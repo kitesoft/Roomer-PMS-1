@@ -20,28 +20,35 @@ uses
   cxContainer,
   cxEdit,
   cxCheckBox,
-  StdCtrls, Vcl.Mask, sMaskEdit, sCustomComboEdit, sTooledit, sButton, Vcl.ExtCtrls, sPanel
+  StdCtrls, Vcl.Mask, sMaskEdit, sCustomComboEdit, sTooledit, sButton, Vcl.ExtCtrls, sPanel, Vcl.ComCtrls, dxCore,
+  cxDateUtils, dxSkinsCore, dxSkinCaramel, dxSkinCoffee, dxSkinDarkSide, dxSkinTheAsphaltWorld, dxSkinsDefaultPainters,
+  cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar
 
   ;
 
 type
   TfrmHomedate = class(TForm)
     Panel2: TsPanel;
-    dtHome: TsDateEdit;
+    dtHome: TcxDateEdit;
     sPanel1: TsPanel;
     Button2: TsButton;
     Button1: TsButton;
     procedure FormCreate(Sender : TObject);
-    procedure FormShow(Sender : TObject);
-    procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
-    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
-    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure dtHomeKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure Button1Click(Sender: TObject);
+    procedure dtHomePropertiesValidate(Sender: TObject; var DisplayValue: Variant; var ErrorText: TCaption;
+      var Error: Boolean);
   private
     { Private declarations }
-    procedure returnToHome;
+    FResult : boolean;
+    FCanClose: Boolean;
+    function Getdate: TDateTime;
+    procedure SetDate(const Value: TDateTime);
   public
+    function ShowWithPrePressedKey(const aChar: char): boolean;
     { Public declarations }
+    property Date: TDateTime read Getdate write SetDate;
   end;
 
 var
@@ -56,17 +63,32 @@ uses
 
 procedure TfrmHomedate.Button1Click(Sender: TObject);
 begin
-  Close;
+  FResult := false;
 end;
 
 procedure TfrmHomedate.Button2Click(Sender: TObject);
 begin
-  returnToHome;
+  Button2.SetFocus; // initiate loosefocus of dateedit control
+  if FCanClose then
+  begin
+    FResult := True;
+    Close;
+  end;
 end;
 
-procedure TfrmHomedate.FormClose(Sender: TObject; var Action: TCloseAction);
+procedure TfrmHomedate.dtHomeKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
 begin
-  frmMain.KeyPreview := true;
+ if Key = VK_RETURN then
+  begin
+    Button2Click(Sender);
+    Key := VK_NONAME;
+  end;
+end;
+
+procedure TfrmHomedate.dtHomePropertiesValidate(Sender: TObject; var DisplayValue: Variant; var ErrorText: TCaption;
+  var Error: Boolean);
+begin
+  FCanClose := not Error;
 end;
 
 procedure TfrmHomedate.FormCreate(Sender : TObject);
@@ -75,32 +97,31 @@ begin
   glb.PerformAuthenticationAssertion(self);
   PlaceFormOnVisibleMonitor(self);
   dtHome.Date := now;
+  FCanClose := True;
 end;
 
-procedure TfrmHomedate.FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+function TfrmHomedate.Getdate: TDateTime;
 begin
-  if Key = VK_RETURN then
+  Result := dtHome.Date;
+end;
+
+procedure TfrmHomedate.SetDate(const Value: TDateTime);
+begin
+  dtHome.Date := Value;
+end;
+
+function TfrmHomedate.ShowWithPrePressedKey(const aChar: char): boolean;
+begin
+  // replace first char with prepressedkey
+  if aChar <> #0 then
   begin
-    returnToHome;
-    Key := VK_NONAME;
+    dtHome.SetSelection(0, 1); // select char to replace
+    dtHome.SelText := aChar;
+    dtHome.SelStart := 1; // set cursor after first char
   end;
+  ShowModal;
+  Result := FResult;
 end;
-
-procedure TfrmHomedate.FormShow(Sender : TObject);
-begin
-//  dtHome.setfocus;
-//  dtHome.Date := frmMain.dtDate.Date;
-//  frmMain.KeyPreview := false;
-end;
-
-procedure TfrmHomedate.returnToHome;
-begin
-    frmMain.dtDate.Date := StrToDate(dtHome.Text); // dtHome.Date;
-//    frmMain.RefreshGrid();
-    Close;
-end;
-
-
 
 end.
 

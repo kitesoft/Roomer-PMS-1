@@ -1206,7 +1206,7 @@ type
 
     // *Bar File
     procedure _Close;
-    procedure _ChangeDate;
+    procedure _ChangeDate(aInitialChar: char);
     procedure _Refresh;
     procedure _DayNotes;
 
@@ -4192,21 +4192,7 @@ begin
 
   if CharInSet(Key, ['0' .. '9']) then
   begin
-    frmHomedate.dtHome.Date := dtDate.Date;
-    // frmHomeDate.Show;
-    frmHomedate.Left := Left + 1;
-    frmHomedate.Top := Top + 1;
-
-    // frmHomedate.ActiveControl := frmHomedate.dtHome;
-    frmHomedate.dtHome.SelLength := 0;
-    // frmHomeDate.dtHome.SetFocus;
-    frmHomedate.dtHome.SelStart := 0;
-    frmHomedate.dtHome.SelLength := 1;
-    frmHomedate.dtHome.SetSelText(s);
-    frmHomedate.dtHome.SelLength := 0;
-    // SendKeys(PChar(s), true);
-    frmHomedate.dtHome.SelStart := 1;
-    frmHomedate.ShowModal;
+    _ChangeDate(Key);
     Key := #0;
   end;
 end;
@@ -12881,7 +12867,7 @@ end;
 procedure TfrmMain.btnChangeDateClick(Sender: TObject);
 begin
   UserClickedDxLargeButton(Sender);
-  _ChangeDate;
+  _ChangeDate(#0);
 end;
 
 procedure TfrmMain.btnChannelPlansClick(Sender: TObject);
@@ -13868,18 +13854,21 @@ begin
   Close;
 end;
 
-procedure TfrmMain._ChangeDate;
+procedure TfrmMain._ChangeDate(aInitialChar: char);
+var
+  frmDate: TfrmHomedate;
 begin
-  frmHomedate.dtHome.Date := dtDate.Date;
-  frmHomedate.Show;
-  frmHomedate.Left := Left + 1;
-  frmHomedate.Top := Top - 1;
+  frmDate := TfrmHomeDate.Create(nil);
+  try
+    frmDate.Date := dtDate.Date;
+    frmdate.Left := Left + 10;
+    frmdate.Top := Top + 35;
 
-  frmHomedate.ActiveControl := frmHomedate.dtHome;
-  frmHomedate.dtHome.SelLength := 0;
-  frmHomedate.dtHome.SetFocus;
-  frmHomedate.dtHome.SelStart := 0;
-  frmHomedate.dtHome.SelLength := length(frmHomedate.dtHome.Text);
+    if frmDate.ShowWithPrePressedKey(aInitialChar) then
+      dtDate.Date := frmDate.Date;
+  finally
+    frmDate.Free;
+  end;
 end;
 
 procedure TfrmMain._Refresh;
