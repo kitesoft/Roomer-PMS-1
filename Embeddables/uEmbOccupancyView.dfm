@@ -134,10 +134,8 @@ object embOccupancyView: TembOccupancyView
       SelectionColor = clHighlight
       SelectionTextColor = clHighlightText
       SortSettings.DefaultFormat = ssAutomatic
-      Version = '7.9.1.1'
+      Version = '7.9.1.0'
       WordWrap = False
-      ExplicitLeft = 2
-      ExplicitTop = 2
     end
   end
 end

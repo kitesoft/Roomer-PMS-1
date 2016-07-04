@@ -231,7 +231,9 @@ uses
   uFloatUtils in 'RoomerVCLs\Source\uFloatUtils.pas',
   uRptStockItems in 'uRptStockItems.pas' {frmRptStockItems},
   uOpenAPICaller in 'OpenAPI\uOpenAPICaller.pas',
-  ufrmPaymentReqRoomtypeGroup in 'ufrmPaymentReqRoomtypeGroup.pas' {frmPaymentReqRoomtypeGroup};
+  ufrmPaymentReqRoomtypeGroup in 'ufrmPaymentReqRoomtypeGroup.pas' {frmPaymentReqRoomtypeGroup},
+  uBaseEmbeddableForm in 'Embeddables\uBaseEmbeddableForm.pas' {embeddableForm},
+  uEmbDateSelection in 'Embeddables\uEmbDateSelection.pas' {frmDateSelection};
 
 {$R *.RES}
 
@@ -247,6 +249,7 @@ begin
 
   Application.CreateForm(TD, D);
   Application.CreateForm(TDReportData, DReportData);
+  Application.CreateForm(TfrmDateSelection, frmDateSelection);
   frmRoomerSplash.PrepareBusyNotificator;
 
   Application.CreateForm(TDImages, DImages);
