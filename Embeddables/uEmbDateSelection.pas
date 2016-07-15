@@ -8,9 +8,11 @@ uses
   sMaskEdit, sCustomComboEdit, sToolEdit, sComboBox, sGroupBox;
 
 type
-  TDateSelPreset = (Today, Tomorrow, Yesterday, ThisWeek, ThisMonth, ThisYear);
+  {$ScopedEnums ON}
+  TDateSelPreset = (Today, Tomorrow, Yesterday, ThisWeek, ThisMonth, ThisYear, Manual);
   TDateSelPresetHelper = record helper for TDateSelPreset
   public
+    class function FromItemIndex(idx: integer): TDateSelPreset; static;
     procedure SetStrings(aStrings: TStrings);
   end;
 
@@ -25,6 +27,7 @@ type
     gbxPresets: TsGroupBox;
     cbxPresets: TsComboBox;
     procedure cbxMonthChange(Sender: TObject);
+    procedure cbxPresetsChange(Sender: TObject);
   private
     function GetFromDate: TDateTime;
     function GetToDate: TDateTime;
@@ -45,6 +48,10 @@ implementation
 
 {$R *.dfm}
 
+uses
+    SysUtils
+  , uDateTimeHelper
+  ;
 
 
 { TfrmDateSelection }
@@ -54,6 +61,49 @@ begin
   inherited;
   SignalChanges(Sender);
   UpdateControls;
+end;
+
+procedure TfrmDateSelection.cbxPresetsChange(Sender: TObject);
+begin
+  inherited;
+  if not UpdatingControls then
+  begin
+    case TDateSelPreset.FromItemIndex(cbxPresets.itemIndex) of
+      TDateSelPreset.Today:
+                  begin
+                    dtDateFrom.Date := now;
+                    dtDateTo.Date := now;
+                  end;
+      TDateSelPreset.Tomorrow:
+                  begin
+                    dtDateFrom.Date := now+1;
+                    dtDateTo.Date := now+1;
+                  end;
+      TDateSelPreset.Yesterday:
+                  begin
+                    dtDateFrom.Date := now-1;
+                    dtDateTo.Date := now-1;
+                  end;
+      TDateSelPreset.ThisWeek:
+                  begin
+                    dtDateFrom.Date := now.StartOfWeek;
+                    dtDateTo.Date := now.EndOfWeek;
+                  end;
+      TDateSelPreset.ThisMonth:
+                  begin
+                    dtDateFrom.Date := Now.StartOfMonth;
+                    dtDateTo.Date := now.EndOfMonth;
+                  end;
+      TDateSelPreset.ThisYear:
+                  begin
+                    dtDateFrom.Date := now.StartOfYear;
+                    dtDateTo.Date := now.EndOfYear;
+                  end;
+      TDateSelPreset.Manual:
+                  begin
+                  end;
+    end;
+  end;
 end;
 
 constructor TfrmDateSelection.Create(aOwner: TComponent);
@@ -69,27 +119,46 @@ end;
 
 function TfrmDateSelection.GetFromDate: TDateTime;
 begin
-
+  Result := dtDateFrom.Date;
 end;
 
 function TfrmDateSelection.GetToDate: TDateTime;
 begin
-
+  Result := dtDateTo.Date;
 end;
 
 procedure TfrmDateSelection.SetFromDate(const Value: TDateTime);
 begin
-
+  dtDateFrom.Date := Value;
 end;
 
 procedure TfrmDateSelection.SetToDate(const Value: TDateTime);
 begin
-
+  dtDateTo.Date := Value;
 end;
 
 procedure TfrmDateSelection.UpdateControls;
 begin
   inherited;
+  if not UpdatingControls then
+  try
+    UpdatingControls := True;
+
+
+  finally
+    UpdatingControls := False;
+  end;
+end;
+
+{ TDateSelPresetHelper }
+
+class function TdateSelPreset.FromItemIndex(idx: integer): TDateSelPreset;
+begin
+  Result := TDateSelPreset(idx);
+end;
+
+procedure TDateSelPresetHelper.SetStrings(aStrings: TStrings);
+begin
 
 end;
 

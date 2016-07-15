@@ -11,7 +11,6 @@ program Roomer;
 uses
   {$ifdef UseFastMM}
   FastMM4 in 'FastMM\FastMM4.pas',
-  FastMM4Messages in 'FastMM\FastMM4Messages.pas',
   {$endif}
   Forms,
   uMain in 'uMain.pas' {frmMain},
@@ -233,7 +232,8 @@ uses
   uOpenAPICaller in 'OpenAPI\uOpenAPICaller.pas',
   ufrmPaymentReqRoomtypeGroup in 'ufrmPaymentReqRoomtypeGroup.pas' {frmPaymentReqRoomtypeGroup},
   uBaseEmbeddableForm in 'Embeddables\uBaseEmbeddableForm.pas' {embeddableForm},
-  uEmbDateSelection in 'Embeddables\uEmbDateSelection.pas' {frmDateSelection};
+  uEmbDateSelection in 'Embeddables\uEmbDateSelection.pas' {frmDateSelection},
+  uDateTimeHelper in 'RoomerVCLs\Source\uDateTimeHelper.pas';
 
 {$R *.RES}
 

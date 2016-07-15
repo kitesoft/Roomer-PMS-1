@@ -11,8 +11,8 @@ uses
 type
   /// <summary>
   ///  Base and abstract form-class to implement embeddable controls <br />
-  ///  To use, derive a form from TEmbeddableForm and implement getEmbeddableControl to return the part of the form that
-  ///  should be embedded.
+  ///  To use, derive a form from TEmbeddableForm and implement getEmbeddableControl to return the TContrl part of the form that
+  ///  should be embedded, i.e. a panel or groupbox.
   /// </summary>
   /// <example>
   ///    TSomePanelForm = class(TEmbeddableForm)
@@ -34,19 +34,21 @@ type
     { Private declarations }
     FOriginalParent: TWinControl;
     FOnChange: TNotifyEvent;
+    FUpdatingControls: boolean;
     procedure SetOriginalParent(const Value: TWinControl);
   protected
     function GetEmbeddableControl: TControl; virtual; abstract;
     property OriginalParent: TWinControl read FOriginalParent write SetOriginalParent;
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
-    procedure SignalChanges(Sender: TOjbect);
+    procedure SignalChanges(Sender: TObject);
+    property UpdatingControls: boolean read FUpdatingControls write FUpdatingControls;
   public
     { Public declarations }
     constructor Create(aOwner: TComponent); override;
     destructor Destroy; override;
 
     /// <summary>
-    ///   Update visiblity and Enabled property of controls
+    ///   Update visiblity and Enabled property of controls, and/or propagate changed value to other controls
     /// </summary>
     procedure UpdateControls; virtual; abstract;
     procedure Attach(aParent: TWinControl);
@@ -94,7 +96,7 @@ begin
     FOriginalParent.FreeNotification(Self);
 end;
 
-procedure TEmbeddableForm.SignalChanges(Sender: TOjbect);
+procedure TEmbeddableForm.SignalChanges(Sender: TObject);
 begin
   If Assigned(FOnChange) then
     FOnChange(Sender);

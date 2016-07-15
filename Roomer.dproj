@@ -763,6 +763,7 @@
             <Form>frmDateSelection</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="RoomerVCLs\Source\uDateTimeHelper.pas"/>
         <None Include="Roomer.todo"/>
         <None Include="notes.txt"/>
         <None Include="Roomer.inc"/>

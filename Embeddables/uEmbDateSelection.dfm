@@ -13,8 +13,6 @@ inherited frmDateSelection: TfrmDateSelection
     Height = 81
     Align = alClient
     TabOrder = 0
-    ExplicitWidth = 635
-    ExplicitHeight = 299
     object gbxSelectMonths: TsGroupBox
       AlignWithMargins = True
       Left = 357
@@ -32,9 +30,6 @@ inherited frmDateSelection: TfrmDateSelection
       TabOrder = 1
       SkinData.SkinSection = 'GROUPBOX'
       Checked = False
-      ExplicitLeft = 354
-      ExplicitTop = 0
-      ExplicitHeight = 75
       object cbxMonth: TsComboBox
         Left = 7
         Top = 18
@@ -127,9 +122,6 @@ inherited frmDateSelection: TfrmDateSelection
       TabOrder = 2
       SkinData.SkinSection = 'GROUPBOX'
       Checked = False
-      ExplicitLeft = 177
-      ExplicitTop = 0
-      ExplicitHeight = 75
       object dtDateFrom: TsDateEdit
         Left = 57
         Top = 18
@@ -199,10 +191,12 @@ inherited frmDateSelection: TfrmDateSelection
       SkinData.SkinSection = 'GROUPBOX'
       Checked = False
       object cbxPresets: TsComboBox
-        Left = 3
+        AlignWithMargins = True
+        Left = 5
         Top = 18
-        Width = 158
+        Width = 160
         Height = 21
+        Align = alTop
         Alignment = taLeftJustify
         BoundLabel.Font.Charset = DEFAULT_CHARSET
         BoundLabel.Font.Color = clWindowText
@@ -220,7 +214,9 @@ inherited frmDateSelection: TfrmDateSelection
         ItemIndex = -1
         ParentFont = False
         TabOrder = 0
-        OnChange = cbxMonthChange
+        OnChange = cbxPresetsChange
+        ExplicitLeft = 3
+        ExplicitWidth = 158
       end
     end
   end
