@@ -13,6 +13,7 @@ uses
   dxStatusBar, cxGridDBTableView, Vcl.Grids, Vcl.DBGrids, Vcl.Menus, cxTimeEdit, ppParameter, ppDesignLayer, ppCtrls,
   ppBands, ppVar, ppPrnabl, ppClass, ppCache, ppProd, ppReport, ppDB, ppComm, ppRelatv, ppDBPipe
   , uCurrencyHandler
+  , ufraDateSelection
   ;
 
 type
@@ -22,12 +23,7 @@ type
     ArrivalsListDS: TDataSource;
     pnlFilter: TsPanel;
     btnRefresh: TsButton;
-    gbxSelectDates: TsGroupBox;
-    rbToday: TsRadioButton;
-    rbTomorrow: TsRadioButton;
-    rbManualRange: TsRadioButton;
-    dtDateFrom: TsDateEdit;
-    dtDateTo: TsDateEdit;
+    pnlSelectDates: TsPanel;
     pnlExportButtons: TsPanel;
     btnExcel: TsButton;
     dxStatusBar: TdxStatusBar;
@@ -125,6 +121,8 @@ type
     StringField5: TStringField;
     IntegerField3: TIntegerField;
     dsArrivalsReport: TDataSource;
+    sPanel1: TsPanel;
+    fraDateSelection: TfraDateSelection;
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure rbRadioButtonClick(Sender: TObject);
@@ -138,8 +136,6 @@ type
     procedure mnuGroupInvoiceClick(Sender: TObject);
     procedure grArrivalsListDBTableView1CellDblClick(Sender: TcxCustomGridTableView; ACellViewInfo: TcxGridTableDataCellViewInfo; AButton: TMouseButton;
       AShift: TShiftState; var AHandled: Boolean);
-    procedure dtDateFromCloseUp(Sender: TObject);
-    procedure dtDateToCloseUp(Sender: TObject);
     procedure grArrivalsListDBTableView1ExpectedTimeOfArrivalGetDisplayText(Sender: TcxCustomGridTableItem;
       ARecord: TcxCustomGridRecord; var AText: string);
     procedure btnReportClick(Sender: TObject);
@@ -149,9 +145,9 @@ type
   private
     FRefreshingdata: boolean;
     FCurrencyhandler: TCurrencyHandler;
+
     { Private declarations }
     procedure UpdateControls;
-    procedure SetManualDates(aFrom, aTo: TDate);
     procedure RefreshData;
     function ConstructSQL: string;
   protected
@@ -173,7 +169,8 @@ implementation
 {$R *.dfm}
 
 uses
-    uRoomerLanguage
+    UITypes
+  , uRoomerLanguage
   , uAppGlobal
   , uG
   , uUtils
@@ -231,7 +228,6 @@ const
           'GROUP BY rd.aDate, rd.RoomReservation '+
           'ORDER BY rd.aDate, rd.Room ';
 
-  cSqlForSingleDate = '      AND rd.ADate = ''%s'' ';
   cSqlForDateRange = '      AND rd.ADate >= ''%s'' AND rd.ADate <= ''%s'' ';
 
   WM_REFRESH_DATA = WM_User + 51;
@@ -338,15 +334,10 @@ end;
 function TfrmArrivalsReport.ConstructSQL: string;
 var s : String;
 begin
-  if rbToday.Checked OR rbTomorrow.Checked then
-    s := Format(cSqlForSingleDate, [FormatDateTime('yyyy-mm-dd', dtDateFrom.Date)])
-  else
-    s := Format(cSqlForDateRange, [FormatDateTime('yyyy-mm-dd', dtDateFrom.Date),
-                                   FormatDateTime('yyyy-mm-dd', dtDateTo.Date)]);
+  s := Format(cSqlForDateRange, [FormatDateTime('yyyy-mm-dd', fraDateSelection.FromDate),
+                                 FormatDateTime('yyyy-mm-dd', fraDateSelection.ToDate)]);
   Result := Format(cSQL, [s]);
-  {$ifdef DEBUG}
-    CopyToClipboard(Result);
-  {$endif}
+  CopyToClipboard(Result);
 end;
 
 constructor TfrmArrivalsReport.Create(aOwner: TComponent);
@@ -361,23 +352,12 @@ begin
   FCurrencyhandler.Free;
 end;
 
-procedure TfrmArrivalsReport.dtDateFromCloseUp(Sender: TObject);
-begin
- if dtDateFrom.Date > dtDateTo.Date then
-   dtDateTo.Date := dtDateFrom.Date;
-end;
-
-procedure TfrmArrivalsReport.dtDateToCloseUp(Sender: TObject);
-begin
- if dtDateFrom.Date > dtDateTo.Date then
-   dtDateFrom.Date := dtDateTo.Date;
-end;
-
 procedure TfrmArrivalsReport.FormCreate(Sender: TObject);
 begin
   RoomerLanguage.TranslateThisForm(self);
   glb.PerformAuthenticationAssertion(self);
   PlaceFormOnVisibleMonitor(self);
+
 end;
 
 procedure TfrmArrivalsReport.FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -434,8 +414,8 @@ var
   s : string;
 begin
 
-  rlabFrom.Caption := DateToStr(dtDateFrom.Date);
-  rlabTo.Caption := DateToStr(dtDateTo.Date);
+  rlabFrom.Caption := DateToStr(fraDateSelection.FromDate);
+  rlabTo.Caption := DateToStr(fraDateSelection.ToDate);
 
   s := g.qHotelName;
   rLabHotelName.Caption := s;
@@ -496,12 +476,6 @@ begin
   end;
 end;
 
-procedure TfrmArrivalsReport.SetManualDates(aFrom, aTo: TDate);
-begin
-  dtDateFrom.Date := aFrom;
-  dtDateTo.Date := aTo;
-end;
-
 procedure TfrmArrivalsReport.UpdateControls;
 var
   lDataAvailable: boolean;
@@ -509,18 +483,13 @@ begin
   if FRefreshingData then
     Exit;
 
-  dtDateFrom.Enabled := rbManualRange.Checked;
-  dtDateTo.Enabled := rbManualRange.Checked;
-
-  if rbToday.Checked then
-    SetManualDates(Now, now)
-  else if rbTomorrow.Checked then
-    SetManualDates(Now+1, Now+1);
-
   lDataAvailable := kbmArrivalsList.Active and NOT kbmArrivalsList.Eof;
   btnCheckIn.Enabled := lDataAvailable;
   btnProfile.Enabled := lDataAvailable;
   btnInvoice.Enabled := lDataAvailable;
+
+  fraDateSelection.UpdateControls;
+
 end;
 
 procedure TfrmArrivalsReport.WndProc(var message: TMessage);

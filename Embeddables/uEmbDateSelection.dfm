@@ -43,6 +43,7 @@ inherited frmDateSelection: TfrmDateSelection
         BoundLabel.Font.Style = []
         SkinData.SkinSection = 'COMBOBOX'
         VerticalAlignment = taAlignTop
+        Style = csDropDownList
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clBlack
@@ -52,7 +53,6 @@ inherited frmDateSelection: TfrmDateSelection
         ItemIndex = -1
         ParentFont = False
         TabOrder = 0
-        Text = 'Select month ...'
         OnChange = cbxMonthChange
         Items.Strings = (
           'Select month ...'
@@ -82,18 +82,19 @@ inherited frmDateSelection: TfrmDateSelection
         BoundLabel.Font.Style = []
         SkinData.SkinSection = 'COMBOBOX'
         VerticalAlignment = taAlignTop
+        Style = csDropDownList
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clBlack
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
-        ItemIndex = -1
+        ItemIndex = 0
         ParentFont = False
         TabOrder = 1
-        Text = 'Select year ...'
+        Text = '2011'
+        OnChange = cbxMonthChange
         Items.Strings = (
-          'Veldu '#225'r ...'
           '2011'
           '2012'
           '2013'
@@ -102,7 +103,8 @@ inherited frmDateSelection: TfrmDateSelection
           '2016'
           '2017'
           '2018'
-          '2020')
+          '2020'
+          '2021')
       end
     end
     object gbxSelectDates: TsGroupBox
@@ -205,6 +207,7 @@ inherited frmDateSelection: TfrmDateSelection
         BoundLabel.Font.Style = []
         SkinData.SkinSection = 'COMBOBOX'
         VerticalAlignment = taAlignTop
+        Style = csDropDownList
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clBlack
@@ -215,8 +218,7 @@ inherited frmDateSelection: TfrmDateSelection
         ParentFont = False
         TabOrder = 0
         OnChange = cbxPresetsChange
-        ExplicitLeft = 3
-        ExplicitWidth = 158
+        ExplicitLeft = 7
       end
     end
   end

@@ -233,7 +233,9 @@ uses
   ufrmPaymentReqRoomtypeGroup in 'ufrmPaymentReqRoomtypeGroup.pas' {frmPaymentReqRoomtypeGroup},
   uBaseEmbeddableForm in 'Embeddables\uBaseEmbeddableForm.pas' {embeddableForm},
   uEmbDateSelection in 'Embeddables\uEmbDateSelection.pas' {frmDateSelection},
-  uDateTimeHelper in 'RoomerVCLs\Source\uDateTimeHelper.pas';
+  uDateTimeHelper in 'RoomerVCLs\Source\uDateTimeHelper.pas',
+  ufraDateSelection in 'Embeddables\ufraDateSelection.pas' {fraDateSelection: TFrame},
+  uDateSelPreset in 'Definitions\uDateSelPreset.pas';
 
 {$R *.RES}
 
@@ -249,7 +251,6 @@ begin
 
   Application.CreateForm(TD, D);
   Application.CreateForm(TDReportData, DReportData);
-  Application.CreateForm(TfrmDateSelection, frmDateSelection);
   frmRoomerSplash.PrepareBusyNotificator;
 
   Application.CreateForm(TDImages, DImages);

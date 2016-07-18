@@ -26,26 +26,14 @@ object frmArrivalsReport: TfrmArrivalsReport
     Align = alTop
     TabOrder = 0
     SkinData.SkinSection = 'PANEL'
-    ExplicitTop = -6
-    object btnRefresh: TsButton
-      Left = 378
-      Top = 14
-      Width = 118
-      Height = 26
-      Caption = 'Refresh'
-      Default = True
-      ImageIndex = 28
-      Images = DImages.PngImageList1
-      TabOrder = 1
-      OnClick = btnRefreshClick
-      SkinData.SkinSection = 'BUTTON'
-    end
-    object gbxSelectDates: TsGroupBox
+    object pnlSelectDates: TsPanel
+      AlignWithMargins = True
       Left = 4
-      Top = 0
-      Width = 368
-      Height = 94
-      Caption = 'Select dates'
+      Top = 4
+      Width = 496
+      Height = 93
+      Align = alLeft
+      BevelOuter = bvNone
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -53,84 +41,28 @@ object frmArrivalsReport: TfrmArrivalsReport
       Font.Style = []
       ParentFont = False
       TabOrder = 0
-      SkinData.SkinSection = 'GROUPBOX'
-      Checked = False
-      object rbToday: TsRadioButton
-        Left = 4
-        Top = 21
-        Width = 58
-        Height = 19
-        Caption = 'Today'
-        Checked = True
+      SkinData.SkinSection = 'PANEL'
+      inline fraDateSelection: TfraDateSelection
+        Left = 0
+        Top = 0
+        Width = 496
+        Height = 93
+        Align = alClient
         TabOrder = 0
-        TabStop = True
-        OnClick = rbRadioButtonClick
-      end
-      object rbTomorrow: TsRadioButton
-        Left = 4
-        Top = 46
-        Width = 76
-        Height = 19
-        Caption = 'Tomorrow'
-        TabOrder = 1
-        OnClick = rbRadioButtonClick
-      end
-      object rbManualRange: TsRadioButton
-        Left = 119
-        Top = 21
-        Width = 122
-        Height = 19
-        Caption = 'Manual date range:'
-        TabOrder = 2
-        OnClick = rbRadioButtonClick
-      end
-      object dtDateFrom: TsDateEdit
-        Left = 122
-        Top = 45
-        Width = 105
-        Height = 21
-        AutoSize = False
-        Color = clWhite
-        EditMask = '!99/99/9999;1; '
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
-        Font.Height = -11
-        Font.Name = 'Tahoma'
-        Font.Style = []
-        MaxLength = 10
-        ParentFont = False
-        TabOrder = 3
-        Text = '  -  -    '
-        CheckOnExit = True
-        SkinData.SkinSection = 'EDIT'
-        GlyphMode.Blend = 0
-        GlyphMode.Grayed = False
-        OnCloseUp = dtDateFromCloseUp
-        DialogTitle = 'Date from select'
-      end
-      object dtDateTo: TsDateEdit
-        Left = 233
-        Top = 45
-        Width = 105
-        Height = 21
-        AutoSize = False
-        Color = clWhite
-        EditMask = '!99/99/9999;1; '
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
-        Font.Height = -11
-        Font.Name = 'Tahoma'
-        Font.Style = []
-        MaxLength = 10
-        ParentFont = False
-        TabOrder = 4
-        Text = '  -  -    '
-        CheckOnExit = True
-        SkinData.SkinSection = 'EDIT'
-        GlyphMode.Blend = 0
-        GlyphMode.Grayed = False
-        OnCloseUp = dtDateToCloseUp
-        DialogTitle = 'Date to select'
+        ExplicitWidth = 496
+        ExplicitHeight = 93
+        inherited gbxSelectMonths: TsGroupBox
+          Height = 87
+          ExplicitHeight = 87
+        end
+        inherited gbxSelectDates: TsGroupBox
+          Height = 87
+          ExplicitHeight = 87
+        end
+        inherited gbxPresets: TsGroupBox
+          Height = 87
+          ExplicitHeight = 87
+        end
       end
     end
     object pnlExportButtons: TsPanel
@@ -183,9 +115,6 @@ object frmArrivalsReport: TfrmArrivalsReport
         TabOrder = 2
         OnClick = btnProfileClick
         SkinData.SkinSection = 'BUTTON'
-        ExplicitLeft = 307
-        ExplicitTop = 5
-        ExplicitHeight = 29
       end
       object btnInvoice: TsButton
         AlignWithMargins = True
@@ -215,7 +144,36 @@ object frmArrivalsReport: TfrmArrivalsReport
         TabOrder = 4
         OnClick = btnReportClick
         SkinData.SkinSection = 'BUTTON'
-        ExplicitLeft = 1018
+      end
+    end
+    object sPanel1: TsPanel
+      AlignWithMargins = True
+      Left = 506
+      Top = 4
+      Width = 613
+      Height = 93
+      Align = alClient
+      BevelOuter = bvNone
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 1
+      SkinData.SkinSection = 'PANEL'
+      object btnRefresh: TsButton
+        Left = 10
+        Top = 12
+        Width = 118
+        Height = 37
+        Caption = 'Refresh'
+        Default = True
+        ImageIndex = 28
+        Images = DImages.PngImageList1
+        TabOrder = 0
+        OnClick = btnRefreshClick
+        SkinData.SkinSection = 'BUTTON'
       end
     end
   end

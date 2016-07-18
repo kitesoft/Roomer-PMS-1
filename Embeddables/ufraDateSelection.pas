@@ -1,16 +1,16 @@
-unit uEmbDateSelection;
+unit ufraDateSelection;
 
 interface
 
 uses
-  System.Classes,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uBaseEmbeddableForm, Vcl.ExtCtrls, sPanel, Vcl.StdCtrls, sRadioButton, Vcl.Mask,
-  sMaskEdit, sCustomComboEdit, sToolEdit, sComboBox, sGroupBox;
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
+  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Mask, sMaskEdit, sCustomComboEdit, sToolEdit,
+  sComboBox, sGroupBox
+  , uDateSelPreset
+  ;
 
 type
-
-  TfrmDateSelection = class(TembeddableForm)
-    pnlDateSelection: TsPanel;
+  TfraDateSelection = class(TFrame)
     gbxSelectMonths: TsGroupBox;
     cbxMonth: TsComboBox;
     cbxYear: TsComboBox;
@@ -26,48 +26,43 @@ type
     function GetToDate: TDateTime;
     procedure SetFromDate(const Value: TDateTime);
     procedure SetToDate(const Value: TDateTime);
-    { Private declarations }
+    function GetPreset: TDateSelpreset;
+    procedure SetPreset(const Value: TDateSelpreset);
+
   protected
-    function GetEmbeddableControl: TControl; override;
-    procedure DoUpdateControls; override;
   public
     { Public declarations }
-    constructor Create(aOwner: TComponent); override;
+    constructor Create(aOwner: TCOmponent); override;
+    procedure UpdateControls;
+
+    property Preset: TDateSelpreset read GetPreset write SetPreset;
     property FromDate: TDateTime read GetFromDate write SetFromDate;
     property ToDate: TDateTime read GetToDate write SetToDate;
   end;
 
 implementation
 
+uses
+    uDateTimeHelper
+  , DateUtils
+  ;
 {$R *.dfm}
 
-uses
-    SysUtils
-  , DateUtils
-  , uDateTimeHelper
-  , uDateSelPreset
-  , TypInfo
-  ;
-
-
-{ TfrmDateSelection }
-
-procedure TfrmDateSelection.cbxMonthChange(Sender: TObject);
+procedure TfraDateSelection.cbxMonthChange(Sender: TObject);
 begin
   inherited;
-  SignalChanges(Sender);
 
   dtDateFrom.Date := TDateTime.Create(StrToIntDef(cbxYear.Text, now.Year), cbxMonth.ItemIndex, 1);
   dtDateTo.Date := TDateTime.Create(StrToIntDef(cbxYear.Text, now.Year), cbxMonth.ItemIndex, 1).EndOfMonth;
 
-  DoUpdateControls;
+  UpdateControls;
 end;
 
-procedure TfrmDateSelection.cbxPresetsChange(Sender: TObject);
+procedure TfraDateSelection.cbxPresetsChange(Sender: TObject);
 begin
   inherited;
-  if not UpdatingControls then
-  begin
+//  if not UpdatingControls then
+//  begin
     case TDateSelPreset.FromItemIndex(cbxPresets.itemIndex) of
       TDateSelPreset.Today:
                   begin
@@ -105,49 +100,55 @@ begin
                   end;
     end;
     UpdateControls;
-  end;
+//  end;
+
 end;
 
-constructor TfrmDateSelection.Create(aOwner: TComponent);
+constructor TfraDateSelection.Create(aOwner: TCOmponent);
 begin
   inherited;
   TDateSelPreset.SetStrings(cbxPresets.Items);
 
   cbxPresets.ItemIndex := ord(TDateSelPreset.Today);
+  cbxPresetsChange(Self);
   cbxMonth.ItemIndex := now.Month -1;
   cbxYear.ItemIndex := cbxYear.Items.IndexOf(IntToStr(now.Year));
 end;
 
-function TfrmDateSelection.GetEmbeddableControl: TControl;
-begin
-  Result := pnlDateSelection;
-end;
-
-function TfrmDateSelection.GetFromDate: TDateTime;
+function TfraDateSelection.GetFromDate: TDateTime;
 begin
   Result := dtDateFrom.Date;
 end;
 
-function TfrmDateSelection.GetToDate: TDateTime;
+function TfraDateSelection.GetPreset: TDateSelpreset;
+begin
+  Result := TDateSelPreset.Fromitemindex(cbxPresets.itemIndex);
+end;
+
+function TfraDateSelection.GetToDate: TDateTime;
 begin
   Result := dtDateTo.Date;
 end;
 
-procedure TfrmDateSelection.SetFromDate(const Value: TDateTime);
+procedure TfraDateSelection.SetFromDate(const Value: TDateTime);
 begin
   dtDateFrom.Date := Value;
 end;
 
-procedure TfrmDateSelection.SetToDate(const Value: TDateTime);
+procedure TfraDateSelection.SetPreset(const Value: TDateSelpreset);
+begin
+  cbxPresets.ItemIndex := ord(value);
+end;
+
+procedure TfraDateSelection.SetToDate(const Value: TDateTime);
 begin
   dtDateTo.Date := Value;
 end;
 
-procedure TfrmDateSelection.DoUpdateControls;
+procedure TfraDateSelection.UpdateControls;
 var
   lPreset: TDateSelPreset;
 begin
-  inherited;
   lPreset := TDateSelPreset.FromItemIndex(cbxPresets.ItemIndex);
   dtDateFrom.ReadOnly := lPreset <> TDateSelpreset.Manual;
   dtDateTo.ReadOnly := lPreset <> TDateSelpreset.Manual;
@@ -158,7 +159,8 @@ begin
     cbxMonth.ItemIndex := -1;
     cbxYear.ItemIndex := -1;
   end;
-end;
 
+  Repaint;
+end;
 
 end.

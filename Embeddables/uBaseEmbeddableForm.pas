@@ -40,6 +40,7 @@ type
     function GetEmbeddableControl: TControl; virtual; abstract;
     property OriginalParent: TWinControl read FOriginalParent write SetOriginalParent;
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
+    procedure DoUpdateControls; virtual; abstract;
     procedure SignalChanges(Sender: TObject);
     property UpdatingControls: boolean read FUpdatingControls write FUpdatingControls;
   public
@@ -50,7 +51,7 @@ type
     /// <summary>
     ///   Update visiblity and Enabled property of controls, and/or propagate changed value to other controls
     /// </summary>
-    procedure UpdateControls; virtual; abstract;
+    procedure UpdateControls;
     procedure Attach(aParent: TWinControl);
     procedure Detach;
     property EmbeddableControl: TControl read GetEmbeddableControl;
@@ -81,7 +82,8 @@ end;
 
 procedure TEmbeddableForm.Detach;
 begin
-  EmbeddableControl.Parent := FOriginalParent;
+  if assigned(EmbeddableControl) then
+    EmbeddableControl.Parent := FOriginalParent;
   OriginalParent := nil;
 end;
 
@@ -100,6 +102,18 @@ procedure TEmbeddableForm.SignalChanges(Sender: TObject);
 begin
   If Assigned(FOnChange) then
     FOnChange(Sender);
+end;
+
+procedure TEmbeddableForm.UpdateControls;
+begin
+  if not UpdatingControls then
+  try
+    FUpdatingControls := True;
+
+    DoUpdateControls;
+  finally
+    FUpdatingControls := False;
+  end;
 end;
 
 procedure TEmbeddableForm.Notification(AComponent: TComponent; Operation: TOperation);

@@ -1,0 +1,214 @@
+object fraDateSelection: TfraDateSelection
+  Left = 0
+  Top = 0
+  Width = 499
+  Height = 81
+  TabOrder = 0
+  object gbxSelectMonths: TsGroupBox
+    AlignWithMargins = True
+    Left = 356
+    Top = 3
+    Width = 139
+    Height = 75
+    Align = alLeft
+    Caption = '.. or select a month'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
+    TabOrder = 2
+    SkinData.SkinSection = 'GROUPBOX'
+    Checked = False
+    object cbxMonth: TsComboBox
+      Left = 7
+      Top = 18
+      Width = 118
+      Height = 21
+      Alignment = taLeftJustify
+      BoundLabel.Font.Charset = DEFAULT_CHARSET
+      BoundLabel.Font.Color = clWindowText
+      BoundLabel.Font.Height = -13
+      BoundLabel.Font.Name = 'Tahoma'
+      BoundLabel.Font.Style = []
+      SkinData.SkinSection = 'COMBOBOX'
+      VerticalAlignment = taAlignTop
+      Style = csDropDownList
+      Color = clWhite
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ItemIndex = -1
+      ParentFont = False
+      TabOrder = 0
+      OnChange = cbxMonthChange
+      Items.Strings = (
+        'Select month ...'
+        'January'
+        'February'
+        'March'
+        'April'
+        'May'
+        'June'
+        'July'
+        'August'
+        'September'
+        'October'
+        'November'
+        'December')
+    end
+    object cbxYear: TsComboBox
+      Left = 7
+      Top = 45
+      Width = 118
+      Height = 21
+      Alignment = taLeftJustify
+      BoundLabel.Font.Charset = DEFAULT_CHARSET
+      BoundLabel.Font.Color = clWindowText
+      BoundLabel.Font.Height = -13
+      BoundLabel.Font.Name = 'Tahoma'
+      BoundLabel.Font.Style = []
+      SkinData.SkinSection = 'COMBOBOX'
+      VerticalAlignment = taAlignTop
+      Style = csDropDownList
+      Color = clWhite
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ItemIndex = 0
+      ParentFont = False
+      TabOrder = 1
+      Text = '2011'
+      OnChange = cbxMonthChange
+      Items.Strings = (
+        '2011'
+        '2012'
+        '2013'
+        '2014'
+        '2015'
+        '2016'
+        '2017'
+        '2018'
+        '2020'
+        '2021')
+    end
+  end
+  object gbxSelectDates: TsGroupBox
+    AlignWithMargins = True
+    Left = 179
+    Top = 3
+    Width = 171
+    Height = 75
+    Align = alLeft
+    Caption = '.. or select a date range'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
+    TabOrder = 1
+    SkinData.SkinSection = 'GROUPBOX'
+    Checked = False
+    object dtDateFrom: TsDateEdit
+      Left = 57
+      Top = 18
+      Width = 105
+      Height = 21
+      AutoSize = False
+      Color = clWhite
+      EditMask = '!99/99/9999;1; '
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      MaxLength = 10
+      ParentFont = False
+      TabOrder = 0
+      Text = '  -  -    '
+      CheckOnExit = True
+      BoundLabel.Active = True
+      BoundLabel.Caption = 'From:'
+      BoundLabel.Indent = 10
+      SkinData.SkinSection = 'EDIT'
+      GlyphMode.Blend = 0
+      GlyphMode.Grayed = False
+    end
+    object dtDateTo: TsDateEdit
+      Left = 57
+      Top = 45
+      Width = 105
+      Height = 21
+      AutoSize = False
+      Color = clWhite
+      EditMask = '!99/99/9999;1; '
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      MaxLength = 10
+      ParentFont = False
+      TabOrder = 1
+      Text = '  -  -    '
+      CheckOnExit = True
+      BoundLabel.Active = True
+      BoundLabel.Caption = 'To:'
+      BoundLabel.Indent = 10
+      SkinData.SkinSection = 'EDIT'
+      GlyphMode.Blend = 0
+      GlyphMode.Grayed = False
+    end
+  end
+  object gbxPresets: TsGroupBox
+    AlignWithMargins = True
+    Left = 3
+    Top = 3
+    Width = 170
+    Height = 75
+    Align = alLeft
+    Caption = 'Select preset'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
+    TabOrder = 0
+    SkinData.SkinSection = 'GROUPBOX'
+    Checked = False
+    object cbxPresets: TsComboBox
+      AlignWithMargins = True
+      Left = 5
+      Top = 18
+      Width = 160
+      Height = 21
+      Align = alTop
+      Alignment = taLeftJustify
+      BoundLabel.Font.Charset = DEFAULT_CHARSET
+      BoundLabel.Font.Color = clWindowText
+      BoundLabel.Font.Height = -13
+      BoundLabel.Font.Name = 'Tahoma'
+      BoundLabel.Font.Style = []
+      SkinData.SkinSection = 'COMBOBOX'
+      VerticalAlignment = taAlignTop
+      Style = csDropDownList
+      Color = clWhite
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ItemIndex = -1
+      ParentFont = False
+      TabOrder = 0
+      OnChange = cbxPresetsChange
+    end
+  end
+end

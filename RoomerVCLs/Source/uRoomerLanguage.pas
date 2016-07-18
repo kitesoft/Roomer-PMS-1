@@ -246,26 +246,52 @@ var RoomerLanguageActivated : Boolean;
 
     RoomerLanguage : TRoomerLanguage;
 
-    constants : TDictionary<String, String>;
+
+function ConstantsDictionary:TDictionary<String, String>;
 
 procedure Register;
 
 implementation
 
-uses uFormCreateHook;
+uses
+  System.Generics.Defaults
+  , uFormCreateHook
+  ;
 
 resourcestring
   RoomerLanguageFileName = 'RoomerLanguage_%s(%d).src';
+
+CONST KEY_MASK = '%s.%s.%s';
+      NOT_FOUND_TEXT = '-*/:\*-';
+
+var
+    constants : TDictionary<String, String>;
+
 
 procedure Register;
 begin
   RegisterComponents('Roomer', [TRoomerLanguage]);
 end;
 
-CONST KEY_MASK = '%s.%s.%s';
-      NOT_FOUND_TEXT = '-*/:\*-';
+
+Type
+  TCustomEqualityComparer = class(TEqualityComparer<string>)
+  public
+    function Equals(const Left, Right: string): Boolean; override;
+    function GetHashCode(const Value: string): Integer; override;
+  end;
+
 
 { TLanguageDictionary }
+
+function ConstantsDictionary:TDictionary<String, String>;
+begin
+  if not assigned(constants) then
+    constants := TDictionary<String, String>.Create(TCustomEqualityComparer.Create());
+
+  Result := constants;
+end;
+
 
 procedure TLanguageDictionary.Clear;
 begin
@@ -1466,6 +1492,25 @@ begin
   FTemporaryValue := temporaryValue;
 end;
 
+///////////////////////////////////////////////////////////////////////////////////////
+///
+///
+
+function TCustomEqualityComparer.Equals(const Left, Right: string): Boolean;
+begin
+  Result := SameText(Left, Right);
+end;
+
+function TCustomEqualityComparer.GetHashCode(const Value: string): Integer;
+var s: string;
+begin
+  s := UpperCase(Value);
+  Result := BobJenkinsHash(s[1], Length(s) * SizeOf(s[1]), 0);
+end;
+
+
+
+
 initialization
 
   RoomerLanguageActivated := False;
@@ -1492,5 +1537,7 @@ finalization
   end;
   {$ENDIF}
   RoomerLanguage.Free;
+
+  FreeAndNil(constants);
 
 end.

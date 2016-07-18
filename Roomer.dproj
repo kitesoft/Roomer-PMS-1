@@ -764,6 +764,12 @@
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="RoomerVCLs\Source\uDateTimeHelper.pas"/>
+        <DCCReference Include="Embeddables\ufraDateSelection.pas">
+            <Form>fraDateSelection</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TFrame</DesignClass>
+        </DCCReference>
+        <DCCReference Include="Definitions\uDateSelPreset.pas"/>
         <None Include="Roomer.todo"/>
         <None Include="notes.txt"/>
         <None Include="Roomer.inc"/>
