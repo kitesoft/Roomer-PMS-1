@@ -3,96 +3,61 @@ unit uRptHouseKeeping;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, kbmMemTable, cxClasses, cxPropertiesStore, Vcl.StdCtrls, sRadioButton,
-  acPNG, sLabel, Vcl.Mask, sMaskEdit, sCustomComboEdit, sToolEdit, sGroupBox, sButton, Vcl.ExtCtrls, sPanel,
-  uDImages, cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, dxSkinsCore, dxSkinCaramel, dxSkinCoffee,
-  dxSkinDarkSide, dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinsdxStatusBarPainter, cxStyles,
-  dxSkinscxPCPainter, cxCustomData, cxFilter, cxData, cxDataStorage, cxEdit, cxNavigator, cxDBData, cxGridLevel,
-  cxGridCustomTableView, cxGridTableView, cxGridBandedTableView, cxGridDBBandedTableView, cxGridCustomView, cxGrid,
-  dxStatusBar, cxGridDBTableView, Vcl.Grids, Vcl.DBGrids, Vcl.Menus, cxTimeEdit, ppParameter, ppDesignLayer, ppCtrls,
-  ppBands, ppVar, ppPrnabl, ppClass, ppCache, ppProd, ppReport, ppDB, ppComm, ppRelatv, ppDBPipe, sComboBox, cxTextEdit,
+  Winapi.Windows, Winapi.Messages
+  , uRoomerGridForm, cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxStyles, dxSkinsCore,
+  dxSkinCaramel, dxSkinCoffee, dxSkinDarkSide, dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinscxPCPainter,
+  cxCustomData, cxFilter, cxData, cxDataStorage, cxEdit, cxNavigator, Data.DB, cxDBData, dxSkinsdxStatusBarPainter,
   dxPSGlbl, dxPSUtl, dxPSEngn, dxPrnPg, dxBkgnd, dxWrap, dxPrnDev, dxPSCompsProvider, dxPSFillPatterns,
   dxPSEdgePatterns, dxPSPDFExportCore, dxPSPDFExport, cxDrawTextUtils, dxPSPrVwStd, dxPSPrVwAdv, dxPSPrVwRibbon,
-  dxPScxPageControlProducer, dxPScxEditorProducers, dxPScxExtEditorProducers, dxSkinsdxBarPainter,
-  dxSkinsdxRibbonPainter, dxServerModeData, dxServerModeDBXDataSource, dxPSCore, dxPScxGridLnk, dxPScxGridLayoutViewLnk,
-  dxPScxCommon, cxMemo, cxLabel, ppStrtch, ppMemo
-  , uRoomerForm, cxSpinEdit
+  dxPScxPageControlProducer, dxPScxGridLnk, dxPScxGridLayoutViewLnk, dxPScxEditorProducers, dxPScxExtEditorProducers,
+  dxSkinsdxBarPainter, dxSkinsdxRibbonPainter, cxLabel, cxTextEdit, cxTimeEdit, cxSpinEdit, cxMemo,
+  cxGridCustomTableView, cxGridTableView, cxGridDBTableView, Vcl.Controls, Vcl.StdCtrls, sComboBox, Vcl.Mask, sMaskEdit,
+  sCustomComboEdit, sToolEdit, sLabel, sGroupBox, System.Classes, System.Actions, Vcl.ActnList, dxPSCore, dxPScxCommon,
+  cxClasses, kbmMemTable, cxPropertiesStore, dxStatusBar, cxGridLevel, cxGridCustomView, cxGrid, sButton, Vcl.ExtCtrls,
+  sPanel
+
   ;
 
 type
-  TfrmHouseKeepingReport = class(TfrmBaseRoomerForm)
+  TfrmHouseKeepingReport = class(TfrmBaseRoomerGridForm)
     FormStore: TcxPropertiesStore;
-    kbmHouseKeepingList: TkbmMemTable;
-    HouseKeepingListDS: TDataSource;
-    pnlFilter: TsPanel;
-    btnRefresh: TsButton;
-    pnlExportButtons: TsPanel;
-    btnExcel: TsButton;
-    grHouseKeepingList: TcxGrid;
-    lvHouseKeepingListLevel1: TcxGridLevel;
-    grHouseKeepingListDBTableView1: TcxGridDBTableView;
     gbxSelection: TsGroupBox;
     dtDate: TsDateEdit;
     cbxLocations: TsComboBox;
     lblDate: TsLabel;
     lblLocation: TsLabel;
-    kbmHouseKeepingListroomtype: TStringField;
-    kbmHouseKeepingListfloor: TIntegerField;
-    kbmHouseKeepingListnumberofguests: TIntegerField;
-    kbmHouseKeepingListexpectedcot: TTimeField;
-    kbmHouseKeepingListstatus: TStringField;
     grHouseKeepingListDBTableView1room: TcxGridDBColumn;
     grHouseKeepingListDBTableView1roomtype: TcxGridDBColumn;
     grHouseKeepingListDBTableView1floor: TcxGridDBColumn;
     grHouseKeepingListDBTableView1expectedcot: TcxGridDBColumn;
-    kbmHouseKeepingListroom: TStringField;
-    kbmHouseKeepingListlocation: TStringField;
     grHouseKeepingListDBTableView1location: TcxGridDBColumn;
-    gridPrinter: TdxComponentPrinter;
-    gridPrinterLink1: TdxGridReportLink;
-    btnPrintGrid: TsButton;
-    cxStyleRepository2: TcxStyleRepository;
-    dxGridReportLinkStyleSheet1: TdxGridReportLinkStyleSheet;
-    cxStyle2: TcxStyle;
-    cxStyle3: TcxStyle;
-    cxStyle4: TcxStyle;
-    cxStyle5: TcxStyle;
-    cxStyle6: TcxStyle;
-    cxStyle7: TcxStyle;
-    cxStyle8: TcxStyle;
-    cxStyle9: TcxStyle;
-    cxStyle10: TcxStyle;
-    cxStyle11: TcxStyle;
-    cxStyle12: TcxStyle;
-    cxStyle13: TcxStyle;
-    cxStyle14: TcxStyle;
     grHouseKeepingListDBTableView1Roomnotes: TcxGridDBColumn;
-    kbmHouseKeepingListRoomnotes: TMemoField;
-    kbmHouseKeepingListArrivingGuests: TIntegerField;
-    kbmHouseKeepingListexpectedtoa: TTimeField;
     grHouseKeepingListDBTableView1LastGuests: TcxGridDBColumn;
     grHouseKeepingListDBTableView1ArrivingGuests: TcxGridDBColumn;
     grHouseKeepingListDBTableView1housekeepingstatus: TcxGridDBColumn;
     grHouseKeepingListDBTableView1expectedtoa: TcxGridDBColumn;
-    kbmHouseKeepingListmaintenancenotes: TMemoField;
-    kbmHouseKeepingListcleaningnotes: TMemoField;
     grHouseKeepingListDBTableView1maintenancenotes: TcxGridDBColumn;
     grHouseKeepingListDBTableView1cleaningnotes: TcxGridDBColumn;
-    procedure btnExcelClick(Sender: TObject);
-    procedure btnRefreshClick(Sender: TObject);
-    procedure kbmHouseKeepingListAfterScroll(DataSet: TDataSet);
-    procedure btnPrintGridClick(Sender: TObject);
+    kbmGridDataroom: TStringField;
+    kbmGridDataroomtype: TStringField;
+    kbmGridDatafloor: TIntegerField;
+    kbmGridDataLastGuests: TIntegerField;
+    kbmGridDataArrivingGuests: TIntegerField;
+    kbmGridDataexpectedcot: TTimeField;
+    kbmGridDatahousekeepingstatus: TStringField;
+    kbmGridDatalocation: TStringField;
+    kbmGridDataexpectedtoa: TTimeField;
+    kbmGridDataRoomnotes: TMemoField;
+    kbmGridDatamaintenancenotes: TMemoField;
+    kbmGridDatacleaningnotes: TMemoField;
     procedure grHouseKeepingListDBTableView1ArrivingGuestsGetDisplayText(Sender: TcxCustomGridTableItem;
       ARecord: TcxCustomGridRecord; var AText: string);
   private
-    FRefreshingdata: boolean;
    { Private declarations }
-    function ConstructSQL: string;
     procedure UpdateLocations;
   protected
     procedure UpdateControls; override;
-    procedure LoadData; override;
+    function ConstructSQLStatement: string; override;
   public
     { Public declarations }
   end;
@@ -108,23 +73,13 @@ implementation
 {$R *.dfm}
 
 uses
-    uRoomerLanguage
-  , uAppGlobal
-  , uG
+   uAppGlobal
   , uUtils
-  , cxGridExportLink
-  , ShellApi
-  , cmpRoomerDataset
-  , uD
+  , SysUtils
   , PrjConst
-  , hData
-  , uAlerts
-  , uProvideARoom2
-  , uGuestCheckInForm
-  , uInvoice
-  , uReservationProfile
-  , uRptbViewer
-  , _Glob;
+  , Math
+  , _Glob
+  ;
 
 const
   cSQL =
@@ -192,24 +147,8 @@ begin
   end;
 end;
 
-procedure TfrmHouseKeepingReport.btnExcelClick(Sender: TObject);
-var
-  sFilename : string;
-  s         : string;
-begin
-  dateTimeToString(s, 'yyyymmddhhnn', now);
-  sFilename := g.qProgramPath + s + '_HouseKeepingList';
-  ExportGridToExcel(sFilename, grHouseKeepingList, true, true, true);
-  ShellExecute(Handle, 'OPEN', PChar(sFilename + '.xls'), nil, nil, sw_shownormal);
-end;
 
-procedure TfrmHouseKeepingReport.btnRefreshClick(Sender: TObject);
-begin
-  RefreshData;
-end;
-
-
-function TfrmHouseKeepingReport.ConstructSQL: string;
+function TfrmHouseKeepingReport.ConstructSQLStatement: string;
 begin
   Result := ReplaceString(cSQL, '{probedate}', _db(dtDate.Date));
   Result := ReplaceString(Result, '{departure}', _db(GetTranslatedText('shTx_Housekeepinglist_Departure')));
@@ -228,70 +167,9 @@ begin
   if aText = '0'then aText := '';
 end;
 
-procedure TfrmHouseKeepingReport.kbmHouseKeepingListAfterScroll(DataSet: TDataSet);
-begin
-  UpdateControls;
-end;
-
-
-procedure TfrmHouseKeepingReport.LoadData;
-var
-  s    : string;
-  rset1: TRoomerDataset;
-begin
-  inherited;
-  if NOT btnRefresh.Enabled then exit;
-
-  btnRefresh.Enabled := False;
-  Screen.Cursor := crHourglass;
-  try
-
-    kbmHouseKeepingList.DisableControls;
-    try
-      FRefreshingdata := True; // UpdateControls still called when updating dataset, despite DisableControls
-      rSet1 := CreateNewDataSet;
-      try
-        s := ConstructSQL;
-
-        hData.rSet_bySQL(rSet1, s, false);
-        rSet1.First;
-        if not kbmHouseKeepingList.Active then
-          kbmHouseKeepingList.Open;
-        LoadKbmMemtableFromDataSetQuiet(kbmHouseKeepingList,rSet1,[]);
-      finally
-        FreeAndNil(rSet1);
-      end;
-
-      kbmHouseKeepingList.First;
-
-    finally
-      FRefreshingdata := False;
-      kbmHouseKeepingList.EnableControls;
-    end;
-  finally
-    btnRefresh.Enabled := True;
-    Screen.Cursor := crDefault;
-  end;
-end;
-
-
-procedure TfrmHouseKeepingReport.btnPrintGridClick(Sender: TObject);
-var
-  lTitle: string;
-begin
-  lTitle := Format('%s - %s %s', [Caption, dtDate.Text, cbxLocations.Text]);
-  gridPrinter.PrintTitle := lTitle;
-  gridPrinterLink1.ReportTitle.Text := lTitle;
-  gridPrinter.Print(True, nil, gridPrinterLink1);
-end;
-
 procedure TfrmHouseKeepingReport.UpdateControls;
 begin
-  if FRefreshingData then
-    Exit;
-
   inherited;
-
   UpdateLocations;
 end;
 

@@ -8,151 +8,126 @@ inherited frmHouseKeepingReport: TfrmHouseKeepingReport
   ExplicitHeight = 625
   PixelsPerInch = 96
   TextHeight = 13
-  inherited dxStatusBar: TdxStatusBar
-    Top = 566
+  inherited pnlTop: TsPanel
     Width = 1123
-    ExplicitTop = 566
+    Height = 129
     ExplicitWidth = 1123
-  end
-  object pnlFilter: TsPanel [1]
-    Left = 0
-    Top = 0
-    Width = 1123
-    Height = 137
-    Align = alTop
-    TabOrder = 0
-    SkinData.SkinSection = 'PANEL'
-    object btnRefresh: TsButton
-      Left = 242
-      Top = 22
-      Width = 118
-      Height = 26
-      Caption = 'Refresh'
-      Default = True
-      ImageIndex = 28
-      Images = DImages.PngImageList1
-      TabOrder = 0
-      OnClick = btnRefreshClick
-      SkinData.SkinSection = 'BUTTON'
-    end
-    object pnlExportButtons: TsPanel
-      Left = 1
-      Top = 93
+    ExplicitHeight = 129
+    inherited pnlActionButtons: TsPanel
+      Top = 85
       Width = 1121
-      Height = 43
-      Align = alBottom
-      BevelOuter = bvNone
-      TabOrder = 1
-      SkinData.SkinSection = 'PANEL'
-      object btnExcel: TsButton
+      ExplicitLeft = 1
+      ExplicitTop = 85
+      ExplicitWidth = 1121
+      inherited btnReport: TsButton
+        Left = 990
+        ExplicitLeft = 990
+      end
+      inherited btnRefresh: TsButton
+        ExplicitLeft = 3
+      end
+      inherited btnExcel: TsButton
+        Left = 856
+        ExplicitLeft = 856
+      end
+    end
+    inherited pnlSelection: TsPanel
+      Width = 1121
+      Height = 84
+      ExplicitLeft = 1
+      ExplicitTop = 1
+      ExplicitWidth = 1121
+      ExplicitHeight = 84
+      object gbxSelection: TsGroupBox
         AlignWithMargins = True
         Left = 3
         Top = 3
-        Width = 128
-        Height = 37
+        Width = 221
+        Height = 78
         Align = alLeft
-        Caption = 'Excel'
-        ImageIndex = 115
-        Images = DImages.PngImageList1
+        Caption = 'Select date and location'
         TabOrder = 0
-        OnClick = btnExcelClick
-        SkinData.SkinSection = 'BUTTON'
-      end
-      object btnPrintGrid: TsButton
-        AlignWithMargins = True
-        Left = 990
-        Top = 3
-        Width = 128
-        Height = 37
-        Align = alRight
-        Caption = 'Report'
-        ImageIndex = 69
-        Images = DImages.PngImageList1
-        TabOrder = 1
-        OnClick = btnPrintGridClick
-        SkinData.SkinSection = 'BUTTON'
-      end
-    end
-    object gbxSelection: TsGroupBox
-      AlignWithMargins = True
-      Left = 4
-      Top = 4
-      Width = 221
-      Height = 86
-      Align = alLeft
-      Caption = 'Select date and location'
-      TabOrder = 2
-      Checked = False
-      object lblDate: TsLabel
-        Left = 47
-        Top = 23
-        Width = 30
-        Height = 13
-        Alignment = taRightJustify
-        Caption = 'Date: '
-      end
-      object lblLocation: TsLabel
-        Left = 33
-        Top = 50
-        Width = 44
-        Height = 13
-        Alignment = taRightJustify
-        Caption = 'Location:'
-      end
-      object dtDate: TsDateEdit
-        Left = 91
-        Top = 20
-        Width = 105
-        Height = 21
-        AutoSize = False
-        Color = clWhite
-        EditMask = '!99/99/9999;1; '
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
-        Font.Height = -11
-        Font.Name = 'Tahoma'
-        Font.Style = []
-        MaxLength = 10
-        ParentFont = False
-        TabOrder = 0
-        CheckOnExit = True
-        SkinData.SkinSection = 'EDIT'
-        GlyphMode.Blend = 0
-        GlyphMode.Grayed = False
-        DefaultToday = True
-        DialogTitle = 'Housekeeping date'
-      end
-      object cbxLocations: TsComboBox
-        Left = 91
-        Top = 47
-        Width = 105
-        Height = 21
-        Alignment = taLeftJustify
-        VerticalAlignment = taAlignTop
-        Style = csDropDownList
-        Color = clWhite
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
-        Font.Height = -11
-        Font.Name = 'Tahoma'
-        Font.Style = []
-        ItemIndex = -1
-        ParentFont = False
-        TabOrder = 1
+        Checked = False
+        object lblDate: TsLabel
+          Left = 47
+          Top = 23
+          Width = 30
+          Height = 13
+          Alignment = taRightJustify
+          Caption = 'Date: '
+        end
+        object lblLocation: TsLabel
+          Left = 33
+          Top = 50
+          Width = 44
+          Height = 13
+          Alignment = taRightJustify
+          Caption = 'Location:'
+        end
+        object dtDate: TsDateEdit
+          Left = 91
+          Top = 20
+          Width = 105
+          Height = 21
+          AutoSize = False
+          Color = clWhite
+          EditMask = '!99/99/9999;1; '
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          MaxLength = 10
+          ParentFont = False
+          TabOrder = 0
+          CheckOnExit = True
+          SkinData.SkinSection = 'EDIT'
+          GlyphMode.Blend = 0
+          GlyphMode.Grayed = False
+          DefaultToday = True
+          DialogTitle = 'Housekeeping date'
+        end
+        object cbxLocations: TsComboBox
+          Left = 91
+          Top = 47
+          Width = 105
+          Height = 21
+          Alignment = taLeftJustify
+          VerticalAlignment = taAlignTop
+          Style = csDropDownList
+          Color = clWhite
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ItemIndex = -1
+          ParentFont = False
+          TabOrder = 1
+        end
       end
     end
   end
+  inherited grData: TcxGrid
+    Top = 129
+    Width = 1123
+    Height = 437
+    ExplicitTop = 129
+    ExplicitWidth = 1123
+    ExplicitHeight = 437
+  end
   object grHouseKeepingList: TcxGrid [2]
     Left = 0
-    Top = 137
+    Top = 129
     Width = 1123
-    Height = 429
+    Height = 437
     Align = alClient
     TabOrder = 2
     LookAndFeel.NativeStyle = False
+    ExplicitTop = 131
     object grHouseKeepingListDBTableView1: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
-      DataController.DataSource = HouseKeepingListDS
+      DataController.DataSource = dsGridData
       DataController.Options = [dcoAssignGroupingValues, dcoAssignMasterDetailKeys, dcoSaveExpanding, dcoGroupsAlwaysExpanded]
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <>
@@ -286,26 +261,13 @@ inherited frmHouseKeepingReport: TfrmHouseKeepingReport
       GridView = grHouseKeepingListDBTableView1
     end
   end
-  object FormStore: TcxPropertiesStore
-    Components = <
-      item
-        Component = Owner
-        Properties.Strings = (
-          'Height'
-          'Left'
-          'Position'
-          'Top'
-          'Width')
-      end>
-    StorageName = 'Software\Roomer\FormStatus\frmRptHouseKeeping'
-    StorageType = stRegistry
-    Left = 274
-    Top = 358
+  inherited dxStatusBar: TdxStatusBar
+    Top = 566
+    Width = 1123
+    ExplicitTop = 566
+    ExplicitWidth = 1123
   end
-  object kbmHouseKeepingList: TkbmMemTable
-    DesignActivation = True
-    AttachedAutoRefresh = True
-    AttachMaxCount = 1
+  inherited kbmGridData: TkbmMemTable
     FieldDefs = <
       item
         Name = 'room'
@@ -322,7 +284,11 @@ inherited frmHouseKeepingReport: TfrmHouseKeepingReport
         DataType = ftInteger
       end
       item
-        Name = 'numberofguests'
+        Name = 'LastGuests'
+        DataType = ftInteger
+      end
+      item
+        Name = 'ArrivingGuests'
         DataType = ftInteger
       end
       item
@@ -330,257 +296,97 @@ inherited frmHouseKeepingReport: TfrmHouseKeepingReport
         DataType = ftTime
       end
       item
-        Name = 'status'
+        Name = 'housekeepingstatus'
         DataType = ftString
         Size = 20
+      end
+      item
+        Name = 'location'
+        DataType = ftString
+        Size = 10
+      end
+      item
+        Name = 'expectedtoa'
+        DataType = ftTime
+      end
+      item
+        Name = 'Roomnotes'
+        DataType = ftMemo
+      end
+      item
+        Name = 'maintenancenotes'
+        DataType = ftMemo
+      end
+      item
+        Name = 'cleaningnotes'
+        DataType = ftMemo
       end>
-    IndexDefs = <>
-    SortOptions = []
-    PersistentBackup = False
-    ProgressFlags = [mtpcLoad, mtpcSave, mtpcCopy]
-    LoadedCompletely = False
-    SavedCompletely = False
-    FilterOptions = []
-    Version = '7.22.00 Standard Edition'
-    LanguageID = 0
-    SortID = 0
-    SubLanguageID = 1
-    LocaleID = 1024
-    AfterScroll = kbmHouseKeepingListAfterScroll
-    Left = 432
-    Top = 311
-    object kbmHouseKeepingListroom: TStringField
+    object kbmGridDataroom: TStringField
       FieldName = 'room'
       Size = 10
     end
-    object kbmHouseKeepingListroomtype: TStringField
+    object kbmGridDataroomtype: TStringField
       FieldName = 'roomtype'
       Size = 10
     end
-    object kbmHouseKeepingListfloor: TIntegerField
+    object kbmGridDatafloor: TIntegerField
       FieldName = 'floor'
     end
-    object kbmHouseKeepingListnumberofguests: TIntegerField
+    object kbmGridDataLastGuests: TIntegerField
       FieldName = 'LastGuests'
     end
-    object kbmHouseKeepingListArrivingGuests: TIntegerField
+    object kbmGridDataArrivingGuests: TIntegerField
       FieldName = 'ArrivingGuests'
     end
-    object kbmHouseKeepingListexpectedcot: TTimeField
+    object kbmGridDataexpectedcot: TTimeField
       FieldName = 'expectedcot'
     end
-    object kbmHouseKeepingListstatus: TStringField
+    object kbmGridDatahousekeepingstatus: TStringField
       FieldName = 'housekeepingstatus'
     end
-    object kbmHouseKeepingListlocation: TStringField
+    object kbmGridDatalocation: TStringField
       FieldName = 'location'
       Size = 10
     end
-    object kbmHouseKeepingListexpectedtoa: TTimeField
+    object kbmGridDataexpectedtoa: TTimeField
       FieldName = 'expectedtoa'
     end
-    object kbmHouseKeepingListRoomnotes: TMemoField
+    object kbmGridDataRoomnotes: TMemoField
       FieldName = 'Roomnotes'
       BlobType = ftMemo
     end
-    object kbmHouseKeepingListmaintenancenotes: TMemoField
+    object kbmGridDatamaintenancenotes: TMemoField
       FieldName = 'maintenancenotes'
       BlobType = ftMemo
     end
-    object kbmHouseKeepingListcleaningnotes: TMemoField
+    object kbmGridDatacleaningnotes: TMemoField
       FieldName = 'cleaningnotes'
       BlobType = ftMemo
     end
   end
-  object HouseKeepingListDS: TDataSource
-    DataSet = kbmHouseKeepingList
-    Left = 440
-    Top = 367
+  inherited cxGridStyleRepository: TcxStyleRepository
+    PixelsPerInch = 96
   end
-  object gridPrinter: TdxComponentPrinter
-    CurrentLink = gridPrinterLink1
-    Version = 0
-    Left = 680
-    Top = 328
-    object gridPrinterLink1: TdxGridReportLink
-      Active = True
-      Component = grHouseKeepingList
-      PageNumberFormat = pnfNumeral
-      PrinterPage.DMPaper = 9
-      PrinterPage.Footer = 6350
-      PrinterPage.Header = 6350
-      PrinterPage.Margins.Bottom = 6350
-      PrinterPage.Margins.Left = 5000
-      PrinterPage.Margins.Right = 5000
-      PrinterPage.Margins.Top = 12700
-      PrinterPage.PageFooter.RightTitle.Strings = (
-        '[Page # of Pages #]')
-      PrinterPage.PageSize.X = 210000
-      PrinterPage.PageSize.Y = 297000
-      PrinterPage.ScaleMode = smFit
-      PrinterPage._dxMeasurementUnits_ = 0
-      PrinterPage._dxLastMU_ = 2
-      ReportDocument.CreationDate = 42633.603041921300000000
-      ReportTitle.Font.Charset = DEFAULT_CHARSET
-      ReportTitle.Font.Color = clBlack
-      ReportTitle.Font.Height = -19
-      ReportTitle.Font.Name = 'Arial'
-      ReportTitle.Font.Style = [fsBold]
-      ShrinkToPageWidth = True
-      AssignedFormatValues = [fvTime, fvPageNumber]
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clBlack
-      Font.Height = -15
-      Font.Name = 'Arial'
-      Font.Style = []
-      OptionsExpanding.ExpandGroupRows = True
-      OptionsFormatting.LookAndFeelKind = lfFlat
-      OptionsFormatting.UseNativeStyles = True
-      OptionsOnEveryPage.Footers = False
-      OptionsOnEveryPage.FilterBar = False
-      OptionsView.FilterBar = False
-      StyleRepository = cxStyleRepository2
-      Styles.StyleSheet = dxGridReportLinkStyleSheet1
+  inherited gridPrinter: TdxComponentPrinter
+    inherited gridPrinterLink1: TdxGridReportLink
+      ReportDocument.CreationDate = 42628.627292673610000000
       BuiltInReportLink = True
     end
   end
-  object cxStyleRepository2: TcxStyleRepository
-    Left = 352
-    Top = 56
-    PixelsPerInch = 96
-    object cxStyle2: TcxStyle
-      AssignedValues = [svColor, svFont]
-      Color = clBtnFace
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clDefault
-      Font.Height = -16
-      Font.Name = 'Arial'
-      Font.Style = [fsBold]
-    end
-    object cxStyle3: TcxStyle
-      AssignedValues = [svColor, svFont]
-      Color = clBtnFace
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clDefault
-      Font.Height = -16
-      Font.Name = 'Arial'
-      Font.Style = []
-    end
-    object cxStyle4: TcxStyle
-      AssignedValues = [svColor, svFont]
-      Color = clBtnFace
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clDefault
-      Font.Height = -16
-      Font.Name = 'Arial'
-      Font.Style = []
-    end
-    object cxStyle5: TcxStyle
-      AssignedValues = [svColor, svFont]
-      Color = clBtnFace
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clDefault
-      Font.Height = -16
-      Font.Name = 'Arial'
-      Font.Style = []
-    end
-    object cxStyle6: TcxStyle
-      AssignedValues = [svColor, svFont]
-      Color = clWhite
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clDefault
-      Font.Height = -16
-      Font.Name = 'Arial'
-      Font.Style = []
-    end
-    object cxStyle7: TcxStyle
-      AssignedValues = [svColor, svFont]
-      Color = 16053492
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clDefault
-      Font.Height = -16
-      Font.Name = 'Arial'
-      Font.Style = []
-    end
-    object cxStyle8: TcxStyle
-      AssignedValues = [svColor, svFont]
-      Color = clWhite
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clDefault
-      Font.Height = -16
-      Font.Name = 'Arial'
-      Font.Style = []
-    end
-    object cxStyle9: TcxStyle
-      AssignedValues = [svColor, svFont]
-      Color = clBtnShadow
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clDefault
-      Font.Height = -16
-      Font.Name = 'Arial'
-      Font.Style = []
-    end
-    object cxStyle10: TcxStyle
-      AssignedValues = [svColor, svFont]
-      Color = clBtnFace
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clDefault
-      Font.Height = -16
-      Font.Name = 'Arial'
-      Font.Style = []
-    end
-    object cxStyle11: TcxStyle
-      AssignedValues = [svColor, svFont]
-      Color = clBtnFace
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clDefault
-      Font.Height = -16
-      Font.Name = 'Arial'
-      Font.Style = [fsBold]
-    end
-    object cxStyle12: TcxStyle
-      AssignedValues = [svColor, svFont]
-      Color = clBtnFace
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clDefault
-      Font.Height = -16
-      Font.Name = 'Arial'
-      Font.Style = [fsBold]
-    end
-    object cxStyle13: TcxStyle
-      AssignedValues = [svColor, svFont]
-      Color = clWhite
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clDefault
-      Font.Height = -16
-      Font.Name = 'Arial'
-      Font.Style = []
-    end
-    object cxStyle14: TcxStyle
-      AssignedValues = [svColor, svFont]
-      Color = clBtnFace
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clDefault
-      Font.Height = -16
-      Font.Name = 'Arial'
-      Font.Style = []
-    end
-    object dxGridReportLinkStyleSheet1: TdxGridReportLinkStyleSheet
-      Caption = 'Arial font'
-      Styles.BandHeader = cxStyle2
-      Styles.Caption = cxStyle3
-      Styles.CardCaptionRow = cxStyle4
-      Styles.CardRowCaption = cxStyle5
-      Styles.Content = cxStyle6
-      Styles.ContentEven = cxStyle7
-      Styles.ContentOdd = cxStyle8
-      Styles.FilterBar = cxStyle9
-      Styles.Footer = cxStyle10
-      Styles.Group = cxStyle11
-      Styles.Header = cxStyle12
-      Styles.Preview = cxStyle13
-      Styles.Selection = cxStyle14
-      BuiltIn = True
-    end
+  object FormStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = Owner
+        Properties.Strings = (
+          'Height'
+          'Left'
+          'Position'
+          'Top'
+          'Width')
+      end>
+    StorageName = 'Software\Roomer\FormStatus\frmRptHouseKeeping'
+    StorageType = stRegistry
+    Left = 274
+    Top = 358
   end
 end
