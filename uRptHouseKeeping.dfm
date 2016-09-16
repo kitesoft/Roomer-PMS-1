@@ -100,6 +100,15 @@ inherited frmHouseKeepingReport: TfrmHouseKeepingReport
           TabOrder = 1
         end
       end
+      object BitBtn1: TBitBtn
+        Left = 424
+        Top = 24
+        Width = 75
+        Height = 25
+        Caption = 'BitBtn1'
+        TabOrder = 1
+        OnClick = BitBtn1Click
+      end
     end
   end
   inherited grData: TcxGrid
@@ -118,6 +127,7 @@ inherited frmHouseKeepingReport: TfrmHouseKeepingReport
     Align = alClient
     TabOrder = 2
     LookAndFeel.NativeStyle = False
+    ExplicitTop = 131
     object grHouseKeepingListDBTableView1: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = dsGridData
@@ -357,13 +367,54 @@ inherited frmHouseKeepingReport: TfrmHouseKeepingReport
       BlobType = ftMemo
     end
   end
-  inherited cxGridStyleRepository: TcxStyleRepository
-    PixelsPerInch = 96
-  end
   inherited gridPrinter: TdxComponentPrinter
     inherited gridPrinterLink1: TdxGridReportLink
       ReportDocument.CreationDate = 42628.627292673610000000
       AssignedFormatValues = []
+      Styles.BandHeader = nil
+      Styles.Caption = nil
+      Styles.CardCaptionRow = nil
+      Styles.CardRowCaption = nil
+      Styles.Content = nil
+      Styles.ContentEven = nil
+      Styles.ContentOdd = nil
+      Styles.FilterBar = nil
+      Styles.Footer = nil
+      Styles.Group = nil
+      Styles.Header = nil
+      Styles.Preview = nil
+      Styles.Selection = nil
+      BuiltInReportLink = True
+    end
+  end
+  inherited cxGridStyleRepository: TcxStyleRepository
+    PixelsPerInch = 96
+    inherited dxGridReportLinkStyleSheet1: TdxGridReportLinkStyleSheet
+      BuiltIn = True
+    end
+  end
+  object dxComponentPrinter1: TdxComponentPrinter
+    CurrentLink = dxComponentPrinter1Link1
+    Version = 0
+    Left = 352
+    Top = 464
+    object dxComponentPrinter1Link1: TdxGridReportLink
+      Active = True
+      Component = grData
+      PageNumberFormat = pnfNumeral
+      PrinterPage.DMPaper = 9
+      PrinterPage.Footer = 6350
+      PrinterPage.Header = 6350
+      PrinterPage.Margins.Bottom = 12700
+      PrinterPage.Margins.Left = 12700
+      PrinterPage.Margins.Right = 12700
+      PrinterPage.Margins.Top = 12700
+      PrinterPage.PageSize.X = 210000
+      PrinterPage.PageSize.Y = 297000
+      PrinterPage._dxMeasurementUnits_ = 0
+      PrinterPage._dxLastMU_ = 2
+      ReportDocument.CreationDate = 42629.373200659720000000
+      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
   end

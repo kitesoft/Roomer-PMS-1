@@ -100,8 +100,7 @@ begin
   gridPrinter.PrintTitle := Caption;
   gridPrinterLink1.ReportTitle.Text := Caption;
   gridPrinterLink1.ComponentPrinter := gridPrinter;
-  gridPrinterLink1.Preview;
-//  gridPrinter.Print(True, nil, gridPrinterLink1);
+  gridPrinter.Print(True, nil, gridPrinterLink1);
 end;
 
 procedure TfrmBaseRoomerGridForm.acGridDependentActionUpdate(Sender: TObject);
@@ -144,7 +143,7 @@ begin
         kbmGridData.EmptyTable;
         s := ConstructSQLStatement;
 
-        hData.rSet_bySQL(rSet1, s);
+        hData.rSet_bySQL(rSet1, s, false);
         rSet1.First;
         if not kbmGridData.Active then
           kbmGridData.Open;

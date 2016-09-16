@@ -15,7 +15,7 @@ uses
   sCustomComboEdit, sToolEdit, sLabel, sGroupBox, System.Classes, System.Actions, Vcl.ActnList, dxPSCore, dxPScxCommon,
   cxClasses, kbmMemTable, cxPropertiesStore, dxStatusBar, cxGridLevel, cxGridCustomView, cxGrid, sButton, Vcl.ExtCtrls,
   sPanel
-  , uRoomerGridForm
+  , uRoomerGridForm, Vcl.Buttons
   ;
 
 type
@@ -49,8 +49,12 @@ type
     kbmGridDataRoomnotes: TMemoField;
     kbmGridDatamaintenancenotes: TMemoField;
     kbmGridDatacleaningnotes: TMemoField;
+    dxComponentPrinter1: TdxComponentPrinter;
+    dxComponentPrinter1Link1: TdxGridReportLink;
+    BitBtn1: TBitBtn;
     procedure grHouseKeepingListDBTableView1ArrivingGuestsGetDisplayText(Sender: TcxCustomGridTableItem;
       ARecord: TcxCustomGridRecord; var AText: string);
+    procedure BitBtn1Click(Sender: TObject);
   private
    { Private declarations }
     procedure UpdateLocations;
@@ -78,9 +82,12 @@ uses
   , PrjConst
   , Math
   , _Glob
+  , uReservationStateDefinitions
   ;
 
 const
+  cRemovedReservations: TReservationStateSet = [rsCancelled, rsDeleted];
+
   cSQL =
       '	select * '#10+
       '	from '#10+
@@ -113,19 +120,19 @@ const
       '	  LEFT OUTER JOIN ( SELECT * '#10+
       '			 , (select count(*) from persons p where p.roomreservation = rrd.RoomReservation)  + rrd.numChildren + rrd.numInfants as NumGuestsD '#10+
       '	         FROM roomreservations rrd '#10+
-      '			 where rrd.status not in (''C'', ''D'') and rrd.departure = {probedate} '#10+
+      '			 where rrd.status not in ' + cRemovedReservations.AsSQLString + ' and rrd.departure = {probedate} '#10+
       '			) departing on departing.room = r.room '#10+
       ' '#10+
       '		LEFT OUTER JOIN ( SELECT * '#10+
       '			 , (select count(*) from persons p where p.roomreservation = rra.RoomReservation)  + rra.numChildren + rra.numInfants as NumGuestsA '#10+
       '	         FROM roomreservations rra '#10+
-      '			 where rra.status not in (''C'', ''D'') and rra.arrival= {probedate} '#10+
+      '			 where rra.status not in ' + cRemovedReservations.AsSQLString + ' and rra.arrival= {probedate} '#10+
       '			) arriving on arriving.room = r.room '#10+
       ' '#10+
       '		LEFT OUTER JOIN ( SELECT * '#10+
       '			 , (select count(*) from persons p where p.roomreservation = rrs.RoomReservation)  + rrs.numChildren + rrs.numInfants as NumGuestsS '#10+
       '	         FROM roomreservations rrs '#10+
-      '			 where rrs.status not in (''C'', ''D'') and rrs.arrival < {probedate} and rrs.departure > {probedate} '#10+
+      '			 where rrs.status not in ' + cRemovedReservations.AsSQLString + ' and rrs.arrival < {probedate} and rrs.departure > {probedate} '#10+
       '			) stayover on stayover.room=r.room '#10+
       '	 group by room, roomtype, floor, numberguests '#10+
       '	 order by floor, room ) x '#10+
@@ -134,11 +141,10 @@ const
 
 function ShowHouseKeepingReport(aDate: TDateTime):  boolean;
 var
-  frm: TfrmBaseRoomerGridForm; // TfrmHouseKeepingReport;
+  frm: TfrmHouseKeepingReport;
 begin
-  frm := TfrmBaseRoomerGridForm.Create(nil); //.Create(nil);
+  frm := TfrmHouseKeepingReport.Create(nil);
   try
-//    frm.dtDate.Date := aDate;
     frm.ShowModal;
     Result := (frm.modalresult = mrOk);
   finally
@@ -146,6 +152,14 @@ begin
   end;
 end;
 
+
+procedure TfrmHouseKeepingReport.BitBtn1Click(Sender: TObject);
+begin
+  inherited;
+  dxComponentPrinter1.PrintTitle := Caption;
+  dxComponentPrinter1Link1.ReportTitle.Text := Caption;
+  dxComponentPrinter1.Print(True, nil, dxComponentPrinter1Link1);
+end;
 
 function TfrmHouseKeepingReport.ConstructSQLStatement: string;
 begin
