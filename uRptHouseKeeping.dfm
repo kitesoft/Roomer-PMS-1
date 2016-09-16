@@ -16,15 +16,11 @@ inherited frmHouseKeepingReport: TfrmHouseKeepingReport
     inherited pnlActionButtons: TsPanel
       Top = 85
       Width = 1121
-      ExplicitLeft = 1
       ExplicitTop = 85
       ExplicitWidth = 1121
       inherited btnReport: TsButton
         Left = 990
         ExplicitLeft = 990
-      end
-      inherited btnRefresh: TsButton
-        ExplicitLeft = 3
       end
       inherited btnExcel: TsButton
         Left = 856
@@ -34,8 +30,6 @@ inherited frmHouseKeepingReport: TfrmHouseKeepingReport
     inherited pnlSelection: TsPanel
       Width = 1121
       Height = 84
-      ExplicitLeft = 1
-      ExplicitTop = 1
       ExplicitWidth = 1121
       ExplicitHeight = 84
       object gbxSelection: TsGroupBox
@@ -124,7 +118,6 @@ inherited frmHouseKeepingReport: TfrmHouseKeepingReport
     Align = alClient
     TabOrder = 2
     LookAndFeel.NativeStyle = False
-    ExplicitTop = 131
     object grHouseKeepingListDBTableView1: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = dsGridData
@@ -370,23 +363,8 @@ inherited frmHouseKeepingReport: TfrmHouseKeepingReport
   inherited gridPrinter: TdxComponentPrinter
     inherited gridPrinterLink1: TdxGridReportLink
       ReportDocument.CreationDate = 42628.627292673610000000
+      AssignedFormatValues = []
       BuiltInReportLink = True
     end
-  end
-  object FormStore: TcxPropertiesStore
-    Components = <
-      item
-        Component = Owner
-        Properties.Strings = (
-          'Height'
-          'Left'
-          'Position'
-          'Top'
-          'Width')
-      end>
-    StorageName = 'Software\Roomer\FormStatus\frmRptHouseKeeping'
-    StorageType = stRegistry
-    Left = 274
-    Top = 358
   end
 end

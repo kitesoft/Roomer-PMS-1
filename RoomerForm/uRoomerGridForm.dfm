@@ -22,8 +22,6 @@ inherited frmBaseRoomerGridForm: TfrmBaseRoomerGridForm
       BevelOuter = bvNone
       TabOrder = 0
       SkinData.SkinSection = 'PANEL'
-      ExplicitLeft = 2
-      ExplicitTop = 51
       object btnReport: TsButton
         AlignWithMargins = True
         Left = 675
@@ -41,7 +39,6 @@ inherited frmBaseRoomerGridForm: TfrmBaseRoomerGridForm
         ParentFont = False
         TabOrder = 0
         SkinData.SkinSection = 'BUTTON'
-        ExplicitLeft = 502
       end
       object btnRefresh: TsButton
         AlignWithMargins = True
@@ -60,7 +57,6 @@ inherited frmBaseRoomerGridForm: TfrmBaseRoomerGridForm
         ParentFont = False
         TabOrder = 1
         SkinData.SkinSection = 'BUTTON'
-        ExplicitLeft = 502
       end
       object btnExcel: TsButton
         AlignWithMargins = True
@@ -79,7 +75,6 @@ inherited frmBaseRoomerGridForm: TfrmBaseRoomerGridForm
         ParentFont = False
         TabOrder = 2
         SkinData.SkinSection = 'BUTTON'
-        ExplicitLeft = 502
       end
     end
     object pnlSelection: TsPanel
@@ -91,9 +86,6 @@ inherited frmBaseRoomerGridForm: TfrmBaseRoomerGridForm
       BevelOuter = bvNone
       TabOrder = 1
       SkinData.SkinSection = 'PANEL'
-      ExplicitLeft = 2
-      ExplicitTop = 51
-      ExplicitHeight = 43
     end
   end
   object grData: TcxGrid [1]
@@ -104,6 +96,7 @@ inherited frmBaseRoomerGridForm: TfrmBaseRoomerGridForm
     Align = alClient
     TabOrder = 1
     LookAndFeel.NativeStyle = False
+    ExplicitLeft = -1
     ExplicitTop = 102
     object grDataDBTableView1: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
@@ -146,6 +139,8 @@ inherited frmBaseRoomerGridForm: TfrmBaseRoomerGridForm
   inherited dxStatusBar: TdxStatusBar
     Top = 561
     Width = 808
+    ExplicitTop = 561
+    ExplicitWidth = 808
   end
   inherited psRoomerBase: TcxPropertiesStore
     Components = <
@@ -223,7 +218,7 @@ inherited frmBaseRoomerGridForm: TfrmBaseRoomerGridForm
       PrinterPage.ScaleMode = smFit
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
-      ReportDocument.CreationDate = 42628.567723368060000000
+      ReportDocument.CreationDate = 42629.360100208330000000
       ReportDocument.Creator = 'Roomer'
       ReportTitle.Font.Charset = DEFAULT_CHARSET
       ReportTitle.Font.Color = clBlack
@@ -238,6 +233,7 @@ inherited frmBaseRoomerGridForm: TfrmBaseRoomerGridForm
       Font.Style = []
       OptionsFormatting.LookAndFeelKind = lfFlat
       OptionsFormatting.UseNativeStyles = True
+      StyleRepository = cxGridStyleRepository
       BuiltInReportLink = True
     end
   end

@@ -42,7 +42,6 @@ type
     procedure acGridDependentActionUpdate(Sender: TObject);
   private
     function GridContainsData: boolean;
-    procedure btnExcelClick(Sender: TObject);
   protected
     procedure LoadData; override;
     function ConstructSQLStatement: string; virtual;
@@ -68,27 +67,6 @@ uses
   , uUtils
   ;
 
-
-procedure TfrmBaseRoomerGridForm.btnExcelClick(Sender: TObject);
-var
-  sFilename : string;
-  s         : string;
-  c : char;
-const
-  cFilenameReplaceChar: char = '_';
-begin
-  dateTimeToString(s, 'yyyymmddhhnn', now);
-  sFileName := TPath.Combine(g.qProgramPath, s);
-
-  s := Caption;
-  for c in Caption do
-    if not TPath.IsValidFileNameChar(c) then
-      s := s.Replace(c, cFilenameReplaceChar);
-
-  sFilename := sFileName + s;
-  ExportGridToExcel(sFilename, grData, true, true, true);
-  ShellExecute(Handle, 'OPEN', PChar(sFilename + '.xls'), nil, nil, sw_shownormal);
-end;
 
 
 function TfrmBaseRoomerGridForm.GridContainsData: boolean;
@@ -121,7 +99,9 @@ procedure TfrmBaseRoomerGridForm.acPrintExecute(Sender: TObject);
 begin
   gridPrinter.PrintTitle := Caption;
   gridPrinterLink1.ReportTitle.Text := Caption;
-  gridPrinter.Print(True, nil, gridPrinterLink1);
+  gridPrinterLink1.ComponentPrinter := gridPrinter;
+  gridPrinterLink1.Preview;
+//  gridPrinter.Print(True, nil, gridPrinterLink1);
 end;
 
 procedure TfrmBaseRoomerGridForm.acGridDependentActionUpdate(Sender: TObject);

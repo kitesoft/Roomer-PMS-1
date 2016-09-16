@@ -4,7 +4,7 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages
-  , uRoomerGridForm, cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxStyles, dxSkinsCore,
+  , cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxStyles, dxSkinsCore,
   dxSkinCaramel, dxSkinCoffee, dxSkinDarkSide, dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinscxPCPainter,
   cxCustomData, cxFilter, cxData, cxDataStorage, cxEdit, cxNavigator, Data.DB, cxDBData, dxSkinsdxStatusBarPainter,
   dxPSGlbl, dxPSUtl, dxPSEngn, dxPrnPg, dxBkgnd, dxWrap, dxPrnDev, dxPSCompsProvider, dxPSFillPatterns,
@@ -15,12 +15,11 @@ uses
   sCustomComboEdit, sToolEdit, sLabel, sGroupBox, System.Classes, System.Actions, Vcl.ActnList, dxPSCore, dxPScxCommon,
   cxClasses, kbmMemTable, cxPropertiesStore, dxStatusBar, cxGridLevel, cxGridCustomView, cxGrid, sButton, Vcl.ExtCtrls,
   sPanel
-
+  , uRoomerGridForm
   ;
 
 type
   TfrmHouseKeepingReport = class(TfrmBaseRoomerGridForm)
-    FormStore: TcxPropertiesStore;
     gbxSelection: TsGroupBox;
     dtDate: TsDateEdit;
     cbxLocations: TsComboBox;
@@ -135,11 +134,11 @@ const
 
 function ShowHouseKeepingReport(aDate: TDateTime):  boolean;
 var
-  frm: TfrmHouseKeepingReport;
+  frm: TfrmBaseRoomerGridForm; // TfrmHouseKeepingReport;
 begin
-  frm := TfrmHouseKeepingReport.Create(nil);
+  frm := TfrmBaseRoomerGridForm.Create(nil); //.Create(nil);
   try
-    frm.dtDate.Date := aDate;
+//    frm.dtDate.Date := aDate;
     frm.ShowModal;
     Result := (frm.modalresult = mrOk);
   finally
@@ -192,7 +191,10 @@ begin
   end;
 
   if lCurrentSelection.IsEmpty then
-    cbxLocations.ItemIndex := -1
+    if cbxLocations.Items.Count = 1 then
+      cbxLocations.ItemIndex := 0
+    else
+      cbxLocations.ItemIndex := -1
   else
     cbxLocations.ItemIndex := cbxLocations.Items.IndexOf(lCurrentSelection);
 end;
