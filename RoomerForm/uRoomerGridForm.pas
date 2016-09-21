@@ -42,6 +42,7 @@ type
     procedure acGridDependentActionUpdate(Sender: TObject);
   private
     function GridContainsData: boolean;
+    procedure ExportGridToExcel;
   protected
     procedure LoadData; override;
     function ConstructSQLStatement: string; virtual;
@@ -75,24 +76,8 @@ begin
 end;
 
 procedure TfrmBaseRoomerGridForm.acExportExcelExecute(Sender: TObject);
-var
-  sFilename : string;
-  s         : string;
-  c : char;
-const
-  cFilenameReplaceChar: char = '_';
 begin
-  dateTimeToString(s, 'yyyymmddhhnn', now);
-  sFileName := TPath.Combine(g.qProgramPath, s);
-
-  s := Caption;
-  for c in Caption do
-    if not TPath.IsValidFileNameChar(c) then
-      s := s.Replace(c, cFilenameReplaceChar);
-
-  sFilename := sFileName + s;
-  ExportGridToExcel(sFilename, grData, true, true, true);
-  ShellExecute(Handle, 'OPEN', PChar(sFilename + '.xls'), nil, nil, sw_shownormal);
+  ExportGridToExcel;
 end;
 
 procedure TfrmBaseRoomerGridForm.acPrintExecute(Sender: TObject);
@@ -125,6 +110,27 @@ function TfrmBaseRoomerGridForm.ConstructSQLStatement: string;
 begin
   // if not overridden then no data is delivered
   Result := 'SELECT ''<NO DATA>'' as Result';
+end;
+
+procedure TfrmBaseRoomerGridForm.ExportGridToExcel;
+var
+  sFilename : string;
+  s         : string;
+  c : char;
+const
+  cFilenameReplaceChar: char = '_';
+begin
+  dateTimeToString(s, 'yyyymmddhhnn', now);
+  sFileName := TPath.Combine(g.qProgramPath, s);
+
+  s := Caption;
+  for c in Caption do
+    if not TPath.IsValidFileNameChar(c) then
+      s := s.Replace(c, cFilenameReplaceChar);
+
+  sFilename := sFileName + s;
+  ExportGridToExcel(sFilename, grData, true, true, true);
+  ShellExecute(Handle, 'OPEN', PChar(sFilename + '.xls'), nil, nil, sw_shownormal);
 end;
 
 procedure TfrmBaseRoomerGridForm.LoadData;

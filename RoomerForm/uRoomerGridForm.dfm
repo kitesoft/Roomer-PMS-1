@@ -1,4 +1,5 @@
 inherited frmBaseRoomerGridForm: TfrmBaseRoomerGridForm
+  Caption = 'Base Roomer Grid Form'
   ClientHeight = 581
   ClientWidth = 808
   ExplicitWidth = 824
@@ -39,7 +40,6 @@ inherited frmBaseRoomerGridForm: TfrmBaseRoomerGridForm
         ParentFont = False
         TabOrder = 0
         SkinData.SkinSection = 'BUTTON'
-        ExplicitTop = 1
       end
       object btnRefresh: TsButton
         AlignWithMargins = True
@@ -192,7 +192,6 @@ inherited frmBaseRoomerGridForm: TfrmBaseRoomerGridForm
     object gridPrinterLink1: TdxGridReportLink
       Active = True
       Component = grData
-      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.Header = 6350
@@ -205,14 +204,13 @@ inherited frmBaseRoomerGridForm: TfrmBaseRoomerGridForm
       PrinterPage.ScaleMode = smFit
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
-      ReportDocument.CreationDate = 42629.369829537040000000
+      ReportDocument.CreationDate = 42634.601072905090000000
       ReportTitle.Font.Charset = DEFAULT_CHARSET
       ReportTitle.Font.Color = clBlack
       ReportTitle.Font.Height = -19
       ReportTitle.Font.Name = 'Arial'
       ReportTitle.Font.Style = [fsBold]
       ShrinkToPageWidth = True
-      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlack
       Font.Height = -15
