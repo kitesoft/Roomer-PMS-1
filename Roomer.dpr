@@ -241,7 +241,8 @@ uses
   uRoomerForm in 'RoomerForm\uRoomerForm.pas' {frmBaseRoomerForm},
   uBreakfastStateDefinitions in 'Definitions\uBreakfastStateDefinitions.pas',
   uAccountTypeDefinitions in 'Definitions\uAccountTypeDefinitions.pas',
-  uRoomerGridForm in 'RoomerForm\uRoomerGridForm.pas' {frmBaseRoomerGridForm};
+  uRoomerGridForm in 'RoomerForm\uRoomerGridForm.pas' {frmBaseRoomerGridForm},
+  uGridExporter in 'RoomerForm\uGridExporter.pas';
 
 {$R *.RES}
 

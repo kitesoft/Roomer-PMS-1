@@ -61,12 +61,10 @@ uses
   , IOUtils
   , hData
   , SysUtils
-  , cxGridExportLink
-  , ShellApi
   , cmpRoomerDataset
   , uD
   , uUtils
-  ;
+  , uGridExporter;
 
 
 
@@ -114,23 +112,14 @@ end;
 
 procedure TfrmBaseRoomerGridForm.ExportGridToExcel;
 var
-  sFilename : string;
-  s         : string;
-  c : char;
-const
-  cFilenameReplaceChar: char = '_';
+  gridExporter: TGridExporter;
 begin
-  dateTimeToString(s, 'yyyymmddhhnn', now);
-  sFileName := TPath.Combine(g.qProgramPath, s);
-
-  s := Caption;
-  for c in Caption do
-    if not TPath.IsValidFileNameChar(c) then
-      s := s.Replace(c, cFilenameReplaceChar);
-
-  sFilename := sFileName + s;
-  ExportGridToExcel(sFilename, grData, true, true, true);
-  ShellExecute(Handle, 'OPEN', PChar(sFilename + '.xls'), nil, nil, sw_shownormal);
+  gridExporter := TGridExporter.Create(grData);
+  try
+    gridExporter.ExportToXLS;
+  finally
+    gridExporter.Free;
+  end;
 end;
 
 procedure TfrmBaseRoomerGridForm.LoadData;
