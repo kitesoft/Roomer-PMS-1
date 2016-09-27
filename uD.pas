@@ -10818,7 +10818,7 @@ begin
   s := s + '   roomreservations ' + chr(10);
   s := s + ' SET ' + chr(10);
   s := s + '   Room = ' + _db(NewRoom) + ' ' + chr(10);
-  s := s + '   ,rrIsNoRoom = 0 ' + chr(10);
+  s := s + '   ,rrIsNoRoom = 1 ' + chr(10);
   s := s + '   ,rrRoomAlias = ' + _db(sRoom) + ' ' + chr(10);
   s := s + '   ,rrRoomTypeAlias = ' + _db(sRoomType) + ' ' + chr(10);
   s := s + ' WHERE ' + chr(10);
@@ -10836,7 +10836,7 @@ begin
   s := s + ' SET ' + chr(10);
   s := s + '   Room = ' + _db(NewRoom) + ' ' + chr(10);
   s := s + ' , updated = 1 ' + chr(10);
-  s := s + ' , isNoRoom = 0 ' + chr(10);
+  s := s + ' , isNoRoom = 1 ' + chr(10);
   s := s + ' WHERE ' + chr(10);
   s := s + '   RoomReservation = ' + inttostr(RoomReservation) + ' ' + chr(10);
   if not cmd_bySQL(s) then

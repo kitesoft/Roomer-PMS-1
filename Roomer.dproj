@@ -792,6 +792,15 @@
             <Form>frmBaseRoomerGridForm</Form>
         </DCCReference>
         <DCCReference Include="RoomerForm\uGridExporter.pas"/>
+        <DCCReference Include="RoomerForm\uRoomerEditableGridForm.pas">
+            <Form>frmRoomerEditableGridForm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="RoomerForm\uRoomerReportGridForm.pas">
+            <Form>frmRoomerReportGridForm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="RoomerForm\uRoomerDataProvider.pas"/>
         <None Include="Roomer.todo"/>
         <None Include="notes.txt"/>
         <None Include="Roomer.inc"/>

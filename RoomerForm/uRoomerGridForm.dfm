@@ -16,71 +16,17 @@ inherited frmBaseRoomerGridForm: TfrmBaseRoomerGridForm
     SkinData.SkinSection = 'PANEL'
     object pnlActionButtons: TsPanel
       Left = 1
-      Top = 56
+      Top = 1
       Width = 806
       Height = 43
-      Align = alBottom
+      Align = alTop
       BevelOuter = bvNone
       TabOrder = 0
       SkinData.SkinSection = 'PANEL'
-      object btnReport: TsButton
-        AlignWithMargins = True
-        Left = 675
-        Top = 3
-        Width = 128
-        Height = 37
-        Action = acPrint
-        Align = alRight
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'Tahoma'
-        Font.Style = []
-        Images = DImages.PngImageList1
-        ParentFont = False
-        TabOrder = 0
-        SkinData.SkinSection = 'BUTTON'
-      end
-      object btnRefresh: TsButton
-        AlignWithMargins = True
-        Left = 3
-        Top = 3
-        Width = 128
-        Height = 37
-        Action = acRefresh
-        Align = alLeft
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'Tahoma'
-        Font.Style = []
-        Images = DImages.PngImageList1
-        ParentFont = False
-        TabOrder = 1
-        SkinData.SkinSection = 'BUTTON'
-      end
-      object btnExcel: TsButton
-        AlignWithMargins = True
-        Left = 541
-        Top = 3
-        Width = 128
-        Height = 37
-        Action = acExportExcel
-        Align = alRight
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'Tahoma'
-        Font.Style = []
-        Images = DImages.PngImageList1
-        ParentFont = False
-        TabOrder = 2
-        SkinData.SkinSection = 'BUTTON'
-      end
     end
     object pnlSelection: TsPanel
       Left = 1
-      Top = 1
+      Top = 44
       Width = 806
       Height = 55
       Align = alClient
@@ -128,8 +74,10 @@ inherited frmBaseRoomerGridForm: TfrmBaseRoomerGridForm
       OptionsView.ColumnAutoWidth = True
       OptionsView.Footer = True
       OptionsView.GroupFooters = gfAlwaysVisible
+      OptionsView.HeaderAutoHeight = True
       Styles.Group = cxsBoldStyle
       Styles.GroupSummary = cxsBoldStyle
+      Styles.Header = cxsBoldStyle
     end
     object lvGridDataLevel1: TcxGridLevel
       GridView = grDataDBTableView1
@@ -205,7 +153,7 @@ inherited frmBaseRoomerGridForm: TfrmBaseRoomerGridForm
       PrinterPage.ScaleMode = smFit
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
-      ReportDocument.CreationDate = 42634.610468310190000000
+      ReportDocument.CreationDate = 42640.437843217590000000
       ReportTitle.Font.Charset = DEFAULT_CHARSET
       ReportTitle.Font.Color = clBlack
       ReportTitle.Font.Height = -19
@@ -378,11 +326,11 @@ inherited frmBaseRoomerGridForm: TfrmBaseRoomerGridForm
     Top = 240
     object acPrint: TAction
       Caption = 'Print'
+      Enabled = False
       Hint = 'Print the current contents of the grid'
       ImageIndex = 3
       ShortCut = 16464
       OnExecute = acPrintExecute
-      OnUpdate = acGridDependentActionUpdate
     end
     object acRefresh: TAction
       Caption = 'Refresh'
@@ -390,10 +338,29 @@ inherited frmBaseRoomerGridForm: TfrmBaseRoomerGridForm
       OnExecute = acRefreshExecute
     end
     object acExportExcel: TAction
+      Category = 'Export'
       Caption = 'Export to Excel'
       Hint = 'Create an Excel sheet with the current contents of the grid'
       ImageIndex = 115
       OnExecute = acExportExcelExecute
+      OnUpdate = acGridDependentActionUpdate
+    end
+    object acExportHTML: TAction
+      Category = 'Export'
+      Caption = 'Export to HTML'
+      ImageIndex = 115
+      OnUpdate = acGridDependentActionUpdate
+    end
+    object acExportText: TAction
+      Category = 'Export'
+      Caption = 'Export to Text'
+      ImageIndex = 115
+      OnUpdate = acGridDependentActionUpdate
+    end
+    object acExportXML: TAction
+      Category = 'Export'
+      Caption = 'Export to XML'
+      ImageIndex = 115
       OnUpdate = acGridDependentActionUpdate
     end
   end

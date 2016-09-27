@@ -499,6 +499,8 @@ object frmReservationProfile: TfrmReservationProfile
     object TabSheet3: TsTabSheet
       Caption = 'Main'
       TabVisible = False
+      SkinData.CustomColor = False
+      SkinData.CustomFont = False
       object Panel3: TsPanel
         Left = 0
         Top = 0
@@ -1929,6 +1931,8 @@ object frmReservationProfile: TfrmReservationProfile
     SkinData.SkinSection = 'PAGECONTROL'
     object RoomsTab: TsTabSheet
       Caption = 'Rooms'
+      SkinData.CustomColor = False
+      SkinData.CustomFont = False
       object grRooms: TcxGrid
         Left = 0
         Top = 86
@@ -2725,6 +2729,7 @@ object frmReservationProfile: TfrmReservationProfile
           TabOrder = 4
           OnClick = btnProvideRoomClick
           SkinData.SkinSection = 'BUTTON'
+          ExplicitTop = 2
         end
         object cxButton5: TsButton
           AlignWithMargins = True
@@ -2816,6 +2821,8 @@ object frmReservationProfile: TfrmReservationProfile
     object GuestsTab: TsTabSheet
       Caption = 'Guests'
       ImageIndex = 1
+      SkinData.CustomColor = False
+      SkinData.CustomFont = False
       object Panel10: TsPanel
         Left = 0
         Top = 0
@@ -3436,6 +3443,8 @@ object frmReservationProfile: TfrmReservationProfile
     object InvoicesTab: TsTabSheet
       Caption = 'Afgehandelde facturen'
       ImageIndex = 2
+      SkinData.CustomColor = False
+      SkinData.CustomFont = False
       object Panel11: TsPanel
         Left = 0
         Top = 0

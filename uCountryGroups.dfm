@@ -44,7 +44,7 @@ object frmCountryGroups: TfrmCountryGroups
     object labFilterWarning: TsLabel
       Left = 1
       Top = 66
-      Width = 4
+      Width = 558
       Height = 14
       Align = alBottom
       Alignment = taCenter
@@ -57,6 +57,7 @@ object frmCountryGroups: TfrmCountryGroups
       Font.Height = -12
       Font.Name = 'Tahoma'
       Font.Style = []
+      ExplicitWidth = 4
     end
     object btnClear: TsSpeedButton
       Left = 274
@@ -128,7 +129,7 @@ object frmCountryGroups: TfrmCountryGroups
     end
     object btnOther: TsButton
       Left = 293
-      Top = 4
+      Top = 7
       Width = 144
       Height = 26
       Hint = 'Other actions - Select from menu'

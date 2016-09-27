@@ -14,17 +14,15 @@ inherited frmHouseKeepingReport: TfrmHouseKeepingReport
     ExplicitWidth = 1123
     ExplicitHeight = 129
     inherited pnlActionButtons: TsPanel
-      Top = 85
       Width = 1121
-      ExplicitTop = 85
       ExplicitWidth = 1121
-      inherited btnReport: TsButton
-        Left = 990
-        ExplicitLeft = 990
-      end
       inherited btnExcel: TsButton
         Left = 856
         ExplicitLeft = 856
+      end
+      inherited btnReport: TsButton
+        Left = 990
+        ExplicitLeft = 990
       end
     end
     inherited pnlSelection: TsPanel
@@ -100,168 +98,101 @@ inherited frmHouseKeepingReport: TfrmHouseKeepingReport
           TabOrder = 1
         end
       end
-      object BitBtn1: TBitBtn
-        Left = 424
-        Top = 24
-        Width = 75
-        Height = 25
-        Caption = 'BitBtn1'
-        TabOrder = 1
-        OnClick = BitBtn1Click
-      end
     end
   end
   inherited grData: TcxGrid
     Top = 129
     Width = 1123
     Height = 437
+    TabOrder = 2
     ExplicitTop = 129
     ExplicitWidth = 1123
     ExplicitHeight = 437
-  end
-  object grHouseKeepingList: TcxGrid [2]
-    Left = 0
-    Top = 129
-    Width = 1123
-    Height = 437
-    Align = alClient
-    TabOrder = 2
-    LookAndFeel.NativeStyle = False
-    ExplicitTop = 131
-    object grHouseKeepingListDBTableView1: TcxGridDBTableView
-      Navigator.Buttons.CustomButtons = <>
-      DataController.DataSource = dsGridData
-      DataController.Options = [dcoAssignGroupingValues, dcoAssignMasterDetailKeys, dcoSaveExpanding, dcoGroupsAlwaysExpanded]
-      DataController.Summary.DefaultGroupSummaryItems = <>
-      DataController.Summary.FooterSummaryItems = <>
-      DataController.Summary.SummaryGroups = <>
-      FilterRow.Visible = True
-      OptionsCustomize.DataRowSizing = True
-      OptionsData.Deleting = False
-      OptionsData.DeletingConfirmation = False
-      OptionsData.Editing = False
-      OptionsData.Inserting = False
-      OptionsView.CellAutoHeight = True
-      OptionsView.ColumnAutoWidth = True
-      object grHouseKeepingListDBTableView1location: TcxGridDBColumn
-        Caption = 'Location'
-        DataBinding.FieldName = 'location'
-        PropertiesClassName = 'TcxLabelProperties'
-        Options.Editing = False
-        SortIndex = 0
-        SortOrder = soAscending
-        Width = 54
-      end
-      object grHouseKeepingListDBTableView1floor: TcxGridDBColumn
-        Caption = 'Floor'
-        DataBinding.FieldName = 'floor'
-        PropertiesClassName = 'TcxTextEditProperties'
-        Properties.Alignment.Horz = taCenter
-        Properties.Alignment.Vert = taTopJustify
-        HeaderAlignmentHorz = taCenter
-        Options.Editing = False
-        SortIndex = 1
-        SortOrder = soAscending
-        Width = 57
-      end
-      object grHouseKeepingListDBTableView1room: TcxGridDBColumn
-        Caption = 'Room'
+    inherited grDataDBTableView1: TcxGridDBTableView
+      DataController.Summary.DefaultGroupSummaryItems = <
+        item
+          Kind = skCount
+          Position = spFooter
+        end
+        item
+          Kind = skSum
+          Position = spFooter
+        end
+        item
+          Format = '0'
+          Kind = skCount
+          Position = spFooter
+          Column = grDataDBTableView1Room
+        end
+        item
+          Format = '0'
+          Column = grDataDBTableView1Room
+        end>
+      DataController.Summary.FooterSummaryItems = <
+        item
+          Format = '0'
+          Kind = skCount
+        end
+        item
+          Format = '0'
+          Kind = skSum
+        end
+        item
+          Format = '0'
+          Kind = skCount
+          Column = grDataDBTableView1Room
+        end>
+      object grDataDBTableView1Room: TcxGridDBColumn
         DataBinding.FieldName = 'room'
-        PropertiesClassName = 'TcxTextEditProperties'
-        Properties.Alignment.Horz = taCenter
-        Properties.Alignment.Vert = taTopJustify
         HeaderAlignmentHorz = taCenter
-        Options.Editing = False
-        SortIndex = 2
-        SortOrder = soAscending
-        Width = 72
       end
-      object grHouseKeepingListDBTableView1roomtype: TcxGridDBColumn
-        Caption = 'RoomType'
+      object grDataDBTableView1roomtype: TcxGridDBColumn
         DataBinding.FieldName = 'roomtype'
-        PropertiesClassName = 'TcxTextEditProperties'
-        Properties.Alignment.Horz = taCenter
-        Properties.Alignment.Vert = taTopJustify
         HeaderAlignmentHorz = taCenter
-        Options.Editing = False
-        Width = 74
       end
-      object grHouseKeepingListDBTableView1LastGuests: TcxGridDBColumn
-        Caption = 'Guests'
-        DataBinding.FieldName = 'LastGuests'
-        PropertiesClassName = 'TcxTextEditProperties'
-        Properties.Alignment.Horz = taCenter
-        Properties.Alignment.Vert = taTopJustify
-        OnGetDisplayText = grHouseKeepingListDBTableView1ArrivingGuestsGetDisplayText
+      object grDataDBTableView1location: TcxGridDBColumn
+        DataBinding.FieldName = 'location'
         HeaderAlignmentHorz = taCenter
-        Options.Editing = False
-        Width = 58
       end
-      object grHouseKeepingListDBTableView1expectedcot: TcxGridDBColumn
-        Caption = 'Checkout time'
+      object grDataDBTableView1floor: TcxGridDBColumn
+        DataBinding.FieldName = 'floor'
+        HeaderAlignmentHorz = taCenter
+      end
+      object grDataDBTableView1expectedcot: TcxGridDBColumn
         DataBinding.FieldName = 'expectedcot'
         PropertiesClassName = 'TcxTimeEditProperties'
-        Properties.Alignment.Horz = taCenter
-        Properties.Alignment.Vert = taTopJustify
         Properties.TimeFormat = tfHourMin
         HeaderAlignmentHorz = taCenter
-        Width = 89
       end
-      object grHouseKeepingListDBTableView1housekeepingstatus: TcxGridDBColumn
-        Caption = 'Status'
-        DataBinding.FieldName = 'housekeepingstatus'
-        PropertiesClassName = 'TcxLabelProperties'
-        Properties.Alignment.Horz = taLeftJustify
-        Options.Editing = False
-        Width = 112
-      end
-      object grHouseKeepingListDBTableView1ArrivingGuests: TcxGridDBColumn
-        Caption = 'Arriving Guests'
-        DataBinding.FieldName = 'ArrivingGuests'
-        PropertiesClassName = 'TcxSpinEditProperties'
-        Properties.Alignment.Horz = taCenter
-        Properties.Alignment.Vert = taTopJustify
-        OnGetDisplayText = grHouseKeepingListDBTableView1ArrivingGuestsGetDisplayText
+      object grDataDBTableView1LastGuests: TcxGridDBColumn
+        DataBinding.FieldName = 'LastGuests'
         HeaderAlignmentHorz = taCenter
-        Options.Editing = False
-        Width = 96
       end
-      object grHouseKeepingListDBTableView1expectedtoa: TcxGridDBColumn
-        Caption = 'Arrival time'
+      object grDataDBTableView1expectedtoa: TcxGridDBColumn
         DataBinding.FieldName = 'expectedtoa'
         PropertiesClassName = 'TcxTimeEditProperties'
-        Properties.Alignment.Vert = taTopJustify
         Properties.TimeFormat = tfHourMin
         HeaderAlignmentHorz = taCenter
-        Options.Editing = False
-        Width = 66
       end
-      object grHouseKeepingListDBTableView1Roomnotes: TcxGridDBColumn
-        Caption = 'Room Notes'
-        DataBinding.FieldName = 'roomnotes'
+      object grDataDBTableView1ArrivingGuests: TcxGridDBColumn
+        DataBinding.FieldName = 'ArrivingGuests'
+        HeaderAlignmentHorz = taCenter
+      end
+      object grDataDBTableView1housekeepingstatus: TcxGridDBColumn
+        DataBinding.FieldName = 'housekeepingstatus'
+      end
+      object grDataDBTableView1Roomnotes: TcxGridDBColumn
+        DataBinding.FieldName = 'Roomnotes'
         PropertiesClassName = 'TcxMemoProperties'
-        Options.Editing = False
-        Width = 441
       end
-      object grHouseKeepingListDBTableView1maintenancenotes: TcxGridDBColumn
-        Caption = 'Maintenance Notes'
+      object grDataDBTableView1maintenancenotes: TcxGridDBColumn
         DataBinding.FieldName = 'maintenancenotes'
-        PropertiesClassName = 'TcxMemoProperties'
         Visible = False
-        Options.Editing = False
-        Width = 441
       end
-      object grHouseKeepingListDBTableView1cleaningnotes: TcxGridDBColumn
-        Caption = 'Cleaning Notes'
+      object grDataDBTableView1cleaningnotes: TcxGridDBColumn
         DataBinding.FieldName = 'cleaningnotes'
-        PropertiesClassName = 'TcxMemoProperties'
         Visible = False
-        Options.Editing = False
-        Width = 441
       end
-    end
-    object lvHouseKeepingListLevel1: TcxGridLevel
-      GridView = grHouseKeepingListDBTableView1
     end
   end
   inherited dxStatusBar: TdxStatusBar
@@ -325,52 +256,74 @@ inherited frmHouseKeepingReport: TfrmHouseKeepingReport
         DataType = ftMemo
       end>
     object kbmGridDataroom: TStringField
+      Alignment = taCenter
+      DisplayLabel = 'Room'
       FieldName = 'room'
       Size = 10
     end
     object kbmGridDataroomtype: TStringField
+      Alignment = taCenter
+      DisplayLabel = 'Roomtype'
+      DisplayWidth = 15
       FieldName = 'roomtype'
       Size = 10
     end
     object kbmGridDatafloor: TIntegerField
+      Alignment = taCenter
+      DisplayLabel = 'Floor'
       FieldName = 'floor'
     end
     object kbmGridDataLastGuests: TIntegerField
+      DisplayLabel = 'Last Guests'
       FieldName = 'LastGuests'
+      DisplayFormat = '0'
     end
     object kbmGridDataArrivingGuests: TIntegerField
+      DisplayLabel = 'Arriving Guests'
       FieldName = 'ArrivingGuests'
+      DisplayFormat = '0'
     end
     object kbmGridDataexpectedcot: TTimeField
+      Alignment = taCenter
+      DisplayLabel = 'Checkout Time'
+      DisplayWidth = 10
       FieldName = 'expectedcot'
     end
     object kbmGridDatahousekeepingstatus: TStringField
+      DisplayLabel = 'Status'
+      DisplayWidth = 40
       FieldName = 'housekeepingstatus'
     end
     object kbmGridDatalocation: TStringField
+      DisplayLabel = 'Location'
       FieldName = 'location'
       Size = 10
     end
     object kbmGridDataexpectedtoa: TTimeField
+      Alignment = taCenter
+      DisplayLabel = 'Arrival time'
       FieldName = 'expectedtoa'
     end
     object kbmGridDataRoomnotes: TMemoField
+      DisplayWidth = 100
       FieldName = 'Roomnotes'
       BlobType = ftMemo
     end
     object kbmGridDatamaintenancenotes: TMemoField
+      DisplayLabel = 'Maintenancenotes'
       FieldName = 'maintenancenotes'
       BlobType = ftMemo
     end
     object kbmGridDatacleaningnotes: TMemoField
+      DisplayLabel = 'Cleaningnotes'
       FieldName = 'cleaningnotes'
       BlobType = ftMemo
     end
   end
   inherited gridPrinter: TdxComponentPrinter
+    Left = 176
     inherited gridPrinterLink1: TdxGridReportLink
       ReportDocument.CreationDate = 42628.627292673610000000
-      AssignedFormatValues = []
       Styles.BandHeader = nil
       Styles.Caption = nil
       Styles.CardCaptionRow = nil
@@ -391,31 +344,6 @@ inherited frmHouseKeepingReport: TfrmHouseKeepingReport
     PixelsPerInch = 96
     inherited dxGridReportLinkStyleSheet1: TdxGridReportLinkStyleSheet
       BuiltIn = True
-    end
-  end
-  object dxComponentPrinter1: TdxComponentPrinter
-    CurrentLink = dxComponentPrinter1Link1
-    Version = 0
-    Left = 352
-    Top = 464
-    object dxComponentPrinter1Link1: TdxGridReportLink
-      Active = True
-      Component = grData
-      PageNumberFormat = pnfNumeral
-      PrinterPage.DMPaper = 9
-      PrinterPage.Footer = 6350
-      PrinterPage.Header = 6350
-      PrinterPage.Margins.Bottom = 12700
-      PrinterPage.Margins.Left = 12700
-      PrinterPage.Margins.Right = 12700
-      PrinterPage.Margins.Top = 12700
-      PrinterPage.PageSize.X = 210000
-      PrinterPage.PageSize.Y = 297000
-      PrinterPage._dxMeasurementUnits_ = 0
-      PrinterPage._dxLastMU_ = 2
-      ReportDocument.CreationDate = 42629.373200659720000000
-      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
-      BuiltInReportLink = True
     end
   end
 end

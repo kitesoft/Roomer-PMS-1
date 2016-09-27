@@ -242,7 +242,10 @@ uses
   uBreakfastStateDefinitions in 'Definitions\uBreakfastStateDefinitions.pas',
   uAccountTypeDefinitions in 'Definitions\uAccountTypeDefinitions.pas',
   uRoomerGridForm in 'RoomerForm\uRoomerGridForm.pas' {frmBaseRoomerGridForm},
-  uGridExporter in 'RoomerForm\uGridExporter.pas';
+  uGridExporter in 'RoomerForm\uGridExporter.pas',
+  uRoomerEditableGridForm in 'RoomerForm\uRoomerEditableGridForm.pas' {frmRoomerEditableGridForm},
+  uRoomerReportGridForm in 'RoomerForm\uRoomerReportGridForm.pas' {frmRoomerReportGridForm},
+  uRoomerDataProvider in 'RoomerForm\uRoomerDataProvider.pas';
 
 {$R *.RES}
 
@@ -261,9 +264,7 @@ begin
   TSplashFormManager.UpdateProgress('Loading forms...');
 
   Application.CreateForm(TDImages, DImages);
-
   Application.CreateForm(TfrmMain, frmMain);
-
   if D.roomerMainDataSet.IsConnectedToInternet then
   begin
     Application.CreateForm(TfrmDaysStatistics, frmDaysStatistics);
