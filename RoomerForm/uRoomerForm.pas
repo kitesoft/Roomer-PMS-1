@@ -9,7 +9,7 @@ uses
   , cxPropertiesStore
   , Winapi.Messages, cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, dxSkinsCore, dxSkinCaramel,
   dxSkinCoffee, dxSkinDarkSide, dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinsdxStatusBarPainter, Vcl.Controls,
-  dxStatusBar, cxGridTableView, cxStyles, dxPScxCommon, dxPScxGridLnk;
+  dxStatusBar, cxGridTableView, cxStyles, dxPScxCommon, dxPScxGridLnk, System.Actions, Vcl.ActnList;
 
 type
   /// <summary>
@@ -29,6 +29,9 @@ type
     psRoomerBase: TcxPropertiesStore;
     dxStatusBar: TdxStatusBar;
     cxsrRoomerStyleRepository: TcxStyleRepository;
+    alRoomerForm: TActionList;
+    acCloseForm: TAction;
+    procedure acCloseFormExecute(Sender: TObject);
   private
     FCloseOnEsc: boolean;
     FBusyState: TRoomerFormBusyState;
@@ -94,6 +97,13 @@ type
 
 { TfrmBaseRoomerForm }
 
+procedure TfrmBaseRoomerForm.acCloseFormExecute(Sender: TObject);
+begin
+  if (fsModal in FormState) then
+    ModalResult := mrClose;
+  Close;
+end;
+
 constructor TfrmBaseRoomerForm.Create(AOwner: TComponent);
 begin
   inherited;
@@ -136,7 +146,7 @@ procedure TfrmBaseRoomerForm.KeyDown(var Key: Word; Shift: TShiftState);
 begin
   inherited; // Calls FormKeyDown event if present
   if FCloseOnEsc and (Key = VK_ESCAPE) then
-    Close;
+    acCloseForm.Execute;
 end;
 
 procedure TfrmBaseRoomerForm.KeepOnVisibleMonitor;

@@ -28,11 +28,8 @@ type
     grData: TcxGrid;
     lvGridDataLevel1: TcxGridLevel;
     vwTableView: TcxGridDBTableView;
-    cxGridStyleRepository: TcxStyleRepository;
-    cxsBoldStyle: TcxStyle;
     gridPrinter: TdxComponentPrinter;
     gridPrinterLink: TdxGridReportLink;
-    alGridActions: TActionList;
     acPrint: TAction;
     acRefresh: TAction;
     pnlSelection: TsPanel;
@@ -55,7 +52,7 @@ type
     /// </summary>
     FDataProviderClass: TRoomerDataProviderClass;
     procedure DoShow; override;
-    procedure LoadData; override;
+    procedure DoLoadData; override;
   public
     constructor Create(aOwner: TComponent); override;
     destructor Destroy; override;
@@ -123,7 +120,7 @@ begin
     UpdateControls;
 end;
 
-procedure TfrmBaseRoomerGridForm.LoadData;
+procedure TfrmBaseRoomerGridForm.DoLoadData;
 begin
   inherited;
   if assigned(FDataProvider) then

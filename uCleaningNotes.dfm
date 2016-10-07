@@ -127,8 +127,8 @@ inherited frmCleaningNotes: TfrmCleaningNotes
     object chkActive: TsCheckBox
       Left = 55
       Top = 63
-      Width = 246
-      Height = 17
+      Width = 238
+      Height = 20
       Caption = 'Active (if checked then just active are visible)'
       Checked = True
       State = cbChecked
@@ -317,7 +317,7 @@ inherited frmCleaningNotes: TfrmCleaningNotes
       BuiltIn = True
     end
   end
-  object mnuOther: TPopupMenu
+  object mnuOther: TPopupMenu [6]
     Images = DImages.PngImageList1
     Left = 382
     Top = 24
@@ -354,12 +354,12 @@ inherited frmCleaningNotes: TfrmCleaningNotes
       end
     end
   end
-  object dsCleaningNotes: TDataSource
+  object dsCleaningNotes: TDataSource [7]
     DataSet = m_CleaningNotes
     Left = 168
     Top = 144
   end
-  object grPrinter: TdxComponentPrinter
+  object grPrinter: TdxComponentPrinter [8]
     CurrentLink = prLink_grData
     Version = 0
     Left = 80
@@ -367,7 +367,6 @@ inherited frmCleaningNotes: TfrmCleaningNotes
     object prLink_grData: TdxGridReportLink
       Active = True
       Component = grData
-      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 5080
       PrinterPage.GrayShading = True
@@ -381,13 +380,12 @@ inherited frmCleaningNotes: TfrmCleaningNotes
       PrinterPage.PageSize.Y = 297180
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
-      ReportDocument.CreationDate = 42650.665394074070000000
+      ReportDocument.CreationDate = 42650.930720034720000000
       ReportTitle.Font.Charset = DEFAULT_CHARSET
       ReportTitle.Font.Color = clBlack
       ReportTitle.Font.Height = -19
       ReportTitle.Font.Name = 'Arial'
       ReportTitle.Font.Style = [fsBold]
-      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       OptionsSize.AutoWidth = True
       ScaleFonts = False
       StyleRepository = cxsrRoomerStyleRepository
@@ -395,7 +393,7 @@ inherited frmCleaningNotes: TfrmCleaningNotes
       BuiltInReportLink = True
     end
   end
-  object m_CleaningNotes: TdxMemData
+  object m_CleaningNotes: TdxMemData [9]
     Indexes = <
       item
         SortOptions = []
@@ -437,7 +435,7 @@ inherited frmCleaningNotes: TfrmCleaningNotes
       FieldName = 'onlyWhenRoomIsDirty'
     end
   end
-  object timFilter: TTimer
+  object timFilter: TTimer [10]
     Enabled = False
     Interval = 2000
     OnTimer = timFilterTimer

@@ -39,7 +39,6 @@ inherited frmRoomerReportGridForm: TfrmRoomerReportGridForm
         ParentFont = False
         TabOrder = 1
         SkinData.SkinSection = 'BUTTON'
-        ExplicitLeft = 300
       end
       object btnReport: TsButton
         AlignWithMargins = True
@@ -61,30 +60,33 @@ inherited frmRoomerReportGridForm: TfrmRoomerReportGridForm
       end
     end
   end
-  inherited gridPrinter: TdxComponentPrinter
-    inherited gridPrinterLink1: TdxGridReportLink
-      ReportDocument.CreationDate = 42636.442572986110000000
-      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
-      Styles.BandHeader = nil
-      Styles.Caption = nil
-      Styles.CardCaptionRow = nil
-      Styles.CardRowCaption = nil
+  inherited grData: TcxGrid
+    inherited vwTableView: TcxGridDBTableView
       Styles.Content = nil
       Styles.ContentEven = nil
       Styles.ContentOdd = nil
-      Styles.FilterBar = nil
+      Styles.Selection = nil
       Styles.Footer = nil
       Styles.Group = nil
+      Styles.GroupSummary = nil
       Styles.Header = nil
       Styles.Preview = nil
-      Styles.Selection = nil
-      BuiltInReportLink = True
     end
   end
-  inherited cxGridStyleRepository: TcxStyleRepository
+  inherited cxsrRoomerStyleRepository: TcxStyleRepository
     PixelsPerInch = 96
-    inherited dxGridReportLinkStyleSheet1: TdxGridReportLinkStyleSheet
+    inherited dxssRoomerGridReportLink: TdxGridReportLinkStyleSheet
       BuiltIn = True
+    end
+    inherited cxssRoomerGridTableView: TcxGridTableViewStyleSheet
+      BuiltIn = True
+    end
+  end
+  inherited gridPrinter: TdxComponentPrinter
+    inherited gridPrinterLink: TdxGridReportLink
+      ReportDocument.CreationDate = 42650.922173229170000000
+      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
+      BuiltInReportLink = True
     end
   end
 end

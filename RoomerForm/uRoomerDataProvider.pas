@@ -13,14 +13,15 @@ type
   ERoomerDataProviderException = class(Exception);
 
   /// <summary>
-  ///   Base and abstract class that provides the data for a RoomerGridForm. <br />
+  ///   Base and abstract class that provides the data for a RoomerForm. <br />
   ///  Contains methods to populate different memorybased datasets with the resulting data stored in a
   ///  TRoomerDataset
   /// </summary>
   TRoomerDataProvider = class abstract(TObject)
   protected
     /// <summary>
-    ///   Return a roomerdataset with updated data
+    ///   Return a roomerdataset with updated data <br />
+    ///  Note that the caller of this function is not responsible for the destruction of this TRoomerdataset!
     /// </summary>
     function GetData: TRoomerDataset; virtual; abstract;
     function GetIsReadOnly: boolean; virtual; abstract;

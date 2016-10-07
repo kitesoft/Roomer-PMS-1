@@ -17,6 +17,10 @@ uses
   ;
 
 type
+  /// <summary>
+  ///   Base roomer form with a non-editable wgrid usable for report etc <br />
+  ///  Adds action buttons for refresh, Excel and Printing (Report)
+  /// </summary>
   TfrmRoomerReportGridForm = class(TfrmBaseRoomerGridForm)
     btnRefresh: TsButton;
     btnExcel: TsButton;

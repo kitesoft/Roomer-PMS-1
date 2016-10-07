@@ -57,8 +57,8 @@ object frmBaseRoomerForm: TfrmBaseRoomerForm
     Top = 16
   end
   object cxsrRoomerStyleRepository: TcxStyleRepository
-    Left = 488
-    Top = 16
+    Left = 504
+    Top = 32
     PixelsPerInch = 96
     object cxstBandHeader: TcxStyle
       AssignedValues = [svColor, svFont]
@@ -316,6 +316,17 @@ object frmBaseRoomerForm: TfrmBaseRoomerForm
       Styles.Header = cxstHeader
       Styles.Preview = cxstPreview
       BuiltIn = True
+    end
+  end
+  object alRoomerForm: TActionList
+    Images = DImages.PngImageList1
+    Left = 584
+    Top = 64
+    object acCloseForm: TAction
+      Category = 'Form'
+      Caption = 'Close'
+      ImageIndex = 27
+      OnExecute = acCloseFormExecute
     end
   end
 end

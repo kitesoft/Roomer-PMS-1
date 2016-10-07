@@ -95,7 +95,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinValentine,
   dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, cxDropDownEdit, cxCheckBox, cxCalendar, cxCurrencyEdit,
   uCurrencyHandler
-  , uRoomerForm, dxSkinsdxStatusBarPainter, dxStatusBar
+  , uRoomerForm, dxSkinsdxStatusBarPainter, dxStatusBar, System.Actions, Vcl.ActnList
 
   ;
 

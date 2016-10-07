@@ -811,6 +811,10 @@
             <Form>frmCleaningNotesEdit</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="RoomerForm\uRoomerDetailForm.pas">
+            <Form>frmBaseRoomerDetailForm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <None Include="Roomer.todo"/>
         <None Include="notes.txt"/>
         <None Include="Roomer.inc"/>

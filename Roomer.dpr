@@ -249,7 +249,8 @@ uses
   uFinancialReportsAPICaller in 'OpenAPI\uFinancialReportsAPICaller.pas',
   uRptDailyRevenues in 'Financials\uRptDailyRevenues.pas' {frmRptDailyRevenues},
   uCleaningNotes in 'uCleaningNotes.pas' {frmCleaningNotes},
-  uCleaningNotesEdit in 'uCleaningNotesEdit.pas' {frmCleaningNotesEdit};
+  uCleaningNotesEdit in 'uCleaningNotesEdit.pas' {frmCleaningNotesEdit},
+  uRoomerDetailForm in 'RoomerForm\uRoomerDetailForm.pas' {frmBaseRoomerDetailForm};
 
 {$R *.RES}
 

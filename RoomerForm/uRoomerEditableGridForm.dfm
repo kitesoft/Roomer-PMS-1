@@ -14,24 +14,6 @@ inherited frmRoomerEditableGridForm: TfrmRoomerEditableGridForm
     inherited pnlActionButtons: TsPanel
       Width = 825
       ExplicitWidth = 825
-      object btnOther: TsButton
-        AlignWithMargins = True
-        Left = 678
-        Top = 3
-        Width = 144
-        Height = 37
-        Hint = 'Other actions - Select from menu'
-        Margins.Left = 6
-        Align = alRight
-        Caption = 'Other actions'
-        ImageIndex = 76
-        Images = DImages.PngImageList1
-        ParentShowHint = False
-        ShowHint = True
-        Style = bsSplitButton
-        TabOrder = 0
-        SkinData.SkinSection = 'BUTTON'
-      end
     end
     inherited pnlSelection: TsPanel
       Width = 825
@@ -45,6 +27,22 @@ inherited frmRoomerEditableGridForm: TfrmRoomerEditableGridForm
     ExplicitTop = 197
     ExplicitWidth = 827
     ExplicitHeight = 394
+    inherited vwTableView: TcxGridDBTableView
+      OnCellDblClick = vwTableViewCellDblClick
+      OptionsData.Appending = True
+      OptionsData.Deleting = True
+      OptionsData.Editing = True
+      OptionsData.Inserting = True
+      Styles.Content = nil
+      Styles.ContentEven = nil
+      Styles.ContentOdd = nil
+      Styles.Selection = nil
+      Styles.Footer = nil
+      Styles.Group = nil
+      Styles.GroupSummary = nil
+      Styles.Header = nil
+      Styles.Preview = nil
+    end
   end
   inherited dxStatusBar: TdxStatusBar
     Top = 591
@@ -75,33 +73,16 @@ inherited frmRoomerEditableGridForm: TfrmRoomerEditableGridForm
       Index = 0
     end
   end
-  inherited gridPrinter: TdxComponentPrinter
-    inherited gridPrinterLink1: TdxGridReportLink
-      ReportDocument.CreationDate = 42636.425004895830000000
-      AssignedFormatValues = []
-      Styles.BandHeader = nil
-      Styles.Caption = nil
-      Styles.CardCaptionRow = nil
-      Styles.CardRowCaption = nil
-      Styles.Content = nil
-      Styles.ContentEven = nil
-      Styles.ContentOdd = nil
-      Styles.FilterBar = nil
-      Styles.Footer = nil
-      Styles.Group = nil
-      Styles.Header = nil
-      Styles.Preview = nil
-      Styles.Selection = nil
-      BuiltInReportLink = True
-    end
-  end
-  inherited cxGridStyleRepository: TcxStyleRepository
+  inherited cxsrRoomerStyleRepository: TcxStyleRepository
     PixelsPerInch = 96
-    inherited dxGridReportLinkStyleSheet1: TdxGridReportLinkStyleSheet
+    inherited dxssRoomerGridReportLink: TdxGridReportLinkStyleSheet
+      BuiltIn = True
+    end
+    inherited cxssRoomerGridTableView: TcxGridTableViewStyleSheet
       BuiltIn = True
     end
   end
-  inherited alGridActions: TActionList
+  inherited alRoomerForm: TActionList
     object acNew: TAction
       Category = 'GridEdit'
       Caption = 'New'
@@ -135,6 +116,14 @@ inherited frmRoomerEditableGridForm: TfrmRoomerEditableGridForm
       Caption = 'Cancel'
       ImageIndex = 4
       OnExecute = acCancelExecute
+      OnUpdate = acCancelUpdate
+    end
+  end
+  inherited gridPrinter: TdxComponentPrinter
+    inherited gridPrinterLink: TdxGridReportLink
+      ReportDocument.CreationDate = 42650.926843981480000000
+      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
+      BuiltInReportLink = True
     end
   end
   object dxBarManager: TdxBarManager
@@ -251,7 +240,7 @@ inherited frmRoomerEditableGridForm: TfrmRoomerEditableGridForm
     object N2: TMenuItem
       Caption = '-'
     end
-    object Export1: TMenuItem
+    object mnuExport: TMenuItem
       Caption = 'Export'
       object mnuiGridToExcel: TMenuItem
         Action = acExportExcel

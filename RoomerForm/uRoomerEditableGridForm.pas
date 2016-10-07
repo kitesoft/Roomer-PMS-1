@@ -15,16 +15,17 @@ uses
   kbmMemTable, cxPropertiesStore, dxStatusBar, cxGridLevel, cxGridCustomView, cxGridCustomTableView, cxGridTableView,
   cxGridDBTableView, cxGrid, Vcl.StdCtrls, sButton, Vcl.ExtCtrls, sPanel, dxRibbonSkins, dxBarDBNav, dxBar, dxRibbon,
   Vcl.Menus
+  , uRoomerDetailForm
   ;
 
 type
+
   TfrmRoomerEditableGridForm = class(TfrmBaseRoomerGridForm)
     acNew: TAction;
     acEdit: TAction;
     acDelete: TAction;
     acPost: TAction;
     acCancel: TAction;
-    btnOther: TsButton;
     dxBarManager: TdxBarManager;
     dxRibbonTab1: TdxRibbonTab;
     dxRibbon: TdxRibbon;
@@ -41,7 +42,7 @@ type
     mnuiPrint: TMenuItem;
     mnuiAllowGridEdit: TMenuItem;
     N2: TMenuItem;
-    Export1: TMenuItem;
+    mnuExport: TMenuItem;
     mnuiGridToExcel: TMenuItem;
     mnuiGridToHtml: TMenuItem;
     mnuiGridToText: TMenuItem;
@@ -55,10 +56,27 @@ type
     procedure acNewUpdate(Sender: TObject);
     procedure acEditUpdate(Sender: TObject);
     procedure acDeleteUpdate(Sender: TObject);
+    procedure vwTableViewCellDblClick(Sender: TcxCustomGridTableView; ACellViewInfo: TcxGridTableDataCellViewInfo;
+      AButton: TMouseButton; AShift: TShiftState; var AHandled: Boolean);
+    procedure acCancelUpdate(Sender: TObject);
   private
+    FAllowGridEdit: boolean;
+    FDetailFormClass: TfrmBaseRoomerDetailFormClass;
+    procedure SetAllowGridEdit(const Value: boolean);
     { Private declarations }
+  protected
+    procedure UpdateControls; override;
   public
     { Public declarations }
+    /// <summary>
+    ///   Allow direct editing of data in grid. If not allowed then a DetailForm should be assigned
+    //    to allow changing of data
+    /// </summary>
+    property AllowGridEdit: boolean read FAllowGridEdit write SetAllowGridEdit;
+    /// <summary>
+    ///   If assigned and AllowGridEdit is False this is the form used to edit and display detail data
+    /// </summary>
+    property DetailFormClass: TfrmBaseRoomerDetailFormClass read FDetailFormClass write FDetailFormClass;
   end;
 
 implementation
@@ -71,40 +89,58 @@ begin
   dsGridData.DataSet.Cancel;
 end;
 
+procedure TfrmRoomerEditableGridForm.acCancelUpdate(Sender: TObject);
+begin
+  inherited;
+  acCancel.Enabled := (dsGridData.Dataset.State in [dsEdit, dsInsert])
+end;
+
 procedure TfrmRoomerEditableGridForm.acDeleteExecute(Sender: TObject);
 begin
   inherited;
-  dsGridData.Dataset.Delete;
+  if FAllowGridEdit then
+    dsGridData.Dataset.Delete
+  else if TRoomerDetailFormFactory.ShowDetailModal(FDetailFormClass, fmDelete) then
+    RefreshData;
 end;
 
 procedure TfrmRoomerEditableGridForm.acDeleteUpdate(Sender: TObject);
 begin
   inherited;
-  acNew.Enabled := dsGridData.Dataset.State = dsBrowse;
+  acNew.Enabled := (dsGridData.Dataset.State = dsBrowse) and
+                   (FAllowGridEdit or Assigned(FDetailFormClass));
 end;
 
 procedure TfrmRoomerEditableGridForm.acEditExecute(Sender: TObject);
 begin
   inherited;
-  dsGridData.Dataset.Edit;
+  if FAllowGridEdit then
+    dsGridData.Dataset.Edit
+  else if TRoomerDetailFormFactory.ShowDetailModal(FDetailFormClass, fmEdit) then
+    RefreshData;
 end;
 
 procedure TfrmRoomerEditableGridForm.acEditUpdate(Sender: TObject);
 begin
   inherited;
-  acEdit.Enabled := dsGridData.Dataset.State = dsBrowse;
+  acEdit.Enabled := (dsGridData.Dataset.State = dsBrowse)  and
+                   (FAllowGridEdit or Assigned(FDetailFormClass));
 end;
 
 procedure TfrmRoomerEditableGridForm.acNewExecute(Sender: TObject);
 begin
   inherited;
-  dsGridData.DataSet.Insert;
+  if FAllowGridEdit then
+    dsGridData.DataSet.Insert
+  else if TRoomerDetailFormFactory.ShowDetailModal(FDetailFormClass, fmInsert) then
+    RefreshData;
 end;
 
 procedure TfrmRoomerEditableGridForm.acNewUpdate(Sender: TObject);
 begin
   inherited;
-  acNew.Enabled := dsGridData.Dataset.State = dsBrowse;
+  acNew.Enabled := (dsGridData.Dataset.State = dsBrowse) and
+                   (FAllowGridEdit or Assigned(FDetailFormClass));
 end;
 
 procedure TfrmRoomerEditableGridForm.acPostExecute(Sender: TObject);
@@ -117,6 +153,32 @@ procedure TfrmRoomerEditableGridForm.acPostUpdate(Sender: TObject);
 begin
   inherited;
   acPost.Enabled := dsGridData.DataSet.State in [dsEdit, dsInsert];
+end;
+
+procedure TfrmRoomerEditableGridForm.SetAllowGridEdit(const Value: boolean);
+begin
+  FAllowGridEdit := Value;
+  UpdateControls;
+end;
+
+procedure TfrmRoomerEditableGridForm.UpdateControls;
+begin
+  inherited;
+  with vwTableView.OptionsData do
+  begin
+    Appending := FAllowGridEdit;
+    Deleting := FAllowGridEdit;
+    Editing := FAllowGridEdit;
+    Inserting := FAllowGridEdit;
+  end;
+end;
+
+procedure TfrmRoomerEditableGridForm.vwTableViewCellDblClick(Sender: TcxCustomGridTableView;
+  ACellViewInfo: TcxGridTableDataCellViewInfo; AButton: TMouseButton; AShift: TShiftState; var AHandled: Boolean);
+begin
+  inherited;
+  if acEdit.Enabled then
+    acEdit.Execute;
 end;
 
 end.

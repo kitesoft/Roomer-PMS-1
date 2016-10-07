@@ -16,17 +16,17 @@ inherited frmBaseRoomerGridForm: TfrmBaseRoomerGridForm
     SkinData.SkinSection = 'PANEL'
     object pnlActionButtons: TsPanel
       Left = 1
-      Top = 1
+      Top = 56
       Width = 806
       Height = 43
-      Align = alTop
+      Align = alBottom
       BevelOuter = bvNone
       TabOrder = 0
       SkinData.SkinSection = 'PANEL'
     end
     object pnlSelection: TsPanel
       Left = 1
-      Top = 44
+      Top = 1
       Width = 806
       Height = 55
       Align = alClient
@@ -76,9 +76,6 @@ inherited frmBaseRoomerGridForm: TfrmBaseRoomerGridForm
       OptionsView.Footer = True
       OptionsView.GroupFooters = gfAlwaysVisible
       OptionsView.HeaderAutoHeight = True
-      Styles.Group = cxsBoldStyle
-      Styles.GroupSummary = cxsBoldStyle
-      Styles.Header = cxsBoldStyle
       Styles.StyleSheet = cxssRoomerGridTableView
     end
     object lvGridDataLevel1: TcxGridLevel
@@ -113,6 +110,47 @@ inherited frmBaseRoomerGridForm: TfrmBaseRoomerGridForm
     end
     inherited cxssRoomerGridTableView: TcxGridTableViewStyleSheet
       BuiltIn = True
+    end
+  end
+  inherited alRoomerForm: TActionList
+    object acPrint: TAction
+      Caption = 'Print'
+      Enabled = False
+      Hint = 'Print the current contents of the grid'
+      ImageIndex = 3
+      ShortCut = 16464
+      OnExecute = acPrintExecute
+    end
+    object acRefresh: TAction
+      Caption = 'Refresh'
+      ImageIndex = 11
+      OnExecute = acRefreshExecute
+    end
+    object acExportExcel: TAction
+      Category = 'Export'
+      Caption = 'Export to Excel'
+      Hint = 'Create an Excel sheet with the current contents of the grid'
+      ImageIndex = 115
+      OnExecute = acExportExcelExecute
+      OnUpdate = acGridDependentActionUpdate
+    end
+    object acExportHTML: TAction
+      Category = 'Export'
+      Caption = 'Export to HTML'
+      ImageIndex = 115
+      OnUpdate = acGridDependentActionUpdate
+    end
+    object acExportText: TAction
+      Category = 'Export'
+      Caption = 'Export to Text'
+      ImageIndex = 115
+      OnUpdate = acGridDependentActionUpdate
+    end
+    object acExportXML: TAction
+      Category = 'Export'
+      Caption = 'Export to XML'
+      ImageIndex = 115
+      OnUpdate = acGridDependentActionUpdate
     end
   end
   object kbmGridData: TkbmMemTable
@@ -167,7 +205,7 @@ inherited frmBaseRoomerGridForm: TfrmBaseRoomerGridForm
       PrinterPage.ScaleMode = smFit
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
-      ReportDocument.CreationDate = 42650.703204062500000000
+      ReportDocument.CreationDate = 42650.997308958340000000
       ReportTitle.Font.Charset = DEFAULT_CHARSET
       ReportTitle.Font.Color = clBlack
       ReportTitle.Font.Height = -19
@@ -184,7 +222,6 @@ inherited frmBaseRoomerGridForm: TfrmBaseRoomerGridForm
       OptionsFormatting.UseNativeStyles = True
       OptionsSize.AutoWidth = True
       ScaleFonts = False
-      StyleRepository = cxGridStyleRepository
       Styles.BandHeader = cxstReportBandHeader
       Styles.Caption = cxstReportCaption
       Styles.CardCaptionRow = cxstReportCardCaptionRow
@@ -198,199 +235,7 @@ inherited frmBaseRoomerGridForm: TfrmBaseRoomerGridForm
       Styles.Header = cxstReportHeader
       Styles.Preview = cxstReportPreview
       Styles.Selection = cxstReportSelection
-      Styles.StyleSheet = dxGridReportLinkStyleSheet1
       BuiltInReportLink = True
-    end
-  end
-  object cxGridStyleRepository: TcxStyleRepository
-    Left = 176
-    Top = 240
-    PixelsPerInch = 96
-    object cxsBoldStyle: TcxStyle
-      AssignedValues = [svFont]
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = [fsBold]
-    end
-    object cxStyle2: TcxStyle
-      AssignedValues = [svColor, svFont]
-      Color = clBtnFace
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clDefault
-      Font.Height = -16
-      Font.Name = 'Arial'
-      Font.Style = [fsBold]
-    end
-    object cxStyle3: TcxStyle
-      AssignedValues = [svColor, svFont]
-      Color = clBtnFace
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clDefault
-      Font.Height = -16
-      Font.Name = 'Arial'
-      Font.Style = []
-    end
-    object cxStyle4: TcxStyle
-      AssignedValues = [svColor, svFont]
-      Color = clBtnFace
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clDefault
-      Font.Height = -16
-      Font.Name = 'Arial'
-      Font.Style = []
-    end
-    object cxStyle5: TcxStyle
-      AssignedValues = [svColor, svFont]
-      Color = clBtnFace
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clDefault
-      Font.Height = -16
-      Font.Name = 'Arial'
-      Font.Style = []
-    end
-    object cxStyle6: TcxStyle
-      AssignedValues = [svColor, svFont]
-      Color = clWhite
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clDefault
-      Font.Height = -16
-      Font.Name = 'Arial'
-      Font.Style = []
-    end
-    object cxStyle7: TcxStyle
-      AssignedValues = [svColor, svFont]
-      Color = 16053492
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clDefault
-      Font.Height = -16
-      Font.Name = 'Arial'
-      Font.Style = []
-    end
-    object cxStyle8: TcxStyle
-      AssignedValues = [svColor, svFont]
-      Color = clWhite
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clDefault
-      Font.Height = -16
-      Font.Name = 'Arial'
-      Font.Style = []
-    end
-    object cxStyle9: TcxStyle
-      AssignedValues = [svColor, svFont]
-      Color = clBtnShadow
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clDefault
-      Font.Height = -16
-      Font.Name = 'Arial'
-      Font.Style = []
-    end
-    object cxStyle10: TcxStyle
-      AssignedValues = [svColor, svFont]
-      Color = clBtnFace
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clDefault
-      Font.Height = -16
-      Font.Name = 'Arial'
-      Font.Style = []
-    end
-    object cxStyle11: TcxStyle
-      AssignedValues = [svColor, svFont]
-      Color = clBtnFace
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clDefault
-      Font.Height = -16
-      Font.Name = 'Arial'
-      Font.Style = [fsBold]
-    end
-    object cxStyle12: TcxStyle
-      AssignedValues = [svColor, svFont]
-      Color = clBtnFace
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clDefault
-      Font.Height = -16
-      Font.Name = 'Arial'
-      Font.Style = [fsBold]
-    end
-    object cxStyle13: TcxStyle
-      AssignedValues = [svColor, svFont]
-      Color = clWhite
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clDefault
-      Font.Height = -16
-      Font.Name = 'Arial'
-      Font.Style = []
-    end
-    object cxStyle14: TcxStyle
-      AssignedValues = [svColor, svFont]
-      Color = clBtnFace
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clDefault
-      Font.Height = -16
-      Font.Name = 'Arial'
-      Font.Style = []
-    end
-    object dxGridReportLinkStyleSheet1: TdxGridReportLinkStyleSheet
-      Caption = 'Arial font'
-      Styles.BandHeader = cxStyle2
-      Styles.Caption = cxStyle3
-      Styles.CardCaptionRow = cxStyle4
-      Styles.CardRowCaption = cxStyle5
-      Styles.Content = cxStyle6
-      Styles.ContentEven = cxStyle7
-      Styles.ContentOdd = cxStyle8
-      Styles.FilterBar = cxStyle9
-      Styles.Footer = cxStyle10
-      Styles.Group = cxStyle11
-      Styles.Header = cxStyle12
-      Styles.Preview = cxStyle13
-      Styles.Selection = cxStyle14
-      BuiltIn = True
-    end
-  end
-  object alGridActions: TActionList
-    Images = DImages.PngImageList1
-    Left = 472
-    Top = 240
-    object acPrint: TAction
-      Caption = 'Print'
-      Enabled = False
-      Hint = 'Print the current contents of the grid'
-      ImageIndex = 3
-      ShortCut = 16464
-      OnExecute = acPrintExecute
-    end
-    object acRefresh: TAction
-      Caption = 'Refresh'
-      ImageIndex = 11
-      OnExecute = acRefreshExecute
-    end
-    object acExportExcel: TAction
-      Category = 'Export'
-      Caption = 'Export to Excel'
-      Hint = 'Create an Excel sheet with the current contents of the grid'
-      ImageIndex = 115
-      OnExecute = acExportExcelExecute
-      OnUpdate = acGridDependentActionUpdate
-    end
-    object acExportHTML: TAction
-      Category = 'Export'
-      Caption = 'Export to HTML'
-      ImageIndex = 115
-      OnUpdate = acGridDependentActionUpdate
-    end
-    object acExportText: TAction
-      Category = 'Export'
-      Caption = 'Export to Text'
-      ImageIndex = 115
-      OnUpdate = acGridDependentActionUpdate
-    end
-    object acExportXML: TAction
-      Category = 'Export'
-      Caption = 'Export to XML'
-      ImageIndex = 115
-      OnUpdate = acGridDependentActionUpdate
     end
   end
 end
