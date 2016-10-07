@@ -43,7 +43,8 @@ inherited frmBaseRoomerGridForm: TfrmBaseRoomerGridForm
     Align = alClient
     TabOrder = 1
     LookAndFeel.NativeStyle = False
-    object grDataDBTableView1: TcxGridDBTableView
+    ExplicitTop = 94
+    object vwTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = dsGridData
       DataController.Options = [dcoAssignGroupingValues, dcoAssignMasterDetailKeys, dcoSaveExpanding, dcoGroupsAlwaysExpanded]
@@ -78,9 +79,10 @@ inherited frmBaseRoomerGridForm: TfrmBaseRoomerGridForm
       Styles.Group = cxsBoldStyle
       Styles.GroupSummary = cxsBoldStyle
       Styles.Header = cxsBoldStyle
+      Styles.StyleSheet = cxssRoomerGridTableView
     end
     object lvGridDataLevel1: TcxGridLevel
-      GridView = grDataDBTableView1
+      GridView = vwTableView
     end
   end
   inherited dxStatusBar: TdxStatusBar
@@ -92,7 +94,7 @@ inherited frmBaseRoomerGridForm: TfrmBaseRoomerGridForm
   inherited psRoomerBase: TcxPropertiesStore
     Components = <
       item
-        Component = grDataDBTableView1
+        Component = vwTableView
         Properties.Strings = (
           'Height'
           'Left'
@@ -152,6 +154,7 @@ inherited frmBaseRoomerGridForm: TfrmBaseRoomerGridForm
     object gridPrinterLink: TdxGridReportLink
       Active = True
       Component = grData
+      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.Header = 6350
@@ -164,13 +167,14 @@ inherited frmBaseRoomerGridForm: TfrmBaseRoomerGridForm
       PrinterPage.ScaleMode = smFit
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
-      ReportDocument.CreationDate = 42650.655847013890000000
+      ReportDocument.CreationDate = 42650.703204062500000000
       ReportTitle.Font.Charset = DEFAULT_CHARSET
       ReportTitle.Font.Color = clBlack
       ReportTitle.Font.Height = -19
       ReportTitle.Font.Name = 'Arial'
       ReportTitle.Font.Style = [fsBold]
       ShrinkToPageWidth = True
+      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlack
       Font.Height = -15

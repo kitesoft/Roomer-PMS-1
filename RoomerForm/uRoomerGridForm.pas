@@ -27,7 +27,7 @@ type
     pnlActionButtons: TsPanel;
     grData: TcxGrid;
     lvGridDataLevel1: TcxGridLevel;
-    grDataDBTableView1: TcxGridDBTableView;
+    vwTableView: TcxGridDBTableView;
     cxGridStyleRepository: TcxStyleRepository;
     cxsBoldStyle: TcxStyle;
     gridPrinter: TdxComponentPrinter;
@@ -50,6 +50,9 @@ type
     function GridContainsData: boolean;
     procedure ExportGridToExcel;
   protected
+    /// <summary>
+    ///   Class to be used as TRoomerDataProvider, Should be set in the Create() of the derived form, before calling inherited
+    /// </summary>
     FDataProviderClass: TRoomerDataProviderClass;
     procedure DoShow; override;
     procedure LoadData; override;
@@ -130,7 +133,8 @@ end;
 constructor TfrmBaseRoomerGridForm.Create(aOwner: TComponent);
 begin
   inherited;
-  FDataProvider := FDataProviderClass.Create;
+  if assigned(FDataProviderClass) then
+    FDataProvider := FDataProviderClass.Create;
 end;
 
 destructor TfrmBaseRoomerGridForm.Destroy;

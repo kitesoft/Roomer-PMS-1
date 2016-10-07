@@ -175,6 +175,9 @@ end;
 
 procedure TfrmBaseRoomerForm.Loaded;
 begin
+
+  // Note that psRoombase must store the TForm.Position property otherwise the designtime value of this property will
+  // override the position of the form after it has been restored by the TcxPropertyStore
   psRoomerBase.StorageName := 'Software\Roomer\FormStatus\' + classname;
   psRoomerBase.Components[0].Component := Self;
 
