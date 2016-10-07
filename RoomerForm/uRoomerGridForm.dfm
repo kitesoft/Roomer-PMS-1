@@ -101,6 +101,18 @@ inherited frmBaseRoomerGridForm: TfrmBaseRoomerGridForm
           'Width')
       end>
   end
+  inherited cxsrRoomerStyleRepository: TcxStyleRepository
+    PixelsPerInch = 96
+    inherited cxstReportSelection: TcxStyle
+      AssignedValues = []
+    end
+    inherited dxssRoomerGridReportLink: TdxGridReportLinkStyleSheet
+      BuiltIn = True
+    end
+    inherited cxssRoomerGridTableView: TcxGridTableViewStyleSheet
+      BuiltIn = True
+    end
+  end
   object kbmGridData: TkbmMemTable
     Active = True
     DesignActivation = True
@@ -133,14 +145,13 @@ inherited frmBaseRoomerGridForm: TfrmBaseRoomerGridForm
     Top = 391
   end
   object gridPrinter: TdxComponentPrinter
-    CurrentLink = gridPrinterLink1
+    CurrentLink = gridPrinterLink
     Version = 0
     Left = 168
     Top = 448
-    object gridPrinterLink1: TdxGridReportLink
+    object gridPrinterLink: TdxGridReportLink
       Active = True
       Component = grData
-      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.Header = 6350
@@ -153,14 +164,13 @@ inherited frmBaseRoomerGridForm: TfrmBaseRoomerGridForm
       PrinterPage.ScaleMode = smFit
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
-      ReportDocument.CreationDate = 42640.437843217590000000
+      ReportDocument.CreationDate = 42650.655847013890000000
       ReportTitle.Font.Charset = DEFAULT_CHARSET
       ReportTitle.Font.Color = clBlack
       ReportTitle.Font.Height = -19
       ReportTitle.Font.Name = 'Arial'
       ReportTitle.Font.Style = [fsBold]
       ShrinkToPageWidth = True
-      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlack
       Font.Height = -15
@@ -168,7 +178,22 @@ inherited frmBaseRoomerGridForm: TfrmBaseRoomerGridForm
       Font.Style = []
       OptionsFormatting.LookAndFeelKind = lfFlat
       OptionsFormatting.UseNativeStyles = True
+      OptionsSize.AutoWidth = True
+      ScaleFonts = False
       StyleRepository = cxGridStyleRepository
+      Styles.BandHeader = cxstReportBandHeader
+      Styles.Caption = cxstReportCaption
+      Styles.CardCaptionRow = cxstReportCardCaptionRow
+      Styles.CardRowCaption = cxstReportCardRowCaption
+      Styles.Content = cxstReportContent
+      Styles.ContentEven = cxstReportContentEven
+      Styles.ContentOdd = cxstReportContentOdd
+      Styles.FilterBar = cxstReportFilterBar
+      Styles.Footer = cxstReportFooter
+      Styles.Group = cxstReportFooter
+      Styles.Header = cxstReportHeader
+      Styles.Preview = cxstReportPreview
+      Styles.Selection = cxstReportSelection
       Styles.StyleSheet = dxGridReportLinkStyleSheet1
       BuiltInReportLink = True
     end

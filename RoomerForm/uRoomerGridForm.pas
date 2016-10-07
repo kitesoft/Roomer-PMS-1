@@ -31,7 +31,7 @@ type
     cxGridStyleRepository: TcxStyleRepository;
     cxsBoldStyle: TcxStyle;
     gridPrinter: TdxComponentPrinter;
-    gridPrinterLink1: TdxGridReportLink;
+    gridPrinterLink: TdxGridReportLink;
     alGridActions: TActionList;
     acPrint: TAction;
     acRefresh: TAction;
@@ -52,11 +52,13 @@ type
   protected
     FDataProviderClass: TRoomerDataProviderClass;
     procedure DoShow; override;
-    function ConstructSQLStatement: string; virtual;
     procedure LoadData; override;
   public
     constructor Create(aOwner: TComponent); override;
     destructor Destroy; override;
+    /// <summary>
+    ///   Component delivering data to the grid
+    /// </summary>
     property DataProvider: TRoomerDataProvider read FDataProvider;
     { Public declarations }
   end;
@@ -95,9 +97,9 @@ end;
 procedure TfrmBaseRoomerGridForm.acPrintExecute(Sender: TObject);
 begin
   gridPrinter.PrintTitle := Caption;
-  gridPrinterLink1.ReportTitle.Text := Caption;
-  gridPrinterLink1.ComponentPrinter := gridPrinter;
-  gridPrinter.Print(True, nil, gridPrinterLink1);
+  gridPrinterLink.ReportTitle.Text := Caption;
+  gridPrinterLink.ComponentPrinter := gridPrinter;
+  gridPrinter.Print(True, nil, gridPrinterLink);
 end;
 
 procedure TfrmBaseRoomerGridForm.acGridDependentActionUpdate(Sender: TObject);
@@ -123,12 +125,6 @@ begin
   inherited;
   if assigned(FDataProvider) then
     FDataProvider.LoadDataIntoKbmMemTable(kbmGridData);
-end;
-
-function TfrmBaseRoomerGridForm.ConstructSQLStatement: string;
-begin
-  // if not overridden then no data is delivered
-  Result := 'SELECT ''<NO SQL SPECIFIED>'' as Result';
 end;
 
 constructor TfrmBaseRoomerGridForm.Create(aOwner: TComponent);
