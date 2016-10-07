@@ -185,7 +185,10 @@ uses uAppGlobal,
   , uHotelStatusOfflineReport
   , uHotelArrivalsOfflineReport
   , uRptArrivals
-  , uFrmRoomReservationCancellationDialog;
+  , uFrmRoomReservationCancellationDialog
+  , uCleaningNotes
+  , uCleaningNotesEdit
+  ;
 
 
 Type
@@ -1566,6 +1569,18 @@ begin
                 'The Extra(s) [%s] do not have enough available stock for the whole reservation period: '+ #13 +
                 'Do you want to continue anyway?');
   constants.Add('shDeleteDayClosingTime', 'Delete DayClosingtime');
+  constants.Add('shRoomerFormBusyStateIdle', 'Ready');
+  constants.Add('shRoomerFormBusyStateLoadingData', 'Loading data...');
+  constants.Add('shRoomerFormBusyStatePrinting', 'Printing ...');
+
+  constants.Add('shServiceTypeNeeded', 'Please provide the service type.');
+  constants.Add('shOnceTypeNeeded', 'Please provide the once type.');
+
+  constants.Add('shChangesToRomClassDoNotChangeTheBookingSiteOTA', 'Please NOTE:'#13'Changing these settings does not affect the settings in the OTA (booking site).'#13'You will need to apply these settings there yourself, manually.');
+
+  constants.Add('shCleaningNotesIntervalLabel', 'Days interval:');
+  constants.Add('shCleaningNotesOnceLabel', 'Day in question:');
+
 end;
 
 procedure AddConstants_OfflineReports;
@@ -1803,6 +1818,10 @@ begin
   TfrmDeparturesReport.Create(nil).Free;
   TfrmRptStockItems.Create(nil).Free;
   TfrmPaymentReqRoomtypeGroup.Create(nil).Free;
+
+  TfrmCleaningNotes.Create(nil).Free;
+  TfrmCleaningNotesEdit.Create(nil).Free;
+
 
 end;
 

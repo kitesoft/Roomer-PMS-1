@@ -3,7 +3,7 @@ object frmMain: TfrmMain
   Top = 134
   ActiveControl = pageMainGrids
   ClientHeight = 665
-  ClientWidth = 1231
+  ClientWidth = 1288
   Color = clWhite
   DoubleBuffered = True
   Font.Charset = DEFAULT_CHARSET
@@ -43,7 +43,7 @@ object frmMain: TfrmMain
   object dxBarDockControl1: TdxBarDockControl
     Left = 0
     Top = 155
-    Width = 1231
+    Width = 1288
     Height = 3
     Align = dalTop
     BarManager = barinn
@@ -52,11 +52,12 @@ object frmMain: TfrmMain
     SunkenBorder = True
     UseOwnColor = True
     UseOwnSunkenBorder = True
+    ExplicitTop = 122
   end
   object panMain: TsPanel
     Left = 3
     Top = 158
-    Width = 1228
+    Width = 1285
     Height = 477
     Margins.Left = 0
     Margins.Top = 0
@@ -71,7 +72,7 @@ object frmMain: TfrmMain
     object lblSearchFilterActive: TsLabel
       Left = 0
       Top = 170
-      Width = 1228
+      Width = 1285
       Height = 3
       Hint = 'Search Filter Active'
       Align = alTop
@@ -92,7 +93,7 @@ object frmMain: TfrmMain
     object pageMainGrids: TsPageControl
       Left = 0
       Top = 173
-      Width = 924
+      Width = 981
       Height = 304
       ActivePage = tabGuestList
       Align = alClient
@@ -111,7 +112,7 @@ object frmMain: TfrmMain
         object grOneDayRooms: TAdvStringGrid
           Left = 0
           Top = 0
-          Width = 916
+          Width = 973
           Height = 276
           Cursor = crDefault
           Align = alClient
@@ -444,7 +445,7 @@ object frmMain: TfrmMain
         object Panel3: TsPanel
           Left = 0
           Top = 0
-          Width = 916
+          Width = 973
           Height = 100
           Align = alTop
           BevelOuter = bvNone
@@ -521,7 +522,7 @@ object frmMain: TfrmMain
               Left = 3
               Top = 15
               Width = 151
-              Height = 17
+              Height = 19
               Caption = 'Reservation on new page'
               Font.Charset = DEFAULT_CHARSET
               Font.Color = clWindowText
@@ -538,7 +539,7 @@ object frmMain: TfrmMain
               Left = 3
               Top = 36
               Width = 81
-              Height = 17
+              Height = 19
               Caption = 'Print memo'
               Font.Charset = DEFAULT_CHARSET
               Font.Color = clWindowText
@@ -577,7 +578,7 @@ object frmMain: TfrmMain
         object gAllReservations: TcxGrid
           Left = 0
           Top = 100
-          Width = 916
+          Width = 973
           Height = 176
           Align = alClient
           BevelInner = bvNone
@@ -863,7 +864,7 @@ object frmMain: TfrmMain
         object panPeriodRooms: TsPanel
           Left = 0
           Top = 0
-          Width = 916
+          Width = 973
           Height = 126
           Align = alClient
           BevelOuter = bvNone
@@ -872,7 +873,7 @@ object frmMain: TfrmMain
           object lblLoading: TsLabel
             Left = 0
             Top = 0
-            Width = 916
+            Width = 973
             Height = 4
             Hint = 'Search Filter Active'
             Align = alTop
@@ -893,7 +894,7 @@ object frmMain: TfrmMain
           object lblRoomBeingMoved: TsLabel
             Left = 0
             Top = 4
-            Width = 916
+            Width = 973
             Height = 24
             Align = alTop
             Caption = '---'
@@ -913,7 +914,7 @@ object frmMain: TfrmMain
             Tag = 1
             Left = 0
             Top = 28
-            Width = 916
+            Width = 973
             Height = 76
             Cursor = crDefault
             Align = alClient
@@ -1140,14 +1141,14 @@ object frmMain: TfrmMain
           object pnlLegends: TsPanel
             Left = 0
             Top = 104
-            Width = 916
+            Width = 973
             Height = 22
             Align = alBottom
             BevelOuter = bvNone
             TabOrder = 2
             SkinData.SkinSection = 'TRANSPARENT'
             object sPanel2: TsPanel
-              Left = -64
+              Left = -7
               Top = 0
               Width = 980
               Height = 22
@@ -1299,7 +1300,7 @@ object frmMain: TfrmMain
         object splitPeriod: TcxSplitter
           Left = 0
           Top = 126
-          Width = 916
+          Width = 973
           Height = 8
           Hint = 'No Rooms'
           Margins.Left = 5
@@ -1316,12 +1317,12 @@ object frmMain: TfrmMain
           Color = 6842472
           ParentColor = False
           ExplicitTop = 159
-          ExplicitWidth = 919
+          ExplicitWidth = 976
         end
         object pnlPeriodNoRooms: TsPanel
           Left = 0
           Top = 167
-          Width = 916
+          Width = 973
           Height = 109
           Hint = 'Test Hint'
           Align = alBottom
@@ -1331,7 +1332,7 @@ object frmMain: TfrmMain
             Tag = 2
             Left = 1
             Top = 1
-            Width = 914
+            Width = 971
             Height = 107
             Cursor = crDefault
             Align = alClient
@@ -1467,14 +1468,14 @@ object frmMain: TfrmMain
         object pnlBottomViewSettings: TsPanel
           Left = 0
           Top = 134
-          Width = 916
+          Width = 973
           Height = 33
           Align = alBottom
           TabOrder = 3
           OnMouseEnter = pnlNoRoomButtonsMouseEnter
           SkinData.SkinSection = 'PANEL'
           object pnlOccupancyViewButtons: TPanel
-            Left = 546
+            Left = 603
             Top = 1
             Width = 369
             Height = 31
@@ -1533,7 +1534,7 @@ object frmMain: TfrmMain
             end
           end
           object pnlNoRoomButtons: TsPanel
-            Left = 308
+            Left = 365
             Top = 1
             Width = 238
             Height = 31
@@ -1581,7 +1582,7 @@ object frmMain: TfrmMain
           object pnlViewSwitch: TsPanel
             Left = 1
             Top = 1
-            Width = 307
+            Width = 364
             Height = 31
             Align = alClient
             BevelOuter = bvLowered
@@ -1665,7 +1666,7 @@ object frmMain: TfrmMain
     object panMainTop: TsPanel
       Left = 0
       Top = 137
-      Width = 1228
+      Width = 1285
       Height = 33
       Margins.Left = 0
       Margins.Top = 0
@@ -1739,7 +1740,7 @@ object frmMain: TfrmMain
       object __PanGridsHeader: TsPanel
         Left = 610
         Top = 0
-        Width = 618
+        Width = 675
         Height = 33
         Align = alClient
         Alignment = taLeftJustify
@@ -1795,7 +1796,7 @@ object frmMain: TfrmMain
           ExplicitHeight = 20
         end
         object sPanel3: TsPanel
-          Left = 115
+          Left = 172
           Top = 1
           Width = 502
           Height = 31
@@ -1910,7 +1911,7 @@ object frmMain: TfrmMain
         object sPanel4: TsPanel
           Left = 54
           Top = 1
-          Width = 61
+          Width = 118
           Height = 31
           Margins.Left = 0
           Margins.Top = 0
@@ -2423,7 +2424,7 @@ object frmMain: TfrmMain
     object pnlMessages: TsPanel
       Left = 0
       Top = 0
-      Width = 1228
+      Width = 1285
       Height = 106
       Align = alTop
       BevelOuter = bvNone
@@ -2438,7 +2439,7 @@ object frmMain: TfrmMain
       object mmoMessage: THTMLabel
         Left = 88
         Top = 3
-        Width = 1137
+        Width = 1194
         Height = 100
         Align = alClient
         BorderWidth = 2
@@ -2491,7 +2492,7 @@ object frmMain: TfrmMain
       end
     end
     object pnlStatSlider: TsPanel
-      Left = 924
+      Left = 981
       Top = 173
       Width = 304
       Height = 304
@@ -3039,7 +3040,7 @@ object frmMain: TfrmMain
     object pnlOffline: TsPanel
       Left = 0
       Top = 106
-      Width = 1228
+      Width = 1285
       Height = 31
       Align = alTop
       BevelOuter = bvNone
@@ -3074,7 +3075,7 @@ object frmMain: TfrmMain
   object dxRibbon1: TdxRibbon
     Left = 0
     Top = 0
-    Width = 1231
+    Width = 1288
     Height = 155
     Margins.Left = 0
     Margins.Top = 0
@@ -3203,6 +3204,7 @@ object frmMain: TfrmMain
       Index = 4
     end
     object System: TdxRibbonTab
+      Active = True
       Caption = 'System'
       Groups = <
         item
@@ -3274,6 +3276,8 @@ object frmMain: TfrmMain
     ParentColor = False
     UseOwnColor = True
     Visible = False
+    ExplicitTop = 125
+    ExplicitHeight = 510
   end
   object pnlRoomerLogoOld: TsPanel
     Left = 667
@@ -3647,7 +3651,7 @@ object frmMain: TfrmMain
   object pnlDayStatus: TsPanel
     Left = 0
     Top = 635
-    Width = 1231
+    Width = 1288
     Height = 30
     Align = alBottom
     BevelOuter = bvNone
@@ -3808,7 +3812,7 @@ object frmMain: TfrmMain
     end
     object __VER: TsLabel
       AlignWithMargins = True
-      Left = 1054
+      Left = 1111
       Top = 5
       Width = 174
       Height = 22
@@ -3827,7 +3831,7 @@ object frmMain: TfrmMain
     end
     object __TimingResult: TsLabel
       AlignWithMargins = True
-      Left = 996
+      Left = 1053
       Top = 5
       Width = 15
       Height = 22
@@ -4760,7 +4764,7 @@ object frmMain: TfrmMain
     object barinnBar7: TdxBar
       Caption = 'Room price'
       CaptionButtons = <>
-      DockedLeft = 658
+      DockedLeft = 722
       DockedTop = 0
       FloatLeft = 1324
       FloatTop = 8
@@ -4792,7 +4796,7 @@ object frmMain: TfrmMain
     object barinnBar8: TdxBar
       Caption = 'Sale / payments'
       CaptionButtons = <>
-      DockedLeft = 822
+      DockedLeft = 886
       DockedTop = 0
       FloatLeft = 1324
       FloatTop = 8
@@ -4832,6 +4836,10 @@ object frmMain: TfrmMain
         item
           Visible = True
           ItemName = 'btnBookKeepingCodes'
+        end
+        item
+          Visible = True
+          ItemName = 'btnDayClosingTimes'
         end>
       OneOnRow = False
       Row = 0
@@ -4896,6 +4904,10 @@ object frmMain: TfrmMain
         item
           Visible = True
           ItemName = 'btnContactTypes'
+        end
+        item
+          Visible = True
+          ItemName = 'btnCleaningNotes'
         end>
       OneOnRow = False
       Row = 0
@@ -4906,7 +4918,7 @@ object frmMain: TfrmMain
     object barinnUsers: TdxBar
       Caption = 'Users'
       CaptionButtons = <>
-      DockedLeft = 544
+      DockedLeft = 607
       DockedTop = 0
       FloatLeft = 1324
       FloatTop = 8
@@ -4952,6 +4964,10 @@ object frmMain: TfrmMain
         item
           Visible = True
           ItemName = 'btnCashierReport'
+        end
+        item
+          Visible = True
+          ItemName = 'btnDailyRevenues'
         end>
       OneOnRow = False
       Row = 0
@@ -4962,7 +4978,7 @@ object frmMain: TfrmMain
     object barinnReports2: TdxBar
       Caption = 'Reports 2'
       CaptionButtons = <>
-      DockedLeft = 264
+      DockedLeft = 330
       DockedTop = 0
       FloatLeft = 1324
       FloatTop = 8
@@ -5074,7 +5090,7 @@ object frmMain: TfrmMain
     object barinnReportsInvoices: TdxBar
       Caption = 'Invoices'
       CaptionButtons = <>
-      DockedLeft = 827
+      DockedLeft = 893
       DockedTop = 0
       FloatLeft = 1324
       FloatTop = 8
@@ -5274,7 +5290,7 @@ object frmMain: TfrmMain
     object barinnBar5: TdxBar
       Caption = 'System Actions'
       CaptionButtons = <>
-      DockedLeft = 692
+      DockedLeft = 755
       DockedTop = 0
       FloatLeft = 1337
       FloatTop = 8
@@ -5310,7 +5326,7 @@ object frmMain: TfrmMain
     object barinnBar9: TdxBar
       Caption = 'Templates'
       CaptionButtons = <>
-      DockedLeft = 989
+      DockedLeft = 1052
       DockedTop = 0
       FloatLeft = 1278
       FloatTop = 8
@@ -5334,7 +5350,7 @@ object frmMain: TfrmMain
     object barinnBar10: TdxBar
       Caption = 'Ledger'
       CaptionButtons = <>
-      DockedLeft = 1036
+      DockedLeft = 1102
       DockedTop = 0
       FloatLeft = -183
       FloatTop = 8
@@ -5354,7 +5370,6 @@ object frmMain: TfrmMain
     object barinnFinancials: TdxBar
       Caption = 'Financials'
       CaptionButtons = <>
-      DockedDockingStyle = dsTop
       DockedLeft = 988
       DockedTop = 0
       FloatLeft = 1265
@@ -5369,13 +5384,13 @@ object frmMain: TfrmMain
       OneOnRow = False
       Row = 0
       UseOwnFont = False
-      Visible = False
+      Visible = True
       WholeRow = False
     end
     object barinnHousekeeping: TdxBar
       Caption = 'Custom 1'
       CaptionButtons = <>
-      DockedLeft = 1038
+      DockedLeft = 1102
       DockedTop = 0
       FloatLeft = 1284
       FloatTop = 217
@@ -6048,7 +6063,7 @@ object frmMain: TfrmMain
       Caption = 'Day Closing Times'
       Category = 0
       Hint = 'Edit day closing timestamps'
-      Visible = ivNever
+      Visible = ivAlways
       LargeImageIndex = 135
       OnClick = btnDayClosingTimesClick
       SyncImageIndex = False
@@ -6268,6 +6283,28 @@ object frmMain: TfrmMain
       Visible = ivAlways
       LargeImageIndex = 64
       OnClick = btnReRegisterPMSClick
+    end
+    object btnDailyRevenues: TdxBarLargeButton
+      Caption = 'Daily Revenues'
+      Category = 0
+      Hint = 'Daily Revenues and Payments report'
+      Visible = ivAlways
+      LargeImageIndex = 118
+      OnClick = btnDailyRevenuesClick
+    end
+    object btnCleaningNotes: TdxBarLargeButton
+      Caption = 'Cleaning notes'
+      Category = 0
+      Hint = 'Cleaning notes'
+      Visible = ivAlways
+      LargeImageIndex = 136
+      OnClick = btnCleaningNotesClick
+    end
+    object btnDailyrev: TdxBarLargeButton
+      Caption = 'New Button'
+      Category = 0
+      Hint = 'New Button'
+      Visible = ivAlways
     end
     object mmnuFile: TdxBarSubItem
       Caption = '&File'
@@ -9463,10 +9500,8 @@ object frmMain: TfrmMain
         Properties.Strings = (
           'Height'
           'Left'
-          'Position'
           'Top'
-          'Width'
-          'WindowState')
+          'Width')
       end
       item
         Component = pnlPeriodNoRooms

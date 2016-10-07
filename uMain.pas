@@ -733,6 +733,10 @@ type
     btnSimpleHouseKeeping: TdxBarLargeButton;
     btnReRegisterPMS: TdxBarLargeButton;
     btnRptDepartures: TdxBarLargeButton;
+    btnDailyRevenues: TdxBarLargeButton;
+    btnDayCLosingTimes: TdxBarLargeButton;
+    btnCleaningNotes: TdxBarLargeButton;
+    btnDailyrev: TdxBarLargeButton;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
@@ -1034,6 +1038,8 @@ type
     procedure btnCloseCurrentDayClick(Sender: TObject);
     procedure btnSimpleHouseKeepingClick(Sender: TObject);
     procedure btnReRegisterPMSClick(Sender: TObject);
+    procedure btnDailyRevenuesClick(Sender: TObject);
+    procedure btnCleaningNotesClick(Sender: TObject);
 
   private
     FReservationsModel: TReservationsModel;
@@ -1628,6 +1634,7 @@ uses
   uInvoiceCompare,
   GoogleOTP256,
   uInvoiceController,
+  uCleaningNotes,
   Math
     , uOfflineReportGrid
     , uRptArrivals
@@ -1641,7 +1648,7 @@ uses
     , uDayClosingTimes
     , uDayClosingTimesAPICaller
     , uDateTimeHelper
-    , uRptHouseKeeping, uReservationStateChangeHandler;
+    , uRptHouseKeeping, uReservationStateChangeHandler, uRptDailyRevenues;
 
 {$R *.DFM}
 {$R Cursors.res}
@@ -7643,31 +7650,34 @@ begin
         for i := RoomerMessages.Count - 1 downto 0 do
         begin
           RoomerMessage := RoomerMessages.ActiveRoomerMessage[i];
-          systemMessage := RoomerMessage.RoomerMessageType = 'SYSTEM_MESSAGE';
-          if systemMessage AND NOT anySystemMessage then
+          if Assigned(RoomerMessage) then
           begin
-            mmoMessage.HtmlText.Text := RoomerMessage.TheMessage;
-            mmoMessage.Tag := RoomerMessage.id;
-          end
-          else if NOT systemMessage then
-          begin
-            if RoomerMessage.RoomerMessageType = 'RESERVATION_MESSAGE' then
+            systemMessage := RoomerMessage.RoomerMessageType = 'SYSTEM_MESSAGE';
+            if systemMessage AND NOT anySystemMessage then
             begin
-              ResList.Add(inttostr(RoomerMessage.id));
-              RoomerMessageType := rmtNewBooking;
+              mmoMessage.HtmlText.Text := RoomerMessage.TheMessage;
+              mmoMessage.Tag := RoomerMessage.id;
             end
-            else if RoomerMessage.RoomerMessageType = 'CANCELLATION_MESSAGE' then
+            else if NOT systemMessage then
             begin
-              CancelList.Add(inttostr(RoomerMessage.id));
-              RoomerMessageType := rmtCancellation;
-            end
-            else
-              RoomerMessageType := rmtUnknown;
-            if RoomerMessageType <> rmtUnknown then
-            begin
-              FrmMessagesTemplates.AddMessage(RoomerMessageType, RoomerMessage.TheMessage, '',
-                inttostr(RoomerMessage.id));
-              RoomerMessages.Delete(i);
+              if RoomerMessage.RoomerMessageType = 'RESERVATION_MESSAGE' then
+              begin
+                ResList.Add(inttostr(RoomerMessage.id));
+                RoomerMessageType := rmtNewBooking;
+              end
+              else if RoomerMessage.RoomerMessageType = 'CANCELLATION_MESSAGE' then
+              begin
+                CancelList.Add(inttostr(RoomerMessage.id));
+                RoomerMessageType := rmtCancellation;
+              end
+              else
+                RoomerMessageType := rmtUnknown;
+              if RoomerMessageType <> rmtUnknown then
+              begin
+                FrmMessagesTemplates.AddMessage(RoomerMessageType, RoomerMessage.TheMessage, '',
+                  inttostr(RoomerMessage.id));
+                RoomerMessages.Delete(i);
+              end;
             end;
           end;
           anySystemMessage := anySystemMessage OR systemMessage;
@@ -11576,6 +11586,14 @@ begin
   _CheckOutRoom;
 end;
 
+procedure TfrmMain.btnCleaningNotesClick(Sender: TObject);
+var
+  theData: recCleaningNotesHolder;
+begin
+  UserClickedDxLargeButton(Sender);
+  if openCleaningNotes(actNone, false, theData) then;
+end;
+
 procedure TfrmMain.btnClearSearchClick(Sender: TObject);
 begin
   edtSearch.Text := '';
@@ -12026,6 +12044,12 @@ procedure TfrmMain.btnCustomerTypeListClick(Sender: TObject);
 begin
   UserClickedDxLargeButton(Sender);
   _CustomerTypeList;
+end;
+
+procedure TfrmMain.btnDailyRevenuesClick(Sender: TObject);
+begin
+  UserClickedDxLargeButton(Sender);
+  ShowDailyRevenuesReport;
 end;
 
 procedure TfrmMain.btnDashboardClick(Sender: TObject);

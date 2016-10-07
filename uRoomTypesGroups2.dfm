@@ -225,6 +225,7 @@ object frmRoomTypesGroups2: TfrmRoomTypesGroups2
       Align = alClient
       TabOrder = 3
       LookAndFeel.NativeStyle = False
+      ExplicitTop = 87
       object tvData: TcxGridDBTableView
         OnDblClick = tvDataDblClick
         Navigator.Buttons.CustomButtons = <>
@@ -399,6 +400,8 @@ object frmRoomTypesGroups2: TfrmRoomTypesGroups2
         object tvDataBreakfastIncluded: TcxGridDBColumn
           Caption = 'Breakfast Incl'
           DataBinding.FieldName = 'BreakfastIncluded'
+          PropertiesClassName = 'TcxCheckBoxProperties'
+          Properties.OnEditValueChanged = tvDataBreakfastIncludedPropertiesEditValueChanged
           Width = 90
         end
         object tvDataHalfBoard: TcxGridDBColumn

@@ -245,7 +245,11 @@ uses
   uGridExporter in 'RoomerForm\uGridExporter.pas',
   uRoomerEditableGridForm in 'RoomerForm\uRoomerEditableGridForm.pas' {frmRoomerEditableGridForm},
   uRoomerReportGridForm in 'RoomerForm\uRoomerReportGridForm.pas' {frmRoomerReportGridForm},
-  uRoomerDataProvider in 'RoomerForm\uRoomerDataProvider.pas';
+  uRoomerDataProvider in 'RoomerForm\uRoomerDataProvider.pas',
+  uFinancialReportsAPICaller in 'OpenAPI\uFinancialReportsAPICaller.pas',
+  uRptDailyRevenues in 'Financials\uRptDailyRevenues.pas' {frmRptDailyRevenues},
+  uCleaningNotes in 'uCleaningNotes.pas' {frmCleaningNotes},
+  uCleaningNotesEdit in 'uCleaningNotesEdit.pas' {frmCleaningNotesEdit};
 
 {$R *.RES}
 

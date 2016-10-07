@@ -518,9 +518,7 @@ object frmReservationProfile: TfrmReservationProfile
           Color = clGradientActiveCaption
           ParentColor = False
           SkinData.CustomColor = True
-          ExplicitLeft = 414
-          ExplicitTop = 1
-          ExplicitHeight = 190
+          ExplicitTop = 6
         end
         object sSplitter3: TsSplitter
           AlignWithMargins = True
