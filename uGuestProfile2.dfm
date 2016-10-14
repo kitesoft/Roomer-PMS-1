@@ -505,6 +505,8 @@ object frmGuestProfile2: TfrmGuestProfile2
     Align = alClient
     TabOrder = 2
     LookAndFeel.NativeStyle = False
+    ExplicitLeft = 1
+    ExplicitTop = 411
     object tvData: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       Navigator.Buttons.First.Visible = True
@@ -904,7 +906,8 @@ object frmGuestProfile2: TfrmGuestProfile2
       PrinterPage.PageSize.Y = 297000
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
-      ReportDocument.CreationDate = 42655.491569722220000000
+      ReportDocument.CreationDate = 42653.891623576390000000
+      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
   end

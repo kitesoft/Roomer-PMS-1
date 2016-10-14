@@ -1577,6 +1577,8 @@ begin
   constants.Add('shCleaningNotesIntervalLabel', 'Days interval:');
   constants.Add('shCleaningNotesOnceLabel', 'Day in question:');
 
+  constants.Add('shTx_D_SaveToSpecifiedInvoiceIndex', 'Saved invoice as number %d');
+
   constants.Add('shTx_MandatoryFields_City', 'City');
   constants.Add('shTx_MandatoryFields_Country', 'Country of origin');
   constants.Add('shTx_MandatoryFields_FirstName', 'First name');
