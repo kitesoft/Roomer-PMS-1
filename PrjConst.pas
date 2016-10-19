@@ -9,11 +9,6 @@ resourcestring
   SVersion = 'Version ';
   SDatabase = 'Database ';
 
-  //uMain
-  sh0070 = 'Version';
-  sh0080 = 'Ver';
-
-
 function GetTranslatedText(nameOfConstant : String) : String;
 procedure GenerateTranslateTextTableForConstants;
 procedure GenerateTranslateTextTableForAllForms;
@@ -368,6 +363,14 @@ begin
   constants.Add('shTx_NumGuests', 'Num guests');
   constants.Add('shTx_ReportedBy', 'Reported by');
   constants.Add('shTx_CleaningNotes', 'Cleaning notes');
+  constants.Add('shTx_CleaningNoteServiceType_Interval', 'Interval');
+  constants.Add('shTx_CleaningNoteServiceType_Once', 'Once');
+  constants.Add('shTx_CleaningNoteintervalType_Checkin', 'Checkin');
+  constants.Add('shTx_CleaningNoteintervalType_BeforeCheckout', 'Before Checkout');
+  constants.Add('shTx_CleaningNoteintervalType_CheckOut', 'At Checkout');
+  constants.Add('shTx_CleaningNoteintervalType_XthDay', 'On Xth day of stay');
+  constants.Add('shTx_CleaningNoteintervalType_XdaysAfterCheckout', 'X days after checkout');
+
  // constants.Add('shTx_MaintenanceNotes', 'Mainteance notes');
   constants.Add('shTx_MaintenanceNotes', 'Maintenance notes');
   constants.Add('shTx_LostAndFount', 'Lost and found');
@@ -767,14 +770,9 @@ begin
   constants.Add('shTx_Invoice_SaleNotSelected', 'Sale item not selected !');
   constants.Add('shTx_Invoice_TakeItemFromInvoice', 'Take [%s] from invoice?');
   constants.Add('shTx_Invoice_CanNotDelete', 'System item can not delete ');
+  constants.Add('shTx_InvoiceUnableToSave', 'We are unable to save the invoice. Select [Retry] to try again or [Cancel] '
+            + #13 + 'to temporarily stop the work with this invoice');
 
- (* constants.Add('shTx_Invoice_BlankLine', 'Auð lína');
-  constants.Add('shTx_Invoice_ErrorInTotal', 'villa í upphæð %s');
-  constants.Add('shTx_Invoice_MoveItemToGroupInvoice', 'Viltu færa %s: %s' + #10 +
-                                             'á hópreikning ');
-  constants.Add('shTx_Invoice_FailedGroupInvoice', 'Ekki tókst að uppfæra Hópreikning - Hætt við ' + #10 +
-                                             'Villa : %s'); *)
-											 
   constants.Add('shTx_Invoice_BlankLine', 'Blank Line');
   constants.Add('shTx_Invoice_ErrorInTotal', 'Error in total %s');
   constants.Add('shTx_Invoice_MoveItemToGroupInvoice', 'Move item %s: %s' + #10 +
@@ -931,7 +929,8 @@ begin
 
   constants.Add('shTx_FrmReservationprofile_BlockMoveReasonCaption', 'Reason for blocking the move of room ');
   constants.Add('shTx_FrmReservationprofile_PerNight', 'per night');
-
+  constants.Add('shTx_FrmReservationprofile_UpdateExclBreakfast', 'The number of guest and/or nights has changed. Update the number of breakfasts in the invoice?');
+  constants.Add('shFailedUpdateBreakfastCount', 'Failed to update number of breakfasts. Please review the relevant invoicelines.');
   constants.Add('shTx_AccountType_GroupAccount', 'Group Account');
   constants.Add('shTx_AccountType_RoomAccount', 'Room Account');
 
@@ -1535,6 +1534,8 @@ begin
   constants.Add('shTxThisConfirmAllottedBooking', 'This will change the full booking into a confirmed reservation.' + #10#10 + 'Do you want to continue?');
   constants.Add('shTx_CloseFinancialDay', 'This will close the current day for revenues and payments?' + #10#10 + 'Do you want to continue?');
   constants.Add('shTx_CurrentFinancialDay',  'Current financial day: ');
+  constants.Add('shTx_FinancialDayAlreadyClosed', 'The current financial [%s] day is already closed. Use "Day Closing times" button to change if needed.');
+
 end;
 
 procedure AddConstants_7; // Baettu vid thennan ad vild
@@ -1580,6 +1581,16 @@ begin
 
   constants.Add('shCleaningNotesIntervalLabel', 'Days interval:');
   constants.Add('shCleaningNotesOnceLabel', 'Day in question:');
+
+  constants.Add('shTx_D_SaveToSpecifiedInvoiceIndex', 'Saved invoice as number %d');
+
+  constants.Add('shTx_MandatoryFields_City', 'City');
+  constants.Add('shTx_MandatoryFields_Country', 'Country of origin');
+  constants.Add('shTx_MandatoryFields_FirstName', 'First name');
+  constants.Add('shTx_MandatoryFields_Surname', 'Surname');
+  constants.Add('shTx_MandatoryFields_Market', 'Visitation type (Leisure/Business)');
+  constants.Add('shTx_MandatoryFields_Nationality', 'Nationality');
+  constants.Add('shTx_MandatoryFields_Guarantee', 'Guarantee');
 
 end;
 
@@ -1649,8 +1660,8 @@ begin
   frmSelLang := TfrmSelLang.Create(nil); frmSelLang.Free; frmSelLang := nil;
 //frmUDL := TfrmUDL.Create(nil); frmUDL.Free; frmUDL := nil;
 //frmHotelListMissing := TfrmHotelListMissing.Create(nil); frmHotelListMissing.Free; frmHotelListMissing := nil;
-  frmMaidActions := TfrmMaidActions.Create(nil); frmMaidActions.Free; frmMaidActions := nil;
-  frmMaidActionsEdit := TfrmMaidActionsEdit.Create(nil); frmMaidActionsEdit.Free; frmMaidActionsEdit := nil;
+  TfrmMaidActions.Create(nil).Free;
+  TfrmMaidActionsEdit.Create(nil).Free;
 // Empty?  frmMakeReservation := TfrmMakeReservation.Create(nil); frmMakeReservation.Free; frmMakeReservation := nil;
   frmRoomDateProblem := TfrmRoomDateProblem.Create(nil); frmRoomDateProblem.Free; frmRoomDateProblem := nil;
   frmResProblem := TfrmResProblem.Create(nil); frmResProblem.Free; frmResProblem := nil;

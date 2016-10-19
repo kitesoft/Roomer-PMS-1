@@ -210,7 +210,6 @@ uses
   uRoomerContainerClasses in 'uRoomerContainerClasses.pas',
   uAvailabilityPerDay in 'AvailabilityManagement\uAvailabilityPerDay.pas',
   uInvoiceController in 'Invoice\uInvoiceController.pas',
-  VersionInfo in 'Extras\VersionInfo.pas',
   uOfflineReportGenerator in 'OfflineReports\uOfflineReportGenerator.pas',
   uOffLineReport in 'OfflineReports\uOffLineReport.pas',
   uHotelStatusOfflineReport in 'OfflineReports\uHotelStatusOfflineReport.pas',
@@ -250,7 +249,15 @@ uses
   uRptDailyRevenues in 'Financials\uRptDailyRevenues.pas' {frmRptDailyRevenues},
   uCleaningNotes in 'uCleaningNotes.pas' {frmCleaningNotes},
   uCleaningNotesEdit in 'uCleaningNotesEdit.pas' {frmCleaningNotesEdit},
-  uRoomerDetailForm in 'RoomerForm\uRoomerDetailForm.pas' {frmBaseRoomerDetailForm};
+  uRoomerDetailForm in 'RoomerForm\uRoomerDetailForm.pas' {frmBaseRoomerDetailForm},
+  uMandatoryFieldDefinitions in 'Definitions\uMandatoryFieldDefinitions.pas',
+  uInvoiceEntities in 'Invoice\uInvoiceEntities.pas',
+  uVatCalculator in 'VAT\uVatCalculator.pas',
+  uPMSSettings in 'PMSSettings\uPMSSettings.pas',
+  uTableEntityList in 'TableCache\uTableEntityList.pas',
+  uMessageList in 'uMessageList.pas',
+  uRoomerVersionInfo in 'Extras\uRoomerVersionInfo.pas',
+  uCleaningNotesDefinitions in 'Definitions\uCleaningNotesDefinitions.pas';
 
 {$R *.RES}
 

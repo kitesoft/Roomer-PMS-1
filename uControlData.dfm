@@ -3,15 +3,17 @@ object frmControlData: TfrmControlData
   Top = 186
   BorderIcons = []
   Caption = 'Settings'
-  ClientHeight = 680
+  ClientHeight = 707
   ClientWidth = 1261
   Color = clBtnFace
   ParentFont = True
+  KeyPreview = True
   OldCreateOrder = True
   Position = poOwnerFormCenter
   OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy
+  OnKeyDown = FormKeyDown
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
@@ -19,11 +21,9 @@ object frmControlData: TfrmControlData
     Left = 0
     Top = 3
     Width = 1261
-    Height = 644
+    Height = 671
     Align = alClient
     TabOrder = 1
-    OnClick = __Panel2Click
-    ExplicitWidth = 1116
     object sLabel4: TsLabel
       Left = 248
       Top = 120
@@ -52,7 +52,6 @@ object frmControlData: TfrmControlData
       ParentFont = False
       TabOrder = 0
       SkinData.SkinSection = 'TOOLBAR'
-      ExplicitWidth = 1114
       object labHeader: TsLabel
         Left = 1
         Top = 1
@@ -73,7 +72,7 @@ object frmControlData: TfrmControlData
       Left = 1
       Top = 29
       Width = 156
-      Height = 614
+      Height = 641
       Align = alLeft
       TabOrder = 1
       SkinData.SkinSection = 'PANEL'
@@ -81,20 +80,21 @@ object frmControlData: TfrmControlData
         Left = 1
         Top = 1
         Width = 154
-        Height = 612
+        Height = 639
         Align = alClient
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = 4473924
+        Font.Color = clBlack
         Font.Height = -12
         Font.Name = 'Tahoma'
         Font.Style = []
         Indent = 19
         ParentFont = False
+        ReadOnly = True
         TabOrder = 0
         OnChange = tvSelectionChange
         Items.NodeData = {
-          030A000000280000000000000001000000FFFFFFFFFFFFFFFF00000000000000
+          030B000000280000000000000001000000FFFFFFFFFFFFFFFF00000000000000
           0000000000010548006F00740065006C00260000000000000002000000FFFFFF
           FFFFFFFFFF000000000000000000000000010449004400270073002C00000000
           00000009000000FFFFFFFFFFFFFFFF000000000000000003000000010749006E
@@ -118,7 +118,9 @@ object frmControlData: TfrmControlData
           FFFFFFFFFF000000000000000000000000010F4300680061006E006E0065006C
           0020006D0061006E00610067006500720036000000000000000A000000FFFFFF
           FFFFFFFFFF000000000000000000000000010C52006500730065007200760061
-          00740069006F006E007300}
+          00740069006F006E007300480000000000000013000000FFFFFFFFFFFFFFFF00
+          000000000000000000000001154D0061006E006400610074006F007200790020
+          0069006E0066006F0072006D006100740069006F006E00}
         SkinData.SkinSection = 'EDIT'
       end
     end
@@ -126,17 +128,16 @@ object frmControlData: TfrmControlData
       Left = 157
       Top = 29
       Width = 1103
-      Height = 614
+      Height = 641
       Align = alClient
       TabOrder = 2
       SkinData.SkinSection = 'PANEL'
-      ExplicitWidth = 958
       object mainPage: TsPageControl
         Left = 1
         Top = 1
         Width = 1101
-        Height = 612
-        ActivePage = AdvTabSheet6
+        Height = 639
+        ActivePage = AdvTabSheet5
         Align = alClient
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
@@ -146,7 +147,6 @@ object frmControlData: TfrmControlData
         ParentFont = False
         TabOrder = 0
         SkinData.SkinSection = 'PAGECONTROL'
-        ExplicitWidth = 956
         object tsNull: TsTabSheet
           Caption = 'tsNull'
           SkinData.CustomColor = False
@@ -294,7 +294,7 @@ object frmControlData: TfrmControlData
               Style = csDropDownList
               Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = 4473924
+              Font.Color = clBlack
               Font.Height = -12
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -778,7 +778,7 @@ object frmControlData: TfrmControlData
               Height = 22
               Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = 4473924
+              Font.Color = clBlack
               Font.Height = -12
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -868,7 +868,7 @@ object frmControlData: TfrmControlData
               VerticalAlignment = taAlignTop
               Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = 4473924
+              Font.Color = clBlack
               Font.Height = -12
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -962,7 +962,7 @@ object frmControlData: TfrmControlData
               Height = 22
               Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = 4473924
+              Font.Color = clBlack
               Font.Height = -12
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -980,7 +980,7 @@ object frmControlData: TfrmControlData
               Height = 22
               Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = 4473924
+              Font.Color = clBlack
               Font.Height = -12
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -998,7 +998,7 @@ object frmControlData: TfrmControlData
               Height = 22
               Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = 4473924
+              Font.Color = clBlack
               Font.Height = -12
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -1016,7 +1016,7 @@ object frmControlData: TfrmControlData
               Height = 22
               Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = 4473924
+              Font.Color = clBlack
               Font.Height = -12
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -1088,7 +1088,7 @@ object frmControlData: TfrmControlData
               Height = 22
               Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = 4473924
+              Font.Color = clBlack
               Font.Height = -12
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -1106,7 +1106,7 @@ object frmControlData: TfrmControlData
               Height = 22
               Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = 4473924
+              Font.Color = clBlack
               Font.Height = -12
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -1171,7 +1171,7 @@ object frmControlData: TfrmControlData
               Style = csDropDownList
               Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = 4473924
+              Font.Color = clBlack
               Font.Height = -11
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -1199,7 +1199,7 @@ object frmControlData: TfrmControlData
             Left = 0
             Top = 0
             Width = 1093
-            Height = 583
+            Height = 610
             ActivePage = tsInvTexts_Laser1
             Align = alClient
             Font.Charset = DEFAULT_CHARSET
@@ -4001,7 +4001,7 @@ object frmControlData: TfrmControlData
               Style = csDropDownList
               Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = 4473924
+              Font.Color = clBlack
               Font.Height = -12
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -4022,7 +4022,7 @@ object frmControlData: TfrmControlData
               Height = 22
               Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = 4473924
+              Font.Color = clBlack
               Font.Height = -12
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -4101,7 +4101,7 @@ object frmControlData: TfrmControlData
               Height = 22
               Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = 4473924
+              Font.Color = clBlack
               Font.Height = -12
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -4375,7 +4375,7 @@ object frmControlData: TfrmControlData
               Alignment = taCenter
               Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = 4473924
+              Font.Color = clBlack
               Font.Height = -12
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -4396,7 +4396,7 @@ object frmControlData: TfrmControlData
               Alignment = taCenter
               Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = 4473924
+              Font.Color = clBlack
               Font.Height = -12
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -4474,7 +4474,7 @@ object frmControlData: TfrmControlData
               Alignment = taCenter
               Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = 4473924
+              Font.Color = clBlack
               Font.Height = -12
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -4495,7 +4495,7 @@ object frmControlData: TfrmControlData
               Alignment = taCenter
               Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = 4473924
+              Font.Color = clBlack
               Font.Height = -12
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -4531,7 +4531,7 @@ object frmControlData: TfrmControlData
               Height = 22
               Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = 4473924
+              Font.Color = clBlack
               Font.Height = -12
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -4546,7 +4546,7 @@ object frmControlData: TfrmControlData
               Height = 22
               Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = 4473924
+              Font.Color = clBlack
               Font.Height = -12
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -4561,7 +4561,7 @@ object frmControlData: TfrmControlData
               Height = 22
               Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = 4473924
+              Font.Color = clBlack
               Font.Height = -12
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -5145,7 +5145,7 @@ object frmControlData: TfrmControlData
               Height = 22
               Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = 4473924
+              Font.Color = clBlack
               Font.Height = -12
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -5182,7 +5182,7 @@ object frmControlData: TfrmControlData
               VerticalAlignment = taAlignTop
               Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = 4473924
+              Font.Color = clBlack
               Font.Height = -12
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -5197,7 +5197,7 @@ object frmControlData: TfrmControlData
               Height = 22
               Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = 4473924
+              Font.Color = clBlack
               Font.Height = -12
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -5285,7 +5285,7 @@ object frmControlData: TfrmControlData
               Height = 22
               Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = 4473924
+              Font.Color = clBlack
               Font.Height = -12
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -5303,7 +5303,7 @@ object frmControlData: TfrmControlData
               Height = 22
               Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = 4473924
+              Font.Color = clBlack
               Font.Height = -12
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -5321,7 +5321,7 @@ object frmControlData: TfrmControlData
               Height = 22
               Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = 4473924
+              Font.Color = clBlack
               Font.Height = -12
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -5434,7 +5434,7 @@ object frmControlData: TfrmControlData
               VerticalAlignment = taAlignTop
               Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = 4473924
+              Font.Color = clBlack
               Font.Height = -12
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -5449,7 +5449,7 @@ object frmControlData: TfrmControlData
               Height = 22
               Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = 4473924
+              Font.Color = clBlack
               Font.Height = -12
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -5468,7 +5468,7 @@ object frmControlData: TfrmControlData
           SkinData.CustomFont = False
           DesignSize = (
             1093
-            583)
+            610)
           object LMDGroupBox10: TsGroupBox
             Left = 4
             Top = 4
@@ -5519,7 +5519,7 @@ object frmControlData: TfrmControlData
               AutoSize = False
               Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = 4473924
+              Font.Color = clBlack
               Font.Height = -12
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -5542,7 +5542,7 @@ object frmControlData: TfrmControlData
               AutoSize = False
               Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = 4473924
+              Font.Color = clBlack
               Font.Height = -12
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -5626,7 +5626,6 @@ object frmControlData: TfrmControlData
           Caption = 'Reservations'
           SkinData.CustomColor = False
           SkinData.CustomFont = False
-          ExplicitWidth = 948
           object LMDGroupBox25: TsGroupBox
             Left = 12
             Top = 12
@@ -5933,7 +5932,7 @@ object frmControlData: TfrmControlData
               Height = 22
               Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = 4473924
+              Font.Color = clBlack
               Font.Height = -12
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -5955,7 +5954,7 @@ object frmControlData: TfrmControlData
               Style = csDropDownList
               Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = 4473924
+              Font.Color = clBlack
               Font.Height = -12
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -5985,7 +5984,7 @@ object frmControlData: TfrmControlData
               Height = 22
               Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = 4473924
+              Font.Color = clBlack
               Font.Height = -12
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -6008,7 +6007,7 @@ object frmControlData: TfrmControlData
               Style = csDropDownList
               Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = 4473924
+              Font.Color = clBlack
               Font.Height = -12
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -6038,7 +6037,7 @@ object frmControlData: TfrmControlData
               Height = 22
               Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = 4473924
+              Font.Color = clBlack
               Font.Height = -12
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -6061,7 +6060,7 @@ object frmControlData: TfrmControlData
               Style = csDropDownList
               Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = 4473924
+              Font.Color = clBlack
               Font.Height = -12
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -6091,7 +6090,7 @@ object frmControlData: TfrmControlData
               Height = 22
               Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = 4473924
+              Font.Color = clBlack
               Font.Height = -12
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -6114,7 +6113,7 @@ object frmControlData: TfrmControlData
               Style = csDropDownList
               Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = 4473924
+              Font.Color = clBlack
               Font.Height = -12
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -6144,7 +6143,7 @@ object frmControlData: TfrmControlData
               Height = 22
               Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = 4473924
+              Font.Color = clBlack
               Font.Height = -12
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -6392,7 +6391,7 @@ object frmControlData: TfrmControlData
               Height = 21
               Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = 4473924
+              Font.Color = clBlack
               Font.Height = -11
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -6408,7 +6407,7 @@ object frmControlData: TfrmControlData
               Height = 21
               Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = 4473924
+              Font.Color = clBlack
               Font.Height = -11
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -6490,7 +6489,7 @@ object frmControlData: TfrmControlData
               Style = csDropDownList
               Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = 4473924
+              Font.Color = clBlack
               Font.Height = -11
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -6573,7 +6572,7 @@ object frmControlData: TfrmControlData
               Height = 21
               Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = 4473924
+              Font.Color = clBlack
               Font.Height = -11
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -6590,7 +6589,7 @@ object frmControlData: TfrmControlData
               Height = 21
               Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = 4473924
+              Font.Color = clBlack
               Font.Height = -11
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -6698,7 +6697,7 @@ object frmControlData: TfrmControlData
             Left = 0
             Top = 61
             Width = 1093
-            Height = 522
+            Height = 549
             ActivePage = AdvTabSheet11
             Align = alClient
             TabOrder = 1
@@ -6802,7 +6801,7 @@ object frmControlData: TfrmControlData
                 Left = 0
                 Top = 56
                 Width = 1085
-                Height = 437
+                Height = 464
                 ActivePage = AdvTabSheet12
                 Align = alClient
                 TabOrder = 1
@@ -7033,7 +7032,7 @@ object frmControlData: TfrmControlData
                     Height = 22
                     Color = clWhite
                     Font.Charset = DEFAULT_CHARSET
-                    Font.Color = 4473924
+                    Font.Color = clBlack
                     Font.Height = -12
                     Font.Name = 'Tahoma'
                     Font.Style = []
@@ -7048,7 +7047,7 @@ object frmControlData: TfrmControlData
                     Height = 22
                     Color = clWhite
                     Font.Charset = DEFAULT_CHARSET
-                    Font.Color = 4473924
+                    Font.Color = clBlack
                     Font.Height = -12
                     Font.Name = 'Tahoma'
                     Font.Style = []
@@ -7063,7 +7062,7 @@ object frmControlData: TfrmControlData
                     Height = 22
                     Color = clWhite
                     Font.Charset = DEFAULT_CHARSET
-                    Font.Color = 4473924
+                    Font.Color = clBlack
                     Font.Height = -12
                     Font.Name = 'Tahoma'
                     Font.Style = []
@@ -7210,7 +7209,7 @@ object frmControlData: TfrmControlData
                     Height = 22
                     Color = clWhite
                     Font.Charset = DEFAULT_CHARSET
-                    Font.Color = 4473924
+                    Font.Color = clBlack
                     Font.Height = -12
                     Font.Name = 'Tahoma'
                     Font.Style = []
@@ -7228,7 +7227,7 @@ object frmControlData: TfrmControlData
                     Height = 22
                     Color = clWhite
                     Font.Charset = DEFAULT_CHARSET
-                    Font.Color = 4473924
+                    Font.Color = clBlack
                     Font.Height = -12
                     Font.Name = 'Tahoma'
                     Font.Style = []
@@ -7246,7 +7245,7 @@ object frmControlData: TfrmControlData
                     Height = 22
                     Color = clWhite
                     Font.Charset = DEFAULT_CHARSET
-                    Font.Color = 4473924
+                    Font.Color = clBlack
                     Font.Height = -12
                     Font.Name = 'Tahoma'
                     Font.Style = []
@@ -7264,7 +7263,7 @@ object frmControlData: TfrmControlData
                     Height = 22
                     Color = clWhite
                     Font.Charset = DEFAULT_CHARSET
-                    Font.Color = 4473924
+                    Font.Color = clBlack
                     Font.Height = -12
                     Font.Name = 'Tahoma'
                     Font.Style = []
@@ -7572,7 +7571,7 @@ object frmControlData: TfrmControlData
               Height = 22
               Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = 4473924
+              Font.Color = clBlack
               Font.Height = -12
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -7645,7 +7644,7 @@ object frmControlData: TfrmControlData
               Height = 22
               Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = 4473924
+              Font.Color = clBlack
               Font.Height = -12
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -7668,7 +7667,7 @@ object frmControlData: TfrmControlData
             Left = 0
             Top = 0
             Width = 399
-            Height = 583
+            Height = 610
             Align = alLeft
             TabOrder = 0
             SkinData.SkinSection = 'GROUPBOX'
@@ -7827,7 +7826,7 @@ object frmControlData: TfrmControlData
                 Style = csDropDownList
                 Color = clWhite
                 Font.Charset = DEFAULT_CHARSET
-                Font.Color = 4473924
+                Font.Color = clBlack
                 Font.Height = -12
                 Font.Name = 'Tahoma'
                 Font.Style = []
@@ -8579,7 +8578,7 @@ object frmControlData: TfrmControlData
             Left = 399
             Top = 0
             Width = 694
-            Height = 583
+            Height = 610
             Align = alClient
             TabOrder = 1
             SkinData.SkinSection = 'GROUPBOX'
@@ -8807,7 +8806,7 @@ object frmControlData: TfrmControlData
             end
             object Panel6: TsPanel
               Left = 1
-              Top = 543
+              Top = 570
               Width = 692
               Height = 39
               Align = alBottom
@@ -8924,6 +8923,84 @@ object frmControlData: TfrmControlData
             end
           end
         end
+        object tabMandatory: TsTabSheet
+          Caption = 'Mandatory info'
+          SkinData.CustomColor = False
+          SkinData.CustomFont = False
+          object pcMandatoryInfo: TsPageControl
+            AlignWithMargins = True
+            Left = 20
+            Top = 20
+            Width = 1053
+            Height = 570
+            Margins.Left = 20
+            Margins.Top = 20
+            Margins.Right = 20
+            Margins.Bottom = 20
+            ActivePage = tabGuestInformation
+            Align = alClient
+            TabOrder = 0
+            object tabGuestInformation: TsTabSheet
+              Caption = 'Mandatory Guest information'
+              SkinData.CustomColor = False
+              SkinData.CustomFont = False
+              object clbMandatoryFields: TsCheckListBox
+                AlignWithMargins = True
+                Left = 20
+                Top = 53
+                Width = 390
+                Height = 478
+                Margins.Left = 20
+                Margins.Top = 20
+                Margins.Bottom = 10
+                Align = alLeft
+                BorderStyle = bsSingle
+                Color = clWhite
+                Columns = 1
+                Font.Charset = DEFAULT_CHARSET
+                Font.Color = clBlack
+                Font.Height = -12
+                Font.Name = 'Tahoma'
+                Font.Style = []
+                ParentFont = False
+                TabOrder = 0
+                SkinData.SkinSection = 'EDIT'
+              end
+              object pnlManInfoButtons: TsPanel
+                Left = 0
+                Top = 0
+                Width = 1045
+                Height = 33
+                Align = alTop
+                TabOrder = 1
+                object btnMFSelectNone: TsButton
+                  AlignWithMargins = True
+                  Left = 120
+                  Top = 4
+                  Width = 91
+                  Height = 25
+                  Margins.Left = 5
+                  Align = alLeft
+                  Caption = 'Select none'
+                  TabOrder = 0
+                  OnClick = btnMFSelectNoneClick
+                end
+                object btnMFSelectAll: TsButton
+                  AlignWithMargins = True
+                  Left = 21
+                  Top = 4
+                  Width = 91
+                  Height = 25
+                  Margins.Left = 20
+                  Align = alLeft
+                  Caption = 'Select all'
+                  TabOrder = 1
+                  OnClick = btnMFSelectAllClick
+                end
+              end
+            end
+          end
+        end
       end
     end
   end
@@ -8935,11 +9012,10 @@ object frmControlData: TfrmControlData
     Align = alTop
     TabOrder = 0
     SkinData.SkinSection = 'PANEL'
-    ExplicitWidth = 1116
   end
   object sPanel1: TsPanel
     Left = 0
-    Top = 647
+    Top = 674
     Width = 1261
     Height = 33
     Margins.Left = 2
@@ -8950,7 +9026,6 @@ object frmControlData: TfrmControlData
     BevelOuter = bvNone
     TabOrder = 2
     SkinData.SkinSection = 'PANEL'
-    ExplicitWidth = 1116
     DesignSize = (
       1261
       33)
@@ -8969,7 +9044,6 @@ object frmControlData: TfrmControlData
       TabOrder = 0
       OnClick = okBtnClick
       SkinData.SkinSection = 'BUTTON'
-      ExplicitLeft = 954
     end
     object btnCancel: TsButton
       Left = 1180
@@ -8984,20 +9058,6 @@ object frmControlData: TfrmControlData
       TabOrder = 1
       OnClick = btnCancelClick
       SkinData.SkinSection = 'BUTTON'
-      ExplicitLeft = 1035
     end
-  end
-  object r1_: TRoomerDataSet
-    CommandText = ''
-    CommandType = cmdUnknown
-    Parameters = <>
-    DataActive = False
-    RoomerStoreUri = 'http://localhost:8080/services/'
-    RoomerUri = 'http://localhost:8080/services/'
-    RoomerEntitiesUri = 'http://localhost:8080/services/entities/'
-    RoomerDatasetsUri = 'http://localhost:8080/services/datasets/'
-    SessionLengthSeconds = 0
-    Left = 25
-    Top = 397
   end
 end

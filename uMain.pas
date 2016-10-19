@@ -961,7 +961,6 @@ type
     procedure I1Click(Sender: TObject);
     procedure G4Click(Sender: TObject);
     procedure sSpeedButton1Click(Sender: TObject);
-    procedure lblPropertyStatusDblClick(Sender: TObject);
     procedure btnManagmentStatClick(Sender: TObject);
     procedure pmnuReservationRoomListClick(Sender: TObject);
     procedure mnuRoomListForReservationClick(Sender: TObject);
@@ -992,7 +991,6 @@ type
     procedure F1Click(Sender: TObject);
     procedure grOneDayRoomsDblClickCell(Sender: TObject; ARow, ACol: integer);
     procedure btnClearWindowCacheClick(Sender: TObject);
-    procedure __lblUsernameDblClick(Sender: TObject);
     procedure btnGuestProfilesClick(Sender: TObject);
     procedure btnBookKeepingCodesClick(Sender: TObject);
     procedure btnHotelSpecificSqlQueriesClick(Sender: TObject);
@@ -1019,7 +1017,6 @@ type
     procedure btnSetNoroomClick(Sender: TObject);
     procedure btnConfirmAllottedBookingClick(Sender: TObject);
     procedure sSkinManager1SkinLoading(Sender: TObject);
-    procedure sPanel3DblClick(Sender: TObject);
     procedure timOfflineReportsTimer(Sender: TObject);
     procedure btnDynamicRateRulesClick(Sender: TObject);
     procedure __cbxHotelsCloseUp(Sender: TObject);
@@ -1648,7 +1645,8 @@ uses
     , uDayClosingTimes
     , uDayClosingTimesAPICaller
     , uDateTimeHelper
-    , uRptHouseKeeping, uReservationStateChangeHandler, uRptDailyRevenues;
+    , uRptHouseKeeping, uReservationStateChangeHandler, uRptDailyRevenues
+    , uRoomerVersionInfo;
 
 {$R *.DFM}
 {$R Cursors.res}
@@ -1969,7 +1967,6 @@ end;
 
 procedure TfrmMain.AssignSkinColorsToComponents;
 begin
-  DebugLog('Starting AssignSkinColorsToComponents');
   Chart1.Color := sSkinManager1.GetGlobalColor;
   Chart1.LeftAxis.LabelsFont.Color := sSkinManager1.GetGlobalFontColor;
   Chart1.BottomAxis.LabelsFont.Color := sSkinManager1.GetGlobalFontColor;
@@ -2002,7 +1999,6 @@ begin
   __REVPAR.Font.Color := cbxStatDay.Font.Color;
   lblStatRoomsSold.Font.Color := cbxStatDay.Font.Color;
   __ROOMSSOLD.Font.Color := cbxStatDay.Font.Color;
-  DebugLog('Ending AssignSkinColorsToComponents');
   if cbxStatDay.ItemIndex < 0 then
     cbxStatDay.ItemIndex := 0;
   cbxStatDay.Update;
@@ -2212,31 +2208,13 @@ end;
 procedure TfrmMain.SetWindowTitle;
 var
   s: string;
-  recVer: TEXEVersionData;
 begin
-  recVer := _GetEXEVersionData(Paramstr(0));
-
   if NOT RBEMode then
-    s := 'ROOMER PMS'
+    s := 'ROOMER PMS '
   else
     s := 'Roomer Booking Engine - ';
 
-  s := s + { 0070 } ' - ' + GetTranslatedText('sh0070') + ':' + recVer.FileVersion; // ProductVersion;
-  Caption := s;
-end;
-
-procedure TfrmMain.sPanel3DblClick(Sender: TObject);
-begin
-{$IFDEF DEBUG}
-  ShowMessage(d.roomerMainDataSet.TestSpecificOpenApiAuthHeaders(
-    '2a0434bc',
-    'ORBIS',
-    'a02da62f9c6f941024e90d5828d9246c096fb5b1286946e1a63b14981d42f55e',
-    'https://api.roomercloud.net/roomer/openAPI/REST/bookings/roomassignments?roomNumber=004',
-    now));
-  ShowMessage(CalculateOTPOnSpecifiedTime('a02da62f9c6f941024e90d5828d9246c096fb5b1286946e1a63b14981d42f55e',
-    StrToDateTime('05-01-2016 12:00:00')));
-{$ENDIF}
+  Caption := s + TRoomerVersionInfo.ShortVersionString;
 end;
 
 procedure TfrmMain.splitPeriodMoved(Sender: TObject);
@@ -2248,7 +2226,6 @@ procedure TfrmMain.sSkinManager1SkinLoading(Sender: TObject);
 var
   skinName: String;
 begin
-  DebugLog('Starting sSkinManager1AfterChange');
   skinName := LowerCase(trim(sSkinManager1.skinName));
   if (pos(skinName, 'office2007 black,tv-b') > 0) then
     dxRibbon1.ColorSchemeName := 'DarkSide'
@@ -2265,13 +2242,6 @@ begin
   WriteStringValueToAnyRegistry('Software\Roomer\FormStatus\StoreMainV2\sSkinManager1', 'SkinName',
     sSkinManager1.skinName);
 
-  DebugLog('Ending sSkinManager1AfterChange');
-  // TsSkinManager.GetGlobalColor
-  // TsSkinManager.GetGlobalFontColor
-  // TsSkinManager.GetActiveEditColor
-  // TsSkinManager.GetActiveEditFontColor
-  // TsSkinManager.GetHighLightColor
-  // TsSkinManager.GetHighLightFontColor
 end;
 
 procedure TfrmMain.sSpeedButton1Click(Sender: TObject);
@@ -2311,45 +2281,6 @@ begin
   result := true;
   if ViewMode <> vmOneDay then
     exit;
-end;
-
-procedure TfrmMain.lblPropertyStatusDblClick(Sender: TObject);
-begin
-{$IFDEF DEBUG}
-  RoomerLanguage.PerformDBUpdatesWhenUnknownEntitiesFound := true;
-  try
-    GenerateTranslateTextTableForConstants;
-    GenerateTranslateTextTableForAllForms;
-    TranslateOpenForms;
-    try
-      frmHomedate.Show;
-      RoomerLanguage.TranslateThisForm(frmRptManagment);
-      frmHomedate.Hide;
-    except
-    end;
-  finally
-    RoomerLanguage.PerformDBUpdatesWhenUnknownEntitiesFound := false;
-  end;
-{$ENDIF}
-end;
-
-procedure TfrmMain.__lblUsernameDblClick(Sender: TObject);
-var
-  Invoice: TInvoice;
-begin
-  { IFDEF DEBUG }
-  // PushActivityLogs;
-  if GetSelectedRoomInformation then
-  begin
-    if IsControlKeyPressed then
-      _iRoomReservation := 0;
-
-    Invoice := TInvoice.Create(_iReservation, _iRoomReservation, 0, -1, 0);
-    DebugMessage(FloatToStr(Invoice.Total) + #10 + FloatToStr(Invoice.TotalPayments) + #10 +
-      FloatToStr(Invoice.Balance));
-    Invoice.Free;
-  end;
-  { ENDIF }
 end;
 
 procedure TfrmMain.__lblSearchDblClick(Sender: TObject);
@@ -2505,24 +2436,31 @@ begin
   if OffLineMode then
     exit;
 
-  if (Sender = btnBack) then
-    iMPly := -1
-  else
-    iMPly := 1;
+  btnBack.Enabled := false;
+  btnForward.Enabled := false;
+  try
+    if (Sender = btnBack) then
+      iMPly := -1
+    else
+      iMPly := 1;
 
-  // Ctrl means a week forward or backward
-  if IsControlKeyPressed then
-  begin
-    lNewDate := dtDate.Date + 7 * iMPly;
+    // Ctrl means a week forward or backward
+    if IsControlKeyPressed then
+    begin
+      lNewDate := dtDate.Date + 7 * iMPly;
 
-    // Ctrl-Alt means a month forward or backwork
-    if IsAltKeyPressed then
-      lNewDate := IncMonth(dtDate.Date, iMPly)
-  end
-  else
-    lNewDate := dtDate.Date + 1 * iMPly;
+      // Ctrl-Alt means a month forward or backwork
+      if IsAltKeyPressed then
+        lNewDate := IncMonth(dtDate.Date, iMPly)
+    end
+    else
+      lNewDate := dtDate.Date + 1 * iMPly;
 
-  dtDate.Date := lNewDate;
+    dtDate.Date := lNewDate;
+  finally
+    btnBack.Enabled := True;
+    btnForward.Enabled := True;
+  end;
 end;
 
 procedure TfrmMain.btnBreakfastGuestsClick(Sender: TObject);
@@ -2847,7 +2785,6 @@ end;
 
 procedure TfrmMain.FormCreate(Sender: TObject);
 var
-  recVer: TEXEVersionData;
   temp: String;
 begin
   FormShowing := false;
@@ -2925,8 +2862,7 @@ begin
   StoreMain.RestoreFrom;
   PlaceFormOnVisibleMonitor(self);
   try
-    recVer := _GetEXEVersionData(Paramstr(0));
-    __VER.Caption := { 1081 } ANSIUpperCase(GetTranslatedText('sh0080')) + ': ' + recVer.FileVersion;
+    __VER.Caption := TRoomerVersionInfo.LongVersionString;
   except
   end;
 
@@ -3790,7 +3726,7 @@ begin
         else if (lLoginFormResult = lrLogin) and (NOT OffLineMode) AND d.roomerMainDataSet.IsConnectedToInternet AND
           d.roomerMainDataSet.RoomerPlatformAvailable then
         begin
-          d.roomerMainDataSet.LOGIN(lHotelID, userName, password, 'ROOMERPMS', GetVersion(Application.ExeName));
+          d.roomerMainDataSet.LOGIN(lHotelID, userName, password, 'ROOMERPMS', TRoomerVersionInfo.FileVersion);
           FOffLineMode := false;
         end
         else
@@ -4275,6 +4211,9 @@ begin
 
     s := Format(HOTEL_PERFORMANCE_QUERY_BETWEEN_DATES,
       [
+      dateToSqlString(now + cbxStatDay.ItemIndex),
+      dateToSqlString(now + cbxStatDay.ItemIndex),
+
       dateToSqlString(now + cbxStatDay.ItemIndex),
       dateToSqlString(now + cbxStatDay.ItemIndex),
 
@@ -5163,80 +5102,6 @@ begin
     ShowMessage(GetTranslatedText('sh1008'));
 end;
 
-// ------------------------------------------------------------------------------
-// +080223 - Added 5day Grid support
-//
-// ------------------------------------------------------------------------------
-//procedure TfrmMain.OneDay_CheckIn;
-//var
-//  Execute: boolean;
-//  bContinue: boolean;
-//  s: String;
-//  lRoomStateCHanger: TRoomReservationStateChangeHandler;
-//begin
-//
-//  lRoomStateCHanger := TRoomReservationStateChangeHandler.Create(_iReservation, _iRoomReservation);
-//  try
-//    if lRoomStateChanger.ChangeState(rsGuests) then
-//      RefreshGrid;
-//  finally
-//    lRoomStateChanger.Free;
-//  end;
-
-//  if GetSelectedRoomInformation then
-//  begin
-//    if g.qWarnCheckInDirtyRoom AND g.oRooms.Room[_Room].IsDirty then
-//    begin
-//      s := Format(GetTranslatedText('shTx_Various_RoomNotClean'), [_Room]);
-//      if MessageDlg(s, mtWarning, [mbYes, mbCancel], 0) <> mrYes then
-//        exit;
-//    end;
-//
-//    if _ResStatus = rsBlocked then
-//      exit;
-//
-//    Execute := true;
-//    if _ResStatus <> rsReservation then
-//    begin
-//      if _ResStatus = rsAlotment then
-//        _ResStatus := rsReservation
-//      else if _ResStatus = rsOverbooked then
-//        _ResStatus := rsReservation
-//      else if _ResStatus = rsTmp1 then // *HJ 140206
-//        _ResStatus := rsReservation
-//      else if _ResStatus = rsAwaitingPayment then // *HJ 140206
-//        _ResStatus := rsReservation
-//      else
-//        Execute := false;
-//    end;
-//
-//    if Execute then
-//    begin
-//      if ctrlGetBoolean('CheckinWithDetailsDialog') OR
-//        (MessageDlg(Format(GetTranslatedText('shCheckRoom'), [_Name]), mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
-//      begin
-//
-//        ShowAlertsForReservation(_iReservation, _iRoomReservation, atCHECK_IN);
-//
-//        bContinue := true;
-//        if _NoRoom then
-//          bContinue := OneDay_DoProvideRoom;
-//
-//        if bContinue then
-//        begin
-//          if (NOT ctrlGetBoolean('CheckinWithDetailsDialog')) OR OpenGuestCheckInForm(_iRoomReservation) then
-//          begin
-//            d.CheckInGuest(_iRoomReservation);
-//            if (ViewMode = vmOneDay) OR (ViewMode = vmPeriod) then
-//              RefreshGrid;
-//          end;
-//        end;
-//      end
-//    end
-//    else
-//      ShowMessage(GetTranslatedText('sh1010'));
-//  end;
-//end;
 
 procedure TfrmMain.CheckOutARoom(const Room: String; iRoomReservation, iReservation: integer);
 var
@@ -5250,18 +5115,6 @@ begin
   finally
     lRoomStateChanger.Free;
   end;
-//  if ctrlGetBoolean('CheckOutWithPaymentsDialog') OR
-//    (MessageDlg(Format(GetTranslatedText('shCheckOutSelectedRoom'), [Room]), mtConfirmation, [mbYes, mbNo], 0) = mrYes)
-//  then
-//  begin
-//    ShowAlertsForReservation(iReservation, iRoomReservation, atCHECK_OUT);
-//    if ctrlGetBoolean('CheckOutWithPaymentsDialog') then
-//      CheckoutGuestNoDialog(iReservation, iRoomReservation, Room)
-//    else
-//      d.CheckOutGuest(iRoomReservation, Room);
-//    if (ViewMode = vmOneDay) OR (ViewMode = vmPeriod) then
-//      RefreshGrid;
-//  end
 end;
 
 function TfrmMain.CheckInARoom(iReservation, iRoomReservation: integer): boolean;
@@ -5287,51 +5140,23 @@ end;
 procedure TfrmMain.CheckInGroup;
 var
   lStateChanger: TReservationStateChangeHandler;
+  i : Integer;
+  lstRoomReservations : TStringList;
+  lstRoomReservationsStatus : TStringList;
+  ReservationCount : Integer;
 begin
 
-  lStateChanger := TReservationStateChangeHandler.Create(_iReservation);
-  try
-    if lStateChanger.ChangeState(rsGuests) then
-      if (ViewMode = vmOneDay) OR (ViewMode = vmPeriod) then
-          RefreshGrid;
-  finally
-    lStateChanger.Free;
+  if GetSelectedRoomInformation then
+  begin
+    lStateChanger := TReservationStateChangeHandler.Create(_iReservation);
+    try
+      if lStateChanger.ChangeState(rsGuests) then
+        if (ViewMode = vmOneDay) OR (ViewMode = vmPeriod) then
+              RefreshGrid;
+    finally
+      lStateChanger.Free;
+    end;
   end;
-
-
-//  lstRoomReservations := TStringList.Create;
-//  lstRoomReservationsStatus := TStringList.Create;
-//  try
-//    if GetSelectedRoomInformation then
-//    begin
-//
-//      if _ResStatus = rsBlocked then
-//        exit;
-//
-//      ReservationCount := GetReservationRRList(_iReservation, lstRoomReservations, lstRoomReservationsStatus);
-//      if ReservationCount < 1 then
-//        exit; // ==>
-//      ShowAlertsForReservation(_iReservation, 0, atCHECK_IN);
-//      if (MessageDlg(Format(GetTranslatedText('shCheckInGroupOfRoom'), [_Room]), mtConfirmation, [mbYes, mbNo], 0)
-//        = mrYes) then
-//      begin
-//        for i := 0 to ReservationCount - 1 do
-//        begin
-//          if UpperCase(lstRoomReservationsStatus[i]) = 'P' then
-//          begin
-//            _iRoomReservation := StrToInt(lstRoomReservations[i]);
-//            ShowAlertsForReservation(0, _iRoomReservation, atCHECK_IN);
-//            d.CheckInGuest(_iRoomReservation)
-//          end;
-//        end;
-//        if (ViewMode = vmOneDay) OR (ViewMode = vmPeriod) then
-//          RefreshGrid;
-//      end;
-//    end;
-//  finally
-//    lstRoomReservations.Free;
-//    lstRoomReservationsStatus.Free;
-//  end;
 end;
 
 // ------------------------------------------------------------------------------
@@ -7689,10 +7514,6 @@ begin
         if OffLineMode then
           OffLineMode := false;
       except
-{$IFDEF DEBUG}
-        // if NOT OffLineMode then
-        // raise Exception.Create('Message Retrieval failed');
-{$ENDIF}
       end;
     finally
       ResList.Free;
@@ -7974,6 +7795,7 @@ begin
   zDateFrom := trunc(dtDate.Date);
   zDateTo := zDateFrom + zNights;
   PostMessage(handle, WM_REFRESH_DATE, 0, 0);
+  PostMessage(handle, WM_REFRESH_STAFF_COMM_NOTIFIER, 0, 0);
 end;
 
 procedure TfrmMain.grPeriodRoomsEnter(Sender: TObject);
@@ -11612,14 +11434,10 @@ end;
 procedure CloseFinancialDay;
 var
   lCaller: TDayClosingTimesAPICaller;
-  lCurrentDay: TdateTime;
 begin
   lCaller := TDayClosingTimesAPICaller.Create;
   try
-    lCurrentDay := lCaller.GetRunningDay;
-    if MessageDlg(GetTranslatedText('shTx_CloseFinancialDay') + #10 +
-                  GetTranslatedText('shTx_CurrentFinancialDay') + lCurrentDay.ToString, mtConfirmation, [mbYes, mbCancel], 0) = mrYes then
-      lCaller.CloseRunningDay;
+    lCaller.CloseRunningDayGuarded;
   finally
     lCaller.Free;
   end;
@@ -13441,15 +13259,10 @@ begin
 end;
 
 procedure TfrmMain._MaidJobScripts;
+var
+  theData: recMaidActionHolder;
 begin
-  Application.CreateForm(TfrmMaidActions, frmMaidActions);
-  try
-    if frmMaidActions.ShowModal = mrOK then
-    begin
-    end;
-  finally
-    frmMaidActions.Free;
-  end;
+  openMaidAction(actNone, theData);
 end;
 
 procedure TfrmMain._RoomRates;
@@ -13780,24 +13593,15 @@ procedure TfrmMain.HandleSkinManagerChange;
 var
   skin: String;
 begin
-  DebugLog('Starting __dxBarCombo1CloseUp');
   sSkinManager1.active := false;
   try
-    DebugLog('Selecting Skin __dxBarCombo1CloseUp');
     skin := __dxBarCombo1.Items[__dxBarCombo1.CurItemIndex];
-    DebugLog('Selected Skin __dxBarCombo1CloseUp - ' + skin);
     sSkinManager1.skinName := DelChars(skin, '&');
-    DebugLog('Assigned Skin __dxBarCombo1CloseUp - ' + sSkinManager1.skinName);
   finally
-    DebugLog('Activating Skinmanager __dxBarCombo1CloseUp');
     sSkinManager1.active := true;
-    DebugLog('Skinmanager activated __dxBarCombo1CloseUp');
   end;
-  DebugLog('Loaded __dxBarCombo1CloseUp');
   sSkinManager1.Loaded;
-  DebugLog('Loaded done __dxBarCombo1CloseUp');
   SetExtraSkinColors;
-  DebugLog('Ending __dxBarCombo1CloseUp');
 end;
 
 procedure TfrmMain.dxBarLargeButton2Click(Sender: TObject);

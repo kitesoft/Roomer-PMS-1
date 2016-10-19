@@ -53,8 +53,10 @@ type
 
   TReservationStateChangeHandler = class(TBaseReservationStateChangeHandler)
   private
+    FConfirmed : Boolean;
     FRoomStateChangers: TObjectDictionary<integer, TRoomReservationStateChangeHandler>;
     function GetRoomstateChangeHandler(aRoomRes: integer): TRoomReservationStateChangeHandler;
+    procedure AddRoomResChangeSetHandlers;
   protected
     function Checkin: boolean; override;
     function CheckOut: boolean; override;
@@ -64,7 +66,9 @@ type
     constructor Create(aReservation: integer); reintroduce;
     destructor Destroy; override;
     procedure AddRoomStateChangeHandler(aHandler: TRoomReservationStateChangeHandler);
+    procedure UpdateRoomResStateChangeHandlers;
     procedure Clear;
+    function ChangeState(aNewState: TReservationState): boolean; override;
     /// <summary>
     ///   For a full reservation the change is allowed if for at least one of the rooms the change is allowed
     /// </summary>
@@ -145,8 +149,9 @@ begin
     ShowAlertsForReservation(FReservation, 0, atCHECK_IN);
 
     lRoom := FRoomStateChangers.Values.ToArray[0].Room;
-    if (MessageDlg(Format(GetTranslatedText('shCheckInGroupOfRoom'), [lRoom]), mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
+    if FConfirmed OR (MessageDlg(Format(GetTranslatedText('shCheckInGroupOfRoom'), [lRoom]), mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
     begin
+      FConfirmed := True;
       for lRoomHandler in FRoomStateChangers.Values do
       begin
         if lRoomHandler.ChangeIsAllowed(rsGuests) then
@@ -175,8 +180,9 @@ begin
     ShowAlertsForReservation(FReservation, 0, atCHECK_OUT);
 
     lRoom := FRoomStateChangers.Values.ToArray[0].Room;
-    if (MessageDlg(Format(GetTranslatedText('shCheckOutGroupOfRoom'), [lRoom]), mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
+    if FConfirmed OR (MessageDlg(Format(GetTranslatedText('shCheckOutGroupOfRoom'), [lRoom]), mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
     begin
+      FConfirmed := True;
       for lRoomHandler in FRoomStateChangers.Values do
       begin
         if lRoomHandler.ChangeIsAllowed(rsDeparted) then
@@ -199,8 +205,28 @@ end;
 constructor TReservationStateChangeHandler.Create(aReservation: integer);
 begin
   inherited Create;
+  FConfirmed := False;
   FReservation := aReservation;
+  FConfirmed := False;
   FRoomStateChangers:= TObjectDictionary<integer, TRoomReservationStateChangeHandler>.Create([doOwnsValues]);
+  AddRoomResChangeSetHandlers;
+end;
+
+procedure TReservationStateChangehandler.AddRoomResChangeSetHandlers;
+var
+  lRoomResList: TStringlist;
+  lDummy: TStringlist;
+  lRoomres: string;
+begin
+  lDummy := nil;
+  lRoomResList := TStringList.Create;
+  try
+    GetReservationRRList(FReservation, lRoomResList, lDummy);
+    for lRoomRes in lRoomResList do
+      AddRoomStateChangeHandler(TRoomReservationStateChangeHandler.Create(FReservation, StrToInt(lRoomRes)));
+  finally
+    lRoomResList.Free;
+  end;
 end;
 
 destructor TReservationStateChangeHandler.Destroy;
@@ -223,6 +249,12 @@ begin
       FCurrentState := rsMixed;
       Break;
     end;
+end;
+
+procedure TReservationStateChangeHandler.UpdateRoomResStateChangeHandlers;
+begin
+  FRoomStateChangers.Clear;
+  AddRoomResChangeSetHandlers;
 end;
 
 function TReservationStateChangeHandler.GetRoomstateChangeHandler(aRoomRes: Integer): TRoomReservationStateChangeHandler;
@@ -351,6 +383,12 @@ begin
     d.UpdateStatusSimple(FReservation, FRoomReservation, FNewState.AsStatusChar);
     Result := True;
   end;
+end;
+
+function TReservationStateChangeHandler.ChangeState(aNewState: TReservationState): boolean;
+begin
+  FConfirmed := False;
+  inherited;
 end;
 
 end.

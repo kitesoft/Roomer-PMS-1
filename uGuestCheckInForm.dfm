@@ -231,8 +231,9 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
               Caption = 'Title:'
             end
             object shpFirstname: TShape
-              Left = 436
-              Top = 70
+              Tag = 12
+              Left = 437
+              Top = 73
               Width = 16
               Height = 17
               Brush.Color = clRed
@@ -241,8 +242,9 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
               Visible = False
             end
             object shpLastname: TShape
-              Left = 436
-              Top = 97
+              Tag = 13
+              Left = 437
+              Top = 96
               Width = 16
               Height = 17
               Brush.Color = clRed
@@ -251,6 +253,7 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
               Visible = False
             end
             object shpCity: TShape
+              Tag = 10
               Left = 436
               Top = 482
               Width = 16
@@ -261,6 +264,7 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
               Visible = False
             end
             object shpCountry: TShape
+              Tag = 11
               Left = 436
               Top = 509
               Width = 16
@@ -293,8 +297,20 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
               Font.Style = []
             end
             object shpMarket: TShape
-              Left = 437
+              Tag = 14
+              Left = 436
               Top = 260
+              Width = 16
+              Height = 17
+              Brush.Color = clRed
+              Pen.Color = clRed
+              Shape = stCircle
+              Visible = False
+            end
+            object shpNationality: TShape
+              Tag = 15
+              Left = 436
+              Top = 208
               Width = 16
               Height = 17
               Brush.Color = clRed
@@ -319,6 +335,7 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
               BoundLabel.Caption = 'test'
             end
             object edLastName: TsEdit
+              Tag = 13
               Left = 190
               Top = 96
               Width = 241
@@ -384,6 +401,7 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
               BoundLabel.Caption = 'test'
             end
             object edCountry: TsEdit
+              Tag = 11
               Left = 190
               Top = 508
               Width = 34
@@ -444,6 +462,7 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
               PopupWidth = 250
             end
             object edCity: TsEdit
+              Tag = 10
               Left = 190
               Top = 481
               Width = 241
@@ -512,6 +531,7 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
               BoundLabel.Caption = 'test'
             end
             object edNationality: TsEdit
+              Tag = 15
               Left = 190
               Top = 204
               Width = 34
@@ -597,8 +617,8 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
             object cbActiveLiveSearch: TsCheckBox
               Left = 190
               Top = 47
-              Width = 82
-              Height = 19
+              Width = 74
+              Height = 20
               Caption = 'Live search'
               TabOrder = 21
               OnClick = cbActiveLiveSearchClick
@@ -607,6 +627,7 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
               ImgUnchecked = 0
             end
             object edFirstname: TRoomerFilterComboBox
+              Tag = 12
               Left = 190
               Top = 69
               Width = 241
@@ -630,10 +651,12 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
               OnKeyDown = edFirstnameKeyDown
             end
             object cbxMarket: TsComboBox
+              Tag = 14
               Left = 190
               Top = 258
               Width = 76
               Height = 19
+              Hint = 'Select market or press DEL to clear'
               Alignment = taLeftJustify
               BoundLabel.Caption = 'Market:'
               SkinData.SkinSection = 'COMBOBOX'
@@ -649,6 +672,7 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
               ParentFont = False
               TabOrder = 8
               OnChange = cbxMarketChange
+              OnKeyDown = cbxMarketKeyDown
               Items.Strings = (
                 'Leisure'
                 'Business')
@@ -656,8 +680,8 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
             object chkCountryForAllGuests: TsCheckBox
               Left = 190
               Top = 532
-              Width = 252
-              Height = 19
+              Width = 244
+              Height = 20
               Hint = 
                 'When checked the selected country will be set for all guests of ' +
                 'this room that don'#39't already have a country set'
@@ -671,6 +695,8 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
           end
           object sTabSheet6: TsTabSheet
             Caption = 'Company'
+            SkinData.CustomColor = False
+            SkinData.CustomFont = False
             object sLabel22: TsLabel
               Left = 11
               Top = 24
@@ -1153,6 +1179,7 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
           Font.Style = [fsBold]
         end
         object shpGuarantee: TShape
+          Tag = 16
           Left = 342
           Top = 254
           Width = 16
@@ -1180,13 +1207,15 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
           Caption = '0.00'
         end
         object cbxGuaranteeTypes: TsComboBox
-          Left = 189
+          Tag = 16
+          Left = 187
           Top = 253
           Width = 149
           Height = 21
           Alignment = taLeftJustify
           SkinData.SkinSection = 'COMBOBOX'
           VerticalAlignment = taAlignTop
+          TextHint = 'Select'
           Style = csDropDownList
           Color = clWhite
           Font.Charset = DEFAULT_CHARSET
@@ -1194,10 +1223,9 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
-          ItemIndex = 3
+          ItemIndex = -1
           ParentFont = False
           TabOrder = 0
-          Text = 'Select'
           OnCloseUp = cbxGuaranteeTypesCloseUp
           Items.Strings = (
             'Credit card'
@@ -1210,11 +1238,13 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
           Top = 294
           Width = 326
           Height = 170
-          ActivePage = sTabSheet4
+          ActivePage = sTabSheet3
           TabOrder = 1
           SkinData.SkinSection = 'PAGECONTROL'
           object sTabSheet3: TsTabSheet
             Caption = 'Credit card'
+            SkinData.CustomColor = False
+            SkinData.CustomFont = False
             object sLabel12: TsLabel
               Left = 66
               Top = 69
@@ -1280,6 +1310,7 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
               AutoSize = False
             end
             object shpCash: TShape
+              Tag = 16
               Left = 298
               Top = 19
               Width = 16
@@ -1290,6 +1321,7 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
               Visible = False
             end
             object edAmount: TsEdit
+              Tag = 16
               Left = 94
               Top = 18
               Width = 67
@@ -1333,9 +1365,13 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
           end
           object sTabSheet5: TsTabSheet
             Caption = 'None'
+            SkinData.CustomColor = False
+            SkinData.CustomFont = False
           end
           object sTabSheet7: TsTabSheet
             Caption = 'Select'
+            SkinData.CustomColor = False
+            SkinData.CustomFont = False
           end
         end
       end

@@ -70,7 +70,6 @@ function GetCursorPosForControl(AControl: TWinControl): TPoint;
 procedure DeleteFileWithWildcard(Path: string; files : String);
 procedure GetFileList(FileList: TStrings; Path: string; files : String = '*.*');
 
-function GetVersion(sFileName:string): string;
 function DoubleQuoteIfNeeded(s : String) : String;
 function CorrectDecimalSeparator(s : String) : String;
 function RoomerStrToFloat(s : String) : Double;
@@ -84,6 +83,7 @@ function Str2Bool(s : String) : Boolean;
 function Bool2Str(b : Boolean) : String;
 procedure DebugMessage(const Str: string);
 procedure CopyToClipboard(const Str: string; iDelayMs: integer = 500);
+procedure TextToClipboard(const Str: string; iDelayMs: integer = 500);
 function ClipboardText : String;
 function ClipboardHasFormat(format : Word) : Boolean;
 function LoadImageToBitmap(Filename : String) : TBitmap;
@@ -160,6 +160,8 @@ function RunningInMainThread: boolean;
 
 var SystemDecimalSeparator : char;
 
+function StringIndexInSet(Selector : string; CaseList: array of string): Integer;
+
 
 implementation
 
@@ -168,6 +170,20 @@ uses System.SysUtils, clipbrd{$IFNDEF RBE_BUILD}, PrjConst{$ENDIF};
 function linuxLFCRToWindows(source : String) : String;
 begin
   result := ReplaceString(ReplaceString(source, '\n', #10), '\r', #13);
+end;
+
+function StringIndexInSet(Selector : string; CaseList: array of string): Integer;
+var cnt: integer;
+begin
+  Result:=-1;
+  for cnt := 0 to Length(CaseList)-1 do
+  begin
+    if CompareText(Selector, CaseList[cnt]) = 0 then
+    begin
+      Result:=cnt;
+      Break;
+    end;
+  end;
 end;
 
 function JoinStrings(list : TStrings; Delimiter : Char; QuoteChar : Char = '''') : String;
@@ -1142,6 +1158,26 @@ begin
 {$ENDIF}
 end;
 
+procedure TextToClipboard(const Str: string; iDelayMs: integer = 500);
+const MaxRetries= 5;
+var   RetryCount: Integer;
+begin
+  for RetryCount:= 1 to MaxRetries do
+  try
+    Clipboard.AsText:= Str;
+    Break;
+  except
+    on Exception do
+    begin
+      if RetryCount = MaxRetries then
+      //  raise Exception.Create('Cannot set clipboard')
+		    raise Exception.Create({$IFNDEF RBE_BUILD}GetTranslatedText('shTx_Utils_CannotClipboard'){$ELSE}'Cannot Copy To Clipboard'{$ENDIF})
+      else
+        Sleep(iDelayMs)
+    end;
+  end;
+end;
+
 function ClipboardText : String;
 begin
   result := Clipboard.AsText;
@@ -1463,28 +1499,6 @@ begin
   GetCursorPos(P);
   ScreenToClient(AControl.Handle, P );
   result := P;
-end;
-
-function GetVersion(sFileName:string): string;
-var
-  VerInfoSize: DWORD;
-  VerInfo: Pointer;
-  VerValueSize: DWORD;
-  VerValue: PVSFixedFileInfo;
-  Dummy: DWORD;
-begin
-  VerInfoSize := GetFileVersionInfoSize(PChar(sFileName), Dummy);
-  GetMem(VerInfo, VerInfoSize);
-  GetFileVersionInfo(PChar(sFileName), 0, VerInfoSize, VerInfo);
-  VerQueryValue(VerInfo, '\', Pointer(VerValue), VerValueSize);
-  with VerValue^ do
-  begin
-    Result := IntToStr(dwFileVersionMS shr 16);
-    Result := Result + '.' + IntToStr(dwFileVersionMS and $FFFF);
-    Result := Result + '.' + IntToStr(dwFileVersionLS shr 16);
-    Result := Result + '.' + IntToStr(dwFileVersionLS and $FFFF);
-  end;
-  FreeMem(VerInfo, VerInfoSize);
 end;
 
 type

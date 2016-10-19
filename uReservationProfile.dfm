@@ -10,6 +10,7 @@ object frmReservationProfile: TfrmReservationProfile
   Font.Height = -9
   Font.Name = 'Tahoma'
   Font.Style = []
+  KeyPreview = True
   OldCreateOrder = False
   Position = poMainFormCenter
   ShowHint = True
@@ -1944,6 +1945,7 @@ object frmReservationProfile: TfrmReservationProfile
         Font.Style = []
         Images = DImages.cxSmallImagesFlat
         ParentFont = False
+        PopupMenu = mnuGrid
         TabOrder = 0
         LookAndFeel.NativeStyle = False
         object tvRooms: TcxGridDBTableView
@@ -2881,8 +2883,8 @@ object frmReservationProfile: TfrmReservationProfile
         object chkShowAllGuests: TsCheckBox
           Left = 333
           Top = 11
-          Width = 102
-          Height = 19
+          Width = 94
+          Height = 20
           Caption = 'Show all guests'
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 4
@@ -3832,16 +3834,14 @@ object frmReservationProfile: TfrmReservationProfile
     Align = alBottom
     TabOrder = 4
     SkinData.SkinSection = 'PANEL'
-    DesignSize = (
-      1136
-      33)
     object sButton2: TsButton
-      Left = 963
+      AlignWithMargins = True
+      Left = 1049
       Top = 4
       Width = 83
       Height = 25
       Hint = 'Confirm close'
-      Anchors = [akTop, akRight]
+      Align = alRight
       Caption = 'OK'
       ImageIndex = 82
       Images = DImages.PngImageList1
@@ -3850,23 +3850,8 @@ object frmReservationProfile: TfrmReservationProfile
       ShowHint = False
       TabOrder = 0
       SkinData.SkinSection = 'BUTTON'
-    end
-    object sButton3: TsButton
-      Left = 1048
-      Top = 4
-      Width = 83
-      Height = 25
-      Hint = 'Confirm close'
-      Anchors = [akTop, akRight]
-      Cancel = True
-      Caption = 'Cancel'
-      ImageIndex = 10
-      Images = DImages.PngImageList1
-      ModalResult = 2
-      ParentShowHint = False
-      ShowHint = False
-      TabOrder = 1
-      SkinData.SkinSection = 'BUTTON'
+      ExplicitLeft = 966
+      ExplicitTop = 6
     end
   end
   object mRooms: TdxMemData
@@ -3876,8 +3861,8 @@ object frmReservationProfile: TfrmReservationProfile
     AfterPost = mRoomsAfterPost
     AfterScroll = mRoomsAfterScroll
     OnCalcFields = mRoomsCalcFields
-    Left = 352
-    Top = 448
+    Left = 360
+    Top = 424
     object mRoomsReservation: TIntegerField
       FieldName = 'Reservation'
     end
@@ -4106,7 +4091,7 @@ object frmReservationProfile: TfrmReservationProfile
     SortOptions = []
     AfterScroll = mGuestRoomsAfterScroll
     Left = 56
-    Top = 440
+    Top = 424
     object mGuestRoomsReservation: TIntegerField
       FieldName = 'Reservation'
     end
@@ -4631,6 +4616,49 @@ object frmReservationProfile: TfrmReservationProfile
     end
     object Clipboardtohiddenmemo1: TMenuItem
       Action = acPasteIntoHiddenMemo
+    end
+  end
+  object mnuGrid: TPopupMenu
+    Left = 864
+    Top = 536
+    object R1: TMenuItem
+      Caption = 'Remove Room'
+      OnClick = btnRemoveRoomClick
+    end
+    object G1: TMenuItem
+      Caption = 'Guest details'
+      OnClick = sButton5Click
+    end
+    object P1: TMenuItem
+      Caption = 'Provide room number'
+      OnClick = btnProvideRoomClick
+    end
+    object J1: TMenuItem
+      Caption = 'Jump'
+      OnClick = cxButton6Click
+    end
+    object R2: TMenuItem
+      Caption = 'Room documents'
+      OnClick = cxButton5Click
+    end
+    object I1: TMenuItem
+      Caption = 'Prices'
+      OnClick = btnShowPricesClick
+    end
+    object G2: TMenuItem
+      Caption = 'Group - guest names'
+      OnClick = btnGroupsClick
+    end
+    object R4: TMenuItem
+      Caption = 'Re-activate room charges'
+      OnClick = R4Click
+    end
+    object N2: TMenuItem
+      Caption = '-'
+    end
+    object R3: TMenuItem
+      Caption = 'Refresh'
+      OnClick = btnRoomsRefreshClick
     end
   end
 end

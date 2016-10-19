@@ -271,7 +271,6 @@ object frmInvoice: TfrmInvoice
         ParentFont = False
         ReadOnly = True
         TabOrder = 10
-        OnChange = edtCurrencyChange
         OnDblClick = edtCurrencyDblClick
         SkinData.SkinSection = 'EDIT'
         BoundLabel.Font.Charset = DEFAULT_CHARSET
@@ -560,7 +559,7 @@ object frmInvoice: TfrmInvoice
       end
       object btnExit: TcxButton
         Left = 907
-        Top = 2
+        Top = -3
         Width = 161
         Height = 44
         Hint = 'Close form'
@@ -596,7 +595,7 @@ object frmInvoice: TfrmInvoice
       end
       object btnProforma: TcxButton
         Left = 907
-        Top = 48
+        Top = 44
         Width = 161
         Height = 41
         Action = actPrintProforma
@@ -639,8 +638,8 @@ object frmInvoice: TfrmInvoice
       object chkShowPackage: TsCheckBox
         Left = 906
         Top = 135
-        Width = 119
-        Height = 17
+        Width = 111
+        Height = 20
         Caption = 'Package on invoice'
         Anchors = [akTop, akRight]
         Checked = True
@@ -1346,7 +1345,7 @@ object frmInvoice: TfrmInvoice
               SearchFooter.HintHighlight = 'Highlight occurrences'
               SearchFooter.MatchCaseCaption = 'Match case'
               SortSettings.DefaultFormat = ssAutomatic
-              Version = '7.9.1.1'
+              Version = '8.1.2.0'
               ColWidths = (
                 24
                 91
@@ -1425,8 +1424,8 @@ object frmInvoice: TfrmInvoice
               object chkReCalcPrices: TsCheckBox
                 Left = 9
                 Top = 20
-                Width = 203
-                Height = 17
+                Width = 195
+                Height = 20
                 Caption = 'Recalc price on guestcount  changes'
                 Checked = True
                 State = cbChecked
@@ -1438,8 +1437,8 @@ object frmInvoice: TfrmInvoice
               object chkAutoUpdateNullPrice: TsCheckBox
                 Left = 9
                 Top = 46
-                Width = 134
-                Height = 17
+                Width = 126
+                Height = 20
                 Caption = 'Auto update Null Price'
                 Checked = True
                 State = cbChecked
@@ -1565,7 +1564,7 @@ object frmInvoice: TfrmInvoice
                 Caption = 'Description'
                 DataBinding.FieldName = 'RoomDescription'
                 Options.Editing = False
-                Width = 137
+                Width = 95
               end
               object tvRoomResRoomType: TcxGridDBColumn
                 Caption = 'Type'
@@ -1578,6 +1577,11 @@ object frmInvoice: TfrmInvoice
                 Visible = False
                 Options.Editing = False
                 Width = 111
+              end
+              object tvRoomResGuestName: TcxGridDBColumn
+                Caption = 'Guest name'
+                DataBinding.FieldName = 'GuestName'
+                Width = 172
               end
               object tvRoomResArrival: TcxGridDBColumn
                 DataBinding.FieldName = 'Arrival'
@@ -2265,7 +2269,6 @@ object frmInvoice: TfrmInvoice
       end
       object Exit1: TMenuItem
         Caption = 'Close'
-        ShortCut = 27
         OnClick = Exit1Click
       end
       object N1: TMenuItem
@@ -2532,7 +2535,6 @@ object frmInvoice: TfrmInvoice
     end
     object actAddPackage: TAction
       Caption = 'Add Package'
-      OnExecute = actAddPackageExecute
     end
     object Action2: TAction
       Category = 'Lines'
@@ -2616,18 +2618,6 @@ object frmInvoice: TfrmInvoice
     Left = 296
     Top = 304
   end
-  object MemData1: TdxMemData
-    Indexes = <>
-    SortOptions = []
-    Left = 176
-    Top = 384
-  end
-  object MemData2: TdxMemData
-    Indexes = <>
-    SortOptions = []
-    Left = 256
-    Top = 376
-  end
   object mRoomRates: TdxMemData
     Indexes = <>
     SortOptions = []
@@ -2673,6 +2663,10 @@ object frmInvoice: TfrmInvoice
     end
     object mRoomRatesNativeAmount: TFloatField
       FieldName = 'NativeAmount'
+    end
+    object mRoomRatesGuestName: TWideStringField
+      FieldName = 'GuestName'
+      Size = 60
     end
   end
   object mRoomRatesTmp: TdxMemData
@@ -2792,6 +2786,10 @@ object frmInvoice: TfrmInvoice
     end
     object mRoomResGroupAccount: TBooleanField
       FieldName = 'GroupAccount'
+    end
+    object mRoomResGuestName: TWideStringField
+      FieldName = 'GuestName'
+      Size = 60
     end
   end
   object mPayments: TdxMemData

@@ -105,10 +105,6 @@ object frmMain: TfrmMain
         ImageIndex = 8
         SkinData.CustomColor = False
         SkinData.CustomFont = False
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object grOneDayRooms: TAdvStringGrid
           Left = 0
           Top = 0
@@ -422,7 +418,7 @@ object frmMain: TfrmMain
             object lblNoRoom: TsLabel
               Left = 3
               Top = 59
-              Width = 50
+              Width = 76
               Height = 13
               Align = alBottom
               Alignment = taCenter
@@ -433,6 +429,7 @@ object frmMain: TfrmMain
               Font.Height = -11
               Font.Name = 'Tahoma'
               Font.Style = [fsBold]
+              ExplicitWidth = 50
             end
           end
         end
@@ -850,10 +847,6 @@ object frmMain: TfrmMain
         ImageIndex = 2
         SkinData.CustomColor = False
         SkinData.CustomFont = False
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object sLabel2: TsLabel
           Left = 224
           Top = 400
@@ -1316,8 +1309,6 @@ object frmMain: TfrmMain
           OnMoved = splitPeriodMoved
           Color = 6842472
           ParentColor = False
-          ExplicitTop = 159
-          ExplicitWidth = 976
         end
         object pnlPeriodNoRooms: TsPanel
           Left = 0
@@ -1609,7 +1600,7 @@ object frmMain: TfrmMain
               ParentFont = False
               OnClick = btnOccupancyViewClick
               OnMouseMove = btnOccupancyViewMouseMove
-              ExplicitTop = 4
+              ExplicitTop = 2
             end
             object btnUnassignedReservations: TSpeedButton
               AlignWithMargins = True
@@ -1638,29 +1629,17 @@ object frmMain: TfrmMain
         Caption = 'tabFreeRooms'
         SkinData.CustomColor = False
         SkinData.CustomFont = False
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
       end
       object tabDashboard: TsTabSheet
         Caption = 'tabDashboard'
         SkinData.CustomColor = False
         SkinData.CustomFont = False
         SkinData.SkinSection = 'TRANSPARENT'
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
       end
       object tabRateQuery: TsTabSheet
         Caption = 'tabRateQuery'
         SkinData.CustomColor = False
         SkinData.CustomFont = False
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
       end
     end
     object panMainTop: TsPanel
@@ -1810,7 +1789,6 @@ object frmMain: TfrmMain
           Padding.Left = 3
           ParentColor = True
           TabOrder = 0
-          OnDblClick = sPanel3DblClick
           OnMouseEnter = tabsViewMouseEnter
           SkinData.CustomColor = True
           SkinData.CustomFont = True
@@ -2598,7 +2576,6 @@ object frmMain: TfrmMain
             Align = alClient
             Caption = 'Hotel Property Status'
             ParentFont = False
-            OnDblClick = lblPropertyStatusDblClick
             Font.Charset = DEFAULT_CHARSET
             Font.Color = clWindowText
             Font.Height = -17
@@ -3146,10 +3123,6 @@ object frmMain: TfrmMain
         end
         item
           ToolbarName = 'barinnInvoiceLists'
-        end
-        item
-          Caption = 'Financials'
-          ToolbarName = 'barinnFinancials'
         end>
       Index = 2
     end
@@ -3170,8 +3143,6 @@ object frmMain: TfrmMain
         item
         end
         item
-        end
-        item
           ToolbarName = 'barinnGuests'
         end
         item
@@ -3180,6 +3151,7 @@ object frmMain: TfrmMain
       Index = 3
     end
     object rbTabData: TdxRibbonTab
+      Active = True
       Caption = 'Data'
       Groups = <
         item
@@ -3199,12 +3171,15 @@ object frmMain: TfrmMain
           ToolbarName = 'barinnBar8'
         end
         item
+          Caption = 'Financials'
+          ToolbarName = 'barinnFinancials'
+        end
+        item
           Caption = 'Book keeping'
         end>
       Index = 4
     end
     object System: TdxRibbonTab
-      Active = True
       Caption = 'System'
       Groups = <
         item
@@ -3604,14 +3579,13 @@ object frmMain: TfrmMain
       Font.Style = [fsBold]
     end
     object __lblUsername: TsLabel
-      Left = 219
-      Top = 4
+      Left = 214
+      Top = 3
       Width = 23
       Height = 17
       Alignment = taRightJustify
       Caption = 'N/A'
       ParentFont = False
-      OnDblClick = __lblUsernameDblClick
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -13
@@ -4764,7 +4738,7 @@ object frmMain: TfrmMain
     object barinnBar7: TdxBar
       Caption = 'Room price'
       CaptionButtons = <>
-      DockedLeft = 722
+      DockedLeft = 658
       DockedTop = 0
       FloatLeft = 1324
       FloatTop = 8
@@ -4796,7 +4770,7 @@ object frmMain: TfrmMain
     object barinnBar8: TdxBar
       Caption = 'Sale / payments'
       CaptionButtons = <>
-      DockedLeft = 886
+      DockedLeft = 822
       DockedTop = 0
       FloatLeft = 1324
       FloatTop = 8
@@ -4978,7 +4952,7 @@ object frmMain: TfrmMain
     object barinnReports2: TdxBar
       Caption = 'Reports 2'
       CaptionButtons = <>
-      DockedLeft = 330
+      DockedLeft = 341
       DockedTop = 0
       FloatLeft = 1324
       FloatTop = 8
@@ -5090,7 +5064,7 @@ object frmMain: TfrmMain
     object barinnReportsInvoices: TdxBar
       Caption = 'Invoices'
       CaptionButtons = <>
-      DockedLeft = 893
+      DockedLeft = 904
       DockedTop = 0
       FloatLeft = 1324
       FloatTop = 8
@@ -5350,7 +5324,7 @@ object frmMain: TfrmMain
     object barinnBar10: TdxBar
       Caption = 'Ledger'
       CaptionButtons = <>
-      DockedLeft = 1102
+      DockedLeft = 1113
       DockedTop = 0
       FloatLeft = -183
       FloatTop = 8
@@ -5370,7 +5344,7 @@ object frmMain: TfrmMain
     object barinnFinancials: TdxBar
       Caption = 'Financials'
       CaptionButtons = <>
-      DockedLeft = 988
+      DockedLeft = 1178
       DockedTop = 0
       FloatLeft = 1265
       FloatTop = 8
@@ -6246,9 +6220,9 @@ object frmMain: TfrmMain
       OnClick = btnHideCancelledBookingsClick
     end
     object btnCloseCurrentDay: TdxBarLargeButton
-      Caption = 'Close Day'
+      Caption = 'Close fin. day now'
       Category = 0
-      Hint = 'Close the financial Day'
+      Hint = 'Close the current financial day at the current timestamp'
       Visible = ivNever
       LargeImageIndex = 64
       OnClick = btnCloseCurrentDayClick
@@ -7249,10 +7223,10 @@ object frmMain: TfrmMain
       AutoGrayScale = False
     end
     object btnRptFinanceForecast: TdxBarLargeButton
-      Caption = 'Finance forecast'
+      Caption = 'Financial pivottable'
       Category = 9
       HelpContext = 5
-      Hint = 'Finance forecast'
+      Hint = 'Financial pivottable'
       Visible = ivAlways
       LargeImageIndex = 59
       OnClick = btnRptFinanceForecastClick
