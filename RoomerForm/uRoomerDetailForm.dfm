@@ -57,7 +57,6 @@ inherited frmBaseRoomerDetailForm: TfrmBaseRoomerDetailForm
       ParentFont = False
       TabOrder = 1
       SkinData.SkinSection = 'BUTTON'
-      ExplicitTop = 0
     end
   end
   object pnlDetails: TsPanel [2]

@@ -43,7 +43,6 @@ inherited frmBaseRoomerGridForm: TfrmBaseRoomerGridForm
     Align = alClient
     TabOrder = 1
     LookAndFeel.NativeStyle = False
-    ExplicitTop = 94
     object vwTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = dsGridData
@@ -154,15 +153,10 @@ inherited frmBaseRoomerGridForm: TfrmBaseRoomerGridForm
     end
   end
   object kbmGridData: TkbmMemTable
-    Active = True
     DesignActivation = True
     AttachedAutoRefresh = True
     AttachMaxCount = 1
-    FieldDefs = <
-      item
-        Name = 'RoomerRoomReservationID'
-        DataType = ftInteger
-      end>
+    FieldDefs = <>
     IndexDefs = <>
     SortOptions = []
     PersistentBackup = False
@@ -205,7 +199,7 @@ inherited frmBaseRoomerGridForm: TfrmBaseRoomerGridForm
       PrinterPage.ScaleMode = smFit
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
-      ReportDocument.CreationDate = 42650.997308958340000000
+      ReportDocument.CreationDate = 42663.637085659720000000
       ReportTitle.Font.Charset = DEFAULT_CHARSET
       ReportTitle.Font.Color = clBlack
       ReportTitle.Font.Height = -19

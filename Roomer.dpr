@@ -8,6 +8,8 @@ program Roomer;
 //  FastMM4Messages in 'FastMM\FastMM4Messages.pas',
 //  {$endif}
 
+
+
 uses
   {$ifdef UseFastMM}
   FastMM4 in 'FastMM\FastMM4.pas',
@@ -257,7 +259,8 @@ uses
   uTableEntityList in 'TableCache\uTableEntityList.pas',
   uMessageList in 'uMessageList.pas',
   uRoomerVersionInfo in 'Extras\uRoomerVersionInfo.pas',
-  uCleaningNotesDefinitions in 'Definitions\uCleaningNotesDefinitions.pas';
+  uCleaningNotesDefinitions in 'Definitions\uCleaningNotesDefinitions.pas',
+  uCountryGroupsGrid in 'BaseData\uCountryGroupsGrid.pas';
 
 {$R *.RES}
 

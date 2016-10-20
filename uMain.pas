@@ -1646,7 +1646,7 @@ uses
     , uDayClosingTimesAPICaller
     , uDateTimeHelper
     , uRptHouseKeeping, uReservationStateChangeHandler, uRptDailyRevenues
-    , uRoomerVersionInfo;
+    , uRoomerVersionInfo, uCountryGroupsGrid;
 
 {$R *.DFM}
 {$R Cursors.res}
@@ -11902,7 +11902,8 @@ end;
 procedure TfrmMain.btnCountryGroupsListClick(Sender: TObject);
 begin
   UserClickedDxLargeButton(Sender);
-  _CountryGroupList;
+//  _CountryGroupList;
+  CountryGroupsGrid;
 end;
 
 procedure TfrmMain.btnCurrenciesListClick(Sender: TObject);

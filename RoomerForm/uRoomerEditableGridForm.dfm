@@ -7,26 +7,161 @@ inherited frmRoomerEditableGridForm: TfrmRoomerEditableGridForm
   PixelsPerInch = 96
   TextHeight = 11
   inherited pnlTop: TsPanel
-    Top = 97
     Width = 827
-    ExplicitTop = 97
     ExplicitWidth = 827
     inherited pnlActionButtons: TsPanel
       Width = 825
       ExplicitWidth = 825
     end
     inherited pnlSelection: TsPanel
+      Top = 36
       Width = 825
+      Height = 20
+      ExplicitTop = 36
       ExplicitWidth = 825
+      ExplicitHeight = 20
+    end
+    object pnlEditButtons: TsPanel
+      Left = 1
+      Top = 1
+      Width = 825
+      Height = 35
+      Align = alTop
+      TabOrder = 2
+      object btnOther: TsButton
+        AlignWithMargins = True
+        Left = 677
+        Top = 4
+        Width = 144
+        Height = 27
+        Hint = 'Other actions - Select from menu'
+        Align = alRight
+        Caption = 'Other actions'
+        DropDownMenu = mnuOther
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        ImageIndex = 76
+        Images = DImages.PngImageList1
+        ParentFont = False
+        ParentShowHint = False
+        ShowHint = True
+        Style = bsSplitButton
+        TabOrder = 0
+        SkinData.SkinSection = 'BUTTON'
+      end
+      object btnDelete: TsButton
+        AlignWithMargins = True
+        Left = 196
+        Top = 4
+        Width = 90
+        Height = 27
+        Action = acDelete
+        Align = alLeft
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        Images = DImages.PngImageList1
+        ParentFont = False
+        ParentShowHint = False
+        ShowHint = True
+        TabOrder = 1
+        SkinData.SkinSection = 'BUTTON'
+      end
+      object btnEdit: TsButton
+        AlignWithMargins = True
+        Left = 100
+        Top = 4
+        Width = 90
+        Height = 27
+        Action = acEdit
+        Align = alLeft
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        Images = DImages.PngImageList1
+        ParentFont = False
+        ParentShowHint = False
+        ShowHint = True
+        TabOrder = 2
+        SkinData.SkinSection = 'BUTTON'
+      end
+      object btnInsert: TsButton
+        AlignWithMargins = True
+        Left = 4
+        Top = 4
+        Width = 90
+        Height = 27
+        Action = acNew
+        Align = alLeft
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        Images = DImages.PngImageList1
+        ParentFont = False
+        ParentShowHint = False
+        ShowHint = True
+        TabOrder = 3
+        SkinData.SkinSection = 'BUTTON'
+      end
+      object btnrefresh: TsButton
+        AlignWithMargins = True
+        Left = 388
+        Top = 4
+        Width = 90
+        Height = 27
+        Action = acRefresh
+        Align = alLeft
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        Images = DImages.PngImageList1
+        ParentFont = False
+        ParentShowHint = False
+        ShowHint = True
+        TabOrder = 4
+        SkinData.SkinSection = 'BUTTON'
+        ExplicitLeft = 292
+        ExplicitTop = 2
+      end
+      object btnPost: TsButton
+        AlignWithMargins = True
+        Left = 292
+        Top = 4
+        Width = 90
+        Height = 27
+        Action = acPost
+        Align = alLeft
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        Images = DImages.PngImageList1
+        ParentFont = False
+        ParentShowHint = False
+        ShowHint = True
+        TabOrder = 5
+        SkinData.SkinSection = 'BUTTON'
+        ExplicitTop = 2
+      end
     end
   end
   inherited grData: TcxGrid
-    Top = 197
     Width = 827
-    Height = 394
-    ExplicitTop = 197
+    Height = 491
     ExplicitWidth = 827
-    ExplicitHeight = 394
+    ExplicitHeight = 491
     inherited vwTableView: TcxGridDBTableView
       OnCellDblClick = vwTableViewCellDblClick
       OptionsData.Appending = True
@@ -50,29 +185,6 @@ inherited frmRoomerEditableGridForm: TfrmRoomerEditableGridForm
     ExplicitTop = 591
     ExplicitWidth = 827
   end
-  object dxRibbon: TdxRibbon [3]
-    Left = 0
-    Top = 0
-    Width = 827
-    Height = 97
-    BarManager = dxBarManager
-    Style = rs2013
-    ColorSchemeName = 'White'
-    QuickAccessToolbar.Visible = False
-    ShowTabHeaders = False
-    Contexts = <>
-    TabOrder = 7
-    TabStop = False
-    object dxRibbonTab1: TdxRibbonTab
-      Active = True
-      Caption = 'dxRibbonTab1'
-      Groups = <
-        item
-          ToolbarName = 'dxBarPostCancel'
-        end>
-      Index = 0
-    end
-  end
   inherited cxsrRoomerStyleRepository: TcxStyleRepository
     PixelsPerInch = 96
     inherited dxssRoomerGridReportLink: TdxGridReportLinkStyleSheet
@@ -83,6 +195,8 @@ inherited frmRoomerEditableGridForm: TfrmRoomerEditableGridForm
     end
   end
   inherited alRoomerForm: TActionList
+    Left = 672
+    Top = 48
     object acNew: TAction
       Category = 'GridEdit'
       Caption = 'New'
@@ -119,117 +233,19 @@ inherited frmRoomerEditableGridForm: TfrmRoomerEditableGridForm
       OnUpdate = acCancelUpdate
     end
   end
+  inherited kbmGridData: TkbmMemTable
+    BeforePost = kbmGridDataBeforePost
+  end
   inherited gridPrinter: TdxComponentPrinter
     inherited gridPrinterLink: TdxGridReportLink
       ReportDocument.CreationDate = 42650.926843981480000000
-      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
+      AssignedFormatValues = []
       BuiltInReportLink = True
     end
   end
-  object dxBarManager: TdxBarManager
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
-    Font.Style = []
-    Categories.Strings = (
-      'Default')
-    Categories.ItemsVisibles = (
-      2)
-    Categories.Visibles = (
-      True)
-    ImageOptions.LargeImages = DImages.cxLargeImagesFlat
-    PopupMenuLinks = <>
-    UseSystemFont = True
-    Left = 656
-    Top = 16
-    DockControlHeights = (
-      0
-      0
-      0
-      0)
-    object dxBarPostCancel: TdxBar
-      CaptionButtons = <>
-      DockedLeft = 0
-      DockedTop = 0
-      FloatLeft = 398
-      FloatTop = 153
-      FloatClientWidth = 51
-      FloatClientHeight = 42
-      ItemLinks = <
-        item
-          Visible = True
-          ItemName = 'btnPostRibbon'
-        end
-        item
-          Visible = True
-          ItemName = 'bntCancelRibbon'
-        end
-        item
-          BeginGroup = True
-          Visible = True
-          ItemName = 'dxBarLargeButton4'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarLargeButton1'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarLargeButton5'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarLargeButton6'
-        end>
-      OneOnRow = True
-      Row = 0
-      UseOwnFont = False
-      Visible = True
-      WholeRow = False
-    end
-    object btnPostRibbon: TdxBarLargeButton
-      Action = acPost
-      Category = 0
-    end
-    object bntCancelRibbon: TdxBarLargeButton
-      Action = acCancel
-      Category = 0
-    end
-    object dxBarLargeButton1: TdxBarLargeButton
-      Action = acEdit
-      Category = 0
-    end
-    object dxBarLargeButton2: TdxBarLargeButton
-      Action = acNew
-      Category = 0
-    end
-    object dxBarLargeButton3: TdxBarLargeButton
-      Action = acDelete
-      Category = 0
-    end
-    object dxBarLargeButton4: TdxBarLargeButton
-      Action = acNew
-      Category = 0
-    end
-    object dxBarLargeButton5: TdxBarLargeButton
-      Action = acDelete
-      Category = 0
-    end
-    object dxBarLargeButton6: TdxBarLargeButton
-      Caption = 'Other Actions'
-      Category = 0
-      Hint = 'Other Actions'
-      Visible = ivAlways
-      ButtonStyle = bsDropDown
-      LargeImageIndex = 76
-      SyncImageIndex = False
-      ImageIndex = 76
-    end
-  end
   object mnuOther: TPopupMenu
-    Left = 320
-    Top = 328
+    Left = 672
+    Top = 192
     object mnuiPrint: TMenuItem
       Action = acPrint
     end

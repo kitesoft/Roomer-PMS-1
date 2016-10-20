@@ -825,6 +825,7 @@
         <DCCReference Include="uMessageList.pas"/>
         <DCCReference Include="Extras\uRoomerVersionInfo.pas"/>
         <DCCReference Include="Definitions\uCleaningNotesDefinitions.pas"/>
+        <DCCReference Include="BaseData\uCountryGroupsGrid.pas"/>
         <None Include="Roomer.todo"/>
         <None Include="notes.txt"/>
         <None Include="Roomer.inc"/>

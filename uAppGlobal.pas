@@ -287,6 +287,8 @@ Type
 
       property PMSSettings: TPmsSettings read FPmsSettings;
 
+      function TableEntityByName(const aTableName: string): TTableEntity;
+
    published
       property PreviousGuestsSet : TRoomerDataSet read FPreviousGuestsSet;
       property RoomsSet        : TRoomerDataSet read GetRoomsSet;
@@ -1355,6 +1357,11 @@ end;
 function TGlobalSettings.RoomTypeCount : integer;
 begin
   result := FRoomTypes.Count;
+end;
+
+function TGlobalSettings.TableEntityByName(const aTableName: string): TTableEntity;
+begin
+  Result := tablesList.TableEntity[aTableName];
 end;
 
 function TGlobalSettings.GetRoomType( iIndex : integer ) : string;

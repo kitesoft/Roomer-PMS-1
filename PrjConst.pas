@@ -1592,6 +1592,7 @@ begin
   constants.Add('shTx_MandatoryFields_Nationality', 'Nationality');
   constants.Add('shTx_MandatoryFields_Guarantee', 'Guarantee');
 
+  constants.Add('shTx_RoomerDetailForm_Delete', 'Delete');
 end;
 
 procedure AddConstants_OfflineReports;

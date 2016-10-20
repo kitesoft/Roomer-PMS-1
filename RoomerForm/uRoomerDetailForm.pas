@@ -8,7 +8,8 @@ uses
   , uRoomerForm, cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, dxSkinsCore, dxSkinCaramel,
   dxSkinCoffee, dxSkinDarkSide, dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinsdxStatusBarPainter,
   cxGridTableView, cxStyles, dxPScxCommon, dxPScxGridLnk, cxClasses, cxPropertiesStore, dxStatusBar, Vcl.StdCtrls,
-  sButton, System.Actions, Vcl.ActnList, Vcl.ExtCtrls, sPanel;
+  sButton, System.Actions, Vcl.ActnList, Vcl.ExtCtrls, sPanel,
+  uRoomerDataProvider;
 
 type
 
@@ -30,10 +31,11 @@ type
     procedure acCancelExecute(Sender: TObject);
   private
     FFormMode: TDetailFormMode;
+    FDataProvider: TRoomerDataProvider;
   protected
     procedure UpdateControls; override;
   public
-    constructor Create(aOwner: TComponent; aFormMode: TDetailFormMode); reintroduce;
+    constructor Create(aOwner: TComponent; aFormMode: TDetailFormMode; aDataprovider: TRoomerDataProvider); reintroduce;
   end;
 
   TfrmBaseRoomerDetailFormClass = class of TfrmBaseRoomerDetailForm;
@@ -44,7 +46,7 @@ type
     ///   Create and show an instance of form in the provided mode. <br />
     ///  Returns true if modalresult = OK
     /// </summary>
-    class function ShowDetailModal(aClass: TfrmBaseRoomerDetailFormClass; aFormMode: TDetailFormMode): boolean;
+    class function ShowDetailModal(aClass: TfrmBaseRoomerDetailFormClass; aFormMode: TDetailFormMode; aDataprovider: TRoomerDataProvider): boolean;
   end;
 
 implementation
@@ -53,16 +55,17 @@ implementation
 
 uses
   RTTI
+  , PrjConst
   ;
 
 
 { TRoomerDetailFormFactory }
 
-class function TRoomerDetailFormFactory.ShowDetailModal(aClass: TfrmBaseRoomerDetailFormClass; aFormMode: TDetailFormMode): boolean;
+class function TRoomerDetailFormFactory.ShowDetailModal(aClass: TfrmBaseRoomerDetailFormClass; aFormMode: TDetailFormMode; aDataprovider: TRoomerDataProvider): boolean;
 begin
   Result := False;
   if assigned(aClass) then
-    with aClass.Create(nil, aFormMode) do
+    with aClass.Create(nil, aFormMode, aDataprovider) do
     try
       Result := (ShowModal = mrOK)
     finally
@@ -84,9 +87,10 @@ begin
   Close;
 end;
 
-constructor TfrmBaseRoomerDetailForm.Create(aOwner: TComponent; aFormMode: TDetailFormMode);
+constructor TfrmBaseRoomerDetailForm.Create(aOwner: TComponent; aFormMode: TDetailFormMode; aDataprovider: TRoomerDataProvider);
 begin
   FFormMode := aFormMode;
+  FDataProvider := aDataProvider;
   inherited Create(aOwner);
 end;
 
@@ -118,6 +122,8 @@ begin
     Free;
   end;
 
+  if FFormMode = fmDelete then
+    btnOK.Caption := GetTranslatedText('shTx_RoomerDetailForm_Delete');
 end;
 
 end.

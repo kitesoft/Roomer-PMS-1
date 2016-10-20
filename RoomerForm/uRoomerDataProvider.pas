@@ -6,6 +6,7 @@ uses
     cmpRoomerDataset
   , SysUtils
   , kbmMemTable
+  , uTableEntityList
   ;
 
 type
@@ -26,6 +27,7 @@ type
     function GetData: TRoomerDataset; virtual; abstract;
     function GetIsReadOnly: boolean; virtual; abstract;
   public
+    constructor Create; virtual; abstract;
     procedure LoadDataIntoKbmMemTable(aKbmTable: TkbmMemTable);
     function ContainsData: boolean;  virtual; abstract;
     property IsReadOnly: boolean read GetIsReadOnly;
@@ -44,19 +46,20 @@ type
     function ConstructSQLStatement: string; virtual;
     function GetIsReadOnly: boolean; override;
   public
-    constructor Create; virtual;
+    constructor Create; override;
     destructor Destroy; override;
     function ContainsData: boolean; override;
   end;
 
   /// <summary>
-  ///   Implementation of TRoomerDataProvider that gets its data from a base table stored in AppGlobal object
+  ///   Implementation of TRoomerDataProvider that gets its data from a tableEntity stored in AppGlobal object
   /// </summary>
-  TRoomerBaseTableDataProvider = class(TRoomerDataProvider)
+  TRoomerTableEntityDataProvider = class(TRoomerDataProvider)
   private
-    FBaseTableName: string;
+    FTableEntity: TTableEntity;
     procedure SetBaseTableName(const Value: string);
   protected
+    FBaseTableName: string;
     function GetData: TRoomerDataset; override;
     function GetIsReadOnly: boolean; override;
   public
@@ -101,6 +104,7 @@ end;
 procedure TRoomerDataProvider.LoadDataIntoKbmMemTable(aKbmTable: TkbmMemTable);
 var
   lSaveCursor: TCursor;
+  lOptions: TkbmMemTableCopyTableOptions;
 begin
 
   lSaveCursor := Screen.Cursor;
@@ -111,8 +115,11 @@ begin
       aKbmTable.Open;
     aKbmTable.DisableControls;
     try
-      akbmTable.EmptyTable;
-      LoadKbmMemtableFromDataSetQuiet(aKbmTable, GetData, []);
+      lOptions := [];
+      if aKbmTable.FieldCount < 2 then
+        Include(lOptions, mtcpoStructure);
+
+      LoadKbmMemtableFromDataSetQuiet(aKbmTable, GetData, lOptions);
     finally
       akbmTable.EnableControls;
     end;
@@ -133,26 +140,26 @@ end;
 
 { TRoomerBaseTableDataProvider }
 
-function TRoomerBaseTableDataProvider.GetIsReadOnly: boolean;
+function TRoomerTableEntityDataProvider.GetIsReadOnly: boolean;
 begin
   Result := False;
 end;
 
-function TRoomerBaseTableDataProvider.ContainsData: boolean;
+function TRoomerTableEntityDataProvider.ContainsData: boolean;
 begin
   Result := GetData.RecordCount > 0;
 end;
 
-function TRoomerBaseTableDataProvider.GetData: TRoomerDataset;
+function TRoomerTableEntityDataProvider.GetData: TRoomerDataset;
 begin
   inherited;
-  glb.RefreshTableIfNeeded(FBaseTableName);
-  Result := glb.GetDataSetFromDictionary(FBaseTableName);
+  glb.RefreshTablesWhenNeeded;
+  Result := glb.TableEntityByName(FBaseTableName).RSet;
 end;
 
-procedure TRoomerBaseTableDataProvider.SetBaseTableName(const Value: string);
+procedure TRoomerTableEntityDataProvider.SetBaseTableName(const Value: string);
 begin
-  if assigned(glb.TableEntityByTableName(Value)) then
+  if assigned(glb.TableEntityByName(Value)) then
     FBaseTableName := Value
   else
     raise ERoomerDataProviderException.CreateFmt('Base table [%s] not found in dictionary', [Value]);

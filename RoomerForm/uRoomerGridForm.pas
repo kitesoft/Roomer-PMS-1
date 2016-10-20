@@ -44,6 +44,7 @@ type
     procedure acGridDependentActionUpdate(Sender: TObject);
   private
     FDataProvider: TRoomerDataProvider;
+    FLoadOnShow: boolean;
     function GridContainsData: boolean;
     procedure ExportGridToExcel;
   protected
@@ -53,6 +54,12 @@ type
     FDataProviderClass: TRoomerDataProviderClass;
     procedure DoShow; override;
     procedure DoLoadData; override;
+    /// <summary>
+    ///   If true the data will be loaded directly in the DoShow method, otherwise dataloading must be initiated by the form
+    ///  itsself. Can be used i.e. for forms with complex queries where the user will first change the selection parameters. <br />
+    ///  Default = True
+    /// </summary>
+    property LoadOnShow: boolean read FLoadOnShow write FLoadOnShow;
   public
     constructor Create(aOwner: TComponent); override;
     destructor Destroy; override;
@@ -125,11 +132,19 @@ begin
   inherited;
   if assigned(FDataProvider) then
     FDataProvider.LoadDataIntoKbmMemTable(kbmGridData);
+  vwTableView.BeginUpdate;
+  try
+    vwTableView.ClearItems;
+    vwTableView.DataController.CreateAllItems;
+  finally
+    vwTableView.EndUpdate;
+  end;
 end;
 
 constructor TfrmBaseRoomerGridForm.Create(aOwner: TComponent);
 begin
   inherited;
+  FLoadOnShow := True;
   if assigned(FDataProviderClass) then
     FDataProvider := FDataProviderClass.Create;
 end;
@@ -143,6 +158,8 @@ end;
 procedure TfrmBaseRoomerGridForm.DoShow;
 begin
   inherited;
+  if LoadOnShow then
+    RefreshData;
 end;
 
 procedure TfrmBaseRoomerGridForm.ExportGridToExcel;

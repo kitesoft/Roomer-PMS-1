@@ -129,7 +129,7 @@ object frmCountryGroups: TfrmCountryGroups
     end
     object btnOther: TsButton
       Left = 293
-      Top = 7
+      Top = 4
       Width = 144
       Height = 26
       Hint = 'Other actions - Select from menu'
