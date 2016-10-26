@@ -4055,8 +4055,8 @@ begin
                   sText := '';
                 sText := tmp + sText;
 
-                AddRoom(Room, 0, Arrival, Departure, UnpaidDays, sText, (FRoomReservation = 0), RoomReservation, 0, false, '', '',
-                        NumberGuests, ChildrenCount, isPackage, RoomReservation, zRoomRSet.FieldByName('invBreakFast').AsBoolean );
+                AddRoom(Room, 0, Arrival, Departure, UnpaidDays, sText, (lRoomReservation = 0), lRoomReservation, 0, false, '', '',
+                        NumberGuests, ChildrenCount, isPackage, lRoomReservation, zRoomRSet.FieldByName('invBreakFast').AsBoolean );
               end;
             end;
 
@@ -5464,7 +5464,8 @@ begin
   if Assigned(invoiceLine) then
     result := (invoiceLine.Number <> _StrToFloat(agrLines.Cells[col_ItemCount, line])) OR
       (invoiceLine.Price <> iMultiplier * _StrToFloat(agrLines.Cells[col_ItemPrice, line])) OR
-      (invoiceLine.Total <> iMultiplier * _StrToFloat(agrLines.Cells[col_TotalPrice, line]));
+      (invoiceLine.Total <> iMultiplier * _StrToFloat(agrLines.Cells[col_TotalPrice, line])) OR
+      (invoiceline.FText <> agrLines.Cells[col_Description, line]);
 end;
 
 function TfrmInvoice.SaveInvoice(iInvoiceNumber: integer): boolean;
@@ -5805,6 +5806,7 @@ begin
           s := 'UPDATE invoicelines' +
             ' Set ItemNumber= ' + _db(i) +
             ' , InvoiceNumber= ' + _db(iInvoiceNumber) +
+            ' , Description= ' + _db(agrLines.Cells[col_Description, i]) +
             ' , Number= ' + _db(ItemCount) +
             ' , Price= ' + _CommaToDot(floattostr(iCreditinvoiceMultiplier * _StrToFloat(agrLines.Cells[col_ItemPrice, i]))) +
             ' , Total= ' + _CommaToDot(floattostr(iCreditinvoiceMultiplier * _StrToFloat(agrLines.Cells[col_TotalPrice, i]))) +
@@ -6249,7 +6251,9 @@ begin
           end;
         end;
       col_Description:
-        ;
+        begin
+          chkChanged;
+        end;
 
       col_ItemCount:
         begin

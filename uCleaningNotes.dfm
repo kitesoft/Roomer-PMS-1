@@ -384,7 +384,7 @@ inherited frmCleaningNotes: TfrmCleaningNotes
       PrinterPage.PageSize.Y = 297180
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
-      ReportDocument.CreationDate = 42662.431614386570000000
+      ReportDocument.CreationDate = 42664.497753344910000000
       ReportTitle.Font.Charset = DEFAULT_CHARSET
       ReportTitle.Font.Color = clBlack
       ReportTitle.Font.Height = -19
