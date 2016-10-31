@@ -519,7 +519,7 @@ object frmMain: TfrmMain
               Left = 3
               Top = 15
               Width = 151
-              Height = 19
+              Height = 17
               Caption = 'Reservation on new page'
               Font.Charset = DEFAULT_CHARSET
               Font.Color = clWindowText
@@ -536,7 +536,7 @@ object frmMain: TfrmMain
               Left = 3
               Top = 36
               Width = 81
-              Height = 19
+              Height = 17
               Caption = 'Print memo'
               Font.Charset = DEFAULT_CHARSET
               Font.Color = clWindowText
@@ -1632,8 +1632,6 @@ object frmMain: TfrmMain
       end
       object tabDashboard: TsTabSheet
         Caption = 'tabDashboard'
-        SkinData.CustomColor = False
-        SkinData.CustomFont = False
         SkinData.SkinSection = 'TRANSPARENT'
       end
       object tabRateQuery: TsTabSheet
@@ -2288,7 +2286,7 @@ object frmMain: TfrmMain
             HintPrevMonth = 'Previous Month'
             HintNextMonth = 'Next Month'
             HintNextYear = 'Next Year'
-            Version = '2.3.1.1'
+            Version = '2.3.0.0'
             TMSStyle = 0
           end
         end
@@ -2435,7 +2433,7 @@ object frmMain: TfrmMain
         ParentColor = False
         Transparent = True
         OnAnchorClick = mmoMessageAnchorClick
-        Version = '1.9.2.6'
+        Version = '1.9.2.3'
         ExplicitLeft = 87
         ExplicitWidth = 1019
       end
@@ -2578,6 +2576,7 @@ object frmMain: TfrmMain
             Align = alClient
             Caption = 'Hotel Property Status'
             ParentFont = False
+            OnDblClick = lblPropertyStatusDblClick
             Font.Charset = DEFAULT_CHARSET
             Font.Color = clWindowText
             Font.Height = -17
@@ -2773,7 +2772,7 @@ object frmMain: TfrmMain
           SelectionColor = 15790320
           SelectionColorTo = 15387318
           SortSettings.DefaultFormat = ssAutomatic
-          Version = '8.1.2.0'
+          Version = '7.9.1.1'
           ColWidths = (
             70
             12
@@ -2932,7 +2931,7 @@ object frmMain: TfrmMain
           SelectionColor = 15790320
           SelectionColorTo = 15387318
           SortSettings.DefaultFormat = ssAutomatic
-          Version = '8.1.2.0'
+          Version = '7.9.1.1'
           RowHeights = (
             19
             19
@@ -9506,7 +9505,6 @@ object frmMain: TfrmMain
     AddedTitle.Font.Name = 'Tahoma'
     AddedTitle.Font.Style = []
     AddedTitle.Text = 'Next Generation Hotel Management'
-    FormHeader.AdditionalHeight = 0
     SkinData.CustomColor = True
     SkinData.CustomFont = True
     SkinData.SkinManager = sSkinManager1

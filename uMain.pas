@@ -11463,6 +11463,26 @@ begin
   _Logout;
 end;
 
+procedure TfrmMain.lblPropertyStatusDblClick(Sender: TObject);
+begin
+{$IFDEF DEBUG}
+  RoomerLanguage.PerformDBUpdatesWhenUnknownEntitiesFound := true;
+  try
+    GenerateTranslateTextTableForConstants;
+    GenerateTranslateTextTableForAllForms;
+    TranslateOpenForms;
+    try
+      frmHomedate.Show;
+      RoomerLanguage.TranslateThisForm(frmRptManagment);
+      frmHomedate.Hide;
+    except
+    end;
+  finally
+    RoomerLanguage.PerformDBUpdatesWhenUnknownEntitiesFound := false;
+  end;
+{$ENDIF}
+end;
+
 procedure TfrmMain.btnLostAndFoundClick(Sender: TObject);
 begin
   UserClickedDxLargeButton(Sender);
