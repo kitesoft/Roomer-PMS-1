@@ -389,8 +389,8 @@ begin
           if trx then
             Rset.SystemStartTransaction;
 
-          if (status <> 'O') and (status <> 'N') then
-            d.roomerMainDataSet.SystemChangeAvailabilityForRoom(RoomReservation, false); //
+          if TReservationState.FromResStatus(status).InfluencesAvailability then
+            d.roomerMainDataSet.SystemChangeAvailabilityForRoom(RoomReservation, false); //Increase availability
 
           try
             ExePlan.AddExec('UPDATE roomsdate SET ResFlag =' + _db(STATUS_DELETED) + ' WHERE RoomReservation = ' +
@@ -505,10 +505,9 @@ begin
             ExePlan.AddExec(s);
             
             ExePlan.Execute(ptExec, false, false);
-            if (status <> 'O') and (status <> 'N') then
-            begin
-              d.roomerMainDataSet.SystemChangeAvailabilityForRoom(RoomReservation, true); //
-            end;
+            if TReservationState.FromResStatus(status).InfluencesAvailability then
+              d.roomerMainDataSet.SystemChangeAvailabilityForRoom(RoomReservation, true); //decrease availability
+
             if trx then
               Rset.SystemCommitTransaction;
           except

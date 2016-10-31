@@ -15113,18 +15113,18 @@ begin
     ss := ss + '  WHERE (Roomreservation = ' + _db(RoomReservation) + ') ';
     cmd_bySQL(ss);
 
-    if (Status <> 'O') and (Status <> 'N') then
+    if TReservationState.FromResStatus(status).InfluencesAvailability then
     begin
       if realType then
       begin
         temp := format('(changeNoRoomRoomtype) Change roomtype of a NO-ROOM booking for Reservation=%d, RoomReservation=%d, FROM RoomType=%s, FOR ArrDate=%s, DepDate=%s',
                        [Reservation, RoomReservation, oldType, DateToSqlString(Arrival), DateToSqlString(Departure)]);
-        d.roomerMainDataSet.SystemChangeAvailability(oldType, Arrival, Departure - 1, false, temp); // auka framboð
+        d.roomerMainDataSet.SystemChangeAvailability(oldType, Arrival, Departure - 1, false, temp); // increase availabilty
       end;
 
       temp := format('(changeNoRoomRoomtype) Change roomtype of a NO-ROOM booking for Reservation=%d, RoomReservation=%d, TO RoomType=%s, FOR ArrDate=%s, DepDate=%s',
                      [Reservation, RoomReservation, newRoomType, DateToSqlString(Arrival), DateToSqlString(Departure)]);
-      d.roomerMainDataSet.SystemChangeAvailability(newRoomType, Arrival, Departure - 1, true, temp); // minnka framboð
+      d.roomerMainDataSet.SystemChangeAvailability(newRoomType, Arrival, Departure - 1, true, temp); // decrease availability
     end;
 
     result := true;
@@ -15179,18 +15179,18 @@ begin
     ss := ss + '  WHERE (Roomreservation = ' + _db(RoomReservation) + ') ';
     cmd_bySQL(ss);
 
-    if (Status <> 'O') and (Status <> 'N') then
+    if TReservationState.FromResStatus(status).InfluencesAvailability then
     begin
       if realType then
       begin
         temp := format('(changeNoRoomRoomtype) Change roomtype of a NO-ROOM booking for Reservation=%d, RoomReservation=%d, FROM RoomType=%s, FOR ArrDate=%s, DepDate=%s',
                        [Reservation, RoomReservation, oldType, DateToSqlString(Arrival), DateToSqlString(Departure)]);
-        d.roomerMainDataSet.SystemChangeAvailability(oldType, Arrival, Departure - 1, false, temp); // auka framboð
+        d.roomerMainDataSet.SystemChangeAvailability(oldType, Arrival, Departure - 1, false, temp); // increase availability
       end;
 
       temp := format('(changeNoRoomRoomtype) Change roomtype of a NO-ROOM booking for Reservation=%d, RoomReservation=%d, TO RoomType=%s, FOR ArrDate=%s, DepDate=%s',
                      [Reservation, RoomReservation, newRoomType, DateToSqlString(Arrival), DateToSqlString(Departure)]);
-      d.roomerMainDataSet.SystemChangeAvailability(newRoomType, Arrival, Departure - 1, true, temp); // minnka framboð
+      d.roomerMainDataSet.SystemChangeAvailability(newRoomType, Arrival, Departure - 1, true, temp); // decrease availability
     end;
 
     result := newRoomType;
