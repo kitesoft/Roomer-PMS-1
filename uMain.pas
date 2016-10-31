@@ -67,7 +67,7 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver, dxSkinSpringTime,
   dxSkinStardust,
   dxSkinSummer2008, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, sScrollBox, acImage, AdvUtil,
-  uReservationStateDefinitions
+  uReservationStateDefinitions, System.Actions, Vcl.ActnList
 
     ;
 
@@ -736,6 +736,10 @@ type
     btnDayCLosingTimes: TdxBarLargeButton;
     btnCleaningNotes: TdxBarLargeButton;
     btnDailyrev: TdxBarLargeButton;
+    dxBarDeveloperTools: TdxBarSubItem;
+    bbUpdateTranslations: TdxBarButton;
+    alDeveloperTools: TActionList;
+    acUpdateTranslations: TAction;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
@@ -843,7 +847,6 @@ type
     procedure btnVariblesClick(Sender: TObject);
     procedure btnVariblesGroupsClick(Sender: TObject);
     procedure BtnMaidJobScriptsClick(Sender: TObject);
-    procedure actLanguageExecute(Sender: TObject);
     procedure btnJumpToRoomAndDateClick(Sender: TObject);
     procedure cbxNameOrderPeriodChange(Sender: TObject);
     procedure grPeriodRoomsKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -1036,6 +1039,7 @@ type
     procedure btnReRegisterPMSClick(Sender: TObject);
     procedure btnDailyRevenuesClick(Sender: TObject);
     procedure btnCleaningNotesClick(Sender: TObject);
+    procedure acUpdateTranslationsExecute(Sender: TObject);
 
   private
     FReservationsModel: TReservationsModel;
@@ -3035,6 +3039,12 @@ begin
   end
   else
     ExitProcess(0);
+
+{$ifdef DEBUG}
+  dxBarDeveloperTools.Visible := ivAlways;
+{$else}
+  dxBarDeveloperTools.Visible := ivNever;
+{$endif}
 end;
 
 
@@ -12924,9 +12934,22 @@ begin
   end;
 end;
 
-procedure TfrmMain.actLanguageExecute(Sender: TObject);
+procedure TfrmMain.acUpdateTranslationsExecute(Sender: TObject);
 begin
-
+   RoomerLanguage.PerformDBUpdatesWhenUnknownEntitiesFound := true;
+   try
+     GenerateTranslateTextTableForConstants;
+     GenerateTranslateTextTableForAllForms;
+     TranslateOpenForms;
+     try
+       frmHomedate.Show;
+       RoomerLanguage.TranslateThisForm(frmRptManagment);
+       frmHomedate.Hide;
+     except
+     end;
+   finally
+     RoomerLanguage.PerformDBUpdatesWhenUnknownEntitiesFound := false;
+   end;
 end;
 
 // ########################  Customer - country - Currency ####################
