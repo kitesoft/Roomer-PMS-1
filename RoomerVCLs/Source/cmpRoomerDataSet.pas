@@ -188,7 +188,7 @@ type
     destructor Destroy; override;
 
     function CreateRoomerClient(aAddAuthenticationHeader: boolean = false): TRoomerHttpClient;
-    function GetFloatValue(Field: TField): Double;
+    function GetFloatValue(Field: TField): Double; deprecated;
     procedure Post; override;
     procedure OpenDataset(const SqlResult: String);
     procedure OpenDatasetFromUrlAsString(aEndPoint: String; SetLastAccess: boolean = true; loggingInOut: Integer = 0;contentType: String = '');
@@ -1904,15 +1904,6 @@ end;
 function TRoomerDataSet.GetCommandText: String;
 begin
   Result := Sql.Text;
-end;
-
-function SystemDecimalSeparator: string;
-var
-  Decimal: PChar;
-begin
-  Decimal := StrAlloc(10);
-  GetLocaleInfo(LOCALE_SYSTEM_DEFAULT, LOCALE_SDECIMAL, Decimal, 10);
-  Result := String(Decimal)[1];
 end;
 
 function TRoomerDataSet.GetFloatValue(Field: TField): Double;

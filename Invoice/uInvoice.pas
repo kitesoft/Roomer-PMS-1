@@ -1695,15 +1695,14 @@ begin
 
         while not rSet.eof do
         begin
-          CurrencyRate := LocalFloatValue(rSet.FieldByName('CurrencyRate').asString);
+          CurrencyRate := rSet.FieldByName('CurrencyRate').AsFloat;
           Currency := rSet.FieldByName('Currency').asString;
           ItemId := rSet.FieldByName('ItemId').asString;
-          Price := LocalFloatValue(rSet.FieldByName('Price').asString);
-          Total := LocalFloatValue(rSet.FieldByName('Total').asString);
-          TotalWOVat := LocalFloatValue(rSet.FieldByName('TotalWOVat')
-            .asString);
-          Vat := LocalFloatValue(rSet.FieldByName('Vat').asString);
-          Number := rSet.GetFloatValue(rSet.FieldByName('Number')); // -96
+          Price := rSet.FieldByName('Price').AsFloat;
+          Total := rSet.FieldByName('Total').AsFloat;
+          TotalWOVat := rSet.FieldByName('TotalWOVat').AsFloat;
+          Vat := rSet.FieldByName('Vat').AsFloat;
+          Number := rSet.FieldByName('Number').AsFloat;
           VATType := rSet.FieldByName('VATType').asString;
           OrginalRef := rSet.FieldByName('InvoiceNumber').asinteger;
           PurchaseDate := rSet.FieldByName('PurchaseDate').asdateTime;
@@ -3395,7 +3394,7 @@ var
       if s <> '' then
       begin
         GetInvoiceIndexPanel(i).HelpContext := i + 1;
-        Value := LocalizedFloatValue(s);
+        Value := StrToFloat(s);
         GetInvoiceIndexItems(i).Hint := Currency + ' ' +
           trim(_floattostr(Value, 12, 2));
       end;
@@ -4162,9 +4161,8 @@ begin
           ItemId := trim(eSet.FieldByName('ItemId').asString);
           lineId := eSet.FieldByName('Id').asinteger;
 
-          CurrencyRate := LocalFloatValue(eSet.FieldByName('CurrencyRate')
-            .asString);
-          Price := LocalFloatValue(eSet.FieldByName('Price').asString);
+          CurrencyRate := eSet.FieldByName('CurrencyRate').AsFloat;
+          Price := eSet.FieldByName('Price').AsFloat;
 
           if Item_isRoomRent(ItemId) then
           begin
@@ -8965,12 +8963,9 @@ begin
     if not rSet.eof then
     begin
       rSet.edit;
-      rSet.FieldByName('Total').Value := Total +
-        LocalFloatValue(rSet.FieldByName('Total').asString);
-      rSet.FieldByName('TotalWOVAT').Value := TotalWOVat +
-        LocalFloatValue(rSet.FieldByName('TotalWOVAT').asString);
-      rSet.FieldByName('TotalVAT').Value := TotalVAT +
-        LocalFloatValue(rSet.FieldByName('TotalVAT').asString);
+      rSet.FieldByName('Total').Value := Total + rSet.FieldByName('Total').asFloat;
+      rSet.FieldByName('TotalWOVAT').Value := TotalWOVat + rSet.FieldByName('TotalWOVAT').AsFloat;
+      rSet.FieldByName('TotalVAT').Value := TotalVAT + rSet.FieldByName('TotalVAT').AsFloat;
       rSet.post; // ID ADDED
     end;
 
@@ -9265,12 +9260,9 @@ begin
           if not rSet.eof then
           begin
             rSet.edit;
-            rSet.FieldByName('Total').Value := Total +
-              LocalFloatValue(rSet.FieldByName('Total').asString);
-            rSet.FieldByName('TotalWOVAT').Value := TotalWOVat +
-              LocalFloatValue(rSet.FieldByName('TotalWOVAT').asString);
-            rSet.FieldByName('TotalVAT').Value := TotalVAT +
-              LocalFloatValue(rSet.FieldByName('TotalVAT').asString);
+            rSet.FieldByName('Total').Value := Total + rSet.FieldByName('Total').AsFloat;
+            rSet.FieldByName('TotalWOVAT').Value := TotalWOVat + rSet.FieldByName('TotalWOVAT').AsFloat;
+            rSet.FieldByName('TotalVAT').Value := TotalVAT + rSet.FieldByName('TotalVAT').AsFloat;
             rSet.post; // ID ADDED
           end;
 

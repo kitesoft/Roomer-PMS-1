@@ -1386,12 +1386,12 @@ begin
           ItemID := rSet.FieldByName('ItemId').Asstring;
           Number := rSet.FieldByName('number').asFloat; // -96
           Description := rSet.FieldByName('Description').Asstring;
-          Price := LocalFloatValue(rSet.FieldByName('Price').Asstring);
+          Price := rSet.FieldByName('Price').AsFloat;
           VATType := rSet.FieldByName('VATType').Asstring;
-          Total := LocalFloatValue(rSet.FieldByName('Total').Asstring);
-          TotalWOVAT := LocalFloatValue(rSet.FieldByName('TotalWOVat').Asstring);
-          Vat := LocalFloatValue(rSet.FieldByName('Vat').Asstring);
-          CurrencyRate := LocalFloatValue(rSet.FieldByName('CurrencyRate').Asstring);
+          Total := rSet.FieldByName('Total').AsFloat;
+          TotalWOVAT := rSet.FieldByName('TotalWOVat').AsFloat;
+          Vat := rSet.FieldByName('Vat').AsFloat;
+          CurrencyRate := rSet.FieldByName('CurrencyRate').AsFloat;
           Currency := rSet.FieldByName('Currency').Asstring;
           persons := rSet.FieldByName('Persons').AsInteger;
           Nights := rSet.FieldByName('Nights').AsInteger;
@@ -2835,12 +2835,12 @@ begin
         result.AccItemLink := rSet.FieldByName('AccItemLink').Asstring;
         result.Item := rSet.FieldByName('Item').Asstring;
         result.Description := rSet.FieldByName('ItemDescription').Asstring;
-        result.Price := LocalFloatValue(rSet.FieldByName('Price').Asstring);
+        result.Price := rSet.FieldByName('Price').AsFloat;
         result.Itemtype := rSet.FieldByName('Itemtype').Asstring;
         result.ItemTypeDescription := rSet.FieldByName('ItemTypeDescription').Asstring;
         result.VATCode := rSet.FieldByName('VATCode').Asstring;
         result.VATCodeDescription := rSet.FieldByName('VATCodeDescription').Asstring;
-        result.VATPercentage := LocalFloatValue(rSet.FieldByName('VATPercentage').Asstring);
+        result.VATPercentage := rSet.FieldByName('VATPercentage').AsFloat;
         result.VATformula := rSet.FieldByName('valueformula').asString;
         result.ItemKind := Item_GetKind(aItem)
       end;
@@ -2978,11 +2978,11 @@ begin
     if hData.rSet_bySQL(rSet, s) then
     begin
       ExtraPrice := rSet.GetFloatValue(rSet.FieldByName('PriceExtraPerson'));
-      p1 := LocalFloatValue(rSet.FieldByName('Price1Person').Asstring);
-      p2 := LocalFloatValue(rSet.FieldByName('Price2Persons').Asstring);
-      p3 := LocalFloatValue(rSet.FieldByName('Price3Persons').Asstring);
-      p4 := LocalFloatValue(rSet.FieldByName('Price4Persons').Asstring);
-      p5 := LocalFloatValue(rSet.FieldByName('Price5Persons').Asstring);
+      p1 := rSet.FieldByName('Price1Person').AsFloat;
+      p2 := rSet.FieldByName('Price2Persons').AsFloat;
+      p3 := rSet.FieldByName('Price3Persons').AsFloat;
+      p4 := rSet.FieldByName('Price4Persons').AsFloat;
+      p5 := rSet.FieldByName('Price5Persons').AsFloat;
 
       if p1 = 0 then
         p1 := ExtraPrice;
@@ -3063,12 +3063,12 @@ begin
     s := format(select_getPrice_2, [rtID]);
     if hData.rSet_bySQL(rSet, s) then
     begin
-      ExtraPrice := LocalFloatValue(rSet.FieldByName('PriceExtraPerson').Asstring);
-      p1 := LocalFloatValue(rSet.FieldByName('Price1Person').Asstring);
-      p2 := LocalFloatValue(rSet.FieldByName('Price2Persons').Asstring);
-      p3 := LocalFloatValue(rSet.FieldByName('Price3Persons').Asstring);
-      p4 := LocalFloatValue(rSet.FieldByName('Price4Persons').Asstring);
-      p5 := LocalFloatValue(rSet.FieldByName('Price5Persons').Asstring);
+      ExtraPrice := rSet.FieldByName('PriceExtraPerson').AsFloat;
+      p1 := rSet.FieldByName('Price1Person').AsFloat;
+      p2 := rSet.FieldByName('Price2Persons').AsFloat;
+      p3 := rSet.FieldByName('Price3Persons').AsFloat;
+      p4 := rSet.FieldByName('Price4Persons').AsFloat;
+      p5 := rSet.FieldByName('Price5Persons').AsFloat;
 
       if p1 = 0 then
         p1 := ExtraPrice;
@@ -4553,7 +4553,7 @@ begin
     if hData.rSet_bySQL(rSet, s) then
     begin
       Currency := rSet.FieldByName('Currency').Asstring;
-      Rate := LocalFloatValue(rSet.FieldByName('CurrencyRate').Asstring);
+      Rate := rSet.FieldByName('CurrencyRate').AsFloat;
     end;
   finally
     freeandnil(rSet);
@@ -4881,11 +4881,10 @@ begin
   try
     if LocateRecord(glb.Vat, 'VATCode', Code) then
     begin
-      Percentage := LocalFloatValue(glb.Vat.FieldByName('VATPercentage').Asstring);
+      Percentage := glb.Vat.FieldByName('VATPercentage').AsFloat;
       if FieldExists(glb.Vat, 'valueFormula') then
         Formula := glb.Vat['valueFormula'];
-      packageFormula := PackageVATvalueFormula(package, Item,
-        LocalFloatValue(glb.Vat.FieldByName('VATPercentage').Asstring));
+      packageFormula := PackageVATvalueFormula(package, Item,  glb.Vat.FieldByName('VATPercentage').AsFloat);
       if packageFormula <> '' then
         Formula := packageFormula;
     end;
@@ -4899,7 +4898,7 @@ begin
 
   try
     if LocateRecord(glb.Vat, 'VATCode', Code) then
-      result := LocalFloatValue(glb.Vat.FieldByName('VATPercentage').Asstring);
+      result := glb.Vat.FieldByName('VATPercentage').AsFloat;
   except
   end;
 end;
@@ -5994,7 +5993,7 @@ begin
 
     sLocalCurrency := d.mtHead_.FieldByName('LocalCurrency').Asstring;
     sCurrency := d.mtHead_.FieldByName('Currency').Asstring;
-    fCurrencyRate := LocalFloatValue(d.mtHead_.FieldByName('CurrencyRate').Asstring);
+    fCurrencyRate := d.mtHead_.FieldByName('CurrencyRate').AsFloat;
     sCurrencyRate := floattostr(fCurrencyRate);
 
     invoiceCurrency := sCurrency;
@@ -6068,15 +6067,15 @@ begin
 
       if isCurrency then
       begin
-        FAmount := LocalFloatValue(d.mtLines_.FieldByName('foAmount').Asstring);
-        FAmountWoVat := LocalFloatValue(d.mtLines_.FieldByName('foAmountWoVat').Asstring);
-        fPrice := LocalFloatValue(d.mtLines_.FieldByName('foPrice').Asstring);
+        FAmount := d.mtLines_.FieldByName('foAmount').AsFloat;
+        FAmountWoVat := d.mtLines_.FieldByName('foAmountWoVat').AsFloat;
+        fPrice := d.mtLines_.FieldByName('foPrice').AsFloat;
       end
       else
       begin
-        FAmount := LocalFloatValue(d.mtLines_.FieldByName('Amount').Asstring);
-        FAmountWoVat := LocalFloatValue(d.mtLines_.FieldByName('AmountWoVat').Asstring);
-        fPrice := LocalFloatValue(d.mtLines_.FieldByName('Price').Asstring);
+        FAmount := d.mtLines_.FieldByName('Amount').AsFloat;
+        FAmountWoVat := d.mtLines_.FieldByName('AmountWoVat').AsFloat;
+        fPrice := d.mtLines_.FieldByName('Price').AsFloat;
       end;
 
       sAmount := floattostr(FAmount);
@@ -6389,10 +6388,10 @@ begin
 
       sLocalCurrency := d.mtHead_.FieldByName('LocalCurrency').Asstring;
       sCurrency := d.mtHead_.FieldByName('Currency').Asstring;
-      fCurrencyRate := LocalFloatValue(d.mtHead_.FieldByName('CurrencyRate').Asstring);
+      fCurrencyRate := d.mtHead_.FieldByName('CurrencyRate').AsFloat;
       sCurrencyRate := floattostr(fCurrencyRate);
 
-      fLodgingTax := LocalFloatValue(d.mtHead_.FieldByName('TotalStayTax').Asstring);
+      fLodgingTax := d.mtHead_.FieldByName('TotalStayTax').AsFloat;
       iLodgingTaxNights := d.mtHead_.FieldByName('TotalStayTaxNights').AsInteger;
 
       sLodgingTax := floattostr(fLodgingTax);
@@ -6535,15 +6534,15 @@ begin
 
         if isCurrency then
         begin
-          FAmount := LocalFloatValue(d.mtLines_.FieldByName('foAmount').Asstring);
-          FAmountWoVat := LocalFloatValue(d.mtLines_.FieldByName('foAmountWoVat').Asstring);
-          fPrice := LocalFloatValue(d.mtLines_.FieldByName('foPrice').Asstring);
+          FAmount := d.mtLines_.FieldByName('foAmount').AsFloat;
+          FAmountWoVat := d.mtLines_.FieldByName('foAmountWoVat').AsFloat;
+          fPrice := d.mtLines_.FieldByName('foPrice').AsFloat;
         end
         else
         begin
-          FAmount := LocalFloatValue(d.mtLines_.FieldByName('Amount').Asstring);
-          FAmountWoVat := LocalFloatValue(d.mtLines_.FieldByName('AmountWoVat').Asstring);
-          fPrice := LocalFloatValue(d.mtLines_.FieldByName('Price').Asstring);
+          FAmount := d.mtLines_.FieldByName('Amount').AsFloat;
+          FAmountWoVat := d.mtLines_.FieldByName('AmountWoVat').AsFloat;
+          fPrice := d.mtLines_.FieldByName('Price').AsFloat;
         end;
 
         sAmount := floattostr(FAmount);
@@ -6584,11 +6583,11 @@ begin
 
         if isCurrency then
         begin
-          fTmp := LocalFloatValue(d.mtPayments_.FieldByName('foAmount').Asstring)
+          fTmp := d.mtPayments_.FieldByName('foAmount').AsFloat;
         end
         else
         begin
-          fTmp := LocalFloatValue(d.mtPayments_.FieldByName('Amount').Asstring);
+          fTmp := d.mtPayments_.FieldByName('Amount').AsFloat;
         end;
 
         sPayment := floattostr(fTmp);
@@ -7604,7 +7603,7 @@ begin
           s := s + seppi + rSet.FieldByName('Tel2').Asstring;
           s := s + seppi + rSet.FieldByName('FAX').Asstring;
           s := s + seppi + rSet.FieldByName('EmailAddress').Asstring;
-          dTmp := LocalFloatValue(rSet.FieldByName('DiscountPercent').Asstring);
+          dTmp := rSet.FieldByName('DiscountPercent').AsFloat;
           try
             sTmp := floattostr(dTmp);
           except
@@ -11015,7 +11014,7 @@ begin
     s := format(select_rrGetDiscount, [RoomReservation]);
     if hData.rSet_bySQL(rSet, s) then
     begin
-      Discount := LocalFloatValue(rSet.FieldByName('discount').Asstring);
+      Discount := rSet.FieldByName('discount').AsFloat;
       Percentage := rSet['Percentage'];
 
       DiscountType := 0;

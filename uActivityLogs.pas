@@ -122,7 +122,7 @@ implementation
 
 uses Menus, sButton, sLabel, ud, ioUtils, uAppGlobal, uDateUtils, uStringUtils, dxBar
     , WinApi.Windows
-    ;
+    , XmlUtils;
 
 
 function GetDataFileLocationWithName(activity: TActivityType): String;

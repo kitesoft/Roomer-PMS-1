@@ -237,47 +237,6 @@ uses
   , uDImages;
 {$R *.dfm}
 
-function SetFloatFormat(Decimals : Integer; ShowCurrency : boolean) : string;
-var
-  s : string;
-  sDecimals : string;
-begin
-  sDecimals := inttostr(Decimals);
-  if ShowCurrency then
-    s := 'm'
-  else
-    s := 'n';
-  result := '%.' + sDecimals + s
-end;
-
-function FloatToCellStr(aNumber : Double; Format : string; commaToDot : boolean) : string;
-var
-  i : Integer;
-  s : string;
-begin
-  s := '0';
-
-  if Format = '' then
-  begin
-    s := floatTostr(aNumber);
-  end
-  else
-  begin
-    s := formatFloat(Format, aNumber);
-  end;
-
-  if commaToDot then
-  begin
-    for i := 1 to length(s) do
-    begin
-      if s[i] = '.' then
-        s[i] := SystemDecimalSeparator
-      else if s[i] = ',' then
-        s[i] := '.'
-    end;
-  end;
-  result := s;
-end;
 
 // ******************************************************************************
 

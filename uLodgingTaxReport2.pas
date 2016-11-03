@@ -477,12 +477,12 @@ sql := sql +    '   ih.InvoiceNumber ';
         Customer := rSet.FieldByName('Customer').Asstring;
         name := rSet.FieldByName('Name').Asstring;
 
-        Total          := LocalFloatValue(rSet.FieldByName('Total').asString);
-        TotalWOVAT     := LocalFloatValue(rSet.FieldByName('TotalWOVAT').asString);
-        TotalVAT       := LocalFloatValue(rSet.FieldByName('TotalVAT').asString);
+        Total          := rSet.FieldByName('Total').AsFloat;
+        TotalWOVAT     := rSet.FieldByName('TotalWOVAT').AsFLoat;
+        TotalVAT       := rSet.FieldByName('TotalVAT').AsFloat;
 
-        TotalStayTax   := LocalFloatValue(rSet.FieldByName('TotalStayTax').asString);
-        TotalStayTaxExcluted   := LocalFloatValue(rSet.FieldByName('TotalStayTaxExcluted').asString);
+        TotalStayTax   := rSet.FieldByName('TotalStayTax').AsFloat;
+        TotalStayTaxExcluted   := rSet.FieldByName('TotalStayTaxExcluted').AsFloat;
 
         TotalStayTaxNights := rSet.FieldByName('TotalStayTaxNights').Asinteger;
         InvoicedtDate := _dbDateTodate(InvoiceDate);

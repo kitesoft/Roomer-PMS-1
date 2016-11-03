@@ -668,6 +668,7 @@ uses
     , uG
     , _Glob
     , ShellApi
+    , Math
     ;
 
 {$R *.dfm}
@@ -1442,13 +1443,13 @@ begin
     while not mItemSale.Eof do
     begin
       inc(id);
-      if LocalFloatValue(mItemSale.FieldByName('Total').AsString) <> 0 then
+      if IsZero(mItemSale.FieldByName('Total').AsFloat) then
       begin
         mSums.append;
         mSums.FieldByName('id').AsInteger := id;
         mSums.FieldByName('Code').AsString := mItemSale.FieldByName('Item').AsString;
         mSums.FieldByName('Description').AsString := mItemSale.FieldByName('Description').AsString;;
-        mSums.FieldByName('Sale').AsFloat := LocalFloatValue(mItemSale.FieldByName('Total').AsString);
+        mSums.FieldByName('Sale').AsFloat := mItemSale.FieldByName('Total').AsFloat;
         mSums.FieldByName('Payment').AsFloat := 0.00;
         mSums.Post;
       end;
@@ -1472,7 +1473,7 @@ begin
         mSums.FieldByName('id').AsInteger := id;
         mSums.FieldByName('Code').AsString := mPaymentTypes.FieldByName('PayType').AsString;
         mSums.FieldByName('Description').AsString := mPaymentTypes.FieldByName('PayTypeDescription').AsString;;
-        mSums.FieldByName('Payment').AsFloat := LocalFloatValue(mPaymentTypes.FieldByName('Amount').AsString);
+        mSums.FieldByName('Payment').AsFloat := mPaymentTypes.FieldByName('Amount').AsFloat;
         mSums.FieldByName('Sale').AsFloat := 0.00;
         mSums.Post;
       end;
@@ -1505,7 +1506,7 @@ begin
         mSums2.FieldByName('id').AsInteger := id;
         mSums2.FieldByName('Code').AsString := mItemTypeSale.FieldByName('ItemType').AsString;
         mSums2.FieldByName('Description').AsString := mItemTypeSale.FieldByName('ItemTypeDescription').AsString;;
-        mSums2.FieldByName('Sale').AsFloat := LocalFloatValue(mItemTypeSale.FieldByName('Total').AsString);
+        mSums2.FieldByName('Sale').AsFloat := mItemTypeSale.FieldByName('Total').AsFloat;
         mSums2.FieldByName('Payment').AsFloat := 0.00;
         mSums2.Post;
       end;
@@ -1529,7 +1530,7 @@ begin
         mSums2.FieldByName('id').AsInteger := id;
         mSums2.FieldByName('Code').AsString := mPaymentGroups.FieldByName('PayGroup').AsString;
         mSums2.FieldByName('Description').AsString := mPaymentGroups.FieldByName('Description').AsString;
-        mSums2.FieldByName('Payment').AsFloat := LocalFloatValue(mPaymentGroups.FieldByName('Amount').AsString);
+        mSums2.FieldByName('Payment').AsFloat := mPaymentGroups.FieldByName('Amount').AsFloat;
         mSums2.FieldByName('Sale').AsFloat := 0.00;
         mSums2.Post;
       end;

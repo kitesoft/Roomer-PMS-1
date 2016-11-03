@@ -220,7 +220,8 @@ uses uD,
      uDateUtils,
      uUtils,
      uMain,
-     uRoomerLanguage
+     uRoomerLanguage,
+     Math
      ;
 
 procedure TfrmDaysStatistics.PerformRequest;
@@ -281,7 +282,8 @@ begin
   begin
     RatesAndAvails := channel.RatesAndAvailabilities[i];
     ARatesText := formatFloat('#,##0.00', RatesAndAvails.rate);
-    if ARatesText = CorrectDecimalSeparator('0.00') then
+    if IsZero(RatesAndAvails.rate, 0.01) then
+//    if ARatesText = CorrectDecimalSeparator('0.00') then
        ARatesText := 'N/A';
     if (LastRoomType <> RatesAndAvails.roomType) AND
        (LastRateValue <> ARatesText) then

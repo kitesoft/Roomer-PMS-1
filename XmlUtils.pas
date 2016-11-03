@@ -18,7 +18,17 @@ function XPATHSelect( const FocusNode: IXMLNode; const sXPath: string): TArray<I
 function XPATHSelectFirst( const FocusNode: IXMLNode; const sXPath: string; var SelectedNode: IXMLNode): boolean;
 function GetAttributeValue(Node: IXMLDomNode; AttribName, defaultValue: String): String;
 
+
+function XMLToFloat(const aStringValue: string; aDefault: extended = 0.00): extended;
+function FloatToXML(aValue: double; aDecimals: integer = 0): string;
+
+var
+  // Fixed predefined formatsettings to be used when formatting from or to XML strings
+  XMLFormatSettings: TFormatSettings;
+
 implementation
+
+uses uFloatUtils;
 
 function GetAttributeValue(Node: IXMLDomNode; AttribName, defaultValue: String): String;
 var
@@ -104,4 +114,30 @@ begin
   result := assigned( SelectedNode)
 end;
 
+
+function FloatToXML(aValue: double; aDecimals: integer = 0): string;
+begin
+  Result := FloatToStr(RoundDecimals(aValue, aDecimals), XMLFormatSettings);
+end;
+
+function XMLToFloat(const aStringValue: string; aDefault: extended = 0.00): extended;
+begin
+  Result := StrToFloatDef(aStringValue, aDefault, XMLFormatSettings);
+end;
+
+procedure InitXMLFormatSettings;
+begin
+  with XMLFormatSettings do
+  begin
+    DecimalSeparator := '.';
+    ThousandSeparator := ',';
+    DateSeparator := '-';
+    TimeSeparator := ':';
+    ShortDateFormat := 'yy-mm-dd';
+    ShortTimeFormat := 'HH:mm';
+  end;
+end;
+
+initialization
+  initXMLFormatSettings;
 end.

@@ -76,6 +76,8 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
     object sTabSheet1: TsTabSheet
       Caption = 'Main'
       TabSkin = 'TRANSPARENT'
+      SkinData.CustomColor = False
+      SkinData.CustomFont = False
       object gbxGuest: TsGroupBox
         Left = 0
         Top = 0
@@ -250,8 +252,8 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
         object cbxActive: TsCheckBox
           Left = 122
           Top = 15
-          Width = 64
-          Height = 17
+          Width = 56
+          Height = 20
           Caption = 'Active'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -702,8 +704,8 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
         object cbxBreakfastIncluded: TsCheckBox
           Left = 227
           Top = 16
-          Width = 74
-          Height = 17
+          Width = 66
+          Height = 20
           Caption = 'Breakfast'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -719,8 +721,8 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
         object cbxHalfBoard: TsCheckBox
           Left = 227
           Top = 42
-          Width = 79
-          Height = 17
+          Width = 71
+          Height = 20
           Caption = 'Half-board'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -736,8 +738,8 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
         object cbxFullBoard: TsCheckBox
           Left = 227
           Top = 67
-          Width = 76
-          Height = 17
+          Width = 68
+          Height = 20
           Caption = 'Full-board'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -754,6 +756,8 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
     end
     object sTabSheet2: TsTabSheet
       Caption = 'Default values'
+      SkinData.CustomColor = False
+      SkinData.CustomFont = False
       object sGroupBox1: TsGroupBox
         AlignWithMargins = True
         Left = 0
@@ -840,8 +844,8 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
         object cbxNonRefundable: TsCheckBox
           Left = 235
           Top = 24
-          Width = 103
-          Height = 17
+          Width = 95
+          Height = 20
           Caption = 'Non-refundable'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -920,8 +924,8 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
         object cbxsendAvailability: TsCheckBox
           Left = 227
           Top = 16
-          Width = 105
-          Height = 17
+          Width = 97
+          Height = 20
           Caption = 'Send availability'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -937,8 +941,8 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
         object cbxsendRate: TsCheckBox
           Left = 227
           Top = 42
-          Width = 75
-          Height = 17
+          Width = 67
+          Height = 20
           Caption = 'Send rate'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -954,8 +958,8 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
         object cbxsendStopSell: TsCheckBox
           Left = 227
           Top = 68
-          Width = 94
-          Height = 17
+          Width = 86
+          Height = 20
           Caption = 'Send stop sell'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -971,8 +975,8 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
         object cbxsendMinStay: TsCheckBox
           Left = 227
           Top = 94
-          Width = 95
-          Height = 17
+          Width = 87
+          Height = 20
           Caption = 'Send min stay'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -1085,8 +1089,8 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
         object cbxDefStopSale: TsCheckBox
           Left = 235
           Top = 24
-          Width = 68
-          Height = 17
+          Width = 60
+          Height = 20
           Caption = 'Stop sell'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -1111,6 +1115,7 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
+          NumbersOnly = True
           ParentFont = False
           TabOrder = 1
           OnKeyPress = edtdefRateKeyPress
@@ -1187,8 +1192,8 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
         object cbxDefClosedToArrival: TsCheckBox
           Left = 235
           Top = 181
-          Width = 107
-          Height = 17
+          Width = 99
+          Height = 20
           Caption = 'Closed to Arrival'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -1204,8 +1209,8 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
         object cbxDefClosedToDeparture: TsCheckBox
           Left = 235
           Top = 204
-          Width = 125
-          Height = 17
+          Width = 117
+          Height = 20
           Caption = 'Closed to Departure'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -1222,6 +1227,8 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
     end
     object sTabSheet3: TsTabSheet
       Caption = 'Master rate'
+      SkinData.CustomColor = False
+      SkinData.CustomFont = False
       object sGroupBox4: TsGroupBox
         AlignWithMargins = True
         Left = 0
@@ -1438,7 +1445,7 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
           Left = 257
           Top = 58
           Width = 20
-          Height = 16
+          Height = 20
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -11
@@ -1505,7 +1512,7 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
           Left = 257
           Top = 84
           Width = 20
-          Height = 16
+          Height = 20
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -11
@@ -1561,7 +1568,7 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
           Left = 257
           Top = 110
           Width = 20
-          Height = 16
+          Height = 20
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -11
@@ -1578,7 +1585,7 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
           Left = 257
           Top = 160
           Width = 20
-          Height = 16
+          Height = 20
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -11
@@ -1594,7 +1601,7 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
           Left = 257
           Top = 185
           Width = 20
-          Height = 16
+          Height = 20
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -11
@@ -1610,7 +1617,7 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
           Left = 257
           Top = 210
           Width = 20
-          Height = 16
+          Height = 20
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -11
@@ -1626,7 +1633,7 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
           Left = 257
           Top = 235
           Width = 20
-          Height = 16
+          Height = 20
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -11
@@ -1642,7 +1649,7 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
           Left = 257
           Top = 259
           Width = 20
-          Height = 16
+          Height = 20
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -11
@@ -1658,7 +1665,7 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
           Left = 257
           Top = 135
           Width = 20
-          Height = 16
+          Height = 20
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -11
