@@ -26,7 +26,7 @@ type
     exportFileTemplate : String;
     procedure Process;
     function GetExportTemplate: String;
-    procedure ExportToCSV;
+    procedure ExportToCSV(btnName : String);
     { Private declarations }
   public
     { Public declarations }
@@ -52,6 +52,7 @@ uses ud
     , uUtils
     , uFileSystemUtils
     , uResourceManagement
+    , uActivityLogs
     ;
 
 procedure PostInvoicesToBookKeepingSystem(invoiceList : String);
@@ -79,9 +80,25 @@ begin
   Application.ProcessMessages;
   try
     if exportFileTemplate = '' then
-      Process
-    else
-      ExportToCsv;
+    begin
+      AddRoomerActivityLog(d.roomerMainDataSet.username,
+                           uActivityLogs.BUTTON_CLICK,
+                           TsButton(Sender).Name,
+                           format('User ' + d.roomerMainDataSet.username + ' tried to post invoices %s-%s to bookkeeping system', [edtFrom.Text, edtTo.Text]),
+                           '',
+                           '',
+                           '',
+                           0,
+                           0,
+                           strToIntDef(edtFrom.Text, 0),
+                           strToIntDef(edtTo.Text, 0),
+                           0,
+                           '');
+      Process;
+    end else
+    begin
+      ExportToCsv(TsButton(Sender).Name);
+    end;
   finally
     screen.Cursor := crDefault;
     Application.ProcessMessages;
@@ -256,7 +273,7 @@ begin
     end;
 end;
 
-procedure TFrmPostInvoices.ExportToCSV;
+procedure TFrmPostInvoices.ExportToCSV(btnName : String);
 var lines, fld : TStringList;
     line, SubjectTemplate, newLine : String;
     i : Integer;
@@ -299,6 +316,19 @@ var firstRound : Boolean;
 begin
   if dlgSave.Execute then
   begin
+    AddRoomerActivityLog(d.roomerMainDataSet.username,
+                         uActivityLogs.BUTTON_CLICK,
+                         btnName,
+                         format('User ' + d.roomerMainDataSet.username + ' exported invoices %s-%s/%s to ', [edtFrom.Text, edtTo.Text,edtInvoiceList.Text]),
+                         '',
+                         '',
+                         '',
+                         0,
+                         0,
+                         strToIntDef(edtFrom.Text, 0),
+                         strToIntDef(edtTo.Text, 0),
+                         0,
+                         '');
     if edtInvoiceList.Text = '' then
     begin
       s := '';
@@ -395,12 +425,14 @@ function TFrmPostInvoices.GetExportTemplate : String;
 var rSet : TRoomerDataSet;
 begin
   rSet := CreateNewDataSet;
-  rSet_bySQL(rSet, 'SELECT InvoiceExportFilename FROM hotelconfigurations LIMIT 1');
+  rSet_bySQL(rSet, 'SELECT (SELECT 1 FROM home100.hotelservices WHERE active=1 AND hotelId=SUBSTR(DATABASE(), 9, 15) AND serviceType=''FINANCE'' LIMIT 1) AS financeConnected, InvoiceExportFilename FROM hotelconfigurations LIMIT 1');
   rSet.First;
   if NOT rSet.Eof then
   begin
-    result := rSet['InvoiceExportFilename'];
-
+    if rSet['financeConnected'] = 1 then
+      result := ''
+    else
+      result := rSet['InvoiceExportFilename'];
   end else
     result := '';
 end;

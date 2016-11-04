@@ -46,6 +46,10 @@
         <Base>true</Base>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base)'!=''">
+        <Manifest_File>None</Manifest_File>
+        <DCC_UnitSearchPath>..\..\_dcu;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <VerInfo_Keys>CompanyName=Promoir BV;FileDescription=Roomer PMS Upgrade Agent;FileVersion=1.2.0.0;InternalName=Upgrader;LegalCopyright=(C) 2013, Promoir BV;LegalTrademarks=Roomer is a registered trademark of Promoir BV;OriginalFilename=RoomerUpgradeAgent;ProductName=Roomer Open Hospitality Platform;ProductVersion=1.2.0.0;Comments=</VerInfo_Keys>
+        <VerInfo_Locale>1043</VerInfo_Locale>
         <DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;$(DCC_Namespace)</DCC_Namespace>
         <Icon_MainIcon>$(BDS)\bin\delphi_PROJECTICON.ico</Icon_MainIcon>
         <DCC_DcuOutput>.\$(Platform)\$(Config)</DCC_DcuOutput>
@@ -80,8 +84,6 @@
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
-        <Manifest_File>None</Manifest_File>
-        <VerInfo_Locale>1043</VerInfo_Locale>
         <DCC_ExeOutput>..\..\RoomerPMSRelease\</DCC_ExeOutput>
         <DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
         <DCC_Define>RELEASE;_ROOMERSSL;$(DCC_Define)</DCC_Define>
@@ -159,10 +161,7 @@
                     <VersionInfoKeys Name="CFBundleAllowMixedLocalizations"/>
                     <VersionInfoKeys Name="CFBundleExecutable"/>
                 </VersionInfoKeys>
-                <Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k170.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp170.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
-                </Excluded_Packages>
+                <Excluded_Packages/>
                 <Source>
                     <Source Name="MainSource">RoomerUpgradeAgent.dpr</Source>
                 </Source>
