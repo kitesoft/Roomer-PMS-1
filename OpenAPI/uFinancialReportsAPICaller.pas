@@ -64,7 +64,12 @@ begin
 
     Result := roomerClient.GetWithStatus(lURI, lResponse) = 200;
     if Result then
+    begin
+      FLastErrorResponse := '';
       aRSet.OpenDataset(lResponse);
+    end
+    else
+      FLastErrorResponse := lResponse;
   finally
     roomerClient.Free;
   end;
@@ -98,7 +103,12 @@ begin
 
     Result := roomerClient.GetWithStatus(lURI, lResponse) = 200;
     if Result then
+    begin
+      FLastErrorResponse := '';
       aRSet.OpenDataset(lResponse);
+    end
+    else
+      FLastErrorResponse := lResponse;
   finally
     roomerClient.Free;
   end;
@@ -132,7 +142,12 @@ begin
 
     Result := roomerClient.GetWithStatus(lURI, lResponse) = 200;
     if Result then
+    begin
+      FLastErrorResponse := '';
       aRSet.OpenDataset(lResponse);
+    end
+    else
+      FLastErrorResponse := lResponse;
   finally
     roomerClient.Free;
   end;end;
