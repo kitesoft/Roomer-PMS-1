@@ -90,9 +90,6 @@ uses
 type
   TfrmInvoiceList2 = class(TForm)
     LMDSimplePanel1: TsPanel;
-    btnReservation: TsButton;
-    LMDSpeedButton1: TsButton;
-    LMDButton1: TsButton;
     LMDGroupBox1: TsGroupBox;
     dtFrom: TsDateEdit;
     dtTo: TsDateEdit;
@@ -106,15 +103,10 @@ type
     LMDSpeedButton3: TsButton;
     rbtLast: TsRadioButton;
     cbxTxtType: TsComboBox;
-    LMDSpeedButton5: TsButton;
-    btnViewInvoice: TsButton;
-    LMDSpeedButton6: TsButton;
-    LMDSpeedButton7: TsButton;
     edtLast: TsSpinEdit;
     edtInvoiceFrom: TsSpinEdit;
     edtInvoiceTo: TsSpinEdit;
     FormStore: TcxPropertiesStore;
-    sButton1: TsButton;
     sPanel1: TsPanel;
     mDS: TDataSource;
     m22_: TkbmMemTable;
@@ -148,13 +140,20 @@ type
     tvInvoiceHeadReservation: TcxGridDBBandedColumn;
     tvInvoiceHeadRoomReservation: TcxGridDBBandedColumn;
     lvInvoiceHead: TcxGridLevel;
-    sButton2: TsButton;
     cLabFilter: TsLabel;
     edFilter: TsEdit;
     btnClear: TsSpeedButton;
     btnExport: TsButton;
     tvInvoiceHeadRowSelected: TcxGridDBBandedColumn;
     tvInvoiceHeadexternalInvoiceId: TcxGridDBBandedColumn;
+    pnlButtons: TsPanel;
+    LMDSpeedButton6: TsButton;
+    btnReservation: TsButton;
+    LMDSpeedButton1: TsButton;
+    btnViewInvoice: TsButton;
+    sButton1: TsButton;
+    sButton2: TsButton;
+    LMDButton1: TsButton;
     procedure rbtDatesClick(Sender : TObject);
     procedure FormCreate(Sender : TObject);
     procedure cbxPeriodChange(Sender : TObject);
@@ -164,13 +163,11 @@ type
     procedure dtToChange(Sender : TObject);
     procedure LMDSpeedButton3Click(Sender : TObject);
     procedure FormShow(Sender : TObject);
-    procedure LMDSpeedButton5Click(Sender : TObject);
     procedure btnReservationClick(Sender : TObject);
     procedure LMDSpeedButton1Click(Sender : TObject);
     procedure LMDButton1Click(Sender : TObject);
     procedure btnViewInvoiceClick(Sender : TObject);
     procedure LMDSpeedButton6Click(Sender : TObject);
-    procedure LMDSpeedButton7Click(Sender : TObject);
     procedure tvInvDblClick(Sender: TObject);
     procedure edLastCountChange(Sender: TObject);
     procedure edtInvoiceFromChange(Sender: TObject);
@@ -718,6 +715,7 @@ end;
 
 procedure TfrmInvoiceList2.FormShow(Sender : TObject);
 begin
+
   cbxPeriod.ItemIndex := 0;
   cbxTxtType.ItemIndex := 0;
   zLastInvoiceID := hdata.IVH_GetLastID();
@@ -799,14 +797,14 @@ begin
 AProperties := d.getCurrencyProperties(g.qNativeCurrency);
 end;
 
-procedure TfrmInvoiceList2.LMDSpeedButton5Click(Sender : TObject);
-var
-  InvoiceNumber : integer;
-begin
-  InvoiceNumber := m22_.fieldbyname('invoicenumber').AsInteger;
-  d.CreateMtFields;
-  d.InsertMTdata(InvoiceNumber, true, false,false);
-end;
+//procedure TfrmInvoiceList2.LMDSpeedButton5Click(Sender : TObject);
+//var
+//  InvoiceNumber : integer;
+//begin
+//  InvoiceNumber := m22_.fieldbyname('invoicenumber').AsInteger;
+//  d.CreateMtFields;
+//  d.InsertMTdata(InvoiceNumber, true, false,false);
+//end;
 
 procedure TfrmInvoiceList2.btnClearClick(Sender: TObject);
 begin
@@ -906,23 +904,23 @@ begin
   ShellExecute(Handle, 'OPEN', PChar(sFilename + '.xls'), nil, nil, sw_shownormal);
 end;
 
-procedure TfrmInvoiceList2.LMDSpeedButton7Click(Sender : TObject);
-var
-  InvoiceNumber : integer;
-  i : integer;
-begin
-  i := 0;
-  m22_.First;
-  while not m22_.Eof do
-  begin
-    inc(i);
-    InvoiceNumber := m22_.fieldbyname('invoicenumber').AsInteger;
-    d.CreateMtFields;
-    d.InsertMTdata(InvoiceNumber, true, true,false);
-    application.ProcessMessages;
-    m22_.Next;
-  end;
-end;
+//procedure TfrmInvoiceList2.LMDSpeedButton7Click(Sender : TObject);
+//var
+//  InvoiceNumber : integer;
+//  i : integer;
+//begin
+//  i := 0;
+//  m22_.First;
+//  while not m22_.Eof do
+//  begin
+//    inc(i);
+//    InvoiceNumber := m22_.fieldbyname('invoicenumber').AsInteger;
+//    d.CreateMtFields;
+//    d.InsertMTdata(InvoiceNumber, true, true,false);
+//    application.ProcessMessages;
+//    m22_.Next;
+//  end;
+//end;
 
 end.
 

@@ -52,7 +52,16 @@ procedure AddOfflineReportActivityLog(const user : String;
 procedure AddRoomerActivityLog(const user : String;
                                action : TRoomerAction;
                                const result : String;
-                               const moreInfo : String);
+                               const moreInfo : String;
+                               const OldValue : String = '';
+                               const NewValue : String = '';
+                               const Code : String = '';
+                               const Reservation : Integer = 0;
+                               const RoomReservation : Integer = 0;
+                               const ID_1 : Integer = 0;
+                               const ID_2 : Integer = 0;
+                               const ID_3 : Integer = 0;
+                               const ADate : String = '');
 
 procedure AddInvoiceActivityLog(const user : String;
                                 iReservation,
@@ -381,7 +390,16 @@ end;
 procedure AddRoomerActivityLog(const user : String;
                                action : TRoomerAction;
                                const result : String;
-                               const moreInfo : String);
+                               const moreInfo : String;
+                               const OldValue : String = '';
+                               const NewValue : String = '';
+                               const Code : String = '';
+                               const Reservation : Integer = 0;
+                               const RoomReservation : Integer = 0;
+                               const ID_1 : Integer = 0;
+                               const ID_2 : Integer = 0;
+                               const ID_3 : Integer = 0;
+                               const ADate : String = '');
 var categoryName, actionName, sLine : String;
 begin
   try
@@ -397,15 +415,15 @@ begin
                             actionName,
                             moreinfo,
                             moreinfo,
-                            '',
-                            '',
-                            '',
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            '');
+                            OldValue,
+                            NewValue,
+                            Code,
+                            Reservation,
+                            RoomReservation,
+                            ID_1,
+                            ID_2,
+                            ID_3,
+                            ADate);
   AddToTextFile(GetDataFileLocationWithName(ROOMER), sLine);
 end;
 
