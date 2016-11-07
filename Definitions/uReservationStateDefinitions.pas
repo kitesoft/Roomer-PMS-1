@@ -50,6 +50,7 @@ type
     TReservationStateSet = set of TReservationState;
 
     TReservationStateHelper = record helper for TReservationState
+  private
     public
       // constructor
       /// <summary>
@@ -109,6 +110,18 @@ type
       ///   Returns a TReservationState set with all states that are allowed to change into the Self state
       /// </summary>
       function StatesAllowedToChangeIntoThis: TReservationStateSet;
+
+      /// <summary>
+      ///   True if a reservation with this state has influence on the room availability
+      /// </summary>
+      function InfluencesAvailability: boolean;
+
+      /// <summary>
+      ///   True if changing the reservationstate of a reservation from this into newState could change the
+      ///   availability of rooms
+      /// </summary>
+      function AffectsAvailabilityWhenChangingTo(anewState: TReservationState): boolean;
+
     end;
 
     TReservationStateSetHelper = record helper for TReservationStateSet
@@ -221,6 +234,33 @@ begin
     Result := rsUnKnown
   else
     Result := FromResStatus(statusStr.Chars[0]);
+end;
+
+function TReservationStateHelper.InfluencesAvailability: boolean;
+begin
+  case Self of
+    rsReservation:        result := True;
+    rsGuests:             result := True;
+    rsDeparted:           result := True;
+    rsOptionalBooking:    result := False;
+    rsAllotment:          result := True;
+    rsNoShow:             result := False;
+    rsBlocked:            result := True;
+    rsCancelled:          result := False;
+    rsTmp1:               result := False;
+    rsAwaitingPayment:    result := True;
+    rsAwaitingPayConfirm: result := True;
+    rsMixed:              result := True;
+    rsWaitingList:        result := True;
+  else
+    Result := True;
+  end;
+
+end;
+
+function TReservationStateHelper.AffectsAvailabilityWhenChangingTo(anewState: TReservationState): boolean;
+begin
+  Result := (Self.influencesAvailability <> aNewState.influencesAvailability);
 end;
 
 function TReservationStateHelper.IsUserSelectable: boolean;

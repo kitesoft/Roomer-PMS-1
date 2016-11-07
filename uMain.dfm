@@ -103,10 +103,8 @@ object frmMain: TfrmMain
       object tabOneDayView: TsTabSheet
         Caption = 'tabOneDayView'
         ImageIndex = 8
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
+        SkinData.CustomColor = False
+        SkinData.CustomFont = False
         object grOneDayRooms: TAdvStringGrid
           Left = 0
           Top = 0
@@ -284,7 +282,7 @@ object frmMain: TfrmMain
           SortSettings.HeaderColorTo = 16579058
           SortSettings.HeaderMirrorColor = 16380385
           SortSettings.HeaderMirrorColorTo = 16182488
-          Version = '7.9.1.1'
+          Version = '8.1.2.0'
           ColWidths = (
             47
             49
@@ -438,6 +436,8 @@ object frmMain: TfrmMain
       object tabGuestList: TsTabSheet
         Caption = 'tabGuestList'
         ImageIndex = 9
+        SkinData.CustomColor = False
+        SkinData.CustomFont = False
         object Panel3: TsPanel
           Left = 0
           Top = 0
@@ -844,10 +844,8 @@ object frmMain: TfrmMain
       object tabPeriod: TsTabSheet
         Caption = 'tabPeriod'
         ImageIndex = 2
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
+        SkinData.CustomColor = False
+        SkinData.CustomFont = False
         object sLabel2: TsLabel
           Left = 224
           Top = 400
@@ -1090,7 +1088,7 @@ object frmMain: TfrmMain
             SortSettings.HeaderColorTo = 16579058
             SortSettings.HeaderMirrorColor = 16380385
             SortSettings.HeaderMirrorColorTo = 16182488
-            Version = '7.9.1.1'
+            Version = '8.1.2.0'
             ColWidths = (
               73
               20
@@ -1449,7 +1447,7 @@ object frmMain: TfrmMain
             SearchFooter.HintHighlight = 'Highlight occurences'
             SearchFooter.MatchCaseCaption = 'Match case'
             SortSettings.DefaultFormat = ssAutomatic
-            Version = '7.9.1.1'
+            Version = '8.1.2.0'
             ColWidths = (
               64
               64
@@ -1629,10 +1627,8 @@ object frmMain: TfrmMain
       end
       object tabFreeRooms: TsTabSheet
         Caption = 'tabFreeRooms'
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
+        SkinData.CustomColor = False
+        SkinData.CustomFont = False
       end
       object tabDashboard: TsTabSheet
         Caption = 'tabDashboard'
@@ -1644,10 +1640,8 @@ object frmMain: TfrmMain
       end
       object tabRateQuery: TsTabSheet
         Caption = 'tabRateQuery'
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
+        SkinData.CustomColor = False
+        SkinData.CustomFont = False
       end
     end
     object panMainTop: TsPanel
@@ -2497,12 +2491,13 @@ object frmMain: TfrmMain
         Margins.Right = 0
         Margins.Bottom = 0
         HorzScrollBar.Visible = False
+        VertScrollBar.Position = 120
         Align = alClient
         TabOrder = 0
         SkinData.SkinSection = 'PANEL'
         object sSplitter1: TsSplitter
           Left = 0
-          Top = 492
+          Top = 372
           Width = 273
           Height = 8
           Cursor = crVSplit
@@ -2518,7 +2513,7 @@ object frmMain: TfrmMain
         end
         object lblBusyDownloading: TsLabel
           Left = 0
-          Top = 13
+          Top = -107
           Width = 273
           Height = 13
           Margins.Left = 10
@@ -2541,7 +2536,7 @@ object frmMain: TfrmMain
         end
         object lblCacheNotification: TsLabel
           Left = 0
-          Top = 0
+          Top = -120
           Width = 273
           Height = 13
           Margins.Left = 10
@@ -2564,7 +2559,7 @@ object frmMain: TfrmMain
         end
         object Panel5: TsPanel
           Left = 0
-          Top = 194
+          Top = 74
           Width = 273
           Height = 26
           Align = alTop
@@ -2592,7 +2587,7 @@ object frmMain: TfrmMain
         end
         object Chart1: TChart
           Left = 0
-          Top = 330
+          Top = 210
           Width = 273
           Height = 162
           Margins.Left = 10
@@ -2645,7 +2640,7 @@ object frmMain: TfrmMain
         end
         object grdRoomStatusses: TAdvStringGrid
           Left = 0
-          Top = 500
+          Top = 380
           Width = 273
           Height = 50
           Cursor = crDefault
@@ -2796,7 +2791,7 @@ object frmMain: TfrmMain
         end
         object grdRoomClasses: TAdvStringGrid
           Left = 0
-          Top = 220
+          Top = 100
           Width = 273
           Height = 110
           Cursor = crDefault
@@ -2946,7 +2941,7 @@ object frmMain: TfrmMain
         end
         object pnlDateStatistics: TsPanel
           Left = 0
-          Top = 26
+          Top = -94
           Width = 273
           Height = 23
           Margins.Left = 10
@@ -2968,7 +2963,7 @@ object frmMain: TfrmMain
         end
         object pnlNotifications: TsPanel
           Left = 0
-          Top = 49
+          Top = -71
           Width = 273
           Height = 145
           Margins.Left = 10
@@ -3183,7 +3178,6 @@ object frmMain: TfrmMain
       Index = 4
     end
     object System: TdxRibbonTab
-      Active = True
       Caption = 'System'
       Groups = <
         item
@@ -3213,6 +3207,7 @@ object frmMain: TfrmMain
       Index = 5
     end
     object rbTabChannels: TdxRibbonTab
+      Active = True
       Caption = 'Channels'
       Groups = <
         item
@@ -5136,6 +5131,10 @@ object frmMain: TfrmMain
         item
           Visible = True
           ItemName = 'mmnuHelp'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarDeveloperTools'
         end>
       OneOnRow = True
       RotateWhenVertical = False
@@ -6269,6 +6268,20 @@ object frmMain: TfrmMain
       Category = 0
       Hint = 'New Button'
       Visible = ivAlways
+    end
+    object dxBarDeveloperTools: TdxBarSubItem
+      Caption = 'Developer Tools'
+      Category = 0
+      Visible = ivNever
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbUpdateTranslations'
+        end>
+    end
+    object bbUpdateTranslations: TdxBarButton
+      Action = acUpdateTranslations
+      Category = 0
     end
     object mmnuFile: TdxBarSubItem
       Caption = '&File'
@@ -24977,5 +24990,13 @@ object frmMain: TfrmMain
     OnTimer = timOfflineReportsTimer
     Left = 328
     Top = 208
+  end
+  object alDeveloperTools: TActionList
+    Left = 1152
+    Top = 48
+    object acUpdateTranslations: TAction
+      Caption = 'Update Translations'
+      OnExecute = acUpdateTranslationsExecute
+    end
   end
 end
