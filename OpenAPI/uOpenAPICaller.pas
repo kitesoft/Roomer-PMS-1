@@ -14,7 +14,9 @@ type
   const
     cAccMicrosoftDataset = 'application/x-microsoft-dataset';
   protected
+    FLastErrorResponse: string;
   public
+    property LastErrorResponse: string read FLastErrorResponse;
   end;
 
   TInventoriesOpenAPICaller = class(TBaseOpenAPICaller)
