@@ -17,7 +17,7 @@ uses
   dxPScxPageControlProducer, dxPScxEditorProducers, dxPScxExtEditorProducers, dxSkinsdxBarPainter,
   dxSkinsdxRibbonPainter, dxServerModeData, dxServerModeDBXDataSource, dxPSCore, dxPScxGridLnk, dxPScxGridLayoutViewLnk,
   dxPScxCommon, cxMemo, cxLabel, ppStrtch, ppMemo
-  , uRoomerForm, cxSpinEdit
+  , uRoomerForm, cxSpinEdit, Vcl.ComCtrls, sStatusBar
   ;
 
 type
@@ -79,7 +79,7 @@ type
     function ConstructSQL: string;
     procedure UpdateLocations;
   protected
-    procedure UpdateControls; override;
+    procedure DoUpdateControls; override;
     procedure DoLoadData; override;
     procedure DoShow; override;
   public
@@ -310,7 +310,7 @@ begin
   gridPrinter.Print(True, nil, gridPrinterLink);
 end;
 
-procedure TfrmHouseKeepingReport.UpdateControls;
+procedure TfrmHouseKeepingReport.DoUpdateControls;
 begin
   if FRefreshingData then
     Exit;

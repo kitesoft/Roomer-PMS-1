@@ -13,7 +13,7 @@ object FrmSelectCloudConfiguration: TFrmSelectCloudConfiguration
   Font.Style = []
   OldCreateOrder = False
   Position = poScreenCenter
-  OnClose = FormClose
+  OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
   object sLabel1: TsLabel
@@ -81,7 +81,6 @@ object FrmSelectCloudConfiguration: TFrmSelectCloudConfiguration
     TabOrder = 2
   end
   object StoreMain: TcxPropertiesStore
-    Active = False
     Components = <
       item
         Component = cbxEnvironment

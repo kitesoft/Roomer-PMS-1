@@ -29,13 +29,14 @@ uses
     , Vcl.ExtCtrls
     , Vcl.StdCtrls
     , Vcl.ComCtrls
+    , uRoomerDialogForm, cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, dxSkinsCore, dxSkinCaramel,
+  dxSkinCoffee, dxSkinDarkSide, dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinsdxStatusBarPainter,
+  cxGridTableView, cxStyles, dxPScxCommon, dxPScxGridLnk, cxClasses, cxPropertiesStore, dxStatusBar, sStatusBar, uMain,
+  AdvSmoothProgressBar
     ;
 
 type
-  TfrmChangeRRdates = class(TForm)
-    Panel1: TsPanel;
-    btnCancel: TsButton;
-    sSkinProvider1: TsSkinProvider;
+  TfrmChangeRRdates = class(TfrmBaseRoomerDialogForm)
     sPanel1: TsPanel;
     gbrNextRR: TsGroupBox;
     labNextName: TsLabel;
@@ -57,7 +58,6 @@ type
     labLastDeparture: TsLabel;
     labLastStatus: TsLabel;
     labLastDays: TsLabel;
-    Timer1: TTimer;
     LMDSimplePanel1: TsPanel;
     gbxReservationsDates: TsGroupBox;
     labArrival: TsLabel;
@@ -69,8 +69,7 @@ type
     sGroupBox1: TsGroupBox;
     Label1: TsLabel;
     sLabel1: TsLabel;
-    btnOK: TsButton;
-    sButton1: TsButton;
+    btnSplit: TsButton;
     sLabel2: TsLabel;
     labPart1: TsLabel;
     labPart2: TsLabel;
@@ -78,19 +77,14 @@ type
     dtDeparture: TsDateEdit;
     edNightCount: TsSpinEdit;
     dtSplitAt: TsDateEdit;
-    pbProgress: TsProgressBar;
+    btnChangeDates: TsButton;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
-    procedure btnOKClick(Sender: TObject);
+    procedure btnChangeDatesClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
-    procedure dtArrivalChange(Sender: TObject);
-    procedure dtDepartureChange(Sender: TObject);
     procedure dtDepartureDblClick(Sender: TObject);
-    procedure Timer1Timer(Sender: TObject);
-    procedure sButton1Click(Sender: TObject);
-    procedure dtSplitAtChange(Sender: TObject);
-    procedure edNightCountChange(Sender: TObject);
-    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure btnSplitClick(Sender: TObject);
+    procedure dtUpdateControls(Sender: TObject);
   private
     { Private declarations }
 
@@ -121,8 +115,10 @@ type
 
     zFirstTime: boolean;
 
-    procedure UpdateControls;
     function RV_ChangeRoomDates(Reservation: integer): boolean;
+
+  protected
+    procedure DoUpdateControls; override;
 
   public
     { Public declarations }
@@ -550,75 +546,92 @@ begin
   end;
 end;
 
-procedure TfrmChangeRRdates.UpdateControls;
+procedure TfrmChangeRRdates.DoUpdateControls;
 var
   iNights: integer;
-  iDayOfWeekFrom: integer;
-  iDayOfWeekTo: integer;
+  lErrorMessage: string;
+  lOverlapMessage: string;
 begin
+  inherited;
 
-  labErr.caption := '';
-  labErr.Font.Color := clBlack;
-  labErr.Color := clBtnface;
-
-  btnOK.Enabled := true;
-
-  iNights := trunc(dtDeparture.date) - trunc(dtArrival.date);
-
-  edNightCount.Value := iNights;
-
-  iDayOfWeekFrom := DayOfWeek(dtArrival.date);
-  iDayOfWeekTo := DayOfWeek(dtDeparture.date);
-
-  labWeekDayFrom.caption := _strTokenAt(GetTranslatedText('dayStr1'), ';', iDayOfWeekFrom - 1);
-  labWeekDayTo.caption := _strTokenAt(GetTranslatedText('dayStr1'), ';', iDayOfWeekTo - 1);
-
-  if iNights = 0 then
+  if dtArrival.CheckValidDate(False) and dtDeparture.CheckValidDate(false) then
   begin
-    labErr.Font.Color := clRed;
-    labErr.Color := clYellow;
 
-    labErr.caption := GetTranslatedText('shTx_ChangeRRdates_ErrorSameDate');
-    btnOK.Enabled := false;
-  end;
+    lErrorMessage := '';
 
-  if iNights < 0 then
-  begin
-    labErr.Font.Color := clRed;
-    labErr.Color := clYellow;
+    labWeekDayFrom.caption := _strTokenAt(GetTranslatedText('dayStr1'), ';', DayOfWeek(dtArrival.date) - 1);
+    labWeekDayTo.caption := _strTokenAt(GetTranslatedText('dayStr1'), ';', DayOfWeek(dtDeparture.date) - 1);
 
-    labErr.caption := GetTranslatedText('shTx_ChangeRRdates_CheckinAfterCheckout');
-    btnOK.Enabled := false;
-  end;
+    // Adjust other controls to the active one
+    if Screen.ActiveControl = dtArrival then
+      dtDeparture.Date := dtArrival.Date + edNightCount.Value
+    else if Screen.ActiveControl = dtDeparture then
+      edNightCount.Value := trunc(dtDeparture.Date - dtArrival.Date)
+    else if Screen.ActiveControl = edNightCount then
+      dtDeparture.Date := dtArrival.Date + edNightCount.Value;
 
-  gbrNextRR.Color := clBtnface;
-  if dtDeparture.date > nextArrival then
-  begin
-    labErr.Font.Color := clBlack;
-    labErr.Color := clYellow;
+    iNights := trunc(dtDeparture.date) - trunc(dtArrival.date);
 
-    gbrNextRR.Color := clRed;
-    labErr.caption := GetTranslatedText('shTx_ChangeRRdates_BookingOverlap');
-  end;
 
-  gbrLastRR.Color := clBtnface;
-  if dtArrival.date < LastDeparture then
-  begin
-    labErr.Font.Color := clBlack;
-    labErr.Color := clYellow;
+    if iNights = 0 then
+      lErrorMessage := GetTranslatedText('shTx_ChangeRRdates_ErrorSameDate')
+    else if iNights < 0 then
+      lErrorMessage := GetTranslatedText('shTx_ChangeRRdates_CheckinAfterCheckout');
 
-    gbrLastRR.Color := clRed;
-    labErr.caption := GetTranslatedText('shTx_ChangeRRdates_BookingOverlap');
-  end;
+
+    gbrNextRR.Color := clBtnface;
+    gbrLastRR.Color := clBtnface;
+    if dtDeparture.date > nextArrival then
+    begin
+      gbrNextRR.Color := clRed;
+      lOverlapMessage := GetTranslatedText('shTx_ChangeRRdates_BookingOverlap');
+    end;
+    if dtArrival.date < LastDeparture then
+    begin
+      gbrLastRR.Color := clRed;
+      lOverlapMessage := GetTranslatedText('shTx_ChangeRRdates_BookingOverlap');
+    end;
+
+
+    if not lErrorMessage.IsEmpty then
+    begin
+      labErr.Font.Color := clRed;
+      labErr.Color := clYellow;
+
+      labErr.caption := lErrorMessage;
+      btnOK.Enabled := false;
+    end
+    else if not lOverlapMessage.IsEmpty then
+    begin
+      labErr.Font.Color := clBlack;
+      labErr.Color := clYellow;
+
+      gbrNextRR.Color := clRed;
+      labErr.caption := lOverlapMessage;
+      btnOk.Enabled  := true;
+    end
+    else
+    begin
+      labErr.caption := '';
+      labErr.Font.Color := clBlack;
+      labErr.Color := clBtnface;
+
+      btnOK.Enabled := true;
+    end;
+
+    labErr.Left := edNightCount.Left + (edNightCount.Width div 2) - (labErr.Width div 2);
+
+
+  end
+  else
+    btnOk.Enabled := False;
+
+  btnSplit.Enabled := dtSplitAt.CheckValidDate(false) and (zArrival < dtSplitAt.date) and (dtSplitAt.Date <= zDeparture);
 end;
 
 procedure TfrmChangeRRdates.FormCreate(Sender: TObject);
 begin
   zFirstTime := true;
-  RoomerLanguage.TranslateThisForm(self);
-  glb.PerformAuthenticationAssertion(self);
-  PlaceFormOnVisibleMonitor(self);
-  // **
   zCalcPrice := false;
 end;
 
@@ -634,9 +647,8 @@ begin
 
   dtArrival.date := zArrival;
   dtDeparture.date := zDeparture;
+  edNightCount.Value := trunc(dtDeparture.date - dtArrival.Date);
   dtSplitAt.date := zArrival + 1;
-  if dtSplitAt.date = dtDeparture.date then
-    sGroupBox1.Enabled := false;
 
   zIsPaid := false;
 
@@ -736,24 +748,18 @@ begin
 
 end;
 
-procedure TfrmChangeRRdates.FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
-begin
-  if Key = VK_ESCAPE then
-    btnCancel.Click;
-end;
-
-procedure TfrmChangeRRdates.btnOKClick(Sender: TObject);
+procedure TfrmChangeRRdates.btnChangeDatesClick(Sender: TObject);
 var
   isPaid: boolean;
   rr: integer;
 
 begin
   // **
-  zArrival := dtArrival.date;
-  zDeparture := dtDeparture.date;
-
   if MessageDlg('Change room dates ', mtConfirmation, [mbYes, mbNo], 0) = mrYes then
   begin
+    zArrival := dtArrival.date;
+    zDeparture := dtDeparture.date;
+
     if (oldArrival <> zArrival) or (oldDeparture <> zDeparture) then
     begin
       if zRoomReservation = 0 then
@@ -796,30 +802,15 @@ begin
   zDeparture := 1;
 end;
 
-procedure TfrmChangeRRdates.dtArrivalChange(Sender: TObject);
-begin
-  UpdateControls;
-end;
-
-procedure TfrmChangeRRdates.dtDepartureChange(Sender: TObject);
-begin
-  UpdateControls;
-end;
-
 procedure TfrmChangeRRdates.dtDepartureDblClick(Sender: TObject);
 begin
-  dtDeparture.date := dtArrival.date + 1;
+  dtDeparture.date := dtArrival.date + edNightCount.Value;
 end;
 
-procedure TfrmChangeRRdates.dtSplitAtChange(Sender: TObject);
+procedure TfrmChangeRRdates.dtUpdateControls(Sender: TObject);
 begin
-  if zFirstTime then
-    exit;
-
-  if dtSplitAt.date < zArrival + 1 then
-    dtSplitAt.date := zArrival + 1;
-  if dtSplitAt.date > zDeparture - 1 then
-    dtSplitAt.date := zDeparture - 1;
+  inherited;
+  UpdateControls;
 end;
 
 function TfrmChangeRRdates.RV_ChangeRoomDates(Reservation: integer): boolean;
@@ -893,11 +884,9 @@ begin
             Rset.Next;
           end;
 
-          pbProgress.Max := iCount * 2;
-          pbProgress.Position := 0;
-          pbProgress.Visible := true;
+          sbProgressBar.Maximum := iCount * 2;
+          sbProgressBar.Position := 0;
           iCount := 0;
-          pbProgress.Update;
 
           Rset.First;
           while not Rset.eof do
@@ -909,8 +898,7 @@ begin
             RR_ChangeDates(RoomReservation, dtArrival.date, dtDeparture.date, 0, isPaid, false);
 
             inc(iCount);
-            pbProgress.Position := iCount;
-            pbProgress.Update;
+            sbProgressBar.Position := iCount;
             Rset.Next;
           end;
 
@@ -926,8 +914,7 @@ begin
             d.roomerMainDataSet.SystempackagesRecalcInvoice(rr, RoomReservation);
 
             inc(iCount);
-            pbProgress.Position := iCount;
-            pbProgress.Update;
+            sbProgressBar.Position := iCount;
             Rset.Next;
           end;
         finally
@@ -953,7 +940,7 @@ begin
   BringToFront;
 end;
 
-procedure TfrmChangeRRdates.sButton1Click(Sender: TObject);
+procedure TfrmChangeRRdates.btnSplitClick(Sender: TObject);
 var
   Rset: TRoomerDataSet;
 
@@ -1162,29 +1149,6 @@ begin
       FreeAndNil(ExecutionPlan);
     end;
   end;
-end;
-
-procedure TfrmChangeRRdates.edNightCountChange(Sender: TObject);
-var
-  iDayOfWeekFrom: integer;
-  iDayOfWeekTo: integer;
-begin
-  zDate := dtArrival.date + edNightCount.Value;
-  zNights := edNightCount.Value;
-
-  iDayOfWeekFrom := DayOfWeek(dtArrival.date);
-  iDayOfWeekTo := DayOfWeek(zDate);
-
-  labWeekDayFrom.caption := _strTokenAt(GetTranslatedText('dayStr1'), ';', iDayOfWeekFrom - 1);
-  labWeekDayTo.caption := _strTokenAt(GetTranslatedText('dayStr1'), ';', iDayOfWeekTo - 1);
-
-  dtDeparture.date := zDate;
-end;
-
-procedure TfrmChangeRRdates.Timer1Timer(Sender: TObject);
-begin
-  Timer1.Enabled := false;
-  close;
 end;
 
 end.

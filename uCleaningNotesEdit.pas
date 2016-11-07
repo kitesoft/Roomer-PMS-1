@@ -32,7 +32,7 @@ type
     procedure __cbxServiceTypeCloseUp(Sender: TObject);
   private
   protected
-    procedure UpdateControls; override;
+    procedure DoUpdateControls; override;
     procedure DoLoadData; override;
   public
     { Public declarations }
@@ -115,7 +115,7 @@ begin
   UpdateControls;
 end;
 
-procedure TFrmCleaningNotesEdit.UpdateControls;
+procedure TFrmCleaningNotesEdit.DoUpdateControls;
 begin
   inherited;
   __cbxOnceType.Visible := __cbxServiceType.ItemIndex > 0;

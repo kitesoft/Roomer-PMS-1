@@ -113,7 +113,7 @@ type
     function ConstructSQL: string;
   protected
     procedure DoLoadData; override;
-    procedure UpdateControls; override;
+    procedure DoUpdateControls; override;
     procedure DoShow; override;
   public
     constructor Create(aOwner: TComponent); override;
@@ -386,7 +386,7 @@ begin
   dtDateTo.Date := aTo;
 end;
 
-procedure TfrmArrivalsReport.UpdateControls;
+procedure TfrmArrivalsReport.DoUpdateControls;
 var
   lDataAvailable: boolean;
 begin

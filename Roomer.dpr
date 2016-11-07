@@ -251,7 +251,8 @@ uses
   uTableEntityList in 'TableCache\uTableEntityList.pas',
   uMessageList in 'uMessageList.pas',
   uRoomerVersionInfo in 'Extras\uRoomerVersionInfo.pas',
-  uCleaningNotesDefinitions in 'Definitions\uCleaningNotesDefinitions.pas';
+  uCleaningNotesDefinitions in 'Definitions\uCleaningNotesDefinitions.pas',
+  uRoomerDialogForm in 'RoomerForm\uRoomerDialogForm.pas' {frmBaseRoomerDialogForm};
 
 {$R *.RES}
 

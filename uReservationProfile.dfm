@@ -1402,8 +1402,8 @@ object frmReservationProfile: TfrmReservationProfile
                 TabOrder = 3
                 OnResize = pnlTelephoneResize
                 object sLabel1: TsLabel
-                  Left = 6
-                  Top = 6
+                  Left = 2
+                  Top = 9
                   Width = 57
                   Height = 11
                   Alignment = taRightJustify
@@ -1983,7 +1983,7 @@ object frmReservationProfile: TfrmReservationProfile
     Top = 374
     Width = 1136
     Height = 255
-    ActivePage = InvoicesTab
+    ActivePage = RoomsTab
     Align = alClient
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
@@ -2165,6 +2165,7 @@ object frmReservationProfile: TfrmReservationProfile
               end>
             Properties.ViewStyle = vsHideCursor
             Properties.OnButtonClick = tvRoomsRoomTypePropertiesButtonClick
+            OnGetProperties = tvRoomsRoomTypeGetProperties
             Width = 79
           end
           object tvRoomsRoomClass: TcxGridDBColumn

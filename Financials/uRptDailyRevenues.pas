@@ -107,7 +107,7 @@ type
     { Private declarations }
   protected
     procedure DoLoadData; override;
-    procedure UpdateControls; override;
+    procedure DoUpdateControls; override;
   public
     { Public declarations }
     constructor Create(Owner: TComponent); override;
@@ -385,7 +385,7 @@ begin
   AProperties := FCurrencyhandler.GetcxEditProperties;
 end;
 
-procedure TfrmRptDailyRevenues.UpdateControls;
+procedure TfrmRptDailyRevenues.DoUpdateControls;
 begin
   if FRefreshingData then
     Exit;

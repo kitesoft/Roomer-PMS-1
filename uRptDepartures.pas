@@ -99,7 +99,7 @@ type
     procedure SetManualDates(aFrom, aTo: TDate);
     function getsql(DateFrom,DateTo : Tdate) : string;
   protected
-    procedure UpdateControls; override;
+    procedure DoUpdateControls; override;
     procedure DoLoadData; override;
   public
     constructor Create(aOwner: TComponent); override;
@@ -516,7 +516,7 @@ begin
   AProperties := FCurrencyhandler.GetcxEditProperties;
 end;
 
-procedure TfrmDeparturesReport.UpdateControls;
+procedure TfrmDeparturesReport.DoUpdateControls;
 var
   lDataAvailable: boolean;
 begin

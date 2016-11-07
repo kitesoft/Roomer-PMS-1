@@ -8,7 +8,7 @@ inherited frmHouseKeepingReport: TfrmHouseKeepingReport
   ExplicitHeight = 625
   PixelsPerInch = 96
   TextHeight = 13
-  inherited dxStatusBar: TdxStatusBar
+  inherited sbStatusBar: TsStatusBar
     Top = 566
     Width = 1123
     ExplicitTop = 566
@@ -60,10 +60,11 @@ inherited frmHouseKeepingReport: TfrmHouseKeepingReport
         SkinData.SkinSection = 'BUTTON'
       end
       object btnRefresh: TsButton
-        Left = 0
-        Top = 0
+        AlignWithMargins = True
+        Left = 3
+        Top = 3
         Width = 128
-        Height = 43
+        Height = 37
         Align = alLeft
         Caption = 'Refresh'
         Default = True
@@ -72,6 +73,9 @@ inherited frmHouseKeepingReport: TfrmHouseKeepingReport
         TabOrder = 2
         OnClick = btnRefreshClick
         SkinData.SkinSection = 'BUTTON'
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitHeight = 43
       end
     end
     object gbxSelection: TsGroupBox
@@ -453,6 +457,7 @@ inherited frmHouseKeepingReport: TfrmHouseKeepingReport
       PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
+      PrinterPage.GrayShading = True
       PrinterPage.Header = 6350
       PrinterPage.Margins.Bottom = 12700
       PrinterPage.Margins.Left = 6400
@@ -478,7 +483,7 @@ inherited frmHouseKeepingReport: TfrmHouseKeepingReport
       PrinterPage.ScaleMode = smFit
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
-      ReportDocument.CreationDate = 42664.408449988430000000
+      ReportDocument.CreationDate = 42681.614899918980000000
       ReportTitle.Font.Charset = DEFAULT_CHARSET
       ReportTitle.Font.Color = clBlack
       ReportTitle.Font.Height = -19

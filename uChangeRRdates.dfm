@@ -1,76 +1,71 @@
-object frmChangeRRdates: TfrmChangeRRdates
+inherited frmChangeRRdates: TfrmChangeRRdates
   Left = 1072
   Top = 281
-  BorderIcons = []
-  BorderStyle = bsDialog
   Caption = 'Change room reservation dates'
-  ClientHeight = 347
-  ClientWidth = 617
-  Color = clBtnFace
-  Font.Charset = DEFAULT_CHARSET
-  Font.Color = clWindowText
-  Font.Height = -11
-  Font.Name = 'Tahoma'
-  Font.Style = []
-  KeyPreview = True
-  OldCreateOrder = False
-  Position = poOwnerFormCenter
+  ClientHeight = 382
+  ClientWidth = 623
   OnCreate = FormCreate
-  OnKeyDown = FormKeyDown
   OnShow = FormShow
+  ExplicitWidth = 629
+  ExplicitHeight = 411
   PixelsPerInch = 96
   TextHeight = 13
-  object Panel1: TsPanel
-    Left = 0
-    Top = 314
-    Width = 617
-    Height = 33
-    Align = alBottom
-    BevelOuter = bvNone
-    TabOrder = 0
-    SkinData.SkinSection = 'PANEL'
-    DesignSize = (
-      617
-      33)
-    object btnCancel: TsButton
-      Left = 502
+  inherited sbStatusBar: TsStatusBar
+    Top = 362
+    Width = 623
+    Margins.Left = 4
+    Margins.Top = 4
+    Margins.Right = 4
+    Margins.Bottom = 4
+    ExplicitTop = 362
+    ExplicitWidth = 623
+  end
+  inherited pnlButtons: TsPanel
+    Top = 319
+    Width = 623
+    Margins.Left = 4
+    Margins.Top = 4
+    Margins.Right = 4
+    Margins.Bottom = 4
+    TabOrder = 3
+    ExplicitTop = 319
+    ExplicitWidth = 623
+    inherited btnOK: TsButton
+      Left = 518
       Top = 5
-      Width = 107
-      Height = 25
-      Anchors = [akTop, akRight]
-      Cancel = True
-      Caption = 'Cancel'
-      ImageIndex = 4
-      Images = DImages.PngImageList1
-      ModalResult = 2
-      TabOrder = 0
-      OnClick = btnCancelClick
-      SkinData.SkinSection = 'BUTTON'
-    end
-    object pbProgress: TsProgressBar
-      Left = 7
-      Top = 6
-      Width = 474
-      Height = 23
-      Position = 50
-      TabOrder = 1
-      Visible = False
-      SkinData.SkinSection = 'GAUGE'
+      Height = 33
+      Margins.Left = 4
+      Margins.Top = 4
+      Margins.Right = 4
+      Margins.Bottom = 4
+      ExplicitLeft = 518
+      ExplicitTop = 5
+      ExplicitHeight = 33
     end
   end
-  object sPanel1: TsPanel
+  object sPanel1: TsPanel [2]
     Left = 0
     Top = 165
-    Width = 617
-    Height = 149
+    Width = 623
+    Height = 154
+    Margins.Left = 4
+    Margins.Top = 4
+    Margins.Right = 4
+    Margins.Bottom = 4
     Align = alClient
-    TabOrder = 1
+    TabOrder = 0
     SkinData.SkinSection = 'PANEL'
     object gbrNextRR: TsGroupBox
-      Left = 310
-      Top = 6
-      Width = 299
-      Height = 125
+      AlignWithMargins = True
+      Left = 308
+      Top = 5
+      Width = 310
+      Height = 144
+      Margins.Left = 4
+      Margins.Top = 4
+      Margins.Right = 4
+      Margins.Bottom = 4
+      Align = alClient
       Caption = 'Next Reservation'
       TabOrder = 0
       SkinData.SkinSection = 'GROUPBOX'
@@ -80,6 +75,10 @@ object frmChangeRRdates: TfrmChangeRRdates
         Top = 20
         Width = 4
         Height = 13
+        Margins.Left = 4
+        Margins.Top = 4
+        Margins.Right = 4
+        Margins.Bottom = 4
         Caption = '-'
         ParentFont = False
         Font.Charset = DEFAULT_CHARSET
@@ -93,6 +92,10 @@ object frmChangeRRdates: TfrmChangeRRdates
         Top = 39
         Width = 4
         Height = 13
+        Margins.Left = 4
+        Margins.Top = 4
+        Margins.Right = 4
+        Margins.Bottom = 4
         Caption = '-'
         ParentFont = False
         Font.Charset = DEFAULT_CHARSET
@@ -106,6 +109,10 @@ object frmChangeRRdates: TfrmChangeRRdates
         Top = 60
         Width = 38
         Height = 13
+        Margins.Left = 4
+        Margins.Top = 4
+        Margins.Right = 4
+        Margins.Bottom = 4
         Alignment = taRightJustify
         Caption = 'Arrival :'
         ParentFont = False
@@ -116,10 +123,14 @@ object frmChangeRRdates: TfrmChangeRRdates
         Font.Style = []
       end
       object LMDSimpleLabel4: TsLabel
-        Left = 58
-        Top = 81
+        Left = 57
+        Top = 82
         Width = 56
         Height = 13
+        Margins.Left = 4
+        Margins.Top = 4
+        Margins.Right = 4
+        Margins.Bottom = 4
         Alignment = taRightJustify
         Caption = 'Departure :'
         ParentFont = False
@@ -130,10 +141,14 @@ object frmChangeRRdates: TfrmChangeRRdates
         Font.Style = []
       end
       object LMDSimpleLabel5: TsLabel
-        Left = 76
-        Top = 101
+        Left = 75
+        Top = 100
         Width = 38
         Height = 13
+        Margins.Left = 4
+        Margins.Top = 4
+        Margins.Right = 4
+        Margins.Bottom = 4
         Alignment = taRightJustify
         Caption = 'Status :'
         ParentFont = False
@@ -148,6 +163,10 @@ object frmChangeRRdates: TfrmChangeRRdates
         Top = 60
         Width = 4
         Height = 13
+        Margins.Left = 4
+        Margins.Top = 4
+        Margins.Right = 4
+        Margins.Bottom = 4
         Caption = '-'
         ParentFont = False
         Font.Charset = DEFAULT_CHARSET
@@ -158,9 +177,13 @@ object frmChangeRRdates: TfrmChangeRRdates
       end
       object labNextDeparture: TsLabel
         Left = 122
-        Top = 81
+        Top = 82
         Width = 4
         Height = 13
+        Margins.Left = 4
+        Margins.Top = 4
+        Margins.Right = 4
+        Margins.Bottom = 4
         Caption = '-'
         ParentFont = False
         Font.Charset = DEFAULT_CHARSET
@@ -171,9 +194,13 @@ object frmChangeRRdates: TfrmChangeRRdates
       end
       object labNextStatus: TsLabel
         Left = 122
-        Top = 101
+        Top = 100
         Width = 4
         Height = 13
+        Margins.Left = 4
+        Margins.Top = 4
+        Margins.Right = 4
+        Margins.Bottom = 4
         Caption = '-'
         ParentFont = False
         Font.Charset = DEFAULT_CHARSET
@@ -187,6 +214,10 @@ object frmChangeRRdates: TfrmChangeRRdates
         Top = 60
         Width = 4
         Height = 13
+        Margins.Left = 4
+        Margins.Top = 4
+        Margins.Right = 4
+        Margins.Bottom = 4
         Caption = '-'
         ParentFont = False
         Font.Charset = DEFAULT_CHARSET
@@ -197,10 +228,16 @@ object frmChangeRRdates: TfrmChangeRRdates
       end
     end
     object gbrLastRR: TsGroupBox
-      Left = 11
-      Top = 6
+      AlignWithMargins = True
+      Left = 5
+      Top = 5
       Width = 295
-      Height = 125
+      Height = 144
+      Margins.Left = 4
+      Margins.Top = 4
+      Margins.Right = 4
+      Margins.Bottom = 4
+      Align = alLeft
       Caption = 'Previous reservation'
       TabOrder = 1
       SkinData.SkinSection = 'GROUPBOX'
@@ -210,6 +247,10 @@ object frmChangeRRdates: TfrmChangeRRdates
         Top = 20
         Width = 4
         Height = 13
+        Margins.Left = 4
+        Margins.Top = 4
+        Margins.Right = 4
+        Margins.Bottom = 4
         Caption = '-'
         ParentFont = False
         Font.Charset = DEFAULT_CHARSET
@@ -220,9 +261,13 @@ object frmChangeRRdates: TfrmChangeRRdates
       end
       object labLastGuest: TsLabel
         Left = 8
-        Top = 36
+        Top = 35
         Width = 4
         Height = 13
+        Margins.Left = 4
+        Margins.Top = 4
+        Margins.Right = 4
+        Margins.Bottom = 4
         Caption = '-'
         ParentFont = False
         Font.Charset = DEFAULT_CHARSET
@@ -236,6 +281,10 @@ object frmChangeRRdates: TfrmChangeRRdates
         Top = 60
         Width = 38
         Height = 13
+        Margins.Left = 4
+        Margins.Top = 4
+        Margins.Right = 4
+        Margins.Bottom = 4
         Alignment = taRightJustify
         Caption = 'Arrival :'
         ParentFont = False
@@ -247,9 +296,13 @@ object frmChangeRRdates: TfrmChangeRRdates
       end
       object LMDSimpleLabel7: TsLabel
         Left = 57
-        Top = 81
+        Top = 82
         Width = 56
         Height = 13
+        Margins.Left = 4
+        Margins.Top = 4
+        Margins.Right = 4
+        Margins.Bottom = 4
         Alignment = taRightJustify
         Caption = 'Departure :'
         ParentFont = False
@@ -261,9 +314,13 @@ object frmChangeRRdates: TfrmChangeRRdates
       end
       object LMDSimpleLabel8: TsLabel
         Left = 75
-        Top = 101
+        Top = 100
         Width = 38
         Height = 13
+        Margins.Left = 4
+        Margins.Top = 4
+        Margins.Right = 4
+        Margins.Bottom = 4
         Alignment = taRightJustify
         Caption = 'Status :'
         ParentFont = False
@@ -278,6 +335,10 @@ object frmChangeRRdates: TfrmChangeRRdates
         Top = 60
         Width = 4
         Height = 13
+        Margins.Left = 4
+        Margins.Top = 4
+        Margins.Right = 4
+        Margins.Bottom = 4
         Caption = '-'
         ParentFont = False
         Font.Charset = DEFAULT_CHARSET
@@ -288,9 +349,13 @@ object frmChangeRRdates: TfrmChangeRRdates
       end
       object labLastDeparture: TsLabel
         Left = 122
-        Top = 81
+        Top = 82
         Width = 4
         Height = 13
+        Margins.Left = 4
+        Margins.Top = 4
+        Margins.Right = 4
+        Margins.Bottom = 4
         Caption = '-'
         ParentFont = False
         Font.Charset = DEFAULT_CHARSET
@@ -301,9 +366,13 @@ object frmChangeRRdates: TfrmChangeRRdates
       end
       object labLastStatus: TsLabel
         Left = 122
-        Top = 101
+        Top = 100
         Width = 4
         Height = 13
+        Margins.Left = 4
+        Margins.Top = 4
+        Margins.Right = 4
+        Margins.Bottom = 4
         Caption = '-'
         ParentFont = False
         Font.Charset = DEFAULT_CHARSET
@@ -317,35 +386,53 @@ object frmChangeRRdates: TfrmChangeRRdates
         Top = 60
         Width = 4
         Height = 13
+        Margins.Left = 4
+        Margins.Top = 4
+        Margins.Right = 4
+        Margins.Bottom = 4
         Caption = '-'
       end
     end
   end
-  object LMDSimplePanel1: TsPanel
+  object LMDSimplePanel1: TsPanel [3]
     Left = 0
     Top = 0
-    Width = 617
+    Width = 623
     Height = 165
+    Margins.Left = 4
+    Margins.Top = 4
+    Margins.Right = 4
+    Margins.Bottom = 4
     Align = alTop
-    TabOrder = 2
+    TabOrder = 1
     SkinData.SkinSection = 'PANEL'
     object gbxReservationsDates: TsGroupBox
-      Left = 7
-      Top = 6
-      Width = 299
-      Height = 147
+      AlignWithMargins = True
+      Left = 5
+      Top = 5
+      Width = 295
+      Height = 155
+      Margins.Left = 4
+      Margins.Top = 4
+      Margins.Right = 4
+      Margins.Bottom = 4
+      Align = alLeft
       Caption = 'Change dates'
       TabOrder = 0
       SkinData.SkinSection = 'GROUPBOX'
       Checked = False
       DesignSize = (
-        299
-        147)
+        295
+        155)
       object labArrival: TsLabel
         Left = 64
         Top = 25
         Width = 38
         Height = 13
+        Margins.Left = 4
+        Margins.Top = 4
+        Margins.Right = 4
+        Margins.Bottom = 4
         Alignment = taRightJustify
         Caption = 'Arrival :'
       end
@@ -354,6 +441,10 @@ object frmChangeRRdates: TfrmChangeRRdates
         Top = 51
         Width = 56
         Height = 13
+        Margins.Left = 4
+        Margins.Top = 4
+        Margins.Right = 4
+        Margins.Bottom = 4
         Alignment = taRightJustify
         Caption = 'Departure :'
         ParentFont = False
@@ -368,6 +459,10 @@ object frmChangeRRdates: TfrmChangeRRdates
         Top = 78
         Width = 37
         Height = 13
+        Margins.Left = 4
+        Margins.Top = 4
+        Margins.Right = 4
+        Margins.Bottom = 4
         Alignment = taRightJustify
         Caption = 'Nights :'
         ParentFont = False
@@ -382,6 +477,10 @@ object frmChangeRRdates: TfrmChangeRRdates
         Top = 25
         Width = 4
         Height = 13
+        Margins.Left = 4
+        Margins.Top = 4
+        Margins.Right = 4
+        Margins.Bottom = 4
         Caption = '-'
         ParentFont = False
         Font.Charset = DEFAULT_CHARSET
@@ -395,6 +494,10 @@ object frmChangeRRdates: TfrmChangeRRdates
         Top = 51
         Width = 4
         Height = 13
+        Margins.Left = 4
+        Margins.Top = 4
+        Margins.Right = 4
+        Margins.Bottom = 4
         Caption = '-'
         ParentFont = False
         Font.Charset = DEFAULT_CHARSET
@@ -404,10 +507,14 @@ object frmChangeRRdates: TfrmChangeRRdates
         Font.Style = []
       end
       object labErr: TsLabel
-        Left = 4
-        Top = 92
+        Left = 110
+        Top = 101
         Width = 3
         Height = 13
+        Margins.Left = 4
+        Margins.Top = 4
+        Margins.Right = 4
+        Margins.Bottom = 4
         Color = clYellow
         ParentColor = False
         ParentFont = False
@@ -418,25 +525,15 @@ object frmChangeRRdates: TfrmChangeRRdates
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
       end
-      object btnOK: TsButton
-        Left = 220
-        Top = 119
-        Width = 75
-        Height = 25
-        Anchors = [akTop, akRight]
-        Caption = 'OK'
-        ImageIndex = 82
-        Images = DImages.PngImageList1
-        ModalResult = 1
-        TabOrder = 0
-        OnClick = btnOKClick
-        SkinData.SkinSection = 'BUTTON'
-      end
       object dtArrival: TsDateEdit
         Left = 108
         Top = 21
         Width = 94
-        Height = 21
+        Height = 22
+        Margins.Left = 4
+        Margins.Top = 4
+        Margins.Right = 4
+        Margins.Bottom = 4
         AutoSize = False
         Color = clWhite
         EditMask = '!99/99/9999;1; '
@@ -447,9 +544,10 @@ object frmChangeRRdates: TfrmChangeRRdates
         Font.Style = []
         MaxLength = 10
         ParentFont = False
-        TabOrder = 1
+        TabOrder = 0
         Text = '  -  -    '
-        OnChange = dtArrivalChange
+        OnChange = dtUpdateControls
+        OnExit = dtUpdateControls
         CheckOnExit = True
         SkinData.SkinSection = 'EDIT'
         GlyphMode.Blend = 0
@@ -460,6 +558,10 @@ object frmChangeRRdates: TfrmChangeRRdates
         Top = 48
         Width = 94
         Height = 21
+        Margins.Left = 4
+        Margins.Top = 4
+        Margins.Right = 4
+        Margins.Bottom = 4
         AutoSize = False
         Color = clWhite
         EditMask = '!99/99/9999;1; '
@@ -472,8 +574,9 @@ object frmChangeRRdates: TfrmChangeRRdates
         ParentFont = False
         TabOrder = 2
         Text = '  -  -    '
-        OnChange = dtDepartureChange
+        OnChange = dtUpdateControls
         OnDblClick = dtDepartureDblClick
+        OnExit = dtUpdateControls
         CheckOnExit = True
         SkinData.SkinSection = 'EDIT'
         GlyphMode.Blend = 0
@@ -481,9 +584,13 @@ object frmChangeRRdates: TfrmChangeRRdates
       end
       object edNightCount: TsSpinEdit
         Left = 108
-        Top = 75
-        Width = 96
+        Top = 74
+        Width = 94
         Height = 21
+        Margins.Left = 4
+        Margins.Top = 4
+        Margins.Right = 4
+        Margins.Bottom = 4
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clBlack
@@ -491,32 +598,61 @@ object frmChangeRRdates: TfrmChangeRRdates
         Font.Name = 'Tahoma'
         Font.Style = []
         ParentFont = False
-        TabOrder = 3
+        TabOrder = 1
         Text = '1'
-        OnChange = edNightCountChange
+        OnChange = dtUpdateControls
+        OnExit = dtUpdateControls
         SkinData.SkinSection = 'EDIT'
         MaxValue = 1000
         MinValue = 1
         Value = 1
       end
+      object btnChangeDates: TsButton
+        Left = 215
+        Top = 126
+        Width = 76
+        Height = 25
+        Margins.Left = 4
+        Margins.Top = 4
+        Margins.Right = 4
+        Margins.Bottom = 4
+        Anchors = [akTop, akRight]
+        Caption = 'Change'
+        ImageIndex = 82
+        Images = DImages.PngImageList1
+        ModalResult = 1
+        TabOrder = 3
+        OnClick = btnChangeDatesClick
+        SkinData.SkinSection = 'BUTTON'
+      end
     end
     object sGroupBox1: TsGroupBox
-      Left = 310
-      Top = 6
-      Width = 299
-      Height = 147
+      AlignWithMargins = True
+      Left = 308
+      Top = 5
+      Width = 310
+      Height = 155
+      Margins.Left = 4
+      Margins.Top = 4
+      Margins.Right = 4
+      Margins.Bottom = 4
+      Align = alClient
       Caption = '.. or split reservation in two'
       TabOrder = 1
       SkinData.SkinSection = 'GROUPBOX'
       Checked = False
       DesignSize = (
-        299
-        147)
+        310
+        155)
       object Label1: TsLabel
         Left = 62
         Top = 24
         Width = 40
         Height = 13
+        Margins.Left = 4
+        Margins.Top = 4
+        Margins.Right = 4
+        Margins.Bottom = 4
         Alignment = taRightJustify
         Caption = 'Split at :'
       end
@@ -525,6 +661,10 @@ object frmChangeRRdates: TfrmChangeRRdates
         Top = 24
         Width = 4
         Height = 13
+        Margins.Left = 4
+        Margins.Top = 4
+        Margins.Right = 4
+        Margins.Bottom = 4
         Caption = '-'
         ParentFont = False
         Font.Charset = DEFAULT_CHARSET
@@ -538,6 +678,10 @@ object frmChangeRRdates: TfrmChangeRRdates
         Top = 45
         Width = 152
         Height = 13
+        Margins.Left = 4
+        Margins.Top = 4
+        Margins.Right = 4
+        Margins.Bottom = 4
         Caption = 'First date in second reservation'
       end
       object labPart1: TsLabel
@@ -545,6 +689,10 @@ object frmChangeRRdates: TfrmChangeRRdates
         Top = 71
         Width = 4
         Height = 13
+        Margins.Left = 4
+        Margins.Top = 4
+        Margins.Right = 4
+        Margins.Bottom = 4
         Caption = '-'
       end
       object labPart2: TsLabel
@@ -552,27 +700,39 @@ object frmChangeRRdates: TfrmChangeRRdates
         Top = 92
         Width = 4
         Height = 13
+        Margins.Left = 4
+        Margins.Top = 4
+        Margins.Right = 4
+        Margins.Bottom = 4
         Caption = '-'
       end
-      object sButton1: TsButton
-        Left = 221
-        Top = 119
+      object btnSplit: TsButton
+        Left = 231
+        Top = 126
         Width = 75
         Height = 25
+        Margins.Left = 4
+        Margins.Top = 4
+        Margins.Right = 4
+        Margins.Bottom = 4
         Anchors = [akTop, akRight]
-        Caption = 'OK'
+        Caption = 'Split'
         ImageIndex = 82
         Images = DImages.PngImageList1
         ModalResult = 1
         TabOrder = 0
-        OnClick = sButton1Click
+        OnClick = btnSplitClick
         SkinData.SkinSection = 'BUTTON'
       end
       object dtSplitAt: TsDateEdit
         Left = 108
-        Top = 21
+        Top = 18
         Width = 86
         Height = 21
+        Margins.Left = 4
+        Margins.Top = 4
+        Margins.Right = 4
+        Margins.Bottom = 4
         AutoSize = False
         Color = clWhite
         EditMask = '!99/99/9999;1; '
@@ -585,7 +745,7 @@ object frmChangeRRdates: TfrmChangeRRdates
         ParentFont = False
         TabOrder = 1
         Text = '  -  -    '
-        OnChange = dtSplitAtChange
+        OnChange = dtUpdateControls
         CheckOnExit = True
         SkinData.SkinSection = 'EDIT'
         GlyphMode.Blend = 0
@@ -593,23 +753,22 @@ object frmChangeRRdates: TfrmChangeRRdates
       end
     end
   end
-  object sSkinProvider1: TsSkinProvider
-    AddedTitle.Font.Charset = DEFAULT_CHARSET
-    AddedTitle.Font.Color = clNone
-    AddedTitle.Font.Height = -11
-    AddedTitle.Font.Name = 'Tahoma'
-    AddedTitle.Font.Style = []
-    FormHeader.AdditionalHeight = 0
-    SkinData.SkinSection = 'FORM'
-    TitleButtons = <>
-    Left = 32
-    Top = 104
+  inherited sbProgressBar: TAdvSmoothProgressBar
+    TMSStyle = 4
   end
-  object Timer1: TTimer
-    Enabled = False
-    Interval = 10
-    OnTimer = Timer1Timer
-    Left = 168
-    Top = 168
+  inherited psRoomerBase: TcxPropertiesStore
+    Left = 288
+    Top = 24
+  end
+  inherited cxsrRoomerStyleRepository: TcxStyleRepository
+    Left = 336
+    Top = 64
+    PixelsPerInch = 96
+    inherited dxssRoomerGridReportLink: TdxGridReportLinkStyleSheet
+      BuiltIn = True
+    end
+    inherited cxssRoomerGridTableView: TcxGridTableViewStyleSheet
+      BuiltIn = True
+    end
   end
 end

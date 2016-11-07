@@ -720,6 +720,8 @@ type
       const ARect: TRect; AState: TOwnerDrawState);
     procedure R4Click(Sender: TObject);
     procedure btnChangeNationalityClick(Sender: TObject);
+    procedure tvRoomsRoomTypeGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
+      var AProperties: TcxCustomEditProperties);
   private
     { Private declarations }
     vStartName: string;
@@ -2839,6 +2841,12 @@ begin
     DynamicRates.UpdateRoomReservation(mRooms['RoomReservation'], code, mRooms['RoomType'], mRooms['Arrival'],
       mRooms['Departure']);
   end;
+end;
+
+procedure TfrmReservationProfile.tvRoomsRoomTypeGetProperties(Sender: TcxCustomGridTableItem;
+  ARecord: TcxCustomGridRecord; var AProperties: TcxCustomEditProperties);
+begin
+  TcxCustomButtonEditProperties(aProperties).Buttons[0].Enabled := (copy(mRoomsRoom.asstring, 1, 1) = '<');
 end;
 
 procedure TfrmReservationProfile.tvRoomsRoomTypePropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
