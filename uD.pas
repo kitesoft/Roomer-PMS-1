@@ -1541,7 +1541,7 @@ begin
                       'itemAdded ' +
                       'FROM invoicelines, ' +
                       '     control c ' +
-                      'WHERE InvoiceNumber=%d AND (NOT ItemId IN (c.RoomRentItem, ' +
+                      'WHERE InvoiceNumber=%d AND (NOT ItemId IN (c.RoomRentItem, c.DiscountItem, ' +
                       '(SELECT Item FROM items WHERE ID=(SELECT BOOKING_ITEM_ID FROM home100.TAXES WHERE HOTEL_ID=SUBSTR(database(), 9, 10) AND PurchaseDate >= VALID_FROM AND PurchaseDate <= VALID_TO LIMIT 1) LIMIT 1)))',
                       [SelectedInvoiceIndex, Invoice]);
         CopyToClipboard(sql);
