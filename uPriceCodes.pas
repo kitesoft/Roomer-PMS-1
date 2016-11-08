@@ -450,13 +450,13 @@ begin
   zData.pcCode                := m_['pcCode'];
   zData.pcDescription         := m_['pcDescription'];
   zData.pcRack                := m_['pcRack'];
-  zData.pcRackCalc            := LocalFloatValue(m_['pcRackCalc'])           ;
+  zData.pcRackCalc            := m_.FieldByName('pcRackCalc').asFloat;
   zData.pcShowDiscount        := m_['pcShowDiscount'];
   zData.pcDiscountText        := m_['pcDiscountText'];
   zData.pcAutomatic           := m_['pcAutomatic'];
   zData.pcLastUpdate          := m_['pcLastUpdate'];
   zData.pcDiscountMethod      := m_.FieldByName('pcDiscountMethod').asinteger;
-  zData.pcDiscountPriceAfter  := LocalFloatValue(m_['pcDiscountPriceAfter']);
+  zData.pcDiscountPriceAfter  := m_.FieldByName('pcDiscountPriceAfter').AsFloat;
   zData.pcDiscountDaysAfter   := m_.FieldByName('pcDiscountDaysAfter').asinteger;
   zData.Active                := m_['Active'];
 end;
@@ -660,13 +660,13 @@ begin
   zData.pcCode                    := dataset['pcCode'];
   zData.pcDescription             := dataset['pcDescription'];
   zData.pcRack                    := dataset['pcRack'];
-  zData.pcRackCalc                := LocalFloatValue(dataset['pcRackCalc']);
+  zData.pcRackCalc                := dataset.FieldByName('pcRackCalc').AsFloat;
   zData.pcShowDiscount            := dataset['pcShowDiscount'];
   zData.pcDiscountText            := dataset['pcDiscountText'];
   zData.pcAutomatic               := dataset['pcAutomatic'];
   zData.pcLastUpdate              := dataset['pcLastUpdate'];
   zData.pcDiscountMethod          := dataset.FieldByName('pcDiscountMethod').asinteger;
-  zData.pcDiscountPriceAfter      := LocalFloatValue(dataset['pcDiscountPriceAfter']);
+  zData.pcDiscountPriceAfter      := dataset.FieldByName('pcDiscountPriceAfter').AsFloat;
   zData.pcDiscountDaysAfter       := dataset.FieldByName('pcDiscountDaysAfter').asinteger;
   zData.Active                    := dataset['Active'];
 

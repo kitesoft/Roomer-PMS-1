@@ -295,7 +295,7 @@ type
 
 implementation
 
-uses uAppGlobal, hData, uD, _Glob, cmpRoomerDataSet, uUtils;
+uses uAppGlobal, hData, uD, _Glob, cmpRoomerDataSet, uUtils, XmlUtils;
 
 { TInvoice }
 
@@ -826,7 +826,7 @@ begin
       end;
 
       FCurrency := node.attributes.getNamedItem('currency').text;
-      CurrencyRate := LocalizedFloatValue(node.attributes.getNamedItem('currencyRate').text, true, 1.00);
+      CurrencyRate := XMLToFloat(node.attributes.getNamedItem('currencyRate').text, 1.00);
 
 
     end;
@@ -923,22 +923,22 @@ begin
       PurchaseDate := SqlStringToDate(node.childNodes[i].Text)
     else
     if node.childNodes[i].nodeName = 'numItems' then
-      NumItems := LocalizedFloatValue(node.childNodes[i].Text, true, 0.00)
+      NumItems := XMLToFloat(node.childNodes[i].Text, 0.00)
     else
     if node.childNodes[i].nodeName = 'itemNetPrice' then
-      PriceNet := LocalizedFloatValue(node.childNodes[i].Text, true, 0.00)
+      PriceNet := XMLToFloat(node.childNodes[i].Text, 0.00)
     else
     if node.childNodes[i].nodeName = 'itemGrossPrice' then
-      PriceGross := LocalizedFloatValue(node.childNodes[i].Text, true, 0.00)
+      PriceGross := XMLToFloat(node.childNodes[i].Text, 0.00)
     else
     if node.childNodes[i].nodeName = 'totalGrossAmount' then
-      FGrossAmount := LocalizedFloatValue(node.childNodes[i].Text, true, 0.00)
+      FGrossAmount := XMLToFloat(node.childNodes[i].Text, 0.00)
     else
     if node.childNodes[i].nodeName = 'itemVatAmount' then
     begin
-      Vat := LocalizedFloatValue(node.childNodes[i].Text, true, 0.00);
+      Vat := XMLToFloat(node.childNodes[i].Text, 0.00);
       VatCode := node.childNodes[i].attributes.getNamedItem('roomerCode').Text;
-      VatPercentage := LocalizedFloatValue(node.childNodes[i].attributes.getNamedItem('percentage').Text, true, 0.00);
+      VatPercentage := XMLToFloat(node.childNodes[i].attributes.getNamedItem('percentage').Text, 0.00);
     end;
   end;
 
@@ -1145,7 +1145,7 @@ begin
   PayType := node.attributes.getNamedItem('roomerCode').text;
   AccountKey := node.attributes.getNamedItem('accountKey').text;
   Currency := node.attributes.getNamedItem('currency').text;
-  CurrencyRate := LocalizedFloatValue(node.attributes.getNamedItem('currencyRate').text, true, 1.00);
+  CurrencyRate := XMLToFloat(node.attributes.getNamedItem('currencyRate').text, 1.00);
   for i := 0 to node.childNodes.length - 1 do
   begin
     if node.childNodes[i].nodeName = 'description' then
@@ -1158,7 +1158,7 @@ begin
       PayDate := SqlStringToDate(node.childNodes[i].Text)
     else
     if node.childNodes[i].nodeName = 'amount' then
-      Amount := LocalizedFloatValue(node.childNodes[i].Text, true, 0.00);
+      Amount := XMLToFloat(node.childNodes[i].Text, 0.00);
   end;
 
   FChanged := false;

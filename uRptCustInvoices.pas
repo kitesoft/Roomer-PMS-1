@@ -915,9 +915,9 @@ begin
           Address1          :=  rSet.FieldByName('Address1').asstring  ;
           Address2          :=  rSet.FieldByName('Address2').asstring  ;
           Address3          :=  rSet.FieldByName('Address3').asstring  ;
-          ihAmountWithTax   :=  LocalFloatValue(rSet.FieldByName('ihAmountWithTax').asString)  ;
-          ihAmountNoTax     :=  LocalFloatValue(rSet.FieldByName('ihAmountNoTax').asString)  ;
-          ihAmountTax       :=  LocalFloatValue(rSet.FieldByName('ihAmountTax').asString)  ;
+          ihAmountWithTax   :=  rSet.FieldByName('ihAmountWithTax').AsFloat;
+          ihAmountNoTax     :=  rSet.FieldByName('ihAmountNoTax').AsFloat;
+          ihAmountTax       :=  rSet.FieldByName('ihAmountTax').AsFloat;
           CreditInvoice     :=  rSet.FieldByName('CreditInvoice').asinteger ;
           OriginalInvoice   :=  rSet.FieldByName('OriginalInvoice').asinteger ;
           RoomGuest         :=  rSet.FieldByName('RoomGuest').asstring  ;
@@ -965,11 +965,11 @@ begin
         Description       :=  rSet.FieldByName('Description').asstring  ;
         Price             :=  rSet.GetFloatValue(rSet.FieldByName('Price'))  ;
         VATType           :=  rSet.FieldByName('VATType').asString  ;
-        ilAmountWithTax   :=  LocalFloatValue(rSet.FieldByName('ilAmountWithTax').asString)  ;
-        ilAmountNoTax     :=  LocalFloatValue(rSet.FieldByName('ilAmountNoTax').asString)  ;
-        ilAmountTax       :=  LocalFloatValue(rSet.FieldByName('ilAmountTax').asString)  ;
+        ilAmountWithTax   :=  rSet.FieldByName('ilAmountWithTax').AsFloat;
+        ilAmountNoTax     :=  rSet.FieldByName('ilAmountNoTax').AsFloat;
+        ilAmountTax       :=  rSet.FieldByName('ilAmountTax').AsFloat;
         Currency          :=  rSet.FieldByName('Currency').asstring  ;
-        CurrencyRate      :=  LocalFloatValue(rSet.FieldByName('CurrencyRate').asString)  ;
+        CurrencyRate      :=  rSet.FieldByName('CurrencyRate').AsFloat;
         ImportRefrence    :=  rSet.FieldByName('ImportRefrence').asstring  ;
         ImportSource      :=  rSet.FieldByName('ImportSource').asstring  ;
 

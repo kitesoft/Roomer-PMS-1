@@ -1887,7 +1887,6 @@ function GetPriceType(RoomType: string): string;
 function RE_GetFirstAndLastDate(iReservation: integer; var FirstDate, LastDate: Tdate): integer;
 { ..Moved }
 
-function LocalFloatValue(Value: String): double;
 function FilterTablenames(sql: String): String;
 function GetLastID(tableName: string; doLowerCase: boolean = true): integer;
 
@@ -2148,11 +2147,6 @@ uses
   uAvailabilityPerDay,
   PrjConst
   ;
-
-function LocalFloatValue(Value: String): double;
-begin
-  result := LocalizedFloatValue(Value);
-end;
 
 procedure SetForeignKeyCheckValue(value : Byte);
 begin
@@ -3278,12 +3272,12 @@ begin
       result.RoomType := rSet.fieldbyname('RoomType').asString;
       result.Currency := rSet.fieldbyname('Currency').asString;
       result.Description := rSet.fieldbyname('Description').asString;
-      result.Price1Person := LocalFloatValue(rSet.fieldbyname('Price1Person').asString);
-      result.Price2Persons := LocalFloatValue(rSet.fieldbyname('Price2Persons').asString);
-      result.Price3Persons := LocalFloatValue(rSet.fieldbyname('Price3Persons').asString);
-      result.Price4Persons := LocalFloatValue(rSet.fieldbyname('Price4Persons').asString);
-      result.Price5Persons := LocalFloatValue(rSet.fieldbyname('Price5Persons').asString);
-      result.PriceExtraPerson := LocalFloatValue(rSet.fieldbyname('PriceExtraPerson').asString);
+      result.Price1Person := rSet.fieldbyname('Price1Person').AsFloat;
+      result.Price2Persons := rSet.fieldbyname('Price2Persons').AsFloat;
+      result.Price3Persons := rSet.fieldbyname('Price3Persons').AsFloat;
+      result.Price4Persons := rSet.fieldbyname('Price4Persons').AsFloat;
+      result.Price5Persons := rSet.fieldbyname('Price5Persons').AsFloat;
+      result.PriceExtraPerson := rSet.fieldbyname('PriceExtraPerson').AsFloat;
     end;
   finally
     freeandnil(rSet);
@@ -4269,17 +4263,17 @@ begin
       result.Status := rSet.fieldbyname('Status').asString;
       result.GroupAccount := rSet['GroupAccount'];
       result.invBreakfast := rSet['invBreakfast'];
-      result.RoomPrice1 := LocalFloatValue(rSet.fieldbyname('RoomPrice1').asString);
+      result.RoomPrice1 := rSet.fieldbyname('RoomPrice1').AsFloat;
       result.Price1From := rSet.fieldbyname('Price1From').asString;
       result.Price1To := rSet.fieldbyname('Price1To').asString;
-      result.RoomPrice2 := LocalFloatValue(rSet.fieldbyname('RoomPrice2').asString);
+      result.RoomPrice2 := rSet.fieldbyname('RoomPrice2').AsFloat;
       result.Price2From := rSet.fieldbyname('Price2From').asString;
       result.Price2To := rSet.fieldbyname('Price2To').asString;
-      result.RoomPrice3 := LocalFloatValue(rSet.fieldbyname('RoomPrice3').asString);
+      result.RoomPrice3 := rSet.fieldbyname('RoomPrice3').AsFloat;
       result.Price3From := rSet.fieldbyname('Price3From').asString;
       result.Price3To := rSet.fieldbyname('Price3To').asString;
       result.Currency := rSet.fieldbyname('Currency').asString;
-      result.Discount := LocalFloatValue(rSet.fieldbyname('Discount').asString);
+      result.Discount := rSet.fieldbyname('Discount').AsFloat;
       result.Percentage := rSet['Percentage'];
       result.PriceType := rSet.fieldbyname('PriceType').asString;
       result.Arrival := rSet.fieldbyname('Arrival').asString;
@@ -4287,9 +4281,9 @@ begin
       result.RoomType := rSet.fieldbyname('RoomType').asString;
       result.PMInfo := rSet.fieldbyname('PMInfo').asString;
       result.HiddenInfo := rSet.fieldbyname('HiddenInfo').asString;
-      result.RoomRentPaid1 := LocalFloatValue(rSet.fieldbyname('RoomRentPaid1').asString);
-      result.RoomRentPaid2 := LocalFloatValue(rSet.fieldbyname('RoomRentPaid2').asString);
-      result.RoomRentPaid3 := LocalFloatValue(rSet.fieldbyname('RoomRentPaid3').asString);
+      result.RoomRentPaid1 := rSet.fieldbyname('RoomRentPaid1').AsFloat;
+      result.RoomRentPaid2 := rSet.fieldbyname('RoomRentPaid2').AsFloat;
+      result.RoomRentPaid3 := rSet.fieldbyname('RoomRentPaid3').AsFloat;
       result.RoomRentPaymentInvoice := rSet.fieldbyname('RoomRentPaymentInvoice').asInteger;
       result.Hallres := rSet.fieldbyname('Hallres').asInteger;
       result.rrTmp := rSet.fieldbyname('rrTmp').asString;
@@ -4308,7 +4302,7 @@ begin
       result.numChildren := rSet.fieldbyname('numChildren').asInteger;
       result.numInfants := rSet.fieldbyname('numInfants').asInteger;
 
-      result.avrageRate := LocalFloatValue(rSet.fieldbyname('AvrageRate').asString);
+      result.avrageRate := rSet.fieldbyname('AvrageRate').AsFloat;
       result.rateCount := rSet.fieldbyname('rateCount').asInteger;
       result.package := rSet.fieldbyname('package').asString;
       result.ExpectedTimeOfArrival := rSet.fieldbyname('ExpectedTimeOfArrival').AsString;
@@ -4351,9 +4345,9 @@ begin
       result.Information := rSet.fieldbyname('Information').asString;
       result.PMInfo := rSet.fieldbyname('PMInfo').asString;
       result.HiddenInfo := rSet.fieldbyname('HiddenInfo').asString;
-      result.RoomRentPaid1 := LocalFloatValue(rSet.fieldbyname('RoomRentPaid1').asString);
-      result.RoomRentPaid2 := LocalFloatValue(rSet.fieldbyname('RoomRentPaid2').asString);
-      result.RoomRentPaid3 := LocalFloatValue(rSet.fieldbyname('RoomRentPaid3').asString);
+      result.RoomRentPaid1 := rSet.fieldbyname('RoomRentPaid1').AsFloat;
+      result.RoomRentPaid2 := rSet.fieldbyname('RoomRentPaid2').AsFloat;
+      result.RoomRentPaid3 := rSet.fieldbyname('RoomRentPaid3').AsFloat;
       result.RoomRentPaymentInvoice := rSet.fieldbyname('RoomRentPaymentInvoice').asInteger;
       result.ContactName := rSet.fieldbyname('ContactName').asString;
       result.ContactPhone := rSet.fieldbyname('ContactPhone').asString;
@@ -4850,12 +4844,12 @@ begin
       result.AccItemLink := rSet.fieldbyname('AccItemLink').asString;
       result.Item := rSet.fieldbyname('Item').asString;
       result.Description := rSet.fieldbyname('Description').asString;
-      result.Price := LocalFloatValue(rSet.fieldbyname('Price').asString);
+      result.Price := rSet.fieldbyname('Price').AsFloat;
       result.ItemType := rSet.fieldbyname('Itemtype').asString;
       result.ItemTypeDescription := rSet.fieldbyname('ItemTypeDescription').asString;
       result.VatCode := rSet.fieldbyname('VATCode').asString;
       result.VATCodeDescription := rSet.fieldbyname('VATCodeDescription').asString;
-      result.VATPercentage := LocalFloatValue(rSet.fieldbyname('VATPercentage').asString);
+      result.VATPercentage := rSet.fieldbyname('VATPercentage').AsFloat;
       result.ItemKind := Item_GetKind(aItem)
     end;
   finally
@@ -5338,7 +5332,7 @@ begin
   result := 1;
   if glb.LocateCurrency(Currency) then
   begin
-    result := LocalFloatValue(glb.CurrenciesSet.fieldbyname('AValue').asString);
+    result := glb.CurrenciesSet.fieldbyname('AValue').AsFloat;
   end;
 end;
 
@@ -5525,9 +5519,9 @@ begin
 
       while not rSet.Eof do
       begin
-        Total := Total + LocalFloatValue(rSet.fieldbyname('Total').asString);
-        TotalWOVAT := TotalWOVAT + LocalFloatValue(rSet.fieldbyname('TotalWOVAT').asString);
-        TotalVAT := TotalVAT + LocalFloatValue(rSet.fieldbyname('VAT').asString);
+        Total := Total + rSet.fieldbyname('Total').AsFloat;
+        TotalWOVAT := TotalWOVAT + rSet.fieldbyname('TotalWOVAT').AsFloat;
+        TotalVAT := TotalVAT + rSet.fieldbyname('VAT').AsFloat;
         rSet.Next;
       end;
 
@@ -5806,7 +5800,7 @@ begin
     s := format(select_RV_ClosedInvoiceAmount, [iReservation]);
     if hData.rSet_bySQL(rSet, s) then
     begin
-      result := LocalFloatValue(rSet.fieldbyname('Amount').asString);
+      result := rSet.fieldbyname('Amount').AsFloat;
     end;
   finally
     freeandnil(rSet);
@@ -6332,7 +6326,7 @@ begin
         Hairdryer := rSet['Hairdryer'];
         InternetPlug := rSet['InternetPlug'];
         Fax := rSet['Fax'];
-        SqrMeters := LocalFloatValue(rSet.fieldbyname('SqrMeters').asString);
+        SqrMeters := rSet.fieldbyname('SqrMeters').AsFloat;
         BedSize := rSet.fieldbyname('BedSize').asString;
         Equipments := rSet.fieldbyname('Equipments').asString;
         Bookable := rSet['Bookable'];
@@ -6385,7 +6379,7 @@ begin
         Country := rSet.fieldbyname('Country').asString;
         MarketSegmentName := rSet.fieldbyname('MarketSegmentName').asString;
         MarketSegmentCode := rSet.fieldbyname('MarketSegmentCode').asString;
-        DiscountPerc := LocalFloatValue(rSet.fieldbyname('DiscountPerc').asString);
+        DiscountPerc := rSet.fieldbyname('DiscountPerc').AsFloat;
         EmailAddress := rSet.fieldbyname('EmailAddress').asString;
         HomePage := rSet.fieldbyname('Homepage').asString;
         ContactPerson := rSet.fieldbyname('ContactPerson').asString;
@@ -7066,8 +7060,8 @@ begin
   id := aRSet.fieldbyname('ID').asInteger;
   Currency := aRSet.fieldbyname('currency').asString;
   Description := aRSet.fieldbyname('description').asString;
-  Value := LocalFloatValue(aRSet.fieldbyname('aValue').asString);
-  SellValue := LocalFloatValue(aRSet.fieldbyname('SellValue').asString);
+  Value := aRSet.fieldbyname('aValue').AsFloat;
+  SellValue := aRSet.fieldbyname('SellValue').AsFloat;
   Decimals := aRSet.fieldbyname('Decimals').asinteger;
   Displayformat := aRSet.fieldbyname('Displayformat').asString;
   CurrencySign := aRSet.fieldbyname('CurrencySign').asString;
@@ -8253,7 +8247,7 @@ begin
       result := true;
       theData.VatCode := rSet.fieldbyname('VATCode').asString;
       theData.Description := rSet.fieldbyname('description').asString;
-      theData.VATPercentage := LocalFloatValue(rSet.fieldbyname('VATPercentage').asString);
+      theData.VATPercentage := rSet.fieldbyname('VATPercentage').AsFloat;
       theData.valueFormula := rSet.fieldbyname('valueFormula').asString;
       theData.BookKeepCode := rSet.fieldbyname('BookKeepCode').asString;
     end;
@@ -8591,13 +8585,13 @@ begin
       theData.pcDescription := rSet.fieldbyname('pcDescription').asString;
       theData.pcActive := rSet['pcActive'];
       theData.pcRack := rSet['pcRack'];
-      theData.pcRackCalc := LocalFloatValue(rSet.fieldbyname('pcRackCalc').asString);
+      theData.pcRackCalc := rSet.fieldbyname('pcRackCalc').AsFloat;
       theData.pcShowDiscount := rSet['pcShowDiscount'];
       theData.pcDiscountText := rSet.fieldbyname('pcDiscountText').asString;
       theData.pcAutomatic := rSet['pcAutomatic'];
       theData.pcLastUpdate := rSet.fieldbyname('pcLastUpdate').AsDateTime;
       theData.pcDiscountMethod := rSet['pcDiscountMethod'];
-      theData.pcDiscountPriceAfter := LocalFloatValue(rSet.fieldbyname('pcDiscountPriceAfter').asString);
+      theData.pcDiscountPriceAfter := rSet.fieldbyname('pcDiscountPriceAfter').AsFloat;
       theData.pcDiscountDaysAfter := rSet.fieldbyname('pcDiscountDaysAfter').asInteger;
       theData.active := rSet['Active'];
     end;

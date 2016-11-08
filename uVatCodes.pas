@@ -339,7 +339,7 @@ begin
   initVatCodeHolder(zData);
   zData.VATCode         := m_.fieldbyname('VATCode').asstring;
   zData.Description     := m_.fieldbyname('Description').asstring;
-  zData.VATPercentage   := LocalFloatValue(m_.fieldbyname('VATPercentage').asString);
+  zData.VATPercentage   := m_.fieldbyname('VATPercentage').asFloat;
   zData.ValueFormula     := m_.fieldbyname('ValueFormula').asstring;
   zData.BookKeepCode     := m_.fieldbyname('BookKeepCode').asstring;
 end;
@@ -517,7 +517,7 @@ begin
   initVatCodeHolder(zData);
   zData.VatCode      := dataset.fieldbyname('VatCode').asstring;
   zData.Description  := dataset.fieldbyname('Description').asstring;
-  zData.VATPercentage:= LocalFloatValue(dataset.fieldbyname('VATPercentage').asString);
+  zData.VATPercentage:= dataset.fieldbyname('VATPercentage').asFloat;
   zData.ValueFormula := dataset.fieldbyname('ValueFormula').asstring;
   zData.BookKeepCode := dataset.fieldbyname('BookKeepCode').asstring;
 

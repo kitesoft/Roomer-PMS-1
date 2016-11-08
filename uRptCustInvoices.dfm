@@ -397,6 +397,12 @@ object frmRptCustInvoices: TfrmRptCustInvoices
     SkinData.SkinSection = 'PAGECONTROL'
     object tabOpenInvoices: TsTabSheet
       Caption = 'Item summery'
+      SkinData.CustomColor = False
+      SkinData.CustomFont = False
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object sPanel3: TsPanel
         Left = 0
         Top = 0
@@ -472,6 +478,8 @@ object frmRptCustInvoices: TfrmRptCustInvoices
     end
     object tabFinishedInvoices: TsTabSheet
       Caption = 'Invoice list'
+      SkinData.CustomColor = False
+      SkinData.CustomFont = False
       ExplicitLeft = 0
       ExplicitTop = 0
       ExplicitWidth = 0

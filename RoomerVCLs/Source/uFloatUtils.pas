@@ -23,23 +23,13 @@ begin
 end;
 
 function SystemDecimalSeparator: char;
-//var
-//  Decimal: PChar;
 begin
   Result := TFormatSettings.Create.DecimalSeparator;
-//  Decimal := StrAlloc(10);
-//  GetLocaleInfo(LOCALE_SYSTEM_DEFAULT, LOCALE_SDECIMAL, Decimal, 10);
-//  result := String(Decimal)[1];
 end;
 
 function SystemThousandsSeparator: char;
-//var
-//  Thousands: PChar;
 begin
   Result := TFormatSettings.Create.ThousandSeparator;
-//  Thousands := StrAlloc(10);
-//  GetLocaleInfo(LOCALE_SYSTEM_DEFAULT, LOCALE_STHOUSAND, Thousands, 10);
-//  result := String(Thousands)[1];
 end;
 
 function LocalizedFloatToString(number: Double): String;

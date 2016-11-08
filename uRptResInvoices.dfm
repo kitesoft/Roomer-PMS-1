@@ -174,7 +174,7 @@ object frmRptResInvoices: TfrmRptResInvoices
         MaxLength = 10
         ParentFont = False
         TabOrder = 0
-        Text = '  .  .    '
+        Text = '  -  -    '
         OnChange = dtDateFromChange
         CheckOnExit = True
         SkinData.SkinSection = 'EDIT'
@@ -197,7 +197,7 @@ object frmRptResInvoices: TfrmRptResInvoices
         MaxLength = 10
         ParentFont = False
         TabOrder = 1
-        Text = '  .  .    '
+        Text = '  -  -    '
         OnChange = dtDateFromChange
         CheckOnExit = True
         SkinData.SkinSection = 'EDIT'
@@ -444,6 +444,10 @@ object frmRptResInvoices: TfrmRptResInvoices
       Caption = 'Item summery'
       SkinData.CustomColor = False
       SkinData.CustomFont = False
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object sPanel3: TsPanel
         Left = 0
         Top = 0
@@ -521,6 +525,10 @@ object frmRptResInvoices: TfrmRptResInvoices
       Caption = 'Closed Invoice list'
       SkinData.CustomColor = False
       SkinData.CustomFont = False
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object sPanel2: TsPanel
         Left = 0
         Top = 0
@@ -924,6 +932,10 @@ object frmRptResInvoices: TfrmRptResInvoices
       Caption = 'Open Invoice list'
       SkinData.CustomColor = False
       SkinData.CustomFont = False
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object sPanel4: TsPanel
         Left = 0
         Top = 0
@@ -1198,7 +1210,7 @@ object frmRptResInvoices: TfrmRptResInvoices
     LoadedCompletely = False
     SavedCompletely = False
     FilterOptions = []
-    Version = '7.62.00 Standard Edition'
+    Version = '7.22.00 Standard Edition'
     LanguageID = 0
     SortID = 0
     SubLanguageID = 1
@@ -1394,7 +1406,7 @@ object frmRptResInvoices: TfrmRptResInvoices
     LoadedCompletely = False
     SavedCompletely = False
     FilterOptions = []
-    Version = '7.62.00 Standard Edition'
+    Version = '7.22.00 Standard Edition'
     LanguageID = 0
     SortID = 0
     SubLanguageID = 1
@@ -1518,7 +1530,7 @@ object frmRptResInvoices: TfrmRptResInvoices
     LoadedCompletely = False
     SavedCompletely = False
     FilterOptions = []
-    Version = '7.62.00 Standard Edition'
+    Version = '7.22.00 Standard Edition'
     LanguageID = 0
     SortID = 0
     SubLanguageID = 1

@@ -395,6 +395,8 @@ implementation
 
 { Global Functions }
 
+uses XmlUtils;
+
 function Getperformance(Doc: IXMLDocument): IXMLPerformanceType;
 begin
   Result := Doc.GetDocBinding('performance', TXMLPerformanceType, TargetNamespace) as IXMLPerformanceType;
@@ -477,7 +479,7 @@ end;
 
 function TXMLDayType.Get_Adr: Double;
 begin
-  Result := RoomerStrToFloat(AttributeNodes['adr'].NodeValue);
+  Result := XMLToFloat(AttributeNodes['adr'].NodeValue);
 end;
 
 procedure TXMLDayType.Set_Adr(Value: Double);
@@ -547,7 +549,7 @@ end;
 
 function TXMLDayType.Get_MaxRate: Double;
 begin
-  Result := RoomerStrToFloat(AttributeNodes['maxRate'].NodeValue);
+  Result := XMLToFloat(AttributeNodes['maxRate'].NodeValue);
 end;
 
 procedure TXMLDayType.Set_MaxRate(Value: Double);
@@ -557,7 +559,7 @@ end;
 
 function TXMLDayType.Get_MinRate: Double;
 begin
-  Result := RoomerStrToFloat(AttributeNodes['minRate'].NodeValue);
+  Result := XMLToFloat(AttributeNodes['minRate'].NodeValue);
 end;
 
 procedure TXMLDayType.Set_MinRate(Value: Double);
@@ -577,7 +579,7 @@ end;
 
 function TXMLDayType.Get_Occ: Double;
 begin
-  Result := RoomerStrToFloat(AttributeNodes['occ'].NodeValue);
+  Result := XMLToFloat(AttributeNodes['occ'].NodeValue);
 end;
 
 procedure TXMLDayType.Set_Occ(Value: Double);
@@ -607,7 +609,7 @@ end;
 
 function TXMLDayType.Get_RevPar: Double;
 begin
-  Result := RoomerStrToFloat(AttributeNodes['revPar'].NodeValue);
+  Result := XMLToFloat(AttributeNodes['revPar'].NodeValue);
 end;
 
 procedure TXMLDayType.Set_RevPar(Value: Double);
@@ -617,7 +619,7 @@ end;
 
 function TXMLDayType.Get_Revenue: Double;
 begin
-  Result := RoomerStrToFloat(AttributeNodes['revenue'].NodeValue);
+  Result := XMLToFloat(AttributeNodes['revenue'].NodeValue);
 end;
 
 procedure TXMLDayType.Set_Revenue(Value: Double);
@@ -647,7 +649,7 @@ end;
 
 function TXMLDayType.Get_TotalDiscounts: Double;
 begin
-  Result := RoomerStrToFloat(AttributeNodes['totalDiscounts'].NodeValue);
+  Result := XMLToFloat(AttributeNodes['totalDiscounts'].NodeValue);
 end;
 
 procedure TXMLDayType.Set_TotalDiscounts(Value: Double);
@@ -704,7 +706,7 @@ end;
 
 function TXMLRoomTypeType.Get_Rate: Double;
 begin
-  Result := RoomerStrToFloat(AttributeNodes['rate'].NodeValue);
+  Result := XMLToFloat(AttributeNodes['rate'].NodeValue);
 end;
 
 procedure TXMLRoomTypeType.Set_Rate(Value: Double);
@@ -746,7 +748,7 @@ end;
 
 function TXMLChannelType.Get_Adr: Double;
 begin
-  Result := RoomerStrToFloat(AttributeNodes['adr'].NodeValue);
+  Result := XMLToFloat(AttributeNodes['adr'].NodeValue);
 end;
 
 procedure TXMLChannelType.Set_Adr(Value: Double);
@@ -796,7 +798,7 @@ end;
 
 function TXMLChannelType.Get_MaxRate: Double;
 begin
-  Result := RoomerStrToFloat(AttributeNodes['maxRate'].NodeValue);
+  Result := XMLToFloat(AttributeNodes['maxRate'].NodeValue);
 end;
 
 procedure TXMLChannelType.Set_MaxRate(Value: Double);
@@ -806,7 +808,7 @@ end;
 
 function TXMLChannelType.Get_MinRate: Double;
 begin
-  Result := RoomerStrToFloat(AttributeNodes['minRate'].NodeValue);
+  Result := XMLToFloat(AttributeNodes['minRate'].NodeValue);
 end;
 
 procedure TXMLChannelType.Set_MinRate(Value: Double);
@@ -816,7 +818,7 @@ end;
 
 function TXMLChannelType.Get_Occ: Double;
 begin
-  Result := RoomerStrToFloat(AttributeNodes['occ'].NodeValue);
+  Result := XMLToFloat(AttributeNodes['occ'].NodeValue);
 end;
 
 procedure TXMLChannelType.Set_Occ(Value: Double);
@@ -826,7 +828,7 @@ end;
 
 function TXMLChannelType.Get_RevPar: Double;
 begin
-  Result := RoomerStrToFloat(AttributeNodes['revPar'].NodeValue);
+  Result := XMLToFloat(AttributeNodes['revPar'].NodeValue);
 end;
 
 procedure TXMLChannelType.Set_RevPar(Value: Double);
@@ -836,7 +838,7 @@ end;
 
 function TXMLChannelType.Get_Revenue: Double;
 begin
-  Result := RoomerStrToFloat(AttributeNodes['revenue'].NodeValue);
+  Result := XMLToFloat(AttributeNodes['revenue'].NodeValue);
 end;
 
 procedure TXMLChannelType.Set_Revenue(Value: Double);
@@ -866,7 +868,7 @@ end;
 
 function TXMLChannelType.Get_TotalDiscounts: Double;
 begin
-  Result := RoomerStrToFloat(AttributeNodes['totalDiscounts'].NodeValue);
+  Result := XMLToFloat(AttributeNodes['totalDiscounts'].NodeValue);
 end;
 
 procedure TXMLChannelType.Set_TotalDiscounts(Value: Double);

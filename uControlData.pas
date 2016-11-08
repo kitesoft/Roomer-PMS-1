@@ -1337,7 +1337,7 @@ g.ProcessAppIni(0);
     end;
 
     try
-      edCallStartPrice.value := LocalFloatValue(rControlData.fieldbyname('callStartPrice').asString);
+      edCallStartPrice.value := rControlData.fieldbyname('callStartPrice').AsFloat;
     except
       edCallStartPrice.value := 0;
     end;
@@ -1349,7 +1349,7 @@ g.ProcessAppIni(0);
     end;
 
     try
-      edCallMinPrice.value := LocalFloatValue(rControlData.fieldbyname('callMinPrice').asString);
+      edCallMinPrice.value := rControlData.fieldbyname('callMinPrice').AsFloat;
     except
       edCallMinPrice.value := 0;
     end;

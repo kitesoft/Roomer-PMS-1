@@ -3515,9 +3515,9 @@ begin
           Address1 := rSet.fieldbyname('Address1').asstring;
           Address2 := rSet.fieldbyname('Address2').asstring;
           Address3 := rSet.fieldbyname('Address3').asstring;
-          ihAmountWithTax := LocalFloatValue(rSet.fieldbyname('ihAmountWithTax').asstring);
-          ihAmountNoTax := LocalFloatValue(rSet.fieldbyname('ihAmountNoTax').asstring);
-          ihAmountTax := LocalFloatValue(rSet.fieldbyname('ihAmountTax').asstring);
+          ihAmountWithTax := rSet.fieldbyname('ihAmountWithTax').AsFloat;
+          ihAmountNoTax := rSet.fieldbyname('ihAmountNoTax').AsFloat;
+          ihAmountTax := rSet.fieldbyname('ihAmountTax').AsFloat;
           CreditInvoice := rSet.fieldbyname('CreditInvoice').asInteger;
           OriginalInvoice := rSet.fieldbyname('OriginalInvoice').asInteger;
           RoomGuest := rSet.fieldbyname('RoomGuest').asstring;
@@ -3558,13 +3558,13 @@ begin
         Item := rSet.fieldbyname('Item').asstring;
         Quantity := rSet.fieldbyname('Quantity').AsFloat; // -96
         description := rSet.fieldbyname('Description').asstring;
-        price := LocalFloatValue(rSet.fieldbyname('Price').asstring);
+        price := rSet.fieldbyname('Price').AsFloat;
         VATType := rSet.fieldbyname('VATType').asstring;
-        ilAmountWithTax := LocalFloatValue(rSet.fieldbyname('ilAmountWithTax').asstring);
-        ilAmountNoTax := LocalFloatValue(rSet.fieldbyname('ilAmountNoTax').asstring);
-        ilAmountTax := LocalFloatValue(rSet.fieldbyname('ilAmountTax').asstring);
+        ilAmountWithTax := rSet.fieldbyname('ilAmountWithTax').AsFloat;
+        ilAmountNoTax := rSet.fieldbyname('ilAmountNoTax').AsFloat;
+        ilAmountTax := rSet.fieldbyname('ilAmountTax').AsFloat;
         Currency := rSet.fieldbyname('Currency').asstring;
-        CurrencyRate := LocalFloatValue(rSet.fieldbyname('CurrencyRate').asstring);
+        CurrencyRate := rSet.fieldbyname('CurrencyRate').AsFloat;
         ImportRefrence := rSet.fieldbyname('ImportRefrence').asstring;
         ImportSource := rSet.fieldbyname('ImportSource').asstring;
 
