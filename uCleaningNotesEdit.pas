@@ -8,7 +8,7 @@ uses
   sComboBox, sLabel
   , uRoomerForm, cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, dxSkinsCore, dxSkinCaramel,
   dxSkinCoffee, dxSkinDarkSide, dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinsdxStatusBarPainter,
-  cxGridTableView, cxStyles, dxPScxCommon, dxPScxGridLnk, dxStatusBar;
+  cxGridTableView, cxStyles, dxPScxCommon, dxPScxGridLnk, dxStatusBar, AdvSmoothProgressBar, Vcl.ComCtrls, sStatusBar;
 
 type
   TfrmCleaningNotesEdit = class(TfrmBaseRoomerForm)

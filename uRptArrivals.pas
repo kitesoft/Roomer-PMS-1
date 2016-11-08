@@ -15,7 +15,7 @@ uses
   cxDrawTextUtils, dxPSPrVwStd, dxPSPrVwAdv, dxPSPrVwRibbon, dxPScxPageControlProducer, dxPScxGridLnk,
   dxPScxGridLayoutViewLnk, dxPScxEditorProducers, dxPScxExtEditorProducers, dxSkinsdxBarPainter, dxSkinsdxRibbonPainter,
   dxPScxCommon, dxPSCore, dxStatusBar
-  , uCurrencyHandler  ;
+  , uCurrencyHandler, AdvSmoothProgressBar, Vcl.ComCtrls, sStatusBar  ;
 
 type
   TfrmArrivalsReport = class(TfrmBaseRoomerForm)

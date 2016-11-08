@@ -15,7 +15,8 @@ uses
   uRoomerForm, dxPSGlbl, dxPSUtl, dxPSEngn, dxPrnPg, dxBkgnd, dxWrap, dxPrnDev, dxPSCompsProvider, dxPSFillPatterns,
   dxPSEdgePatterns, dxPSPDFExportCore, dxPSPDFExport, cxDrawTextUtils, dxPSPrVwStd, dxPSPrVwAdv, dxPSPrVwRibbon,
   dxPScxPageControlProducer, dxPScxGridLnk, dxPScxGridLayoutViewLnk, dxPScxEditorProducers, dxPScxExtEditorProducers,
-  dxSkinsdxBarPainter, dxSkinsdxRibbonPainter, dxPScxCommon, dxPSCore, cxLabel;
+  dxSkinsdxBarPainter, dxSkinsdxRibbonPainter, dxPScxCommon, dxPSCore, cxLabel, AdvSmoothProgressBar, Vcl.ComCtrls,
+  sStatusBar;
 
 type
   TfrmDeparturesReport = class(TfrmBaseRoomerForm)

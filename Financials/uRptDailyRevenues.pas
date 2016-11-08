@@ -16,7 +16,7 @@ uses
   Vcl.ComCtrls, sStatusBar, sCheckBox, cxCalendar
   , cmpRoomerDataset, Vcl.Mask, sMaskEdit, sCustomComboEdit, sToolEdit
   , uRoomerForm, dxSkinsdxStatusBarPainter, dxStatusBar, sGroupBox, sRadioButton, uCurrencyHandler, sSplitter,
-  dxPScxPivotGridLnk
+  dxPScxPivotGridLnk, AdvSmoothProgressBar
   ;
 
 type

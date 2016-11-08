@@ -11,11 +11,9 @@ inherited frmRptTotallist: TfrmRptTotallist
   ExplicitHeight = 672
   PixelsPerInch = 96
   TextHeight = 13
-  inherited dxStatusBar: TdxStatusBar
+  inherited sbStatusBar: TsStatusBar
     Top = 613
     Width = 1347
-    ExplicitTop = 613
-    ExplicitWidth = 1347
   end
   object Panel3: TsPanel [1]
     Left = 0
@@ -519,6 +517,18 @@ inherited frmRptTotallist: TfrmRptTotallist
     end
     object lvTotallistLevel1: TcxGridLevel
       GridView = lvTotallist
+    end
+  end
+  inherited sbProgressBar: TAdvSmoothProgressBar
+    TMSStyle = 4
+  end
+  inherited cxsrRoomerStyleRepository: TcxStyleRepository
+    PixelsPerInch = 96
+    inherited dxssRoomerGridReportLink: TdxGridReportLinkStyleSheet
+      BuiltIn = True
+    end
+    inherited cxssRoomerGridTableView: TcxGridTableViewStyleSheet
+      BuiltIn = True
     end
   end
   object kbmTotallist: TkbmMemTable
