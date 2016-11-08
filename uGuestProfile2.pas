@@ -214,7 +214,6 @@ type
     labResNumbers: TsLabel;
     Panel1: TsPanel;
     sButton2: TsButton;
-    sButton3: TsButton;
     edNewReservation: TsEdit;
     btnConfirmNewReservation: TsSpeedButton;
     sLabel3: TsLabel;
@@ -232,6 +231,8 @@ type
     eriBtnNewProfileNotVisible: TcxEditRepositoryButtonItem;
     eriBtnEdCurrProfileNotVisible: TcxEditRepositoryButtonItem;
     eriBtnEdCurrProfileVisible: TcxEditRepositoryButtonItem;
+    m_Nationality: TWideStringField;
+    tvDataNationality: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -274,6 +275,7 @@ type
       var AProperties: TcxCustomEditProperties);
     procedure tvDataCountryPropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure tvDataNationalityPropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
 
   private
     { Private declarations }
@@ -301,6 +303,7 @@ type
     procedure fillHolder;
     procedure changeAllowgridEdit;
     procedure CorrectCurrentGuest(iGoto: Integer);
+    procedure GetCountryCodeForField(FieldName, prompt: String);
   public
     { Public declarations }
     zAct               : TActTableAction;
@@ -741,6 +744,7 @@ begin
   zData.Address3             := dataset['Address3'       ];
   zData.Address4             := dataset['Address4'       ];
   zData.Country              := dataset['Country'        ];
+  zData.Nationality          := dataset['Nationality'    ];
   zData.Company              := dataset['Company'        ];
   zData.GuestType            := dataset['GuestType'      ];
   zData.Information          := dataset['Information'    ];
@@ -1049,22 +1053,21 @@ begin
   end;
 end;
 
-procedure TfrmGuestProfile2.tvDataCountryPropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
+procedure TfrmGuestProfile2.GetCountryCodeForField(FieldName, prompt : String);
 var
   theData : recCountryHolder;
   s : string;
 begin
 
-  theData.Country := m_.fieldbyname('Country').AsString;
+  theData.Country := m_.fieldbyname(FieldName).AsString;
   if Countries(actLookup,theData) then
   begin
-    if m_.fieldbyname('Country').AsString <> thedata.Country then
+    if m_.fieldbyname(FieldName).AsString <> thedata.Country then
     begin
       if m_.FieldByName('mainname').AsBoolean = true then
       begin
-        s := '';
-        s := s+'Change All gests countries to '+' '+thedata.Country+' '+chr(10);
-        s := s+'If No then only this guest will be changed '+chr(10);
+        s := 'Change all guests ' + prompt + ' to '+' '+thedata.Country+' '+chr(10);
+        s := s+'If [No] then only the selected guest will be changed '+chr(10);
         s := s+GetTranslatedText('shContinue');
         if MessageDlg(s,mtConfirmation, [mbYes, mbNo], 0) = mrYes then
         begin
@@ -1072,7 +1075,7 @@ begin
           while not m_.Eof do
           begin
             m_.Edit;
-            m_.fieldbyname('Country').AsString := thedata.Country;
+            m_.fieldbyname(FieldName).AsString := thedata.Country;
             m_.Post;
             m_.next;
           end;
@@ -1080,17 +1083,22 @@ begin
         end else
         begin
           m_.Edit;
-          m_.fieldbyname('Country').AsString := thedata.Country;
+          m_.fieldbyname(FieldName).AsString := thedata.Country;
           m_.Post;
         end;
       end else
       begin
         m_.Edit;
-        m_.fieldbyname('Country').AsString := thedata.Country;
+        m_.fieldbyname(FieldName).AsString := thedata.Country;
         m_.Post;
       end;
     end;
   end;
+end;
+
+procedure TfrmGuestProfile2.tvDataCountryPropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
+begin
+  GetCountryCodeForField('Country', 'countries');
 end;
 
 
@@ -1140,6 +1148,11 @@ procedure TfrmGuestProfile2.tvDataFocusedItemChanged(Sender: TcxCustomGridTableV
   AFocusedItem: TcxCustomGridTableItem);
 begin
   //tvData.Invalidate();
+end;
+
+procedure TfrmGuestProfile2.tvDataNationalityPropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
+begin
+  GetCountryCodeForField('Nationality', 'nationalities');
 end;
 
 //////////////////////////////////////////////////////////////////////////

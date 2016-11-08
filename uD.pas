@@ -780,6 +780,7 @@ type
     procedure chkConfirmMonitor;
     procedure TurnoverAndPayemnetsClearAllData(justClose: boolean);
 
+    function ChangeNationality(newCountry: string; reservation, RoomReservation, Person, Medhod: Integer): boolean;
     function getCurrencyProperties(Currency: String): TcxCustomEditProperties;
     procedure AddOrCreateToPackage(pckTotalsList: TRoomPackageLineEntryList;
       Code: String;
@@ -4586,6 +4587,7 @@ begin
     s := s + ', Address3 ' + chr(10);
     s := s + ', Address4 ' + chr(10);
     s := s + ', Country ' + chr(10);
+    s := s + ', Nationality ' + chr(10);
     s := s + ', Company ' + chr(10);
     s := s + ', GuestType ' + chr(10);
     s := s + ', Information ' + chr(10);
@@ -4602,6 +4604,7 @@ begin
     s := s + ', ' + _db(ciCustomerInfo.Address2) + chr(10);
     s := s + ', ' + _db(ciCustomerInfo.Address3) + chr(10);
     s := s + ', ' + _db(ciCustomerInfo.Address4) + chr(10);
+    s := s + ', ' + _db(ciCustomerInfo.Country) + chr(10);
     s := s + ', ' + _db(ciCustomerInfo.Country) + chr(10);
     s := s + ', ' + _db('') + chr(10);
     s := s + ', ' + _db(sType) + chr(10);
@@ -5728,6 +5731,67 @@ begin
     s := '';
     s := s + ' UPDATE persons ' + chr(10);
     s := s + ' Set Country=' + _db(newCountry) + ' ' + chr(10);
+    s := s + ' WHERE (Reservation = ' + inttostr(reservation) + ') ' + chr(10);
+    if not cmd_bySQL(s) then
+    begin
+      result := False;
+    end;
+
+    s := '';
+    s := s + ' UPDATE reservations ' + chr(10);
+    s := s + ' Set Country=' + _db(newCountry) + ' ' + chr(10);
+    s := s + ' WHERE (Reservation = ' + inttostr(reservation) + ') ' + chr(10);
+    if not cmd_bySQL(s) then
+    begin
+      result := False;
+    end;
+  end;
+end;
+
+function Td.ChangeNationality(newCountry: string; reservation, RoomReservation, Person, Medhod: Integer): boolean;
+var
+  s: string;
+begin
+  result := False;
+
+  if Medhod = 0 then
+  begin
+    if Person < 1 then
+      exit;
+    result := True;
+    s := '';
+    s := s + ' UPDATE persons ' + chr(10);
+    s := s + ' Set Nationality=' + _db(newCountry) + ' ' + chr(10);
+    s := s + ' WHERE (Person = ' + inttostr(Person) + ') ' + chr(10);
+    if not cmd_bySQL(s) then
+    begin
+      result := False;
+    end;
+  end;
+
+  if Medhod = 1 then
+  begin
+    if RoomReservation < 1 then
+      exit;
+    result := True;
+    s := '';
+    s := s + ' UPDATE persons ' + chr(10);
+    s := s + ' Set Nationality=' + _db(newCountry) + ' ' + chr(10);
+    s := s + ' WHERE (RoomReservation = ' + inttostr(RoomReservation) + ') ' + chr(10);
+    if not cmd_bySQL(s) then
+    begin
+      result := False;
+    end;
+  end;
+
+  if Medhod = 2 then
+  begin
+    if reservation < 1 then
+      exit;
+    result := True;
+    s := '';
+    s := s + ' UPDATE persons ' + chr(10);
+    s := s + ' Set Nationality=' + _db(newCountry) + ' ' + chr(10);
     s := s + ' WHERE (Reservation = ' + inttostr(reservation) + ') ' + chr(10);
     if not cmd_bySQL(s) then
     begin
@@ -10091,25 +10155,17 @@ var
 
 begin
 
-  s := s + '  SELECT'#10;
-  s := s + '    DISTINCT'#10;
-  s := s + '    RoomReservation'#10;
-  s := s + '  FROM'#10;
-  s := s + '    roomreservations'#10;
+  s := s + '  SELECT DISTINCT rd.RoomReservation '#10;
+  s := s + '  FROM roomsdate rd JOIN roomreservations rr ON rr.RoomReservation = rd.RoomReservation '#10;
   if Location <> '' then
   begin
-    s := s + ' INNER JOIN ' + #10;
-    s := s + '    rooms ON roomreservations.Room =  rooms.Room ' + #10;
-    s := s + ' INNER JOIN ' + #10;
-    s := s + '   locations ON  rooms.Location = locations.Location ' + #10;
+    s := s + ' INNER JOIN rooms r ON rr.Room =  r.Room ' + #10;
+    s := s + ' INNER JOIN locations l ON  r.Location = l.Location ' + #10;
   end;
-  s := s + '  WHERE' + #10;
-  s := s + '        (Departure >= %s )' + #10;
-  s := s + '    AND (Departure <= %s )' + #10;
-  s := s + '    AND (roomreservations.useInNationalReport = 1 )' + #10;
+  s := s + '  WHERE (ADate >= %s) AND (ADate <= %s ) AND (rr.useInNationalReport = 1 )' + #10;
   if Location <> '' then
   begin
-    s := s + ' AND (locations.Location in (' + Location + ') ) ' + #10;
+    s := s + ' AND (l.Location in (' + Location + ') ) ' + #10;
   end;
   s := s + '  ORDER BY RoomReservation' + #10;
 

@@ -589,6 +589,11 @@ type
     edtReservationNumber: TsEdit;
     gbxAllGuestsNationality: TsGroupBox;
     btnChangeNationality: TsButton;
+    btnChangeCountry: TsButton;
+    lblNationality: TsLabel;
+    edtNationality: TsEdit;
+    lblNationalityName: TsLabel;
+    mAllGuestsNationality: TWideStringField;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -722,6 +727,8 @@ type
     procedure btnChangeNationalityClick(Sender: TObject);
     procedure tvRoomsRoomTypeGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
       var AProperties: TcxCustomEditProperties);
+    procedure btnChangeCountryClick(Sender: TObject);
+    procedure edtNationalityChange(Sender: TObject);
   private
     { Private declarations }
     vStartName: string;
@@ -776,7 +783,8 @@ type
     procedure SelectMainGuestProfile;
     procedure ShowMainGuestProfile;
     procedure mnuOtherResStateChangeClick(Sender: TObject);
-    procedure ChangeCountryAllGuests(const aNewCountry: string; const aOldCountryName, aNewCountryName: string);
+    procedure ChangeNationalityAllGuests(const aNewCountry: string; const aOldCountryName, aNewCountryName: string);
+    procedure ChangeCountryAllGuests(const aNewCountry, aOldCountryName, aNewCountryName: string);
 
     property OutOfOrderBlocking: Boolean read FOutOfOrderBlocking write SetOutOfOrderBlocking;
   public
@@ -1357,6 +1365,18 @@ end;
 //
 // ************************************************************************************
 
+procedure TfrmReservationProfile.btnChangeCountryClick(Sender: TObject);
+var
+  lData: recCountryHolder;
+  lOldCountryName: string;
+begin
+//
+  lData.Country := edtContactCountry.Text;
+  lOldCountryName := lblContactCountry.Caption;
+  if Countries(actLookup, lData) then
+    ChangeNationalityAllGuests(lData.Country, lOldCountryName, lData.CountryName);
+end;
+
 procedure TfrmReservationProfile.btnChangeNationalityClick(Sender: TObject);
 var
   lData: recCountryHolder;
@@ -1369,14 +1389,24 @@ begin
     ChangeCountryAllGuests(lData.Country, lOldCountryName, lData.CountryName);
 end;
 
-procedure TfrmReservationProfile.ChangeCountryAllGuests(const aNewCountry: string; const aOldCountryName, aNewCountryName: string);
+procedure TfrmReservationProfile.ChangeNationalityAllGuests(const aNewCountry: string; const aOldCountryName, aNewCountryName: string);
 var
   s: string;
 begin
   s := format(GetTranslatedText('shTx_ReservationProfile_ChangeNationalityConfirmation'), [aOldCountryName, aNewCountryName]);
   if (MessageDlg(s, mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
-    if not d.ChangeCountry(aNewCountry, zReservation, 0, 0, 2) then
+    if not d.ChangeNationality(aNewCountry, zReservation, 0, 0, 2) then
       showmessage(GetTranslatedText('shTx_ReservationProfile_NationalityChangeFailed'));
+end;
+
+procedure TfrmReservationProfile.ChangeCountryAllGuests(const aNewCountry: string; const aOldCountryName, aNewCountryName: string);
+var
+  s: string;
+begin
+  s := format(GetTranslatedText('shTx_ReservationProfile_ChangeCountryConfirmation'), [aOldCountryName, aNewCountryName]);
+  if (MessageDlg(s, mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
+    if not d.ChangeCountry(aNewCountry, zReservation, 0, 0, 2) then
+      showmessage(GetTranslatedText('shTx_ReservationProfile_CountryChangeFailed'));
 end;
 
 
@@ -1424,12 +1454,17 @@ var
 begin
   loldCOuntryName := lblContactCountry.Caption;
   if getCountry(edtContactCountry, lblContactCountry) then
-    ChangeCountryAllGuests(edtContactCountry.Text, lOldCountryName, lblContactCountry.Caption);
+    ChangeNationalityAllGuests(edtContactCountry.Text, lOldCountryName, lblContactCountry.Caption);
 end;
 
 procedure TfrmReservationProfile.edtGuestCountryChange(Sender: TObject);
 begin
   CountryValidate(edtGuestCountry, lblGuestCountry);
+end;
+
+procedure TfrmReservationProfile.edtNationalityChange(Sender: TObject);
+begin
+  CountryValidate(edtNationality, lblNationalityName);
 end;
 
 procedure TfrmReservationProfile.edCountryExit(Sender: TObject);
@@ -2556,6 +2591,7 @@ begin
     edtGuestAddress3.Text := mAllGuestsAddress3.AsString;
     edtGuestAddress4.Text := mAllGuestsAddress4.AsString;
     edtGuestCountry.Text := mAllGuestsCountry.AsString;
+    edtNationality.Text := mAllGuestsNationality.AsString;
   end
   else
   begin
@@ -2565,6 +2601,7 @@ begin
     edtGuestAddress3.Text := '';
     edtGuestAddress4.Text := '';
     edtGuestCountry.Text := '';
+    edtNationality.Text := '';
   end
 end;
 

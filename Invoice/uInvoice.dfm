@@ -673,7 +673,7 @@ object frmInvoice: TfrmInvoice
         Top = 0
         Width = 1018
         Height = 502
-        ActivePage = tabRoomPrice
+        ActivePage = tabInvoice
         Align = alClient
         TabOrder = 0
         object tabInvoice: TTabSheet
@@ -1349,8 +1349,7 @@ object frmInvoice: TfrmInvoice
               SearchFooter.HintHighlight = 'Highlight occurrences'
               SearchFooter.MatchCaseCaption = 'Match case'
               SortSettings.DefaultFormat = ssAutomatic
-              Version = '8.1.2.0'
-              ExplicitTop = 6
+              Version = '7.9.1.1'
               ColWidths = (
                 24
                 91

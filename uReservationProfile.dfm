@@ -542,12 +542,6 @@ object frmReservationProfile: TfrmReservationProfile
     object TabSheet3: TsTabSheet
       Caption = 'Main'
       TabVisible = False
-      SkinData.CustomColor = False
-      SkinData.CustomFont = False
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Panel3: TsPanel
         Left = 0
         Top = 0
@@ -598,12 +592,6 @@ object frmReservationProfile: TfrmReservationProfile
             SkinData.SkinSection = 'PAGECONTROL'
             object tsContact: TsTabSheet
               Caption = 'Contact'
-              SkinData.CustomColor = False
-              SkinData.CustomFont = False
-              ExplicitLeft = 0
-              ExplicitTop = 0
-              ExplicitWidth = 0
-              ExplicitHeight = 0
               object lblContactName: TsLabel
                 Left = 32
                 Top = 5
@@ -989,12 +977,6 @@ object frmReservationProfile: TfrmReservationProfile
             end
             object TabSheet4: TsTabSheet
               Caption = 'Customer'
-              SkinData.CustomColor = False
-              SkinData.CustomFont = False
-              ExplicitLeft = 0
-              ExplicitTop = 0
-              ExplicitWidth = 0
-              ExplicitHeight = 0
               object Label19: TsLabel
                 Left = 12
                 Top = 32
@@ -1280,12 +1262,6 @@ object frmReservationProfile: TfrmReservationProfile
             object TabSheet5: TsTabSheet
               Caption = 'Customer Tel / Email'
               ImageIndex = 1
-              SkinData.CustomColor = False
-              SkinData.CustomFont = False
-              ExplicitLeft = 0
-              ExplicitTop = 0
-              ExplicitWidth = 0
-              ExplicitHeight = 0
               object Label11: TsLabel
                 Left = 45
                 Top = 29
@@ -1489,18 +1465,21 @@ object frmReservationProfile: TfrmReservationProfile
             Left = 1
             Top = 1
             Width = 228
-            Height = 152
+            Height = 162
             Align = alClient
             Caption = 'Main guest for room :'
             TabOrder = 0
             SkinData.SkinSection = 'GROUPBOX'
             Checked = False
+            ExplicitLeft = -1
+            ExplicitTop = 2
+            ExplicitHeight = 166
             DesignSize = (
               228
-              152)
+              162)
             object lblGuestName: TsLabel
               Left = 35
-              Top = 21
+              Top = 18
               Width = 28
               Height = 11
               Alignment = taRightJustify
@@ -1514,7 +1493,7 @@ object frmReservationProfile: TfrmReservationProfile
             end
             object sLabel9: TsLabel
               Left = 13
-              Top = 40
+              Top = 39
               Width = 50
               Height = 11
               Alignment = taRightJustify
@@ -1529,7 +1508,7 @@ object frmReservationProfile: TfrmReservationProfile
             end
             object sLabel10: TsLabel
               Left = 14
-              Top = 83
+              Top = 81
               Width = 50
               Height = 11
               Alignment = taRightJustify
@@ -1544,7 +1523,7 @@ object frmReservationProfile: TfrmReservationProfile
             end
             object sLabel11: TsLabel
               Left = 14
-              Top = 105
+              Top = 101
               Width = 50
               Height = 11
               Alignment = taRightJustify
@@ -1557,14 +1536,42 @@ object frmReservationProfile: TfrmReservationProfile
               Font.Name = 'Tahoma'
               Font.Style = []
             end
+            object lblNationality: TsLabel
+              Left = 12
+              Top = 143
+              Width = 51
+              Height = 11
+              Alignment = taRightJustify
+              AutoSize = False
+              Caption = 'Nationality:'
+              ParentFont = False
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -9
+              Font.Name = 'Tahoma'
+              Font.Style = []
+            end
+            object lblNationalityName: TsLabel
+              Left = 111
+              Top = 144
+              Width = 3
+              Height = 11
+              Caption = '-'
+              ParentFont = False
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -9
+              Font.Name = 'Tahoma'
+              Font.Style = []
+            end
             object edtGuestName: TsEdit
               AlignWithMargins = True
               Left = 67
-              Top = 15
+              Top = 14
               Width = 109
               Height = 20
               Margins.Left = 65
-              Margins.Top = 2
+              Margins.Top = 1
               Margins.Right = 50
               Margins.Bottom = 0
               Align = alTop
@@ -1584,15 +1591,16 @@ object frmReservationProfile: TfrmReservationProfile
               BoundLabel.Font.Height = -13
               BoundLabel.Font.Name = 'Tahoma'
               BoundLabel.Font.Style = []
+              ExplicitTop = 15
             end
             object edtGuestAddress2: TsEdit
               AlignWithMargins = True
               Left = 67
-              Top = 58
+              Top = 55
               Width = 156
               Height = 20
               Margins.Left = 65
-              Margins.Top = 2
+              Margins.Top = 1
               Margins.Bottom = 0
               Align = alTop
               Color = clWhite
@@ -1611,15 +1619,16 @@ object frmReservationProfile: TfrmReservationProfile
               BoundLabel.Font.Height = -13
               BoundLabel.Font.Name = 'Tahoma'
               BoundLabel.Font.Style = []
+              ExplicitTop = 57
             end
             object edtGuestAddress3: TsEdit
               AlignWithMargins = True
               Left = 67
-              Top = 80
+              Top = 76
               Width = 156
               Height = 20
               Margins.Left = 65
-              Margins.Top = 2
+              Margins.Top = 1
               Margins.Bottom = 0
               Align = alTop
               Color = clWhite
@@ -1638,15 +1647,16 @@ object frmReservationProfile: TfrmReservationProfile
               BoundLabel.Font.Height = -13
               BoundLabel.Font.Name = 'Tahoma'
               BoundLabel.Font.Style = []
+              ExplicitTop = 79
             end
             object edtGuestAddress4: TsEdit
               AlignWithMargins = True
               Left = 67
-              Top = 102
+              Top = 97
               Width = 156
               Height = 20
               Margins.Left = 65
-              Margins.Top = 2
+              Margins.Top = 1
               Margins.Bottom = 0
               Align = alTop
               Color = clWhite
@@ -1665,15 +1675,16 @@ object frmReservationProfile: TfrmReservationProfile
               BoundLabel.Font.Height = -13
               BoundLabel.Font.Name = 'Tahoma'
               BoundLabel.Font.Style = []
+              ExplicitTop = 101
             end
             object edtGuestAddress1: TsEdit
               AlignWithMargins = True
               Left = 67
-              Top = 37
+              Top = 35
               Width = 156
               Height = 19
               Margins.Left = 65
-              Margins.Top = 2
+              Margins.Top = 1
               Margins.Bottom = 0
               Align = alTop
               Color = clWhite
@@ -1692,11 +1703,12 @@ object frmReservationProfile: TfrmReservationProfile
               BoundLabel.Font.Height = -13
               BoundLabel.Font.Name = 'Tahoma'
               BoundLabel.Font.Style = []
+              ExplicitTop = 36
             end
             object sPanel2: TsPanel
               AlignWithMargins = True
               Left = 2
-              Top = 122
+              Top = 117
               Width = 224
               Height = 23
               Margins.Left = 0
@@ -1707,6 +1719,7 @@ object frmReservationProfile: TfrmReservationProfile
               BevelOuter = bvNone
               TabOrder = 7
               OnResize = pnlTelephoneResize
+              ExplicitTop = 122
               object sLabel8: TsLabel
                 Left = 10
                 Top = 6
@@ -1724,7 +1737,7 @@ object frmReservationProfile: TfrmReservationProfile
               end
               object lblGuestCountry: TsLabel
                 Left = 109
-                Top = 7
+                Top = 6
                 Width = 3
                 Height = 11
                 Caption = '-'
@@ -1738,11 +1751,11 @@ object frmReservationProfile: TfrmReservationProfile
               object edtGuestCountry: TsEdit
                 AlignWithMargins = True
                 Left = 65
-                Top = 3
+                Top = 1
                 Width = 35
                 Height = 20
                 Margins.Left = 58
-                Margins.Top = 2
+                Margins.Top = 1
                 Margins.Bottom = 0
                 Color = clWhite
                 Constraints.MaxWidth = 140
@@ -1766,7 +1779,7 @@ object frmReservationProfile: TfrmReservationProfile
             end
             object btnMainGuestSelectProfile: TsButton
               Left = 178
-              Top = 13
+              Top = 12
               Width = 23
               Height = 23
               Hint = 'Select a guest profile'
@@ -1780,7 +1793,7 @@ object frmReservationProfile: TfrmReservationProfile
             end
             object btnMainGuestEditProfile: TsButton
               Left = 202
-              Top = 13
+              Top = 12
               Width = 23
               Height = 23
               Hint = 'Edit guest profile'
@@ -1792,24 +1805,63 @@ object frmReservationProfile: TfrmReservationProfile
               OnClick = btnMainGuestEditProfileClick
               SkinData.SkinSection = 'BUTTON'
             end
+            object edtNationality: TsEdit
+              AlignWithMargins = True
+              Left = 67
+              Top = 139
+              Width = 35
+              Height = 20
+              Margins.Left = 58
+              Margins.Top = 1
+              Margins.Bottom = 0
+              Color = clWhite
+              Constraints.MaxWidth = 140
+              Font.Charset = ANSI_CHARSET
+              Font.Color = clBlack
+              Font.Height = -9
+              Font.Name = 'Arial'
+              Font.Style = []
+              MaxLength = 100
+              ParentFont = False
+              ReadOnly = True
+              TabOrder = 8
+              OnChange = edtNationalityChange
+              SkinData.SkinSection = 'EDIT'
+              BoundLabel.Font.Charset = DEFAULT_CHARSET
+              BoundLabel.Font.Color = clWindowText
+              BoundLabel.Font.Height = -13
+              BoundLabel.Font.Name = 'Tahoma'
+              BoundLabel.Font.Style = []
+            end
           end
           object gbxAllGuestsNationality: TsGroupBox
             Left = 1
-            Top = 153
+            Top = 163
             Width = 228
-            Height = 50
+            Height = 40
             Align = alBottom
             TabOrder = 1
             Checked = False
+            ExplicitTop = 164
             object btnChangeNationality: TsButton
-              Left = 67
-              Top = 15
-              Width = 150
-              Height = 25
+              Left = 4
+              Top = 8
+              Width = 109
+              Height = 29
               Hint = 'Change nationality of all guests'
               Caption = 'Change all nationalities'
               TabOrder = 0
               OnClick = btnChangeNationalityClick
+            end
+            object btnChangeCountry: TsButton
+              Left = 116
+              Top = 8
+              Width = 109
+              Height = 29
+              Hint = 'Change nationality of all guests'
+              Caption = 'Change all countries'
+              TabOrder = 1
+              OnClick = btnChangeCountryClick
             end
           end
         end
@@ -1884,6 +1936,8 @@ object frmReservationProfile: TfrmReservationProfile
               ScrollBars = ssVertical
               TabOrder = 0
               SkinData.SkinSection = 'EDIT'
+              ExplicitLeft = 3
+              ExplicitTop = 20
             end
           end
           object GroupBox2: TsGroupBox
@@ -2017,12 +2071,6 @@ object frmReservationProfile: TfrmReservationProfile
     SkinData.SkinSection = 'PAGECONTROL'
     object RoomsTab: TsTabSheet
       Caption = 'Rooms'
-      SkinData.CustomColor = False
-      SkinData.CustomFont = False
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object grRooms: TcxGrid
         Left = 0
         Top = 86
@@ -2912,12 +2960,6 @@ object frmReservationProfile: TfrmReservationProfile
     object GuestsTab: TsTabSheet
       Caption = 'Guests'
       ImageIndex = 1
-      SkinData.CustomColor = False
-      SkinData.CustomFont = False
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Panel10: TsPanel
         Left = 0
         Top = 0
@@ -2978,8 +3020,8 @@ object frmReservationProfile: TfrmReservationProfile
         object chkShowAllGuests: TsCheckBox
           Left = 333
           Top = 11
-          Width = 102
-          Height = 19
+          Width = 94
+          Height = 20
           Caption = 'Show all guests'
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 4
@@ -3522,12 +3564,6 @@ object frmReservationProfile: TfrmReservationProfile
     end
     object sTabSheet2: TsTabSheet
       Caption = 'Alerts'
-      SkinData.CustomColor = False
-      SkinData.CustomFont = False
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object pnlAlertHolder: TsPanel
         Left = 0
         Top = 0
@@ -3542,12 +3578,6 @@ object frmReservationProfile: TfrmReservationProfile
     object InvoicesTab: TsTabSheet
       Caption = 'Afgehandelde facturen'
       ImageIndex = 2
-      SkinData.CustomColor = False
-      SkinData.CustomFont = False
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Panel11: TsPanel
         Left = 0
         Top = 0
@@ -4377,6 +4407,10 @@ object frmReservationProfile: TfrmReservationProfile
     end
     object mAllGuestsMainName: TBooleanField
       FieldName = 'MainName'
+    end
+    object mAllGuestsNationality: TWideStringField
+      FieldName = 'Nationality'
+      Size = 2
     end
   end
   object mAllGuestsDS: TDataSource

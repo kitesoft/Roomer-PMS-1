@@ -239,7 +239,7 @@ object frmGuestProfile2: TfrmGuestProfile2
         Left = 250
         Top = 109
         Width = 20
-        Height = 18
+        Height = 16
         TabOrder = 1
         SkinData.SkinSection = 'CHECKBOX'
         ImgChecked = 0
@@ -393,7 +393,7 @@ object frmGuestProfile2: TfrmGuestProfile2
         Left = 250
         Top = 131
         Width = 20
-        Height = 18
+        Height = 16
         TabOrder = 5
         SkinData.SkinSection = 'CHECKBOX'
         ImgChecked = 0
@@ -505,8 +505,6 @@ object frmGuestProfile2: TfrmGuestProfile2
     Align = alClient
     TabOrder = 2
     LookAndFeel.NativeStyle = False
-    ExplicitLeft = 1
-    ExplicitTop = 411
     object tvData: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       Navigator.Buttons.First.Visible = True
@@ -641,6 +639,21 @@ object frmGuestProfile2: TfrmGuestProfile2
         Options.ShowEditButtons = isebAlways
         Width = 57
       end
+      object tvDataNationality: TcxGridDBColumn
+        DataBinding.FieldName = 'Nationality'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Default = True
+            ImageIndex = 31
+            Kind = bkGlyph
+          end>
+        Properties.Images = DImages.PngImageList1
+        Properties.ViewStyle = vsHideCursor
+        Properties.OnButtonClick = tvDataNationalityPropertiesButtonClick
+        Options.ShowEditButtons = isebAlways
+        Width = 62
+      end
       object tvDatatel1: TcxGridDBColumn
         DataBinding.FieldName = 'tel1'
         Width = 72
@@ -737,22 +750,6 @@ object frmGuestProfile2: TfrmGuestProfile2
       OnClick = sButton2Click
       SkinData.SkinSection = 'BUTTON'
     end
-    object sButton3: TsButton
-      Left = 531
-      Top = 2
-      Width = 84
-      Height = 25
-      Hint = 'Cancel and close'
-      Anchors = [akTop, akRight]
-      Caption = 'Cancel'
-      ImageIndex = 4
-      Images = DImages.PngImageList1
-      ModalResult = 2
-      TabOrder = 1
-      Visible = False
-      OnClick = btnCancelClick
-      SkinData.SkinSection = 'BUTTON'
-    end
   end
   object m_: TdxMemData
     Indexes = <>
@@ -845,6 +842,10 @@ object frmGuestProfile2: TfrmGuestProfile2
     object m_PersonsProfilesId: TIntegerField
       FieldName = 'PersonsProfilesId'
     end
+    object m_Nationality: TWideStringField
+      FieldName = 'Nationality'
+      Size = 2
+    end
   end
   object mnuOther: TPopupMenu
     Left = 616
@@ -894,6 +895,7 @@ object frmGuestProfile2: TfrmGuestProfile2
     object prLink_grData: TdxGridReportLink
       Active = True
       Component = grData
+      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -906,7 +908,7 @@ object frmGuestProfile2: TfrmGuestProfile2
       PrinterPage.PageSize.Y = 297000
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
-      ReportDocument.CreationDate = 42653.891623576390000000
+      ReportDocument.CreationDate = 42682.697080520830000000
       AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end

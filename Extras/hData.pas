@@ -13963,6 +13963,7 @@ begin
   s := s + '   ,Address3 ' + #10;
   s := s + '   ,Address4 ' + #10;
   s := s + '   ,Country ' + #10;
+  s := s + '   ,Nationality ' + #10;
   s := s + '   ,Company ' + #10;
 
   s := s + '   ,CompanyName ' + #10;
@@ -14001,6 +14002,7 @@ begin
   s := s + ' , ' + _db(theData.Address3) + #10;
   s := s + ' , ' + _db(theData.Address4) + #10;
   s := s + ' , ' + _db(theData.Country) + #10;
+  s := s + ' , ' + _db(theData.Nationality) + #10;
   s := s + ' , ' + _db(theData.Company) + #10;
 
   s := s + ' , ' + _db(theData.CompanyName) + #10;
@@ -14067,6 +14069,7 @@ begin
       result.Address3 := rSet.fieldbyname('Address3').asString;
       result.Address4 := rSet.fieldbyname('Address4').asString;
       result.Country := rSet.fieldbyname('Country').asString;
+      result.Nationality := rSet.fieldbyname('Nationality').asString;
       result.Company := rSet.fieldbyname('Company').asString;
 
       result.CompanyName := rSet.fieldbyname('CompanyName').AsString;
@@ -14120,6 +14123,7 @@ begin
       result.Address3 := rSet.fieldbyname('Address3').asString;
       result.Address4 := rSet.fieldbyname('Address4').asString;
       result.Country := rSet.fieldbyname('Country').asString;
+      result.Nationality := rSet.fieldbyname('Nationality').asString;
       result.Company := rSet.fieldbyname('Company').asString;
 
       result.CompanyName := rSet.fieldbyname('CompanyName').AsString;
@@ -14225,6 +14229,7 @@ begin
   s := s + '  ,`Address3`        = ' + _db(theData.Address3) + ' ' + #10;
   s := s + '  ,`Address4`        = ' + _db(theData.Address4) + ' ' + #10;
   s := s + '  ,`Country`         = ' + _db(theData.Country) + ' ' + #10;
+  s := s + '  ,`Nationality`     = ' + _db(theData.Nationality) + ' ' + #10;
   s := s + '  ,`Company`         = ' + _db(theData.Company) + ' ' + #10;
 
   s := s + '  ,`CompanyName`  = ' + _db(theData.CompanyName) + ' ' + #10;

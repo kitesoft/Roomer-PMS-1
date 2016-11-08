@@ -1426,6 +1426,7 @@ begin
           personData.Address4 := ContactAddress4;
 //0810-hj           personData.Country := ContactCountry;
           personData.Country := Country;
+          personData.Nationality := Country;
           personData.PersonsProfilesId := FHomeCustomer.PersonProfileId;
 
           personData.Tel1 := ContactPhone;

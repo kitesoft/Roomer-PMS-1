@@ -899,8 +899,15 @@ begin
 									 ' From %s to %s.' + #10#10 +
                                      //   'Ertu viss ?');
 									  'Confirm ?');
-//  constants.Add('shTx_ReservationProfile_NationalityChangeFailed', 'Ekki tókst að breyta landi');
+  constants.Add('shTx_ReservationProfile_ChangeCountryConfirmation',
+                                     //   'Breyta þjóðerni allra gesta pöntunnar ' + #10 +
+									 'Change country of origin of all guests ' + #10 +
+                                     //   ' from %s to %s.' + #10#10 +
+									 ' From %s to %s.' + #10#10 +
+                                     //   'Ertu viss ?');
+									  'Confirm ?');
   constants.Add('shTx_ReservationProfile_NationalityChangeFailed', 'Changing nationality failed');
+  constants.Add('shTx_ReservationProfile_CountryChangeFailed', 'Changing nationality failed');
   constants.Add('shTx_ReservationProfile_Outdated', 'OutDated');
   constants.Add('shTx_ReservationProfile_ChangeAllRooms', 'Change all rooms to ');
   constants.Add('shTx_ReservationProfile_BreakfastInc', 'Breakfast included ?');

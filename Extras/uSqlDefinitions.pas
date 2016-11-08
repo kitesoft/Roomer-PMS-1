@@ -1317,6 +1317,7 @@ select_ReservationProfile_allGuestsSQL : string =
 '   , persons.Address3 '+
 '   , persons.Address4 '+
 '   , persons.Country '+
+'   , persons.Nationality '+
 '   , persons.PID '+
 '   , persons.MainName '+
 ' FROM '+
@@ -2288,7 +2289,7 @@ select_telLog_refresh : string =
   ///s := s + ' WHERE (RoomType = ' + quotedstr(sRoomType) + ') '+#10;
 
   select_RoomTypeRuleExistsInOther : string =
-  ' SELECT Roomtype FROM [Roomtypes] '+
+  ' SELECT Roomtype FROM roomtypes '+
   ' WHERE (Roomtype = %s )';
 
 
@@ -3454,7 +3455,7 @@ select_Item_Exists : string =
 ' WHERE (Item = %s) ';  //' + quotedstr(sItem) + '
 
 select_ItemType_Exists : string =
-' SELECT ItemType FROM [ItemTypes] '#10+
+' SELECT ItemType FROM itemtypes '#10+
 ' WHERE (ItemType = %s) ';  //' + _db(sItemType) + '
 
 
@@ -3606,7 +3607,7 @@ select_DraftInv_exists : string =
 ' , SplitNumber '#10+
 ' , Invoicenumber '#10+
 ' , Finished '#10+
-'   FROM [invoiceHeads] '#10+
+'   FROM invoiceheads '#10+
 ' WHERE '#10+
 '   RoomReservation = %s '#10+  //' + inttostr(RoomReservation) + '
 '   and SplitNumber = 0 '#10+ // roomInvoice
@@ -3620,7 +3621,7 @@ select_DraftInvGroup_exists : string =
 ' , SplitNumber '#10+
 ' , Invoicenumber '#10+
 ' , Finished '#10+
-'   FROM [invoiceHeads] '#10+
+'   FROM invoiceheads '#10+
 ' WHERE '#10+
 '   Reservation = %d '#10+  //' + inttostr(Reservation) + '
 '   and RoomReservation = 0 '#10+ // roomInvoice
@@ -3651,13 +3652,13 @@ select_DraftInv_Create : string =
 ' ,Address3 '#10+
 ' ,Address4 '#10+
 ' ,Country '#10+
-' FROM [Reservations] '#10+
+' FROM reservations '#10+
 ' WHERE Reservation = %d ';  //' + inttostr(Reservation)
 
 select_DraftInv_Create2 : string =
 ' SELECT '#10+
 '   currency '#10+
-' FROM [RoomReservations] '#10+
+' FROM roomreservations '#10+
 ' WHERE RoomReservation = %d ';  //' + inttostr(RoomReservation)
 
 select_DraftInv_RRUpdateAmounts : string =
@@ -4046,11 +4047,11 @@ select_GET_CountryGroupDefault : string =
     ;
 
 select_CountryGroupExistsInOther : string =
-' SELECT CountryGroup FROM [Countries] '#10+
+' SELECT CountryGroup FROM countries '#10+
 ' WHERE (CountryGroup = %s) ';  //' + quotedstr(sCountryGroup) + '
 
 select_CountryGroupExist : string =
-' SELECT CountryGroup FROM [CountryGroups] '#10+
+' SELECT CountryGroup FROM countrygroups '#10+
 ' WHERE (CountryGroup = %s) ';  //' + quotedstr(sCode) + '
 
 select_GET_CountryHolderByCountry : string =
@@ -4091,31 +4092,31 @@ select_GET_CountryCurrency : string =
 '  (Country = %s) ';  //N'+quotedstr(sCode)+'
 
 select_CountryExistsInOther : string =
-' SELECT Country FROM [customers] '#10+
+' SELECT Country FROM customers '#10+
 ' WHERE (Country = %s) ';  //' + quotedstr(sCountry) + '
 
 select_CountryExistsInOther2 : string =
-' SELECT Country FROM [invoiceheads] '#10+
+' SELECT Country FROM invoiceheads '#10+
 ' WHERE (Country = %s) ';  //' + quotedstr(sCountry) + '
 
 select_CountryExistsInOther3 : string =
-' SELECT Country FROM [persons] '#10+
+' SELECT Country FROM persons '#10+
 ' WHERE (Country = %s) ';  //' + quotedstr(sCountry) + '
 
 select_CountryExistsInOther4 : string =
-' SELECT Country FROM [staffMembers] '#10+
+' SELECT Country FROM staffmembers '#10+
 ' WHERE (Country = %s) ';  //' + quotedstr(sCountry) + '
 
 select_CountryExistsInOther5 : string =
-' SELECT Country FROM [staffMembers] '#10+
+' SELECT Country FROM staffmembers '#10+
 ' WHERE (Country = %s) ';  //' + quotedstr(sCountry) + '
 
 select_CountryExistsInOther6 : string =
-' SELECT Country FROM [reservations] '#10+
+' SELECT Country FROM reservations '#10+
 ' WHERE (Country = %s) ';  //' + quotedstr(sCountry) + '
 
 select_CountryExists : string =
-' SELECT Country FROM [Countries] '#10+
+' SELECT Country FROM countries '#10+
 ' WHERE (Country = %s) ';  //' + quotedstr(sCode) + '
 
 select_GET_CurrencyHolderByCurrency : string =
@@ -4135,31 +4136,31 @@ select_GET_CurrencyHolderByCurrency : string =
 '  (currency = %s) ';  //N'+quotedstr(getItem)+'
 
 select_currencyExistsInOther  : string =
-' SELECT NativeCurrency FROM [control] '#10+
+' SELECT NativeCurrency FROM control '#10+
 ' WHERE (NativeCurrency = %s) ';  //' + quotedstr(sCurrency) + '
 
 select_currencyExistsInOther1  : string =
-' SELECT Currency FROM [Countries] '#10+
+' SELECT Currency FROM countries '#10+
 ' WHERE (Currency = %s) ';  //' + quotedstr(sCurrency) + '
 
 select_currencyExistsInOther2  : string =
-' SELECT Currency FROM [Customers] '#10+
+' SELECT Currency FROM customers '#10+
 ' WHERE (Currency = %s) ';  //' + quotedstr(sCurrency) + '
 
 select_currencyExistsInOther3  : string =
-' SELECT Currency FROM [PriceTypes] '#10+
+' SELECT Currency FROM pricetypes '#10+
 ' WHERE (Currency = %s) ';  //' + quotedstr(sCurrency) + '
 
 select_currencyExistsInOther4  : string =
-' SELECT Currency FROM [invoicelines] '#10+
+' SELECT Currency FROM invoicelines '#10+
 ' WHERE (Currency = %s) ';  //' + quotedstr(sCurrency) + '
 
 select_currencyExistsInOther5  : string =
-' SELECT Currency FROM [Payments] '#10+
+' SELECT Currency FROM payments '#10+
 ' WHERE (Currency = %s) ';  //' + quotedstr(sCurrency) + '
 
 select_currencyExistsInOther6  : string =
-' SELECT Currency FROM [RoomReservations] '#10+
+' SELECT Currency FROM roomreservations '#10+
 ' WHERE (Currency = %s) ';  //' + quotedstr(sCurrency) + '
 
 
@@ -5111,77 +5112,78 @@ select_customer_ByCustomer : string =
 
 select_ItemType_ByItemType : string =
 '  SELECT '#10+
-'     [ItemType] '#10+
-'    ,[Description] '#10+
-'    ,[VATCode] '#10+
-'    ,[AccItemLink] '#10+
-'    ,[ID] '#10+
-'    ,[Active] '#10+
+'     ItemType '#10+
+'    ,Description '#10+
+'    ,VATCode '#10+
+'    ,AccItemLink '#10+
+'    ,ID '#10+
+'    ,Active '#10+
 '  FROM '#10+
-'    [ItemTypes] '#10+
+'    ItemTypes '#10+
 '  WHERE '#10+
-'    [ItemType] = %d ';
+'    ItemType = %d ';
 
 // @ItemType varchar(20)
 
 
 select_PERSON : string =
 '  SELECT '#10+
-'     [Person] '#10+
-'    ,[RoomReservation] '#10+
-'    ,[Reservation] '#10+
-'    ,[Name] '#10+
-'    ,[Surname] '#10+
-'    ,[Address1] '#10+
-'    ,[Address2] '#10+
-'    ,[Address3] '#10+
-'    ,[Address4] '#10+
-'    ,[Country] '#10+
-'    ,[Company] '#10+
-'    , [GuestType] '#10+
-'    ,[Information] '#10+
-'    ,[PID] '#10+
-'    ,[MainName] '#10+
-'    ,[Customer] '#10+
-'    ,[peTmp] '#10+
-'    ,[hgrID] '#10+
-'    ,[HallReservation] '#10+
-'    ,[Tel1] '#10+
-'    ,[Tel2] '#10+
-'    ,[Fax] '#10+
-'    ,[Email] '#10+
+'     Person '#10+
+'    ,RoomReservation '#10+
+'    ,Reservation '#10+
+'    ,Name '#10+
+'    ,Surname '#10+
+'    ,Address1 '#10+
+'    ,Address2 '#10+
+'    ,Address3 '#10+
+'    ,Address4 '#10+
+'    ,Country '#10+
+'    ,Nationality '#10+
+'    ,Company '#10+
+'    ,GuestType '#10+
+'    ,Information '#10+
+'    ,PID '#10+
+'    ,MainName '#10+
+'    ,Customer '#10+
+'    ,peTmp '#10+
+'    ,hgrID '#10+
+'    ,HallReservation '#10+
+'    ,Tel1 '#10+
+'    ,Tel2 '#10+
+'    ,Fax '#10+
+'    ,Email '#10+
 '  FROM '#10+
-'    [Persons] '#10+
+'    Persons '#10+
 '  WHERE '#10+
 '    Person = %d ';
 //	@Person int
 
 select_Person_By_roomreservation : string =
 '  SELECT '#10+
-'     [Person] '#10+
-'    ,[RoomReservation] '#10+
-'    ,[Reservation] '#10+
-'    ,[Name] '#10+
-'    ,[Surname] '#10+
-'    ,[Address1] '#10+
-'    ,[Address2] '#10+
-'    ,[Address3] '#10+
-'    ,[Address4] '#10+
-'    ,[Country] '#10+
-'    ,[Company] '#10+
-'    ,[GuestType] '#10+
-'    ,[Information] '#10+
-'    ,[PID] '#10+
-'    ,[MainName] '#10+
-'    ,[Customer] '#10+
-'    ,[peTmp] '#10+
-'    ,[hgrID] '#10+
-'    ,[HallReservation] '#10+
-'    ,[Tel1] '#10+
-'    ,[Tel2] '#10+
-'    ,[Fax] '#10+
-'    ,[Email] '#10+
-'  FROM [Persons] '#10+
+'     Person '#10+
+'    ,RoomReservation '#10+
+'    ,Reservation '#10+
+'    ,Name '#10+
+'    ,Surname '#10+
+'    ,Address1 '#10+
+'    ,Address2 '#10+
+'    ,Address3 '#10+
+'    ,Address4 '#10+
+'    ,Country '#10+
+'    ,Company '#10+
+'    ,GuestType '#10+
+'    ,Information '#10+
+'    ,PID '#10+
+'    ,MainName '#10+
+'    ,Customer '#10+
+'    ,peTmp '#10+
+'    ,hgrID '#10+
+'    ,HallReservation '#10+
+'    ,Tel1 '#10+
+'    ,Tel2 '#10+
+'    ,Fax '#10+
+'    ,Email '#10+
+'  FROM Persons '#10+
 '    WHERE roomreservation = %d ';
 
 //	@roomreservation int
