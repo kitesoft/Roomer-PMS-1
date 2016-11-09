@@ -2,7 +2,7 @@
     <PropertyGroup>
         <ProjectGuid>{436E2CCE-115E-475F-9C3E-19C03F70A4D0}</ProjectGuid>
         <MainSource>Roomer.dpr</MainSource>
-        <Config Condition="'$(Config)'==''">Debug</Config>
+        <Config Condition="'$(Config)'==''">DebugBas</Config>
         <DCC_DCCCompiler>DCC32</DCC_DCCCompiler>
         <ProjectVersion>14.3</ProjectVersion>
         <FrameworkType>VCL</FrameworkType>
@@ -463,7 +463,7 @@
             <Form>frmLocations</Form>
         </DCCReference>
         <DCCReference Include="uRegistryServices.pas"/>
-        <DCCReference Include="uUtils.pas"/>
+        <DCCReference Include="RoomerUtils\uUtils.pas"/>
         <DCCReference Include="uPersonContactType.pas">
             <Form>frmPersonContactType</Form>
         </DCCReference>
@@ -704,7 +704,7 @@
         </DCCReference>
         <DCCReference Include="uActivityLogs.pas"/>
         <DCCReference Include="uInvoiceContainer.pas"/>
-        <DCCReference Include="XmlUtils.pas"/>
+        <DCCReference Include="RoomerUtils\XmlUtils.pas"/>
         <DCCReference Include="uInvoiceLineEdit.pas">
             <Form>FrmInvoiceLineEdit</Form>
         </DCCReference>
@@ -819,6 +819,7 @@
             <Form>frmBaseRoomerDialogForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="RoomerUtils\uSQLUtils.pas"/>
         <None Include="Roomer.todo"/>
         <None Include="notes.txt"/>
         <None Include="Roomer.inc"/>

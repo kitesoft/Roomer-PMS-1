@@ -38,50 +38,6 @@ object frmBaseRoomerForm: TfrmBaseRoomerForm
     OnDrawPanel = sbStatusBarDrawPanel
     SkinData.SkinSection = 'STATUSBAR'
   end
-  object sbProgressBar: TAdvSmoothProgressBar
-    Left = 272
-    Top = 144
-    Width = 150
-    Height = 17
-    Step = 10.000000000000000000
-    Maximum = 100.000000000000000000
-    ProgressAnimation = False
-    Appearance.BackGroundFill.Color = clInactiveBorder
-    Appearance.BackGroundFill.ColorTo = clGradientActiveCaption
-    Appearance.BackGroundFill.ColorMirror = clNone
-    Appearance.BackGroundFill.ColorMirrorTo = clNone
-    Appearance.BackGroundFill.GradientType = gtVertical
-    Appearance.BackGroundFill.GradientMirrorType = gtSolid
-    Appearance.BackGroundFill.BorderColor = clSilver
-    Appearance.BackGroundFill.Rounding = 0
-    Appearance.BackGroundFill.ShadowOffset = 0
-    Appearance.BackGroundFill.Glow = gmNone
-    Appearance.ProgressFill.Color = clBlue
-    Appearance.ProgressFill.ColorTo = 16768452
-    Appearance.ProgressFill.ColorMirror = 16765357
-    Appearance.ProgressFill.ColorMirrorTo = 16767936
-    Appearance.ProgressFill.GradientType = gtVertical
-    Appearance.ProgressFill.GradientMirrorType = gtVertical
-    Appearance.ProgressFill.BorderColor = 16765357
-    Appearance.ProgressFill.Rounding = 0
-    Appearance.ProgressFill.ShadowOffset = 0
-    Appearance.ProgressFill.Glow = gmNone
-    Appearance.Font.Charset = DEFAULT_CHARSET
-    Appearance.Font.Color = clWindowText
-    Appearance.Font.Height = -11
-    Appearance.Font.Name = 'Tahoma'
-    Appearance.Font.Style = []
-    Appearance.ProgressFont.Charset = DEFAULT_CHARSET
-    Appearance.ProgressFont.Color = clWindowText
-    Appearance.ProgressFont.Height = -11
-    Appearance.ProgressFont.Name = 'Tahoma'
-    Appearance.ProgressFont.Style = []
-    Appearance.ValueFormat = '%.0f%%'
-    Version = '1.9.0.2'
-    OnPositionChanged = sbProgressBarPositionChanged
-    Visible = False
-    TMSStyle = 4
-  end
   object psRoomerBase: TcxPropertiesStore
     Components = <
       item

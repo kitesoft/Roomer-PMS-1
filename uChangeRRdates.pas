@@ -884,8 +884,8 @@ begin
             Rset.Next;
           end;
 
-          sbProgressBar.Maximum := iCount * 2;
-          sbProgressBar.Position := 0;
+          ProgressBar.Maximum := iCount * 2;
+          ProgressBar.Position := 0;
           iCount := 0;
 
           Rset.First;
@@ -898,7 +898,7 @@ begin
             RR_ChangeDates(RoomReservation, dtArrival.date, dtDeparture.date, 0, isPaid, false);
 
             inc(iCount);
-            sbProgressBar.Position := iCount;
+            ProgressBar.Position := iCount;
             Rset.Next;
           end;
 
@@ -914,7 +914,7 @@ begin
             d.roomerMainDataSet.SystempackagesRecalcInvoice(rr, RoomReservation);
 
             inc(iCount);
-            sbProgressBar.Position := iCount;
+            ProgressBar.Position := iCount;
             Rset.Next;
           end;
         finally

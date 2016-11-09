@@ -753,9 +753,6 @@ inherited frmChangeRRdates: TfrmChangeRRdates
       end
     end
   end
-  inherited sbProgressBar: TAdvSmoothProgressBar
-    TMSStyle = 4
-  end
   inherited psRoomerBase: TcxPropertiesStore
     Left = 288
     Top = 24

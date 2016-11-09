@@ -100,7 +100,7 @@ uses
   uFileDependencyManager in 'uFileDependencyManager.pas',
   uLocations2 in 'uLocations2.pas' {frmLocations},
   uRegistryServices in 'uRegistryServices.pas',
-  uUtils in 'uUtils.pas',
+  uUtils in 'RoomerUtils\uUtils.pas',
   uPersonContactType in 'uPersonContactType.pas' {frmPersonContactType},
   uSqlDefinitions in 'Extras\uSqlDefinitions.pas',
   uChannelManager in 'uChannelManager.pas' {frmChannelManager},
@@ -190,7 +190,7 @@ uses
   uInvoice2015 in 'uInvoice2015.pas' {FrmInvoice2015},
   uActivityLogs in 'uActivityLogs.pas',
   uInvoiceContainer in 'uInvoiceContainer.pas',
-  XmlUtils in 'XmlUtils.pas',
+  XmlUtils in 'RoomerUtils\XmlUtils.pas',
   uInvoiceLineEdit in 'uInvoiceLineEdit.pas' {FrmInvoiceLineEdit},
   uFrmMergePortfolios in 'uFrmMergePortfolios.pas' {frmMergePortfolios},
   uStaffCommunication in 'uStaffCommunication.pas',
@@ -252,7 +252,8 @@ uses
   uMessageList in 'uMessageList.pas',
   uRoomerVersionInfo in 'Extras\uRoomerVersionInfo.pas',
   uCleaningNotesDefinitions in 'Definitions\uCleaningNotesDefinitions.pas',
-  uRoomerDialogForm in 'RoomerForm\uRoomerDialogForm.pas' {frmBaseRoomerDialogForm};
+  uRoomerDialogForm in 'RoomerForm\uRoomerDialogForm.pas' {frmBaseRoomerDialogForm},
+  uSQLUtils in 'RoomerUtils\uSQLUtils.pas';
 
 {$R *.RES}
 

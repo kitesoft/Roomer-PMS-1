@@ -11,6 +11,8 @@ inherited frmDeparturesReport: TfrmDeparturesReport
   inherited sbStatusBar: TsStatusBar
     Top = 565
     Width = 1055
+    ExplicitTop = 565
+    ExplicitWidth = 1055
   end
   object pnlFilter: TsPanel [1]
     Left = 0
@@ -51,8 +53,8 @@ inherited frmDeparturesReport: TfrmDeparturesReport
       object rbToday: TsRadioButton
         Left = 4
         Top = 21
-        Width = 58
-        Height = 19
+        Width = 50
+        Height = 20
         Caption = 'Today'
         Checked = True
         TabOrder = 0
@@ -62,8 +64,8 @@ inherited frmDeparturesReport: TfrmDeparturesReport
       object rbTomorrow: TsRadioButton
         Left = 4
         Top = 46
-        Width = 76
-        Height = 19
+        Width = 68
+        Height = 20
         Caption = 'Tomorrow'
         TabOrder = 1
         OnClick = rbRadioButtonClick
@@ -71,8 +73,8 @@ inherited frmDeparturesReport: TfrmDeparturesReport
       object rbManualRange: TsRadioButton
         Left = 119
         Top = 21
-        Width = 122
-        Height = 19
+        Width = 114
+        Height = 20
         Caption = 'Manual date range:'
         TabOrder = 2
         OnClick = rbRadioButtonClick
@@ -312,17 +314,15 @@ inherited frmDeparturesReport: TfrmDeparturesReport
       object tvDeparturesListExpectedCheckOutTime: TcxGridDBColumn
         Caption = 'Expected COT'
         DataBinding.FieldName = 'ExpectedCheckOutTime'
-        PropertiesClassName = 'TcxTimeEditProperties'
-        Properties.UseTimeFormatWhenUnfocused = False
+        PropertiesClassName = 'TcxTextEditProperties'
+        Properties.Alignment.Horz = taCenter
+        OnGetDisplayText = tvDeparturesListExpectedCheckOutTimeGetDisplayText
         Width = 79
       end
     end
     object lvDeparturesList: TcxGridLevel
       GridView = tvDeparturesList
     end
-  end
-  inherited sbProgressBar: TAdvSmoothProgressBar
-    TMSStyle = 4
   end
   inherited cxsrRoomerStyleRepository: TcxStyleRepository
     PixelsPerInch = 96
@@ -507,7 +507,7 @@ inherited frmDeparturesReport: TfrmDeparturesReport
       PrinterPage.ScaleMode = smFit
       PrinterPage._dxMeasurementUnits_ = 2
       PrinterPage._dxLastMU_ = 2
-      ReportDocument.CreationDate = 42682.515052152780000000
+      ReportDocument.CreationDate = 42683.480430601850000000
       ReportTitle.Font.Charset = DEFAULT_CHARSET
       ReportTitle.Font.Color = clBlack
       ReportTitle.Font.Height = -19
