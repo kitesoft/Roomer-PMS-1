@@ -5,7 +5,8 @@ unit sColorSelect;
 interface
 
 uses
-  Windows, Messages, SysUtils, Classes, Graphics, Dialogs, Buttons, sSpeedButton;
+  Windows, Messages, SysUtils, Classes, Graphics, Dialogs, Buttons,
+  sSpeedButton;
 
 
 type

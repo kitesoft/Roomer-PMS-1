@@ -74,7 +74,7 @@ type
     procedure ClickCheck; virtual;
     function GetCheckWidth: Integer;
   public
-    constructor Create (AOwner: TComponent); override;
+    constructor Create(AOwner: TComponent); override;
     procedure CreateWnd; override;
     destructor Destroy; override;
 {$ENDIF} // NOTFORHELP
@@ -636,6 +636,7 @@ begin
         else begin
           Key := 0;
           ItemIndex := i;
+          Click;
         end;
     end;
 
@@ -647,6 +648,7 @@ begin
         else begin
           Key := 0;
           ItemIndex := i;
+          Click;
         end;
     end
     else

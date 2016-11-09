@@ -153,6 +153,7 @@ type
     GripVertical: integer;
   end;
 
+  TacFormCallBack = procedure(SkinProvider: TComponent; Data: integer = 0);
 
 procedure CopyExForms(SkinManager: TComponent);
 procedure LockForms  (SkinManager: TComponent);
@@ -161,6 +162,7 @@ procedure AppBroadCastS(var Message);
 procedure SendToHooked (var Message);
 procedure IntSkinForm  (Form: TCustomForm);
 procedure IntUnSkinForm(Form: TCustomForm);
+procedure IterateForms(sm: TComponent; FormCallBack: TacFormCallBack; Data: integer = 0);
 
 function SectionInArray(const Sections: TacIntSections; const Value: integer; RangeMin: TacSection = ssMenuItem; RangeMax: TacSection = ssWebBtn): boolean;
 
@@ -178,11 +180,6 @@ uses
   sVclUtils, sMessages, sCommonData, sSkinProvider, sSkinManager, acDials;
 
 
-type
-  TAccessSkinProvider = class(TsSkinProvider);
-  TacFormCallBack = procedure(sp: TAccessSkinProvider; Data: integer = 0);
-
-
 function SectionInArray(const Sections: TacIntSections; const Value: integer; RangeMin: TacSection = ssMenuItem; RangeMax: TacSection = ssWebBtn): boolean;
 var
   Section: TacSection;
@@ -197,17 +194,17 @@ begin
 end;
 
 
-procedure IterateForms(sm: TsSkinManager; FormCallBack: TacFormCallBack; Data: integer = 0);
+procedure IterateForms(sm: TComponent; FormCallBack: TacFormCallBack; Data: integer = 0);
 var
   i: integer;
-  sp: TAccessSkinProvider;
+  sp: TsSkinProvider;
 begin
   i := 0;
   while i <= Length(HookedComponents) - 1 do begin
     if HookedComponents[i] is TCustomForm then
       with TForm(HookedComponents[i]) do
         if (WindowState <> wsMinimized) and (FormStyle <> fsMDIChild) and (Parent = nil) and HandleAllocated and Visible then begin
-          sp := TAccessSkinProvider(SendAMessage(TForm(HookedComponents[i]), AC_GETPROVIDER));
+          sp := TsSkinProvider(SendAMessage(TForm(HookedComponents[i]), AC_GETPROVIDER));
           if (sp <> nil) and (sp.SkinData.SkinManager = sm) then
             FormCallBack(sp, Data);
         end;
@@ -217,20 +214,23 @@ begin
 end;
 
 
-procedure CopyExFormsCB(sp: TAccessSkinProvider; Data: integer);
+type
+  TAccessSkinProvider = class(TsSkinProvider);
+
+procedure CopyExFormsCB(sp: TComponent; Data: integer);
 begin
-  with sp do begin
+  with TAccessSkinProvider(sp) do begin
     if BorderForm <> nil then
       with BorderForm do
         if AForm <> nil then begin
-          sp.FormState := sp.FormState or FS_CHANGING;
+          TAccessSkinProvider(sp).FormState := TAccessSkinProvider(sp).FormState or FS_CHANGING;
           if CoverBmp <> nil then
             FreeAndNil(CoverBmp);
 
-          CoverBmp := GetFormImage(sp);
+          CoverBmp := GetFormImage(TAccessSkinProvider(sp));
         end;
 
-    sp.FInAnimation := True;
+    TAccessSkinProvider(sp).FInAnimation := True;
   end;
 end;
 
@@ -249,11 +249,11 @@ begin
 end;
 
 
-procedure LockFormsCB(sp: TAccessSkinProvider; Data: integer);
+procedure LockFormsCB(sp: TComponent; Data: integer);
 var
   Alpha: integer;
 begin
-  with sp do begin
+  with TAccessSkinProvider(sp) do begin
     FInAnimation := True;
     FormState := FormState or FS_LOCKED;
     if BorderForm <> nil then
@@ -284,7 +284,7 @@ begin
       if IsDefault and (AnimEffects.SkinChanging.Active) then
         InAnimationProcess := True;
 
-      IterateForms(TsSkinManager(SkinManager), LockFormsCB);
+      IterateForms(SkinManager, LockFormsCB);
     end;
 end;
 
@@ -293,19 +293,19 @@ var
   iLatestTitleHeight: integer = 0;
 
 
-procedure AllowRedrawCB(sp: TAccessSkinProvider; Data: integer);
+procedure AllowRedrawCB(sp: TComponent; Data: integer);
 begin
-  if sp.FormState and FS_LOCKED <> 0 then
-    sp.Form.Perform(WM_SETREDRAW, 1, 0);
+  if TAccessSkinProvider(sp).FormState and FS_LOCKED <> 0 then
+    TAccessSkinProvider(sp).Form.Perform(WM_SETREDRAW, 1, 0);
 end;
 
 
-procedure DoRepaintCB(sp: TAccessSkinProvider; Data: integer);
+procedure DoRepaintCB(sp: TComponent; Data: integer);
 var
   ActWnd: hwnd;
   AlphaValue: byte;
 begin
-  with sp, SkinData.SkinManager, AnimEffects.SkinChanging do
+  with TAccessSkinProvider(sp), SkinData.SkinManager, AnimEffects.SkinChanging do
     if Form.WindowState <> wsMinimized then
       if FormState and FS_LOCKED <> 0 then begin
         if Data = 1 then begin
@@ -323,7 +323,7 @@ begin
                 else    AnimShowControl(Form, Time, AlphaValue, atcFade)
               end
             else
-              AnimShowControl(sp.Form, 0);
+              AnimShowControl(Form, 0);
           end;
           FormState := FormState and not FS_CHANGING;
           if (BorderForm <> nil) and (Form.WindowState = wsMaximized) then // Title height may be changed
@@ -342,9 +342,9 @@ begin
             if {(Win32MajorVersion < 6) or }not AeroIsEnabled then
               SetWindowRgn(Form.Handle, 0, False); // Fixing of Aero bug
 
-            sSkinProvider.FillArOR(sp); // Update rgn data for skin
-            sSkinProvider.UpdateRgn(sp, True, True); // Update of native borders
-            RedrawWindow(sp.Form.Handle, nil, 0, RDWA_ALLNOW); // Redraw main form under layered form
+            sSkinProvider.FillArOR(TAccessSkinProvider(sp)); // Update rgn data for skin
+            sSkinProvider.UpdateRgn(TAccessSkinProvider(sp), True, True); // Update of native borders
+            RedrawWindow(Form.Handle, nil, 0, RDWA_ALLNOW); // Redraw main form under layered form
             if BorderForm <> nil then begin
               SetWindowRgn(BorderForm.AForm.Handle, BorderForm.MakeRgn, False); // Avoiding a flickering
               BorderForm.UpdateExBordersPos;

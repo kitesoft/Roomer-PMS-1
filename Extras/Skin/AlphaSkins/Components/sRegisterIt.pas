@@ -50,7 +50,7 @@ begin
   Bmp := TBitmap.Create;
   Bmp.LoadFromResourceName(hInstance, 'ACLOGO');
   try
-    SplashScreenServices.AddPluginBitmap('AlphaControls 2015', Bmp.Handle, False,
+    SplashScreenServices.AddPluginBitmap('AlphaControls 2016', Bmp.Handle, False,
 {$IFNDEF ALITE}
       {$IFDEF RUNIDEONLY}'Trial edition'{$ELSE}'Registered'{$ENDIF},
 {$ELSE}

@@ -1,6 +1,5 @@
 unit sGradient;
 {$I sDefs.inc}
-//+
 
 interface
 

@@ -93,6 +93,7 @@ type
 
     function PrepareCache: boolean; virtual;
 
+    function ScaledAddWidth: integer;
     procedure PaintArrow(const pR: PRect; Mode: integer);
     procedure ActionChanged(Sender: TObject);
     procedure ActionChange (Sender: TObject; CheckDefaults: Boolean); override;
@@ -283,7 +284,7 @@ var
   cr, ir: TRect;
 begin
   if ButtonStyle = tbsDropDown then begin
-    w := AddedWidth;
+    w := ScaledAddWidth;
     if not Assigned(OnCLick) then begin
       ir := ImgRect(False);
       if ShowCaption then
@@ -328,7 +329,7 @@ end;
 
 function TsSpeedButton.ArrowWidth: integer;
 begin
-  Result := integer(ButtonStyle = tbsDropDown) * AddedWidth;
+  Result := integer(ButtonStyle = tbsDropDown) * ScaledAddWidth;
 end;
 
 
@@ -358,10 +359,10 @@ begin
   if ButtonStyle = tbsDropDown then
     if not Assigned(OnCLick) then begin
       iAddedWidth := 0;
-      iArrowWidth := AddedWidth;
+      iArrowWidth := ScaledAddWidth;
     end
     else begin
-      iAddedWidth := AddedWidth;
+      iAddedWidth := ScaledAddWidth;
       iArrowWidth := 0;
     end
   else begin
@@ -702,10 +703,10 @@ begin
   if ButtonStyle = tbsDropDown then
     if not Assigned(OnCLick) then begin
       iAddedWidth := 0;
-      iArrowWidth := AddedWidth;
+      iArrowWidth := ScaledAddWidth;
     end
     else begin
-      iAddedWidth := AddedWidth;
+      iAddedWidth := ScaledAddWidth;
       iArrowWidth := 0;
     end
   else begin
@@ -895,11 +896,11 @@ var
               FCommonData.FSaturation := 0;
               FCommonData.FColorTone := clNone;
               // Paint BG
-              PaintItemBG(FCommonData, ci, Mode, Rect(Width - AddedWidth, 0, Width, Height), Point(Left + Width - ArrowWidth, Top), FCommonData.FCacheBMP, integer(Down), integer(Down));
+              PaintItemBG(FCommonData, ci, Mode, Rect(Width - ScaledAddWidth, 0, Width, Height), Point(Left + Width - ArrowWidth, Top), FCommonData.FCacheBMP, integer(Down), integer(Down));
               inc(ci.X, Left);
               inc(ci.Y, Top);
               if FCommonData.SkinManager.IsValidImgIndex(FCommonData.BorderIndex) then
-                DrawSkinRect(FCommonData.FCacheBMP, Rect(Width - AddedWidth, 0, Width, Height), ci, FCommonData.SkinManager.ma[FCommonData.BorderIndex], Mode, True);
+                DrawSkinRect(FCommonData.FCacheBMP, Rect(Width - ScaledAddWidth, 0, Width, Height), ci, FCommonData.SkinManager.ma[FCommonData.BorderIndex], Mode, True);
 
               dec(ci.X, Left);
               dec(ci.Y, Top);
@@ -1011,6 +1012,12 @@ begin
 end;
 
 
+function TsSpeedButton.ScaledAddWidth: integer;
+begin
+  Result := AddedWidth * SkinData.ScalePercent div 100;
+end;
+
+
 procedure TsSpeedButton.SetAlignment(const Value: TAlignment);
 begin
   if FAlignment <> Value then begin
@@ -1025,10 +1032,10 @@ begin
   if FButtonStyle <> Value then begin
     if not (csLoading in ComponentState) then
       if Value = tbsDropDown then
-        Width := Width + AddedWidth
+        Width := Width + ScaledAddWidth
       else
         if FButtonStyle = tbsDropdown then
-          Width := Width - AddedWidth;
+          Width := Width - ScaledAddWidth;
 
     FButtonStyle := Value;
     UpdateControl;
@@ -1348,14 +1355,14 @@ begin
     ShowHintStored := True;
   end;
   if (Button = mbLeft) and Enabled then
-    if (ButtonStyle = tbsDropDown) and Assigned(DropDownMenu) and ((X > Width - AddedWidth) or not Assigned(OnCLick)) then begin
+    if (ButtonStyle = tbsDropDown) and Assigned(DropDownMenu) and ((X > Width - ScaledAddWidth) or not Assigned(OnCLick)) then begin
       TempControl := pointer(Self);
       c := nil;
       StopTimer(SkinData);
       if not MenuVisible then begin
 {$IFNDEF FPC}
         if SkinData.SkinManager <> nil then
-          SkinData.SkinManager.SkinableMenus.HookPopupMenu(DropDownMenu, SkinData.SkinManager.Active);
+          SkinData.SkinManager.SkinableMenus.HookPopupMenu(DropDownMenu, SkinData.SkinManager.CommonSkinData.Active);
 {$ENDIF}
 
         MenuVisible := True;
@@ -1487,7 +1494,7 @@ begin
         Self.Images := ActionList.Images;
         b := True;
       end;
-{$IFDEF DELPHI2010}
+{$IFDEF D2010}
       if Self.ImageIndex <> TacSpeedButtonActionLink(ActionLink).FImageIndex then begin
         Self.ImageIndex := TacSpeedButtonActionLink(ActionLink).FImageIndex;
         b := True;
@@ -1871,7 +1878,7 @@ end;
 procedure TacSpeedButtonActionLink.SetImageIndex(Value: Integer);
 begin
   if IsImageIndexLinked or FClient.Glyph.Empty then begin
-{$IFDEF DELPHI2010}
+{$IFDEF D2010}
     FImageIndex := Value;
 {$ENDIF}
     if (Action is TCustomAction) and (FClient is TsSpeedButton) then

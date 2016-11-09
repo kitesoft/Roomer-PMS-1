@@ -340,7 +340,7 @@ begin
       if Bmp.PixelFormat <> pf32bit then begin // If alpha-channell is empty
         Bmp.PixelFormat := pf32bit;
         if InitLine(Bmp, Pointer(D0), DeltaD) then
-          if ioUseGamma in Png.ImageProperties.Options then
+          if (ioUseGamma in Png.ImageProperties.Options) and not (coApplyGamma in Png.ColorManager.TargetOptions) then
             for Y := 0 to Png.Height - 1 do begin
               D := Pointer(LongInt(D0) + DeltaD * Y);
               for X := 0 to Png.Width - 1 do begin

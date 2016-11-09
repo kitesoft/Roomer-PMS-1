@@ -38,6 +38,7 @@ type
     FScaling: integer;
     FStyle: TacMagnStyle;
     FPopupMenu: TPopupMenu;
+    FShowPopupMenu: boolean;
     FOnDblClick: TNotifyEvent;
     FSizingMode: TacSizingMode;
     FOnPosChanging: TPosChangingEvent;
@@ -57,6 +58,7 @@ type
     function GetPixelColor(X, Y: TColor): TColor;
     procedure Refresh;
   published
+    property ShowPopupMenu: boolean read FShowPopupMenu write FShowPopupMenu default True;
     property PopupMenu: TPopupMenu read FPopupMenu write FPopupMenu;
     property Scaling: integer read FScaling write SetScaling default 2;
     property Width: TMagnSize read FWidth write SetWidth default 280;
@@ -162,7 +164,7 @@ var
 begin
   if not IntUpdating and not Closing then begin
     if DefaultManager <> nil then
-      DefaultManager.SkinableMenus.HookPopupMenu(PopupMenu, (DefaultManager.Active and (DefaultManager.SkinName <> '')));
+      DefaultManager.SkinableMenus.HookPopupMenu(PopupMenu, DefaultManager.Active and (DefaultManager.SkinName <> ''));
 
     MakeAeroMagnifier;
     with ContentMargins do begin
@@ -695,6 +697,7 @@ begin
   FHeight := 280;
   FWidth := FHeight;
   FSizingMode := asmFreeAspectRatio;
+  FShowPopupMenu := True;
   FStyle := amsRectangle;
 end;
 
@@ -753,14 +756,18 @@ begin
     end;
     TacMagnForm(acMagnForm).FormCreateInit;
     TacMagnForm(acMagnForm).Scale := FScaling;
-    if FPopupMenu <> nil then
-      TacMagnForm(acMagnForm).PopupMenu := FPopupMenu
+    if ShowPopupMenu then begin
+      if FPopupMenu <> nil then
+        TacMagnForm(acMagnForm).PopupMenu := FPopupMenu
+      else
+        for i := 0 to TacMagnForm(acMagnForm).PopupMenu1.Items.Count - 1 do
+          if TacMagnForm(acMagnForm).PopupMenu1.Items[i].Tag = FScaling then begin
+            TacMagnForm(acMagnForm).PopupMenu1.Items[i].Checked := True;
+            Break;
+          end;
+    end
     else
-      for i := 0 to TacMagnForm(acMagnForm).PopupMenu1.Items.Count - 1 do
-        if TacMagnForm(acMagnForm).PopupMenu1.Items[i].Tag = FScaling then begin
-          TacMagnForm(acMagnForm).PopupMenu1.Items[i].Checked := True;
-          Break;
-        end;
+      TacMagnForm(acMagnForm).PopupMenu := nil;
 
     if GetWindowLong(acMagnForm.Handle, GWL_EXSTYLE) and WS_EX_LAYERED = 0 then
       SetWindowLong(TacMagnForm(acMagnForm).Handle, GWL_EXSTYLE, GetWindowLong(acMagnForm.Handle, GWL_EXSTYLE) or WS_EX_LAYERED);

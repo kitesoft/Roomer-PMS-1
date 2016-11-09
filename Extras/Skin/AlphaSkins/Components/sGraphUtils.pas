@@ -1,7 +1,6 @@
 unit sGraphUtils;
 {$I sDefs.inc}
 //{$DEFINE LOGGED}
-//+
 
 interface
 
@@ -94,7 +93,10 @@ procedure CopyTransBitmaps(DstBmp, SrcBmp: Graphics.TBitMap; X, Y: integer; Tran
 // Sum two bitmaps by mask MskBmp
 procedure SumByMaskWith32(const DstBmp, SrcBmp, MskBmp: Graphics.TBitMap; const aRect: TRect);
 // procedure SumByMask(var Src1, Src2, MskBmp: Graphics.TBitMap; aRect: TRect);
-function MakeRotated90(var Bmp: TBitmap; CW: boolean; KillSource: boolean = True): TBitmap;
+function Makerotated90(var Bmp: TBitmap; CW: boolean; KillSource: boolean = True): TBitmap;
+function sMakerotated90(var Bmp: TBitmap; CW: boolean; KillSource: boolean = True): TBitmap;
+
+
 // Returns color as (ColorBegin + ColorEnd) / 2
 function AverageColor(const ColorBegin, ColorEnd: TsColor): TsColor; overload;
 function AverageColor(const ColorBegin, ColorEnd: TColor): TColor; overload;
@@ -438,17 +440,17 @@ begin
   VertFont.lfOrientation := VertFont.lfEscapement;
   VertFont.lfPitchAndFamily := Default_Pitch;
   VertFont.lfQuality := Default_Quality;
-  if Font.Name <> 'MS Sans Serif' then
+  if Font.Name <> s_MSSansSerif then
 {$IFDEF TNTUNICODE}
     WStrPCopy(VertFont.lfFaceName, Font.Name)
   else
-    WStrPCopy(VertFont.lfFaceName, 'Arial');
+    WStrPCopy(VertFont.lfFaceName, s_Arial);
 
   NewFont := CreateFontIndirectW(VertFont);
 {$ELSE}
     StrPCopy(VertFont.lfFaceName, Font.Name)
   else
-    VertFont.lfFaceName := 'Arial';
+    VertFont.lfFaceName := s_Arial;
 
   NewFont := CreateFontIndirect(VertFont);
 {$ENDIF}
@@ -2514,7 +2516,7 @@ var
 begin
   for i := 0 to Ctrl.ControlCount - 1 do begin
     Child := Ctrl.Controls[i];
-    if (Child is TGraphicControl) and StdTransparency {$IFNDEF ALITE} or (Child is TsSplitter) {$ENDIF} then
+    if (Child is TGraphicControl) and ((DefaultManager = nil) or DefaultManager.Options.StdImgTransparency) {$IFNDEF ALITE} or (Child is TsSplitter) {$ENDIF} then
       Continue;
 
     with Child do
@@ -3101,7 +3103,7 @@ end;
 
 procedure QBlur(Bmp: TBitmap);
 var
-  bWidth, bHeight, Row, Col, Delta, h4: integer;
+  bWidth, bHeight, Row, Col, Delta{, h4}: integer;
   ACol: PRGBAArray_S;
   P: PRGBAArray_D;
   Rows: PPRows;
@@ -3109,9 +3111,12 @@ begin
   with Bmp do begin
     bWidth := Width - 1;
     bHeight := Height - 1;
-    h4 := Height * 4;
-    GetMem(Rows, h4);
-    GetMem(ACol, h4);
+//    h4 := Height * 4;
+//    GetMem(Rows, h4);
+//    GetMem(ACol, h4);
+  GetMem(Rows, Bmp.Height * SizeOf(PRGBAArray));
+  GetMem(ACol, Bmp.Height * SizeOf(TsColor_));
+
     Rows[0] := Scanline[0];
     if Height > 1 then begin
       Rows[1] := Scanline[1];
@@ -3121,11 +3126,14 @@ begin
           Rows[Row] := Pointer(integer(Rows[0]) + Row * Delta);
       end;
     end;
-    P := AllocMem(Width * 4);
+//    P := AllocMem(Width * 4);
+    P := AllocMem(Bmp.Width * SizeOf(TsColor_));
     for Row := 0 to bHeight do
       BlurRow(Slice(Rows[Row]^, Width), P);
 
-    ReAllocMem(P, h4);
+//    ReAllocMem(P, h4);
+    ReAllocMem(P, Bmp.Height * SizeOf(TsColor_));
+//try
     for Col := 0 to bWidth do begin
       for Row := 0 to bHeight do
         ACol[Row] := Rows[Row][Col];
@@ -3134,6 +3142,8 @@ begin
       for Row := 0 to bHeight do
         Rows[Row][Col] := ACol[Row];
     end;
+//except
+//end;
     FreeMem(Rows);
     FreeMem(ACol);
     ReAllocMem(P, 0);
@@ -5095,7 +5105,110 @@ begin
 end;
 
 
+function bmpRotate(var SBitmap: TBitmap; RotateAngle: Word; FreeupBmp: Boolean): TBITMAP;
+var
+  SDBits, TDBits: PByteArray;
+  SHPIX, THPIX: HGlobal;
+  YY1, XX1, YY2, XX2,
+  BitPos1, BitPos2,
+  SIW, SIL, TIW,
+  ImageSize, LBPS1, LBPS2, BmpBitRead: Integer;
+begin
+  if (SBitmap <> nil) and (SBitmap.PixelFormat = pf32bit) then begin
+    SIW := SBitmap.Width;
+    SIL := SBitmap.Height;
+
+    LBPS1 := SIW * 4;
+    ImageSize := LBPS1 * SIL;
+    SHPIX := GlobalAlloc(GMEM_FIXED, ImageSize);
+    SDBits := GlobalLock(Shpix);
+    BmpBitRead := GetBitmapBits(SBitmap.Handle, ImageSize, SDBits);
+    Result := TBitmap.Create;
+    Result.Monochrome := SBitmap.Monochrome;
+    Result.PixelFormat := SBitmap.PixelFormat;
+    if FreeupBmp then
+      FreeAndNil(SBitmap);
+
+    if BmpBitRead = 0 then begin // Upps what happens? No error handling yet, just do not return any bmp
+      GlobalUnlock(shpix);
+      GlobalFree(sHpix);
+      FreeAndNil(Result);
+    end
+    else begin
+      Result.Width := SIW;
+      Result.Height := SIl;
+      LBPS2 := LBPS1;
+      if (RotateAngle = 90) or (RotateAngle = 270) then begin
+        Result.Width := SIL;
+        Result.Height := SIW;
+        LBPS2 := SIL * 4;
+      end;
+      TIW := Result.Width - 1;
+      THPIX := GlobalAlloc(GMEM_FIXED, ImageSize);
+      TDBits := GlobalLock(thpix);
+      dec(SIL);
+      dec(SIW);
+      for YY1 := 0 to SIL do
+        for XX1 := 0 to SIW do begin
+          case RotateAngle of
+            90: begin
+              YY2 := XX1;
+              XX2 := TIW - YY1;
+            end;
+            180: begin
+              XX2 := SIW - XX1;
+              YY2 := SIL - YY1;
+            end;
+            270: begin
+              YY2 := SIW - XX1;
+              XX2 := YY1;
+            end
+            else begin
+              YY2 := YY1;
+              XX2 := XX1;
+            end;
+          end;
+          BitPos1 := YY1 * LBPS1 + XX1 * 4;
+          BitPos2 := YY2 * LBPS2 + XX2 * 4;
+          TDBits^[BitPos2] := SDBits^[BitPos1];
+
+          inc(BitPos1);
+          inc(BitPos2);
+          TDBits^[BitPos2] := SDBits^[BitPos1];
+
+          inc(BitPos1);
+          inc(BitPos2);
+          TDBits^[BitPos2] := SDBits^[BitPos1];
+
+          inc(BitPos1);
+          inc(BitPos2);
+          TDBits^[BitPos2] := SDBits^[BitPos1];
+        end;
+
+      SetBitmapBits(RESULT.Handle, ImageSize, TDBits);
+      GlobalUnlock(shpix);
+      GlobalFree(sHpix);
+      GlobalUnlock(thpix);
+      GlobalFree(tHpix);
+    end;
+  end;
+end;
+
+
 function MakeRotated90(var Bmp: TBitmap; CW: boolean; KillSource: boolean = True): TBitmap;
+begin
+  if Bmp.PixelFormat = pf32bit then
+    if CW then
+      Result := bmpRotate(bmp, 90, KillSource)
+    else
+      Result := bmpRotate(bmp, 270, KillSource)
+  else
+    Result := nil;
+end;
+
+
+//**********************************************************
+function sMakeRotated90(var Bmp: TBitmap; CW: boolean; KillSource: boolean = True): TBitmap;
 var
   X, Y, w, h: integer;
   C: TsColor;
@@ -5123,7 +5236,6 @@ begin
   if KillSource then
     FreeAndNil(Bmp);
 end;
-
 
 function CreateBmpLike(const Bmp: TBitmap): TBitmap;
 begin

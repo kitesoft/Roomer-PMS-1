@@ -321,7 +321,7 @@ implementation
 uses
   Math, Menus,
   {$IFDEF LOGGED}sDebugMsgs, {$ENDIF}
-  sSkinProps, sDefaults, sMessages, sCommonData, sSkinManager, sVCLUtils, sAlphaGraph, sStyleSimply;
+  sCommonData, sSkinProps, sDefaults, sMessages, sSkinManager, sVCLUtils, sAlphaGraph, sStyleSimply;
 
 
 {$IFNDEF NOTFORHELP}
@@ -492,6 +492,9 @@ begin
 end;
 
 
+type
+  TAccessCommonData = class(TsCommonData);
+
 procedure TsSpinButton.Loaded;
 var
   W, H: Integer;
@@ -503,8 +506,10 @@ begin
   if (W <> Width) or (H <> Height) then
     inherited SetBounds(Left, Top, W, H);
 
-  FUpButton.SkinData.SkinManager   := FOwner.SkinData.FSkinManager;
-  FDownButton.SkinData.SkinManager := FOwner.SkinData.FSkinManager;
+  with TAccessCommonData(FOwner.SkinData) do begin
+    TAccessCommonData(FUpButton.SkinData).SkinManager   := FSkinManager;
+    TAccessCommonData(FDownButton.SkinData).SkinManager := FSkinManager;
+  end;
 end;
 
 
@@ -947,16 +952,27 @@ end;
 
 function TsSpinEdit.CheckValue(NewValue: LongInt): LongInt;
 begin
-  if (NewValue < 0) and not FAllowNegative then
-    Result := max(0, FMinValue)
-  else
+  if FMinValue <> FMaxValue then begin
     Result := NewValue;
+    if FMinValue <> 0 then
+      if NewValue < FMinValue then
+        Result := FMinValue
+      else
+        if NewValue > FMaxValue then
+          Result := FMaxValue;
 
-  if ((FMinValue <> 0) or (FMinValue <> FMaxValue)) and (NewValue < FMinValue) then
-    Result := FMinValue
+    if FMaxValue <> 0 then
+      if NewValue > FMaxValue then
+        Result := FMaxValue
+      else
+        if NewValue < FMinValue then
+          Result := FMinValue
+  end
   else
-    if (FMaxValue <> 0) and (NewValue > FMaxValue) then
-      Result := FMaxValue;
+    if (NewValue < 0) and not FAllowNegative then
+      Result := max(0, FMinValue)
+    else
+      Result := NewValue;
 end;
 
 
@@ -1077,10 +1093,14 @@ end;
 
 
 procedure TsDecimalSpinEdit.SetDecimalPlaces(New: Integer);
+var
+  ActValue: Extended;
 begin
   if fDecimalPlaces <> New then begin
     fDecimalPlaces := New;
-    Value := CheckValue(Value);
+    ActValue := FValue;
+    FValue := 0;
+    Value := CheckValue(ActValue);
   end;
 end;
 
@@ -1214,18 +1234,31 @@ end;
 
 
 procedure TsDecimalSpinEdit.CMChanged(var Message: TMessage);
+var
+  dSep: Char;
+  s: string;
 begin
   inherited;
-  if not (csLoading in ComponentState) and not ValueChanging then begin
+  if {not (csLoading in ComponentState) and }not ValueChanging then begin
     TextChanging := True;
     if (Text = '') or (Text = CharMinus) or (Text = CharPlus) then
       Value := 0
-    else
+    else begin
+      dSep := {$IFDEF DELPHI_XE}FormatSettings.{$ENDIF}DecimalSeparator;
+      if (dSep <> s_Dot) and (Pos(s_Dot, Text) > 0) then
+        s := ReplaceStr(Text, s_Dot, dSep)
+      else
+        if (dSep <> s_Comma) and (Pos(s_Comma, Text) > 0) then
+          s := ReplaceStr(Text, s_Comma, dSep)
+        else
+          s := Text;
+
 {$IFDEF DELPHI6UP}
-      Value := StrToFloatDef(Text, 0);
+      Value := StrToFloatDef(s, 0);
 {$ELSE}
-      Value := StrToFloat(Text);
+      Value := StrToFloat(s);
 {$ENDIF}
+    end;
 
     TextChanging := False;
   end;
@@ -1462,8 +1495,8 @@ begin
     if SkinData.SkinIndex >= 0 then
       with SkinData, SkinManager.gd[SkinIndex] do
         if (CurrentState = 0) and (FOwner.FOwner <> nil) then
-          if FOwner.FOwner.FlatSpinButtons or (Props[0].Transparency = 100) then
-            C := ColorToRGB(Props[0].FontColor.Color)//FOwner.FOwner.Font.Color
+          if FOwner.FOwner.FlatSpinButtons or NeedParentFont(SkinData, 0){(Props[0].Transparency = 100)} then
+            C := ColorToRGB({Props[0].FontColor.Color)//}FOwner.FOwner.Font.Color)
           else
             C := ColorToRGB(Props[0].FontColor.Color)
         else

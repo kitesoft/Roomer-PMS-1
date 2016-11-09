@@ -1,5 +1,78 @@
 AlphaControls :: history
 
+08.10.2016 AlphaControls v11.19 Stable released
+
+  * ColorTone, HUEOffset and Saturation properties added in the TsPanel.SkinData
+  * The new ShowPopupMenu property added in the TsMagnifier component
+  * Added new KeepThumbAspectRatio property in the TsSlider component
+  * Added the EmptyIsNull property in the TsDBMemo component
+  * The AllowCalculator property added in the TsCurrencyEdit component
+  * The Options.StdImgTransparency property added in the TsSkinManager component
+  * Solved issue with mask in the TsShellListView component compiled in the Win64 mode
+  * Solved some issues with controls placed on the TsTabControl
+  * Solved issue with showing of TsComboBox placed on a Notebook component
+  * Improved painting of items in the TsTreeViewEx component
+  * Improved scaling of VCL dialogs
+  * Fixed AV in importing of external section in the ASkinEditor tool
+  * Copy/paste of a section style implemented in popup menu in the ASkinEditor tool
+  * Minor improvements and bug-fixes
+  * Published new "Material light" skin
+
+16.10.2016 AlphaControls v11.18 Stable released
+
+  * Fixed error in the TsPageScroll component painting
+  * Fixed error in showing of some forms
+  * Improved painting of Png glyphs
+  * Minor improvements
+
+13.10.2016 AlphaControls v11.17 Stable released
+
+  * Improved initializing of the TsDecimalSpinEdit when the DecimalPlaces property is changed
+  * Improved drawing of the TsImage if Transparent property is False
+  * Improved showing of popup forms by the ShowPopupForm procedure
+  * Improved scaling of TsSpeedButton and TsButton when dropdown arrow is visible
+  * Improved painting of the TsCombobox component without skins
+  * Switching of the ScaleMode property is improved visually
+  * Solved issue with drawing of a selected item with big text in the TsTreeView component
+  * Solved problem with scrolling of the TsSkinSelector component by keyboard
+  * Solved issue with empty form showing when ExtendedBorders used
+  * Solved problem with hotkeys when TsComboboxEx is focused
+  * Added support of the TSearchBox component
+  * Added semitransparent painting of the disabled TsSlider components and caption of the TsGroupBox component
+
+20.09.2016 AlphaControls v11.16 Stable released
+
+  * Fixed error in the AnimShowControl procedure under 64-bit compiler
+  * Solved issue with hiding of glow effect in some components
+  * Improved refresh of scrolls in skinned frames
+  * Improved stretching of images
+  * Improved transparency of the TsImage
+  * Improved repainting of child forms
+  * Improved support of skinning of the TDBGridEh component
+  * Improved drawing of items in the TsTreeView with enabled RowSelect property
+  * Published new "Clean card" skin
+
+04.09.2016 AlphaControls v11.15 Stable released
+
+  * Fixed Error in compiling of the AlphaDB package
+  * Improved work of the TsSpinEdit component with MinValue and MaxValue properties
+
+02.09.2016 AlphaControls v11.14 Stable released
+
+  * Fixed error of loading in the TsVirtualImageList component
+  * Fixed error in the TsSkinSelector component
+  * Added RightToLeft BidiMode support in the TsComboEdit control
+  * Some improvements in the cxGrid support
+  * Optimized the MakeRotated90 function
+  * Improved scaling in several components
+  * Removed flickering of child controls placed on the TsGradientPanel component
+  * A lot of minor bug-fixes and improvements
+
+16.08.2016 AlphaControls v11.13 Stable released
+
+  * Fixed "Out of memory" error in adding of internal skins
+  * Improved drawing of the TFrame content in AlphaHints
+
 12.08.2016 AlphaControls v11.12 Stable released
 
   * Fixed error in decoding of skins under Win64 compiler

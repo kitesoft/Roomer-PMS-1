@@ -341,7 +341,7 @@ type
     // Painting procedures <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     function  PaintAll: boolean;
     function  HeaderUsed: boolean;
-    procedure PaintForm(DC: hdc; SendUpdated: boolean = True);
+    procedure PaintForm(DC: hdc; PaintRect: TRect; SendUpdated: boolean = True);
     procedure PaintCaption(DC: hdc);
 
     procedure PaintTitleContent(CaptWidth: integer);
@@ -793,13 +793,14 @@ const
   FS_CHANGING       = $1000;
   FS_ANIMSHOWING    = $2000;
 
-  FS_ANIMMINREST = FS_ANIMRESTORING or FS_ANIMMINIMIZING;
-  FS_ANIMATING = FS_BLENDMOVING or FS_ANIMMINREST;
+  FS_ANIMMINREST  = FS_ANIMRESTORING or FS_ANIMMINIMIZING;
+  FS_ANIMATING    = FS_BLENDMOVING   or FS_ANIMMINREST;
+  FS_FULLPAINTING = FS_CHANGING      or FS_BLENDMOVING or FS_ANIMMINIMIZING;
 
   FS_MAXHEIGHT      = $4000;
   FS_MAXWIDTH       = $8000;
-  FS_LOCKED         = $10000;   // Lock for animation
-  FS_SCROLLUPDATING = $20000;   // Update ListSW object
+  FS_LOCKED         = $10000;  // Lock for animation
+  FS_SCROLLUPDATING = $20000;  // Update ListSW object
   FS_POSCHANGING    = $40000;
   FS_ZOOMING        = $80000;
   FS_DISABLED       = $100000;
@@ -861,7 +862,7 @@ implementation
 
 
 uses
-  math, CommCtrl, ComCtrls, StdCtrls,
+  math, CommCtrl, ComCtrls, StdCtrls, Dialogs,
 {$IFDEF LOGGED}
   sDebugMsgs,
 {$ENDIF}
@@ -877,7 +878,6 @@ uses
 
 const
   FS_MAXBOUNDS = FS_MAXHEIGHT or FS_MAXWIDTH;
-  FS_FULLPAINTING = FS_CHANGING or FS_BLENDMOVING or FS_ANIMMINIMIZING;
   HTITEM = 2000;
 
   UserButtonsOffset = 6;
@@ -1839,80 +1839,78 @@ var
   t, h, l, w: integer;
 begin
   with sp do
-    if FDrawNonClientArea and not InAnimation(sp) {or (sp.LockCount > 0) } and (Form.WindowState <> wsMinimized) and Form.Showing then begin
-      if (BorderForm <> nil) and (Form.Menu = nil) {and (AddHeight = 0)} then
-        Exit;
-
-      if (Form.FormStyle = fsMDIChild) and (MDISkinProvider <> nil) and
-           (TsSkinProvider(MDISkinProvider).LockCount > 0) or (FormState and FS_BLENDMOVING <> 0) then
-        Exit;
-
-      if CaptForm = nil then begin
-        CaptForm := TacGlowForm.CreateNew(Application);
-        if CaptForm = nil then
+    if FDrawNonClientArea and not InAnimation(sp) {or (sp.LockCount > 0) } and (Form.WindowState <> wsMinimized) and Form.Showing then
+      if (BorderForm = nil) or (Form.Menu <> nil) {and (AddHeight = 0)} then begin
+        if (Form.FormStyle = fsMDIChild) and (MDISkinProvider <> nil) and
+             (TsSkinProvider(MDISkinProvider).LockCount > 0) or (FormState and FS_BLENDMOVING <> 0) then
           Exit;
 
-        CaptForm.HandleNeeded;
-        if not CaptForm.HandleAllocated then begin
-          FreeAndNil(CaptForm);
-          Exit;
-        end;
-        TForm(CaptForm).OnPaint := CaptFormPaint;
-        OldCaptFormProc := CaptForm.WindowProc;
-        CaptForm.WindowProc := NewCaptFormProc;
-      end;
-      if BorderForm <> nil then begin
-        h := MenuHeight * LinesCount + 1;
-        t := Form.Top + OffsetY - h - ShadowSize.Top - DiffTitle(BorderForm);
-        l := Form.Left + SysBorderWidth(Form.Handle, BorderForm, False);
-        w := Form.Width - 2 * SysBorderWidth(Form.Handle, BorderForm, False);
-        if h <> 0 then
-          inc(h);
-      end
-      else begin
-        h := Form.Height;
-        t := Form.Top;
-        l := Form.Left;
-        w := Form.Width;
+        if CaptForm = nil then begin
+          CaptForm := TacGlowForm.CreateNew(Application);
+          if CaptForm = nil then
+            Exit;
 
-        Rgn := CreateRectRgn(0, 0, w, h);
-        cR := acClientRect(Form.Handle);
-        SubRgn := CreateRectRgn(cR.Left, cR.Top, cR.Right, cR.Bottom);
-        CombineRgn(Rgn, Rgn, SubRgn, RGN_DIFF);
-        DeleteObject(SubRgn);
-
-        if (Form.Parent <> nil) or (Form.FormStyle = fsMDIChild) then begin
-          DC := GetDC(Form.Handle);
-          if GetClipBox(DC, cR) = NULLREGION then begin
+          CaptForm.HandleNeeded;
+          if not CaptForm.HandleAllocated then begin
             FreeAndNil(CaptForm);
-            ReleaseDC(Form.Handle, DC);
             Exit;
           end;
-          if (cR.Left < cR.Right) and (cR.Top < cR.Bottom) then begin
-            SubRgn := CreateRectRgn(cR.Left, cR.Top, cR.Right, cR.Bottom);
-            CombineRgn(Rgn, Rgn, SubRgn, RGN_AND);
-            DeleteObject(SubRgn);
-          end;
-          ReleaseDC(Form.Handle, DC);
+          TForm(CaptForm).OnPaint := CaptFormPaint;
+          OldCaptFormProc := CaptForm.WindowProc;
+          CaptForm.WindowProc := NewCaptFormProc;
         end;
-        SetWindowRgn(CaptForm.Handle, Rgn, False);
-      end;
-      CaptForm.SetBounds(l, t, w, h);
-      if Form.FormStyle = fsMDIChild then begin
-        if MDISkinProvider <> nil then
-          p := TsSkinProvider(MDISkinProvider).Form.ClientToScreen(Point(Form.Left + GetAlignShift(TsSkinProvider(MDISkinProvider).Form, alLeft, True){ + 2}, Form.Top + GetAlignShift(TsSkinProvider(MDISkinProvider).Form, alTop, True){ + 2}));
+        if BorderForm <> nil then begin
+          h := MenuHeight * LinesCount + 1;
+          t := Form.Top + OffsetY - h - ShadowSize.Top - DiffTitle(BorderForm);
+          l := Form.Left + SysBorderWidth(Form.Handle, BorderForm, False);
+          w := Form.Width - 2 * SysBorderWidth(Form.Handle, BorderForm, False);
+          if h <> 0 then
+            inc(h);
+        end
+        else begin
+          h := Form.Height;
+          t := Form.Top;
+          l := Form.Left;
+          w := Form.Width;
 
-        SetWindowPos(CaptForm.Handle, 0, p.x, p.y, Form.Width, HeaderHeight, SWPA_SHOW);
-      end
-      else
-        if GetWindowLong(Form.Handle, GWL_EXSTYLE) and WS_EX_TOPMOST <> 0 then
-          SetWindowPos(CaptForm.Handle, HWND_TOPMOST, l, t, w, h, SWPA_SHOW)
+          Rgn := GetRgnFromArOR(sp);
+          cR := acClientRect(Form.Handle);
+          SubRgn := CreateRectRgn(cR.Left, cR.Top, cR.Right, cR.Bottom);
+          CombineRgn(Rgn, Rgn, SubRgn, RGN_DIFF);
+          DeleteObject(SubRgn);
+
+          if (Form.Parent <> nil) or (Form.FormStyle = fsMDIChild) then begin
+            DC := GetDC(Form.Handle);
+            if GetClipBox(DC, cR) = NULLREGION then begin
+              FreeAndNil(CaptForm);
+              ReleaseDC(Form.Handle, DC);
+              Exit;
+            end;
+            if (cR.Left < cR.Right) and (cR.Top < cR.Bottom) then begin
+              SubRgn := CreateRectRgn(cR.Left, cR.Top, cR.Right, cR.Bottom);
+              CombineRgn(Rgn, Rgn, SubRgn, RGN_AND);
+              DeleteObject(SubRgn);
+            end;
+            ReleaseDC(Form.Handle, DC);
+          end;
+          SetWindowRgn(CaptForm.Handle, Rgn, False);
+        end;
+        CaptForm.SetBounds(l, t, w, h);
+        if Form.FormStyle = fsMDIChild then begin
+          if MDISkinProvider <> nil then
+            p := TsSkinProvider(MDISkinProvider).Form.ClientToScreen(Point(Form.Left + GetAlignShift(TsSkinProvider(MDISkinProvider).Form, alLeft, True){ + 2}, Form.Top + GetAlignShift(TsSkinProvider(MDISkinProvider).Form, alTop, True){ + 2}));
+
+          SetWindowPos(CaptForm.Handle, 0, p.x, p.y, Form.Width, HeaderHeight, SWPA_SHOW);
+        end
         else
-          SetWindowPos(CaptForm.Handle, HWND_TOP{GetNextWindow(sp.Form.Handle, GW_HWNDPREV)}, l, t, w, h, SWPA_SHOW);
+          if GetWindowLong(Form.Handle, GWL_EXSTYLE) and WS_EX_TOPMOST <> 0 then
+            SetWindowPos(CaptForm.Handle, HWND_TOPMOST, l, t, w, h, SWPA_SHOW)
+          else
+            SetWindowPos(CaptForm.Handle, HWND_TOP{GetNextWindow(sp.Form.Handle, GW_HWNDPREV)}, l, t, w, h, SWPA_SHOW);
 
-      ShowWindow(CaptForm.Handle, SW_SHOWNOACTIVATE);
-      RedrawWindow(CaptForm.Handle, nil, 0, RDWA_FRAMENOW);
-    end;
+        ShowWindow(CaptForm.Handle, SW_SHOWNOACTIVATE);
+        RedrawWindow(CaptForm.Handle, nil, 0, RDWA_FRAMENOW);
+      end;
 end;
 
 
@@ -2135,8 +2133,8 @@ begin
   case Max of
     -100..8: Result := 1;
     9..16:   Result := 8;
-    17..33:  Result := 16;
-    34..48:  Result := 24
+    17..38:  Result := 16;
+    39..48:  Result := 24
     else     Result := 32
   end;
 end;
@@ -3225,7 +3223,7 @@ begin
             if ac_ChangeThumbPreviews and (LParamHi <> 0) and (LParamLo <> 0) then // Task menu support when not MainFormOnTaskBar
               Result := LRESULT(SetThumbIcon(Form.Handle, Self, LParamHi, LParamLo));
 
-        SM_ALPHACMD:          AC_SMAlphaCmd_Skinned(Message);
+        SM_ALPHACMD: AC_SMAlphaCmd_Skinned(Message);
         CM_COLORCHANGED:
           if FormState and (FS_ANIMSHOWING or FS_ANIMCLOSING) <> 0 then
             Exit;
@@ -3292,7 +3290,12 @@ begin
         WM_NCLBUTTONUP,
         WM_LBUTTONUP:         AC_WMLButtonUp(TWMNCLButtonUp(Message));
 
-        WM_ENTERIDLE:         Message.Result := 0;
+        WM_ENTERIDLE:
+          if Message.WParam = MSGF_DIALOGBOX then
+            OldWndProc(Message)
+          else
+            Message.Result := 0;
+
         WM_PRINTCLIENT:       ;
 
 {
@@ -3475,13 +3478,14 @@ begin
 end;
 
 
-procedure TsSkinProvider.PaintForm(DC: hdc; SendUpdated: boolean = True);
+procedure TsSkinProvider.PaintForm(DC: hdc; PaintRect: TRect; SendUpdated: boolean = True);
 var
   Changed: boolean;
   i, w: integer;
   R: TRect;
 begin
   R := Form.ClientRect;
+  IntersectClipRect(DC, PaintRect.Left, PaintRect.Top, PaintRect.Right, PaintRect.Bottom);
   with SkinData, SkinManager do
     if CtrlSkinState and ACS_FAST <> 0 then begin
       if Form.FormStyle <> fsMDIForm then begin
@@ -3954,12 +3958,15 @@ var
           R.Right := R.Left + tsAdded.cx + 4;
           if (R.Left + 8 < R.Right) and (FTitleSkinIndex >= 0) then begin
             FCommonData.FCacheBmp.Canvas.Font.Assign(FAddedTitle.Font);
-            FCommonData.FCacheBmp.Canvas.Font.Height := sMan.ScaleInt(FAddedTitle.Font.Height);
-            if (FAddedTitle.Font.Color = clNone) or (FAddedTitle.Font.Color = clWindowText) then
-              FCommonData.FCacheBmp.Canvas.Font.Color := sMan.gd[FTitleSkinIndex].Props[integer(FormActive)].FontColor.Color
-            else
-              if not FormActive then
-                FCommonData.FCacheBmp.Canvas.Font.Color := BlendColors(sMan.gd[FTitleSkinIndex].Props[0].FontColor.Color, FAddedTitle.Font.Color, 127);
+            FCommonData.FCacheBmp.Canvas.Font.Height := FAddedTitle.Font.Height;//sMan.ScaleInt(FAddedTitle.Font.Height);
+            case FAddedTitle.Font.Color of
+              clNone, clWindowText:
+//            if (FAddedTitle.Font.Color = clNone) or (FAddedTitle.Font.Color = clWindowText) then
+                FCommonData.FCacheBmp.Canvas.Font.Color := sMan.gd[FTitleSkinIndex].Props[integer(FormActive)].FontColor.Color
+              else
+                if not FormActive then
+                  FCommonData.FCacheBmp.Canvas.Font.Color := BlendColors(sMan.gd[FTitleSkinIndex].Props[0].FontColor.Color, FAddedTitle.Font.Color, 127);
+            end;
 
             if BorderForm = nil then begin
               FCommonData.FCacheBmp.Canvas.Brush.Style := bsClear;
@@ -4271,15 +4278,23 @@ begin
     MenuChanged := False;
     FCommonData.BGChanged := False;
     if Assigned(Form.OnPaint) and IsCached(SkinData) then begin
-      SavedCanvas := Form.Canvas.Handle;
-      Form.Canvas.Handle := SkinData.FCacheBmp.Canvas.Handle;
-      SavedDC := SaveDC(Form.Canvas.Handle);
-      MoveWindowOrg(Form.Canvas.Handle, OffsetX, OffsetY);
-      Form.Canvas.Lock;
-      Form.OnPaint(Form);
-      Form.Canvas.Unlock;
-      RestoreDC(Form.Canvas.Handle, SavedDC);
-      Form.Canvas.Handle := SavedCanvas;
+      if not IsIconic(Form.Handle) then begin
+        SavedCanvas := Form.Canvas.Handle;
+        Form.Canvas.Handle := SkinData.FCacheBmp.Canvas.Handle;
+        SavedDC := SaveDC(Form.Canvas.Handle);
+        MoveWindowOrg(Form.Canvas.Handle, OffsetX, OffsetY);
+        Form.Canvas.Lock;
+        Form.OnPaint(Form);
+        Form.Canvas.Unlock;
+        RestoreDC(Form.Canvas.Handle, SavedDC);
+        Form.Canvas.Handle := SavedCanvas;
+      end
+      else begin
+        FirstInitialized := True;
+        SkinData.BGChanged := True; // Call OnPaint later when restored
+        FCommonData.Updating := False;
+        Exit;
+      end;
     end;
     SkinData.PaintOuterEffects(Form, Point(OffsetX, OffsetY));
     FirstInitialized := True;
@@ -5164,7 +5179,12 @@ begin
     sbh := SysBorderHeight(Form.Handle, BorderForm);
     Height := CaptionHeight + sbh + SysBorderWidth(Form.Handle, BorderForm, False) + MenuHeight + ShadowSize.Top;
     cy := iff(Full, TempBmp.Height, CaptionHeight + sbh);
-    BitBlt(Canvas.Handle, 0, 0, Width, cy, FCommonData.FCacheBmp.Canvas.Handle, CaptWidth - Width - 1, 0, SRCCOPY);
+    Canvas.Lock;
+    try
+      BitBlt(Canvas.Handle, 0, 0, Width, cy, FCommonData.FCacheBmp.Canvas.Handle, CaptWidth - Width - 1, 0, SRCCOPY);
+    finally
+      Canvas.Unlock;
+    end;
   end;
 end;
 
@@ -5203,7 +5223,7 @@ begin
                      (Form <> TsSkinProvider(MDISkinProvider).Form.ActiveMDIChild)) then begin
       SavedDC := SaveDC(DC);
       ExcludeControls(DC, Form, 0, 0);
-      PaintForm(DC);
+      PaintForm(DC, MkRect(Form));
       if IsGripVisible(Self) then begin
         MoveWindowOrg(DC, -OffsetX, -OffsetY);
         PaintGrip(DC, Self);
@@ -5369,7 +5389,7 @@ begin
              Assigned(TsSkinProvider(MDISkinProvider).Form.ActiveMDIChild) and
                (TsSkinProvider(MDISkinProvider).Form.ActiveMDIChild.WindowState = wsMaximized) and
                  (Form <> TsSkinProvider(MDISkinProvider).Form.ActiveMDIChild)) then
-      PaintForm(Form.Canvas.Handle);
+      PaintForm(Form.Canvas.Handle, PS.rcPaint);
 
   finally
     Form.Canvas.UnLock;
@@ -6571,7 +6591,7 @@ begin
 
       if HaveBorder(Self) and (FormState and FS_BLENDMOVING = 0) then
         if MDIButtonsNeeded then begin
-          if (TWMActivate(Message).Active <> WA_INACTIVE) or (Form.ActiveMDIChild.Active) then begin
+          if (TWMActivate(Message).Active <> WA_INACTIVE) or Form.ActiveMDIChild.Active then begin
             FormActive := (TWMActivate(Message).Active <> WA_INACTIVE) or (Form.ActiveMDIChild.Active);
             FLinesCount := -1;
           end;
@@ -6697,7 +6717,7 @@ begin
                       (SkinData.FCacheBmp <> nil {it's possible under Aero}) then begin // Window will be hidden
             if not IsIconic(Form.Handle) then begin
               if SkinData.SkinManager.ShowState <> saMinimize then // Closing
-                if FAllowAnimation and (SkinData.SkinManager.AnimEffects.FormHide.Active) and
+                if FAllowAnimation and SkinData.SkinManager.AnimEffects.FormHide.Active and
                      SkinData.SkinManager.Effects.AllowAnimation and
                        (FormState and FS_ANIMCLOSING = 0) and
                          (Form.Parent = nil) then begin
@@ -6801,7 +6821,7 @@ begin
           KillAnimations;
           if (Form <> nil) and Form.Visible then
             if FCommonData <> nil then begin
-              FCommonData.BGChanged := True; // Clear cache if form closing was cancelled
+//            FCommonData.BGChanged := True; // Clear cache if form closing was cancelled
               SetHotHT(0);
             end;
         end;
@@ -7064,7 +7084,7 @@ begin
               if SkinData.SkinManager.Options.NativeBordersMaximized and (Form.WindowState = wsMaximized) and (BorderForm <> nil) then
                 FreeAndNil(BorderForm);
               // If can optimize (Pre-paint the form while is under the BorderForm)
-              if (BorderForm <> nil) then begin // Update extended borders
+              if BorderForm <> nil then begin // Update extended borders
                 if BorderForm.AForm = nil then
                   BorderForm.CreateNewForm;
 
@@ -7109,8 +7129,7 @@ begin
                    ((ListSW = nil) or
                       (ListSW.sBarVert = nil) or
                         (ListSW.sBarHorz = nil) or
-                          (not ListSW.sBarVert.fScrollVisible and
-                            not ListSW.sBarHorz.fScrollVisible)) then begin // Pre-paint the form while is under the BorderForm
+                          (not ListSW.sBarVert.fScrollVisible and not ListSW.sBarHorz.fScrollVisible)) then begin // Pre-paint the form while is under the BorderForm
 
                 if BorderForm.AForm = nil then
                   BorderForm.CreateNewForm;
@@ -7213,6 +7232,7 @@ begin
         FCaptionSkinIndex := -1;
         AlphaBroadCast(Form, Message);
         AdapterRemove;
+        KillAnimations;
         if Assigned(SkinData.SkinManager) then
           DeleteUnusedBmps(True);
 
@@ -7254,6 +7274,7 @@ begin
       end;
 
     AC_SETNEWSKIN: begin
+      KillAnimations;
       if not (csDestroying in Form.ComponentState) and Assigned(SkinData) then
         if (ACUInt(Message.LParam) = ACUInt(SkinData.SkinManager)) and not Assigned(SystemMenu) then
           PrepareForm;
@@ -7433,10 +7454,17 @@ begin
 
     AC_ENDPARENTUPDATE:
       if FCommonData.FUpdating then begin
-        FCommonData.FUpdating := False;
-        RedrawWindow(Form.Handle, nil, 0, RDW_FRAME or RDW_INVALIDATE);
-        Result := True;
-      end;
+        if InUpdating(FCommonData) then begin
+          FCommonData.FUpdating := False;
+          Updatergn(Self);
+          RedrawWindow(Form.Handle, nil, 0, RDW_FRAME or RDW_INVALIDATE or RDW_ALLCHILDREN or RDW_UPDATENOW);
+          SetParentUpdated(Form);
+          Result := True;
+        end;
+      end
+      else
+        if SkinData.CtrlSkinState and ACS_FAST <> 0 then
+          SetParentUpdated(Form);
 
     AC_SETBGCHANGED:
       FCommonData.BGChanged := True;
@@ -7650,8 +7678,7 @@ var
 begin
   if FDrawNonClientArea and FDrawClientArea then begin // If first showing
     if Form.Showing then begin
-//      SkinData.SkinManager.UpdateScale(Form);
-      if Assigned(SkinData.SkinManager) then
+      if Assigned(SkinData.SkinManager) {$IFDEF D2010}and (Form.ClassName <> 'TMessageForm'){$ENDIF} then
         SkinData.SkinManager.UpdateScale(Form);
 
       if Form.FormStyle = fsMDIChild{ and ((MDISkinProvider = nil) or TsSkinProvider(MDISkinProvider).FInAnimation) }then begin
@@ -7697,7 +7724,7 @@ begin
       if fAnimating then begin
         FCommonData.Updating := True; // Don't draw child controls
         FInAnimation := True;
-        lInted := DoLayered(Form.Handle, True);
+        lInted := DoLayered(Form.Handle, True, 0);
 //        X := MaxByte;
         if lInted then begin
           if BorderForm = nil then
@@ -7731,6 +7758,10 @@ begin
 //      SetWindowLong(Form.Handle, GWL_STYLE, GetWindowLong(Form.Handle, GWL_STYLE) and not WS_VISIBLE and not WS_CLIPSIBLINGS);
 //      SetWindowLong(Form.Handle, GWL_EXSTYLE, GetWindowLong(Form.Handle, GWL_EXSTYLE) or WS_EX_LAYERED or WS_EX_NOPARENTNOTIFY);
       OldWndProc(Message);
+
+//      if lInted then
+//        DoLayered(Form.Handle, True, 0);
+        
 //      SetWindowLong(Form.Handle, GWL_EXSTYLE, GetWindowLong(Form.Handle, GWL_EXSTYLE) and not WS_EX_LAYERED);
 //      CanLog := False;
 
@@ -7769,6 +7800,12 @@ begin
 
         fAnimating := False;
         AnimShowForm(Self, SkinData.SkinManager.AnimEffects.FormShow.Time, X, SkinData.SkinManager.AnimEffects.FormShow.Mode);
+
+//        DoLayered(Form.Handle, False, 255);
+//        while SetWindowLong(Form.Handle, GWL_EXSTYLE, GetWindowLong(Form.Handle, GWL_EXSTYLE) and not WS_EX_LAYERED) = 0 do;
+
+//        Application.UpdateVisible;
+
         RgnChanging := False;
       end
       else
@@ -7917,12 +7954,13 @@ end;
 procedure TsSkinProvider.AC_WMSetIcon(var Message: TMessage);
 begin
   if not (csLoading in ComponentState) and (Message.LParam <> 0) and not InAnimationProcess and Form.Showing then begin
-    if not AeroIsEnabled then
+    if not AeroIsEnabled then begin
       Form.Perform(WM_SETREDRAW, 0, 0);
-
-    OldWndProc(Message);
-    if not AeroIsEnabled then
+      OldWndProc(Message);
       Form.Perform(WM_SETREDRAW, 1, 0);
+    end
+    else
+      OldWndProc(Message);
 
     UpdateSkinCaption(Self);
   end
@@ -7936,14 +7974,14 @@ procedure TsSkinProvider.AC_CMVisibleChanged_Unskinned(var Message: TMessage);
 var
   i: integer;
 begin
-  if (Message.WParam = 1) and Assigned(SkinData.SkinManager) then
+  if (Message.WParam = 1) and Assigned(SkinData.SkinManager) {$IFDEF D2010}and (Form.ClassName <> 'TMessageForm'){$ENDIF} then
     SkinData.SkinManager.UpdateScale(Form);
 
   if FDrawNonClientArea and not Application.Terminated then // If first showing
     if (Message.WParam = 0) and (SkinData.SkinManager <> nil) and SkinData.SkinManager.CommonSkinData.Active then
       if not IsIconic(Form.Handle) then begin
         if SkinData.SkinManager.ShowState <> saMinimize then // Closing
-          if FAllowAnimation and (SkinData.SkinManager.AnimEffects.FormHide.Active) and
+          if FAllowAnimation and SkinData.SkinManager.AnimEffects.FormHide.Active and
                SkinData.SkinManager.Effects.AllowAnimation and
                  (FormState and FS_ANIMCLOSING = 0) and
                    (Form.Parent = nil) then begin
@@ -7988,7 +8026,7 @@ begin
                SkinData.SkinManager.Active and
                  DrawNonClientArea and
                    SkinData.SkinManager.Effects.AllowAnimation and
-                     (SkinData.SkinManager.AnimEffects.FormHide.Active) {and
+                     SkinData.SkinManager.AnimEffects.FormHide.Active {and
            (SkinData.SkinManager.AnimEffects.FormHide.Time > 0) }then begin
         acHideTimer := nil;
         SkipAnimation := True;
@@ -8910,12 +8948,11 @@ begin
       end
 
       else
-        if BetWeen(Message.HitTest, HTITEM, HTITEM + MaxByte) then begin
+        if BetWeen(Message.HitTest, HTITEM, HTITEM + MaxByte) then
           if Assigned(FTitleBar) then begin
             Item := FTitleBar.Items[Message.HitTest - HTITEM];
             Item.DoMouseUp(mbRight, [], Message.XCursor, Message.YCursor);
           end;
-        end
     end;
   end
   else
@@ -9013,6 +9050,9 @@ begin
       DC := TWMPaint(Message).DC;
       FCommonData.PrintDC := DC;
       FCommonData.FUpdating := False;
+      if (FCommonData.FCacheBmp = nil) or FCommonData.FCacheBmp.Empty then
+        FCommonData.BGChanged := True;
+
       if BorderForm <> nil then begin
         if FCommonData.BGChanged then
           PaintAll;
@@ -9042,12 +9082,15 @@ begin
         MoveWindowOrg(DC, OffsetX, OffsetY);
         GetClientRect(Form.Handle, cR);
         IntersectClipRect(DC, 0, 0, WidthOf(cR), HeightOf(cR));
-        if SkinData.CtrlSkinState and ACS_FAST = 0 then
-          PaintForm(DC)
+        if SkinData.CtrlSkinState and ACS_FAST = 0 then begin
+          SavedDC := SaveDC(DC);
+          PaintForm(DC, MkRect(Form));
+          RestoreDC(DC, SavedDC);
+        end
         else begin
           SavedDC := SaveDC(DC);
           ExcludeControls(DC, Form, 0, 0);
-          PaintForm(DC);
+          PaintForm(DC, MkRect(Form));
           RestoreDC(DC, SavedDC);
           if Form.FormStyle <> fsMDIForm then
             PaintControls(DC, Form, True, MkPoint, 0, FormState and FS_ANIMCLOSING = 0);
@@ -9115,42 +9158,41 @@ var
   cR: TRect;
 begin
   if IsWindowVisible(form.Handle){ Form.Showing} and FDrawClientArea then begin
-    if (SkinData.CtrlSkinState and ACS_LOCKED <> 0) or FCommonData.FUpdating then
-      Exit;
+    if (SkinData.CtrlSkinState and ACS_LOCKED = 0) and not FCommonData.FUpdating then begin
+      if not (csPaintCopy in Form.ControlState) and (Message.WParam <> WParam(Message.LParam) {PerformEraseBackground, TntSpeedButtons}) then begin
+        if not IsCached(FCommonData) or ((Form.FormStyle = fsMDIForm) and (Form.ActiveMDIChild <> nil) and (Form.ActiveMDIChild.WindowState = wsMaximized)) then begin
+          if (Form.FormStyle = fsMDIChild) and (FCommonData.FCacheBmp <> nil) and (MDISkinProvider <> nil) then begin
+            GetClientRect(TsSkinProvider(MDISkinProvider).Form.Handle, cR);
+            if (PtInRect(cR, Form.BoundsRect.TopLeft) and PtInRect(cR, Form.BoundsRect.BottomRight)) then begin
+              FCommonData.FCacheBmp.Height := min(FCommonData.FCacheBmp.Height, CaptionHeight + SysBorderHeight(Form.Handle, BorderForm) + LinesCount * MenuHeight + 1);
+              FCommonData.BGChanged := True;
+            end
+          end;
+          AC_WMEraseBkGndHandler(TWMPaint(Message).DC);
+          if MDICreating then begin
+            MDICreating := False;
+            if Form.FormStyle = fsMDIChild then
+              ChildProvider := Self;
+          end;
+        end
+        else
+          if not FCommonData.FUpdating then begin
+            if (FCommonData.FCacheBmp <> nil) and not FCommonData.BGChanged then
+              CopyWinControlCache(Form, FCommonData, Rect(OffsetX, OffsetY, OffsetX + Form.ClientWidth, OffsetY + Form.ClientHeight), MkRect(Form.ClientWidth, Form.ClientHeight), TWMPaint(Message).DC, False);
 
-    if not (csPaintCopy in Form.ControlState) and (Message.WParam <> WParam(Message.LParam) {PerformEraseBackground, TntSpeedButtons}) then begin
-      if not IsCached(FCommonData) or ((Form.FormStyle = fsMDIForm) and (Form.ActiveMDIChild <> nil) and (Form.ActiveMDIChild.WindowState = wsMaximized)) then begin
-        if (Form.FormStyle = fsMDIChild) and (FCommonData.FCacheBmp <> nil) and (MDISkinProvider <> nil) then begin
-          GetClientRect(TsSkinProvider(MDISkinProvider).Form.Handle, cR);
-          if (PtInRect(cR, Form.BoundsRect.TopLeft) and PtInRect(cR, Form.BoundsRect.BottomRight)) then begin
-            FCommonData.FCacheBmp.Height := min(FCommonData.FCacheBmp.Height, CaptionHeight + SysBorderHeight(Form.Handle, BorderForm) + LinesCount * MenuHeight + 1);
-            FCommonData.BGChanged := True;
+            SetParentUpdated(Form);
           end
-        end;
-        AC_WMEraseBkGndHandler(TWMPaint(Message).DC);
-        if MDICreating then begin
-          MDICreating := False;
-          if Form.FormStyle = fsMDIChild then
-            ChildProvider := Self;
-        end;
       end
       else
-        if not FCommonData.FUpdating then begin
-          if (FCommonData.FCacheBmp <> nil) and not FCommonData.BGChanged then
-            CopyWinControlCache(Form, FCommonData, Rect(OffsetX, OffsetY, OffsetX + Form.ClientWidth, OffsetY + Form.ClientHeight), MkRect(Form.ClientWidth, Form.ClientHeight), TWMPaint(Message).DC, False);
+        if Message.WParam <> 0 then // From PaintTo
+          if not FCommonData.BGChanged then
+            if IsCached(FCommonData) then
+              BitBlt(TWMPaint(Message).DC, 0, 0, Form.Width, Form.Height, FCommonData.FCacheBmp.Canvas.Handle, OffsetX, OffsetY, SRCCOPY)
+            else
+              FillDC(TWMPaint(Message).DC, MkRect(Form), GetBGColor(SkinData, 0));
 
-          SetParentUpdated(Form);
-        end
-    end
-    else
-      if Message.WParam <> 0 then // From PaintTo
-        if not FCommonData.BGChanged then
-          if IsCached(FCommonData) then
-            BitBlt(TWMPaint(Message).DC, 0, 0, Form.Width, Form.Height, FCommonData.FCacheBmp.Canvas.Handle, OffsetX, OffsetY, SRCCOPY)
-          else
-            FillDC(TWMPaint(Message).DC, MkRect(Form), GetBGColor(SkinData, 0));
-
-    Message.Result := 1;
+      Message.Result := 1;
+    end;
   end
   else
     OldWndProc(Message);
@@ -9227,8 +9269,8 @@ begin
   if (sPopupCalendar <> nil) and sPopupCalendar.Visible then
     sPopupCalendar.Close;
 
-  if (Message.WParam = 1) and (SkinData.SkinManager.AnimEffects.Minimizing.Active) and (FormState and FS_ANIMMINIMIZING = 0) then
-    if (BorderForm <> nil) then begin
+  if (Message.WParam = 1) and SkinData.SkinManager.AnimEffects.Minimizing.Active and (FormState and FS_ANIMMINIMIZING = 0) then
+    if BorderForm <> nil then begin
       if FormState and FS_DISABLED = 0 then
         BorderForm.UpdateExBordersPos(False) // Update z-order ( BDS )
     end
@@ -9237,8 +9279,7 @@ begin
            (Message.WParam = 1) and
              (Application.MainForm.WindowState = wsMinimized) and
                not IsIconic(Application.MainForm.Handle) and
-                 ((FormTimer = nil) or
-                   not TacMinTimer(FormTimer).Minimized) then begin // Restore a main form if is not restored still
+                 ((FormTimer = nil) or not TacMinTimer(FormTimer).Minimized) then begin // Restore a main form if is not restored still
         Application.MainForm.WindowState := wsNormal;
         InvalidateRect(Application.MainForm.Handle, nil, True);
         RedrawWindow(Application.MainForm.Handle, nil, 0, RDWA_ALLNOW);
@@ -9251,7 +9292,7 @@ begin
   OldWndProc(Message);
   if (Form.FormStyle = fsMDIChild) and Assigned(MDISkinProvider) and not (csDestroying in TsSkinProvider(MDISkinProvider).ComponentState) then
     with TsSkinProvider(MDISkinProvider) do
-      if (Form.WindowState <> wsMaximized) then begin
+      if Form.WindowState <> wsMaximized then begin
         MenusInitialized := False;
         Menuchanged := True;
         SkinData.BGChanged := True;
@@ -9380,7 +9421,7 @@ begin
           end
           else
             if SkinData.SkinManager.ShowState <> saMinimize then begin // Closing
-              if FAllowAnimation and (SkinData.SkinManager.AnimEffects.FormHide.Active) and
+              if FAllowAnimation and SkinData.SkinManager.AnimEffects.FormHide.Active and
                    SkinData.SkinManager.Effects.AllowAnimation and
                      (Form.Parent = nil) and (Form.FormStyle <> fsMDIChild) then begin
                 if AeroIsEnabled then
@@ -10613,7 +10654,6 @@ begin
             SetHotHT(Message.Result) // Title icon hovered
           else begin
             SetHotHT(0);
-
             if MaxMoving and IsZoomed(TsSkinProvider(FOwner).Form.Handle) then begin
               p := acMousePos;
               if (abs(LastMousePos.X - p.X) > 5) or (abs(LastMousePos.Y - p.Y) > 5) then begin
@@ -12466,7 +12506,7 @@ begin
                       else
 {$ENDIF}
                       appHandle := Application.{$IFDEF FPC}MainFormHandle{$ELSE}Handle{$ENDIF};
-                      if (ai.Wnd = appHandle) then begin
+                      if ai.Wnd = appHandle then begin
                         if SendMessage(hToolBar, TB_GETITEMRECT, i, LPARAM(ipRemoteBuffer)) <> 0 then
                           ReadProcessMemory(hProcess, ipRemoteBuffer, @Result, SizeOf(TRect), ipBytesRead);
 

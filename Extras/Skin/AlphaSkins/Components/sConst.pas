@@ -15,7 +15,6 @@ uses
 const
   CompatibleSkinVersion = 8.45; // Version of supported skins in current version of the package
   MaxCompSkinVersion = 11.99;
-  ExceptTag = $100 {256}; // Bit Mask for the tag value in 3rd-party controls which will not be skinned automatically (Old value is -98)
 
   // Data characters for skins
   TexChar   = Char('~');
@@ -313,7 +312,8 @@ type
 
 const
   NCS_DROPSHADOW = $20000;
-{$IFNDEF DELPHI_XE3}
+{$IFNDEF D2010}
+//{$IFNDEF DELPHI_XE3}
   BS_SPLITBUTTON    = 12;
   BS_DEFSPLITBUTTON = 13;
   BS_COMMANDLINK    = 14;
@@ -331,6 +331,9 @@ const
   s_WinControlForm = 'TWinControlForm';
   s_NoFocusProp    = 'ACNOFOCUS';
   s_acScale        = 'ACSCALE';
+
+  s_MSSansSerif = 'MS Sans Serif';
+  s_Arial = 'Arial';
 
 {$IFNDEF DISABLEPREVIEWMODE} // Used with ASkinEditor
   s_PreviewKey   = '/acpreview';           //
@@ -483,6 +486,7 @@ const
   ssButtons: TsCodes       = [COC_TsButton, COC_TsBitBtn, COC_TsSpeedButton];
 
 var
+  ExceptTag: integer = $100 {256}; // Bit Mask for the tag value in 3rd-party controls which will not be skinned automatically (Old value is -98)
   acWinVer: integer;
   sPopupCalendar: TForm;
   acDebugMode: boolean = False;
@@ -535,7 +539,7 @@ var
   ac_DialogsLevel:        integer = 2;     // Deep of system dialogs skinning
   ac_ChangeThumbPreviews: boolean = False; // Allow a changing of Aero preview window by AlphaControls (is not ready currently)
   ac_AllowHotEdits:       boolean = False; // Allow to repaint edit controls when hovered by mouse pointer
-  StdTransparency:        boolean = False; // Set this variable to True for a standard mechanism of GraphicControls repainting
+//  StdTransparency:        boolean = False; // Set this variable to True for a standard mechanism of GraphicControls repainting
 
   ac_CXSIZEFRAME:  integer = 0;
   ac_CXFIXEDFRAME: integer = 0;

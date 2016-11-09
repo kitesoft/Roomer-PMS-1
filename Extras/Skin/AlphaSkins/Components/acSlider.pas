@@ -1,6 +1,6 @@
 unit acSlider;
 {$I sDefs.inc}
-//+
+
 interface
 
 uses
@@ -21,6 +21,7 @@ type
 
   TsButtonPanel = class(TsPanel)
   public
+    function PrepareCache: boolean; override;
     procedure WndProc(var Message: TMessage); override;
   end;
 
@@ -33,7 +34,8 @@ type
     FSliderOn,
     FReversed,
     FUseSymbols,
-    FShowCaption: boolean;
+    FShowCaption,
+    FKeepThumbAspectRatio: boolean;
 
     FImageIndexOn,
     FImageIndexOff: TImageIndex;
@@ -136,10 +138,11 @@ type
     property ContentPlacing: TSliderContentPlacing read FContentPlacing write SetContentPlacing default scpThumb;
     property ThumbSizeInPercent: TPercent read FThumbSizeInPercent write SetThumbSizeInPercent default 50;
 
-    property Reversed:    boolean index 0 read FReversed    write SetBoolean default False;
-    property ShowCaption: boolean index 1 read FShowCaption write SetBoolean default True;
-    property SliderOn:    Boolean index 2 read FSliderOn    write SetBoolean default True;
-    property UseSymbols:  boolean index 3 read FUseSymbols  write SetBoolean default False;
+    property Reversed:              boolean index 0 read FReversed    write SetBoolean default False;
+    property ShowCaption:           boolean index 1 read FShowCaption write SetBoolean default True;
+    property SliderOn:              boolean index 2 read FSliderOn    write SetBoolean default True;
+    property UseSymbols:            boolean index 3 read FUseSymbols  write SetBoolean default False;
+    property KeepThumbAspectRatio:  boolean index 4 read FKeepThumbAspectRatio write SetBoolean default True;
     {:@event}
     property OnChanging:     TacOnChangingEvent   read FOnChanging     write FOnChanging;
     {:@event}
@@ -150,7 +153,8 @@ type
 implementation
 
 uses
-  sSkinProps, sStyleSimply, acntUtils, math, sGraphUtils, sMessages, sVCLUtils;
+  math,
+  sSkinProps, sStyleSimply, acntUtils, sGraphUtils, sMessages, sVCLUtils, sDefaults;
 
 
 const
@@ -552,6 +556,7 @@ begin
   FThumbSizeInPercent := 50;
   FContentPlacing := scpThumb;
   FReversed := False;
+  FKeepThumbAspectRatio := True;
 
   FGlyphIndexOff := -1;
   FGlyphIndexOn  := -1;
@@ -741,6 +746,9 @@ end;
 
 
 function TsSlider.PrepareCache: boolean;
+var
+  R: TRect;
+  CI: TCacheInfo;
 
   function ImageIndex: integer;
   begin
@@ -753,16 +761,17 @@ function TsSlider.PrepareCache: boolean;
 begin
   SkinData.UpdateIndexes;
   InitCacheBmp(SkinData);
+  CI := GetParentCache(SkinData);
   if CustomImageUsed then begin
     if SkinData.SkinManager.Active then
-      PaintItem(SkinData.SkinManager.ConstData.Sections[ssTransparent], GetParentCache(SkinData), False, 0, MkRect(Self), Point(Left, Top), SkinData.FCacheBMP, SkinData.SkinManager)
+      PaintItem(SkinData.SkinManager.ConstData.Sections[ssTransparent], CI, False, 0, MkRect(Self), Point(Left, Top), SkinData.FCacheBMP, SkinData.SkinManager)
     else
       FillDC(SkinData.FCacheBmp.Canvas.Handle, MkRect(Self), ColorToRGB(Color));
 
     Images.Draw(SkinData.FCacheBmp.Canvas, 0, 0, ImageIndex);
   end
   else
-    PaintItem(SkinData.SkinIndex, GetParentCache(SkinData), True, 0, MkRect(Self), Point(Left, Top), SkinData.FCacheBMP, SkinData.SkinManager);
+    PaintItem(SkinData.SkinIndex, CI, True, 0, MkRect(Self), Point(Left, Top), SkinData.FCacheBMP, SkinData.SkinManager);
 
   if {FShowCaption and }(ContentPlacing = scpBackground) then
     PaintContent(ContentRect, SkinData.FCacheBmp.Canvas);
@@ -774,6 +783,11 @@ begin
   if DockSite then
     PaintDragPanel(SkinData.FCacheBmp.Canvas.Handle);
 
+  if not Enabled then begin
+    R := MkRect(SkinData.FCacheBmp);
+    OffsetRect(R, CI.X + Left, CI.Y + Top);
+    BlendTransRectangle(SkinData.FCacheBMP, 0, 0, CI.Bmp, R, DefBlendDisabled);
+  end;
   SkinData.BGChanged := False;
   Result := True;
 end;
@@ -960,8 +974,12 @@ end;
 procedure TsSlider.UpdateButton;
 begin
   if Orientation = coHorizontal then begin
-    FButton.Width := Width * FThumbSizeInPercent div 100;
     FButton.Height := Height - ThumbMargin(asTop) - ThumbMargin(asBottom);
+    if FKeepThumbAspectRatio then
+      FButton.Width := FButton.Height
+    else
+      FButton.Width := Width * FThumbSizeInPercent div 100;
+
     if not Capturing then
       if BtnInBeginning then
         FButton.Left := ThumbMargin(asLeft)
@@ -971,8 +989,12 @@ begin
     FButton.Top := ThumbMargin(asTop);
   end
   else begin
-    FButton.Width := Width - ThumbMargin(asLeft) - ThumbMargin(asRight);
     FButton.Height := Height * FThumbSizeInPercent div 100;
+    if FKeepThumbAspectRatio then
+      FButton.Width := FButton.Height
+    else
+      FButton.Width := Width - ThumbMargin(asLeft) - ThumbMargin(asRight);
+
     FButton.Left := ThumbMargin(asLeft);
     if not Capturing then
       if BtnInBeginning then
@@ -1107,6 +1129,11 @@ begin
 
     WM_SIZE: 
       UpdateButton;
+
+    CM_ENABLEDCHANGED: begin
+      SkinData.Invalidate;
+      FButton.Enabled := Enabled;
+    end;
   end;
 
   if Assigned(BoundLabel) then
@@ -1164,6 +1191,12 @@ begin
       UpdateButton;
       SkinData.Invalidate;
     end;
+
+    4: if FKeepThumbAspectRatio <> Value then begin
+      FKeepThumbAspectRatio := Value;
+      UpdateButton;
+      SkinData.Invalidate;
+    end;
   end;
 end;
 
@@ -1190,12 +1223,34 @@ begin
 end;
 
 
+function TsButtonPanel.PrepareCache: boolean;
+var
+  R: TRect;
+  CI: TCacheInfo;
+begin
+  Result := inherited PrepareCache;
+  if Result and not Enabled then begin
+    R := MkRect(SkinData.FCacheBmp);
+    CI := GetParentCache(SkinData);
+    if CI.Ready then begin
+      OffsetRect(R, CI.X + Left, CI.Y + Top);
+      BlendTransRectangle(SkinData.FCacheBMP, 0, 0, CI.Bmp, R, DefBlendDisabled);
+    end;
+  end;
+end;
+
+
 procedure TsButtonPanel.WndProc(var Message: TMessage);
 begin
   case Message.Msg of
     WM_PAINT: begin
       SkinData.CtrlSkinState := SkinData.CtrlSkinState and not ACS_FAST;
       inherited;
+    end;
+
+    CM_ENABLEDCHANGED: begin
+      SkinData.Invalidate;
+//      FButton.Enabled := Enabled;
     end;
 
     WM_NCPAINT, WM_ERASEBKGND:

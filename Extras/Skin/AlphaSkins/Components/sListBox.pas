@@ -1,7 +1,7 @@
 unit sListBox;
 {$I sDefs.inc}
 //{$DEFINE LOGGED}
-//+
+
 interface
 
 uses
@@ -25,10 +25,14 @@ type
     FOnMouseLeave: TNotifyEvent;
     FBoundLabel: TsBoundLabel;
     FOnVScroll: TNotifyEvent;
+    FullPaint: boolean;
     procedure SetDisabledKind(const Value: TsDisabledKind);
     procedure CNDrawItem  (var Message: TWMDrawItem); message CN_DRAWITEM;
     procedure WMPaint     (var Message: TWMPaint);    message WM_PAINT;
     procedure WMEraseBkGnd(var Message: TWMPaint);
+{$IFDEF DELPHI6UP}
+    function GetItemTextDirect(AIndex: integer): acString;
+{$ENDIF}
   protected
     FAutoHideScroll: boolean;
     FCommonData: TsScrollWndData;
@@ -83,10 +87,11 @@ var
   XOffset: integer;
 begin
 //  if not InAnimationProcess then
+  if SkinData.SkinIndex >= 0 then
     with Message.DrawItemStruct^ do begin
       State := TOwnerDrawState(LongRec(itemState).Lo);
       if Message.Result = 0 then begin // If received not from WM_PAINT handler
-        if (Columns = 0) and (ListSW <> nil) and (ListSW.sBarHorz <> nil) then
+        if (Columns = 0) and (ListSW <> nil) and (ListSW.sBarHorz <> nil) and FullPaint then
           XOffset := ListSW.sBarHorz.ScrollInfo.nPos
         else
           XOffset := 0;
@@ -95,7 +100,9 @@ begin
         State := State + [odReserved1];
       end;
       DrawItem(integer(itemID), rcItem, State);
-    end;
+    end
+  else
+    inherited;
 end;
 
 
@@ -107,8 +114,8 @@ begin
   ControlStyle := ControlStyle - [csOpaque];
   FAutoCompleteDelay := 500;
   FAutoHideScroll := True;
-  if FCommonData.SkinSection = '' then
-    FCommonData.SkinSection := s_Edit;
+//  if FCommonData.SkinSection = '' then
+//    FCommonData.SkinSection := s_Edit;
 
   FDisabledKind := DefDisabledKind;
   FBoundLabel := TsBoundLabel.Create(Self, FCommonData);
@@ -165,7 +172,11 @@ begin
     if UseRightToLeftReading then
       DrawStyle := DrawStyle or DT_RTLREADING or DT_RIGHT;
 
+{$IFDEF DELPHI6UP}
+    s := PacChar({$IFDEF TNTUNICODE}TTntStrings{$ENDIF}GetItemTextDirect(Index){(Items)[Index]});
+{$ELSE}
     s := PacChar({$IFDEF TNTUNICODE}TTntStrings{$ENDIF}(Items)[Index]);
+{$ENDIF}
     l := Items.Count;
     bSelected := (odSelected in State);
     if SkinData.Skinned then begin
@@ -292,6 +303,26 @@ begin
   end;
 end;
 
+{$IFDEF DELPHI6UP}
+function TsCustomListBox.GetItemTextDirect(AIndex: integer): acString;
+var
+  Len: Integer;
+begin
+  if Style in [lbVirtual, lbVirtualOwnerDraw] then
+    Result := DoGetData(AIndex)
+  else begin
+    Len := TrySendMessage(Handle, LB_GETTEXTLEN, AIndex, 0);
+    if Len <> LB_ERR then begin
+      SetLength(Result, Len);
+      if Len <> 0 then begin
+        Len := TrySendMessage(Handle, LB_GETTEXT, AIndex, LPARAM(PChar(Result)));
+        SetLength(Result, Len);
+      end;
+    end;
+  end;
+end;
+{$ENDIF}
+
 
 procedure TsCustomListBox.SetAutoHideScroll(const Value: boolean);
 begin
@@ -332,6 +363,7 @@ var
     MaxBottom, MaxRight, i: Integer;
     MeasureItemStruct: TMeasureItemStruct;
   begin
+    FullPaint := True;
     R := MkRect(Width, 0);
     MaxBottom := 0;
     MaxRight := 0;
@@ -389,6 +421,8 @@ var
 
     if (R.Right > Width - 6) then
       BitBlt(DC, MaxRight, 0, Width - MaxRight - bw, R.Bottom, FCommonData.FCacheBmp.Canvas.Handle, MaxRight + bw, bw, SRCCOPY);
+
+    FullPaint := False;
   end;
 
 begin
@@ -397,7 +431,7 @@ begin
     EndPaint(Handle, PS);
   end
   else}
-    if (SkinData.Skinned or (Style in [lbOwnerDrawFixed, lbOwnerDrawVariable])) then begin
+    if (SkinData.Skinned or (Style in [{lbOwnerDrawFixed, }lbOwnerDrawVariable])) then begin
       if Message.DC <> 0 then
         DC := Message.DC
       else begin
@@ -465,6 +499,13 @@ begin
 
         AC_ENDUPDATE:
           Perform(CM_INVALIDATE, 0, 0);
+
+        AC_GETDEFINDEX: begin
+          if FCommonData.SkinManager <> nil then
+            Message.Result := FCommonData.SkinManager.ConstData.Sections[ssEdit] + 1;
+
+          Exit;
+        end
       end;
       if SkinData.Skinned then // Do not call it again
         Exit;

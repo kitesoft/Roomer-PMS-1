@@ -685,6 +685,8 @@ end;
 
 
 procedure TsTitleBar.SetImages(const Value: TCustomImageList);
+var
+  i: integer;
 begin
   if FImages <> Value then begin
     if FImages <> nil then
@@ -695,6 +697,10 @@ begin
       FImages.RegisterChanges(FImageChangeLink);
       FImages.FreeNotification(Self);
     end;
+    for i := 0 to Items.Count - 1 do
+      if Items[i].AutoSize then
+        Items[i].UpdateSize;
+
     CalcSizes;
     Invalidate;
   end;

@@ -182,7 +182,7 @@ uses
   ExtCtrls,
   {$IFDEF DELPHI6UP} DateUtils, {$ENDIF}
   {$IFDEF LOGGED} sDebugMsgs, {$ENDIF}
-  sSkinProps, sSkinManager, sPopupClndr, sVclUtils, sToolEdit, sStyleSimply;
+  sCommonData, sSkinProps, sSkinManager, sPopupClndr, sVclUtils, sToolEdit, sStyleSimply;
 
 
 function WeekNum(const TDT: TDateTime): Word;
@@ -783,15 +783,18 @@ begin
 end;
 
 
+type
+  TAccessCommonData = class(TsCommonData);
+
 procedure TsMonthCalendar.Loaded;
 var
   i: integer;
 begin
   inherited;
   if Assigned(FDragBar) and FDragBar.Visible then begin
-    FDragBar.SkinData.FSkinManager := SkinData.FSkinManager;
+    TAccessCommonData(FDragBar.SkinData).FSkinManager := TAccessCommonData(SkinData).FSkinManager;
     for i := 0 to 3 do
-      FBtns[i].SkinData.FSkinManager := SkinData.FSkinManager;
+      TAccessCommonData(FBtns[i].SkinData).FSkinManager := TAccessCommonData(SkinData).FSkinManager;
   end;
 end;
 
@@ -1543,6 +1546,7 @@ var
   FPos: real;
   DC: hdc;
 begin
+  FDragBar.Repaint;
   NewBmp := CreateBmp32(FGrid);
 {$IFDEF DELPHI6UP}
   FGrid.PaintTo(NewBmp.Canvas, 0, 0);

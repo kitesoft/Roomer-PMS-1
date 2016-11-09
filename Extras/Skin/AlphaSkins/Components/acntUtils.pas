@@ -66,7 +66,7 @@ function IsValidIndex(Value, Amount: integer; First: integer = 0): Boolean;
 function acGetAnimation: Boolean;
 procedure acSetAnimation(const Value: Boolean);
 function RectIsVisible(const ParentRect, Rect: TRect): boolean;
-function RectInRect(BigRect, SmallRect: TRect): boolean;
+function RectInRect(BigRect, SmallRect: TRect; FullInclude: boolean = True): boolean;
 function RotateRect(R: TRect): TRect;
 function RectsAnd(const R1, R2: TRect): TRect;
 function SumRects(const R1, R2: TRect): TRect;
@@ -541,11 +541,14 @@ begin
 end;
 
 
-function RectInRect(BigRect, SmallRect: TRect): boolean;
+function RectInRect(BigRect, SmallRect: TRect; FullInclude: boolean = True): boolean;
 begin
   inc(BigRect.Bottom);
   inc(BigRect.Right);
-  Result := PtInRect(BigRect, SmallRect.TopLeft) and PtInRect(BigRect, SmallRect.BottomRight);
+  if FullInclude then
+    Result := PtInRect(BigRect, SmallRect.TopLeft) and PtInRect(BigRect, SmallRect.BottomRight)
+  else
+    Result := PtInRect(BigRect, SmallRect.TopLeft) or PtInRect(BigRect, SmallRect.BottomRight);
 end;
 
 

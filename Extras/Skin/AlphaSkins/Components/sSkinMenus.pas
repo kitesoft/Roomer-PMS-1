@@ -1,7 +1,7 @@
 unit sSkinMenus;
 {$I sDefs.inc}
 //{$DEFINE LOGGED}
-//+
+
 interface
 
 uses
@@ -114,6 +114,7 @@ type
     procedure SetActive(const Value: boolean);
     constructor Create(AOwner: TComponent);
     destructor Destroy; override;
+    function NoBorder: boolean;
     procedure InitItem(Item: TMenuItem; A: boolean);
     procedure InitItems(A: boolean);
     procedure InitMenuLine(Menu: TMainMenu; A: boolean);
@@ -166,7 +167,7 @@ uses
 
 
 const
-  DontForget = 'Use OnGetExtraLineData event';
+  s_DontForget = 'Use OnGetExtraLineData event';
 
 
 var
@@ -333,13 +334,16 @@ var
       if Item.Parent.Items[Item.Parent.Count - 1 - i].Visible then begin
         if Item.Parent.Items[Item.Parent.Count - 1 - i] = Item then
           Result := True;
-          
+
         Break
       end;
   end;
 
 begin
   if (FOwner <> nil) and TsSkinManager(FOwner).Active then begin
+    if NoBorder then
+      inc(ARect.Right, 6);
+
     sm := TsSkinManager(FOwner);
     Item := TMenuItem(Sender);
     // Get RTL value from parent menu
@@ -348,7 +352,7 @@ begin
     if TempControl <> nil then begin
       if ShowHintStored then
         Application.ShowHint := AppShowHint;
-      
+
       SendAMessage(TControl(TempControl), WM_MOUSELEAVE);
       TempControl := nil;
     end;
@@ -747,7 +751,7 @@ begin
           if ExtraGlyph <> nil then
             FreeAndNil(ExtraGlyph);
 
-          ExtraCaption := DontForget;
+          ExtraCaption := s_DontForget;
           mi.HaveExtraLine := True;
           if Assigned(TsSkinManager(FOwner).OnGetMenuExtraLineData) then
             TsSkinManager(FOwner).OnGetMenuExtraLineData(mi.FirstItem, ExtraSection, ExtraCaption, ExtraGlyph, mi.HaveExtraLine);
@@ -810,6 +814,9 @@ begin
         acDrawText(ACanvas.Handle, PacChar(Text), R, DT_EXPANDTABS or DT_NOCLIP or DT_CALCRECT or DT_WORDBREAK);
 
       Width := Margin * 3 + WidthOf(R) + GlyphSize(Item, False).cx * 2 + Spacing;
+
+      if NoBorder then
+        dec(Width, 6);
     end;
     if mi.HaveExtraLine and (not Breaked(Item) or (Item.Parent.Items[0] = Item)) then
       inc(Width, ExtraWidth(mi));
@@ -1079,9 +1086,11 @@ begin
   // Text writing
   UpdateFont(ItemBmp.Canvas, Item, False, True);
 
-  s := ExtractWord(1, Item.Caption, [cLineCaption]);
-  if cMenuCaption <> CharMinus then
-    s := ExtractWord(1, s, [cMenuCaption]);
+  s := Copy(Item.Caption, 2, Length(Item.Caption) - 2);
+
+//  s := ExtractWord(1, Item.Caption, [cLineCaption]);
+//  if cMenuCaption <> CharMinus then
+//    s := ExtractWord(1, s, [cMenuCaption]);
 
   Flags := DT_WORDBREAK{DT_SINGLELINE} or DT_VCENTER or DT_CENTER or DT_HIDEPREFIX;
   R := Rect(ExtraWidth(mi), 0, ItemBmp.Width, ItemBmp.Height);
@@ -1439,6 +1448,12 @@ begin
 end;
 
 
+function TsSkinableMenus.NoBorder: boolean;
+begin
+  Result := TsSkinManager(FOwner).gd[TsSkinManager(FOwner).ConstData.Sections[ssMainMenu]].BorderIndex < 0;
+end;
+
+
 function TsSkinableMenus.IsPopupItem(Item: TMenuItem): boolean;
 begin
   Result := Item.GetParentMenu is TPopupMenu;
@@ -1621,7 +1636,7 @@ begin
         if ExtraGlyph <> nil then
           FreeAndNil(ExtraGlyph);
 
-        ExtraCaption := DontForget;
+        ExtraCaption := s_DontForget;
         mi.HaveExtraLine := True;
         if Assigned(OnGetMenuExtraLineData) then
           OnGetMenuExtraLineData(Item.Parent.Items[0], ExtraSection, ExtraCaption, ExtraGlyph, mi.HaveExtraLine);

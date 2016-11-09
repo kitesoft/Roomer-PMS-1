@@ -100,7 +100,7 @@ begin
 
   Frame := TFrame(AOwner);
   FCommonData.FOwnerControl := TControl(AOwner);
-  if Frame <> nil then begin
+  if (Frame <> nil) and not CtrlIsSkinned(Frame) then begin
     OldWndProc := Frame.WindowProc;
     Frame.WindowProc := NewWndProc;
   end;
@@ -272,6 +272,11 @@ begin
             Exit;
           end;
 
+          AC_GETSKINDATA: begin
+            Message.Result := LResult(SkinData);
+            Exit;
+          end;
+
 {          AC_SETSCALE:
             begin
               CommonMessage(Message, SkinData);
@@ -409,6 +414,11 @@ begin
           OldWndProc(Message);
           if Frame.HandleAllocated then
             SkinData.InitCommonProp;
+        end;
+
+        WM_VSCROLL, WM_HSCROLL: begin
+          OldWndProc(Message);
+          UpdateScrolls(ListSW, True);
         end;
 
         CM_MOUSEENTER:

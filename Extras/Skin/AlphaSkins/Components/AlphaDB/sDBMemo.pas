@@ -1,6 +1,6 @@
 unit sDBMemo;
 {$I sDefs.inc}
-//+
+
 interface
 
 uses
@@ -15,6 +15,7 @@ type
     FOnVScroll: TNotifyEvent;
     FOnScrollCaret: TNotifyEvent;
     FBoundLabel: TsBoundLabel;
+    FEmptyIsNull: boolean;
     FCommonData: TsScrollWndData;
     FDisabledKind: TsDisabledKind;
     FOldDataChange: TNotifyEvent;
@@ -22,6 +23,7 @@ type
     procedure DataChange(Sender: TObject);
   protected
     procedure WndProc (var Message: TMessage); override;
+    procedure Change; override;
   public
     ListSW: TacScrollWnd;
     procedure AfterConstruction; override;
@@ -33,6 +35,7 @@ type
     property BoundLabel: TsBoundLabel read FBoundLabel write FBoundLabel;
     property CharCase;
     property DisabledKind: TsDisabledKind read FDisabledKind write SetDisabledKind default DefDisabledKind;
+    property EmptyIsNull: boolean read FEmptyIsNull write FEmptyIsNull default False;
     property SkinData: TsScrollWndData read FCommonData write FCommonData;
   end;
 
@@ -62,6 +65,7 @@ begin
   inherited Create(AOwner);
   ControlStyle := ControlStyle - [csOpaque];
   FDisabledKind := DefDisabledKind;
+  FEmptyIsNull := False;
   FBoundLabel := TsBoundLabel.Create(Self, FCommonData);
   ParentColor := False;                                 
   FOldDataChange := _TDBMemo(Self).FDataLink.OnDataChange;
@@ -166,7 +170,7 @@ begin
           FOnVScroll(Self);
     end;
   end;
-
+  
   if Assigned(BoundLabel) then
     BoundLabel.HandleOwnerMsg(Message, Self);
 end;
@@ -175,6 +179,14 @@ end;
 function TsDBMemo.IsEmpty: boolean;
 begin
   Result := Text = '';
+end;
+
+
+procedure TsDBMemo.Change; 
+begin
+  inherited;
+  if EmptyIsNull and (Text = '') and (Field <> nil) then
+    Field.Clear;
 end;
 
 end.

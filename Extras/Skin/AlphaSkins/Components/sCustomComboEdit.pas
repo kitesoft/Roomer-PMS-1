@@ -244,7 +244,7 @@ begin
     DC := GetWindowDC(Parent.Handle);
     SavedDC := SaveDC(DC);
     try
-      bWidth := max(0, FOwner.BorderWidth);
+      bWidth := integer(FOwner.BorderStyle <> bsNone) * 2;//max(0, FOwner.BorderWidth);
       BitBlt(DC, Left + bWidth, Top + bWidth, Width, Height, aDC, 0, 0, SRCCOPY)
     finally
       RestoreDC(DC, SavedDC);
@@ -265,7 +265,12 @@ begin
   Flat := True;
 {$ENDIF}
   Cursor := crArrow;
-  Align := alRight; // Button is aligned by right side
+{
+  if FOwner.BiDiMode <> bdRightToLeft then
+    Align := alRight
+  else
+    Align := alLeft;
+}
   Top := 0;
   Width := 22;
   ShowCaption := False;
@@ -437,17 +442,30 @@ procedure TsCustomComboEdit.SetEditRect;
 var
   Loc: TRect;
 begin
+  if FButton <> nil then
+    if BiDiMode <> bdRightToLeft then
+      FButton.Align := alRight
+    else
+      FButton.Align := alLeft;
+
   if (Parent <> nil) and HandleAllocated then begin
     SendMessage(Handle, EM_GETRECT, 0, LPARAM(@Loc));
-    Loc.Bottom := ClientHeight;
-    Loc.Right := ClientWidth - integer(FShowButton) * FButton.Width;
     Loc.Top := 0;
+    Loc.Bottom := ClientHeight;
 
-    if (BorderStyle <> bsNone) then
-      Loc.Left := 2 * integer(not Ctl3d)
-    else
-      Loc.Left := 0;
-
+    if BidiMode <> bdRightToLeft then begin
+      Loc.Right := ClientWidth - integer(FShowButton) * FButton.Width;
+      if BorderStyle <> bsNone then
+        Loc.Left := 2 * integer(not Ctl3d)
+      else
+        Loc.Left := 0;
+    end
+    else begin
+      Loc.Left := integer(FShowButton) * FButton.Width;
+      Loc.Right := ClientWidth;
+      if BorderStyle <> bsNone then
+        InflateRect(Loc, -integer(not Ctl3d), 0);
+    end;
     SendMessage(Handle, EM_SETRECTNP, 0, LPARAM(@Loc));
     SendMessage(Handle, EM_GETRECT,   0, LPARAM(@Loc));  {debug}
   end;
@@ -567,13 +585,13 @@ begin
         AC_GETBG:
           with Message, PacBGInfo(Message.LParam)^ do begin
             InitBGInfo(SkinData, PacBGInfo(LParam), 0);
-            PacBGInfo(Message.LParam)^.Offset.X := BorderWidth;
+            PacBGInfo(Message.LParam)^.Offset.X := integer(BorderStyle <> bsNone) * 2;//BorderWidth;
             Offset.Y := Offset.X;
             Exit;
           end;
 
         AC_POPUPCLOSED: begin
-          FPopupWindow := nil;
+//          FPopupWindow := nil;
           PopupWindowClose;
           Exit;
         end;
@@ -589,6 +607,11 @@ begin
     CM_MOUSEENTER:
       if SkinData.FMouseAbove then
         Exit;
+
+    CM_MOUSELEAVE: begin
+      if (FButton <> nil) and FButton.SkinData.FMouseAbove then
+        FButton.Perform(SM_ALPHACMD, AC_MOUSELEAVE_HI, 0);
+    end;
 
 
     WM_PRINT:
@@ -900,15 +923,19 @@ begin
     Canvas.Font.Assign(Font);
     bw := BorderWidth;
     aText := EditText;
-    R := Rect(bw + 2 * integer(not Ctl3D), bw, Width - bw - integer(FShowButton) * Button.Width, Height - bw);
+    if BidiMode <> bdRightToLeft then
+      R := Rect(bw + 2 * integer(not Ctl3D), bw, Width - bw - integer(FShowButton) * Button.Width, Height - bw)
+    else
+      R := Rect(integer(FShowButton) * Button.Width + bw, bw, Width - bw, Height - bw);
+
     if Text <> '' then begin
       if PasswordChar <> #0 then
         acFillString(aText, Length(aText), acChar(PasswordChar));
 
       SavedDC := SaveDC(Canvas.Handle);
-      IntersectClipRect(Canvas.Handle, 0, 0, R.Right, R.Bottom);
+      IntersectClipRect(Canvas.Handle, R.Left, R.Top, R.Right, R.Bottom);
       try
-        acWriteTextEx(Canvas, PacChar(aText), Enabled or SkinData.Skinned, R, DT_TOP or GetStringFlags(Self, Alignment) or DT_NOPREFIX, SkinData, ControlIsActive(SkinData));
+        acWriteTextEx(Canvas, PacChar(aText), Enabled or SkinData.Skinned, R, DT_TOP or GetStringFlags(Self, Alignment) or DT_NOPREFIX and not DT_NOCLIP, SkinData, ControlIsActive(SkinData));
       finally
         RestoreDC(Canvas.Handle, SavedDC);
       end;
@@ -1041,6 +1068,8 @@ end;
 
 
 procedure TsEditButton.WndProc(var Message: TMessage);
+var
+  R: TRect;
 begin
   if Assigned(FOwner) and Assigned(FOwner.SkinData) and FOwner.SkinData.Skinned then
     case Message.Msg of
@@ -1066,8 +1095,9 @@ begin
         end;
 
       CM_MOUSELEAVE, WM_MOUSELEAVE:
-        if not acMouseInControl(FOwner) then
+        if not acMouseInControl(FOwner) then begin
           FOwner.WndProc(Message);
+        end;
 
       CM_MOUSEENTER:
         FOwner.WndProc(Message)
@@ -1088,6 +1118,16 @@ begin
           Exit;
         end;
       end;
+
+    CM_MOUSELEAVE:
+      if SkinData.SkinManager <> nil then
+        if SkinData.SkinManager.ActiveGraphControl = Self then begin
+          SkinData.SkinManager.ActiveGraphControl := nil;
+          SkinData.FMouseAbove := False;
+          FinishTimer(SkinData.AnimTimer);
+          R := BoundsRect;
+          RedrawWindow(FOwner.Handle, @R, 0, RDW_INVALIDATE or RDW_ERASE or RDW_UPDATENOW);
+        end;
   end;
 end;
 

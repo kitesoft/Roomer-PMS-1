@@ -31,6 +31,7 @@ type
     function OffsetX: integer;
     function OffsetY: integer;
     function PrepareCache: boolean;
+    function TextIsVisible(Button: TToolButton): boolean;
     procedure ChangeScale(M, D: Integer); override;
     procedure OurAdvancedCustomDraw(Sender: TToolBar; const ARect: TRect; Stage: TCustomDrawStage; var DefaultDraw: Boolean);
     procedure OurAdvancedCustomDrawButton(Sender: TToolBar; Button: TToolButton; State: TCustomDrawState;
@@ -229,7 +230,7 @@ begin
         if (Controls[i] is TToolButton) and (csDesigning in ComponentState) then
           Continue;
 
-        if (Controls[i] is TGraphicControl) and StdTransparency then
+        if (Controls[i] is TGraphicControl) and (SkinData.SkinManager <> nil) and SkinData.SkinManager.Options.StdImgTransparency then
           Continue;
 
         if not Visible or not RectIsVisible(DstRect, BoundsRect) then
@@ -310,7 +311,7 @@ var
     with Result do
       if not List then begin
         Left   := (IntButtonWidth - Images.Width) div 2 + 1;
-        Top    := (Button.Height - Images.Height - integer(ShowCaptions) * (FCommonData.FCacheBMP.Canvas.TextHeight('A') + 3)) div 2;
+        Top    := (Button.Height - Images.Height - integer(TextIsVisible(Button)) * (FCommonData.FCacheBMP.Canvas.TextHeight('A') + 3)) div 2;
         Right  := Result.Left + Images.Width;
         Bottom := Result.Bottom + Images.Height;
       end
@@ -363,7 +364,7 @@ var
           OffsetRect(Result, 1, 1);
     end;
   begin
-    if ShowCaptions {$IFDEF D2010}or (AllowTextButtons and (Button.Style = tbsTextButton)) {$ENDIF} then begin
+    if TextIsVisible(Button) then begin
       cRect := CaptionRect;
 {$IFDEF TNTUNICODE}
       if Button is TTntToolButton then
@@ -594,6 +595,12 @@ begin
     FDisabledKind := Value;
     Repaint;
   end;
+end;
+
+
+function TsToolBar.TextIsVisible(Button: TToolButton): boolean;
+begin
+  Result := ShowCaptions {$IFDEF D2010}and not (AllowTextButtons and List and (Button.Style <> tbsTextButton)){$ENDIF} {$IFDEF D2010}or (AllowTextButtons and (Button.Style = tbsTextButton)) {$ENDIF};
 end;
 
 

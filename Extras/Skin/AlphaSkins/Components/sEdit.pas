@@ -1,7 +1,6 @@
 unit sEdit;
 {$I sDefs.inc}
 //{$DEFINE LOGGED}
-//+
 
 interface
 

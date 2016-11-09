@@ -89,7 +89,7 @@ implementation
 uses
   math,
   {$IFDEF LOGGED} sDebugMsgs, {$ENDIF}
-  sGraphUtils, acntUtils, sAlphaGraph, sSkinManager, sThirdParty;
+  sGraphUtils, acntUtils, sAlphaGraph, sSkinManager, sThirdParty, acPNG, sVCLUtils, sMessages;
 
 
 procedure TsCustomImage.AfterConstruction;
@@ -189,6 +189,7 @@ end;
 function TsCustomImage.PrepareCache(DC: HDC): boolean;
 var
   R: TRect;
+  C: TsColor;
   CI: TCacheInfo;
   BGInfo: TacBGInfo;
 
@@ -265,7 +266,7 @@ var
       end;
     end
     else
-      if not (Picture.Graphic is TBitmap) {$IFDEF D2010}or not Picture.Graphic.SupportsPartialTransparency {$ENDIF} then begin
+      if not (Picture.Graphic is TBitmap) and not (Picture.Graphic is TPNGGraphic) (*{$IFDEF D2010}or not Picture.Graphic.SupportsPartialTransparency {$ENDIF}*) then begin
         TmpBmp.Width := StretchSize.cx;
         TmpBmp.Height := StretchSize.cy;
         BitBlt(TmpBmp.Canvas.Handle, 0, 0, Width, Height, FCommonData.FCacheBmp.Canvas.Handle, 0, 0, SRCCOPY);
@@ -282,7 +283,13 @@ var
           TmpBmp.Assign(Picture.Bitmap);
           if TmpBmp.PixelFormat <> pf32bit then begin
             TmpBmp.PixelFormat := pf32bit;
-            FillAlphaRect(TmpBmp, MkRect(TmpBmp), MaxByte);
+            if Transparent then begin
+              C.C := TmpBmp.Canvas.Pixels[0, Height - 1];
+              C.A := 0;
+              FillAlphaRect(TmpBmp, MkRect(TmpBmp), MaxByte, C.C)
+            end
+            else
+              FillAlphaRect(TmpBmp, MkRect(TmpBmp), MaxByte);
           end;
           if Stretch then begin
             StretchSrc := TmpBmp;
@@ -292,7 +299,7 @@ var
           end;
         end;
 
-    if Stretch {$IFDEF DELPHI6UP}and (not Proportional){$ENDIF} or not Center then begin
+    if Stretch {$IFDEF DELPHI6UP}and not Proportional{$ENDIF} or not Center then begin
       l := 0;
       t := 0;
     end
@@ -308,30 +315,47 @@ var
 begin
   Result := True;
   GetBGInfo(@BGInfo, Parent);
-  if BGInfo.BgType = btNotReady then begin
-    FCommonData.FUpdating := True;
-    Result := False;
-  end
-  else begin
+
+  InitCacheBmp(SkinData);
+  BGInfo.Bmp := nil;
+  BGInfo.BgType := btUnknown;
+  BGInfo.PleaseDraw := False;
+  BGInfo.FillRect := MkRect;
+  if not ((SkinData.SkinManager <> nil) and SkinData.SkinManager.Options.StdImgTransparency) then
+    SendAMessage(Parent, AC_GETBG, LPARAM(@BGInfo));
+
+  if (BGInfo.BgType = btUnknown) or (SkinData.SkinManager <> nil) and SkinData.SkinManager.Options.StdImgTransparency then begin
+    BitBlt(FCommonData.FCacheBmp.Canvas.Handle, 0, 0, Width, Height, DC, 0, 0, SRCCOPY);
     CI := BGInfoToCI(@BGInfo);
-    InitCacheBmp(SkinData);
-    if not CI.Ready or not CI.Bmp.Empty then begin
-      if Transparent then
-        if not CI.Ready and (CI.FillColor = sFuchsia.C) then
-          BitBlt(FCommonData.FCacheBmp.Canvas.Handle, 0, 0, Width, Height, DC, 0, 0, SRCCOPY)
-        else
-          if not CI.Ready or (CI.Bmp = nil) then
-            FillDC(FCommonData.FCacheBmp.Canvas.Handle, MkRect(Self), CI.FillColor)
+    DrawImage;
+    FCommonData.BGChanged := False;
+  end
+  else
+    if BGInfo.BgType = btNotReady then begin
+      FCommonData.FUpdating := True;
+      Result := False;
+    end
+    else begin
+      CI := BGInfoToCI(@BGInfo);
+      InitCacheBmp(SkinData);
+      if not CI.Ready or not CI.Bmp.Empty then begin
+        if Transparent then
+          if not CI.Ready and (CI.FillColor = sFuchsia.C) then
+            BitBlt(FCommonData.FCacheBmp.Canvas.Handle, 0, 0, Width, Height, DC, 0, 0, SRCCOPY)
           else
-            BitBlt(FCommonData.FCacheBmp.Canvas.Handle, 0, 0, Width, Height, CI.Bmp.Canvas.Handle, {CI.X{ + }Left, {CI.Y{ + }Top, SRCCOPY);
+            if not CI.Ready or (CI.Bmp = nil) then
+              FillDC(FCommonData.FCacheBmp.Canvas.Handle, MkRect(Self), CI.FillColor)
+            else
+              BitBlt(FCommonData.FCacheBmp.Canvas.Handle, 0, 0, Width, Height, CI.Bmp.Canvas.Handle, CI.X{ + Left}, CI.Y{ + Top}, SRCCOPY);
+  //            BitBlt(FCommonData.FCacheBmp.Canvas.Handle, 0, 0, Width, Height, CI.Bmp.Canvas.Handle, CI.X + Left, CI.Y + Top, SRCCOPY);
 
-      if FCommonData.SkinSection <> '' then
-        PaintItem(FCommonData, CI, True, 0, MkRect(Self), MkPoint(Left, Top), FCommonData.FCacheBMP, True, 0, 0);
+        if FCommonData.SkinSection <> '' then
+          PaintItem(FCommonData, CI, True, 0, MkRect(Self), MkPoint(Left, Top), FCommonData.FCacheBMP, True, 0, 0);
 
-      DrawImage;
-      FCommonData.BGChanged := False;
+        DrawImage;
+        FCommonData.BGChanged := False;
+      end;
     end;
-  end;
 end;
 
 

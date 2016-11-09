@@ -65,6 +65,7 @@ type
     procedure Reset; override;
     procedure CheckRange;
     procedure UpdateData;
+    function CanCalc: boolean; virtual;
     property Formatting: Boolean read FFormatting;
     property Alignment: TAlignment read FAlignment write SetAlignment default taRightJustify;
     property BeepOnError: Boolean read FBeepOnError write SetBeepOnError default True;
@@ -232,7 +233,7 @@ procedure TsCustomNumEdit.KeyPress(var Key: Char);
 var
   p: DWord;
 begin
-  if Assigned(FPopupWindow) and IsWindowVisible(FPopupWindow.Handle) then begin
+  if CanCalc and Assigned(FPopupWindow) and IsWindowVisible(FPopupWindow.Handle) then begin
 {$IFNDEF ALITE}
     TsCalcForm(FPopupWindow).OnKeyPress(FPopupWindow, Key);
 {$ENDIF}    
@@ -244,7 +245,7 @@ begin
 
     inherited KeyPress(Key);
     if not CharInSet(Key, [#3, #22]) then begin // Ctrl-C, Ctrl-V
-      if CharInSet(Key, [#43{'+'}, #45{'-'}, #47{'/'}, #42{'*'}, #37{'%'}]) then begin
+      if CanCalc and CharInSet(Key, [#43{'+'}, #45{'-'}, #47{'/'}, #42{'*'}, #37{'%'}]) then begin
         p := DWord(SendMessage(Handle, EM_GETSEL, 0, 0)) mod $10000;
         if p = 0 then begin
           if (Key <> #45) then
@@ -261,7 +262,7 @@ begin
 {$IFNDEF ALITE}
         if Assigned(FPopupWindow) and IsWindowVisible(FPopupWindow.Handle) then
           TsCalcForm(FPopupWindow).OnKeyPress(FPopupWindow, Key);
-{$ENDIF}          
+{$ENDIF}
 
         Key := #0;
       end
@@ -549,6 +550,12 @@ begin
 end;
 
 
+function TsCustomNumEdit.CanCalc: boolean;
+begin
+  Result := True;
+end;
+
+
 procedure TsCustomNumEdit.Change;
 begin
   if not FFormatting then begin
@@ -610,41 +617,43 @@ end;
 
 procedure TsCustomNumEdit.PopupWindowShow;
 begin
-  FadingForbidden := True;
+  if CanCalc then begin
+    FadingForbidden := True;
 {$IFNDEF ALITE}
-  FreeAndNil(FPopupWindow);
-  FPopupWindow := TsCalcForm.Create(Self);
-  TsCalcForm(FPopupWindow).Font.Assign(Font);
-  if Self.SkinData.SkinManager <> nil then
-    TsCalcForm(FPopupWindow).Font.Height := Self.Font.Height * 100 div aScalePercents[Self.SkinData.SkinManager.GetScale];
+    FreeAndNil(FPopupWindow);
+    FPopupWindow := TsCalcForm.Create(Self);
+    TsCalcForm(FPopupWindow).Font.Assign(Font);
+    if Self.SkinData.SkinManager <> nil then
+      TsCalcForm(FPopupWindow).Font.Height := Self.Font.Height * 100 div aScalePercents[Self.SkinData.SkinManager.GetScale];
 
-  with TsCalcForm(FPopupWindow) do begin
-    ChangeBtnsStyle(FlatButtons);
-    TsCalcForm(FPopupWindow).Height := PopupHeight - TsCalcForm(FPopupWindow).sDragBar1.Height - TsCalcForm(FPopupWindow).FDisplayPanel.Height;
-  end;
-  with TsCalcForm(FPopupWindow) do begin
-    Position := poDefault;
-    FDisplayPanel.Visible := False;
-    if sDragBar1 <> nil then
-      sDragBar1.Visible := False;
+    with TsCalcForm(FPopupWindow) do begin
+      ChangeBtnsStyle(FlatButtons);
+      TsCalcForm(FPopupWindow).Height := PopupHeight - TsCalcForm(FPopupWindow).sDragBar1.Height - TsCalcForm(FPopupWindow).FDisplayPanel.Height;
+    end;
+    with TsCalcForm(FPopupWindow) do begin
+      Position := poDefault;
+      FDisplayPanel.Visible := False;
+      if sDragBar1 <> nil then
+        sDragBar1.Visible := False;
 
-    FPrecision := 16;
-    FEditor := Self;
-//    if SkinData.Skinned then begin
-      FMainPanel.BorderStyle := bsNone;
-      FDisplayPanel.BorderStyle := bsNone;
-{    end
-    else begin
-      FMainPanel.Ctl3D := False;
-      FMainPanel.BorderStyle := bsSingle;
-      FDisplayPanel.BorderStyle := bsSingle;
-    end;}
-    SetText(Text);
-    OnClose := CalcWindowClose;
-  end;
+      FPrecision := 16;
+      FEditor := Self;
+  //    if SkinData.Skinned then begin
+        FMainPanel.BorderStyle := bsNone;
+        FDisplayPanel.BorderStyle := bsNone;
+  {    end
+      else begin
+        FMainPanel.Ctl3D := False;
+        FMainPanel.BorderStyle := bsSingle;
+        FDisplayPanel.BorderStyle := bsSingle;
+      end;}
+      SetText(Text);
+      OnClose := CalcWindowClose;
+    end;
 {$ENDIF}
-  inherited;
-  FadingForbidden := False;
+    inherited;
+    FadingForbidden := False;
+  end;
 end;
 
 
