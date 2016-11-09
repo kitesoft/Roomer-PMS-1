@@ -460,7 +460,7 @@ end;
     sql := sql +'        (rd.ADate >=  %s ) AND (rd.ADate <=  %s ) AND (rd.ResFlag in '+Flags+')'#10;
     sql := sql +'  ORDER BY rd.RoomReservation';
 
-    result := format(sql , [_DateToDbDate(DateFrom,true),_DateToDbDate(DateTo,true)]);
+    result := format(sql , [_db(DateFrom,true),_db(DateTo,true)]);
   end;
 
 
@@ -653,7 +653,8 @@ begin
     finally
       freeandnil(rSet1);
     end;
-  finally
+
+  finally
     screen.Cursor := crDefault;
   end;
 

@@ -391,8 +391,8 @@ begin
     s := s+'  invoiceheads ih '#10;
     s := s+'   LEFT JOIN customers cust ON ih.customer = cust.customer '#10;
     s := s+'WHERE (invoicenumber > 0) '#10;
-    s := s+'   AND (InvoiceDate >= '+_dateToSqlDate(zDateFrom)+') '#10;
-    s := s+'   AND (InvoiceDate <= '+_dateToSqlDate(zDateTO)+') '#10;
+    s := s+'   AND (InvoiceDate >= '+_db(zDateFrom)+') '#10;
+    s := s+'   AND (InvoiceDate <= '+_db(zDateTO)+') '#10;
     s := s+'GROUP BY '#10;
     s := s+'  Customer '#10;
 
@@ -401,7 +401,8 @@ begin
 
     ExecutionPlan.AddQuery(s);
     //////////////////// Execute!
-
+
+
     screen.Cursor := crHourGlass;
     kbmTotal.DisableControls;
     try
@@ -489,8 +490,8 @@ begin
       s := s+'FROM '#10;
       s := s+'  invoiceheads ih '#10;
       s := s+'WHERE (invoicenumber > 0) '#10;
-      s := s+'   AND (InvoiceDate >= '+_dateToSqlDate(zDateFrom)+') '#10;
-      s := s+'   AND (InvoiceDate <= '+_dateToSqlDate(zDateTO)+') '#10;
+      s := s+'   AND (InvoiceDate >= '+_db(zDateFrom)+') '#10;
+      s := s+'   AND (InvoiceDate <= '+_db(zDateTO)+') '#10;
       s := s+'   AND (customer = '+_db(customer)+') '#10;
 
 //      copytoclipboard(s);
@@ -498,7 +499,8 @@ begin
 
       ExecutionPlan.AddQuery(s);
       //////////////////// Execute!
-
+
+
       screen.Cursor := crHourGlass;
       kbmTotal.DisableControls;
       try
@@ -845,12 +847,14 @@ begin
       s := s+ '     INNER JOIN payments on payments.invoicenumber = invoiceheads.invoicenumber '#10;
       s := s+ '     INNER JOIN paytypes on paytypes.paytype = payments.paytype '#10;
       s := s+ '     INNER JOIN paygroups on paytypes.paygroup = paygroups.paygroup '#10;
-      s := s+ ' WHERE '#10;
-      s := s+ ' invoiceheads.invoicenumber in ('+invoicelist+') '#10;
+
+      s := s+ ' WHERE '#10;
+
+      s := s+ ' invoiceheads.invoicenumber in ('+invoicelist+') '#10;
 
 //      s := s+ '  (invoiceheads.InvoiceNumber > 0) ';
-//      s := s+ ' AND (invoiceheads.ihInvoiceDate >= '+_DatetoDBDate(zDateFrom,true)+') ';
-//      s := s+ ' AND (invoiceheads.ihInvoiceDate <= '+_DatetoDBDate(zDateTo,true)+') ';
+//      s := s+ ' AND (invoiceheads.ihInvoiceDate >= '+_db(zDateFrom,true)+') ';
+//      s := s+ ' AND (invoiceheads.ihInvoiceDate <= '+_db(zDateTo,true)+') ';
 //
 //      s := s+ ' AND (invoiceheads.Customer = '+_db(Customer)+') ';
 
@@ -863,7 +867,8 @@ begin
 
       ExecutionPlan.AddQuery(s);
      //////////////////// Execute!
-      s := '';
+
+      s := '';
       s := s+'SELECT '#10;
       s := s+'   sum(il.total) AS Amount '#10;
       s := s+'  ,count(il.id) AS LineCount '#10;

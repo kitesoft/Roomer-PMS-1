@@ -362,7 +362,7 @@ begin
   s := s + '		 JOIN currencies curr on curr.Currency=rd.Currency '#10 ;
 //  s := s + '		 JOIN rooms r on rd.room = r.room and r.wildcard=0 and r.active=1 and statistics=1 and hidden=0 '#10 ;
   s := s + '		 WHERE '#10 ;
-  s := s + '				((pdd.date>='+_DateToDbDate(zDateFrom,true)+' AND pdd.date<='+_DateToDbDate(zDateTo,true)+')) '#10 ;
+  s := s + '				((pdd.date>='+_db(zDateFrom,true)+' AND pdd.date<='+_db(zDateTo,true)+')) '#10 ;
   s := s + '		    AND (SUBSTR(rd.room, 1, 1) = ''<'' OR NOT ISNULL((SELECT 1 FROM rooms r WHERE r.room=rd.room and r.wildcard=0 and r.active=1 and statistics=1 and hidden=0 LIMIT 1))) '#10 ;
   s := s + '		 GROUP BY pdd.date '#10 ;
   s := s + '		 ORDER BY pdd.date '#10 ;
@@ -396,7 +396,7 @@ begin
   s := s + '				CAST(0 AS SIGNED) AS totalGuests '#10 ;
   s := s + '		 FROM predefineddates pdd '#10 ;
   s := s + '		 WHERE '#10 ;
-  s := s + '				((pdd.date>='+_DateToDbDate(zDateFrom,true)+' AND pdd.date<='+_DateToDbDate(zDateTo,true)+')) '#10 ;
+  s := s + '				((pdd.date>='+_db(zDateFrom,true)+' AND pdd.date<='+_db(zDateTo,true)+')) '#10 ;
   s := s + '		 AND ISNULL((SELECT id FROM roomsdate WHERE ADate=pdd.date AND NOT(ResFlag IN ('+_db(STATUS_DELETED)+','+_db(STATUS_CANCELLED)+')) LIMIT 1)) '#10 ;
   s := s + '		 GROUP BY pdd.date '#10 ;
   s := s + '		 ORDER BY pdd.date '#10 ;
@@ -404,13 +404,14 @@ begin
   s := s + '	) AllData '#10 ;
   s := s + ' on DATE(pd.date) = AllData.aDate '#10 ;
   s := s + ' WHERE '#10 ;
-  s := s + '	((pd.date>='+_DateToDbDate(zDateFrom,true)+' AND pd.date<='+_DateToDbDate(zDateTo,true)+')) '#10 ;
+  s := s + '	((pd.date>='+_db(zDateFrom,true)+' AND pd.date<='+_db(zDateTo,true)+')) '#10 ;
   s := s + ' ORDER BY date ';
 
     ExecutionPlan.AddQuery(s);
     CopyToClipboard(s);
     //////////////////// Execute!
-
+
+
     screen.Cursor := crHourGlass;
     kbmStat.DisableControls;
     try

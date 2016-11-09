@@ -730,7 +730,7 @@ begin
           if sTemp = '' then
           begin
             dtdate := zOneDay_dtDate + 1000;
-          end else dtDate := _DBDateToDate(sTemp);
+          end else dtDate := SQLToDateTime(sTemp);
           iNextOcc := trunc(dtDate)-trunc(zOneDay_dtDate);
           resultFilter := iNextOcc >= numDays;
         end;

@@ -317,26 +317,26 @@ begin
   zInvoiceTo := 0;
   zLast := 0;
   zText := '';
-  zTextType := 0; // 0= Reikningsnúmer
+  zTextType := 0; // 0= Reikningsnï¿½mer
   // 1= Kennitala
-  // 2= Nafn Gests eða Fyrirtækis
-  // 3= Nafn á Reikningi
-  // 4= Bókunn númer
-  // 5= Herbergjabókunn
+  // 2= Nafn Gests eï¿½a Fyrirtï¿½kis
+  // 3= Nafn ï¿½ Reikningi
+  // 4= Bï¿½kunn nï¿½mer
+  // 5= Herbergjabï¿½kunn
 
   zPeriodIndex := 1;
-  // 0=Í dag
-  // 1=í gær
-  // 2=Síðustu 3 daga
-  // 3=Síðustu 5 daga
-  // 4=Síðustu 10 daga
-  // 5=í þessari viku
-  // 6=Í síðustu viku
-  // 7=Í þessum mánuði
-  // 8=í síðasta mánuði
-  // 9=Á þessu ári
-  // 10=Á síðasta ári
-  // 11=Frá upphafi
+  // 0=ï¿½ dag
+  // 1=ï¿½ gï¿½r
+  // 2=Sï¿½ï¿½ustu 3 daga
+  // 3=Sï¿½ï¿½ustu 5 daga
+  // 4=Sï¿½ï¿½ustu 10 daga
+  // 5=ï¿½ ï¿½essari viku
+  // 6=ï¿½ sï¿½ï¿½ustu viku
+  // 7=ï¿½ ï¿½essum mï¿½nuï¿½i
+  // 8=ï¿½ sï¿½ï¿½asta mï¿½nuï¿½i
+  // 9=ï¿½ ï¿½essu ï¿½ri
+  // 10=ï¿½ sï¿½ï¿½asta ï¿½ri
+  // 11=Frï¿½ upphafi
 
   edtLast.Value := 50;
   zLast := edtLast.Value;
@@ -384,41 +384,41 @@ begin
   case zPeriodIndex of
     0 :
       begin
-        // - ekkert valið -
+        // - ekkert valiï¿½ -
       end;
     1 :
       begin
-        // Í dag
+        // ï¿½ dag
         dtTo.Date := Date;
         dtFrom.Date := Date;
       end;
     2 :
       begin
-        // í gær
+        // ï¿½ gï¿½r
         dtTo.Date := Date - 1;
         dtFrom.Date := Date - 1;
       end;
     3 :
       begin
-        // Síðustu 3 daga
+        // Sï¿½ï¿½ustu 3 daga
         dtTo.Date := Date;
         dtFrom.Date := Date - 4;
       end;
     4 :
       begin
-        // Síðustu 10 daga
+        // Sï¿½ï¿½ustu 10 daga
         dtTo.Date := Date;
         dtFrom.Date := Date - 9;
       end;
     5 :
       begin
-        // í þessari viku
+        // ï¿½ ï¿½essari viku
         dtTo.Date := Date;
         dtFrom.Date := Date - ThisWeekDay + 1;
       end;
     6 :
       begin
-        // Í síðustu viku
+        // ï¿½ sï¿½ï¿½ustu viku
         dtTo.Date := (Date - ThisWeekDay);
         dtFrom.Date := (Date - ThisWeekDay) - 6;
       end;
@@ -429,7 +429,7 @@ begin
       end;
     8 :
       begin
-        // í síðasta mánuði
+        // ï¿½ sï¿½ï¿½asta mï¿½nuï¿½i
         if ThisMonth = 1 then
           LastMonth := 12
         else
@@ -445,7 +445,7 @@ begin
       end;
     10 :
       begin
-        // Á síðasta ári
+        // ï¿½ sï¿½ï¿½asta ï¿½ri
         dtFrom.Date := encodeDate(ThisYear - 1, 1, 1);
         dtTo.Date := encodeDate(ThisYear - 1, 12, 31)
       end;
@@ -574,7 +574,7 @@ begin
 
     if rbtDates.checked then
     begin
-      s := s + '    AND ((invoiceheads.ihInvoiceDate >= ' + _DateToDBDate(zdtFrom, true) + ')  AND (invoiceheads.ihInvoiceDate <= ' + _DateToDBDate(zDTTo, true)
+      s := s + '    AND ((invoiceheads.ihInvoiceDate >= ' + _db(zdtFrom, true) + ')  AND (invoiceheads.ihInvoiceDate <= ' + _db(zDTTo, true)
         + ')) ';
     end;
 
@@ -595,15 +595,15 @@ begin
             s := s + '  AND (custPID=' + _db(edtFreeText.Text) + ') ';
           end;
         2 :
-          begin // Customer Númer;
+          begin // Customer Nï¿½mer;
             s := s + '  AND (Customer=' + _db(edtFreeText.Text) + ') ';
           end;
         3 :
-          begin // Nafn Gests eða Fyrirtækis;
+          begin // Nafn Gests eï¿½a Fyrirtï¿½kis;
             s := s + '  AND ((Name LIKE ' + _db('%' + edtFreeText.Text + '%') + ') OR (RoomGuest LIKE ' + _db('%' + edtFreeText.Text + '%') + ')) ';
           end;
         4 :
-          begin // Númer bókunnar;
+          begin // Nï¿½mer bï¿½kunnar;
             if _isInteger(edtFreeText.Text) then
             begin
               s := s + '  AND (Reservation=' + edtFreeText.Text + ') ';
@@ -614,7 +614,7 @@ begin
             end;
           end;
         5 :
-          begin // Númer herbergja bókunnar;
+          begin // Nï¿½mer herbergja bï¿½kunnar;
             if _isInteger(edtFreeText.Text) then
             begin
               s := s + '  AND (RoomReservation=' + edtFreeText.Text + ') ';

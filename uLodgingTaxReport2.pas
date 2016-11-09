@@ -485,7 +485,7 @@ sql := sql +    '   ih.InvoiceNumber ';
         TotalStayTaxExcluted   := rSet.FieldByName('TotalStayTaxExcluted').AsFloat;
 
         TotalStayTaxNights := rSet.FieldByName('TotalStayTaxNights').Asinteger;
-        InvoicedtDate := _dbDateTodate(InvoiceDate);
+        InvoicedtDate := SQLToDate(InvoiceDate);
 
         TotalTax := TotalStayTax+TotalStayTaxExcluted;
 
@@ -791,7 +791,7 @@ var
   weekNum : word;
 begin
   sdate := DataSet.FieldByName('ADate').Asstring;
-  dtDate := _dbDateTodate(sdate);
+  dtDate := SQLToDateTime(sdate);
   decodeDate(dtDate, y, m, d);
   weekNum := _weekNum(dtDate);
 

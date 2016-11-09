@@ -290,14 +290,14 @@ end;
 procedure TfrmOpenInvoicesNew.dtEdFromPropertiesChange(Sender : TObject);
 begin
   zdtFromDate := dtEdFrom.date;
-  zsDateFrom := _DateToDBDate(dtEdFrom.date, false);
+  zsDateFrom := _db(dtEdFrom.date, false);
 
 end;
 
 procedure TfrmOpenInvoicesNew.dtEdToPropertiesChange(Sender : TObject);
 begin
   zdtToDate := dtEdTo.date;
-  zsDateTo := _DateToDBDate(dtEdTo.date, false);
+  zsDateTo := _db(dtEdTo.date, false);
 end;
 
 function TfrmOpenInvoicesNew.GetRRinList : string;
@@ -490,8 +490,10 @@ begin
         s := s+' SELECT * FROM ( ';
       end;
 
-      s := s+' SELECT '#10;
-      s := s+'   rd.roomReservation '#10;
+
+      s := s+' SELECT '#10;
+
+      s := s+'   rd.roomReservation '#10;
       s := s+' , rd.Reservation '#10;
       s := s+' , rd.Room '#10;
       s := s+' , rd.RoomType '#10;
@@ -527,7 +529,7 @@ begin
       s := s+' INNER JOIN '#10;
       s := s+'   reservations rv ON rd.reservation = rv.reservation '#10;
       s := s+' WHERE '#10;
-      s := s+'   (rd.roomreservation in '+zRRinlist+') '#10;  //**zxhj breytti ekki hér því er tekið í rrList
+      s := s+'   (rd.roomreservation in '+zRRinlist+') '#10;  //**zxhj breytti ekki hï¿½r ï¿½vï¿½ er tekiï¿½ ï¿½ rrList
       s := s+'   AND (rr.RoomRentPaymentInvoice > -999 ) '#10;
       s := s+' GROUP BY '#10;
       s := s+'     rd.roomreservation '#10;
@@ -538,22 +540,33 @@ begin
       s := s+'   , rd.paid '#10;
       s := s+' ORDER BY roomReservation '#10;
 
-      if not chkShownull.checked then
-      begin
+
+      if not chkShownull.checked then
+
+      begin
         s := s+' ) tmp '#10;
-        s := s+'WHERE TotalRate <> 0 '#10;
-      end;
-      ExecutionPlan.AddQuery(s);
 
-      sqlStr := s;
+        s := s+'WHERE TotalRate <> 0 '#10;
 
-      s := '';
+      end;
 
-      if not chkShownull.checked then
-      begin
+      ExecutionPlan.AddQuery(s);
+
+
+      sqlStr := s;
+
+
+      s := '';
+
+
+      if not chkShownull.checked then
+
+      begin
         s := s+' SELECT * FROM ( ';
-      end;
-
+
+      end;
+
+
       s := s+' SELECT '#10;
       s := s+'   il.Reservation '#10;
       s := s+' , il.RoomReservation '#10;
@@ -581,7 +594,8 @@ begin
       s := s+'   reservations rv ON il.reservation = rv.reservation '#10;
       s := s+' WHERE '#10;
       s := s+'   il.reservation in '+zRVinlist+' AND (il.invoicenumber=-1) AND (il.roomreservation <> 0) AND (rr.RoomRentpaymentInvoice > -999) '#10;
-      s := s+' GROUP BY '#10;
+
+      s := s+' GROUP BY '#10;
       s := s+'   il.roomreservation '#10;
       s := s+' ORDER BY roomReservation '#10;
 
@@ -589,7 +603,8 @@ begin
       begin
         s := s+' ) tmp '#10;
         s := s+'WHERE Amount <> 0 '#10;
-      end;
+
+      end;
 
       sqlStr := #10+#10+sqlStr+s;
 
@@ -597,11 +612,14 @@ begin
 
       s := '';
       if not chkShownull.checked then
-      begin
-        s := s+' SELECT * FROM ( ';
-      end;
 
-      s := s+' SELECT '#10;
+      begin
+        s := s+' SELECT * FROM ( ';
+
+      end;
+
+
+      s := s+' SELECT '#10;
       s := s+'   il.Reservation '#10;
       s := s+' , il.RoomReservation '#10;
       s := s+' , il.itemID '#10;
@@ -616,15 +634,18 @@ begin
       s := s+'   reservations rv ON il.reservation = rv.reservation '#10;
       s := s+' WHERE '#10;
       s := s+'   (il.itemID <> '+_db(g.qRoomRentItem)+') AND (il.invoicenumber=-1) AND (roomreservation=0) '#10;
-      s := s+' GROUP BY '#10;
-      s := s+'   il.reservation '#10;
+
+      s := s+' GROUP BY '#10;
+
+      s := s+'   il.reservation '#10;
       s := s+' ORDER BY Reservation '#10;
 
       if not chkShownull.checked then
       begin
         s := s+' ) tmp '#10;
         s := s+'WHERE Amount <> 0 '#10;
-      end;
+
+      end;
 
       sqlStr := #10+#10+sqlStr+s;
       debugmessage(sqlstr);

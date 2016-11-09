@@ -243,6 +243,7 @@ var
 
   ExePlan: TRoomerExecutionPlan;
   lSplit: TStringList;
+  lDate: TDate;
 
 begin
   Result := False;
@@ -261,8 +262,8 @@ begin
     lstPrices.Sorted := true;
     lstPrices.Duplicates := dupIgnore;
 
-    sNewArrival := _DateToDBDate(newArrival, false);
-    sNewDeparture := _DateToDBDate(newDeparture, false);
+    sNewArrival := _db(newArrival, false);
+    sNewDeparture := _db(newDeparture, false);
     NumDays := trunc(newDeparture) - trunc(newArrival);
 
     if NumDays < 1 then
@@ -394,7 +395,8 @@ begin
 
             for ii := trunc(newArrival) to trunc(newArrival) + NumDays - 1 do
             begin
-              sDate := _DateToDBDate(ii, false);
+              lDate := ii;
+              sDate := _db(lDate, false);
               if rateCount = 1 then // same rate all days 5 11 4 12 3 13 2 14 1 15 0 16 -1
               begin
                 rd_.First;
@@ -851,8 +853,8 @@ begin
     s := '';
     s := select_ReservationProfile_RegulateRoomDates(bAll);
     if NOT bAll then
-      s := format(s, [Reservation, _DateToDBDate(dateHolder.Arrival, true),
-        _DateToDBDate(dateHolder.Departure, true)])
+      s := format(s, [Reservation, _db(dateHolder.Arrival, true),
+        _db(dateHolder.Departure, true)])
     else
       s := format(s, [Reservation]);
 
@@ -964,6 +966,7 @@ var
   personData: RecPersonHolder;
   package: string;
   rr: integer;
+  lDate: TDate;
 
 begin
   // **
@@ -985,8 +988,8 @@ begin
 
         newRrId := RR_SetNewID();
         firstHolder.RoomReservation := newRrId;
-        firstHolder.Arrival := _DateToDBDate(Arrival1, false);
-        firstHolder.Departure := _DateToDBDate(Departure1, false);;
+        firstHolder.Arrival := _db(Arrival1, false);
+        firstHolder.Departure := _db(Departure1, false);;
         firstHolder.rrArrival := Arrival1;
         firstHolder.rrDeparture := Departure1;
 
@@ -1002,7 +1005,7 @@ begin
           s := s + '  and ADate < %s) '#10;
           s := s + ' AND (ResFlag <> ' + _db(STATUS_DELETED) + ' ) '#10;
           s := s + ' AND (roomreservation = ' + _db(roomHolder.RoomReservation) + ') '#10;
-          s := format(s, [_DateToDBDate(Arrival1, true), _DateToDBDate(Departure1, true)]);
+          s := format(s, [_db(Arrival1, true), _db(Departure1, true)]);
 
           if hData.rSet_bySQL(Rset, s) then
           begin
@@ -1018,8 +1021,8 @@ begin
         // DebugMessage('invoicelines '#10#10+s);
         ExecutionPlan.AddExec(s);
 
-        roomHolder.Arrival := _DateToDBDate(Arrival2, false);
-        roomHolder.Departure := _DateToDBDate(Departure2, false);;
+        roomHolder.Arrival := _db(Arrival2, false);
+        roomHolder.Departure := _db(Departure2, false);;
         roomHolder.rrArrival := Arrival2;
         roomHolder.rrDeparture := Departure2;
 
@@ -1035,7 +1038,7 @@ begin
           s := s + '  and ADate < %s) '#10;
           s := s + ' AND (ResFlag <> ' + _db(STATUS_DELETED) + ' ) '#10;
           s := s + ' AND (roomreservation = ' + _db(roomHolder.RoomReservation) + ') '#10;
-          s := format(s, [_DateToDBDate(Arrival2, true), _DateToDBDate(Departure2, true)]);
+          s := format(s, [_db(Arrival2, true), _db(Departure2, true)]);
 
           if hData.rSet_bySQL(Rset, s) then
           begin
@@ -1065,7 +1068,8 @@ begin
         iDayCount := trunc(Departure1) - trunc(Arrival1);
         for ii := trunc(Arrival1) to trunc(Arrival1) + iDayCount - 1 do
         begin
-          sDate := _DateToDBDate(ii, false);
+          lDate := ii;
+          sDate := _db(lDate, false);
           s := '';
           s := s + ' UPDATE roomsdate ';
           s := s + ' SET ';

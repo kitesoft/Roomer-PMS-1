@@ -821,6 +821,7 @@
         </DCCReference>
         <DCCReference Include="RoomerUtils\uSQLUtils.pas"/>
         <DCCReference Include="RoomerVCLs\Source\uStringUtils.pas"/>
+        <DCCReference Include="Definitions\uInvoiceDefinitions.pas"/>
         <None Include="Roomer.todo"/>
         <None Include="notes.txt"/>
         <None Include="Roomer.inc"/>

@@ -1,4 +1,4 @@
-unit hData;
+ï»¿unit hData;
 
 interface
 
@@ -2142,11 +2142,12 @@ uses
   uD,
   ug,
   uDayNotes, uPriceOBJ, uSqlDefinitions, uStringUtils, uAppGlobal, uRoomTypes2,
+  DateUtils,
   uDateUtils,
   uActivityLogs,
   uAvailabilityPerDay,
   PrjConst
-  , uSQLUtils;
+  , uSQLUtils, uInvoiceDefinitions;
 
 procedure SetForeignKeyCheckValue(value : Byte);
 begin
@@ -2665,7 +2666,7 @@ begin
     RoomReservation := 0; // int
     SplitNumber := 0; // int
     InvoiceNumber := -1; // int
-    InvoiceDate := _dateToDBdate(date, false); // nvarchar(10)
+    InvoiceDate := _db(date, false); // nvarchar(10)
     Customer := ''; // nvarchar(15)
     name := ''; // nvarchar(70)
     Address1 := ''; // nvarchar(70)
@@ -2856,8 +2857,8 @@ begin
     Discount := 0.00;
     Percentage := true;
     PriceType := '';
-    Arrival := _dateToDBdate(date, false);
-    Departure := _dateToDBdate(date + 1, false);;
+    Arrival := _db(date, false);
+    Departure := _db(IncDay(date, 1), false);;
     RoomType := '';
     PMInfo := '';
     HiddenInfo := '';
@@ -2888,14 +2889,14 @@ begin
 
     // OutDated
     RoomPrice1 := 0.00;
-    Price1From := _dateToDBdate(date, false);
-    Price1To := _dateToDBdate(date, false);
+    Price1From := _db(date, false);
+    Price1To := _db(date, false);
     RoomPrice2 := 0.00;
-    Price2From := _dateToDBdate(date, false);
-    Price2To := _dateToDBdate(date, false);
+    Price2From := _db(date, false);
+    Price2To := _db(date, false);
     RoomPrice3 := 0.00;
-    Price3From := _dateToDBdate(date, false);
-    Price3To := _dateToDBdate(date, false);
+    Price3From := _db(date, false);
+    Price3To := _db(date, false);
     RoomRentPaid1 := 0.00;
     RoomRentPaid2 := 0.00;
     RoomRentPaid3 := 0.00;
@@ -2918,8 +2919,8 @@ begin
   begin
     Reservation := 0;
 
-    Arrival := _dateToDBdate(date, false);
-    Departure := _dateToDBdate(date + 1, false);
+    Arrival := _db(date, false);
+    Departure := _db(IncDay(date, 1), false);
     Customer := '0';
     name := '';
     Address1 := '';
@@ -2933,7 +2934,7 @@ begin
     CustomerEmail := '';
     CustomerWebSite := '';
     Status := '';
-    ReservationDate := _dateToDBdate(date, false);
+    ReservationDate := _db(date, false);
     Staff := aStaff;
     Information := '';
     PMInfo := '';
@@ -2973,7 +2974,7 @@ begin
   with rec do
   begin
     id := 0;
-    ADate := _dateToDBdate(date, false);
+    ADate := _db(date, false);
     Room := '';
     RoomType := '';
     RoomReservation := 0;
@@ -4035,13 +4036,13 @@ begin
   s := s + '  , ' + _db(theData.Hallres) + #10;
   s := s + '  , ' + _db(theData.rrTmp) + #10;
   s := s + '  , ' + _db(theData.rrDescription) + #10;
-  s := s + '  , ' + _dateToDBdate(theData.rrArrival, true) + #10;
-  s := s + '  , ' + _dateToDBdate(theData.rrDeparture, true) + #10;
+  s := s + '  , ' + _db(theData.rrArrival, true) + #10;
+  s := s + '  , ' + _db(theData.rrDeparture, true) + #10;
   s := s + '  , ' + _db(theData.rrIsNoRoom) + #10;
   s := s + '  , ' + _db(theData.rrRoomAlias) + #10;
   s := s + '  , ' + _db(theData.rrRoomTypeAlias) + #10;
   s := s + '  , ' + _db(theData.UseStayTax) + #10;
-  s := s + '  , ' + _dateTimeToDBdate(theData.CancelDate, true) + #10;
+  s := s + '  , ' + _db(theData.CancelDate, true) + #10;
   s := s + '  , ' + _db(theData.CancelStaff) + #10;
   s := s + '  , ' + _db(theData.CancelReason) + #10;
   s := s + '  , ' + _db(theData.CancelInformation) + #10;
@@ -4140,6 +4141,7 @@ var
   ii: integer;
   theData: recRoomsDateHolder;
   Rate: double;
+  lDate: TDate;
 begin
   initRoomsDateHolderRec(theData);
   iErrorDays := 0;
@@ -4148,7 +4150,8 @@ begin
   try
     for ii := trunc(ADate) to trunc(ADate) + NumDays - 1 do
     begin
-      sDate := _dateToDBdate(ii, false);
+      lDate := ii;
+      sDate := _db(lDate, false);
 
       theData.ADate := sDate;
 
@@ -4415,7 +4418,7 @@ begin
     s := s + 'WHERE '#10;
     s := s + '(ADate=%s) and (roomreservation=%d) '#10;
 
-    s := format(s, [_dateToDBdate(ADate, true), RoomReservation]);
+    s := format(s, [_db(ADate, true), RoomReservation]);
 
     if hData.rSet_bySQL(rSet, s) then
     begin
@@ -4982,7 +4985,7 @@ begin
     if hData.rSet_bySQL(rSet, s) then
     begin
       sDate := rSet.fieldbyname('ReservationDate').asString;
-      result.bookingDate := _DBDateToDate(sDate);
+      result.bookingDate := SQLToDate(sDate);
       result.bookingStaff := rSet.fieldbyname('staff').asString;
 
       // result.RoomCount := RV_RoomCount(iReservation, Connection,logLevel,logPath);
@@ -5180,11 +5183,11 @@ begin
     // s := s + '     INNER JOIN '+#10;
     // s := s + '       RoomReservations ON dbo.roomsdate.RoomReservation = dbo.RoomReservations.RoomReservation '+#10;
     // s := s + ' WHERE ';
-    // s := s + '    (dbo.roomsdate.Room = ' + _dbStr(Room) + ') '+#10;
-    // s := s + ' AND (dbo.roomsdate.ADate = ' + _dateToDBdate(ADate - 1, true) + ') '+#10;
+    // s := s + '    (dbo.roomsdate.Room = ' + _db(Room) + ') '+#10;
+    // s := s + ' AND (dbo.roomsdate.ADate = ' + _db(ADate - 1, true) + ') '+#10;
     // s := s + ' AND (dbo.roomsdate.ResFlag = ' + _db('G') + ') '+#10;
-    // s := s + ' AND (dbo.RoomReservations.Departure = ' + _dateToDBdate(ADate, true) + ') '+#10;
-    s := format(select_RR_GetDeparting, [_dbStr(Room), _dateToDBdate(ADate - 1, true), _dateToDBdate(ADate, true)]);
+    // s := s + ' AND (dbo.RoomReservations.Departure = ' + _db(ADate, true) + ') '+#10;
+    s := format(select_RR_GetDeparting, [_db(Room), _db(IncDay(ADate, -1), true), _db(ADate, true)]);
     if hData.rSet_bySQL(rSet, s) then
     begin
       result := rSet.fieldbyname('RoomReservation').asInteger;
@@ -5206,10 +5209,10 @@ begin
   try
     sql := ' SELECT '#10 + '     Room '#10 + '   , RoomReservation '#10 + '   , ADate '#10 + ' FROM '#10 + '   roomsdate '#10 + ' WHERE '#10 +
       '   (Room = %s)  and (ADate = %s) ' +
-    // ' + _dbStr(Room) + '  //' + _dateToDBdate(ADate, true) + '
-      '   AND (ResFlag <> ' + _db(STATUS_DELETED) + ' ) ' + // **zxhj bætti við
+    // ' + _db(Room) + '  //' + _db(ADate, true) + '
+      '   AND (ResFlag <> ' + _db(STATUS_DELETED) + ' ) ' + // **zxhj bï¿½tti viï¿½
       ' LIMIT 1 ';
-    s := format(sql, [_dbStr(Room), _dateToDBdate(ADate, true)]);
+    s := format(sql, [_db(Room), _db(ADate, true)]);
     if hData.rSet_bySQL(rSet, s) then
     begin
       result := rSet.fieldbyname('RoomReservation').asInteger;
@@ -5233,10 +5236,10 @@ begin
   try
 
     sql := ' SELECT '#10 + '     Room '#10 + '   , RoomReservation '#10 + '   , Resflag '#10 + '   , ADate '#10 + ' FROM '#10 + '   roomsdate '#10 +
-      ' WHERE '#10 + '   (Room = %s)  and (ADate = %s) ' + '   AND (ResFlag <> ' + _db(STATUS_DELETED) + ' ) ' + // **zxhj bætti við
+      ' WHERE '#10 + '   (Room = %s)  and (ADate = %s) ' + '   AND (ResFlag <> ' + _db(STATUS_DELETED) + ' ) ' + // **zxhj bï¿½tti viï¿½
       ' LIMIT 1 ';
 
-    s := format(sql, [_dbStr(Room), _dateToDBdate(ADate, true)]);
+    s := format(sql, [_db(Room), _db(ADate, true)]);
     if hData.rSet_bySQL(rSet, s) then
     begin
       if rSet.fieldbyname('resflag').asString <> 'G' then
@@ -5448,7 +5451,7 @@ begin
   invoiceHeadData.RoomReservation := RoomReservation;
   invoiceHeadData.SplitNumber := cHotelInvoice; // 0
   invoiceHeadData.InvoiceNumber := -1;
-  invoiceHeadData.InvoiceDate := _dateToDBdate(InvoiceDate, false); // ath
+  invoiceHeadData.InvoiceDate := _db(InvoiceDate, false); // ath
   invoiceHeadData.Customer := Customer;
   invoiceHeadData.name := aName + ', ' + GuestName;
   invoiceHeadData.Address1 := Address1;
@@ -5967,8 +5970,8 @@ var
   DateTo: Tdate;
 begin
   try
-    DateFrom := _DBDateToDate(dbDateFrom);
-    DateTo := _DBDateToDate(dbDateTo);
+    DateFrom := SQLToDate(dbDateFrom);
+    DateTo := SQLToDate(dbDateTo);
     result := trunc(DateTo) - trunc(DateFrom);
   except
     result := 0;
@@ -7376,7 +7379,7 @@ begin
 
   rSet := CreateNewDataSet;
   try
-    s := format(sql, [_dateToDBdate(DateFrom, true), _dateToDBdate(DateTo, true),location]);
+    s := format(sql, [_db(DateFrom, true), _db(DateTo, true),location]);
     if rSet_bySQL(rSet, s) then
     begin
       while not rSet.Eof do
@@ -7406,10 +7409,10 @@ begin
   // s := s +'   InvoiceHeads '+#10;
   // s := s +' WHERE '+#10;
   // s := s +'       (InvoiceNumber > 0) '+#10;
-  // s := s +'    AND (ihConfirmDate = '+_DateTimeToDbDate(confirmDate,true)+')';
+  // s := s +'    AND (ihConfirmDate = '+_db(confirmDate,true)+')';
   rSet := CreateNewDataSet;
   try
-    s := format(select_invoiceList_ConfirmGroup, [_dateTimeToDBdate(confirmDate, true)]);
+    s := format(select_invoiceList_ConfirmGroup, [_db(confirmDate, true)]);
     rSet_bySQL(rSet, s);
     while not rSet.Eof do
     begin
@@ -7448,7 +7451,7 @@ begin
 
   rSet := CreateNewDataSet;
   try
-    s := format(sql, [_dateToDBdate(2, true),location]);
+    s := format(sql, [_db(cEmptyConfirmDate, true),location]);
 
     if rSet_bySQL(rSet, s) then
     begin
@@ -7474,11 +7477,11 @@ begin
   result := TstringList.Create;
 
   sql := ' SELECT '#10 + '   InvoiceNumber '#10 + ' FROM '#10 + '   invoiceheads '#10 + ' WHERE '#10 + '       (InvoiceNumber > 0) '#10 +
-    '    AND (ihConfirmDate = %s)'; // '+_DateToDbDate(2,true)+'
+    '    AND (ihConfirmDate = %s)'; // '+_db(2,true)+'
 
   rSet := CreateNewDataSet;
   try
-    s := format(sql, [_dbDateAndTime(confirmDate)]);
+    s := format(sql, [_db(confirmDate)]);
 
     // copytoclipboard(s);
     // debugMessage(s);
@@ -9019,7 +9022,7 @@ begin
 
         s := s + ' Values ' + chr(10);
         s := s + ' (' + chr(10);
-        s := s + '  ' + _dateToDBdate(FromDate, true) + chr(10);
+        s := s + '  ' + _db(FromDate, true) + chr(10);
         s := s + ', ' + quotedstr(RoomType) + chr(10);
         s := s + ', ' + inttostr(freeRooms) + chr(10);
         s := s + ' )' + chr(10);
@@ -9069,8 +9072,8 @@ begin
         ToDate := FromDate + dateCount;
       end;
 
-      sFromDate := _dateToDBdate(FromDate, false);
-      sToDate := _dateToDBdate(ToDate, false);
+      sFromDate := _db(FromDate, false);
+      sToDate := _db(ToDate, false);
 
       for i := 0 to lstRoomTypes.Count - 1 do
       begin
@@ -9145,8 +9148,8 @@ begin
   try
     RoomStatus_updByRangeAndType(FromDate, dateCount, roomType1, roomType2);
 
-    sFromDate := _dateToDBdate(FromDate, false);
-    sToDate := _dateToDBdate(ToDate, false);
+    sFromDate := _db(FromDate, false);
+    sToDate := _db(ToDate, false);
 
     rSet := CreateNewDataSet;
     try
@@ -9586,19 +9589,19 @@ begin
   try
 
     sql := ' SELECT '#10 + '    Adate '#10 + ' FROM '#10 + '    roomsDate '#10 + ' WHERE (reservation = %d) '#10 + '   AND (ResFlag <> ' + _db(STATUS_DELETED) +
-      ' ) ' + // **zxhj bætti við
+      ' ) ' + // **zxhj bï¿½tti viï¿½
       ' Order BY ADATE ';
     s := format(sql, [iReservation]);
     if rSet_bySQL(rSet, s) then
     begin
       sFirstDate := rSet.fieldbyname('Adate').asString;
-      FirstDate := _DBDateToDate(sFirstDate);
+      FirstDate := SQLToDate(sFirstDate);
 
       rSet.last;
       if not rSet.bof then
       begin
         sLastdate := rSet.fieldbyname('Adate').asString;
-        LastDate := _DBDateToDate(sLastdate);
+        LastDate := SQLToDate(sLastdate);
       end;
       dateCount := trunc(LastDate) - trunc(FirstDate);
       result := dateCount + 1;
@@ -10437,7 +10440,7 @@ begin
       exit;
     end;
 
-    sql := ' SELECT RoomType FROM roomsdate ' + ' WHERE (RoomType = %s ) ' + '   AND (ResFlag <> ' + _db(STATUS_DELETED) + ' ) '; // **zxhj bætti við
+    sql := ' SELECT RoomType FROM roomsdate ' + ' WHERE (RoomType = %s ) ' + '   AND (ResFlag <> ' + _db(STATUS_DELETED) + ' ) '; // **zxhj bï¿½tti viï¿½
     s := format(sql, [_db(sRoomType)]);
     if hData.rSet_bySQL(rSet, s) then
     begin

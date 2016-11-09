@@ -497,7 +497,7 @@ uses
   , uFinishedInvoices2
   , uSqlDefinitions
   , uAppGlobal
-  ;
+  , uSQLUtils;
 
 // *****************************************************************************
 // TCustInfo - Starts
@@ -1014,7 +1014,7 @@ begin
         begin
           pmCode := rSet.fieldbyname('PayType').asString;
           pmAmount := rSet.fieldbyname('Amount').AsFloat;
-          pmDate := _DBdateToDate(rSet.fieldbyname('PayDate').asString);
+          pmDate := SQLToDateTime(rSet.fieldbyname('PayDate').asString);
           pmDescription := rSet.fieldbyname('Description').asstring;
           pmTypeIndex   := rSet.fieldbyname('TypeIndex').asInteger;
 
@@ -1255,7 +1255,7 @@ begin
       FivhExtraText       := invoicedata.ExtraText;
 
       sTmp := invoicedata.InvoiceDate;
-      FivhDate := _DBdateToDate(sTmp);
+      FivhDate := SQLToDate(sTmp);
 
       FivhPayDate         := invoicedata.ihPayDate;
       FivhStaff           := invoicedata.ihStaff;
@@ -1289,7 +1289,7 @@ begin
         FivhRoomNumber := tempStr; // d.RR_GetRoomNr(FivhRoomReservation);
         FivhExtraText := rSet.fieldbyname('ExtraText').asString;
         sTmp := rSet.fieldbyname('InvoiceDate').asString;
-        FivhDate := _DBdateToDate(sTmp);
+        FivhDate := SQLToDate(sTmp);
 
         FivhPayDate := rSet.fieldbyname('ihPayDate').asDateTime;
         FivhStaff := rSet.fieldbyname('ihStaff').asString;
@@ -1519,7 +1519,7 @@ begin
 
         ilID := rSet.fieldbyname('ID').asInteger;
         sTmp := rSet.fieldbyname('PurchaseDate').asString;
-        Date := _DBdateToDate(sTmp);
+        Date := SQLToDate(sTmp);
 
         LineNo := rSet.fieldbyname('ItemNumber').asInteger;
         Code := rSet.fieldbyname('ItemID').asString;

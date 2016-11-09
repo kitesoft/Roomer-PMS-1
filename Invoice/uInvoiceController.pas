@@ -662,7 +662,7 @@ begin
          ', ' + _db(RoomReservation) +
          ', ' + _db(SplitNumber) +
          ', ' + _db(itemNumber) +
-         ', ' + _DateToDbDate(PurchaseDate, True) +
+         ', ' + _db(PurchaseDate, True) +
          ', ' + _db(InvoiceNumber) +
          ', ' + _db(itemId) +
          ', ' + _db(Number) +
@@ -1545,7 +1545,7 @@ begin
            ', ' + _db(RoomReservation) +
            ', ' + _db(SplitNumber) +
            ', ' + _db(InvoiceNumber) +
-           ', ' + _DateToDbDate(InvoiceDate, True) +
+           ', ' + _db(InvoiceDate, True) +
            ', ' + format('(SELECT IFNULL((SELECT Customer FROM invoiceaddressees ia WHERE ia.invoiceNumber=%d ' +
             '        AND ia.Reservation=%d ' +
             '        AND ia.RoomReservation=%d ' +
@@ -1604,10 +1604,10 @@ begin
            ', ' + _db(false) +
            ', ' + inttostr(1) +
            ', ' + _db(g.qUser) +
-           ', ' + _DateToDbDate(Date, True) +
-           ', ' + _DateToDbDate(ihInvoiceDate, True) +
-           ', ' + _DateToDbDate(ihConfirmDate, True) +
-           ', ' + _DateToDbDate(ihPayDate, True) +
+           ', ' + _db(Date, True) +
+           ', ' + _db(ihInvoiceDate, True) +
+           ', ' + _db(ihConfirmDate, True) +
+           ', ' + _db(ihPayDate, True) +
            ', ' + _db(InvRefrence) +
            ', ' + _db(ihCurrency) +
            ', ' + _db(ihCurrencyRate) +
@@ -1637,7 +1637,7 @@ begin
            ', SplitNumber ' + _db(SplitNumber) +
 
            ', InvoiceNumber ' + _db(InvoiceNumber) +
-           ', InvoiceDate ' + _DateToDbDate(InvoiceDate, true) +
+           ', InvoiceDate ' + _db(InvoiceDate, true) +
 
            ', Customer ' + _db(Customer) +
            ', Name ' + _db(Name) +
@@ -1912,7 +1912,7 @@ begin
          ', ' + _db(CreateAGUID) +
 
          ', ' + _db(InvoiceNumber) +
-         ', ' + _DateToDbDate(Now, True) +
+         ', ' + _db(Now, True) +
 
          ', ' + _db(PayType) +
          ', ' + _CommaToDot(trim(floattostr(Amount))) +

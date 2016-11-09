@@ -1648,8 +1648,8 @@ begin
       ExecutionPlan.Execute(ptQuery);
 
       rSet0       := ExecutionPlan.Results[0];
-      lastDate     := _dbDateToDate(rSet0.FieldByName('maxDate').asString);
-      zfirstDate   := _dbDateToDate(rSet0.FieldByName('minDate').asString);
+      lastDate     := rSet0.FieldByName('maxDate').asDateTime;
+      zfirstDate   := rSet0.FieldByName('minDate').AsDateTime;
       zRoomCount   := rSet0.FieldByName('RoomCount').asInteger;
       zNightCount  := trunc(lastDate)-trunc(zFirstDate);
       zNightCount  := zNightCount+1;

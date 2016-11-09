@@ -1328,7 +1328,7 @@ begin
     s := s + ' FROM '#10;
     s := s + '   turnoverandpayments tp '#10;
     s := s + ' WHERE '#10;
-    s := s + '( confirmDate = ' + _dbDateAndTime(confirmDate) +
+    s := s + '( confirmDate = ' + _db(confirmDate) +
       ' ) and (datatype=1) ';
 
     // Getting items in invoicelines that is not roomrent
@@ -1347,7 +1347,7 @@ begin
     s := s + ' FROM '#10;
     s := s + '   turnoverandpayments tp '#10;
     s := s + '  WHERE '#10;
-    s := s + '( confirmDate = ' + _dbDateAndTime(confirmDate) +
+    s := s + '( confirmDate = ' + _db(confirmDate) +
       ' ) and (datatype=2) ';
 
     // copyToClipboard(s);
@@ -1375,7 +1375,7 @@ begin
     s := s + ' FROM '#10;
     s := s + '   roomsdatechange rdc '#10;
     s := s + '  WHERE '#10;
-    s := s + '( rdc.confirmDate = ' + _dbDateAndTime(confirmDate) + ' ) ';
+    s := s + '( rdc.confirmDate = ' + _db(confirmDate) + ' ) ';
 
     // copyToClipboard(s);
     // DebugMessage(s);
@@ -1401,7 +1401,7 @@ begin
     s := s + '  ,ilc.Confirmdate '#10;
     s := s + ' FROM invoicelinepricechange ilc '#10;
     s := s + '  WHERE '#10;
-    s := s + '(ilc.confirmDate = ' + _dbDateAndTime(confirmDate) + ') ';
+    s := s + '(ilc.confirmDate = ' + _db(confirmDate) + ') ';
 
     // copyToClipboard(s);
     // DebugMessage(s);
@@ -1506,7 +1506,7 @@ begin
     s := s + '      paytypes pty ON pm.paytype = pty.paytype INNER JOIN '#10;
     s := s + '      paygroups pgr ON pty.paygroup = pgr.paygroup '#10;
     s := s + '  WHERE '#10;
-    s := s + '( confirmDate = ' + _dbDateAndTime(confirmDate) + ') ';
+    s := s + '( confirmDate = ' + _db(confirmDate) + ') ';
     s := s + '  ORDER BY '#10;
     s := s + '    pm.payDate '#10;
 
@@ -1532,7 +1532,7 @@ begin
     s := s + '        INNER JOIN paytypes pty ON pm.paytype = pty.paytype '#10;
     s := s + '        INNER JOIN paygroups pgr ON pty.paygroup = pgr.paygroup '#10;
     s := s + '   WHERE '#10;
-    s := s + '( confirmDate = ' + _dbDateAndTime(confirmDate) + ') '#10;
+    s := s + '( confirmDate = ' + _db(confirmDate) + ') '#10;
     // s := s + '     ( confirmDate = '2014-05-03 14:05:31') '#10;
     s := s + '    ORDER BY '#10;
     s := s + '      pm.payDate '#10;

@@ -398,11 +398,11 @@ begin
     '           AND '+
     '      ( ( ADate >= %s ) '+
     '   AND (ADate < %s ) )' +
-    '   AND (ResFlag <> '+_db(STATUS_DELETED)+' ) '; //**zxhj bætti við
+    '   AND (ResFlag <> '+_db(STATUS_DELETED)+' ) '; //**zxhj bï¿½tti viï¿½
 
-//    '   AND (ResFlag <> '+_db(STATUS_CANCELED)+' ) '; //**zxhj bætti við
+//    '   AND (ResFlag <> '+_db(STATUS_CANCELED)+' ) '; //**zxhj bï¿½tti viï¿½
 
-    s := format(sql , [_db(Room),_DateToDBDate(dtArrival, true),_DateToDBDate(dtDeparture, true)]);
+    s := format(sql , [_db(Room),_db(dtArrival, true),_db(dtDeparture, true)]);
     hData.rSet_bySQL(rSet,s);
 
     rSet.First;
@@ -490,24 +490,24 @@ begin
         ProblemAction := g.OpenResProblem(lstProblems);
 
         case ProblemAction of
-          0 : // Ný bókun víkur
+          0 : // Nï¿½ bï¿½kun vï¿½kur
             begin
               d.SetAsNoRoom(RoomReservation);
-              doMove := false; // þarf ekker að gera búið að setja bókunina utan herbergja
+              doMove := false; // ï¿½arf ekker aï¿½ gera bï¿½iï¿½ aï¿½ setja bï¿½kunina utan herbergja
             end;
 
-          1 : // Eldri bókanir víkja
+          1 : // Eldri bï¿½kanir vï¿½kja
             begin
               for i := 0 to lstProblems.Count - 1 do
               begin
                 iRR := strToInt(lstProblems[i]);
                 d.SetAsNoRoom(iRR);
               end;
-              doMove := true; // búið að setja hinar bokaninr utan herbergja
-              // svo setja nýja í herbergið
+              doMove := true; // bï¿½iï¿½ aï¿½ setja hinar bokaninr utan herbergja
+              // svo setja nï¿½ja ï¿½ herbergiï¿½
             end;
 
-          2 : // Hætta við
+          2 : // Hï¿½tta viï¿½
             begin
               doMove := false;
             end;

@@ -1,6 +1,6 @@
 unit uInvoice2016;
 
-{ isl } // í forminu
+{ isl } // ï¿½ forminu
 interface
 
 uses
@@ -736,7 +736,7 @@ type
     publicReservation, FRoomReservation: integer;
     FnewSplitNumber: integer; // 0 = herbergjareikningur
     // 1 = Credit Reikningur
-    // 2 = Staðgreiðslureikningur
+    // 2 = Staï¿½greiï¿½slureikningur
     FCredit: boolean;
     zFakeGroup: boolean;
 
@@ -1161,11 +1161,11 @@ begin
   agrLines.Cells[col_isPackage, iRow] := _bool2str(invoiceLine.FIspackage, 2);
   agrLines.Cells[col_NoGuests, iRow] := inttostr(invoiceLine.FNoGuests);
 
-  // s := _dbDateAndTime(invoiceLine.FConfirmDate,false);
+  // s := _db(invoiceLine.FConfirmDate,false);
   // showmessage(s);
 
   agrLines.Cells[col_confirmdate, iRow] :=
-    _dbDateAndTime(invoiceLine.FConfirmDate, false);
+    _db(invoiceLine.FConfirmDate, false);
   agrLines.Cells[col_confirmAmount, iRow] := _db(invoiceLine.FConfirmAmount);
 
   if invoiceLine.FAuto then
@@ -1196,7 +1196,7 @@ var
   sRoomRentItem: string;
   sDiscountItem: string;
 
-  TotalÍnvoice: Double;
+  Totalï¿½nvoice: Double;
   TotalDownPayments: Double;
   TotalBalance: Double;
 
@@ -1230,7 +1230,7 @@ begin
   try
     ttVAT := 0.00;
 
-    TotalÍnvoice := 0.00;
+    Totalï¿½nvoice := 0.00;
     TotalDownPayments := 0.00;
     TotalBalance := 0.00;
 
@@ -1259,7 +1259,7 @@ begin
 
           if itemId <> '' then
           begin
-            // ef ekki greiðsla
+            // ef ekki greiï¿½sla
             if sPaymentItem <> itemId then
             begin
               if ((ItemKind <> ikRoomRent) and (ItemKind <> ikRoomRentDiscount)
@@ -1683,7 +1683,7 @@ begin
           zS := zS + ', ' + _db(FRoomReservation);
           zS := zS + ', ' + _db(FnewSplitNumber);
           zS := zS + ', ' + _db(itemNumber);
-          zS := zS + ', ' + _DateToDbDate(PurchaseDate, True);
+          zS := zS + ', ' + _db(PurchaseDate, True);
           zS := zS + ', ' + _db(zInvoiceNumber);
           zS := zS + ', ' + _db(itemId);
           zS := zS + ', ' + _db(Number);
@@ -2277,7 +2277,7 @@ begin
     ShowDiscount := mRoomRates.FieldByName('showDiscount').asBoolean;
     RateDate := mRoomRates.FieldByName('RateDate').asdateTime;
 
-    sDate := _DateToDbDate(RateDate, True);
+    sDate := _db(RateDate, True);
 
 
       s := '';
@@ -2293,7 +2293,7 @@ begin
       s := s + ' (aDate = %s) '#10;
       s := s + 'AND (roomreservation = %d) '#10;
       s := s + '   AND (ResFlag <> ' + _db(STATUS_DELETED) + ' ) ';
-      // **zxhj Bætti við
+      // **zxhj Bï¿½tti viï¿½
 
       s := format(s, [sDate, RoomReservation]);
       if cmd_bySQL(s) then
@@ -3270,7 +3270,7 @@ begin
     m.FieldByName('SplitNumber').asinteger := FnewSplitNumber;
     m.FieldByName('ItemNumber').asinteger := i;
     m.FieldByName('PurchaseDate').asString :=
-      _DateToDbDate(integer(agrLines.Objects[1, i]), True);
+      _db(integer(agrLines.Objects[1, i]), True);
     m.FieldByName('InvoiceNumber').asinteger := zInvoiceNumber;
     m.FieldByName('ItemId').asString := lineItem;
     m.FieldByName('Number').asfloat := ItemCount;
@@ -3629,10 +3629,10 @@ begin
       AddRRColor(Invoice.InvoiceIndex,
         invoice.Total,
         invoice.ihCurrency);
-      // Sækja Invoice sem er til
+      // Sï¿½kja Invoice sem er til
       zInvoiceNumber := Invoice.InvoiceNumber;
 
-      if FnewSplitNumber <> 2 then // ef ekki staðgreiðslureikningur
+      if FnewSplitNumber <> 2 then // ef ekki staï¿½greiï¿½slureikningur
       begin
 {$REGION 'Set Invoice type'}
         if Invoice.InvoiceType <> 4 then // Free text
@@ -4218,7 +4218,7 @@ begin
   recordSet.first;
   while NOT recordSet.eof do
   begin
-    if recordSet[field] = _DateToDbDate(Value, false) then
+    if recordSet[field] = _db(Value, false) then
     begin
       result := True;
       break;
@@ -4733,7 +4733,7 @@ begin
 
   zCol := -1;
   zRow := -1;
-  // label12.caption:= ('Dálkur '+inttostr(zCol)+' / Lína '+inttostr(zRow));
+  // label12.caption:= ('Dï¿½lkur '+inttostr(zCol)+' / Lï¿½na '+inttostr(zRow));
 
   zbDoingReference := false;
 
@@ -5139,7 +5139,7 @@ begin
     (((itemId = g.qRoomRentItem) or (itemId = g.qDiscountItem)) AND
     (isSystemLine(agrLines.row) = True)) then
   begin
-    if tmpRoomReservation = 0 then // þ.e GroupInvoice
+    if tmpRoomReservation = 0 then // ï¿½.e GroupInvoice
     begin
       try
         tmpRoomReservation := TRoomInfo(agrLines.Objects[2, zRow])
@@ -5246,7 +5246,7 @@ begin
   s := '';
   s := s + 'DELETE FROM invoicelines ' + #10;
   s := s + ' WHERE ' + #10;
-  s := s + '   SplitNumber = 1 ' + #10; // þ.e kredit
+  s := s + '   SplitNumber = 1 ' + #10; // ï¿½.e kredit
   s := s + '   AND InvoiceNumber = -1 ' + #10;
   if not cmd_bySQL(s, True, True) then
   begin
@@ -5274,7 +5274,7 @@ begin
 
   iMultiplier := 1;
 
-  // Til þess að setja allar tölur í mínus
+  // Til ï¿½ess aï¿½ setja allar tï¿½lur ï¿½ mï¿½nus
   if FCredit then
     iMultiplier := -1;
 
@@ -5327,7 +5327,7 @@ begin
   s := s + ', ' + _db(FRoomReservation);
   s := s + ', ' + _db(FnewSplitNumber);
   s := s + ', ' + _db(zInvoiceNumber);
-  s := s + ', ' + _DateToDbDate(zInvoiceDate, True);
+  s := s + ', ' + _db(zInvoiceDate, True);
   s := s + ', ' + format('(SELECT IFNULL((SELECT Customer FROM invoiceaddressees ia WHERE ia.invoiceNumber=%d ' +
           '        AND ia.Reservation=%d ' +
           '        AND ia.RoomReservation=%d ' +
@@ -5386,10 +5386,10 @@ begin
   s := s + ', ' + _db(false);
   s := s + ', ' + inttostr(1);
   s := s + ', ' + _db(g.qUser);
-  s := s + ', ' + _DateToDbDate(Date, True);
-  s := s + ', ' + _DateToDbDate(zInvoiceDate, True);
-  s := s + ', ' + _DateToDbDate(zConfirmDate, True);
-  s := s + ', ' + _DateToDbDate(zPayDate, True);
+  s := s + ', ' + _db(Date, True);
+  s := s + ', ' + _db(zInvoiceDate, True);
+  s := s + ', ' + _db(zConfirmDate, True);
+  s := s + ', ' + _db(zPayDate, True);
   s := s + ', ' + _db(edtInvRefrence.Text);
   s := s + ', ' + _db(edtCurrency.Text);
   s := s + ', ' + _db(_StrToFloat(edtRate.Text));
@@ -5581,9 +5581,9 @@ begin
     if (isSystemLine(i)) or (trim(g.qRoomRentItem) = agrLines.Cells[col_Item, i]
       ) or (trim(g.qDiscountItem) = agrLines.Cells[col_Item, i]) then
     begin
-      // Setja dagsetningu á herbergisleigu
-      // Dagsetning er í upphafi 0  31.12.1899
-      // en er hér sett á dagsetningu prentunnar
+      // Setja dagsetningu ï¿½ herbergisleigu
+      // Dagsetning er ï¿½ upphafi 0  31.12.1899
+      // en er hï¿½r sett ï¿½ dagsetningu prentunnar
       agrLines.Cells[col_date, i] := datetostr(trunc(now));
       agrLines.Objects[1, i] := TObject(trunc(now));
 
@@ -5892,7 +5892,7 @@ begin
           end;
 
           // -- is this an Automatically maintained line ?
-          // og þess vegna ekki vistuð í invoicelines
+          // og ï¿½ess vegna ekki vistuï¿½ ï¿½ invoicelines
 
           if (isSystemLine(i)) and (iInvoiceNumber <= 0) and
             (aItem <> g.qBreakFastItem) then
@@ -5910,9 +5910,9 @@ begin
             (trim(g.qRoomRentItem) = agrLines.Cells[col_Item, i]) or
             (trim(g.qDiscountItem) = agrLines.Cells[col_Item, i]) then
           begin
-            // Setja dagsetningu á herbergisleigu
-            // Dagsetning er í upphafi 0  31.12.1899
-            // en er hér sett á dagsetningu prentunnar
+            // Setja dagsetningu ï¿½ herbergisleigu
+            // Dagsetning er ï¿½ upphafi 0  31.12.1899
+            // en er hï¿½r sett ï¿½ dagsetningu prentunnar
             agrLines.Cells[col_date, i] := datetostr(trunc(now));
             agrLines.Objects[1, i] := TObject(trunc(now));
 
@@ -6058,7 +6058,7 @@ begin
           s := s + ', ' + inttostr(FRoomReservation);
           s := s + ', ' + inttostr(FnewSplitNumber);
           s := s + ', ' + inttostr(i);
-          s := s + ', ' + _DateToDbDate(integer(agrLines.Objects[1, i]), True);
+          s := s + ', ' + _db(integer(agrLines.Objects[1, i]), True);
           s := s + ', ' + inttostr(iInvoiceNumber);
 
           sItemID := agrLines.Cells[col_Item, i];
@@ -6111,7 +6111,7 @@ begin
           s := s + ', ' + _db(Refrence);
           s := s + ', ' + _db(Source);
           s := s + ', ' + _db(isPackage);
-          s := s + ', ' + _dbDateAndTime(confirmDate);
+          s := s + ', ' + _db(confirmDate);
           s := s + ', ' + _db(confirmAmount);
           s := s + ', ' + _db(irrAlias);
           s := s + ', ' + _db(FInvoiceIndex);
@@ -6663,7 +6663,7 @@ begin
     sTmp := trim(_strTokenAt(PayLines[i], '|', 1));
 
     try
-      { TODO -oHordur -cOther : Afhverju er þetta kommentað út }
+      { TODO -oHordur -cOther : Afhverju er ï¿½etta kommentaï¿½ ï¿½t }
       // ATHOLD payTypes      iTmp := d.GET_PaytypeDays_byPaytype(pmCode);
       if iTmp > days then
         days := iTmp;
@@ -6809,8 +6809,8 @@ Label TryAgain;
 begin
   // ILTMP
 
-  // Þegar hér er komið þá er reikningsnúmerið
-  // alltaf -1 nema þegar um kreditreikning er að ræða
+  // ï¿½egar hï¿½r er komiï¿½ ï¿½ï¿½ er reikningsnï¿½meriï¿½
+  // alltaf -1 nema ï¿½egar um kreditreikning er aï¿½ rï¿½ï¿½a
 
   result := false;
   iTmp := zInvoiceNumber;
@@ -6873,7 +6873,7 @@ begin
 
         AddDeleteFromInvoiceToExecutionPlan(ExecutionPlan);
 
-        iMultiplier := 1; // til þess að setja í mínus ef Kredit
+        iMultiplier := 1; // til ï¿½ess aï¿½ setja ï¿½ mï¿½nus ef Kredit
         if FCredit then
         begin
           iMultiplier := -1;
@@ -6942,7 +6942,7 @@ begin
             // not raise
           end;
 
-          // ef tómt
+          // ef tï¿½mt
           if (trim(sItemID) = '') and (sDescription = '') then
             continue;
 
@@ -6972,11 +6972,11 @@ begin
             end;
           end;
 
-          // verð á vöru í vörulínu
+          // verï¿½ ï¿½ vï¿½ru ï¿½ vï¿½rulï¿½nu
           sLinePrice := agrLines.Cells[col_ItemPrice, i];
           dLinePrice := _StrToFloat(sLinePrice);
 
-          // Heildaverð vörulínu
+          // Heildaverï¿½ vï¿½rulï¿½nu
           sLineTotal := agrLines.Cells[col_TotalPrice, i];
           dLineTotal := _StrToFloat(sLineTotal);
 
@@ -6999,7 +6999,7 @@ begin
           // dTmp := dLineTotal / (1 + (ItemTypeInfo.VATPercentage / 100));
           // dLineVAT := dLineTotal - dTmp;
 
-          // og án VSK
+          // og ï¿½n VSK
           dLineTotalWOVat := dLineTotal - dLineVAT;
 
           // Ef kredit
@@ -7008,8 +7008,8 @@ begin
           dLineVAT := iMultiplier * dLineVAT;
           dLineTotalWOVat := iMultiplier * dLineTotalWOVat;
 
-          // Ef í gjaldmiðli þá uppreikna
-          // RoomRent vörulínur í ISK
+          // Ef ï¿½ gjaldmiï¿½li ï¿½ï¿½ uppreikna
+          // RoomRent vï¿½rulï¿½nur ï¿½ ISK
           if Item_isRoomRent(sItemID) then
           begin
             dLinePrice := _CurrencyValueSell * dLinePrice;
@@ -7019,13 +7019,13 @@ begin
             RoomRentPaid := True;
           end;
 
-          // og aftur í texta
+          // og aftur ï¿½ texta
           sLinePrice := _CommaToDot(floattostr(dLinePrice));
           sLineTotal := _CommaToDot(floattostr(dLineTotal));
           sLineVAT := _CommaToDot(floattostr(dLineVAT));
           sLineTotalWOVat := _CommaToDot(floattostr(dLineTotalWOVat));
 
-          // Samtals á reikning í ISK
+          // Samtals ï¿½ reikning ï¿½ ISK
           FTotal := FTotal + dLineTotal;
           fTotalVAT := fTotalVAT + dLineVAT;
           fTotalWOVat := fTotalWOVat + dLineTotalWOVat;
@@ -7097,8 +7097,8 @@ begin
           s := s + ', ' + _db(FnewSplitNumber); // SPlitNumber
           s := s + ', ' + _db(i); // ItemNumber
 
-          s := s + ', ' + _DateToDbDate(integer(agrLines.Objects[1, i]), True);
-          // PurchaseDate //ATHOLD er þetta alltaf now
+          s := s + ', ' + _db(integer(agrLines.Objects[1, i]), True);
+          // PurchaseDate //ATHOLD er ï¿½etta alltaf now
           s := s + ', ' + inttostr(zInvoiceNumber); // InvoiceNumber
           s := s + ', ' + _db(sItemID); // ItemID
           s := s + ', ' + _db(ItemCount);
@@ -7123,7 +7123,7 @@ begin
           s := s + ', ' + _db(sAccountKey);
           s := s + ', ' + _db(sRefrence);
           s := s + ', ' + _db(sSource);
-          s := s + ', ' + _dbDateAndTime(confirmDate);
+          s := s + ', ' + _db(confirmDate);
           s := s + ', ' + _db(confirmAmount);
           s := s + ', ' + _db(isPackage);
           s := s + ', ' + _db(irrAlias);
@@ -7169,9 +7169,9 @@ begin
                 + ') '#10;;
               s := s + ' AND (Paid = 0) '#10;
               s := s + '   AND (ResFlag <> ' + _db(STATUS_DELETED) + ' ) '#10;
-              // **zxhj bætti við
-              s := s + ' ORDER BY adate '#10; // **ssshj bætti við
-              s := s + ' LIMIT ' + _db(ItemCount) + ' '#10; // **ssshj bætti við
+              // **zxhj bï¿½tti viï¿½
+              s := s + ' ORDER BY adate '#10; // **ssshj bï¿½tti viï¿½
+              s := s + ' LIMIT ' + _db(ItemCount) + ' '#10; // **ssshj bï¿½tti viï¿½
 
               // copyToClipboard(s);
               // debugMessage(s);
@@ -7232,7 +7232,7 @@ begin
 
         s := s + ', ' + inttostr(zInvoiceNumber);
 
-        s := s + ', ' + _DateToDbDate(zInvoiceDate, True);
+        s := s + ', ' + _db(zInvoiceDate, True);
 
         s := s + ', ' + _db(edtCustomer.Text);
         s := s + ', ' + _db(edtName.Text);
@@ -7255,10 +7255,10 @@ begin
         s := s + ', ' + _db(false);
         s := s + ', ' + inttostr(rgrInvoiceType.itemIndex);
         s := s + ', ' + _db(g.qUser);
-        s := s + ', ' + _DateToDbDate(Date, True);
-        s := s + ', ' + _DateToDbDate(zInvoiceDate, True);
-        s := s + ', ' + _DateToDbDate(zConfirmDate, True);
-        s := s + ', ' + _DateToDbDate(zPayDate, True);
+        s := s + ', ' + _db(Date, True);
+        s := s + ', ' + _db(zInvoiceDate, True);
+        s := s + ', ' + _db(zConfirmDate, True);
+        s := s + ', ' + _db(zPayDate, True);
         s := s + ', ' + _db(edtInvRefrence.Text);
 
         s := s + ', ' + _CommaToDot(floattostr(dTotalStayTax));
@@ -7335,7 +7335,7 @@ begin
           s := s + ', ' + _db(ct);
 
           s := s + ', ' + inttostr(zInvoiceNumber);
-          s := s + ', ' + _DateToDbDate(zInvoiceDate, True);
+          s := s + ', ' + _db(zInvoiceDate, True);
           sTmp := _strTokenAt(stlPaySelections[i], '|', 0);
           s := s + ', ' + _db(_strTokenAt(stlPaySelections[i], '|', 0));
           s := s + ', ' + _CommaToDot
@@ -7452,8 +7452,8 @@ begin
       zDoSave := false;
       SaveAnd(false);
       try
-        // Hér er tekkað á kvort ógreiddir herbergja  reikningar
-        // séu til staðar ef þetta er hópreikningur
+        // Hï¿½r er tekkaï¿½ ï¿½ kvort ï¿½greiddir herbergja  reikningar
+        // sï¿½u til staï¿½ar ef ï¿½etta er hï¿½preikningur
         // if publicReservation > 0 then
         // begin
         // if FRoomReservation <= 0 then
@@ -7468,7 +7468,7 @@ begin
             chkShowPackage.checked, zEmailAddress);
 
 {$IFDEF DEBUG}
-          // Skrifa út á disk
+          // Skrifa ï¿½t ï¿½ disk
           // try
           // raise Exception.Create('Error Gerfivilla');
           // except on e: Exception do
@@ -7485,7 +7485,7 @@ begin
           begin
             // BOOK KEEPING / Finance
 {$IFDEF DEBUG}
-            // Skrifa út á disk
+            // Skrifa ï¿½t ï¿½ disk
 {$ELSE}
             remoteResult := d.roomerMainDataSet.SystemSendInvoiceToBookkeeping
               (zInvoiceNumber);
@@ -7533,14 +7533,14 @@ begin
       except
         on e: Exception do
         begin
-          ShowMessage('Ekki tókst ad senda reikning No. ' +
+          ShowMessage('Ekki tï¿½kst ad senda reikning No. ' +
             inttostr(zInvoiceNumber) +
-            ' til bókhaldskerfisins. Vinsamlega sendið reikninginn handvirkt síðar ');
+            ' til bï¿½khaldskerfisins. Vinsamlega sendiï¿½ reikninginn handvirkt sï¿½ï¿½ar ');
           AddRoomerActivityLog(d.roomerMainDataSet.username, ERROR, e.message,
             format('Exception while sending invoice to booking keeping. Invoice %d, RoomReservation %d, Reservation %d -> %s',
             [zInvoiceNumber, FRoomReservation, publicReservation, e.message]));
-          // Sýna dialog - segja frá ad ekki hafi gengid ad send invoice til DK vegna tengivillu.
-          // Gefa upp númerid á reikningnum.
+          // Sï¿½na dialog - segja frï¿½ ad ekki hafi gengid ad send invoice til DK vegna tengivillu.
+          // Gefa upp nï¿½merid ï¿½ reikningnum.
         end;
       end;
     end
@@ -7778,7 +7778,7 @@ begin
           begin
             if mRoomRates['Roomreservation'] = RoomReservation then
             begin
-              aDate := _DateToDbDate(mRoomRates.FieldByName('rateDate')
+              aDate := _db(mRoomRates.FieldByName('rateDate')
                 .asdateTime, false);
               d.RR_Upd_CurrencyRoomPrice(RoomReservation, aDate,
                 zCurrentCurrency, convert);
@@ -7819,7 +7819,7 @@ begin
       mRoomRates.first;
       while not mRoomRates.eof do
       begin
-        aDate := _DateToDbDate(mRoomRates.FieldByName('rateDate')
+        aDate := _db(mRoomRates.FieldByName('rateDate')
           .asdateTime, false);
         d.RR_Upd_CurrencyRoomPrice(FRoomReservation, aDate,
           zCurrentCurrency, convert);
@@ -8136,8 +8136,8 @@ begin
     try
 
       (*
-        Hér er verið að sækja upplýsingar á kreditreikning
-        útfrá refrence númeri annars reiknings
+        Hï¿½r er veriï¿½ aï¿½ sï¿½kja upplï¿½singar ï¿½ kreditreikning
+        ï¿½tfrï¿½ refrence nï¿½meri annars reiknings
       *)
 
       zCurrencyRate := 1.00;
@@ -8395,7 +8395,7 @@ var
   // s: string;
   // sql : string;
 begin
-  // Ekki fyrir staðgreiðslureikninga
+  // Ekki fyrir staï¿½greiï¿½slureikninga
   result := false;
   if FnewSplitNumber = 2 then
     exit;
@@ -8546,7 +8546,7 @@ begin
       invRefrence := sTmp;
     end;
 
-    // Þ.e ekki frágengin reikningur
+    // ï¿½.e ekki frï¿½gengin reikningur
     if (invoiceNumber = -1) or (FCredit) then
     begin
       edtCustomer.Text := trim(customer);
@@ -8638,7 +8638,7 @@ begin
     invRefrence := sTmp;
   end;
 
-  // Þ.e ekki frágengin reikningur
+  // ï¿½.e ekki frï¿½gengin reikningur
   if (invoiceNumber = -1) or (FCredit) then
   begin
     edtCustomer.Text := trim(customer);
@@ -8731,7 +8731,7 @@ begin
     invRefrence := sTmp;
   end;
 
-  // Þ.e ekki frágengin reikningur
+  // ï¿½.e ekki frï¿½gengin reikningur
   if (invoiceNumber = -1) or (FCredit) then
   begin
     edtCustomer.Text := trim(customer);
@@ -9321,7 +9321,7 @@ begin
     theData.TypeIndex := ORD(ptDownPayment);
     theData.invoiceNumber := zInvoiceNumber;
     theData.customer := edtCustomer.Text;
-    theData.PayDate := _DateToDbDate(Date, false);
+    theData.PayDate := _db(Date, false);
     theData.Amount := rec.Amount;
     theData.Description := rec.Description;
     theData.CurrencyRate := zCurrencyRate; // ATH
@@ -9697,8 +9697,8 @@ begin
   TotalWOVat := Total - TotalVAT;
 
   s := '';
-  // s := s + 'Viltu færa ' + itemId + ': ' + Description + #10;
-  // s := s + 'á hópreikning ';
+  // s := s + 'Viltu fï¿½ra ' + itemId + ': ' + Description + #10;
+  // s := s + 'ï¿½ hï¿½preikning ';
   s := s + format(GetTranslatedText('shTx_Invoice_MoveItemToRoomInvoice'),
     [itemId, Description, RoomByRoomReservation(toRoomReservation)]);
 
@@ -10045,8 +10045,8 @@ begin
   TotalWOVat := Total - TotalVAT;
 
   s := '';
-  // s := s + 'Viltu færa ' + itemId + ': ' + Description + #10;
-  // s := s + 'á hópreikning ';
+  // s := s + 'Viltu fï¿½ra ' + itemId + ': ' + Description + #10;
+  // s := s + 'ï¿½ hï¿½preikning ';
   s := s + format(GetTranslatedText('shTx_Invoice_MoveItemToGroupInvoice'),
     [itemId, Description]);
 
@@ -10251,7 +10251,7 @@ begin
         end;
 
         // -- is this an Automatically maintained line ?
-        // og þess vegna ekki vistuð í invoicelines
+        // og ï¿½ess vegna ekki vistuï¿½ ï¿½ invoicelines
         if (isSystemLine(i)) and (iInvoiceNumber <= 0) then
           continue;
 
@@ -10265,9 +10265,9 @@ begin
           (trim(g.qRoomRentItem) = agrLines.Cells[col_Item, i]) or
           (trim(g.qDiscountItem) = agrLines.Cells[col_Item, i]) then
         begin
-          // Setja dagsetningu á herbergisleigu
-          // Dagsetning er í upphafi 0  31.12.1899
-          // en er hér sett á dagsetningu prentunnar
+          // Setja dagsetningu ï¿½ herbergisleigu
+          // Dagsetning er ï¿½ upphafi 0  31.12.1899
+          // en er hï¿½r sett ï¿½ dagsetningu prentunnar
           agrLines.Cells[col_date, i] := datetostr(trunc(now));
           agrLines.Objects[1, i] := TObject(trunc(now));
 
@@ -10407,7 +10407,7 @@ begin
         s := s + ', ' + inttostr(FRoomReservation);
         s := s + ', ' + inttostr(FnewSplitNumber);
         s := s + ', ' + inttostr(i);
-        s := s + ', ' + _DateToDbDate(integer(agrLines.Objects[1, i]), True);
+        s := s + ', ' + _db(integer(agrLines.Objects[1, i]), True);
         s := s + ', ' + inttostr(iInvoiceNumber);
 
         sItemID := agrLines.Cells[col_Item, i];
@@ -10459,7 +10459,7 @@ begin
         s := s + ', ' + _db(Refrence);
         s := s + ', ' + _db(Source);
         s := s + ', ' + _db(isPackage);
-        s := s + ', ' + _dbDateAndTime(confirmDate);
+        s := s + ', ' + _db(confirmDate);
         s := s + ', ' + _db(confirmAmount);
         s := s + ', ' + _db(irrAlias);
 
@@ -10514,7 +10514,7 @@ var
 begin
   iMultiplier := 1;
 
-  // Til þess að setja allar tölur í mínus
+  // Til ï¿½ess aï¿½ setja allar tï¿½lur ï¿½ mï¿½nus
   if FCredit then
     iMultiplier := -1;
 
@@ -10580,7 +10580,7 @@ begin
   s := s + ', ' + _db(FnewSplitNumber);
 
   s := s + ', ' + _db(PROFORMA_INVOICE_NUMBER);
-  s := s + ', ' + _DateToDbDate(zInvoiceDate, True);
+  s := s + ', ' + _db(zInvoiceDate, True);
   s := s + ', ' + _db(edtCustomer.Text);
   s := s + ', ' + _db(edtName.Text);
   s := s + ', ' + _db(edtPersonalId.Text);

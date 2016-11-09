@@ -486,7 +486,8 @@ begin
         s := s + ', rr.PriceType AS PriceType ';
         s := s + ', rd.Currency AS Currency ';
         s := s + ', (SELECT id FROM invoicelines WHERE InvoiceNumber=-1 AND roomreservation=rd.roomreservation LIMIT 1) AS ItemsOnInvoice ';
-        s := s + '  FROM ';
+
+        s := s + '  FROM ';
         s := s + ' roomsdate rd ';
         s := s + 'LEFT JOIN rooms ro ON ro.Room=rd.Room ' +
                  'JOIN currencies cur ON cur.Currency=rd.Currency ' +
@@ -497,7 +498,7 @@ begin
                  'persons ' +
                  'WHERE ' +
                  'RoomReservation IN (SELECT RoomReservation FROM roomsdate rd1 WHERE rd1.ADate>=' +
-                      _DatetoDBDate(fromDate, true) + ' AND rd1.ADate<' + _DatetoDBDate(toDate, true) + ' AND rd1.ResFlag NOT IN (''X'')) ' +
+                      _db(fromDate, true) + ' AND rd1.ADate<' + _db(toDate, true) + ' AND rd1.ResFlag NOT IN (''X'')) ' +
                  'GROUP BY RoomReservation ' +
                  'ORDER BY MainName DESC ' +
                  ') pe ON pe.roomreservation = rd.roomreservation ' +
@@ -512,8 +513,8 @@ begin
              'AND VALID_FROM <= rd.ADate ' +
              'AND VALID_TO >= rd.ADate ';
 
-        s := s + '  WHERE (( ADate >= ' + _DatetoDBDate(fromDate, true) + ' ) ';
-        s := s + '   AND (ADate < ' + _DatetoDBDate(toDate, true) + ' )) ';
+        s := s + '  WHERE (( ADate >= ' + _db(fromDate, true) + ' ) ';
+        s := s + '   AND (ADate < ' + _db(toDate, true) + ' )) ';
         s := s + '   AND (ResFlag <> '+_db(STATUS_DELETED)+' ) '; //**zxhj line added
 
         if skipCancelledBookings then

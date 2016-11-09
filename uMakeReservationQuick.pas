@@ -2970,7 +2970,7 @@ begin
         rSet.First;
         while not rSet.eof do
         begin
-          ADate := _DBDateToDate(rSet.FieldByName('aDate').AsString);
+          ADate := SQLToDateTime(rSet.FieldByName('aDate').AsString);
           RoomType := rSet.FieldByName('RoomType').AsString;
           Status := rSet.FieldByName('ResFlag').AsString;
           isNoRoom := rSet.FieldByName('isNoRoom').AsBoolean;
@@ -3754,8 +3754,8 @@ begin
     if Trim(inStrRoomTypes) <> '' then
       andRoomTypes := format('AND  `RoomType` IN (%s)', [inStrRoomTypes]);
 
-    s := format(s, [_dateToDbDate(FirstArrival, true)
-      , _dateToDbDate(LastDeparture, true)
+    s := format(s, [_db(FirstArrival, true)
+      , _db(LastDeparture, true)
       , priceID
       , _db(Currency)
       , andRoomTypes

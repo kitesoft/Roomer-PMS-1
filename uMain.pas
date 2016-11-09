@@ -4135,7 +4135,7 @@ begin
         if length(zsNoRooms) > 0 then
           Delete(zsNoRooms, length(zsNoRooms), 1);
 
-        sDate := _dateToDBDate(dtDate.Date, false);
+        sDate := _db(dtDate.Date, false);
         ClearFreeRooms;
         FFreeRooms := TFreeRooms.Create(g.qHotelCode, dtDate.Date, zsOccRackRooms);
 
@@ -5521,7 +5521,7 @@ procedure TfrmMain.OneDay_DisplayGrid;
           dtDate := zOneDay_dtDate + 1000;
         end
         else
-          dtDate := _DBDateToDate(sDate);
+          dtDate := SQLToDate(sDate);
         iNextOcc := trunc(dtDate) - trunc(zOneDay_dtDate);
 
         // iNextOcc := d.Next_OccupiedDayCount(zOneDay_dtDate, Room);
@@ -5550,7 +5550,7 @@ procedure TfrmMain.OneDay_DisplayGrid;
           dtDate := zOneDay_dtDate + 1000;
         end
         else
-          dtDate := _DBDateToDate(sDate);
+          dtDate := SQLToDateTime(sDate);
 
         iNextOcc := trunc(dtDate) - trunc(zOneDay_dtDate);
 
@@ -13671,18 +13671,18 @@ begin
   case aType of
     0:
       begin
-        result := Format(GetListOfRoomReservationsPerArrivalDate, [_dateToDBDate(dtDate.Date, true),
-          _dateToDBDate(dtDate.Date, true)]);
+        result := Format(GetListOfRoomReservationsPerArrivalDate, [_db(dtDate.Date, true),
+          _db(dtDate.Date, true)]);
       end;
     1:
       begin
-        result := Format(GetListOfRoomReservationsPerDepartureDate, [_dateToDBDate(dtDate.Date, true),
-          _dateToDBDate(dtDate.Date, true)]);
+        result := Format(GetListOfRoomReservationsPerDepartureDate, [_db(dtDate.Date, true),
+          _db(dtDate.Date, true)]);
       end;
     2:
       begin
-        result := Format(GetListOfRoomReservationsFromToDate, [_dateToDBDate(dtDate.Date, true),
-          _dateToDBDate(dtDate.Date, true)]);
+        result := Format(GetListOfRoomReservationsFromToDate, [_db(dtDate.Date, true),
+          _db(dtDate.Date, true)]);
       end;
   else
     begin

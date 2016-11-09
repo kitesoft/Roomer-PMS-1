@@ -1,4 +1,4 @@
-unit objNewReservation;
+ï»¿unit objNewReservation;
 
 interface
 
@@ -839,6 +839,7 @@ var
 
   iDayCount: integer;
   sDate: string;
+  lDate: TDate;
 
   RoomNumber: string;
   isNoRoom: Boolean;
@@ -1002,8 +1003,8 @@ var
     Arrival          := FnewRoomReservations.FRoomList[0].FArrival;
     Departure        := FnewRoomReservations.FRoomList[0].FDeparture;;
 
-    reservationData.Arrival   := _DateToDBDate(Arrival  , false);
-    reservationData.Departure := _DateToDBDate(Departure, false);
+    reservationData.Arrival   := _db(Arrival  , false);
+    reservationData.Departure := _db(Departure, false);
 
     reservationData.Customer := Customer;
     reservationData.name     := copy(reservationName,1,100);
@@ -1018,7 +1019,7 @@ var
     reservationData.CustomerEmail := CustomerEmail;
     reservationData.CustomerWebSite := CustomerWebSite;
     reservationData.status := RoomStatus;
-    reservationData.reservationDate := _DateToDBDate(reservationDate, false);
+    reservationData.reservationDate := _db(reservationDate, false);
     reservationData.Staff := FStaff;;
     reservationData.Information := ReservationGeneralInfo;
     reservationData.PMInfo := ReservationPaymentInfo;
@@ -1075,7 +1076,7 @@ var
     invoiceHeadData.RoomReservation := 0;
     invoiceHeadData.SplitNumber := 0;
     invoiceHeadData.InvoiceNumber := -1;
-    invoiceHeadData.InvoiceDate := _DateToDBDate(reservationDate, false);
+    invoiceHeadData.InvoiceDate := _db(reservationDate, false);
     invoiceHeadData.Customer := Customer;
     invoiceHeadData.name := copy(reservationName + ', ' + guestName,1,100);
     invoiceHeadData.Address1 := Address1;
@@ -1287,8 +1288,8 @@ begin
           roomReservationData.Discount        := Discount;
           roomReservationData.Percentage      := isPercentage;
           roomReservationData.PriceType       := PriceCode;
-          roomReservationData.Arrival         := _DateToDBDate(Arrival, false);
-          roomReservationData.Departure       := _DateToDBDate(Departure, false);
+          roomReservationData.Arrival         := _db(Arrival, false);
+          roomReservationData.Departure       := _db(Departure, false);
           roomReservationData.RoomType        := RoomType;
           roomReservationData.Package         := package;
           roomReservationData.PMInfo          := RoomPMInfo;
@@ -1319,14 +1320,14 @@ begin
           roomReservationData.Discount    := avrageDiscount;
 
           roomReservationData.RoomPrice1      := 0.00;
-          roomReservationData.Price1From      := _DateToDBDate(Arrival, false);
-          roomReservationData.Price1To        := _DateToDBDate(Departure, false);
+          roomReservationData.Price1From      := _db(Arrival, false);
+          roomReservationData.Price1To        := _db(Departure, false);
           roomReservationData.RoomPrice2      := 0.00;
-          roomReservationData.Price2From      := _DateToDBDate(Arrival, false);
-          roomReservationData.Price2To        := _DateToDBDate(Arrival, false);
+          roomReservationData.Price2From      := _db(Arrival, false);
+          roomReservationData.Price2To        := _db(Arrival, false);
           roomReservationData.RoomPrice3      := 0.00;
-          roomReservationData.Price3From      := _DateToDBDate(Arrival, false);
-          roomReservationData.Price3To        := _DateToDBDate(Arrival, false);
+          roomReservationData.Price3From      := _db(Arrival, false);
+          roomReservationData.Price3To        := _db(Arrival, false);
           roomReservationData.Hallres         := 0;
 
           roomReservationData.ExpectedTimeOfArrival := ExpTOA;
@@ -1373,7 +1374,8 @@ begin
           iDayCount := trunc(Departure) - trunc(Arrival);
           for ii := trunc(Arrival) to trunc(Arrival) + iDayCount - 1 do
           begin
-            sDate := _DateToDBDate(ii, false);
+            lDate := ii;
+            sDate := _db(lDate, false);
             roomsDateData.ADate := sDate;
             RateIndex := FnewRoomReservations.FRoomList[i].FRates.FindRateByDate(ii, 0);
 
@@ -1768,7 +1770,7 @@ begin
     cmdList.Add('DELETE from roomreservations WHERE reservation=' + inttostr(Reservation));
     cmdList.Add('DELETE from invoiceheads WHERE reservation=' + inttostr(Reservation));
 
-    //**zxhj ATH EKKI breyta resstatus hér
+    //**zxhj ATH EKKI breyta resstatus hï¿½r
     cmdList.Add('DELETE from roomsdate WHERE reservation=' + inttostr(Reservation));
 
     cmdList.Add('DELETE from persons WHERE reservation=' + inttostr(Reservation));

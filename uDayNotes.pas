@@ -520,7 +520,8 @@ begin
 
       mCurrentGuests_.Open;
 
-      lstRR := d.lstRR_CurrentlyCheckedIn(aDate);
+
+      lstRR := d.lstRR_CurrentlyCheckedIn(aDate);
       try
         for i := 0 to lstRR.Count - 1 do
         begin
@@ -637,8 +638,8 @@ var
   dtDateTo : TdateTime;
 
 begin
-  dtDateFrom  := dtImportLogDate.Date;  //ATHTODO á ağ vera datetime
-  dtDateTo    := dtImportLogDate.Date+edImportLogDaysToShow.Value-1; //ATHTODO á ağ vera datetime
+  dtDateFrom  := dtImportLogDate.Date;  //ATHTODO ï¿½ aï¿½ vera datetime
+  dtDateTo    := dtImportLogDate.Date+edImportLogDaysToShow.Value-1; //ATHTODO ï¿½ aï¿½ vera datetime
 
   cxLabel7.Caption := dateToStr(dtDateFrom);
   cxLabel9.Caption := dateToStr(dtDateTo);
@@ -996,7 +997,7 @@ begin
     exit;
 
 
-  //**ATH setja á server
+  //**ATH setja ï¿½ server
   s := '';
   s := s+'SELECT predefineddates.date AS ResDate, '#10;
   s := s+'       roomtypes.RoomType, '#10;
@@ -1026,7 +1027,7 @@ begin
   s := s+'WHERE roomtypes.Active=1 AND predefineddates.date>=%s AND predefineddates.date<=DATE_ADD(%s,INTERVAL %d DAY) '#10;
   s := s+'GROUP BY predefineddates.date, roomtypes.RoomType ';
 
-	s := format(s, [ _dateToDBDate(zCurrentDate,true),_dateToDBDate(zCurrentDate,true), zDaysToShow]);
+	s := format(s, [ _db(zCurrentDate,true),_db(zCurrentDate,true), zDaysToShow]);
 
 //  copytoclipboard(s);
 //  debugmessage(s);

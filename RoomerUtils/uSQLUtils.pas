@@ -9,17 +9,16 @@ uses
 
 
 // Conversion of different datatypes to strings that can be used in SQL statements
-//   All resulting strings are surrounded by single quotes and other quotes are escaped with a \
 
 function _db(const aString : string)    : string; overload;
-function _db(const aString : char)      : string; overload;
 function _db(const aInt  : integer)     : string; overload;
 function _db(const aBool : boolean)     : string; overload;
 function _db(const aFloat : Extended)   : string; overload;
 function _db(const aFloat : double)     : string; overload;
-function _db(const aDate  : TDateTime)  : string; overload;
-function _db(const aDate : TDate)       : string; overload;
+function _db(const aDate: TDateTime; aQuoted: boolean = true)  : string; overload;
+function _db(const aDate: TDate; aQuoted: boolean = true)     : string; overload;
 function _db(const aTime: TTime)        : string; overload;
+function _db(const aTimeStamp: TTimeStamp): string; overload;
 
 
 /// <summary>
@@ -34,6 +33,9 @@ function FloatToSQL(aValue: double; aDecimals: integer): string; overload;
 ///   Convert a SQl string to a float
 /// </summary>
 function SQLToFloat(const aStringValue: string; aDefault: extended = 0.00): extended;
+
+function SQLToDate(const aStringvalue: string): TDate;
+function SQLToDateTime(const aStringvalue: string): TDateTime;
 
 var
   // Fixed predefined formatsettings to be used when formatting from or to SQL strings
@@ -52,7 +54,7 @@ const
   cEscapedQuote = #92#39;
 
 /// <summary>
-///   Surround string with single quotes
+///   Surround string with single quotes, take escaped quotes at the end of the string into account
 /// </summary>
 function RoomerQuotedString(s : String) : String;
 begin
@@ -68,21 +70,10 @@ begin
   result := s;
 end;
 
-
-
-
 function _db(const aString : string)   : string;
 begin
   result := RoomerQuotedString(StringReplace(aString, #39, '\' + #39, [rfReplaceAll]));
 end;
-
-function _db(const aString : char)   : string;
-var s : String;
-begin
-  s := aString;
-  result := RoomerQuotedString(StringReplace(s, #39, '\' + #39, [rfReplaceAll]));
-end;
-
 
 function _db(const aInt  : integer)    : string;
 begin
@@ -96,49 +87,45 @@ begin
 end;
 
 function _db(const aFloat : Extended)  : string;
-var
-  s : string;
 begin
-  s:=floatToStr(aFloat);
-  result := _CommaToDot(S);
+  Result := FloatToSQL(aFloat);
 end;
 
 function _db(const aFloat : double)  : string;
-var
-  s : string;
 begin
-  s:=floatToStr(aFloat);
-  result := _CommaToDot(S);
+  Result := FloatToSQL(aFloat);
 end;
 
-function _db(const aDate : TDate)  : string;
-var
-  S : string;
+function _db(const aDate : TDate; aQuoted: boolean = true)  : string;
 begin
-  datetimetostring(S, 'yyyy-mm-dd', aDate);
-  Result := quotedstr(S);
+  // Shortdate
+  Result := DateToStr(aDate, SQLFormatSettings);
+  if aQuoted then
+    Result := quotedstr(Result);
 end;
 
-
-function _db(const aDate : TDateTime)  : string;
-var
-  S : string;
+function _db(const aDate : TDateTime; aQuoted: boolean)  : string;
 begin
-  datetimetostring(S, 'yyyy-mm-dd', aDate);
-  Result := quotedstr(S);
+  //ShortDate + longtime
+  Result := DateTimeToStr(aDate, SQLFormatSettings);
+  if aQuoted then
+    Result := quotedstr(Result);
 end;
 
 function _db(const aTime: TTime): string;
 var
   S : string;
 begin
-  datetimetostring(S, 'hh:MM', aTime);
+  // Longtime
+  s := TimeToStr(aTime, SQLFormatSettings);
   if s = '00:00' then s := '';
   Result := quotedstr(S);
 end;
 
+function _db(const aTimeStamp: TTimeStamp): string; overload;
+begin
 
-
+end;
 
 function FloatToSQL(aValue: double): string;
 begin
@@ -155,6 +142,18 @@ begin
   Result := StrToFloatDef(aStringValue, aDefault, SQLFormatSettings);
 end;
 
+function SQLToDate(const aStringvalue: string): TDate;
+begin
+  Result := StrToDate(aStringValue, SQLFormatSettings);
+end;
+
+function SQLToDateTime(const aStringvalue: string): TDateTime;
+begin
+  Result := StrToDateTime(aStringValue, SQLFormatSettings);
+end;
+
+
+
 procedure InitSQLFormatSettings;
 begin
   with SQLFormatSettings do
@@ -165,6 +164,7 @@ begin
     TimeSeparator := ':';
     ShortDateFormat := 'yyyy-mm-dd';
     ShortTimeFormat := 'HH:mm';
+    LongTimeFormat :=  'HH:mm:ss';
   end;
 end;
 

@@ -669,7 +669,7 @@ uses
     , _Glob
     , ShellApi
     , Math
-    ;
+    , uSQLUtils, uInvoiceDefinitions;
 
 {$R *.dfm}
 
@@ -2030,11 +2030,11 @@ begin
     s := s + ' SET ';
     if zIsConfirmed then
     begin
-      s := s + '   ihConfirmDate = ' + _dbDateAndTime(2);
+      s := s + '   ihConfirmDate = ' + _db(cEmptyConfirmDate);
     end
     else
     begin
-      s := s + '   ihConfirmDate = ' + _dbDateAndTime(now);
+      s := s + '   ihConfirmDate = ' + _db(now);
     end;
     s := s + ' WHERE ' + #10;
     s := s + '   (invoiceheads.InvoiceNumber IN ' + zSQLInText + ') ' + #10;
