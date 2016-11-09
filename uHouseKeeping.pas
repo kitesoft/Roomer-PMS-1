@@ -158,7 +158,6 @@ type
     LMDSpeedButton12: TsButton;
     sPanel1: TsPanel;
     sButton2: TsButton;
-    grExcelCross: TAdvGridExcelIO;
     Button1: TsButton;
     rpt: TppReport;
     ppParameterList1: TppParameterList;
@@ -251,7 +250,7 @@ uses
   , uAppGlobal
   , hData
   , uDImages
-  , uMain;
+  , uMain, uSQLUtils;
 
 
 procedure TfrmHouseKeeping.FormDestroy(Sender: TObject);
@@ -462,9 +461,9 @@ procedure TfrmHouseKeeping.LMDSpeedButton6Click(Sender: TObject);
 var
   sFileName : string;
 begin
-  sFileName := g.qProgramPath+'MaidsCross.xls';
-  grExcelCross.XLSExport(sFileName);
-  ShellExecute(Handle, 'OPEN', PChar(sFilename), nil, nil, sw_shownormal);
+//  sFileName := g.qProgramPath+'MaidsCross.xls';
+//  grExcelCross.XLSExport(sFileName);
+//  ShellExecute(Handle, 'OPEN', PChar(sFilename), nil, nil, sw_shownormal);
 end;
 
 procedure TfrmHouseKeeping.ppDetailBand1BeforePrint(Sender: TObject);

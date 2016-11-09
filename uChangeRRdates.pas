@@ -167,7 +167,7 @@ uses
     , uReservationStateDefinitions
     , uUtils
     , UITypes
-    ;
+    , uSQLUtils;
 
 {$R *.dfm}
 

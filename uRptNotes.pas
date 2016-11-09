@@ -175,7 +175,7 @@ uses
   , uRoomerLanguage
   , uDImages
   , uReservationProfile
-  , uMain;
+  , uMain, uSQLUtils;
 
 function RptNotes : boolean;
 begin

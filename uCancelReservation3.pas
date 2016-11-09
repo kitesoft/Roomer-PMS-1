@@ -150,7 +150,7 @@ uses
   ,uD
   ,PrjConst
   ,uDimages
-  , uReservationStateDefinitions;
+  , uReservationStateDefinitions, uSQLUtils;
 {$R *.dfm}
 
 

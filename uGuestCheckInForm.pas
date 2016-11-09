@@ -335,7 +335,7 @@ uses uRoomerLanguage,
   DateUtils,
   uRoomerDefinitions,
   uInvoiceContainer,
-  uMandatoryFieldDefinitions;
+  uMandatoryFieldDefinitions, uSQLUtils;
 
 const
   WM_SET_COMBO_TEXT = WM_User + 101;

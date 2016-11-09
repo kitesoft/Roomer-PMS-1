@@ -378,7 +378,7 @@ uses
   PrjConst,
   uRoomerDefinitions,
   uReservationStateDefinitions,
-  Math;
+  Math, uSQLUtils;
 
 { TfrmAllotmentToRes }
 

@@ -245,7 +245,7 @@ procedure UpdatePersonsFromID(Person : TPerson; ID: Integer);
 
 implementation
 
-uses uD, hData, _Glob;
+uses uD, hData, _Glob, uSQLUtils;
 
 function CreatePersonFromRecord(rSet : TDataSet) : TPerson;
 begin

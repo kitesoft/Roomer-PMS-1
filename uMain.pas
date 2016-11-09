@@ -1649,7 +1649,7 @@ uses
     , uDayClosingTimesAPICaller
     , uDateTimeHelper
     , uRptHouseKeeping, uReservationStateChangeHandler, uRptDailyRevenues
-    , uRoomerVersionInfo;
+    , uRoomerVersionInfo, uSQLUtils;
 
 {$R *.DFM}
 {$R Cursors.res}

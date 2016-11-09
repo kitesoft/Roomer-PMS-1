@@ -97,7 +97,7 @@ uses
   , PrjConst
   , uRoomerDefinitions
   , uAvailabilityPerDay
-  , uReservationStateDefinitions;
+  , uReservationStateDefinitions, uSQLUtils;
 {$R *.DFM}
 
 function ProvideARoom2(RoomReservation : Integer; aShowUncleanRooms: boolean = True) : String;

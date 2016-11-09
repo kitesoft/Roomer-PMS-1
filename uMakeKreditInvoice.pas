@@ -207,7 +207,7 @@ uses
   , uFrmHandleBookKeepingException
   , uMain
   , RoomerCloudEntities
-  ;
+  , uSQLUtils;
 
 
 function MakeKreditInvoice(number : integer; var createNew : boolean) : boolean;

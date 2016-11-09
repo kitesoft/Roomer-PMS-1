@@ -17,7 +17,7 @@ uses
   dxPScxPageControlProducer, dxPScxEditorProducers, dxPScxExtEditorProducers, dxSkinsdxBarPainter,
   dxSkinsdxRibbonPainter, dxServerModeData, dxServerModeDBXDataSource, dxPSCore, dxPScxGridLnk, dxPScxGridLayoutViewLnk,
   dxPScxCommon, cxMemo, cxLabel, ppStrtch, ppMemo
-  , uRoomerForm, cxSpinEdit, Vcl.ComCtrls, sStatusBar
+  , uRoomerForm, cxSpinEdit, Vcl.ComCtrls, sStatusBar, dxPScxPivotGridLnk
   ;
 
 type
@@ -113,7 +113,7 @@ uses
   , uInvoice
   , uReservationProfile
   , uRptbViewer
-  , _Glob, uCleaningNotesDefinitions;
+  , _Glob, uCleaningNotesDefinitions, uSQLUtils;
 
 
 function ShowHouseKeepingReport(aDate: TDateTime):  boolean;

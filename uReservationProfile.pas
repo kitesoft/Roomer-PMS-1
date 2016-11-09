@@ -854,7 +854,7 @@ uses
   ufrmReservationExtras
   , uInvoiceContainer
   , uCurrencyHandler
-  , uAccountTypeDefinitions, uBreakfastStateDefinitions;
+  , uAccountTypeDefinitions, uBreakfastStateDefinitions, uSQLUtils;
 
 {$R *.DFM}
 

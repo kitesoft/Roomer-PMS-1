@@ -232,7 +232,7 @@ object frmHouseKeeping: TfrmHouseKeeping
         SearchFooter.HintHighlight = 'Highlight occurences'
         SearchFooter.MatchCaseCaption = 'Match case'
         SortSettings.DefaultFormat = ssAutomatic
-        Version = '7.9.1.0'
+        Version = '8.1.2.0'
         RowHeights = (
           22
           22
@@ -301,6 +301,10 @@ object frmHouseKeeping: TfrmHouseKeeping
       Caption = 'Detailed'
       SkinData.CustomColor = False
       SkinData.CustomFont = False
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object grVar: TcxGrid
         Left = 0
         Top = 33
@@ -718,20 +722,6 @@ object frmHouseKeeping: TfrmHouseKeeping
     DataSet = mvar_
     Left = 360
     Top = 200
-  end
-  object grExcelCross: TAdvGridExcelIO
-    AdvStringGrid = grCross
-    Options.ExportOverwrite = omWarn
-    Options.ExportOverwriteMessage = 'File %s already exists'#13'Ok to overwrite ?'
-    Options.ExportRawRTF = False
-    UseUnicode = False
-    GridStartRow = 0
-    GridStartCol = 0
-    DateFormat = 'dd.mm.yyyy'
-    TimeFormat = 'hh:nn:ss'
-    Version = '3.13'
-    Left = 160
-    Top = 217
   end
   object rpt: TppReport
     AutoStop = False

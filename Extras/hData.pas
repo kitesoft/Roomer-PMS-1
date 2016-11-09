@@ -2146,7 +2146,7 @@ uses
   uActivityLogs,
   uAvailabilityPerDay,
   PrjConst
-  ;
+  , uSQLUtils;
 
 procedure SetForeignKeyCheckValue(value : Byte);
 begin

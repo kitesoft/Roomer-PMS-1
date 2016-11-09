@@ -351,7 +351,7 @@ uses
   , DateUtils
   , uDateUtils
   , Math
-  ;
+  , uSQLUtils;
 
 const
   cSTOCKITEM_IMPORTREFERENCE = 'STOCKITEM';

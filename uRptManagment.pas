@@ -235,7 +235,7 @@ uses
   uDimages,
   uRoomerDefinitions,
   uReservationStateDefinitions,
-  uRptbViewer;
+  uRptbViewer, uSQLUtils;
 
 function rptManagment : boolean;
 begin

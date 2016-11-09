@@ -307,7 +307,7 @@ uses
   , uAppGlobal
   , uDImages
   , uMain
-  ;
+  , uSQLUtils;
 
 
 {$R *.dfm}

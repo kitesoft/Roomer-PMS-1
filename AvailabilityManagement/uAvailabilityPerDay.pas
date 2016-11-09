@@ -39,7 +39,7 @@ function IsAvailabilityThere(oldRoomType, newRoomType : String; arrival, departu
 
 implementation
 
-uses uG, PrjConst, Dialogs;
+uses uG, PrjConst, Dialogs, uSQLUtils;
 
 function IsAvailabilityThere(oldRoomType, newRoomType : String; arrival, departure : TDate) : Boolean;
 var s : String;

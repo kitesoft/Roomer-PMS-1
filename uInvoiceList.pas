@@ -142,7 +142,7 @@ uses
   , uAppGlobal
   , uDImages
   , uReservationProfile
-  ;
+  , uSQLUtils;
 
 {$R *.DFM}
 

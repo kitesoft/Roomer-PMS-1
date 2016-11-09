@@ -404,7 +404,7 @@ uses
   , uDImages
   , uRoomerDefinitions
   , uReservationStateDefinitions
-  ;
+  , uSQLUtils;
 
 
 

@@ -73,7 +73,7 @@ uses
   , hData
   , uRoomerDefinitions
   , uReservationStateDefinitions
-  ;
+  , uSQLUtils;
 
 { TDataCollection }
 

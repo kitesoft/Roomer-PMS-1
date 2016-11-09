@@ -77,7 +77,7 @@ uses
   hData
   , uSqlDefinitions
   , uRoomerDefinitions
-  , uReservationStateDefinitions;
+  , uReservationStateDefinitions, uSQLUtils;
 
 //******************************************************************************
 //*

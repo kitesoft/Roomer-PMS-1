@@ -110,7 +110,7 @@ procedure GetCustomerDepartments(CustomerId : Integer; IncludeContacts : Boolean
 
 implementation
 
-uses uD, hData, _Glob;
+uses uD, hData, _Glob, uSQLUtils;
 
 procedure ReadCustomerDepartments(CustomerId : Integer; List : TCustomerDepartments; IncludeContacts : Boolean = True);
 var sql : String;

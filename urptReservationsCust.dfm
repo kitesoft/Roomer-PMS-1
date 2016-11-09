@@ -576,8 +576,8 @@ object frmRptReservationsCust: TfrmRptReservationsCust
         Caption = 'Clear'
         OnClick = btnClearClick
         SkinData.SkinSection = 'SPEEDBUTTON'
-        ImageIndex = 10
         Images = DImages.PngImageList1
+        ImageIndex = 10
       end
       object cxGroupBox2: TsGroupBox
         Left = 163
@@ -593,21 +593,18 @@ object frmRptReservationsCust: TfrmRptReservationsCust
         ParentFont = False
         TabOrder = 0
         SkinData.SkinSection = 'GROUPBOX'
+        Checked = False
         object cbxMonth: TsComboBox
           Left = 15
           Top = 20
           Width = 121
           Height = 21
           Alignment = taLeftJustify
-          BoundLabel.Indent = 0
           BoundLabel.Font.Charset = DEFAULT_CHARSET
           BoundLabel.Font.Color = clWindowText
           BoundLabel.Font.Height = -13
           BoundLabel.Font.Name = 'Tahoma'
           BoundLabel.Font.Style = []
-          BoundLabel.Layout = sclLeft
-          BoundLabel.MaxWidth = 0
-          BoundLabel.UseSkinColor = True
           SkinData.SkinSection = 'COMBOBOX'
           VerticalAlignment = taAlignTop
           Color = clWhite
@@ -642,15 +639,11 @@ object frmRptReservationsCust: TfrmRptReservationsCust
           Width = 121
           Height = 21
           Alignment = taLeftJustify
-          BoundLabel.Indent = 0
           BoundLabel.Font.Charset = DEFAULT_CHARSET
           BoundLabel.Font.Color = clWindowText
           BoundLabel.Font.Height = -13
           BoundLabel.Font.Name = 'Tahoma'
           BoundLabel.Font.Style = []
-          BoundLabel.Layout = sclLeft
-          BoundLabel.MaxWidth = 0
-          BoundLabel.UseSkinColor = True
           SkinData.SkinSection = 'COMBOBOX'
           VerticalAlignment = taAlignTop
           Color = clWhite
@@ -704,6 +697,7 @@ object frmRptReservationsCust: TfrmRptReservationsCust
         ParentFont = False
         TabOrder = 2
         SkinData.SkinSection = 'GROUPBOX'
+        Checked = False
         object dtDateFrom: TsDateEdit
           Left = 16
           Top = 20
@@ -720,17 +714,9 @@ object frmRptReservationsCust: TfrmRptReservationsCust
           MaxLength = 10
           ParentFont = False
           TabOrder = 0
-          Text = '  .  .    '
+          Text = '  -  -    '
           OnChange = dtDateFromChange
-          BoundLabel.Indent = 0
-          BoundLabel.Font.Charset = DEFAULT_CHARSET
-          BoundLabel.Font.Color = clWindowText
-          BoundLabel.Font.Height = -11
-          BoundLabel.Font.Name = 'Tahoma'
-          BoundLabel.Font.Style = []
-          BoundLabel.Layout = sclLeft
-          BoundLabel.MaxWidth = 0
-          BoundLabel.UseSkinColor = True
+          CheckOnExit = True
           SkinData.SkinSection = 'EDIT'
           GlyphMode.Blend = 0
           GlyphMode.Grayed = False
@@ -751,17 +737,9 @@ object frmRptReservationsCust: TfrmRptReservationsCust
           MaxLength = 10
           ParentFont = False
           TabOrder = 1
-          Text = '  .  .    '
+          Text = '  -  -    '
           OnChange = dtDateFromChange
-          BoundLabel.Indent = 0
-          BoundLabel.Font.Charset = DEFAULT_CHARSET
-          BoundLabel.Font.Color = clWindowText
-          BoundLabel.Font.Height = -11
-          BoundLabel.Font.Name = 'Tahoma'
-          BoundLabel.Font.Style = []
-          BoundLabel.Layout = sclLeft
-          BoundLabel.MaxWidth = 0
-          BoundLabel.UseSkinColor = True
+          CheckOnExit = True
           SkinData.SkinSection = 'EDIT'
           GlyphMode.Blend = 0
           GlyphMode.Grayed = False
@@ -782,15 +760,6 @@ object frmRptReservationsCust: TfrmRptReservationsCust
         TabOrder = 3
         OnChange = edFilterChange
         SkinData.SkinSection = 'EDIT'
-        BoundLabel.Indent = 0
-        BoundLabel.Font.Charset = DEFAULT_CHARSET
-        BoundLabel.Font.Color = clWindowText
-        BoundLabel.Font.Height = -11
-        BoundLabel.Font.Name = 'Tahoma'
-        BoundLabel.Font.Style = []
-        BoundLabel.Layout = sclLeft
-        BoundLabel.MaxWidth = 0
-        BoundLabel.UseSkinColor = True
       end
       object rgrDateRangeFor: TsRadioGroup
         Left = 322
@@ -800,6 +769,7 @@ object frmRptReservationsCust: TfrmRptReservationsCust
         Caption = 'Date range for..'
         TabOrder = 4
         SkinData.SkinSection = 'GROUPBOX'
+        Checked = False
         ItemIndex = 0
         Items.Strings = (
           'Reservation made'
@@ -833,6 +803,7 @@ object frmRptReservationsCust: TfrmRptReservationsCust
         ParentFont = False
         TabOrder = 6
         SkinData.SkinSection = 'GROUPBOX'
+        Checked = False
         object btnGetCustomer: TsSpeedButton
           Left = 104
           Top = 18
@@ -869,15 +840,6 @@ object frmRptReservationsCust: TfrmRptReservationsCust
           TabOrder = 0
           TextHint = 'dbl-click to select from list'
           SkinData.SkinSection = 'EDIT'
-          BoundLabel.Indent = 0
-          BoundLabel.Font.Charset = DEFAULT_CHARSET
-          BoundLabel.Font.Color = clWindowText
-          BoundLabel.Font.Height = -11
-          BoundLabel.Font.Name = 'Tahoma'
-          BoundLabel.Font.Style = []
-          BoundLabel.Layout = sclLeft
-          BoundLabel.MaxWidth = 0
-          BoundLabel.UseSkinColor = True
         end
       end
     end

@@ -358,7 +358,7 @@ uses   dbTables
      , ug
      , uUtils
      , PrjConst
-      , uFileSystemUtils;
+      , uFileSystemUtils, uSQLUtils;
 
 procedure FilterRoom( RoomNumber : string );
 begin

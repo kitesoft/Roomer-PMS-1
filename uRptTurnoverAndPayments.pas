@@ -495,7 +495,7 @@ implementation
 
 uses
   uAppGlobal, uD, uDReportData, uRoomerLanguage, uReservationProfile, uFinishedInvoices2,
-  uInvoice, uRptConfirms, uDImages;
+  uInvoice, uRptConfirms, uDImages, uSQLUtils;
 
 function OpenRptTurnoverAndPayments: boolean;
 begin

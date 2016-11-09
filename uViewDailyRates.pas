@@ -86,7 +86,7 @@ uses uD,
      uAppGlobal,
      uTaxCalc,
      cmpRoomerDataSet
-     ;
+     , uSQLUtils;
 
 
 procedure ShowRatesForRoomReservation(RoomReservation : Integer);

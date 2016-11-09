@@ -863,7 +863,7 @@ uses
     , uAlerts
     , uFrmCheckOut
     , UITypes
-    , uVatCalculator, uTableEntityList;
+    , uVatCalculator, uTableEntityList, uSQLUtils;
 
 {$R *.dfm}
 

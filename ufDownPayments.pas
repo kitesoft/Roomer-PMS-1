@@ -317,7 +317,7 @@ uses
   , PrjConst
   , uAssignPayment
   , DateUtils
-  , uDImages;
+  , uDImages, uSQLUtils;
 
 
 procedure AddGroupToReport(aBreakName: String; aDataPipeline: TppDataPipeline;   aReport: TppCustomReport);

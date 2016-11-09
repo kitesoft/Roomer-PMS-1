@@ -51,7 +51,6 @@ object frmCancelReservation3: TfrmCancelReservation3
       TabOrder = 0
       SkinData.SkinSection = 'GROUPBOX'
       Checked = False
-      ExplicitWidth = 530
       object memReason: TsMemo
         AlignWithMargins = True
         Left = 8
@@ -77,7 +76,6 @@ object frmCancelReservation3: TfrmCancelReservation3
         BoundLabel.Font.Name = 'Tahoma'
         BoundLabel.Font.Style = []
         SkinData.SkinSection = 'EDIT'
-        ExplicitWidth = 514
       end
     end
     object cxGroupBox2: TsGroupBox

@@ -158,7 +158,7 @@ uses
   , uRoomerDefinitions
   , uMain, uReservationStateDefinitions
   , DateUtils
-  ;
+  , uSQLUtils;
 
 
 function rptTotalList : boolean;

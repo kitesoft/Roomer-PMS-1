@@ -165,7 +165,7 @@ uses
    , uReservationProfile
    , uGuestProfile2
 
-   , uDImages;
+   , uDImages, uSQLUtils;
 
 procedure TfrmGuestSearch.btnReservationClick(Sender: TObject);
 var

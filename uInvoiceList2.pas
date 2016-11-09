@@ -242,7 +242,7 @@ uses
   , PrjConst
   , uDImages
   , uFrmPostInvoices
-  ;
+  , uSQLUtils;
 
 {$R *.dfm}
 (*

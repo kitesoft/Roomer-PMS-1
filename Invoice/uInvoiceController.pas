@@ -470,7 +470,7 @@ uses uAppGlobal,
      hData,
      _Glob,
      uG
-     ;
+     , uSQLUtils;
 
 
 

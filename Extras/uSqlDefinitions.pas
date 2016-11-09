@@ -6099,6 +6099,8 @@ function SELECT_DYNAMIC_RATES(chManCode, channelCode, RoomClass : String) : Stri
 
 implementation
 
+uses uSQLUtils;
+
 function SELECT_DYNAMIC_RATES(chManCode, channelCode, RoomClass : String) : String;
 begin
   result := 'SELECT dpr.*, rtg.Description AS Rate_Name, cm.Description AS ChannelManagerName, ch.Name AS ChannelName ' +

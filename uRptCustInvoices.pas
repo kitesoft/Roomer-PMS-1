@@ -248,7 +248,7 @@ uses
   PrjConst,
   uRoomerLanguage
   , DateUtils
-  , uDImages;
+  , uDImages, uSQLUtils;
 
 function RptCustInvoices : boolean;
 begin

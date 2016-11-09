@@ -48,7 +48,6 @@ function _IsDate(date : string) : Boolean;
 function _IsHomeDate(date : string) : Boolean;
 
 
-function _SqlFloatToStr(f : double; default : string) : string;
 function _CommaToDot(S : string) : string;
 function _DotToComma(S : string) : string;
 
@@ -80,18 +79,9 @@ function _strPadZeroL(const S : string; Len : integer) : string;
 
 function _dbStr(const aString : string; use_N_Prefix : boolean=true) : string;
 function _dbInt(const aInt : integer) : string;
-
-function _db(const aString : string)   : string; Overload;
-function _db(const aString : char)   : string; Overload;
 function _dbNullIfEmpty(const aString : string)   : string; Overload;
-function _db(const aInt  : integer)    : string; Overload;
-function _db(const aBool : boolean)    : string; Overload;
-function _db(const aFloat : Extended)  : string; Overload;
-function _db(const aFloat : double)    : string; Overload;
-function _db(const aDate  : TdateTime) : string; Overload;
+
 function _dbDT(const aDate : TDateTime)  : string;
-function _db(const aDate : TDate)  : string; Overload;
-function _db(const aTime: TTime): string; overload;
 function _dbDateAndTime(const aDate : TDateTime; qouted : boolean=true)  : string;
 
 function _FloatToStr(fValue : double; w, d : byte) : string;
@@ -1454,19 +1444,6 @@ begin
   Result := S;
 end;
 
-function _SqlFloatToStr(f : double; default : string) : string;
-var
-  sTmp : string;
-begin
-  sTmp := default;
-  try
-    sTmp := floattostr(f);
-    sTmp := _CommaToDot(sTmp);
-  except
-  end;
-  Result := sTmp;
-end;
-
 
 // **********************************************************
 
@@ -1949,33 +1926,6 @@ begin
 end;
 
 
-function RoomerQuotedString(s : String) : String;
-begin
-  if s = '' then
-    s := ''''''
-  else
-  begin
-    if copy(s, 1, 1) <> #39 then
-       s := #39 + s;
-    if (copy(s, length(s), 1) <> #39) OR (copy(s, length(s) - 1, 2) = '\'+#39) then
-       s := s + #39;
-  end;
-  result := s;
-end;
-
-function _db(const aString : string)   : string; Overload;
-begin
-  result := RoomerQuotedString(StringReplace(aString, #39, '\' + #39, [rfReplaceAll]));
-end;
-
-function _db(const aString : char)   : string; Overload;
-var s : String;
-begin
-  s := aString;
-  result := RoomerQuotedString(StringReplace(s, #39, '\' + #39, [rfReplaceAll]));
-end;
-
-
 function _dbNullIfEmpty(const aString : string)   : string; Overload;
 var value : String;
 begin
@@ -1989,50 +1939,6 @@ begin
 end;
 
 
-function _db(const aInt  : integer)    : string; Overload;
-begin
-  result := inttostr(aInt);
-end;
-
-function _db(const aBool : boolean)    : string; Overload;
-begin
-  result := BoolToString_0_1(aBool);
-  if result = '-1' then result := '1';
-end;
-
-function _db(const aFloat : Extended)  : string; Overload;
-var
-  s : string;
-begin
-  s:=floatToStr(aFloat);
-  result := _CommaToDot(S);
-end;
-
-function _db(const aFloat : double)  : string; Overload;
-var
-  s : string;
-begin
-  s:=floatToStr(aFloat);
-  result := _CommaToDot(S);
-end;
-
-function _db(const aDate : TDateTime)  : string; Overload;
-var
-  S : string;
-begin
-  datetimetostring(S, 'yyyy-mm-dd', aDate);
-  Result := quotedstr(S);
-end;
-
-function _db(const aTime: TTime): string; overload;
-var
-  S : string;
-begin
-  datetimetostring(S, 'hh:MM', aTime);
-  if s = '00:00' then s := '';
-  Result := quotedstr(S);
-end;
-
 function _dbDT(const aDate : TDateTime)  : string;
 var
   S : string;
@@ -2041,14 +1947,6 @@ begin
   Result := quotedstr(S);
 end;
 
-
-function _db(const aDate : TDate)  : string; Overload;
-var
-  S : string;
-begin
-  datetimetostring(S, 'yyyy-mm-dd', aDate);
-  Result := quotedstr(S);
-end;
 
 function _dbDateAndTime(const aDate : TDateTime; qouted : boolean=true)  : string;
 var

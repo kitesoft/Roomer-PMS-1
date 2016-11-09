@@ -207,7 +207,7 @@ uses
   , uRoomerLanguage
   , uDImages
   , uReservationProfile
-  , uMain;
+  , uMain, uSQLUtils;
 
 function RptGuests : boolean;
 begin

@@ -284,7 +284,7 @@ uses
   , uUtils
   , PrjConst
   , DateUtils
-  , uDImages;
+  , uDImages, uSQLUtils;
 
 
 procedure ShowReservationStatistics;

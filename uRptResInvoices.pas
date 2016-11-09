@@ -308,7 +308,7 @@ uses
   uRoomerLanguage,
   PrjConst
   , uDImages
-  , DateUtils;
+  , DateUtils, uSQLUtils;
 
 function RptResInvoices : boolean;
 begin
