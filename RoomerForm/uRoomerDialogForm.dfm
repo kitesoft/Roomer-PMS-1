@@ -48,9 +48,6 @@ inherited frmBaseRoomerDialogForm: TfrmBaseRoomerDialogForm
       SkinData.SkinSection = 'BUTTON'
     end
   end
-  inherited sbProgressBar: TAdvSmoothProgressBar
-    TMSStyle = 4
-  end
   inherited cxsrRoomerStyleRepository: TcxStyleRepository
     PixelsPerInch = 96
     inherited dxssRoomerGridReportLink: TdxGridReportLinkStyleSheet

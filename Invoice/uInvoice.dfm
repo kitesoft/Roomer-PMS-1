@@ -638,8 +638,8 @@ object frmInvoice: TfrmInvoice
       object chkShowPackage: TsCheckBox
         Left = 906
         Top = 135
-        Width = 111
-        Height = 20
+        Width = 119
+        Height = 19
         Caption = 'Package on invoice'
         Anchors = [akTop, akRight]
         Checked = True
@@ -679,10 +679,6 @@ object frmInvoice: TfrmInvoice
         object tabInvoice: TTabSheet
           Caption = 'Invoice'
           TabVisible = False
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object Panel2: TsPanel
             Left = 0
             Top = 340
@@ -1349,7 +1345,7 @@ object frmInvoice: TfrmInvoice
               SearchFooter.HintHighlight = 'Highlight occurrences'
               SearchFooter.MatchCaseCaption = 'Match case'
               SortSettings.DefaultFormat = ssAutomatic
-              Version = '7.9.1.1'
+              Version = '8.1.2.0'
               ColWidths = (
                 24
                 91
@@ -1364,10 +1360,6 @@ object frmInvoice: TfrmInvoice
         object tabRoomPrice: TTabSheet
           Caption = 'RoomPrice'
           TabVisible = False
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object panTopRoomRates: TsPanel
             Left = 0
             Top = 0
@@ -1432,8 +1424,8 @@ object frmInvoice: TfrmInvoice
               object chkReCalcPrices: TsCheckBox
                 Left = 9
                 Top = 20
-                Width = 195
-                Height = 20
+                Width = 203
+                Height = 19
                 Caption = 'Recalc price on guestcount  changes'
                 Checked = True
                 State = cbChecked
@@ -1445,8 +1437,8 @@ object frmInvoice: TfrmInvoice
               object chkAutoUpdateNullPrice: TsCheckBox
                 Left = 9
                 Top = 46
-                Width = 126
-                Height = 20
+                Width = 134
+                Height = 19
                 Caption = 'Auto update Null Price'
                 Checked = True
                 State = cbChecked

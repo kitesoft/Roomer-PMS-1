@@ -15,7 +15,7 @@ uses
   cxDrawTextUtils, dxPSPrVwStd, dxPSPrVwAdv, dxPSPrVwRibbon, dxPScxPageControlProducer, dxPScxGridLnk,
   dxPScxGridLayoutViewLnk, dxPScxEditorProducers, dxPScxExtEditorProducers, dxSkinsdxBarPainter, dxSkinsdxRibbonPainter,
   dxPScxCommon, dxPSCore, dxStatusBar
-  , uCurrencyHandler, AdvSmoothProgressBar, Vcl.ComCtrls, sStatusBar  ;
+  , uCurrencyHandler, AdvSmoothProgressBar, Vcl.ComCtrls, sStatusBar, cxTextEdit  ;
 
 type
   TfrmArrivalsReport = class(TfrmBaseRoomerForm)
@@ -151,43 +151,34 @@ uses
   , uReservationStateChangeHandler, uReservationStateDefinitions;
 
 const
-  cSQL = 'SELECT '+
-          '  co.CompanyID, ' +
-          '  rd.Room, '+
-          '  rd.RoomType, '+
-          '  r.Reservation AS RoomerReservationId, '+
-          '  rd.RoomReservation AS RoomerRoomReservationId, '+
-          '  pe.Name AS GuestName, '+
-          '  r.Customer AS CompanyCode, '+
-          '  r.Name AS CompanyName, '+
-          '  CAST(rr.AvrageRate as DECIMAL(10,3)) AS AverageRoomRate, '+
-          '  ( SELECT cast(rd1.ADate as date)'+
-          '         FROM roomsdate rd1 '+
-          '         WHERE rd1.RoomReservation=rd.RoomReservation '+
-          '               AND (rd1.ResFlag = ''P'') '+
-          '         ORDER BY rd1.ADate LIMIT 1) AS Arrival, '+
-          '  Cast(DATE_ADD((SELECT rd1.ADate '+
-          '              FROM roomsdate rd1 '+
-          '              WHERE rd1.RoomReservation=rd.RoomReservation AND (rd1.ResFlag = ''P'') '+
-          '              ORDER BY rd1.ADate DESC LIMIT 1), '+
-          '            INTERVAL 1 DAY) as Date) AS Departure, '+
-          '  ( SELECT COUNT(id) '+
-          '    FROM persons pe1 '+
-          '    WHERE pe1.RoomReservation=rd.RoomReservation) AS NumGuests, '+
-          '  rr.ExpectedTimeOfArrival as ExpectedTimeOfArrival '+
-          'FROM roomsdate rd '+
-          'JOIN roomreservations rr ON rr.RoomReservation=rd.RoomReservation '+
-          'JOIN reservations r ON r.Reservation=rd.Reservation '+
-          'JOIN persons pe ON pe.RoomReservation=rd.RoomReservation AND pe.MainName=1 '+
-          'JOIN channels ch ON ch.Id=r.Channel, '+
-          'control co '+
-          'WHERE ( SELECT rd1.ADate '+
-          '        FROM roomsdate rd1 '+
-          '        WHERE rd1.RoomReservation=rd.RoomReservation AND (rd1.ResFlag = ''P'') '+
-          '        ORDER BY rd1.ADate LIMIT 1)=rd.ADate '+
-          '      AND (rd.ResFlag = ''P'') '+
-          '      %s '+
-          'GROUP BY rd.aDate, rd.RoomReservation '+
+  cSQL = 'SELECT '#10 +
+          '  co.CompanyID, '#10 +
+          '  rd.Room, '#10 +
+          '  rd.RoomType, '#10 +
+          '  r.Reservation AS RoomerReservationId, '#10 +
+          '  rd.RoomReservation AS RoomerRoomReservationId, '#10 +
+          '  pe.Name AS GuestName, '#10 +
+          '  r.Customer AS CompanyCode, '#10 +
+          '  r.Name AS CompanyName, '#10 +
+          '  rr.AvrageRate AS AverageRoomRate, '#10 +
+          '  CAST(rr.Arrival AS DATE) as Arrival, '#10 +
+          '  CAST(rr.Departure AS DATE) as Departure,   '#10 +
+          '  ( SELECT COUNT(id) '#10 +
+          '    FROM persons pe1 '#10 +
+          '    WHERE pe1.RoomReservation=rd.RoomReservation) AS NumGuests, '#10 +
+          '  rr.ExpectedTimeOfArrival as ExpectedTimeOfArrival '#10 +
+          'FROM roomsdate rd '#10 +
+          'JOIN roomreservations rr ON rr.RoomReservation=rd.RoomReservation '#10 +
+          'JOIN reservations r ON r.Reservation=rd.Reservation '#10 +
+          'JOIN persons pe ON pe.RoomReservation=rd.RoomReservation AND pe.MainName=1 '#10 +
+          ', control co '#10 +
+          'WHERE ( SELECT rd1.ADate '#10 +
+          '        FROM roomsdate rd1 '#10 +
+          '        WHERE rd1.RoomReservation=rd.RoomReservation AND (rd1.ResFlag = ''P'') '#10 +
+          '        ORDER BY rd1.ADate LIMIT 1)=rd.ADate '#10 +
+          '      AND (rd.ResFlag = ''P'') '#10 +
+          '      %s '#10 +
+          'GROUP BY rd.aDate, rd.RoomReservation '#10 +
           'ORDER BY rd.aDate, rd.Room ';
 
   cSqlForSingleDate = '      AND rd.ADate = ''%s'' ';

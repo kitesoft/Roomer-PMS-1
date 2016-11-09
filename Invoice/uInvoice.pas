@@ -844,7 +844,7 @@ uses
   UITypes
   , uFloatUtils
   , Math
-    , uVatCalculator;
+    , uVatCalculator, uSQLUtils;
 
 {$R *.DFM}
 
@@ -3394,7 +3394,7 @@ var
       if s <> '' then
       begin
         GetInvoiceIndexPanel(i).HelpContext := i + 1;
-        Value := StrToFloat(s);
+        Value := SQLToFloat(s);
         GetInvoiceIndexItems(i).Hint := Currency + ' ' +
           trim(_floattostr(Value, 12, 2));
       end;

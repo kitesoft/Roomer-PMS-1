@@ -32,7 +32,6 @@ type
     psRoomerBase: TcxPropertiesStore;
     sbStatusBar: TsStatusBar;
     cxsrRoomerStyleRepository: TcxStyleRepository;
-    sbProgressBar: TAdvSmoothProgressBar;
     procedure sbStatusBarDrawPanel(StatusBar: TStatusBar; Panel: TStatusPanel; const Rect: TRect);
     procedure sbProgressBarPositionChanged(Sender: TObject; Value: Double);
   private
@@ -40,6 +39,7 @@ type
     FBusyState: TRoomerFormBusyState;
     FUpdatingControls: boolean;
     FUpdatingData: boolean;
+    FProgressBar: TAdvSmoothProgressBar;
     procedure KeepOnVisibleMonitor;
     procedure LoadData;
     function GetStateTextPanel: TStatusPanel;
@@ -63,12 +63,14 @@ type
     /// </summary>
     procedure DoLoadData; virtual;
     property StateTextPanel: TStatusPanel read GetStateTextPanel;
+    property ProgressBar: TAdvSmoothProgressBar read FProgressBar;
   public
     constructor Create(AOwner: TComponent); override;
     /// <summary>
     ///   Signal form through Windows messaging system to reload data and update controls
     /// </summary>
     procedure RefreshData;
+
   published
     /// <summary>
     ///  Close the window when ESC is pressed by the user, Default = True
@@ -105,13 +107,15 @@ constructor TfrmBaseRoomerForm.Create(AOwner: TComponent);
 begin
   inherited;
 
+  // Place pogressbase on Statuspanel
+  FProgressBar := TAdvSmoothProgressBar.Create(Self);
+  FProgressBar.Parent := sbStatusBar;
+  FProgressBar.Visible := False;
+
   RoomerLanguage.TranslateThisForm(self);
   glb.PerformAuthenticationAssertion(self);
 
   FCloseOnEsc := True;
-
-  // Place pogressbase on Statuspanel
-  sbProgressBar.Parent := sbStatusBar;
 
 end;
 
@@ -213,13 +217,13 @@ procedure TfrmBaseRoomerForm.sbStatusBarDrawPanel(StatusBar: TStatusBar; Panel: 
 begin
   if Panel = Statusbar.Panels[2] then
   begin
-    sbProgressBar.Visible := (sbProgressBar.Position > 0) and (sbProgressBar.Position < sbProgressBar.Maximum);
-    if sbProgressBar.Visible then
+    FProgressBar.Visible := (FProgressBar.Position > 0) and (FProgressBar.Position < FProgressBar.Maximum);
+    if FProgressBar.Visible then
     begin
-      sbProgressBar.Top := Rect.top;
-      sbProgressBar.Left := Rect.Left;
-      sbProgressBar.Width := Rect.Right - Rect.Left - 15;
-      sbProgressBar.Height := Rect.Bottom - Rect.Top;
+      FProgressBar.Top := Rect.top;
+      FProgressBar.Left := Rect.Left;
+      FProgressBar.Width := Rect.Right - Rect.Left - 15;
+      FProgressBar.Height := Rect.Bottom - Rect.Top;
     end;
   end;
 end;

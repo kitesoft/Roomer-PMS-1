@@ -47,8 +47,8 @@ inherited frmArrivalsReport: TfrmArrivalsReport
       object rbToday: TsRadioButton
         Left = 4
         Top = 21
-        Width = 58
-        Height = 19
+        Width = 50
+        Height = 20
         Caption = 'Today'
         Checked = True
         TabOrder = 0
@@ -58,8 +58,8 @@ inherited frmArrivalsReport: TfrmArrivalsReport
       object rbTomorrow: TsRadioButton
         Left = 4
         Top = 46
-        Width = 76
-        Height = 19
+        Width = 68
+        Height = 20
         Caption = 'Tomorrow'
         TabOrder = 1
         OnClick = rbRadioButtonClick
@@ -67,8 +67,8 @@ inherited frmArrivalsReport: TfrmArrivalsReport
       object rbManualRange: TsRadioButton
         Left = 119
         Top = 21
-        Width = 122
-        Height = 19
+        Width = 114
+        Height = 20
         Caption = 'Manual date range:'
         TabOrder = 2
         OnClick = rbRadioButtonClick
@@ -262,6 +262,8 @@ inherited frmArrivalsReport: TfrmArrivalsReport
       object grArrivalsListDBTableView1RoomerReservationID: TcxGridDBColumn
         Caption = 'Reservation ID'
         DataBinding.FieldName = 'RoomerReservationID'
+        PropertiesClassName = 'TcxTextEditProperties'
+        Properties.Alignment.Horz = taCenter
         Options.Editing = False
         Width = 83
       end
@@ -281,6 +283,8 @@ inherited frmArrivalsReport: TfrmArrivalsReport
       object grArrivalsListDBTableView1Roomtype: TcxGridDBColumn
         Caption = 'Room type'
         DataBinding.FieldName = 'Roomtype'
+        PropertiesClassName = 'TcxTextEditProperties'
+        Properties.Alignment.Horz = taCenter
         Options.Editing = False
         Width = 66
       end
@@ -299,9 +303,8 @@ inherited frmArrivalsReport: TfrmArrivalsReport
       object grArrivalsListDBTableView1ExpectedTimeOfArrival: TcxGridDBColumn
         Caption = 'Expected TOA'
         DataBinding.FieldName = 'ExpectedTimeOfArrival'
-        PropertiesClassName = 'TcxTimeEditProperties'
+        PropertiesClassName = 'TcxTextEditProperties'
         Properties.Alignment.Horz = taCenter
-        Properties.UseTimeFormatWhenUnfocused = False
         OnGetDisplayText = grArrivalsListDBTableView1ExpectedTimeOfArrivalGetDisplayText
         HeaderAlignmentHorz = taCenter
         Options.Editing = False
@@ -323,9 +326,8 @@ inherited frmArrivalsReport: TfrmArrivalsReport
   inherited sbStatusBar: TsStatusBar
     Top = 566
     Width = 1123
-  end
-  inherited sbProgressBar: TAdvSmoothProgressBar
-    TMSStyle = 4
+    ExplicitTop = 566
+    ExplicitWidth = 1123
   end
   inherited psRoomerBase: TcxPropertiesStore
     Components = <
@@ -544,7 +546,7 @@ inherited frmArrivalsReport: TfrmArrivalsReport
       PrinterPage.ScaleMode = smFit
       PrinterPage._dxMeasurementUnits_ = 2
       PrinterPage._dxLastMU_ = 2
-      ReportDocument.CreationDate = 42682.515134212960000000
+      ReportDocument.CreationDate = 42683.480262222220000000
       ReportTitle.Font.Charset = DEFAULT_CHARSET
       ReportTitle.Font.Color = clBlack
       ReportTitle.Font.Height = -19
