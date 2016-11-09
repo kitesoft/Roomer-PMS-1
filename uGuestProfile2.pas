@@ -1268,6 +1268,12 @@ begin
       s := s + ' where RoomReservation = ' + _db(zRoomReservation);
       ExecutionPlan.AddExec(s);
 
+      s := '';
+      s := s + 'UPDATE payments '+#10;
+      s := s + 'Set Reservation = ' + _db(newReservation)+#10;
+      s := s + ' where RoomReservation = ' + _db(zRoomReservation);
+      ExecutionPlan.AddExec(s);
+
       if ExecutionPlan.Execute(ptExec, False, True) then
         ExecutionPlan.CommitTransaction
       else
@@ -1349,47 +1355,44 @@ begin
 
       s := '';
       s := s + ' UPDATE roomreservations '+#10;
-      s := s + ' SET '+#10;
-      s := s + '   Reservation = ' + _db(newReservation) + ' '+#10;
-      s := s + ' WHERE '+#10;
-      s := s + '   (RoomReservation = ' + _db(zRoomReservation) + ')'+#10;
+      s := s + ' SET Reservation = ' + _db(newReservation) + ' '+#10;
+      s := s + ' WHERE (RoomReservation = ' + _db(zRoomReservation) + ')'+#10;
       ExecutionPlan.AddExec(s);
 
       s := '';
       s := s + ' UPDATE invoiceheads '+#10;
-      s := s + ' SET '+#10;
-      s := s + '   Reservation = ' + _db(newReservation) + ' '+#10;
-      s := s + ' WHERE '+#10;
-      s := s + '   (RoomReservation = ' + _db(zRoomReservation) + ') '+#10;
+      s := s + ' SET Reservation = ' + _db(newReservation) + ' '+#10;
+      s := s + ' WHERE (RoomReservation = ' + _db(zRoomReservation) + ') '+#10;
       ExecutionPlan.AddExec(s);
 
       s := '';
       s := s + ' UPDATE invoicelines '+#10;
-      s := s + ' SET '+#10;
-      s := s + '   Reservation = ' + _db(newReservation) + ' '+#10;
-      s := s + ' WHERE '+#10;
-      s := s + '   (RoomReservation = ' + _db(zRoomReservation) + ') '+#10;
+      s := s + ' SET Reservation = ' + _db(newReservation) + ' '+#10;
+      s := s + ' WHERE (RoomReservation = ' + _db(zRoomReservation) + ') '+#10;
       ExecutionPlan.AddExec(s);
 
 
       s := '';
       s := s + ' UPDATE persons '+#10;
-      s := s + ' SET '+#10;
-      s := s + '    Reservation = ' + _db(newReservation) + ' '+#10;
+      s := s + ' SET Reservation = ' + _db(newReservation) + ' '+#10;
       s := s + '   ,SurName = ' + _db(edNewReservation.text) + ' '+#10;
-      s := s + ' WHERE '+#10;
-      s := s + '   (RoomReservation = ' + _db(zRoomReservation) + ') '+#10;
+      s := s + ' WHERE (RoomReservation = ' + _db(zRoomReservation) + ') '+#10;
       ExecutionPlan.AddExec(s);
 
 
       s := '';
       s := s + ' UPDATE roomsdate '+#10;
-      s := s + ' SET '+#10;
-      s := s + '   Reservation = ' + _db(newReservation) + ' '+#10;
-      s := s + ' WHERE '+#10;
-      s := s + '   (RoomReservation = ' + _db(zRoomReservation) + ') '+#10;
+      s := s + ' SET Reservation = ' + _db(newReservation) + ' '+#10;
+      s := s + ' WHERE (RoomReservation = ' + _db(zRoomReservation) + ') '+#10;
       s := s + '   AND (ResFlag <> '+_db(STATUS_DELETED)+' ) '; //**zxhj line added
       ExecutionPlan.AddExec(s);
+
+      s := '';
+      s := s + ' UPDATE payments '+#10;
+      s := s + ' SET Reservation = ' + _db(newReservation) + ' '+#10;
+      s := s + ' WHERE (RoomReservation = ' + _db(zRoomReservation) + ') '+#10;
+      ExecutionPlan.AddExec(s);
+
       if ExecutionPlan.Execute(ptExec, False, True) then
         ExecutionPlan.CommitTransaction
       else

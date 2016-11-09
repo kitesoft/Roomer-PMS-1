@@ -191,7 +191,6 @@ object frmGuestProfile2: TfrmGuestProfile2
         Height = 78
         TabOrder = 0
         SkinData.SkinSection = 'GROUPBOX'
-        Checked = False
         object labroom: TsLabel
           Left = 12
           Top = 8
@@ -239,7 +238,7 @@ object frmGuestProfile2: TfrmGuestProfile2
         Left = 250
         Top = 109
         Width = 20
-        Height = 16
+        Height = 20
         TabOrder = 1
         SkinData.SkinSection = 'CHECKBOX'
         ImgChecked = 0
@@ -253,7 +252,6 @@ object frmGuestProfile2: TfrmGuestProfile2
         Caption = 'Create new reservation from this room'
         TabOrder = 2
         SkinData.SkinSection = 'GROUPBOX'
-        Checked = False
         object sLabel1: TsLabel
           Left = 10
           Top = 24
@@ -302,7 +300,6 @@ object frmGuestProfile2: TfrmGuestProfile2
         Caption = 'Assign this reservation to another reservation'
         TabOrder = 3
         SkinData.SkinSection = 'GROUPBOX'
-        Checked = False
         object sLabel2: TsLabel
           Left = 31
           Top = 24
@@ -354,7 +351,6 @@ object frmGuestProfile2: TfrmGuestProfile2
         Caption = 'Room invoiceline descripton formula'
         TabOrder = 4
         SkinData.SkinSection = 'GROUPBOX'
-        Checked = False
         object Label12: TsLabel
           Left = 9
           Top = 41
@@ -393,7 +389,7 @@ object frmGuestProfile2: TfrmGuestProfile2
         Left = 250
         Top = 131
         Width = 20
-        Height = 16
+        Height = 20
         TabOrder = 5
         SkinData.SkinSection = 'CHECKBOX'
         ImgChecked = 0
@@ -452,7 +448,6 @@ object frmGuestProfile2: TfrmGuestProfile2
         Caption = 'Notes for Room'
         TabOrder = 1
         SkinData.SkinSection = 'GROUPBOX'
-        Checked = False
         object memRoomNotes: TcxMemo
           Left = 2
           Top = 15
@@ -478,7 +473,6 @@ object frmGuestProfile2: TfrmGuestProfile2
         Caption = 'Notes for guest'
         TabOrder = 2
         SkinData.SkinSection = 'GROUPBOX'
-        Checked = False
         object cxDBMemo1: TcxDBMemo
           Left = 2
           Top = 15
@@ -895,7 +889,6 @@ object frmGuestProfile2: TfrmGuestProfile2
     object prLink_grData: TdxGridReportLink
       Active = True
       Component = grData
-      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -908,8 +901,7 @@ object frmGuestProfile2: TfrmGuestProfile2
       PrinterPage.PageSize.Y = 297000
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
-      ReportDocument.CreationDate = 42682.697080520830000000
-      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
+      ReportDocument.CreationDate = 42683.618900451390000000
       BuiltInReportLink = True
     end
   end
