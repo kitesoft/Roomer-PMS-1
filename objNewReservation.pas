@@ -46,7 +46,7 @@ TYPE
     constructor Create(aitemID: integer; const aItem: string; const aDesc: string;
                                         aCount: integer; aPrice: double; aFromdate, aToDate: TDateTime);
     /// <summary> Post reservationExtra to server </summary>
-    procedure Post;
+    procedure Post(aUseTransaction: boolean=true);
 
     function IsAvailable: boolean;
 
@@ -84,7 +84,7 @@ TYPE
     /// <summary> Add reservationextras from the provided dataset </summary>
     procedure LoadFromDataset(aDataset: TDataset);
     /// <summary> Post all ReservationExtras to server
-    procedure Post;
+    procedure Post(aUseTransaction: boolean=true);
     procedure DeleteAllFromDatabase;
     function IsAvailable(aUnavailableList: TStringlist): boolean;
   end;
@@ -1642,7 +1642,7 @@ begin
         end; // for 0 to roomcount
 
 
-        if not ExecutionPlan.Execute(ptExec, False, True) then
+        if not ExecutionPlan.Execute(ptExec, not Transactional, not Transactional) then
           raise Exception.Create(ExecutionPlan.ExecException);
 
 
@@ -1692,7 +1692,7 @@ begin
 
 
         for newRoomReservationItem in FnewRoomReservations.FRoomList do
-          newRoomReservationItem.Extras.Post;
+          newRoomReservationItem.Extras.Post(not Transactional);
 
 
         if FHomeCustomer.CreatePersonProfileId then
@@ -1723,7 +1723,7 @@ begin
         begin
           if Transactional then
             ExecutionPlan.RollbackTransaction;
-          showMessage('Error creating reservation for ' + MainGuestName + ' on ' + dateToStr(Arrival)+ '#10' + e.message);
+          showMessage('Error creating reservation for ' + MainGuestName + ' on ' + dateToStr(Arrival) + #10 + e.message);
           isOk := True;
           result := false;
         end;
@@ -1855,7 +1855,7 @@ begin
 
 end;
 
-procedure TReservationExtra.Post;
+procedure TReservationExtra.Post(aUseTransaction: boolean);
 const
   cSQL = 'INSERT into roomreservationstockitems (' +
          ' reservation, ' +
@@ -1905,7 +1905,7 @@ begin
       dt := dt + 1;
     end;
     AddInvoiceInsert(lExecPlan);
-    lExecPlan.Execute(ptExec, True, True);
+    lExecPlan.Execute(ptExec, aUseTransaction, aUseTransAction);
   finally
     lExecPlan.Free;
   end;
@@ -2067,12 +2067,22 @@ begin
     Item.RoomReservationItem := FReservationitem;
 end;
 
-procedure TReservationExtrasList.Post;
+procedure TReservationExtrasList.Post(aUseTransaction: boolean);
 var
   lResExtra: TReservationExtra;
 begin
-  for lResExtra in Self do
-    lResExtra.Post;
+  if aUseTransaction then
+    d.roomerMainDataSet.SystemStartTransaction;
+  try
+    for lResExtra in Self do
+      lResExtra.Post(not aUseTransaction);
+
+      if aUseTransAction then
+        d.roomerMainDataSet.SystemCommitTransaction;
+  except
+    d.roomerMainDataSet.SystemRollbackTransaction;
+    raise
+  end;
 end;
 
 function TReservationExtrasList.TotalPrice: double;
