@@ -4197,7 +4197,7 @@ begin
             eSet.GetFloatValue(eSet.FieldByName('ConfirmAmount')),
             lRoomReservation, eSet.FieldByName('AutoGen').asString,
             eSet.FieldByName('ItemNumber').asinteger);
-          if (agrLines.Cells[col_Item, agrLines.RowCount - 1] <> '') then
+          if (agrLines.Cells[col_Item, agrLines.RowCount - 1] <> '') or (agrLines.Cells[col_Description, agrLines.RowCount - 1] <> '') then
             inc(iCurrentRow);
           agrLines.RowCount := iCurrentRow;
           DisplayLine(iCurrentRow - 1, idx);
