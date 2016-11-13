@@ -459,7 +459,6 @@ object frmMain: TfrmMain
             TabOrder = 0
             OnClick = rgrGroupreportStayTypeClick
             SkinData.SkinSection = 'GROUPBOX'
-            Checked = False
             Items.Strings = (
               'Arrival'
               'Departure'
@@ -510,7 +509,6 @@ object frmMain: TfrmMain
             ParentFont = False
             TabOrder = 4
             SkinData.SkinSection = 'GROUPBOX'
-            Checked = False
             object chkNewPage: TsCheckBox
               Left = 3
               Top = 15
@@ -1939,7 +1937,6 @@ object frmMain: TfrmMain
             Text = '  -  -    '
             OnChange = dtDateChange
             OnMouseEnter = tabsViewMouseEnter
-            CheckOnExit = True
             BoundLabel.Font.Charset = DEFAULT_CHARSET
             BoundLabel.Font.Color = clWindowText
             BoundLabel.Font.Height = -13
@@ -24371,7 +24368,6 @@ object frmMain: TfrmMain
           D496F22FE8894AD5544124613CFD3DA81B0D5A2C07FBA45272141100A1D417F9
           EAE352F5EFD75657D651AA03DBBEFF3FE40E5F74}
       end>
-    MenuSupport.IcoLineSkin = 'ICOLINE'
     MenuSupport.ExtraLineFont.Charset = DEFAULT_CHARSET
     MenuSupport.ExtraLineFont.Color = clWindowText
     MenuSupport.ExtraLineFont.Height = -13
