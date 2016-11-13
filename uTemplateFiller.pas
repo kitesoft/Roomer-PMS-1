@@ -73,6 +73,8 @@ type TBookingConfirmationEmailItems = (
           _infoContactName,
           _infoProfileName,
           _infoRoomsGuestsPrices,
+          _bookingRoomRate,
+          _bookingRoomRateDiscount,
           _infoPayment,
           _infoPaymentType,
           _infoPaymentStatus,
@@ -99,6 +101,8 @@ end;
 
 function fillInBookingInformation(booking : Integer; template : String; var Subject: String; filterOutCancels : Boolean = True) : String;
 var bookingGuestsRoomsPrices : String;
+    bookingRoomRate,
+    bookingRoomRateDiscount,
     totalBookingPrice : Double;
 
     s : String;
@@ -203,7 +207,8 @@ begin
   rSetRoomsDate := CreateNewDataSet;
   try
     s := format(
-         'SELECT Reservation, RoomReservation, Arrival, Departure, NumberOfNights, AveragePrice*NumberOfNights AS TotalPrice, AveragePrice, Currency, Room, ' +
+         'SELECT Reservation, RoomReservation, Arrival, Departure, NumberOfNights, (AveragePrice - AverageDiscount)*NumberOfNights AS TotalPrice, (AveragePrice - AverageDiscount) AS AveragePrice, ' +
+         'AveragePrice AS RealRate, AverageDiscount AS RateDiscount, Currency, Room, ' +
          'IF(ISNULL(RoomClass) OR RoomClass='''', RoomType, RoomClass) AS RoomClass, ' +
          'IF(ISNULL(RoomClass) OR RoomClass='''', ' +
          '(SELECT Description FROM roomtypes WHERE RoomType=xxx.RoomType), ' +
@@ -250,6 +255,7 @@ begin
          '                            WHERE RoomReservation = rd.RoomReservation ' +
          '                            AND (ImportSource = r.Package AND r.Package != '''')), 0)) ' +
          '       / COUNT(rd.id) AS AveragePrice, ' +
+         '(SUM(IF(isPercentage, RoomRate * rd.Discount / 100, rd.Discount))) / COUNT(rd.id) AS AverageDiscount, ' +
          'rd.Currency, ' +
          'rd.Room, ' +
          'r.RoomClass, ' +
@@ -290,10 +296,14 @@ begin
     rSetRoomsDate.First;
     GetGlobals;
     totalBookingPrice := 0.00;
+    bookingRoomRateDiscount := 0.00;
+    bookingRoomRate := 0.00;
     while NOT rSetRoomsDate.Eof do
     begin
       bookingGuestsRoomsPrices := bookingGuestsRoomsPrices + getRoomRow(rSetRoomsDate);
       totalBookingPrice := totalBookingPrice + rSetRoomsDate['TotalPrice'];
+      bookingRoomRate := bookingRoomRate + rSetRoomsDate['RealRate'];
+      bookingRoomRateDiscount := bookingRoomRateDiscount + rSetRoomsDate['RateDiscount'];
       rSetRoomsDate.Next;
     end;
     bookingGuestsRoomsPrices := bookingGuestsRoomsPrices
@@ -337,6 +347,9 @@ begin
       result := ReplaceString(result, GetCorrectedEnumName(_customerCity), customerCity);
       result := ReplaceString(result, GetCorrectedEnumName(_customerCountryCode), customerCountryCode);
       result := ReplaceString(result, GetCorrectedEnumName(_customerCountryName), customerCountryName);
+
+      result := ReplaceString(result, GetCorrectedEnumName(_bookingRoomRate), Trim(_floattostr(bookingRoomRate, 12, 2)));
+      result := ReplaceString(result, GetCorrectedEnumName(_bookingRoomRateDiscount), Trim(_floattostr(bookingRoomRateDiscount, 12, 2)));
 
       result := ReplaceString(result, GetCorrectedEnumName(_bookingGuestsRoomsPrices), bookingGuestsRoomsPrices);
       result := ReplaceString(result, GetCorrectedEnumName(_bookingTotalPrice), Trim(_floattostr(totalBookingPrice, 12, 2)));
