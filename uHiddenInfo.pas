@@ -103,7 +103,7 @@ uses
   PrjConst
   , uDImages
   , UITypes
-  , uRoomerVersionInfo;
+  , uRoomerVersionInfo, uSQLUtils;
 {$R *.dfm}
 
 

@@ -158,7 +158,7 @@ uses
   , uRoomerDefinitions
   , uMain, uReservationStateDefinitions
   , DateUtils
-  ;
+  , uSQLUtils;
 
 
 function rptTotalList : boolean;
@@ -497,15 +497,17 @@ begin
       s := s+'FROM '#10;
       s := s+'    predefineddates pd '#10;
       s := s+'WHERE '#10;
-      s := s+'    ((pd.date >= '+_DateToDbDate(zDateFrom,true)+' AND pd.date<='+_DateToDbDate(zDateTo,true)+')) '#10;
-  
+      s := s+'    ((pd.date >= '+_db(zDateFrom,true)+' AND pd.date<='+_db(zDateTo,true)+')) '#10;
+
+  
   
 {$ENDREGION}
 
     CopyToClipboard(s);
     lExecutionPlan.AddQuery(s);
 
-    screen.Cursor := crHourGlass;
+
+    screen.Cursor := crHourGlass;
     kbmTotallist.DisableControls;
     try
       lExecutionPlan.Execute(ptQuery);

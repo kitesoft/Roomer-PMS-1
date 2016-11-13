@@ -337,7 +337,7 @@ uses
   , PrjConst
   , uDImages
   , uUtils
-  , uMain;
+  , uMain, uSQLUtils;
 {$R *.dfm}
 
 
@@ -605,7 +605,7 @@ begin
   try
     screen.Cursor := crHourGlass;
     try
-      s := format(s, [_DateToDBDate(zDateFrom, True), _DateToDBDate(zDateTo, True), zRoomReservationsList]);
+      s := format(s, [_db(zDateFrom, True), _db(zDateTo, True), zRoomReservationsList]);
       CopyToCLipboard(s);
       hData.rSet_bySQL(rSet,s);
       if mNationalStatistics.Active then mNationalStatistics.Close;

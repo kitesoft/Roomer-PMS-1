@@ -331,7 +331,7 @@ uses
   , uCountries
   , uAlerts
   , uUtils
-  ;
+  , uSQLUtils;
 
 {$R *.dfm}
 

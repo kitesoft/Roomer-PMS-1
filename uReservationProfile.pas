@@ -854,7 +854,7 @@ uses
   ufrmReservationExtras
   , uInvoiceContainer
   , uCurrencyHandler
-  , uAccountTypeDefinitions, uBreakfastStateDefinitions;
+  , uAccountTypeDefinitions, uBreakfastStateDefinitions, uSQLUtils;
 
 {$R *.DFM}
 
@@ -1132,8 +1132,8 @@ begin
         edtTel2.text := trim(fieldbyname('Tel2').asstring);
         edtFax.text := trim(fieldbyname('Fax').asstring);
 
-        dtArrival.Date := _DBDateToDate(trim(fieldbyname('Arrival').asstring));
-        dtDeparture.Date := _DBDateToDate(trim(fieldbyname('Departure').asstring));
+        dtArrival.Date := SQLToDate(trim(fieldbyname('Arrival').asstring));
+        dtDeparture.Date := SQLToDate(trim(fieldbyname('Departure').asstring));
 
         memInformation.Lines.text := trim(fieldbyname('Information').asstring);
         memPMInfo.Lines.text := trim(fieldbyname('PMInfo').asstring);
@@ -1333,8 +1333,8 @@ begin
       rSet.fieldbyname('Tel1').asstring := edtTel1.text;
       rSet.fieldbyname('Fax').asstring := edtFax.text;
       rSet.fieldbyname('Tel2').asstring := edtTel2.text;
-      rSet.fieldbyname('Arrival').asstring := _DateToDBDate(dtArrival.Date, false);
-      rSet.fieldbyname('Departure').asstring := _DateToDBDate(dtDeparture.Date, false);
+      rSet.fieldbyname('Arrival').asstring := _db(dtArrival.Date, false);
+      rSet.fieldbyname('Departure').asstring := _db(dtDeparture.Date, false);
       rSet.fieldbyname('Information').asstring := memInformation.Lines.text;
       rSet.fieldbyname('PMInfo').asstring := memPMInfo.Lines.text;
       rSet.fieldbyname('ContactName').asstring := edtContactName.text;
@@ -1702,7 +1702,7 @@ begin
     s := s + '`Arrival` = %s, '#10;;
     s := s + '`Departure` = %s '#10;
     s := s + 'WHERE reservation = %d ';
-    s := format(s, [_DateToDBDate(arrival, true), _DateToDBDate(departure, true), zReservation]);
+    s := format(s, [_db(arrival, true), _db(departure, true), zReservation]);
     if not cmd_bySQL(s) then
     begin
     end;
@@ -1937,8 +1937,8 @@ begin
       roomReservationData.invBreakfast := isBreckfastIncluted;
       roomReservationData.Currency := Currency;
       roomReservationData.PriceType := PriceCode;
-      roomReservationData.arrival := _DateToDBDate(arrival, false);
-      roomReservationData.departure := _DateToDBDate(departure, false);
+      roomReservationData.arrival := _db(arrival, false);
+      roomReservationData.departure := _db(departure, false);
       roomReservationData.RoomType := RoomType;
       roomReservationData.PMInfo := RoomPMInfo;
       roomReservationData.HiddenInfo := RoomHiddenInfo;
@@ -1960,14 +1960,14 @@ begin
       roomReservationData.rateCount := rateCount;
       roomReservationData.Discount := AvrageDiscount;
       roomReservationData.RoomPrice1 := 0.00;
-      roomReservationData.Price1From := _DateToDBDate(arrival, false);
-      roomReservationData.Price1To := _DateToDBDate(departure, false);
+      roomReservationData.Price1From := _db(arrival, false);
+      roomReservationData.Price1To := _db(departure, false);
       roomReservationData.RoomPrice2 := 0.00;
-      roomReservationData.Price2From := _DateToDBDate(arrival, false);
-      roomReservationData.Price2To := _DateToDBDate(arrival, false);
+      roomReservationData.Price2From := _db(arrival, false);
+      roomReservationData.Price2To := _db(arrival, false);
       roomReservationData.RoomPrice3 := 0.00;
-      roomReservationData.Price3From := _DateToDBDate(arrival, false);
-      roomReservationData.Price3To := _DateToDBDate(arrival, false);
+      roomReservationData.Price3From := _db(arrival, false);
+      roomReservationData.Price3To := _db(arrival, false);
       roomReservationData.Hallres := 0;
       roomReservationData.ExpectedTimeOfArrival := lExpectedTOA;
       roomReservationData.ExpectedCheckoutTime := lExpectedCOT;
@@ -1981,7 +1981,7 @@ begin
       invoiceHeadData.roomReservation := iRoomreservation;
       invoiceHeadData.SplitNumber := 0;
       invoiceHeadData.InvoiceNumber := -1;
-      invoiceHeadData.InvoiceDate := _DateToDBDate(now, false);
+      invoiceHeadData.InvoiceDate := _db(now, false);
       invoiceHeadData.Customer := Customer;
       invoiceHeadData.name := ReservationName + ', ' + guestName;
       invoiceHeadData.Address1 := Address1;

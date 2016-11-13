@@ -1260,8 +1260,7 @@ begin
   agrLines.Cells[col_isPackage, iRow] := _bool2str(invoiceLine.FIspackage, 2);
   agrLines.Cells[col_NoGuests, iRow] := inttostr(invoiceLine.FNoGuests);
 
-  agrLines.Cells[col_confirmdate, iRow] :=
-    _dbDateAndTime(invoiceLine.FConfirmDate, false);
+  agrLines.Cells[col_confirmdate, iRow] :=  _db(invoiceLine.FConfirmDate, false);
   agrLines.Cells[col_confirmAmount, iRow] := _db(invoiceLine.FConfirmAmount);
 
   if invoiceLine.FAuto then
@@ -1613,7 +1612,7 @@ begin
   s := s + ', ' + _db(rgrInvoiceType.itemIndex);
   s := s + ', ' + _db(g.qUser);
   s := s + ', ' + _db(Date);
-  s := s + ', ' + _dbDT(zInvoiceDate);
+  s := s + ', ' + _db(zInvoiceDate);
   s := s + ', ' + _db(zConfirmDate);
   s := s + ', ' + _db(zPayDate);
   s := s + ', ' + _db(edtCurrency.Text);
@@ -1780,7 +1779,7 @@ begin
           qry := qry + ', ' + _db(FRoomReservation);
           qry := qry + ', ' + _db(FnewSplitNumber);
           qry := qry + ', ' + _db(itemNumber);
-          qry := qry + ', ' + _DateToDbDate(PurchaseDate, True);
+          qry := qry + ', ' + _db(PurchaseDate, True);
           qry := qry + ', ' + _db(zInvoiceNumber);
           qry := qry + ', ' + _db(ItemId);
           qry := qry + ', ' + _db(Number);
@@ -2321,7 +2320,7 @@ begin
       ShowDiscount := mRoomRates.FieldByName('showDiscount').asBoolean;
       RateDate := mRoomRates.FieldByName('RateDate').asdateTime;
 
-      sDate := _DateToDbDate(RateDate, True);
+      sDate := _db(RateDate, True);
 
       s := '';
       s := s + 'UPDATE `roomsdate` '#10;
@@ -3022,6 +3021,7 @@ var
   bSystemLine: boolean;
 
   lInvRoom: TInvoiceRoomEntity;
+  lDate: TDate;
 
 begin
   for i := 1 to agrLines.RowCount - 1 do
@@ -3119,8 +3119,8 @@ begin
     m.FieldByName('RoomReservation').asinteger := FRoomReservation;
     m.FieldByName('SplitNumber').asinteger := FnewSplitNumber;
     m.FieldByName('ItemNumber').asinteger := i;
-    m.FieldByName('PurchaseDate').asString :=
-      _DateToDbDate(integer(agrLines.Objects[col_Description, i]), True);
+    lDate := integer(agrLines.Objects[col_Description, i]);
+    m.FieldByName('PurchaseDate').asString := _db(lDate);
     m.FieldByName('InvoiceNumber').asinteger := zInvoiceNumber;
     m.FieldByName('ItemId').asString := lineItem;
     m.FieldByName('Number').asfloat := ItemCount;
@@ -3661,7 +3661,7 @@ begin
         invoiceHeadData.RoomReservation := FRoomReservation;
         invoiceHeadData.SplitNumber := FnewSplitNumber;
         invoiceHeadData.invoiceNumber := zInvoiceNumber;
-        invoiceHeadData.InvoiceDate := _DateToDbDate(zInvoiceDate, false);
+        invoiceHeadData.InvoiceDate := _db(zInvoiceDate, false);
         invoiceHeadData.ihCurrency := zrSet.FieldByName('Currency').asString;
         invoiceHeadData.ihCurrencyRate := GetRate(zrSet.FieldByName('Currency').asString);
 
@@ -3801,8 +3801,8 @@ begin
         s := s + '(rd.roomreservation = %d) AND (rd.paid=0) AND rd.ResFlag NOT IN (''X'') '#10;
         s := s + 'ORDER BY '#10;
         s := s + '  ADate '#10;
-        // s := format(s, [RoomReservation, RoomReservation, _DateToDbDate(Arrival, True), _DateToDbDate(Departure, True)]);
-        s := format(s, [lRoomReservation]); //, _DateToDbDate(Arrival, True), _DateToDbDate(Departure, True)]);
+        // s := format(s, [RoomReservation, RoomReservation, _db(Arrival, True), _db(Departure, True)]);
+        s := format(s, [lRoomReservation]); //, _db(Arrival, True), _db(Departure, True)]);
 
         copytoclipboard(s);
         // debugmessage(s);
@@ -3897,7 +3897,7 @@ begin
                 reservation := rSet.FieldByName('Reservation').asinteger;
                 Room := rSet.FieldByName('Room').asString;
                 PriceCode := rSet.FieldByName('PriceCode').asString;
-                RateDate := _DBDateToDate(rSet.FieldByName('ADate').asString);
+                RateDate := SQLToDate(rSet.FieldByName('ADate').asString);
                 Rate := rSet.GetFloatValue(rSet.FieldByName('RoomRate'));
                 Discount := rSet.GetFloatValue(rSet.FieldByName('Discount'));
                 isPercentage := rSet.FieldByName('isPercentage').asBoolean;
@@ -4188,7 +4188,7 @@ begin
           idx := AddLine(lineId, ItemId, _s,
             dNumber, Price, // -96
             Price * dNumber, // -96
-            _DBDateToDate(eSet.FieldByName('PurchaseDate').asString), false,
+            SQLToDate(eSet.FieldByName('PurchaseDate').asString), false,
             trim(eSet.FieldByName('importRefrence').asString),
             trim(eSet.FieldByName('importSource').asString),
             eSet.FieldByName('isPackage').asBoolean,
@@ -4197,7 +4197,7 @@ begin
             eSet.GetFloatValue(eSet.FieldByName('ConfirmAmount')),
             lRoomReservation, eSet.FieldByName('AutoGen').asString,
             eSet.FieldByName('ItemNumber').asinteger);
-          if (agrLines.Cells[col_Item, agrLines.RowCount - 1] <> '') then
+          if (agrLines.Cells[col_Item, agrLines.RowCount - 1] <> '') or (agrLines.Cells[col_Description, agrLines.RowCount - 1] <> '') then
             inc(iCurrentRow);
           agrLines.RowCount := iCurrentRow;
           DisplayLine(iCurrentRow - 1, idx);
@@ -4222,7 +4222,7 @@ begin
             // **HJ
             mPayments.insert;
             mPayments.FieldByName('PayType').asString := eSet.FieldByName('PayType').asString;
-            mPayments.FieldByName('PayDate').asdateTime := _DBDateToDate(eSet.FieldByName('PayDate').asString);
+            mPayments.FieldByName('PayDate').asdateTime := SQLToDateTime(eSet.FieldByName('PayDate').asString);
             mPayments.FieldByName('Amount').asfloat := eSet.FieldByName('Amount').asfloat;
             mPayments.FieldByName('Description').asString := eSet.FieldByName('Description').asString;
             mPayments.FieldByName('PayGroup').asString := '';
@@ -4300,7 +4300,7 @@ begin
   recordSet.first;
   while NOT recordSet.eof do
   begin
-    if recordSet[field] = _DateToDbDate(Value, false) then
+    if recordSet[field] = _db(Value, false) then
     begin
       result := True;
       break;
@@ -5376,7 +5376,7 @@ begin
   s := s + ', ' + _db(FRoomReservation);
   s := s + ', ' + _db(FnewSplitNumber);
   s := s + ', ' + _db(zInvoiceNumber);
-  s := s + ', ' + _DateToDbDate(zInvoiceDate, True);
+  s := s + ', ' + _db(zInvoiceDate, True);
   s := s + ', ' + format('(SELECT IFNULL((SELECT Customer FROM invoiceaddressees ia WHERE ia.invoiceNumber=%d ' +
     '        AND ia.Reservation=%d ' +
     '        AND ia.RoomReservation=%d ' +
@@ -5442,10 +5442,10 @@ begin
   s := s + ', ' + _db(false);
   s := s + ', ' + inttostr(1);
   s := s + ', ' + _db(g.qUser);
-  s := s + ', ' + _DateToDbDate(Date, True);
-  s := s + ', ' + _DateToDbDate(zInvoiceDate, True);
-  s := s + ', ' + _DateToDbDate(zConfirmDate, True);
-  s := s + ', ' + _DateToDbDate(zPayDate, True);
+  s := s + ', ' + _db(Date, True);
+  s := s + ', ' + _db(zInvoiceDate, True);
+  s := s + ', ' + _db(zConfirmDate, True);
+  s := s + ', ' + _db(zPayDate, True);
   s := s + ', ' + _db(edtInvRefrence.Text);
   s := s + ', ' + _db(edtCurrency.Text);
   s := s + ', ' + _db(_StrToFloat(edtRate.Text));
@@ -5537,6 +5537,7 @@ var
   invoiceLine: TInvoiceLine;
   lRevenueCorrection: double;
   lRevenueCorrectionVat: double;
+  lDate: TDate;
 
 begin
 
@@ -5744,7 +5745,8 @@ begin
           s := s + ', ' + inttostr(FRoomReservation);
           s := s + ', ' + inttostr(FnewSplitNumber);
           s := s + ', ' + inttostr(i);
-          s := s + ', ' + _DateToDbDate(integer(agrLines.Objects[col_Description, i]), True);
+          lDate := integer(agrLines.Objects[col_Description, i]);
+          s := s + ', ' + _db(lDate);
           s := s + ', ' + inttostr(iInvoiceNumber);
           s := s + ', ' + _db(sItemID);
           s := s + ', ' + _db(ItemCount); // -96ath
@@ -5796,7 +5798,7 @@ begin
           s := s + ', ' + _db(Refrence);
           s := s + ', ' + _db(Source);
           s := s + ', ' + _db(isPackage);
-          s := s + ', ' + _dbDateAndTime(confirmDate);
+          s := s + ', ' + _db(confirmDate);
           s := s + ', ' + _db(confirmAmount);
           s := s + ', ' + _db(irrAlias);
           s := s + ', ' + _db(FInvoiceIndex);
@@ -6526,6 +6528,7 @@ var
   invoiceLine: TInvoiceLine;
   lRevenueCorrection: double;
   lRevenueCorrectionVat: double;
+  lDate: TDate;
 
 Label
   TryAgain;
@@ -6834,7 +6837,8 @@ begin
             s := s + ', ' + _db(FnewSplitNumber); // SPlitNumber
             s := s + ', ' + _db(i); // ItemNumber
 
-            s := s + ', ' + _DateToDbDate(integer(agrLines.Objects[col_Description, i]), True);
+            lDate := integer(agrLines.Objects[col_Description, i]);
+            s := s + ', ' + _db(lDate);
             // PurchaseDate //ATHOLD er �etta alltaf now
             s := s + ', ' + inttostr(zInvoiceNumber); // InvoiceNumber
             s := s + ', ' + _db(sItemID); // ItemID
@@ -6859,7 +6863,7 @@ begin
             s := s + ', ' + _db(sAccountKey);
             s := s + ', ' + _db(sRefrence);
             s := s + ', ' + _db(sSource);
-            s := s + ', ' + _dbDateAndTime(confirmDate);
+            s := s + ', ' + _db(confirmDate);
             s := s + ', ' + _db(confirmAmount);
             s := s + ', ' + _db(isPackage);
             s := s + ', ' + _db(irrAlias);
@@ -6991,7 +6995,7 @@ begin
 
         s := s + ', ' + inttostr(zInvoiceNumber);
 
-        s := s + ', ' + _DateToDbDate(zInvoiceDate, True);
+        s := s + ', ' + _db(zInvoiceDate, True);
 
         s := s + ', ' + _db(edtCustomer.Text);
         s := s + ', ' + _db(edtName.Text);
@@ -7014,10 +7018,10 @@ begin
         s := s + ', ' + _db(false);
         s := s + ', ' + inttostr(rgrInvoiceType.itemIndex);
         s := s + ', ' + _db(g.qUser);
-        s := s + ', ' + _DateToDbDate(Date, True);
-        s := s + ', ' + _DateToDbDate(zInvoiceDate, True);
-        s := s + ', ' + _DateToDbDate(zConfirmDate, True);
-        s := s + ', ' + _DateToDbDate(zPayDate, True);
+        s := s + ', ' + _db(Date, True);
+        s := s + ', ' + _db(zInvoiceDate, True);
+        s := s + ', ' + _db(zConfirmDate, True);
+        s := s + ', ' + _db(zPayDate, True);
         s := s + ', ' + _db(edtInvRefrence.Text);
 
         s := s + ', ' + _CommaToDot(floattostr(dTotalStayTax));
@@ -7095,7 +7099,7 @@ begin
           s := s + ', ' + _db(ct);
 
           s := s + ', ' + inttostr(zInvoiceNumber);
-          s := s + ', ' + _DateToDbDate(zInvoiceDate, True);
+          s := s + ', ' + _db(zInvoiceDate, True);
           sTmp := _strTokenAt(stlPaySelections[i], '|', 0);
           s := s + ', ' + _db(_strTokenAt(stlPaySelections[i], '|', 0));
           s := s + ', ' + _CommaToDot
@@ -7486,7 +7490,7 @@ begin
           begin
             if mRoomRates['Roomreservation'] = RoomReservation then
             begin
-              aDate := _DateToDbDate(mRoomRates.FieldByName('rateDate')
+              aDate := _db(mRoomRates.FieldByName('rateDate')
                 .asdateTime, false);
               d.RR_Upd_CurrencyRoomPrice(RoomReservation, aDate,
                 zCurrentCurrency, convert);
@@ -7526,7 +7530,7 @@ begin
       mRoomRates.first;
       while not mRoomRates.eof do
       begin
-        aDate := _DateToDbDate(mRoomRates.FieldByName('rateDate').asdateTime, false);
+        aDate := _db(mRoomRates.FieldByName('rateDate').asdateTime, false);
         d.RR_Upd_CurrencyRoomPrice(FRoomReservation, aDate,
           zCurrentCurrency, convert);
         s := '';
@@ -8273,8 +8277,7 @@ begin
             mPayments.insert;
             mPayments.FieldByName('PayType').asString :=
               rSet.FieldByName('PayType').asString;
-            mPayments.FieldByName('PayDate').asdateTime :=
-              _DBDateToDate(rSet.FieldByName('PayDate').asString);
+            mPayments.FieldByName('PayDate').asdateTime := SQLToDateTime(rSet.FieldByName('PayDate').asString);
             mPayments.FieldByName('Amount').asfloat :=
               rSet.FieldByName('Amount').asfloat;
             mPayments.FieldByName('Description').asString :=
@@ -8464,7 +8467,7 @@ begin
     theData.TypeIndex := ORD(ptDownPayment);
     theData.invoiceNumber := zInvoiceNumber;
     theData.customer := edtCustomer.Text;
-    theData.PayDate := _DateToDbDate(Date, false);
+    theData.PayDate := _db(Date, false);
     theData.Amount := rec.Amount;
     theData.Description := rec.Description;
     theData.CurrencyRate := zCurrencyRate; // ATH
@@ -9371,6 +9374,7 @@ var
   isOK: boolean;
 
   lInvRoom: TInvoiceRoomEntity;
+  lDate: TDate;
 
 begin
   isOK := True;
@@ -9562,7 +9566,8 @@ begin
       s := s + ', ' + inttostr(FRoomReservation);
       s := s + ', ' + inttostr(FnewSplitNumber);
       s := s + ', ' + inttostr(i);
-      s := s + ', ' + _DateToDbDate(integer(agrLines.Objects[col_Description, i]), True);
+      lDate := integer(agrLines.Objects[col_Description, i]);
+      s := s + ', ' + _db(lDate);
       s := s + ', ' + inttostr(iInvoiceNumber);
 
       s := s + ', ' + _db(sItemID);
@@ -9612,7 +9617,7 @@ begin
       s := s + ', ' + _db(Refrence);
       s := s + ', ' + _db(Source);
       s := s + ', ' + _db(isPackage);
-      s := s + ', ' + _dbDateAndTime(confirmDate);
+      s := s + ', ' + _db(confirmDate);
       s := s + ', ' + _db(confirmAmount);
       s := s + ', ' + _db(irrAlias);
 
@@ -9722,7 +9727,7 @@ begin
   s := s + ', ' + _db(FnewSplitNumber);
 
   s := s + ', ' + _db(PROFORMA_INVOICE_NUMBER);
-  s := s + ', ' + _DateToDbDate(zInvoiceDate, True);
+  s := s + ', ' + _db(zInvoiceDate, True);
   s := s + ', ' + _db(edtCustomer.Text);
   s := s + ', ' + _db(edtName.Text);
   s := s + ', ' + _db(edtPersonalId.Text);

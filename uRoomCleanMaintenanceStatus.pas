@@ -84,7 +84,7 @@ uses
   _Glob,
   CompProd
   , uUtils
-  ;
+  , uSQLUtils;
 
 {$R *.dfm}
 

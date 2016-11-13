@@ -863,7 +863,7 @@ uses
     , uAlerts
     , uFrmCheckOut
     , UITypes
-    , uVatCalculator, uTableEntityList;
+    , uVatCalculator, uTableEntityList, uSQLUtils;
 
 {$R *.dfm}
 
@@ -1405,7 +1405,7 @@ begin
           d.kbmInvoiceLines.FieldByName('RoomReservation').AsInteger := RoomReservation;
           d.kbmInvoiceLines.FieldByName('SplitNumber').AsInteger := SplitNumber;;
           d.kbmInvoiceLines.FieldByName('ItemNumber').AsInteger := ItemNumber;
-          d.kbmInvoiceLines.FieldByName('PurchaseDate').asDateTime := _dbdateToDate(PurchaseDate);
+          d.kbmInvoiceLines.FieldByName('PurchaseDate').asDateTime := SQLToDate(PurchaseDate);
           d.kbmInvoiceLines.FieldByName('InvoiceNumber').AsInteger := InvoiceNumber;
           d.kbmInvoiceLines.FieldByName('ItemId').Asstring := ItemID;
           d.kbmInvoiceLines.FieldByName('Number').asFloat := Number; // -96
@@ -2474,7 +2474,7 @@ begin
       '   ((roomsdate.ADate =  %s ) AND (roomsdate.ResFlag = ''G'' )' +
       '   AND (roomreservations.Departure =  %s )) ';
 
-    s := format(sql, [_DateToDBDate(aDate, True), _DateToDBDate(aDate - 1, True), _DateToDBDate(aDate, True)]);
+    s := format(sql, [_db(aDate, True), _db(IncDay(aDate, - 1), True),  _db(aDate, True)]);
     if hData.rSet_bySQL(rSet, s) then
     begin
       while not rSet.eof do
@@ -2519,8 +2519,8 @@ begin
       '     AND (roomsdate.ResFlag =  ''G'' ) ' +
       '     AND (roomreservations.Departure =   %s ) ';
 
-    s := format(sql, [RoomReservation, _DateToDBDate(aDate, True), RoomReservation, _DateToDBDate(aDate - 1, True),
-      _DateToDBDate(aDate, True)]);
+    s := format(sql, [RoomReservation, _db(aDate, True), RoomReservation, _db(IncDay(aDate, -1), True),
+      _db(aDate, True)]);
     result := hData.rSet_bySQL(rSet, s);
   finally
     freeandnil(rSet);
@@ -3268,7 +3268,7 @@ var
 begin
   rSet := CreateNewDataSet;
   try
-    s := format(select_SeasonExist, [_DateToDBDate(aDateFrom, True), _DateToDBDate(aDateTo, True)]);
+    s := format(select_SeasonExist, [_db(aDateFrom, True), _db(aDateTo, True)]);
     result := hData.rSet_bySQL(rSet, s);
   finally
     freeandnil(rSet);
@@ -3278,7 +3278,7 @@ begin
   // s := s + 'FROM '+chr(10);
   // s := s + 'tblSeasons '+chr(10);
   // s := s + 'WHERE '+chr(10);
-  // s := s + '(seStartDate = ' + _DateToDBDate(aDateFrom,true) + ') AND  (seEndDate = ' + _DateToDBDate(aDateTo,true) + ') '+chr(10);
+  // s := s + '(seStartDate = ' + _db(aDateFrom,true) + ') AND  (seEndDate = ' + _db(aDateTo,true) + ') '+chr(10);
 end;
 
 function Td.SeasonCount(aDate: TdateTime): Integer;
@@ -3289,7 +3289,7 @@ begin
   result := 0;
   rSet := CreateNewDataSet;
   try
-    s := format(select_SeasonCount, [_DateToDBDate(aDate, True), _DateToDBDate(aDate, True)]);
+    s := format(select_SeasonCount, [_db(aDate, True), _db(aDate, True)]);
     if hData.rSet_bySQL(rSet, s) then
     begin
       result := rSet.recordcount;
@@ -3302,7 +3302,7 @@ begin
   // s := s + 'FROM '+chr(10);
   // s := s + 'tblSeasons '+chr(10);
   // s := s + 'WHERE '+chr(10);
-  // s := s + '(seStartDate <= ' + _DateToDBDate(adate,true) + ') AND  (seEndDate >= ' + _DateToDBDate(adate,true) + ') '+chr(10);
+  // s := s + '(seStartDate <= ' + _db(adate,true) + ') AND  (seEndDate >= ' + _db(adate,true) + ') '+chr(10);
 end;
 
 function Td.FindSeasonID(aDate: TdateTime): Integer;
@@ -3317,7 +3317,7 @@ begin
   result := -1;
   rSet := CreateNewDataSet;
   try
-    s := format(select_FindSeasonID, [_DateToDBDate(aDate, True), _DateToDBDate(aDate, True)]);
+    s := format(select_FindSeasonID, [_db(aDate, True), _db(aDate, True)]);
     if hData.rSet_bySQL(rSet, s) then
     begin
       MaxNights := 0;
@@ -3344,7 +3344,7 @@ begin
   // s := s + 'FROM '+chr(10);
   // s := s + 'tblSeasons '+chr(10);
   // s := s + 'WHERE '+chr(10);
-  // s := s + '(seStartDate <= ' + _DateToDBDate(adate,true) + ') AND  (seEndDate >= ' + _DateToDBDate(adate,true) + ') '+chr(10);
+  // s := s + '(seStartDate <= ' + _db(adate,true) + ') AND  (seEndDate >= ' + _db(adate,true) + ') '+chr(10);
 end;
 
 
@@ -3530,11 +3530,11 @@ begin
   if RoomReservation > 1 then
   begin
     ArrivalDate := GetRoomReservatiaonArrival(RoomReservation);
-    sDate := _DateToDBDate(ArrivalDate, False);
+    sDate := _db(ArrivalDate, False);
   end
   else
   begin
-    sDate := _DateToDBDate(noResDate, False)
+    sDate := _db(noResDate, False)
   end;
   result := 0;
 
@@ -3577,11 +3577,11 @@ begin
   if RoomReservation > 1 then
   begin
     ArrivalDate := GetRoomReservatiaonArrival(RoomReservation);
-    sDate := _DateToDBDate(ArrivalDate, False);
+    sDate := _db(ArrivalDate, False);
   end
   else
   begin
-    sDate := _DateToDBDate(noResDate, False)
+    sDate := _db(noResDate, False)
   end;
   result := 0;
 
@@ -4181,7 +4181,7 @@ begin
   s := s + '  ORDER BY Room '#10;
 
   // s := select_GetRoomList_Occupied(iRoomreservation);
-  s := format(s, [_DateToDBDate(dtDateFrom, True), _DateToDBDate(dtDateTo, True), iRoomReservation]);
+  s := format(s, [_db(dtDateFrom, True), _db(dtDateTo, True), iRoomReservation]);
 
   rSet := CreateNewDataSet;
   try
@@ -4258,7 +4258,7 @@ begin
       '    AND (Room =  %s )) '#10 +
       '   AND (ResFlag <> ' + _db(STATUS_DELETED) + ' ) '#10; // //**zxhj ATH
 
-    s := format(sql, [_DateToDBDate(dtDate, True), _db(Room)]);
+    s := format(sql, [_db(dtDate, True), _db(Room)]);
     if hData.rSet_bySQL(rSet, s) then
     begin
       result := True;
@@ -5031,20 +5031,20 @@ begin
   end
   else if seasonId = -2 then
   begin // n�verandi +
-    s := s + ' AND (seEndDate>' + _DateToDBDate(date, True) + ') ' + chr(10);
+    s := s + ' AND (seEndDate>' + _db(date, True) + ') ' + chr(10);
   end
   else if seasonId = -3 then
   begin // N�verandi =
-    s := s + ' AND ((seStartDate<=' + _DateToDBDate(date, True) + ') AND (seEndDate>' + _DateToDBDate(date + 1, True) +
+    s := s + ' AND ((seStartDate<=' + _db(date, True) + ') AND (seEndDate>' + _db(incDay(date, 1), True) +
       ')) ' + chr(10);
   end
   else if seasonId = -4 then
   begin // li�inn
-    s := s + ' AND (seEndDate<' + _DateToDBDate(date + 1, True) + ') ' + chr(10);
+    s := s + ' AND (seEndDate<' + _db(IncDay(date, 1), True) + ') ' + chr(10);
   end
   else if seEndDate > 1 then //
   begin
-    s := s + ' AND (seEndDate>' + _DateToDBDate(seEndDate, True) + ') ' + chr(10);
+    s := s + ' AND (seEndDate>' + _db(seEndDate, True) + ') ' + chr(10);
   end;
   // xxXX T�mabilsAfm�rkunn Endar
 
@@ -5446,7 +5446,7 @@ begin
   s := s + '  ' + inttostr(R.reservation) + chr(10);
   s := s + ', ' + inttostr(R.RoomReservation) + chr(10);
   s := s + ', ' + inttostr(R.InvoiceNumber) + chr(10);
-  s := s + ', ' + _dateTimeToDBdate(R.ActionDate, True) + chr(10);
+  s := s + ', ' + _db(R.ActionDate, True) + chr(10);
   s := s + ', ' + inttostr(R.actionID) + chr(10);
   s := s + ', ' + _db(R.Action) + chr(10);
   s := s + ', ' + _db(R.ActionNote) + chr(10);
@@ -5467,7 +5467,7 @@ begin
   s := s + ' DELETE ' + chr(10);
   s := s + ' FROM tblmaidjobs ' + chr(10);
   s := s + ' WHERE  ' + chr(10);
-  s := s + ' (mjDate = ' + _DateToDBDate(aDate, True) + ') ' + chr(10);
+  s := s + ' (mjDate = ' + _db(aDate, True) + ') ' + chr(10);
   if not All then
   begin
     s := s + ' AND (mjAction <> ' + _db('EXTRA') + ') ' + chr(10);
@@ -7895,11 +7895,11 @@ begin
   rSet := CreateNewDataSet;
   try
     // **xzhj
-    s := format(select_Next_OccupiedDate, [_db(Room), _DateToDBDate(FromDate, True)]);
+    s := format(select_Next_OccupiedDate, [_db(Room), _db(FromDate, True)]);
     if hData.rSet_bySQL(rSet, s) then
     begin
       sDate := rSet.FieldByName('ADate').Asstring;
-      result := _dbdateToDate(sDate);
+      result := SQLToDate(sDate);
     end;
   finally
     freeandnil(rSet);
@@ -8045,9 +8045,9 @@ begin
                       UTF8String(''));
                     nRoomreservation.writestring(UTF8String('location'), UTF8String(Location), UTF8String(''));
                     nRoomreservation.writestring(UTF8String('floor'), UTF8String(Floor), UTF8String(''));
-                    nRoomreservation.writestring(UTF8String('arrival'), UTF8String(_DateToDBDate(Arrival, False)),
+                    nRoomreservation.writestring(UTF8String('arrival'), UTF8String(_db(Arrival, False)),
                       UTF8String(''));
-                    nRoomreservation.writestring(UTF8String('departure'), UTF8String(_DateToDBDate(departure, False)),
+                    nRoomreservation.writestring(UTF8String('departure'), UTF8String(_db(departure, False)),
                       UTF8String(''));
                     nRoomreservation.writestring(UTF8String('customer'), UTF8String(customer), UTF8String(''));
                     nRoomreservation.writestring(UTF8String('customer_name'), UTF8String(CustomerName), UTF8String(''));
@@ -9504,9 +9504,9 @@ begin
     if hData.rSet_bySQL(rSet, s) then
     begin
       s := rSet.FieldByName('Arrival').Asstring;
-      result.Arrival := _dbdateToDate(s);
+      result.Arrival := SQLToDate(s);
       s := rSet.FieldByName('Departure').Asstring;
-      result.departure := _dbdateToDate(s);
+      result.departure := SQLToDate(s);
       result.RoomReservation := -1;
       result.reservation := iReservation;
       result.status := '';
@@ -9859,7 +9859,7 @@ begin
 
     if hData.rSet_bySQL(rSet, s) then
     begin
-      result := _dbdateToDate(rSet.FieldByName('aDate').Asstring);
+      result := SQLToDate(rSet.FieldByName('aDate').Asstring);
       Room := rSet.FieldByName('room').Asstring;
     end;
   finally
@@ -9893,7 +9893,7 @@ begin
     s := format(sql, [reservation]);
     if hData.rSet_bySQL(rSet, s) then
     begin
-      result := _dbdateToDate(rSet.FieldByName('aDate').Asstring);
+      result := SQLToDate(rSet.FieldByName('aDate').Asstring);
       Room := rSet.FieldByName('room').Asstring;
     end;
   finally
@@ -9954,7 +9954,7 @@ begin
     s := format(s, [res]);
     if hData.rSet_bySQL(rSet, s) then
     begin
-      result := _dbdateToDate(rSet.FieldByName('aDate').Asstring);
+      result := SQLToDate(rSet.FieldByName('aDate').Asstring);
       Room := rSet.FieldByName('room').Asstring;
     end;
   finally
@@ -9977,7 +9977,7 @@ begin
     // s := s + ' FROM '+chr(10);
     // s := s + '   Reservations '+chr(10);
     // s := s + ' WHERE '+chr(10);
-    // s := s + '   (Reservation = '+_dbInt(Reservation)+') '+chr(10);
+    // s := s + '   (Reservation = '+_db(Reservation)+') '+chr(10);
 
     s := format(select_RV_getMemos, [reservation]);
     if hData.rSet_bySQL(rSet, s) then
@@ -10105,7 +10105,7 @@ begin
     // debugmessage(s);
     // copytoclipboard(s);
 
-    s := format(s, [_DateToDBDate(DateFrom, True), _DateToDBDate(DateTo, True)]);
+    s := format(s, [_db(DateFrom, True), _db(DateTo, True)]);
     if hData.rSet_bySQL(rSet, s) then
     begin
       while not rSet.eof do
@@ -10131,7 +10131,7 @@ begin
 
   rSet := CreateNewDataSet;
   try
-    s := format(select_RRlst_DepartureNationalReport, [_DateToDBDate(DateFrom, True), _DateToDBDate(DateTo, True),
+    s := format(select_RRlst_DepartureNationalReport, [_db(DateFrom, True), _db(DateTo, True),
       _db(True)]);
     if hData.rSet_bySQL(rSet, s) then
     begin
@@ -10172,7 +10172,7 @@ begin
   result := tstringList.Create;
   rSet := CreateNewDataSet;
   try
-    s := format(s, [_DateToDBDate(DateFrom, True), _DateToDBDate(DateTo, True)]);
+    s := format(s, [_db(DateFrom, True), _db(DateTo, True)]);
 
     // copytoclipboard(s);
     // debugmessage(s);
@@ -10212,7 +10212,7 @@ begin
     s := s + '   AND (roomreservation=0) '#10;
     s := s + ' ORDER BY Reservation ';
 
-    s := format(s, [_DateToDBDate(DateFrom, True), _DateToDBDate(DateTo, True)]);
+    s := format(s, [_db(DateFrom, True), _db(DateTo, True)]);
 
     if hData.rSet_bySQL(rSet, s) then
     begin
@@ -10296,7 +10296,7 @@ begin
     end;
     sql := sql + '  ORDER BY Reservation';
 
-    s := format(sql, [_DateToDBDate(DateFrom, True), _DateToDBDate(DateTo, True)]);
+    s := format(sql, [_db(DateFrom, True), _db(DateTo, True)]);
     // copyToClipboard(s);
     // DebugMessage(s);
 
@@ -10338,7 +10338,7 @@ begin
       '    AND (status <> ' + _db(STATUS_DELETED) + ' ) ' + // **zxhj
       '    AND (status <> ' + _db(STATUS_CANCELED) + ' ) ' + // **zxhj
       '  ORDER BY RoomReservation';
-    s := format(sql, [_DateToDBDate(DateFrom, True), _DateToDBDate(DateTo, True)]);
+    s := format(sql, [_db(DateFrom, True), _db(DateTo, True)]);
     if hData.rSet_bySQL(rSet, s) then
     begin
       while not rSet.eof do
@@ -10367,7 +10367,7 @@ begin
   try
 
     sql := GetListOfRoomReservationsPerArrivalDate;
-    s := format(sql, [_DateToDBDate(DateFrom, True), _DateToDBDate(DateTo, True)]);
+    s := format(sql, [_db(DateFrom, True), _db(DateTo, True)]);
     if hData.rSet_bySQL(rSet, s) then
     begin
       while not rSet.eof do
@@ -10403,7 +10403,7 @@ begin
       '    AND (Departure <=  %s )' +
       '  ORDER BY RoomReservation';
 
-    s := format(sql, [_DateToDBDate(DateFrom, True), _DateToDBDate(DateTo, True)]);
+    s := format(sql, [_db(DateFrom, True), _db(DateTo, True)]);
     if hData.rSet_bySQL(rSet, s) then
     begin
       while not rSet.eof do
@@ -10441,7 +10441,7 @@ begin
       '    AND (status <> ' + _db(STATUS_DELETED) + ' ) ' + // **zxhj
       '    AND (status <> ' + _db(STATUS_CANCELED) + ' ) ' + // **zxhj
       '  ORDER BY RoomReservation';
-    s := format(sql, [_DateToDBDate(DateFrom, True), _DateToDBDate(DateTo, True)]);
+    s := format(sql, [_db(DateFrom, True), _db(DateTo, True)]);
 
     if hData.rSet_bySQL(rSet, s) then
     begin
@@ -10470,7 +10470,7 @@ begin
   rSet := CreateNewDataSet;
   try
     sql := GetListOfRoomReservationsPerDepartureDate;
-    s := format(sql, [_DateToDBDate(DateFrom, True), _DateToDBDate(DateTo, True)]);
+    s := format(sql, [_db(DateFrom, True), _db(DateTo, True)]);
 
     if hData.rSet_bySQL(rSet, s) then
     begin
@@ -10510,7 +10510,7 @@ begin
       '    AND (ResFlag <> ' + _db(STATUS_CANCELED) + ' ) ' + // **zxhj
       '  ORDER BY Reservation';
 
-    s := format(sql, [_DateToDBDate(DateFrom, True), _DateToDBDate(DateTo, True)]);
+    s := format(sql, [_db(DateFrom, True), _db(DateTo, True)]);
     if hData.rSet_bySQL(rSet, s) then
     begin
       while not rSet.eof do
@@ -10551,7 +10551,7 @@ begin
       '   AND (ResFlag <> ' + _db(STATUS_CANCELED) + ' ) ' + // **zxhj line added
       '  ORDER BY RoomReservation';
 
-    s := format(sql, [_DateToDBDate(DateFrom, True), _DateToDBDate(DateTo, True)]);
+    s := format(sql, [_db(DateFrom, True), _db(DateTo, True)]);
     if hData.rSet_bySQL(rSet, s) then
     begin
       while not rSet.eof do
@@ -10581,7 +10581,7 @@ begin
   try
 
     sql := GetListOfRoomReservationsFromToDate;
-    s := format(sql, [_DateToDBDate(DateFrom, True), _DateToDBDate(DateTo, True)]);
+    s := format(sql, [_db(DateFrom, True), _db(DateTo, True)]);
 
     if hData.rSet_bySQL(rSet, s) then
     begin
@@ -11407,8 +11407,8 @@ var
 
 begin
   doIt := False;
-  sNewArrival := _DateToDBDate(newArrival, False);
-  sNewDeparture := _DateToDBDate(newDeparture, False);
+  sNewArrival := _db(newArrival, False);
+  sNewDeparture := _db(newDeparture, False);
   NumDays := trunc(newDeparture) - trunc(newArrival);
 
   if NumDays < 1 then
@@ -13426,7 +13426,7 @@ begin
         s := '';
         s := s + ' UPDATE roomsdate ';
         s := s + ' SET ';
-        s := s + '    ConfirmDate = ' + _dbDateAndTime(zConfirmedDate) + ' '#10;
+        s := s + '    ConfirmDate = ' + _db(zConfirmedDate) + ' '#10;
         s := s + '   ,ConfirmAmount = ' + _db(Amount) + ' '#10;
         s := s + '   ,ConfirmDiscount = ' + _db(Discount) + ' '#10;
         s := s + '   ,ConfirmTax = ' + _db(Tax) + ' '#10;
@@ -13519,7 +13519,7 @@ begin
         s := '';
         s := s + ' UPDATE invoicelines ';
         s := s + ' SET ';
-        s := s + '    ConfirmDate = ' + _dbDateAndTime(zConfirmedDate) + ' '#10;
+        s := s + '    ConfirmDate = ' + _db(zConfirmedDate) + ' '#10;
         s := s + '   ,ConfirmAmount = ' + _db(Amount) + ' '#10;
         s := s + ' WHERE ' + #10;
         s := s + '   (id = ' + _db(Id) + ') ' + #10;
@@ -13544,7 +13544,7 @@ begin
         s := '';
         s := s + ' UPDATE invoicelines ';
         s := s + ' SET ';
-        // s := s + '    ConfirmDate = '+_dbDateAndTime(confirmdate)+' '#10;
+        // s := s + '    ConfirmDate = '+_db(confirmdate)+' '#10;
         s := s + '   ConfirmAmount = ' + _db(Amount) + ' '#10;
         s := s + ' WHERE ' + #10;
         s := s + '   (id = ' + _db(Id) + ') ' + #10;
@@ -13561,7 +13561,7 @@ begin
     s := '';
     s := s + ' UPDATE payments ';
     s := s + ' SET ';
-    s := s + '   ConfirmDate = ' + _dbDateAndTime(zConfirmedDate) + ' '#10;
+    s := s + '   ConfirmDate = ' + _db(zConfirmedDate) + ' '#10;
     s := s + ' WHERE ' + #10;
     s := s + '   (confirmdate = ' + _db('1900-01-01 00:00:00') + ') ' + #10;
     if not cmd_bySQL(s) then
@@ -13572,7 +13572,7 @@ begin
     s := '';
     s := s + ' UPDATE invoiceheads ';
     s := s + ' SET ';
-    s := s + '   ihConfirmDate = ' + _dbDateAndTime(zConfirmedDate) + ' '#10;
+    s := s + '   ihConfirmDate = ' + _db(zConfirmedDate) + ' '#10;
     s := s + ' WHERE ' + #10;
     s := s + '   (ihconfirmdate = ' + _db('1900-01-01 00:00:00') +
       ') AND (invoicenumber>0) ' + #10;
@@ -13584,7 +13584,7 @@ begin
     s := '';
     s := s + ' UPDATE invoicelines ';
     s := s + ' SET ';
-    s := s + '   ConfirmDate = ' + _dbDateAndTime(zConfirmedDate) + ' '#10;
+    s := s + '   ConfirmDate = ' + _db(zConfirmedDate) + ' '#10;
     s := s + ' WHERE ' + #10;
     s := s + '   (confirmdate = ' + _db('1900-01-01 00:00:00') +
       ') AND (invoicenumber>0) ' + #10;
@@ -13627,7 +13627,7 @@ begin
       s := s + ' ,Itemcount) '#10;
       s := s + '  VALUES '#10;
       s := s + ' ( '#10;
-      s := s + ' ' + _dbDateAndTime(confirmDate) + ' '#10;
+      s := s + ' ' + _db(confirmDate) + ' '#10;
       s := s + ' ,' + _db(Item) + ' '#10;
       s := s + ' ,' + _db(Description) + ' '#10;
       s := s + ' ,' + _db(Amount) + ' '#10;
@@ -13683,7 +13683,7 @@ begin
       s := s + ' ,Itemcount) '#10;
       s := s + '  VALUES '#10;
       s := s + ' ( '#10;
-      s := s + ' ' + _dbDateAndTime(confirmDate) + ' '#10;
+      s := s + ' ' + _db(confirmDate) + ' '#10;
       s := s + ' ,' + _db(Item) + ' '#10;
       s := s + ' ,' + _db(Description) + ' '#10;
       s := s + ' ,' + _db(Amount) + ' '#10;
@@ -13778,7 +13778,7 @@ begin
       s := s + ' ,' + _db(RoomReservation) + ' '#10;
       s := s + ' ,' + _db(confirmAmount) + ' '#10;
       s := s + ' ,' + _db(PriceChange) + ' '#10;
-      s := s + ' ,' + _dbDateAndTime(zConfirmedDate) + ' '#10;
+      s := s + ' ,' + _db(zConfirmedDate) + ' '#10;
       s := s + ' ) '#10;
 
       if not cmd_bySQL(s) then
@@ -13840,7 +13840,7 @@ begin
       s := s + ' ,' + _db(discountChange) + ' '#10;
       s := s + ' ,' + _db(taxChange) + ' '#10;
       s := s + ' ,' + _db(rentChange) + ' '#10;
-      s := s + ' ,' + _dbDateAndTime(zConfirmedDate) + ' '#10;
+      s := s + ' ,' + _db(zConfirmedDate) + ' '#10;
       s := s + ' ) '#10;
       if not cmd_bySQL(s) then
       begin
@@ -15386,7 +15386,7 @@ begin
         s := '';
         s := s + ' UPDATE roomsdate ';
         s := s + ' SET ';
-        s := s + '    ConfirmDate = ' + _dbDateAndTime(zConfirmedDate) + ' '#10;
+        s := s + '    ConfirmDate = ' + _db(zConfirmedDate) + ' '#10;
         s := s + '   ,ConfirmAmount = ' + _db(Amount) + ' '#10;
         s := s + '   ,ConfirmDiscount = ' + _db(Discount) + ' '#10;
         s := s + '   ,ConfirmTax = ' + _db(Tax) + ' '#10;
@@ -15478,7 +15478,7 @@ begin
         s := '';
         s := s + ' UPDATE invoicelines ';
         s := s + ' SET ';
-        s := s + '    ConfirmDate = ' + _dbDateAndTime(zConfirmedDate) + ' '#10;
+        s := s + '    ConfirmDate = ' + _db(zConfirmedDate) + ' '#10;
         s := s + '   ,ConfirmAmount = ' + _db(Amount) + ' '#10;
         s := s + ' WHERE ' + #10;
         s := s + '   (id = ' + _db(Id) + ') ' + #10;
@@ -15503,7 +15503,7 @@ begin
         s := '';
         s := s + ' UPDATE invoicelines ';
         s := s + ' SET ';
-        // s := s + '    ConfirmDate = '+_dbDateAndTime(confirmdate)+' '#10;
+        // s := s + '    ConfirmDate = '+_db(confirmdate)+' '#10;
         s := s + '   ConfirmAmount = ' + _db(Amount) + ' '#10;
         s := s + ' WHERE ' + #10;
         s := s + '   (id = ' + _db(Id) + ') ' + #10;
@@ -15520,7 +15520,7 @@ begin
     s := '';
     s := s + ' UPDATE payments ';
     s := s + ' SET ';
-    s := s + '   ConfirmDate = ' + _dbDateAndTime(zConfirmedDate) + ' '#10;
+    s := s + '   ConfirmDate = ' + _db(zConfirmedDate) + ' '#10;
     s := s + ' WHERE ' + #10;
     s := s + '   (confirmdate = ' + _db('1900-01-01 00:00:00') + ') ' + #10;
     if not cmd_bySQL(s) then
@@ -15531,7 +15531,7 @@ begin
     s := '';
     s := s + ' UPDATE invoiceheads ';
     s := s + ' SET ';
-    s := s + '   ihConfirmDate = ' + _dbDateAndTime(zConfirmedDate) + ' '#10;
+    s := s + '   ihConfirmDate = ' + _db(zConfirmedDate) + ' '#10;
     s := s + ' WHERE ' + #10;
     s := s + '   (ihconfirmdate = ' + _db('1900-01-01 00:00:00') +
       ') AND (invoicenumber>0) ' + #10;
@@ -15543,7 +15543,7 @@ begin
     s := '';
     s := s + ' UPDATE invoicelines ';
     s := s + ' SET ';
-    s := s + '   ConfirmDate = ' + _dbDateAndTime(zConfirmedDate) + ' '#10;
+    s := s + '   ConfirmDate = ' + _db(zConfirmedDate) + ' '#10;
     s := s + ' WHERE ' + #10;
     s := s + '   (confirmdate = ' + _db('1900-01-01 00:00:00') +
       ') AND (invoicenumber>0) ' + #10;
@@ -15586,7 +15586,7 @@ begin
       s := s + ' ,Itemcount) '#10;
       s := s + '  VALUES '#10;
       s := s + ' ( '#10;
-      s := s + ' ' + _dbDateAndTime(confirmDate) + ' '#10;
+      s := s + ' ' + _db(confirmDate) + ' '#10;
       s := s + ' ,' + _db(Item) + ' '#10;
       s := s + ' ,' + _db(Description) + ' '#10;
       s := s + ' ,' + _db(Amount) + ' '#10;
@@ -15642,7 +15642,7 @@ begin
       s := s + ' ,Itemcount) '#10;
       s := s + '  VALUES '#10;
       s := s + ' ( '#10;
-      s := s + ' ' + _dbDateAndTime(confirmDate) + ' '#10;
+      s := s + ' ' + _db(confirmDate) + ' '#10;
       s := s + ' ,' + _db(Item) + ' '#10;
       s := s + ' ,' + _db(Description) + ' '#10;
       s := s + ' ,' + _db(Amount) + ' '#10;
@@ -15736,7 +15736,7 @@ begin
       s := s + ' ,' + _db(RoomReservation) + ' '#10;
       s := s + ' ,' + _db(confirmAmount) + ' '#10;
       s := s + ' ,' + _db(PriceChange) + ' '#10;
-      s := s + ' ,' + _dbDateAndTime(zConfirmedDate) + ' '#10;
+      s := s + ' ,' + _db(zConfirmedDate) + ' '#10;
       s := s + ' ) '#10;
 
       if not cmd_bySQL(s) then
@@ -15798,7 +15798,7 @@ begin
       s := s + ' ,' + _db(discountChange) + ' '#10;
       s := s + ' ,' + _db(taxChange) + ' '#10;
       s := s + ' ,' + _db(rentChange) + ' '#10;
-      s := s + ' ,' + _dbDateAndTime(zConfirmedDate) + ' '#10;
+      s := s + ' ,' + _db(zConfirmedDate) + ' '#10;
       s := s + ' ) '#10;
       if not cmd_bySQL(s) then
       begin
@@ -15865,7 +15865,7 @@ begin
       s := s + ' ,' + _db(confirmAmount) + ' '#10;
       s := s + ' ,' + _db(Room) + ' '#10;
       s := s + ' ,' + _db(InvoiceNumber) + ' '#10;
-      s := s + ' ,' + _dbDateAndTime(zConfirmedDate) + ' '#10;
+      s := s + ' ,' + _db(zConfirmedDate) + ' '#10;
       s := s + ' ) '#10;
       copytoclipboard(s);
       if not cmd_bySQL(s) then

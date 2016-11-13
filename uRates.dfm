@@ -130,7 +130,7 @@ object frmRates: TfrmRates
         Width = 153
         Height = 21
         Color = clWindow
-        Version = '1.5.0.0'
+        Version = '1.5.0.1'
         Visible = True
         Ctl3D = True
         Columns = <
@@ -519,7 +519,6 @@ object frmRates: TfrmRates
     Left = 216
     Top = 240
     object prLink_grData: TdxGridReportLink
-      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -533,7 +532,6 @@ object frmRates: TfrmRates
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
       ReportDocument.CreationDate = 41334.495374884260000000
-      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
   end

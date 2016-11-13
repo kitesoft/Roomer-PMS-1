@@ -52,7 +52,7 @@ type
 
 implementation
   uses
-    uSqlDefinitions;
+    uSqlDefinitions, uSQLUtils;
 
 
 // ******************************************************************************
@@ -220,7 +220,7 @@ begin
           qMT_.ClearFields;
 
           tmpStr := rSet.fieldbyname('Adate').AsString;
-          tmpDate := _DBDateToDate(tmpStr);
+          tmpDate := SQLToDate(tmpStr);
           tmpDate := Int(tmpDate);
 
           noRoom := false;

@@ -584,7 +584,7 @@ uses
   ufrmSelLang,
   PrjConst,
   System.UITypes
-  ;
+  , uSQLUtils;
 
 function GetNameCombination(order : Integer; Customer, Guest : String) : String;
 begin
@@ -2077,12 +2077,6 @@ begin
       result := i;
     end;
 end;
-
-function DateToStrByType(dtDate : TdateTime) : string;
-begin
-  result := _DateToDBDate(dtDate,true)
-end;
-
 
 
 function CombineNames(sName, sSurname : string) : string;

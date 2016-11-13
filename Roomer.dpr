@@ -253,7 +253,9 @@ uses
   uRoomerVersionInfo in 'Extras\uRoomerVersionInfo.pas',
   uCleaningNotesDefinitions in 'Definitions\uCleaningNotesDefinitions.pas',
   uRoomerDialogForm in 'RoomerForm\uRoomerDialogForm.pas' {frmBaseRoomerDialogForm},
-  uSQLUtils in 'RoomerUtils\uSQLUtils.pas';
+  uSQLUtils in 'RoomerUtils\uSQLUtils.pas',
+  uStringUtils in 'RoomerVCLs\Source\uStringUtils.pas',
+  uInvoiceDefinitions in 'Definitions\uInvoiceDefinitions.pas';
 
 {$R *.RES}
 

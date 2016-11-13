@@ -32,6 +32,10 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
       Caption = 'Reservation'
       SkinData.CustomColor = False
       SkinData.CustomFont = False
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object panTop: TsPanel
         Left = 0
         Top = 0
@@ -976,6 +980,10 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
             TabVisible = False
             SkinData.CustomColor = False
             SkinData.CustomFont = False
+            ExplicitLeft = 0
+            ExplicitTop = 0
+            ExplicitWidth = 0
+            ExplicitHeight = 0
             object sPanel3: TsPanel
               Left = 0
               Top = 0
@@ -1382,20 +1390,18 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                 object lblSpecialRequests: TsLabel
                   Left = 2
                   Top = 15
-                  Width = 312
+                  Width = 81
                   Height = 13
                   Align = alTop
                   Caption = 'Special Requests'
-                  ExplicitWidth = 81
                 end
                 object lblNotes: TsLabel
                   Left = 2
                   Top = 101
-                  Width = 312
+                  Width = 28
                   Height = 13
                   Align = alTop
                   Caption = 'Notes'
-                  ExplicitWidth = 28
                 end
                 object edtSpecialRequests: TMemo
                   AlignWithMargins = True
@@ -1537,6 +1543,10 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
             TabVisible = False
             SkinData.CustomColor = False
             SkinData.CustomFont = False
+            ExplicitLeft = 0
+            ExplicitTop = 0
+            ExplicitWidth = 0
+            ExplicitHeight = 0
             object clabTel2: TsLabel
               Left = 204
               Top = 125
@@ -1827,6 +1837,10 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
       ImageIndex = 1
       SkinData.CustomColor = False
       SkinData.CustomFont = False
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object panSelectTypesTop: TsPanel
         Left = 0
         Top = 0
@@ -2101,6 +2115,10 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
       ImageIndex = 2
       SkinData.CustomColor = False
       SkinData.CustomFont = False
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object panSelectRoomsTop: TsPanel
         Left = 0
         Top = 0
@@ -2506,6 +2524,10 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
       ImageIndex = 3
       SkinData.CustomColor = False
       SkinData.CustomFont = False
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object panTopRoomRates: TsPanel
         Left = 0
         Top = 0
@@ -2657,6 +2679,10 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
             Caption = 'Extra'
             SkinData.CustomColor = False
             SkinData.CustomFont = False
+            ExplicitLeft = 0
+            ExplicitTop = 0
+            ExplicitWidth = 0
+            ExplicitHeight = 0
             object sPanel2: TsPanel
               Left = -2
               Top = 0
@@ -2829,6 +2855,10 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
             Caption = 'Alerts'
             SkinData.CustomColor = False
             SkinData.CustomFont = False
+            ExplicitLeft = 0
+            ExplicitTop = 0
+            ExplicitWidth = 0
+            ExplicitHeight = 0
           end
         end
       end
@@ -3322,8 +3352,8 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
         object clabPaymentNotes: TsLabel
           Left = 1
           Top = 1
-          Width = 280
-          Height = 15
+          Width = 86
+          Height = 13
           Align = alClient
           Alignment = taCenter
           Caption = 'Payment Notes'
@@ -3333,8 +3363,6 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = [fsBold]
-          ExplicitWidth = 86
-          ExplicitHeight = 13
         end
       end
       object memReservationPaymentInfo: TsMemo
@@ -3380,8 +3408,8 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
         object clabGeneralNotes: TsLabel
           Left = 1
           Top = 1
-          Width = 402
-          Height = 15
+          Width = 79
+          Height = 13
           Align = alClient
           Alignment = taCenter
           Caption = 'General Notes'
@@ -3394,8 +3422,6 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = [fsBold]
-          ExplicitWidth = 79
-          ExplicitHeight = 13
         end
       end
       object memReservationGeneralInfo: TsMemo
@@ -3441,8 +3467,8 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
         object clabRoomNotes: TsLabel
           Left = 1
           Top = 1
-          Width = 412
-          Height = 15
+          Width = 68
+          Height = 13
           Align = alClient
           Alignment = taCenter
           Caption = 'Room Notes'
@@ -3455,8 +3481,6 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = [fsBold]
-          ExplicitWidth = 68
-          ExplicitHeight = 13
         end
       end
       object btnClearLog: TsButton

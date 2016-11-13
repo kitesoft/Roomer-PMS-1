@@ -901,7 +901,8 @@ object frmGuestProfile2: TfrmGuestProfile2
       PrinterPage.PageSize.Y = 297000
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
-      ReportDocument.CreationDate = 42683.618900451390000000
+      ReportDocument.CreationDate = 42682.697080520830000000
+      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
   end

@@ -151,7 +151,7 @@ implementation
 
 {$R *.dfm}
 
-uses uD, uDImages;
+uses uD, uDImages, uInvoiceDefinitions, uSQLUtils;
 
 
 function OpenRptConfirms(var confirmdate : TdateTime; var sConfirmedDates : string) : boolean;
@@ -171,7 +171,7 @@ begin
     else
     begin
       confirmdate := 2;
-      sConfirmedDates := _dbDateAndTime(2);
+      sConfirmedDates := _db(cEmptyConfirmDate);
     end;
   finally
     freeandnil(frmrptConfirms);
@@ -192,14 +192,10 @@ end;
 
 procedure TfrmrptConfirms.BtnOkClick(Sender: TObject);
 begin
-  if kbmConfirms_.RecordCount > 0 then
-  begin
-    zconfirmedDate := kbmConfirms_.fieldbyname('confirmdate').AsDateTime;
-  end;
-
  zsConfirmedDates := '';
  if kbmConfirms_.RecordCount > 0 then
  begin
+    zconfirmedDate := kbmConfirms_.fieldbyname('confirmdate').AsDateTime;
     kbmConfirms_.DisableControls;
     try
       kbmConfirms_.first;
@@ -207,14 +203,14 @@ begin
       begin
         if kbmConfirms_['Selected'] = true then
         begin
-          zsConfirmedDates := zsConfirmedDates+_dbDateAndTime(kbmConfirms_['confirmdate'])+',';
+          zsConfirmedDates := zsConfirmedDates+_db(kbmConfirms_.FieldByname('confirmdate').AsDateTime) +',';
         end;
         kbmConfirms_.next;
       end;
 
     if zsConfirmedDates = '' then
     begin
-      zsConfirmedDates := _dbDateAndTime(zconfirmedDate)
+      zsConfirmedDates := _db(zconfirmedDate)
     end else
     begin
       delete(zsConfirmedDates,length(zsConfirmedDates),1);
@@ -224,7 +220,6 @@ begin
     end;
 
  end;
- debugmessage(zsConfirmedDates);
 
 end;
 
@@ -366,14 +361,16 @@ begin
 //    s := s+ ' FROM '#10;
 //    s := s+ '   turnoverandpayments tp '#10;
 //    s := s+ ' WHERE '#10;
-//    s := s+ '   (tp.confirmDate >='+_dbdateandtime(dateFrom)+') AND (tp.confirmDate <'+_dbdateandtime(dateTo)+') '#10;
+//    s := s+ '   (tp.confirmDate >='+_db(dateFrom)+') AND (tp.confirmDate <'+_db(dateTo)+') '#10;
 //    s := s+ ' GROUP BY '#10;
 //    s := s+ '   tp.confirmdate '#10;
 //    s := s+ '  ,tp.DataType '#10;
 
-//469
 
-    s := s+ ' SELECT confirmdate '#10;
+//469
+
+
+    s := s+ ' SELECT confirmdate '#10;
     s := s+ '    , SUM(Turnover) AS Turnover '#10;
     s := s+ '    , SUM(payments) AS payments '#10;
     s := s+ '    , (SUM(Turnover) - SUM(payments)) AS diff '#10;
@@ -385,7 +382,7 @@ begin
     s := s+ '  FROM '#10;
     s := s+ '    turnoverandpayments tp '#10;
     s := s+ '  WHERE '#10;
-    s := s+ '   (tp.confirmDate >='+_dbdateandtime(dateFrom)+') AND (tp.confirmDate <'+_dbdateandtime(dateTo)+') '#10;
+    s := s+ '   (tp.confirmDate >='+_db(dateFrom)+') AND (tp.confirmDate <'+_db(dateTo)+') '#10;
     s := s+ ' GROUP BY '#10;
     s := s+ '    tp.confirmdate '#10;
     s := s+ '    ,tp.DataType '#10;

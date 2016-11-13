@@ -335,7 +335,7 @@ uses uRoomerLanguage,
   DateUtils,
   uRoomerDefinitions,
   uInvoiceContainer,
-  uMandatoryFieldDefinitions;
+  uMandatoryFieldDefinitions, uSQLUtils;
 
 const
   WM_SET_COMBO_TEXT = WM_User + 101;
@@ -870,7 +870,7 @@ begin
     theDownPaymentData.TypeIndex := ORD(ptDownPayment);
     theDownPaymentData.invoiceNumber := -1;
     theDownPaymentData.Customer := Customer;
-    theDownPaymentData.PayDate := _DateToDbDate(now, false);
+    theDownPaymentData.PayDate := _db(now, false);
     theDownPaymentData.Amount := rec.Amount;
     theDownPaymentData.Description := rec.Description;
     theDownPaymentData.CurrencyRate := 1.00; // ATH

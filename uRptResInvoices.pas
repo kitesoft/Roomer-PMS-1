@@ -308,7 +308,7 @@ uses
   uRoomerLanguage,
   PrjConst
   , uDImages
-  , DateUtils;
+  , DateUtils, uSQLUtils;
 
 function RptResInvoices : boolean;
 begin
@@ -501,14 +501,15 @@ begin
   s := s+'       roomsdate d2 '#10;
   s := s+'       INNER JOIN roomreservations r2 ON r2.roomreservation = d2.roomreservation '#10;
   s := s+'     WHERE '#10;
-  s := s+'           (r2.arrival >= '+_dateToSqlDate(zDateFrom)+') '#10;
-  s := s+'       AND (r2.arrival <= '+_dateToSqlDate(zDateTO)+') '#10;
+  s := s+'           (r2.arrival >= '+_db(zDateFrom)+') '#10;
+  s := s+'       AND (r2.arrival <= '+_db(zDateTO)+') '#10;
   s := s+'       AND ((d2.resFlag) <> '+_db('C')+' and (d2.resFlag <> '+_db('X')+')) '#10;
   result := s;
 end;
 
 
-procedure TfrmRptResInvoices.btnRefreshClick(Sender: TObject);
+
+procedure TfrmRptResInvoices.btnRefreshClick(Sender: TObject);
 begin
   getTotal;
 end;
@@ -595,7 +596,8 @@ begin
 
     ExecutionPlan.AddQuery(s);
 
-    screen.Cursor := crHourGlass;
+
+    screen.Cursor := crHourGlass;
     kbmTotal.DisableControls;
     try
       if ExecutionPlan.Execute(ptQuery) then
@@ -734,8 +736,8 @@ begin
     s := s+'        INNER JOIN reservations rv ON rv.reservation = rr.reservation '#10;
     s := s+'        INNER JOIN customers cu ON cu.customer = rv.customer '#10;
     s := s+'      WHERE '#10;
-    s := s+'           (rr.arrival >= '+_dateToSqlDate(zDateFrom)+') '#10;
-    s := s+'       AND (rr.arrival <= '+_dateToSqlDate(zDateTO)+') '#10;
+    s := s+'           (rr.arrival >= '+_db(zDateFrom)+') '#10;
+    s := s+'       AND (rr.arrival <= '+_db(zDateTO)+') '#10;
     s := s+'       AND ((rd.resFlag) <> '+_db('C')+' and (rd.resFlag <> '+_db('X')+')) '#10;
     s := s+'       AND rd.paid = 0 '#10;
     s := s+'       AND cu.customer = '+_db(customer)+' '#10;
@@ -746,7 +748,8 @@ begin
 
     ExecutionPlan.AddQuery(s);
     screen.Cursor := crHourGlass;
-
+
+
     kbmOpenInvoices.DisableControls;
     try
       if ExecutionPlan.Execute(ptQuery) then
@@ -805,7 +808,8 @@ begin
 
       ExecutionPlan.AddQuery(s);
       //////////////////// Execute!
-
+
+
       screen.Cursor := crHourGlass;
       kbmTotal.DisableControls;
       try
@@ -1216,12 +1220,14 @@ begin
       s := s+ '     INNER JOIN payments on payments.invoicenumber = invoiceheads.invoicenumber '#10;
       s := s+ '     INNER JOIN paytypes on paytypes.paytype = payments.paytype '#10;
       s := s+ '     INNER JOIN paygroups on paytypes.paygroup = paygroups.paygroup '#10;
-      s := s+ ' WHERE '#10;
-      s := s+ ' invoiceheads.invoicenumber in ('+invoicelist+') '#10;
+
+      s := s+ ' WHERE '#10;
+
+      s := s+ ' invoiceheads.invoicenumber in ('+invoicelist+') '#10;
 
 //      s := s+ '  (invoiceheads.InvoiceNumber > 0) ';
-//      s := s+ ' AND (invoiceheads.ihInvoiceDate >= '+_DatetoDBDate(zDateFrom,true)+') ';
-//      s := s+ ' AND (invoiceheads.ihInvoiceDate <= '+_DatetoDBDate(zDateTo,true)+') ';
+//      s := s+ ' AND (invoiceheads.ihInvoiceDate >= '+_db(zDateFrom,true)+') ';
+//      s := s+ ' AND (invoiceheads.ihInvoiceDate <= '+_db(zDateTo,true)+') ';
 //
 //      s := s+ ' AND (invoiceheads.Customer = '+_db(Customer)+') ';
 
@@ -1234,7 +1240,8 @@ begin
 
       ExecutionPlan.AddQuery(s);
      //////////////////// Execute!
-      s := '';
+
+      s := '';
       s := s+'SELECT '#10;
       s := s+'   sum(il.total) AS Amount '#10;
       s := s+'  ,count(il.id) AS LineCount '#10;

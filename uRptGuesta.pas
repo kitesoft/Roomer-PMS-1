@@ -340,7 +340,7 @@ end;
       sql := sql +'        (rd.ADate >=  %s ) AND (rd.ADate <=  %s ) AND (rd.ResFlag in '+Flags+')'#10;
       sql := sql +'  ORDER BY rd.Reservation';
 
-      s := format(sql , [_DateToDbDate(DateFrom,true),_DateToDbDate(DateTo,true)]);
+      s := format(sql , [_db(DateFrom,true),_db(DateTo,true)]);
 //      copyToClipboard(s);
 //      DebugMessage(s);
 
@@ -472,7 +472,8 @@ begin
     finally
       freeandnil(ExecutionPlan);
     end;
-  finally
+
+  finally
     screen.Cursor := crDefault;
   end;
 

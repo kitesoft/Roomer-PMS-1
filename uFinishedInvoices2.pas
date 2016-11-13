@@ -261,7 +261,7 @@ uses
   , uStringUtils
   , uEmailingDialog
   , uResourceManagement
-  ;
+  , uSQLUtils;
 
 {$R *.DFM}
 
@@ -666,7 +666,7 @@ begin
 
       while not rset.eof do
       begin
-        tcPages.Tabs.AddObject( DateToStr( _DBDateToDate( rset.fieldByName( 'InvoiceDate' ).asString ) ) + ' R.' + inttostr( rSet.fieldByName( 'InvoiceNumber' ).asInteger ),
+        tcPages.Tabs.AddObject( DateToStr( SQLToDate( rset.fieldByName( 'InvoiceDate' ).asString ) ) + ' R.' + inttostr( rSet.fieldByName( 'InvoiceNumber' ).asInteger ),
                                          pointer( rSet.fieldByName( 'InvoiceNumber' ).asInteger ) );
         rSet.next;
       end;

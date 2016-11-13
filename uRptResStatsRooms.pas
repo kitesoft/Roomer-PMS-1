@@ -284,7 +284,7 @@ uses
   , uUtils
   , PrjConst
   , DateUtils
-  , uDImages;
+  , uDImages, uSQLUtils;
 
 
 procedure ShowReservationStatistics;
@@ -675,7 +675,7 @@ begin
 //    s := s+ '       INNER JOIN rooms rrro ON (rr.room=rrro.room and rrro.wildcard=0) '#10;
     s := s+ '       INNER JOIN roomtypes rt ON rt.RoomType = rd.RoomType '#10;
     s := s+ '       LEFT OUTER JOIN rooms ro ON (ro.Room = rd.Room and ro.wildcard=0) '#10;
-    s := s+ ' WHERE rd.ADate>='+_DateToDbDate(zDateFrom,true)+' AND rd.ADate<='+_DateToDbDate(zDateTo,true)+' '#10;
+    s := s+ ' WHERE rd.ADate>='+_db(zDateFrom,true)+' AND rd.ADate<='+_db(zDateTo,true)+' '#10;
     s := s+ ' AND (SUBSTR(rd.Room, 1, 1)=''<'' OR NOT ISNULL((SELECT ID FROM rooms r WHERE r.Room=rd.Room AND r.wildcard=0)))';
     statusIn := StatusSQL;
     if statusIn <> '' then
@@ -830,7 +830,7 @@ begin
    s := s+'    ,(SELECT NumberGuests FROM roomtypes WHERE RoomType=ro.RoomType) AS totalNumberOfBeds '#10;
    s := s+'  FROM predefineddates pd, rooms ro '#10;
    s := s+'  WHERE ro.wildcard=0 AND '#10;
-   s := s+'     ((pd.date>='+_DateToDbDate(zDateFrom,true)+' AND pd.date<='+_DateToDbDate(zDateTo,true)+')) '#10;
+   s := s+'     ((pd.date>='+_db(zDateFrom,true)+' AND pd.date<='+_db(zDateTo,true)+')) '#10;
    if chkStatistics.checked then
    begin
      s := s+'AND (ro.Statistics = 1)  '#10;

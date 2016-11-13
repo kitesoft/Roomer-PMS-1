@@ -1,4 +1,4 @@
-unit uAvailability;
+ï»¿unit uAvailability;
 
 interface
 uses
@@ -73,7 +73,7 @@ uses
   , hData
   , uRoomerDefinitions
   , uReservationStateDefinitions
-  ;
+  , uSQLUtils;
 
 { TDataCollection }
 
@@ -193,10 +193,10 @@ begin
     'SELECT RoomType, ADate, ResFlag from roomsdate '+
     ' where (ADate >= %s '+
     '   and ADate < %s )'+
-    '   AND (ResFlag <> '+_db(STATUS_DELETED)+' ) '+ //**zxhj bætt við
+    '   AND (ResFlag <> '+_db(STATUS_DELETED)+' ) '+ //**zxhj bï¿½tt viï¿½
     ' ORDER BY ADate, RoomType ' ;
 
-    s := format(sql , [_DatetoDBDate(FDateFrom,true),_DatetoDBDate(FDateTo,true) ]);
+    s := format(sql , [_db(FDateFrom,true),_db(FDateTo,true) ]);
     hData.rSet_bySQL(rSet,s);
 
     with rSet do
@@ -207,7 +207,7 @@ begin
       iCount := 0;
       while not eof do
       begin
-        //**zxhj Breytti ekkert hér ?????????
+        //**zxhj Breytti ekkert hï¿½r ?????????
         if ( trim( fieldByName('ResFlag').asString ) <> 'C' )  and
            ( trim( fieldByName( 'ResFlag' ).asString ) <> 'N' ) then
         begin
@@ -278,14 +278,16 @@ var
     i,
     l,
     iMax : integer;
+    lDate: TDate;
   begin
     // --
     iMax := 0;
     for i := trunc( dtArrival ) to trunc( dtDeparture ) - 1 do
     begin
       rSet.Filtered := false;
+      lDate := i;
       rSet.Filter := 'RoomType=' + quotedStr( sType ) + ' and ' +
-                           'ADate=' + _DateToDBDate( i ,true );
+                           'ADate=' + _db(lDate ,true );
       rSet.Filtered := true;
       try
         with rSet do
@@ -294,7 +296,7 @@ var
           first;
           while not eof do
           begin
-            //**zxhj  breytti ekki hér
+            //**zxhj  breytti ekki hï¿½r
             if ((trim( fieldByName( 'ResFlag' ).asString ) <> 'N') and (trim( fieldByName( 'ResFlag' ).asString ) <> 'N')) then inc( l );
             next;
           end;
@@ -311,7 +313,7 @@ var
   s : string;
   sql : string;
 begin
-  // Öll herbergin
+  // ï¿½ll herbergin
   glb.InitAvailability;
 
   rSet := CreateNewDataSet;
@@ -323,10 +325,10 @@ begin
     'SELECT Room, RoomType, ADate, ResFlag from roomsdate '+
     ' WHERE (ADate >= %s '+
     '   and ADate < %s) '+
-    '   AND (ResFlag <> '+_db(STATUS_DELETED)+' ) '+ //**zxhj bætti við
+    '   AND (ResFlag <> '+_db(STATUS_DELETED)+' ) '+ //**zxhj bï¿½tti viï¿½
     ' ORDER BY Room, ADate, RoomType ' ;
 
-    s := format(sql, [_DatetoDBDate(dtArrival,true),_DatetoDBDate(dtDeparture,true)]);
+    s := format(sql, [_db(dtArrival,true),_db(dtDeparture,true)]);
     hData.rSet_bySQL(rSet,s);
 
     sLastRoom := '<None Yet>';
@@ -355,13 +357,13 @@ begin
 //    //<Roomsdate>SELECT
 //    s := '';
 //    s := s+ 'select Room, RoomType, ADate, ResFlag from [RoomsDate]' ;
-//    s := s+ ' where ADate >= ' + _DatetoDBDate(dtArrival,true) ;
-//    s := s+ '   and ADate < ' + _DatetoDBDate(dtDeparture,true) ;
+//    s := s+ ' where ADate >= ' + _db(dtArrival,true) ;
+//    s := s+ '   and ADate < ' + _db(dtDeparture,true) ;
 //    s := s+ '   and Room >= ' + QuotedStr( '<' ) ;
 //    s := s+ '   and Room < ' + QuotedStr( '>' ) ;
 //    s := s+ ' ORDER BY Room, ADate, RoomType' ;
 //
-//    s := format(select_InitTypeAvailabilities2 , [_DatetoDBDate(dtArrival,true),_DatetoDBDate(dtDeparture,true)]);
+//    s := format(select_InitTypeAvailabilities2 , [_db(dtArrival,true),_db(dtDeparture,true)]);
 //    CopyToClipboard(s);
 //    DebugMessage('select_InitTypeAvailabilities2'#10#10+s);
 //    hData.rSet_bySQL(rSet,s);

@@ -561,7 +561,7 @@ uses ioUtils, uMain, uDateUtils, uStringUtils, _glob, uAppGlobal, PrjConst,
   uFrmChannelCopyFrom, uRoomerMessageDialog, uDImages, uExcelProcessors, uG, uEmailExcelSheet, hData,
   uActivityLogs,
   UITypes
-  , uFloatUtils, uFileSystemUtils;
+  , uFloatUtils, uFileSystemUtils, uSQLUtils;
 
 const
   BODY_START = '<body bgcolor="#0000FF"><font bgcolor="#0000FF" color="#FFFFFF">';

@@ -136,20 +136,23 @@ uses
   , uGuestCheckInForm
   , uInvoice
   , uReservationProfile
-  , uReservationStateDefinitions, uReservationStateChangeHandler, uInvoiceContainer;
+  , uReservationStateDefinitions, uReservationStateChangeHandler, uInvoiceContainer, uSQLUtils;
 
 
 const
 
 WM_REFRESH_DATA = WM_User + 51;
 
-function TfrmDeparturesReport.getsql(DateFrom,DateTo : Tdate) : string;
+
+function TfrmDeparturesReport.getsql(DateFrom,DateTo : Tdate) : string;
 var
  s : string;
 begin
 
-  s := ' SELECT '#10;
-  s := s + ' Room, '#10;
+
+  s := ' SELECT '#10;
+
+  s := s + ' Room, '#10;
     s := s + ' GuestName, '#10;
     s := s + ' Reservation AS RoomerReservationId, '#10;
     s := s + ' CompanyName, '#10;
@@ -261,7 +264,7 @@ begin
     s := s + '            JOIN items i ON i.Item = co.RoomRentItem '#10;
     s := s + '            JOIN itemtypes it ON it.ItemType = i.ItemType '#10;
     s := s + '            JOIN vatcodes vc ON vc.VATCode = it.VATCode, '#10;
-    s := s + '            (SELECT '+_dateToSqlDate(DateFrom)+' AS StartDate, '+_dateToSqlDate(DateTo)+' AS EndDate) AS params '#10;
+    s := s + '            (SELECT '+_db(DateFrom, True)+' AS StartDate, '+_db(DateTo, True)+' AS EndDate) AS params '#10;
     s := s + '            WHERE '#10;
     s := s + '                rr.departure between params.Startdate and params.EndDate '#10;
     s := s + '                AND NOT ResFlag IN (''X'' , ''C'', ''D'') '#10;
@@ -276,8 +279,10 @@ begin
     s := s + '  ) zzz '#10;
     s := s + ' ORDER BY Departure , Room '#10;
 
-  result := s;
-end;
+
+  result := s;
+
+end;
 
 
 function ShowDeparturesReport: boolean;

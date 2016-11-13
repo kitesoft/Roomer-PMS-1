@@ -42,6 +42,12 @@ object frmNationalReport3: TfrmNationalReport3
     object sheetNationalStatistics1: TsTabSheet
       Caption = 'Room Nights'
       ImageIndex = 1
+      SkinData.CustomColor = False
+      SkinData.CustomFont = False
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Panel2: TsPanel
         Left = 0
         Top = 0
@@ -213,6 +219,12 @@ object frmNationalReport3: TfrmNationalReport3
     object cxTabSheet1: TsTabSheet
       Caption = 'Guests'
       ImageIndex = 2
+      SkinData.CustomColor = False
+      SkinData.CustomFont = False
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Panel5: TsPanel
         Left = 0
         Top = 0

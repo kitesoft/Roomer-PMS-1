@@ -261,7 +261,7 @@ begin
 //          s := s+'      ,showDiscount = '+_db(showDiscount)+' '+#10;
 //          s := s+'  WHERE '+#10;
 //          s := s+'    (RoomReservation = '+_db(roomreservation)+') '+#10;
-//          s := s+'  AND (aDate = '+_glob._dateToDBDate(aDate,true)+')'+#10;
+//          s := s+'  AND (aDate = '+_glob._db(aDate,true)+')'+#10;
 //          ok := cmd_bySQL(s);
 //          aDate := aDate+1;
 //        end;

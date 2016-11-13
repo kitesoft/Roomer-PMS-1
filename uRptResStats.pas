@@ -467,7 +467,7 @@ uses
   , cxPivotGridAdvancedCustomization
   , uFinanceForcastLayout
   , DateUtils
-  ;
+  , uSQLUtils;
 
 const WM_LOAD_LAYOUT = WM_User + 401;
       WM_START_LOAD = WM_User + 402;
@@ -1624,7 +1624,7 @@ begin
   VatDiscountUnbilled  := 0.00;
   VatDiscountTotal     := 0.00;
 
-  dataset.FieldByName('dtDate').AsDateTime := _dbDateToDate(dataset.FieldByName('aDate').AsString);
+  dataset.FieldByName('dtDate').AsDateTime := SQLToDateTime(dataset.FieldByName('aDate').AsString);
 
   discount     := dataset.FieldByName('discount').AsFloat;
   isPercentage := dataset.FieldByName('isPercentage').AsBoolean;
@@ -1634,8 +1634,8 @@ begin
   ItemId       := dataset.FieldByName('ItemId').AsString;
   Currency     := dataset.FieldByName('Currency').AsString;
 
-  dtArrival   := _dbDateToDate(dataset.FieldByName('sArrival').AsString);
-  dtDeparture := _dbDateToDate(dataset.FieldByName('sDeparture').AsString);
+  dtArrival   := SQLToDate(dataset.FieldByName('sArrival').AsString);
+  dtDeparture := SQLToDate(dataset.FieldByName('sDeparture').AsString);
 
   dataset.FieldByName('DayCount').asInteger := trunc(dtDeparture)-trunc(dtArrival);
 

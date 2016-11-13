@@ -312,7 +312,7 @@ uses
   uMain
   , uSqlDefinitions
   , System.TypInfo
-  ;
+  , uSQLUtils;
 
 { TGuestObject }
 
@@ -559,10 +559,10 @@ begin
             end;
             SingleReservations.FCustomer := Trim(FieldByName('Customer').asString);
             SingleReservations.FName := Trim(FieldByName('Name').asString);
-            SingleReservations.FArrival := _DBDateToDate(Trim(FieldByName('Arrival').asString));
-            SingleReservations.FReservationDate := _DBDateToDate(Trim(FieldByName('ReservationDate').asString));
+            SingleReservations.FArrival := SQLtOdate(Trim(FieldByName('Arrival').asString));
+            SingleReservations.FReservationDate := SQLToDate(Trim(FieldByName('ReservationDate').asString));
             SingleReservations.FStaff := Trim(FieldByName('Staff').asString);
-            SingleReservations.FDeparture := _DBDateToDate(Trim(FieldByName('Departure').asString));
+            SingleReservations.FDeparture := SQLToDate(Trim(FieldByName('Departure').asString));
             SingleReservations.FTel1 := Trim(FieldByName('Tel1').asString);
             SingleReservations.FTel2 := Trim(FieldByName('Tel2').asString);
             SingleReservations.FFax := Trim(FieldByName('Fax').asString);
@@ -589,8 +589,8 @@ begin
             RoomObject.FRoomRes := FieldByName('RoomReservation').asInteger;
             RoomObject.FReservation := FieldByName('Reservation').asInteger;
             RoomObject.FGuestCount := FieldByName('NumGuests').asInteger;
-            RoomObject.FArrival := _DBDateToDate(Trim(FieldByName('RoomArrival').asString));
-            RoomObject.FDeparture := _DBDateToDate(Trim(FieldByName('RoomDeparture').asString));
+            RoomObject.FArrival := SQLToDate(Trim(FieldByName('RoomArrival').asString));
+            RoomObject.FDeparture := SQLToDate(Trim(FieldByName('RoomDeparture').asString));
             RoomObject.FRoomNumber := Trim(FieldByName('Room').asString);
             RoomObject.FRRNumber := Trim(FieldByName('rrRoom').asString);
             try

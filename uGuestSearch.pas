@@ -165,7 +165,7 @@ uses
    , uReservationProfile
    , uGuestProfile2
 
-   , uDImages;
+   , uDImages, uSQLUtils;
 
 procedure TfrmGuestSearch.btnReservationClick(Sender: TObject);
 var
@@ -430,7 +430,7 @@ begin
       s := s + fields;
 
     if chkUseDates.checked  then
-       s := s+'  AND ((`roomreservations`.rrArrival >= '+_dateToDbDate(zDateFrom,true)+') AND (`roomreservations`.rrDeparture <= '+_dateToDbDate(zDateTo,true)+')) '#10;
+       s := s+'  AND ((`roomreservations`.rrArrival >= '+_db(zDateFrom,true)+') AND (`roomreservations`.rrDeparture <= '+_db(zDateTo,true)+')) '#10;
 
   //  s := s+' ORDER BY `roomreservations`.rrArrival ';
 

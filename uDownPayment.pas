@@ -99,7 +99,7 @@ implementation
 
 {$R *.dfm}
 
-uses uAppGlobal, uD, uDImages;
+uses uAppGlobal, uD, uDImages, uSQLUtils;
 
 procedure TfrmDownPayment.btnCancelClick(Sender: TObject);
 begin
