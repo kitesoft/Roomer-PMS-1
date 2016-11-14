@@ -443,7 +443,7 @@ begin
         s := s + ' (il.Total <> 0) AND (il.InvoiceNumber = -1) AND (il.RoomReservation = rd.roomReservation )) ';
         s := s + '  AS TotalNoRent, ';
         s := s + '      to_bool(IF(tax.INCL_EXCL=''INCLUDED'' OR ' +
-			       '(tax.INCL_EXCL=''PER_CUSTOMER'' AND IFNULL(cu.StayTaxIncluted, 1), 1, 0)) AS CityTaxInCl, ' +
+			       '(tax.INCL_EXCL=''PER_CUSTOMER'' AND IFNULL(cu.StayTaxIncluted, 1)), 1, 0)) AS CityTaxInCl, ' +
 			       'tax.AMOUNT AS taxAmount, ' +
 			       'to_bool(IF(tax.TAX_TYPE=''FIXED_AMOUNT'', 0, 1)) AS taxPercentage, ' +
 			       'to_bool(IF(tax.RETAXABLE=''FALSE'', 0, 1)) AS taxRetaxable, ' +
