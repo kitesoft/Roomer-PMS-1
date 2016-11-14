@@ -1,4 +1,4 @@
-unit uInvoiceList2;
+﻿unit uInvoiceList2;
 
 interface
 
@@ -564,7 +564,8 @@ begin
     s := s + '    , invoiceheads.TotalStayTaxNights Taxunits'#10;
     s := s + '    , (if(invoiceheads.Splitnumber=1,'+_db('CREDIT')+','+_db('DEBIT')+')) AS CreditType '#10;
     s := s + '    , (invoiceheads.Total div invoiceheads.ihCurrencyRate) AS CurrencyAmount '#10;
-    s := s + '    , (if(invoiceheads.Reservation = 0 and invoiceheads.Roomreservation=0,'+_db('Cash')+',if(invoiceheads.Reservation > 0 and invoiceheads.Roomreservation=0,'+_db('Group')+','+_db('Room')+'))) AS Invoicetype '#10;
+    s := s + '    , (if(invoiceheads.Reservation = 0 and invoiceheads.Roomreservation=0,' + _db(GetTranslatedText('shUI_Reports_InvoiceTypeCash')) +
+                     ',if(invoiceheads.Reservation > 0 and invoiceheads.Roomreservation=0,'+ _db(GetTranslatedText('shUI_Reports_InvoiceTypeGroup')) + ',' + _db(GetTranslatedText('shUI_Reports_InvoiceTypeRoom')) + '))) AS Invoicetype '#10;
     s := s + '    , (IF(invoiceheads.CreditInvoice<>0,invoiceheads.CreditInvoice,if(invoiceheads.OriginalInvoice<>0,invoiceheads.OriginalInvoice,0))) AS Link'#10;
     s := s + '    , (SELECT surName FROM customers WHERE Customer = invoiceheads.Customer Limit 1) As CustomerName'#10;
     s := s + '     FROM '#10;

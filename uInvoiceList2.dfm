@@ -334,9 +334,6 @@ object frmInvoiceList2: TfrmInvoiceList2
       Align = alBottom
       BevelOuter = bvNone
       TabOrder = 2
-      ExplicitLeft = 928
-      ExplicitTop = 80
-      ExplicitWidth = 185
       object LMDSpeedButton6: TsButton
         AlignWithMargins = True
         Left = 3
@@ -350,9 +347,6 @@ object frmInvoiceList2: TfrmInvoiceList2
         TabOrder = 0
         OnClick = LMDSpeedButton6Click
         SkinData.SkinSection = 'BUTTON'
-        ExplicitLeft = 7
-        ExplicitTop = 4
-        ExplicitHeight = 37
       end
       object btnReservation: TsButton
         AlignWithMargins = True
@@ -367,9 +361,6 @@ object frmInvoiceList2: TfrmInvoiceList2
         TabOrder = 1
         OnClick = btnReservationClick
         SkinData.SkinSection = 'BUTTON'
-        ExplicitLeft = 113
-        ExplicitTop = 4
-        ExplicitHeight = 37
       end
       object LMDSpeedButton1: TsButton
         AlignWithMargins = True
@@ -384,9 +375,6 @@ object frmInvoiceList2: TfrmInvoiceList2
         TabOrder = 2
         OnClick = LMDSpeedButton1Click
         SkinData.SkinSection = 'BUTTON'
-        ExplicitLeft = 219
-        ExplicitTop = 4
-        ExplicitHeight = 37
       end
       object btnViewInvoice: TsButton
         AlignWithMargins = True
@@ -401,9 +389,6 @@ object frmInvoiceList2: TfrmInvoiceList2
         TabOrder = 3
         OnClick = btnViewInvoiceClick
         SkinData.SkinSection = 'BUTTON'
-        ExplicitLeft = 325
-        ExplicitTop = 4
-        ExplicitHeight = 37
       end
       object sButton1: TsButton
         AlignWithMargins = True
@@ -418,9 +403,6 @@ object frmInvoiceList2: TfrmInvoiceList2
         TabOrder = 4
         OnClick = sButton1Click
         SkinData.SkinSection = 'BUTTON'
-        ExplicitLeft = 431
-        ExplicitTop = 4
-        ExplicitHeight = 37
       end
       object sButton2: TsButton
         AlignWithMargins = True
@@ -434,9 +416,6 @@ object frmInvoiceList2: TfrmInvoiceList2
         TabOrder = 5
         OnClick = sButton2Click
         SkinData.SkinSection = 'BUTTON'
-        ExplicitLeft = 749
-        ExplicitTop = 4
-        ExplicitHeight = 37
       end
       object LMDButton1: TsButton
         AlignWithMargins = True
@@ -452,9 +431,6 @@ object frmInvoiceList2: TfrmInvoiceList2
         TabOrder = 6
         OnClick = LMDButton1Click
         SkinData.SkinSection = 'BUTTON'
-        ExplicitLeft = 855
-        ExplicitTop = 4
-        ExplicitHeight = 37
       end
     end
   end
@@ -638,7 +614,7 @@ object frmInvoiceList2: TfrmInvoiceList2
         Position.RowIndex = 0
       end
       object tvInvoiceHeadInvoicetype: TcxGridDBBandedColumn
-        Caption = 'Type'
+        Caption = 'Invoice type'
         DataBinding.FieldName = 'Invoicetype'
         Options.Editing = False
         Width = 67
