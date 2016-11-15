@@ -1,6 +1,7 @@
 object FrmCheckOut: TFrmCheckOut
   Left = 0
   Top = 0
+  BorderIcons = []
   BorderStyle = bsDialog
   Caption = 'Check Out'
   ClientHeight = 296
@@ -79,10 +80,11 @@ object FrmCheckOut: TFrmCheckOut
       SkinData.SkinSection = 'BUTTON'
     end
     object cbxForce: TsCheckBox
-      Left = 348
-      Top = 6
-      Width = 235
-      Height = 20
+      AlignWithMargins = True
+      Left = 345
+      Top = 5
+      Width = 243
+      Height = 19
       Caption = 'Allow checkout in spite of open group invoice'
       TabOrder = 2
       Visible = False
@@ -101,6 +103,8 @@ object FrmCheckOut: TFrmCheckOut
     BevelEdges = [beRight, beBottom]
     TabOrder = 1
     SkinData.SkinSection = 'PANEL'
+    ExplicitLeft = -6
+    ExplicitTop = -3
     object __lblRoomBalance: TsLabel
       Left = 16
       Top = 24
@@ -364,8 +368,8 @@ object FrmCheckOut: TFrmCheckOut
       Caption = '0.00'
     end
     object lbSubTotalGr: TsLabel
-      Left = 189
-      Top = 114
+      Left = 193
+      Top = 116
       Width = 80
       Height = 13
       Alignment = taRightJustify
@@ -447,11 +451,9 @@ object FrmCheckOut: TFrmCheckOut
       item
         Component = Owner
         Properties.Strings = (
-          'Height'
           'Left'
           'Position'
-          'Top'
-          'Width')
+          'Top')
       end>
     StorageName = 'Software\Roomer\FormStatus\CheckoutDialog'
     StorageType = stRegistry
