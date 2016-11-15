@@ -102,7 +102,7 @@ uses
   dxSkinOffice2007Silver, dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinValentine,
   dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, AdvDropDown, AdvColorPickerDropDown, AdvGlowButton, AdvOfficeSelectors, AsgCombo, ColorCombo, dxGalleryControl, dxColorGallery, dxColorEdit,
-  sListBox, sCheckListBox
+  sListBox, sCheckListBox, uFraCountryPanel
 
 
 
@@ -515,11 +515,8 @@ type
     chkUseStayTax: TsCheckBox;
     labNativeCurrency: TsLabel;
     edNativeCurrency: TsComboEdit;
-    labCountry: TsLabel;
     sLabel1: TsLabel;
     cbxStatusAttr_: TsComboBox;
-    edCountry: TsComboEdit;
-    sLabel2: TsLabel;
     sLabel3: TsLabel;
     edInvoiceFormFileISL: TsFilenameEdit;
     edInvoiceFormFileERL: TsFilenameEdit;
@@ -708,6 +705,8 @@ type
     lblShowRoomAsPaidWhenZero: TsLabel;
     lbShowIncludedBreakfastOnInvoice: TsLabel;
     cbShowIncludedBreakfastOnInvoice: TsCheckBox;
+    fraCountry: TfraCountryPanel;
+    lblCountry: TsLabel;
     procedure FormCreate(Sender : TObject);
     procedure FormClose(Sender : TObject; var Action : TCloseAction);
     procedure FormShow(Sender : TObject);
@@ -743,7 +742,6 @@ type
     procedure edinPosMonitorChkSecChange(Sender: TObject);
     procedure edNativeCurrencyDblClick(Sender: TObject);
     procedure cbxStatusAttr_CloseUp(Sender: TObject);
-    procedure edCountryDblClick(Sender: TObject);
     procedure edInvoiceFormFileERLChange(Sender: TObject);
     procedure edInvoiceFormFileISLChange(Sender: TObject);
     procedure fcCurrentFontNameCloseUp(Sender: TObject);
@@ -1000,11 +998,7 @@ g.ProcessAppIni(0);
     editAddress2.Text := rControlData.fieldbyname('Address2').AsString;
     editAddress3.Text := rControlData.fieldbyname('Address3').AsString;
     editAddress4.Text := rControlData.fieldbyname('Address4').AsString;
-    edCountry.Text := rControlData.fieldbyname('Country').AsString;
-
-    //**TESTED**// lev3 ok
-    countryValidate(edCountry,labCountry);
-
+    fraCountry.CountryCode := rControlData.fieldbyname('Country').AsString;
 
     editTelephone1.Text := rControlData.fieldbyname('Telephone1').AsString;
     editTelephone2.Text := rControlData.fieldbyname('Telephone2').AsString;
@@ -1628,7 +1622,7 @@ begin
       rControlData.fieldbyname('Address2').AsString := editAddress2.Text;
       rControlData.fieldbyname('Address3').AsString := editAddress3.Text;
       rControlData.fieldbyname('Address4').AsString := editAddress4.Text;
-      rControlData.fieldbyname('Country').AsString := edCountry.Text;
+      rControlData.fieldbyname('Country').AsString := fraCountry.CountryCode;
 
       rControlData.fieldbyname('Telephone1').AsString := editTelephone1.Text;
       rControlData.fieldbyname('Telephone2').AsString := editTelephone2.Text;
@@ -2347,12 +2341,6 @@ begin
   sLabel10.Caption :=  _glob._strPadZeroL(inttostr(Hour),2)+':'+_glob._strPadZeroL(inttostr(minute),2);
 end;
 
-procedure TfrmControlData.edCountryDblClick(Sender: TObject);
-begin
-  if getCountry(edCountry, labCountry) then
-  begin
-  end;
-end;
 
 // ******************************************************************************
 

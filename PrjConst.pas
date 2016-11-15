@@ -892,22 +892,14 @@ begin
   constants.Add('shTx_Packages_Exists', 'exists in Items table ');
   constants.Add('shTx_ReservationProfile_MustBeOver1Day', 'Number of days must be atleast 1 day - Check the dates ! ');
   constants.Add('shTx_ReservationProfile_CopyHidden', 'Copy to hidden :');
-  constants.Add('shTx_ReservationProfile_ChangeNationalityConfirmation',
-                                     //   'Breyta þjóðerni allra gesta pöntunnar ' + #10 +
-									 'Change nationality of all guests ' + #10 +
-                                     //   ' from %s to %s.' + #10#10 +
-									 ' From %s to %s.' + #10#10 +
-                                     //   'Ertu viss ?');
+  constants.Add('shTx_ReservationProfile_ChangeNationalityConfirm',
+									 'Change nationality of all guests to %s.' + #10#10 +
 									  'Confirm ?');
-  constants.Add('shTx_ReservationProfile_ChangeCountryConfirmation',
-                                     //   'Breyta þjóðerni allra gesta pöntunnar ' + #10 +
-									 'Change country of origin of all guests ' + #10 +
-                                     //   ' from %s to %s.' + #10#10 +
-									 ' From %s to %s.' + #10#10 +
-                                     //   'Ertu viss ?');
+  constants.Add('shTx_ReservationProfile_ChangeCountryConfirm',
+									 'Change country of origin of all guests to %s.' + #10#10 +
 									  'Confirm ?');
   constants.Add('shTx_ReservationProfile_NationalityChangeFailed', 'Changing nationality failed');
-  constants.Add('shTx_ReservationProfile_CountryChangeFailed', 'Changing nationality failed');
+  constants.Add('shTx_ReservationProfile_CountryChangeFailed', 'Changing country failed');
   constants.Add('shTx_ReservationProfile_Outdated', 'OutDated');
   constants.Add('shTx_ReservationProfile_ChangeAllRooms', 'Change all rooms to ');
   constants.Add('shTx_ReservationProfile_BreakfastInc', 'Breakfast included ?');
@@ -1778,7 +1770,7 @@ begin
   frmRptReservationsCust := TfrmRptReservationsCust.Create(nil); frmRptReservationsCust.Free; frmRptReservationsCust := nil;
 
   frmGuestProfiles := TfrmGuestProfiles.Create(nil); frmGuestProfiles.Free; frmGuestProfiles := nil;
-  frmGuestPortfolio := TfrmGuestPortfolio.Create(nil); frmGuestPortfolio.Free; frmGuestPortfolio := nil;
+  TfrmGuestPortfolio.Create(nil).Free;
 
 
   frmRptTurnoverAndPayments := TfrmRptTurnoverAndPayments.Create(nil); frmRptTurnoverAndPayments.Free; frmRptTurnoverAndPayments := nil;

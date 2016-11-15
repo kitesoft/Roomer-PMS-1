@@ -15,7 +15,8 @@ uses
   dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins, dxSkinOffice2007Black, dxSkinOffice2007Blue,
   dxSkinOffice2007Green, dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver,
   dxSkinOffice2013White, dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver, dxSkinSpringTime,
-  dxSkinStardust, dxSkinSummer2008, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, dxPScxPivotGridLnk;
+  dxSkinStardust, dxSkinSummer2008, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, dxPScxPivotGridLnk,
+  uFraCountryPanel;
 
 type
   TfrmGuestPortfolio = class(TForm)
@@ -30,18 +31,15 @@ type
     sLabel1: TsLabel;
     sLabel3: TsLabel;
     sLabel11: TsLabel;
-    sLabel4: TsLabel;
+    lblPersonNationality: TsLabel;
     sLabel5: TsLabel;
     sLabel6: TsLabel;
     sLabel7: TsLabel;
-    sSpeedButton2: TsSpeedButton;
-    sSpeedButton8: TsSpeedButton;
     cmbGender: TsComboBox;
     edtTitle: TsEdit;
     edtFirstname: TsEdit;
     edtLastname: TsEdit;
     edtProfession: TsEdit;
-    edtNationality: TsEdit;
     edtBirthday: TsDateEdit;
     edtPassport: TsEdit;
     edtPassportExpiry: TsDateEdit;
@@ -70,15 +68,12 @@ type
     sLabel20: TsLabel;
     sLabel24: TsLabel;
     sLabel26: TsLabel;
-    sLabel27: TsLabel;
-    sSpeedButton9: TsSpeedButton;
-    sSpeedButton10: TsSpeedButton;
+    lblContactCountry: TsLabel;
     edtAddress1: TsEdit;
     edtAddress2: TsEdit;
     edtZip: TsEdit;
     edtCity: TsEdit;
     edtState: TsEdit;
-    edtCountry: TsEdit;
     sLabel22: TsLabel;
     edtSkype: TsEdit;
     sGroupBox6: TsGroupBox;
@@ -110,10 +105,7 @@ type
     sLabel13: TsLabel;
     sLabel17: TsLabel;
     sLabel31: TsLabel;
-    sLabel32: TsLabel;
-    edtCompCountry: TsEdit;
-    sSpeedButton1: TsSpeedButton;
-    sSpeedButton3: TsSpeedButton;
+    lblCompCountry: TsLabel;
     sGroupBox8: TsGroupBox;
     sLabel33: TsLabel;
     sLabel34: TsLabel;
@@ -258,20 +250,17 @@ type
     xcbxEmailNews: TsCheckBox;
     xedtGuestNotes: TsCheckBox;
     pnlHolder: TsPanel;
+    fraPersonCountry: TfraCountryPanel;
+    fraContactCountry: TfraCountryPanel;
+    fraCompanyCountry: TfraCountryPanel;
     procedure FormCreate(Sender: TObject);
-    procedure cmbGenderChange(Sender: TObject);
+    procedure evtDataChange(Sender: TObject);
     procedure edtBirthdayChange(Sender: TObject);
     procedure cbxEmailSpecialsClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btnBackClick(Sender: TObject);
     procedure btnForwardClick(Sender: TObject);
-    procedure sSpeedButton2Click(Sender: TObject);
-    procedure sSpeedButton9Click(Sender: TObject);
-    procedure sSpeedButton1Click(Sender: TObject);
-    procedure sSpeedButton3Click(Sender: TObject);
-    procedure sSpeedButton10Click(Sender: TObject);
-    procedure sSpeedButton8Click(Sender: TObject);
     procedure sSpeedButton6Click(Sender: TObject);
     procedure sSpeedButton11Click(Sender: TObject);
     procedure sSpeedButton7Click(Sender: TObject);
@@ -305,9 +294,6 @@ type
     procedure AccumulateChanges;
     procedure PrepareMerge(Main : Boolean);
   end;
-
-var
-  frmGuestPortfolio: TfrmGuestPortfolio;
 
 function OpenGuestPortfolioEdit(rSet : TRoomerDataset; GuestId : Integer = -1; AllowNavigation : Boolean = True) : Boolean;
 function CreateNewGuest(rSet : TRoomerDataset; FromPerson : Integer = -1; FromCustomer : String = '') : Integer;
@@ -505,7 +491,7 @@ begin
   FreeAndNil(PortfolioEdit);
 end;
 
-procedure TfrmGuestPortfolio.cmbGenderChange(Sender: TObject);
+procedure TfrmGuestPortfolio.evtDataChange(Sender: TObject);
 begin
   DataChanged := True;
   if Sender IS TsEdit then
@@ -534,7 +520,14 @@ begin
     edtLastname.Text := dataset['LastName'];
     edtProfession.Text := dataset['Profession'];
     edtSSN.Text := dataset['SocialSecurityNumber'];
-    edtNationality.Text := dataset['Nationality'];
+
+    fraPersonCountry.DisableEvents;
+    try
+      fraPersonCountry.CountryCode := dataset['Nationality'];
+    finally
+      fraPersonCountry.EnableEvents;
+    end;
+
     edtBirthday.Date := dataset['DateOfBirth'];
     edtPassport.Text := dataset['PassportNumber'];
     edtPassportExpiry.Date := dataset['PassportExpiry'];
@@ -555,7 +548,13 @@ begin
     edtZip.Text := dataset['Zip'];
     edtCity.Text := dataset['City'];
     edtState.Text := dataset['State'];
-    edtCountry.Text := dataset['Country'];
+
+    fraContactCountry.DisableEvents;
+    try
+      fraContactCountry.CountryCode := dataset['Country'];
+    finally
+      fraContactCountry.EnableEvents;
+    end;
 
     // Telephones
     edtLandline.Text := dataset['TelLandline'];
@@ -581,7 +580,12 @@ begin
     edtCompZip.Text := dataset['CompZip'];
     edtCompCity.Text := dataset['CompCity'];
     edtCompState.Text := dataset['CompState'];
-    edtCompCountry.Text := dataset['CompCountry'];
+    fraCompanyCountry.DisableEvents;
+    try
+      fraCompanyCountry.CountryCode := dataset['CompCountry'];
+    finally
+      fraCompanyCountry.EnableEvents;
+    end;
 
     // Telephones
     edtCompTel.Text := dataset['CompTel'];
@@ -674,7 +678,7 @@ begin
   dataset['SocialSecurityNumber'] := edtSSN.Text;
   dataset['LastName'] := edtLastname.Text;
   dataset['Profession'] := edtProfession.Text;
-  dataset['Nationality'] := edtNationality.Text;
+  dataset['Nationality'] := fraPersonCountry.CountryCode;
   dataset['DateOfBirth'] := edtBirthday.Date;
   dataset['PassportNumber'] := edtPassport.Text;
   dataset['PassportExpiry'] := edtPassportExpiry.Date;
@@ -695,7 +699,7 @@ begin
   dataset['Zip'] := edtZip.Text;
   dataset['City'] := edtCity.Text;
   dataset['State'] := edtState.Text;
-  dataset['Country'] := edtCountry.Text;
+  dataset['Country'] := fraContactCountry.CountryCode;
 
   // Telephones
   dataset['TelLandline'] := edtLandline.Text;
@@ -721,7 +725,7 @@ begin
   dataset['CompZip'] := edtCompZip.Text;
   dataset['CompCity'] := edtCompCity.Text;
   dataset['CompState'] := edtCompState.Text;
-  dataset['CompCountry'] := edtCompCountry.Text;
+  dataset['CompCountry'] := fraCompanyCountry.CountryCode;
 
   // Telephones
   dataset['CompTel'] := edtCompTel.Text;
@@ -755,7 +759,7 @@ end;
 procedure TfrmGuestPortfolio.sButton1Click(Sender: TObject);
 begin
   grPrinter.CurrentLink.Component := grData;
-  grPrinter.PrintTitle := 'Hitorical Bookings - ' + trim(dataset['firstname'] + ' ' + dataset['lastname']);
+  grPrinter.PrintTitle := 'Historical Bookings - ' + trim(dataset['firstname'] + ' ' + dataset['lastname']);
   prLink_grData.ReportTitle.Text := grPrinter.PrintTitle;
   grPrinter.Preview(true, prLink_grData);
 end;
@@ -875,11 +879,6 @@ begin
   TsButton(Sender).Enabled := pgPages.ActivePageIndex > 0;
 end;
 
-procedure TfrmGuestPortfolio.sSpeedButton10Click(Sender: TObject);
-begin
-  edtCountry.Text := ctrlGetString('Country');
-end;
-
 procedure TfrmGuestPortfolio.sSpeedButton11Click(Sender: TObject);
 var
   theData : recRoomTypeHolder;
@@ -888,42 +887,12 @@ begin
   if openRoomTypes(actLookup,theData) then
   begin
     edtRoomType.text := theData.RoomType;
-//    lbContactCountryName.caption := theData.CountryName;
   end;
 end;
 
 procedure TfrmGuestPortfolio.sSpeedButton12Click(Sender: TObject);
 begin
   edtRoomType.text := '';
-end;
-
-procedure TfrmGuestPortfolio.sSpeedButton1Click(Sender: TObject);
-var
-  theData : recCountryHolder;
-begin
-  theData.Country := edtCompCountry.Text;
-  if Countries(actLookup,theData) then
-  begin
-    edtCompCountry.text := theData.Country;
-//    lbContactCountryName.caption := theData.CountryName;
-  end;
-end;
-
-procedure TfrmGuestPortfolio.sSpeedButton2Click(Sender: TObject);
-var
-  theData : recCountryHolder;
-begin
-  theData.Country := edtNationality.Text;
-  if Countries(actLookup,theData) then
-  begin
-    edtNationality.text := theData.Country;
-//    lbContactCountryName.caption := theData.CountryName;
-  end;
-end;
-
-procedure TfrmGuestPortfolio.sSpeedButton3Click(Sender: TObject);
-begin
-  edtCompCountry.Text := ctrlGetString('Country');
 end;
 
 procedure TfrmGuestPortfolio.sSpeedButton4Click(Sender: TObject);
@@ -939,7 +908,7 @@ begin
     edtCompAddress2.text := theData.Address2;
     edtCompZip.text := theData.Address3;
     edtCompCity.text := theData.Address4;
-    edtCompCountry.text := theData.Country;
+    fraCompanyCountry.CountryCode := theData.Country;
 
     edtCompTel.text := theData.Tel1;
     edtCompEmail.text := theData.EmailAddress;
@@ -959,30 +928,12 @@ begin
   if openRooms(actLookup,theData) then
   begin
     edtRoom.text := theData.Room;
-//    lbContactCountryName.caption := theData.CountryName;
   end;
 end;
 
 procedure TfrmGuestPortfolio.sSpeedButton7Click(Sender: TObject);
 begin
   edtRoom.text := '';
-end;
-
-procedure TfrmGuestPortfolio.sSpeedButton8Click(Sender: TObject);
-begin
-  edtNationality.Text := ctrlGetString('Country');
-end;
-
-procedure TfrmGuestPortfolio.sSpeedButton9Click(Sender: TObject);
-var
-  theData : recCountryHolder;
-begin
-  theData.Country := edtCountry.Text;
-  if Countries(actLookup,theData) then
-  begin
-    edtCountry.text := theData.Country;
-//    lbContactCountryName.caption := theData.CountryName;
-  end;
 end;
 
 procedure TfrmGuestPortfolio.tvDataCellDblClick(Sender: TcxCustomGridTableView; ACellViewInfo: TcxGridTableDataCellViewInfo; AButton: TMouseButton; AShift: TShiftState; var AHandled: Boolean);
@@ -1030,6 +981,11 @@ begin
 
   btnTabBack.Enabled := False;
   btnTabForward.Enabled := True;
+
+  fraPersonCountry.OnCountryChange := evtDataChange;
+  fraContactCountry.OnCountryChange := evtDataChange;
+  fraCompanyCountry.OnCountryChange := evtDataChange;
+
   DisplayCurrent;
 end;
 

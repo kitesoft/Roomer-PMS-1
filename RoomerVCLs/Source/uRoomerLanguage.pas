@@ -184,6 +184,7 @@ type
     procedure TranslateThis(comp: TCheckListBox; key: String); overload;
     procedure TranslateThis(comp: TChart; key: String); overload;
     procedure TranslateThis(comp: TcxGridDBBandedTableView; key: String); overload;
+    procedure TranslateThis(comp: TFrame; const key: string); overload;
 
     procedure LoadFromStream(stream: TStream);
     procedure SaveToStream(stream: TStream);
@@ -1050,6 +1051,10 @@ begin
   if comp is TAdvEditBtn then
     TranslateThis(comp AS TAdvEditBtn, key)
 
+  else
+  if comp is TFrame then
+    TranslateThis(comp as TFrame, key);
+
 end;
 
 // ******************************************************************************************
@@ -1455,6 +1460,11 @@ begin
   comp.Hint := GetTranslationOfSpecifiedKey(key + 'Hint', comp.Hint);
 end;
 
+
+procedure TRoomerLanguage.TranslateThis(comp: TFrame; const key: string);
+begin
+//
+end;
 
 { TRoomerLanguageItem }
 

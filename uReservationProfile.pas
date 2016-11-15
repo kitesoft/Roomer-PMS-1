@@ -73,7 +73,7 @@ uses
   uDynamicRates
   , cxSpinEdit
   , uReservationStateDefinitions, System.Actions, Vcl.ActnList
-  , uReservationStateChangeHandler
+  , uReservationStateChangeHandler, uFraCountryPanel
   ;
 
 type
@@ -521,28 +521,14 @@ type
     edtTel1: TsEdit;
     edtTel2: TsEdit;
     sLabel9: TsLabel;
-    sLabel10: TsLabel;
-    sLabel11: TsLabel;
     edtGuestName: TsEdit;
     edtGuestAddress2: TsEdit;
-    edtGuestAddress3: TsEdit;
-    edtGuestAddress4: TsEdit;
     edtGuestAddress1: TsEdit;
     mAllGuestsMainName: TBooleanField;
-    sPanel2: TsPanel;
-    sLabel8: TsLabel;
-    edtGuestCountry: TsEdit;
-    lblGuestCountry: TsLabel;
-    sPanel3: TsPanel;
     Label8: TsLabel;
     lblCustomerType: TsLabel;
     edtType: TsEdit;
     btnGetCustomerType: TsButton;
-    sPanel4: TsPanel;
-    edtContact: TsLabel;
-    lblContactCountry: TsLabel;
-    edtContactCountry: TsEdit;
-    btnGetContactCountry: TsButton;
     ppmCheckin: TPopupMenu;
     alReservation: TActionList;
     acCheckinReservation: TAction;
@@ -590,10 +576,19 @@ type
     pnlAllGuestsNationality: TsPanel;
     btnChangeNationality: TsButton;
     btnChangeCountry: TsButton;
-    lblNationality: TsLabel;
-    edtNationality: TsEdit;
-    lblNationalityName: TsLabel;
     mAllGuestsNationality: TWideStringField;
+    pnlGuestZipCity: TsPanel;
+    sLabel11: TsLabel;
+    edtGuestAddress3: TsEdit;
+    edtGuestAddress4: TsEdit;
+    fraGuestNationality: TfraCountryPanel;
+    fraGuestCountry: TfraCountryPanel;
+    fraContactCountry: TfraCountryPanel;
+    sPanel3: TsPanel;
+    mAllGuestsemail: TWideStringField;
+    lblGuestCountry: TsLabel;
+    lblGuestNationality: TsLabel;
+    lblContactCountry: TsLabel;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -641,8 +636,6 @@ type
     procedure tvRoomsInitEdit(Sender: TcxCustomGridTableView;
       AItem: TcxCustomGridTableItem; AEdit: TcxCustomEdit);
     procedure edtTypeDblClick(Sender: TObject);
-    procedure edtContactCountryClick(Sender: TObject);
-    procedure edCountryKeyPress(Sender: TObject; var Key: Char);
     procedure mainPageChange(Sender: TObject);
     procedure edGetCustomerClick(Sender: TObject);
     procedure tvRoomsDeparturePropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
@@ -657,8 +650,6 @@ type
     procedure tvRoomsColumn1PropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
     procedure cxButton5Click(Sender: TObject);
     procedure cxButton6Click(Sender: TObject);
-    procedure edCountryExit(Sender: TObject);
-    procedure edCountryChange(Sender: TObject);
     procedure tvInvoiceHeadsAmountWithTaxGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
       var AProperties: TcxCustomEditProperties);
     procedure tvInvoiceHeadsAmountNoTaxGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
@@ -703,7 +694,6 @@ type
       var AProperties: TcxCustomEditProperties);
     procedure pnlTelephoneResize(Sender: TObject);
     procedure btnExcelClick(Sender: TObject);
-    procedure edtGuestCountryChange(Sender: TObject);
     procedure acCheckinReservationExecute(Sender: TObject);
     procedure acCheckinRoomExecute(Sender: TObject);
     procedure acCheckoutRoomExecute(Sender: TObject);
@@ -726,8 +716,6 @@ type
     procedure R4Click(Sender: TObject);
     procedure tvRoomsRoomTypeGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
       var AProperties: TcxCustomEditProperties);
-    procedure btnChangeCountryClick(Sender: TObject);
-    procedure edtNationalityChange(Sender: TObject);
   private
     { Private declarations }
     vStartName: string;
@@ -782,8 +770,8 @@ type
     procedure SelectMainGuestProfile;
     procedure ShowMainGuestProfile;
     procedure mnuOtherResStateChangeClick(Sender: TObject);
-    procedure ChangeNationalityAllGuests(const aNewCountry: string; const aOldCountryName, aNewCountryName: string);
-    procedure ChangeCountryAllGuests(const aNewCountry, aOldCountryName, aNewCountryName: string);
+    procedure ChangeNationalityAllGuests(Sender: TObject);
+    procedure ChangeCountryAllGuests(Sender: TObject);
 
     property OutOfOrderBlocking: Boolean read FOutOfOrderBlocking write SetOutOfOrderBlocking;
   public
@@ -1004,6 +992,12 @@ begin
 
   vStartName := frmReservationProfile.edtName.text;
 
+
+  fraGuestNationality.AllowEdit := False;
+  fraGuestCountry.AllowEdit := False;
+  fraGuestNationality.OnCountryChange := ChangeNationalityAllGuests;
+  fraGuestCountry.OnCountryChange := ChangeCountryAllGuests;
+
   pnlAllGuestsNationality.Visible := glb.PMSSettings.EditAllGuestsNationality;
 end;
 
@@ -1113,7 +1107,13 @@ begin
         edtContactAddress2.text := trim(fieldbyname('ContactAddress2').asstring);
         edtContactAddress3.text := trim(fieldbyname('ContactAddress3').asstring);
         edtContactAddress4.text := trim(fieldbyname('ContactAddress4').asstring);
-        edtContactCountry.text := trim(fieldbyname('ContactCountry').asstring);
+
+        fraContactCountry.DisableEvents;
+        try
+          fraContactCountry.CountryCode := trim(fieldbyname('ContactCountry').asstring);
+        finally
+          fraContactCountry.EnableEvents;
+        end;
 
         edtName.text := trim(fieldbyname('Name').asstring);
         edtKennitala.text := trim(fieldbyname('CustPId').asstring);
@@ -1122,10 +1122,6 @@ begin
         edtAddress3.text := trim(fieldbyname('Address3').asstring);
         edtCustomerEmail.text := trim(fieldbyname('CustomerEmail').asstring);
         edtCustomerWebSite.text := trim(fieldbyname('CustomerWebSite').asstring);
-        edtContactCountry.text := trim(fieldbyname('Country').asstring);
-
-        // **TESTED**// lev3 ok
-        countryValidate(edtContactCountry, lblContactCountry);
 
         edtTel1.text := trim(fieldbyname('Tel1').asstring);
         edtTel2.text := trim(fieldbyname('Tel2').asstring);
@@ -1327,7 +1323,7 @@ begin
       rSet.fieldbyname('Address3').asstring := edtAddress3.text;
       rSet.fieldbyname('CustomerWebSite').asstring := edtCustomerWebSite.text;
       rSet.fieldbyname('CustomerEmail').asstring := edtCustomerEmail.text;
-      rSet.fieldbyname('Country').asstring := edtContactCountry.text;
+      rSet.fieldbyname('Country').asstring := fraContactCountry.CountryCode;
       rSet.fieldbyname('MarketSegment').asstring := edtType.text;
       rSet.fieldbyname('Tel1').asstring := edtTel1.text;
       rSet.fieldbyname('Fax').asstring := edtFax.text;
@@ -1344,7 +1340,7 @@ begin
       rSet.fieldbyname('ContactAddress2').asstring := edtContactAddress2.text;
       rSet.fieldbyname('ContactAddress3').asstring := edtContactAddress3.text;
       rSet.fieldbyname('ContactAddress4').asstring := edtContactAddress4.text;
-      rSet.fieldbyname('ContactCountry').asstring := edtContactCountry.text;
+      rSet.fieldbyname('ContactCountry').asstring := fraContactCountry.CountryCode;
       rSet.fieldbyname('invRefrence').asstring := edtInvRefrence.text;
       rSet.Post;
 
@@ -1364,38 +1360,28 @@ end;
 //
 // ************************************************************************************
 
-procedure TfrmReservationProfile.btnChangeCountryClick(Sender: TObject);
-var
-  lData: recCountryHolder;
-  lOldCountryName: string;
-begin
-//
-  lData.Country := edtContactCountry.Text;
-  lOldCountryName := lblContactCountry.Caption;
-  if Countries(actLookup, lData) then
-    if (Sender = btnChangeCountry) then
-      ChangeCountryAllGuests(lData.Country, lOldCountryName, lData.CountryName)
-    else
-      ChangeNationalityAllGuests(lData.Country, lOldCountryName, lData.CountryName);
-end;
-
-procedure TfrmReservationProfile.ChangeNationalityAllGuests(const aNewCountry: string; const aOldCountryName, aNewCountryName: string);
+procedure TfrmReservationProfile.ChangeNationalityAllGuests(Sender: TObject);
 var
   s: string;
+  fra: TfraCountryPanel;
 begin
-  s := format(GetTranslatedText('shTx_ReservationProfile_ChangeNationalityConfirmation'), [aOldCountryName, aNewCountryName]);
+  fra := Sender as TfraCountryPanel;
+
+  s := format(GetTranslatedText('shTx_ReservationProfile_ChangeNationalityConfirm'), [fra.CountryName]);
   if (MessageDlg(s, mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
-    if not d.ChangeNationality(aNewCountry, zReservation, 0, 0, 2) then
+    if not d.ChangeNationality(fra.CountryCode, zReservation, 0, 0, 2) then
       showmessage(GetTranslatedText('shTx_ReservationProfile_NationalityChangeFailed'));
 end;
 
-procedure TfrmReservationProfile.ChangeCountryAllGuests(const aNewCountry: string; const aOldCountryName, aNewCountryName: string);
+procedure TfrmReservationProfile.ChangeCountryAllGuests(Sender: TObject);
 var
   s: string;
+  fra: TfraCountryPanel;
 begin
-  s := format(GetTranslatedText('shTx_ReservationProfile_ChangeCountryConfirmation'), [aOldCountryName, aNewCountryName]);
+  fra := Sender as TfraCountryPanel;
+  s := format(GetTranslatedText('shTx_ReservationProfile_ChangeCountryConfirm'), [fra.CountryName]);
   if (MessageDlg(s, mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
-    if not d.ChangeCountry(aNewCountry, zReservation, 0, 0, 2) then
+    if not d.ChangeCountry(fra.CountryCode, zReservation, 0, 0, 2) then
       showmessage(GetTranslatedText('shTx_ReservationProfile_CountryChangeFailed'));
 end;
 
@@ -1428,45 +1414,6 @@ end;
 // Edits Dbl-click to select
 //
 // ********************************************************************************************
-
-procedure TfrmReservationProfile.edCountryChange(Sender: TObject);
-begin
-  if glb.LocateCountry(edtContactCountry.text) then
-    lblContactCountry.caption := glb.Countries['CountryName'] // GET_CountryName(sValue);
-  else
-    lblContactCountry.caption := GetTranslatedText('shNotF_star');
-
-end;
-
-procedure TfrmReservationProfile.edtContactCountryClick(Sender: TObject);
-var
-  lOldCountryName: string;
-begin
-  loldCOuntryName := lblContactCountry.Caption;
-  if getCountry(edtContactCountry, lblContactCountry) then
-    ChangeNationalityAllGuests(edtContactCountry.Text, lOldCountryName, lblContactCountry.Caption);
-end;
-
-procedure TfrmReservationProfile.edtGuestCountryChange(Sender: TObject);
-begin
-  CountryValidate(edtGuestCountry, lblGuestCountry);
-end;
-
-procedure TfrmReservationProfile.edtNationalityChange(Sender: TObject);
-begin
-  CountryValidate(edtNationality, lblNationalityName);
-end;
-
-procedure TfrmReservationProfile.edCountryExit(Sender: TObject);
-begin
-  countryValidate(edtContactCountry, lblContactCountry);
-end;
-
-procedure TfrmReservationProfile.edCountryKeyPress(Sender: TObject;
-  var Key: Char);
-begin
-  Key := #0;
-end;
 
 procedure TfrmReservationProfile.edGetCustomerClick(Sender: TObject);
 var
@@ -1881,7 +1828,7 @@ begin
       Address2 := edtAddress1.text;
       Address3 := edtAddress1.text;
       Address4 := edtAddress1.text;
-      Country := edtContactCountry.text;
+      Country := fraContactCountry.CountryCode;
 
       Currency := mRoomsCurrency.asstring;
       isGroupInvoice := mRoomsisGroupAccount.AsBoolean;
@@ -2580,8 +2527,21 @@ begin
     edtGuestAddress2.Text := mAllGuestsAddress2.AsString;
     edtGuestAddress3.Text := mAllGuestsAddress3.AsString;
     edtGuestAddress4.Text := mAllGuestsAddress4.AsString;
-    edtGuestCountry.Text := mAllGuestsCountry.AsString;
-    edtNationality.Text := mAllGuestsNationality.AsString;
+
+    fraGuestCountry.DisableEvents;
+    try
+      fraGuestCountry.CountryCode := mAllGuestsCountry.AsString;
+    finally
+      fraGuestCountry.EnableEvents;
+    end;
+
+    fraGuestNationality.DisableEvents;
+    try
+      fraGuestNationality.CountryCode := mAllGuestsNationality.AsString;
+    finally
+      fraGuestNationality.EnableEvents;
+    end;
+
   end
   else
   begin
@@ -2590,8 +2550,8 @@ begin
     edtGuestAddress2.Text := '';
     edtGuestAddress3.Text := '';
     edtGuestAddress4.Text := '';
-    edtGuestCountry.Text := '';
-    edtNationality.Text := '';
+    fraGuestCountry.CountryCode := '';
+    fraGuestNationality.CountryCode := '';
   end
 end;
 
@@ -3675,6 +3635,7 @@ end;
 procedure TfrmReservationProfile.btnMainGuestEditProfileClick(Sender: TObject);
 begin
   ShowMainGuestProfile;
+  UpdateGuestDetails(mRoomsRoomReservation.AsInteger);
 end;
 
 procedure TfrmReservationProfile.btnMainGuestSelectProfileClick(Sender: TObject);

@@ -1320,6 +1320,7 @@ select_ReservationProfile_allGuestsSQL : string =
 '   , persons.Nationality '+
 '   , persons.PID '+
 '   , persons.MainName '+
+'   , persons.email '+
 ' FROM '+
 '   persons '+
 '     LEFT OUTER JOIN '+

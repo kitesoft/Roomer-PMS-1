@@ -255,7 +255,8 @@ uses
   uRoomerDialogForm in 'RoomerForm\uRoomerDialogForm.pas' {frmBaseRoomerDialogForm},
   uSQLUtils in 'RoomerUtils\uSQLUtils.pas',
   uStringUtils in 'RoomerVCLs\Source\uStringUtils.pas',
-  uInvoiceDefinitions in 'Definitions\uInvoiceDefinitions.pas';
+  uInvoiceDefinitions in 'Definitions\uInvoiceDefinitions.pas',
+  uFraCountryPanel in 'Embeddables\uFraCountryPanel.pas' {fraCountryPanel: TFrame};
 
 {$R *.RES}
 
