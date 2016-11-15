@@ -587,7 +587,7 @@ type
     gbxInfo: TsGroupBox;
     lblReservationNumber: TsLabel;
     edtReservationNumber: TsEdit;
-    gbxAllGuestsNationality: TsGroupBox;
+    pnlAllGuestsNationality: TsPanel;
     btnChangeNationality: TsButton;
     btnChangeCountry: TsButton;
     lblNationality: TsLabel;
@@ -724,7 +724,6 @@ type
     procedure tvRoomsStatusTextPropertiesDrawItem(AControl: TcxCustomComboBox; ACanvas: TcxCanvas; AIndex: Integer;
       const ARect: TRect; AState: TOwnerDrawState);
     procedure R4Click(Sender: TObject);
-    procedure btnChangeNationalityClick(Sender: TObject);
     procedure tvRoomsRoomTypeGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
       var AProperties: TcxCustomEditProperties);
     procedure btnChangeCountryClick(Sender: TObject);
@@ -1005,7 +1004,7 @@ begin
 
   vStartName := frmReservationProfile.edtName.text;
 
-  gbxAllGuestsNationality.Visible := glb.PMSSettings.EditAllGuestsNationality;
+  pnlAllGuestsNationality.Visible := glb.PMSSettings.EditAllGuestsNationality;
 end;
 
 procedure TfrmReservationProfile.FormCreate(Sender: TObject);
@@ -1374,19 +1373,10 @@ begin
   lData.Country := edtContactCountry.Text;
   lOldCountryName := lblContactCountry.Caption;
   if Countries(actLookup, lData) then
-    ChangeNationalityAllGuests(lData.Country, lOldCountryName, lData.CountryName);
-end;
-
-procedure TfrmReservationProfile.btnChangeNationalityClick(Sender: TObject);
-var
-  lData: recCountryHolder;
-  lOldCountryName: string;
-begin
-//
-  lData.Country := edtContactCountry.Text;
-  lOldCountryName := lblContactCountry.Caption;
-  if Countries(actLookup, lData) then
-    ChangeCountryAllGuests(lData.Country, lOldCountryName, lData.CountryName);
+    if (Sender = btnChangeCountry) then
+      ChangeCountryAllGuests(lData.Country, lOldCountryName, lData.CountryName)
+    else
+      ChangeNationalityAllGuests(lData.Country, lOldCountryName, lData.CountryName);
 end;
 
 procedure TfrmReservationProfile.ChangeNationalityAllGuests(const aNewCountry: string; const aOldCountryName, aNewCountryName: string);
