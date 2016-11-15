@@ -300,13 +300,10 @@ type
     tvPaymentsPayGroup: TcxGridDBColumn;
     tvPaymentsMemo: TcxGridDBColumn;
     tvPaymentsconfirmDate: TcxGridDBColumn;
-    btnAddDownPayment: TsButton;
     clabDownpayments: TsLabel;
     edtDownPayments: TsEdit;
     clabBalance: TsLabel;
     edtBalance: TsEdit;
-    btnEditDownPayment: TsButton;
-    btnDeleteDownpayment: TsButton;
     tvPaymentsid: TcxGridDBColumn;
     rptDsLines: TfrxDBDataset;
     clabForeignCurrency: TsLabel;
@@ -455,6 +452,10 @@ type
     mRoomRatesGuestName: TWideStringField;
     mRoomResGuestName: TWideStringField;
     tvRoomResGuestName: TcxGridDBColumn;
+    pnlPaymentButtons: TsPanel;
+    btnAddDownPayment: TsButton;
+    btnEditDownPayment: TsButton;
+    btnDeleteDownpayment: TsButton;
     procedure FormCreate(Sender: TObject);
     procedure agrLinesMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: integer);
@@ -537,6 +538,7 @@ type
     procedure S1Click(Sender: TObject);
     procedure Exit1Click(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure pnlPaymentButtonsResize(Sender: TObject);
   private
     { Private declarations }
 
@@ -4800,6 +4802,10 @@ end;
 
 procedure TfrmInvoice.FormShow(Sender: TObject);
 begin
+  btnEditDownPayment.Visible := glb.PMSSettings.AllowPaymentModification;
+  btnDeleteDownpayment.Visible := glb.PMSSettings.AllowPaymentModification;
+  btnRemoveItem.Visible := glb.PMSSettings.AllowDeletingItemsFromInvoice;
+
   LoadInvoice;
   UpdateCaptions;
 
@@ -7741,6 +7747,11 @@ procedure TfrmInvoice.pnlInvoiceIndex0DragOver(Sender, Source: TObject;
   X, Y: integer; State: TDragState; var Accept: boolean);
 begin
   Accept := (Source = agrLines) OR (Source IS TcxDragControlObject);
+end;
+
+procedure TfrmInvoice.pnlPaymentButtonsResize(Sender: TObject);
+begin
+  pnlPaymentButtons.Left := btnSaveChanges.Left + btnSaveChanges.Width - pnlPaymentButtons.Width;
 end;
 
 procedure TfrmInvoice.T1Click(Sender: TObject);

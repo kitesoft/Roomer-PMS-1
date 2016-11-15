@@ -128,9 +128,9 @@ object frmStaffEdit2: TfrmStaffEdit2
           Top = 15
           Width = 113
           Height = 21
-          Color = 3355443
+          Color = clWhite
           Font.Charset = DEFAULT_CHARSET
-          Font.Color = 15724527
+          Font.Color = clBlack
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
@@ -143,9 +143,9 @@ object frmStaffEdit2: TfrmStaffEdit2
           Top = 41
           Width = 113
           Height = 21
-          Color = 3355443
+          Color = clWhite
           Font.Charset = DEFAULT_CHARSET
-          Font.Color = 15724527
+          Font.Color = clBlack
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
@@ -156,8 +156,8 @@ object frmStaffEdit2: TfrmStaffEdit2
         object chkActive: TsCheckBox
           Left = 287
           Top = 17
-          Width = 50
-          Height = 20
+          Width = 58
+          Height = 19
           Caption = 'Active'
           TabOrder = 1
           SkinData.SkinSection = 'CHECKBOX'
@@ -167,8 +167,8 @@ object frmStaffEdit2: TfrmStaffEdit2
         object chkPmsOnly: TsCheckBox
           Left = 374
           Top = 17
-          Width = 63
-          Height = 20
+          Width = 71
+          Height = 19
           Caption = 'PMS only'
           TabOrder = 3
           SkinData.SkinSection = 'CHECKBOX'
@@ -178,8 +178,8 @@ object frmStaffEdit2: TfrmStaffEdit2
         object chkWindowsAuth: TsCheckBox
           Left = 287
           Top = 42
-          Width = 94
-          Height = 20
+          Width = 102
+          Height = 19
           Caption = 'Windows audth'
           TabOrder = 4
           SkinData.SkinSection = 'CHECKBOX'
@@ -241,9 +241,9 @@ object frmStaffEdit2: TfrmStaffEdit2
           Width = 311
           Height = 21
           Anchors = [akLeft, akTop, akRight]
-          Color = 3355443
+          Color = clWhite
           Font.Charset = DEFAULT_CHARSET
-          Font.Color = 15724527
+          Font.Color = clBlack
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
@@ -256,9 +256,9 @@ object frmStaffEdit2: TfrmStaffEdit2
           Top = 16
           Width = 113
           Height = 21
-          Color = 3355443
+          Color = clWhite
           Font.Charset = DEFAULT_CHARSET
-          Font.Color = 15724527
+          Font.Color = clBlack
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
@@ -291,9 +291,9 @@ object frmStaffEdit2: TfrmStaffEdit2
           Width = 342
           Height = 21
           Anchors = [akLeft, akTop, akRight]
-          Color = 3355443
+          Color = clWhite
           Font.Charset = DEFAULT_CHARSET
-          Font.Color = 15724527
+          Font.Color = clBlack
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
@@ -307,9 +307,9 @@ object frmStaffEdit2: TfrmStaffEdit2
           Width = 342
           Height = 21
           Anchors = [akLeft, akTop, akRight]
-          Color = 3355443
+          Color = clWhite
           Font.Charset = DEFAULT_CHARSET
-          Font.Color = 15724527
+          Font.Color = clBlack
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
@@ -323,9 +323,9 @@ object frmStaffEdit2: TfrmStaffEdit2
           Width = 342
           Height = 21
           Anchors = [akLeft, akTop, akRight]
-          Color = 3355443
+          Color = clWhite
           Font.Charset = DEFAULT_CHARSET
-          Font.Color = 15724527
+          Font.Color = clBlack
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
@@ -339,9 +339,9 @@ object frmStaffEdit2: TfrmStaffEdit2
           Width = 342
           Height = 21
           Anchors = [akLeft, akTop, akRight]
-          Color = 3355443
+          Color = clWhite
           Font.Charset = DEFAULT_CHARSET
-          Font.Color = 15724527
+          Font.Color = clBlack
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
@@ -434,9 +434,9 @@ object frmStaffEdit2: TfrmStaffEdit2
           Top = 16
           Width = 90
           Height = 21
-          Color = 3355443
+          Color = clWhite
           Font.Charset = DEFAULT_CHARSET
-          Font.Color = 15724527
+          Font.Color = clBlack
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
@@ -463,9 +463,9 @@ object frmStaffEdit2: TfrmStaffEdit2
           DropDownCount = 30
           SkinData.SkinSection = 'COMBOBOX'
           VerticalAlignment = taAlignTop
-          Color = 3355443
+          Color = clWhite
           Font.Charset = DEFAULT_CHARSET
-          Font.Color = 15724527
+          Font.Color = clBlack
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
@@ -556,9 +556,9 @@ object frmStaffEdit2: TfrmStaffEdit2
           Top = 38
           Width = 113
           Height = 21
-          Color = 3355443
+          Color = clWhite
           Font.Charset = DEFAULT_CHARSET
-          Font.Color = 15724527
+          Font.Color = clBlack
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
@@ -572,9 +572,9 @@ object frmStaffEdit2: TfrmStaffEdit2
           Width = 179
           Height = 21
           Anchors = [akLeft, akTop, akRight]
-          Color = 3355443
+          Color = clWhite
           Font.Charset = DEFAULT_CHARSET
-          Font.Color = 15724527
+          Font.Color = clBlack
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
@@ -587,9 +587,9 @@ object frmStaffEdit2: TfrmStaffEdit2
           Top = 15
           Width = 113
           Height = 21
-          Color = 3355443
+          Color = clWhite
           Font.Charset = DEFAULT_CHARSET
-          Font.Color = 15724527
+          Font.Color = clBlack
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
@@ -603,9 +603,9 @@ object frmStaffEdit2: TfrmStaffEdit2
           Width = 342
           Height = 21
           Anchors = [akLeft, akTop, akRight]
-          Color = 3355443
+          Color = clWhite
           Font.Charset = DEFAULT_CHARSET
-          Font.Color = 15724527
+          Font.Color = clBlack
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
@@ -640,9 +640,9 @@ object frmStaffEdit2: TfrmStaffEdit2
           Width = 458
           Height = 65
           Align = alClient
-          Color = 3355443
+          Color = clWhite
           Font.Charset = DEFAULT_CHARSET
-          Font.Color = 15724527
+          Font.Color = clBlack
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
@@ -686,9 +686,9 @@ object frmStaffEdit2: TfrmStaffEdit2
         SkinData.SkinSection = 'GROUPBOX'
         Checked = False
         object cLabStaffType: TsLabel
-          Left = 0
-          Top = 22
-          Width = 159
+          Left = 2
+          Top = 25
+          Width = 157
           Height = 15
           Alignment = taRightJustify
           AutoSize = False
@@ -716,7 +716,7 @@ object frmStaffEdit2: TfrmStaffEdit2
         object cLabStaffType1: TsLabel
           Left = 2
           Top = 46
-          Width = 159
+          Width = 157
           Height = 15
           Alignment = taRightJustify
           AutoSize = False
@@ -743,8 +743,8 @@ object frmStaffEdit2: TfrmStaffEdit2
         end
         object cLabStaffType2: TsLabel
           Left = 2
-          Top = 68
-          Width = 159
+          Top = 67
+          Width = 157
           Height = 15
           Alignment = taRightJustify
           AutoSize = False
@@ -759,7 +759,7 @@ object frmStaffEdit2: TfrmStaffEdit2
         object cLabStaffType3: TsLabel
           Left = 2
           Top = 91
-          Width = 159
+          Width = 157
           Height = 15
           Alignment = taRightJustify
           AutoSize = False
@@ -834,9 +834,9 @@ object frmStaffEdit2: TfrmStaffEdit2
           SkinData.SkinSection = 'SPEEDBUTTON'
         end
         object cLabStaffType4: TsLabel
-          Left = 0
+          Left = 2
           Top = 115
-          Width = 159
+          Width = 157
           Height = 15
           Alignment = taRightJustify
           AutoSize = False
@@ -876,9 +876,9 @@ object frmStaffEdit2: TfrmStaffEdit2
           Width = 92
           Height = 21
           CharCase = ecUpperCase
-          Color = 3355443
+          Color = clWhite
           Font.Charset = DEFAULT_CHARSET
-          Font.Color = 15724527
+          Font.Color = clBlack
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
@@ -895,9 +895,9 @@ object frmStaffEdit2: TfrmStaffEdit2
           Width = 92
           Height = 21
           CharCase = ecUpperCase
-          Color = 3355443
+          Color = clWhite
           Font.Charset = DEFAULT_CHARSET
-          Font.Color = 15724527
+          Font.Color = clBlack
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
@@ -913,9 +913,9 @@ object frmStaffEdit2: TfrmStaffEdit2
           Width = 92
           Height = 21
           CharCase = ecUpperCase
-          Color = 3355443
+          Color = clWhite
           Font.Charset = DEFAULT_CHARSET
-          Font.Color = 15724527
+          Font.Color = clBlack
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
@@ -931,9 +931,9 @@ object frmStaffEdit2: TfrmStaffEdit2
           Width = 92
           Height = 21
           CharCase = ecUpperCase
-          Color = 3355443
+          Color = clWhite
           Font.Charset = DEFAULT_CHARSET
-          Font.Color = 15724527
+          Font.Color = clBlack
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
@@ -950,9 +950,9 @@ object frmStaffEdit2: TfrmStaffEdit2
           Width = 92
           Height = 21
           CharCase = ecUpperCase
-          Color = 3355443
+          Color = clWhite
           Font.Charset = DEFAULT_CHARSET
-          Font.Color = 15724527
+          Font.Color = clBlack
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []

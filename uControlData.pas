@@ -597,8 +597,6 @@ type
     sLabel10: TsLabel;
     __cbxTaxPercentage: TsCheckBox;
     edinPosMonitorChkSec: TsSpinEdit;
-    sLabel12: TsLabel;
-    chkNegInvoice: TsCheckBox;
     btnOK: TsButton;
     btnCancel: TsButton;
     sGroupBox6: TsGroupBox;
@@ -626,8 +624,6 @@ type
     cbxCheckInDetailsDialog: TsCheckBox;
     sGroupBox10: TsGroupBox;
     cbxLocationPerRoomType: TsCheckBox;
-    sLabel17: TsLabel;
-    cbxWithdrawalWithoutGuarantee: TsCheckBox;
     sGroupBox11: TsGroupBox;
     sLabel20: TsLabel;
     cbxQuery: TsComboBox;
@@ -680,8 +676,6 @@ type
     sGroupBox18: TsGroupBox;
     sLabel34: TsLabel;
     __CurrencySyncSource: TsComboBox;
-    lblRequireExactClosingPayment: TsLabel;
-    cbxRequireExactClosingPayment: TsCheckBox;
     sLabel35: TsLabel;
     sLabel36: TsLabel;
     panWaitinglistNonOptional: TsPanel;
@@ -707,6 +701,17 @@ type
     cbShowIncludedBreakfastOnInvoice: TsCheckBox;
     fraCountry: TfraCountryPanel;
     lblCountry: TsLabel;
+    sGroupBox19: TsGroupBox;
+    sLabel12: TsLabel;
+    chkNegInvoice: TsCheckBox;
+    lblRequireExactClosingPayment: TsLabel;
+    cbxRequireExactClosingPayment: TsCheckBox;
+    sLabel17: TsLabel;
+    cbxWithdrawalWithoutGuarantee: TsCheckBox;
+    cbAllowPaymentModification: TsCheckBox;
+    lblAllowPaymentModifications: TsLabel;
+    lblAllowDeleteItemsFromInvoice: TsLabel;
+    cbAllowDeleteItemsFromInvoice: TsCheckBox;
     procedure FormCreate(Sender : TObject);
     procedure FormClose(Sender : TObject; var Action : TCloseAction);
     procedure FormShow(Sender : TObject);
@@ -1529,6 +1534,8 @@ g.ProcessAppIni(0);
     end;
 
     cbShowIncludedBreakfastOnInvoice.Checked := glb.PMSSettings.ShowIncludedBreakfastOnInvoice;
+    cbAllowPaymentModification.Checked := glb.PMSSettings.AllowPaymentModification;
+    cbAllowDeleteItemsFromInvoice.Checked := glb.PMSSettings.AllowDeletingItemsFromInvoice;
 
     edtRIIndexRoomRent.Value := rSethotelconfigurations.FieldByName('RoomInvoiceRoomRentIndex').AsInteger + 1;
     edtRIIndexPosItems.Value := rSethotelconfigurations.FieldByName('RoomInvoicePosItemIndex').AsInteger + 1;
@@ -2019,6 +2026,8 @@ begin
       end;
 
       glb.PMSSettings.ShowIncludedBreakfastOnInvoice := cbShowIncludedBreakfastOnInvoice.Checked;
+      glb.PMSSettings.AllowPaymentModification := cbAllowPaymentModification.Checked;
+      glb.PMSSettings.AllowDeletingItemsFromInvoice := cbAllowDeleteItemsFromInvoice.Checked;
 
       try
         rSethotelconfigurations.FieldByName('forceExternalCustomerIdCorrectness').AsBoolean := chkforceExternalCustomerIdCorrectness.Checked;

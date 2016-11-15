@@ -37,6 +37,10 @@ type
     procedure SetShowInvoiceAsPaidWhenStatusIsZero(const Value: boolean);
     function GetShowIncludedBreakfastOnInvoice: boolean;
     procedure SetShowIncludedBreakfastOnInvoice(const Value: boolean);
+    function GetAllowPaymentModification: boolean;
+    procedure SetAllowPaymentModification(const Value: boolean);
+    function GetAllowDeletingItemsFromInvoice: boolean;
+    procedure SetAllowDeletingItemsFromInvoice(const Value: boolean);
 
   public
     constructor Create(aPMSDataset: TRoomerDataset);
@@ -58,6 +62,9 @@ type
     /// </summary>
     property ShowInvoiceAsPaidWhenStatusIsZero: boolean read GetShowInvoiceAsPaidWhenStatusIsZero write SetShowInvoiceAsPaidWhenStatusIsZero;
     property ShowIncludedBreakfastOnInvoice: boolean read GetShowIncludedBreakfastOnInvoice write SetShowIncludedBreakfastOnInvoice;
+
+    property AllowPaymentModification: boolean read GetAllowPaymentModification write SetAllowPaymentModification;
+    property AllowDeletingItemsFromInvoice: boolean read GetAllowDeletingItemsFromInvoice write SetAllowDeletingItemsFromInvoice;
   end;
 
 implementation
@@ -74,6 +81,8 @@ const
   cAllGuestsNationality = 'EDIT_ALLGUESTS_NATIONALITY';
   cInvoiceHandlingGroup = 'INVOICE_HANDLING_FUNCTIONS';
   cInvoiceHandlingShowAsPaidWhenZero = 'SHOW_AS_PAID_WHEN_ZERO';
+  cAllowPaymentModifications = 'ALLOW_PAYMENT_MODIFICATIONS';
+  cAllowDeletingItemsFromInvoice = 'ALLOW_DELETING_FROM_INVOICE';
   cShowIncludedBreakfastOnInvoice = 'SHOW_INCLUDED_BREAKFAST_ON_INVOICE';
 
 procedure TPmsSettings.PutSettingsValue(KeyGroup, Key, Value : String; CreateIfNotExists : Boolean = False);
@@ -156,6 +165,16 @@ begin
   PutSettingsValue(KeyGroup, Key, IIF(Value, 'TRUE', 'FALSE'), CreateIfNotExists);
 end;
 
+procedure TPMSSettings.SetAllowDeletingItemsFromInvoice(const Value: boolean);
+begin
+  SetSettingsAsBoolean(cInvoiceHandlingGroup, cAllowDeletingItemsFromInvoice, Value, True);
+end;
+
+procedure TPMSSettings.SetAllowPaymentModification(const Value: boolean);
+begin
+  SetSettingsAsBoolean(cInvoiceHandlingGroup, cAllowPaymentModifications, Value, True);
+end;
+
 procedure TPmsSettings.SetBetaFunctionsAvailable(const Value: boolean);
 begin
   SetSettingsAsBoolean(cBetaFunctionsGroup, cBetaFunctionsAvailableName, Value, True);
@@ -184,19 +203,29 @@ begin
     SetSettingsAsBoolean(lMF.PMSSettingGroup, lMF.PMSSettingName, (lMF in Value), True);
 end;
 
+function TPMSSettings.GetAllowDeletingItemsFromInvoice: boolean;
+begin
+  Result := GetSettingsAsBoolean(cInvoiceHandlingGroup , cAllowDeletingItemsFromInvoice, False, True);
+end;
+
+function TPMSSettings.GetAllowPaymentModification: boolean;
+begin
+  Result := GetSettingsAsBoolean(cInvoiceHandlingGroup , cAllowPaymentModifications, False, True);
+end;
+
 function TPmsSettings.GetBetaFunctionsAvailable: boolean;
 begin
-  Result := GetSettingsAsBoolean(cBetaFunctionsGroup , cBetaFunctionsAvailableName, False );
+  Result := GetSettingsAsBoolean(cBetaFunctionsGroup , cBetaFunctionsAvailableName, False, False );
 end;
 
 function TPMSSettings.GetEditAllGuestsNationality: boolean;
 begin
-  Result := GetSettingsAsBoolean(cAllGuestsNationalityGroup, cAllGuestsNationality, False );
+  Result := GetSettingsAsBoolean(cAllGuestsNationalityGroup, cAllGuestsNationality, False, True );
 end;
 
 function TPMSSettings.GetShowIncludedBreakfastOnInvoice: boolean;
 begin
-  Result := GetSettingsAsBoolean(cInvoiceHandlingGroup, cShowIncludedBreakfastOnInvoice, False);
+  Result := GetSettingsAsBoolean(cInvoiceHandlingGroup, cShowIncludedBreakfastOnInvoice, False, False);
 end;
 
 function TPMSSettings.GetShowInvoiceAsPaidWhenStatusIsZero: boolean;
