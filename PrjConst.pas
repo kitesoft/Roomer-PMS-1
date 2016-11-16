@@ -1151,6 +1151,7 @@ begin
   constants.Add('shTx_RoomDateProblem_Allotment', 'Allotment');
   constants.Add('shTx_StaffEdit2_InitialsRequired', 'Initials are required');
   constants.Add('shTx_StaffEdit2_InitialExists', 'This already initial exists ');
+  constants.Add('shTx_StaffEdit2_PasswordsNoEqual', 'Password and repeat password are not the same');
   constants.Add('shTx_StaffEdit2_NameRequired', 'Name is required');
   constants.Add('shTx_StaffEdit2_RightsRequired', 'Set access rights of this staffmember');
   constants.Add('shTx_StaffEdit2_LanguageRequired', 'Language is required');

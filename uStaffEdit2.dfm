@@ -4,7 +4,7 @@ object frmStaffEdit2: TfrmStaffEdit2
   BorderStyle = bsDialog
   Caption = 'Staff'
   ClientHeight = 520
-  ClientWidth = 480
+  ClientWidth = 469
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -26,16 +26,16 @@ object frmStaffEdit2: TfrmStaffEdit2
   object panBtn: TsPanel
     Left = 5
     Top = 487
-    Width = 470
+    Width = 459
     Height = 33
     Align = alBottom
     TabOrder = 0
     SkinData.SkinSection = 'PANEL'
     DesignSize = (
-      470
+      459
       33)
     object btnCancel: TsButton
-      Left = 378
+      Left = 367
       Top = 4
       Width = 85
       Height = 25
@@ -51,7 +51,7 @@ object frmStaffEdit2: TfrmStaffEdit2
       SkinData.SkinSection = 'BUTTON'
     end
     object BtnOk: TsButton
-      Left = 286
+      Left = 275
       Top = 4
       Width = 85
       Height = 25
@@ -70,9 +70,9 @@ object frmStaffEdit2: TfrmStaffEdit2
   object pageMain: TsPageControl
     Left = 5
     Top = 5
-    Width = 470
+    Width = 459
     Height = 482
-    ActivePage = sTabSheet2
+    ActivePage = sTabSheet1
     Align = alClient
     Style = tsFlatButtons
     TabHeight = 25
@@ -83,118 +83,193 @@ object frmStaffEdit2: TfrmStaffEdit2
       Caption = 'Main'
       SkinData.CustomColor = False
       SkinData.CustomFont = False
-      object gbxGuest: TsGroupBox
+      object gbxLoginInfo: TsGroupBox
         Left = 0
         Top = 0
-        Width = 462
-        Height = 72
+        Width = 451
+        Height = 95
         Align = alTop
         Caption = 'Login information'
         TabOrder = 0
         SkinData.SkinSection = 'GROUPBOX'
         Checked = False
-        object clabInitials: TsLabel
+        object pnlLoginInfo: TsPanel
           Left = 2
-          Top = 18
-          Width = 159
-          Height = 13
-          Alignment = taRightJustify
-          AutoSize = False
-          Caption = 'Username :'
-          ParentFont = False
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = []
-        end
-        object clabPassword: TsLabel
-          Left = 2
-          Top = 44
-          Width = 159
-          Height = 13
-          Alignment = taRightJustify
-          AutoSize = False
-          Caption = 'Password :'
-          ParentFont = False
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = []
-        end
-        object edInitials: TsEdit
-          Left = 165
           Top = 15
-          Width = 113
-          Height = 21
-          Color = clWhite
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          ParentFont = False
+          Width = 281
+          Height = 78
+          Align = alClient
+          BevelOuter = bvNone
           TabOrder = 0
-          SkinData.SkinSection = 'EDIT'
+          object clabInitials: TsLabel
+            Left = 2
+            Top = 5
+            Width = 159
+            Height = 13
+            Alignment = taRightJustify
+            AutoSize = False
+            Caption = 'Username :'
+            ParentFont = False
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clBlack
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = []
+          end
+          object clabPassword: TsLabel
+            Left = 2
+            Top = 30
+            Width = 159
+            Height = 13
+            Alignment = taRightJustify
+            AutoSize = False
+            Caption = 'Password :'
+            ParentFont = False
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clBlack
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = []
+          end
+          object lblRepeatPassword: TsLabel
+            Left = 2
+            Top = 54
+            Width = 159
+            Height = 13
+            Alignment = taRightJustify
+            AutoSize = False
+            Caption = 'Repeat Password :'
+            ParentFont = False
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clBlack
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = []
+          end
+          object edInitials: TsEdit
+            AlignWithMargins = True
+            Left = 165
+            Top = 3
+            Width = 113
+            Height = 21
+            Margins.Left = 165
+            Margins.Bottom = 0
+            Align = alTop
+            Color = clWhite
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clBlack
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
+            TabOrder = 0
+            SkinData.SkinSection = 'EDIT'
+          end
+          object edPassword: TsEdit
+            AlignWithMargins = True
+            Left = 165
+            Top = 27
+            Width = 113
+            Height = 21
+            Margins.Left = 165
+            Margins.Bottom = 0
+            Align = alTop
+            Color = clWhite
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clBlack
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
+            TabOrder = 1
+            SkinData.SkinSection = 'EDIT'
+          end
+          object edtRepeatPassword: TsEdit
+            AlignWithMargins = True
+            Left = 165
+            Top = 51
+            Width = 113
+            Height = 21
+            Margins.Left = 165
+            Margins.Bottom = 0
+            Align = alTop
+            Color = clWhite
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clBlack
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
+            TabOrder = 2
+            SkinData.SkinSection = 'EDIT'
+          end
         end
-        object edPassword: TsEdit
-          Left = 165
-          Top = 41
-          Width = 113
-          Height = 21
-          Color = clWhite
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          ParentFont = False
-          TabOrder = 2
-          SkinData.SkinSection = 'EDIT'
-        end
-        object chkActive: TsCheckBox
-          Left = 287
-          Top = 17
-          Width = 58
-          Height = 19
-          Caption = 'Active'
+        object pnlChecks: TsPanel
+          AlignWithMargins = True
+          Left = 288
+          Top = 15
+          Width = 161
+          Height = 78
+          Margins.Left = 5
+          Margins.Top = 0
+          Margins.Right = 0
+          Margins.Bottom = 0
+          Align = alRight
+          BevelOuter = bvNone
           TabOrder = 1
-          SkinData.SkinSection = 'CHECKBOX'
-          ImgChecked = 0
-          ImgUnchecked = 0
-        end
-        object chkPmsOnly: TsCheckBox
-          Left = 374
-          Top = 17
-          Width = 71
-          Height = 19
-          Caption = 'PMS only'
-          TabOrder = 3
-          SkinData.SkinSection = 'CHECKBOX'
-          ImgChecked = 0
-          ImgUnchecked = 0
-        end
-        object chkWindowsAuth: TsCheckBox
-          Left = 287
-          Top = 42
-          Width = 102
-          Height = 19
-          Caption = 'Windows audth'
-          TabOrder = 4
-          SkinData.SkinSection = 'CHECKBOX'
-          ImgChecked = 0
-          ImgUnchecked = 0
+          SkinData.SkinSection = 'PANEL'
+          object chkActive: TsCheckBox
+            AlignWithMargins = True
+            Left = 3
+            Top = 3
+            Width = 155
+            Height = 20
+            Margins.Bottom = 0
+            Caption = 'Active'
+            Align = alTop
+            TabOrder = 0
+            SkinData.SkinSection = 'CHECKBOX'
+            ImgChecked = 0
+            ImgUnchecked = 0
+          end
+          object chkWindowsAuth: TsCheckBox
+            AlignWithMargins = True
+            Left = 3
+            Top = 49
+            Width = 155
+            Height = 20
+            Margins.Bottom = 0
+            Caption = 'Windows authentication'
+            Align = alTop
+            TabOrder = 1
+            SkinData.SkinSection = 'CHECKBOX'
+            ImgChecked = 0
+            ImgUnchecked = 0
+          end
+          object chkPmsOnly: TsCheckBox
+            AlignWithMargins = True
+            Left = 3
+            Top = 26
+            Width = 155
+            Height = 20
+            Margins.Bottom = 0
+            Caption = 'PMS only'
+            Align = alTop
+            TabOrder = 2
+            SkinData.SkinSection = 'CHECKBOX'
+            ImgChecked = 0
+            ImgUnchecked = 0
+          end
         end
       end
       object cbxName: TsGroupBox
         AlignWithMargins = True
         Left = 0
-        Top = 76
-        Width = 462
+        Top = 97
+        Width = 451
         Height = 71
         Margins.Left = 0
-        Margins.Top = 4
+        Margins.Top = 2
         Margins.Right = 0
         Margins.Bottom = 0
         Align = alTop
@@ -202,9 +277,6 @@ object frmStaffEdit2: TfrmStaffEdit2
         TabOrder = 1
         SkinData.SkinSection = 'GROUPBOX'
         Checked = False
-        DesignSize = (
-          462
-          71)
         object clabName: TsLabel
           Left = 2
           Top = 44
@@ -236,11 +308,13 @@ object frmStaffEdit2: TfrmStaffEdit2
           Font.Style = []
         end
         object edName: TsEdit
-          Left = 165
-          Top = 41
-          Width = 311
+          AlignWithMargins = True
+          Left = 167
+          Top = 45
+          Width = 279
           Height = 21
-          Anchors = [akLeft, akTop, akRight]
+          Margins.Left = 165
+          Align = alTop
           Color = clWhite
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
@@ -252,11 +326,15 @@ object frmStaffEdit2: TfrmStaffEdit2
           SkinData.SkinSection = 'EDIT'
         end
         object edStaffPID: TsEdit
-          Left = 165
-          Top = 16
-          Width = 113
+          AlignWithMargins = True
+          Left = 167
+          Top = 18
+          Width = 279
           Height = 21
+          Margins.Left = 165
+          Align = alTop
           Color = clWhite
+          Constraints.MaxWidth = 279
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
           Font.Height = -11
@@ -270,11 +348,11 @@ object frmStaffEdit2: TfrmStaffEdit2
       object gbxAddress: TsGroupBox
         AlignWithMargins = True
         Left = 0
-        Top = 151
-        Width = 462
+        Top = 170
+        Width = 451
         Height = 111
         Margins.Left = 0
-        Margins.Top = 4
+        Margins.Top = 2
         Margins.Right = 0
         Margins.Bottom = 0
         Align = alTop
@@ -282,15 +360,15 @@ object frmStaffEdit2: TfrmStaffEdit2
         TabOrder = 2
         SkinData.SkinSection = 'GROUPBOX'
         Checked = False
-        DesignSize = (
-          462
-          111)
         object edAddress1: TsEdit
-          Left = 165
-          Top = 12
-          Width = 342
+          AlignWithMargins = True
+          Left = 167
+          Top = 15
+          Width = 279
           Height = 21
-          Anchors = [akLeft, akTop, akRight]
+          Margins.Left = 165
+          Margins.Top = 0
+          Align = alTop
           Color = clWhite
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
@@ -302,11 +380,14 @@ object frmStaffEdit2: TfrmStaffEdit2
           SkinData.SkinSection = 'EDIT'
         end
         object edAddress2: TsEdit
-          Left = 165
-          Top = 36
-          Width = 342
+          AlignWithMargins = True
+          Left = 167
+          Top = 39
+          Width = 279
           Height = 21
-          Anchors = [akLeft, akTop, akRight]
+          Margins.Left = 165
+          Margins.Top = 0
+          Align = alTop
           Color = clWhite
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
@@ -318,11 +399,14 @@ object frmStaffEdit2: TfrmStaffEdit2
           SkinData.SkinSection = 'EDIT'
         end
         object edAddress3: TsEdit
-          Left = 165
-          Top = 59
-          Width = 342
+          AlignWithMargins = True
+          Left = 167
+          Top = 63
+          Width = 279
           Height = 21
-          Anchors = [akLeft, akTop, akRight]
+          Margins.Left = 165
+          Margins.Top = 0
+          Align = alTop
           Color = clWhite
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
@@ -334,11 +418,14 @@ object frmStaffEdit2: TfrmStaffEdit2
           SkinData.SkinSection = 'EDIT'
         end
         object edAddress4: TsEdit
-          Left = 165
-          Top = 83
-          Width = 342
+          AlignWithMargins = True
+          Left = 167
+          Top = 87
+          Width = 279
           Height = 21
-          Anchors = [akLeft, akTop, akRight]
+          Margins.Left = 165
+          Margins.Top = 0
+          Align = alTop
           Color = clWhite
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
@@ -353,11 +440,11 @@ object frmStaffEdit2: TfrmStaffEdit2
       object gbxLanguage: TsGroupBox
         AlignWithMargins = True
         Left = 0
-        Top = 360
-        Width = 462
+        Top = 375
+        Width = 451
         Height = 72
         Margins.Left = 0
-        Margins.Top = 4
+        Margins.Top = 2
         Margins.Right = 0
         Margins.Bottom = 0
         Align = alTop
@@ -366,7 +453,7 @@ object frmStaffEdit2: TfrmStaffEdit2
         SkinData.SkinSection = 'GROUPBOX'
         Checked = False
         object clabStaffLanguage: TsLabel
-          Left = 107
+          Left = 106
           Top = 44
           Width = 54
           Height = 13
@@ -380,35 +467,13 @@ object frmStaffEdit2: TfrmStaffEdit2
           Font.Style = []
         end
         object clabCountry: TsLabel
-          Left = 2
+          Left = 1
           Top = 19
           Width = 159
           Height = 13
           Alignment = taRightJustify
           AutoSize = False
           Caption = 'Country :'
-          ParentFont = False
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = []
-        end
-        object btnGetGountry: TsSpeedButton
-          Left = 257
-          Top = 16
-          Width = 20
-          Height = 20
-          Caption = '..'
-          OnClick = btnGetGountryClick
-          SkinData.SkinSection = 'SPEEDBUTTON'
-        end
-        object labCountry: TsLabel
-          Left = 287
-          Top = 20
-          Width = 4
-          Height = 13
-          Caption = '-'
           ParentFont = False
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
@@ -428,22 +493,6 @@ object frmStaffEdit2: TfrmStaffEdit2
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
-        end
-        object edCountry: TsEdit
-          Left = 165
-          Top = 16
-          Width = 90
-          Height = 21
-          Color = clWhite
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          ParentFont = False
-          TabOrder = 0
-          OnDblClick = btnGetGountryClick
-          SkinData.SkinSection = 'EDIT'
         end
         object __cbxLanguage: TsComboBox
           Left = 165
@@ -471,17 +520,38 @@ object frmStaffEdit2: TfrmStaffEdit2
           Font.Style = []
           ItemIndex = -1
           ParentFont = False
+          TabOrder = 0
+        end
+        inline fraCountry: TfraCountryPanel
+          Left = 165
+          Top = 16
+          Width = 206
+          Height = 20
           TabOrder = 1
+          ExplicitLeft = 165
+          ExplicitTop = 16
+          inherited pnlCountry: TsPanel
+            ExplicitWidth = 206
+            inherited lblCountryName: TsLabel
+              Height = 14
+            end
+            inherited edCountryCode: TsEdit
+              ExplicitLeft = 0
+            end
+            inherited btnGetCountry: TsButton
+              ExplicitLeft = 38
+            end
+          end
         end
       end
       object cbxContact: TsGroupBox
         AlignWithMargins = True
         Left = 0
-        Top = 266
-        Width = 462
+        Top = 283
+        Width = 451
         Height = 90
         Margins.Left = 0
-        Margins.Top = 4
+        Margins.Top = 2
         Margins.Right = 0
         Margins.Bottom = 0
         Align = alTop
@@ -489,9 +559,6 @@ object frmStaffEdit2: TfrmStaffEdit2
         TabOrder = 4
         SkinData.SkinSection = 'GROUPBOX'
         Checked = False
-        DesignSize = (
-          462
-          90)
         object gbxContact: TsLabel
           Left = 2
           Top = 18
@@ -507,25 +574,12 @@ object frmStaffEdit2: TfrmStaffEdit2
           Font.Name = 'Tahoma'
           Font.Style = []
         end
-        object clabTel2: TsLabel
-          Left = 284
-          Top = 18
-          Width = 47
-          Height = 13
-          AutoSize = False
-          Caption = 'Phone : '
-          ParentFont = False
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = []
-        end
         object clabFax: TsLabel
           Left = 2
           Top = 41
           Width = 159
           Height = 15
+          Margins.Top = 2
           Alignment = taRightJustify
           AutoSize = False
           Caption = 'Mobile : '
@@ -537,9 +591,9 @@ object frmStaffEdit2: TfrmStaffEdit2
           Font.Style = []
         end
         object clabEmail: TsLabel
-          Left = 2
+          Left = 60
           Top = 64
-          Width = 159
+          Width = 100
           Height = 16
           Alignment = taRightJustify
           AutoSize = False
@@ -551,12 +605,17 @@ object frmStaffEdit2: TfrmStaffEdit2
           Font.Name = 'Tahoma'
           Font.Style = []
         end
-        object edFax: TsEdit
-          Left = 165
-          Top = 38
-          Width = 113
+        object edMobile: TsEdit
+          AlignWithMargins = True
+          Left = 167
+          Top = 39
+          Width = 279
           Height = 21
+          Margins.Left = 165
+          Margins.Bottom = 0
+          Align = alTop
           Color = clWhite
+          Constraints.MaxWidth = 279
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
           Font.Height = -11
@@ -566,12 +625,77 @@ object frmStaffEdit2: TfrmStaffEdit2
           TabOrder = 2
           SkinData.SkinSection = 'EDIT'
         end
-        object edTel2: TsEdit
-          Left = 328
+        object pnlTel: TsPanel
+          AlignWithMargins = True
+          Left = 2
           Top = 15
-          Width = 179
+          Width = 447
           Height = 21
-          Anchors = [akLeft, akTop, akRight]
+          Margins.Left = 0
+          Margins.Top = 0
+          Margins.Right = 0
+          Margins.Bottom = 0
+          Align = alTop
+          BevelOuter = bvNone
+          TabOrder = 0
+          DesignSize = (
+            447
+            21)
+          object clabTel2: TsLabel
+            Left = 284
+            Top = 3
+            Width = 47
+            Height = 13
+            AutoSize = False
+            Caption = 'Phone : '
+            ParentFont = False
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clBlack
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = []
+          end
+          object edTel1: TsEdit
+            Left = 165
+            Top = 0
+            Width = 113
+            Height = 21
+            Color = clWhite
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clBlack
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
+            TabOrder = 0
+            SkinData.SkinSection = 'EDIT'
+          end
+          object edTel2: TsEdit
+            Left = 331
+            Top = 0
+            Width = 113
+            Height = 21
+            Anchors = [akLeft, akTop, akRight]
+            Color = clWhite
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clBlack
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
+            TabOrder = 1
+            SkinData.SkinSection = 'EDIT'
+          end
+        end
+        object edEmailAddress: TsEdit
+          AlignWithMargins = True
+          Left = 167
+          Top = 63
+          Width = 279
+          Height = 21
+          Margins.Left = 165
+          Margins.Bottom = 0
+          Align = alTop
           Color = clWhite
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
@@ -582,48 +706,21 @@ object frmStaffEdit2: TfrmStaffEdit2
           TabOrder = 1
           SkinData.SkinSection = 'EDIT'
         end
-        object edTel1: TsEdit
-          Left = 165
-          Top = 15
-          Width = 113
-          Height = 21
-          Color = clWhite
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          ParentFont = False
-          TabOrder = 0
-          SkinData.SkinSection = 'EDIT'
-        end
-        object edEmailAddress: TsEdit
-          Left = 165
-          Top = 61
-          Width = 342
-          Height = 21
-          Anchors = [akLeft, akTop, akRight]
-          Color = clWhite
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          ParentFont = False
-          TabOrder = 3
-          SkinData.SkinSection = 'EDIT'
-        end
       end
     end
     object sTabSheet2: TsTabSheet
       Caption = 'Authorization'
       SkinData.CustomColor = False
       SkinData.CustomFont = False
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object sGroupBox2: TsGroupBox
         AlignWithMargins = True
         Left = 0
         Top = 157
-        Width = 462
+        Width = 451
         Height = 115
         Margins.Left = 0
         Margins.Top = 4
@@ -635,10 +732,11 @@ object frmStaffEdit2: TfrmStaffEdit2
         SkinData.SkinSection = 'GROUPBOX'
         Checked = False
         object memIPAddresses: TsMemo
-          Left = 2
-          Top = 48
-          Width = 458
-          Height = 65
+          AlignWithMargins = True
+          Left = 5
+          Top = 51
+          Width = 441
+          Height = 59
           Align = alClient
           Color = clWhite
           Font.Charset = DEFAULT_CHARSET
@@ -653,7 +751,7 @@ object frmStaffEdit2: TfrmStaffEdit2
         object sPanel1: TsPanel
           Left = 2
           Top = 15
-          Width = 458
+          Width = 447
           Height = 33
           Align = alTop
           TabOrder = 1
@@ -674,7 +772,7 @@ object frmStaffEdit2: TfrmStaffEdit2
         AlignWithMargins = True
         Left = 0
         Top = 4
-        Width = 462
+        Width = 451
         Height = 149
         Margins.Left = 0
         Margins.Top = 4

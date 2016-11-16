@@ -33,7 +33,7 @@ uses
   , sCurrEdit
   , sSkinProvider
   , sSpinEdit
-  , sComboBox, Vcl.ComCtrls, sPageControl, sBevel, sMemo
+  , sComboBox, Vcl.ComCtrls, sPageControl, sBevel, sMemo, uFraCountryPanel
 
   ;
 
@@ -45,12 +45,11 @@ type
     pageMain: TsPageControl;
     sTabSheet1: TsTabSheet;
     sTabSheet2: TsTabSheet;
-    gbxGuest: TsGroupBox;
+    gbxLoginInfo: TsGroupBox;
     clabInitials: TsLabel;
     clabPassword: TsLabel;
     edInitials: TsEdit;
     edPassword: TsEdit;
-    chkActive: TsCheckBox;
     cbxName: TsGroupBox;
     clabName: TsLabel;
     clabStaffPID: TsLabel;
@@ -64,10 +63,7 @@ type
     gbxLanguage: TsGroupBox;
     clabStaffLanguage: TsLabel;
     clabCountry: TsLabel;
-    btnGetGountry: TsSpeedButton;
-    labCountry: TsLabel;
     labStaffLanguage: TsLabel;
-    edCountry: TsEdit;
     __cbxLanguage: TsComboBox;
     sGroupBox2: TsGroupBox;
     cbxContact: TsGroupBox;
@@ -75,7 +71,7 @@ type
     clabTel2: TsLabel;
     clabFax: TsLabel;
     clabEmail: TsLabel;
-    edFax: TsEdit;
+    edMobile: TsEdit;
     edTel2: TsEdit;
     edTel1: TsEdit;
     edEmailAddress: TsEdit;
@@ -103,8 +99,13 @@ type
     memIPAddresses: TsMemo;
     sPanel1: TsPanel;
     btnAddCurrent: TsButton;
-    chkPmsOnly: TsCheckBox;
+    edtRepeatPassword: TsEdit;
+    lblRepeatPassword: TsLabel;
+    fraCountry: TfraCountryPanel;
+    pnlChecks: TsPanel;
+    chkActive: TsCheckBox;
     chkWindowsAuth: TsCheckBox;
+    chkPmsOnly: TsCheckBox;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure BtnOkClick(Sender: TObject);
@@ -115,7 +116,6 @@ type
     procedure btnGetStaffType4Click(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure btnCancelClick(Sender: TObject);
-    procedure btnGetGountryClick(Sender: TObject);
     procedure btnAddCurrentClick(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
   private
@@ -188,6 +188,8 @@ begin
 
   edPassword.MaxLength := 20;
   edPassword.PasswordChar := '*';
+  edtRepeatPassword.MaxLength := 20;
+  edtRepeatPassword.PasswordChar := '*';
 
   edStaffPID.MaxLength := 20;
   edStaffPID.CharCase  := ecUpperCase;
@@ -201,7 +203,7 @@ begin
 
   edTel1.MaxLength      := 15;
   edTel2.MaxLength      := 15;
-  edFax.MaxLength       := 15;
+  edMobile.MaxLength       := 15;
 end;
 
 
@@ -250,10 +252,10 @@ begin
   edAddress2.Text      := zData.Address2        ;
   edAddress3.Text      := zData.Address3        ;
   edAddress4.Text      := zData.Address4        ;
-  edCountry.Text       := zData.Country         ;
+  fraCountry.CountryCode := zData.Country         ;
   edTel1.Text          := zData.Tel1            ;
   edTel2.Text          := zData.Tel2            ;
-  edFax.Text           := zData.Fax             ;
+  edMobile.Text        := zData.Mobile             ;
   __cbxLanguage.ItemIndex := FindLanguageIdInCombobox(zData.StaffLanguage);
   edStaffType.Text     := zData.StaffType       ;
   edStaffType1.Text    := zData.StaffType1      ;
@@ -326,19 +328,6 @@ begin
   zCanClose := true;
 end;
 
-procedure TfrmStaffEdit2.btnGetGountryClick(Sender: TObject);
-var
-  theData : recCountryHolder;
-begin
-  theData.Country := zData.Country;
-  countries(actlookup,theData);
-  if theData.Country <> '' then
-  begin
-    edCountry.text := theData.Country;
-    labCountry.Caption := theData.CountryName;
-  end;
-end;
-
 procedure TfrmStaffEdit2.btnGetStaffType1Click(Sender: TObject);
 var
   theData : recStaffTypeHolder;
@@ -393,37 +382,36 @@ begin
 end;
 
 procedure TfrmStaffEdit2.BtnOkClick(Sender: TObject);
+var
+  lFocusControl: TWincontrol;
+  lParent: TWinControl;
 begin
-   zCanClose := false;
+  zCanClose := false;
+  lFocusControl := nil;
 
   if trim(edInitials.Text) = '' then
   begin
   //  showmessage('Initials is required');
 	  showmessage(GetTranslatedText('shTx_StaffEdit2_InitialsRequired'));
-    edInitials.SetFocus;
-    Exit;
-  end;
-
-  if edInitials.text <> tmpHolder.Initials then
+    lFocusControl := edInitials;
+  end
+  else if (edInitials.text <> tmpHolder.Initials) and StaffMemberExist(edInitials.text) then
   begin
-    if StaffMemberExist(edInitials.text) then
-    begin
-    //  showmessage('This initial exists ');
-	    showmessage(GetTranslatedText('shTx_StaffEdit2_InitialExists'));
-      edInitials.SetFocus;
-      exit;
-    end;
-  end;
-
-  if trim(edName.Text) = '' then
+    showmessage(GetTranslatedText('shTx_StaffEdit2_InitialExists'));
+    lFocusControl := edInitials;
+  end
+  else if (edPassword.Text <> edtRepeatPassword.Text) then
+  begin
+	  showmessage(GetTranslatedText('shTx_StaffEdit2_PasswordsNoEqual'));
+    lFocusControl := edPassword;
+  end
+  else if trim(edName.Text) = '' then
   begin
    // showmessage('Name is required');
 	  showmessage(GetTranslatedText('shTx_StaffEdit2_NameRequired'));
-    edName.SetFocus;
-    Exit;
-  end;
-
-  if (trim(edStaffType.Text) = '') and
+    lFocusControl := edName;
+  end
+  else if (trim(edStaffType.Text) = '') and
      (trim(edStaffType1.Text) = '') and
      (trim(edStaffType2.Text) = '') and
      (trim(edStaffType3.Text) = '') and
@@ -432,45 +420,55 @@ begin
   begin
    // showmessage('Name is required');
 	  showmessage(GetTranslatedText('shTx_StaffEdit2_RightsRequired'));
-    pageMain.ActivePage := sTabSheet2;
-    edStaffType.SetFocus;
-    Exit;
-  end;
-
-  if __cbxLanguage.ItemIndex = -1 then
+    lFocusControl := edStaffType;
+  end
+  else if __cbxLanguage.ItemIndex = -1 then
   begin
    // showmessage('Name is required');
 	  showmessage(GetTranslatedText('shTx_StaffEdit2_LanguageRequired'));
-    __cbxLanguage.SetFocus;
-    Exit;
+    lFocusControl := __cbxLanguage
+  end
+  else
+    zCanClose := true;
+
+  if zCanClose then
+  begin
+    zData.Active        :=  chkActive.checked     ;
+    zData.Initials       :=  edInitials.Text       ;
+    zData.Password       :=  edPassword.Text       ;
+    zData.StaffPID       :=  edStaffPID.Text       ;
+    zData.Name           :=  edName.Text           ;
+    zData.Address1       :=  edAddress1.Text       ;
+    zData.Address2       :=  edAddress2.Text       ;
+    zData.Address3       :=  edAddress3.Text       ;
+    zData.Address4       :=  edAddress4.Text       ;
+    zData.Country        :=  fraCountry.CountryCode;
+    zData.Tel1           :=  edTel1.Text           ;
+    zData.Tel2           :=  edTel2.Text           ;
+    zData.Mobile            :=  edMobile.Text            ;
+    zData.StaffLanguage  :=  TRoomerLanguageItem(__cbxLanguage.Items.Objects[__cbxLanguage.ItemIndex]).id;
+    zData.StaffType      :=  edStaffType.Text      ;
+    zData.StaffType1     :=  edStaffType1.Text     ;
+    zData.StaffType2     :=  edStaffType2.Text     ;
+    zData.StaffType3     :=  edStaffType3.Text     ;
+    zData.StaffType4     :=  edStaffType4.Text     ;
+    zData.IPAddresses    :=  memIpAddresses.Text   ;
+    zData.PmsOnly        :=  chkPmsOnly.checked    ;
+    zData.WindowsAuth    :=  ChkWindowsAuth.checked;
+  end
+  else if (lFocusControl <> nil) then
+  begin
+    //Find Tabsheet of control to set focus to
+    lParent := lFocusControl.Parent;
+    while (lParent <> nil) and not (lParent is TTabsheet) do
+      lParent := lParent.Parent;
+
+    if (lParent <> nil) then
+    begin
+      pageMain.ActivePageIndex := TTabSheet(lParent).PageIndex;
+      lFocusControl.SetFocus;
+    end;
   end;
-
-
-
-  zCanClose := true;
-
-  zData.Active        :=  chkActive.checked     ;
-  zData.Initials       :=  edInitials.Text       ;
-  zData.Password       :=  edPassword.Text       ;
-  zData.StaffPID       :=  edStaffPID.Text       ;
-  zData.Name           :=  edName.Text           ;
-  zData.Address1       :=  edAddress1.Text       ;
-  zData.Address2       :=  edAddress2.Text       ;
-  zData.Address3       :=  edAddress3.Text       ;
-  zData.Address4       :=  edAddress4.Text       ;
-  zData.Country        :=  edCountry.Text        ;
-  zData.Tel1           :=  edTel1.Text           ;
-  zData.Tel2           :=  edTel2.Text           ;
-  zData.Fax            :=  edFax.Text            ;
-  zData.StaffLanguage  :=  TRoomerLanguageItem(__cbxLanguage.Items.Objects[__cbxLanguage.ItemIndex]).id;
-  zData.StaffType      :=  edStaffType.Text      ;
-  zData.StaffType1     :=  edStaffType1.Text     ;
-  zData.StaffType2     :=  edStaffType2.Text     ;
-  zData.StaffType3     :=  edStaffType3.Text     ;
-  zData.StaffType4     :=  edStaffType4.Text     ;
-  zData.IPAddresses    :=  memIpAddresses.Text   ;
-  zData.PmsOnly        :=  chkPmsOnly.checked     ;
-  zData.WindowsAuth    :=  ChkWindowsAuth.checked     ;
 
 
 end;

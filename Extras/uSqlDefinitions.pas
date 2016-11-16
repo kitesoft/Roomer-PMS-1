@@ -5750,7 +5750,7 @@ select_staffTypes : string =
   ' ,Country '#10+
   ' ,Tel1 '#10+
   ' ,Tel2 '#10+
-  ' ,Fax '#10+
+  ' ,Fax as Mobile '#10+
   ' ,ActiveMember '#10+
   ' ,StaffLanguage '#10+
   ' ,StaffType '#10+

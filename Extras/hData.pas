@@ -1416,7 +1416,7 @@ type
     Country: string;
     Tel1: string;
     Tel2: string;
-    Fax: string;
+    Mobile: string;
     ActiveMember: boolean;
     StaffLanguage: integer;
     StaffType: string;
@@ -12664,7 +12664,7 @@ begin
     Country := '';
     Tel1 := '';
     Tel2 := '';
-    Fax := '';
+    Mobile := '';
     ActiveMember := true;
     StaffLanguage := 0;
     StaffType := '';
@@ -12710,7 +12710,7 @@ begin
   s := s + '  , Country       = ' + _db(theData.Country) + ' ' + #10;
   s := s + '  , Tel1          = ' + _db(theData.Tel1) + ' ' + #10;
   s := s + '  , Tel2          = ' + _db(theData.Tel2) + ' ' + #10;
-  s := s + '  , Fax           = ' + _db(theData.Fax) + ' ' + #10;
+  s := s + '  , Fax           = ' + _db(theData.Mobile) + ' ' + #10;
   s := s + '  , ActiveMember  = ' + _db(theData.ActiveMember) + ' ' + #10;
   s := s + '  , StaffLanguage = ' + _db(theData.StaffLanguage) + ' ' + #10;
   s := s + '  , StaffType     = ' + _dbNullIfEmpty(theData.StaffType) + ' ' + #10;
@@ -12788,7 +12788,7 @@ begin
   s := s + '  ,' + _db(theData.Country) + #10;
   s := s + '  ,' + _db(theData.Tel1) + #10;
   s := s + '  ,' + _db(theData.Tel2) + #10;
-  s := s + '  ,' + _db(theData.Fax) + #10;
+  s := s + '  ,' + _db(theData.Mobile) + #10;
   s := s + '  ,' + _db(theData.ActiveMember) + #10;
   s := s + '  ,' + _db(theData.StaffLanguage) + #10;
   s := s + '  ,' + _dbNullIfEmpty(theData.StaffType) + #10;
@@ -12818,7 +12818,7 @@ begin
   try
 
     sql := ' SELECT '#10 + ' ID '#10 + ' ,Active '#10 + ' ,Initials '#10 + ' ,Password '#10 + ' ,StaffPID '#10 + ' ,Name '#10 + ' ,Address1 '#10 +
-      ' ,Address2 '#10 + ' ,Address3 '#10 + ' ,Address4 '#10 + ' ,Country '#10 + ' ,Tel1 '#10 + ' ,Tel2 '#10 + ' ,Fax '#10 + ' ,ActiveMember '#10 +
+      ' ,Address2 '#10 + ' ,Address3 '#10 + ' ,Address4 '#10 + ' ,Country '#10 + ' ,Tel1 '#10 + ' ,Tel2 '#10 + ' ,Fax as Mobile'#10 + ' ,ActiveMember '#10 +
       ' ,StaffLanguage '#10 + ' ,StaffType '#10 + ' ,StaffType1 '#10 + ' ,StaffType2 '#10 + ' ,StaffType3 '#10 + ' ,StaffType4 '#10 + ' ,IPAddresses '#10 +
       ' ,PmsOnly '#10 + ' ,WindowsAuth '#10 + ' FROM staffmembers  '#10 + ' WHERE  '#10 + ' (Initials =  %s ) ';
 
@@ -12838,7 +12838,7 @@ begin
       theData.Country := rSet.fieldbyname('Country').asString;
       theData.Tel1 := rSet.fieldbyname('Tel1').asString;
       theData.Tel2 := rSet.fieldbyname('Tel2').asString;
-      theData.Fax := rSet.fieldbyname('Fax').asString;
+      theData.mobile:= rSet.fieldbyname('Mobile').asString;
       theData.ActiveMember := rSet.fieldbyname('ActiveMember').Asboolean;
       theData.StaffLanguage := rSet.fieldbyname('StaffLanguage').asInteger;
       theData.StaffType := rSet.fieldbyname('StaffType').asString;

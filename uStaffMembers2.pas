@@ -156,7 +156,7 @@ type
     tvDataCountry: TcxGridDBBandedColumn;
     tvDatatel1: TcxGridDBBandedColumn;
     tvDatatel2: TcxGridDBBandedColumn;
-    tvDatafax: TcxGridDBBandedColumn;
+    tvDataMobile: TcxGridDBBandedColumn;
     tvDataActiveMember: TcxGridDBBandedColumn;
     tvDataStaffType: TcxGridDBBandedColumn;
     tvDataStaffLanguage: TcxGridDBBandedColumn;
@@ -323,7 +323,7 @@ begin
   zData.Country          := m_['Country'];
   zData.Tel1             := m_['Tel1'];
   zData.Tel2             := m_['Tel2'];
-  zData.Fax              := m_['Fax'];
+  zData.Mobile              := m_['mobile'];
   zData.ActiveMember     := m_['ActiveMember'];
   zData.StaffLanguage    := m_['StaffLanguage'];
   zData.StaffType        := m_['StaffType'];
@@ -353,7 +353,7 @@ begin
   tvDataCountry      .Options.Editing  := zAllowGridEdit AND glb.AccessAllowed(tvDataCountry      .Tag);
   tvDataTel1         .Options.Editing  := zAllowGridEdit AND glb.AccessAllowed(tvDataTel1         .Tag);
   tvDataTel2         .Options.Editing  := zAllowGridEdit AND glb.AccessAllowed(tvDataTel2         .Tag);
-  tvDataFax          .Options.Editing  := zAllowGridEdit AND glb.AccessAllowed(tvDataFax          .Tag);
+  tvDataMobile       .Options.Editing  := zAllowGridEdit AND glb.AccessAllowed(tvDataMobile       .Tag);
   tvDataActiveMember .Options.Editing  := zAllowGridEdit AND glb.AccessAllowed(tvDataActiveMember .Tag);
   tvDataStaffLanguage.Options.Editing  := zAllowGridEdit AND glb.AccessAllowed(tvDataStaffLanguage.Tag);
   tvDataStaffType    .Options.Editing  := zAllowGridEdit AND glb.AccessAllowed(tvDataStaffType    .Tag);
@@ -411,7 +411,7 @@ begin
   tvData.DataController.Filter.Root.AddItem(tvDataAddress4 ,foLike,'%'+edFilter.Text+'%','%'+edFilter.Text+'%');
   tvData.DataController.Filter.Root.AddItem(tvDatatel1     ,foLike,'%'+edFilter.Text+'%','%'+edFilter.Text+'%');
   tvData.DataController.Filter.Root.AddItem(tvDatatel2     ,foLike,'%'+edFilter.Text+'%','%'+edFilter.Text+'%');
-  tvData.DataController.Filter.Root.AddItem(tvDatafax      ,foLike,'%'+edFilter.Text+'%','%'+edFilter.Text+'%');
+  tvData.DataController.Filter.Root.AddItem(tvDataMobile   ,foLike,'%'+edFilter.Text+'%','%'+edFilter.Text+'%');
   tvData.DataController.Filter.Root.AddItem(tvDataStaffType,foLike,'%'+edFilter.Text+'%','%'+edFilter.Text+'%');
   tvData.DataController.Filter.Root.AddItem(tvDataStaffType1,foLike,'%'+edFilter.Text+'%','%'+edFilter.Text+'%');
   tvData.DataController.Filter.Root.AddItem(tvDataStaffType2,foLike,'%'+edFilter.Text+'%','%'+edFilter.Text+'%');
@@ -797,7 +797,7 @@ begin
        m_['Country']      :=  zData.Country        ;
        m_['Tel1']         :=  zData.Tel1           ;
        m_['Tel2']         :=  zData.Tel2           ;
-       m_['Fax']          :=  zData.Fax            ;
+       m_['Mobile']          :=  zData.mobile;
        m_['StaffLanguage']:=  zData.StaffLanguage  ;
        m_['StaffType']    :=  zData.StaffType      ;
        m_['StaffType1']   :=  zData.StaffType1     ;
@@ -832,7 +832,7 @@ begin
        m_['Country']      :=  zData.Country        ;
        m_['Tel1']         :=  zData.Tel1           ;
        m_['Tel2']         :=  zData.Tel2           ;
-       m_['Fax']          :=  zData.Fax            ;
+       m_['Mobile']          :=  zData.Mobile;
        m_['StaffLanguage']:=  zData.StaffLanguage  ;
        m_['StaffType']    :=  zData.StaffType      ;
        m_['StaffType1']   :=  zData.StaffType1     ;
@@ -924,7 +924,7 @@ begin
     zData.Country      := dataset['Country'];
     zData.Tel1         := dataset['Tel1'];
     zData.Tel2         := dataset['Tel2'];
-    zData.Fax          := dataset['Fax'];
+    zData.Mobile       := dataset['Mobile'];
     zData.ActiveMember := dataset['ActiveMember'];
     zData.StaffLanguage:= dataset['StaffLanguage'];
     zData.StaffType    := dataset['StaffType'];
@@ -990,7 +990,7 @@ begin
   dataset['Country']  := '';
   dataset['Tel1']  := '';
   dataset['Tel2']  := '';
-  dataset['Fax']  := '';
+  dataset['Mobile']  := '';
   dataset['ActiveMember']  := true;
   dataset['StaffLanguage']  := 0;
   dataset['StaffType']  := '';

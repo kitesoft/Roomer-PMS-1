@@ -460,7 +460,7 @@ object frmStaffMembers2: TfrmStaffMembers2
         Position.ColIndex = 1
         Position.RowIndex = 0
       end
-      object tvDatafax: TcxGridDBBandedColumn
+      object tvDataMobile: TcxGridDBBandedColumn
         Tag = 6
         Caption = 'Mobile'
         DataBinding.FieldName = 'fax'
@@ -537,6 +537,7 @@ object frmStaffMembers2: TfrmStaffMembers2
     Left = 368
     Top = 224
     object prLink_grData: TdxGridReportLink
+      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -550,6 +551,7 @@ object frmStaffMembers2: TfrmStaffMembers2
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
       ReportDocument.CreationDate = 41334.495374884260000000
+      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
   end
@@ -654,7 +656,7 @@ object frmStaffMembers2: TfrmStaffMembers2
         Size = 31
       end
       item
-        Name = 'fax'
+        Name = 'mobile'
         DataType = ftString
         Size = 31
       end
