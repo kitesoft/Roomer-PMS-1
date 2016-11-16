@@ -5952,7 +5952,9 @@ begin
     exit;
 
   case PaymentInvoice of
-    -1, -2:
+    -1, -2: result := IIF(GroupAccount, onGroupColor, onColor);
+  else
+    IF NOT NORent then
       result := IIF(GroupAccount, onGroupColor, onColor);
   end;
 end;
