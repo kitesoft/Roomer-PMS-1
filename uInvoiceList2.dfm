@@ -34,7 +34,6 @@ object frmInvoiceList2: TfrmInvoiceList2
       Caption = 'Search'
       TabOrder = 0
       SkinData.SkinSection = 'GROUPBOX'
-      Checked = False
       object LMDSimpleLabel2: TsLabel
         Left = 251
         Top = 20
@@ -92,7 +91,6 @@ object frmInvoiceList2: TfrmInvoiceList2
         TabOrder = 0
         Text = '  -  -    '
         OnChange = dtFromChange
-        CheckOnExit = True
         SkinData.SkinSection = 'EDIT'
         GlyphMode.Blend = 0
         GlyphMode.Grayed = False
@@ -116,7 +114,6 @@ object frmInvoiceList2: TfrmInvoiceList2
         TabOrder = 1
         Text = '  -  -    '
         OnChange = dtToChange
-        CheckOnExit = True
         SkinData.SkinSection = 'EDIT'
         GlyphMode.Blend = 0
         GlyphMode.Grayed = False
@@ -317,10 +314,10 @@ object frmInvoiceList2: TfrmInvoiceList2
       end
     end
     object btnExport: TsButton
-      Left = 550
-      Top = 17
+      Left = 547
+      Top = 19
       Width = 118
-      Height = 40
+      Height = 44
       Caption = 'Export invoices'
       TabOrder = 1
       OnClick = btnExportClick

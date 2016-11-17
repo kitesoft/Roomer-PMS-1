@@ -1019,15 +1019,15 @@ end;
 function TRoomerDataSet.SystempackagesList(packageCode : String; currency : String = ''): String;
 begin
   Result := downloadUrlAsStringUsingPost(RoomerUri + 'roompackages/list', 
-              format('hotelId=%s&packageCode=%s&currency=%s', [activeRoomerDataSet.hotelId, packageCode, currency]));
+              format('hotelId=%s&packageCode=%s&currency=%s', [activeRoomerDataSet.hotelId, UrlEncode(packageCode), currency]));
 end;
 
 
 function TRoomerDataSet.SystempackagesRemove(packageCode : String; roomReservation, roomReservationAlias : Integer; restorePrice : Boolean = False; splitNumber : Integer = 0; invoiceNumber : Integer = -1): String;
 var strRestore : String;begin
   if restorePrice then strRestore := 'true' else strRestore := 'false';
-  Result := downloadUrlAsStringUsingPost(RoomerUri + 'roompackages/remove', 
-              format('hotelId=%s&packageCode=%s&roomReservation=%d&roomReservationAlias=%d&splitNumber=%d&invoiceNumber=%d&restorePrice=%s', [activeRoomerDataSet.hotelId, packageCode, roomReservation, roomReservationAlias, splitNumber, invoiceNumber, strRestore]));
+  Result := downloadUrlAsStringUsingPost(RoomerUri + 'roompackages/remove',
+              format('hotelId=%s&packageCode=%s&roomReservation=%d&roomReservationAlias=%d&splitNumber=%d&invoiceNumber=%d&restorePrice=%s', [activeRoomerDataSet.hotelId, UrlEncode(packageCode), roomReservation, roomReservationAlias, splitNumber, invoiceNumber, strRestore]));
 end;
 
 
@@ -1039,7 +1039,7 @@ begin
   else
     sRate := '_';
   Result := downloadUrlAsStringUsingPost(RoomerUri + 'roompackages/add',
-              format('hotelId=%s&packageCode=%s&roomReservation=%d&roomReservationAlias=%d&splitNumber=%d&invoiceNumber=%d&%srate=%s&currency=%s', [activeRoomerDataSet.hotelId, packageCode, roomReservation, roomReservationAlias, splitNumber, invoiceNumber, sRate, FloatToDBString(rate), currency]));
+              format('hotelId=%s&packageCode=%s&roomReservation=%d&roomReservationAlias=%d&splitNumber=%d&invoiceNumber=%d&%srate=%s&currency=%s', [activeRoomerDataSet.hotelId, UrlEncode(packageCode), roomReservation, roomReservationAlias, splitNumber, invoiceNumber, sRate, FloatToDBString(rate), currency]));
 end;
 
 

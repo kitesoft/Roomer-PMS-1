@@ -386,10 +386,10 @@ begin
           if trx then
             Rset.SystemStartTransaction;
 
-          if TReservationState.FromResStatus(status).InfluencesAvailability then
-            d.roomerMainDataSet.SystemChangeAvailabilityForRoom(RoomReservation, false); //Increase availability
-
           try
+            if TReservationState.FromResStatus(status).InfluencesAvailability then
+              d.roomerMainDataSet.SystemChangeAvailabilityForRoom(RoomReservation, false); //Increase availability
+
             ExePlan.AddExec('UPDATE roomsdate SET ResFlag =' + _db(STATUS_DELETED) + ' WHERE RoomReservation = ' +
               inttostr(RoomReservation));
 
@@ -501,7 +501,7 @@ begin
 
             s := ' DELETE FROM roomsdate where ResFlag =' + _db(STATUS_DELETED) + ' AND RoomReservation = ' + _db(RoomReservation) + #10;
             ExePlan.AddExec(s);
-            
+
             ExePlan.Execute(ptExec, false, false);
             if TReservationState.FromResStatus(status).InfluencesAvailability then
               d.roomerMainDataSet.SystemChangeAvailabilityForRoom(RoomReservation, true); //decrease availability
