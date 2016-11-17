@@ -3066,8 +3066,8 @@ begin
                           'AND FIND_IN_SET(ch.id, cm.channels) ' +
                           'AND ch.activePlanCode=%d ' +
                           'UNION ALL ' +
-                          'SELECT CURRENT_DATE AS today, ' +
-                          ' -1 AS chId, ''MASTER RATE'' AS channelName, EXISTS(SELECT id FROM channels WHERE directConnection LIMIT 1) AS directConnection, 3 AS rateRoundingType ' +
+                          'SELECT CURRENT_DATE AS today, ' +                                                                                             // 2 decimals
+                          ' -1 AS chId, ''MASTER RATE'' AS channelName, EXISTS(SELECT id FROM channels WHERE directConnection LIMIT 1) AS directConnection, 5 AS rateRoundingType ' +
                           ', to_bool((SELECT masterRatesActive FROM hotelconfigurations LIMIT 1)) AS masterRatesActive ' +
                           'ORDER BY IF(chId=-1, '''', channelName) ', [cmId, pcId])));
 
