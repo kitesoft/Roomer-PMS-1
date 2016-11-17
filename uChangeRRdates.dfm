@@ -69,7 +69,6 @@ inherited frmChangeRRdates: TfrmChangeRRdates
       Caption = 'Next Reservation'
       TabOrder = 0
       SkinData.SkinSection = 'GROUPBOX'
-      Checked = False
       object labNextName: TsLabel
         Left = 8
         Top = 20
@@ -241,7 +240,6 @@ inherited frmChangeRRdates: TfrmChangeRRdates
       Caption = 'Previous reservation'
       TabOrder = 1
       SkinData.SkinSection = 'GROUPBOX'
-      Checked = False
       object labLastName: TsLabel
         Left = 8
         Top = 20
@@ -420,7 +418,6 @@ inherited frmChangeRRdates: TfrmChangeRRdates
       Caption = 'Change dates'
       TabOrder = 0
       SkinData.SkinSection = 'GROUPBOX'
-      Checked = False
       DesignSize = (
         295
         155)
@@ -548,7 +545,6 @@ inherited frmChangeRRdates: TfrmChangeRRdates
         Text = '  -  -    '
         OnChange = dtUpdateControls
         OnExit = dtUpdateControls
-        CheckOnExit = True
         SkinData.SkinSection = 'EDIT'
         GlyphMode.Blend = 0
         GlyphMode.Grayed = False
@@ -577,7 +573,6 @@ inherited frmChangeRRdates: TfrmChangeRRdates
         OnChange = dtUpdateControls
         OnDblClick = dtDepartureDblClick
         OnExit = dtUpdateControls
-        CheckOnExit = True
         SkinData.SkinSection = 'EDIT'
         GlyphMode.Blend = 0
         GlyphMode.Grayed = False
@@ -640,7 +635,6 @@ inherited frmChangeRRdates: TfrmChangeRRdates
       Caption = '.. or split reservation in two'
       TabOrder = 1
       SkinData.SkinSection = 'GROUPBOX'
-      Checked = False
       DesignSize = (
         310
         155)
@@ -746,7 +740,6 @@ inherited frmChangeRRdates: TfrmChangeRRdates
         TabOrder = 1
         Text = '  -  -    '
         OnChange = dtUpdateControls
-        CheckOnExit = True
         SkinData.SkinSection = 'EDIT'
         GlyphMode.Blend = 0
         GlyphMode.Grayed = False

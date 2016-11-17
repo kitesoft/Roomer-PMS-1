@@ -52,7 +52,6 @@ object frmMain: TfrmMain
     SunkenBorder = True
     UseOwnColor = True
     UseOwnSunkenBorder = True
-    ExplicitTop = 122
   end
   object panMain: TsPanel
     Left = 0
@@ -3077,7 +3076,6 @@ object frmMain: TfrmMain
       Index = 0
     end
     object rbTabReservation: TdxRibbonTab
-      Active = True
       Caption = 'Reservation'
       Groups = <
         item
@@ -3098,6 +3096,7 @@ object frmMain: TfrmMain
       Index = 1
     end
     object rbTabInvoice: TdxRibbonTab
+      Active = True
       Caption = 'Invoice'
       Groups = <
         item
