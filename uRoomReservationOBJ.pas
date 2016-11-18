@@ -1,31 +1,30 @@
 unit uRoomReservationOBJ;
 interface
 
-Uses
+uses
     Windows
-  , Messages
-  , SysUtils
-  , Variants
   , Classes
-  , Graphics
-  , Controls
-  , DB
-  , Forms
-  , Dialogs
-  , Contnrs
-  , _glob
-  , ug
-  , ud
-  , ADODB
-  , uUtils
-  , uDateUtils
   , kbmMemTable
   , cmpRoomerDataSet
-  , cmpRoomerConnection
+  , Generics.Collections
+  , uReservationStateDefinitions
   ;
 
 //******************************************************************************
-TYPE
+type
+
+  /// <summary>
+  ///   Basic representation of a Roomreservation, containing only basic information
+  /// </summary>
+  TRoomReservationBasicObj = class
+  public
+    Reservation: integer;
+    Roomreservation: integer;
+    Room: string;
+    State: TReservationState;
+  end;
+
+  TRoomResBasicObjList = TObjectList<TRoomreservationBasicObj>;
 
   TRoomReservation = class
   private
@@ -74,10 +73,19 @@ TYPE
 implementation
 
 uses
-  hData
+    Data.DB
+  , SysUtils
+  , hData
   , uSqlDefinitions
   , uRoomerDefinitions
-  , uReservationStateDefinitions, uSQLUtils;
+  , uSQLUtils
+  , cmpRoomerConnection
+  , uG
+  , uD
+  , uDateUtils
+  , uUtils
+
+;
 
 //******************************************************************************
 //*

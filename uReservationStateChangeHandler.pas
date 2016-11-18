@@ -7,6 +7,7 @@ uses
   , SysUtils
   , uReservationStateDefinitions
   , Generics.Collections
+  , uRoomReservationObj
   ;
 
 
@@ -46,7 +47,7 @@ type
     procedure UpdateCurrentState; override;
   public
     constructor Create(aReservation, aRoomReservation: integer); overload;
-    constructor Create(aReservation, aRoomReservation: integer; aCurrentState: TReservationState); overload;
+    constructor Create(aRoomresObj: TRoomReservationBasicObj); overload;
 
     property Room: string read FRoom;
   end;
@@ -225,16 +226,14 @@ end;
 
 procedure TReservationStateChangehandler.AddRoomResChangeSetHandlers;
 var
-  lRoomResList: TStringlist;
-  lDummy: TStringlist;
-  lRoomres: string;
+  lRoomResList: TRoomResBasicObjList;
+  lRoomresObj: TRoomReservationBasicObj;
 begin
-  lDummy := nil;
-  lRoomResList := TStringList.Create;
+  lRoomResList := TRoomResBasicObjList.Create;
   try
-    GetReservationRRList(FReservation, lRoomResList, lDummy);
-    for lRoomRes in lRoomResList do
-      AddRoomStateChangeHandler(TRoomReservationStateChangeHandler.Create(FReservation, StrToInt(lRoomRes)));
+    GetReservationRRList(FReservation, lRoomResList);
+    for lRoomResObj in lRoomResList do
+      AddRoomStateChangeHandler(TRoomReservationStateChangeHandler.Create(lRoomResObj));
   finally
     lRoomResList.Free;
   end;
@@ -318,13 +317,6 @@ begin
   end;
 end;
 
-constructor TRoomReservationStateChangeHandler.Create(aReservation, aRoomReservation: integer;
-  aCurrentState: TReservationState);
-begin
-  Create(aReservation, aRoomReservation);
-  FCurrentState := aCurrentState;
-  FCurrentStateDirty := False;
-end;
 
 constructor TRoomReservationStateChangeHandler.Create(aReservation, aRoomReservation: integer);
 begin
@@ -333,6 +325,17 @@ begin
   FRoomReservation := aRoomReservation;
   FRoom := d.RR_GetRoomNr(FRoomReservation);
 end;
+
+constructor TRoomReservationStateChangeHandler.Create(aRoomresObj: TRoomReservationBasicObj);
+begin
+  Create;
+  FReservation := aRoomResObj.Reservation;
+  FRoomReservation := aRoomResObj.RoomReservation;
+  FRoom := aRoomResObj.Room;
+  FCurrentState := aRoomResObj.State;
+  FCurrentStateDirty := False;
+end;
+
 
 procedure TRoomReservationStateChangeHandler.UpdateCurrentState;
 begin

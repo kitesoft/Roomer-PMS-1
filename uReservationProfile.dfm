@@ -924,15 +924,16 @@ object frmReservationProfile: TfrmReservationProfile
                 Margins.Bottom = 0
                 Align = alTop
                 TabOrder = 5
+                ExplicitLeft = 65
                 ExplicitTop = 105
-                ExplicitWidth = 240
+                ExplicitWidth = 175
                 inherited pnlCountry: TsPanel
                   Width = 175
-                  ExplicitWidth = 240
+                  ExplicitWidth = 175
                   inherited lblCountryName: TsLabel
                     Width = 3
+                    Height = 14
                     Font.Height = -9
-                    ExplicitLeft = 66
                     ExplicitWidth = 3
                     ExplicitHeight = 11
                   end
@@ -949,6 +950,10 @@ object frmReservationProfile: TfrmReservationProfile
               Caption = 'Customer'
               SkinData.CustomColor = False
               SkinData.CustomFont = False
+              ExplicitLeft = 0
+              ExplicitTop = 0
+              ExplicitWidth = 0
+              ExplicitHeight = 0
               object Label19: TsLabel
                 Left = 12
                 Top = 32
@@ -1243,6 +1248,10 @@ object frmReservationProfile: TfrmReservationProfile
               ImageIndex = 1
               SkinData.CustomColor = False
               SkinData.CustomFont = False
+              ExplicitLeft = 0
+              ExplicitTop = 0
+              ExplicitWidth = 0
+              ExplicitHeight = 0
               object Label11: TsLabel
                 Left = 45
                 Top = 29
@@ -1455,8 +1464,6 @@ object frmReservationProfile: TfrmReservationProfile
             TabOrder = 0
             SkinData.SkinSection = 'GROUPBOX'
             Checked = False
-            ExplicitLeft = -1
-            ExplicitTop = -1
             DesignSize = (
               228
               169)
@@ -1571,7 +1578,6 @@ object frmReservationProfile: TfrmReservationProfile
               BoundLabel.Font.Height = -13
               BoundLabel.Font.Name = 'Tahoma'
               BoundLabel.Font.Style = []
-              ExplicitTop = 59
             end
             object edtGuestAddress1: TsEdit
               AlignWithMargins = True
@@ -1720,16 +1726,16 @@ object frmReservationProfile: TfrmReservationProfile
               Margins.Bottom = 0
               Align = alTop
               TabOrder = 7
-              ExplicitLeft = 65
+              ExplicitLeft = 67
               ExplicitTop = 125
-              ExplicitWidth = 161
+              ExplicitWidth = 159
               inherited pnlCountry: TsPanel
                 Width = 159
-                ExplicitWidth = 224
+                ExplicitWidth = 159
                 inherited lblCountryName: TsLabel
                   Width = 3
+                  Height = 14
                   Font.Height = -9
-                  ExplicitLeft = 66
                   ExplicitWidth = 3
                   ExplicitHeight = 11
                 end
@@ -1754,16 +1760,16 @@ object frmReservationProfile: TfrmReservationProfile
               Margins.Bottom = 0
               Align = alTop
               TabOrder = 6
-              ExplicitLeft = 2
+              ExplicitLeft = 67
               ExplicitTop = 103
-              ExplicitWidth = 224
+              ExplicitWidth = 159
               inherited pnlCountry: TsPanel
                 Width = 159
-                ExplicitWidth = 224
+                ExplicitWidth = 159
                 inherited lblCountryName: TsLabel
                   Width = 3
+                  Height = 14
                   Font.Height = -9
-                  ExplicitLeft = 66
                   ExplicitWidth = 3
                   ExplicitHeight = 11
                 end
@@ -2900,6 +2906,10 @@ object frmReservationProfile: TfrmReservationProfile
       ImageIndex = 1
       SkinData.CustomColor = False
       SkinData.CustomFont = False
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Panel10: TsPanel
         Left = 0
         Top = 0
@@ -3385,20 +3395,18 @@ object frmReservationProfile: TfrmReservationProfile
           object lblSpecialRequests: TsLabel
             Left = 2
             Top = 15
-            Width = 250
+            Width = 81
             Height = 13
             Align = alTop
             Caption = 'Special Requests'
-            ExplicitWidth = 81
           end
           object lblNotes: TsLabel
             Left = 2
             Top = 101
-            Width = 250
+            Width = 28
             Height = 13
             Align = alTop
             Caption = 'Notes'
-            ExplicitWidth = 28
           end
           object edtSpecialRequests: TMemo
             AlignWithMargins = True
@@ -3506,6 +3514,10 @@ object frmReservationProfile: TfrmReservationProfile
       Caption = 'Alerts'
       SkinData.CustomColor = False
       SkinData.CustomFont = False
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object pnlAlertHolder: TsPanel
         Left = 0
         Top = 0
@@ -3522,6 +3534,10 @@ object frmReservationProfile: TfrmReservationProfile
       ImageIndex = 2
       SkinData.CustomColor = False
       SkinData.CustomFont = False
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Panel11: TsPanel
         Left = 0
         Top = 0

@@ -3525,6 +3525,7 @@ select_GetReservationRRList : string =
 '    RoomReservation '#10+
 '   ,Reservation '#10+
 '   ,Status '#10+
+'   ,Room '#10+
 ' FROM '#10+
 '   roomreservations '#10+
 ' WHERE '#10+

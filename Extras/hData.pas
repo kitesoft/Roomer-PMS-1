@@ -21,6 +21,7 @@ uses
   , dxMdaSet
   , System.Generics.Collections
   , uReservationStateDefinitions
+  , uRoomReservationOBJ
   ;
 
 const
@@ -1837,7 +1838,7 @@ function IVH_GetLastID: integer;
 function NumberOfInvoiceLines(iReservation, iRoomReservation, iSplitNumber: integer; InvoiceIndex : Integer = -1): integer;
 function GetRate(Currency: string): double;
 
-function GetReservationRRList(Reservation: integer; var RRlist, lstRoomReservationsStatus: TstringList): integer;
+function GetReservationRRList(Reservation: integer; aRoomResBasicList: TRoomResBasicObjList): integer;
 
 function Item_GetKind(sItem: string): TItemKind;
 
@@ -5005,40 +5006,33 @@ begin
   end;
 end;
 
-function GetReservationRRList(Reservation: integer; var RRlist, lstRoomReservationsStatus: TstringList): integer;
+function GetReservationRRList(Reservation: integer; aRoomResBasicList: TRoomResBasicObjList): integer;
 var
   s: string;
   rSet: TRoomerDataSet;
+  lRRObj: TRoomReservationBasicObj;
 begin
   // **
   result := 0;
-  RRlist.clear;
-  if assigned(lstRoomReservationsStatus) then
-    lstRoomReservationsStatus.Clear;
+  aRoomResBasicList.clear;
 
   rSet := CreateNewDataSet;
   try
-    // s := s + ' SELECT '+#10;
-    // s := s + '    RoomReservation '+#10;
-    // s := s + '   ,Reservation '+#10;
-    // s := s + ' FROM '+#10;
-    // s := s + '   RoomReservations '+#10;
-    // s := s + ' WHERE '+#10;
-    // s := s + ' Reservation = ' + inttostr(Reservation)+#10;
     s := format(select_GetReservationRRList, [Reservation]);
     if hData.rSet_bySQL(rSet, s) then
     begin
       result := rSet.recordCount;
-      if result > 0 then
+      rSet.First;
+      while not rSet.Eof do
       begin
-        rSet.First;
-        while not rSet.Eof do
-        begin
-          RRlist.Add(rSet.fieldbyname('RoomReservation').asString);
-          if assigned(lstRoomReservationsStatus) then
-            lstRoomReservationsStatus.Add(rSet.fieldbyname('Status').asString);
-          rSet.Next;
-        end;
+        lRRObj := TRoomReservationBasicObj.Create;
+        lRRObj.Reservation := Reservation;
+        lRRobj.Roomreservation := rSet.fieldbyname('RoomReservation').asInteger;
+        lRRobj.Room := rSet.FieldByName('Room').asstring;
+        lRRObj.State := TReservationState.FromResStatus(rSet.FieldByName('Status').AsString);
+
+        aRoomResBasicList.Add(lRRObj);
+        rSet.Next;
       end;
     end;
   finally

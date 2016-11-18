@@ -983,20 +983,14 @@ begin
 
   FReservationChangeStateHandler := TReservationStateChangeHandler.Create(zReservation);
 
-  try
-    PlacePnlDataWait;
-    timStart.enabled := True;
-  finally
-    Enabled := true;
-  end;
+  PlacePnlDataWait;
+  timStart.enabled := True;
 
   vStartName := frmReservationProfile.edtName.text;
 
 
   fraGuestNationality.AllowEdit := False;
   fraGuestCountry.AllowEdit := False;
-  fraGuestNationality.OnCountryChange := ChangeNationalityAllGuests;
-  fraGuestCountry.OnCountryChange := ChangeCountryAllGuests;
 
   pnlAllGuestsNationality.Visible := glb.PMSSettings.EditAllGuestsNationality;
 end;
@@ -2480,8 +2474,6 @@ begin
     sBreakfast := '';
     sStatus := '';
 
-    FReservationChangeStateHandler.UpdateRoomResStateChangeHandlers;
-
     while not mRooms.Eof do
     begin
 
@@ -2493,9 +2485,6 @@ begin
       sPaymentdetails := sPaymentdetails + _GLOB._Bool2Str(isGroupAccount, 0);
 
       sBreakfast := sBreakfast + _GLOB._Bool2Str(breakfastIncluted, 0);
-
-      FReservationChangeStateHandler.AddRoomStateChangeHandler(TRoomReservationStateChangeHandler.Create(zReservation, mRoomsRoomReservation.AsInteger));
-
       mRooms.Next;
     end;
 
