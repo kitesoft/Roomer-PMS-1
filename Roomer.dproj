@@ -2,7 +2,7 @@
     <PropertyGroup>
         <ProjectGuid>{436E2CCE-115E-475F-9C3E-19C03F70A4D0}</ProjectGuid>
         <MainSource>Roomer.dpr</MainSource>
-        <Config Condition="'$(Config)'==''">Debug</Config>
+        <Config Condition="'$(Config)'==''">releaseBas</Config>
         <DCC_DCCCompiler>DCC32</DCC_DCCCompiler>
         <ProjectVersion>14.3</ProjectVersion>
         <FrameworkType>VCL</FrameworkType>
@@ -32,6 +32,19 @@
     <PropertyGroup Condition="('$(Platform)'=='Win32' and '$(Cfg_1)'=='true') or '$(Cfg_1_Win32)'!=''">
         <Cfg_1_Win32>true</Cfg_1_Win32>
         <CfgParent>Cfg_1</CfgParent>
+        <Cfg_1>true</Cfg_1>
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Config)'=='releaseBas' or '$(Cfg_4)'!=''">
+        <Cfg_4>true</Cfg_4>
+        <CfgParent>Cfg_1</CfgParent>
+        <Cfg_1>true</Cfg_1>
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="('$(Platform)'=='Win32' and '$(Cfg_4)'=='true') or '$(Cfg_4_Win32)'!=''">
+        <Cfg_4_Win32>true</Cfg_4_Win32>
+        <CfgParent>Cfg_4</CfgParent>
+        <Cfg_4>true</Cfg_4>
         <Cfg_1>true</Cfg_1>
         <Base>true</Base>
     </PropertyGroup>
@@ -68,17 +81,6 @@
         <CfgParent>Cfg_5</CfgParent>
         <Cfg_5>true</Cfg_5>
         <Cfg_3>true</Cfg_3>
-        <Base>true</Base>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Config)'=='releaseBas' or '$(Cfg_4)'!=''">
-        <Cfg_4>true</Cfg_4>
-        <CfgParent>Base</CfgParent>
-        <Base>true</Base>
-    </PropertyGroup>
-    <PropertyGroup Condition="('$(Platform)'=='Win32' and '$(Cfg_4)'=='true') or '$(Cfg_4_Win32)'!=''">
-        <Cfg_4_Win32>true</Cfg_4_Win32>
-        <CfgParent>Cfg_4</CfgParent>
-        <Cfg_4>true</Cfg_4>
         <Base>true</Base>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Config)'=='DebugBjorn' or '$(Cfg_6)'!=''">
@@ -127,10 +129,11 @@
         <Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1)'!=''">
+        <VerInfo_PreRelease>true</VerInfo_PreRelease>
         <VerInfo_Build>0</VerInfo_Build>
-        <VerInfo_Keys>CompanyName=Promoir BV;FileDescription=Roomer PMS;FileVersion=1.9.9.0;InternalName=;LegalCopyright=(C) 2013, 2014, 2015, 2016 Promoir BV;LegalTrademarks=Roomer is a Registered Trademark of Promoir BV;OriginalFilename=Roomer.exe;ProductName=Roomer Open Hospitality Platform;ProductVersion=1.9.9.0;Comments=;ExtraBuild=161031;PrivateBuild=</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=Promoir BV;FileDescription=Roomer PMS;FileVersion=1.9.10.0;InternalName=;LegalCopyright=(C) 2013, 2014, 2015, 2016 Promoir BV;LegalTrademarks=Roomer is a Registered Trademark of Promoir BV;OriginalFilename=Roomer.exe;ProductName=Roomer Open Hospitality Platform;ProductVersion=1.9.10.0;Comments=;ExtraBuild=161121;PrivateBuild=</VerInfo_Keys>
         <VerInfo_AutoGenVersion>false</VerInfo_AutoGenVersion>
-        <VerInfo_Release>9</VerInfo_Release>
+        <VerInfo_Release>10</VerInfo_Release>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <DCC_MaxStackSize>1176576</DCC_MaxStackSize>
         <DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
@@ -148,6 +151,19 @@
         <DCC_ExeOutput>RoomerPMSRelease</DCC_ExeOutput>
         <Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
         <DCC_Define>RELEASE;$(DCC_Define)</DCC_Define>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Cfg_4)'!=''">
+        <VerInfo_Debug>true</VerInfo_Debug>
+        <DCC_ExeOutput>_bin\$(Platform)</DCC_ExeOutput>
+        <DCC_DcpOutput>_dcu</DCC_DcpOutput>
+        <DCC_DcuOutput>_dcu</DCC_DcuOutput>
+        <DCC_DebugInformation>false</DCC_DebugInformation>
+        <DCC_AssertionsAtRuntime>false</DCC_AssertionsAtRuntime>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Cfg_4_Win32)'!=''">
+        <VerInfo_Private>true</VerInfo_Private>
+        <Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
+        <VerInfo_Locale>1033</VerInfo_Locale>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <DCC_ExeOutput>$(ROOMER_DEBUG_DIR)</DCC_ExeOutput>
@@ -212,26 +228,6 @@
         <VerInfo_AutoGenVersion>false</VerInfo_AutoGenVersion>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <DCC_DebugInfoInExe>true</DCC_DebugInfoInExe>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Cfg_4)'!=''">
-        <VerInfo_Build>4</VerInfo_Build>
-        <VerInfo_Release>7</VerInfo_Release>
-        <VerInfo_Keys>CompanyName=Promoir BV;FileDescription=Roomer PMS;FileVersion=1.9.7.4;InternalName=;LegalCopyright=(C) 2013, 2014, 2015, 2016 Promoir BV;LegalTrademarks=Roomer is a Registered Trademark of Promoir BV;OriginalFilename=Roomer.exe;ProductName=Roomer Open Hospitality Platform;ProductVersion=1.9.7.4;Comments=;ExtraBuild=160907;PrivateBuild=</VerInfo_Keys>
-        <VerInfo_AutoGenVersion>false</VerInfo_AutoGenVersion>
-        <DCC_ExeOutput>_bin\$(Platform)</DCC_ExeOutput>
-        <DCC_DcpOutput>_dcu</DCC_DcpOutput>
-        <DCC_DcuOutput>_dcu</DCC_DcuOutput>
-        <DCC_DebugInformation>false</DCC_DebugInformation>
-        <DCC_AssertionsAtRuntime>false</DCC_AssertionsAtRuntime>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Cfg_4_Win32)'!=''">
-        <VerInfo_Release>9</VerInfo_Release>
-        <VerInfo_Keys>CompanyName=Promoir BV;FileDescription=Roomer PMS;FileVersion=1.9.9.0;InternalName=;LegalCopyright=(C) 2013, 2014, 2015, 2016 Promoir BV;LegalTrademarks=Roomer is a Registered Trademark of Promoir BV;OriginalFilename=Roomer.exe;ProductName=Roomer Open Hospitality Platform;ProductVersion=1.9.9.0;Comments=;ExtraBuild=161018;PrivateBuild=</VerInfo_Keys>
-        <VerInfo_Private>true</VerInfo_Private>
-        <Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
-        <VerInfo_PreRelease>true</VerInfo_PreRelease>
-        <VerInfo_Build>0</VerInfo_Build>
-        <VerInfo_Locale>1033</VerInfo_Locale>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_6)'!=''">
         <DCC_ExeOutput>$(ROOMER_DEBUG_DIR)</DCC_ExeOutput>
@@ -834,7 +830,7 @@
         <None Include="Sql\DB_CHANGES_V.1.9.5.0.SQL"/>
         <BuildConfiguration Include="releaseBas">
             <Key>Cfg_4</Key>
-            <CfgParent>Base</CfgParent>
+            <CfgParent>Cfg_1</CfgParent>
         </BuildConfiguration>
         <BuildConfiguration Include="ProfilingBas">
             <Key>Cfg_5</Key>
