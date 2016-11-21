@@ -675,22 +675,8 @@ uses
 
 
 function TfrmDayFinical.CreateSQLInText(list: TstringList): string;
-var
-  i: integer;
-  s: string;
 begin
-  result := '';
-  s := '';
-  for i := 0 to list.Count - 1 do
-  begin
-    s := s + list[i] + ',';
-  end;
-
-  if length(s) > 0 then
-  begin
-    delete(s, length(s), 1);
-    result := '(' + s + ')';
-  end;
+  Result := '(' + list.CommaText + ')'
 end;
 
 procedure TfrmDayFinical.cxButton1Click(Sender: TObject);
@@ -851,18 +837,18 @@ begin
     begin
       lst := invoiceList_Unconfirmed(inLocation);
       try
+        if lst.Count = 0 then
+        begin
+          showmessage(GetTranslatedText('shTx_DayFinical_NoInvoices'));
+          exit;
+        end;
         zSQLInText := CreateSQLInText(lst);
       finally
         freeandNil(lst);
       end;
-      if zSQLInText = '' then
-      begin
-        showmessage(GetTranslatedText('shTx_DayFinical_NoInvoices'));
-        exit;
-      end;
+
     end
-    else
-      if zConfirmState = 0 then
+    else if zConfirmState = 0 then
     begin
       dateFrom := trunc(dtDate.date);
       dateTo := trunc(dtDateTo.date);
@@ -873,32 +859,31 @@ begin
 
       lst := invoiceList_FromTo(dateFrom, dateTo, inLocation);
       try
+        if lst.Count = 0 then
+        begin
+          showmessage(format(GetTranslatedText('shTx_DayFinical_NoInvoicesForFromToDate'),
+            [dateToStr(dateFrom), dateToStr(dateTo)]));
+          exit;
+        end;
         zSQLInText := CreateSQLInText(lst);
       finally
         freeandNil(lst);
       end;
 
-      if zSQLInText = '' then
-      begin
-        showmessage(format(GetTranslatedText('shTx_DayFinical_NoInvoicesForFromToDate'),
-          [dateToStr(dateFrom), dateToStr(dateTo)]));
-        exit;
-      end;
     end
-    else
-      if zConfirmState = 2 then
+    else if zConfirmState = 2 then
     begin
       lst := invoiceList_ConfirmGroup(zConfirmedDate);
       try
+        if lst.Count = 0 then
+        begin
+          dateTimeTostring(s, 'dd.mm.yyyy hh:NN:ss', zConfirmedDate);
+          showmessage(format(GetTranslatedText('shTx_DayFinical_NoConfirmedInvoicesFor'), [s]));
+          exit;
+        end;
         zSQLInText := CreateSQLInText(lst);
       finally
         freeandNil(lst);
-      end;
-      if zSQLInText = '' then
-      begin
-        dateTimeTostring(s, 'dd.mm.yyyy hh:NN:ss', zConfirmedDate);
-        showmessage(format(GetTranslatedText('shTx_DayFinical_NoConfirmedInvoicesFor'), [s]));
-        exit;
       end;
     end;
 

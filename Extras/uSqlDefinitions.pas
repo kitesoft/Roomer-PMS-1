@@ -475,43 +475,55 @@ var
 
   //TESTED NOT
   select_DayFinical_GetInvoicelist : string =
-  ' SELECT '+
-  '     invoiceheads.Reservation '+
-  '   , invoiceheads.RoomReservation '+
-  '   , invoiceheads.SplitNumber '+
-  '   , invoiceheads.InvoiceNumber '+
-  '   , invoiceheads.Customer '+
-  '   , invoiceheads.Name AS NameOnInvoice '+
-  '   , invoiceheads.Address1 '+
-  '   , invoiceheads.Address2 '+
-  '   , invoiceheads.Address3 '+
-  '   , invoiceheads.Total AS ihAmountWithTax '+
-  '   , invoiceheads.TotalWOVAT AS ihAmountNoTax '+
-  '   , invoiceheads.TotalVAT AS ihAmountTax '+
-  '   , invoiceheads.CreditInvoice '+
-  '   , invoiceheads.OriginalInvoice '+
-  '   , invoiceheads.RoomGuest '+
-  '   , invoiceheads.ihInvoiceDate AS InvoiceDate '+
-  '   , invoiceheads.ihPayDate AS dueDate '+
-  '   , invoiceheads.invRefrence '+
-  '   , invoiceheads.TotalStayTax '+
-  '   , invoiceheads.TotalStayTaxNights '+
-  '   , invoiceheads.ihConfirmDate AS ConfirmedDate '+
-  '   , invoiceheads.ihCurrency AS Currency '+
-  '   , invoiceheads.ihCurrencyRate AS Rate '+
-  '   , invoiceheads.ihStaff AS Staff '+
-  '   , customers.Surname AS CustomerName '+
-  '   , customers.TravelAgency AS isAgency '+
-  '   , customers.CustomerType AS markedSegment '+
-  '   , customertypes.Description AS markedSegmentDescription '+
-  ' FROM '+
-  '   customertypes '+
-  '     RIGHT OUTER JOIN customers ON customertypes.CustomerType = customers.CustomerType '+
-  '     RIGHT OUTER JOIN invoiceheads ON customers.Customer = invoiceheads.Customer '+
-  ' WHERE '+
-  '   (invoiceheads.InvoiceNumber IN  %s ) '+ //zSqlInText
-  ' ORDER BY '+
-  '   invoiceheads.InvoiceNumber ' ;
+  ' SELECT '#10+
+  '     ih.Reservation '#10+
+  '   , ih.RoomReservation '#10+
+  '   , ih.SplitNumber '#10+
+  '   , ih.InvoiceNumber '#10+
+  '   , ih.Customer '#10+
+  '   , ih.Name AS NameOnInvoice '#10+
+  '   , ih.Address1 '#10+
+  '   , ih.Address2 '#10+
+  '   , ih.Address3 '#10+
+  '   , il.Total AS ihAmountWithTax '#10+
+  '   , il.Total - il.TotalVat  AS ihAmountNoTax '#10+
+  '   , il.TotalVAT AS ihAmountTax '#10+
+  '   , ih.CreditInvoice '#10+
+  '   , ih.OriginalInvoice '#10+
+  '   , ih.RoomGuest '#10+
+  '   , ih.ihInvoiceDate AS InvoiceDate '#10+
+  '   , ih.ihPayDate AS dueDate '#10+
+  '   , ih.invRefrence '#10+
+  '   , ih.TotalStayTax '#10+
+  '   , ih.TotalStayTaxNights '#10+
+  '   , ih.ihConfirmDate AS ConfirmedDate '#10+
+  '   , ih.ihCurrency AS Currency '#10+
+  '   , ih.ihCurrencyRate AS Rate '#10+
+  '   , ih.ihStaff AS Staff '#10+
+  '   , customers.Surname AS CustomerName '#10+
+  '   , customers.TravelAgency AS isAgency '#10+
+  '   , customers.CustomerType AS markedSegment '#10+
+  '   , customertypes.Description AS markedSegmentDescription '#10+
+  ' FROM '#10+
+  '     customertypes '#10+
+  '     RIGHT OUTER JOIN '#10+
+  '       customers ON customertypes.CustomerType = customers.CustomerType '#10+
+  '     RIGHT OUTER JOIN invoiceheads ih ON customers.Customer = ih.Customer '#10+
+  '     RIGHT JOIN '#10+
+  '       (SELECT '#10+
+  '          invoicenumber '#10+
+//  '          , sum(Total + revenueCorrection) as Total '#10+
+//  '          , sum(Vat + revenueCorrectionVat) AS TotalVAT '#10+
+  '          , sum(Total) as Total '#10+
+  '          , sum(Vat) AS TotalVAT '#10+
+  '        from invoicelines '#10+
+  '        where (invoicenumber> 0) '#10+
+  '        group by invoicenumber '#10+
+  '       ) il on il.invoicenumber = ih.invoicenumber '#10+
+  ' WHERE '#10+
+  '   (ih.InvoiceNumber IN  %s ) '#10+ //zSqlInText
+  ' ORDER BY '#10+
+  '   ih.InvoiceNumber ' ;
 
   //TESTED NOT
 

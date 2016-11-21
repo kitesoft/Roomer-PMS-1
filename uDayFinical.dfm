@@ -63,74 +63,6 @@ object frmDayFinical: TfrmDayFinical
       Font.Name = 'Tahoma'
       Font.Style = [fsBold]
     end
-    object btnRefresh: TsButton
-      Left = 551
-      Top = 58
-      Width = 100
-      Height = 28
-      Caption = 'Refresh'
-      Default = True
-      ImageIndex = 28
-      Images = DImages.PngImageList1
-      TabOrder = 0
-      OnClick = btnRefreshClick
-      SkinData.SkinSection = 'BUTTON'
-    end
-    object GroupBox1: TsGroupBox
-      Left = 274
-      Top = 6
-      Width = 271
-      Height = 80
-      Caption = '.. or Unconfirmed'
-      TabOrder = 2
-      SkinData.SkinSection = 'GROUPBOX'
-      Checked = False
-      object chkGetUnconfirmed: TsCheckBox
-        Left = 21
-        Top = 18
-        Width = 99
-        Height = 20
-        Caption = 'Get unconfirmed'
-        TabOrder = 0
-        OnClick = chkGetUnconfirmedClick
-        SkinData.SkinSection = 'CHECKBOX'
-        ImgChecked = 0
-        ImgUnchecked = 0
-      end
-      object btnConfirm: TsButton
-        Left = 21
-        Top = 50
-        Width = 100
-        Height = 25
-        Caption = 'Confirm now'
-        ImageIndex = 82
-        Images = DImages.PngImageList1
-        TabOrder = 1
-        Visible = False
-        OnClick = btnConfirmClick
-        SkinData.SkinSection = 'BUTTON'
-      end
-    end
-    object getConfirmGroup: TsButton
-      Left = 551
-      Top = 13
-      Width = 100
-      Height = 42
-      Caption = 'Get Selected confirm group'
-      TabOrder = 3
-      OnClick = getConfirmGroupClick
-      SkinData.SkinSection = 'BUTTON'
-    end
-    object btnSwitchToDates: TsButton
-      Left = 33
-      Top = 60
-      Width = 120
-      Height = 20
-      Caption = 'Switch to dates'
-      TabOrder = 4
-      OnClick = btnSwitchToDatesClick
-      SkinData.SkinSection = 'BUTTON'
-    end
     object gbxSelectDates: TsGroupBox
       Left = 11
       Top = 6
@@ -217,8 +149,8 @@ object frmDayFinical: TfrmDayFinical
       object chkOneday: TsCheckBox
         Left = 3
         Top = 60
-        Width = 61
-        Height = 20
+        Width = 69
+        Height = 19
         Caption = 'One day'
         Checked = True
         State = cbChecked
@@ -228,6 +160,74 @@ object frmDayFinical: TfrmDayFinical
         ImgChecked = 0
         ImgUnchecked = 0
       end
+    end
+    object btnRefresh: TsButton
+      Left = 551
+      Top = 58
+      Width = 100
+      Height = 28
+      Caption = 'Refresh'
+      Default = True
+      ImageIndex = 28
+      Images = DImages.PngImageList1
+      TabOrder = 0
+      OnClick = btnRefreshClick
+      SkinData.SkinSection = 'BUTTON'
+    end
+    object GroupBox1: TsGroupBox
+      Left = 274
+      Top = 6
+      Width = 271
+      Height = 80
+      Caption = '.. or Unconfirmed'
+      TabOrder = 2
+      SkinData.SkinSection = 'GROUPBOX'
+      Checked = False
+      object chkGetUnconfirmed: TsCheckBox
+        Left = 21
+        Top = 18
+        Width = 107
+        Height = 19
+        Caption = 'Get unconfirmed'
+        TabOrder = 0
+        OnClick = chkGetUnconfirmedClick
+        SkinData.SkinSection = 'CHECKBOX'
+        ImgChecked = 0
+        ImgUnchecked = 0
+      end
+      object btnConfirm: TsButton
+        Left = 21
+        Top = 50
+        Width = 100
+        Height = 25
+        Caption = 'Confirm now'
+        ImageIndex = 82
+        Images = DImages.PngImageList1
+        TabOrder = 1
+        Visible = False
+        OnClick = btnConfirmClick
+        SkinData.SkinSection = 'BUTTON'
+      end
+    end
+    object getConfirmGroup: TsButton
+      Left = 551
+      Top = 13
+      Width = 100
+      Height = 42
+      Caption = 'Get Selected confirm group'
+      TabOrder = 3
+      OnClick = getConfirmGroupClick
+      SkinData.SkinSection = 'BUTTON'
+    end
+    object btnSwitchToDates: TsButton
+      Left = 33
+      Top = 60
+      Width = 120
+      Height = 20
+      Caption = 'Switch to dates'
+      TabOrder = 4
+      OnClick = btnSwitchToDatesClick
+      SkinData.SkinSection = 'BUTTON'
     end
     object pnlButtons: TsPanel
       Left = 0
@@ -331,7 +331,7 @@ object frmDayFinical: TfrmDayFinical
     Top = 135
     Width = 1011
     Height = 556
-    ActivePage = SheetInvoicelist
+    ActivePage = sheetItemSale
     Align = alClient
     Style = tsFlatButtons
     TabHeight = 25
@@ -339,15 +339,12 @@ object frmDayFinical: TfrmDayFinical
     TabWidth = 120
     OnChange = mainPageChange
     SkinData.SkinSection = 'PAGECONTROL'
+    ExplicitTop = 137
     object sheetSums: TsTabSheet
       Caption = 'Sums'
       ImageIndex = 4
       SkinData.CustomColor = False
       SkinData.CustomFont = False
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Panel9: TsPanel
         Left = 265
         Top = 0
@@ -380,10 +377,6 @@ object frmDayFinical: TfrmDayFinical
             Caption = 'Sale type / paymentgroup'
             SkinData.CustomColor = False
             SkinData.CustomFont = False
-            ExplicitLeft = 0
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
             object grSums2: TcxGrid
               Left = 0
               Top = 0
@@ -392,6 +385,8 @@ object frmDayFinical: TfrmDayFinical
               Align = alClient
               TabOrder = 0
               LookAndFeel.NativeStyle = False
+              ExplicitLeft = 1
+              ExplicitTop = 3
               object tvSums2: TcxGridDBTableView
                 Navigator.Buttons.CustomButtons = <>
                 Navigator.Buttons.First.Visible = True
@@ -522,10 +517,6 @@ object frmDayFinical: TfrmDayFinical
             ImageIndex = 1
             SkinData.CustomColor = False
             SkinData.CustomFont = False
-            ExplicitLeft = 0
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
             object grSums: TcxGrid
               Left = 0
               Top = 0
@@ -848,10 +839,6 @@ object frmDayFinical: TfrmDayFinical
       ImageIndex = 3
       SkinData.CustomColor = False
       SkinData.CustomFont = False
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Panel4: TsPanel
         Left = 0
         Top = 0
@@ -893,6 +880,7 @@ object frmDayFinical: TfrmDayFinical
         Align = alClient
         TabOrder = 1
         LookAndFeel.NativeStyle = False
+        ExplicitTop = 33
         object tvInvoiceHeads: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           Navigator.Buttons.First.Visible = True
@@ -1287,10 +1275,6 @@ object frmDayFinical: TfrmDayFinical
       ImageIndex = 2
       SkinData.CustomColor = False
       SkinData.CustomFont = False
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Panel3: TsPanel
         Left = 0
         Top = 0
@@ -1428,10 +1412,6 @@ object frmDayFinical: TfrmDayFinical
       ImageIndex = 5
       SkinData.CustomColor = False
       SkinData.CustomFont = False
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Panel7: TsPanel
         Left = 0
         Top = 0
@@ -1561,10 +1541,6 @@ object frmDayFinical: TfrmDayFinical
       ImageIndex = 7
       SkinData.CustomColor = False
       SkinData.CustomFont = False
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Panel13: TsPanel
         Left = 0
         Top = 0
@@ -1700,10 +1676,6 @@ object frmDayFinical: TfrmDayFinical
       ImageIndex = 4
       SkinData.CustomColor = False
       SkinData.CustomFont = False
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Panel5: TsPanel
         Left = 0
         Top = 0
@@ -1896,10 +1868,6 @@ object frmDayFinical: TfrmDayFinical
       ImageIndex = 3
       SkinData.CustomColor = False
       SkinData.CustomFont = False
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Panel1: TsPanel
         Left = 0
         Top = 0
@@ -2007,10 +1975,6 @@ object frmDayFinical: TfrmDayFinical
       ImageIndex = 6
       SkinData.CustomColor = False
       SkinData.CustomFont = False
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Panel8: TsPanel
         Left = 0
         Top = 0
@@ -2381,6 +2345,7 @@ object frmDayFinical: TfrmDayFinical
     object grPrinterSums2: TdxGridReportLink
       Active = True
       Component = grSums2
+      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -2402,13 +2367,15 @@ object frmDayFinical: TfrmDayFinical
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
       ReportDocument.Caption = 'Sums2'
-      ReportDocument.CreationDate = 42683.616889490740000000
+      ReportDocument.CreationDate = 42692.457444525460000000
       ReportTitle.TextAlignX = taLeft
+      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
     object grPrinterSums: TdxGridReportLink
       Active = True
       Component = grSums
+      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -2421,11 +2388,13 @@ object frmDayFinical: TfrmDayFinical
       PrinterPage.PageSize.Y = 297000
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
-      ReportDocument.CreationDate = 42683.616889513890000000
+      ReportDocument.CreationDate = 42692.457444537040000000
+      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
     object grPrinterInvoicelist: TdxGridReportLink
       Component = grInvoicelist
+      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -2439,11 +2408,13 @@ object frmDayFinical: TfrmDayFinical
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
       ReportDocument.Caption = 'Sums2'
+      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
     object grPrinterItemSale: TdxGridReportLink
       Active = True
       Component = grItemSale
+      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -2457,12 +2428,14 @@ object frmDayFinical: TfrmDayFinical
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
       ReportDocument.Caption = 'Sums2'
-      ReportDocument.CreationDate = 42683.616889537040000000
+      ReportDocument.CreationDate = 42692.457444548610000000
+      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
     object grPrinterItemTypeSale: TdxGridReportLink
       Active = True
       Component = grItemTypeSale
+      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -2476,12 +2449,14 @@ object frmDayFinical: TfrmDayFinical
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
       ReportDocument.Caption = 'Sums2'
-      ReportDocument.CreationDate = 42683.616889560190000000
+      ReportDocument.CreationDate = 42692.457444571760000000
+      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
     object grPrinterItemVATsale: TdxGridReportLink
       Active = True
       Component = grItemVATsale
+      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -2495,12 +2470,14 @@ object frmDayFinical: TfrmDayFinical
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
       ReportDocument.Caption = 'Sums2'
-      ReportDocument.CreationDate = 42683.616889606480000000
+      ReportDocument.CreationDate = 42692.457444583340000000
+      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
     object grPrinterPaymentGroups: TdxGridReportLink
       Active = True
       Component = grPaymentGroups
+      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -2514,11 +2491,13 @@ object frmDayFinical: TfrmDayFinical
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
       ReportDocument.Caption = 'Sums2'
-      ReportDocument.CreationDate = 42683.616889618050000000
+      ReportDocument.CreationDate = 42692.457444594900000000
+      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
     object grPrinterPayments: TdxGridReportLink
       Component = grPayments
+      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -2532,11 +2511,13 @@ object frmDayFinical: TfrmDayFinical
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
       ReportDocument.Caption = 'Sums2'
+      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
     object grPrinterPaymentType: TdxGridReportLink
       Active = True
       Component = grPaymentType
+      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -2550,7 +2531,8 @@ object frmDayFinical: TfrmDayFinical
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
       ReportDocument.Caption = 'Sums2'
-      ReportDocument.CreationDate = 42683.616889629630000000
+      ReportDocument.CreationDate = 42692.457444606480000000
+      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
     object grPrinterLink1: TdxCompositionReportLink
@@ -2605,7 +2587,7 @@ object frmDayFinical: TfrmDayFinical
     Indexes = <>
     SortOptions = []
     Left = 284
-    Top = 194
+    Top = 210
     object mSumsid: TIntegerField
       FieldName = 'id'
     end

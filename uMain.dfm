@@ -52,6 +52,7 @@ object frmMain: TfrmMain
     SunkenBorder = True
     UseOwnColor = True
     UseOwnSunkenBorder = True
+    ExplicitTop = 122
   end
   object panMain: TsPanel
     Left = 0
@@ -102,6 +103,8 @@ object frmMain: TfrmMain
       object tabOneDayView: TsTabSheet
         Caption = 'tabOneDayView'
         ImageIndex = 8
+        SkinData.CustomColor = False
+        SkinData.CustomFont = False
         object grOneDayRooms: TAdvStringGrid
           Left = 0
           Top = 0
@@ -279,7 +282,7 @@ object frmMain: TfrmMain
           SortSettings.HeaderColorTo = 16579058
           SortSettings.HeaderMirrorColor = 16380385
           SortSettings.HeaderMirrorColorTo = 16182488
-          Version = '7.9.1.1'
+          Version = '8.1.2.0'
           ColWidths = (
             47
             49
@@ -434,6 +437,8 @@ object frmMain: TfrmMain
       object tabGuestList: TsTabSheet
         Caption = 'tabGuestList'
         ImageIndex = 9
+        SkinData.CustomColor = False
+        SkinData.CustomFont = False
         object Panel3: TsPanel
           Left = 0
           Top = 0
@@ -458,6 +463,7 @@ object frmMain: TfrmMain
             TabOrder = 0
             OnClick = rgrGroupreportStayTypeClick
             SkinData.SkinSection = 'GROUPBOX'
+            Checked = False
             Items.Strings = (
               'Arrival'
               'Departure'
@@ -508,11 +514,12 @@ object frmMain: TfrmMain
             ParentFont = False
             TabOrder = 4
             SkinData.SkinSection = 'GROUPBOX'
+            Checked = False
             object chkNewPage: TsCheckBox
               Left = 3
               Top = 15
               Width = 151
-              Height = 17
+              Height = 19
               Caption = 'Reservation on new page'
               Font.Charset = DEFAULT_CHARSET
               Font.Color = clWindowText
@@ -529,7 +536,7 @@ object frmMain: TfrmMain
               Left = 3
               Top = 36
               Width = 81
-              Height = 17
+              Height = 19
               Caption = 'Print memo'
               Font.Charset = DEFAULT_CHARSET
               Font.Color = clWindowText
@@ -838,6 +845,8 @@ object frmMain: TfrmMain
       object tabPeriod: TsTabSheet
         Caption = 'tabPeriod'
         ImageIndex = 2
+        SkinData.CustomColor = False
+        SkinData.CustomFont = False
         object sLabel2: TsLabel
           Left = 224
           Top = 400
@@ -1080,7 +1089,7 @@ object frmMain: TfrmMain
             SortSettings.HeaderColorTo = 16579058
             SortSettings.HeaderMirrorColor = 16380385
             SortSettings.HeaderMirrorColorTo = 16182488
-            Version = '7.9.1.1'
+            Version = '8.1.2.0'
             ColWidths = (
               73
               20
@@ -1438,7 +1447,7 @@ object frmMain: TfrmMain
             SearchFooter.HintHighlight = 'Highlight occurences'
             SearchFooter.MatchCaseCaption = 'Match case'
             SortSettings.DefaultFormat = ssAutomatic
-            Version = '7.9.1.1'
+            Version = '8.1.2.0'
             ColWidths = (
               64
               64
@@ -1618,13 +1627,19 @@ object frmMain: TfrmMain
       end
       object tabFreeRooms: TsTabSheet
         Caption = 'tabFreeRooms'
+        SkinData.CustomColor = False
+        SkinData.CustomFont = False
       end
       object tabDashboard: TsTabSheet
         Caption = 'tabDashboard'
+        SkinData.CustomColor = False
+        SkinData.CustomFont = False
         SkinData.SkinSection = 'TRANSPARENT'
       end
       object tabRateQuery: TsTabSheet
         Caption = 'tabRateQuery'
+        SkinData.CustomColor = False
+        SkinData.CustomFont = False
       end
     end
     object panMainTop: TsPanel
@@ -1936,6 +1951,7 @@ object frmMain: TfrmMain
             Text = '  -  -    '
             OnChange = dtDateChange
             OnMouseEnter = tabsViewMouseEnter
+            CheckOnExit = True
             BoundLabel.Font.Charset = DEFAULT_CHARSET
             BoundLabel.Font.Color = clWindowText
             BoundLabel.Font.Height = -13
@@ -2272,7 +2288,7 @@ object frmMain: TfrmMain
             HintPrevMonth = 'Previous Month'
             HintNextMonth = 'Next Month'
             HintNextYear = 'Next Year'
-            Version = '2.3.0.0'
+            Version = '2.3.1.1'
             TMSStyle = 0
           end
         end
@@ -2419,7 +2435,7 @@ object frmMain: TfrmMain
         ParentColor = False
         Transparent = True
         OnAnchorClick = mmoMessageAnchorClick
-        Version = '1.9.2.3'
+        Version = '1.9.2.6'
         ExplicitLeft = 87
         ExplicitWidth = 1019
       end
@@ -2756,7 +2772,7 @@ object frmMain: TfrmMain
           SelectionColor = 15790320
           SelectionColorTo = 15387318
           SortSettings.DefaultFormat = ssAutomatic
-          Version = '7.9.1.1'
+          Version = '8.1.2.0'
           ColWidths = (
             70
             12
@@ -2915,7 +2931,7 @@ object frmMain: TfrmMain
           SelectionColor = 15790320
           SelectionColorTo = 15387318
           SortSettings.DefaultFormat = ssAutomatic
-          Version = '7.9.1.1'
+          Version = '8.1.2.0'
           RowHeights = (
             19
             19
@@ -3096,7 +3112,6 @@ object frmMain: TfrmMain
       Index = 1
     end
     object rbTabInvoice: TdxRibbonTab
-      Active = True
       Caption = 'Invoice'
       Groups = <
         item
@@ -3111,6 +3126,7 @@ object frmMain: TfrmMain
       Index = 2
     end
     object rbTabReports: TdxRibbonTab
+      Active = True
       Caption = 'Reports'
       Groups = <
         item
@@ -9489,6 +9505,7 @@ object frmMain: TfrmMain
     AddedTitle.Font.Name = 'Tahoma'
     AddedTitle.Font.Style = []
     AddedTitle.Text = 'Next Generation Hotel Management'
+    FormHeader.AdditionalHeight = 0
     SkinData.CustomColor = True
     SkinData.CustomFont = True
     SkinData.SkinManager = sSkinManager1
@@ -24367,6 +24384,7 @@ object frmMain: TfrmMain
           D496F22FE8894AD5544124613CFD3DA81B0D5A2C07FBA45272141100A1D417F9
           EAE352F5EFD75657D651AA03DBBEFF3FE40E5F74}
       end>
+    MenuSupport.IcoLineSkin = 'ICOLINE'
     MenuSupport.ExtraLineFont.Charset = DEFAULT_CHARSET
     MenuSupport.ExtraLineFont.Color = clWindowText
     MenuSupport.ExtraLineFont.Height = -13
