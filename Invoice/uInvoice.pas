@@ -566,7 +566,7 @@ type
     SelectableRooms: TRoomInfoList;
     SelectableExternalRooms: TRoomInfoList;
     zInvoiceNumber: integer;
-    zInvoiceDate: TDateTime;
+    zInvoiceDate: TDate;
     zConfirmDate: TDate;
     zPayDate: TDate;
 
