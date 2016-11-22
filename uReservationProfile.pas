@@ -840,6 +840,7 @@ uses
   ufrmReservationExtras
   , uInvoiceContainer
   , uCurrencyHandler
+  , uAccountTypeDefinitions, uBreakfastStateDefinitions, uSQLUtils, ufrmRoomPrices;
   , uAccountTypeDefinitions, uBreakfastStateDefinitions, uSQLUtils, uDateTimeHelper;
 
 {$R *.DFM}
@@ -2142,7 +2143,7 @@ end;
 procedure TfrmReservationProfile.btnShowPricesClick(Sender: TObject);
 begin
   try
-    EditInvoice(zReservation, 0, 0, 0, 0, 0, false, true, true);
+    EditRoomRates(zReservation, mRoomsCurrency.AsString);
   finally
     Display_rGrid(zRoomReservation);
   end;

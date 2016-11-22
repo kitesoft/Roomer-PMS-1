@@ -6419,12 +6419,11 @@ begin
   if iRoomReservation = 0 then   //FRoomReservation = 0  // GroupInvoice
   begin
     s := format(s, ['Reservation', iReservation, _db(Customer), iReservation, iReservation]);
-    s := s+' (SELECT COUNT(id) FROM persons WHERE %s=rr.%s) AS numTaxGuests '+#10;
   end else
   begin
     s := format(s, ['RoomReservation', iRoomReservation, _db(Customer), iReservation, iReservation]);
-    s := s+' (SELECT COUNT(id) FROM persons WHERE %s=rr.%s) AS numTaxGuests '+#10;
   end;
+  s := s+' (SELECT COUNT(id) FROM persons WHERE %s=rr.%s) AS numTaxGuests '+#10;
 
   s := s+'  FROM '+#10;
   s := s+'     roomreservations rr '+#10;

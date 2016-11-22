@@ -668,8 +668,8 @@ object frmEditRoomPrice: TfrmEditRoomPrice
     SubLanguageID = 1
     LocaleID = 1024
     BeforePost = _kbmRoomRatesBeforePost
-    Left = 256
-    Top = 194
+    Left = 128
+    Top = 242
   end
   object kbmRoomRatesDS: TDataSource
     DataSet = mRoomRates

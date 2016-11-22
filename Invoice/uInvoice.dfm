@@ -667,1092 +667,702 @@ object frmInvoice: TfrmInvoice
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
-      object pageMain: TPageControl
+      object Panel2: TsPanel
         Left = 0
-        Top = 0
-        Width = 1040
-        Height = 502
-        ActivePage = tabInvoice
-        Align = alClient
+        Top = 350
+        Width = 1096
+        Height = 152
+        Align = alBottom
+        BevelOuter = bvLowered
+        ParentColor = True
         TabOrder = 0
-        object tabInvoice: TTabSheet
-          Caption = 'Invoice'
-          TabVisible = False
-          object Panel2: TsPanel
-            Left = 0
-            Top = 340
-            Width = 1032
-            Height = 152
-            Align = alBottom
-            BevelOuter = bvLowered
-            ParentColor = True
-            TabOrder = 0
-            SkinData.SkinSection = 'PANEL'
-            object memExtraText: TMemo
-              Left = 1
-              Top = 1
-              Width = 336
-              Height = 150
-              Align = alLeft
-              BevelInner = bvNone
-              BevelOuter = bvNone
-              BorderStyle = bsNone
-              Color = clWhite
-              Font.Charset = ANSI_CHARSET
-              Font.Color = 16384
-              Font.Height = -12
-              Font.Name = 'Courier New'
-              Font.Style = []
-              ParentFont = False
-              ScrollBars = ssVertical
-              TabOrder = 0
-            end
-            object sPanel2: TsPanel
-              Left = 337
-              Top = 1
-              Width = 256
-              Height = 150
-              Align = alLeft
-              ParentBackground = False
-              ParentColor = True
-              TabOrder = 1
-              SkinData.SkinSection = 'PANEL'
-              object clabTotalwoVAT: TsLabel
-                Left = 7
-                Top = 9
-                Width = 124
-                Height = 13
-                Alignment = taRightJustify
-                AutoSize = False
-                Caption = 'Total w/o VAT :'
-                ParentFont = False
-                Font.Charset = DEFAULT_CHARSET
-                Font.Color = clBlack
-                Font.Height = -11
-                Font.Name = 'Tahoma'
-                Font.Style = [fsBold]
-              end
-              object clavVAT: TsLabel
-                Left = 7
-                Top = 29
-                Width = 124
-                Height = 13
-                Alignment = taRightJustify
-                AutoSize = False
-                Caption = 'VAT :'
-                ParentFont = False
-                Font.Charset = DEFAULT_CHARSET
-                Font.Color = clBlack
-                Font.Height = -11
-                Font.Name = 'Tahoma'
-                Font.Style = [fsBold]
-              end
-              object clabInvoiceTotal: TsLabel
-                Left = 7
-                Top = 49
-                Width = 124
-                Height = 13
-                Alignment = taRightJustify
-                AutoSize = False
-                Caption = 'Invoice total :'
-                ParentFont = False
-                Font.Charset = DEFAULT_CHARSET
-                Font.Color = clBlack
-                Font.Height = -11
-                Font.Name = 'Tahoma'
-                Font.Style = [fsBold]
-              end
-              object clabDownpayments: TsLabel
-                Left = 7
-                Top = 69
-                Width = 124
-                Height = 13
-                Alignment = taRightJustify
-                AutoSize = False
-                Caption = 'Down payments :'
-                ParentFont = False
-                Font.Charset = DEFAULT_CHARSET
-                Font.Color = clBlack
-                Font.Height = -11
-                Font.Name = 'Tahoma'
-                Font.Style = [fsBold]
-              end
-              object clabBalance: TsLabel
-                Left = 7
-                Top = 89
-                Width = 124
-                Height = 13
-                Alignment = taRightJustify
-                AutoSize = False
-                Caption = 'Balance :'
-                ParentFont = False
-                Font.Charset = DEFAULT_CHARSET
-                Font.Color = clBlack
-                Font.Height = -11
-                Font.Name = 'Tahoma'
-                Font.Style = [fsBold]
-              end
-              object edtTotal: TsEdit
-                Left = 139
-                Top = 6
-                Width = 105
-                Height = 17
-                Alignment = taRightJustify
-                AutoSize = False
-                BorderStyle = bsNone
-                Color = clWhite
-                Font.Charset = ANSI_CHARSET
-                Font.Color = clBlack
-                Font.Height = -11
-                Font.Name = 'Courier New'
-                Font.Style = []
-                ParentFont = False
-                ReadOnly = True
-                TabOrder = 0
-                OnChange = edtTotalChange
-                SkinData.SkinSection = 'EDIT'
-                BoundLabel.Font.Charset = DEFAULT_CHARSET
-                BoundLabel.Font.Color = clWindowText
-                BoundLabel.Font.Height = -13
-                BoundLabel.Font.Name = 'Tahoma'
-                BoundLabel.Font.Style = []
-              end
-              object edtVat: TsEdit
-                Left = 139
-                Top = 26
-                Width = 105
-                Height = 17
-                Alignment = taRightJustify
-                AutoSize = False
-                BorderStyle = bsNone
-                Color = clWhite
-                Font.Charset = ANSI_CHARSET
-                Font.Color = clBlack
-                Font.Height = -11
-                Font.Name = 'Courier New'
-                Font.Style = []
-                ParentFont = False
-                ReadOnly = True
-                TabOrder = 1
-                OnChange = edtTotalChange
-                SkinData.SkinSection = 'EDIT'
-                BoundLabel.Font.Charset = DEFAULT_CHARSET
-                BoundLabel.Font.Color = clWindowText
-                BoundLabel.Font.Height = -13
-                BoundLabel.Font.Name = 'Tahoma'
-                BoundLabel.Font.Style = []
-              end
-              object edtInvoiceTotal: TsEdit
-                Left = 139
-                Top = 46
-                Width = 105
-                Height = 17
-                Alignment = taRightJustify
-                AutoSize = False
-                BorderStyle = bsNone
-                Color = clWhite
-                Font.Charset = ANSI_CHARSET
-                Font.Color = clBlack
-                Font.Height = -11
-                Font.Name = 'Courier New'
-                Font.Style = []
-                ParentFont = False
-                ReadOnly = True
-                TabOrder = 2
-                OnChange = edtTotalChange
-                SkinData.SkinSection = 'EDIT'
-                BoundLabel.Font.Charset = DEFAULT_CHARSET
-                BoundLabel.Font.Color = clWindowText
-                BoundLabel.Font.Height = -13
-                BoundLabel.Font.Name = 'Tahoma'
-                BoundLabel.Font.Style = []
-              end
-              object edtDownPayments: TsEdit
-                Left = 139
-                Top = 66
-                Width = 105
-                Height = 17
-                Alignment = taRightJustify
-                AutoSize = False
-                BorderStyle = bsNone
-                Color = clWhite
-                Font.Charset = ANSI_CHARSET
-                Font.Color = clBlack
-                Font.Height = -11
-                Font.Name = 'Courier New'
-                Font.Style = []
-                ParentFont = False
-                ReadOnly = True
-                TabOrder = 3
-                OnChange = edtTotalChange
-                SkinData.SkinSection = 'EDIT'
-                BoundLabel.Font.Charset = DEFAULT_CHARSET
-                BoundLabel.Font.Color = clWindowText
-                BoundLabel.Font.Height = -13
-                BoundLabel.Font.Name = 'Tahoma'
-                BoundLabel.Font.Style = []
-              end
-              object edtBalance: TsEdit
-                Left = 139
-                Top = 86
-                Width = 105
-                Height = 17
-                Alignment = taRightJustify
-                AutoSize = False
-                BorderStyle = bsNone
-                Color = clWhite
-                Font.Charset = ANSI_CHARSET
-                Font.Color = clBlack
-                Font.Height = -11
-                Font.Name = 'Courier New'
-                Font.Style = []
-                ParentFont = False
-                ReadOnly = True
-                TabOrder = 4
-                OnChange = edtTotalChange
-                SkinData.SkinSection = 'EDIT'
-                BoundLabel.Font.Charset = DEFAULT_CHARSET
-                BoundLabel.Font.Color = clWindowText
-                BoundLabel.Font.Height = -13
-                BoundLabel.Font.Name = 'Tahoma'
-                BoundLabel.Font.Style = []
-              end
-              object grbInclutedTaxes: TsGroupBox
-                Left = 16
-                Top = 110
-                Width = 228
-                Height = 36
-                Caption = 'Included taxes'
-                TabOrder = 5
-                SkinData.SkinSection = 'GROUPBOX'
-                Checked = False
-                object labLodgingTaxISK: TsLabel
-                  Left = 12
-                  Top = 16
-                  Width = 22
-                  Height = 13
-                  Caption = '0,00'
-                end
-                object labLodgingTaxNights: TsLabel
-                  Left = 192
-                  Top = 16
-                  Width = 22
-                  Height = 13
-                  Caption = '0,00'
-                end
-                object labTaxNights: TsLabel
-                  Left = 95
-                  Top = 16
-                  Width = 53
-                  Height = 13
-                  Alignment = taRightJustify
-                  AutoSize = False
-                  Caption = 'units :'
-                  ParentFont = False
-                  Font.Charset = DEFAULT_CHARSET
-                  Font.Color = clBlack
-                  Font.Height = -11
-                  Font.Name = 'Tahoma'
-                  Font.Style = [fsBold]
-                end
-                object ClabLodgingTaxCurrency: TsLabel
-                  Left = 77
-                  Top = 16
-                  Width = 19
-                  Height = 13
-                  Alignment = taRightJustify
-                  Caption = 'ISK'
-                  ParentFont = False
-                  Font.Charset = DEFAULT_CHARSET
-                  Font.Color = clBlack
-                  Font.Height = -11
-                  Font.Name = 'Tahoma'
-                  Font.Style = [fsBold]
-                end
-              end
-            end
-            object TsPanel
-              Left = 593
-              Top = 1
-              Width = 438
-              Height = 150
-              Align = alClient
-              TabOrder = 2
-              SkinData.SkinSection = 'PANEL'
-              object sPanel3: TsPanel
-                Left = 1
-                Top = 1
-                Width = 436
-                Height = 20
-                Align = alTop
-                TabOrder = 0
-                SkinData.SkinSection = 'PANEL'
-                object labPayments: TsLabel
-                  Left = 9
-                  Top = 2
-                  Width = 84
-                  Height = 13
-                  Caption = 'Down payments :'
-                end
-              end
-              object grPayments: TcxGrid
-                Left = 1
-                Top = 21
-                Width = 436
-                Height = 128
-                Align = alClient
-                DragMode = dmAutomatic
-                TabOrder = 1
-                LookAndFeel.NativeStyle = False
-                object tvPayments: TcxGridDBTableView
-                  OnMouseDown = tvPaymentsMouseDown
-                  Navigator.Buttons.CustomButtons = <>
-                  OnCellDblClick = tvPaymentsCellDblClick
-                  DataController.DataSource = PaymentsDS
-                  DataController.Summary.DefaultGroupSummaryItems = <>
-                  DataController.Summary.FooterSummaryItems = <>
-                  DataController.Summary.SummaryGroups = <>
-                  OptionsData.CancelOnExit = False
-                  OptionsData.Deleting = False
-                  OptionsData.DeletingConfirmation = False
-                  OptionsData.Editing = False
-                  OptionsData.Inserting = False
-                  OptionsView.GroupByBox = False
-                  object tvPaymentsPayDate: TcxGridDBColumn
-                    Caption = 'Date'
-                    DataBinding.FieldName = 'PayDate'
-                    Width = 75
-                  end
-                  object tvPaymentsPayType: TcxGridDBColumn
-                    Caption = 'Type'
-                    DataBinding.FieldName = 'PayType'
-                    Width = 78
-                  end
-                  object tvPaymentsAmount: TcxGridDBColumn
-                    DataBinding.FieldName = 'Amount'
-                    Width = 84
-                  end
-                  object tvPaymentsDescription: TcxGridDBColumn
-                    DataBinding.FieldName = 'Description'
-                    Width = 128
-                  end
-                  object tvPaymentsPayGroup: TcxGridDBColumn
-                    DataBinding.FieldName = 'PayGroup'
-                    Width = 70
-                  end
-                  object tvPaymentsMemo: TcxGridDBColumn
-                    DataBinding.FieldName = 'Memo'
-                    PropertiesClassName = 'TcxMemoProperties'
-                    Options.Editing = False
-                  end
-                  object tvPaymentsconfirmDate: TcxGridDBColumn
-                    DataBinding.FieldName = 'confirmDate'
-                  end
-                  object tvPaymentsid: TcxGridDBColumn
-                    DataBinding.FieldName = 'id'
-                  end
-                end
-                object lvPayments: TcxGridLevel
-                  GridView = tvPayments
-                end
-              end
-            end
+        SkinData.SkinSection = 'PANEL'
+        object memExtraText: TMemo
+          Left = 1
+          Top = 1
+          Width = 336
+          Height = 150
+          Align = alLeft
+          BevelInner = bvNone
+          BevelOuter = bvNone
+          BorderStyle = bsNone
+          Color = clWhite
+          Font.Charset = ANSI_CHARSET
+          Font.Color = 16384
+          Font.Height = -12
+          Font.Name = 'Courier New'
+          Font.Style = []
+          ParentFont = False
+          ScrollBars = ssVertical
+          TabOrder = 0
+        end
+        object sPanel2: TsPanel
+          Left = 337
+          Top = 1
+          Width = 256
+          Height = 150
+          Align = alLeft
+          ParentBackground = False
+          ParentColor = True
+          TabOrder = 1
+          SkinData.SkinSection = 'PANEL'
+          object clabTotalwoVAT: TsLabel
+            Left = 7
+            Top = 9
+            Width = 124
+            Height = 13
+            Alignment = taRightJustify
+            AutoSize = False
+            Caption = 'Total w/o VAT :'
+            ParentFont = False
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clBlack
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = [fsBold]
           end
-          object Panel4: TsPanel
-            Left = 0
-            Top = 0
-            Width = 1032
-            Height = 91
-            Align = alTop
-            BevelOuter = bvNone
+          object clavVAT: TsLabel
+            Left = 7
+            Top = 29
+            Width = 124
+            Height = 13
+            Alignment = taRightJustify
+            AutoSize = False
+            Caption = 'VAT :'
+            ParentFont = False
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clBlack
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = [fsBold]
+          end
+          object clabInvoiceTotal: TsLabel
+            Left = 7
+            Top = 49
+            Width = 124
+            Height = 13
+            Alignment = taRightJustify
+            AutoSize = False
+            Caption = 'Invoice total :'
+            ParentFont = False
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clBlack
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = [fsBold]
+          end
+          object clabDownpayments: TsLabel
+            Left = 7
+            Top = 69
+            Width = 124
+            Height = 13
+            Alignment = taRightJustify
+            AutoSize = False
+            Caption = 'Down payments :'
+            ParentFont = False
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clBlack
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = [fsBold]
+          end
+          object clabBalance: TsLabel
+            Left = 7
+            Top = 89
+            Width = 124
+            Height = 13
+            Alignment = taRightJustify
+            AutoSize = False
+            Caption = 'Balance :'
+            ParentFont = False
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clBlack
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = [fsBold]
+          end
+          object edtTotal: TsEdit
+            Left = 139
+            Top = 6
+            Width = 105
+            Height = 17
+            Alignment = taRightJustify
+            AutoSize = False
+            BorderStyle = bsNone
+            Color = clWhite
+            Font.Charset = ANSI_CHARSET
+            Font.Color = clBlack
+            Font.Height = -11
+            Font.Name = 'Courier New'
+            Font.Style = []
+            ParentFont = False
+            ReadOnly = True
+            TabOrder = 0
+            OnChange = edtTotalChange
+            SkinData.SkinSection = 'EDIT'
+            BoundLabel.Font.Charset = DEFAULT_CHARSET
+            BoundLabel.Font.Color = clWindowText
+            BoundLabel.Font.Height = -13
+            BoundLabel.Font.Name = 'Tahoma'
+            BoundLabel.Font.Style = []
+          end
+          object edtVat: TsEdit
+            Left = 139
+            Top = 26
+            Width = 105
+            Height = 17
+            Alignment = taRightJustify
+            AutoSize = False
+            BorderStyle = bsNone
+            Color = clWhite
+            Font.Charset = ANSI_CHARSET
+            Font.Color = clBlack
+            Font.Height = -11
+            Font.Name = 'Courier New'
+            Font.Style = []
+            ParentFont = False
+            ReadOnly = True
             TabOrder = 1
-            SkinData.SkinSection = 'PANEL'
-            DesignSize = (
-              1032
-              91)
-            object btnRoomToTemp: TsButton
-              Left = 10
-              Top = 4
-              Width = 130
-              Height = 40
-              Action = actRRtoTemp
-              TabOrder = 0
-              SkinData.SkinSection = 'BUTTON'
+            OnChange = edtTotalChange
+            SkinData.SkinSection = 'EDIT'
+            BoundLabel.Font.Charset = DEFAULT_CHARSET
+            BoundLabel.Font.Color = clWindowText
+            BoundLabel.Font.Height = -13
+            BoundLabel.Font.Name = 'Tahoma'
+            BoundLabel.Font.Style = []
+          end
+          object edtInvoiceTotal: TsEdit
+            Left = 139
+            Top = 46
+            Width = 105
+            Height = 17
+            Alignment = taRightJustify
+            AutoSize = False
+            BorderStyle = bsNone
+            Color = clWhite
+            Font.Charset = ANSI_CHARSET
+            Font.Color = clBlack
+            Font.Height = -11
+            Font.Name = 'Courier New'
+            Font.Style = []
+            ParentFont = False
+            ReadOnly = True
+            TabOrder = 2
+            OnChange = edtTotalChange
+            SkinData.SkinSection = 'EDIT'
+            BoundLabel.Font.Charset = DEFAULT_CHARSET
+            BoundLabel.Font.Color = clWindowText
+            BoundLabel.Font.Height = -13
+            BoundLabel.Font.Name = 'Tahoma'
+            BoundLabel.Font.Style = []
+          end
+          object edtDownPayments: TsEdit
+            Left = 139
+            Top = 66
+            Width = 105
+            Height = 17
+            Alignment = taRightJustify
+            AutoSize = False
+            BorderStyle = bsNone
+            Color = clWhite
+            Font.Charset = ANSI_CHARSET
+            Font.Color = clBlack
+            Font.Height = -11
+            Font.Name = 'Courier New'
+            Font.Style = []
+            ParentFont = False
+            ReadOnly = True
+            TabOrder = 3
+            OnChange = edtTotalChange
+            SkinData.SkinSection = 'EDIT'
+            BoundLabel.Font.Charset = DEFAULT_CHARSET
+            BoundLabel.Font.Color = clWindowText
+            BoundLabel.Font.Height = -13
+            BoundLabel.Font.Name = 'Tahoma'
+            BoundLabel.Font.Style = []
+          end
+          object edtBalance: TsEdit
+            Left = 139
+            Top = 86
+            Width = 105
+            Height = 17
+            Alignment = taRightJustify
+            AutoSize = False
+            BorderStyle = bsNone
+            Color = clWhite
+            Font.Charset = ANSI_CHARSET
+            Font.Color = clBlack
+            Font.Height = -11
+            Font.Name = 'Courier New'
+            Font.Style = []
+            ParentFont = False
+            ReadOnly = True
+            TabOrder = 4
+            OnChange = edtTotalChange
+            SkinData.SkinSection = 'EDIT'
+            BoundLabel.Font.Charset = DEFAULT_CHARSET
+            BoundLabel.Font.Color = clWindowText
+            BoundLabel.Font.Height = -13
+            BoundLabel.Font.Name = 'Tahoma'
+            BoundLabel.Font.Style = []
+          end
+          object grbInclutedTaxes: TsGroupBox
+            Left = 16
+            Top = 110
+            Width = 228
+            Height = 36
+            Caption = 'Included taxes'
+            TabOrder = 5
+            SkinData.SkinSection = 'GROUPBOX'
+            Checked = False
+            object labLodgingTaxISK: TsLabel
+              Left = 12
+              Top = 16
+              Width = 22
+              Height = 13
+              Caption = '0,00'
             end
-            object btnAddItem: TsButton
-              Left = 10
-              Top = 47
-              Width = 130
-              Height = 40
-              Action = actAddLine
-              TabOrder = 1
-              SkinData.SkinSection = 'BUTTON'
+            object labLodgingTaxNights: TsLabel
+              Left = 192
+              Top = 16
+              Width = 22
+              Height = 13
+              Caption = '0,00'
             end
-            object btnItemToTmp: TsButton
-              Left = 141
-              Top = 4
-              Width = 130
-              Height = 40
-              Action = actItemToTemp
-              TabOrder = 2
-              SkinData.SkinSection = 'BUTTON'
-            end
-            object btnRemoveItem: TsButton
-              Left = 141
-              Top = 47
-              Width = 130
-              Height = 40
-              Action = actDelLine
-              TabOrder = 3
-              SkinData.SkinSection = 'BUTTON'
-            end
-            object btnMoveItem: TsButton
-              Left = 272
-              Top = 4
-              Width = 130
-              Height = 40
-              Action = actItemToGroupInvoice
-              Caption = 'Move sales item'
-              DropDownMenu = mnuMoveItem
-              Style = bsSplitButton
-              TabOrder = 4
-              SkinData.SkinSection = 'BUTTON'
-            end
-            object btnMoveRoom: TsButton
-              Left = 403
-              Top = 4
-              Width = 130
-              Height = 40
-              Caption = 'Move room item'
-              DropDownMenu = mnuMoveRoom
-              Enabled = False
-              Style = bsSplitButton
-              TabOrder = 6
-              SkinData.SkinSection = 'BUTTON'
-            end
-            object btnRemoveLodgingTax2: TsButton
-              Left = 403
-              Top = 47
-              Width = 130
-              Height = 40
-              Caption = 'Toggle lodging tax'
-              TabOrder = 7
-              OnClick = btnRemoveLodgingTax2Click
-              SkinData.SkinSection = 'BUTTON'
-            end
-            object btnReservationNotes: TsButton
-              Left = 272
-              Top = 47
-              Width = 130
-              Height = 40
-              Caption = 'Reservation notes'
-              TabOrder = 5
-              OnClick = btnReservationNotesClick
-              SkinData.SkinSection = 'BUTTON'
-            end
-            object btnSaveChanges: TsButton
-              Left = 892
-              Top = 4
-              Width = 134
-              Height = 40
-              Anchors = [akTop, akRight]
-              Caption = 'Save changes'
+            object labTaxNights: TsLabel
+              Left = 95
+              Top = 16
+              Width = 53
+              Height = 13
+              Alignment = taRightJustify
+              AutoSize = False
+              Caption = 'units :'
+              ParentFont = False
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = clWhite
+              Font.Color = clBlack
               Font.Height = -11
               Font.Name = 'Tahoma'
               Font.Style = [fsBold]
-              ImageIndex = 2
-              Images = DImages.cxSmallImagesFlat
+            end
+            object ClabLodgingTaxCurrency: TsLabel
+              Left = 77
+              Top = 16
+              Width = 19
+              Height = 13
+              Alignment = taRightJustify
+              Caption = 'ISK'
               ParentFont = False
-              TabOrder = 8
-              Visible = False
-              OnClick = btnSaveChangesClick
-              SkinData.CustomFont = True
-              SkinData.ColorTone = clRed
-            end
-            object pnlPaymentButtons: TsPanel
-              Left = 629
-              Top = 47
-              Width = 396
-              Height = 40
-              Alignment = taLeftJustify
-              Anchors = [akTop, akRight]
-              AutoSize = True
-              BevelOuter = bvNone
-              TabOrder = 9
-              OnResize = pnlPaymentButtonsResize
-              SkinData.SkinSection = 'PANEL'
-              object btnAddDownPayment: TsButton
-                Left = 0
-                Top = 0
-                Width = 131
-                Height = 40
-                Action = actDownPayment
-                Align = alRight
-                TabOrder = 0
-                SkinData.SkinSection = 'BUTTON'
-              end
-              object btnEditDownPayment: TsButton
-                Left = 131
-                Top = 0
-                Width = 131
-                Height = 40
-                Align = alRight
-                Caption = 'Edit Down Payment'
-                TabOrder = 1
-                OnClick = btnEditDownPaymentClick
-                SkinData.SkinSection = 'BUTTON'
-              end
-              object btnDeleteDownpayment: TsButton
-                Left = 262
-                Top = 0
-                Width = 134
-                Height = 40
-                Align = alRight
-                Caption = 'Delete Down Payment'
-                TabOrder = 2
-                OnClick = btnDeleteDownpaymentClick
-                SkinData.SkinSection = 'BUTTON'
-              end
-            end
-          end
-          object sPanel1: TsPanel
-            Left = 0
-            Top = 91
-            Width = 1032
-            Height = 249
-            Align = alClient
-            BevelOuter = bvNone
-            Caption = 'sPanel1'
-            Padding.Left = 10
-            Padding.Top = 5
-            Padding.Right = 10
-            Padding.Bottom = 5
-            TabOrder = 2
-            SkinData.SkinSection = 'PANEL'
-            object agrLines: TAdvStringGrid
-              Left = 10
-              Top = 5
-              Width = 1012
-              Height = 239
-              Cursor = crDefault
-              Align = alClient
-              BevelInner = bvNone
-              BevelOuter = bvNone
-              BorderStyle = bsNone
-              ColCount = 7
-              DefaultRowHeight = 19
-              DrawingStyle = gdsClassic
-              FixedCols = 0
-              RowCount = 2
-              Font.Charset = ANSI_CHARSET
+              Font.Charset = DEFAULT_CHARSET
               Font.Color = clBlack
-              Font.Height = -12
-              Font.Name = 'Courier New'
-              Font.Style = []
-              Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goColSizing, goEditing, goThumbTracking]
-              ParentFont = False
-              ScrollBars = ssBoth
-              TabOrder = 0
-              OnDrawCell = agrLinesDrawCell
-              OnGetEditText = agrLinesGetEditText
-              OnKeyDown = agrLinesKeyDown
-              OnMouseDown = agrLinesMouseDown
-              HoverRowCells = [hcNormal, hcSelected]
-              OnGetCellColor = agrLinesGetCellColor
-              OnGetAlignment = agrLinesGetAlignment
-              OnRowChanging = agrLinesRowChanging
-              OnDblClickCell = agrLinesDblClickCell
-              OnCanEditCell = agrLinesCanEditCell
-              OnCellValidate = agrLinesCellValidate
-              OnCheckBoxClick = agrLinesCheckBoxClick
-              OnColumnSize = agrLinesColumnSize
-              ActiveCellFont.Charset = DEFAULT_CHARSET
-              ActiveCellFont.Color = clWindowText
-              ActiveCellFont.Height = -13
-              ActiveCellFont.Name = 'Tahoma'
-              ActiveCellFont.Style = [fsBold]
-              ControlLook.FixedGradientHoverFrom = clGray
-              ControlLook.FixedGradientHoverTo = clWhite
-              ControlLook.FixedGradientDownFrom = clGray
-              ControlLook.FixedGradientDownTo = clSilver
-              ControlLook.DropDownHeader.Font.Charset = DEFAULT_CHARSET
-              ControlLook.DropDownHeader.Font.Color = clWindowText
-              ControlLook.DropDownHeader.Font.Height = -13
-              ControlLook.DropDownHeader.Font.Name = 'Tahoma'
-              ControlLook.DropDownHeader.Font.Style = []
-              ControlLook.DropDownHeader.Visible = True
-              ControlLook.DropDownHeader.Buttons = <>
-              ControlLook.DropDownFooter.Font.Charset = DEFAULT_CHARSET
-              ControlLook.DropDownFooter.Font.Color = clWindowText
-              ControlLook.DropDownFooter.Font.Height = -13
-              ControlLook.DropDownFooter.Font.Name = 'Tahoma'
-              ControlLook.DropDownFooter.Font.Style = []
-              ControlLook.DropDownFooter.Visible = True
-              ControlLook.DropDownFooter.Buttons = <>
-              Filter = <>
-              FilterDropDown.Font.Charset = DEFAULT_CHARSET
-              FilterDropDown.Font.Color = clWindowText
-              FilterDropDown.Font.Height = -13
-              FilterDropDown.Font.Name = 'Tahoma'
-              FilterDropDown.Font.Style = []
-              FilterDropDownClear = '(All)'
-              FilterEdit.TypeNames.Strings = (
-                'Starts with'
-                'Ends with'
-                'Contains'
-                'Not contains'
-                'Equal'
-                'Not equal'
-                'Larger than'
-                'Smaller than'
-                'Clear')
-              FixedColWidth = 24
-              FixedRowHeight = 19
-              FixedFont.Charset = DEFAULT_CHARSET
-              FixedFont.Color = clWindowText
-              FixedFont.Height = -13
-              FixedFont.Name = 'Tahoma'
-              FixedFont.Style = [fsBold]
-              FloatFormat = '%.2f'
-              HoverButtons.Buttons = <>
-              HoverButtons.Position = hbLeftFromColumnLeft
-              HTMLSettings.ImageFolder = 'images'
-              HTMLSettings.ImageBaseName = 'img'
-              PrintSettings.DateFormat = 'dd/mm/yyyy'
-              PrintSettings.Font.Charset = DEFAULT_CHARSET
-              PrintSettings.Font.Color = clWindowText
-              PrintSettings.Font.Height = -13
-              PrintSettings.Font.Name = 'Tahoma'
-              PrintSettings.Font.Style = []
-              PrintSettings.FixedFont.Charset = DEFAULT_CHARSET
-              PrintSettings.FixedFont.Color = clWindowText
-              PrintSettings.FixedFont.Height = -13
-              PrintSettings.FixedFont.Name = 'Tahoma'
-              PrintSettings.FixedFont.Style = []
-              PrintSettings.HeaderFont.Charset = DEFAULT_CHARSET
-              PrintSettings.HeaderFont.Color = clWindowText
-              PrintSettings.HeaderFont.Height = -13
-              PrintSettings.HeaderFont.Name = 'Tahoma'
-              PrintSettings.HeaderFont.Style = []
-              PrintSettings.FooterFont.Charset = DEFAULT_CHARSET
-              PrintSettings.FooterFont.Color = clWindowText
-              PrintSettings.FooterFont.Height = -13
-              PrintSettings.FooterFont.Name = 'Tahoma'
-              PrintSettings.FooterFont.Style = []
-              PrintSettings.PageNumSep = '/'
-              ScrollWidth = 21
-              SearchFooter.FindNextCaption = 'Find &next'
-              SearchFooter.FindPrevCaption = 'Find &previous'
-              SearchFooter.Font.Charset = DEFAULT_CHARSET
-              SearchFooter.Font.Color = clWindowText
-              SearchFooter.Font.Height = -13
-              SearchFooter.Font.Name = 'Tahoma'
-              SearchFooter.Font.Style = []
-              SearchFooter.HighLightCaption = 'Highlight'
-              SearchFooter.HintClose = 'Close'
-              SearchFooter.HintFindNext = 'Find next occurrence'
-              SearchFooter.HintFindPrev = 'Find previous occurrence'
-              SearchFooter.HintHighlight = 'Highlight occurrences'
-              SearchFooter.MatchCaseCaption = 'Match case'
-              SortSettings.DefaultFormat = ssAutomatic
-              Version = '8.1.2.0'
-              ColWidths = (
-                24
-                91
-                348
-                88
-                83
-                91
-                31)
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = [fsBold]
             end
           end
         end
-        object tabRoomPrice: TTabSheet
-          Caption = 'RoomPrice'
-          TabVisible = False
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 1010
-          ExplicitHeight = 0
-          object panTopRoomRates: TsPanel
-            Left = 0
-            Top = 0
-            Width = 1032
-            Height = 85
+        object TsPanel
+          Left = 593
+          Top = 1
+          Width = 502
+          Height = 150
+          Align = alClient
+          TabOrder = 2
+          SkinData.SkinSection = 'PANEL'
+          object sPanel3: TsPanel
+            Left = 1
+            Top = 1
+            Width = 500
+            Height = 20
             Align = alTop
             TabOrder = 0
             SkinData.SkinSection = 'PANEL'
-            ExplicitWidth = 1010
-            object cxGroupBox4: TsGroupBox
-              AlignWithMargins = True
-              Left = 230
-              Top = 4
-              Width = 220
-              Height = 77
-              Align = alLeft
-              Caption = 'Selected room'
-              TabOrder = 0
-              SkinData.SkinSection = 'GROUPBOX'
-              Checked = False
-              object btdEditRoomRate: TsButton
-                Left = 8
-                Top = 14
-                Width = 206
-                Height = 20
-                Caption = 'Change rate per date'
-                TabOrder = 0
-                OnClick = btdEditRoomRateClick
-                SkinData.SkinSection = 'BUTTON'
-              end
-              object sButton1: TsButton
-                Left = 9
-                Top = 33
-                Width = 206
-                Height = 20
-                Caption = 'Apply to all roomtypes'
-                TabOrder = 1
-                OnClick = sButton1Click
-                SkinData.SkinSection = 'BUTTON'
-              end
-              object sButton4: TsButton
-                Left = 9
-                Top = 53
-                Width = 206
-                Height = 20
-                Caption = 'Apply to same roomtype'
-                TabOrder = 2
-                OnClick = sButton4Click
-                SkinData.SkinSection = 'BUTTON'
-              end
-            end
-            object sGroupBox2: TsGroupBox
-              AlignWithMargins = True
-              Left = 456
-              Top = 4
-              Width = 268
-              Height = 77
-              Align = alLeft
-              Caption = 'Other properties'
-              TabOrder = 1
-              SkinData.SkinSection = 'GROUPBOX'
-              Checked = False
-              object chkReCalcPrices: TsCheckBox
-                Left = 9
-                Top = 20
-                Width = 195
-                Height = 20
-                Caption = 'Recalc price on guestcount  changes'
-                Checked = True
-                State = cbChecked
-                TabOrder = 0
-                SkinData.SkinSection = 'CHECKBOX'
-                ImgChecked = 0
-                ImgUnchecked = 0
-              end
-              object chkAutoUpdateNullPrice: TsCheckBox
-                Left = 9
-                Top = 46
-                Width = 126
-                Height = 20
-                Caption = 'Auto update Null Price'
-                Checked = True
-                State = cbChecked
-                TabOrder = 1
-                SkinData.SkinSection = 'CHECKBOX'
-                ImgChecked = 0
-                ImgUnchecked = 0
-              end
-            end
-            object sGroupBox1: TsGroupBox
-              AlignWithMargins = True
-              Left = 4
-              Top = 4
-              Width = 220
-              Height = 77
-              Align = alLeft
-              Caption = 'Back to Invoice'
-              TabOrder = 2
-              SkinData.SkinSection = 'GROUPBOX'
-              Checked = False
-              DesignSize = (
-                220
-                77)
-              object sButton2: TsButton
-                Left = 111
-                Top = 16
-                Width = 100
-                Height = 55
-                Anchors = [akTop, akRight]
-                Caption = 'Cancel'
-                ImageIndex = 10
-                Images = DImages.cxLargeImagesFlat
-                TabOrder = 0
-                OnClick = sButton2Click
-                SkinData.SkinSection = 'BUTTON'
-              end
-              object sButton3: TsButton
-                Left = 6
-                Top = 16
-                Width = 100
-                Height = 55
-                Caption = 'Apply'
-                ImageIndex = 82
-                Images = DImages.cxLargeImagesFlat
-                TabOrder = 1
-                OnClick = sButton3Click
-                SkinData.SkinSection = 'BUTTON'
-              end
+            object labPayments: TsLabel
+              Left = 9
+              Top = 2
+              Width = 84
+              Height = 13
+              Caption = 'Down payments :'
             end
           end
-          object grRoomRes: TcxGrid
-            Left = 0
-            Top = 85
-            Width = 1032
-            Height = 407
+          object grPayments: TcxGrid
+            Left = 1
+            Top = 21
+            Width = 500
+            Height = 128
             Align = alClient
+            DragMode = dmAutomatic
             TabOrder = 1
             LookAndFeel.NativeStyle = False
-            ExplicitWidth = 1010
-            object tvRoomRes: TcxGridDBTableView
+            object tvPayments: TcxGridDBTableView
+              OnMouseDown = tvPaymentsMouseDown
               Navigator.Buttons.CustomButtons = <>
-              DataController.DataSource = mRoomResDS
-              DataController.DetailKeyFieldNames = 'RoomReservation'
-              DataController.KeyFieldNames = 'RoomReservation'
-              DataController.Summary.DefaultGroupSummaryItems = <>
-              DataController.Summary.FooterSummaryItems = <
-                item
-                  Format = '###0.;###0.'
-                  Kind = skSum
-                  FieldName = 'Guests'
-                  Column = tvRoomResGuests
-                end
-                item
-                  Format = '###0.;###0.'
-                  Kind = skSum
-                  FieldName = 'ChildrenCount'
-                  Column = tvRoomResChildrenCount
-                end
-                item
-                  Format = '###0.;###0.'
-                  Kind = skSum
-                  FieldName = 'infantCount'
-                  Column = tvRoomResinfantCount
-                end
-                item
-                  Format = '###0.00;###0.00'
-                  Kind = skSum
-                  FieldName = 'AvragePrice'
-                  Column = tvRoomResAvragePrice
-                end
-                item
-                  Format = '###0.00;###0.00'
-                  Kind = skAverage
-                  FieldName = 'AvragePrice'
-                  Column = tvRoomResAvragePrice
-                end>
-              DataController.Summary.SummaryGroups = <>
-              OptionsData.DeletingConfirmation = False
-              OptionsData.Inserting = False
-              OptionsView.Footer = True
-              OptionsView.FooterAutoHeight = True
-              OptionsView.FooterMultiSummaries = True
-              OptionsView.GroupByBox = False
-              object tvRoomResColumn1: TcxGridDBColumn
-                Caption = 'Edit'
-                PropertiesClassName = 'TcxButtonEditProperties'
-                Properties.Buttons = <
-                  item
-                    Caption = 'Refresh'
-                    Default = True
-                    ImageIndex = 29
-                    Kind = bkGlyph
-                  end>
-                Properties.ViewStyle = vsButtonsOnly
-                Properties.OnButtonClick = tvRoomResColumn1PropertiesButtonClick
-                Options.ShowEditButtons = isebAlways
-                Width = 39
-              end
-              object tvRoomResRoom: TcxGridDBColumn
-                DataBinding.FieldName = 'Room'
-                Options.Editing = False
-              end
-              object tvRoomResRoomDescription: TcxGridDBColumn
-                Caption = 'Description'
-                DataBinding.FieldName = 'RoomDescription'
-                Options.Editing = False
-                Width = 95
-              end
-              object tvRoomResRoomType: TcxGridDBColumn
-                Caption = 'Type'
-                DataBinding.FieldName = 'RoomType'
-                Options.Editing = False
-              end
-              object tvRoomResRoomTypeDescription: TcxGridDBColumn
-                Caption = 'Description'
-                DataBinding.FieldName = 'RoomTypeDescription'
-                Visible = False
-                Options.Editing = False
-                Width = 111
-              end
-              object tvRoomResGuestName: TcxGridDBColumn
-                Caption = 'Guest name'
-                DataBinding.FieldName = 'GuestName'
-                Width = 172
-              end
-              object tvRoomResArrival: TcxGridDBColumn
-                DataBinding.FieldName = 'Arrival'
-                Options.Editing = False
-                Width = 80
-              end
-              object tvRoomResDeparture: TcxGridDBColumn
-                DataBinding.FieldName = 'Departure'
-                Options.Editing = False
-                Width = 80
-              end
-              object tvRoomResGuests: TcxGridDBColumn
-                DataBinding.FieldName = 'Guests'
-                PropertiesClassName = 'TcxSpinEditProperties'
-                Properties.MaxValue = 100.000000000000000000
-                Properties.MinValue = 1.000000000000000000
-                Properties.OnEditValueChanged = tvRoomResGuestsPropertiesEditValueChanged
-                Width = 45
-              end
-              object tvRoomResChildrenCount: TcxGridDBColumn
-                Caption = 'Children'
-                DataBinding.FieldName = 'ChildrenCount'
-                PropertiesClassName = 'TcxSpinEditProperties'
-                Properties.MaxValue = 10.000000000000000000
-                Properties.OnEditValueChanged = tvRoomResChildrenCountPropertiesEditValueChanged
-                Width = 45
-              end
-              object tvRoomResinfantCount: TcxGridDBColumn
-                Caption = 'infants'
-                DataBinding.FieldName = 'infantCount'
-                PropertiesClassName = 'TcxSpinEditProperties'
-                Properties.MaxValue = 10.000000000000000000
-                Properties.OnEditValueChanged = tvRoomResinfantCountPropertiesEditValueChanged
-                Width = 45
-              end
-              object tvRoomResAvragePrice: TcxGridDBColumn
-                DataBinding.FieldName = 'AvragePrice'
-                PropertiesClassName = 'TcxCalcEditProperties'
-                Properties.DisplayFormat = '###0.00;###0.00'
-                Properties.OnEditValueChanged = tvRoomResAvragePricePropertiesEditValueChanged
-              end
-              object tvRoomResPackage: TcxGridDBColumn
-                DataBinding.FieldName = 'Package'
-                Width = 89
-              end
-              object tvRoomResRateCount: TcxGridDBColumn
-                DataBinding.FieldName = 'RateCount'
-                PropertiesClassName = 'TcxSpinEditProperties'
-                Properties.DisplayFormat = '###0.;###0.'
-                Options.Editing = False
-              end
-              object tvRoomResPriceCode: TcxGridDBColumn
-                DataBinding.FieldName = 'PriceCode'
-                Options.Editing = False
-              end
-              object tvRoomResAvrageDiscount: TcxGridDBColumn
-                DataBinding.FieldName = 'AvrageDiscount'
-                Options.Editing = False
-              end
-              object tvRoomResisPercentage: TcxGridDBColumn
-                DataBinding.FieldName = 'isPercentage'
-                Options.Editing = False
-              end
-              object tvRoomResRoomReservation: TcxGridDBColumn
-                DataBinding.FieldName = 'RoomReservation'
-              end
-            end
-            object tvRoomRates: TcxGridDBTableView
-              Navigator.Buttons.CustomButtons = <>
-              DataController.DataModeController.SyncMode = False
-              DataController.DataSource = kbmRoomRatesDS
-              DataController.DetailKeyFieldNames = 'RoomReservation'
-              DataController.KeyFieldNames = 'RoomReservation'
-              DataController.MasterKeyFieldNames = 'RoomReservation'
+              OnCellDblClick = tvPaymentsCellDblClick
+              DataController.DataSource = PaymentsDS
               DataController.Summary.DefaultGroupSummaryItems = <>
               DataController.Summary.FooterSummaryItems = <>
               DataController.Summary.SummaryGroups = <>
               OptionsData.CancelOnExit = False
               OptionsData.Deleting = False
               OptionsData.DeletingConfirmation = False
+              OptionsData.Editing = False
               OptionsData.Inserting = False
               OptionsView.GroupByBox = False
-              object tvRoomRatesReservation: TcxGridDBColumn
-                DataBinding.FieldName = 'Reservation'
-                Visible = False
-              end
-              object tvRoomRatesRoomReservation: TcxGridDBColumn
-                DataBinding.FieldName = 'RoomReservation'
-                Visible = False
-              end
-              object tvRoomRatesRoomNumber: TcxGridDBColumn
-                Caption = 'Room'
-                DataBinding.FieldName = 'RoomNumber'
-                Visible = False
-              end
-              object tvRoomRatesRateDate: TcxGridDBColumn
+              object tvPaymentsPayDate: TcxGridDBColumn
                 Caption = 'Date'
-                DataBinding.FieldName = 'RateDate'
+                DataBinding.FieldName = 'PayDate'
+                Width = 75
               end
-              object tvRoomRatesPriceCode: TcxGridDBColumn
-                Caption = 'Price code'
-                DataBinding.FieldName = 'PriceCode'
+              object tvPaymentsPayType: TcxGridDBColumn
+                Caption = 'Type'
+                DataBinding.FieldName = 'PayType'
+                Width = 78
               end
-              object tvRoomRatesRate: TcxGridDBColumn
-                Caption = 'Room Rate'
-                DataBinding.FieldName = 'Rate'
-                PropertiesClassName = 'TcxCalcEditProperties'
+              object tvPaymentsAmount: TcxGridDBColumn
+                DataBinding.FieldName = 'Amount'
+                Width = 84
               end
-              object tvRoomRatesDiscount: TcxGridDBColumn
-                DataBinding.FieldName = 'Discount'
+              object tvPaymentsDescription: TcxGridDBColumn
+                DataBinding.FieldName = 'Description'
+                Width = 128
               end
-              object tvRoomRatesisPercentage: TcxGridDBColumn
-                Caption = 'is %'
-                DataBinding.FieldName = 'isPercentage'
+              object tvPaymentsPayGroup: TcxGridDBColumn
+                DataBinding.FieldName = 'PayGroup'
+                Width = 70
               end
-              object tvRoomRatesShowDiscount: TcxGridDBColumn
-                Caption = 'Show Discount'
-                DataBinding.FieldName = 'ShowDiscount'
-                Visible = False
+              object tvPaymentsMemo: TcxGridDBColumn
+                DataBinding.FieldName = 'Memo'
+                PropertiesClassName = 'TcxMemoProperties'
+                Options.Editing = False
               end
-              object tvRoomRatesisPaid: TcxGridDBColumn
-                Caption = 'Paid'
-                DataBinding.FieldName = 'isPaid'
-                Visible = False
+              object tvPaymentsconfirmDate: TcxGridDBColumn
+                DataBinding.FieldName = 'confirmDate'
               end
-              object tvRoomRatesDiscountAmount: TcxGridDBColumn
-                Caption = 'Total discount'
-                DataBinding.FieldName = 'DiscountAmount'
-              end
-              object tvRoomRatesRentAmount: TcxGridDBColumn
-                Caption = 'Total Rent'
-                DataBinding.FieldName = 'RentAmount'
-              end
-              object tvRoomRatesNativeAmount: TcxGridDBColumn
-                Caption = 'Native'
-                DataBinding.FieldName = 'NativeAmount'
+              object tvPaymentsid: TcxGridDBColumn
+                DataBinding.FieldName = 'id'
               end
             end
-            object lvRoomRes: TcxGridLevel
-              GridView = tvRoomRes
-              object lvRoomRates: TcxGridLevel
-                GridView = tvRoomRates
-              end
+            object lvPayments: TcxGridLevel
+              GridView = tvPayments
             end
           end
+        end
+      end
+      object Panel4: TsPanel
+        Left = 0
+        Top = 0
+        Width = 1096
+        Height = 91
+        Align = alTop
+        BevelOuter = bvNone
+        TabOrder = 3
+        SkinData.SkinSection = 'PANEL'
+        DesignSize = (
+          1096
+          91)
+        object btnRoomToTemp: TsButton
+          Left = 10
+          Top = 4
+          Width = 130
+          Height = 40
+          Action = actRRtoTemp
+          TabOrder = 0
+          SkinData.SkinSection = 'BUTTON'
+        end
+        object btnAddItem: TsButton
+          Left = 10
+          Top = 47
+          Width = 130
+          Height = 40
+          Action = actAddLine
+          TabOrder = 1
+          SkinData.SkinSection = 'BUTTON'
+        end
+        object btnItemToTmp: TsButton
+          Left = 141
+          Top = 4
+          Width = 130
+          Height = 40
+          Action = actItemToTemp
+          TabOrder = 2
+          SkinData.SkinSection = 'BUTTON'
+        end
+        object btnRemoveItem: TsButton
+          Left = 141
+          Top = 47
+          Width = 130
+          Height = 40
+          Action = actDelLine
+          TabOrder = 3
+          SkinData.SkinSection = 'BUTTON'
+        end
+        object btnMoveItem: TsButton
+          Left = 272
+          Top = 4
+          Width = 130
+          Height = 40
+          Action = actItemToGroupInvoice
+          Caption = 'Move sales item'
+          DropDownMenu = mnuMoveItem
+          Style = bsSplitButton
+          TabOrder = 4
+          SkinData.SkinSection = 'BUTTON'
+        end
+        object btnMoveRoom: TsButton
+          Left = 403
+          Top = 4
+          Width = 130
+          Height = 40
+          Caption = 'Move room item'
+          DropDownMenu = mnuMoveRoom
+          Enabled = False
+          Style = bsSplitButton
+          TabOrder = 6
+          SkinData.SkinSection = 'BUTTON'
+        end
+        object btnRemoveLodgingTax2: TsButton
+          Left = 403
+          Top = 47
+          Width = 130
+          Height = 40
+          Caption = 'Toggle lodging tax'
+          TabOrder = 7
+          OnClick = btnRemoveLodgingTax2Click
+          SkinData.SkinSection = 'BUTTON'
+        end
+        object btnReservationNotes: TsButton
+          Left = 272
+          Top = 47
+          Width = 130
+          Height = 40
+          Caption = 'Reservation notes'
+          TabOrder = 5
+          OnClick = btnReservationNotesClick
+          SkinData.SkinSection = 'BUTTON'
+        end
+        object btnSaveChanges: TsButton
+          Left = 892
+          Top = 4
+          Width = 134
+          Height = 40
+          Anchors = [akTop, akRight]
+          Caption = 'Save changes'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWhite
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = [fsBold]
+          ImageIndex = 2
+          Images = DImages.cxSmallImagesFlat
+          ParentFont = False
+          TabOrder = 8
+          Visible = False
+          OnClick = btnSaveChangesClick
+          SkinData.CustomFont = True
+          SkinData.ColorTone = clRed
+        end
+        object pnlPaymentButtons: TsPanel
+          Left = 629
+          Top = 47
+          Width = 396
+          Height = 40
+          Alignment = taLeftJustify
+          Anchors = [akTop, akRight]
+          AutoSize = True
+          BevelOuter = bvNone
+          TabOrder = 9
+          OnResize = pnlPaymentButtonsResize
+          SkinData.SkinSection = 'PANEL'
+          object btnAddDownPayment: TsButton
+            Left = 0
+            Top = 0
+            Width = 131
+            Height = 40
+            Action = actDownPayment
+            Align = alRight
+            TabOrder = 0
+            SkinData.SkinSection = 'BUTTON'
+          end
+          object btnEditDownPayment: TsButton
+            Left = 131
+            Top = 0
+            Width = 131
+            Height = 40
+            Align = alRight
+            Caption = 'Edit Down Payment'
+            TabOrder = 1
+            OnClick = btnEditDownPaymentClick
+            SkinData.SkinSection = 'BUTTON'
+          end
+          object btnDeleteDownpayment: TsButton
+            Left = 262
+            Top = 0
+            Width = 134
+            Height = 40
+            Align = alRight
+            Caption = 'Delete Down Payment'
+            TabOrder = 2
+            OnClick = btnDeleteDownpaymentClick
+            SkinData.SkinSection = 'BUTTON'
+          end
+        end
+      end
+      object sPanel1: TsPanel
+        Left = 0
+        Top = 91
+        Width = 1040
+        Height = 259
+        Align = alClient
+        BevelOuter = bvNone
+        Caption = 'sPanel1'
+        Padding.Left = 10
+        Padding.Top = 5
+        Padding.Right = 10
+        Padding.Bottom = 5
+        TabOrder = 2
+        SkinData.SkinSection = 'PANEL'
+        object agrLines: TAdvStringGrid
+          Left = 10
+          Top = 5
+          Width = 1020
+          Height = 249
+          Cursor = crDefault
+          Align = alClient
+          BevelInner = bvNone
+          BevelOuter = bvNone
+          BorderStyle = bsNone
+          ColCount = 7
+          DefaultRowHeight = 19
+          DrawingStyle = gdsClassic
+          FixedCols = 0
+          RowCount = 2
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clBlack
+          Font.Height = -12
+          Font.Name = 'Courier New'
+          Font.Style = []
+          Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goColSizing, goEditing, goThumbTracking]
+          ParentFont = False
+          ScrollBars = ssBoth
+          TabOrder = 0
+          OnDrawCell = agrLinesDrawCell
+          OnGetEditText = agrLinesGetEditText
+          OnKeyDown = agrLinesKeyDown
+          OnMouseDown = agrLinesMouseDown
+          HoverRowCells = [hcNormal, hcSelected]
+          OnGetCellColor = agrLinesGetCellColor
+          OnGetAlignment = agrLinesGetAlignment
+          OnRowChanging = agrLinesRowChanging
+          OnDblClickCell = agrLinesDblClickCell
+          OnCanEditCell = agrLinesCanEditCell
+          OnCellValidate = agrLinesCellValidate
+          OnCheckBoxClick = agrLinesCheckBoxClick
+          OnColumnSize = agrLinesColumnSize
+          ActiveCellFont.Charset = DEFAULT_CHARSET
+          ActiveCellFont.Color = clWindowText
+          ActiveCellFont.Height = -13
+          ActiveCellFont.Name = 'Tahoma'
+          ActiveCellFont.Style = [fsBold]
+          ControlLook.FixedGradientHoverFrom = clGray
+          ControlLook.FixedGradientHoverTo = clWhite
+          ControlLook.FixedGradientDownFrom = clGray
+          ControlLook.FixedGradientDownTo = clSilver
+          ControlLook.DropDownHeader.Font.Charset = DEFAULT_CHARSET
+          ControlLook.DropDownHeader.Font.Color = clWindowText
+          ControlLook.DropDownHeader.Font.Height = -13
+          ControlLook.DropDownHeader.Font.Name = 'Tahoma'
+          ControlLook.DropDownHeader.Font.Style = []
+          ControlLook.DropDownHeader.Visible = True
+          ControlLook.DropDownHeader.Buttons = <>
+          ControlLook.DropDownFooter.Font.Charset = DEFAULT_CHARSET
+          ControlLook.DropDownFooter.Font.Color = clWindowText
+          ControlLook.DropDownFooter.Font.Height = -13
+          ControlLook.DropDownFooter.Font.Name = 'Tahoma'
+          ControlLook.DropDownFooter.Font.Style = []
+          ControlLook.DropDownFooter.Visible = True
+          ControlLook.DropDownFooter.Buttons = <>
+          Filter = <>
+          FilterDropDown.Font.Charset = DEFAULT_CHARSET
+          FilterDropDown.Font.Color = clWindowText
+          FilterDropDown.Font.Height = -13
+          FilterDropDown.Font.Name = 'Tahoma'
+          FilterDropDown.Font.Style = []
+          FilterDropDownClear = '(All)'
+          FilterEdit.TypeNames.Strings = (
+            'Starts with'
+            'Ends with'
+            'Contains'
+            'Not contains'
+            'Equal'
+            'Not equal'
+            'Larger than'
+            'Smaller than'
+            'Clear')
+          FixedColWidth = 24
+          FixedRowHeight = 19
+          FixedFont.Charset = DEFAULT_CHARSET
+          FixedFont.Color = clWindowText
+          FixedFont.Height = -13
+          FixedFont.Name = 'Tahoma'
+          FixedFont.Style = [fsBold]
+          FloatFormat = '%.2f'
+          HoverButtons.Buttons = <>
+          HoverButtons.Position = hbLeftFromColumnLeft
+          HTMLSettings.ImageFolder = 'images'
+          HTMLSettings.ImageBaseName = 'img'
+          PrintSettings.DateFormat = 'dd/mm/yyyy'
+          PrintSettings.Font.Charset = DEFAULT_CHARSET
+          PrintSettings.Font.Color = clWindowText
+          PrintSettings.Font.Height = -13
+          PrintSettings.Font.Name = 'Tahoma'
+          PrintSettings.Font.Style = []
+          PrintSettings.FixedFont.Charset = DEFAULT_CHARSET
+          PrintSettings.FixedFont.Color = clWindowText
+          PrintSettings.FixedFont.Height = -13
+          PrintSettings.FixedFont.Name = 'Tahoma'
+          PrintSettings.FixedFont.Style = []
+          PrintSettings.HeaderFont.Charset = DEFAULT_CHARSET
+          PrintSettings.HeaderFont.Color = clWindowText
+          PrintSettings.HeaderFont.Height = -13
+          PrintSettings.HeaderFont.Name = 'Tahoma'
+          PrintSettings.HeaderFont.Style = []
+          PrintSettings.FooterFont.Charset = DEFAULT_CHARSET
+          PrintSettings.FooterFont.Color = clWindowText
+          PrintSettings.FooterFont.Height = -13
+          PrintSettings.FooterFont.Name = 'Tahoma'
+          PrintSettings.FooterFont.Style = []
+          PrintSettings.PageNumSep = '/'
+          ScrollWidth = 21
+          SearchFooter.FindNextCaption = 'Find &next'
+          SearchFooter.FindPrevCaption = 'Find &previous'
+          SearchFooter.Font.Charset = DEFAULT_CHARSET
+          SearchFooter.Font.Color = clWindowText
+          SearchFooter.Font.Height = -13
+          SearchFooter.Font.Name = 'Tahoma'
+          SearchFooter.Font.Style = []
+          SearchFooter.HighLightCaption = 'Highlight'
+          SearchFooter.HintClose = 'Close'
+          SearchFooter.HintFindNext = 'Find next occurrence'
+          SearchFooter.HintFindPrev = 'Find previous occurrence'
+          SearchFooter.HintHighlight = 'Highlight occurrences'
+          SearchFooter.MatchCaseCaption = 'Match case'
+          SortSettings.DefaultFormat = ssAutomatic
+          Version = '8.1.2.0'
+          ColWidths = (
+            24
+            91
+            348
+            88
+            83
+            91
+            31)
         end
       end
       object sPanel4: TsPanel
         AlignWithMargins = True
         Left = 1043
-        Top = 3
+        Top = 94
         Width = 50
-        Height = 496
+        Height = 253
         Align = alRight
         TabOrder = 1
         object pnlInvoiceIndex0: TsPanel
@@ -2559,13 +2169,6 @@ object frmInvoice: TfrmInvoice
       Caption = 'Action2'
     end
   end
-  object PopupMenu1: TPopupMenu
-    Left = 56
-    Top = 297
-    object StofnaViskiptamann1: TMenuItem
-      Caption = 'Stofna Vi'#240'skiptamann'
-    end
-  end
   object timCloseInvoice: TTimer
     Enabled = False
     Interval = 100
@@ -2614,16 +2217,6 @@ object frmInvoice: TfrmInvoice
     Left = 448
     Top = 312
   end
-  object mRoomResDS: TDataSource
-    DataSet = mRoomRes
-    Left = 48
-    Top = 552
-  end
-  object kbmRoomRatesDS: TDataSource
-    DataSet = mRoomRates
-    Left = 168
-    Top = 552
-  end
   object PaymentsDS: TDataSource
     DataSet = mPayments
     Left = 320
@@ -2635,180 +2228,6 @@ object frmInvoice: TfrmInvoice
     BCDToCurrency = False
     Left = 296
     Top = 304
-  end
-  object mRoomRates: TdxMemData
-    Indexes = <>
-    SortOptions = []
-    Left = 136
-    Top = 512
-    object mRoomRatesReservation: TIntegerField
-      FieldName = 'Reservation'
-    end
-    object mRoomRatesroomreservation: TIntegerField
-      FieldName = 'roomreservation'
-    end
-    object mRoomRatesRoomNumber: TStringField
-      FieldName = 'RoomNumber'
-      Size = 10
-    end
-    object mRoomRatesRateDate: TDateTimeField
-      FieldName = 'RateDate'
-    end
-    object mRoomRatesPriceCode: TStringField
-      FieldName = 'PriceCode'
-      Size = 10
-    end
-    object mRoomRatesRate: TFloatField
-      FieldName = 'Rate'
-    end
-    object mRoomRatesDiscount: TFloatField
-      FieldName = 'Discount'
-    end
-    object mRoomRatesisPercentage: TBooleanField
-      FieldName = 'isPercentage'
-    end
-    object mRoomRatesShowDiscount: TBooleanField
-      FieldName = 'ShowDiscount'
-    end
-    object mRoomRatesisPaid: TBooleanField
-      FieldName = 'isPaid'
-    end
-    object mRoomRatesDiscountAmount: TFloatField
-      FieldName = 'DiscountAmount'
-    end
-    object mRoomRatesRentAmount: TFloatField
-      FieldName = 'RentAmount'
-    end
-    object mRoomRatesNativeAmount: TFloatField
-      FieldName = 'NativeAmount'
-    end
-    object mRoomRatesGuestName: TWideStringField
-      FieldName = 'GuestName'
-      Size = 60
-    end
-  end
-  object mRoomRatesTmp: TdxMemData
-    Indexes = <>
-    SortOptions = []
-    Left = 216
-    Top = 512
-    object IntegerField1: TIntegerField
-      FieldName = 'Reservation'
-    end
-    object IntegerField2: TIntegerField
-      FieldName = 'roomreservation'
-    end
-    object StringField1: TStringField
-      FieldName = 'RoomNumber'
-      Size = 10
-    end
-    object DateTimeField1: TDateTimeField
-      FieldName = 'RateDate'
-    end
-    object StringField2: TStringField
-      FieldName = 'PriceCode'
-      Size = 10
-    end
-    object FloatField1: TFloatField
-      FieldName = 'Rate'
-    end
-    object FloatField2: TFloatField
-      FieldName = 'Discount'
-    end
-    object BooleanField1: TBooleanField
-      FieldName = 'isPercentage'
-    end
-    object BooleanField2: TBooleanField
-      FieldName = 'ShowDiscount'
-    end
-    object BooleanField3: TBooleanField
-      FieldName = 'isPaid'
-    end
-    object FloatField3: TFloatField
-      FieldName = 'DiscountAmount'
-    end
-    object FloatField4: TFloatField
-      FieldName = 'RentAmount'
-    end
-    object FloatField5: TFloatField
-      FieldName = 'NativeAmount'
-    end
-  end
-  object mRoomRes: TdxMemData
-    Indexes = <
-      item
-        FieldName = 'Room'
-        SortOptions = []
-      end>
-    SortOptions = []
-    Left = 48
-    Top = 504
-    object mRoomResReservation: TIntegerField
-      FieldName = 'Reservation'
-    end
-    object mRoomResroomreservation: TIntegerField
-      FieldName = 'roomreservation'
-    end
-    object mRoomResRoom: TStringField
-      FieldName = 'Room'
-      Size = 10
-    end
-    object mRoomResRoomType: TStringField
-      FieldName = 'RoomType'
-      Size = 10
-    end
-    object mRoomResGuests: TIntegerField
-      FieldName = 'Guests'
-    end
-    object mRoomResAvragePrice: TFloatField
-      FieldName = 'AvragePrice'
-    end
-    object mRoomResRateCount: TIntegerField
-      FieldName = 'RateCount'
-    end
-    object mRoomResRoomDescription: TStringField
-      FieldName = 'RoomDescription'
-      Size = 30
-    end
-    object mRoomResRoomTypeDescription: TStringField
-      FieldName = 'RoomTypeDescription'
-      Size = 30
-    end
-    object mRoomResArrival: TDateTimeField
-      FieldName = 'Arrival'
-    end
-    object mRoomResDeparture: TDateTimeField
-      FieldName = 'Departure'
-    end
-    object mRoomResChildrenCount: TIntegerField
-      FieldName = 'ChildrenCount'
-    end
-    object mRoomResinfantCount: TIntegerField
-      FieldName = 'infantCount'
-    end
-    object mRoomResPriceCode: TStringField
-      FieldName = 'PriceCode'
-      Size = 10
-    end
-    object mRoomResAvrageDiscount: TFloatField
-      FieldName = 'AvrageDiscount'
-    end
-    object mRoomResisPercentage: TBooleanField
-      FieldName = 'isPercentage'
-    end
-    object mRoomResPackage: TWideStringField
-      FieldName = 'Package'
-    end
-    object mRoomResInvoiceIndex: TIntegerField
-      FieldName = 'InvoiceIndex'
-    end
-    object mRoomResGroupAccount: TBooleanField
-      FieldName = 'GroupAccount'
-    end
-    object mRoomResGuestName: TWideStringField
-      FieldName = 'GuestName'
-      Size = 60
-    end
   end
   object mPayments: TdxMemData
     Indexes = <>
@@ -2850,53 +2269,6 @@ object frmInvoice: TfrmInvoice
     end
     object mPaymentsdddd: TDateField
       FieldName = 'dddd'
-    end
-  end
-  object mRR_: TdxMemData
-    Indexes = <>
-    SortOptions = []
-    Left = 432
-    Top = 448
-    object IntegerField3: TIntegerField
-      FieldName = 'Reservation'
-    end
-    object IntegerField4: TIntegerField
-      FieldName = 'roomreservation'
-    end
-    object StringField3: TStringField
-      FieldName = 'RoomNumber'
-      Size = 10
-    end
-    object DateTimeField2: TDateTimeField
-      FieldName = 'RateDate'
-    end
-    object StringField4: TStringField
-      FieldName = 'PriceCode'
-      Size = 10
-    end
-    object FloatField6: TFloatField
-      FieldName = 'Rate'
-    end
-    object FloatField7: TFloatField
-      FieldName = 'Discount'
-    end
-    object BooleanField4: TBooleanField
-      FieldName = 'isPercentage'
-    end
-    object BooleanField5: TBooleanField
-      FieldName = 'ShowDiscount'
-    end
-    object BooleanField6: TBooleanField
-      FieldName = 'isPaid'
-    end
-    object FloatField8: TFloatField
-      FieldName = 'DiscountAmount'
-    end
-    object FloatField9: TFloatField
-      FieldName = 'RentAmount'
-    end
-    object FloatField10: TFloatField
-      FieldName = 'NativeAmount'
     end
   end
   object mnuMoveItem: TPopupMenu
@@ -3000,6 +2372,133 @@ object frmInvoice: TfrmInvoice
     object N12: TMenuItem
       Tag = 9
       Caption = '10'
+    end
+  end
+  object mRoomRes: TdxMemData
+    Indexes = <
+      item
+        FieldName = 'Room'
+        SortOptions = []
+      end>
+    SortOptions = []
+    Left = 152
+    Top = 408
+    object mRoomResReservation: TIntegerField
+      FieldName = 'Reservation'
+    end
+    object mRoomResroomreservation: TIntegerField
+      FieldName = 'roomreservation'
+    end
+    object mRoomResRoom: TStringField
+      FieldName = 'Room'
+      Size = 10
+    end
+    object mRoomResRoomType: TStringField
+      FieldName = 'RoomType'
+      Size = 10
+    end
+    object mRoomResGuests: TIntegerField
+      FieldName = 'Guests'
+    end
+    object mRoomResAvragePrice: TFloatField
+      FieldName = 'AvragePrice'
+    end
+    object mRoomResRateCount: TIntegerField
+      FieldName = 'RateCount'
+    end
+    object mRoomResRoomDescription: TStringField
+      FieldName = 'RoomDescription'
+      Size = 30
+    end
+    object mRoomResRoomTypeDescription: TStringField
+      FieldName = 'RoomTypeDescription'
+      Size = 30
+    end
+    object mRoomResArrival: TDateTimeField
+      FieldName = 'Arrival'
+    end
+    object mRoomResDeparture: TDateTimeField
+      FieldName = 'Departure'
+    end
+    object mRoomResChildrenCount: TIntegerField
+      FieldName = 'ChildrenCount'
+    end
+    object mRoomResinfantCount: TIntegerField
+      FieldName = 'infantCount'
+    end
+    object mRoomResPriceCode: TStringField
+      FieldName = 'PriceCode'
+      Size = 10
+    end
+    object mRoomResAvrageDiscount: TFloatField
+      FieldName = 'AvrageDiscount'
+    end
+    object mRoomResisPercentage: TBooleanField
+      FieldName = 'isPercentage'
+    end
+    object mRoomResPackage: TWideStringField
+      FieldName = 'Package'
+    end
+    object mRoomResInvoiceIndex: TIntegerField
+      FieldName = 'InvoiceIndex'
+    end
+    object mRoomResGroupAccount: TBooleanField
+      FieldName = 'GroupAccount'
+    end
+    object mRoomResGuestName: TWideStringField
+      FieldName = 'GuestName'
+      Size = 60
+    end
+  end
+  object mRoomRates: TdxMemData
+    Indexes = <>
+    SortOptions = []
+    Left = 224
+    Top = 408
+    object mRoomRatesReservation: TIntegerField
+      FieldName = 'Reservation'
+    end
+    object mRoomRatesroomreservation: TIntegerField
+      FieldName = 'roomreservation'
+    end
+    object mRoomRatesRoomNumber: TStringField
+      FieldName = 'RoomNumber'
+      Size = 10
+    end
+    object mRoomRatesRateDate: TDateTimeField
+      FieldName = 'RateDate'
+    end
+    object mRoomRatesPriceCode: TStringField
+      FieldName = 'PriceCode'
+      Size = 10
+    end
+    object mRoomRatesRate: TFloatField
+      FieldName = 'Rate'
+    end
+    object mRoomRatesDiscount: TFloatField
+      FieldName = 'Discount'
+    end
+    object mRoomRatesisPercentage: TBooleanField
+      FieldName = 'isPercentage'
+    end
+    object mRoomRatesShowDiscount: TBooleanField
+      FieldName = 'ShowDiscount'
+    end
+    object mRoomRatesisPaid: TBooleanField
+      FieldName = 'isPaid'
+    end
+    object mRoomRatesDiscountAmount: TFloatField
+      FieldName = 'DiscountAmount'
+    end
+    object mRoomRatesRentAmount: TFloatField
+      FieldName = 'RentAmount'
+    end
+    object mRoomRatesNativeAmount: TFloatField
+      FieldName = 'NativeAmount'
+    end
+    object mRoomRatesGuestName: TWideStringField
+      FieldName = 'GuestName'
+      Size = 60
     end
   end
 end

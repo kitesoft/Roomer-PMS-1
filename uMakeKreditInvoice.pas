@@ -506,7 +506,7 @@ begin
     begin
       SelectedInvoiceIndex := 0;
       d.copyInvoiceToInvoiceLinesTmp(OrginalInvoice, true, hasPackage, SelectedInvoiceIndex);
-      EditInvoice(Reservation, Roomreservation, 0, SelectedInvoiceIndex, 0, 0, false,false,false,NOT hasPackage);
+      EditInvoice(Reservation, Roomreservation, 0, SelectedInvoiceIndex, 0, 0, false,false,NOT hasPackage);
     end;
   end else
   begin
