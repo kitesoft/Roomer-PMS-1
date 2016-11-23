@@ -2333,22 +2333,23 @@ begin
   if transaction then
     BeginTransaction;
   try
-    if PlanType = ptQuery then
+    if (PlanType = ptQuery) or (Plantype = ptAll) then
     begin
       for i := 0 to QueryCount - 1 do
         queryResults.add(FRoomerDataSet.CreateNewDataset);
 
-      lSQLList := getSqlsAsTList(PlanType);
+      lSQLList := getSqlsAsTList(ptQuery);
       try
         res := RoomerDataSet.SystemFreeMultipleQuery(queryResults, lSQLList);
       finally
         lSQLList.Free;
       end;
 
-    end
-    else if PlanType = ptExec then
+    end;
+
+    if (PlanType = ptExec) or (Plantype = ptAll) then
     begin
-      lSQLList := getSqlsAsTList(PlanType);
+      lSQLList := getSqlsAsTList(ptExec);
       try
         res := RoomerDataSet.SystemFreeExecuteMultiple(lSQLList);
       finally
