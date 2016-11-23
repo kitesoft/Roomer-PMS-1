@@ -256,7 +256,8 @@ uses
   uSQLUtils in 'RoomerUtils\uSQLUtils.pas',
   uStringUtils in 'RoomerVCLs\Source\uStringUtils.pas',
   uInvoiceDefinitions in 'Definitions\uInvoiceDefinitions.pas',
-  uFraCountryPanel in 'Embeddables\uFraCountryPanel.pas' {fraCountryPanel: TFrame};
+  uFraCountryPanel in 'Embeddables\uFraCountryPanel.pas' {fraCountryPanel: TFrame},
+  uRoomerConfirmationDialogs in 'uRoomerConfirmationDialogs.pas';
 
 {$R *.RES}
 

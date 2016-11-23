@@ -1592,6 +1592,9 @@ begin
 //      contType := GetMIMEtype(filename);
 //      if LENGTH(contType) < 4 then
 //        contType := 'application/' + copy(LowerCase(ExtractFileExt(Filename)), 2, maxint);
+      contType := GetMIMEtype(filename);
+      if LENGTH(contType) < 4 then
+        contType := 'application/unknown';
       att := multi.AddFile('attachment', filePath, contType);
       att.filename := extractFilename(filename);
     end;

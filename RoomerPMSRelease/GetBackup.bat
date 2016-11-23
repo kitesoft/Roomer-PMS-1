@@ -1,4 +1,12 @@
 @ECHO OFF
+
+set AWSCMD="aws.exe"
+where /Q %AWSCMD%
+if errorlevel 1 (
+  Echo ERROR: AWS-CLI not found on path
+  goto :EOF
+)
+
 SET A_FEW_SPACES=                                                                     .
 SET OK_TOEXECUTE=1
 IF "%1"=="" (
@@ -34,8 +42,8 @@ IF "%OK_TOEXECUTE%"=="0" (
     ECHO %A_FEW_SPACES%
     ECHO Downloading !FILE_TO_DOWNLOAD! TO %3
     ECHO %A_FEW_SPACES%
-    AWSCLI\aws.exe configure<PRODIAM
-    AWSCLI\aws.exe s3 cp !FILE_TO_DOWNLOAD! %3
+    %AWSCMD% configure<PRODIAM
+    %AWSCMD% s3 cp !FILE_TO_DOWNLOAD! %3
 
 )
 

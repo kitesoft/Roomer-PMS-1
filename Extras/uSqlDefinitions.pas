@@ -289,7 +289,7 @@ var
   '   , Reservation '+
   '   , Status '+
   '   , rrArrival '+
-  '   , rrDeparture '+
+  '   , rrDeparture, (SELECT channel FROM reservations WHERE Reservation=%d LIMIT 1) AS channel '+
   ' FROM '+
   '   roomreservations '+
   ' WHERE '+

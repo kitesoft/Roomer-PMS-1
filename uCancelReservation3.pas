@@ -137,6 +137,7 @@ type
     zRoomReservations : string;
     zRooms : string;
     zAll : boolean;
+    AllowCancel : Boolean;
   end;
 
 var
@@ -177,31 +178,18 @@ var
 begin
   rSet := CreateNewDataSet;
   try
-    
+
     rSet.CommandType := cmdText;
-
-    s := '';
-    s := s+ ' SELECT ';
-    s := s+ '     RoomReservation ';
-    s := s+ '   , Room ';
-    s := s+ '   , RoomType ';
-    s := s+ '   , Reservation ';
-    s := s+ '   , Status ';
-    s := s+ '   , rrArrival ';
-    s := s+ '   , rrDeparture ';
-    s := s+ ' FROM ';
-    s := s+ '   roomreservations ';
-    s := s+ ' WHERE ';
-    s := s+ '   (Reservation = '+_db(zReservation)+') ';
-    s := s+ ' ORDER BY room ';
-
-    s := format(select_CancelReservation3_GetData , [zReservation]);
+    s := format(select_CancelReservation3_GetData , [zReservation, zReservation]);
 //    CopyToClipboard(s);
 //    DebugMessage('select_CancelReservation3_GetData'#10#10+s);
     hData.rSet_bySQL(rSet,s);
 
     if mRooms.Active then mRooms.close;
     mRooms.Open;
+    rSet.First;
+    if not rSet.Eof then
+      AllowCancel := NOT glb.GetBooleanValueOfFieldFromId('channels', 'managedByChannelManager', rSet['channel']);
 
     while not rSet.Eof do
     begin

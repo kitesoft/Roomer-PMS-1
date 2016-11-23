@@ -1588,6 +1588,9 @@ begin
 
   constants.Add('shTx_D_SaveToSpecifiedInvoiceIndex', 'Saved invoice as number %d');
 
+  constants.Add('shTxRemoveReservationWarning', 'You are about to remove a reservation originating from a connection with external booking party.' + #13 +
+                                                'Are you sure you want to continue?');
+
   constants.Add('shTx_MandatoryFields_City', 'City');
   constants.Add('shTx_MandatoryFields_Country', 'Country of origin');
   constants.Add('shTx_MandatoryFields_FirstName', 'First name');
