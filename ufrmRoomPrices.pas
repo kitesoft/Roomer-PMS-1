@@ -3,17 +3,65 @@
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uRoomerForm, cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters,
-  cxStyles, dxSkinsCore, dxSkinCaramel, dxSkinCoffee, dxSkinDarkSide, dxSkinTheAsphaltWorld, dxSkinsDefaultPainters,
-  dxSkinscxPCPainter, cxCustomData, cxFilter, cxData, cxDataStorage, cxEdit, cxNavigator, Data.DB, cxDBData,
-  cxButtonEdit, cxSpinEdit, cxCalc, dxmdaset, cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
-  cxGridCustomView, cxGrid, Vcl.StdCtrls, sCheckBox, sButton, sGroupBox, Vcl.ExtCtrls, sPanel, dxPScxCommon,
-  dxPScxGridLnk, cxClasses, cxPropertiesStore, Vcl.ComCtrls, sStatusBar, sLabel, cxCurrencyEdit
-  , uCurrencyHandler
-  ;
+  Winapi.Windows,
+  Winapi.Messages,
+  System.SysUtils,
+  System.Variants,
+  System.Classes,
+  Vcl.Graphics,
+  Vcl.Controls,
+  Vcl.Forms,
+  Vcl.Dialogs,
+  uRoomerForm,
+  cxGraphics,
+  cxControls,
+  cxLookAndFeels,
+  cxLookAndFeelPainters,
+  cxStyles,
+  dxSkinsCore,
+  dxSkinCaramel,
+  dxSkinCoffee,
+  dxSkinDarkSide,
+  dxSkinTheAsphaltWorld,
+  dxSkinsDefaultPainters,
+  dxSkinscxPCPainter,
+  cxCustomData,
+  cxFilter,
+  cxData,
+  cxDataStorage,
+  cxEdit,
+  cxNavigator,
+  Data.DB,
+  cxDBData,
+  cxButtonEdit,
+  cxSpinEdit,
+  cxCalc,
+  dxmdaset,
+  cxGridLevel,
+  cxGridCustomTableView,
+  cxGridTableView,
+  cxGridDBTableView,
+  cxGridCustomView,
+  cxGrid,
+  Vcl.StdCtrls,
+  sCheckBox,
+  sButton,
+  sGroupBox,
+  Vcl.ExtCtrls,
+  sPanel,
+  dxPScxCommon,
+  dxPScxGridLnk,
+  cxClasses,
+  cxPropertiesStore,
+  Vcl.ComCtrls,
+  sStatusBar,
+  sLabel,
+  cxCurrencyEdit,
+  uCurrencyHandler, cxCheckBox;
 
 type
+  ERoomPricesException = class(Exception);
+
   TfrmRoomPrices = class(TfrmBaseRoomerForm)
     pnlTopRoomRates: TsPanel;
     cxGroupBox4: TsGroupBox;
@@ -21,7 +69,6 @@ type
     btnApplyAllRoomtypes: TsButton;
     btnApplySameRoomType: TsButton;
     sGroupBox2: TsGroupBox;
-    chkReCalcPrices: TsCheckBox;
     chkAutoUpdateNullPrice: TsCheckBox;
     pnlButtons: TsPanel;
     btnCancel: TsButton;
@@ -39,12 +86,11 @@ type
     tvRoomResGuests: TcxGridDBColumn;
     tvRoomResChildrenCount: TcxGridDBColumn;
     tvRoomResinfantCount: TcxGridDBColumn;
-    tvRoomResAvragePrice: TcxGridDBColumn;
+    tvRoomResAveragePrice: TcxGridDBColumn;
     tvRoomResPackage: TcxGridDBColumn;
     tvRoomResRateCount: TcxGridDBColumn;
     tvRoomResPriceCode: TcxGridDBColumn;
-    tvRoomResAvrageDiscount: TcxGridDBColumn;
-    tvRoomResisPercentage: TcxGridDBColumn;
+    tvRoomResAverageDiscount: TcxGridDBColumn;
     tvRoomResRoomReservation: TcxGridDBColumn;
     tvRoomRates: TcxGridDBTableView;
     tvRoomRatesReservation: TcxGridDBColumn;
@@ -65,20 +111,19 @@ type
     mRoomRes: TdxMemData;
     mRoomResReservation: TIntegerField;
     mRoomResroomreservation: TIntegerField;
-    mRoomResRoom: TStringField;
-    mRoomResRoomType: TStringField;
+    mRoomResRoom: TWideStringField;
+    mRoomResRoomType: TWideStringField;
     mRoomResGuests: TIntegerField;
-    mRoomResAvragePrice: TFloatField;
+    mRoomResAveragePrice: TFloatField;
     mRoomResRateCount: TIntegerField;
-    mRoomResRoomDescription: TStringField;
-    mRoomResRoomTypeDescription: TStringField;
-    mRoomResArrival: TDateTimeField;
-    mRoomResDeparture: TDateTimeField;
+    mRoomResRoomDescription: TWideStringField;
+    mRoomResRoomTypeDescription: TWideStringField;
+    mRoomResArrival: TDateField;
+    mRoomResDeparture: TDateField;
     mRoomResChildrenCount: TIntegerField;
     mRoomResinfantCount: TIntegerField;
-    mRoomResPriceCode: TStringField;
-    mRoomResAvrageDiscount: TFloatField;
-    mRoomResisPercentage: TBooleanField;
+    mRoomResPriceCode: TWideStringField;
+    mRoomResAverageDiscount: TFloatField;
     mRoomResPackage: TWideStringField;
     mRoomResInvoiceIndex: TIntegerField;
     mRoomResGroupAccount: TBooleanField;
@@ -87,9 +132,9 @@ type
     mRoomRates: TdxMemData;
     mRoomRatesReservation: TIntegerField;
     mRoomRatesroomreservation: TIntegerField;
-    mRoomRatesRoomNumber: TStringField;
-    mRoomRatesRateDate: TDateTimeField;
-    mRoomRatesPriceCode: TStringField;
+    mRoomRatesRoomNumber: TWideStringField;
+    mRoomRatesRateDate: TDateField;
+    mRoomRatesPriceCode: TWideStringField;
     mRoomRatesRate: TFloatField;
     mRoomRatesDiscount: TFloatField;
     mRoomRatesisPercentage: TBooleanField;
@@ -103,9 +148,9 @@ type
     mRR_: TdxMemData;
     IntegerField3: TIntegerField;
     IntegerField4: TIntegerField;
-    StringField3: TStringField;
-    DateTimeField2: TDateTimeField;
-    StringField4: TStringField;
+    StringField3: TWideStringField;
+    DateTimeField2: TDateField;
+    StringField4: TWideStringField;
     FloatField6: TFloatField;
     FloatField7: TFloatField;
     BooleanField4: TBooleanField;
@@ -117,9 +162,9 @@ type
     mRoomRatesTmp: TdxMemData;
     IntegerField1: TIntegerField;
     IntegerField2: TIntegerField;
-    StringField1: TStringField;
-    DateTimeField1: TDateTimeField;
-    StringField2: TStringField;
+    StringField1: TWideStringField;
+    DateTimeField1: TDateField;
+    StringField2: TWideStringField;
     FloatField1: TFloatField;
     FloatField2: TFloatField;
     BooleanField1: TBooleanField;
@@ -133,54 +178,122 @@ type
     procedure btnApplyClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure tvRoomResEditColumnButtonClick(Sender: TObject; AButtonIndex: Integer);
-    procedure tvRoomResGuestsPropertiesEditValueChanged(Sender: TObject);
-    procedure tvRoomResChildrenCountPropertiesEditValueChanged(Sender: TObject);
-    procedure tvRoomResinfantCountPropertiesEditValueChanged(Sender: TObject);
-    procedure tvRoomResAvragePricePropertiesEditValueChanged(Sender: TObject);
+    procedure tvRoomResAveragePricePropertiesEditValueChanged(Sender: TObject);
     procedure btnRatePerDateClick(Sender: TObject);
     procedure btnApplyAllRoomtypesClick(Sender: TObject);
     procedure btnApplySameRoomTypeClick(Sender: TObject);
-    procedure tvRoomResAvragePriceGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
+    procedure tvRoomResAveragePriceGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
+      var AProperties: TcxCustomEditProperties);
+    procedure FormShow(Sender: TObject);
+    procedure tvRoomRatesNativeAmountGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
       var AProperties: TcxCustomEditProperties);
   private
-    FReservation: integer;
+    FRoomReservations: TStringlist;
     FCurrency: string;
     FCurrencyRate: double;
     FCurrencyhandler: TCurrencyhandler;
-    procedure EditRoomRateOneRoom(aRoomRes: integer);
-    procedure ApplyRateToOther(RoomReservation: integer; const RoomType: string);
+    FInvoiceIndex: Integer;
+    procedure EditRoomRateOneRoom(aRoomRes: Integer);
+    procedure ApplyRateToOther(RoomReservation: Integer; const RoomType: string);
     procedure ApplyChanges;
-    procedure CalcOnePrice(RoomReservation: integer; NewRate: Double = 0);
-    procedure ApplyNettoRateToNullPrice(NewRate: Double; RoomReservation: integer; RoomType: string);
+    procedure CalcOnePrice(RoomReservation: Integer; NewRate: double = 0);
+    procedure ApplyNettoRateToNullPrice(NewRate: double; RoomReservation: Integer; RoomType: string);
     procedure SetCurrency(const Value: string);
     { Private declarations }
+  protected
+    procedure DoLoadData; override;
   public
     { Public declarations }
     constructor Create(aOwner: TComponent); override;
     destructor Destroy; override;
-    property Reservation: integer read FReservation write FReservation;
+    property RoomReservations: TStringlist read FRoomReservations write FRoomReservations;
+    property InvoiceIndex: Integer read FInvoiceIndex write FInvoiceIndex;
     property Currency: string read FCurrency write SetCurrency;
   end;
 
-
-  procedure EditRoomRates(aReservation: integer; const aCurrency: string);
+procedure EditRoomRates(aRoomReservations: TStringlist; aInvoiceindex: Integer = -1; const aCurrency: string = '');
 
 implementation
 
 uses
-  uEditRoomPrice
-  , hData, uG, uSQLUtils, uReservationStateDefinitions;
+  uEditRoomPrice,
+  hData,
+  uG,
+  uSQLUtils,
+  uReservationStateDefinitions,
+  cmpRoomerDataset,
+  uUtils, uD;
+
+const
+  // Params: Roomreservation, roomreservation and invoiceindex
+  cSQL_GetRoomRes = ' SELECT DISTINCT '#10 +
+    '  rr.Reservation '#10 +
+    ' ,rr.Roomreservation '#10 +
+    ' ,rr.Room '#10 +
+    ' ,rr.Roomtype '#10 +
+    ' ,r.Description as RoomDescription '#10 +
+    ' ,rt.Description as RoomTypeDescription '#10 +
+    ' ,(SELECT COUNT(id) FROM persons WHERE RoomReservation=rr.RoomReservation) AS Guests '#10 +
+    ' ,IF(ISNULL((SELECT name FROM persons pe WHERE pe.MainName AND pe.roomreservation = rd.roomreservation LIMIT 1)), '#10+
+    '   (SELECT name FROM persons pe WHERE pe.roomreservation = rd.roomreservation LIMIT 1), '#10 +
+    '   (SELECT name FROM persons pe WHERE pe.MainName AND pe.roomreservation = rd.roomreservation LIMIT 1)) AS GuestName '#10+
+    ' ,rr.numChildren as ChildrenCount '#10 +
+    ' ,rr.numInfants as InfantCount '#10 +
+    ' ,rr.AvrageRate as AveragePrice '#10 +
+    ' ,rr.RateCount '#10 +
+    ' ,rr.Discount as AverageDiscount '#10 +
+//    ' ,rr.Percentage as IsPercentage '#10 +
+    ' ,rr.Groupaccount '#10 +
+    ' ,rr.Package '#10 +
+    ' ,CAST(rr.Arrival as DATE) as Arrival '#10 +
+    ' ,CAST(rr.Departure as Date) Departure '#10 +
+    ' ,rr.PriceType as PriceCode '#10 +
+    ' FROM roomreservations rr '#10 +
+    ' JOIN (SELECT %d as Invoiceindex) params '#10+
+    ' JOIN roomsdate rd on (rr.roomreservation=rd.roomreservation or rd.paidby=rr.roomreservation) and rd.paid=0 '#10+
+    ' LEFT OUTER JOIN roomtypes rt ON rt.RoomType = rr.RoomType '#10 +
+    ' LEFT OUTER JOIN rooms r ON r.Room = rr.room '#10 + ' WHERE rr.RoomReservation IN %s '#10 +
+    '      AND rr.GroupAccount = 0  '#10 +
+    '      AND (params.InvoiceIndex=-1 or rr.InvoiceIndex = params.InvoiceIndex) '#10;
+
+  cSQL_GetRoomRates = ' SELECT '#10 +
+    '   rd.Reservation '#10 +
+    '  ,rd.Roomreservation '#10 +
+    '  ,rd.Room as Roomnumber '#10 +
+    '  ,cast(aDate as DATE) as RateDate '#10 +
+    '  ,PriceCode '#10 +
+    '  ,Roomrate as Rate'#10 +
+    '  ,rd.Discount '#10 +
+    '  ,IsPercentage '#10 +
+    '  ,ShowDiscount '#10 +
+    '  ,IF(isPercentage, Roomrate * rd.Discount / 100, rd.Discount ) as DiscountAmount '#10 +
+    '  ,Roomrate - IF(isPercentage, Roomrate * rd.Discount / 100, rd.Discount ) as Rentamount '#10 +
+    '  ,c.AValue * (Roomrate - IF(isPercentage, Roomrate * rd.Discount / 100, rd.Discount)) as NativeAmount '#10 +
+    '  ,IF(ISNULL((SELECT name FROM persons pe WHERE pe.MainName AND pe.roomreservation = rd.roomreservation LIMIT 1)), '#10+
+    '   (SELECT name FROM persons pe WHERE pe.roomreservation = rd.roomreservation LIMIT 1), '#10 +
+    '   (SELECT name FROM persons pe WHERE pe.MainName AND pe.roomreservation = rd.roomreservation LIMIT 1)) AS GuestName '#10+
+    ' FROM roomsdate rd '#10 +
+    ' JOIN (SELECT %d as Invoiceindex) params '#10 +
+    ' JOIN roomreservations rr on rr.roomreservation=rd.roomreservation AND (params.InvoiceIndex=-1 or rr.InvoiceIndex = params.InvoiceIndex) '#10+
+    ' JOIN currencies c on c.currency=rd.currency '#10+
+    ' WHERE rd.roomreservation in %s '#10 +
+    '     and rd.paid = 0 '#10 +
+    '     and rd.resflag <> ''X'' '#10;
 
 {$R *.dfm}
 
-procedure EditRoomRates(aReservation: integer; const aCurrency: string);
+procedure EditRoomRates(aRoomReservations: TStringlist; aInvoiceindex: Integer = -1; const aCurrency: string = '');
 var
   frm: TfrmRoomPrices;
 begin
+  if aRoomReservations.Count = 0 then
+    raise ERoomPricesException.Create('No roomreservations specified to edit roomrates.');
+
   frm := TfrmRoomPrices.Create(nil);
   try
-    frm.Reservation := aReservation;
-    frm.Currency := aCurrency;
+    frm.RoomReservations := aRoomReservations;
+    frm.InvoiceIndex := aInvoiceindex;
+    frm.Currency := iif(aCurrency = '', g.qNativeCurrency, aCurrency);
     frm.ShowModal;
   finally
     frm.Free;
@@ -217,26 +330,33 @@ begin
   EditRoomRateOneRoom(mRoomRes.FieldByName('roomreservation').asinteger);
 end;
 
-procedure TfrmRoomPrices.tvRoomResAvragePriceGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
-  var AProperties: TcxCustomEditProperties);
+procedure TfrmRoomPrices.tvRoomRatesNativeAmountGetProperties(Sender: TcxCustomGridTableItem;
+  ARecord: TcxCustomGridRecord; var AProperties: TcxCustomEditProperties);
 begin
   inherited;
-  aProperties := FCurrencyhandler.GetcxEditProperties;
+  aProperties := d.getCurrencyProperties(g.qNativeCurrency);
 end;
 
-procedure TfrmRoomPrices.tvRoomResAvragePricePropertiesEditValueChanged(Sender: TObject);
+procedure TfrmRoomPrices.tvRoomResAveragePriceGetProperties(Sender: TcxCustomGridTableItem;
+  ARecord: TcxCustomGridRecord; var AProperties: TcxCustomEditProperties);
+begin
+  inherited;
+  AProperties := FCurrencyhandler.GetcxEditPropertiesKeepEvents(aProperties);
+end;
+
+procedure TfrmRoomPrices.tvRoomResAveragePricePropertiesEditValueChanged(Sender: TObject);
 var
-  RoomReservation: integer;
+  RoomReservation: Integer;
   RoomType: string;
-  oldRate: Double;
-  NewRate: Double;
+  oldRate: double;
+  NewRate: double;
 begin
   RoomReservation := mRoomRes.FieldByName('RoomReservation').asinteger;
-  oldRate := mRoomRes.FieldByName('avragePrice').asfloat;
+  oldRate := mRoomRes.FieldByName('AveragePrice').asfloat;
   RoomType := mRoomRes.FieldByName('RoomType').asString;
 
   mRoomRes.post;
-  NewRate := mRoomRes.FieldByName('avragePrice').asfloat;
+  NewRate := mRoomRes.FieldByName('AveragePrice').asfloat;
 
   if oldRate <> NewRate then
     CalcOnePrice(RoomReservation, NewRate);
@@ -246,95 +366,43 @@ begin
 
 end;
 
-procedure TfrmRoomPrices.tvRoomResChildrenCountPropertiesEditValueChanged(Sender: TObject);
-var
-  RoomReservation: integer;
-  oldValue: integer;
-  newValue: integer;
-begin
-  oldValue := mRoomRes.FieldByName('ChildrenCount').asinteger;
-  RoomReservation := mRoomRes.FieldByName('RoomReservation').asinteger;
-  mRoomRes.post;
-  newValue := mRoomRes.FieldByName('ChildrenCount').asinteger;
-  if newValue <> oldValue then
-    CalcOnePrice(RoomReservation);
-
-end;
-
 procedure TfrmRoomPrices.tvRoomResEditColumnButtonClick(Sender: TObject; AButtonIndex: Integer);
 begin
   EditRoomRateOneRoom(mRoomRes.FieldByName('roomreservation').asinteger);
+  RefreshData;
 end;
 
-procedure TfrmRoomPrices.tvRoomResGuestsPropertiesEditValueChanged(Sender: TObject);
-var
-  RoomReservation: integer;
-  oldValue: integer;
-  newValue: integer;
-begin
-  oldValue := mRoomRes.FieldByName('guests').asinteger;
-  RoomReservation := mRoomRes.FieldByName('RoomReservation').asinteger;
-  mRoomRes.post;
-  newValue := mRoomRes.FieldByName('guests').asinteger;
-  if newValue <> oldValue then
-    CalcOnePrice(RoomReservation);
-
-
-end;
-
-procedure TfrmRoomPrices.tvRoomResinfantCountPropertiesEditValueChanged(Sender: TObject);
-var
-  RoomReservation: integer;
-  oldValue: integer;
-  newValue: integer;
-begin
-  oldValue := mRoomRes.FieldByName('infantCount').asinteger;
-  RoomReservation := mRoomRes.FieldByName('RoomReservation').asinteger;
-  mRoomRes.post;
-  newValue := mRoomRes.FieldByName('InfantCount').asinteger;
-  if newValue <> oldValue then
-  begin
-    CalcOnePrice(RoomReservation);
-  end;
-end;
-
-procedure TfrmRoomPrices.EditRoomRateOneRoom(aRoomRes: integer);
+procedure TfrmRoomPrices.EditRoomRateOneRoom(aRoomRes: Integer);
 var
   theData: recEditRoomPriceHolder;
 
-  reservation: integer;
-  RoomReservation: integer;
+  reservation: Integer;
+  RoomReservation: Integer;
   RoomNumber: string;
   PriceCode: string;
   RateDate: TDateTime;
-  Rate: Double;
-  Discount: Double;
+  Rate: double;
+  Discount: double;
   isPercentage: boolean;
   ShowDiscount: boolean;
   isPaid: boolean;
-  DiscountAmount: Double;
-  rentAmount: Double;
-  NativeAmount: Double;
-  AvrageAmount: Double;
-  ttAmount: Double;
-  AmountCount: integer;
-  lstPrices: TStringList;
-  RateCount: integer;
+  DiscountAmount: double;
+  rentAmount: double;
+  NativeAmount: double;
+  AverageAmount: double;
+  ttAmount: double;
+  AmountCount: Integer;
 
-  ttDiscount: Double;
-  AvrageDiscount: Double;
+  ttDiscountAmount: double;
+  AverageDiscount: double;
 
-  applyType: integer;
+  applyType: Integer;
 
 begin
   applyType := 0;
   if mRR_.active then
-    mRR_.close;
-  lstPrices := TStringList.create;
+    mRR_.Close;
   try
-    lstPrices.Sorted := True;
-    lstPrices.Duplicates := dupIgnore;
-
     initEditRoomPriceHolder(theData);
     theData.isCreateRes := True;
 
@@ -352,36 +420,22 @@ begin
     mRoomRates.first;
     while not mRoomRates.eof do
     begin
-      if mRoomRates.FieldByName('roomreservation').asinteger = RoomReservation
-      then
+      if mRoomRates.FieldByName('roomreservation').asinteger = RoomReservation then
       begin
         mRR_.append;
-        mRR_.FieldByName('Reservation').asinteger :=
-          mRoomRates.FieldByName('Reservation').asinteger;
-        mRR_.FieldByName('RoomReservation').asinteger :=
-          mRoomRates.FieldByName('RoomReservation').asinteger;
-        mRR_.FieldByName('RoomNumber').asString :=
-          mRoomRates.FieldByName('RoomNumber').asString;
-        mRR_.FieldByName('PriceCode').asString :=
-          mRoomRates.FieldByName('PriceCode').asString;
-        mRR_.FieldByName('RateDate').asdateTime :=
-          mRoomRates.FieldByName('RateDate').asdateTime;
-        mRR_.FieldByName('Rate').asfloat :=
-          mRoomRates.FieldByName('Rate').asfloat;
-        mRR_.FieldByName('Discount').asfloat :=
-          mRoomRates.FieldByName('Discount').asfloat;
-        mRR_.FieldByName('isPercentage').asBoolean :=
-          mRoomRates.FieldByName('isPercentage').asBoolean;
-        mRR_.FieldByName('ShowDiscount').asBoolean :=
-          mRoomRates.FieldByName('ShowDiscount').asBoolean;
-        mRR_.FieldByName('isPaid').asBoolean := mRoomRates.FieldByName('isPaid')
-          .asBoolean;
-        mRR_.FieldByName('DiscountAmount').asfloat :=
-          mRoomRates.FieldByName('DiscountAmount').asfloat;
-        mRR_.FieldByName('RentAmount').asfloat :=
-          mRoomRates.FieldByName('RentAmount').asfloat;
-        mRR_.FieldByName('NativeAmount').asfloat :=
-          mRoomRates.FieldByName('NativeAmount').asfloat;
+        mRR_.FieldByName('Reservation').asinteger := mRoomRates.FieldByName('Reservation').asinteger;
+        mRR_.FieldByName('RoomReservation').asinteger := mRoomRates.FieldByName('RoomReservation').asinteger;
+        mRR_.FieldByName('RoomNumber').asString := mRoomRates.FieldByName('RoomNumber').asString;
+        mRR_.FieldByName('PriceCode').asString := mRoomRates.FieldByName('PriceCode').asString;
+        mRR_.FieldByName('RateDate').asdateTime := mRoomRates.FieldByName('RateDate').asdateTime;
+        mRR_.FieldByName('Rate').asfloat := mRoomRates.FieldByName('Rate').asfloat;
+        mRR_.FieldByName('Discount').asfloat := mRoomRates.FieldByName('Discount').asfloat;
+        mRR_.FieldByName('isPercentage').asBoolean := mRoomRates.FieldByName('isPercentage').asBoolean;
+        mRR_.FieldByName('ShowDiscount').asBoolean := mRoomRates.FieldByName('ShowDiscount').asBoolean;
+        mRR_.FieldByName('isPaid').asBoolean := mRoomRates.FieldByName('isPaid').asBoolean;
+        mRR_.FieldByName('DiscountAmount').asfloat := mRoomRates.FieldByName('DiscountAmount').asfloat;
+        mRR_.FieldByName('RentAmount').asfloat := mRoomRates.FieldByName('RentAmount').asfloat;
+        mRR_.FieldByName('NativeAmount').asfloat := mRoomRates.FieldByName('NativeAmount').asfloat;
         mRR_.post;
       end;
       mRoomRates.Next;
@@ -392,57 +446,53 @@ begin
     theData.Room := mRR_.FieldByName('roomNumber').asString;
     ttAmount := 0;
     AmountCount := 0;
-    ttDiscount := 0;
-    isPercentage := false;
+    ttDiscountAmount := 0;
 
     if editRoomPrice(actNone, theData, mRR_, applyType) then
     begin
       mRoomRates.DisableControls;
       try
-      mRR_.first;
-      while not mRR_.eof do
-      begin
-        reservation := mRR_.FieldByName('Reservation').asinteger;
-        RoomReservation := mRR_.FieldByName('RoomReservation').asinteger;
-        RoomNumber := mRR_.FieldByName('RoomNumber').asString;
-        PriceCode := mRR_.FieldByName('PriceCode').asString;
-        RateDate := mRR_.FieldByName('RateDate').asdateTime;
-        Rate := mRR_.FieldByName('Rate').asfloat;
-        Discount := mRR_.FieldByName('Discount').asfloat;
-        isPercentage := mRR_.FieldByName('isPercentage').asBoolean;
-        ShowDiscount := mRR_.FieldByName('ShowDiscount').asBoolean;
-        isPaid := mRR_.FieldByName('isPaid').asBoolean;
-        DiscountAmount := mRR_.FieldByName('DiscountAmount').asfloat;
-        rentAmount := mRR_.FieldByName('RentAmount').asfloat;
-        NativeAmount := mRR_.FieldByName('NativeAmount').asfloat;
-
-        lstPrices.add(floattostr(rentAmount));
-        inc(AmountCount);
-        ttAmount := ttAmount + rentAmount;
-        ttDiscount := ttDiscount + Discount;
-
-        if mRoomRates.Locate('RoomReservation;rateDate',
-          VarArrayOf([RoomReservation, RateDate]), []) then
+        mRR_.first;
+        while not mRR_.eof do
         begin
-          mRoomRates.edit;
-          mRoomRates.FieldByName('Reservation').asinteger := reservation;
-          mRoomRates.FieldByName('RoomReservation').asinteger :=
-            RoomReservation;
-          mRoomRates.FieldByName('RoomNumber').asString := RoomNumber;
-          mRoomRates.FieldByName('PriceCode').asString := PriceCode;
-          mRoomRates.FieldByName('RateDate').asdateTime := RateDate;
-          mRoomRates.FieldByName('Rate').asfloat := Rate;
-          mRoomRates.FieldByName('Discount').asfloat := Discount;
-          mRoomRates.FieldByName('isPercentage').asBoolean := isPercentage;
-          mRoomRates.FieldByName('ShowDiscount').asBoolean := ShowDiscount;
-          mRoomRates.FieldByName('isPaid').asBoolean := isPaid;
-          mRoomRates.FieldByName('DiscountAmount').asfloat := DiscountAmount;
-          mRoomRates.FieldByName('RentAmount').asfloat := rentAmount;
-          mRoomRates.FieldByName('NativeAmount').asfloat := NativeAmount;
-          mRoomRates.post;
+          reservation := mRR_.FieldByName('Reservation').asinteger;
+          RoomReservation := mRR_.FieldByName('RoomReservation').asinteger;
+          RoomNumber := mRR_.FieldByName('RoomNumber').asString;
+          PriceCode := mRR_.FieldByName('PriceCode').asString;
+          RateDate := mRR_.FieldByName('RateDate').asdateTime;
+          Rate := mRR_.FieldByName('Rate').asfloat;
+          Discount := mRR_.FieldByName('Discount').asfloat;
+          isPercentage := mRR_.FieldByName('isPercentage').asBoolean;
+          ShowDiscount := mRR_.FieldByName('ShowDiscount').asBoolean;
+          isPaid := mRR_.FieldByName('isPaid').asBoolean;
+          DiscountAmount := mRR_.FieldByName('DiscountAmount').asfloat;
+          rentAmount := mRR_.FieldByName('RentAmount').asfloat;
+          NativeAmount := mRR_.FieldByName('NativeAmount').asfloat;
+
+          inc(AmountCount);
+          ttAmount := ttAmount + rentAmount;
+          ttDiscountAmount := ttDiscountAmount + DiscountAmount;
+
+          if mRoomRates.Locate('RoomReservation;rateDate', VarArrayOf([RoomReservation, RateDate]), []) then
+          begin
+            mRoomRates.edit;
+            mRoomRates.FieldByName('Reservation').asinteger := reservation;
+            mRoomRates.FieldByName('RoomReservation').asinteger := RoomReservation;
+            mRoomRates.FieldByName('RoomNumber').asString := RoomNumber;
+            mRoomRates.FieldByName('PriceCode').asString := PriceCode;
+            mRoomRates.FieldByName('RateDate').asdateTime := RateDate;
+            mRoomRates.FieldByName('Rate').asfloat := Rate;
+            mRoomRates.FieldByName('Discount').asfloat := Discount;
+            mRoomRates.FieldByName('isPercentage').asBoolean := isPercentage;
+            mRoomRates.FieldByName('ShowDiscount').asBoolean := ShowDiscount;
+            mRoomRates.FieldByName('isPaid').asBoolean := isPaid;
+            mRoomRates.FieldByName('DiscountAmount').asfloat := DiscountAmount;
+            mRoomRates.FieldByName('RentAmount').asfloat := rentAmount;
+            mRoomRates.FieldByName('NativeAmount').asfloat := NativeAmount;
+            mRoomRates.post;
+          end;
+          mRR_.Next;
         end;
-        mRR_.Next;
-      end;
       finally
         mRoomRates.EnableControls;
       end;
@@ -450,24 +500,21 @@ begin
       begin
         if AmountCount <> 0 then
         begin
-          AvrageAmount := ttAmount / AmountCount;
-          AvrageDiscount := ttDiscount / AmountCount;
+          AverageAmount := ttAmount / AmountCount;
+          AverageDiscount := ttDiscountAmount / AmountCount;
 
-          RateCount := lstPrices.Count;
           mRoomRes.edit;
-          mRoomRes.FieldByName('AvragePrice').asfloat := AvrageAmount;
-          mRoomRes.FieldByName('RateCount').asinteger := RateCount;
+          mRoomRes.FieldByName('AveragePrice').asfloat := AverageAmount;
+          mRoomRes.FieldByName('RateCount').asinteger := AmountCount;
           mRoomRes.FieldByName('PriceCode').asString := PriceCode;
-          mRoomRes.FieldByName('AvrageDiscount').asfloat := AvrageDiscount;
-          mRoomRes.FieldByName('isPercentage').asBoolean := isPercentage;
+          mRoomRes.FieldByName('AverageDiscount').asfloat := AverageDiscount;
           mRoomRes.post;
         end;
       end;
     end;
   finally
-    FreeAndNil(lstPrices);
     if mRR_.active then
-      mRR_.close;
+      mRR_.Close;
   end;
 
   if applyType = 2 then
@@ -475,6 +522,12 @@ begin
   else if applyType = 3 then
     ApplyRateToOther(RoomReservation, '');
 
+end;
+
+procedure TfrmRoomPrices.FormShow(Sender: TObject);
+begin
+  inherited;
+  RefreshData;
 end;
 
 procedure TfrmRoomPrices.SetCurrency(const Value: string);
@@ -485,35 +538,35 @@ begin
     if assigned(FCurrencyhandler) then
       FCurrencyhandler.Free;
 
-    FCurrencyhandler := TCurrencyHandler.Create(FCurrency);
+    FCurrencyhandler := TCurrencyhandler.Create(FCurrency);
 
     lblCurrency.Caption := FCurrencyhandler.CurrencyCode
   end;
 end;
 
-procedure TfrmRoomPrices.ApplyRateToOther(RoomReservation: integer; const RoomType: string);
+procedure TfrmRoomPrices.ApplyRateToOther(RoomReservation: Integer; const RoomType: string);
 var
   RateDate: TDateTime;
   PriceCode: string;
-  Rate: Double;
-  Discount: Double;
+  Rate: double;
+  Discount: double;
   isPercentage: boolean;
   ShowDiscount: boolean;
   isPaid: boolean;
-  DiscountAmount: Double;
-  rentAmount: Double;
-  NativeAmount: Double;
+  DiscountAmount: double;
+  rentAmount: double;
+  NativeAmount: double;
 
   Arrival: TDateTime;
   Departure: TDateTime;
 
-  AvragePrice: Double;
-  RateCount: integer;
-  AvrageDiscount: Double;
+  AveragePrice: double;
+  RateCount: Integer;
+  AverageDiscount: double;
   Room: string;
 
   found: boolean;
-  currentRoomReservation: integer;
+  currentRoomReservation: Integer;
 
 begin
   // RoomReservation := mRoomRes.FieldByName('RoomReservation').AsInteger;
@@ -521,14 +574,13 @@ begin
 
   Arrival := mRoomRes.FieldByName('Arrival').asdateTime;
   Departure := mRoomRes.FieldByName('Departure').asdateTime;
-  AvragePrice := mRoomRes.FieldByName('AvragePrice').asfloat;
+  AveragePrice := mRoomRes.FieldByName('AveragePrice').asfloat;
   RateCount := mRoomRes.FieldByName('RateCount').asinteger;
   PriceCode := mRoomRes.FieldByName('PriceCode').asString;
-  AvrageDiscount := mRoomRes.FieldByName('AvrageDiscount').asfloat;
-  isPercentage := mRoomRes.FieldByName('isPercentage').asBoolean;
+  AverageDiscount := mRoomRes.FieldByName('AverageDiscount').asfloat;
 
   if mRoomRatesTmp.active then
-    mRoomRatesTmp.close;
+    mRoomRatesTmp.Close;
   mRoomRatesTmp.Open;
   mRoomRatesTmp.LoadFromDataSet(mRoomRates);
 
@@ -547,15 +599,13 @@ begin
           continue;
         end;
       end;
-      if (mRoomRes.FieldByName('RoomReservation').asinteger <> RoomReservation)
-        AND (mRoomRes.FieldByName('Arrival').asdateTime = Arrival) AND
+      if (mRoomRes.FieldByName('RoomReservation').asinteger <> RoomReservation) AND
+        (mRoomRes.FieldByName('Arrival').asdateTime = Arrival) AND
         (mRoomRes.FieldByName('Departure').asdateTime = Departure) then
       begin
-        currentRoomReservation := mRoomRes.FieldByName('RoomReservation')
-          .asinteger;
+        currentRoomReservation := mRoomRes.FieldByName('RoomReservation').asinteger;
         repeat
-          found := mRoomRates.Locate('roomreservation',
-            currentRoomReservation, []);
+          found := mRoomRates.Locate('roomreservation', currentRoomReservation, []);
           if found then
           begin
             mRoomRates.delete;
@@ -574,15 +624,13 @@ begin
             isPercentage := mRoomRatesTmp.FieldByName('isPercentage').asBoolean;
             ShowDiscount := mRoomRatesTmp.FieldByName('ShowDiscount').asBoolean;
             isPaid := mRoomRatesTmp.FieldByName('isPaid').asBoolean;
-            DiscountAmount := mRoomRatesTmp.FieldByName
-              ('DiscountAmount').asfloat;
+            DiscountAmount := mRoomRatesTmp.FieldByName('DiscountAmount').asfloat;
             rentAmount := mRoomRatesTmp.FieldByName('RentAmount').asfloat;
             NativeAmount := mRoomRatesTmp.FieldByName('NativeAmount').asfloat;
 
             mRoomRates.append;
             mRoomRates.FieldByName('Reservation').asinteger := -1;
-            mRoomRates.FieldByName('RoomReservation').asinteger :=
-              currentRoomReservation;
+            mRoomRates.FieldByName('RoomReservation').asinteger := currentRoomReservation;
             mRoomRates.FieldByName('RoomNumber').asString := Room;
             mRoomRates.FieldByName('RateDate').asdateTime := RateDate;
             mRoomRates.FieldByName('PriceCode').asString := PriceCode;
@@ -600,11 +648,10 @@ begin
         end;
 
         mRoomRes.edit;
-        mRoomRes.FieldByName('AvragePrice').asfloat := AvragePrice;
+        mRoomRes.FieldByName('AveragePrice').asfloat := AveragePrice;
         mRoomRes.FieldByName('RateCount').asinteger := RateCount;
         mRoomRes.FieldByName('PriceCode').asString := PriceCode;
-        mRoomRes.FieldByName('AvrageDiscount').asfloat := AvrageDiscount;
-        mRoomRes.FieldByName('isPercentage').asBoolean := isPercentage;
+        mRoomRes.FieldByName('AverageDiscount').asfloat := AverageDiscount;
         mRoomRes.post;
       end;
       mRoomRes.Next;
@@ -618,19 +665,19 @@ end;
 
 procedure TfrmRoomPrices.ApplyChanges;
 var
-  RoomReservation: integer;
-  AvragePrice: Double;
-  RateCount: integer;
-  Guests: integer;
-  ChildrenCount: integer;
-  infantCount: integer;
+  RoomReservation: Integer;
+  AveragePrice: double;
+  RateCount: Integer;
+  Guests: Integer;
+  ChildrenCount: Integer;
+  infantCount: Integer;
   PriceCode: string;
   Currency: string;
 
-  AvrageDiscount: Double;
+  AverageDiscount: double;
 
-  RoomRate: Double;
-  Discount: Double;
+  RoomRate: double;
+  Discount: double;
   isPercentage: boolean;
   ShowDiscount: boolean;
   RateDate: TDate;
@@ -639,27 +686,29 @@ var
 
   s: string;
 
+  lExecPlan: TRoomerexecutionPlan;
 begin
   // Apply changes and return
   Currency := FCurrency;
 
   mRoomRes.DisableControls;
   mRoomRates.DisableControls;
+  lExecplan := d.roomerMainDataSet.CreateExecutionPlan;
   try
+
     mRoomRes.first;
     while not mRoomRes.eof do
     begin
       // update values
       // reservation   := mRoomRes.FieldByName('Reservation').Asinteger;
       RoomReservation := mRoomRes.FieldByName('roomreservation').asinteger;
-      AvragePrice := mRoomRes.FieldByName('avragePrice').asfloat;
+      AveragePrice := mRoomRes.FieldByName('AveragePrice').asfloat;
       RateCount := mRoomRes.FieldByName('rateCount').asinteger;
       Guests := mRoomRes.FieldByName('guests').asinteger;
       ChildrenCount := mRoomRes.FieldByName('childrenCount').asinteger;
       infantCount := mRoomRes.FieldByName('infantCount').asinteger;
       PriceCode := mRoomRes.FieldByName('priceCode').asString;
-      AvrageDiscount := mRoomRes.FieldByName('avrageDiscount').asfloat;
-      isPercentage := mRoomRes.FieldByName('isPercentage').asBoolean;
+      AverageDiscount := mRoomRes.FieldByName('AverageDiscount').asfloat;
 
       s := '';
       s := s + 'UPDATE `roomreservations` '#10;
@@ -669,13 +718,13 @@ begin
       s := s + ',`numGuests`   = ' + _db(Guests) + ' '#10;
       s := s + ',`numChildren` = ' + _db(ChildrenCount) + ' '#10;
       s := s + ',`numInfants`  = ' + _db(infantCount) + ' '#10;
-      s := s + ',`AvrageRate`  = ' + _db(AvragePrice) + ' '#10;
+      s := s + ',`AvrageRate`  = ' + _db(AveragePrice) + ' '#10;
       s := s + ',`RateCount`   = ' + _db(RateCount) + ' '#10;
-      s := s + ',`Discount`    = ' + _db(AvrageDiscount) + ' '#10;
-      s := s + ',`Percentage`  = ' + _db(isPercentage) + ' '#10;
+      s := s + ',`Discount`    = ' + _db(AverageDiscount) + ' '#10;
       s := s + 'WHERE `roomreservation` = %d ';
       s := format(s, [RoomReservation]);
-      cmd_bySQL(s);
+
+      lExecPlan.AddExec(s);
       mRoomRes.Next;
     end;
 
@@ -707,192 +756,186 @@ begin
       s := s + '   AND (ResFlag <> ' + _db(rsDeleted.AsStatusChar) + ' ) ';
 
       s := format(s, [sDate, RoomReservation]);
-      cmd_bySQL(s);
+      lExecPLan.AddExec(s);
       mRoomRates.Next;
     end;
+
+    try
+      lExecPlan.Execute(ptExec, True, True);
+    except
+      on E: Exception do
+        raise ERoomPricesException.Create('Applying roomrates failed. Changes are not saved.'+ #10 + 'Error: ' + E.Message);
+    end;
   finally
+    lExecplan.Free;
     mRoomRates.EnableControls;
     mRoomRes.EnableControls;
   end;
 end;
 
-procedure TfrmRoomPrices.CalcOnePrice(RoomReservation: integer; NewRate: Double = 0);
+procedure TfrmRoomPrices.CalcOnePrice(RoomReservation: Integer; NewRate: double = 0);
 var
-  lstPrices: TStringList;
-  // RoomReservation : integer;
-
-  ii: integer;
+  ii: Integer;
 
   Room: string;
   RoomType: string;
-  Guests: integer;
-  RateCount: integer;
+  Guests: Integer;
+  RateCount: Integer;
   RoomDescription: string;
   RoomTypeDescription: string;
   Arrival: TDateTime;
   Departure: TDateTime;
-  ChildrenCount: integer;
-  infantCount: integer;
-  DiscountAmount: Double;
-  rentAmount: Double;
-  NativeAmount: Double;
+  ChildrenCount: Integer;
+  infantCount: Integer;
+  DiscountAmount: double;
+  rentAmount: double;
+  NativeAmount: double;
 
-  priceID: integer;
+  priceID: Integer;
   PriceCode: string;
 
-  rateTotal: Double;
-  rateAvrage: Double;
+  rateTotal: double;
+  rateAverage: double;
 
-  DiscountTotal: Double;
-  DiscountAvrage: Double;
+  DiscountTotal: double;
+  DiscountAverage: double;
 
-  dayCount: integer;
+  dayCount: Integer;
   aDate: TDateTime;
 
-  Rate: Double;
+  Rate: double;
 
   isPercentage: boolean;
   isPaid: boolean;
 
   Currency: string;
-  CurrencyRate: Double;
-  Discount: Double;
+  CurrencyRate: double;
+  Discount: double;
   ShowDiscount: boolean;
   found: boolean;
 
 begin
-  lstPrices := TStringList.create;
-  try
-    lstPrices.Sorted := True;
-    lstPrices.Duplicates := dupIgnore;
+  Currency := FCurrency;
+  CurrencyRate := FCurrencyRate;
 
-    Currency := FCurrency;
-    CurrencyRate := FCurrencyRate;
+  Discount := 0;
+  ShowDiscount := false;
+  isPercentage := false;
+  isPaid := false;
 
-    Discount := 0;
-    ShowDiscount := false;
-    isPercentage := false;
-    isPaid := false;
+  if mRoomRates.RecordCount <> 0 then
+  begin
+    mRoomRates.first;
+    Discount := mRoomRates.FieldByName('Discount').asfloat;
+    ShowDiscount := mRoomRates.FieldByName('isPercentage').asBoolean;
+    isPercentage := mRoomRates.FieldByName('ShowDiscount').asBoolean;
+  end;
 
-    if mRoomRates.RecordCount <> 0 then
-    begin
-      mRoomRates.first;
-      Discount := mRoomRates.FieldByName('Discount').asfloat;
-      ShowDiscount := mRoomRates.FieldByName('isPercentage').asBoolean;
-      isPercentage := mRoomRates.FieldByName('ShowDiscount').asBoolean;
-    end;
-
-    if mRoomRes.Locate('roomreservation', RoomReservation, []) then
-    begin
-      repeat
-        found := mRoomRates.Locate('roomreservation', RoomReservation, []);
-        if found then
-        begin
-          mRoomRates.delete;
-        end;
-      until not found;
-
-      Room := mRoomRes.FieldByName('room').asString;
-      Arrival := mRoomRes.FieldByName('arrival').asdateTime;
-      Departure := mRoomRes.FieldByName('departure').asdateTime;
-      RoomType := mRoomRes.FieldByName('RoomType').asString;
-      RoomTypeDescription := mRoomRes.FieldByName
-        ('RoomTypeDescription').asString;
-      RoomDescription := mRoomRes.FieldByName('RoomDescription').asString;
-      Guests := mRoomRes.FieldByName('Guests').asinteger;
-      ChildrenCount := mRoomRes.FieldByName('ChildrenCount').asinteger;
-      infantCount := mRoomRes.FieldByName('infantCount').asinteger;
-      PriceCode := mRoomRes.FieldByName('PriceCode').asString;
-      priceID := hData.PriceCode_ID(PriceCode);
-
-      dayCount := trunc(Departure) - trunc(Arrival);
-      aDate := trunc(Arrival);
-      rateTotal := 0;
-      DiscountTotal := 0;
-      lstPrices.Clear;
-      for ii := 0 to dayCount - 1 do
+  if mRoomRes.Locate('roomreservation', RoomReservation, []) then
+  begin
+    repeat
+      found := mRoomRates.Locate('roomreservation', RoomReservation, []);
+      if found then
       begin
-        if NewRate <> 0 then
-        begin
-          Rate := NewRate;
-        end
-        else
-        begin
-          Rate := GetDayRate(RoomType, Room, aDate, Guests, ChildrenCount,
-            infantCount, Currency, priceID, Discount, ShowDiscount,
-            isPercentage, isPaid, false);
-        end;
-
-        DiscountAmount := 0;
-
-        if Rate <> 0 then
-        begin
-          if Discount <> 0 then
-          begin
-            if isPercentage then
-            begin
-              DiscountAmount := Rate * Discount / 100;
-            end
-            else
-            begin
-              DiscountAmount := Discount;
-            end;
-          end;
-        end;
-        rentAmount := Rate - DiscountAmount;
-        if CurrencyRate = 0 then
-          CurrencyRate := 1;
-        NativeAmount := rentAmount * CurrencyRate;
-
-        mRoomRates.append;
-        mRoomRates.FieldByName('Reservation').asinteger := -1;
-        mRoomRates.FieldByName('RoomReservation').asinteger := RoomReservation;
-        mRoomRates.FieldByName('RoomNumber').asString := Room;
-        mRoomRates.FieldByName('RateDate').asdateTime := aDate;
-        mRoomRates.FieldByName('PriceCode').asString := PriceCode;
-        mRoomRates.FieldByName('Rate').asfloat := Rate;
-        mRoomRates.FieldByName('Discount').asfloat := Discount;
-        mRoomRates.FieldByName('isPercentage').asBoolean := isPercentage;
-        mRoomRates.FieldByName('ShowDiscount').asBoolean := ShowDiscount;
-        mRoomRates.FieldByName('isPaid').asBoolean := isPaid;
-        mRoomRates.FieldByName('DiscountAmount').asfloat := DiscountAmount;
-        mRoomRates.FieldByName('RentAmount').asfloat := rentAmount;
-        mRoomRates.FieldByName('NativeAmount').asfloat := NativeAmount;
-        mRoomRates.post;
-
-        lstPrices.add(floattostr(rentAmount));
-        rateTotal := rateTotal + rentAmount;
-        DiscountTotal := DiscountTotal + Discount;
-        aDate := aDate + 1
+        mRoomRates.delete;
       end;
+    until not found;
 
-      if dayCount <> 0 then
+    Room := mRoomRes.FieldByName('room').asString;
+    Arrival := mRoomRes.FieldByName('arrival').asdateTime;
+    Departure := mRoomRes.FieldByName('departure').asdateTime;
+    RoomType := mRoomRes.FieldByName('RoomType').asString;
+    RoomTypeDescription := mRoomRes.FieldByName('RoomTypeDescription').asString;
+    RoomDescription := mRoomRes.FieldByName('RoomDescription').asString;
+    Guests := mRoomRes.FieldByName('Guests').asinteger;
+    ChildrenCount := mRoomRes.FieldByName('ChildrenCount').asinteger;
+    infantCount := mRoomRes.FieldByName('infantCount').asinteger;
+    PriceCode := mRoomRes.FieldByName('PriceCode').asString;
+    priceID := hData.PriceCode_ID(PriceCode);
+
+    dayCount := trunc(Departure) - trunc(Arrival);
+    aDate := trunc(Arrival);
+    rateTotal := 0;
+    DiscountTotal := 0;
+    RateCount := 0;
+    for ii := 0 to dayCount - 1 do
+    begin
+      if NewRate <> 0 then
       begin
-        rateAvrage := rateTotal / dayCount;
-        DiscountAvrage := DiscountTotal / dayCount;
+        Rate := NewRate;
       end
       else
       begin
-        rateAvrage := 0;
-        DiscountAvrage := 0;
+        Rate := GetDayRate(RoomType, Room, aDate, Guests, ChildrenCount, infantCount, Currency, priceID, Discount,
+          ShowDiscount, isPercentage, isPaid, false);
       end;
-      RateCount := lstPrices.Count;
-      mRoomRes.edit;
-      mRoomRes.FieldByName('AvragePrice').asfloat := rateAvrage;
-      mRoomRes.FieldByName('RateCount').asfloat := RateCount;
-      mRoomRes.FieldByName('AvrageDiscount').asfloat := DiscountAvrage;
-      mRoomRes.post;
-    end;
-  finally
-    FreeAndNil(lstPrices);
-  end;
-end;
 
+      DiscountAmount := 0;
+
+      if Rate <> 0 then
+      begin
+        if Discount <> 0 then
+        begin
+          if isPercentage then
+          begin
+            DiscountAmount := Rate * Discount / 100;
+          end
+          else
+          begin
+            DiscountAmount := Discount;
+          end;
+        end;
+      end;
+      rentAmount := Rate - DiscountAmount;
+      if CurrencyRate = 0 then
+        CurrencyRate := 1;
+      NativeAmount := rentAmount * CurrencyRate;
+
+      mRoomRates.append;
+      mRoomRates.FieldByName('Reservation').asinteger := -1;
+      mRoomRates.FieldByName('RoomReservation').asinteger := RoomReservation;
+      mRoomRates.FieldByName('RoomNumber').asString := Room;
+      mRoomRates.FieldByName('RateDate').asdateTime := aDate;
+      mRoomRates.FieldByName('PriceCode').asString := PriceCode;
+      mRoomRates.FieldByName('Rate').asfloat := Rate;
+      mRoomRates.FieldByName('Discount').asfloat := Discount;
+      mRoomRates.FieldByName('isPercentage').asBoolean := isPercentage;
+      mRoomRates.FieldByName('ShowDiscount').asBoolean := ShowDiscount;
+      mRoomRates.FieldByName('isPaid').asBoolean := isPaid;
+      mRoomRates.FieldByName('DiscountAmount').asfloat := DiscountAmount;
+      mRoomRates.FieldByName('RentAmount').asfloat := rentAmount;
+      mRoomRates.FieldByName('NativeAmount').asfloat := NativeAmount;
+      mRoomRates.post;
+
+      inc(RateCount);
+      rateTotal := rateTotal + rentAmount;
+      DiscountTotal := DiscountTotal + Discount;
+      aDate := aDate + 1
+    end;
+
+    if dayCount <> 0 then
+    begin
+      rateAverage := rateTotal / dayCount;
+      DiscountAverage := DiscountTotal / dayCount;
+    end
+    else
+    begin
+      rateAverage := 0;
+      DiscountAverage := 0;
+    end;
+    mRoomRes.edit;
+    mRoomRes.FieldByName('AveragePrice').asfloat := rateAverage;
+    mRoomRes.FieldByName('RateCount').asfloat := RateCount;
+    mRoomRes.FieldByName('AverageDiscount').asfloat := DiscountAverage;
+    mRoomRes.post;
+  end;
+
+end;
 
 constructor TfrmRoomPrices.Create(aOwner: TComponent);
 begin
   inherited;
-  FCurrencyhandler := TCurrencyHandler.Create(g.qNativeCurrency);
+  FCurrencyhandler := TCurrencyhandler.Create(g.qNativeCurrency);
 end;
 
 destructor TfrmRoomPrices.Destroy;
@@ -901,9 +944,43 @@ begin
   inherited;
 end;
 
-procedure TfrmRoomPrices.ApplyNettoRateToNullPrice(NewRate: Double; RoomReservation: integer; RoomType: string);
+procedure TfrmRoomPrices.DoLoadData;
 var
-  currentRoomReservation: integer;
+  lExecPlan: TRoomerExecutionPlan;
+  lSQL: string;
+  lRoomResList: string;
+begin
+  inherited;
+
+  mRoomRates.DisableControls;
+  mRoomRes.DisableControls;
+  lExecPlan := d.roomerMainDataSet.CreateExecutionPlan;
+  try
+
+    lRoomResList := '(' + FRoomReservations.CommaText + ')';
+    lSQL := format(cSQL_GetRoomRes, [FInvoiceIndex, lRoomresList]);
+    CopyToClipboard(lSQL);
+    lExecPlan.AddQuery(lSQL);
+
+    lSQL := format(cSQL_GetRoomRates, [FInvoiceIndex, lRoomresList]);
+    CopyToClipboard(lSQL);
+    lExecPlan.AddQuery(lSQL);
+
+    lExecPlan.Execute;
+
+    mRoomRes.LoadFromDataSet(lExecPlan.Results[0]);
+    mRoomRates.LoadFromDataSet(lExecPlan.Results[1]);
+
+  finally
+    lExecPlan.Free;
+    mRoomRates.EnableControls;
+    mRoomRes.EnableControls;
+  end;
+end;
+
+procedure TfrmRoomPrices.ApplyNettoRateToNullPrice(NewRate: double; RoomReservation: Integer; RoomType: string);
+var
+  currentRoomReservation: Integer;
 begin
   mRoomRates.DisableControls;
   mRoomRes.DisableControls;
@@ -919,12 +996,10 @@ begin
           continue;
         end;
       end;
-      if (mRoomRes.FieldByName('RoomReservation').asinteger <> RoomReservation)
-      then
+      if (mRoomRes.FieldByName('RoomReservation').asinteger <> RoomReservation) then
       begin
-        currentRoomReservation := mRoomRes.FieldByName('RoomReservation')
-          .asinteger;
-        if mRoomRes.FieldByName('AvragePrice').asfloat = 0 then
+        currentRoomReservation := mRoomRes.FieldByName('RoomReservation').asinteger;
+        if mRoomRes.FieldByName('AveragePrice').asfloat = 0 then
         begin
           CalcOnePrice(currentRoomReservation, NewRate);
         end;
@@ -937,6 +1012,5 @@ begin
     mRoomRes.EnableControls;
   end;
 end;
-
 
 end.

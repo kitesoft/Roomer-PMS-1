@@ -2,6 +2,7 @@ inherited frmRoomPrices: TfrmRoomPrices
   Caption = 'Room Rates'
   ClientHeight = 585
   ClientWidth = 1128
+  OnShow = FormShow
   ExplicitWidth = 1144
   ExplicitHeight = 624
   PixelsPerInch = 96
@@ -10,7 +11,7 @@ inherited frmRoomPrices: TfrmRoomPrices
     Top = 565
     Width = 1128
     ExplicitTop = 565
-    ExplicitWidth = 1048
+    ExplicitWidth = 1128
   end
   object pnlTopRoomRates: TsPanel [1]
     Left = 0
@@ -20,7 +21,6 @@ inherited frmRoomPrices: TfrmRoomPrices
     Align = alTop
     TabOrder = 1
     SkinData.SkinSection = 'PANEL'
-    ExplicitWidth = 1048
     object cxGroupBox4: TsGroupBox
       AlignWithMargins = True
       Left = 230
@@ -32,6 +32,7 @@ inherited frmRoomPrices: TfrmRoomPrices
       TabOrder = 0
       SkinData.SkinSection = 'GROUPBOX'
       Checked = False
+      ExplicitTop = 2
       object btnRatePerDate: TsButton
         AlignWithMargins = True
         Left = 5
@@ -86,13 +87,13 @@ inherited frmRoomPrices: TfrmRoomPrices
       TabOrder = 1
       SkinData.SkinSection = 'GROUPBOX'
       Checked = False
-      object chkReCalcPrices: TsCheckBox
+      object chkAutoUpdateNullPrice: TsCheckBox
         AlignWithMargins = True
         Left = 5
         Top = 18
         Width = 258
         Height = 20
-        Caption = 'Recalc price on guestcount  changes'
+        Caption = 'Auto update Null Price'
         Align = alTop
         Checked = True
         State = cbChecked
@@ -100,27 +101,7 @@ inherited frmRoomPrices: TfrmRoomPrices
         SkinData.SkinSection = 'CHECKBOX'
         ImgChecked = 0
         ImgUnchecked = 0
-        ExplicitLeft = 9
-        ExplicitTop = 20
-        ExplicitWidth = 195
-      end
-      object chkAutoUpdateNullPrice: TsCheckBox
-        AlignWithMargins = True
-        Left = 5
-        Top = 44
-        Width = 258
-        Height = 20
-        Caption = 'Auto update Null Price'
-        Align = alTop
-        Checked = True
-        State = cbChecked
-        TabOrder = 1
-        SkinData.SkinSection = 'CHECKBOX'
-        ImgChecked = 0
-        ImgUnchecked = 0
-        ExplicitLeft = 9
-        ExplicitTop = 46
-        ExplicitWidth = 126
+        ExplicitTop = 44
       end
     end
     object pnlButtons: TsPanel
@@ -182,7 +163,6 @@ inherited frmRoomPrices: TfrmRoomPrices
         Align = alTop
         Alignment = taCenter
         Caption = '<autofilled>'
-        ExplicitLeft = 16
         ExplicitWidth = 60
       end
     end
@@ -196,7 +176,6 @@ inherited frmRoomPrices: TfrmRoomPrices
     TabOrder = 2
     LookAndFeel.NativeStyle = False
     ExplicitTop = 91
-    ExplicitWidth = 1048
     object tvRoomRes: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = mRoomResDS
@@ -225,14 +204,14 @@ inherited frmRoomPrices: TfrmRoomPrices
         item
           Format = '###0.00;###0.00'
           Kind = skSum
-          FieldName = 'AvragePrice'
-          Column = tvRoomResAvragePrice
+          FieldName = 'AveragePrice'
+          Column = tvRoomResAveragePrice
         end
         item
           Format = '###0.00;###0.00'
           Kind = skAverage
-          FieldName = 'AvragePrice'
-          Column = tvRoomResAvragePrice
+          FieldName = 'AveragePrice'
+          Column = tvRoomResAveragePrice
         end>
       DataController.Summary.SummaryGroups = <>
       OptionsData.DeletingConfirmation = False
@@ -296,32 +275,32 @@ inherited frmRoomPrices: TfrmRoomPrices
       object tvRoomResGuests: TcxGridDBColumn
         DataBinding.FieldName = 'Guests'
         PropertiesClassName = 'TcxSpinEditProperties'
+        Properties.CanEdit = False
         Properties.MaxValue = 100.000000000000000000
         Properties.MinValue = 1.000000000000000000
-        Properties.OnEditValueChanged = tvRoomResGuestsPropertiesEditValueChanged
         Width = 45
       end
       object tvRoomResChildrenCount: TcxGridDBColumn
         Caption = 'Children'
         DataBinding.FieldName = 'ChildrenCount'
         PropertiesClassName = 'TcxSpinEditProperties'
+        Properties.CanEdit = False
         Properties.MaxValue = 10.000000000000000000
-        Properties.OnEditValueChanged = tvRoomResChildrenCountPropertiesEditValueChanged
         Width = 45
       end
       object tvRoomResinfantCount: TcxGridDBColumn
         Caption = 'Infants'
         DataBinding.FieldName = 'infantCount'
         PropertiesClassName = 'TcxSpinEditProperties'
+        Properties.CanEdit = False
         Properties.MaxValue = 10.000000000000000000
-        Properties.OnEditValueChanged = tvRoomResinfantCountPropertiesEditValueChanged
         Width = 45
       end
-      object tvRoomResAvragePrice: TcxGridDBColumn
-        Caption = 'AveragePrice'
-        DataBinding.FieldName = 'AvragePrice'
+      object tvRoomResAveragePrice: TcxGridDBColumn
+        DataBinding.FieldName = 'AveragePrice'
         PropertiesClassName = 'TcxCurrencyEditProperties'
-        OnGetProperties = tvRoomResAvragePriceGetProperties
+        Properties.OnEditValueChanged = tvRoomResAveragePricePropertiesEditValueChanged
+        OnGetProperties = tvRoomResAveragePriceGetProperties
       end
       object tvRoomResPackage: TcxGridDBColumn
         DataBinding.FieldName = 'Package'
@@ -337,14 +316,10 @@ inherited frmRoomPrices: TfrmRoomPrices
         DataBinding.FieldName = 'PriceCode'
         Options.Editing = False
       end
-      object tvRoomResAvrageDiscount: TcxGridDBColumn
-        DataBinding.FieldName = 'AvrageDiscount'
+      object tvRoomResAverageDiscount: TcxGridDBColumn
+        DataBinding.FieldName = 'AverageDiscount'
         PropertiesClassName = 'TcxCurrencyEditProperties'
-        OnGetProperties = tvRoomResAvragePriceGetProperties
-        Options.Editing = False
-      end
-      object tvRoomResisPercentage: TcxGridDBColumn
-        DataBinding.FieldName = 'isPercentage'
+        OnGetProperties = tvRoomResAveragePriceGetProperties
         Options.Editing = False
       end
       object tvRoomResRoomReservation: TcxGridDBColumn
@@ -390,36 +365,53 @@ inherited frmRoomPrices: TfrmRoomPrices
       object tvRoomRatesRate: TcxGridDBColumn
         Caption = 'Room Rate'
         DataBinding.FieldName = 'Rate'
-        PropertiesClassName = 'TcxCalcEditProperties'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        OnGetProperties = tvRoomResAveragePriceGetProperties
+        Width = 70
       end
       object tvRoomRatesDiscount: TcxGridDBColumn
         DataBinding.FieldName = 'Discount'
+        PropertiesClassName = 'TcxCalcEditProperties'
+        Width = 70
       end
       object tvRoomRatesisPercentage: TcxGridDBColumn
         Caption = 'is %'
         DataBinding.FieldName = 'isPercentage'
+        PropertiesClassName = 'TcxCheckBoxProperties'
       end
       object tvRoomRatesShowDiscount: TcxGridDBColumn
         Caption = 'Show Discount'
         DataBinding.FieldName = 'ShowDiscount'
+        PropertiesClassName = 'TcxCheckBoxProperties'
         Visible = False
       end
       object tvRoomRatesisPaid: TcxGridDBColumn
         Caption = 'Paid'
         DataBinding.FieldName = 'isPaid'
+        PropertiesClassName = 'TcxCheckBoxProperties'
         Visible = False
       end
       object tvRoomRatesDiscountAmount: TcxGridDBColumn
         Caption = 'Total discount'
         DataBinding.FieldName = 'DiscountAmount'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        OnGetProperties = tvRoomResAveragePriceGetProperties
+        Options.Editing = False
+        Width = 70
       end
       object tvRoomRatesRentAmount: TcxGridDBColumn
         Caption = 'Total Rent'
         DataBinding.FieldName = 'RentAmount'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        OnGetProperties = tvRoomResAveragePriceGetProperties
+        Width = 70
       end
       object tvRoomRatesNativeAmount: TcxGridDBColumn
         Caption = 'Native'
         DataBinding.FieldName = 'NativeAmount'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        OnGetProperties = tvRoomRatesNativeAmountGetProperties
+        Width = 70
       end
     end
     object lvRoomRes: TcxGridLevel
@@ -430,6 +422,12 @@ inherited frmRoomPrices: TfrmRoomPrices
     end
   end
   inherited psRoomerBase: TcxPropertiesStore
+    Components = <
+      item
+        Component = chkAutoUpdateNullPrice
+        Properties.Strings = (
+          'Checked')
+      end>
     Left = 928
     Top = 144
   end
@@ -459,35 +457,35 @@ inherited frmRoomPrices: TfrmRoomPrices
     object mRoomResroomreservation: TIntegerField
       FieldName = 'roomreservation'
     end
-    object mRoomResRoom: TStringField
+    object mRoomResRoom: TWideStringField
       FieldName = 'Room'
       Size = 10
     end
-    object mRoomResRoomType: TStringField
+    object mRoomResRoomType: TWideStringField
       FieldName = 'RoomType'
       Size = 10
     end
     object mRoomResGuests: TIntegerField
       FieldName = 'Guests'
     end
-    object mRoomResAvragePrice: TFloatField
-      FieldName = 'AvragePrice'
+    object mRoomResAveragePrice: TFloatField
+      FieldName = 'AveragePrice'
     end
     object mRoomResRateCount: TIntegerField
       FieldName = 'RateCount'
     end
-    object mRoomResRoomDescription: TStringField
+    object mRoomResRoomDescription: TWideStringField
       FieldName = 'RoomDescription'
       Size = 30
     end
-    object mRoomResRoomTypeDescription: TStringField
+    object mRoomResRoomTypeDescription: TWideStringField
       FieldName = 'RoomTypeDescription'
       Size = 30
     end
-    object mRoomResArrival: TDateTimeField
+    object mRoomResArrival: TDateField
       FieldName = 'Arrival'
     end
-    object mRoomResDeparture: TDateTimeField
+    object mRoomResDeparture: TDateField
       FieldName = 'Departure'
     end
     object mRoomResChildrenCount: TIntegerField
@@ -496,15 +494,12 @@ inherited frmRoomPrices: TfrmRoomPrices
     object mRoomResinfantCount: TIntegerField
       FieldName = 'infantCount'
     end
-    object mRoomResPriceCode: TStringField
+    object mRoomResPriceCode: TWideStringField
       FieldName = 'PriceCode'
       Size = 10
     end
-    object mRoomResAvrageDiscount: TFloatField
-      FieldName = 'AvrageDiscount'
-    end
-    object mRoomResisPercentage: TBooleanField
-      FieldName = 'isPercentage'
+    object mRoomResAverageDiscount: TFloatField
+      FieldName = 'AverageDiscount'
     end
     object mRoomResPackage: TWideStringField
       FieldName = 'Package'
@@ -536,14 +531,14 @@ inherited frmRoomPrices: TfrmRoomPrices
     object mRoomRatesroomreservation: TIntegerField
       FieldName = 'roomreservation'
     end
-    object mRoomRatesRoomNumber: TStringField
+    object mRoomRatesRoomNumber: TWideStringField
       FieldName = 'RoomNumber'
       Size = 10
     end
-    object mRoomRatesRateDate: TDateTimeField
+    object mRoomRatesRateDate: TDateField
       FieldName = 'RateDate'
     end
-    object mRoomRatesPriceCode: TStringField
+    object mRoomRatesPriceCode: TWideStringField
       FieldName = 'PriceCode'
       Size = 10
     end
@@ -592,14 +587,14 @@ inherited frmRoomPrices: TfrmRoomPrices
     object IntegerField4: TIntegerField
       FieldName = 'roomreservation'
     end
-    object StringField3: TStringField
+    object StringField3: TWideStringField
       FieldName = 'RoomNumber'
       Size = 10
     end
-    object DateTimeField2: TDateTimeField
+    object DateTimeField2: TDateField
       FieldName = 'RateDate'
     end
-    object StringField4: TStringField
+    object StringField4: TWideStringField
       FieldName = 'PriceCode'
       Size = 10
     end
@@ -639,14 +634,14 @@ inherited frmRoomPrices: TfrmRoomPrices
     object IntegerField2: TIntegerField
       FieldName = 'roomreservation'
     end
-    object StringField1: TStringField
+    object StringField1: TWideStringField
       FieldName = 'RoomNumber'
       Size = 10
     end
-    object DateTimeField1: TDateTimeField
+    object DateTimeField1: TDateField
       FieldName = 'RateDate'
     end
-    object StringField2: TStringField
+    object StringField2: TWideStringField
       FieldName = 'PriceCode'
       Size = 10
     end

@@ -2141,11 +2141,26 @@ begin
 end;
 
 procedure TfrmReservationProfile.btnShowPricesClick(Sender: TObject);
+var
+  lRoomResList: TStringlist;
+  lBookMark: TBooKmark;
 begin
+  lBookMark := mRooms.Bookmark;
+  mROoms.DisableControls;
+  lRoomresList := TStringlist.Create;
   try
-    EditRoomRates(zReservation, mRoomsCurrency.AsString);
+    mRooms.First;
+    while not mRooms.Eof do
+    begin
+      lRoomResList.Add(mRoomsRoomReservation.AsString);
+      mRooms.next;
+    end;
+    EditRoomRates(lRoomResList, -1, mRoomsCurrency.AsString);
   finally
+    lRoomresList.Free;
     Display_rGrid(zRoomReservation);
+    mRooms.Bookmark := lBookMark;
+    mROoms.EnableControls;
   end;
 end;
 

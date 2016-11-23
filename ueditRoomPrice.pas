@@ -58,7 +58,7 @@ uses
   dxSkinLondonLiquidSky, dxSkinMoneyTwins, dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green, dxSkinOffice2007Pink,
   dxSkinOffice2007Silver, dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinValentine,
-  dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, dxmdaset
+  dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, dxmdaset, cxCheckBox, cxCurrencyEdit, uCurrencyHandler
 
   ;
 
@@ -131,7 +131,7 @@ type
     mRoomRatesReservation: TIntegerField;
     mRoomRatesroomreservation: TIntegerField;
     mRoomRatesRoomNumber: TStringField;
-    mRoomRatesRateDate: TDateTimeField;
+    mRoomRatesRateDate: TDateField;
     mRoomRatesPriceCode: TStringField;
     mRoomRatesRate: TFloatField;
     mRoomRatesDiscount: TFloatField;
@@ -156,14 +156,21 @@ type
     procedure btnSelectPriceCodeClick(Sender: TObject);
     procedure mRoomRatesBeforePost(DataSet: TDataSet);
     procedure btnApplyRuleClick(Sender: TObject);
+    procedure tvRoomRatesNativeAmountGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
+      var AProperties: TcxCustomEditProperties);
+    procedure tvRoomRatesRentAmountGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
+      var AProperties: TcxCustomEditProperties);
   private
     { Private declarations }
+    FCurrencyHandler: TCurrencyHandler;
+    FData: recEditRoomPriceHolder;
     function getPriceFromPriceCode(priceCode : string; aDate : Tdate) : double;
+    procedure SetData(const Value: recEditRoomPriceHolder);
   public
     { Public declarations }
-    zData : recEditRoomPriceHolder;
     zAct  : TActTableAction;
     ApplyType : integer;
+    property zData : recEditRoomPriceHolder read FData write SetData;
   end;
 
 function editRoomPrice(act : TActTableAction; var theData : recEditRoomPriceHolder; var m_ : TdxMemData; var applyType  : integer) : boolean;
@@ -272,7 +279,6 @@ begin
       end;
       RentAmount  := Rate-DiscountAmount;
 
-      if zData.currencyRate = 0 then zData.currencyRate := 1;
       NativeAmount := RentAmount*zData.CurrencyRate;
 
       mRoomRates.Edit;
@@ -288,9 +294,6 @@ begin
     mRoomRates.Next;
   end;
 end;
-
-
-
 
 function TfrmEditRoomPrice.getPriceFromPriceCode(priceCode : string; aDate : Tdate) : double;
 var
@@ -371,7 +374,6 @@ begin
     end;
     RentAmount  := Rate-DiscountAmount;
 
-    if zData.currencyRate = 0 then zData.currencyRate := 1;
     NativeAmount := RentAmount*zData.CurrencyRate;
   end;
 
@@ -441,7 +443,6 @@ begin
         end;
       end;
       RentAmount  := Rate-DiscountAmount;
-      if zData.currencyRate = 0 then zData.currencyRate := 1;
       NativeAmount := RentAmount*zData.CurrencyRate;
 
       mRoomRates.Edit;
@@ -497,7 +498,6 @@ begin
         end;
       end;
       RentAmount  := Rate-DiscountAmount;
-      if zData.currencyRate = 0 then zData.currencyRate := 1;
       NativeAmount := RentAmount*zData.CurrencyRate;
 
       mRoomRates.Edit;
@@ -554,14 +554,13 @@ end;
 
 procedure TfrmEditRoomPrice.FormDestroy(Sender: TObject);
 begin
-  //**
+  FCurrencyHandler.Free;
 end;
 
 procedure TfrmEditRoomPrice.FormShow(Sender: TObject);
 var
   recCount : integer;
 begin
-
   labCurrency.caption  := zData.currency+' - rate '+floattostr(zData.currencyRate);
   labRoom.Caption      := zData.room;
   labRoomType.Caption  := zData.roomType;
@@ -616,7 +615,6 @@ begin
     end;
     RentAmount  := Rate-DiscountAmount;
 
-    if zData.currencyRate = 0 then zData.currencyRate := 1;
     NativeAmount := RentAmount*zData.CurrencyRate;
   end;
 
@@ -634,6 +632,33 @@ end;
 procedure TfrmEditRoomPrice.sButton2Click(Sender: TObject);
 begin
   ApplyType := 3;
+end;
+
+procedure TfrmEditRoomPrice.SetData(const Value: recEditRoomPriceHolder);
+begin
+  FData := Value;
+  if FData.currency = '' then
+  begin
+    FData.currency := g.qNativeCurrency;
+    FData.currencyRate := 1.0;
+  end;
+
+  if Assigned(FCurrencyHandler) then
+    FCurrencyHandler.Free;
+
+  FCurrencyHandler := TCurrencyHandler.Create(FData.currency);
+end;
+
+procedure TfrmEditRoomPrice.tvRoomRatesNativeAmountGetProperties(Sender: TcxCustomGridTableItem;
+  ARecord: TcxCustomGridRecord; var AProperties: TcxCustomEditProperties);
+begin
+  aProperties := d.getCurrencyProperties(g.qNativeCurrency);
+end;
+
+procedure TfrmEditRoomPrice.tvRoomRatesRentAmountGetProperties(Sender: TcxCustomGridTableItem;
+  ARecord: TcxCustomGridRecord; var AProperties: TcxCustomEditProperties);
+begin
+  aProperties := FCurrencyHandler.GetcxEditPropertiesKeepEvents(aProperties);
 end;
 
 end.

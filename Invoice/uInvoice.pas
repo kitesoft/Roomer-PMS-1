@@ -4969,6 +4969,7 @@ var
   ARow: integer;
   ItemId: string;
   tmpRoomReservation: integer;
+  lRoomreslist: TStringlist;
 begin
 
   agrLines.MouseToCell(X, Y, ACol, ARow);
@@ -5008,8 +5009,13 @@ begin
 
     if tmpRoomReservation <> -1 then
     begin
-      if (ItemId = g.qRoomRentItem) or (ItemId = g.qDiscountItem) then
-        EditRoomRates(Reservation, zCurrentCurrency);
+      lRoomreslist := TStringlist.Create;
+      try
+        lRoomreslist.Add(intToStr(tmpRoomReservation));
+        EditRoomRates(lRoomreslist, FInvoiceIndex, zCurrentCurrency);
+      finally
+        lRoomResList.Free;
+      end;
 
 //      if (ItemId = g.qRoomRentItem) then
 //      begin
