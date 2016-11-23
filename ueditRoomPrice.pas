@@ -164,7 +164,6 @@ type
     { Private declarations }
     FCurrencyHandler: TCurrencyHandler;
     FData: recEditRoomPriceHolder;
-    function getPriceFromPriceCode(priceCode : string; aDate : Tdate) : double;
     procedure SetData(const Value: recEditRoomPriceHolder);
   public
     { Public declarations }
@@ -209,8 +208,6 @@ begin
 end;
 
 function editRoomPrice(act : TActTableAction; var theData : recEditRoomPriceHolder;var m_ : TdxMemData; var applyType : integer) : boolean;
-var
-  aRate : double;
 begin
   result := false;
   frmEditRoomPrice := TfrmEditRoomPrice.Create(frmEditRoomPrice);
@@ -251,7 +248,6 @@ var
   RentAmount       : double   ;
   NativeAmount     : double   ;
 
-  oldRate : double;
 begin
 
   mRoomRates.First;
@@ -262,8 +258,6 @@ begin
     Rate          := mRoomRates.FieldByName('Rate').AsFloat;
 
     DiscountAmount := 0;
-    RentAmount     := 0;
-    NativeAmount   := 0;
 
     if rate <> 0 then
     begin
@@ -293,53 +287,6 @@ begin
 
     mRoomRates.Next;
   end;
-end;
-
-function TfrmEditRoomPrice.getPriceFromPriceCode(priceCode : string; aDate : Tdate) : double;
-var
-  Prices : TPrices;
-  RoomType : string;
-  DateFrom : TDate;
-  DateTo : TDate;
-  NumGuests : Integer;
-  Currency : string;
-  childrenCount : integer;
-  infantCount   : integer;
-
-  calcPrice : double;
-  sTmp      : string;
-  p        : Integer;
-  tmp      : double;
-
-begin
-  result := 0;
-  RoomType  := zData.RoomType;
-  DateFrom  := aDate;
-  DateTo    := aDate+1;
-  Currency  := zData.currency;
-  NumGuests := zData.guests;
-  childrenCount := zData.ChildrenCount;
-  infantCount := zData.infantCount;
-
-  if PriceCode = '' then
-  begin
-    exit;
-  end;
-
-  if Currency = '' then
-  begin
-    exit;
-  end;
-
-
-  Prices := GetPrices(PriceCode, RoomType, DateFrom, DateTo, NumGuests, Currency);
-
-  if Prices.PricesCount > 0 then
-  begin
-    result := Prices.Prices[0].Price;
-//    calcPrice := _priceRound(calcPrice, 50, 3);
-  end
-
 end;
 
 
@@ -398,7 +345,7 @@ var
 begin
   priceCode := edPcCode.Text;
   priceID   := PriceCode_ID(priceCode);
-
+  Rate := 0;
   mRoomRates.First;
   while not mRoomRates.eof do
   begin
@@ -426,8 +373,6 @@ begin
       isPercentage  := mRoomRates.FieldByName('isPercentage').AsBoolean;
 
       DiscountAmount := 0;
-      RentAmount     := 0;
-      NativeAmount   := 0;
 
       if rate <> 0 then
       begin
@@ -481,8 +426,6 @@ begin
       Discount      := mRoomRates.FieldByName('Discount').AsFloat;
       isPercentage  := mRoomRates.FieldByName('isPercentage').AsBoolean;
       DiscountAmount := 0;
-      RentAmount := 0;
-      NativeAmount := 0;
 
       if rate <> 0 then
       begin

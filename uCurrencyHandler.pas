@@ -56,6 +56,10 @@ type
     ///  event handlers of the origianlProperties to the returned one
     /// </summary>
     function GetcxEditPropertiesKeepEvents(aOriginalProperties: TcxCustomEditProperties): TcxCurrencyEditProperties;
+    /// <summary>
+    ///   Returns a formatted string with the currencycode and the exchange rate, used to display active currency in i.e. a labelcaption
+    /// </summary>
+    function ShortDescription: string;
   end;
 
 
@@ -65,7 +69,7 @@ uses
     uAppGlobal
   , uStringUtils
   , uFloatUtils
-  , uD;
+  , uD, PrjConst;
 
 { TCurrencyHandler }
 
@@ -118,6 +122,13 @@ end;
 function TCurrencyHandler.GetRate: double;
 begin
   Result := FCurrencyRec.Value;
+end;
+
+function TCurrencyHandler.ShortDescription: string;
+const
+  cFormat = '%s - %s: %s';
+begin
+  Result := Format(cFormat, [CurrencyCode, GetTranslatedText('shCurrencyRate'), FloatToStr(RoundDecimals(Rate, 4))]);
 end;
 
 function TCurrencyHandler.RoundedValue(aAmount: double): double;

@@ -824,8 +824,7 @@ begin
       iReservation := mCurrentGuests_.fieldbyname('Reservation').asinteger;
     end;
 
-    EditInvoice(iReservation, 0, 0, 0, 0, 0, false, true,false);
-  end;
+  EditInvoice(iReservation, 0, 0, 0, 0, 0, false);
 end;
 
 procedure TfrmDayNotes.OpenthisRoom1Click(Sender: TObject);
@@ -848,6 +847,8 @@ begin
     end;
     EditInvoice(iReservation, iRoomReservation, 0, 0, 0, 0, false, true,false);
   end;
+
+  EditInvoice(iReservation, iRoomReservation, 0, 0, 0, 0, false);
 end;
 
 procedure TfrmDayNotes.pageMainChange(Sender: TObject);

@@ -600,10 +600,6 @@ object frmReservationProfile: TfrmReservationProfile
               Caption = 'Contact'
               SkinData.CustomColor = False
               SkinData.CustomFont = False
-              ExplicitLeft = 0
-              ExplicitTop = 0
-              ExplicitWidth = 0
-              ExplicitHeight = 0
               object lblContactName: TsLabel
                 Left = 32
                 Top = 5
@@ -952,6 +948,10 @@ object frmReservationProfile: TfrmReservationProfile
               Caption = 'Customer'
               SkinData.CustomColor = False
               SkinData.CustomFont = False
+              ExplicitLeft = 0
+              ExplicitTop = 0
+              ExplicitWidth = 0
+              ExplicitHeight = 0
               object Label19: TsLabel
                 Left = 12
                 Top = 32
@@ -2900,6 +2900,10 @@ object frmReservationProfile: TfrmReservationProfile
       ImageIndex = 1
       SkinData.CustomColor = False
       SkinData.CustomFont = False
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Panel10: TsPanel
         Left = 0
         Top = 0
@@ -3524,6 +3528,10 @@ object frmReservationProfile: TfrmReservationProfile
       ImageIndex = 2
       SkinData.CustomColor = False
       SkinData.CustomFont = False
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Panel11: TsPanel
         Left = 0
         Top = 0

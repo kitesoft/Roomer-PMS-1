@@ -115,6 +115,10 @@ object frmDayNotes: TfrmDayNotes
       ImageIndex = 3
       SkinData.CustomColor = False
       SkinData.CustomFont = False
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Panel3: TsPanel
         Left = 0
         Top = 33
@@ -422,6 +426,7 @@ object frmDayNotes: TfrmDayNotes
             BoundLabel.Font.Name = 'Tahoma'
             BoundLabel.Font.Style = []
             SkinData.SkinSection = 'EDIT'
+            ExplicitWidth = 939
           end
           object Panel5: TsPanel
             Left = 0
@@ -975,6 +980,7 @@ object frmDayNotes: TfrmDayNotes
                 BoundLabel.Font.Name = 'Tahoma'
                 BoundLabel.Font.Style = []
                 SkinData.SkinSection = 'EDIT'
+                ExplicitWidth = 511
               end
             end
             object cxSplitter2: TcxSplitter

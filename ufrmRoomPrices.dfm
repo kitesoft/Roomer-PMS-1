@@ -32,7 +32,6 @@ inherited frmRoomPrices: TfrmRoomPrices
       TabOrder = 0
       SkinData.SkinSection = 'GROUPBOX'
       Checked = False
-      ExplicitTop = 2
       object btnRatePerDate: TsButton
         AlignWithMargins = True
         Left = 5
@@ -92,7 +91,7 @@ inherited frmRoomPrices: TfrmRoomPrices
         Left = 5
         Top = 18
         Width = 258
-        Height = 20
+        Height = 19
         Caption = 'Auto update Null Price'
         Align = alTop
         Checked = True
@@ -101,7 +100,6 @@ inherited frmRoomPrices: TfrmRoomPrices
         SkinData.SkinSection = 'CHECKBOX'
         ImgChecked = 0
         ImgUnchecked = 0
-        ExplicitTop = 44
       end
     end
     object pnlButtons: TsPanel
@@ -139,6 +137,7 @@ inherited frmRoomPrices: TfrmRoomPrices
         Caption = 'Apply'
         ImageIndex = 82
         Images = DImages.cxLargeImagesFlat
+        ModalResult = 1
         TabOrder = 1
         OnClick = btnApplyClick
         SkinData.SkinSection = 'BUTTON'
@@ -175,7 +174,6 @@ inherited frmRoomPrices: TfrmRoomPrices
     Align = alClient
     TabOrder = 2
     LookAndFeel.NativeStyle = False
-    ExplicitTop = 91
     object tvRoomRes: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = mRoomResDS

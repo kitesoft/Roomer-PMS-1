@@ -292,7 +292,7 @@ end;
 
 procedure TfrmArrivalsReport.mnuGroupInvoiceClick(Sender: TObject);
 begin
-  EditInvoice(kbmArrivalsList['RoomerReservationID'], 0, 0, 0, 0, 0, false, true,false);
+  EditInvoice(kbmArrivalsList['RoomerReservationID'], 0, 0, 0, 0, 0, false);
 end;
 
 procedure TfrmArrivalsReport.grArrivalsListDBTableView1AverageRoomRateGetProperties(Sender: TcxCustomGridTableItem;
@@ -324,7 +324,7 @@ end;
 
 procedure TfrmArrivalsReport.mnuRoomInvoiceClick(Sender: TObject);
 begin
-  EditInvoice(kbmArrivalsList['RoomerReservationID'], kbmArrivalsList['RoomerRoomReservationID'], 0, 0, 0, 0, false, true,false);
+  EditInvoice(kbmArrivalsList['RoomerReservationID'], kbmArrivalsList['RoomerRoomReservationID'], 0, 0, 0, 0, false);
 end;
 
 procedure TfrmArrivalsReport.rbRadioButtonClick(Sender: TObject);

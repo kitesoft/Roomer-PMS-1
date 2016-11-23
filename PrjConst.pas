@@ -294,6 +294,7 @@ begin
   constants.Add('shAndCurrency', 'and Currency ');
   constants.Add('shAndPersonVipType', 'and Person VIP Type ');
   constants.Add('shAndPersonContactType', 'and Person Contact Type ');
+  constants.Add('shCurrencyRate', 'Rate');
   // uCountryGroups;
   constants.Add('shDeleteCountrygroup', 'Delete countrygroup');
   constants.Add('shDeleteChannelManager', 'Delete channel manager');

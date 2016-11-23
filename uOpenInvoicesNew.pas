@@ -366,7 +366,7 @@ var
 begin
   Reservation := kbmRoomsDate_.FieldByName('Reservation').AsInteger;
 
-  EditInvoice(Reservation, 0, 0, 0, 0, 0, false, true,false);
+  EditInvoice(Reservation, 0, 0, 0, 0, 0, false);
 end;
 
 procedure TfrmOpenInvoicesNew.sButton8Click(Sender: TObject);
@@ -376,7 +376,7 @@ var
 begin
   Reservation := kbmRoomsDate_.FieldByName('Reservation').AsInteger;
   RoomReservation := kbmRoomsDate_.FieldByName('RoomReservation').AsInteger;
-  EditInvoice(Reservation, RoomReservation, 0, 0, 0, 0, false, true,false);
+  EditInvoice(Reservation, RoomReservation, 0, 0, 0, 0, false);
 end;
 
 procedure TfrmOpenInvoicesNew.sButton9Click(Sender: TObject);

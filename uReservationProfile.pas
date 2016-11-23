@@ -1172,7 +1172,7 @@ begin
     0:
       begin
         try
-          EditInvoice(zReservation, zRoomReservation, 0, 0, 0, 0, false, true, false);
+          EditInvoice(zReservation, zRoomReservation, 0, 0, 0, 0, false);
         finally
           Display_rGrid(zRoomReservation);
         end;
@@ -1180,7 +1180,7 @@ begin
     1:
       begin
         try
-          EditInvoice(zReservation, 0, 0, 0, 0, 0, false, true, false);
+          EditInvoice(zReservation, 0, 0, 0, 0, 0, false);
         finally
           Display_rGrid(zRoomReservation);
         end;
@@ -2195,7 +2195,7 @@ end;
 procedure TfrmReservationProfile.OpenthisRoom1Click(Sender: TObject);
 begin
   try
-    EditInvoice(zReservation, zRoomReservation, 0, 0, 0, 0, false, true, false);
+    EditInvoice(zReservation, zRoomReservation, 0, 0, 0, 0, false);
   finally
     Display_rGrid(zRoomReservation);
   end;
@@ -2205,7 +2205,7 @@ end;
 procedure TfrmReservationProfile.OpenGroupInvoice1Click(Sender: TObject);
 begin
   try
-    EditInvoice(zReservation, 0, 0, 0, 0, 0, false, true, false);
+    EditInvoice(zReservation, 0, 0, 0, 0, 0, false);
   finally
     Display_rGrid(zRoomReservation);
   end;

@@ -211,7 +211,7 @@ type
     property Currency: string read FCurrency write SetCurrency;
   end;
 
-procedure EditRoomRates(aRoomReservations: TStringlist; aInvoiceindex: Integer = -1; const aCurrency: string = '');
+function EditRoomRates(aRoomReservations: TStringlist; aInvoiceindex: Integer = -1; const aCurrency: string = ''): boolean;
 
 implementation
 
@@ -282,9 +282,10 @@ const
 
 {$R *.dfm}
 
-procedure EditRoomRates(aRoomReservations: TStringlist; aInvoiceindex: Integer = -1; const aCurrency: string = '');
+function EditRoomRates(aRoomReservations: TStringlist; aInvoiceindex: Integer = -1; const aCurrency: string = ''): boolean;
 var
   frm: TfrmRoomPrices;
+  mr: integer;
 begin
   if aRoomReservations.Count = 0 then
     raise ERoomPricesException.Create('No roomreservations specified to edit roomrates.');
@@ -294,7 +295,8 @@ begin
     frm.RoomReservations := aRoomReservations;
     frm.InvoiceIndex := aInvoiceindex;
     frm.Currency := iif(aCurrency = '', g.qNativeCurrency, aCurrency);
-    frm.ShowModal;
+    mr := frm.ShowModal;
+    result := (mr = mrok);
   finally
     frm.Free;
   end;
@@ -310,7 +312,7 @@ procedure TfrmRoomPrices.btnApplyClick(Sender: TObject);
 begin
   inherited;
   ApplyChanges;
-  Close;
+  // Form closed by Modalresult
 end;
 
 procedure TfrmRoomPrices.btnApplySameRoomTypeClick(Sender: TObject);
@@ -540,7 +542,7 @@ begin
 
     FCurrencyhandler := TCurrencyhandler.Create(FCurrency);
 
-    lblCurrency.Caption := FCurrencyhandler.CurrencyCode
+    lblCurrency.Caption := FCurrencyhandler.ShortDescription;
   end;
 end;
 
