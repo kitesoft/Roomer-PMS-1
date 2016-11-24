@@ -37,7 +37,6 @@ object frmInvoice: TfrmInvoice
     Color = clWhite
     TabOrder = 1
     SkinData.SkinSection = 'PANEL'
-    ExplicitWidth = 1074
     object lblChangedInvoiceActive: TsLabel
       Left = 0
       Top = 157
@@ -69,7 +68,6 @@ object frmInvoice: TfrmInvoice
       ParentColor = True
       TabOrder = 0
       SkinData.SkinSection = 'PANEL'
-      ExplicitWidth = 1074
       DesignSize = (
         1096
         157)
@@ -577,7 +575,6 @@ object frmInvoice: TfrmInvoice
         TabOrder = 17
         WordWrap = True
         OnClick = btnExitClick
-        ExplicitLeft = 907
       end
       object btnInvoice: TcxButton
         Left = 929
@@ -595,7 +592,6 @@ object frmInvoice: TfrmInvoice
         SpeedButtonOptions.Flat = True
         TabOrder = 19
         WordWrap = True
-        ExplicitLeft = 907
       end
       object btnProforma: TcxButton
         Left = 929
@@ -612,7 +608,6 @@ object frmInvoice: TfrmInvoice
         SpeedButtonOptions.Flat = True
         TabOrder = 18
         WordWrap = True
-        ExplicitLeft = 907
       end
       object edtForeignCurrency: TsEdit
         Left = 724
@@ -672,7 +667,6 @@ object frmInvoice: TfrmInvoice
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitWidth = 1074
       object pageMain: TPageControl
         Left = 0
         Top = 0
@@ -681,11 +675,9 @@ object frmInvoice: TfrmInvoice
         ActivePage = tabInvoice
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 1018
         object tabInvoice: TTabSheet
           Caption = 'Invoice'
           TabVisible = False
-          ExplicitWidth = 1010
           object Panel2: TsPanel
             Left = 0
             Top = 340
@@ -696,7 +688,6 @@ object frmInvoice: TfrmInvoice
             ParentColor = True
             TabOrder = 0
             SkinData.SkinSection = 'PANEL'
-            ExplicitWidth = 1010
             object memExtraText: TMemo
               Left = 1
               Top = 1
@@ -988,7 +979,6 @@ object frmInvoice: TfrmInvoice
               Align = alClient
               TabOrder = 2
               SkinData.SkinSection = 'PANEL'
-              ExplicitWidth = 416
               object sPanel3: TsPanel
                 Left = 1
                 Top = 1
@@ -997,7 +987,6 @@ object frmInvoice: TfrmInvoice
                 Align = alTop
                 TabOrder = 0
                 SkinData.SkinSection = 'PANEL'
-                ExplicitWidth = 414
                 object labPayments: TsLabel
                   Left = 9
                   Top = 2
@@ -1015,7 +1004,6 @@ object frmInvoice: TfrmInvoice
                 DragMode = dmAutomatic
                 TabOrder = 1
                 LookAndFeel.NativeStyle = False
-                ExplicitWidth = 414
                 object tvPayments: TcxGridDBTableView
                   OnMouseDown = tvPaymentsMouseDown
                   Navigator.Buttons.CustomButtons = <>
@@ -1079,7 +1067,6 @@ object frmInvoice: TfrmInvoice
             BevelOuter = bvNone
             TabOrder = 1
             SkinData.SkinSection = 'PANEL'
-            ExplicitWidth = 1010
             DesignSize = (
               1032
               91)
@@ -1183,7 +1170,6 @@ object frmInvoice: TfrmInvoice
               OnClick = btnSaveChangesClick
               SkinData.CustomFont = True
               SkinData.ColorTone = clRed
-              ExplicitLeft = 870
             end
             object pnlPaymentButtons: TsPanel
               Left = 629
@@ -1217,7 +1203,6 @@ object frmInvoice: TfrmInvoice
                 TabOrder = 1
                 OnClick = btnEditDownPaymentClick
                 SkinData.SkinSection = 'BUTTON'
-                ExplicitLeft = 100
               end
               object btnDeleteDownpayment: TsButton
                 Left = 262
@@ -1246,7 +1231,6 @@ object frmInvoice: TfrmInvoice
             Padding.Bottom = 5
             TabOrder = 2
             SkinData.SkinSection = 'PANEL'
-            ExplicitWidth = 1010
             object agrLines: TAdvStringGrid
               Left = 10
               Top = 5
@@ -1374,7 +1358,6 @@ object frmInvoice: TfrmInvoice
               SearchFooter.MatchCaseCaption = 'Match case'
               SortSettings.DefaultFormat = ssAutomatic
               Version = '8.1.2.0'
-              ExplicitWidth = 990
               ColWidths = (
                 24
                 91
@@ -1389,7 +1372,10 @@ object frmInvoice: TfrmInvoice
         object tabRoomPrice: TTabSheet
           Caption = 'RoomPrice'
           TabVisible = False
+          ExplicitLeft = 0
+          ExplicitTop = 0
           ExplicitWidth = 1010
+          ExplicitHeight = 0
           object panTopRoomRates: TsPanel
             Left = 0
             Top = 0
@@ -1769,7 +1755,6 @@ object frmInvoice: TfrmInvoice
         Height = 496
         Align = alRight
         TabOrder = 1
-        ExplicitLeft = 1021
         object pnlInvoiceIndex0: TsPanel
           Left = 3
           Top = 4
@@ -2285,7 +2270,6 @@ object frmInvoice: TfrmInvoice
     Height = 19
     Panels = <>
     SkinData.SkinSection = 'STATUSBAR'
-    ExplicitWidth = 1074
   end
   object MainMenu1: TMainMenu
     Left = 372

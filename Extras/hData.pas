@@ -2667,7 +2667,7 @@ begin
     RoomReservation := 0; // int
     SplitNumber := 0; // int
     InvoiceNumber := -1; // int
-    InvoiceDate := _db(date, false); // nvarchar(10)
+    InvoiceDate := _db(Tdate(date), false); // nvarchar(10)
     Customer := ''; // nvarchar(15)
     name := ''; // nvarchar(70)
     Address1 := ''; // nvarchar(70)
@@ -2858,8 +2858,8 @@ begin
     Discount := 0.00;
     Percentage := true;
     PriceType := '';
-    Arrival := _db(date, false);
-    Departure := _db(IncDay(date, 1), false);;
+    Arrival := _db(TDate(date), false);
+    Departure := _db(TDate(IncDay(date, 1)), false);;
     RoomType := '';
     PMInfo := '';
     HiddenInfo := '';
@@ -2890,14 +2890,14 @@ begin
 
     // OutDated
     RoomPrice1 := 0.00;
-    Price1From := _db(date, false);
-    Price1To := _db(date, false);
+    Price1From := _db(Tdate(date), false);
+    Price1To := _db(Tdate(date), false);
     RoomPrice2 := 0.00;
-    Price2From := _db(date, false);
-    Price2To := _db(date, false);
+    Price2From := _db(TDate(date), false);
+    Price2To := _db(Tdate(date), false);
     RoomPrice3 := 0.00;
-    Price3From := _db(date, false);
-    Price3To := _db(date, false);
+    Price3From := _db(TDate(date), false);
+    Price3To := _db(Tdate(date), false);
     RoomRentPaid1 := 0.00;
     RoomRentPaid2 := 0.00;
     RoomRentPaid3 := 0.00;
@@ -2920,8 +2920,8 @@ begin
   begin
     Reservation := 0;
 
-    Arrival := _db(date, false);
-    Departure := _db(IncDay(date, 1), false);
+    Arrival := _db(TDate(date), false);
+    Departure := _db(TDate(IncDay(date, 1)), false);
     Customer := '0';
     name := '';
     Address1 := '';
@@ -2935,7 +2935,7 @@ begin
     CustomerEmail := '';
     CustomerWebSite := '';
     Status := '';
-    ReservationDate := _db(date, false);
+    ReservationDate := _db(Tdate(date), false);
     Staff := aStaff;
     Information := '';
     PMInfo := '';
@@ -2975,7 +2975,7 @@ begin
   with rec do
   begin
     id := 0;
-    ADate := _db(date, false);
+    ADate := _db(TDate(date), false);
     Room := '';
     RoomType := '';
     RoomReservation := 0;

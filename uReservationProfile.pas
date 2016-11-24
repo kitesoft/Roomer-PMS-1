@@ -782,7 +782,7 @@ type
     zReservation: longInt;
     zRoomReservation: longInt;
 
-    zInitDateFrom, zInitDateTo: TDateTime;
+    zInitDateFrom, zInitDateTo: TDate;
 
     zShowAllGuests: Boolean;
 
@@ -841,7 +841,7 @@ uses
   ufrmReservationExtras
   , uInvoiceContainer
   , uCurrencyHandler
-  , uAccountTypeDefinitions, uBreakfastStateDefinitions, uSQLUtils;
+  , uAccountTypeDefinitions, uBreakfastStateDefinitions, uSQLUtils, uDateTimeHelper;
 
 {$R *.DFM}
 
@@ -1322,8 +1322,8 @@ begin
       rSet.fieldbyname('Tel1').asstring := edtTel1.text;
       rSet.fieldbyname('Fax').asstring := edtFax.text;
       rSet.fieldbyname('Tel2').asstring := edtTel2.text;
-      rSet.fieldbyname('Arrival').asstring := _db(dtArrival.Date, false);
-      rSet.fieldbyname('Departure').asstring := _db(dtDeparture.Date, false);
+      rSet.fieldbyname('Arrival').asstring := _db(TDate(dtArrival.Date), false);
+      rSet.fieldbyname('Departure').asstring := _db(TDate(dtDeparture.Date), false);
       rSet.fieldbyname('Information').asstring := memInformation.Lines.text;
       rSet.fieldbyname('PMInfo').asstring := memPMInfo.Lines.text;
       rSet.fieldbyname('ContactName').asstring := edtContactName.text;
@@ -1737,8 +1737,8 @@ var
   ReservationName: string;
 
   RoomNumber: string;
-  arrival: TDateTime;
-  departure: TDateTime;
+  arrival: TDate;
+  departure: TDate;
 
   iReservation: Integer;
   iRoomreservation: Integer;
@@ -1912,7 +1912,7 @@ begin
       invoiceHeadData.roomReservation := iRoomreservation;
       invoiceHeadData.SplitNumber := 0;
       invoiceHeadData.InvoiceNumber := -1;
-      invoiceHeadData.InvoiceDate := _db(now, false);
+      invoiceHeadData.InvoiceDate := _db(TDate(now), false);
       invoiceHeadData.Customer := Customer;
       invoiceHeadData.name := ReservationName + ', ' + guestName;
       invoiceHeadData.Address1 := Address1;
@@ -2009,6 +2009,9 @@ begin
       else
         raise Exception.Create(ExecutionPlan.ExecException);
 
+      FReservationChangeStateHandler.UpdateRoomResStateChangeHandlers;
+      Display_rGrid(zRoomReservation);
+
     except
       on e: Exception do
       begin
@@ -2020,7 +2023,6 @@ begin
     FreeAndNil(ExecutionPlan);
   end;
 
-  Display_rGrid(zRoomReservation);
 end;
 
 procedure TfrmReservationProfile.MoveGuestToNewRoom2;
@@ -2042,10 +2044,11 @@ var
 begin
   RoomNumber := d.RR_GetRoomNr(zRoomReservation);
 
-  if not g.OpenRemoveRoom(zRoomReservation) then
-    exit;
-
-  Display_rGrid(zRoomReservation);
+  if g.OpenRemoveRoom(zRoomReservation) then
+  begin
+    FReservationChangeStateHandler.UpdateRoomResStateChangeHandlers;
+    Display_rGrid(zRoomReservation);
+  end;
 end;
 
 procedure TfrmReservationProfile.btnPasteFileClick(Sender: TObject);

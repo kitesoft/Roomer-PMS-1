@@ -106,8 +106,10 @@ end;
 
 function _db(const aDate : TDateTime; aQuoted: boolean)  : string;
 begin
-  //ShortDate + longtime
-  Result := DateTimeToStr(aDate, SQLFormatSettings);
+  //ShortDate + Shorttime
+//  Result := DateTimeToStr(aDate, SQLFormatSettings);
+//  DateTimeToString(result, SQLFormatSettings.ShortDateFormat + ' ' + SQLFormatSettings.ShortTimeFormat, aDate, SQLFormatSettings);
+  Result := DateToStr(aDate, SQLFormatSettings);
   if aQuoted then
     Result := quotedstr(Result);
 end;

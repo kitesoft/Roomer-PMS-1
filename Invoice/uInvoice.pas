@@ -728,7 +728,7 @@ type
       : TRoomerExecutionPlan);
 
     function LocateDate(recordSet: TRoomerDataset; field: String;
-      Value: TDateTime): boolean;
+      Value: TDate): boolean;
     procedure GetTaxTypes(TaxResultInvoiceLines: TInvoiceTaxEntityList);
     procedure HandleExceptionListFromBookKeepingSystem(invoiceNumber: integer;
       ErrorList: String);
@@ -4295,8 +4295,7 @@ begin
   // CheckCheckboxes;
 end;
 
-function TfrmInvoice.LocateDate(recordSet: TRoomerDataset; field: String;
-  Value: TDateTime): boolean;
+function TfrmInvoice.LocateDate(recordSet: TRoomerDataset; field: String; Value: TDate): boolean;
 begin
   result := false;
   recordSet.first;
