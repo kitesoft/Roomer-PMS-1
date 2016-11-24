@@ -116,15 +116,21 @@ function _db(const aTime: TTime): string;
 var
   S : string;
 begin
-  // Longtime
-  s := TimeToStr(aTime, SQLFormatSettings);
+  // Shorttime
+  //s := TimeToStr(aTime, SQLFormatSettings);
+  DateTimeToString(s, SQLFormatSettings.ShortTimeFormat, aTime, SQLFormatSettings);
   if s = '00:00' then s := '';
   Result := quotedstr(S);
 end;
 
 function _db(const aTimeStamp: TTimeStamp): string; overload;
+var
+  S : string;
 begin
-
+  // Longtime
+  s := TimeToStr(TimeStampToDateTime(aTimeStamp), SQLFormatSettings);
+  if s.StartsWith('00:00') then s := '';
+  Result := quotedstr(S);
 end;
 
 function FloatToSQL(aValue: double): string;
@@ -164,7 +170,7 @@ begin
     TimeSeparator := ':';
     ShortDateFormat := 'yyyy-mm-dd';
     ShortTimeFormat := 'HH:mm';
-    LongTimeFormat :=  'HH:mm:ss';
+    LongTimeFormat :=  'HH:mm:ss.zzz';
   end;
 end;
 
