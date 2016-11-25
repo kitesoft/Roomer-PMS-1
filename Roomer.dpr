@@ -268,6 +268,8 @@ begin
   Application.MainformOnTaskbar := True;
   Application.Initialize;
   Application.Title := 'ROOMER - Next Generation Hotel Management System';
+  // reduce number of times that TAction.OnUpdate events are called
+  Application.ActionUpdateDelay := 10;
 
   TSplashFormManager.Show;
 

@@ -1,4 +1,4 @@
- unit uProvideARoom2;
+﻿ unit uProvideARoom2;
 
 interface
 
@@ -55,13 +55,13 @@ type
     cbIncludeNonCleanRooms: TsCheckBox;
     procedure FormShow(Sender : TObject);
     procedure FormCreate(Sender : TObject);
-    procedure FormClose(Sender : TObject; var Action : TCloseAction);
     procedure agrRoomsGetCellColor(Sender : TObject; ARow, ACol : Integer; AState : TGridDrawState; ABrush : TBrush; AFont : TFont);
     procedure agrRoomsGridHint(Sender : TObject; ARow, ACol : Integer; var hintstr : string);
     procedure rgrOptionsClick(Sender: TObject);
     procedure agrRoomsDblClickCell(Sender: TObject; ARow, ACol: Integer);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure cbIncludeNonCleanRoomsClick(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
   private
     { Private declarations }
   public
@@ -365,15 +365,15 @@ begin
   zOpList := tstringList.Create;
 end;
 
+procedure TfrmProvideARoom2.FormDestroy(Sender: TObject);
+begin
+  zOpList.free;
+end;
+
 procedure TfrmProvideARoom2.FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
 begin
   if Key = VK_ESCAPE then
     Close;
-end;
-
-procedure TfrmProvideARoom2.FormClose(Sender : TObject; var Action : TCloseAction);
-begin
-  zOpList.free;
 end;
 
 function GetProblemRooms(Room : string; dtArrival, dtDeparture : Tdate; var lst : tstringList) : Integer;

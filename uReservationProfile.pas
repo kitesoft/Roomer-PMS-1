@@ -330,7 +330,7 @@ type
     tvRoomsRoomClass: TcxGridDBColumn;
     mRoomsRoomClassDescription: TWideStringField;
     tvRoomsRoomClassDescription: TcxGridDBColumn;
-    tvRoomsColumn1: TcxGridDBColumn;
+    tvRoomsDocuments: TcxGridDBColumn;
     cxButton5: TsButton;
     cxButton6: TsButton;
     mInvoiceLinesQuantity: TFloatField;
@@ -464,7 +464,6 @@ type
     mRoomsExpectedTimeOfArrival: TWideStringField;
     mRoomsExpectedCheckoutTime: TWideStringField;
     tvRoomsPersonsProfilesId: TcxGridDBColumn;
-    tvRoomsoutOfOrderBlocking: TcxGridDBColumn;
     tvRoomsManualChannelId: TcxGridDBColumn;
     tvRoomsExpectedTimeOfArrival: TcxGridDBColumn;
     tvRoomsExpectedCheckoutTime: TcxGridDBColumn;
@@ -589,6 +588,7 @@ type
     lblGuestCountry: TsLabel;
     lblGuestNationality: TsLabel;
     lblContactCountry: TsLabel;
+    acChangeRoomType: TAction;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -646,8 +646,7 @@ type
     procedure rgrinvoicePropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
     procedure cxButton3Click(Sender: TObject);
     procedure FormResize(Sender: TObject);
-    procedure tvRoomsRoomTypePropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
-    procedure tvRoomsColumn1PropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
+    procedure tvRoomsDocumentsPropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
     procedure cxButton5Click(Sender: TObject);
     procedure cxButton6Click(Sender: TObject);
     procedure tvInvoiceHeadsAmountWithTaxGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
@@ -714,8 +713,8 @@ type
     procedure tvRoomsStatusTextPropertiesDrawItem(AControl: TcxCustomComboBox; ACanvas: TcxCanvas; AIndex: Integer;
       const ARect: TRect; AState: TOwnerDrawState);
     procedure R4Click(Sender: TObject);
-    procedure tvRoomsRoomTypeGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
-      var AProperties: TcxCustomEditProperties);
+    procedure acChangeRoomTypeExecute(Sender: TObject);
+    procedure acChangeRoomTypeUpdate(Sender: TObject);
   private
     { Private declarations }
     vStartName: string;
@@ -1054,7 +1053,6 @@ end;
 procedure TfrmReservationProfile.R4Click(Sender: TObject);
 begin
   d.roomerMainDataSet.DoCommand('UPDATE roomsdate SET Paid=0 WHERE RoomReservation=' + inttostr(zRoomReservation));
-//  btnShowInvoice.Click;
 end;
 
 // **********************************************************************************
@@ -1510,7 +1508,6 @@ begin
   begin
     d.UpdateGroupAccountAll(zReservation, 0, zRoomReservation, GroupAccount);
     Display_rGrid(zRoomReservation);
-    // frmMain.refreshGrid;
   end;
 
   UpdateInfoLabels;
@@ -1643,7 +1640,7 @@ end;
 
 procedure TfrmReservationProfile.cxButton5Click(Sender: TObject);
 begin
-  tvRoomsColumn1PropertiesButtonClick(nil, 0);
+  tvRoomsDocumentsPropertiesButtonClick(Sender, 0);
 end;
 
 procedure TfrmReservationProfile.cxButton6Click(Sender: TObject);
@@ -1657,6 +1654,32 @@ end;
 // ******************************************************************************
 // Room Functions
 // ******************************************************************************
+
+procedure TfrmReservationProfile.acChangeRoomTypeExecute(Sender: TObject);
+var
+  s: String;
+begin
+  if copy(mRoomsRoom.asstring, 1, 1) = '<' then
+  begin
+    s := changeNoRoomRoomtypeReturnSelection(zReservation, zRoomReservation, trim(mRoomsRoomtype.asstring));
+    if s <> '' then
+    begin
+      mRooms.Edit;
+      try
+        mRoomsRoomtype.asstring := s;
+        mRooms.Post;
+      except
+        mRooms.Cancel;
+        raise;
+      end;
+    end;
+  end;
+end;
+
+procedure TfrmReservationProfile.acChangeRoomTypeUpdate(Sender: TObject);
+begin
+  acChangeRoomType.Visible := mRoomsRoom.asstring.StartsWith('<');
+end;
 
 procedure TfrmReservationProfile.acCheckinReservationExecute(Sender: TObject);
 begin
@@ -1679,7 +1702,6 @@ procedure TfrmReservationProfile.acCheckoutReservationExecute(Sender: TObject);
 begin
   if FReservationChangeStateHandler.ChangeState(rsDeparted) then
     Display;
-//  acCheckinReservation.Enabled := mRooms.Active and not mRooms.Eof and FReservationChangeStateHandler.ChangeIsAllowed(rsDeparted);
 end;
 
 procedure TfrmReservationProfile.acCheckoutRoomExecute(Sender: TObject);
@@ -2458,7 +2480,7 @@ begin
     s := s + '  Room ';
 
     s := format(s, [zReservation]);
-
+    copytoclipboard(s);
     rSet := CreateNewDataSet;
     hData.rSet_bySQL(rSet, s);
 
@@ -2550,7 +2572,7 @@ end;
 procedure TfrmReservationProfile.tvRoomsaccountTypeTextPropertiesChange(Sender: TObject);
 begin
   try
-    mRoomsisGroupAccount.AsBoolean := (TcxComboBox(Sender).ItemIndex = 1); // pos('Not', mRoomsBreakfastText.asString) = 0;
+    mRoomsisGroupAccount.AsBoolean := (TcxComboBox(Sender).ItemIndex = 1);
     d.UpdateGroupAccountOne(zReservation, zRoomReservation, zRoomReservation, mRoomsisGroupAccount.Asboolean);
     mRooms.Post;
     SetPaymentDetailItemindex('');
@@ -2806,42 +2828,16 @@ end;
 procedure TfrmReservationProfile.tvRoomsratePlanCodePropertiesCloseUp(Sender: TObject);
 var
   code: String;
-//  rate: double;
 begin
   if NOT mRooms.Eof then
   begin
     code := (tvRoomsratePlanCode.Properties AS TcxComboBoxProperties).Items[TcxComboBox(Sender).ItemIndex];
-//    rate := DynamicRates.AverageRateStay(code, mRooms['RoomType'], mRooms['Arrival'], mRooms['Departure']);
     mRooms.Edit;
     mRooms['ratePlanCode'] := code;
-//    mRooms['unpaidRentPrice'] := rate;
     mRooms.Post;
 
     DynamicRates.UpdateRoomReservation(mRooms['RoomReservation'], code, mRooms['RoomType'], mRooms['Arrival'],
       mRooms['Departure']);
-  end;
-end;
-
-procedure TfrmReservationProfile.tvRoomsRoomTypeGetProperties(Sender: TcxCustomGridTableItem;
-  ARecord: TcxCustomGridRecord; var AProperties: TcxCustomEditProperties);
-begin
-  TcxCustomButtonEditProperties(aProperties).Buttons[0].Enabled := (copy(mRoomsRoom.asstring, 1, 1) = '<');
-end;
-
-procedure TfrmReservationProfile.tvRoomsRoomTypePropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
-var
-  s: String;
-begin
-  if copy(mRoomsRoom.asstring, 1, 1) = '<' then
-  begin
-    s := changeNoRoomRoomtypeReturnSelection(zReservation, zRoomReservation,
-      trim(mRoomsRoomtype.asstring));
-    if s <> '' then
-    begin
-      mRooms.Edit;
-      mRoomsRoomtype.asstring := s;
-      mRooms.Post;
-    end;
   end;
 end;
 
@@ -2993,7 +2989,7 @@ end;
 procedure TfrmReservationProfile.tvRoomsbreakfastTextPropertiesChange(Sender: TObject);
 begin
   try
-    mRoomsBreakFast.AsBoolean := (TcxComboBox(Sender).ItemIndex = 0); // pos('Not', mRoomsBreakfastText.asString) = 0;
+    mRoomsBreakFast.AsBoolean := (TcxComboBox(Sender).ItemIndex = 0);
     d.UpdateBreakfastIncluted(zReservation, zRoomReservation, mRoomsBreakFast.Asboolean);
     mRooms.Post;
     SetBreakfastItemindex('');
@@ -3050,7 +3046,7 @@ begin
   end;
 end;
 
-procedure TfrmReservationProfile.tvRoomsColumn1PropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
+procedure TfrmReservationProfile.tvRoomsDocumentsPropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
 begin
   StaticResources('Room Resources',
     format(ROOM_BOOKING_STATIC_RESOURCES, [inttostr(mRooms['RoomReservation'])]),

@@ -5588,49 +5588,13 @@ begin
 
   glb.CustomertypesSet.First;
   result := glb.CustomertypesSet.fieldbyname('CustomerType').asString;
-
-  // RSet := CreateNewDataSet;
-  // try
-  // s := format(select_CustomerTypes_GetDefault, []);
-  // if hData.rSet_bySQL(rSet,s, Connection,LogLevel,logPath) then
-  // begin
-  // result := Rset.FieldByName('CustomerType').AsString;
-  // end;
-  // finally
-  // freeandnil(Rset);
-  // end;
 end;
 
 function Country_GetDefault(): string;
-// Rset : TRoomerDataSet;
-// s : string;
-
-var
-  m: TKbmMemtable;
 begin
-  m := TKbmMemtable.Create(nil);
-  try
-    LoadKbmMemtableFromDataSetQuiet(m,glb.Countries, [mtcpoStructure]);
-    m.First;
-    m.sortfields := 'OrderIndex';
-    m.sort([mtcoDescending]);
-    m.First;
-    result := m.fieldbyname('country').asString;
-  finally
-    freeandnil(m);
-  end;
-  // result := '';
-  // RSet := CreateNewDataSet;
-  // try
-  // s := format(select_Country_GetDefault, []);
-  // if hData.rSet_bySQL(rSet,s, Connection,LogLevel,logPath) then
-  // begin
-  // result := Rset.FieldByName('Country').AsString;
-  // end;
-  // finally
-  // freeandnil(Rset);
-  // end;
-
+  glb.Countries.IndexFieldNames := 'OrderIndex';
+  glb.Countries.First;
+  result := glb.Countries.fieldbyname('country').asString;
 end;
 
 function Item_GetDescription(Item: string): string;
