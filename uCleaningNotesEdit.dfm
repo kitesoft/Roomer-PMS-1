@@ -51,6 +51,8 @@ inherited frmCleaningNotesEdit: TfrmCleaningNotesEdit
   inherited sbStatusBar: TsStatusBar
     Top = 395
     Width = 610
+    ExplicitTop = 395
+    ExplicitWidth = 610
   end
   object panBtn: TsPanel [6]
     Left = 0
@@ -211,9 +213,6 @@ inherited frmCleaningNotesEdit: TfrmCleaningNotesEdit
     TabOrder = 4
     ImgChecked = 0
     ImgUnchecked = 0
-  end
-  inherited sbProgressBar: TAdvSmoothProgressBar
-    TMSStyle = 4
   end
   inherited psRoomerBase: TcxPropertiesStore
     Left = 536
