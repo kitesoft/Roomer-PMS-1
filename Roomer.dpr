@@ -8,6 +8,8 @@ program Roomer;
 //  FastMM4Messages in 'FastMM\FastMM4Messages.pas',
 //  {$endif}
 
+
+
 uses
   {$ifdef UseFastMM}
   FastMM4 in 'FastMM\FastMM4.pas',
@@ -132,7 +134,7 @@ uses
   ufDownPayments in 'ufDownPayments.pas' {frmRptDownPayments},
   uAssignPayment in 'uAssignPayment.pas' {frmAssignPayment},
   uFrmResources in 'uFrmResources.pas' {FrmResources},
-  uFrmMessagesTemplates in 'uFrmMessagesTemplates.pas' {FrmMessagesTemplates},
+  uFrmMessagesTemplates in 'Embeddables\uFrmMessagesTemplates.pas' {FrmMessagesTemplates},
   uFrmNotepad in 'uFrmNotepad.pas' {FrmNotepad},
   uFrmGuestReviews in 'uFrmGuestReviews.pas' {Form6},
   uRptConfirms in 'uRptConfirms.pas' {frmrptConfirms},
@@ -257,7 +259,8 @@ uses
   uStringUtils in 'RoomerVCLs\Source\uStringUtils.pas',
   uInvoiceDefinitions in 'Definitions\uInvoiceDefinitions.pas',
   uFraCountryPanel in 'Embeddables\uFraCountryPanel.pas' {fraCountryPanel: TFrame},
-  uRoomerConfirmationDialogs in 'uRoomerConfirmationDialogs.pas';
+  uRoomerConfirmationDialogs in 'uRoomerConfirmationDialogs.pas',
+  uEmbDateStatistics in 'Embeddables\uEmbDateStatistics.pas' {frmEmbDateStatistics};
 
 {$R *.RES}
 
@@ -275,6 +278,7 @@ begin
 
   Application.CreateForm(TD, D);
   Application.CreateForm(TDReportData, DReportData);
+  Application.CreateForm(TfrmEmbDateStatistics, frmEmbDateStatistics);
   TSplashFormManager.UpdateProgress('Loading forms...');
 
   Application.CreateForm(TDImages, DImages);

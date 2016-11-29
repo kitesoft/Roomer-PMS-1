@@ -52,7 +52,6 @@ object frmMain: TfrmMain
     SunkenBorder = True
     UseOwnColor = True
     UseOwnSunkenBorder = True
-    ExplicitTop = 122
   end
   object panMain: TsPanel
     Left = 0
@@ -2496,504 +2495,81 @@ object frmMain: TfrmMain
       TabOrder = 0
       Visible = False
       SkinData.SkinSection = 'TRANSPARENT'
-      object PanStat: TsScrollBox
-        AlignWithMargins = True
-        Left = 10
-        Top = 0
-        Width = 294
-        Height = 304
+      object lblBusyDownloading: TsLabel
+        Left = 0
+        Top = 158
+        Width = 304
+        Height = 13
+        Margins.Left = 10
+        Margins.Top = 0
+        Margins.Right = 0
+        Margins.Bottom = 0
+        Align = alTop
+        Caption = 'Downloading...'
+        Color = clBlack
+        ParentColor = False
+        ParentFont = False
+        Visible = False
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = 15789037
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        UseSkinColor = False
+        ExplicitWidth = 73
+      end
+      object lblCacheNotification: TsLabel
+        Left = 0
+        Top = 145
+        Width = 304
+        Height = 13
+        Margins.Left = 10
+        Margins.Top = 0
+        Margins.Right = 0
+        Margins.Bottom = 0
+        Align = alTop
+        Caption = 'Updating cache...'
+        Color = clGreen
+        ParentColor = False
+        ParentFont = False
+        Visible = False
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = 15789037
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        UseSkinColor = False
+        ExplicitWidth = 86
+      end
+      object pnlStatistics: TsScrollBox
+        Left = 0
+        Top = 171
+        Width = 304
+        Height = 133
         Margins.Left = 10
         Margins.Top = 0
         Margins.Right = 0
         Margins.Bottom = 0
         HorzScrollBar.Visible = False
-        VertScrollBar.Position = 120
         Align = alClient
         TabOrder = 0
         SkinData.SkinSection = 'PANEL'
-        object sSplitter1: TsSplitter
-          Left = 0
-          Top = 372
-          Width = 273
-          Height = 8
-          Cursor = crVSplit
-          Margins.Left = 10
-          Margins.Top = 0
-          Margins.Right = 0
-          Margins.Bottom = 0
-          Align = alTop
-          Beveled = True
-          SkinData.SkinSection = 'SPLITTER'
-          ExplicitTop = 569
-          ExplicitWidth = 238
-        end
-        object lblBusyDownloading: TsLabel
-          Left = 0
-          Top = -107
-          Width = 273
-          Height = 13
-          Margins.Left = 10
-          Margins.Top = 0
-          Margins.Right = 0
-          Margins.Bottom = 0
-          Align = alTop
-          Caption = 'Downloading...'
-          Color = clBlack
-          ParentColor = False
-          ParentFont = False
-          Visible = False
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = 15789037
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          UseSkinColor = False
-          ExplicitWidth = 73
-        end
-        object lblCacheNotification: TsLabel
-          Left = 0
-          Top = -120
-          Width = 273
-          Height = 13
-          Margins.Left = 10
-          Margins.Top = 0
-          Margins.Right = 0
-          Margins.Bottom = 0
-          Align = alTop
-          Caption = 'Updating cache...'
-          Color = clGreen
-          ParentColor = False
-          ParentFont = False
-          Visible = False
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = 15789037
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          UseSkinColor = False
-          ExplicitWidth = 86
-        end
-        object Panel5: TsPanel
-          Left = 0
-          Top = 74
-          Width = 273
-          Height = 26
-          Align = alTop
-          TabOrder = 0
-          SkinData.SkinSection = 'PANEL'
-          object lblPropertyStatus: TsLabel
-            Left = 1
-            Top = 1
-            Width = 271
-            Height = 24
-            Margins.Left = 10
-            Margins.Top = 0
-            Margins.Right = 0
-            Margins.Bottom = 0
-            Align = alClient
-            Caption = 'Hotel Property Status'
-            ParentFont = False
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clWindowText
-            Font.Height = -17
-            Font.Name = 'Tahoma'
-            Font.Style = []
-            ExplicitWidth = 158
-            ExplicitHeight = 21
-          end
-        end
-        object Chart1: TChart
-          Left = 0
-          Top = 210
-          Width = 273
-          Height = 162
-          Margins.Left = 10
-          Margins.Top = 0
-          Margins.Right = 0
-          Margins.Bottom = 0
-          Foot.Font.Name = 'Segoe UI'
-          Legend.Font.Height = -8
-          Legend.Font.Name = 'Segoe UI'
-          Legend.Visible = False
-          SubTitle.Font.Color = clBlack
-          Title.Font.Height = -8
-          Title.Text.Strings = (
-            'Rooms')
-          BottomAxis.LabelsFont.Height = -12
-          SeriesGroups = <
-            item
-              Name = 'Group1'
-            end>
-          View3DWalls = False
-          Align = alTop
-          BevelOuter = bvNone
-          Color = clWhite
-          TabOrder = 1
-          OnDblClick = Chart1DblClick
-          PrintMargins = (
-            15
-            6
-            15
-            6)
-          ColorPaletteIndex = 13
-          object Series1: TBarSeries
-            ColorEachPoint = True
-            Marks.Arrow.Visible = True
-            Marks.Callout.Brush.Color = clBlack
-            Marks.Callout.Arrow.Visible = True
-            Marks.Style = smsValue
-            Marks.Visible = True
-            Title = 'Rooms'
-            XValues.Name = 'X'
-            XValues.Order = loAscending
-            YValues.Name = 'Bar'
-            YValues.Order = loNone
-            Data = {
-              060500000000000000000024400000FF00FF04000000526F6F6D000000000000
-              204000000020FF0500000054616B656E0000000000001C4080804000FF040000
-              004E6F526D000000000000F03FFF000000FF0400000046726565000000000000
-              004000800000FF050000004E6574746F}
-          end
-        end
-        object grdRoomStatusses: TAdvStringGrid
-          Left = 0
-          Top = 380
-          Width = 273
-          Height = 50
-          Cursor = crDefault
-          Margins.Left = 10
-          Margins.Top = 0
-          Margins.Right = 0
-          Margins.Bottom = 0
-          Align = alTop
-          BevelEdges = []
-          BevelInner = bvNone
-          BevelOuter = bvNone
-          BorderStyle = bsNone
-          ColCount = 3
-          Ctl3D = False
-          DefaultColWidth = 70
-          DefaultRowHeight = 19
-          DrawingStyle = gdsClassic
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          ParentCtl3D = False
-          ParentFont = False
-          ScrollBars = ssBoth
-          TabOrder = 2
-          ActiveRowColor = 15790320
-          HoverRowCells = [hcNormal, hcSelected]
-          OnGetAlignment = grdRoomStatussesGetAlignment
-          ActiveCellFont.Charset = DEFAULT_CHARSET
-          ActiveCellFont.Color = clWindowText
-          ActiveCellFont.Height = -13
-          ActiveCellFont.Name = 'Tahoma'
-          ActiveCellFont.Style = [fsBold]
-          AutoSize = True
-          ControlLook.FixedGradientFrom = clInactiveCaptionText
-          ControlLook.FixedGradientTo = clWhite
-          ControlLook.FixedGradientHoverFrom = clGray
-          ControlLook.FixedGradientHoverTo = clWhite
-          ControlLook.FixedGradientDownFrom = clGray
-          ControlLook.FixedGradientDownTo = clSilver
-          ControlLook.ControlStyle = csWinXP
-          ControlLook.DropDownHeader.Font.Charset = DEFAULT_CHARSET
-          ControlLook.DropDownHeader.Font.Color = clWindowText
-          ControlLook.DropDownHeader.Font.Height = -13
-          ControlLook.DropDownHeader.Font.Name = 'Tahoma'
-          ControlLook.DropDownHeader.Font.Style = []
-          ControlLook.DropDownHeader.Visible = True
-          ControlLook.DropDownHeader.Buttons = <>
-          ControlLook.DropDownFooter.Font.Charset = DEFAULT_CHARSET
-          ControlLook.DropDownFooter.Font.Color = clWindowText
-          ControlLook.DropDownFooter.Font.Height = -13
-          ControlLook.DropDownFooter.Font.Name = 'Tahoma'
-          ControlLook.DropDownFooter.Font.Style = []
-          ControlLook.DropDownFooter.Visible = True
-          ControlLook.DropDownFooter.Buttons = <>
-          Filter = <>
-          FilterDropDown.Font.Charset = DEFAULT_CHARSET
-          FilterDropDown.Font.Color = clWindowText
-          FilterDropDown.Font.Height = -13
-          FilterDropDown.Font.Name = 'Tahoma'
-          FilterDropDown.Font.Style = []
-          FilterDropDownClear = '(All)'
-          FilterEdit.TypeNames.Strings = (
-            'Starts with'
-            'Ends with'
-            'Contains'
-            'Not contains'
-            'Equal'
-            'Not equal'
-            'Larger than'
-            'Smaller than'
-            'Clear')
-          FixedColWidth = 70
-          FixedRowHeight = 19
-          FixedFont.Charset = DEFAULT_CHARSET
-          FixedFont.Color = clWindowText
-          FixedFont.Height = -11
-          FixedFont.Name = 'Tahoma'
-          FixedFont.Style = [fsBold]
-          Flat = True
-          FloatFormat = '%.2f'
-          Grouping.HeaderColor = clInactiveCaptionText
-          Grouping.HeaderColorTo = clWhite
-          Grouping.SummaryColor = 15790320
-          Grouping.SummaryColorTo = clWhite
-          HoverButtons.Buttons = <>
-          HoverButtons.Position = hbLeftFromColumnLeft
-          HTMLSettings.ImageFolder = 'images'
-          HTMLSettings.ImageBaseName = 'img'
-          PrintSettings.DateFormat = 'dd/mm/yyyy'
-          PrintSettings.Font.Charset = DEFAULT_CHARSET
-          PrintSettings.Font.Color = clWindowText
-          PrintSettings.Font.Height = -13
-          PrintSettings.Font.Name = 'Tahoma'
-          PrintSettings.Font.Style = []
-          PrintSettings.FixedFont.Charset = DEFAULT_CHARSET
-          PrintSettings.FixedFont.Color = clWindowText
-          PrintSettings.FixedFont.Height = -13
-          PrintSettings.FixedFont.Name = 'Tahoma'
-          PrintSettings.FixedFont.Style = []
-          PrintSettings.HeaderFont.Charset = DEFAULT_CHARSET
-          PrintSettings.HeaderFont.Color = clWindowText
-          PrintSettings.HeaderFont.Height = -13
-          PrintSettings.HeaderFont.Name = 'Tahoma'
-          PrintSettings.HeaderFont.Style = []
-          PrintSettings.FooterFont.Charset = DEFAULT_CHARSET
-          PrintSettings.FooterFont.Color = clWindowText
-          PrintSettings.FooterFont.Height = -13
-          PrintSettings.FooterFont.Name = 'Tahoma'
-          PrintSettings.FooterFont.Style = []
-          PrintSettings.PageNumSep = '/'
-          ScrollWidth = 21
-          SearchFooter.Color = clInactiveCaptionText
-          SearchFooter.ColorTo = clWhite
-          SearchFooter.FindNextCaption = 'Find &next'
-          SearchFooter.FindPrevCaption = 'Find &previous'
-          SearchFooter.Font.Charset = DEFAULT_CHARSET
-          SearchFooter.Font.Color = clWindowText
-          SearchFooter.Font.Height = -13
-          SearchFooter.Font.Name = 'Tahoma'
-          SearchFooter.Font.Style = []
-          SearchFooter.HighLightCaption = 'Highlight'
-          SearchFooter.HintClose = 'Close'
-          SearchFooter.HintFindNext = 'Find next occurrence'
-          SearchFooter.HintFindPrev = 'Find previous occurrence'
-          SearchFooter.HintHighlight = 'Highlight occurrences'
-          SearchFooter.MatchCaseCaption = 'Match case'
-          SelectionColor = 15790320
-          SelectionColorTo = 15387318
-          SortSettings.DefaultFormat = ssAutomatic
-          Version = '8.1.2.0'
-          ColWidths = (
-            70
-            12
-            12)
-          RowHeights = (
-            19
-            19
-            19
-            19
-            19
-            19
-            19
-            19
-            19
-            19)
-        end
-        object grdRoomClasses: TAdvStringGrid
-          Left = 0
-          Top = 100
-          Width = 273
-          Height = 110
-          Cursor = crDefault
-          Margins.Left = 10
-          Margins.Top = 0
-          Margins.Right = 0
-          Margins.Bottom = 0
-          Align = alTop
-          BevelEdges = []
-          BevelInner = bvNone
-          BevelOuter = bvNone
-          BorderStyle = bsNone
-          ColCount = 4
-          Ctl3D = False
-          DefaultColWidth = 60
-          DefaultRowHeight = 19
-          DrawingStyle = gdsClassic
-          RowCount = 5
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Segoe UI'
-          Font.Style = []
-          ParentCtl3D = False
-          ParentFont = False
-          PopupMenu = pmnuChannelSettings
-          ScrollBars = ssNone
-          TabOrder = 3
-          OnDrawCell = grdRoomClassesDrawCell
-          OnMouseDown = grdRoomClassesMouseDown
-          OnMouseMove = grdRoomClassesMouseMove
-          ActiveRowColor = 15790320
-          HoverRowCells = [hcNormal, hcSelected]
-          OnGetCellBorder = grdRoomClassesGetCellBorder
-          OnGetAlignment = grdRoomStatussesGetAlignment
-          OnCanEditCell = grdRoomClassesCanEditCell
-          OnCellValidate = grdRoomClassesCellValidate
-          HintShowSizing = True
-          ActiveCellFont.Charset = DEFAULT_CHARSET
-          ActiveCellFont.Color = clWindowText
-          ActiveCellFont.Height = -13
-          ActiveCellFont.Name = 'Tahoma'
-          ActiveCellFont.Style = [fsBold]
-          ControlLook.FixedGradientFrom = clInactiveCaptionText
-          ControlLook.FixedGradientTo = clWhite
-          ControlLook.FixedGradientHoverFrom = clGray
-          ControlLook.FixedGradientHoverTo = clWhite
-          ControlLook.FixedGradientDownFrom = clGray
-          ControlLook.FixedGradientDownTo = clSilver
-          ControlLook.ControlStyle = csWinXP
-          ControlLook.DropDownHeader.Font.Charset = DEFAULT_CHARSET
-          ControlLook.DropDownHeader.Font.Color = clWindowText
-          ControlLook.DropDownHeader.Font.Height = -13
-          ControlLook.DropDownHeader.Font.Name = 'Tahoma'
-          ControlLook.DropDownHeader.Font.Style = []
-          ControlLook.DropDownHeader.Visible = True
-          ControlLook.DropDownHeader.Buttons = <>
-          ControlLook.DropDownFooter.Font.Charset = DEFAULT_CHARSET
-          ControlLook.DropDownFooter.Font.Color = clWindowText
-          ControlLook.DropDownFooter.Font.Height = -13
-          ControlLook.DropDownFooter.Font.Name = 'Tahoma'
-          ControlLook.DropDownFooter.Font.Style = []
-          ControlLook.DropDownFooter.Visible = True
-          ControlLook.DropDownFooter.Buttons = <>
-          Filter = <>
-          FilterDropDown.Font.Charset = DEFAULT_CHARSET
-          FilterDropDown.Font.Color = clWindowText
-          FilterDropDown.Font.Height = -13
-          FilterDropDown.Font.Name = 'Tahoma'
-          FilterDropDown.Font.Style = []
-          FilterDropDownClear = '(All)'
-          FilterEdit.TypeNames.Strings = (
-            'Starts with'
-            'Ends with'
-            'Contains'
-            'Not contains'
-            'Equal'
-            'Not equal'
-            'Larger than'
-            'Smaller than'
-            'Clear')
-          FixedColWidth = 60
-          FixedRowHeight = 19
-          FixedFont.Charset = DEFAULT_CHARSET
-          FixedFont.Color = clWindowText
-          FixedFont.Height = -11
-          FixedFont.Name = 'Tahoma'
-          FixedFont.Style = [fsBold]
-          Flat = True
-          FloatFormat = '%.2f'
-          Grouping.HeaderColor = clInactiveCaptionText
-          Grouping.HeaderColorTo = clWhite
-          Grouping.SummaryColor = 15790320
-          Grouping.SummaryColorTo = clWhite
-          HoverButtons.Buttons = <>
-          HoverButtons.Position = hbLeftFromColumnLeft
-          HTMLSettings.ImageFolder = 'images'
-          HTMLSettings.ImageBaseName = 'img'
-          PrintSettings.DateFormat = 'dd/mm/yyyy'
-          PrintSettings.Font.Charset = DEFAULT_CHARSET
-          PrintSettings.Font.Color = clWindowText
-          PrintSettings.Font.Height = -13
-          PrintSettings.Font.Name = 'Tahoma'
-          PrintSettings.Font.Style = []
-          PrintSettings.FixedFont.Charset = DEFAULT_CHARSET
-          PrintSettings.FixedFont.Color = clWindowText
-          PrintSettings.FixedFont.Height = -13
-          PrintSettings.FixedFont.Name = 'Tahoma'
-          PrintSettings.FixedFont.Style = []
-          PrintSettings.HeaderFont.Charset = DEFAULT_CHARSET
-          PrintSettings.HeaderFont.Color = clWindowText
-          PrintSettings.HeaderFont.Height = -13
-          PrintSettings.HeaderFont.Name = 'Tahoma'
-          PrintSettings.HeaderFont.Style = []
-          PrintSettings.FooterFont.Charset = DEFAULT_CHARSET
-          PrintSettings.FooterFont.Color = clWindowText
-          PrintSettings.FooterFont.Height = -13
-          PrintSettings.FooterFont.Name = 'Tahoma'
-          PrintSettings.FooterFont.Style = []
-          PrintSettings.PageNumSep = '/'
-          ScrollWidth = 21
-          SearchFooter.Color = clInactiveCaptionText
-          SearchFooter.ColorTo = clWhite
-          SearchFooter.FindNextCaption = 'Find &next'
-          SearchFooter.FindPrevCaption = 'Find &previous'
-          SearchFooter.Font.Charset = DEFAULT_CHARSET
-          SearchFooter.Font.Color = clWindowText
-          SearchFooter.Font.Height = -13
-          SearchFooter.Font.Name = 'Tahoma'
-          SearchFooter.Font.Style = []
-          SearchFooter.HighLightCaption = 'Highlight'
-          SearchFooter.HintClose = 'Close'
-          SearchFooter.HintFindNext = 'Find next occurrence'
-          SearchFooter.HintFindPrev = 'Find previous occurrence'
-          SearchFooter.HintHighlight = 'Highlight occurrences'
-          SearchFooter.MatchCaseCaption = 'Match case'
-          SelectionColor = 15790320
-          SelectionColorTo = 15387318
-          SortSettings.DefaultFormat = ssAutomatic
-          Version = '8.1.2.0'
-          RowHeights = (
-            19
-            19
-            19
-            19
-            19)
-        end
-        object pnlDateStatistics: TsPanel
-          Left = 0
-          Top = -94
-          Width = 273
-          Height = 23
-          Margins.Left = 10
-          Margins.Top = 0
-          Margins.Right = 0
-          Margins.Bottom = 0
-          Align = alTop
-          Alignment = taLeftJustify
-          BevelOuter = bvNone
-          Caption = ' 2013-10-10'
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -15
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          ParentFont = False
-          TabOrder = 4
-          SkinData.SkinSection = 'PANEL'
-        end
-        object pnlNotifications: TsPanel
-          Left = 0
-          Top = -71
-          Width = 273
-          Height = 145
-          Margins.Left = 10
-          Margins.Top = 0
-          Margins.Right = 0
-          Margins.Bottom = 0
-          Align = alTop
-          Alignment = taLeftJustify
-          BevelOuter = bvNone
-          TabOrder = 5
-          Visible = False
-          SkinData.SkinSection = 'PANEL'
-        end
+      end
+      object pnlNotifications: TsPanel
+        Left = 0
+        Top = 0
+        Width = 304
+        Height = 145
+        Margins.Left = 10
+        Margins.Top = 0
+        Margins.Right = 0
+        Margins.Bottom = 0
+        Align = alTop
+        Alignment = taLeftJustify
+        BevelOuter = bvNone
+        TabOrder = 1
+        Visible = False
+        SkinData.SkinSection = 'PANEL'
       end
     end
     object pnlTimeMessage: TsPanel
@@ -3196,6 +2772,7 @@ object frmMain: TfrmMain
       Index = 4
     end
     object System: TdxRibbonTab
+      Active = True
       Caption = 'System'
       Groups = <
         item
@@ -5280,10 +4857,6 @@ object frmMain: TfrmMain
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'btnDownloadBackup'
-        end
-        item
-          Visible = True
           ItemName = 'btnDeleteCache'
         end
         item
@@ -5307,7 +4880,7 @@ object frmMain: TfrmMain
     object barinnBar9: TdxBar
       Caption = 'Templates'
       CaptionButtons = <>
-      DockedLeft = 1052
+      DockedLeft = 982
       DockedTop = 0
       FloatLeft = 1278
       FloatTop = 8
@@ -5820,7 +5393,6 @@ object frmMain: TfrmMain
       Hint = 'Download'
       Visible = ivAlways
       LargeImageIndex = 2
-      OnClick = btnDownloadBackupClick
     end
     object btnCommunicationTest: TdxBarLargeButton
       Caption = 'Comm Test'
@@ -24721,13 +24293,6 @@ object frmMain: TfrmMain
     Left = 736
     Top = 400
   end
-  object timGetRoomStatuses: TTimer
-    Enabled = False
-    Interval = 10
-    OnTimer = timGetRoomStatusesTimer
-    Left = 912
-    Top = 328
-  end
   object ilBackForth: TsAlphaImageList
     DrawingStyle = dsTransparent
     Items = <
@@ -24847,13 +24412,6 @@ object frmMain: TfrmMain
     OnTimer = timHaltTimer
     Left = 64
     Top = 592
-  end
-  object pmnuChannelSettings: TPopupMenu
-    Left = 1160
-    Top = 592
-    object N01: TMenuItem
-      Caption = '0'
-    end
   end
   object timHideTimeMessage: TTimer
     Enabled = False
