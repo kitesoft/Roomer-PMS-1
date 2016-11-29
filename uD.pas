@@ -5693,7 +5693,7 @@ var
 begin
   result := False;
 
-  if Medhod = 0 then
+  if Medhod = 0 then // single person
   begin
     if Person < 1 then
       exit;
@@ -5708,7 +5708,7 @@ begin
     end;
   end;
 
-  if Medhod = 1 then
+  if Medhod = 1 then // all persons in roomreservaiton
   begin
     if RoomReservation < 1 then
       exit;
@@ -5723,7 +5723,7 @@ begin
     end;
   end;
 
-  if Medhod = 2 then
+  if Medhod = 2 then // al persons in reservation
   begin
     if reservation < 1 then
       exit;

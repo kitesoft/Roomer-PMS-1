@@ -715,6 +715,8 @@ type
     procedure R4Click(Sender: TObject);
     procedure acChangeRoomTypeExecute(Sender: TObject);
     procedure acChangeRoomTypeUpdate(Sender: TObject);
+    procedure btnChangeNationalitiesAllGuestsClick(Sender: TObject);
+    procedure btnChangeCountryAllGuestsClick(Sender: TObject);
   private
     { Private declarations }
     vStartName: string;
@@ -769,8 +771,6 @@ type
     procedure SelectMainGuestProfile;
     procedure ShowMainGuestProfile;
     procedure mnuOtherResStateChangeClick(Sender: TObject);
-    procedure ChangeNationalityAllGuests(Sender: TObject);
-    procedure ChangeCountryAllGuests(Sender: TObject);
 
     property OutOfOrderBlocking: Boolean read FOutOfOrderBlocking write SetOutOfOrderBlocking;
   public
@@ -988,8 +988,11 @@ begin
   vStartName := frmReservationProfile.edtName.text;
 
 
-  fraGuestNationality.AllowEdit := False;
-  fraGuestCountry.AllowEdit := False;
+  fraGuestNationality.AllowEdit := True;
+  fraGuestNationality.OnCountryChange := btnChangeNationalitiesAllGuestsClick;
+  fraGuestCountry.AllowEdit := True;
+  fraGuestCountry.OnCountryChange := btnChangeCountryAllGuestsClick;
+  fraContactCountry.AllowEdit := False;
 
   pnlAllGuestsNationality.Visible := glb.PMSSettings.EditAllGuestsNationality;
 end;
@@ -1352,29 +1355,81 @@ end;
 //
 // ************************************************************************************
 
-procedure TfrmReservationProfile.ChangeNationalityAllGuests(Sender: TObject);
+procedure TfrmReservationProfile.btnChangeNationalitiesAllGuestsClick(Sender: TObject);
 var
   s: string;
   fra: TfraCountryPanel;
+  lMethod: integer;
+  lPerson: integer;
+  lAnswer: integer;
 begin
-  fra := Sender as TfraCountryPanel;
+  fra := fraGuestNationality;
 
   s := format(GetTranslatedText('shTx_ReservationProfile_ChangeNationalityConfirm'), [fra.CountryName]);
-  if (MessageDlg(s, mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
-    if not d.ChangeNationality(fra.CountryCode, zReservation, 0, 0, 2) then
-      showmessage(GetTranslatedText('shTx_ReservationProfile_NationalityChangeFailed'));
+  lAnswer := MessageDlg(s, mtConfirmation, [mbYes, mbNo, mbAll], 0, mbYes);
+
+  lPerson := 0;
+  case lAnswer of
+    mrYes:  begin
+              lMethod := 1; // all persons in roomreservation
+            end;
+    mrNo:  begin // one person
+              if Sender = btnChangeNationality then
+                Exit; // No need to change mainguest when btn is used
+              lMethod := 0;
+              mAllGuests.Locate('Room;MainName', VarArrayOf([mROomsRoom.AsString, True]), []);
+              lPerson := mAllGuestsPerson.Asinteger
+            end;
+    mrAll:  begin
+              lMethod := 2; // all persons in reservation
+            end;
+    else
+      Exit;
+  end;
+
+  if not d.ChangeNationality(fra.CountryCode, mRoomsReservation.Asinteger, mRoomsRoomReservation.Asinteger, lPerson, lMethod) then
+    showmessage(GetTranslatedText('shTx_ReservationProfile_NationalityChangeFailed'))
+  else
+    getGuestData(mRoomsRoomReservation.Asinteger, True);
 end;
 
-procedure TfrmReservationProfile.ChangeCountryAllGuests(Sender: TObject);
+procedure TfrmReservationProfile.btnChangeCountryAllGuestsClick(Sender: TObject);
 var
   s: string;
   fra: TfraCountryPanel;
+  lMethod: integer;
+  lPerson: integer;
+  lAnswer : integer;
 begin
-  fra := Sender as TfraCountryPanel;
+  fra := fraGuestCountry;
+
   s := format(GetTranslatedText('shTx_ReservationProfile_ChangeCountryConfirm'), [fra.CountryName]);
-  if (MessageDlg(s, mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
-    if not d.ChangeCountry(fra.CountryCode, zReservation, 0, 0, 2) then
-      showmessage(GetTranslatedText('shTx_ReservationProfile_CountryChangeFailed'));
+  lAnswer := MessageDlg(s, mtConfirmation, [mbYes, mbNo, mbAll], 0, mbYes);
+
+  lPerson := 0;
+  case lAnswer of
+    mrYes:  begin
+              lMethod := 1; // all persons in roomreservation
+            end;
+    mrNo:  begin // one person
+              if Sender = btnChangeCountry then
+                Exit; // No need to change mainguest when btn is used
+              lMethod := 0;
+              mAllGuests.Locate('Room;MainName', VarArrayOf([mROomsRoom.AsString, True]), []);
+              lPerson := mAllGuestsPerson.Asinteger
+            end;
+    mrAll:  begin
+              lMethod := 2; // all persons in reservation
+            end;
+    else
+      Exit;
+  end;
+
+  if not d.ChangeCountry(fra.CountryCode, mRoomsReservation.Asinteger, mRoomsRoomReservation.Asinteger, lPerson, lMethod) then
+    showmessage(GetTranslatedText('shTx_ReservationProfile_CountryChangeFailed'))
+  else
+    getGuestData(mRoomsRoomReservation.Asinteger, True);
+
 end;
 
 
@@ -2276,15 +2331,20 @@ var
   HiddenInfo: string;
   ChannelRequest: String;
 begin
-  if mainPage.ActivePage = GuestsTab then
+  if not Dataset.ControlsDisabled then
   begin
-    if lvAllGuests.GridView.Focused then
+    UpdateGuestDetails(mRoomsRoomReservation.AsInteger);
+
+    if mainPage.ActivePage = GuestsTab then
     begin
-      zRoomReservation := DataSet.fieldbyname('Roomreservation').asInteger;
-      d.RR_GetMemoBothTextForRoom(zRoomReservation, HiddenInfo, ChannelRequest);
-      memRoomNotes.Lines.text := HiddenInfo;
-      memRequestFromChannel.Lines.text := ChannelRequest;
-    end;
+      if lvAllGuests.GridView.Focused then
+      begin
+        zRoomReservation := DataSet.fieldbyname('Roomreservation').asInteger;
+        d.RR_GetMemoBothTextForRoom(zRoomReservation, HiddenInfo, ChannelRequest);
+        memRoomNotes.Lines.text := HiddenInfo;
+        memRequestFromChannel.Lines.text := ChannelRequest;
+      end;
+    end
   end;
 end;
 
@@ -3392,7 +3452,6 @@ begin
         mAllGuests.LoadFromDataSet(rSet);
 
         mAllGuests.Locate('RoomReservation', gotoRoomReservation, []);
-        mAllGuestsAfterScroll(mAllGuests);
         result := true;
       finally
         mAllGuests.AfterScroll := mAllGuestsAfterScroll;
@@ -3400,6 +3459,7 @@ begin
     finally
       screen.Cursor := crDefault;
       mAllGuests.EnableControls;
+      mAllGuestsAfterScroll(mAllGuests);
     end;
   finally
     FreeAndNil(rSet);

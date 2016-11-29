@@ -544,10 +544,6 @@ object frmReservationProfile: TfrmReservationProfile
       TabVisible = False
       SkinData.CustomColor = False
       SkinData.CustomFont = False
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Panel3: TsPanel
         Left = 0
         Top = 0
@@ -600,10 +596,6 @@ object frmReservationProfile: TfrmReservationProfile
               Caption = 'Contact'
               SkinData.CustomColor = False
               SkinData.CustomFont = False
-              ExplicitLeft = 0
-              ExplicitTop = 0
-              ExplicitWidth = 0
-              ExplicitHeight = 0
               object lblContactName: TsLabel
                 Left = 32
                 Top = 5
@@ -940,16 +932,9 @@ object frmReservationProfile: TfrmReservationProfile
                   ExplicitWidth = 175
                   inherited lblCountryName: TsLabel
                     Width = 3
-                    Height = 11
                     Font.Height = -9
                     ExplicitWidth = 3
                     ExplicitHeight = 11
-                  end
-                  inherited edCountryCode: TsEdit
-                    ExplicitLeft = 0
-                  end
-                  inherited btnGetCountry: TsButton
-                    ExplicitLeft = 38
                   end
                 end
               end
@@ -958,10 +943,6 @@ object frmReservationProfile: TfrmReservationProfile
               Caption = 'Customer'
               SkinData.CustomColor = False
               SkinData.CustomFont = False
-              ExplicitLeft = 0
-              ExplicitTop = 0
-              ExplicitWidth = 0
-              ExplicitHeight = 0
               object Label19: TsLabel
                 Left = 12
                 Top = 32
@@ -1256,10 +1237,6 @@ object frmReservationProfile: TfrmReservationProfile
               ImageIndex = 1
               SkinData.CustomColor = False
               SkinData.CustomFont = False
-              ExplicitLeft = 0
-              ExplicitTop = 0
-              ExplicitWidth = 0
-              ExplicitHeight = 0
               object Label11: TsLabel
                 Left = 45
                 Top = 29
@@ -1520,7 +1497,7 @@ object frmReservationProfile: TfrmReservationProfile
             end
             object lblGuestNationality: TsLabel
               Left = 14
-              Top = 126
+              Top = 129
               Width = 48
               Height = 11
               Alignment = taRightJustify
@@ -1742,17 +1719,12 @@ object frmReservationProfile: TfrmReservationProfile
                 ExplicitWidth = 159
                 inherited lblCountryName: TsLabel
                   Width = 3
-                  Height = 11
                   Font.Height = -9
                   ExplicitWidth = 3
                   ExplicitHeight = 11
                 end
-                inherited edCountryCode: TsEdit
-                  ExplicitLeft = 0
-                end
                 inherited btnGetCountry: TsButton
                   Visible = False
-                  ExplicitLeft = 38
                 end
               end
             end
@@ -1776,16 +1748,9 @@ object frmReservationProfile: TfrmReservationProfile
                 ExplicitWidth = 159
                 inherited lblCountryName: TsLabel
                   Width = 3
-                  Height = 11
                   Font.Height = -9
                   ExplicitWidth = 3
                   ExplicitHeight = 11
-                end
-                inherited edCountryCode: TsEdit
-                  ExplicitLeft = 0
-                end
-                inherited btnGetCountry: TsButton
-                  ExplicitLeft = 38
                 end
               end
             end
@@ -1802,18 +1767,18 @@ object frmReservationProfile: TfrmReservationProfile
               Top = 4
               Width = 109
               Height = 25
-              Hint = 'Change nationality of all guests'
               Caption = 'Change all nationalities'
               TabOrder = 0
+              OnClick = btnChangeNationalitiesAllGuestsClick
             end
             object btnChangeCountry: TsButton
-              Left = 117
+              Left = 115
               Top = 4
               Width = 109
               Height = 25
-              Hint = 'Change nationality of all guests'
               Caption = 'Change all countries'
               TabOrder = 1
+              OnClick = btnChangeCountryAllGuestsClick
             end
           end
         end
@@ -2023,10 +1988,6 @@ object frmReservationProfile: TfrmReservationProfile
       Caption = 'Rooms'
       SkinData.CustomColor = False
       SkinData.CustomFont = False
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object grRooms: TcxGrid
         Left = 0
         Top = 86
@@ -2920,10 +2881,6 @@ object frmReservationProfile: TfrmReservationProfile
       ImageIndex = 1
       SkinData.CustomColor = False
       SkinData.CustomFont = False
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Panel10: TsPanel
         Left = 0
         Top = 0
@@ -2984,8 +2941,8 @@ object frmReservationProfile: TfrmReservationProfile
         object chkShowAllGuests: TsCheckBox
           Left = 333
           Top = 11
-          Width = 102
-          Height = 19
+          Width = 94
+          Height = 20
           Caption = 'Show all guests'
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 4
@@ -3409,18 +3366,20 @@ object frmReservationProfile: TfrmReservationProfile
           object lblSpecialRequests: TsLabel
             Left = 2
             Top = 15
-            Width = 81
+            Width = 250
             Height = 13
             Align = alTop
             Caption = 'Special Requests'
+            ExplicitWidth = 81
           end
           object lblNotes: TsLabel
             Left = 2
             Top = 101
-            Width = 28
+            Width = 250
             Height = 13
             Align = alTop
             Caption = 'Notes'
+            ExplicitWidth = 28
           end
           object edtSpecialRequests: TMemo
             AlignWithMargins = True
@@ -3528,10 +3487,6 @@ object frmReservationProfile: TfrmReservationProfile
       Caption = 'Alerts'
       SkinData.CustomColor = False
       SkinData.CustomFont = False
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object pnlAlertHolder: TsPanel
         Left = 0
         Top = 0
@@ -3548,10 +3503,6 @@ object frmReservationProfile: TfrmReservationProfile
       ImageIndex = 2
       SkinData.CustomColor = False
       SkinData.CustomFont = False
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Panel11: TsPanel
         Left = 0
         Top = 0
