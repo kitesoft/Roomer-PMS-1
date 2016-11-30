@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, sLabel, Vcl.Grids, AdvObj, BaseGrid, AdvGrid, VCLTee.TeEngine,
   VCLTee.Series, VCLTee.TeeProcs, VCLTee.Chart, Vcl.ExtCtrls, sPanel, Vcl.Menus
-  , Generics.Collections
+  , Generics.Collections, AdvUtil
   ;
 
 type
@@ -55,6 +55,10 @@ type
     pmnuChannelSettings: TPopupMenu;
     N01: TMenuItem;
     timGetRoomStatuses: TTimer;
+    pgrStatisticsPanelGroup: TCategoryPanelGroup;
+    cpnlRoomClasses: TCategoryPanel;
+    cpnlChart: TCategoryPanel;
+    cpnlRoomtypes: TCategoryPanel;
     procedure grdRoomClassesCanEditCell(Sender: TObject; ARow, ACol: integer; var CanEdit: boolean);
     procedure grdRoomClassesCellValidate(Sender: TObject; ACol, ARow: integer; var Value: string; var Valid: boolean);
     procedure grdRoomClassesDrawCell(Sender: TObject; ACol, ARow: integer; Rect: TRect; State: TGridDrawState);
@@ -63,15 +67,20 @@ type
     procedure grdRoomClassesMouseMove(Sender: TObject; Shift: TShiftState; X, Y: integer);
     procedure grdRoomStatussesGetAlignment(Sender: TObject; ARow, ACol: integer; var HAlign: TAlignment;
       var VAlign: TVAlignment);
+    procedure timGetRoomStatusesTimer(Sender: TObject);
+    procedure grdResize(Sender: TObject);
   private
     availListContainer: TRoomClassChannelAvailabilityContainerList;
     FDate: TDate;
-    procedure FillRoomTypesGrid(aDate: TDate);
+    iLastHintRow: integer;
+    iLastHintCol: integer;
+    zHintPoint: TPoint;
+    zHintComp: TWinControl;
+    procedure FillRoomTypesGrid;
     function CountRoomsOfSpecificType(const RoomType: String): integer;
     function GetShowChart: boolean;
     procedure SetShowChart(const Value: boolean);
-    procedure RefreshStats(aDate: TDate);
-    procedure DisplayRoomStatusses(Date: TdateTime);
+    procedure DisplayRoomStatusses;
     function AnyCheckedStopItems: boolean;
     procedure PopulateChannelStopMenu;
     procedure SelectStopChannel(Sender: TObject);
@@ -79,6 +88,8 @@ type
     procedure SetDate(const Value: TDate);
     function GetAvailableCellText(Value: integer): String;
     function RoomTypeIndexInGrid(Grid: TAdvStringGrid; const RoomType: String): integer;
+    procedure PlaceMouseClickToCell(Sender: TObject; X, Y: integer);
+    procedure ActivateHint(HintPoint: TPoint; comp: TWinControl);
     { Private declarations }
   public
     constructor Create(aOwner: TCOmponent); override;
@@ -103,7 +114,7 @@ uses
   , uDateUtils
   , uMain  // todo: refactor this dependency
   , Data.DB
-  ;
+  , uActivityLogs, hData, uDayNotes, uUtils;
 
 
 {$R *.dfm}
@@ -111,16 +122,6 @@ uses
 const
   DEFAULT_UNPARSABLE_INT_VALUE: integer = -99999;
 
-
-//  Chart1.Color := sSkinManager1.GetGlobalColor;
-//  Chart1.LeftAxis.LabelsFont.Color := sSkinManager1.GetGlobalFontColor;
-//  Chart1.BottomAxis.LabelsFont.Color := sSkinManager1.GetGlobalFontColor;
-//  Chart1.Title.Font.Color := sSkinManager1.GetHighLightFontColor;
-
-
-
-//  grdRoomStatusses.DefaultColWidth := (grdRoomStatusses.ClientWidth) div grdRoomStatusses.ColCount;
-//  grdRoomClasses.DefaultColWidth := (grdRoomClasses.ClientWidth) div grdRoomClasses.ColCount;
 
 
 { TRoomClassChannelAvailabilityContainer }
@@ -148,76 +149,77 @@ begin
 end;
 
 
+procedure TfrmEmbDateStatistics.FillRoomTypesGrid;
+ var
+   rSet: TRoomerDataSet;
+   idx: integer;
+ begin
+   availListContainer.Clear;
+   grdRoomStatusses.ColCount := 3;
+   grdRoomStatusses.RowCount := 2;
+   grdRoomStatusses.cells[0, 0] := GetTranslatedText('shType');
+   grdRoomStatusses.cells[1, 0] := GetTranslatedText('shRooms');
+   grdRoomStatusses.cells[2, 0] := GetTranslatedText('shTx_Available');
+   glb.RoomTypesSet.first;
+   while not glb.RoomTypesSet.eof do
+   begin
+     if glb.RoomTypesSet['Active'] then
+     begin
+       grdRoomStatusses.cells[0, grdRoomStatusses.RowCount - 1] := glb.RoomTypesSet['RoomType'];
+       grdRoomStatusses.cells[1, grdRoomStatusses.RowCount - 1] :=
+         inttostr(CountRoomsOfSpecificType(glb.RoomTypesSet['RoomType']));
+       grdRoomStatusses.RowCount := grdRoomStatusses.RowCount + 1;
+     end;
+     glb.RoomTypesSet.next;
+   end;
+   grdRoomStatusses.RowCount := grdRoomStatusses.RowCount - 1;
+   grdRoomStatusses.Height := grdRoomStatusses.DefaultRowHeight * grdRoomStatusses.RowCount;
 
-procedure TfrmEmbDateStatistics.FillRoomTypesGrid(aDate: TDate);
-var
-  rSet: TRoomerDataSet;
-  idx: integer;
-begin
-  // rSet := d.roomerMainDataSet.ActivateNewDataset
-  // (d.roomerMainDataSet.SystemFreeQuery('SELECT rt.RoomType,' +
-  // ' (SELECT COUNT(Room) FROM rooms WHERE rooms.RoomType=rt.RoomType AND Active=1 AND NOT Hidden) AS NumRooms'
-  // + ' FROM roomtypes rt WHERE active=1 ORDER BY rt.RoomType'));
-  grdRoomStatusses.ColCount := 3;
-  grdRoomStatusses.RowCount := 2;
-  grdRoomStatusses.cells[0, 0] := GetTranslatedText('shType');
-  grdRoomStatusses.cells[1, 0] := GetTranslatedText('shRooms');
-  grdRoomStatusses.cells[2, 0] := GetTranslatedText('shTx_Available');
-  glb.RoomTypesSet.first;
-  while not glb.RoomTypesSet.eof do
-  begin
-    if glb.RoomTypesSet['Active'] then
-    begin
-      grdRoomStatusses.cells[0, grdRoomStatusses.RowCount - 1] := glb.RoomTypesSet['RoomType'];
-      grdRoomStatusses.cells[1, grdRoomStatusses.RowCount - 1] :=
-        inttostr(CountRoomsOfSpecificType(glb.RoomTypesSet['RoomType']));
-      grdRoomStatusses.RowCount := grdRoomStatusses.RowCount + 1;
-    end;
-    glb.RoomTypesSet.next;
-  end;
-  grdRoomStatusses.RowCount := grdRoomStatusses.RowCount - 1;
-  grdRoomStatusses.Height := grdRoomStatusses.DefaultRowHeight * grdRoomStatusses.RowCount;
+   if d.roomerMainDataSet.OffLineMode then
+     exit;
 
-  if d.roomerMainDataSet.OffLineMode then
-    exit;
+   rSet := d.roomerMainDataSet.ActivateNewDataset
+     (d.roomerMainDataSet.SystemFreeQuery(Format('SELECT rtg.Code, ' +
+     '(SELECT COUNT(r.Room) FROM rooms r, roomtypes rt WHERE r.Active AND r.WildCard=0 AND r.RoomType=rt.RoomType AND rt.RoomTypeGroup=rtg.Code) AS NumRooms, '
+     +
+     '(SELECT availability FROM channelratesavailabilities WHERE date=_params._date AND roomClassId=rtg.id LIMIT 1) AS ChannelAvailable '
+     +
+     'FROM roomtypegroups rtg, ' + '     (SELECT ''%s'' AS _date) AS _params ' + 'WHERE active=1 ' +
+     // '-- AND (SELECT COUNT(r.Room) FROM rooms r, roomtypes rt WHERE r.RoomType=rt.RoomType AND rt.RoomTypeGroup=rtg.Code) > 0 ' +
+     'ORDER BY rtg.Code', [uDateUtils.dateToSqlString(FDate)])));
+   try
+     grdRoomClasses.ColCount := 4;
+     grdRoomClasses.RowCount := 2;
+     grdRoomClasses.cells[0, 0] := GetTranslatedText('shTx_Class');
+     grdRoomClasses.cells[1, 0] := GetTranslatedText('shRooms');
+     grdRoomClasses.cells[2, 0] := GetTranslatedText('shTx_Available');
+     grdRoomClasses.cells[3, 0] := GetTranslatedText('shTx_ChannelAvailable');
+     rSet.first;
+     while not rSet.eof do
+     begin
+       if rSet['NumRooms'] > 0 then
+       begin
+         idx := grdRoomClasses.RowCount - 1;
+         grdRoomClasses.cells[0, idx] := rSet['Code'];
+         grdRoomClasses.cells[1, idx] := rSet['NumRooms'];
+         grdRoomClasses.cells[2, idx] := '0';
+         grdRoomClasses.cells[3, idx] := rSet['ChannelAvailable'];
+         grdRoomClasses.Objects[3, idx] := Pointer(1);
+         availListContainer.Add(TRoomClassChannelAvailabilityContainer.Create(rSet['Code'], rSet['NumRooms'], 0, 0, 0,
+           idx, false));
 
-  rSet := d.roomerMainDataSet.ActivateNewDataset
-    (d.roomerMainDataSet.SystemFreeQuery(Format('SELECT rtg.Code, ' +
-    '(SELECT COUNT(r.Room) FROM rooms r, roomtypes rt WHERE r.Active AND r.WildCard=0 AND r.RoomType=rt.RoomType AND rt.RoomTypeGroup=rtg.Code) AS NumRooms, '
-    +
-    '(SELECT availability FROM channelratesavailabilities WHERE date=_params._date AND roomClassId=rtg.id LIMIT 1) AS ChannelAvailable '
-    +
-    'FROM roomtypegroups rtg, ' + '     (SELECT ''%s'' AS _date) AS _params ' + 'WHERE active=1 ' +
-    // '-- AND (SELECT COUNT(r.Room) FROM rooms r, roomtypes rt WHERE r.RoomType=rt.RoomType AND rt.RoomTypeGroup=rtg.Code) > 0 ' +
-    'ORDER BY rtg.Code', [uDateUtils.dateToSqlString(aDate)])));
-  try
-    grdRoomClasses.ColCount := 4;
-    grdRoomClasses.RowCount := 2;
-    grdRoomClasses.cells[0, 0] := GetTranslatedText('shTx_Class');
-    grdRoomClasses.cells[1, 0] := GetTranslatedText('shRooms');
-    grdRoomClasses.cells[2, 0] := GetTranslatedText('shTx_Available');
-    grdRoomClasses.cells[3, 0] := GetTranslatedText('shTx_ChannelAvailable');
-    rSet.first;
-    while not rSet.eof do
-    begin
-      if rSet['NumRooms'] > 0 then
-      begin
-        idx := grdRoomClasses.RowCount - 1;
-        grdRoomClasses.cells[0, idx] := rSet['Code'];
-        grdRoomClasses.cells[1, idx] := rSet['NumRooms'];
-        grdRoomClasses.cells[2, idx] := '0';
-        grdRoomClasses.cells[3, idx] := rSet['ChannelAvailable'];
-        grdRoomClasses.Objects[3, idx] := Pointer(1);
-        grdRoomClasses.RowCount := grdRoomClasses.RowCount + 1;
-      end;
-      rSet.next;
-    end;
-    grdRoomClasses.RowCount := grdRoomClasses.RowCount - 1;
-    grdRoomClasses.Height := grdRoomClasses.DefaultRowHeight * grdRoomClasses.RowCount;
-  finally
-    freeandNil(rSet);
-  end;
-end;
+         grdRoomClasses.RowCount := grdRoomClasses.RowCount + 1;
+       end;
+       rSet.next;
+     end;
+     grdRoomClasses.RowCount := grdRoomClasses.RowCount - 1;
+     grdRoomClasses.Height := grdRoomClasses.DefaultRowHeight * grdRoomClasses.RowCount;
+   finally
+     freeandNil(rSet);
+   end;
+ end;
+
+
 
 function TfrmEmbDateStatistics.GetDate: TDate;
 begin
@@ -231,29 +233,34 @@ end;
 
 procedure TfrmEmbDateStatistics.Refresh;
 begin
+  chrtRoomStats.Color := frmMain.sSkinManager1.GetGlobalColor;
+  chrtRoomStats.LeftAxis.LabelsFont.Color := frmMain.sSkinManager1.GetGlobalFontColor;
+  chrtRoomStats.BottomAxis.LabelsFont.Color := frmMain.sSkinManager1.GetGlobalFontColor;
+  chrtRoomStats.Title.Font.Color := frmMain.sSkinManager1.GetHighLightFontColor;
 
-end;
+  grdRoomStatusses.DefaultColWidth := (grdRoomStatusses.ClientWidth) div grdRoomStatusses.ColCount;
+  grdRoomClasses.DefaultColWidth := (grdRoomClasses.ClientWidth) div grdRoomClasses.ColCount;
 
-procedure TfrmEmbDateStatistics.RefreshStats(aDate: TDate);
-begin
+  lblDateStatistics.Caption := DateToStr(FDate) + ' ' + FormatDateTime('dddd', FDate);
 
-  lblDateStatistics.Caption := DateToStr(aDate) + ' ' + FormatDateTime('dddd', aDate);
+  chrtRoomStats.Series[0].Clear;
+  chrtRoomStats.Series[0].Add(frmMain.statNumRooms, GetTranslatedText('shMainFormStatisticsRooms'), clBlue);
+  chrtRoomStats.Series[0].Add(frmMain.statTaken, GetTranslatedText('shTx_Taken'), clMaroon);
+  chrtRoomStats.Series[0].Add(frmMain.statNumExternRooms, GetTranslatedText('shTx_NoRm'), clYellow);
+  chrtRoomStats.Series[0].Add(frmMain.statNumRooms - frmMain.statTaken, GetTranslatedText('shTx_Free'), clGreen);
+  chrtRoomStats.Series[0].Add(frmMain.statNumRooms - frmMain.statNumExternRooms - frmMain.statTaken, GetTranslatedText('shTx_Netto'), clRed);
+  chrtRoomStats.Series[0].Add(frmMain.statCancelledExt + frmMain.statCancelledRm, GetTranslatedText('shTx_Cancelled'), clBlack);
 
-
-//        Chart1.Series[0].Clear;
-//        Chart1.Series[0].Add(statNumRooms, GetTranslatedText('shMainFormStatisticsRooms'), clBlue);
-//        Chart1.Series[0].Add(statTaken, GetTranslatedText('shTx_Taken'), clMaroon);
-//        Chart1.Series[0].Add(statNumExternRooms, GetTranslatedText('shTx_NoRm'), clYellow);
-//        Chart1.Series[0].Add(statNumRooms - statTaken, GetTranslatedText('shTx_Free'), clGreen);
-//        Chart1.Series[0].Add(statNumRooms - statNumExternRooms - statTaken, GetTranslatedText('shTx_Netto'), clRed);
-//        Chart1.Series[0].Add(statCancelledExt + statCancelledRm, GetTranslatedText('shTx_Cancelled'), clBlack);
-
+  FillRoomTypesGrid;
+  DisplayRoomStatusses;
 
 end;
 
 procedure TfrmEmbDateStatistics.SetDate(const Value: TDate);
 begin
   FDate := Value;
+  if ComponentRunning(Self) then
+    Refresh;
 end;
 
 procedure TfrmEmbDateStatistics.SetShowChart(const Value: boolean);
@@ -312,11 +319,10 @@ begin
       result := i;
       break;
     end;
-
 end;
 
 
-procedure TfrmEmbDateStatistics.DisplayRoomStatusses(Date: TdateTime);
+procedure TfrmEmbDateStatistics.DisplayRoomStatusses;
 var
   rSet: TRoomerDataSet;
   i, idx: integer;
@@ -435,8 +441,8 @@ begin
 
       timGetRoomStatuses.Enabled := true;
 
-      ShowTimelyMessage(Format(GetTranslatedText('shTx_FrmMain_ChannelChangedMaxAvail'), [grdRoomClasses.cells[0, ARow],
-        iValue]));
+//      ShowTimelyMessage(Format(GetTranslatedText('shTx_FrmMain_ChannelChangedMaxAvail'), [grdRoomClasses.cells[0, ARow],
+//        iValue]));
       exit;
     end
     else
@@ -450,18 +456,13 @@ begin
 
   temp := Format
     ('(grdRoomClassesCellValidate 2) Manual change of availability for RoomClass=%s, SetAvailability=%d, Date=%s',
-    [grdRoomClasses.cells[0, ARow], iValue, dateToSqlString(lastDate)]);
-  d.roomerMainDataSet.SystemSetChannelAvailability(uDateUtils.dateToSqlString(lastDate), grdRoomClasses.cells[0, ARow],
-    1, iValue, -1, -1, -1, temp);
-  AddAvailabilityActivityLog(d.roomerMainDataSet.userName,
-    EDIT,
-    grdRoomClasses.cells[0, ARow],
-    iValue,
-    lastDate,
-    'Edited in Roomer''s main screen');
+    [grdRoomClasses.cells[0, ARow], iValue, dateToSqlString(FDate)]);
 
-  ShowTimelyMessage(Format(GetTranslatedText('shTx_FrmMain_ChannelChangedAvail'), [grdRoomClasses.cells[0, ARow],
-    iValue]));
+  d.roomerMainDataSet.SystemSetChannelAvailability(uDateUtils.dateToSqlString(FDate), grdRoomClasses.cells[0, ARow], 1, iValue, -1, -1, -1, temp);
+
+  AddAvailabilityActivityLog(d.roomerMainDataSet.userName, EDIT, grdRoomClasses.cells[0, ARow], iValue,  FDate, 'Edited in' + Classname);
+
+//    ShowTimelyMessage(Format(GetTranslatedText('shTx_FrmMain_ChannelChangedAvail'), [grdRoomClasses.cells[0, ARow], iValue]));
   StatusCont.ChannelAvailable := iValue;
   grdRoomClasses.Invalidate;
 end;
@@ -473,8 +474,8 @@ var
   iValue: integer;
   StatusCont: TRoomClassChannelAvailabilityContainer;
 begin
-  if FAppClosing then
-    exit;
+//  if FAppClosing then
+//    exit;
   Text := grdRoomClasses.cells[ACol, ARow];
   if (ACol = 3) AND (ARow > 0) then
   begin
@@ -484,7 +485,7 @@ begin
         StatusCont := availListContainer[ARow - 1];
         with grdRoomClasses.Canvas do
         begin
-          Brush.Color := sSkinManager1.GetGlobalColor; // clWhite; // $00EAEAEA;
+          Brush.Color := frmMain.sSkinManager1.GetGlobalColor; // clWhite; // $00EAEAEA;
           Font.Style := [fsBold];
           iValue := strtointDef(Text, DEFAULT_UNPARSABLE_INT_VALUE);
           if iValue > 0 then
@@ -498,7 +499,7 @@ begin
             Text := 'n/a';
           end
           else
-            Font.Color := sSkinManager1.GetGlobalFontColor; // clBlue;
+            Font.Color := frmMain.sSkinManager1.GetGlobalFontColor; // clBlue;
           if (iValue > 0) AND (StrToInt(grdRoomClasses.cells[2, ARow]) - iValue < 0) then
           begin
             Font.Color := clWhite;
@@ -523,11 +524,11 @@ begin
     with grdRoomClasses.Canvas do
     begin
       iValue := strtointDef(Text, DEFAULT_UNPARSABLE_INT_VALUE);
-      Brush.Color := sSkinManager1.GetGlobalColor; // $00EAEAEA;
+      Brush.Color := frmMain.sSkinManager1.GetGlobalColor; // $00EAEAEA;
       if iValue > 0 then
-        Font.Color := sSkinManager1.GetGlobalFontColor // clBlue
+        Font.Color := frmMain.sSkinManager1.GetGlobalFontColor // clBlue
       else if iValue = 0 then
-        Font.Color := sSkinManager1.GetGlobalFontColor // clBlack
+        Font.Color := frmMain.sSkinManager1.GetGlobalFontColor // clBlack
       else
       begin
         Font.Color := clRed;
@@ -544,8 +545,8 @@ begin
   begin
     with grdRoomClasses.Canvas do
     begin
-      Brush.Color := sSkinManager1.GetGlobalColor; // $00EAEAEA;
-      Font.Color := sSkinManager1.GetGlobalFontColor; // clBlack;
+      Brush.Color := frmMain.sSkinManager1.GetGlobalColor; // $00EAEAEA;
+      Font.Color := frmMain.sSkinManager1.GetGlobalFontColor; // clBlack;
       Font.Style := [];
       Font.size := 7;
       FillRect(Rect);
@@ -561,8 +562,8 @@ var
   iValue: integer;
   StatusCont: TRoomClassChannelAvailabilityContainer;
 begin
-  if FAppClosing then
-    exit;
+//  if FAppClosing then
+//    exit;
 
   if (ARow > 0) AND (ACol = 3) then
   begin
@@ -586,12 +587,22 @@ begin
   end;
 end;
 
+procedure TfrmEmbDateStatistics.PlaceMouseClickToCell(Sender: TObject; X, Y: integer);
+var
+  ACol: integer;
+  ARow: integer;
+begin
+  TAdvStringGrid(Sender).MouseToCell(X, Y, ACol, ARow);
+  TAdvStringGrid(Sender).col := ACol;
+  TAdvStringGrid(Sender).row := ARow;
+end;
+
 procedure TfrmEmbDateStatistics.grdRoomClassesMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
 var
   PpUp: TPoint;
 begin
-  if FAppClosing then
-    exit;
+//  if FAppClosing then
+//    exit;
   PlaceMouseClickToCell(Sender, X, Y);
   if Button = mbRight then
   begin
@@ -611,8 +622,8 @@ var
   StatusCont: TRoomClassChannelAvailabilityContainer;
   availColor, maxColor, HintStr: String;
 begin
-  if FAppClosing then
-    exit;
+//  if FAppClosing then
+//    exit;
   grdRoomClasses.MouseToCell(X, Y, ACol, ARow);
   Application.ProcessMessages;
   if (iLastHintRow = ARow) and (iLastHintCol = ACol) then
@@ -669,14 +680,23 @@ end;
 procedure TfrmEmbDateStatistics.grdRoomStatussesGetAlignment(Sender: TObject; ARow, ACol: integer; var HAlign: TAlignment;
   var VAlign: TVAlignment);
 begin
-  if FAppClosing then
-    exit;
+//  if FAppClosing then
+//    exit;
   if (ACol IN [1, 2, 3]) then
     HAlign := taRightJustify
   else if (ACol = 0) AND (ARow > 0) then
     HAlign := taRightJustify
   else if (ACol = 0) AND (ARow = 0) then
     HAlign := taCenter;
+end;
+
+procedure TfrmEmbDateStatistics.grdResize(Sender: TObject);
+var
+  lCatPanel: TCategoryPanel;
+begin
+  lCatPanel := TCategoryPanel(TWinControl(Sender).Parent);
+  if not lCatPanel.Collapsed then
+    lCatPanel.Height := TWinControl(Sender).Height + 26;
 end;
 
 procedure TfrmEmbDateStatistics.SelectStopChannel(Sender: TObject);
@@ -738,7 +758,7 @@ begin
       'WHERE roomClassId=(SELECT id FROM roomtypegroups WHERE Code=''%s'' LIMIT 1) ' +
       'AND to_bool((SELECT Active FROM channels WHERE id=channelId)) ' +
       'AND date=''%s'' ' + 'ORDER BY channelName', [grdRoomClasses.cells[0, grdRoomClasses.row],
-      uDateUtils.dateToSqlString(lastDate)])));
+      uDateUtils.dateToSqlString(FDate)])));
     try
       rSet.first;
       while not rSet.eof do
@@ -758,37 +778,31 @@ begin
 end;
 
 
-procedure TfrmEmbDateStatistics.FillRoomTypesGrid;
-var
-  rSet: TRoomerDataSet;
-  idx: integer;
-begin
-  availListContainer.Clear;
-  if d.roomerMainDataSet.OffLineMode then
-    exit;
 
-  rSet := d.roomerMainDataSet.ActivateNewDataset
-    (d.roomerMainDataSet.SystemFreeQuery(Format('SELECT rtg.Code, ' +
-    '(SELECT COUNT(r.Room) FROM rooms r, roomtypes rt WHERE r.Active AND r.WildCard=0 AND r.RoomType=rt.RoomType AND rt.RoomTypeGroup=rtg.Code) AS NumRooms, '
-    +
-    '(SELECT availability FROM channelratesavailabilities WHERE date=_params._date AND roomClassId=rtg.id LIMIT 1) AS ChannelAvailable '
-    +
-    'FROM roomtypegroups rtg, ' + '     (SELECT ''%s'' AS _date) AS _params ' + 'WHERE active=1 ' +
-    // '-- AND (SELECT COUNT(r.Room) FROM rooms r, roomtypes rt WHERE r.RoomType=rt.RoomType AND rt.RoomTypeGroup=rtg.Code) > 0 ' +
-    'ORDER BY rtg.Code', [uDateUtils.dateToSqlString(dtDate.Date)])));
+procedure TfrmEmbDateStatistics.timGetRoomStatusesTimer(Sender: TObject);
+var
+  f: double;
+begin
+  timGetRoomStatuses.Enabled := false;
   try
-    rSet.first;
-    while not rSet.eof do
-    begin
-        availListContainer.Add(TRoomClassChannelAvailabilityContainer.Create(rSet['Code'], rSet['NumRooms'], 0, 0, 0,
-          idx, false));
-      rSet.next;
-    end;
-  finally
-    freeandNil(rSet);
+    frmDayNotes.edCurrentDate.Text := DateToStr(timGetRoomStatuses.Tag);
+    f := timGetRoomStatuses.tag;
+    Date := TDateTime(f);
+  Except
   end;
+
 end;
 
+
+
+procedure TfrmEmbDateStatistics.ActivateHint(HintPoint: TPoint; comp: TWinControl);
+begin
+  zHintPoint := HintPoint;
+  zHintComp := comp;
+  // Application.CancelHint;
+  comp.ShowHint := true;
+  Application.ActivateHint(zHintPoint);
+end;
 
 
 

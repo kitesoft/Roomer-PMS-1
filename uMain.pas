@@ -853,7 +853,6 @@ type
     procedure N12Click(Sender: TObject);
     procedure rgrGroupreportStayTypeChanging(Sender: TObject; NewIndex: integer; var AllowChange: boolean);
     procedure btnChannelsClick(Sender: TObject);
-    procedure timGetRoomStatusesTimer(Sender: TObject);
     procedure btnRatesClick(Sender: TObject);
     procedure btnBackForwardClick(Sender: TObject);
     procedure btnManagerChannelManagerListClick(Sender: TObject);
@@ -1499,7 +1498,10 @@ type
 
     zHintPoint: TPoint;
     zHintComp: TWinControl;
-    
+
+    // TODO: to be moved into TReservationModel
+    statNumRooms, statNumExternRooms, statTaken, statCancelledExt, statCancelledRm: integer;
+
     constructor Create(aOwner: TComponent); override;
     procedure WndProc(var message: TMessage); override;
     procedure BlinkRoom;
@@ -2807,18 +2809,13 @@ begin
   Application.HintHidePause := 15000;
   Application.HintPause := 500;
 
-  SetDateWithoutEvents(trunc(now));
-
-  btnShowHideStatClick(nil);
-  btnShowHideHintClick(nil);
-  btnHideCancelledBookingsClick(nil);
-
-  dxRibbon1.ActiveTab := rbTabHome;
 
   tabsView.Font.Color := clWhite;
 
   lblAuthStatus.Caption := GetTranslatedText('shTx_AuthNeeded');
-  // Application.ModalPopupMode := pmAuto;
+
+  frmDateStatistics := TfrmEmbDateStatistics.Create(self);
+  frmDateStatistics.pnlStatistics.Parent := pnlStatistics;
 
 end;
 
@@ -2907,6 +2904,12 @@ begin
     exit;
   FormShowing := true;
 
+  btnShowHideStatClick(nil);
+  btnShowHideHintClick(nil);
+  btnHideCancelledBookingsClick(nil);
+
+  dxRibbon1.ActiveTab := rbTabHome;
+
   SetDateWithoutEvents(trunc(now));
 
   StaffComm := TStaffCommunication.Create(pnlStaffComm);
@@ -2916,9 +2919,6 @@ begin
 
   FrmMessagesTemplates := TFrmMessagesTemplates.Create(nil);
   FrmMessagesTemplates.pnlContainer.Parent := pnlNotifications;
-
-  frmDateStatistics := TfrmEmbDateStatistics.Create(self);
-  frmDateStatistics.pnlStatistics.Parent := pnlStatistics;
 
   if StartHotel(true) and NOT LoginCancelled then
   begin
@@ -3855,7 +3855,6 @@ var
   mnuItem: TMenuItem;
 
   statLastRoomNumber: String;
-  statNumRooms, statNumExternRooms, statTaken, statCancelledExt, statCancelledRm: integer;
 
   lDate: TdateTime;
   lReservations: TSingleReservations;
@@ -3867,7 +3866,7 @@ begin
   grOneDayRooms.BeginUpdate;
   try
 
-//    timGetRoomStatuses.Enabled := false;
+    frmDateStatistics.timGetRoomStatuses.Enabled := false;
     BusyOn;
     try
       statNumRooms := g.oRooms.RoomCount;
@@ -3998,8 +3997,8 @@ begin
       end;
       BusyOff;
     end;
-    timGetRoomStatuses.Tag := trunc(dtDate.Date);
-    timGetRoomStatuses.Enabled := true;
+    frmDateStatistics.timGetRoomStatuses.Tag := trunc(dtDate.Date);
+    frmDateStatistics.timGetRoomStatuses.Enabled := true;
   finally
     grOneDayRooms.endUpdate;
     RefreshStats;
@@ -4109,8 +4108,8 @@ begin
       vmMeetings: ;
       vmDashboard:  begin
                       frmDaysStatistics.ViewDate := dtDate.Date;
-                      timGetRoomStatuses.Tag := trunc(dtDate.Date);
-                      timGetRoomStatuses.Enabled := true;
+                      frmDateStatistics.timGetRoomStatuses.Tag := trunc(dtDate.Date);
+                      frmDateStatistics.timGetRoomStatuses.Enabled := true;
                     end;
       vmRateQuery:  PostMessage(handle, WM_SET_DATE_FROM_MAIN, 0, trunc(dtDate.Date));
 
@@ -7543,8 +7542,8 @@ begin
   zGridTag := (Sender as TAdvStringGrid).Tag;
 
   aDate := Period_ColToDate(ACol);
-  timGetRoomStatuses.Tag := trunc(aDate);
-  timGetRoomStatuses.Enabled := true;
+  frmDateStatistics.timGetRoomStatuses.Tag := trunc(aDate);
+  frmDateStatistics.timGetRoomStatuses.Enabled := true;
 
   grPeriodRooms.col := ACol;
   grPeriodRooms.row := ARow;
@@ -7937,20 +7936,6 @@ begin
   end
   else
     timCheckSessionExpired.Enabled := true;
-end;
-
-procedure TfrmMain.timGetRoomStatusesTimer(Sender: TObject);
-var
-  f: double;
-begin
-  timGetRoomStatuses.Enabled := false;
-  try
-    frmDayNotes.edCurrentDate.Text := DateToStr(timGetRoomStatuses.Tag);
-    f := timGetRoomStatuses.tag;
-    frmDateStatistics.Date := TDateTime(f);
-  Except
-  end;
-
 end;
 
 procedure TfrmMain.timHaltTimer(Sender: TObject);
@@ -10189,8 +10174,8 @@ begin
   if (ACol >= (Sender as TAdvStringGrid).FixedCols) then
   begin
     aDate := Period_NO_ColToDate(ACol);
-    timGetRoomStatuses.Tag := trunc(aDate);
-    timGetRoomStatuses.Enabled := true;
+    frmDateStatistics.timGetRoomStatuses.Tag := trunc(aDate);
+    frmDateStatistics.timGetRoomStatuses.Enabled := true;
   end;
   try
     if assigned(grPeriodRooms_NO.Objects[ACol, ARow]) then
@@ -13226,8 +13211,8 @@ begin
       if ViewMode = vmGuestList then
         gAllReservations.SetFocus;
     finally
-      timGetRoomStatuses.Tag := trunc(dtDate.Date);
-      timGetRoomStatuses.Enabled := true;
+      frmDateStatistics.timGetRoomStatuses.Tag := trunc(dtDate.Date);
+      frmDateStatistics.timGetRoomStatuses.Enabled := true;
     end;
 end;
 
