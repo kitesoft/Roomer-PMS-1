@@ -63,7 +63,6 @@ object frmHouseKeeping: TfrmHouseKeeping
       Caption = 'Select date'
       TabOrder = 0
       SkinData.SkinSection = 'GROUPBOX'
-      Checked = False
       object sLabel1: TsLabel
         Left = 4
         Top = 20
@@ -90,7 +89,6 @@ object frmHouseKeeping: TfrmHouseKeeping
         ParentFont = False
         TabOrder = 0
         Text = '  -  -    '
-        CheckOnExit = True
         SkinData.SkinSection = 'EDIT'
         GlyphMode.Blend = 0
         GlyphMode.Grayed = False
@@ -123,8 +121,6 @@ object frmHouseKeeping: TfrmHouseKeeping
     SkinData.SkinSection = 'PAGECONTROL'
     object sTabSheet1: TsTabSheet
       Caption = 'List'
-      SkinData.CustomColor = False
-      SkinData.CustomFont = False
       object grCross: TAdvStringGrid
         Left = 0
         Top = 43
@@ -233,6 +229,7 @@ object frmHouseKeeping: TfrmHouseKeeping
         SearchFooter.MatchCaseCaption = 'Match case'
         SortSettings.DefaultFormat = ssAutomatic
         Version = '8.1.2.0'
+        ExplicitTop = 41
         RowHeights = (
           22
           22
@@ -266,6 +263,7 @@ object frmHouseKeeping: TfrmHouseKeeping
           TabOrder = 0
           OnClick = LMDSpeedButton6Click
           SkinData.SkinSection = 'BUTTON'
+          ExplicitTop = 2
         end
         object LMDSpeedButton12: TsButton
           AlignWithMargins = True
@@ -299,12 +297,6 @@ object frmHouseKeeping: TfrmHouseKeeping
     end
     object tabActions: TsTabSheet
       Caption = 'Detailed'
-      SkinData.CustomColor = False
-      SkinData.CustomFont = False
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object grVar: TcxGrid
         Left = 0
         Top = 33
@@ -1408,5 +1400,19 @@ object frmHouseKeeping: TfrmHouseKeeping
     StorageType = stRegistry
     Left = 294
     Top = 328
+  end
+  object grExcelCross: TAdvGridExcelIO
+    AdvStringGrid = grCross
+    Options.ExportOverwrite = omWarn
+    Options.ExportOverwriteMessage = 'File %s already exists'#13'Ok to overwrite ?'
+    Options.ExportRawRTF = False
+    UseUnicode = False
+    GridStartRow = 0
+    GridStartCol = 0
+    DateFormat = 'dd.mm.yyyy'
+    TimeFormat = 'hh:nn:ss'
+    Version = '3.13'
+    Left = 160
+    Top = 217
   end
 end

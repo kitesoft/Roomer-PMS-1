@@ -208,6 +208,7 @@ type
     sLabel1: TsLabel;
     labLocations: TsLabel;
     labLocationsList: TsLabel;
+    grExcelCross: TAdvGridExcelIO;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure sButton1Click(Sender: TObject);
@@ -461,9 +462,9 @@ procedure TfrmHouseKeeping.LMDSpeedButton6Click(Sender: TObject);
 var
   sFileName : string;
 begin
-//  sFileName := g.qProgramPath+'MaidsCross.xls';
-//  grExcelCross.XLSExport(sFileName);
-//  ShellExecute(Handle, 'OPEN', PChar(sFilename), nil, nil, sw_shownormal);
+  sFileName := g.qProgramPath+'MaidsCross.xls';
+  grExcelCross.XLSExport(sFileName);
+  ShellExecute(Handle, 'OPEN', PChar(sFilename), nil, nil, sw_shownormal);
 end;
 
 procedure TfrmHouseKeeping.ppDetailBand1BeforePrint(Sender: TObject);

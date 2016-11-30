@@ -112,7 +112,8 @@ contains
   HSLUtils in 'Source\HSLUtils.pas',
   uRoomerHttpClient in 'Source\uRoomerHttpClient.pas',
   uFloatUtils in 'Source\uFloatUtils.pas',
-  uStandaloneRoomerVersionInfo in 'Source\uStandaloneRoomerVersionInfo.pas';
+  uStandaloneRoomerVersionInfo in 'Source\uStandaloneRoomerVersionInfo.pas',
+  XmlUtils in '..\RoomerUtils\XmlUtils.pas';
 
 end.
 
