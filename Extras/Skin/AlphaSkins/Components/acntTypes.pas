@@ -130,7 +130,7 @@ begin
     // Removing of blinking
     CM_VISIBLECHANGED, WM_SHOWWINDOW:
       if (Message.WParam = 0) and HandleAllocated then // If hide
-        SetWindowPos(Handle, 0, 0, 0, 0, 0, SW_HIDE or SWP_NOMOVE or SWP_NOSIZE);
+        SetWindowPos(Handle, 0, 0, 0, 0, 0, SWPA_HIDE or SWP_NOMOVE or SWP_NOSIZE);
 
     WM_NCHITTEST: begin
       Message.Result := HTTRANSPARENT;

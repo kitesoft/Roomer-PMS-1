@@ -1,7 +1,7 @@
 unit sSpinEdit;
 {$I sDefs.inc}
 //{$DEFINE LOGGED}
-//+
+
 interface
 
 uses

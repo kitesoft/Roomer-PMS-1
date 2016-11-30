@@ -1,7 +1,7 @@
 unit sToolBar;
 {$I sDefs.inc}
 //{$DEFINE LOGGED}
-//+
+
 interface
 
 uses
@@ -78,8 +78,7 @@ begin
   if ToolBar.SkinData.SkinManager.IsValidImgIndex(mi) then begin
     Bmp := CreateBmp32(R);
     BGInfo.BgType := btUnknown;
-    BGInfo.Offset.X := 0;
-    BGInfo.Offset.Y := 0;
+    BGInfo.Offset := MkPoint;
     BGInfo.Bmp := nil;
     BGInfo.R := MkRect(Bmp);
     BGInfo.PleaseDraw := False;
@@ -426,7 +425,7 @@ begin
 
         Flags := Flags + [tbNoEtchedEffect, tbNoEdges];
         iR := GetButtonRect(Button.Index);
-        if WidthOf(iR) <> Button.Width then begin
+        if (WidthOf(iR) <> Button.Width) or (HeightOf(iR) <> Button.Height) then begin
           Loaded; // Reinit buttons
           iR := GetButtonRect(Button.Index);
         end;

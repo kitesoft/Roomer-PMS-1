@@ -16,7 +16,7 @@ uses
 
 {$IFNDEF NOTFORHELP}
 const
-  acCurrentVersion = '11.19';
+  acCurrentVersion = '11.21';
 
 {$R sXB.res}   // Default ext borders
 {$R sOEff.res} // Default outer masks
@@ -44,7 +44,7 @@ type
 
   TacSkinTypes = (stUnpacked, stPacked, stAllSkins);
   TacSkinPlaces = (spInternal, spExternal, spAllPlaces);
-  TacScaleMode = (sm100, sm125, sm150, smAuto, smOldMode);
+  TacScaleMode = (sm100, sm125, sm150, sm200, smAuto, smOldMode);
 
   TacMenuItemData = record
     Font: TFont;
@@ -5127,6 +5127,9 @@ var
     if FOwner.IsDefault then begin
       ac_ArrowWidth := MulDiv(ac_ArrowWidth, aScalePercents[FOwner.GetScale], aScalePercents[OldScale]);
       ac_ArrowHeight := ac_ArrowWidth div 2 + ac_ArrowWidth mod 2;
+      iDefIcoLineWidth := MulDiv(iDefIcoLineWidth, aScalePercents[FOwner.GetScale], aScalePercents[OldScale]);
+      acAddedTabSpacing := MulDiv(acAddedTabSpacing, aScalePercents[FOwner.GetScale], aScalePercents[OldScale]);
+      acSpacing := MulDiv(acSpacing, aScalePercents[FOwner.GetScale], aScalePercents[OldScale]);
 {$IFDEF D2010}
       Screen.MessageFont.Size := MulDiv(Screen.MessageFont.Size, aScalePercents[FOwner.GetScale], aScalePercents[OldScale]);
 {$ENDIF}
@@ -5190,7 +5193,8 @@ begin
     if SysScale = 0 then
       case GetScale of
         1:   Result := Value + Value div 4;
-        2:   Result := Value + Value div 2
+        2:   Result := Value + Value div 2;
+        3:   Result := 2 * Value
         else Result := Value;
       end
     else begin

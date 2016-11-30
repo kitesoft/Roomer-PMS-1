@@ -323,8 +323,8 @@ const
   EmptyCI: TCacheInfo = (Bmp: nil; X: -99; Y: -99; FillColor: clFuchsia; Ready: False);
   sFuchsia: TsColor = (C: $FF00FF); // Transparent color
   sTabPositions: array [TTabPosition] of string = ('', 'BOTTOM', 'LEFT', 'RIGHT');
-  aScalePercents: array [0..2] of integer = (100, 125, 150);
-  aSfxs: array [0..2] of string = ('', '*125', '*150');
+  aScalePercents: array [0..3] of integer = (100, 125, 150, 200);
+  aSfxs: array [0..3] of string = ('', '*125', '*150', '*200');
 
   s_RegName        = 'AlphaSkins';
   s_IntSkinsPath   = 'IntSkinsPath';
@@ -462,6 +462,7 @@ const
   COC_TsSkinProvider     = 224;
   COC_TsMDIForm          = 225;
   COC_TsFrameAdapter     = 226;
+  COC_TsCircleControl    = 227;
 
   COC_TsAdapter          = 230;
   COC_TsAdapterEdit      = 231;
@@ -501,6 +502,8 @@ var
   acSkinPreviewUpdating: boolean = False;  //
 {$ENDIF}
   acScrollBtnLength: integer = 16;
+  acAddedTabSpacing: integer = 6;
+  acSpacing: integer = 4;
 
   AppShowHint: boolean;
   TempControl: pointer;

@@ -1,5 +1,22 @@
 AlphaControls :: history
 
+29.11.2016 AlphaControls v11.21 Stable released
+
+  * Solved issue with non existing resource under C++ Builder
+  * Improved scaling of TsTitleBar items and menus
+  * Minor bugfixes and improvements
+
+23.11.2016 AlphaControls v11.20 Stable released
+
+  * Fixed error in the TsSlider component when the Enabled property is False
+  * Improved showing of menu items in some new skins
+  * Added new acgpUtils.pas unit with some Gdi+ functions: acgpDrawEllipse, acgpDrawLine, acgpFillEllipse and acgpDrawArc
+  * Added a scaling support and set of new properties in the TsMeter component
+  * Added 200% scaling mode
+  * Added automatic repainting of the TsSkinProvider.TitleIcon.Glyph after changing
+  * Added the BitBltRotated procedure in the sGraphUtils unit
+  * Published new "Material Dark" skin
+
 08.10.2016 AlphaControls v11.19 Stable released
 
   * ColorTone, HUEOffset and Saturation properties added in the TsPanel.SkinData
@@ -16,7 +33,7 @@ AlphaControls :: history
   * Fixed AV in importing of external section in the ASkinEditor tool
   * Copy/paste of a section style implemented in popup menu in the ASkinEditor tool
   * Minor improvements and bug-fixes
-  * Published new "Material light" skin
+  * Published new "Material Light" skin
 
 16.10.2016 AlphaControls v11.18 Stable released
 

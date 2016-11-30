@@ -154,7 +154,7 @@ implementation
 
 uses
   math,
-  sSkinProps, sStyleSimply, acntUtils, sGraphUtils, sMessages, sVCLUtils, sDefaults;
+  sAlphaGraph, sSkinProps, sStyleSimply, acntUtils, sGraphUtils, sMessages, sVCLUtils, sDefaults;
 
 
 const
@@ -748,6 +748,7 @@ end;
 function TsSlider.PrepareCache: boolean;
 var
   R: TRect;
+  C: TColor;
   CI: TCacheInfo;
 
   function ImageIndex: integer;
@@ -786,7 +787,16 @@ begin
   if not Enabled then begin
     R := MkRect(SkinData.FCacheBmp);
     OffsetRect(R, CI.X + Left, CI.Y + Top);
-    BlendTransRectangle(SkinData.FCacheBMP, 0, 0, CI.Bmp, R, DefBlendDisabled);
+    if CI.Ready then
+      BlendTransRectangle(SkinData.FCacheBMP, 0, 0, CI.Bmp, R, DefBlendDisabled)
+    else begin
+      if CI.FillColor <> clFuchsia then
+        C := CI.FillColor
+      else
+        C := GetControlColor(Parent);
+
+      BlendColorRect(SkinData.FCacheBMP, R, byte(DefBlendDisabled), C);
+    end;
   end;
   SkinData.BGChanged := False;
   Result := True;

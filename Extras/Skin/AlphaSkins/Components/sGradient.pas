@@ -413,7 +413,6 @@ begin
                   DB := ((SB - B) * TextureAlpha + B shl 8) shr 8;
                   DA := AlphaChannel;
                 end;
-
             end;
             // Texture for the first line
             CurrentY := aRect.Top;

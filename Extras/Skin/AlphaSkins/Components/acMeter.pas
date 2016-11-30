@@ -24,13 +24,19 @@ type
 
   TMeterShadowData = class(TPersistent)
   private
+    FSize,
+    FTransparency: byte;
     FVisible: boolean;
+    procedure SetSize(const Value: byte);
+    procedure SetTransparency(const Value: byte);
     procedure SetVisible(const Value: boolean);
   protected
     FOwner: TMeterPaintData;
   public
     constructor Create(AOwner: TMeterPaintData);
   published
+    property Size: byte read FSize write SetSize default 5;
+    property Transparency: byte read FTransparency write SetTransparency default 200;
     property Visible: boolean read FVisible write SetVisible default True;
   end;
 {$ENDIF}
@@ -44,6 +50,9 @@ type
     FStretched,
     FTransparent: boolean;
 
+    FDialPenWidth,
+    FArrowPenWidth: byte;
+
     FColor,
     FDialColor,
     FArrowColor: TColor;
@@ -53,6 +62,7 @@ type
     procedure SetShadowData     (const Index: Integer; const Value: TMeterShadowData);
     procedure SetBoolean        (const Index: Integer; const Value: boolean);
     procedure SetColor          (const Index: Integer; const Value: TColor);
+    procedure SetByte           (const Index: Integer; const Value: byte);
   protected
     FOwner: TGraphicControl;
   public
@@ -64,6 +74,10 @@ type
     property ArrowColor: TColor index 0 read FArrowColor write SetColor default clBlack;
     property Color:      TColor index 1 read FColor      write SetColor default clWhite;
     property DialColor:  TColor index 2 read FDialColor  write SetColor default clBlack;
+
+    property DialPenWidth:  byte index 0 read FDialPenWidth  write SetByte default 2;
+    property ArrowPenWidth: byte index 1 read FArrowPenWidth write SetByte default 2;
+
     property ArrowShadow: TMeterShadowData index 0 read FArrowShadow write SetShadowData;
     property DialShadow:  TMeterShadowData index 0 read FDialShadow  write SetShadowData;
     property Stretched:   boolean index 0 read FStretched   write SetBoolean default False;
@@ -108,16 +122,13 @@ type
   protected
     Screw,
     Cache,
-    Circle,
     ColorLine,
-    ShadowLayer,
-    ScrewShadow,
-    ArrowCircle: TBitmap;
+    ShadowLayer: TBitmap;
 
     Center: TPoint;
     MeterSize: TSize;
     procedure Paint; override;
-    function GetMargin: real;
+    function GetMargin: integer;
     procedure PrepareCache;
     function GetMinRect: TRect;
     function GetMaxRect: TRect;
@@ -126,6 +137,7 @@ type
     function GetPaintColor(IsArrow: boolean): TColor;
     function PosToRad(Pos: integer): real;
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
+    function ScaleValue(Value: integer): integer;
   public
     function GetCaptionRect: TRect;
     constructor Create(AOwner: TComponent); override;
@@ -190,7 +202,7 @@ type
 implementation
 
 uses Math,
-  sGraphUtils, sVCLUtils, sCommonData, sConst, acntUtils, acPng, sAlphaGraph, sMessages;
+  sGraphUtils, sVCLUtils, sCommonData, sConst, acntUtils, acPng, sAlphaGraph, sMessages, acgpUtils, sDefaults, sSkinManager;
 
 {$R acMeter.res}
 
@@ -199,105 +211,10 @@ const
   s_Min = 'MIN';
   ImgSize = DefaultSize - 2;
   MinSize = 16;
-  LineWidth = 2;
 
 var
   resScrew,
-  resColorLine,
-  resCircleLine,
-  resArrowCircle,
-  resScrewShadow: TBitmap;
-
-
-procedure DrawAntialisedLine(Bmp: TBitmap; const AX1, AY1, AX2, AY2: real; const LineColor: TColor);
-var
-  Swapped: boolean;
-  C_: TsColor;
-
-  procedure Plot(const x, y: integer; c: real);
-  var
-    ResClr: TsColor;
-  begin
-    if IsValidIndex(y, Bmp.Height) and IsValidIndex(x, Bmp.Width) then begin
-      ResClr := GetAPixel(Bmp, iff(Swapped, y, x), iff(Swapped, x, y));
-      ResClr.R := Round(ResClr.R * (1 - c) + C_.R * c);
-      ResClr.G := Round(ResClr.G * (1 - c) + C_.G * c);
-      ResClr.B := Round(ResClr.B * (1 - c) + C_.B * c);
-      SetAPixel(Bmp, iff(Swapped, y, x), iff(Swapped, x, y), ResClr);
-    end;
-  end;
-
-  function rfrac(const x: real): real;
-  begin
-    rfrac := 1 - frac(x);
-  end;
-
-  procedure swap(var a, b: real);
-  var
-    tmp: real;
-  begin
-    tmp := a;
-    a := b;
-    b := tmp;
-  end;
-
-var
-  x1, x2, y1, y2, dx, dy, gradient, xend, yend, xgap, xpxl1, ypxl1, xpxl2, ypxl2, intery: real;
-  x: integer;
-begin
-  x1 := AX1;
-  x2 := AX2;
-  y1 := AY1;
-  y2 := AY2;
-  dx := x2 - x1;
-  dy := y2 - y1;
-  Swapped := abs(dx) < abs(dy);
-  C_.C := SwapRedBlue(LineColor);
-  if swapped then begin
-    swap(x1, y1);
-    swap(x2, y2);
-    swap(dx, dy);
-  end;
-  if x2 < x1 then begin
-    swap(x1, x2);
-    swap(y1, y2);
-  end;
-  if dx <> 0 then begin
-    gradient := dy / dx;
-    xend := round(x1);
-    yend := y1 + gradient * (xend - x1);
-    xgap := rfrac(x1 + 0.5);
-    xpxl1 := xend;
-    ypxl1 := floor(yend);
-    plot(Round(xpxl1), Round(ypxl1), rfrac(yend) * xgap);
-    plot(Round(xpxl1), Round(ypxl1) + 1, frac(yend) * xgap);
-    intery := yend + gradient;
-    xend := round(x2);
-    yend := y2 + gradient * (xend - x2);
-    xgap := frac(x2 + 0.5);
-    xpxl2 := xend;
-    ypxl2 := floor(yend);
-    plot(Round(xpxl2), Round(ypxl2), rfrac(yend) * xgap);
-    plot(Round(xpxl2), Round(ypxl2) + 1, frac(yend) * xgap);
-    for x := round(xpxl1) + 1 to round(xpxl2) - 1 do begin
-      plot(Round(x), floor(intery), rfrac(intery));
-      plot(Round(x), floor(intery) + 1, frac(intery));
-      intery := intery + gradient;
-    end;
-  end;
-end;
-
-
-procedure DrawBoldLine(Bmp: TBitmap; const AX1, AY1, AX2, AY2: real; const aWidth: integer; const LineColor: TColor);
-var
-  dw, i, j: integer;
-begin
-  dw := aWidth div 2;
-  for j := -dw + 1 to dw do
-    for i := -dw + 1 to dw do
-      DrawAntialisedLine(Bmp, AX1 - j, AY1 - i, AX2 - j, AY2 - i, LineColor);
-end;
-
+  resColorLine: TBitmap;
 
 procedure TsMeter.AfterConstruction;
 begin
@@ -342,11 +259,6 @@ begin
 
   Screw := TBitmap.Create;
   Screw.Assign(resScrew);
-
-  ScrewShadow := TBitmap.Create;
-  ScrewShadow.Assign(resScrewShadow);
-  ScrewShadow.PixelFormat := pf32Bit;
-  FillAlphaRect(ScrewShadow, MkRect(ScrewShadow), MaxByte);
 end;
 
 
@@ -355,13 +267,19 @@ begin
   FPaintData.Free;
   Screw.Free;
   Cache.Free;
-  Circle.Free;
   ColorLine.Free;
-  ArrowCircle.Free;
-  ScrewShadow.Free;
   ShadowLayer.Free;
   FreeAndNil(FImageChangeLink);
   inherited;
+end;
+
+
+function TsMeter.ScaleValue(Value: integer): integer;
+begin
+  if (DefaultManager <> nil) then
+    Result := DefaultManager.ScaleInt(Value)
+  else
+    Result := Value;
 end;
 
 
@@ -422,9 +340,9 @@ begin
 end;
 
 
-function TsMeter.GetMargin: real;
+function TsMeter.GetMargin: integer;
 begin
-  Result := 4 * MeterSize.cx / ImgSize;
+  Result := 2;
 end;
 
 
@@ -450,30 +368,16 @@ end;
 
 
 procedure TsMeter.Init;
-var
-  TmpBmp: TBitmap;
 begin
   if (Width > MinSize) and (Height > MinSize) then begin
-    Circle.Free;
-    Circle := TBitmap.Create;
-    if (ctCustomImage <> ContentType) and (FPaintData.FDialShadow.Visible or FPaintData.FArrowShadow.Visible) then begin
-      Circle.Assign(resCircleLine);
-      Circle.PixelFormat := pf32Bit;
-    end;
     if not FPaintData.Stretched then begin
-      MeterSize.cx := ImgSize;
-      MeterSize.cy := ImgSize;
+      MeterSize.cx := ScaleValue(ImgSize);
+      MeterSize.cy := ScaleValue(ImgSize);
     end
     else begin
       MeterSize.cx := Width;
       MeterSize.cy := Height;
     end;
-
-    if ArrowCircle = nil then
-      ArrowCircle := TBitmap.Create;
-
-    ArrowCircle.Assign(resArrowCircle);
-    ArrowCircle.PixelFormat := pf32Bit;
 
     if FPaintData.Stretched then begin
       MeterSize.cx := Math.min(Width, Height);
@@ -486,25 +390,25 @@ begin
     ArrowLength := Center.X div 5 * 3;
 
     ColorLine.Free;
-    ColorLine := TBitmap.Create;
-    ColorLine.Assign(resColorLine);
+    if (MeterSize.cx = resColorLine.Width) and (MeterSize.cy = resColorLine.Height) then begin
+      ColorLine := TBitmap.Create;
+      ColorLine.Assign(resColorLine)
+    end
+    else begin
+      ColorLine := CreateBmp32(MeterSize.cx, MeterSize.cy);
+      Stretch(resColorLine, ColorLine, ColorLine.Width, ColorLine.Height, ftMitchell);
+    end;
 
     Cache.Free;
     Cache := CreateBmp32(MeterSize);
-
-    if FPaintData.Stretched and ((MeterSize.cy <> Circle.Height) or (MeterSize.cx <> Circle.Width)) then begin
-      TmpBmp := CreateBmp32(MeterSize);
-      Stretch(Circle, TmpBmp, MeterSize.cx, MeterSize.cy, ftMitchell);
-      Circle.Free;
-      Circle := TmpBmp;
-
+{
+    if FPaintData.Stretched and ((MeterSize.cy <> ColorLine.Height) or (MeterSize.cx <> ColorLine.Width)) then begin
       TmpBmp := CreateBmp32(MeterSize);
       Stretch(ColorLine, TmpBmp, MeterSize.cx, MeterSize.cy, ftMitchell);
       ColorLine.Free;
       ColorLine := TmpBmp;
     end;
-//    BitBlt(Circle.Canvas.Handle, Center.X - ArrowCircle.Width div 2, Center.Y - ArrowCircle.Height div 2, ArrowCircle.Width, ArrowCircle.Height,
-//           ArrowCircle.Canvas.Handle, 0, 0, SRCCOPY);
+}    
   end;
 end;
 
@@ -572,21 +476,26 @@ end;
 procedure TsMeter.PrepareCache;
 const
   ShadowOffset: TPoint = (X: 1; Y: 1);
-  ShadowBlur = 2;
 var
   R: TRect;
   Rad: real;
   s: string;
   C_: TsColor;
-  SavedDC: hdc;
+  MinMask: byte;
+  Delta: integer;
   TextSize: TSize;
-  i, gr, Margin: integer;
+  CustomBmp: TBitmap;
+  S0, SA: PRGBAArray_;
   Coord1, Coord2: TPoint;
+  x, y, i, gr, Margin,
+  DialPenWidth, DialShadowSize, ArrowPenWidth, ArrowShadowSize: integer;
+  ShMaskCircle, ShMaskArrow: TsColor;
 
   function PaintText: TRect;
   begin
     Cache.Canvas.Font.Assign(Font);
     Cache.Canvas.Brush.Style := bsClear;
+    SelectObject(Cache.Canvas.Handle, Cache.Canvas.Font.Handle);
     if ShowMinMax then begin
       R := GetMinRect;
       if ShowMinMaxValue then
@@ -633,7 +542,21 @@ var
   end;
 
 begin
-  Margin := Round(GetMargin);
+  Margin := GetMargin;
+  ShMaskCircle.A := 0;
+  ShMaskCircle.R := PaintData.DialShadow.Transparency;
+  ShMaskCircle.G := ShMaskCircle.R;
+  ShMaskCircle.B := ShMaskCircle.R;
+  ShMaskArrow.A := 0;
+  ShMaskArrow.R := PaintData.ArrowShadow.Transparency;
+  ShMaskArrow.G := ShMaskArrow.R;
+  ShMaskArrow.B := ShMaskArrow.R;
+
+  ArrowShadowSize := ScaleValue(PaintData.ArrowShadow.Size);
+  ArrowPenWidth   := ScaleValue(PaintData.ArrowPenWidth);
+  DialShadowSize  := ScaleValue(PaintData.DialShadow.Size);
+  DialPenWidth    := ScaleValue(PaintData.DialPenWidth);
+
   // Shadows
   if FPaintData.FDialShadow.Visible and (ctCustomImage <> ContentType) or FPaintData.FArrowShadow.Visible then
     if ShadowLayer = nil then
@@ -644,93 +567,101 @@ begin
       FillDC(ShadowLayer.Canvas.Handle, MkRect(ShadowLayer), $FFFFFF);
     end;
 
+  // Circle shadow
   if FPaintData.FDialShadow.Visible and (ctCustomImage <> ContentType) then begin
-    ShadowLayer.Canvas.Pen.Color := $AAAAAA;
-    ShadowLayer.Canvas.Pen.Width := 2;
-    ShadowLayer.Canvas.Brush.Style := bsSolid;
-    ShadowLayer.Canvas.Brush.Color := $FFFFFF;
-    ShadowLayer.Canvas.Ellipse(Margin + ShadowOffset.X, Margin + ShadowOffset.Y,
-        MeterSize.cx - Margin -1{+ ShadowOffset.X}, MeterSize.cy - Margin{ + ShadowOffset.Y});
-  end;
-  if FPaintData.FArrowShadow.Visible then begin
-    BitBlt(ShadowLayer.Canvas.Handle, Center.X - ScrewShadow.Width div 2 + ShadowOffset.X, Center.Y - ScrewShadow.Height div 2 + ShadowOffset.Y, ScrewShadow.Width, ScrewShadow.Height,
-           ScrewShadow.Canvas.Handle, 0, 0, SRCCOPY);
-    Coord1 := GetLineCoord(PosToRad(FPosition));
-    DrawBoldLine(ShadowLayer, Coord1.X + ShadowOffset.X, Coord1.Y + ShadowOffset.Y, Center.X + ShadowOffset.X, Center.Y + ShadowOffset.Y, LineWidth, $999999);
-  end;
-
-  if ctCustomImage <> ContentType {FPaintData.BackgroundImage.Empty} then begin
-    if FPaintData.FDialShadow.Visible or FPaintData.FArrowShadow.Visible then begin
-      FillAlphaRect(ShadowLayer, MkRect(ShadowLayer), MaxByte);
-      for i := 0 to ShadowBlur - 1 do
-        QBlur(ShadowLayer);
-
-      SavedDC := SaveDC(ShadowLayer.Canvas.Handle);
-      try
-        ExcludeClipRect(ShadowLayer.Canvas.Handle, Margin, Margin, MeterSize.cx - Margin, MeterSize.cy - Margin);
-        FillDC(ShadowLayer.Canvas.Handle, MkRect(ShadowLayer), $FFFFFF);
-      finally
-        RestoreDC(ShadowLayer.Canvas.Handle, SavedDC);
+    i := Margin + DialPenWidth;
+    gr := DialPenWidth div 2;
+    acGPDrawEllipse(ShadowLayer.Canvas.Handle, i - gr + 1, i - gr + 1, MeterSize.cx - 2 * i + gr - 3, MeterSize.cy - 2 * i + gr - 3, ShMaskCircle.C, DialShadowSize);
+    if InitLine(ShadowLayer, Pointer(S0), Delta) then
+      for y := 0 to ShadowLayer.Height - 1 do begin
+        SA := Pointer(LongInt(S0) + Delta * Y);
+        MinMask := mini(MaxByte, ShMaskCircle.R + (MaxByte - ShMaskCircle.R) * y * 3 div (ShadowLayer.Height * 2));
+        for x := 0 to ShadowLayer.Width - 1 do begin
+          SA[X].R := maxi(MinMask, SA[X].R);
+          SA[X].G := SA[X].R;
+          SA[X].B := SA[X].R;
+        end;
       end;
-    end;
+  end;
 
+  // Arrow shadow
+  if FPaintData.FArrowShadow.Visible then begin
+    acGPFillEllipse(ShadowLayer.Canvas.Handle,
+                    Center.X - Screw.Width  div 2 - ArrowShadowSize div 2,
+                    Center.Y - Screw.Height div 2 - ArrowShadowSize div 2,
+                    Screw.Width + ArrowShadowSize,
+                    Screw.Height + ArrowShadowSize,
+                    ShMaskArrow.C);
+
+    Coord1 := GetLineCoord(PosToRad(FPosition));
+    acGPDrawLine(ShadowLayer.Canvas.Handle, Coord1.X + ShadowOffset.X, Coord1.Y + ShadowOffset.Y, Center.X + ShadowOffset.X, Center.Y + ShadowOffset.Y, ShMaskArrow.C, ArrowShadowSize + ArrowPenWidth - 2);
+  end;
+
+  if ctCustomImage <> ContentType then begin
     // BG fill
-    if not FPaintData.Transparent then begin
-      Cache.Canvas.Brush.Color := ColorToRGB(FPaintData.Color);
-      Cache.Canvas.Pen.Style := psClear;
-      Cache.Canvas.Ellipse(Margin, Margin, MeterSize.cx - Margin, MeterSize.cx - Margin);
-    end;
+    if not FPaintData.Transparent then
+      acGPFillEllipse(Cache.Canvas.Handle, Margin, Margin, MeterSize.cx - 2 * Margin, MeterSize.cx - 2 * Margin, {FF000000 or }ColorToRGB(FPaintData.Color));
+
     if FShowTicks then begin
-      // Ticks big
       i := Min;
-      Circle.Canvas.Font.Assign(Font);
+      if FContentType = ctGradient then
+        PaintBmp32(Cache, ColorLine);
+
+      // Ticks big
+      Cache.Canvas.Font.Assign(Font);
       while i <= Max do begin
         if i mod TickStepBig = 0 then begin
           Rad := PosToRad(i);
           Coord1 := GetLineCoord(Rad, Center.X - Margin - 1);
           Coord2 := GetLineCoord(Rad, Center.X - ArrowLength div 4);
-          DrawBoldLine(Circle, Coord1.X, Coord1.Y, Coord2.X, Coord2.Y, LineWidth, 0);
+          acGPDrawLine(Cache.Canvas.Handle, Coord1.X, Coord1.Y, Coord2.X, Coord2.Y, Font.Color, ArrowPenWidth);
           if FContentType = ctValues then begin
             s := IntToStr(i);
-            TextSize := GetStringSize(Circle.Canvas.Handle, s);
+            TextSize := GetStringSize(Cache.Canvas.Handle, s);
             gr := 90 - Round(Rad * 180 / Pi);
 
             Coord2.X := Round(Coord2.X - sin(Rad) * (TextSize.cx / 2) + sin(Rad));
             Coord2.Y := Round(Coord2.Y + cos(Rad) * (TextSize.cy / 2) - 2 * cos(Rad));
 
-            DrawAngledText(Circle.Canvas, IntToStr(i), gr * 10, Coord2);
+            DrawAngledText(Cache.Canvas, IntToStr(i), gr * 10, Coord2);
           end;
         end;
         inc(i, TickStepSmall);
       end;
-      if FContentType = ctGradient then
-        PaintBmp32(Cache, ColorLine);
       // Ticks small
       i := Min;
       while i <= Max do begin
         if i mod TickStepBig <> 0 then begin
           Coord1 := GetLineCoord(PosToRad(i), Center.X - Margin - 1);
           Coord2 := GetLineCoord(PosToRad(i), Center.X - ArrowLength div 5);
-          DrawBoldLine(Cache, Coord1.X, Coord1.Y, Coord2.X, Coord2.Y, LineWidth, $BBBBBB);
+          acGPDrawLine(Cache.Canvas.Handle, Coord1.X, Coord1.Y, Coord2.X, Coord2.Y, BlendColors(Font.Color, PaintData.Color, DefBlendDisabled), ArrowPenWidth);
         end;
         inc(i, TickStepSmall);
       end;
     end;
-//    C_.C := 0;
-//    if FPaintData.FDialShadow.Visible or FPaintData.FArrowShadow.Visible then
-//      BlendTransBmpByMask(Cache, ShadowLayer, C_);
   end
   else
     if not FPaintData.BackgroundImage.Empty then begin
-      if FPaintData.BackgroundImage.PixelFormat <> pf32bit then
-        BitBlt(Cache.Canvas.Handle, 0, 0, FPaintData.BackgroundImage.Width, FPaintData.BackgroundImage.Height, FPaintData.BackgroundImage.Canvas.Handle, 0, 0, SRCCOPY)
-      else
-        PaintBmp32(Cache, FPaintData.BackgroundImage);
+      if (MeterSize.cx = resColorLine.Width) and (MeterSize.cy = resColorLine.Height) then begin
+        CustomBmp := TBitmap.Create;
+        CustomBmp.Assign(FPaintData.BackgroundImage)
+      end
+      else begin
+        CustomBmp := CreateBmp32(MeterSize.cx, MeterSize.cy);
+        Stretch(FPaintData.BackgroundImage, CustomBmp, CustomBmp.Width, CustomBmp.Height, ftMitchell);
+      end;
 
-      if FPaintData.FArrowShadow.Visible then begin
+      if CustomBmp.PixelFormat <> pf32bit then
+        BitBlt(Cache.Canvas.Handle, 0, 0, CustomBmp.Width, CustomBmp.Height, CustomBmp.Canvas.Handle, 0, 0, SRCCOPY)
+      else
+        PaintBmp32(Cache, CustomBmp);
+
+      CustomBmp.Free;
+
+{      if FPaintData.FArrowShadow.Visible then begin
         FillAlphaRect(ShadowLayer, MkRect(ShadowLayer), MaxByte);
-        for i := 0 to ShadowBlur - 1 do
-          QBlur(ShadowLayer);
+//        for i := 0 to ShadowBlur - 1 do
+//          QBlur(ShadowLayer);
 
         SavedDC := SaveDC(ShadowLayer.Canvas.Handle);
         try
@@ -739,7 +670,7 @@ begin
         finally
           RestoreDC(ShadowLayer.Canvas.Handle, SavedDC);
         end;
-      end;
+      end;  }
     end;
 
   C_.C := 0;
@@ -747,14 +678,16 @@ begin
     BlendTransBmpByMask(Cache, ShadowLayer, C_);
 
   C_.I := GetPaintColor(False);
-  // Arrow
-  BlendTransBmpByMask(Cache, Circle, C_);
+  // Circle
+  if (ctCustomImage <> ContentType) and (DialPenWidth > 0) then
+    acGPDrawEllipse(Cache.Canvas.Handle, Margin, Margin, MeterSize.cx - 2 * Margin - DialPenWidth div 2, MeterSize.cy - 2 * Margin - DialPenWidth div 2, C_.C, DialPenWidth);
 
+  // Arrow
   Coord1 := GetLineCoord(PosToRad(FPosition));
-  DrawBoldLine(Cache, Coord1.X, Coord1.Y, Center.X, Center.Y, LineWidth, GetPaintColor(True));
+  acGPDrawLine(Cache.Canvas.Handle, Coord1.X, Coord1.Y, Center.X, Center.Y, GetPaintColor(True), ArrowPenWidth);
 
   C_.C := GetPaintColor(True);
-  BlendBmpRectByMask(Cache, ArrowCircle, Point(Center.X - ArrowCircle.Width div 2, Center.Y - ArrowCircle.Height div 2), C_);
+  acGPfILLEllipse(Cache.Canvas.Handle, Center.X - 8, Center.y - 8, 15, 15, GetPaintColor(True));
 
   R := PaintText;
   if (Images <> nil) and (FGlyphIndex >= 0) then begin
@@ -853,6 +786,8 @@ constructor TMeterShadowData.Create(AOwner: TMeterPaintData);
 begin
   FOwner := AOwner;
   FVisible := True;
+  FSize := 5;
+  FTransparency := 200;
 end;
 
 
@@ -865,18 +800,21 @@ begin
 end;
 
 
-function LoadBmpFromRes(Name: string; IsPng: boolean): TBitmap;
-var
-  rs: TResourceStream;
+procedure TMeterShadowData.SetSize(const Value: byte);
 begin
-  rs := TResourceStream.Create(hInstance, Name, RT_RCDATA);
-  if IsPng then
-    Result := TPNGGraphic.Create
-  else
-    Result := TBitmap.Create;
+  if FSize <> Value then begin
+    FSize := Value;
+    FOwner.FOwner.Repaint;
+  end;
+end;
 
-  Result.LoadFromStream(rs);
-  rs.Free;
+
+procedure TMeterShadowData.SetTransparency(const Value: byte);
+begin
+  if FTransparency <> Value then begin
+    FTransparency := Value;
+    FOwner.FOwner.Repaint;
+  end;
 end;
 
 
@@ -889,6 +827,8 @@ begin
   FArrowColor := clBlack;
   FDialShadow  := TMeterShadowData.Create(Self);
   FArrowShadow := TMeterShadowData.Create(Self);
+  FDialPenWidth  := 2;
+  FArrowPenWidth := 2;
   FBackgroundImage := TBitmap.Create;
 end;
 
@@ -947,11 +887,34 @@ begin
 end;
 
 
+procedure TMeterPaintData.SetByte(const Index: Integer; const Value: byte);
+begin
+  case Index of
+    0: if FDialPenWidth <> Value then begin
+      FDialPenWidth := Value;
+      FOwner.Repaint;
+    end;
+
+    1: if FArrowPenWidth <> Value then begin
+      FArrowPenWidth := Value;
+      FOwner.Repaint;
+    end;
+  end;
+end;
+
+
 procedure TMeterPaintData.SetShadowData(const Index: Integer; const Value: TMeterShadowData);
 begin
   case Index of
-    0: FArrowShadow.Assign(Value);
-    1: FDialShadow. Assign(Value);
+    0: if FArrowShadow <> Value then begin
+      FArrowShadow.Assign(Value);
+      FOwner.Repaint;
+    end;
+
+    1: if FDialShadow <> Value then begin
+      FDialShadow.Assign(Value);
+      FOwner.Repaint;
+    end;
   end;
 end;
 
@@ -1014,26 +977,30 @@ begin
   inherited;
   case Message.Msg of
     CM_TEXTCHANGED:
-      if not (csDestroying in ComponentState) then begin
+      if not (csDestroying in ComponentState) then
         Repaint;
-      end;
   end;
 end;
 
 
+function LoadBmpFromRes(Name: string): TBitmap;
+var
+  rs: TResourceStream;
+begin
+  rs := TResourceStream.Create(hInstance, Name, RT_RCDATA);
+  Result := TPNGGraphic.Create;
+  Result.LoadFromStream(rs);
+  rs.Free;
+end;
+
+
 initialization
-  resScrew       := LoadBmpFromRes('Screw',       True);
-  resColorLine   := LoadBmpFromRes('ColorLine',   True);
-  resCircleLine  := LoadBmpFromRes('CircleLine',  True);
-  resArrowCircle := LoadBmpFromRes('ArrowCircle', False);
-  resScrewShadow := LoadBmpFromRes('ScrewShadow', False);
+  resScrew := LoadBmpFromRes('Screw');
+  resColorLine := LoadBmpFromRes('ColorLine');
 
 
 finalization
   resScrew.Free;
   resColorLine.Free;
-  resCircleLine.Free;
-  resArrowCircle.Free;
-  resScrewShadow.Free;
 
 end.

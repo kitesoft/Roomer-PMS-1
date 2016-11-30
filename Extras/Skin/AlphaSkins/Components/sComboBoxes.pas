@@ -12,7 +12,6 @@ uses
   {$IFNDEF DELPHI6UP} acD5Ctrls, {$ENDIF}
   sCommonData, sDefaults, sConst, acntUtils, sGraphUtils, acSBUtils, acAlphaImageList, sSpeedButton;
 
-
 type
 {$IFNDEF NOTFORHELP}
 {$IFDEF DELPHI6UP}
@@ -166,7 +165,9 @@ type
     FListSelected,
     FShowColorName: boolean;
 
-    FMargin: integer;
+    FMargin,
+    FColorRectHeight,
+    FColorRectWidth: integer;
     FStyle: TsColorBoxStyle;
     FPopupMode: TacColorPopupMode;
     FOnColorName: TOnColorName;
@@ -177,15 +178,14 @@ type
     procedure SetDefaultColorColor(const Value: TColor);
     procedure SetNoneColorColor   (const Value: TColor);
     procedure SetShowColorName    (const Value: boolean);
-    procedure SetMargin           (const Value: integer);
     procedure SetSelected         (const AColor: TColor);
     procedure SetPopupMode        (const Value: TacColorPopupMode);
     procedure ColorCallBack       (const AName: string);
+    procedure SetInteger          (const Index, Value: integer);
     procedure WMDrawItem(var Message: TWMDrawItem); override;
   protected
     procedure CloseUp; override;
     function AllowDropDown: boolean; override;
-    function ColorRect(SourceRect: TRect; State: TOwnerDrawState): TRect;
     function DrawSkinItem(aIndex: Integer; aRect: TRect; aState: TOwnerDrawState; aDC: hdc): boolean; override;
     procedure KeyDown(var Key: Word; Shift: TShiftState); override;
     function PickCustomColor: Boolean;
@@ -204,8 +204,11 @@ type
     property Colors[Index: Integer]: TColor read GetColor;
   published
     property Style: TsColorBoxStyle read FStyle write SetStyle default [cbStandardColors, cbExtendedColors, cbSystemColors];
-    property Margin: integer read FMargin write SetMargin default 0;
     property ShowColorName: boolean read FShowColorName write SetShowColorName default True;
+
+    property Margin:          integer index 0 read FMargin          write SetInteger default 0;
+    property ColorRectHeight: integer index 1 read FColorRectHeight write SetInteger default 14;
+    property ColorRectWidth:  integer index 2 read FColorRectWidth  write SetInteger default 21;
 
     property Selected:          TColor read GetSelected        write SetSelected          default clBlack;
     property DefaultColorColor: TColor read FDefaultColorColor write SetDefaultColorColor default clBlack;
@@ -1552,21 +1555,6 @@ begin
 end;
 
 
-function TsCustomColorBox.ColorRect(SourceRect: TRect; State: TOwnerDrawState): TRect;
-begin
-  Result := SourceRect;
-  if ShowColorName then
-    Result.Right := 2 * (Result.Bottom - Result.Top) + Result.Left
-  else
-    Result.Right := Result.Right - WidthOf(ButtonRect) - 3 * integer(FShowButton);
-
-  if odComboBoxEdit in State then
-    InflateRect(Result, - 1 - FMargin, - 1 - FMargin)
-  else
-    InflateRect(Result, - 1, - 1);
-end;
-
-
 constructor TsCustomColorBox.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
@@ -1576,6 +1564,8 @@ begin
   FPopupMode := pmColorList;
   FShowColorName := True;
   FNoneColorColor := clBlack;
+  FColorRectHeight := 14;
+  FColorRectWidth := 21;
   FCommonData.COC := COC_TsColorBox;
 end;
 
@@ -1711,16 +1701,11 @@ begin
       if C = clNone then
         C := NoneColorColor;
 
-    gRect := rText;
-    if odComboBoxEdit in aState then
-      InflateRect(gRect, - 1 - FMargin, - 1 - FMargin)
-    else
-      InflateRect(gRect, - 1, - 1);
-
     if ShowColorName or not bEdit then begin
-      InflateRect(gRect, -2, 0);
-      gRect.Left := gRect.Left - 2;
-      gRect.Right := gRect.Left + 2 * (gRect.Bottom - gRect.Top);
+      gRect.Top := max(0, (HeightOf(aRect) - FColorRectHeight) div 2);
+      gRect.Left := gRect.Top;
+      gRect.Bottom := gRect.Top + FColorRectHeight;
+      gRect.Right := gRect.Left + FColorRectWidth;
 
       FillDC(Bmp.Canvas.Handle, gRect, C);
       Bmp.Canvas.Brush.Color := ColorToBorderColor(ColorToRGB(C));
@@ -1753,6 +1738,12 @@ begin
           DrawFocusRect(Bmp.Canvas.Handle, gRect);
       end
       else begin
+        gRect := rText;
+        if odComboBoxEdit in aState then
+          InflateRect(gRect, - 1 - FMargin, - 1 - FMargin)
+        else
+          InflateRect(gRect, - 1, - 1);
+
         FillDC(Bmp.Canvas.Handle, gRect, C);
         Bmp.Canvas.Brush.Color := ColorToBorderColor(ColorToRGB(C));
         Bmp.Canvas.Brush.Style := bsSolid;
@@ -1938,12 +1929,24 @@ begin
 end;
 
 
-procedure TsCustomColorBox.SetMargin(const Value: integer);
+procedure TsCustomColorBox.SetInteger(const Index, Value: integer);
 begin
-  if FMargin <> Value then begin
-    FMargin := Value;
-    FMargin := min(FMargin, Height div 2);
-    FCommonData.Invalidate;
+  case Index of
+    0: if FMargin <> Value then begin
+      FMargin := Value;
+      FMargin := min(FMargin, Height div 2);
+      FCommonData.Invalidate;
+    end;
+
+    1: if FColorRectHeight <> Value then begin
+      FColorRectHeight := Value;
+      FCommonData.Invalidate;
+    end;
+
+    2: if FColorRectWidth <> Value then begin
+      FColorRectWidth := Value;
+      FCommonData.Invalidate;
+    end;
   end;
 end;
 

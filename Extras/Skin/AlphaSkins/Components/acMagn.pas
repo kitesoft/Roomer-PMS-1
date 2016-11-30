@@ -163,7 +163,7 @@ var
   cL, cT, w, h, XOffs, YOffs, i, p, StepCount: integer;
 begin
   if not IntUpdating and not Closing then begin
-    if DefaultManager <> nil then
+    if (DefaultManager <> nil) and (Caller.ShowPopupMenu) then
       DefaultManager.SkinableMenus.HookPopupMenu(PopupMenu, DefaultManager.Active and (DefaultManager.SkinName <> ''));
 
     MakeAeroMagnifier;

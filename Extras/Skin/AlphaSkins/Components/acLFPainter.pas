@@ -5,9 +5,9 @@ unit acLFPainter;
 // WARNING! This unit is compatible with Devexpress version 2011 and newer
 // for older versions used the acLFPainter6.pas unit
 
-//{$DEFINE VER16_1_4}   // cxGrid version 16.1.4 and newer
-//{$DEFINE VER14_1_2}
-//{$DEFINE VER13_2_2}
+{$DEFINE VER16_1_4}   // cxGrid version 16.1.4 and newer
+{$DEFINE VER14_1_2}
+{$DEFINE VER13_2_2}
 {$DEFINE VER12_2_3}
 {$DEFINE VER12_1_6}
 {$DEFINE VER26}
@@ -136,7 +136,8 @@ type
     function ButtonSymbolState(AState: TcxButtonState): TcxButtonState; override;
     procedure DrawButton(ACanvas: TcxCanvas; R: TRect; const ACaption: string; AState: TcxButtonState;
       ADrawBorder: Boolean = True; AColor: TColor = clDefault; ATextColor: TColor = clDefault;
-      AWordWrap: Boolean = False; AIsToolButton: Boolean = False); override;
+      AWordWrap: Boolean = False; AIsToolButton: Boolean = False
+      {$IFDEF VER13_2_2}; APart: TcxButtonPart = cxbpButton{$ENDIF}); override;
     procedure DrawButtonBorder(ACanvas: TcxCanvas; R: TRect; AState: TcxButtonState); override;
     procedure DrawExpandButton(ACanvas: TcxCanvas; const R: TRect; AExpanded: Boolean; AColor: TColor = clDefault); override;
     function DrawExpandButtonFirst: Boolean; override;
@@ -376,7 +377,7 @@ type
     class procedure DrawPanelSeparator(AStatusBar: TdxCustomStatusBar; ACanvas: TcxCanvas; const R: TRect); override;
     class procedure DrawTopBorder(AStatusBar: TdxCustomStatusBar; ACanvas: TcxCanvas; const R: TRect); override;
     class function GetPanelColor(AStatusBar: TdxCustomStatusBar; APanel: TdxStatusBarPanel): TColor; override;
-    class procedure DrawSizeGrip(AStatusBar: TdxCustomStatusBar; ACanvas: TcxCanvas; R: TRect); override;
+    class procedure DrawSizeGrip(AStatusBar: TdxCustomStatusBar; ACanvas: TcxCanvas; R: TRect{$IFNDEF VER14_1_2}; AOverlapped: Boolean{$ENDIF}); override;
   end;
 {$endif}
 
@@ -1338,6 +1339,9 @@ begin
         DrawColorArrow(TmpBmp.Canvas, C, MkRect(TmpBmp), asBottom);
       end;
 {$ENDIF}
+      if cxbsDisabled = AState then
+        BlendTransBitmap(TmpBmp, DefBlendDisabled, TsColor(CI.FillColor));
+
       BitBlt(ACanvas.Handle, R.Left, R.Top, TmpBmp.Width, TmpBmp.Height, TmpBmp.Canvas.Handle, 0, 0, SRCCOPY);
       FreeAndNil(TmpBmp);
     end;
@@ -3440,7 +3444,7 @@ begin
 end;
 
 
-class procedure TdxACStatusBarSkinPainter.DrawSizeGrip(AStatusBar: TdxCustomStatusBar; ACanvas: TcxCanvas; R: TRect);
+class procedure TdxACStatusBarSkinPainter.DrawSizeGrip(AStatusBar: TdxCustomStatusBar; ACanvas: TcxCanvas; R: TRect{$IFNDEF VER14_1_2}; AOverlapped: Boolean{$ENDIF});
 var
   Bmp: TBitmap;
 begin
