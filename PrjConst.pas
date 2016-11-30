@@ -894,10 +894,14 @@ begin
   constants.Add('shTx_ReservationProfile_CopyHidden', 'Copy to hidden :');
   constants.Add('shTx_ReservationProfile_ChangeNationalityConfirm',
 									 'Change nationality of all guests to %s.' + #10#10 +
-									  'Confirm ?');
+									  '  Yes: All guests in this room' + #10 +
+                    '  All: All guests in this reservation' + #10 +
+                    '  No:  Cancel all changes');
   constants.Add('shTx_ReservationProfile_ChangeCountryConfirm',
 									 'Change country of origin of all guests to %s.' + #10#10 +
-									  'Confirm ?');
+									  '  Yes: All guests in this room' + #10 +
+                    '  All: All guests in this reservation' + #10 +
+                    '  No:  Cancel all changes');
   constants.Add('shTx_ReservationProfile_NationalityChangeFailed', 'Changing nationality failed');
   constants.Add('shTx_ReservationProfile_CountryChangeFailed', 'Changing country failed');
   constants.Add('shTx_ReservationProfile_Outdated', 'OutDated');
@@ -1683,7 +1687,7 @@ begin
   frmOpenInvoicesNew := TfrmOpenInvoicesNew.Create(nil); frmOpenInvoicesNew.Free; frmOpenInvoicesNew := nil;
   frmResMemos := TfrmResMemos.Create(nil); frmResMemos.Free; frmResMemos := nil;
 //  frmSelHotel := TfrmSelHotel.Create(nil); frmSelHotel.Free; frmSelHotel := nil;
-  frmHomedate := TfrmHomedate.Create(nil); frmHomedate.Free; frmHomedate := nil;
+  TfrmHomedate.Create(nil).Free;
 //  frmGoToRoomandDate := TfrmGoToRoomandDate.Create(nil); frmGoToRoomandDate.Free; frmGoToRoomandDate := nil;
   frmHiddenInfo := TfrmHiddenInfo.Create(nil); frmHiddenInfo.Free; frmHiddenInfo := nil;
   frmDownPayment := TfrmDownPayment.Create(nil); frmDownPayment.Free; frmDownPayment := nil;

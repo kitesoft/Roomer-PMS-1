@@ -129,6 +129,7 @@ contains
   acPopupCtrls in 'acPopupCtrls.pas',
   acPopupController in 'acPopupController.pas',
   acntTypes in 'acntTypes.pas',
+  acgpUtils in 'acgpUtils.pas',
   acTitleBar in 'acTitleBar.pas';
 
 end.

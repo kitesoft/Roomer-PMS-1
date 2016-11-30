@@ -197,7 +197,7 @@ uses
   Dialogs, Math, TypInfo, Registry,
   {$IFDEF TNTUNICODE} TntSystem, TntWindows, TntWideStrUtils,{$ENDIF}
   {$IFNDEF ALITE}sDialogs, {$ENDIF}
-  sSkinProvider, acntTypes;
+  acPng, sSkinProvider, acntTypes;
 
 
 var

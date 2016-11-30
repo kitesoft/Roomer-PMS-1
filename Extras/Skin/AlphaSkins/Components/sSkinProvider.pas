@@ -181,6 +181,7 @@ type
     FVisible: boolean;
     procedure SetGlyph  (const Value: TBitmap);
     procedure SetVisible(const Value: boolean);
+    procedure GlyphChanged(Sender: TObject);
   public
     constructor Create(AOwner: TsSkinProvider);
     destructor Destroy; override;
@@ -9975,6 +9976,7 @@ constructor TsTitleIcon.Create;
 begin
   FOwner := AOwner;
   FGlyph := TBitmap.Create;
+  FGlyph.OnChange := GlyphChanged;
   FHeight := 0;
   FWidth  := 0;
   FVisible := True;
@@ -9985,6 +9987,12 @@ destructor TsTitleIcon.Destroy;
 begin
   FreeAndNil(FGlyph);
   inherited Destroy;
+end;
+
+
+procedure TsTitleIcon.GlyphChanged(Sender: TObject);
+begin
+  UpdateSkinCaption(FOwner);
 end;
 
 

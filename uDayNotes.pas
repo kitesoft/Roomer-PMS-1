@@ -1,4 +1,4 @@
-unit uDayNotes;
+﻿unit uDayNotes;
 
 
 interface
@@ -64,13 +64,6 @@ uses
   cxPCdxBarPopupMenu,
   cxExportPivotGridLink,
   cxNavigator
-
-
-//  , datelbl
-//  , AdvEdit
-//  , AdvEdBtn
-//  , PlannerDatePicker
-
   , uUtils
   , cmpRoomerDataSet
   , cmpRoomerConnection, sPageControl, sMemo, sLabel, sPanel, sEdit, sSpinEdit, sButton,
@@ -203,9 +196,7 @@ type
     gridImportLogsDBTableView1DateInsert: TcxGridDBColumn;
     gridImportLogsDBTableView1ImportTypeID: TcxGridDBColumn;
     gridImportLogsDBTableView1ImportType: TcxGridDBColumn;
-    dtImportLogDate: TsDateEdit;
     mImportLogImportData: TMemoField;
-    cxButton5: TsButton;
     mImportLogDateExport: TDateTimeField;
     gridImportLogsDBTableView1DateExport: TcxGridDBColumn;
     mImportLogImportResultId: TIntegerField;
@@ -247,18 +238,6 @@ type
     gridImportLogsDBTableView1GuestName: TcxGridDBColumn;
     mImportLogImportResult: TStringField;
     cxButton6: TsButton;
-    cxLabel5: TsLabel;
-    edImportLogDaysToShow: TsSpinEdit;
-    cxLabel6: TsLabel;
-    cxLabel7: TsLabel;
-    cxLabel8: TsLabel;
-    cxLabel9: TsLabel;
-    cxButton10: TsButton;
-    cxButton11: TsButton;
-    cxButton12: TsButton;
-    cxButton13: TsButton;
-    cxButton14: TsButton;
-    cxButton15: TsButton;
     mImportLoginvoiceNumber: TIntegerField;
     gridImportLogsDBTableView1invoiceNumber: TcxGridDBColumn;
     DateLabel1: TDateLabel;
@@ -313,9 +292,24 @@ type
     sGroupBox1: TsGroupBox;
     sWebLabel1: TsWebLabel;
     edCurrentDate: TEdit;
+    pnlTopRow: TsPanel;
+    dtImportLogDate: TsDateEdit;
+    cxLabel5: TsLabel;
+    edImportLogDaysToShow: TsSpinEdit;
+    cxLabel6: TsLabel;
+    cxLabel7: TsLabel;
+    cxLabel8: TsLabel;
+    cxLabel9: TsLabel;
+    cxButton5: TsButton;
+    sPanel1: TsPanel;
+    cxButton10: TsButton;
+    cxButton11: TsButton;
+    cxButton12: TsButton;
+    cxButton13: TsButton;
+    cxButton14: TsButton;
+    cxButton15: TsButton;
     procedure FormCreate(Sender : TObject);
     procedure FormShow(Sender : TObject);
-    procedure FormHide(Sender : TObject);
     procedure FormKeyDown(Sender : TObject; var Key : Word; Shift : TShiftState);
     procedure FormKeyPress(Sender : TObject; var Key : Char);
     procedure FormDestroy(Sender : TObject);
@@ -362,17 +356,11 @@ type
     zLeftIsExpand : boolean;
     zRightIsExpand : boolean;
 
-    zReservation : integer;
-    zRoomReservation : integer;
-
     zCurrentDate : TDate;
 
-    { Private declarations }
-    procedure showdates;
 
   public
     { Public declarations }
-    v : Boolean;
     lastDate : Tdate;
     activeTab : integer;
 
@@ -404,7 +392,7 @@ uses
   , uDImages
   , uRoomerDefinitions
   , uReservationStateDefinitions
-  , uSQLUtils;
+  , uSQLUtils, uDateTimeHelper;
 
 
 
@@ -415,8 +403,6 @@ begin
   RoomerLanguage.TranslateThisForm(self);
   pageMain.ActivePageIndex := 0;
 
-
-  v := false;
   edCurrentDate.text := dateToStr(frmMain.dtdate.Date);
   lastDate := frmMain.dtDate.date;
 
@@ -437,11 +423,6 @@ begin
 
 end;
 
-procedure TfrmDayNotes.FormHide(Sender : TObject);
-begin
-  // V := false;
-end;
-
 procedure TfrmDayNotes.FormKeyDown(Sender : TObject; var Key : Word; Shift : TShiftState);
 begin
   if Key = VK_ESCAPE then
@@ -449,16 +430,10 @@ begin
   else
   if Key = vk_F11 then
   begin
-    if frmDayNotes.v then
-    begin
-      frmDayNotes.v := false;
-      frmDayNotes.hide;
-    end
+    if Visible then
+      Hide
     else
-    begin
-      frmDayNotes.v := true;
-      frmDayNotes.show;
-    end;
+      Show;
   end;
 end;
 
@@ -648,41 +623,8 @@ begin
   try
     rSet := CreateNewDataSet;
     try
-//      s := '';
-//      s := s+' SELECT ';
-//      s := s+'        Id ';
-//      s := s+'      , DateInsert ';
-//      s := s+'      , ImportTypeID ';
-//      s := s+'      , ImportData ';
-//      s := s+'      , ImportResultID ';
-//      s := s+'      , Reservation ';
-//      s := s+'      , RoomReservation ';
-//      s := s+'      , Customer ';
-//      s := s+'      , DateExport ';
-//      s := s+'      , ItemCount ';
-//      s := s+'      , HotelCode ';
-//      s := s+'      , Staff ';
-//      s := s+'      , RoomNumber ';
-//      s := s+'      , isGroupInvoice ';
-//      s := s+'      , invCustomer ';
-//      s := s+'      , invPersonalID ';
-//      s := s+'      , invCustomerName ';
-//      s := s+'      , invAddress1 ';
-//      s := s+'      , invAddress2 ';
-//      s := s+'      , invAddress3 ';
-//      s := s+'      , invAddress4 ';
-//      s := s+'      , GuestName ';
-//      s := s+'      , SaleRefrence ';
-//      s := s+'      , invoiceNumber ';
-//      s := s+'    FROM ';
-//      s := s+'      tblImportLogs ';
-//      s := s+'    WHERE ';
-//      s := s+'      ( (DateInsert >='+_db(dtDateFrom)+ ') AND (DateInsert <='+_db(dtDateTo)+ ') )';
-
 
 		s := format(select_DayNotes_RefreshImPortLog , [_db(dtDateFrom),_db(dtDateTo)]);
-//	CopyToClipboard(s);
-//	DebugMessage('select_DayNotes_RefreshImPortLog'#10#10+s);
 		hData.rSet_bySQL(rSet,s);
 
       if mImportLog.active then mImportLog.close;
@@ -770,8 +712,6 @@ var
   s : string;
   i : integer;
   ch : char;
-  ii : integer;
-
   ss : string;
 
 
@@ -780,7 +720,6 @@ begin
   s := memlog.Text;
 
   ss := '';
-  ii := 0;
   for i := 1 to length(s)-1 do
   begin
     ch := s[i];
@@ -801,14 +740,12 @@ var
   s : string;
   i : integer;
   ch : char;
-  ii : integer;
   ss : string;
 begin
   //**
   s := memlog.Text;
 
   ss := '';
-  ii := 0;
   for i := 1 to length(s)-1 do
   begin
     ch := s[i];
@@ -832,12 +769,6 @@ begin
   memlog.lines.add('#---');
 end;
 
-
-
-procedure TfrmDayNotes.showdates;
-begin
-end;
-
 procedure TfrmDayNotes.mImportLogAfterScroll(DataSet: TDataSet);
 begin
   memImportData.Clear;
@@ -846,89 +777,77 @@ end;
 procedure TfrmDayNotes.mnuThisreservationClick(Sender: TObject);
 var
   iReservation : integer;
-  iRoomReservation : integer;
 begin
   if pageMain.ActivePage = tabLog then
+  begin
     if pageLog.ActivePage = tabImportLog then
-  begin
-    iReservation := mImportLog.fieldbyname('Reservation').asinteger;
-    iRoomReservation := mImportLog.fieldbyname('RoomReservation').asinteger;
-  end else
-  begin
-    iReservation := mCurrentGuests_.fieldbyname('Reservation').asinteger;
-    iRoomReservation := mCurrentGuests_.fieldbyname('RoomReservation').asinteger;
+    begin
+      iReservation := mImportLog.fieldbyname('Reservation').asinteger;
+    end else
+    begin
+      iReservation := mCurrentGuests_.fieldbyname('Reservation').asinteger;
+    end;
+    ShowFinishedInvoices2(itPerReservation, '', iReservation);
   end;
-  ShowFinishedInvoices2(itPerReservation, '', iReservation);
 end;
 
 procedure TfrmDayNotes.mnuThisRoomClick(Sender: TObject);
 var
-  iReservation : integer;
   iRoomReservation : integer;
 begin
   if pageMain.ActivePage = tabLog then
+  begin
     if pageLog.ActivePage = tabImportLog then
-  begin
-    iReservation := mImportLog.fieldbyname('Reservation').asinteger;
-    iRoomReservation := mImportLog.fieldbyname('RoomReservation').asinteger;
-  end else
-  begin
-    iReservation := mCurrentGuests_.fieldbyname('Reservation').asinteger;
-    iRoomReservation := mCurrentGuests_.fieldbyname('RoomReservation').asinteger;
+    begin
+      iRoomReservation := mImportLog.fieldbyname('RoomReservation').asinteger;
+    end else
+    begin
+      iRoomReservation := mCurrentGuests_.fieldbyname('RoomReservation').asinteger;
+    end;
+
+    ShowFinishedInvoices2(itPerRoomRes, '', iRoomReservation);
   end;
-
-
-
-  ShowFinishedInvoices2(itPerRoomRes, '', iRoomReservation);
 end;
 
 procedure TfrmDayNotes.OpenGroupInvoice1Click(Sender: TObject);
 var
   iReservation : integer;
-  iRoomReservation : integer;
-  Arrival : Tdate;
-  Departure : Tdate;
 begin
-  Arrival := date;
-  Departure := date;
 
   if pageMain.ActivePage = tabLog then
+  begin
     if pageLog.ActivePage = tabImportLog then
-  begin
-    iReservation := mImportLog.fieldbyname('Reservation').asinteger;
-    iRoomReservation := mImportLog.fieldbyname('RoomReservation').asinteger;
-  end else
-  begin
-    iReservation := mCurrentGuests_.fieldbyname('Reservation').asinteger;
-    iRoomReservation := mCurrentGuests_.fieldbyname('RoomReservation').asinteger;
-  end;
+    begin
+      iReservation := mImportLog.fieldbyname('Reservation').asinteger;
+    end else
+    begin
+      iReservation := mCurrentGuests_.fieldbyname('Reservation').asinteger;
+    end;
 
-  EditInvoice(iReservation, 0, 0, 0, 0, 0, false, true,false);
+    EditInvoice(iReservation, 0, 0, 0, 0, 0, false, true,false);
+  end;
 end;
 
 procedure TfrmDayNotes.OpenthisRoom1Click(Sender: TObject);
 var
   iReservation : integer;
   iRoomReservation : integer;
-  Arrival : Tdate;
-  Departure : Tdate;
 begin
-  Arrival := date;
-  Departure := date;
 
 
   if pageMain.ActivePage = tabLog then
+  begin
     if pageLog.ActivePage = tabImportLog then
-  begin
-    iReservation := mImportLog.fieldbyname('Reservation').asinteger;
-    iRoomReservation := mImportLog.fieldbyname('RoomReservation').asinteger;
-  end else
-  begin
-    iReservation := mCurrentGuests_.fieldbyname('Reservation').asinteger;
-    iRoomReservation := mCurrentGuests_.fieldbyname('RoomReservation').asinteger;
+    begin
+      iReservation := mImportLog.fieldbyname('Reservation').asinteger;
+      iRoomReservation := mImportLog.fieldbyname('RoomReservation').asinteger;
+    end else
+    begin
+      iReservation := mCurrentGuests_.fieldbyname('Reservation').asinteger;
+      iRoomReservation := mCurrentGuests_.fieldbyname('RoomReservation').asinteger;
+    end;
+    EditInvoice(iReservation, iRoomReservation, 0, 0, 0, 0, false, true,false);
   end;
-
-  EditInvoice(iReservation, iRoomReservation, 0, 0, 0, 0, false, true,false);
 end;
 
 procedure TfrmDayNotes.pageMainChange(Sender: TObject);
@@ -958,16 +877,10 @@ end;
 procedure TfrmDayNotes.FormCloseQuery(Sender : TObject; var CanClose : Boolean);
 begin
   CanClose := false;
-  if frmDayNotes.v then
-  begin
-    frmDayNotes.v := false;
-    frmDayNotes.hide;
-  end
+  if Visible then
+    Hide
   else
-  begin
-    frmDayNotes.v := true;
-    frmDayNotes.show;
-  end;
+    Show;
 end;
 
 
@@ -988,7 +901,6 @@ end;
 
 procedure TfrmDayNotes.RefreshRoomStatus;
 var
-  sSQL : string;
   s : string;
   rSet : TRoomerDataSet;
 begin
@@ -1046,19 +958,18 @@ begin
 
   PivStatus.ApplyBestFit;
 
-//***************************************************************************************
-
-  dateTimeTostring(s,'dd.mm.yyyy',zCurrentDate);
-  labStatusDateFrom.caption := s;
-
-  dateTimeToString(s,'dd.mm.yyyy',zCurrentDate+zDaysToShow-1);
-  labStatusDateTo.caption := s;
 end;
 
 
 procedure TfrmDayNotes.edDaysToShowPropertiesChange(Sender : TObject);
 begin
   zDaysToShow := edDaysToShow.Value;
+
+  //dateTimeTostring(s,'dd.mm.yyyy',zCurrentDate);
+  labStatusDateFrom.caption := DateToStr(zCurrentDate);
+
+  // dateTimeToString(s,'dd.mm.yyyy',zCurrentDate+zDaysToShow-1);
+  labStatusDateTo.caption := DateToStr(zCurrentDate+zDaysToShow-1);
   RefreshRoomStatus;
 end;
 
@@ -1167,27 +1078,18 @@ end;
 procedure TfrmDayNotes.cxButton15Click(Sender: TObject);
 var
   iReservation : integer;
-  iRoomReservation : integer;
 begin
   iReservation := mImportLog.fieldbyname('Reservation').asinteger;
-  iRoomReservation := mImportLog.fieldbyname('RoomReservation').asinteger;
-
-  if g.openresMemo(iReservation) then
-  begin
-  end;
+  g.openresMemo(iReservation);
 end;
 
 procedure TfrmDayNotes.cxButton1Click(Sender: TObject);
 var
   iReservation : integer;
-  iRoomReservation : integer;
 begin
   iReservation := mCurrentGuests_.fieldbyname('Reservation').asinteger;
-  iRoomReservation := mCurrentGuests_.fieldbyname('RoomReservation').asinteger;
 
-  if g.openresMemo(iReservation) then
-  begin
-  end;
+  g.openresMemo(iReservation);
 end;
 
 procedure TfrmDayNotes.cxButton4Click(Sender: TObject);

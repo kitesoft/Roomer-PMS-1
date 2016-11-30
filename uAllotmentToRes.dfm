@@ -33,7 +33,6 @@ object frmAllotmentToRes: TfrmAllotmentToRes
     Align = alBottom
     TabOrder = 0
     SkinData.SkinSection = 'PANEL'
-    ExplicitWidth = 1086
     DesignSize = (
       1165
       33)
@@ -62,7 +61,6 @@ object frmAllotmentToRes: TfrmAllotmentToRes
       TabOrder = 1
       OnClick = sButton5Click
       SkinData.SkinSection = 'BUTTON'
-      ExplicitLeft = 926
     end
     object sButton6: TsButton
       Left = 1086
@@ -76,7 +74,6 @@ object frmAllotmentToRes: TfrmAllotmentToRes
       ModalResult = 2
       TabOrder = 2
       SkinData.SkinSection = 'BUTTON'
-      ExplicitLeft = 1007
     end
   end
   object panLeft: TsPanel
@@ -122,9 +119,6 @@ object frmAllotmentToRes: TfrmAllotmentToRes
         TabOrder = 1
         SkinData.SkinSection = 'GROUPBOX'
         Checked = False
-        ExplicitLeft = 1
-        ExplicitTop = 33
-        ExplicitHeight = 172
         object chkRoomCount: TsCheckBox
           Left = 14
           Top = 18
@@ -208,8 +202,6 @@ object frmAllotmentToRes: TfrmAllotmentToRes
         Align = alBottom
         TabOrder = 2
         SkinData.SkinSection = 'PANEL'
-        ExplicitLeft = 3
-        ExplicitTop = 200
         object sButton4: TsButton
           AlignWithMargins = True
           Left = 373
@@ -226,7 +218,6 @@ object frmAllotmentToRes: TfrmAllotmentToRes
           TabOrder = 0
           OnClick = sButton4Click
           SkinData.SkinSection = 'BUTTON'
-          ExplicitHeight = 25
         end
       end
       object sGroupBox1: TsGroupBox
@@ -240,9 +231,6 @@ object frmAllotmentToRes: TfrmAllotmentToRes
         TabOrder = 3
         SkinData.SkinSection = 'GROUPBOX'
         Checked = False
-        ExplicitLeft = 216
-        ExplicitTop = 31
-        ExplicitHeight = 172
         object clabFirstDate: TsLabel
           Left = 8
           Top = 22
@@ -504,7 +492,6 @@ object frmAllotmentToRes: TfrmAllotmentToRes
     Align = alClient
     TabOrder = 2
     SkinData.SkinSection = 'PANEL'
-    ExplicitWidth = 495
     object sLabel2: TsLabel
       Left = 240
       Top = 48
@@ -519,7 +506,6 @@ object frmAllotmentToRes: TfrmAllotmentToRes
       Align = alTop
       TabOrder = 0
       SkinData.SkinSection = 'PANEL'
-      ExplicitWidth = 493
       object sPanel7: TsPanel
         Left = 1
         Top = 1
@@ -536,7 +522,6 @@ object frmAllotmentToRes: TfrmAllotmentToRes
         TabOrder = 0
         OnDblClick = sPanel7DblClick
         SkinData.SkinSection = 'MENUCAPTION'
-        ExplicitWidth = 491
       end
       object sGroupBox3: TsGroupBox
         AlignWithMargins = True
@@ -549,9 +534,6 @@ object frmAllotmentToRes: TfrmAllotmentToRes
         TabOrder = 1
         SkinData.SkinSection = 'GROUPBOX'
         Checked = False
-        ExplicitLeft = 1
-        ExplicitTop = 33
-        ExplicitHeight = 172
         object cLabCountry: TsLabel
           Left = 19
           Top = 72
@@ -682,8 +664,6 @@ object frmAllotmentToRes: TfrmAllotmentToRes
         Align = alBottom
         TabOrder = 3
         SkinData.SkinSection = 'PANEL'
-        ExplicitLeft = -1
-        ExplicitWidth = 738
         object sButton2: TsButton
           AlignWithMargins = True
           Left = 4
@@ -699,7 +679,6 @@ object frmAllotmentToRes: TfrmAllotmentToRes
           TabOrder = 0
           OnClick = sButton2Click
           SkinData.SkinSection = 'BUTTON'
-          ExplicitHeight = 25
         end
       end
       object sGroupBox4: TsGroupBox
@@ -741,9 +720,6 @@ object frmAllotmentToRes: TfrmAllotmentToRes
       Align = alClient
       TabOrder = 1
       LookAndFeel.NativeStyle = False
-      ExplicitLeft = 0
-      ExplicitTop = 248
-      ExplicitWidth = 493
       object tvRoomRes: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = mRoomResDS

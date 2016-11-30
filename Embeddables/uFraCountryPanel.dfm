@@ -18,7 +18,6 @@ object fraCountryPanel: TfraCountryPanel
     TabOrder = 0
     StyleElements = [seFont, seClient]
     SkinData.SkinSection = 'PANEL'
-    ExplicitWidth = 320
     object lblCountryName: TsLabel
       AlignWithMargins = True
       Left = 63
@@ -34,8 +33,7 @@ object fraCountryPanel: TfraCountryPanel
       Font.Height = -11
       Font.Name = 'Tahoma'
       Font.Style = []
-      ExplicitLeft = 128
-      ExplicitHeight = 13
+      ExplicitTop = 4
     end
     object edCountryCode: TsEdit
       AlignWithMargins = True
@@ -48,6 +46,7 @@ object fraCountryPanel: TfraCountryPanel
       Margins.Right = 0
       Margins.Bottom = 0
       Align = alLeft
+      CharCase = ecUpperCase
       Constraints.MaxWidth = 140
       Font.Charset = ANSI_CHARSET
       Font.Color = clWindowText
@@ -64,7 +63,6 @@ object fraCountryPanel: TfraCountryPanel
       BoundLabel.Font.Height = -13
       BoundLabel.Font.Name = 'Tahoma'
       BoundLabel.Font.Style = []
-      ExplicitLeft = 65
       ExplicitHeight = 22
     end
     object btnGetCountry: TsButton
@@ -80,7 +78,6 @@ object fraCountryPanel: TfraCountryPanel
       TabOrder = 1
       OnClick = btnGetCountryClick
       SkinData.SkinSection = 'BUTTON'
-      ExplicitLeft = 103
     end
   end
 end

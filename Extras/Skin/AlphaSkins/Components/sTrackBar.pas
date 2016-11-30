@@ -1,7 +1,7 @@
 unit sTrackBar;
 {$I sDefs.inc}
 //{$DEFINE LOGGED}
-//+
+
 interface
 
 uses
@@ -635,7 +635,7 @@ begin
               sRect.Bottom := sRect.Bottom - j;
             end;
           end
-          else begin
+          else
             if (pos < ShowProgressFrom) then begin
               sRect.Bottom := sRect.Top + j;
               sRect.Top    := sRect.Top + i;
@@ -644,7 +644,7 @@ begin
               sRect.Bottom := sRect.Top + i;
               sRect.Top    := sRect.Top + j;
             end;
-          end;
+
           PaintProgress(sRect, False);
         end;
       end;
@@ -759,7 +759,7 @@ var
   GlyphSize: TSize;
   DrawPoint: TPoint;
   Stretched: boolean;
-  ActThumbSize: integer;
+//  ActThumbSize: integer;
   aRect, DrawRect: TRect;
 
   procedure PaintGlyph(R: TRect);
@@ -790,7 +790,7 @@ var
           ThumbGlyph.PixelFormat := pf24bit;
       end;
     end;
-    if (ThumbGlyph.PixelFormat = pf32bit) then  // Patch if Png, don't work in std. mode
+    if ThumbGlyph.PixelFormat = pf32bit then // Patch if Png, doesn't work in std. mode
       CopyBmp32(R, MkRect(ThumbGlyph), FCommonData.FCacheBmp, ThumbGlyph, EmptyCI, False, clNone, 0, False)
     else
       BitBlt(FCommonData.FCacheBmp.Canvas.Handle, R.Left, R.Top, ThumbGlyph.Width, ThumbGlyph.Height, ThumbGlyph.Canvas.Handle, 0, 0, SRCCOPY);
@@ -837,16 +837,17 @@ begin
   if ThumbGlyph.Empty then begin
     with SkinData.SkinManager do
       if IsValidImgIndex(FThumbNdx) then begin
-        if GetScale = 0 then
+{        if GetScale = 0 then
           ActThumbSize := iThumbSize
         else
           ActThumbSize := ScaleInt(iThumbSize) + 1;
-
+}
         GlyphSize := MkSize(ma[FThumbNdx]);
-        if (Orientation = trHorizontal) and (HeightOf(aRect) = ActThumbSize) or (Orientation = trVertical) and (WidthOf(aRect) = ActThumbSize) then
+{        if (Orientation = trHorizontal) and (HeightOf(aRect) = ActThumbSize) or (Orientation = trVertical) and (WidthOf(aRect) = ActThumbSize) then
           Stretched := False
         else
-          Stretched := (HeightOf(aRect) <> GlyphSize.cy) or (WidthOf(aRect) <> GlyphSize.cx);
+          Stretched := (HeightOf(aRect) <> GlyphSize.cy) or (WidthOf(aRect) <> GlyphSize.cx);}
+          Stretched := False;
 
         DrawRect := PrepareBG;
         DrawPoint := Point(DrawRect.Left + (WidthOf(DrawRect) - GlyphSize.cx) div 2, DrawRect.Top + (HeightOf(DrawRect) - GlyphSize.cy) div 2);

@@ -3,7 +3,7 @@ object frmDayNotes: TfrmDayNotes
   Top = 230
   Caption = 'Live Data'
   ClientHeight = 629
-  ClientWidth = 947
+  ClientWidth = 821
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -16,7 +16,6 @@ object frmDayNotes: TfrmDayNotes
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   OnDestroy = FormDestroy
-  OnHide = FormHide
   OnKeyDown = FormKeyDown
   OnKeyPress = FormKeyPress
   OnShow = FormShow
@@ -25,9 +24,9 @@ object frmDayNotes: TfrmDayNotes
   object DateLabel1: TDateLabel
     Left = 480
     Top = 328
-    Width = 50
+    Width = 56
     Height = 13
-    Caption = '9-11-2016'
+    Caption = '29-11-2016'
     DateTimeFormat = 'd/m/yyyy'
     Version = '1.1.0.0'
     RefreshInterval = 0
@@ -36,14 +35,14 @@ object frmDayNotes: TfrmDayNotes
   object LMDStatusBar1: TStatusBar
     Left = 0
     Top = 610
-    Width = 947
+    Width = 821
     Height = 19
     Panels = <>
   end
   object pageMain: TsPageControl
     Left = 0
     Top = 0
-    Width = 947
+    Width = 821
     Height = 610
     ActivePage = tabStatus
     Align = alClient
@@ -62,7 +61,7 @@ object frmDayNotes: TfrmDayNotes
       object sGroupBox1: TsGroupBox
         Left = 0
         Top = 0
-        Width = 939
+        Width = 813
         Height = 113
         Margins.Left = 10
         Margins.Top = 10
@@ -77,7 +76,7 @@ object frmDayNotes: TfrmDayNotes
           AlignWithMargins = True
           Left = 5
           Top = 18
-          Width = 929
+          Width = 803
           Height = 90
           Align = alClient
           Alignment = taCenter
@@ -119,26 +118,30 @@ object frmDayNotes: TfrmDayNotes
       object Panel3: TsPanel
         Left = 0
         Top = 33
-        Width = 939
+        Width = 813
         Height = 31
         Align = alTop
         BevelOuter = bvNone
         TabOrder = 0
         SkinData.SkinSection = 'PANEL'
         object cxLabel1: TsLabel
-          Left = 0
-          Top = 5
-          Width = 118
-          Height = 17
+          AlignWithMargins = True
+          Left = 8
+          Top = 3
+          Width = 85
+          Height = 25
+          Margins.Left = 8
+          Align = alLeft
           Alignment = taRightJustify
-          AutoSize = False
           Caption = 'Days to show :'
           ParentFont = False
+          Layout = tlCenter
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -13
           Font.Name = 'Tahoma'
           Font.Style = []
+          ExplicitHeight = 16
         end
         object labCol: TsLabel
           Left = 492
@@ -154,58 +157,72 @@ object frmDayNotes: TfrmDayNotes
           Font.Style = []
         end
         object cxLabel3: TsLabel
-          Left = 196
-          Top = 5
-          Width = 58
-          Height = 17
-          AutoSize = False
+          AlignWithMargins = True
+          Left = 165
+          Top = 3
+          Width = 39
+          Height = 25
+          Align = alLeft
           Caption = 'From :'
           ParentFont = False
+          Layout = tlCenter
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -13
           Font.Name = 'Tahoma'
           Font.Style = []
+          ExplicitHeight = 16
         end
         object cxLabel4: TsLabel
-          Left = 323
-          Top = 5
-          Width = 32
-          Height = 17
-          AutoSize = False
+          AlignWithMargins = True
+          Left = 280
+          Top = 3
+          Width = 24
+          Height = 25
+          Align = alLeft
           Caption = 'To :'
           ParentFont = False
+          Layout = tlCenter
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -13
           Font.Name = 'Tahoma'
           Font.Style = []
+          ExplicitHeight = 16
         end
         object labStatusDateFrom: TsLabel
-          Left = 248
-          Top = 5
+          AlignWithMargins = True
+          Left = 210
+          Top = 3
           Width = 64
-          Height = 16
+          Height = 25
+          Align = alLeft
           Caption = '10.10.2011'
           ParentFont = False
+          Layout = tlCenter
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -13
           Font.Name = 'Tahoma'
           Font.Style = []
+          ExplicitHeight = 16
         end
         object labStatusDateTo: TsLabel
-          Left = 365
-          Top = 5
+          AlignWithMargins = True
+          Left = 310
+          Top = 3
           Width = 64
-          Height = 16
+          Height = 25
+          Align = alLeft
           Caption = '10.10.2011'
           ParentFont = False
+          Layout = tlCenter
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -13
           Font.Name = 'Tahoma'
           Font.Style = []
+          ExplicitHeight = 16
         end
         object edRefresh: TEdit
           Left = 944
@@ -217,18 +234,23 @@ object frmDayNotes: TfrmDayNotes
           OnChange = edRefreshChange
         end
         object edDaysToShow: TsSpinEdit
-          Left = 124
-          Top = 2
+          AlignWithMargins = True
+          Left = 99
+          Top = 3
           Width = 60
-          Height = 24
+          Height = 25
+          Align = alLeft
+          Alignment = taCenter
           Color = clWhite
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
           Font.Height = -13
           Font.Name = 'Tahoma'
           Font.Style = []
+          NumbersOnly = True
           ParentFont = False
           TabOrder = 1
+          Text = '1'
           OnChange = edDaysToShowPropertiesChange
           SkinData.SkinSection = 'EDIT'
           BoundLabel.Font.Charset = DEFAULT_CHARSET
@@ -236,28 +258,31 @@ object frmDayNotes: TfrmDayNotes
           BoundLabel.Font.Height = -13
           BoundLabel.Font.Name = 'Tahoma'
           BoundLabel.Font.Style = []
-          MaxValue = 0
-          MinValue = 1
-          Value = 0
+          AllowNegative = False
+          MaxValue = 99999999
+          MinValue = 0
+          Value = 1
+          ExplicitHeight = 24
         end
       end
       object cxPageControl1: TcxPageControl
         Left = 0
         Top = 64
-        Width = 939
+        Width = 813
         Height = 511
         Align = alClient
         TabOrder = 1
         Properties.CustomButtons.Buttons = <>
         LookAndFeel.NativeStyle = False
-        ClientRectBottom = 511
-        ClientRectRight = 939
-        ClientRectTop = 0
+        ClientRectBottom = 509
+        ClientRectLeft = 2
+        ClientRectRight = 811
+        ClientRectTop = 2
       end
       object Panel4: TsPanel
         Left = 0
         Top = 0
-        Width = 939
+        Width = 813
         Height = 33
         Align = alTop
         TabOrder = 2
@@ -290,7 +315,7 @@ object frmDayNotes: TfrmDayNotes
       object pivStatus: TcxDBPivotGrid
         Left = 0
         Top = 64
-        Width = 939
+        Width = 813
         Height = 511
         Align = alClient
         DataSource = RoomStatusDS
@@ -347,14 +372,10 @@ object frmDayNotes: TfrmDayNotes
       ImageIndex = 1
       SkinData.CustomColor = False
       SkinData.CustomFont = False
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Panel1: TsPanel
         Left = 0
         Top = 0
-        Width = 939
+        Width = 813
         Height = 9
         Align = alTop
         Color = clHighlight
@@ -365,7 +386,7 @@ object frmDayNotes: TfrmDayNotes
       object pageLog: TcxPageControl
         Left = 0
         Top = 9
-        Width = 939
+        Width = 813
         Height = 566
         Align = alClient
         TabOrder = 1
@@ -373,19 +394,17 @@ object frmDayNotes: TfrmDayNotes
         Properties.CustomButtons.Buttons = <>
         LookAndFeel.NativeStyle = False
         OnPageChanging = pageLogPageChanging
-        ClientRectBottom = 566
-        ClientRectRight = 939
-        ClientRectTop = 24
+        ClientRectBottom = 564
+        ClientRectLeft = 2
+        ClientRectRight = 811
+        ClientRectTop = 22
         object tabActionLog: TcxTabSheet
           Caption = 'Actions'
           ImageIndex = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object memLog: TsMemo
             Left = 0
             Top = 41
-            Width = 935
+            Width = 809
             Height = 501
             Align = alClient
             Font.Charset = DEFAULT_CHARSET
@@ -407,7 +426,7 @@ object frmDayNotes: TfrmDayNotes
           object Panel5: TsPanel
             Left = 0
             Top = 0
-            Width = 935
+            Width = 809
             Height = 41
             Align = alTop
             TabOrder = 1
@@ -477,216 +496,269 @@ object frmDayNotes: TfrmDayNotes
         object tabImportLog: TcxTabSheet
           Caption = 'Import'
           ImageIndex = 1
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object Panel6: TsPanel
             Left = 0
             Top = 0
-            Width = 939
+            Width = 809
             Height = 65
             Align = alTop
             TabOrder = 0
             SkinData.SkinSection = 'PANEL'
-            ExplicitWidth = 935
-            object cxLabel5: TsLabel
-              Left = 177
-              Top = 11
-              Width = 75
-              Height = 17
-              AutoSize = False
-              Caption = 'Days to show :'
-              ParentFont = False
-              Font.Charset = DEFAULT_CHARSET
-              Font.Color = clWindowText
-              Font.Height = -13
-              Font.Name = 'Tahoma'
-              Font.Style = []
-            end
-            object cxLabel6: TsLabel
-              Left = 320
-              Top = 11
-              Width = 46
-              Height = 17
-              AutoSize = False
-              Caption = 'From :'
-              ParentFont = False
-              Font.Charset = DEFAULT_CHARSET
-              Font.Color = clWindowText
-              Font.Height = -13
-              Font.Name = 'Tahoma'
-              Font.Style = []
-            end
-            object cxLabel7: TsLabel
-              Left = 369
-              Top = 11
-              Width = 64
-              Height = 16
-              Caption = '10.10.2011'
-              ParentFont = False
-              Font.Charset = DEFAULT_CHARSET
-              Font.Color = clWindowText
-              Font.Height = -13
-              Font.Name = 'Tahoma'
-              Font.Style = []
-            end
-            object cxLabel8: TsLabel
-              Left = 430
-              Top = 11
-              Width = 33
-              Height = 17
-              AutoSize = False
-              Caption = 'To :'
-              ParentFont = False
-              Font.Charset = DEFAULT_CHARSET
-              Font.Color = clWindowText
-              Font.Height = -13
-              Font.Name = 'Tahoma'
-              Font.Style = []
-            end
-            object cxLabel9: TsLabel
-              Left = 473
-              Top = 11
-              Width = 64
-              Height = 16
-              Caption = '10.10.2011'
-              ParentFont = False
-              Font.Charset = DEFAULT_CHARSET
-              Font.Color = clWindowText
-              Font.Height = -13
-              Font.Name = 'Tahoma'
-              Font.Style = []
-            end
-            object dtImportLogDate: TsDateEdit
-              Left = 21
-              Top = 8
-              Width = 112
-              Height = 21
-              AutoSize = False
-              Color = clWhite
-              EditMask = '!99/99/9999;1; '
-              Font.Charset = DEFAULT_CHARSET
-              Font.Color = 2302755
-              Font.Height = -11
-              Font.Name = 'Tahoma'
-              Font.Style = []
-              MaxLength = 10
-              ParentFont = False
+            object pnlTopRow: TsPanel
+              Left = 1
+              Top = 1
+              Width = 807
+              Height = 32
+              Align = alTop
+              BevelOuter = bvNone
               TabOrder = 0
-              Text = '  -  -    '
-              OnChange = dtImportLogDateChange
-              CheckOnExit = True
-              SkinData.SkinSection = 'EDIT'
-              GlyphMode.Blend = 0
-              GlyphMode.Grayed = False
+              object cxLabel5: TsLabel
+                AlignWithMargins = True
+                Left = 126
+                Top = 3
+                Width = 85
+                Height = 26
+                Align = alLeft
+                Caption = 'Days to show :'
+                ParentFont = False
+                Layout = tlCenter
+                Font.Charset = DEFAULT_CHARSET
+                Font.Color = clWindowText
+                Font.Height = -13
+                Font.Name = 'Tahoma'
+                Font.Style = []
+                ExplicitHeight = 16
+              end
+              object cxLabel6: TsLabel
+                AlignWithMargins = True
+                Left = 282
+                Top = 3
+                Width = 39
+                Height = 26
+                Align = alLeft
+                Caption = 'From :'
+                ParentFont = False
+                Layout = tlCenter
+                Font.Charset = DEFAULT_CHARSET
+                Font.Color = clWindowText
+                Font.Height = -13
+                Font.Name = 'Tahoma'
+                Font.Style = []
+                ExplicitHeight = 16
+              end
+              object cxLabel7: TsLabel
+                AlignWithMargins = True
+                Left = 327
+                Top = 3
+                Width = 64
+                Height = 26
+                Align = alLeft
+                Caption = '10.10.2011'
+                ParentFont = False
+                Layout = tlCenter
+                Font.Charset = DEFAULT_CHARSET
+                Font.Color = clWindowText
+                Font.Height = -13
+                Font.Name = 'Tahoma'
+                Font.Style = []
+                ExplicitHeight = 16
+              end
+              object cxLabel8: TsLabel
+                AlignWithMargins = True
+                Left = 397
+                Top = 3
+                Width = 24
+                Height = 26
+                Align = alLeft
+                Caption = 'To :'
+                ParentFont = False
+                Layout = tlCenter
+                Font.Charset = DEFAULT_CHARSET
+                Font.Color = clWindowText
+                Font.Height = -13
+                Font.Name = 'Tahoma'
+                Font.Style = []
+                ExplicitHeight = 16
+              end
+              object cxLabel9: TsLabel
+                AlignWithMargins = True
+                Left = 427
+                Top = 3
+                Width = 64
+                Height = 26
+                Align = alLeft
+                Caption = '10.10.2011'
+                ParentFont = False
+                Layout = tlCenter
+                Font.Charset = DEFAULT_CHARSET
+                Font.Color = clWindowText
+                Font.Height = -13
+                Font.Name = 'Tahoma'
+                Font.Style = []
+                ExplicitHeight = 16
+              end
+              object dtImportLogDate: TsDateEdit
+                AlignWithMargins = True
+                Left = 8
+                Top = 3
+                Width = 112
+                Height = 26
+                Margins.Left = 8
+                Align = alLeft
+                AutoSize = False
+                Color = clWhite
+                EditMask = '!99/99/9999;1; '
+                Font.Charset = DEFAULT_CHARSET
+                Font.Color = clBlack
+                Font.Height = -11
+                Font.Name = 'Tahoma'
+                Font.Style = []
+                MaxLength = 10
+                ParentFont = False
+                TabOrder = 0
+                Text = '  -  -    '
+                OnChange = dtImportLogDateChange
+                CheckOnExit = True
+                SkinData.SkinSection = 'EDIT'
+                GlyphMode.Blend = 0
+                GlyphMode.Grayed = False
+                Weekends = [dowLocaleDefault]
+              end
+              object edImportLogDaysToShow: TsSpinEdit
+                AlignWithMargins = True
+                Left = 217
+                Top = 3
+                Width = 59
+                Height = 26
+                Align = alLeft
+                Color = clWhite
+                Font.Charset = DEFAULT_CHARSET
+                Font.Color = clBlack
+                Font.Height = -13
+                Font.Name = 'Tahoma'
+                Font.Style = []
+                ParentFont = False
+                TabOrder = 1
+                Text = '1'
+                OnChange = edImportLogDaysToShowPropertiesChange
+                SkinData.SkinSection = 'EDIT'
+                BoundLabel.Font.Charset = DEFAULT_CHARSET
+                BoundLabel.Font.Color = clWindowText
+                BoundLabel.Font.Height = -13
+                BoundLabel.Font.Name = 'Tahoma'
+                BoundLabel.Font.Style = []
+                MaxValue = 99999999
+                MinValue = 1
+                Value = 1
+                ExplicitHeight = 24
+              end
+              object cxButton5: TsButton
+                AlignWithMargins = True
+                Left = 717
+                Top = 3
+                Width = 87
+                Height = 26
+                Align = alRight
+                Caption = 'Refresh'
+                TabOrder = 2
+                OnClick = cxButton5Click
+                SkinData.SkinSection = 'BUTTON'
+              end
             end
-            object cxButton5: TsButton
-              Left = 544
-              Top = 8
-              Width = 75
-              Height = 21
-              Caption = 'Refresh'
+            object sPanel1: TsPanel
+              Left = 1
+              Top = 33
+              Width = 807
+              Height = 31
+              Align = alClient
+              BevelOuter = bvNone
               TabOrder = 1
-              OnClick = cxButton5Click
-              SkinData.SkinSection = 'BUTTON'
-            end
-            object edImportLogDaysToShow: TsSpinEdit
-              Left = 255
-              Top = 9
-              Width = 59
-              Height = 21
-              Color = clWhite
-              Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
-              Font.Height = -13
-              Font.Name = 'Tahoma'
-              Font.Style = []
-              ParentFont = False
-              TabOrder = 2
-              OnChange = edImportLogDaysToShowPropertiesChange
-              SkinData.SkinSection = 'EDIT'
-              BoundLabel.Font.Charset = DEFAULT_CHARSET
-              BoundLabel.Font.Color = clWindowText
-              BoundLabel.Font.Height = -13
-              BoundLabel.Font.Name = 'Tahoma'
-              BoundLabel.Font.Style = []
-              MaxValue = 0
-              MinValue = 1
-              Value = 0
-            end
-            object cxButton10: TsButton
-              Left = 17
-              Top = 35
-              Width = 79
-              Height = 25
-              Caption = 'Excel'
-              TabOrder = 8
-              OnClick = cxButton10Click
-              SkinData.SkinSection = 'BUTTON'
-            end
-            object cxButton11: TsButton
-              Left = 99
-              Top = 35
-              Width = 79
-              Height = 25
-              Caption = 'Reservaton'
-              TabOrder = 3
-              OnClick = cxButton11Click
-              SkinData.SkinSection = 'BUTTON'
-            end
-            object cxButton12: TsButton
-              Left = 180
-              Top = 35
-              Width = 80
-              Height = 25
-              Caption = 'Room'
-              TabOrder = 4
-              SkinData.SkinSection = 'BUTTON'
-            end
-            object cxButton13: TsButton
-              Left = 262
-              Top = 35
-              Width = 80
-              Height = 25
-              Caption = 'Guests'
-              TabOrder = 5
-              OnClick = cxButton13Click
-              SkinData.SkinSection = 'BUTTON'
-            end
-            object cxButton14: TsButton
-              Left = 343
-              Top = 35
-              Width = 81
-              Height = 25
-              Caption = 'Invoices'
-              DropDownMenu = mnuFinishedInv
-              TabOrder = 6
-              SkinData.SkinSection = 'BUTTON'
-            end
-            object cxButton15: TsButton
-              Left = 430
-              Top = 35
-              Width = 111
-              Height = 25
-              Caption = 'Reservation Notes'
-              TabOrder = 7
-              OnClick = cxButton15Click
-              SkinData.SkinSection = 'BUTTON'
+              object cxButton10: TsButton
+                AlignWithMargins = True
+                Left = 8
+                Top = 3
+                Width = 79
+                Height = 25
+                Margins.Left = 8
+                Align = alLeft
+                Caption = 'Excel'
+                TabOrder = 0
+                OnClick = cxButton10Click
+                SkinData.SkinSection = 'BUTTON'
+              end
+              object cxButton11: TsButton
+                AlignWithMargins = True
+                Left = 93
+                Top = 3
+                Width = 79
+                Height = 25
+                Align = alLeft
+                Caption = 'Reservaton'
+                TabOrder = 1
+                OnClick = cxButton11Click
+                SkinData.SkinSection = 'BUTTON'
+              end
+              object cxButton12: TsButton
+                AlignWithMargins = True
+                Left = 178
+                Top = 3
+                Width = 80
+                Height = 25
+                Align = alLeft
+                Caption = 'Room'
+                TabOrder = 2
+                SkinData.SkinSection = 'BUTTON'
+              end
+              object cxButton13: TsButton
+                AlignWithMargins = True
+                Left = 264
+                Top = 3
+                Width = 80
+                Height = 25
+                Align = alLeft
+                Caption = 'Guests'
+                TabOrder = 3
+                OnClick = cxButton13Click
+                SkinData.SkinSection = 'BUTTON'
+              end
+              object cxButton14: TsButton
+                AlignWithMargins = True
+                Left = 350
+                Top = 3
+                Width = 81
+                Height = 25
+                Align = alLeft
+                Caption = 'Invoices'
+                DropDownMenu = mnuFinishedInv
+                TabOrder = 4
+                SkinData.SkinSection = 'BUTTON'
+              end
+              object cxButton15: TsButton
+                AlignWithMargins = True
+                Left = 437
+                Top = 3
+                Width = 111
+                Height = 25
+                Align = alLeft
+                Caption = 'Reservation Notes'
+                TabOrder = 5
+                OnClick = cxButton15Click
+                SkinData.SkinSection = 'BUTTON'
+              end
             end
           end
           object Panel7: TsPanel
             Left = 0
             Top = 65
-            Width = 939
+            Width = 809
             Height = 326
             Align = alTop
             TabOrder = 1
             SkinData.SkinSection = 'PANEL'
-            ExplicitWidth = 935
             object gridImportLogs: TcxGrid
               Left = 1
               Top = 1
-              Width = 933
+              Width = 807
               Height = 324
               Align = alClient
               TabOrder = 0
@@ -838,35 +910,32 @@ object frmDayNotes: TfrmDayNotes
           object cxSplitter1: TcxSplitter
             Left = 0
             Top = 391
-            Width = 939
+            Width = 809
             Height = 8
             HotZoneClassName = 'TcxMediaPlayer9Style'
             AlignSplitter = salTop
             Control = Panel7
-            ExplicitWidth = 8
           end
           object Panel8: TsPanel
             Left = 0
             Top = 399
-            Width = 939
+            Width = 809
             Height = 143
             Align = alClient
             TabOrder = 3
             SkinData.SkinSection = 'PANEL'
-            ExplicitWidth = 935
             object Panel9: TsPanel
               Left = 425
               Top = 1
-              Width = 513
+              Width = 383
               Height = 141
               Align = alClient
               TabOrder = 0
               SkinData.SkinSection = 'PANEL'
-              ExplicitWidth = 509
               object Panel10: TsPanel
                 Left = 1
                 Top = 1
-                Width = 507
+                Width = 381
                 Height = 33
                 Align = alTop
                 BevelOuter = bvNone
@@ -887,11 +956,12 @@ object frmDayNotes: TfrmDayNotes
               object memImportData: TsMemo
                 Left = 1
                 Top = 34
-                Width = 507
+                Width = 381
                 Height = 106
                 Align = alClient
+                Color = clWhite
                 Font.Charset = ANSI_CHARSET
-                Font.Color = clWindowText
+                Font.Color = clBlack
                 Font.Height = -13
                 Font.Name = 'Courier New'
                 Font.Style = []
@@ -966,14 +1036,10 @@ object frmDayNotes: TfrmDayNotes
       ImageIndex = 3
       SkinData.CustomColor = False
       SkinData.CustomFont = False
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Panel2: TsPanel
         Left = 0
         Top = 0
-        Width = 939
+        Width = 813
         Height = 33
         Align = alTop
         BevelOuter = bvNone
@@ -1054,7 +1120,7 @@ object frmDayNotes: TfrmDayNotes
       object gridCurrentGuests: TcxGrid
         Left = 0
         Top = 33
-        Width = 939
+        Width = 813
         Height = 542
         Align = alClient
         TabOrder = 1

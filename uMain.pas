@@ -12419,14 +12419,10 @@ end;
 
 procedure TfrmMain._DayNotes;
 begin
-  if frmDayNotes.V then
-  begin
-    frmDayNotes.V := false;
-    frmDayNotes.Close;
-  end
+  if frmDayNotes.Visible then
+    frmDayNotes.Close
   else
   begin
-    frmDayNotes.V := true;
     frmDayNotes.ActiveTab := -1;
     frmDayNotes.Show;
   end;

@@ -17,6 +17,9 @@ uses
 
 
 {$IFNDEF NOTFORHELP}
+const
+  MaxKernelSize = 16;
+
 type
   TsHSV = record
     h: integer;
@@ -25,14 +28,10 @@ type
   TFilterType = (ftBox {fastest}, ftTriangle, ftHermite, ftBell, ftSpline, ftLanczos3 {Slowest}, ftMitchell);
 
 
-const
-  MaxKernelSize = 16;
-
-
-type
   PByteArrays = ^TByteArrays;
   TByteArrays = array [0..1000000] of PByteArray;
   TKernelSize = 1..MaxKernelSize;
+
 
 procedure CopyBmp(DstBmp, SrcBmp: TBitmap);
 procedure DrawColorArrow(const Canvas: TCanvas; const Color: TColor; R: TRect; const Direction: TacSide); overload;
@@ -95,6 +94,7 @@ procedure SumByMaskWith32(const DstBmp, SrcBmp, MskBmp: Graphics.TBitMap; const 
 // procedure SumByMask(var Src1, Src2, MskBmp: Graphics.TBitMap; aRect: TRect);
 function Makerotated90(var Bmp: TBitmap; CW: boolean; KillSource: boolean = True): TBitmap;
 function sMakerotated90(var Bmp: TBitmap; CW: boolean; KillSource: boolean = True): TBitmap;
+procedure BitBltRotated(DC: hdc; SrcBmp: TBitmap; ACenter: TPoint; Angle: integer);
 
 
 // Returns color as (ColorBegin + ColorEnd) / 2
@@ -367,8 +367,8 @@ begin
         for y := ac_ArrowHeight - 1 downto 0 do begin
           S := Pointer(LongInt(S0) + DeltaS * (TopPos + y));
           for x := i to ac_ArrowHeight - 1 do begin
-            S[LeftPos + x].C := Color;
-            S[LeftPos + ac_ArrowWidth - x - 1].C := Color;
+            S[LeftPos + x].C := ActColor;
+            S[LeftPos + ac_ArrowWidth - x - 1].C := ActColor;
           end;
           inc(i);
         end;
@@ -1204,24 +1204,13 @@ function GetBGInfo(const BGInfo: PacBGInfo; const Handle: THandle; aPleaseDraw: 
 var
   P: TPoint;
   b: boolean;
-//  M: TMessage;
   FSaveIndex: hdc;
-//  sd: TsCommonData;
 begin
   with BGInfo^ do begin
     b := PleaseDraw;
     BgType := btUnknown;
     PleaseDraw := aPleaseDraw;
     FillRect := MkRect;
-{
-    sd := GetCommonData(Handle);
-    if (sd <> nil) and Assigned(sd.WndProc) then begin
-      M := MakeMessage(SM_ALPHACMD, AC_GETBG_HI, LPARAM(BGInfo), 0);
-      sd.WndProc(M);
-    end
-    else
-      SendMessage(Handle, SM_ALPHACMD, AC_GETBG_HI, LPARAM(BGInfo));
-}
     SendAMessage(Handle, AC_GETBG, LPARAM(BGInfo));
 
     if BgType <> btUnknown then
@@ -1269,9 +1258,7 @@ end;
 
 function GetBGInfo(const BGInfo: PacBGInfo; const Control: TControl; aPleaseDraw: boolean = False): boolean; overload;
 var
-//  sd: TsCommonData;
   FSaveIndex: hdc;
-//  M: TMessage;
   b: boolean;
   P: TPoint;
 begin
@@ -1282,19 +1269,6 @@ begin
     FillRect := MkRect;
     b := PleaseDraw;
     SendAMessage(Control, AC_GETBG, LPARAM(BGInfo));
-{
-    if (Control is TWinControl) and TWinControl(Control).HandleAllocated then begin
-      sd := GetCommonData(TWinControl(Control).Handle);
-      if (sd <> nil) and Assigned(sd.WndProc) then begin
-        M := MakeMessage(SM_ALPHACMD, AC_GETBG_HI, LPARAM(BGInfo), 0);
-        sd.WndProc(M);
-      end
-      else
-        SendMessage(TWinControl(Control).Handle, SM_ALPHACMD, AC_GETBG_HI, LPARAM(BGInfo));
-    end
-    else
-      Control.Perform(SM_ALPHACMD, AC_GETBG_HI, LPARAM(BGInfo));
-}
     if BgType = btUnknown then
       if b then begin // If real parent bg is required
         FSaveIndex := SaveDC(DrawDC);
@@ -1321,7 +1295,7 @@ begin
           FillDC(DrawDC, R, Color);
       end;
   end;
-  Result := True;//BGInfo^.BgType <> btNotReady;
+  Result := True;
 end;
 
 
@@ -1878,9 +1852,7 @@ begin
 
     if Assigned(SkinManager) then
       with TsSkinManager(SkinManager) do begin
-        if IsValidSkinIndex(SkinIndex) and
-             (R.Bottom <= ItemBmp.Height) and (R.Right <= ItemBmp.Width) and
-               (R.Left >= 0) and (R.Top >= 0) then begin
+        if IsValidSkinIndex(SkinIndex) and (R.Bottom <= ItemBmp.Height) and (R.Right <= ItemBmp.Width) and (R.Left >= 0) and (R.Top >= 0) then begin
           // Count of allowed states is limited in skin
           if gd[SkinIndex].States <= State then
             State := gd[SkinIndex].States - 1;
@@ -2520,9 +2492,8 @@ begin
       Continue;
 
     with Child do
-      if Visible then
-        if (Child is TGraphicControl) then
-          ExcludeClipRect(DC, Left + OffsetX, Top + OffsetY, Left + Width + OffsetX, Top + Height + OffsetY);
+      if Visible and (Child is TGraphicControl) then
+        ExcludeClipRect(DC, Left + OffsetX, Top + OffsetY, Left + Width + OffsetX, Top + Height + OffsetY);
   end;
 end;
 
@@ -3023,87 +2994,10 @@ begin
   Move(P[0], theRow[0], (h + 1) * 4{Sizeof(TsColor_)});
 end;
 
-(*
-procedure BlurRow(var theRow: array of TsColor_S; P: PRGBAArray_D);
-var
-  tw: byte;
-//  sCol: TsColor_M;
-  j, n, h, tw3, tr, tg, tb, ta, cr, cg, cb, ca: integer;
-begin
-  h := High(theRow);
-//  with sCol do
-    for j := 0 to h do begin
-      tb := 0;
-      tg := 0;
-      tr := 0;
-      ta := 0;
-      cb := 0;
-      cg := 0;
-      cr := 0;
-      ca := 0;
-      tw := 0;
-//      MI := 0;
-      for n := -1 to 1 do
-        if (j - n >= 0) and (j - n < h) then begin
-          with theRow[j - n] do
-            if SA > 0 then begin
-              inc(tb, SB div 3);
-              inc(tg, SG div 3);
-              inc(tr, SR div 3);
-              inc(ta, SA div 3 + 1);
-//              MI := SI;
-            end
-          else
-{            if MA > 0 then begin
-              inc(cb, MB div 3);
-              inc(cg, MG div 3);
-              inc(cr, MR div 3);
-              inc(ca, MA div 3);
-            end
-            else}
-              inc(tw)
-        end
-        else
-{          if MA > 0 then begin
-            inc(cb, MB div 3);
-            inc(cg, MG div 3);
-            inc(cr, MR div 3);
-            inc(ca, MA div 3);
-          end
-          else}
-            inc(tw);
-
-{      if (tw <> 0) and (MA > 0) then begin
-        tw3 := 3 * tw;
-        inc(cb, MB div tw3);
-        inc(cg, MG div tw3);
-        inc(cr, MR div tw3);
-        inc(ca, MA div tw3);
-      end;
-}
-      if ca <> 0 then begin
-        inc(tb, cb);
-        inc(tg, cg);
-        inc(tr, cr);
-      end;
-      with P[j] do
-        if ta > 0 then begin
-          if tb > MaxByte then DB := MaxByte else DB := tb;
-          if tg > MaxByte then DG := MaxByte else DG := tg;
-          if tr > MaxByte then DR := MaxByte else DR := tr;
-          if ta > MaxByte then DA := MaxByte else DA := ta;
-        end
-        else
-          DI := 0;
-    end;
-
-  Move(P[0], theRow[0], (h + 1) * 4{Sizeof(TsColor_)});
-end;
-*)
 
 procedure QBlur(Bmp: TBitmap);
 var
-  bWidth, bHeight, Row, Col, Delta{, h4}: integer;
+  bWidth, bHeight, Row, Col, Delta: integer;
   ACol: PRGBAArray_S;
   P: PRGBAArray_D;
   Rows: PPRows;
@@ -3111,9 +3005,6 @@ begin
   with Bmp do begin
     bWidth := Width - 1;
     bHeight := Height - 1;
-//    h4 := Height * 4;
-//    GetMem(Rows, h4);
-//    GetMem(ACol, h4);
   GetMem(Rows, Bmp.Height * SizeOf(PRGBAArray));
   GetMem(ACol, Bmp.Height * SizeOf(TsColor_));
 
@@ -3126,14 +3017,11 @@ begin
           Rows[Row] := Pointer(integer(Rows[0]) + Row * Delta);
       end;
     end;
-//    P := AllocMem(Width * 4);
     P := AllocMem(Bmp.Width * SizeOf(TsColor_));
     for Row := 0 to bHeight do
       BlurRow(Slice(Rows[Row]^, Width), P);
 
-//    ReAllocMem(P, h4);
     ReAllocMem(P, Bmp.Height * SizeOf(TsColor_));
-//try
     for Col := 0 to bWidth do begin
       for Row := 0 to bHeight do
         ACol[Row] := Rows[Row][Col];
@@ -3142,8 +3030,6 @@ begin
       for Row := 0 to bHeight do
         Rows[Row][Col] := ACol[Row];
     end;
-//except
-//end;
     FreeMem(Rows);
     FreeMem(ACol);
     ReAllocMem(P, 0);
@@ -3386,10 +3272,7 @@ begin
           if (FOwnerControl <> nil) and
                SectionInArray(SkinManager.ConstData.Sections, SkinIndex, ssMenuItem, ssWebBtn) and
                     (FOwnerControl.Parent <> nil) then
-  //          if (SkinData.SkinManager.gd[SkinData.SkinIndex].Props[State].Transparency > 0) then
             aSkinIndex := GetFontIndex(FOwnerControl, SkinIndex, SkinManager, integer(Hot))
-  //          else
-  //            SkinIndex := SkinData.SkinIndex
           else
             aSkinIndex := SkinIndex;
 
@@ -4432,9 +4315,6 @@ begin
               end;
               if Reflected then begin
                 h := min(Bmp2H div 2 - 1, Bmp1H - R1.Bottom - 1);
-//                A := MaxByte div Bmp2H; // Step
-//                A := MaxByte div (Bmp2H div 2); // Step
-//                R := MaxByte;
                 for YPos := 1 to h do begin
                   S := Pointer(LongInt(S0) + DeltaS * (R2.Bottom - YPos - 1));
                   D := Pointer(LongInt(D0) + DeltaD * (R1.Bottom + YPos));
@@ -4460,10 +4340,6 @@ begin
                       inc(dX1);
                       inc(dX2);
                     end;
-
-//                  dec(R, A);
-//                  dec(G, A);
-//                  dec(B, A);
                 end;
               end;
             end
@@ -4758,7 +4634,7 @@ begin
                 end
               else
                 with ci do
-                  if (ch > Y + R1.Top + YPos) and (XPos >= -k2) then 
+                  if (ch > Y + R1.Top + YPos) and (XPos >= -k2) then
                     if (cw <= k2 + XPos) or (Y + R1.Top + YPos < 0) then
                       Break
                     else
@@ -5105,7 +4981,7 @@ begin
 end;
 
 
-function bmpRotate(var SBitmap: TBitmap; RotateAngle: Word; FreeupBmp: Boolean): TBITMAP;
+function bmpRotate(var SBitmap: TBitmap; RotateAngle: Word; FreeupBmp: Boolean): TBitmap;
 var
   SDBits, TDBits: PByteArray;
   SHPIX, THPIX: HGlobal;
@@ -5155,14 +5031,17 @@ begin
               YY2 := XX1;
               XX2 := TIW - YY1;
             end;
+
             180: begin
               XX2 := SIW - XX1;
               YY2 := SIL - YY1;
             end;
+
             270: begin
               YY2 := SIW - XX1;
               XX2 := YY1;
             end
+
             else begin
               YY2 := YY1;
               XX2 := XX1;
@@ -5236,6 +5115,156 @@ begin
   if KillSource then
     FreeAndNil(Bmp);
 end;
+
+
+type
+  TAngle = 0..359;
+
+  TDoublePoint = record
+    X, Y: Double;
+  end;
+
+  TPrlgram = class
+  private
+    FPoints: array [0..3] of TDoublePoint;
+    function GetPoint(Index: Integer): TPoint;
+  public
+    constructor Create(const APoints: array of TPoint); reintroduce;
+    property Points[Index: Integer]: TPoint read GetPoint;
+    procedure Rotate(Angle: TAngle);
+  end;
+
+  TSinCos = record
+    S, C: Single;
+  end;
+
+  TSCA = array [0..359] of TSinCos;
+
+var
+  SCA: TSCA;
+
+
+function Rad(Deg: Extended): Extended;
+const
+  RadConst = Pi / 180;
+begin
+  Result := Deg * RadConst; // Conversion radian => degré
+end;
+
+
+procedure InitSCA;
+Var
+  I: Integer;
+  S, C: Extended;
+begin
+  for I := 0 to 359 do begin
+    SinCos(Rad(I), S, C);
+    SCA[I].S := S;
+    SCA[I].C := C;
+  end;
+end;
+
+
+constructor TPrlgram.Create(const APoints: array of TPoint);
+Var
+  I: Integer;
+begin
+  inherited Create;
+
+  for I := 1 to Min(4, Length(APoints)) do begin
+    FPoints[I - 1].X := APoints[I].X;
+    FPoints[I - 1].Y := APoints[I].Y;
+  end;
+{
+  for I := 0 to Min(4, Length(APoints)) - 1 do begin
+    FPoints[I].X := APoints[I].X;
+    FPoints[I].Y := APoints[I].Y;
+  end;
+}
+end;
+
+
+function TPrlgram.GetPoint(Index: Integer): TPoint;
+begin
+try
+  if Index in [0..3] then
+    Result := Point(Round(FPoints[Index].X), Round(FPoints[Index].Y));
+except
+end;
+end;
+
+
+procedure TPrlgram.Rotate(Angle: TAngle);
+Var
+  CX, CY: Single;
+  I: Integer;
+  T: TDoublePoint;
+  X, Y: Single;
+  S, C: Single;
+begin
+  CX := (FPoints[0].X + FPoints[2].X) / 2;
+  CY := (FPoints[0].Y + FPoints[2].Y) / 2;
+
+  for I := 0 to 3 do begin
+    T.X := FPoints[I].X - CX;
+    T.Y := FPoints[I].Y - CY;
+
+    S := SCA[Angle].S;
+    C := SCA[Angle].C;
+
+    X := T.X * C + T.Y * S;
+    Y := -T.X * S + T.Y * C;
+
+    T.X := CX + X;
+    T.Y := CY + Y;
+
+    FPoints[I].X := T.X;
+    FPoints[I].Y := T.Y;
+  end;
+end;
+
+
+procedure BitBltRotated(DC: hdc; SrcBmp: TBitmap; ACenter: TPoint; Angle: integer);
+Var
+  Points: array [0..3] of TPoint;
+  Pts: array [0..2] of TPoint;
+  Rect: TPrlgram;
+begin
+  InitSCA;
+
+  Angle := 360 - Angle;
+
+  if Angle < 0 then
+    inc(Angle, 360)
+  else
+    if Angle >= 360 then
+      dec(Angle, 360);
+
+
+  Points[0].X := ACenter.X - SrcBmp.Width div 2;
+  Points[0].Y := ACenter.Y - SrcBmp.Height div 2;
+  Points[1].X := Points[0].X + SrcBmp.Width;
+  Points[1].Y := Points[0].Y;
+  Points[2].X := Points[1].X;
+  Points[2].Y := Points[1].Y + SrcBmp.Height;
+  Points[3].X := Points[0].X;
+  Points[3].Y := Points[0].Y + SrcBmp.Height;
+
+//  if Assigned(Rect) then
+//    Rect.Free;
+
+  Rect := TPrlgram.Create(Points);
+
+  Rect.Rotate(Angle);
+
+  Pts[0] := Rect.Points[1];
+  Pts[1] := Rect.Points[2];
+  Pts[2] := Rect.Points[0];
+
+//    FillRect(Img.ClientRect);
+  PlgBlt(DC, Pts, SrcBmp.Canvas.Handle, 0, 0, SrcBmp.Width, SrcBmp.Height, 0, 0, 0);
+end;
+
 
 function CreateBmpLike(const Bmp: TBitmap): TBitmap;
 begin

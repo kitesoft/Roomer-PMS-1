@@ -132,6 +132,7 @@ type
     procedure KillTimers;
     function GetActivePage: TsTabSheet;
     procedure UpdateBtnData;
+    procedure UpdatePadding;
     function SpinSection: string;
     procedure CMDockClient(var Message: TCMDockClient); message CM_DOCKCLIENT;
   private
@@ -157,12 +158,11 @@ type
     FTabsLineSkin: TsSkinSection;
     FOnPageChanging: TacTabChangingEvent;
     function GetActivePageIndex: Integer;
-    procedure SetTabAlignment     (const Value: TAlignment);
-    procedure SetActiveTabEnlarged(const Value: boolean);
-    procedure SetShowUpDown       (const Value: boolean);
-    procedure SetHoveredBtnIndex  (const Value: integer);
-    procedure SetActivePageIndex  (const Value: Integer);
-    procedure SetCurItem          (const Value: integer);
+    procedure SetTabAlignment    (const Value: TAlignment);
+    procedure SetShowUpDown      (const Value: boolean);
+    procedure SetHoveredBtnIndex (const Value: integer);
+    procedure SetActivePageIndex (const Value: integer);
+    procedure SetCurItem         (const Value: integer);
     procedure SetInt (const Index: Integer; const Value: integer);
     procedure SetBool(const Index: Integer; const Value: boolean);
     procedure SetTabsLineSkin(const Value: TsSkinSection);
@@ -208,12 +208,12 @@ type
     procedure CloseClick(Sender: TObject);
     procedure SetPadding(Value: boolean);
   published
-    property AccessibleDisabledPages: boolean read FAccessibleDisabledPages write FAccessibleDisabledPages default True;
-    property ActiveTabEnlarged:       boolean read FActiveTabEnlarged       write SetActiveTabEnlarged     default True;
     property ActivePage: TsTabSheet read GetActivePage write SetActivePage;
     property AnimatEvents: TacAnimatEvents read FAnimatEvents write FAnimatEvents default [aeGlobalDef];
     property Style;
 {$ENDIF}
+    property AccessibleDisabledPages: boolean read FAccessibleDisabledPages write FAccessibleDisabledPages default True;
+
     property CloseBtnSkin: TsSkinSection read FCloseBtnSkin write SetCloseBtnSkin;
 
     property ActiveIsBold:       boolean index 0 read FActiveIsBold       write SetBool default False;
@@ -222,6 +222,7 @@ type
     property ShowCloseBtns:      boolean index 3 read FShowCloseBtns      write SetBool default False;
     property ShowFocus:          boolean index 4 read FShowFocus          write SetBool default True;
     property AllowAnimSwitching: boolean index 5 read FAllowAnimSwitching write SetBool default True;
+    property ActiveTabEnlarged:  boolean index 6 read FActiveTabEnlarged  write SetBool default True;
 
     property TabMargin:  integer index 0 read FTabMargin  write SetInt default 3;
     property TabPadding: integer index 1 read FTabPadding write SetInt default 0;
@@ -1870,11 +1871,16 @@ begin
       end;
     end;
 
-  if not bUpdating then begin
-    bUpdating := True;
-    SetPadding(FShowCloseBtns);
-    bUpdating := False;
-  end;
+  if not bUpdating then
+    UpdatePadding;
+end;
+
+
+procedure TsPageControl.UpdatePadding;
+begin
+  bUpdating := True;
+  SetPadding(FShowCloseBtns);
+  bUpdating := False;
 end;
 
 
@@ -2404,7 +2410,7 @@ const
 
 procedure TsPageControl.InitTabContentData(Canvas: TCanvas; Page: TTabSheet; TabRect: TRect; State: integer; IsTabMenu: boolean; var Data: TacTabData);
 var
-  IsVertical, ArrowUnderText: boolean;
+  IsVertical, bArrowVisible, ArrowUnderText: boolean;
   imgWidth, imgHeight: integer;
   lCaption: ACString;
   R: TRect;
@@ -2416,6 +2422,7 @@ begin
 {$ENDIF}
     lCaption := Page.Caption; // Text size received
 
+  bArrowVisible := IsTabMenu and (TsTabSheet(Page).TabType = ttMenu);
   FillChar(R, SizeOf(TRect), 0);
   acDrawText(Canvas.Handle, lCaption, R, DT_CALCRECT);
   Data.TextSize := MkSize(R);
@@ -2449,28 +2456,7 @@ begin
         OffsetRect(TabRect, 0, 1);
 
     Data.TextRect := TabRect;
-    // Arrow rect
-    if IsTabMenu and (TsTabSheet(Page).TabType = ttMenu) then begin
-      ArrowUnderText := False;
-      if TabPosition in [tpTop, tpBottom] then // Can arrow be placed under text?
-        if HeightOf(TabRect) - Data.TextSize.cy - 6 > ArrowSize then
-          ArrowUnderText := True;
 
-      Data.ArrowDirection := asBottom;
-      if not ArrowUnderText then begin
-        Data.ArrowRect.Left   := Data.TextRect.Right - ArrowSize - 4;
-        Data.ArrowRect.Top    := Data.TextRect.Top   + (HeightOf(Data.TextRect) - ArrowSize) div 2 + 1;
-        Data.ArrowRect.Right  := Data.ArrowRect.Left + ArrowSize;
-        Data.ArrowRect.Bottom := Data.ArrowRect.Top  + ArrowSize;
-        if (State = 2) and FActiveTabEnlarged then
-          if not SkinData.Skinned or (SkinData.SkinManager <> nil) and SkinData.SkinManager.ButtonsOptions.ShiftContentOnClick then
-            OffsetRect(Data.ArrowRect, 1, 1);
-      end;
-    end
-    else begin
-      Data.ArrowRect := MkRect;
-      ArrowUnderText := False;
-    end;
     // Close btn rect
     if FShowCloseBtns and not IsTabMenu and TsTabSheet(Page).UseCloseBtn then begin
       Data.BtnRect.Left   := TabRect.Right    - BtnWidth - BtnOffsX;
@@ -2489,6 +2475,7 @@ begin
     end
     else
       Data.BtnRect := MkRect;
+
     // Image rect
     if (Images <> nil) and IsValidIndex(Page.ImageIndex, GetImageCount(Images)) then begin
       imgWidth := GetImageWidth(Images);
@@ -2499,7 +2486,7 @@ begin
         if TabAlignment = taRightJustify then
           Data.GlyphRect.Left := TabRect.Right - Data.TextSize.cx - imgWidth - TabSpacing - TabMargin
         else
-          Data.GlyphRect.Left := max(Data.TextRect.Left + (WidthOf(Data.TextRect) - (Data.TextSize.cx + imgWidth + TabSpacing)) div 2, TabRect.Left + TabMargin);
+          Data.GlyphRect.Left := max(Data.TextRect.Left + (WidthOf(Data.TextRect) - (Data.TextSize.cx + imgWidth + TabSpacing + integer(bArrowVisible) * (ArrowSize + acSpacing))) div 2, TabRect.Left + TabMargin);
 
       Data.GlyphRect.Top := TabRect.Top + (HeightOf(TabRect) - imgHeight) div 2;
       Data.GlyphRect.Right := Data.GlyphRect.Left + imgWidth;
@@ -2513,7 +2500,7 @@ begin
       Data.GlyphRect := MkRect;
       if (TabAlignment = taLeftJustify) or
            (Data.BtnRect.Left <> Data.BtnRect.Right) or
-             (Data.ArrowRect.Left <> Data.ArrowRect.Right) or
+             bArrowVisible or
                (ShowCloseBtns and (TsTabSheet(Page).TabType = ttTab)) then // If button or arrow exists or left aligned
         Data.TextRect.Left := TabRect.Left + TabMargin + TabPadding
       else
@@ -2526,6 +2513,30 @@ begin
     Data.TextRect.Right := min(Data.TextRect.Left + Data.TextSize.cx + 2, Data.TextRect.Right - integer(Data.ArrowRect.Left = Data.BtnRect.Right) * 3); //
     Data.TextRect.Top := Data.TextRect.Top + (HeightOf(Data.TextRect) - Data.TextSize.cy) div 2;
     Data.TextRect.Bottom := Data.TextRect.Top + Data.TextSize.cy;
+
+    // Arrow rect
+    if bArrowVisible then begin
+      ArrowUnderText := False;
+      if TabPosition in [tpTop, tpBottom] then // Can arrow be placed under text?
+        if HeightOf(TabRect) - Data.TextSize.cy - acAddedTabSpacing > ArrowSize then
+          ArrowUnderText := True;
+
+      Data.ArrowDirection := asBottom;
+      if not ArrowUnderText then begin
+        Data.ArrowRect.Left   := min(Data.TextRect.Left + Data.TextSize.cx + acSpacing, TabRect.Right - ArrowSize);
+        Data.ArrowRect.Top    := Data.TextRect.Top   + (HeightOf(Data.TextRect) - ArrowSize) div 2 + 1;
+        Data.ArrowRect.Right  := Data.ArrowRect.Left + ArrowSize;
+        Data.ArrowRect.Bottom := Data.ArrowRect.Top  + ArrowSize;
+        if (State = 2) and FActiveTabEnlarged then
+          if not SkinData.Skinned or (SkinData.SkinManager <> nil) and SkinData.SkinManager.ButtonsOptions.ShiftContentOnClick then
+            OffsetRect(Data.ArrowRect, 1, 1);
+      end;
+    end
+    else begin
+      Data.ArrowRect := MkRect;
+      ArrowUnderText := False;
+    end;
+
     if ArrowUnderText then begin
       if TabPosition in [tpTop, tpBottom] then begin
         OffsetRect(Data.TextRect, 0, -4);
@@ -2567,7 +2578,7 @@ begin
 
     Data.TextRect := TabRect;
     // Arrow rect
-    if IsTabMenu and (TsTabSheet(Page).TabType = ttMenu) then begin
+    if bArrowVisible then begin
       Data.ArrowRect.Top    := Data.TextRect.Top + 8;
       Data.ArrowRect.Left   := Data.TextRect.Left + (WidthOf(Data.TextRect) - ArrowSize) div 2;
       Data.ArrowRect.Right  := Data.ArrowRect.Left + ArrowSize;
@@ -2752,6 +2763,11 @@ begin
 
     5:
       FAllowAnimSwitching := Value;
+
+    6: if FActiveTabEnlarged <> Value then begin
+      FActiveTabEnlarged := Value;
+      SkinData.Invalidate;
+    end;
   end;
 end;
 
@@ -3351,15 +3367,6 @@ begin
 end;
 
 
-procedure TsPageControl.SetActiveTabEnlarged(const Value: boolean);
-begin
-  if FActiveTabEnlarged <> Value then begin
-    FActiveTabEnlarged := Value;
-    SkinData.Invalidate;
-  end;
-end;
-
-
 procedure TsPageControl.ChangeScale(M, D: Integer);
 begin
 {$IFDEF DELPHI_10BERLIN}
@@ -3373,6 +3380,7 @@ begin
   TabHeight := MulDiv(TabHeight, M, D);
   TabWidth := MulDiv(TabWidth, M, D);
 {$ENDIF}
+  UpdatePadding;
 end;
 
 end.

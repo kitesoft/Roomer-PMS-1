@@ -1,7 +1,7 @@
 unit sTabControl;
 {$I sDefs.inc}
 //{$DEFINE LOGGED}
-//+
+
 interface
 
 uses
@@ -9,7 +9,6 @@ uses
   {$IFDEF DELPHI_XE2} UITypes, {$ENDIF}
   {$IFNDEF DELPHI5} types, {$ENDIF}
   acSBUtils, sCommonData, sConst;
-
 
 type
 {$IFNDEF NOTFORHELP}
@@ -874,7 +873,7 @@ begin
                     end;
                 end;
               end;
-          end
+          end;
     end;
 
   inherited;
@@ -882,11 +881,10 @@ begin
     case Message.Msg of
       CN_NOTIFY:
         case TWMNotify(Message).NMHdr^.code of
-          TCN_SELCHANGE:
-            if Style in [tsButtons, tsFlatButtons] then begin
-              SkinData.BGChanged := True;
-              RedrawWindow(Handle, nil, 0, RDW_ERASE or RDW_INVALIDATE);
-            end;
+          TCN_SELCHANGE: begin
+            SkinData.BGChanged := True;
+            RedrawWindow(Handle, nil, 0, RDW_FRAME or RDW_INVALIDATE);
+          end;
         end;
 
       TCM_SETCURSEL:

@@ -202,7 +202,7 @@ uses
 
 
 const
-  AddedWidth = 16;
+  iDefAddedWidth = 16;
 
 
 type
@@ -713,7 +713,11 @@ begin
     iAddedWidth := 0;
     iArrowWidth := 0;
   end;
-  iSpacing := Spacing * integer(ShowCaption and (gw > 0) and (Caption <> ''));
+  if ShowCaption and (gw > 0) and (Caption <> '') then
+    iSpacing := MulDiv(Spacing, SkinData.ScalePercent, 100)
+  else
+    iSpacing := 0;
+
   dw := (Width - iAddedWidth - iArrowWidth - gw - iSpacing - TextSize.cx) div 2 - iMargin; // Content offset
   dh := (Height - gh - iSpacing - TextSize.cy) div 2 - iMargin;
   case Layout of
@@ -1014,7 +1018,7 @@ end;
 
 function TsSpeedButton.ScaledAddWidth: integer;
 begin
-  Result := AddedWidth * SkinData.ScalePercent div 100;
+  Result := iDefAddedWidth * SkinData.ScalePercent div 100;
 end;
 
 

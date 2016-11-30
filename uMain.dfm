@@ -847,6 +847,10 @@ object frmMain: TfrmMain
         ImageIndex = 2
         SkinData.CustomColor = False
         SkinData.CustomFont = False
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object sLabel2: TsLabel
           Left = 224
           Top = 400
@@ -1309,6 +1313,7 @@ object frmMain: TfrmMain
           OnMoved = splitPeriodMoved
           Color = 6842472
           ParentColor = False
+          ExplicitTop = 159
         end
         object pnlPeriodNoRooms: TsPanel
           Left = 0
@@ -1629,17 +1634,29 @@ object frmMain: TfrmMain
         Caption = 'tabFreeRooms'
         SkinData.CustomColor = False
         SkinData.CustomFont = False
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
       end
       object tabDashboard: TsTabSheet
         Caption = 'tabDashboard'
         SkinData.CustomColor = False
         SkinData.CustomFont = False
         SkinData.SkinSection = 'TRANSPARENT'
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
       end
       object tabRateQuery: TsTabSheet
         Caption = 'tabRateQuery'
         SkinData.CustomColor = False
         SkinData.CustomFont = False
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
       end
     end
     object panMainTop: TsPanel
@@ -3070,6 +3087,7 @@ object frmMain: TfrmMain
     TabOrder = 2
     TabStop = False
     object rbTabHome: TdxRibbonTab
+      Active = True
       Caption = 'Roomer'
       Groups = <
         item
@@ -3126,7 +3144,6 @@ object frmMain: TfrmMain
       Index = 2
     end
     object rbTabReports: TdxRibbonTab
-      Active = True
       Caption = 'Reports'
       Groups = <
         item

@@ -136,22 +136,15 @@ type
     procedure SetAlignment  (const Value: TAlignment);
     procedure SetGlyph      (const Value: TBitmap);
     procedure SetName       (const Value: string);
-    procedure SetVisible    (const Value: boolean);
     procedure SetAlign      (const Value: TacItemAlign);
     procedure SetCaption    (const Value: acString);
     procedure SetGroupIndex (const Value: integer);
-    procedure SetNumGlyphs  (const Value: integer);
     procedure SetStyle      (const Value: TacBtnStyle);
-    procedure SetHeight     (const Value: integer);
-    procedure SetWidth      (const Value: integer);
-    procedure SetAutoSize   (const Value: boolean);
-    procedure SetDown       (const Value: boolean);
-    procedure SetSpacing    (const Value: integer);
     procedure SetState      (const Value: integer);
-    procedure SetImageIndex (const AIndex, Value: integer); // Calc size when AutoSize is True
+    procedure SetInteger    (const AIndex, Value: integer); // Calc size when AutoSize is True
     function GetState: integer;
     procedure OnGlyphChange(Sender: TObject);
-    procedure SetEnabled(const Value: boolean);
+    procedure SetBoolean(const Index: Integer; const Value: boolean);
   protected
     FDown: boolean;
     FState: integer;
@@ -194,33 +187,38 @@ type
     property Align: TacItemAlign read FAlign write SetAlign default tbaLeft;
     property Alignment: TAlignment read FAlignment write SetAlignment default taLeftJustify;
 
-    property AutoSize: boolean read FAutoSize write SetAutoSize default True;
     property Caption: acString read FCaption write SetCaption;
     property DropdownMenu: TPopupMenu read FDropdownMenu write FDropdownMenu;
-    property Down: boolean read FDown write SetDown default False;
-    property Enabled: boolean read FEnabled write SetEnabled default True;
     property FontData: TacFontData read FFontData write FFontData;
     property Glyph: TBitmap read FGlyph write SetGlyph;
-    property Height: integer read FHeight write SetHeight default 18;
+
+    property AutoSize : boolean index 0 read FAutoSize write SetBoolean default True;
+    property Down     : boolean index 1 read FDown     write SetBoolean default False;
+    property Enabled  : boolean index 2 read FEnabled  write SetBoolean default True;
+    property Visible  : boolean index 3 read FVisible  write SetBoolean default True;
+
     property Hint: acString read FHint write FHint;
 
-    property DisabledImageIndex : integer index 0 read FDisabledImageIndex write SetImageIndex default -1;
-    property ImageIndex         : integer index 1 read FImageIndex         write SetImageIndex default -1;
-    property HotImageIndex      : integer index 2 read FHotImageIndex      write SetImageIndex default -1;
-    property PressedImageIndex  : integer index 3 read FPressedImageIndex  write SetImageIndex default -1;
+    property DisabledImageIndex : integer index 0 read FDisabledImageIndex write SetInteger default -1;
+    property ImageIndex         : integer index 1 read FImageIndex         write SetInteger default -1;
+    property HotImageIndex      : integer index 2 read FHotImageIndex      write SetInteger default -1;
+    property PressedImageIndex  : integer index 3 read FPressedImageIndex  write SetInteger default -1;
+
+    property NumGlyphs          : integer index 4 read FNumGlyphs          write SetInteger default 1;
+    property Spacing            : integer index 5 read FSpacing            write SetInteger default 4;
+    property Height             : integer index 6 read FHeight             write SetInteger default 18;
+    property Width              : integer index 7 read FWidth              write SetInteger default 22;
 
     property Index;
     property Name: string read FName write SetName;
-    property NumGlyphs: integer read FNumGlyphs write SetNumGlyphs default 1;
+
+
     property ShowHint: boolean read FShowHint write FShowHint;
 {$IFDEF ALPHASKINS}
     property SkinSection: string read FSkinSection write SetSkinSection;
 {$ENDIF}
-    property Spacing: integer read FSpacing write SetSpacing default 4;
     property Style: TacBtnStyle read FStyle write SetStyle default bsButton;
     property Tag: integer read FTag write FTag default 0;
-    property Visible: boolean read FVisible write SetVisible default True;
-    property Width: integer read FWidth write SetWidth default 22;
     property OnClick: TNotifyEvent read FOnClick write FOnClick;
     property OnMouseDown:  TMouseEvent  read FOnMouseDown  write FOnMouseDown;
     property OnMouseEnter: TNotifyEvent read FOnMouseEnter write FOnMouseEnter;
@@ -435,13 +433,12 @@ end;
 
 procedure UpdateAlphaTitle(Img: TBitmap);
 var
-  iWidth, x, y: integer;
+  x, y: integer;
   S: PRGBAArray_;
 begin
-  iWidth := Img.Width - 1;
   for Y := 0 to Img.Height - 1 do begin
     S := Img.ScanLine[Y];
-    for X := 0 to iWidth do
+    for X := 0 to Img.Width - 1 do
       with S[X] do
         if C <> clFuchsia then begin
           A := MaxByte - A;
@@ -999,11 +996,38 @@ begin
 end;
 
 
-procedure TacTitleBarItem.SetAutoSize(const Value: boolean);
+procedure TacTitleBarItem.SetBoolean(const Index: Integer; const Value: boolean);
+var
+  i: integer;
 begin
-  if FAutoSize <> Value then begin
-    FAutoSize := Value;
-    Invalidate(True);
+  case Index of
+    0: if FAutoSize <> Value then begin
+      FAutoSize := Value;
+      Invalidate(True);
+    end;
+
+    1: if FDown <> Value then begin
+      FDown := Value;
+      State := integer(Value) * 2;
+      if FDown and (GroupIndex <> 0) then
+        for i := 0 to TacTitleItems(Collection).Count - 1 do
+          if (TacTitleItems(Collection).GetItem(i) <> Self) and (TacTitleItems(Collection).GetItem(i).GroupIndex = GroupIndex) then begin
+            TacTitleItems(Collection).GetItem(i).FDown := False;
+            TacTitleItems(Collection).GetItem(i).FState := 0;
+          end;
+
+      Invalidate;
+    end;
+
+    2: if FEnabled <> Value then begin
+      FEnabled := Value;
+      Invalidate;
+    end;
+
+    3: if FVisible <> Value then begin
+      FVisible := Value;
+      Invalidate(True);
+    end;
   end;
 end;
 
@@ -1013,34 +1037,6 @@ begin
   if FCaption <> Value then begin
     FCaption := Value;
     Invalidate(True);
-  end;
-end;
-
-
-procedure TacTitleBarItem.SetDown(const Value: boolean);
-var
-  i: integer;
-begin
-  if FDown <> Value then begin
-    FDown := Value;
-    State := integer(Value) * 2;
-    if FDown and (GroupIndex <> 0) then
-      for i := 0 to TacTitleItems(Collection).Count - 1 do
-        if (TacTitleItems(Collection).GetItem(i) <> Self) and (TacTitleItems(Collection).GetItem(i).GroupIndex = GroupIndex) then begin
-          TacTitleItems(Collection).GetItem(i).FDown := False;
-          TacTitleItems(Collection).GetItem(i).FState := 0;
-        end;
-
-    Invalidate;
-  end;
-end;
-
-
-procedure TacTitleBarItem.SetEnabled(const Value: boolean);
-begin
-  if FEnabled <> Value then begin
-    FEnabled := Value;
-    Invalidate;
   end;
 end;
 
@@ -1061,16 +1057,7 @@ begin
 end;
 
 
-procedure TacTitleBarItem.SetHeight(const Value: integer);
-begin
-  if FHeight <> Value then begin
-    FHeight := Value;
-    Invalidate(True);
-  end;
-end;
-
-
-procedure TacTitleBarItem.SetImageIndex(const AIndex, Value: integer);
+procedure TacTitleBarItem.SetInteger(const AIndex, Value: integer);
 begin
   if State = 2 then
     State := 0;
@@ -1095,6 +1082,26 @@ begin
       FPressedImageIndex := Value;
       Invalidate;
     end;
+
+    4: if FNumGlyphs <> Value then begin
+      FNumGlyphs := Value;
+      Invalidate(True);
+    end;
+
+    5: if FSpacing <> Value then begin
+      FSpacing := Value;
+      Invalidate(True);
+    end;
+
+    6: if FHeight <> Value then begin
+      FHeight := Value;
+      Invalidate(True);
+    end;
+
+    7: if FWidth <> Value then begin
+      FWidth := Value;
+      Invalidate(True);
+    end;
   end;
 end;
 
@@ -1104,14 +1111,6 @@ begin
   FName := Value;
 end;
 
-
-procedure TacTitleBarItem.SetNumGlyphs(const Value: integer);
-begin
-  if FNumGlyphs <> Value then begin
-    FNumGlyphs := Value;
-    Invalidate(True);
-  end;
-end;
 
 
 {$IFDEF ALPHASKINS}
@@ -1124,15 +1123,6 @@ begin
   end;
 end;
 {$ENDIF}
-
-
-procedure TacTitleBarItem.SetSpacing(const Value: integer);
-begin
-  if FSpacing <> Value then begin
-    FSpacing := Value;
-    Invalidate(True);
-  end;
-end;
 
 
 procedure TacTitleBarItem.SetState(const Value: integer);
@@ -1154,28 +1144,11 @@ begin
 end;
 
 
-procedure TacTitleBarItem.SetVisible(const Value: boolean);
-begin
-  if FVisible <> Value then begin
-    FVisible := Value;
-    Invalidate(True);
-  end;
-end;
-
-
-procedure TacTitleBarItem.SetWidth(const Value: integer);
-begin
-  if FWidth <> Value then begin
-    FWidth := Value;
-    Invalidate(True);
-  end;
-end;
-
-
 procedure TacTitleBarItem.UpdateSize;
 var
   ArrowFont: TFont;
   ts: TSize;
+  b: boolean;
   s: string;
 begin
   if Visible then
@@ -1193,6 +1166,7 @@ begin
       if Caption <> '' then begin
         // Init font
         InitFont;
+        b := True;
         s := Caption;
         ts := GetStringSize(FFontData.UsedFont.Handle, s);
         if FContentSize.cx <> 0 then begin
@@ -1202,8 +1176,14 @@ begin
         end;
 
         FContentSize := MkSize(FContentSize.cx + ts.cx + 4 * integer(Style = bsTab), max(FContentSize.cy, ts.cy));
-      end;
+      end
+      else
+        b := False;
+
       if (Style in [bsMenu, bsButton]) and (DropDownMenu <> nil) then begin
+        if not b then
+          InitFont;
+
         if Style = bsMenu then
           inc(FContentSize.cx, 4)
         else

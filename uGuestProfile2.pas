@@ -298,7 +298,7 @@ type
     zCustomer         : string ;
     zSurname          : string ;
     zCountry          : string ;
-
+    zNationality      : string ;
     Procedure fillGridFromDataset(sGoto : string);
     procedure fillHolder;
     procedure changeAllowgridEdit;
@@ -587,6 +587,7 @@ begin
   zCustomer         := m_.fieldbyname('Customer').asString          ;
   zSurname          := m_.fieldbyname('surName').asString          ;
   zCountry          := m_.fieldbyname('Country').asString          ;
+  zNationality      := m_.fieldbyname('Nationality').asString      ;
   edSurName.text := zSurName;
 
   sbMain.SimpleText := zSortStr;
@@ -806,6 +807,7 @@ begin
   dataset['Address3'       ] := '';
   dataset['Address4'       ] := '';
   dataset['Country'        ] := zCountry;
+  dataset['Nationality'    ] := zNationality;
   dataset['Company'        ] := zCompany;
   dataset['GuestType'      ] := zGuestType;
   dataset['Information'    ] := '';
