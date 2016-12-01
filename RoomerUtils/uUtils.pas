@@ -155,10 +155,9 @@ procedure SplitString(text : String; list : TStrings; Delimiter : Char; QuoteCha
 function linuxLFCRToWindows(source : String) : String;
 
 function ComponentRunning(aComponent: TComponent): boolean;
-
 function RunningInMainThread: boolean;
 
-//var SystemDecimalSeparator : char;
+function GetParentOfType(aControl: TControl; aClassType: TClass): TControl;
 
 function StringIndexInSet(Selector : string; CaseList: array of string): Integer;
 
@@ -1672,6 +1671,13 @@ end;
 function RunningInMainThread: boolean;
 begin
   Result := (GetCurrentThreadId() = MainThreadID);
+end;
+
+function GetParentOfType(aControl: TControl; aClassType: TClass): TControl;
+begin
+  Result := aControl.Parent;
+  while Assigned(Result) and (result.ClassType <> aClassType) do
+    Result := Result.parent;
 end;
 { TIntValue }
 
