@@ -460,7 +460,6 @@ type
     mnuThisreservation: TMenuItem;
     OpenthisRoom1: TMenuItem;
     OpenGroupInvoice1: TMenuItem;
-    btnSwitchToDates: TsButton;
     StoreMain: TcxPropertiesStore;
     btnPaymentReport: TsButton;
     rptbPayments: TppReport;
@@ -576,7 +575,6 @@ type
     procedure OpenthisRoom1Click(Sender: TObject);
     procedure OpenGroupInvoice1Click(Sender: TObject);
     procedure getConfirmGroupClick(Sender: TObject);
-    procedure btnSwitchToDatesClick(Sender: TObject);
     procedure chkOnedayClick(Sender: TObject);
     procedure btnPaymentReportClick(Sender: TObject);
     procedure cxButton1Click(Sender: TObject);
@@ -914,8 +912,8 @@ begin
     if chkGetUnconfirmed.Checked then
     begin
       zConfirmState := 1;
-      gbxSelectDates.Visible := false;
-      btnConfirm.Visible := true;
+      gbxSelectDates.Visible:= false;
+      btnConfirm.Enabled := true;
       GetAll(true);
     end
     else
@@ -1428,7 +1426,7 @@ begin
     while not mItemSale.Eof do
     begin
       inc(id);
-      if IsZero(mItemSale.FieldByName('Total').AsFloat) then
+      if not IsZero(mItemSale.FieldByName('Total').AsFloat) then
       begin
         mSums.append;
         mSums.FieldByName('id').AsInteger := id;
@@ -2413,17 +2411,12 @@ begin
   zDoChkEvent := false;
   chkGetUnconfirmed.Checked := true;
   zDoChkEvent := true;
-  gbxSelectDates.Visible := false;
+  gbxSelectDates.Visible:= false;
   zIsConfirmed := true;
-  btnConfirm.Visible := true;
+  btnConfirm.Enabled := true;
   btnConfirm.caption := 'Un-confirm NOW';
   btnConfirm.caption := GetTranslatedText('shTx_DayFinical_Unconfirm');
   GetAll(true);
-end;
-
-procedure TfrmDayFinical.btnSwitchToDatesClick(Sender: TObject);
-begin
-  SwitchToDates;
 end;
 
 procedure TfrmDayFinical.SwitchToDates;
@@ -2445,7 +2438,7 @@ begin
   chkGetUnconfirmed.Checked := false;
   zDoChkEvent := true;
 
-  btnConfirm.Visible := false;
+  btnConfirm.Enabled := false;
   // btnConfirm.Caption        := 'Confirm NOW';
   btnConfirm.caption := GetTranslatedText('shTx_DayFinical_Confirm');
   GetAll(true);
