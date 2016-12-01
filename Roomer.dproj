@@ -2,7 +2,7 @@
     <PropertyGroup>
         <ProjectGuid>{436E2CCE-115E-475F-9C3E-19C03F70A4D0}</ProjectGuid>
         <MainSource>Roomer.dpr</MainSource>
-        <Config Condition="'$(Config)'==''">Release</Config>
+        <Config Condition="'$(Config)'==''">DebugBas</Config>
         <DCC_DCCCompiler>DCC32</DCC_DCCCompiler>
         <ProjectVersion>14.3</ProjectVersion>
         <FrameworkType>VCL</FrameworkType>
@@ -547,7 +547,7 @@
         <DCCReference Include="uFrmResources.pas">
             <Form>FrmResources</Form>
         </DCCReference>
-        <DCCReference Include="uFrmMessagesTemplates.pas">
+        <DCCReference Include="Embeddables\uFrmMessagesTemplates.pas">
             <Form>FrmMessagesTemplates</Form>
         </DCCReference>
         <DCCReference Include="uFrmNotepad.pas">
@@ -825,6 +825,9 @@
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="uRoomerConfirmationDialogs.pas"/>
+        <DCCReference Include="Embeddables\uEmbDateStatistics.pas">
+            <Form>frmEmbDateStatistics</Form>
+        </DCCReference>
         <None Include="Roomer.todo"/>
         <None Include="notes.txt"/>
         <None Include="Roomer.inc"/>
