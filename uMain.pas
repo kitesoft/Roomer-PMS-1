@@ -695,6 +695,7 @@ type
     bbUpdateTranslations: TdxBarButton;
     alDeveloperTools: TActionList;
     acUpdateTranslations: TAction;
+    splStatistics: TsSplitter;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
@@ -1397,7 +1398,6 @@ type
     procedure PlaceMouseClickToCell(Sender: TObject; X, Y: integer);
     procedure DisplayStatusses(IncludeChart: boolean);
     function Period_NO_ColToDate(ACol: integer): TdateTime;
-    procedure ShowTimelyMessage(const sMessage: string);
     procedure HideRowsWithNotFittingRooms(currRow: integer; fromDate, toDate: Tdate);
     procedure ShowAllRoomsRows;
     procedure FindRoomInPeriodView(const Room: String);
@@ -1515,6 +1515,7 @@ type
     procedure RemoveLanguagesFilesAndRefresh(Refresh: boolean = true);
     procedure ShowBookingConfirmationTemplates;
     procedure ShowCancelConfirmationTemplates;
+    procedure ShowTimelyMessage(const sMessage: string);
 
     property RBEMode: boolean read FRBEMode write SetRBEMode;
     function FilteredFloors: TSet_Of_Integer;
@@ -1732,8 +1733,6 @@ begin
 
   glb.FillLocationsMenu(mnuFilterLocation, LocationMenuSelect);
   GetMnuFilterLocationsFromStore;
-
-  frmDateStatistics.Refresh;
 
 end;
 
@@ -3487,14 +3486,6 @@ end;
 procedure TfrmMain.DisplayStatusses(IncludeChart: boolean);
 begin
   frmDateStatistics.ShowChart := IncludeChart;
-//  Chart1.Visible := IncludeChart;
-//  if IncludeChart then
-//  begin
-//    pnlDateStatistics.Top := 0;
-//    grdRoomClasses.Top := pnlDateStatistics.Top + pnlDateStatistics.Height + 10;
-//    Chart1.Top := grdRoomClasses.Top + grdRoomClasses.Height + 10;
-//    grdRoomStatusses.Top := Chart1.Top + Chart1.Height + 10;
-//  end;
 end;
 
 procedure TfrmMain.pageMainGridsChange(Sender: TObject);
@@ -3866,7 +3857,7 @@ begin
   grOneDayRooms.BeginUpdate;
   try
 
-    frmDateStatistics.timGetRoomStatuses.Enabled := false;
+//    frmDateStatistics.timGetRoomStatuses.Enabled := false;
     BusyOn;
     try
       statNumRooms := g.oRooms.RoomCount;
@@ -3997,8 +3988,8 @@ begin
       end;
       BusyOff;
     end;
-    frmDateStatistics.timGetRoomStatuses.Tag := trunc(dtDate.Date);
-    frmDateStatistics.timGetRoomStatuses.Enabled := true;
+    frmDateStatistics.Date:= trunc(dtDate.Date);
+    frmDateStatistics.RefreshData;
   finally
     grOneDayRooms.endUpdate;
     RefreshStats;
@@ -4108,8 +4099,8 @@ begin
       vmMeetings: ;
       vmDashboard:  begin
                       frmDaysStatistics.ViewDate := dtDate.Date;
-                      frmDateStatistics.timGetRoomStatuses.Tag := trunc(dtDate.Date);
-                      frmDateStatistics.timGetRoomStatuses.Enabled := true;
+                      frmDateStatistics.Date := trunc(dtDate.Date);
+                      frmDateStatistics.RefreshData
                     end;
       vmRateQuery:  PostMessage(handle, WM_SET_DATE_FROM_MAIN, 0, trunc(dtDate.Date));
 
@@ -7542,8 +7533,8 @@ begin
   zGridTag := (Sender as TAdvStringGrid).Tag;
 
   aDate := Period_ColToDate(ACol);
-  frmDateStatistics.timGetRoomStatuses.Tag := trunc(aDate);
-  frmDateStatistics.timGetRoomStatuses.Enabled := true;
+  frmDateStatistics.Date := trunc(aDate);
+  frmDateStatistics.RefreshData;
 
   grPeriodRooms.col := ACol;
   grPeriodRooms.row := ARow;
@@ -10174,8 +10165,8 @@ begin
   if (ACol >= (Sender as TAdvStringGrid).FixedCols) then
   begin
     aDate := Period_NO_ColToDate(ACol);
-    frmDateStatistics.timGetRoomStatuses.Tag := trunc(aDate);
-    frmDateStatistics.timGetRoomStatuses.Enabled := true;
+    frmDateStatistics.Date := trunc(aDate);
+    frmDateStatistics.RefreshData;
   end;
   try
     if assigned(grPeriodRooms_NO.Objects[ACol, ARow]) then
@@ -13211,8 +13202,8 @@ begin
       if ViewMode = vmGuestList then
         gAllReservations.SetFocus;
     finally
-      frmDateStatistics.timGetRoomStatuses.Tag := trunc(dtDate.Date);
-      frmDateStatistics.timGetRoomStatuses.Enabled := true;
+      frmDateStatistics.Date:= trunc(dtDate.Date);
+      frmDateStatistics.RefreshData;
     end;
 end;
 

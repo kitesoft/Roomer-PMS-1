@@ -1,23 +1,23 @@
-object frmEmbDateStatistics: TfrmEmbDateStatistics
-  Left = 0
-  Top = 0
+inherited frmEmbDateStatistics: TfrmEmbDateStatistics
   Caption = 'Statistics'
   ClientHeight = 677
-  ClientWidth = 324
-  Color = clBtnFace
-  Font.Charset = DEFAULT_CHARSET
-  Font.Color = clWindowText
+  ClientWidth = 319
   Font.Height = -11
-  Font.Name = 'Tahoma'
-  Font.Style = []
-  OldCreateOrder = False
+  ExplicitWidth = 335
+  ExplicitHeight = 716
   PixelsPerInch = 96
   TextHeight = 13
-  object pnlStatistics: TsPanel
+  inherited sbStatusBar: TsStatusBar
+    Top = 657
+    Width = 319
+    ExplicitTop = 657
+    ExplicitWidth = 324
+  end
+  object pnlStatistics: TsPanel [1]
     Left = 0
     Top = 0
-    Width = 324
-    Height = 677
+    Width = 319
+    Height = 657
     Align = alClient
     BevelOuter = bvNone
     Color = 14540253
@@ -30,11 +30,11 @@ object frmEmbDateStatistics: TfrmEmbDateStatistics
     ParentFont = False
     TabOrder = 0
     SkinData.SkinSection = 'PANEL'
-    ExplicitWidth = 313
+    ExplicitWidth = 324
     object lblPropertyStatus: TsLabel
       Left = 0
       Top = 0
-      Width = 324
+      Width = 319
       Height = 21
       Margins.Left = 10
       Margins.Top = 0
@@ -54,7 +54,7 @@ object frmEmbDateStatistics: TfrmEmbDateStatistics
     object lblDateStatistics: TsLabel
       Left = 0
       Top = 21
-      Width = 324
+      Width = 319
       Height = 18
       Margins.Left = 10
       Margins.Top = 0
@@ -74,8 +74,8 @@ object frmEmbDateStatistics: TfrmEmbDateStatistics
     object pgrStatisticsPanelGroup: TCategoryPanelGroup
       Left = 0
       Top = 39
-      Width = 324
-      Height = 638
+      Width = 319
+      Height = 618
       VertScrollBar.Tracking = True
       Align = alClient
       HeaderFont.Charset = DEFAULT_CHARSET
@@ -84,17 +84,17 @@ object frmEmbDateStatistics: TfrmEmbDateStatistics
       HeaderFont.Name = 'Tahoma'
       HeaderFont.Style = []
       TabOrder = 0
-      ExplicitWidth = 313
       object cpnlRoomtypes: TCategoryPanel
-        Top = 372
+        Top = 417
         Height = 221
         Caption = 'Room types'
         TabOrder = 0
-        ExplicitTop = 395
-        object grdRoomStatusses: TAdvStringGrid
+        ExplicitTop = 372
+        ExplicitWidth = 322
+        object grdRoomStates: TAdvStringGrid
           Left = 0
           Top = 0
-          Width = 320
+          Width = 298
           Height = 195
           Cursor = crDefault
           Margins.Left = 10
@@ -122,6 +122,7 @@ object frmEmbDateStatistics: TfrmEmbDateStatistics
           TabOrder = 0
           ActiveRowColor = 15790320
           HoverRowCells = [hcNormal, hcSelected]
+          OnGetAlignment = grdGetAlignment
           OnResize = grdResize
           ActiveCellFont.Charset = DEFAULT_CHARSET
           ActiveCellFont.Color = clWindowText
@@ -229,6 +230,7 @@ object frmEmbDateStatistics: TfrmEmbDateStatistics
           ShowDesignHelper = False
           SortSettings.DefaultFormat = ssAutomatic
           Version = '8.1.2.0'
+          ExplicitWidth = 320
           ColWidths = (
             70
             12
@@ -248,20 +250,20 @@ object frmEmbDateStatistics: TfrmEmbDateStatistics
       end
       object cpnlChart: TCategoryPanel
         Top = 177
-        Height = 195
+        Height = 240
         Caption = 'Chart'
         TabOrder = 1
-        ExplicitTop = 200
         object chrtRoomStats: TChart
           Left = 0
           Top = 0
-          Width = 320
-          Height = 169
+          Width = 315
+          Height = 214
           Margins.Left = 10
           Margins.Top = 0
           Margins.Right = 0
           Margins.Bottom = 0
           Foot.Font.Name = 'Segoe UI'
+          LeftWall.Color = clSilver
           Legend.Font.Height = -8
           Legend.Font.Name = 'Segoe UI'
           Legend.Visible = False
@@ -272,15 +274,18 @@ object frmEmbDateStatistics: TfrmEmbDateStatistics
           Title.Visible = False
           BottomAxis.LabelsAlternate = True
           BottomAxis.LabelsSeparation = 4
+          LeftAxis.Automatic = False
+          LeftAxis.AutomaticMaximum = False
+          LeftAxis.Maximum = 29.000000000000000000
           SeriesGroups = <
             item
               Name = 'Group1'
             end>
-          View3DWalls = False
           Align = alClient
           BevelOuter = bvNone
           Color = clWhite
           TabOrder = 0
+          ExplicitHeight = 167
           PrintMargins = (
             15
             6
@@ -292,17 +297,25 @@ object frmEmbDateStatistics: TfrmEmbDateStatistics
             Marks.Arrow.Visible = True
             Marks.Callout.Brush.Color = clBlack
             Marks.Callout.Arrow.Visible = True
+            Marks.Callout.Distance = -19
+            Marks.Callout.Length = 0
+            Marks.Margins.Left = 5
+            Marks.Margins.Top = 1
+            Marks.Margins.Right = 8
+            Marks.Margins.Bottom = 0
             Marks.Style = smsValue
             Marks.Visible = True
             Title = 'Rooms'
+            Emboss.Color = 8487297
+            Shadow.Color = 8487297
             XValues.Name = 'X'
             XValues.Order = loAscending
             YValues.Name = 'Bar'
             YValues.Order = loNone
             Data = {
-              06050000000000000000002040FFFF0000FF0500000054616B656E0000000000
-              001C4080804000FF040000004E6F526D000000000000F03FFF000000FF040000
-              0046726565000000000000004000800000FF050000004E6574746F0000000000
+              06050000000000000000001440FFFF0000FF0500000054616B656E0000000000
+              001C4080804000FF040000004E6F526D0000000000002840FF000000FF040000
+              0046726565000000000000224000800000FF050000004E6574746F0000000000
               00004080404000FF0900000043616E63656C6C6564}
           end
         end
@@ -312,10 +325,11 @@ object frmEmbDateStatistics: TfrmEmbDateStatistics
         Height = 177
         Caption = 'Room Classes'
         TabOrder = 2
+        ExplicitWidth = 322
         object grdRoomClasses: TAdvStringGrid
           Left = 0
           Top = 0
-          Width = 320
+          Width = 298
           Height = 172
           Cursor = crDefault
           Margins.Left = 10
@@ -349,7 +363,7 @@ object frmEmbDateStatistics: TfrmEmbDateStatistics
           ActiveRowColor = 15790320
           HoverRowCells = [hcNormal, hcSelected]
           OnGetCellBorder = grdRoomClassesGetCellBorder
-          OnGetAlignment = grdRoomStatussesGetAlignment
+          OnGetAlignment = grdGetAlignment
           OnCanEditCell = grdRoomClassesCanEditCell
           OnCellValidate = grdRoomClassesCellValidate
           OnResize = grdResize
@@ -459,6 +473,7 @@ object frmEmbDateStatistics: TfrmEmbDateStatistics
           ShowDesignHelper = False
           SortSettings.DefaultFormat = ssAutomatic
           Version = '8.1.2.0'
+          ExplicitWidth = 320
           RowHeights = (
             19
             19
@@ -469,6 +484,37 @@ object frmEmbDateStatistics: TfrmEmbDateStatistics
       end
     end
   end
+  inherited psRoomerBase: TcxPropertiesStore
+    Components = <
+      item
+        Component = cpnlChart
+        Properties.Strings = (
+          'Collapsed')
+      end
+      item
+        Component = cpnlRoomClasses
+        Properties.Strings = (
+          'Collapsed')
+      end
+      item
+        Component = cpnlRoomtypes
+        Properties.Strings = (
+          'Collapsed')
+      end>
+    Left = 104
+    Top = 8
+  end
+  inherited cxsrRoomerStyleRepository: TcxStyleRepository
+    Left = 24
+    Top = 8
+    PixelsPerInch = 96
+    inherited dxssRoomerGridReportLink: TdxGridReportLinkStyleSheet
+      BuiltIn = True
+    end
+    inherited cxssRoomerGridTableView: TcxGridTableViewStyleSheet
+      BuiltIn = True
+    end
+  end
   object pmnuChannelSettings: TPopupMenu
     Left = 252
     Top = 508
@@ -476,11 +522,10 @@ object frmEmbDateStatistics: TfrmEmbDateStatistics
       Caption = '0'
     end
   end
-  object timGetRoomStatuses: TTimer
-    Enabled = False
-    Interval = 10
-    OnTimer = timGetRoomStatusesTimer
-    Left = 260
-    Top = 456
+  object sSkinProvider1: TsSkinProvider
+    SkinData.SkinSection = 'FORM'
+    TitleButtons = <>
+    Left = 248
+    Top = 168
   end
 end

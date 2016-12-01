@@ -90,868 +90,104 @@ object frmMain: TfrmMain
       ExplicitTop = 27
       ExplicitWidth = 1153
     end
-    object pageMainGrids: TsPageControl
+    object pnlBottom: TsPanel
       Left = 0
       Top = 173
-      Width = 984
+      Width = 1288
       Height = 304
-      ActivePage = tabOneDayView
       Align = alClient
-      TabOrder = 3
-      OnChange = pageMainGridsChange
-      SkinData.SkinSection = 'PAGECONTROL'
-      object tabOneDayView: TsTabSheet
-        Caption = 'tabOneDayView'
-        ImageIndex = 8
-        object grOneDayRooms: TAdvStringGrid
-          Left = 0
-          Top = 0
-          Width = 976
-          Height = 276
-          Cursor = crDefault
-          Align = alClient
-          BevelEdges = []
-          BevelInner = bvNone
-          BevelOuter = bvNone
-          ColCount = 13
-          Ctl3D = False
-          DefaultRowHeight = 18
-          DrawingStyle = gdsClassic
-          RowCount = 2
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Segoe UI'
-          Font.Style = []
-          GradientEndColor = cl3DDkShadow
-          Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goColSizing]
-          ParentCtl3D = False
-          ParentFont = False
-          PopupMenu = mmnuOneDayGrid
-          ScrollBars = ssBoth
-          TabOrder = 0
-          OnDragDrop = grOneDayRoomsDragDrop
-          OnDragOver = grOneDayRoomsDragOver
-          OnDrawCell = grOneDayRoomsDrawCell
-          OnEndDrag = grOneDayRoomsEndDrag
-          OnEnter = grOneDayRoomsEnter
-          OnMouseDown = grOneDayRoomsMouseDown
-          OnMouseMove = grOneDayRoomsMouseMove
-          OnMouseUp = grOneDayRoomsMouseUp
-          OnStartDrag = grOneDayRoomsStartDrag
-          ActiveRowColor = clWhite
-          GridLineColor = 15527152
-          GridFixedLineColor = 13947601
-          HoverRowCells = [hcNormal, hcSelected]
-          OnGetCellPrintColor = grOneDayRoomsGetCellPrintColor
-          OnGridHint = grOneDayRoomsGridHint
-          OnClickCell = grOneDayRoomsClickCell
-          OnRightClickCell = grOneDayRoomsClickCell
-          OnDblClickCell = grOneDayRoomsDblClickCell
-          OnDragScroll = grOneDayRoomsDragScroll
-          OnResize = grOneDayRoomsResize
-          HintShowSizing = True
-          OnEndColumnSize = grOneDayRoomsEndColumnSize
-          ActiveCellFont.Charset = DEFAULT_CHARSET
-          ActiveCellFont.Color = clWindowText
-          ActiveCellFont.Height = -11
-          ActiveCellFont.Name = 'Tahoma'
-          ActiveCellFont.Style = [fsBold]
-          ActiveCellColor = 16575452
-          ActiveCellColorTo = 16571329
-          BackGround.Display = bdFixed
-          BackGround.Cells = bcAll
-          BackGround.Color = clWindowFrame
-          BackGround.ColorTo = clWindowFrame
-          CellNode.Color = clGray
-          ControlLook.FixedGradientMirrorFrom = 16049884
-          ControlLook.FixedGradientMirrorTo = 16247261
-          ControlLook.FixedGradientHoverFrom = 16710648
-          ControlLook.FixedGradientHoverTo = 16446189
-          ControlLook.FixedGradientHoverMirrorFrom = 16049367
-          ControlLook.FixedGradientHoverMirrorTo = 15258305
-          ControlLook.FixedGradientDownFrom = 15853789
-          ControlLook.FixedGradientDownTo = 15852760
-          ControlLook.FixedGradientDownMirrorFrom = 15522767
-          ControlLook.FixedGradientDownMirrorTo = 15588559
-          ControlLook.FixedGradientDownBorder = 14007466
-          ControlLook.DropDownHeader.Font.Charset = DEFAULT_CHARSET
-          ControlLook.DropDownHeader.Font.Color = clWindowText
-          ControlLook.DropDownHeader.Font.Height = -11
-          ControlLook.DropDownHeader.Font.Name = 'Tahoma'
-          ControlLook.DropDownHeader.Font.Style = []
-          ControlLook.DropDownHeader.Visible = True
-          ControlLook.DropDownHeader.Buttons = <>
-          ControlLook.DropDownFooter.Font.Charset = DEFAULT_CHARSET
-          ControlLook.DropDownFooter.Font.Color = clWindowText
-          ControlLook.DropDownFooter.Font.Height = -11
-          ControlLook.DropDownFooter.Font.Name = 'Tahoma'
-          ControlLook.DropDownFooter.Font.Style = []
-          ControlLook.DropDownFooter.Visible = True
-          ControlLook.DropDownFooter.Buttons = <>
-          DragScrollOptions.Active = True
-          Filter = <>
-          FilterDropDown.Font.Charset = DEFAULT_CHARSET
-          FilterDropDown.Font.Color = clWindowText
-          FilterDropDown.Font.Height = -11
-          FilterDropDown.Font.Name = 'Tahoma'
-          FilterDropDown.Font.Style = []
-          FilterDropDownClear = '(All)'
-          FilterEdit.TypeNames.Strings = (
-            'Starts with'
-            'Ends with'
-            'Contains'
-            'Not contains'
-            'Equal'
-            'Not equal'
-            'Larger than'
-            'Smaller than'
-            'Clear')
-          FixedColWidth = 47
-          FixedRowHeight = 18
-          FixedRowAlways = True
-          FixedColAlways = True
-          FixedFont.Charset = DEFAULT_CHARSET
-          FixedFont.Color = clBlack
-          FixedFont.Height = -11
-          FixedFont.Name = 'Tahoma'
-          FixedFont.Style = [fsBold]
-          Flat = True
-          FloatFormat = '%.2f'
-          HoverButtons.Buttons = <>
-          HoverButtons.Position = hbLeftFromColumnLeft
-          HTMLSettings.ImageFolder = 'images'
-          HTMLSettings.ImageBaseName = 'img'
-          Look = glWin7
-          MouseActions.DisjunctCellSelect = True
-          PrintSettings.FooterSize = 50
-          PrintSettings.HeaderSize = 50
-          PrintSettings.Date = ppBottomRight
-          PrintSettings.DateFormat = 'dd/mm/yyyy hh:nn'
-          PrintSettings.PageNr = ppBottomCenter
-          PrintSettings.Title = ppTopCenter
-          PrintSettings.TitleLines.Strings = (
-            'Guest status 04-06-2014')
-          PrintSettings.Font.Charset = DEFAULT_CHARSET
-          PrintSettings.Font.Color = clWindowText
-          PrintSettings.Font.Height = -11
-          PrintSettings.Font.Name = 'Tahoma'
-          PrintSettings.Font.Style = []
-          PrintSettings.FixedFont.Charset = DEFAULT_CHARSET
-          PrintSettings.FixedFont.Color = clWindowText
-          PrintSettings.FixedFont.Height = -11
-          PrintSettings.FixedFont.Name = 'Tahoma'
-          PrintSettings.FixedFont.Style = []
-          PrintSettings.HeaderFont.Charset = DEFAULT_CHARSET
-          PrintSettings.HeaderFont.Color = clWindowText
-          PrintSettings.HeaderFont.Height = -11
-          PrintSettings.HeaderFont.Name = 'Tahoma'
-          PrintSettings.HeaderFont.Style = []
-          PrintSettings.FooterFont.Charset = DEFAULT_CHARSET
-          PrintSettings.FooterFont.Color = clWindowText
-          PrintSettings.FooterFont.Height = -11
-          PrintSettings.FooterFont.Name = 'Tahoma'
-          PrintSettings.FooterFont.Style = []
-          PrintSettings.LeftSize = 50
-          PrintSettings.RightSize = 50
-          PrintSettings.TitleSpacing = 50
-          PrintSettings.Orientation = poLandscape
-          PrintSettings.FitToPage = fpAlways
-          PrintSettings.PageNumSep = '/'
-          PrintSettings.PrintGraphics = True
-          ScrollWidth = 21
-          SearchFooter.Color = 16645370
-          SearchFooter.ColorTo = 16247261
-          SearchFooter.FindNextCaption = 'Find next'
-          SearchFooter.FindPrevCaption = 'Find previous'
-          SearchFooter.Font.Charset = DEFAULT_CHARSET
-          SearchFooter.Font.Color = clWindowText
-          SearchFooter.Font.Height = -11
-          SearchFooter.Font.Name = 'Tahoma'
-          SearchFooter.Font.Style = []
-          SearchFooter.HighLightCaption = 'Highlight'
-          SearchFooter.HintClose = 'Close'
-          SearchFooter.HintFindNext = 'Find next occurence'
-          SearchFooter.HintFindPrev = 'Find previous occurence'
-          SearchFooter.HintHighlight = 'Highlight occurences'
-          SearchFooter.MatchCaseCaption = 'Match case'
-          SortSettings.DefaultFormat = ssAutomatic
-          SortSettings.HeaderColor = 16579058
-          SortSettings.HeaderColorTo = 16579058
-          SortSettings.HeaderMirrorColor = 16380385
-          SortSettings.HeaderMirrorColorTo = 16182488
-          Version = '8.1.2.0'
-          ColWidths = (
-            47
-            49
-            150
-            66
-            59
-            22
-            6
-            44
-            39
-            128
-            64
-            52
-            21)
-          object imgBlinker: TImage
-            Left = 290
-            Top = 37
-            Width = 64
-            Height = 64
-            AutoSize = True
-            Picture.Data = {
-              0B546478504E47496D61676589504E470D0A1A0A0000000D4948445200000040
-              000000400806000000AA6971DE0000000467414D410000B18F0BFC6105000000
-              097048597300000EBC00000EBC0195BC72490000000774494D4507DD0C020937
-              23303C6A120000000774455874417574686F7200A9AECC480000000C74455874
-              4465736372697074696F6E00130921230000000A74455874436F707972696768
-              7400AC0FCC3A0000000974455874536F667477617265005D70FF3A0000000774
-              455874536F7572636500F5FF83EB0000000874455874436F6D6D656E7400F6CC
-              96BF00000006744558745469746C6500A8EED2270000097249444154785EE59A
-              4D6C54D71986DD104220093163FC6FA0FC19840425F106FC47137545D3761575
-              934D979112C3186390BA2062D3165562D9B2420D2586188C0D48858A0A5B50B1
-              A858B08A94482522AA221B836CD906663CC3EDFB9CB9C7BE9E39B6E7E70EB634
-              477A75C79FEF3DF7BCEFF9BEEF9CEFCC94799E57D2701A4B094E6329C1692C25
-              388DA504A7B194E03496129CC65282D3584A701A4B094E6329C1690C01E5C964
-              F2B4705B9F736E7A6EE8E5CB977FD14757DFA1C2692C109087F8DEF6E3D7BC59
-              5C4DE1D855AFEDD880AE16FD73F08BE3D763894462607272F2A303070EBC0ECA
-              CACA5608AF093F0169EF2B084E630128D7CCA591B7C407441C9257BCB6EE3EAF
-              EDA88FAECBB3885E8EC5E3F1AB4F9E3CF96D6D6DED9A868686D560D3A64D6FEE
-              DAB5EB0D915FE98B119A084E639E30E463B197EFCD216F66BC5FA4AF78ED22DE
-              DA75C96B3B22986BAFD77AE4EB140EF7C69E3F7F7EFEF1E3C79F6ED9B2E55D8B
-              6DDBB6ADADA8A8784702BCBD6FDFBED5228F10A189E034E60127F994AB6BD645
-              BEED28B37C2945B6F3A270C16B895E30D7D643E763E3E3E37F1D1D1DFD7D6363
-              E37A20E295D5D5D55512A18ABFE509911D3B76BCE38B40582C1B01E627DFAD99
-              C7CD99719F781BE4A35F69C6BFF25AC0A1BFC7474646FE0C366EDC580B366CD8
-              50575F5FDF20110CD4EA110211F0043F1C5E738C2567388D396071F226BE7B67
-              0468D18CA744C0037AE2C3C3C35D131313678333BF79F3E6EA9D3B77D6421C68
-              E6EBB059019A9A9AC8054B2E4016E4E7C6B911C1A0D76B8E5E9C26DE897B1BEF
-              4A76E59044082B0290BD060FE0FF24475F80250D81ACC8A7E2DD92D7DFB29108
-              F7777E3DFDF4E9D35F2BE3FF134240F1FE566565E5DB0851575757016144B0D0
-              CC474886AC0822BFA449D0909F8CC5DECF8ABC603C01887C4B777F426BFC2FB5
-              57E8BF7DFBB67167625AAEBF4A9FD790E876EFDEBDCE860357E58575909777AC
-              0ED3FD81D3B800F224AF3CA095A0E5D800E4DFA70FFAA24F66124210F3D77BE3
-              0590067CC6C6FF2C799E098CA920388DF3A068E4D9ED4190307895E481D3E880
-              8DF9BCC8B71F19488E8D8D6DF1B7C83FB5FDA69397CBAF4D271F70FB50778016
-              4E631A0A26AF6C5F27F2F7D457067962DF929710E5AF923C701A03288C7CD740
-              F2D1A347115B1CD97E17234F2284BC440875DBEB82D3E8A360F210551F8FD5D7
-              92362640E338AB8F193C330C3E0A23CF7D2A82669FB54855843CCF66C8EE085B
-              A33DE6CA46898D533BFD9B7EE696CA858086D701DFAB52E5B54F3883FC543CDE
-              343BF030C8CBD62D012885799E6228550B18501BB41EEE9128EA13716C9F2181
-              46589170811F5E2B33C8E32EE19307904F5585AD51CDFCA1F33EF973FEF57CAA
-              3EC02BE83F64D0C835E417769CE41E5359FAC48B4C5E30FD5CD176587580996D
-              09F0F9975EF3E77FF35A3ABE9437C80BA8123B150E94C82183A62DF77AA0FAA2
-              C226DC190144FE8AAE734E7242230FE4FE4600FA9000CD220D798B960E794247
-              2A1C8A019A48D7525972157973D610F48032C5FEE9835FDCD08043266F6043E0
-              92298999E916BC4030334F224C9BB5304193DB5351D6505C7105730410F6263D
-              6FF0E017FF10294B5E315B30798000EA1311E8834427A44E87D437EF2822684A
-              7CA6D466E611016F4817A02C168BBD974826870E9EB8EE93A59E27315D349FF3
-              23EF43CF988351EB591C9399A3B2E283460224F6950CCDA10B274F1902B03E72
-              24AD5AFDDA07C7F4B0D433EBB5993109A2652C2FF2063C23E859136233C85CB7
-              C3068DACCF4AA0E5308217CC2B00FB6FEDDF7F236FB8FE61772A668DCB325B76
-              F69D04972F68F0E2F085ECEF9F33D4BA04A0445D895AC3C3C3BF7BF6EC599F39
-              CCC4131412ED4715C34680453CA0F39AD289595D4E2712893BFABCA44DE3789E
-              8B00A650D9B367CF5B9CDB4D4D4DF590484C0828764D0C672FC25EF617BA06CF
-              00CC3980B0C26E4F19DC2BC01A42807D003940A1509F21803F4813066C1DD935
-              8D8E8E462726A6CE1A11488C798A303636B60ED2C2EB6C45D992F20EC0CC141B
-              C1F867F6B76EDDBA613E0198A1155604B2E7C4C4C41FC6C6C6FF9497085DD792
-              66754924066FDEBC59457851EF73CEC7A070C95701665ED72ABDBB8604A87737
-              3805006A1935FBF8F8F81F358BBE084A883988D07CFC6A42CF364984A173E7CE
-              49D7D4F137036283A2FECD01683181DB33F37A77FDF6EDDBEBF9F2C549DEC225
-              02E7F8FFFBF1C7CFE688A065665111B4F43577F7271E3E7CB8FFC58B17774F9E
-              3CB99D81A84FF3ED0F8361561860B190FE3EE74628083593AC1081782D4804F6
-              0DBA67FFD1CB89FBF7EFB74B847F9F387162278361600C8619D2DF45F304FAC6
-              DBF03A3E2B2FAC77120FC28A403E088AC01EE1FBEF7FF8245D84D406C925029B
-              9F7EAF557B89FD877AA6EFDEBDFB0122C813C47D96BCC488E83DE5366EC304FD
-              DABEE1406E73924E47BA0824B08E8E8E6A44F8EEBBFF7E9C9D08B30516DF1035
-              472F4C0F0D0D7DE87B42A30655C537420C90E488D0E9593C2C4864B3F2488455
-              4EC22E2C20C2AD6FBEF9F657D98A6042855321BE2A3B72317EEFDEBD9F93134E
-              9D3AB5557D469819F61FFE3BDEE07D61C2EE3BC425752CE6223B1F5C229C3973
-              66E3F4F4F41DE2DA5477768964B65D22985CE097C608D6D51B7FF0E0411B7DD0
-              176EC9EC40DE1F64D14E8481D3B8107C1166F608A18810BD145B2A119CC6C5E0
-              12A1AFAFAF51E1F09F1B37FEF5B31911162A9BD34538BC3422388DD9C08AC000
-              AD08838383BB2170EBD6AD3D7989B0049EE034668B741118B015816C9E97089D
-              2911586158AE8A2D82D3980B5C2230F09191913BDA3A7BAA213C95D49E0879DA
-              065396EAB1B90D1BFFE31EEE9D9C9CF454851A118B2D82D3982B8222B0CE3260
-              066F09B0B46167E5D07D66696329E26AC19A6C8B249ED19525D1EC0AFD22E65D
-              FA085B04A7311F302006161481415B212291C85AC8B1C6339B80FB82A0F4462C
-              EDDBD7E9EF99C34B8010F4C7737A0FDF182F2F0140BA08100E8A002068C1FFD2
-              01795BB6EAFE1A7D363F94E26F768AF4A96757F11ED7187285D358088222305B
-              F6874F10D3DFFCCC2D0211102C548280ACEEAB9117D5E919F35339C4C02B104E
-              E1637E28E57A7FAE701A0B859A39EE0AEE13987DC8D7D4D45442D0D6E6F301D2
-              9CD8887003B53B36C44100F5B5BC05006AC613FC84F726B14F1E40083C61210F
-              B04028CA5791AE443C3CC90F2D12E1B2F8A5E882F045C01B4C96C71BA8F2F008
-              661242D980844A2805C82FABDF0A2F0A5F04E30D08810B2306841603F7713FCF
-              F13CFDD09FEB3DF9C0690C1B6A7882F5869C8EC2EDBD3CE73F6FFA72BD271F38
-              8DA504A7B174E095FD1F21B355973FA962C40000000049454E44AE426082}
-            Transparent = True
-            Visible = False
-          end
-          object pnlNoRoomDrop: TsPanel
-            Left = 513
-            Top = 160
-            Width = 84
-            Height = 77
-            BevelOuter = bvLowered
-            BorderWidth = 2
-            BorderStyle = bsSingle
-            Color = 16777153
-            TabOrder = 0
-            Visible = False
-            OnDragDrop = pnlNoRoomDropDragDrop
-            OnDragOver = pnlNoRoomDropDragOver
-            SkinData.SkinSection = 'PANEL'
-            object arrowImage: TImage
-              Left = 14
-              Top = 8
-              Width = 52
-              Height = 52
-              AutoSize = True
-              Transparent = True
-              OnDragDrop = pnlNoRoomDropDragDrop
-              OnDragOver = pnlNoRoomDropDragOver
-            end
-            object lblNoRoom: TsLabel
-              Left = 3
-              Top = 59
-              Width = 76
-              Height = 13
-              Align = alBottom
-              Alignment = taCenter
-              Caption = 'No Room'
-              ParentFont = False
-              Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
-              Font.Height = -11
-              Font.Name = 'Tahoma'
-              Font.Style = [fsBold]
-              ExplicitWidth = 50
-            end
-          end
-        end
+      TabOrder = 0
+      object splStatistics: TsSplitter
+        Left = 976
+        Top = 1
+        Width = 7
+        Height = 302
+        Align = alRight
+        Color = clGradientActiveCaption
+        ParentColor = False
+        SkinData.SkinSection = 'SPLITTER'
+        ExplicitLeft = 977
       end
-      object tabGuestList: TsTabSheet
-        Caption = 'tabGuestList'
-        ImageIndex = 9
-        object Panel3: TsPanel
-          Left = 0
-          Top = 0
-          Width = 976
-          Height = 100
-          Align = alTop
-          BevelOuter = bvNone
-          TabOrder = 0
-          SkinData.SkinSection = 'TRANSPARENT'
-          object rgrGroupreportStayType: TsRadioGroup
-            Left = 2
-            Top = 4
-            Width = 128
-            Height = 84
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clWindowText
-            Font.Height = -11
-            Font.Name = 'Tahoma'
-            Font.Style = []
-            ParentBackground = False
-            ParentFont = False
-            TabOrder = 0
-            OnClick = rgrGroupreportStayTypeClick
-            SkinData.SkinSection = 'GROUPBOX'
-            Items.Strings = (
-              'Arrival'
-              'Departure'
-              'All')
-            OnChanging = rgrGroupreportStayTypeChanging
-          end
-          object btnGroupReportExpandAll: TcxButton
-            Left = 136
-            Top = 11
-            Width = 117
-            Height = 22
-            Caption = 'Expand All'
-            LookAndFeel.NativeStyle = False
-            TabOrder = 1
-            OnClick = btnGroupReportExpandAllClick
-          end
-          object btnGroupreportCollapseAll: TcxButton
-            Left = 136
-            Top = 39
-            Width = 117
-            Height = 21
-            Caption = 'Collapse All'
-            LookAndFeel.NativeStyle = False
-            TabOrder = 2
-            OnClick = btnGroupreportCollapseAllClick
-          end
-          object btnGuestListExcel: TcxButton
-            Left = 136
-            Top = 66
-            Width = 117
-            Height = 22
-            Caption = 'Excel'
-            LookAndFeel.NativeStyle = False
-            TabOrder = 3
-            OnClick = btnGuestListExcelClick
-          end
-          object grbGroupReportProperties: TsGroupBox
-            Left = 301
-            Top = 4
-            Width = 258
-            Height = 84
-            Caption = 'Report'
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clWindowText
-            Font.Height = -11
-            Font.Name = 'Tahoma'
-            Font.Style = []
-            ParentFont = False
-            TabOrder = 4
-            SkinData.SkinSection = 'GROUPBOX'
-            object chkNewPage: TsCheckBox
-              Left = 3
-              Top = 15
-              Width = 151
-              Height = 17
-              Caption = 'Reservation on new page'
-              Font.Charset = DEFAULT_CHARSET
-              Font.Color = clWindowText
-              Font.Height = -11
-              Font.Name = 'Tahoma'
-              Font.Style = []
-              ParentFont = False
-              TabOrder = 0
-              SkinData.SkinSection = 'CHECKBOX'
-              ImgChecked = 0
-              ImgUnchecked = 0
-            end
-            object chkPrintMemo: TsCheckBox
-              Left = 3
-              Top = 36
-              Width = 81
-              Height = 17
-              Caption = 'Print memo'
-              Font.Charset = DEFAULT_CHARSET
-              Font.Color = clWindowText
-              Font.Height = -11
-              Font.Name = 'Tahoma'
-              Font.Style = []
-              ParentFont = False
-              TabOrder = 1
-              SkinData.SkinSection = 'CHECKBOX'
-              ImgChecked = 0
-              ImgUnchecked = 0
-            end
-            object btnGroupReportShow: TcxButton
-              Left = 74
-              Top = 58
-              Width = 80
-              Height = 21
-              Caption = 'Show'
-              LookAndFeel.NativeStyle = False
-              TabOrder = 2
-              OnClick = btnGroupReportShowClick
-            end
-          end
-          object btnBreakfastGuests: TcxButton
-            Left = 394
-            Top = 11
-            Width = 110
-            Height = 21
-            Caption = 'Breakfast guests'
-            LookAndFeel.NativeStyle = False
-            TabOrder = 5
-            Visible = False
-            OnClick = btnBreakfastGuestsClick
-          end
-        end
-        object gAllReservations: TcxGrid
-          Left = 0
-          Top = 100
-          Width = 976
-          Height = 176
-          Align = alClient
-          BevelInner = bvNone
-          BevelOuter = bvRaised
-          BorderStyle = cxcbsNone
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          ParentFont = False
-          PopupMenu = pupGroups
-          TabOrder = 1
-          LookAndFeel.NativeStyle = False
-          object tvAllReservations: TcxGridDBTableView
-            Navigator.Buttons.CustomButtons = <>
-            Navigator.Buttons.First.Visible = True
-            Navigator.Buttons.PriorPage.Visible = True
-            Navigator.Buttons.Prior.Visible = True
-            Navigator.Buttons.Next.Visible = True
-            Navigator.Buttons.NextPage.Visible = True
-            Navigator.Buttons.Last.Visible = True
-            Navigator.Buttons.Insert.Enabled = False
-            Navigator.Buttons.Insert.Visible = False
-            Navigator.Buttons.Append.Enabled = False
-            Navigator.Buttons.Append.Visible = False
-            Navigator.Buttons.Delete.Enabled = False
-            Navigator.Buttons.Delete.Visible = False
-            Navigator.Buttons.Edit.Enabled = False
-            Navigator.Buttons.Edit.Visible = False
-            Navigator.Buttons.Post.Enabled = False
-            Navigator.Buttons.Post.Visible = False
-            Navigator.Buttons.Cancel.Enabled = False
-            Navigator.Buttons.Cancel.Visible = True
-            Navigator.Buttons.Refresh.Visible = True
-            Navigator.Buttons.SaveBookmark.Visible = True
-            Navigator.Buttons.GotoBookmark.Visible = True
-            Navigator.Buttons.Filter.Visible = True
-            DataController.DataSource = allReservationsDS
-            DataController.Summary.DefaultGroupSummaryItems = <>
-            DataController.Summary.FooterSummaryItems = <
-              item
-                Kind = skSum
-                FieldName = 'RvGuestCount'
-                Column = tvAllReservationsRvGuestCount
-              end
-              item
-                Kind = skSum
-                FieldName = 'RRGuestCount'
-                Column = tvAllReservationsRRGuestCount
-              end
-              item
-                Kind = skSum
-                FieldName = 'breakfastGuests'
-                Column = tvAllReservationsbreakfastGuests
-              end>
-            DataController.Summary.SummaryGroups = <>
-            OptionsBehavior.IncSearch = True
-            OptionsData.CancelOnExit = False
-            OptionsData.Deleting = False
-            OptionsData.DeletingConfirmation = False
-            OptionsData.Editing = False
-            OptionsData.Inserting = False
-            OptionsView.Footer = True
-            OptionsView.Indicator = True
-            object tvAllReservationsRoom: TcxGridDBColumn
-              Caption = 'Room.'
-              DataBinding.FieldName = 'Room'
-              Width = 44
-            end
-            object tvAllReservationsRoomType: TcxGridDBColumn
-              Caption = 'Type'
-              DataBinding.FieldName = 'RoomType'
-              Width = 49
-            end
-            object tvAllReservationsReservationName: TcxGridDBColumn
-              Caption = 'Reservation Name'
-              DataBinding.FieldName = 'ReservationName'
-              Visible = False
-              Width = 189
-            end
-            object tvAllReservationsmainGuests: TcxGridDBColumn
-              DataBinding.FieldName = 'mainGuests'
-              Visible = False
-              Width = 164
-            end
-            object tvAllReservationsResLine: TcxGridDBColumn
-              Caption = 'Guest / Reservation Name'
-              DataBinding.FieldName = 'ResLine'
-              Width = 210
-            end
-            object tvAllReservationsArrivalDate: TcxGridDBColumn
-              Caption = 'Arrival'
-              DataBinding.FieldName = 'ArrivalDate'
-            end
-            object tvAllReservationsDepartureDate: TcxGridDBColumn
-              Caption = 'Departure'
-              DataBinding.FieldName = 'DepartureDate'
-            end
-            object tvAllReservationsNights: TcxGridDBColumn
-              DataBinding.FieldName = 'Nights'
-              Width = 42
-            end
-            object tvAllReservationsRRGuestCount: TcxGridDBColumn
-              Caption = 'Guests'
-              DataBinding.FieldName = 'RRGuestCount'
-              Width = 40
-            end
-            object tvAllReservationsAdults: TcxGridDBColumn
-              DataBinding.FieldName = 'Adults'
-              Width = 52
-            end
-            object tvAllReservationsChildren: TcxGridDBColumn
-              DataBinding.FieldName = 'Children'
-              Width = 52
-            end
-            object tvAllReservationsInfants: TcxGridDBColumn
-              DataBinding.FieldName = 'Infants'
-              Width = 47
-            end
-            object tvAllReservationsStatustext: TcxGridDBColumn
-              Caption = 'Status'
-              DataBinding.FieldName = 'Statustext'
-              Width = 89
-            end
-            object tvAllReservationsCurrency: TcxGridDBColumn
-              DataBinding.FieldName = 'Currency'
-            end
-            object tvAllReservationsAverageRate: TcxGridDBColumn
-              Caption = 'Average Rate'
-              DataBinding.FieldName = 'AverageRate'
-              OnGetProperties = tvAllReservationsAverageRateGetProperties
-            end
-            object tvAllReservationsTotalStayRate: TcxGridDBColumn
-              Caption = 'Total Stay Rate'
-              DataBinding.FieldName = 'TotalStayRate'
-              OnGetProperties = tvAllReservationsTotalStayRateGetProperties
-            end
-            object tvAllReservationsBreakfast: TcxGridDBColumn
-              Caption = 'Breakfast.'
-              DataBinding.FieldName = 'Breakfast'
-            end
-            object tvAllReservationsbreakfastGuests: TcxGridDBColumn
-              Caption = 'Brkf. Guests'
-              DataBinding.FieldName = 'breakfastGuests'
-              Width = 58
-            end
-            object tvAllReservationsmarketSegmentDescription: TcxGridDBColumn
-              Caption = 'Market'
-              DataBinding.FieldName = 'marketSegmentDescription'
-              Width = 90
-            end
-            object tvAllReservationsGroupAccount: TcxGridDBColumn
-              Caption = 'Group'
-              DataBinding.FieldName = 'GroupAccount'
-            end
-            object tvAllReservationsRoomDescription: TcxGridDBColumn
-              Caption = 'Room description'
-              DataBinding.FieldName = 'RoomDescription'
-              Width = 84
-            end
-            object tvAllReservationsFloor: TcxGridDBColumn
-              Caption = 'Floor.'
-              DataBinding.FieldName = 'Floor'
-              Width = 35
-            end
-            object tvAllReservationsLocationDescription: TcxGridDBColumn
-              Caption = 'Location'
-              DataBinding.FieldName = 'LocationDescription'
-              Width = 102
-            end
-            object tvAllReservationsCustomer: TcxGridDBColumn
-              DataBinding.FieldName = 'Customer'
-              Visible = False
-            end
-            object tvAllReservationsCustomerName: TcxGridDBColumn
-              DataBinding.FieldName = 'CustomerName'
-            end
-            object tvAllReservationsPersonalID: TcxGridDBColumn
-              Caption = 'Personal ID'
-              DataBinding.FieldName = 'PersonalID'
-            end
-            object tvAllReservationsEmail: TcxGridDBColumn
-              DataBinding.FieldName = 'Email'
-              Visible = False
-              Width = 148
-            end
-            object tvAllReservationsWebsite: TcxGridDBColumn
-              DataBinding.FieldName = 'Website'
-              Visible = False
-              Width = 125
-            end
-            object tvAllReservationsRvGuestCount: TcxGridDBColumn
-              DataBinding.FieldName = 'RvGuestCount'
-              Visible = False
-            end
-            object tvAllReservationsNoRoom: TcxGridDBColumn
-              Caption = 'No-Room'
-              DataBinding.FieldName = 'NoRoom'
-            end
-            object tvAllReservationsBookable: TcxGridDBColumn
-              DataBinding.FieldName = 'Bookable'
-              Visible = False
-            end
-            object tvAllReservationsStatistics: TcxGridDBColumn
-              DataBinding.FieldName = 'Statistics'
-              Visible = False
-            end
-            object tvAllReservationsRoomReservation: TcxGridDBColumn
-              DataBinding.FieldName = 'RoomReservation'
-              Visible = False
-            end
-            object tvAllReservationsroomCount: TcxGridDBColumn
-              DataBinding.FieldName = 'roomCount'
-              Visible = False
-            end
-            object tvAllReservationsReservation: TcxGridDBColumn
-              DataBinding.FieldName = 'Reservation'
-              Visible = False
-            end
-            object tvAllReservationsStatus: TcxGridDBColumn
-              DataBinding.FieldName = 'Status'
-              Visible = False
-            end
-            object tvAllReservationsLocation: TcxGridDBColumn
-              DataBinding.FieldName = 'Location'
-              Visible = False
-            end
-            object tvAllReservationsmarketSegment: TcxGridDBColumn
-              DataBinding.FieldName = 'marketSegment'
-              Visible = False
-            end
-            object tvAllReservationsresInfo: TcxGridDBColumn
-              DataBinding.FieldName = 'resInfo'
-              Visible = False
-              GroupIndex = 0
-              Width = 242
-            end
-            object tvAllReservationshidden: TcxGridDBColumn
-              DataBinding.FieldName = 'hidden'
-              Visible = False
-            end
-            object tvAllReservationsEquipments: TcxGridDBColumn
-              DataBinding.FieldName = 'Equipments'
-              Visible = False
-              Width = 137
-            end
-            object tvAllReservationsGroupReservation: TcxGridDBColumn
-              Caption = 'Group Res.'
-              DataBinding.FieldName = 'GroupReservation'
-              Visible = False
-            end
-            object tvAllReservationsGroupReservationName: TcxGridDBColumn
-              DataBinding.FieldName = 'GroupReservationName'
-              Width = 200
-            end
-            object tvAllReservationsmem: TcxGridDBColumn
-              DataBinding.FieldName = 'mem'
-              Width = 200
-            end
-          end
-          object lvAllReservations: TcxGridLevel
-            GridView = tvAllReservations
-          end
-        end
-      end
-      object tabPeriod: TsTabSheet
-        Caption = 'tabPeriod'
-        ImageIndex = 2
-        object sLabel2: TsLabel
-          Left = 224
-          Top = 400
-          Width = 38
-          Height = 13
-          Caption = 'sLabel2'
-        end
-        object panPeriodRooms: TsPanel
-          Left = 0
-          Top = 0
-          Width = 976
-          Height = 126
-          Align = alClient
-          BevelOuter = bvNone
-          TabOrder = 0
-          SkinData.SkinSection = 'PANEL'
-          object lblLoading: TsLabel
+      object pageMainGrids: TsPageControl
+        Left = 1
+        Top = 1
+        Width = 975
+        Height = 302
+        ActivePage = tabOneDayView
+        Align = alClient
+        TabOrder = 1
+        OnChange = pageMainGridsChange
+        SkinData.SkinSection = 'PAGECONTROL'
+        ExplicitLeft = 53
+        ExplicitTop = -4
+        ExplicitWidth = 976
+        object tabOneDayView: TsTabSheet
+          Caption = 'tabOneDayView'
+          ImageIndex = 8
+          ExplicitWidth = 974
+          object grOneDayRooms: TAdvStringGrid
             Left = 0
             Top = 0
-            Width = 976
-            Height = 4
-            Hint = 'Search Filter Active'
-            Align = alTop
-            AutoSize = False
-            Caption = '  Reading period...'
-            Color = clRed
-            ParentColor = False
-            ParentFont = False
-            Visible = False
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = 15789037
-            Font.Height = -17
-            Font.Name = 'Tahoma'
-            Font.Style = [fsBold]
-            UseSkinColor = False
-            ExplicitWidth = 845
-          end
-          object lblRoomBeingMoved: TsLabel
-            Left = 0
-            Top = 4
-            Width = 976
-            Height = 24
-            Align = alTop
-            Caption = '---'
-            Color = clBlue
-            ParentColor = False
-            ParentFont = False
-            Visible = False
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clWhite
-            Font.Height = -20
-            Font.Name = 'Tahoma'
-            Font.Style = [fsBold]
-            UseSkinColor = False
-            ExplicitWidth = 27
-          end
-          object grPeriodRooms: TAdvStringGrid
-            Tag = 1
-            Left = 0
-            Top = 28
-            Width = 976
-            Height = 76
+            Width = 967
+            Height = 274
             Cursor = crDefault
             Align = alClient
+            BevelEdges = []
             BevelInner = bvNone
             BevelOuter = bvNone
+            ColCount = 13
             Ctl3D = False
             DefaultRowHeight = 18
-            DoubleBuffered = True
             DrawingStyle = gdsClassic
+            RowCount = 2
             Font.Charset = DEFAULT_CHARSET
             Font.Color = clBlack
             Font.Height = -11
-            Font.Name = 'Tahoma'
+            Font.Name = 'Segoe UI'
             Font.Style = []
-            Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRowSizing, goColSizing]
+            GradientEndColor = cl3DDkShadow
+            Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goColSizing]
             ParentCtl3D = False
-            ParentDoubleBuffered = False
             ParentFont = False
             PopupMenu = mmnuOneDayGrid
             ScrollBars = ssBoth
             TabOrder = 0
-            StyleElements = [seClient, seBorder]
-            OnDragDrop = grPeriodRoomsDragDrop
-            OnDragOver = grPeriodRoomsDragOver
-            OnDrawCell = grPeriodRoomsDrawCell
-            OnEnter = grPeriodRoomsEnter
-            OnKeyDown = grPeriodRoomsKeyDown
-            OnKeyUp = grPeriodRoomsKeyUp
-            OnMouseDown = grPeriodRoomsMouseDown
-            OnMouseMove = grPeriodRoomsMouseMove
-            OnMouseUp = grPeriodRoomsMouseUp
-            OnStartDrag = grPeriodRoomsStartDrag
+            OnDragDrop = grOneDayRoomsDragDrop
+            OnDragOver = grOneDayRoomsDragOver
+            OnDrawCell = grOneDayRoomsDrawCell
+            OnEndDrag = grOneDayRoomsEndDrag
+            OnEnter = grOneDayRoomsEnter
+            OnMouseDown = grOneDayRoomsMouseDown
+            OnMouseMove = grOneDayRoomsMouseMove
+            OnMouseUp = grOneDayRoomsMouseUp
+            OnStartDrag = grOneDayRoomsStartDrag
+            ActiveRowColor = clWhite
+            GridLineColor = 15527152
+            GridFixedLineColor = 13947601
             HoverRowCells = [hcNormal, hcSelected]
-            OnGetCellColor = grPeriodRoomsGetCellColor
-            OnGetCellBorder = grPeriodRoomsGetCellBorder
-            OnGetAlignment = grPeriodRoomsGetAlignment
-            OnGridHint = grPeriodRoomsGridHint
-            OnClickCell = grPeriodRoomsClickCell
-            OnRightClickCell = grPeriodRoomsClickCell
-            OnDblClickCell = grPeriodRoomsDblClickCell
+            OnGetCellPrintColor = grOneDayRoomsGetCellPrintColor
+            OnGridHint = grOneDayRoomsGridHint
+            OnClickCell = grOneDayRoomsClickCell
+            OnRightClickCell = grOneDayRoomsClickCell
+            OnDblClickCell = grOneDayRoomsDblClickCell
             OnDragScroll = grOneDayRoomsDragScroll
-            OnResize = grPeriodRoomsResize
-            DragDropSettings.OleDropTarget = True
-            DragDropSettings.OleDropSource = True
-            ActiveCellShow = True
+            OnResize = grOneDayRoomsResize
+            HintShowSizing = True
+            OnEndColumnSize = grOneDayRoomsEndColumnSize
             ActiveCellFont.Charset = DEFAULT_CHARSET
             ActiveCellFont.Color = clWindowText
             ActiveCellFont.Height = -11
             ActiveCellFont.Name = 'Tahoma'
             ActiveCellFont.Style = [fsBold]
-            BackGround.Color = clWhite
-            CellNode.NodeType = cnFlat
+            ActiveCellColor = 16575452
+            ActiveCellColorTo = 16571329
+            BackGround.Display = bdFixed
+            BackGround.Cells = bcAll
+            BackGround.Color = clWindowFrame
+            BackGround.ColorTo = clWindowFrame
+            CellNode.Color = clGray
+            ControlLook.FixedGradientMirrorFrom = 16049884
+            ControlLook.FixedGradientMirrorTo = 16247261
             ControlLook.FixedGradientHoverFrom = 16710648
             ControlLook.FixedGradientHoverTo = 16446189
             ControlLook.FixedGradientHoverMirrorFrom = 16049367
@@ -993,10 +229,12 @@ object frmMain: TfrmMain
               'Larger than'
               'Smaller than'
               'Clear')
-            FixedColWidth = 73
+            FixedColWidth = 47
             FixedRowHeight = 18
+            FixedRowAlways = True
+            FixedColAlways = True
             FixedFont.Charset = DEFAULT_CHARSET
-            FixedFont.Color = clWhite
+            FixedFont.Color = clBlack
             FixedFont.Height = -11
             FixedFont.Name = 'Tahoma'
             FixedFont.Style = [fsBold]
@@ -1006,15 +244,16 @@ object frmMain: TfrmMain
             HoverButtons.Position = hbLeftFromColumnLeft
             HTMLSettings.ImageFolder = 'images'
             HTMLSettings.ImageBaseName = 'img'
-            Look = glSoft
-            MouseActions.AllColumnSize = True
-            MouseActions.AllRowSize = True
+            Look = glWin7
             MouseActions.DisjunctCellSelect = True
-            Multilinecells = True
+            PrintSettings.FooterSize = 50
+            PrintSettings.HeaderSize = 50
             PrintSettings.Date = ppBottomRight
             PrintSettings.DateFormat = 'dd/mm/yyyy hh:nn'
             PrintSettings.PageNr = ppBottomCenter
             PrintSettings.Title = ppTopCenter
+            PrintSettings.TitleLines.Strings = (
+              'Guest status 04-06-2014')
             PrintSettings.Font.Charset = DEFAULT_CHARSET
             PrintSettings.Font.Color = clWindowText
             PrintSettings.Font.Height = -11
@@ -1035,32 +274,16 @@ object frmMain: TfrmMain
             PrintSettings.FooterFont.Height = -11
             PrintSettings.FooterFont.Name = 'Tahoma'
             PrintSettings.FooterFont.Style = []
+            PrintSettings.LeftSize = 50
+            PrintSettings.RightSize = 50
+            PrintSettings.TitleSpacing = 50
             PrintSettings.Orientation = poLandscape
             PrintSettings.FitToPage = fpAlways
             PrintSettings.PageNumSep = '/'
             PrintSettings.PrintGraphics = True
-            RowIndicator.Data = {
-              42020000424D4202000000000000420000002800000010000000100000000100
-              1000030000000002000000000000000000000000000000000000007C0000E003
-              00001F0000001F7C1F7C1F7C1F7C1F7C1F7C1F7C1F7C1F7C1F7C1F7C1F7C1F7C
-              1F7C1F7C1F7C1F7C1F7C1F7C1F7C1F7C1F7C1F7C1F7C1F7C1F7C1F7C1F7C1F7C
-              1F7C1F7C1F7C1F7C000000000000000000000000000000000000000000001F7C
-              1F7C1F7C1F7C1F7C0000FF3DFF3DFF3DFF3D9F109F109F101A001A0000001F7C
-              1F7C1F7C1F7C1F7C0000DF5AFF3DFF3DFF3DFF3D9F109F109F101A0000001F7C
-              1F7C1F7C1F7C1F7C0000DF5ADF5AFF3DFF3DFF3DFF3D9F109F109F1000001F7C
-              1F7C1F7C1F7C1F7C0000DF5ADF5ADF5AFF3DFF3DFF3DFF3D9F109F1000001F7C
-              1F7C1F7C1F7C1F7C0000DF5ADF5ADF5ADF5AFF3DFF3DFF3DFF3D9F1000001F7C
-              1F7C1F7C1F7C1F7C0000DF5ADF5ADF5ADF5ADF5AFF3DFF3DFF3DFF3D00001F7C
-              1F7C1F7C1F7C00000000DF5ADF5ADF5ADF5ADF5ADF5AFF3DFF3DFF3D00000000
-              1F7C1F7C1F7C1F7C0000DF5ADF5ADF5ADF5ADF5ADF5ADF5AFF3DFF3D00001F7C
-              1F7C1F7C1F7C1F7C1F7C0000DF5ADF5ADF5ADF5ADF5ADF5ADF5A00001F7C1F7C
-              1F7C1F7C1F7C1F7C1F7C00000000DF5ADF5ADF5ADF5ADF5A00001F7C1F7C1F7C
-              1F7C1F7C1F7C1F7C1F7C00001F7C0000DF5ADF5ADF5A00001F7C1F7C1F7C1F7C
-              1F7C1F7C1F7C1F7C1F7C0000000000000000DF5A00001F7C1F7C1F7C1F7C1F7C
-              1F7C1F7C1F7C1F7C1F7C1F7C1F7C1F7C1F7C00001F7C1F7C1F7C1F7C1F7C1F7C
-              1F7C1F7C1F7C}
             ScrollWidth = 21
-            SearchFooter.Color = clBtnFace
+            SearchFooter.Color = 16645370
+            SearchFooter.ColorTo = 16247261
             SearchFooter.FindNextCaption = 'Find next'
             SearchFooter.FindPrevCaption = 'Find previous'
             SearchFooter.Font.Charset = DEFAULT_CHARSET
@@ -1074,558 +297,1466 @@ object frmMain: TfrmMain
             SearchFooter.HintFindPrev = 'Find previous occurence'
             SearchFooter.HintHighlight = 'Highlight occurences'
             SearchFooter.MatchCaseCaption = 'Match case'
-            SelectionColor = clHighlight
-            SelectionTextColor = clHighlightText
-            SizeWhileTyping.Height = True
             SortSettings.DefaultFormat = ssAutomatic
+            SortSettings.HeaderColor = 16579058
             SortSettings.HeaderColorTo = 16579058
             SortSettings.HeaderMirrorColor = 16380385
             SortSettings.HeaderMirrorColorTo = 16182488
             Version = '8.1.2.0'
+            ExplicitWidth = 974
             ColWidths = (
-              73
-              20
-              20
-              20
-              20)
+              47
+              49
+              150
+              66
+              59
+              22
+              6
+              44
+              39
+              128
+              64
+              52
+              21)
+            object imgBlinker: TImage
+              Left = 290
+              Top = 37
+              Width = 64
+              Height = 64
+              AutoSize = True
+              Picture.Data = {
+                0B546478504E47496D61676589504E470D0A1A0A0000000D4948445200000040
+                000000400806000000AA6971DE0000000467414D410000B18F0BFC6105000000
+                097048597300000EBC00000EBC0195BC72490000000774494D4507DD0C020937
+                23303C6A120000000774455874417574686F7200A9AECC480000000C74455874
+                4465736372697074696F6E00130921230000000A74455874436F707972696768
+                7400AC0FCC3A0000000974455874536F667477617265005D70FF3A0000000774
+                455874536F7572636500F5FF83EB0000000874455874436F6D6D656E7400F6CC
+                96BF00000006744558745469746C6500A8EED2270000097249444154785EE59A
+                4D6C54D71986DD104220093163FC6FA0FC19840425F106FC47137545D3761575
+                934D979112C3186390BA2062D3165562D9B2420D2586188C0D48858A0A5B50B1
+                A858B08A94482522AA221B836CD906663CC3EDFB9CB9C7BE9E39B6E7E70EB634
+                477A75C79FEF3DF7BCEFF9BEEF9CEFCC94799E57D2701A4B094E6329C1692C25
+                388DA504A7B194E03496129CC65282D3584A701A4B094E6329C1690C01E5C964
+                F2B4705B9F736E7A6EE8E5CB977FD14757DFA1C2692C109087F8DEF6E3D7BC59
+                5C4DE1D855AFEDD880AE16FD73F08BE3D763894462607272F2A303070EBC0ECA
+                CACA5608AF093F0169EF2B084E630128D7CCA591B7C407441C9257BCB6EE3EAF
+                EDA88FAECBB3885E8EC5E3F1AB4F9E3CF96D6D6DED9A868686D560D3A64D6FEE
+                DAB5EB0D915FE98B119A084E639E30E463B197EFCD216F66BC5FA4AF78ED22DE
+                DA75C96B3B22986BAFD77AE4EB140EF7C69E3F7F7EFEF1E3C79F6ED9B2E55D8B
+                6DDBB6ADADA8A8784702BCBD6FDFBED5228F10A189E034E60127F994AB6BD645
+                BEED28B37C2945B6F3A270C16B895E30D7D643E763E3E3E37F1D1D1DFD7D6363
+                E37A20E295D5D5D55512A18ABFE509911D3B76BCE38B40582C1B01E627DFAD99
+                C7CD99719F781BE4A35F69C6BFF25AC0A1BFC7474646FE0C366EDC580B366CD8
+                50575F5FDF20110CD4EA110211F0043F1C5E738C2567388D396071F226BE7B67
+                0468D18CA744C0037AE2C3C3C35D131313678333BF79F3E6EA9D3B77D6421C68
+                E6EBB059019A9A9AC8054B2E4016E4E7C6B911C1A0D76B8E5E9C26DE897B1BEF
+                4A76E59044082B0290BD060FE0FF24475F80250D81ACC8A7E2DD92D7DFB29108
+                F7777E3DFDF4E9D35F2BE3FF134240F1FE566565E5DB0851575757016144B0D0
+                CC474886AC0822BFA449D0909F8CC5DECF8ABC603C01887C4B777F426BFC2FB5
+                57E8BF7DFBB67167625AAEBF4A9FD790E876EFDEBDCE860357E58575909777AC
+                0ED3FD81D3B800F224AF3CA095A0E5D800E4DFA70FFAA24F66124210F3D77BE3
+                0590067CC6C6FF2C799E098CA920388DF3A068E4D9ED4190307895E481D3E880
+                8DF9BCC8B71F19488E8D8D6DF1B7C83FB5FDA69397CBAF4D271F70FB50778016
+                4E631A0A26AF6C5F27F2F7D457067962DF929710E5AF923C701A03288C7CD740
+                F2D1A347115B1CD97E17234F2284BC440875DBEB82D3E8A360F210551F8FD5D7
+                92362640E338AB8F193C330C3E0A23CF7D2A82669FB54855843CCF66C8EE085B
+                A33DE6CA46898D533BFD9B7EE696CA858086D701DFAB52E5B54F3883FC543CDE
+                343BF030C8CBD62D012885799E6228550B18501BB41EEE9128EA13716C9F2181
+                46589170811F5E2B33C8E32EE19307904F5585AD51CDFCA1F33EF973FEF57CAA
+                3EC02BE83F64D0C835E417769CE41E5359FAC48B4C5E30FD5CD176587580996D
+                09F0F9975EF3E77FF35A3ABE9437C80BA8123B150E94C82183A62DF77AA0FAA2
+                C226DC190144FE8AAE734E7242230FE4FE4600FA9000CD220D798B960E794247
+                2A1C8A019A48D7525972157973D610F48032C5FEE9835FDCD08043266F6043E0
+                92298999E916BC4030334F224C9BB5304193DB5351D6505C7105730410F6263D
+                6FF0E017FF10294B5E315B30798000EA1311E8834427A44E87D437EF2822684A
+                7CA6D466E611016F4817A02C168BBD974826870E9EB8EE93A59E27315D349FF3
+                23EF43CF988351EB591C9399A3B2E283460224F6950CCDA10B274F1902B03E72
+                24AD5AFDDA07C7F4B0D433EBB5993109A2652C2FF2063C23E859136233C85CB7
+                C3068DACCF4AA0E5308217CC2B00FB6FEDDF7F236FB8FE61772A668DCB325B76
+                F69D04972F68F0E2F085ECEF9F33D4BA04A0445D895AC3C3C3BF7BF6EC599F39
+                CCC4131412ED4715C34680453CA0F39AD289595D4E2712893BFABCA44DE3789E
+                8B00A650D9B367CF5B9CDB4D4D4DF590484C0828764D0C672FC25EF617BA06CF
+                00CC3980B0C26E4F19DC2BC01A42807D003940A1509F21803F4813066C1DD935
+                8D8E8E462726A6CE1A11488C798A303636B60ED2C2EB6C45D992F20EC0CC141B
+                C1F867F6B76EDDBA613E0198A1155604B2E7C4C4C41FC6C6C6FF9497085DD792
+                66754924066FDEBC59457851EF73CEC7A070C95701665ED72ABDBB8604A87737
+                3805006A1935FBF8F8F81F358BBE084A883988D07CFC6A42CF364984A173E7CE
+                49D7D4F137036283A2FECD01683181DB33F37A77FDF6EDDBEBF9F2C549DEC225
+                02E7F8FFFBF1C7CFE688A065665111B4F43577F7271E3E7CB8FFC58B17774F9E
+                3CB99D81A84FF3ED0F8361561860B190FE3EE74628083593AC1081782D4804F6
+                0DBA67FFD1CB89FBF7EFB74B847F9F387162278361600C8619D2DF45F304FAC6
+                DBF03A3E2B2FAC77120FC28A403E088AC01EE1FBEF7FF8245D84D406C925029B
+                9F7EAF557B89FD877AA6EFDEBDFB0122C813C47D96BCC488E83DE5366EC304FD
+                DABEE1406E73924E47BA0824B08E8E8E6A44F8EEBBFF7E9C9D08B30516DF1035
+                472F4C0F0D0D7DE87B42A30655C537420C90E488D0E9593C2C4864B3F2488455
+                4EC22E2C20C2AD6FBEF9F657D98A6042855321BE2A3B72317EEFDEBD9F93134E
+                9D3AB5557D469819F61FFE3BDEE07D61C2EE3BC425752CE6223B1F5C229C3973
+                66E3F4F4F41DE2DA5477768964B65D22985CE097C608D6D51B7FF0E0411B7DD0
+                176EC9EC40DE1F64D14E8481D3B8107C1166F608A18810BD145B2A119CC6C5E0
+                12A1AFAFAF51E1F09F1B37FEF5B31911162A9BD34538BC3422388DD9C08AC000
+                AD08838383BB2170EBD6AD3D7989B0049EE034668B741118B015816C9E97089D
+                2911586158AE8A2D82D3980B5C2230F09191913BDA3A7BAA213C95D49E0879DA
+                065396EAB1B90D1BFFE31EEE9D9C9CF454851A118B2D82D3982B8222B0CE3260
+                066F09B0B46167E5D07D66696329E26AC19A6C8B249ED19525D1EC0AFD22E65D
+                FA085B04A7311F302006161481415B212291C85AC8B1C6339B80FB82A0F4462C
+                EDDBD7E9EF99C34B8010F4C7737A0FDF182F2F0140BA08100E8A002068C1FFD2
+                01795BB6EAFE1A7D363F94E26F768AF4A96757F11ED7187285D358088222305B
+                F6874F10D3DFFCCC2D0211102C548280ACEEAB9117D5E919F35339C4C02B104E
+                E1637E28E57A7FAE701A0B859A39EE0AEE13987DC8D7D4D45442D0D6E6F301D2
+                9CD8887003B53B36C44100F5B5BC05006AC613FC84F726B14F1E40083C61210F
+                B04028CA5791AE443C3CC90F2D12E1B2F8A5E882F045C01B4C96C71BA8F2F008
+                661242D980844A2805C82FABDF0A2F0A5F04E30D08810B2306841603F7713FCF
+                F13CFDD09FEB3DF9C0690C1B6A7882F5869C8EC2EDBD3CE73F6FFA72BD271F38
+                8DA504A7B174E095FD1F21B355973FA962C40000000049454E44AE426082}
+              Transparent = True
+              Visible = False
+            end
+            object pnlNoRoomDrop: TsPanel
+              Left = 513
+              Top = 160
+              Width = 84
+              Height = 77
+              BevelOuter = bvLowered
+              BorderWidth = 2
+              BorderStyle = bsSingle
+              Color = 16777153
+              TabOrder = 0
+              Visible = False
+              OnDragDrop = pnlNoRoomDropDragDrop
+              OnDragOver = pnlNoRoomDropDragOver
+              SkinData.SkinSection = 'PANEL'
+              object arrowImage: TImage
+                Left = 14
+                Top = 8
+                Width = 52
+                Height = 52
+                AutoSize = True
+                Transparent = True
+                OnDragDrop = pnlNoRoomDropDragDrop
+                OnDragOver = pnlNoRoomDropDragOver
+              end
+              object lblNoRoom: TsLabel
+                Left = 3
+                Top = 59
+                Width = 76
+                Height = 13
+                Align = alBottom
+                Alignment = taCenter
+                Caption = 'No Room'
+                ParentFont = False
+                Font.Charset = DEFAULT_CHARSET
+                Font.Color = clBlack
+                Font.Height = -11
+                Font.Name = 'Tahoma'
+                Font.Style = [fsBold]
+                ExplicitWidth = 50
+              end
+            end
           end
-          object pnlViewType: TsPanel
-            Left = 288
-            Top = 64
-            Width = 185
-            Height = 49
-            TabOrder = 1
+        end
+        object tabGuestList: TsTabSheet
+          Caption = 'tabGuestList'
+          ImageIndex = 9
+          ExplicitWidth = 974
+          object Panel3: TsPanel
+            Left = 0
+            Top = 0
+            Width = 967
+            Height = 100
+            Align = alTop
+            BevelOuter = bvNone
+            TabOrder = 0
             SkinData.SkinSection = 'TRANSPARENT'
-            object cbxViewTypes: TsComboBox
-              Left = 1
-              Top = 1
-              Width = 183
+            ExplicitWidth = 974
+            object rgrGroupreportStayType: TsRadioGroup
+              Left = 2
+              Top = 4
+              Width = 128
+              Height = 84
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = []
+              ParentBackground = False
+              ParentFont = False
+              TabOrder = 0
+              OnClick = rgrGroupreportStayTypeClick
+              SkinData.SkinSection = 'GROUPBOX'
+              Items.Strings = (
+                'Arrival'
+                'Departure'
+                'All')
+              OnChanging = rgrGroupreportStayTypeChanging
+            end
+            object btnGroupReportExpandAll: TcxButton
+              Left = 136
+              Top = 11
+              Width = 117
+              Height = 22
+              Caption = 'Expand All'
+              LookAndFeel.NativeStyle = False
+              TabOrder = 1
+              OnClick = btnGroupReportExpandAllClick
+            end
+            object btnGroupreportCollapseAll: TcxButton
+              Left = 136
+              Top = 39
+              Width = 117
               Height = 21
+              Caption = 'Collapse All'
+              LookAndFeel.NativeStyle = False
+              TabOrder = 2
+              OnClick = btnGroupreportCollapseAllClick
+            end
+            object btnGuestListExcel: TcxButton
+              Left = 136
+              Top = 66
+              Width = 117
+              Height = 22
+              Caption = 'Excel'
+              LookAndFeel.NativeStyle = False
+              TabOrder = 3
+              OnClick = btnGuestListExcelClick
+            end
+            object grbGroupReportProperties: TsGroupBox
+              Left = 301
+              Top = 4
+              Width = 258
+              Height = 84
+              Caption = 'Report'
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = []
+              ParentFont = False
+              TabOrder = 4
+              SkinData.SkinSection = 'GROUPBOX'
+              object chkNewPage: TsCheckBox
+                Left = 3
+                Top = 15
+                Width = 151
+                Height = 17
+                Caption = 'Reservation on new page'
+                Font.Charset = DEFAULT_CHARSET
+                Font.Color = clWindowText
+                Font.Height = -11
+                Font.Name = 'Tahoma'
+                Font.Style = []
+                ParentFont = False
+                TabOrder = 0
+                SkinData.SkinSection = 'CHECKBOX'
+                ImgChecked = 0
+                ImgUnchecked = 0
+              end
+              object chkPrintMemo: TsCheckBox
+                Left = 3
+                Top = 36
+                Width = 81
+                Height = 17
+                Caption = 'Print memo'
+                Font.Charset = DEFAULT_CHARSET
+                Font.Color = clWindowText
+                Font.Height = -11
+                Font.Name = 'Tahoma'
+                Font.Style = []
+                ParentFont = False
+                TabOrder = 1
+                SkinData.SkinSection = 'CHECKBOX'
+                ImgChecked = 0
+                ImgUnchecked = 0
+              end
+              object btnGroupReportShow: TcxButton
+                Left = 74
+                Top = 58
+                Width = 80
+                Height = 21
+                Caption = 'Show'
+                LookAndFeel.NativeStyle = False
+                TabOrder = 2
+                OnClick = btnGroupReportShowClick
+              end
+            end
+            object btnBreakfastGuests: TcxButton
+              Left = 394
+              Top = 11
+              Width = 110
+              Height = 21
+              Caption = 'Breakfast guests'
+              LookAndFeel.NativeStyle = False
+              TabOrder = 5
+              Visible = False
+              OnClick = btnBreakfastGuestsClick
+            end
+          end
+          object gAllReservations: TcxGrid
+            Left = 0
+            Top = 100
+            Width = 967
+            Height = 174
+            Align = alClient
+            BevelInner = bvNone
+            BevelOuter = bvRaised
+            BorderStyle = cxcbsNone
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
+            PopupMenu = pupGroups
+            TabOrder = 1
+            LookAndFeel.NativeStyle = False
+            ExplicitWidth = 974
+            object tvAllReservations: TcxGridDBTableView
+              Navigator.Buttons.CustomButtons = <>
+              Navigator.Buttons.First.Visible = True
+              Navigator.Buttons.PriorPage.Visible = True
+              Navigator.Buttons.Prior.Visible = True
+              Navigator.Buttons.Next.Visible = True
+              Navigator.Buttons.NextPage.Visible = True
+              Navigator.Buttons.Last.Visible = True
+              Navigator.Buttons.Insert.Enabled = False
+              Navigator.Buttons.Insert.Visible = False
+              Navigator.Buttons.Append.Enabled = False
+              Navigator.Buttons.Append.Visible = False
+              Navigator.Buttons.Delete.Enabled = False
+              Navigator.Buttons.Delete.Visible = False
+              Navigator.Buttons.Edit.Enabled = False
+              Navigator.Buttons.Edit.Visible = False
+              Navigator.Buttons.Post.Enabled = False
+              Navigator.Buttons.Post.Visible = False
+              Navigator.Buttons.Cancel.Enabled = False
+              Navigator.Buttons.Cancel.Visible = True
+              Navigator.Buttons.Refresh.Visible = True
+              Navigator.Buttons.SaveBookmark.Visible = True
+              Navigator.Buttons.GotoBookmark.Visible = True
+              Navigator.Buttons.Filter.Visible = True
+              DataController.DataSource = allReservationsDS
+              DataController.Summary.DefaultGroupSummaryItems = <>
+              DataController.Summary.FooterSummaryItems = <
+                item
+                  Kind = skSum
+                  FieldName = 'RvGuestCount'
+                  Column = tvAllReservationsRvGuestCount
+                end
+                item
+                  Kind = skSum
+                  FieldName = 'RRGuestCount'
+                  Column = tvAllReservationsRRGuestCount
+                end
+                item
+                  Kind = skSum
+                  FieldName = 'breakfastGuests'
+                  Column = tvAllReservationsbreakfastGuests
+                end>
+              DataController.Summary.SummaryGroups = <>
+              OptionsBehavior.IncSearch = True
+              OptionsData.CancelOnExit = False
+              OptionsData.Deleting = False
+              OptionsData.DeletingConfirmation = False
+              OptionsData.Editing = False
+              OptionsData.Inserting = False
+              OptionsView.Footer = True
+              OptionsView.Indicator = True
+              object tvAllReservationsRoom: TcxGridDBColumn
+                Caption = 'Room.'
+                DataBinding.FieldName = 'Room'
+                Width = 44
+              end
+              object tvAllReservationsRoomType: TcxGridDBColumn
+                Caption = 'Type'
+                DataBinding.FieldName = 'RoomType'
+                Width = 49
+              end
+              object tvAllReservationsReservationName: TcxGridDBColumn
+                Caption = 'Reservation Name'
+                DataBinding.FieldName = 'ReservationName'
+                Visible = False
+                Width = 189
+              end
+              object tvAllReservationsmainGuests: TcxGridDBColumn
+                DataBinding.FieldName = 'mainGuests'
+                Visible = False
+                Width = 164
+              end
+              object tvAllReservationsResLine: TcxGridDBColumn
+                Caption = 'Guest / Reservation Name'
+                DataBinding.FieldName = 'ResLine'
+                Width = 210
+              end
+              object tvAllReservationsArrivalDate: TcxGridDBColumn
+                Caption = 'Arrival'
+                DataBinding.FieldName = 'ArrivalDate'
+              end
+              object tvAllReservationsDepartureDate: TcxGridDBColumn
+                Caption = 'Departure'
+                DataBinding.FieldName = 'DepartureDate'
+              end
+              object tvAllReservationsNights: TcxGridDBColumn
+                DataBinding.FieldName = 'Nights'
+                Width = 42
+              end
+              object tvAllReservationsRRGuestCount: TcxGridDBColumn
+                Caption = 'Guests'
+                DataBinding.FieldName = 'RRGuestCount'
+                Width = 40
+              end
+              object tvAllReservationsAdults: TcxGridDBColumn
+                DataBinding.FieldName = 'Adults'
+                Width = 52
+              end
+              object tvAllReservationsChildren: TcxGridDBColumn
+                DataBinding.FieldName = 'Children'
+                Width = 52
+              end
+              object tvAllReservationsInfants: TcxGridDBColumn
+                DataBinding.FieldName = 'Infants'
+                Width = 47
+              end
+              object tvAllReservationsStatustext: TcxGridDBColumn
+                Caption = 'Status'
+                DataBinding.FieldName = 'Statustext'
+                Width = 89
+              end
+              object tvAllReservationsCurrency: TcxGridDBColumn
+                DataBinding.FieldName = 'Currency'
+              end
+              object tvAllReservationsAverageRate: TcxGridDBColumn
+                Caption = 'Average Rate'
+                DataBinding.FieldName = 'AverageRate'
+                OnGetProperties = tvAllReservationsAverageRateGetProperties
+              end
+              object tvAllReservationsTotalStayRate: TcxGridDBColumn
+                Caption = 'Total Stay Rate'
+                DataBinding.FieldName = 'TotalStayRate'
+                OnGetProperties = tvAllReservationsTotalStayRateGetProperties
+              end
+              object tvAllReservationsBreakfast: TcxGridDBColumn
+                Caption = 'Breakfast.'
+                DataBinding.FieldName = 'Breakfast'
+              end
+              object tvAllReservationsbreakfastGuests: TcxGridDBColumn
+                Caption = 'Brkf. Guests'
+                DataBinding.FieldName = 'breakfastGuests'
+                Width = 58
+              end
+              object tvAllReservationsmarketSegmentDescription: TcxGridDBColumn
+                Caption = 'Market'
+                DataBinding.FieldName = 'marketSegmentDescription'
+                Width = 90
+              end
+              object tvAllReservationsGroupAccount: TcxGridDBColumn
+                Caption = 'Group'
+                DataBinding.FieldName = 'GroupAccount'
+              end
+              object tvAllReservationsRoomDescription: TcxGridDBColumn
+                Caption = 'Room description'
+                DataBinding.FieldName = 'RoomDescription'
+                Width = 84
+              end
+              object tvAllReservationsFloor: TcxGridDBColumn
+                Caption = 'Floor.'
+                DataBinding.FieldName = 'Floor'
+                Width = 35
+              end
+              object tvAllReservationsLocationDescription: TcxGridDBColumn
+                Caption = 'Location'
+                DataBinding.FieldName = 'LocationDescription'
+                Width = 102
+              end
+              object tvAllReservationsCustomer: TcxGridDBColumn
+                DataBinding.FieldName = 'Customer'
+                Visible = False
+              end
+              object tvAllReservationsCustomerName: TcxGridDBColumn
+                DataBinding.FieldName = 'CustomerName'
+              end
+              object tvAllReservationsPersonalID: TcxGridDBColumn
+                Caption = 'Personal ID'
+                DataBinding.FieldName = 'PersonalID'
+              end
+              object tvAllReservationsEmail: TcxGridDBColumn
+                DataBinding.FieldName = 'Email'
+                Visible = False
+                Width = 148
+              end
+              object tvAllReservationsWebsite: TcxGridDBColumn
+                DataBinding.FieldName = 'Website'
+                Visible = False
+                Width = 125
+              end
+              object tvAllReservationsRvGuestCount: TcxGridDBColumn
+                DataBinding.FieldName = 'RvGuestCount'
+                Visible = False
+              end
+              object tvAllReservationsNoRoom: TcxGridDBColumn
+                Caption = 'No-Room'
+                DataBinding.FieldName = 'NoRoom'
+              end
+              object tvAllReservationsBookable: TcxGridDBColumn
+                DataBinding.FieldName = 'Bookable'
+                Visible = False
+              end
+              object tvAllReservationsStatistics: TcxGridDBColumn
+                DataBinding.FieldName = 'Statistics'
+                Visible = False
+              end
+              object tvAllReservationsRoomReservation: TcxGridDBColumn
+                DataBinding.FieldName = 'RoomReservation'
+                Visible = False
+              end
+              object tvAllReservationsroomCount: TcxGridDBColumn
+                DataBinding.FieldName = 'roomCount'
+                Visible = False
+              end
+              object tvAllReservationsReservation: TcxGridDBColumn
+                DataBinding.FieldName = 'Reservation'
+                Visible = False
+              end
+              object tvAllReservationsStatus: TcxGridDBColumn
+                DataBinding.FieldName = 'Status'
+                Visible = False
+              end
+              object tvAllReservationsLocation: TcxGridDBColumn
+                DataBinding.FieldName = 'Location'
+                Visible = False
+              end
+              object tvAllReservationsmarketSegment: TcxGridDBColumn
+                DataBinding.FieldName = 'marketSegment'
+                Visible = False
+              end
+              object tvAllReservationsresInfo: TcxGridDBColumn
+                DataBinding.FieldName = 'resInfo'
+                Visible = False
+                GroupIndex = 0
+                Width = 242
+              end
+              object tvAllReservationshidden: TcxGridDBColumn
+                DataBinding.FieldName = 'hidden'
+                Visible = False
+              end
+              object tvAllReservationsEquipments: TcxGridDBColumn
+                DataBinding.FieldName = 'Equipments'
+                Visible = False
+                Width = 137
+              end
+              object tvAllReservationsGroupReservation: TcxGridDBColumn
+                Caption = 'Group Res.'
+                DataBinding.FieldName = 'GroupReservation'
+                Visible = False
+              end
+              object tvAllReservationsGroupReservationName: TcxGridDBColumn
+                DataBinding.FieldName = 'GroupReservationName'
+                Width = 200
+              end
+              object tvAllReservationsmem: TcxGridDBColumn
+                DataBinding.FieldName = 'mem'
+                Width = 200
+              end
+            end
+            object lvAllReservations: TcxGridLevel
+              GridView = tvAllReservations
+            end
+          end
+        end
+        object tabPeriod: TsTabSheet
+          Caption = 'tabPeriod'
+          ImageIndex = 2
+          ExplicitWidth = 974
+          object sLabel2: TsLabel
+            Left = 224
+            Top = 400
+            Width = 38
+            Height = 13
+            Caption = 'sLabel2'
+          end
+          object panPeriodRooms: TsPanel
+            Left = 0
+            Top = 0
+            Width = 967
+            Height = 124
+            Align = alClient
+            BevelOuter = bvNone
+            TabOrder = 0
+            SkinData.SkinSection = 'PANEL'
+            ExplicitWidth = 974
+            object lblLoading: TsLabel
+              Left = 0
+              Top = 0
+              Width = 967
+              Height = 4
+              Hint = 'Search Filter Active'
               Align = alTop
-              Alignment = taLeftJustify
-              SkinData.SkinSection = 'COMBOBOX'
-              VerticalAlignment = taAlignTop
-              Style = csDropDownList
-              Color = clWhite
+              AutoSize = False
+              Caption = '  Reading period...'
+              Color = clRed
+              ParentColor = False
+              ParentFont = False
+              Visible = False
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = 15789037
+              Font.Height = -17
+              Font.Name = 'Tahoma'
+              Font.Style = [fsBold]
+              UseSkinColor = False
+              ExplicitWidth = 845
+            end
+            object lblRoomBeingMoved: TsLabel
+              Left = 0
+              Top = 4
+              Width = 967
+              Height = 24
+              Align = alTop
+              Caption = '---'
+              Color = clBlue
+              ParentColor = False
+              ParentFont = False
+              Visible = False
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWhite
+              Font.Height = -20
+              Font.Name = 'Tahoma'
+              Font.Style = [fsBold]
+              UseSkinColor = False
+              ExplicitWidth = 27
+            end
+            object grPeriodRooms: TAdvStringGrid
+              Tag = 1
+              Left = 0
+              Top = 28
+              Width = 967
+              Height = 74
+              Cursor = crDefault
+              Align = alClient
+              BevelInner = bvNone
+              BevelOuter = bvNone
+              Ctl3D = False
+              DefaultRowHeight = 18
+              DoubleBuffered = True
+              DrawingStyle = gdsClassic
               Font.Charset = DEFAULT_CHARSET
               Font.Color = clBlack
               Font.Height = -11
               Font.Name = 'Tahoma'
               Font.Style = []
-              ItemIndex = 0
+              Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRowSizing, goColSizing]
+              ParentCtl3D = False
+              ParentDoubleBuffered = False
               ParentFont = False
+              PopupMenu = mmnuOneDayGrid
+              ScrollBars = ssBoth
               TabOrder = 0
-              Text = 'One line'
-              OnCloseUp = cbxViewTypesCloseUp
-              Items.Strings = (
-                'One line'
-                'Two lines'
-                'Three lines')
+              StyleElements = [seClient, seBorder]
+              OnDragDrop = grPeriodRoomsDragDrop
+              OnDragOver = grPeriodRoomsDragOver
+              OnDrawCell = grPeriodRoomsDrawCell
+              OnEnter = grPeriodRoomsEnter
+              OnKeyDown = grPeriodRoomsKeyDown
+              OnKeyUp = grPeriodRoomsKeyUp
+              OnMouseDown = grPeriodRoomsMouseDown
+              OnMouseMove = grPeriodRoomsMouseMove
+              OnMouseUp = grPeriodRoomsMouseUp
+              OnStartDrag = grPeriodRoomsStartDrag
+              HoverRowCells = [hcNormal, hcSelected]
+              OnGetCellColor = grPeriodRoomsGetCellColor
+              OnGetCellBorder = grPeriodRoomsGetCellBorder
+              OnGetAlignment = grPeriodRoomsGetAlignment
+              OnGridHint = grPeriodRoomsGridHint
+              OnClickCell = grPeriodRoomsClickCell
+              OnRightClickCell = grPeriodRoomsClickCell
+              OnDblClickCell = grPeriodRoomsDblClickCell
+              OnDragScroll = grOneDayRoomsDragScroll
+              OnResize = grPeriodRoomsResize
+              DragDropSettings.OleDropTarget = True
+              DragDropSettings.OleDropSource = True
+              ActiveCellShow = True
+              ActiveCellFont.Charset = DEFAULT_CHARSET
+              ActiveCellFont.Color = clWindowText
+              ActiveCellFont.Height = -11
+              ActiveCellFont.Name = 'Tahoma'
+              ActiveCellFont.Style = [fsBold]
+              BackGround.Color = clWhite
+              CellNode.NodeType = cnFlat
+              ControlLook.FixedGradientHoverFrom = 16710648
+              ControlLook.FixedGradientHoverTo = 16446189
+              ControlLook.FixedGradientHoverMirrorFrom = 16049367
+              ControlLook.FixedGradientHoverMirrorTo = 15258305
+              ControlLook.FixedGradientDownFrom = 15853789
+              ControlLook.FixedGradientDownTo = 15852760
+              ControlLook.FixedGradientDownMirrorFrom = 15522767
+              ControlLook.FixedGradientDownMirrorTo = 15588559
+              ControlLook.FixedGradientDownBorder = 14007466
+              ControlLook.DropDownHeader.Font.Charset = DEFAULT_CHARSET
+              ControlLook.DropDownHeader.Font.Color = clWindowText
+              ControlLook.DropDownHeader.Font.Height = -11
+              ControlLook.DropDownHeader.Font.Name = 'Tahoma'
+              ControlLook.DropDownHeader.Font.Style = []
+              ControlLook.DropDownHeader.Visible = True
+              ControlLook.DropDownHeader.Buttons = <>
+              ControlLook.DropDownFooter.Font.Charset = DEFAULT_CHARSET
+              ControlLook.DropDownFooter.Font.Color = clWindowText
+              ControlLook.DropDownFooter.Font.Height = -11
+              ControlLook.DropDownFooter.Font.Name = 'Tahoma'
+              ControlLook.DropDownFooter.Font.Style = []
+              ControlLook.DropDownFooter.Visible = True
+              ControlLook.DropDownFooter.Buttons = <>
+              DragScrollOptions.Active = True
+              Filter = <>
+              FilterDropDown.Font.Charset = DEFAULT_CHARSET
+              FilterDropDown.Font.Color = clWindowText
+              FilterDropDown.Font.Height = -11
+              FilterDropDown.Font.Name = 'Tahoma'
+              FilterDropDown.Font.Style = []
+              FilterDropDownClear = '(All)'
+              FilterEdit.TypeNames.Strings = (
+                'Starts with'
+                'Ends with'
+                'Contains'
+                'Not contains'
+                'Equal'
+                'Not equal'
+                'Larger than'
+                'Smaller than'
+                'Clear')
+              FixedColWidth = 73
+              FixedRowHeight = 18
+              FixedFont.Charset = DEFAULT_CHARSET
+              FixedFont.Color = clWhite
+              FixedFont.Height = -11
+              FixedFont.Name = 'Tahoma'
+              FixedFont.Style = [fsBold]
+              Flat = True
+              FloatFormat = '%.2f'
+              HoverButtons.Buttons = <>
+              HoverButtons.Position = hbLeftFromColumnLeft
+              HTMLSettings.ImageFolder = 'images'
+              HTMLSettings.ImageBaseName = 'img'
+              Look = glSoft
+              MouseActions.AllColumnSize = True
+              MouseActions.AllRowSize = True
+              MouseActions.DisjunctCellSelect = True
+              Multilinecells = True
+              PrintSettings.Date = ppBottomRight
+              PrintSettings.DateFormat = 'dd/mm/yyyy hh:nn'
+              PrintSettings.PageNr = ppBottomCenter
+              PrintSettings.Title = ppTopCenter
+              PrintSettings.Font.Charset = DEFAULT_CHARSET
+              PrintSettings.Font.Color = clWindowText
+              PrintSettings.Font.Height = -11
+              PrintSettings.Font.Name = 'Tahoma'
+              PrintSettings.Font.Style = []
+              PrintSettings.FixedFont.Charset = DEFAULT_CHARSET
+              PrintSettings.FixedFont.Color = clWindowText
+              PrintSettings.FixedFont.Height = -11
+              PrintSettings.FixedFont.Name = 'Tahoma'
+              PrintSettings.FixedFont.Style = []
+              PrintSettings.HeaderFont.Charset = DEFAULT_CHARSET
+              PrintSettings.HeaderFont.Color = clWindowText
+              PrintSettings.HeaderFont.Height = -11
+              PrintSettings.HeaderFont.Name = 'Tahoma'
+              PrintSettings.HeaderFont.Style = []
+              PrintSettings.FooterFont.Charset = DEFAULT_CHARSET
+              PrintSettings.FooterFont.Color = clWindowText
+              PrintSettings.FooterFont.Height = -11
+              PrintSettings.FooterFont.Name = 'Tahoma'
+              PrintSettings.FooterFont.Style = []
+              PrintSettings.Orientation = poLandscape
+              PrintSettings.FitToPage = fpAlways
+              PrintSettings.PageNumSep = '/'
+              PrintSettings.PrintGraphics = True
+              RowIndicator.Data = {
+                42020000424D4202000000000000420000002800000010000000100000000100
+                1000030000000002000000000000000000000000000000000000007C0000E003
+                00001F0000001F7C1F7C1F7C1F7C1F7C1F7C1F7C1F7C1F7C1F7C1F7C1F7C1F7C
+                1F7C1F7C1F7C1F7C1F7C1F7C1F7C1F7C1F7C1F7C1F7C1F7C1F7C1F7C1F7C1F7C
+                1F7C1F7C1F7C1F7C000000000000000000000000000000000000000000001F7C
+                1F7C1F7C1F7C1F7C0000FF3DFF3DFF3DFF3D9F109F109F101A001A0000001F7C
+                1F7C1F7C1F7C1F7C0000DF5AFF3DFF3DFF3DFF3D9F109F109F101A0000001F7C
+                1F7C1F7C1F7C1F7C0000DF5ADF5AFF3DFF3DFF3DFF3D9F109F109F1000001F7C
+                1F7C1F7C1F7C1F7C0000DF5ADF5ADF5AFF3DFF3DFF3DFF3D9F109F1000001F7C
+                1F7C1F7C1F7C1F7C0000DF5ADF5ADF5ADF5AFF3DFF3DFF3DFF3D9F1000001F7C
+                1F7C1F7C1F7C1F7C0000DF5ADF5ADF5ADF5ADF5AFF3DFF3DFF3DFF3D00001F7C
+                1F7C1F7C1F7C00000000DF5ADF5ADF5ADF5ADF5ADF5AFF3DFF3DFF3D00000000
+                1F7C1F7C1F7C1F7C0000DF5ADF5ADF5ADF5ADF5ADF5ADF5AFF3DFF3D00001F7C
+                1F7C1F7C1F7C1F7C1F7C0000DF5ADF5ADF5ADF5ADF5ADF5ADF5A00001F7C1F7C
+                1F7C1F7C1F7C1F7C1F7C00000000DF5ADF5ADF5ADF5ADF5A00001F7C1F7C1F7C
+                1F7C1F7C1F7C1F7C1F7C00001F7C0000DF5ADF5ADF5A00001F7C1F7C1F7C1F7C
+                1F7C1F7C1F7C1F7C1F7C0000000000000000DF5A00001F7C1F7C1F7C1F7C1F7C
+                1F7C1F7C1F7C1F7C1F7C1F7C1F7C1F7C1F7C00001F7C1F7C1F7C1F7C1F7C1F7C
+                1F7C1F7C1F7C}
+              ScrollWidth = 21
+              SearchFooter.Color = clBtnFace
+              SearchFooter.FindNextCaption = 'Find next'
+              SearchFooter.FindPrevCaption = 'Find previous'
+              SearchFooter.Font.Charset = DEFAULT_CHARSET
+              SearchFooter.Font.Color = clWindowText
+              SearchFooter.Font.Height = -11
+              SearchFooter.Font.Name = 'Tahoma'
+              SearchFooter.Font.Style = []
+              SearchFooter.HighLightCaption = 'Highlight'
+              SearchFooter.HintClose = 'Close'
+              SearchFooter.HintFindNext = 'Find next occurence'
+              SearchFooter.HintFindPrev = 'Find previous occurence'
+              SearchFooter.HintHighlight = 'Highlight occurences'
+              SearchFooter.MatchCaseCaption = 'Match case'
+              SelectionColor = clHighlight
+              SelectionTextColor = clHighlightText
+              SizeWhileTyping.Height = True
+              SortSettings.DefaultFormat = ssAutomatic
+              SortSettings.HeaderColorTo = 16579058
+              SortSettings.HeaderMirrorColor = 16380385
+              SortSettings.HeaderMirrorColorTo = 16182488
+              Version = '8.1.2.0'
+              ExplicitWidth = 974
+              ColWidths = (
+                73
+                20
+                20
+                20
+                20)
+            end
+            object pnlViewType: TsPanel
+              Left = 288
+              Top = 64
+              Width = 185
+              Height = 49
+              TabOrder = 1
+              SkinData.SkinSection = 'TRANSPARENT'
+              object cbxViewTypes: TsComboBox
+                Left = 1
+                Top = 1
+                Width = 183
+                Height = 21
+                Align = alTop
+                Alignment = taLeftJustify
+                SkinData.SkinSection = 'COMBOBOX'
+                VerticalAlignment = taAlignTop
+                Style = csDropDownList
+                Color = clWhite
+                Font.Charset = DEFAULT_CHARSET
+                Font.Color = clBlack
+                Font.Height = -11
+                Font.Name = 'Tahoma'
+                Font.Style = []
+                ItemIndex = 0
+                ParentFont = False
+                TabOrder = 0
+                Text = 'One line'
+                OnCloseUp = cbxViewTypesCloseUp
+                Items.Strings = (
+                  'One line'
+                  'Two lines'
+                  'Three lines')
+              end
+            end
+            object pnlLegends: TsPanel
+              Left = 0
+              Top = 102
+              Width = 967
+              Height = 22
+              Align = alBottom
+              BevelOuter = bvNone
+              TabOrder = 2
+              SkinData.SkinSection = 'TRANSPARENT'
+              ExplicitWidth = 974
+              object sPanel2: TsPanel
+                Left = -13
+                Top = 0
+                Width = 980
+                Height = 22
+                Align = alRight
+                BevelOuter = bvNone
+                TabOrder = 0
+                SkinData.SkinSection = 'TRANSPARENT'
+                ExplicitLeft = -6
+                object __ExplainG: TsLabel
+                  Left = 194
+                  Top = -3
+                  Width = 118
+                  Height = 21
+                  AutoSize = False
+                  Caption = 'Checked in'
+                  ParentFont = False
+                  Font.Charset = DEFAULT_CHARSET
+                  Font.Color = clWindowText
+                  Font.Height = -16
+                  Font.Name = 'Segoe UI'
+                  Font.Style = []
+                end
+                object shpG: TShape
+                  Left = 173
+                  Top = 2
+                  Width = 15
+                  Height = 16
+                  Brush.Color = clRed
+                  Pen.Color = clRed
+                  Shape = stCircle
+                end
+                object __ExplainP: TsLabel
+                  Left = 25
+                  Top = -3
+                  Width = 132
+                  Height = 21
+                  AutoSize = False
+                  Caption = 'Due to arrive'
+                  ParentFont = False
+                  Font.Charset = DEFAULT_CHARSET
+                  Font.Color = clWindowText
+                  Font.Height = -16
+                  Font.Name = 'Segoe UI'
+                  Font.Style = []
+                end
+                object shpP: TShape
+                  Left = 4
+                  Top = 2
+                  Width = 15
+                  Height = 16
+                  Brush.Color = clRed
+                  Pen.Color = clRed
+                  Shape = stCircle
+                end
+                object __ExplainDeparting: TsLabel
+                  Left = 357
+                  Top = -3
+                  Width = 142
+                  Height = 21
+                  AutoSize = False
+                  Caption = 'Departing'
+                  ParentFont = False
+                  Font.Charset = DEFAULT_CHARSET
+                  Font.Color = clWindowText
+                  Font.Height = -16
+                  Font.Name = 'Segoe UI'
+                  Font.Style = []
+                end
+                object shpDeparting: TShape
+                  Left = 336
+                  Top = 2
+                  Width = 15
+                  Height = 16
+                  Brush.Color = clRed
+                  Pen.Color = clRed
+                  Shape = stCircle
+                end
+                object __ExplainB: TsLabel
+                  Left = 522
+                  Top = -3
+                  Width = 132
+                  Height = 21
+                  AutoSize = False
+                  Caption = 'Due to arrive'
+                  ParentFont = False
+                  Font.Charset = DEFAULT_CHARSET
+                  Font.Color = clWindowText
+                  Font.Height = -16
+                  Font.Name = 'Segoe UI'
+                  Font.Style = []
+                end
+                object shpB: TShape
+                  Left = 501
+                  Top = 2
+                  Width = 15
+                  Height = 16
+                  Brush.Color = clRed
+                  Pen.Color = clRed
+                  Shape = stCircle
+                end
+                object __ExplainN: TsLabel
+                  Left = 696
+                  Top = -3
+                  Width = 132
+                  Height = 21
+                  AutoSize = False
+                  Caption = 'Due to arrive'
+                  ParentFont = False
+                  Font.Charset = DEFAULT_CHARSET
+                  Font.Color = clWindowText
+                  Font.Height = -16
+                  Font.Name = 'Segoe UI'
+                  Font.Style = []
+                end
+                object shpN: TShape
+                  Left = 675
+                  Top = 2
+                  Width = 15
+                  Height = 16
+                  Brush.Color = clRed
+                  Pen.Color = clRed
+                  Shape = stCircle
+                end
+                object __ExplainO: TsLabel
+                  Left = 864
+                  Top = -3
+                  Width = 132
+                  Height = 21
+                  AutoSize = False
+                  Caption = 'Due to arrive'
+                  ParentFont = False
+                  Font.Charset = DEFAULT_CHARSET
+                  Font.Color = clWindowText
+                  Font.Height = -16
+                  Font.Name = 'Segoe UI'
+                  Font.Style = []
+                end
+                object shpO: TShape
+                  Left = 843
+                  Top = 2
+                  Width = 15
+                  Height = 16
+                  Brush.Color = clRed
+                  Pen.Color = clRed
+                  Shape = stCircle
+                end
+              end
             end
           end
-          object pnlLegends: TsPanel
+          object splitPeriod: TcxSplitter
             Left = 0
-            Top = 104
-            Width = 976
-            Height = 22
+            Top = 124
+            Width = 967
+            Height = 8
+            Hint = 'No Rooms'
+            Margins.Left = 5
+            Margins.Top = 5
+            Margins.Right = 5
+            Margins.Bottom = 5
+            HotZoneClassName = 'TcxMediaPlayer9Style'
+            AlignSplitter = salBottom
+            NativeBackground = False
+            AutoSnap = True
+            MinSize = 50
+            Control = pnlPeriodNoRooms
+            OnMoved = splitPeriodMoved
+            Color = 6842472
+            ParentColor = False
+            ExplicitWidth = 974
+          end
+          object pnlPeriodNoRooms: TsPanel
+            Left = 0
+            Top = 165
+            Width = 967
+            Height = 109
+            Hint = 'Test Hint'
             Align = alBottom
-            BevelOuter = bvNone
             TabOrder = 2
-            SkinData.SkinSection = 'TRANSPARENT'
-            object sPanel2: TsPanel
-              Left = -4
-              Top = 0
-              Width = 980
-              Height = 22
+            SkinData.SkinSection = 'PANEL'
+            ExplicitWidth = 974
+            object grPeriodRooms_NO: TAdvStringGrid
+              Tag = 2
+              Left = 1
+              Top = 1
+              Width = 965
+              Height = 107
+              Cursor = crDefault
+              Align = alClient
+              Ctl3D = False
+              DefaultRowHeight = 21
+              DrawingStyle = gdsClassic
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clBlack
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = []
+              Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goDrawFocusSelected]
+              ParentCtl3D = False
+              ParentFont = False
+              PopupMenu = mmnuOneDayGrid
+              ScrollBars = ssBoth
+              TabOrder = 0
+              OnDragDrop = grPeriodRooms_NODragDrop
+              OnDragOver = grPeriodRooms_NODragOver
+              OnDrawCell = grPeriodRoomsDrawCell
+              OnKeyDown = grPeriodRooms_NOKeyDown
+              OnKeyUp = grPeriodRooms_NOKeyUp
+              OnMouseDown = grPeriodRooms_NOMouseDown
+              OnMouseMove = grPeriodRoomsMouseMove
+              HoverRowCells = [hcNormal, hcSelected]
+              OnGetCellColor = grPeriodRooms_NOGetCellColor
+              OnGetCellBorder = grPeriodRooms_NOGetCellBorder
+              OnGridHint = grPeriodRoomsGridHint
+              OnClickCell = grPeriodRooms_NOClickCell
+              OnRightClickCell = grPeriodRooms_NOClickCell
+              OnDblClickCell = grPeriodRoomsDblClickCell
+              DragDropSettings.OleDropTarget = True
+              DragDropSettings.OleDropSource = True
+              ActiveCellShow = True
+              ActiveCellFont.Charset = DEFAULT_CHARSET
+              ActiveCellFont.Color = clWindowText
+              ActiveCellFont.Height = -11
+              ActiveCellFont.Name = 'Tahoma'
+              ActiveCellFont.Style = [fsBold]
+              ControlLook.FixedGradientHoverFrom = clGray
+              ControlLook.FixedGradientHoverTo = clWhite
+              ControlLook.FixedGradientDownFrom = clGray
+              ControlLook.FixedGradientDownTo = clSilver
+              ControlLook.DropDownHeader.Font.Charset = DEFAULT_CHARSET
+              ControlLook.DropDownHeader.Font.Color = clWindowText
+              ControlLook.DropDownHeader.Font.Height = -11
+              ControlLook.DropDownHeader.Font.Name = 'Tahoma'
+              ControlLook.DropDownHeader.Font.Style = []
+              ControlLook.DropDownHeader.Visible = True
+              ControlLook.DropDownHeader.Buttons = <>
+              ControlLook.DropDownFooter.Font.Charset = DEFAULT_CHARSET
+              ControlLook.DropDownFooter.Font.Color = clWindowText
+              ControlLook.DropDownFooter.Font.Height = -11
+              ControlLook.DropDownFooter.Font.Name = 'Tahoma'
+              ControlLook.DropDownFooter.Font.Style = []
+              ControlLook.DropDownFooter.Visible = True
+              ControlLook.DropDownFooter.Buttons = <>
+              Filter = <>
+              FilterDropDown.Font.Charset = DEFAULT_CHARSET
+              FilterDropDown.Font.Color = clWindowText
+              FilterDropDown.Font.Height = -11
+              FilterDropDown.Font.Name = 'Tahoma'
+              FilterDropDown.Font.Style = []
+              FilterDropDownClear = '(All)'
+              FilterEdit.TypeNames.Strings = (
+                'Starts with'
+                'Ends with'
+                'Contains'
+                'Not contains'
+                'Equal'
+                'Not equal'
+                'Larger than'
+                'Smaller than'
+                'Clear')
+              FixedFont.Charset = DEFAULT_CHARSET
+              FixedFont.Color = clWindowText
+              FixedFont.Height = -11
+              FixedFont.Name = 'Tahoma'
+              FixedFont.Style = [fsBold]
+              Flat = True
+              FloatFormat = '%.2f'
+              HoverButtons.Buttons = <>
+              HoverButtons.Position = hbLeftFromColumnLeft
+              HTMLSettings.ImageFolder = 'images'
+              HTMLSettings.ImageBaseName = 'img'
+              Look = glSoft
+              PrintSettings.DateFormat = 'dd/mm/yyyy'
+              PrintSettings.Font.Charset = DEFAULT_CHARSET
+              PrintSettings.Font.Color = clWindowText
+              PrintSettings.Font.Height = -11
+              PrintSettings.Font.Name = 'Tahoma'
+              PrintSettings.Font.Style = []
+              PrintSettings.FixedFont.Charset = DEFAULT_CHARSET
+              PrintSettings.FixedFont.Color = clWindowText
+              PrintSettings.FixedFont.Height = -11
+              PrintSettings.FixedFont.Name = 'Tahoma'
+              PrintSettings.FixedFont.Style = []
+              PrintSettings.HeaderFont.Charset = DEFAULT_CHARSET
+              PrintSettings.HeaderFont.Color = clWindowText
+              PrintSettings.HeaderFont.Height = -11
+              PrintSettings.HeaderFont.Name = 'Tahoma'
+              PrintSettings.HeaderFont.Style = []
+              PrintSettings.FooterFont.Charset = DEFAULT_CHARSET
+              PrintSettings.FooterFont.Color = clWindowText
+              PrintSettings.FooterFont.Height = -11
+              PrintSettings.FooterFont.Name = 'Tahoma'
+              PrintSettings.FooterFont.Style = []
+              PrintSettings.PageNumSep = '/'
+              ScrollWidth = 21
+              SearchFooter.FindNextCaption = 'Find next'
+              SearchFooter.FindPrevCaption = 'Find previous'
+              SearchFooter.Font.Charset = DEFAULT_CHARSET
+              SearchFooter.Font.Color = clWindowText
+              SearchFooter.Font.Height = -11
+              SearchFooter.Font.Name = 'Tahoma'
+              SearchFooter.Font.Style = []
+              SearchFooter.HighLightCaption = 'Highlight'
+              SearchFooter.HintClose = 'Close'
+              SearchFooter.HintFindNext = 'Find next occurence'
+              SearchFooter.HintFindPrev = 'Find previous occurence'
+              SearchFooter.HintHighlight = 'Highlight occurences'
+              SearchFooter.MatchCaseCaption = 'Match case'
+              SortSettings.DefaultFormat = ssAutomatic
+              Version = '8.1.2.0'
+              ExplicitWidth = 972
+              ColWidths = (
+                64
+                64
+                64
+                64
+                64)
+            end
+          end
+          object pnlBottomViewSettings: TsPanel
+            Left = 0
+            Top = 132
+            Width = 967
+            Height = 33
+            Align = alBottom
+            TabOrder = 3
+            OnMouseEnter = pnlNoRoomButtonsMouseEnter
+            SkinData.SkinSection = 'PANEL'
+            ExplicitWidth = 974
+            object pnlOccupancyViewButtons: TPanel
+              Left = 597
+              Top = 1
+              Width = 369
+              Height = 31
               Align = alRight
               BevelOuter = bvNone
               TabOrder = 0
+              OnMouseMove = btnOccupancyViewMouseMove
+              ExplicitLeft = 604
+              object btnOccupancyViewHide: TSpeedButton
+                Left = 6
+                Top = 3
+                Width = 96
+                Height = 26
+                GroupIndex = 12
+                Caption = 'Hide'
+                Font.Charset = DEFAULT_CHARSET
+                Font.Color = clWindowText
+                Font.Height = -16
+                Font.Name = 'Segoe UI'
+                Font.Style = []
+                ParentFont = False
+                OnClick = btnOccupancyViewHideClick
+                OnMouseMove = btnOccupancyViewMouseMove
+              end
+              object btnOccupancyViewDefault: TSpeedButton
+                Left = 108
+                Top = 3
+                Width = 124
+                Height = 26
+                GroupIndex = 12
+                Down = True
+                Caption = 'Default'
+                Font.Charset = DEFAULT_CHARSET
+                Font.Color = clWindowText
+                Font.Height = -16
+                Font.Name = 'Segoe UI'
+                Font.Style = []
+                ParentFont = False
+                OnClick = btnOccupancyViewHideClick
+                OnMouseMove = btnOccupancyViewMouseMove
+              end
+              object btnOccupancyViewAdvanced: TSpeedButton
+                Left = 238
+                Top = 3
+                Width = 124
+                Height = 26
+                GroupIndex = 12
+                Caption = 'Advanced'
+                Font.Charset = DEFAULT_CHARSET
+                Font.Color = clWindowText
+                Font.Height = -16
+                Font.Name = 'Segoe UI'
+                Font.Style = []
+                ParentFont = False
+                OnClick = btnOccupancyViewHideClick
+                OnMouseMove = btnOccupancyViewMouseMove
+              end
+            end
+            object pnlNoRoomButtons: TsPanel
+              Left = 359
+              Top = 1
+              Width = 238
+              Height = 31
+              Align = alRight
+              BevelOuter = bvNone
+              TabOrder = 1
+              Visible = False
+              OnMouseEnter = pnlNoRoomButtonsMouseEnter
+              OnMouseMove = btnOccupancyViewMouseMove
               SkinData.SkinSection = 'TRANSPARENT'
-              object __ExplainG: TsLabel
-                Left = 194
-                Top = -3
+              ExplicitLeft = 366
+              object btnNoRoomsHide: TSpeedButton
+                Left = 6
+                Top = 3
+                Width = 102
+                Height = 26
+                GroupIndex = 11
+                Caption = 'Hide'
+                Font.Charset = DEFAULT_CHARSET
+                Font.Color = clWindowText
+                Font.Height = -16
+                Font.Name = 'Segoe UI'
+                Font.Style = []
+                ParentFont = False
+                OnClick = btnNoRoomsHideClick
+                OnMouseMove = btnOccupancyViewMouseMove
+              end
+              object btnNoRoomsShow: TSpeedButton
+                Left = 114
+                Top = 3
                 Width = 118
-                Height = 21
-                AutoSize = False
-                Caption = 'Checked in'
-                ParentFont = False
+                Height = 26
+                GroupIndex = 11
+                Down = True
+                Caption = 'Show'
                 Font.Charset = DEFAULT_CHARSET
                 Font.Color = clWindowText
                 Font.Height = -16
                 Font.Name = 'Segoe UI'
                 Font.Style = []
-              end
-              object shpG: TShape
-                Left = 173
-                Top = 2
-                Width = 15
-                Height = 16
-                Brush.Color = clRed
-                Pen.Color = clRed
-                Shape = stCircle
-              end
-              object __ExplainP: TsLabel
-                Left = 25
-                Top = -3
-                Width = 132
-                Height = 21
-                AutoSize = False
-                Caption = 'Due to arrive'
                 ParentFont = False
-                Font.Charset = DEFAULT_CHARSET
-                Font.Color = clWindowText
-                Font.Height = -16
-                Font.Name = 'Segoe UI'
-                Font.Style = []
+                OnClick = btnNoRoomsHideClick
+                OnMouseMove = btnOccupancyViewMouseMove
               end
-              object shpP: TShape
+            end
+            object pnlViewSwitch: TsPanel
+              Left = 1
+              Top = 1
+              Width = 358
+              Height = 31
+              Align = alClient
+              BevelOuter = bvLowered
+              TabOrder = 2
+              OnMouseMove = btnOccupancyViewMouseMove
+              SkinData.SkinSection = 'TRANSPARENT'
+              ExplicitWidth = 365
+              object btnOccupancyView: TSpeedButton
+                AlignWithMargins = True
                 Left = 4
-                Top = 2
-                Width = 15
-                Height = 16
-                Brush.Color = clRed
-                Pen.Color = clRed
-                Shape = stCircle
-              end
-              object __ExplainDeparting: TsLabel
-                Left = 357
-                Top = -3
-                Width = 142
-                Height = 21
-                AutoSize = False
-                Caption = 'Departing'
-                ParentFont = False
+                Top = 3
+                Width = 197
+                Height = 26
+                Margins.Top = 2
+                Margins.Bottom = 1
+                Align = alLeft
+                GroupIndex = 9
+                Down = True
+                Caption = 'Occupancy view'
                 Font.Charset = DEFAULT_CHARSET
                 Font.Color = clWindowText
                 Font.Height = -16
                 Font.Name = 'Segoe UI'
                 Font.Style = []
-              end
-              object shpDeparting: TShape
-                Left = 336
-                Top = 2
-                Width = 15
-                Height = 16
-                Brush.Color = clRed
-                Pen.Color = clRed
-                Shape = stCircle
-              end
-              object __ExplainB: TsLabel
-                Left = 522
-                Top = -3
-                Width = 132
-                Height = 21
-                AutoSize = False
-                Caption = 'Due to arrive'
                 ParentFont = False
+                OnClick = btnOccupancyViewClick
+                OnMouseMove = btnOccupancyViewMouseMove
+                ExplicitTop = 2
+              end
+              object btnUnassignedReservations: TSpeedButton
+                AlignWithMargins = True
+                Left = 207
+                Top = 3
+                Width = 232
+                Height = 26
+                Margins.Top = 2
+                Margins.Bottom = 1
+                Align = alLeft
+                GroupIndex = 9
+                Caption = 'Unassigned reservations (0)'
                 Font.Charset = DEFAULT_CHARSET
                 Font.Color = clWindowText
                 Font.Height = -16
                 Font.Name = 'Segoe UI'
                 Font.Style = []
-              end
-              object shpB: TShape
-                Left = 501
-                Top = 2
-                Width = 15
-                Height = 16
-                Brush.Color = clRed
-                Pen.Color = clRed
-                Shape = stCircle
-              end
-              object __ExplainN: TsLabel
-                Left = 696
-                Top = -3
-                Width = 132
-                Height = 21
-                AutoSize = False
-                Caption = 'Due to arrive'
                 ParentFont = False
-                Font.Charset = DEFAULT_CHARSET
-                Font.Color = clWindowText
-                Font.Height = -16
-                Font.Name = 'Segoe UI'
-                Font.Style = []
-              end
-              object shpN: TShape
-                Left = 675
-                Top = 2
-                Width = 15
-                Height = 16
-                Brush.Color = clRed
-                Pen.Color = clRed
-                Shape = stCircle
-              end
-              object __ExplainO: TsLabel
-                Left = 864
-                Top = -3
-                Width = 132
-                Height = 21
-                AutoSize = False
-                Caption = 'Due to arrive'
-                ParentFont = False
-                Font.Charset = DEFAULT_CHARSET
-                Font.Color = clWindowText
-                Font.Height = -16
-                Font.Name = 'Segoe UI'
-                Font.Style = []
-              end
-              object shpO: TShape
-                Left = 843
-                Top = 2
-                Width = 15
-                Height = 16
-                Brush.Color = clRed
-                Pen.Color = clRed
-                Shape = stCircle
+                OnClick = btnOccupancyViewClick
+                OnMouseMove = btnOccupancyViewMouseMove
               end
             end
           end
         end
-        object splitPeriod: TcxSplitter
-          Left = 0
-          Top = 126
-          Width = 976
-          Height = 8
-          Hint = 'No Rooms'
-          Margins.Left = 5
-          Margins.Top = 5
-          Margins.Right = 5
-          Margins.Bottom = 5
-          HotZoneClassName = 'TcxMediaPlayer9Style'
-          AlignSplitter = salBottom
-          NativeBackground = False
-          AutoSnap = True
-          MinSize = 50
-          Control = pnlPeriodNoRooms
-          OnMoved = splitPeriodMoved
-          Color = 6842472
-          ParentColor = False
+        object tabFreeRooms: TsTabSheet
+          Caption = 'tabFreeRooms'
+          ExplicitWidth = 974
         end
-        object pnlPeriodNoRooms: TsPanel
-          Left = 0
-          Top = 167
-          Width = 976
-          Height = 109
-          Hint = 'Test Hint'
-          Align = alBottom
-          TabOrder = 2
-          SkinData.SkinSection = 'PANEL'
-          object grPeriodRooms_NO: TAdvStringGrid
-            Tag = 2
-            Left = 1
-            Top = 1
-            Width = 974
-            Height = 107
-            Cursor = crDefault
-            Align = alClient
-            Ctl3D = False
-            DefaultRowHeight = 21
-            DrawingStyle = gdsClassic
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clBlack
-            Font.Height = -11
-            Font.Name = 'Tahoma'
-            Font.Style = []
-            Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goDrawFocusSelected]
-            ParentCtl3D = False
-            ParentFont = False
-            PopupMenu = mmnuOneDayGrid
-            ScrollBars = ssBoth
-            TabOrder = 0
-            OnDragDrop = grPeriodRooms_NODragDrop
-            OnDragOver = grPeriodRooms_NODragOver
-            OnDrawCell = grPeriodRoomsDrawCell
-            OnKeyDown = grPeriodRooms_NOKeyDown
-            OnKeyUp = grPeriodRooms_NOKeyUp
-            OnMouseDown = grPeriodRooms_NOMouseDown
-            OnMouseMove = grPeriodRoomsMouseMove
-            HoverRowCells = [hcNormal, hcSelected]
-            OnGetCellColor = grPeriodRooms_NOGetCellColor
-            OnGetCellBorder = grPeriodRooms_NOGetCellBorder
-            OnGridHint = grPeriodRoomsGridHint
-            OnClickCell = grPeriodRooms_NOClickCell
-            OnRightClickCell = grPeriodRooms_NOClickCell
-            OnDblClickCell = grPeriodRoomsDblClickCell
-            DragDropSettings.OleDropTarget = True
-            DragDropSettings.OleDropSource = True
-            ActiveCellShow = True
-            ActiveCellFont.Charset = DEFAULT_CHARSET
-            ActiveCellFont.Color = clWindowText
-            ActiveCellFont.Height = -11
-            ActiveCellFont.Name = 'Tahoma'
-            ActiveCellFont.Style = [fsBold]
-            ControlLook.FixedGradientHoverFrom = clGray
-            ControlLook.FixedGradientHoverTo = clWhite
-            ControlLook.FixedGradientDownFrom = clGray
-            ControlLook.FixedGradientDownTo = clSilver
-            ControlLook.DropDownHeader.Font.Charset = DEFAULT_CHARSET
-            ControlLook.DropDownHeader.Font.Color = clWindowText
-            ControlLook.DropDownHeader.Font.Height = -11
-            ControlLook.DropDownHeader.Font.Name = 'Tahoma'
-            ControlLook.DropDownHeader.Font.Style = []
-            ControlLook.DropDownHeader.Visible = True
-            ControlLook.DropDownHeader.Buttons = <>
-            ControlLook.DropDownFooter.Font.Charset = DEFAULT_CHARSET
-            ControlLook.DropDownFooter.Font.Color = clWindowText
-            ControlLook.DropDownFooter.Font.Height = -11
-            ControlLook.DropDownFooter.Font.Name = 'Tahoma'
-            ControlLook.DropDownFooter.Font.Style = []
-            ControlLook.DropDownFooter.Visible = True
-            ControlLook.DropDownFooter.Buttons = <>
-            Filter = <>
-            FilterDropDown.Font.Charset = DEFAULT_CHARSET
-            FilterDropDown.Font.Color = clWindowText
-            FilterDropDown.Font.Height = -11
-            FilterDropDown.Font.Name = 'Tahoma'
-            FilterDropDown.Font.Style = []
-            FilterDropDownClear = '(All)'
-            FilterEdit.TypeNames.Strings = (
-              'Starts with'
-              'Ends with'
-              'Contains'
-              'Not contains'
-              'Equal'
-              'Not equal'
-              'Larger than'
-              'Smaller than'
-              'Clear')
-            FixedFont.Charset = DEFAULT_CHARSET
-            FixedFont.Color = clWindowText
-            FixedFont.Height = -11
-            FixedFont.Name = 'Tahoma'
-            FixedFont.Style = [fsBold]
-            Flat = True
-            FloatFormat = '%.2f'
-            HoverButtons.Buttons = <>
-            HoverButtons.Position = hbLeftFromColumnLeft
-            HTMLSettings.ImageFolder = 'images'
-            HTMLSettings.ImageBaseName = 'img'
-            Look = glSoft
-            PrintSettings.DateFormat = 'dd/mm/yyyy'
-            PrintSettings.Font.Charset = DEFAULT_CHARSET
-            PrintSettings.Font.Color = clWindowText
-            PrintSettings.Font.Height = -11
-            PrintSettings.Font.Name = 'Tahoma'
-            PrintSettings.Font.Style = []
-            PrintSettings.FixedFont.Charset = DEFAULT_CHARSET
-            PrintSettings.FixedFont.Color = clWindowText
-            PrintSettings.FixedFont.Height = -11
-            PrintSettings.FixedFont.Name = 'Tahoma'
-            PrintSettings.FixedFont.Style = []
-            PrintSettings.HeaderFont.Charset = DEFAULT_CHARSET
-            PrintSettings.HeaderFont.Color = clWindowText
-            PrintSettings.HeaderFont.Height = -11
-            PrintSettings.HeaderFont.Name = 'Tahoma'
-            PrintSettings.HeaderFont.Style = []
-            PrintSettings.FooterFont.Charset = DEFAULT_CHARSET
-            PrintSettings.FooterFont.Color = clWindowText
-            PrintSettings.FooterFont.Height = -11
-            PrintSettings.FooterFont.Name = 'Tahoma'
-            PrintSettings.FooterFont.Style = []
-            PrintSettings.PageNumSep = '/'
-            ScrollWidth = 21
-            SearchFooter.FindNextCaption = 'Find next'
-            SearchFooter.FindPrevCaption = 'Find previous'
-            SearchFooter.Font.Charset = DEFAULT_CHARSET
-            SearchFooter.Font.Color = clWindowText
-            SearchFooter.Font.Height = -11
-            SearchFooter.Font.Name = 'Tahoma'
-            SearchFooter.Font.Style = []
-            SearchFooter.HighLightCaption = 'Highlight'
-            SearchFooter.HintClose = 'Close'
-            SearchFooter.HintFindNext = 'Find next occurence'
-            SearchFooter.HintFindPrev = 'Find previous occurence'
-            SearchFooter.HintHighlight = 'Highlight occurences'
-            SearchFooter.MatchCaseCaption = 'Match case'
-            SortSettings.DefaultFormat = ssAutomatic
-            Version = '8.1.2.0'
-            ColWidths = (
-              64
-              64
-              64
-              64
-              64)
-          end
+        object tabDashboard: TsTabSheet
+          Caption = 'tabDashboard'
+          SkinData.SkinSection = 'TRANSPARENT'
+          ExplicitWidth = 974
         end
-        object pnlBottomViewSettings: TsPanel
-          Left = 0
-          Top = 134
-          Width = 976
-          Height = 33
-          Align = alBottom
-          TabOrder = 3
-          OnMouseEnter = pnlNoRoomButtonsMouseEnter
-          SkinData.SkinSection = 'PANEL'
-          object pnlOccupancyViewButtons: TPanel
-            Left = 606
-            Top = 1
-            Width = 369
-            Height = 31
-            Align = alRight
-            BevelOuter = bvNone
-            TabOrder = 0
-            OnMouseMove = btnOccupancyViewMouseMove
-            object btnOccupancyViewHide: TSpeedButton
-              Left = 6
-              Top = 3
-              Width = 96
-              Height = 26
-              GroupIndex = 12
-              Caption = 'Hide'
-              Font.Charset = DEFAULT_CHARSET
-              Font.Color = clWindowText
-              Font.Height = -16
-              Font.Name = 'Segoe UI'
-              Font.Style = []
-              ParentFont = False
-              OnClick = btnOccupancyViewHideClick
-              OnMouseMove = btnOccupancyViewMouseMove
-            end
-            object btnOccupancyViewDefault: TSpeedButton
-              Left = 108
-              Top = 3
-              Width = 124
-              Height = 26
-              GroupIndex = 12
-              Down = True
-              Caption = 'Default'
-              Font.Charset = DEFAULT_CHARSET
-              Font.Color = clWindowText
-              Font.Height = -16
-              Font.Name = 'Segoe UI'
-              Font.Style = []
-              ParentFont = False
-              OnClick = btnOccupancyViewHideClick
-              OnMouseMove = btnOccupancyViewMouseMove
-            end
-            object btnOccupancyViewAdvanced: TSpeedButton
-              Left = 238
-              Top = 3
-              Width = 124
-              Height = 26
-              GroupIndex = 12
-              Caption = 'Advanced'
-              Font.Charset = DEFAULT_CHARSET
-              Font.Color = clWindowText
-              Font.Height = -16
-              Font.Name = 'Segoe UI'
-              Font.Style = []
-              ParentFont = False
-              OnClick = btnOccupancyViewHideClick
-              OnMouseMove = btnOccupancyViewMouseMove
-            end
-          end
-          object pnlNoRoomButtons: TsPanel
-            Left = 368
-            Top = 1
-            Width = 238
-            Height = 31
-            Align = alRight
-            BevelOuter = bvNone
-            TabOrder = 1
-            Visible = False
-            OnMouseEnter = pnlNoRoomButtonsMouseEnter
-            OnMouseMove = btnOccupancyViewMouseMove
-            SkinData.SkinSection = 'TRANSPARENT'
-            object btnNoRoomsHide: TSpeedButton
-              Left = 6
-              Top = 3
-              Width = 102
-              Height = 26
-              GroupIndex = 11
-              Caption = 'Hide'
-              Font.Charset = DEFAULT_CHARSET
-              Font.Color = clWindowText
-              Font.Height = -16
-              Font.Name = 'Segoe UI'
-              Font.Style = []
-              ParentFont = False
-              OnClick = btnNoRoomsHideClick
-              OnMouseMove = btnOccupancyViewMouseMove
-            end
-            object btnNoRoomsShow: TSpeedButton
-              Left = 114
-              Top = 3
-              Width = 118
-              Height = 26
-              GroupIndex = 11
-              Down = True
-              Caption = 'Show'
-              Font.Charset = DEFAULT_CHARSET
-              Font.Color = clWindowText
-              Font.Height = -16
-              Font.Name = 'Segoe UI'
-              Font.Style = []
-              ParentFont = False
-              OnClick = btnNoRoomsHideClick
-              OnMouseMove = btnOccupancyViewMouseMove
-            end
-          end
-          object pnlViewSwitch: TsPanel
-            Left = 1
-            Top = 1
-            Width = 367
-            Height = 31
-            Align = alClient
-            BevelOuter = bvLowered
-            TabOrder = 2
-            OnMouseMove = btnOccupancyViewMouseMove
-            SkinData.SkinSection = 'TRANSPARENT'
-            object btnOccupancyView: TSpeedButton
-              AlignWithMargins = True
-              Left = 4
-              Top = 3
-              Width = 197
-              Height = 26
-              Margins.Top = 2
-              Margins.Bottom = 1
-              Align = alLeft
-              GroupIndex = 9
-              Down = True
-              Caption = 'Occupancy view'
-              Font.Charset = DEFAULT_CHARSET
-              Font.Color = clWindowText
-              Font.Height = -16
-              Font.Name = 'Segoe UI'
-              Font.Style = []
-              ParentFont = False
-              OnClick = btnOccupancyViewClick
-              OnMouseMove = btnOccupancyViewMouseMove
-              ExplicitTop = 2
-            end
-            object btnUnassignedReservations: TSpeedButton
-              AlignWithMargins = True
-              Left = 207
-              Top = 3
-              Width = 232
-              Height = 26
-              Margins.Top = 2
-              Margins.Bottom = 1
-              Align = alLeft
-              GroupIndex = 9
-              Caption = 'Unassigned reservations (0)'
-              Font.Charset = DEFAULT_CHARSET
-              Font.Color = clWindowText
-              Font.Height = -16
-              Font.Name = 'Segoe UI'
-              Font.Style = []
-              ParentFont = False
-              OnClick = btnOccupancyViewClick
-              OnMouseMove = btnOccupancyViewMouseMove
-            end
-          end
+        object tabRateQuery: TsTabSheet
+          Caption = 'tabRateQuery'
+          ExplicitWidth = 974
         end
       end
-      object tabFreeRooms: TsTabSheet
-        Caption = 'tabFreeRooms'
-      end
-      object tabDashboard: TsTabSheet
-        Caption = 'tabDashboard'
+      object pnlStatSlider: TsPanel
+        Left = 983
+        Top = 1
+        Width = 304
+        Height = 302
+        Align = alRight
+        BevelOuter = bvNone
+        TabOrder = 0
+        Visible = False
         SkinData.SkinSection = 'TRANSPARENT'
-      end
-      object tabRateQuery: TsTabSheet
-        Caption = 'tabRateQuery'
+        object lblBusyDownloading: TsLabel
+          Left = 0
+          Top = 158
+          Width = 304
+          Height = 13
+          Margins.Left = 10
+          Margins.Top = 0
+          Margins.Right = 0
+          Margins.Bottom = 0
+          Align = alTop
+          Caption = 'Downloading...'
+          Color = clBlack
+          ParentColor = False
+          ParentFont = False
+          Visible = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = 15789037
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          UseSkinColor = False
+          ExplicitWidth = 73
+        end
+        object lblCacheNotification: TsLabel
+          Left = 0
+          Top = 145
+          Width = 304
+          Height = 13
+          Margins.Left = 10
+          Margins.Top = 0
+          Margins.Right = 0
+          Margins.Bottom = 0
+          Align = alTop
+          Caption = 'Updating cache...'
+          Color = clGreen
+          ParentColor = False
+          ParentFont = False
+          Visible = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = 15789037
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          UseSkinColor = False
+          ExplicitWidth = 86
+        end
+        object pnlStatistics: TsScrollBox
+          Left = 0
+          Top = 171
+          Width = 304
+          Height = 131
+          Margins.Left = 10
+          Margins.Top = 0
+          Margins.Right = 0
+          Margins.Bottom = 0
+          HorzScrollBar.Visible = False
+          Align = alClient
+          TabOrder = 0
+          SkinData.SkinSection = 'PANEL'
+          ExplicitLeft = 3
+          ExplicitTop = 169
+        end
+        object pnlNotifications: TsPanel
+          Left = 0
+          Top = 0
+          Width = 304
+          Height = 145
+          Margins.Left = 10
+          Margins.Top = 0
+          Margins.Right = 0
+          Margins.Bottom = 0
+          Align = alTop
+          Alignment = taLeftJustify
+          BevelOuter = bvNone
+          TabOrder = 1
+          Visible = False
+          SkinData.SkinSection = 'PANEL'
+        end
       end
     end
     object panMainTop: TsPanel
@@ -2359,7 +2490,6 @@ object frmMain: TfrmMain
           Font.Style = [fsBold]
           ParentFont = False
           OnClick = btnBackForwardClick
-          ExplicitTop = 3
         end
         object btnBack: TcxButton
           AlignWithMargins = True
@@ -2455,93 +2585,6 @@ object frmMain: TfrmMain
         end
       end
     end
-    object pnlStatSlider: TsPanel
-      Left = 984
-      Top = 173
-      Width = 304
-      Height = 304
-      Align = alRight
-      BevelOuter = bvNone
-      TabOrder = 0
-      Visible = False
-      SkinData.SkinSection = 'TRANSPARENT'
-      object lblBusyDownloading: TsLabel
-        Left = 0
-        Top = 158
-        Width = 304
-        Height = 13
-        Margins.Left = 10
-        Margins.Top = 0
-        Margins.Right = 0
-        Margins.Bottom = 0
-        Align = alTop
-        Caption = 'Downloading...'
-        Color = clBlack
-        ParentColor = False
-        ParentFont = False
-        Visible = False
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = 15789037
-        Font.Height = -11
-        Font.Name = 'Tahoma'
-        Font.Style = []
-        UseSkinColor = False
-        ExplicitWidth = 73
-      end
-      object lblCacheNotification: TsLabel
-        Left = 0
-        Top = 145
-        Width = 304
-        Height = 13
-        Margins.Left = 10
-        Margins.Top = 0
-        Margins.Right = 0
-        Margins.Bottom = 0
-        Align = alTop
-        Caption = 'Updating cache...'
-        Color = clGreen
-        ParentColor = False
-        ParentFont = False
-        Visible = False
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = 15789037
-        Font.Height = -11
-        Font.Name = 'Tahoma'
-        Font.Style = []
-        UseSkinColor = False
-        ExplicitWidth = 86
-      end
-      object pnlStatistics: TsScrollBox
-        Left = 0
-        Top = 171
-        Width = 304
-        Height = 133
-        Margins.Left = 10
-        Margins.Top = 0
-        Margins.Right = 0
-        Margins.Bottom = 0
-        HorzScrollBar.Visible = False
-        Align = alClient
-        TabOrder = 0
-        SkinData.SkinSection = 'PANEL'
-      end
-      object pnlNotifications: TsPanel
-        Left = 0
-        Top = 0
-        Width = 304
-        Height = 145
-        Margins.Left = 10
-        Margins.Top = 0
-        Margins.Right = 0
-        Margins.Bottom = 0
-        Align = alTop
-        Alignment = taLeftJustify
-        BevelOuter = bvNone
-        TabOrder = 1
-        Visible = False
-        SkinData.SkinSection = 'PANEL'
-      end
-    end
     object pnlTimeMessage: TsPanel
       Left = 44
       Top = 9
@@ -2563,18 +2606,25 @@ object frmMain: TfrmMain
       SkinData.CustomColor = True
       SkinData.SkinSection = 'PANEL'
       object lblTimeMessage: TsLabel
-        Left = 9
-        Top = 6
-        Width = 24
-        Height = 24
+        Left = 0
+        Top = 0
+        Width = 1035
+        Height = 41
+        Align = alClient
+        Alignment = taCenter
         Caption = '....'
         ParentFont = False
+        Layout = tlCenter
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clRed
         Font.Height = -20
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         UseSkinColor = False
+        ExplicitLeft = 9
+        ExplicitTop = 6
+        ExplicitWidth = 24
+        ExplicitHeight = 24
       end
     end
     object pnlOffline: TsPanel
@@ -2593,7 +2643,7 @@ object frmMain: TfrmMain
       Font.Style = [fsBold]
       ParentBackground = False
       ParentFont = False
-      TabOrder = 5
+      TabOrder = 3
       Visible = False
       OnDblClick = btnGoOnlineClick
       SkinData.CustomColor = True
@@ -9043,6 +9093,11 @@ object frmMain: TfrmMain
         Component = pnlPeriodNoRooms
         Properties.Strings = (
           'Height')
+      end
+      item
+        Component = splStatistics
+        Properties.Strings = (
+          'Left')
       end
       item
         Component = sSkinManager1
