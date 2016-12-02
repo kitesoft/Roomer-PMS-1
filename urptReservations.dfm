@@ -1,30 +1,28 @@
-object frmRptReservations: TfrmRptReservations
+inherited frmRptReservations: TfrmRptReservations
   Left = 788
   Top = 319
   Caption = 'Reservations list'
   ClientHeight = 644
   ClientWidth = 1094
-  Color = clBtnFace
   Constraints.MinWidth = 920
-  Font.Charset = DEFAULT_CHARSET
-  Font.Color = clWindowText
   Font.Height = -11
-  Font.Name = 'Tahoma'
-  Font.Style = []
-  KeyPreview = True
-  OldCreateOrder = False
   Position = poOwnerFormCenter
   OnClose = FormClose
   OnCreate = FormCreate
-  OnKeyDown = FormKeyDown
   OnShow = FormShow
+  ExplicitWidth = 1110
+  ExplicitHeight = 683
   PixelsPerInch = 96
   TextHeight = 13
-  object pnlHolder: TsPanel
+  inherited sbStatusBar: TsStatusBar
+    Top = 624
+    Width = 1094
+  end
+  object pnlHolder: TsPanel [1]
     Left = 0
     Top = 0
     Width = 1094
-    Height = 644
+    Height = 624
     Margins.Left = 2
     Margins.Top = 2
     Margins.Right = 2
@@ -37,17 +35,16 @@ object frmRptReservations: TfrmRptReservations
       Left = 0
       Top = 117
       Width = 1094
-      Height = 507
+      Height = 487
       ActivePage = tabReservation
       Align = alClient
       TabOrder = 0
+      OnChange = pageMainChange
       SkinData.SkinSection = 'PAGECONTROL'
-      OnPageChanging = pageMainPageChanging
+      ExplicitTop = 116
       object tabReservation: TsTabSheet
         Caption = 'Reservations'
         ImageIndex = 2
-        SkinData.CustomColor = False
-        SkinData.CustomFont = False
         object Panel5: TsPanel
           Left = 0
           Top = 0
@@ -56,6 +53,7 @@ object frmRptReservations: TfrmRptReservations
           Align = alTop
           TabOrder = 0
           SkinData.SkinSection = 'PANEL'
+          ExplicitTop = -6
           object btnGuestsExcel: TsButton
             AlignWithMargins = True
             Left = 4
@@ -123,12 +121,30 @@ object frmRptReservations: TfrmRptReservations
             OnClick = btnGuestsRoomClick
             SkinData.SkinSection = 'BUTTON'
           end
+          object btnJumpToRoom: TsButton
+            AlignWithMargins = True
+            Left = 561
+            Top = 4
+            Width = 117
+            Height = 36
+            Align = alLeft
+            Caption = 'Jump to'
+            ImageIndex = 57
+            Images = DImages.PngImageList1
+            ModalResult = 1
+            TabOrder = 5
+            OnClick = btnJumpToRoomClick
+            SkinData.SkinSection = 'BUTTON'
+            ExplicitLeft = 852
+            ExplicitTop = 6
+            ExplicitHeight = 38
+          end
         end
         object grReservations: TcxGrid
           Left = 0
           Top = 44
           Width = 1086
-          Height = 435
+          Height = 415
           Align = alClient
           PopupMenu = PopupMenu1
           TabOrder = 1
@@ -544,17 +560,11 @@ object frmRptReservations: TfrmRptReservations
       end
       object tabRoom: TsTabSheet
         Caption = 'Rooms'
-        SkinData.CustomColor = False
-        SkinData.CustomFont = False
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object grRooms: TcxGrid
           Left = 0
           Top = 44
           Width = 1086
-          Height = 435
+          Height = 415
           Align = alClient
           PopupMenu = PopupMenu1
           TabOrder = 0
@@ -998,7 +1008,7 @@ object frmRptReservations: TfrmRptReservations
     end
     object dxStatusBar1: TdxStatusBar
       Left = 0
-      Top = 624
+      Top = 604
       Width = 1094
       Height = 20
       Panels = <>
@@ -1059,7 +1069,6 @@ object frmRptReservations: TfrmRptReservations
         ParentFont = False
         TabOrder = 0
         SkinData.SkinSection = 'GROUPBOX'
-        Checked = False
         object cbxMonth: TsComboBox
           Left = 15
           Top = 20
@@ -1073,6 +1082,7 @@ object frmRptReservations: TfrmRptReservations
           BoundLabel.Font.Style = []
           SkinData.SkinSection = 'COMBOBOX'
           VerticalAlignment = taAlignTop
+          Style = csDropDownList
           Color = clWhite
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
@@ -1082,7 +1092,6 @@ object frmRptReservations: TfrmRptReservations
           ItemIndex = -1
           ParentFont = False
           TabOrder = 0
-          Text = 'Choose a Month ...'
           OnCloseUp = cbxMonthPropertiesCloseUp
           Items.Strings = (
             'Choose a Month ...'
@@ -1112,6 +1121,7 @@ object frmRptReservations: TfrmRptReservations
           BoundLabel.Font.Style = []
           SkinData.SkinSection = 'COMBOBOX'
           VerticalAlignment = taAlignTop
+          Style = csDropDownList
           Color = clWhite
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
@@ -1121,7 +1131,6 @@ object frmRptReservations: TfrmRptReservations
           ItemIndex = -1
           ParentFont = False
           TabOrder = 1
-          Text = 'Choose a year ...'
           OnCloseUp = cbxMonthPropertiesCloseUp
           Items.Strings = (
             'Choose year ...'
@@ -1163,7 +1172,6 @@ object frmRptReservations: TfrmRptReservations
         ParentFont = False
         TabOrder = 2
         SkinData.SkinSection = 'GROUPBOX'
-        Checked = False
         object dtDateFrom: TsDateEdit
           Left = 16
           Top = 20
@@ -1182,7 +1190,6 @@ object frmRptReservations: TfrmRptReservations
           TabOrder = 0
           Text = '  -  -    '
           OnChange = dtDateFromChange
-          CheckOnExit = True
           SkinData.SkinSection = 'EDIT'
           GlyphMode.Blend = 0
           GlyphMode.Grayed = False
@@ -1205,7 +1212,6 @@ object frmRptReservations: TfrmRptReservations
           TabOrder = 1
           Text = '  -  -    '
           OnChange = dtDateFromChange
-          CheckOnExit = True
           SkinData.SkinSection = 'EDIT'
           GlyphMode.Blend = 0
           GlyphMode.Grayed = False
@@ -1235,26 +1241,11 @@ object frmRptReservations: TfrmRptReservations
         Caption = 'Date range for..'
         TabOrder = 4
         SkinData.SkinSection = 'GROUPBOX'
-        Checked = False
         ItemIndex = 0
         Items.Strings = (
           'Reservation made'
           'Reservation arrival'
           'Reservation stay')
-      end
-      object btnJumpToRoom: TsButton
-        Left = 852
-        Top = 8
-        Width = 117
-        Height = 38
-        Anchors = [akTop, akRight]
-        Caption = 'Jump to'
-        ImageIndex = 57
-        Images = DImages.PngImageList1
-        ModalResult = 1
-        TabOrder = 5
-        OnClick = btnJumpToRoomClick
-        SkinData.SkinSection = 'BUTTON'
       end
       object btnClose: TsButton
         Left = 975
@@ -1267,10 +1258,19 @@ object frmRptReservations: TfrmRptReservations
         ImageIndex = 27
         Images = DImages.PngImageList1
         ModalResult = 8
-        TabOrder = 6
+        TabOrder = 5
         OnClick = btnCloseClick
         SkinData.SkinSection = 'BUTTON'
       end
+    end
+  end
+  inherited cxsrRoomerStyleRepository: TcxStyleRepository
+    PixelsPerInch = 96
+    inherited dxssRoomerGridReportLink: TdxGridReportLinkStyleSheet
+      BuiltIn = True
+    end
+    inherited cxssRoomerGridTableView: TcxGridTableViewStyleSheet
+      BuiltIn = True
     end
   end
   object kbmReservations_: TkbmMemTable

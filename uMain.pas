@@ -11539,23 +11539,25 @@ procedure TfrmMain.btnReservationsListClick(Sender: TObject);
 var
   sRoom: string;
   aDate: Tdate;
+  frm: TfrmRptReservations;
 begin
   UserClickedDxLargeButton(Sender);
   // **
   aDate := Date;
-  Application.CreateForm(TfrmRptReservations, frmRptReservations);
+  sRoom := '';
+  frm := TfrmRptReservations.Create(nil);
   try
-    if frmRptReservations.ShowModal = mrOK then
+    if frm.ShowModal = mrOK then
     begin
-      if frmRptReservations.zRoom <> '' then
+      if frm.zRoom <> '' then
       begin
-        aDate := trunc(frmRptReservations.zArrival);
+        aDate := trunc(frm.zArrival);
         RefreshGrid;
-        sRoom := frmRptReservations.zRoom;
+        sRoom := frm.zRoom;
       end;
     end;
   finally
-    frmRptReservations.Free;
+    frm.Free;
   end;
 
   if sRoom <> '' then
@@ -13356,7 +13358,6 @@ begin
   pnlTimeMessage.Left := 0;
   pnlTimeMessage.Width := panMain.Width;
 
-  lblTimeMessage.Top := 8;
   lblTimeMessage.Caption := sMessage;
   pnlTimeMessage.Show;
   timHideTimeMessage.Interval := 3000;

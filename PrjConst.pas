@@ -1768,7 +1768,7 @@ begin
   FrmHandleBookKeepingException := TFrmHandleBookKeepingException.Create(nil); FrmHandleBookKeepingException.Free; FrmHandleBookKeepingException := nil;
   FrmRoomClassEdit := TFrmRoomClassEdit.Create(nil); FrmRoomClassEdit.Free; FrmRoomClassEdit := nil;
 
-  frmRptReservations := TfrmRptReservations.Create(nil); frmRptReservations.Free; frmRptReservations := nil;
+  TfrmRptReservations.Create(nil).Free;
   FrmPostInvoices := TFrmPostInvoices.Create(nil); FrmPostInvoices.Free; FrmPostInvoices := nil;
   frmRptBreakfastGuests := TfrmRptBreakfastGuests.Create(nil); frmRptBreakfastGuests.Free; frmRptBreakfastGuests := nil;
   frmGuestCheckInForm := TfrmGuestCheckInForm.Create(nil); frmGuestCheckInForm.Free; frmGuestCheckInForm := nil;

@@ -2178,6 +2178,7 @@ var
   ReportLink: TdxGridReportLink;
 
 begin
+  ReportLink := nil;
 
   if zIsOneDay then
   begin
