@@ -840,8 +840,9 @@ uses
   ufrmReservationExtras
   , uInvoiceContainer
   , uCurrencyHandler
-  , uAccountTypeDefinitions, uBreakfastStateDefinitions, uSQLUtils, ufrmRoomPrices;
-  , uAccountTypeDefinitions, uBreakfastStateDefinitions, uSQLUtils, uDateTimeHelper;
+  , uAccountTypeDefinitions, uBreakfastStateDefinitions, uSQLUtils, ufrmRoomPrices
+  , uDateTimeHelper
+  ;
 
 {$R *.DFM}
 

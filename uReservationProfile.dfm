@@ -147,7 +147,6 @@ object frmReservationProfile: TfrmReservationProfile
       Align = alLeft
       TabOrder = 0
       SkinData.SkinSection = 'GROUPBOX'
-      Checked = False
       object Label2: TsLabel
         Left = 33
         Top = 19
@@ -213,7 +212,6 @@ object frmReservationProfile: TfrmReservationProfile
         ReadOnly = True
         TabOrder = 1
         Text = '  -  -    '
-        CheckOnExit = True
         SkinData.SkinSection = 'EDIT'
         GlyphMode.Blend = 0
         GlyphMode.Grayed = False
@@ -240,7 +238,6 @@ object frmReservationProfile: TfrmReservationProfile
         ReadOnly = True
         TabOrder = 2
         Text = '  -  -    '
-        CheckOnExit = True
         SkinData.SkinSection = 'EDIT'
         GlyphMode.Blend = 0
         GlyphMode.Grayed = False
@@ -257,7 +254,6 @@ object frmReservationProfile: TfrmReservationProfile
       Padding.Left = 5
       TabOrder = 1
       SkinData.SkinSection = 'GROUPBOX'
-      Checked = False
       object lblMarket: TsLabel
         Left = 68
         Top = 18
@@ -400,7 +396,6 @@ object frmReservationProfile: TfrmReservationProfile
       Align = alLeft
       TabOrder = 2
       SkinData.SkinSection = 'GROUPBOX'
-      Checked = False
       object Label25: TsLabel
         Left = 27
         Top = 19
@@ -497,7 +492,6 @@ object frmReservationProfile: TfrmReservationProfile
       Align = alClient
       TabOrder = 3
       SkinData.SkinSection = 'GROUPBOX'
-      Checked = False
       object lblReservationNumber: TsLabel
         Left = 34
         Top = 19
@@ -542,8 +536,6 @@ object frmReservationProfile: TfrmReservationProfile
     object TabSheet3: TsTabSheet
       Caption = 'Main'
       TabVisible = False
-      SkinData.CustomColor = False
-      SkinData.CustomFont = False
       ExplicitLeft = 0
       ExplicitTop = 0
       ExplicitWidth = 0
@@ -598,8 +590,10 @@ object frmReservationProfile: TfrmReservationProfile
             SkinData.SkinSection = 'PAGECONTROL'
             object tsContact: TsTabSheet
               Caption = 'Contact'
-              SkinData.CustomColor = False
-              SkinData.CustomFont = False
+              ExplicitLeft = 0
+              ExplicitTop = 0
+              ExplicitWidth = 0
+              ExplicitHeight = 0
               object lblContactName: TsLabel
                 Left = 32
                 Top = 5
@@ -946,8 +940,6 @@ object frmReservationProfile: TfrmReservationProfile
             end
             object TabSheet4: TsTabSheet
               Caption = 'Customer'
-              SkinData.CustomColor = False
-              SkinData.CustomFont = False
               ExplicitLeft = 0
               ExplicitTop = 0
               ExplicitWidth = 0
@@ -1244,8 +1236,6 @@ object frmReservationProfile: TfrmReservationProfile
             object TabSheet5: TsTabSheet
               Caption = 'Customer Tel / Email'
               ImageIndex = 1
-              SkinData.CustomColor = False
-              SkinData.CustomFont = False
               ExplicitLeft = 0
               ExplicitTop = 0
               ExplicitWidth = 0
@@ -1461,7 +1451,6 @@ object frmReservationProfile: TfrmReservationProfile
             Caption = 'Main guest for room :'
             TabOrder = 0
             SkinData.SkinSection = 'GROUPBOX'
-            Checked = False
             DesignSize = (
               228
               169)
@@ -1848,7 +1837,6 @@ object frmReservationProfile: TfrmReservationProfile
             Caption = 'General Information'
             TabOrder = 0
             SkinData.SkinSection = 'GROUPBOX'
-            Checked = False
             object memInformation: TsMemo
               Left = 2
               Top = 13
@@ -1879,7 +1867,6 @@ object frmReservationProfile: TfrmReservationProfile
             Caption = 'Payment Information'
             TabOrder = 1
             SkinData.SkinSection = 'GROUPBOX'
-            Checked = False
             object memPMInfo: TsMemo
               Left = 2
               Top = 13
@@ -1918,7 +1905,6 @@ object frmReservationProfile: TfrmReservationProfile
               Caption = 'Notes for room : '
               TabOrder = 0
               SkinData.SkinSection = 'GROUPBOX'
-              Checked = False
               object memRoomNotes: TsMemo
                 Left = 2
                 Top = 13
@@ -1950,7 +1936,6 @@ object frmReservationProfile: TfrmReservationProfile
               Caption = 'Requests from booking channel :'
               TabOrder = 1
               SkinData.SkinSection = 'GROUPBOX'
-              Checked = False
               object memRequestFromChannel: TsMemo
                 Left = 2
                 Top = 13
@@ -1995,14 +1980,12 @@ object frmReservationProfile: TfrmReservationProfile
     TabOrder = 2
     TabWidth = 150
     OnChange = mainPageChange
-    ActiveTabEnlarged = False
     ActiveIsBold = True
     ShowFocus = False
+    ActiveTabEnlarged = False
     SkinData.SkinSection = 'PAGECONTROL'
     object RoomsTab: TsTabSheet
       Caption = 'Rooms'
-      SkinData.CustomColor = False
-      SkinData.CustomFont = False
       ExplicitLeft = 0
       ExplicitTop = 0
       ExplicitWidth = 0
@@ -2898,8 +2881,6 @@ object frmReservationProfile: TfrmReservationProfile
     object GuestsTab: TsTabSheet
       Caption = 'Guests'
       ImageIndex = 1
-      SkinData.CustomColor = False
-      SkinData.CustomFont = False
       ExplicitLeft = 0
       ExplicitTop = 0
       ExplicitWidth = 0
@@ -3385,7 +3366,6 @@ object frmReservationProfile: TfrmReservationProfile
           Caption = 'Guest profile notes and preferences'
           TabOrder = 1
           SkinData.SkinSection = 'GROUPBOX'
-          Checked = False
           object lblSpecialRequests: TsLabel
             Left = 2
             Top = 15
@@ -3453,7 +3433,6 @@ object frmReservationProfile: TfrmReservationProfile
             Height = 105
             Align = alTop
             TabOrder = 2
-            Checked = False
             object lblRoomType: TsLabel
               Left = 7
               Top = 43
@@ -3506,8 +3485,6 @@ object frmReservationProfile: TfrmReservationProfile
     end
     object sTabSheet2: TsTabSheet
       Caption = 'Alerts'
-      SkinData.CustomColor = False
-      SkinData.CustomFont = False
       ExplicitLeft = 0
       ExplicitTop = 0
       ExplicitWidth = 0
@@ -3526,8 +3503,6 @@ object frmReservationProfile: TfrmReservationProfile
     object InvoicesTab: TsTabSheet
       Caption = 'Afgehandelde facturen'
       ImageIndex = 2
-      SkinData.CustomColor = False
-      SkinData.CustomFont = False
       ExplicitLeft = 0
       ExplicitTop = 0
       ExplicitWidth = 0

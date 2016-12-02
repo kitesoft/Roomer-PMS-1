@@ -281,7 +281,7 @@
             <DesignClass>TDataModule</DesignClass>
         </DCCReference>
         <DCCReference Include="uD.pas">
-            <Form>forceoffline</Form>
+            <Form>D</Form>
             <DesignClass>TDataModule</DesignClass>
         </DCCReference>
         <DCCReference Include="uG.pas"/>
@@ -824,7 +824,9 @@
             <FormType>dfm</FormType>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
-        <DCCReference Include="uRoomerConfirmationDialogs.pas"/>
+        <DCCReference Include="ufrmRoomPrices.pas">
+            <Form>frmRoomPrices</Form>
+        </DCCReference>
         <DCCReference Include="Embeddables\uEmbDateStatistics.pas">
             <Form>frmEmbDateStatistics</Form>
         </DCCReference>
