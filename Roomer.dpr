@@ -260,7 +260,8 @@ uses
   uInvoiceDefinitions in 'Definitions\uInvoiceDefinitions.pas',
   uFraCountryPanel in 'Embeddables\uFraCountryPanel.pas' {fraCountryPanel: TFrame},
   uRoomerConfirmationDialogs in 'uRoomerConfirmationDialogs.pas',
-  uEmbDateStatistics in 'Embeddables\uEmbDateStatistics.pas' {frmEmbDateStatistics};
+  uEmbDateStatistics in 'Embeddables\uEmbDateStatistics.pas' {frmEmbDateStatistics},
+  uMasterRateDefaults in 'Rates\uMasterRateDefaults.pas' {frmMasterRateDefaults};
 
 {$R *.RES}
 

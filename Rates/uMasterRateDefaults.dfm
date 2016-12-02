@@ -3,7 +3,7 @@ object frmMasterRateDefaults: TfrmMasterRateDefaults
   Top = 0
   Caption = 'MasterRateDefaults'
   ClientHeight = 495
-  ClientWidth = 448
+  ClientWidth = 953
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -22,7 +22,7 @@ object frmMasterRateDefaults: TfrmMasterRateDefaults
   object pnlHolder: TsPanel
     Left = 0
     Top = 0
-    Width = 448
+    Width = 953
     Height = 495
     Margins.Left = 2
     Margins.Top = 2
@@ -32,20 +32,29 @@ object frmMasterRateDefaults: TfrmMasterRateDefaults
     BevelOuter = bvNone
     TabOrder = 0
     SkinData.SkinSection = 'PANEL'
+    ExplicitWidth = 448
     object sPanel2: TsPanel
       Left = 0
       Top = 0
-      Width = 448
-      Height = 81
+      Width = 953
+      Height = 105
       Align = alTop
       TabOrder = 0
       SkinData.SkinSection = 'PANEL'
+      ExplicitWidth = 448
       object lbStartFrom: TsLabel
-        Left = 13
-        Top = 51
-        Width = 83
+        Left = 49
+        Top = 48
+        Width = 88
         Height = 13
-        Caption = 'Show from date: '
+        Caption = 'Channel Manager:'
+      end
+      object sLabel1: TsLabel
+        Left = 49
+        Top = 72
+        Width = 50
+        Height = 13
+        Caption = 'Plan code:'
       end
       object btnDelete: TsButton
         Left = 205
@@ -102,63 +111,52 @@ object frmMasterRateDefaults: TfrmMasterRateDefaults
         OnClick = btnEditClick
         SkinData.SkinSection = 'BUTTON'
       end
-      object edtLastDate: TsDateEdit
-        Left = 109
-        Top = 48
-        Width = 90
+      object cbxChannelManager: TsComboBox
+        Left = 141
+        Top = 45
+        Width = 145
         Height = 21
-        AutoSize = False
-        Color = clWhite
-        EditMask = '!99/99/9999;1; '
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
-        Font.Height = -11
-        Font.Name = 'Tahoma'
-        Font.Style = []
-        MaxLength = 10
-        ParentFont = False
+        Alignment = taLeftJustify
+        VerticalAlignment = taAlignTop
+        ItemIndex = -1
         TabOrder = 4
-        CheckOnExit = True
-        GlyphMode.Blend = 0
-        GlyphMode.Grayed = False
-        DefaultToday = True
+        OnCloseUp = cbxChannelManagerCloseUp
       end
-      object btnRefresh: TsButton
-        Left = 205
-        Top = 46
-        Width = 90
-        Height = 26
-        Hint = 'Refresh grid'
-        Caption = 'Refresh'
-        Images = DImages.PngImageList1
-        ParentShowHint = False
-        ShowHint = True
+      object cbxPlanCode: TsComboBox
+        Left = 141
+        Top = 70
+        Width = 145
+        Height = 21
+        Alignment = taLeftJustify
+        VerticalAlignment = taAlignTop
+        ItemIndex = -1
         TabOrder = 5
-        OnClick = btnRefreshClick
-        SkinData.SkinSection = 'BUTTON'
+        OnCloseUp = cbxPlanCodeCloseUp
       end
     end
     object sbMain: TsStatusBar
       Left = 0
       Top = 476
-      Width = 448
+      Width = 953
       Height = 19
       Panels = <>
       SkinData.SkinSection = 'STATUSBAR'
+      ExplicitWidth = 448
     end
     object panBtn: TsPanel
       Left = 0
       Top = 443
-      Width = 448
+      Width = 953
       Height = 33
       Align = alBottom
       TabOrder = 2
       SkinData.SkinSection = 'PANEL'
+      ExplicitWidth = 448
       DesignSize = (
-        448
+        953
         33)
       object btnCancel: TsButton
-        Left = 359
+        Left = 864
         Top = 4
         Width = 86
         Height = 25
@@ -171,9 +169,10 @@ object frmMasterRateDefaults: TfrmMasterRateDefaults
         ModalResult = 2
         TabOrder = 1
         SkinData.SkinSection = 'BUTTON'
+        ExplicitLeft = 359
       end
       object BtnOk: TsButton
-        Left = 267
+        Left = 772
         Top = 4
         Width = 86
         Height = 25
@@ -187,87 +186,129 @@ object frmMasterRateDefaults: TfrmMasterRateDefaults
         TabOrder = 0
         OnClick = BtnOkClick
         SkinData.SkinSection = 'BUTTON'
+        ExplicitLeft = 267
       end
     end
-    object grData: TcxGrid
+    object sPanel1: TsPanel
       Left = 0
-      Top = 81
-      Width = 448
-      Height = 362
+      Top = 105
+      Width = 953
+      Height = 338
       Align = alClient
       TabOrder = 3
-      LookAndFeel.NativeStyle = False
-      object tvData: TcxGridDBTableView
-        Navigator.Buttons.CustomButtons = <>
-        Navigator.Buttons.First.Visible = True
-        Navigator.Buttons.PriorPage.Hint = 'Prior page'
-        Navigator.Buttons.PriorPage.Visible = True
-        Navigator.Buttons.Prior.Hint = 'Prior'
-        Navigator.Buttons.Prior.Visible = True
-        Navigator.Buttons.Next.Hint = 'Next'
-        Navigator.Buttons.Next.Visible = True
-        Navigator.Buttons.NextPage.Hint = 'Next page'
-        Navigator.Buttons.NextPage.Visible = True
-        Navigator.Buttons.Last.Hint = 'Last'
-        Navigator.Buttons.Last.Visible = True
-        Navigator.Buttons.Insert.Hint = 'Insert'
-        Navigator.Buttons.Insert.Visible = True
-        Navigator.Buttons.Append.Enabled = False
-        Navigator.Buttons.Append.Hint = 'Append'
-        Navigator.Buttons.Append.Visible = False
-        Navigator.Buttons.Delete.Hint = 'Delete'
-        Navigator.Buttons.Delete.Visible = True
-        Navigator.Buttons.Edit.Enabled = False
-        Navigator.Buttons.Edit.Hint = 'Edit'
-        Navigator.Buttons.Edit.Visible = False
-        Navigator.Buttons.Post.Hint = 'Post'
-        Navigator.Buttons.Post.Visible = True
-        Navigator.Buttons.Cancel.Hint = 'Cancel'
-        Navigator.Buttons.Cancel.Visible = True
-        Navigator.Buttons.Refresh.Enabled = False
-        Navigator.Buttons.Refresh.Hint = 'Refresh'
-        Navigator.Buttons.Refresh.Visible = False
-        Navigator.Buttons.SaveBookmark.Enabled = False
-        Navigator.Buttons.SaveBookmark.Hint = 'Save bookmark'
-        Navigator.Buttons.SaveBookmark.Visible = False
-        Navigator.Buttons.GotoBookmark.Enabled = False
-        Navigator.Buttons.GotoBookmark.Hint = 'Goto bookmark'
-        Navigator.Buttons.GotoBookmark.Visible = False
-        Navigator.Buttons.Filter.Hint = 'Filter'
-        Navigator.Buttons.Filter.Visible = True
-        Navigator.InfoPanel.Visible = True
-        Navigator.Visible = True
-        DataController.DataSource = DS
-        DataController.Summary.DefaultGroupSummaryItems = <>
-        DataController.Summary.FooterSummaryItems = <>
-        DataController.Summary.SummaryGroups = <>
-        OptionsBehavior.AlwaysShowEditor = True
-        OptionsBehavior.FocusCellOnTab = True
-        OptionsBehavior.IncSearch = True
-        OptionsData.Appending = True
-        OptionsData.CancelOnExit = False
-        OptionsData.DeletingConfirmation = False
-        OptionsView.GroupByBox = False
-        OptionsView.Indicator = True
-        object tvDataDay: TcxGridDBColumn
-          DataBinding.FieldName = 'Day'
-          PropertiesClassName = 'TcxDateEditProperties'
-          Properties.ShowTime = False
-          HeaderAlignmentHorz = taCenter
-          SortIndex = 0
-          SortOrder = soDescending
-          Width = 108
+      ExplicitLeft = 272
+      ExplicitTop = 296
+      ExplicitWidth = 185
+      ExplicitHeight = 41
+      object sSplitter1: TsSplitter
+        Left = 251
+        Top = 1
+        Height = 336
+        ExplicitLeft = 256
+        ExplicitTop = 112
+        ExplicitHeight = 100
+      end
+      object grData: TcxGrid
+        Left = 257
+        Top = 1
+        Width = 695
+        Height = 336
+        Align = alClient
+        TabOrder = 0
+        LookAndFeel.NativeStyle = False
+        ExplicitTop = 0
+        object tvData: TcxGridDBTableView
+          Navigator.Buttons.CustomButtons = <>
+          Navigator.Buttons.First.Visible = True
+          Navigator.Buttons.PriorPage.Hint = 'Prior page'
+          Navigator.Buttons.PriorPage.Visible = True
+          Navigator.Buttons.Prior.Hint = 'Prior'
+          Navigator.Buttons.Prior.Visible = True
+          Navigator.Buttons.Next.Hint = 'Next'
+          Navigator.Buttons.Next.Visible = True
+          Navigator.Buttons.NextPage.Hint = 'Next page'
+          Navigator.Buttons.NextPage.Visible = True
+          Navigator.Buttons.Last.Hint = 'Last'
+          Navigator.Buttons.Last.Visible = True
+          Navigator.Buttons.Insert.Hint = 'Insert'
+          Navigator.Buttons.Insert.Visible = True
+          Navigator.Buttons.Append.Enabled = False
+          Navigator.Buttons.Append.Hint = 'Append'
+          Navigator.Buttons.Append.Visible = False
+          Navigator.Buttons.Delete.Hint = 'Delete'
+          Navigator.Buttons.Delete.Visible = True
+          Navigator.Buttons.Edit.Enabled = False
+          Navigator.Buttons.Edit.Hint = 'Edit'
+          Navigator.Buttons.Edit.Visible = False
+          Navigator.Buttons.Post.Hint = 'Post'
+          Navigator.Buttons.Post.Visible = True
+          Navigator.Buttons.Cancel.Hint = 'Cancel'
+          Navigator.Buttons.Cancel.Visible = True
+          Navigator.Buttons.Refresh.Enabled = False
+          Navigator.Buttons.Refresh.Hint = 'Refresh'
+          Navigator.Buttons.Refresh.Visible = False
+          Navigator.Buttons.SaveBookmark.Enabled = False
+          Navigator.Buttons.SaveBookmark.Hint = 'Save bookmark'
+          Navigator.Buttons.SaveBookmark.Visible = False
+          Navigator.Buttons.GotoBookmark.Enabled = False
+          Navigator.Buttons.GotoBookmark.Hint = 'Goto bookmark'
+          Navigator.Buttons.GotoBookmark.Visible = False
+          Navigator.Buttons.Filter.Hint = 'Filter'
+          Navigator.Buttons.Filter.Visible = True
+          Navigator.InfoPanel.Visible = True
+          Navigator.Visible = True
+          DataController.DataSource = DS
+          DataController.Summary.DefaultGroupSummaryItems = <>
+          DataController.Summary.FooterSummaryItems = <>
+          DataController.Summary.SummaryGroups = <>
+          OptionsBehavior.AlwaysShowEditor = True
+          OptionsBehavior.FocusCellOnTab = True
+          OptionsBehavior.IncSearch = True
+          OptionsData.Appending = True
+          OptionsData.CancelOnExit = False
+          OptionsData.DeletingConfirmation = False
+          OptionsView.GroupByBox = False
+          OptionsView.Indicator = True
+          object tvDataDay: TcxGridDBColumn
+            DataBinding.FieldName = 'Day'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.ShowTime = False
+            HeaderAlignmentHorz = taCenter
+            SortIndex = 0
+            SortOrder = soDescending
+            Width = 108
+          end
+          object tvDataClosingTime: TcxGridDBColumn
+            DataBinding.FieldName = 'ClosingTimestamp'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.Kind = ckDateTime
+            HeaderAlignmentHorz = taCenter
+            Width = 121
+          end
         end
-        object tvDataClosingTime: TcxGridDBColumn
-          DataBinding.FieldName = 'ClosingTimestamp'
-          PropertiesClassName = 'TcxDateEditProperties'
-          Properties.Kind = ckDateTime
-          HeaderAlignmentHorz = taCenter
-          Width = 121
+        object lvData: TcxGridLevel
+          GridView = tvData
         end
       end
-      object lvData: TcxGridLevel
-        GridView = tvData
+      object lvRateCodes: TsListView
+        Left = 1
+        Top = 1
+        Width = 250
+        Height = 336
+        Align = alLeft
+        Columns = <
+          item
+            Caption = 'Rate code'
+          end
+          item
+            Caption = 'Description'
+            Width = 200
+          end>
+        ReadOnly = True
+        RowSelect = True
+        TabOrder = 1
+        ViewStyle = vsReport
+        ExplicitTop = 6
       end
     end
   end
@@ -351,7 +392,6 @@ object frmMasterRateDefaults: TfrmMasterRateDefaults
     Left = 96
     Top = 192
     object prLink_grData: TdxGridReportLink
-      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -365,7 +405,6 @@ object frmMasterRateDefaults: TfrmMasterRateDefaults
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
       ReportDocument.CreationDate = 41334.495374884260000000
-      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
   end

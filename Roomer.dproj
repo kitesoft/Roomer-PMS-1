@@ -828,6 +828,9 @@
         <DCCReference Include="Embeddables\uEmbDateStatistics.pas">
             <Form>frmEmbDateStatistics</Form>
         </DCCReference>
+        <DCCReference Include="Rates\uMasterRateDefaults.pas">
+            <Form>frmMasterRateDefaults</Form>
+        </DCCReference>
         <None Include="Roomer.todo"/>
         <None Include="notes.txt"/>
         <None Include="Roomer.inc"/>
