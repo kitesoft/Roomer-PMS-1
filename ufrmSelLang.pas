@@ -83,7 +83,6 @@ end;
 
 procedure TfrmSelLang.btnOkClick(Sender: TObject);
 var
-  line : string;
   languageItem : TRoomerLanguageItem;
 begin
   languageItem := TRoomerLanguageItem(cbxSelLang.Items.Objects[cbxSelLang.itemindex]);

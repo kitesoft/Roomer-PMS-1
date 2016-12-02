@@ -271,8 +271,6 @@ end;
 
 function payGroupValidate(ed : TsComboEdit; lab : TsLabel) : boolean;
 var
-  sValue : string;
-  pcCode : string;
   theData : recPayGroupHolder;
 begin
   initPayGroupHolder(theData);

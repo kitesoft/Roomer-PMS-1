@@ -178,7 +178,6 @@ type
     Procedure fillGridFromDataset(iGoto : integer);
     procedure fillHolder;
     procedure changeAllowgridEdit;
-    function getPrevCode : string;
     Procedure chkFilter;
     procedure applyFilter;
 
@@ -423,13 +422,6 @@ begin
   end;
 end;
 
-
-////////////////////////////////////////////////////////////////////////////////////////
-// memory table
-////////////////////////////////////////////////////////////////////////////////////////
-function TfrmCustomerTypes2.getPrevCode: string;
-begin
-end;
 
 procedure TfrmCustomerTypes2.m_BeforeDelete(DataSet: TDataSet);
 var

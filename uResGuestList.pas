@@ -204,7 +204,7 @@ type
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
   private
     { Private declarations }
-    procedure ClearAll;
+//    procedure ClearAll;
     procedure Refresh;
     procedure updateHeadInfo;
     function getRes(reservation : Integer) : boolean;
@@ -251,8 +251,6 @@ end;
 
 
 procedure TfrmResGuestList.FormCreate(Sender : TObject);
-var
-  i : Integer;
 begin
   RoomerLanguage.TranslateThisForm(self);
   zReservation := - 1;
@@ -645,6 +643,7 @@ begin
 
 end;
 
+(*
 procedure TfrmResGuestList.ClearAll;
 begin
   // **
@@ -672,7 +671,7 @@ begin
   edArrival.caption := '';
   edDeparture.caption := '';
 end;
-
+*)
 procedure TfrmResGuestList.cxGrid1DBTableView1DblClick(Sender : TObject);
 var
   GuestName : string;

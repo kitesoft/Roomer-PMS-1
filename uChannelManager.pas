@@ -315,7 +315,6 @@ var
   theData : recChannelManagerHolder;
 begin
   //*NOT TESTED*//
-  result := false;
   initChannelManagerHolder(theData);
   theData.Id := strtointdef(trim(ed.text), 1);
   result := ChannelManager(actLookup,theData);
@@ -335,8 +334,6 @@ end;
 
 function channelManagerValidate(ed : TsComboEdit; lab : TsLabel) : boolean;
 var
-  sValue : string;
-  pcCode : string;
   theData : recChannelManagerHolder;
 begin
   //*NOT TESTED*//

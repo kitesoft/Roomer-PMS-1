@@ -282,9 +282,7 @@ type
     SettingMainName : Boolean;
     zFirstTime       : boolean;
     zAllowGridEdit   : boolean;
-    zFilterOn        : boolean;
     zSortStr         : string;
-    zIsAddRow        : boolean;
 
     zUseInNationalReport : boolean;
     zBlockMove : boolean;
@@ -371,7 +369,6 @@ Procedure TfrmGuestProfile2.fillGridFromDataset(sGoto : string);
 var
   s    : string;
   rSet : TRoomerDataSet;
-  active : boolean;
 begin
 
   zFirstTime := true;
@@ -571,7 +568,6 @@ end;
 
 procedure TfrmGuestProfile2.FormShow(Sender: TObject);
 var
-  sMemText       : string;
   roomNumber     : string;
   ResGuestCount  : integer;
   RoomGuestCount : integer;
@@ -828,7 +824,7 @@ end;
 
 procedure TfrmGuestProfile2.sButton1Click(Sender: TObject);
 var
-  sMemText,s : string;
+  sMemText : string;
 begin
   if g.openresMemo(zReservation) then
   begin

@@ -27,7 +27,7 @@ function IsFileInUse(fName : string) : boolean;
 procedure SaveToTextFile(const FileName, data: String);
 procedure AddToTextFile(const FileName, data: String);
 function ReadFromTextFile(const FileName: String): String;
-function KillTask(ExeFileName: string): integer;
+procedure KillTask(ExeFileName: string);
 
 
 implementation
@@ -412,7 +412,7 @@ begin
   end;
 end;
 
-function KillTask(ExeFileName: string): integer;
+procedure KillTask(ExeFileName: string);
 var
   options: TExecuteFileOptions;
 begin

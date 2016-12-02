@@ -266,7 +266,6 @@ function getPriceCode(ed : TAdvEdit; lab : TsLabel) : boolean;
 var
   theData : recPriceCodeHolder;
 begin
-  result := false;
   initPriceCodeHolder(theData);
   theData.pcCode := trim(ed.text);
   result := priceCodes(actLookup,theData);
@@ -289,7 +288,6 @@ function getPriceCode(ed : TDBEdit; lab : TsLabel) : boolean;
 var
   theData : recPriceCodeHolder;
 begin
-  result := false;
   initPriceCodeHolder(theData);
   theData.pcCode := trim(ed.text);
   result := priceCodes(actLookup,theData);
@@ -312,7 +310,6 @@ function getPriceCode(ed : TEdit; lab : TsLabel) : boolean;
 var
   theData : recPriceCodeHolder;
 begin
-  result := false;
   initPriceCodeHolder(theData);
   theData.pcCode := trim(ed.text);
   result := priceCodes(actLookup,theData);
@@ -341,7 +338,6 @@ begin
   Except
     id := priceCode_RackID();
   end;
-  result := false;
   initPriceCodeHolder(theData);
   theData.ID := id;
   result := priceCodes(actLookup,theData);
@@ -362,8 +358,6 @@ end;
 
 function priceCodeValidate(ed : TAdvEdit; lab : TsLabel) : boolean;
 var
-  sValue : string;
-  pcCode : string;
   theData : recPriceCodeHolder;
 begin
   initPriceCodeHolder(theData);

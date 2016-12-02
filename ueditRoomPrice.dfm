@@ -40,7 +40,6 @@ object frmEditRoomPrice: TfrmEditRoomPrice
       ParentFont = False
       TabOrder = 0
       SkinData.SkinSection = 'GROUPBOX'
-      Checked = False
       DesignSize = (
         410
         126)
@@ -231,7 +230,6 @@ object frmEditRoomPrice: TfrmEditRoomPrice
       Caption = 'Room info'
       TabOrder = 1
       SkinData.SkinSection = 'GROUPBOX'
-      Checked = False
       object clabRoom: TsLabel
         Left = 12
         Top = 16

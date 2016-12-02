@@ -76,6 +76,10 @@ object frmCustomerEdit2: TfrmCustomerEdit2
     SkinData.SkinSection = 'PAGECONTROL'
     object SheetMain: TsTabSheet
       Caption = 'Customer'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object gbxAddress: TsGroupBox
         Left = 0
         Top = 291
@@ -85,7 +89,6 @@ object frmCustomerEdit2: TfrmCustomerEdit2
         Caption = 'Address'
         TabOrder = 0
         SkinData.SkinSection = 'GROUPBOX'
-        Checked = False
         DesignSize = (
           464
           132)
@@ -195,7 +198,6 @@ object frmCustomerEdit2: TfrmCustomerEdit2
         Caption = 'Name'
         TabOrder = 1
         SkinData.SkinSection = 'GROUPBOX'
-        Checked = False
         DesignSize = (
           464
           101)
@@ -343,7 +345,6 @@ object frmCustomerEdit2: TfrmCustomerEdit2
         Caption = 'Contact Information'
         TabOrder = 2
         SkinData.SkinSection = 'GROUPBOX'
-        Checked = False
         DesignSize = (
           464
           153)
@@ -539,7 +540,6 @@ object frmCustomerEdit2: TfrmCustomerEdit2
         Caption = 'Default values for this customer'
         TabOrder = 3
         SkinData.SkinSection = 'GROUPBOX'
-        Checked = False
         object clabMarkedSegment: TsLabel
           Left = 73
           Top = 22
@@ -887,6 +887,10 @@ object frmCustomerEdit2: TfrmCustomerEdit2
     end
     object SheetExtra: TsTabSheet
       Caption = 'More'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object sGroupBox1: TsGroupBox
         Left = 0
         Top = 0
@@ -896,7 +900,6 @@ object frmCustomerEdit2: TfrmCustomerEdit2
         Caption = 'Notes'
         TabOrder = 0
         SkinData.SkinSection = 'GROUPBOX'
-        Checked = False
         object memNotes: TsMemo
           Left = 2
           Top = 15
@@ -920,6 +923,10 @@ object frmCustomerEdit2: TfrmCustomerEdit2
     end
     object tabDepartments: TsTabSheet
       Caption = 'Departments'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object sSplitter1: TsSplitter
         Left = 185
         Top = 0
@@ -978,7 +985,7 @@ object frmCustomerEdit2: TfrmCustomerEdit2
           object sLabel6: TsLabel
             Left = 0
             Top = 35
-            Width = 185
+            Width = 75
             Height = 13
             Align = alBottom
             Caption = 'Departments'
@@ -988,7 +995,6 @@ object frmCustomerEdit2: TfrmCustomerEdit2
             Font.Height = -11
             Font.Name = 'Tahoma'
             Font.Style = [fsBold]
-            ExplicitWidth = 75
           end
           object btnAddDepartment: TsButton
             AlignWithMargins = True
@@ -1096,7 +1102,7 @@ object frmCustomerEdit2: TfrmCustomerEdit2
           object sLabel7: TsLabel
             Left = 0
             Top = 35
-            Width = 273
+            Width = 50
             Height = 13
             Align = alBottom
             Caption = 'Contacts'
@@ -1106,7 +1112,6 @@ object frmCustomerEdit2: TfrmCustomerEdit2
             Font.Height = -11
             Font.Name = 'Tahoma'
             Font.Style = [fsBold]
-            ExplicitWidth = 50
           end
           object btnAddContact: TsButton
             AlignWithMargins = True

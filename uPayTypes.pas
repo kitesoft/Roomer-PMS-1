@@ -281,7 +281,6 @@ function getpayType(ed : TsComboEdit; lab : TsLabel) : boolean;
 var
   theData : recpayTypeHolder;
 begin
-  result := false;
   initpayTypeHolder(theData);
   theData.payType := trim(ed.text);
   result := payType(actLookup, true, theData);
@@ -302,8 +301,6 @@ end;
 
 function payTypeValidate(ed : TsComboEdit; lab : TsLabel) : boolean;
 var
-  sValue : string;
-  pcCode : string;
   theData : recpayTypeHolder;
 begin
   initpayTypeHolder(theData);
@@ -332,7 +329,6 @@ var
   s    : string;
   rSet : TRoomerDataSet;
   active : boolean;
-  PayType : string;
 begin
   active := chkActive.Checked;
   zFirstTime := true;

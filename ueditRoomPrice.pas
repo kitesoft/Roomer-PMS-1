@@ -350,56 +350,49 @@ begin
   while not mRoomRates.eof do
   begin
     oldRate       := mRoomRates.FieldByName('Rate').AsFloat;
-    if rate <> oldRate then
+    adate         := mRoomRates.FieldByName('RateDate').AsDateTime;
+    rate          := hdata.GetDayRate(zData.RoomType,
+                                       zData.Room,
+                                       aDate,
+                                       zData.Guests,
+                                       zData.childrenCount,
+                                       zData.infantCount,
+                                       zData.currency,
+                                       PriceID,
+                                       0,
+                                       false,
+                                       true,
+                                       false,
+                                       false);
+
+    Discount      := mRoomRates.FieldByName('Discount').AsFloat;
+    isPercentage  := mRoomRates.FieldByName('isPercentage').AsBoolean;
+
+    DiscountAmount := 0;
+
+    if rate <> 0 then
     begin
-      adate         := mRoomRates.FieldByName('RateDate').AsDateTime;
-      rate          := //getPriceFromPriceCode(priceCode,aDate);
-
-      hdata.GetDayRate(zData.RoomType,
-                       zData.Room,
-                       aDate,
-                       zData.Guests,
-                       zData.childrenCount,
-                       zData.infantCount,
-                       zData.currency,
-                       PriceID,
-                       0,
-                       false,
-                       true,
-                       false,
-                       false);
-
-      Discount      := mRoomRates.FieldByName('Discount').AsFloat;
-      isPercentage  := mRoomRates.FieldByName('isPercentage').AsBoolean;
-
-      DiscountAmount := 0;
-
-      if rate <> 0 then
+      if isPercentage then
       begin
-        if discount <> 0 then
-        begin
-          if isPercentage then
-          begin
-            DiscountAmount :=  Rate*discount/100;
-          end else
-          begin
-            DiscountAmount := discount;
-          end;
-        end;
+        DiscountAmount :=  Rate*discount/100;
+      end else
+      begin
+        DiscountAmount := discount;
       end;
-      RentAmount  := Rate-DiscountAmount;
-      NativeAmount := RentAmount*zData.CurrencyRate;
-
-      mRoomRates.Edit;
-      mRoomRates.FieldByName('priceCode').AsString     := PriceCode;
-      mRoomRates.FieldByName('Rate').AsFloat           := Rate;
-      mRoomRates.FieldByName('Discount').AsFloat       := Discount;
-      mRoomRates.FieldByName('isPercentage').AsBoolean := isPercentage;
-      mRoomRates.FieldByName('DiscountAmount').AsFloat := DiscountAmount;
-      mRoomRates.FieldByName('RentAmount').AsFloat     := RentAmount;
-      mRoomRates.FieldByName('NativeAmount').AsFloat   := NativeAmount;
-      mRoomRates.post;
     end;
+    RentAmount  := Rate-DiscountAmount;
+    NativeAmount := RentAmount*zData.CurrencyRate;
+
+    mRoomRates.Edit;
+    mRoomRates.FieldByName('priceCode').AsString     := PriceCode;
+    mRoomRates.FieldByName('Rate').AsFloat           := Rate;
+    mRoomRates.FieldByName('Discount').AsFloat       := Discount;
+    mRoomRates.FieldByName('isPercentage').AsBoolean := isPercentage;
+    mRoomRates.FieldByName('DiscountAmount').AsFloat := DiscountAmount;
+    mRoomRates.FieldByName('RentAmount').AsFloat     := RentAmount;
+    mRoomRates.FieldByName('NativeAmount').AsFloat   := NativeAmount;
+    mRoomRates.post;
+
     mRoomRates.Next;
   end;
 end;

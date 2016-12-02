@@ -177,7 +177,7 @@ type
 
     procedure initEdits;
     procedure DisplayCustomerDepartments;
-    function SelectedCustomerDepartmentId: Integer;
+//    function SelectedCustomerDepartmentId: Integer;
     procedure ListContacts;
     procedure ActivateButtons;
 
@@ -334,7 +334,6 @@ procedure TfrmCustomerEdit2.DisplayCustomerDepartments;
 var
   i: Integer;
   Item  : TListItem;
-  l: Integer;
 begin
   lvContacts.Items.Clear;
   lvDepartments.Items.Clear;
@@ -382,6 +381,7 @@ begin
         ACCESS_RESTRICTED);
 end;
 
+(*
 function TfrmCustomerEdit2.SelectedCustomerDepartmentId : Integer;
 var dep : TCustomerDepartment;
 begin
@@ -390,7 +390,7 @@ begin
   dep := TCustomerDepartment(lvDepartments.Selected.Data);
   result := dep.ID;
 end;
-
+*)
 procedure TfrmCustomerEdit2.sSpeedButton1Click(Sender: TObject);
 var
   s : string;
@@ -667,7 +667,6 @@ begin
 end;
 
 procedure TfrmCustomerEdit2.btnEditDepartmentClick(Sender: TObject);
-var id : Integer;
 begin
   if Assigned(lvDepartments.Selected) then
   begin

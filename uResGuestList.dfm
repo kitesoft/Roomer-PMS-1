@@ -228,8 +228,6 @@ object frmResGuestList: TfrmResGuestList
     object TabSheet1: TsTabSheet
       Caption = 'Room Reservations'
       TabVisible = False
-      SkinData.CustomColor = False
-      SkinData.CustomFont = False
       ExplicitLeft = 0
       ExplicitTop = 0
       ExplicitWidth = 0
@@ -478,7 +476,6 @@ object frmResGuestList: TfrmResGuestList
       Caption = 'Group Booking'
       TabOrder = 0
       SkinData.SkinSection = 'GROUPBOX'
-      Checked = False
       object Label2: TsLabel
         Left = 5
         Top = 12
@@ -812,7 +809,6 @@ object frmResGuestList: TfrmResGuestList
       Caption = 'contacts'
       TabOrder = 1
       SkinData.SkinSection = 'GROUPBOX'
-      Checked = False
       object Label12: TsLabel
         Left = 5
         Top = 13
@@ -955,7 +951,6 @@ object frmResGuestList: TfrmResGuestList
       Caption = 'Booking comments'
       TabOrder = 2
       SkinData.SkinSection = 'GROUPBOX'
-      Checked = False
       object memResInfo: TsMemo
         AlignWithMargins = True
         Left = 10
@@ -995,7 +990,6 @@ object frmResGuestList: TfrmResGuestList
       Caption = 'Payment details'
       TabOrder = 3
       SkinData.SkinSection = 'GROUPBOX'
-      Checked = False
       object memPaymentInfo: TsMemo
         AlignWithMargins = True
         Left = 10

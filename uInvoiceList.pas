@@ -182,16 +182,6 @@ var
   rSet : TRoomerDataSet;
   s    : string;
 
-  Number       : integer;
-  NameOnInvoice : string;
-  InvoiceDate  : Tdate;
-  sDate        : string;
-  Link         : integer;
-  Amount       : Double;
-
-  CreditInvoice  : integer;
-  OriginalInvoice : integer;
-
   InvoiceFrom   : integer;
   InvoiceTo     : integer;
   Invoicenumber : integer;

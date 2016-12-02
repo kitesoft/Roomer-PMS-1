@@ -215,7 +215,6 @@ type
     Procedure fillGridFromDataset(iGoto : integer);
     procedure fillHolder;
     procedure changeAllowgridEdit;
-    function getPrevCode : string;
     Procedure chkFilter;
     procedure applyFilter;
     procedure doEdit;
@@ -518,15 +517,6 @@ end;
 
 
 ////////////////////////////////////////////////////////////////////////////////////////
-// memory table
-////////////////////////////////////////////////////////////////////////////////////////
-function TfrmStaffMembers2.getPrevCode: string;
-begin
-end;
-
-
-
-////////////////////////////////////////////////////////////////////////////////////////
 //  table View Functions
 ////////////////////////////////////////////////////////////////////////////////////////
 
@@ -675,8 +665,6 @@ begin
 end;
 
 procedure TfrmStaffMembers2.tvDataDblClick(Sender: TObject);
-var
-  Allow : boolean;
 begin
   if not zAllowGridEdit then
   begin

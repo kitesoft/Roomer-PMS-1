@@ -31,8 +31,6 @@ object frmLodgingTaxReport2: TfrmLodgingTaxReport2
     object sheetMain: TsTabSheet
       Caption = 'Main'
       TabVisible = False
-      SkinData.CustomColor = False
-      SkinData.CustomFont = False
       ExplicitLeft = 0
       ExplicitTop = 0
       ExplicitWidth = 0
@@ -372,7 +370,6 @@ object frmLodgingTaxReport2: TfrmLodgingTaxReport2
       ParentFont = False
       TabOrder = 0
       SkinData.SkinSection = 'GROUPBOX'
-      Checked = False
       object dtDateFrom: TsDateEdit
         Left = 16
         Top = 23
@@ -394,7 +391,6 @@ object frmLodgingTaxReport2: TfrmLodgingTaxReport2
         TabOrder = 0
         Text = '  -  -    '
         OnChange = dtDateFromChange
-        CheckOnExit = True
         SkinData.SkinSection = 'EDIT'
         GlyphMode.Blend = 0
         GlyphMode.Grayed = False
@@ -420,7 +416,6 @@ object frmLodgingTaxReport2: TfrmLodgingTaxReport2
         TabOrder = 1
         Text = '  -  -    '
         OnChange = dtDateFromChange
-        CheckOnExit = True
         SkinData.SkinSection = 'EDIT'
         GlyphMode.Blend = 0
         GlyphMode.Grayed = False
@@ -440,7 +435,6 @@ object frmLodgingTaxReport2: TfrmLodgingTaxReport2
       ParentFont = False
       TabOrder = 1
       SkinData.SkinSection = 'GROUPBOX'
-      Checked = False
       object cbxMonth: TsComboBox
         Left = 15
         Top = 22

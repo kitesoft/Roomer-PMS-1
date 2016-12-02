@@ -225,9 +225,6 @@ end;
 function checkNewVersion(Handle : THandle; RoomerDataSet : TRoomerDataSet) : boolean;
 var
   version : String;
-  FileInfo : TFileEntity;
-  sPath,
-  UpgradeManagerPath : String;
   NumDialogShown : Integer;
   s : String;
   Buttons: TMsgDlgButtons;
@@ -235,7 +232,7 @@ var
   lMSgResult: integer;
 begin
 
-
+  Result := false;
   if TRoomerVersionInfo.FileVersionOnServer(version) and not (TRoomerVersionInfo.IsPreRelease or TRoomerVersionInfo.IsDebug) and (version <> TROomerVersionInfo.FileVersion) then
   begin
     with TRoomerRegistryIniFile.Create(GetRoomerIniFilename) do
@@ -260,7 +257,6 @@ begin
       Buttons := [mbOK,mbCancel];
     end;
 
-    lMsgResult := mrCancel;
     with CreateMessageDialog(s, mtConfirmation, Buttons) do
     try
       lButton := TButton(FindComponent('OK'));

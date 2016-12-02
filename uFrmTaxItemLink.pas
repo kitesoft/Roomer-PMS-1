@@ -156,7 +156,7 @@ begin
 end;
 
 procedure TFrmTaxItemLink.FormShow(Sender: TObject);
-var sql : String;
+var
     temp : TStrings;
     i : Integer;
 

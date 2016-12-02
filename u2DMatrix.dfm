@@ -167,7 +167,7 @@ object frm2DMatrix: Tfrm2DMatrix
     SearchFooter.HintHighlight = 'Highlight occurrences'
     SearchFooter.MatchCaseCaption = 'Match case'
     SortSettings.DefaultFormat = ssAutomatic
-    Version = '7.9.1.0'
+    Version = '8.1.2.0'
   end
   object pnlHeader: TsPanel
     AlignWithMargins = True

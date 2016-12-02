@@ -152,7 +152,6 @@ type
     fNames: Array of string;
     fValues: Array of Extended;
     function Add(Name: String; Value: Extended): Integer;
-    procedure Delete(Name: String);
   protected
     procedure Clear;
     function GetName(Index: Integer): String;
@@ -362,19 +361,6 @@ begin
   end;
 end;
 
-procedure TVariables.Delete(Name: String);
-var
- i: Integer;
-begin
-  Name := AnsiLowerCase(Name);
-  i := GetIndex(Name);
-  if i = -1 then exit;
-  dec(fCount);
-  move(fNames[i + 1], fNames[i], (fCount - i - 1) * sizeof(string));
-  move(fValues[i + 1], fValues[i], (fCount-i-1) * sizeof(extended));
-  setlength(fNames, fCount);
-  setlength(fValues, fCount);
-end;
 
 function TVariables.GetName(Index: Integer): String;
 begin

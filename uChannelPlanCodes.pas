@@ -250,7 +250,6 @@ function getChannelPlanCode(ed : TAdvEdit; lab : TLabel) : boolean;
 var
   theData : recChannelPlanCodeHolder;
 begin
-  result := false;
   initChannelPlanCodeHolder(theData);
   theData.Code := trim(ed.text);
   result := ChannelPlanCodes(actLookup,theData);
@@ -271,8 +270,6 @@ end;
 
 function ChannelCodeValidate(ed : TAdvEdit; lab : TLabel) : boolean;
 var
-  sValue : string;
-  pcCode : string;
   theData : recChannelPlanCodeHolder;
 begin
   initChannelPlanCodeHolder(theData);

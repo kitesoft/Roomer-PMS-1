@@ -218,7 +218,6 @@ end;
 procedure TfrmRptBookkeeping.ShowData;
 var
   y, m, d : word;
-  idx : integer;
   lastDay : integer;
 begin
   decodeDate(now, y, m, d);

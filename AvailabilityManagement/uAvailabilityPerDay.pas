@@ -126,10 +126,9 @@ begin
 end;
 
 function TAvailabilityPerDay.RoomTypeOverbooking(sType : String; NumRoomsToAdd : Integer) : Boolean;
-var iNum : Integer;
-    LowerType : String;
+var
+  LowerType : String;
 begin
-  result := False;
   LowerType := AnsiLowerCase(sType);
   rSetAvail.Filter := format('(RoomType=%s)', [_db(LowerType)]);
   rSetAvail.Filtered := True;

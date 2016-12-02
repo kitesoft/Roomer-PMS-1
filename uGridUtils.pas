@@ -35,7 +35,6 @@ var
   FStream: TFileStream;
   I, J: Integer;
 begin
-  Result := False;
   FStream := TFileStream.Create(PChar(AFileName), fmCreate or fmOpenWrite);
   try
     CXlsBof[4] := 0;

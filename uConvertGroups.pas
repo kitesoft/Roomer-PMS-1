@@ -525,7 +525,7 @@ begin
     end;
     if ins_Convertgroup(zData) then
     begin
-      m_.FieldByName('ID').AsInteger := nID;
+      m_.FieldByName('ID').AsInteger := nID;          ///TODO: This does not work!
       glb.ForceTableRefresh;
     end else
     begin
