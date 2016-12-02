@@ -57,7 +57,7 @@ uses
   sStatusBar,
   sLabel,
   cxCurrencyEdit,
-  uCurrencyHandler, cxCheckBox;
+  uCurrencyHandler, cxCheckBox, uDImages;
 
 type
   ERoomPricesException = class(Exception);
@@ -253,7 +253,7 @@ const
     ' JOIN roomsdate rd on (rr.roomreservation=rd.roomreservation or rd.paidby=rr.roomreservation) and rd.paid=0 '#10+
     ' LEFT OUTER JOIN roomtypes rt ON rt.RoomType = rr.RoomType '#10 +
     ' LEFT OUTER JOIN rooms r ON r.Room = rr.room '#10 + ' WHERE rr.RoomReservation IN %s '#10 +
-    '      AND rr.GroupAccount = 0  '#10 +
+//    '      AND rr.GroupAccount = 0  '#10 +
     '      AND (params.InvoiceIndex=-1 or rr.InvoiceIndex = params.InvoiceIndex) '#10;
 
   cSQL_GetRoomRates = ' SELECT '#10 +
@@ -264,10 +264,10 @@ const
     '  ,PriceCode '#10 +
     '  ,Roomrate as Rate'#10 +
     '  ,rd.Discount '#10 +
-    '  ,IsPercentage '#10 +
+    '  ,rd.IsPercentage '#10 +
     '  ,ShowDiscount '#10 +
-    '  ,IF(isPercentage, Roomrate * rd.Discount / 100, rd.Discount ) as DiscountAmount '#10 +
-    '  ,Roomrate - IF(isPercentage, Roomrate * rd.Discount / 100, rd.Discount ) as Rentamount '#10 +
+    '  ,IF(rd.isPercentage, Roomrate * rd.Discount / 100, rd.Discount ) as DiscountAmount '#10 +
+    '  ,Roomrate - IF(rd.isPercentage, Roomrate * rd.Discount / 100, rd.Discount ) as Rentamount '#10 +
     '  ,c.AValue * (Roomrate - IF(isPercentage, Roomrate * rd.Discount / 100, rd.Discount)) as NativeAmount '#10 +
     '  ,IF(ISNULL((SELECT name FROM persons pe WHERE pe.MainName AND pe.roomreservation = rd.roomreservation LIMIT 1)), '#10+
     '   (SELECT name FROM persons pe WHERE pe.roomreservation = rd.roomreservation LIMIT 1), '#10 +
@@ -371,7 +371,6 @@ end;
 procedure TfrmRoomPrices.tvRoomResEditColumnButtonClick(Sender: TObject; AButtonIndex: Integer);
 begin
   EditRoomRateOneRoom(mRoomRes.FieldByName('roomreservation').asinteger);
-  RefreshData;
 end;
 
 procedure TfrmRoomPrices.EditRoomRateOneRoom(aRoomRes: Integer);
@@ -958,6 +957,8 @@ begin
   mRoomRes.DisableControls;
   lExecPlan := d.roomerMainDataSet.CreateExecutionPlan;
   try
+    mRoomRates.Close;
+    mRoomRes.Close;
 
     lRoomResList := '(' + FRoomReservations.CommaText + ')';
     lSQL := format(cSQL_GetRoomRes, [FInvoiceIndex, lRoomresList]);

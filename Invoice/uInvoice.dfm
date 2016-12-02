@@ -289,7 +289,6 @@ object frmInvoice: TfrmInvoice
         TabOrder = 9
         OnClick = rgrInvoiceTypeClick
         SkinData.SkinSection = 'GROUPBOX'
-        Checked = False
         ItemIndex = 1
         Items.Strings = (
           'Customer'
@@ -914,7 +913,6 @@ object frmInvoice: TfrmInvoice
             Caption = 'Included taxes'
             TabOrder = 5
             SkinData.SkinSection = 'GROUPBOX'
-            Checked = False
             object labLodgingTaxISK: TsLabel
               Left = 12
               Top = 16

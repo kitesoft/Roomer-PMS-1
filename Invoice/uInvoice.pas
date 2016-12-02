@@ -2741,7 +2741,7 @@ begin
           mRoomRes.FieldByName('InfantCount').asinteger := infantCount;
           mRoomRes.FieldByName('PriceCode').asString := PriceCode;
           mRoomRes.FieldByName('AvrageDiscount').asfloat := AvrageDiscount;
-          mRoomRes.FieldByName('isPercentage').asBoolean := isPercentage;
+          mRoomRes.FieldByName('isPercentage').asBoolean := isPercentage; //TODO: using IsPercentage of Roomreservation is wrong, should use percentage of Roomsdate
           mRoomRes.FieldByName('InvoiceIndex').asinteger := FInvoiceIndex;
           mRoomRes.FieldByName('GroupAccount').asBoolean := zRoomRSet['GroupAccount'];
 
@@ -2905,7 +2905,7 @@ begin
               if isPercentage then
               begin
                 DiscountText := DiscountText + '(' +
-                  floattostr(AvrageDiscount) + '%)';
+                  floattostr(RoundDecimals(AvrageDiscount,2)) + '%)';
               end
               else
               begin

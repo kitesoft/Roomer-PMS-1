@@ -31,7 +31,6 @@ inherited frmRoomPrices: TfrmRoomPrices
       Caption = 'Selected room'
       TabOrder = 0
       SkinData.SkinSection = 'GROUPBOX'
-      Checked = False
       object btnRatePerDate: TsButton
         AlignWithMargins = True
         Left = 5
@@ -85,13 +84,12 @@ inherited frmRoomPrices: TfrmRoomPrices
       Caption = 'Other properties'
       TabOrder = 1
       SkinData.SkinSection = 'GROUPBOX'
-      Checked = False
       object chkAutoUpdateNullPrice: TsCheckBox
         AlignWithMargins = True
         Left = 5
         Top = 18
         Width = 258
-        Height = 19
+        Height = 20
         Caption = 'Auto update Null Price'
         Align = alTop
         Checked = True
@@ -152,7 +150,6 @@ inherited frmRoomPrices: TfrmRoomPrices
       Align = alLeft
       Caption = 'Currency'
       TabOrder = 3
-      Checked = False
       object lblCurrency: TsLabel
         AlignWithMargins = True
         Left = 5
@@ -174,6 +171,7 @@ inherited frmRoomPrices: TfrmRoomPrices
     Align = alClient
     TabOrder = 2
     LookAndFeel.NativeStyle = False
+    ExplicitTop = 91
     object tvRoomRes: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = mRoomResDS
@@ -212,6 +210,7 @@ inherited frmRoomPrices: TfrmRoomPrices
           Column = tvRoomResAveragePrice
         end>
       DataController.Summary.SummaryGroups = <>
+      Images = DImages.PngImageList1
       OptionsData.DeletingConfirmation = False
       OptionsData.Inserting = False
       OptionsView.Footer = True
@@ -223,11 +222,12 @@ inherited frmRoomPrices: TfrmRoomPrices
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
           item
-            Caption = 'Refresh'
+            Caption = 'Edit...'
             Default = True
-            ImageIndex = 29
+            ImageIndex = 25
             Kind = bkGlyph
           end>
+        Properties.Images = DImages.PngImageList1
         Properties.ViewStyle = vsButtonsOnly
         Properties.OnButtonClick = tvRoomResEditColumnButtonClick
         Options.ShowEditButtons = isebAlways
