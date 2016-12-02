@@ -60,11 +60,12 @@ uses
   dxSkinOffice2007Silver, dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinValentine,
   dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, cxCurrencyEdit, cxTimeEdit
+  , uRoomerForm, dxPScxCommon, dxPScxGridLnk, sStatusBar
 
   ;
 
 type
-  TfrmRptReservations = class(TForm)
+  TfrmRptReservations = class(TfrmBaseRoomerForm)
     pageMain: TsPageControl;
     dxStatusBar1 : TdxStatusBar;
     Panel3: TsPanel;
@@ -272,7 +273,6 @@ type
     tvRoomsinvRefrence: TcxGridDBColumn;
     tvRoomsmarketSegment: TcxGridDBColumn;
     tvRoomsCustomerEmail: TcxGridDBColumn;
-    btnJumpToRoom: TsButton;
     pnlHolder: TsPanel;
     btnClose: TsButton;
     tvReservationschannel: TcxGridDBColumn;
@@ -286,6 +286,7 @@ type
     tvRoomsAvrageRate: TcxGridDBColumn;
     tvRoomReservationsExpectedTimeOfArrival: TcxGridDBColumn;
     tvRoomReservationsExpectedCheckoutTime: TcxGridDBColumn;
+    btnJumpToRoom: TsButton;
     procedure cbxMonthPropertiesCloseUp(Sender : TObject);
     procedure btnRefreshClick(Sender : TObject);
     procedure dtDateFromChange(Sender : TObject);
@@ -299,8 +300,6 @@ type
     procedure btnJumpToRoomClick(Sender: TObject);
     procedure edFilterChange(Sender: TObject);
     procedure btnClearClick(Sender: TObject);
-    procedure sButton8Click(Sender: TObject);
-    procedure pageMainPageChanging(Sender: TObject; NewPage: TsTabSheet; var AllowChange: Boolean);
     procedure sButton2Click(Sender: TObject);
     procedure brnRoomsTabReservationClick(Sender: TObject);
     procedure btnRoomsTabRoomClick(Sender: TObject);
@@ -312,7 +311,7 @@ type
     procedure tvReservationsTotalRoomRentGetProperties(
       Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
       var AProperties: TcxCustomEditProperties);
-    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure pageMainChange(Sender: TObject);
   private
     { Private declarations }
     zDateFrom : Tdate;
@@ -339,10 +338,13 @@ type
 
     function GetRVinList : string;
     procedure ShowData;
-    procedure GetData;
     procedure rrGetData;
     procedure ApplyFilter;
+    procedure GetData;
 
+  protected
+    procedure DoUpdateControls; override;
+    procedure DoLoadData; override;
   public
     { Public declarations }
     zRoom    : string;
@@ -355,11 +357,10 @@ type
     procedure BringWindowToFront;
   end;
 
-var
-  frmRptReservations : TfrmRptReservations;
-  frmRptReservationsX: TfrmRptReservations;
-
 procedure OpenReportReservations(embedPanel : TsPanel = nil; WindowCloseEvent : TNotifyEvent = nil);
+
+var
+  frmRptReservationsX: TfrmRptReservations;
 
 implementation
 
@@ -388,7 +389,7 @@ begin
   try
     _frmRptReservations.embedded := (embedPanel <> nil);
     _frmRptReservations.EmbedWindowCloseEvent := WindowCloseEvent;
-    _frmRptReservations.PrepareUserInterface;
+    _frmRptReservations.UpdateControls;
     if _frmRptReservations.embedded then
     begin
       _frmRptReservations.pnlHolder.parent := embedPanel;
@@ -416,18 +417,48 @@ end;
 
 procedure TfrmRptReservations.btnCollapseAllClick(Sender: TObject);
 begin
-//  tvRoomReservations.ViewData.Collapse(True);
   tvReservations.ViewData.Collapse(True);
 end;
 
 procedure TfrmRptReservations.btnExpandAllClick(Sender: TObject);
 begin
   tvReservations.ViewData.Expand(True);
-//  tvRoomReservations.ViewData.Expand(True);
 end;
 
 procedure TfrmRptReservations.btnRefreshClick(Sender : TObject);
 begin
+  RefreshData;
+end;
+
+
+procedure TfrmRptReservations.cbxMonthPropertiesCloseUp(Sender : TObject);
+var
+  y, m : word;
+  lastDay : integer;
+begin
+  inherited;
+  if cbxYear.ItemIndex < 1 then
+    exit;
+  if cbxMonth.ItemIndex < 1 then
+    exit;
+  zSetDates := false;
+  y := StrToInt(cbxYear.Items[cbxYear.ItemIndex]);
+  m := cbxMonth.ItemIndex;
+
+  zDateFrom := encodeDate(y, m, 1);
+  lastDay := DaysInAMonth(y, m);
+  zDateTo := encodeDate(y, m, lastDay);
+  dtDateFrom.Date := zDateFrom;
+  dtDateTo.Date := zDateTo;
+  zSetDates := true;
+
+  UpdateControls;
+end;
+
+
+procedure TfrmRptReservations.DoLoadData;
+begin
+  inherited;
   if pageMain.ActivePage = tabRoom then
   begin
     rrGetData;
@@ -437,31 +468,16 @@ begin
   end;
 end;
 
-
-procedure TfrmRptReservations.cbxMonthPropertiesCloseUp(Sender : TObject);
-var
-  y, m : word;
-  lastDay : integer;
-
+procedure TfrmRptReservations.DoUpdateControls;
 begin
-
-  if cbxYear.ItemIndex < 1 then
-    exit;
-  if cbxMonth.ItemIndex < 1 then
-    exit;
-  zSetDates := false;
-  y := StrToInt(cbxYear.Items[cbxYear.ItemIndex]);
-//  y := cbxYear.ItemIndex + 2010;
-  m := cbxMonth.ItemIndex;
-
-  zDateFrom := encodeDate(y, m, 1);
-  lastDay := DaysInAMonth(y, m);
-  zDateTo := encodeDate(y, m, lastDay);
-  dtDateFrom.Date := zDateFrom;
-  dtDateTo.Date := zDateTo;
-  zSetDates := true;
+  inherited;
+  btnJumpToRoom.Visible := NOT embedded;
+  brnGuestsReservation.Visible := NOT embedded;
+  btnGuestsRoom.Visible := NOT embedded;
+  brnRoomsTabReservation.Visible := NOT embedded;
+  btnRoomsTabRoom.Visible := NOT embedded;
+  btnClose.Visible := embedded;
 end;
-
 
 procedure TfrmRptReservations.btnGuestsExcelClick(Sender: TObject);
 var
@@ -489,10 +505,7 @@ begin
   theData.Reservation := iReservation;
   theData.name := '';
 
-  if openGuestProfile(actNone,theData) then
-  begin
-    //**
-  end;
+  openGuestProfile(actNone,theData);
 end;
 
 procedure TfrmRptReservations.BringWindowToFront;
@@ -509,9 +522,7 @@ begin
   iRoomReservation := 0;
 
   if EditReservation(iReservation, iRoomReservation) then
-  begin
-
-  end;
+    RefreshData;
 end;
 
 procedure TfrmRptReservations.dtDateFromChange(Sender : TObject);
@@ -524,6 +535,8 @@ begin
     cbxYear.ItemIndex := 0;
     cbxMonth.ItemIndex := 0;
   end;
+
+  UpdateControls;
 end;
 
 procedure TfrmRptReservations.ApplyFilter;
@@ -602,8 +615,7 @@ end;
 
 procedure TfrmRptReservations.FormCreate(Sender : TObject);
 begin
-  RoomerLanguage.TranslateThisForm(self);
-  glb.PerformAuthenticationAssertion(self); PlaceFormOnVisibleMonitor(self);
+
   glb.fillListWithMonthsLong(cbxMonth.Items, 1);
   glb.fillListWithYears(cbxYear.Items, 1, False);
 
@@ -630,12 +642,6 @@ end;
 
 
 
-procedure TfrmRptReservations.FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
-begin
-  if Key = VK_ESCAPE then
-    btnClose.Click;
-end;
-
 procedure TfrmRptReservations.FormShow(Sender: TObject);
 begin
   PrepareUserInterface;
@@ -655,11 +661,6 @@ begin
   cbxMonth.ItemIndex := zMonth;
 
   cbxYear.ItemIndex := cbxYear.Items.IndexOf(inttostr(zYear));
-//  idx := zYear - 2010;
-//  if (idx < cbxYear.Items.Count - 1) and (idx > 0) then
-//  begin
-//    cbxYear.ItemIndex := idx;
-//  end;
 
   zDateFrom := encodeDate(y, m, 1);
   lastDay := DaysInAMonth(y, m);
@@ -667,8 +668,6 @@ begin
   dtDateFrom.Date := zDateFrom;
   dtDateTo.Date := zDateTo;
   zSetDates := true;
-
-//  btnHagstofaReport.Enabled := true;
 
   //**
   zRoomReservationsList := '';
@@ -692,74 +691,37 @@ end;
 
 function TfrmRptReservations.GetRVinList : string;
 var
-  s      : string;
   rvList : TstringList;
-  i      : integer;
-  dateTo : Tdate;
 begin
-  result := '';
-  dateTo := zdateTo; // +1;
-
-  case rgrDateRangeFor.itemindex of
-    0 : begin
-      rvList := d.Rvlst_CreatedFromTo(zDateFrom, dateTo);
-    end;
-    1 : begin
-      rvList := d.Rvlst_Arrival(zDateFrom, dateTo)
-    end;
-    2 : begin
-        rvList := d.Rvlst_FromTo(zDateFrom, dateTo);
-    end;
-  end;
-
-//  rvList := d.Rvlst_CreatedFromTo(zDateFrom, zDateTo);
   try
-    s := '';
-    for i := 0 to rvList.Count - 1 do
-    begin
-      if rvList[i] <> '0' then
-        s := s+rvList[i]+',';
-    end;
-    if length(s) > 0 then
-    begin
-      delete(s,length(s),1);
-      s := '('+s+')';
-      result := s;
+    case rgrDateRangeFor.itemindex of
+      0 : rvList := d.Rvlst_CreatedFromTo(dtDateFrom.Date, dtDateTo.Date);
+      1 : rvList := d.Rvlst_Arrival(dtDateFrom.Date, dtDateTo.Date);
+      2 : rvList := d.Rvlst_FromTo(dtDateFrom.Date, dtDateTo.Date);
+    else
+      exit;
     end;
     zReservationCount := rvList.count;
+    if rvList.Count > 0 then
+      result := '(' + rvList.CommaText + ')'
+    else
+      result := '(-1)';
   finally
     freeandNil(rvList);
   end;
-  result := s;
-
-  if result = '' then
-    result := '(-1)';
 end;
 
 
-procedure TfrmRptReservations.pageMainPageChanging(Sender: TObject; NewPage: TsTabSheet; var AllowChange: Boolean);
+procedure TfrmRptReservations.pageMainChange(Sender: TObject);
 begin
+  inherited;
   edFilter.Text := '';
-
-  if newPage = tabRoom then
-  begin
-    rrGetData;
-  end else
-  begin
-    getData
-  end;
+  RefreshData;
 end;
 
 procedure TfrmRptReservations.PrepareUserInterface;
 begin
-  btnJumpToRoom.Visible := NOT embedded;
-  brnGuestsReservation.Visible := NOT embedded;
-  btnGuestsRoom.Visible := NOT embedded;
-  brnRoomsTabReservation.Visible := NOT embedded;
-  btnRoomsTabRoom.Visible := NOT embedded;
-  btnClose.Visible := embedded;
   ShowData;
-  getData;
 end;
 
 procedure TfrmRptReservations.btnJumpToRoomClick(Sender: TObject);
@@ -1031,7 +993,7 @@ begin
     s := s+'    , (((((SELECT SUM(RoomRate) FROM roomsdate WHERE (roomsdate.reservation=rv.reservation) AND  (roomsdate.ResFlag not in('+quotedstr('X')+','+quotedstr('C')+')))  '#10;
     s := s+'         - (SELECT SUM(IF(isPercentage, RoomRate*Discount/100, Discount)) FROM roomsdate WHERE (roomsdate.reservation=rv.reservation) AND (roomsdate.ResFlag not in('+quotedstr('X')+','+quotedstr('C')+')))))  '#10;
     s := s+'             * (SELECT Avalue FROM currencies WHERE currency= (SELECT currency FROM roomsdate WHERE roomsdate.reservation=rv.reservation LIMIT 1))))  '#10;
-    s := s+'                / (SELECT count(ID) FROM roomsdate WHERE roomsdate.reservation=rv.reservation) AS AvrageRoomRent  '#10;
+    s := s+'                / (SELECT count(ID) FROM roomsdate WHERE roomsdate.reservation=rv.reservation  AND (roomsdate.ResFlag not in('+quotedstr('X')+','+quotedstr('C')+'))) AS AvrageRoomRent  '#10;
 
     s := s+' FROM '#10;
     s := s+'   reservations rv '#10;
@@ -1174,15 +1136,6 @@ begin
   end;
   tvReservations.ApplyBestFit;
 end;
-
-procedure TfrmRptReservations.sButton8Click(Sender: TObject);
-begin
-  //**
-  rrGetData;
-end;
-
-
-
 
 end.
 
