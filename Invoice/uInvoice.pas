@@ -678,7 +678,7 @@ var
   frmInvoice: TfrmInvoice;
 
 procedure EditInvoice(reservation, RoomReservation, SplitNumber, InvoiceIndex: integer;
-  Arrival, Departure: TDate; bCredit{, aModal, fakeGroup}: boolean; FromKredit: boolean = false);
+  Arrival, Departure: TDate; bCredit: boolean; FromKredit: boolean = false);
 
 implementation
 
@@ -758,7 +758,7 @@ const
     );
 
 procedure EditInvoice(reservation, RoomReservation, SplitNumber, InvoiceIndex: integer;
-  Arrival, Departure: TDate; bCredit{, aModal, fakeGroup}: boolean; FromKredit: boolean = false);
+  Arrival, Departure: TDate; bCredit: boolean; FromKredit: boolean = false);
 var
   _frmInvoice: TfrmInvoice;
 begin
