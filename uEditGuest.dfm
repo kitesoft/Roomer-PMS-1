@@ -13,9 +13,6 @@ object frmEditGuest: TfrmEditGuest
   Font.Style = []
   OldCreateOrder = False
   Scaled = False
-  OnClose = FormClose
-  OnCloseQuery = FormCloseQuery
-  OnCreate = FormCreate
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
@@ -68,20 +65,22 @@ object frmEditGuest: TfrmEditGuest
     Top = 3
     Width = 498
     Height = 559
-    ActivePage = tabGuest
+    ActivePage = tabCompany
     Align = alClient
     Style = tsButtons
     TabHeight = 32
     TabOrder = 1
     TabWidth = 160
     SkinData.SkinSection = 'PAGECONTROL'
+    ExplicitLeft = 8
+    ExplicitTop = 4
     object tabGuest: TsTabSheet
       Caption = 'Guest'
       SkinData.CustomColor = False
       SkinData.CustomFont = False
       object sGroupBox1: TsGroupBox
         Left = 3
-        Top = 14
+        Top = 3
         Width = 470
         Height = 199
         Caption = 'Guest information'
@@ -93,6 +92,7 @@ object frmEditGuest: TfrmEditGuest
         ParentFont = False
         TabOrder = 0
         SkinData.SkinSection = 'GROUPBOX'
+        Checked = False
         object sLabel1: TsLabel
           Left = 105
           Top = 23
@@ -149,22 +149,6 @@ object frmEditGuest: TfrmEditGuest
           Font.Name = 'Tahoma'
           Font.Style = []
         end
-        object clabNationality: TsLabel
-          Left = 113
-          Top = 148
-          Width = 55
-          Height = 13
-          Alignment = taRightJustify
-          Caption = 'Nationality:'
-          Color = clBtnFace
-          ParentColor = False
-          ParentFont = False
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = []
-        end
         object sLabel15: TsLabel
           Left = 103
           Top = 172
@@ -194,14 +178,13 @@ object frmEditGuest: TfrmEditGuest
           Font.Name = 'Tahoma'
           Font.Style = []
         end
-        object labNationality: TsLabel
-          Left = 240
-          Top = 148
-          Width = 4
+        object lblNationality: TsLabel
+          Left = 113
+          Top = 147
+          Width = 55
           Height = 13
-          Caption = '-'
-          Color = clBtnFace
-          ParentColor = False
+          Alignment = taRightJustify
+          Caption = 'Nationality:'
           ParentFont = False
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -216,21 +199,12 @@ object frmEditGuest: TfrmEditGuest
           Height = 21
           AutoCloseUp = True
           Alignment = taLeftJustify
-          BoundLabel.Indent = 0
-          BoundLabel.Font.Charset = DEFAULT_CHARSET
-          BoundLabel.Font.Color = clWindowText
-          BoundLabel.Font.Height = -11
-          BoundLabel.Font.Name = 'Tahoma'
-          BoundLabel.Font.Style = []
-          BoundLabel.Layout = sclLeft
-          BoundLabel.MaxWidth = 0
-          BoundLabel.UseSkinColor = True
           SkinData.SkinSection = 'COMBOBOX'
           VerticalAlignment = taAlignTop
           AutoComplete = False
           Color = clWhite
           Font.Charset = DEFAULT_CHARSET
-          Font.Color = 2302755
+          Font.Color = clBlack
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
@@ -245,7 +219,7 @@ object frmEditGuest: TfrmEditGuest
           Height = 21
           Color = clWhite
           Font.Charset = DEFAULT_CHARSET
-          Font.Color = 2302755
+          Font.Color = clBlack
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
@@ -253,15 +227,6 @@ object frmEditGuest: TfrmEditGuest
           TabOrder = 1
           SkinData.SkinSection = 'EDIT'
           BoundLabel.Caption = 'test'
-          BoundLabel.Indent = 0
-          BoundLabel.Font.Charset = DEFAULT_CHARSET
-          BoundLabel.Font.Color = clWindowText
-          BoundLabel.Font.Height = -11
-          BoundLabel.Font.Name = 'Tahoma'
-          BoundLabel.Font.Style = []
-          BoundLabel.Layout = sclLeft
-          BoundLabel.MaxWidth = 0
-          BoundLabel.UseSkinColor = True
         end
         object edCardId: TsEdit
           Left = 174
@@ -270,7 +235,7 @@ object frmEditGuest: TfrmEditGuest
           Height = 21
           Color = clWhite
           Font.Charset = DEFAULT_CHARSET
-          Font.Color = 2302755
+          Font.Color = clBlack
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
@@ -278,15 +243,6 @@ object frmEditGuest: TfrmEditGuest
           TabOrder = 2
           SkinData.SkinSection = 'EDIT'
           BoundLabel.Caption = 'test'
-          BoundLabel.Indent = 0
-          BoundLabel.Font.Charset = DEFAULT_CHARSET
-          BoundLabel.Font.Color = clWindowText
-          BoundLabel.Font.Height = -11
-          BoundLabel.Font.Name = 'Tahoma'
-          BoundLabel.Font.Style = []
-          BoundLabel.Layout = sclLeft
-          BoundLabel.MaxWidth = 0
-          BoundLabel.UseSkinColor = True
         end
         object edTitle: TsEdit
           Left = 174
@@ -295,7 +251,7 @@ object frmEditGuest: TfrmEditGuest
           Height = 21
           Color = clWhite
           Font.Charset = DEFAULT_CHARSET
-          Font.Color = 2302755
+          Font.Color = clBlack
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
@@ -303,15 +259,6 @@ object frmEditGuest: TfrmEditGuest
           TabOrder = 3
           SkinData.SkinSection = 'EDIT'
           BoundLabel.Caption = 'test'
-          BoundLabel.Indent = 0
-          BoundLabel.Font.Charset = DEFAULT_CHARSET
-          BoundLabel.Font.Color = clWindowText
-          BoundLabel.Font.Height = -11
-          BoundLabel.Font.Name = 'Tahoma'
-          BoundLabel.Font.Style = []
-          BoundLabel.Layout = sclLeft
-          BoundLabel.MaxWidth = 0
-          BoundLabel.UseSkinColor = True
         end
         object edSSN: TsEdit
           Left = 174
@@ -320,7 +267,7 @@ object frmEditGuest: TfrmEditGuest
           Height = 21
           Color = clWhite
           Font.Charset = DEFAULT_CHARSET
-          Font.Color = 2302755
+          Font.Color = clBlack
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
@@ -328,43 +275,6 @@ object frmEditGuest: TfrmEditGuest
           TabOrder = 4
           SkinData.SkinSection = 'EDIT'
           BoundLabel.Caption = 'test'
-          BoundLabel.Indent = 0
-          BoundLabel.Font.Charset = DEFAULT_CHARSET
-          BoundLabel.Font.Color = clWindowText
-          BoundLabel.Font.Height = -11
-          BoundLabel.Font.Name = 'Tahoma'
-          BoundLabel.Font.Style = []
-          BoundLabel.Layout = sclLeft
-          BoundLabel.MaxWidth = 0
-          BoundLabel.UseSkinColor = True
-        end
-        object edNationality: TsEdit
-          Left = 174
-          Top = 145
-          Width = 34
-          Height = 21
-          CharCase = ecUpperCase
-          Color = clWhite
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = 2302755
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          ParentFont = False
-          TabOrder = 5
-          OnDblClick = btnGetNationalityClick
-          OnExit = edNationalityExit
-          SkinData.SkinSection = 'EDIT'
-          BoundLabel.Caption = 'test'
-          BoundLabel.Indent = 0
-          BoundLabel.Font.Charset = DEFAULT_CHARSET
-          BoundLabel.Font.Color = clWindowText
-          BoundLabel.Font.Height = -11
-          BoundLabel.Font.Name = 'Tahoma'
-          BoundLabel.Font.Style = []
-          BoundLabel.Layout = sclLeft
-          BoundLabel.MaxWidth = 0
-          BoundLabel.UseSkinColor = True
         end
         object edDateOfBirth: TsDateEdit
           Left = 174
@@ -381,18 +291,15 @@ object frmEditGuest: TfrmEditGuest
           Font.Style = []
           MaxLength = 10
           ParentFont = False
-          TabOrder = 6
+          TabOrder = 5
           Text = '  -  -    '
           Visible = False
-          BoundLabel.Indent = 0
+          CheckOnExit = True
           BoundLabel.Font.Charset = DEFAULT_CHARSET
           BoundLabel.Font.Color = clWindowText
           BoundLabel.Font.Height = -13
           BoundLabel.Font.Name = 'Tahoma'
           BoundLabel.Font.Style = []
-          BoundLabel.Layout = sclLeft
-          BoundLabel.MaxWidth = 0
-          BoundLabel.UseSkinColor = True
           SkinData.SkinSection = 'EDIT'
           GlyphMode.Blend = 0
           GlyphMode.Grayed = False
@@ -402,29 +309,42 @@ object frmEditGuest: TfrmEditGuest
           ShowWeeks = True
           PopupWidth = 250
         end
-        object btnGetNationality: TsButton
-          Left = 210
-          Top = 145
-          Width = 23
-          Height = 21
-          Caption = '...'
-          TabOrder = 7
-          OnClick = btnGetNationalityClick
-          SkinData.SkinSection = 'BUTTON'
-        end
         object sButton2: TsButton
           Left = 418
           Top = 20
           Width = 32
           Height = 21
           Caption = '...'
-          TabOrder = 8
+          TabOrder = 6
           SkinData.SkinSection = 'BUTTON'
+        end
+        inline fraNationality: TfraCountryPanel
+          Left = 174
+          Top = 144
+          Width = 241
+          Height = 20
+          TabOrder = 7
+          ExplicitLeft = 174
+          ExplicitTop = 144
+          ExplicitWidth = 241
+          inherited pnlCountry: TsPanel
+            Width = 241
+            ExplicitWidth = 306
+            inherited lblCountryName: TsLabel
+              ExplicitLeft = 63
+            end
+            inherited edCountryCode: TsEdit
+              ExplicitLeft = 0
+            end
+            inherited btnGetCountry: TsButton
+              ExplicitLeft = 38
+            end
+          end
         end
       end
       object sGroupBox2: TsGroupBox
-        Left = 4
-        Top = 381
+        Left = 3
+        Top = 383
         Width = 470
         Height = 116
         Caption = 'Contact Information'
@@ -436,6 +356,7 @@ object frmEditGuest: TfrmEditGuest
         ParentFont = False
         TabOrder = 1
         SkinData.SkinSection = 'GROUPBOX'
+        Checked = False
         object sLabel13: TsLabel
           Left = 74
           Top = 33
@@ -485,7 +406,7 @@ object frmEditGuest: TfrmEditGuest
           Height = 21
           Color = clWhite
           Font.Charset = DEFAULT_CHARSET
-          Font.Color = 2302755
+          Font.Color = clBlack
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
@@ -493,15 +414,6 @@ object frmEditGuest: TfrmEditGuest
           TabOrder = 0
           SkinData.SkinSection = 'EDIT'
           BoundLabel.Caption = 'test'
-          BoundLabel.Indent = 0
-          BoundLabel.Font.Charset = DEFAULT_CHARSET
-          BoundLabel.Font.Color = clWindowText
-          BoundLabel.Font.Height = -11
-          BoundLabel.Font.Name = 'Tahoma'
-          BoundLabel.Font.Style = []
-          BoundLabel.Layout = sclLeft
-          BoundLabel.MaxWidth = 0
-          BoundLabel.UseSkinColor = True
         end
         object edMobile: TsEdit
           Left = 173
@@ -510,7 +422,7 @@ object frmEditGuest: TfrmEditGuest
           Height = 21
           Color = clWhite
           Font.Charset = DEFAULT_CHARSET
-          Font.Color = 2302755
+          Font.Color = clBlack
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
@@ -518,15 +430,6 @@ object frmEditGuest: TfrmEditGuest
           TabOrder = 1
           SkinData.SkinSection = 'EDIT'
           BoundLabel.Caption = 'test'
-          BoundLabel.Indent = 0
-          BoundLabel.Font.Charset = DEFAULT_CHARSET
-          BoundLabel.Font.Color = clWindowText
-          BoundLabel.Font.Height = -11
-          BoundLabel.Font.Name = 'Tahoma'
-          BoundLabel.Font.Style = []
-          BoundLabel.Layout = sclLeft
-          BoundLabel.MaxWidth = 0
-          BoundLabel.UseSkinColor = True
         end
         object edEmail: TsEdit
           Left = 173
@@ -535,7 +438,7 @@ object frmEditGuest: TfrmEditGuest
           Height = 21
           Color = clWhite
           Font.Charset = DEFAULT_CHARSET
-          Font.Color = 2302755
+          Font.Color = clBlack
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
@@ -543,15 +446,6 @@ object frmEditGuest: TfrmEditGuest
           TabOrder = 2
           SkinData.SkinSection = 'EDIT'
           BoundLabel.Caption = 'test'
-          BoundLabel.Indent = 0
-          BoundLabel.Font.Charset = DEFAULT_CHARSET
-          BoundLabel.Font.Color = clWindowText
-          BoundLabel.Font.Height = -11
-          BoundLabel.Font.Name = 'Tahoma'
-          BoundLabel.Font.Style = []
-          BoundLabel.Layout = sclLeft
-          BoundLabel.MaxWidth = 0
-          BoundLabel.UseSkinColor = True
         end
       end
       object sGroupBox3: TsGroupBox
@@ -568,6 +462,7 @@ object frmEditGuest: TfrmEditGuest
         ParentFont = False
         TabOrder = 2
         SkinData.SkinSection = 'GROUPBOX'
+        Checked = False
         object sLabel3: TsLabel
           Left = 124
           Top = 21
@@ -610,30 +505,13 @@ object frmEditGuest: TfrmEditGuest
           Font.Name = 'Tahoma'
           Font.Style = []
         end
-        object clabCountry: TsLabel
-          Left = 116
+        object lblCountry: TsLabel
+          Left = 124
           Top = 129
-          Width = 52
+          Width = 43
           Height = 13
           Alignment = taRightJustify
-          Caption = '* Country:'
-          Color = clBtnFace
-          ParentColor = False
-          ParentFont = False
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = []
-        end
-        object labCountry: TsLabel
-          Left = 238
-          Top = 129
-          Width = 4
-          Height = 13
-          Caption = '-'
-          Color = clBtnFace
-          ParentColor = False
+          Caption = 'Country:'
           ParentFont = False
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -648,7 +526,7 @@ object frmEditGuest: TfrmEditGuest
           Height = 21
           Color = clWhite
           Font.Charset = DEFAULT_CHARSET
-          Font.Color = 2302755
+          Font.Color = clBlack
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
@@ -656,15 +534,6 @@ object frmEditGuest: TfrmEditGuest
           TabOrder = 0
           SkinData.SkinSection = 'EDIT'
           BoundLabel.Caption = 'test'
-          BoundLabel.Indent = 0
-          BoundLabel.Font.Charset = DEFAULT_CHARSET
-          BoundLabel.Font.Color = clWindowText
-          BoundLabel.Font.Height = -11
-          BoundLabel.Font.Name = 'Tahoma'
-          BoundLabel.Font.Style = []
-          BoundLabel.Layout = sclLeft
-          BoundLabel.MaxWidth = 0
-          BoundLabel.UseSkinColor = True
         end
         object edAddress2: TsEdit
           Left = 173
@@ -673,7 +542,7 @@ object frmEditGuest: TfrmEditGuest
           Height = 21
           Color = clWhite
           Font.Charset = DEFAULT_CHARSET
-          Font.Color = 2302755
+          Font.Color = clBlack
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
@@ -681,15 +550,6 @@ object frmEditGuest: TfrmEditGuest
           TabOrder = 1
           SkinData.SkinSection = 'EDIT'
           BoundLabel.Caption = 'test'
-          BoundLabel.Indent = 0
-          BoundLabel.Font.Charset = DEFAULT_CHARSET
-          BoundLabel.Font.Color = clWindowText
-          BoundLabel.Font.Height = -11
-          BoundLabel.Font.Name = 'Tahoma'
-          BoundLabel.Font.Style = []
-          BoundLabel.Layout = sclLeft
-          BoundLabel.MaxWidth = 0
-          BoundLabel.UseSkinColor = True
         end
         object edZipcode: TsEdit
           Left = 173
@@ -698,7 +558,7 @@ object frmEditGuest: TfrmEditGuest
           Height = 21
           Color = clWhite
           Font.Charset = DEFAULT_CHARSET
-          Font.Color = 2302755
+          Font.Color = clBlack
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
@@ -706,15 +566,6 @@ object frmEditGuest: TfrmEditGuest
           TabOrder = 2
           SkinData.SkinSection = 'EDIT'
           BoundLabel.Caption = 'test'
-          BoundLabel.Indent = 0
-          BoundLabel.Font.Charset = DEFAULT_CHARSET
-          BoundLabel.Font.Color = clWindowText
-          BoundLabel.Font.Height = -11
-          BoundLabel.Font.Name = 'Tahoma'
-          BoundLabel.Font.Style = []
-          BoundLabel.Layout = sclLeft
-          BoundLabel.MaxWidth = 0
-          BoundLabel.UseSkinColor = True
         end
         object edCity: TsEdit
           Left = 173
@@ -723,7 +574,7 @@ object frmEditGuest: TfrmEditGuest
           Height = 21
           Color = clWhite
           Font.Charset = DEFAULT_CHARSET
-          Font.Color = 2302755
+          Font.Color = clBlack
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
@@ -731,55 +582,29 @@ object frmEditGuest: TfrmEditGuest
           TabOrder = 3
           SkinData.SkinSection = 'EDIT'
           BoundLabel.Caption = 'test'
-          BoundLabel.Indent = 0
-          BoundLabel.Font.Charset = DEFAULT_CHARSET
-          BoundLabel.Font.Color = clWindowText
-          BoundLabel.Font.Height = -11
-          BoundLabel.Font.Name = 'Tahoma'
-          BoundLabel.Font.Style = []
-          BoundLabel.Layout = sclLeft
-          BoundLabel.MaxWidth = 0
-          BoundLabel.UseSkinColor = True
         end
-        object edCountry: TsEdit
-          Left = 174
+        inline fraCountry: TfraCountryPanel
+          Left = 173
           Top = 126
-          Width = 34
-          Height = 21
-          CharCase = ecUpperCase
-          Color = clWhite
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = 2302755
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          ParentFont = False
+          Width = 242
+          Height = 20
           TabOrder = 4
-          OnChange = edCountryChange
-          OnDblClick = btnGetCountryClick
-          OnExit = edCountryExit
-          OnKeyUp = edCountryKeyUp
-          SkinData.SkinSection = 'EDIT'
-          BoundLabel.Caption = 'test'
-          BoundLabel.Indent = 0
-          BoundLabel.Font.Charset = DEFAULT_CHARSET
-          BoundLabel.Font.Color = clWindowText
-          BoundLabel.Font.Height = -11
-          BoundLabel.Font.Name = 'Tahoma'
-          BoundLabel.Font.Style = []
-          BoundLabel.Layout = sclLeft
-          BoundLabel.MaxWidth = 0
-          BoundLabel.UseSkinColor = True
-        end
-        object btnGetCountry: TsButton
-          Left = 210
-          Top = 126
-          Width = 23
-          Height = 21
-          Caption = '...'
-          TabOrder = 5
-          OnClick = btnGetCountryClick
-          SkinData.SkinSection = 'BUTTON'
+          ExplicitLeft = 173
+          ExplicitTop = 126
+          ExplicitWidth = 242
+          inherited pnlCountry: TsPanel
+            Width = 242
+            ExplicitWidth = 307
+            inherited lblCountryName: TsLabel
+              ExplicitLeft = 63
+            end
+            inherited edCountryCode: TsEdit
+              ExplicitLeft = 0
+            end
+            inherited btnGetCountry: TsButton
+              ExplicitLeft = 38
+            end
+          end
         end
       end
     end
@@ -787,6 +612,8 @@ object frmEditGuest: TfrmEditGuest
       Caption = 'Company'
       SkinData.CustomColor = False
       SkinData.CustomFont = False
+      ExplicitLeft = 0
+      ExplicitTop = 39
       object sGroupBox4: TsGroupBox
         Left = 3
         Top = 10
@@ -801,6 +628,7 @@ object frmEditGuest: TfrmEditGuest
         ParentFont = False
         TabOrder = 0
         SkinData.SkinSection = 'GROUPBOX'
+        Checked = False
         object sLabel23: TsLabel
           Left = 90
           Top = 23
@@ -836,7 +664,7 @@ object frmEditGuest: TfrmEditGuest
           Height = 21
           Color = clWhite
           Font.Charset = DEFAULT_CHARSET
-          Font.Color = 2302755
+          Font.Color = clBlack
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
@@ -844,15 +672,6 @@ object frmEditGuest: TfrmEditGuest
           TabOrder = 0
           SkinData.SkinSection = 'EDIT'
           BoundLabel.Caption = 'test'
-          BoundLabel.Indent = 0
-          BoundLabel.Font.Charset = DEFAULT_CHARSET
-          BoundLabel.Font.Color = clWindowText
-          BoundLabel.Font.Height = -11
-          BoundLabel.Font.Name = 'Tahoma'
-          BoundLabel.Font.Style = []
-          BoundLabel.Layout = sclLeft
-          BoundLabel.MaxWidth = 0
-          BoundLabel.UseSkinColor = True
         end
         object edVAT: TsEdit
           Left = 173
@@ -861,7 +680,7 @@ object frmEditGuest: TfrmEditGuest
           Height = 21
           Color = clWhite
           Font.Charset = DEFAULT_CHARSET
-          Font.Color = 2302755
+          Font.Color = clBlack
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
@@ -869,15 +688,6 @@ object frmEditGuest: TfrmEditGuest
           TabOrder = 1
           SkinData.SkinSection = 'EDIT'
           BoundLabel.Caption = 'test'
-          BoundLabel.Indent = 0
-          BoundLabel.Font.Charset = DEFAULT_CHARSET
-          BoundLabel.Font.Color = clWindowText
-          BoundLabel.Font.Height = -11
-          BoundLabel.Font.Name = 'Tahoma'
-          BoundLabel.Font.Style = []
-          BoundLabel.Layout = sclLeft
-          BoundLabel.MaxWidth = 0
-          BoundLabel.UseSkinColor = True
         end
       end
       object sGroupBox5: TsGroupBox
@@ -894,6 +704,7 @@ object frmEditGuest: TfrmEditGuest
         ParentFont = False
         TabOrder = 1
         SkinData.SkinSection = 'GROUPBOX'
+        Checked = False
         object sLabel31: TsLabel
           Left = 73
           Top = 23
@@ -943,7 +754,7 @@ object frmEditGuest: TfrmEditGuest
           Height = 21
           Color = clWhite
           Font.Charset = DEFAULT_CHARSET
-          Font.Color = 2302755
+          Font.Color = clBlack
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
@@ -951,15 +762,6 @@ object frmEditGuest: TfrmEditGuest
           TabOrder = 0
           SkinData.SkinSection = 'EDIT'
           BoundLabel.Caption = 'test'
-          BoundLabel.Indent = 0
-          BoundLabel.Font.Charset = DEFAULT_CHARSET
-          BoundLabel.Font.Color = clWindowText
-          BoundLabel.Font.Height = -11
-          BoundLabel.Font.Name = 'Tahoma'
-          BoundLabel.Font.Style = []
-          BoundLabel.Layout = sclLeft
-          BoundLabel.MaxWidth = 0
-          BoundLabel.UseSkinColor = True
         end
         object edFax: TsEdit
           Left = 173
@@ -968,7 +770,7 @@ object frmEditGuest: TfrmEditGuest
           Height = 21
           Color = clWhite
           Font.Charset = DEFAULT_CHARSET
-          Font.Color = 2302755
+          Font.Color = clBlack
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
@@ -976,15 +778,6 @@ object frmEditGuest: TfrmEditGuest
           TabOrder = 1
           SkinData.SkinSection = 'EDIT'
           BoundLabel.Caption = 'test'
-          BoundLabel.Indent = 0
-          BoundLabel.Font.Charset = DEFAULT_CHARSET
-          BoundLabel.Font.Color = clWindowText
-          BoundLabel.Font.Height = -11
-          BoundLabel.Font.Name = 'Tahoma'
-          BoundLabel.Font.Style = []
-          BoundLabel.Layout = sclLeft
-          BoundLabel.MaxWidth = 0
-          BoundLabel.UseSkinColor = True
         end
         object edCompEmail: TsEdit
           Left = 173
@@ -993,7 +786,7 @@ object frmEditGuest: TfrmEditGuest
           Height = 21
           Color = clWhite
           Font.Charset = DEFAULT_CHARSET
-          Font.Color = 2302755
+          Font.Color = clBlack
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
@@ -1001,15 +794,6 @@ object frmEditGuest: TfrmEditGuest
           TabOrder = 2
           SkinData.SkinSection = 'EDIT'
           BoundLabel.Caption = 'test'
-          BoundLabel.Indent = 0
-          BoundLabel.Font.Charset = DEFAULT_CHARSET
-          BoundLabel.Font.Color = clWindowText
-          BoundLabel.Font.Height = -11
-          BoundLabel.Font.Name = 'Tahoma'
-          BoundLabel.Font.Style = []
-          BoundLabel.Layout = sclLeft
-          BoundLabel.MaxWidth = 0
-          BoundLabel.UseSkinColor = True
         end
       end
       object sGroupBox6: TsGroupBox
@@ -1026,6 +810,7 @@ object frmEditGuest: TfrmEditGuest
         ParentFont = False
         TabOrder = 2
         SkinData.SkinSection = 'GROUPBOX'
+        Checked = False
         object sLabel25: TsLabel
           Left = 124
           Top = 23
@@ -1068,26 +853,13 @@ object frmEditGuest: TfrmEditGuest
           Font.Name = 'Tahoma'
           Font.Style = []
         end
-        object clabCompCountry: TsLabel
-          Left = 115
-          Top = 126
+        object lblCompCountry: TsLabel
+          Left = 114
+          Top = 125
           Width = 52
           Height = 13
           Alignment = taRightJustify
           Caption = '* Country:'
-          ParentFont = False
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = []
-        end
-        object labCompCountry: TsLabel
-          Left = 240
-          Top = 124
-          Width = 4
-          Height = 13
-          Caption = '-'
           ParentFont = False
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -1102,7 +874,7 @@ object frmEditGuest: TfrmEditGuest
           Height = 21
           Color = clWhite
           Font.Charset = DEFAULT_CHARSET
-          Font.Color = 2302755
+          Font.Color = clBlack
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
@@ -1110,15 +882,6 @@ object frmEditGuest: TfrmEditGuest
           TabOrder = 0
           SkinData.SkinSection = 'EDIT'
           BoundLabel.Caption = 'test'
-          BoundLabel.Indent = 0
-          BoundLabel.Font.Charset = DEFAULT_CHARSET
-          BoundLabel.Font.Color = clWindowText
-          BoundLabel.Font.Height = -11
-          BoundLabel.Font.Name = 'Tahoma'
-          BoundLabel.Font.Style = []
-          BoundLabel.Layout = sclLeft
-          BoundLabel.MaxWidth = 0
-          BoundLabel.UseSkinColor = True
         end
         object edCompAddress2: TsEdit
           Left = 173
@@ -1127,7 +890,7 @@ object frmEditGuest: TfrmEditGuest
           Height = 21
           Color = clWhite
           Font.Charset = DEFAULT_CHARSET
-          Font.Color = 2302755
+          Font.Color = clBlack
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
@@ -1135,15 +898,6 @@ object frmEditGuest: TfrmEditGuest
           TabOrder = 1
           SkinData.SkinSection = 'EDIT'
           BoundLabel.Caption = 'test'
-          BoundLabel.Indent = 0
-          BoundLabel.Font.Charset = DEFAULT_CHARSET
-          BoundLabel.Font.Color = clWindowText
-          BoundLabel.Font.Height = -11
-          BoundLabel.Font.Name = 'Tahoma'
-          BoundLabel.Font.Style = []
-          BoundLabel.Layout = sclLeft
-          BoundLabel.MaxWidth = 0
-          BoundLabel.UseSkinColor = True
         end
         object edCompZipcode: TsEdit
           Left = 173
@@ -1152,7 +906,7 @@ object frmEditGuest: TfrmEditGuest
           Height = 21
           Color = clWhite
           Font.Charset = DEFAULT_CHARSET
-          Font.Color = 2302755
+          Font.Color = clBlack
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
@@ -1160,15 +914,6 @@ object frmEditGuest: TfrmEditGuest
           TabOrder = 2
           SkinData.SkinSection = 'EDIT'
           BoundLabel.Caption = 'test'
-          BoundLabel.Indent = 0
-          BoundLabel.Font.Charset = DEFAULT_CHARSET
-          BoundLabel.Font.Color = clWindowText
-          BoundLabel.Font.Height = -11
-          BoundLabel.Font.Name = 'Tahoma'
-          BoundLabel.Font.Style = []
-          BoundLabel.Layout = sclLeft
-          BoundLabel.MaxWidth = 0
-          BoundLabel.UseSkinColor = True
         end
         object edCompCity: TsEdit
           Left = 173
@@ -1177,7 +922,7 @@ object frmEditGuest: TfrmEditGuest
           Height = 21
           Color = clWhite
           Font.Charset = DEFAULT_CHARSET
-          Font.Color = 2302755
+          Font.Color = clBlack
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
@@ -1185,50 +930,28 @@ object frmEditGuest: TfrmEditGuest
           TabOrder = 3
           SkinData.SkinSection = 'EDIT'
           BoundLabel.Caption = 'test'
-          BoundLabel.Indent = 0
-          BoundLabel.Font.Charset = DEFAULT_CHARSET
-          BoundLabel.Font.Color = clWindowText
-          BoundLabel.Font.Height = -11
-          BoundLabel.Font.Name = 'Tahoma'
-          BoundLabel.Font.Style = []
-          BoundLabel.Layout = sclLeft
-          BoundLabel.MaxWidth = 0
-          BoundLabel.UseSkinColor = True
         end
-        object edCompCountry: TsEdit
+        inline fraCompanyCountry: TfraCountryPanel
           Left = 173
-          Top = 123
-          Width = 34
-          Height = 21
-          Color = clWhite
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = 2302755
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          ParentFont = False
+          Top = 122
+          Width = 240
+          Height = 20
           TabOrder = 4
-          SkinData.SkinSection = 'EDIT'
-          BoundLabel.Caption = 'test'
-          BoundLabel.Indent = 0
-          BoundLabel.Font.Charset = DEFAULT_CHARSET
-          BoundLabel.Font.Color = clWindowText
-          BoundLabel.Font.Height = -11
-          BoundLabel.Font.Name = 'Tahoma'
-          BoundLabel.Font.Style = []
-          BoundLabel.Layout = sclLeft
-          BoundLabel.MaxWidth = 0
-          BoundLabel.UseSkinColor = True
-        end
-        object sButton4: TsButton
-          Left = 211
-          Top = 123
-          Width = 23
-          Height = 21
-          Caption = '...'
-          TabOrder = 5
-          OnClick = sButton4Click
-          SkinData.SkinSection = 'BUTTON'
+          ExplicitLeft = 173
+          ExplicitTop = 122
+          ExplicitWidth = 240
+          inherited pnlCountry: TsPanel
+            Width = 240
+            inherited lblCountryName: TsLabel
+              ExplicitLeft = 63
+            end
+            inherited edCountryCode: TsEdit
+              ExplicitLeft = 0
+            end
+            inherited btnGetCountry: TsButton
+              ExplicitLeft = 38
+            end
+          end
         end
       end
     end

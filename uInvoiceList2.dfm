@@ -26,101 +26,14 @@ object frmInvoiceList2: TfrmInvoiceList2
     Align = alTop
     TabOrder = 0
     SkinData.SkinSection = 'PANEL'
-    object btnReservation: TsButton
-      Left = 113
-      Top = 136
-      Width = 100
-      Height = 37
-      Caption = 'Reservation'
-      ImageIndex = 56
-      Images = DImages.PngImageList1
-      TabOrder = 2
-      OnClick = btnReservationClick
-      SkinData.SkinSection = 'BUTTON'
-    end
-    object LMDSpeedButton1: TsButton
-      Left = 219
-      Top = 136
-      Width = 100
-      Height = 37
-      Caption = 'Guests'
-      ImageIndex = 39
-      Images = DImages.PngImageList1
-      TabOrder = 3
-      OnClick = LMDSpeedButton1Click
-      SkinData.SkinSection = 'BUTTON'
-    end
-    object LMDSpeedButton5: TsButton
-      Left = 537
-      Top = 136
-      Width = 100
-      Height = 37
-      Caption = 'Export'
-      HotImageIndex = 98
-      ImageIndex = 98
-      Images = DImages.PngImageList1
-      TabOrder = 4
-      OnClick = LMDSpeedButton5Click
-      SkinData.SkinSection = 'BUTTON'
-    end
-    object btnViewInvoice: TsButton
-      Left = 325
-      Top = 136
-      Width = 100
-      Height = 37
-      Caption = 'Invoice'
-      ImageIndex = 63
-      Images = DImages.PngImageList1
-      TabOrder = 5
-      OnClick = btnViewInvoiceClick
-      SkinData.SkinSection = 'BUTTON'
-    end
-    object LMDSpeedButton6: TsButton
-      Left = 7
-      Top = 136
-      Width = 100
-      Height = 37
-      Caption = 'EXCEL'
-      ImageIndex = 132
-      Images = DImages.PngImageList1
-      TabOrder = 6
-      OnClick = LMDSpeedButton6Click
-      SkinData.SkinSection = 'BUTTON'
-    end
-    object LMDSpeedButton7: TsButton
-      Left = 643
-      Top = 136
-      Width = 100
-      Height = 37
-      Caption = 'Export all'
-      ImageIndex = 98
-      Images = DImages.PngImageList1
-      TabOrder = 7
-      OnClick = LMDSpeedButton7Click
-      SkinData.SkinSection = 'BUTTON'
-    end
-    object LMDButton1: TsButton
-      Left = 855
-      Top = 136
-      Width = 100
-      Height = 37
-      Caption = 'Jump to room'
-      ImageIndex = 57
-      Images = DImages.PngImageList1
-      ModalResult = 1
-      TabOrder = 0
-      OnClick = LMDButton1Click
-      SkinData.SkinSection = 'BUTTON'
-    end
     object LMDGroupBox1: TsGroupBox
       Left = 10
       Top = 10
       Width = 531
       Height = 120
       Caption = 'Search'
-      TabOrder = 1
+      TabOrder = 0
       SkinData.SkinSection = 'GROUPBOX'
-      Checked = False
       object LMDSimpleLabel2: TsLabel
         Left = 251
         Top = 20
@@ -178,7 +91,6 @@ object frmInvoiceList2: TfrmInvoiceList2
         TabOrder = 0
         Text = '  -  -    '
         OnChange = dtFromChange
-        CheckOnExit = True
         SkinData.SkinSection = 'EDIT'
         GlyphMode.Blend = 0
         GlyphMode.Grayed = False
@@ -202,7 +114,6 @@ object frmInvoiceList2: TfrmInvoiceList2
         TabOrder = 1
         Text = '  -  -    '
         OnChange = dtToChange
-        CheckOnExit = True
         SkinData.SkinSection = 'EDIT'
         GlyphMode.Blend = 0
         GlyphMode.Grayed = False
@@ -402,38 +313,122 @@ object frmInvoiceList2: TfrmInvoiceList2
         Value = 0
       end
     end
-    object sButton1: TsButton
-      Left = 431
-      Top = 136
-      Width = 100
-      Height = 37
-      Caption = 'Print'
-      ImageIndex = 3
-      Images = DImages.PngImageList1
-      TabOrder = 8
-      OnClick = sButton1Click
-      SkinData.SkinSection = 'BUTTON'
-    end
-    object sButton2: TsButton
-      Left = 749
-      Top = 136
-      Width = 100
-      Height = 37
-      Caption = 'Best fit'
-      Images = DImages.PngImageList1
-      TabOrder = 9
-      OnClick = sButton2Click
-      SkinData.SkinSection = 'BUTTON'
-    end
     object btnExport: TsButton
-      Left = 550
-      Top = 17
+      Left = 547
+      Top = 19
       Width = 118
-      Height = 40
+      Height = 44
       Caption = 'Export invoices'
-      TabOrder = 10
+      TabOrder = 1
       OnClick = btnExportClick
       SkinData.SkinSection = 'BUTTON'
+    end
+    object pnlButtons: TsPanel
+      Left = 1
+      Top = 141
+      Width = 1131
+      Height = 41
+      Align = alBottom
+      BevelOuter = bvNone
+      TabOrder = 2
+      object LMDSpeedButton6: TsButton
+        AlignWithMargins = True
+        Left = 3
+        Top = 3
+        Width = 100
+        Height = 35
+        Align = alLeft
+        Caption = 'EXCEL'
+        ImageIndex = 132
+        Images = DImages.PngImageList1
+        TabOrder = 0
+        OnClick = LMDSpeedButton6Click
+        SkinData.SkinSection = 'BUTTON'
+      end
+      object btnReservation: TsButton
+        AlignWithMargins = True
+        Left = 109
+        Top = 3
+        Width = 100
+        Height = 35
+        Align = alLeft
+        Caption = 'Reservation'
+        ImageIndex = 56
+        Images = DImages.PngImageList1
+        TabOrder = 1
+        OnClick = btnReservationClick
+        SkinData.SkinSection = 'BUTTON'
+      end
+      object LMDSpeedButton1: TsButton
+        AlignWithMargins = True
+        Left = 215
+        Top = 3
+        Width = 100
+        Height = 35
+        Align = alLeft
+        Caption = 'Guests'
+        ImageIndex = 39
+        Images = DImages.PngImageList1
+        TabOrder = 2
+        OnClick = LMDSpeedButton1Click
+        SkinData.SkinSection = 'BUTTON'
+      end
+      object btnViewInvoice: TsButton
+        AlignWithMargins = True
+        Left = 321
+        Top = 3
+        Width = 100
+        Height = 35
+        Align = alLeft
+        Caption = 'Invoice'
+        ImageIndex = 63
+        Images = DImages.PngImageList1
+        TabOrder = 3
+        OnClick = btnViewInvoiceClick
+        SkinData.SkinSection = 'BUTTON'
+      end
+      object sButton1: TsButton
+        AlignWithMargins = True
+        Left = 427
+        Top = 3
+        Width = 100
+        Height = 35
+        Align = alLeft
+        Caption = 'Print'
+        ImageIndex = 3
+        Images = DImages.PngImageList1
+        TabOrder = 4
+        OnClick = sButton1Click
+        SkinData.SkinSection = 'BUTTON'
+      end
+      object sButton2: TsButton
+        AlignWithMargins = True
+        Left = 533
+        Top = 3
+        Width = 100
+        Height = 35
+        Align = alLeft
+        Caption = 'Best fit'
+        Images = DImages.PngImageList1
+        TabOrder = 5
+        OnClick = sButton2Click
+        SkinData.SkinSection = 'BUTTON'
+      end
+      object LMDButton1: TsButton
+        AlignWithMargins = True
+        Left = 639
+        Top = 3
+        Width = 100
+        Height = 35
+        Align = alLeft
+        Caption = 'Jump to room'
+        ImageIndex = 57
+        Images = DImages.PngImageList1
+        ModalResult = 1
+        TabOrder = 6
+        OnClick = LMDButton1Click
+        SkinData.SkinSection = 'BUTTON'
+      end
     end
   end
   object sPanel1: TsPanel
@@ -616,7 +611,7 @@ object frmInvoiceList2: TfrmInvoiceList2
         Position.RowIndex = 0
       end
       object tvInvoiceHeadInvoicetype: TcxGridDBBandedColumn
-        Caption = 'Type'
+        Caption = 'Invoice type'
         DataBinding.FieldName = 'Invoicetype'
         Options.Editing = False
         Width = 67

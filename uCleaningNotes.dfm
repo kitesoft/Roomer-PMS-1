@@ -14,10 +14,10 @@ inherited frmCleaningNotes: TfrmCleaningNotes
   ExplicitHeight = 497
   PixelsPerInch = 96
   TextHeight = 13
-  inherited dxStatusBar: TdxStatusBar
-    Top = 438
+  inherited sbStatusBar: TsStatusBar
+    Top = 406
     Width = 975
-    ExplicitTop = 438
+    ExplicitTop = 406
     ExplicitWidth = 975
   end
   object sPanel1: TsPanel [1]
@@ -141,12 +141,13 @@ inherited frmCleaningNotes: TfrmCleaningNotes
   end
   object panBtn: TsPanel [2]
     Left = 0
-    Top = 406
+    Top = 426
     Width = 975
     Height = 32
     Align = alBottom
     TabOrder = 2
     SkinData.SkinSection = 'PANEL'
+    ExplicitTop = 406
     DesignSize = (
       975
       32)
@@ -371,6 +372,7 @@ inherited frmCleaningNotes: TfrmCleaningNotes
     object prLink_grData: TdxGridReportLink
       Active = True
       Component = grData
+      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 5080
       PrinterPage.GrayShading = True
@@ -384,12 +386,13 @@ inherited frmCleaningNotes: TfrmCleaningNotes
       PrinterPage.PageSize.Y = 297180
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
-      ReportDocument.CreationDate = 42664.497753344910000000
+      ReportDocument.CreationDate = 42702.385106736110000000
       ReportTitle.Font.Charset = DEFAULT_CHARSET
       ReportTitle.Font.Color = clBlack
       ReportTitle.Font.Height = -19
       ReportTitle.Font.Name = 'Arial'
       ReportTitle.Font.Style = [fsBold]
+      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       OptionsSize.AutoWidth = True
       ScaleFonts = False
       StyleRepository = cxsrRoomerStyleRepository

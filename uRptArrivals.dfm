@@ -214,7 +214,6 @@ inherited frmArrivalsReport: TfrmArrivalsReport
     PopupMenu = pnmuGridMenu
     TabOrder = 1
     LookAndFeel.NativeStyle = False
-    ExplicitTop = 146
     object grArrivalsListDBTableView1: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       OnCellDblClick = grArrivalsListDBTableView1CellDblClick
@@ -263,6 +262,8 @@ inherited frmArrivalsReport: TfrmArrivalsReport
       object grArrivalsListDBTableView1RoomerReservationID: TcxGridDBColumn
         Caption = 'Reservation ID'
         DataBinding.FieldName = 'RoomerReservationID'
+        PropertiesClassName = 'TcxTextEditProperties'
+        Properties.Alignment.Horz = taCenter
         Options.Editing = False
         Width = 83
       end
@@ -282,6 +283,8 @@ inherited frmArrivalsReport: TfrmArrivalsReport
       object grArrivalsListDBTableView1Roomtype: TcxGridDBColumn
         Caption = 'Room type'
         DataBinding.FieldName = 'Roomtype'
+        PropertiesClassName = 'TcxTextEditProperties'
+        Properties.Alignment.Horz = taCenter
         Options.Editing = False
         Width = 66
       end
@@ -300,9 +303,8 @@ inherited frmArrivalsReport: TfrmArrivalsReport
       object grArrivalsListDBTableView1ExpectedTimeOfArrival: TcxGridDBColumn
         Caption = 'Expected TOA'
         DataBinding.FieldName = 'ExpectedTimeOfArrival'
-        PropertiesClassName = 'TcxTimeEditProperties'
+        PropertiesClassName = 'TcxTextEditProperties'
         Properties.Alignment.Horz = taCenter
-        Properties.UseTimeFormatWhenUnfocused = False
         OnGetDisplayText = grArrivalsListDBTableView1ExpectedTimeOfArrivalGetDisplayText
         HeaderAlignmentHorz = taCenter
         Options.Editing = False
@@ -321,7 +323,7 @@ inherited frmArrivalsReport: TfrmArrivalsReport
       GridView = grArrivalsListDBTableView1
     end
   end
-  inherited dxStatusBar: TdxStatusBar
+  inherited sbStatusBar: TsStatusBar
     Top = 566
     Width = 1123
     ExplicitTop = 566
@@ -522,9 +524,9 @@ inherited frmArrivalsReport: TfrmArrivalsReport
     object grdPrinterLink1: TdxGridReportLink
       Active = True
       Component = grArrivalsList
-      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
+      PrinterPage.GrayShading = True
       PrinterPage.Header = 6350
       PrinterPage.Margins.Bottom = 6350
       PrinterPage.Margins.Left = 5000
@@ -543,14 +545,13 @@ inherited frmArrivalsReport: TfrmArrivalsReport
       PrinterPage.ScaleMode = smFit
       PrinterPage._dxMeasurementUnits_ = 2
       PrinterPage._dxLastMU_ = 2
-      ReportDocument.CreationDate = 42650.475200173610000000
+      ReportDocument.CreationDate = 42697.547810138890000000
       ReportTitle.Font.Charset = DEFAULT_CHARSET
       ReportTitle.Font.Color = clBlack
       ReportTitle.Font.Height = -19
       ReportTitle.Font.Name = 'Arial'
       ReportTitle.Font.Style = [fsBold]
       ShrinkToPageWidth = True
-      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlack
       Font.Height = -11

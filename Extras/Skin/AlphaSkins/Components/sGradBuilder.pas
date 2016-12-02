@@ -1,6 +1,5 @@
 unit sGradBuilder;
 {$I sDefs.inc}
-//+
 
 interface
 
@@ -427,8 +426,10 @@ procedure TGradBuilder.TemplatePanelDblClick(Sender: TObject);
 begin
   LastPoint := TGradPoint(Sender);
   NoMouse := True;
-  if sColorDialogForm = nil then
-    sColorDialogForm := TsColorDialogForm.Create(Application);
+  if sColorDialogForm <> nil then
+    FreeAndNil(sColorDialogForm);
+
+  sColorDialogForm := TsColorDialogForm.Create(Application);
 
   sColorDialogForm.InitControls(True, False, LastPoint.Color, bsNone);
   sColorDialogForm.SetCurrentColor(LastPoint.Color);
@@ -492,6 +493,7 @@ begin
       sGroupBox2.BringToFront;
     end;
   end;
+
   for i := 0 to Length(g) - 1 do
     g[i].Mode1 := Value;
 

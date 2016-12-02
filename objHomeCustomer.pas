@@ -305,7 +305,7 @@ begin
     FFax                :=  glb.CustomersSet.FieldByName('Fax').AsString;
     FCountry            :=  glb.CustomersSet.FieldByName('Country').AsString;
     FMarketSegmentCode  :=  glb.CustomersSet.FieldByName('CustomerType').AsString;
-    FDiscountPerc       :=  LocalFloatValue(glb.CustomersSet.FieldByName('DiscountPercent').AsString);
+    FDiscountPerc       :=  glb.CustomersSet.FieldByName('DiscountPercent').asFloat;
     FEmailAddress       :=  glb.CustomersSet.FieldByName('EmailAddress').AsString;
     FHomePage           :=  glb.CustomersSet.FieldByName('Homepage').AsString;
     FContactPerson      :=  glb.CustomersSet.FieldByName('ContactPerson').AsString;

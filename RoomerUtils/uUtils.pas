@@ -48,7 +48,7 @@ function simpleTextTosimpleHtml(_text : String) : String;
 function ComputerName:String;
 function GetMIMEtype(FileName:String):String;
 function ReplaceString(original, toReplace, replaceWith : String) : String;
-function FloatToXml(Value : Double; decimals : Integer) : String;
+//function FloatToXml(Value : Double; decimals : Integer) : String;
 function IndexOfArray(Items: array of String; const Value: String; defaultResult : Integer = -1): Integer;
 function Split(Text : String; Delimiter : String) : TStringList;
 function SplitStringToTStrings(const aSeparator, aString: String; aMax: Integer = 0): TStringList;
@@ -71,8 +71,8 @@ procedure DeleteFileWithWildcard(Path: string; files : String);
 procedure GetFileList(FileList: TStrings; Path: string; files : String = '*.*');
 
 function DoubleQuoteIfNeeded(s : String) : String;
-function CorrectDecimalSeparator(s : String) : String;
-function RoomerStrToFloat(s : String) : Double;
+//function CorrectDecimalSeparator(s : String) : String;
+//function RoomerStrToFloat(s : String) : Double;
 function ZerosInFront(s : String; toLength : Integer) : String;
 function SecondsSinceMidnight : integer;
 function MinutesSinceMidnight : integer;
@@ -90,9 +90,9 @@ function LoadImageToBitmap(Filename : String) : TBitmap;
 function ResizeImageToNewTempFile(filename : String; maxWidth, maxHeight : Integer; backColor : TColor) : String;
 function DetectImage(const InputFileName: string; BM: TBitmap) : TImageFileType;
 procedure ResizeBitmap(Bitmap: TBitmap; Width, Height: Integer; Background: TColor);
-function SystemThousandsSeparator : string;
-function GetValidDecimalChar : Char;
-function LocalizedFloatValue(value : String; save : boolean = true; def : Double = 0.00): Double;
+//function SystemThousandsSeparator : string;
+//function GetValidDecimalChar : Char;
+//function LocalizedFloatValue(value : String; save : boolean = true; def : Double = 0.00): Double;
 {$IFNDEF RBE_BUILD}function AuthenticateAgainstWindows(login, password, domain: string;
   var token: THandle; var msg: string): Boolean;{$ENDIF}
 function ParameterByName(name: String): String;
@@ -155,17 +155,16 @@ procedure SplitString(text : String; list : TStrings; Delimiter : Char; QuoteCha
 function linuxLFCRToWindows(source : String) : String;
 
 function ComponentRunning(aComponent: TComponent): boolean;
-
 function RunningInMainThread: boolean;
 
-var SystemDecimalSeparator : char;
+function GetParentOfType(aControl: TControl; aClassType: TClass): TControl;
 
 function StringIndexInSet(Selector : string; CaseList: array of string): Integer;
 
 
 implementation
 
-uses System.SysUtils, clipbrd{$IFNDEF RBE_BUILD}, PrjConst{$ENDIF};
+uses System.SysUtils, clipbrd{$IFNDEF RBE_BUILD}, PrjConst{$ENDIF}, uFloatUtils;
 
 function linuxLFCRToWindows(source : String) : String;
 begin
@@ -378,26 +377,26 @@ begin
   result := StringReplace(original, toReplace, replaceWith, [rfReplaceAll, rfIgnoreCase]);
 end;
 
-function FloatToXml(Value : Double; decimals : Integer) : String;
-var
-  s, s1 : string;
-  i : integer;
-  dRound : Double;
-  ch : Char;
-begin
-  // --
-  if decimals > 0 then
-    s1 := '0.' + StringOfChar('0', decimals - 1) + '1'
-  else
-    s1 := '0.01';
-  dRound := LocalizedFloatValue(s1);
-  str(roundTo(Value, dRound) : 10 : decimals, s);
-  ch := GetValidDecimalChar;
-  for i := 1 to length(s) do
-    if not CharInSet(s[i], [ch, ' ', '0' .. '9', '-', '+', ',']) then
-      s[i] := '.';
-  result := trim(s);
-end;
+//function FloatToXml(Value : Double; decimals : Integer) : String;
+//var
+//  s, s1 : string;
+//  i : integer;
+//  dRound : Double;
+//  ch : Char;
+//begin
+//  // --
+//  if decimals > 0 then
+//    s1 := '0.' + StringOfChar('0', decimals - 1) + '1'
+//  else
+//    s1 := '0.01';
+//  dRound := LocalizedFloatValue(s1);
+//  str(roundTo(Value, dRound) : 10 : decimals, s);
+//  ch := GetValidDecimalChar;
+//  for i := 1 to length(s) do
+//    if not CharInSet(s[i], [ch, ' ', '0' .. '9', '-', '+', ',']) then
+//      s[i] := '.';
+//  result := trim(s);
+//end;
 
 function IndexOfArray(Items: array of String; const Value: String; defaultResult : Integer = -1): Integer;
 var
@@ -657,15 +656,15 @@ begin
     result := s;
 end;
 
-function CorrectDecimalSeparator(s : String) : String;
-begin
-  result := StringReplace(StringReplace(s, '.', FormatSettings.DecimalSeparator, []), ',', FormatSettings.DecimalSeparator, []);
-end;
-
-function RoomerStrToFloat(s : String) : Double;
-begin
-  result := StrToFloat(CorrectDecimalSeparator(s));
-end;
+//function CorrectDecimalSeparator(s : String) : String;
+//begin
+//  result := StringReplace(StringReplace(s, '.', FormatSettings.DecimalSeparator, []), ',', FormatSettings.DecimalSeparator, []);
+//end;
+//
+//function RoomerStrToFloat(s : String) : Double;
+//begin
+//  result := StrToFloat(CorrectDecimalSeparator(s));
+//end;
 
 function ZerosInFront(s : String; toLength : Integer) : String;
 begin
@@ -709,6 +708,7 @@ begin
   result := d;
 end;
 
+(*
 function GetValidDecimalChar : Char;
 var value : String;
 begin
@@ -832,7 +832,7 @@ begin
     end;
   end;
 end;
-
+*)
 
 function GetHTMLColor(cl: TColor; IsBackColor: Boolean = false): string;
 var
@@ -1118,13 +1118,13 @@ begin
   Result := sUserName;
 end;
 
-function SystemThousandsSeparator : string;
-var Thousands : PChar;
-begin
-  Thousands := StrAlloc(10);
-  GetLocaleInfo(LOCALE_SYSTEM_DEFAULT, LOCALE_STHOUSAND, Thousands, 10);
-  result := String(Thousands)[1];
-end;
+//function SystemThousandsSeparator : string;
+//var Thousands : PChar;
+//begin
+//  Thousands := StrAlloc(10);
+//  GetLocaleInfo(LOCALE_SYSTEM_DEFAULT, LOCALE_STHOUSAND, Thousands, 10);
+//  result := String(Thousands)[1];
+//end;
 
 procedure DebugMessage(const Str: string);
 begin
@@ -1672,6 +1672,13 @@ function RunningInMainThread: boolean;
 begin
   Result := (GetCurrentThreadId() = MainThreadID);
 end;
+
+function GetParentOfType(aControl: TControl; aClassType: TClass): TControl;
+begin
+  Result := aControl.Parent;
+  while Assigned(Result) and (result.ClassType <> aClassType) do
+    Result := Result.parent;
+end;
 { TIntValue }
 
 constructor TIntValue.Create(value: integer);
@@ -1681,12 +1688,12 @@ end;
 
 
 /////////////////////////////////////////////////////////
-procedure SetSystemDecimalSeparator;
-begin
-  SystemDecimalSeparator := TFormatsettings.Create.DecimalSeparator;
-end;
-
-initialization
-  SetSystemDecimalSeparator;
+//procedure SetSystemDecimalSeparator;
+//begin
+//  SystemDecimalSeparator := TFormatsettings.Create.DecimalSeparator;
+//end;
+//
+//initialization
+//  SetSystemDecimalSeparator;
 
 end.

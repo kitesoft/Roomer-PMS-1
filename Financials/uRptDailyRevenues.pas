@@ -16,7 +16,7 @@ uses
   Vcl.ComCtrls, sStatusBar, sCheckBox, cxCalendar
   , cmpRoomerDataset, Vcl.Mask, sMaskEdit, sCustomComboEdit, sToolEdit
   , uRoomerForm, dxSkinsdxStatusBarPainter, dxStatusBar, sGroupBox, sRadioButton, uCurrencyHandler, sSplitter,
-  dxPScxPivotGridLnk
+  dxPScxPivotGridLnk, AdvSmoothProgressBar
   ;
 
 type
@@ -101,13 +101,13 @@ type
     FRefreshingData: Boolean;
     FRecordSet: TRoomerDataSet;
     FCurrencyhandler: TCurrencyHandler;
-    procedure ShowError(const aOperation: string);
+    procedure ShowError(const aOperation: string; const aMessage: string = '');
     procedure UpdateBalanceData;
     procedure SetSummaryDisplayFormat(aView: TcxGridDBTableView; const aFormat: string);
     { Private declarations }
   protected
     procedure DoLoadData; override;
-    procedure UpdateControls; override;
+    procedure DoUpdateControls; override;
   public
     { Public declarations }
     constructor Create(Owner: TComponent); override;
@@ -247,7 +247,7 @@ begin
           m_Payments.Open;
         end
         else
-          ShowError('reading of DailyRevenuesReport payment data');
+          ShowError('reading of DailyRevenuesReport payment data', lCaller.LastErrorResponse);
 
         if lCaller.GetRevenuesReportAsDataset(FRecordSet, dtFromDate.Date, dtToDate.Date) then
         begin
@@ -255,7 +255,7 @@ begin
           m_Revenues.Open;
         end
         else
-          ShowError('reading of DailyRevenuesReport revenues data');
+          ShowError('reading of DailyRevenuesReport revenues data', lCaller.LastErrorResponse);
 
         if lCaller.GetRoomrentReportAsDataset(FRecordSet, dtFromDate.Date, dtToDate.Date) then
         begin
@@ -264,7 +264,7 @@ begin
           m_Revenues.Open;
         end
         else
-          ShowError('reading of DailyRevenuesReport roomrent data');
+          ShowError('reading of DailyRevenuesReport roomrent data', lCaller.LastErrorResponse);
 
         UpdateBalanceData;
 
@@ -373,9 +373,9 @@ begin
   UpdateControls;
 end;
 
-procedure TfrmRptDailyRevenues.ShowError(const aOperation: string);
+procedure TfrmRptDailyRevenues.ShowError(const aOperation: string; const aMessage: string= '');
 begin
-  raise Exception.CreateFmt('Error occured during %s.'+ #10 + 'Operation is cancelled', [aOperation]);
+  raise Exception.CreateFmt('Error occured during %s.'+ #10 + 'Operation is cancelled.' + #10#10 + 'Message: %s', [aOperation, aMessage]);
 end;
 
 procedure TfrmRptDailyRevenues.tvPaymentsTotalAmountGetProperties(Sender: TcxCustomGridTableItem;
@@ -385,7 +385,7 @@ begin
   AProperties := FCurrencyhandler.GetcxEditProperties;
 end;
 
-procedure TfrmRptDailyRevenues.UpdateControls;
+procedure TfrmRptDailyRevenues.DoUpdateControls;
 begin
   if FRefreshingData then
     Exit;

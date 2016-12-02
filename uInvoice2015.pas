@@ -168,7 +168,8 @@ implementation
 
 {$R *.dfm}
 
-uses hData, uUtils, uInvoiceLineEdit, uCustomers2, uAppGlobal, uG, uD, cmpRoomerDataset, uSqlDefinitions, uCurrencies;
+uses hData, uUtils, uInvoiceLineEdit, uCustomers2, uAppGlobal, uG, uD, cmpRoomerDataset, uSqlDefinitions, uCurrencies,
+  XmlUtils;
 
 procedure EditInvoice2015(Reservation, RoomReservation, SplitNumber: Integer; Credit, Cash: boolean; RoomNumber: String; Expanded : Boolean; InvoiceNumber: Integer = -1);
 var

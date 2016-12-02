@@ -17,7 +17,7 @@ uses
   dxPScxPageControlProducer, dxPScxEditorProducers, dxPScxExtEditorProducers, dxSkinsdxBarPainter,
   dxSkinsdxRibbonPainter, dxServerModeData, dxServerModeDBXDataSource, dxPSCore, dxPScxGridLnk, dxPScxGridLayoutViewLnk,
   dxPScxCommon, cxMemo, cxLabel, ppStrtch, ppMemo
-  , uRoomerForm, cxSpinEdit
+  , uRoomerForm, cxSpinEdit, Vcl.ComCtrls, sStatusBar, dxPScxPivotGridLnk
   ;
 
 type
@@ -79,7 +79,7 @@ type
     function ConstructSQL: string;
     procedure UpdateLocations;
   protected
-    procedure UpdateControls; override;
+    procedure DoUpdateControls; override;
     procedure DoLoadData; override;
     procedure DoShow; override;
   public
@@ -113,7 +113,7 @@ uses
   , uInvoice
   , uReservationProfile
   , uRptbViewer
-  , _Glob, uCleaningNotesDefinitions;
+  , _Glob, uCleaningNotesDefinitions, uSQLUtils;
 
 
 function ShowHouseKeepingReport(aDate: TDateTime):  boolean;
@@ -169,6 +169,7 @@ begin
       '	   when (not IsNUll(departing.room)) then {departure} '#10+
       '	   when (not IsNUll(arriving.room)) then {arrival} '#10+
       '	   when (not IsnUll(stayover.room)) then {stayover} '#10+
+      '	   when r.Status = ''U'' then mc.Name '#10+
       '	 end as HousekeepingStatus, '#10+
       '  mc.Name as Roomstatus '#10 +
       '	from '#10+
@@ -182,7 +183,7 @@ begin
       '                     GROUP_CONCAT(DISTINCT cn.Message SEPARATOR ''\n'') AS Note '#10+
       '             FROM cleaningnotes cn '#10 +
       '	  JOIN (  '#10 +
-      '     SELECT -- get all roomreservations with rooms occupied today or yesterday '#10 +
+      '     SELECT -- get all roomreservations with rooms occupied today or yesterday  or still dirty '#10 +
       '       rr.Room, '#10+
       '       r.Status as CleanStatus, '#10+
       '       rr.Arrival AS Arrival, '#10+
@@ -194,7 +195,8 @@ begin
       '     FROM roomreservations rr '#10 +
       '     JOIN rooms r on r.room=rr.room '#10 +
       '     WHERE rr.roomreservation IN '#10 +
-      '         (SELECT roomreservation FROM roomsdate WHERE (Adate={probedate} OR DATE_ADD(ADate, INTERVAL 1 DAY)={probedate}) AND resflag in (''P'',''G'',''D'')) '#10 +
+      '         (SELECT roomreservation FROM roomsdate WHERE ((Adate={probedate} OR DATE_ADD(ADate, INTERVAL 1 DAY)={probedate})  OR (aDate < {probedate} and r.status = ''U'')) '#10 +
+			'		          AND resflag in (''P'',''G'',''D'') ) '#10 +
       '     ) xxx ON '#10 +
       '            (NOT cn.onlyWhenRoomIsDirty OR CleanStatus IN (''U'')) AND '#10 +
       '          ( (   -- Interval notes, '#10 +
@@ -308,7 +310,7 @@ begin
   gridPrinter.Print(True, nil, gridPrinterLink);
 end;
 
-procedure TfrmHouseKeepingReport.UpdateControls;
+procedure TfrmHouseKeepingReport.DoUpdateControls;
 begin
   if FRefreshingData then
     Exit;

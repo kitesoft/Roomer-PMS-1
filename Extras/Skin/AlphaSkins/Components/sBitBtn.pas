@@ -835,6 +835,8 @@ end;
 
 
 procedure TsBitBtn.WndProc(var Message: TMessage);
+var
+  PS: TPaintStruct;
 begin
 {$IFDEF LOGGED}
   AddToLog(Message);
@@ -1002,10 +1004,12 @@ begin
 
       WM_SETTEXT:
         if Showing then begin
+          FinishTimer(SkinData.AnimTimer);
           StopTimer(SkinData);
           SetRedraw(Handle, 0);
           inherited;
           SetRedraw(Handle, 1);
+          RedrawWindow(Handle, nil, 0, RDW_INVALIDATE or RDW_UPDATENOW);
           Exit;
         end;
 
@@ -1025,8 +1029,12 @@ begin
 
       WM_PAINT:
         if Visible or (csDesigning in ComponentState) then begin
-          if Parent = nil then
+          if (Parent = nil) then Exit;
+          if InUpdating(FCommonData) then begin
+            BeginPaint(Handle, PS);
+            EndPaint(Handle, PS);
             Exit;
+          end;
 
           OurPaintHandler(TWMPaint(Message).DC);
           if not (csDesigning in ComponentState) then

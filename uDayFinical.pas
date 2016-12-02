@@ -460,7 +460,6 @@ type
     mnuThisreservation: TMenuItem;
     OpenthisRoom1: TMenuItem;
     OpenGroupInvoice1: TMenuItem;
-    btnSwitchToDates: TsButton;
     StoreMain: TcxPropertiesStore;
     btnPaymentReport: TsButton;
     rptbPayments: TppReport;
@@ -576,7 +575,6 @@ type
     procedure OpenthisRoom1Click(Sender: TObject);
     procedure OpenGroupInvoice1Click(Sender: TObject);
     procedure getConfirmGroupClick(Sender: TObject);
-    procedure btnSwitchToDatesClick(Sender: TObject);
     procedure chkOnedayClick(Sender: TObject);
     procedure btnPaymentReportClick(Sender: TObject);
     procedure cxButton1Click(Sender: TObject);
@@ -668,28 +666,15 @@ uses
     , uG
     , _Glob
     , ShellApi
-    ;
+    , Math
+    , uSQLUtils, uInvoiceDefinitions;
 
 {$R *.dfm}
 
 
 function TfrmDayFinical.CreateSQLInText(list: TstringList): string;
-var
-  i: integer;
-  s: string;
 begin
-  result := '';
-  s := '';
-  for i := 0 to list.Count - 1 do
-  begin
-    s := s + list[i] + ',';
-  end;
-
-  if length(s) > 0 then
-  begin
-    delete(s, length(s), 1);
-    result := '(' + s + ')';
-  end;
+  Result := '(' + list.CommaText + ')'
 end;
 
 procedure TfrmDayFinical.cxButton1Click(Sender: TObject);
@@ -850,18 +835,18 @@ begin
     begin
       lst := invoiceList_Unconfirmed(inLocation);
       try
+        if lst.Count = 0 then
+        begin
+          showmessage(GetTranslatedText('shTx_DayFinical_NoInvoices'));
+          exit;
+        end;
         zSQLInText := CreateSQLInText(lst);
       finally
         freeandNil(lst);
       end;
-      if zSQLInText = '' then
-      begin
-        showmessage(GetTranslatedText('shTx_DayFinical_NoInvoices'));
-        exit;
-      end;
+
     end
-    else
-      if zConfirmState = 0 then
+    else if zConfirmState = 0 then
     begin
       dateFrom := trunc(dtDate.date);
       dateTo := trunc(dtDateTo.date);
@@ -872,32 +857,31 @@ begin
 
       lst := invoiceList_FromTo(dateFrom, dateTo, inLocation);
       try
+        if lst.Count = 0 then
+        begin
+          showmessage(format(GetTranslatedText('shTx_DayFinical_NoInvoicesForFromToDate'),
+            [dateToStr(dateFrom), dateToStr(dateTo)]));
+          exit;
+        end;
         zSQLInText := CreateSQLInText(lst);
       finally
         freeandNil(lst);
       end;
 
-      if zSQLInText = '' then
-      begin
-        showmessage(format(GetTranslatedText('shTx_DayFinical_NoInvoicesForFromToDate'),
-          [dateToStr(dateFrom), dateToStr(dateTo)]));
-        exit;
-      end;
     end
-    else
-      if zConfirmState = 2 then
+    else if zConfirmState = 2 then
     begin
       lst := invoiceList_ConfirmGroup(zConfirmedDate);
       try
+        if lst.Count = 0 then
+        begin
+          dateTimeTostring(s, 'dd.mm.yyyy hh:NN:ss', zConfirmedDate);
+          showmessage(format(GetTranslatedText('shTx_DayFinical_NoConfirmedInvoicesFor'), [s]));
+          exit;
+        end;
         zSQLInText := CreateSQLInText(lst);
       finally
         freeandNil(lst);
-      end;
-      if zSQLInText = '' then
-      begin
-        dateTimeTostring(s, 'dd.mm.yyyy hh:NN:ss', zConfirmedDate);
-        showmessage(format(GetTranslatedText('shTx_DayFinical_NoConfirmedInvoicesFor'), [s]));
-        exit;
       end;
     end;
 
@@ -928,8 +912,8 @@ begin
     if chkGetUnconfirmed.Checked then
     begin
       zConfirmState := 1;
-      gbxSelectDates.Visible := false;
-      btnConfirm.Visible := true;
+      gbxSelectDates.Visible:= false;
+      btnConfirm.Enabled := true;
       GetAll(true);
     end
     else
@@ -1442,13 +1426,13 @@ begin
     while not mItemSale.Eof do
     begin
       inc(id);
-      if LocalFloatValue(mItemSale.FieldByName('Total').AsString) <> 0 then
+      if not IsZero(mItemSale.FieldByName('Total').AsFloat) then
       begin
         mSums.append;
         mSums.FieldByName('id').AsInteger := id;
         mSums.FieldByName('Code').AsString := mItemSale.FieldByName('Item').AsString;
         mSums.FieldByName('Description').AsString := mItemSale.FieldByName('Description').AsString;;
-        mSums.FieldByName('Sale').AsFloat := LocalFloatValue(mItemSale.FieldByName('Total').AsString);
+        mSums.FieldByName('Sale').AsFloat := mItemSale.FieldByName('Total').AsFloat;
         mSums.FieldByName('Payment').AsFloat := 0.00;
         mSums.Post;
       end;
@@ -1472,7 +1456,7 @@ begin
         mSums.FieldByName('id').AsInteger := id;
         mSums.FieldByName('Code').AsString := mPaymentTypes.FieldByName('PayType').AsString;
         mSums.FieldByName('Description').AsString := mPaymentTypes.FieldByName('PayTypeDescription').AsString;;
-        mSums.FieldByName('Payment').AsFloat := LocalFloatValue(mPaymentTypes.FieldByName('Amount').AsString);
+        mSums.FieldByName('Payment').AsFloat := mPaymentTypes.FieldByName('Amount').AsFloat;
         mSums.FieldByName('Sale').AsFloat := 0.00;
         mSums.Post;
       end;
@@ -1505,7 +1489,7 @@ begin
         mSums2.FieldByName('id').AsInteger := id;
         mSums2.FieldByName('Code').AsString := mItemTypeSale.FieldByName('ItemType').AsString;
         mSums2.FieldByName('Description').AsString := mItemTypeSale.FieldByName('ItemTypeDescription').AsString;;
-        mSums2.FieldByName('Sale').AsFloat := LocalFloatValue(mItemTypeSale.FieldByName('Total').AsString);
+        mSums2.FieldByName('Sale').AsFloat := mItemTypeSale.FieldByName('Total').AsFloat;
         mSums2.FieldByName('Payment').AsFloat := 0.00;
         mSums2.Post;
       end;
@@ -1529,7 +1513,7 @@ begin
         mSums2.FieldByName('id').AsInteger := id;
         mSums2.FieldByName('Code').AsString := mPaymentGroups.FieldByName('PayGroup').AsString;
         mSums2.FieldByName('Description').AsString := mPaymentGroups.FieldByName('Description').AsString;
-        mSums2.FieldByName('Payment').AsFloat := LocalFloatValue(mPaymentGroups.FieldByName('Amount').AsString);
+        mSums2.FieldByName('Payment').AsFloat := mPaymentGroups.FieldByName('Amount').AsFloat;
         mSums2.FieldByName('Sale').AsFloat := 0.00;
         mSums2.Post;
       end;
@@ -2029,11 +2013,11 @@ begin
     s := s + ' SET ';
     if zIsConfirmed then
     begin
-      s := s + '   ihConfirmDate = ' + _dbDateAndTime(2);
+      s := s + '   ihConfirmDate = ' + _db(cEmptyConfirmDate);
     end
     else
     begin
-      s := s + '   ihConfirmDate = ' + _dbDateAndTime(now);
+      s := s + '   ihConfirmDate = ' + _db(now);
     end;
     s := s + ' WHERE ' + #10;
     s := s + '   (invoiceheads.InvoiceNumber IN ' + zSQLInText + ') ' + #10;
@@ -2194,6 +2178,7 @@ var
   ReportLink: TdxGridReportLink;
 
 begin
+  ReportLink := nil;
 
   if zIsOneDay then
   begin
@@ -2388,7 +2373,7 @@ var
   dummy: string;
 begin
   if GetReservationFromActivePage(Reservation, RoomReservation, dummy) then
-    EditInvoice(Reservation, RoomReservation, 0, 0, 0, 0, false, false, false)
+    EditInvoice(Reservation, RoomReservation, 0, 0, 0, 0, false)
   else
     showmessage(GetTranslatedText('shTx_DayFinical_CashInvoice'));
 
@@ -2401,7 +2386,7 @@ var
   dummy: string;
 begin
   if GetReservationFromActivePage(Reservation, RoomReservation, dummy) then
-    EditInvoice(Reservation, 0, 0, 0, 0, 0, false, false, false)
+    EditInvoice(Reservation, 0, 0, 0, 0, 0, false)
   else
     showmessage(GetTranslatedText('shTx_DayFinical_CashInvoice'));
 end;
@@ -2427,17 +2412,12 @@ begin
   zDoChkEvent := false;
   chkGetUnconfirmed.Checked := true;
   zDoChkEvent := true;
-  gbxSelectDates.Visible := false;
+  gbxSelectDates.Visible:= false;
   zIsConfirmed := true;
-  btnConfirm.Visible := true;
+  btnConfirm.Enabled := true;
   btnConfirm.caption := 'Un-confirm NOW';
   btnConfirm.caption := GetTranslatedText('shTx_DayFinical_Unconfirm');
   GetAll(true);
-end;
-
-procedure TfrmDayFinical.btnSwitchToDatesClick(Sender: TObject);
-begin
-  SwitchToDates;
 end;
 
 procedure TfrmDayFinical.SwitchToDates;
@@ -2459,7 +2439,7 @@ begin
   chkGetUnconfirmed.Checked := false;
   zDoChkEvent := true;
 
-  btnConfirm.Visible := false;
+  btnConfirm.Enabled := false;
   // btnConfirm.Caption        := 'Confirm NOW';
   btnConfirm.caption := GetTranslatedText('shTx_DayFinical_Confirm');
   GetAll(true);

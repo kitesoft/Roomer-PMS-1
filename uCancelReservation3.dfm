@@ -29,7 +29,6 @@ object frmCancelReservation3: TfrmCancelReservation3
     BevelOuter = bvNone
     TabOrder = 0
     SkinData.SkinSection = 'PANEL'
-    ExplicitWidth = 542
     object cxGroupBox1: TsGroupBox
       AlignWithMargins = True
       Left = 6
@@ -50,8 +49,6 @@ object frmCancelReservation3: TfrmCancelReservation3
       ParentFont = False
       TabOrder = 0
       SkinData.SkinSection = 'GROUPBOX'
-      Checked = False
-      ExplicitWidth = 530
       object memReason: TsMemo
         AlignWithMargins = True
         Left = 8
@@ -77,7 +74,6 @@ object frmCancelReservation3: TfrmCancelReservation3
         BoundLabel.Font.Name = 'Tahoma'
         BoundLabel.Font.Style = []
         SkinData.SkinSection = 'EDIT'
-        ExplicitWidth = 514
       end
     end
     object cxGroupBox2: TsGroupBox
@@ -100,8 +96,6 @@ object frmCancelReservation3: TfrmCancelReservation3
       ParentFont = False
       TabOrder = 1
       SkinData.SkinSection = 'GROUPBOX'
-      Checked = False
-      ExplicitWidth = 530
       DesignSize = (
         490
         45)
@@ -135,7 +129,6 @@ object frmCancelReservation3: TfrmCancelReservation3
           'Customer cancelled booking with sufficient notice'
           'Customer failed to cancel booking with sufficient notice'
           'Channel Modification')
-        ExplicitWidth = 514
       end
     end
   end
@@ -148,8 +141,6 @@ object frmCancelReservation3: TfrmCancelReservation3
     BevelOuter = bvNone
     TabOrder = 1
     SkinData.SkinSection = 'PANEL'
-    ExplicitTop = 411
-    ExplicitWidth = 542
     DesignSize = (
       502
       87)
@@ -212,8 +203,6 @@ object frmCancelReservation3: TfrmCancelReservation3
     Align = alClient
     TabOrder = 2
     SkinData.SkinSection = 'PANEL'
-    ExplicitWidth = 542
-    ExplicitHeight = 226
     object gRooms: TcxGrid
       Left = 1
       Top = 34
@@ -222,9 +211,6 @@ object frmCancelReservation3: TfrmCancelReservation3
       Align = alClient
       TabOrder = 0
       LookAndFeel.NativeStyle = False
-      ExplicitTop = 33
-      ExplicitWidth = 540
-      ExplicitHeight = 192
       object tvRooms: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         Navigator.Buttons.First.Visible = True
@@ -315,7 +301,6 @@ object frmCancelReservation3: TfrmCancelReservation3
       BevelOuter = bvNone
       TabOrder = 1
       SkinData.SkinSection = 'PANEL'
-      ExplicitWidth = 540
       object cxButton1: TsButton
         Left = 171
         Top = 4
@@ -369,8 +354,6 @@ object frmCancelReservation3: TfrmCancelReservation3
     BevelOuter = bvNone
     TabOrder = 3
     SkinData.SkinSection = 'PANEL'
-    ExplicitTop = 498
-    ExplicitWidth = 542
     DesignSize = (
       502
       33)

@@ -191,7 +191,8 @@ end;
 
 function TsCustomComboBox.AllowBtnStyle: boolean;
 begin
-  Result := (Style in [csDropDownList, csOwnerDrawFixed, csOwnerDrawVariable]) and (SkinData.SkinSection = '');
+  Result := (Style in [csDropDownList, csOwnerDrawFixed, csOwnerDrawVariable]) and
+              ((SkinData.SkinSection = '') or not SkinData.Skinned);
 end;
 
 
@@ -501,7 +502,7 @@ begin
     Mode := integer((State = 1) or (AllowBtnStyle and (FCommonData.FMouseAbove or FCommonData.FFocused)));
 
   R := ButtonRect;
-  with SkinData.SkinManager do
+  with FCommonData.SkinManager do
     if not AllowBtnStyle then
       with ConstData.ComboBtn do begin
         if SkinIndex >= 0 then begin
@@ -514,30 +515,26 @@ begin
           DrawSkinGlyph(FCommonData.FCacheBmp, Point(R.Left + (WidthOf(R) - ma[FGlyphIndex].Width) div 2,
                         (Height - ButtonHeight) div 2), Mode, 1, ma[FGlyphIndex], MakeCacheInfo(SkinData.FCacheBmp))
         else begin // Paint without glyph
-          if SkinIndex >= 0 then // If COMBOBTN used
+          if (SkinIndex >= 0) and not AllowBtnStyle then
             C := gd[SkinIndex].Props[min(Mode, ac_MaxPropsIndex)].FontColor.Color
           else
-            if SkinData.SkinIndex >= 0 then
-              C := gd[SkinData.SkinIndex].Props[min(Mode, ac_MaxPropsIndex)].FontColor.Color
-            else
-              C := ColorToRGB(clWindowText);
+            C := ColorToRGB(clWindowText);
 
           DrawColorArrow(FCommonData.FCacheBmp, C, R, asBottom);
         end;
       end
-    else begin
+    else
       if not gd[FCommonData.SkinIndex].GiveOwnFont and IsValidImgIndex(FGlyphIndex) then
         DrawSkinGlyph(FCommonData.FCacheBmp, Point(R.Left + (WidthOf(R) - ma[FGlyphIndex].Width) div 2,
                       (Height - ButtonHeight) div 2), Mode, 1, ma[FGlyphIndex], MakeCacheInfo(SkinData.FCacheBmp))
       else begin // Paint without glyph
-        if SkinData.SkinIndex >= 0 then
-          C := gd[SkinData.SkinIndex].Props[min(Mode, ac_MaxPropsIndex)].FontColor.Color
+        if FCommonData.SkinIndex >= 0 then
+          C := gd[FCommonData.SkinIndex].Props[min(Mode, ac_MaxPropsIndex)].FontColor.Color
         else
           C := ColorToRGB(clWindowText);
 
         DrawColorArrow(FCommonData.FCacheBmp, C, R, asBottom);
       end;
-    end;
 end;
 
 
@@ -865,7 +862,7 @@ begin
           OurPaintHandler(0);
           CommonWndProc(Message, FCommonData);
           inherited;
-        end;
+        end;   
         Exit;
       end;
 
@@ -928,7 +925,6 @@ begin
       end;
     end;
   end;
-
   if Assigned(BoundLabel) then
     BoundLabel.HandleOwnerMsg(Message, Self);
 end;
@@ -967,8 +963,12 @@ end;
 procedure TsCustomComboBox.CreateParams(var Params: TCreateParams);
 begin
   inherited;
+  SkinData.UpdateIndexes;
   if Style in [csDropDown, csDropDownList] then
-    Params.Style := Params.Style or CBS_OWNERDRAWFIXED and not CBS_OWNERDRAWVARIABLE;
+    if SkinData.Skinned then
+      Params.Style := Params.Style or CBS_OWNERDRAWFIXED// and not CBS_OWNERDRAWVARIABLE
+    else
+      Params.Style := Params.Style and not CBS_OWNERDRAWFIXED;
 end;
 
 
@@ -1129,38 +1129,40 @@ begin
     BitBlt(Canvas.Handle, Rect.Left, Rect.Top, Bmp.Width, Bmp.Height, Bmp.Canvas.Handle, 0, 0, SRCCOPY);
     FreeAndNil(Bmp);
   end
-  else begin
-    Canvas.Font.Assign(Font);
-    if odSelected in State then begin
-      TmpColor := ColorToRGB(clHighLight);
-      Canvas.Font.Color := ColorToRGB(clHighLightText);
-      Canvas.Brush.Color := ColorToRGB(clHighLight);
-    end
-    else begin
-      TmpColor := ColorToRGB(Color);
-      Canvas.Font.Color := ColorToRGB(Font.Color);
-      Canvas.Brush.Color := Color;
-    end;
-    FillDC(Canvas.Handle, Rect, TmpColor);
-    if (Index >= 0) and (Index < Items.Count) then begin
-      InflateRect(Rect, -2, 0);
-      if Assigned(OnDrawItem) and (Style in [csOwnerDrawFixed, csOwnerDrawVariable]) then
-        OnDrawItem(Self, Index, Rect, State)
+  else
+//    if not AllowBtnStyle then
+    begin
+      Canvas.Font.Assign(Font);
+      if odSelected in State then begin
+        TmpColor := ColorToRGB(clHighLight);
+        Canvas.Font.Color := ColorToRGB(clHighLightText);
+        Canvas.Brush.Color := ColorToRGB(clHighLight);
+      end
       else begin
-        Canvas.Brush.Style := bsClear;
-        case Alignment of
-          taLeftJustify:;
-          taCenter:       DrawStyle := DrawStyle or DT_CENTER;
-          taRightJustify: DrawStyle := DrawStyle or DT_RIGHT;
-        end;
-        AcDrawText(Canvas.Handle, Items[Index], Rect, DrawStyle);
+        TmpColor := ColorToRGB(Color);
+        Canvas.Font.Color := ColorToRGB(Font.Color);
+        Canvas.Brush.Color := Color;
       end;
-      if odFocused in State then begin
-        InflateRect(Rect, 2, 0);
-        DrawFocusRect(Canvas.Handle, Rect);
+      FillDC(Canvas.Handle, Rect, TmpColor);
+      if IsValidIndex(Index, Items.Count) then begin
+        InflateRect(Rect, -2, 0);
+        if Assigned(OnDrawItem) and (Style in [csOwnerDrawFixed, csOwnerDrawVariable]) then
+          OnDrawItem(Self, Index, Rect, State)
+        else begin
+          Canvas.Brush.Style := bsClear;
+          case Alignment of
+            taLeftJustify:;
+            taCenter:       DrawStyle := DrawStyle or DT_CENTER;
+            taRightJustify: DrawStyle := DrawStyle or DT_RIGHT;
+          end;
+          AcDrawText(Canvas.Handle, Items[Index], Rect, DrawStyle);
+        end;
+        if odFocused in State then begin
+          InflateRect(Rect, 2, 0);
+          DrawFocusRect(Canvas.Handle, Rect);
+        end;
       end;
     end;
-  end;
 end;
 
 
@@ -1209,7 +1211,7 @@ begin
   if M <> D then begin
     inherited;
     if Showing then
-      ItemHeight := MulDiv(ItemHeight, M, D);
+      ItemHeight := MulDiv(Height, M, D) - 6;
   end
   else
     inherited;
@@ -1219,6 +1221,7 @@ end;
 function TsCustomComboBox.HandleAlphaMsg(var Message: TMessage): boolean;
 var
   i: integer;
+  b: boolean;
 begin
   Result := True;
   case Message.WParamHi of
@@ -1239,6 +1242,7 @@ begin
           Font.OnChange := nil; // Don't recreate control!
           Font.Color := clWindowText;
         end;
+        RecreateWnd;
       end;
 
     AC_REFRESH:
@@ -1253,16 +1257,19 @@ begin
         Repaint;
       end;
 
-    AC_SETSCALE: begin
-      if BoundLabel <> nil then BoundLabel.UpdateScale(Message.LParam);
-      Exit;
-    end;
+    AC_SETSCALE:
+      if BoundLabel <> nil then
+        BoundLabel.UpdateScale(Message.LParam);
 
     AC_SETNEWSKIN:
       if ACUInt(Message.LParam) = ACUInt(SkinData.SkinManager) then begin
+        b := SkinData.Skinned; // Remember if was not skinned, for recreating 
         HideGlow(SkinData.GlowID);
         CommonWndProc(Message, FCommonData);
         UpdateIndexes;
+        if not b then
+          RecreateWnd;
+
         if ListSW <> nil then
           ListSW.acWndProc(Message);
       end;
@@ -1276,15 +1283,10 @@ begin
     AC_PREPARECACHE:
       PrepareCache;
 
-    AC_GETDEFINDEX: begin
+    AC_GETDEFINDEX:
       if FCommonData.SkinManager <> nil then
-        if AllowBtnStyle then
-          Message.Result := FCommonData.SkinManager.ConstData.Sections[ssButton] + 1
-        else
-          Message.Result := FCommonData.SkinManager.ConstData.Sections[ssComboBox] + 1;
-
-      Exit;
-    end;
+        with FCommonData.SkinManager.ConstData do
+          Message.Result := iff(AllowBtnStyle, Sections[ssButton], Sections[ssComboBox]) + 1;
 
     AC_MOUSELEAVE:
       SendMessage(Handle, CM_MOUSELEAVE, 0, 0)
@@ -1307,6 +1309,13 @@ end;
 
 procedure TsCustomComboBox.UpdateIndexes;
 begin
+  with SkinData do
+    if (SkinManager <> nil) and (SkinIndex >= 0) then
+      FGlyphIndex := SkinManager.GetMaskIndex(SkinIndex, s_ItemGlyph)
+    else
+      FGlyphIndex := -1;
+
+{
   if (SkinData.SkinManager <> nil) and (SkinData.SkinIndex >= 0) then
     if AllowBtnStyle then
       FGlyphIndex := SkinData.SkinManager.GetMaskIndex(FCommonData.SkinManager.ConstData.Sections[ssComboBox], s_ItemGlyph)
@@ -1314,6 +1323,7 @@ begin
       FGlyphIndex := SkinData.SkinManager.GetMaskIndex(SkinData.SkinIndex, s_ItemGlyph)
   else
     FGlyphIndex := -1;
+}
 end;
 
 end.

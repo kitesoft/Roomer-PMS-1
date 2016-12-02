@@ -48,20 +48,21 @@ inherited frmCleaningNotesEdit: TfrmCleaningNotesEdit
     Alignment = taRightJustify
     Caption = 'Note:'
   end
-  inherited dxStatusBar: TdxStatusBar
-    Top = 428
+  inherited sbStatusBar: TsStatusBar
+    Top = 395
     Width = 610
-    ExplicitTop = 428
+    ExplicitTop = 395
     ExplicitWidth = 610
   end
   object panBtn: TsPanel [6]
     Left = 0
-    Top = 395
+    Top = 415
     Width = 610
     Height = 33
     Align = alBottom
     TabOrder = 6
     SkinData.SkinSection = 'PANEL'
+    ExplicitTop = 395
     DesignSize = (
       610
       33)

@@ -188,7 +188,7 @@ type
     destructor Destroy; override;
 
     function CreateRoomerClient(aAddAuthenticationHeader: boolean = false): TRoomerHttpClient;
-    function GetFloatValue(Field: TField): Double;
+    function GetFloatValue(Field: TField): Double; deprecated;
     procedure Post; override;
     procedure OpenDataset(const SqlResult: String);
     procedure OpenDatasetFromUrlAsString(aEndPoint: String; SetLastAccess: boolean = true; loggingInOut: Integer = 0;contentType: String = '');
@@ -345,6 +345,7 @@ uses
   ALHttpClient,
   IdSSLOpenSSL
   , XMLUtils
+  , uStandaloneRoomerVersionInfo
   ;
 
 resourcestring
@@ -1591,6 +1592,9 @@ begin
 //      contType := GetMIMEtype(filename);
 //      if LENGTH(contType) < 4 then
 //        contType := 'application/' + copy(LowerCase(ExtractFileExt(Filename)), 2, maxint);
+      contType := GetMIMEtype(filename);
+      if LENGTH(contType) < 4 then
+        contType := 'application/unknown';
       att := multi.AddFile('attachment', filePath, contType);
       att.filename := extractFilename(filename);
     end;
@@ -1903,15 +1907,6 @@ end;
 function TRoomerDataSet.GetCommandText: String;
 begin
   Result := Sql.Text;
-end;
-
-function SystemDecimalSeparator: string;
-var
-  Decimal: PChar;
-begin
-  Decimal := StrAlloc(10);
-  GetLocaleInfo(LOCALE_SYSTEM_DEFAULT, LOCALE_SDECIMAL, Decimal, 10);
-  Result := String(Decimal)[1];
 end;
 
 function TRoomerDataSet.GetFloatValue(Field: TField): Double;
@@ -2341,22 +2336,23 @@ begin
   if transaction then
     BeginTransaction;
   try
-    if PlanType = ptQuery then
+    if (PlanType = ptQuery) or (Plantype = ptAll) then
     begin
       for i := 0 to QueryCount - 1 do
         queryResults.add(FRoomerDataSet.CreateNewDataset);
 
-      lSQLList := getSqlsAsTList(PlanType);
+      lSQLList := getSqlsAsTList(ptQuery);
       try
         res := RoomerDataSet.SystemFreeMultipleQuery(queryResults, lSQLList);
       finally
         lSQLList.Free;
       end;
 
-    end
-    else if PlanType = ptExec then
+    end;
+
+    if (PlanType = ptExec) or (Plantype = ptAll) then
     begin
-      lSQLList := getSqlsAsTList(PlanType);
+      lSQLList := getSqlsAsTList(ptExec);
       try
         res := RoomerDataSet.SystemFreeExecuteMultiple(lSQLList);
       finally
@@ -2433,14 +2429,7 @@ begin
   ownerId := _ownerId;
 end;
 
-//var
-//  recVer: TEXEVersionData;
-//
 initialization
-
-begin
-//  recVer := _GetEXEVersionData(Paramstr(0));
-//  EXTRA_BUILD_ID := recVer.ExtraBuild;
-end;
+  EXTRA_BUILD_ID := TRoomerVersionInfo.ExtraBuild;
 
 end.

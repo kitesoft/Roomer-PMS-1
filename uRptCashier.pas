@@ -312,7 +312,7 @@ implementation
 
 uses
   uD, uRoomerLanguage, uDimages, uDateUtils, uFrmResources, PrjConst, uGridUtils, uRptbViewer, uReservationProfile, uFinishedInvoices2, uInvoice
-    ;
+    , uSQLUtils;
 
 CONST
   FINANCE_QUERY = 'SELECT ' + #10
@@ -922,7 +922,7 @@ begin
   end
   else
   begin
-    EditInvoice(iReservation, iRoomReservation, 0, 0, 0, 0, false, true, false);
+    EditInvoice(iReservation, iRoomReservation, 0, 0, 0, 0, false);
   end;
 end;
 

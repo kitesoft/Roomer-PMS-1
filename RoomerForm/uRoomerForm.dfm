@@ -2,12 +2,12 @@ object frmBaseRoomerForm: TfrmBaseRoomerForm
   Left = 0
   Top = 0
   Caption = 'Base Roomer Form'
-  ClientHeight = 299
-  ClientWidth = 635
+  ClientHeight = 253
+  ClientWidth = 537
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
-  Font.Height = -9
+  Font.Height = 13
   Font.Name = 'Tahoma'
   Font.Style = []
   KeyPreview = True
@@ -15,31 +15,28 @@ object frmBaseRoomerForm: TfrmBaseRoomerForm
   Position = poMainFormCenter
   ShowHint = True
   PixelsPerInch = 96
-  TextHeight = 11
-  object dxStatusBar: TdxStatusBar
+  TextHeight = 13
+  object sbStatusBar: TsStatusBar
     Left = 0
-    Top = 279
-    Width = 635
+    Top = 233
+    Width = 537
     Height = 20
+    Color = 15130321
     Panels = <
       item
-        PanelStyleClassName = 'TdxStatusBarStateIndicatorPanelStyle'
-        PanelStyle.Indicators = <
-          item
-            IndicatorType = sitGreen
-          end>
+        Style = psOwnerDraw
         Width = 27
       end
       item
-        PanelStyleClassName = 'TdxStatusBarTextPanelStyle'
-        PanelStyle.EllipsisType = dxetSmartPath
         Text = 'Idle'
+        Width = 50
+      end
+      item
+        Style = psOwnerDraw
+        Width = 50
       end>
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
-    Font.Style = []
+    OnDrawPanel = sbStatusBarDrawPanel
+    SkinData.SkinSection = 'STATUSBAR'
   end
   object psRoomerBase: TcxPropertiesStore
     Components = <

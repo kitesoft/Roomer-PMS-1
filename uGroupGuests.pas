@@ -282,7 +282,7 @@ uses
    uD
    ,uGuestCheckInForm
    ,uEditGuest
-   ,uCountries;
+   ,uCountries, uSQLUtils;
 
 
 function TfrmGroupGuests.CountryValidate(country : string) : boolean;

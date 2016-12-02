@@ -58,7 +58,7 @@ uses
   dxSkiniMaginary, dxSkinLilian, dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMoneyTwins, dxSkinOffice2007Black, dxSkinOffice2007Blue,
   dxSkinOffice2007Green, dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver,
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver, dxSkinSpringTime, dxSkinStardust,
-  dxSkinSummer2008, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, AdvUtil
+  dxSkinSummer2008, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, AdvUtil, cxCurrencyEdit
   ;
 
 
@@ -227,7 +227,7 @@ type
     kbmRestRoomRatesDS: TDataSource;
     kbmRestRoomRates: TkbmMemTable;
     chkShowRoomdescription: TsCheckBox;
-    sCheckBox1: TsCheckBox;
+    chkFitColumns: TsCheckBox;
     chkIsGroupInvoice: TsCheckBox;
     sPanel3: TsPanel;
     sButton2: TsButton;
@@ -251,7 +251,6 @@ type
     labCustomer: TsLabel;
     grRoomRes: TcxGrid;
     tvRoomRes: TcxGridDBTableView;
-    tvRoomResColumn1: TcxGridDBColumn;
     tvRoomResRoom: TcxGridDBColumn;
     tvRoomResRoomDescription: TcxGridDBColumn;
     tvRoomResRoomType: TcxGridDBColumn;
@@ -302,12 +301,14 @@ type
     procedure grProvideClickCell(Sender: TObject; ARow, ACol: Integer);
     function updateCellInfo(aCol,aRow : integer; newRR : integer) : boolean;
     procedure grProvideDblClickCell(Sender: TObject; ARow, ACol: Integer);
-    procedure sCheckBox1Click(Sender: TObject);
+    procedure chkFitColumnsClick(Sender: TObject);
     procedure btnHideShowAllotmentClick(Sender: TObject);
     procedure sButton5Click(Sender: TObject);
     procedure sButton2Click(Sender: TObject);
     procedure btnReCalcClick(Sender: TObject);
     procedure btnReclacAllPricesClick(Sender: TObject);
+    procedure tvRoomResGetCurrencyProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
+      var AProperties: TcxCustomEditProperties);
 
   private
     { Private declarations }
@@ -356,6 +357,7 @@ type
     function RoomsInAllotment : integer;
     function CalcOnePrice(roomreservation : integer; NewRate : double=0) : boolean;
     procedure ReclacAllPrices;
+    procedure FreeGridObjects;
 
   public
     { Public declarations }
@@ -378,7 +380,7 @@ uses
   PrjConst,
   uRoomerDefinitions,
   uReservationStateDefinitions,
-  Math;
+  Math, uSQLUtils;
 
 { TfrmAllotmentToRes }
 
@@ -542,7 +544,7 @@ begin
 end;
 
 
-procedure TfrmAllotmentToRes.sCheckBox1Click(Sender: TObject);
+procedure TfrmAllotmentToRes.chkFitColumnsClick(Sender: TObject);
 begin
   if (sender as TsCheckBox).Checked then
   begin
@@ -881,7 +883,18 @@ end;
 
 procedure TfrmAllotmentToRes.FormDestroy(Sender: TObject);
 begin
+  FreeGridObjects;
   //**
+end;
+
+procedure TfrmAllotmentToRes.FreeGridObjects;
+var
+  r, c: integer;
+begin
+  for r := grProvide.FixedRows to grProvide.RowCount -1 do
+    for c := grProvide.FixedCols to grProvide.ColCount -1 do
+      if Assigned(grProvide.Objects[c, r]) then
+        grProvide.Objects[c, r].Free;
 end;
 
 procedure TfrmAllotmentToRes.FormShow(Sender: TObject);
@@ -1001,6 +1014,12 @@ end;
 
 
 
+
+procedure TfrmAllotmentToRes.tvRoomResGetCurrencyProperties(Sender: TcxCustomGridTableItem;
+  ARecord: TcxCustomGridRecord; var AProperties: TcxCustomEditProperties);
+begin
+  d.getCurrencyProperties(g.qNativeCurrency);
+end;
 
 function TfrmAllotmentToRes.GetResStatus(ACol, ARow : integer; var status : string) : boolean;
 begin
@@ -1164,7 +1183,16 @@ begin
     FirstCol := mQuickRes.FieldByName('firstCol').asInteger;
     LastCol  := mQuickRes.FieldByName('LastCol').asInteger;
 
-    RoomReservation := RR_SetNewID();
+    RoomReservation := -1;
+    // If there already is a roomres for this room for an adjacent period then merge that one with selected dates
+    if mRRinfo.Locate('row', aRow, []) and kbmRoomRes.Locate('room', mRRInfo.FieldByName('room').AsString, []) then
+    begin
+      if (trunc(ColToDate(FirstCol)) = trunc(kbmRoomres.FieldByName('Departure').AsDateTime)) OR
+         (trunc(ColToDate(LastCol)) =  trunc(kbmRoomres.FieldByName('Arrival').AsDateTime) - 1) then
+         RoomReservation := kbmRoomRes.FieldByName('Roomreservation').asInteger;
+    end;
+    if RoomReservation = -1 then
+      RoomReservation := RR_SetNewID();
 
     for i := FirstCol to LastCol do
     begin
@@ -1343,6 +1371,22 @@ var
   currencyRate   : double;
   currency : string;
   oSelectedRoomItem : TnewRoomReservationItem;
+
+  procedure lclDeleteRoomResFromDataset(aRoomRes: integer; aRoomresField: TField);
+  begin
+    with aRoomResField.DataSet do
+    begin
+      First;
+      while not Eof do
+      begin
+        if (aROomResField.asInteger = aRoomRes) then
+          Delete
+        else
+          Next;
+      end;
+    end;
+  end;
+
 begin
 
   result := false;
@@ -1357,6 +1401,11 @@ begin
     kbmRoomres.DisableControls;
     kbmRoomRates.DisableControls;
     try
+      // If Roomres already exists, delete all prior info from roomres and roomrates
+      lclDeleteRoomResFromDataset(RoomReservation, kbmRoomRes.FieldByName('RoomReservation'));
+      lclDeleteRoomResFromDataset(RoomReservation, kbmRoomRates.FieldByName('RoomReservation'));
+
+
       sFilter :='(processed='+inttostr(roomreservation)+')';
 
       mRRinfo.Filter   := sFilter;
@@ -1587,8 +1636,8 @@ begin
 
     s := '';
     s := s+' SELECT '#10;
-    s := s+'       max(date(rd.Adate)) as maxDate '#10;
-    s := s+'     , min(date(rd.Adate)) as minDate '#10;
+    s := s+'       cast(max(date(rd.Adate)) as DATE) as maxDate '#10;
+    s := s+'     , cast(min(date(rd.Adate)) as DATE) as minDate '#10;
     s := s+'     , count(room) as RoomCount '#10;
     s := s+'  FROM '#10;
     s := s+'    roomsdate rd '#10;
@@ -1622,11 +1671,16 @@ begin
     s := s+'    , rr.GroupAccount '#10;
     s := s+'    , (SELECT name FROM persons WHERE persons.roomreservation=rd.roomreservation LIMIT 1) AS MainGuest '#10;
     s := s+'    , (SELECT count(ID) FROM persons WHERE persons.roomreservation=rd.roomreservation) AS GuestCount '#10;
-    s := s+'    , (SELECT Description FROM rooms WHERE rooms.room=rd.room) AS RoomDescription '#10;
+    s := s+'    , COALESCE(r.Description, "") as RoomDescription '#10;
+    s := s+'    , COALESCE(rt.Description, "") AS RoomTypeDescription '#10;
     s := s+' FROM '#10;
     s := s+'   roomsdate rd '#10;
     s := s+' INNER JOIN '#10;
     s := s+'   roomreservations rr ON rd.roomreservation = rr.roomreservation ';
+    s := s+' LEFT OUTER JOIN '#10;
+    s := s+'   rooms r ON r.room = rd.room';
+    s := s+' LEFT OUTER JOIN '#10;
+    s := s+'   roomtypes rt ON rt.roomtype= r.roomtype';
     s := s+' WHERE '#10;
     s := s+'   (rd.Reservation = %d) '#10;
     s := s+'   AND (ResFlag <> '+_db(STATUS_DELETED)+' ) '; //**zxhj line added
@@ -1648,8 +1702,8 @@ begin
       ExecutionPlan.Execute(ptQuery);
 
       rSet0       := ExecutionPlan.Results[0];
-      lastDate     := _dbDateToDate(rSet0.FieldByName('maxDate').asString);
-      zfirstDate   := _dbDateToDate(rSet0.FieldByName('minDate').asString);
+      lastDate     := rSet0.FieldByName('maxDate').asDateTime;
+      zfirstDate   := rSet0.FieldByName('minDate').AsDateTime;
       zRoomCount   := rSet0.FieldByName('RoomCount').asInteger;
       zNightCount  := trunc(lastDate)-trunc(zFirstDate);
       zNightCount  := zNightCount+1;
@@ -2055,7 +2109,7 @@ begin
       mRRinfo.First;
 
       RoomDescription     := mRRinfo.fieldbyname('RoomDescription').asstring;
-      RoomTypeDescription := mRRinfo.fieldbyname('RoomDescription').asstring;
+      RoomTypeDescription := mRRinfo.fieldbyname('RoomTypeDescription').asstring;
       MainGuest           := mRRinfo.fieldbyname('MainGuest').asstring;
       isPercentage        := mRRinfo.fieldbyname('isPercentage').asBoolean;
       PriceCode           := mRRinfo.fieldbyname('PriceCode').asstring;

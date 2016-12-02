@@ -48,21 +48,12 @@ function _IsDate(date : string) : Boolean;
 function _IsHomeDate(date : string) : Boolean;
 
 
-function _SqlFloatToStr(f : double; default : string) : string;
 function _CommaToDot(S : string) : string;
 function _DotToComma(S : string) : string;
 
 function _Bool2Str(const aBool : Boolean; Kind : integer) : string;
 function _Bool2String(const aBool : Boolean; Values : string) : string;
 
-function _dateToSqlDate(const dDate : TdateTime) : string;
-function _dateToSqlDateMidnight(aDate : TdateTime) : string;
-
-function _dateToDBDate(aDate : TdateTime; quoted : Boolean) : string;
-function _DBDateToDate(sDate : string) : TdateTime;
-
-function _dateTimeToDBDate(aDate : TdateTime; quoted : Boolean) : string;
-function _DBDateToDateTime(sDate : string) : TdateTime;
 function _DBDateToDateTimeNoMs(sDate : string) : TdateTime;
 
 function _TrimLower(const S : string) : string;
@@ -78,21 +69,7 @@ function _strPadR(const S : string; Len : integer) : string;
 function _strPadC(const S : string; Len : integer) : string;
 function _strPadZeroL(const S : string; Len : integer) : string;
 
-function _dbStr(const aString : string; use_N_Prefix : boolean=true) : string;
-function _dbInt(const aInt : integer) : string;
-
-function _db(const aString : string)   : string; Overload;
-function _db(const aString : char)   : string; Overload;
 function _dbNullIfEmpty(const aString : string)   : string; Overload;
-function _db(const aInt  : integer)    : string; Overload;
-function _db(const aBool : boolean)    : string; Overload;
-function _db(const aFloat : Extended)  : string; Overload;
-function _db(const aFloat : double)    : string; Overload;
-function _db(const aDate  : TdateTime) : string; Overload;
-function _dbDT(const aDate : TDateTime)  : string;
-function _db(const aDate : TDate)  : string; Overload;
-function _db(const aTime: TTime): string; overload;
-function _dbDateAndTime(const aDate : TDateTime; qouted : boolean=true)  : string;
 
 function _FloatToStr(fValue : double; w, d : byte) : string;
 function _StrToFloat(sValue : string) : double;
@@ -462,163 +439,6 @@ begin
   else
     Result := copy(Values, pos('/', Values) + 1, maxint)
 end;
-
-function _dateToSqlDate(const dDate : TdateTime) : string;
-begin
-  Result := quotedstr(uDateUtils.dateToSqlString(dDate)); // FormatDateTime('mm"/"dd"/"yyyy', dDate));
-end;
-
-function _dateToSqlDateMidnight(aDate : TdateTime) : string;
-var
-  S : string;
-begin
-  datetimetostring(S, 'yyyy-mm-dd 00:00:00', aDate);
-  Result := quotedstr(S);
-end;
-
-function _dateToDBDate(aDate : TdateTime; quoted : Boolean) : string;
-var
-  S : string;
-begin
-  datetimetostring(S, 'yyyy-mm-dd', aDate);
-  Result := S;
-  if quoted then
-    Result := quotedstr(S);
-end;
-
-function _dateTimeToDBDate(aDate : TdateTime; quoted : Boolean) : string;
-var
-  S : string;
-begin
-  datetimetostring(S, 'yyyy-mm-dd hh:nn:ss.zzz', aDate);
-  Result := S;
-  if quoted then
-    Result := quotedstr(S);
-end;
-
-
-(*
-function MyDBStrToDate(sDate : string) : TdateTime;
-var
-  y, m, d : Word;
-  sy, sm, sd : string;
-begin
-  try
-    sy := copy(sDate, 1, 4);
-    sm := copy(sDate, 6, 2);
-    sd := copy(sDate, 9, 2);
-    y := strToInt(sy);
-    m := strToInt(sm);
-    d := strToInt(sd);
-    Result := MyEncodeDate(y, m, d);
-  except
-    Result := trunc(now);
-  end;
-end;
-*)
-
-
-function _DBDateToDate(sDate : string) : TdateTime;
-var
-  d, m, y : Word;
-  sd, sm, sy : string;
-begin
-  sDate := trim(sDate);
-  sy := copy(sDate, 1, 4);
-  sm := copy(sDate, 6, 2);
-  sd := copy(sDate, 9, 2);
-
-  try
-    d := strToInt(sd);
-  except
-    d := 1;
-  end;
-
-  try
-    m := strToInt(sm);
-  except
-    m := 1;
-  end;
-
-  try
-    y := strToInt(sy);
-  except
-    y := 1900;
-  end;
-
-  Result := encodeDate(y, m, d);
-end;
-
-
-function _DBDateToDateTime(sDate : string) : TdateTime;
-var
-  d, m, y : Word;
-  h,n,s,z : word;
-
-  sd, sm, sy : string;
-
-  sH, sN,sS, sZ : string;
-
-
-begin
-  sDate := trim(sDate);
-  sy := copy(sDate, 1, 4);
-  sm := copy(sDate, 6, 2);
-  sd := copy(sDate, 9, 2);
-  //12345678901234567890123
-  //2012-03-16 00:00:00.000
-
-  sH := copy(sDate, 12, 2);
-  sN := copy(sDate, 15, 2);
-  sS := copy(sDate, 18, 2);
-  sZ := copy(sDate, 21, 3);
-
-
-  try
-    d := strToInt(sd);
-  except
-    d := 1;
-  end;
-
-  try
-    m := strToInt(sm);
-  except
-    m := 1;
-  end;
-
-  try
-    y := strToInt(sy);
-  except
-    y := 1900;
-  end;
-
-  try
-    h := strToInt(sh);
-  except
-    h := 0;
-  end;
-
-  try
-    n := strToInt(sn);
-  except
-    n := 0;
-  end;
-
-  try
-    s := strToInt(ss);
-  except
-    s := 0;
-  end;
-
-  try
-    z := strToInt(sz);
-  except
-    z := 0;
-  end;
-
-  Result := encodeDateTime(y,m,d,h,n,s,z);
-end;
-
 
 
 function _DBDateToDateTimeNoMs(sDate : string) : TdateTime;
@@ -1454,19 +1274,6 @@ begin
   Result := S;
 end;
 
-function _SqlFloatToStr(f : double; default : string) : string;
-var
-  sTmp : string;
-begin
-  sTmp := default;
-  try
-    sTmp := floattostr(f);
-    sTmp := _CommaToDot(sTmp);
-  except
-  end;
-  Result := sTmp;
-end;
-
 
 // **********************************************************
 
@@ -1898,22 +1705,6 @@ begin
 end;
 
 
-function _dbStr(const aString : string; use_N_Prefix : boolean=true) : string;
-var
-  s : string;
-begin
-  s := aString;
-  s := quotedStr(s);
-  if use_N_Prefix then s := 'N'+s;
-  result := s;
-end;
-
-function _dbInt(const aInt : integer) : string;
-begin
-  result := inttostr(aInt);
-end;
-
-
 function _GetExeByExtension(sExt : string) : string;
 var
    sExtDesc:string;
@@ -1949,33 +1740,6 @@ begin
 end;
 
 
-function RoomerQuotedString(s : String) : String;
-begin
-  if s = '' then
-    s := ''''''
-  else
-  begin
-    if copy(s, 1, 1) <> #39 then
-       s := #39 + s;
-    if (copy(s, length(s), 1) <> #39) OR (copy(s, length(s) - 1, 2) = '\'+#39) then
-       s := s + #39;
-  end;
-  result := s;
-end;
-
-function _db(const aString : string)   : string; Overload;
-begin
-  result := RoomerQuotedString(StringReplace(aString, #39, '\' + #39, [rfReplaceAll]));
-end;
-
-function _db(const aString : char)   : string; Overload;
-var s : String;
-begin
-  s := aString;
-  result := RoomerQuotedString(StringReplace(s, #39, '\' + #39, [rfReplaceAll]));
-end;
-
-
 function _dbNullIfEmpty(const aString : string)   : string; Overload;
 var value : String;
 begin
@@ -1987,77 +1751,6 @@ begin
     result := quotedstr(value);
   end;
 end;
-
-
-function _db(const aInt  : integer)    : string; Overload;
-begin
-  result := inttostr(aInt);
-end;
-
-function _db(const aBool : boolean)    : string; Overload;
-begin
-  result := BoolToString_0_1(aBool);
-  if result = '-1' then result := '1';
-end;
-
-function _db(const aFloat : Extended)  : string; Overload;
-var
-  s : string;
-begin
-  s:=floatToStr(aFloat);
-  result := _CommaToDot(S);
-end;
-
-function _db(const aFloat : double)  : string; Overload;
-var
-  s : string;
-begin
-  s:=floatToStr(aFloat);
-  result := _CommaToDot(S);
-end;
-
-function _db(const aDate : TDateTime)  : string; Overload;
-var
-  S : string;
-begin
-  datetimetostring(S, 'yyyy-mm-dd', aDate);
-  Result := quotedstr(S);
-end;
-
-function _db(const aTime: TTime): string; overload;
-var
-  S : string;
-begin
-  datetimetostring(S, 'hh:MM', aTime);
-  if s = '00:00' then s := '';
-  Result := quotedstr(S);
-end;
-
-function _dbDT(const aDate : TDateTime)  : string;
-var
-  S : string;
-begin
-  datetimetostring(S, 'yyyy-mm-dd hh:MM:ss', aDate);
-  Result := quotedstr(S);
-end;
-
-
-function _db(const aDate : TDate)  : string; Overload;
-var
-  S : string;
-begin
-  datetimetostring(S, 'yyyy-mm-dd', aDate);
-  Result := quotedstr(S);
-end;
-
-function _dbDateAndTime(const aDate : TDateTime; qouted : boolean=true)  : string;
-var
-  S : string;
-begin
-  datetimetostring(S, 'yyyy-mm-dd hh:nn:ss', aDate);
-  if qouted then Result := quotedstr(S) else Result := S
-end;
-
 
 function _calcVAT(with_VAT, VATPrecent : double) : double;
 var

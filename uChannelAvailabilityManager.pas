@@ -254,7 +254,7 @@ type
     sButton3: TsButton;
     timRecalc: TTimer;
     sPanel6: TsPanel;
-    cbxStopMinOptions: TsCheckBox;
+    cbxRateRestrictions: TsCheckBox;
     cbxPlanCodes: TsComboBox;
     sButton4: TsButton;
     sButton5: TsButton;
@@ -266,7 +266,6 @@ type
     cbxAvailType: TsComboBox;
     pnlHolder: TsPanel;
     btnClose: TsButton;
-    cbxExtraRestrictions: TsCheckBox;
     lblDCAvailability: TsLabel;
     edtDCAvailbility: TsEdit;
     cbDCAvailabilityType: TsComboBox;
@@ -372,7 +371,7 @@ type
     procedure gridGridHint(Sender: TObject; ARow, ACol: integer; var hintstr: string);
     procedure timRecalcTimer(Sender: TObject);
     procedure rateGridCheckBoxChange(Sender: TObject; ACol, ARow: integer; State: Boolean);
-    procedure cbxStopMinOptionsClick(Sender: TObject);
+    procedure cbxRateRestrictionsClick(Sender: TObject);
     procedure sButton4Click(Sender: TObject);
     procedure sButton5Click(Sender: TObject);
     procedure gridEditCellDone(Sender: TObject; ACol, ARow: integer);
@@ -561,7 +560,7 @@ uses ioUtils, uMain, uDateUtils, uStringUtils, _glob, uAppGlobal, PrjConst,
   uFrmChannelCopyFrom, uRoomerMessageDialog, uDImages, uExcelProcessors, uG, uEmailExcelSheet, hData,
   uActivityLogs,
   UITypes
-  , uFloatUtils, uFileSystemUtils;
+  , uFloatUtils, uFileSystemUtils, uSQLUtils;
 
 const
   BODY_START = '<body bgcolor="#0000FF"><font bgcolor="#0000FF" color="#FFFFFF">';
@@ -969,7 +968,7 @@ begin
   try FreeAndNil(rateGrid); except end;
   try FreeAndNil(grid); except end;
   try FreeAndNil(cbxShowLinkedCells); except end;
-  try FreeAndNil(cbxStopMinOptions); except end;
+  try FreeAndNil(cbxRateRestrictions); except end;
   try FreeAndNil(pgcPages); except end;
 
   action := caFree;
@@ -2471,10 +2470,18 @@ begin
       dtBulkTo.MaxDate := MaxDate;
     Screen.Cursor := crHourglass;
     try
-      RemoveData;
+      rateGrid.BeginUpdate;
+      grid.BeginUpdate;
+      try
+        rateGrid.UnHideRowsAll;
+        RemoveData;
+      finally
+        grid.EndUpdate;
+        rateGrid.EndUpdate;
+      end;
       sTabSheet1.TabVisible := true; // NOT onlyDirectConnection;
-      cbxExtraRestrictions.Checked := false;
-      cbxExtraRestrictions.Tag := 0;
+//      cbxExtraRestrictions.Checked := false;
+//      cbxExtraRestrictions.Tag := 0;
 
       ShowRatesForSelectedChannelManager;
       ShowAvailabilityForSelectedChannelManager;
@@ -2489,7 +2496,7 @@ begin
   end;
 end;
 
-procedure TfrmChannelAvailabilityManager.cbxStopMinOptionsClick(Sender: TObject);
+procedure TfrmChannelAvailabilityManager.cbxRateRestrictionsClick(Sender: TObject);
 begin
   TsCheckBox(Sender).Tag := ABS(ORD(TsCheckBox(Sender).Checked));
   HideShowExtraCells;
@@ -3066,8 +3073,8 @@ begin
                           'AND FIND_IN_SET(ch.id, cm.channels) ' +
                           'AND ch.activePlanCode=%d ' +
                           'UNION ALL ' +
-                          'SELECT CURRENT_DATE AS today, ' +
-                          ' -1 AS chId, ''MASTER RATE'' AS channelName, EXISTS(SELECT id FROM channels WHERE directConnection LIMIT 1) AS directConnection, 3 AS rateRoundingType ' +
+                          'SELECT CURRENT_DATE AS today, ' +                                                                                             // 2 decimals
+                          ' -1 AS chId, ''MASTER RATE'' AS channelName, EXISTS(SELECT id FROM channels WHERE directConnection LIMIT 1) AS directConnection, 5 AS rateRoundingType ' +
                           ', to_bool((SELECT masterRatesActive FROM hotelconfigurations LIMIT 1)) AS masterRatesActive ' +
                           'ORDER BY IF(chId=-1, '''', channelName) ', [cmId, pcId])));
 
@@ -3183,7 +3190,7 @@ begin
 
                 rateGrid.Cells[0, iRateRow] := format('%s[%s] %s', [tempSpaces, RateSet['rtgCode'], RateSet['rtgDescription']]);
 
-                inc(iRow, 7 + ABS(ORD(isCurrentDirectConnection)));
+                inc(iRow, 6 + ABS(ORD(isCurrentDirectConnection)));
                 iCountLine := 1;
                 rateGrid.RowCount := iRow + 3;
 
@@ -3194,17 +3201,17 @@ begin
                   inc(iCountLine);
                 end;
 
-                if isCurrentDirectConnection OR (anyDirectConnection AND (chId = -2)) then
-                begin
-                  rateGrid.Cells[0, iRateRow + iCountLine] := '<font></font><p align="right"><b>Availability</p>';
-                  rateGrid.Objects[0, iRateRow + iCountLine] := Pointer(11); // Disabled!! Pointer(1);
-                end
-                else
-                begin
-                  rateGrid.Cells[0, iRateRow + iCountLine] := '<font></font><p align="right"><b>Not used</p>';
-                  rateGrid.Objects[0, iRateRow + iCountLine] := Pointer(11);
-                end;
-                inc(iCountLine);
+//                if isCurrentDirectConnection OR (anyDirectConnection AND (chId = -2)) then
+//                begin
+//                  rateGrid.Cells[0, iRateRow + iCountLine] := '<font></font><p align="right"><b>Availability</p>';
+//                  rateGrid.Objects[0, iRateRow + iCountLine] := Pointer(11); // Disabled!! Pointer(1);
+//                end
+//                else
+//                begin
+//                  rateGrid.Cells[0, iRateRow + iCountLine] := '<font></font><p align="right"><b>Not used</p>';
+//                  rateGrid.Objects[0, iRateRow + iCountLine] := Pointer(11);
+//                end;
+//                inc(iCountLine);
 
                 rateGrid.Cells[0, iRateRow + iCountLine] := '<font></font><p align="right"><b>Minimum stay</p>';
                 rateGrid.Objects[0, iRateRow + iCountLine] := Pointer(3);
@@ -3279,11 +3286,11 @@ begin
                 inc(iCountLine);
               end;
 
-              if isCurrentDirectConnection OR (anyDirectConnection AND (chId = -2)) then
-              begin
-                rateGrid.Cells[iRateCol, iRateRow + iCountLine] := inttostr(RateSet['availability']);
-              end;
-              inc(iCountLine);
+//              if isCurrentDirectConnection OR (anyDirectConnection AND (chId = -2)) then
+//              begin
+//                rateGrid.Cells[iRateCol, iRateRow + iCountLine] := inttostr(RateSet['availability']);
+//              end;
+//              inc(iCountLine);
 
               rateGrid.Cells[iRateCol, iRateRow + iCountLine] := inttostr(RateSet['minstay']);
               inc(iCountLine);
@@ -3302,7 +3309,7 @@ begin
             RateSet.next;
           end;
 
-          inc(iRow, 1); // * cbxStopMinOptions.Tag);
+          inc(iRow, 1); // * cbxRateRestrictions.Tag);
           rateGrid.RowCount := iRow;
 
           AvailSet.next;
@@ -3315,10 +3322,10 @@ begin
               cbxChannel.Checked[i] := true;
 
       finally
-        cbxStopMinOptions.Checked := False;
-        cbxExtraRestrictions.Checked := False;
-        cbxStopMinOptions.Tag := 0;
-        cbxExtraRestrictions.Tag := 0;
+        cbxRateRestrictions.Checked := False;
+//        cbxExtraRestrictions.Checked := False;
+        cbxRateRestrictions.Tag := 0;
+//        cbxExtraRestrictions.Tag := 0;
         rateGrid.EndUpdate;
         grid.EndUpdate;
   {$IFDEF DEBUG}
@@ -3817,7 +3824,7 @@ begin
   edtSingleUsePrice.Visible := anyDirectConnection;
   lblSingleUsePrice.Visible := anyDirectConnection;
 
-  cbxExtraRestrictions.Visible := true; // anyDirectConnection; Made active on 2016-01-14
+//  cbxExtraRestrictions.Visible := true; // anyDirectConnection; Made active on 2016-01-14
 end;
 
 
@@ -3834,7 +3841,7 @@ begin
     edtSingleUsePrice.Visible := anyDirectConnection;
     lblSingleUsePrice.Visible := anyDirectConnection;
 
-    cbxExtraRestrictions.Visible := true; // anyDirectConnection;  Made active on 2016-01-14
+//    cbxExtraRestrictions.Visible := true; // anyDirectConnection;  Made active on 2016-01-14
     pnlRestrictions.Height := 169;
 
     cbxBasedOnArrival.enabled := __cbxMinimumStayActive.Checked;
@@ -3957,8 +3964,13 @@ end;
 
 procedure TfrmChannelAvailabilityManager.btnCheckAllChannelClick(Sender: TObject);
 begin
-  CheckOrUnCheckAllInCheckList(ccChannels, true);
-  ccChannelsClickCheck(ccChannels);
+  ccChannels.OnClickCheck := nil;
+  try
+    CheckOrUnCheckAllInCheckList(ccChannels, true);
+    ccChannelsClickCheck(ccChannels);
+  finally
+    ccChannels.OnClickCheck := ccChannelsClickCheck;
+  end;
 end;
 
 procedure TfrmChannelAvailabilityManager.sButton1Click(Sender: TObject);
@@ -4100,8 +4112,13 @@ end;
 
 procedure TfrmChannelAvailabilityManager.btnClearChannelSelectionGridClick(Sender: TObject);
 begin
-  CheckOrUnCheckAllInCheckList(ccChannels, false);
-  ccChannelsClickCheck(ccChannels);
+  ccChannels.OnClickCheck := nil;
+  try
+    CheckOrUnCheckAllInCheckList(ccChannels, false);
+    ccChannelsClickCheck(ccChannels);
+  finally
+    ccChannels.OnClickCheck := ccChannelsClickCheck;
+  end;
 end;
 
 procedure TfrmChannelAvailabilityManager.__cbxMinimumStayActiveClick(Sender: TObject);
@@ -4177,53 +4194,78 @@ var
   iRow, iHeight: integer;
   PriceData : TPriceData;
 CONST CHECK_BOX_CELL_HEIGHT = 22;
+
+  procedure HideOrShowRow(iRow : Integer; iHeight : integer);
+  begin
+    if iHeight = 0 then
+      rateGrid.HideRow(iRow)
+    else begin
+      rateGrid.RowHeights[iRow] := iHeight;
+      rateGrid.UnHideRow(iRow);
+    end;
+  end;
+
 begin
   rateGrid.BeginUpdate;
   try
-  for iRow := 1 to rateGrid.RowCount - 1 do
-  begin
-    PriceData := getPriceDataOfRow(1, iRow);
-    if Assigned(PriceData) then
+    rateGrid.UnHideRowsAll;
+    for iRow := rateGrid.RowCount - 1 downto 1 do
     begin
-        iHeight := ABS(ORD((PriceData.channelId = -1) OR IsIdCheckedInCheckListCombo(ccChannels, PriceData.channelId)));
+      PriceData := getPriceDataOfRow(1, iRow);
+      if isHiddenUnusedRow(iRow) then
+        HideOrShowRow(iRow, 0);
+      if Assigned(PriceData) then
+      begin
+          iHeight := ABS(ORD((PriceData.channelId = -1) OR IsIdCheckedInCheckListCombo(ccChannels, PriceData.channelId)));
 
-        // If sub-rate then hide it
-        if (NOT cbxShowSubrates.Checked) then
-          iHeight := ABS(ORD((iHeight > 0) AND (PriceData.FRoomTypeGroupCode = PriceData.RoomTypeTopClass)));
+          // If sub-rate then hide it
+          if (NOT cbxShowSubrates.Checked) then
+            iHeight := ABS(ORD((iHeight > 0) AND (PriceData.FRoomTypeGroupCode = PriceData.RoomTypeTopClass)));
 
-        // Hidden, unused Row?
-        if isHiddenUnusedRow(iRow) then
-          rateGrid.RowHeights[iRow] := 0
+          // Hidden, unused Row?
+//          if isHiddenUnusedRow(iRow) then
+//            HideOrShowRow(iRow, ABS(ORD(isHiddenUnusedRow(iRow))) * rateGrid.DefaultRowHeight);
+  //        if isHiddenUnusedRow(iRow) then
+  //          rateGrid.RowHeights[iRow] := 0
 
-        else if isPriceRow(iRow) then
-          rateGrid.RowHeights[iRow] := rateGrid.DefaultRowHeight * iHeight
+          if isPriceRow(iRow) then
+            HideOrShowRow(iRow, rateGrid.DefaultRowHeight * iHeight)
+  //          rateGrid.RowHeights[iRow] := rateGrid.DefaultRowHeight * iHeight
 
-        else if isAvailabilityRow(iRow) then
-          rateGrid.RowHeights[iRow] := rateGrid.DefaultRowHeight * iHeight
+          else if isAvailabilityRow(iRow) then
+            HideOrShowRow(iRow, rateGrid.DefaultRowHeight * iHeight)
+  //          rateGrid.RowHeights[iRow] := rateGrid.DefaultRowHeight * iHeight
 
-        else if isStopSellRow(iRow) then
-          rateGrid.RowHeights[iRow] := CHECK_BOX_CELL_HEIGHT * ABS(ORD(cbxStopMinOptions.Checked)) * iHeight
+          else if isStopSellRow(iRow) then
+            HideOrShowRow(iRow, CHECK_BOX_CELL_HEIGHT * ABS(ORD(cbxRateRestrictions.Checked)) * iHeight)
+  //          rateGrid.RowHeights[iRow] := CHECK_BOX_CELL_HEIGHT * ABS(ORD(cbxRateRestrictions.Checked)) * iHeight
 
-        else if isMinStayRow(iRow) then
-          rateGrid.RowHeights[iRow] := rateGrid.DefaultRowHeight * ABS(ORD(cbxStopMinOptions.Checked)) * iHeight
+          else if isMinStayRow(iRow) then
+            HideOrShowRow(iRow, rateGrid.DefaultRowHeight * ABS(ORD(cbxRateRestrictions.Checked)) * iHeight)
+  //          rateGrid.RowHeights[iRow] := rateGrid.DefaultRowHeight * ABS(ORD(cbxRateRestrictions.Checked)) * iHeight
 
-        else if isMaxStayRow(iRow) then
-          rateGrid.RowHeights[iRow] := rateGrid.DefaultRowHeight * ABS(ORD(cbxExtraRestrictions.Checked)) * iHeight
+          else if isMaxStayRow(iRow) then
+            HideOrShowRow(iRow, rateGrid.DefaultRowHeight * ABS(ORD(cbxRateRestrictions.Checked)) * iHeight)
+  //          rateGrid.RowHeights[iRow] := rateGrid.DefaultRowHeight * ABS(ORD(cbxRateRestrictions.Checked)) * iHeight
 
-        else if isCloseOnArrivalRow(iRow) then
-          rateGrid.RowHeights[iRow] := CHECK_BOX_CELL_HEIGHT * ABS(ORD(cbxExtraRestrictions.Checked)) * iHeight
+          else if isCloseOnArrivalRow(iRow) then
+            HideOrShowRow(iRow, CHECK_BOX_CELL_HEIGHT * ABS(ORD(cbxRateRestrictions.Checked)) * iHeight)
+  //          rateGrid.RowHeights[iRow] := CHECK_BOX_CELL_HEIGHT * ABS(ORD(cbxExtraRestrictions.Checked)) * iHeight
 
-        else if isClosedOnDepartureRow(iRow) then
-          rateGrid.RowHeights[iRow] := CHECK_BOX_CELL_HEIGHT * ABS(ORD(cbxExtraRestrictions.Checked)) * iHeight
+          else if isClosedOnDepartureRow(iRow) then
+            HideOrShowRow(iRow, CHECK_BOX_CELL_HEIGHT * ABS(ORD(cbxRateRestrictions.Checked)) * iHeight)
+  //          rateGrid.RowHeights[iRow] := CHECK_BOX_CELL_HEIGHT * ABS(ORD(cbxExtraRestrictions.Checked)) * iHeight
 
-        else if isLOSArrivalDateBasedRow(iRow) then
-          rateGrid.RowHeights[iRow] := CHECK_BOX_CELL_HEIGHT * ABS(ORD(cbxExtraRestrictions.Checked)) * iHeight
+          else if isLOSArrivalDateBasedRow(iRow) then
+            HideOrShowRow(iRow, CHECK_BOX_CELL_HEIGHT * ABS(ORD(cbxRateRestrictions.Checked)) * iHeight)
+  //          rateGrid.RowHeights[iRow] := CHECK_BOX_CELL_HEIGHT * ABS(ORD(cbxExtraRestrictions.Checked)) * iHeight
 
-        else if isSingleUsePriceRow(iRow) then
-          rateGrid.RowHeights[iRow] := rateGrid.DefaultRowHeight * ABS(ORD(cbxExtraRestrictions.Checked)) * iHeight;
+          else if isSingleUsePriceRow(iRow) then
+            HideOrShowRow(iRow, rateGrid.DefaultRowHeight * ABS(ORD(cbxRateRestrictions.Checked)) * iHeight)
+  //          rateGrid.RowHeights[iRow] := rateGrid.DefaultRowHeight * ABS(ORD(cbxExtraRestrictions.Checked)) * iHeight;
 
+      end;
     end;
-  end;
   finally
     rateGrid.EndUpdate;
   end;
@@ -4272,7 +4314,7 @@ end;
 
 procedure TfrmChannelAvailabilityManager.rateGridCellChanging(Sender: TObject; OldRow, OldCol, NewRow, NewCol: integer; var Allow: Boolean);
 begin
-  Allow := isAnyEditableRow(NewRow);
+//  Allow := isAnyEditableRow(NewRow);
 end;
 
 
@@ -4511,6 +4553,7 @@ begin
       iValue := StrToIntDef(value, -9999999);
       if iValue <> -9999999 then
       begin
+        timRecalc.enabled := False;
         if isAvailabilityRow(ARow) then
           PriceData.Availability := iValue
         else if isMinStayRow(ARow) then
@@ -4518,6 +4561,7 @@ begin
         else if isMaxStayRow(ARow) then
           PriceData.MaxStay := iValue;
         CorrectMasterRateLinkedCells(PriceData, ACol, ARow);
+        timRecalc.enabled := true;
       end
     end;
   end;
@@ -4856,28 +4900,39 @@ var
 begin
   if Halting then
     exit;
-  if Key = VK_DOWN then
-  begin
-    if TAdvStringGrid(Sender).Row <= TAdvStringGrid(Sender).RowCount - 1 then
-    begin
-      iRow := TAdvStringGrid(Sender).Row + 1;
-      while ((iRow < TAdvStringGrid(Sender).RowCount) AND (TAdvStringGrid(Sender).RowHeights[iRow] < 9)) do
-        iRow := iRow + 1;
-      if iRow <= TAdvStringGrid(Sender).RowCount then
-        TAdvStringGrid(Sender).Row := iRow - 1;
-    end;
-  end
-  else if Key = VK_UP then
-  begin
-    if TAdvStringGrid(Sender).Row > 2 then
-    begin
-      iRow := TAdvStringGrid(Sender).Row - 1;
-      while ((iRow > 1) AND (TAdvStringGrid(Sender).RowHeights[iRow] < 9)) do
-        iRow := iRow - 1;
-      if iRow > 1 then
-        TAdvStringGrid(Sender).Row := iRow + 1;
-    end;
-  end;
+//  if Key = VK_DOWN then
+//  begin
+//    if TAdvStringGrid(Sender).Row <= TAdvStringGrid(Sender).RowCount - 1 then
+//    begin
+//      iRow := TAdvStringGrid(Sender).Row + 1;
+//      while ((iRow < TAdvStringGrid(Sender).RowCount) AND (TAdvStringGrid(Sender).RowHeights[iRow] < 9)) do
+//        iRow := iRow + 1;
+//      if iRow <= TAdvStringGrid(Sender).RowCount then
+//        TAdvStringGrid(Sender).Row := iRow - 1;
+//    end;
+//  end
+//  else if Key = VK_UP then
+//  begin
+//    if TAdvStringGrid(Sender).Row > 2 then
+//    begin
+//      iRow := TAdvStringGrid(Sender).Row - 1;
+//      while ((iRow > 1) AND (TAdvStringGrid(Sender).RowHeights[iRow] < 9)) do
+//        iRow := iRow - 1;
+//      if iRow > 1 then
+//        TAdvStringGrid(Sender).Row := iRow + 1;
+//    end;
+//  end;
+
+//  if Key = VK_DOWN then
+//  begin
+//    if TAdvStringGrid(Sender).Row <= TAdvStringGrid(Sender).RowCount - 1 then
+//      TAdvStringGrid(Sender).Row := TAdvStringGrid(Sender).Row + 1;
+//  end
+//  else if Key = VK_UP then
+//  begin
+//    if TAdvStringGrid(Sender).Row > 2 then
+//      TAdvStringGrid(Sender).Row := TAdvStringGrid(Sender).Row - 1;
+//  end;
 
   if NOT TAdvStringGrid(Sender).EditMode then
   begin
@@ -4891,7 +4946,6 @@ begin
   begin
     if TAdvStringGrid(Sender).Col < TAdvStringGrid(Sender).ColCount then
       TAdvStringGrid(Sender).Col := TAdvStringGrid(Sender).Col + 1;
-
   end;
 end;
 

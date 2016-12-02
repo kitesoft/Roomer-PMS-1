@@ -178,15 +178,22 @@ begin
     end;
   end;
 
-  cbxForce.Visible := SameValue(FRoomInvoice.Balance, 0) AND not SameValue(FGroupInvoice.Balance, 0);
-  BtnCheckOut.Enabled := ((NOT pnlRoomBalance.Visible) AND (NOT pnlGroupBalance.Visible));
-  sLabel1.Visible := BtnCheckOut.Enabled;
+  sLabel1.Visible := not (pnlRoomBalance.Visible or pnlGroupBalance.Visible);
   if sLabel1.Visible then
   begin
     sLabel1.Left := 5;
     sLabel1.Top := (Height - panBtn.Height) div 2;
     Width := sLabel1.Width + 20;
-  end;
+  end
+  else
+    // NB: using pnlRoomBalance.Width twice because pnlGroupBalance has Align=alClient and its width would become 626
+    Width := pnlRoomBalance.Width * iif(pnlRoomBalance.Visible, 1, 0) + pnlRoomBalance.Width * iif(pnlGroupBalance.Visible, 1, 0) + 6;
+
+  cbxForce.Visible := SameValue(FRoomInvoice.Balance, 0) AND not SameValue(FGroupInvoice.Balance, 0);
+  if cbxForce.Visible then
+    cbxForce.Left := pnlGroupBalance.Left + (pnlGroupBalance.Width - cbxForce.Width) div 2;
+  BtnCheckOut.Enabled := ((NOT pnlRoomBalance.Visible) AND (NOT pnlGroupBalance.Visible or cbxForce.Checked));
+
 end;
 
 procedure TFrmCheckOut.FormCreate(Sender: TObject);
@@ -234,13 +241,13 @@ end;
 
 procedure TFrmCheckOut.btnGroupInvoiceClick(Sender: TObject);
 begin
-  EditInvoice(Reservation, 0, 0, 0, 0, 0, false, true, false);
+  EditInvoice(Reservation, 0, 0, 0, 0, 0, false);
   ReloadInvoiceStatuses;
 end;
 
 procedure TFrmCheckOut.btnRoomInvoiceClick(Sender: TObject);
 begin
-  EditInvoice(Reservation, RoomReservation, 0, 0, 0, 0, false, true, false);
+  EditInvoice(Reservation, RoomReservation, 0, 0, 0, 0, false);
   ReloadInvoiceStatuses;
 end;
 

@@ -37,6 +37,7 @@ type
     FOuterCache: TBitmap;
     FSkinSection: TsSkinSection;
     FOuterEffects: TacOuterEffects;
+    FSkinManager: TsSkinManager;
     function GetUpdating: boolean;
     procedure SetSkinSection(const Value: string);
 {$IFDEF DEBUG}
@@ -78,7 +79,6 @@ type
     FColorTone: TColor;
     FSWHandle: THandle;
     FOwnerObject: TObject;
-    FSkinManager: TsSkinManager;
     AnimTimer: TacThreadedTimer;
     WndProc: TWndMethod;
 
@@ -529,6 +529,19 @@ var
   WndRect: TRect;
   Parent: TWinControl;
   aState, iTransparency, iGradient, iTexture: integer;
+
+  procedure GiveOwnBmp;
+  begin
+    PBGInfo^.BgType := btCache;
+    if PBGInfo^.PleaseDraw then
+      with PBGInfo^ do
+        BitBlt(DrawDC, R.Left, R.Top, WidthOf(R), HeightOf(R), SkinData.FCacheBmp.Canvas.Handle, Offset.X, Offset.Y, SRCCOPY)
+    else begin
+      PBGInfo^.Bmp := SkinData.FCacheBmp;
+      PBGInfo^.Offset := MkPoint;
+    end;
+  end;
+
 begin
   with SkinData do
     if PBGInfo^.PleaseDraw then begin
@@ -568,37 +581,33 @@ begin
             0: with gd[SkinIndex] do begin
               if (iGradient > 0) or (iTexture > 0) or (ImgTL >= 0) or (ImgBL >= 0) or (ImgBR >= 0) or (ImgTR >= 0) or HaveOuterEffects(SkinData) then begin
                 PBGInfo^.Color := GetGlobalColor;
-                if (FCacheBmp = nil) or FCacheBmp.Empty or (FOwnerControl <> nil) and ((FCacheBmp.Width <> FOwnerControl.Width) or (FCacheBmp.Height <> FOwnerControl.Height)) then begin
+                if BGChanged or (FCacheBmp = nil) or FCacheBmp.Empty or (FOwnerControl <> nil) and ((FCacheBmp.Width <> FOwnerControl.Width) or (FCacheBmp.Height <> FOwnerControl.Height)) then begin
                   BGChanged := True;
-                  if FCacheBmp <> nil then
-                    FCacheBmp.Width := 0;
+                  if FOwnerControl <> nil then begin
+                    if FCacheBmp <> nil then
+                      FCacheBmp.Width := 0;
 
-                  if FOwnerControl <> nil then
-                    SendAMessage(FOwnerControl, AC_PREPARECACHE);
+                    SendAMessage(FOwnerControl, AC_PREPARECACHE)
+                  end
+                  else
+                    if FOwnerObject is TsSkinProvider then
+                      if TsSkinProvider(FOwnerObject).FFormState and FS_BLENDMOVING <> 0 then begin
+                        GiveOwnBmp;
+                        Exit;
+                      end
+                      else begin
+                        if FCacheBmp <> nil then
+                          FCacheBmp.Width := 0;
+
+                        SendAMessage(TsSkinProvider(FOwnerObject).Form, AC_PREPARECACHE);
+                      end;
 
                   if (FCacheBmp = nil) or FCacheBmp.Empty then begin
                     PBGInfo^.BgType := btNotReady;
                     Exit;
-                  end
-                  else begin
-                    PBGInfo^.BgType := btCache;
-                    if PBGInfo^.PleaseDraw then
-                      with PBGInfo^ do
-                        BitBlt(DrawDC, R.Left, R.Top, WidthOf(R), HeightOf(R), FCacheBmp.Canvas.Handle, Offset.X, Offset.Y, SRCCOPY)
-                    else begin
-                      PBGInfo^.Bmp := FCacheBmp;
-                      PBGInfo^.Offset := MkPoint;
-                    end;
                   end;
                 end;
-                PBGInfo^.BgType := btCache;
-                if PBGInfo^.PleaseDraw then
-                  with PBGInfo^ do
-                    BitBlt(DrawDC, R.Left, R.Top, WidthOf(R), HeightOf(R), FCacheBmp.Canvas.Handle, Offset.X, Offset.Y, SRCCOPY)
-                else begin
-                  PBGInfo^.Bmp := FCacheBmp;
-                  PBGInfo^.Offset := MkPoint;
-                end;
+                GiveOwnBmp;
               end
               else begin
                 PBGInfo^.Bmp := nil;
@@ -1711,17 +1720,21 @@ function TsCommonData.Skinned(const CheckSkinActive: boolean = False): boolean;
 var
   SM: TsSkinManager;
 begin
-  SM := SkinManager;
-  if (SM <> nil) and not (csDestroying in SM.ComponentState) and SM.IsValidSkinIndex(SkinIndex) then
-    if (FOwnerObject = nil) or not (csDestroying in TComponent(FOwnerObject).ComponentState) then
-      if CheckSkinActive then
-        Result := SM.CommonSkinData.Active
+  try
+    SM := SkinManager;
+    if (SM <> nil) and not (csDestroying in SM.ComponentState) and SM.IsValidSkinIndex(SkinIndex) then
+      if (FOwnerObject = nil) or not (csDestroying in TComponent(FOwnerObject).ComponentState) then
+        if CheckSkinActive then
+          Result := SM.CommonSkinData.Active
+        else
+          Result := True
       else
-        Result := True
+        Result := False
     else
-      Result := False
-  else
+      Result := False;
+  except
     Result := False;
+  end;
 end;
 
 
@@ -1763,7 +1776,7 @@ begin
         if States <= State then
           State := States - 1;
 
-        Result := Props[min(State, ac_MaxPropsIndex)].Transparency >= 50;
+        Result := Props[min(State, ac_MaxPropsIndex)].Transparency > 50;
         if Result and (BorderIndex >= 0) then
           with ma[BorderIndex] do
             if State = 0 then
@@ -1778,9 +1791,9 @@ begin
                   X := R.Left + State * Width + Width div 2;
                   Y := R.Bottom - Height div 2;
                   if Bmp <> nil then
-                    Result := GetAPixel(Bmp, X, Y).R >= 127
+                    Result := GetAPixel(Bmp, X, Y).R > 127
                   else
-                    Result := GetAPixel(SkinManager.MasterBitmap, X, Y).R >= 127
+                    Result := GetAPixel(SkinManager.MasterBitmap, X, Y).R > 127
                 end;
       end
     else
@@ -1886,14 +1899,13 @@ begin
               Message.Result := 1
             else
               if IsCached(SkinData) and not CustomColor then
-                if FOwnerControl is TWinControl then begin
+                if FOwnerControl is TWinControl then
                   if (FCacheBmp = nil) or FCacheBmp.Empty then begin
                     SendAMessage(TWinControl(FOwnerControl).Handle, AC_PREPARECACHE);
-                    Message.Result := integer(FCacheBmp.Empty);
-                    Exit;
-                  end;
-                  Message.Result := LRESULT((FCacheBmp.Width <> FOwnerControl.Width) or (FCacheBmp.Height <> FOwnerControl.Height));
-                end
+                    Message.Result := integer((FCacheBmp = nil) or FCacheBmp.Empty);
+                  end
+                  else
+                    Message.Result := LRESULT((FCacheBmp.Width <> FOwnerControl.Width) or (FCacheBmp.Height <> FOwnerControl.Height))
                 else
                   Message.Result := 0
               else
@@ -2535,7 +2547,7 @@ begin
     try
       for i := 0 to Control.ControlCount - 1 do begin
         Child := Control.Controls[i];
-        if (Child is TGraphicControl) and StdTransparency {$IFNDEF ALITE}or (Child is TsSplitter){$ENDIF} then
+        if (Child is TGraphicControl) and (SkinData.SkinManager <> nil) and SkinData.SkinManager.Options.StdImgTransparency {$IFNDEF ALITE}or (Child is TsSplitter){$ENDIF} then
           Continue;
 
         with Child do begin

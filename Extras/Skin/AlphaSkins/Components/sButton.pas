@@ -137,6 +137,7 @@ type
     procedure OurPaintHandler(aDC: hdc);
     procedure DrawCaption(Canvas: TCanvas = nil);
     procedure DrawGlyph  (Canvas: TCanvas = nil);
+    function ScaledDropWidth: integer;
     function CaptionRect: TRect;
     function GlyphExist: boolean;
     function PrepareCache: boolean;
@@ -329,6 +330,11 @@ begin
 end;
 
 
+function TsButton.ScaledDropWidth: integer;
+begin
+  Result := DropWidth * SkinData.ScalePercent div 100;
+end;
+
 procedure TsButton.SetButtonStyle(ADefault: Boolean);
 begin
   if ADefault <> IsFocused then
@@ -346,7 +352,7 @@ begin
   Size := GetCaptionSize(Self);
   aWidth := Width;
   if Style = bsSplitButton then
-    dec(aWidth, DropWidth);
+    dec(aWidth, ScaledDropWidth);
 
   if Style = bsCommandLink then begin
     Result.Left := FContentMargin + GetImageSize(Self).cx + ContentSpacing;
@@ -578,7 +584,7 @@ begin
   if GlyphExist then begin
     aWidth := Width;
     if Style = bsSplitButton then
-      dec(aWidth, DropWidth);
+      dec(aWidth, ScaledDropWidth);
 
     if Style = bsCommandLink then begin
       Result.Left := ImageMargins.Left + FContentMargin;
@@ -645,12 +651,12 @@ procedure TsButton.MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Int
 var
   P: TPoint;
 begin
-  if (Style = bsSplitButton) and (DropDownMenu <> nil) and PtInRect(Rect(Width - DropWidth, 0, Width, Height), Point(X, Y)) then begin
+  if (Style = bsSplitButton) and (DropDownMenu <> nil) and PtInRect(Rect(Width - ScaledDropWidth, 0, Width, Height), Point(X, Y)) then begin
     P := ClientToScreen(MkPoint);
     DroppedDown := True;
     FCommonData.Invalidate;
 {$IFNDEF FPC}
-    if (DefaultManager <> nil) and DefaultManager.Active then
+    if (DefaultManager <> nil) and DefaultManager.CommonSkinData.Active then
       DefaultManager.SkinableMenus.HookPopupMenu(DropDownMenu, True);
 {$ENDIF}
     DropDownMenu.PopupComponent := Self;
@@ -862,9 +868,9 @@ begin
       with FCommonData, FCacheBmp.Canvas do begin
         Pen.Color := ColorToRGB(SkinManager.gd[SkinIndex].Props[integer(State <> 0)].FontColor.Color);
         Pen.Width := 1;
-        MoveTo(Width - DropWidth + 1, 4);
-        LineTo(Width - DropWidth + 1, Height - 4);
-        DrawColorArrow(FCacheBmp, Pen.Color, Rect(Width - DropWidth, 0, Width, Height), asBottom);
+        MoveTo(Width - ScaledDropWidth + 1, 4);
+        LineTo(Width - ScaledDropWidth + 1, Height - 4);
+        DrawColorArrow(FCacheBmp, Pen.Color, Rect(Width - ScaledDropWidth, 0, Width, Height), asBottom);
       end;
 
     if not Enabled or ((Action <> nil) and not Assigned(TAction(Action).OnExecute){ not TAction(Action).Enabled // Button not repainted immediately if Action.Enabled changed }) then
@@ -936,6 +942,8 @@ end;
 
 
 procedure TsButton.WndProc(var Message: TMessage);
+var
+  PS: TPaintStruct;
 begin
 {$IFDEF LOGGED}
   AddToLog(Message);
@@ -1018,6 +1026,7 @@ begin
       end;
     end
   else begin
+
     case Message.Msg of
       SM_ALPHACMD:
         case Message.WParamHi of
@@ -1100,6 +1109,7 @@ begin
 
       CM_TEXTCHANGED:
         if not (csDestroying in ComponentState) then begin
+          FinishTimer(SkinData.AnimTimer);
           StopTimer(SkinData);
           FCommonData.Invalidate;
           Exit;
@@ -1114,8 +1124,12 @@ begin
 
       WM_PAINT:
         if Visible or (csDesigning in ComponentState) then begin
-          if (Parent = nil) or InUpdating(FCommonData) then
+          if (Parent = nil) then Exit;
+          if InUpdating(FCommonData) then begin
+            BeginPaint(Handle, PS);
+            EndPaint(Handle, PS);
             Exit;
+          end;
 
           OurPaintHandler(TWMPaint(Message).DC);
           if not (csDesigning in ComponentState) then
@@ -1187,7 +1201,7 @@ begin
           else
             inherited;
 
-      WM_ENABLE: 
+      WM_ENABLE:
         Exit; // Avoiding of blinking when switched
     end;
     if CommonWndProc(Message, FCommonData) then
@@ -1297,7 +1311,7 @@ begin
       Canvas.Pen.Color := clWindowFrame;
       Canvas.Brush.Color := clBtnFace;
       if Style = bsSplitButton then
-        R.Right := R.Right - DropWidth + 2;
+        R.Right := R.Right - ScaledDropWidth + 2;
 
       DrawFocusRect(Canvas.Handle, R);
     end;
@@ -1345,7 +1359,7 @@ begin
       Canvas.Pen.Color := clWindowFrame;
       Canvas.Brush.Color := clBtnFace;
       if Style = bsSplitButton then
-        R.Right := R.Right - DropWidth + 2;
+        R.Right := R.Right - ScaledDropWidth + 2;
 
       DrawFocusRect(Canvas.Handle, R);
     end;
@@ -1355,9 +1369,9 @@ begin
   if Style = bsSplitButton then begin
     Canvas.Pen.Color := clWindowFrame;
     Canvas.Pen.Width := 1;
-    Canvas.MoveTo(Width - DropWidth + 1, 4);
-    Canvas.LineTo(Width - DropWidth + 1, Height - 4);
-    DrawColorArrow(Canvas, Font.Color, Rect(Width - DropWidth, 0, Width, Height), asBottom);
+    Canvas.MoveTo(Width - ScaledDropWidth + 1, 4);
+    Canvas.LineTo(Width - ScaledDropWidth + 1, Height - 4);
+    DrawColorArrow(Canvas, Font.Color, Rect(Width - ScaledDropWidth, 0, Width, Height), asBottom);
   end;
   Canvas.Handle := 0;
   Canvas.Free;

@@ -158,7 +158,6 @@ type
     LMDSpeedButton12: TsButton;
     sPanel1: TsPanel;
     sButton2: TsButton;
-    grExcelCross: TAdvGridExcelIO;
     Button1: TsButton;
     rpt: TppReport;
     ppParameterList1: TppParameterList;
@@ -209,6 +208,7 @@ type
     sLabel1: TsLabel;
     labLocations: TsLabel;
     labLocationsList: TsLabel;
+    grExcelCross: TAdvGridExcelIO;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure sButton1Click(Sender: TObject);
@@ -251,7 +251,7 @@ uses
   , uAppGlobal
   , hData
   , uDImages
-  , uMain;
+  , uMain, uSQLUtils;
 
 
 procedure TfrmHouseKeeping.FormDestroy(Sender: TObject);

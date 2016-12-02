@@ -41,6 +41,7 @@ type
     procedure Reset; override;
   public
     constructor Create(AOwner: TComponent); override;
+    procedure CreateWnd; override;
     destructor Destroy; override;
     property Field: TField read GetField;
   published
@@ -143,7 +144,6 @@ end;
 constructor TsDBDateEdit.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
-  ControlStyle := ControlStyle + [csReplicatable];
   FDataLink := TFieldDataLink.Create;
   FDataLink.Control := Self;
   FDataLink.OnDataChange := DataChange;
@@ -151,6 +151,14 @@ begin
   FDataLink.OnUpdateData := UpdateData;
   OnAcceptDate := AfterPopup;
   UpdateMask;
+  ControlStyle := ControlStyle + [csReplicatable];
+end;
+
+
+procedure TsDBDateEdit.CreateWnd;
+begin
+  inherited;
+  Button.ControlStyle := Button.ControlStyle + [csReplicatable];
 end;
 
 
@@ -158,7 +166,7 @@ procedure TsDBDateEdit.DataChange(Sender: TObject);
 begin
   if FDataLink.Field <> nil then begin
     EditMask := GetDateMask;
-    Self.Date := FDataLink.Field.AsDateTime;
+    Date := FDataLink.Field.AsDateTime;
   end
   else
     if csDesigning in ComponentState then begin

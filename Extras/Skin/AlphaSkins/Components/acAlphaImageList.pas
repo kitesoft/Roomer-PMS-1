@@ -1851,12 +1851,16 @@ begin
     CreateImgList;
 
   UpdateList(False);
-  i := DefaultManager.GetScale;
-  if i > 0 then begin
-    Width  := MulDiv(Width,  aScalePercents[i], aScalePercents[CurrentScale]);
-    Height := MulDiv(Height, aScalePercents[i], aScalePercents[CurrentScale]);
-    CurrentScale := i;
-  end;
+  if DefaultManager <> nil then begin
+    i := DefaultManager.GetScale;
+    if i > 0 then begin
+      Width  := MulDiv(Width,  aScalePercents[i], aScalePercents[CurrentScale]);
+      Height := MulDiv(Height, aScalePercents[i], aScalePercents[CurrentScale]);
+      CurrentScale := i;
+    end;
+  end
+  else
+    CurrentScale := 0;
 end;
 
 

@@ -878,7 +878,7 @@ begin
       CI.FillColor := DefaultManager.GetGlobalColor;
       CI.Ready := False;
       CI.Bmp := nil;
-      PaintItem(i, s_Button, CI, True, State, Rect(0, 0, TmpBmp.Width, TmpBmp.Height), MkPoint, TmpBmp, DefaultManager);
+      PaintItem(i, CI, True, State, Rect(0, 0, TmpBmp.Width, TmpBmp.Height), MkPoint, TmpBmp, DefaultManager);
       ACanvas.Font.Color := DefaultManager.gd[i].Props[integer(State <> 0)].FontColor.Color;
       if ACaption <> '' then begin
         TmpBmp.Canvas.Font.Color := ACanvas.Font.Color;
@@ -918,7 +918,7 @@ begin
       CI.FillColor := DefaultManager.GetGlobalColor;
       CI.Ready := False;
       CI.Bmp := nil;
-      PaintItem(i, s_ToolButton, CI, True, State, Rect(0, 0, TmpBmp.Width, TmpBmp.Height), MkPoint, TmpBmp, DefaultManager);
+      PaintItem(i, CI, True, State, Rect(0, 0, TmpBmp.Width, TmpBmp.Height), MkPoint, TmpBmp, DefaultManager);
       BitBlt(ACanvas.Handle, R.Left, R.Top, TmpBmp.Width, TmpBmp.Height, TmpBmp.Canvas.Handle, 0, 0, SRCCOPY);
       FreeAndNil(TmpBmp);
     end;
@@ -1026,7 +1026,7 @@ begin
       else State := 0
     end;
     if DefaultManager.IsValidSkinIndex(i) then
-      PaintItem(i, sSect, CI, True, State, Rect(0, 0, TmpBmp.Width, TmpBmp.Height), MkPoint, TmpBmp, DefaultManager)
+      PaintItem(i, CI, True, State, Rect(0, 0, TmpBmp.Width, TmpBmp.Height), MkPoint, TmpBmp, DefaultManager)
     else
       FillDC(TmpBmp.Canvas.Handle, Rect(0, 0, TmpBmp.Width, TmpBmp.Height), CI.FillColor);
 
@@ -1244,7 +1244,7 @@ begin
       TmpBmp := CreateBmp32(R);
       BitBlt(TmpBmp.Canvas.Handle, 0, 0, TmpBmp.Width, TmpBmp.Height, ACanvas.Handle, R.Left, R.Top, SRCCOPY);
       CI := MakeCacheInfo(TmpBmp);
-      PaintItem(i, sSection, CI, True, State, Rect(0, 0, TmpBmp.Width, TmpBmp.Height), MkPoint, TmpBmp, DefManager);
+      PaintItem(i, CI, True, State, Rect(0, 0, TmpBmp.Width, TmpBmp.Height), MkPoint, TmpBmp, DefManager);
       DrawArrow(TmpBmp, DefManager.gd[i].Props[integer(State <> 0)].FontColor.Color);
       BitBlt(aCanvas.Handle, R.Left, R.Top, TmpBmp.Width, TmpBmp.Height, TmpBmp.Canvas.Handle, 0, 0, SRCCOPY);
       FreeAndNil(TmpBmp);
@@ -1622,7 +1622,7 @@ begin
       CI.FillColor := DefaultManager.GetGlobalColor;
       CI.Ready := False;
       CI.Bmp := nil;
-      PaintItem(i, s_Button, CI, True, 0, Rect(0, 0, TmpBmp.Width, TmpBmp.Height), MkPoint, TmpBmp, DefaultManager);
+      PaintItem(i, CI, True, 0, Rect(0, 0, TmpBmp.Width, TmpBmp.Height), MkPoint, TmpBmp, DefaultManager);
       BitBlt(ACanvas.Handle, ARect.Left, ARect.Top, TmpBmp.Width, TmpBmp.Height, TmpBmp.Canvas.Handle, 0, 0, SRCCOPY);
       FreeAndNil(TmpBmp);
     end;
@@ -1647,7 +1647,7 @@ begin
       TmpBmp := CreateBmp32(ARect);
       BGBmp := CreateBmp32(ARect);
       BitBlt(BgBmp.Canvas.Handle, 0, 0, TmpBmp.Width, TmpBmp.Height, ACanvas.Handle, ARect.Left, ARect.Top, SRCCOPY);
-      PaintItem(i, s_Button, MakeCacheInfo(BgBmp), True, 0, Rect(0, 0, TmpBmp.Width, TmpBmp.Height), MkPoint, TmpBmp, DefaultManager);
+      PaintItem(i, MakeCacheInfo(BgBmp), True, 0, Rect(0, 0, TmpBmp.Width, TmpBmp.Height), MkPoint, TmpBmp, DefaultManager);
       BitBlt(ACanvas.Handle, ARect.Left, ARect.Top, TmpBmp.Width, TmpBmp.Height, TmpBmp.Canvas.Handle, 0, 0, SRCCOPY);
       FreeAndNil(TmpBmp);
       FreeAndNil(BgBmp);
@@ -1699,12 +1699,12 @@ begin
     if AIsNextButton then begin
       Ndx := DefaultManager.GetSkinIndex(s_TabLeft);
       if Ndx < 0 then DefaultManager.GetSkinIndex(s_Button);
-      if Ndx >= 0 then PaintItem(Ndx, s_TabLeft, MakeCacheInfo(cBmp), True, GetState[AState], Rect(0, 0, TmpBmp.Width, TmpBmp.Height), MkPoint, TmpBmp, DefaultManager) // Transparency is not needed
+      if Ndx >= 0 then PaintItem(Ndx, MakeCacheInfo(cBmp), True, GetState[AState], Rect(0, 0, TmpBmp.Width, TmpBmp.Height), MkPoint, TmpBmp, DefaultManager) // Transparency is not needed
     end
     else begin
       Ndx := DefaultManager.GetSkinIndex(s_TabRight);
       if Ndx < 0 then DefaultManager.GetSkinIndex(s_Button);
-      if Ndx >= 0 then PaintItem(Ndx, s_TabRight, MakeCacheInfo(cBmp), True, GetState[AState], Rect(0, 0, TmpBmp.Width, TmpBmp.Height), MkPoint, TmpBmp, DefaultManager) // Transparency is not needed
+      if Ndx >= 0 then PaintItem(Ndx, MakeCacheInfo(cBmp), True, GetState[AState], Rect(0, 0, TmpBmp.Width, TmpBmp.Height), MkPoint, TmpBmp, DefaultManager) // Transparency is not needed
     end;
     cBmp.Free;
 
@@ -1812,13 +1812,13 @@ var
         Bmp.Width := w + BtnSize;
         if APart = sbpPageUp then
           with Scrolls[asLeft] do begin
-            PaintItemFast(SkinIndex, MaskIndex, BGIndex[0], BGIndex[1], '', CI, True,
+            PaintItemFast(SkinIndex, MaskIndex, BGIndex[0], BGIndex[1], CI, True,
                           State, Rect(0, 0, Bmp.Width, h), MkPoint, Bmp, DefaultManager);
             BitBlt(NewBmp.Canvas.Handle, 0, 0, w, h, Bmp.Canvas.Handle, BtnSize, 0, SRCCOPY);
           end
         else
           with Scrolls[asRight] do begin
-            PaintItemFast(SkinIndex, MaskIndex, BGIndex[0], BGIndex[1], '', CI, True,
+            PaintItemFast(SkinIndex, MaskIndex, BGIndex[0], BGIndex[1], CI, True,
                           State, Rect(0, 0, Bmp.Width, NewBmp.Height), MkPoint, Bmp, DefaultManager);
             BitBlt(NewBmp.Canvas.Handle, 0, 0, w, h, Bmp.Canvas.Handle, 0, 0, SRCCOPY);
           end;
@@ -1827,13 +1827,13 @@ var
         Bmp.Height := h + BtnSize;
         if APart = sbpPageUp then
           with Scrolls[asTop] do begin
-            PaintItemFast(SkinIndex, MaskIndex, BGIndex[0], BGIndex[1], '', CI, True,
+            PaintItemFast(SkinIndex, MaskIndex, BGIndex[0], BGIndex[1], CI, True,
                           State, Rect(0, 0, w, Bmp.Height), MkPoint, Bmp, DefaultManager);
             BitBlt(NewBmp.Canvas.Handle, 0, 0, w, h, Bmp.Canvas.Handle, 0, BtnSize, SRCCOPY);
           end
         else
           with Scrolls[asBottom] do begin
-            PaintItemFast(SkinIndex, MaskIndex, BGIndex[0], BGIndex[1], '', CI, True,
+            PaintItemFast(SkinIndex, MaskIndex, BGIndex[0], BGIndex[1], CI, True,
                           State, Rect(0, 0, w, Bmp.Height), MkPoint, Bmp, DefaultManager);
             BitBlt(NewBmp.Canvas.Handle, 0, 0, w, h, Bmp.Canvas.Handle, 0, 0, SRCCOPY);
           end;
@@ -1857,7 +1857,7 @@ begin
           CI := MakeCacheInfo(BGBmp);
           CI.X := 30;
           with Sliders[False] do begin
-            PaintItemFast(SkinIndex, MaskIndex, BGIndex[0], BGIndex[1], SkinSection,
+            PaintItemFast(SkinIndex, MaskIndex, BGIndex[0], BGIndex[1],
                           CI, True, State, Rect(0, 0, TmpBmp.Width, TmpBmp.Height), MkPoint, TmpBmp, DefaultManager);
             FreeAndNil(BGBmp);
             PaintGlyph(GlyphIndex);
@@ -1872,7 +1872,7 @@ begin
             if DefaultManager.gd[SkinIndex].ReservedBoolean and (MaskIndex >= 0) then
               TmpBmp.Width := math.max(GetSystemMetrics(SM_CXHSCROLL), WidthOfImage(DefaultManager.ma[MaskIndex]));
 
-            PaintItemFast(SkinIndex, MaskIndex, BGIndex[0], BGIndex[1], SkinSection,
+            PaintItemFast(SkinIndex, MaskIndex, BGIndex[0], BGIndex[1],
                           CI, True, State, Rect(0, 0, TmpBmp.Width, TmpBmp.Height), MkPoint, TmpBmp, DefaultManager);
             FreeAndNil(BGBmp);
             PaintArrow(asLeft);
@@ -1887,7 +1887,7 @@ begin
             if DefaultManager.gd[SkinIndex].ReservedBoolean and (MaskIndex >= 0) then
               TmpBmp.Width := math.max(GetSystemMetrics(SM_CXHSCROLL), WidthOfImage(DefaultManager.ma[MaskIndex]));
 
-            PaintItemFast(SkinIndex, MaskIndex, BGIndex[0], BGIndex[1], SkinSection,
+            PaintItemFast(SkinIndex, MaskIndex, BGIndex[0], BGIndex[1],
                           CI, True, State, Rect(0, 0, TmpBmp.Width, TmpBmp.Height), MkPoint, TmpBmp, DefaultManager);
             FreeAndNil(BGBmp);
             BitBlt(TmpBmp.Canvas.Handle, 0, 0, WidthOf(R), HeightOf(R), TmpBmp.Canvas.Handle, TmpBmp.Width - WidthOf(R), 0, SRCCOPY);
@@ -1907,7 +1907,7 @@ begin
           CI := MakeCacheInfo(BGBmp);
           CI.Y := 30;
           with Sliders[True] do begin
-            PaintItemFast(SkinIndex, MaskIndex, BGIndex[0], BGIndex[1], SkinSection,
+            PaintItemFast(SkinIndex, MaskIndex, BGIndex[0], BGIndex[1],
                           CI, True, State, Rect(0, 0, TmpBmp.Width, TmpBmp.Height), MkPoint, TmpBmp, DefaultManager);
             FreeAndNil(BGBmp);
             PaintGlyph(GlyphIndex);
@@ -1922,7 +1922,7 @@ begin
             if DefaultManager.gd[SkinIndex].ReservedBoolean and (MaskIndex >= 0) then
               TmpBmp.Height := math.max(GetSystemMetrics(SM_CXHSCROLL), HeightOfImage(DefaultManager.ma[MaskIndex]));
 
-            PaintItemFast(SkinIndex, MaskIndex, BGIndex[0], BGIndex[1], SkinSection,
+            PaintItemFast(SkinIndex, MaskIndex, BGIndex[0], BGIndex[1],
                           CI, True, State, Rect(0, 0, TmpBmp.Width, TmpBmp.Height), MkPoint, TmpBmp, DefaultManager);
             FreeAndNil(BGBmp);
             PaintArrow(asTop);
@@ -1937,7 +1937,7 @@ begin
             if DefaultManager.gd[SkinIndex].ReservedBoolean and (MaskIndex >= 0) then
               TmpBmp.Height := math.max(GetSystemMetrics(SM_CXHSCROLL), HeightOfImage(DefaultManager.ma[MaskIndex]));
 
-            PaintItemFast(SkinIndex, MaskIndex, BGIndex[0], BGIndex[1], SkinSection,
+            PaintItemFast(SkinIndex, MaskIndex, BGIndex[0], BGIndex[1],
                           CI, True, State, Rect(0, 0, TmpBmp.Width, TmpBmp.Height), MkPoint, TmpBmp, DefaultManager);
             FreeAndNil(BGBmp);
             BitBlt(TmpBmp.Canvas.Handle, 0, 0, WidthOf(R), HeightOf(R), TmpBmp.Canvas.Handle, 0, TmpBmp.Height - HeightOf(R), SRCCOPY);
@@ -2056,7 +2056,7 @@ begin
       if State <> 2 then
         dec(R.Bottom);
 
-      PaintItem(i, s, CI, True, State, R, MkPoint, ACanvas.Handle, DefaultManager);
+      PaintItem(i, CI, True, State, R, MkPoint, ACanvas.Handle, DefaultManager);
       FreeAndNil(Bmp);
     end;
     ACanvas.Font.Assign(AFont);
@@ -2092,7 +2092,7 @@ begin
       i := DefaultManager.GetSkinIndex(s);
       if DefaultManager.IsValidSkinIndex(i) then begin
         Bmp := CreateBmp32(WidthOf(R), 15);
-        PaintItem(i, s, CI, False, 0, Rect(0, 0, Bmp.Width, Bmp.Height), MkPoint, Bmp, DefaultManager);
+        PaintItem(i, CI, False, 0, Rect(0, 0, Bmp.Width, Bmp.Height), MkPoint, Bmp, DefaultManager);
         BitBlt(ACanvas.Handle, R.Left, R.Top, Bmp.Width, 2, Bmp.Canvas.Handle, 0, 0, SRCCOPY);
         FreeAndNil(Bmp);
       end
@@ -2103,7 +2103,7 @@ begin
       s := s + sTabPositions[tpLeft];
       i := DefaultManager.GetSkinIndex(s);
       if DefaultManager.IsValidSkinIndex(i) then
-        PaintItem(i, s, CI, False, 0, R, MkPoint, ACanvas.Handle, DefaultManager)
+        PaintItem(i, CI, False, 0, R, MkPoint, ACanvas.Handle, DefaultManager)
       else
         FillDC(ACanvas.Handle, R, DefaultManager.GetGlobalColor);
     end;

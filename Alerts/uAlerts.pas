@@ -83,7 +83,7 @@ procedure ShowAlertsForReservation(Reservation, RoomReservation : Integer; Alert
 
 implementation
 
-uses uD, hData, _Glob, Dialogs, uFrmAlertDialog;
+uses uD, hData, _Glob, Dialogs, uFrmAlertDialog, uSQLUtils;
 
 function CreateAlertsForRoomReservation(Reservation: Integer; RoomReservation: Integer; AlertType : TAlertType) : TAlertList;
 begin

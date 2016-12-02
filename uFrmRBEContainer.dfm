@@ -53,8 +53,6 @@ object FrmRBEContainer: TFrmRBEContainer
         SkinData.SkinSection = 'PAGECONTROL'
         object sTabSheet1: TsTabSheet
           Caption = 'Rates & Availability'
-          SkinData.CustomColor = False
-          SkinData.CustomFont = False
           ExplicitLeft = 0
           ExplicitTop = 0
           ExplicitWidth = 0
@@ -108,8 +106,6 @@ object FrmRBEContainer: TFrmRBEContainer
         end
         object sTabSheet2: TsTabSheet
           Caption = 'Rates'
-          SkinData.CustomColor = False
-          SkinData.CustomFont = False
           ExplicitLeft = 0
           ExplicitTop = 0
           ExplicitWidth = 0
@@ -161,8 +157,10 @@ object FrmRBEContainer: TFrmRBEContainer
         end
         object sTabSheet3: TsTabSheet
           Caption = 'Tables'
-          SkinData.CustomColor = False
-          SkinData.CustomFont = False
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object sLabelFX3: TsLabelFX
             Left = 1
             Top = 114
@@ -181,7 +179,7 @@ object FrmRBEContainer: TFrmRBEContainer
           object sLabelFX2: TsLabelFX
             Left = 0
             Top = 0
-            Width = 148
+            Width = 53
             Height = 25
             Align = alTop
             Alignment = taCenter
@@ -195,9 +193,6 @@ object FrmRBEContainer: TFrmRBEContainer
             Angle = 0
             Shadow.OffsetKeeper.LeftTop = -1
             Shadow.OffsetKeeper.RightBottom = 3
-            ExplicitLeft = -1
-            ExplicitTop = -1
-            ExplicitWidth = 53
           end
           object sLabelFX4: TsLabelFX
             Left = 1
@@ -291,8 +286,6 @@ object FrmRBEContainer: TFrmRBEContainer
         end
         object sTabSheet4: TsTabSheet
           Caption = 'Templates'
-          SkinData.CustomColor = False
-          SkinData.CustomFont = False
           object sLabelFX6: TsLabelFX
             Left = 3
             Top = 114
@@ -325,8 +318,6 @@ object FrmRBEContainer: TFrmRBEContainer
             Angle = 0
             Shadow.OffsetKeeper.LeftTop = -1
             Shadow.OffsetKeeper.RightBottom = 3
-            ExplicitLeft = -1
-            ExplicitTop = -1
             ExplicitWidth = 82
           end
           object btnEmailTemplates: TsButton
@@ -343,12 +334,14 @@ object FrmRBEContainer: TFrmRBEContainer
         end
         object sTabSheet5: TsTabSheet
           Caption = 'Settings'
-          SkinData.CustomColor = False
-          SkinData.CustomFont = False
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object sLabelFX12: TsLabelFX
             Left = 0
             Top = 0
-            Width = 148
+            Width = 64
             Height = 25
             Align = alTop
             Alignment = taCenter
@@ -362,9 +355,6 @@ object FrmRBEContainer: TFrmRBEContainer
             Angle = 0
             Shadow.OffsetKeeper.LeftTop = -1
             Shadow.OffsetKeeper.RightBottom = 3
-            ExplicitLeft = -1
-            ExplicitTop = -1
-            ExplicitWidth = 64
           end
           object sLabelFX13: TsLabelFX
             Left = 3
@@ -395,8 +385,6 @@ object FrmRBEContainer: TFrmRBEContainer
         end
         object sTabSheet6: TsTabSheet
           Caption = 'Reports'
-          SkinData.CustomColor = False
-          SkinData.CustomFont = False
           ExplicitLeft = 0
           ExplicitTop = 0
           ExplicitWidth = 0
@@ -497,8 +485,6 @@ object FrmRBEContainer: TFrmRBEContainer
           Angle = 0
           Shadow.OffsetKeeper.LeftTop = -1
           Shadow.OffsetKeeper.RightBottom = 3
-          ExplicitLeft = -1
-          ExplicitTop = 24
           ExplicitWidth = 10
         end
         object tabWindows: TsPageControl

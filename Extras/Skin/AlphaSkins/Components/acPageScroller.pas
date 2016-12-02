@@ -283,7 +283,7 @@ begin
   case Message.Msg of
     SM_ALPHACMD: 
       case Message.WParamHi of
-{
+
         AC_GETBG: begin
           inherited;
           if Orientation = soHorizontal then
@@ -293,7 +293,7 @@ begin
 
           Exit;
         end;
-}
+
         AC_MOUSELEAVE:
           DoMouseLeave;
 
@@ -986,8 +986,9 @@ begin
       C := 0;
       if BtnNdx >= 0 then begin
         GetBGInfo(@BGInfo, Self);
-        inc(BGInfo.Offset.X, R.Left);
-        inc(BGInfo.Offset.Y, R.Top);
+        BGInfo.Offset := MkPoint;
+//        inc(BGInfo.Offset.X, R.Left);
+//        inc(BGInfo.Offset.Y, R.Top);
         CI := BGInfoToCI(@BGInfo);
 //        CI := MakeCacheInfo(SkinData.FCacheBmp, R.Left, R.Top);
         State := BtnState(Btn);
@@ -995,7 +996,7 @@ begin
           State := 0;
           b := True;
         end;
-        PaintItem(BtnNdx, CI, True, State, MkRect(Bmp), MkPoint, Bmp);
+        PaintItem(BtnNdx, CI, True, State, MkRect(Bmp), R.TopLeft{ MkPoint}, Bmp);
         if (State = 0) and (SkinData.SkinManager.gd[BtnNdx].Props[0].Transparency = 100) then
           iNdx := GetFontIndex(Self, SkinData.SkinIndex, SkinData.SkinManager)
         else
@@ -1005,8 +1006,10 @@ begin
           C := SkinData.SkinManager.gd[iNdx].Props[min(State, ac_MaxPropsIndex)].Fontcolor.Color
       end;
       DrawColorArrow(Bmp, C, MkRect(Bmp), BtnSizes[Orientation <> soHorizontal, Btn]);
-      if b then // If disabled
-        BlendTransRectangle(Bmp, 0, 0, CI.Bmp, R, DefBlendDisabled);
+      if b and CI.Ready then // If disabled
+        BlendTransRectangle(Bmp, 0, 0, CI.Bmp, R, DefBlendDisabled)
+      else
+        FadeBmp(Bmp, R, DefBlendDisabled, TsColor(CI.FillColor), 0, 0);
 
       BitBlt(DC, R.Left, R.Top, Bmp.Width, Bmp.Height, Bmp.Canvas.Handle, 0, 0, SRCCOPY);
       Bmp.Free;

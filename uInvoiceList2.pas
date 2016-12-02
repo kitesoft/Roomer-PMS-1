@@ -1,4 +1,4 @@
-unit uInvoiceList2;
+ï»¿unit uInvoiceList2;
 
 interface
 
@@ -90,9 +90,6 @@ uses
 type
   TfrmInvoiceList2 = class(TForm)
     LMDSimplePanel1: TsPanel;
-    btnReservation: TsButton;
-    LMDSpeedButton1: TsButton;
-    LMDButton1: TsButton;
     LMDGroupBox1: TsGroupBox;
     dtFrom: TsDateEdit;
     dtTo: TsDateEdit;
@@ -106,15 +103,10 @@ type
     LMDSpeedButton3: TsButton;
     rbtLast: TsRadioButton;
     cbxTxtType: TsComboBox;
-    LMDSpeedButton5: TsButton;
-    btnViewInvoice: TsButton;
-    LMDSpeedButton6: TsButton;
-    LMDSpeedButton7: TsButton;
     edtLast: TsSpinEdit;
     edtInvoiceFrom: TsSpinEdit;
     edtInvoiceTo: TsSpinEdit;
     FormStore: TcxPropertiesStore;
-    sButton1: TsButton;
     sPanel1: TsPanel;
     mDS: TDataSource;
     m22_: TkbmMemTable;
@@ -148,13 +140,20 @@ type
     tvInvoiceHeadReservation: TcxGridDBBandedColumn;
     tvInvoiceHeadRoomReservation: TcxGridDBBandedColumn;
     lvInvoiceHead: TcxGridLevel;
-    sButton2: TsButton;
     cLabFilter: TsLabel;
     edFilter: TsEdit;
     btnClear: TsSpeedButton;
     btnExport: TsButton;
     tvInvoiceHeadRowSelected: TcxGridDBBandedColumn;
     tvInvoiceHeadexternalInvoiceId: TcxGridDBBandedColumn;
+    pnlButtons: TsPanel;
+    LMDSpeedButton6: TsButton;
+    btnReservation: TsButton;
+    LMDSpeedButton1: TsButton;
+    btnViewInvoice: TsButton;
+    sButton1: TsButton;
+    sButton2: TsButton;
+    LMDButton1: TsButton;
     procedure rbtDatesClick(Sender : TObject);
     procedure FormCreate(Sender : TObject);
     procedure cbxPeriodChange(Sender : TObject);
@@ -164,13 +163,11 @@ type
     procedure dtToChange(Sender : TObject);
     procedure LMDSpeedButton3Click(Sender : TObject);
     procedure FormShow(Sender : TObject);
-    procedure LMDSpeedButton5Click(Sender : TObject);
     procedure btnReservationClick(Sender : TObject);
     procedure LMDSpeedButton1Click(Sender : TObject);
     procedure LMDButton1Click(Sender : TObject);
     procedure btnViewInvoiceClick(Sender : TObject);
     procedure LMDSpeedButton6Click(Sender : TObject);
-    procedure LMDSpeedButton7Click(Sender : TObject);
     procedure tvInvDblClick(Sender: TObject);
     procedure edLastCountChange(Sender: TObject);
     procedure edtInvoiceFromChange(Sender: TObject);
@@ -245,7 +242,7 @@ uses
   , PrjConst
   , uDImages
   , uFrmPostInvoices
-  ;
+  , uSQLUtils;
 
 {$R *.dfm}
 (*
@@ -320,26 +317,26 @@ begin
   zInvoiceTo := 0;
   zLast := 0;
   zText := '';
-  zTextType := 0; // 0= Reikningsnúmer
+  zTextType := 0; // 0= Reikningsnï¿½mer
   // 1= Kennitala
-  // 2= Nafn Gests eða Fyrirtækis
-  // 3= Nafn á Reikningi
-  // 4= Bókunn númer
-  // 5= Herbergjabókunn
+  // 2= Nafn Gests eï¿½a Fyrirtï¿½kis
+  // 3= Nafn ï¿½ Reikningi
+  // 4= Bï¿½kunn nï¿½mer
+  // 5= Herbergjabï¿½kunn
 
   zPeriodIndex := 1;
-  // 0=Í dag
-  // 1=í gær
-  // 2=Síðustu 3 daga
-  // 3=Síðustu 5 daga
-  // 4=Síðustu 10 daga
-  // 5=í þessari viku
-  // 6=Í síðustu viku
-  // 7=Í þessum mánuði
-  // 8=í síðasta mánuði
-  // 9=Á þessu ári
-  // 10=Á síðasta ári
-  // 11=Frá upphafi
+  // 0=ï¿½ dag
+  // 1=ï¿½ gï¿½r
+  // 2=Sï¿½ï¿½ustu 3 daga
+  // 3=Sï¿½ï¿½ustu 5 daga
+  // 4=Sï¿½ï¿½ustu 10 daga
+  // 5=ï¿½ ï¿½essari viku
+  // 6=ï¿½ sï¿½ï¿½ustu viku
+  // 7=ï¿½ ï¿½essum mï¿½nuï¿½i
+  // 8=ï¿½ sï¿½ï¿½asta mï¿½nuï¿½i
+  // 9=ï¿½ ï¿½essu ï¿½ri
+  // 10=ï¿½ sï¿½ï¿½asta ï¿½ri
+  // 11=Frï¿½ upphafi
 
   edtLast.Value := 50;
   zLast := edtLast.Value;
@@ -387,41 +384,41 @@ begin
   case zPeriodIndex of
     0 :
       begin
-        // - ekkert valið -
+        // - ekkert valiï¿½ -
       end;
     1 :
       begin
-        // Í dag
+        // ï¿½ dag
         dtTo.Date := Date;
         dtFrom.Date := Date;
       end;
     2 :
       begin
-        // í gær
+        // ï¿½ gï¿½r
         dtTo.Date := Date - 1;
         dtFrom.Date := Date - 1;
       end;
     3 :
       begin
-        // Síðustu 3 daga
+        // Sï¿½ï¿½ustu 3 daga
         dtTo.Date := Date;
         dtFrom.Date := Date - 4;
       end;
     4 :
       begin
-        // Síðustu 10 daga
+        // Sï¿½ï¿½ustu 10 daga
         dtTo.Date := Date;
         dtFrom.Date := Date - 9;
       end;
     5 :
       begin
-        // í þessari viku
+        // ï¿½ ï¿½essari viku
         dtTo.Date := Date;
         dtFrom.Date := Date - ThisWeekDay + 1;
       end;
     6 :
       begin
-        // Í síðustu viku
+        // ï¿½ sï¿½ï¿½ustu viku
         dtTo.Date := (Date - ThisWeekDay);
         dtFrom.Date := (Date - ThisWeekDay) - 6;
       end;
@@ -432,7 +429,7 @@ begin
       end;
     8 :
       begin
-        // í síðasta mánuði
+        // ï¿½ sï¿½ï¿½asta mï¿½nuï¿½i
         if ThisMonth = 1 then
           LastMonth := 12
         else
@@ -448,7 +445,7 @@ begin
       end;
     10 :
       begin
-        // Á síðasta ári
+        // ï¿½ sï¿½ï¿½asta ï¿½ri
         dtFrom.Date := encodeDate(ThisYear - 1, 1, 1);
         dtTo.Date := encodeDate(ThisYear - 1, 12, 31)
       end;
@@ -567,7 +564,8 @@ begin
     s := s + '    , invoiceheads.TotalStayTaxNights Taxunits'#10;
     s := s + '    , (if(invoiceheads.Splitnumber=1,'+_db('CREDIT')+','+_db('DEBIT')+')) AS CreditType '#10;
     s := s + '    , (invoiceheads.Total div invoiceheads.ihCurrencyRate) AS CurrencyAmount '#10;
-    s := s + '    , (if(invoiceheads.Reservation = 0 and invoiceheads.Roomreservation=0,'+_db('Cash')+',if(invoiceheads.Reservation > 0 and invoiceheads.Roomreservation=0,'+_db('Group')+','+_db('Room')+'))) AS Invoicetype '#10;
+    s := s + '    , (if(invoiceheads.Reservation = 0 and invoiceheads.Roomreservation=0,' + _db(GetTranslatedText('shUI_Reports_InvoiceTypeCash')) +
+                     ',if(invoiceheads.Reservation > 0 and invoiceheads.Roomreservation=0,'+ _db(GetTranslatedText('shUI_Reports_InvoiceTypeGroup')) + ',' + _db(GetTranslatedText('shUI_Reports_InvoiceTypeRoom')) + '))) AS Invoicetype '#10;
     s := s + '    , (IF(invoiceheads.CreditInvoice<>0,invoiceheads.CreditInvoice,if(invoiceheads.OriginalInvoice<>0,invoiceheads.OriginalInvoice,0))) AS Link'#10;
     s := s + '    , (SELECT surName FROM customers WHERE Customer = invoiceheads.Customer Limit 1) As CustomerName'#10;
     s := s + '     FROM '#10;
@@ -577,7 +575,7 @@ begin
 
     if rbtDates.checked then
     begin
-      s := s + '    AND ((invoiceheads.ihInvoiceDate >= ' + _DateToDBDate(zdtFrom, true) + ')  AND (invoiceheads.ihInvoiceDate <= ' + _DateToDBDate(zDTTo, true)
+      s := s + '    AND ((invoiceheads.ihInvoiceDate >= ' + _db(zdtFrom, true) + ')  AND (invoiceheads.ihInvoiceDate <= ' + _db(zDTTo, true)
         + ')) ';
     end;
 
@@ -598,15 +596,15 @@ begin
             s := s + '  AND (custPID=' + _db(edtFreeText.Text) + ') ';
           end;
         2 :
-          begin // Customer Númer;
+          begin // Customer Nï¿½mer;
             s := s + '  AND (Customer=' + _db(edtFreeText.Text) + ') ';
           end;
         3 :
-          begin // Nafn Gests eða Fyrirtækis;
+          begin // Nafn Gests eï¿½a Fyrirtï¿½kis;
             s := s + '  AND ((Name LIKE ' + _db('%' + edtFreeText.Text + '%') + ') OR (RoomGuest LIKE ' + _db('%' + edtFreeText.Text + '%') + ')) ';
           end;
         4 :
-          begin // Númer bókunnar;
+          begin // Nï¿½mer bï¿½kunnar;
             if _isInteger(edtFreeText.Text) then
             begin
               s := s + '  AND (Reservation=' + edtFreeText.Text + ') ';
@@ -617,7 +615,7 @@ begin
             end;
           end;
         5 :
-          begin // Númer herbergja bókunnar;
+          begin // Nï¿½mer herbergja bï¿½kunnar;
             if _isInteger(edtFreeText.Text) then
             begin
               s := s + '  AND (RoomReservation=' + edtFreeText.Text + ') ';
@@ -718,6 +716,7 @@ end;
 
 procedure TfrmInvoiceList2.FormShow(Sender : TObject);
 begin
+
   cbxPeriod.ItemIndex := 0;
   cbxTxtType.ItemIndex := 0;
   zLastInvoiceID := hdata.IVH_GetLastID();
@@ -799,14 +798,14 @@ begin
 AProperties := d.getCurrencyProperties(g.qNativeCurrency);
 end;
 
-procedure TfrmInvoiceList2.LMDSpeedButton5Click(Sender : TObject);
-var
-  InvoiceNumber : integer;
-begin
-  InvoiceNumber := m22_.fieldbyname('invoicenumber').AsInteger;
-  d.CreateMtFields;
-  d.InsertMTdata(InvoiceNumber, true, false,false);
-end;
+//procedure TfrmInvoiceList2.LMDSpeedButton5Click(Sender : TObject);
+//var
+//  InvoiceNumber : integer;
+//begin
+//  InvoiceNumber := m22_.fieldbyname('invoicenumber').AsInteger;
+//  d.CreateMtFields;
+//  d.InsertMTdata(InvoiceNumber, true, false,false);
+//end;
 
 procedure TfrmInvoiceList2.btnClearClick(Sender: TObject);
 begin
@@ -906,23 +905,23 @@ begin
   ShellExecute(Handle, 'OPEN', PChar(sFilename + '.xls'), nil, nil, sw_shownormal);
 end;
 
-procedure TfrmInvoiceList2.LMDSpeedButton7Click(Sender : TObject);
-var
-  InvoiceNumber : integer;
-  i : integer;
-begin
-  i := 0;
-  m22_.First;
-  while not m22_.Eof do
-  begin
-    inc(i);
-    InvoiceNumber := m22_.fieldbyname('invoicenumber').AsInteger;
-    d.CreateMtFields;
-    d.InsertMTdata(InvoiceNumber, true, true,false);
-    application.ProcessMessages;
-    m22_.Next;
-  end;
-end;
+//procedure TfrmInvoiceList2.LMDSpeedButton7Click(Sender : TObject);
+//var
+//  InvoiceNumber : integer;
+//  i : integer;
+//begin
+//  i := 0;
+//  m22_.First;
+//  while not m22_.Eof do
+//  begin
+//    inc(i);
+//    InvoiceNumber := m22_.fieldbyname('invoicenumber').AsInteger;
+//    d.CreateMtFields;
+//    d.InsertMTdata(InvoiceNumber, true, true,false);
+//    application.ProcessMessages;
+//    m22_.Next;
+//  end;
+//end;
 
 end.
 

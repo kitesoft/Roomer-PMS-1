@@ -536,6 +536,7 @@ type
     FClientRect: TRect;
     FrameColor: integer;
 
+    StdNCPaint,
     SingleLineEdit,
     CtrlListChanged: boolean;
 
@@ -549,6 +550,7 @@ type
     constructor Create(AHandle: hwnd; ASkinData: TsCommonData; ASkinManager: TsSkinManager; const SkinParams: TacSkinParams; Repaint: boolean = True); override;
     procedure acWndProc(var Message: TMessage); override;
     function HandleAlphaCmd(var Message: TMessage): boolean;
+    function NCContent: boolean;
     procedure SaveStdParams; override;
     procedure SetSkinParams; override;
     procedure RestoreStdParams; override;
@@ -3535,7 +3537,7 @@ end;
 procedure TacScrollWnd.acWndProc(var Message: TMessage);
 var
   i: integer;
-  M: TMEssage;
+  M: TMessage;
   ListSW: TacScrollWnd;
 begin
   case Message.Msg of
@@ -3685,7 +3687,7 @@ begin
             AC_ENDPARENTUPDATE: {if SkinData.FUpdating then ??? }begin
 {$IFNDEF ALITE}
   {$IFDEF D2006}
-              if SkinData.FOwnerObject is TsFrameAdapter then
+              if (SkinData.FOwnerObject is TsFrameAdapter) or (SkinData.FOwnerObject is TsSkinProvider) then
 {                if (csAligning in TsFrameAdapter(SkinData.FOwnerObject).Frame.ControlState) then} begin
                   Message.Result := CallPrevWndProc(CtrlHandle, Message.Msg, Message.WParam, Message.LParam);
                   Exit;
@@ -4001,7 +4003,7 @@ begin
 
     WM_NCPAINT:
       if IsWindowVisible(CtrlHandle) and not bPreventStyleChange then begin
-        if not InAnimationProcess then begin
+        if not InAnimationProcess and not StdNCPaint then begin
           InitCtrlData(CtrlHandle, ParentWnd, WndRect, ParentRect, WndSize, WndPos);
           if InUpdating(SkinData) then
             Exit;
@@ -4019,6 +4021,18 @@ begin
           end;
           SavedDC := SaveDC(DC);
           try
+            if NCContent then begin
+              StdNCPaint := True;
+              if cxLeftEdge > 0 then
+                SetWindowRgn(CtrlHandle, CreateRectRgn(2, 2, WndSize.cx - 2, WndSize.cy - 2), False);
+
+              Message.Result := CallPrevWndProc(CtrlHandle, Message.Msg, Message.WParam, Message.LParam);
+              if cxLeftEdge > 0 then
+                SetWindowRgn(CtrlHandle, 0, False);
+
+              StdNCPaint := False;
+            end;
+
             Message.Result := Ac_NCDraw(Self, Self.CtrlHandle, -1, DC);
             if (DC <> 0) and (SkinData <> nil) then begin
 //{$IFNDEF DELPHI7UP}
@@ -4055,7 +4069,7 @@ begin
       CtrlListChanged := True;
 
     WM_PARENTNOTIFY:
-      if Message.WParamLo in [WM_CREATE, WM_DESTROY] then
+//      if Message.WParamLo in [WM_CREATE, WM_DESTROY] then
         if (Message.WParamLo = WM_CREATE) and (srThirdParty in SkinData.SkinManager.SkinningRules) then
           CtrlListChanged := True;
 
@@ -4130,6 +4144,7 @@ begin
     NewWndProcInstance := nil;
     SkinManager := ASkinManager;
     Destroyed := False;
+    StdNCPaint := False;
     if ASkinData <> nil then
       SkinData := TsScrollWndData(ASkinData)
     else begin
@@ -4274,6 +4289,19 @@ begin
 
     else
       Result := CommonMessage(Message, SkinData);
+  end;
+end;
+
+
+function TacEditWnd.NCContent: boolean;
+var
+  cR: TRect;
+begin
+  if not (SkinData.FOwnerControl is TCustomEdit) or sBarHorz.fScrollVisible or sBarVert.fScrollVisible then
+    Result := False
+  else begin
+    GetClientRect(CtrlHandle, cR);
+    Result := ((WndSize.cx - 2 * cxLeftEdge) <> WidthOf(cR)) or ((WndSize.cy - 2 * cxLeftEdge) <> HeightOf(cR));
   end;
 end;
 
@@ -5982,30 +6010,17 @@ end;
 procedure TacGridEhWnd.acWndProc(var Message: TMessage);
 begin
 {$IFDEF LOGGED}
-//  AddToLog(Message);
+  AddToLog(Message);
 {$ENDIF}
   inherited;
   case Message.Msg of
+    WM_WINDOWPOSCHANGED:
+      if (Message.LParam <> 0) and (TWindowPos(Pointer(Message.LParam)^).Flags and SWP_FRAMECHANGED <> 0) then
+        AddToAdapter(TWinControl(SkinData.FOwnerControl));
+
     WM_PARENTNOTIFY:
       if (Message.WParamLo = WM_CREATE) and (srThirdParty in SkinData.SkinManager.SkinningRules) then
         AddToAdapter(TWinControl(SkinData.FOwnerControl));
-{
-    WM_SIZE: begin
-      for i := 0 to TWinControl(SkinData.FOwnerControl).ControlCount - 1 do begin
-        if TWinControl(SkinData.FOwnerControl).Controls[i] is TWinControl then begin
-          Panel := TWinControl(TWinControl(SkinData.FOwnerControl).Controls[i]);
-          AddToAdapter(Panel);
-          for j := 0 to Panel.ControlCount - 1 do
-            if (Panel.Controls[j] is TWinControl) and (Panel.Controls[j].Width <> 0) then begin
-              if Panel.Controls[j].Width = Panel.Controls[j].Height then begin
-                AddToAdapter(TWinControl(SkinData.FOwnerControl))
-              end
-              else
-                AddToAdapter(TWinControl(SkinData.FOwnerControl))
-            end;
-        end;
-      end;
-    end;}
   end;
 end;
 
@@ -6185,6 +6200,7 @@ begin
     if obj <> nil then
       TryChangeIntProp(obj, acColor, Palette[pcMainColor]);
   end;
+  AddToAdapter(TWinControl(SkinData.FOwnerControl));
 end;
 
 
@@ -7499,7 +7515,7 @@ begin
           RestoreStdParams;
         end;
         if (uxthemeLib <> 0) and (SkinData <> nil) then
-          if (SkinData.FOwnerObject is TsSkinProvider) then begin
+          if SkinData.FOwnerObject is TsSkinProvider then begin
             if TsSkinProvider(SkinData.FOwnerObject).DrawNonClientArea then
               Ac_SetWindowTheme(CtrlHandle, nil, nil);
           end
@@ -7915,6 +7931,8 @@ begin
 
     WM_SETTEXT:
       if IsWindowVisible(CtrlHandle) then begin
+        FinishTimer(SkinData.AnimTimer);
+        StopTimer(SkinData);
         SetRedraw(CtrlHandle, 0);
         inherited;
         SetRedraw(CtrlHandle, 1);
@@ -8947,6 +8965,7 @@ var
   C: TsColor;
   CI: TCacheInfo;
 begin
+  InitCtrlData(CtrlHandle, ParentWnd, WndRect, ParentRect, WndSize, WndPos);
   InitCacheBmp(SkinData);
   if not OwnerDraw then begin
     SkinData.FCacheBmp.Width  := WndSize.cx;
@@ -10263,7 +10282,7 @@ begin
     if (SkinData.FOwnerControl.Parent <> nil) and (csCreating in SkinData.FOwnerControl.Parent.ControlState) then
       Exit;
 
-    if not SkinData.Updating then begin
+    if not InUpdating(SkinData) then begin
       InitCtrlData(CtrlHandle, ParentWnd, WndRect, ParentRect, WndSize, WndPos);
       if aDC = 0 then
         DC := GetWindowDC(Panel.Handle)
@@ -10483,7 +10502,7 @@ var
   w: integer;
   ClRect: TRect;
 begin
-  if not InUpdating(SkinData) then begin
+  if IsWindowVisible(CtrlHandle) and not InUpdating(SkinData) then begin
     GetWindowRect(CtrlHandle, WndRect);
     GetClientRect(CtrlHandle, ClRect);
     WndSize := MkSize(WndRect);
@@ -10947,10 +10966,10 @@ var
     VertFont.lfPitchAndFamily := Default_Pitch;
     VertFont.lfQuality := Default_Quality;
     StrPCopy(VertFont.lfFaceName, Bmp.Canvas.Font.Name);
-    if Font.Name <> 'MS Sans Serif' then
+    if Font.Name <> s_MSSansSerif then
       StrPCopy(VertFont.lfFaceName, Font.Name)
     else
-      VertFont.lfFaceName := 'Arial';
+      VertFont.lfFaceName := s_Arial;
 
     Bmp.Canvas.Font.Handle := CreateFontIndirect(VertFont);
     Bmp.Canvas.Font.Color := SkinData.SkinManager.gd[TabIndex].Props[integer(State <> 0)].FontColor.Color;
@@ -11813,7 +11832,7 @@ begin
         if (Controls[i] is TToolButton) and (csDesigning in ComponentState) then
           Continue;
 
-        if (Controls[i] is TGraphicControl) and StdTransparency then
+        if (Controls[i] is TGraphicControl) and (SkinData.SkinManager <> nil) and SkinData.SkinManager.Options.StdImgTransparency then
           Continue;
 
         if not Controls[i].Visible or not RectIsVisible(DstRect, Controls[i].BoundsRect) then

@@ -29,7 +29,7 @@ uses
   uCreditPrompt in 'uCreditPrompt.pas' {frmCreditPrompt},
   uInvoiceList in 'uInvoiceList.pas' {frmInvoiceList},
   uDReportData in 'uDReportData.pas' {DReportData: TDataModule},
-  uD in 'uD.pas' {forceoffline: TDataModule},
+  uD in 'uD.pas' {D: TDataModule},
   uG in 'uG.pas',
   uConverts in 'uConverts.pas' {frmConverts},
   ufrmSelLang in 'ufrmSelLang.pas' {frmSelLang},
@@ -102,7 +102,7 @@ uses
   uFileDependencyManager in 'uFileDependencyManager.pas',
   uLocations2 in 'uLocations2.pas' {frmLocations},
   uRegistryServices in 'uRegistryServices.pas',
-  uUtils in 'uUtils.pas',
+  uUtils in 'RoomerUtils\uUtils.pas',
   uPersonContactType in 'uPersonContactType.pas' {frmPersonContactType},
   uSqlDefinitions in 'Extras\uSqlDefinitions.pas',
   uChannelManager in 'uChannelManager.pas' {frmChannelManager},
@@ -134,7 +134,7 @@ uses
   ufDownPayments in 'ufDownPayments.pas' {frmRptDownPayments},
   uAssignPayment in 'uAssignPayment.pas' {frmAssignPayment},
   uFrmResources in 'uFrmResources.pas' {FrmResources},
-  uFrmMessagesTemplates in 'uFrmMessagesTemplates.pas' {FrmMessagesTemplates},
+  uFrmMessagesTemplates in 'Embeddables\uFrmMessagesTemplates.pas' {FrmMessagesTemplates},
   uFrmNotepad in 'uFrmNotepad.pas' {FrmNotepad},
   uFrmGuestReviews in 'uFrmGuestReviews.pas' {Form6},
   uRptConfirms in 'uRptConfirms.pas' {frmrptConfirms},
@@ -192,7 +192,7 @@ uses
   uInvoice2015 in 'uInvoice2015.pas' {FrmInvoice2015},
   uActivityLogs in 'uActivityLogs.pas',
   uInvoiceContainer in 'uInvoiceContainer.pas',
-  XmlUtils in 'XmlUtils.pas',
+  XmlUtils in 'RoomerUtils\XmlUtils.pas',
   uInvoiceLineEdit in 'uInvoiceLineEdit.pas' {FrmInvoiceLineEdit},
   uFrmMergePortfolios in 'uFrmMergePortfolios.pas' {frmMergePortfolios},
   uStaffCommunication in 'uStaffCommunication.pas',
@@ -260,6 +260,13 @@ uses
   uMessageList in 'uMessageList.pas',
   uRoomerVersionInfo in 'Extras\uRoomerVersionInfo.pas',
   uCleaningNotesDefinitions in 'Definitions\uCleaningNotesDefinitions.pas',
+  uRoomerDialogForm in 'RoomerForm\uRoomerDialogForm.pas' {frmBaseRoomerDialogForm},
+  uSQLUtils in 'RoomerUtils\uSQLUtils.pas',
+  uStringUtils in 'RoomerVCLs\Source\uStringUtils.pas',
+  uInvoiceDefinitions in 'Definitions\uInvoiceDefinitions.pas',
+  uFraCountryPanel in 'Embeddables\uFraCountryPanel.pas' {fraCountryPanel: TFrame},
+  ufrmRoomPrices in 'ufrmRoomPrices.pas' {frmRoomPrices},
+  uEmbDateStatistics in 'Embeddables\uEmbDateStatistics.pas' {frmEmbDateStatistics};
   uCountryGroupsGrid in 'BaseData\uCountryGroupsGrid.pas';
 
 {$R *.RES}
@@ -271,6 +278,8 @@ begin
   Application.MainformOnTaskbar := True;
   Application.Initialize;
   Application.Title := 'ROOMER - Next Generation Hotel Management System';
+  // reduce number of times that TAction.OnUpdate events are called
+  Application.ActionUpdateDelay := 10;
 
   TSplashFormManager.Show;
 

@@ -803,8 +803,8 @@ begin
     PickPanel.Width := SelectedPanel.Width;
     PickPanel.Height := SelectedPanel.Height;
     PickPanel.Color := SelectedPanel.Brush.Color;
-    PickPanel.Left := p.x;
-    PickPanel.Top := p.y;
+    PickPanel.Left := p.x - Monitor.Left;
+    PickPanel.Top := p.y - Monitor.Top;
     PickPanel.Parent := PickForm;
     PickPanel.Visible := True;
 
@@ -912,7 +912,7 @@ end;
 
 procedure TsColorDialogForm.PickFormMouseDown(Sender: TObject;  Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
-  PickColor := Bmp.Canvas.Pixels[x, y];
+  PickColor := ColorToRGB(Bmp.Canvas.Pixels[x + 1, y - 2]);
   SetCurrentColor(PickColor);
   TForm(Sender).Close;
 end;
@@ -929,7 +929,7 @@ end;
 procedure TsColorDialogForm.PickFormMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
 begin
   if PickPanel <> nil then begin
-    PickColor := Bmp.Canvas.Pixels[x, y];
+    PickColor := ColorToRGB(Bmp.Canvas.Pixels[x + 1, y - 2]);
     PickPanel.Color := PickColor;
     PickPanel.Repaint;
   end;

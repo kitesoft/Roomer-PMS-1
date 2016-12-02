@@ -53,7 +53,7 @@ type
     /// <summary>
     ///   Return the lastest published fileversion of roomer.exe on the server
     /// </summary>
-    class function FileVersionOnServer: string; static;
+    class function FileVersionOnServer(var aVersion: string): boolean; static;
     /// <summary>
     ///   Returns version string containing 'Version ' + fileversion appended with ExtraBuild, and IsPreRelease or IsDebug options
     /// </summary>
@@ -76,7 +76,6 @@ uses
   , uFileDependencyManager
   , XMLUtils
   , IOUtils
-  , PrjConst
   ;
 
 { TRoomerVersionInfo }
@@ -103,13 +102,14 @@ begin
   Result := VersionData.FileVersion;
 end;
 
-class function TRoomerVersionInfo.FileVersionOnServer: string;
+class function TRoomerVersionInfo.FileVersionOnServer(var aVersion: string): boolean;
 var
   sTempName : String;
   XML: IXMLDOMDocument2;
   node: IXMLDOmNode;
 begin
-  Result := '<version not found>';
+  Result := false;
+  aVersion := '<version not found>';
   sTempName := TPath.Combine(TPath.GetTempPath, 'roomerversion.xml');
 
   try
@@ -126,7 +126,8 @@ begin
   begin
     if GetAttributeValue(node, 'filename', '') = 'Roomer.exe' then
     begin
-      result := GetAttributeValue(node, 'version', Result);
+      Result := true;
+      aVersion := GetAttributeValue(node, 'version', aVersion);
       Break;
     end;
     node := node.nextSibling;
@@ -228,12 +229,12 @@ end;
 
 class function TRoomerVersionInfo.ShortVersionString: string;
 begin
-  Result := GetTranslatedText('sh0070') + FileVersion;
+  Result := 'Version' + FileVersion; // GetTranslatedText('sh0070') + FileVersion;
 end;
 
 class function TRoomerVersionInfo.LongVersionString: string;
 begin
-  Result := Format('%s %s [%s]', [GetTranslatedText('sh0080'), FileVersion, ExtraBuild]);
+  Result := Format('Ver %s [%s]', [FileVersion, ExtraBuild]);
   if IsPreRelease then
     Result := Result + ' [pre-release]';
   if IsDebug then

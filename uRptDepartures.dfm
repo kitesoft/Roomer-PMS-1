@@ -8,7 +8,7 @@ inherited frmDeparturesReport: TfrmDeparturesReport
   ExplicitHeight = 624
   PixelsPerInch = 96
   TextHeight = 13
-  inherited dxStatusBar: TdxStatusBar
+  inherited sbStatusBar: TsStatusBar
     Top = 565
     Width = 1055
     ExplicitTop = 565
@@ -220,7 +220,6 @@ inherited frmDeparturesReport: TfrmDeparturesReport
     PopupMenu = pnmuGridMenu
     TabOrder = 1
     LookAndFeel.NativeStyle = False
-    ExplicitTop = 146
     object tvDeparturesList: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DeparturesListDS
@@ -315,8 +314,9 @@ inherited frmDeparturesReport: TfrmDeparturesReport
       object tvDeparturesListExpectedCheckOutTime: TcxGridDBColumn
         Caption = 'Expected COT'
         DataBinding.FieldName = 'ExpectedCheckOutTime'
-        PropertiesClassName = 'TcxTimeEditProperties'
-        Properties.UseTimeFormatWhenUnfocused = False
+        PropertiesClassName = 'TcxTextEditProperties'
+        Properties.Alignment.Horz = taCenter
+        OnGetDisplayText = tvDeparturesListExpectedCheckOutTimeGetDisplayText
         Width = 79
       end
     end
@@ -486,8 +486,10 @@ inherited frmDeparturesReport: TfrmDeparturesReport
     object grdPrinterLink1: TdxGridReportLink
       Active = True
       Component = grDeparturesList
+      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
+      PrinterPage.GrayShading = True
       PrinterPage.Header = 6350
       PrinterPage.Margins.Bottom = 6350
       PrinterPage.Margins.Left = 5000
@@ -506,13 +508,14 @@ inherited frmDeparturesReport: TfrmDeparturesReport
       PrinterPage.ScaleMode = smFit
       PrinterPage._dxMeasurementUnits_ = 2
       PrinterPage._dxLastMU_ = 2
-      ReportDocument.CreationDate = 42650.475391759260000000
+      ReportDocument.CreationDate = 42697.547671203710000000
       ReportTitle.Font.Charset = DEFAULT_CHARSET
       ReportTitle.Font.Color = clBlack
       ReportTitle.Font.Height = -19
       ReportTitle.Font.Name = 'Arial'
       ReportTitle.Font.Style = [fsBold]
       ShrinkToPageWidth = True
+      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlack
       Font.Height = -11

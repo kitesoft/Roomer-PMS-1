@@ -21,7 +21,7 @@ type
 {$ENDIF}
 {$IFNDEF NOTFORHELP}
   private
-    FCommonData: TsCommonData;
+    FCommonData: TsCtrlSkinData;
     FOldBevel: TPanelBevel;
     FOnPaint: TPaintEvent;
 {$IFNDEF D2010}
@@ -44,7 +44,7 @@ type
     procedure PaintWindow(DC: HDC); override;
   published
 {$ENDIF} // NOTFORHELP
-    property SkinData: TsCommonData read FCommonData write FCommonData;
+    property SkinData: TsCtrlSkinData read FCommonData write FCommonData;
     property OnPaint: TPaintEvent read FOnPaint write FOnPaint;
 {$IFNDEF D2010}
     property OnMouseEnter: TNotifyEvent read FOnMouseEnter write FOnMouseEnter;
@@ -236,7 +236,9 @@ implementation
 uses
   math, TypInfo,
   {$IFDEF LOGGED} sDebugMsgs, {$ENDIF}
-  sSkinProps, sMessages, sGraphUtils, sVCLUtils, sSkinManager, sBorders, acntUtils, sMaskData, sAlphaGraph, sStyleSimply, sGradient;
+  {$IFNDEF ALITE} sSplitter, {$ENDIF}
+  sSkinProps, sMessages, sGraphUtils, sVCLUtils, sSkinManager, sBorders, acntUtils, sMaskData, sAlphaGraph, sStyleSimply,
+  sGradient;
 
 
 procedure TsPanel.AfterConstruction;
@@ -254,7 +256,7 @@ end;
 
 constructor TsPanel.Create(AOwner: TComponent);
 begin
-  FCommonData := TsCommonData.Create(Self, True);
+  FCommonData := TsCtrlSkinData.Create(Self, True);
   FCommonData.COC := COC_TsPanel;
   inherited Create(AOwner);
 end;
@@ -517,6 +519,7 @@ begin
       R := ClientRect;
       w := BorderWidth + integer(BevelInner <> bvNone) * BevelWidth + integer(BevelOuter <> bvNone) * BevelWidth;
       InflateRect(R, -w, -w);
+      UpdateBmpColors(FCommonData.FCacheBmp, SkinData, True, 0);
       SkinData.PaintOuterEffects(Self, MkPoint);
       WriteText(R, FCommonData.FCacheBmp.Canvas);
       if Assigned(FOnPaint) then
@@ -806,7 +809,7 @@ begin
       end;
 
       CM_SHOWINGCHANGED:
-        if (SkinData.SkinManager.Options.OptimizingPriority = opMemory) and Visible then
+        if {(SkinData.SkinManager.Options.OptimizingPriority = opMemory) and} Visible then
           FCommonData.FUpdating := False;
 
       WM_WINDOWPOSCHANGING:
@@ -1287,8 +1290,34 @@ end;
 
 
 procedure TsGradientPanel.CopyCache(DC: hdc);
+var
+  R, cR: TRect;
+  i: integer;
+  SaveIndex: HDC;
+  Child: TControl;
 begin
-  BitBlt(DC, 0, 0, Width, Height, FCacheBmp.Canvas.Handle, 0, 0, SRCCOPY)
+  SaveIndex := SaveDC(DC);
+  cR := MkRect(Self);
+//  IntersectClipRect(DC, DstRect.Left, DstRect.Top, DstRect.Right, DstRect.Bottom);
+  try
+    for i := 0 to ControlCount - 1 do begin
+      Child := Controls[i];
+      if (Child is TGraphicControl) and ((DefaultManager = nil) or DefaultManager.Options.StdImgTransparency) {$IFNDEF ALITE}or (Child is TsSplitter){$ENDIF} then
+        Continue;
+
+      with Child do begin
+        R := BoundsRect;
+        if Visible and RectIsVisible(cR, R) then
+          if {(csDesigning in ComponentState) or} (csOpaque in ControlStyle) or (Child is TGraphicControl) then
+            ExcludeClipRect(DC, R.Left, R.Top, R.Right, R.Bottom);
+      end;
+    end;
+    BitBlt(DC, 0, 0, Width, Height, FCacheBmp.Canvas.Handle, 0, 0, SRCCOPY);
+  finally
+    RestoreDC(DC, SaveIndex);
+  end;
+
+//  BitBlt(DC, 0, 0, Width, Height, FCacheBmp.Canvas.Handle, 0, 0, SRCCOPY)
 end;
 
 

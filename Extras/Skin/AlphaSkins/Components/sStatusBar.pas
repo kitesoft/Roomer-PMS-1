@@ -1,7 +1,7 @@
 unit sStatusBar;
 {$I sDefs.inc}
 //{$DEFINE LOGGED}
-//+
+
 interface
 
 uses

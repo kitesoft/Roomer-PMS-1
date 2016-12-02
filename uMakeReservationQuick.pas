@@ -139,7 +139,7 @@ uses
   system.Generics.Collections,
   uDynamicRates,
   sListView,
-  cxTimeEdit, AdvSplitter
+  cxTimeEdit, AdvSplitter, uFraCountryPanel
     ;
 
 TYPE
@@ -454,10 +454,6 @@ type
     clabContactEmail: TsLabel;
     edContactEmail: TsEdit;
     edtSpecialRequests: TMemo;
-    clabGuestCountry: TsLabel;
-    edCountry: TsEdit;
-    sSpeedButton1: TsSpeedButton;
-    labCountryName: TsLabel;
     mnuFinish: TPopupMenu;
     mnuFinishAndShow: TMenuItem;
     memReservationPaymentInfo: TsMemo;
@@ -491,10 +487,6 @@ type
     chkSendConfirmation: TsCheckBox;
     lblContactZip: TsLabel;
     lblContactCity: TsLabel;
-    lbContactCountry: TsLabel;
-    edContactCountry: TsEdit;
-    sSpeedButton4: TsSpeedButton;
-    lbContactCountryName: TsLabel;
     lblPortfolio: TsLabel;
     edtPortfolio: TsEdit;
     btnPortfolio: TsSpeedButton;
@@ -636,12 +628,12 @@ type
     m_occWaitingListNonOptional: TIntegerField;
     chkExcludeWaitingListNonOptional: TsCheckBox;
     cbxFilterSelectedTypes: TsCheckBox;
+    fraCountry: TfraCountryPanel;
+    lblCountry: TsLabel;
     procedure FormShow(Sender: TObject);
     procedure edCustomerDblClick(Sender: TObject);
-    procedure edCustomerPropertiesEditValueChanged(Sender: TObject);
     procedure edCustomerExit(Sender: TObject);
     procedure btnFinishClick(Sender: TObject);
-    procedure edCountryDblClick(Sender: TObject);
     procedure edMarketSegmentCodeDblClick(Sender: TObject);
     procedure edCurrencyDblClick(Sender: TObject);
     procedure edPcCodePropertiesButtonClick(Sender: TObject; AButtonIndex: integer);
@@ -682,12 +674,10 @@ type
     procedure sButton5Click(Sender: TObject);
     procedure sButton6Click(Sender: TObject);
     procedure sButton7Click(Sender: TObject);
-    procedure edCountryExit(Sender: TObject);
     procedure dtArrivalCloseUp(Sender: TObject);
     procedure dtDepartureCloseUp(Sender: TObject);
     procedure dtArrivalChange(Sender: TObject);
     procedure dtDepartureChange(Sender: TObject);
-    procedure edCountryChange(Sender: TObject);
     procedure edCustomerChange(Sender: TObject);
     procedure btnGetLastCustomerClick(Sender: TObject);
     procedure edCurrencyChange(Sender: TObject);
@@ -695,7 +685,6 @@ type
     procedure mnuFinishAndShowClick(Sender: TObject);
     procedure edCustomerKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure edMarketSegmentCodeKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
-    procedure edCountryKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure edCurrencyKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure edPcCodeKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure edPackageDblClick(Sender: TObject);
@@ -767,7 +756,6 @@ type
     procedure SetAllAsNoRoom(doNextPage: boolean = true);
 
     function customerValidate: boolean;
-    function CountryValidate: boolean;
     function MarketSegmentValidate: boolean;
     function CurrencyValidate(ed: TsEdit; lab, labName: TsLabel): boolean;
     function PriceCodeValidate(ed: TsEdit; lab, labName: TsLabel): boolean;
@@ -835,7 +823,7 @@ uses
   uViewDailyRates
  , ufrmReservationExtras
  , DateUtils
- ;
+ , uSQLUtils;
 
 {$R *.dfm}
 
@@ -1074,7 +1062,6 @@ begin
     edContactAddress2.Text := '';
     edContactAddress3.Text := '';
     edContactAddress4.Text := '';
-    // 0810-hj    edContactCountry.Text := ctrlGetString('Country');
     edContactPhone.Text := '';
     edContactFax.Text := '';
     edContactEmail.Text := '';
@@ -1092,7 +1079,7 @@ begin
       edContactAddress2.Text := glb.PreviousGuestsSet['Address2'];
       edContactAddress3.Text := glb.PreviousGuestsSet['Address3'];
       edContactAddress4.Text := glb.PreviousGuestsSet['Address4'];
-      edCountry.Text := glb.PersonProfiles['Country'];
+      fraCountry.CountryCode := glb.PersonProfiles['Country'];
       s := glb.PreviousGuestsSet['Tel1'];
       if s = '' then
         s := glb.PreviousGuestsSet['Tel2'];
@@ -1107,7 +1094,7 @@ begin
       edContactAddress2.Text := glb.PersonProfiles['Address2'];
       edContactAddress3.Text := glb.PersonProfiles['Zip'];
       edContactAddress4.Text := glb.PersonProfiles['City'];
-      edCountry.Text := glb.PersonProfiles['Country'];
+      fraCountry.CountryCode := glb.PersonProfiles['Country'];
       s := glb.PersonProfiles['TelMobile'];
       if s = '' then
         s := glb.PersonProfiles['TelLandLine'];
@@ -1802,8 +1789,7 @@ begin
   FNewReservation.HomeCustomer.Customer_update(Customer);
   labCustomerName.Caption := FNewReservation.HomeCustomer.CustomerName;
 
-  edCountry.Text := FNewReservation.HomeCustomer.Country;
-  labCountryName.Caption := FNewReservation.HomeCustomer.CountryName;
+  fraCountry.CountryCode:= FNewReservation.HomeCustomer.Country;
   edReservationName.Text := FNewReservation.HomeCustomer.CustomerName;
 
   cbxRoomStatus.ItemIndex := RoomStatusFromInfo(FNewReservation.HomeCustomer.RoomStatus);
@@ -1828,7 +1814,6 @@ begin
   edEmailAddress.Text := FNewReservation.HomeCustomer.EmailAddress;
   edHomePage.Text := FNewReservation.HomeCustomer.HomePage;
   edContactPhone.Text := FNewReservation.HomeCustomer.ContactPhone;
-  // 0810-hj   edContactCountry.text       := oNewReservation.HomeCustomer.Country;
   edContactPerson.Text := ''; // oNewReservation.HomeCustomer.ContactPerson;
   edContactFax.Text := ''; // oNewReservation.HomeCustomer.ContactFax;
   edContactEmail.Text := ''; // oNewReservation.HomeCustomer.ContactEmail;
@@ -2274,8 +2259,7 @@ begin
         zCustomerChanged := true;
         initCustomer;
       end;
-      edCountry.Text := rSet.FieldByName('country').AsString;
-      labCountryName.Caption := '';
+      fraCountry.CountryCode := rSet.FieldByName('country').AsString;
     end;
   finally
     FreeAndNil(rSet);
@@ -2286,7 +2270,7 @@ procedure TfrmMakeReservationQuick.btnNextClick(Sender: TObject);
 begin
   if not customerValidate then
     exit;
-  if not CountryValidate then
+  if not fraCountry.IsValid then
     exit;
   if not MarketSegmentValidate then
     exit;
@@ -2371,9 +2355,6 @@ begin
 
     edContactPhone.Text := '';
     edContactFax.Text := '';
-    edContactEmail.Text := '';
-
-    lbContactCountryName.Caption := '';
   end;
   edtPortfolio.Tag := 0;
   edtPortfolio.Text := '';
@@ -2575,9 +2556,6 @@ begin
       edContactFax.Text := glb.PersonProfiles['TelFax'];
       edContactEmail.Text := glb.PersonProfiles['Email'];
 
-      if glb.LocateSpecificRecordAndGetValue('countries', 'Country', edContactCountry.Text, 'CountryName', sName) then
-        lbContactCountryName.Caption := sName;
-
       edtSpecialRequests.Text := glb.PersonProfiles['Preparation'];
       edtNotes.Text := glb.PersonProfiles['Information'];
       edtRoom.Text := glb.PersonProfiles['Room'];
@@ -2630,15 +2608,6 @@ begin
   end;
 end;
 
-procedure TfrmMakeReservationQuick.edCustomerPropertiesEditValueChanged(Sender: TObject);
-begin
-end;
-
-
-// **********************************************************************************
-// Country
-//
-
 procedure TfrmMakeReservationQuick.cbxFilterSelectedTypesClick(Sender: TObject);
 begin
   SetRoomFilterOnlySelectedTypes(TCheckbox(Sender).Checked);
@@ -2650,30 +2619,6 @@ begin
   mSelectRooms.Filtered := aOnlySelected;
 end;
 
-function TfrmMakeReservationQuick.CountryValidate: boolean;
-var
-  sValue: string;
-begin
-  Result := true;
-
-  sValue := Trim(edCountry.Text);
-  // **NOT TESTED**//
-  if not hData.CountryExists(sValue) then
-  begin
-    edCountry.SetFocus;
-    labCountryName.Font.Color := clRed;
-    labCountryName.Caption := GetTranslatedText('shNotF_star');
-    Result := false;
-    exit;
-  end
-  else
-  begin
-    labCountryName.Font.Color := clBlack;
-    if glb.LocateCountry(sValue) then
-      labCountryName.Caption := glb.Countries['CountryName']; // GET_CountryName(sValue);
-  end;
-
-end;
 
 procedure TfrmMakeReservationQuick.mSelectRoomsFilterRecord(DataSet: TDataSet; var Accept: Boolean);
 var
@@ -2970,7 +2915,7 @@ begin
         rSet.First;
         while not rSet.eof do
         begin
-          ADate := _DBDateToDate(rSet.FieldByName('aDate').AsString);
+          ADate := SQLToDateTime(rSet.FieldByName('aDate').AsString);
           RoomType := rSet.FieldByName('RoomType').AsString;
           Status := rSet.FieldByName('ResFlag').AsString;
           isNoRoom := rSet.FieldByName('isNoRoom').AsBoolean;
@@ -3754,8 +3699,8 @@ begin
     if Trim(inStrRoomTypes) <> '' then
       andRoomTypes := format('AND  `RoomType` IN (%s)', [inStrRoomTypes]);
 
-    s := format(s, [_dateToDbDate(FirstArrival, true)
-      , _dateToDbDate(LastDeparture, true)
+    s := format(s, [_db(FirstArrival, true)
+      , _db(LastDeparture, true)
       , priceID
       , _db(Currency)
       , andRoomTypes
@@ -4199,7 +4144,7 @@ begin
   end;
 
   FNewReservation.HomeCustomer.invRefrence := edInvRefrence.Text;
-  FNewReservation.HomeCustomer.Country := edCountry.Text;
+  FNewReservation.HomeCustomer.Country := fraCountry.CountryCode;
   FNewReservation.HomeCustomer.ReservationName := edReservationName.Text;
   FNewReservation.HomeCustomer.RoomStatus := RoomStatusToInfo(cbxRoomStatus.ItemIndex);
   FNewReservation.HomeCustomer.MarketSegmentCode := edMarketSegmentCode.Text;
@@ -4223,7 +4168,7 @@ begin
   FNewReservation.HomeCustomer.ContactAddress3 := edContactAddress3.Text;
   FNewReservation.HomeCustomer.ContactAddress4 := edContactAddress4.Text;
   // 0810-hj   FNewReservation.HomeCustomer.ContactCountry         := edContactCountry.text   ;
-  FNewReservation.HomeCustomer.ContactCountry := edCountry.Text;
+  FNewReservation.HomeCustomer.ContactCountry := fraCountry.CountryCode;
   FNewReservation.HomeCustomer.PersonProfileId := edtPortfolio.Tag;
   FNewReservation.HomeCustomer.CreatePersonProfileId := cbxAddToGuestProfiles.Checked;
 
@@ -4749,36 +4694,6 @@ begin
     edContactPerson.SelLength := 0;
     edContactPerson.SelStart := length(sTemp);
     lblNew.Visible := edContactPerson.active;
-  end;
-end;
-
-procedure TfrmMakeReservationQuick.edCountryChange(Sender: TObject);
-begin
-  CountryValidate;
-end;
-
-procedure TfrmMakeReservationQuick.edCountryDblClick(Sender: TObject);
-var
-  theData: recCountryHolder;
-begin
-  theData.Country := edCountry.Text;
-  if Countries(actLookup, theData) then
-  begin
-    edCountry.Text := theData.Country;
-    labCountryName.Caption := theData.CountryName;
-  end;
-end;
-
-procedure TfrmMakeReservationQuick.edCountryExit(Sender: TObject);
-begin
-  CountryValidate;
-end;
-
-procedure TfrmMakeReservationQuick.edCountryKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
-begin
-  if Key = vk_f2 then
-  begin
-    edCountryDblClick(self);
   end;
 end;
 

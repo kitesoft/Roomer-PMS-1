@@ -13,8 +13,8 @@ type
     btnOk: TsButton;
     StoreMain: TcxPropertiesStore;
     sButton1: TsButton;
-    procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure cbxEnvironmentChange(Sender: TObject);
+    procedure FormShow(Sender: TObject);
   protected
     procedure CreateParams(var Params: TCreateParams); override;
     { Private declarations }
@@ -32,7 +32,7 @@ implementation
 
 {$R *.dfm}
 
-uses Inifiles, System.IOUtils;
+uses Inifiles, System.IOUtils, uUtils;
 
 function SelectConfigurationEnvironment(files : TStrings) : String;
 var _FrmSelectCloudConfiguration: TFrmSelectCloudConfiguration;
@@ -63,13 +63,14 @@ begin
   btnOk.Enabled := cbxEnvironment.ItemIndex >= 0;
 end;
 
-procedure TFrmSelectCloudConfiguration.FormClose(Sender: TObject; var Action: TCloseAction);
+procedure TFrmSelectCloudConfiguration.FormShow(Sender: TObject);
 begin
-  StoreMain.StoreTo;
+  PlaceFormOnVisibleMonitor(self);
 end;
 
 procedure TFrmSelectCloudConfiguration.PrepareList(files: TStrings);
-var path : String;
+var
+  path : String;
 begin
   cbxEnvironment.Items.Clear;
   for path in files do
@@ -81,7 +82,6 @@ begin
       free;
     end;
   end;
-  btnOk.Enabled := False;
   StoreMain.RestoreFrom;
   cbxEnvironmentChange(nil);
 end;

@@ -318,7 +318,7 @@ begin
       RtSrc := CreateBmp32(H, W);
       FillSize := GetFillSize;
       BitBlt(RtSrc.Canvas.Handle, 0, 0, RtSrc.Width, RtSrc.Height, FCommonData.FCacheBmp.Canvas.Handle, 0, 0, SRCCOPY);
-      RtSrc := MakeRotated90(RtSrc, True, True);
+      RtSrc := sMakeRotated90(RtSrc, True, True);
       CI.Bmp := RtSrc;
     end
     else begin
@@ -397,7 +397,7 @@ begin
           end;
 
         if RtSrc <> nil then begin
-          TempBmp := MakeRotated90(TempBmp, False, True);
+          TempBmp := sMakeRotated90(TempBmp, False, True);
           if FShowText then begin
             S := Format('%d%', [iff(FCalcPercents, PercentDone, FCurValue)]) + FSuffix;
             TempBmp.Canvas.Font.Assign(Font);
@@ -641,6 +641,11 @@ begin
           Repaint;
           Exit;
         end;
+
+      AC_SETSCALE: begin
+        if FTmpProgressBmp <> nil then
+          FreeAndNil(FTmpProgressBmp);
+      end;
 
       AC_REFRESH:
         if ACUInt(Message.LParam) = ACUInt(SkinData.SkinManager) then begin

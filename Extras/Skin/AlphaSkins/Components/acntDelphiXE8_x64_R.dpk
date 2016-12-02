@@ -131,6 +131,7 @@ contains
   acPopupCtrls in 'acPopupCtrls.pas',
   acPopupController in 'acPopupController.pas',
   acntTypes in 'acntTypes.pas',
+  acgpUtils in 'acgpUtils.pas',
   acZLibEx in 'acZLibEx.pas';
 
 end.

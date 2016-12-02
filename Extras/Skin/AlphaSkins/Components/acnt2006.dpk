@@ -28,7 +28,6 @@ package acnt2006;
 {$WARNINGS OFF}
 
 requires
-  acnt2006_R,
   dclstd,
   dcl31w,
   vcl,

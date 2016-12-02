@@ -1,6 +1,6 @@
 unit sFrameBar;
 {$I sDefs.inc}
-//+
+
 interface
 
 uses
@@ -684,6 +684,9 @@ begin
 end;
 
 
+type
+  TAccessCommonData = class(TsCommonData);
+
 function TsFrameBar.CreateDefaultFrame: TFrame;
 var
   lbl: TsLabel;
@@ -695,7 +698,7 @@ begin
     Result.Height := 150;
 
   with TsFrameAdapter.Create(Result), SkinData do begin
-    SkinManager := Self.SkinData.FSkinManager;
+    SkinManager := TAccessCommonData(Self.SkinData).FSkinManager;
     SkinSection := s_BarPanel;
   end;
   lbl := TsLabel.Create(Result);
@@ -738,7 +741,7 @@ var
 begin
   inherited;
   for i := 0 to Items.Count - 1 do begin
-    Items[i].TitleButton.SkinData.SkinManager := SkinData.FSkinManager;
+    Items[i].TitleButton.SkinData.SkinManager := TAccessCommonData(SkinData).FSkinManager;
     Items[i].TitleButton.Cursor := Items[i].Cursor;
   end;
   if Visible then

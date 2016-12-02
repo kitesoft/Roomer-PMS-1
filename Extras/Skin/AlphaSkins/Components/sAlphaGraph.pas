@@ -146,6 +146,7 @@ end;
 procedure SwapLong(P: PInteger; Count: Cardinal); overload;
 {$IFDEF WIN64}
 begin
+{$R-}
   while Count > 0 do begin
     p^ := SwapLong(p^);
   {$POINTERMATH ON}
@@ -153,6 +154,7 @@ begin
   {$POINTERMATH OFF}
     dec(Count);
   end;
+{$R+}
 {$ELSE}
 asm
 @@Loop:
@@ -859,7 +861,7 @@ var
 begin
   if (State <> 0) or (MaskData.DrawMode and BDM_ACTIVEONLY = 0) then begin
     if (WidthOf(aRect) > 1) and (HeightOf(aRect) > 1) and (MaskData.Manager <> nil) then begin
-      lWidth := MaskData.WL; //<---
+      lWidth := MaskData.WL;
       tWidth := MaskData.WT;
       rWidth := MaskData.WR;
       bWidth := MaskData.WB;
@@ -1229,9 +1231,9 @@ end;
 
 procedure CopyByMask32(R1, R2: TRect; const Bmp1, Bmp2: TBitmap; const CI: TCacheInfo; const MaskData: TsMaskData);
 var
-  S0, D0, D, CacheBMP: PRGBAArray_;
   S: PRGBAArray_S;
   M: PRGBAArray_M;
+  S0, D0, D, CacheBMP: PRGBAArray_;
   PosX, PosY, h, w, dX1, dX2, hdiv2, k1, a_, DeltaS, DeltaD: integer;
 begin
 {$IFDEF NOSLOWDETAILS} Exit;{$ENDIF}
@@ -1598,8 +1600,15 @@ begin
             TmpBmp.Free;
           end
           else begin
-            StretchBlt(Bmp.Canvas.Handle, 0, 0, Dst_Width, Dst_Height, BmpSrc.Canvas.Handle, SrcX1, SrcY1, Src_Width, Src_Height, SRCCOPY);
-            StretchBlt(MaskBmp.Canvas.Handle, 0, 0, Dst_Width, Dst_Height, BmpSrc.Canvas.Handle, SrcX1, SrcY1 + MaskOffset, Src_Width, Src_Height, SRCCOPY);
+            Bmp.Canvas.Lock;
+            MaskBmp.Canvas.Lock;
+            try
+              StretchBlt(Bmp.Canvas.Handle, 0, 0, Dst_Width, Dst_Height, BmpSrc.Canvas.Handle, SrcX1, SrcY1, Src_Width, Src_Height, SRCCOPY);
+              StretchBlt(MaskBmp.Canvas.Handle, 0, 0, Dst_Width, Dst_Height, BmpSrc.Canvas.Handle, SrcX1, SrcY1 + MaskOffset, Src_Width, Src_Height, SRCCOPY);
+            finally
+              Bmp.Canvas.Unlock;
+              MaskBmp.Canvas.Unlock;
+            end;
           end;
           iY := 0;
           if DstY1 + Dst_Height > BmpDst.Height then
@@ -2651,8 +2660,8 @@ end;
 procedure DrawSkinRect32Ex(aBmp: TBitmap; const aRect: TRect; const ci: TCacheInfo; const MaskData: TsMaskData; const State: integer; MaxWidths: TRect; Opacity: integer);
 var
   x, y, w, h, dw, dh, dhm, NewState, lWidth, tWidth, rWidth, bWidth, maxl, maxt, maxr, maxb: integer;
-  BmpSrc: TBitmap;
   Stretch: boolean;
+  BmpSrc: TBitmap;
 begin
   if (State <> 0) or (MaskData.DrawMode and BDM_ACTIVEONLY = 0) then
     if (WidthOf(aRect) > 1) and (HeightOf(aRect) > 1) and (MaskData.Manager <> nil) then begin

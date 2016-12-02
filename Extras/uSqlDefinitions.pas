@@ -23,10 +23,10 @@ const HOTEL_PERFORMANCE_QUERY_BETWEEN_DATES = 'SELECT IFNULL(ADate, pdd.date) AS
          '       RoomCount, ' +
          '       RoomsSold, OOO ' +
          'FROM ( ' +
-         'SELECT rd.ADate, SUM(RoomRate * cu.AValue) / rm.RoomCount AS RevPar, ' +
+         'SELECT rd.ADate, SUM((IF(Discount > 0, RoomRate - IF(isPercentage, RoomRate * Discount / 100, Discount), RoomRate)) * cu.AValue) / rm.RoomCount AS RevPar, ' +
          '       rm.RoomCount, ' +
-         '       SUM(RoomRate * cu.AValue) AS Revenue, ' +
-         '       AVG(RoomRate * cu.AValue) AS ADR, ' +
+         '       SUM((IF(Discount > 0, RoomRate - IF(isPercentage, RoomRate * Discount / 100, Discount), RoomRate)) * cu.AValue) AS Revenue, ' +
+         '       AVG((IF(Discount > 0, RoomRate - IF(isPercentage, RoomRate * Discount / 100, Discount), RoomRate)) * cu.AValue) AS ADR, ' +
          '       COUNT(rd.id) AS RoomsSold, rd1.OOO ' +
          'FROM roomsdate rd ' +
          '     LEFT JOIN rooms ro ON ro.Room = rd.Room ' +
@@ -289,7 +289,7 @@ var
   '   , Reservation '+
   '   , Status '+
   '   , rrArrival '+
-  '   , rrDeparture '+
+  '   , rrDeparture, (SELECT channel FROM reservations WHERE Reservation=%d LIMIT 1) AS channel '+
   ' FROM '+
   '   roomreservations '+
   ' WHERE '+
@@ -475,43 +475,55 @@ var
 
   //TESTED NOT
   select_DayFinical_GetInvoicelist : string =
-  ' SELECT '+
-  '     invoiceheads.Reservation '+
-  '   , invoiceheads.RoomReservation '+
-  '   , invoiceheads.SplitNumber '+
-  '   , invoiceheads.InvoiceNumber '+
-  '   , invoiceheads.Customer '+
-  '   , invoiceheads.Name AS NameOnInvoice '+
-  '   , invoiceheads.Address1 '+
-  '   , invoiceheads.Address2 '+
-  '   , invoiceheads.Address3 '+
-  '   , invoiceheads.Total AS ihAmountWithTax '+
-  '   , invoiceheads.TotalWOVAT AS ihAmountNoTax '+
-  '   , invoiceheads.TotalVAT AS ihAmountTax '+
-  '   , invoiceheads.CreditInvoice '+
-  '   , invoiceheads.OriginalInvoice '+
-  '   , invoiceheads.RoomGuest '+
-  '   , invoiceheads.ihInvoiceDate AS InvoiceDate '+
-  '   , invoiceheads.ihPayDate AS dueDate '+
-  '   , invoiceheads.invRefrence '+
-  '   , invoiceheads.TotalStayTax '+
-  '   , invoiceheads.TotalStayTaxNights '+
-  '   , invoiceheads.ihConfirmDate AS ConfirmedDate '+
-  '   , invoiceheads.ihCurrency AS Currency '+
-  '   , invoiceheads.ihCurrencyRate AS Rate '+
-  '   , invoiceheads.ihStaff AS Staff '+
-  '   , customers.Surname AS CustomerName '+
-  '   , customers.TravelAgency AS isAgency '+
-  '   , customers.CustomerType AS markedSegment '+
-  '   , customertypes.Description AS markedSegmentDescription '+
-  ' FROM '+
-  '   customertypes '+
-  '     RIGHT OUTER JOIN customers ON customertypes.CustomerType = customers.CustomerType '+
-  '     RIGHT OUTER JOIN invoiceheads ON customers.Customer = invoiceheads.Customer '+
-  ' WHERE '+
-  '   (invoiceheads.InvoiceNumber IN  %s ) '+ //zSqlInText
-  ' ORDER BY '+
-  '   invoiceheads.InvoiceNumber ' ;
+  ' SELECT '#10+
+  '     ih.Reservation '#10+
+  '   , ih.RoomReservation '#10+
+  '   , ih.SplitNumber '#10+
+  '   , ih.InvoiceNumber '#10+
+  '   , ih.Customer '#10+
+  '   , ih.Name AS NameOnInvoice '#10+
+  '   , ih.Address1 '#10+
+  '   , ih.Address2 '#10+
+  '   , ih.Address3 '#10+
+  '   , il.Total AS ihAmountWithTax '#10+
+  '   , il.Total - il.TotalVat  AS ihAmountNoTax '#10+
+  '   , il.TotalVAT AS ihAmountTax '#10+
+  '   , ih.CreditInvoice '#10+
+  '   , ih.OriginalInvoice '#10+
+  '   , ih.RoomGuest '#10+
+  '   , ih.ihInvoiceDate AS InvoiceDate '#10+
+  '   , ih.ihPayDate AS dueDate '#10+
+  '   , ih.invRefrence '#10+
+  '   , ih.TotalStayTax '#10+
+  '   , ih.TotalStayTaxNights '#10+
+  '   , ih.ihConfirmDate AS ConfirmedDate '#10+
+  '   , ih.ihCurrency AS Currency '#10+
+  '   , ih.ihCurrencyRate AS Rate '#10+
+  '   , ih.ihStaff AS Staff '#10+
+  '   , customers.Surname AS CustomerName '#10+
+  '   , customers.TravelAgency AS isAgency '#10+
+  '   , customers.CustomerType AS markedSegment '#10+
+  '   , customertypes.Description AS markedSegmentDescription '#10+
+  ' FROM '#10+
+  '     customertypes '#10+
+  '     RIGHT OUTER JOIN '#10+
+  '       customers ON customertypes.CustomerType = customers.CustomerType '#10+
+  '     RIGHT OUTER JOIN invoiceheads ih ON customers.Customer = ih.Customer '#10+
+  '     RIGHT JOIN '#10+
+  '       (SELECT '#10+
+  '          invoicenumber '#10+
+//  '          , sum(Total + revenueCorrection) as Total '#10+
+//  '          , sum(Vat + revenueCorrectionVat) AS TotalVAT '#10+
+  '          , sum(Total) as Total '#10+
+  '          , sum(Vat) AS TotalVAT '#10+
+  '        from invoicelines '#10+
+  '        where (invoicenumber> 0) '#10+
+  '        group by invoicenumber '#10+
+  '       ) il on il.invoicenumber = ih.invoicenumber '#10+
+  ' WHERE '#10+
+  '   (ih.InvoiceNumber IN  %s ) '#10+ //zSqlInText
+  ' ORDER BY '#10+
+  '   ih.InvoiceNumber ' ;
 
   //TESTED NOT
 
@@ -641,8 +653,8 @@ var
   '     INNER JOIN '+
   '       roomtypes ON tblroomstatus.RoomType = roomtypes.RoomType '+
   ' WHERE '+
-  ' (resDate>= %s ) '+      //_dateToSqlDate(zCurrentDate)
-  ' AND (resDate<= %s ) '+  //_dateToSqlDate(zCurrentDate + zDaysToShow - 1)
+  ' (resDate>= %s ) '+      //_db(zCurrentDate)
+  ' AND (resDate<= %s ) '+  //_db(zCurrentDate + zDaysToShow - 1)
   ' ORDER BY '+
   '   tblroomstatus.RoomType '+
   '   ,tblroomstatus.resDate ' ;
@@ -668,8 +680,8 @@ var
   '   , roomtypes.RoomTypeGroup '+
   '   , roomtypegroups.Description '+
   ' HAVING '+
-  ' (resDate>= %s ) '+       //_dateToSqlDate(zCurrentDate)
-  ' AND (resDate<= %s ) ' ;  //_dateToSqlDate(zCurrentDate + zDaysToShow - 1)
+  ' (resDate>= %s ) '+       //_db(zCurrentDate)
+  ' AND (resDate<= %s ) ' ;  //_db(zCurrentDate + zDaysToShow - 1)
 
 
  // TRSTED NOT
@@ -951,7 +963,7 @@ select_MaidList_MaidList_AfterScroll : string =
 ' SELECT * '+
 ' From tblmaidjobs '+
 ' WHERE (mjRoom = %s ) AND (mjDate = %s ) ' ;
-///  ' WHERE (mjRoom ='+quotedStr(zRoom)+') AND (mjDate ='+_dateToSqlDate(zDate)+') '+#10 ;
+///  ' WHERE (mjRoom ='+quotedStr(zRoom)+') AND (mjDate ='+_db(zDate)+') '+#10 ;
 
 
 //TESTED NOT
@@ -959,14 +971,14 @@ select_MaidList_UpdateMemTables : string =
 ' SELECT * '+
 ' From tblmaidlists '+
 ' WHERE (mlDate = %s ) ' ;
-/// ' WHERE (mlDate ='+_dateToSqlDate(zDate)+') '+#10 ;
+/// ' WHERE (mlDate ='+_db(zDate)+') '+#10 ;
 
 //TESTED NOT
 select_MaidList_UpdateMemTables2 : string =
 ' SELECT * '+
 ' From tblmaidjobs '+
 ' WHERE (mjDate = %s ) ';
-///    ' WHERE (mjDate ='+_dateToSqlDate(zDate)+') '+#10 ;
+///    ' WHERE (mjDate ='+_db(zDate)+') '+#10 ;
 
 // TESTED
 select_MaidList_CreateCross : string =
@@ -1317,8 +1329,10 @@ select_ReservationProfile_allGuestsSQL : string =
 '   , persons.Address3 '+
 '   , persons.Address4 '+
 '   , persons.Country '+
+'   , persons.Nationality '+
 '   , persons.PID '+
 '   , persons.MainName '+
+'   , persons.email '+
 ' FROM '+
 '   persons '+
 '     LEFT OUTER JOIN '+
@@ -1714,13 +1728,13 @@ select_telLog_refresh : string =
 ' FROM '+
 '   telLog '+
 ' WHERE '+
-'     ((Callstart >=%s ) '+   // _DateToDBDate(zDateFrom, true)
-'     AND (Callstart <=%s )) '+  //_DateToDBDate(zDateTo+1, true)
+'     ((Callstart >=%s ) '+   // _db(zDateFrom, true)
+'     AND (Callstart <=%s )) '+  //_db(zDateTo+1, true)
 ' ORDER BY '+
 '   CallStart ';
 
-///      '     ((Callstart >=' + _DateToDBDate(zDateFrom, true) + ' ) '+
-///      '     AND (Callstart <=' + _DateToDBDate(zDateTo+1, true) + ' )) '+
+///      '     ((Callstart >=' + _db(zDateFrom, true) + ' ) '+
+///      '     AND (Callstart <=' + _db(zDateTo+1, true) + ' )) '+
 
 
 
@@ -2132,19 +2146,19 @@ select_telLog_refresh : string =
   ///s := s + ' WHERE (Location = ' + quotedstr(sLocation) + ') '+#10;
 
 
-///  s := s + '   ((roomsdate.ADate = ' + _DateToDBDate(adate,true) + ') AND (roomsdate.ResFlag = ' + quotedstr('G')
-///  s := s + '   ((roomsdate.ADate = ' + _DateToDBDate(adate - 1,true) + ') AND (roomsdate.ResFlag = ' + quotedstr('G')
-///  s := s + '   AND (roomreservations.Departure = ' + _DateToDBDate(adate,true) + ')) '+#10;
+///  s := s + '   ((roomsdate.ADate = ' + _db(adate,true) + ') AND (roomsdate.ResFlag = ' + quotedstr('G')
+///  s := s + '   ((roomsdate.ADate = ' + _db(adate - 1,true) + ') AND (roomsdate.ResFlag = ' + quotedstr('G')
+///  s := s + '   AND (roomreservations.Departure = ' + _db(adate,true) + ')) '+#10;
 
 
 
 ///  s := s + '   (roomsdate.RoomReservation = '+inttostr(RoomReservation)+') '+#10;
-///  s := s + '     AND (roomsdate.ADate = ' + _DateToDBDate(adate,true) + ') '+#10;
+///  s := s + '     AND (roomsdate.ADate = ' + _db(adate,true) + ') '+#10;
 ///  s := s + '     AND (roomsdate.ResFlag = ' + quotedstr('G')+ ') '+#10;
 ///  s := s + '   (roomsdate.RoomReservation = '+inttostr(RoomReservation)+') '+#10;
-///  s := s + '     AND (roomsdate.ADate = ' + _DateToDBDate(adate-1,true) + ') '+#10;
+///  s := s + '     AND (roomsdate.ADate = ' + _db(adate-1,true) + ') '+#10;
 ///  s := s + '     AND (roomsdate.ResFlag = ' + quotedstr('G')+ ') '+#10;
-///  s := s + '     AND (roomreservations.Departure =  ' + _DateToDBDate(adate,true) + ') '+#10;
+///  s := s + '     AND (roomreservations.Departure =  ' + _db(adate,true) + ') '+#10;
 
 
   select_isResCurrentlyCheckedIn : string =
@@ -2288,7 +2302,7 @@ select_telLog_refresh : string =
   ///s := s + ' WHERE (RoomType = ' + quotedstr(sRoomType) + ') '+#10;
 
   select_RoomTypeRuleExistsInOther : string =
-  ' SELECT Roomtype FROM [Roomtypes] '+
+  ' SELECT Roomtype FROM roomtypes '+
   ' WHERE (Roomtype = %s )';
 
 
@@ -2403,7 +2417,7 @@ select_telLog_refresh : string =
   ' tblseasons '+
   ' WHERE '+
   ' (seStartDate =  %s ) AND  (seEndDate =  %s ) ';
-  ///s := s + '(seStartDate = ' + _DateToDBDate(aDateFrom,true) + ') AND  (seEndDate = ' + _DateToDBDate(aDateTo,true) + ') '+#10;
+  ///s := s + '(seStartDate = ' + _db(aDateFrom,true) + ') AND  (seEndDate = ' + _db(aDateTo,true) + ') '+#10;
 
   select_SeasonCount : string =
   ' SELECT '+
@@ -2412,7 +2426,7 @@ select_telLog_refresh : string =
   ' tblseasons '+
   ' WHERE '+
   ' (seStartDate <=  %s ) AND  (seEndDate >=  %s ) ';
-  ///s := s + '(seStartDate <= ' + _DateToDBDate(adate,true) + ') AND  (seEndDate >= ' + _DateToDBDate(adate,true) + ') '+#10;
+  ///s := s + '(seStartDate <= ' + _db(adate,true) + ') AND  (seEndDate >= ' + _db(adate,true) + ') '+#10;
 
   select_FindSeasonID : string =
   'SELECT '+
@@ -2423,7 +2437,7 @@ select_telLog_refresh : string =
   'tblseasons '+
   'WHERE '+
   '(seStartDate <=  %s ) AND  (seEndDate >=  %s ) ';
-  ///s := s + '(seStartDate <= ' + _DateToDBDate(adate,true) + ') AND  (seEndDate >= ' + _DateToDBDate(adate,true) + ') '+#10;
+  ///s := s + '(seStartDate <= ' + _db(adate,true) + ') AND  (seEndDate >= ' + _db(adate,true) + ') '+#10;
 
 
     select_InvoiceLinesTmp_exists : string =
@@ -2562,7 +2576,7 @@ select_telLog_refresh : string =
 
 
 
-///    s := s + '        (ADate = ' + _DateToDBDate(dtDate,true) + ') '+#10;
+///    s := s + '        (ADate = ' + _db(dtDate,true) + ') '+#10;
 ///    s := s + '    AND (Room = ' + quotedstr(Room) + ') '+#10;
 
   select_ChangeResDates : string =
@@ -2991,7 +3005,7 @@ select_getRoomTypeFromRR : string =
       '  ORDER BY ADATE ' +
      ' LIMIT 1 ' +
     '';
-///      s := s + '   (Room = ' + quotedstr(Room) + ') AND (ADate > ' + _dateToDBDate(FromDate,true) + ') '+#10;
+///      s := s + '   (Room = ' + quotedstr(Room) + ') AND (ADate > ' + _db(FromDate,true) + ') '+#10;
 
       select_IH_GetRefrence : string =
       ' SELECT '+
@@ -3200,9 +3214,9 @@ select_getRoomTypeFromRR : string =
       'FROM roomreservations '+
       'WHERE RoomReservation = %d ';
 
-///      s := s + '   (RoomReservation = '+_dbInt(RoomReservation)+') '+#10;
+///      s := s + '   (RoomReservation = '+_db(RoomReservation)+') '+#10;
 
-/// s := s + '   (Reservation = '+_dbInt(Reservation)+') '+#10;
+/// s := s + '   (Reservation = '+_db(Reservation)+') '+#10;
 
 
   select_RV_getMemos : string =
@@ -3215,7 +3229,7 @@ select_getRoomTypeFromRR : string =
   '   (Reservation = %d) ' +
     ' LIMIT 1 ' +
     '';
-      ///s := s + '   (Reservation = '+_dbInt(Reservation)+') '+#10;
+      ///s := s + '   (Reservation = '+_db(Reservation)+') '+#10;
 
       select_INV_FirstDayAndRoom : string =
       'SELECT '+
@@ -3228,10 +3242,10 @@ select_getRoomTypeFromRR : string =
       '  (InvoiceNumber = %d) '
    + ' LIMIT 1 '
     ;
-      ///s := s + '  (InvoiceNumber = '+_dbInt(invoiceNumber)+') '+#10;
+      ///s := s + '  (InvoiceNumber = '+_db(invoiceNumber)+') '+#10;
 
-//      s := s + '        (ADate >= '+_DateToDbDate(DateFrom,true)+')'+#10;
-///      s := s + '    AND (ADate <= '+_DateToDbDate(DateTo,true)+')'+#10;
+//      s := s + '        (ADate >= '+_db(DateFrom,true)+')'+#10;
+///      s := s + '    AND (ADate <= '+_db(DateTo,true)+')'+#10;
 
 
       select_RRlst_Departure : string =
@@ -3244,8 +3258,8 @@ select_getRoomTypeFromRR : string =
       '        (Departure >=  %s )'+
       '    AND (Departure <=  %s )'+
       '  ORDER BY RoomReservation';
-///      s := s + '        (Departure >= '+_DateToDbDate(DateFrom,true)+')'+#10;
-///      s := s + '    AND (Departure <= '+_DateToDbDate(DateTo,true)+')'+#10;
+///      s := s + '        (Departure >= '+_db(DateFrom,true)+')'+#10;
+///      s := s + '    AND (Departure <= '+_db(DateTo,true)+')'+#10;
 
       select_RRlst_DepartureNationalReport : string =
       '  SELECT'+
@@ -3258,8 +3272,8 @@ select_getRoomTypeFromRR : string =
       '    AND (Departure <=  %s )'+
       '    AND (useInNationalReport =  %s ) '+
       '  ORDER BY RoomReservation' ;
-///      s := s + '        (Departure >= '+_DateToDbDate(DateFrom,true)+')'+#10+#10;
-///      s := s + '    AND (Departure <= '+_DateToDbDate(DateTo,true)+')'+#10+#10;
+///      s := s + '        (Departure >= '+_db(DateFrom,true)+')'+#10+#10;
+///      s := s + '    AND (Departure <= '+_db(DateTo,true)+')'+#10+#10;
 ///      s := s + '    AND (useInNationalReport = '+_db(true)+')'+#10+#10;
 
 
@@ -3276,12 +3290,12 @@ select_getRoomTypeFromRR : string =
       '  ORDER BY RoomReservation';
 
 
-///      s := s + '        (ADate >= '+_DateToDbDate(DateFrom,true)+')'+#10;
-///      s := s + '    AND (ADate <= '+_DateToDbDate(DateTo,true)+')'+#10;
+///      s := s + '        (ADate >= '+_db(DateFrom,true)+')'+#10;
+///      s := s + '    AND (ADate <= '+_db(DateTo,true)+')'+#10;
 
 
-///      s := s + '        (Arrival >= '+_DateToDbDate(DateFrom,true)+')'+#10;
-///      s := s + '    AND (Arrival <= '+_DateToDbDate(DateTo,true)+')'+#10;
+///      s := s + '        (Arrival >= '+_db(DateFrom,true)+')'+#10;
+///      s := s + '    AND (Arrival <= '+_db(DateTo,true)+')'+#10;
 
 
       select_Rvlst_Departure : string =
@@ -3294,8 +3308,8 @@ select_getRoomTypeFromRR : string =
       '        (Departure >=  %s )'+
       '    AND (Departure <=  %s )'+
       '  ORDER BY Reservation';
-///      s := s + '        (Departure >= '+_DateToDbDate(DateFrom,true)+')'+#10;
-///      s := s + '    AND (Departure <= '+_DateToDbDate(DateTo,true)+')'+#10;
+///      s := s + '        (Departure >= '+_db(DateFrom,true)+')'+#10;
+///      s := s + '    AND (Departure <= '+_db(DateTo,true)+')'+#10;
 
 
       select_IH_Upd_UnPaid_RR : string =
@@ -3454,7 +3468,7 @@ select_Item_Exists : string =
 ' WHERE (Item = %s) ';  //' + quotedstr(sItem) + '
 
 select_ItemType_Exists : string =
-' SELECT ItemType FROM [ItemTypes] '#10+
+' SELECT ItemType FROM itemtypes '#10+
 ' WHERE (ItemType = %s) ';  //' + _db(sItemType) + '
 
 
@@ -3523,6 +3537,7 @@ select_GetReservationRRList : string =
 '    RoomReservation '#10+
 '   ,Reservation '#10+
 '   ,Status '#10+
+'   ,Room '#10+
 ' FROM '#10+
 '   roomreservations '#10+
 ' WHERE '#10+
@@ -3584,10 +3599,10 @@ select_RR_GetDeparting : string =
 '     INNER JOIN '#10+
 '       roomreservations ON roomsdate.RoomReservation = roomreservations.RoomReservation '#10+
 ' WHERE '#10+
-'    (roomsdate.Room = %s) '#10+  //' + _dbStr(Room) + '
-' AND (roomsdate.ADate = %s) '#10+  //' + _dateToDBdate(ADate - 1, true) + '
+'    (roomsdate.Room = %s) '#10+  //' + _db(Room) + '
+' AND (roomsdate.ADate = %s) '#10+  //' + _db(ADate - 1, true) + '
 ' AND (roomsdate.ResFlag = ''G'') '#10+
-' AND (RoomReservations.Departure = %s) '  //' + _dateToDBdate(ADate, true) + '
+' AND (RoomReservations.Departure = %s) '  //' + _db(ADate, true) + '
    + ' LIMIT 1 '
     ;
 
@@ -3606,7 +3621,7 @@ select_DraftInv_exists : string =
 ' , SplitNumber '#10+
 ' , Invoicenumber '#10+
 ' , Finished '#10+
-'   FROM [invoiceHeads] '#10+
+'   FROM invoiceheads '#10+
 ' WHERE '#10+
 '   RoomReservation = %s '#10+  //' + inttostr(RoomReservation) + '
 '   and SplitNumber = 0 '#10+ // roomInvoice
@@ -3620,7 +3635,7 @@ select_DraftInvGroup_exists : string =
 ' , SplitNumber '#10+
 ' , Invoicenumber '#10+
 ' , Finished '#10+
-'   FROM [invoiceHeads] '#10+
+'   FROM invoiceheads '#10+
 ' WHERE '#10+
 '   Reservation = %d '#10+  //' + inttostr(Reservation) + '
 '   and RoomReservation = 0 '#10+ // roomInvoice
@@ -3651,13 +3666,13 @@ select_DraftInv_Create : string =
 ' ,Address3 '#10+
 ' ,Address4 '#10+
 ' ,Country '#10+
-' FROM [Reservations] '#10+
+' FROM reservations '#10+
 ' WHERE Reservation = %d ';  //' + inttostr(Reservation)
 
 select_DraftInv_Create2 : string =
 ' SELECT '#10+
 '   currency '#10+
-' FROM [RoomReservations] '#10+
+' FROM roomreservations '#10+
 ' WHERE RoomReservation = %d ';  //' + inttostr(RoomReservation)
 
 select_DraftInv_RRUpdateAmounts : string =
@@ -4046,11 +4061,11 @@ select_GET_CountryGroupDefault : string =
     ;
 
 select_CountryGroupExistsInOther : string =
-' SELECT CountryGroup FROM [Countries] '#10+
+' SELECT CountryGroup FROM countries '#10+
 ' WHERE (CountryGroup = %s) ';  //' + quotedstr(sCountryGroup) + '
 
 select_CountryGroupExist : string =
-' SELECT CountryGroup FROM [CountryGroups] '#10+
+' SELECT CountryGroup FROM countrygroups '#10+
 ' WHERE (CountryGroup = %s) ';  //' + quotedstr(sCode) + '
 
 select_GET_CountryHolderByCountry : string =
@@ -4091,31 +4106,31 @@ select_GET_CountryCurrency : string =
 '  (Country = %s) ';  //N'+quotedstr(sCode)+'
 
 select_CountryExistsInOther : string =
-' SELECT Country FROM [customers] '#10+
+' SELECT Country FROM customers '#10+
 ' WHERE (Country = %s) ';  //' + quotedstr(sCountry) + '
 
 select_CountryExistsInOther2 : string =
-' SELECT Country FROM [invoiceheads] '#10+
+' SELECT Country FROM invoiceheads '#10+
 ' WHERE (Country = %s) ';  //' + quotedstr(sCountry) + '
 
 select_CountryExistsInOther3 : string =
-' SELECT Country FROM [persons] '#10+
+' SELECT Country FROM persons '#10+
 ' WHERE (Country = %s) ';  //' + quotedstr(sCountry) + '
 
 select_CountryExistsInOther4 : string =
-' SELECT Country FROM [staffMembers] '#10+
+' SELECT Country FROM staffmembers '#10+
 ' WHERE (Country = %s) ';  //' + quotedstr(sCountry) + '
 
 select_CountryExistsInOther5 : string =
-' SELECT Country FROM [staffMembers] '#10+
+' SELECT Country FROM staffmembers '#10+
 ' WHERE (Country = %s) ';  //' + quotedstr(sCountry) + '
 
 select_CountryExistsInOther6 : string =
-' SELECT Country FROM [reservations] '#10+
+' SELECT Country FROM reservations '#10+
 ' WHERE (Country = %s) ';  //' + quotedstr(sCountry) + '
 
 select_CountryExists : string =
-' SELECT Country FROM [Countries] '#10+
+' SELECT Country FROM countries '#10+
 ' WHERE (Country = %s) ';  //' + quotedstr(sCode) + '
 
 select_GET_CurrencyHolderByCurrency : string =
@@ -4135,31 +4150,31 @@ select_GET_CurrencyHolderByCurrency : string =
 '  (currency = %s) ';  //N'+quotedstr(getItem)+'
 
 select_currencyExistsInOther  : string =
-' SELECT NativeCurrency FROM [control] '#10+
+' SELECT NativeCurrency FROM control '#10+
 ' WHERE (NativeCurrency = %s) ';  //' + quotedstr(sCurrency) + '
 
 select_currencyExistsInOther1  : string =
-' SELECT Currency FROM [Countries] '#10+
+' SELECT Currency FROM countries '#10+
 ' WHERE (Currency = %s) ';  //' + quotedstr(sCurrency) + '
 
 select_currencyExistsInOther2  : string =
-' SELECT Currency FROM [Customers] '#10+
+' SELECT Currency FROM customers '#10+
 ' WHERE (Currency = %s) ';  //' + quotedstr(sCurrency) + '
 
 select_currencyExistsInOther3  : string =
-' SELECT Currency FROM [PriceTypes] '#10+
+' SELECT Currency FROM pricetypes '#10+
 ' WHERE (Currency = %s) ';  //' + quotedstr(sCurrency) + '
 
 select_currencyExistsInOther4  : string =
-' SELECT Currency FROM [invoicelines] '#10+
+' SELECT Currency FROM invoicelines '#10+
 ' WHERE (Currency = %s) ';  //' + quotedstr(sCurrency) + '
 
 select_currencyExistsInOther5  : string =
-' SELECT Currency FROM [Payments] '#10+
+' SELECT Currency FROM payments '#10+
 ' WHERE (Currency = %s) ';  //' + quotedstr(sCurrency) + '
 
 select_currencyExistsInOther6  : string =
-' SELECT Currency FROM [RoomReservations] '#10+
+' SELECT Currency FROM roomreservations '#10+
 ' WHERE (Currency = %s) ';  //' + quotedstr(sCurrency) + '
 
 
@@ -4202,7 +4217,7 @@ select_invoiceList_ConfirmGroup : string =
 '   InvoiceHeads '#10+
 ' WHERE '#10+
 '       (InvoiceNumber > 0) '#10+
-'    AND (ihConfirmDate = %s)';  //'+_DateTimeToDbDate(confirmDate,true)+'
+'    AND (ihConfirmDate = %s)';  //'+_db(confirmDate,true)+'
 
 
 select_GET_ConvertHolder : string =
@@ -5111,77 +5126,78 @@ select_customer_ByCustomer : string =
 
 select_ItemType_ByItemType : string =
 '  SELECT '#10+
-'     [ItemType] '#10+
-'    ,[Description] '#10+
-'    ,[VATCode] '#10+
-'    ,[AccItemLink] '#10+
-'    ,[ID] '#10+
-'    ,[Active] '#10+
+'     ItemType '#10+
+'    ,Description '#10+
+'    ,VATCode '#10+
+'    ,AccItemLink '#10+
+'    ,ID '#10+
+'    ,Active '#10+
 '  FROM '#10+
-'    [ItemTypes] '#10+
+'    ItemTypes '#10+
 '  WHERE '#10+
-'    [ItemType] = %d ';
+'    ItemType = %d ';
 
 // @ItemType varchar(20)
 
 
 select_PERSON : string =
 '  SELECT '#10+
-'     [Person] '#10+
-'    ,[RoomReservation] '#10+
-'    ,[Reservation] '#10+
-'    ,[Name] '#10+
-'    ,[Surname] '#10+
-'    ,[Address1] '#10+
-'    ,[Address2] '#10+
-'    ,[Address3] '#10+
-'    ,[Address4] '#10+
-'    ,[Country] '#10+
-'    ,[Company] '#10+
-'    , [GuestType] '#10+
-'    ,[Information] '#10+
-'    ,[PID] '#10+
-'    ,[MainName] '#10+
-'    ,[Customer] '#10+
-'    ,[peTmp] '#10+
-'    ,[hgrID] '#10+
-'    ,[HallReservation] '#10+
-'    ,[Tel1] '#10+
-'    ,[Tel2] '#10+
-'    ,[Fax] '#10+
-'    ,[Email] '#10+
+'     Person '#10+
+'    ,RoomReservation '#10+
+'    ,Reservation '#10+
+'    ,Name '#10+
+'    ,Surname '#10+
+'    ,Address1 '#10+
+'    ,Address2 '#10+
+'    ,Address3 '#10+
+'    ,Address4 '#10+
+'    ,Country '#10+
+'    ,Nationality '#10+
+'    ,Company '#10+
+'    ,GuestType '#10+
+'    ,Information '#10+
+'    ,PID '#10+
+'    ,MainName '#10+
+'    ,Customer '#10+
+'    ,peTmp '#10+
+'    ,hgrID '#10+
+'    ,HallReservation '#10+
+'    ,Tel1 '#10+
+'    ,Tel2 '#10+
+'    ,Fax '#10+
+'    ,Email '#10+
 '  FROM '#10+
-'    [Persons] '#10+
+'    Persons '#10+
 '  WHERE '#10+
 '    Person = %d ';
 //	@Person int
 
 select_Person_By_roomreservation : string =
 '  SELECT '#10+
-'     [Person] '#10+
-'    ,[RoomReservation] '#10+
-'    ,[Reservation] '#10+
-'    ,[Name] '#10+
-'    ,[Surname] '#10+
-'    ,[Address1] '#10+
-'    ,[Address2] '#10+
-'    ,[Address3] '#10+
-'    ,[Address4] '#10+
-'    ,[Country] '#10+
-'    ,[Company] '#10+
-'    ,[GuestType] '#10+
-'    ,[Information] '#10+
-'    ,[PID] '#10+
-'    ,[MainName] '#10+
-'    ,[Customer] '#10+
-'    ,[peTmp] '#10+
-'    ,[hgrID] '#10+
-'    ,[HallReservation] '#10+
-'    ,[Tel1] '#10+
-'    ,[Tel2] '#10+
-'    ,[Fax] '#10+
-'    ,[Email] '#10+
-'  FROM [Persons] '#10+
+'     Person '#10+
+'    ,RoomReservation '#10+
+'    ,Reservation '#10+
+'    ,Name '#10+
+'    ,Surname '#10+
+'    ,Address1 '#10+
+'    ,Address2 '#10+
+'    ,Address3 '#10+
+'    ,Address4 '#10+
+'    ,Country '#10+
+'    ,Company '#10+
+'    ,GuestType '#10+
+'    ,Information '#10+
+'    ,PID '#10+
+'    ,MainName '#10+
+'    ,Customer '#10+
+'    ,peTmp '#10+
+'    ,hgrID '#10+
+'    ,HallReservation '#10+
+'    ,Tel1 '#10+
+'    ,Tel2 '#10+
+'    ,Fax '#10+
+'    ,Email '#10+
+'  FROM Persons '#10+
 '    WHERE roomreservation = %d ';
 
 //	@roomreservation int
@@ -5747,7 +5763,7 @@ select_staffTypes : string =
   ' ,Country '#10+
   ' ,Tel1 '#10+
   ' ,Tel2 '#10+
-  ' ,Fax '#10+
+  ' ,Fax as Mobile '#10+
   ' ,ActiveMember '#10+
   ' ,StaffLanguage '#10+
   ' ,StaffType '#10+
@@ -6034,7 +6050,8 @@ select_Persons_byReservation : string =
 
 
 
-Get_mainGuestname : string = ' (Select Name from persons %s where (%s.roomreservation = %s.roomreservation) and (mainName=1)) AS %s ';
+
+Get_mainGuestname : string = ' (Select Name from persons %s where (%s.roomreservation = %s.roomreservation) and (mainName=1)) AS %s ';
 
 
 
@@ -6097,6 +6114,8 @@ function SELECT_DYNAMIC_RATES(chManCode, channelCode, RoomClass : String) : Stri
 
 implementation
 
+uses uSQLUtils;
+
 function SELECT_DYNAMIC_RATES(chManCode, channelCode, RoomClass : String) : String;
 begin
   result := 'SELECT dpr.*, rtg.Description AS Rate_Name, cm.Description AS ChannelManagerName, ch.Name AS ChannelName ' +
@@ -6114,9 +6133,12 @@ end;
 
 function GetListOfRoomReservationsPerDepartureDate : string;
 begin
-  result :=
-      '  SELECT'+
-      '    DISTINCT'+
+
+  result :=
+
+      '  SELECT'+
+
+      '    DISTINCT'+
       '    RoomReservation'+
       '  FROM'+
       '    roomreservations'+
@@ -6131,9 +6153,12 @@ end;
 
 function GetListOfRoomReservationsFromToDate : string;
 begin
-  result :=
-      '  SELECT'+
-      '    DISTINCT'+
+
+  result :=
+
+      '  SELECT'+
+
+      '    DISTINCT'+
       '    RoomReservation'+
       '  FROM'+
       '    roomsdate'+
@@ -6148,9 +6173,12 @@ end;
 
 function GetListOfRoomReservationsPerArrivalDate : string;
 begin
-  result :=
-      '  SELECT'+
-      '    DISTINCT'+
+
+  result :=
+
+      '  SELECT'+
+
+      '    DISTINCT'+
       '    RoomReservation'+
       '  FROM'+
       '    roomreservations'+
@@ -6162,7 +6190,8 @@ begin
 
       '  ORDER BY RoomReservation';
 end;
-
+
+
 //TESTED OK
 
 //TESTED NOT
@@ -6210,16 +6239,16 @@ begin
   s := s+' WHERE '+#10;
   if   DateSelMedhod = 0 then
   begin
-    s := s+'    (RoomReservations.rrArrival <= %s ) '+#10;  //'+_DateToDBDate(zdtFrom,true)++#10;
-    s := s+'    AND  (RoomReservations.rrDeparture >= %s ) '+#10; //'+_DateToDBDate(zdtFrom,true)++#10;
+    s := s+'    (RoomReservations.rrArrival <= %s ) '+#10;  //'+_db(zdtFrom,true)++#10;
+    s := s+'    AND  (RoomReservations.rrDeparture >= %s ) '+#10; //'+_db(zdtFrom,true)++#10;
   end else
   if DateSelMedhod = 1 then
   begin
-    s := s+'    (RoomReservations.rrDeparture >= %s ) '+#10; //'+_DateToDBDate(zdtFrom,true)+'
+    s := s+'    (RoomReservations.rrDeparture >= %s ) '+#10; //'+_db(zdtFrom,true)+'
   end else
   if DateSelMedhod = 2 then
   begin
-     s := s+'    (RoomReservations.rrDeparture <= %s ) '+#10;//'+_DateToDBDate(zdtFrom,true)+'
+     s := s+'    (RoomReservations.rrDeparture <= %s ) '+#10;//'+_db(zdtFrom,true)+'
   end else
   begin
     s := s+'    (RoomReservations.arrival > ''2000-01-01'' ) '+#10;
@@ -6390,12 +6419,11 @@ begin
   if iRoomReservation = 0 then   //FRoomReservation = 0  // GroupInvoice
   begin
     s := format(s, ['Reservation', iReservation, _db(Customer), iReservation, iReservation]);
-    s := s+' (SELECT COUNT(id) FROM persons WHERE %s=rr.%s) AS numTaxGuests '+#10;
   end else
   begin
     s := format(s, ['RoomReservation', iRoomReservation, _db(Customer), iReservation, iReservation]);
-    s := s+' (SELECT COUNT(id) FROM persons WHERE %s=rr.%s) AS numTaxGuests '+#10;
   end;
+  s := s+' (SELECT COUNT(id) FROM persons WHERE %s=rr.%s) AS numTaxGuests '+#10;
 
   s := s+'  FROM '+#10;
   s := s+'     roomreservations rr '+#10;
@@ -6432,8 +6460,8 @@ begin
   s := s+' SELECT * from invoiceheads '+#10;
   if medhod = 1 then
   begin
-    s := s+ ' where InvoiceDate >= %s '+#10;      //_DateToDBDate(dtFrom.Date,true) ;
-    s := s+ '   and InvoiceDate <= %s '+#10;      //_DateToDBDate(dtTo.Date,true) ;
+    s := s+ ' where InvoiceDate >= %s '+#10;      //_db(dtFrom.Date,true) ;
+    s := s+ '   and InvoiceDate <= %s '+#10;      //_db(dtTo.Date,true) ;
     s := s+ '   and InvoiceNumber > 0'+#10;
     s := s+ 'Order By InvoiceDate'+#10;
   end else
@@ -6659,8 +6687,10 @@ end;
     '  WHERE '+
     '    (Total > 0) AND (ih.InvoiceNumber = - 1) AND (ih.RoomReservation = rr.roomReservation) '+
     '    ) as TotalNoRent '+
-    '  FROM '+
-    '       reservations rv '+
+
+    '  FROM '+
+
+    '       reservations rv '+
     '     ,  roomsdate rd '+
     '     , roomreservations rr '+
     '     , persons pe '+
@@ -6669,14 +6699,14 @@ end;
 ///
 ///    if _FromDate + 1 = _ToDate then
 ///    begin
-///      s := s + '       rd.ADate = ' + _DateToDBDate(_FromDate,true)+chr(10)
+///      s := s + '       rd.ADate = ' + _db(_FromDate,true)+chr(10)
 ///    end
 ///    else
 ///    begin
-///      s := s + '       ( rd.ADate >= ' + _DateToDBDate(_FromDate,true)+chr(10);
-///      s := s + '   and   rd.ADate <  ' + _DateToDBDate(_ToDate,true) + ')'+chr(10);
+///      s := s + '       ( rd.ADate >= ' + _db(_FromDate,true)+chr(10);
+///      s := s + '   and   rd.ADate <  ' + _db(_ToDate,true) + ')'+chr(10);
 ///    end;
-///    s := s + '   or  ( rr.Departure = ' + _DateToDBDate(_ToDate - 1,true) + ')'+chr(10);
+///    s := s + '   or  ( rr.Departure = ' + _db(_ToDate - 1,true) + ')'+chr(10);
 ///    s := s + ' )'+chr(10);
 ///
 ///    case _ReservationState of
@@ -6725,8 +6755,8 @@ end;
       s := s+' WHERE Reservation = %d '#10;
       if not bAll then
       begin
-        S := S + '   AND Arrival = %s '#10;      //_DateToDBDate(zInitDateFrom, true)
-        S := S + '   AND Departure = %s '#10;   //_DateToDBDate(zInitDateTo, true);
+        S := S + '   AND Arrival = %s '#10;      //_db(zInitDateFrom, true)
+        S := S + '   AND Departure = %s '#10;   //_db(zInitDateTo, true);
       end;
       result := s;
     end;
@@ -6891,13 +6921,13 @@ begin
   s:= s+'      (reservations.Customer =  %s ) '#10;
   if iDateMark = 0 then
   begin
-    s := s + '     AND (roomreservations.rrArrival >= %s ) ';  //_DateToDBDate(zDateFrom, true)
-    s := s + '     AND (roomreservations.rrArrival <= %s ) ';  //_DateToDBDate(zDateTo, true)
+    s := s + '     AND (roomreservations.rrArrival >= %s ) ';  //_db(zDateFrom, true)
+    s := s + '     AND (roomreservations.rrArrival <= %s ) ';  //_db(zDateTo, true)
   end else
   if iDateMark = 1 then
   begin
-    s := s + '     AND (roomreservations.rrDeparture >= %s ) ';  //_DateToDBDate(zDateFrom, true)
-    s := s + '     AND (roomreservations.rrDeparture <= %s ) ';  //_DateToDBDate(zDateTo, true)
+    s := s + '     AND (roomreservations.rrDeparture >= %s ) ';  //_db(zDateFrom, true)
+    s := s + '     AND (roomreservations.rrDeparture <= %s ) ';  //_db(zDateTo, true)
   end;
   s := s + ' GROUP BY roomreservations.reservation, roomreservations.roomreservation ';
   s := s + ' ORDER BY roomreservations.Reservation, room, rrArrival ';
@@ -7013,8 +7043,8 @@ end;
       s := s + '   locations ON  rooms.Location = locations.Location '+#10;
     end;
     s := s + '  WHERE'+#10;
-    s := s + '        (Departure >= %s )'+#10;  //'+_DateToDbDate(DateFrom,true)+'
-    s := s + '    AND (Departure <= %s )'+#10;  //'+_DateToDbDate(DateTo,true)+'
+    s := s + '        (Departure >= %s )'+#10;  //'+_db(DateFrom,true)+'
+    s := s + '    AND (Departure <= %s )'+#10;  //'+_db(DateTo,true)+'
     s := s + '    AND (roomreservations.useInNationalReport = 1 )'+#10;  //'+_db(true)+'
     if Location <> '' then
     begin

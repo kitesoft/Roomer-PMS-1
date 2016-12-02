@@ -1199,8 +1199,8 @@ object frmFinishedInvoices2: TfrmFinishedInvoices2
             object LMDSimpleLabel1: TsLabel
               Left = 0
               Top = 0
-              Width = 338
-              Height = 21
+              Width = 80
+              Height = 13
               Align = alClient
               Alignment = taCenter
               Caption = 'VAT Summary'
@@ -1212,8 +1212,6 @@ object frmFinishedInvoices2: TfrmFinishedInvoices2
               Font.Height = -11
               Font.Name = 'Tahoma'
               Font.Style = [fsBold]
-              ExplicitWidth = 80
-              ExplicitHeight = 13
             end
           end
           object agrVSK: TAdvStringGrid
@@ -1328,7 +1326,7 @@ object frmFinishedInvoices2: TfrmFinishedInvoices2
             SearchFooter.HintHighlight = 'Highlight occurences'
             SearchFooter.MatchCaseCaption = 'Match case'
             SortSettings.DefaultFormat = ssAutomatic
-            Version = '7.9.1.0'
+            Version = '8.1.2.0'
             RowHeights = (
               18
               21
@@ -1357,8 +1355,8 @@ object frmFinishedInvoices2: TfrmFinishedInvoices2
             object LMDSimpleLabel2: TsLabel
               Left = 0
               Top = 0
-              Width = 343
-              Height = 21
+              Width = 109
+              Height = 13
               Align = alClient
               Alignment = taCenter
               Caption = 'Payment Summary'
@@ -1370,8 +1368,6 @@ object frmFinishedInvoices2: TfrmFinishedInvoices2
               Font.Height = -11
               Font.Name = 'Tahoma'
               Font.Style = [fsBold]
-              ExplicitWidth = 109
-              ExplicitHeight = 13
             end
           end
           object agrPayments: TAdvStringGrid
@@ -1486,7 +1482,7 @@ object frmFinishedInvoices2: TfrmFinishedInvoices2
             SearchFooter.HintHighlight = 'Highlight occurences'
             SearchFooter.MatchCaseCaption = 'Match case'
             SortSettings.DefaultFormat = ssAutomatic
-            Version = '7.9.1.0'
+            Version = '8.1.2.0'
             RowHeights = (
               19
               21
@@ -1605,7 +1601,7 @@ object frmFinishedInvoices2: TfrmFinishedInvoices2
         SearchFooter.HintHighlight = 'Highlight occurences'
         SearchFooter.MatchCaseCaption = 'Match case'
         SortSettings.DefaultFormat = ssAutomatic
-        Version = '7.9.1.0'
+        Version = '8.1.2.0'
         RowHeights = (
           19
           21

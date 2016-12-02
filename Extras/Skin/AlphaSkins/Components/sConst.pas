@@ -15,7 +15,6 @@ uses
 const
   CompatibleSkinVersion = 8.45; // Version of supported skins in current version of the package
   MaxCompSkinVersion = 11.99;
-  ExceptTag = $100 {256}; // Bit Mask for the tag value in 3rd-party controls which will not be skinned automatically (Old value is -98)
 
   // Data characters for skins
   TexChar   = Char('~');
@@ -313,7 +312,8 @@ type
 
 const
   NCS_DROPSHADOW = $20000;
-{$IFNDEF DELPHI_XE3}
+{$IFNDEF D2010}
+//{$IFNDEF DELPHI_XE3}
   BS_SPLITBUTTON    = 12;
   BS_DEFSPLITBUTTON = 13;
   BS_COMMANDLINK    = 14;
@@ -323,14 +323,17 @@ const
   EmptyCI: TCacheInfo = (Bmp: nil; X: -99; Y: -99; FillColor: clFuchsia; Ready: False);
   sFuchsia: TsColor = (C: $FF00FF); // Transparent color
   sTabPositions: array [TTabPosition] of string = ('', 'BOTTOM', 'LEFT', 'RIGHT');
-  aScalePercents: array [0..2] of integer = (100, 125, 150);
-  aSfxs: array [0..2] of string = ('', '*125', '*150');
+  aScalePercents: array [0..3] of integer = (100, 125, 150, 200);
+  aSfxs: array [0..3] of string = ('', '*125', '*150', '*200');
 
   s_RegName        = 'AlphaSkins';
   s_IntSkinsPath   = 'IntSkinsPath';
   s_WinControlForm = 'TWinControlForm';
   s_NoFocusProp    = 'ACNOFOCUS';
   s_acScale        = 'ACSCALE';
+
+  s_MSSansSerif = 'MS Sans Serif';
+  s_Arial = 'Arial';
 
 {$IFNDEF DISABLEPREVIEWMODE} // Used with ASkinEditor
   s_PreviewKey   = '/acpreview';           //
@@ -459,6 +462,7 @@ const
   COC_TsSkinProvider     = 224;
   COC_TsMDIForm          = 225;
   COC_TsFrameAdapter     = 226;
+  COC_TsCircleControl    = 227;
 
   COC_TsAdapter          = 230;
   COC_TsAdapterEdit      = 231;
@@ -483,6 +487,7 @@ const
   ssButtons: TsCodes       = [COC_TsButton, COC_TsBitBtn, COC_TsSpeedButton];
 
 var
+  ExceptTag: integer = $100 {256}; // Bit Mask for the tag value in 3rd-party controls which will not be skinned automatically (Old value is -98)
   acWinVer: integer;
   sPopupCalendar: TForm;
   acDebugMode: boolean = False;
@@ -497,6 +502,8 @@ var
   acSkinPreviewUpdating: boolean = False;  //
 {$ENDIF}
   acScrollBtnLength: integer = 16;
+  acAddedTabSpacing: integer = 6;
+  acSpacing: integer = 4;
 
   AppShowHint: boolean;
   TempControl: pointer;
@@ -535,7 +542,7 @@ var
   ac_DialogsLevel:        integer = 2;     // Deep of system dialogs skinning
   ac_ChangeThumbPreviews: boolean = False; // Allow a changing of Aero preview window by AlphaControls (is not ready currently)
   ac_AllowHotEdits:       boolean = False; // Allow to repaint edit controls when hovered by mouse pointer
-  StdTransparency:        boolean = False; // Set this variable to True for a standard mechanism of GraphicControls repainting
+//  StdTransparency:        boolean = False; // Set this variable to True for a standard mechanism of GraphicControls repainting
 
   ac_CXSIZEFRAME:  integer = 0;
   ac_CXFIXEDFRAME: integer = 0;

@@ -13,11 +13,15 @@ Type
   TsCurrencyEdit = class(TsCustomNumEdit)
 {$IFNDEF NOTFORHELP}
   protected
+    FAllowCalculator: boolean;
     procedure ButtonClick; override;
+    function CanCalc: boolean; override;
   public
     constructor Create(AOwner:TComponent); override;
     procedure CreateParams(var Params: TCreateParams); override;
   published
+    property AllowCalculator: boolean read FAllowCalculator write FAllowCalculator default False;
+
     property Alignment;
     property AutoSelect;
     property AutoSize;
@@ -93,6 +97,12 @@ begin
 end;
 
 
+function TsCurrencyEdit.CanCalc: boolean;
+begin
+  Result := FAllowCalculator;
+end;
+
+
 constructor TsCurrencyEdit.Create(AOwner:TComponent);
 begin
   inherited Create(AOwner);
@@ -100,6 +110,7 @@ begin
   FDefBmpID := iBTN_CALC;
   SkinData.COC := COC_TsCurrencyEdit;
   Width := 80;
+  FAllowCalculator := False;
 {  ControlState := ControlState + [csCreating];
   try
     Button.Parent := nil;

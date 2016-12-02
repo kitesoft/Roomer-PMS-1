@@ -35,7 +35,7 @@ uses
   uDateUtils,
   ud,
   System.Generics.Collections,
-  _Glob;
+  _Glob, uSQLUtils;
 
 function TDynamicRates.Active: Boolean;
 begin

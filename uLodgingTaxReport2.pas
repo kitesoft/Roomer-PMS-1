@@ -307,7 +307,7 @@ uses
   , uAppGlobal
   , uDImages
   , uMain
-  ;
+  , uSQLUtils;
 
 
 {$R *.dfm}
@@ -477,15 +477,15 @@ sql := sql +    '   ih.InvoiceNumber ';
         Customer := rSet.FieldByName('Customer').Asstring;
         name := rSet.FieldByName('Name').Asstring;
 
-        Total          := LocalFloatValue(rSet.FieldByName('Total').asString);
-        TotalWOVAT     := LocalFloatValue(rSet.FieldByName('TotalWOVAT').asString);
-        TotalVAT       := LocalFloatValue(rSet.FieldByName('TotalVAT').asString);
+        Total          := rSet.FieldByName('Total').AsFloat;
+        TotalWOVAT     := rSet.FieldByName('TotalWOVAT').AsFLoat;
+        TotalVAT       := rSet.FieldByName('TotalVAT').AsFloat;
 
-        TotalStayTax   := LocalFloatValue(rSet.FieldByName('TotalStayTax').asString);
-        TotalStayTaxExcluted   := LocalFloatValue(rSet.FieldByName('TotalStayTaxExcluted').asString);
+        TotalStayTax   := rSet.FieldByName('TotalStayTax').AsFloat;
+        TotalStayTaxExcluted   := rSet.FieldByName('TotalStayTaxExcluted').AsFloat;
 
         TotalStayTaxNights := rSet.FieldByName('TotalStayTaxNights').Asinteger;
-        InvoicedtDate := _dbDateTodate(InvoiceDate);
+        InvoicedtDate := SQLToDate(InvoiceDate);
 
         TotalTax := TotalStayTax+TotalStayTaxExcluted;
 
@@ -791,7 +791,7 @@ var
   weekNum : word;
 begin
   sdate := DataSet.FieldByName('ADate').Asstring;
-  dtDate := _dbDateTodate(sdate);
+  dtDate := SQLToDateTime(sdate);
   decodeDate(dtDate, y, m, d);
   weekNum := _weekNum(dtDate);
 
@@ -989,7 +989,7 @@ begin
 
   iReservation := mInvoiceHeads.FieldByName('Reservation').Asinteger;
   iRoomReservation := mInvoiceHeads.FieldByName('RoomReservation').Asinteger; ;
-  EditInvoice(iReservation, 0, 0, 0, 0, 0, false, true,false);
+  EditInvoice(iReservation, 0, 0, 0, 0, 0, false);
 end;
 
 procedure TfrmLodgingTaxReport2.OpenthisRoom1Click(Sender : TObject);
@@ -1003,7 +1003,7 @@ begin
 
   iReservation := mInvoiceHeads.FieldByName('Reservation').Asinteger;
   iRoomReservation := mInvoiceHeads.FieldByName('RoomReservation').Asinteger; ;
-  EditInvoice(iReservation, iRoomReservation, 0, 0, 0, 0, false, true,false);
+  EditInvoice(iReservation, iRoomReservation, 0, 0, 0, 0, false);
 end;
 
 // -------------------------------------------------------------------------------

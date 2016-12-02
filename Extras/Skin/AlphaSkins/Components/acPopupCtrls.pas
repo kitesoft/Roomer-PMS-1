@@ -233,8 +233,6 @@ begin
 
     WM_PAINT: if not SkinData.Skinned and Button.ComboBtn then begin
       inherited;
-//      Button.GraphRepaint;
-//      Button.Paint;
       DC := GetWindowDC(Handle);
       Button.Perform(WM_PAINT, WParam(DC), Message.LParam);
       ReleaseDC(Handle, DC);
@@ -242,6 +240,12 @@ begin
     end;
   end;
   inherited;
+  case Message.Msg of
+    CM_TEXTCHANGED: begin
+      SkinData.BGChanged := True;
+      RedrawWindow(Handle, nil, 0, RDWA_ALLNOW);
+    end;
+  end;
 end;
 
 

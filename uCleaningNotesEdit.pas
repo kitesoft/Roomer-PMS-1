@@ -8,7 +8,7 @@ uses
   sComboBox, sLabel
   , uRoomerForm, cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, dxSkinsCore, dxSkinCaramel,
   dxSkinCoffee, dxSkinDarkSide, dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinsdxStatusBarPainter,
-  cxGridTableView, cxStyles, dxPScxCommon, dxPScxGridLnk, dxStatusBar;
+  cxGridTableView, cxStyles, dxPScxCommon, dxPScxGridLnk, dxStatusBar, AdvSmoothProgressBar, Vcl.ComCtrls, sStatusBar;
 
 type
   TfrmCleaningNotesEdit = class(TfrmBaseRoomerForm)
@@ -32,7 +32,7 @@ type
     procedure __cbxServiceTypeCloseUp(Sender: TObject);
   private
   protected
-    procedure UpdateControls; override;
+    procedure DoUpdateControls; override;
     procedure DoLoadData; override;
   public
     { Public declarations }
@@ -115,7 +115,7 @@ begin
   UpdateControls;
 end;
 
-procedure TFrmCleaningNotesEdit.UpdateControls;
+procedure TFrmCleaningNotesEdit.DoUpdateControls;
 begin
   inherited;
   __cbxOnceType.Visible := __cbxServiceType.ItemIndex > 0;

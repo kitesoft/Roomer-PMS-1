@@ -1,4 +1,4 @@
-unit uMakeKreditInvoice;
+ï»¿unit uMakeKreditInvoice;
 
 interface
 
@@ -207,7 +207,7 @@ uses
   , uFrmHandleBookKeepingException
   , uMain
   , RoomerCloudEntities
-  ;
+  , uSQLUtils;
 
 
 function MakeKreditInvoice(number : integer; var createNew : boolean) : boolean;
@@ -252,7 +252,7 @@ var
 
     initInvoiceHeadHolderRec(invoiceHeadData);
     invoiceHeadData.InvoiceNumber   := zKeditInvoiceNumber;
-    invoiceHeadData.InvoiceDate     := _dateToDbdate(dtInvoicedate.date,false); //
+    invoiceHeadData.InvoiceDate     := _db(dtInvoicedate.date,false); //
     invoiceHeadData.ihDate          := Now;
     invoiceHeadData.ihInvoiceDate   := dtInvoicedate.date;
     invoiceHeadData.ihPayDate       := dtPayDate.date;
@@ -313,7 +313,7 @@ var
   begin
     initInvoiceLineHolderRec(invoiceLineData);
     invoiceLineData.InvoiceNumber   := zKeditInvoiceNumber;
-    invoiceLineData.SplitNumber     := 1; // Var ekki svona í fyrri
+    invoiceLineData.SplitNumber     := 1; // Var ekki svona ï¿½ fyrri
     invoiceLineData.confirmDate     := 2;
     invoiceLineData.confirmAmount   := 0.00;
 
@@ -329,7 +329,7 @@ var
           RoomReservation      := kbmInvoiceLines['RoomReservation'];
 //          SplitNumber          := kbmInvoiceLines['SplitNumber'];
           ItemNumber           := kbmInvoiceLines['ItemNumber'];
-          PurchaseDate         := _DbDateToDate(kbmInvoiceLines['PurchaseDate']);
+          PurchaseDate         := SQLToDateTime(kbmInvoiceLines['PurchaseDate']);
 //          InvoiceNumber        := kbmInvoiceLines['InvoiceNumber'];
           ItemID               := kbmInvoiceLines['ItemID'];
           Number               := kbmInvoiceLines['Number'];
@@ -386,7 +386,7 @@ var
     initPaymentHolderRec(paymentData);
     PaymentData.InvoiceNumber   := zKeditInvoiceNumber;
     PaymentData.confirmDate     := 2;
-    PaymentData.PayDate         := _dateToDbdate(dtInvoicedate.date,false);
+    PaymentData.PayDate         := _db(dtInvoicedate.date,false);
 
     kbmPayments.DisableControls;
     try
@@ -400,7 +400,7 @@ var
           AutoGen            := _GetCurrentTick;
           TypeIndex          := kbmPayments['TypeIndex'];
           InvoiceNumber      := zKeditInvoiceNumber;
-          PayDate            := _dateToDbdate(dtInvoicedate.date,false);
+          PayDate            := _db(dtInvoicedate.date,false);
           Customer           := kbmPayments['Customer'];
           PayType            := kbmPayments['PayType'];
           Amount             := kbmPayments['Amount']*-1;
@@ -506,7 +506,7 @@ begin
     begin
       SelectedInvoiceIndex := 0;
       d.copyInvoiceToInvoiceLinesTmp(OrginalInvoice, true, hasPackage, SelectedInvoiceIndex);
-      EditInvoice(Reservation, Roomreservation, 0, SelectedInvoiceIndex, 0, 0, false,false,false,NOT hasPackage);
+      EditInvoice(Reservation, Roomreservation, 0, SelectedInvoiceIndex, 0, 0, NOT hasPackage);
     end;
   end else
   begin
@@ -754,8 +754,7 @@ EditInvoice(0, // Reservation,
       0, // Arrival,
       0, // Departure : TDate;
       true, // bCredit,
-      true // aModal : boolean
-      , false);
+    );
 
 end;
 

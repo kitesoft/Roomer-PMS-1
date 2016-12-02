@@ -248,7 +248,7 @@ uses
   PrjConst,
   uRoomerLanguage
   , DateUtils
-  , uDImages;
+  , uDImages, uSQLUtils;
 
 function RptCustInvoices : boolean;
 begin
@@ -391,8 +391,8 @@ begin
     s := s+'  invoiceheads ih '#10;
     s := s+'   LEFT JOIN customers cust ON ih.customer = cust.customer '#10;
     s := s+'WHERE (invoicenumber > 0) '#10;
-    s := s+'   AND (InvoiceDate >= '+_dateToSqlDate(zDateFrom)+') '#10;
-    s := s+'   AND (InvoiceDate <= '+_dateToSqlDate(zDateTO)+') '#10;
+    s := s+'   AND (InvoiceDate >= '+_db(zDateFrom)+') '#10;
+    s := s+'   AND (InvoiceDate <= '+_db(zDateTO)+') '#10;
     s := s+'GROUP BY '#10;
     s := s+'  Customer '#10;
 
@@ -401,7 +401,8 @@ begin
 
     ExecutionPlan.AddQuery(s);
     //////////////////// Execute!
-
+
+
     screen.Cursor := crHourGlass;
     kbmTotal.DisableControls;
     try
@@ -489,8 +490,8 @@ begin
       s := s+'FROM '#10;
       s := s+'  invoiceheads ih '#10;
       s := s+'WHERE (invoicenumber > 0) '#10;
-      s := s+'   AND (InvoiceDate >= '+_dateToSqlDate(zDateFrom)+') '#10;
-      s := s+'   AND (InvoiceDate <= '+_dateToSqlDate(zDateTO)+') '#10;
+      s := s+'   AND (InvoiceDate >= '+_db(zDateFrom)+') '#10;
+      s := s+'   AND (InvoiceDate <= '+_db(zDateTO)+') '#10;
       s := s+'   AND (customer = '+_db(customer)+') '#10;
 
 //      copytoclipboard(s);
@@ -498,7 +499,8 @@ begin
 
       ExecutionPlan.AddQuery(s);
       //////////////////// Execute!
-
+
+
       screen.Cursor := crHourGlass;
       kbmTotal.DisableControls;
       try
@@ -845,12 +847,14 @@ begin
       s := s+ '     INNER JOIN payments on payments.invoicenumber = invoiceheads.invoicenumber '#10;
       s := s+ '     INNER JOIN paytypes on paytypes.paytype = payments.paytype '#10;
       s := s+ '     INNER JOIN paygroups on paytypes.paygroup = paygroups.paygroup '#10;
-      s := s+ ' WHERE '#10;
-      s := s+ ' invoiceheads.invoicenumber in ('+invoicelist+') '#10;
+
+      s := s+ ' WHERE '#10;
+
+      s := s+ ' invoiceheads.invoicenumber in ('+invoicelist+') '#10;
 
 //      s := s+ '  (invoiceheads.InvoiceNumber > 0) ';
-//      s := s+ ' AND (invoiceheads.ihInvoiceDate >= '+_DatetoDBDate(zDateFrom,true)+') ';
-//      s := s+ ' AND (invoiceheads.ihInvoiceDate <= '+_DatetoDBDate(zDateTo,true)+') ';
+//      s := s+ ' AND (invoiceheads.ihInvoiceDate >= '+_db(zDateFrom,true)+') ';
+//      s := s+ ' AND (invoiceheads.ihInvoiceDate <= '+_db(zDateTo,true)+') ';
 //
 //      s := s+ ' AND (invoiceheads.Customer = '+_db(Customer)+') ';
 
@@ -863,7 +867,8 @@ begin
 
       ExecutionPlan.AddQuery(s);
      //////////////////// Execute!
-      s := '';
+
+      s := '';
       s := s+'SELECT '#10;
       s := s+'   sum(il.total) AS Amount '#10;
       s := s+'  ,count(il.id) AS LineCount '#10;
@@ -915,9 +920,9 @@ begin
           Address1          :=  rSet.FieldByName('Address1').asstring  ;
           Address2          :=  rSet.FieldByName('Address2').asstring  ;
           Address3          :=  rSet.FieldByName('Address3').asstring  ;
-          ihAmountWithTax   :=  LocalFloatValue(rSet.FieldByName('ihAmountWithTax').asString)  ;
-          ihAmountNoTax     :=  LocalFloatValue(rSet.FieldByName('ihAmountNoTax').asString)  ;
-          ihAmountTax       :=  LocalFloatValue(rSet.FieldByName('ihAmountTax').asString)  ;
+          ihAmountWithTax   :=  rSet.FieldByName('ihAmountWithTax').AsFloat;
+          ihAmountNoTax     :=  rSet.FieldByName('ihAmountNoTax').AsFloat;
+          ihAmountTax       :=  rSet.FieldByName('ihAmountTax').AsFloat;
           CreditInvoice     :=  rSet.FieldByName('CreditInvoice').asinteger ;
           OriginalInvoice   :=  rSet.FieldByName('OriginalInvoice').asinteger ;
           RoomGuest         :=  rSet.FieldByName('RoomGuest').asstring  ;
@@ -965,11 +970,11 @@ begin
         Description       :=  rSet.FieldByName('Description').asstring  ;
         Price             :=  rSet.GetFloatValue(rSet.FieldByName('Price'))  ;
         VATType           :=  rSet.FieldByName('VATType').asString  ;
-        ilAmountWithTax   :=  LocalFloatValue(rSet.FieldByName('ilAmountWithTax').asString)  ;
-        ilAmountNoTax     :=  LocalFloatValue(rSet.FieldByName('ilAmountNoTax').asString)  ;
-        ilAmountTax       :=  LocalFloatValue(rSet.FieldByName('ilAmountTax').asString)  ;
+        ilAmountWithTax   :=  rSet.FieldByName('ilAmountWithTax').AsFloat;
+        ilAmountNoTax     :=  rSet.FieldByName('ilAmountNoTax').AsFloat;
+        ilAmountTax       :=  rSet.FieldByName('ilAmountTax').AsFloat;
         Currency          :=  rSet.FieldByName('Currency').asstring  ;
-        CurrencyRate      :=  LocalFloatValue(rSet.FieldByName('CurrencyRate').asString)  ;
+        CurrencyRate      :=  rSet.FieldByName('CurrencyRate').AsFloat;
         ImportRefrence    :=  rSet.FieldByName('ImportRefrence').asstring  ;
         ImportSource      :=  rSet.FieldByName('ImportSource').asstring  ;
 

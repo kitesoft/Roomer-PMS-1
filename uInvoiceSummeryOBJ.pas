@@ -497,7 +497,7 @@ uses
   , uFinishedInvoices2
   , uSqlDefinitions
   , uAppGlobal
-  ;
+  , uSQLUtils;
 
 // *****************************************************************************
 // TCustInfo - Starts
@@ -1013,8 +1013,8 @@ begin
         while not rSet.Eof do
         begin
           pmCode := rSet.fieldbyname('PayType').asString;
-          pmAmount := LocalFloatValue(rSet.fieldbyname('Amount').asString);
-          pmDate := _DBdateToDate(rSet.fieldbyname('PayDate').asString);
+          pmAmount := rSet.fieldbyname('Amount').AsFloat;
+          pmDate := SQLToDateTime(rSet.fieldbyname('PayDate').asString);
           pmDescription := rSet.fieldbyname('Description').asstring;
           pmTypeIndex   := rSet.fieldbyname('TypeIndex').asInteger;
 
@@ -1255,7 +1255,7 @@ begin
       FivhExtraText       := invoicedata.ExtraText;
 
       sTmp := invoicedata.InvoiceDate;
-      FivhDate := _DBdateToDate(sTmp);
+      FivhDate := SQLToDate(sTmp);
 
       FivhPayDate         := invoicedata.ihPayDate;
       FivhStaff           := invoicedata.ihStaff;
@@ -1289,20 +1289,20 @@ begin
         FivhRoomNumber := tempStr; // d.RR_GetRoomNr(FivhRoomReservation);
         FivhExtraText := rSet.fieldbyname('ExtraText').asString;
         sTmp := rSet.fieldbyname('InvoiceDate').asString;
-        FivhDate := _DBdateToDate(sTmp);
+        FivhDate := SQLToDate(sTmp);
 
         FivhPayDate := rSet.fieldbyname('ihPayDate').asDateTime;
         FivhStaff := rSet.fieldbyname('ihStaff').asString;
 
-        FivhTotal := LocalFloatValue(rSet.fieldbyname('Total').asString);
-        FivhTotal_woVat := LocalFloatValue(rSet.fieldbyname('TotalWOVAT').asString);
-        FivhTotal_VAT := LocalFloatValue(rSet.fieldbyname('TotalVAT').asString);
-        FivhTotalBreakFast := LocalFloatValue(rSet.fieldbyname('TotalBreakFast').asString);
+        FivhTotal := rSet.fieldbyname('Total').asFloat;
+        FivhTotal_woVat := rSet.fieldbyname('TotalWOVAT').AsFloat;
+        FivhTotal_VAT := rSet.fieldbyname('TotalVAT').AsFloat;
+        FivhTotalBreakFast := rSet.fieldbyname('TotalBreakFast').AsFloat;
         FivhCreditInvoice := rSet.fieldbyname('CreditInvoice').asInteger;
         FivhOriginalInvoice := rSet.fieldbyname('OriginalInvoice').asInteger;
         FivhSplitNumber := rSet.fieldbyname('SplitNumber').asInteger;
 
-        FivhTotalStayTax       := LocalFloatValue(rSet.fieldbyname('TotalStayTax').asString);
+        FivhTotalStayTax       := rSet.fieldbyname('TotalStayTax').asFloat;
         FivhTotalStayTaxNights := rSet.fieldbyname('TotalStayTaxNights').asInteger;
         FivhShowPackage        := rSet.fieldbyname('Showpackage').asBoolean;
         FivhLocation           := rSet.fieldbyname('Location').asString;
@@ -1519,17 +1519,17 @@ begin
 
         ilID := rSet.fieldbyname('ID').asInteger;
         sTmp := rSet.fieldbyname('PurchaseDate').asString;
-        Date := _DBdateToDate(sTmp);
+        Date := SQLToDate(sTmp);
 
         LineNo := rSet.fieldbyname('ItemNumber').asInteger;
         Code := rSet.fieldbyname('ItemID').asString;
 
 
         Count      := rSet.GetFloatValue(rSet.fieldbyname('Number')); //-96
-        Price      := LocalFloatValue(rSet.fieldbyname('Price').asString);
-        TotalPrice := LocalFloatValue(rSet.fieldbyname('Total').asString);
-        TotalWOVat := LocalFloatValue(rSet.fieldbyname('TotalWOVat').asString);
-        VATAmount  := LocalFloatValue(rSet.fieldbyname('Vat').asString);
+        Price      := rSet.fieldbyname('Price').AsFloat;
+        TotalPrice := rSet.fieldbyname('Total').AsFLoat;
+        TotalWOVat := rSet.fieldbyname('TotalWOVat').AsFloat;
+        VATAmount  := rSet.fieldbyname('Vat').AsFloat;
         VatType    := rSet.fieldbyname('VATType').asString;
         AccountKey := rSet.fieldbyname('ilAccountKey').asString;
 
@@ -1538,7 +1538,7 @@ begin
         if index = 1 then
         begin
           FCurrency := rSet.fieldbyname('Currency').asString;
-          FCurrencyRate := LocalFloatValue(rSet.fieldbyname('CurrencyRate').asString);
+          FCurrencyRate := rSet.fieldbyname('CurrencyRate').AsFloat;
           FCurrencyType := getCurrencyType(FCurrency); // ctLocalor ctForeign
         end;
 

@@ -183,6 +183,9 @@ uses uAppGlobal,
   , uFrmRoomReservationCancellationDialog
   , uCleaningNotes
   , uCleaningNotesEdit
+  , uRptDailyRevenues
+  , uRptHouseKeeping
+  , uDayClosingTimes
   ;
 
 
@@ -291,6 +294,7 @@ begin
   constants.Add('shAndCurrency', 'and Currency ');
   constants.Add('shAndPersonVipType', 'and Person VIP Type ');
   constants.Add('shAndPersonContactType', 'and Person Contact Type ');
+  constants.Add('shCurrencyRate', 'Rate');
   // uCountryGroups;
   constants.Add('shDeleteCountrygroup', 'Delete countrygroup');
   constants.Add('shDeleteChannelManager', 'Delete channel manager');
@@ -889,15 +893,18 @@ begin
   constants.Add('shTx_Packages_Exists', 'exists in Items table ');
   constants.Add('shTx_ReservationProfile_MustBeOver1Day', 'Number of days must be atleast 1 day - Check the dates ! ');
   constants.Add('shTx_ReservationProfile_CopyHidden', 'Copy to hidden :');
-  constants.Add('shTx_ReservationProfile_ChangeNationalityConfirmation',
-                                     //   'Breyta þjóðerni allra gesta pöntunnar ' + #10 +
-									 'Change nationality of all guests ' + #10 +
-                                     //   ' from %s to %s.' + #10#10 +
-									 ' From %s to %s.' + #10#10 +
-                                     //   'Ertu viss ?');
-									  'Confirm ?');
-//  constants.Add('shTx_ReservationProfile_NationalityChangeFailed', 'Ekki tókst að breyta landi');
+  constants.Add('shTx_ReservationProfile_ChangeNationalityConfirm',
+									 'Change nationality of all guests to %s.' + #10#10 +
+									  '  Yes: All guests in this room' + #10 +
+                    '  All: All guests in this reservation' + #10 +
+                    '  No:  Cancel all changes');
+  constants.Add('shTx_ReservationProfile_ChangeCountryConfirm',
+									 'Change country of origin of all guests to %s.' + #10#10 +
+									  '  Yes: All guests in this room' + #10 +
+                    '  All: All guests in this reservation' + #10 +
+                    '  No:  Cancel all changes');
   constants.Add('shTx_ReservationProfile_NationalityChangeFailed', 'Changing nationality failed');
+  constants.Add('shTx_ReservationProfile_CountryChangeFailed', 'Changing country failed');
   constants.Add('shTx_ReservationProfile_Outdated', 'OutDated');
   constants.Add('shTx_ReservationProfile_ChangeAllRooms', 'Change all rooms to ');
   constants.Add('shTx_ReservationProfile_BreakfastInc', 'Breakfast included ?');
@@ -1066,6 +1073,7 @@ begin
   constants.Add('shTx_ProvideARoom_Bath', 'bath ');
   constants.Add('shTx_ProvideARoom_RoomWithout', 'Room without');
   constants.Add('shTx_ProvideARoom_RoomWith', 'Room with');
+  constants.Add('shProvideaRoomCleanToo', 'No clean rooms available, show unclean rooms?');
   
   constants.Add('shTx_StaffTypes2_UpdateNotOK', 'UPDATE NOT OK');
   constants.Add('shTx_StaffTypes2_InsertNotOK', 'INSERT NOT OK');
@@ -1148,6 +1156,7 @@ begin
   constants.Add('shTx_RoomDateProblem_Allotment', 'Allotment');
   constants.Add('shTx_StaffEdit2_InitialsRequired', 'Initials are required');
   constants.Add('shTx_StaffEdit2_InitialExists', 'This already initial exists ');
+  constants.Add('shTx_StaffEdit2_PasswordsNoEqual', 'Password and repeat password are not the same');
   constants.Add('shTx_StaffEdit2_NameRequired', 'Name is required');
   constants.Add('shTx_StaffEdit2_RightsRequired', 'Set access rights of this staffmember');
   constants.Add('shTx_StaffEdit2_LanguageRequired', 'Language is required');
@@ -1584,6 +1593,9 @@ begin
 
   constants.Add('shTx_D_SaveToSpecifiedInvoiceIndex', 'Saved invoice as number %d');
 
+  constants.Add('shTxRemoveReservationWarning', 'You are about to remove a reservation originating from a connection with external booking party.' + #13 +
+                                                'Are you sure you want to continue?');
+
   constants.Add('shTx_MandatoryFields_City', 'City');
   constants.Add('shTx_MandatoryFields_Country', 'Country of origin');
   constants.Add('shTx_MandatoryFields_FirstName', 'First name');
@@ -1677,7 +1689,7 @@ begin
   frmOpenInvoicesNew := TfrmOpenInvoicesNew.Create(nil); frmOpenInvoicesNew.Free; frmOpenInvoicesNew := nil;
   frmResMemos := TfrmResMemos.Create(nil); frmResMemos.Free; frmResMemos := nil;
 //  frmSelHotel := TfrmSelHotel.Create(nil); frmSelHotel.Free; frmSelHotel := nil;
-  frmHomedate := TfrmHomedate.Create(nil); frmHomedate.Free; frmHomedate := nil;
+  TfrmHomedate.Create(nil).Free;
 //  frmGoToRoomandDate := TfrmGoToRoomandDate.Create(nil); frmGoToRoomandDate.Free; frmGoToRoomandDate := nil;
   frmHiddenInfo := TfrmHiddenInfo.Create(nil); frmHiddenInfo.Free; frmHiddenInfo := nil;
   frmDownPayment := TfrmDownPayment.Create(nil); frmDownPayment.Free; frmDownPayment := nil;
@@ -1758,7 +1770,7 @@ begin
   FrmHandleBookKeepingException := TFrmHandleBookKeepingException.Create(nil); FrmHandleBookKeepingException.Free; FrmHandleBookKeepingException := nil;
   FrmRoomClassEdit := TFrmRoomClassEdit.Create(nil); FrmRoomClassEdit.Free; FrmRoomClassEdit := nil;
 
-  frmRptReservations := TfrmRptReservations.Create(nil); frmRptReservations.Free; frmRptReservations := nil;
+  TfrmRptReservations.Create(nil).Free;
   FrmPostInvoices := TFrmPostInvoices.Create(nil); FrmPostInvoices.Free; FrmPostInvoices := nil;
   frmRptBreakfastGuests := TfrmRptBreakfastGuests.Create(nil); frmRptBreakfastGuests.Free; frmRptBreakfastGuests := nil;
   frmGuestCheckInForm := TfrmGuestCheckInForm.Create(nil); frmGuestCheckInForm.Free; frmGuestCheckInForm := nil;
@@ -1768,7 +1780,7 @@ begin
   frmRptReservationsCust := TfrmRptReservationsCust.Create(nil); frmRptReservationsCust.Free; frmRptReservationsCust := nil;
 
   frmGuestProfiles := TfrmGuestProfiles.Create(nil); frmGuestProfiles.Free; frmGuestProfiles := nil;
-  frmGuestPortfolio := TfrmGuestPortfolio.Create(nil); frmGuestPortfolio.Free; frmGuestPortfolio := nil;
+  TfrmGuestPortfolio.Create(nil).Free;
 
 
   frmRptTurnoverAndPayments := TfrmRptTurnoverAndPayments.Create(nil); frmRptTurnoverAndPayments.Free; frmRptTurnoverAndPayments := nil;
@@ -1833,6 +1845,10 @@ begin
 
   TfrmCleaningNotes.Create(nil).Free;
   TfrmCleaningNotesEdit.Create(nil).Free;
+
+  TfrmRptDailyRevenues.Create(nil).Free;
+  TfrmHouseKeepingReport.Create(nil).Free;
+  TfrmDayClosingTimes.Create(nil).Free;
 
 
 end;

@@ -263,8 +263,8 @@ begin
     try
 //      s := '';
 //      s := s + 'Select Room, RoomType, ADate, ResFlag from [RoomsDate] ';
-//      s := s + ' where ADate >= ' + _DateToDBDate(DateFrom, true);
-//      s := s + '   and ADate < ' + _DateToDBDate(DateTo, true);
+//      s := s + ' where ADate >= ' + _db(DateFrom, true);
+//      s := s + '   and ADate < ' + _db(DateTo, true);
 //      s := s + '   and ( Room  < ' + QuotedStr('<');
 //      s := s + '         or Room  > ' + QuotedStr('>') + ')';
 

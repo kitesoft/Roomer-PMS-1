@@ -24,6 +24,8 @@ const
 
 function acMousePos: TPoint;
 function acMouseInControl(Control: TControl): boolean;
+function acMouseInControlDC(Handle: THandle): boolean;
+
 function CtrlUnderMouse: TControl;
 function GetRootParent(Handle: THandle): THandle;
 function LeftToRight(const Control: TControl; const NormalAlignment: boolean = True): boolean;
@@ -192,6 +194,29 @@ begin
         ReleaseDC(Control.Parent.Handle, DC);
       end;
     end;
+end;
+
+
+function acMouseInControlDC(Handle: THandle): boolean;
+var
+  DC: hdc;
+  WndRect, R: TRect;
+begin
+  DC := GetWindowDC(Handle);
+  GetWindowRect(Handle, WndRect);
+  try
+    case GetClipBox(DC, R) of
+      SIMPLEREGION: begin
+        OffsetRect(R, WndRect.Left, WndRect.Top);
+        Result := PtInRect(R, acMousePos);
+      end;
+      NULLREGION:    Result := False;
+      COMPLEXREGION: Result := False
+      else           Result := False
+    end;
+  finally
+    ReleaseDC(Handle, DC);
+  end;
 end;
 
 
@@ -405,6 +430,7 @@ end;
 
 procedure AnimShowForm(sp: TsSkinProvider; wTime: word = 0; MaxTransparency: integer = MaxByte; AnimType: TacAnimType = atAero);
 const
+  ShowCommands: array[TWindowState] of Integer = (SW_SHOWNORMAL, SW_SHOWMINNOACTIVE, SW_SHOWMAXIMIZED);
 //  DebugOffsX = 100; DebugOffsY = -100;
   DebugOffsX = 0; DebugOffsY = 0;
 var
@@ -499,6 +525,23 @@ var
         b := b + dy;
       end
     end
+  end;
+
+  procedure UpdateBlend;
+  begin
+{$IFDEF DELPHI7UP}
+    if sp.Form.AlphaBlend then
+      DoLayered(sp.Form.Handle, True, sp.Form.AlphaBlendValue)
+    else
+{$ENDIF}
+    begin
+      // Update of form blend. Calling it, because "not WS_EX_LAYERED" style changes a form blending not always
+      // Solving of the problem with empty form
+      if AeroIsEnabled then
+        DoLayered(sp.Form.Handle, True, MaxByte);
+
+      SetWindowLong(sp.Form.Handle, GWL_EXSTYLE, GetWindowLong(sp.Form.Handle, GWL_EXSTYLE) and not WS_EX_LAYERED);
+    end;
   end;
 
 begin
@@ -613,17 +656,14 @@ begin
         ReleaseDC(0, DC);
         if sp <> nil then begin
           sp.FInAnimation := False;
-{$IFDEF DELPHI7UP}
-          if sp.Form.AlphaBlend then
-            DoLayered(sp.Form.Handle, True, sp.Form.AlphaBlendValue)
-//            sp.Form.AlphaBlendValue := MaxTransparency
 
-          else
-{$ENDIF}
-            SetWindowLong(sp.Form.Handle, GWL_EXSTYLE, GetWindowLong(sp.Form.Handle, GWL_EXSTYLE) and not WS_EX_LAYERED);
-//            while SetWindowLong(sp.Form.Handle, GWL_EXSTYLE, GetWindowLong(sp.Form.Handle, GWL_EXSTYLE) and not WS_EX_LAYERED) = 0 do;
+          DoLayered(sp.Form.Handle, True, 0);
+          ShowWindow(sp.Form.Handle, ShowCommands[sp.Form.WindowState]);
 
+//          SetWindowPos(sp.Form.Handle, AnimForm.Handle, 0, 0, 0, 0, SWP_NOMOVE + SWP_NOZORDER + SWP_NOACTIVATE + SWP_SHOWWINDOW);
           SetWindowPos(sp.Form.Handle, AnimForm.Handle, 0, 0, 0, 0, SWPA_ZORDER);
+          UpdateBlend;
+
           InAnimationProcess := False;
           if sp.BorderForm <> nil then
             sp.BorderForm.ExBorderShowing := True; // Do not update extended borders
@@ -631,12 +671,10 @@ begin
           if (Win32MajorVersion = 6) and (Win32MinorVersion = 0) then // Patch for Vista
             SetWindowLong(sp.Form.Handle, GWL_STYLE, GetWindowLong(sp.Form.Handle, GWL_STYLE) or WS_VISIBLE); // Form must be visible
 
-          sp.Form.Perform(WM_SETREDRAW, 1, 0); // Vista and newer
-
           if sp.BorderForm <> nil then
             sSkinProvider.UpdateRgn(sp, True, True); // Guarantees that region is updated
 
-//          while not RedrawWindow(sp.Form.Handle, nil, 0, RDWA_ALLNOW) do;
+//          sp.Form.Perform(WM_SETREDRAW, 1, 0); // Vista and newer
           RedrawWindow(sp.Form.Handle, nil, 0, RDWA_ALLNOW);
 
           if sp.BorderForm <> nil then
@@ -650,12 +688,12 @@ begin
           if sp.BorderForm = nil then
             FreeAndNil(AnimForm)
           else begin
-//            sSkinProvider.UpdateRgn(sp, True, True); // Guarantees that region is updated
             SetWindowRgn(AnimForm.Handle, sp.BorderForm.MakeRgn, False);
             if sp.SkinData.SkinManager.CommonSkinData.UseAeroBluring {$IFNDEF NOFONTSCALEPATCH} or (sp.SkinData.SkinManager.SysFontScale > 0) and (acWinVer > 7){$ENDIF} then
               sp.BorderForm.UpdateExBordersPos(True);
-          end;
 
+            UpdateBlend;
+          end;
           if Assigned(sp.OnAfterAnimation) then
             sp.OnAfterAnimation(aeShowing);
         end;

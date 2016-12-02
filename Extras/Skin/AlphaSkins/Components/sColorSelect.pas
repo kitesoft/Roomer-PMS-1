@@ -5,7 +5,8 @@ unit sColorSelect;
 interface
 
 uses
-  Windows, Messages, SysUtils, Classes, Graphics, Dialogs, Buttons, sSpeedButton;
+  Windows, Messages, SysUtils, Classes, Graphics, Dialogs, Buttons,
+  sSpeedButton;
 
 
 type
@@ -161,11 +162,11 @@ begin
       Glyph.Canvas.Pixels[0, 0]                          := sFuchsia.C;
       Glyph.Canvas.Pixels[FImgWidth - 1, FImgHeight - 1] := sFuchsia.C;
       Glyph.Canvas.Pixels[FImgWidth - 1, 0]              := sFuchsia.C;
+}
       if Repaint then begin
         SkinData.BGChanged := True;
         GraphRepaint;
       end;
-}
     end;
 end;
 

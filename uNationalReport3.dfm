@@ -32,7 +32,7 @@ object frmNationalReport3: TfrmNationalReport3
     Top = 117
     Width = 1079
     Height = 479
-    ActivePage = cxTabSheet1
+    ActivePage = sheetNationalStatistics1
     Align = alClient
     Style = tsButtons
     TabHeight = 25
@@ -44,6 +44,10 @@ object frmNationalReport3: TfrmNationalReport3
       ImageIndex = 1
       SkinData.CustomColor = False
       SkinData.CustomFont = False
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Panel2: TsPanel
         Left = 0
         Top = 0
@@ -217,6 +221,10 @@ object frmNationalReport3: TfrmNationalReport3
       ImageIndex = 2
       SkinData.CustomColor = False
       SkinData.CustomFont = False
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Panel5: TsPanel
         Left = 0
         Top = 0

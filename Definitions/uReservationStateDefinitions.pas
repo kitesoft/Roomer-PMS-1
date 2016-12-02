@@ -44,12 +44,15 @@ type
 
     rsMixed,
 
-    rsWaitingList
+    rsWaitingList,
+
+    rsDeleted
   );
 
     TReservationStateSet = set of TReservationState;
 
     TReservationStateHelper = record helper for TReservationState
+  private
     public
       // constructor
       /// <summary>
@@ -104,6 +107,22 @@ type
       ///   Can the current state be changed into aNewState
       /// </summary>
       function CanChangeTo(aNewState: TReservationState): boolean;
+
+      /// <summary>
+      ///   Returns a TReservationState set with all states that are allowed to change into the Self state
+      /// </summary>
+      function StatesAllowedToChangeIntoThis: TReservationStateSet;
+
+      /// <summary>
+      ///   True if a reservation with this state has influence on the room availability
+      /// </summary>
+      function InfluencesAvailability: boolean;
+
+      /// <summary>
+      ///   True if changing the reservationstate of a reservation from this into newState could change the
+      ///   availability of rooms
+      /// </summary>
+      function AffectsAvailabilityWhenChangingTo(anewState: TReservationState): boolean;
 
     end;
 
@@ -162,7 +181,7 @@ end;
 function TReservationStateHelper.AsStatusChar: Char;
 const
   cReservationStateChars : Array[TReservationState] of char =
-      ('P','P','G','D','O','A','N','B','C','W','Z','Q', 'M', 'L');
+      ('P','P','G','D','O','A','N','B','C','W','Z','Q', 'M', 'L', 'X');
 begin
   Result := cReservationStateChars[Self];
 end;
@@ -186,7 +205,7 @@ begin
     case Self of
       rsUnknown:            Result := aNewState in [rsReservation, rsGuests, rsOptionalBooking, rsAllotment, rsNoShow, rsBlocked, rsCancelled, rsWaitingList];
       rsReservation:        Result := aNewState in [rsGuests, rsOptionalBooking, rsAllotment, rsNoShow, rsBlocked, rsCancelled, rsWaitingList];
-      rsGuests:             Result := aNewState in [rsReservation, rsDeparted, rsWaitingList];
+      rsGuests:             Result := aNewState in [rsReservation, rsDeparted];
       rsDeparted:           Result := aNewState in [rsGuests];
       rsOptionalBooking:    Result := aNewState in [rsReservation, rsGuests, rsAllotment, rsNoShow, rsBlocked, rsCancelled, rsWaitingList];
       rsAllotment:          Result := aNewState in [rsReservation, rsGuests, rsOptionalBooking, rsNoShow, rsBlocked, rsCancelled, rsWaitingList];
@@ -219,6 +238,34 @@ begin
     Result := FromResStatus(statusStr.Chars[0]);
 end;
 
+function TReservationStateHelper.InfluencesAvailability: boolean;
+begin
+  case Self of
+    rsReservation:        result := True;
+    rsGuests:             result := True;
+    rsDeparted:           result := True;
+    rsOptionalBooking:    result := False;
+    rsAllotment:          result := True;
+    rsNoShow:             result := False;
+    rsBlocked:            result := True;
+    rsCancelled:          result := False;
+    rsTmp1:               result := False;
+    rsAwaitingPayment:    result := True;
+    rsAwaitingPayConfirm: result := True;
+    rsMixed:              result := True;
+    rsWaitingList:        result := True;
+    rsDeleted:            result := false;
+  else
+    Result := True;
+  end;
+
+end;
+
+function TReservationStateHelper.AffectsAvailabilityWhenChangingTo(anewState: TReservationState): boolean;
+begin
+  Result := (Self.influencesAvailability <> aNewState.influencesAvailability);
+end;
+
 function TReservationStateHelper.IsUserSelectable: boolean;
 begin
   case Self of
@@ -235,10 +282,21 @@ begin
     rsAwaitingPayConfirm: result := False;
     rsMixed:              result := false;
     rsWaitingList:        result := True;
+    rsDeleted:            result := False;
   else
     Result := false;
   end;
 
+end;
+
+function TReservationStateHelper.StatesAllowedToChangeIntoThis: TReservationStateSet;
+var
+  lState: TReservationState;
+begin
+  Result := [];
+  for lState := low(TReservationstate) to high(TReservationState) do
+    if lState.CanChangeTo(Self) then
+      include(Result, lState);
 end;
 
 function TReservationStateHelper.AsReadableString : string;
@@ -288,6 +346,7 @@ begin
     'Z': result := rsAwaitingPayment;
     'Q': result := rsAwaitingPayConfirm;
     'L': result := rsWaitingList;
+    'X': result := rsDeleted;
   else
     result := rsUnKnown;
   end;

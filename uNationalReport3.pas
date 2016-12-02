@@ -337,7 +337,7 @@ uses
   , PrjConst
   , uDImages
   , uUtils
-  , uMain;
+  , uMain, uSQLUtils;
 {$R *.dfm}
 
 
@@ -554,9 +554,9 @@ begin
   'FROM '#10+
   '  countries '#10+
   '    INNER JOIN countrygroups ON countries.countrygroup = countrygroups.CountryGroup '#10+
-  '    INNER JOIN persons ON countries.country = persons.country '#10+
+  '    INNER JOIN persons ON countries.country = persons.Nationality '#10+ // persons.country '#10+
   '    INNER JOIN reservations ON persons.Reservation = reservations.Reservation '#10+
-  '    INNER JOIN roomsdate ON persons.RoomReservation = roomsdate.RoomReservation '#10+
+  '    INNER JOIN roomsdate ON persons.RoomReservation = roomsdate.RoomReservation AND (ADate >= %s) AND (ADate <= %s ) '#10+
   ///ERROR Corrected
 //  '    INNER JOIN rooms on (rooms.room=roomsdate.room and rooms.wildcard=0 and rooms.active=1) '#10+
   ' WHERE '#10+
@@ -605,7 +605,7 @@ begin
   try
     screen.Cursor := crHourGlass;
     try
-      s := format(s, [zRoomReservationsList]);
+      s := format(s, [_db(zDateFrom, True), _db(zDateTo, True), zRoomReservationsList]);
       CopyToCLipboard(s);
       hData.rSet_bySQL(rSet,s);
       if mNationalStatistics.Active then mNationalStatistics.Close;
@@ -724,7 +724,8 @@ begin
     '   , reservations.Customer '#10+
     '   , persons.Name AS GuestName '#10+
     '   , persons.Person '#10+
-    '   , persons.Country AS GuestsCountry'#10+
+//    '   , persons.Country AS GuestsCountry'#10+
+    '   , persons.Nationality AS GuestsCountry'#10+
     '   , countries.CountryName AS GuestCountryName '#10+
     '   , countrygroups.GroupName AS GuestGroupName '#10+#10+
     '   , roomreservations.Room '#10+
@@ -739,7 +740,7 @@ begin
     ' FROM '#10+
     '   countries '#10+
     '     RIGHT OUTER JOIN '#10+
-    '       persons ON countries.Country = persons.Country '#10+
+    '       persons ON countries.Country = persons.Nationality '#10+ // persons.Country '#10+
     '     LEFT OUTER JOIN '#10+
     '       countrygroups ON countries.CountryGroup = countrygroups.CountryGroup '#10+
     '     RIGHT OUTER JOIN '#10+
@@ -1116,7 +1117,7 @@ begin
     if MessageDlg(S, mtConfirmation, [mbYes, mbNo], 0) = mrYes then
     begin
       newCountry := countryHolder.Country ;
-      if not d.ChangeCountry(newCountry, iReservation, 0, 0, 2) then
+      if not d.ChangeNationality(newCountry, iReservation, 0, 0, 2) then
       begin
         showmessage(GetTranslatedText('shTx_NationalReport_NoChangeCountry'));
       end;

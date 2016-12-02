@@ -1,7 +1,7 @@
 unit sTabControl;
 {$I sDefs.inc}
 //{$DEFINE LOGGED}
-//+
+
 interface
 
 uses
@@ -9,7 +9,6 @@ uses
   {$IFDEF DELPHI_XE2} UITypes, {$ENDIF}
   {$IFNDEF DELPHI5} types, {$ENDIF}
   acSBUtils, sCommonData, sConst;
-
 
 type
 {$IFNDEF NOTFORHELP}
@@ -35,6 +34,7 @@ type
     procedure AC_WMPaint(var Message: TWMPaint);
     procedure Loaded; override;
     procedure AfterConstruction; override;
+    procedure PrepareCache;
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
     procedure WndProc(var Message: TMessage); override;
@@ -52,16 +52,32 @@ uses
   sStyleSimply, sSkinProps, sGraphUtils, acntUtils, sMessages, sVCLUtils, sSkinManager, sAlphaGraph;
 
 
+procedure TsTabControl.PrepareCache;
+var
+  ci: TCacheInfo;
+  R: TRect;
+begin
+  InitCacheBmp(SkinData);
+  CI := GetParentCache(SkinData);
+  SkinData.FCacheBmp.Width := Width;
+  SkinData.FCacheBmp.Height := Height;
+  if Tabs.Count > 0 then
+    DrawSkinTabs(CI);
+
+  R := PageRect;
+  PaintItem(SkinData.SkinIndex, CI, False, 0, R, Point(Left, Top), SkinData.FCacheBmp, SkinData.SkinManager);
+  SkinData.BGChanged := False;
+end;
+
+
 procedure TsTabControl.AC_WMPaint(var Message: TWMPaint);
 var
   DC, SavedDC, TabDC: hdc;
-  ci: TCacheInfo;
   R: TRect;
 begin
   SavedDC := 0;
   TabDC := 0;
-  SkinData.FUpdating := SkinData.Updating;
-  if not SkinData.FUpdating then begin
+  if not InUpdating(SkinData) then begin
     if (Message.Unused = 1) or InAnimationProcess or (SkinData.CtrlSkinState and ACS_PRINTING <> 0) then
       DC := Message.DC
     else begin
@@ -70,25 +86,18 @@ begin
     end;
     try
       // If transparent and form resizing processed
-      SkinData.BGChanged := True;
-      CI := GetParentCache(SkinData);
-      if SkinData.BGChanged then begin
-        InitCacheBmp(SkinData);
-        SkinData.FCacheBmp.Width := Width;
-        SkinData.FCacheBmp.Height := Height;
-        if Tabs.Count > 0 then
-          DrawSkinTabs(CI);
+//      SkinData.BGChanged := True;
+      SkinData.PaintOuterEffects(Self, MkPoint);
 
-        R := PageRect;
-        PaintItem(SkinData.SkinIndex, CI, False, 0, R, Point(Left, Top), SkinData.FCacheBmp, SkinData.SkinManager);
-        SkinData.BGChanged := False;
-      end;
+      if SkinData.BGChanged then
+        PrepareCache;
+
       if (Tabs.Count > 0) and (TabIndex >= 0) then begin
         R := SkinTabRect(TabIndex, True);
         TabDC := SaveDC(DC);
         ExcludeClipRect(DC, R.Left, R.Top, R.Right, R.Bottom);
       end;
-      SkinData.PaintOuterEffects(Self, MkPoint);
+
       CopyWinControlCache(Self, SkinData, MkRect, MkRect(Self), DC, False);
       if (Tabs.Count > 0) and (TabIndex >= 0) then begin
         RestoreDC(DC, TabDC);
@@ -98,6 +107,7 @@ begin
         end;
         DrawSkinTab(TabIndex, 2, DC);
       end;
+
       SetParentUpdated(Self);
       sVCLUtils.PaintControls(DC, Self, True, MkPoint);
     finally
@@ -200,10 +210,10 @@ var
     VertFont.lfOrientation := VertFont.lfEscapement;
     VertFont.lfPitchAndFamily := Default_Pitch;
     VertFont.lfQuality := Default_Quality;
-    if Font.Name <> 'MS Sans Serif' then
+    if Font.Name <> s_MSSansSerif then
       StrPCopy(VertFont.lfFaceName, Font.Name)
     else
-      VertFont.lfFaceName := 'Arial';
+      VertFont.lfFaceName := s_Arial;
 
     Bmp.Canvas.Font.Handle := CreateFontIndirect(VertFont);
     Bmp.Canvas.Font.Color := SkinData.SkinManager.gd[TabSkinIndex].Props[integer(State > 0)].FontColor.Color;
@@ -731,6 +741,9 @@ begin
         Exit;
       end;
 
+      AC_PREPARECACHE:
+        PrepareCache;
+
       AC_GETDEFINDEX: begin
         if FCommonData.SkinManager <> nil then
           Message.Result := FCommonData.SkinManager.GetSkinIndex(s_PageControl + sTabPositions[TabPosition]) + 1;
@@ -860,7 +873,7 @@ begin
                     end;
                 end;
               end;
-          end
+          end;
     end;
 
   inherited;
@@ -868,11 +881,10 @@ begin
     case Message.Msg of
       CN_NOTIFY:
         case TWMNotify(Message).NMHdr^.code of
-          TCN_SELCHANGE:
-            if Style in [tsButtons, tsFlatButtons] then begin
-              SkinData.BGChanged := True;
-              RedrawWindow(Handle, nil, 0, RDW_ERASE or RDW_INVALIDATE);
-            end;
+          TCN_SELCHANGE: begin
+            SkinData.BGChanged := True;
+            RedrawWindow(Handle, nil, 0, RDW_FRAME or RDW_INVALIDATE);
+          end;
         end;
 
       TCM_SETCURSEL:

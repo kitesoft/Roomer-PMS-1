@@ -380,6 +380,7 @@ type
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
     destructor Destroy; override;
     procedure Loaded; override;
+    property Align;
     property Items;
     property Path: string read GetPath write SetPath;
     property Folders[Index: Integer]: TacShellFolder read GetFolder;
@@ -624,7 +625,7 @@ type
 
 
 function G_ValidateWildText(const S, Mask: string; MaskChar: Char = CharQuest; WildCard: Char = '*'): Boolean;
-function G_CharPos(C: Char; const S: string; StartPos: Integer = 1): Integer; overload;
+function CharPosEx(C: Char; const S: String; StartPos: Integer = 1): Integer;
 procedure DisposePIDL(PIDL: PItemIDList);
 
 function DesktopShellFolder: IShellFolder;
@@ -4075,7 +4076,7 @@ var
   P, P1, B: PChar;
   C: Char;
 begin
-  X := G_CharPos(WildCard, Mask);
+  X := CharPosEx(WildCard, Mask);
   Result := False;
   if X = 0 then begin
     L := Length(Mask);
@@ -4093,110 +4094,81 @@ begin
       until L = 0;
       Result := True;
     end;
-    Exit;
-  end;
-  L := Length(S);
-  P := Pointer(S);
-  B := Pointer(Mask);
-  Q := X - 1;
-  if L < Q then
-    Exit;
-
-  while Q > 0 do begin
-    C := B^;
-    if (C <> MaskChar) and (C <> P^) and (ToUpperChars[Byte(C)] <> ToUpperChars[Byte(P^)]) then
-      Exit;
-
-    Dec(Q);
-    Inc(B);
-    Inc(P);
-  end;
-  Dec(L, X - 1);
-  repeat
-    X0 := X;
-    P1 := P;
-    while Mask[X0] = WildCard do
-      Inc(X0);
-
-    X := G_CharPos(WildCard, Mask, X0);
-    if X = 0 then
-      Break;
-  99:
-    P := P1;
-    B := @Mask[X0];
-    Q := X - X0;
+  end
+  else begin
+    L := Length(S);
+    P := Pointer(S);
+    B := Pointer(Mask);
+    Q := X - 1;
     if L < Q then
       Exit;
 
     while Q > 0 do begin
       C := B^;
-      if (C <> MaskChar) and (C <> P^) and (ToUpperChars[Byte(C)] <> ToUpperChars[Byte(P^)]) then begin
-        Inc(P1);
-        Dec(L);
-        goto 99;
-      end;
+      if (C <> MaskChar) and (C <> P^) and (ToUpperChars[Byte(C)] <> ToUpperChars[Byte(P^)]) then
+        Exit;
+
       Dec(Q);
       Inc(B);
       Inc(P);
     end;
-    Dec(L, X - X0);
-  until False;
-  X := Length(Mask);
-  if L >= X - X0 + 1 then begin
-    P := Pointer(S);
-    Inc(P, Length(S) - 1);
-    while X >= X0 do begin
-      C := Mask[X];
-      if (C <> MaskChar) and (C <> P^) and (ToUpperChars[Byte(C)] <> ToUpperChars[Byte(P^)]) then Exit;
-      Dec(X);
-      Dec(P);
+    Dec(L, X - 1);
+    repeat
+      X0 := X;
+      P1 := P;
+      while Mask[X0] = WildCard do
+        Inc(X0);
+
+      X := CharPosEx(WildCard, Mask, X0);
+      if X = 0 then
+        Break;
+    99:
+      P := P1;
+      B := @Mask[X0];
+      Q := X - X0;
+      if L < Q then
+        Exit;
+
+      while Q > 0 do begin
+        C := B^;
+        if (C <> MaskChar) and (C <> P^) and (ToUpperChars[Byte(C)] <> ToUpperChars[Byte(P^)]) then begin
+          Inc(P1);
+          Dec(L);
+          goto 99;
+        end;
+        Dec(Q);
+        Inc(B);
+        Inc(P);
+      end;
+      Dec(L, X - X0);
+    until False;
+    X := Length(Mask);
+    if L >= X - X0 + 1 then begin
+      P := Pointer(S);
+      Inc(P, Length(S) - 1);
+      while X >= X0 do begin
+        C := Mask[X];
+        if (C <> MaskChar) and (C <> P^) and (ToUpperChars[Byte(C)] <> ToUpperChars[Byte(P^)]) then Exit;
+        Dec(X);
+        Dec(P);
+      end;
+      Result := True;
     end;
-    Result := True;
   end;
 end;
 
 
-function G_CharPos(C: Char; const S: string; StartPos: Integer): Integer;
-asm
-      TEST  EDX,EDX
-      JE    @@qt
-{$IFDEF WIN64}
-      PUSH  RDI
-{$ELSE}
-      PUSH  EDI
-{$ENDIF}
-      MOV   EDI,EDX
-      LEA   EDX,[ECX-1]
-      MOV   ECX,[EDI-4]
-      SUB   ECX,EDX
-      JLE   @@m1
-{$IFDEF WIN64}
-      PUSH  RDI
-{$ELSE}
-      PUSH  EDI
-{$ENDIF}
-      ADD   EDI,EDX
-{$IFDEF WIN64}
-      POP   RDX
-{$ELSE}
-      POP   EDX
-{$ENDIF}
-      REPNE SCASB
-      JNE   @@m1
-      MOV   EAX,EDI
-      SUB   EAX,EDX
-{$IFDEF WIN64}
-      POP   RDI
-{$ELSE}
-      POP   EDI
-{$ENDIF}
-      RET
-{$IFDEF WIN64}
-@@m1: POP   RDI
-{$ELSE}
-@@m1: POP   EDI
-{$ENDIF}
-@@qt: XOR   EAX,EAX
+function CharPosEx(C: Char; const S: String; StartPos: Integer = 1): Integer;
+var
+  dwIndex: Integer;
+begin
+  Result := 0;
+  if Length(S) >= StartPos then
+    for dwIndex := StartPos to Length(S) do
+      if S[dwIndex] = C then begin
+         Result := dwIndex;
+         break;
+      end;
 end;
 
 

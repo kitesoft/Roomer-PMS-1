@@ -221,7 +221,6 @@ type
     FqInPosMonitorUse    : boolean;
     FqInPosMonitorChkSec : integer;
 
-    FqShowSideBar : boolean;
     FqTempPath: string;
     FqApplicationID: string;
     FqAppSecret: string;
@@ -504,8 +503,6 @@ type
     property qSnPathXML  : string read FqSnPathXML  write FqSnPathXML;
     property qSnPathCurrentGuestsXML  : string read FqSnPathCurrentGuestsXML  write FqSnPathCurrentGuestsXML;
 
-    property qShowSideBar  : boolean read FqShowSideBar  write FqShowSideBar;
-
     property BackupMachine  : boolean read FBackupMachine  write FBackupMachine;
 
     property qInPosMonitorUse     : boolean  read  FqInPosMonitorUse     write  FqInPosMonitorUse    ;
@@ -586,8 +583,9 @@ uses
   uChangeRRdates,
   ufrmSelLang,
   PrjConst,
-  System.UITypes
-  ;
+  System.UITypes,
+  uSQLUtils,
+  uRoomerConfirmationDialogs;
 
 function GetNameCombination(order : Integer; Customer, Guest : String) : String;
 begin
@@ -1141,7 +1139,6 @@ begin
             // [misc]
             FBackupMachine := ReadBool(secMisc, indBackupMaschine, false);
             qLangID := ReadInteger(secMisc, indLangID, 0);
-            qShowSideBar := ReadBool(secMisc, indShowSideBar, false);
             qLogLevel := ReadInteger(secMisc, indLogLevel, 0);
 
             // [FileWatch]
@@ -1191,7 +1188,6 @@ begin
             WriteBool(secMisc, indBackupMaschine, FBackupMachine);
             WriteInteger(secMisc, indLangID, qLangID);
             WriteInteger(secMisc, indLogLevel, qLogLevel);
-            WriteBool(secMisc, indShowSideBar, qShowSideBar);
 
             // [Data]
 //            Writestring(secDATA, indCommandtext, qCommandText);
@@ -1503,6 +1499,8 @@ var
   lstRoomReservations : TstringList;
   reservation : integer;
 
+  userName, password : String;
+  _frmCancelReservation3 : TfrmCancelReservation3;
 begin
   screen.Cursor := crHourglass;
   try
@@ -1515,29 +1513,36 @@ begin
         frmCancelReservation3.ShowModal;
         if frmCancelReservation3.modalresult = mrOk then
         begin
-          CancelStaff        := g.qUser;
-          CancelReason       := frmCancelReservation3.zReason;
-          CancelInformation  := frmCancelReservation3.zInformation;
-          CancelType         := frmCancelReservation3.zType;
-          Reservation        := frmCancelReservation3.zReservation;
+          userName := '';
+          password := '';
+          if frmCancelReservation3.AllowCancel OR
+             ((MessageDlg(GetTranslatedText('shTxRemoveReservationWarning'), mtWarning, [mbYes, mbNo], 0) = mrYes) AND
+             openLogin(userName, password)) then
+          begin
+            CancelStaff        := userName;
+            CancelReason       := frmCancelReservation3.zReason;
+            CancelInformation  := frmCancelReservation3.zInformation;
+            CancelType         := frmCancelReservation3.zType;
+            Reservation        := frmCancelReservation3.zReservation;
 
-          if frmCancelReservation3.zAll then
-          begin
-            d.RemoveReservation(Reservation,CancelStaff,CancelReason,CancelInformation,CancelType);
-          end else
-          begin
-           // if MessageDlg('Delete selected rooms from reservation ?'+chr(10)+'Rooms : '+frmCancelReservation3.zRooms, mtConfirmation, [mbYes, mbNo], 0) = mrYes then
-			      if MessageDlg(format(GetTranslatedText('shTx_G_DeleteRooms'), [frmCancelReservation3.zRooms]), mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+            if frmCancelReservation3.zAll then
             begin
-              _strTokenToStrings(frmCancelReservation3.zRoomReservations,';',lstRoomreservations);
-              for i :=  0 to LstRoomReservations.Count - 1 do
+              d.RemoveReservation(Reservation,CancelStaff,CancelReason,CancelInformation,CancelType);
+            end else
+            begin
+             // if MessageDlg('Delete selected rooms from reservation ?'+chr(10)+'Rooms : '+frmCancelReservation3.zRooms, mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+              if MessageDlg(format(GetTranslatedText('shTx_G_DeleteRooms'), [frmCancelReservation3.zRooms]), mtConfirmation, [mbYes, mbNo], 0) = mrYes then
               begin
-                roomReservation := strToInt(lstRoomReservations[i]);
-                d.RemoveRoomReservation(RoomReservation,CancelStaff,cancelreason,CancelInformation,CancelType,true, true, false);
+                _strTokenToStrings(frmCancelReservation3.zRoomReservations,';',lstRoomreservations);
+                for i :=  0 to LstRoomReservations.Count - 1 do
+                begin
+                  roomReservation := strToInt(lstRoomReservations[i]);
+                  d.RemoveRoomReservation(RoomReservation,CancelStaff,cancelreason,CancelInformation,CancelType,true, true, false);
+                end;
               end;
             end;
+            result := true;
           end;
-          result := true;
         end
       finally
         frmCancelReservation3.free;
@@ -2082,12 +2087,6 @@ begin
       result := i;
     end;
 end;
-
-function DateToStrByType(dtDate : TdateTime) : string;
-begin
-  result := _DateToDBDate(dtDate,true)
-end;
-
 
 
 function CombineNames(sName, sSurname : string) : string;

@@ -4,12 +4,14 @@ interface
 
 uses
   Vcl.Forms
+  , Types
   , System.Classes
   , cxClasses
   , cxPropertiesStore
   , Winapi.Messages, cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, dxSkinsCore, dxSkinCaramel,
   dxSkinCoffee, dxSkinDarkSide, dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinsdxStatusBarPainter, Vcl.Controls,
-  dxStatusBar, cxGridTableView, cxStyles, dxPScxCommon, dxPScxGridLnk, System.Actions, Vcl.ActnList;
+  dxStatusBar, cxGridTableView, cxStyles, dxPScxCommon, dxPScxGridLnk, Vcl.ComCtrls, sStatusBar, acProgressBar,
+  AdvSmoothProgressBar;
 
 type
   /// <summary>
@@ -21,24 +23,29 @@ type
   ///  Basic form to be used for all Roomer windows and dialogs. <br />
   ///  Restores and Stores its dimensional properties in the registry based on the actual form classname <br />
   ///  User can close window with ESC if that option is set (default = true) <br />
-  ///  Contains a status panel with a statusindicator. Setting the BusyState property updates the indicator and statusmessage. <br/>
+  ///  Contains a status panel with a statusindicator. Setting the BusyState property updates the statusmessage. <br/>
   ///  <br/>
+  ///  The statusbar also contains a progressbar which is only visible when the position > 0 and position < max <br />
   ///  Forms derived from this base class should override the UpdateControls() ans DoLoadData() methods
   ///  </summary>
   TfrmBaseRoomerForm = class(TForm)
     psRoomerBase: TcxPropertiesStore;
-    dxStatusBar: TdxStatusBar;
+    sbStatusBar: TsStatusBar;
     cxsrRoomerStyleRepository: TcxStyleRepository;
     alRoomerForm: TActionList;
     acCloseForm: TAction;
     procedure acCloseFormExecute(Sender: TObject);
+    procedure sbStatusBarDrawPanel(StatusBar: TStatusBar; Panel: TStatusPanel; const Rect: TRect);
+    procedure sbProgressBarPositionChanged(Sender: TObject; Value: Double);
   private
     FCloseOnEsc: boolean;
     FBusyState: TRoomerFormBusyState;
+    FUpdatingControls: boolean;
+    FUpdatingData: boolean;
+    FProgressBar: TAdvSmoothProgressBar;
     procedure KeepOnVisibleMonitor;
     procedure LoadData;
-    function GetStateIndicator: TdxStatusBarStateIndicatorItem;
-    function GetStateTextPanel: TdxStatusBarpanel;
+    function GetStateTextPanel: TStatusPanel;
     function GetBusyState: TRoomerFormBusyState;
     procedure SetBusyState(const Value: TRoomerFormBusyState);
   protected
@@ -52,19 +59,21 @@ type
     /// <summary>
     ///   Update the contents and/or properties of visual components, like Enabled etc
     /// </summary>
-    procedure UpdateControls; virtual;
+    procedure UpdateControls;
+    procedure DoUpdateControls; virtual;
     /// <summary>
     ///   (Re)load data needed to display in the form
     /// </summary>
     procedure DoLoadData; virtual;
-    property StateIndicator: TdxStatusBarStateIndicatorItem read GetStateIndicator;
-    property StateTextPanel: TdxStatusBarpanel read GetStateTextPanel;
+    property StateTextPanel: TStatusPanel read GetStateTextPanel;
+    property ProgressBar: TAdvSmoothProgressBar read FProgressBar;
   public
     constructor Create(AOwner: TComponent); override;
     /// <summary>
     ///   Signal form through Windows messaging system to reload data and update controls
     /// </summary>
     procedure RefreshData;
+
   published
     /// <summary>
     ///  Close the window when ESC is pressed by the user, Default = True
@@ -75,6 +84,8 @@ type
     /// </summary>
     property BusyState: TRoomerFormBusyState read GetBusyState write SetBusyState;
   end;
+
+  //TODO: Create a form factory, with derivatives for implemented forms
 
 implementation
 
@@ -92,7 +103,7 @@ type
   TRoomerFormBusyStateHelper = record helper for TRoomerFormBusyState
   public
     function StatusMessage: String;
-    function Indicator: TdxStatusBarStateIndicatorType;
+//    function Indicator: TdxStatusBarStateIndicatorType;
   end;
 
 { TfrmBaseRoomerForm }
@@ -108,10 +119,16 @@ constructor TfrmBaseRoomerForm.Create(AOwner: TComponent);
 begin
   inherited;
 
+  // Place pogressbase on Statuspanel
+  FProgressBar := TAdvSmoothProgressBar.Create(Self);
+  FProgressBar.Parent := sbStatusBar;
+  FProgressBar.Visible := False;
+
   RoomerLanguage.TranslateThisForm(self);
   glb.PerformAuthenticationAssertion(self);
 
   FCloseOnEsc := True;
+
 end;
 
 
@@ -127,19 +144,19 @@ begin
   UpdateControls;
 end;
 
+procedure TfrmBaseRoomerForm.DoUpdateControls;
+begin
+// to be overriden
+end;
+
 function TfrmBaseRoomerForm.GetBusyState: TRoomerFormBusyState;
 begin
   Result := FBusyState;
 end;
 
-function TfrmBaseRoomerForm.GetStateIndicator: TdxStatusBarStateIndicatorItem;
+function TfrmBaseRoomerForm.GetStateTextPanel: TStatusPanel;
 begin
-  Result := TdxStatusBarStateIndicatorPanelStyle(dxStatusBar.Panels[0].PanelStyle).Indicators[0];
-end;
-
-function TfrmBaseRoomerForm.GetStateTextPanel: TdxStatusBarpanel;
-begin
-  Result := dxStatusBar.Panels[1];
+  Result := sbStatusBar.Panels[1];
 end;
 
 procedure TfrmBaseRoomerForm.KeyDown(var Key: Word; Shift: TShiftState);
@@ -172,14 +189,20 @@ procedure TfrmBaseRoomerForm.LoadData;
 var
   lCursor: TCursor;
 begin
-  lCursor := Screen.Cursor;
-  Screen.Cursor := crHourGlass;
+  if not FUpdatingData then
   try
-    BusyState := fsLoadingData;
-    DoLoadData;
+    FUpdatingData := True;
+    lCursor := Screen.Cursor;
+    Screen.Cursor := crHourGlass;
+    try
+      BusyState := fsLoadingData;
+      DoLoadData;
+    finally
+      BusyState := fsIdle;
+      Screen.Cursor := lCursor;
+    end;
   finally
-    BusyState := fsIdle;
-    Screen.Cursor := lCursor;
+    FUpdatingData := False;
   end;
 end;
 
@@ -200,20 +223,46 @@ begin
   PostMessage(Handle, WM_REFRESH_DATA, 0, 0);
 end;
 
+procedure TfrmBaseRoomerForm.sbProgressBarPositionChanged(Sender: TObject; Value: Double);
+begin
+  sbStatusBar.Repaint;
+end;
+
+procedure TfrmBaseRoomerForm.sbStatusBarDrawPanel(StatusBar: TStatusBar; Panel: TStatusPanel; const Rect: TRect);
+begin
+  if Panel = Statusbar.Panels[2] then
+  begin
+    FProgressBar.Visible := (FProgressBar.Position > 0) and (FProgressBar.Position < FProgressBar.Maximum);
+    if FProgressBar.Visible then
+    begin
+      FProgressBar.Top := Rect.top;
+      FProgressBar.Left := Rect.Left;
+      FProgressBar.Width := Rect.Right - Rect.Left - 15;
+      FProgressBar.Height := Rect.Bottom - Rect.Top;
+    end;
+  end;
+end;
+
 procedure TfrmBaseRoomerForm.SetBusyState(const Value: TRoomerFormBusyState);
 begin
   if Value <> FBusyState then
   begin
     FBusyState := Value;
     StateTextPanel.Text := FBusyState.StatusMessage;
-    StateIndicator.IndicatorType := FBusyState.Indicator;
-    dxStatusBar.Repaint;
+//    StateIndicator.IndicatorType := FBusyState.Indicator;
+    sbStatusBar.Repaint;
   end;
 end;
 
 procedure TfrmBaseRoomerForm.UpdateControls;
 begin
-  // to be overridden in derived classes
+  if not FUpdatingControls then
+  try
+    FUpdatingControls := true;
+    DoUpdateControls;
+  finally
+    FUpdatingControls := False;
+  end;
 end;
 
 procedure TfrmBaseRoomerForm.WndProc(var message: TMessage);
@@ -228,17 +277,6 @@ end;
 
 { TRoomerBusyStateHelper }
 
-function TRoomerFormBusyStateHelper.Indicator: TdxStatusBarStateIndicatorType;
-begin
-  case Self of
-    fsIdle:         Result := sitGreen;
-    fsLoadingData:  Result := sitYellow;
-    fsPrinting:     Result := sitBlue;
-  else
-    Result := sitOff;
-  end;
-end;
-
 function TRoomerFormBusyStateHelper.StatusMessage: String;
 begin
   case Self of
@@ -250,5 +288,6 @@ begin
   end;
 
 end;
+
 
 end.

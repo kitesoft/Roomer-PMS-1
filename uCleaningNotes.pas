@@ -198,7 +198,7 @@ type
     zData: recCleaningNotesHolder;
     property AllowGridEdit: boolean read FAllowGridEdit write SetAllowGridEdit;
     procedure DoLoadData; override;
-    procedure UpdateControls; override;
+    procedure DoUpdateControls; override;
   end;
 
 function openCleaningNotes(act : TActTableAction; Lookup : Boolean; var theData : recCleaningNotesHolder) : boolean;
@@ -562,7 +562,7 @@ begin
   aText := TCleaningNoteServiceType.FromString(aText).AsReadableString;
 end;
 
-procedure TfrmCleaningNotes.UpdateControls;
+procedure TfrmCleaningNotes.DoUpdateControls;
 begin
   inherited;
 

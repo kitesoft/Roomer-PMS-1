@@ -362,6 +362,7 @@ type
     rgn: hrgn;
     FMousePos: TacMousePosition;
     OldFrameProc: TWndMethod;
+    OldSDProc: TWndMethod;
     procedure CreateAlphaBmp(const Width, Height: integer); virtual;
     procedure CreateParams(var Params: TCreateParams); override;
     function GetMask: TBitmap;
@@ -536,7 +537,9 @@ begin
 
   if Assigned(FOnShowHint) then begin
     ResetHintInfo;
-    FOnShowHint(HintStr, CanShow, HintInfo, HintFrame)
+    FOnShowHint(HintStr, CanShow, HintInfo, HintFrame);
+    if (HintFrame <> nil) and (DefaultManager <> nil) then
+      DefaultManager.UpdateScale(HintFrame);
   end
   else
     inherited;
@@ -585,6 +588,9 @@ begin
           ResetHintInfo;
           NewText := HintText;
           OnShowHint(NewText, b, HintInfo, HintFrame);
+          if (HintFrame <> nil) and (DefaultManager <> nil) then
+            DefaultManager.UpdateScale(HintFrame);
+
           if (NewText <> HintText) or (HintFrame <> nil) then
             HintRect := CalcHintRect(iff(FMaxWidth < 1, Screen.Width, FMaxWidth), NewText, NIL);
 
@@ -903,6 +909,9 @@ begin
         ResetHintInfo;
         NewText := HintText;
         OnShowHint(NewText, b, HintInfo, HintFrame);
+        if (HintFrame <> nil) and (DefaultManager <> nil) then
+          DefaultManager.UpdateScale(HintFrame);
+
         if (NewText <> HintText) or (HintFrame <> nil) then
           HintRect := CalcHintRect(iff(FMaxWidth < 1, Screen.Width, FMaxWidth), NewText, nil);
 
@@ -1310,12 +1319,15 @@ begin
         Manager.HintFrame.HandleNeeded;
 
         sd := GetCommonData(Manager.HintFrame.Handle);
+        if sd = nil then
+          sd := TsCommonData(Manager.HintFrame.Perform(SM_ALPHACMD, AC_GETSKINDATA_HI, 0));
+
         if (sd <> nil) and Assigned(sd.WndProc) then begin
-          OldFrameProc := sd.WndProc;
+          OldSDProc := sd.WndProc;
           sd.WndProc := FrameWndProc;
         end;
-//        OldFrameProc := Manager.HintFrame.WindowProc;
-//        Manager.HintFrame.WindowProc := FrameWndProc;
+        OldFrameProc := Manager.HintFrame.WindowProc;
+        Manager.HintFrame.WindowProc := FrameWndProc;
 
         SaveIndex := SaveDC(Bmp.Canvas.Handle);
         Bmp.Canvas.Lock;
@@ -1328,10 +1340,11 @@ begin
           end;
 
         if (sd <> nil) and Assigned(sd.WndProc) then begin
-          sd.WndProc := OldFrameProc;
-          OldFrameProc := nil;
+          sd.WndProc := OldSDProc;
+          OldSDProc := nil;
         end;
-//        Manager.HintFrame.WindowProc := OldFrameProc;
+        Manager.HintFrame.WindowProc := OldFrameProc;
+        OldFrameProc := nil;
         // Next two line are called after labels painting for avoiding of "Reflected text" error
         Bmp.PixelFormat := pf32bit;
         Bmp.HandleType := bmDIB;

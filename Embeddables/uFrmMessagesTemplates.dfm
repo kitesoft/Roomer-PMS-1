@@ -31,7 +31,7 @@ object FrmMessagesTemplates: TFrmMessagesTemplates
     object sLabel2: TsLabel
       Left = 0
       Top = 0
-      Width = 151
+      Width = 194
       Height = 16
       Margins.Left = 2
       Margins.Top = 2
@@ -45,6 +45,7 @@ object FrmMessagesTemplates: TFrmMessagesTemplates
       Font.Height = -13
       Font.Name = 'Tahoma'
       Font.Style = []
+      ExplicitWidth = 151
     end
     object sbMessageContainer: TsScrollBox
       Left = 0
@@ -108,7 +109,7 @@ object FrmMessagesTemplates: TFrmMessagesTemplates
           OnClick = HTMLabel2Click
           OnMouseLeave = MessageAreaMouseLeave
           OnMouseEnter = MessageAreaMouseEnter
-          Version = '1.9.2.2'
+          Version = '1.9.2.6'
           ExplicitWidth = 164
         end
         object sPanel1: TsPanel

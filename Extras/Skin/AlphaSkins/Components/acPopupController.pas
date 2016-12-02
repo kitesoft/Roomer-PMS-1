@@ -1,7 +1,10 @@
 unit acPopupController;
 {$I sDefs.inc}
 //{$DEFINE LOGGED}
-//+
+//{$DEFINE AC_NOSHADOW}
+//{$DEFINE AC_NOHANDLECTRL}
+//{$DEFINE AC_NOHANDLEFORM}
+
 interface
 
 uses
@@ -17,24 +20,38 @@ type
   TacFormHandler = class(TObject)
   protected
     ClientCtrl: TWinControl;
+{$IFNDEF AC_NOHANDLEFORM}
     FormWndProc: TWndMethod;
+{$ENDIF}
+{$IFNDEF AC_NOHANDLECTRL}
     CtrlWndProc: TWndMethod;
+{$ENDIF}
+    Initialized: boolean;
     CheckTimer: TacThreadedTimer;
     Controller: TsPopupController;
     OldOnClose: TCloseEvent;
+    CaptureHandle: THandle;
     constructor Create(AForm: TForm; ACtrl: TWinControl);
+    procedure InitControls(AForm: TForm; ACtrl: TWinControl);
+    procedure UnInitControls;
     procedure UpdateRgn(AHandle: THandle);
     procedure UpdateRgnBmp(aBmp: TBitmap);
     procedure CloseForm(CallProc: boolean = True);
     procedure DoTimer(Sender: TObject);
+{$IFNDEF AC_NOHANDLEFORM}
     procedure DoWndProc (var Message: TMessage);
+{$ENDIF} // AC_NOHANDLEFORM
+{$IFNDEF AC_NOHANDLECTRL}
     procedure DoCtrlProc(var Message: TMessage);
-    procedure UnInitFormHandler;
+{$ENDIF}
   public
     Closed: boolean;
     PopupForm: TForm;
     PopupCtrl: TWinControl;
     ParentForm: TForm;
+{$IFNDEF AC_NOSHADOW}
+    ShadowForm: TCustomForm;
+{$ENDIF}
     destructor Destroy; override;
   end;
 
@@ -64,7 +81,9 @@ type
 
 procedure ShowPopupForm(AForm: TForm; AOwnerControl: TWinControl); overload;
 procedure ShowPopupForm(AForm: TForm; ALeftTop: TPoint); overload;
+{$IFNDEF AC_NOSHADOW}
 function AttachShadowForm(aForm: TForm; DoShow: boolean = True): TCustomForm;
+{$ENDIF}
 
 var
   acIntController: TsPopupController = nil;
@@ -84,9 +103,9 @@ var
 procedure ShowPopupForm(AForm: TForm; AOwnerControl: TWinControl);
 begin
   if acIntController = nil then
-    acIntController := TsPopupController.Create(nil)
-  else
-    acIntController.KillAllForms(AForm);
+    acIntController := TsPopupController.Create(nil);
+//  else
+//    acIntController.KillAllForms(AForm);
 
   acIntController.ShowForm(AForm, AOwnerControl);
 end;
@@ -119,6 +138,7 @@ begin
 
     AForm.OnClose := DoClose;
   end;
+  FormHandlers[Result].Closed := False;
 end;
 
 
@@ -329,6 +349,7 @@ var
       Bounds := OwnerBounds;
       lPos.LayerBlend := ABlend;
     end;
+//    aForm.Perform(SM_ALPHACMD, AC_UPDATESHADOW, LParam(@lPos));
     SendAMessage(AHandle, AC_UPDATESHADOW, LParam(@lPos));
   end;
 
@@ -428,6 +449,7 @@ begin
 end;
 
 
+{$IFNDEF AC_NOSHADOW}
 type
   TacShadowForm = class(TacGlowForm)
   protected
@@ -439,11 +461,13 @@ type
   public
     Locked: boolean;
     procedure UpdateShadowPos;
+    procedure HideWnd;
     function ShadowTemplate: TBitmap;
     function ShadowSize: TRect;
     procedure KillShadow;
     procedure SetNewPos(aLeft, aTop, aWidth, aHeight: integer; BlendValue: byte);
     constructor CreateNew(AOwner: TComponent; Dummy: Integer  = 0); override;
+    destructor Destroy; override;
     procedure NewWndProc(var Message: TMessage);
   end;
 
@@ -455,12 +479,34 @@ end;
 
 
 constructor TacShadowForm.CreateNew(AOwner: TComponent; Dummy: Integer  = 0);
+var
+  sd: TsCommonData;
 begin
   inherited;
+  Tag := ExceptTag;
   FOwnerForm := TForm(AOwner);
   OldWndProc := FOwnerForm.WindowProc;
   FOwnerForm.WindowProc := NewWndProc;
+
+  sd := GetCommonData(FOwnerForm.Handle);
+  if sd <> nil then
+    sd.WndProc := NewWndProc;
+
   FDestroyed := False;
+end;
+
+
+destructor TacShadowForm.Destroy;
+begin
+  inherited;
+end;
+
+
+procedure TacShadowForm.HideWnd;
+begin
+  Hide;
+  ShowWindow(Handle, SW_HIDE);
+  Locked := True;
 end;
 
 
@@ -534,12 +580,20 @@ end;
 
 
 procedure TacShadowForm.KillShadow;
+var
+  sd: TsCommonData;
 begin
   if not FDestroyed then begin
     FDestroyed := True;
     FOwnerForm.WindowProc := OldWndProc;
+
+    sd := GetCommonData(FOwnerForm.Handle);
+    if sd <> nil then
+      sd.WndProc := OldWndProc;
+
+    OldWndProc := nil;
     FOwnerForm := nil;
-    Hide;
+    HideWnd;
     Release;
 //    Free;
   end;
@@ -554,25 +608,29 @@ begin
         AC_UPDATESHADOW: begin
           Locked := False;
           with PacLayerPos(Message.LParam)^ do
-            SetNewPos(Bounds.BLeft, Bounds.BTop, Bounds.BWidth, Bounds.BHeight, LayerBlend);
+            if Bounds.BHeight > 0 then
+              SetNewPos(Bounds.BLeft, Bounds.BTop, Bounds.BWidth, Bounds.BHeight, LayerBlend);
 
           Exit;
         end;
       end;
 
-    WM_CLOSE, WM_DESTROY:
-      KillShadow;
+    WM_CLOSE:
+      HideWnd;
 
     WM_SHOWWINDOW:
       if Message.WParam = 0 then
-        KillShadow;
+        HideWnd;
   end;
 
   OldWndProc(Message);
   case Message.Msg of
+//    WM_DESTROY:
+//      KillShadow;
+
     WM_WINDOWPOSCHANGED, WM_WINDOWPOSCHANGING, WM_SIZE:
       if not Locked and ((FOwnerForm = nil) or not IsWindowVisible(FOwnerForm.Handle)) then
-        KillShadow
+        HideWnd
       else
         UpdateShadowPos;
   end;
@@ -594,7 +652,7 @@ procedure TacShadowForm.UpdateShadowPos;
 var
   OwnerBounds: TSrcRect;
 begin
-  if not Locked and (FOwnerForm <> nil) and FOwnerForm.HandleAllocated then begin
+  if not Locked and (FOwnerForm <> nil) and FOwnerForm.HandleAllocated and IsWindowVisible(FOwnerForm.Handle) then begin
     GetWindowRect(FOwnerForm.Handle, TRect(OwnerBounds));
     with OwnerBounds do
       SetNewPos(SLeft, STop, FOwnerForm.Width, FOwnerForm.Height, OwnerBlend);
@@ -607,20 +665,18 @@ begin
   Result := TacShadowForm.CreateNew(aForm);
   TacShadowForm(Result).Locked := not DoShow;
 end;
+{$ENDIF} // AC_NOSHADOW
 
 
 procedure TsPopupController.ShowForm(AForm: TForm; AOwnerControl: TWinControl; AnimTime: integer = 80);
 var
   ctrlRect, formRect: TRect;
-  ShadowForm: TacShadowForm;
   ParentForm: TCustomForm;
   bAlphaBlendValue: byte;
   HandlerIndex: integer;
   sp: TsSkinProvider;
 begin
   if (AForm <> nil) and (AOwnerControl <> nil) and not SkipOpen then begin
-    ShadowForm := TacShadowForm(AttachShadowForm(AForm, False));
-
     sp := GetSkinProvider(aForm);
     if sp <> nil then
       sp.AllowAnimation := False;
@@ -635,7 +691,19 @@ begin
 
     AForm.BorderStyle := bsNone;
     HandlerIndex := InitFormHandler(AForm, AOwnerControl);
-
+{$IFNDEF AC_NOSHADOW}
+    if FormHandlers[HandlerIndex].ShadowForm = nil then
+      FormHandlers[HandlerIndex].ShadowForm := TacShadowForm(AttachShadowForm(AForm, False));
+{$ENDIF}
+    with FormHandlers[HandlerIndex] do begin
+      CaptureHandle := GetCapture;
+      if CheckTimer = nil then begin
+        CheckTimer := TacThreadedTimer.Create(nil);
+        CheckTimer.Interval := 100;
+        CheckTimer.OnTimer := DoTimer;
+      end;
+      CheckTimer.Enabled := True;
+    end;
 {$IFDEF DELPHI7UP}
     SetWindowLong(AForm.Handle, GWL_STYLE, GetWindowLong(AForm.Handle, GWL_STYLE) or WS_CLIPSIBLINGS or NativeInt(WS_POPUP));
 {$ELSE}
@@ -688,8 +756,10 @@ begin
 //    if sp <> nil then // If not animated
 //      sp.AllowAnimation := b;
 
-    if not ShadowForm.FDestroyed then
-      ShadowForm.UpdateShadowPos;
+{$IFNDEF AC_NOSHADOW}
+    if not TacShadowForm(FormHandlers[HandlerIndex].ShadowForm).FDestroyed then
+      TacShadowForm(FormHandlers[HandlerIndex].ShadowForm).UpdateShadowPos;
+{$ENDIF}
   end;
   SkipOpen := False;
 end;
@@ -698,15 +768,12 @@ end;
 procedure TsPopupController.ShowFormPos(AForm: TForm; ALeftTop: TPoint; AnimTime: integer);
 var
   ctrlRect, formRect: TRect;
-  ShadowForm: TacShadowForm;
   ParentForm: TCustomForm;
   bAlphaBlendValue: byte;
   HandlerIndex: integer;
   sp: TsSkinProvider;
 begin
   if (AForm <> nil) and not SkipOpen then begin
-    ShadowForm := TacShadowForm(AttachShadowForm(AForm, False));
-
     sp := GetSkinProvider(aForm);
     if sp <> nil then
       sp.AllowAnimation := False;
@@ -721,7 +788,19 @@ begin
 
     AForm.BorderStyle := bsNone;
     HandlerIndex := InitFormHandler(AForm, nil);
-
+{$IFNDEF AC_NOSHADOW}
+    if FormHandlers[HandlerIndex].ShadowForm = nil then
+      FormHandlers[HandlerIndex].ShadowForm := TacShadowForm(AttachShadowForm(AForm, False));
+{$ENDIF}
+    with FormHandlers[HandlerIndex] do begin
+      CaptureHandle := GetCapture;
+      if CheckTimer = nil then begin
+        CheckTimer := TacThreadedTimer.Create(nil);
+        CheckTimer.Interval := 100;
+        CheckTimer.OnTimer := DoTimer;
+      end;
+      CheckTimer.Enabled := True;
+    end;
 {$IFDEF DELPHI7UP}
     SetWindowLong(AForm.Handle, GWL_STYLE, GetWindowLong(AForm.Handle, GWL_STYLE) or WS_CLIPSIBLINGS or NativeInt(WS_POPUP));
 {$ELSE}
@@ -772,8 +851,10 @@ begin
     AForm.Visible := True;
     AnimShowPopup(AForm, AnimTime, bAlphaBlendValue);
 
-    if not ShadowForm.FDestroyed then
-      ShadowForm.UpdateShadowPos;
+{$IFNDEF AC_NOSHADOW}
+    if not TacShadowForm(FormHandlers[HandlerIndex].ShadowForm).FDestroyed then
+      TacShadowForm(FormHandlers[HandlerIndex].ShadowForm).UpdateShadowPos;
+{$ENDIF}
   end;
   SkipOpen := False;
 end;
@@ -828,9 +909,8 @@ type
 
 procedure TacFormHandler.CloseForm(CallProc: boolean = True);
 var
-  aForm: TForm;
   ca: TCloseAction;
-  sd: TsCommonData;
+//  sd: TsCommonData;
 begin
   CheckTimer.Enabled := False;
   if not Closed and (PopupForm <> nil) and PopupForm.CloseQuery then begin
@@ -861,28 +941,13 @@ begin
         else}
           PopupCtrl.Perform(SM_ALPHACMD, AC_POPUPCLOSED shl 16, LParam(PopupForm));
 
-      PopupForm.WindowProc := FormWndProc;
-
-      sd := GetCommonData(PopupForm.Handle);
-      if sd <> nil then
-        sd.WndProc := nil;//FormWndProc;
-
-      FormWndProc := nil;
-
-      if PopupCtrl <> nil then
-        PopupCtrl.WindowProc := CtrlWndProc;
-
-      aForm := PopupForm;
-      UnInitFormHandler;
-      PopupForm := nil;
-      PopupCtrl := nil;
       if CallProc then
         case ca of
           caHide:
-            aForm.Hide;
+            PopupForm.Hide;
 
           caFree:
-            aForm.Free;
+            PopupForm.Free;
         end;
 
       if not Application.Active and (ParentForm <> nil) then
@@ -893,46 +958,47 @@ end;
 
 
 constructor TacFormHandler.Create(AForm: TForm; ACtrl: TWinControl);
-var
-  sd: TsCommonData;
 begin
   inherited Create;
-  PopupForm := AForm;
-  PopupCtrl := ACtrl;
   Closed := False;
-  FormWndProc := AForm.WindowProc;
-  PopupForm.WindowProc := DoWndProc;
-  sd := GetCommonData(PopupForm.Handle);
-  if sd <> nil then
-    sd.WndProc := DoWndProc;
-
-  if ACtrl <> nil then begin
-    CtrlWndProc := ACtrl.WindowProc;
-    PopupCtrl.WindowProc := DoCtrlProc;
-    ParentForm := TForm(GetParentForm(ACtrl));
-  end
-  else
-    ParentForm := nil;
-
-  CheckTimer := TacThreadedTimer.Create(nil);
-  CheckTimer.Interval := 100;
-  CheckTimer.OnTimer := DoTimer;
+{$IFNDEF AC_NOSHADOW}
+  ShadowForm := nil;
+{$ENDIF}
+  InitControls(AForm, ACtrl);
 end;
 
 
 destructor TacFormHandler.Destroy;
 begin
+  UnInitControls;
   FreeAndNil(CheckTimer);
   inherited;
 end;
 
 
+{$IFNDEF AC_NOHANDLECTRL}
 procedure TacFormHandler.DoCtrlProc(var Message: TMessage);
 begin
 {$IFDEF LOGGED}
   AddToLog(Message);
 {$ENDIF}
   case Message.Msg of
+    WM_DESTROY: begin
+{$IFNDEF AC_NOSHADOW}
+      if ShadowForm <> nil then begin
+        TacShadowForm(ShadowForm).KillShadow;
+        ShadowForm := nil;
+      end;
+{$ENDIF}
+
+{$IFNDEF AC_NOHANDLEFORM}
+      FormWndProc(Message);
+{$ENDIF}
+      UnInitControls;
+
+      Exit;
+    end;
+
     WM_MOUSEWHEEL:
       PopupForm.DefaultHandler(Message);
 
@@ -943,12 +1009,16 @@ begin
 //      if not (PopupCtrl is TsCustomComboBoxEx) then
 //        Controller.SkipOpen := Message.Msg = WM_LBUTTONDOWN;
 
-      CloseForm;
+      if not Closed and (PopupForm <> nil) then
+        CloseForm
+      else
+        CtrlWndProc(Message);
     end
     else
       CtrlWndProc(Message);
   end;
 end;
+{$ENDIF} // AC_NOHANDLECTRL
 
 
 procedure TacFormHandler.DoTimer(Sender: TObject);
@@ -972,7 +1042,7 @@ begin
       Closeform
     else begin
       CaptHandle := GetCapture;
-      if CaptHandle <> 0 then
+      if (CaptHandle <> 0) and (CaptureHandle <> CaptHandle) then
         if not ContainsWnd(CaptHandle, PopupForm.Handle) and ((PopupCtrl = nil) or not ContainsWnd(CaptHandle, PopupCtrl.Handle)) then
           if not Controller.HasChild(PopupForm) then
             Closeform;
@@ -980,19 +1050,20 @@ begin
 end;
 
 
+{$IFNDEF AC_NOHANDLEFORM}
 procedure TacFormHandler.DoWndProc(var Message: TMessage);
 begin
 {$IFDEF LOGGED}
   AddToLog(Message);
 {$ENDIF}
   case Message.Msg of
-{    SM_ALPHACMD:
-      case Message.WParamHi of
-        AC_REMOVESKIN:
+    WM_DESTROY: begin
+      if Assigned(FormWndProc) then
+        FormWndProc(Message);
 
-
-      end;
-}
+      UnInitControls;
+      Exit;
+    end;
 
     CM_VISIBLECHANGED, CM_SHOWINGCHANGED:
       if PopupForm <> nil then begin
@@ -1001,26 +1072,78 @@ begin
 
         FormWndProc(Message);
       end;
-{
-    WM_MOUSEWHEEL:
-      PopupForm.DefaultHandler(Message);
-}
-    WM_MOUSEACTIVATE:
+
+    WM_MOUSEACTIVATE: begin
+      FormWndProc(Message);
       Message.Result := MA_NOACTIVATE
+    end
 
     else
       if Assigned(FormWndProc) then
         FormWndProc(Message);
   end;
 end;
+{$ENDIF} // AC_NOHANDLEFORM
 
 
-procedure TacFormHandler.UnInitFormHandler;
+procedure TacFormHandler.InitControls(AForm: TForm; ACtrl: TWinControl);
+var
+  sd: TsCommonData;
 begin
-  if PopupForm <> nil then begin
-    PopupForm.OnDeactivate := nil;
-    if Assigned(OldOnClose) then
-      PopupForm.OnClose := OldOnClose;
+  Closed := False;
+  PopupForm := AForm;
+  PopupCtrl := ACtrl;
+{$IFNDEF AC_NOHANDLEFORM}
+  FormWndProc := AForm.WindowProc;
+  AForm.WindowProc := DoWndProc;
+  sd := GetCommonData(AForm.Handle);
+  if sd <> nil then
+    sd.WndProc := DoWndProc;
+{$ENDIF}
+
+  if ACtrl <> nil then begin
+{$IFNDEF AC_NOHANDLECTRL}
+    CtrlWndProc := ACtrl.WindowProc;
+    PopupCtrl.WindowProc := DoCtrlProc;
+{$ENDIF} // AC_NOHANDLECTRL
+    ParentForm := TForm(GetParentForm(ACtrl));
+  end
+  else
+    ParentForm := nil;
+
+  Initialized := True;
+end;
+
+
+procedure TacFormHandler.UnInitControls;
+var
+  sd: TsCommonData;
+begin
+  if Initialized then begin
+{$IFNDEF AC_NOHANDLEFORM}
+    PopupForm.WindowProc := FormWndProc;
+
+    sd := GetCommonData(PopupForm.Handle);
+    if sd <> nil then
+      sd.WndProc := nil; // FormWndProc;
+
+    FormWndProc := nil;
+{$ENDIF}
+
+{$IFNDEF AC_NOHANDLECTRL}
+    if PopupCtrl <> nil then
+      PopupCtrl.WindowProc := CtrlWndProc;
+{$ENDIF}
+
+    if PopupForm <> nil then begin
+      PopupForm.OnDeactivate := nil;
+      if Assigned(OldOnClose) then
+        PopupForm.OnClose := OldOnClose;
+    end;
+  //  aForm := PopupForm;
+    PopupForm := nil;
+    PopupCtrl := nil;
+    Initialized := False;
   end;
 end;
 

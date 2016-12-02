@@ -3,7 +3,7 @@ object frmAllotmentToRes: TfrmAllotmentToRes
   Top = 0
   Caption = 'Provide allotment'
   ClientHeight = 505
-  ClientWidth = 1086
+  ClientWidth = 1165
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -28,13 +28,13 @@ object frmAllotmentToRes: TfrmAllotmentToRes
   object sPanel2: TsPanel
     Left = 0
     Top = 472
-    Width = 1086
+    Width = 1165
     Height = 33
     Align = alBottom
     TabOrder = 0
     SkinData.SkinSection = 'PANEL'
     DesignSize = (
-      1086
+      1165
       33)
     object btnHideShowAllotment: TsButton
       Left = 8
@@ -49,7 +49,7 @@ object frmAllotmentToRes: TfrmAllotmentToRes
       SkinData.SkinSection = 'BUTTON'
     end
     object sButton5: TsButton
-      Left = 926
+      Left = 1005
       Top = 4
       Width = 78
       Height = 25
@@ -63,7 +63,7 @@ object frmAllotmentToRes: TfrmAllotmentToRes
       SkinData.SkinSection = 'BUTTON'
     end
     object sButton6: TsButton
-      Left = 1007
+      Left = 1086
       Top = 4
       Width = 75
       Height = 25
@@ -109,10 +109,11 @@ object frmAllotmentToRes: TfrmAllotmentToRes
         SkinData.SkinSection = 'MENUCAPTION'
       end
       object sGroupBox2: TsGroupBox
-        Left = 1
-        Top = 33
+        AlignWithMargins = True
+        Left = 4
+        Top = 36
         Width = 210
-        Height = 172
+        Height = 166
         Align = alLeft
         Caption = 'Show in cells'
         TabOrder = 1
@@ -139,7 +140,7 @@ object frmAllotmentToRes: TfrmAllotmentToRes
           Caption = 'Guest name'
           Checked = True
           State = cbChecked
-          TabOrder = 1
+          TabOrder = 2
           SkinData.SkinSection = 'CHECKBOX'
           ImgChecked = 0
           ImgUnchecked = 0
@@ -150,7 +151,7 @@ object frmAllotmentToRes: TfrmAllotmentToRes
           Width = 192
           Height = 19
           Caption = 'Price info (Code - Price - Discount)'
-          TabOrder = 2
+          TabOrder = 3
           SkinData.SkinSection = 'CHECKBOX'
           ImgChecked = 0
           ImgUnchecked = 0
@@ -161,7 +162,7 @@ object frmAllotmentToRes: TfrmAllotmentToRes
           Width = 113
           Height = 19
           Caption = 'Number of guests'
-          TabOrder = 3
+          TabOrder = 1
           SkinData.SkinSection = 'CHECKBOX'
           ImgChecked = 0
           ImgUnchecked = 0
@@ -180,14 +181,14 @@ object frmAllotmentToRes: TfrmAllotmentToRes
           ImgChecked = 0
           ImgUnchecked = 0
         end
-        object sCheckBox1: TsCheckBox
+        object chkFitColumns: TsCheckBox
           Left = 14
           Top = 128
           Width = 81
           Height = 19
           Caption = 'Fit columns'
           TabOrder = 5
-          OnClick = sCheckBox1Click
+          OnClick = chkFitColumnsClick
           SkinData.SkinSection = 'CHECKBOX'
           ImgChecked = 0
           ImgUnchecked = 0
@@ -201,15 +202,15 @@ object frmAllotmentToRes: TfrmAllotmentToRes
         Align = alBottom
         TabOrder = 2
         SkinData.SkinSection = 'PANEL'
-        DesignSize = (
-          581
-          42)
         object sButton4: TsButton
-          Left = 374
-          Top = 9
+          AlignWithMargins = True
+          Left = 373
+          Top = 6
           Width = 204
-          Height = 25
-          Anchors = [akTop, akRight]
+          Height = 30
+          Margins.Top = 5
+          Margins.Bottom = 5
+          Align = alRight
           Caption = 'Add Allotment to Reservation'
           ImageAlignment = iaRight
           ImageIndex = 107
@@ -220,10 +221,11 @@ object frmAllotmentToRes: TfrmAllotmentToRes
         end
       end
       object sGroupBox1: TsGroupBox
-        Left = 211
-        Top = 33
+        AlignWithMargins = True
+        Left = 220
+        Top = 36
         Width = 248
-        Height = 172
+        Height = 166
         Align = alLeft
         Caption = 'Allotment'
         TabOrder = 3
@@ -466,7 +468,7 @@ object frmAllotmentToRes: TfrmAllotmentToRes
       SortSettings.HeaderColorTo = 16579058
       SortSettings.HeaderMirrorColor = 16380385
       SortSettings.HeaderMirrorColorTo = 16182488
-      Version = '7.9.1.1'
+      Version = '8.1.2.0'
       ColWidths = (
         132)
       RowHeights = (
@@ -485,7 +487,7 @@ object frmAllotmentToRes: TfrmAllotmentToRes
   object sPanel4: TsPanel
     Left = 591
     Top = 0
-    Width = 495
+    Width = 574
     Height = 472
     Align = alClient
     TabOrder = 2
@@ -499,7 +501,7 @@ object frmAllotmentToRes: TfrmAllotmentToRes
     object sPanel5: TsPanel
       Left = 1
       Top = 1
-      Width = 493
+      Width = 572
       Height = 248
       Align = alTop
       TabOrder = 0
@@ -507,7 +509,7 @@ object frmAllotmentToRes: TfrmAllotmentToRes
       object sPanel7: TsPanel
         Left = 1
         Top = 1
-        Width = 491
+        Width = 570
         Height = 32
         Align = alTop
         Caption = 'Reservation'
@@ -522,10 +524,11 @@ object frmAllotmentToRes: TfrmAllotmentToRes
         SkinData.SkinSection = 'MENUCAPTION'
       end
       object sGroupBox3: TsGroupBox
-        Left = 1
-        Top = 33
+        AlignWithMargins = True
+        Left = 4
+        Top = 36
         Width = 280
-        Height = 172
+        Height = 166
         Align = alLeft
         Caption = 'Reservation'
         TabOrder = 1
@@ -656,16 +659,20 @@ object frmAllotmentToRes: TfrmAllotmentToRes
       object sPanel3: TsPanel
         Left = 1
         Top = 205
-        Width = 491
+        Width = 570
         Height = 42
         Align = alBottom
         TabOrder = 3
         SkinData.SkinSection = 'PANEL'
         object sButton2: TsButton
+          AlignWithMargins = True
           Left = 4
-          Top = 9
+          Top = 6
           Width = 204
-          Height = 25
+          Height = 30
+          Margins.Top = 5
+          Margins.Bottom = 5
+          Align = alLeft
           Caption = 'Add Room to Allotment'
           ImageIndex = 106
           Images = DImages.PngImageList1
@@ -676,7 +683,7 @@ object frmAllotmentToRes: TfrmAllotmentToRes
       end
       object sGroupBox4: TsGroupBox
         Left = 295
-        Top = 39
+        Top = 36
         Width = 185
         Height = 98
         Caption = 'Recalculate Roomprices'
@@ -708,7 +715,7 @@ object frmAllotmentToRes: TfrmAllotmentToRes
     object grRoomRes: TcxGrid
       Left = 1
       Top = 249
-      Width = 493
+      Width = 572
       Height = 222
       Align = alClient
       TabOrder = 1
@@ -751,26 +758,14 @@ object frmAllotmentToRes: TfrmAllotmentToRes
             Column = tvRoomResAvragePrice
           end>
         DataController.Summary.SummaryGroups = <>
+        OptionsData.Deleting = False
         OptionsData.DeletingConfirmation = False
         OptionsData.Inserting = False
+        OptionsView.CellAutoHeight = True
         OptionsView.Footer = True
         OptionsView.FooterAutoHeight = True
         OptionsView.FooterMultiSummaries = True
         OptionsView.GroupByBox = False
-        object tvRoomResColumn1: TcxGridDBColumn
-          Caption = 'Edit'
-          PropertiesClassName = 'TcxButtonEditProperties'
-          Properties.Buttons = <
-            item
-              Caption = 'Refresh'
-              Default = True
-              ImageIndex = 29
-              Kind = bkGlyph
-            end>
-          Properties.ViewStyle = vsButtonsOnly
-          Options.ShowEditButtons = isebAlways
-          Width = 39
-        end
         object tvRoomResRoom: TcxGridDBColumn
           DataBinding.FieldName = 'Room'
           Options.Editing = False
@@ -832,8 +827,9 @@ object frmAllotmentToRes: TfrmAllotmentToRes
         object tvRoomResAvragePrice: TcxGridDBColumn
           Caption = 'Netto Rate'
           DataBinding.FieldName = 'AvragePrice'
-          PropertiesClassName = 'TcxCalcEditProperties'
-          Properties.DisplayFormat = '###0.00;###0.00'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          OnGetProperties = tvRoomResGetCurrencyProperties
+          Options.Editing = False
           Width = 73
         end
         object tvRoomResRateCount: TcxGridDBColumn
@@ -848,6 +844,7 @@ object frmAllotmentToRes: TfrmAllotmentToRes
         end
         object tvRoomResAvrageDiscount: TcxGridDBColumn
           DataBinding.FieldName = 'AvrageDiscount'
+          PropertiesClassName = 'TcxCalcEditProperties'
           Options.Editing = False
         end
         object tvRoomResisPercentage: TcxGridDBColumn
@@ -1030,6 +1027,11 @@ object frmAllotmentToRes: TfrmAllotmentToRes
       end
       item
         Name = 'RoomDescription'
+        DataType = ftString
+        Size = 30
+      end
+      item
+        Name = 'RoomtypeDescription'
         DataType = ftString
         Size = 30
       end

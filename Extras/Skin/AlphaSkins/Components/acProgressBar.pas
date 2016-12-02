@@ -1,6 +1,6 @@
 unit acProgressBar;
 {$I sDefs.inc}
-//+
+
 interface
 
 uses
@@ -33,10 +33,10 @@ type
     FMarqueeInterval: Integer;
     FStyle: TProgressBarStyle;
 {$ENDIF}
-    procedure PrepareCache;
-    function ProgressRect: TRect;
-    function ItemSize: TSize;
     function ClRect: TRect;
+    procedure PrepareCache;
+    function ItemSize: TSize;
+    function ProgressRect: TRect;
     procedure SetProgressSkin(const Value: TsSkinSection);
 {$IFNDEF D2009}
     procedure SetStyle(const Value: TProgressBarStyle);
@@ -81,7 +81,7 @@ end;
 
 function TsProgressBar.ClRect: TRect;
 begin
-  Result := MkRect(Width, Height);
+  Result := MkRect(Self);
   InflateRect(Result, -1, -1);
 end;
 
@@ -196,6 +196,20 @@ var
   prRect: TRect;
   Bmp: TBitmap;
   iSize: TSize;
+
+  procedure PaintBarItem(p: TPoint);
+  begin
+{$IFDEF D2009}
+    if SkinData.CustomColor then
+      FillDC(FCommonData.FCacheBmp.Canvas.Handle, Rect(p.X, p.Y, Bmp.Width + p.X, Bmp.Height + p.Y), BarColor)
+    else
+{$ENDIF}    
+    begin
+      PaintItem(si, ci, True, 0, MkRect(Bmp), p, Bmp, FCommonData.SkinManager);
+      BitBlt(FCommonData.FCacheBmp.Canvas.Handle, p.X, p.Y, Bmp.Width, Bmp.Height, Bmp.Canvas.Handle, 0, 0, SRCCOPY);
+    end;
+  end;
+
 begin
   if (Style <> pbstMarquee) and not Smooth then
     if (FCommonData.FCacheBmp <> nil) and (FCommonData.FCacheBmp.Width = Width) and (FCommonData.FCacheBmp.Height = Height) then begin
@@ -214,14 +228,19 @@ begin
       else
         value := 0;
 
-      if (value = FOldCount) and ((Position - Min) <> Max) then
+      if (value = FOldCount) and (Position - Min <> Max) then
         Exit
       else
         FOldCount := value;
     end;
 
   InitCacheBmp(FCommonData);
-  PaintItem(FCommonData, GetParentCache(FCommonData), True, 0, MkRect(Self), Point(Left, Top), FCommonData.FCacheBMP, False);
+{$IFDEF D2009}
+  if SkinData.CustomColor then
+    FillDC(FCommonData.FCacheBmp.Canvas.Handle, MkRect(Self), BackgroundColor)
+  else
+{$ENDIF}
+    PaintItem(FCommonData, GetParentCache(FCommonData), True, 0, MkRect(Self), Point(Left, Top), FCommonData.FCacheBMP, False);
 
   if Max > Min then begin
     with FCommonData.SkinManager do
@@ -251,8 +270,7 @@ begin
           if c > Width then
             c := c - Width;
 
-          PaintItem(si, ci, True, 0, MkRect(Bmp), Point(c, prRect.Top), Bmp, FCommonData.SkinManager);
-          BitBlt(FCommonData.FCacheBmp.Canvas.Handle, c, prRect.Top, Bmp.Width, Bmp.Height, Bmp.Canvas.Handle, 0, 0, SRCCOPY);
+          PaintBarItem(Point(c, prRect.Top));
         end
       else
         for i := 0 to 4 do begin
@@ -260,16 +278,14 @@ begin
           if c < 0 then
             c := Height + c;
 
-          PaintItem(si, ci, True, 0, MkRect(Bmp), Point(prRect.Left, c), Bmp, FCommonData.SkinManager);
-          BitBlt(FCommonData.FCacheBmp.Canvas.Handle, prRect.Left, c, Bmp.Width, Bmp.Height, Bmp.Canvas.Handle, 0, 0, SRCCOPY);
+          PaintBarItem(Point(prRect.Left, c));
         end;
     end
     else
       if Orientation = pbHorizontal then begin
         if Smooth then begin
           Bmp.Width := WidthOf(prRect);
-          PaintItem(si, ci, True, 0, MkRect(Bmp), prRect.TopLeft, Bmp, FCommonData.SkinManager);
-          BitBlt(FCommonData.FCacheBmp.Canvas.Handle, prRect.Left, prRect.Top, Bmp.Width, Bmp.Height, Bmp.Canvas.Handle, 0, 0, SRCCOPY);
+          PaintBarItem(prRect.TopLeft);
         end
         else
           if (Max > Min) and (Position > Min) then begin
@@ -278,14 +294,12 @@ begin
             if c > 1 then begin
               d := (w - c * iSize.cx) div (c - 1);
               value := Round(c / (Max - Min) * (Position - Min));
-              for i := 0 to value - 1 do begin
-                PaintItem(si, ci, True, 0, MkRect(Bmp), Point(prRect.Left + i * (iSize.cx + d), prRect.Top), Bmp, FCommonData.SkinManager);
-                BitBlt(FCommonData.FCacheBmp.Canvas.Handle, prRect.Left + i * (iSize.cx + d), prRect.Top, Bmp.Width, Bmp.Height, Bmp.Canvas.Handle, 0, 0, SRCCOPY);
-              end;
+              for i := 0 to value - 1 do
+                PaintBarItem(Point(prRect.Left + i * (iSize.cx + d), prRect.Top));
+
               if (Value > 0) and (Position = Max) and (w - (Value - 1) * (iSize.cx + d) - iSize.cx > 3) then begin
                 Bmp.Width := w - (Value - 1) * (iSize.cx + d) - iSize.cx;
-                PaintItem(si, ci, True, 0, MkRect(Bmp), Point(prRect.Left + Value * (iSize.cx + d), prRect.Top), Bmp, FCommonData.SkinManager);
-                BitBlt(FCommonData.FCacheBmp.Canvas.Handle, prRect.Left + (Value * (iSize.cx + d)), prRect.Top, Bmp.Width, Bmp.Height, Bmp.Canvas.Handle, 0, 0, SRCCOPY);
+                PaintBarItem(Point(prRect.Left + Value * (iSize.cx + d), prRect.Top));
               end;
             end;
           end
@@ -293,8 +307,7 @@ begin
       else
         if Smooth then begin
           Bmp.Height := HeightOf(prRect);
-          PaintItem(si, ci, True, 0, MkRect(Bmp), prRect.TopLeft, Bmp, FCommonData.SkinManager);
-          BitBlt(FCommonData.FCacheBmp.Canvas.Handle, prRect.Left, prRect.Top, Bmp.Width, Bmp.Height, Bmp.Canvas.Handle, 0, 0, SRCCOPY);
+          PaintBarItem(prRect.TopLeft);
         end
         else
           if (Max > Min) and (Position > Min) then begin
@@ -303,14 +316,12 @@ begin
             if c > 1 then begin
               d := (h - c * iSize.cy) div (c - 1);
               value := Round(c / (Max - Min) * (Position - Min));
-              for i := 0 to value - 1 do begin
-                PaintItem(si, ci, True, 0, MkRect(Bmp), Point(prRect.Left, prRect.Bottom - i * (iSize.cy + d) - iSize.cy), Bmp, FCommonData.SkinManager);
-                BitBlt(FCommonData.FCacheBmp.Canvas.Handle, prRect.Left, prRect.Bottom - i * (iSize.cy + d) - iSize.cy, Bmp.Width, Bmp.Height, Bmp.Canvas.Handle, 0, 0, SRCCOPY);
-              end;
+              for i := 0 to value - 1 do
+                PaintBarItem(Point(prRect.Left, prRect.Bottom - i * (iSize.cy + d) - iSize.cy));
+
               if (Value > 0) and (Position = Max) and (h - (Value - 1) * (iSize.cy + d) - iSize.cy > 3) then begin
                 Bmp.Height := HeightOf(clRect) - Value * (iSize.cy + d);
-                PaintItem(si, ci, True, 0, MkRect(Bmp), prRect.TopLeft, Bmp, FCommonData.SkinManager);
-                BitBlt(FCommonData.FCacheBmp.Canvas.Handle, prRect.Left, prRect.Top, Bmp.Width, Bmp.Height, Bmp.Canvas.Handle, 0, 0, SRCCOPY);
+                PaintBarItem(prRect.TopLeft);
               end;
             end;
           end;
@@ -470,12 +481,13 @@ begin
   if ControlIsReady(Self) and FCommonData.Skinned then begin
     case Message.Msg of
       PBM_SETPOS: begin
-        if Style = pbstMarquee then
+        if Style = pbstMarquee then begin
           Perform(WM_SETREDRAW, 0, 0);
-
-        inherited;
-        if Style = pbstMarquee then
+          inherited;
           Perform(WM_SETREDRAW, 1, 0);
+        end
+        else
+          inherited;
 
         Exit;
       end;

@@ -2,7 +2,7 @@ unit sSkinManager;
 {$I sDefs.inc}
 // {$DEFINE LOGGED}
 // {$DEFINE DEBUGOBJ}
-//+
+
 interface
 
 uses
@@ -16,7 +16,7 @@ uses
 
 {$IFNDEF NOTFORHELP}
 const
-  acCurrentVersion = '11.12';
+  acCurrentVersion = '11.21';
 
 {$R sXB.res}   // Default ext borders
 {$R sOEff.res} // Default outer masks
@@ -44,7 +44,7 @@ type
 
   TacSkinTypes = (stUnpacked, stPacked, stAllSkins);
   TacSkinPlaces = (spInternal, spExternal, spAllPlaces);
-  TacScaleMode = (sm100, sm125, sm150, smAuto, smOldMode);
+  TacScaleMode = (sm100, sm125, sm150, sm200, smAuto, smOldMode);
 
   TacMenuItemData = record
     Font: TFont;
@@ -379,6 +379,7 @@ type
     FStdGlyphsOrder,
     FCheckEmptyAlpha,
     FChangeSysColors,
+    FStdImgTransparency,
     FNativeBordersMaximized: boolean;
 
     FOwner: TsSkinManager;
@@ -394,6 +395,7 @@ type
     property StdGlyphsOrder         : boolean index 3 read GetBool write SetBool default False;
     property ChangeSysColors        : boolean index 4 read GetBool write SetBool default False;
     property CheckEmptyAlpha        : boolean index 0 read GetBool write SetBool default False;
+    property StdImgTransparency     : boolean index 5 read GetBool write SetBool default False;
     property NativeBordersMaximized : boolean index 2 read GetBool write SetBool default False;
     property ScaleMode: TacScaleMode read FScaleMode write SetScaleMode default smOldMode;
     property OptimizingPriority: TacOptimizingPriority read FOptimizingPriority write FOptimizingPriority default opSpeed;
@@ -983,27 +985,30 @@ begin
         w := min(l + mask.WL, Bmp.Width  - 1);
         h := min(mask.R.Top  + mask.WT, Bmp.Height - 1);
         Checkbits;
-        if Result > 0 then Exit;
-        // Right top
-        l := mask.R.Left + i * dx + WidthOf(mask.R) div mask.ImageCount - mask.WR;
-        t := mask.R.Top;
-        w := min(l + mask.WR, Bmp.Width - 1);
-        h := min(mask.R.Top + mask.WT, Bmp.Height - 1);
-        Checkbits;
-        if Result > 0 then Exit;
-        // Left bottom
-        l := mask.R.Left + i * dx;
-        t := mask.R.Top + HeightOf(mask.R) div (mask.MaskType + 1) - mask.WB;
-        w := min(mask.R.Left + mask.WL, Bmp.Width - 1);
-        h := min(t + mask.WB, Bmp.Height - 1);
-        Checkbits;
-        if Result > 0 then Exit;
-        // Right bottom
-        l := mask.R.Left + i * dx + WidthOf(mask.R) div mask.ImageCount - mask.WR;
-        t := mask.R.Top + HeightOf(mask.R) div (mask.MaskType + 1) - mask.WB;
-        w := min(mask.R.Left + mask.WL, Bmp.Width - 1);
-        h := min(t + mask.WB, Bmp.Height - 1);
-        Checkbits;
+        if Result <= 0 then begin
+          // Right top
+          l := mask.R.Left + i * dx + WidthOf(mask.R) div mask.ImageCount - mask.WR;
+          t := mask.R.Top;
+          w := min(l + mask.WR, Bmp.Width - 1);
+          h := min(mask.R.Top + mask.WT, Bmp.Height - 1);
+          Checkbits;
+          if Result <= 0 then begin
+            // Left bottom
+            l := mask.R.Left + i * dx;
+            t := mask.R.Top + HeightOf(mask.R) div (mask.MaskType + 1) - mask.WB;
+            w := min(mask.R.Left + mask.WL, Bmp.Width - 1);
+            h := min(t + mask.WB, Bmp.Height - 1);
+            Checkbits;
+            if Result <= 0 then begin
+              // Right bottom
+              l := mask.R.Left + i * dx + WidthOf(mask.R) div mask.ImageCount - mask.WR;
+              t := mask.R.Top + HeightOf(mask.R) div (mask.MaskType + 1) - mask.WB;
+              w := min(l + mask.WL, Bmp.Width - 1);
+              h := min(t + mask.WB, Bmp.Height - 1);
+              Checkbits;
+            end;
+          end;
+        end;
       end;
     end;
   end;
@@ -2355,8 +2360,8 @@ begin
     InitDevEx(False);
 
 {$IFNDEF ALITE}
-  if acIntController <> nil then
-    acIntController.KillAllForms(nil);
+//  if acIntController <> nil then
+//    acIntController.KillAllForms(nil);
 {$ENDIF}
 
   SkinRemoving := True;
@@ -2586,6 +2591,9 @@ begin
       EnableAlign;
       if IsVisible then
         SetWindowPos(Handle, 0, 0, 0, 0, 0, SWP_SHOW);
+
+      if iNewScale < iOldScale then
+        InvalidateRect(0, @R, True);
 
       Effects.AllowAnimation := b;
     end;
@@ -5040,7 +5048,8 @@ begin
     0: Result := FCheckEmptyAlpha;
     1: Result := FNoMouseHover;
     2: Result := FNativeBordersMaximized;
-    3: Result := FStdGlyphsOrder
+    3: Result := FStdGlyphsOrder;
+    5: Result := FStdImgTransparency
   else Result := FChangeSysColors; // 4
   end;
 end;
@@ -5053,6 +5062,7 @@ begin
     1: FNoMouseHover           := Value;
     2: FNativeBordersMaximized := Value;
     3: FStdGlyphsOrder         := Value;
+    5: FStdImgTransparency     := Value;
     4: begin
       FChangeSysColors := Value;
 {$IFNDEF WIN64}
@@ -5073,9 +5083,43 @@ begin
 end;
 
 
+const
+  LF_UNLOCK = 1;
+  LF_REDUCED = 2;
+
+procedure LockFormUpdate(sp: TComponent; Data: integer);
+begin
+  with TsSkinProvider(sp) do begin
+    if Data and LF_UNLOCK = 0 then begin
+      FFormState := FFormState or FS_FULLPAINTING;
+      if (BorderForm <> nil){ and (Data and LF_REDUCED <> 0)} then begin
+//        TsSkinProvider(sp).BorderForm.ResetRgn := True;
+        TsSkinProvider(sp).BorderForm.UpdateExBordersPos(False);
+//        TsSkinProvider(sp).BorderForm.UpdateRgn;
+      end;
+      FInAnimation := Data and LF_UNLOCK = 0;
+      FFormState := FFormState or FS_LOCKED;
+    end
+    else begin
+      FFormState := FFormState and not FS_LOCKED and not FS_FULLPAINTING;
+      SkinData.BGChanged := True;
+      SendAMessage(TsSkinProvider(sp).Form.Handle, AC_PREPARECACHE);
+      FFormState := 0;
+    end;
+    if BorderForm <> nil then begin
+      BorderForm.ExBorderShowing := Data and LF_UNLOCK = 0;
+//      if Data = (LF_REDUCED or LF_UNLOCK) then
+//        BorderForm.UpdateExBordersPos(True);
+    end;
+    TrySendMessage(Form.Handle, WM_SETREDRAW, Data and LF_UNLOCK, 0);
+  end;
+end;
+
+
 procedure TacOptions.SetScaleMode(const Value: TacScaleMode);
 var
   OldScale: integer;
+  ReduceSize: boolean;
   ScaleChangeData: TScaleChangeData;
 
   procedure UpdateVariables;
@@ -5083,12 +5127,23 @@ var
     if FOwner.IsDefault then begin
       ac_ArrowWidth := MulDiv(ac_ArrowWidth, aScalePercents[FOwner.GetScale], aScalePercents[OldScale]);
       ac_ArrowHeight := ac_ArrowWidth div 2 + ac_ArrowWidth mod 2;
+      iDefIcoLineWidth := MulDiv(iDefIcoLineWidth, aScalePercents[FOwner.GetScale], aScalePercents[OldScale]);
+      acAddedTabSpacing := MulDiv(acAddedTabSpacing, aScalePercents[FOwner.GetScale], aScalePercents[OldScale]);
+      acSpacing := MulDiv(acSpacing, aScalePercents[FOwner.GetScale], aScalePercents[OldScale]);
+{$IFDEF D2010}
+      Screen.MessageFont.Size := MulDiv(Screen.MessageFont.Size, aScalePercents[FOwner.GetScale], aScalePercents[OldScale]);
+{$ENDIF}
     end;
   end;
 
 begin
   if FScaleMode <> Value then begin
     OldScale := FOwner.GetScale;
+
+    if Value = smAuto then
+      ReduceSize := aScalePercents[FOwner.SysFontScale] < aScalePercents[OldScale]
+    else
+      ReduceSize := aScalePercents[ord(Value)] < aScalePercents[OldScale];
 
     if Assigned(FOwner.OnScaleModeChange) then begin
       ScaleChangeData.OldScaleMode := FScaleMode;
@@ -5105,8 +5160,10 @@ begin
         UpdateVariables;
         if not (csLoading in ComponentState) then begin
           BeginUpdate;
+          IterateForms(FOwner, LockFormUpdate, LF_REDUCED * integer(ReduceSize));
           UpdateAllScale;
           UpdateCurrentSkin;
+          IterateForms(FOwner, LockFormUpdate, LF_UNLOCK or LF_REDUCED * integer(ReduceSize));
           EndUpdate(True, False);
         end;
       end;
@@ -5136,7 +5193,8 @@ begin
     if SysScale = 0 then
       case GetScale of
         1:   Result := Value + Value div 4;
-        2:   Result := Value + Value div 2
+        2:   Result := Value + Value div 2;
+        3:   Result := 2 * Value
         else Result := Value;
       end
     else begin
@@ -5253,19 +5311,24 @@ var
 
 begin
   // Check file type
-  SetLength(KeysArray, pwds.Count);
-  for i := 0 to pwds.Count - 1 do begin
-    s := pwds[i];
-    s := DelChars(s, #13);
-    s := DelChars(s, #10);
-    s := DelChars(s, ' ');
-    if not TryStrTo64(s, KeysArray[i]) then begin
-      KeysArray[i] := 0;
-      DisableManager;
-      MessageDlg('Secure key has incorrect format', mtError, [mbOk], 0);
-      EnableManager;
+  if pwds <> nil then begin
+    SetLength(KeysArray, pwds.Count);
+    for i := 0 to pwds.Count - 1 do begin
+      s := pwds[i];
+      s := DelChars(s, #13);
+      s := DelChars(s, #10);
+      s := DelChars(s, ' ');
+      if not TryStrTo64(s, KeysArray[i]) then begin
+        KeysArray[i] := 0;
+        DisableManager;
+        MessageDlg('Secure key has incorrect format', mtError, [mbOk], 0);
+        EnableManager;
+      end;
     end;
-  end;
+  end
+  else
+    SetLength(KeysArray, 0);
+
   Convertor.PackedData.Seek(0, 0);
   if SkinManager.Owner <> nil then
     for i := 1 to Length(SkinManager.Owner.Name) do
@@ -5273,7 +5336,16 @@ begin
 
   Convertor.PackedData.Read(cArray, SizeOf(TsCharArray));
   DisableManager;
-  l := asSkinDecode(cArray, KeysArray, pwds.Count, c, c, r);
+  if pwds <> nil then
+    l := asSkinDecode(cArray, KeysArray, pwds.Count, c, c, r)
+  else
+    l := asSkinDecode(cArray, KeysArray, 0, c, c, r);
+
+  if (pwds = nil) and (l > 0) then begin
+    Result := False;
+    Exit;
+  end;
+
   EnableManager;
   case l of
    -1: begin
@@ -5342,21 +5414,57 @@ end;
 
 function GetPreviewStream(aStream: TMemoryStream; SrcStream: TMemoryStream): boolean; overload;
 const
-  sMagic = 'previewimg';
-  sEncoded: array [0..3] of AnsiChar = ('A', 'S', 'z', 'c');
+  sMagic: AnsiString = 'previewimg';
 var
   l, position: integer;
-  sStream: TStringStream;
+  BufText: AnsiString;
+
+  function BMSearch(StartPos: Integer; const P, S: AnsiString): Integer;
+  type
+    TBMTable = array[0..255] of Integer;
+  var
+    Pos, lp, i: Integer;
+    BMT: TBMTable;
+  begin
+    for i := 0 to 255 do
+      BMT[i] := Length(P);
+
+    for i := Length(P) downto 1 do
+      if BMT[Byte(P[i])] = Length(P) then
+        BMT[Byte(P[i])] := Length(P) - i;
+
+    lp := Length(P);
+    Pos := StartPos + lp -1;
+    while Pos <= Length(S) do
+      if P[lp] <> S[Pos] then
+        Pos := Pos + BMT[Byte(S[Pos])]
+      else
+        if lp = 1 then begin
+          Result := Pos;
+          Exit;
+        end
+        else
+          for i := lp - 1 downto 1 do
+            if P[i] <> S[Pos - lp + i] then begin
+              Inc(Pos);
+              Break;
+             end
+             else
+               if i = 1 then begin
+                 Result := Pos - lp + 1;
+                 Exit;
+               end;
+
+    Result := 0;
+  end;
+
 begin
   Result := False;
-
-  sStream := TStringStream.Create{$IFNDEF D2010}(''){$ENDIF};
   SrcStream.Seek(0, 0);
-  sStream.CopyFrom(SrcStream, SrcStream.Size);
-
-  position := Pos(sMagic, AnsiString(sStream.DataString));
+  SetString(BufText, PAnsiChar(SrcStream.Memory), SrcStream.Size);
+  position := bmSearch(0, sMagic, BufText);
   if position > 0 then begin
-    SrcStream.Seek(position + Length(sMagic) - 1, 0);
+    SrcStream.Seek(position + 9, 0);
     SrcStream.Read(l, SizeOf(l));
     try
       aStream.Size := l;
@@ -5366,7 +5474,6 @@ begin
       Result := True;
     end;
   end;
-  sStream.Free;
 end;
 
 

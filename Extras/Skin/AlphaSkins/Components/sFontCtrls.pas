@@ -39,7 +39,7 @@ type
   public
     constructor Create(AOwner: TComponent); override;
     procedure Loaded; override;
-    procedure WndProc (var Message: TMessage); override;
+    procedure WndProc(var Message: TMessage); override;
     procedure DrawItem(Index: Integer; Rect: TRect; State: TOwnerDrawState); override;
     procedure MeasureItem(Index: Integer; var Height: Integer); override;
   published
@@ -171,7 +171,7 @@ const
   TestStr = 'Ag';
 
 var
-  iC: integer;
+//  iC: integer;
   fa: TFontsArray;
   FBitmaps: TBitmapArray;
 
@@ -301,6 +301,18 @@ begin
   DC := GetDC(0);
   EnumFontFamilies(DC, nil, @EnumFontFamProc, 0);
   ReleaseDC(0, DC);
+end;
+
+
+procedure UpdateGlobalFontList();
+var
+  iC: integer;
+begin
+  for iC := 0 to Length(fa) - 1 do
+    TFontClass(fa[iC]).Free;
+
+  SetLength(fa, 0);
+  GetAllInstalledScreenFonts;
 end;
 
 
@@ -644,10 +656,15 @@ procedure TsFontComboBox.WndProc(var Message: TMessage);
 var
   s: string;
   i: integer;
+  CurrentFontName: string;
 begin
   case Message.Msg of
-    WM_FONTCHANGE:
+    CM_FONTCHANGE, WM_FONTCHANGE: begin
+      CurrentFontName := Items[ItemIndex];
+      UpdateGlobalFontList();
       GetFonts(Self);
+      ItemIndex := Items.IndexOf(CurrentFontName);
+    end;
 
     WM_SETTEXT:
       if not (csLoading in ComponentState) and
@@ -668,10 +685,16 @@ end;
 
 
 procedure TsFontListBox.WndProc(var Message: TMessage);
+var
+  CurrentFontName: string;
 begin
   case Message.Msg of
-    WM_FONTCHANGE:
+    CM_FONTCHANGE, WM_FONTCHANGE: begin
+      CurrentFontName := Items[ItemIndex];
+      UpdateGlobalFontList();
       GetFonts(Self);
+      ItemIndex := Items.IndexOf(CurrentFontName);
+    end;
   end;
   inherited;
 end;
@@ -679,6 +702,9 @@ end;
 
 const
   FontTypesArray: array [0..3] of string = ('PS', 'TTF', 'RASTER', 'UNKNOWN');
+
+var
+  iC: integer;
 
 initialization
   GetAllInstalledScreenFonts;

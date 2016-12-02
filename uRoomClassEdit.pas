@@ -138,7 +138,6 @@ type
     zData : recRoomTypeGroupHolder;
     zInsert : Boolean;
 
-    SystemDecimalChar : Char;
     procedure EditsToRecordHolder;
     procedure RecordHolderToEdits;
   public
@@ -397,9 +396,9 @@ end;
 
 procedure TFrmRoomClassEdit.edtdefRateKeyPress(Sender: TObject; var Key: Char);
 begin
-  if not (Key in [#8, '0'..'9', '-', SystemDecimalChar]) then
+  if not (Key in [#8, '0'..'9', '-', FormatSettings.DecimalSeparator]) then
     Key := #0
-  else if ((Key = SystemDecimalChar) or (Key = '-')) and
+  else if ((Key = FormatSettings.DecimalSeparator) or (Key = '-')) and
           (Pos(Key, TsEdit(Sender).Text) > 0) then
   begin
     Key := #0;
@@ -419,7 +418,6 @@ end;
 
 procedure TFrmRoomClassEdit.FormCreate(Sender: TObject);
 begin
-  SystemDecimalChar := SystemDecimalSeparator;
   RoomerLanguage.TranslateThisForm(self);
   glb.PerformAuthenticationAssertion(self); PlaceFormOnVisibleMonitor(self);
 end;

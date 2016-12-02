@@ -214,7 +214,6 @@ type
     labResNumbers: TsLabel;
     Panel1: TsPanel;
     sButton2: TsButton;
-    sButton3: TsButton;
     edNewReservation: TsEdit;
     btnConfirmNewReservation: TsSpeedButton;
     sLabel3: TsLabel;
@@ -232,6 +231,8 @@ type
     eriBtnNewProfileNotVisible: TcxEditRepositoryButtonItem;
     eriBtnEdCurrProfileNotVisible: TcxEditRepositoryButtonItem;
     eriBtnEdCurrProfileVisible: TcxEditRepositoryButtonItem;
+    m_Nationality: TWideStringField;
+    tvDataNationality: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -274,6 +275,7 @@ type
       var AProperties: TcxCustomEditProperties);
     procedure tvDataCountryPropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure tvDataNationalityPropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
 
   private
     { Private declarations }
@@ -296,11 +298,12 @@ type
     zCustomer         : string ;
     zSurname          : string ;
     zCountry          : string ;
-
+    zNationality      : string ;
     Procedure fillGridFromDataset(sGoto : string);
     procedure fillHolder;
     procedure changeAllowgridEdit;
     procedure CorrectCurrentGuest(iGoto: Integer);
+    procedure GetCountryCodeForField(FieldName, prompt: String);
   public
     { Public declarations }
     zAct               : TActTableAction;
@@ -328,7 +331,7 @@ uses
   , uCountries
   , uAlerts
   , uUtils
-  ;
+  , uSQLUtils;
 
 {$R *.dfm}
 
@@ -584,6 +587,7 @@ begin
   zCustomer         := m_.fieldbyname('Customer').asString          ;
   zSurname          := m_.fieldbyname('surName').asString          ;
   zCountry          := m_.fieldbyname('Country').asString          ;
+  zNationality      := m_.fieldbyname('Nationality').asString      ;
   edSurName.text := zSurName;
 
   sbMain.SimpleText := zSortStr;
@@ -741,6 +745,7 @@ begin
   zData.Address3             := dataset['Address3'       ];
   zData.Address4             := dataset['Address4'       ];
   zData.Country              := dataset['Country'        ];
+  zData.Nationality          := dataset['Nationality'    ];
   zData.Company              := dataset['Company'        ];
   zData.GuestType            := dataset['GuestType'      ];
   zData.Information          := dataset['Information'    ];
@@ -802,6 +807,7 @@ begin
   dataset['Address3'       ] := '';
   dataset['Address4'       ] := '';
   dataset['Country'        ] := zCountry;
+  dataset['Nationality'    ] := zNationality;
   dataset['Company'        ] := zCompany;
   dataset['GuestType'      ] := zGuestType;
   dataset['Information'    ] := '';
@@ -1049,22 +1055,21 @@ begin
   end;
 end;
 
-procedure TfrmGuestProfile2.tvDataCountryPropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
+procedure TfrmGuestProfile2.GetCountryCodeForField(FieldName, prompt : String);
 var
   theData : recCountryHolder;
   s : string;
 begin
 
-  theData.Country := m_.fieldbyname('Country').AsString;
+  theData.Country := m_.fieldbyname(FieldName).AsString;
   if Countries(actLookup,theData) then
   begin
-    if m_.fieldbyname('Country').AsString <> thedata.Country then
+    if m_.fieldbyname(FieldName).AsString <> thedata.Country then
     begin
       if m_.FieldByName('mainname').AsBoolean = true then
       begin
-        s := '';
-        s := s+'Change All gests countries to '+' '+thedata.Country+' '+chr(10);
-        s := s+'If No then only this guest will be changed '+chr(10);
+        s := 'Change all guests ' + prompt + ' to '+' '+thedata.Country+' '+chr(10);
+        s := s+'If [No] then only the selected guest will be changed '+chr(10);
         s := s+GetTranslatedText('shContinue');
         if MessageDlg(s,mtConfirmation, [mbYes, mbNo], 0) = mrYes then
         begin
@@ -1072,7 +1077,7 @@ begin
           while not m_.Eof do
           begin
             m_.Edit;
-            m_.fieldbyname('Country').AsString := thedata.Country;
+            m_.fieldbyname(FieldName).AsString := thedata.Country;
             m_.Post;
             m_.next;
           end;
@@ -1080,17 +1085,22 @@ begin
         end else
         begin
           m_.Edit;
-          m_.fieldbyname('Country').AsString := thedata.Country;
+          m_.fieldbyname(FieldName).AsString := thedata.Country;
           m_.Post;
         end;
       end else
       begin
         m_.Edit;
-        m_.fieldbyname('Country').AsString := thedata.Country;
+        m_.fieldbyname(FieldName).AsString := thedata.Country;
         m_.Post;
       end;
     end;
   end;
+end;
+
+procedure TfrmGuestProfile2.tvDataCountryPropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
+begin
+  GetCountryCodeForField('Country', 'countries');
 end;
 
 
@@ -1140,6 +1150,11 @@ procedure TfrmGuestProfile2.tvDataFocusedItemChanged(Sender: TcxCustomGridTableV
   AFocusedItem: TcxCustomGridTableItem);
 begin
   //tvData.Invalidate();
+end;
+
+procedure TfrmGuestProfile2.tvDataNationalityPropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
+begin
+  GetCountryCodeForField('Nationality', 'nationalities');
 end;
 
 //////////////////////////////////////////////////////////////////////////
@@ -1255,6 +1270,12 @@ begin
       s := s + ' where RoomReservation = ' + _db(zRoomReservation);
       ExecutionPlan.AddExec(s);
 
+      s := '';
+      s := s + 'UPDATE payments '+#10;
+      s := s + 'Set Reservation = ' + _db(newReservation)+#10;
+      s := s + ' where RoomReservation = ' + _db(zRoomReservation);
+      ExecutionPlan.AddExec(s);
+
       if ExecutionPlan.Execute(ptExec, False, True) then
         ExecutionPlan.CommitTransaction
       else
@@ -1336,47 +1357,44 @@ begin
 
       s := '';
       s := s + ' UPDATE roomreservations '+#10;
-      s := s + ' SET '+#10;
-      s := s + '   Reservation = ' + _db(newReservation) + ' '+#10;
-      s := s + ' WHERE '+#10;
-      s := s + '   (RoomReservation = ' + _db(zRoomReservation) + ')'+#10;
+      s := s + ' SET Reservation = ' + _db(newReservation) + ' '+#10;
+      s := s + ' WHERE (RoomReservation = ' + _db(zRoomReservation) + ')'+#10;
       ExecutionPlan.AddExec(s);
 
       s := '';
       s := s + ' UPDATE invoiceheads '+#10;
-      s := s + ' SET '+#10;
-      s := s + '   Reservation = ' + _db(newReservation) + ' '+#10;
-      s := s + ' WHERE '+#10;
-      s := s + '   (RoomReservation = ' + _db(zRoomReservation) + ') '+#10;
+      s := s + ' SET Reservation = ' + _db(newReservation) + ' '+#10;
+      s := s + ' WHERE (RoomReservation = ' + _db(zRoomReservation) + ') '+#10;
       ExecutionPlan.AddExec(s);
 
       s := '';
       s := s + ' UPDATE invoicelines '+#10;
-      s := s + ' SET '+#10;
-      s := s + '   Reservation = ' + _db(newReservation) + ' '+#10;
-      s := s + ' WHERE '+#10;
-      s := s + '   (RoomReservation = ' + _db(zRoomReservation) + ') '+#10;
+      s := s + ' SET Reservation = ' + _db(newReservation) + ' '+#10;
+      s := s + ' WHERE (RoomReservation = ' + _db(zRoomReservation) + ') '+#10;
       ExecutionPlan.AddExec(s);
 
 
       s := '';
       s := s + ' UPDATE persons '+#10;
-      s := s + ' SET '+#10;
-      s := s + '    Reservation = ' + _db(newReservation) + ' '+#10;
+      s := s + ' SET Reservation = ' + _db(newReservation) + ' '+#10;
       s := s + '   ,SurName = ' + _db(edNewReservation.text) + ' '+#10;
-      s := s + ' WHERE '+#10;
-      s := s + '   (RoomReservation = ' + _db(zRoomReservation) + ') '+#10;
+      s := s + ' WHERE (RoomReservation = ' + _db(zRoomReservation) + ') '+#10;
       ExecutionPlan.AddExec(s);
 
 
       s := '';
       s := s + ' UPDATE roomsdate '+#10;
-      s := s + ' SET '+#10;
-      s := s + '   Reservation = ' + _db(newReservation) + ' '+#10;
-      s := s + ' WHERE '+#10;
-      s := s + '   (RoomReservation = ' + _db(zRoomReservation) + ') '+#10;
+      s := s + ' SET Reservation = ' + _db(newReservation) + ' '+#10;
+      s := s + ' WHERE (RoomReservation = ' + _db(zRoomReservation) + ') '+#10;
       s := s + '   AND (ResFlag <> '+_db(STATUS_DELETED)+' ) '; //**zxhj line added
       ExecutionPlan.AddExec(s);
+
+      s := '';
+      s := s + ' UPDATE payments '+#10;
+      s := s + ' SET Reservation = ' + _db(newReservation) + ' '+#10;
+      s := s + ' WHERE (RoomReservation = ' + _db(zRoomReservation) + ') '+#10;
+      ExecutionPlan.AddExec(s);
+
       if ExecutionPlan.Execute(ptExec, False, True) then
         ExecutionPlan.CommitTransaction
       else

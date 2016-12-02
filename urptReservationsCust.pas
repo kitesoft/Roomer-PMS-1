@@ -257,7 +257,7 @@ uses
   , uSqlDefinitions
   , uGuestProfile2
   , PrjConst
-  ;
+  , uSQLUtils;
 {$R *.dfm}
 
 

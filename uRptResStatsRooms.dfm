@@ -484,6 +484,10 @@ object frmRptResStatsRooms: TfrmRptResStatsRooms
       OnShow = SheetMainResultShow
       SkinData.CustomColor = False
       SkinData.CustomFont = False
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Panel1: TPanel
         Left = 240
         Top = 0
@@ -511,6 +515,10 @@ object frmRptResStatsRooms: TfrmRptResStatsRooms
               Caption = 'Result'
               SkinData.CustomColor = False
               SkinData.CustomFont = False
+              ExplicitLeft = 0
+              ExplicitTop = 0
+              ExplicitWidth = 0
+              ExplicitHeight = 0
               object pg001: TcxDBPivotGrid
                 Left = 0
                 Top = 43
@@ -682,7 +690,7 @@ object frmRptResStatsRooms: TfrmRptResStatsRooms
                   Left = 406
                   Top = 4
                   Width = 4
-                  Height = 35
+                  Height = 13
                   Align = alLeft
                   Caption = '-'
                   ParentFont = False
@@ -692,7 +700,6 @@ object frmRptResStatsRooms: TfrmRptResStatsRooms
                   Font.Height = -11
                   Font.Name = 'Tahoma'
                   Font.Style = []
-                  ExplicitHeight = 13
                 end
                 object btnPivgrRequestsExcel: TsButton
                   AlignWithMargins = True
@@ -782,6 +789,7 @@ object frmRptResStatsRooms: TfrmRptResStatsRooms
           HotZoneClassName = 'TcxMediaPlayer8Style'
           AlignSplitter = salTop
           Control = Panel5
+          ExplicitWidth = 8
         end
         object Panel6: TPanel
           Left = 1
@@ -1089,6 +1097,10 @@ object frmRptResStatsRooms: TfrmRptResStatsRooms
       Caption = 'Data'
       SkinData.CustomColor = False
       SkinData.CustomFont = False
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object sPanel6: TsPanel
         Left = 0
         Top = 0
@@ -1280,6 +1292,7 @@ object frmRptResStatsRooms: TfrmRptResStatsRooms
     end
     object prLinkGrDrill: TdxGridReportLink
       Component = grDrill
+      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -1292,6 +1305,7 @@ object frmRptResStatsRooms: TfrmRptResStatsRooms
       PrinterPage.PageSize.Y = 297000
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
+      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
   end

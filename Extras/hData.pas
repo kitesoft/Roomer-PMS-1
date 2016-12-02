@@ -1,4 +1,4 @@
-unit hData;
+ï»¿unit hData;
 
 interface
 
@@ -21,6 +21,7 @@ uses
   , dxMdaSet
   , System.Generics.Collections
   , uReservationStateDefinitions
+  , uRoomReservationOBJ
   ;
 
 const
@@ -1416,7 +1417,7 @@ type
     Country: string;
     Tel1: string;
     Tel2: string;
-    Fax: string;
+    Mobile: string;
     ActiveMember: boolean;
     StaffLanguage: integer;
     StaffType: string;
@@ -1837,7 +1838,7 @@ function IVH_GetLastID: integer;
 function NumberOfInvoiceLines(iReservation, iRoomReservation, iSplitNumber: integer; InvoiceIndex : Integer = -1): integer;
 function GetRate(Currency: string): double;
 
-function GetReservationRRList(Reservation: integer; var RRlist, lstRoomReservationsStatus: TstringList): integer;
+function GetReservationRRList(Reservation: integer; aRoomResBasicList: TRoomResBasicObjList): integer;
 
 function Item_GetKind(sItem: string): TItemKind;
 
@@ -1887,7 +1888,6 @@ function GetPriceType(RoomType: string): string;
 function RE_GetFirstAndLastDate(iReservation: integer; var FirstDate, LastDate: Tdate): integer;
 { ..Moved }
 
-function LocalFloatValue(Value: String): double;
 function FilterTablenames(sql: String): String;
 function GetLastID(tableName: string; doLowerCase: boolean = true): integer;
 
@@ -2143,16 +2143,12 @@ uses
   uD,
   ug,
   uDayNotes, uPriceOBJ, uSqlDefinitions, uStringUtils, uAppGlobal, uRoomTypes2,
+  DateUtils,
   uDateUtils,
   uActivityLogs,
   uAvailabilityPerDay,
   PrjConst
-  ;
-
-function LocalFloatValue(Value: String): double;
-begin
-  result := LocalizedFloatValue(Value);
-end;
+  , uSQLUtils, uInvoiceDefinitions;
 
 procedure SetForeignKeyCheckValue(value : Byte);
 begin
@@ -2218,7 +2214,7 @@ begin
     on e: exception do
     begin
       DebugMessage(e.Message);
-      // uStringUtils.CopyToClipboard(Rset.CommandText);
+       uStringUtils.CopyToClipboard(Rset.CommandText);
       // result := false;
       // errMsg := e.message;
       raise;
@@ -2671,7 +2667,7 @@ begin
     RoomReservation := 0; // int
     SplitNumber := 0; // int
     InvoiceNumber := -1; // int
-    InvoiceDate := _dateToDBdate(date, false); // nvarchar(10)
+    InvoiceDate := _db(Tdate(date), false); // nvarchar(10)
     Customer := ''; // nvarchar(15)
     name := ''; // nvarchar(70)
     Address1 := ''; // nvarchar(70)
@@ -2862,8 +2858,8 @@ begin
     Discount := 0.00;
     Percentage := true;
     PriceType := '';
-    Arrival := _dateToDBdate(date, false);
-    Departure := _dateToDBdate(date + 1, false);;
+    Arrival := _db(TDate(date), false);
+    Departure := _db(TDate(IncDay(date, 1)), false);;
     RoomType := '';
     PMInfo := '';
     HiddenInfo := '';
@@ -2894,14 +2890,14 @@ begin
 
     // OutDated
     RoomPrice1 := 0.00;
-    Price1From := _dateToDBdate(date, false);
-    Price1To := _dateToDBdate(date, false);
+    Price1From := _db(Tdate(date), false);
+    Price1To := _db(Tdate(date), false);
     RoomPrice2 := 0.00;
-    Price2From := _dateToDBdate(date, false);
-    Price2To := _dateToDBdate(date, false);
+    Price2From := _db(TDate(date), false);
+    Price2To := _db(Tdate(date), false);
     RoomPrice3 := 0.00;
-    Price3From := _dateToDBdate(date, false);
-    Price3To := _dateToDBdate(date, false);
+    Price3From := _db(TDate(date), false);
+    Price3To := _db(Tdate(date), false);
     RoomRentPaid1 := 0.00;
     RoomRentPaid2 := 0.00;
     RoomRentPaid3 := 0.00;
@@ -2924,8 +2920,8 @@ begin
   begin
     Reservation := 0;
 
-    Arrival := _dateToDBdate(date, false);
-    Departure := _dateToDBdate(date + 1, false);
+    Arrival := _db(TDate(date), false);
+    Departure := _db(TDate(IncDay(date, 1)), false);
     Customer := '0';
     name := '';
     Address1 := '';
@@ -2939,7 +2935,7 @@ begin
     CustomerEmail := '';
     CustomerWebSite := '';
     Status := '';
-    ReservationDate := _dateToDBdate(date, false);
+    ReservationDate := _db(Tdate(date), false);
     Staff := aStaff;
     Information := '';
     PMInfo := '';
@@ -2979,7 +2975,7 @@ begin
   with rec do
   begin
     id := 0;
-    ADate := _dateToDBdate(date, false);
+    ADate := _db(TDate(date), false);
     Room := '';
     RoomType := '';
     RoomReservation := 0;
@@ -3278,12 +3274,12 @@ begin
       result.RoomType := rSet.fieldbyname('RoomType').asString;
       result.Currency := rSet.fieldbyname('Currency').asString;
       result.Description := rSet.fieldbyname('Description').asString;
-      result.Price1Person := LocalFloatValue(rSet.fieldbyname('Price1Person').asString);
-      result.Price2Persons := LocalFloatValue(rSet.fieldbyname('Price2Persons').asString);
-      result.Price3Persons := LocalFloatValue(rSet.fieldbyname('Price3Persons').asString);
-      result.Price4Persons := LocalFloatValue(rSet.fieldbyname('Price4Persons').asString);
-      result.Price5Persons := LocalFloatValue(rSet.fieldbyname('Price5Persons').asString);
-      result.PriceExtraPerson := LocalFloatValue(rSet.fieldbyname('PriceExtraPerson').asString);
+      result.Price1Person := rSet.fieldbyname('Price1Person').AsFloat;
+      result.Price2Persons := rSet.fieldbyname('Price2Persons').AsFloat;
+      result.Price3Persons := rSet.fieldbyname('Price3Persons').AsFloat;
+      result.Price4Persons := rSet.fieldbyname('Price4Persons').AsFloat;
+      result.Price5Persons := rSet.fieldbyname('Price5Persons').AsFloat;
+      result.PriceExtraPerson := rSet.fieldbyname('PriceExtraPerson').AsFloat;
     end;
   finally
     freeandnil(rSet);
@@ -4041,13 +4037,13 @@ begin
   s := s + '  , ' + _db(theData.Hallres) + #10;
   s := s + '  , ' + _db(theData.rrTmp) + #10;
   s := s + '  , ' + _db(theData.rrDescription) + #10;
-  s := s + '  , ' + _dateToDBdate(theData.rrArrival, true) + #10;
-  s := s + '  , ' + _dateToDBdate(theData.rrDeparture, true) + #10;
+  s := s + '  , ' + _db(theData.rrArrival, true) + #10;
+  s := s + '  , ' + _db(theData.rrDeparture, true) + #10;
   s := s + '  , ' + _db(theData.rrIsNoRoom) + #10;
   s := s + '  , ' + _db(theData.rrRoomAlias) + #10;
   s := s + '  , ' + _db(theData.rrRoomTypeAlias) + #10;
   s := s + '  , ' + _db(theData.UseStayTax) + #10;
-  s := s + '  , ' + _dateTimeToDBdate(theData.CancelDate, true) + #10;
+  s := s + '  , ' + _db(theData.CancelDate, true) + #10;
   s := s + '  , ' + _db(theData.CancelStaff) + #10;
   s := s + '  , ' + _db(theData.CancelReason) + #10;
   s := s + '  , ' + _db(theData.CancelInformation) + #10;
@@ -4146,6 +4142,7 @@ var
   ii: integer;
   theData: recRoomsDateHolder;
   Rate: double;
+  lDate: TDate;
 begin
   initRoomsDateHolderRec(theData);
   iErrorDays := 0;
@@ -4154,7 +4151,8 @@ begin
   try
     for ii := trunc(ADate) to trunc(ADate) + NumDays - 1 do
     begin
-      sDate := _dateToDBdate(ii, false);
+      lDate := ii;
+      sDate := _db(lDate, false);
 
       theData.ADate := sDate;
 
@@ -4269,17 +4267,17 @@ begin
       result.Status := rSet.fieldbyname('Status').asString;
       result.GroupAccount := rSet['GroupAccount'];
       result.invBreakfast := rSet['invBreakfast'];
-      result.RoomPrice1 := LocalFloatValue(rSet.fieldbyname('RoomPrice1').asString);
+      result.RoomPrice1 := rSet.fieldbyname('RoomPrice1').AsFloat;
       result.Price1From := rSet.fieldbyname('Price1From').asString;
       result.Price1To := rSet.fieldbyname('Price1To').asString;
-      result.RoomPrice2 := LocalFloatValue(rSet.fieldbyname('RoomPrice2').asString);
+      result.RoomPrice2 := rSet.fieldbyname('RoomPrice2').AsFloat;
       result.Price2From := rSet.fieldbyname('Price2From').asString;
       result.Price2To := rSet.fieldbyname('Price2To').asString;
-      result.RoomPrice3 := LocalFloatValue(rSet.fieldbyname('RoomPrice3').asString);
+      result.RoomPrice3 := rSet.fieldbyname('RoomPrice3').AsFloat;
       result.Price3From := rSet.fieldbyname('Price3From').asString;
       result.Price3To := rSet.fieldbyname('Price3To').asString;
       result.Currency := rSet.fieldbyname('Currency').asString;
-      result.Discount := LocalFloatValue(rSet.fieldbyname('Discount').asString);
+      result.Discount := rSet.fieldbyname('Discount').AsFloat;
       result.Percentage := rSet['Percentage'];
       result.PriceType := rSet.fieldbyname('PriceType').asString;
       result.Arrival := rSet.fieldbyname('Arrival').asString;
@@ -4287,9 +4285,9 @@ begin
       result.RoomType := rSet.fieldbyname('RoomType').asString;
       result.PMInfo := rSet.fieldbyname('PMInfo').asString;
       result.HiddenInfo := rSet.fieldbyname('HiddenInfo').asString;
-      result.RoomRentPaid1 := LocalFloatValue(rSet.fieldbyname('RoomRentPaid1').asString);
-      result.RoomRentPaid2 := LocalFloatValue(rSet.fieldbyname('RoomRentPaid2').asString);
-      result.RoomRentPaid3 := LocalFloatValue(rSet.fieldbyname('RoomRentPaid3').asString);
+      result.RoomRentPaid1 := rSet.fieldbyname('RoomRentPaid1').AsFloat;
+      result.RoomRentPaid2 := rSet.fieldbyname('RoomRentPaid2').AsFloat;
+      result.RoomRentPaid3 := rSet.fieldbyname('RoomRentPaid3').AsFloat;
       result.RoomRentPaymentInvoice := rSet.fieldbyname('RoomRentPaymentInvoice').asInteger;
       result.Hallres := rSet.fieldbyname('Hallres').asInteger;
       result.rrTmp := rSet.fieldbyname('rrTmp').asString;
@@ -4308,7 +4306,7 @@ begin
       result.numChildren := rSet.fieldbyname('numChildren').asInteger;
       result.numInfants := rSet.fieldbyname('numInfants').asInteger;
 
-      result.avrageRate := LocalFloatValue(rSet.fieldbyname('AvrageRate').asString);
+      result.avrageRate := rSet.fieldbyname('AvrageRate').AsFloat;
       result.rateCount := rSet.fieldbyname('rateCount').asInteger;
       result.package := rSet.fieldbyname('package').asString;
       result.ExpectedTimeOfArrival := rSet.fieldbyname('ExpectedTimeOfArrival').AsString;
@@ -4351,9 +4349,9 @@ begin
       result.Information := rSet.fieldbyname('Information').asString;
       result.PMInfo := rSet.fieldbyname('PMInfo').asString;
       result.HiddenInfo := rSet.fieldbyname('HiddenInfo').asString;
-      result.RoomRentPaid1 := LocalFloatValue(rSet.fieldbyname('RoomRentPaid1').asString);
-      result.RoomRentPaid2 := LocalFloatValue(rSet.fieldbyname('RoomRentPaid2').asString);
-      result.RoomRentPaid3 := LocalFloatValue(rSet.fieldbyname('RoomRentPaid3').asString);
+      result.RoomRentPaid1 := rSet.fieldbyname('RoomRentPaid1').AsFloat;
+      result.RoomRentPaid2 := rSet.fieldbyname('RoomRentPaid2').AsFloat;
+      result.RoomRentPaid3 := rSet.fieldbyname('RoomRentPaid3').AsFloat;
       result.RoomRentPaymentInvoice := rSet.fieldbyname('RoomRentPaymentInvoice').asInteger;
       result.ContactName := rSet.fieldbyname('ContactName').asString;
       result.ContactPhone := rSet.fieldbyname('ContactPhone').asString;
@@ -4421,7 +4419,7 @@ begin
     s := s + 'WHERE '#10;
     s := s + '(ADate=%s) and (roomreservation=%d) '#10;
 
-    s := format(s, [_dateToDBdate(ADate, true), RoomReservation]);
+    s := format(s, [_db(ADate, true), RoomReservation]);
 
     if hData.rSet_bySQL(rSet, s) then
     begin
@@ -4850,12 +4848,12 @@ begin
       result.AccItemLink := rSet.fieldbyname('AccItemLink').asString;
       result.Item := rSet.fieldbyname('Item').asString;
       result.Description := rSet.fieldbyname('Description').asString;
-      result.Price := LocalFloatValue(rSet.fieldbyname('Price').asString);
+      result.Price := rSet.fieldbyname('Price').AsFloat;
       result.ItemType := rSet.fieldbyname('Itemtype').asString;
       result.ItemTypeDescription := rSet.fieldbyname('ItemTypeDescription').asString;
       result.VatCode := rSet.fieldbyname('VATCode').asString;
       result.VATCodeDescription := rSet.fieldbyname('VATCodeDescription').asString;
-      result.VATPercentage := LocalFloatValue(rSet.fieldbyname('VATPercentage').asString);
+      result.VATPercentage := rSet.fieldbyname('VATPercentage').AsFloat;
       result.ItemKind := Item_GetKind(aItem)
     end;
   finally
@@ -4988,7 +4986,7 @@ begin
     if hData.rSet_bySQL(rSet, s) then
     begin
       sDate := rSet.fieldbyname('ReservationDate').asString;
-      result.bookingDate := _DBDateToDate(sDate);
+      result.bookingDate := SQLToDate(sDate);
       result.bookingStaff := rSet.fieldbyname('staff').asString;
 
       // result.RoomCount := RV_RoomCount(iReservation, Connection,logLevel,logPath);
@@ -5008,40 +5006,33 @@ begin
   end;
 end;
 
-function GetReservationRRList(Reservation: integer; var RRlist, lstRoomReservationsStatus: TstringList): integer;
+function GetReservationRRList(Reservation: integer; aRoomResBasicList: TRoomResBasicObjList): integer;
 var
   s: string;
   rSet: TRoomerDataSet;
+  lRRObj: TRoomReservationBasicObj;
 begin
   // **
   result := 0;
-  RRlist.clear;
-  if assigned(lstRoomReservationsStatus) then
-    lstRoomReservationsStatus.Clear;
+  aRoomResBasicList.clear;
 
   rSet := CreateNewDataSet;
   try
-    // s := s + ' SELECT '+#10;
-    // s := s + '    RoomReservation '+#10;
-    // s := s + '   ,Reservation '+#10;
-    // s := s + ' FROM '+#10;
-    // s := s + '   RoomReservations '+#10;
-    // s := s + ' WHERE '+#10;
-    // s := s + ' Reservation = ' + inttostr(Reservation)+#10;
     s := format(select_GetReservationRRList, [Reservation]);
     if hData.rSet_bySQL(rSet, s) then
     begin
       result := rSet.recordCount;
-      if result > 0 then
+      rSet.First;
+      while not rSet.Eof do
       begin
-        rSet.First;
-        while not rSet.Eof do
-        begin
-          RRlist.Add(rSet.fieldbyname('RoomReservation').asString);
-          if assigned(lstRoomReservationsStatus) then
-            lstRoomReservationsStatus.Add(rSet.fieldbyname('Status').asString);
-          rSet.Next;
-        end;
+        lRRObj := TRoomReservationBasicObj.Create;
+        lRRObj.Reservation := Reservation;
+        lRRobj.Roomreservation := rSet.fieldbyname('RoomReservation').asInteger;
+        lRRobj.Room := rSet.FieldByName('Room').asstring;
+        lRRObj.State := TReservationState.FromResStatus(rSet.FieldByName('Status').AsString);
+
+        aRoomResBasicList.Add(lRRObj);
+        rSet.Next;
       end;
     end;
   finally
@@ -5186,11 +5177,11 @@ begin
     // s := s + '     INNER JOIN '+#10;
     // s := s + '       RoomReservations ON dbo.roomsdate.RoomReservation = dbo.RoomReservations.RoomReservation '+#10;
     // s := s + ' WHERE ';
-    // s := s + '    (dbo.roomsdate.Room = ' + _dbStr(Room) + ') '+#10;
-    // s := s + ' AND (dbo.roomsdate.ADate = ' + _dateToDBdate(ADate - 1, true) + ') '+#10;
+    // s := s + '    (dbo.roomsdate.Room = ' + _db(Room) + ') '+#10;
+    // s := s + ' AND (dbo.roomsdate.ADate = ' + _db(ADate - 1, true) + ') '+#10;
     // s := s + ' AND (dbo.roomsdate.ResFlag = ' + _db('G') + ') '+#10;
-    // s := s + ' AND (dbo.RoomReservations.Departure = ' + _dateToDBdate(ADate, true) + ') '+#10;
-    s := format(select_RR_GetDeparting, [_dbStr(Room), _dateToDBdate(ADate - 1, true), _dateToDBdate(ADate, true)]);
+    // s := s + ' AND (dbo.RoomReservations.Departure = ' + _db(ADate, true) + ') '+#10;
+    s := format(select_RR_GetDeparting, [_db(Room), _db(IncDay(ADate, -1), true), _db(ADate, true)]);
     if hData.rSet_bySQL(rSet, s) then
     begin
       result := rSet.fieldbyname('RoomReservation').asInteger;
@@ -5212,10 +5203,10 @@ begin
   try
     sql := ' SELECT '#10 + '     Room '#10 + '   , RoomReservation '#10 + '   , ADate '#10 + ' FROM '#10 + '   roomsdate '#10 + ' WHERE '#10 +
       '   (Room = %s)  and (ADate = %s) ' +
-    // ' + _dbStr(Room) + '  //' + _dateToDBdate(ADate, true) + '
-      '   AND (ResFlag <> ' + _db(STATUS_DELETED) + ' ) ' + // **zxhj bætti við
+    // ' + _db(Room) + '  //' + _db(ADate, true) + '
+      '   AND (ResFlag <> ' + _db(STATUS_DELETED) + ' ) ' + // **zxhj bï¿½tti viï¿½
       ' LIMIT 1 ';
-    s := format(sql, [_dbStr(Room), _dateToDBdate(ADate, true)]);
+    s := format(sql, [_db(Room), _db(ADate, true)]);
     if hData.rSet_bySQL(rSet, s) then
     begin
       result := rSet.fieldbyname('RoomReservation').asInteger;
@@ -5239,10 +5230,10 @@ begin
   try
 
     sql := ' SELECT '#10 + '     Room '#10 + '   , RoomReservation '#10 + '   , Resflag '#10 + '   , ADate '#10 + ' FROM '#10 + '   roomsdate '#10 +
-      ' WHERE '#10 + '   (Room = %s)  and (ADate = %s) ' + '   AND (ResFlag <> ' + _db(STATUS_DELETED) + ' ) ' + // **zxhj bætti við
+      ' WHERE '#10 + '   (Room = %s)  and (ADate = %s) ' + '   AND (ResFlag <> ' + _db(STATUS_DELETED) + ' ) ' + // **zxhj bï¿½tti viï¿½
       ' LIMIT 1 ';
 
-    s := format(sql, [_dbStr(Room), _dateToDBdate(ADate, true)]);
+    s := format(sql, [_db(Room), _db(ADate, true)]);
     if hData.rSet_bySQL(rSet, s) then
     begin
       if rSet.fieldbyname('resflag').asString <> 'G' then
@@ -5338,7 +5329,7 @@ begin
   result := 1;
   if glb.LocateCurrency(Currency) then
   begin
-    result := LocalFloatValue(glb.CurrenciesSet.fieldbyname('AValue').asString);
+    result := glb.CurrenciesSet.fieldbyname('AValue').AsFloat;
   end;
 end;
 
@@ -5454,7 +5445,7 @@ begin
   invoiceHeadData.RoomReservation := RoomReservation;
   invoiceHeadData.SplitNumber := cHotelInvoice; // 0
   invoiceHeadData.InvoiceNumber := -1;
-  invoiceHeadData.InvoiceDate := _dateToDBdate(InvoiceDate, false); // ath
+  invoiceHeadData.InvoiceDate := _db(InvoiceDate, false); // ath
   invoiceHeadData.Customer := Customer;
   invoiceHeadData.name := aName + ', ' + GuestName;
   invoiceHeadData.Address1 := Address1;
@@ -5525,9 +5516,9 @@ begin
 
       while not rSet.Eof do
       begin
-        Total := Total + LocalFloatValue(rSet.fieldbyname('Total').asString);
-        TotalWOVAT := TotalWOVAT + LocalFloatValue(rSet.fieldbyname('TotalWOVAT').asString);
-        TotalVAT := TotalVAT + LocalFloatValue(rSet.fieldbyname('VAT').asString);
+        Total := Total + rSet.fieldbyname('Total').AsFloat;
+        TotalWOVAT := TotalWOVAT + rSet.fieldbyname('TotalWOVAT').AsFloat;
+        TotalVAT := TotalVAT + rSet.fieldbyname('VAT').AsFloat;
         rSet.Next;
       end;
 
@@ -5597,49 +5588,13 @@ begin
 
   glb.CustomertypesSet.First;
   result := glb.CustomertypesSet.fieldbyname('CustomerType').asString;
-
-  // RSet := CreateNewDataSet;
-  // try
-  // s := format(select_CustomerTypes_GetDefault, []);
-  // if hData.rSet_bySQL(rSet,s, Connection,LogLevel,logPath) then
-  // begin
-  // result := Rset.FieldByName('CustomerType').AsString;
-  // end;
-  // finally
-  // freeandnil(Rset);
-  // end;
 end;
 
 function Country_GetDefault(): string;
-// Rset : TRoomerDataSet;
-// s : string;
-
-var
-  m: TKbmMemtable;
 begin
-  m := TKbmMemtable.Create(nil);
-  try
-    LoadKbmMemtableFromDataSetQuiet(m,glb.Countries, [mtcpoStructure]);
-    m.First;
-    m.sortfields := 'OrderIndex';
-    m.sort([mtcoDescending]);
-    m.First;
-    result := m.fieldbyname('country').asString;
-  finally
-    freeandnil(m);
-  end;
-  // result := '';
-  // RSet := CreateNewDataSet;
-  // try
-  // s := format(select_Country_GetDefault, []);
-  // if hData.rSet_bySQL(rSet,s, Connection,LogLevel,logPath) then
-  // begin
-  // result := Rset.FieldByName('Country').AsString;
-  // end;
-  // finally
-  // freeandnil(Rset);
-  // end;
-
+  glb.Countries.IndexFieldNames := 'OrderIndex';
+  glb.Countries.First;
+  result := glb.Countries.fieldbyname('country').asString;
 end;
 
 function Item_GetDescription(Item: string): string;
@@ -5806,7 +5761,7 @@ begin
     s := format(select_RV_ClosedInvoiceAmount, [iReservation]);
     if hData.rSet_bySQL(rSet, s) then
     begin
-      result := LocalFloatValue(rSet.fieldbyname('Amount').asString);
+      result := rSet.fieldbyname('Amount').AsFloat;
     end;
   finally
     freeandnil(rSet);
@@ -5973,8 +5928,8 @@ var
   DateTo: Tdate;
 begin
   try
-    DateFrom := _DBDateToDate(dbDateFrom);
-    DateTo := _DBDateToDate(dbDateTo);
+    DateFrom := SQLToDate(dbDateFrom);
+    DateTo := SQLToDate(dbDateTo);
     result := trunc(DateTo) - trunc(DateFrom);
   except
     result := 0;
@@ -6332,7 +6287,7 @@ begin
         Hairdryer := rSet['Hairdryer'];
         InternetPlug := rSet['InternetPlug'];
         Fax := rSet['Fax'];
-        SqrMeters := LocalFloatValue(rSet.fieldbyname('SqrMeters').asString);
+        SqrMeters := rSet.fieldbyname('SqrMeters').AsFloat;
         BedSize := rSet.fieldbyname('BedSize').asString;
         Equipments := rSet.fieldbyname('Equipments').asString;
         Bookable := rSet['Bookable'];
@@ -6385,7 +6340,7 @@ begin
         Country := rSet.fieldbyname('Country').asString;
         MarketSegmentName := rSet.fieldbyname('MarketSegmentName').asString;
         MarketSegmentCode := rSet.fieldbyname('MarketSegmentCode').asString;
-        DiscountPerc := LocalFloatValue(rSet.fieldbyname('DiscountPerc').asString);
+        DiscountPerc := rSet.fieldbyname('DiscountPerc').AsFloat;
         EmailAddress := rSet.fieldbyname('EmailAddress').asString;
         HomePage := rSet.fieldbyname('Homepage').asString;
         ContactPerson := rSet.fieldbyname('ContactPerson').asString;
@@ -7066,8 +7021,8 @@ begin
   id := aRSet.fieldbyname('ID').asInteger;
   Currency := aRSet.fieldbyname('currency').asString;
   Description := aRSet.fieldbyname('description').asString;
-  Value := LocalFloatValue(aRSet.fieldbyname('aValue').asString);
-  SellValue := LocalFloatValue(aRSet.fieldbyname('SellValue').asString);
+  Value := aRSet.fieldbyname('aValue').AsFloat;
+  SellValue := aRSet.fieldbyname('SellValue').AsFloat;
   Decimals := aRSet.fieldbyname('Decimals').asinteger;
   Displayformat := aRSet.fieldbyname('Displayformat').asString;
   CurrencySign := aRSet.fieldbyname('CurrencySign').asString;
@@ -7382,7 +7337,7 @@ begin
 
   rSet := CreateNewDataSet;
   try
-    s := format(sql, [_dateToDBdate(DateFrom, true), _dateToDBdate(DateTo, true),location]);
+    s := format(sql, [_db(DateFrom, true), _db(DateTo, true),location]);
     if rSet_bySQL(rSet, s) then
     begin
       while not rSet.Eof do
@@ -7412,10 +7367,10 @@ begin
   // s := s +'   InvoiceHeads '+#10;
   // s := s +' WHERE '+#10;
   // s := s +'       (InvoiceNumber > 0) '+#10;
-  // s := s +'    AND (ihConfirmDate = '+_DateTimeToDbDate(confirmDate,true)+')';
+  // s := s +'    AND (ihConfirmDate = '+_db(confirmDate,true)+')';
   rSet := CreateNewDataSet;
   try
-    s := format(select_invoiceList_ConfirmGroup, [_dateTimeToDBdate(confirmDate, true)]);
+    s := format(select_invoiceList_ConfirmGroup, [_db(confirmDate, true)]);
     rSet_bySQL(rSet, s);
     while not rSet.Eof do
     begin
@@ -7454,7 +7409,7 @@ begin
 
   rSet := CreateNewDataSet;
   try
-    s := format(sql, [_dateToDBdate(2, true),location]);
+    s := format(sql, [_db(cEmptyConfirmDate, true),location]);
 
     if rSet_bySQL(rSet, s) then
     begin
@@ -7480,11 +7435,11 @@ begin
   result := TstringList.Create;
 
   sql := ' SELECT '#10 + '   InvoiceNumber '#10 + ' FROM '#10 + '   invoiceheads '#10 + ' WHERE '#10 + '       (InvoiceNumber > 0) '#10 +
-    '    AND (ihConfirmDate = %s)'; // '+_DateToDbDate(2,true)+'
+    '    AND (ihConfirmDate = %s)'; // '+_db(2,true)+'
 
   rSet := CreateNewDataSet;
   try
-    s := format(sql, [_dbDateAndTime(confirmDate)]);
+    s := format(sql, [_db(confirmDate)]);
 
     // copytoclipboard(s);
     // debugMessage(s);
@@ -8253,7 +8208,7 @@ begin
       result := true;
       theData.VatCode := rSet.fieldbyname('VATCode').asString;
       theData.Description := rSet.fieldbyname('description').asString;
-      theData.VATPercentage := LocalFloatValue(rSet.fieldbyname('VATPercentage').asString);
+      theData.VATPercentage := rSet.fieldbyname('VATPercentage').AsFloat;
       theData.valueFormula := rSet.fieldbyname('valueFormula').asString;
       theData.BookKeepCode := rSet.fieldbyname('BookKeepCode').asString;
     end;
@@ -8591,13 +8546,13 @@ begin
       theData.pcDescription := rSet.fieldbyname('pcDescription').asString;
       theData.pcActive := rSet['pcActive'];
       theData.pcRack := rSet['pcRack'];
-      theData.pcRackCalc := LocalFloatValue(rSet.fieldbyname('pcRackCalc').asString);
+      theData.pcRackCalc := rSet.fieldbyname('pcRackCalc').AsFloat;
       theData.pcShowDiscount := rSet['pcShowDiscount'];
       theData.pcDiscountText := rSet.fieldbyname('pcDiscountText').asString;
       theData.pcAutomatic := rSet['pcAutomatic'];
       theData.pcLastUpdate := rSet.fieldbyname('pcLastUpdate').AsDateTime;
       theData.pcDiscountMethod := rSet['pcDiscountMethod'];
-      theData.pcDiscountPriceAfter := LocalFloatValue(rSet.fieldbyname('pcDiscountPriceAfter').asString);
+      theData.pcDiscountPriceAfter := rSet.fieldbyname('pcDiscountPriceAfter').AsFloat;
       theData.pcDiscountDaysAfter := rSet.fieldbyname('pcDiscountDaysAfter').asInteger;
       theData.active := rSet['Active'];
     end;
@@ -9025,7 +8980,7 @@ begin
 
         s := s + ' Values ' + chr(10);
         s := s + ' (' + chr(10);
-        s := s + '  ' + _dateToDBdate(FromDate, true) + chr(10);
+        s := s + '  ' + _db(FromDate, true) + chr(10);
         s := s + ', ' + quotedstr(RoomType) + chr(10);
         s := s + ', ' + inttostr(freeRooms) + chr(10);
         s := s + ' )' + chr(10);
@@ -9075,8 +9030,8 @@ begin
         ToDate := FromDate + dateCount;
       end;
 
-      sFromDate := _dateToDBdate(FromDate, false);
-      sToDate := _dateToDBdate(ToDate, false);
+      sFromDate := _db(FromDate, false);
+      sToDate := _db(ToDate, false);
 
       for i := 0 to lstRoomTypes.Count - 1 do
       begin
@@ -9151,8 +9106,8 @@ begin
   try
     RoomStatus_updByRangeAndType(FromDate, dateCount, roomType1, roomType2);
 
-    sFromDate := _dateToDBdate(FromDate, false);
-    sToDate := _dateToDBdate(ToDate, false);
+    sFromDate := _db(FromDate, false);
+    sToDate := _db(ToDate, false);
 
     rSet := CreateNewDataSet;
     try
@@ -9592,19 +9547,19 @@ begin
   try
 
     sql := ' SELECT '#10 + '    Adate '#10 + ' FROM '#10 + '    roomsDate '#10 + ' WHERE (reservation = %d) '#10 + '   AND (ResFlag <> ' + _db(STATUS_DELETED) +
-      ' ) ' + // **zxhj bætti við
+      ' ) ' + // **zxhj bï¿½tti viï¿½
       ' Order BY ADATE ';
     s := format(sql, [iReservation]);
     if rSet_bySQL(rSet, s) then
     begin
       sFirstDate := rSet.fieldbyname('Adate').asString;
-      FirstDate := _DBDateToDate(sFirstDate);
+      FirstDate := SQLToDate(sFirstDate);
 
       rSet.last;
       if not rSet.bof then
       begin
         sLastdate := rSet.fieldbyname('Adate').asString;
-        LastDate := _DBDateToDate(sLastdate);
+        LastDate := SQLToDate(sLastdate);
       end;
       dateCount := trunc(LastDate) - trunc(FirstDate);
       result := dateCount + 1;
@@ -10443,7 +10398,7 @@ begin
       exit;
     end;
 
-    sql := ' SELECT RoomType FROM roomsdate ' + ' WHERE (RoomType = %s ) ' + '   AND (ResFlag <> ' + _db(STATUS_DELETED) + ' ) '; // **zxhj bætti við
+    sql := ' SELECT RoomType FROM roomsdate ' + ' WHERE (RoomType = %s ) ' + '   AND (ResFlag <> ' + _db(STATUS_DELETED) + ' ) '; // **zxhj bï¿½tti viï¿½
     s := format(sql, [_db(sRoomType)]);
     if hData.rSet_bySQL(rSet, s) then
     begin
@@ -12667,7 +12622,7 @@ begin
     Country := '';
     Tel1 := '';
     Tel2 := '';
-    Fax := '';
+    Mobile := '';
     ActiveMember := true;
     StaffLanguage := 0;
     StaffType := '';
@@ -12713,7 +12668,7 @@ begin
   s := s + '  , Country       = ' + _db(theData.Country) + ' ' + #10;
   s := s + '  , Tel1          = ' + _db(theData.Tel1) + ' ' + #10;
   s := s + '  , Tel2          = ' + _db(theData.Tel2) + ' ' + #10;
-  s := s + '  , Fax           = ' + _db(theData.Fax) + ' ' + #10;
+  s := s + '  , Fax           = ' + _db(theData.Mobile) + ' ' + #10;
   s := s + '  , ActiveMember  = ' + _db(theData.ActiveMember) + ' ' + #10;
   s := s + '  , StaffLanguage = ' + _db(theData.StaffLanguage) + ' ' + #10;
   s := s + '  , StaffType     = ' + _dbNullIfEmpty(theData.StaffType) + ' ' + #10;
@@ -12791,7 +12746,7 @@ begin
   s := s + '  ,' + _db(theData.Country) + #10;
   s := s + '  ,' + _db(theData.Tel1) + #10;
   s := s + '  ,' + _db(theData.Tel2) + #10;
-  s := s + '  ,' + _db(theData.Fax) + #10;
+  s := s + '  ,' + _db(theData.Mobile) + #10;
   s := s + '  ,' + _db(theData.ActiveMember) + #10;
   s := s + '  ,' + _db(theData.StaffLanguage) + #10;
   s := s + '  ,' + _dbNullIfEmpty(theData.StaffType) + #10;
@@ -12821,7 +12776,7 @@ begin
   try
 
     sql := ' SELECT '#10 + ' ID '#10 + ' ,Active '#10 + ' ,Initials '#10 + ' ,Password '#10 + ' ,StaffPID '#10 + ' ,Name '#10 + ' ,Address1 '#10 +
-      ' ,Address2 '#10 + ' ,Address3 '#10 + ' ,Address4 '#10 + ' ,Country '#10 + ' ,Tel1 '#10 + ' ,Tel2 '#10 + ' ,Fax '#10 + ' ,ActiveMember '#10 +
+      ' ,Address2 '#10 + ' ,Address3 '#10 + ' ,Address4 '#10 + ' ,Country '#10 + ' ,Tel1 '#10 + ' ,Tel2 '#10 + ' ,Fax as Mobile'#10 + ' ,ActiveMember '#10 +
       ' ,StaffLanguage '#10 + ' ,StaffType '#10 + ' ,StaffType1 '#10 + ' ,StaffType2 '#10 + ' ,StaffType3 '#10 + ' ,StaffType4 '#10 + ' ,IPAddresses '#10 +
       ' ,PmsOnly '#10 + ' ,WindowsAuth '#10 + ' FROM staffmembers  '#10 + ' WHERE  '#10 + ' (Initials =  %s ) ';
 
@@ -12841,7 +12796,7 @@ begin
       theData.Country := rSet.fieldbyname('Country').asString;
       theData.Tel1 := rSet.fieldbyname('Tel1').asString;
       theData.Tel2 := rSet.fieldbyname('Tel2').asString;
-      theData.Fax := rSet.fieldbyname('Fax').asString;
+      theData.mobile:= rSet.fieldbyname('Mobile').asString;
       theData.ActiveMember := rSet.fieldbyname('ActiveMember').Asboolean;
       theData.StaffLanguage := rSet.fieldbyname('StaffLanguage').asInteger;
       theData.StaffType := rSet.fieldbyname('StaffType').asString;
@@ -13969,6 +13924,7 @@ begin
   s := s + '   ,Address3 ' + #10;
   s := s + '   ,Address4 ' + #10;
   s := s + '   ,Country ' + #10;
+  s := s + '   ,Nationality ' + #10;
   s := s + '   ,Company ' + #10;
 
   s := s + '   ,CompanyName ' + #10;
@@ -14007,6 +13963,7 @@ begin
   s := s + ' , ' + _db(theData.Address3) + #10;
   s := s + ' , ' + _db(theData.Address4) + #10;
   s := s + ' , ' + _db(theData.Country) + #10;
+  s := s + ' , ' + _db(theData.Nationality) + #10;
   s := s + ' , ' + _db(theData.Company) + #10;
 
   s := s + ' , ' + _db(theData.CompanyName) + #10;
@@ -14073,6 +14030,7 @@ begin
       result.Address3 := rSet.fieldbyname('Address3').asString;
       result.Address4 := rSet.fieldbyname('Address4').asString;
       result.Country := rSet.fieldbyname('Country').asString;
+      result.Nationality := rSet.fieldbyname('Nationality').asString;
       result.Company := rSet.fieldbyname('Company').asString;
 
       result.CompanyName := rSet.fieldbyname('CompanyName').AsString;
@@ -14126,6 +14084,7 @@ begin
       result.Address3 := rSet.fieldbyname('Address3').asString;
       result.Address4 := rSet.fieldbyname('Address4').asString;
       result.Country := rSet.fieldbyname('Country').asString;
+      result.Nationality := rSet.fieldbyname('Nationality').asString;
       result.Company := rSet.fieldbyname('Company').asString;
 
       result.CompanyName := rSet.fieldbyname('CompanyName').AsString;
@@ -14231,6 +14190,7 @@ begin
   s := s + '  ,`Address3`        = ' + _db(theData.Address3) + ' ' + #10;
   s := s + '  ,`Address4`        = ' + _db(theData.Address4) + ' ' + #10;
   s := s + '  ,`Country`         = ' + _db(theData.Country) + ' ' + #10;
+  s := s + '  ,`Nationality`     = ' + _db(theData.Nationality) + ' ' + #10;
   s := s + '  ,`Company`         = ' + _db(theData.Company) + ' ' + #10;
 
   s := s + '  ,`CompanyName`  = ' + _db(theData.CompanyName) + ' ' + #10;
@@ -15113,18 +15073,18 @@ begin
     ss := ss + '  WHERE (Roomreservation = ' + _db(RoomReservation) + ') ';
     cmd_bySQL(ss);
 
-    if (Status <> 'O') and (Status <> 'N') then
+    if TReservationState.FromResStatus(status).InfluencesAvailability then
     begin
       if realType then
       begin
         temp := format('(changeNoRoomRoomtype) Change roomtype of a NO-ROOM booking for Reservation=%d, RoomReservation=%d, FROM RoomType=%s, FOR ArrDate=%s, DepDate=%s',
                        [Reservation, RoomReservation, oldType, DateToSqlString(Arrival), DateToSqlString(Departure)]);
-        d.roomerMainDataSet.SystemChangeAvailability(oldType, Arrival, Departure - 1, false, temp); // auka framboð
+        d.roomerMainDataSet.SystemChangeAvailability(oldType, Arrival, Departure - 1, false, temp); // increase availabilty
       end;
 
       temp := format('(changeNoRoomRoomtype) Change roomtype of a NO-ROOM booking for Reservation=%d, RoomReservation=%d, TO RoomType=%s, FOR ArrDate=%s, DepDate=%s',
                      [Reservation, RoomReservation, newRoomType, DateToSqlString(Arrival), DateToSqlString(Departure)]);
-      d.roomerMainDataSet.SystemChangeAvailability(newRoomType, Arrival, Departure - 1, true, temp); // minnka framboð
+      d.roomerMainDataSet.SystemChangeAvailability(newRoomType, Arrival, Departure - 1, true, temp); // decrease availability
     end;
 
     result := true;
@@ -15179,18 +15139,18 @@ begin
     ss := ss + '  WHERE (Roomreservation = ' + _db(RoomReservation) + ') ';
     cmd_bySQL(ss);
 
-    if (Status <> 'O') and (Status <> 'N') then
+    if TReservationState.FromResStatus(status).InfluencesAvailability then
     begin
       if realType then
       begin
         temp := format('(changeNoRoomRoomtype) Change roomtype of a NO-ROOM booking for Reservation=%d, RoomReservation=%d, FROM RoomType=%s, FOR ArrDate=%s, DepDate=%s',
                        [Reservation, RoomReservation, oldType, DateToSqlString(Arrival), DateToSqlString(Departure)]);
-        d.roomerMainDataSet.SystemChangeAvailability(oldType, Arrival, Departure - 1, false, temp); // auka framboð
+        d.roomerMainDataSet.SystemChangeAvailability(oldType, Arrival, Departure - 1, false, temp); // increase availability
       end;
 
       temp := format('(changeNoRoomRoomtype) Change roomtype of a NO-ROOM booking for Reservation=%d, RoomReservation=%d, TO RoomType=%s, FOR ArrDate=%s, DepDate=%s',
                      [Reservation, RoomReservation, newRoomType, DateToSqlString(Arrival), DateToSqlString(Departure)]);
-      d.roomerMainDataSet.SystemChangeAvailability(newRoomType, Arrival, Departure - 1, true, temp); // minnka framboð
+      d.roomerMainDataSet.SystemChangeAvailability(newRoomType, Arrival, Departure - 1, true, temp); // decrease availability
     end;
 
     result := newRoomType;

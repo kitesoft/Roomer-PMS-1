@@ -379,7 +379,7 @@ begin
   zData.ID                       := m_.fieldbyname('ID').asInteger;
   zData.currency                 := m_.fieldbyname('currency').asstring;
   zData.Description              := m_.fieldbyname('Description').asstring;
-  zData.Value                    := LocalFloatValue(m_.fieldbyname('Avalue').asString);
+  zData.Value                    := m_.fieldbyname('Avalue').asFloat;
   zData.active                   := m_['Active'];
 end;
 

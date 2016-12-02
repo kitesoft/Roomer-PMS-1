@@ -83,7 +83,7 @@ function GetNodeByText(const TreeView: TCustomTreeView; const s: acString): TTre
 implementation
 
 uses
-  StdCtrls,
+  StdCtrls, math,
   {$IFDEF LOGGED}sDebugMsgs, {$ENDIF}
   sVclUtils, sStyleSimply, acntUtils, sGraphUtils, sAlphaGraph, sSkinProps, sSkinManager;
 
@@ -303,7 +303,7 @@ begin
         end;
 
         nRect := Node.DisplayRect(True);
-        if IsRectEmpty(nRect) or not RectInRect(ClientRect, nRect) then
+        if IsRectEmpty(nRect) or not RectInRect(ClientRect, nRect, False) then
           Exit;
 
         if RowSelect and not ShowLines and bSelected then begin
@@ -357,7 +357,7 @@ begin
           sNdx := -1;
           FillDC(Bmp.Canvas.Handle, aRect, CI.FillColor)
         end;
-        if (HotTrack or (RowBmp <> nil)) and (Images <> nil) then  // Fix of glyphs painting std bug
+        if (HotTrack or (RowBmp <> nil) or RowSelect and bSelected) and (Images <> nil) then  // Fix of glyphs painting std bug
           Images.Draw(Bmp.Canvas, 2, (Bmp.Height - Images.Height) div 2, Node.ImageIndex);
 
         Bmp.Canvas.Font.Assign(Canvas.Font);
@@ -374,7 +374,7 @@ begin
         else
           acWriteTextEx(Bmp.Canvas, PacChar({$IFDEF TNTUNICODE}TTntTreeNode{$ENDIF}(Node).Text), True, aRect, DrawStyle, sNdx, Focused or SkinData.FMouseAbove and MayBeHot(SkinData), SkinData.SkinManager);
 
-        if (Focused) and (sNdx < 0) and bSelected then begin
+        if Focused and (sNdx < 0) and bSelected then begin
           InflateRect(aRect, 1, 0);
           aRect.Left := 0;
           DrawFocusRect(Bmp.Canvas.Handle, aRect);
@@ -593,6 +593,7 @@ var
 
   CI: TCacheInfo;
   lType: Cardinal;
+  bFocused: boolean;
   DrawStyle: Cardinal;
   nRect, aRect, rText: TRect;
   w, h, bw, cx, sNdx: integer;
@@ -697,19 +698,21 @@ var
   end;
 
 begin
-  if {not (csDesigning in ComponentState) and} (Node <> nil) then
-    if SkinData.Skinned then begin
+  if {not (csDesigning in ComponentState) and} (Node <> nil) then begin
+//    if SkinData.Skinned then begin
+      bFocused := Focused;
       if aDC = 0 then
         DC := GetDC(Handle)
       else
         DC := aDC;
-      // Init color and font properties
+
       if ListSW <> nil then
         bw := ListSW.cxLeftEdge
       else
         bw := 3 * integer(BorderStyle = bsSingle);
 
       Canvas.Handle := DC;
+      // Init color and font properties
       Canvas.Brush.Color := Color;
       Canvas.Font.Assign(Font);
       CallEvents;
@@ -732,7 +735,7 @@ begin
         Bmp.Canvas.Font.Assign(Canvas.Font);
         aRect := MkRect(Bmp);
         CI.Bmp := SkinData.FCacheBmp;
-        CI.Ready := True;//False;
+        CI.Ready := True;
         CI.FillColor := ColorToRGB(Canvas.Brush.Color);
         CI.X := 0;
         CI.Y := 0;
@@ -746,25 +749,31 @@ begin
 {$ENDIF}
         begin
           NodeAtPos := nil;
-          if (cdsSelected in State) or (Selected = Node) then
+          if {(cdsSelected in State) or }(Selected = Node) then
             bSelected := True
           else
-            if (HotTrack and (cdsHot in State)) and (Focused or not HideSelection) or (FRightNode = Node) then
+            if {(HotTrack and (cdsHot in State)) and (Focused or not HideSelection) or }(FRightNode = Node) then
               bSelected := True
-            else begin
-              NodeAtPos := GetNodeAt(p.X, p.Y);
-              bSelected := NodeAtPos = Node;
-            end;
+            else
+              if HotTrack then begin
+                NodeAtPos := GetNodeAt(p.X, p.Y);
+                bSelected := NodeAtPos = Node;
+              end
+              else
+                bSelected := False;
         end;
         BitBlt(Bmp.Canvas.Handle, 0, 0, Bmp.Width, Bmp.Height, SkinData.FCacheBmp.Canvas.Handle, nRect.Left + bw, nRect.Top + bw, SRCCOPY);
         OffsetRect(rText, 2, 0);
-        if bSelected or (NodeAtPos = Node) {or (cdsSelected in State) }then begin
+        if bSelected or (HotTrack and (NodeAtPos = Node)) {or (cdsSelected in State) }then begin
           sNdx := SkinData.SkinManager.ConstData.Sections[ssSelection];
           InflateRect(rText, 1, 0);
           if sNdx < 0 then
-            FillDC(Bmp.Canvas.Handle, rText, SkinData.SkinManager.GetHighLightColor((cdsFocused in State) and bSelected))
+            FillDC(Bmp.Canvas.Handle, rText, SkinData.SkinManager.GetHighLightColor(bFocused{(cdsFocused in State)} and bSelected))
           else
-            PaintItem(sNdx, CI, True, integer(Focused and bSelected or (NodeAtPos <> nil)), rText, nRect.TopLeft, Bmp, SkinData.SkinManager);
+            PaintItem(sNdx, CI, True, integer(bFocused and bSelected or (HotTrack and (NodeAtPos <> nil))),
+                       Rect(rText.Left, rText.Top, min(rText.Right, SkinData.FCacheBmp.Width), rText.Bottom),
+                       nRect.TopLeft, Bmp, SkinData.SkinManager);
+//            PaintItem(sNdx, CI, True, integer(bFocused and bSelected or (HotTrack and (NodeAtPos <> nil))), rText, nRect.TopLeft, Bmp, SkinData.SkinManager);
 
           if HotTrack and ((cdsHot in State) or (NodeAtPos = Node)) and (Selected <> Node) then
             BlendTransRectangle(Bmp, 0, 0, CI.Bmp, MkRect(Bmp), Byte(180));
@@ -784,13 +793,13 @@ begin
         DrawStyle := DT_NOPREFIX or DT_EXPANDTABS or DT_SINGLELINE or DT_VCENTER or DT_NOCLIP;
         if sNdx < 0 then begin
           if bSelected then
-            Bmp.Canvas.Font.Color := SkinData.SkinManager.GetHighLightFontColor(cdsFocused in State);
+            Bmp.Canvas.Font.Color := SkinData.SkinManager.GetHighLightFontColor(bFocused{cdsFocused in State});
 
           Bmp.Canvas.Brush.Style := bsClear;
           AcDrawText(Bmp.Canvas.Handle, {$IFDEF TNTUNICODE}TTntTreeNode{$ENDIF}(Node).Text, rText, DrawStyle);
         end
         else
-          acWriteTextEx(Bmp.Canvas, PacChar({$IFDEF TNTUNICODE}TTntTreeNode{$ENDIF}(Node).Text), True, rText, DrawStyle, sNdx, Focused or (SkinData.FMouseAbove or (NodeAtPos = Node)) {and MayBeHot(SkinData)}, SkinData.SkinManager);
+          acWriteTextEx(Bmp.Canvas, PacChar({$IFDEF TNTUNICODE}TTntTreeNode{$ENDIF}(Node).Text), True, rText, DrawStyle, sNdx, bFocused or (SkinData.FMouseAbove or (NodeAtPos = Node)) {and MayBeHot(SkinData)}, SkinData.SkinManager);
 
         dec(rText.Left, 2);
         OffsetRect(rText, -2, 0);
@@ -851,7 +860,7 @@ begin
 
           NewPen.Free;
         end;
-        if (Focused) and (sNdx < 0) and bSelected then begin
+        if bFocused and (sNdx < 0) and bSelected then begin
           InflateRect(aRect, 1, 0);
           aRect.Left := 0;
           DrawFocusRect(Bmp.Canvas.Handle, rText);
@@ -866,8 +875,8 @@ begin
           ReleaseDC(Handle, DC);
       end
     end
-    else
-      CallEvents;
+//    else
+//      CallEvents;
 end;
 
 
@@ -923,6 +932,7 @@ procedure TsTreeViewEx.MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y:
 var
   Node: TTreeNode;
 begin
+  inherited;
   if FAutoChildCheck then begin
     Node := GetNodeAt(X, Y);
     if (Node <> nil) and (GetHitTestInfoAt(X, Y) = [htOnItem, htOnStateIcon]) then
@@ -951,11 +961,11 @@ begin
         DrawItem(DC, Node, []);
         Item := TreeView_GetNextVisible(Handle, Item);
         Node := Items.GetNode(Item);
-        if Node = nil then
-          Break;
       finally
         RestoreDC(DC, SavedDC);
       end;
+      if Node = nil then
+        Break;
     end;
 
   BitBlt(DC, 0, LastBottom, Width, Height, SkinData.FCacheBmp.Canvas.Handle, ListSW.cxLeftEdge, ListSW.cyTopEdge + LastBottom, SRCCOPY);
@@ -1172,6 +1182,21 @@ begin
     end;
 
   inherited;
+  case Message.Msg of
+    SM_ALPHACMD:
+      case Message.WParamHi of
+        AC_REMOVESKIN: begin
+          if ACUInt(Message.LParam) = ACUInt(SkinData.SkinManager) then
+            if HandleAllocated then begin
+              if not SkinData.CustomColor then
+                TreeView_SetBkColor(Handle, ColorToRGB(Color));
+
+              if not SkinData.CustomColor then
+                TreeView_SetTextColor(Handle, ColorToRGB(Font.Color));
+            end;
+        end;
+      end;
+  end;
 end;
 
 end.

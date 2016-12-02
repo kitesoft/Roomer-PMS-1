@@ -504,43 +504,39 @@ begin
       if FindFormInList(hwnd) = nil then begin
         Form := FindFormOnScreen(hwnd);
         if Form <> nil then begin
-          if Form.Tag and ExceptTag = ExceptTag then
-            Exit;
+          if Form.Tag and ExceptTag <> ExceptTag then
+            if not (csLoading in Form.ComponentState) or (TForm(Form).FormStyle = fsMDIChild) then begin
+              for i := 0 to ThirdPartySkipForms.Count - 1 do
+                if lstrcmp(pClassName, PChar(ThirdPartySkipForms[i])) = 0 then
+                  Exit;
 
-          if not (csLoading in Form.ComponentState) or (TForm(Form).FormStyle = fsMDIChild) then begin
-            for i := 0 to ThirdPartySkipForms.Count - 1 do
-              if lstrcmp(pClassName, PChar(ThirdPartySkipForms[i])) = 0 then
-                Exit;
+              if lstrcmp(pClassName, PChar(s_TMessageForm)) = 0 then begin
+                if not (srStdDialogs in DefaultManager.SkinningRules) then
+                  Exit;
+              end
+              else
+                if not (srStdForms in DefaultManager.SkinningRules) then
+                  Exit;
 
-            if lstrcmp(pClassName, PChar(s_TMessageForm)) = 0 then begin
-              if not (srStdDialogs in DefaultManager.SkinningRules) then
-                Exit;
+              ap := TacProvider.Create(Form);
+              acSupportedList.add(ap);
+              ap.InitForm(Form);
+              if Assigned(ap.sp) then
+                ap.sp.MakeSkinMenu := False;
+              // Add MDIChild which haven't a SkinProvider
+              if TForm(Form).FormStyle = fsMDIForm then
+                for i := 0 to TForm(Form).MDIChildCount - 1 do
+                  if not WndIsSkinned(TForm(Form).MDIChildren[i].Handle{ GetBoolMsg(TForm(Form).MDIChildren[i].Handle, AC_CTRLHANDLED}) then begin
+                    ap := TacProvider.Create(TForm(Form).MDIChildren[i]);
+                    acSupportedList.add(ap);
+                    ap.InitForm(TForm(Form).MDIChildren[i]);
+                  end;
             end
-            else
-              if not (srStdForms in DefaultManager.SkinningRules) then
-                Exit;
-
-            ap := TacProvider.Create(Form);
-            acSupportedList.add(ap);
-            ap.InitForm(Form);
-            if Assigned(ap.sp) then
-              ap.sp.MakeSkinMenu := False;
-            // Add MDIChild which haven't a SkinProvider
-            if TForm(Form).FormStyle = fsMDIForm then
-              for i := 0 to TForm(Form).MDIChildCount - 1 do
-                if not WndIsSkinned(TForm(Form).MDIChildren[i].Handle{ GetBoolMsg(TForm(Form).MDIChildren[i].Handle, AC_CTRLHANDLED}) then begin
-                  ap := TacProvider.Create(TForm(Form).MDIChildren[i]);
-                  acSupportedList.add(ap);
-                  ap.InitForm(TForm(Form).MDIChildren[i]);
-                end;
-          end
         end
         else
-          if ((pClassName = rsfName) or (pClassName = 'NativeHWNDHost')) and (GetParent(hwnd) = 0) {Prevent of control skinning, if not a Windows dialog} then
-            if srStdDialogs in DefaultManager.SkinningRules then
-              if (VisibleDlgCount >= ac_DialogsLevel) and not ControlExists(hwnd, 'toolbarwindow32') then
-                Exit
-              else begin
+          if ((pClassName = rsfName) or (pClassName = 'NativeHWNDHost')) and (GetParent(hwnd) = 0) {Prevent of control skinning, if not a Windows dialog} then begin
+            if srStdDialogs in DefaultManager.SkinningRules then begin
+              if (VisibleDlgCount < ac_DialogsLevel) or ControlExists(hwnd, 'toolbarwindow32') then begin
                 Result := True;
                 if Assigned(DefaultManager.OnSysDlgInit) then begin
                   DlgData.WindowHandle := hwnd;
@@ -554,10 +550,10 @@ begin
                   else
                     acSupportedList.add(ap);
                 end;
-                Exit;
-              end
-            else
-              Exit;
+              end;
+            end;
+            Exit;
+          end;
 
         Result := True;
       end;
@@ -885,6 +881,7 @@ begin
       sp.Control := nil;
       ListSW := TacDialogWnd.Create(hwnd, nil, DefaultManager, sp, False);
       ListSW.CtrlHandle := hwnd;
+      SetWindowLong(hwnd, GWL_STYLE, GetWindowLong(hwnd, GWL_STYLE) and not DS_NOIDLEMSG);
     end;
   end
   else begin
@@ -1391,7 +1388,8 @@ begin
 
             UpdateRgn(Self, False); // Prevent an Aero borders showing
             BorderForm.UpdateExBordersPos(True, MaxByte);
-            SetFocus(CtrlHandle);
+            SetForegroundWindow(CtrlHandle);
+            SetActiveWindow(CtrlHandle);
           end
           else
             BorderForm.UpdateExBordersPos(False);
@@ -1426,8 +1424,9 @@ begin
 {$ENDIF}
       Exit;
     end;
-{$IFNDEF NOWNDANIMATION}
 
+
+{$IFNDEF NOWNDANIMATION}
     WM_COMMAND:
       if (Message.WParam = 2) or (Message.WParam = WM_ACTIVATE) then
         if (SkinData.SkinManager.AnimEffects.DialogHide.Active) and SkinData.SkinManager.Effects.AllowAnimation and (SkinData.SkinManager.AnimEffects.DialogHide.Time > 0) then begin
@@ -1593,6 +1592,7 @@ begin
         Ac_WMNCActivate(Message);
         Exit;
       end;
+
 {
     WM_CLOSE: begin
       Message.Result := CallWindowProc(OldProc, CtrlHandle, Message.Msg, Message.WParam, Message.LParam);

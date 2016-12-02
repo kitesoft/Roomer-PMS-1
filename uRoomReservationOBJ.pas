@@ -1,31 +1,30 @@
 unit uRoomReservationOBJ;
 interface
 
-Uses
+uses
     Windows
-  , Messages
-  , SysUtils
-  , Variants
   , Classes
-  , Graphics
-  , Controls
-  , DB
-  , Forms
-  , Dialogs
-  , Contnrs
-  , _glob
-  , ug
-  , ud
-  , ADODB
-  , uUtils
-  , uDateUtils
   , kbmMemTable
   , cmpRoomerDataSet
-  , cmpRoomerConnection
+  , Generics.Collections
+  , uReservationStateDefinitions
   ;
 
 //******************************************************************************
-TYPE
+type
+
+  /// <summary>
+  ///   Basic representation of a Roomreservation, containing only basic information
+  /// </summary>
+  TRoomReservationBasicObj = class
+  public
+    Reservation: integer;
+    Roomreservation: integer;
+    Room: string;
+    State: TReservationState;
+  end;
+
+  TRoomResBasicObjList = TObjectList<TRoomreservationBasicObj>;
 
   TRoomReservation = class
   private
@@ -74,10 +73,19 @@ TYPE
 implementation
 
 uses
-  hData
+    Data.DB
+  , SysUtils
+  , hData
   , uSqlDefinitions
   , uRoomerDefinitions
-  , uReservationStateDefinitions;
+  , uSQLUtils
+  , cmpRoomerConnection
+  , uG
+  , uD
+  , uDateUtils
+  , uUtils
+
+;
 
 //******************************************************************************
 //*
@@ -443,7 +451,7 @@ begin
         s := s + ' (il.Total <> 0) AND (il.InvoiceNumber = -1) AND (il.RoomReservation = rd.roomReservation )) ';
         s := s + '  AS TotalNoRent, ';
         s := s + '      to_bool(IF(tax.INCL_EXCL=''INCLUDED'' OR ' +
-			       '(tax.INCL_EXCL=''PER_CUSTOMER'' AND cu.StayTaxIncluted), 1, 0)) AS CityTaxInCl, ' +
+			       '(tax.INCL_EXCL=''PER_CUSTOMER'' AND IFNULL(cu.StayTaxIncluted, 1)), 1, 0)) AS CityTaxInCl, ' +
 			       'tax.AMOUNT AS taxAmount, ' +
 			       'to_bool(IF(tax.TAX_TYPE=''FIXED_AMOUNT'', 0, 1)) AS taxPercentage, ' +
 			       'to_bool(IF(tax.RETAXABLE=''FALSE'', 0, 1)) AS taxRetaxable, ' +
@@ -486,7 +494,8 @@ begin
         s := s + ', rr.PriceType AS PriceType ';
         s := s + ', rd.Currency AS Currency ';
         s := s + ', (SELECT id FROM invoicelines WHERE InvoiceNumber=-1 AND roomreservation=rd.roomreservation LIMIT 1) AS ItemsOnInvoice ';
-        s := s + '  FROM ';
+
+        s := s + '  FROM ';
         s := s + ' roomsdate rd ';
         s := s + 'LEFT JOIN rooms ro ON ro.Room=rd.Room ' +
                  'JOIN currencies cur ON cur.Currency=rd.Currency ' +
@@ -497,13 +506,13 @@ begin
                  'persons ' +
                  'WHERE ' +
                  'RoomReservation IN (SELECT RoomReservation FROM roomsdate rd1 WHERE rd1.ADate>=' +
-                      _DatetoDBDate(fromDate, true) + ' AND rd1.ADate<' + _DatetoDBDate(toDate, true) + ' AND rd1.ResFlag NOT IN (''X'')) ' +
+                      _db(fromDate, true) + ' AND rd1.ADate<' + _db(toDate, true) + ' AND rd1.ResFlag NOT IN (''X'')) ' +
                  'GROUP BY RoomReservation ' +
                  'ORDER BY MainName DESC ' +
                  ') pe ON pe.roomreservation = rd.roomreservation ' +
              'JOIN roomreservations rr ON rr.RoomReservation = rd.RoomReservation ' +
              'JOIN reservations rv ON rv.Reservation = rd.Reservation ' +
-             'JOIN customers cu ON cu.Customer=rv.Customer ' +
+             'LEFT JOIN customers cu ON cu.Customer=rv.Customer ' +
              'JOIN control co ' +
              'JOIN items i ON i.Item=co.RoomRentItem ' +
              'JOIN itemtypes it ON it.ItemType=i.ItemType ' +
@@ -512,8 +521,8 @@ begin
              'AND VALID_FROM <= rd.ADate ' +
              'AND VALID_TO >= rd.ADate ';
 
-        s := s + '  WHERE (( ADate >= ' + _DatetoDBDate(fromDate, true) + ' ) ';
-        s := s + '   AND (ADate < ' + _DatetoDBDate(toDate, true) + ' )) ';
+        s := s + '  WHERE (( ADate >= ' + _db(fromDate, true) + ' ) ';
+        s := s + '   AND (ADate < ' + _db(toDate, true) + ' )) ';
         s := s + '   AND (ResFlag <> '+_db(STATUS_DELETED)+' ) '; //**zxhj line added
 
         if skipCancelledBookings then

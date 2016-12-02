@@ -1,7 +1,7 @@
 unit sSkinMenus;
 {$I sDefs.inc}
 //{$DEFINE LOGGED}
-//+
+
 interface
 
 uses
@@ -114,6 +114,8 @@ type
     procedure SetActive(const Value: boolean);
     constructor Create(AOwner: TComponent);
     destructor Destroy; override;
+    function NoBorder: boolean;
+    function RealBorderWidth: integer;
     procedure InitItem(Item: TMenuItem; A: boolean);
     procedure InitItems(A: boolean);
     procedure InitMenuLine(Menu: TMainMenu; A: boolean);
@@ -150,6 +152,7 @@ var
   MDISkinProvider: TObject;
   acCanHookMenu: boolean = False;
   CustomMenuFont: TFont = nil;
+  iDefIcoLineWidth: integer = 16;
 
 
 const
@@ -166,7 +169,7 @@ uses
 
 
 const
-  DontForget = 'Use OnGetExtraLineData event';
+  s_DontForget = 'Use OnGetExtraLineData event';
 
 
 var
@@ -247,7 +250,7 @@ begin
         if Assigned(mi) and Assigned(mi.Images) then
           Result := MkSize(Item.GetParentMenu.Images.Width, Item.GetParentMenu.Images.Height)
         else
-          Result := MkSize(16, 16)
+          Result := MkSize(iDefIcoLineWidth, iDefIcoLineWidth)
       end;
 end;
 
@@ -279,12 +282,12 @@ var
   mi: TacMenuInfo;
   sm: TsSkinManager;
   DrawStyle: Cardinal;
-  R, gRect, cRect: TRect;
+  R, gRect, cRect, clipBox: TRect;
   Text, TabText: acString;
   ItemBmp, BGImage: TBitmap;
   ItemData: TacMenuItemData;
   DrawData: TacDrawGlyphData;
-  i, j, c, l, Br, w, h: integer;
+  bWidth, i, j, c, l, Br, w, h: integer;
 
   function TextRect: TRect;
   begin
@@ -316,12 +319,11 @@ var
   begin
     Result := False;
     for i := 0 to Item.Parent.Count - 1 do
-      if Item.Parent.Items[i].Visible then begin
-        if Item.Parent.Items[i] = Item then
+      if Item.Parent.Items[i].Visible then
+        if Item.Parent.Items[i] = Item then begin
           Result := True;
-
-        Break
-      end;
+          Break;
+        end;
   end;
 
   function IsBtmVisible(Item: TMenuItem): boolean;
@@ -330,16 +332,25 @@ var
   begin
     Result := False;
     for i := 0 to Item.Parent.Count - 1 do
-      if Item.Parent.Items[Item.Parent.Count - 1 - i].Visible then begin
-        if Item.Parent.Items[Item.Parent.Count - 1 - i] = Item then
+      if Item.Parent.Items[Item.Parent.Count - 1 - i].Visible then
+        if Item.Parent.Items[Item.Parent.Count - 1 - i] = Item then begin
           Result := True;
-          
-        Break
-      end;
+          Break;
+        end;
   end;
 
 begin
   if (FOwner <> nil) and TsSkinManager(FOwner).Active then begin
+    bWidth := RealBorderWidth;
+    GetClipBox(ACanvas.Handle, clipBox);
+    if NoBorder then begin
+      if clipBox.Right - ARect.Right < 10 then
+        ARect.Right := clipBox.Right;
+
+      if clipBox.Bottom - ARect.Bottom < 10 then
+        ARect.Bottom := clipBox.Bottom;
+    end;
+
     sm := TsSkinManager(FOwner);
     Item := TMenuItem(Sender);
     // Get RTL value from parent menu
@@ -348,7 +359,7 @@ begin
     if TempControl <> nil then begin
       if ShowHintStored then
         Application.ShowHint := AppShowHint;
-      
+
       SendAMessage(TControl(TempControl), WM_MOUSELEAVE);
       TempControl := nil;
     end;
@@ -367,9 +378,10 @@ begin
         if (BGImage <> nil) and (BGImage.Canvas.Handle <> 0) then
           try
             if IsTopVisible(Item) then begin // First item
-              BitBlt(NewDC, 0, 0, BGImage.Width, BorderWidth, BGImage.Canvas.Handle, 0, 0, SRCCOPY);
+              BitBlt(NewDC, 0, 0, BGImage.Width, bWidth, BGImage.Canvas.Handle, 0, 0, SRCCOPY);
               // Left border
-              BitBlt(NewDC, 0, 0, ExtraWidth(mi) * Br + max(SkinBorderWidth, BorderWidth), mi.Bmp.Height, BGImage.Canvas.Handle, 0, 0, SRCCOPY);
+              if not IsDivText(Item) then
+                BitBlt(NewDC, 0, 0, ExtraWidth(mi) * Br + max(SkinBorderWidth, bWidth + 1), mi.Bmp.Height, BGImage.Canvas.Handle, 0, 0, SRCCOPY);
             end;
             if IsBtmVisible(Item) then // Last item
               BitBlt(NewDC, 0, BGImage.Height - BorderWidth, BGImage.Width, BorderWidth, BGImage.Canvas.Handle, 0, BGImage.Height - BorderWidth, SRCCOPY);
@@ -416,23 +428,23 @@ begin
           FillDC(BGImage.Canvas.Handle, Rect(aRect.Left, 0, aRect.Left + 1, BGImage.Height), C);
         end;
         if Item.Parent.Items[Item.MenuIndex + 1].Break <> mbNone then
-          BitBlt(ACanvas.Handle, aRect.Left, aRect.Bottom, WidthOf(aRect), BGImage.Height - 6 - aRect.Bottom, BGImage.Canvas.Handle, aRect.Left + 3, aRect.Bottom + 3, SrcCopy);
+          BitBlt(ACanvas.Handle, aRect.Left, aRect.Bottom, WidthOf(aRect), BGImage.Height - 2 * 3 - aRect.Bottom, BGImage.Canvas.Handle, aRect.Left + 3, aRect.Bottom + 3, SrcCopy);
 {$ENDIF}
       end
       else begin
         if aRect.Bottom < BGImage.Height - 6 then
-          BitBlt(ACanvas.Handle, aRect.Left, aRect.Bottom, WidthOf(aRect), BGImage.Height - 6 - aRect.Bottom, BGImage.Canvas.Handle, aRect.Left + 3, aRect.Bottom + 3, SrcCopy);
+          BitBlt(ACanvas.Handle, aRect.Left, aRect.Bottom, WidthOf(aRect), BGImage.Height - 2 * 3 - aRect.Bottom, BGImage.Canvas.Handle, aRect.Left + 3, aRect.Bottom + 3, SrcCopy);
 
         mi.ItemsIterated := True;
       end;
 {$IFNDEF FPC}
       if Item.Break <> mbNone then
-        BitBlt(ACanvas.Handle, aRect.Left - 4, aRect.Top, 4, BGImage.Height - 6, BGImage.Canvas.Handle, aRect.Left - 1, aRect.Top + 3, SrcCopy);
+        BitBlt(ACanvas.Handle, aRect.Left - 4, aRect.Top, 4, BGImage.Height - 6, BGImage.Canvas.Handle, aRect.Left - 1, aRect.Top + RealBorderWidth, SrcCopy);
 {$ENDIF}
       ItemBmp := CreateBmp32(max(WidthOf(aRect, True) - ExtraWidth(mi) * Br, 0), HeightOf(aRect, True));
       // Draw MenuItem
       if TsSkinManager(FOwner).IsValidSkinIndex(i) then
-        PaintItem(i, MakeCacheInfo(BGImage, 3, 3), True, integer(Item.Enabled and (odSelected in State)), MkRect(ItemBmp.Width, HeightOf(aRect)),
+        PaintItem(i, MakeCacheInfo(BGImage, bWidth, bWidth), True, integer(Item.Enabled and (odSelected in State)), MkRect(ItemBmp.Width, HeightOf(aRect)),
                   Point(aRect.Left + ExtraWidth(mi) * Br, aRect.Top), ItemBmp.Canvas.Handle, FOwner);
 
       if odChecked in State then
@@ -459,7 +471,7 @@ begin
           end
         end;
 
-      if not Item.Bitmap.Empty or (Item.GetImageList <> nil) and (Item.ImageIndex >= 0) and (Item.ImageIndex < Item.GetImageList.Count) then begin
+      if not Item.Bitmap.Empty or (Item.GetImageList <> nil) and IsValidIndex(Item.ImageIndex, Item.GetImageList.Count) then begin
         if not Item.Bitmap.Empty then begin
           w := Item.Bitmap.Width;
           h := Item.Bitmap.Height;
@@ -477,7 +489,7 @@ begin
         if RTL then
           gRect.Left := ARect.Right - gRect.Top - w - ExtraWidth(mi)
         else
-          gRect.Left := min(3, gRect.Top);
+          gRect.Left := min(RealBorderWidth, gRect.Top);
 
         gRect.Bottom := gRect.Top + h;
         gRect.Right := gRect.Left + w;
@@ -605,12 +617,12 @@ begin
 
       if not Item.Enabled then begin
         R := aRect;
-        OffsetRect(R, BorderWidth + ExtraWidth(mi) * Br, BorderWidth);
+        OffsetRect(R, bWidth + ExtraWidth(mi) * Br, bWidth);
         BlendTransRectangle(ItemBmp, 0, 0, BGImage, R, DefBlendDisabled);
       end;
       BitBlt(ACanvas.Handle, aRect.Left + ExtraWidth(mi) * Br, aRect.Top, ItemBmp.Width, ItemBmp.Height, ItemBmp.Canvas.Handle, 0, 0, SrcCopy);
       if (Item = Item.Parent.Items[0]) and (ExtraWidth(mi) > 0) and (not IsNT or (Win32MajorVersion >= 6)) then
-        BitBlt(ACanvas.Handle, 0, 0, ExtraWidth(mi) * Br, BGImage.Height, BGImage.Canvas.Handle, 3, 3, SRCCOPY);
+        BitBlt(ACanvas.Handle, 0, 0, ExtraWidth(mi) * Br, BGImage.Height, BGImage.Canvas.Handle, RealBorderWidth, RealBorderWidth, SRCCOPY);
 
       FreeAndNil(ItemBmp);
     finally
@@ -743,16 +755,16 @@ begin
       if not Measuring and not (csDesigning in TsSkinManager(FOwner).ComponentState) then
         if mi.FirstItem.Name <> s_SkinSelectItemName then begin
           Measuring := True;
-          ExtraSection := s_MenuExtraLine;
           if ExtraGlyph <> nil then
             FreeAndNil(ExtraGlyph);
 
-          ExtraCaption := DontForget;
           mi.HaveExtraLine := True;
-          if Assigned(TsSkinManager(FOwner).OnGetMenuExtraLineData) then
+          if Assigned(TsSkinManager(FOwner).OnGetMenuExtraLineData) then begin
+            ExtraSection := s_MenuExtraLine;
+            ExtraCaption := s_DontForget;
             TsSkinManager(FOwner).OnGetMenuExtraLineData(mi.FirstItem, ExtraSection, ExtraCaption, ExtraGlyph, mi.HaveExtraLine);
-
-          ExtraCaption := DelChars(ExtraCaption, '&');
+            ExtraCaption := DelChars(ExtraCaption, '&');
+          end;
           if not mi.HaveExtraLine and Assigned(ExtraGlyph) then
             FreeAndNil(ExtraGlyph);
 
@@ -810,6 +822,9 @@ begin
         acDrawText(ACanvas.Handle, PacChar(Text), R, DT_EXPANDTABS or DT_NOCLIP or DT_CALCRECT or DT_WORDBREAK);
 
       Width := Margin * 3 + WidthOf(R) + GlyphSize(Item, False).cx * 2 + Spacing;
+
+      if NoBorder then
+        dec(Width, 2 * BorderWidth);
     end;
     if mi.HaveExtraLine and (not Breaked(Item) or (Item.Parent.Items[0] = Item)) then
       inc(Width, ExtraWidth(mi));
@@ -969,7 +984,7 @@ end;
 
 function TsSkinableMenus.CursorMarginH: integer;
 begin
-  Result := BorderWidth;
+  Result := RealBorderWidth;
 end;
 
 
@@ -1026,7 +1041,7 @@ begin
     if BorderIndex >= 0 then begin
       TempBmp := CreateBmp32(aRect);
       if MenuBmp <> nil then
-        BitBlt(TempBmp.Canvas.Handle, 0, 0, WidthOf(aRect), HeightOf(aRect), MenuBmp.Canvas.Handle, aRect.Left + 3, aRect.Top + 3, SRCCOPY);
+        BitBlt(TempBmp.Canvas.Handle, 0, 0, WidthOf(aRect), HeightOf(aRect), MenuBmp.Canvas.Handle, aRect.Left + RealBorderWidth, aRect.Top + RealBorderWidth, SRCCOPY);
 
       CI := MakeCacheInfo(TempBmp);
       DrawSkinRect(TempBmp, nRect, CI, ma[BorderIndex], 0, True);
@@ -1034,7 +1049,7 @@ begin
       FreeAndnil(TempBmp);
     end
     else begin
-      BitBlt(aCanvas.Handle, aRect.Left, aRect.Top, WidthOf(aRect), HeightOf(aRect), MenuBmp.Canvas.Handle, aRect.Left + 3, aRect.Top + 3, SRCCOPY);
+      BitBlt(aCanvas.Handle, aRect.Left, aRect.Top, WidthOf(aRect), HeightOf(aRect), MenuBmp.Canvas.Handle, aRect.Left + RealBorderWidth, aRect.Top + RealBorderWidth, SRCCOPY);
       if Palette[pcBorder] <> clFuchsia then
         aCanvas.Pen.Color := Palette[pcBorder]
       else
@@ -1064,7 +1079,7 @@ begin
 
   if ExtraWidth(mi) > 0 then begin
     i := integer(not Breaked(Item) or (Item.Parent.Items[0] = Item));
-    BitBlt(ItemBmp.Canvas.Handle, 0, 0, ExtraWidth(mi) * i + max(SkinBorderWidth, BorderWidth), ItemBmp.Height, BG.Canvas.Handle, aRect.Left + Offset, aRect.Top + Offset, SRCCOPY);
+    BitBlt(ItemBmp.Canvas.Handle, 0, 0, ExtraWidth(mi) * i + max(SkinBorderWidth, 3), ItemBmp.Height, BG.Canvas.Handle, aRect.Left + Offset, aRect.Top + Offset, SRCCOPY);
   end;
 
   if TsSkinManager(FOwner).ConstData.Sections[ssMenuCaption] < 0 then
@@ -1074,14 +1089,16 @@ begin
 
   BitBltBorder(ItemBmp.Canvas.Handle, 0, 0, ItemBmp.Width, ItemBmp.Height, BG.Canvas.Handle, aRect.Left + Offset, aRect.Top + Offset, 1);
   if TsSkinManager(FOwner).IsValidSkinIndex(i) then
-    PaintItem(i, MakeCacheInfo(BG, 4, 4), True, 0, R, Point(aRect.Left + ExtraWidth(mi), aRect.Top), ItemBmp.Canvas.Handle, FOwner);
+    PaintItem(i, MakeCacheInfo(BG, 1 + RealBorderWidth, 1 + RealBorderWidth), True, 0, R, Point(aRect.Left + ExtraWidth(mi), aRect.Top), ItemBmp.Canvas.Handle, FOwner);
 
   // Text writing
   UpdateFont(ItemBmp.Canvas, Item, False, True);
 
-  s := ExtractWord(1, Item.Caption, [cLineCaption]);
-  if cMenuCaption <> CharMinus then
-    s := ExtractWord(1, s, [cMenuCaption]);
+  s := Copy(Item.Caption, 2, Length(Item.Caption) - 2);
+
+//  s := ExtractWord(1, Item.Caption, [cLineCaption]);
+//  if cMenuCaption <> CharMinus then
+//    s := ExtractWord(1, s, [cMenuCaption]);
 
   Flags := DT_WORDBREAK{DT_SINGLELINE} or DT_VCENTER or DT_CENTER or DT_HIDEPREFIX;
   R := Rect(ExtraWidth(mi), 0, ItemBmp.Width, ItemBmp.Height);
@@ -1439,6 +1456,12 @@ begin
 end;
 
 
+function TsSkinableMenus.NoBorder: boolean;
+begin
+  Result := TsSkinManager(FOwner).gd[TsSkinManager(FOwner).ConstData.Sections[ssMainMenu]].BorderIndex < 0;
+end;
+
+
 function TsSkinableMenus.IsPopupItem(Item: TMenuItem): boolean;
 begin
   Result := Item.GetParentMenu is TPopupMenu;
@@ -1489,7 +1512,7 @@ var
   i: integer;
 begin
   if FSkinBorderWidth < 0 then begin
-    i := TsSkinManager(FOwner).GetMaskIndex(s_MainMenu, s_BordersMask);
+    i := TsSkinManager(FOwner).gd[TsSkinManager(FOwner).ConstData.Sections[ssMainMenu]].BorderIndex;
     if i >= 0 then begin
       FSkinBorderWidth := TsSkinManager(FOwner).ma[i].BorderWidth;
       if FSkinBorderWidth <= 0 then
@@ -1504,10 +1527,11 @@ end;
 
 function TsSkinableMenus.ExtraWidth(const mi: TacMenuInfo): integer;
 begin
-  if TsSkinManager(FOwner).MenuSupport.UseExtraLine and mi.HaveExtraLine then
-    Result := TsSkinManager(FOwner).MenuSupport.ExtraLineWidth
-  else
-    Result := 0;
+  with TsSkinManager(FOwner) do
+    if MenuSupport.UseExtraLine and mi.HaveExtraLine then
+      Result := ScaleInt(MenuSupport.ExtraLineWidth)
+    else
+      Result := 0;
 end;
 
 
@@ -1590,7 +1614,7 @@ var
       StrPCopy(VertFont.lfFaceName, MenuSupport.ExtraLineFont.Name);
       GetObject(ItemBmp.Canvas.Handle, SizeOf(TLogFont), pFont);
       VertFont.lfEscapement := Orient;
-      VertFont.lfHeight     := MenuSupport.ExtraLineFont.Height;
+      VertFont.lfHeight     := TsSkinManager(FOwner).ScaleInt(MenuSupport.ExtraLineFont.Height);
       VertFont.lfStrikeOut  := integer(fsStrikeOut  in MenuSupport.ExtraLineFont.Style);
       VertFont.lfItalic     := integer(fsItalic     in MenuSupport.ExtraLineFont.Style);
       VertFont.lfUnderline  := integer(fsUnderline	in MenuSupport.ExtraLineFont.Style);
@@ -1617,16 +1641,16 @@ begin
   with TsSkinManager(FOwner) do begin
     if not (csDesigning in ComponentState) then
       if Item.Parent.Items[0].Name <> s_SkinSelectItemName then begin
-        ExtraSection := s_MenuExtraLine;
         if ExtraGlyph <> nil then
           FreeAndNil(ExtraGlyph);
 
-        ExtraCaption := DontForget;
         mi.HaveExtraLine := True;
-        if Assigned(OnGetMenuExtraLineData) then
+        if Assigned(OnGetMenuExtraLineData) then begin
+          ExtraSection := s_MenuExtraLine;
+          ExtraCaption := s_DontForget;
           OnGetMenuExtraLineData(Item.Parent.Items[0], ExtraSection, ExtraCaption, ExtraGlyph, mi.HaveExtraLine);
-
-        ExtraCaption := DelChars(ExtraCaption, '&');
+          ExtraCaption := DelChars(ExtraCaption, '&');
+        end;
         if not mi.HaveExtraLine and Assigned(ExtraGlyph) then
           FreeAndNil(ExtraGlyph);
       end
@@ -1642,7 +1666,7 @@ begin
     i := ConstData.Sections[ssMainMenu];
     // Draw Menu
     GlyphSizeCX := GlyphSize(Item, false).cx;
-    IcoLineWidth := GlyphSizeCX + Margin + Spacing;
+    IcoLineWidth := GlyphSizeCX + Margin + Spacing + RealBorderWidth - BorderWidth;
     if IsValidSkinIndex(i) then begin
       // Background
       PaintItemBG(i, EmptyCI, 0, gRect, MkPoint, mi.Bmp, FOwner);
@@ -1656,7 +1680,7 @@ begin
           BitBlt(mi.Bmp.Canvas.Handle, SkinBorderWidth + ExtraWidth(mi), SkinBorderWidth, ItemBmp.Width, ItemBmp.Height, ItemBmp.Canvas.Handle, 0, 0, SrcCopy);
           FreeAndNil(ItemBmp);
         end;
-      end;                     
+      end;
       // Border
       j := gd[i].BorderIndex;// GetMaskIndex(i, s_BordersMask);
       if IsValidImgIndex(j) then
@@ -1665,7 +1689,7 @@ begin
       if MenuSupport.UseExtraLine and mi.HaveExtraLine then begin
         j := GetSkinIndex(ExtraSection);
         if j >= 0 then begin // Extra line
-          ItemBmp := CreateBmp32(MenuSupport.ExtraLineWidth, mi.Bmp.Height - SkinBorderWidth * 2);
+          ItemBmp := CreateBmp32(ScaleInt(MenuSupport.ExtraLineWidth), mi.Bmp.Height - SkinBorderWidth * 2);
           R := MkRect(ItemBmp);
           PaintItem(j, ci, True, 0, R, Point(SkinBorderWidth, SkinBorderWidth), ItemBmp, FOwner);
           Marg := 12;
@@ -1702,6 +1726,15 @@ begin
     SetLength(MenuInfoArray, Length(MenuInfoArray) + 1);
     MenuInfoArray[Length(MenuInfoArray) - 1] := mi;
   end;
+end;
+
+
+function TsSkinableMenus.RealBorderWidth: integer;
+begin
+  if TsSkinManager(FOwner).gd[TsSkinManager(FOwner).ConstData.Sections[ssMainMenu]].BorderIndex < 0 then
+    Result := 0
+  else
+    Result := FBorderWidth;
 end;
 
 

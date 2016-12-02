@@ -1,7 +1,6 @@
 unit sEdit;
 {$I sDefs.inc}
 //{$DEFINE LOGGED}
-//+
 
 interface
 
@@ -44,6 +43,9 @@ type
     procedure WndProc(var Message: TMessage); override;
   published
     property Align;
+{$IFDEF DELPHI7UP}
+    property MaxLength;
+{$ENDIF}
 {$ENDIF} // NOTFORHELP
     property DisabledKind: TsDisabledKind read FDisabledKind write SetDisabledKind default DefDisabledKind;
     property SkinData: TsCtrlSkinData read FCommonData write FCommonData;

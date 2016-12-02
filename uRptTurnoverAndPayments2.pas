@@ -563,7 +563,7 @@ implementation
 
 uses
   uAppGlobal, uD, uDReportData, uRoomerLanguage, uReservationProfile, uFinishedInvoices2,
-  uInvoice, uRptConfirms, uDImages;
+  uInvoice, uRptConfirms, uDImages, uSQLUtils;
 
 function OpenRptTurnoverAndPayments2: boolean;
 var _frmRptTurnoverAndPayments2 : TfrmRptTurnoverAndPayments2;
@@ -680,7 +680,7 @@ var
   confirmDate: TdateTime;
   sConfirmedDates : string;
 begin
-  sConfirmedDates := _dbDateAndTime(2);
+  sConfirmedDates := _db(2);
   confirmDate := 2;
   if OpenRptConfirms(confirmDate,sConfirmedDates) then
   begin
@@ -998,7 +998,7 @@ begin
     Departure := Date;
     iReservation := d.kbmpaymentList_.FieldByName('Reservation').asinteger;
     iRoomReservation := d.kbmpaymentList_.FieldByName('RoomReservation').asinteger;
-    EditInvoice(iReservation, iRoomReservation, 0, 0, 0, 0, false, true, false);
+    EditInvoice(iReservation, iRoomReservation, 0, 0, 0, 0, false);
   end;
 end;
 
@@ -1039,7 +1039,7 @@ begin
     Departure := Date;
     iReservation := d.kbmRoomsDate_.FieldByName('Reservation').asinteger;
     iRoomReservation := d.kbmRoomsDate_.FieldByName('RoomReservation').asinteger;
-    EditInvoice(iReservation, iRoomReservation, 0, 0, 0, 0, false, true, false);
+    EditInvoice(iReservation, iRoomReservation, 0, 0, 0, 0, false);
   end;
 end;
 
@@ -1079,7 +1079,7 @@ begin
     Departure := Date;
     iReservation := DReportData.kbmUnconfirmedInvoicelines_.FieldByName('Reservation').asinteger;
     iRoomReservation := DReportData.kbmUnconfirmedInvoicelines_.FieldByName('RoomReservation').asinteger;
-    EditInvoice(iReservation, iRoomReservation, 0, 0, 0, 0, false, true, false);
+    EditInvoice(iReservation, iRoomReservation, 0, 0, 0, 0, false);
   end;
 end;
 
@@ -1139,7 +1139,7 @@ begin
     iReservation := d.mInvoiceHeads.FieldByName('Reservation').asinteger;
     iRoomReservation := d.mInvoiceHeads.FieldByName('RoomReservation')
       .asinteger;
-    EditInvoice(iReservation, iRoomReservation, 0, 0, 0, 0, false, true, false);
+    EditInvoice(iReservation, iRoomReservation, 0, 0, 0, 0, false);
   end;
 end;
 
@@ -1253,7 +1253,7 @@ begin
       s := s + ';';
 
        //    s := s + ' WHERE '#10;
-       //    s := s + '( confirmDate = '+ _dbDateAndTime(confirmDate) +' ) and (datatype=1) ';
+       //    s := s + '( confirmDate = '+ _db(confirmDate) +' ) and (datatype=1) ';
 
       sqls := sqls + s+chr(10);
     end else
@@ -1299,7 +1299,7 @@ begin
     s := s + '  tp.Item '#10;
     s := s + ';';
 
-//    s := s + '( confirmDate = ' + _dbDateAndTime(confirmDate) + ' ) and (datatype=2) ';
+//    s := s + '( confirmDate = ' + _db(confirmDate) + ' ) and (datatype=2) ';
 
    sqls := sqls + s+chr(10);
 
@@ -1332,7 +1332,7 @@ begin
     s := s + '( rdc.confirmDate in('+ sconfirmedDates+')) ';
     s := s + ';';
 
-//    s := s + '( rdc.confirmDate = ' + _dbDateAndTime(confirmDate) + ' ) ';
+//    s := s + '( rdc.confirmDate = ' + _db(confirmDate) + ' ) ';
 
     sqls := sqls + s+chr(10);
 
@@ -1364,7 +1364,7 @@ begin
     s := s + '(ilc.confirmDate in('+ sconfirmedDates+')) ';
     s := s + ';';
 
-//    s := s + '(ilc.confirmDate = ' + _dbDateAndTime(confirmDate) + ') ';
+//    s := s + '(ilc.confirmDate = ' + _db(confirmDate) + ') ';
 
 
    sqls := sqls + s+chr(10);
@@ -1489,7 +1489,7 @@ begin
     s := s + '   WHERE '#10;
 // confirmDate in('+ sconfirmedDates+')
     s := s + '( confirmDate in('+ sconfirmedDates+')) '#10;
-//    s := s + '( confirmDate = ' + _dbDateAndTime(confirmDate) + ') '#10;
+//    s := s + '( confirmDate = ' + _db(confirmDate) + ') '#10;
     s := s + '    ORDER BY '#10;
     s := s + '      pm.payDate '#10;
     s := s + ';';
@@ -1776,7 +1776,7 @@ begin
     iReservation := d.kbmRoomRentOnInvoice_.FieldByName('Reservation').asinteger;
     iRoomReservation := d.kbmRoomRentOnInvoice_.FieldByName('RoomReservation')
       .asinteger;
-    EditInvoice(iReservation, iRoomReservation, 0, 0, 0, 0, false, true, false);
+    EditInvoice(iReservation, iRoomReservation, 0, 0, 0, 0, false);
   end;
 end;
 

@@ -44,8 +44,8 @@ object frmOpenInvoicesNew: TfrmOpenInvoicesNew
     object chkShowNull: TsCheckBox
       Left = 152
       Top = 37
-      Width = 158
-      Height = 17
+      Width = 150
+      Height = 20
       Caption = 'Show invoices with 0 prices'
       TabOrder = 1
       SkinData.SkinSection = 'CHECKBOX'
@@ -125,6 +125,8 @@ object frmOpenInvoicesNew: TfrmOpenInvoicesNew
     object sTabSheet2: TsTabSheet
       Caption = 'Rent'
       TabVisible = False
+      SkinData.CustomColor = False
+      SkinData.CustomFont = False
       ExplicitLeft = 0
       ExplicitTop = 0
       ExplicitWidth = 0

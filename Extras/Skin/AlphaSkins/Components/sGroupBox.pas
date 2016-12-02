@@ -58,7 +58,8 @@ type
     FCaptionWidth: TacIntProperty;
 
     FOnCheckBoxChanged: TNotifyEvent;
-    procedure WMFontChanged(var Message: TMessage); message CM_FONTCHANGED;
+    procedure WMFontChanged   (var Message: TMessage); message CM_FONTCHANGED;
+    procedure CMEnabledChanged(var Message: TMessage); message CM_ENABLEDCHANGED;
     procedure SetCaptionLayout  (const Value: TsCaptionLayout);
     procedure SetCaptionYOffset (const Value: integer);
     procedure SetCaptionSkin    (const Value: TsSkinSection);
@@ -175,7 +176,8 @@ uses
   {$IFDEF TNTUNICODE}TntWindows, {$ENDIF}
   {$IFDEF LOGGED}sDebugMsgs, {$ENDIF}
   {$IFDEF DELPHI7UP}Themes, {$ENDIF}
-  acntUtils, sStyleSimply, sMessages, sVCLUtils, sGraphUtils, sSkinProps, sSkinManager, sAlphaGraph, sMaskData, acThdTimer;
+  acntUtils, sStyleSimply, sMessages, sVCLUtils, sGraphUtils, sSkinProps, sSkinManager, sAlphaGraph,
+  sDefaults, sMaskData, acThdTimer;
 
 const
   CheckIndent = 2;
@@ -440,12 +442,23 @@ end;
 
 
 procedure TsGroupBox.PaintCaptionArea(cRect: TRect; CI: TCacheInfo; AState: integer);
+var
+  R: TRect;
 begin
   if Caption <> '' then
     WriteText(cRect, CI);
 
   if CheckBoxVisible then
     PaintCheckBoxSkin(FCommonData.FCacheBMP, CheckBoxRect, AState);
+
+  if not Enabled then
+    if CI.Ready then begin
+      R := cRect;
+      OffsetRect(R, CI.X + Left, CI.Y + Top);
+      BlendTransRectangle(FCommonData.FCacheBMP, cRect.Left, cRect.Top, CI.Bmp, R, DefBlendDisabled);
+    end
+    else
+      FadeBmp(FCommonData.FCacheBMP, cRect, DefBlendDisabled, TsColor(CI.FillColor), 0, 0);
 end;
 
 
@@ -744,6 +757,13 @@ begin
   FCommonData.FCacheBmp.Canvas.Font.Assign(Font);
   if Caption <> '' then
     FCommonData.Invalidate;
+end;
+
+
+procedure TsGroupBox.CMEnabledChanged(var Message: TMessage); 
+begin
+  inherited;
+  FCommonData.Invalidate;
 end;
 
 

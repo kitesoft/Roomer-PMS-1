@@ -142,7 +142,7 @@ uses
   , uAppGlobal
   , uDImages
   , uReservationProfile
-  ;
+  , uSQLUtils;
 
 {$R *.DFM}
 
@@ -240,8 +240,8 @@ begin
     s := s+ 'FROM invoiceheads '+#10;
     if medhod = 1 then
     begin
-      s := s+ ' where (InvoiceDate >= '+_DateToDBDate(dtFrom.Date,true)+') '+#10;      //_DateToDBDate(dtFrom.Date,true) ;
-      s := s+ '   and (InvoiceDate <= '+_DateToDBDate(dtTo.Date,true)+') '+#10;      //_DateToDBDate(dtTo.Date,true) ;
+      s := s+ ' where (InvoiceDate >= '+_db(dtFrom.Date,true)+') '+#10;      //_db(dtFrom.Date,true) ;
+      s := s+ '   and (InvoiceDate <= '+_db(dtTo.Date,true)+') '+#10;      //_db(dtTo.Date,true) ;
       s := s+ '   and (InvoiceNumber > 0) '+#10;
       s := s+ 'Order By InvoiceDate DESC '+#10;
     end else

@@ -2,10 +2,11 @@ unit acLFPainter;
 {$I cxVer.inc} {$undef DELPHI5}
 {$I sDefs.inc}
 
-// WARNING! This unit is compatible with Devexpress version 2011
+// WARNING! This unit is compatible with Devexpress version 2011 and newer
 // for older versions used the acLFPainter6.pas unit
 
-{$DEFINE VER14_1_2} // cxGrid version 14.1.2 and newer
+{$DEFINE VER16_1_4}   // cxGrid version 16.1.4 and newer
+{$DEFINE VER14_1_2}
 {$DEFINE VER13_2_2}
 {$DEFINE VER12_2_3}
 {$DEFINE VER12_1_6}
@@ -74,7 +75,7 @@ type
     function DefaultDateNavigatorSelectionColor: TColor; override;
     function DefaultDateNavigatorSelectionTextColor: TColor; override;
     function DefaultDateNavigatorTextColor: TColor; override;
-    function DefaultDateNavigatorTodayTextColor: TColor; override;
+    function DefaultDateNavigatorTodayTextColor: TColor; {$IFNDEF VER16_1_4} override; {$ENDIF}
 
     function DefaultSchedulerBackgroundColor: TColor; override;
     function DefaultSchedulerTextColor: TColor; override;
@@ -135,7 +136,8 @@ type
     function ButtonSymbolState(AState: TcxButtonState): TcxButtonState; override;
     procedure DrawButton(ACanvas: TcxCanvas; R: TRect; const ACaption: string; AState: TcxButtonState;
       ADrawBorder: Boolean = True; AColor: TColor = clDefault; ATextColor: TColor = clDefault;
-      AWordWrap: Boolean = False; AIsToolButton: Boolean = False); override;
+      AWordWrap: Boolean = False; AIsToolButton: Boolean = False
+      {$IFDEF VER13_2_2}; APart: TcxButtonPart = cxbpButton{$ENDIF}); override;
     procedure DrawButtonBorder(ACanvas: TcxCanvas; R: TRect; AState: TcxButtonState); override;
     procedure DrawExpandButton(ACanvas: TcxCanvas; const R: TRect; AExpanded: Boolean; AColor: TColor = clDefault); override;
     function DrawExpandButtonFirst: Boolean; override;
@@ -332,7 +334,7 @@ type
     procedure DrawTrackBarTrack(ACanvas: TcxCanvas; const ARect, ASelection: TRect; AShowSelection, AEnabled, AHorizontal: Boolean; ATrackColor: TColor); override;
     procedure DrawTrackBarTrackBounds(ACanvas: TcxCanvas; const ARect: TRect); override;
 {$IFDEF VER14_1_2}
-    procedure DrawTrackBarThumbBorderUpDown(ACanvas: TcxCanvas; const ALightPolyLine, AShadowPolyLine, ADarkPolyLine: TPointArray); override;
+    procedure DrawTrackBarThumbBorderUpDown(ACanvas: TcxCanvas; const ALightPolyLine, AShadowPolyLine, ADarkPolyLine: TPoints); override;
 {$ELSE}
     procedure DrawTrackBarThumbBorderUpDown(ACanvas: TcxCanvas; const ALightPolyLine, AShadowPolyLine, ADarkPolyLine: TPointArray); override;
 {$ENDIF}
@@ -454,13 +456,13 @@ var
   CI: TCacheInfo;
 begin
   if Skinned then begin
-    i := DefaultManager.GetSkinIndex(s_ToolButton);
+    i := DefaultManager.ConstData.Sections[ssToolButton];
     if DefaultManager.IsValidSkinIndex(i) then begin
       TmpBmp := CreateBmp32(R);
       CI.Bmp := nil;
       CI.FillColor := DefaultManager.GetGlobalColor;
       CI.Ready := False;
-      PaintItem(i, s_ToolButton, CI, True, StateValues[AState], MkRect(TmpBmp), MkPoint, TmpBmp, DefaultManager);
+      PaintItem(i, CI, True, StateValues[AState], MkRect(TmpBmp), MkPoint, TmpBmp, DefaultManager);
       BitBlt(ACanvas.Handle, R.Left, R.Top, TmpBmp.Width, TmpBmp.Height, TmpBmp.Canvas.Handle, 0, 0, SRCCOPY);
       FreeAndNil(TmpBmp);
     end;
@@ -548,7 +550,7 @@ var
   i: integer;
 begin
   if Skinned then begin
-    i := DefaultManager.GetSkinIndex(s_Button);
+    i := DefaultManager.ConstData.Sections[ssButton];
     if DefaultManager.IsValidSkinIndex(i) then
       with DefaultManager.gd[i] do
         Result := Props[integer((AState in [cxbsHot, cxbsPressed]) and (States > 1))].FontColor.Color
@@ -1279,17 +1281,19 @@ end;
 
 procedure TcxACLookAndFeelPainter.DrawBorder(ACanvas: TcxCanvas; R: TRect);
 var
-  i, m: integer;
+//  i,
+  m: integer;
   Bmp: TBitmap;
 begin
   if Skinned then begin
-    i := DefaultManager.GetSkinIndex(s_Edit);
-    m := DefaultManager.GetMaskIndex(i, s_BordersMask);
-    if DefaultManager.IsValidImgIndex(m) then begin
-      Bmp := CreateBmp32(R);
-      PaintSection(Bmp, s_Edit, s_Edit, 0, DefaultManager, R.TopLeft, DefaultManager.GetGlobalColor);
-      BitBltBorder(ACanvas.Handle, R.Left, R.Top, R.Right, R.Bottom, Bmp.Canvas.Handle, 0, 0, 3);
-      FreeAndNil(Bmp);
+    if DefaultManager.ConstData.Sections[ssEdit] >= 0 then begin
+      m := DefaultManager.gd[DefaultManager.ConstData.Sections[ssEdit]].BorderIndex;
+      if DefaultManager.IsValidImgIndex(m) then begin
+        Bmp := CreateBmp32(R);
+        PaintSection(Bmp, s_Edit, s_Edit, 0, DefaultManager, R.TopLeft, DefaultManager.GetGlobalColor);
+        BitBltBorder(ACanvas.Handle, R.Left, R.Top, R.Right, R.Bottom, Bmp.Canvas.Handle, 0, 0, 3);
+        FreeAndNil(Bmp);
+      end;
     end;
   end
   else
@@ -1299,7 +1303,8 @@ end;
 
 procedure TcxACLookAndFeelPainter.DrawButton(ACanvas: TcxCanvas; R: TRect; const ACaption: string; AState: TcxButtonState;
       ADrawBorder: Boolean = True; AColor: TColor = clDefault; ATextColor: TColor = clDefault;
-      AWordWrap: Boolean = False; AIsToolButton: Boolean = False);
+      AWordWrap: Boolean = False; AIsToolButton: Boolean = False
+      {$IFDEF VER13_2_2}; APart: TcxButtonPart = cxbpButton{$ENDIF});
 var
   i: integer;
   TmpBmp: TBitmap;
@@ -1310,7 +1315,7 @@ var
 {$ENDIF}
 begin
   if Skinned then begin
-    i := DefaultManager.GetSkinIndex(s_Button);
+    i := DefaultManager.ConstData.Sections[ssButton];
     if DefaultManager.IsValidSkinIndex(i) then begin
       TmpBmp := CreateBmp32(R);
       CI.Bmp := nil;
@@ -1325,15 +1330,18 @@ begin
         DrawText(TmpBmp.Canvas.Handle, PChar(ACaption), Length(ACaption), rText, DT_EXPANDTABS or DT_VCENTER or DT_CENTER or DT_SINGLELINE);
       end;
 {$IFDEF VER13_2_2}
-//      if APart = cxbpDropDownRightPart then begin
-//        if i >= 0 then
-//          C := DefaultManager.gd[i].Props[min(StateValues[AState], ac_MaxPropsIndex)].FontColor.Color
-//        else
-//          C := ColorToRGB(clWindowText);
-//
-//        DrawColorArrow(TmpBmp.Canvas, C, MkRect(TmpBmp), asBottom);
-//      end;
+      if APart = cxbpDropDownRightPart then begin
+        if i >= 0 then
+          C := DefaultManager.gd[i].Props[min(StateValues[AState], ac_MaxPropsIndex)].FontColor.Color
+        else
+          C := ColorToRGB(clWindowText);
+
+        DrawColorArrow(TmpBmp.Canvas, C, MkRect(TmpBmp), asBottom);
+      end;
 {$ENDIF}
+      if cxbsDisabled = AState then
+        BlendTransBitmap(TmpBmp, DefBlendDisabled, TsColor(CI.FillColor));
+
       BitBlt(ACanvas.Handle, R.Left, R.Top, TmpBmp.Width, TmpBmp.Height, TmpBmp.Canvas.Handle, 0, 0, SRCCOPY);
       FreeAndNil(TmpBmp);
     end;
@@ -1424,24 +1432,20 @@ end;
 procedure TcxACLookAndFeelPainter.DrawContainerBorder(ACanvas: TcxCanvas;
   const R: TRect; AStyle: TcxContainerBorderStyle; AWidth: Integer; AColor: TColor; ABorders: TcxBorders);
 var
-  i, m: integer;
+  m: integer;
   Bmp: TBitmap;
 begin
-  if Skinned then
-    case AStyle of
-      cbs3D: begin
-        i := DefaultManager.GetSkinIndex(s_Edit);
-        m := DefaultManager.GetMaskIndex(i, s_BordersMask);
-        if DefaultManager.IsValidImgIndex(m) then begin
-          Bmp := CreateBmp32(R);
-          PaintSection(Bmp, s_Edit, s_Edit, 0, DefaultManager, R.TopLeft, DefaultManager.GetGlobalColor);
-          BitBltBorder(ACanvas.Handle, R.Left, R.Top, R.Right, R.Bottom, Bmp.Canvas.Handle, 0, 0, 2);
-          FreeAndNil(Bmp);
-        end;
-      end
-      else
-        inherited;
-    end
+  if Skinned and (AStyle = cbs3D) then begin
+    if DefaultManager.ConstData.Sections[ssEdit] >= 0 then begin
+      m := DefaultManager.gd[DefaultManager.ConstData.Sections[ssEdit]].BorderIndex;
+      if DefaultManager.IsValidImgIndex(m) then begin
+        Bmp := CreateBmp32(R);
+        PaintSection(Bmp, s_Edit, s_Edit, 0, DefaultManager, R.TopLeft, DefaultManager.GetGlobalColor);
+        BitBltBorder(ACanvas.Handle, R.Left, R.Top, R.Right, R.Bottom, Bmp.Canvas.Handle, 0, 0, 2);
+        FreeAndNil(Bmp);
+      end;
+    end;
+  end
   else
     inherited
 end;
@@ -1483,14 +1487,14 @@ begin
       end
 
       else begin
-        sIndex := DefaultManager.GetSkinIndex(s_UpDown);
+        sIndex := DefaultManager.ConstData.Sections[ssUpDown];
 {$IFNDEF VER14_1_2}
         Side := asBottom;
 {$ENDIF}
       end;
     end;
     if sIndex < 0 then
-      sIndex := DefaultManager.GetSkinIndex(s_Button);
+      sIndex := DefaultManager.ConstData.Sections[ssButton];
 
     R := ARect;
     TmpBmp := CreateBmp32(R);
@@ -1593,14 +1597,14 @@ begin
         glIndex := DefaultManager.ConstData.ComboBtn.GlyphIndex;
         Side := asBottom;
         if sIndex < 0 then
-          sIndex := DefaultManager.GetSkinIndex(s_UpDown);
+          sIndex := DefaultManager.ConstData.Sections[ssUpDown];
       end
 
       else
         Exit;
     end;
     if sIndex < 0 then
-      sIndex := DefaultManager.GetSkinIndex(s_Button);
+      sIndex := DefaultManager.ConstData.Sections[ssButton];
 
     Offset := 0;
     case AState of
@@ -1729,7 +1733,8 @@ var
   i: integer;
 begin
   if Skinned then begin
-    i := DefaultManager.ConstData.RadioButton[True]; DefaultManager.GetMaskIndex(DefaultManager.ConstData.IndexGLobalInfo, s_RadioButtonChecked);
+    i := DefaultManager.ConstData.RadioButton[True];
+//    DefaultManager.GetMaskIndex(DefaultManager.ConstData.IndexGLobalInfo, s_RadioButtonChecked);
     if DefaultManager.IsValidImgIndex(i) then
       Result := MkSize(DefaultManager.ma[i])
     else
@@ -1753,9 +1758,11 @@ var
   CI: TCacheInfo;
 begin
   if Skinned then begin
-    i := DefaultManager.GetMaskIndex(DefaultManager.ConstData.IndexGLobalInfo, s_SmallIconClose);
+//    i := DefaultManager.GetMaskIndex(DefaultManager.ConstData.IndexGLobalInfo, s_SmallIconClose);
+    i := DefaultManager.ConstData.TitleGlyphs[tgSmallClose];
     if i < 0 then
-      i := DefaultManager.GetMaskIndex(DefaultManager.ConstData.IndexGLobalInfo, s_BorderIconClose);
+      i := DefaultManager.ConstData.TitleGlyphs[tgClose];
+//      DefaultManager.GetMaskIndex(DefaultManager.ConstData.IndexGLobalInfo, s_BorderIconClose);
 
     if DefaultManager.IsValidImgIndex(i) then begin
       TmpBmp := CreateBmp32(R);
@@ -1800,9 +1807,9 @@ var
 
 begin
   if Skinned then begin
-    i := DefManager.GetSkinIndex(s_UpDown);
+    i := DefManager.ConstData.Sections[ssUpDown];
     if not DefManager.IsValidSkinIndex(i) then begin
-      i := DefManager.GetSkinIndex(s_Button);
+      i := DefManager.ConstData.Sections[ssButton];
       sSection := s_Button;
     end
     else
@@ -1943,7 +1950,6 @@ const
   ShowEndEllipsises: array [Boolean] of Integer = (0, cxShowEndEllipsis);
 var
   Section: string;
-  R: TRect;
   TmpBmp: TBitmap;
   i: integer;
 begin
@@ -1964,7 +1970,6 @@ begin
         ACanvas.Font.Color := DefaultManager.gd[i].Props[min(StateValues[AState], ac_MaxPropsIndex)].FontColor.Color;
 
       ACanvas.Brush.Style := bsClear;
-      R := ATextAreaBounds;
       ACanvas.DrawText(AText, ATextAreaBounds, AlignmentsHorz[AAlignmentHorz] or
           AlignmentsVert[AAlignmentVert] or MultiLines[AMultiLine] or ShowEndEllipsises[AShowEndEllipsis]);
     end;
@@ -1993,14 +1998,11 @@ procedure TcxACLookAndFeelPainter.DrawHeaderControlSectionBorder(ACanvas: TcxCan
 var
   Section: string;
   aBmp: TBitmap;
-  w, h: integer;
 begin
   if Skinned then begin
     if AState in [cxbsDefault, cxbsNormal, cxbsHot, cxbsPressed] then begin
       Section := s_ColHeader;
-      w := WidthOf(R, True);
-      h := HeightOf(R, True);
-      if (w > 0) and (h > 0) then begin
+      if (WidthOf(R, True) > 0) and (HeightOf(R, True) > 0) then begin
         aBmp := CreateBmp32(R);
         PaintSection(aBmp, s_ColHeader, s_Button, StateValues[AState], DefaultManager, R.TopLeft, DefaultManager.GetGlobalColor);
         BitBlt(ACanvas.Handle, R.Left, R.Top, aBmp.Width, aBmp.Height, aBmp.Canvas.Handle, 0, 0, SRCCOPY);
@@ -2120,9 +2122,9 @@ begin
   if Skinned then begin
     rText := HeaderContentBounds(ABounds, []);
     DrawHeader(ACanvas, ABounds, rText, ANeighbors, [], cxbsNormal, taCenter, vaCenter, False, False, AText, ACanvas.Font, clNone, clNone);
-    i := DefaultManager.GetSkinIndex(s_ColHeader);
+    i := DefaultManager.ConstData.Sections[ssColHeader];
     if i < 0 then
-      DefaultManager.GetSkinIndex(s_Button);
+      i := DefaultManager.ConstData.Sections[ssButton];
 
     if i >= 0 then
       DrawMonthHeaderArrows(ACanvas, ABounds, AArrows, ASideWidth, DefaultManager.gd[i].Props[0].FontColor.Color)
@@ -2177,7 +2179,7 @@ var
   CI: TCacheInfo;
 begin
   if Skinned then begin
-    i := DefaultManager.GetSkinIndex(s_Gauge);
+    i := DefaultManager.ConstData.Sections[ssGauge];
     if DefaultManager.IsValidSkinIndex(i) then begin
       TmpBmp := CreateBmp32(ARect);
       CI.Bmp := nil;
@@ -2199,7 +2201,7 @@ var
   TmpBmp, BGBmp: TBitmap;
 begin
   if Skinned then begin
-    i := DefaultManager.GetSkinIndex(iff(AVertical, s_ProgressV, s_ProgressH));
+    i := iff(AVertical, DefaultManager.ConstData.Sections[ssProgressV], DefaultManager.ConstData.Sections[ssProgressH]);
     if DefaultManager.IsValidSkinIndex(i) then begin
       TmpBmp := CreateBmp32(ARect);
       BGBmp  := CreateBmpLike(TmpBmp);
@@ -2212,8 +2214,6 @@ begin
   end
   else
     inherited
-//  Old Flat style //
-//  if Skinned then ACanvas.FillRect(ARect, BlendColors(DefaultManager.GetActiveEditFontColor, DefaultManager.GetActiveEditColor, 0.5)) else inherited;
 end;
 
 
@@ -2237,8 +2237,8 @@ procedure TcxACLookAndFeelPainter.DrawSchedulerNavigationButton(ACanvas: TcxCanv
 var
   TmpBmp: TcxBitmap;
   cBmp: TBitmap;
-  R: TRect;
   Ndx: integer;
+  R: TRect;
 
   function RotateTextRect(const ATextRect: TRect): TRect;
   begin
@@ -2257,16 +2257,15 @@ begin
     if AIsNextButton then begin
       Ndx := DefaultManager.ConstData.Tabs[tlSingle][asLeft].SkinIndex;
       if Ndx < 0 then
-        DefaultManager.GetSkinIndex(s_Button);
+        Ndx := DefaultManager.ConstData.Sections[ssButton];
 
       if Ndx >= 0 then
         PaintItem(Ndx, MakeCacheInfo(cBmp), True, GetState[AState], MkRect(TmpBmp), MkPoint, TmpBmp, DefaultManager) // Transparency is not needed
     end
     else begin
-//      Ndx := DefaultManager.GetSkinIndex(s_TabRight);
       Ndx := DefaultManager.ConstData.Tabs[tlSingle][asRight].SkinIndex;
       if Ndx < 0 then
-        DefaultManager.GetSkinIndex(s_Button);
+        Ndx := DefaultManager.ConstData.Sections[ssButton];
 
       if Ndx >= 0 then
         PaintItem(Ndx, MakeCacheInfo(cBmp), True, GetState[AState], MkRect(TmpBmp), MkPoint, TmpBmp, DefaultManager) // Transparency is not needed
@@ -2410,109 +2409,109 @@ begin
   if IsRectEmpty(R) or ((APart = sbpThumbnail) and (AState = cxbsDisabled)) then
     Exit;
 
-  if not Skinned then begin
+  if Skinned then begin
+    TmpBmp := CreateBmp32(R);
+    with DefaultManager.ConstData do begin
+      if AHorizontal then
+        case APart of
+          sbpThumbnail: begin
+            BGBmp := CreateBmp32(WidthOf(R) + 60, HeightOf(R));
+            PaintPage(sbpPageUp, BGBmp.Width, BGBmp.Height, BGBmp);
+            CI := MakeCacheInfo(BGBmp);
+            CI.X := 30;
+            with Sliders[False] do begin
+              PaintItemFast(SkinIndex, MaskIndex, BGIndex[0], BGIndex[1], CI, True, StateValues[AState], MkRect(TmpBmp), MkPoint, TmpBmp, DefaultManager);
+              FreeAndNil(BGBmp);
+              PaintGlyph(GlyphIndex);
+            end;
+          end;
+
+          sbpLineUp: begin
+            BGBmp := CreateBmp32(R);
+            PaintPage(sbpPageUp, BGBmp.Width, BGBmp.Height, BGBmp, True);
+            CI := MakeCacheInfo(BGBmp);
+            with ScrollBtns[asLeft] do begin
+              if DefaultManager.gd[SkinIndex].ReservedBoolean and (MaskIndex >= 0) then
+                TmpBmp.Width := math.max(GetSystemMetrics(SM_CXHSCROLL), DefaultManager.ma[MaskIndex].Width);
+
+              PaintItemFast(SkinIndex, MaskIndex, BGIndex[0], BGIndex[1], CI, True, StateValues[AState], MkRect(TmpBmp), MkPoint, TmpBmp, DefaultManager);
+              FreeAndNil(BGBmp);
+              PaintArrow(asLeft);
+            end;
+          end;
+
+          sbpLineDown: begin
+            BGBmp := CreateBmp32(R);
+            PaintPage(sbpPageDown, BGBmp.Width, BGBmp.Height, BGBmp, True);
+            CI := MakeCacheInfo(BGBmp);
+            with ScrollBtns[asRight] do begin
+              if DefaultManager.gd[SkinIndex].ReservedBoolean and (MaskIndex >= 0) then
+                TmpBmp.Width := math.max(GetSystemMetrics(SM_CXHSCROLL), DefaultManager.ma[MaskIndex].Width);
+
+              PaintItemFast(SkinIndex, MaskIndex, BGIndex[0], BGIndex[1], CI, True, StateValues[AState], MkRect(TmpBmp), MkPoint, TmpBmp, DefaultManager);
+              FreeAndNil(BGBmp);
+              BitBlt(TmpBmp.Canvas.Handle, 0, 0, WidthOf(R), HeightOf(R), TmpBmp.Canvas.Handle, TmpBmp.Width - WidthOf(R), 0, SRCCOPY);
+              PaintArrow(asRight);
+              TmpBmp.Width := WidthOf(R);
+            end;
+          end;
+
+          sbpPageUp, sbpPageDown:
+            PaintPage(APart, TmpBmp.Width, TmpBmp.Height);
+        end
+      else
+        case APart of
+          sbpThumbnail: begin
+            BGBmp := CreateBmp32(WidthOf(R), HeightOf(R) + 60);
+            PaintPage(sbpPageUp, BGBmp.Width, BGBmp.Height, BGBmp);
+            CI := MakeCacheInfo(BGBmp);
+            CI.Y := 30;
+            with Sliders[True] do begin
+              PaintItemFast(SkinIndex, MaskIndex, BGIndex[0], BGIndex[1], CI, True, StateValues[AState], MkRect(TmpBmp), MkPoint, TmpBmp, DefaultManager);
+              FreeAndNil(BGBmp);
+              PaintGlyph(GlyphIndex);
+            end;
+          end;
+
+          sbpLineUp: begin
+            BGBmp := CreateBmp32(R);
+            PaintPage(sbpPageUp, BGBmp.Width, BGBmp.Height, BGBmp, True);
+            CI := MakeCacheInfo(BGBmp);
+            with ScrollBtns[asTop] do begin
+              if DefaultManager.gd[SkinIndex].ReservedBoolean and (MaskIndex >= 0) then
+                TmpBmp.Height := math.max(GetSystemMetrics(SM_CXHSCROLL), DefaultManager.ma[MaskIndex].Height);
+
+              PaintItemFast(SkinIndex, MaskIndex, BGIndex[0], BGIndex[1], CI, True, StateValues[AState], MkRect(TmpBmp), MkPoint, TmpBmp, DefaultManager);
+              FreeAndNil(BGBmp);
+              PaintArrow(asTop);
+            end;
+          end;
+
+          sbpLineDown: begin
+            BGBmp := CreateBmp32(R);
+            PaintPage(sbpPageDown, BGBmp.Width, BGBmp.Height, BGBmp, True);
+            CI := MakeCacheInfo(BGBmp);
+            with ScrollBtns[asBottom] do begin
+              if DefaultManager.gd[SkinIndex].ReservedBoolean and (MaskIndex >= 0) then
+                TmpBmp.Height := math.max(GetSystemMetrics(SM_CXHSCROLL), DefaultManager.ma[MaskIndex].Height);
+
+              PaintItemFast(SkinIndex, MaskIndex, BGIndex[0], BGIndex[1], CI, True, StateValues[AState], MkRect(TmpBmp), MkPoint, TmpBmp, DefaultManager);
+              FreeAndNil(BGBmp);
+              BitBlt(TmpBmp.Canvas.Handle, 0, 0, WidthOf(R), HeightOf(R), TmpBmp.Canvas.Handle, 0, TmpBmp.Height - HeightOf(R), SRCCOPY);
+              PaintArrow(asBottom);
+              TmpBmp.Height := HeightOf(R);
+            end;
+          end;
+
+          sbpPageUp, sbpPageDown:
+            PaintPage(APart, TmpBmp.Width, TmpBmp.Height);
+        end;
+    end;
+    BitBlt(ACanvas.Handle, R.Left, R.Top, WidthOf(R), HeightOf(R), TmpBmp.Canvas.Handle, 0, 0, SRCCOPY);
+    FreeAndNil(TmpBmp);
+  end
+  else
     inherited DrawScrollBarPart(ACanvas, AHorizontal, R, APart, AState);
-    Exit;
-  end;
-  TmpBmp := CreateBmp32(R);
-  with DefaultManager.ConstData do begin
-    if AHorizontal then
-      case APart of
-        sbpThumbnail: begin
-          BGBmp := CreateBmp32(WidthOf(R) + 60, HeightOf(R));
-          PaintPage(sbpPageUp, BGBmp.Width, BGBmp.Height, BGBmp);
-          CI := MakeCacheInfo(BGBmp);
-          CI.X := 30;
-          with Sliders[False] do begin
-            PaintItemFast(SkinIndex, MaskIndex, BGIndex[0], BGIndex[1], CI, True, StateValues[AState], MkRect(TmpBmp), MkPoint, TmpBmp, DefaultManager);
-            FreeAndNil(BGBmp);
-            PaintGlyph(GlyphIndex);
-          end;
-        end;
-
-        sbpLineUp: begin
-          BGBmp := CreateBmp32(R);
-          PaintPage(sbpPageUp, BGBmp.Width, BGBmp.Height, BGBmp, True);
-          CI := MakeCacheInfo(BGBmp);
-          with ScrollBtns[asLeft] do begin
-            if DefaultManager.gd[SkinIndex].ReservedBoolean and (MaskIndex >= 0) then
-              TmpBmp.Width := math.max(GetSystemMetrics(SM_CXHSCROLL), DefaultManager.ma[MaskIndex].Width);
-
-            PaintItemFast(SkinIndex, MaskIndex, BGIndex[0], BGIndex[1], CI, True, StateValues[AState], MkRect(TmpBmp), MkPoint, TmpBmp, DefaultManager);
-            FreeAndNil(BGBmp);
-            PaintArrow(asLeft);
-          end;
-        end;
-
-        sbpLineDown: begin
-          BGBmp := CreateBmp32(R);
-          PaintPage(sbpPageDown, BGBmp.Width, BGBmp.Height, BGBmp, True);
-          CI := MakeCacheInfo(BGBmp);
-          with ScrollBtns[asRight] do begin
-            if DefaultManager.gd[SkinIndex].ReservedBoolean and (MaskIndex >= 0) then
-              TmpBmp.Width := math.max(GetSystemMetrics(SM_CXHSCROLL), DefaultManager.ma[MaskIndex].Width);
-
-            PaintItemFast(SkinIndex, MaskIndex, BGIndex[0], BGIndex[1], CI, True, StateValues[AState], MkRect(TmpBmp), MkPoint, TmpBmp, DefaultManager);
-            FreeAndNil(BGBmp);
-            BitBlt(TmpBmp.Canvas.Handle, 0, 0, WidthOf(R), HeightOf(R), TmpBmp.Canvas.Handle, TmpBmp.Width - WidthOf(R), 0, SRCCOPY);
-            PaintArrow(asRight);
-            TmpBmp.Width := WidthOf(R);
-          end;
-        end;
-
-        sbpPageUp, sbpPageDown:
-          PaintPage(APart, TmpBmp.Width, TmpBmp.Height);
-      end
-    else
-      case APart of
-        sbpThumbnail: begin
-          BGBmp := CreateBmp32(WidthOf(R), HeightOf(R) + 60);
-          PaintPage(sbpPageUp, BGBmp.Width, BGBmp.Height, BGBmp);
-          CI := MakeCacheInfo(BGBmp);
-          CI.Y := 30;
-          with Sliders[True] do begin
-            PaintItemFast(SkinIndex, MaskIndex, BGIndex[0], BGIndex[1], CI, True, StateValues[AState], MkRect(TmpBmp), MkPoint, TmpBmp, DefaultManager);
-            FreeAndNil(BGBmp);
-            PaintGlyph(GlyphIndex);
-          end;
-        end;
-
-        sbpLineUp: begin
-          BGBmp := CreateBmp32(R);
-          PaintPage(sbpPageUp, BGBmp.Width, BGBmp.Height, BGBmp, True);
-          CI := MakeCacheInfo(BGBmp);
-          with ScrollBtns[asTop] do begin
-            if DefaultManager.gd[SkinIndex].ReservedBoolean and (MaskIndex >= 0) then
-              TmpBmp.Height := math.max(GetSystemMetrics(SM_CXHSCROLL), DefaultManager.ma[MaskIndex].Height);
-
-            PaintItemFast(SkinIndex, MaskIndex, BGIndex[0], BGIndex[1], CI, True, StateValues[AState], MkRect(TmpBmp), MkPoint, TmpBmp, DefaultManager);
-            FreeAndNil(BGBmp);
-            PaintArrow(asTop);
-          end;
-        end;
-
-        sbpLineDown: begin
-          BGBmp := CreateBmp32(R);
-          PaintPage(sbpPageDown, BGBmp.Width, BGBmp.Height, BGBmp, True);
-          CI := MakeCacheInfo(BGBmp);
-          with ScrollBtns[asBottom] do begin
-            if DefaultManager.gd[SkinIndex].ReservedBoolean and (MaskIndex >= 0) then
-              TmpBmp.Height := math.max(GetSystemMetrics(SM_CXHSCROLL), DefaultManager.ma[MaskIndex].Height);
-
-            PaintItemFast(SkinIndex, MaskIndex, BGIndex[0], BGIndex[1], CI, True, StateValues[AState], MkRect(TmpBmp), MkPoint, TmpBmp, DefaultManager);
-            FreeAndNil(BGBmp);
-            BitBlt(TmpBmp.Canvas.Handle, 0, 0, WidthOf(R), HeightOf(R), TmpBmp.Canvas.Handle, 0, TmpBmp.Height - HeightOf(R), SRCCOPY);
-            PaintArrow(asBottom);
-            TmpBmp.Height := HeightOf(R);
-          end;
-        end;
-
-        sbpPageUp, sbpPageDown:
-          PaintPage(APart, TmpBmp.Width, TmpBmp.Height);
-      end;
-  end;
-  BitBlt(ACanvas.Handle, R.Left, R.Top, WidthOf(R), HeightOf(R), TmpBmp.Canvas.Handle, 0, 0, SRCCOPY);
-  FreeAndNil(TmpBmp);
 end;
 
 
@@ -2527,7 +2526,7 @@ begin
     if DefaultManager.IsValidImgIndex(i) then begin
       TmpBmp := CreateBmp32(WidthOf(ARect), HeightOf(ARect));
 
-      p.x := (WidthOf(ARect) - DefaultManager.ma[i].Width);
+      p.x := (WidthOf (ARect) - DefaultManager.ma[i].Width);
       p.y := (HeightOf(ARect) - DefaultManager.ma[i].Height);
 
       FillDC(TmpBmp.Canvas.Handle, ARect, DefaultManager.GetGlobalColor);
@@ -2560,12 +2559,13 @@ var
   begin
     with DefaultManager do
       if DefaultManager.IsValidImgIndex(ConstData.ScrollBtns[Side].GlyphIndex) then begin
-        p.x := (WidthOf(R)  - ma[ConstData.ScrollBtns[Side].GlyphIndex].Width) div 2;
+        p.x := (WidthOf(R)  - ma[ConstData.ScrollBtns[Side].GlyphIndex].Width)  div 2;
         p.y := (HeightOf(R) - ma[ConstData.ScrollBtns[Side].GlyphIndex].Height) div 2;
-        if (p.x < 0) or (p.y < 0) then
-          Exit;
+        if p.y < 0 then
+          p.y := 0;
 
-        DrawSkinGlyph(TmpBmp, p, State, 1, ma[ConstData.ScrollBtns[Side].GlyphIndex], MakeCacheInfo(TmpBmp));
+        if (p.x >= 0) and (p.y >= 0) then
+          DrawSkinGlyph(TmpBmp, p, State, 1, ma[ConstData.ScrollBtns[Side].GlyphIndex], MakeCacheInfo(TmpBmp));
       end
       else begin
         C := GetGlobalFontColor;
@@ -2578,19 +2578,19 @@ var
   end;
 
 begin
-  if not Skinned then begin
-    inherited;
-    Exit
-  end;
-  TmpBmp := CreateBmp32(R);
-  BitBlt(TmpBmp.Canvas.Handle, 0, 0, TmpBmp.Width, TmpBmp.Height, ACanvas.Handle, R.Left, R.Top, SRCCOPY);
-  if not AAscendingSorting then
-    PaintGlyph(asBottom)
-  else
-    PaintGlyph(asTop);
+  if Skinned then begin
+    TmpBmp := CreateBmp32(R);
+    BitBlt(TmpBmp.Canvas.Handle, 0, 0, TmpBmp.Width, TmpBmp.Height, ACanvas.Handle, R.Left, R.Top, SRCCOPY);
+    if not AAscendingSorting then
+      PaintGlyph(asBottom)
+    else
+      PaintGlyph(asTop);
 
-  BitBlt(ACanvas.Handle, R.Left, R.Top, TmpBmp.Width, TmpBmp.Height, TmpBmp.Canvas.Handle, 0, 0, SRCCOPY);
-  FreeAndNil(TmpBmp)
+    BitBlt(ACanvas.Handle, R.Left, R.Top, TmpBmp.Width, TmpBmp.Height, TmpBmp.Canvas.Handle, 0, 0, SRCCOPY);
+    FreeAndNil(TmpBmp)
+  end
+  else
+    inherited;
 end;
 
 
@@ -2613,7 +2613,7 @@ var
   CI: TCacheInfo;
 begin
   if Skinned then begin
-    i := DefaultManager.GetSkinIndex(iff(AVertical, s_TabLeft, s_TabTop));
+    i := iff(AVertical, DefaultManager.ConstData.Tabs[tlSingle][asLeft].SkinIndex, DefaultManager.ConstData.Tabs[tlSingle][asTop].SkinIndex);
     if DefaultManager.IsValidSkinIndex(i) then begin
       Bmp := CreateBmp32(R);
       CI.FillColor := DefaultManager.GetGlobalColor;
@@ -2692,11 +2692,11 @@ begin
 end;
 
 
-//{$IFDEF VER14_1_2}
-//procedure TcxACLookAndFeelPainter.DrawTrackBarThumbBorderUpDown(ACanvas: TcxCanvas; const ALightPolyLine, AShadowPolyLine, ADarkPolyLine: dxCore.TPoints);
-//{$ELSE}
+{$IFDEF VER14_1_2}
+procedure TcxACLookAndFeelPainter.DrawTrackBarThumbBorderUpDown(ACanvas: TcxCanvas; const ALightPolyLine, AShadowPolyLine, ADarkPolyLine: dxCore.TPoints);
+{$ELSE}
 procedure TcxACLookAndFeelPainter.DrawTrackBarThumbBorderUpDown(ACanvas: TcxCanvas; const ALightPolyLine, AShadowPolyLine, ADarkPolyLine: TPointArray);
-//{$ENDIF}
+{$ENDIF}
 begin
   inherited;
 end;
@@ -2861,9 +2861,9 @@ var
   i: integer;
 begin
   if Skinned then begin
-    i := DefaultManager.GetSkinIndex(s_ColHeader);
+    i := DefaultManager.ConstData.Sections[ssColHeader];
     if i < 0 then
-      i := DefaultManager.GetSkinIndex(s_Button);
+      i := DefaultManager.ConstData.Sections[ssButton];
 
     if i < 0 then
       Result := DefaultManager.GetGlobalFontColor
@@ -2887,7 +2887,7 @@ end;
 
 function TcxACLookAndFeelPainter.GetSplitterSize(AHorizontal: Boolean): TSize;
 begin
-  Result := cxClasses.Size(8, 8); // inherited GetSplitterSize(AHorizontal)
+  Result := cxClasses.Size(8, 8);
 end;
 
 
@@ -3099,13 +3099,10 @@ end;
 
 
 function TcxACLookAndFeelPainter.SizeGripSize: TSize;
-var
-  i: integer;
 begin
   if Skinned then begin
-    i := DefaultManager.ConstData.GripRightBottom;
-    if DefaultManager.IsValidImgIndex(i) then
-      Result := MkSize(DefaultManager.ma[i])
+    if DefaultManager.IsValidImgIndex(DefaultManager.ConstData.GripRightBottom) then
+      Result := MkSize(DefaultManager.ma[DefaultManager.ConstData.GripRightBottom])
     else
       Result := cxClasses.Size(GetSystemMetrics(SM_CXVSCROLL), GetSystemMetrics(SM_CYHSCROLL));
   end
@@ -3338,13 +3335,11 @@ end;
 
 procedure TcxACPCPainter.InternalPaintTab(ACanvas: TcxCanvas; ATabVisibleIndex: Integer);
 var
-  ABitmap: TcxBitmap;
-  ATabRect: TRect;
   ATabViewInfo: TcxTabViewInfo;
+  ABitmap: TcxBitmap;
   ATabOrigin: TPoint;
-
-  s: string;
   i, State: integer;
+  ATabRect: TRect;
   CI: TCacheInfo;
 begin
   if Skinned then begin
@@ -3363,8 +3358,7 @@ begin
       else
         State := integer(ATabViewInfo.IsHighlighted);
 
-      s := iff(TAccessTabControlProperties(ATabViewInfo.Properties).TabPosition in [cxPC.tpTop, cxPC.tpBottom], s_TabTop, s_TabLeft);
-      i := DefaultManager.GetSkinIndex(s);
+      i := iff(TAccessTabControlProperties(ATabViewInfo.Properties).TabPosition in [cxPC.tpTop, cxPC.tpBottom], DefaultManager.ConstData.Tabs[tlSingle][asTop].SkinIndex, DefaultManager.ConstData.Tabs[tlSingle][asLeft].SkinIndex);
       if DefaultManager.IsValidSkinIndex(i) then begin
         CI.Bmp := nil;
         CI.Ready := False;
@@ -3409,7 +3403,7 @@ begin
     inherited;
 end;
 
-{$ifdef EXPRESSBARS}
+{$IFDEF EXPRESSBARS}
 class procedure TdxACStatusBarSkinPainter.AdjustTextColor(AStatusBar: TdxCustomStatusBar; var AColor: TColor; Active: Boolean);
 begin
   if Skinned then
@@ -3519,7 +3513,7 @@ begin
   else
     Result := inherited TopBorderSize;
 end;
-{$endif} // EXPRESSBARS
+{$ENDIF} // EXPRESSBARS
 {$ENDIF}
 
 

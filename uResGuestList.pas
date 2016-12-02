@@ -234,50 +234,9 @@ uses
   , uFileDependencyManager
   , uAppGlobal
   , PrjConst
-  , uDImages;
+  , uDImages, uSQLUtils;
 {$R *.dfm}
 
-function SetFloatFormat(Decimals : Integer; ShowCurrency : boolean) : string;
-var
-  s : string;
-  sDecimals : string;
-begin
-  sDecimals := inttostr(Decimals);
-  if ShowCurrency then
-    s := 'm'
-  else
-    s := 'n';
-  result := '%.' + sDecimals + s
-end;
-
-function FloatToCellStr(aNumber : Double; Format : string; commaToDot : boolean) : string;
-var
-  i : Integer;
-  s : string;
-begin
-  s := '0';
-
-  if Format = '' then
-  begin
-    s := floatTostr(aNumber);
-  end
-  else
-  begin
-    s := formatFloat(Format, aNumber);
-  end;
-
-  if commaToDot then
-  begin
-    for i := 1 to length(s) do
-    begin
-      if s[i] = '.' then
-        s[i] := SystemDecimalSeparator
-      else if s[i] = ',' then
-        s[i] := '.'
-    end;
-  end;
-  result := s;
-end;
 
 // ******************************************************************************
 
@@ -370,7 +329,7 @@ begin
       mResCustomer.FieldByName('Tel1').AsString := rSet.FieldByName('Tel1').AsString;
       mResCustomer.FieldByName('Tel2').AsString := rSet.FieldByName('Tel2').AsString;
       mResCustomer.FieldByName('Fax').AsString := rSet.FieldByName('Fax').AsString;
-      mResCustomer.FieldByName('ReservationDate').AsDateTime := _DBDateToDate((rSet.FieldByName('ReservationDate').AsString));
+      mResCustomer.FieldByName('ReservationDate').AsDateTime := SQLToDateTime(rSet.FieldByName('ReservationDate').AsString);
       mResCustomer.FieldByName('Contact').AsString := rSet.FieldByName('ContactName').AsString;
       mResCustomer.FieldByName('ContactPhone').AsString := rSet.FieldByName('ContactPhone').AsString;
       mResCustomer.FieldByName('ContactFax').AsString := rSet.FieldByName('ContactFax').AsString;
@@ -381,8 +340,8 @@ begin
       mResCustomer.FieldByName('HiddenInfo').AsString := rSet.FieldByName('HiddenInfo').AsString;
       mResCustomer.FieldByName('CustomerNo').AsString := rSet.FieldByName('Customer').AsString;
       mResCustomer.FieldByName('CustPID').AsString := rSet.FieldByName('CustPID').AsString;
-      mResCustomer.FieldByName('Arrival').AsDateTime := _DBDateToDate((rSet.FieldByName('Arrival').AsString));
-      mResCustomer.FieldByName('Departure').AsDateTime := _DBDateToDate((rSet.FieldByName('Departure').AsString));
+      mResCustomer.FieldByName('Arrival').AsDateTime := SQLToDateTime(rSet.FieldByName('Arrival').AsString);
+      mResCustomer.FieldByName('Departure').AsDateTime := SQLToDateTime(rSet.FieldByName('Departure').AsString);
       mResCustomer.Post;
 
       edName.caption := mResCustomer.FieldByName('Name').AsString;

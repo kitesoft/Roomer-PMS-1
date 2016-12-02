@@ -5,6 +5,7 @@ interface
 uses
     hData
   , SysUtils
+  , cxEdit
   , cxCurrencyEdit
   ;
 
@@ -50,6 +51,15 @@ type
     ///   Get the CustomEditProperties component defined in uD , based on currencycode
     /// </summary>
     function GetcxEditProperties: TcxCurrencyEditProperties;
+    /// <summary>
+    ///   Get the CustomEditProperties component defined in uD , based on currencycode, and transfer the
+    ///  event handlers of the origianlProperties to the returned one
+    /// </summary>
+    function GetcxEditPropertiesKeepEvents(aOriginalProperties: TcxCustomEditProperties): TcxCurrencyEditProperties;
+    /// <summary>
+    ///   Returns a formatted string with the currencycode and the exchange rate, used to display active currency in i.e. a labelcaption
+    /// </summary>
+    function ShortDescription: string;
   end;
 
 
@@ -59,7 +69,7 @@ uses
     uAppGlobal
   , uStringUtils
   , uFloatUtils
-  , uD;
+  , uD, PrjConst;
 
 { TCurrencyHandler }
 
@@ -101,9 +111,24 @@ begin
   Result := TcxCurrencyEditProperties(d.getCurrencyProperties(FCurrencyRec.Currency));
 end;
 
+function TCurrencyHandler.GetcxEditPropertiesKeepEvents(aOriginalProperties: TcxCustomEditProperties): TcxCurrencyEditProperties;
+begin
+  Result := GetcxEditProperties;
+  Result.OnChange := aOriginalProperties.OnChange;
+  Result.OnEditValueChanged := aOriginalProperties.OnEditValueChanged;
+  Result.OnValidate := aOriginalProperties.OnValidate;
+end;
+
 function TCurrencyHandler.GetRate: double;
 begin
   Result := FCurrencyRec.Value;
+end;
+
+function TCurrencyHandler.ShortDescription: string;
+const
+  cFormat = '%s - %s: %s';
+begin
+  Result := Format(cFormat, [CurrencyCode, GetTranslatedText('shCurrencyRate'), FloatToStr(RoundDecimals(Rate, 4))]);
 end;
 
 function TCurrencyHandler.RoundedValue(aAmount: double): double;

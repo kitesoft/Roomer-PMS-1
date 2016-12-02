@@ -112,7 +112,7 @@ function SelectPaymentTypes( Amount : Double;
                             Customer : string;
                             PaymentType : hdata.TPaymentTypes;
                             var lst : TstringList;
-                            var zInvoiceDate : TDateTime; var zPayDate : TDate; var zLocation : string) : boolean;
+                            var aInvoiceDate : TDate; var aPayDate : TDate; var aLocation : string) : boolean;
 
 
 
@@ -132,7 +132,7 @@ function SelectPaymentTypes( Amount : Double;
                              Customer : string;
                              PaymentType : hdata.TPaymentTypes;
                              var lst : TstringList;
-                             var zInvoiceDate : TDateTime; var zPayDate : TDate; var zLocation : string) : boolean;
+                             var aInvoiceDate : TDate; var aPayDate : TDate; var aLocation : string) : boolean;
 var
   i : integer;
   selected : string;
@@ -196,15 +196,15 @@ begin
       result := true;
       sSelectedCustomer := frmInvoicePayment.edtCustomer.text;
       fSelectedAmount   := _StrToFloat( frmInvoicePayment.edtAmount.text );
-      zInvoiceDate      := frmInvoicePayment.dtInvDate.date;
-      zPayDate          := frmInvoicePayment.dtPayDate.date;
+      aInvoiceDate      := frmInvoicePayment.dtInvDate.date;
+      aPayDate          := frmInvoicePayment.dtPayDate.date;
 
 
-      zLocation := '';
+      aLocation := '';
 
       if frmInvoicePayment.cbxLocation.itemindex > 0 then
       begin
-        zLocation := frmInvoicePayment.cbxLocation.items[frmInvoicePayment.cbxLocation.itemindex];
+        aLocation := frmInvoicePayment.cbxLocation.items[frmInvoicePayment.cbxLocation.itemindex];
       end;
 
       for i := 0 to frmInvoicePayment.agrPayTypes.RowCount - 1  do

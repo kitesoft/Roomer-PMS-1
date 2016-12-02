@@ -249,6 +249,12 @@ object frmAssignPayment: TfrmAssignPayment
     SkinData.SkinSection = 'PAGECONTROL'
     object sTabSheet1: TsTabSheet
       Caption = 'Work within reservation group'
+      SkinData.CustomColor = False
+      SkinData.CustomFont = False
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object btnSetToGroupAccount: TsButton
         Left = 16
         Top = 26
@@ -307,6 +313,12 @@ object frmAssignPayment: TfrmAssignPayment
     end
     object sTabSheet2: TsTabSheet
       Caption = 'Move to other reservation '
+      SkinData.CustomColor = False
+      SkinData.CustomFont = False
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       DesignSize = (
         442
         216)

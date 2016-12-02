@@ -776,11 +776,15 @@ begin
 end;
 
 
+type
+  TAccessCommonData = class(TsCommonData);
+
+
 constructor TsNavButton.Create(AOwner: TComponent);
 begin
   inherited;
   ShowCaption := False;
-  SkinData.SkinManager := TsPanel(AOwner).SkinData.FSkinManager;
+  SkinData.SkinManager := TAccessCommonData(TsPanel(AOwner).SkinData).FSkinManager;
   SkinData.SkinSection := s_TOOLBUTTON;
   Self.DisabledGlyphKind := Self.DisabledGlyphKind + [dgBlended];
   Self.DisabledKind := Self.DisabledKind + [dkBlended];

@@ -238,7 +238,7 @@ uses
   , uSqlDefinitions
   , uCurrencies
   , uUtils
-  ;
+  , uSQLUtils;
 
 
 

@@ -81,6 +81,7 @@ const
     'TLabeledEdit=Edit'           + s_0D0A +
     'THotKey=Edit'                + s_0D0A +
     'TListBox=Edit'               + s_0D0A +
+    'TSearchBox=Edit'             + s_0D0A +
     'TCheckListBox=Edit'          + s_0D0A +
     'TRichEdit=Edit'              + s_0D0A +
     'TSpinEdit=Edit'              + s_0D0A +

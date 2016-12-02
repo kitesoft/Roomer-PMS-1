@@ -67,45 +67,12 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver, dxSkinSpringTime,
   dxSkinStardust,
   dxSkinSummer2008, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, sScrollBox, acImage, AdvUtil,
-  uReservationStateDefinitions
+  uReservationStateDefinitions, System.Actions, Vcl.ActnList, uEmbDateStatistics
 
     ;
 
 type
   TViewMode = (vmNone, vmOneDay, vmGuestList, vmPeriod, vmMeetings, vmDashboard, vmRateQuery);
-
-  TRoomAvailabilityEntity = class
-  private
-    FRoom: String;
-    FRoomType: STring;
-    FRoomClass: String;
-  public
-    constructor Create(const Room, RoomType, RoomClass: String);
-    destructor Destroy; override;
-
-    property Room: String read FRoom;
-    property RoomType: String read FRoomType;
-    property RoomClass: String read FRoomClass;
-  end;
-
-  TRoomAvailabilityEntityList = TObjectList<TRoomAvailabilityEntity>;
-
-  TRoomClassChannelAvailabilityContainer = class
-  public
-    RoomTypeGroup: String;
-    NumRooms: integer;
-    Reserved: integer;
-    ChannelAvailable: integer;
-    ChannelMaxAvailable: integer;
-    GridIndex: integer;
-    AnyStop: boolean;
-
-    constructor Create(const _RoomTypeGroup: String; _NumRooms: integer; _Reserved: integer; _ChannelAvailable: integer;
-      _ChannelMaxAvailable: integer;
-      _GridIndex: integer; _AnyStop: boolean);
-  end;
-
-  TRoomClassChannelAvailabilityContainerDictionary = TObjectList<TRoomClassChannelAvailabilityContainer>;
 
 type
   recColRow = record
@@ -298,7 +265,6 @@ type
     btnResStat: TdxBarLargeButton;
     btnQuicReservation: TdxBarLargeButton;
     Panel2: TsPanel;
-    oldDock1: TdxBarDockControl;
     btnShowHideHint: TdxBarLargeButton;
     btnReservationNotes: TdxBarLargeButton;
     btnRptCustInvoices2: TdxBarLargeButton;
@@ -481,7 +447,6 @@ type
     tabFreeRooms: TsTabSheet;
     btnGotoToday: TcxButton;
     btnChannels: TdxBarLargeButton;
-    timGetRoomStatuses: TTimer;
     btnServers: TdxBarButton;
     btnActions: TdxBarButton;
     btnTriggers: TdxBarButton;
@@ -524,17 +489,7 @@ type
     btnReservationsList: TdxBarLargeButton;
     btnChanceledReservation: TdxBarLargeButton;
     btnTestData: TdxBarLargeButton;
-    pmnuChannelSettings: TPopupMenu;
-    N01: TMenuItem;
-    PanStat: TsScrollBox;
-    sSplitter1: TsSplitter;
-    lblBusyDownloading: TsLabel;
-    Panel5: TsPanel;
-    Chart1: TChart;
-    Series1: TBarSeries;
-    grdRoomStatusses: TAdvStringGrid;
-    grdRoomClasses: TAdvStringGrid;
-    pnlDateStatistics: TsPanel;
+    pnlStatistics: TsScrollBox;
     pnlTimeMessage: TsPanel;
     lblTimeMessage: TsLabel;
     timHideTimeMessage: TTimer;
@@ -597,7 +552,6 @@ type
     edtSearch: TButtonedEdit;
     sPanel4: TsPanel;
     lblMainHeader: TsLabel;
-    lblPropertyStatus: TsLabel;
     pnlRoomerLogoOld: TsPanel;
     Image5: TImage;
     lblHotelName: TsLabel;
@@ -737,6 +691,11 @@ type
     btnDayCLosingTimes: TdxBarLargeButton;
     btnCleaningNotes: TdxBarLargeButton;
     btnDailyrev: TdxBarLargeButton;
+    dxBarDeveloperTools: TdxBarSubItem;
+    bbUpdateTranslations: TdxBarButton;
+    alDeveloperTools: TActionList;
+    acUpdateTranslations: TAction;
+    splStatistics: TsSplitter;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
@@ -844,7 +803,6 @@ type
     procedure btnVariblesClick(Sender: TObject);
     procedure btnVariblesGroupsClick(Sender: TObject);
     procedure BtnMaidJobScriptsClick(Sender: TObject);
-    procedure actLanguageExecute(Sender: TObject);
     procedure btnJumpToRoomAndDateClick(Sender: TObject);
     procedure cbxNameOrderPeriodChange(Sender: TObject);
     procedure grPeriodRoomsKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -896,19 +854,14 @@ type
     procedure N12Click(Sender: TObject);
     procedure rgrGroupreportStayTypeChanging(Sender: TObject; NewIndex: integer; var AllowChange: boolean);
     procedure btnChannelsClick(Sender: TObject);
-    procedure timGetRoomStatusesTimer(Sender: TObject);
-    procedure grdRoomStatussesGetAlignment(Sender: TObject; ARow, ACol: integer; var HAlign: TAlignment;
-      var VAlign: TVAlignment);
     procedure btnRatesClick(Sender: TObject);
     procedure btnBackForwardClick(Sender: TObject);
     procedure btnManagerChannelManagerListClick(Sender: TObject);
-    procedure btnDownloadBackupClick(Sender: TObject);
     procedure __lblSearchDblClick(Sender: TObject);
     procedure btnCommunicationTestClick(Sender: TObject);
     procedure timRetryRefreshTimer(Sender: TObject);
     procedure timMessagesTimer(Sender: TObject);
     procedure sButton2Click(Sender: TObject);
-    procedure Chart1DblClick(Sender: TObject);
     procedure grOneDayRoomsResize(Sender: TObject);
     procedure grOneDayRoomsEndColumnSize(Sender: TObject; ACol: integer);
     procedure timHaltTimer(Sender: TObject);
@@ -918,14 +871,8 @@ type
     procedure btnChannelPlansClick(Sender: TObject);
     procedure btnReservationsListClick(Sender: TObject);
     procedure btnTestDataClick(Sender: TObject);
-    procedure grdRoomClassesCanEditCell(Sender: TObject; ARow, ACol: integer; var CanEdit: boolean);
-    procedure grdRoomClassesCellValidate(Sender: TObject; ACol, ARow: integer; var Value: string; var Valid: boolean);
-    procedure grdRoomClassesDrawCell(Sender: TObject; ACol, ARow: integer; Rect: TRect; State: TGridDrawState);
-    procedure grdRoomClassesMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
-    procedure grdRoomClassesGetCellBorder(Sender: TObject; ARow, ACol: integer; APen: TPen; var Borders: TCellBorders);
     procedure grPeriodRoomsResize(Sender: TObject);
     procedure timHideTimeMessageTimer(Sender: TObject);
-    procedure grdRoomClassesMouseMove(Sender: TObject; Shift: TShiftState; X, Y: integer);
     procedure grPeriodRoomsStartDrag(Sender: TObject; var DragObject: TDragObject);
     procedure grOneDayRoomsDragScroll(Sender: TObject; TopRow, LeftCol: integer;
       var DragScrollDir: TDragScrollDirection; var CanScroll: boolean);
@@ -1037,6 +984,7 @@ type
     procedure btnReRegisterPMSClick(Sender: TObject);
     procedure btnDailyRevenuesClick(Sender: TObject);
     procedure btnCleaningNotesClick(Sender: TObject);
+    procedure acUpdateTranslationsExecute(Sender: TObject);
 
   private
     FReservationsModel: TReservationsModel;
@@ -1049,6 +997,7 @@ type
 
     FormShowing: boolean;
     FrmMessagesTemplates: TFrmMessagesTemplates;
+    frmDateStatistics: TfrmEmbDateStatistics;
     curNoDrop: HCursor;
     curNoDropNew: HCursor;
 
@@ -1148,7 +1097,6 @@ type
     HoverPointOneDay: TPoint;
     HoverPointPeriod: TPoint;
     lastDate: TdateTime;
-    availListContainer: TRoomClassChannelAvailabilityContainerDictionary;
     MoveFunctionAvailRooms: TRoomAvailabilityEntityList;
 
     CurrentlyActiveGrid: TAdvStringGrid;
@@ -1431,10 +1379,6 @@ type
     procedure grAutoSizeGrids;
     function ReservationtInGroupList(resId: integer): boolean;
     function GroupsFilterActive: boolean;
-    procedure DisplayRoomStatusses(Date: TdateTime);
-    procedure FillRoomTypesGrid;
-    function RoomTypeIndexInGrid(Grid: TAdvStringGrid; const RoomType: String): integer;
-    function GetAvailableCellText(Value: integer): String;
     procedure EnableDisableFunctions(Enable: boolean);
     procedure AutoResizeOneDayGrid;
     procedure ClearGroupList;
@@ -1451,13 +1395,9 @@ type
     procedure FillPeriodGridWithRooms;
     procedure GetArrivingGuestIndexes(var idxRoom: integer; var idxReservation: integer; ACol, ARow: integer);
     procedure GetLeavingGuestIndexes(var idxRoom: integer; var idxReservation: integer; ACol, ARow: integer);
-    procedure SelectStopChannel(Sender: TObject);
-    procedure PopulateChannelStopMenu;
     procedure PlaceMouseClickToCell(Sender: TObject; X, Y: integer);
     procedure DisplayStatusses(IncludeChart: boolean);
     function Period_NO_ColToDate(ACol: integer): TdateTime;
-    function AnyCheckedStopItems: boolean;
-    procedure ShowTimelyMessage(const sMessage: string);
     procedure HideRowsWithNotFittingRooms(currRow: integer; fromDate, toDate: Tdate);
     procedure ShowAllRoomsRows;
     procedure FindRoomInPeriodView(const Room: String);
@@ -1502,7 +1442,6 @@ type
     procedure ActivateHint(HintPoint: TPoint; comp: TWinControl);
     procedure EnterRateQueryView(aDate: integer);
     procedure SetOffLineMode(const Value: boolean);
-    function CountRoomsOfSpecificType(const RoomType: String): integer;
     procedure MyRoundedRect(Canvas: TCanvas; X1, Y1, X2, Y2: integer; DoRoundCorners: boolean = true);
     procedure PlaceRoomerOnCurrentMonitor;
     function GetActivePeriodGrid: TAdvStringGrid;
@@ -1559,11 +1498,12 @@ type
 
     zHintPoint: TPoint;
     zHintComp: TWinControl;
-    
+
+    // TODO: to be moved into TReservationModel
+    statNumRooms, statNumExternRooms, statTaken, statCancelledExt, statCancelledRm: integer;
+
     constructor Create(aOwner: TComponent); override;
     procedure WndProc(var message: TMessage); override;
-    procedure DownloadProgress(Sender: TObject; Read, Total: integer);
-    procedure IdHTTP1Work(ASender: TObject; AWorkMode: TWorkMode; AWorkCount: Int64);
     procedure BlinkRoom;
     procedure TranslateOpenForms;
     procedure GoToDateAndRoom(aDate: TdateTime; RoomReservation: integer);
@@ -1575,6 +1515,7 @@ type
     procedure RemoveLanguagesFilesAndRefresh(Refresh: boolean = true);
     procedure ShowBookingConfirmationTemplates;
     procedure ShowCancelConfirmationTemplates;
+    procedure ShowTimelyMessage(const sMessage: string);
 
     property RBEMode: boolean read FRBEMode write SetRBEMode;
     function FilteredFloors: TSet_Of_Integer;
@@ -1646,7 +1587,7 @@ uses
     , uDayClosingTimesAPICaller
     , uDateTimeHelper
     , uRptHouseKeeping, uReservationStateChangeHandler, uRptDailyRevenues
-    , uRoomerVersionInfo, uCountryGroupsGrid;
+    , uRoomerVersionInfo, uSQLUtils;
 
 {$R *.DFM}
 {$R Cursors.res}
@@ -1662,7 +1603,6 @@ const
   WM_REFRESH_STAFF_COMM_NOTIFIER = WM_User + 394;
   PERIOD_GRID_RECTANGLES_WIDTH = 10;
 
-  DEFAULT_UNPARSABLE_INT_VALUE: integer = -99999;
   //cGoingStr = '» ';
   cGoingStr: string = char($bb);
   cgrRoom_RoomColumn = 1;
@@ -1793,7 +1733,6 @@ begin
 
   glb.FillLocationsMenu(mnuFilterLocation, LocationMenuSelect);
   GetMnuFilterLocationsFromStore;
-  FillRoomTypesGrid;
 
 end;
 
@@ -1839,8 +1778,6 @@ begin
   d.roomerMainDataSet.LoggedIn := False;
   EmptyStringGrid(grPeriodRooms);
   EmptyStringGrid(grOneDayRooms);
-  EmptyStringGrid(grdRoomStatusses);
-  EmptyStringGrid(grdRoomClasses);
   EmptyStringGrid(grPeriodRooms_NO);
   try
     EnterDayView;
@@ -1967,10 +1904,6 @@ end;
 
 procedure TfrmMain.AssignSkinColorsToComponents;
 begin
-  Chart1.Color := sSkinManager1.GetGlobalColor;
-  Chart1.LeftAxis.LabelsFont.Color := sSkinManager1.GetGlobalFontColor;
-  Chart1.BottomAxis.LabelsFont.Color := sSkinManager1.GetGlobalFontColor;
-  Chart1.Title.Font.Color := sSkinManager1.GetHighLightFontColor;
   pnlNoRoomDrop.Color := sSkinManager1.GetGlobalColor;
   lblNoRoom.Font.Color := sSkinManager1.GetGlobalFontColor;
   grPeriodRooms.FixedFont.Color := sSkinManager1.GetGlobalFontColor;
@@ -2751,8 +2684,6 @@ constructor TfrmMain.Create(aOwner: TComponent);
 begin
   inherited;
 
-  availListContainer := TRoomClassChannelAvailabilityContainerDictionary.Create(true);
-
   GroupList := TGroupEntityList.Create(true);
   MoveFunctionAvailRooms := TRoomAvailabilityEntityList.Create(true);
 
@@ -2877,18 +2808,13 @@ begin
   Application.HintHidePause := 15000;
   Application.HintPause := 500;
 
-  SetDateWithoutEvents(trunc(now));
-
-  btnShowHideStatClick(nil);
-  btnShowHideHintClick(nil);
-  btnHideCancelledBookingsClick(nil);
-
-  dxRibbon1.ActiveTab := rbTabHome;
 
   tabsView.Font.Color := clWhite;
 
   lblAuthStatus.Caption := GetTranslatedText('shTx_AuthNeeded');
-  // Application.ModalPopupMode := pmAuto;
+
+  frmDateStatistics := TfrmEmbDateStatistics.Create(self);
+  frmDateStatistics.pnlStatistics.Parent := pnlStatistics;
 
 end;
 
@@ -2912,10 +2838,6 @@ begin
   end;
   try
     StaffComm.Free;
-  Except
-  end;
-  try
-    availListContainer.Free;
   Except
   end;
   try
@@ -2981,6 +2903,12 @@ begin
     exit;
   FormShowing := true;
 
+  btnShowHideStatClick(nil);
+  btnShowHideHintClick(nil);
+  btnHideCancelledBookingsClick(nil);
+
+  dxRibbon1.ActiveTab := rbTabHome;
+
   SetDateWithoutEvents(trunc(now));
 
   StaffComm := TStaffCommunication.Create(pnlStaffComm);
@@ -3015,10 +2943,6 @@ begin
 
     if btnShowHideStat.Down then
       btnShowHideStatClick(btnShowHideStat);
-    // if btnShowHideHint.Down then
-    // btnShowHideHintClick(btnShowHideHint);
-//    if btnHideCancelledBookings.Down then
-//       btnHideCancelledBookings(nil);
 
 
     if cbxViewTypes.ItemIndex < 0 then
@@ -3036,6 +2960,12 @@ begin
   end
   else
     ExitProcess(0);
+
+{$ifdef DEBUG}
+  dxBarDeveloperTools.Visible := ivAlways;
+{$else}
+  dxBarDeveloperTools.Visible := ivNever;
+{$endif}
 end;
 
 
@@ -3288,8 +3218,6 @@ begin
 
     btnCheckInRoom.Enabled := true;
 
-    oldDock1.Visible := g.qShowSideBar;
-
     FRBEMode := false;
     RBEMode := (g.qUserPriv1 = 50) OR (g.qUserPriv2 = 50) OR (g.qUserPriv3 = 50) OR (g.qUserPriv4 = 50) OR
       (g.qUserPriv5 = 50);
@@ -3391,97 +3319,6 @@ procedure TfrmMain.tvAllReservationsTotalStayRateGetProperties(Sender: TcxCustom
   var AProperties: TcxCustomEditProperties);
 begin
   AProperties := d.getCurrencyProperties(ARecord.Values[tvAllReservationsCurrency.index]);
-end;
-
-function TfrmMain.CountRoomsOfSpecificType(const RoomType: String): integer;
-begin
-  result := 0;
-  glb.RoomsSet.first;
-  while NOT glb.RoomsSet.eof do
-  begin
-    if (glb.RoomsSet['RoomType'] = RoomType) AND (glb.RoomsSet['Active']) AND (NOT glb.RoomsSet['Hidden']) then
-      inc(result);
-    glb.RoomsSet.next;
-  end;
-end;
-
-procedure TfrmMain.FillRoomTypesGrid;
-var
-  rSet: TRoomerDataSet;
-  idx: integer;
-begin
-  availListContainer.Clear;
-  // rSet := d.roomerMainDataSet.ActivateNewDataset
-  // (d.roomerMainDataSet.SystemFreeQuery('SELECT rt.RoomType,' +
-  // ' (SELECT COUNT(Room) FROM rooms WHERE rooms.RoomType=rt.RoomType AND Active=1 AND NOT Hidden) AS NumRooms'
-  // + ' FROM roomtypes rt WHERE active=1 ORDER BY rt.RoomType'));
-  grdRoomStatusses.ColCount := 3;
-  grdRoomStatusses.RowCount := 2;
-  grdRoomStatusses.cells[0, 0] := GetTranslatedText('shType');
-  grdRoomStatusses.cells[1, 0] := GetTranslatedText('shRooms');
-  grdRoomStatusses.cells[2, 0] := GetTranslatedText('shTx_Available');
-  glb.RoomTypesSet.first;
-  while not glb.RoomTypesSet.eof do
-  begin
-    if glb.RoomTypesSet['Active'] then
-    begin
-      grdRoomStatusses.cells[0, grdRoomStatusses.RowCount - 1] := glb.RoomTypesSet['RoomType'];
-      grdRoomStatusses.cells[1, grdRoomStatusses.RowCount - 1] :=
-        inttostr(CountRoomsOfSpecificType(glb.RoomTypesSet['RoomType']));
-      grdRoomStatusses.RowCount := grdRoomStatusses.RowCount + 1;
-    end;
-    glb.RoomTypesSet.next;
-  end;
-  grdRoomStatusses.RowCount := grdRoomStatusses.RowCount - 1;
-  grdRoomStatusses.Height := grdRoomStatusses.DefaultRowHeight * grdRoomStatusses.RowCount;
-
-  if d.roomerMainDataSet.OffLineMode then
-    exit;
-
-  rSet := d.roomerMainDataSet.ActivateNewDataset
-    (d.roomerMainDataSet.SystemFreeQuery(Format('SELECT rtg.Code, ' +
-    '(SELECT COUNT(r.Room) FROM rooms r, roomtypes rt WHERE r.Active AND r.WildCard=0 AND r.RoomType=rt.RoomType AND rt.RoomTypeGroup=rtg.Code) AS NumRooms, '
-    +
-    '(SELECT availability FROM channelratesavailabilities WHERE date=_params._date AND roomClassId=rtg.id LIMIT 1) AS ChannelAvailable '
-    +
-    'FROM roomtypegroups rtg, ' + '     (SELECT ''%s'' AS _date) AS _params ' + 'WHERE active=1 ' +
-    // '-- AND (SELECT COUNT(r.Room) FROM rooms r, roomtypes rt WHERE r.RoomType=rt.RoomType AND rt.RoomTypeGroup=rtg.Code) > 0 ' +
-    'ORDER BY rtg.Code', [uDateUtils.dateToSqlString(dtDate.Date)])));
-  try
-    grdRoomClasses.ColCount := 4;
-    grdRoomClasses.RowCount := 2;
-    grdRoomClasses.cells[0, 0] := GetTranslatedText('shTx_Class');
-    grdRoomClasses.cells[1, 0] := GetTranslatedText('shRooms');
-    grdRoomClasses.cells[2, 0] := GetTranslatedText('shTx_Available');
-    grdRoomClasses.cells[3, 0] := GetTranslatedText('shTx_ChannelAvailable');
-    rSet.first;
-    while not rSet.eof do
-    begin
-      if rSet['NumRooms'] > 0 then
-      begin
-        idx := grdRoomClasses.RowCount - 1;
-        grdRoomClasses.cells[0, idx] := rSet['Code'];
-        grdRoomClasses.cells[1, idx] := rSet['NumRooms'];
-        grdRoomClasses.cells[2, idx] := '0';
-        grdRoomClasses.cells[3, idx] := rSet['ChannelAvailable'];
-        grdRoomClasses.Objects[3, idx] := Pointer(1);
-        availListContainer.Add(TRoomClassChannelAvailabilityContainer.Create(rSet['Code'], rSet['NumRooms'], 0, 0, 0,
-          idx, false));
-
-        grdRoomClasses.RowCount := grdRoomClasses.RowCount + 1;
-      end;
-      rSet.next;
-    end;
-    grdRoomClasses.RowCount := grdRoomClasses.RowCount - 1;
-    grdRoomClasses.Height := grdRoomClasses.DefaultRowHeight * grdRoomClasses.RowCount;
-  finally
-    freeandNil(rSet);
-  end;
-end;
-
-procedure TfrmMain.Chart1DblClick(Sender: TObject);
-begin
-  sSkinManager1.active := NOT sSkinManager1.active;
 end;
 
 function TfrmMain.CheckForUpdatedRelease: boolean;
@@ -3648,14 +3485,7 @@ end;
 
 procedure TfrmMain.DisplayStatusses(IncludeChart: boolean);
 begin
-  Chart1.Visible := IncludeChart;
-  if IncludeChart then
-  begin
-    pnlDateStatistics.Top := 0;
-    grdRoomClasses.Top := pnlDateStatistics.Top + pnlDateStatistics.Height + 10;
-    Chart1.Top := grdRoomClasses.Top + grdRoomClasses.Height + 10;
-    grdRoomStatusses.Top := Chart1.Top + Chart1.Height + 10;
-  end;
+  frmDateStatistics.ShowChart := IncludeChart;
 end;
 
 procedure TfrmMain.pageMainGridsChange(Sender: TObject);
@@ -3900,7 +3730,8 @@ begin
   begin
     options := [eoWait, eoMaximized];
     ExecuteFile(handle, 'CMD.EXE', '/c REG DELETE HKCU\Software\Roomer\FormStatus /f', options);
-    ExecuteFile(handle, 'CMD.EXE', '/c taskkill /f /im Roomer.exe', options);
+//    ExecuteFile(handle, 'CMD.EXE', '/c taskkill /f /im Roomer.exe', options);
+    KillTask('Roomer.exe');
     exit;
   end;
 
@@ -3989,9 +3820,6 @@ end;
 
 procedure TfrmMain.FormResize(Sender: TObject);
 begin
-  grdRoomStatusses.DefaultColWidth := (grdRoomStatusses.ClientWidth) div grdRoomStatusses.ColCount;
-  grdRoomClasses.DefaultColWidth := (grdRoomClasses.ClientWidth) div grdRoomClasses.ColCount;
-
   pnlRoomerLogo.Left := ClientWidth - pnlRoomerLogo.Width - 10;
 
   if assigned(StaffComm) then
@@ -4018,7 +3846,6 @@ var
   mnuItem: TMenuItem;
 
   statLastRoomNumber: String;
-  statNumRooms, statNumExternRooms, statTaken, statCancelledExt, statCancelledRm: integer;
 
   lDate: TdateTime;
   lReservations: TSingleReservations;
@@ -4030,7 +3857,7 @@ begin
   grOneDayRooms.BeginUpdate;
   try
 
-    timGetRoomStatuses.Enabled := false;
+//    frmDateStatistics.timGetRoomStatuses.Enabled := false;
     BusyOn;
     try
       statNumRooms := g.oRooms.RoomCount;
@@ -4127,17 +3954,9 @@ begin
         if length(zsNoRooms) > 0 then
           Delete(zsNoRooms, length(zsNoRooms), 1);
 
-        sDate := _dateToDBDate(dtDate.Date, false);
+        sDate := _db(dtDate.Date, false);
         ClearFreeRooms;
         FFreeRooms := TFreeRooms.Create(g.qHotelCode, dtDate.Date, zsOccRackRooms);
-
-        Chart1.Series[0].Clear;
-        Chart1.Series[0].Add(statNumRooms, GetTranslatedText('shMainFormStatisticsRooms'), clBlue);
-        Chart1.Series[0].Add(statTaken, GetTranslatedText('shTx_Taken'), clMaroon);
-        Chart1.Series[0].Add(statNumExternRooms, GetTranslatedText('shTx_NoRm'), clYellow);
-        Chart1.Series[0].Add(statNumRooms - statTaken, GetTranslatedText('shTx_Free'), clGreen);
-        Chart1.Series[0].Add(statNumRooms - statNumExternRooms - statTaken, GetTranslatedText('shTx_Netto'), clRed);
-        Chart1.Series[0].Add(statCancelledExt + statCancelledRm, GetTranslatedText('shTx_Cancelled'), clBlack);
 
         OneDayUpdatePage(dtDate.Date);
 
@@ -4169,8 +3988,8 @@ begin
       end;
       BusyOff;
     end;
-    timGetRoomStatuses.Tag := trunc(dtDate.Date);
-    timGetRoomStatuses.Enabled := true;
+    frmDateStatistics.Date:= trunc(dtDate.Date);
+    frmDateStatistics.RefreshData;
   finally
     grOneDayRooms.endUpdate;
     RefreshStats;
@@ -4264,6 +4083,7 @@ begin
     exit;
   end;
   StartTimeMeasure;
+
   BusyRefreshingTodaysGrid := true;
   Screen.Cursor := crHourGlass;
   try
@@ -4279,8 +4099,8 @@ begin
       vmMeetings: ;
       vmDashboard:  begin
                       frmDaysStatistics.ViewDate := dtDate.Date;
-                      timGetRoomStatuses.Tag := trunc(dtDate.Date);
-                      timGetRoomStatuses.Enabled := true;
+                      frmDateStatistics.Date := trunc(dtDate.Date);
+                      frmDateStatistics.RefreshData
                     end;
       vmRateQuery:  PostMessage(handle, WM_SET_DATE_FROM_MAIN, 0, trunc(dtDate.Date));
 
@@ -5003,7 +4823,7 @@ begin
     exit;
   iRoomReservation := mAllReservations['RoomReservation'];
   iReservation := mAllReservations['Reservation'];
-  EditInvoice(iReservation, iRoomReservation, 0, 0, 0, 0, false, true, false);
+  EditInvoice(iReservation, iRoomReservation, 0, 0, 0, 0, false);
 end;
 
 procedure TfrmMain.G4Click(Sender: TObject);
@@ -5013,7 +4833,7 @@ begin
   if mAllReservations.eof OR mAllReservations.BOF then
     exit;
   iReservation := mAllReservations['Reservation'];
-  EditInvoice(iReservation, 0, 0, 0, 0, 0, false, true, false);
+  EditInvoice(iReservation, 0, 0, 0, 0, 0, false);
 end;
 
 function TfrmMain.GetActivePeriodGrid: TAdvStringGrid;
@@ -5279,7 +5099,7 @@ begin
       EditInvoice2015(_iReservation, _iRoomReservation, 0, false, false, '', g.qExpandRoomRentOnInvoice)
     else
 {$ENDIF}
-      EditInvoice(_iReservation, _iRoomReservation, 0, _InvoiceIndex, 0, 0, false, true, false);
+      EditInvoice(_iReservation, _iRoomReservation, 0, _InvoiceIndex, 0, 0, false);
   end;
 end;
 
@@ -5512,7 +5332,7 @@ procedure TfrmMain.OneDay_DisplayGrid;
           dtDate := zOneDay_dtDate + 1000;
         end
         else
-          dtDate := _DBDateToDate(sDate);
+          dtDate := SQLToDate(sDate);
         iNextOcc := trunc(dtDate) - trunc(zOneDay_dtDate);
 
         // iNextOcc := d.Next_OccupiedDayCount(zOneDay_dtDate, Room);
@@ -5541,7 +5361,7 @@ procedure TfrmMain.OneDay_DisplayGrid;
           dtDate := zOneDay_dtDate + 1000;
         end
         else
-          dtDate := _DBDateToDate(sDate);
+          dtDate := SQLToDateTime(sDate);
 
         iNextOcc := trunc(dtDate) - trunc(zOneDay_dtDate);
 
@@ -5939,16 +5759,15 @@ function TfrmMain.getInvoiceMadeColor(PaymentInvoice: integer; NoRent: boolean;
   offColor, onColor, onGroupColor: integer; GroupAccount: boolean): integer;
 begin
   result := offColor;
+  if (NoRent AND glb.PMSSettings.ShowInvoiceAsPaidWhenStatusIsZero) then
+    exit;
+
   case PaymentInvoice of
-    - 1:
-      result := onColor;
-    -2:
-      result := onColor;
+    -1, -2: result := IIF(GroupAccount, onGroupColor, onColor);
+  else
+    IF NOT NORent then
+      result := IIF(GroupAccount, onGroupColor, onColor);
   end;
-  if (result = onColor) OR NoRent then
-    result := onColor;
-  if (result = onColor) AND GroupAccount then
-    result := onGroupColor;
 end;
 
 function TfrmMain.getUnpaidItemsColor(Value: boolean; defaultColor: integer): integer;
@@ -7068,7 +6887,7 @@ begin
                 chRect.Bottom := myRect.Bottom - 3;
                 chRect.Right := chRect.Left + iRectangleSpaceForInvoiceMade;
                 iTempColor := getInvoiceMadeColor(FReservationsModel.Reservations[iRes].Rooms[iRoom].PaymentInvoice,
-                  (round(FReservationsModel.Reservations[iRes].Rooms[iRoom].OngoingRent) <> 0), Brush.Color, clWhite,
+                  (round(FReservationsModel.Reservations[iRes].Rooms[iRoom].OngoingRent) = 0), Brush.Color, clWhite,
                   clAqua,
                   FReservationsModel.Reservations[iRes].Rooms[iRoom].GroupAccount);
                 DrawRectanglOnCanvas(Grid.Canvas, iTempColor, chRect);
@@ -7143,7 +6962,7 @@ begin
               chRect.Bottom := myRect.Bottom - 3;
               chRect.Right := chRect.Left + iRectangleSpaceForInvoiceMade;
               iTempColor := getInvoiceMadeColor(FReservationsModel.Reservations[iRes].Rooms[iRoom].PaymentInvoice,
-                round(FReservationsModel.Reservations[iRes].Rooms[iRoom].OngoingRent) <> 0, Brush.Color, clWhite, clAqua,
+                round(FReservationsModel.Reservations[iRes].Rooms[iRoom].OngoingRent) = 0, Brush.Color, clWhite, clAqua,
                 FReservationsModel.Reservations[iRes].Rooms[iRoom].GroupAccount);
               DrawRectanglOnCanvas(Grid.Canvas, iTempColor, chRect);
             end;
@@ -7251,7 +7070,7 @@ begin
           chRect.Bottom := Rect.Bottom - 3;
           chRect.Right := chRect.Left + iRectangleSpaceForInvoiceMade;
           iTempColor := getInvoiceMadeColor(FReservationsModel.Reservations[iRes].Rooms[iRoom].PaymentInvoice,
-            round(FReservationsModel.Reservations[iRes].Rooms[iRoom].OngoingRent) <> 0, Brush.Color, clWhite, clAqua,
+            round(FReservationsModel.Reservations[iRes].Rooms[iRoom].OngoingRent) = 0, Brush.Color, clWhite, clAqua,
             FReservationsModel.Reservations[iRes].Rooms[iRoom].GroupAccount);
           DrawRectanglOnCanvas(Grid.Canvas, iTempColor, chRect);
         end;
@@ -7527,8 +7346,8 @@ begin
           i := 145;
         pnlNotifications.Height := i;
       end;
-      Panel5.Top := grdRoomClasses.Top;
-      pnlNotifications.Top := Panel5.Top; // pnlDateStatistics.Top + pnlDateStatistics.Height + 1;
+//      Panel5.Top := grdRoomClasses.Top;
+//      pnlNotifications.Top := Panel5.Top; // pnlDateStatistics.Top + pnlDateStatistics.Height + 1;
     end;
   finally
     lblCacheNotification.Visible := false;
@@ -7714,8 +7533,8 @@ begin
   zGridTag := (Sender as TAdvStringGrid).Tag;
 
   aDate := Period_ColToDate(ACol);
-  timGetRoomStatuses.Tag := trunc(aDate);
-  timGetRoomStatuses.Enabled := true;
+  frmDateStatistics.Date := trunc(aDate);
+  frmDateStatistics.RefreshData;
 
   grPeriodRooms.col := ACol;
   grPeriodRooms.row := ARow;
@@ -8110,16 +7929,6 @@ begin
     timCheckSessionExpired.Enabled := true;
 end;
 
-procedure TfrmMain.timGetRoomStatusesTimer(Sender: TObject);
-begin
-  timGetRoomStatuses.Enabled := false;
-  try
-    frmDayNotes.edCurrentDate.Text := DateToStr(timGetRoomStatuses.Tag);
-  Except
-  end;
-  DisplayRoomStatusses(timGetRoomStatuses.Tag);
-end;
-
 procedure TfrmMain.timHaltTimer(Sender: TObject);
 begin
   timHalt.Enabled := false;
@@ -8141,126 +7950,6 @@ begin
     pnlTimeMessage.Hide;
 end;
 
-procedure TfrmMain.DisplayRoomStatusses(Date: TdateTime);
-var
-  rSet: TRoomerDataSet;
-  i, idx: integer;
-  sText: String;
-  StatusCont: TRoomClassChannelAvailabilityContainer;
-  ChAvail, chAvailMax: integer;
-  AnyStop: boolean;
-
-  dcField: TField;
-begin
-  try
-    if lastDate = Date then
-      exit;
-
-    dcField := nil;
-    lastDate := Date;
-
-    pnlDateStatistics.Caption := ' ' + DateToStr(Date) + ' ' + FormatDateTime('dddd', Date);
-
-    if d.roomerMainDataSet.OffLineMode then
-      exit;
-
-    grdRoomClasses.BeginUpdate;
-    grdRoomStatusses.BeginUpdate;
-    try
-      grdRoomStatusses.DefaultColWidth := grdRoomStatusses.ClientWidth div grdRoomStatusses.ColCount;
-      grdRoomClasses.DefaultColWidth := grdRoomClasses.ClientWidth div grdRoomClasses.ColCount;
-
-      rSet := d.roomerMainDataSet.ActivateNewDataset(d.roomerMainDataSet.SystemGetRoomTypeStatus(Date, Date));
-      try
-        rSet.first;
-        for i := 1 to grdRoomStatusses.RowCount - 1 do
-          grdRoomStatusses.cells[2, i] := GetAvailableCellText(StrToInt(grdRoomStatusses.cells[1, i]));
-
-        for i := 1 to grdRoomClasses.RowCount - 1 do
-        begin
-          grdRoomClasses.cells[2, i] := grdRoomClasses.cells[1, i];
-          grdRoomClasses.cells[3, i] := inttostr(DEFAULT_UNPARSABLE_INT_VALUE);
-          StatusCont := availListContainer[i - 1];
-          StatusCont.Reserved := 0;
-        end;
-
-        while not rSet.eof do
-        begin
-          idx := RoomTypeIndexInGrid(grdRoomStatusses, rSet['RoomType']);
-          if idx >= 0 then
-          begin
-            sText := inttostr(StrToInt(grdRoomStatusses.cells[1, idx]) - rSet['Reserved']);
-            grdRoomStatusses.cells[2, idx] := sText;
-          end;
-          idx := RoomTypeIndexInGrid(grdRoomClasses, rSet['RoomTypeGroup']);
-          if idx >= 0 then
-          begin
-            AnyStop := false;
-            ChAvail := rSet['ChannelAvailable'];
-
-            chAvailMax := rSet['ChannelMaxAvailable'];
-            if rSet.Fields.FindField('anyStop') <> nil then
-              AnyStop := rSet['anyStop'];
-            StatusCont := availListContainer[idx - 1];
-            // TRoomClassChannelAvailabilityContainer(grdRoomClasses.Objects[3, idx]);
-            StatusCont.Reserved := StatusCont.Reserved + rSet['Reserved'];
-            StatusCont.ChannelAvailable := ChAvail;
-            StatusCont.ChannelMaxAvailable := chAvailMax;
-            StatusCont.AnyStop := AnyStop;
-
-            if (NOT assigned(dcField)) then
-              grdRoomClasses.Objects[3, idx] := Pointer(1)
-            else if rSet['directConnection'] then
-              grdRoomClasses.Objects[3, idx] := Pointer(2)
-            else
-              grdRoomClasses.Objects[3, idx] := Pointer(1);
-
-            sText := inttostr(StatusCont.NumRooms - StatusCont.Reserved);
-            grdRoomClasses.cells[2, idx] := sText;
-            sText := inttostr(StatusCont.ChannelAvailable);
-            grdRoomClasses.cells[3, idx] := sText;
-          end;
-          rSet.next;
-        end;
-      finally
-        freeandNil(rSet);
-      end;
-    finally
-      grdRoomClasses.endUpdate;
-      grdRoomStatusses.endUpdate;
-    end;
-  finally
-    grdRoomClasses.Invalidate;
-  end;
-end;
-
-function TfrmMain.GetAvailableCellText(Value: integer): String;
-var
-  sColor, sText: String;
-begin
-  sText := inttostr(Value);
-  if Value < 0 then
-    sColor := '#FF0000'
-  else if Value = 0 then
-    sColor := '#000000'
-  else
-    sColor := '#0000FF';
-  result := Format('<p align="right"><font color="%s" size="7"><b>%s</b></font></p>', [sColor, sText]);
-end;
-
-function TfrmMain.RoomTypeIndexInGrid(Grid: TAdvStringGrid; const RoomType: String): integer;
-var
-  i: integer;
-begin
-  result := -1;
-  for i := 0 to Grid.RowCount - 1 do
-    if Grid.cells[0, i] = RoomType then
-    begin
-      result := i;
-      break;
-    end;
-
-end;
 
 /// /////////////////////////////////////////////////////////////////////////////
 /// /////////////////////////////////////////////////////////////////////////////
@@ -9549,67 +9238,6 @@ begin
     end;
 end;
 
-procedure TfrmMain.grdRoomClassesCanEditCell(Sender: TObject; ARow, ACol: integer; var CanEdit: boolean);
-begin
-  CanEdit := (ACol = 3) AND (ARow > 0) AND (grdRoomClasses.cells[ACol, ARow] <> inttostr(DEFAULT_UNPARSABLE_INT_VALUE));
-end;
-
-procedure TfrmMain.grdRoomClassesCellValidate(Sender: TObject; ACol, ARow: integer; var Value: string;
-  var Valid: boolean);
-var
-  iValue: integer;
-  StatusCont: TRoomClassChannelAvailabilityContainer;
-  temp: String;
-begin
-  //
-  StatusCont := availListContainer[ARow - 1];
-  iValue := strtointDef(Value, DEFAULT_UNPARSABLE_INT_VALUE);
-  if iValue = DEFAULT_UNPARSABLE_INT_VALUE then
-  begin
-    if ANSIUpperCase(Copy(Value, 1, 1)) = 'M' then
-    begin
-      iValue := strtointDef(Copy(Value, 2, maxint), DEFAULT_UNPARSABLE_INT_VALUE);
-      if iValue < -1 then
-        raise Exception.Create(GetTranslatedText('shTx_FrmMain_WrongValueEntered'));
-      temp := Format
-        ('(grdRoomClassesCellValidate 1) Manual change of MAX availability for RoomClass=%s, SetMaxAvailability=%d, Date=%s',
-        [grdRoomClasses.cells[0, ARow], iValue, dateToSqlString(lastDate)]);
-      d.roomerMainDataSet.SystemSetChannelAvailability(uDateUtils.dateToSqlString(lastDate),
-        grdRoomClasses.cells[0, ARow], 1, -2, iValue, -1, -1, temp);
-      lastDate := 0;
-      StatusCont.ChannelMaxAvailable := iValue;
-      timGetRoomStatuses.Enabled := true;
-      ShowTimelyMessage(Format(GetTranslatedText('shTx_FrmMain_ChannelChangedMaxAvail'), [grdRoomClasses.cells[0, ARow],
-        iValue]));
-      exit;
-    end
-    else
-    begin
-      Valid := false;
-      raise Exception.Create(GetTranslatedText('shTx_FrmMain_WrongValueEntered'));
-    end;
-  end;
-  if iValue < -1 then
-    raise Exception.Create(GetTranslatedText('shTx_FrmMain_WrongValueEntered'));
-
-  temp := Format
-    ('(grdRoomClassesCellValidate 2) Manual change of availability for RoomClass=%s, SetAvailability=%d, Date=%s',
-    [grdRoomClasses.cells[0, ARow], iValue, dateToSqlString(lastDate)]);
-  d.roomerMainDataSet.SystemSetChannelAvailability(uDateUtils.dateToSqlString(lastDate), grdRoomClasses.cells[0, ARow],
-    1, iValue, -1, -1, -1, temp);
-  AddAvailabilityActivityLog(d.roomerMainDataSet.userName,
-    EDIT,
-    grdRoomClasses.cells[0, ARow],
-    iValue,
-    lastDate,
-    'Edited in Roomer''s main screen');
-
-  ShowTimelyMessage(Format(GetTranslatedText('shTx_FrmMain_ChannelChangedAvail'), [grdRoomClasses.cells[0, ARow],
-    iValue]));
-  StatusCont.ChannelAvailable := iValue;
-  grdRoomClasses.Invalidate;
-end;
-
 procedure TfrmMain.PlaceMouseClickToCell(Sender: TObject; X, Y: integer);
 var
   ACol: integer;
@@ -9618,219 +9246,6 @@ begin
   TAdvStringGrid(Sender).MouseToCell(X, Y, ACol, ARow);
   TAdvStringGrid(Sender).col := ACol;
   TAdvStringGrid(Sender).row := ARow;
-end;
-
-procedure TfrmMain.grdRoomClassesDrawCell(Sender: TObject; ACol, ARow: integer; Rect: TRect; State: TGridDrawState);
-var
-  Text: String;
-  dx: integer;
-  iValue: integer;
-  StatusCont: TRoomClassChannelAvailabilityContainer;
-begin
-  if FAppClosing then
-    exit;
-  Text := grdRoomClasses.cells[ACol, ARow];
-  if (ACol = 3) AND (ARow > 0) then
-  begin
-    try
-      if ARow - 1 < availListContainer.Count then
-      begin
-        StatusCont := availListContainer[ARow - 1];
-        with grdRoomClasses.Canvas do
-        begin
-          Brush.Color := sSkinManager1.GetGlobalColor; // clWhite; // $00EAEAEA;
-          Font.Style := [fsBold];
-          iValue := strtointDef(Text, DEFAULT_UNPARSABLE_INT_VALUE);
-          if iValue > 0 then
-            Font.Color := clBlue
-          else if iValue = 0 then
-            Font.Color := $000080FF // Orange
-          else if iValue = DEFAULT_UNPARSABLE_INT_VALUE then
-          begin
-            Font.Color := clBlack;
-            Brush.Color := $00EAEAEA;
-            Text := 'n/a';
-          end
-          else
-            Font.Color := sSkinManager1.GetGlobalFontColor; // clBlue;
-          if (iValue > 0) AND (StrToInt(grdRoomClasses.cells[2, ARow]) - iValue < 0) then
-          begin
-            Font.Color := clWhite;
-            Brush.Color := $000080FF;
-            Font.Style := [fsBold, fsItalic];
-          end;
-          Font.size := 7;
-          FillRect(Rect);
-          if iValue = -1 then
-            Text := 'auto'
-          else if iValue <> DEFAULT_UNPARSABLE_INT_VALUE then
-            Text := Format('%d/%d', [StatusCont.ChannelAvailable, StatusCont.ChannelMaxAvailable]);
-          dx := TextWidth(Text) + 2;
-          TextOut(Rect.Right - dx, Rect.Top, Text);
-        end;
-      end;
-    except
-    end;
-  end
-  else if (ACol = 2) AND (ARow > 0) then
-  begin
-    with grdRoomClasses.Canvas do
-    begin
-      iValue := strtointDef(Text, DEFAULT_UNPARSABLE_INT_VALUE);
-      Brush.Color := sSkinManager1.GetGlobalColor; // $00EAEAEA;
-      if iValue > 0 then
-        Font.Color := sSkinManager1.GetGlobalFontColor // clBlue
-      else if iValue = 0 then
-        Font.Color := sSkinManager1.GetGlobalFontColor // clBlack
-      else
-      begin
-        Font.Color := clRed;
-        Brush.Color := clWhite
-      end;
-      Font.Style := [fsBold];
-      Font.size := 7;
-      FillRect(Rect);
-      dx := TextWidth(Text) + 2;
-      TextOut(Rect.Right - dx, Rect.Top, Text);
-    end;
-  end;
-  if (ACol = 1) AND (ARow > 0) then
-  begin
-    with grdRoomClasses.Canvas do
-    begin
-      Brush.Color := sSkinManager1.GetGlobalColor; // $00EAEAEA;
-      Font.Color := sSkinManager1.GetGlobalFontColor; // clBlack;
-      Font.Style := [];
-      Font.size := 7;
-      FillRect(Rect);
-      dx := TextWidth(Text) + 2;
-      TextOut(Rect.Right - dx, Rect.Top, Text);
-    end;
-  end;
-end;
-
-procedure TfrmMain.grdRoomClassesGetCellBorder(Sender: TObject; ARow, ACol: integer; APen: TPen;
-  var Borders: TCellBorders);
-var
-  iValue: integer;
-  StatusCont: TRoomClassChannelAvailabilityContainer;
-begin
-  if FAppClosing then
-    exit;
-
-  if (ARow > 0) AND (ACol = 3) then
-  begin
-    if (ARow < grdRoomClasses.RowCount) AND (ACol < grdRoomClasses.ColCount) then
-      try
-        iValue := strtointDef(grdRoomClasses.cells[3, ARow], DEFAULT_UNPARSABLE_INT_VALUE);
-        if iValue <> DEFAULT_UNPARSABLE_INT_VALUE then
-          if ARow - 1 < availListContainer.Count then
-          begin
-            StatusCont := availListContainer[ARow - 1];
-            // TRoomClassChannelAvailabilityContainer(grdRoomClasses.Objects[3, aRow]);
-            if StatusCont.AnyStop then
-            begin
-              APen.Color := clRed;
-              APen.Width := 4;
-              Borders := [cbTop, cbLeft, cbRight, cbBottom];
-            end;
-          end;
-      except
-      end;
-  end;
-end;
-
-procedure TfrmMain.grdRoomClassesMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
-var
-  PpUp: TPoint;
-begin
-  if FAppClosing then
-    exit;
-  PlaceMouseClickToCell(Sender, X, Y);
-  if Button = mbRight then
-  begin
-    PpUp.X := X;
-    PpUp.Y := Y;
-    PpUp := grdRoomClasses.ClientToScreen(PpUp);
-    PopulateChannelStopMenu;
-    pmnuChannelSettings.Popup(PpUp.X, PpUp.Y);
-  end;
-end;
-
-procedure TfrmMain.grdRoomClassesMouseMove(Sender: TObject; Shift: TShiftState; X, Y: integer);
-var
-  Text: String;
-  ARow, ACol, iValue: integer;
-  APoint: TPoint;
-  StatusCont: TRoomClassChannelAvailabilityContainer;
-  availColor, maxColor, HintStr: String;
-begin
-  if FAppClosing then
-    exit;
-  grdRoomClasses.MouseToCell(X, Y, ACol, ARow);
-  Application.ProcessMessages;
-  if (iLastHintRow = ARow) and (iLastHintCol = ACol) then
-    exit;
-
-  if (ACol = 3) AND (ARow > 0) then
-  begin
-    StatusCont := availListContainer[ARow - 1];
-    // TRoomClassChannelAvailabilityContainer(grdRoomClasses.Objects[3, aRow]);
-    // ATitle := GetTranslatedText('shTx_FrmMain_Explanation');
-    Text := TAdvStringGrid(Sender).cells[ACol, ARow];
-    // AIcon := ORD(biInfo);
-    maxColor := '#0000ff';
-    if StatusCont.ChannelMaxAvailable < 1 then
-      maxColor := '#ff0000';
-
-    HintStr := GetTranslatedText('shTx_FrmMain_ChannelAvailabilityClassesHintHeader');
-    iValue := strtointDef(Text, DEFAULT_UNPARSABLE_INT_VALUE);
-    availColor := '#0000ff';
-    if iValue < 1 then
-      availColor := '#ff0000';
-
-    if ((iValue > 0) AND (StrToInt(grdRoomClasses.cells[2, ARow]) - iValue < 0)) then
-      HintStr := HintStr + GetTranslatedText('shTx_FrmMain_WarningIncorrectAvailability')
-    else if iValue >= 0 then
-      HintStr := HintStr + Format(GetTranslatedText('shTx_FrmMain_RoomsAvailableFromChannels'), [availColor, iValue]) +
-        Format(GetTranslatedText('shTx_FrmMain_ChannelMaxAvailability'), [maxColor, StatusCont.ChannelMaxAvailable])
-      // else
-      // if iValue = 0 then
-      // HintStr := HintStr + GetTranslatedText('shTx_FrmMain_NoRoomsAvailableFromChannels') +
-      // format(GetTranslatedText('shTx_FrmMain_ChannelMaxAvailability'), [maxColor, statusCont.ChannelMaxAvailable])
-    else if iValue = DEFAULT_UNPARSABLE_INT_VALUE then
-      HintStr := GetTranslatedText('shTx_FrmMain_RoomClassNotAvailableOnChannels')
-    else
-      HintStr := GetTranslatedText('shTx_FrmMain_AutoAvailabilityOnChannels');
-
-    if StatusCont.AnyStop then
-      HintStr := HintStr + '<hr>' + GetTranslatedText('shTx_FrmMain_StopSaleActiveOnOneOrMoreChannels');
-
-    HintStr := '<font size="10">' + HintStr + '</font>';
-
-    grdRoomClasses.Hint := HintStr;
-    APoint.X := X;
-    APoint.Y := Y;
-    APoint := grdRoomClasses.ClientToScreen(APoint);
-    ActivateHint(APoint, grdRoomClasses);
-
-    iLastHintRow := ARow;
-    iLastHintCol := ACol;
-
-  end;
-end;
-
-procedure TfrmMain.grdRoomStatussesGetAlignment(Sender: TObject; ARow, ACol: integer; var HAlign: TAlignment;
-  var VAlign: TVAlignment);
-begin
-  if FAppClosing then
-    exit;
-  if (ACol IN [1, 2, 3]) then
-    HAlign := taRightJustify
-  else if (ACol = 0) AND (ARow > 0) then
-    HAlign := taRightJustify
-  else if (ACol = 0) AND (ARow = 0) then
-    HAlign := taCenter;
 end;
 
 procedure TfrmMain.grNoRooms_MergeGrid;
@@ -10527,7 +9942,7 @@ begin
             chRect.Top := Rect.Top + 3;
             chRect.Bottom := Rect.Bottom - 3;
             chRect.Right := chRect.Left + iExtraSpace;
-            iTempColor := getInvoiceMadeColor(rri.PaymentInvoice, round(rri.OngoingRent) <> 0, Brush.Color, clWhite,
+            iTempColor := getInvoiceMadeColor(rri.PaymentInvoice, round(rri.OngoingRent) = 0, Brush.Color, clWhite,
               clAqua, rri.GroupAccount);
             DrawRectanglOnCanvas(TAdvStringGrid(Sender).Canvas, iTempColor, chRect);
           end;
@@ -10750,8 +10165,8 @@ begin
   if (ACol >= (Sender as TAdvStringGrid).FixedCols) then
   begin
     aDate := Period_NO_ColToDate(ACol);
-    timGetRoomStatuses.Tag := trunc(aDate);
-    timGetRoomStatuses.Enabled := true;
+    frmDateStatistics.Date := trunc(aDate);
+    frmDateStatistics.RefreshData;
   end;
   try
     if assigned(grPeriodRooms_NO.Objects[ACol, ARow]) then
@@ -11152,84 +10567,6 @@ begin
   _RoomGuests;
 end;
 
-procedure TfrmMain.SelectStopChannel(Sender: TObject);
-var
-  s: String;
-  Value: integer;
-  StatusCont: TRoomClassChannelAvailabilityContainer;
-begin
-  TMenuItem(Sender).Checked := NOT TMenuItem(Sender).Checked;
-  if TMenuItem(Sender).Checked then
-    Value := 1
-  else
-    Value := 0;
-
-  StatusCont := availListContainer[grdRoomClasses.row - 1];
-  // TRoomClassChannelAvailabilityContainer(grdRoomClasses.Objects[3, grdRoomClasses.Row]);
-  StatusCont.AnyStop := AnyCheckedStopItems;
-
-  s := Format('UPDATE channelrates SET dirty=1, Stop=%d ' + 'WHERE id=%d', [Value, TMenuItem(Sender).Tag]);
-  if not cmd_bySQL(s) then
-  begin
-    raise Exception.Create('Channel Stop-Sale update failed.');
-  end;
-  grdRoomClasses.Update;
-  grdRoomClasses.Invalidate;
-end;
-
-Function TfrmMain.AnyCheckedStopItems: boolean;
-var
-  i: integer;
-begin
-  result := false;
-  for i := 0 to pmnuChannelSettings.Items.Count - 1 do
-    if pmnuChannelSettings.Items[i].Checked then
-    begin
-      result := true;
-      break;
-    end;
-end;
-
-procedure TfrmMain.PopulateChannelStopMenu;
-var
-  rSet: TRoomerDataSet;
-  item: TMenuItem;
-  iValue: integer;
-begin
-  if (grdRoomClasses.row > 0) then
-  begin
-
-    pmnuChannelSettings.Items.Clear;
-    iValue := strtointDef(grdRoomClasses.cells[3, grdRoomClasses.row], DEFAULT_UNPARSABLE_INT_VALUE);
-    if iValue = DEFAULT_UNPARSABLE_INT_VALUE then
-      exit;
-
-    rSet := d.roomerMainDataSet.ActivateNewDataset
-      (d.roomerMainDataSet.SystemFreeQuery(Format('SELECT id, Stop, ' +
-      '       (SELECT Code FROM roomtypegroups WHERE id=roomClassId) AS roomClass, ' +
-      '       channelId, ' + '       (SELECT name FROM channels WHERE id=channelId) AS channelName ' +
-      'FROM channelrates ' +
-      'WHERE roomClassId=(SELECT id FROM roomtypegroups WHERE Code=''%s'' LIMIT 1) ' +
-      'AND to_bool((SELECT Active FROM channels WHERE id=channelId)) ' +
-      'AND date=''%s'' ' + 'ORDER BY channelName', [grdRoomClasses.cells[0, grdRoomClasses.row],
-      uDateUtils.dateToSqlString(lastDate)])));
-    try
-      rSet.first;
-      while not rSet.eof do
-      begin
-        item := TMenuItem.Create(pmnuChannelSettings);
-        item.Caption := 'Stop on ' + rSet['channelName'];
-        item.Checked := rSet['Stop'];
-        item.Tag := rSet['id'];
-        item.OnClick := SelectStopChannel;
-        pmnuChannelSettings.Items.Add(item);
-        rSet.next;
-      end;
-    finally
-      freeandNil(rSet);
-    end;
-  end;
-end;
 
 procedure TfrmMain.btnDeleteCacheClick(Sender: TObject);
 var
@@ -11266,39 +10603,10 @@ begin
   end;
 end;
 
-procedure TfrmMain.IdHTTP1Work(ASender: TObject; AWorkMode: TWorkMode; AWorkCount: Int64);
-begin
-  DownloadProgress(ASender, AWorkCount, AWorkCount);
-end;
-
 procedure TfrmMain.btnDeleteReservationClick(Sender: TObject);
 begin
   UserClickedDxLargeButton(Sender);
   _RemoveAReservation;
-end;
-
-procedure TfrmMain.btnDownloadBackupClick(Sender: TObject);
-begin
-  UserClickedDxLargeButton(Sender);
-  if dlgSave.Execute then
-  begin
-
-    d.roomerMainDataSet.roomerClient.{$IFDEF USE_INDY}OnWork := IdHTTP1Work{$ELSE}OnDownloadProgress :=
-      DownloadProgress{$ENDIF};
-    // lblBusyDownloading.Caption := 'Downloading...';
-    lblBusyDownloading.Caption := GetTranslatedText('shTx_Main_Downloading');
-    lblBusyDownloading.Visible := true;
-    try
-      d.roomerMainDataSet.SystemDownloadRoomerBackup(dlgSave.FileName);
-    finally
-//      frmRoomerSplash.NilInternetEvents;
-      // lblBusyDownloading.Caption := 'Ready.';
-      lblBusyDownloading.Caption := GetTranslatedText('shTx_Main_Ready');
-      lblBusyDownloading.Update;
-      sleep(1000);
-      lblBusyDownloading.Visible := false;
-    end;
-  end;
 end;
 
 procedure TfrmMain.btnDownPaymentsClick(Sender: TObject);
@@ -11457,6 +10765,7 @@ begin
   end;
   _Logout;
 end;
+
 
 procedure TfrmMain.btnLostAndFoundClick(Sender: TObject);
 begin
@@ -12231,23 +11540,25 @@ procedure TfrmMain.btnReservationsListClick(Sender: TObject);
 var
   sRoom: string;
   aDate: Tdate;
+  frm: TfrmRptReservations;
 begin
   UserClickedDxLargeButton(Sender);
   // **
   aDate := Date;
-  Application.CreateForm(TfrmRptReservations, frmRptReservations);
+  sRoom := '';
+  frm := TfrmRptReservations.Create(nil);
   try
-    if frmRptReservations.ShowModal = mrOK then
+    if frm.ShowModal = mrOK then
     begin
-      if frmRptReservations.zRoom <> '' then
+      if frm.zRoom <> '' then
       begin
-        aDate := trunc(frmRptReservations.zArrival);
+        aDate := trunc(frm.zArrival);
         RefreshGrid;
-        sRoom := frmRptReservations.zRoom;
+        sRoom := frm.zRoom;
       end;
     end;
   finally
-    frmRptReservations.Free;
+    frm.Free;
   end;
 
   if sRoom <> '' then
@@ -12411,14 +11722,10 @@ end;
 
 procedure TfrmMain._DayNotes;
 begin
-  if frmDayNotes.V then
-  begin
-    frmDayNotes.V := false;
-    frmDayNotes.Close;
-  end
+  if frmDayNotes.Visible then
+    frmDayNotes.Close
   else
   begin
-    frmDayNotes.V := true;
     frmDayNotes.ActiveTab := -1;
     frmDayNotes.Show;
   end;
@@ -12458,12 +11765,12 @@ begin
   begin
     if d.qrres = 0 then
     begin
-      EditInvoice(d.qRes, 0, 0, 0, 0, 0, false, true, false);
+      EditInvoice(d.qRes, 0, 0, 0, 0, 0, false);
     end
     else
     begin
       // This is not groupinvoice
-      EditInvoice(d.qRes, d.qrres, 0, 0, 0, 0, false, true, false);
+      EditInvoice(d.qRes, d.qrres, 0, 0, 0, 0, false);
     end;
   end;
 
@@ -12483,12 +11790,12 @@ begin
   begin
     if d.qrres = 0 then
     begin
-      EditInvoice(d.qRes, 0, 0, 0, 0, 0, false, true, false);
+      EditInvoice(d.qRes, 0, 0, 0, 0, 0, false);
     end
     else
     begin
       // This is not groupinvoice
-      EditInvoice(d.qRes, d.qrres, 0, 0, 0, 0, false, true, false);
+      EditInvoice(d.qRes, d.qrres, 0, 0, 0, 0, false);
     end;
   end;
 
@@ -12500,7 +11807,7 @@ end;
 procedure TfrmMain._CashInvoice;
 begin
   try
-    EditInvoice(0, 0, 2, 0, 0, 0, false, true, false);
+    EditInvoice(0, 0, 2, 0, 0, 0, false);
   finally
   end;
 end;
@@ -12930,9 +12237,22 @@ begin
   end;
 end;
 
-procedure TfrmMain.actLanguageExecute(Sender: TObject);
+procedure TfrmMain.acUpdateTranslationsExecute(Sender: TObject);
 begin
-
+   RoomerLanguage.PerformDBUpdatesWhenUnknownEntitiesFound := true;
+   try
+     GenerateTranslateTextTableForConstants;
+     GenerateTranslateTextTableForAllForms;
+     TranslateOpenForms;
+     try
+       frmHomedate.Show;
+       RoomerLanguage.TranslateThisForm(frmRptManagment);
+       frmHomedate.Hide;
+     except
+     end;
+   finally
+     RoomerLanguage.PerformDBUpdatesWhenUnknownEntitiesFound := false;
+   end;
 end;
 
 // ########################  Customer - country - Currency ####################
@@ -13194,8 +12514,6 @@ begin
       cbxNameOrderPeriod.ItemIndex := g.qNameOrderPeriod;
 
       RefreshGrid;
-      oldDock1.Visible := g.qShowSideBar;
-
       Period_Init;
       Period_GetRooms;
     end;
@@ -13654,18 +12972,18 @@ begin
   case aType of
     0:
       begin
-        result := Format(GetListOfRoomReservationsPerArrivalDate, [_dateToDBDate(dtDate.Date, true),
-          _dateToDBDate(dtDate.Date, true)]);
+        result := Format(GetListOfRoomReservationsPerArrivalDate, [_db(dtDate.Date, true),
+          _db(dtDate.Date, true)]);
       end;
     1:
       begin
-        result := Format(GetListOfRoomReservationsPerDepartureDate, [_dateToDBDate(dtDate.Date, true),
-          _dateToDBDate(dtDate.Date, true)]);
+        result := Format(GetListOfRoomReservationsPerDepartureDate, [_db(dtDate.Date, true),
+          _db(dtDate.Date, true)]);
       end;
     2:
       begin
-        result := Format(GetListOfRoomReservationsFromToDate, [_dateToDBDate(dtDate.Date, true),
-          _dateToDBDate(dtDate.Date, true)]);
+        result := Format(GetListOfRoomReservationsFromToDate, [_db(dtDate.Date, true),
+          _db(dtDate.Date, true)]);
       end;
   else
     begin
@@ -13887,8 +13205,8 @@ begin
       if ViewMode = vmGuestList then
         gAllReservations.SetFocus;
     finally
-      timGetRoomStatuses.Tag := trunc(dtDate.Date);
-      timGetRoomStatuses.Enabled := true;
+      frmDateStatistics.Date:= trunc(dtDate.Date);
+      frmDateStatistics.RefreshData;
     end;
 end;
 
@@ -14041,7 +13359,6 @@ begin
   pnlTimeMessage.Left := 0;
   pnlTimeMessage.Width := panMain.Width;
 
-  lblTimeMessage.Top := 8;
   lblTimeMessage.Caption := sMessage;
   pnlTimeMessage.Show;
   timHideTimeMessage.Interval := 3000;
@@ -14109,28 +13426,6 @@ begin
   rLabReportName.Caption := s;
 end;
 
-procedure TfrmMain.DownloadProgress(Sender: TObject; Read, Total: integer);
-begin
-  if lblBusyDownloading.Color <> sSkinManager1.GetHighLightColor(true) then
-  begin
-    lblBusyDownloading.Color := sSkinManager1.GetHighLightColor(true);
-    lblBusyDownloading.Font.Color := sSkinManager1.GetHighLightFontColor(true);
-  end
-  else
-  begin
-    lblBusyDownloading.Color := sSkinManager1.GetGlobalColor;
-    lblBusyDownloading.Font.Color := sSkinManager1.GetGlobalFontColor;
-  end;
-  lblBusyDownloading.Update;
-  // if sProgressBar1.Max <> Total then
-  // sProgressBar1.Max := Total;
-  // sProgressBar1.Position := Read;
-  // sProgressBar1.Update;
-  // value := 100 * (Read / Total);
-  // lblDownloaded.Caption := FormatFloat('0.00',value) + '% of ' + FormatByteSize(Total);
-  // Application.ProcessMessages;
-end;
-
 procedure TfrmMain.CopyReservation(reservationId: integer);
 begin
   ClipboardCopy(Format(ROOMER_COPY_RESERVATION_ID, [d.roomerMainDataSet.hotelId, reservationId]));
@@ -14145,33 +13440,4 @@ JclStackTrackingOptions := JclStackTrackingOptions + [stExceptFrame];
 // , stAllModules, stTraceAllExceptions, stMainThreadOnly ];
 JclStartExceptionTracking;
 {$ENDIF}
-{ TRoomClassChannelAvailabilityContainer }
-
-constructor TRoomClassChannelAvailabilityContainer.Create(const _RoomTypeGroup: String;
-  _NumRooms, _Reserved, _ChannelAvailable, _ChannelMaxAvailable,
-  _GridIndex: integer; _AnyStop: boolean);
-begin
-  RoomTypeGroup := _RoomTypeGroup;
-  NumRooms := _NumRooms;
-  Reserved := _Reserved;
-  ChannelAvailable := _ChannelAvailable;
-  ChannelMaxAvailable := _ChannelMaxAvailable;
-  GridIndex := _GridIndex;
-  AnyStop := _AnyStop;
-end;
-
-{ TRoomAvailabilityEntity }
-
-constructor TRoomAvailabilityEntity.Create(const Room, RoomType, RoomClass: String);
-begin
-  FRoom := Room;
-  FRoomType := RoomType;
-  FRoomClass := RoomClass;
-end;
-
-destructor TRoomAvailabilityEntity.Destroy;
-begin
-  inherited;
-end;
-
 end.

@@ -27,7 +27,6 @@ object frmStaffTypes2: TfrmStaffTypes2
     Align = alTop
     TabOrder = 0
     SkinData.SkinSection = 'PANEL'
-    ExplicitWidth = 457
     DesignSize = (
       590
       70)
@@ -108,16 +107,15 @@ object frmStaffTypes2: TfrmStaffTypes2
       TabOrder = 2
       OnClick = btnCloseClick
       SkinData.SkinSection = 'BUTTON'
-      ExplicitLeft = 366
     end
     object edFilter: TsEdit
       Left = 56
       Top = 39
       Width = 209
       Height = 21
-      Color = 3355443
+      Color = clWhite
       Font.Charset = DEFAULT_CHARSET
-      Font.Color = 15724527
+      Font.Color = clBlack
       Font.Height = -11
       Font.Name = 'Tahoma'
       Font.Style = []
@@ -161,7 +159,6 @@ object frmStaffTypes2: TfrmStaffTypes2
     Height = 19
     Panels = <>
     SkinData.SkinSection = 'STATUSBAR'
-    ExplicitWidth = 457
   end
   object panBtn: TsPanel
     Left = 0
@@ -171,7 +168,6 @@ object frmStaffTypes2: TfrmStaffTypes2
     Align = alBottom
     TabOrder = 2
     SkinData.SkinSection = 'PANEL'
-    ExplicitWidth = 457
     DesignSize = (
       590
       33)
@@ -189,7 +185,6 @@ object frmStaffTypes2: TfrmStaffTypes2
       TabOrder = 0
       OnClick = btnCancelClick
       SkinData.SkinSection = 'BUTTON'
-      ExplicitLeft = 368
     end
     object BtnOk: TsButton
       Left = 413
@@ -205,7 +200,6 @@ object frmStaffTypes2: TfrmStaffTypes2
       TabOrder = 1
       OnClick = BtnOkClick
       SkinData.SkinSection = 'BUTTON'
-      ExplicitLeft = 280
     end
   end
   object grData: TcxGrid
@@ -216,7 +210,6 @@ object frmStaffTypes2: TfrmStaffTypes2
     Align = alClient
     TabOrder = 3
     LookAndFeel.NativeStyle = False
-    ExplicitWidth = 457
     object tvData: TcxGridDBTableView
       OnDblClick = tvDataDblClick
       Navigator.Buttons.CustomButtons = <>
@@ -292,7 +285,7 @@ object frmStaffTypes2: TfrmStaffTypes2
         Width = 259
       end
       object tvDataAccessPrivilidges: TcxGridDBColumn
-        Caption = 'Privilidges'
+        Caption = 'Privileges'
         DataBinding.FieldName = 'AccessPrivilidges'
         PropertiesClassName = 'TcxSpinEditProperties'
       end
@@ -363,7 +356,6 @@ object frmStaffTypes2: TfrmStaffTypes2
     Left = 368
     Top = 224
     object prLink_grData: TdxGridReportLink
-      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -377,7 +369,6 @@ object frmStaffTypes2: TfrmStaffTypes2
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
       ReportDocument.CreationDate = 41334.495374884260000000
-      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
   end

@@ -513,12 +513,12 @@ begin
       s := s + ' FROM '+chr(10);
       s := s + '   tellog '+chr(10);
       s := s + ' WHERE '+chr(10);
-      s := s + '     ((Callstart >=' + _DateToDBDate(zDateFrom, true) + ' ) ';
-      s := s + '     AND (Callstart <=' + _DateToDBDate(zDateTo+1, true) + ' )) ';
+      s := s + '     ((Callstart >=' + _db(zDateFrom, true) + ' ) ';
+      s := s + '     AND (Callstart <=' + _db(zDateTo+1, true) + ' )) ';
       s := s + ' ORDER BY '+chr(10);
       s := s + '   CallStart '+chr(10);
 
-      s := format(select_telLog_refresh , [_DateToDBDate(zDateFrom, true),_DateToDBDate(zDateTo+1, true) ]);
+      s := format(select_telLog_refresh , [_db(zDateFrom, true),_db(zDateTo+1, true) ]);
       // CopyToClipboard(s);
       // DebugMessage(''#10#10+s);
       hData.rSet_bySQL(rSet,s);
