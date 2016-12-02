@@ -1438,12 +1438,12 @@ begin
         begin
           if RoomReservation = 0 then
           begin
-            EditInvoice(reservation, 0, 0, 0, 0, 0, False, True, False);
+            EditInvoice(reservation, 0, 0, 0, 0, 0, False);
           end
           else
           begin
             // This is not groupinvoice
-            EditInvoice(reservation, RoomReservation, 0, 0, 0, 0, False, True, False);
+            EditInvoice(reservation, RoomReservation, 0, 0, 0, 0, False);
           end;
         end;
       end;

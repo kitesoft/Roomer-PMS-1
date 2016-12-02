@@ -2,8 +2,8 @@ object frmEditRoomPrice: TfrmEditRoomPrice
   Left = 0
   Top = 0
   Caption = 'Edit roomprice'
-  ClientHeight = 411
-  ClientWidth = 647
+  ClientHeight = 455
+  ClientWidth = 665
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,7 +20,7 @@ object frmEditRoomPrice: TfrmEditRoomPrice
   object Panel1: TsPanel
     Left = 0
     Top = 0
-    Width = 647
+    Width = 665
     Height = 136
     Align = alTop
     BevelOuter = bvNone
@@ -405,14 +405,15 @@ object frmEditRoomPrice: TfrmEditRoomPrice
   object grRoomRates: TcxGrid
     Left = 0
     Top = 136
-    Width = 647
-    Height = 219
+    Width = 665
+    Height = 263
     Align = alClient
     TabOrder = 1
     LookAndFeel.NativeStyle = False
     object tvRoomRates: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = kbmRoomRatesDS
+      DataController.Options = [dcoAssignGroupingValues, dcoAssignMasterDetailKeys, dcoSaveExpanding, dcoImmediatePost]
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -497,6 +498,7 @@ object frmEditRoomPrice: TfrmEditRoomPrice
       object tvRoomRatesisPercentage: TcxGridDBColumn
         Caption = 'is %'
         DataBinding.FieldName = 'isPercentage'
+        PropertiesClassName = 'TcxCheckBoxProperties'
         Width = 43
       end
       object tvRoomRatesShowDiscount: TcxGridDBColumn
@@ -510,18 +512,23 @@ object frmEditRoomPrice: TfrmEditRoomPrice
       object tvRoomRatesDiscountAmount: TcxGridDBColumn
         Caption = 'Total Discount '
         DataBinding.FieldName = 'DiscountAmount'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
         Options.Editing = False
         Width = 92
       end
       object tvRoomRatesRentAmount: TcxGridDBColumn
         Caption = 'Total'
         DataBinding.FieldName = 'RentAmount'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        OnGetProperties = tvRoomRatesRentAmountGetProperties
         Options.Editing = False
         Width = 83
       end
       object tvRoomRatesNativeAmount: TcxGridDBColumn
         Caption = 'Native currency'
         DataBinding.FieldName = 'NativeAmount'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        OnGetProperties = tvRoomRatesNativeAmountGetProperties
         Options.Editing = False
         Width = 74
       end
@@ -532,8 +539,8 @@ object frmEditRoomPrice: TfrmEditRoomPrice
   end
   object Panel2: TsPanel
     Left = 0
-    Top = 355
-    Width = 647
+    Top = 399
+    Width = 665
     Height = 56
     Align = alBottom
     BevelOuter = bvNone
@@ -616,7 +623,7 @@ object frmEditRoomPrice: TfrmEditRoomPrice
       end
       item
         Name = 'RateDate'
-        DataType = ftDateTime
+        DataType = ftDate
       end
       item
         Name = 'PriceCode'
@@ -668,8 +675,8 @@ object frmEditRoomPrice: TfrmEditRoomPrice
     SubLanguageID = 1
     LocaleID = 1024
     BeforePost = _kbmRoomRatesBeforePost
-    Left = 256
-    Top = 194
+    Left = 128
+    Top = 242
   end
   object kbmRoomRatesDS: TDataSource
     DataSet = mRoomRates
@@ -692,7 +699,7 @@ object frmEditRoomPrice: TfrmEditRoomPrice
       FieldName = 'RoomNumber'
       Size = 10
     end
-    object mRoomRatesRateDate: TDateTimeField
+    object mRoomRatesRateDate: TDateField
       FieldName = 'RateDate'
     end
     object mRoomRatesPriceCode: TStringField
