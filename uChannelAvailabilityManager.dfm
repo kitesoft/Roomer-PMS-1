@@ -310,7 +310,6 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
           TabOrder = 14
           Text = '  -  -    '
           OnChange = dtBulkToChange
-          CheckOnExit = True
           BoundLabel.Font.Charset = DEFAULT_CHARSET
           BoundLabel.Font.Color = clWindowText
           BoundLabel.Font.Height = -13
@@ -344,7 +343,6 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
           TabOrder = 15
           Text = '  -  -    '
           OnChange = dtBulkToChange
-          CheckOnExit = True
           BoundLabel.Font.Charset = DEFAULT_CHARSET
           BoundLabel.Font.Color = clWindowText
           BoundLabel.Font.Height = -13
@@ -359,8 +357,8 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
         object cbMon: TsCheckBox
           Left = 96
           Top = 383
-          Width = 65
-          Height = 18
+          Width = 57
+          Height = 20
           Margins.Left = 2
           Margins.Top = 2
           Margins.Right = 2
@@ -376,8 +374,8 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
         object cbTue: TsCheckBox
           Left = 96
           Top = 400
-          Width = 66
-          Height = 18
+          Width = 58
+          Height = 20
           Margins.Left = 2
           Margins.Top = 2
           Margins.Right = 2
@@ -393,8 +391,8 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
         object cbWen: TsCheckBox
           Left = 96
           Top = 417
-          Width = 81
-          Height = 18
+          Width = 73
+          Height = 20
           Margins.Left = 2
           Margins.Top = 2
           Margins.Right = 2
@@ -410,8 +408,8 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
         object cbThu: TsCheckBox
           Left = 96
           Top = 435
-          Width = 71
-          Height = 18
+          Width = 63
+          Height = 20
           Margins.Left = 2
           Margins.Top = 2
           Margins.Right = 2
@@ -427,8 +425,8 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
         object cbFri: TsCheckBox
           Left = 216
           Top = 383
-          Width = 57
-          Height = 18
+          Width = 49
+          Height = 20
           Margins.Left = 2
           Margins.Top = 2
           Margins.Right = 2
@@ -444,8 +442,8 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
         object cbSat: TsCheckBox
           Left = 216
           Top = 400
-          Width = 69
-          Height = 18
+          Width = 61
+          Height = 20
           Margins.Left = 2
           Margins.Top = 2
           Margins.Right = 2
@@ -461,8 +459,8 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
         object cbSun: TsCheckBox
           Left = 216
           Top = 417
-          Width = 63
-          Height = 18
+          Width = 55
+          Height = 20
           Margins.Left = 2
           Margins.Top = 2
           Margins.Right = 2
@@ -630,7 +628,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
           Left = 114
           Top = 62
           Width = 20
-          Height = 18
+          Height = 20
           Margins.Left = 2
           Margins.Top = 2
           Margins.Right = 2
@@ -645,7 +643,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
           Left = 114
           Top = 112
           Width = 20
-          Height = 18
+          Height = 20
           Margins.Left = 2
           Margins.Top = 2
           Margins.Right = 2
@@ -770,7 +768,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
             Left = 13
             Top = 28
             Width = 20
-            Height = 18
+            Height = 20
             Margins.Left = 2
             Margins.Top = 2
             Margins.Right = 2
@@ -944,7 +942,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
             Left = 222
             Top = 26
             Width = 20
-            Height = 18
+            Height = 20
             Enabled = False
             TabOrder = 3
             SkinData.SkinSection = 'CHECKBOX'
@@ -955,7 +953,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
             Left = 336
             Top = 25
             Width = 20
-            Height = 18
+            Height = 20
             Enabled = False
             TabOrder = 4
             SkinData.SkinSection = 'CHECKBOX'
@@ -996,7 +994,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
           Left = 114
           Top = 87
           Width = 20
-          Height = 18
+          Height = 20
           Hint = 'Enable Single Use Price settings'
           Margins.Left = 2
           Margins.Top = 2
@@ -1021,7 +1019,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
         end
         object btnClearChannelSelection: TsButton
           Left = 370
-          Top = 35
+          Top = 36
           Width = 24
           Height = 22
           Hint = 'Unselect/uncheck all'
@@ -1043,7 +1041,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
         end
         object btnCheckAllBulkChannel: TsButton
           Left = 400
-          Top = 35
+          Top = 36
           Width = 24
           Height = 22
           Hint = 'Select/Check all'
@@ -1131,7 +1129,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
         Margins.Top = 2
         Margins.Right = 2
         Margins.Bottom = 2
-        ActivePage = sTabSheet1
+        ActivePage = sTabSheet2
         Align = alClient
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
@@ -1148,8 +1146,6 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
           Margins.Right = 2
           Margins.Bottom = 2
           Caption = 'Availabilities'
-          SkinData.CustomColor = False
-          SkinData.CustomFont = False
           object Panel2: TsPanel
             Left = 0
             Top = 467
@@ -1379,8 +1375,10 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
               URLColor = clBlack
               ValidChars = '0123456789'
               VAlignment = vtaCenter
-              Version = '8.1.2.0'
+              Version = '7.9.1.1'
               WordWrap = False
+              ExplicitLeft = 1
+              ExplicitTop = 18
               ColWidths = (
                 250
                 80
@@ -1410,8 +1408,8 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
               object cbxShowLinkedCells: TsCheckBox
                 Left = 5
                 Top = 2
-                Width = 121
-                Height = 19
+                Width = 113
+                Height = 20
                 Margins.Left = 2
                 Margins.Top = 2
                 Margins.Right = 2
@@ -1432,13 +1430,11 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
           Margins.Right = 2
           Margins.Bottom = 2
           Caption = 'Rates'
-          SkinData.CustomColor = False
-          SkinData.CustomFont = False
           object rateGrid: TAdvStringGrid
             Left = 0
-            Top = 48
+            Top = 50
             Width = 621
-            Height = 419
+            Height = 417
             Cursor = crDefault
             Align = alClient
             BevelInner = bvNone
@@ -1609,8 +1605,10 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
             URLColor = clBlack
             ValidChars = '0123456789+-!%*/'
             VAlignment = vtaCenter
-            Version = '8.1.2.0'
+            Version = '7.9.1.1'
             WordWrap = False
+            ExplicitLeft = 1
+            ExplicitTop = 52
             ColWidths = (
               400
               80
@@ -1754,7 +1752,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
             Left = 0
             Top = 0
             Width = 621
-            Height = 48
+            Height = 50
             Margins.Left = 2
             Margins.Top = 2
             Margins.Right = 2
@@ -1767,7 +1765,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
               Left = 579
               Top = 0
               Width = 42
-              Height = 48
+              Height = 50
               Align = alRight
               Center = True
               ParentShowHint = False
@@ -1852,46 +1850,36 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
               ExplicitLeft = 504
               ExplicitHeight = 21
             end
-            object cbxStopMinOptions: TsCheckBox
+            object cbxRateRestrictions: TsCheckBox
               Left = 5
               Top = 4
-              Width = 263
-              Height = 19
+              Width = 133
+              Height = 23
               Margins.Left = 2
               Margins.Top = 2
               Margins.Right = 2
               Margins.Bottom = 2
-              Caption = 'Toggle "Stop sell" and "Minimum stay" restrictions'
+              Caption = 'Rate restrictions'
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -16
+              Font.Name = 'Tahoma'
+              Font.Style = []
+              ParentFont = False
               TabOrder = 0
-              OnClick = cbxStopMinOptionsClick
-              SkinData.SkinSection = 'CHECKBOX'
-              ImgChecked = 0
-              ImgUnchecked = 0
-            end
-            object cbxExtraRestrictions: TsCheckBox
-              Left = 319
-              Top = 4
-              Width = 145
-              Height = 19
-              Margins.Left = 2
-              Margins.Top = 2
-              Margins.Right = 2
-              Margins.Bottom = 2
-              Caption = 'Toggle extra restrictions'
-              TabOrder = 1
-              OnClick = cbxStopMinOptionsClick
+              OnClick = cbxRateRestrictionsClick
               SkinData.SkinSection = 'CHECKBOX'
               ImgChecked = 0
               ImgUnchecked = 0
             end
             object ccChannels: TCheckComboBox
               Left = 5
-              Top = 24
+              Top = 26
               Width = 244
               Height = 22
               AutoComplete = False
               DropDownCount = 16
-              TabOrder = 2
+              TabOrder = 1
               Items.Strings = (
                 'A'
                 'B'
@@ -1905,9 +1893,9 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
             end
             object cbxShowSubrates: TsCheckBox
               Left = 319
-              Top = 24
-              Width = 103
-              Height = 19
+              Top = 27
+              Width = 95
+              Height = 20
               Margins.Left = 2
               Margins.Top = 2
               Margins.Right = 2
@@ -1915,31 +1903,31 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
               Caption = 'Show sub-rates'
               Checked = True
               State = cbChecked
-              TabOrder = 3
-              OnClick = cbxStopMinOptionsClick
+              TabOrder = 2
+              OnClick = cbxRateRestrictionsClick
               SkinData.SkinSection = 'CHECKBOX'
               ImgChecked = 0
               ImgUnchecked = 0
             end
             object btnClearChannelSelectionGrid: TsButton
               Left = 255
-              Top = 22
+              Top = 26
               Width = 24
               Height = 22
               Hint = 'Unselect/uncheck all'
               Caption = '[ ]'
-              TabOrder = 4
+              TabOrder = 3
               OnClick = btnClearChannelSelectionGridClick
               SkinData.SkinSection = 'BUTTON'
             end
             object btnCheckAllChannel: TsButton
               Left = 285
-              Top = 22
+              Top = 26
               Width = 24
               Height = 22
               Hint = 'Select/Check all'
               Caption = '[x]'
-              TabOrder = 5
+              TabOrder = 4
               OnClick = btnCheckAllChannelClick
               SkinData.SkinSection = 'BUTTON'
             end
@@ -2125,7 +2113,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
             HintPrevMonth = 'Previous Month'
             HintNextMonth = 'Next Month'
             HintNextYear = 'Next Year'
-            Version = '2.3.1.1'
+            Version = '2.3.0.0'
             TMSStyle = 0
           end
         end
@@ -2225,7 +2213,6 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
           ParentFont = False
           TabOrder = 5
           Text = '  -  -    '
-          CheckOnExit = True
           BoundLabel.Font.Charset = DEFAULT_CHARSET
           BoundLabel.Font.Color = clWindowText
           BoundLabel.Font.Height = -13
@@ -2398,14 +2385,16 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
         TabOrder = 0
         SkinData.SkinSection = 'PANEL'
         object cbxChannelManagers: TsComboBox
+          AlignWithMargins = True
           Left = 5
-          Top = 7
+          Top = 5
           Width = 108
           Height = 21
-          Margins.Left = 2
-          Margins.Top = 2
+          Margins.Left = 5
+          Margins.Top = 5
           Margins.Right = 2
           Margins.Bottom = 2
+          Align = alLeft
           Alignment = taLeftJustify
           BoundLabel.Font.Charset = DEFAULT_CHARSET
           BoundLabel.Font.Color = clWindowText
@@ -2425,16 +2414,19 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
           ParentFont = False
           TabOrder = 0
           OnChange = cbxChannelManagersChange
+          ExplicitTop = 7
         end
         object cbxPlanCodes: TsComboBox
-          Left = 117
-          Top = 6
+          AlignWithMargins = True
+          Left = 120
+          Top = 5
           Width = 109
           Height = 21
-          Margins.Left = 2
-          Margins.Top = 2
+          Margins.Left = 5
+          Margins.Top = 5
           Margins.Right = 2
           Margins.Bottom = 2
+          Align = alLeft
           Alignment = taLeftJustify
           BoundLabel.Font.Charset = DEFAULT_CHARSET
           BoundLabel.Font.Color = clWindowText
@@ -2454,6 +2446,8 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
           ParentFont = False
           TabOrder = 1
           OnChange = cbxChannelManagersChange
+          ExplicitLeft = 117
+          ExplicitTop = 7
         end
       end
       object btnClose: TsButton
