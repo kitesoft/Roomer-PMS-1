@@ -23,10 +23,10 @@ const HOTEL_PERFORMANCE_QUERY_BETWEEN_DATES = 'SELECT IFNULL(ADate, pdd.date) AS
          '       RoomCount, ' +
          '       RoomsSold, OOO ' +
          'FROM ( ' +
-         'SELECT rd.ADate, SUM(RoomRate * cu.AValue) / rm.RoomCount AS RevPar, ' +
+         'SELECT rd.ADate, SUM((IF(Discount > 0, RoomRate - IF(isPercentage, RoomRate * Discount / 100, Discount), RoomRate)) * cu.AValue) / rm.RoomCount AS RevPar, ' +
          '       rm.RoomCount, ' +
-         '       SUM(RoomRate * cu.AValue) AS Revenue, ' +
-         '       AVG(RoomRate * cu.AValue) AS ADR, ' +
+         '       SUM((IF(Discount > 0, RoomRate - IF(isPercentage, RoomRate * Discount / 100, Discount), RoomRate)) * cu.AValue) AS Revenue, ' +
+         '       AVG((IF(Discount > 0, RoomRate - IF(isPercentage, RoomRate * Discount / 100, Discount), RoomRate)) * cu.AValue) AS ADR, ' +
          '       COUNT(rd.id) AS RoomsSold, rd1.OOO ' +
          'FROM roomsdate rd ' +
          '     LEFT JOIN rooms ro ON ro.Room = rd.Room ' +
