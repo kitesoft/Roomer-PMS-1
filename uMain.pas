@@ -696,6 +696,7 @@ type
     alDeveloperTools: TActionList;
     acUpdateTranslations: TAction;
     splStatistics: TsSplitter;
+    dxBarLargeButton7: TdxBarLargeButton;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
@@ -985,6 +986,7 @@ type
     procedure btnDailyRevenuesClick(Sender: TObject);
     procedure btnCleaningNotesClick(Sender: TObject);
     procedure acUpdateTranslationsExecute(Sender: TObject);
+    procedure dxBarLargeButton7Click(Sender: TObject);
 
   private
     FReservationsModel: TReservationsModel;
@@ -1587,7 +1589,10 @@ uses
     , uDayClosingTimesAPICaller
     , uDateTimeHelper
     , uRptHouseKeeping, uReservationStateChangeHandler, uRptDailyRevenues
-    , uRoomerVersionInfo, uSQLUtils;
+    , uRoomerVersionInfo
+    , uSQLUtils
+    , uMasterRateDefaults
+    ;
 
 {$R *.DFM}
 {$R Cursors.res}
@@ -11425,6 +11430,11 @@ procedure TfrmMain.dxBarLargeButton4Click(Sender: TObject);
 begin
   UserClickedDxLargeButton(Sender);
   StaticResources('Files', ANY_FILE, ACCESS_RESTRICTED);
+end;
+
+procedure TfrmMain.dxBarLargeButton7Click(Sender: TObject);
+begin
+  EditMasterRateDefaults;
 end;
 
 procedure TfrmMain.btnReRegisterPMSClick(Sender: TObject);

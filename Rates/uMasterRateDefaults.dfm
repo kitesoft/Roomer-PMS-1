@@ -118,7 +118,14 @@ object frmMasterRateDefaults: TfrmMasterRateDefaults
         Height = 21
         Alignment = taLeftJustify
         VerticalAlignment = taAlignTop
+        Color = clWhite
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = []
         ItemIndex = -1
+        ParentFont = False
         TabOrder = 4
         OnCloseUp = cbxChannelManagerCloseUp
       end
@@ -129,7 +136,14 @@ object frmMasterRateDefaults: TfrmMasterRateDefaults
         Height = 21
         Alignment = taLeftJustify
         VerticalAlignment = taAlignTop
+        Color = clWhite
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = []
         ItemIndex = -1
+        ParentFont = False
         TabOrder = 5
         OnCloseUp = cbxPlanCodeCloseUp
       end
@@ -141,7 +155,6 @@ object frmMasterRateDefaults: TfrmMasterRateDefaults
       Height = 19
       Panels = <>
       SkinData.SkinSection = 'STATUSBAR'
-      ExplicitWidth = 448
     end
     object panBtn: TsPanel
       Left = 0
@@ -269,21 +282,52 @@ object frmMasterRateDefaults: TfrmMasterRateDefaults
           OptionsData.DeletingConfirmation = False
           OptionsView.GroupByBox = False
           OptionsView.Indicator = True
-          object tvDataDay: TcxGridDBColumn
-            DataBinding.FieldName = 'Day'
-            PropertiesClassName = 'TcxDateEditProperties'
-            Properties.ShowTime = False
-            HeaderAlignmentHorz = taCenter
-            SortIndex = 0
-            SortOrder = soDescending
-            Width = 108
+          object tvDataRecId: TcxGridDBColumn
+            DataBinding.FieldName = 'RecId'
+            Visible = False
           end
-          object tvDataClosingTime: TcxGridDBColumn
-            DataBinding.FieldName = 'ClosingTimestamp'
-            PropertiesClassName = 'TcxDateEditProperties'
-            Properties.Kind = ckDateTime
-            HeaderAlignmentHorz = taCenter
-            Width = 121
+          object tvDatafromDate: TcxGridDBColumn
+            Caption = 'From date'
+            DataBinding.FieldName = 'fromDate'
+          end
+          object tvDatastop: TcxGridDBColumn
+            Caption = 'Stop sell'
+            DataBinding.FieldName = 'stop'
+            Width = 58
+          end
+          object tvDataprice: TcxGridDBColumn
+            Caption = 'Price'
+            DataBinding.FieldName = 'price'
+          end
+          object tvDatasingleUsePrice: TcxGridDBColumn
+            Caption = 'Single use price'
+            DataBinding.FieldName = 'singleUsePrice'
+            Width = 96
+          end
+          object tvDataavailability: TcxGridDBColumn
+            Caption = 'Availability'
+            DataBinding.FieldName = 'availability'
+          end
+          object tvDataminStay: TcxGridDBColumn
+            Caption = 'Min. stay'
+            DataBinding.FieldName = 'minStay'
+          end
+          object tvDatamaxStay: TcxGridDBColumn
+            Caption = 'Max. Stay'
+            DataBinding.FieldName = 'maxStay'
+          end
+          object tvDataclosedOnArrival: TcxGridDBColumn
+            Caption = 'CTA'
+            DataBinding.FieldName = 'closedOnArrival'
+          end
+          object tvDataclosedOnDeparture: TcxGridDBColumn
+            Caption = 'CTD'
+            DataBinding.FieldName = 'closedOnDeparture'
+          end
+          object tvDatalengthOfStayArrivalDateBased: TcxGridDBColumn
+            Caption = 'LOS arrival based'
+            DataBinding.FieldName = 'lengthOfStayArrivalDateBased'
+            Width = 120
           end
         end
         object lvData: TcxGridLevel
@@ -296,6 +340,7 @@ object frmMasterRateDefaults: TfrmMasterRateDefaults
         Width = 250
         Height = 336
         Align = alLeft
+        Color = clWhite
         Columns = <
           item
             Caption = 'Rate code'
@@ -304,10 +349,18 @@ object frmMasterRateDefaults: TfrmMasterRateDefaults
             Caption = 'Description'
             Width = 200
           end>
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = []
         ReadOnly = True
         RowSelect = True
+        ParentFont = False
         TabOrder = 1
         ViewStyle = vsReport
+        OnChange = lvRateCodesChange
+        ExplicitLeft = -5
         ExplicitTop = 6
       end
     end
@@ -374,11 +427,38 @@ object frmMasterRateDefaults: TfrmMasterRateDefaults
     OnNewRecord = m_NewRecord
     Left = 208
     Top = 192
-    object m_day: TDateField
-      FieldName = 'Day'
+    object m_fromDate: TDateField
+      FieldName = 'fromDate'
     end
-    object m_ClosingTime: TDateTimeField
-      FieldName = 'ClosingTimestamp'
+    object m_price: TFloatField
+      FieldName = 'price'
+    end
+    object m_availability: TIntegerField
+      FieldName = 'availability'
+    end
+    object m_minStay: TIntegerField
+      FieldName = 'minStay'
+    end
+    object m_maxStay: TIntegerField
+      FieldName = 'maxStay'
+    end
+    object m_closedOnArrival: TBooleanField
+      FieldName = 'closedOnArrival'
+    end
+    object m_closedOnDeparture: TBooleanField
+      FieldName = 'closedOnDeparture'
+    end
+    object m_stop: TBooleanField
+      FieldName = 'stop'
+    end
+    object m_lengthOfStayArrivalDateBased: TBooleanField
+      FieldName = 'lengthOfStayArrivalDateBased'
+    end
+    object m_singleUsePrice: TFloatField
+      FieldName = 'singleUsePrice'
+    end
+    object m_id: TIntegerField
+      FieldName = 'id'
     end
   end
   object DS: TDataSource

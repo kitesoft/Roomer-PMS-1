@@ -52,7 +52,6 @@ object frmMain: TfrmMain
     SunkenBorder = True
     UseOwnColor = True
     UseOwnSunkenBorder = True
-    ExplicitTop = 122
   end
   object panMain: TsPanel
     Left = 0
@@ -118,13 +117,9 @@ object frmMain: TfrmMain
         TabOrder = 1
         OnChange = pageMainGridsChange
         SkinData.SkinSection = 'PAGECONTROL'
-        ExplicitLeft = 53
-        ExplicitTop = -4
-        ExplicitWidth = 976
         object tabOneDayView: TsTabSheet
           Caption = 'tabOneDayView'
           ImageIndex = 8
-          ExplicitWidth = 974
           object grOneDayRooms: TAdvStringGrid
             Left = 0
             Top = 0
@@ -302,8 +297,7 @@ object frmMain: TfrmMain
             SortSettings.HeaderColorTo = 16579058
             SortSettings.HeaderMirrorColor = 16380385
             SortSettings.HeaderMirrorColorTo = 16182488
-            Version = '8.1.2.0'
-            ExplicitWidth = 974
+            Version = '7.9.1.1'
             ColWidths = (
               47
               49
@@ -458,7 +452,6 @@ object frmMain: TfrmMain
         object tabGuestList: TsTabSheet
           Caption = 'tabGuestList'
           ImageIndex = 9
-          ExplicitWidth = 974
           object Panel3: TsPanel
             Left = 0
             Top = 0
@@ -468,7 +461,6 @@ object frmMain: TfrmMain
             BevelOuter = bvNone
             TabOrder = 0
             SkinData.SkinSection = 'TRANSPARENT'
-            ExplicitWidth = 974
             object rgrGroupreportStayType: TsRadioGroup
               Left = 2
               Top = 4
@@ -865,7 +857,6 @@ object frmMain: TfrmMain
         object tabPeriod: TsTabSheet
           Caption = 'tabPeriod'
           ImageIndex = 2
-          ExplicitWidth = 974
           object sLabel2: TsLabel
             Left = 224
             Top = 400
@@ -882,7 +873,6 @@ object frmMain: TfrmMain
             BevelOuter = bvNone
             TabOrder = 0
             SkinData.SkinSection = 'PANEL'
-            ExplicitWidth = 974
             object lblLoading: TsLabel
               Left = 0
               Top = 0
@@ -1109,7 +1099,7 @@ object frmMain: TfrmMain
               SortSettings.HeaderColorTo = 16579058
               SortSettings.HeaderMirrorColor = 16380385
               SortSettings.HeaderMirrorColorTo = 16182488
-              Version = '8.1.2.0'
+              Version = '7.9.1.1'
               ExplicitWidth = 974
               ColWidths = (
                 73
@@ -1332,7 +1322,7 @@ object frmMain: TfrmMain
             OnMoved = splitPeriodMoved
             Color = 6842472
             ParentColor = False
-            ExplicitWidth = 974
+            ExplicitTop = 157
           end
           object pnlPeriodNoRooms: TsPanel
             Left = 0
@@ -1472,7 +1462,7 @@ object frmMain: TfrmMain
               SearchFooter.HintHighlight = 'Highlight occurences'
               SearchFooter.MatchCaseCaption = 'Match case'
               SortSettings.DefaultFormat = ssAutomatic
-              Version = '8.1.2.0'
+              Version = '7.9.1.1'
               ExplicitWidth = 972
               ColWidths = (
                 64
@@ -1657,16 +1647,25 @@ object frmMain: TfrmMain
         end
         object tabFreeRooms: TsTabSheet
           Caption = 'tabFreeRooms'
+          ExplicitLeft = 0
+          ExplicitTop = 0
           ExplicitWidth = 974
+          ExplicitHeight = 0
         end
         object tabDashboard: TsTabSheet
           Caption = 'tabDashboard'
           SkinData.SkinSection = 'TRANSPARENT'
+          ExplicitLeft = 0
+          ExplicitTop = 0
           ExplicitWidth = 974
+          ExplicitHeight = 0
         end
         object tabRateQuery: TsTabSheet
           Caption = 'tabRateQuery'
+          ExplicitLeft = 0
+          ExplicitTop = 0
           ExplicitWidth = 974
+          ExplicitHeight = 0
         end
       end
       object pnlStatSlider: TsPanel
@@ -1738,8 +1737,6 @@ object frmMain: TfrmMain
           Align = alClient
           TabOrder = 0
           SkinData.SkinSection = 'PANEL'
-          ExplicitLeft = 3
-          ExplicitTop = 169
         end
         object pnlNotifications: TsPanel
           Left = 0
@@ -2404,7 +2401,7 @@ object frmMain: TfrmMain
             HintPrevMonth = 'Previous Month'
             HintNextMonth = 'Next Month'
             HintNextYear = 'Next Year'
-            Version = '2.3.1.1'
+            Version = '2.3.0.0'
             TMSStyle = 0
           end
         end
@@ -2551,7 +2548,7 @@ object frmMain: TfrmMain
         ParentColor = False
         Transparent = True
         OnAnchorClick = mmoMessageAnchorClick
-        Version = '1.9.2.6'
+        Version = '1.9.2.3'
         ExplicitLeft = 87
         ExplicitWidth = 1019
       end
@@ -2621,8 +2618,6 @@ object frmMain: TfrmMain
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         UseSkinColor = False
-        ExplicitLeft = 9
-        ExplicitTop = 6
         ExplicitWidth = 24
         ExplicitHeight = 24
       end
@@ -2791,7 +2786,6 @@ object frmMain: TfrmMain
       Index = 4
     end
     object System: TdxRibbonTab
-      Active = True
       Caption = 'System'
       Groups = <
         item
@@ -2821,6 +2815,7 @@ object frmMain: TfrmMain
       Index = 5
     end
     object rbTabChannels: TdxRibbonTab
+      Active = True
       Caption = 'Channels'
       Groups = <
         item
@@ -4840,6 +4835,10 @@ object frmMain: TfrmMain
         item
           Visible = True
           ItemName = 'btnDynamicRateRules'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarLargeButton7'
         end>
       OneOnRow = True
       Row = 0
@@ -5891,6 +5890,13 @@ object frmMain: TfrmMain
     object bbUpdateTranslations: TdxBarButton
       Action = acUpdateTranslations
       Category = 0
+    end
+    object dxBarLargeButton7: TdxBarLargeButton
+      Caption = 'Default Master-rates'
+      Category = 0
+      Hint = 'Default Master-rates'
+      Visible = ivAlways
+      OnClick = dxBarLargeButton7Click
     end
     object mmnuFile: TdxBarSubItem
       Caption = '&File'

@@ -42,8 +42,6 @@ type
     DS: TDataSource;
     grPrinter: TdxComponentPrinter;
     prLink_grData: TdxGridReportLink;
-    m_day: TDateField;
-    m_ClosingTime: TDateTimeField;
     lbStartFrom: TsLabel;
     cbxChannelManager: TsComboBox;
     cbxPlanCode: TsComboBox;
@@ -51,11 +49,31 @@ type
     sPanel1: TsPanel;
     grData: TcxGrid;
     tvData: TcxGridDBTableView;
-    tvDataDay: TcxGridDBColumn;
-    tvDataClosingTime: TcxGridDBColumn;
     lvData: TcxGridLevel;
     lvRateCodes: TsListView;
     sSplitter1: TsSplitter;
+    m_fromDate: TDateField;
+    m_price: TFloatField;
+    m_availability: TIntegerField;
+    m_minStay: TIntegerField;
+    m_maxStay: TIntegerField;
+    m_closedOnArrival: TBooleanField;
+    m_closedOnDeparture: TBooleanField;
+    m_stop: TBooleanField;
+    m_lengthOfStayArrivalDateBased: TBooleanField;
+    m_singleUsePrice: TFloatField;
+    tvDataRecId: TcxGridDBColumn;
+    tvDatafromDate: TcxGridDBColumn;
+    tvDataprice: TcxGridDBColumn;
+    tvDataavailability: TcxGridDBColumn;
+    tvDataminStay: TcxGridDBColumn;
+    tvDatamaxStay: TcxGridDBColumn;
+    tvDataclosedOnArrival: TcxGridDBColumn;
+    tvDataclosedOnDeparture: TcxGridDBColumn;
+    tvDatastop: TcxGridDBColumn;
+    tvDatalengthOfStayArrivalDateBased: TcxGridDBColumn;
+    tvDatasingleUsePrice: TcxGridDBColumn;
+    m_id: TIntegerField;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -77,6 +95,7 @@ type
     procedure BtnOkClick(Sender: TObject);
     procedure cbxChannelManagerCloseUp(Sender: TObject);
     procedure cbxPlanCodeCloseUp(Sender: TObject);
+    procedure lvRateCodesChange(Sender: TObject; Item: TListItem; Change: TItemChange);
   private
     FDirty : Boolean;
     FUpdatingGrid: Boolean;
@@ -212,25 +231,31 @@ begin
 end;
 
 procedure TfrmMasterRateDefaults.fillGridFromDataset;
+var rSet : TRoomerDataSet;
 begin
+  if NOT Assigned(lvRateCodes.Selected) then exit;
+
   if ComponentRunning(Self) then
   begin
     FUpdatingGrid := true;
     m_.DisableControls;
     try
-//      lCaller := TMasterRateDefaultsAPICaller.Create;
-//      try
-//        if lCaller.GetMasterRateDefaultsAsDataset(FRecordSet, edtLastDate.Date.AddYears(-1), edtLastDate.Date+1) then
-//        begin
-//          if m_.active then m_.Close;
-//          m_.LoadFromDataSet(FRecordSet);
-//          m_.Open;
-//        end
-//        else
-//          ShowError('reading of DayClosing timestamps');
-//      finally
-//        lCaller.Free;
-//      end;
+      rSet := CreateNewDataSet;
+      try
+        hData.rSet_bySQL(rSet,
+                            format('SELECT DATE(fromDate) AS fromDate, price, availability, minStay, maxStay, closedOnArrival, ' +
+                                   'closedOnDeparture, stop, lengthOfStayArrivalDateBased, singleUsePrice, id ' +
+                                   'FROM channelmasterratesdefaults WHERE channelManager=%d AND planCodeId=%d AND roomClassId=%d',
+                                  [FSelectedChannel,
+                                   FSelectedPlanCode,
+                                   Integer(lvRateCodes.Selected.Data)]));
+        rSet.First;
+        if m_.active then m_.Close;
+        m_.LoadFromDataSet(rSet);
+        m_.Open;
+      finally
+        rSet.Free;
+      end;
     finally
       m_.EnableControls;
       FUpdatingGrid := False;
@@ -251,6 +276,11 @@ begin
   grData.SetFocus;
 end;
 
+procedure TfrmMasterRateDefaults.lvRateCodesChange(Sender: TObject; Item: TListItem; Change: TItemChange);
+begin
+  fillGridFromDataset;
+end;
+
 procedure TfrmMasterRateDefaults.prepareSelectableList;
 var rSet : TRoomerDataset;
 
@@ -260,7 +290,8 @@ var rSet : TRoomerDataset;
     RSet.First;
     while NOT RSet.Eof do
     begin
-      cbx.Items.AddObject(RSet[NameField], Pointer(RSet.FieldByName(IdField).AsInteger));
+      if RSet['active'] then
+        cbx.Items.AddObject(RSet[NameField], Pointer(RSet.FieldByName(IdField).AsInteger));
       RSet.Next;
     end;
     cbx.ItemIndex := ABS(ORD(cbx.Items.Count > 0) - 1);
@@ -287,6 +318,7 @@ var rSet : TRoomerDataset;
 
     lvItem : TListItem;
 begin
+  lvRateCodes.OnChange := nil;
   lvRateCodes.Items.BeginUpdate;
   try
     lvRateCodes.Items.Clear;
@@ -305,6 +337,7 @@ begin
     end;
   finally
     lvRateCodes.Items.EndUpdate;
+    lvRateCodes.OnChange := lvRateCodesChange;
   end;
 end;
 
@@ -359,7 +392,7 @@ begin
   if FUpdatingGrid then exit;
 
   s := '';
-  s := s+GetTranslatedText('shDeleteDayClosingTime')+' '+m_day.AsString;
+  s := s+GetTranslatedText('shDeleteDayClosingTime')+' '+m_fromDate.ToString;
   s := s+GetTranslatedText('shContinue');
 
   if MessageDlg(s,mtConfirmation, [mbYes, mbNo], 0) <> mrYes then
@@ -381,7 +414,7 @@ end;
 procedure TfrmMasterRateDefaults.m_BeforeInsert(DataSet: TDataSet);
 begin
   if FUpdatingGrid then exit;
-  tvData.GetColumnByFieldName('day').Focused := True;
+  tvData.GetColumnByFieldName('fromDate').Focused := True;
 end;
 
 procedure TfrmMasterRateDefaults.m_BeforePost(DataSet: TDataSet);
@@ -409,11 +442,7 @@ end;
 
 procedure TfrmMasterRateDefaults.m_NewRecord(DataSet: TDataSet);
 begin
-  if Now().Hour < 8 then
-    dataset['Day'] := TDateTime.Yesterday
-  else
-    dataset['Day'] := TDateTime.Today;
-  dataset['closingtimestamp'] := Now();
+  dataset['fromDate'] := TDateTime.Today
 end;
 
 procedure TfrmMasterRateDefaults.ShowError(const aOperation: string);
