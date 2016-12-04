@@ -262,7 +262,8 @@ uses
   ufrmRoomPrices in 'ufrmRoomPrices.pas' {frmRoomPrices},
   uRoomerConfirmationDialogs in 'uRoomerConfirmationDialogs.pas',
   uEmbDateStatistics in 'Embeddables\uEmbDateStatistics.pas' {frmEmbDateStatistics},
-  uMasterRateDefaults in 'Rates\uMasterRateDefaults.pas' {frmMasterRateDefaults};
+  uMasterRateDefaults in 'Rates\uMasterRateDefaults.pas' {frmMasterRateDefaults},
+  uTopClassAvailabilityOrder in 'uTopClassAvailabilityOrder.pas' {FrmTopClassAvailabilityOrder};
 
 {$R *.RES}
 
@@ -280,6 +281,7 @@ begin
 
   Application.CreateForm(TD, D);
   Application.CreateForm(TDReportData, DReportData);
+  Application.CreateForm(TFrmTopClassAvailabilityOrder, FrmTopClassAvailabilityOrder);
   TSplashFormManager.UpdateProgress('Loading forms...');
 
   Application.CreateForm(TDImages, DImages);

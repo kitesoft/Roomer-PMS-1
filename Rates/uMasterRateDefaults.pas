@@ -161,6 +161,7 @@ procedure TfrmMasterRateDefaults.FormClose(Sender: TObject; var Action: TCloseAc
 begin
   if tvdata.DataController.DataSet.State in [dsInsert, dsEdit] then
     tvdata.DataController.Post;
+  d.roomerMainDataSet.SystemPrepareChannelRates;
 end;
 
 procedure TfrmMasterRateDefaults.btnDeleteClick(Sender: TObject);

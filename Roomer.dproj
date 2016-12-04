@@ -828,11 +828,16 @@
         <DCCReference Include="ufrmRoomPrices.pas">
             <Form>frmRoomPrices</Form>
         </DCCReference>
+        <DCCReference Include="uRoomerConfirmationDialogs.pas"/>
         <DCCReference Include="Embeddables\uEmbDateStatistics.pas">
             <Form>frmEmbDateStatistics</Form>
         </DCCReference>
         <DCCReference Include="Rates\uMasterRateDefaults.pas">
             <Form>frmMasterRateDefaults</Form>
+        </DCCReference>
+        <DCCReference Include="uTopClassAvailabilityOrder.pas">
+            <Form>FrmTopClassAvailabilityOrder</Form>
+            <FormType>dfm</FormType>
         </DCCReference>
         <None Include="Roomer.todo"/>
         <None Include="notes.txt"/>
