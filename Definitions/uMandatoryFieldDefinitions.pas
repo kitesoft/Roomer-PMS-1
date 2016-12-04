@@ -25,11 +25,6 @@ type
   TMandatoryFieldHelper = record helper for TMandatoryCheckinField
   private
       /// <summary>
-      ///   Create a TManadatoryCheckinField from a PMSSettingName
-      /// </summary>
-      class function FromPMSSettingName(const aName: string): TMandatoryCheckinField; static;
-
-      /// <summary>
       ///   Return a TManadatoryCheckinField based in index
       /// </summary>
       class function FromItemIndex(aIndex: integer) : TMandatoryCheckinField; static;
@@ -164,11 +159,6 @@ end;
 function TMandatoryFieldHelper.PMSSettingName: String;
 begin
   result := MF_PMSSETTING_NAMES[self];
-end;
-
-class function TMandatoryFieldHelper.FromPMSSettingName(const aName: string): TMandatoryCheckinField;
-begin
-  result := TMandatoryCheckinField(StringIndexInSet(UpperCase(aName), MF_PMSSETTING_NAMES));
 end;
 
 function TMandatoryFieldHelper.ToItemIndex: integer;

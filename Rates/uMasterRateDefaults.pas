@@ -20,14 +20,8 @@ uses
 type
   TfrmMasterRateDefaults = class(TForm)
     pnlHolder: TsPanel;
-    sPanel2: TsPanel;
-    btnDelete: TsButton;
-    btnOther: TsButton;
-    btnNew: TsButton;
-    btnEdit: TsButton;
     sbMain: TsStatusBar;
     panBtn: TsPanel;
-    btnCancel: TsButton;
     BtnOk: TsButton;
     mnuOther: TPopupMenu;
     mnuiPrint: TMenuItem;
@@ -42,15 +36,7 @@ type
     DS: TDataSource;
     grPrinter: TdxComponentPrinter;
     prLink_grData: TdxGridReportLink;
-    lbStartFrom: TsLabel;
-    cbxChannelManager: TsComboBox;
-    cbxPlanCode: TsComboBox;
-    sLabel1: TsLabel;
     sPanel1: TsPanel;
-    grData: TcxGrid;
-    tvData: TcxGridDBTableView;
-    lvData: TcxGridLevel;
-    lvRateCodes: TsListView;
     sSplitter1: TsSplitter;
     m_fromDate: TDateField;
     m_price: TFloatField;
@@ -62,18 +48,34 @@ type
     m_stop: TBooleanField;
     m_lengthOfStayArrivalDateBased: TBooleanField;
     m_singleUsePrice: TFloatField;
+    m_id: TIntegerField;
+    sPanel4: TsPanel;
+    lvRateCodes: TsListView;
+    sPanel3: TsPanel;
+    lbStartFrom: TsLabel;
+    cbxChannelManager: TsComboBox;
+    sLabel1: TsLabel;
+    cbxPlanCode: TsComboBox;
+    sPanel5: TsPanel;
+    grData: TcxGrid;
+    tvData: TcxGridDBTableView;
     tvDataRecId: TcxGridDBColumn;
     tvDatafromDate: TcxGridDBColumn;
+    tvDatastop: TcxGridDBColumn;
     tvDataprice: TcxGridDBColumn;
+    tvDatasingleUsePrice: TcxGridDBColumn;
     tvDataavailability: TcxGridDBColumn;
     tvDataminStay: TcxGridDBColumn;
     tvDatamaxStay: TcxGridDBColumn;
     tvDataclosedOnArrival: TcxGridDBColumn;
     tvDataclosedOnDeparture: TcxGridDBColumn;
-    tvDatastop: TcxGridDBColumn;
     tvDatalengthOfStayArrivalDateBased: TcxGridDBColumn;
-    tvDatasingleUsePrice: TcxGridDBColumn;
-    m_id: TIntegerField;
+    lvData: TcxGridLevel;
+    sPanel6: TsPanel;
+    btnNew: TsButton;
+    btnEdit: TsButton;
+    btnDelete: TsButton;
+    btnOther: TsButton;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -92,16 +94,15 @@ type
     procedure mnuiGridToXmlClick(Sender: TObject);
     procedure edtLastDateChange(Sender: TObject);
     procedure btnRefreshClick(Sender: TObject);
-    procedure BtnOkClick(Sender: TObject);
     procedure cbxChannelManagerCloseUp(Sender: TObject);
     procedure cbxPlanCodeCloseUp(Sender: TObject);
     procedure lvRateCodesChange(Sender: TObject; Item: TListItem; Change: TItemChange);
   private
-    FDirty : Boolean;
+    FIsUpdating : Boolean;
     FUpdatingGrid: Boolean;
-    FRecordSet: TRoomerDataSet;
     FSelectedChannel : Integer;
     FSelectedPlanCode : Integer;
+    FSelectedRate : Integer;
     procedure fillGridFromDataset;
     procedure ShowError(const aOperation: string);
     procedure prepareSelectableList;
@@ -132,7 +133,10 @@ uses
   , uG
   , PrjConst
   , _Glob
-  , uD;
+  , uD
+  , uDateUtils
+  , uSqlUtils
+  ;
 
 procedure EditMasterRateDefaults;
 begin
@@ -150,12 +154,13 @@ begin
   RoomerLanguage.TranslateThisForm(self);
   glb.PerformAuthenticationAssertion(self);
   PlaceFormOnVisibleMonitor(self);
-  FDirty := False;
+  FIsUpdating := False;
 end;
 
 procedure TfrmMasterRateDefaults.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
-  FRecordSet := nil;
+  if tvdata.DataController.DataSet.State in [dsInsert, dsEdit] then
+    tvdata.DataController.Post;
 end;
 
 procedure TfrmMasterRateDefaults.btnDeleteClick(Sender: TObject);
@@ -171,12 +176,6 @@ end;
 procedure TfrmMasterRateDefaults.btnNewClick(Sender: TObject);
 begin
   m_.Insert;
-end;
-
-procedure TfrmMasterRateDefaults.BtnOkClick(Sender: TObject);
-begin
-  if tvdata.DataController.DataSet.State in [dsInsert, dsEdit] then
-    tvdata.DataController.Post;
 end;
 
 procedure TfrmMasterRateDefaults.btnRefreshClick(Sender: TObject);
@@ -215,14 +214,12 @@ end;
 
 constructor TfrmMasterRateDefaults.Create(Owner: TComponent);
 begin
-  FRecordSet := d.roomerMainDataSet.CreateNewDataset;
   inherited;
 end;
 
 destructor TfrmMasterRateDefaults.Destroy;
 begin
   inherited;
-  FRecordSet.Free;
 end;
 
 procedure TfrmMasterRateDefaults.edtLastDateChange(Sender: TObject);
@@ -242,13 +239,14 @@ begin
     try
       rSet := CreateNewDataSet;
       try
+        FSelectedRate := Integer(lvRateCodes.Selected.Data);
         hData.rSet_bySQL(rSet,
                             format('SELECT DATE(fromDate) AS fromDate, price, availability, minStay, maxStay, closedOnArrival, ' +
                                    'closedOnDeparture, stop, lengthOfStayArrivalDateBased, singleUsePrice, id ' +
-                                   'FROM channelmasterratesdefaults WHERE channelManager=%d AND planCodeId=%d AND roomClassId=%d',
+                                   'FROM channelmasterratesdefaults WHERE channelManager=%d AND planCodeId=%d AND roomClassId=%d ORDER BY fromDate',
                                   [FSelectedChannel,
                                    FSelectedPlanCode,
-                                   Integer(lvRateCodes.Selected.Data)]));
+                                   FSelectedRate]));
         rSet.First;
         if m_.active then m_.Close;
         m_.LoadFromDataSet(rSet);
@@ -266,13 +264,20 @@ end;
 procedure TfrmMasterRateDefaults.FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
 begin
   if Key = VK_ESCAPE then
-    btnCancel.Click;
+  begin
+    if m_.State IN [dsInsert, dsEdit] then
+      m_.Cancel
+    else
+    begin
+      ModalResult := mrCancel;
+      Close;
+    end;
+  end;
 end;
 
 procedure TfrmMasterRateDefaults.FormShow(Sender: TObject);
 begin
   prepareSelectableList;
-  fillGridFromDataset;
   grData.SetFocus;
 end;
 
@@ -307,6 +312,7 @@ begin
     cbxPlanCode.OnCloseUp := cbxPlanCodeCloseUp;
   end;
 
+  cbxPlanCodeCloseUp(cbxPlanCode);
   cbxChannelManagerCloseUp(cbxChannelManager);
 end;
 
@@ -387,27 +393,24 @@ end;
 procedure TfrmMasterRateDefaults.m_BeforeDelete(DataSet: TDataSet);
 var
   s : string;
-//  lCaller: TMasterRateDefaultsAPICaller;
+  id : Integer;
 begin
   if FUpdatingGrid then exit;
 
   s := '';
-  s := s+GetTranslatedText('shDeleteDayClosingTime')+' '+m_fromDate.ToString;
+  s := s+GetTranslatedText('shDeleteMasterRatesDefault')+' '+RoomerDateToString(DataSet['fromDate']) + #13#13;
   s := s+GetTranslatedText('shContinue');
 
   if MessageDlg(s,mtConfirmation, [mbYes, mbNo], 0) <> mrYes then
     Abort
   else
   begin
+    id := DataSet['id'];
+    s := format(
+         'DELETE FROM channelmasterratesdefaults WHERE id=%d',
+         [id]);
 
-//    lCaller := TMasterRateDefaultsAPICaller.Create;
-//    try
-//      if not lCaller.DeleteDayClosingTime(Dataset['day']) then
-//        ShowError('delete of DayClosing Timestamp');
-////        Abort;
-//    finally
-//      lCaller.Free;
-//    end;
+    d.roomerMainDataSet.DoCommand(s);
   end;
 end;
 
@@ -418,31 +421,105 @@ begin
 end;
 
 procedure TfrmMasterRateDefaults.m_BeforePost(DataSet: TDataSet);
-//var
-//  lCaller: TMasterRateDefaultsAPICaller;
+var s : String;
+    id : Integer;
 begin
-//  if FUpdatingGrid then exit;
-//
-//  lCaller := TMasterRateDefaultsAPICaller.Create;
-//  try
-//    if tvData.DataController.DataSource.State = dsEdit then
-//    begin
-//      if not lCaller.UpdateDayClosingTime(Dataset['day'], Dataset['closingtimestamp']) then
-//        ShowError('update of DayCLosing Timestamp');
-//    end
-//    else if tvData.DataController.DataSource.State = dsInsert then
-//      if not lCaller.InsertDayClosingTime(Dataset['day'], Dataset['closingtimestamp']) then
-//        ShowError('insert of DayCLosing Timestamp. Cannot enter multiple closing times for the same day');
-//
-//    FDirty := True;
-//  finally
-//    lCaller.Free;
-//  end;
+  if FUpdatingGrid then exit;
+  if FIsUpdating then exit;
+
+  if dataset['fromDate'] < TDateTime.Today then raise Exception.Create(GetTranslatedText('DateCanNotBeFromThePast'));
+  if dataset['price'] < 1.00 then raise Exception.Create(GetTranslatedText('RateIsTooLow'));
+  if dataset['availability'] < -1 then raise Exception.Create(GetTranslatedText('AvailabilityIsTooLow'));
+  if dataset['minStay'] < 0 then raise Exception.Create(GetTranslatedText('MinStayIsTooLow'));
+  if (dataset['maxStay'] < 0) OR ((dataset['maxStay'] < dataset['minStay']) AND (dataset['maxStay'] > 0)) then raise Exception.Create(GetTranslatedText('MaxStayCanNotBeLowerThanMinStay'));
+  if dataset['singleUsePrice'] < 0.00 then raise Exception.Create(GetTranslatedText('SingleUseRateIsTooLow'));
+
+  FIsUpdating := True;
+  try
+    if DataSet.State = dsInsert then
+    begin
+      s := format(
+           'INSERT INTO channelmasterratesdefaults (fromDate, ' +
+           'price, availability, minstay, maxStay, closedOnArrival, closedOnDeparture, stop, lengthOfStayArrivalDateBased, ' +
+           'singleUsePrice, channelManager, planCodeId, roomClassId) VALUES(' +
+           '%s, %s, %d, %d, %d, %s, %s, %s, %s, %s, %d, %d, %d)',
+           [_db(dateToSqlString(DataSet.FieldByName('fromDate').AsDateTime)),
+            _db(DataSet.FieldByName('price').AsFloat),
+            DataSet.FieldByName('availability').AsInteger,
+            DataSet.FieldByName('minStay').AsInteger,
+            DataSet.FieldByName('maxStay').AsInteger,
+            _db(DataSet.FieldByName('closedOnArrival').AsBoolean),
+            _db(DataSet.FieldByName('closedOnDeparture').AsBoolean),
+            _db(DataSet.FieldByName('stop').AsBoolean),
+            _db(DataSet.FieldByName('lengthOfStayArrivalDateBased').AsBoolean),
+            _db(DataSet.FieldByName('singleUsePrice').AsFloat),
+            FSelectedChannel,
+            FSelectedPlanCode,
+            FSelectedRate]);
+
+      id := d.roomerMainDataSet.DoCommand(s);
+      if id <= 0 then
+        raise Exception.Create('Adding master rate default unsuccessful.');
+      DataSet['id'] := id;
+    end else
+    if DataSet.State = dsEdit then
+    begin
+      id := DataSet['id'];
+      s := format(
+           'UPDATE channelmasterratesdefaults SET fromDate=%s, ' +
+           'price=%s, availability=%d, minstay=%d, maxStay=%d, closedOnArrival=%s, closedOnDeparture=%s, stop=%s, lengthOfStayArrivalDateBased=%s, ' +
+           'singleUsePrice=%s, channelManager=%d, planCodeId=%d, roomClassId=%d WHERE id=%d',
+           [_db(dateToSqlString(DataSet.FieldByName('fromDate').AsDateTime)),
+            _db(DataSet.FieldByName('price').AsFloat),
+            DataSet.FieldByName('availability').AsInteger,
+            DataSet.FieldByName('minStay').AsInteger,
+            DataSet.FieldByName('maxStay').AsInteger,
+            _db(DataSet.FieldByName('closedOnArrival').AsBoolean),
+            _db(DataSet.FieldByName('closedOnDeparture').AsBoolean),
+            _db(DataSet.FieldByName('stop').AsBoolean),
+            _db(DataSet.FieldByName('lengthOfStayArrivalDateBased').AsBoolean),
+            _db(DataSet.FieldByName('singleUsePrice').AsFloat),
+            FSelectedChannel,
+            FSelectedPlanCode,
+            FSelectedRate,
+            id]);
+
+      d.roomerMainDataSet.DoCommand(s);
+    end;
+  finally
+    FIsUpdating := False;
+  end;
 end;
 
 procedure TfrmMasterRateDefaults.m_NewRecord(DataSet: TDataSet);
 begin
-  dataset['fromDate'] := TDateTime.Today
+  if FUpdatingGrid then exit;
+
+  if glb.LocateSpecificRecord('roomtypegroups', 'id', FSelectedRate) then
+  begin
+    dataset['fromDate'] := TDateTime.Today;
+    dataset['stop'] := IIF(glb.RoomTypeGroups['connectStopSellToMasterRate'], glb.RoomTypeGroups['defStopSale'], False);
+    dataset['price'] := IIF(glb.RoomTypeGroups['connectRateToMasterRate'], glb.RoomTypeGroups.FieldByName('defRate').AsFloat, 0.00);
+    dataset['availability'] := IIF(glb.RoomTypeGroups['connectAvailabilityToMasterRate'], glb.RoomTypeGroups.FieldByName('defAvailability').AsInteger, -1);
+    dataset['minStay'] := IIF(glb.RoomTypeGroups['connectMinStayToMasterRate'], glb.RoomTypeGroups.FieldByName('defMinStay').AsInteger, 0);
+    dataset['maxStay'] := IIF(glb.RoomTypeGroups['connectMaxStayToMasterRate'], glb.RoomTypeGroups.FieldByName('defMaxStay').AsInteger, 0);
+    dataset['closedOnArrival'] := IIF(glb.RoomTypeGroups['connectCOAToMasterRate'], glb.RoomTypeGroups['defClosedToArrival'], False);
+    dataset['closedOnDeparture'] := IIF(glb.RoomTypeGroups['connectCODToMasterRate'], glb.RoomTypeGroups['defClosedToDeparture'], False);
+    dataset['lengthOfStayArrivalDateBased'] := IIF(glb.RoomTypeGroups['connectLOSToMasterRate'], False, False);
+    dataset['singleUsePrice'] := 0.00; // IIF(glb.RoomTypeGroups['connectSingleUseRateToMasterRate'], 0.00, 0.00);
+  end else
+  begin
+    dataset['fromDate'] := TDateTime.Today;
+    dataset['stop'] := False;
+    dataset['price'] := 0.00;
+    dataset['availability'] := -1;
+    dataset['minStay'] := 0;
+    dataset['maxStay'] := 0;
+    dataset['closedOnArrival'] := False;
+    dataset['closedOnDeparture'] := False;
+    dataset['lengthOfStayArrivalDateBased'] := False;
+    dataset['singleUsePrice'] := 0.00;
+  end;
 end;
 
 procedure TfrmMasterRateDefaults.ShowError(const aOperation: string);

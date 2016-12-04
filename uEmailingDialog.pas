@@ -51,8 +51,8 @@ type
     FFiles: TStringList;
     FTemplates : TEmailTemplateInfoList;
     procedure SetFiles(const Value: TStringList);
-    procedure LoadEmailTemplates;
-    function Download(template : TEmailTemplateInfo): String;
+//    procedure LoadEmailTemplates;
+//    function Download(template : TEmailTemplateInfo): String;
     function getSubject: String;
     function getsolvedText(text: String): String;
     function getText: String;
@@ -100,7 +100,6 @@ function sendFileAsAttachment(recipients : TStrings; _caption : String; attachme
 var _frmEmailingDialog: TFrmEmailingDialog;
   i: Integer;
 begin
-  result := True;
   _frmEmailingDialog := TFrmEmailingDialog.Create(nil);
   try
     _frmEmailingDialog.Caption := _Caption;
@@ -122,6 +121,7 @@ begin
   end;
 end;
 
+(*
 function TFrmEmailingDialog.Download(template : TEmailTemplateInfo) : String;
 var filename : String;
 begin
@@ -137,7 +137,7 @@ begin
     Screen.Cursor := crDefault;
   end;
 end;
-
+*)
 procedure TFrmEmailingDialog.edSubjectChange(Sender: TObject);
 begin
   __SubjectSample.Caption := getSubject;
@@ -236,7 +236,7 @@ begin
 //  LoadEmailTemplates;
 end;
 
-
+(*
 procedure TFrmEmailingDialog.LoadEmailTemplates;
 var rSet : TRoomerDataSet;
     template : TEmailTemplateInfo;
@@ -258,6 +258,7 @@ begin
     FreeAndNil(rSet);
   end;
 end;
+*)
 
 procedure TFrmEmailingDialog.sButton1Click(Sender: TObject);
 var bcc : String;

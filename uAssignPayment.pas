@@ -104,9 +104,6 @@ type
     procedure btnOKClick(Sender: TObject);
   private
     { Private declarations }
-    zReservation : integer;
-    zRoomreservation  : integer;
-    zInvoicenumber : integer;
     zIsGroupInvoice : boolean;
     zGroupAvailable : boolean;
 

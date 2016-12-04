@@ -136,11 +136,9 @@ function SelectPaymentTypes( Amount : Double;
 var
   i : integer;
   selected : string;
-  index : integer;
   sTemp : String;
 begin
   // --
-  result := false;
   Application.CreateForm(TfrmInvoicePayment, frmInvoicePayment);
   try
     frmInvoicePayment.FAmount := Amount;
@@ -282,7 +280,6 @@ begin
   // --
   maxDays   := 0;
   fSelected := 0;
-  fLeft     := 0;
 
   for i := 0 to agrPayTypes.RowCount - 1 do
   begin

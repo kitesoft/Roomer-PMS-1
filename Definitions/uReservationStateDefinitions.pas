@@ -44,7 +44,9 @@ type
 
     rsMixed,
 
-    rsWaitingList
+    rsWaitingList,
+
+    rsDeleted
   );
 
     TReservationStateSet = set of TReservationState;
@@ -179,7 +181,7 @@ end;
 function TReservationStateHelper.AsStatusChar: Char;
 const
   cReservationStateChars : Array[TReservationState] of char =
-      ('P','P','G','D','O','A','N','B','C','W','Z','Q', 'M', 'L');
+      ('P','P','G','D','O','A','N','B','C','W','Z','Q', 'M', 'L', 'X');
 begin
   Result := cReservationStateChars[Self];
 end;
@@ -252,6 +254,7 @@ begin
     rsAwaitingPayConfirm: result := True;
     rsMixed:              result := True;
     rsWaitingList:        result := True;
+    rsDeleted:            result := false;
   else
     Result := True;
   end;
@@ -279,6 +282,7 @@ begin
     rsAwaitingPayConfirm: result := False;
     rsMixed:              result := false;
     rsWaitingList:        result := True;
+    rsDeleted:            result := False;
   else
     Result := false;
   end;
@@ -342,6 +346,7 @@ begin
     'Z': result := rsAwaitingPayment;
     'Q': result := rsAwaitingPayConfirm;
     'L': result := rsWaitingList;
+    'X': result := rsDeleted;
   else
     result := rsUnKnown;
   end;

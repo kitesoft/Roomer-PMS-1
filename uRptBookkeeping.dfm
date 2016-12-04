@@ -50,7 +50,6 @@ object frmRptBookkeeping: TfrmRptBookkeeping
       ParentFont = False
       TabOrder = 0
       SkinData.SkinSection = 'GROUPBOX'
-      Checked = False
       object cbxMonth: TsComboBox
         Left = 15
         Top = 20
@@ -154,7 +153,6 @@ object frmRptBookkeeping: TfrmRptBookkeeping
       ParentFont = False
       TabOrder = 2
       SkinData.SkinSection = 'GROUPBOX'
-      Checked = False
       object dtDateFrom: TsDateEdit
         Left = 16
         Top = 20
@@ -173,7 +171,6 @@ object frmRptBookkeeping: TfrmRptBookkeeping
         TabOrder = 0
         Text = '  -  -    '
         OnChange = dtDateFromChange
-        CheckOnExit = True
         SkinData.SkinSection = 'EDIT'
         GlyphMode.Blend = 0
         GlyphMode.Grayed = False
@@ -196,7 +193,6 @@ object frmRptBookkeeping: TfrmRptBookkeeping
         TabOrder = 1
         Text = '  -  -    '
         OnChange = dtDateFromChange
-        CheckOnExit = True
         SkinData.SkinSection = 'EDIT'
         GlyphMode.Blend = 0
         GlyphMode.Grayed = False
@@ -256,6 +252,10 @@ object frmRptBookkeeping: TfrmRptBookkeeping
     SkinData.SkinSection = 'PAGECONTROL'
     object tabStatGrid: TsTabSheet
       Caption = 'Data'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object sPanel1: TsPanel
         Left = 0
         Top = 0
@@ -402,7 +402,7 @@ object frmRptBookkeeping: TfrmRptBookkeeping
         SearchFooter.HintHighlight = 'Highlight occurrences'
         SearchFooter.MatchCaseCaption = 'Match case'
         SortSettings.DefaultFormat = ssAutomatic
-        Version = '7.9.1.1'
+        Version = '8.1.2.0'
         WordWrap = False
       end
     end

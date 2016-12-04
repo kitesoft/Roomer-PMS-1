@@ -44,7 +44,7 @@ type
   public
     constructor Create(InvoiceNumber : integer; invoicedata : recInvoiceHeadHolder);
 
-    destructor destroy; override;
+    destructor Destroy; override;
 
   published
     property IvCustomer : string read FIvCustomer write FIvCustomer;
@@ -86,7 +86,7 @@ type
 
   public
     constructor Create(LineNo : integer);
-    destructor destroy; override;
+    destructor Destroy; override;
   published
     property LineNo : integer read FLineNo write FLineNo;
     property Code : string read FCode write FCode;
@@ -129,7 +129,7 @@ type
 
   public
     constructor Create(LineNo : integer);
-    destructor destroy; override;
+    destructor Destroy; override;
 
   published
     property VATNo : integer read FVATNo write FVATNo;
@@ -158,7 +158,7 @@ type
     FpmTypeIndex   : integer;
   public
     constructor Create(LineNo : integer);
-    destructor destroy; override;
+    destructor Destroy; override;
   published
     property pmNo : integer read FpmNo write FpmNo;
     property pmCode : string read FpmCode write FpmCode;
@@ -340,7 +340,7 @@ type
   public
     constructor Create(InvoiceNumber : integer; PaymentData : recPaymentHolder; invoiceData : recInvoiceHeadHolder);
 
-    destructor destroy; override;
+    destructor Destroy; override;
 
     function UpdateInfo(invoicedata : recInvoiceHeadHolder) : boolean;
 
@@ -1206,7 +1206,6 @@ var
   s : string;
 begin
 
-  result := false;
   rSet := CreateNewDataSet;
   try
     FivhReservation := - 1;
@@ -1215,8 +1214,8 @@ begin
     FivhRefrence := '';
 
     FivhExtraText := '';
-    FivhDate := Date;
-    FivhPayDate := Date;
+    FivhDate := 0;
+    FivhPayDate := 0;
     FivhStaff := '';
 
     FivhTotal_prePaid := 0;
@@ -1312,7 +1311,6 @@ begin
         begin
           FKreditType := ktKredit;
         end;
-        result := true;
       end;
     end;
   finally
@@ -1340,7 +1338,6 @@ begin
       FCompanyPID := rSet.fieldbyname('CompanyPID').asString;
       FCompanyVATno := rSet.fieldbyname('CompanyVATno').asString;
       FCompanyBankInfo := rSet.fieldbyname('CompanyBankInfo').asString;
-      result := true;
     end;
   finally
     freeandnil(rSet);

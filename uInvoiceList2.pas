@@ -190,7 +190,6 @@ type
   private
     { Private declarations }
 
-    r_ : TRoomerDataSet;
     zSortField : string;
     zSortDir : string;
 
@@ -198,12 +197,8 @@ type
     zLastInvoiceID : integer;
 
     firstTime : boolean;
-    zEnterIndex : integer;
 
     procedure RunQuery;
-    procedure runFilter;
-    procedure doFilter;
-    function GetGridFielNamesIndex(sFieldname : string) : integer;
     procedure ViewInvoice;
     procedure ApplyFilter;
     function GetSelectedInvoices : String;
@@ -746,19 +741,6 @@ begin
   if edtInvoiceTo.value < edtInvoiceFrom.Value then
     edtInvoiceTo.Value := edtInvoiceFrom.value;
   zInvoiceTo := edtInvoiceTo.value;
-end;
-
-procedure TfrmInvoiceList2.doFilter;
-begin
-end;
-
-procedure TfrmInvoiceList2.runFilter;
-begin
-end;
-
-function TfrmInvoiceList2.GetGridFielNamesIndex(sFieldname : string) : integer;
-begin
-  result := 0;
 end;
 
 procedure TfrmInvoiceList2.tvInvDblClick(Sender: TObject);

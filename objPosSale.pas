@@ -488,8 +488,7 @@ var
   ItemsNode : TXmlNode;
   ItemNode  : TXmlNode;
 
-  i, ii : Integer;
-  s     : string;
+  i : Integer;
 
   lbx1 : tStringList;
 

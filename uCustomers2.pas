@@ -266,7 +266,6 @@ type
     procedure btnInsertClick(Sender: TObject);
     procedure m_AfterScroll(DataSet: TDataSet);
     procedure Memo_NewRecord(DataSet: TDataSet);
-    procedure Memo_AfterDelete(DataSet: TDataSet);
     procedure sButton2Click(Sender: TObject);
     procedure Memo_BeforeDelete(DataSet: TDataSet);
     procedure DBEdit1Change(Sender: TObject);
@@ -291,7 +290,6 @@ type
     Procedure fillGridFromDataset(sGoto : string);
     procedure fillHolder;
     procedure changeAllowgridEdit;
-    function getPrevCode : string;
     function getPrefrence: boolean;
     Procedure chkFilter;
     procedure applyFilter;
@@ -701,15 +699,6 @@ end;
 ////////////////////////////////////////////////////////////////////////////////////////
 // memory table
 ////////////////////////////////////////////////////////////////////////////////////////
-function TfrmCustomers2.getPrevCode: string;
-begin
-end;
-
-procedure TfrmCustomers2.Memo_AfterDelete(DataSet: TDataSet);
-begin
-  //showmessage('Deleted');
-end;
-
 procedure TfrmCustomers2.Memo_BeforeDelete(DataSet: TDataSet);
 var
   s : string;

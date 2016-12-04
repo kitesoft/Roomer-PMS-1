@@ -374,11 +374,7 @@ var
   s : string;
   rSet : TRoomerDataSet;
   rCount : integer;
-  numGuests : integer;
   sql : string;
-
-  avail_Rooms : integer;
-  avail_beds : integer;
 
   startSQL, stopSQL, elapsedSQL : cardinal;
 
@@ -456,9 +452,7 @@ sql := sql +    '   ih.InvoiceNumber ';
 
       hData.rSet_bySQL(rSet,s);
 
-      rCount := rSet.RecordCount;
       stopSQL := GetTickCount;
-      elapsedSQL := stopSQL - startSQL; // milliseconds
       startLoop := GetTickCount;
       if mInvoiceHeads.Active then
         mInvoiceHeads.Close;
@@ -513,7 +507,6 @@ sql := sql +    '   ih.InvoiceNumber ';
       end;
 
       stopLoop := GetTickCount;
-      elapsedLoop := stopLoop - startLoop; // milliseconds
       mInvoiceHeads.First;
     finally
       mInvoiceHeads.EnableControls;
@@ -664,8 +657,7 @@ end;
 
 procedure TfrmLodgingTaxReport2.cbxMonthCloseUp(Sender: TObject);
 var
-  y, m, d : word;
-  idx : integer;
+  y, m : word;
   lastDay : integer;
 
 begin
@@ -688,8 +680,7 @@ end;
 
 procedure TfrmLodgingTaxReport2.cbxYearCloseUp(Sender: TObject);
 var
-  y, m, d : word;
-  idx : integer;
+  y, m : word;
   lastDay : integer;
 
 begin
@@ -744,7 +735,6 @@ end;
 procedure TfrmLodgingTaxReport2.FormShow(Sender : TObject);
 var
   y, m, d : word;
-  idx : integer;
   lastDay : integer;
   lLocations: TSet_Of_Integer;
 begin
@@ -793,7 +783,7 @@ begin
   sdate := DataSet.FieldByName('ADate').Asstring;
   dtDate := SQLToDateTime(sdate);
   decodeDate(dtDate, y, m, d);
-  weekNum := _weekNum(dtDate);
+  weekNum := DateUtils.WeekOfTheYear(dtDate);
 
   DataSet.FieldByName('dtDate').AsDatetime := dtDate;
   DataSet.FieldByName('Year').Asinteger := y;
@@ -839,7 +829,6 @@ var
   s            : string;
   sortfield    : string;
   isDescending : boolean;
-  sTmp         : string;
 begin
   if mInvoiceHeads.RecordCount = 0 then
     exit;
@@ -952,13 +941,11 @@ procedure TfrmLodgingTaxReport2.mnuThisreservationClick(Sender : TObject);
 var
   iReservation : integer;
   iRoomReservation : integer;
-  sName : string;
 begin
   if mInvoiceHeads.RecordCount = 0 then
     exit;
 
   iReservation := mInvoiceHeads.FieldByName('Reservation').Asinteger;
-  iRoomReservation := mInvoiceHeads.FieldByName('RoomReservation').Asinteger; ;
 
   ShowFinishedInvoices2(itPerReservation, '', iReservation);
 end;
@@ -967,12 +954,10 @@ procedure TfrmLodgingTaxReport2.mnuThisRoomClick(Sender : TObject);
 var
   iReservation : integer;
   iRoomReservation : integer;
-  sName : string;
 begin
   if mInvoiceHeads.RecordCount = 0 then
     exit;
 
-  iReservation := mInvoiceHeads.FieldByName('Reservation').Asinteger;
   iRoomReservation := mInvoiceHeads.FieldByName('RoomReservation').Asinteger; ;
 
   ShowFinishedInvoices2(itPerRoomRes, '', iRoomReservation);
@@ -982,28 +967,25 @@ procedure TfrmLodgingTaxReport2.OpenGroupInvoice1Click(Sender : TObject);
 var
   iReservation : integer;
   iRoomReservation : integer;
-  sName : string;
 begin
   if mInvoiceHeads.RecordCount = 0 then
     exit;
 
   iReservation := mInvoiceHeads.FieldByName('Reservation').Asinteger;
-  iRoomReservation := mInvoiceHeads.FieldByName('RoomReservation').Asinteger; ;
-  EditInvoice(iReservation, 0, 0, 0, 0, 0, false, true,false);
+  EditInvoice(iReservation, 0, 0, 0, 0, 0, false);
 end;
 
 procedure TfrmLodgingTaxReport2.OpenthisRoom1Click(Sender : TObject);
 var
   iReservation : integer;
   iRoomReservation : integer;
-  sName : string;
 begin
   if mInvoiceHeads.RecordCount = 0 then
     exit;
 
   iReservation := mInvoiceHeads.FieldByName('Reservation').Asinteger;
   iRoomReservation := mInvoiceHeads.FieldByName('RoomReservation').Asinteger; ;
-  EditInvoice(iReservation, iRoomReservation, 0, 0, 0, 0, false, true,false);
+  EditInvoice(iReservation, iRoomReservation, 0, 0, 0, 0, false);
 end;
 
 // -------------------------------------------------------------------------------

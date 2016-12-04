@@ -124,31 +124,28 @@ var
 begin
   result := '';
   rSet := CreateNewDataSet;
+  iReservation := 0;
   try
     s := format(select_ProvideARoom2_MoveToRoomEnh2 , [RoomReservation]);
     hData.rSet_bySQL(rSet,s);
     rSet.First;
-    if not rSet.eof then
+
+    blockMove := rSet.fieldbyname('blockMove').AsBoolean;
+    sRoom := trim(rSet.fieldbyname('room').AsString);
+    if blockMove AND
+      (Copy(sRoom, 1, 1) <> '<') then
     begin
-      blockMove := rSet.fieldbyname('blockMove').AsBoolean;
-      sRoom := trim(rSet.fieldbyname('room').AsString);
-      if blockMove AND
-        (Copy(sRoom, 1, 1) <> '<') then
-      begin
-        MessageDlg(GetTranslatedText('shTx_FrmMain_UserCannotMoveTheRoomReservation'), mtError, [mbOk], 0);
-        exit;
-      end;
-      iReservation := rSet.fieldbyname('reservation').AsInteger;
-      sRoomType := rSet.fieldbyname('roomtype').AsString;
-      sStatus := rSet.fieldbyname('status').AsString;
-      dtArrival := trunc(rSet.fieldbyname('rrArrival').AsDateTime);
-      dtDeparture := trunc(rSet.fieldbyname('rrDeparture').AsDateTime);
+      MessageDlg(GetTranslatedText('shTx_FrmMain_UserCannotMoveTheRoomReservation'), mtError, [mbOk], 0);
+      exit;
     end;
+    iReservation := rSet.fieldbyname('reservation').AsInteger;
+    sRoomType := rSet.fieldbyname('roomtype').AsString;
+    sStatus := rSet.fieldbyname('status').AsString;
+    dtArrival := trunc(rSet.fieldbyname('rrArrival').AsDateTime);
+    dtDeparture := trunc(rSet.fieldbyname('rrDeparture').AsDateTime);
   finally
     freeandnil(rSet);
   end;
-
-  isNoRoom := false;
 
   if sRoom = '' then
   begin
@@ -202,9 +199,7 @@ end;
 procedure TfrmProvideARoom2.Display;
 var
   rSet : TRoomerDataSet;
-  i, ii : Integer;
-  sType : string;
-
+  i : Integer;
   s : string;
 
   roomType : string;

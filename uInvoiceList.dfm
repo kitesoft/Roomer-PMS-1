@@ -111,7 +111,6 @@ object frmInvoiceList: TfrmInvoiceList
       ParentFont = False
       TabOrder = 1
       Text = '  -  -    '
-      CheckOnExit = True
       SkinData.SkinSection = 'EDIT'
       GlyphMode.Blend = 0
       GlyphMode.Grayed = False
@@ -134,7 +133,6 @@ object frmInvoiceList: TfrmInvoiceList
       ParentFont = False
       TabOrder = 2
       Text = '  -  -    '
-      CheckOnExit = True
       SkinData.SkinSection = 'EDIT'
       GlyphMode.Blend = 0
       GlyphMode.Grayed = False

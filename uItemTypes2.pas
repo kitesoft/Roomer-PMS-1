@@ -181,7 +181,6 @@ type
     Procedure fillGridFromDataset(sGoto : string);
     procedure fillHolder;
     procedure changeAllowgridEdit;
-    function getPrevCode : string;
     Procedure chkFilter;
     procedure applyFilter;
 
@@ -454,9 +453,6 @@ end;
 ////////////////////////////////////////////////////////////////////////////////////////
 // memory table
 ////////////////////////////////////////////////////////////////////////////////////////
-function TfrmItemTypes2.getPrevCode: string;
-begin
-end;
 
 procedure TfrmItemTypes2.m_BeforeDelete(DataSet: TDataSet);
 var
@@ -659,8 +655,6 @@ end;
 
 procedure TfrmItemTypes2.tvDataVATCodePropertiesValidate(Sender: TObject; var DisplayValue: Variant; var ErrorText: TCaption;
   var Error: Boolean);
-var
-  CurrValue : string;
 begin
   error := false;
   if trim(displayValue) = '' then

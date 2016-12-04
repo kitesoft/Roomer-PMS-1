@@ -92,7 +92,6 @@ function SetRoomCleanAndMaintenanceStatus(sRoom : string; x, y : integer) : bool
 var
   s : string;
   dsRoom, dsCodes, dsNotes : TRoomerDataSet;
-  status : String;
   obj : TObject;
   currStatus : STring;
   idx : Integer;

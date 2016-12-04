@@ -521,7 +521,7 @@ begin
     end;
     if ins_Convert(zData) then
     begin
-      m_.FieldByName('ID').AsInteger := nID;
+      m_.FieldByName('ID').AsInteger := nID;         // TODO: THis does not work
       glb.ForceTableRefresh;
     end else
     begin
@@ -689,13 +689,10 @@ begin
   begin
     screen.Cursor := crHourGlass;
     try
-      currCode := zData.cvId;
-//      prevCode := GetPrevCode;
-
       if Del_Convert(zData) then
       begin
         try
-          fillGridFromDataset(prevCode);
+          fillGridFromDataset(0);
         except
         end;
       end;

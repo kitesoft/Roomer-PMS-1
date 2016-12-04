@@ -18,11 +18,9 @@ type
     procedure FormCreate(Sender: TObject);
     procedure FormHide(Sender: TObject);
   private
-    procedure DownloadProgress(Sender: TObject; Read, Total: Integer);
     { Private declarations }
   public
     { Public declarations }
-    procedure PrepareBusyNotificator;
     procedure NilInternetEvents;
   end;
 
@@ -34,7 +32,6 @@ type
   private
     class var frmInstance: TfrmRoomerSplash;
     class function frmSplash: TfrmRoomerSplash;
-    class procedure ShowSplashForm; static;
   public
     class procedure Show;
     class procedure Close;
@@ -81,18 +78,6 @@ begin
   NilInternetEvents;
 end;
 
-procedure TfrmRoomerSplash.PrepareBusyNotificator;
-begin
-//  d.roomerMainDataSet.roomerClient.OnUploadProgress := DownloadProgress;
-//  d.roomerMainDataSet.roomerClient.OnDownloadProgress := DownloadProgress;
-end;
-
-
-procedure TfrmRoomerSplash.DownloadProgress(Sender: TObject; Read, Total: Integer);
-begin
-//  Update;
-end;
-
 
 class procedure TSplashFormManager.Close;
 begin
@@ -114,14 +99,6 @@ end;
 class procedure TSplashFormManager.Show;
 begin
   frmSplash.Show;
-end;
-
-class procedure TSplashFormManager.ShowSplashForm;
-begin
-  if not assigned(frmInstance) then
-    frmInstance := TfrmRoomerSplash.Create(Application);
-
-  frmInstance.Show;
 end;
 
 class function TSplashFormManager.TryHideForm: boolean;

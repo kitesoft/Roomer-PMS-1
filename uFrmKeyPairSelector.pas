@@ -130,9 +130,6 @@ begin
 end;
 
 procedure TfrmKeyPairSelector.lvListCompare(Sender: TObject; Item1, Item2: TListItem; Data: Integer; var Compare: Integer);
-var
-   intItem1,
-   intItem2: Integer;
 begin
   if SortedColumn = 0 then
   begin

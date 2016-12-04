@@ -172,6 +172,7 @@ object FrmTaxItemLink: TFrmTaxItemLink
         SortType = stText
         TabOrder = 0
         ViewStyle = vsReport
+        FilterTimeOut = 0
         PrintSettings.DateFormat = 'dd/mm/yyyy'
         PrintSettings.Font.Charset = DEFAULT_CHARSET
         PrintSettings.Font.Color = clWindowText
@@ -201,7 +202,7 @@ object FrmTaxItemLink: TFrmTaxItemLink
         DetailView.Font.Height = -13
         DetailView.Font.Name = 'Tahoma'
         DetailView.Font.Style = []
-        Version = '1.6.9.1'
+        Version = '1.7.3.1'
         DataScroll = False
         Fields = <>
         ExplicitWidth = 488

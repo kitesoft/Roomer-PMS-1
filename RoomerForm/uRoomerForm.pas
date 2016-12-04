@@ -82,6 +82,8 @@ type
     property BusyState: TRoomerFormBusyState read GetBusyState write SetBusyState;
   end;
 
+  //TODO: Create a form factory, with derivatives for implemented forms
+
 implementation
 
 {$R *.dfm}
@@ -273,5 +275,6 @@ begin
   end;
 
 end;
+
 
 end.

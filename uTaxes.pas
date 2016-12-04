@@ -212,15 +212,11 @@ type
     zFilterOn        : boolean;
     zSortStr         : string;
     zIsAddRow        : boolean;
-    zCurrencyID      : integer;
-    zCurrency        : string;
-    zLocalCurrency   : string;
     zDescription : string;
 
     Procedure fillGridFromDataset(currency,sGoto : string);
     procedure fillHolder;
     procedure changeAllowgridEdit;
-    function getPrevCode : string;
     Procedure chkFilter;
     procedure applyFilter;
 
@@ -516,10 +512,6 @@ end;
 ////////////////////////////////////////////////////////////////////////////////////////
 
 
-function TfrmTaxes.getPrevCode: string;
-begin
-end;
-
 
 procedure TfrmTaxes.m_BeforeDelete(DataSet: TDataSet);
 var
@@ -638,8 +630,6 @@ begin
 end;
 
 procedure TfrmTaxes.PrepareUserInterface;
-var
-  tmp : integer;
 begin
 //**
   panBtn.Visible   := False;

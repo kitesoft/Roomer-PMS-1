@@ -601,7 +601,6 @@ object frmMain: TfrmMain
             PopupMenu = pupGroups
             TabOrder = 1
             LookAndFeel.NativeStyle = False
-            ExplicitWidth = 974
             object tvAllReservations: TcxGridDBTableView
               Navigator.Buttons.CustomButtons = <>
               Navigator.Buttons.First.Visible = True
@@ -1151,7 +1150,6 @@ object frmMain: TfrmMain
               BevelOuter = bvNone
               TabOrder = 2
               SkinData.SkinSection = 'TRANSPARENT'
-              ExplicitWidth = 974
               object sPanel2: TsPanel
                 Left = -13
                 Top = 0
@@ -1161,7 +1159,6 @@ object frmMain: TfrmMain
                 BevelOuter = bvNone
                 TabOrder = 0
                 SkinData.SkinSection = 'TRANSPARENT'
-                ExplicitLeft = -6
                 object __ExplainG: TsLabel
                   Left = 194
                   Top = -3
@@ -1333,7 +1330,6 @@ object frmMain: TfrmMain
             Align = alBottom
             TabOrder = 2
             SkinData.SkinSection = 'PANEL'
-            ExplicitWidth = 974
             object grPeriodRooms_NO: TAdvStringGrid
               Tag = 2
               Left = 1
@@ -1481,7 +1477,6 @@ object frmMain: TfrmMain
             TabOrder = 3
             OnMouseEnter = pnlNoRoomButtonsMouseEnter
             SkinData.SkinSection = 'PANEL'
-            ExplicitWidth = 974
             object pnlOccupancyViewButtons: TPanel
               Left = 597
               Top = 1
@@ -1491,7 +1486,6 @@ object frmMain: TfrmMain
               BevelOuter = bvNone
               TabOrder = 0
               OnMouseMove = btnOccupancyViewMouseMove
-              ExplicitLeft = 604
               object btnOccupancyViewHide: TSpeedButton
                 Left = 6
                 Top = 3
@@ -1554,7 +1548,6 @@ object frmMain: TfrmMain
               OnMouseEnter = pnlNoRoomButtonsMouseEnter
               OnMouseMove = btnOccupancyViewMouseMove
               SkinData.SkinSection = 'TRANSPARENT'
-              ExplicitLeft = 366
               object btnNoRoomsHide: TSpeedButton
                 Left = 6
                 Top = 3
@@ -1599,7 +1592,6 @@ object frmMain: TfrmMain
               TabOrder = 2
               OnMouseMove = btnOccupancyViewMouseMove
               SkinData.SkinSection = 'TRANSPARENT'
-              ExplicitWidth = 365
               object btnOccupancyView: TSpeedButton
                 AlignWithMargins = True
                 Left = 4
@@ -1649,7 +1641,7 @@ object frmMain: TfrmMain
           Caption = 'tabFreeRooms'
           ExplicitLeft = 0
           ExplicitTop = 0
-          ExplicitWidth = 974
+          ExplicitWidth = 0
           ExplicitHeight = 0
         end
         object tabDashboard: TsTabSheet
@@ -1657,14 +1649,12 @@ object frmMain: TfrmMain
           SkinData.SkinSection = 'TRANSPARENT'
           ExplicitLeft = 0
           ExplicitTop = 0
-          ExplicitWidth = 974
           ExplicitHeight = 0
         end
         object tabRateQuery: TsTabSheet
           Caption = 'tabRateQuery'
           ExplicitLeft = 0
           ExplicitTop = 0
-          ExplicitWidth = 974
           ExplicitHeight = 0
         end
       end
@@ -2024,7 +2014,7 @@ object frmMain: TfrmMain
             Left = 159
             Top = 4
             Width = 94
-            Height = 24
+            Height = 23
             Margins.Left = 10
             Margins.Top = 4
             Align = alLeft
@@ -2037,7 +2027,6 @@ object frmMain: TfrmMain
             Font.Height = -17
             Font.Name = 'Segoe UI'
             Font.Style = [fsBold]
-            ExplicitHeight = 23
           end
           object dtDate: TsDateEdit
             AlignWithMargins = True
@@ -2609,7 +2598,7 @@ object frmMain: TfrmMain
         Height = 41
         Align = alClient
         Alignment = taCenter
-        Caption = '....'
+        Caption = '<Timely messages panel>'
         ParentFont = False
         Layout = tlCenter
         Font.Charset = DEFAULT_CHARSET
@@ -2618,7 +2607,6 @@ object frmMain: TfrmMain
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         UseSkinColor = False
-        ExplicitWidth = 24
         ExplicitHeight = 24
       end
     end
@@ -2734,6 +2722,7 @@ object frmMain: TfrmMain
       Index = 2
     end
     object rbTabReports: TdxRibbonTab
+      Active = True
       Caption = 'Reports'
       Groups = <
         item
@@ -3098,7 +3087,7 @@ object frmMain: TfrmMain
     object lblHotelName: TsLabel
       Left = 0
       Top = 33
-      Width = 301
+      Width = 140
       Height = 22
       Align = alBottom
       Alignment = taCenter
@@ -3109,7 +3098,6 @@ object frmMain: TfrmMain
       Font.Height = -18
       Font.Name = 'Tahoma'
       Font.Style = []
-      ExplicitWidth = 140
     end
   end
   object pnlRBE: TsPanel

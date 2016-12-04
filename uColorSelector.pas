@@ -59,7 +59,6 @@ uses ud, uRoomerLanguage, uDImages, uUtils;
 
 function OpenColorSelectionDialog(var colorId, colorValue : Integer) : Integer;
 begin
-  result := mrCancel;
   frmColorSelector := TfrmColorSelector.Create(Application.MainForm);
   try
     frmColorSelector.selectedColorIndex := colorId;

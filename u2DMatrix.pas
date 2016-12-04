@@ -279,7 +279,6 @@ end;
 procedure Tfrm2DMatrix.ReadPaymentAssuranceMatrix(channelManagerCode: String);
 var
   res: TRoomerDataset;
-  i: Integer;
 begin
   matrix.Clear;
   grdMatrix.ClearAll;
@@ -300,7 +299,6 @@ end;
 procedure Tfrm2DMatrix.ReadChannelConfirmationEmailMatrix;
 var
   res: TRoomerDataset;
-  i: Integer;
 begin
   matrix.Clear;
   grdMatrix.ClearAll;
@@ -320,7 +318,6 @@ end;
 procedure Tfrm2DMatrix.ReadChannelHotelEmailMatrix;
 var
   res: TRoomerDataset;
-  i: Integer;
 begin
   matrix.Clear;
   grdMatrix.ClearAll;

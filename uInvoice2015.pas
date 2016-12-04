@@ -390,9 +390,6 @@ procedure TFrmInvoice2015.GetReservationHeaderInformation;
 var
   rSet: TRoomerDataset;
   s: string;
-  sTmp: string;
-
-  ss: string;
 
 begin
   if SplitNumber = 2 then
@@ -432,14 +429,6 @@ end;
 
 procedure TFrmInvoice2015.GetGuestInformation;
 var
-  Person: Integer;
-  Name: string;
-  Address1: string;
-  Address2: string;
-  Address3: string;
-  Address4: string;
-  Country: string;
-  PID: string;
 
   rSet: TRoomerDataset;
   s: string;
@@ -616,7 +605,6 @@ end;
 procedure TFrmInvoice2015.sButton1Click(Sender: TObject);
 var
   Rec: recDownPayment;
-  theData: recPaymentHolder;
   line: TPaymentLine;
   item: TListItem;
 begin
@@ -668,7 +656,6 @@ end;
 procedure TFrmInvoice2015.btnEditPaymentClick(Sender: TObject);
 var
   Rec: recDownPayment;
-  theData: recPaymentHolder;
   line: TPaymentLine;
   item: TListItem;
 

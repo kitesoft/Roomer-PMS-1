@@ -29,7 +29,7 @@ uses
   uCreditPrompt in 'uCreditPrompt.pas' {frmCreditPrompt},
   uInvoiceList in 'uInvoiceList.pas' {frmInvoiceList},
   uDReportData in 'uDReportData.pas' {DReportData: TDataModule},
-  uD in 'uD.pas' {forceoffline: TDataModule},
+  uD in 'uD.pas' {D: TDataModule},
   uG in 'uG.pas',
   uConverts in 'uConverts.pas' {frmConverts},
   ufrmSelLang in 'ufrmSelLang.pas' {frmSelLang},
@@ -259,6 +259,7 @@ uses
   uStringUtils in 'RoomerVCLs\Source\uStringUtils.pas',
   uInvoiceDefinitions in 'Definitions\uInvoiceDefinitions.pas',
   uFraCountryPanel in 'Embeddables\uFraCountryPanel.pas' {fraCountryPanel: TFrame},
+  ufrmRoomPrices in 'ufrmRoomPrices.pas' {frmRoomPrices},
   uRoomerConfirmationDialogs in 'uRoomerConfirmationDialogs.pas',
   uEmbDateStatistics in 'Embeddables\uEmbDateStatistics.pas' {frmEmbDateStatistics},
   uMasterRateDefaults in 'Rates\uMasterRateDefaults.pas' {frmMasterRateDefaults};

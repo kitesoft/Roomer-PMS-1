@@ -57,6 +57,7 @@ procedure parseFirstAndLastNameFromFullname(Fullname : String; var firstName : S
 function iif(condition : Boolean; TrueResult : String; FalseResult : String) : String; overload;
 function iif(condition : Boolean; TrueResult : Integer; FalseResult : Integer) : Integer; overload;
 function iif(condition : Boolean; TrueResult : Double; FalseResult : Double) : Double; overload;
+function iif(condition : Boolean; TrueResult : Boolean; FalseResult : Boolean) : Boolean; overload;
 
 // Font value back in one line
 function IIF(Condition : Boolean; Alfa, Beta : TFont) : TFont; overload;
@@ -219,6 +220,14 @@ begin
 end;
 
 function iif(condition : Boolean; TrueResult : Double; FalseResult : Double) : Double;
+begin
+  if condition then
+    result := TrueResult
+  else
+    result := FalseResult;
+end;
+
+function iif(condition : Boolean; TrueResult : Boolean; FalseResult : Boolean) : Boolean;
 begin
   if condition then
     result := TrueResult

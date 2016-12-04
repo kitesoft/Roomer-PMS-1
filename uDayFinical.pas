@@ -2178,6 +2178,7 @@ var
   ReportLink: TdxGridReportLink;
 
 begin
+  ReportLink := nil;
 
   if zIsOneDay then
   begin
@@ -2372,7 +2373,7 @@ var
   dummy: string;
 begin
   if GetReservationFromActivePage(Reservation, RoomReservation, dummy) then
-    EditInvoice(Reservation, RoomReservation, 0, 0, 0, 0, false, false, false)
+    EditInvoice(Reservation, RoomReservation, 0, 0, 0, 0, false)
   else
     showmessage(GetTranslatedText('shTx_DayFinical_CashInvoice'));
 
@@ -2385,7 +2386,7 @@ var
   dummy: string;
 begin
   if GetReservationFromActivePage(Reservation, RoomReservation, dummy) then
-    EditInvoice(Reservation, 0, 0, 0, 0, 0, false, false, false)
+    EditInvoice(Reservation, 0, 0, 0, 0, 0, false)
   else
     showmessage(GetTranslatedText('shTx_DayFinical_CashInvoice'));
 end;

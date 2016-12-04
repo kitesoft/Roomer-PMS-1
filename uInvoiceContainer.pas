@@ -146,7 +146,6 @@ type
   TInvoice = class
   private
     FCurrency : String;
-    FXml : String;
     FChanged: Boolean;
     DeletedItems : TInvoiceLineList;
     DeletedPayments : TPaymentLineList;

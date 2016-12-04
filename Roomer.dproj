@@ -129,6 +129,7 @@
         <Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1)'!=''">
+        <DCC_ExeOutput>RoomerPMSRelease</DCC_ExeOutput>
         <VerInfo_Build>1</VerInfo_Build>
         <VerInfo_Keys>CompanyName=Promoir BV;FileDescription=Roomer PMS;FileVersion=1.9.10.1;InternalName=;LegalCopyright=(C) 2013, 2014, 2015, 2016 Promoir BV;LegalTrademarks=Roomer is a Registered Trademark of Promoir BV;OriginalFilename=Roomer.exe;ProductName=Roomer Open Hospitality Platform;ProductVersion=1.9.10.1;Comments=;ExtraBuild=161130;PrivateBuild=</VerInfo_Keys>
         <VerInfo_AutoGenVersion>false</VerInfo_AutoGenVersion>
@@ -160,9 +161,9 @@
         <DCC_AssertionsAtRuntime>false</DCC_AssertionsAtRuntime>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_4_Win32)'!=''">
-        <VerInfo_Build>1</VerInfo_Build>
+        <DCC_ExeOutput>RoomerPMSRelease</DCC_ExeOutput>
         <VerInfo_Debug>false</VerInfo_Debug>
-        <VerInfo_Keys>CompanyName=Promoir BV;FileDescription=Roomer PMS;FileVersion=1.9.10.1;InternalName=;LegalCopyright=(C) 2013, 2014, 2015, 2016 Promoir BV;LegalTrademarks=Roomer is a Registered Trademark of Promoir BV;OriginalFilename=Roomer.exe;ProductName=Roomer Open Hospitality Platform;ProductVersion=1.9.10.1;Comments=;ExtraBuild=161130</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=Promoir BV;FileDescription=Roomer PMS;FileVersion=1.9.10.1;InternalName=;LegalCopyright=(C) 2013, 2014, 2015, 2016 Promoir BV;LegalTrademarks=Roomer is a Registered Trademark of Promoir BV;OriginalFilename=Roomer.exe;ProductName=Roomer Open Hospitality Platform;ProductVersion=1.9.10.1;Comments=;ExtraBuild=161202</VerInfo_Keys>
         <Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
@@ -281,7 +282,7 @@
             <DesignClass>TDataModule</DesignClass>
         </DCCReference>
         <DCCReference Include="uD.pas">
-            <Form>forceoffline</Form>
+            <Form>D</Form>
             <DesignClass>TDataModule</DesignClass>
         </DCCReference>
         <DCCReference Include="uG.pas"/>
@@ -824,7 +825,9 @@
             <FormType>dfm</FormType>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
-        <DCCReference Include="uRoomerConfirmationDialogs.pas"/>
+        <DCCReference Include="ufrmRoomPrices.pas">
+            <Form>frmRoomPrices</Form>
+        </DCCReference>
         <DCCReference Include="Embeddables\uEmbDateStatistics.pas">
             <Form>frmEmbDateStatistics</Form>
         </DCCReference>

@@ -44,7 +44,6 @@ object frmAssignPayment: TfrmAssignPayment
       Padding.Bottom = 3
       TabOrder = 0
       SkinData.SkinSection = 'GROUPBOX'
-      Checked = False
       DesignSize = (
         442
         216)
@@ -249,8 +248,6 @@ object frmAssignPayment: TfrmAssignPayment
     SkinData.SkinSection = 'PAGECONTROL'
     object sTabSheet1: TsTabSheet
       Caption = 'Work within reservation group'
-      SkinData.CustomColor = False
-      SkinData.CustomFont = False
       ExplicitLeft = 0
       ExplicitTop = 0
       ExplicitWidth = 0
@@ -274,7 +271,6 @@ object frmAssignPayment: TfrmAssignPayment
         Caption = 'Assign to room'
         TabOrder = 1
         SkinData.SkinSection = 'GROUPBOX'
-        Checked = False
         object __cbxRoomSelect: TsComboBox
           Left = 8
           Top = 24
@@ -313,8 +309,6 @@ object frmAssignPayment: TfrmAssignPayment
     end
     object sTabSheet2: TsTabSheet
       Caption = 'Move to other reservation '
-      SkinData.CustomColor = False
-      SkinData.CustomFont = False
       ExplicitLeft = 0
       ExplicitTop = 0
       ExplicitWidth = 0
@@ -331,7 +325,6 @@ object frmAssignPayment: TfrmAssignPayment
         Caption = 'Set to group invoice'
         TabOrder = 0
         SkinData.SkinSection = 'GROUPBOX'
-        Checked = False
         DesignSize = (
           436
           113)
@@ -401,7 +394,6 @@ object frmAssignPayment: TfrmAssignPayment
         Caption = 'Set to room'
         TabOrder = 1
         SkinData.SkinSection = 'GROUPBOX'
-        Checked = False
         DesignSize = (
           436
           115)

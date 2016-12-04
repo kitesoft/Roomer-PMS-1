@@ -68,7 +68,7 @@ object frmPriceCodes: TfrmPriceCodes
     object labFilterWarning: TsLabel
       Left = 1
       Top = 74
-      Width = 548
+      Width = 4
       Height = 14
       Align = alBottom
       Alignment = taCenter
@@ -82,7 +82,6 @@ object frmPriceCodes: TfrmPriceCodes
       Font.Height = -12
       Font.Name = 'Tahoma'
       Font.Style = []
-      ExplicitWidth = 4
     end
     object btnDelete: TsButton
       Left = 199
@@ -458,6 +457,7 @@ object frmPriceCodes: TfrmPriceCodes
     object prLink_grData: TdxGridReportLink
       Active = True
       Component = grData
+      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -470,7 +470,8 @@ object frmPriceCodes: TfrmPriceCodes
       PrinterPage.PageSize.Y = 297000
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
-      ReportDocument.CreationDate = 42677.626610358800000000
+      ReportDocument.CreationDate = 42706.677832453700000000
+      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
   end

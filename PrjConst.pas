@@ -294,6 +294,7 @@ begin
   constants.Add('shAndCurrency', 'and Currency ');
   constants.Add('shAndPersonVipType', 'and Person VIP Type ');
   constants.Add('shAndPersonContactType', 'and Person Contact Type ');
+  constants.Add('shCurrencyRate', 'Rate');
   // uCountryGroups;
   constants.Add('shDeleteCountrygroup', 'Delete countrygroup');
   constants.Add('shDeleteChannelManager', 'Delete channel manager');
@@ -1578,6 +1579,7 @@ begin
                 'The Extra(s) [%s] do not have enough available stock for the whole reservation period: '+ #13 +
                 'Do you want to continue anyway?');
   constants.Add('shDeleteDayClosingTime', 'Delete DayClosingtime');
+  constants.Add('shDeleteMasterRatesDefault', 'Delete selected entry of master-rate default setting: ');
   constants.Add('shRoomerFormBusyStateIdle', 'Ready');
   constants.Add('shRoomerFormBusyStateLoadingData', 'Loading data...');
   constants.Add('shRoomerFormBusyStatePrinting', 'Printing ...');
@@ -1602,6 +1604,13 @@ begin
   constants.Add('shTx_MandatoryFields_Market', 'Visitation type (Leisure/Business)');
   constants.Add('shTx_MandatoryFields_Nationality', 'Nationality');
   constants.Add('shTx_MandatoryFields_Guarantee', 'Guarantee');
+
+  constants.Add('DateCanNotBeFromThePast', 'Date can not be from the past.');
+  constants.Add('RateIsTooLow', 'Rate is too low.');
+  constants.Add('AvailabilityIsTooLow', 'Availability is too low.');
+  constants.Add('MinStayIsTooLow', 'Min stay is too low.');
+  constants.Add('MaxStayCanNotBeLowerThanMinStay', 'Max. stay can not be lower than min. stay.');
+  constants.Add('SingleUseRateIsTooLow', 'Single use rate is too low.');
 
 end;
 
@@ -1768,7 +1777,7 @@ begin
   FrmHandleBookKeepingException := TFrmHandleBookKeepingException.Create(nil); FrmHandleBookKeepingException.Free; FrmHandleBookKeepingException := nil;
   FrmRoomClassEdit := TFrmRoomClassEdit.Create(nil); FrmRoomClassEdit.Free; FrmRoomClassEdit := nil;
 
-  frmRptReservations := TfrmRptReservations.Create(nil); frmRptReservations.Free; frmRptReservations := nil;
+  TfrmRptReservations.Create(nil).Free;
   FrmPostInvoices := TFrmPostInvoices.Create(nil); FrmPostInvoices.Free; FrmPostInvoices := nil;
   frmRptBreakfastGuests := TfrmRptBreakfastGuests.Create(nil); frmRptBreakfastGuests.Free; frmRptBreakfastGuests := nil;
   frmGuestCheckInForm := TfrmGuestCheckInForm.Create(nil); frmGuestCheckInForm.Free; frmGuestCheckInForm := nil;
