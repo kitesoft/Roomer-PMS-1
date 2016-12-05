@@ -154,6 +154,8 @@ type
     sButton1: TsButton;
     sButton2: TsButton;
     LMDButton1: TsButton;
+    tvInvoiceHeadpaytypes: TcxGridDBBandedColumn;
+    tvInvoiceHeadpayments: TcxGridDBBandedColumn;
     procedure rbtDatesClick(Sender : TObject);
     procedure FormCreate(Sender : TObject);
     procedure cbxPeriodChange(Sender : TObject);
@@ -539,49 +541,51 @@ begin
   rSet := CreateNewDataset;
   try
     s := s + 'SELECT '#10;
-    s := s + '      invoiceheads.externalInvoiceId '#10;
-    s := s + '    , invoiceheads.Reservation '#10;
-    s := s + '    , invoiceheads.RoomReservation '#10;
-    s := s + '    , invoiceheads.InvoiceNumber '#10;
-    s := s + '    , invoiceheads.Customer '#10;
-    s := s + '    , invoiceheads.Name AS NameOnInvoice'#10;
-    s := s + '    , invoiceheads.Address1 '#10;
-    s := s + '    , invoiceheads.Address2 '#10;
-    s := s + '    , invoiceheads.Address3 '#10;
-    s := s + '    , invoiceheads.invRefrence AS Refrence '#10;
-    s := s + '    , invoiceheads.Total AS Amount '#10;
-    s := s + '    , invoiceheads.TotalWOVat AS WithOutVAT'#10;
-    s := s + '    , invoiceheads.TotalVat AS VAT '#10;
-    s := s + '    , invoiceheads.RoomGuest '#10;
-    s := s + '    , invoiceheads.ihInvoiceDate AS InvoiceDate'#10;
-    s := s + '    , invoiceheads.ihConfirmDate AS Confirmdate'#10;
-    s := s + '    , invoiceheads.ihPayDate AS DueDate'#10;
-    s := s + '    , invoiceheads.ihStaff AS Staff'#10;
-    s := s + '    , invoiceheads.custPID AS CompanyId'#10;
-    s := s + '    , invoiceheads.ihcurrency AS Currency'#10;
-    s := s + '    , invoiceheads.ihcurrencyRate AS CurrencyRate'#10;
-    s := s + '    , invoiceheads.totalStayTax AS Taxes'#10;
-    s := s + '    , invoiceheads.TotalStayTaxNights Taxunits'#10;
-    s := s + '    , (if(invoiceheads.Splitnumber=1,'+_db('CREDIT')+','+_db('DEBIT')+')) AS CreditType '#10;
-    s := s + '    , (invoiceheads.Total div invoiceheads.ihCurrencyRate) AS CurrencyAmount '#10;
-    s := s + '    , (if(invoiceheads.Reservation = 0 and invoiceheads.Roomreservation=0,' + _db(GetTranslatedText('shUI_Reports_InvoiceTypeCash')) +
-                     ',if(invoiceheads.Reservation > 0 and invoiceheads.Roomreservation=0,'+ _db(GetTranslatedText('shUI_Reports_InvoiceTypeGroup')) + ',' + _db(GetTranslatedText('shUI_Reports_InvoiceTypeRoom')) + '))) AS Invoicetype '#10;
-    s := s + '    , (IF(invoiceheads.CreditInvoice<>0,invoiceheads.CreditInvoice,if(invoiceheads.OriginalInvoice<>0,invoiceheads.OriginalInvoice,0))) AS Link'#10;
-    s := s + '    , (SELECT surName FROM customers WHERE Customer = invoiceheads.Customer Limit 1) As CustomerName'#10;
+    s := s + '      ih.externalInvoiceId '#10;
+    s := s + '    , ih.Reservation '#10;
+    s := s + '    , ih.RoomReservation '#10;
+    s := s + '    , ih.InvoiceNumber '#10;
+    s := s + '    , ih.Customer '#10;
+    s := s + '    , ih.Name AS NameOnInvoice'#10;
+    s := s + '    , ih.Address1 '#10;
+    s := s + '    , ih.Address2 '#10;
+    s := s + '    , ih.Address3 '#10;
+    s := s + '    , ih.invRefrence AS Refrence '#10;
+    s := s + '    , ih.Total AS Amount '#10;
+    s := s + '    , ih.TotalWOVat AS WithOutVAT'#10;
+    s := s + '    , ih.TotalVat AS VAT '#10;
+    s := s + '    , ih.RoomGuest '#10;
+    s := s + '    , ih.ihInvoiceDate AS InvoiceDate'#10;
+    s := s + '    , ih.ihConfirmDate AS Confirmdate'#10;
+    s := s + '    , ih.ihPayDate AS DueDate'#10;
+    s := s + '    , ih.ihStaff AS Staff'#10;
+    s := s + '    , ih.custPID AS CompanyId'#10;
+    s := s + '    , ih.ihcurrency AS Currency'#10;
+    s := s + '    , ih.ihcurrencyRate AS CurrencyRate'#10;
+    s := s + '    , ih.totalStayTax AS Taxes'#10;
+    s := s + '    , ih.TotalStayTaxNights Taxunits'#10;
+    s := s + '    , (if(ih.Splitnumber=1,'+_db('CREDIT')+','+_db('DEBIT')+')) AS CreditType '#10;
+    s := s + '    , (ih.Total div ih.ihCurrencyRate) AS CurrencyAmount '#10;
+    s := s + '    , (if(ih.Reservation = 0 and ih.Roomreservation=0,' + _db(GetTranslatedText('shUI_Reports_InvoiceTypeCash')) +
+                     ',if(ih.Reservation > 0 and ih.Roomreservation=0,'+ _db(GetTranslatedText('shUI_Reports_InvoiceTypeGroup')) + ',' + _db(GetTranslatedText('shUI_Reports_InvoiceTypeRoom')) + '))) AS Invoicetype '#10;
+    s := s + '    , (IF(ih.CreditInvoice<>0,ih.CreditInvoice,if(ih.OriginalInvoice<>0,ih.OriginalInvoice,0))) AS Link'#10;
+    s := s + '    , (SELECT surName FROM customers WHERE Customer = ih.Customer Limit 1) As CustomerName'#10;
+    s := s + '    , (SELECT GROUP_CONCAT(PayType) FROM payments WHERE InvoiceNumber=ih.InvoiceNumber) AS paytypes'#10;
+    s := s + '    , (SELECT GROUP_CONCAT(Amount) FROM payments WHERE InvoiceNumber=ih.InvoiceNumber) AS payments'#10;
     s := s + '     FROM '#10;
-    s := s + '        invoiceheads '#10;
+    s := s + '        invoiceheads ih '#10;
     s := s + '    WHERE '#10;
-    s := s + '      (invoiceheads.invoicenumber > 0) '#10;
+    s := s + '      (ih.invoicenumber > 0) '#10;
 
     if rbtDates.checked then
     begin
-      s := s + '    AND ((invoiceheads.ihInvoiceDate >= ' + _db(zdtFrom, true) + ')  AND (invoiceheads.ihInvoiceDate <= ' + _db(zDTTo, true)
+      s := s + '    AND ((ih.ihInvoiceDate >= ' + _db(zdtFrom, true) + ')  AND (ih.ihInvoiceDate <= ' + _db(zDTTo, true)
         + ')) ';
     end;
 
     if (rbtInvoices.checked) or (rbtLast.checked) then
     begin
-      s := s + '    AND ((invoiceheads.InvoiceNumber >= ' + _db(zInvoiceFrom) + ')  AND (invoiceheads.InvoiceNumber <= ' + _db(zInvoiceTo) + ')) ';
+      s := s + '    AND ((ih.InvoiceNumber >= ' + _db(zInvoiceFrom) + ')  AND (ih.InvoiceNumber <= ' + _db(zInvoiceTo) + ')) ';
     end;
 
     if (rbtFreeText.checked) then
@@ -589,7 +593,7 @@ begin
       case cbxTxtType.ItemIndex of
         0 :
           begin // InvoiceNumber;
-            s := s + '  AND (invoiceheads.InvoiceNumber=' + _db(edtFreeText.Text) + ') ';
+            s := s + '  AND (ih.InvoiceNumber=' + _db(edtFreeText.Text) + ') ';
           end;
         1 :
           begin // Kennitala;
@@ -628,9 +632,9 @@ begin
       end;
     end;
     s := s + ' ORDER BY ';
-    s := s + '   invoiceheads.InvoiceNumber DESC';
+    s := s + '   ih.InvoiceNumber DESC';
 
-//    copytoclipboard(s);
+    copytoclipboard(s);
 //    debugMessage(s);
 
     if hData.rSet_bySQL(rSet,s) then

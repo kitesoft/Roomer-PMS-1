@@ -489,6 +489,7 @@ object frmInvoiceList2: TfrmInvoiceList2
     Align = alClient
     TabOrder = 2
     LookAndFeel.NativeStyle = False
+    ExplicitLeft = 1
     object tvInvoiceHead: TcxGridDBBandedTableView
       OnDblClick = tvInvoiceHeadDblClick
       Navigator.Buttons.CustomButtons = <>
@@ -542,7 +543,7 @@ object frmInvoiceList2: TfrmInvoiceList2
         end
         item
           Caption = 'Amounts'
-          Width = 650
+          Width = 895
         end
         item
           Caption = 'Customer'
@@ -570,7 +571,7 @@ object frmInvoiceList2: TfrmInvoiceList2
       object tvInvoiceHeadexternalInvoiceId: TcxGridDBBandedColumn
         Caption = 'External #'
         DataBinding.FieldName = 'externalInvoiceId'
-        Width = 65
+        Width = 66
         Position.BandIndex = 1
         Position.ColIndex = 0
         Position.RowIndex = 0
@@ -632,7 +633,7 @@ object frmInvoiceList2: TfrmInvoiceList2
         PropertiesClassName = 'TcxCurrencyEditProperties'
         OnGetProperties = tvInvoiceHeadAmountGetProperties
         Options.Editing = False
-        Width = 88
+        Width = 65
         Position.BandIndex = 1
         Position.ColIndex = 1
         Position.RowIndex = 0
@@ -643,7 +644,7 @@ object frmInvoiceList2: TfrmInvoiceList2
         PropertiesClassName = 'TcxCurrencyEditProperties'
         OnGetProperties = tvInvoiceHeadWithOutVATGetProperties
         Options.Editing = False
-        Width = 83
+        Width = 74
         Position.BandIndex = 1
         Position.ColIndex = 2
         Position.RowIndex = 0
@@ -653,7 +654,7 @@ object frmInvoiceList2: TfrmInvoiceList2
         PropertiesClassName = 'TcxCurrencyEditProperties'
         OnGetProperties = tvInvoiceHeadVATGetProperties
         Options.Editing = False
-        Width = 93
+        Width = 65
         Position.BandIndex = 1
         Position.ColIndex = 3
         Position.RowIndex = 0
@@ -663,16 +664,32 @@ object frmInvoiceList2: TfrmInvoiceList2
         PropertiesClassName = 'TcxCurrencyEditProperties'
         OnGetProperties = tvInvoiceHeadTaxesGetProperties
         Options.Editing = False
-        Width = 86
+        Width = 64
         Position.BandIndex = 1
         Position.ColIndex = 4
+        Position.RowIndex = 0
+      end
+      object tvInvoiceHeadpaytypes: TcxGridDBBandedColumn
+        Caption = 'Pay types'
+        DataBinding.FieldName = 'paytypes'
+        Width = 144
+        Position.BandIndex = 1
+        Position.ColIndex = 9
+        Position.RowIndex = 0
+      end
+      object tvInvoiceHeadpayments: TcxGridDBBandedColumn
+        Caption = 'Paid amounts'
+        DataBinding.FieldName = 'payments'
+        Width = 129
+        Position.BandIndex = 1
+        Position.ColIndex = 10
         Position.RowIndex = 0
       end
       object tvInvoiceHeadTaxunits: TcxGridDBBandedColumn
         Caption = 'Tax units'
         DataBinding.FieldName = 'Taxunits'
         Options.Editing = False
-        Width = 66
+        Width = 65
         Position.BandIndex = 1
         Position.ColIndex = 5
         Position.RowIndex = 0
@@ -681,7 +698,7 @@ object frmInvoiceList2: TfrmInvoiceList2
         Caption = 'Curr.'
         DataBinding.FieldName = 'Currency'
         Options.Editing = False
-        Width = 36
+        Width = 64
         Position.BandIndex = 1
         Position.ColIndex = 6
         Position.RowIndex = 0
@@ -690,7 +707,7 @@ object frmInvoiceList2: TfrmInvoiceList2
         Caption = 'Rate'
         DataBinding.FieldName = 'CurrencyRate'
         Options.Editing = False
-        Width = 62
+        Width = 63
         Position.BandIndex = 1
         Position.ColIndex = 7
         Position.RowIndex = 0
@@ -701,7 +718,7 @@ object frmInvoiceList2: TfrmInvoiceList2
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00;-,0.00'
         Options.Editing = False
-        Width = 135
+        Width = 96
         Position.BandIndex = 1
         Position.ColIndex = 8
         Position.RowIndex = 0
@@ -782,7 +799,7 @@ object frmInvoiceList2: TfrmInvoiceList2
         Caption = 'Confirm date'
         DataBinding.FieldName = 'Confirmdate'
         Options.Editing = False
-        Width = 64
+        Width = 75
         Position.BandIndex = 3
         Position.ColIndex = 2
         Position.RowIndex = 0
@@ -790,7 +807,7 @@ object frmInvoiceList2: TfrmInvoiceList2
       object tvInvoiceHeadReservation: TcxGridDBBandedColumn
         DataBinding.FieldName = 'Reservation'
         Options.Editing = False
-        Width = 64
+        Width = 74
         Position.BandIndex = 3
         Position.ColIndex = 3
         Position.RowIndex = 0
@@ -799,7 +816,7 @@ object frmInvoiceList2: TfrmInvoiceList2
         Caption = 'Room Reservation'
         DataBinding.FieldName = 'RoomReservation'
         Options.Editing = False
-        Width = 64
+        Width = 118
         Position.BandIndex = 3
         Position.ColIndex = 4
         Position.RowIndex = 0
@@ -964,6 +981,16 @@ object frmInvoiceList2: TfrmInvoiceList2
       item
         Name = 'externalInvoiceId'
         DataType = ftInteger
+      end
+      item
+        Name = 'paytypes'
+        DataType = ftWideString
+        Size = 200
+      end
+      item
+        Name = 'payments'
+        DataType = ftWideString
+        Size = 200
       end>
     IndexDefs = <>
     SortOptions = []
