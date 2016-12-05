@@ -13,6 +13,7 @@ type
     images25x25: TcxImageList;
     ilGuests: TImageList;
     PngImageList1: TPngImageList;
+    PngImageList32: TPngImageList;
   private
     { Private declarations }
   public

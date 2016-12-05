@@ -41,6 +41,10 @@ type
     procedure SetAllowPaymentModification(const Value: boolean);
     function GetAllowDeletingItemsFromInvoice: boolean;
     procedure SetAllowDeletingItemsFromInvoice(const Value: boolean);
+    function GetTopClassAvaiabilityOrderActive: boolean;
+    procedure SetTopClassAvaiabilityOrderActive(const Value: boolean);
+    function GetMasterRateDefaultsActive: boolean;
+    procedure SetMasterRateDefaultsActive(const Value: boolean);
 
   public
     constructor Create(aPMSDataset: TRoomerDataset);
@@ -65,6 +69,10 @@ type
 
     property AllowPaymentModification: boolean read GetAllowPaymentModification write SetAllowPaymentModification;
     property AllowDeletingItemsFromInvoice: boolean read GetAllowDeletingItemsFromInvoice write SetAllowDeletingItemsFromInvoice;
+
+    property TopClassAvaiabilityOrderActive: boolean read GetTopClassAvaiabilityOrderActive write SetTopClassAvaiabilityOrderActive;
+    property MasterRateDefaultsActive: boolean read GetMasterRateDefaultsActive write SetMasterRateDefaultsActive;
+
   end;
 
 implementation
@@ -76,14 +84,18 @@ uses
 
 const
   cBetaFunctionsGroup = 'BETA_FUNCTIONS';
-  cBetaFunctionsAvailableName = 'BETA_FUNCTIONS_AVAILABLE';
   cAllGuestsNationalityGroup = 'RESERVATIONPROFILE_FUNCTIONS';
-  cAllGuestsNationality = 'EDIT_ALLGUESTS_NATIONALITY';
   cInvoiceHandlingGroup = 'INVOICE_HANDLING_FUNCTIONS';
+  cRatesAndAvailabilitiesGroup = 'RATES_AND_AVAILABILITY_FUNCTIONS';
+
+  cBetaFunctionsAvailableName = 'BETA_FUNCTIONS_AVAILABLE';
+  cAllGuestsNationality = 'EDIT_ALLGUESTS_NATIONALITY';
   cInvoiceHandlingShowAsPaidWhenZero = 'SHOW_AS_PAID_WHEN_ZERO';
   cAllowPaymentModifications = 'ALLOW_PAYMENT_MODIFICATIONS';
   cAllowDeletingItemsFromInvoice = 'ALLOW_DELETING_FROM_INVOICE';
   cShowIncludedBreakfastOnInvoice = 'SHOW_INCLUDED_BREAKFAST_ON_INVOICE';
+  cTopClassAvailabilityOrderActive = 'TOP_CLASS_AVAILABILITY_ORDER_ACTIVE';
+  cMasterRateDefaultsActive = 'MASTER_RATE_DEFAULTS_ACTIVE';
 
 procedure TPmsSettings.PutSettingsValue(KeyGroup, Key, Value : String; CreateIfNotExists : Boolean = False);
 begin
@@ -195,12 +207,22 @@ begin
   SetSettingsAsBoolean(cInvoiceHandlingGroup, cInvoiceHandlingShowAsPaidWhenZero, Value, True);
 end;
 
+procedure TPMSSettings.SetTopClassAvaiabilityOrderActive(const Value: boolean);
+begin
+  SetSettingsAsBoolean(cRatesAndAvailabilitiesGroup, cTopClassAvailabilityOrderActive, Value, True);
+end;
+
 procedure TPmsSettings.SetMandatoryCheckinFields(const Value: TMandatoryCheckInFieldSet);
 var
   lMF: TMandatoryCheckinField;
 begin
   for lMF := low(lMF) to high(lMF) do
     SetSettingsAsBoolean(lMF.PMSSettingGroup, lMF.PMSSettingName, (lMF in Value), True);
+end;
+
+procedure TPMSSettings.SetMasterRateDefaultsActive(const Value: boolean);
+begin
+  SetSettingsAsBoolean(cRatesAndAvailabilitiesGroup, cMasterRateDefaultsActive, Value, True);
 end;
 
 function TPMSSettings.GetAllowDeletingItemsFromInvoice: boolean;
@@ -233,6 +255,11 @@ begin
   Result := GetSettingsAsBoolean(cInvoiceHandlingGroup, cInvoiceHandlingShowAsPaidWhenZero, False);
 end;
 
+function TPMSSettings.GetTopClassAvaiabilityOrderActive: boolean;
+begin
+  Result := GetSettingsAsBoolean(cRatesAndAvailabilitiesGroup, cTopClassAvailabilityOrderActive, False, False);
+end;
+
 function TPmsSettings.GetMandatoryCheckinFields: TMandatoryCheckInFieldSet;
 var
   lMF: TMandatoryCheckinField;
@@ -243,8 +270,9 @@ begin
       Include(Result, lMF);
 end;
 
-
-
-
+function TPMSSettings.GetMasterRateDefaultsActive: boolean;
+begin
+  Result := GetSettingsAsBoolean(cRatesAndAvailabilitiesGroup, cMasterRateDefaultsActive, False, False);
+end;
 
 end.

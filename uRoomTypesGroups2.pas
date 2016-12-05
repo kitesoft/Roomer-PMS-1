@@ -234,6 +234,7 @@ type
     tvDataColumn2: TcxGridDBColumn;
     m_PAYMENTS_REQUIRED: TWideStringField;
     tvDataPAYMENTS_REQUIRED: TcxGridDBColumn;
+    btnAvailabilityOrder: TsButton;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormKeyPress(Sender: TObject; var Key: Char);
@@ -276,6 +277,7 @@ type
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure tvDataPAYMENTS_REQUIREDPropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
     procedure tvDataBreakfastIncludedPropertiesEditValueChanged(Sender: TObject);
+    procedure btnAvailabilityOrderClick(Sender: TObject);
   private
     { Private declarations }
     zFirstTime       : boolean;
@@ -335,7 +337,9 @@ uses
   , UITypes
   , uActivityLogs
 
-  , ufrmPaymentReqRoomtypeGroup;
+  , ufrmPaymentReqRoomtypeGroup
+  , uTopClassAvailabilityOrder
+  ;
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -677,6 +681,8 @@ end;
 procedure TfrmRoomTypesGroups2.PrepareUserInterface;
 begin
 //**
+  btnAvailabilityOrder.Visible := glb.PMSSettings.TopClassAvaiabilityOrderActive;
+
   tvDatasendAvailability.Visible := NOT frmMain.RBEMode;
   tvDatasendRate.Visible := NOT frmMain.RBEMode;
   tvDatasendStopSell.Visible := NOT frmMain.RBEMode;
@@ -1222,6 +1228,11 @@ end;
 procedure TfrmRoomTypesGroups2.BringWindowToFront;
 begin
   pnlHolder.BringToFront;
+end;
+
+procedure TfrmRoomTypesGroups2.btnAvailabilityOrderClick(Sender: TObject);
+begin
+  EditAvailabilityOrder;
 end;
 
 procedure TfrmRoomTypesGroups2.btnCancelClick(Sender: TObject);

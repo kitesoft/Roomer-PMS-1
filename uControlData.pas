@@ -712,6 +712,8 @@ type
     lblAllowPaymentModifications: TsLabel;
     lblAllowDeleteItemsFromInvoice: TsLabel;
     cbAllowDeleteItemsFromInvoice: TsCheckBox;
+    lbTopClassAvaiabilityOrderActive: TsLabel;
+    cbTopClassAvaiabilityOrderActive: TsCheckBox;
     procedure FormCreate(Sender : TObject);
     procedure FormClose(Sender : TObject; var Action : TCloseAction);
     procedure FormShow(Sender : TObject);
@@ -1536,6 +1538,7 @@ g.ProcessAppIni(0);
     cbShowIncludedBreakfastOnInvoice.Checked := glb.PMSSettings.ShowIncludedBreakfastOnInvoice;
     cbAllowPaymentModification.Checked := glb.PMSSettings.AllowPaymentModification;
     cbAllowDeleteItemsFromInvoice.Checked := glb.PMSSettings.AllowDeletingItemsFromInvoice;
+    cbTopClassAvaiabilityOrderActive.Checked := glb.PMSSettings.TopClassAvaiabilityOrderActive;
 
     edtRIIndexRoomRent.Value := rSethotelconfigurations.FieldByName('RoomInvoiceRoomRentIndex').AsInteger + 1;
     edtRIIndexPosItems.Value := rSethotelconfigurations.FieldByName('RoomInvoicePosItemIndex').AsInteger + 1;
@@ -2028,6 +2031,7 @@ begin
       glb.PMSSettings.ShowIncludedBreakfastOnInvoice := cbShowIncludedBreakfastOnInvoice.Checked;
       glb.PMSSettings.AllowPaymentModification := cbAllowPaymentModification.Checked;
       glb.PMSSettings.AllowDeletingItemsFromInvoice := cbAllowDeleteItemsFromInvoice.Checked;
+      glb.PMSSettings.TopClassAvaiabilityOrderActive := cbTopClassAvaiabilityOrderActive.Checked;
 
       try
         rSethotelconfigurations.FieldByName('forceExternalCustomerIdCorrectness').AsBoolean := chkforceExternalCustomerIdCorrectness.Checked;

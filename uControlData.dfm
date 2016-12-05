@@ -122,6 +122,8 @@ object frmControlData: TfrmControlData
           000000000000000000000001154D0061006E006400610074006F007200790020
           0069006E0066006F0072006D006100740069006F006E00}
         SkinData.SkinSection = 'EDIT'
+        ExplicitLeft = 2
+        ExplicitTop = 5
       end
     end
     object __LMDBackPanel3: TsPanel
@@ -137,7 +139,7 @@ object frmControlData: TfrmControlData
         Top = 1
         Width = 1101
         Height = 743
-        ActivePage = tsInvoiceSystem
+        ActivePage = AdvTabSheet3
         Align = alClient
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
@@ -149,14 +151,10 @@ object frmControlData: TfrmControlData
         SkinData.SkinSection = 'PAGECONTROL'
         object tsNull: TsTabSheet
           Caption = 'tsNull'
-          SkinData.CustomColor = False
-          SkinData.CustomFont = False
           SkinData.SkinSection = 'FORM'
         end
         object tsCompany: TsTabSheet
           Caption = 'Company'
-          SkinData.CustomColor = False
-          SkinData.CustomFont = False
           object gbxCompany: TsGroupBox
             Left = 3
             Top = 4
@@ -165,7 +163,6 @@ object frmControlData: TfrmControlData
             Caption = 'Hotel'
             TabOrder = 0
             SkinData.SkinSection = 'GROUPBOX'
-            Checked = False
             object clabCompanyCode: TsLabel
               Left = 131
               Top = 18
@@ -356,7 +353,6 @@ object frmControlData: TfrmControlData
             Caption = 'Address'
             TabOrder = 1
             SkinData.SkinSection = 'GROUPBOX'
-            Checked = False
             object clabAddress1: TsLabel
               Left = 154
               Top = 19
@@ -460,12 +456,6 @@ object frmControlData: TfrmControlData
                 inherited lblCountryName: TsLabel
                   Height = 14
                 end
-                inherited edCountryCode: TsEdit
-                  ExplicitLeft = 0
-                end
-                inherited btnGetCountry: TsButton
-                  ExplicitLeft = 38
-                end
               end
             end
           end
@@ -477,7 +467,6 @@ object frmControlData: TfrmControlData
             Caption = 'Contact'
             TabOrder = 2
             SkinData.SkinSection = 'GROUPBOX'
-            Checked = False
             object clabTelephone1: TsLabel
               Left = 151
               Top = 20
@@ -632,7 +621,6 @@ object frmControlData: TfrmControlData
             Caption = 'Account'
             TabOrder = 3
             SkinData.SkinSection = 'GROUPBOX'
-            Checked = False
             object labCompanyVATno: TsLabel
               Left = 183
               Top = 19
@@ -700,7 +688,6 @@ object frmControlData: TfrmControlData
             Caption = 'Computer'
             TabOrder = 4
             SkinData.SkinSection = 'GROUPBOX'
-            Checked = False
             object clabComputerName: TsLabel
               Left = 136
               Top = 19
@@ -782,8 +769,8 @@ object frmControlData: TfrmControlData
             object cbxBackupMachine: TsCheckBox
               Left = 239
               Top = 72
-              Width = 132
-              Height = 20
+              Width = 140
+              Height = 18
               Caption = 'Offline Backup Client'
               TabOrder = 2
               SkinData.SkinSection = 'CHECKBOX'
@@ -799,12 +786,11 @@ object frmControlData: TfrmControlData
             Caption = 'Options'
             TabOrder = 5
             SkinData.SkinSection = 'GROUPBOX'
-            Checked = False
             object cbxLocationPerRoomType: TsCheckBox
               Left = 68
               Top = 24
-              Width = 249
-              Height = 20
+              Width = 257
+              Height = 18
               Caption = 'Room Location determined by Room type'
               TabOrder = 0
               SkinData.SkinSection = 'CHECKBOX'
@@ -814,8 +800,8 @@ object frmControlData: TfrmControlData
             object cbxDefaultSendCCEmailToHotel: TsCheckBox
               Left = 68
               Top = 47
-              Width = 362
-              Height = 20
+              Width = 370
+              Height = 18
               Caption = 'Always send a blind copy of emails to the hotel'#39's email address'
               TabOrder = 1
               SkinData.SkinSection = 'CHECKBOX'
@@ -831,7 +817,6 @@ object frmControlData: TfrmControlData
             Caption = 'Various Services'
             TabOrder = 6
             SkinData.SkinSection = 'GROUPBOX'
-            Checked = False
             object sLabel34: TsLabel
               Left = 52
               Top = 27
@@ -872,8 +857,6 @@ object frmControlData: TfrmControlData
         end
         object tsSystemItemIDs: TsTabSheet
           Caption = 'ID Numbers'
-          SkinData.CustomColor = False
-          SkinData.CustomFont = False
           object cbxIdNumbers: TsGroupBox
             AlignWithMargins = True
             Left = 3
@@ -885,7 +868,6 @@ object frmControlData: TfrmControlData
             Enabled = False
             TabOrder = 0
             SkinData.SkinSection = 'GROUPBOX'
-            Checked = False
             object clabLasIinvoiceNo: TsLabel
               Left = 178
               Top = 19
@@ -1025,7 +1007,6 @@ object frmControlData: TfrmControlData
             Caption = 'Customer ID'
             TabOrder = 1
             SkinData.SkinSection = 'GROUPBOX'
-            Checked = False
             object clabCustomerNumber: TsLabel
               Left = 165
               Top = 19
@@ -1132,7 +1113,6 @@ object frmControlData: TfrmControlData
             Caption = 'Reservation defaults'
             TabOrder = 2
             SkinData.SkinSection = 'GROUPBOX'
-            Checked = False
             object sLabel20: TsLabel
               Left = 64
               Top = 34
@@ -1180,8 +1160,6 @@ object frmControlData: TfrmControlData
         end
         object tsInvoiceTexts: TsTabSheet
           Caption = 'Invoice texts'
-          SkinData.CustomColor = False
-          SkinData.CustomFont = False
           object AdvPageControl2: TsPageControl
             Left = 0
             Top = 0
@@ -1199,8 +1177,6 @@ object frmControlData: TfrmControlData
             SkinData.SkinSection = 'PAGECONTROL'
             object tsInvTexts_Laser1: TsTabSheet
               Caption = '1'
-              SkinData.CustomColor = False
-              SkinData.CustomFont = False
               object gbxInvoiceHead: TsGroupBox
                 Left = 4
                 Top = 4
@@ -1209,7 +1185,6 @@ object frmControlData: TfrmControlData
                 Caption = 'Invoice head text'
                 TabOrder = 0
                 SkinData.SkinSection = 'GROUPBOX'
-                Checked = False
                 object LMDSimpleLabel1: TsLabel
                   Left = 1
                   Top = 19
@@ -1279,7 +1254,6 @@ object frmControlData: TfrmControlData
                 Caption = 'Invoice head captions'
                 TabOrder = 3
                 SkinData.SkinSection = 'GROUPBOX'
-                Checked = False
                 object clabInvoiceDate: TsLabel
                   Left = 1
                   Top = 47
@@ -1679,7 +1653,6 @@ object frmControlData: TfrmControlData
                 Caption = 'Invoice items column captions'
                 TabOrder = 1
                 SkinData.SkinSection = 'GROUPBOX'
-                Checked = False
                 object LMDSimpleLabel15: TsLabel
                   Left = 1
                   Top = 20
@@ -1875,7 +1848,6 @@ object frmControlData: TfrmControlData
                 ParentFont = False
                 TabOrder = 2
                 SkinData.SkinSection = 'GROUPBOX'
-                Checked = False
                 object LMDSimpleLabel46: TsLabel
                   Left = 1
                   Top = 49
@@ -2095,7 +2067,6 @@ object frmControlData: TfrmControlData
                 Caption = 'Bank / account'
                 TabOrder = 4
                 SkinData.SkinSection = 'GROUPBOX'
-                Checked = False
                 object clabVATid: TsLabel
                   Left = 1
                   Top = 48
@@ -2190,8 +2161,6 @@ object frmControlData: TfrmControlData
             end
             object tsInvTexts_Laser2: TsTabSheet
               Caption = '2'
-              SkinData.CustomColor = False
-              SkinData.CustomFont = False
               object gbxVATlist: TsGroupBox
                 Left = 440
                 Top = 6
@@ -2200,7 +2169,6 @@ object frmControlData: TfrmControlData
                 Caption = 'VAT columns'
                 TabOrder = 3
                 SkinData.SkinSection = 'GROUPBOX'
-                Checked = False
                 object LMDSimpleLabel25: TsLabel
                   Left = 4
                   Top = 18
@@ -2420,7 +2388,6 @@ object frmControlData: TfrmControlData
                 Caption = 'Payments Column'
                 TabOrder = 1
                 SkinData.SkinSection = 'GROUPBOX'
-                Checked = False
                 object LMDSimpleLabel29: TsLabel
                   Left = 4
                   Top = 19
@@ -2490,7 +2457,6 @@ object frmControlData: TfrmControlData
                 Caption = 'Payment list columns'
                 TabOrder = 0
                 SkinData.SkinSection = 'GROUPBOX'
-                Checked = False
                 object LMDSimpleLabel31: TsLabel
                   Left = 7
                   Top = 21
@@ -2740,7 +2706,6 @@ object frmControlData: TfrmControlData
                 Caption = 'VAT row'
                 TabOrder = 4
                 SkinData.SkinSection = 'GROUPBOX'
-                Checked = False
                 object LMDSimpleLabel38: TsLabel
                   Left = 7
                   Top = 18
@@ -2810,7 +2775,6 @@ object frmControlData: TfrmControlData
                 Caption = 'Totals'
                 TabOrder = 2
                 SkinData.SkinSection = 'GROUPBOX'
-                Checked = False
                 object LMDSimpleLabel40: TsLabel
                   Left = 3
                   Top = 20
@@ -2910,7 +2874,6 @@ object frmControlData: TfrmControlData
                 Caption = 'Extra lines'
                 TabOrder = 5
                 SkinData.SkinSection = 'GROUPBOX'
-                Checked = False
                 object LMDSimpleLabel43: TsLabel
                   Left = 73
                   Top = 46
@@ -2975,8 +2938,6 @@ object frmControlData: TfrmControlData
             end
             object AdvTabSheet15: TsTabSheet
               Caption = '3'
-              SkinData.CustomColor = False
-              SkinData.CustomFont = False
               object GroupBox3: TsGroupBox
                 AlignWithMargins = True
                 Left = 3
@@ -2987,7 +2948,6 @@ object frmControlData: TfrmControlData
                 Caption = 'Orginal/copy'
                 TabOrder = 0
                 SkinData.SkinSection = 'GROUPBOX'
-                Checked = False
                 object Label31: TsLabel
                   Left = 4
                   Top = 21
@@ -3059,7 +3019,6 @@ object frmControlData: TfrmControlData
                 Caption = 'Lodging tax'
                 TabOrder = 1
                 SkinData.SkinSection = 'GROUPBOX'
-                Checked = False
                 object Label33: TsLabel
                   Left = 4
                   Top = 21
@@ -3131,7 +3090,6 @@ object frmControlData: TfrmControlData
                 Caption = 'Page botton lines'
                 TabOrder = 2
                 SkinData.SkinSection = 'GROUPBOX'
-                Checked = False
                 object LMDSimpleLabel21: TsLabel
                   Left = 6
                   Top = 22
@@ -3263,7 +3221,6 @@ object frmControlData: TfrmControlData
                 Caption = 'Proforma header'
                 TabOrder = 3
                 SkinData.SkinSection = 'GROUPBOX'
-                Checked = False
                 object sLabel15: TsLabel
                   Left = 4
                   Top = 22
@@ -3300,8 +3257,6 @@ object frmControlData: TfrmControlData
         end
         object tsInvoiceSystem: TsTabSheet
           Caption = 'Invoice Settings'
-          SkinData.CustomColor = False
-          SkinData.CustomFont = False
           object LMDGroupBox5: TsGroupBox
             Left = 3
             Top = 3
@@ -3310,7 +3265,6 @@ object frmControlData: TfrmControlData
             Caption = 'System Sale items'
             TabOrder = 0
             SkinData.SkinSection = 'GROUPBOX'
-            Checked = False
             object Label24: TsLabel
               Left = 111
               Top = 18
@@ -3634,7 +3588,6 @@ object frmControlData: TfrmControlData
             Caption = 'Room rate '
             TabOrder = 1
             SkinData.SkinSection = 'GROUPBOX'
-            Checked = False
             object Label1: TsLabel
               Left = 6
               Top = 22
@@ -3669,7 +3622,7 @@ object frmControlData: TfrmControlData
               Left = 249
               Top = 20
               Width = 20
-              Height = 20
+              Height = 16
               TabOrder = 0
               SkinData.SkinSection = 'CHECKBOX'
               ImgChecked = 0
@@ -3679,7 +3632,7 @@ object frmControlData: TfrmControlData
               Left = 249
               Top = 40
               Width = 20
-              Height = 20
+              Height = 16
               TabOrder = 1
               SkinData.SkinSection = 'CHECKBOX'
               ImgChecked = 0
@@ -3694,7 +3647,6 @@ object frmControlData: TfrmControlData
             Caption = 'Various'
             TabOrder = 2
             SkinData.SkinSection = 'GROUPBOX'
-            Checked = False
             object labNativeCurrency: TsLabel
               Left = 497
               Top = 18
@@ -3792,7 +3744,7 @@ object frmControlData: TfrmControlData
               Left = 447
               Top = 39
               Width = 20
-              Height = 20
+              Height = 16
               TabOrder = 2
               SkinData.SkinSection = 'CHECKBOX'
               ImgChecked = 0
@@ -3802,7 +3754,7 @@ object frmControlData: TfrmControlData
               Left = 447
               Top = 58
               Width = 20
-              Height = 20
+              Height = 16
               TabOrder = 3
               SkinData.SkinSection = 'CHECKBOX'
               ImgChecked = 0
@@ -3817,7 +3769,6 @@ object frmControlData: TfrmControlData
             Caption = 'A/R '
             TabOrder = 3
             SkinData.SkinSection = 'GROUPBOX'
-            Checked = False
             object Label65: TsLabel
               Left = 109
               Top = 20
@@ -3882,7 +3833,6 @@ object frmControlData: TfrmControlData
             ParentFont = False
             TabOrder = 4
             SkinData.SkinSection = 'GROUPBOX'
-            Checked = False
             object Label66: TsLabel
               Left = -6
               Top = 66
@@ -3932,7 +3882,7 @@ object frmControlData: TfrmControlData
               Left = 139
               Top = 41
               Width = 20
-              Height = 20
+              Height = 16
               TabOrder = 0
               SkinData.SkinSection = 'CHECKBOX'
               ImgChecked = 0
@@ -3996,7 +3946,6 @@ object frmControlData: TfrmControlData
             ParentFont = False
             TabOrder = 5
             SkinData.SkinSection = 'GROUPBOX'
-            Checked = False
             object Label69: TsLabel
               Left = -2
               Top = 70
@@ -4108,7 +4057,6 @@ object frmControlData: TfrmControlData
             Caption = 'Lodging tax'
             TabOrder = 6
             SkinData.SkinSection = 'GROUPBOX'
-            Checked = False
             object Label62: TsLabel
               Left = 16
               Top = 17
@@ -4173,7 +4121,7 @@ object frmControlData: TfrmControlData
               Left = 256
               Top = 37
               Width = 20
-              Height = 20
+              Height = 16
               TabOrder = 0
               SkinData.SkinSection = 'CHECKBOX'
               ImgChecked = 0
@@ -4183,7 +4131,7 @@ object frmControlData: TfrmControlData
               Left = 256
               Top = 15
               Width = 20
-              Height = 20
+              Height = 16
               TabOrder = 1
               SkinData.SkinSection = 'CHECKBOX'
               ImgChecked = 0
@@ -4193,7 +4141,7 @@ object frmControlData: TfrmControlData
               Left = 256
               Top = 58
               Width = 20
-              Height = 20
+              Height = 16
               Margins.Left = 2
               Margins.Top = 2
               Margins.Right = 2
@@ -4207,7 +4155,7 @@ object frmControlData: TfrmControlData
               Left = 256
               Top = 78
               Width = 20
-              Height = 20
+              Height = 16
               Margins.Left = 2
               Margins.Top = 2
               Margins.Right = 2
@@ -4227,7 +4175,6 @@ object frmControlData: TfrmControlData
             TabOrder = 7
             Visible = False
             SkinData.SkinSection = 'GROUPBOX'
-            Checked = False
             object sLabel7: TsLabel
               Left = -81
               Top = 20
@@ -4247,7 +4194,7 @@ object frmControlData: TfrmControlData
               Left = 192
               Top = 21
               Width = 20
-              Height = 20
+              Height = 16
               TabOrder = 0
               SkinData.SkinSection = 'CHECKBOX'
               ImgChecked = 0
@@ -4262,7 +4209,6 @@ object frmControlData: TfrmControlData
             Caption = 'Payments'
             TabOrder = 8
             SkinData.SkinSection = 'GROUPBOX'
-            Checked = False
             object sLabel12: TsLabel
               Left = 198
               Top = 18
@@ -4337,7 +4283,7 @@ object frmControlData: TfrmControlData
               Left = 447
               Top = 18
               Width = 20
-              Height = 20
+              Height = 16
               TabOrder = 0
               SkinData.SkinSection = 'CHECKBOX'
               ImgChecked = 0
@@ -4347,7 +4293,7 @@ object frmControlData: TfrmControlData
               Left = 447
               Top = 58
               Width = 20
-              Height = 20
+              Height = 16
               TabOrder = 1
               SkinData.SkinSection = 'CHECKBOX'
               ImgChecked = 0
@@ -4357,7 +4303,7 @@ object frmControlData: TfrmControlData
               Left = 447
               Top = 38
               Width = 20
-              Height = 20
+              Height = 16
               TabOrder = 2
               SkinData.SkinSection = 'CHECKBOX'
               ImgChecked = 0
@@ -4367,7 +4313,7 @@ object frmControlData: TfrmControlData
               Left = 447
               Top = 77
               Width = 20
-              Height = 20
+              Height = 16
               TabOrder = 3
               SkinData.SkinSection = 'CHECKBOX'
               ImgChecked = 0
@@ -4377,7 +4323,7 @@ object frmControlData: TfrmControlData
               Left = 447
               Top = 97
               Width = 20
-              Height = 20
+              Height = 16
               TabOrder = 4
               SkinData.SkinSection = 'CHECKBOX'
               ImgChecked = 0
@@ -4387,8 +4333,6 @@ object frmControlData: TfrmControlData
         end
         object tsInvoiceRouting: TsTabSheet
           Caption = 'Invoice Routing'
-          SkinData.CustomColor = False
-          SkinData.CustomFont = False
           object sGroupBox15: TsGroupBox
             AlignWithMargins = True
             Left = 3
@@ -4408,7 +4352,6 @@ object frmControlData: TfrmControlData
             ParentFont = False
             TabOrder = 0
             SkinData.SkinSection = 'GROUPBOX'
-            Checked = False
             object sLabel29: TsLabel
               Left = 127
               Top = 29
@@ -4513,7 +4456,6 @@ object frmControlData: TfrmControlData
             ParentFont = False
             TabOrder = 1
             SkinData.SkinSection = 'GROUPBOX'
-            Checked = False
             object sLabel27: TsLabel
               Left = 127
               Top = 29
@@ -4602,8 +4544,6 @@ object frmControlData: TfrmControlData
         end
         object tsRoomStatusColors: TsTabSheet
           Caption = 'Room Status Texts'
-          SkinData.CustomColor = False
-          SkinData.CustomFont = False
           object LMDGroupBox3: TsGroupBox
             AlignWithMargins = True
             Left = 3
@@ -4615,7 +4555,6 @@ object frmControlData: TfrmControlData
             TabOrder = 0
             Visible = False
             SkinData.SkinSection = 'GROUPBOX'
-            Checked = False
             object EditGreenColor: TsEdit
               Left = 10
               Top = 20
@@ -4720,7 +4659,6 @@ object frmControlData: TfrmControlData
             Caption = 'Set unclean'
             TabOrder = 1
             SkinData.SkinSection = 'GROUPBOX'
-            Checked = False
             object Label56: TsLabel
               Left = 3
               Top = 23
@@ -4755,7 +4693,7 @@ object frmControlData: TfrmControlData
               Left = 432
               Top = 23
               Width = 20
-              Height = 20
+              Height = 16
               TabOrder = 0
               SkinData.SkinSection = 'CHECKBOX'
               ImgChecked = 0
@@ -4765,7 +4703,7 @@ object frmControlData: TfrmControlData
               Left = 432
               Top = 45
               Width = 20
-              Height = 20
+              Height = 16
               TabOrder = 1
               SkinData.SkinSection = 'CHECKBOX'
               ImgChecked = 0
@@ -4782,7 +4720,6 @@ object frmControlData: TfrmControlData
             Caption = 'Check in/out'
             TabOrder = 2
             SkinData.SkinSection = 'GROUPBOX'
-            Checked = False
             object sLabel16: TsLabel
               Left = 3
               Top = 19
@@ -4817,7 +4754,7 @@ object frmControlData: TfrmControlData
               Left = 432
               Top = 19
               Width = 20
-              Height = 20
+              Height = 16
               TabOrder = 0
               SkinData.SkinSection = 'CHECKBOX'
               ImgChecked = 0
@@ -4827,7 +4764,7 @@ object frmControlData: TfrmControlData
               Left = 432
               Top = 41
               Width = 20
-              Height = 20
+              Height = 16
               TabOrder = 1
               SkinData.SkinSection = 'CHECKBOX'
               ImgChecked = 0
@@ -4844,7 +4781,6 @@ object frmControlData: TfrmControlData
             Caption = 'Various options'
             TabOrder = 3
             SkinData.SkinSection = 'GROUPBOX'
-            Checked = False
             object sLabel31: TsLabel
               Left = 3
               Top = 23
@@ -4894,7 +4830,7 @@ object frmControlData: TfrmControlData
               Left = 432
               Top = 23
               Width = 20
-              Height = 20
+              Height = 16
               TabOrder = 0
               SkinData.SkinSection = 'CHECKBOX'
               ImgChecked = 0
@@ -4904,7 +4840,7 @@ object frmControlData: TfrmControlData
               Left = 432
               Top = 45
               Width = 20
-              Height = 20
+              Height = 16
               TabOrder = 1
               SkinData.SkinSection = 'CHECKBOX'
               ImgChecked = 0
@@ -4914,7 +4850,7 @@ object frmControlData: TfrmControlData
               Left = 432
               Top = 67
               Width = 20
-              Height = 20
+              Height = 16
               TabOrder = 2
               SkinData.SkinSection = 'CHECKBOX'
               ImgChecked = 0
@@ -4925,8 +4861,6 @@ object frmControlData: TfrmControlData
         object tsMail: TsTabSheet
           Caption = 'Mail'
           TabVisible = False
-          SkinData.CustomColor = False
-          SkinData.CustomFont = False
           object sLabel5: TsLabel
             Left = 24
             Top = 17
@@ -4948,7 +4882,6 @@ object frmControlData: TfrmControlData
             Caption = 'Mail Servers'
             TabOrder = 0
             SkinData.SkinSection = 'GROUPBOX'
-            Checked = False
             object Label16: TsLabel
               Left = 58
               Top = 19
@@ -5018,7 +4951,6 @@ object frmControlData: TfrmControlData
             Caption = 'Email'
             TabOrder = 1
             SkinData.SkinSection = 'GROUPBOX'
-            Checked = False
             object Label18: TsLabel
               Left = 9
               Top = 21
@@ -5158,7 +5090,7 @@ object frmControlData: TfrmControlData
               Left = 124
               Top = 108
               Width = 20
-              Height = 20
+              Height = 16
               TabOrder = 4
               SkinData.SkinSection = 'CHECKBOX'
               ImgChecked = 0
@@ -5168,8 +5100,6 @@ object frmControlData: TfrmControlData
         end
         object tsLookMainScreen: TsTabSheet
           Caption = 'tsLookMainScreen'
-          SkinData.CustomColor = False
-          SkinData.CustomFont = False
           object GroupBox1: TsGroupBox
             AlignWithMargins = True
             Left = 3
@@ -5180,7 +5110,6 @@ object frmControlData: TfrmControlData
             Caption = 'One day grid'
             TabOrder = 0
             SkinData.SkinSection = 'GROUPBOX'
-            Checked = False
             object Label10: TsLabel
               Left = 102
               Top = 24
@@ -5252,7 +5181,6 @@ object frmControlData: TfrmControlData
               ParentBackground = False
               TabOrder = 1
               SkinData.SkinSection = 'GROUPBOX'
-              Checked = False
               Items.Strings = (
                 'Reservation - guest'
                 'Guest - reservation'
@@ -5299,7 +5227,7 @@ object frmControlData: TfrmControlData
               Left = 288
               Top = 77
               Width = 20
-              Height = 20
+              Height = 16
               TabOrder = 4
               SkinData.SkinSection = 'CHECKBOX'
               ImgChecked = 0
@@ -5316,7 +5244,6 @@ object frmControlData: TfrmControlData
             Caption = 'Period grid'
             TabOrder = 1
             SkinData.SkinSection = 'GROUPBOX'
-            Checked = False
             object Label13: TsLabel
               Left = 89
               Top = 21
@@ -5440,7 +5367,6 @@ object frmControlData: TfrmControlData
               ParentBackground = False
               TabOrder = 3
               SkinData.SkinSection = 'GROUPBOX'
-              Checked = False
               Items.Strings = (
                 'Reservation - guest'
                 'Guest - reservation'
@@ -5461,7 +5387,6 @@ object frmControlData: TfrmControlData
               ParentFont = False
               TabOrder = 4
               SkinData.SkinSection = 'GROUPBOX'
-              Checked = False
               object Label29: TsLabel
                 Left = 3
                 Top = 23
@@ -5563,8 +5488,6 @@ object frmControlData: TfrmControlData
         end
         object tsInvoiceMain: TsTabSheet
           Caption = 'tsInvoiceMain'
-          SkinData.CustomColor = False
-          SkinData.CustomFont = False
           object LMDGroupBox10: TsGroupBox
             AlignWithMargins = True
             Left = 3
@@ -5575,7 +5498,6 @@ object frmControlData: TfrmControlData
             Caption = 'Invoice template'
             TabOrder = 0
             SkinData.SkinSection = 'GROUPBOX'
-            Checked = False
             DesignSize = (
               1087
               80)
@@ -5664,7 +5586,6 @@ object frmControlData: TfrmControlData
             Caption = 'Printers'
             TabOrder = 1
             SkinData.SkinSection = 'GROUPBOX'
-            Checked = False
             object Label8: TsLabel
               Left = 92
               Top = 19
@@ -5723,8 +5644,6 @@ object frmControlData: TfrmControlData
         end
         object tsInvEmail: TsTabSheet
           Caption = 'Reservations'
-          SkinData.CustomColor = False
-          SkinData.CustomFont = False
           object LMDGroupBox25: TsGroupBox
             AlignWithMargins = True
             Left = 3
@@ -5735,7 +5654,6 @@ object frmControlData: TfrmControlData
             Caption = 'Default customer (Rack Customer)'
             TabOrder = 0
             SkinData.SkinSection = 'GROUPBOX'
-            Checked = False
             object Label64: TsLabel
               Left = 6
               Top = 21
@@ -5803,12 +5721,11 @@ object frmControlData: TfrmControlData
             Caption = 'Exclude No-Room with status of : '
             TabOrder = 1
             SkinData.SkinSection = 'GROUPBOX'
-            Checked = False
             object chkExcluteWaitingList: TsCheckBox
               Left = 14
               Top = 21
-              Width = 75
-              Height = 20
+              Width = 83
+              Height = 18
               Caption = 'Waitinglist'
               TabOrder = 0
               SkinData.SkinSection = 'CHECKBOX'
@@ -5818,8 +5735,8 @@ object frmControlData: TfrmControlData
             object chkExcluteAllotment: TsCheckBox
               Left = 14
               Top = 41
-              Width = 73
-              Height = 20
+              Width = 81
+              Height = 18
               Caption = 'Allotment'
               TabOrder = 1
               SkinData.SkinSection = 'CHECKBOX'
@@ -5829,8 +5746,8 @@ object frmControlData: TfrmControlData
             object chkExcluteOrder: TsCheckBox
               Left = 14
               Top = 61
-              Width = 51
-              Height = 20
+              Width = 59
+              Height = 18
               Caption = 'Order'
               TabOrder = 2
               SkinData.SkinSection = 'CHECKBOX'
@@ -5840,8 +5757,8 @@ object frmControlData: TfrmControlData
             object chkExcluteNoShow: TsCheckBox
               Left = 276
               Top = 41
-              Width = 68
-              Height = 20
+              Width = 76
+              Height = 18
               Caption = 'No show'
               TabOrder = 3
               SkinData.SkinSection = 'CHECKBOX'
@@ -5851,8 +5768,8 @@ object frmControlData: TfrmControlData
             object chkExcluteDeparted: TsCheckBox
               Left = 141
               Top = 21
-              Width = 71
-              Height = 20
+              Width = 79
+              Height = 18
               Caption = 'Departed'
               TabOrder = 4
               SkinData.SkinSection = 'CHECKBOX'
@@ -5862,8 +5779,8 @@ object frmControlData: TfrmControlData
             object chkExcluteBlocked: TsCheckBox
               Left = 276
               Top = 21
-              Width = 62
-              Height = 20
+              Width = 70
+              Height = 18
               Caption = 'Blocked'
               TabOrder = 5
               SkinData.SkinSection = 'CHECKBOX'
@@ -5873,8 +5790,8 @@ object frmControlData: TfrmControlData
             object chkExcluteGuest: TsCheckBox
               Left = 141
               Top = 41
-              Width = 52
-              Height = 20
+              Width = 60
+              Height = 18
               Caption = 'Guest'
               TabOrder = 6
               SkinData.SkinSection = 'CHECKBOX'
@@ -5892,12 +5809,11 @@ object frmControlData: TfrmControlData
             Caption = 'ReservationProfile functionality'
             TabOrder = 2
             SkinData.SkinSection = 'GROUPBOX'
-            Checked = False
             object cbxChangeNationality: TsCheckBox
               Left = 14
               Top = 21
-              Width = 189
-              Height = 20
+              Width = 197
+              Height = 18
               Caption = 'Change nationality of all guests'
               TabOrder = 0
               SkinData.SkinSection = 'CHECKBOX'
@@ -5908,8 +5824,6 @@ object frmControlData: TfrmControlData
         end
         object AdvTabSheet3: TsTabSheet
           Caption = 'Channelmanager'
-          SkinData.CustomColor = False
-          SkinData.CustomFont = False
           object sGroupBox1: TsGroupBox
             AlignWithMargins = True
             Left = 3
@@ -5919,7 +5833,6 @@ object frmControlData: TfrmControlData
             Align = alTop
             TabOrder = 0
             SkinData.SkinSection = 'GROUPBOX'
-            Checked = False
             object labChannelManager: TsLabel
               Left = 202
               Top = 20
@@ -5979,7 +5892,6 @@ object frmControlData: TfrmControlData
             Caption = 'Revenue Management Parameters'
             TabOrder = 1
             SkinData.SkinSection = 'GROUPBOX'
-            Checked = False
             object labExpensiveChannelsLevelFrom: TsLabel
               Left = 13
               Top = 27
@@ -6291,12 +6203,11 @@ object frmControlData: TfrmControlData
             Left = 3
             Top = 245
             Width = 1087
-            Height = 72
+            Height = 98
             Align = alTop
             Caption = 'Various Settings'
             TabOrder = 2
             SkinData.SkinSection = 'GROUPBOX'
-            Checked = False
             object sLabel23: TsLabel
               Left = 43
               Top = 20
@@ -6327,11 +6238,25 @@ object frmControlData: TfrmControlData
               Font.Name = 'Tahoma'
               Font.Style = []
             end
+            object lbTopClassAvaiabilityOrderActive: TsLabel
+              Left = 168
+              Top = 65
+              Width = 258
+              Height = 14
+              Alignment = taRightJustify
+              Caption = 'RevPar Guru - Top-class availability-order active:'
+              ParentFont = False
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clBlack
+              Font.Height = -12
+              Font.Name = 'Tahoma'
+              Font.Style = []
+            end
             object cbxAutoAddToGuestPortfolio: TsCheckBox
               Left = 436
               Top = 20
               Width = 20
-              Height = 20
+              Height = 16
               TabOrder = 0
               SkinData.SkinSection = 'CHECKBOX'
               ImgChecked = 0
@@ -6341,8 +6266,18 @@ object frmControlData: TfrmControlData
               Left = 436
               Top = 42
               Width = 20
-              Height = 20
+              Height = 16
               TabOrder = 1
+              SkinData.SkinSection = 'CHECKBOX'
+              ImgChecked = 0
+              ImgUnchecked = 0
+            end
+            object cbTopClassAvaiabilityOrderActive: TsCheckBox
+              Left = 436
+              Top = 65
+              Width = 20
+              Height = 16
+              TabOrder = 2
               SkinData.SkinSection = 'CHECKBOX'
               ImgChecked = 0
               ImgUnchecked = 0
@@ -6351,13 +6286,9 @@ object frmControlData: TfrmControlData
         end
         object AdvTabSheet5: TsTabSheet
           Caption = '-'
-          SkinData.CustomColor = False
-          SkinData.CustomFont = False
         end
         object AdvTabSheet6: TsTabSheet
           Caption = 'Accounting'
-          SkinData.CustomColor = False
-          SkinData.CustomFont = False
           object gbxForceExternalIdCorrectness: TsGroupBox
             AlignWithMargins = True
             Left = 3
@@ -6368,7 +6299,6 @@ object frmControlData: TfrmControlData
             Caption = 'Force External Correctness'
             TabOrder = 0
             SkinData.SkinSection = 'GROUPBOX'
-            Checked = False
             object edForceExternalCustomerIdCorrectness: TsLabel
               Left = 5
               Top = 33
@@ -6425,7 +6355,7 @@ object frmControlData: TfrmControlData
               Left = 219
               Top = 34
               Width = 20
-              Height = 20
+              Height = 16
               TabOrder = 0
               SkinData.SkinSection = 'CHECKBOX'
               ImgChecked = 0
@@ -6435,7 +6365,7 @@ object frmControlData: TfrmControlData
               Left = 219
               Top = 56
               Width = 20
-              Height = 20
+              Height = 16
               TabOrder = 1
               SkinData.SkinSection = 'CHECKBOX'
               ImgChecked = 0
@@ -6445,7 +6375,7 @@ object frmControlData: TfrmControlData
               Left = 219
               Top = 79
               Width = 20
-              Height = 20
+              Height = 16
               TabOrder = 2
               SkinData.SkinSection = 'CHECKBOX'
               ImgChecked = 0
@@ -6472,7 +6402,6 @@ object frmControlData: TfrmControlData
             Caption = 'External Invoice System - Template Entities'
             TabOrder = 1
             SkinData.SkinSection = 'GROUPBOX'
-            Checked = False
             object sLabel13: TsLabel
               Left = 5
               Top = 33
@@ -6567,7 +6496,6 @@ object frmControlData: TfrmControlData
             Caption = 'Other'
             TabOrder = 2
             SkinData.SkinSection = 'GROUPBOX'
-            Checked = False
             object labAutoInvoiceTransfer: TsLabel
               Left = 5
               Top = 33
@@ -6587,7 +6515,7 @@ object frmControlData: TfrmControlData
               Left = 219
               Top = 34
               Width = 20
-              Height = 20
+              Height = 16
               TabOrder = 0
               SkinData.SkinSection = 'CHECKBOX'
               ImgChecked = 0
@@ -6604,7 +6532,6 @@ object frmControlData: TfrmControlData
             Caption = 'Invoice Export Template'
             TabOrder = 3
             SkinData.SkinSection = 'GROUPBOX'
-            Checked = False
             object sLabel19: TsLabel
               Left = 153
               Top = 35
@@ -6659,7 +6586,6 @@ object frmControlData: TfrmControlData
             Caption = 'External POS System - End-Of-Day constants'
             TabOrder = 4
             SkinData.SkinSection = 'GROUPBOX'
-            Checked = False
             object lblCustomer: TsLabel
               Left = 5
               Top = 33
@@ -6745,8 +6671,6 @@ object frmControlData: TfrmControlData
         end
         object AdvTabSheet7: TsTabSheet
           Caption = 'Pos'
-          SkinData.CustomColor = False
-          SkinData.CustomFont = False
           object LMDSimplePanel2: TsPanel
             Left = 0
             Top = 0
@@ -6819,7 +6743,7 @@ object frmControlData: TfrmControlData
               Left = 338
               Top = 8
               Width = 20
-              Height = 20
+              Height = 16
               TabOrder = 1
               SkinData.SkinSection = 'CHECKBOX'
               ImgChecked = 0
@@ -6829,7 +6753,7 @@ object frmControlData: TfrmControlData
               Left = 122
               Top = 8
               Width = 20
-              Height = 20
+              Height = 16
               TabOrder = 2
               SkinData.SkinSection = 'CHECKBOX'
               ImgChecked = 0
@@ -6847,8 +6771,6 @@ object frmControlData: TfrmControlData
             SkinData.SkinSection = 'PAGECONTROL'
             object AdvTabSheet8: TsTabSheet
               Caption = 'Nothing'
-              SkinData.CustomColor = False
-              SkinData.CustomFont = False
               object clabNoAccontConnection: TsLabel
                 Left = 8
                 Top = 8
@@ -6865,8 +6787,6 @@ object frmControlData: TfrmControlData
             end
             object AdvTabSheet9: TsTabSheet
               Caption = 'poster'
-              SkinData.CustomColor = False
-              SkinData.CustomFont = False
               object LMDSimplePanel3: TsPanel
                 Left = 0
                 Top = 0
@@ -6883,7 +6803,6 @@ object frmControlData: TfrmControlData
                   Caption = 'Invoice export'
                   TabOrder = 0
                   SkinData.SkinSection = 'GROUPBOX'
-                  Checked = False
                   DesignSize = (
                     685
                     45)
@@ -6951,8 +6870,6 @@ object frmControlData: TfrmControlData
                 SkinData.SkinSection = 'PAGECONTROL'
                 object AdvTabSheet12: TsTabSheet
                   Caption = '-'
-                  SkinData.CustomColor = False
-                  SkinData.CustomFont = False
                   object LMDSimpleLabel70: TsLabel
                     Left = 6
                     Top = 20
@@ -7219,7 +7136,7 @@ object frmControlData: TfrmControlData
                     Width = 145
                     Height = 22
                     Color = clWindow
-                    Version = '1.5.0.1'
+                    Version = '1.5.0.0'
                     Visible = True
                     Ctl3D = True
                     Columns = <
@@ -7276,7 +7193,7 @@ object frmControlData: TfrmControlData
                     Width = 145
                     Height = 22
                     Color = clWindow
-                    Version = '1.5.0.1'
+                    Version = '1.5.0.0'
                     Visible = True
                     Ctl3D = True
                     Columns = <
@@ -7422,8 +7339,6 @@ object frmControlData: TfrmControlData
             end
             object AdvTabSheet10: TsTabSheet
               Caption = 'Touch Text Entries'
-              SkinData.CustomColor = False
-              SkinData.CustomFont = False
               object LMDSimpleLabel71: TsLabel
                 Left = 26
                 Top = 20
@@ -7510,8 +7425,6 @@ object frmControlData: TfrmControlData
             end
             object tabTouchStoreXML: TsTabSheet
               Caption = 'Touch XML'
-              SkinData.CustomColor = False
-              SkinData.CustomFont = False
               object LMDSimpleLabel81: TsLabel
                 Left = 3
                 Top = 21
@@ -7566,7 +7479,6 @@ object frmControlData: TfrmControlData
                 ParentBackground = False
                 TabOrder = 0
                 SkinData.SkinSection = 'GROUPBOX'
-                Checked = False
                 Items.Strings = (
                   'Do Not Export'
                   'Export to folder'
@@ -7635,25 +7547,17 @@ object frmControlData: TfrmControlData
             end
             object AdvTabSheet11: TsTabSheet
               Caption = 'TOK Windows'
-              SkinData.CustomColor = False
-              SkinData.CustomFont = False
             end
           end
         end
         object AdvTabSheet13: TsTabSheet
           Caption = 'AdvTabSheet13'
-          SkinData.CustomColor = False
-          SkinData.CustomFont = False
         end
         object AdvTabSheet14: TsTabSheet
           Caption = 'Quick Booking'
-          SkinData.CustomColor = False
-          SkinData.CustomFont = False
         end
         object tsIncomingMonitor: TsTabSheet
           Caption = 'Incoming Monitor'#13#10
-          SkinData.CustomColor = False
-          SkinData.CustomFont = False
           object LMDGroupBox23: TsGroupBox
             AlignWithMargins = True
             Left = 3
@@ -7664,7 +7568,6 @@ object frmControlData: TfrmControlData
             Caption = 'Incoming POS sales'
             TabOrder = 0
             SkinData.SkinSection = 'GROUPBOX'
-            Checked = False
             object labSec: TsLabel
               Left = 265
               Top = 54
@@ -7695,8 +7598,8 @@ object frmControlData: TfrmControlData
             object ChkinPosMonitorUse: TsCheckBox
               Left = 16
               Top = 24
-              Width = 97
-              Height = 20
+              Width = 105
+              Height = 18
               Caption = 'Monitor active'
               Font.Charset = DEFAULT_CHARSET
               Font.Color = clBlack
@@ -7739,7 +7642,6 @@ object frmControlData: TfrmControlData
             Caption = 'Auto Turnover/payments confirm'
             TabOrder = 1
             SkinData.SkinSection = 'GROUPBOX'
-            Checked = False
             object sLabel10: TsLabel
               Left = 266
               Top = 61
@@ -7770,8 +7672,8 @@ object frmControlData: TfrmControlData
             object chkConfirmAuto: TsCheckBox
               Left = 17
               Top = 25
-              Width = 54
-              Height = 20
+              Width = 62
+              Height = 18
               Caption = 'Active'
               Font.Charset = DEFAULT_CHARSET
               Font.Color = clBlack
@@ -7808,8 +7710,6 @@ object frmControlData: TfrmControlData
         end
         object tsColors: TsTabSheet
           Caption = 'tsColors'
-          SkinData.CustomColor = False
-          SkinData.CustomFont = False
           object Panel4: TsPanel
             Left = 0
             Top = 0
@@ -7832,7 +7732,6 @@ object frmControlData: TfrmControlData
               ParentFont = False
               TabOrder = 0
               SkinData.SkinSection = 'GROUPBOX'
-              Checked = False
               object labBackgroundColor: TsLabel
                 Left = 2
                 Top = 61
@@ -7864,8 +7763,8 @@ object frmControlData: TfrmControlData
               object chkBold: TsCheckBox
                 Left = 119
                 Top = 111
-                Width = 43
-                Height = 20
+                Width = 51
+                Height = 18
                 Caption = 'Bold'
                 Font.Charset = DEFAULT_CHARSET
                 Font.Color = clWindowText
@@ -7881,8 +7780,8 @@ object frmControlData: TfrmControlData
               object chkItalic: TsCheckBox
                 Left = 119
                 Top = 129
-                Width = 45
-                Height = 20
+                Width = 53
+                Height = 18
                 Caption = 'Italic'
                 Font.Charset = DEFAULT_CHARSET
                 Font.Color = clWindowText
@@ -7898,8 +7797,8 @@ object frmControlData: TfrmControlData
               object chkUnderline: TsCheckBox
                 Left = 237
                 Top = 111
-                Width = 71
-                Height = 20
+                Width = 79
+                Height = 18
                 Caption = 'Underline'
                 Font.Charset = DEFAULT_CHARSET
                 Font.Color = clWindowText
@@ -7915,8 +7814,8 @@ object frmControlData: TfrmControlData
               object chkStrikeOut: TsCheckBox
                 Left = 237
                 Top = 129
-                Width = 70
-                Height = 20
+                Width = 78
+                Height = 18
                 Caption = 'Strikeout'
                 Font.Charset = DEFAULT_CHARSET
                 Font.Color = clWindowText
@@ -9072,8 +8971,6 @@ object frmControlData: TfrmControlData
         end
         object tabMandatory: TsTabSheet
           Caption = 'Mandatory info'
-          SkinData.CustomColor = False
-          SkinData.CustomFont = False
           object pcMandatoryInfo: TsPageControl
             AlignWithMargins = True
             Left = 20
@@ -9089,8 +8986,6 @@ object frmControlData: TfrmControlData
             TabOrder = 0
             object tabGuestInformation: TsTabSheet
               Caption = 'Mandatory Guest information'
-              SkinData.CustomColor = False
-              SkinData.CustomFont = False
               object clbMandatoryFields: TsCheckListBox
                 AlignWithMargins = True
                 Left = 20

@@ -696,7 +696,7 @@ type
     alDeveloperTools: TActionList;
     acUpdateTranslations: TAction;
     splStatistics: TsSplitter;
-    dxBarLargeButton7: TdxBarLargeButton;
+    btnDefaultMasterRates: TdxBarLargeButton;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
@@ -986,7 +986,7 @@ type
     procedure btnDailyRevenuesClick(Sender: TObject);
     procedure btnCleaningNotesClick(Sender: TObject);
     procedure acUpdateTranslationsExecute(Sender: TObject);
-    procedure dxBarLargeButton7Click(Sender: TObject);
+    procedure btnDefaultMasterRatesClick(Sender: TObject);
 
   private
     FReservationsModel: TReservationsModel;
@@ -1483,6 +1483,7 @@ type
     procedure ClearObjectsFromGrid(aGrid: TAdvStringGrid);
     procedure DayClosingTimes;
     procedure DeActivateMessageTimerIfActive;
+    procedure SetPMSVisibilities;
 {$IFDEF USE_JCL}
     procedure LogException(ExceptObj: TObject; ExceptAddr: Pointer; IsOS: boolean);
 {$ENDIF}
@@ -1714,6 +1715,7 @@ begin
   LoggedIn := true;
   OpenAppSettings;
   g.RefreshRoomList;
+  SetPMSVisibilities;
   // ******
   glb.PerformAuthenticationAssertion(self);
   PlaceFormOnVisibleMonitor(self);
@@ -11373,10 +11375,21 @@ begin
   // _RemodeHelp
 end;
 
+procedure TfrmMain.SetPMSVisibilities;
+begin
+  if glb.PMSSettings.MasterRateDefaultsActive then
+    btnDefaultMasterRates.Visible := ivAlways
+  else
+    btnDefaultMasterRates.Visible := ivNever;
+end;
+
 procedure TfrmMain.btnSettingsClick(Sender: TObject);
 begin
   UserClickedDxLargeButton(Sender);
   _Settings;
+
+  SetPMSVisibilities;
+
   FDayViewSizesRead := false;
   if LoadOneDayViewGridStatus then
   begin
@@ -11432,7 +11445,7 @@ begin
   StaticResources('Files', ANY_FILE, ACCESS_RESTRICTED);
 end;
 
-procedure TfrmMain.dxBarLargeButton7Click(Sender: TObject);
+procedure TfrmMain.btnDefaultMasterRatesClick(Sender: TObject);
 begin
   EditMasterRateDefaults;
 end;

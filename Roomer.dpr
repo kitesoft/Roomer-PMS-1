@@ -281,7 +281,6 @@ begin
 
   Application.CreateForm(TD, D);
   Application.CreateForm(TDReportData, DReportData);
-  Application.CreateForm(TFrmTopClassAvailabilityOrder, FrmTopClassAvailabilityOrder);
   TSplashFormManager.UpdateProgress('Loading forms...');
 
   Application.CreateForm(TDImages, DImages);

@@ -41,6 +41,7 @@ object frmRoomTypesGroups2: TfrmRoomTypesGroups2
       Align = alTop
       TabOrder = 0
       SkinData.SkinSection = 'PANEL'
+      ExplicitTop = -6
       DesignSize = (
         853
         89)
@@ -165,6 +166,21 @@ object frmRoomTypesGroups2: TfrmRoomTypesGroups2
         State = cbChecked
         TabOrder = 6
       end
+      object btnAvailabilityOrder: TsButton
+        Left = 477
+        Top = 7
+        Width = 138
+        Height = 26
+        Hint = 'Add new record'
+        Caption = 'Availability order'
+        ImageIndex = 69
+        Images = DImages.PngImageList1
+        ParentShowHint = False
+        ShowHint = True
+        TabOrder = 7
+        OnClick = btnAvailabilityOrderClick
+        SkinData.SkinSection = 'BUTTON'
+      end
     end
     object sbMain: TsStatusBar
       Left = 0
@@ -225,7 +241,6 @@ object frmRoomTypesGroups2: TfrmRoomTypesGroups2
       Align = alClient
       TabOrder = 3
       LookAndFeel.NativeStyle = False
-      ExplicitTop = 87
       object tvData: TcxGridDBTableView
         OnDblClick = tvDataDblClick
         Navigator.Buttons.CustomButtons = <>
@@ -683,7 +698,6 @@ object frmRoomTypesGroups2: TfrmRoomTypesGroups2
     Left = 96
     Top = 192
     object prLink_grData: TdxGridReportLink
-      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -697,7 +711,6 @@ object frmRoomTypesGroups2: TfrmRoomTypesGroups2
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
       ReportDocument.CreationDate = 41334.495374884260000000
-      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
   end
