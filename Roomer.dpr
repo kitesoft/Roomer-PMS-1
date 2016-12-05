@@ -13,6 +13,7 @@ program Roomer;
 uses
   {$ifdef UseFastMM}
   FastMM4 in 'FastMM\FastMM4.pas',
+  FastMM4Messages in 'FastMM\FastMM4Messages.pas',
   {$endif}
   Forms,
   uMain in 'uMain.pas' {frmMain},
@@ -29,7 +30,7 @@ uses
   uCreditPrompt in 'uCreditPrompt.pas' {frmCreditPrompt},
   uInvoiceList in 'uInvoiceList.pas' {frmInvoiceList},
   uDReportData in 'uDReportData.pas' {DReportData: TDataModule},
-  uD in 'uD.pas' {D: TDataModule},
+  uD in 'uD.pas' {d: TDataModule},
   uG in 'uG.pas',
   uConverts in 'uConverts.pas' {frmConverts},
   ufrmSelLang in 'ufrmSelLang.pas' {frmSelLang},
