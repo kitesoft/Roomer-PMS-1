@@ -1,8 +1,8 @@
-object Form1: TForm1
+object frmUpgradeAgent: TfrmUpgradeAgent
   Left = 0
   Top = 0
   BorderStyle = bsNone
-  Caption = 'Form1'
+  Caption = 'Roomer Upgrade Agent'
   ClientHeight = 429
   ClientWidth = 410
   Color = clBlack
@@ -379,14 +379,5 @@ object Form1: TForm1
     OnTimer = tmStartTimer
     Left = 168
     Top = 344
-  end
-  object httpClient: TALWinInetHTTPClient
-    ConnectTimeout = 900
-    SendTimeout = 900
-    ReceiveTimeout = 900
-    OnDownloadProgress = DownloadProgress
-    InternetOptions = [wHttpIo_Ignore_cert_cn_invalid, wHttpIo_Ignore_cert_date_invalid, wHttpIo_Keep_connection, wHttpIo_Need_file, wHttpIo_No_cache_write, wHttpIo_Pragma_nocache, wHttpIo_Reload]
-    Left = 320
-    Top = 208
   end
 end
