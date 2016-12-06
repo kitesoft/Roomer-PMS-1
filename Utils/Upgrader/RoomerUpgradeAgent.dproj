@@ -47,7 +47,7 @@
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base)'!=''">
         <Manifest_File>None</Manifest_File>
-        <DCC_UnitSearchPath>..\..\_dcu;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <DCC_UnitSearchPath>..\..\_dcu;..\..\Extras\\Skin\AlphaSkins\Components;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <VerInfo_Keys>CompanyName=Promoir BV;FileDescription=Roomer PMS Upgrade Agent;FileVersion=1.2.0.0;InternalName=Upgrader;LegalCopyright=(C) 2013, Promoir BV;LegalTrademarks=Roomer is a registered trademark of Promoir BV;OriginalFilename=RoomerUpgradeAgent;ProductName=Roomer Open Hospitality Platform;ProductVersion=1.2.0.0;Comments=</VerInfo_Keys>
         <VerInfo_Locale>1043</VerInfo_Locale>
         <DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;$(DCC_Namespace)</DCC_Namespace>
@@ -91,13 +91,13 @@
         <DCC_DebugInformation>false</DCC_DebugInformation>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
+        <Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
         <Debugger_RunParams>C:\Development\Roomer\Frontend\win-pms\Roomer.exe</Debugger_RunParams>
         <VerInfo_AutoGenVersion>true</VerInfo_AutoGenVersion>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <Icon_MainIcon>RoomerUpgradeAgent_Icon.ico</Icon_MainIcon>
         <DCC_ExeOutput>..\..\RoomerPMSRelease\</DCC_ExeOutput>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
-        <VerInfo_Keys>CompanyName=Promoir BV;FileDescription=Roomer PMS Upgrade Agent;FileVersion=1.2.0.0;InternalName=Upgrader;LegalCopyright=(C) 2013, Promoir BV;LegalTrademarks=Roomer is a registered trademark of Promoir BV;OriginalFilename=RoomerUpgradeAgent;ProductName=Roomer Open Hospitality Platform;ProductVersion=1.2.0.0;Comments=</VerInfo_Keys>
         <VerInfo_MinorVer>2</VerInfo_MinorVer>
     </PropertyGroup>
     <ItemGroup>
