@@ -60,7 +60,7 @@ uses
   dxSkinOffice2007Silver, dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinValentine,
   dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, cxCurrencyEdit, cxTimeEdit
-  , uRoomerForm, dxPScxCommon, dxPScxGridLnk, sStatusBar
+  , uRoomerForm, dxPScxCommon, dxPScxGridLnk, sStatusBar, cxCheckBox, cxCalc
 
   ;
 
@@ -133,8 +133,6 @@ type
     tvRoomReservationsGroupAccount: TcxGridDBColumn;
     tvRoomReservationsinvBreakfast: TcxGridDBColumn;
     tvRoomReservationsCurrency: TcxGridDBColumn;
-    tvRoomReservationsDiscount: TcxGridDBColumn;
-    tvRoomReservationsPercentage: TcxGridDBColumn;
     tvRoomReservationsPriceType: TcxGridDBColumn;
     tvRoomReservationsRoomType: TcxGridDBColumn;
     tvRoomReservationsPMInfo: TcxGridDBColumn;
@@ -147,7 +145,6 @@ type
     tvRoomReservationsnumGuests: TcxGridDBColumn;
     tvRoomReservationsnumChildren: TcxGridDBColumn;
     tvRoomReservationsnumInfants: TcxGridDBColumn;
-    tvRoomReservationsAvrageRate: TcxGridDBColumn;
     tvRoomReservationsRateCount: TcxGridDBColumn;
     tvRoomReservationsdtCreated: TcxGridDBColumn;
     kbmRoomsDate_: TkbmMemTable;
@@ -305,13 +302,12 @@ type
     procedure btnRoomsTabRoomClick(Sender: TObject);
     procedure btnCloseClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
-    procedure tvReservationsDiscountGetProperties(
-      Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
-      var AProperties: TcxCustomEditProperties);
-    procedure tvReservationsTotalRoomRentGetProperties(
+    procedure tvNativeCurrencyGetProperties(
       Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
       var AProperties: TcxCustomEditProperties);
     procedure pageMainChange(Sender: TObject);
+    procedure tvRoomsDateRoomRateGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
+      var AProperties: TcxCustomEditProperties);
   private
     { Private declarations }
     zDateFrom : Tdate;
@@ -675,18 +671,18 @@ begin
 end;
 
 
-procedure TfrmRptReservations.tvReservationsDiscountGetProperties(
+procedure TfrmRptReservations.tvNativeCurrencyGetProperties(
   Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
   var AProperties: TcxCustomEditProperties);
 begin
   AProperties := d.getCurrencyProperties(g.qNativeCurrency);
 end;
 
-procedure TfrmRptReservations.tvReservationsTotalRoomRentGetProperties(
-  Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
-  var AProperties: TcxCustomEditProperties);
+procedure TfrmRptReservations.tvRoomsDateRoomRateGetProperties(Sender: TcxCustomGridTableItem;
+  ARecord: TcxCustomGridRecord; var AProperties: TcxCustomEditProperties);
 begin
-  AProperties := d.getCurrencyProperties(g.qNativeCurrency);
+  inherited;
+  AProperties := d.getCurrencyProperties(kbmRoomsDate_.FieldByName('Currency').AsString);
 end;
 
 function TfrmRptReservations.GetRVinList : string;
@@ -977,22 +973,22 @@ begin
 
     s := s+'   , (SELECT count(ID) FROM roomsdate WHERE roomsdate.reservation=rv.reservation  AND (roomsdate.ResFlag not in('+quotedstr('X')+','+quotedstr('C')+'))) AS TotalNights '#10;
 
-    s := s+'   , (SELECT currency FROM roomsdate WHERE roomsdate.reservation=rv.reservation LIMIT 1) AS Currency  '#10;
-    s := s+'   , (SELECT Avalue FROM currencies WHERE currency= (SELECT currency FROM roomsdate WHERE roomsdate.reservation=rv.reservation LIMIT 1)) AS Currencyrate  '#10;
+    s := s+'   , (SELECT currency FROM roomsdate WHERE roomsdate.reservation=rv.reservation AND (roomsdate.ResFlag not in('+quotedstr('X')+','+quotedstr('C')+')) LIMIT 1) AS Currency  '#10;
+    s := s+'   , (SELECT Avalue FROM currencies WHERE currency= (SELECT currency FROM roomsdate WHERE roomsdate.reservation=rv.reservation AND (roomsdate.ResFlag not in('+quotedstr('X')+','+quotedstr('C')+')) LIMIT 1)) AS Currencyrate  '#10;
 
     s := s+'   , (SELECT SUM(RoomRate) FROM roomsdate WHERE (roomsdate.reservation=rv.reservation) AND (roomsdate.ResFlag not in('+quotedstr('X')+','+quotedstr('C')+'))) '#10;
-    s := s+'       * (SELECT Avalue FROM currencies WHERE currency= (SELECT currency FROM roomsdate WHERE roomsdate.reservation=rv.reservation LIMIT 1))  AS RoomRent '#10;
+    s := s+'       * (SELECT Avalue FROM currencies WHERE currency= (SELECT currency FROM roomsdate WHERE roomsdate.reservation=rv.reservation AND (roomsdate.ResFlag not in('+quotedstr('X')+','+quotedstr('C')+')) LIMIT 1))  AS RoomRent '#10;
 
     s := s+'   , (SELECT SUM(IF(isPercentage, RoomRate*Discount/100, Discount)) FROM roomsdate WHERE (roomsdate.reservation=rv.reservation) AND (roomsdate.ResFlag not in('+quotedstr('X')+','+quotedstr('C')+'))) '#10;
-    s := s+'       * (SELECT Avalue FROM currencies WHERE currency= (SELECT currency FROM roomsdate WHERE roomsdate.reservation=rv.reservation LIMIT 1)) AS Discount '#10;
+    s := s+'       * (SELECT Avalue FROM currencies WHERE currency= (SELECT currency FROM roomsdate WHERE roomsdate.reservation=rv.reservation AND (roomsdate.ResFlag not in('+quotedstr('X')+','+quotedstr('C')+')) LIMIT 1)) AS Discount '#10;
 
     s := s+'   , (((SELECT SUM(RoomRate) FROM roomsdate WHERE (roomsdate.reservation=rv.reservation) AND  (roomsdate.ResFlag not in('+quotedstr('X')+','+quotedstr('C')+'))) '#10;
     s := s+'        - (SELECT SUM(IF(isPercentage, RoomRate*Discount/100, Discount)) FROM roomsdate WHERE (roomsdate.reservation=rv.reservation) AND (roomsdate.ResFlag not in('+quotedstr('X')+','+quotedstr('C')+'))))) '#10;
-    s := s+'            * (SELECT Avalue FROM currencies WHERE currency= (SELECT currency FROM roomsdate WHERE roomsdate.reservation=rv.reservation LIMIT 1)) AS TotalRoomRent '#10;
+    s := s+'            * (SELECT Avalue FROM currencies WHERE currency= (SELECT currency FROM roomsdate WHERE roomsdate.reservation=rv.reservation AND (roomsdate.ResFlag not in('+quotedstr('X')+','+quotedstr('C')+')) LIMIT 1)) AS TotalRoomRent '#10;
 
     s := s+'    , (((((SELECT SUM(RoomRate) FROM roomsdate WHERE (roomsdate.reservation=rv.reservation) AND  (roomsdate.ResFlag not in('+quotedstr('X')+','+quotedstr('C')+')))  '#10;
     s := s+'         - (SELECT SUM(IF(isPercentage, RoomRate*Discount/100, Discount)) FROM roomsdate WHERE (roomsdate.reservation=rv.reservation) AND (roomsdate.ResFlag not in('+quotedstr('X')+','+quotedstr('C')+')))))  '#10;
-    s := s+'             * (SELECT Avalue FROM currencies WHERE currency= (SELECT currency FROM roomsdate WHERE roomsdate.reservation=rv.reservation LIMIT 1))))  '#10;
+    s := s+'             * (SELECT Avalue FROM currencies WHERE currency= (SELECT currency FROM roomsdate WHERE roomsdate.reservation=rv.reservation AND (roomsdate.ResFlag not in('+quotedstr('X')+','+quotedstr('C')+')) LIMIT 1))))  '#10;
     s := s+'                / (SELECT count(ID) FROM roomsdate WHERE roomsdate.reservation=rv.reservation  AND (roomsdate.ResFlag not in('+quotedstr('X')+','+quotedstr('C')+'))) AS AvrageRoomRent  '#10;
 
     s := s+' FROM '#10;
