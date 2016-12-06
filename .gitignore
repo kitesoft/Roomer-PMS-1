@@ -53,6 +53,8 @@ Thumbs.db
 *.tvsconfig
 *.local
 *.dsk
+*.old
+*.err
 Roomer.res
 AQTime/*_Results/
 RoomerPMSRelease/*.exe
