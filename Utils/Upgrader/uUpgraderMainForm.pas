@@ -3,11 +3,22 @@ unit uUpgraderMainForm;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, IOUtils,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, acPNG, Vcl.ExtCtrls, Vcl.StdCtrls, Data.DB, Data.Win.ADODB, cmpRoomerDataSet,
-//  ALHttpClient, ALWininetHttpClient,
-  sSkinProvider, sSkinManager, Vcl.ComCtrls, acProgressBar, sLabel, dxGDIPlusClasses
-  , uRoomerHttpClient;
+  Vcl.Forms,
+  ALHttpClient,
+  ALWininetHttpClient,
+  AlHttpCommon,
+  uRoomerHttpClient,
+  Vcl.ExtCtrls,
+  Data.DB,
+  Data.Win.ADODB,
+  cmpRoomerDataSet,
+  Vcl.Controls,
+  Vcl.ComCtrls,
+  acProgressBar,
+  Vcl.StdCtrls,
+  sLabel,
+  dxGDIPlusClasses,
+  System.Classes;
 
 type
   TfrmUpgradeAgent = class(TForm)
@@ -22,7 +33,6 @@ type
     procedure FormShow(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure tmStartTimer(Sender: TObject);
-    procedure DownloadProgress(sender: TObject; Read, Total: Integer);
   private
     httpCLient: TRoomerHttpClient;
     procedure StartLabel(Label_: TsLabel);
@@ -32,7 +42,7 @@ type
     procedure RemoveLanguagesFiles;
     procedure RemoveAllRoomerCaches;
     function TryCopyFile(localFilename, exeName: PWideChar): Boolean;
-    { Private declarations }
+    procedure DownloadProgress(Sender: TObject; Read, Total: Integer);
   public
     { Public declarations }
   end;
@@ -45,50 +55,53 @@ implementation
 {$R *.dfm}
 
 uses
-  Types
-  , ShellAPI
-  , uStringUtils
-  , uFileSystemUtils
-  , uUpgraderCmdLineOptions
-  , UITypes
-  ;
+  Winapi.Windows,
+  System.SysUtils,
+  Vcl.Graphics,
+  IOUtils,
+  Vcl.Dialogs,
+  Types,
+  ShellAPI,
+  uStringUtils,
+  uFileSystemUtils,
+  uUpgraderCmdLineOptions,
+  UITypes;
 
 const
 
   ROOMER_EXE_URI = 'Roomer.exe';
 
-  _K  = 1024; //byte
-  _B  = 1; //byte
-  _KB = _K * _B; //kilobyte
-  _MB = _K * _KB; //megabyte
-  _GB = _K * _MB; //gigabyte
+  _K = 1024; // byte
+  _B = 1; // byte
+  _KB = _K * _B; // kilobyte
+  _MB = _K * _KB; // megabyte
+  _GB = _K * _MB; // gigabyte
 
 function FormatByteSize(const bytes: Longword): string;
 begin
 
   if bytes > _GB then
     result := FormatFloat('#.## GB', bytes / _GB)
+  else if bytes > _MB then
+    result := FormatFloat('#.## MB', bytes / _MB)
+  else if bytes > _KB then
+    result := FormatFloat('#.## KB', bytes / _KB)
   else
-    if bytes > _MB then
-      result := FormatFloat('#.## MB', bytes / _MB)
-    else
-      if bytes > _KB then
-        result := FormatFloat('#.## KB', bytes / _KB)
-      else
-        result := FormatFloat('#.## Bytes', bytes) ;
+    result := FormatFloat('#.## Bytes', bytes);
 end;
 
 procedure TfrmUpgradeAgent.FormCreate(Sender: TObject);
 begin
-  httpClient := TRoomerHttpClient.Create(Self);
+  httpCLient := TRoomerHttpClient.Create(Self);
 
-  with httpClient do
+  with httpCLient do
   begin
     ConnectTimeout := 900;
     SendTimeout := 900;
     ReceiveTimeout := 900;
     OnDownloadProgress := DownloadProgress;
-    InternetOptions := [wHttpIo_Ignore_cert_cn_invalid, wHttpIo_Ignore_cert_date_invalid, wHttpIo_Keep_connection, wHttpIo_Need_file, wHttpIo_No_cache_write, wHttpIo_Pragma_nocache, wHttpIo_Reload];
+    InternetOptions := [wHttpIo_Ignore_cert_cn_invalid, wHttpIo_Ignore_cert_date_invalid, wHttpIo_Keep_connection,
+      wHttpIo_Need_file, wHttpIo_No_cache_write, wHttpIo_Pragma_nocache, wHttpIo_Reload];
   end;
 end;
 
@@ -110,12 +123,13 @@ begin
   PerformUpdate;
 end;
 
-procedure TfrmUpgradeAgent.DownloadProgress(sender: TObject; Read, Total: Integer);
-var value : Extended;
+procedure TfrmUpgradeAgent.DownloadProgress(Sender: TObject; Read, Total: Integer);
+var
+  value: Extended;
 begin
-//  lblDownloaded.Caption := FormatFloat('0',Read) + ' bytes';
+  // lblDownloaded.Caption := FormatFloat('0',Read) + ' bytes';
   if Total < 1 then
-    Total := 57*_MB;
+    Total := 57 * _MB;
   if sProgressBar1.Max <> Total then
   begin
     sProgressBar1.Max := Total;
@@ -124,8 +138,8 @@ begin
   sProgressBar1.Position := Read;
   value := 100 * (Read / Total);
   if value > 100 then
-     value := 100;
-  lblDownloaded.Caption := FormatFloat('0.00',value) + '% of ~' + FormatByteSize(Total);
+    value := 100;
+  lblDownloaded.Caption := FormatFloat('0.00', value) + '% of ~' + FormatByteSize(Total);
   lblDownloaded.Update;
   sProgressBar1.Update;
   sProgressBar1.Tag := sProgressBar1.Tag + 1;
@@ -143,7 +157,7 @@ begin
   Label_.Update;
 end;
 
-function TfrmUpgradeAgent.DownloadFile(const Url, filename : String) : Boolean;
+function TfrmUpgradeAgent.DownloadFile(const Url, filename: String): Boolean;
 var
   stream: TFileStream;
   aResponseContentHeader: TALHTTPResponseHeader;
@@ -152,7 +166,7 @@ begin
   stream := TFileStream.Create(filename, fmCreate);
   try
     try
-      httpClient.Get(AnsiString(Url), stream, aResponseContentHeader);
+      httpCLient.Get(AnsiString(Url), stream, aResponseContentHeader);
       result := true;
     except
       result := false;
@@ -163,18 +177,17 @@ begin
   end;
 end;
 
-
 procedure TfrmUpgradeAgent.RemoveAllRoomerCaches;
 var
   path: String;
-  files : TStringDynArray;
+  files: TStringDynArray;
   i: Integer;
 begin
   try
     path := TPath.Combine(uFileSystemUtils.LocalAppDataPath, 'Roomer');
-    files := TDirectory.GetFiles(Path + '\', '*.src', TSearchOption.soAllDirectories);
+    files := TDirectory.GetFiles(path + '\', '*.src', TSearchOption.soAllDirectories);
     for i := LOW(files) to HIGH(files) do
-       DeleteFile(files[i]);
+      DeleteFile(files[i]);
   except
     // Ignore - Not a vital problem
   end;
@@ -194,21 +207,21 @@ begin
   end;
 end;
 
-function TfrmUpgradeAgent.TryCopyFile(localFilename, exeName : PWideChar) : Boolean;
+function TfrmUpgradeAgent.TryCopyFile(localFilename, exeName: PWideChar): Boolean;
 begin
-  result := False;
+  result := false;
   while true do
   begin
-    if CopyFile(localFilename, exeName, False) then
+    if CopyFile(localFilename, exeName, false) then
     begin
-      result := True;
+      result := true;
       Break;
     end;
     if MessageDlg('Unable to upgrade Roomer!' + #13#13 +
-                  '[Retry] = Try to automatically close Roomer and retry the upgrade.' + #13 +
-                  '[Cancel] = Cancel the upgrade for now.', mtConfirmation, [mbRetry, mbCancel], 0) = mrCancel then
+      '[Retry] = Try to automatically close Roomer and retry the upgrade.' + #13 +
+      '[Cancel] = Cancel the upgrade for now.', mtConfirmation, [mbRetry, mbCancel], 0) = mrCancel then
     begin
-      result := False;
+      result := false;
       Break;
     end;
     KillTask(ExtractFilename(exeName));
@@ -217,17 +230,18 @@ begin
 end;
 
 procedure TfrmUpgradeAgent.PerformUpdate;
-var exeName : String;
-    localFilename : PWideChar;
-    tempFile : String;
+var
+  exeName: String;
+  localFilename: PWideChar;
+  tempFile: String;
 begin
-  exeName := TUpgraderCmdlineOptions.ExeName;
+  exeName := TUpgraderCmdlineOptions.exeName;
 
   lblExename.Caption := exeName;
   StartLabel(Label1);
   try
-    tempFile := TPath.GetTempFileName; // ExtractFilePath(exeName) + '\rTemp.exe';
-    deleteFile(tempFile);
+    tempFile := TPath.GetTempFileName;
+    DeleteFile(tempFile);
     if DownloadFile(TUpgraderCmdlineOptions.RoomerStoreURL + ROOMER_EXE_URI, tempFile) then
     begin
       if not TUpgraderCmdlineOptions.SkipClearLanguages then
@@ -247,7 +261,7 @@ begin
       if NOT TryCopyFile(localFilename, PChar(exeName)) then
       begin
         if FileExists(tempFile) then
-          deleteFile(tempFile);
+          DeleteFile(tempFile);
         Close;
         exit;
       end;
@@ -259,10 +273,11 @@ begin
       EndLabel(Label3);
     end;
   except
-    On E: Exception do begin
-      {$IFDEF DEBUG}
-        ShowMessage('Error: ' + e.Message);
-      {$ENDIF}
+    On E: Exception do
+    begin
+{$IFDEF DEBUG}
+      ShowMessage('Error: ' + E.Message);
+{$ENDIF}
     end;
   end;
 

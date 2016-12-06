@@ -360,19 +360,6 @@ object frmUpgradeAgent: TfrmUpgradeAgent
     ProgressSkin = 'PROGRESSH'
     SkinData.SkinSection = 'GAUGE'
   end
-  object RoomerDataSet: TRoomerDataSet
-    CommandText = ''
-    CommandType = cmdUnknown
-    Parameters = <>
-    DataActive = False
-    RoomerStoreUri = 'http://localhost:8080/services/'
-    RoomerUri = 'http://mobile.roomerpms.com:8080/services/'
-    RoomerEntitiesUri = 'http://mobile.roomerpms.com:8080/services/entities/'
-    RoomerDatasetsUri = 'http://mobile.roomerpms.com:8080/services/datasets/'
-    SessionLengthSeconds = 0
-    Left = 296
-    Top = 296
-  end
   object tmStart: TTimer
     Enabled = False
     Interval = 100
