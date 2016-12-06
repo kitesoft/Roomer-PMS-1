@@ -338,6 +338,8 @@ object frmUpgradeAgent: TfrmUpgradeAgent
     Width = 410
     Height = 16
     Align = alBottom
+    Alignment = taCenter
+    AutoSize = False
     ParentFont = False
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWhite

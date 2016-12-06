@@ -75,7 +75,7 @@
         <DCC_RemoteDebug>true</DCC_RemoteDebug>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
-        <Debugger_RunParams>-e:C:\Temp\Roomer.exe</Debugger_RunParams>
+        <Debugger_RunParams>-e:C:\Temp\Roomer.exe -s:http://store.roomerdev.net</Debugger_RunParams>
         <Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
         <VerInfo_Keys>CompanyName=Promoir BV;FileDescription=Roomer Upgrade Agent;FileVersion=1.0.0.0;InternalName=;LegalCopyright=(C) 2013 Promoir BV;LegalTrademarks=;OriginalFilename=;ProductName=ROOMER;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
         <DCC_ExeOutput>C:\Temp\</DCC_ExeOutput>
