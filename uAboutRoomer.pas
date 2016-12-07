@@ -197,6 +197,7 @@ begin
     forceDirectories(sPath);
     UpgradeManagerPath := TPath.Combine(sPath, 'RoomerUpgradeAgent.exe');
     FileDependencymanager.getRoomerUpgradeAgentFilePath(UpgradeManagerPath);
+    ExecuteFile(Handle, UpgradeManagerPath, '-e:"' + Application.ExeName + '" -s:"' + d.roomerMainDataSet.RoomerStoreUri + '"', [eoElevate]);
   except
   end;
 end;

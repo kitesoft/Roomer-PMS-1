@@ -97,7 +97,6 @@
     <PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
         <DCC_ExeOutput>..\..\RoomerPMSRelease\</DCC_ExeOutput>
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <Manifest_File>None</Manifest_File>
     </PropertyGroup>
     <ItemGroup>
         <DelphiCompile Include="$(MainSource)">
@@ -156,10 +155,7 @@
                     <VersionInfoKeys Name="CFBundleAllowMixedLocalizations"/>
                     <VersionInfoKeys Name="CFBundleExecutable"/>
                 </VersionInfoKeys>
-                <Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k170.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp170.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
-                </Excluded_Packages>
+                <Excluded_Packages/>
                 <Source>
                     <Source Name="MainSource">VersionXmlGenerator.dpr</Source>
                 </Source>

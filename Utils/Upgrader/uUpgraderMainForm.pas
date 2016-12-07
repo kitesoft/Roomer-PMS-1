@@ -184,8 +184,8 @@ var
   i: Integer;
 begin
   try
-    path := TPath.Combine(uFileSystemUtils.LocalAppDataPath, 'Roomer');
-    files := TDirectory.GetFiles(path + '\', '*.src', TSearchOption.soAllDirectories);
+//    path := TPath.Combine(uFileSystemUtils.LocalAppDataPath, 'Roomer');
+    files := TDirectory.GetFiles(RoomerAppDataPath + '\', '*.src', TSearchOption.soAllDirectories);
     for i := LOW(files) to HIGH(files) do
       DeleteFile(files[i]);
   except
@@ -198,8 +198,7 @@ var
   path: String;
 begin
   try
-    path := TPath.Combine(uFileSystemUtils.LocalAppDataPath, 'Roomer');
-    path := TPath.Combine(path, 'Languages');
+    path := TPath.Combine(RoomerAppDataPath, 'Languages');
     forceDirectories(path);
     DeleteAllFiles(TPath.Combine(path, 'RoomerLanguage*.src'));
   except

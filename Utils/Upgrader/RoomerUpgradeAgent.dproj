@@ -46,9 +46,11 @@
         <Base>true</Base>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base)'!=''">
+        <VerInfo_MajorVer>2</VerInfo_MajorVer>
+        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <Manifest_File>None</Manifest_File>
         <DCC_UnitSearchPath>..\..\_dcu;..\..\Extras\VSoft.CommandlineParser\src;..\..\Extras\Skin\AlphaSkins\Components;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
-        <VerInfo_Keys>CompanyName=Promoir BV;FileDescription=Roomer PMS Upgrade Agent;FileVersion=1.2.0.0;InternalName=Upgrader;LegalCopyright=(C) 2013, Promoir BV;LegalTrademarks=Roomer is a registered trademark of Promoir BV;OriginalFilename=RoomerUpgradeAgent;ProductName=Roomer Open Hospitality Platform;ProductVersion=1.2.0.0;Comments=</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=Promoir BV;FileDescription=Roomer PMS Upgrade Agent;FileVersion=2.0.0.0;InternalName=Upgrader;LegalCopyright=(C) 2013, Promoir BV;LegalTrademarks=Roomer is a registered trademark of Promoir BV;OriginalFilename=RoomerUpgradeAgent;ProductName=Roomer Open Hospitality Platform;ProductVersion=2.0.0.0;Comments=</VerInfo_Keys>
         <VerInfo_Locale>1043</VerInfo_Locale>
         <DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;$(DCC_Namespace)</DCC_Namespace>
         <Icon_MainIcon>$(BDS)\bin\delphi_PROJECTICON.ico</Icon_MainIcon>
@@ -75,13 +77,13 @@
         <DCC_RemoteDebug>true</DCC_RemoteDebug>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
-        <Debugger_RunParams>-e:C:\Temp\Roomer.exe -s:http://store.roomerdev.net</Debugger_RunParams>
+        <VerInfo_MajorVer>1</VerInfo_MajorVer>
+        <Debugger_RunParams>-e:&quot;C:\Temp\Roomer.exe&quot; -s:&quot;http://store.roomerdev.net:80&quot;</Debugger_RunParams>
         <Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
         <VerInfo_Keys>CompanyName=Promoir BV;FileDescription=Roomer Upgrade Agent;FileVersion=1.0.0.0;InternalName=;LegalCopyright=(C) 2013 Promoir BV;LegalTrademarks=;OriginalFilename=;ProductName=ROOMER;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
         <DCC_ExeOutput>C:\Temp\</DCC_ExeOutput>
         <Icon_MainIcon>RoomerUpgradeAgent_Icon.ico</Icon_MainIcon>
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
@@ -92,6 +94,7 @@
         <DCC_DebugInformation>false</DCC_DebugInformation>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
+        <VerInfo_MajorVer>1</VerInfo_MajorVer>
         <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
         <Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
         <Debugger_RunParams>C:\Development\Roomer\Frontend\win-pms\Roomer.exe</Debugger_RunParams>
@@ -99,7 +102,6 @@
         <VerInfo_Locale>1033</VerInfo_Locale>
         <Icon_MainIcon>RoomerUpgradeAgent_Icon.ico</Icon_MainIcon>
         <DCC_ExeOutput>..\..\RoomerPMSRelease\</DCC_ExeOutput>
-        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
     </PropertyGroup>
     <ItemGroup>
         <DelphiCompile Include="$(MainSource)">

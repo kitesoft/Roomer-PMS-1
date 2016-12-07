@@ -16,6 +16,6 @@ begin
   if TUpgraderCmdlineOptions.ParseCommandLine then
   begin
     Application.CreateForm(TfrmUpgradeAgent, frmUpgradeAgent);
-  Application.Run;
+    Application.Run;
   end;
 end.
