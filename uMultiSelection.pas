@@ -11,17 +11,26 @@ type
   TfrmMultiSelection = class(TForm)
     sPanel1: TsPanel;
     pnlHeader: TsPanel;
-    lstItems: TsCheckListBox;
     sButton1: TsButton;
     sButton2: TsButton;
     lblHeader: TsLabel;
+    sPanel2: TsPanel;
+    lstItems: TsCheckListBox;
+    pnlUpDown: TsPanel;
+    btnUp: TsButton;
+    btnDown: TsButton;
     procedure FormCreate(Sender: TObject);
     procedure lstItemsClick(Sender: TObject);
+    procedure lstItemsClickCheck(Sender: TObject);
+    procedure btnUpClick(Sender: TObject);
+    procedure btnDownClick(Sender: TObject);
   private
     { Private declarations }
     ListCodes : TStrings;
     IntegerCodes : Boolean;
     MultiSelect : Boolean;
+    function MoveListItem(ListView: TsCheckListBox; ItemFrom, ItemTo: Word): Boolean;
+    procedure EnableOrDisableButtons;
   public
     { Public declarations }
     procedure PrepareItems(OriginalSelection: String; _MultiSelect : Boolean; _IntegerCodes : Boolean; ListCodeItems, ListNameItems: TStrings);
@@ -125,6 +134,20 @@ begin
 end;
 
 
+procedure TfrmMultiSelection.btnDownClick(Sender: TObject);
+begin
+//Move Down
+ if lstItems.ItemIndex < lstItems.Items.Count - 1 then
+   MoveListItem(lstItems, lstItems.ItemIndex, lstItems.ItemIndex + 1);
+end;
+
+procedure TfrmMultiSelection.btnUpClick(Sender: TObject);
+begin
+//Move Up
+ if lstItems.ItemIndex > 0 then
+   MoveListItem(lstItems, lstItems.ItemIndex, lstItems.ItemIndex - 1);
+end;
+
 procedure TfrmMultiSelection.FormCreate(Sender: TObject);
 begin
   RoomerLanguage.TranslateThisForm(self);
@@ -146,6 +169,17 @@ begin
 end;
 
 procedure TfrmMultiSelection.lstItemsClick(Sender: TObject);
+begin
+  EnableOrDisableButtons;
+end;
+
+procedure TfrmMultiSelection.EnableOrDisableButtons;
+begin
+  btnUp.Enabled := (lstItems.ItemIndex > 0);
+  btnDown.Enabled := (lstItems.ItemIndex >= 0) AND (lstItems.ItemIndex < lstItems.Items.Count - 1);
+end;
+
+procedure TfrmMultiSelection.lstItemsClickCheck(Sender: TObject);
 var i, iCurr : integer;
 begin
   if NOT lstItems.MultiSelect then
@@ -170,6 +204,7 @@ begin
   ListCodes := ListCodeItems;
   IntegerCodes := _IntegerCodes;
   MultiSelect := _MultiSelect;
+  pnlUpDown.Visible := _MultiSelect;
   lstItems.MultiSelect := MultiSelect;
 
   lstItems.Clear;
@@ -195,9 +230,32 @@ begin
       lstItems.Checked[iCurr] := (OriginalList.IndexOf(ListCodes[i]) >= 0);
     end;
 
+    for i := 0 to OriginalList.Count - 1 do
+      MoveListItem(lstItems, ListCodes.IndexOf(OriginalList[i]), i);
+
   finally
     OriginalList.Free;
   end;
 end;
+
+function TfrmMultiSelection.MoveListItem(ListView: TsCheckListBox; ItemFrom, ItemTo: Word): Boolean;
+var
+  Source, Target: String;
+begin
+  listview.Items.BeginUpdate;
+  try
+//    Source := ListView.Items[ItemFrom];
+//    Target := ListView.Items.Insert(ItemTo);
+//    Target := Source;
+    ListView.Items.Move(ItemFrom, ItemTo);
+    ListCodes.Move(ItemFrom, ItemTo);
+    ListView.ItemIndex := ItemTo;
+    Result := True;
+  finally
+    ListView.Items.EndUpdate;
+  end;
+  EnableOrDisableButtons;
+end;
+
 
 end.

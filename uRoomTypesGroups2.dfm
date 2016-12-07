@@ -37,14 +37,13 @@ object frmRoomTypesGroups2: TfrmRoomTypesGroups2
       Left = 0
       Top = 0
       Width = 853
-      Height = 89
+      Height = 105
       Align = alTop
       TabOrder = 0
       SkinData.SkinSection = 'PANEL'
-      ExplicitTop = -6
       DesignSize = (
         853
-        89)
+        105)
       object cLabFilter: TsLabel
         Left = 19
         Top = 41
@@ -157,7 +156,7 @@ object frmRoomTypesGroups2: TfrmRoomTypesGroups2
         SkinData.SkinSection = 'BUTTON'
       end
       object chkActive: TCheckBox
-        Left = 55
+        Left = 56
         Top = 63
         Width = 246
         Height = 17
@@ -180,6 +179,15 @@ object frmRoomTypesGroups2: TfrmRoomTypesGroups2
         TabOrder = 7
         OnClick = btnAvailabilityOrderClick
         SkinData.SkinSection = 'BUTTON'
+      end
+      object cbTopClasses: TCheckBox
+        Left = 56
+        Top = 81
+        Width = 246
+        Height = 17
+        Caption = 'Only show top-classes (availability classes)'
+        TabOrder = 8
+        OnClick = cbTopClassesClick
       end
     end
     object sbMain: TsStatusBar
@@ -235,12 +243,14 @@ object frmRoomTypesGroups2: TfrmRoomTypesGroups2
     end
     object grData: TcxGrid
       Left = 0
-      Top = 89
+      Top = 105
       Width = 853
-      Height = 479
+      Height = 463
       Align = alClient
       TabOrder = 3
       LookAndFeel.NativeStyle = False
+      ExplicitTop = 89
+      ExplicitHeight = 479
       object tvData: TcxGridDBTableView
         OnDblClick = tvDataDblClick
         Navigator.Buttons.CustomButtons = <>
@@ -698,6 +708,7 @@ object frmRoomTypesGroups2: TfrmRoomTypesGroups2
     Left = 96
     Top = 192
     object prLink_grData: TdxGridReportLink
+      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -711,6 +722,7 @@ object frmRoomTypesGroups2: TfrmRoomTypesGroups2
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
       ReportDocument.CreationDate = 41334.495374884260000000
+      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
   end

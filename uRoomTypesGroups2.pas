@@ -235,6 +235,7 @@ type
     m_PAYMENTS_REQUIRED: TWideStringField;
     tvDataPAYMENTS_REQUIRED: TcxGridDBColumn;
     btnAvailabilityOrder: TsButton;
+    cbTopClasses: TCheckBox;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormKeyPress(Sender: TObject; var Key: Char);
@@ -278,6 +279,7 @@ type
     procedure tvDataPAYMENTS_REQUIREDPropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
     procedure tvDataBreakfastIncludedPropertiesEditValueChanged(Sender: TObject);
     procedure btnAvailabilityOrderClick(Sender: TObject);
+    procedure cbTopClassesClick(Sender: TObject);
   private
     { Private declarations }
     zFirstTime       : boolean;
@@ -303,6 +305,7 @@ type
 
     embedded : Boolean;
     EmbedWindowCloseEvent : TNotifyEvent;
+    OnlyTopClasses : Boolean;
 
     procedure PrepareUserInterface;
     procedure BringWindowToFront;
@@ -310,7 +313,7 @@ type
 
 function openRoomTypeGroups(act : TActTableAction; var theData : recRoomTypeGroupHolder;
         embedPanel : TsPanel = nil;
-        WindowCloseEvent : TNotifyEvent = nil) : boolean;
+        WindowCloseEvent : TNotifyEvent = nil; onlyTopClasses : Boolean = False) : boolean;
 
 var
   frmRoomTypesGroups2: TfrmRoomTypesGroups2;
@@ -346,7 +349,7 @@ uses
 //  unit global functions
 //////////////////////////////////////////////////////////////////////////////////////////////
 
-function openRoomTypeGroups(act : TActTableAction; var theData : recRoomTypeGroupHolder; embedPanel : TsPanel = nil; WindowCloseEvent : TNotifyEvent = nil) : boolean;
+function openRoomTypeGroups(act : TActTableAction; var theData : recRoomTypeGroupHolder; embedPanel : TsPanel = nil; WindowCloseEvent : TNotifyEvent = nil; onlyTopClasses : Boolean = False) : boolean;
 var _frmRoomTypesGroups2: TfrmRoomTypesGroups2;
 begin
   result := false;
@@ -354,28 +357,18 @@ begin
   try
     _frmRoomTypesGroups2.zData := theData;
     _frmRoomTypesGroups2.zAct := act;
-    _frmRoomTypesGroups2.embedded := (act = actNone) AND
-                                    (embedPanel <> nil);
-    _frmRoomTypesGroups2.EmbedWindowCloseEvent := WindowCloseEvent;
-    if _frmRoomTypesGroups2.embedded then
+    _frmRoomTypesGroups2.OnlyTopClasses := OnlyTopClasses;
+    _frmRoomTypesGroups2.cbTopClasses.visible := NOT OnlyTopClasses;
+    _frmRoomTypesGroups2.PrepareUserInterface;
+    _frmRoomTypesGroups2.ShowModal;
+    if _frmRoomTypesGroups2.modalresult = mrOk then
     begin
-      _frmRoomTypesGroups2.pnlHolder.parent := embedPanel;
-      embedPanel.Update;
-      frmRoomTypesGroups2X := _frmRoomTypesGroups2;
+      theData := _frmRoomTypesGroups2.zData;
+      result := true;
     end
     else
     begin
-      _frmRoomTypesGroups2.PrepareUserInterface;
-      _frmRoomTypesGroups2.ShowModal;
-      if _frmRoomTypesGroups2.modalresult = mrOk then
-      begin
-        theData := _frmRoomTypesGroups2.zData;
-        result := true;
-      end
-      else
-      begin
-        initRoomTypeGroupHolder(theData);
-      end;
+      initRoomTypeGroupHolder(theData);
     end;
   finally
     if (act <> actNone) OR
@@ -409,62 +402,65 @@ begin
       rSet.First;
       while not rSet.Eof do
       begin
-        m_.append;
-        m_.FieldByName('ID').AsInteger              := rSet.FieldByName('ID').AsInteger               ;
-        m_.FieldByName('Active').AsBoolean          := rSet.FieldByName('Active').AsBoolean           ;
-        m_.FieldByName('Description').AsString      := rSet.FieldByName('Description').AsString       ;
-        m_.FieldByName('color').AsString            := rSet.FieldByName('color').AsString             ;
-        m_.FieldByName('Code').AsString             := rSet.FieldByName('Code').AsString              ;
-        m_.FieldByName('TopClass').AsString         := rSet.FieldByName('TopClass').AsString          ;
-        m_.FieldByName('PriorityRule').AsString     := rSet.FieldByName('PriorityRule').AsString      ;
-        m_.FieldByName('MaxCount').AsInteger        := rSet.FieldByName('MaxCount').AsInteger         ;
-        m_.FieldByName('numGuests').AsInteger       := rSet.FieldByName('numGuests').AsInteger        ;
-        m_.FieldByName('minGuests').AsInteger       := rSet.FieldByName('minGuests').AsInteger        ;
-        m_.FieldByName('maxGuests').AsInteger       := rSet.FieldByName('maxGuests').AsInteger        ;
-        m_.FieldByName('maxChildren').AsInteger     := rSet.FieldByName('maxChildren').AsInteger      ;
-        m_.FieldByName('AvailabilityTypes').AsString:= rSet.FieldByName('AvailabilityTypes').AsString ;
-        m_.FieldByName('BreakfastIncluded').AsString:= rSet.FieldByName('BreakfastIncluded').AsString ;
-        m_.FieldByName('HalfBoard').AsString:= rSet.FieldByName('HalfBoard').AsString ;
-        m_.FieldByName('FullBoard').AsString:= rSet.FieldByName('FullBoard').AsString ;
-        m_.FieldByName('defAvailability').AsInteger := rSet.FieldByName('defAvailability').AsInteger  ;
-        m_.FieldByName('defStopSale').asBoolean     := rSet.FieldByName('defStopSale').AsBoolean      ;
-        m_.FieldByName('defRate').asfloat           := rSet.GetFloatValue(rSet.FieldByName('defRate'))           ;
-        m_.FieldByName('defMaxAvailability').AsInteger := rSet.FieldByName('defMaxAvailability').AsInteger  ;
-        m_.FieldByName('defMinStay').AsInteger         := rSet.FieldByName('defMinStay').AsInteger  ;
-        m_.FieldByName('defMaxStay').AsInteger         := rSet.FieldByName('defMaxStay').AsInteger  ;
-        m_.FieldByName('defClosedToArrival').asBoolean     := rSet.FieldByName('defClosedToArrival').AsBoolean      ;
-        m_.FieldByName('defClosedToDeparture').asBoolean     := rSet.FieldByName('defClosedToDeparture').AsBoolean      ;
-        m_.FieldByName('NonRefundable').asBoolean     := rSet.FieldByName('NonRefundable').AsBoolean      ;
-        m_.FieldByName('AutoChargeCreditcards').asBoolean     := rSet.FieldByName('AutoChargeCreditcards').AsBoolean      ;
-        m_.FieldByName('RateExtraBed').asfloat           := rSet.GetFloatValue(rSet.FieldByName('RateExtraBed'))          ;
-        m_.FieldByName('PhotoUri').AsString     := rSet.FieldByName('PhotoUri').AsString      ;
-        m_.FieldByName('sendAvailability').asBoolean     := rSet.FieldByName('sendAvailability').AsBoolean      ;
-        m_.FieldByName('sendRate').asBoolean     := rSet.FieldByName('sendRate').AsBoolean      ;
-        m_.FieldByName('sendStopSell').asBoolean     := rSet.FieldByName('sendStopSell').AsBoolean      ;
-        m_.FieldByName('sendMinStay').asBoolean     := rSet.FieldByName('sendMinStay').AsBoolean      ;
-        m_.FieldByName('DetailedDescriptionHtml').asString     := rSet.FieldByName('DetailedDescriptionHtml').AsString      ;
-        m_.FieldByName('DetailedDescription').asString     := rSet.FieldByName('DetailedDescription').AsString      ;
-        m_.FieldByName('Package').asString     := rSet.FieldByName('Package').AsString      ;
-        m_.FieldByName('OrderIndex').asInteger     := rSet.FieldByName('OrderIndex').AsInteger      ;
-        m_.FieldByName('PAYMENTS_REQUIRED').asString     := rSet.FieldByName('PAYMENTS_REQUIRED').AsString      ;
+        if (NOT OnlyTopClasses) OR (UpperCase(rSet.FieldByName('Code').AsString) = UpperCase(rSet.FieldByName('TopClass').AsString)) then
+        begin
+          m_.append;
+          m_.FieldByName('ID').AsInteger              := rSet.FieldByName('ID').AsInteger               ;
+          m_.FieldByName('Active').AsBoolean          := rSet.FieldByName('Active').AsBoolean           ;
+          m_.FieldByName('Description').AsString      := rSet.FieldByName('Description').AsString       ;
+          m_.FieldByName('color').AsString            := rSet.FieldByName('color').AsString             ;
+          m_.FieldByName('Code').AsString             := rSet.FieldByName('Code').AsString              ;
+          m_.FieldByName('TopClass').AsString         := rSet.FieldByName('TopClass').AsString          ;
+          m_.FieldByName('PriorityRule').AsString     := rSet.FieldByName('PriorityRule').AsString      ;
+          m_.FieldByName('MaxCount').AsInteger        := rSet.FieldByName('MaxCount').AsInteger         ;
+          m_.FieldByName('numGuests').AsInteger       := rSet.FieldByName('numGuests').AsInteger        ;
+          m_.FieldByName('minGuests').AsInteger       := rSet.FieldByName('minGuests').AsInteger        ;
+          m_.FieldByName('maxGuests').AsInteger       := rSet.FieldByName('maxGuests').AsInteger        ;
+          m_.FieldByName('maxChildren').AsInteger     := rSet.FieldByName('maxChildren').AsInteger      ;
+          m_.FieldByName('AvailabilityTypes').AsString:= rSet.FieldByName('AvailabilityTypes').AsString ;
+          m_.FieldByName('BreakfastIncluded').AsString:= rSet.FieldByName('BreakfastIncluded').AsString ;
+          m_.FieldByName('HalfBoard').AsString:= rSet.FieldByName('HalfBoard').AsString ;
+          m_.FieldByName('FullBoard').AsString:= rSet.FieldByName('FullBoard').AsString ;
+          m_.FieldByName('defAvailability').AsInteger := rSet.FieldByName('defAvailability').AsInteger  ;
+          m_.FieldByName('defStopSale').asBoolean     := rSet.FieldByName('defStopSale').AsBoolean      ;
+          m_.FieldByName('defRate').asfloat           := rSet.GetFloatValue(rSet.FieldByName('defRate'))           ;
+          m_.FieldByName('defMaxAvailability').AsInteger := rSet.FieldByName('defMaxAvailability').AsInteger  ;
+          m_.FieldByName('defMinStay').AsInteger         := rSet.FieldByName('defMinStay').AsInteger  ;
+          m_.FieldByName('defMaxStay').AsInteger         := rSet.FieldByName('defMaxStay').AsInteger  ;
+          m_.FieldByName('defClosedToArrival').asBoolean     := rSet.FieldByName('defClosedToArrival').AsBoolean      ;
+          m_.FieldByName('defClosedToDeparture').asBoolean     := rSet.FieldByName('defClosedToDeparture').AsBoolean      ;
+          m_.FieldByName('NonRefundable').asBoolean     := rSet.FieldByName('NonRefundable').AsBoolean      ;
+          m_.FieldByName('AutoChargeCreditcards').asBoolean     := rSet.FieldByName('AutoChargeCreditcards').AsBoolean      ;
+          m_.FieldByName('RateExtraBed').asfloat           := rSet.GetFloatValue(rSet.FieldByName('RateExtraBed'))          ;
+          m_.FieldByName('PhotoUri').AsString     := rSet.FieldByName('PhotoUri').AsString      ;
+          m_.FieldByName('sendAvailability').asBoolean     := rSet.FieldByName('sendAvailability').AsBoolean      ;
+          m_.FieldByName('sendRate').asBoolean     := rSet.FieldByName('sendRate').AsBoolean      ;
+          m_.FieldByName('sendStopSell').asBoolean     := rSet.FieldByName('sendStopSell').AsBoolean      ;
+          m_.FieldByName('sendMinStay').asBoolean     := rSet.FieldByName('sendMinStay').AsBoolean      ;
+          m_.FieldByName('DetailedDescriptionHtml').asString     := rSet.FieldByName('DetailedDescriptionHtml').AsString      ;
+          m_.FieldByName('DetailedDescription').asString     := rSet.FieldByName('DetailedDescription').AsString      ;
+          m_.FieldByName('Package').asString     := rSet.FieldByName('Package').AsString      ;
+          m_.FieldByName('OrderIndex').asInteger     := rSet.FieldByName('OrderIndex').AsInteger      ;
+          m_.FieldByName('PAYMENTS_REQUIRED').asString     := rSet.FieldByName('PAYMENTS_REQUIRED').AsString      ;
 
 
-        m_['connectRateToMasterRate'] := rSet['connectRateToMasterRate'];
-        m_['masterRateRateDeviation'] := rSet['masterRateRateDeviation'];
-        m_['RateDeviationType'] := rSet['RateDeviationType'];
-        m_['connectSingleUseRateToMasterRate'] := rSet['connectSingleUseRateToMasterRate'];
-        m_['masterRateSingleUseRateDeviation'] := rSet['masterRateSingleUseRateDeviation'];
-        m_['singleUseRateDeviationType'] := rSet['singleUseRateDeviationType'];
-        m_['connectStopSellToMasterRate'] := rSet['connectStopSellToMasterRate'];
-        m_['connectAvailabilityToMasterRate'] := rSet['connectAvailabilityToMasterRate'];
-        m_['connectMinStayToMasterRate'] := rSet['connectMinStayToMasterRate'];
-        m_['connectMaxStayToMasterRate'] := rSet['connectMaxStayToMasterRate'];
-        m_['connectCOAToMasterRate'] := rSet['connectCOAToMasterRate'];
-        m_['connectCODToMasterRate'] := rSet['connectCODToMasterRate'];
-        m_['connectLOSToMasterRate'] := rSet['connectLOSToMasterRate'];
-        m_['RATE_PLAN_TYPE'] := rSet['RATE_PLAN_TYPE'];
+          m_['connectRateToMasterRate'] := rSet['connectRateToMasterRate'];
+          m_['masterRateRateDeviation'] := rSet['masterRateRateDeviation'];
+          m_['RateDeviationType'] := rSet['RateDeviationType'];
+          m_['connectSingleUseRateToMasterRate'] := rSet['connectSingleUseRateToMasterRate'];
+          m_['masterRateSingleUseRateDeviation'] := rSet['masterRateSingleUseRateDeviation'];
+          m_['singleUseRateDeviationType'] := rSet['singleUseRateDeviationType'];
+          m_['connectStopSellToMasterRate'] := rSet['connectStopSellToMasterRate'];
+          m_['connectAvailabilityToMasterRate'] := rSet['connectAvailabilityToMasterRate'];
+          m_['connectMinStayToMasterRate'] := rSet['connectMinStayToMasterRate'];
+          m_['connectMaxStayToMasterRate'] := rSet['connectMaxStayToMasterRate'];
+          m_['connectCOAToMasterRate'] := rSet['connectCOAToMasterRate'];
+          m_['connectCODToMasterRate'] := rSet['connectCODToMasterRate'];
+          m_['connectLOSToMasterRate'] := rSet['connectLOSToMasterRate'];
+          m_['RATE_PLAN_TYPE'] := rSet['RATE_PLAN_TYPE'];
 
-        m_.Post;
+          m_.Post;
+        end;
         rSet.Next;
       end;
       if iGoto = '' then
@@ -541,6 +537,12 @@ begin
 end;
 
 
+
+procedure TfrmRoomTypesGroups2.cbTopClassesClick(Sender: TObject);
+begin
+  OnlyTopClasses := cbTopClasses.Checked;
+  fillGridFromDataset('');
+end;
 
 procedure TfrmRoomTypesGroups2.changeAllowgridEdit;
 begin
@@ -647,6 +649,7 @@ end;
 procedure TfrmRoomTypesGroups2.FormCreate(Sender: TObject);
 begin
   embedded := False;
+  OnlyTopClasses := False;
   EmbedWindowCloseEvent := nil;
   RoomerLanguage.TranslateThisForm(self);
      glb.PerformAuthenticationAssertion(self); PlaceFormOnVisibleMonitor(self);
