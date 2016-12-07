@@ -175,7 +175,7 @@ object frmItems2: TfrmItems2
       Left = 55
       Top = 63
       Width = 246
-      Height = 19
+      Height = 17
       Caption = 'Active (if checked then just active are visible)'
       Checked = True
       State = cbChecked
@@ -610,7 +610,6 @@ object frmItems2: TfrmItems2
     Left = 80
     Top = 136
     object prLink_grData: TdxGridReportLink
-      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 5080
       PrinterPage.GrayShading = True
@@ -624,7 +623,6 @@ object frmItems2: TfrmItems2
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
       ReportDocument.CreationDate = 41334.495374884260000000
-      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
   end

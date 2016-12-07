@@ -97,14 +97,38 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinValentine,
   dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, cxDropDownEdit, cxCheckBox, cxCalendar, cxCurrencyEdit,
   uCurrencyHandler
-
   ;
 
 type
   {$SCOPEDENUMS ON}
-  TShowItemOfType = (All, BreakfastItems, StockItems, NonStockitems, MinibarItems, ShowAvailability);
-  TShowItemOfTypeSet = set of TShowItemOfType;
+  ///	<summary>
+  ///	  Determines which type of itemsales or information is shown or hidden in the
+  ///	  SalesItems grid
+  ///	</summary>
+  TShowItemOption = (
+    ///	<summary>
+    ///	  Don't show items with stockitem property
+    ///	</summary>
+    HideStockItems,
 
+    ///	<summary>
+    ///	  Only show items with stockitem Property
+    ///	</summary>
+    OnlyStockitems,
+
+    ///	<summary>
+    ///	  Add current availability of stockitems
+    ///	</summary>
+    ShowAvailability,
+
+    ///	<summary>
+    ///	  Hide the Roomrent and payment item set in the settings
+    ///	</summary>
+    HideSystemItems
+  );
+  TShowItemOptionSet = set of TShowItemOption;
+
+type
   TfrmItems2 = class(TForm)
     sPanel1: TsPanel;
     btnDelete: TsButton;
@@ -261,7 +285,7 @@ type
     zFilterOn        : boolean;
 
     zSortStr         : string;
-    FShowItemsOfType: TShowItemOfTypeSet;
+    FShowItemsOfType: TShowItemOptionSet;
     FAvailSet: TRoomerDataset;
 
     FLocateAfterPost: integer;
@@ -292,14 +316,23 @@ type
     ///  zData is used to determine requested peroid of use
     /// </summary>
     procedure GetStockItemsPerPrice(aDataList: TrecItemHolderList);
-    property ShowItemsOfType: TShowItemOfTypeSet read FShowItemsOfType write FShowItemsOfType;
+    ///	<summary>
+    ///	  <para>
+    ///	    Determines which items are shown or hidden in the sales items grid.
+    ///	  </para>
+    ///	  <para>
+    ///	    Default = [] which means all itemtypes are shown
+    ///	  </para>
+    ///	</summary>
+    property ShowItemsOfType: TShowItemOptionSet read FShowItemsOfType write FShowItemsOfType;
     property AllowGridEdit: boolean read FAllowGridEdit write SetAllowGridEdit;
   end;
 
-function openItems(act : TActTableAction; Lookup : Boolean; var theData : recItemHolder; aShowTypes: TShowItemOfTypeSet=[TShowItemOfType.All]) : boolean;
-function openMultipleItems(act : TActTableAction; Lookup : Boolean; theData : TrecItemHolderList; aShowTypes: TShowItemOfTypeSet=[TShowItemOfType.All]) : boolean;
+function openItems(act : TActTableAction; Lookup : Boolean; var theData : recItemHolder; aShowTypes: TShowItemOptionSet = []) : boolean;
+function openMultipleItems(act : TActTableAction; Lookup : Boolean; theData : TrecItemHolderList; aShowTypes: TShowItemOptionSet = []) : boolean;
+
 /// <summary>
-///   Special version of openitems that allows selection of stockitems, and returning multiple items if th seelcted period
+///   Special version of openitems that allows selection of stockitems, and returning multiple items if the selected period
 /// involves a pricechange
 /// </summary>
 function SelectStockItems(ainitRec: recItemHolder; aDataList : TrecItemHolderList) : boolean;
@@ -322,6 +355,7 @@ uses
   , uDateUtils
   , DateUtils
   , Math
+  , uSQLUtils
   ;
 
 
@@ -330,7 +364,7 @@ uses
 //  unit global functions
 //////////////////////////////////////////////////////////////////////////////////////////////
 
-function openItems(act : TActTableAction; Lookup : Boolean; var theData : recItemHolder; aShowTypes: TShowItemOfTypeSet=[TShowItemOfType.All]) : boolean;
+function openItems(act : TActTableAction; Lookup : Boolean; var theData : recItemHolder; aShowTypes: TShowItemOptionSet = []) : boolean;
 var _frmItems2 : TfrmItems2;
 begin
   result := false;
@@ -365,7 +399,7 @@ begin
     frmItems2.zData := aInitRec;
     frmItems2.Lookup := True;
     frmItems2.zAct := actLookup;
-    frmItems2.ShowItemsOfType := [TShowItemOfType.StockItems, TShowItemOfType.ShowAvailability];
+    frmItems2.ShowItemsOfType := [TShowItemOption.OnlyStockitems, TShowItemOption.ShowAvailability];
     frmItems2.ShowModal;
     if frmItems2.modalresult = mrOk then
     begin
@@ -379,7 +413,7 @@ begin
 end;
 
 
-function openMultipleItems(act : TActTableAction; Lookup : Boolean; theData : TrecItemHolderList; aShowTypes: TShowItemOfTypeSet=[TShowItemOfType.All]) : boolean;
+function openMultipleItems(act : TActTableAction; Lookup : Boolean; theData : TrecItemHolderList; aShowTypes: TShowItemOptionSet = []) : boolean;
 var _frmItems2 : TfrmItems2;
 begin
   result := false;
@@ -492,35 +526,32 @@ begin
     else
       lFilterExpr.Append('(active=0) ');
 
-    if not (TShowItemOfType.All in FShowItemsOfType) then
+    if not (FShowItemsOfType = []) then
     begin
       lFilterExpr.Append(' and (');
 
-      if TShowItemOfType.StockItems in FShowItemsOfType then
+      if TShowItemOption.OnlyStockitems in FShowItemsOfType then
       begin
         lFilterExpr.Append(' (stockitem=1)');
-        lFilterExpr.Append(' or');
+        lFilterExpr.Append(' and');
       end;
 
-      if TShowItemOfType.NonStockItems in FShowItemsOfType then
+      if TShowItemOption.HideStockItems in FShowItemsOfType then
       begin
         lFilterExpr.Append(' (stockitem=0)');
-        lFilterExpr.Append(' or');
+        lFilterExpr.Append(' and');
       end;
 
-      if TShowItemOfType.BreakfastItems in FShowItemsOfType then
+      if TShowItemOption.HideSystemItems in FShowItemsOfType then
       begin
-        lFilterExpr.Append(' (breakfastitem=1)');
-        lFilterExpr.Append(' or');
+        lFilterExpr.Append(' (Item <> ' + _db(g.qRoomRentItem) + ')');
+        lFilterExpr.Append(' and');
+        lFilterExpr.Append(' (Item <> ' + _db(g.qPaymentItem) + ')');
+        lFilterExpr.Append(' and');
       end;
 
-      if TShowItemOfType.MinibarItems in FShowItemsOfType then
-      begin
-        lFilterExpr.Append(' (minibaritem=1)');
-        lFilterExpr.Append(' or');
-      end;
         // remove last 'Or'
-      lFilterExpr.Remove(lFilterExpr.Length-2, 2);
+      lFilterExpr.Remove(lFilterExpr.Length-3, 3);
       lFilterExpr.Append(')');
     end;
     aRSet.Filter := lFilterExpr.ToString;
@@ -594,7 +625,7 @@ begin
     begin
       m_Items.DisableControls;
       try
-        if TShowItemOfType.ShowAvailability in FShowItemsOfType then
+        if TShowItemOption.ShowAvailability in FShowItemsOfType then
           GetStockitemAvailability;
 
         m_Items.LoadFromDataSet(rSet);
@@ -857,24 +888,20 @@ begin
   tvPricesfromdate.SortOrder := soDescending;
   tvPrices.NewItemRow.Visible := false;
 
-  if (TShowItemOfType.ShowAvailability in FShowItemsOfType) then
+  if (TShowItemOption.ShowAvailability in FShowItemsOfType) then
   begin
     tvDataAvailableStock.Visible := True;
     pnlInfo.Visible := true;
     labAvailFrom.Caption := DateToStr(zData.AvailabilityFrom);
     labAvailTo.Caption := DateToStr(zData.AvailabilityTo);
-  end
-  else
-    tvDataAvailableStock.Visible := False;
+  end;
 
-  if (TShowItemOfType.NonStockitems in FShowItemsOfType) then
+  if (TShowItemOption.HideStockItems in FShowItemsOfType) then
   begin
     tvDataAvailableStock.Visible := false;
     tvDataStockItem.Visible := false;
     tvDataTotalStock.Visible := false;
   end;
-
-  tvDataTotalStock.Visible := not tvDataAvailableStock.Visible;
 
   grData.SetFocus;
 end;
@@ -1085,7 +1112,7 @@ procedure TfrmItems2.m_ItemsCalcFields(DataSet: TDataSet);
 var
   lMaxUsage: integer;
 begin
-  if (TShowItemOfType.ShowAvailability in FShowItemsOfType) then
+  if (TShowItemOption.ShowAvailability in FShowItemsOfType) then
   begin
     m_Availability.DisableControls;
     try

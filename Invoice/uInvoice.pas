@@ -4877,7 +4877,7 @@ begin
     rec := TrecItemHolder.create;
     rec.recHolder.Item := Item;
     theData.add(rec);
-    if openMultipleItems(actLookup, True, theData, [TShowItemOfType.NonStockitems]) AND (theData.Count > 0) then
+    if openMultipleItems(actLookup, True, theData, [TShowItemOption.HideStockItems, TShowItemOption.HideSystemItems]) AND (theData.Count > 0) then
     begin
       if theData[0].recHolder.Item <> Item then // New item
       begin
@@ -4885,14 +4885,7 @@ begin
         begin
           ItemKind := Item_GetKind(theData[i].recHolder.Item);
 
-          if ItemKind = ikPayment then
-          begin
-            // MessageDlg('You are not allowed to use the System''s Payment code directly', mtError, [mbOK], 0);
-            MessageDlg(GetTranslatedText('shTx_Invoice_NotAllowed'), mtError,
-              [mbOk], 0);
-            exit;
-          end
-          else if glb.LocateSpecificRecordAndGetValue('items', 'Item', theData[i].recHolder.Item, 'Itemtype', ItemType) AND
+          if glb.LocateSpecificRecordAndGetValue('items', 'Item', theData[i].recHolder.Item, 'Itemtype', ItemType) AND
             glb.LocateSpecificRecordAndGetValue('itemtypes', 'ItemType', ItemType, 'VATCode', VATCode) then
           begin
             if glb.LocateSpecificRecord('vatcodes', 'VATCode', VATCode) then

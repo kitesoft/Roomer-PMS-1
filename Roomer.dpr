@@ -13,7 +13,6 @@ program Roomer;
 uses
   {$ifdef UseFastMM}
   FastMM4 in 'FastMM\FastMM4.pas',
-  FastMM4Messages in 'FastMM\FastMM4Messages.pas',
   {$endif}
   Forms,
   uMain in 'uMain.pas' {frmMain},
@@ -190,7 +189,6 @@ uses
   uExcelProcessors in 'RoomerVCLs\Source\uExcelProcessors.pas',
   uEmailExcelSheet in 'uEmailExcelSheet.pas' {FrmEmailExcelSheet},
   uRptTurnoverAndPayments in 'uRptTurnoverAndPayments.pas' {frmRptTurnoverAndPayments},
-  uInvoice2015 in 'uInvoice2015.pas' {FrmInvoice2015},
   uActivityLogs in 'uActivityLogs.pas',
   uInvoiceContainer in 'uInvoiceContainer.pas',
   XmlUtils in 'RoomerUtils\XmlUtils.pas',

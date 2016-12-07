@@ -3,25 +3,27 @@ inherited frmRptReservations: TfrmRptReservations
   Top = 319
   Caption = 'Reservations list'
   ClientHeight = 644
-  ClientWidth = 1094
+  ClientWidth = 1234
   Constraints.MinWidth = 920
   Font.Height = -11
   Position = poOwnerFormCenter
   OnClose = FormClose
   OnCreate = FormCreate
   OnShow = FormShow
-  ExplicitWidth = 1110
+  ExplicitWidth = 1250
   ExplicitHeight = 683
   PixelsPerInch = 96
   TextHeight = 13
   inherited sbStatusBar: TsStatusBar
     Top = 624
-    Width = 1094
+    Width = 1234
+    ExplicitTop = 624
+    ExplicitWidth = 1094
   end
   object pnlHolder: TsPanel [1]
     Left = 0
     Top = 0
-    Width = 1094
+    Width = 1234
     Height = 624
     Margins.Left = 2
     Margins.Top = 2
@@ -31,29 +33,33 @@ inherited frmRptReservations: TfrmRptReservations
     BevelOuter = bvNone
     TabOrder = 0
     SkinData.SkinSection = 'PANEL'
+    ExplicitWidth = 1094
     object pageMain: TsPageControl
       Left = 0
       Top = 117
-      Width = 1094
-      Height = 487
+      Width = 1234
+      Height = 489
       ActivePage = tabReservation
       Align = alClient
       TabOrder = 0
       OnChange = pageMainChange
       SkinData.SkinSection = 'PAGECONTROL'
-      ExplicitTop = 116
+      ExplicitWidth = 1094
+      ExplicitHeight = 487
       object tabReservation: TsTabSheet
         Caption = 'Reservations'
         ImageIndex = 2
+        ExplicitWidth = 1086
+        ExplicitHeight = 459
         object Panel5: TsPanel
           Left = 0
           Top = 0
-          Width = 1086
+          Width = 1226
           Height = 44
           Align = alTop
           TabOrder = 0
           SkinData.SkinSection = 'PANEL'
-          ExplicitTop = -6
+          ExplicitWidth = 1086
           object btnGuestsExcel: TsButton
             AlignWithMargins = True
             Left = 4
@@ -135,20 +141,19 @@ inherited frmRptReservations: TfrmRptReservations
             TabOrder = 5
             OnClick = btnJumpToRoomClick
             SkinData.SkinSection = 'BUTTON'
-            ExplicitLeft = 852
-            ExplicitTop = 6
-            ExplicitHeight = 38
           end
         end
         object grReservations: TcxGrid
           Left = 0
           Top = 44
-          Width = 1086
-          Height = 415
+          Width = 1226
+          Height = 417
           Align = alClient
           PopupMenu = PopupMenu1
           TabOrder = 1
           LookAndFeel.NativeStyle = False
+          ExplicitLeft = 3
+          ExplicitTop = 20
           object tvReservations: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             Navigator.Buttons.Insert.Visible = False
@@ -225,7 +230,7 @@ inherited frmRptReservations: TfrmRptReservations
               Width = 80
             end
             object tvReservationsinvRefrence: TcxGridDBColumn
-              Caption = 'Refrence'
+              Caption = 'Reference'
               DataBinding.FieldName = 'invRefrence'
               Width = 231
             end
@@ -316,19 +321,24 @@ inherited frmRptReservations: TfrmRptReservations
               DataBinding.FieldName = 'PMInfo'
             end
             object tvReservationsinputsource: TcxGridDBColumn
+              Caption = 'Inputsource'
               DataBinding.FieldName = 'inputsource'
             end
             object tvReservationssrcrequest: TcxGridDBColumn
+              Caption = 'Source request'
               DataBinding.FieldName = 'srcrequest'
             end
             object tvReservationsmarketSegment: TcxGridDBColumn
+              Caption = 'Market Segment'
               DataBinding.FieldName = 'marketSegment'
             end
             object tvReservationsexternalIds: TcxGridDBColumn
+              Caption = 'External Ids'
               DataBinding.FieldName = 'externalIds'
               Width = 100
             end
             object tvReservationsreservation: TcxGridDBColumn
+              Caption = 'Reservation nr.'
               DataBinding.FieldName = 'reservation'
             end
             object tvReservationsID: TcxGridDBColumn
@@ -336,45 +346,48 @@ inherited frmRptReservations: TfrmRptReservations
               Visible = False
             end
             object tvReservationsuseStayTax: TcxGridDBColumn
+              Caption = 'Use StayTax'
               DataBinding.FieldName = 'useStayTax'
             end
             object tvReservationschannel: TcxGridDBColumn
+              Caption = 'Channel'
               DataBinding.FieldName = 'channel'
             end
             object tvReservationstotalNights: TcxGridDBColumn
+              Caption = 'Total Nights'
               DataBinding.FieldName = 'totalNights'
             end
             object tvReservationsCurrency: TcxGridDBColumn
               DataBinding.FieldName = 'Currency'
-              OnGetProperties = tvReservationsTotalRoomRentGetProperties
             end
             object tvReservationsCurrencyrate: TcxGridDBColumn
               Caption = 'Rate'
               DataBinding.FieldName = 'Currencyrate'
               PropertiesClassName = 'TcxCurrencyEditProperties'
+              OnGetProperties = tvNativeCurrencyGetProperties
             end
             object tvReservationsRoomRent: TcxGridDBColumn
               Caption = 'Room Rent'
               DataBinding.FieldName = 'RoomRent'
               PropertiesClassName = 'TcxCurrencyEditProperties'
-              OnGetProperties = tvReservationsDiscountGetProperties
+              OnGetProperties = tvNativeCurrencyGetProperties
             end
             object tvReservationsDiscount: TcxGridDBColumn
               DataBinding.FieldName = 'Discount'
               PropertiesClassName = 'TcxCurrencyEditProperties'
-              OnGetProperties = tvReservationsDiscountGetProperties
+              OnGetProperties = tvNativeCurrencyGetProperties
             end
             object tvReservationsTotalRoomRent: TcxGridDBColumn
-              Caption = 'Tota lRoom Rent'
+              Caption = 'Total Room Rent'
               DataBinding.FieldName = 'TotalRoomRent'
               PropertiesClassName = 'TcxCurrencyEditProperties'
-              OnGetProperties = tvReservationsTotalRoomRentGetProperties
+              OnGetProperties = tvNativeCurrencyGetProperties
             end
             object tvReservationsAvrageRoomRent: TcxGridDBColumn
               Caption = 'Per Night'
               DataBinding.FieldName = 'AvrageRoomRent'
               PropertiesClassName = 'TcxCurrencyEditProperties'
-              OnGetProperties = tvReservationsTotalRoomRentGetProperties
+              OnGetProperties = tvNativeCurrencyGetProperties
             end
           end
           object tvRoomReservations: TcxGridDBTableView
@@ -392,10 +405,12 @@ inherited frmRptReservations: TfrmRptReservations
               Visible = False
             end
             object tvRoomReservationsreservation: TcxGridDBColumn
+              Caption = 'Reservation'
               DataBinding.FieldName = 'reservation'
               Visible = False
             end
             object tvRoomReservationsroom: TcxGridDBColumn
+              Caption = 'Room'
               DataBinding.FieldName = 'room'
             end
             object tvRoomReservationsRoomType: TcxGridDBColumn
@@ -427,12 +442,15 @@ inherited frmRptReservations: TfrmRptReservations
               DataBinding.FieldName = 'GuestCount'
             end
             object tvRoomReservationsnumGuests: TcxGridDBColumn
+              Caption = 'Guests'
               DataBinding.FieldName = 'numGuests'
             end
             object tvRoomReservationsnumChildren: TcxGridDBColumn
+              Caption = 'Children'
               DataBinding.FieldName = 'numChildren'
             end
             object tvRoomReservationsnumInfants: TcxGridDBColumn
+              Caption = 'Infants'
               DataBinding.FieldName = 'numInfants'
             end
             object tvRoomReservationsStatus: TcxGridDBColumn
@@ -442,21 +460,17 @@ inherited frmRptReservations: TfrmRptReservations
               DataBinding.FieldName = 'GroupAccount'
             end
             object tvRoomReservationsinvBreakfast: TcxGridDBColumn
+              Caption = 'Breakfast'
               DataBinding.FieldName = 'invBreakfast'
             end
             object tvRoomReservationsCurrency: TcxGridDBColumn
               DataBinding.FieldName = 'Currency'
             end
-            object tvRoomReservationsDiscount: TcxGridDBColumn
-              DataBinding.FieldName = 'Discount'
-            end
-            object tvRoomReservationsPercentage: TcxGridDBColumn
-              DataBinding.FieldName = 'Percentage'
-            end
             object tvRoomReservationsPriceType: TcxGridDBColumn
               DataBinding.FieldName = 'PriceType'
             end
             object tvRoomReservationsRoomRentPaymentInvoice: TcxGridDBColumn
+              Caption = 'RoomRent Payment Invoice'
               DataBinding.FieldName = 'RoomRentPaymentInvoice'
             end
             object tvRoomReservationsPMInfo: TcxGridDBColumn
@@ -471,20 +485,21 @@ inherited frmRptReservations: TfrmRptReservations
             end
             object tvRoomReservationsrrIsNoRoom: TcxGridDBColumn
               DataBinding.FieldName = 'rrIsNoRoom'
+              Visible = False
             end
             object tvRoomReservationsuseStayTax: TcxGridDBColumn
+              Caption = 'Use Staytax'
               DataBinding.FieldName = 'useStayTax'
             end
             object tvRoomReservationsuseinNationalReport: TcxGridDBColumn
+              Caption = 'In NationalReport'
               DataBinding.FieldName = 'useinNationalReport'
-            end
-            object tvRoomReservationsAvrageRate: TcxGridDBColumn
-              DataBinding.FieldName = 'AvrageRate'
             end
             object tvRoomReservationsRateCount: TcxGridDBColumn
               DataBinding.FieldName = 'RateCount'
             end
             object tvRoomReservationsdtCreated: TcxGridDBColumn
+              Caption = 'Date Created'
               DataBinding.FieldName = 'dtCreated'
             end
           end
@@ -503,30 +518,37 @@ inherited frmRptReservations: TfrmRptReservations
             end
             object tvRoomsDatereservation: TcxGridDBColumn
               DataBinding.FieldName = 'reservation'
+              Visible = False
             end
             object tvRoomsDateroomDate: TcxGridDBColumn
+              Caption = 'Date'
               DataBinding.FieldName = 'roomDate'
             end
             object tvRoomsDateGuestName: TcxGridDBColumn
               DataBinding.FieldName = 'GuestName'
             end
             object tvRoomsDateResFlag: TcxGridDBColumn
+              Caption = 'Status'
               DataBinding.FieldName = 'ResFlag'
             end
             object tvRoomsDateisNoRoom: TcxGridDBColumn
               DataBinding.FieldName = 'isNoRoom'
+              Visible = False
             end
             object tvRoomsDatePriceCode: TcxGridDBColumn
               DataBinding.FieldName = 'PriceCode'
             end
             object tvRoomsDateRoomRate: TcxGridDBColumn
               DataBinding.FieldName = 'RoomRate'
+              PropertiesClassName = 'TcxCurrencyEditProperties'
+              OnGetProperties = tvRoomsDateRoomRateGetProperties
             end
             object tvRoomsDateCurrency: TcxGridDBColumn
               DataBinding.FieldName = 'Currency'
             end
             object tvRoomsDateDiscount: TcxGridDBColumn
               DataBinding.FieldName = 'Discount'
+              PropertiesClassName = 'TcxCalcEditProperties'
             end
             object tvRoomsDateisPercentage: TcxGridDBColumn
               DataBinding.FieldName = 'isPercentage'
@@ -560,15 +582,19 @@ inherited frmRptReservations: TfrmRptReservations
       end
       object tabRoom: TsTabSheet
         Caption = 'Rooms'
+        ExplicitWidth = 1086
+        ExplicitHeight = 459
         object grRooms: TcxGrid
           Left = 0
           Top = 44
-          Width = 1086
-          Height = 415
+          Width = 1226
+          Height = 417
           Align = alClient
           PopupMenu = PopupMenu1
           TabOrder = 0
           LookAndFeel.NativeStyle = False
+          ExplicitWidth = 1086
+          ExplicitHeight = 415
           object cxGridDBTableView2: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = kbmRoomReservationsDS
@@ -938,11 +964,12 @@ inherited frmRptReservations: TfrmRptReservations
         object sPanel1: TsPanel
           Left = 0
           Top = 0
-          Width = 1086
+          Width = 1226
           Height = 44
           Align = alTop
           TabOrder = 1
           SkinData.SkinSection = 'PANEL'
+          ExplicitWidth = 1086
           object sButton2: TsButton
             Left = 3
             Top = 2
@@ -1008,9 +1035,9 @@ inherited frmRptReservations: TfrmRptReservations
     end
     object dxStatusBar1: TdxStatusBar
       Left = 0
-      Top = 604
-      Width = 1094
-      Height = 20
+      Top = 606
+      Width = 1234
+      Height = 18
       Panels = <>
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
@@ -1021,14 +1048,15 @@ inherited frmRptReservations: TfrmRptReservations
     object Panel3: TsPanel
       Left = 0
       Top = 0
-      Width = 1094
+      Width = 1234
       Height = 117
       Align = alTop
       Anchors = [akTop, akRight]
       TabOrder = 2
       SkinData.SkinSection = 'PANEL'
+      ExplicitWidth = 1094
       DesignSize = (
-        1094
+        1234
         117)
       object cLabFilter: TsLabel
         Left = 67
@@ -1248,7 +1276,7 @@ inherited frmRptReservations: TfrmRptReservations
           'Reservation stay')
       end
       object btnClose: TsButton
-        Left = 975
+        Left = 1115
         Top = 8
         Width = 117
         Height = 38
@@ -1261,6 +1289,7 @@ inherited frmRptReservations: TfrmRptReservations
         TabOrder = 5
         OnClick = btnCloseClick
         SkinData.SkinSection = 'BUTTON'
+        ExplicitLeft = 975
       end
     end
   end
