@@ -71,7 +71,6 @@ uses uAppGlobal,
   uSplashRoomer,
   RoomerLoginForm,
   uAboutRoomer,
-  uManageFilesOnServer,
   uChannelAvailabilityManager,
   ueditRoomPrice,
   uRoomCleanMaintenanceStatus,
@@ -860,9 +859,9 @@ procedure AddConstants_3;
 begin
   constants.Add('shTx_QuickReservation_NewReservationQuick', 'New Reservation - Quick Mode');
   constants.Add('shTx_QuickReservation_NewReservation', 'New Reservation');
-  constants.Add('shTx_ManageFiles_Delete', 'Do you want to delete file "%s"?');
-  constants.Add('shTx_ManageFiles_UnableToUpload', 'Unable to upload file "%s"');
-  constants.Add('shTx_ManageFiles_RetrieveList', 'Please first retrieve the list of files to be worked with (ReadFileList)');
+//  constants.Add('shTx_ManageFiles_Delete', 'Do you want to delete file "%s"?');
+//  constants.Add('shTx_ManageFiles_UnableToUpload', 'Unable to upload file "%s"');
+//  constants.Add('shTx_ManageFiles_RetrieveList', 'Please first retrieve the list of files to be worked with (ReadFileList)');
   constants.Add('shTx_NationalReport_Created', 'Created : ');
   constants.Add('shTx_NationalReport_User', 'User : ');
   constants.Add('shTx_NationalReport_ChangeNationalityFromTo', 'Change nationality of all guests ' + #10 +
@@ -1721,7 +1720,7 @@ begin
   TfrmRoomerLoginForm.Create(nil).Free;
 
   frmAboutRoomer := TfrmAboutRoomer.Create(nil); frmAboutRoomer.Free; frmAboutRoomer := nil;
-  frmManageFilesOnServer := TfrmManageFilesOnServer.Create(nil); frmManageFilesOnServer.Free; frmManageFilesOnServer := nil;
+//  frmManageFilesOnServer := TfrmManageFilesOnServer.Create(nil); frmManageFilesOnServer.Free; frmManageFilesOnServer := nil;
   frmChannelAvailabilityManager := TfrmChannelAvailabilityManager.Create(nil); frmChannelAvailabilityManager.Free; frmChannelAvailabilityManager := nil;
   frmEditRoomPrice := TfrmEditRoomPrice.Create(nil); frmEditRoomPrice.Free; frmEditRoomPrice := nil;
   frmRoomCleanMaintenanceStatus := TfrmRoomCleanMaintenanceStatus.Create(nil); frmRoomCleanMaintenanceStatus.Free; frmRoomCleanMaintenanceStatus := nil;

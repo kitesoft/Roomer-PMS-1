@@ -65,8 +65,8 @@ object frmPackageItems: TfrmPackageItems
       Caption = 'Clear'
       OnClick = btnClearClick
       SkinData.SkinSection = 'SPEEDBUTTON'
-      ImageIndex = 10
       Images = DImages.PngImageList1
+      ImageIndex = 10
     end
     object btnClose: TsButton
       Left = 786
@@ -97,15 +97,6 @@ object frmPackageItems: TfrmPackageItems
       TabOrder = 1
       OnChange = edFilterChange
       SkinData.SkinSection = 'EDIT'
-      BoundLabel.Indent = 0
-      BoundLabel.Font.Charset = DEFAULT_CHARSET
-      BoundLabel.Font.Color = clWindowText
-      BoundLabel.Font.Height = -11
-      BoundLabel.Font.Name = 'Tahoma'
-      BoundLabel.Font.Style = []
-      BoundLabel.Layout = sclLeft
-      BoundLabel.MaxWidth = 0
-      BoundLabel.UseSkinColor = True
     end
     object btnInsert: TsButton
       Left = 10
@@ -478,7 +469,6 @@ object frmPackageItems: TfrmPackageItems
     Left = 368
     Top = 224
     object prLink_grData: TdxGridReportLink
-      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -492,7 +482,6 @@ object frmPackageItems: TfrmPackageItems
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
       ReportDocument.CreationDate = 41334.495374884260000000
-      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
   end

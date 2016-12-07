@@ -8,6 +8,7 @@ interface
 uses
   Generics.Collections,
   SysUtils
+  , cmpRoomerDataset
   ;
 
 type
@@ -61,9 +62,7 @@ function FileDependencyManager: TFileDependencymanager;
 implementation
 
 uses
-  cmpRoomerDataSet
-  , uManageFilesOnServer
-  , uResourceManagement
+  uResourceManagement
   , IOUtils
   , IdHTTP
   , IdSSLOpenSSL
@@ -71,7 +70,8 @@ uses
   , uD
   , uDateUtils
   , uFrmResources
-  ;
+  , uAPIDataHandler
+  , uAppGlobal;
 
 var
   gFileDependencyMgr: TFileDependencymanager;
@@ -106,21 +106,13 @@ begin
   end;
 end;
 
+
 procedure TFileDependencymanager.prepareDependencyManager;
 begin
   if d.roomerMainDataSet.OfflineMode then
     exit;
 
   ReadFilesFromStaticResources;
-  try
-    if FFileList.Count = 0 then
-    begin
-      UploadKnownFilesToStaticResourceBundle(d.roomerMainDataSet);
-      ReadFilesFromStaticResources;
-    end;
-  except
-    // Ignore any error here!
-  end;
 end;
 
 procedure TFileDependencymanager.AssertResourcesPrepared;
@@ -149,10 +141,11 @@ begin
 
 end;
 
+
 function TFileDependencymanager.getFullFilename(const Filename: String): String;
 begin
   Result := ExtractFileName(Filename);
-  Result := TPath.Combine(GetCurrenctRoomerPath, Result);
+  Result := TPath.Combine(glb.GetHotelAppDataLocation, Result);
 end;
 
 function TFileDependencymanager.getFilePath(const Filename: String; throwExceptionOnError: Boolean): String;
@@ -166,7 +159,7 @@ begin
     if FFileList.Count = 0 then
       raise EFileDependencyManagerException.Create('Please first retrieve the list of files to be worked with (ReadFileList)'); // GetTranslatedText('shTx_ManageFiles_RetrieveList'));
     sFullFilename := ExtractFileName(Filename);
-    sFullFilename := TPath.Combine(GetCurrenctRoomerPath, sFullFilename);
+    sFullFilename := TPath.Combine(glb.GetHotelAppDataLocation, sFullFilename);
     if uFileSystemUtils.GetFileSize(sFullFilename) = 0 then
       DeleteFile(sFullFilename);
 
@@ -213,7 +206,7 @@ begin
   FullFilename := getFullFilename(REG_FORM_NAME);
   if error OR (Result = '') OR (GetFileSize(FullFilename) < 10) then
   begin
-    d.roomerMainDataSet.SystemDownloadFileFromURI('http://roomerstore.com/Registration_Form.fr3', FullFilename);
+    d.roomerMainDataSet.SystemDownloadFileFromURI(d.roomerMainDataSet.RoomerStoreUri + 'Registration_Form.fr3', FullFilename);
     sendChangedFile(FullFilename);
     Result := FullFilename;
   end;
@@ -270,7 +263,7 @@ begin
       http.Request.Referer := 'Mozilla/3.0 (compatible; Roomer PMS)';
       http.HTTPOptions := [hoForceEncodeParams];
 
-      URI := 'http://roomerstore.com/' + Filename;
+      URI := d.roomerMainDataSet.RoomerStoreUri + Filename;
       http.Head(URI);
       Result := TResourceInfo.Create(Filename, http.Response.LastModified, http.Response.ContentLength, URI);
     finally
@@ -312,17 +305,15 @@ end;
 
 function TFileDependencymanager.getHtmlEditorFilePath(throwExceptionOnError: Boolean = true): String;
 var
-  sPath, parameters: String;
+  parameters: string;
 begin
-  sPath := TPath.Combine(LocalAppDataPath, 'Roomer');
-  forceDirectories(sPath);
-  parameters := TPath.Combine(sPath, 'RoomerHtmlEditorControl.dll');
+  parameters := TPath.Combine(RoomerAppDataPath, 'RoomerHtmlEditorControl.dll');
   getExeFilePath('RoomerHtmlEditorControl.dll', parameters);
 
-  parameters := TPath.Combine(sPath, 'Microsoft.mshtml.dll');
+  parameters := TPath.Combine(RoomerAppDataPath, 'Microsoft.mshtml.dll');
   getExeFilePath('Microsoft.mshtml.dll', parameters);
 
-  parameters := TPath.Combine(sPath, 'RoomerHtmlEditor.exe');
+  parameters := TPath.Combine(RoomerAppDataPath, 'RoomerHtmlEditor.exe');
   Result := getExeFilePath('RoomerHtmlEditor.exe', parameters);
 end;
 

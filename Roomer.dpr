@@ -78,7 +78,6 @@ uses
   uSplashRoomer in 'uSplashRoomer.pas' {frmRoomerSplash},
   RoomerLoginForm in 'RoomerLoginForm.pas' {frmRoomerLoginForm},
   uAboutRoomer in 'uAboutRoomer.pas' {frmAboutRoomer},
-  uManageFilesOnServer in 'uManageFilesOnServer.pas' {frmManageFilesOnServer},
   uChannelAvailabilityManager in 'uChannelAvailabilityManager.pas' {frmChannelAvailabilityManager},
   ueditRoomPrice in 'ueditRoomPrice.pas' {frmEditRoomPrice},
   hData in 'Extras\hData.pas',

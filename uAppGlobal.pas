@@ -257,6 +257,7 @@ Type
       function GetDataCacheLocation : String;
       function GetOfflineReportLocation: string;
       function GetLanguageLocation: String;
+      function GetHotelAppDataLocation: string;
 
       property RoomTypes[ aType : string ] : integer read GetNumberOfItems;
       property RoomTypesNumGuests[ aType : string ] : integer read GetRoomTypeNumberGuests;
@@ -844,30 +845,40 @@ begin
   end;
 end;
 
-function TGlobalSettings.GetDataCacheLocation: String;
-var AppDataPath : String;
-    DataCache: String;
+function TGlobalSettings.GetHotelAppDataLocation: string;
 begin
-  AppDataPath := TPath.Combine(LocalAppDataPath, 'Roomer');
-  DataCache := format('%s\' + cDatacachefoldername, [d.roomerMainDataSet.hotelId]);
-  result := TPath.Combine(AppDataPath, DataCache);
+  Result := TPath.Combine(RoomerAppDataPath, d.roomerMainDataSet.hotelId);
+  forceDirectories(result);
+end;
+
+function TGlobalSettings.GetDataCacheLocation: String;
+//var AppDataPath : String;
+//    DataCache: String;
+begin
+//  AppDataPath := TPath.Combine(LocalAppDataPath, 'Roomer');
+//  DataCache := format('%s\' + cDatacachefoldername, [d.roomerMainDataSet.hotelId]);
+//  result := TPath.Combine(AppDataPath, DataCache);
+//
+  Result := TPath.Combine(GetHotelAppDataLocation, cDatacachefoldername);
   forceDirectories(result);
 end;
 
 function TGlobalSettings.GetOfflineReportLocation: string;
-var AppDataPath : String;
+//var AppDataPath : String;
 begin
-  AppDataPath := TPath.Combine(LocalAppDataPath, 'Roomer');
-  result := format('%s\' + cofflinefoldername,[d.roomerMainDataSet.hotelId]);
-  result := TPath.Combine(AppDataPath, Result);
+//  AppDataPath := TPath.Combine(LocalAppDataPath, 'Roomer');
+//  result := format('%s\' + cofflinefoldername,[d.roomerMainDataSet.hotelId]);
+//  result := TPath.Combine(AppDataPath, Result);
+  Result := TPath.Combine(GetHotelAppDataLocation, cOfflinefoldername);
   forceDirectories(result);
 end;
 
 
 function TGlobalSettings.GetLanguageLocation: String;
 begin
-  result := TPath.Combine(LocalAppDataPath, 'Roomer');
-  result := TPath.Combine(result, 'Languages');
+//  result := TPath.Combine(LocalAppDataPath, 'Roomer');
+//  result := TPath.Combine(result, 'Languages');
+  Result := TPath.Combine(GetHotelAppDataLocation, 'Languages');
   forceDirectories(result);
 end;
 

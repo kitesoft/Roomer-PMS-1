@@ -399,9 +399,6 @@
         <DCCReference Include="uAboutRoomer.pas">
             <Form>frmAboutRoomer</Form>
         </DCCReference>
-        <DCCReference Include="uManageFilesOnServer.pas">
-            <Form>frmManageFilesOnServer</Form>
-        </DCCReference>
         <DCCReference Include="uChannelAvailabilityManager.pas">
             <Form>frmChannelAvailabilityManager</Form>
         </DCCReference>

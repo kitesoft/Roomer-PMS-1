@@ -3,6 +3,8 @@ interface
 
 uses Types, System.SysUtils, Registry, Winapi.Windows, System.IOUtils, Controls, ShellAPI;
 
+function RoomerAppDataPath: string;
+function RoomerTempPath: string;
 function LocalAppDataPath : string;
 Function GetTempFileName(const ext: string): string;
 function GetTempDir: string;
@@ -38,7 +40,7 @@ uses
   , StrUtils
   , Classes
   , uRunWithElevatedOption
-  ;
+  , uRoomerDefinitions;
 
 const
   _K  = 1024; //byte
@@ -140,6 +142,16 @@ end;
 procedure TouchNewFile(FileName: string; Date: TDateTime);
 begin
   TouchFile(FileName, Date, True);
+end;
+
+function RoomerAppDataPath: string;
+begin
+  result := TPath.Combine(LocalAppDataPath, cRoomerFolder);
+end;
+
+function RoomerTempPath: string;
+begin
+  result := TPath.Combine(GetTempPath, cRoomerFolder);
 end;
 
 function LocalAppDataPath : string;

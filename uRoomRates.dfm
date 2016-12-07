@@ -107,7 +107,6 @@ object frmRoomRates: TfrmRoomRates
       Caption = 'Filter'
       TabOrder = 3
       SkinData.SkinSection = 'GROUPBOX'
-      Checked = False
       object sSpeedButton1: TsSpeedButton
         Left = 312
         Top = 67
@@ -302,7 +301,6 @@ object frmRoomRates: TfrmRoomRates
         ParentFont = False
         TabOrder = 2
         OnChange = dtFromChange
-        CheckOnExit = True
         SkinData.SkinSection = 'EDIT'
         GlyphMode.Blend = 0
         GlyphMode.Grayed = False
@@ -328,7 +326,6 @@ object frmRoomRates: TfrmRoomRates
         TabOrder = 3
         Text = '  -  -    '
         OnChange = dtToChange
-        CheckOnExit = True
         SkinData.SkinSection = 'EDIT'
         GlyphMode.Blend = 0
         GlyphMode.Grayed = False
@@ -780,7 +777,6 @@ object frmRoomRates: TfrmRoomRates
     Left = 48
     Top = 176
     object prLink_grData: TdxGridReportLink
-      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -794,7 +790,6 @@ object frmRoomRates: TfrmRoomRates
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
       ReportDocument.CreationDate = 41334.495374884260000000
-      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
   end

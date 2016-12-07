@@ -62,7 +62,7 @@ uses
   , uUtils
   , IOUtils
   , uStringUtils
-  , uFileSystemUtils;
+  , uFileSystemUtils, uAppGlobal;
 
 { TTableDictionary }
 
@@ -211,13 +211,14 @@ begin
 end;
 
 function TTableEntity.GetFilename : String;
-var sPath : String;
+//var sPath : String;
 begin
-  sPath := TPath.Combine(LocalAppDataPath, 'Roomer');
-  sPath := TPath.Combine(sPath, format('%s\datacache',[d.roomerMainDataSet.hotelId]));
-  forceDirectories(sPath);
-
-  result := TPath.Combine(sPath, format(cRoomerTableFileName, [FTableName]));
+//  sPath := TPath.Combine(LocalAppDataPath, 'Roomer');
+//  sPath := TPath.Combine(sPath, format('%s\datacache',[d.roomerMainDataSet.hotelId]));
+  Result := TPath.Combine(glb.GetDataCacheLocation, format(cRoomerTableFileName, [FTableName]));
+//  forceDirectories(sPath);
+//
+//  result := TPath.Combine(sPath, format(cRoomerTableFileName, [FTableName]));
 end;
 
 

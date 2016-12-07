@@ -11,6 +11,7 @@ const
 
 const
   qcCompany        = 'Roomer';
+  cRoomerFolder    = 'Roomer';
   qcApplication    = 'Roomer PMS';
   testCompanyID    = '00';
   testCompanyName  = 'Hotel Trial';

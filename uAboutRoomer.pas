@@ -141,7 +141,7 @@ var
     DashboardExeFilenameAndPath : String;
 begin
   filename := 'RoomerDashboard.exe';
-  sPath := TPath.Combine(LocalAppDataPath, 'Roomer');
+  sPath := RoomerAppDataPath;
   forceDirectories(sPath);
 
   parameters := format('hotel=%s host=%s port=%s user=%s pass=%s date=2014-01-01',
@@ -179,7 +179,7 @@ begin
   if trim(language) = '' then
     language := 'en';
   filename := format('RoomerQS%s.exe', [language]);
-  sPath := TPath.Combine(LocalAppDataPath, 'Roomer');
+  sPath := RoomerAppDataPath;
   forceDirectories(sPath);
   RemoteSupportFilenameAndPath := TPath.Combine(sPath, filename);
   FileDependencymanager.getAnyFileFromRoomerStore(filename, RemoteSupportFilenameAndPath);
@@ -193,11 +193,10 @@ var
 begin
   try
     frmMain.RemoveLanguagesFilesAndRefresh(False);
-    sPath := TPath.Combine(LocalAppDataPath, 'Roomer');
+    sPath := RoomerAppDataPath;
     forceDirectories(sPath);
     UpgradeManagerPath := TPath.Combine(sPath, 'RoomerUpgradeAgent.exe');
     FileDependencymanager.getRoomerUpgradeAgentFilePath(UpgradeManagerPath);
-    ExecuteFile(Handle, UpgradeManagerPath, '"' + Application.ExeName + '"', [eoElevate]);
   except
   end;
 end;

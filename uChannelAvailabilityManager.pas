@@ -1627,7 +1627,7 @@ var
 
           filename := TPath.Combine(Filename, 'RMS_RATES_V1.1.xls');
 
-          d.roomerMainDataSet.SystemDownloadFileFromURI('http://roomerstore.com/templates/RMS_RATES_V1.1.xls', filename);
+          d.roomerMainDataSet.SystemDownloadFileFromURI(d.RoomerMainDataset.RoomerStoreURI + 'templates/RMS_RATES_V1.1.xls', filename);
           ExcelP := TExcelProcessors.Create;
           ExcelP.PrepareRateChanges(filename);
         end;

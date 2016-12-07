@@ -966,7 +966,7 @@ begin
     _RoomerOpenApiBase := RoomerOpenAPIBase;
 
   RoomerOpenApiUri := _RoomerOpenApiBase + ':' + _RoomerOpenApiBasePort + '/roomer/openAPI/REST/';
-  RoomerStoreUri := _RoomerStoreBase + ':' + _RoomerStoreBasePort + '/services/';
+  RoomerStoreUri := _RoomerStoreBase + ':' + _RoomerStoreBasePort + '/';
   RoomerApiUri := _RoomerBase + ':' + _RoomerBasePort + '/services/';
   RoomerApiEntitiesUri := RoomerApiUri + 'entities/';
   RoomerApiDatasetsUri := RoomerApiUri + 'datasets/';
@@ -984,7 +984,7 @@ begin
       _RoomerOpenApiBasePort := ReadString('Cloud', 'RoomerOpenApiPort', RoomerOpenApiBasePort);
 
       RoomerOpenApiUri := _RoomerOpenApiBase + ':' + _RoomerOpenApiBasePort + ReadString('Cloud', 'RoomerOpenApiRestPath', '/roomer/openAPI/REST/');
-      RoomerStoreUri := _RoomerStoreBase + ':' + _RoomerStoreBasePort + '/services/';
+      RoomerStoreUri := _RoomerStoreBase + ':' + _RoomerStoreBasePort + '/';
 
       RoomerApiUri := _RoomerBase + ':' + _RoomerBasePort + '/services/';
       RoomerApiEntitiesUri := RoomerApiUri + 'entities/';

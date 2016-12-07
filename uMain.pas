@@ -1539,11 +1539,10 @@ uses
 {$ENDIF}
     , uD, uRubbishCollectors, uProvideARoom2,
   uInvoice,
-  uInvoice2015,
   uTaxes,
   clipbrd,
   sndkey32, uReservationProfile, uGuestProfile2, uSplashRoomer, uAboutRoomer,
-  uManageFilesOnServer, uControlData, uInvoiceList, uGuestCheckInForm
+  uControlData, uInvoiceList, uGuestCheckInForm
     , uFinishedInvoices2
     , uRoomCleanMaintenanceStatus
     , uDayFinical
@@ -3146,7 +3145,6 @@ begin
   try
     try
       TSplashFormManager.UpdateProgress('Updating hotellist...');
-  //    FileDependencymanager.prepareDependencyManager;
       UpdateHotelsList;
 
       TSplashFormManager.UpdateProgress('Initialize taxes..');
