@@ -3,7 +3,7 @@ object frmMultiSelection: TfrmMultiSelection
   Top = 0
   Caption = 'List Selection'
   ClientHeight = 401
-  ClientWidth = 245
+  ClientWidth = 335
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,7 +20,7 @@ object frmMultiSelection: TfrmMultiSelection
   object sPanel1: TsPanel
     Left = 5
     Top = 368
-    Width = 235
+    Width = 325
     Height = 33
     Margins.Left = 2
     Margins.Top = 2
@@ -30,6 +30,7 @@ object frmMultiSelection: TfrmMultiSelection
     BevelOuter = bvNone
     TabOrder = 0
     SkinData.SkinSection = 'PANEL'
+    ExplicitWidth = 235
     object sButton1: TsButton
       Left = 81
       Top = 3
@@ -80,7 +81,7 @@ object frmMultiSelection: TfrmMultiSelection
   object pnlHeader: TsPanel
     Left = 5
     Top = 0
-    Width = 235
+    Width = 325
     Height = 31
     Margins.Left = 2
     Margins.Top = 2
@@ -90,6 +91,9 @@ object frmMultiSelection: TfrmMultiSelection
     BevelOuter = bvNone
     TabOrder = 1
     SkinData.SkinSection = 'PANEL'
+    ExplicitLeft = 7
+    ExplicitTop = -4
+    ExplicitWidth = 235
     object lblHeader: TsLabel
       Left = 6
       Top = 10
@@ -108,32 +112,87 @@ object frmMultiSelection: TfrmMultiSelection
       Font.Style = []
     end
   end
-  object lstItems: TsCheckListBox
+  object sPanel2: TsPanel
     Left = 5
     Top = 31
-    Width = 235
+    Width = 325
     Height = 337
-    Margins.Left = 2
-    Margins.Top = 2
-    Margins.Right = 2
-    Margins.Bottom = 2
     Align = alClient
-    BorderStyle = bsSingle
-    Color = 3355443
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = 15724527
-    Font.Height = -11
-    Font.Name = 'Tahoma'
-    Font.Style = []
-    MultiSelect = True
-    ParentFont = False
+    BevelOuter = bvNone
     TabOrder = 2
-    OnClick = lstItemsClick
-    BoundLabel.Font.Charset = DEFAULT_CHARSET
-    BoundLabel.Font.Color = clWindowText
-    BoundLabel.Font.Height = -13
-    BoundLabel.Font.Name = 'Tahoma'
-    BoundLabel.Font.Style = []
-    SkinData.SkinSection = 'EDIT'
+    ExplicitLeft = 2
+    ExplicitTop = 30
+    ExplicitWidth = 235
+    object lstItems: TsCheckListBox
+      Left = 45
+      Top = 0
+      Width = 280
+      Height = 337
+      Margins.Left = 2
+      Margins.Top = 2
+      Margins.Right = 2
+      Margins.Bottom = 2
+      Align = alClient
+      BorderStyle = bsSingle
+      Color = clWhite
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      MultiSelect = True
+      ParentFont = False
+      TabOrder = 0
+      OnClick = lstItemsClick
+      BoundLabel.Font.Charset = DEFAULT_CHARSET
+      BoundLabel.Font.Color = clWindowText
+      BoundLabel.Font.Height = -13
+      BoundLabel.Font.Name = 'Tahoma'
+      BoundLabel.Font.Style = []
+      SkinData.SkinSection = 'EDIT'
+      OnClickCheck = lstItemsClickCheck
+      ExplicitLeft = 44
+    end
+    object pnlUpDown: TsPanel
+      Left = 0
+      Top = 0
+      Width = 45
+      Height = 337
+      Align = alLeft
+      BevelOuter = bvNone
+      TabOrder = 1
+      ExplicitLeft = -5
+      ExplicitTop = -3
+      object btnUp: TsButton
+        Left = 5
+        Top = 14
+        Width = 34
+        Height = 33
+        Hint = 'Move up / Higher priority'
+        Enabled = False
+        ImageAlignment = iaCenter
+        ImageIndex = 0
+        ImageMargins.Top = 5
+        Images = DImages.PngImageList32
+        TabOrder = 0
+        OnClick = btnUpClick
+        SkinData.SkinSection = 'BUTTON'
+      end
+      object btnDown: TsButton
+        Left = 5
+        Top = 53
+        Width = 34
+        Height = 34
+        Hint = 'Move down / Lower priority'
+        Enabled = False
+        ImageAlignment = iaCenter
+        ImageIndex = 1
+        ImageMargins.Bottom = 5
+        Images = DImages.PngImageList32
+        TabOrder = 1
+        OnClick = btnDownClick
+        SkinData.SkinSection = 'BUTTON'
+      end
+    end
   end
 end

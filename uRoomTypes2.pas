@@ -835,13 +835,13 @@ begin
   theData.Code := zData.RoomTypeGroup;
 //  theData.ID := zData. CurrencyID;
 
-  openRoomTypeGroups(actlookup,theData);
-
-  if theData.code <> '' then
+  if openRoomTypeGroups(actlookup,theData, nil, nil, true) then
   begin
-    if tvData.DataController.DataSource.State <> dsInsert then m_.Edit;
-    m_['RoomTypeGroup']   := theData.code;
-//    m_['currencyID'] := theData.ID;
+    if theData.code <> '' then
+    begin
+      if tvData.DataController.DataSource.State <> dsInsert then m_.Edit;
+      m_['RoomTypeGroup']   := theData.code;
+    end;
   end;
 end;
 
