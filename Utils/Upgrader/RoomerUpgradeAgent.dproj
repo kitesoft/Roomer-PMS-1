@@ -102,6 +102,8 @@
         <VerInfo_Locale>1033</VerInfo_Locale>
         <Icon_MainIcon>RoomerUpgradeAgent_Icon.ico</Icon_MainIcon>
         <DCC_ExeOutput>..\..\RoomerPMSRelease\</DCC_ExeOutput>
+        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
+        <VerInfo_MinorVer>2</VerInfo_MinorVer>
     </PropertyGroup>
     <ItemGroup>
         <DelphiCompile Include="$(MainSource)">
