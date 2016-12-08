@@ -984,8 +984,11 @@ end;
 
 procedure TfrmChannelAvailabilityManager.FormCreate(Sender: TObject);
 begin
+
   RoomerDataSet := CreateNewDataSet;
   pgcPages.Visible := False;
+  cbxRateRestrictionsClick(cbxRateRestrictions);
+
   RoomerLanguage.TranslateThisForm(self);
   glb.PerformAuthenticationAssertion(self); PlaceFormOnVisibleMonitor(self);
 
@@ -2499,7 +2502,14 @@ end;
 procedure TfrmChannelAvailabilityManager.cbxRateRestrictionsClick(Sender: TObject);
 begin
   TsCheckBox(Sender).Tag := ABS(ORD(TsCheckBox(Sender).Checked));
+
   HideShowExtraCells;
+
+  pnlRestrictions.Visible := TsCheckBox(Sender).Checked AND (pgcPages.ActivePageIndex IN [1]);
+  lblSingleUsePrice.Visible := TsCheckBox(Sender).Checked AND (pgcPages.ActivePageIndex IN [1]);
+  __cbxSingleUsePriceActive.Visible := TsCheckBox(Sender).Checked AND (pgcPages.ActivePageIndex IN [1]);
+  edtSingleUsePrice.Visible := TsCheckBox(Sender).Checked AND (pgcPages.ActivePageIndex IN [1]);
+
 end;
 
 procedure TfrmChannelAvailabilityManager.GetStatusOfRoomClasses;
@@ -3811,6 +3821,7 @@ begin
     RefreshScreen;
   except
   end;
+  cbxRateRestrictionsClick(cbxRateRestrictions);
 end;
 
 procedure TfrmChannelAvailabilityManager.pnlBulkChangesResize(Sender: TObject);
