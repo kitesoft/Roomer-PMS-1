@@ -228,279 +228,44 @@ begin
     // See https://promoir.atlassian.net/wiki/x/B4BEB for an explanation of the different states
 
 {$REGION 'SQL statement'}
-      s := '';
-      s := s+'   SELECT '#10;
-      s := s+'     pd.date AS dtDate, '#10;
-      s := s+'    (SELECT '#10;
-      s := s+'            COUNT(xx.id) '#10;
-      s := s+'        FROM '#10;
-      s := s+'            (SELECT '#10;
-      s := s+'                rr.id, rr.arrival '#10;
-      s := s+'            FROM '#10;
-      s := s+'                roomreservations rr '#10;
-      s := s+'            LEFT OUTER JOIN rooms ON (rooms.room = rr.room '#10;
-      s := s+'                AND rooms.wildcard = 0) '#10;
-      s := s+'            WHERE '#10;
-      s := s+'                rr.status IN ' + cArrivalReservations.AsSQLString ;
-      s := s+'                    AND ((SUBSTRING(rr.room, 1, 1) = ''<'') '#10;
-      s := s+'                    OR (rooms.active = 1))) xx '#10;
-      s := s+'        WHERE '#10;
-      s := s+'            (xx.arrival = pd.date)) AS roomsArrival, '#10;
+      s := '   SELECT ' +
+           '     pd.date AS dtDate, ' +
+           '     SUM(IF(rr.status IN (''P'',''G'',''D'',''W'',''Z'',''Q'') AND rr.arrival = rd.ADate AND rr.arrival = pd.date, 1, 0)) AS roomsArrival, ' +
+           '     SUM(IF(rr.status IN (''P'',''G'',''D'',''W'',''Z'',''Q'') AND rr.arrival = rd.ADate AND rr.arrival = pd.date, p.numGuests, 0)) AS paxArrival, ' +
+           '     dep.numRooms AS roomsDeparture, ' +
+           '     dep.numGuests AS paxDeparture, ' +
+           '     SUM(IF(rr.status IN (''P'',''G'',''D'',''W'',''Z'',''Q'') AND (rr.arrival <= pd.date) AND (rr.departure > pd.date), 1, 0)) AS roomsInHouse, ' +
+           '     SUM(IF(rr.status IN (''P'',''G'',''D'',''W'',''Z'',''Q'') AND (rr.arrival <= pd.date) AND (rr.departure > pd.date), p.numGuests, 0)) AS paxInHouse, ' +
+           '     SUM(IF(rr.status IN (''P'',''G'',''D'',''W'',''Z'',''Q'') AND (rr.arrival < pd.date) AND (rr.departure > pd.date), 1, 0)) AS roomsStay, ' +
+           '     SUM(IF(rr.status IN (''P'',''G'',''D'',''W'',''Z'',''Q'') AND (rr.arrival < pd.date) AND (rr.departure > pd.date), p.numGuests, 0)) AS paxStay, ' +
+           '     SUM(IF(rr.status IN (''O'') AND DATE(rd.Adate) = pd.Date AND rd.resflag IN (''O'') , 1, 0)) AS roomsWaitinglist, ' +
+           '     SUM(IF(rr.status IN (''O'') AND DATE(rd.Adate) = pd.Date AND rd.resflag IN (''O'') , p.numGuests, 0)) AS paxWaitinglist, ' +
+           '     SUM(IF(rr.status IN (''L'') AND DATE(rd.Adate) = pd.Date AND rd.resflag IN (''L'') , 1, 0)) AS roomsWaitinglistNonOptional, ' +
+           '     SUM(IF(rr.status IN (''L'') AND DATE(rd.Adate) = pd.Date AND rd.resflag IN (''L'') , p.numGuests, 0)) AS paxWaitinglistNonOptional, ' +
+           '     SUM(IF(rr.status IN (''A'') AND DATE(rd.Adate) = pd.Date AND rd.resflag IN (''A'') , 1, 0)) AS roomsAllotmennt, ' +
+           '     SUM(IF(rr.status IN (''A'') AND DATE(rd.Adate) = pd.Date AND rd.resflag IN (''A'') , p.numGuests, 0)) AS paxAllotment, ' +
+           '     SUM(IF(rr.status IN (''P'',''G'',''D'',''W'',''Z'',''Q'',''L'',''A'') AND (rr.arrival <= pd.date) AND (rr.departure >= pd.date), 1, 0)) AS roomsTotal, ' +
+           '     SUM(IF(rr.status IN (''P'',''G'',''D'',''W'',''Z'',''Q'',''L'',''A'') AND (rr.arrival <= pd.date) AND (rr.departure >= pd.date) , p.numGuests, 0)) AS paxTotal, ' +
+           '     SUM(IF(rr.status IN (''B'') AND r.outOfOrderBlocking=1 AND DATE(rd.Adate) = pd.Date AND rd.resflag IN (''B'') , 1, 0)) AS roomsOutOfOrder, ' +
+           '     SUM(IF(rr.status IN (''B'') AND r.outOfOrderBlocking=1 AND DATE(rd.Adate) = pd.Date AND rd.resflag IN (''B'') , p.numGuests, 0)) AS paxOutOfOrder ' +
+           'FROM ' +
+           '    predefineddates pd ' +
+           '    JOIN roomsdate rd ON rd.ADate=pd.date AND NOT rd.resFlag IN (''X'',''C'') ' +
+           '    JOIN roomreservations rr ON rr.RoomReservation=rd.RoomReservation ' +
+           '    JOIN reservations r ON r.Reservation=rr.Reservation ' +
+           '    LEFT JOIN (SELECT RoomReservation, COUNT(id) AS numGuests FROM persons GROUP BY RoomReservation) AS p ON p.RoomReservation=rr.RoomReservation ' +
+           '    LEFT JOIN (SELECT rr.departure, SUM(p.numGuests) AS numGuests, COUNT(rr.id) AS numRooms FROM roomreservations rr ' +
+           '                    JOIN (SELECT RoomReservation, COUNT(p.id) numGuests FROM persons p GROUP BY p.RoomReservation) p ON p.RoomReservation=rr.RoomReservation ' +
+           '                    WHERE ((rr.departure >= %s AND rr.departure<=%s)) AND status IN (''P'',''G'',''D'',''W'',''Z'',''Q'') ' +
+           '                    GROUP BY rr.departure) dep ON dep.departure=pd.date ' +
+           '	LEFT OUTER JOIN rooms ON (rooms.room = rr.room AND rooms.wildcard = 0) ' +
+           'WHERE ' +
+           '    ((pd.date >= %s AND pd.date<=%s)) ' +
+           'AND ((rr.room LIKE ''<%s'') OR (rooms.active = 1)) ' +
+           'GROUP BY pd.date';
 
-      s := s+'    (SELECT '#10;
-      s := s+'            SUM(xx.numGuests) '#10;
-      s := s+'        FROM '#10;
-      s := s+'            (SELECT '#10;
-      s := s+'                rr.numGuests, rr.arrival '#10;
-      s := s+'            FROM '#10;
-      s := s+'                roomreservations rr '#10;
-      s := s+'            LEFT OUTER JOIN rooms ON (rooms.room = rr.room '#10;
-      s := s+'                AND rooms.wildcard = 0) '#10;
-      s := s+'            WHERE '#10;
-      s := s+'                rr.status IN ' + cArrivalReservations.AsSQLString;
-      s := s+'                    AND ((SUBSTRING(rr.room, 1, 1) = ''<'') '#10;
-      s := s+'                    OR (rooms.active = 1))) xx '#10;
-      s := s+'        WHERE '#10;
-      s := s+'            (xx.arrival = pd.date)) AS paxArrival, '#10;
+    s := format(s, [_db(zDateFrom, true), _db(zDateTo, true), _db(zDateFrom, true), _db(zDateTo, true), '%']);
 
-      s := s+'    (SELECT '#10;
-      s := s+'            COUNT(xx.id) '#10;
-      s := s+'        FROM '#10;
-      s := s+'            (SELECT '#10;
-      s := s+'                rr.id, rr.departure '#10;
-      s := s+'            FROM '#10;
-      s := s+'                roomreservations rr '#10;
-      s := s+'            LEFT OUTER JOIN rooms ON (rooms.room = rr.room '#10;
-      s := s+'                AND rooms.wildcard = 0) '#10;
-      s := s+'            WHERE '#10;
-      s := s+'                rr.status IN  ' + cDepartureReservations.AsSQLString;
-      s := s+'                    AND ((SUBSTRING(rr.room, 1, 1) = ''<'') '#10;
-      s := s+'                    OR (rooms.active = 1))) xx '#10;
-      s := s+'        WHERE '#10;
-      s := s+'            (xx.departure = pd.date)) AS roomsDeparture, '#10;
-
-      s := s+'    (SELECT '#10;
-      s := s+'            SUM(xx.numGuests) '#10;
-      s := s+'        FROM '#10;
-      s := s+'            (SELECT '#10;
-      s := s+'                rr.numGuests, rr.departure '#10;
-      s := s+'            FROM '#10;
-      s := s+'                roomreservations rr '#10;
-      s := s+'            LEFT OUTER JOIN rooms ON (rooms.room = rr.room '#10;
-      s := s+'                AND rooms.wildcard = 0) '#10;
-      s := s+'            WHERE '#10;
-      s := s+'                rr.status IN ' + cDepartureReservations.AsSQLString;
-      s := s+'                    AND ((SUBSTRING(rr.room, 1, 1) = ''<'') '#10;
-      s := s+'                    OR (rooms.active = 1))) xx '#10;
-      s := s+'        WHERE '#10;
-      s := s+'            (xx.departure = pd.date)) AS paxDeparture, '#10;
-
-      s := s+'    (SELECT '#10;
-      s := s+'            COUNT(xx.id) '#10;
-      s := s+'        FROM '#10;
-      s := s+'            (SELECT '#10;
-      s := s+'                rr.id, rr.arrival, rr.departure'#10;
-      s := s+'            FROM '#10;
-      s := s+'                roomreservations rr '#10;
-      s := s+'            LEFT OUTER JOIN rooms ON (rooms.room = rr.room '#10;
-      s := s+'                AND rooms.wildcard = 0) '#10;
-      s := s+'            WHERE '#10;
-      s := s+'                rr.status IN '+ cInhouseReservations.AsSQLString + #10;
-      s := s+'                    AND ((SUBSTRING(rr.room, 1, 1) = ''<'') '#10;
-      s := s+'                    OR (rooms.active = 1))) xx '#10;
-      s := s+'        WHERE '#10;
-      s := s+'            (xx.arrival <= pd.date) '#10;
-      s := s+'            AND (xx.departure > pd.date)) AS roomsInHouse, '#10;
-
-      s := s+'    (SELECT '#10;
-      s := s+'            SUM(xx.numGuests) '#10;
-      s := s+'        FROM '#10;
-      s := s+'            (SELECT '#10;
-      s := s+'                rr.arrival, rr.departure, '#10;
-      s := s+'                (SELECT COUNT(pe.id) FROM persons pe WHERE pe.RoomReservation=rr.RoomReservation) AS numGuests '#10;
-      s := s+'            FROM '#10;
-      s := s+'                roomreservations rr '#10;
-      s := s+'            LEFT OUTER JOIN rooms ON (rooms.room = rr.room '#10;
-      s := s+'                AND rooms.wildcard = 0) '#10;
-      s := s+'            WHERE '#10;
-      s := s+'                rr.status IN ' + cInhouseReservations.AsSQLString;
-      s := s+'                    AND ((SUBSTRING(rr.room, 1, 1) = ''<'') '#10;
-      s := s+'                    OR (rooms.active = 1))) xx '#10;
-      s := s+'        WHERE '#10;
-      s := s+'            (xx.arrival <= pd.date) AND (xx.departure > pd.date)) AS paxinhouse, '#10;
-
-      s := s+'    (SELECT '#10;
-      s := s+'            COUNT(xx.id) '#10;
-      s := s+'        FROM '#10;
-      s := s+'            (SELECT '#10;
-      s := s+'                rr.id, rr.arrival, rr.departure '#10;
-      s := s+'            FROM '#10;
-      s := s+'                roomreservations rr '#10;
-      s := s+'            LEFT OUTER JOIN rooms ON (rooms.room = rr.room '#10;
-      s := s+'                AND rooms.wildcard = 0) '#10;
-      s := s+'            WHERE '#10;
-      s := s+'                rr.status IN  ' + cStayOverReservations.AsSQLString;
-      s := s+'                    AND ((SUBSTRING(rr.room, 1, 1) = ''<'') '#10;
-      s := s+'                    OR (rooms.active = 1))) xx '#10;
-      s := s+'        WHERE '#10;
-      s := s+'            (xx.arrival < pd.date) '#10;
-      s := s+'                AND (xx.departure > pd.date)) AS roomsStay, '#10;
-
-      s := s+'    (SELECT '#10;
-      s := s+'            SUM(xx.numGuests) '#10;
-      s := s+'        FROM '#10;
-      s := s+'            (SELECT '#10;
-      s := s+'                rr.arrival, rr.departure, '#10;
-      s := s+'                (SELECT COUNT(pe.id) FROM persons pe WHERE pe.RoomReservation=rr.RoomReservation) AS numGuests '#10;
-      s := s+'            FROM '#10;
-      s := s+'                roomreservations rr '#10;
-      s := s+'            LEFT OUTER JOIN rooms ON (rooms.room = rr.room '#10;
-      s := s+'                AND rooms.wildcard = 0) '#10;
-      s := s+'            WHERE '#10;
-      s := s+'                rr.status IN ' + cStayOverReservations.AsSQLString;
-      s := s+'                    AND ((SUBSTRING(rr.room, 1, 1) = ''<'') '#10;
-      s := s+'                    OR (rooms.active = 1))) xx '#10;
-      s := s+'        WHERE '#10;
-      s := s+'            (xx.arrival < pd.date '#10;
-      s := s+'                AND xx.departure > pd.date)) AS paxStay, '#10;
-
-      s := s+'    (SELECT '#10;
-      s := s+'            COUNT(rd.id) '#10;
-      s := s+'        FROM '#10;
-      s := s+'            roomsdate rd '#10;
-      s := s+'        WHERE '#10;
-      s := s+'            DATE(rd.Adate) = pd.Date '#10;
-      s := s+'                AND rd.resflag IN ('+ _db(rsOptionalBooking.AsStatusChar) +')) AS roomsWaitinglist, '#10;
-
-      s := s+'    (SELECT '#10;
-      s := s+'            COUNT(pe.id) '#10;
-      s := s+'        FROM '#10;
-      s := s+'            persons pe '#10;
-      s := s+'        WHERE '#10;
-      s := s+'            RoomReservation IN ((SELECT '#10;
-      s := s+'                    roomreservation '#10;
-      s := s+'                FROM '#10;
-      s := s+'                    roomsdate rd '#10;
-      s := s+'                WHERE '#10;
-      s := s+'                    DATE(rd.Adate) = pd.Date '#10;
-      s := s+'                        AND rd.resflag IN ('+ _db(rsOptionalBooking.AsStatusChar) +')))) AS paxWaitinglist, '#10;
-
-      s := s+'    (SELECT '#10;
-      s := s+'            COUNT(rd.id) '#10;
-      s := s+'        FROM '#10;
-      s := s+'            roomsdate rd '#10;
-      s := s+'        WHERE '#10;
-      s := s+'            DATE(rd.Adate) = pd.Date '#10;
-      s := s+'                AND rd.resflag IN ('+ _db(rsWaitingList.AsStatusChar) +')) AS roomsWaitinglistNonOptional, '#10;
-
-      s := s+'    (SELECT '#10;
-      s := s+'            COUNT(pe.id) '#10;
-      s := s+'        FROM '#10;
-      s := s+'            persons pe '#10;
-      s := s+'        WHERE '#10;
-      s := s+'            RoomReservation IN ((SELECT '#10;
-      s := s+'                    roomreservation '#10;
-      s := s+'                FROM '#10;
-      s := s+'                    roomsdate rd '#10;
-      s := s+'                WHERE '#10;
-      s := s+'                    DATE(rd.Adate) = pd.Date '#10;
-      s := s+'                        AND rd.resflag IN ('+ _db(rsWaitingList.AsStatusChar) +')))) AS paxWaitinglistNonOptional, '#10;
-
-      s := s+'    (SELECT '#10;
-      s := s+'            COUNT(rd.id) '#10;
-      s := s+'        FROM '#10;
-      s := s+'            roomsdate rd '#10;
-      s := s+'        WHERE '#10;
-      s := s+'            DATE(rd.Adate) = pd.Date '#10;
-      s := s+'                AND rd.resflag IN ('+ _db(rsAllotment.AsStatusChar) +')) AS roomsAllotmennt, '#10;
-
-      s := s+'    (SELECT '#10;
-      s := s+'            COUNT(pe.id) '#10;
-      s := s+'        FROM '#10;
-      s := s+'            persons pe '#10;
-      s := s+'        WHERE '#10;
-      s := s+'            RoomReservation IN ((SELECT '#10;
-      s := s+'                    roomreservation '#10;
-      s := s+'                FROM '#10;
-      s := s+'                    roomsdate rd '#10;
-      s := s+'                        INNER JOIN '#10;
-      s := s+'                    rooms ON (rooms.room = rd.room '#10;
-      s := s+'                        AND rooms.wildcard = 0 '#10;
-      s := s+'                        AND rooms.active = 1) '#10;
-      s := s+'                WHERE '#10;
-      s := s+'                    DATE(rd.Adate) = pd.Date '#10;
-      s := s+'                        AND rd.resflag IN ('+ _db(rsAllotment.AsStatusChar) +')))) AS paxAllotment, '#10;
-
-      s := s+'    (SELECT '#10;
-      s := s+'            COUNT(xx.id) '#10;
-      s := s+'        FROM '#10;
-      s := s+'            (SELECT '#10;
-      s := s+'                rr.id, rr.arrival, rr.departure '#10;
-      s := s+'            FROM '#10;
-      s := s+'                roomreservations rr '#10;
-      s := s+'            LEFT OUTER JOIN rooms ON (rooms.room = rr.room '#10;
-      s := s+'                AND rooms.wildcard = 0) '#10;
-      s := s+'            WHERE '#10;
-      s := s+'                rr.status IN '+ cAllReservations.AsSQLString;
-      s := s+'                    AND ((SUBSTRING(rr.room, 1, 1) = ''<'') '#10;
-      s := s+'                    OR (rooms.active = 1))) xx '#10;
-      s := s+'        WHERE '#10;
-      s := s+'            (xx.arrival <= pd.date) '#10;
-      s := s+'                AND xx.departure >= pd.date) AS roomsTotal, '#10;
-
-      s := s+'    (SELECT '#10;
-      s := s+'            SUM(xx.numGuests) '#10;
-      s := s+'        FROM '#10;
-      s := s+'            (SELECT '#10;
-      s := s+'                rr.arrival, rr.departure, '#10;
-      s := s+'                (SELECT COUNT(pe.id) FROM persons pe WHERE pe.RoomReservation=rr.RoomReservation) AS numGuests '#10;
-      s := s+'            FROM '#10;
-      s := s+'                roomreservations rr '#10;
-      s := s+'            LEFT OUTER JOIN rooms ON (rooms.room = rr.room '#10;
-      s := s+'                AND rooms.wildcard = 0) '#10;
-      s := s+'            WHERE '#10;
-      s := s+'                rr.status IN '+ cAllReservations.AsSQLString;
-      s := s+'                    AND ((SUBSTRING(rr.room, 1, 1) = ''<'') '#10;
-      s := s+'                    OR (rooms.active = 1))) xx '#10;
-      s := s+'        WHERE '#10;
-      s := s+'            (xx.arrival <= pd.date '#10;
-      s := s+'                AND xx.departure >= pd.date)) AS paxTotal, '#10;
-
-      s := s+'    (SELECT '#10;
-      s := s+'            COUNT(rd.id) '#10;
-      s := s+'        FROM '#10;
-      s := s+'            roomsdate rd '#10;
-      s := s+'                LEFT JOIN '#10;
-      s := s+'            rooms ON (rooms.room = rd.room '#10;
-      s := s+'                AND rooms.wildcard = 0 '#10;
-      s := s+'                AND rooms.active = 1) '#10;
-      s := s+'        WHERE '#10;
-      s := s+'            DATE(rd.Adate) = pd.Date '#10;
-      s := s+'                AND rd.resflag IN ('+ _db(rsBlocked.AsStatusChar) +')) AS roomsOutOfOrder, '#10;
-
-      s := s+'    (SELECT '#10;
-      s := s+'            COUNT(pe.id) '#10;
-      s := s+'        FROM '#10;
-      s := s+'            persons pe '#10;
-      s := s+'        WHERE '#10;
-      s := s+'            RoomReservation IN ((SELECT '#10;
-      s := s+'                    roomreservation '#10;
-      s := s+'                FROM '#10;
-      s := s+'                    roomsdate rd '#10;
-      s := s+'                        LEFT JOIN '#10;
-      s := s+'                    rooms ON (rooms.room = rd.room '#10;
-      s := s+'                        AND rooms.wildcard = 0 '#10;
-      s := s+'                        AND rooms.active = 1) '#10;
-      s := s+'                WHERE '#10;
-      s := s+'                    DATE(rd.Adate) = pd.Date '#10;
-      s := s+'                        AND rd.resflag IN ('+ _db(rsBlocked.AsStatusChar) +')))) AS paxOutOfOrder '#10;
-      s := s+'FROM '#10;
-      s := s+'    predefineddates pd '#10;
-      s := s+'WHERE '#10;
-      s := s+'    ((pd.date >= '+_db(zDateFrom,true)+' AND pd.date<='+_db(zDateTo,true)+')) '#10;
-
-  
-  
 {$ENDREGION}
 
     CopyToClipboard(s);
