@@ -46,7 +46,7 @@ uses
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinValentine,
   dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, cxButtons, sComboBox,
   sSpeedButton, AdvUtil
-  , uInvoiceEntities
+  , uInvoiceEntities, uCurrencyHandler
     ;
 
 type
@@ -169,7 +169,6 @@ type
     GuestName1: TMenuItem;
     Refrence1: TMenuItem;
     btnGetCurrency: TsButton;
-    btnGetRate: TsButton;
     clabInvoice: TsLabel;
     edtRoomGuest: TsEdit;
     clabRoomGuest: TsLabel;
@@ -374,7 +373,6 @@ type
     procedure actItemToGroupInvoiceExecute(Sender: TObject);
     procedure timCloseInvoiceTimer(Sender: TObject);
     procedure btnRemoveLodgingTax2Click(Sender: TObject);
-    procedure edtRateDblClick(Sender: TObject);
     procedure btnClearAddressesClick(Sender: TObject);
     procedure FormResize(Sender: TObject);
     procedure agrLinesGetCellColor(Sender: TObject; ARow, ACol: integer;
@@ -459,10 +457,6 @@ type
     zbRoomRentinTemp: boolean;
     FInvoiceLinesList: TList<TInvoiceLine>;
 
-    // Global currency and Rate
-    zCurrentCurrency: string;
-    zCurrencyRate: Double;
-    zNativeCurrency: string;
 
     zErr: boolean;
 
@@ -488,6 +482,18 @@ type
     FTotalRoomDiscount: Double;
     FReservation: integer;
     FRoomReservation: integer;
+
+    FNativeCurrencyHandler: TCurrencyHandler;
+    FCurrentCurrencyHandler: TCurrencyHandler;
+
+    function zCurrencyRate: Double;
+    function GetCurrentCurrency: string;
+    procedure SetCurrentCurrency(const Value: string);
+    function GetNativeCurrency: string;
+    procedure SetNativeCurrency(const Value: string);
+    // Global currency and Rate
+    property zCurrentCurrency: string read GetCurrentCurrency write SetCurrentCurrency;
+    property zNativeCurrency: string read GetNativeCurrency write SetNativeCurrency;
 
     procedure LoadInvoice;
     procedure loadInvoiceToMemtable(var m: TKbmMemTable);
@@ -557,7 +563,6 @@ type
     function SaveInvoice(iInvoiceNumber: integer): boolean;
 
     procedure CheckCurrencyChange(oldCurrency: string);
-    procedure CheckRateChange;
 
     procedure CheckRoomRentItem(iRow: integer);
 
@@ -665,6 +670,7 @@ type
 
     OriginalInvoiceStatus: Double;
     constructor Create(aOwner: TComponent); override;
+    destructor Destroy; override;
     property Lines[idx: integer]: TInvoiceLine read GetInvoiceLine;
     procedure UpdateCaptions;
     procedure WndProc(var message: TMessage); override;
@@ -823,6 +829,13 @@ begin
   RemoveAllCheckboxes;
   agrLines.RemoveRows(iRow, 1);
   ForceRowChange;
+end;
+
+destructor TfrmInvoice.Destroy;
+begin
+  FNativeCurrencyHandler.Free;
+  FCurrentCurrencyHandler.Free;
+  inherited;
 end;
 
 // HJ
@@ -1148,7 +1161,7 @@ var
   nativeTotal: Double;
 
   nativeTaxAmount: Double;
-
+  ttNativeItemAmount: double;
   rentVat: Double;
   ItemKind: TItemKind;
 
@@ -1171,6 +1184,7 @@ begin
 
     rentVat := 0.00;
     nativeTaxAmount := 0.00;
+    nativeItemAmount = 0.0;
     taxAmount := 0.00;
 
     // --
@@ -1195,24 +1209,21 @@ begin
                 else if (editCol = col_ItemPrice) AND (editRow = i) then
                   itemAmount := Value * _StrToFloat(agrLines.Cells[col_ItemCount, i])
                 else
-                  itemAmount := _StrToFloat(agrLines.Cells[col_TotalPrice, i]);
+                  itemAmount := _StrToFloat(agrLines.Cells[col_TotalPrice, i]); // in currentcurrency
               except
                 itemAmount := 0;
               end;
 
-              ItemTypeInfo := d.Item_Get_ItemTypeInfo(ItemId,
-                agrLines.Cells[col_Source, i]);
-              lInvRoom := TInvoiceRoomEntity.create(ItemId, 1, 0, _StrToFloat(agrLines.Cells[col_ItemCount, i]),
-                taxAmount, 0, 0, false);
+              ItemTypeInfo := d.Item_Get_ItemTypeInfo(ItemId, agrLines.Cells[col_Source, i]);
+              lInvRoom := TInvoiceRoomEntity.create(ItemId, 1, 0, _StrToFloat(agrLines.Cells[col_ItemCount, i]), taxAmount, 0, 0, false);
               try
-                dVat := GetVATForItem(ItemId, itemAmount, _StrToFloat(agrLines.Cells[col_ItemCount, i]),
-                  lInvRoom, tempInvoiceItemList, ItemTypeInfo, edtCustomer.Text);
+                dVat := GetVATForItem(ItemId, itemAmount, _StrToFloat(agrLines.Cells[col_ItemCount, i]), lInvRoom, tempInvoiceItemList, ItemTypeInfo, edtCustomer.Text);
               finally
                 lInvRoom.free;
               end;
-              agrLines.Cells[col_Vat, i] :=
-                trim(_floattostr(dVat, vWidth, 3));
+              agrLines.Cells[col_Vat, i] := trim(_floattostr(dVat, vWidth, 3));
               ttItemAmount := ttItemAmount + itemAmount;
+              ttNativeItemAmount = ttNativeItemAmount + ite // I was here
               ttItemVat := ttItemVat + dVat;
             end
             else if ((ItemKind = ikStayTax)) then
@@ -1252,7 +1263,8 @@ begin
     end;
 
     nativeRent := (ttRentAmount * zCurrencyRate);
-    nativeTotal := nativeRent + ttItemAmount + nativeTaxAmount;
+    ttNativeItemAmount := ttItemAmount * zCurrencyRate;
+    nativeTotal := nativeRent + ttNativeItemAmount + nativeTaxAmount;
 
     if ABS(nativeRent) > 0.00 then
     begin
@@ -1267,23 +1279,21 @@ begin
       rentVat := dVat;
     end;
 
-    ttVAT := roundDecimals(ttItemVat + rentVat + ttTaxVat,
-      ctrlGetInteger('VATDecimals'));
+    ttVAT := roundDecimals(ttItemVat + rentVat + ttTaxVat, ctrlGetInteger('VATDecimals'));
 
-    edtTotal.Text := trim(_floattostr((nativeTotal) - ttVAT, vWidth, vDec));
-    edtVat.Text := trim(_floattostr(ttVAT, vWidth, vDec));
+    edtTotal.Text := FNativeCurrencyHandler.FormattedValue(nativeTotal - ttVAT));
+    edtVat.Text := FNativeCurrencyHandler.FormattedValue(ttVAT);
 
-    edtInvoiceTotal.Text := trim(_floattostr(nativeTotal, vWidth, vDec));
+    edtInvoiceTotal.Text := FNativeCurrencyHandler.FormattedValue(nativeTotal));
 
     TotalDownPayments := getDownPayments;
     TotalBalance := nativeTotal - TotalDownPayments;
 
-    edtDownPayments.Text := trim(_floattostr(TotalDownPayments, vWidth, vDec));
-    edtBalance.Text := trim(_floattostr(TotalBalance, vWidth, vDec));
+    edtDownPayments.Text := FNativeCurrencyHandler.FormattedValue(TotalDownPayments);
+    edtBalance.Text := FNativeCurrencyHandler.FormattedValue(TotalBalance);
 
     if (edtCurrency.Text <> '') and (edtCurrency.Text <> zNativeCurrency) then
-      edtForeignCurrency.Text :=
-        _floattostr((nativeTotal) / GetRate(edtCurrency.Text), vWidth, vDec);
+      edtForeignCurrency.Text := FCurrentCurrencyHandler.FormattedValue( nativeTotal / FCurrentCurrencyHandler.Rate);
 
   finally
     Screen.Cursor := crDefault;
@@ -1351,6 +1361,20 @@ begin
   agrLines.InsertRows(iAddAt, 1);
   EmptyRow(agrLines, iAddAt);
   DisplayLine(iAddAt, idx);
+end;
+
+procedure TfrmInvoice.SetCurrentCurrency(const Value: string);
+begin
+  if (FCurrentCurrencyHandler = nil) or (FCurrentCurrencyHandler.CurrencyCode <> value) then
+  begin
+    FCurrentCurrencyHandler.free;
+    FCurrentCurrencyHandler := TCurrencyHandler.Create(Value);
+
+    edtCurrency.Text := FCurrentCurrencyHandler.CurrencyCode;
+    edtRate.Text :=  FloatToStr(FCurrentCurrencyHandler.Rate);
+
+    edtForeignCurrency.Visible :=  FCurrentCurrencyHandler.CurrencyCode <> FNativeCurrencyHandler.CurrencyCode;
+  end;
 end;
 
 procedure TfrmInvoice.SetCurrentVisible;
@@ -2110,6 +2134,15 @@ begin
   end;
 end;
 
+procedure TfrmInvoice.SetNativeCurrency(const Value: string);
+begin
+  if (FNativeCurrencyHandler = nil) or (FNativeCurrencyHandler.CurrencyCode <> value) then
+  begin
+    FNativeCurrencyHandler.free;
+    FNativeCurrencyHandler := TCurrencyHandler.Create(Value);
+  end;
+end;
+
 procedure TfrmInvoice.shpInvoiceIndex0DragDrop(Sender, Source: TObject; X, Y: integer);
 begin
   pnlInvoiceIndex0DragDrop(TShape(Sender), Source, X, Y);
@@ -2370,7 +2403,6 @@ begin
       CreateCashInvoice(g.qRackCustomer);
       edtCurrency.Text := zNativeCurrency;
       zCurrentCurrency := edtCurrency.Text;
-      zCurrencyRate := GetRate(zCurrentCurrency);
       edtRate.Text := floattostr(zCurrencyRate);
       InitInvoiceGrid;
       exit;
@@ -2542,7 +2574,6 @@ begin
 
       edtCurrency.Text := trim(zrSet.FieldByName('ihCurrency').asString);
       zCurrentCurrency := edtCurrency.Text;
-      zCurrencyRate := GetRate(zCurrentCurrency);
       edtRate.Text := floattostr(zCurrencyRate);
 
     end
@@ -3198,9 +3229,6 @@ begin
 
   tempInvoiceItemList.Clear;
 
-  zCurrentCurrency := edtCurrency.Text;
-  zCurrencyRate := GetRate(zCurrentCurrency);
-
   for i := 1 to agrLines.RowCount - 1 do
   begin
     Item := _trimlower(agrLines.Cells[col_Item, i]);
@@ -3253,9 +3281,6 @@ var
   litemKind: TItemKind;
 
 begin
-
-  zCurrentCurrency := edtCurrency.Text;
-  zCurrencyRate := GetRate(zCurrentCurrency);
 
   itemVAT := 0.00;
 
@@ -3566,6 +3591,8 @@ begin
   FRoomInfoList := TRoomInfoList.create(True);
   tempInvoiceItemList := TInvoiceItemEntityList.create(True);
 
+  FNativeCurrencyHandler := TCurrencyHandler.Create(ctrlGetString('NativeCurrency'));
+  FCurrentCurrencyHandler := TCurrencyHandler.Create(ctrlGetString('NativeCurrency'));
   inherited;
 
 end;
@@ -3601,8 +3628,6 @@ begin
   zbDoingReference := false;
 
   vDec := 2;
-
-  zCurrencyRate := 1.00;
 
 end;
 
@@ -4866,6 +4891,7 @@ var
   VATCode, ItemType, Item: string;
   i, iStartRow: integer;
   bAdded: boolean;
+  lPrice: double;
 begin
   iStartRow := -1;
   Currency := '';
@@ -4897,10 +4923,13 @@ begin
               agrLines.Cells[col_Description, agrLines.row] := trim(theData[i].recHolder.Description);
               agrLines.Objects[col_Item, agrLines.row] := nil;
               agrLines.Cells[col_ItemCount, agrLines.row] := _floattostr(1, vWidth, vDec);
-              agrLines.Cells[col_ItemPrice, agrLines.row] := _floattostr(theData[i].recHolder.Price, vWidth, vDec);
+              lPrice := theData[i].recHolder.Price / zCurrencyRate;
+              agrLines.Cells[col_ItemPrice, agrLines.row] := _floattostr(lPrice, vWidth, vDec);
               agrLines.Cells[col_autogen, agrLines.row] := _GetCurrentTick;
               agrLines.Objects[col_Description, agrLines.row] := TObject(trunc(now)); // -- PurchaseDate !
               agrLines.Cells[col_date, agrLines.row] := datetostr(trunc(now));
+
+              FormatCurrentLine(agrLines.row);
 
               if NOT CheckIfWithdrawlAllowed_X(false, floattostr(theData[i].recHolder.Price)) then
               begin
@@ -4912,7 +4941,6 @@ begin
 
               chkChanged;
               AddAndInitNewRow;
-              postMessage(handle, WM_FORMAT_LINE, 0, agrLines.row);
               agrLines.Col := agrLines.Col + 1;
               bAdded := True;
               agrLines.row := agrLines.row + 1;
@@ -5024,6 +5052,11 @@ begin
     DisplayTotals;
   end;
   inherited WndProc(message);
+end;
+
+function TfrmInvoice.zCurrencyRate: Double;
+begin
+  Result := FCurrentCurrencyHandler.Rate;
 end;
 
 procedure TfrmInvoice.agrLinesCellValidate(Sender: TObject; ACol, ARow: integer;
@@ -6179,28 +6212,14 @@ end;
 
 procedure TfrmInvoice.edtCurrencyDblClick(Sender: TObject);
 var
-  s: string;
   theData: recCurrencyHolder;
   oldCurrency: string;
 begin
-  s := '';
   oldCurrency := trim(edtCurrency.Text);
   theData.Currency := oldCurrency;
-  Currencies(actLookup, theData);
-  if theData.Currency <> '' then
+  if Currencies(actLookup, theData) and (theData.Currency <> oldCurrency) then
   begin
-    s := theData.Currency;
-  end;
-
-  if (s <> '') and (s <> oldCurrency) then
-  begin
-    edtCurrency.Text := s;
-    if edtCurrency.Text = zNativeCurrency then
-    begin
-      edtForeignCurrency.Text := '';
-      edtForeignCurrency.Visible := false;
-    end;
-    zCurrentCurrency := s;
+    zCurrentCurrency := theData.Currency;
     CheckCurrencyChange(oldCurrency);
   end;
   chkChanged;
@@ -6262,12 +6281,8 @@ begin
   if zCurrentCurrency <> oldCurrency then
   begin
     oldRate := GetRate(oldCurrency);
-    NewRate := GetRate(zCurrentCurrency);
+    NewRate := FCurrentCurrencyHandler.Rate;
 
-    if NewRate = 0 then
-      NewRate := 1;
-    zCurrencyRate := NewRate;
-    edtRate.Text := floattostr(zCurrencyRate);
     convert := oldRate / NewRate;
 
     // Then update database;
@@ -6367,28 +6382,6 @@ begin
     UpdateCaptions;
   end;
 
-end;
-
-procedure TfrmInvoice.CheckRateChange;
-var
-  NewRate: Double;
-  sRate: string;
-
-begin
-  sRate := edtRate.Text;
-
-  try
-    NewRate := _StrToFloat(edtRate.Text);
-  except
-    NewRate := 1;
-    edtRate.Color := clRed;
-  end;
-
-  if NewRate = 0 then
-    NewRate := 1;
-
-  zCurrencyRate := NewRate;
-  calcAndAddAutoItems(FReservation);
 end;
 
 procedure TfrmInvoice.SetCustEdits;
@@ -6534,6 +6527,11 @@ end;
 procedure TfrmInvoice.mnuMoveRoomRentFromGroupToNormalRoomInvoiceClick(Sender: TObject);
 begin
   MoveRoomToRoomInvoice;
+end;
+
+function TfrmInvoice.GetCurrentCurrency: string;
+begin
+  Result := FCurrentCurrencyHandler.CurrencyCode;
 end;
 
 function TfrmInvoice.GetCustomerHeader(Res: integer): boolean;
@@ -6883,6 +6881,11 @@ begin
   finally
     FreeAndNil(rSet);
   end;
+end;
+
+function TfrmInvoice.GetNativeCurrency: string;
+begin
+  Result := FNativeCurrencyHandler.CurrencyCode;
 end;
 
 procedure TfrmInvoice.rgrInvoiceTypeClick(Sender: TObject);
@@ -8555,23 +8558,6 @@ begin
   finally
     FreeAndNil(rSet)
   end;
-end;
-
-procedure TfrmInvoice.edtRateDblClick(Sender: TObject);
-var
-  Rate: Double;
-  Currency: string;
-begin
-  Rate := zCurrencyRate;
-  Currency := edtCurrency.Text;
-
-  if g.OpenChangeRate(Rate, Currency) then
-  begin
-    zCurrencyRate := Rate;
-    edtRate.Text := floattostr(Rate);
-    CheckRateChange
-  end;
-  chkChanged;
 end;
 
 function TfrmInvoice.createAllStr: string;
