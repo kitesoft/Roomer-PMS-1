@@ -608,8 +608,7 @@ type
       ErrorList: String);
     function FindLastRoomRentLine: integer;
     procedure UpdateItemInvoiceLinesForTaxCalculations;
-    function CheckIfWithdrawlAllowed_X(Editing: boolean; Value: String)
-      : boolean;
+    function CheckIfWithdrawlAllowed_X(Editing: boolean; Amount: double): boolean;
     procedure FormatCurrentLine(ARow: integer);
     function CreateProformaID: integer;
     procedure MoveRoomToGroupInvoice;
@@ -4318,8 +4317,8 @@ begin
   s := s + ', ' + _db(zConfirmDate, True);
   s := s + ', ' + _db(zPayDate, True);
   s := s + ', ' + _db(edtInvRefrence.Text);
-  s := s + ', ' + _db(edtCurrency.Text);
-  s := s + ', ' + _db(_StrToFloat(edtRate.Text));
+  s := s + ', ' + _db(FCurrentCurrencyHandler.CurrencyCode);
+  s := s + ', ' + _db(FCurrentCurrencyHandler.Rate);
   s := s + ', ' + _db(showPackage);
   s := s + ', ' + _db(zLocation);
   s := s + ')' + #10;
@@ -4628,7 +4627,7 @@ begin
           s := s + ', ' + _db(iCreditinvoiceMultiplier * fItemTotalWOVat);
           s := s + ', ' + _db(iCreditinvoiceMultiplier * fItemTotalVAT);
           s := s + ', ' + _db(zCurrencyRate);
-          s := s + ', ' + _db(edtCurrency.Text);
+          s := s + ', ' + _db(FCurrentCurrencyHandler.CurrencyCode);
           s := s + ', ' + inttostr(iPersons);
           s := s + ', ' + inttostr(iNights);
 
@@ -4681,8 +4680,8 @@ begin
             ' , Total= ' + _CommaToDot(floattostr(iCreditinvoiceMultiplier * _StrToFloat(agrLines.Cells[col_TotalPrice, i]))) +
             ' , TotalWOVat= ' + _CommaToDot(floattostr(iCreditinvoiceMultiplier * fItemTotalWOVat)) +
             ' , VAT= ' + _CommaToDot(floattostr(iCreditinvoiceMultiplier * fItemTotalVAT)) +
-            ' , CurrencyRate= ' + _CommaToDot(floattostr(zCurrencyRate)) +
-            ' , Currency= ' + _db(edtCurrency.Text) +
+            ' , CurrencyRate= ' + _db(FCurrentCurrencyHandler.Rate) +
+            ' , Currency= ' + _db(FCurrentCurrencyHandler.CurrencyCode) +
             ' , Persons= ' + inttostr(iPersons) +
             ' , Nights= ' + inttostr(iNights) +
             ' , ilAccountKey= ' + _db(sAccountKey) +
@@ -4928,7 +4927,7 @@ begin
 
               FormatCurrentLine(agrLines.row);
 
-              if NOT CheckIfWithdrawlAllowed_X(false, floattostr(theData[i].recHolder.Price)) then
+              if NOT CheckIfWithdrawlAllowed_X(false, lPrice) then
               begin
                 agrLines.RemoveRows(agrLines.row, 1);
                 AddAndInitNewRow;
@@ -4990,17 +4989,14 @@ begin
 
 end;
 
-function TfrmInvoice.CheckIfWithdrawlAllowed_X(Editing: boolean;
-  Value: String): boolean;
+function TfrmInvoice.CheckIfWithdrawlAllowed_X(Editing: boolean; Amount: double): boolean;
 var
   currValue: Double;
-  Amount: Double;
 begin
   result := True;
   if FIsCredit then
     exit;
 
-  Amount := GridFloatValueFromString(Value);
 
   if Editing then
   begin
@@ -5066,7 +5062,7 @@ begin
     case ACol of
       - 1:
         ; // Do nothing...
-      col_Item:                   // THIS COULD IS PROBABLY NEVER CALLED AS col_item cannot be edited!
+      col_Item:                   // THIS CODE IS PROBABLY NEVER CALLED AS col_item cannot be edited!
         begin
           chkChanged;
 
@@ -5087,7 +5083,7 @@ begin
             dItemPrice := Item_GetPrice(agrLines.Cells[col_Item, ARow]);
             agrLines.Cells[col_ItemPrice, ARow] :=  _floattostr(dItemPrice, vWidth, vDec); // native currency
 
-            if NOT CheckIfWithdrawlAllowed_X(false, floattostr(dItemPrice)) then
+            if NOT CheckIfWithdrawlAllowed_X(false, dItemPrice) then
             begin
               Valid := false;
               exit;
@@ -5132,7 +5128,7 @@ begin
           begin
             chkChanged;
 
-            if NOT CheckIfWithdrawlAllowed_X(True, Value) then
+            if NOT CheckIfWithdrawlAllowed_X(True, _StrToFloat(Value)) then
             begin
               Valid := false;
               exit;
@@ -5155,7 +5151,7 @@ begin
           begin
             chkChanged;
 
-            if NOT CheckIfWithdrawlAllowed_X(True, Value) then
+            if NOT CheckIfWithdrawlAllowed_X(True, _StrToFloat(Value)) then
             begin
               Valid := false;
               exit;
@@ -5692,8 +5688,8 @@ begin
             s := s + ', ' + sLineTotal;
             s := s + ', ' + sLineTotalWOVat;
             s := s + ', ' + sLineVAT;
-            s := s + ', ' + _CommaToDot(floattostr(zCurrencyRate));
-            s := s + ', ' + _db(edtCurrency.Text);
+            s := s + ', ' + _db(FCurrentCurrencyHandler.Rate);
+            s := s + ', ' + _db(FCurrentCurrencyHandler.CurrencyCode);
             s := s + ', ' + inttostr(iPersons);
             s := s + ', ' + inttostr(iNights);
             s := s + ', ' + _CommaToDot(floattostr(0.00));
@@ -5727,8 +5723,8 @@ begin
               ' , Total= ' + sLineTotal +
               ' , TotalWOVat= ' + sLineTotalWOVat +
               ' , VAT= ' + sLineVAT +
-              ' , CurrencyRate= ' + _CommaToDot(floattostr(zCurrencyRate)) +
-              ' , Currency= ' + _db(edtCurrency.Text) +
+              ' , CurrencyRate= ' + _db(FCurrentCurrencyHandler.Rate) +
+              ' , Currency= ' + _db(FCurrentCurrencyHandler.CurrencyCode) +
               ' , Persons= ' + inttostr(iPersons) +
               ' , Nights= ' + inttostr(iNights) +
               ' , ilAccountKey= ' + _db(sAccountKey) +
@@ -5866,8 +5862,8 @@ begin
 
         s := s + ', ' + _CommaToDot(floattostr(dTotalStayTax));
         s := s + ', ' + inttostr(iTotalStayTaxNights);
-        s := s + ', ' + _db(edtCurrency.Text);
-        s := s + ', ' + _db(_StrToFloat(edtRate.Text));
+        s := s + ', ' + _db(FCurrentCurrencyHandler.CurrencyCode);
+        s := s + ', ' + _db(FCurrentCurrencyHandler.Rate);
         s := s + ', ' + _db(chkShowPackage.checked);
         s := s + ', ' + _db(zLocation);
         s := s + ', ' + _db(d.roomerMainDataSet.username);
@@ -5945,8 +5941,8 @@ begin
             _StrToFloat(_strTokenAt(stlPaySelections[i], '|', 1)))));
           s := s + ', ' + _db(PaymentDescription + ' [' +
             _strTokenAt(stlPaySelections[i], '|', 0) + ']');
-          s := s + ', ' + _CommaToDot(floattostr(zCurrencyRate));
-          s := s + ', ' + _db(edtCurrency.Text);
+          s := s + ', ' + _db(FCurrentCurrencyHandler.Rate);
+          s := s + ', ' + _db(FCurrentCurrencyHandler.CurrencyCode);
           if PaymentType = ptInvoice then
             s := s + ', 0'
           else if PaymentType = ptDownPayment then
@@ -6343,8 +6339,8 @@ begin
     for i := 1 to agrLines.RowCount - 1 do
     begin
       Item := agrLines.Cells[col_Item, i];
-      if Item_isRoomRent(Item) then
-      begin
+//      if Item_isRoomRent(Item) then
+//      begin
         if NOT isSystemLine(i) then
         begin
           sUnitPrice := agrLines.Cells[col_ItemPrice, i];
@@ -6363,7 +6359,7 @@ begin
           agrLines.Cells[col_TotalPrice, i] :=
             _floattostr(TotalPrice, vWidth, vDec);
         end;
-      end;
+//      end;
     end;
 
     SaveAnd(false);
@@ -7372,8 +7368,8 @@ var
   Total: Double;
   TotalWOVat: Double;
   Vat: Double;
-  CurrencyRate: Double;
-  Currency: string; // (5)
+//  CurrencyRate: Double;
+//  Currency: string; // (5)
   Persons: integer;
   Nights: integer;
   importRefrence: string;
@@ -7449,9 +7445,9 @@ begin
   end;
   TotalWOVat := Total - Vat;
 
-  Currency := edtCurrency.Text;
-  CurrencyRate := GetRate(Currency);
-  edtRate.Text := floattostr(CurrencyRate);
+//  Currency := edtCurrency.Text;
+//  CurrencyRate := GetRate(Currency);
+//  edtRate.Text := floattostr(CurrencyRate);
 
   Persons := 0;
   Nights := 0;
@@ -7478,8 +7474,8 @@ begin
   d.kbmInvoicelines.FieldByName('Total').asfloat := Total;
   d.kbmInvoicelines.FieldByName('TotalWOVat').asfloat := TotalWOVat;
   d.kbmInvoicelines.FieldByName('VAT').asfloat := Vat;
-  d.kbmInvoicelines.FieldByName('CurrencyRate').asfloat := CurrencyRate;
-  d.kbmInvoicelines.FieldByName('Currency').asString := Currency;
+  d.kbmInvoicelines.FieldByName('CurrencyRate').asfloat := FCurrentCurrencyHandler.Rate;
+  d.kbmInvoicelines.FieldByName('Currency').asString := FCurrentCurrencyHandler.CurrencyCode;
   d.kbmInvoicelines.FieldByName('Persons').asinteger := Persons;
   d.kbmInvoicelines.FieldByName('Nights').asinteger := Nights;
   d.kbmInvoicelines.FieldByName('BreakfastPrice').asfloat := 0.00;
@@ -8316,8 +8312,8 @@ begin
 
       s := s + ', ' + _CommaToDot(floattostr(iMultiplier * fItemTotalWOVat));
       s := s + ', ' + _CommaToDot(floattostr(iMultiplier * fItemTotalVAT));
-      s := s + ', ' + _CommaToDot(floattostr(zCurrencyRate));
-      s := s + ', ' + _db(edtCurrency.Text);
+      s := s + ', ' + _db(FCurrentCurrencyHandler.Rate);
+      s := s + ', ' + _db(FCurrentCurrencyHandler.CurrencyCode);
       s := s + ', ' + inttostr(iPersons);
       s := s + ', ' + inttostr(iNights);
       s := s + ', ' + _CommaToDot(floattostr(0.00));
