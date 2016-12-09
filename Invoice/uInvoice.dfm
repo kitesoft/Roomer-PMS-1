@@ -615,7 +615,7 @@ object frmInvoice: TfrmInvoice
         TabOrder = 15
         Text = '0'
         Visible = False
-        OnChange = edtTotalChange
+        OnChange = edtTotalWoVATChange
         SkinData.SkinSection = 'EDIT'
         BoundLabel.Font.Charset = DEFAULT_CHARSET
         BoundLabel.Font.Color = clWindowText
@@ -769,7 +769,7 @@ object frmInvoice: TfrmInvoice
             Font.Name = 'Tahoma'
             Font.Style = [fsBold]
           end
-          object edtTotal: TsEdit
+          object edtTotalWoVAT: TsEdit
             Left = 139
             Top = 6
             Width = 105
@@ -786,7 +786,7 @@ object frmInvoice: TfrmInvoice
             ParentFont = False
             ReadOnly = True
             TabOrder = 0
-            OnChange = edtTotalChange
+            OnChange = edtTotalWoVATChange
             SkinData.SkinSection = 'EDIT'
             BoundLabel.Font.Charset = DEFAULT_CHARSET
             BoundLabel.Font.Color = clWindowText
@@ -811,7 +811,7 @@ object frmInvoice: TfrmInvoice
             ParentFont = False
             ReadOnly = True
             TabOrder = 1
-            OnChange = edtTotalChange
+            OnChange = edtTotalWoVATChange
             SkinData.SkinSection = 'EDIT'
             BoundLabel.Font.Charset = DEFAULT_CHARSET
             BoundLabel.Font.Color = clWindowText
@@ -836,7 +836,7 @@ object frmInvoice: TfrmInvoice
             ParentFont = False
             ReadOnly = True
             TabOrder = 2
-            OnChange = edtTotalChange
+            OnChange = edtTotalWoVATChange
             SkinData.SkinSection = 'EDIT'
             BoundLabel.Font.Charset = DEFAULT_CHARSET
             BoundLabel.Font.Color = clWindowText
@@ -861,7 +861,7 @@ object frmInvoice: TfrmInvoice
             ParentFont = False
             ReadOnly = True
             TabOrder = 3
-            OnChange = edtTotalChange
+            OnChange = edtTotalWoVATChange
             SkinData.SkinSection = 'EDIT'
             BoundLabel.Font.Charset = DEFAULT_CHARSET
             BoundLabel.Font.Color = clWindowText
@@ -886,7 +886,7 @@ object frmInvoice: TfrmInvoice
             ParentFont = False
             ReadOnly = True
             TabOrder = 4
-            OnChange = edtTotalChange
+            OnChange = edtTotalWoVATChange
             SkinData.SkinSection = 'EDIT'
             BoundLabel.Font.Charset = DEFAULT_CHARSET
             BoundLabel.Font.Color = clWindowText
