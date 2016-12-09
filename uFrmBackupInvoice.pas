@@ -237,7 +237,7 @@ begin
   totalsRow := sgInvoice.RowCount;
   IncrementGridRows;
   sgInvoice.Cells[3, totalsRow] := frmInvoice.clabTotalwoVAT.Caption;
-  sgInvoice.Cells[4, totalsRow] := frmInvoice.edtTotal.Text;
+  sgInvoice.Cells[4, totalsRow] := frmInvoice.edtTotalWoVAT.Text;
   IncrementGridRows;
 
   sgInvoice.Cells[3, totalsRow + 1] := frmInvoice.clavVAT.Caption;
