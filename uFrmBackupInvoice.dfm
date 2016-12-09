@@ -139,7 +139,7 @@ object FrmBackupInvoice: TFrmBackupInvoice
     SearchFooter.HintHighlight = 'Highlight occurrences'
     SearchFooter.MatchCaseCaption = 'Match case'
     SortSettings.DefaultFormat = ssAutomatic
-    Version = '8.1.2.0'
+    Version = '7.9.1.0'
   end
   object AdvGridPrintSettings: TAdvGridPrintSettingsDialog
     Caption = 'Print temporary Invoice'
