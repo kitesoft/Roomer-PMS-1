@@ -94,8 +94,8 @@ procedure ResizeBitmap(Bitmap: TBitmap; Width, Height: Integer; Background: TCol
 //function SystemThousandsSeparator : string;
 //function GetValidDecimalChar : Char;
 //function LocalizedFloatValue(value : String; save : boolean = true; def : Double = 0.00): Double;
-{$IFNDEF RBE_BUILD}function AuthenticateAgainstWindows(login, password, domain: string;
-  var token: THandle; var msg: string): Boolean;{$ENDIF}
+{$IFNDEF ROOMER_UTIL}{$IFNDEF RBE_BUILD}function AuthenticateAgainstWindows(login, password, domain: string;
+  var token: THandle; var msg: string): Boolean;{$ENDIF}{$ENDIF}
 function ParameterByName(name: String): String;
 
 procedure SaveToTextFile(filename, data : String);
@@ -165,7 +165,7 @@ function StringIndexInSet(Selector : string; CaseList: array of string): Integer
 
 implementation
 
-uses System.SysUtils, clipbrd{$IFNDEF RBE_BUILD}, PrjConst{$ENDIF}, uFloatUtils;
+uses System.SysUtils, clipbrd{$IFNDEF ROOMER_UTIL}{$IFNDEF RBE_BUILD}, PrjConst{$ENDIF}{$ENDIF}, uFloatUtils;
 
 function linuxLFCRToWindows(source : String) : String;
 begin
@@ -1079,6 +1079,7 @@ begin
   Result := rgb_;
 end;
 
+{$IFNDEF ROOMER_UTIL}
 {$IFNDEF RBE_BUILD}
 function AuthenticateAgainstWindows(login, password, domain: string;
   var token: THandle; var msg: string): Boolean;
@@ -1114,6 +1115,7 @@ begin
     msg := SysErrorMessage(error);
   end;
 end;
+{$ENDIF}
 {$ENDIF}
 function GetCurrentUserName: string;
 const cnMaxUserNameLen = 254;
@@ -1158,8 +1160,11 @@ begin
     on Exception do
     begin
       if RetryCount = MaxRetries then
-      //  raise Exception.Create('Cannot set clipboard')
+        {$IFNDEF ROOMER_UTIL}
 		    raise Exception.Create({$IFNDEF RBE_BUILD}GetTranslatedText('shTx_Utils_CannotClipboard'){$ELSE}'Cannot Copy To Clipboard'{$ENDIF})
+        {$ELSE}
+          raise Exception.Create('Cannot set clipboard')
+        {$ENDIF}
       else
         Sleep(iDelayMs)
     end;
@@ -1179,8 +1184,11 @@ begin
     on Exception do
     begin
       if RetryCount = MaxRetries then
-      //  raise Exception.Create('Cannot set clipboard')
+        {$IFNDEF ROOMER_UTIL}
 		    raise Exception.Create({$IFNDEF RBE_BUILD}GetTranslatedText('shTx_Utils_CannotClipboard'){$ELSE}'Cannot Copy To Clipboard'{$ENDIF})
+        {$ELSE}
+        raise Exception.Create('Cannot set clipboard')
+        {$ENDIF}
       else
         Sleep(iDelayMs)
     end;

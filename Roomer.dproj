@@ -345,7 +345,6 @@
         <DCCReference Include="uDownPayment.pas">
             <Form>frmDownPayment</Form>
         </DCCReference>
-        <DCCReference Include="Extras\_Glob.pas"/>
         <DCCReference Include="uLodgingTaxReport2.pas">
             <Form>frmLodgingTaxReport2</Form>
         </DCCReference>
@@ -834,6 +833,7 @@
             <Form>FrmTopClassAvailabilityOrder</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="Extras\_Glob.pas"/>
         <None Include="Roomer.todo"/>
         <None Include="notes.txt"/>
         <None Include="Roomer.inc"/>

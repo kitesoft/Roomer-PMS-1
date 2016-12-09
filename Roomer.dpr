@@ -53,7 +53,6 @@ uses
   uHiddenInfo in 'uHiddenInfo.pas' {frmHiddenInfo},
   objPosSale in 'objPosSale.pas',
   uDownPayment in 'uDownPayment.pas' {frmDownPayment},
-  _Glob in 'Extras\_Glob.pas',
   uLodgingTaxReport2 in 'uLodgingTaxReport2.pas' {frmLodgingTaxReport2},
   uCancelReservation3 in 'uCancelReservation3.pas' {frmCancelReservation3},
   uCancelReservation2 in 'uCancelReservation2.pas' {frmCancelReservation2},
@@ -261,7 +260,8 @@ uses
   uRoomerConfirmationDialogs in 'uRoomerConfirmationDialogs.pas',
   uEmbDateStatistics in 'Embeddables\uEmbDateStatistics.pas' {frmEmbDateStatistics},
   uMasterRateDefaults in 'Rates\uMasterRateDefaults.pas' {frmMasterRateDefaults},
-  uTopClassAvailabilityOrder in 'uTopClassAvailabilityOrder.pas' {FrmTopClassAvailabilityOrder};
+  uTopClassAvailabilityOrder in 'uTopClassAvailabilityOrder.pas' {FrmTopClassAvailabilityOrder},
+  _Glob in 'Extras\_Glob.pas';
 
 {$R *.RES}
 
