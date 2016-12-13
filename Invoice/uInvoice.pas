@@ -62,8 +62,11 @@ type
 {$M+}
 
   /// <summary>
-  ///   Object attached to a gridline of the invoiceform, containing all Invoice related info shown in that gridline
+  ///   Object attached to a gridline of the invoiceform, containing all Invoice related info shown in that gridline <br/>
   /// </summary>
+  /// <remarks>
+  ///   Note that all amounta re in native currency!
+  /// </remarks>
   TInvoiceLine = class(TObject)
   private
     FInvoiceLineIndex: integer;
@@ -71,11 +74,11 @@ type
     FItem: string;
     FText: string;
 
-    FNumber: Double; // -96
-    FPrice: Double;
+    FQuantity: Double; // -96
+    FNativePrice: Double;
     FDate: TDate;
     FAuto: boolean;
-    FRefrence: string;
+    FReference: string;
     FSource: string;
     FIspackage: boolean;
     FNoGuests: integer;
@@ -88,22 +91,21 @@ type
     function GetTotal: Double;
   public
     constructor create(aIndex, _id: integer);
-    destructor Destroy; override;
   published
     property invoiceLine: integer read FInvoiceLineIndex write FInvoiceLineIndex;
     property Id: integer read FId write FId;
     property Item: string read FItem write FItem;
     property Text: string read FText write FText;
-    property Number: Double read FNumber write FNumber; // -96
+    property Quantity: Double read FQuantity write FQuantity; // -96
     /// <summary>
     ///   Price per item in native currency
     /// </summary>
-    property Price: Double read FPrice write FPrice;
+    property NativePrice: Double read FNativePrice write FNativePrice;
     /// <summary>
     ///   TotalPrice in native currency
     /// </summary>
     property Total: Double read GetTotal;
-    property Refrence: string read FRefrence write FRefrence;
+    property Refrence: string read FReference write FReference;
     property Source: string read FSource write FSource;
     property isPackage: boolean read FIspackage write FIspackage;
     property noGuests: integer read FNoGuests write FNoGuests;
@@ -530,7 +532,7 @@ type
     /// Create a new TInvoiceLine object and add this to zListLines collection
     /// </summary>
     function AddLine(lineId: integer; sItem, sText: string; iNumber: Double;
-      FPrice, FTotal: Double; PurchaseDate: TDate; bAuto: boolean;
+      aNativePrice, FTotal: Double; PurchaseDate: TDate; bAuto: boolean;
       Refrence, Source: string; isPackage: boolean; noGuests: integer;
       confirmDate: TDateTime; confirmAmount: Double; rrAlias: integer;
       AutoGen: string; itemIndex: integer = 0): integer;
@@ -971,20 +973,15 @@ begin
   FId := _id;
   FItem := '';
   FText := '';
-  FNumber := 0;
-  FPrice := 0.00;
-  FRefrence := '';
+  FQuantity := 0;
+  FNativePrice := 0.00;
+  FReference := '';
   FSource := '';
-end;
-
-destructor TInvoiceLine.Destroy;
-begin
-  inherited Destroy;
 end;
 
 function TInvoiceLine.GetTotal: Double;
 begin
-  Result := Price * Number;
+  Result := NativePrice * Quantity;
 end;
 
 /// /////////////////////////////////////////////////////////////////////////////
@@ -1017,7 +1014,7 @@ end;
 
 function TfrmInvoice.AddLine(lineId: integer;
   sItem, sText: string; iNumber: Double; // -96
-  FPrice, FTotal: Double; PurchaseDate: TDate; bAuto: boolean;
+  aNativePrice, FTotal: Double; PurchaseDate: TDate; bAuto: boolean;
   Refrence, Source: string; isPackage: boolean; noGuests: integer;
   confirmDate: TDateTime; confirmAmount: Double; rrAlias: integer;
   AutoGen: string; itemIndex: integer = 0): integer;
@@ -1044,11 +1041,11 @@ begin
   invoiceLine := TInvoiceLine.create(iLastIdx, lineId);
   invoiceLine.FItem := sItem;
   invoiceLine.FText := sText;
-  invoiceLine.FNumber := iNumber;
-  invoiceLine.FPrice := FPrice;
+  invoiceLine.FQuantity := iNumber;
+  invoiceLine.FNativePrice := aNativePrice;
   invoiceLine.FAuto := bAuto;
   invoiceLine.FDate := PurchaseDate;
-  invoiceLine.FRefrence := Refrence;
+  invoiceLine.FReference := Refrence;
   invoiceLine.FSource := Source;
   invoiceLine.FIspackage := isPackage;
   invoiceLine.FNoGuests := noGuests;
@@ -1090,6 +1087,7 @@ begin
     result := TInvoiceLine(agrLines.Objects[cInvoiceLineAttachColumn, ARow]);
 end;
 
+
 function TfrmInvoice.DisplayLine(iRow, idx: integer): integer;
 var
   invoiceLine: TInvoiceLine;
@@ -1103,11 +1101,13 @@ begin
 
   agrLines.Cells[col_Item, iRow]        := invoiceLine.FItem;
   agrLines.Cells[col_Description, iRow] := invoiceLine.FText;
-  agrLines.Cells[col_ItemCount, iRow]   := trim(_floattostr(invoiceLine.FNumber, vWidth, vDec));
-  agrLines.Cells[col_ItemPrice, iRow]   := trim(_floattostr(invoiceLine.FPrice, vWidth, vDec));
-  agrLines.Cells[col_TotalPrice, iRow]  := trim(_floattostr(invoiceLine.Total, vWidth, vDec));
+  agrLines.Cells[col_ItemCount, iRow]   := trim(_floattostr(invoiceLine.FQuantity, vWidth, vDec));
+  agrLines.Cells[col_ItemPrice, iRow]   := FCurrentCurrencyHandler.FormattedValue(
+                                                FNativeCurrencyHandler.ConvertTo(invoiceLine.NativePrice, FCurrentCurrencyHandler));
+  agrLines.Cells[col_TotalPrice, iRow]  := FCurrentCurrencyHandler.FormattedValue(
+                                                FNativeCurrencyHandler.ConvertTo(invoiceLine.Total, FCurrentCurrencyHandler));
   agrLines.Cells[col_System, iRow]      := '';
-  agrLines.Cells[col_Refrence, iRow]    := invoiceLine.FRefrence;
+  agrLines.Cells[col_Refrence, iRow]    := invoiceLine.FReference;
   agrLines.Cells[col_Source, iRow]      := invoiceLine.FSource;
   // **AA
   agrLines.Objects[col_Description, iRow] := TObject(trunc(invoiceLine.FDate));
@@ -4348,9 +4348,9 @@ begin
   result := false;
   invoiceLine := CellInvoiceLine(line);
   if Assigned(invoiceLine) then
-    result := (invoiceLine.Number <> _StrToFloat(agrLines.Cells[col_ItemCount, line])) OR
-      (invoiceLine.Price <> iMultiplier * _StrToFloat(agrLines.Cells[col_ItemPrice, line])) OR
-      (invoiceLine.Total <> iMultiplier * _StrToFloat(agrLines.Cells[col_TotalPrice, line])) OR
+    result := (invoiceLine.Quantity <> _StrToFloat(agrLines.Cells[col_ItemCount, line])) OR
+      (FNativeCurrencyHandler.ConvertTo(invoiceLine.NativePrice, FCurrentCurrencyHandler) <> iMultiplier * _StrToFloat(agrLines.Cells[col_ItemPrice, line])) OR
+      (FNativeCurrencyHandler.ConvertTo(invoiceLine.Total, FCurrentCurrencyHandler) <> iMultiplier * _StrToFloat(agrLines.Cells[col_TotalPrice, line])) OR
       (invoiceline.FText <> agrLines.Cells[col_Description, line]);
 end;
 

@@ -875,6 +875,7 @@ type
     Decimals: integer;
     Displayformat: string;
     CurrencySign: string;
+    CurrencyFormat: byte;
     procedure Init;
     procedure ReadFromDataset(aRSet: TDataset);
   end;
@@ -7027,6 +7028,9 @@ begin
   Displayformat := aRSet.fieldbyname('Displayformat').asString;
   CurrencySign := aRSet.fieldbyname('CurrencySign').asString;
   active := aRSet.fieldbyname('active').Asboolean;
+
+  //TODO: Add field to currencies table with correct format, see http://www.delphibasics.co.uk/RTL.asp?Name=CurrencyFormat
+  CurrencyFormat := iif(Currency = 'ISK', 3, 2);
 end;
 
 procedure recCurrencyHolder.Init;
@@ -7039,6 +7043,7 @@ begin
   Decimals := 0;
   DisplayFormat := '';
   CurrencySign := '';
+  CurrencyFormat := 2;
   active := true;
 end;
 

@@ -225,7 +225,7 @@ uses
   uRptArrivals in 'uRptArrivals.pas' {frmArrivalsReport},
   ufrmReservationExtras in 'StockItems\ufrmReservationExtras.pas',
   uRptDepartures in 'uRptDepartures.pas' {frmDeparturesReport},
-  uCurrencyHandler in 'uCurrencyHandler.pas',
+  uCurrencyHandler in 'Currencies\uCurrencyHandler.pas',
   uFloatUtils in 'RoomerVCLs\Source\uFloatUtils.pas',
   uRptStockItems in 'uRptStockItems.pas' {frmRptStockItems},
   uOpenAPICaller in 'OpenAPI\uOpenAPICaller.pas',
@@ -262,7 +262,8 @@ uses
   uEmbDateStatistics in 'Embeddables\uEmbDateStatistics.pas' {frmEmbDateStatistics},
   uMasterRateDefaults in 'Rates\uMasterRateDefaults.pas' {frmMasterRateDefaults},
   uTopClassAvailabilityOrder in 'uTopClassAvailabilityOrder.pas' {FrmTopClassAvailabilityOrder},
-  uAmount in 'uAmount.pas';
+  uAmount in 'uAmount.pas',
+  uAmountConfigurator in 'Currencies\uAmountConfigurator.pas';
 
 {$R *.RES}
 

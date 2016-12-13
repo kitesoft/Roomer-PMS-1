@@ -7,6 +7,7 @@ uses
   , SysUtils
   , cxEdit
   , cxCurrencyEdit
+  , Generics.Collections
   ;
 
 type
@@ -17,7 +18,8 @@ type
 
   /// <summary>
   ///   Object to handle conversions and display of amounts in a certain currency <br />
-  ///  The handler is constructed for a certain currency code
+  ///  The handler is constructed for a certain currency code and initializes itself with
+  ///  the currency properties from the glb.Currencies dataset
   /// </summary>
   TCurrencyHandler = class
   private
@@ -64,6 +66,19 @@ type
     ///   Returns a formatted string with the currencycode and the exchange rate, used to display active currency in i.e. a labelcaption
     /// </summary>
     function ShortDescription: string;
+  end;
+
+  TCurrencyHandlerDictionary = TObjectDictionary<string, TCurrencyHandler>;
+
+  TCurrencyHandlerFactory = class
+  private
+    class var FCache: TCurrencyHandlerDictionary;
+    class constructor CreateCLass;
+    class destructor DestroyClass;
+    class function GetOrCreateCurrencyhandler(const CurCode: string): TCurrencyHandler; static;
+  public
+    class procedure ClearCache;
+    class property CurrencyHandler[const CurCode: string]: TCurrencyHandler read GetOrCreateCurrencyhandler;
   end;
 
 
@@ -114,12 +129,14 @@ begin
 
   FFormatSettings := TFormatSettings.Create; // System defaults
   FFormatSettings.CurrencyString := FCurrencyRec.CurrencySign;
+  FFormatSettings.CurrencyFormat := FCurrencyRec.CurrencyFormat;
   FFormatSettings.CurrencyDecimals := FCurrencyRec.Decimals;
 end;
 
 function TCurrencyHandler.FormattedValue(aAmount: double): string;
 begin
-  Result := Format('%s %s', [FCurrencyRec.CurrencySign, FormatCurr(FCurrencyRec.Displayformat, RoundedValue(aAmount), FFormatSettings)]);
+//  Result := Format('%s %s', [FCurrencyRec.CurrencySign, FormatCurr(FCurrencyRec.Displayformat, RoundedValue(aAmount), FFormatSettings)]);
+    Result := FormatCurr(FCurrencyRec.Displayformat, RoundedValue(aAmount), FFormatSettings);
 end;
 
 function TCurrencyHandler.GetCurrencyCode: string;
@@ -157,16 +174,30 @@ begin
   Result := RoundDecimals(aAmount, FCurrencyRec.Decimals);
 end;
 
-{ TAmount }
+{ TCurrencyHandlerFactory }
 
-//function TAmount.ConvertTo(const aOtherCurrency: string): TAmount;
-//var
-//  lrecOtherCurrency: recCurrencyHolder;
-//begin
-//  Result.Currency := aOthterCurrency;
-//  lrecOtherCurrency.Currency := aOthterCurrency;
-//  GET_CurrencyHolderByCurrency(lrecOtherCurrency, false);
-//  Result.Value := (Self.Value * Self..Value) / lrecOtherCurrency.Value;
-//end;
+class procedure TCurrencyHandlerFactory.ClearCache;
+begin
+  FCache.Clear;
+end;
+
+class constructor TCurrencyHandlerFactory.CreateCLass;
+begin
+  FCache := TCurrencyHandlerDictionary.Create([doOwnsValues]);
+end;
+
+class destructor TCurrencyHandlerFactory.DestroyClass;
+begin
+  FCache.Free;
+end;
+
+class function TCurrencyHandlerFactory.GetOrCreateCurrencyhandler(const CurCode: string): TCurrencyHandler;
+begin
+  if not FCache.TryGetValue(CurCode, Result) then
+  begin
+    Result := TCurrencyHandler.Create(CurCode);
+    FCache.Add(CurCode, Result);
+  end;
+end;
 
 end.

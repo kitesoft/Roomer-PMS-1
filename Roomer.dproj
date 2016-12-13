@@ -769,7 +769,7 @@
         <DCCReference Include="uRptDepartures.pas">
             <Form>frmDeparturesReport</Form>
         </DCCReference>
-        <DCCReference Include="uCurrencyHandler.pas"/>
+        <DCCReference Include="Currencies\uCurrencyHandler.pas"/>
         <DCCReference Include="RoomerVCLs\Source\uFloatUtils.pas"/>
         <DCCReference Include="uRptStockItems.pas">
             <Form>frmRptStockItems</Form>
@@ -835,6 +835,7 @@
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="uAmount.pas"/>
+        <DCCReference Include="Currencies\uAmountConfigurator.pas"/>
         <None Include="Roomer.todo"/>
         <None Include="notes.txt"/>
         <None Include="Roomer.inc"/>
