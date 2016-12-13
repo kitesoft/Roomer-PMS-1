@@ -4,38 +4,40 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, sButton, Vcl.ExtCtrls, sPanel, Vcl.ComCtrls, sListView, cxClasses, cxPropertiesStore;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, sButton, Vcl.ExtCtrls, sPanel, Vcl.ComCtrls, sListView, cxClasses, cxPropertiesStore,
+  uRoomerForm, cxGridTableView, cxStyles, dxPScxCommon, dxPScxGridLnk, sStatusBar
+  ;
 
 type
-  TFrmTopClassAvailabilityOrder = class(TForm)
+  ETopClassAvailabilityOrderException = class(Exception);
+
+  TFrmTopClassAvailabilityOrder = class(TfrmBaseRoomerForm)
     panBtn: TsPanel;
     BtnOk: TsButton;
     sPanel1: TsPanel;
-    sPanel2: TsPanel;
+    pnlOrder: TsPanel;
     btnUp: TsButton;
     btnDown: TsButton;
     lvRates: TsListView;
-    FormStore: TcxPropertiesStore;
+    btnCancel: TsButton;
     procedure FormShow(Sender: TObject);
     procedure FormCreate(Sender: TObject);
-    procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure lvRatesDragOver(Sender, Source: TObject; X, Y: Integer; State: TDragState; var Accept: Boolean);
     procedure btnUpClick(Sender: TObject);
     procedure btnDownClick(Sender: TObject);
     procedure lvRatesDragDrop(Sender, Source: TObject; X, Y: Integer);
     procedure lvRatesChange(Sender: TObject; Item: TListItem; Change: TItemChange);
+    procedure BtnOkClick(Sender: TObject);
   private
     FDirty : Boolean;
-    procedure LoadTopClasses;
     procedure SaveRates;
     function MoveListViewItem(ListView: TsListView; ItemFrom, ItemTo: Word): Boolean;
     { Private declarations }
+  protected
+    procedure DoLoadData; override;
   public
     { Public declarations }
   end;
-
-var
-  FrmTopClassAvailabilityOrder: TFrmTopClassAvailabilityOrder;
 
 procedure EditAvailabilityOrder;
 
@@ -50,7 +52,8 @@ uses ud
     ;
 
 procedure EditAvailabilityOrder;
-var FrmTopClassAvailabilityOrder: TFrmTopClassAvailabilityOrder;
+var
+  FrmTopClassAvailabilityOrder: TFrmTopClassAvailabilityOrder;
 begin
   FrmTopClassAvailabilityOrder := TFrmTopClassAvailabilityOrder.Create(nil);
   try
@@ -69,6 +72,12 @@ begin
   MoveListViewItem(lvRates, lvRates.Selected.Index, lvRates.Selected.Index + 2);
 end;
 
+procedure TFrmTopClassAvailabilityOrder.BtnOkClick(Sender: TObject);
+begin
+  if FDirty then
+    SaveRates;
+end;
+
 procedure TFrmTopClassAvailabilityOrder.btnUpClick(Sender: TObject);
 begin
   FDirty := lvRates.Selected <> nil;
@@ -77,11 +86,6 @@ begin
   MoveListViewItem(lvRates, lvRates.Selected.Index, lvRates.Selected.Index -1);
 end;
 
-procedure TFrmTopClassAvailabilityOrder.FormClose(Sender: TObject; var Action: TCloseAction);
-begin
-  if FDirty then
-    SaveRates;
-end;
 
 procedure TFrmTopClassAvailabilityOrder.FormCreate(Sender: TObject);
 begin
@@ -90,14 +94,16 @@ end;
 
 procedure TFrmTopClassAvailabilityOrder.FormShow(Sender: TObject);
 begin
-  LoadTopClasses;
+  RefreshData;
 end;
 
-procedure TFrmTopClassAvailabilityOrder.LoadTopClasses;
+procedure TFrmTopClassAvailabilityOrder.DoLoadData;
 var s : String;
     rSet : TRoomerDataSet;
     lv : TListItem;
 begin
+  inherited;
+
   s := 'SELECT IFNULL(tao.`order`, @CNT:=IF(ISNULL(@CNT) OR @CNT=0, 90000, @CNT)+1) AS availabilityOrder, ' +
        'rtg.id AS roomClassId, rtg.Code, rtg.description ' +
        'FROM roomtypegroups rtg ' +
@@ -150,7 +156,8 @@ begin
         CurrentItem.Free;
         CurrentItem := NextItem;
       end;
-    end;end;
+    end;
+end;
 
 procedure TFrmTopClassAvailabilityOrder.lvRatesDragOver(Sender, Source: TObject; X, Y: Integer; State: TDragState; var Accept: Boolean);
 begin
@@ -175,11 +182,14 @@ begin
       id := INTEGER(lvRates.Items[i].Data);
       ExecutionPlan.AddExec(format(s, [id, i]));
     end;
-    ExecutionPlan.Execute(ptExec);
+    try
+      ExecutionPlan.Execute(ptExec, True, True);
+    except on E: Exception do
+      raise ETopClassAvailabilityOrderException.CreateFmt('Error during saving of data:'+ #10 + '%s', [e.Message]);
+    end;
   finally
     ExecutionPlan.Free;
   end;
-
 end;
 
 function TFrmTopClassAvailabilityOrder.MoveListViewItem(ListView: TsListView; ItemFrom, ItemTo: Word): Boolean;

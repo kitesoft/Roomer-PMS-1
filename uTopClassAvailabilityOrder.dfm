@@ -1,75 +1,91 @@
-object FrmTopClassAvailabilityOrder: TFrmTopClassAvailabilityOrder
-  Left = 0
-  Top = 0
+inherited FrmTopClassAvailabilityOrder: TFrmTopClassAvailabilityOrder
   Caption = 'Top-Class Availability Order'
-  ClientHeight = 486
-  ClientWidth = 644
-  Color = clBtnFace
-  Font.Charset = DEFAULT_CHARSET
-  Font.Color = clWindowText
+  ClientHeight = 451
+  ClientWidth = 662
   Font.Height = -11
-  Font.Name = 'Tahoma'
-  Font.Style = []
-  OldCreateOrder = False
-  Position = poMainFormCenter
-  OnClose = FormClose
   OnCreate = FormCreate
   OnShow = FormShow
+  ExplicitWidth = 678
+  ExplicitHeight = 490
   PixelsPerInch = 96
   TextHeight = 13
-  object panBtn: TsPanel
+  inherited sbStatusBar: TsStatusBar
+    Top = 431
+    Width = 662
+    ExplicitTop = 433
+    ExplicitWidth = 644
+  end
+  object panBtn: TsPanel [1]
     Left = 0
-    Top = 453
-    Width = 644
+    Top = 398
+    Width = 662
     Height = 33
     Align = alBottom
+    BevelOuter = bvNone
     TabOrder = 0
     SkinData.SkinSection = 'PANEL'
-    ExplicitLeft = -309
-    ExplicitTop = 443
-    ExplicitWidth = 953
-    DesignSize = (
-      644
-      33)
+    ExplicitTop = 392
     object BtnOk: TsButton
-      Left = 550
-      Top = 4
+      AlignWithMargins = True
+      Left = 481
+      Top = 3
       Width = 86
-      Height = 25
+      Height = 27
       Hint = 'Apply and close'
-      Anchors = [akTop, akRight]
+      Align = alRight
       Caption = 'OK'
       Default = True
       ImageIndex = 82
       Images = DImages.PngImageList1
       ModalResult = 1
       TabOrder = 0
+      OnClick = BtnOkClick
       SkinData.SkinSection = 'BUTTON'
-      ExplicitLeft = 859
+      ExplicitLeft = 462
+      ExplicitTop = 4
+      ExplicitHeight = 25
+    end
+    object btnCancel: TsButton
+      AlignWithMargins = True
+      Left = 573
+      Top = 3
+      Width = 86
+      Height = 27
+      Hint = 'Cancel'
+      Align = alRight
+      Cancel = True
+      Caption = 'Cancel'
+      Default = True
+      ImageIndex = 4
+      Images = DImages.PngImageList1
+      ModalResult = 2
+      TabOrder = 1
+      SkinData.SkinSection = 'BUTTON'
+      ExplicitLeft = 554
+      ExplicitTop = 4
+      ExplicitHeight = 25
     end
   end
-  object sPanel1: TsPanel
+  object sPanel1: TsPanel [2]
     Left = 0
     Top = 0
-    Width = 644
-    Height = 453
+    Width = 662
+    Height = 398
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitLeft = 240
-    ExplicitTop = 240
-    ExplicitWidth = 185
-    ExplicitHeight = 41
-    object sPanel2: TsPanel
+    ExplicitWidth = 644
+    ExplicitHeight = 433
+    object pnlOrder: TsPanel
       Left = 0
       Top = 0
       Width = 45
-      Height = 453
+      Height = 398
       Align = alLeft
       BevelOuter = bvNone
       TabOrder = 0
-      ExplicitLeft = -6
-      ExplicitTop = -6
+      SkinData.SkinSection = 'PANEL'
+      ExplicitHeight = 433
       object btnUp: TsButton
         Left = 5
         Top = 29
@@ -104,8 +120,8 @@ object FrmTopClassAvailabilityOrder: TFrmTopClassAvailabilityOrder
     object lvRates: TsListView
       Left = 45
       Top = 0
-      Width = 599
-      Height = 453
+      Width = 617
+      Height = 398
       Align = alClient
       Color = clWhite
       Columns = <
@@ -114,8 +130,8 @@ object FrmTopClassAvailabilityOrder: TFrmTopClassAvailabilityOrder
           Width = 100
         end
         item
+          AutoSize = True
           Caption = 'Description'
-          Width = 470
         end>
       DragMode = dmAutomatic
       Font.Charset = DEFAULT_CHARSET
@@ -132,22 +148,18 @@ object FrmTopClassAvailabilityOrder: TFrmTopClassAvailabilityOrder
       OnDragDrop = lvRatesDragDrop
       OnDragOver = lvRatesDragOver
       ExplicitTop = -2
+      ExplicitWidth = 599
+      ExplicitHeight = 433
     end
   end
-  object FormStore: TcxPropertiesStore
-    Components = <
-      item
-        Component = Owner
-        Properties.Strings = (
-          'Height'
-          'Left'
-          'Position'
-          'Top'
-          'Width')
-      end>
-    StorageName = 'Software\Roomer\FormStatus\TopClassAvailabilityOrder'
-    StorageType = stRegistry
-    Left = 512
-    Top = 88
+  inherited cxsrRoomerStyleRepository: TcxStyleRepository
+    Left = 464
+    PixelsPerInch = 96
+    inherited dxssRoomerGridReportLink: TdxGridReportLinkStyleSheet
+      BuiltIn = True
+    end
+    inherited cxssRoomerGridTableView: TcxGridTableViewStyleSheet
+      BuiltIn = True
+    end
   end
 end
