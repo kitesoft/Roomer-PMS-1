@@ -1,29 +1,27 @@
-object frmMasterRateDefaults: TfrmMasterRateDefaults
-  Left = 0
-  Top = 0
+inherited frmMasterRateDefaults: TfrmMasterRateDefaults
   Caption = 'MasterRateDefaults'
   ClientHeight = 495
   ClientWidth = 953
-  Color = clBtnFace
-  Font.Charset = DEFAULT_CHARSET
-  Font.Color = clWindowText
   Font.Height = -11
-  Font.Name = 'Tahoma'
-  Font.Style = []
-  KeyPreview = True
-  OldCreateOrder = False
   Position = poOwnerFormCenter
   OnClose = FormClose
-  OnCreate = FormCreate
   OnKeyDown = FormKeyDown
   OnShow = FormShow
+  ExplicitWidth = 969
+  ExplicitHeight = 534
   PixelsPerInch = 96
   TextHeight = 13
-  object pnlHolder: TsPanel
+  inherited sbStatusBar: TsStatusBar
+    Top = 475
+    Width = 953
+    ExplicitTop = 475
+    ExplicitWidth = 953
+  end
+  object pnlHolder: TsPanel [1]
     Left = 0
     Top = 0
     Width = 953
-    Height = 495
+    Height = 475
     Margins.Left = 2
     Margins.Top = 2
     Margins.Right = 2
@@ -32,22 +30,15 @@ object frmMasterRateDefaults: TfrmMasterRateDefaults
     BevelOuter = bvNone
     TabOrder = 0
     SkinData.SkinSection = 'PANEL'
-    object sbMain: TsStatusBar
-      Left = 0
-      Top = 476
-      Width = 953
-      Height = 19
-      Panels = <>
-      SkinData.SkinSection = 'STATUSBAR'
-    end
     object panBtn: TsPanel
       Left = 0
-      Top = 443
+      Top = 442
       Width = 953
       Height = 33
       Align = alBottom
-      TabOrder = 1
+      TabOrder = 0
       SkinData.SkinSection = 'PANEL'
+      ExplicitTop = 423
       DesignSize = (
         953
         33)
@@ -71,13 +62,14 @@ object frmMasterRateDefaults: TfrmMasterRateDefaults
       Left = 0
       Top = 0
       Width = 953
-      Height = 443
+      Height = 442
       Align = alClient
-      TabOrder = 2
+      TabOrder = 1
+      ExplicitHeight = 423
       object sSplitter1: TsSplitter
         Left = 267
         Top = 1
-        Height = 441
+        Height = 440
         ExplicitLeft = 198
         ExplicitTop = -4
         ExplicitHeight = 336
@@ -86,15 +78,16 @@ object frmMasterRateDefaults: TfrmMasterRateDefaults
         Left = 1
         Top = 1
         Width = 266
-        Height = 441
+        Height = 440
         Align = alLeft
         BevelOuter = bvNone
         TabOrder = 0
+        ExplicitHeight = 421
         object lvRateCodes: TsListView
           Left = 0
           Top = 65
           Width = 266
-          Height = 376
+          Height = 375
           HighlightHeaders = False
           Align = alClient
           Color = clWhite
@@ -118,6 +111,7 @@ object frmMasterRateDefaults: TfrmMasterRateDefaults
           TabOrder = 0
           ViewStyle = vsReport
           OnChange = lvRateCodesChange
+          ExplicitHeight = 356
         end
         object sPanel3: TsPanel
           Left = 0
@@ -183,18 +177,20 @@ object frmMasterRateDefaults: TfrmMasterRateDefaults
         Left = 273
         Top = 1
         Width = 679
-        Height = 441
+        Height = 440
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 1
+        ExplicitHeight = 421
         object grData: TcxGrid
           Left = 0
           Top = 65
           Width = 679
-          Height = 376
+          Height = 375
           Align = alClient
           TabOrder = 0
           LookAndFeel.NativeStyle = False
+          ExplicitHeight = 356
           object tvData: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             Navigator.Buttons.First.Visible = True
@@ -264,11 +260,15 @@ object frmMasterRateDefaults: TfrmMasterRateDefaults
             object tvDataprice: TcxGridDBColumn
               Caption = 'Price'
               DataBinding.FieldName = 'price'
+              PropertiesClassName = 'TcxCurrencyEditProperties'
+              OnGetProperties = tvDatapriceGetProperties
               Width = 70
             end
             object tvDatasingleUsePrice: TcxGridDBColumn
               Caption = 'Single use price'
               DataBinding.FieldName = 'singleUsePrice'
+              PropertiesClassName = 'TcxCurrencyEditProperties'
+              OnGetProperties = tvDatapriceGetProperties
               Width = 87
             end
             object tvDataavailability: TcxGridDBColumn
@@ -369,6 +369,15 @@ object frmMasterRateDefaults: TfrmMasterRateDefaults
       end
     end
   end
+  inherited cxsrRoomerStyleRepository: TcxStyleRepository
+    PixelsPerInch = 96
+    inherited dxssRoomerGridReportLink: TdxGridReportLinkStyleSheet
+      BuiltIn = True
+    end
+    inherited cxssRoomerGridTableView: TcxGridTableViewStyleSheet
+      BuiltIn = True
+    end
+  end
   object mnuOther: TPopupMenu
     Images = DImages.PngImageList1
     Left = 14
@@ -405,22 +414,6 @@ object frmMasterRateDefaults: TfrmMasterRateDefaults
         OnClick = mnuiGridToXmlClick
       end
     end
-  end
-  object FormStore: TcxPropertiesStore
-    Components = <
-      item
-        Component = Owner
-        Properties.Strings = (
-          'Height'
-          'Left'
-          'Position'
-          'Top'
-          'Width')
-      end>
-    StorageName = 'Software\Roomer\FormStatus\BookKeepingCodes'
-    StorageType = stRegistry
-    Left = 334
-    Top = 208
   end
   object m_: TdxMemData
     Indexes = <>
