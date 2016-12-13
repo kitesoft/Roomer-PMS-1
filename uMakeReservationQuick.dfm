@@ -30,8 +30,6 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
     SkinData.SkinSection = 'PAGECONTROL'
     object taReservation: TsTabSheet
       Caption = 'Reservation'
-      SkinData.CustomColor = False
-      SkinData.CustomFont = False
       object panTop: TsPanel
         Left = 0
         Top = 0
@@ -75,7 +73,6 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
             ParentFont = False
             TabOrder = 1
             SkinData.SkinSection = 'GROUPBOX'
-            Checked = False
             object clabCustomer: TsLabel
               Left = 106
               Top = 16
@@ -220,7 +217,6 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
             ParentFont = False
             TabOrder = 2
             SkinData.SkinSection = 'GROUPBOX'
-            Checked = False
             object clabReservationName: TsLabel
               Left = 124
               Top = 46
@@ -481,12 +477,8 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                   Height = 14
                   ExplicitLeft = 67
                 end
-                inherited edCountryCode: TsEdit
-                  ExplicitLeft = 0
-                end
                 inherited btnGetCountry: TsButton
                   Width = 23
-                  ExplicitLeft = 38
                   ExplicitWidth = 23
                 end
               end
@@ -506,7 +498,6 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
             Caption = 'Dates'
             TabOrder = 0
             SkinData.SkinSection = 'GROUPBOX'
-            Checked = False
             object clabArrival: TsLabel
               Left = 120
               Top = 17
@@ -624,7 +615,6 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
               Text = '  -  -    '
               OnChange = dtArrivalChange
               OnExit = dtArrivalExit
-              CheckOnExit = True
               SkinData.SkinSection = 'EDIT'
               GlyphMode.Blend = 0
               GlyphMode.Grayed = False
@@ -649,7 +639,6 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
               Text = '  -  -    '
               OnChange = dtDepartureChange
               OnExit = dtDepartureExit
-              CheckOnExit = True
               SkinData.SkinSection = 'EDIT'
               GlyphMode.Blend = 0
               GlyphMode.Grayed = False
@@ -683,7 +672,6 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
             ParentFont = False
             TabOrder = 3
             SkinData.SkinSection = 'GROUPBOX'
-            Checked = False
             object clabCurrency: TsLabel
               Left = 107
               Top = 15
@@ -952,8 +940,6 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
             Caption = 'Contact Details'
             ImageIndex = 2
             TabVisible = False
-            SkinData.CustomColor = False
-            SkinData.CustomFont = False
             object sPanel3: TsPanel
               Left = 0
               Top = 0
@@ -993,7 +979,6 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                 ParentColor = False
                 TabOrder = 0
                 SkinData.SkinSection = 'GROUPBOX'
-                Checked = False
                 object clabContactPerson: TsLabel
                   Left = 68
                   Top = 42
@@ -1297,7 +1282,6 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                 Caption = 'Guest profile notes and preferences'
                 TabOrder = 1
                 SkinData.SkinSection = 'GROUPBOX'
-                Checked = False
                 object lblSpecialRequests: TsLabel
                   Left = 2
                   Top = 15
@@ -1367,7 +1351,6 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                   Height = 105
                   Align = alTop
                   TabOrder = 2
-                  Checked = False
                   object lblRoomType: TsLabel
                     Left = 7
                     Top = 43
@@ -1430,7 +1413,6 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                 Caption = 'Customer Alert'
                 TabOrder = 2
                 SkinData.SkinSection = 'GROUPBOX'
-                Checked = False
                 object memCustomerAlert: TMemo
                   AlignWithMargins = True
                   Left = 7
@@ -1454,8 +1436,6 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
             Caption = 'Customer Details'
             ImageIndex = 1
             TabVisible = False
-            SkinData.CustomColor = False
-            SkinData.CustomFont = False
             object clabTel2: TsLabel
               Left = 204
               Top = 125
@@ -1744,8 +1724,6 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
     object tabSelectType: TsTabSheet
       Caption = 'Select Types'
       ImageIndex = 1
-      SkinData.CustomColor = False
-      SkinData.CustomFont = False
       object panSelectTypesTop: TsPanel
         Left = 0
         Top = 0
@@ -1766,7 +1744,6 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
           Caption = 'Exclude No-Room with status of : '
           TabOrder = 0
           SkinData.SkinSection = 'GROUPBOX'
-          Checked = False
           object chkExcluteWaitingList: TsCheckBox
             Left = 14
             Top = 19
@@ -2018,8 +1995,6 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
     object tabSelectRooms: TsTabSheet
       Caption = 'Select Rooms'
       ImageIndex = 2
-      SkinData.CustomColor = False
-      SkinData.CustomFont = False
       object panSelectRoomsTop: TsPanel
         Left = 0
         Top = 0
@@ -2423,8 +2398,6 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
     object tabRoomRates: TsTabSheet
       Caption = 'Room Rates'
       ImageIndex = 3
-      SkinData.CustomColor = False
-      SkinData.CustomFont = False
       object panTopRoomRates: TsPanel
         Left = 0
         Top = 0
@@ -2445,7 +2418,6 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
           Caption = 'Selected room'
           TabOrder = 1
           SkinData.SkinSection = 'GROUPBOX'
-          Checked = False
           object btdEditRoomRate: TsButton
             Left = 3
             Top = 14
@@ -2489,7 +2461,6 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
           Caption = 'Refresh'
           TabOrder = 0
           SkinData.SkinSection = 'GROUPBOX'
-          Checked = False
           object btnRefresh: TsButton
             Left = 3
             Top = 14
@@ -2574,8 +2545,6 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
           SkinData.SkinSection = 'PAGECONTROL'
           object sTabSheet1: TsTabSheet
             Caption = 'Extra'
-            SkinData.CustomColor = False
-            SkinData.CustomFont = False
             object sPanel2: TsPanel
               Left = -2
               Top = 0
@@ -2746,8 +2715,6 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
           end
           object Alerts: TsTabSheet
             Caption = 'Alerts'
-            SkinData.CustomColor = False
-            SkinData.CustomFont = False
           end
         end
       end
@@ -3198,8 +3165,8 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
       SkinData.SkinSection = 'BUTTON'
     end
     object btnFinish: TsButton
-      Left = 1008
-      Top = 4
+      Left = 1010
+      Top = 5
       Width = 107
       Height = 25
       Anchors = [akTop, akRight]

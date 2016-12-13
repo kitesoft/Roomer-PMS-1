@@ -1102,7 +1102,7 @@ var
     invoiceHeadData.ihPayDate := reservationDate;
     invoiceHeadData.ihStaff := FStaff;
     invoiceHeadData.ihCurrency := Currency;
-    invoiceHeadData.ihCurrencyRate := 1.00;
+    invoiceHeadData.ihCurrencyRate := 0.00;
     invoiceHeadData.ReportDate := '';
     invoiceHeadData.ReportTime := '';
 

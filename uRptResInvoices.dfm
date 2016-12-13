@@ -53,7 +53,6 @@ object frmRptResInvoices: TfrmRptResInvoices
       ParentFont = False
       TabOrder = 0
       SkinData.SkinSection = 'GROUPBOX'
-      Checked = False
       object cbxMonth: TsComboBox
         Left = 15
         Top = 20
@@ -157,7 +156,6 @@ object frmRptResInvoices: TfrmRptResInvoices
       ParentFont = False
       TabOrder = 2
       SkinData.SkinSection = 'GROUPBOX'
-      Checked = False
       object dtDateFrom: TsDateEdit
         Left = 16
         Top = 20
@@ -176,7 +174,6 @@ object frmRptResInvoices: TfrmRptResInvoices
         TabOrder = 0
         Text = '  -  -    '
         OnChange = dtDateFromChange
-        CheckOnExit = True
         SkinData.SkinSection = 'EDIT'
         GlyphMode.Blend = 0
         GlyphMode.Grayed = False
@@ -199,7 +196,6 @@ object frmRptResInvoices: TfrmRptResInvoices
         TabOrder = 1
         Text = '  -  -    '
         OnChange = dtDateFromChange
-        CheckOnExit = True
         SkinData.SkinSection = 'EDIT'
         GlyphMode.Blend = 0
         GlyphMode.Grayed = False
@@ -435,15 +431,13 @@ object frmRptResInvoices: TfrmRptResInvoices
     Top = 89
     Width = 649
     Height = 475
-    ActivePage = sTabSheet1
+    ActivePage = tabFinishedInvoices
     Align = alClient
     TabOrder = 3
     SkinData.SkinSection = 'PAGECONTROL'
     OnPageChanging = tabsMainPageChanging
     object tabOpenInvoices: TsTabSheet
       Caption = 'Item summery'
-      SkinData.CustomColor = False
-      SkinData.CustomFont = False
       ExplicitLeft = 0
       ExplicitTop = 0
       ExplicitWidth = 0
@@ -523,12 +517,6 @@ object frmRptResInvoices: TfrmRptResInvoices
     end
     object tabFinishedInvoices: TsTabSheet
       Caption = 'Closed Invoice list'
-      SkinData.CustomColor = False
-      SkinData.CustomFont = False
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object sPanel2: TsPanel
         Left = 0
         Top = 0
@@ -930,12 +918,6 @@ object frmRptResInvoices: TfrmRptResInvoices
     end
     object sTabSheet1: TsTabSheet
       Caption = 'Open Invoice list'
-      SkinData.CustomColor = False
-      SkinData.CustomFont = False
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object sPanel4: TsPanel
         Left = 0
         Top = 0

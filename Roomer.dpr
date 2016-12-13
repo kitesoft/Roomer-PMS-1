@@ -261,7 +261,8 @@ uses
   uRoomerConfirmationDialogs in 'uRoomerConfirmationDialogs.pas',
   uEmbDateStatistics in 'Embeddables\uEmbDateStatistics.pas' {frmEmbDateStatistics},
   uMasterRateDefaults in 'Rates\uMasterRateDefaults.pas' {frmMasterRateDefaults},
-  uTopClassAvailabilityOrder in 'uTopClassAvailabilityOrder.pas' {FrmTopClassAvailabilityOrder};
+  uTopClassAvailabilityOrder in 'uTopClassAvailabilityOrder.pas' {FrmTopClassAvailabilityOrder},
+  uAmount in 'uAmount.pas';
 
 {$R *.RES}
 

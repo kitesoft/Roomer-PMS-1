@@ -73,7 +73,6 @@ type
 
     FNumber: Double; // -96
     FPrice: Double;
-    FTotal: Double;
     FDate: TDate;
     FAuto: boolean;
     FRefrence: string;
@@ -86,7 +85,7 @@ type
     FrrAlias: integer;
     FAutoGen: string;
     FId: integer;
-
+    function GetTotal: Double;
   public
     constructor create(aIndex, _id: integer);
     destructor Destroy; override;
@@ -96,8 +95,14 @@ type
     property Item: string read FItem write FItem;
     property Text: string read FText write FText;
     property Number: Double read FNumber write FNumber; // -96
+    /// <summary>
+    ///   Price per item in native currency
+    /// </summary>
     property Price: Double read FPrice write FPrice;
-    property Total: Double read FTotal write FTotal;
+    /// <summary>
+    ///   TotalPrice in native currency
+    /// </summary>
+    property Total: Double read GetTotal;
     property Refrence: string read FRefrence write FRefrence;
     property Source: string read FSource write FSource;
     property isPackage: boolean read FIspackage write FIspackage;
@@ -116,12 +121,20 @@ type
   TInvoiceAutoItem = (aiStayTax, aiIncludedBreakfast);
   TInvoiceAutoItemSet = set of TInvoiceAutoItem;
 
-  // ------------------------------------------------------------------------------
-  //
-  // TfrmInvoice
-  //
-  // ------------------------------------------------------------------------------
 
+  /// <summary>
+  ///
+  /// </summary>
+  /// <remarks>
+  ///   CurrencyHandling in the invoice tables:<br />
+  ///  - Invoiceheader.Currency contains the currency used to show the invoice<br />
+  ///  - Invoicelines should always contain all amounts in native currency<br />
+  ///  - invoicelines.currency is not used!<br />
+  ///
+  ///   CurrencyHandling in the invoice form:<br />
+  ///  - Invoicelines shoudl show amounts and prices in selected currency<br />
+  ///  - Total lines on the bottom part are shown in native currency!<br />
+  /// </remarks>
   TfrmInvoice = class(TForm)
     FriendlyStatusBar1: TsStatusBar;
     MainMenu1: TMainMenu;
@@ -960,7 +973,6 @@ begin
   FText := '';
   FNumber := 0;
   FPrice := 0.00;
-  FTotal := 0.00;
   FRefrence := '';
   FSource := '';
 end;
@@ -968,6 +980,11 @@ end;
 destructor TInvoiceLine.Destroy;
 begin
   inherited Destroy;
+end;
+
+function TInvoiceLine.GetTotal: Double;
+begin
+  Result := Price * Number;
 end;
 
 /// /////////////////////////////////////////////////////////////////////////////
@@ -1029,7 +1046,6 @@ begin
   invoiceLine.FText := sText;
   invoiceLine.FNumber := iNumber;
   invoiceLine.FPrice := FPrice;
-  invoiceLine.FTotal := FTotal;
   invoiceLine.FAuto := bAuto;
   invoiceLine.FDate := PurchaseDate;
   invoiceLine.FRefrence := Refrence;
@@ -1089,7 +1105,7 @@ begin
   agrLines.Cells[col_Description, iRow] := invoiceLine.FText;
   agrLines.Cells[col_ItemCount, iRow]   := trim(_floattostr(invoiceLine.FNumber, vWidth, vDec));
   agrLines.Cells[col_ItemPrice, iRow]   := trim(_floattostr(invoiceLine.FPrice, vWidth, vDec));
-  agrLines.Cells[col_TotalPrice, iRow]  := trim(_floattostr(invoiceLine.FTotal, vWidth, vDec));
+  agrLines.Cells[col_TotalPrice, iRow]  := trim(_floattostr(invoiceLine.Total, vWidth, vDec));
   agrLines.Cells[col_System, iRow]      := '';
   agrLines.Cells[col_Refrence, iRow]    := invoiceLine.FRefrence;
   agrLines.Cells[col_Source, iRow]      := invoiceLine.FSource;
@@ -1461,8 +1477,8 @@ begin
   s := s + ', ' + _db(zInvoiceDate);
   s := s + ', ' + _db(zConfirmDate);
   s := s + ', ' + _db(zPayDate);
-  s := s + ', ' + _db(edtCurrency.Text);
-  s := s + ', ' + _db(_StrToFloat(edtRate.Text));
+  s := s + ', ' + _db(FCurrentCurrencyHandler.CurrencyCode);
+  s := s + ', ' + _db(FCurrentCurrencyHandler.Rate);
   s := s + ', ' + _db(zLocation);
 
   s := s + ')' + #10;
@@ -1595,7 +1611,7 @@ begin
           qry := qry + ', TotalWOVat ' + #10;
           qry := qry + ', VAT ' + #10;
           qry := qry + ', CurrencyRate ' + #10;
-          qry := qry + ', Currency ' + #10;
+//          qry := qry + ', Currency ' + #10;
           qry := qry + ', Persons ' + #10;
           qry := qry + ', Nights ' + #10;
           qry := qry + ', BreakfastPrice ' + #10;
@@ -1633,8 +1649,8 @@ begin
           qry := qry + ', ' + _db(Total);
           qry := qry + ', ' + _db(TotalWOVat);
           qry := qry + ', ' + _db(Vat);
-          qry := qry + ', ' + _db(CurrencyRate);
-          qry := qry + ', ' + _db(Currency);
+          qry := qry + ', ' + _db(1.0); //_db(CurrencyRate);
+//          qry := qry + ', ' + _db(Currency);
           qry := qry + ', ' + _db(Persons);
           qry := qry + ', ' + _db(Nights);
           qry := qry + ', ' + _db(BreakfastPrice);
@@ -2066,8 +2082,8 @@ begin
     // _CommaToDot(floattostr(iMultiplier * fItemTotalWOVat));
     m.FieldByName('VAT').asfloat := fVat;
     // _CommaToDot(floattostr(iMultiplier * fItemTotalVAT));
-    m.FieldByName('CurrencyRate').asfloat := zCurrencyRate;
-    m.FieldByName('Currency').asString := edtCurrency.Text;
+    m.FieldByName('CurrencyRate').asfloat := 1.0; //zCurrencyRate;
+//    m.FieldByName('Currency').asString := edtCurrency.Text;
     m.FieldByName('Persons').asinteger := iPersons;
     m.FieldByName('Nights').asinteger := iNights;
     m.FieldByName('BreakfastPrice').asfloat := 0.00;
@@ -2565,9 +2581,7 @@ begin
 {$ENDREGION}
       end;
 
-      edtCurrency.Text := trim(zrSet.FieldByName('ihCurrency').asString);
-      zCurrentCurrency := edtCurrency.Text;
-      edtRate.Text := floattostr(zCurrencyRate);
+      zCurrentCurrency := trim(zrSet.FieldByName('ihCurrency').asString);
 
     end
     else
@@ -4580,7 +4594,7 @@ begin
           s := s + ', ' + 'TotalWOVat ' + #10;
           s := s + ', ' + 'VAT ' + #10;
           s := s + ', ' + 'CurrencyRate ' + #10;
-          s := s + ', ' + 'Currency ' + #10;
+//          s := s + ', ' + 'Currency ' + #10;
           s := s + ', ' + 'Persons ' + #10;
           s := s + ', ' + 'Nights ' + #10;
           s := s + ', ' + 'BreakfastPrice ' + #10;
@@ -4614,20 +4628,20 @@ begin
           s := s + ', ' + _db(ItemCount); // -96ath
           s := s + ', ' + _db(agrLines.Cells[col_Description, i]);
 
-          if isSystemLine(i) or (ItemKindOnRow(i) in [ikRoomRent, ikRoomRentDiscount]) then
+//          if isSystemLine(i) or (ItemKindOnRow(i) in [ikRoomRent, ikRoomRentDiscount]) then
             // -- Auto-Maintained lines are displayed in foreign currency...
-            s := s + ', ' + _db(iCreditinvoiceMultiplier * _CurrencyValueSell * _StrToFloat(agrLines.Cells[col_ItemPrice, i]))
+            s := s + ', ' + _db(iCreditinvoiceMultiplier * _CurrencyValueSell * _StrToFloat(agrLines.Cells[col_ItemPrice, i]));
 
 //???????
-          else // -- ...The others are not...
-            s := s + ', ' + _db(iCreditinvoiceMultiplier * _StrToFloat(agrLines.Cells[col_ItemPrice, i]));
+//          else // -- ...The others are not...
+//            s := s + ', ' + _db(iCreditinvoiceMultiplier * _StrToFloat(agrLines.Cells[col_ItemPrice, i]));
 
           s := s + ', ' + _db(ItemTypeInfo.VATCode);
           s := s + ', ' + _db(iCreditInvoiceMultiplier * fItemTotal);
           s := s + ', ' + _db(iCreditinvoiceMultiplier * fItemTotalWOVat);
           s := s + ', ' + _db(iCreditinvoiceMultiplier * fItemTotalVAT);
-          s := s + ', ' + _db(zCurrencyRate);
-          s := s + ', ' + _db(FCurrentCurrencyHandler.CurrencyCode);
+          s := s + ', ' + _db(1.0); //zCurrencyRate);
+//          s := s + ', ' + _db(FCurrentCurrencyHandler.CurrencyCode);
           s := s + ', ' + inttostr(iPersons);
           s := s + ', ' + inttostr(iNights);
 
@@ -4680,8 +4694,8 @@ begin
             ' , Total= ' + _CommaToDot(floattostr(iCreditinvoiceMultiplier * _StrToFloat(agrLines.Cells[col_TotalPrice, i]))) +
             ' , TotalWOVat= ' + _CommaToDot(floattostr(iCreditinvoiceMultiplier * fItemTotalWOVat)) +
             ' , VAT= ' + _CommaToDot(floattostr(iCreditinvoiceMultiplier * fItemTotalVAT)) +
-            ' , CurrencyRate= ' + _db(FCurrentCurrencyHandler.Rate) +
-            ' , Currency= ' + _db(FCurrentCurrencyHandler.CurrencyCode) +
+            ' , CurrencyRate= ' + _db(1.0) +
+//            ' , Currency= ' + _db(FCurrentCurrencyHandler.CurrencyCode) +
             ' , Persons= ' + inttostr(iPersons) +
             ' , Nights= ' + inttostr(iNights) +
             ' , ilAccountKey= ' + _db(sAccountKey) +
@@ -5526,11 +5540,11 @@ begin
             end;
           end;
 
-          // ver� � v�ru � v�rul�nu
+          // price in current currency
           sLinePrice := agrLines.Cells[col_ItemPrice, i];
           dLinePrice := _StrToFloat(sLinePrice);
 
-          // Heildaver� v�rul�nu
+          // line total in current currency
           sLineTotal := agrLines.Cells[col_TotalPrice, i];
           dLineTotal := _StrToFloat(sLineTotal);
 
@@ -5573,13 +5587,14 @@ begin
           lRevenueCorrection := 0.0;
           lRevenueCorrectionVat := 0.0;
 
+          dLinePrice := FCurrentCurrencyHandler.ConvertTo(dLinePrice, FNativeCurrencyHandler);
+          dLineTotal := FCurrentCurrencyHandler.ConvertTo(dLineTotal, FNativeCurrencyHandler);
+          dLineVAT := FCurrentCurrencyHandler.ConvertTo(dLineVAT, FNativeCurrencyHandler);
+          dLineTotalWOVat := FCurrentCurrencyHandler.ConvertTo(dLineTotalWOVat, FNativeCurrencyHandler);
+
           // roomrent, ctax and roomrentdiscount
           if Item_isRoomRent(sItemID) then
           begin
-            dLinePrice := _CurrencyValueSell * dLinePrice;
-            dLineTotal := _CurrencyValueSell * dLineTotal;
-            dLineVAT := _CurrencyValueSell * dLineVAT;
-            dLineTotalWOVat := _CurrencyValueSell * dLineTotalWOVat;
             RoomRentPaid := True;
           end;
 
@@ -5598,12 +5613,12 @@ begin
           end;
 
           // og aftur � texta
-          sLinePrice := _CommaToDot(floattostr(dLinePrice));
-          sLineTotal := _CommaToDot(floattostr(dLineTotal));
-          sLineVAT := _CommaToDot(floattostr(dLineVAT));
-          sLineTotalWOVat := _CommaToDot(floattostr(dLineTotalWOVat));
+//          sLinePrice := _CommaToDot(floattostr(dLinePrice));
+//          sLineTotal := _CommaToDot(floattostr(dLineTotal));
+//          sLineVAT := _CommaToDot(floattostr(dLineVAT));
+//          sLineTotalWOVat := _CommaToDot(floattostr(dLineTotalWOVat));
 
-          // Samtals � reikning � ISK
+          // Totals in native currency
           FTotal := FTotal + dLineTotal;
           fTotalVAT := fTotalVAT + dLineVAT;
           fTotalWOVat := fTotalWOVat + dLineTotalWOVat;
@@ -5648,7 +5663,7 @@ begin
             s := s + ', ' + 'TotalWOVat ' + #10;
             s := s + ', ' + 'VAT ' + #10;
             s := s + ', ' + 'CurrencyRate ' + #10;
-            s := s + ', ' + 'Currency ' + #10;
+//            s := s + ', ' + 'Currency ' + #10;
             s := s + ', ' + 'Persons ' + #10;
             s := s + ', ' + 'Nights ' + #10;
             s := s + ', ' + 'BreakfastPrice ' + #10;
@@ -5679,25 +5694,25 @@ begin
 
             lDate := integer(agrLines.Objects[col_Description, i]);
             s := s + ', ' + _db(lDate);
-            s := s + ', ' + inttostr(zInvoiceNumber); // InvoiceNumber
+            s := s + ', ' + _db(zInvoiceNumber); // InvoiceNumber
             s := s + ', ' + _db(sItemID); // ItemID
             s := s + ', ' + _db(ItemCount);
             s := s + ', ' + _db(sDescription);
-            s := s + ', ' + sLinePrice;
+            s := s + ', ' + _db(dLinePrice);
             s := s + ', ' + _db(ItemTypeInfo.VATCode);
-            s := s + ', ' + sLineTotal;
-            s := s + ', ' + sLineTotalWOVat;
-            s := s + ', ' + sLineVAT;
-            s := s + ', ' + _db(FCurrentCurrencyHandler.Rate);
-            s := s + ', ' + _db(FCurrentCurrencyHandler.CurrencyCode);
-            s := s + ', ' + inttostr(iPersons);
-            s := s + ', ' + inttostr(iNights);
-            s := s + ', ' + _CommaToDot(floattostr(0.00));
+            s := s + ', ' + _db(dLineTotal);
+            s := s + ', ' + _db(dLineTotalWOVat);
+            s := s + ', ' + _db(dLineVAT);
+//            s := s + ', ' + _db(FCurrentCurrencyHandler.Rate);
+//            s := s + ', ' + _db(FCurrentCurrencyHandler.CurrencyCode);
+            s := s + ', ' + _db(iPersons);
+            s := s + ', ' + _db(iNights);
+            s := s + ', ' + _db(0.00);
             s := s + ', ' + _db(false);
 
-            s := s + ', ' + inttostr(AYear);
-            s := s + ', ' + inttostr(AMon);
-            s := s + ', ' + inttostr(ADay);
+            s := s + ', ' + _db(AYear);
+            s := s + ', ' + _db(AMon);
+            s := s + ', ' + _db(ADay);
 
             s := s + ', ' + _db(sAccountKey);
             s := s + ', ' + _db(sRefrence);
@@ -5719,14 +5734,14 @@ begin
               ' Set ItemNumber= ' + _db(i) +
               ' , InvoiceNumber= ' + _db(zInvoiceNumber) +
               ' , Number= ' + _db(ItemCount) +
-              ' , Price= ' + sLinePrice +
-              ' , Total= ' + sLineTotal +
-              ' , TotalWOVat= ' + sLineTotalWOVat +
-              ' , VAT= ' + sLineVAT +
-              ' , CurrencyRate= ' + _db(FCurrentCurrencyHandler.Rate) +
-              ' , Currency= ' + _db(FCurrentCurrencyHandler.CurrencyCode) +
-              ' , Persons= ' + inttostr(iPersons) +
-              ' , Nights= ' + inttostr(iNights) +
+              ' , Price= ' + _db(dLinePrice) +
+              ' , Total= ' + _db(dLineTotal) +
+              ' , TotalWOVat= ' + _db(dLineTotalWOVat) +
+              ' , VAT= ' + _db(dLineVAT) +
+              ' , CurrencyRate= ' + _db(1.0) + //_db(FCurrentCurrencyHandler.Rate) +
+//              ' , Currency= ' + _db(FCurrentCurrencyHandler.CurrencyCode) +
+              ' , Persons= ' + _db(iPersons) +
+              ' , Nights= ' + _db(iNights) +
               ' , ilAccountKey= ' + _db(sAccountKey) +
               ' , InvoiceIndex= ' + _db(FInvoiceIndex) +
               ' , staffLastEdit= ' + _db(d.roomerMainDataSet.username) +
@@ -5845,14 +5860,14 @@ begin
 
         s := s + ', ' + _db(zCountry);
 
-        s := s + ', ' + _CommaToDot(floattostr(FTotal));
-        s := s + ', ' + _CommaToDot(floattostr(fTotalWOVat));
-        s := s + ', ' + _CommaToDot(floattostr(fTotalVAT));
-        s := s + ', ' + _CommaToDot(floattostr(0.00));
+        s := s + ', ' + _db(FTotal);
+        s := s + ', ' + _db(fTotalWOVat);
+        s := s + ', ' + _db(fTotalVAT);
+        s := s + ', ' + _db(0.00);
         s := s + ', ' + _db(memExtraText.Lines.Text);
-        s := s + ', ' + inttostr(zOriginalInvoice);
+        s := s + ', ' + _db(zOriginalInvoice);
         s := s + ', ' + _db(false);
-        s := s + ', ' + inttostr(rgrInvoiceType.itemIndex);
+        s := s + ', ' + _db(rgrInvoiceType.itemIndex);
         s := s + ', ' + _db(g.qUser);
         s := s + ', ' + _db(Date, True);
         s := s + ', ' + _db(zInvoiceDate, True);
@@ -5860,8 +5875,8 @@ begin
         s := s + ', ' + _db(zPayDate, True);
         s := s + ', ' + _db(edtInvRefrence.Text);
 
-        s := s + ', ' + _CommaToDot(floattostr(dTotalStayTax));
-        s := s + ', ' + inttostr(iTotalStayTaxNights);
+        s := s + ', ' + _db(dTotalStayTax);
+        s := s + ', ' + _db(iTotalStayTaxNights);
         s := s + ', ' + _db(FCurrentCurrencyHandler.CurrencyCode);
         s := s + ', ' + _db(FCurrentCurrencyHandler.Rate);
         s := s + ', ' + _db(chkShowPackage.checked);
@@ -7474,8 +7489,8 @@ begin
   d.kbmInvoicelines.FieldByName('Total').asfloat := Total;
   d.kbmInvoicelines.FieldByName('TotalWOVat').asfloat := TotalWOVat;
   d.kbmInvoicelines.FieldByName('VAT').asfloat := Vat;
-  d.kbmInvoicelines.FieldByName('CurrencyRate').asfloat := FCurrentCurrencyHandler.Rate;
-  d.kbmInvoicelines.FieldByName('Currency').asString := FCurrentCurrencyHandler.CurrencyCode;
+  d.kbmInvoicelines.FieldByName('CurrencyRate').asfloat := 1.0;
+//  d.kbmInvoicelines.FieldByName('Currency').asString := FCurrentCurrencyHandler.CurrencyCode;
   d.kbmInvoicelines.FieldByName('Persons').asinteger := Persons;
   d.kbmInvoicelines.FieldByName('Nights').asinteger := Nights;
   d.kbmInvoicelines.FieldByName('BreakfastPrice').asfloat := 0.00;
@@ -8253,7 +8268,7 @@ begin
       s := s + ', ' + 'TotalWOVat ' + #10;
       s := s + ', ' + 'VAT ' + #10;
       s := s + ', ' + 'CurrencyRate ' + #10;
-      s := s + ', ' + 'Currency ' + #10;
+//      s := s + ', ' + 'Currency ' + #10;
       s := s + ', ' + 'Persons ' + #10;
       s := s + ', ' + 'Nights ' + #10;
       s := s + ', ' + 'BreakfastPrice ' + #10;
@@ -8284,36 +8299,36 @@ begin
       s := s + ', ' + _db(ItemCount); // -96ath
       s := s + ', ' + _db(agrLines.Cells[col_Description, i]);
 
-      if (isSystemLine(i)) or
-        (trim(g.qRoomRentItem) = agrLines.Cells[col_Item, i]) or
-        (trim(g.qDiscountItem) = agrLines.Cells[col_Item, i]) then
-        // -- Auto-Maintained lines are displayed in foreign currency...
+//      if (isSystemLine(i)) or
+//        (trim(g.qRoomRentItem) = agrLines.Cells[col_Item, i]) or
+//        (trim(g.qDiscountItem) = agrLines.Cells[col_Item, i]) then
+//      // -- Auto-Maintained lines are displayed in foreign currency...
         s := s + ', ' + _CommaToDot
           (floattostr(iMultiplier * _CurrencyValueSell *
-          _StrToFloat(agrLines.Cells[col_ItemPrice, i])))
-      else // -- ...The others are not...
-        s := s + ', ' + _CommaToDot
-          (floattostr(iMultiplier * _StrToFloat(agrLines.Cells
-          [col_ItemPrice, i])));
+          _StrToFloat(agrLines.Cells[col_ItemPrice, i])));
+//      else // -- ...The others are not...
+//        s := s + ', ' + _CommaToDot
+//          (floattostr(iMultiplier * _StrToFloat(agrLines.Cells
+//          [col_ItemPrice, i])));
 
       s := s + ', ' + _db(ItemTypeInfo.VATCode);
 
-      if (isSystemLine(i)) or
-        (trim(g.qRoomRentItem) = agrLines.Cells[col_Item, i]) or
-        (trim(g.qDiscountItem) = agrLines.Cells[col_Item, i]) then
-        // -- Auto-Maintained lines are displayed in foreign currency...
+//      if (isSystemLine(i)) or
+//        (trim(g.qRoomRentItem) = agrLines.Cells[col_Item, i]) or
+//        (trim(g.qDiscountItem) = agrLines.Cells[col_Item, i]) then
+//       //  -- Auto-Maintained lines are displayed in foreign currency...
         s := s + ', ' + _CommaToDot
           (floattostr(iMultiplier * _CurrencyValueSell *
-          _StrToFloat(agrLines.Cells[col_TotalPrice, i])))
-      else // -- ...The others are not...
-        s := s + ', ' + _CommaToDot
-          (floattostr(iMultiplier * _StrToFloat(agrLines.Cells
-          [col_TotalPrice, i])));
+          _StrToFloat(agrLines.Cells[col_TotalPrice, i])));
+//      else // -- ...The others are not...
+//        s := s + ', ' + _CommaToDot
+//          (floattostr(iMultiplier * _StrToFloat(agrLines.Cells
+//          [col_TotalPrice, i])));
 
       s := s + ', ' + _CommaToDot(floattostr(iMultiplier * fItemTotalWOVat));
       s := s + ', ' + _CommaToDot(floattostr(iMultiplier * fItemTotalVAT));
-      s := s + ', ' + _db(FCurrentCurrencyHandler.Rate);
-      s := s + ', ' + _db(FCurrentCurrencyHandler.CurrencyCode);
+      s := s + ', ' + _db(1.0); //_db(FCurrentCurrencyHandler.Rate);
+//      s := s + ', ' + _db(FCurrentCurrencyHandler.CurrencyCode);
       s := s + ', ' + inttostr(iPersons);
       s := s + ', ' + inttostr(iNights);
       s := s + ', ' + _CommaToDot(floattostr(0.00));

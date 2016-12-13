@@ -12,12 +12,8 @@ uses
 type
   ECurrencyHandlerException = class(Exception);
 
-  // for future use ... maybe
-//  TAmount = record
-//    Value: double;
-//    Currency: string;
-//    function ConvertTo(const aOtherCurrency: string): TAmount;
-//  end;
+  //TODO: Create a currencyhandler-factory and object cache to avoid recreating handlers
+
 
   /// <summary>
   ///   Object to handle conversions and display of amounts in a certain currency <br />
@@ -39,7 +35,13 @@ type
     ///   Convert aAmount in the currency of this handler to the amount of the currency provided
     /// </summary>
     function ConvertTo(aAmount: double; const aOtherCurrency: string): double; overload;
+    /// <summary>
+    ///   Convert aAmount in the currency of this handler to the amount of the currency provided
+    /// </summary>
     function ConvertTo(aAmount: double; aOtherCurrencyHandler: TCurrencyHandler): double; overload;
+    /// <summary>
+    ///   Convert aAmount from the provided currency into the currency of this handler to the amount of the currency provided
+    /// </summary>
     function ConvertFrom(aAmount: double; const aOtherCurrency: string): double;
     /// <summary>
     ///   Round aAmount to the number of decimals defined for the currency
@@ -88,13 +90,14 @@ end;
 
 function TCurrencyHandler.ConvertFrom(aAmount: double; const aOtherCurrency: string): double;
 var
-  lrecOtherCurrency: recCurrencyHolder;
+  lOtherCurrencyHandler: TCurrencyhandler;
 begin
-  if not glb.LocateCurrency(aOtherCurrency) then
-    raise ECurrencyHandlerException.CreateFmt('Currency code [%s] not found', [aOtherCurrency]);
-
-  lrecOtherCurrency.ReadFromDataset(glb.CurrenciesSet);
-  Result := (aAmount * lrecOtherCurrency.Value) / Rate;
+  lOtherCurrencyHandler := TCurrencyhandler.Create(aOtherCurrency);
+  try
+    Result := lOtherCurrencyHandler.ConvertTo(aAmount, Self);
+  finally
+    lOtherCurrencyHandler.Free;
+  end;
 end;
 
 function TCurrencyHandler.ConvertTo(aAmount: double; aOtherCurrencyHandler: TCurrencyHandler): double;
