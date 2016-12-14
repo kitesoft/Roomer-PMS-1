@@ -300,7 +300,7 @@ object frmInvoice: TfrmInvoice
       end
       object edtRate: TsEdit
         Left = 724
-        Top = 50
+        Top = 49
         Width = 70
         Height = 20
         AutoSize = False
@@ -313,6 +313,7 @@ object frmInvoice: TfrmInvoice
         ParentFont = False
         ReadOnly = True
         TabOrder = 12
+        OnDblClick = edtRateDblClick
         SkinData.SkinSection = 'EDIT'
         BoundLabel.Font.Charset = DEFAULT_CHARSET
         BoundLabel.Font.Color = clWindowText
@@ -335,7 +336,7 @@ object frmInvoice: TfrmInvoice
         Font.Style = []
         MaxLength = 30
         ParentFont = False
-        TabOrder = 14
+        TabOrder = 15
         SkinData.SkinSection = 'EDIT'
         BoundLabel.Font.Charset = DEFAULT_CHARSET
         BoundLabel.Font.Color = clWindowText
@@ -353,6 +354,16 @@ object frmInvoice: TfrmInvoice
         OnClick = edtCurrencyDblClick
         SkinData.SkinSection = 'BUTTON'
       end
+      object btnGetRate: TsButton
+        Left = 795
+        Top = 49
+        Width = 90
+        Height = 20
+        Caption = 'Get..'
+        TabOrder = 13
+        OnClick = edtRateDblClick
+        SkinData.SkinSection = 'BUTTON'
+      end
       object edtRoomGuest: TsEdit
         Left = 724
         Top = 78
@@ -368,7 +379,7 @@ object frmInvoice: TfrmInvoice
         Font.Style = []
         ParentFont = False
         ReadOnly = True
-        TabOrder = 13
+        TabOrder = 14
         SkinData.SkinSection = 'EDIT'
         BoundLabel.Font.Charset = DEFAULT_CHARSET
         BoundLabel.Font.Color = clWindowText
@@ -559,7 +570,7 @@ object frmInvoice: TfrmInvoice
         ParentShowHint = False
         ShowHint = True
         SpeedButtonOptions.Flat = True
-        TabOrder = 16
+        TabOrder = 17
         WordWrap = True
         OnClick = btnExitClick
       end
@@ -576,7 +587,7 @@ object frmInvoice: TfrmInvoice
         ParentShowHint = False
         ShowHint = True
         SpeedButtonOptions.Flat = True
-        TabOrder = 18
+        TabOrder = 19
         WordWrap = True
       end
       object btnProforma: TcxButton
@@ -591,7 +602,7 @@ object frmInvoice: TfrmInvoice
         ParentShowHint = False
         ShowHint = True
         SpeedButtonOptions.Flat = True
-        TabOrder = 17
+        TabOrder = 18
         WordWrap = True
       end
       object edtForeignCurrency: TsEdit
@@ -609,10 +620,10 @@ object frmInvoice: TfrmInvoice
         Font.Style = []
         ParentFont = False
         ReadOnly = True
-        TabOrder = 15
+        TabOrder = 16
         Text = '0'
         Visible = False
-        OnChange = edtTotalWoVATChange
+        OnChange = edtTotalChange
         SkinData.SkinSection = 'EDIT'
         BoundLabel.Font.Charset = DEFAULT_CHARSET
         BoundLabel.Font.Color = clWindowText
@@ -628,7 +639,7 @@ object frmInvoice: TfrmInvoice
         Caption = 'Package on invoice'
         Checked = True
         State = cbChecked
-        TabOrder = 19
+        TabOrder = 20
         SkinData.SkinSection = 'CHECKBOX'
         ImgChecked = 0
         ImgUnchecked = 0
@@ -766,7 +777,7 @@ object frmInvoice: TfrmInvoice
             Font.Name = 'Tahoma'
             Font.Style = [fsBold]
           end
-          object edtTotalWoVAT: TsEdit
+          object edtTotal: TsEdit
             Left = 139
             Top = 6
             Width = 105
@@ -783,7 +794,7 @@ object frmInvoice: TfrmInvoice
             ParentFont = False
             ReadOnly = True
             TabOrder = 0
-            OnChange = edtTotalWoVATChange
+            OnChange = edtTotalChange
             SkinData.SkinSection = 'EDIT'
             BoundLabel.Font.Charset = DEFAULT_CHARSET
             BoundLabel.Font.Color = clWindowText
@@ -808,7 +819,7 @@ object frmInvoice: TfrmInvoice
             ParentFont = False
             ReadOnly = True
             TabOrder = 1
-            OnChange = edtTotalWoVATChange
+            OnChange = edtTotalChange
             SkinData.SkinSection = 'EDIT'
             BoundLabel.Font.Charset = DEFAULT_CHARSET
             BoundLabel.Font.Color = clWindowText
@@ -833,7 +844,7 @@ object frmInvoice: TfrmInvoice
             ParentFont = False
             ReadOnly = True
             TabOrder = 2
-            OnChange = edtTotalWoVATChange
+            OnChange = edtTotalChange
             SkinData.SkinSection = 'EDIT'
             BoundLabel.Font.Charset = DEFAULT_CHARSET
             BoundLabel.Font.Color = clWindowText
@@ -858,7 +869,7 @@ object frmInvoice: TfrmInvoice
             ParentFont = False
             ReadOnly = True
             TabOrder = 3
-            OnChange = edtTotalWoVATChange
+            OnChange = edtTotalChange
             SkinData.SkinSection = 'EDIT'
             BoundLabel.Font.Charset = DEFAULT_CHARSET
             BoundLabel.Font.Color = clWindowText
@@ -883,7 +894,7 @@ object frmInvoice: TfrmInvoice
             ParentFont = False
             ReadOnly = True
             TabOrder = 4
-            OnChange = edtTotalWoVATChange
+            OnChange = edtTotalChange
             SkinData.SkinSection = 'EDIT'
             BoundLabel.Font.Charset = DEFAULT_CHARSET
             BoundLabel.Font.Color = clWindowText

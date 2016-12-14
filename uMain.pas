@@ -29,7 +29,7 @@ uses
     , ppDB, ppDBPipe, ppParameter, ppDesignLayer, ppCtrls, ppBands, ppStrtch, ppMemo, ppClass, ppPrnabl, ppCache,
   ppComm, ppRelatv, ppProd, ppReport
 
-    , TeEngine, Series, TeeProcs, Chart, htmlhint, HTMLabel, uRoomerLanguage
+    , htmlhint, HTMLabel, uRoomerLanguage
 
   // Alpha skins
     , acPNG, acAlphaImageList, acProgressBar, acTitleBar

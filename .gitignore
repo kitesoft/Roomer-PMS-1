@@ -60,4 +60,5 @@ AQTime/*_Results/
 RoomerPMSRelease/*.exe
 RoomerPMSRelease/Roomer.xml
 RoomerPMSRelease/Deployment/
+Utils/*.exe
 

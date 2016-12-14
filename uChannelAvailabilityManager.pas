@@ -13,7 +13,7 @@ uses
   Vcl.ComCtrls,
   sPageControl, Vcl.OleCtrls, SHDocVw, mshtml, RoomerCloudEntities,
   AdvTimePickerDropDown, sEdit, sCheckBox, sComboBox,
-  uUtils, Vcl.Menus, uD, sGroupBox, sBevel, UbuntuProgress, ActiveX, HTMLabel,
+  uUtils, uCurrencyHandlersMap, Vcl.Menus, uD, sGroupBox, sBevel, UbuntuProgress, ActiveX, HTMLabel,
   cxClasses, acImage, clisted, uRoomerThreadedRequest, cxGraphics, cxLookAndFeels, cxLookAndFeelPainters, dxSkinsCore, dxSkinCaramel, dxSkinCoffee,
   dxSkinDarkSide, dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, cxButtons, AdvEdit, AdvEdBtn, PlannerDatePicker,
   dxSkinBlack, dxSkinBlue, dxSkinDevExpressDarkStyle, dxSkinFoggy, dxSkinLiquidSky, dxSkinMcSkin, dxSkinOffice2013White, dxSkinWhiteprint, CheckComboBox,
@@ -118,6 +118,8 @@ type
     FconnectLOSToMasterRate: Boolean;
     FconnectStopSellToMasterRate: Boolean;
 
+    FCurrencyId : Integer;
+
     procedure SetPrice(const value: Double);
     procedure SetAvailability(const value: integer);
     procedure SetCOA(const value: Boolean);
@@ -147,7 +149,9 @@ type
       _connectMaxStayToMasterRate : Boolean;
       _connectCOAToMasterRate : Boolean;
       _connectCODToMasterRate : Boolean;
-      _connectLOSToMasterRate : Boolean
+      _connectLOSToMasterRate : Boolean;
+
+      _CurrencyId : Integer
     );
     destructor Destroy; override;
 
@@ -434,6 +438,8 @@ type
 
     ThreadedDataGetter : TGetThreadedData;
 
+    CurrencyHandlersMap : TCurrencyHandlersMap;
+
 
     procedure ShowAvailabilityForSelectedChannelManager;
     function GetDateLabel(date: TDateTime): String;
@@ -533,6 +539,7 @@ type
     function PerformForcedAvailabilityUpdate: Boolean;
     procedure ReloadSelectedPeriod;
     function AnyRateOrRestrictionsChanges: Boolean;
+    function CorrectAmountByCurrency(price: Double; fromCurrencyId, toCurrencyId: Integer): Double;
   protected
     procedure CreateParams(var Params: TCreateParams); override;
   public
@@ -984,13 +991,14 @@ end;
 
 procedure TfrmChannelAvailabilityManager.FormCreate(Sender: TObject);
 begin
-
   RoomerDataSet := CreateNewDataSet;
   pgcPages.Visible := False;
   cbxRateRestrictionsClick(cbxRateRestrictions);
 
   RoomerLanguage.TranslateThisForm(self);
   glb.PerformAuthenticationAssertion(self); PlaceFormOnVisibleMonitor(self);
+
+  CurrencyHandlersMap := TCurrencyHandlersMap.Create;
 
   imgHelp.Hint := format('<body bgcolor="#0000FF">Color definitions in grid:<br><hr><br>' + '<font %s color="#FFFFFF"> &nbsp;&nbsp;&nbsp;&nbsp;</font>' +
     '<font bgcolor="#0000FF" color="#FFFFFF"> Rate, availability or restriction has changed.</font><br>', [GetHTMLColor(clRed, true)]) +
@@ -1018,6 +1026,7 @@ var
 begin
   RoomerDataset.Free;
   AvailDict.Free;
+  CurrencyHandlersMap.Free;
   for i := 0 to cbxChannelManagers.Items.Count-1 do
   begin
     obj := cbxChannelManagers.Items.Objects[i];
@@ -3284,7 +3293,9 @@ begin
                 RateSet['connectMaxStayToMasterRate'],
                 RateSet['connectCOAToMasterRate'],
                 RateSet['connectCODToMasterRate'],
-                RateSet['connectLOSToMasterRate']
+                RateSet['connectLOSToMasterRate'],
+
+                RateSet['currencyId']
               );
               rateGrid.Objects[iRateCol, iRateRow] := PriceData;
 
@@ -4328,6 +4339,12 @@ begin
 //  Allow := isAnyEditableRow(NewRow);
 end;
 
+function TfrmChannelAvailabilityManager.CorrectAmountByCurrency(price : Double; fromCurrencyId, toCurrencyId : Integer) : Double;
+begin
+  result := price;
+  if glb.PMSSettings.MasterRateCurrencyConvert then
+    result := CurrencyHandlersMap.ConvertAmount(price, fromCurrencyId, toCurrencyId);
+end;
 
 procedure TfrmChannelAvailabilityManager.CorrectMasterRateLinkedCells(PriceData : TPriceData; ACol, ARow: integer);
 var
@@ -4338,7 +4355,7 @@ var
 begin
   if PriceData.channelId = -1 then
   begin
-    for i := ARow + 7 to rateGrid.RowCount - 1 do
+    for i := ARow to rateGrid.RowCount - 1 do
     begin
       DestPriceData := getPriceDataOfRow(ACol, i);
       if assigned(DestPriceData) AND (DestPriceData.channelId >= 0) then
@@ -4348,9 +4365,9 @@ begin
           if (DestPriceData.connectRateToMasterRate AND isPriceRow(ARow)) then
           begin
              if DestPriceData.RateDeviationType = 'FIXED_AMOUNT' then
-               tmpValue := PriceData.price + DestPriceData.masterRateRateDeviation
+               tmpValue := CorrectAmountByCurrency(PriceData.price, PriceData.FCurrencyId, DestPriceData.FCurrencyId) + DestPriceData.masterRateRateDeviation
              else
-               tmpValue := PriceData.price * (1 + DestPriceData.masterRateRateDeviation / 100);
+               tmpValue := CorrectAmountByCurrency(PriceData.price, PriceData.FCurrencyId, DestPriceData.FCurrencyId) * (1 + DestPriceData.masterRateRateDeviation / 100);
              if tmpValue > 0.00 then
                DestPriceData.price := tmpValue;
              SetRateCellValue(ACol, i, DestPriceData, DestPriceData.price);
@@ -4359,9 +4376,9 @@ begin
           if (DestPriceData.connectSingleUseRateToMasterRate AND isSingleUsePriceRow(ARow)) then
           begin
              if DestPriceData.SingleUseRateDeviationType = 'FIXED_AMOUNT' then
-               tmpValue := PriceData.SingleUsePrice + DestPriceData.masterRateSingleUseRateDeviation
+               tmpValue := CorrectAmountByCurrency(PriceData.SingleUsePrice, PriceData.FCurrencyId, DestPriceData.FCurrencyId) + DestPriceData.masterRateSingleUseRateDeviation
              else
-               tmpValue := PriceData.SingleUsePrice * (1 + DestPriceData.masterRateSingleUseRateDeviation / 100);
+               tmpValue := CorrectAmountByCurrency(PriceData.SingleUsePrice, PriceData.FCurrencyId, DestPriceData.FCurrencyId) * (1 + DestPriceData.masterRateSingleUseRateDeviation / 100);
              if tmpValue > 0.00 then
                DestPriceData.SingleUsePrice := tmpValue;
              SetSingleUsePriceCellValue(ACol, i, DestPriceData, DestPriceData.SingleUsePrice);
@@ -4416,7 +4433,6 @@ begin
     end;
   end;
 end;
-
 
 procedure TfrmChannelAvailabilityManager.rateGridCellValidate(Sender: TObject; ACol, ARow: integer; var value: string; var Valid: Boolean);
 var
@@ -5152,7 +5168,9 @@ constructor TPriceData.Create(_Id: integer; const roomtypeGroupCode, _roomTypeTo
   _connectMaxStayToMasterRate : Boolean;
   _connectCOAToMasterRate : Boolean;
   _connectCODToMasterRate : Boolean;
-  _connectLOSToMasterRate : Boolean
+  _connectLOSToMasterRate : Boolean;
+
+  _CurrencyId : Integer
   );
 begin
   ForcingUpdate := false;
@@ -5165,6 +5183,8 @@ begin
   FRoomTypeTopClass := _roomTypeTopClass;
   FRoomTypeGroupId := roomTypeGroupId;
   FDate := date;
+
+  FCurrencyId := _CurrencyId;
 
   FMinStay := minStay;
   FStopSell := stopSell;
