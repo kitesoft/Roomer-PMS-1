@@ -27,9 +27,11 @@ type
     FFormatSettings: TFormatSettings;
     function GetRate: double;
     function GetCurrencyCode: string;
+    function GetId: integer;
   public
     constructor Create(const aCurrencyCode: string);
 
+    property ID: integer read GetId;
     property Rate: double read GetRate;
     property CurrencyCode: string read GetCurrencyCode;
 
@@ -155,6 +157,11 @@ begin
   Result.OnChange := aOriginalProperties.OnChange;
   Result.OnEditValueChanged := aOriginalProperties.OnEditValueChanged;
   Result.OnValidate := aOriginalProperties.OnValidate;
+end;
+
+function TCurrencyHandler.GetId: integer;
+begin
+  Result := FCurrencyRec.id;
 end;
 
 function TCurrencyHandler.GetRate: double;

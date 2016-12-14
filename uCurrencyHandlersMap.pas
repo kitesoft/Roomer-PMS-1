@@ -16,13 +16,12 @@ type
     FMapByCode : TObjectDictionary<String,TCurrencyHandler>;
 
   private
-    function ListOfCurrencies : TStrings;
+    function MakeListOfCurrencies : TStrings;
     procedure prepareCurrencyHandlers(List : TStrings);
   public
-    constructor Create(currencyCodes : TStrings); overload;
-    constructor Create; overload;
+    constructor Create(currencyCodes : TStrings = nil); overload;
 
-    destructor Destroy;
+    destructor Destroy; override;
 
     function ConvertAmount(Amount : Double; FromCurrency, ToCurrency : String) : Double; overload;
     function ConvertAmount(Amount : Double; FromCurrencyId, ToCurrencyId : Integer) : Double; overload;
@@ -55,29 +54,34 @@ begin
        result := HandlerFrom.ConvertTo(Amount, HandlerTo);
 end;
 
-constructor TCurrencyHandlersMap.Create;
-var currencyCodes : TStrings;
+constructor TCurrencyHandlersMap.Create(currencyCodes: TStrings = nil);
+var
+  lCodes: TStrings;
 begin
-  currencyCodes := ListOfCurrencies;
-  try
-    prepareCurrencyHandlers(currencyCodes);
-  finally
-    currencyCodes.Free;
-  end;
-end;
+  FMapById := TObjectDictionary<Integer,TCurrencyHandler>.Create([doOwnsValues]);
+  FMapByCode := TObjectDictionary<String,TCurrencyHandler>.Create([]);
 
-constructor TCurrencyHandlersMap.Create(currencyCodes: TStrings);
-begin
-  prepareCurrencyHandlers(currencyCodes);
+  if currencyCodes = nil then
+  begin
+    lCodes := MakeListOfCurrencies;
+    try
+      prepareCurrencyHandlers(lCodes);
+    finally
+      lCodes.Free;
+    end;
+  end
+  else
+    prepareCurrencyHandlers(currencyCodes);
 end;
 
 destructor TCurrencyHandlersMap.Destroy;
 begin
   FMapById.Free;
   FMapByCode.Free;
+  inherited;
 end;
 
-function TCurrencyHandlersMap.ListOfCurrencies: TStrings;
+function TCurrencyHandlersMap.MakeListOfCurrencies: TStrings;
 begin
   result := TStringList.Create;
   glb.CurrenciesSet.First;
@@ -92,16 +96,14 @@ procedure TCurrencyHandlersMap.prepareCurrencyHandlers(List: TStrings);
 var entry : TCurrencyHandler;
   i: Integer;
 begin
-  FMapById := TObjectDictionary<Integer,TCurrencyHandler>.Create;
-  FMapByCode := TObjectDictionary<String,TCurrencyHandler>.Create;
 
   for i := 0 to List.Count - 1 do
   begin
     entry := TCurrencyHandler.Create(List[i]);
     FMapByCode.Add(List[i], entry);
 
-    entry := TCurrencyHandler.Create(entry.CurrencyRec.id);
-    FMapById.Add(entry.CurrencyRec.id, entry);
+    entry := TCurrencyHandler.Create(entry.CurrencyCode);
+    FMapById.Add(entry.id, entry);
   end;
 
 end;

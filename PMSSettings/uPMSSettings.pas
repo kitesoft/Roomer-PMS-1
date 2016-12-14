@@ -236,7 +236,7 @@ end;
 
 procedure TPMSSettings.SetMasterRateCurrencyConvert(const Value: boolean);
 begin
-  SetSettingsAsString(cRatesAndAvailabilitiesGroup, cMasterRateCurrencyActive, Value, True);
+  SetSettingsAsBoolean(cRatesAndAvailabilitiesGroup, cMasterRateCurrencyActive, Value, True);
 end;
 
 procedure TPMSSettings.SetMasterRateDefaultsActive(const Value: boolean);

@@ -345,6 +345,7 @@
         <DCCReference Include="uDownPayment.pas">
             <Form>frmDownPayment</Form>
         </DCCReference>
+        <DCCReference Include="Extras\_Glob.pas"/>
         <DCCReference Include="uLodgingTaxReport2.pas">
             <Form>frmLodgingTaxReport2</Form>
         </DCCReference>
@@ -835,8 +836,6 @@
         </DCCReference>
         <DCCReference Include="Currencies\uAmount.pas"/>
         <DCCReference Include="Currencies\uAmountConfigurator.pas"/>
-        <DCCReference Include="Extras\_Glob.pas"/>
-        <DCCReference Include="uCurrencyHandlersMap.pas"/>
         <None Include="Roomer.todo"/>
         <None Include="notes.txt"/>
         <None Include="Roomer.inc"/>

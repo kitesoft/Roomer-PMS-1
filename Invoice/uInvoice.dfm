@@ -313,7 +313,6 @@ object frmInvoice: TfrmInvoice
         ParentFont = False
         ReadOnly = True
         TabOrder = 12
-        OnDblClick = edtRateDblClick
         SkinData.SkinSection = 'EDIT'
         BoundLabel.Font.Charset = DEFAULT_CHARSET
         BoundLabel.Font.Color = clWindowText
@@ -361,7 +360,6 @@ object frmInvoice: TfrmInvoice
         Height = 20
         Caption = 'Get..'
         TabOrder = 13
-        OnClick = edtRateDblClick
         SkinData.SkinSection = 'BUTTON'
       end
       object edtRoomGuest: TsEdit
