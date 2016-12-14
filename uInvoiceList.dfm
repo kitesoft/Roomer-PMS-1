@@ -111,7 +111,6 @@ object frmInvoiceList: TfrmInvoiceList
       ParentFont = False
       TabOrder = 1
       Text = '  -  -    '
-      CheckOnExit = True
       SkinData.SkinSection = 'EDIT'
       GlyphMode.Blend = 0
       GlyphMode.Grayed = False
@@ -134,7 +133,6 @@ object frmInvoiceList: TfrmInvoiceList
       ParentFont = False
       TabOrder = 2
       Text = '  -  -    '
-      CheckOnExit = True
       SkinData.SkinSection = 'EDIT'
       GlyphMode.Blend = 0
       GlyphMode.Grayed = False
@@ -210,6 +208,7 @@ object frmInvoiceList: TfrmInvoiceList
       Width = 100
       Height = 25
       Caption = 'Refresh'
+      Default = True
       ImageIndex = 28
       Images = DImages.PngImageList1
       TabOrder = 8
@@ -252,6 +251,7 @@ object frmInvoiceList: TfrmInvoiceList
       TabOrder = 0
       LookAndFeel.Kind = lfStandard
       LookAndFeel.NativeStyle = False
+      ExplicitTop = 48
       object tvInvoices: TcxGridDBBandedTableView
         Navigator.Buttons.CustomButtons = <>
         Navigator.Buttons.Insert.Enabled = False
@@ -283,14 +283,14 @@ object frmInvoiceList: TfrmInvoiceList
           item
             FixedKind = fkLeft
             Options.Moving = False
-            Width = 407
+            Width = 476
           end
           item
           end>
         object tvInvoicesInvoiceNumber: TcxGridDBBandedColumn
           Caption = 'Number'
           DataBinding.FieldName = 'InvoiceNumber'
-          Width = 72
+          Width = 74
           Position.BandIndex = 0
           Position.ColIndex = 0
           Position.RowIndex = 0
@@ -298,7 +298,7 @@ object frmInvoiceList: TfrmInvoiceList
         object tvInvoicesInvoicedate: TcxGridDBBandedColumn
           Caption = 'Date'
           DataBinding.FieldName = 'Invoicedate'
-          Width = 99
+          Width = 98
           Position.BandIndex = 0
           Position.ColIndex = 1
           Position.RowIndex = 0
@@ -306,18 +306,27 @@ object frmInvoiceList: TfrmInvoiceList
         object tvInvoicesNameOnInvoice: TcxGridDBBandedColumn
           Caption = 'Name on invoice'
           DataBinding.FieldName = 'NameOnInvoice'
-          Width = 148
+          Width = 119
           Position.BandIndex = 0
-          Position.ColIndex = 3
+          Position.ColIndex = 4
           Position.RowIndex = 0
         end
         object tvInvoicesAmount: TcxGridDBBandedColumn
           DataBinding.FieldName = 'Amount'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           OnGetProperties = tvInvoicesAmountGetProperties
-          Width = 88
+          Width = 90
           Position.BandIndex = 0
           Position.ColIndex = 2
+          Position.RowIndex = 0
+        end
+        object tvInvoicesCurrencyAmount: TcxGridDBBandedColumn
+          Caption = 'Currency Amount'
+          DataBinding.FieldName = 'CurrencyAmount'
+          OnGetProperties = tvInvoicesCurrencyAmountGetProperties
+          Width = 95
+          Position.BandIndex = 0
+          Position.ColIndex = 3
           Position.RowIndex = 0
         end
         object tvInvoicesCustomer: TcxGridDBBandedColumn
@@ -511,6 +520,10 @@ object frmInvoiceList: TfrmInvoiceList
       end
       item
         Name = 'Amount'
+        DataType = ftFloat
+      end
+      item
+        Name = 'CurrencyAmount'
         DataType = ftFloat
       end
       item

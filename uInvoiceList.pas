@@ -106,6 +106,7 @@ type
     tvInvoicesRoomGuest: TcxGridDBBandedColumn;
     sButton3: TsButton;
     btnInvoiceListReservation: TsButton;
+    tvInvoicesCurrencyAmount: TcxGridDBBandedColumn;
     procedure RadioButton1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure sButton1Click(Sender: TObject);
@@ -122,6 +123,7 @@ type
     procedure sButton3Click(Sender: TObject);
     procedure btnInvoiceListReservationClick(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure tvInvoicesCurrencyAmountGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord; var AProperties: TcxCustomEditProperties);
   private
     { Private declarations }
     procedure refresh;
@@ -231,6 +233,7 @@ begin
     s := s+ ', Customer '+#10;
     s := s+ ', Name AS NameOnInvoice '+#10;
     s := s+ ', Total AS Amount '+#10;
+    s := s+ ', Total/ihCurrencyRate AS CurrencyAmount '+#10;
     s := s+ ', CreditInvoice '+#10;
     s := s+ ', OriginalInvoice '+#10;
     s := s+ ', RoomGuest '+#10;
@@ -327,6 +330,12 @@ procedure TfrmInvoiceList.tvInvoicesCellDblClick(Sender: TcxCustomGridTableView;
   AButton: TMouseButton; AShift: TShiftState; var AHandled: Boolean);
 begin
   getInvoice;
+end;
+
+procedure TfrmInvoiceList.tvInvoicesCurrencyAmountGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
+  var AProperties: TcxCustomEditProperties);
+begin
+  AProperties := d.getCurrencyProperties(ARecord.Values[tvInvoicesihCurrency.index]);;
 end;
 
 procedure TfrmInvoiceList.btnClearClick(Sender: TObject);

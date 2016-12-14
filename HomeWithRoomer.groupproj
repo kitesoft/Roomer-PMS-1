@@ -33,9 +33,6 @@
         <Projects Include="..\Roomer\Delphi Projects\Rest\DelphiXE3_RestApi.dproj">
             <Dependencies/>
         </Projects>
-        <Projects Include="..\Roomer\Delphi Projects\RoomerDataConvert\RoomerDataConvert.dproj">
-            <Dependencies/>
-        </Projects>
         <Projects Include="..\Roomer\DelphiPackages\HtmlEditor\EmbeddedHtmlEditor.dproj">
             <Dependencies/>
         </Projects>
@@ -164,15 +161,6 @@
     <Target Name="DelphiXE3_RestApi:Make">
         <MSBuild Projects="..\Roomer\Delphi Projects\Rest\DelphiXE3_RestApi.dproj" Targets="Make"/>
     </Target>
-    <Target Name="RoomerDataConvert">
-        <MSBuild Projects="..\Roomer\Delphi Projects\RoomerDataConvert\RoomerDataConvert.dproj"/>
-    </Target>
-    <Target Name="RoomerDataConvert:Clean">
-        <MSBuild Projects="..\Roomer\Delphi Projects\RoomerDataConvert\RoomerDataConvert.dproj" Targets="Clean"/>
-    </Target>
-    <Target Name="RoomerDataConvert:Make">
-        <MSBuild Projects="..\Roomer\Delphi Projects\RoomerDataConvert\RoomerDataConvert.dproj" Targets="Make"/>
-    </Target>
     <Target Name="EmbeddedHtmlEditor">
         <MSBuild Projects="..\Roomer\DelphiPackages\HtmlEditor\EmbeddedHtmlEditor.dproj"/>
     </Target>
@@ -264,13 +252,13 @@
         <MSBuild Projects="Utils\VersionXmlGenerator\VersionXmlGenerator.dproj" Targets="Make"/>
     </Target>
     <Target Name="Build">
-        <CallTarget Targets="Roomer;RoomerVCLs;filter;BackendTests;RoomerInvoicing;RoomerLanguage;RoomerSkeleton;RoomerX;RoomerXVcl;DelphiXE3_RestApi;RoomerDataConvert;EmbeddedHtmlEditor;DsgnCPortDXE;CPortLibDXE;RoomerPortMonitor;RoomerTelReader;ExecAndWait;SupportTool;RoomerSupportTool;RoomerUpgradeAgent;VersionXmlGenerator"/>
+        <CallTarget Targets="Roomer;RoomerVCLs;filter;BackendTests;RoomerInvoicing;RoomerLanguage;RoomerSkeleton;RoomerX;RoomerXVcl;DelphiXE3_RestApi;EmbeddedHtmlEditor;DsgnCPortDXE;CPortLibDXE;RoomerPortMonitor;RoomerTelReader;ExecAndWait;SupportTool;RoomerSupportTool;RoomerUpgradeAgent;VersionXmlGenerator"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="Roomer:Clean;RoomerVCLs:Clean;filter:Clean;BackendTests:Clean;RoomerInvoicing:Clean;RoomerLanguage:Clean;RoomerSkeleton:Clean;RoomerX:Clean;RoomerXVcl:Clean;DelphiXE3_RestApi:Clean;RoomerDataConvert:Clean;EmbeddedHtmlEditor:Clean;DsgnCPortDXE:Clean;CPortLibDXE:Clean;RoomerPortMonitor:Clean;RoomerTelReader:Clean;ExecAndWait:Clean;SupportTool:Clean;RoomerSupportTool:Clean;RoomerUpgradeAgent:Clean;VersionXmlGenerator:Clean"/>
+        <CallTarget Targets="Roomer:Clean;RoomerVCLs:Clean;filter:Clean;BackendTests:Clean;RoomerInvoicing:Clean;RoomerLanguage:Clean;RoomerSkeleton:Clean;RoomerX:Clean;RoomerXVcl:Clean;DelphiXE3_RestApi:Clean;EmbeddedHtmlEditor:Clean;DsgnCPortDXE:Clean;CPortLibDXE:Clean;RoomerPortMonitor:Clean;RoomerTelReader:Clean;ExecAndWait:Clean;SupportTool:Clean;RoomerSupportTool:Clean;RoomerUpgradeAgent:Clean;VersionXmlGenerator:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="Roomer:Make;RoomerVCLs:Make;filter:Make;BackendTests:Make;RoomerInvoicing:Make;RoomerLanguage:Make;RoomerSkeleton:Make;RoomerX:Make;RoomerXVcl:Make;DelphiXE3_RestApi:Make;RoomerDataConvert:Make;EmbeddedHtmlEditor:Make;DsgnCPortDXE:Make;CPortLibDXE:Make;RoomerPortMonitor:Make;RoomerTelReader:Make;ExecAndWait:Make;SupportTool:Make;RoomerSupportTool:Make;RoomerUpgradeAgent:Make;VersionXmlGenerator:Make"/>
+        <CallTarget Targets="Roomer:Make;RoomerVCLs:Make;filter:Make;BackendTests:Make;RoomerInvoicing:Make;RoomerLanguage:Make;RoomerSkeleton:Make;RoomerX:Make;RoomerXVcl:Make;DelphiXE3_RestApi:Make;EmbeddedHtmlEditor:Make;DsgnCPortDXE:Make;CPortLibDXE:Make;RoomerPortMonitor:Make;RoomerTelReader:Make;ExecAndWait:Make;SupportTool:Make;RoomerSupportTool:Make;RoomerUpgradeAgent:Make;VersionXmlGenerator:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>
