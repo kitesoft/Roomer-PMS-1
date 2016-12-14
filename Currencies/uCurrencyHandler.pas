@@ -138,7 +138,8 @@ end;
 function TCurrencyHandler.FormattedValue(aAmount: double): string;
 begin
 //  Result := Format('%s %s', [FCurrencyRec.CurrencySign, FormatCurr(FCurrencyRec.Displayformat, RoundedValue(aAmount), FFormatSettings)]);
-    Result := FormatCurr(FCurrencyRec.Displayformat, RoundedValue(aAmount), FFormatSettings);
+//    Result := FormatCurr(FCurrencyRec.Displayformat, RoundedValue(aAmount), FFormatSettings);
+    Result := CurrToStrF(RoundedValue(aAmount), ffCurrency, FFormatsettings.CurrencyDecimals, FFormatSettings);
 end;
 
 function TCurrencyHandler.GetCurrencyCode: string;

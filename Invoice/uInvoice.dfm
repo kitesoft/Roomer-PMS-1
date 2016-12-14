@@ -162,7 +162,7 @@ object frmInvoice: TfrmInvoice
       end
       object clabPId: TsLabel
         Left = 2
-        Top = 31
+        Top = 30
         Width = 103
         Height = 13
         Alignment = taRightJustify
@@ -196,7 +196,7 @@ object frmInvoice: TfrmInvoice
       end
       object clabAddress: TsLabel
         Left = 2
-        Top = 69
+        Top = 71
         Width = 103
         Height = 13
         Alignment = taRightJustify
@@ -213,7 +213,7 @@ object frmInvoice: TfrmInvoice
       end
       object cLabName: TsLabel
         Left = 2
-        Top = 48
+        Top = 51
         Width = 103
         Height = 13
         Alignment = taRightJustify
@@ -335,7 +335,7 @@ object frmInvoice: TfrmInvoice
         Font.Style = []
         MaxLength = 30
         ParentFont = False
-        TabOrder = 15
+        TabOrder = 14
         SkinData.SkinSection = 'EDIT'
         BoundLabel.Font.Charset = DEFAULT_CHARSET
         BoundLabel.Font.Color = clWindowText
@@ -353,15 +353,6 @@ object frmInvoice: TfrmInvoice
         OnClick = edtCurrencyDblClick
         SkinData.SkinSection = 'BUTTON'
       end
-      object btnGetRate: TsButton
-        Left = 795
-        Top = 49
-        Width = 90
-        Height = 20
-        Caption = 'Get..'
-        TabOrder = 13
-        SkinData.SkinSection = 'BUTTON'
-      end
       object edtRoomGuest: TsEdit
         Left = 724
         Top = 78
@@ -377,7 +368,7 @@ object frmInvoice: TfrmInvoice
         Font.Style = []
         ParentFont = False
         ReadOnly = True
-        TabOrder = 14
+        TabOrder = 13
         SkinData.SkinSection = 'EDIT'
         BoundLabel.Font.Charset = DEFAULT_CHARSET
         BoundLabel.Font.Color = clWindowText
@@ -412,7 +403,7 @@ object frmInvoice: TfrmInvoice
       end
       object edtPersonalId: TsEdit
         Left = 111
-        Top = 28
+        Top = 27
         Width = 253
         Height = 17
         AutoSize = False
@@ -568,7 +559,7 @@ object frmInvoice: TfrmInvoice
         ParentShowHint = False
         ShowHint = True
         SpeedButtonOptions.Flat = True
-        TabOrder = 17
+        TabOrder = 16
         WordWrap = True
         OnClick = btnExitClick
       end
@@ -585,7 +576,7 @@ object frmInvoice: TfrmInvoice
         ParentShowHint = False
         ShowHint = True
         SpeedButtonOptions.Flat = True
-        TabOrder = 19
+        TabOrder = 18
         WordWrap = True
       end
       object btnProforma: TcxButton
@@ -600,7 +591,7 @@ object frmInvoice: TfrmInvoice
         ParentShowHint = False
         ShowHint = True
         SpeedButtonOptions.Flat = True
-        TabOrder = 18
+        TabOrder = 17
         WordWrap = True
       end
       object edtForeignCurrency: TsEdit
@@ -618,7 +609,7 @@ object frmInvoice: TfrmInvoice
         Font.Style = []
         ParentFont = False
         ReadOnly = True
-        TabOrder = 16
+        TabOrder = 15
         Text = '0'
         Visible = False
         OnChange = edtTotalChange
@@ -637,7 +628,7 @@ object frmInvoice: TfrmInvoice
         Caption = 'Package on invoice'
         Checked = True
         State = cbChecked
-        TabOrder = 20
+        TabOrder = 19
         SkinData.SkinSection = 'CHECKBOX'
         ImgChecked = 0
         ImgUnchecked = 0

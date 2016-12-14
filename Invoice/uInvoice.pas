@@ -46,7 +46,7 @@ uses
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinValentine,
   dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, cxButtons, sComboBox,
   sSpeedButton, AdvUtil
-  , uInvoiceEntities, uCurrencyHandler
+  , uInvoiceEntities, uCurrencyHandler, uAmount
     ;
 
 type
@@ -75,7 +75,7 @@ type
     FText: string;
 
     FQuantity: Double; // -96
-    FNativePrice: Double;
+    FNativePrice: TAmount;
     FDate: TDate;
     FAuto: boolean;
     FReference: string;
@@ -88,7 +88,7 @@ type
     FrrAlias: integer;
     FAutoGen: string;
     FId: integer;
-    function GetTotal: Double;
+    function GetTotal: TAmount;
   public
     constructor create(aIndex, _id: integer);
   published
@@ -100,12 +100,12 @@ type
     /// <summary>
     ///   Price per item in native currency
     /// </summary>
-    property NativePrice: Double read FNativePrice write FNativePrice;
+    property NativePrice: TAmount read FNativePrice write FNativePrice;
     /// <summary>
     ///   TotalPrice in native currency
     /// </summary>
-    property Total: Double read GetTotal;
-    property Refrence: string read FReference write FReference;
+    property Total: TAmount read GetTotal;
+    property Reference: string read FReference write FReference;
     property Source: string read FSource write FSource;
     property isPackage: boolean read FIspackage write FIspackage;
     property noGuests: integer read FNoGuests write FNoGuests;
@@ -114,6 +114,7 @@ type
     property itemIndex: integer read FitemIndex write FitemIndex;
     property rrAlias: integer read FrrAlias write FrrAlias;
     property AutoGen: string read FAutoGen write FAutoGen;
+    property PurchaseDate: TDate read FDate write FDate;
 
   end;
 
@@ -184,7 +185,6 @@ type
     GuestName1: TMenuItem;
     Refrence1: TMenuItem;
     btnGetCurrency: TsButton;
-    btnGetRate: TsButton;
     clabInvoice: TsLabel;
     edtRoomGuest: TsEdit;
     clabRoomGuest: TsLabel;
@@ -752,8 +752,8 @@ const
   col_TotalPrice = col_ItemPrice + 1; // 5
   col_System = col_TotalPrice + 1; // 6 old 5
   col_date = col_System + 1; // 7
-  col_Refrence = col_date + 1; // // 8 old 7
-  col_Source = col_Refrence + 1; // 9
+  col_Reference = col_date + 1; // // 8 old 7
+  col_Source = col_Reference + 1; // 9
   col_isPackage = col_Source + 1; // //10 old 9
   col_NoGuests = col_isPackage + 1; // 11
   col_confirmdate = col_NoGuests + 1; // 12
@@ -980,7 +980,7 @@ begin
   FSource := '';
 end;
 
-function TInvoiceLine.GetTotal: Double;
+function TInvoiceLine.GetTotal: TAmount;
 begin
   Result := NativePrice * Quantity;
 end;
@@ -1103,12 +1103,10 @@ begin
   agrLines.Cells[col_Item, iRow] := invoiceLine.FItem;
   agrLines.Cells[col_Description, iRow] := invoiceLine.FText;
   agrLines.Cells[col_ItemCount, iRow]   := trim(_floattostr(invoiceLine.FQuantity, vWidth, vDec));
-  agrLines.Cells[col_ItemPrice, iRow]   := FCurrentCurrencyHandler.FormattedValue(
-                                                FNativeCurrencyHandler.ConvertTo(invoiceLine.NativePrice, FCurrentCurrencyHandler));
-  agrLines.Cells[col_TotalPrice, iRow]  := FCurrentCurrencyHandler.FormattedValue(
-                                                FNativeCurrencyHandler.ConvertTo(invoiceLine.Total, FCurrentCurrencyHandler));
+  agrLines.Cells[col_ItemPrice, iRow]   := invoiceLine.NativePrice.ToCurrency(FCurrentCurrencyHandler.CurrencyCode).AsDisplayString;
+  agrLines.Cells[col_TotalPrice, iRow]  := invoiceLine.Total.ToCurrency(FCurrentCurrencyHandler.CurrencyCode).AsDisplayString;
   agrLines.Cells[col_System, iRow]      := '';
-  agrLines.Cells[col_Refrence, iRow]    := invoiceLine.FReference;
+  agrLines.Cells[col_Reference, iRow]    := invoiceLine.FReference;
   agrLines.Cells[col_Source, iRow]      := invoiceLine.FSource;
   // **AA
   agrLines.Objects[col_Description, iRow] := TObject(trunc(invoiceLine.FDate));
@@ -1179,6 +1177,7 @@ var
   ItemKind: TItemKind;
 
   lInvRoom: TInvoiceRoomEntity;
+  lInvLine: TInvoiceLine;
 
 begin
   Screen.Cursor := crHourglass;
@@ -1202,7 +1201,14 @@ begin
     // --
     for i := 1 to agrLines.RowCount - 1 do
     begin
-      ItemId := _trimlower(agrLines.Cells[col_Item, i]);
+      if agrLines.Cells[col_Item, i] = '' then
+          continue;
+
+      lInvLine := CellInvoiceLine(i);
+      if lInvLine = nil then
+        raise Exception.Create('no invoiceline');
+
+      ItemId :=  lInvLine.Item; // _trimlower(agrLines.Cells[col_Item, i]);
       if trim(ItemId) <> '' then
       begin
         ItemKind := Item_GetKind(ItemId);
@@ -1217,27 +1223,24 @@ begin
             begin
               try
                 if (editCol = col_ItemCount) AND (editRow = i) then
-                  itemAmount := Value * _StrToFloat(agrLines.Cells[col_ItemPrice, i])
+                  itemAmount := Value * lInvLine.NativePrice // _StrToFloat(agrLines.Cells[col_ItemPrice, i])
                 else if (editCol = col_ItemPrice) AND (editRow = i) then
-                  itemAmount := Value * _StrToFloat(agrLines.Cells[col_ItemCount, i])
+                  itemAmount := Value * lInvLine.Quantity // _StrToFloat(agrLines.Cells[col_ItemCount, i])
                 else
-                  itemAmount := _StrToFloat(agrLines.Cells[col_TotalPrice, i]);
+                  itemAmount := lInvLine.Total; // _StrToFloat(agrLines.Cells[col_TotalPrice, i]);
               except
                 itemAmount := 0;
               end;
 
-              ItemTypeInfo := d.Item_Get_ItemTypeInfo(ItemId,
-                agrLines.Cells[col_Source, i]);
-              lInvRoom := TInvoiceRoomEntity.create(ItemId, 1, 0, _StrToFloat(agrLines.Cells[col_ItemCount, i]),
-                taxAmount, 0, 0, false);
+              ItemTypeInfo := d.Item_Get_ItemTypeInfo(ItemId, agrLines.Cells[col_Source, i]);
+              lInvRoom := TInvoiceRoomEntity.create(ItemId, 1, 0, lInvLine.Quantity {_StrToFloat(agrLines.Cells[col_ItemCount, i])}, taxAmount, 0, 0, false);
               try
-                dVat := GetVATForItem(ItemId, itemAmount, _StrToFloat(agrLines.Cells[col_ItemCount, i]),
+                dVat := GetVATForItem(ItemId, itemAmount, lInvLine.Quantity {_StrToFloat(agrLines.Cells[col_ItemCount, i])},
                   lInvRoom, tempInvoiceItemList, ItemTypeInfo, edtCustomer.Text);
               finally
                 lInvRoom.free;
               end;
-              agrLines.Cells[col_Vat, i] :=
-                trim(_floattostr(dVat, vWidth, 3));
+              agrLines.Cells[col_Vat, i] := trim(_floattostr(dVat, vWidth, 3));
               ttItemAmount := ttItemAmount + itemAmount;
               ttItemVat := ttItemVat + dVat;
             end
@@ -1245,16 +1248,16 @@ begin
             begin
               ItemTypeInfo := d.Item_Get_ItemTypeInfo(ItemId, agrLines.Cells[col_Source, i]);
               try
-                taxAmount := _StrToFloat(agrLines.Cells[col_TotalPrice, i]);
+                taxAmount := lInvLine.Total;// _StrToFloat(agrLines.Cells[col_TotalPrice, i]);
               except
                 taxAmount := 0;
               end;
               ttTaxAmount := ttTaxAmount + taxAmount;
-              nativeTaxAmount := (ttTaxAmount * zCurrencyRate);
-              lInvRoom := TInvoiceRoomEntity.create(ItemId, 1, 0, _StrToFloat(agrLines.Cells[col_ItemCount, i]),
+              nativeTaxAmount := ttTaxAmount; //(ttTaxAmount * zCurrencyRate);
+              lInvRoom := TInvoiceRoomEntity.create(ItemId, 1, 0, lInvLine.Quantity { _StrToFloat(agrLines.Cells[col_ItemCount, i])},
                 taxAmount, 0, 0, false);
               try
-                dVat := zCurrencyRate * GetVATForItem(ItemId, taxAmount, _StrToFloat(agrLines.Cells[col_ItemCount, i]),
+                dVat := {zCurrencyRate *} GetVATForItem(ItemId, taxAmount, lInvLine.Quantity { _StrToFloat(agrLines.Cells[col_ItemCount, i])},
                   lInvRoom, tempInvoiceItemList, ItemTypeInfo, edtCustomer.Text);
               finally
                 lInvRoom.free;
@@ -1265,19 +1268,19 @@ begin
             else
             begin
               try
-                rentAmount := _StrToFloat(agrLines.Cells[col_TotalPrice, i]);
+                rentAmount := lInvLine.Total;// _StrToFloat(agrLines.Cells[col_TotalPrice, i]);
               except
                 rentAmount := 0;
               end;
               ttRentAmount := ttRentAmount + rentAmount;
-              ttRentNumber := ttRentNumber + _StrToFloat(agrLines.Cells[col_ItemCount, i]);
+              ttRentNumber := ttRentNumber + lInvLine.Quantity; // _StrToFloat(agrLines.Cells[col_ItemCount, i]);
             end;
           end
         end;
       end;
     end;
 
-    nativeRent := (ttRentAmount * zCurrencyRate);
+    nativeRent := ttRentAmount; // (ttRentAmount * zCurrencyRate);
     nativeTotal := nativeRent + ttItemAmount + nativeTaxAmount;
 
     if ABS(nativeRent) > 0.00 then
@@ -1293,23 +1296,21 @@ begin
       rentVat := dVat;
     end;
 
-    ttVAT := roundDecimals(ttItemVat + rentVat + ttTaxVat,
-      ctrlGetInteger('VATDecimals'));
+    ttVAT := roundDecimals(ttItemVat + rentVat + ttTaxVat, ctrlGetInteger('VATDecimals'));
 
-    edtTotal.Text := trim(_floattostr((nativeTotal) - ttVAT, vWidth, vDec));
-    edtVat.Text := trim(_floattostr(ttVAT, vWidth, vDec));
+    edtTotal.Text := TAmount(nativeTotal - ttVat).AsDisplayString; //trim(_floattostr((nativeTotal) - ttVAT, vWidth, vDec));
+    edtVat.Text := TAmount(ttVat).AsDisplayString; // trim(_floattostr(ttVAT, vWidth, vDec));
 
-    edtInvoiceTotal.Text := trim(_floattostr(nativeTotal, vWidth, vDec));
+    edtInvoiceTotal.Text := TAmount(nativeTotal).AsDisplayString; // trim(_floattostr(nativeTotal, vWidth, vDec));
 
     TotalDownPayments := getDownPayments;
     TotalBalance := nativeTotal - TotalDownPayments;
 
-    edtDownPayments.Text := trim(_floattostr(TotalDownPayments, vWidth, vDec));
-    edtBalance.Text := trim(_floattostr(TotalBalance, vWidth, vDec));
+    edtDownPayments.Text := TAmount(TotalDownPayments).AsDisplayString; // trim(_floattostr(TotalDownPayments, vWidth, vDec));
+    edtBalance.Text := TAmount(TotalBalance).AsDisplayString; // trim(_floattostr(TotalBalance, vWidth, vDec));
 
     if (edtCurrency.Text <> '') and (edtCurrency.Text <> zNativeCurrency) then
-      edtForeignCurrency.Text :=
-        _floattostr((nativeTotal) / GetRate(edtCurrency.Text), vWidth, vDec);
+      edtForeignCurrency.Text :=TAmount(nativeTotal).ToCurrency(FCurrentCurrencyHandler.CurrencyCode).AsDisplayString; //  _floattostr((nativeTotal) / GetRate(edtCurrency.Text), vWidth, vDec);
 
   finally
     Screen.Cursor := crDefault;
@@ -1707,7 +1708,7 @@ begin
   agrLines.Cells[col_ItemPrice, 0] := GetTranslatedText('shTxInvoice_Form_Header_UnitPrice');
   agrLines.Cells[col_TotalPrice, 0] := GetTranslatedText('shTxInvoice_Form_Header_Total');
   agrLines.Cells[col_System, 0] := ' !';
-  agrLines.Cells[col_Refrence, 0] := GetTranslatedText('shTxInvoice_Form_Header_Reference');
+  agrLines.Cells[col_Reference, 0] := GetTranslatedText('shTxInvoice_Form_Header_Reference');
   agrLines.Cells[col_Source, 0] := GetTranslatedText('shTxInvoice_Form_Header_Source');
   agrLines.Cells[col_isPackage, 0] := GetTranslatedText('shTxInvoice_Form_Header_Package');
   agrLines.Cells[col_NoGuests, 0] := GetTranslatedText('shTxInvoice_Form_Header_Guests');
@@ -1737,7 +1738,7 @@ begin
     agrLines.ColWidths[col_Description] := iWidth;
 
   agrLines.HideColumn(col_System);
-  agrLines.HideColumn(col_Refrence);
+  agrLines.HideColumn(col_Reference);
   agrLines.HideColumns(col_isPackage, col_autogen);
 
   for i := 0 to agrLines.ColCount - 1 do
@@ -1990,7 +1991,7 @@ begin
     lineTotalPrice := trim(agrLines.Cells[col_TotalPrice, i]);
     lineSystem := trim(agrLines.Cells[col_System, i]);
     lineDate := trim(agrLines.Cells[col_date, i]);
-    lineRefrence := trim(agrLines.Cells[col_Refrence, i]);
+    lineRefrence := trim(agrLines.Cells[col_Reference, i]);
     lineSource := trim(agrLines.Cells[col_Source, i]);
     lineisPackage := trim(agrLines.Cells[col_isPackage, i]);
     lineNoGuests := trim(agrLines.Cells[col_NoGuests, i]);
@@ -2318,6 +2319,7 @@ var
   dNumber: Double;
   lRoomText: string;
   lRoomAdditionalText: string;
+  rdCurrency: string;
 
   function SplitValue(s: String; Index: integer): String;
   var
@@ -2417,10 +2419,6 @@ begin
     if FnewSplitNumber = cCashInvoice then
     begin
       CreateCashInvoice(g.qRackCustomer);
-//      edtCurrency.Text := zNativeCurrency;
-//      zCurrentCurrency := edtCurrency.Text;
-//      zCurrencyRate := GetRate(zCurrentCurrency);
-//      edtRate.Text := floattostr(zCurrencyRate);
       InitInvoiceGrid;
       exit;
     end;
@@ -2722,6 +2720,7 @@ begin
         s := s + 'rd.Reservation, '#10;
         s := s + 'rd.PriceCode, '#10;
         s := s + 'rd.RoomRate, '#10;
+        s := s + 'rd.Currency, '#10;
         s := s + 'rd.Discount, '#10;
         s := s + 'rd.isPercentage, '#10;
         s := s + 'rd.showDiscount, '#10;
@@ -2763,11 +2762,9 @@ begin
           ChildrenCount := zRoomRSet.FieldByName('numChildren').asinteger;
           infantCount := zRoomRSet.FieldByName('numInfants').asinteger;
           PriceCode := zRoomRSet.FieldByName('PriceType').asString;
-          AvrageRate := zRoomRSet.GetFloatValue
-            (zRoomRSet.FieldByName('AvrageRate'));
+          AvrageRate := zRoomRSet.GetFloatValue(zRoomRSet.FieldByName('AvrageRate'));
           RateCount := zRoomRSet.FieldByName('rateCount').asinteger;
-          AvrageDiscount := zRoomRSet.GetFloatValue
-            (zRoomRSet.FieldByName('discount'));
+          AvrageDiscount := zRoomRSet.GetFloatValue(zRoomRSet.FieldByName('discount'));
           isPercentage := zRoomRSet.FieldByName('Percentage').asBoolean;
 
           mRoomRes.append;
@@ -2826,9 +2823,15 @@ begin
                 Room := rSet.FieldByName('Room').asString;
                 PriceCode := rSet.FieldByName('PriceCode').asString;
                 RateDate := SQLToDate(rSet.FieldByName('ADate').asString);
-                Rate := rSet.GetFloatValue(rSet.FieldByName('RoomRate'));
-                Discount := rSet.GetFloatValue(rSet.FieldByName('Discount'));
+
+                rdCurrency := rSet.FieldByName('currency').AsString;
+                Rate := TAmount.Create(rSet.FieldByName('RoomRate').asFloat, rdCurrency).ToCurrency(FNativeCurrencyHandler.CurrencyCode);
+
                 isPercentage := rSet.FieldByName('isPercentage').asBoolean;
+                Discount := rSet.GetFloatValue(rSet.FieldByName('Discount'));
+                if not isPercentage then
+                  Discount := TAmount.Create(Discount, rdCurrency).ToCurrency(FNativeCurrencyHandler.CurrencyCode);
+
                 ShowDiscount := rSet.FieldByName('ShowDiscount').asBoolean;
                 isPaid := rSet.FieldByName('Paid').asBoolean;
 
@@ -2854,14 +2857,14 @@ begin
                   end;
                 end;
                 rentAmount := Rate - DiscountAmount;
-                try
-                  CurrencyRate := _StrToFloat(edtRate.Text);
-                except
-                  CurrencyRate := 1
-                end;
-                if CurrencyRate = 0 then
-                  CurrencyRate := 1;
-                NativeAmount := rentAmount * CurrencyRate;
+//                try
+//                  CurrencyRate := _StrToFloat(edtRate.Text);
+//                except
+//                  CurrencyRate := 1
+//                end;
+//                if CurrencyRate = 0 then
+//                  CurrencyRate := 1;
+                NativeAmount := rentAmount; // * CurrencyRate;
 
                 TotalDiscount := TotalDiscount + DiscountAmount;
 
@@ -3439,9 +3442,9 @@ var
   lItemTypeInfo: TItemTypeInfo;
   lTaxResultInvoiceLines: TInvoiceTaxEntityList;
   lStayTaxUnitCount: integer;
-  lTotalTaxIncluded: double;
-  lTotalTaxExcluded: double;
-  lTotal: double;
+  lTotalTaxIncluded: TAmount;
+  lTotalTaxExcluded: TAmount;
+  lTotal: TAmount;
   lStayTaxUnitCountIncluded: integer;
   lStayTaxUnitCountExcluded: integer;
   tt, l: integer;
@@ -3452,7 +3455,7 @@ begin
   /// calc and add StayTax
   RemoveStayTax;
 
-  labLodgingTaxISK.caption := '0';
+  labLodgingTaxISK.caption := TAmount(0).AsDisplayString;
   labLodgingTaxNights.caption := '0';
 
   lUseStayTax := ctrlGetBoolean('useStayTax') AND RV_useStayTax(reservation);
@@ -3503,7 +3506,7 @@ begin
           else
           begin
             if NOT lTaxResultInvoiceLines[l].Percentage then
-              lTotalTaxExcluded := lTotalTaxExcluded + _RoundN(lTotal / zCurrencyRate, 2)
+              lTotalTaxExcluded := lTotalTaxExcluded + lTotal //+ _RoundN(lTotal / zCurrencyRate, 2)
             else
               lTotalTaxExcluded := lTotalTaxExcluded + lTotal;
             lStayTaxUnitCountExcluded := lStayTaxUnitCountExcluded + trunc(lTaxResultInvoiceLines[l].NumItems);
@@ -3520,7 +3523,7 @@ begin
 
   grbInclutedTaxes.Visible := (lStayTaxUnitCountIncluded <> 0);
 
-  labLodgingTaxISK.caption := _floattostr(lTotalTaxIncluded, vWidth, vDec);
+  labLodgingTaxISK.caption := lTotalTaxincluded.AsDisplayString ;// _floattostr(lTotalTaxIncluded, vWidth, vDec);
   labLodgingTaxNights.caption := floattostr(lStayTaxUnitCount);
 
   DisplayTotals;
@@ -4428,7 +4431,7 @@ var
   ItemPrice: Double;
   lInvRoom: TInvoiceRoomEntity;
 
-  invoiceLine: TInvoiceLine;
+  linvLine: TInvoiceLine;
   lRevenueCorrection: double;
   lRevenueCorrectionVat: double;
   lDate: TDate;
@@ -4467,11 +4470,15 @@ begin
 
       for i := 1 to agrLines.RowCount - 1 do
       begin
-        aItem := trim(agrLines.Cells[col_Item, i]);
-        // -- is this an empty line ?
-
-        if (trim(agrLines.Cells[col_Description, i]) = '') and (aItem = '') then
+        if (trim(agrLines.Cells[col_Description, i]) = '') and (trim(agrLines.Cells[col_Item, i]) = '') then
           continue;
+
+        linvLine := CellInvoiceLine(i);
+
+        if lInvLine = nil then
+          raise Exception.Create('No invoiceline');
+
+        aItem := lInvLine.Item; //trim(agrLines.Cells[col_Item, i]);
 
         // Dont add automatically generated lines when invoice is not definitive
         if (isSystemLine(i)) and (iInvoiceNumber <= 0) {and (aItem <> g.qBreakFastItem)} then
@@ -4480,13 +4487,15 @@ begin
         end;
 
         iNights := 0;
-        iPersons := 0;
-        if agrLines.Cells[col_NoGuests, i] <> '' then
-        begin
-          iPersons := strToInt(agrLines.Cells[col_NoGuests, i])
-        end;
+        iPersons := lInvLine.noGuests;
 
-        ItemTypeInfo := d.Item_Get_ItemTypeInfo(agrLines.Cells[col_Item, i], agrLines.Cells[col_Source, i]);
+//        if agrLines.Cells[col_NoGuests, i] <> '' then
+//        begin
+//          iPersons := strToInt(agrLines.Cells[col_NoGuests, i])
+//        end;
+
+//        ItemTypeInfo := d.Item_Get_ItemTypeInfo(agrLines.Cells[col_Item, i], agrLines.Cells[col_Source, i]);
+        ItemTypeInfo := d.Item_Get_ItemTypeInfo(lInvLine.Item, lInvLine.Source);
 
         // --
         // RoomRentItem
@@ -4496,14 +4505,16 @@ begin
           // Setja dagsetningu � herbergisleigu
           // Dagsetning er � upphafi 0  31.12.1899
           // en er h�r sett � dagsetningu prentunnar
-          agrLines.Cells[col_date, i] := datetostr(trunc(now));
-          agrLines.Objects[col_Description, i] := TObject(trunc(now));
+//          agrLines.Cells[col_date, i] := datetostr(trunc(now));
 
-          try
-            fItemTotal := _CurrencyValueSell * _StrToFloat(agrLines.Cells[col_TotalPrice, i]);
-          except
-            fItemTotal := 0;
-          end;
+          lInvLine.PurchaseDate := trunc(now());
+//          agrLines.Objects[col_Description, i] := TObject(trunc(now));
+
+//          try
+//            fItemTotal := _CurrencyValueSell * _StrToFloat(agrLines.Cells[col_TotalPrice, i]);
+//          except
+//            fItemTotal := 0;
+//          end;
 
           if agrLines.Objects[cRoomInfoAttachColumn, i] <> nil then
           begin
@@ -4511,43 +4522,43 @@ begin
               trunc(TRoomInfo(agrLines.Objects[cRoomInfoAttachColumn, i]).Arrival);
           end;
 
-        end
-        else
-        begin
-          try
-            fItemTotal := _StrToFloat(agrLines.Cells[col_TotalPrice, i]);
-          except
-            fItemTotal := 0;
-          end;
         end;
+//        else
+//        begin
+//          try
+//            fItemTotal := _StrToFloat(agrLines.Cells[col_TotalPrice, i]);
+//          except
+//            fItemTotal := 0;
+//          end;
+//        end;
 
-        Source := agrLines.Cells[col_Source, i];
-        Refrence := agrLines.Cells[col_Refrence, i];
+        fItemTotal := linvLine.Total;
+        Source := linvLine.Source; //agrLines.Cells[col_Source, i];
+        Refrence := linvLine.Reference; // agrLines.Cells[col_Reference, i];
 
-        sTmp := agrLines.Cells[col_confirmdate, i];
-        if sTmp <> '' then
-        begin
-          confirmDate := _DBDateToDateTimeNoMs(sTmp);
-        end
-        else
-          confirmDate := 2;
+//        sTmp := agrLines.Cells[col_confirmdate, i];
+//        if sTmp <> '' then
+//        begin
+//          confirmDate := _DBDateToDateTimeNoMs(sTmp);
+//        end
+//        else
+//          confirmDate := 2;
+        confirmDate := lInvLine.confrimDate;
+        confirmAmount := lInvLine.confrimAmount; // _StrToFloat(agrLines.Cells[col_confirmAmount, i]);
 
-        confirmAmount := _StrToFloat(agrLines.Cells[col_confirmAmount, i]);
-
-        sTmp := trim(agrLines.Cells[col_isPackage, i]);
-        isPackage := (sTmp = 'Yes');
+//        sTmp := trim(agrLines.Cells[col_isPackage, i]);
+        isPackage := lInvLine.isPackage; // (sTmp = 'Yes');
 
         // --
-        lInvRoom := TInvoiceRoomEntity.create(agrLines.Cells[col_Item, i], 1, 0, _StrToFloat(agrLines.Cells[col_ItemCount, i]), fItemTotal, 0, 0, false);
+        lInvRoom := TInvoiceRoomEntity.create(aItem, 1, 0, lInvLine.Quantity, fItemTotal, 0, 0, false);
         try
-          fVat := GetVATForItem(agrLines.Cells[col_Item, i], fItemTotal,
-                  _StrToFloat(agrLines.Cells[col_ItemCount, i]), lInvRoom, tempInvoiceItemList, ItemTypeInfo, edtCustomer.Text);
+          fVat := GetVATForItem(aItem, fItemTotal, lInvLine.Quantity, lInvRoom, tempInvoiceItemList, ItemTypeInfo, edtCustomer.Text);
         finally
           lInvRoom.free;
         end;
 
-        if NOT (ItemKindOnRow(i) in [ikRoomRent, ikRoomRentDiscount]) then
-          agrLines.Cells[col_Vat, i] := trim(_floattostr(fVat, vWidth, 3));
+//        if NOT (ItemKindOnRow(i) in [ikRoomRent, ikRoomRentDiscount]) then
+//          agrLines.Cells[col_Vat, i] := trim(_floattostr(fVat, vWidth, 3));
 
         fItemTotalVAT := fVat;
         fItemTotalWOVat := fItemTotal - fItemTotalVAT;
@@ -4557,40 +4568,39 @@ begin
         fTotalWOVat := fTotalWOVat + fItemTotalWOVat;
 
         try
-          decodedate(integer(agrLines.Objects[col_Description, i]), AYear, AMon, ADay);
+          decodedate(lInvLine.PurchaseDate,  {integer(agrLines.Objects[col_Description, i])} AYear, AMon, ADay);
         except
           decodedate(now, AYear, AMon, ADay);
         end;
 
-        sTmp := agrLines.Cells[col_ItemCount, i];
-        try
-          ItemCount := _StrToFloat(sTmp);
-        except
-          ItemCount := 0;
-        end;
+//        sTmp := agrLines.Cells[col_ItemCount, i];
+//        try
+//          ItemCount := _StrToFloat(sTmp);
+//        except
+//          ItemCount := 0;
+//        end;
+        ItemCount := lInvLine.Quantity;
 
-        sRRAlias := trim(agrLines.Cells[col_rrAlias, i]);
-        irrAlias := -1;
-        try
-          if sRRAlias <> '' then
-            irrAlias := strToInt(sRRAlias);
-        Except
-        end;
+//        sRRAlias := trim(agrLines.Cells[col_rrAlias, i]);
+//        irrAlias := -1;
+//        try
+//          if sRRAlias <> '' then
+//            irrAlias := strToInt(sRRAlias);
+//        Except
+//        end;
+        irrAlias := linvLine.rrAlias;
 
-        AutoGen := trim(agrLines.Cells[col_autogen, i]);
+//        AutoGen := trim(agrLines.Cells[col_autogen, i]);
+        AutoGen := linvLine.AutoGen;
         if AutoGen = '' then
-        begin
           AutoGen := _GetCurrentTick;
-        end;
 
-        sItemID := agrLines.Cells[col_Item, i];
-        sAccountKey := d.Item_Get_AccountKey(sItemID);
+        sAccountKey := d.Item_Get_AccountKey(aItem);
 
-        invoiceLine := CellInvoiceLine(i);
-        if (NOT Assigned(invoiceLine)) OR (invoiceLine.FId < 1) then
+//        invoiceLine := CellInvoiceLine(i);
+        if {(NOT Assigned(invoiceLine)) OR} (linvLine.FId < 1) then // newly added item
         begin
 
-          // SQL 116 INSERxT Invoicelines
           s := '';
           s := s + 'INSERT into invoicelines' + #10;
           s := s + '(' + #10;
@@ -4638,16 +4648,16 @@ begin
           s := s + ', ' + inttostr(FnewSplitNumber);
           s := s + ', ' + inttostr(i);
           lDate := integer(agrLines.Objects[col_Description, i]);
-          s := s + ', ' + _db(lDate);
+          s := s + ', ' + _db(lInvLine.PurchaseDate);
           s := s + ', ' + inttostr(iInvoiceNumber);
           s := s + ', ' + _db(sItemID);
           s := s + ', ' + _db(ItemCount); // -96ath
           s := s + ', ' + _db(agrLines.Cells[col_Description, i]);
 
             // -- Auto-Maintained lines are displayed in foreign currency...
-            s := s + ', ' + _db(iCreditinvoiceMultiplier * _CurrencyValueSell * _StrToFloat(agrLines.Cells[col_ItemPrice, i]));
+            s := s + ', ' + _db(iCreditinvoiceMultiplier * lInvLine.NativePrice); // _CurrencyValueSell * _StrToFloat(agrLines.Cells[col_ItemPrice, i]));
 
-//???????
+//
 //          else // -- ...The others are not...
 //            s := s + ', ' + _db(iCreditinvoiceMultiplier * _StrToFloat(agrLines.Cells[col_ItemPrice, i]));
 
@@ -4705,10 +4715,10 @@ begin
             ' , InvoiceNumber= ' + _db(iInvoiceNumber) +
             ' , Description= ' + _db(agrLines.Cells[col_Description, i]) +
             ' , Number= ' + _db(ItemCount) +
-            ' , Price= ' + _CommaToDot(floattostr(iCreditinvoiceMultiplier * _StrToFloat(agrLines.Cells[col_ItemPrice, i]))) +
-            ' , Total= ' + _CommaToDot(floattostr(iCreditinvoiceMultiplier * _StrToFloat(agrLines.Cells[col_TotalPrice, i]))) +
-            ' , TotalWOVat= ' + _CommaToDot(floattostr(iCreditinvoiceMultiplier * fItemTotalWOVat)) +
-            ' , VAT= ' + _CommaToDot(floattostr(iCreditinvoiceMultiplier * fItemTotalVAT)) +
+            ' , Price= ' + _db(iCreditinvoiceMultiplier * lInvLine.NativePrice) + // _StrToFloat(agrLines.Cells[col_ItemPrice, i]))) +
+            ' , Total= ' + _db(iCreditinvoiceMultiplier * lInvLine.Total) + // _StrToFloat(agrLines.Cells[col_TotalPrice, i]))) +
+            ' , TotalWOVat= ' + _db(iCreditinvoiceMultiplier * fItemTotalWOVat) +
+            ' , VAT= ' + _db(iCreditinvoiceMultiplier * fItemTotalVAT) +
             ' , CurrencyRate= ' + _db(1.0) +
 //            ' , Currency= ' + _db(FCurrentCurrencyHandler.CurrencyCode) +
             ' , Persons= ' + inttostr(iPersons) +
@@ -4716,7 +4726,7 @@ begin
             ' , ilAccountKey= ' + _db(sAccountKey) +
             ' , InvoiceIndex= ' + _db(FInvoiceIndex) +
             ' , staffLastEdit= ' + _db(d.roomerMainDataSet.username) +
-            ' WHERE id=' + _db(invoiceLine.FId);
+            ' WHERE id=' + _db(linvLine.FId);
         end;
 
         lExecutionPlan.AddExec(s);
@@ -4855,7 +4865,7 @@ begin
       HAlign := taLeftJustify; // -96
     col_date:
       HAlign := taLeftJustify; // -96
-    col_Refrence:
+    col_Reference:
       HAlign := taLeftJustify; // -96
     col_Source:
       HAlign := taLeftJustify; // -96
@@ -4915,6 +4925,8 @@ var
   VATCode, ItemType, Item: string;
   i, iStartRow: integer;
   bAdded: boolean;
+  lInvLine: TInvoiceLine;
+  idx: integer;
 begin
   iStartRow := -1;
   Currency := '';
@@ -4942,18 +4954,30 @@ begin
               if iStartRow = -1 then
                 iStartRow := agrLines.row;
 
-              agrLines.Cells[col_Item, agrLines.row] := theData[i].recHolder.Item;
-              agrLines.Cells[col_Description, agrLines.row] := trim(theData[i].recHolder.Description);
-              agrLines.Objects[col_Item, agrLines.row] := nil;
-              agrLines.Cells[col_ItemCount, agrLines.row] := _floattostr(1, vWidth, vDec);
-              agrLines.Cells[col_ItemPrice, agrLines.row] := _floattostr(theData[i].recHolder.Price, vWidth, vDec);
-              agrLines.Cells[col_autogen, agrLines.row] := _GetCurrentTick;
-              agrLines.Objects[col_Description, agrLines.row] := TObject(trunc(now)); // -- PurchaseDate !
-              agrLines.Cells[col_date, agrLines.row] := datetostr(trunc(now));
+              idx := AddLine(0, theData[i].recHolder.Item, trim(theData[i].recHolder.Description), 1, theData[i].recHolder.Price,
+                             0, now(), false, '', '', false, 0, 2, 0, -1, _GetCurrentTick);
+              if assigned(agrLines.Objects[cInvoiceLineAttachColumn, agrLines.row]) then
+              begin
+                lInvLine := TInvoiceLine(agrLines.Objects[cInvoiceLineAttachColumn, agrLines.row]);
+                agrLines.Objects[cInvoiceLineAttachColumn, agrLines.row] := nil;
+                FInvoiceLinesList.Remove(lInvLine);
+                lInvLine.Free;
+              end;
+              DisplayLine(agrLines.Row, idx);
+
+//              agrLines.Cells[col_Item, agrLines.row] := theData[i].recHolder.Item;
+//              agrLines.Cells[col_Description, agrLines.row] := trim(theData[i].recHolder.Description);
+//              agrLines.Objects[col_Item, agrLines.row] := nil;
+//              agrLines.Cells[col_ItemCount, agrLines.row] := _floattostr(1, vWidth, vDec);
+//              agrLines.Cells[col_ItemPrice, agrLines.row] := _floattostr(theData[i].recHolder.Price, vWidth, vDec);
+//              agrLines.Cells[col_autogen, agrLines.row] := _GetCurrentTick;
+//              agrLines.Objects[col_Description, agrLines.row] := TObject(trunc(now)); // -- PurchaseDate !
+//              agrLines.Cells[col_date, agrLines.row] := datetostr(trunc(now));
 
               if NOT CheckIfWithdrawlAllowed_X(false, floattostr(theData[i].recHolder.Price)) then
               begin
                 agrLines.RemoveRows(agrLines.row, 1);
+                //TODO Free linked Invoicelines object!
                 AddAndInitNewRow;
                 DisplayTotals;
                 exit;
@@ -5005,7 +5029,7 @@ procedure TfrmInvoice.agrLinesCanEditCell(Sender: TObject; ARow, ACol: integer;
   var CanEdit: boolean);
 begin
   CanEdit := (NOT(ACol IN [col_Item, col_TotalPrice, col_System, col_date,
-                          col_Refrence, col_Source, col_isPackage, col_NoGuests, col_confirmdate,
+                          col_Reference, col_Source, col_isPackage, col_NoGuests, col_confirmdate,
                           col_confirmAmount]))
     AND (TaxTypes.IndexOf(agrLines.Cells[col_Item, ARow]) < 0)
     AND not (isSystemLine(aRow) and (agrLines.Cells[col_Item, ARow] = g.qBreakFastItem))
@@ -5048,18 +5072,24 @@ begin
 end;
 
 procedure TfrmInvoice.FormatCurrentLine(ARow: integer);
+var
+  lInvLine: TInvoiceLine;
 begin
   agrLines.BeginUpdate;
   try
-    agrLines.Cells[col_ItemPrice, ARow] :=
-      _floattostr(GridCellfloatValue(agrLines, col_ItemPrice, ARow),
-      vWidth, vDec);
-    agrLines.Cells[col_ItemCount, ARow] :=
-      _floattostr(GridCellfloatValue(agrLines, col_ItemCount, ARow), vWidth,
-      vDec); // -96
-    agrLines.Cells[col_TotalPrice, ARow] :=
-      _floattostr(GridCellfloatValue(agrLines, col_ItemPrice, ARow) *
-      GridCellfloatValue(agrLines, col_ItemCount, ARow), vWidth, vDec); // -96
+    lInvLine := CellInvoiceLine(aRow);
+    if assigned(lInvLine) then
+    begin
+      agrLines.Cells[col_ItemPrice, ARow] :=  lInvLine.NativePrice.ToCurrency(FCurrentCurrencyHandler.CurrencyCode).AsDisplayString;
+      agrLines.Cells[col_ItemCount, ARow] :=  _floattostr(linvLine.Quantity, vWidth, vDec);
+      agrLines.Cells[col_TotalPrice, ARow] := lInvLine.Total.ToCurrency(FCurrentCurrencyHandler.CurrencyCode).AsDisplayString;
+    end
+    else
+    begin
+      agrLines.Cells[col_ItemPrice, ARow] :=  _floattostr(GridCellfloatValue(agrLines, col_ItemPrice, ARow), vWidth, vDec);
+      agrLines.Cells[col_ItemCount, ARow] :=  _floattostr(GridCellfloatValue(agrLines, col_ItemCount, ARow), vWidth, vDec); // -96
+      agrLines.Cells[col_TotalPrice, ARow] := _floattostr(GridCellfloatValue(agrLines, col_ItemPrice, ARow) * GridCellfloatValue(agrLines, col_ItemCount, ARow), vWidth, vDec); // -96
+    end;
   finally
     agrLines.EndUpdate;
   end;
@@ -5512,7 +5542,7 @@ begin
           sItemID := trim(agrLines.Cells[col_Item, i]);
           sDescription := trim(agrLines.Cells[col_Description, i]);
           sSource := trim(agrLines.Cells[col_Source, i]);
-          sRefrence := trim(agrLines.Cells[col_Refrence, i]);
+          sRefrence := trim(agrLines.Cells[col_Reference, i]);
 
           sTmp := agrLines.Cells[col_confirmdate, i];
           if sTmp <> '' then
@@ -6249,12 +6279,12 @@ begin
 
   if (s <> '') and (s <> oldCurrency) then
   begin
-    edtCurrency.Text := s;
-    if edtCurrency.Text = zNativeCurrency then
-    begin
-      edtForeignCurrency.Text := '';
-      edtForeignCurrency.Visible := false;
-    end;
+//    edtCurrency.Text := s;
+//    if edtCurrency.Text = zNativeCurrency then
+//    begin
+//      edtForeignCurrency.Text := '';
+//      edtForeignCurrency.Visible := false;
+//    end;
     zCurrentCurrency := s;
     CheckCurrencyChange(oldCurrency);
   end;
@@ -7459,7 +7489,7 @@ begin
   end;
 
   Description := trim(agrLines.Cells[col_Description, CurrentRow]); // (70)
-  importRefrence := trim(agrLines.Cells[col_Refrence, CurrentRow]);
+  importRefrence := trim(agrLines.Cells[col_Reference, CurrentRow]);
   ImportSource := trim(agrLines.Cells[col_Source, CurrentRow]);
 
   // if MessageDlg('Take [' + itemId + '] from invoice ', mtConfirmation, [mbYes, mbNo], 0) <> mrYes then
@@ -8209,7 +8239,7 @@ begin
       end;
 
       Source := agrLines.Cells[col_Source, i];
-      Refrence := agrLines.Cells[col_Refrence, i];
+      Refrence := agrLines.Cells[col_Reference, i];
 
       sTmp := agrLines.Cells[col_confirmdate, i];
       if sTmp <> '' then

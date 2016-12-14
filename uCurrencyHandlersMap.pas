@@ -23,7 +23,7 @@ type
 
     destructor Destroy; override;
 
-    function ConvertAmount(Amount : Double; FromCurrency, ToCurrency : String) : Double; overload;
+    function ConvertAmount(Amount : Double; const FromCurrency, ToCurrency : String) : Double; overload;
     function ConvertAmount(Amount : Double; FromCurrencyId, ToCurrencyId : Integer) : Double; overload;
   end;
 
@@ -36,7 +36,7 @@ uses uAppGlobal
 
 { TCurrencyHandlersMap }
 
-function TCurrencyHandlersMap.ConvertAmount(Amount: Double; FromCurrency, ToCurrency: String): Double;
+function TCurrencyHandlersMap.ConvertAmount(Amount: Double; const FromCurrency, ToCurrency: String): Double;
 var HandlerFrom, HandlerTo : TCurrencyHandler;
 begin
   result := Amount;
