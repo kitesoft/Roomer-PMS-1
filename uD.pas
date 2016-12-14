@@ -10616,7 +10616,7 @@ begin
   end;
 end;
 
-const
+var
   AlreadyLoggingIn: boolean = False;
 
 procedure Td.roomerMainDataSetSessionExpired(Sender: TObject);

@@ -556,7 +556,6 @@ object frmInvoice: TfrmInvoice
         LookAndFeel.NativeStyle = False
         ModalResult = 1
         OptionsImage.ImageIndex = 4
-        OptionsImage.Images = DImages.cxLargeImagesFlat
         ParentShowHint = False
         ShowHint = True
         SpeedButtonOptions.Flat = True
@@ -574,7 +573,6 @@ object frmInvoice: TfrmInvoice
         Caption = 'Pay and Print'
         LookAndFeel.NativeStyle = False
         OptionsImage.ImageIndex = 59
-        OptionsImage.Images = DImages.cxLargeImagesFlat
         ParentShowHint = False
         ShowHint = True
         SpeedButtonOptions.Flat = True
@@ -590,7 +588,6 @@ object frmInvoice: TfrmInvoice
         Anchors = [akTop, akRight]
         LookAndFeel.NativeStyle = False
         OptionsImage.ImageIndex = 3
-        OptionsImage.Images = DImages.cxLargeImagesFlat
         ParentShowHint = False
         ShowHint = True
         SpeedButtonOptions.Flat = True
@@ -1139,7 +1136,6 @@ object frmInvoice: TfrmInvoice
           Font.Name = 'Tahoma'
           Font.Style = [fsBold]
           ImageIndex = 2
-          Images = DImages.cxSmallImagesFlat
           ParentFont = False
           TabOrder = 8
           Visible = False

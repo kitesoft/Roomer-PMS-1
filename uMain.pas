@@ -2439,7 +2439,7 @@ begin
     ShowAllRoomsRows;
 end;
 
-const
+var
   iLastHintRow: integer = -1;
   iLastHintCol: integer = -1;
 
@@ -4076,7 +4076,7 @@ begin
 
 end;
 
-CONST
+var
   BusyRefreshingTodaysGrid: boolean = false;
 
 procedure TfrmMain.RefreshGrid;

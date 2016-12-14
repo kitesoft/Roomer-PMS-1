@@ -572,7 +572,7 @@ const
   ACTIVE_SETTING_RESTRICTION = '<b>%s</b> = %d.<br>';
 
   MAX_UPDATES_PER_CALL =  600;
-
+var
   NUMBER_OF_DAYS_DISPLAYED : Integer = 14;
 
 procedure ShowChannelAvailabilityManager(embedPanel: TsPanel = nil; WindowCloseEvent: TNotifyEvent = nil);

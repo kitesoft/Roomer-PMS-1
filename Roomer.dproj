@@ -834,7 +834,7 @@
             <Form>FrmTopClassAvailabilityOrder</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="uAmount.pas"/>
+        <DCCReference Include="Currencies\uAmount.pas"/>
         <DCCReference Include="Currencies\uAmountConfigurator.pas"/>
         <None Include="Roomer.todo"/>
         <None Include="notes.txt"/>

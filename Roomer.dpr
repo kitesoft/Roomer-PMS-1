@@ -262,7 +262,7 @@ uses
   uEmbDateStatistics in 'Embeddables\uEmbDateStatistics.pas' {frmEmbDateStatistics},
   uMasterRateDefaults in 'Rates\uMasterRateDefaults.pas' {frmMasterRateDefaults},
   uTopClassAvailabilityOrder in 'uTopClassAvailabilityOrder.pas' {FrmTopClassAvailabilityOrder},
-  uAmount in 'uAmount.pas',
+  uAmount in 'Currencies\uAmount.pas',
   uAmountConfigurator in 'Currencies\uAmountConfigurator.pas';
 
 {$R *.RES}
