@@ -45,6 +45,10 @@ type
     procedure SetTopClassAvaiabilityOrderActive(const Value: boolean);
     function GetMasterRateDefaultsActive: boolean;
     procedure SetMasterRateDefaultsActive(const Value: boolean);
+    function GetMasterRateCurrency: String;
+    procedure SetMasterRateCurrency(const Value: String);
+    function GetMasterRateCurrencyConvert: boolean;
+    procedure SetMasterRateCurrencyConvert(const Value: boolean);
 
   public
     constructor Create(aPMSDataset: TRoomerDataset);
@@ -72,6 +76,8 @@ type
 
     property TopClassAvaiabilityOrderActive: boolean read GetTopClassAvaiabilityOrderActive write SetTopClassAvaiabilityOrderActive;
     property MasterRateDefaultsActive: boolean read GetMasterRateDefaultsActive write SetMasterRateDefaultsActive;
+    property MasterRateCurrency: String read GetMasterRateCurrency write SetMasterRateCurrency;
+    property MasterRateCurrencyConvert: boolean read GetMasterRateCurrencyConvert write SetMasterRateCurrencyConvert;
 
   end;
 
@@ -80,6 +86,7 @@ implementation
 uses
   Variants
   , uUtils
+  , hData
   ;
 
 const
@@ -96,6 +103,8 @@ const
   cShowIncludedBreakfastOnInvoice = 'SHOW_INCLUDED_BREAKFAST_ON_INVOICE';
   cTopClassAvailabilityOrderActive = 'TOP_CLASS_AVAILABILITY_ORDER_ACTIVE';
   cMasterRateDefaultsActive = 'MASTER_RATE_DEFAULTS_ACTIVE';
+  cMasterRateCurrency = 'MASTER_RATE_CURRENCY';
+  cMasterRateCurrencyActive = 'MASTER_RATE_CURRENCY_CONERT_ACTIVE';
 
 procedure TPmsSettings.PutSettingsValue(KeyGroup, Key, Value : String; CreateIfNotExists : Boolean = False);
 begin
@@ -220,6 +229,16 @@ begin
     SetSettingsAsBoolean(lMF.PMSSettingGroup, lMF.PMSSettingName, (lMF in Value), True);
 end;
 
+procedure TPMSSettings.SetMasterRateCurrency(const Value: String);
+begin
+  SetSettingsAsString(cRatesAndAvailabilitiesGroup, cMasterRateCurrency, Value, True);
+end;
+
+procedure TPMSSettings.SetMasterRateCurrencyConvert(const Value: boolean);
+begin
+  SetSettingsAsString(cRatesAndAvailabilitiesGroup, cMasterRateCurrencyActive, Value, True);
+end;
+
 procedure TPMSSettings.SetMasterRateDefaultsActive(const Value: boolean);
 begin
   SetSettingsAsBoolean(cRatesAndAvailabilitiesGroup, cMasterRateDefaultsActive, Value, True);
@@ -268,6 +287,16 @@ begin
   for lMF := low(lMF) to high(lMF) do
     if GetSettingsAsBoolean(lMF.PMsSettingGroup, lMF.PMSSettingName, False, True) then
       Include(Result, lMF);
+end;
+
+function TPMSSettings.GetMasterRateCurrency: String;
+begin
+  Result := GetSettingsAsString(cRatesAndAvailabilitiesGroup, cMasterRateCurrency, False, ctrlGetString('NativeCurrency'));
+end;
+
+function TPMSSettings.GetMasterRateCurrencyConvert: boolean;
+begin
+  Result := GetSettingsAsBoolean(cRatesAndAvailabilitiesGroup, cMasterRateCurrencyActive, False, False);
 end;
 
 function TPMSSettings.GetMasterRateDefaultsActive: boolean;

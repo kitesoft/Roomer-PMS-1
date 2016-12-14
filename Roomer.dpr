@@ -261,7 +261,8 @@ uses
   uEmbDateStatistics in 'Embeddables\uEmbDateStatistics.pas' {frmEmbDateStatistics},
   uMasterRateDefaults in 'Rates\uMasterRateDefaults.pas' {frmMasterRateDefaults},
   uTopClassAvailabilityOrder in 'uTopClassAvailabilityOrder.pas' {FrmTopClassAvailabilityOrder},
-  _Glob in 'Extras\_Glob.pas';
+  _Glob in 'Extras\_Glob.pas',
+  uCurrencyHandlersMap in 'uCurrencyHandlersMap.pas';
 
 {$R *.RES}
 

@@ -661,7 +661,7 @@ begin
       if not assigned(FCurrencyhandler) or (not FCurrencyhandler.CurrencyCode.Equals(ResSetGuest['Currency'])) then
       begin
         FCurrencyhandler.Free;
-        FCurrencyhandler := TCurrencyHandler.Create(ResSetGuest['Currency']);
+        FCurrencyhandler := TCurrencyHandler.Create(ResSetGuest.FieldByName('Currency').AsString);
       end;
 
       sTabSheet1.Caption := GetTranslatedText('shTx_RoomEdit_Room') + ResSetGuest['RoomNumber'];

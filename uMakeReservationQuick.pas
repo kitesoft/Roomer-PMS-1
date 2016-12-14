@@ -1544,12 +1544,34 @@ var
   ADate: TDate;
   Rate: double;
   dayCount: integer;
-  rateTotal, rateAvrage: double;
-
+  rateTotal, rateAvrage: Double;
+  channelCurrency : String;
+  rateMultiplier,
+  currentCurrencyRate,
+  channelCurrencyRate : Double;
 begin
   Result := false;
   if mRoomRes.Locate('roomreservation', RoomReservation, []) then
   begin
+
+    channelCurrency := edCurrency.Text;
+    currentCurrencyRate := 1.00;
+    if glb.LocateSpecificRecord('currencies', 'Currency', edCurrency.Text) then
+       currentCurrencyRate := glb.CurrenciesSet['AValue'];
+    rateMultiplier := 1.00;
+    if edtRatePlans.ItemIndex > 0 then
+    begin
+      channelId := integer(edtRatePlans.Items.Objects[edtRatePlans.ItemIndex]);
+      if glb.LocateSpecificRecord('channels', 'id', channelId) AND
+         glb.LocateSpecificRecord('currencies', 'id', glb.ChannelsSet.FieldByName('currencyId').AsInteger) then
+         begin
+            if glb.CurrenciesSet['Currency'] <> edCurrency.Text then
+            begin
+              channelCurrencyRate := glb.CurrenciesSet['AValue'];
+              rateMultiplier := 1 / channelCurrencyRate * currentCurrencyRate / currentCurrencyRate;
+            end;
+         end;
+    end;
 
     Arrival := mRoomRes.FieldByName('arrival').AsDateTime;
     Departure := mRoomRes.FieldByName('departure').AsDateTime;
@@ -1566,11 +1588,11 @@ begin
           // Rate acuired
 
           mRoomRates.edit;
-          mRoomRates.FieldByName('Rate').AsFloat := Rate;
+          mRoomRates.FieldByName('Rate').AsFloat := Rate * rateMultiplier;
           mRoomRates.post;
         end;
       end;
-      rateTotal := rateTotal + Rate;
+      rateTotal := rateTotal + Rate * rateMultiplier;
     end;
 
     rateAvrage := rateTotal / dayCount;

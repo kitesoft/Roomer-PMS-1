@@ -4479,62 +4479,18 @@ end;
 /// ///////////////////////////////////////////////////////////////////////////////////////////
 
 function ctrlGetString(aField: string): string;
-// var
-// Rset : TRoomerDataSet;
-// s : string;
 begin
   result := glb.ControlSet.fieldbyname(aField).asString;
-  // RSet := CreateNewDataSet;
-  // try
-  // s := format(select_ctrlGetString, [aField]);
-  // if hData.rSet_bySQL(rSet,s, Connection,LogLevel,logPath) then
-  // begin
-  // result := trim(Rset.FieldByName(aField).AsString);
-  // end;
-  // finally
-  // freeandnil(Rset);
-  // end;
 end;
 
 function ctrlGetFloat(aField: string): double;
-// var
-// Rset : TRoomerDataSet;
-// s : string;
 begin
   result := glb.ControlSet.GetFloatValue(glb.ControlSet.fieldbyname(aField));
-
-  // RSet := CreateNewDataSet;
-  // try
-  /// /  s := s + 'SELECT ' + aField + ' '+#10;
-  /// /  s := s + 'FROM Control  ';
-  // s := format(select_ctrlGetFloat, [aField]);
-  // if hData.rSet_bySQL(rSet,s, Connection,LogLevel,logPath) then
-  // begin
-  // result := LocalFloatValue(Rset.FieldByName(aField).AsString);
-  // end;
-  // finally
-  // freeandnil(Rset);
-  // end;
 end;
 
 function ctrlGetInteger(aField: string): integer;
-// var
-// Rset : TRoomerDataSet;
-// s : string;
 begin
   result := glb.ControlSet.fieldbyname(aField).asInteger;
-  // RSet := CreateNewDataSet;
-  // try
-  /// /    s := s + 'SELECT ' + aField + ' '+#10;
-  /// /    s := s + 'FROM Control  ';
-  // s := format(select_ctrlGetInteger, [aField]);
-  // if hData.rSet_bySQL(rSet,s, Connection,LogLevel,logPath) then
-  // begin
-  // result := Rset.FieldByName(aField).AsInteger;
-  // end;
-  // finally
-  // freeandnil(Rset);
-  // end;
 end;
 
 
@@ -4560,23 +4516,8 @@ end;
 
 
 function ctrlGetBoolean(aField: string): boolean;
-// var
-// Rset : TRoomerDataSet;
-// s : string;
 begin
   result := glb.ControlSet[aField];
-  // RSet := CreateNewDataSet;
-  // try
-  /// /    s := s + 'SELECT ' + aField + ' '+#10;
-  /// /    s := s + 'FROM Control  ';
-  // s := format(select_ctrlGetBoolean, [aField]);
-  // if hData.rSet_bySQL(rSet,s, Connection,LogLevel,logPath) then
-  // begin
-  // result := Rset[aField];
-  // end;
-  // finally
-  // freeandnil(Rset);
-  // end;
 end;
 
 function Item_Exists(sItem: string): boolean;
@@ -4585,9 +4526,6 @@ var
   s: string;
 begin
   result := false;
-  // s := s + ' SELECT Item FROM [Items] '+#10;
-  // s := s + ' WHERE (Item = ' + quotedstr(sItem) + ') ';
-
   rSet := CreateNewDataSet;
   try
     s := format(select_Item_Exists, [quotedstr(sItem)]);

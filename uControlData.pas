@@ -714,6 +714,9 @@ type
     cbAllowDeleteItemsFromInvoice: TsCheckBox;
     lbTopClassAvaiabilityOrderActive: TsLabel;
     cbTopClassAvaiabilityOrderActive: TsCheckBox;
+    ceMasterRateCurrency: TsComboEdit;
+    lblMasterRateCurrency: TsLabel;
+    lblMasterRateCurrencyName: TsLabel;
     procedure FormCreate(Sender : TObject);
     procedure FormClose(Sender : TObject; var Action : TCloseAction);
     procedure FormShow(Sender : TObject);
@@ -775,6 +778,7 @@ type
     procedure btnMFSelectAllClick(Sender: TObject);
     procedure btnMFSelectNoneClick(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure ceMasterRateCurrencyDblClick(Sender: TObject);
 
   private
     { private declarations }
@@ -1538,6 +1542,7 @@ g.ProcessAppIni(0);
     cbAllowPaymentModification.Checked := glb.PMSSettings.AllowPaymentModification;
     cbAllowDeleteItemsFromInvoice.Checked := glb.PMSSettings.AllowDeletingItemsFromInvoice;
     cbTopClassAvaiabilityOrderActive.Checked := glb.PMSSettings.TopClassAvaiabilityOrderActive;
+    ceMasterRateCurrency.Text := glb.PMSSettings.MasterRateCurrency;
 
     edtRIIndexRoomRent.Value := rSethotelconfigurations.FieldByName('RoomInvoiceRoomRentIndex').AsInteger + 1;
     edtRIIndexPosItems.Value := rSethotelconfigurations.FieldByName('RoomInvoicePosItemIndex').AsInteger + 1;
@@ -2031,6 +2036,7 @@ begin
       glb.PMSSettings.AllowPaymentModification := cbAllowPaymentModification.Checked;
       glb.PMSSettings.AllowDeletingItemsFromInvoice := cbAllowDeleteItemsFromInvoice.Checked;
       glb.PMSSettings.TopClassAvaiabilityOrderActive := cbTopClassAvaiabilityOrderActive.Checked;
+      glb.PMSSettings.MasterRateCurrency := ceMasterRateCurrency.Text;
 
       try
         rSethotelconfigurations.FieldByName('forceExternalCustomerIdCorrectness').AsBoolean := chkforceExternalCustomerIdCorrectness.Checked;
@@ -3548,6 +3554,11 @@ begin
   setColorControls
 end;
 
+
+procedure TfrmControlData.ceMasterRateCurrencyDblClick(Sender: TObject);
+begin
+  getCurrency(ceMasterRateCurrency, lblMasterRateCurrencyName);
+end;
 
 procedure TfrmControlData.setColorControls;
 var

@@ -30,10 +30,12 @@ type
     function GetRate: double;
     function GetCurrencyCode: string;
   public
-    constructor Create(const aCurrencyCode: string);
+    constructor Create(const aCurrencyCode: string); OverLoad;
+    constructor Create(const aCurrencyId: Integer); OverLoad;
 
     property Rate: double read GetRate;
     property CurrencyCode: string read GetCurrencyCode;
+    property CurrencyRec : recCurrencyHolder read FCurrencyRec;
 
     /// <summary>
     ///   Convert aAmount in the currency of this handler to the amount of the currency provided
@@ -100,6 +102,18 @@ end;
 function TCurrencyHandler.ConvertTo(aAmount: double; aOtherCurrencyHandler: TCurrencyHandler): double;
 begin
   Result := (aAmount * Rate) / aOtherCurrencyHandler.Rate;
+end;
+
+constructor TCurrencyHandler.Create(const aCurrencyId: Integer);
+begin
+  if not glb.LocateSpecificRecord('currencies', 'id', aCurrencyId) then
+    raise ECurrencyHandlerException.CreateFmt('Currency ID [%d] not found', [aCurrencyId]);
+
+  FCurrencyRec.ReadFromDataset(glb.CurrenciesSet);
+
+  FFormatSettings := TFormatSettings.Create; // System defaults
+  FFormatSettings.CurrencyString := FCurrencyRec.CurrencySign;
+  FFormatSettings.CurrencyDecimals := FCurrencyRec.Decimals;
 end;
 
 constructor TCurrencyHandler.Create(const aCurrencyCode: string);
