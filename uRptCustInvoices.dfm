@@ -53,7 +53,6 @@ object frmRptCustInvoices: TfrmRptCustInvoices
       ParentFont = False
       TabOrder = 0
       SkinData.SkinSection = 'GROUPBOX'
-      Checked = False
       object cbxMonth: TsComboBox
         Left = 15
         Top = 20
@@ -157,7 +156,6 @@ object frmRptCustInvoices: TfrmRptCustInvoices
       ParentFont = False
       TabOrder = 2
       SkinData.SkinSection = 'GROUPBOX'
-      Checked = False
       object dtDateFrom: TsDateEdit
         Left = 16
         Top = 20
@@ -176,7 +174,6 @@ object frmRptCustInvoices: TfrmRptCustInvoices
         TabOrder = 0
         Text = '  -  -    '
         OnChange = dtDateFromChange
-        CheckOnExit = True
         SkinData.SkinSection = 'EDIT'
         GlyphMode.Blend = 0
         GlyphMode.Grayed = False
@@ -199,7 +196,6 @@ object frmRptCustInvoices: TfrmRptCustInvoices
         TabOrder = 1
         Text = '  -  -    '
         OnChange = dtDateFromChange
-        CheckOnExit = True
         SkinData.SkinSection = 'EDIT'
         GlyphMode.Blend = 0
         GlyphMode.Grayed = False
@@ -397,8 +393,6 @@ object frmRptCustInvoices: TfrmRptCustInvoices
     SkinData.SkinSection = 'PAGECONTROL'
     object tabOpenInvoices: TsTabSheet
       Caption = 'Item summery'
-      SkinData.CustomColor = False
-      SkinData.CustomFont = False
       ExplicitLeft = 0
       ExplicitTop = 0
       ExplicitWidth = 0
@@ -478,8 +472,6 @@ object frmRptCustInvoices: TfrmRptCustInvoices
     end
     object tabFinishedInvoices: TsTabSheet
       Caption = 'Invoice list'
-      SkinData.CustomColor = False
-      SkinData.CustomFont = False
       ExplicitLeft = 0
       ExplicitTop = 0
       ExplicitWidth = 0

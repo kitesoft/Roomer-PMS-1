@@ -1192,7 +1192,8 @@ begin
       s := s+ '   , invoiceheads.CreditInvoice '#10;
       s := s+ '   , invoiceheads.OriginalInvoice '#10;
       s := s+ '   , invoiceheads.RoomGuest '#10;
-      s := s+ '   , invoiceheads.ihInvoiceDate as InvoiceDate'#10;
+//      s := s+ '   , invoiceheads.ihInvoiceDate as InvoiceDate'#10;
+      s := s+ '   , date(invoiceheads.InvoiceDate) as InvoiceDate'#10;
       s := s+ '   , invoiceheads.ihPayDate as dueDate'#10;
       s := s+ '   , invoiceheads.invRefrence '#10;
       s := s+ '   , invoicelines.PurchaseDate '#10;

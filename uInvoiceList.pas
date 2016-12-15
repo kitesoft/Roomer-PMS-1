@@ -259,7 +259,7 @@ begin
       s := s+ ' where InvoiceNumber = ('+_db(invoicenumber)+') '+#10; //+ inttostr( strtointdef( edtInvoice.text, 0 ) ) ;
     end;
 
-//    copyToClipBoard(s);
+    copyToClipBoard(s);
 //    DebugMessage(s);
 
     if hData.rSet_bySQL(rSet,s) then
