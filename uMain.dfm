@@ -24591,8 +24591,8 @@ object frmMain: TfrmMain
     Top = 208
   end
   object alDeveloperTools: TActionList
-    Left = 1152
-    Top = 48
+    Left = 1184
+    Top = 24
     object acUpdateTranslations: TAction
       Caption = 'Update Translations'
       OnExecute = acUpdateTranslationsExecute

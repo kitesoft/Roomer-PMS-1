@@ -156,6 +156,9 @@ type
     LMDButton1: TsButton;
     tvInvoiceHeadpaytypes: TcxGridDBBandedColumn;
     tvInvoiceHeadpayments: TcxGridDBBandedColumn;
+    tvInvoiceHeadLocalAmount: TcxGridDBBandedColumn;
+    tvInvoiceHeadLocalWithOutVAT: TcxGridDBBandedColumn;
+    tvInvoiceHeadLocalVAT: TcxGridDBBandedColumn;
     procedure rbtDatesClick(Sender : TObject);
     procedure FormCreate(Sender : TObject);
     procedure cbxPeriodChange(Sender : TObject);
@@ -189,6 +192,7 @@ type
     procedure tvInvoiceHeadWithOutVATGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
       var AProperties: TcxCustomEditProperties);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure tvInvoiceHeadLocalAmountGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord; var AProperties: TcxCustomEditProperties);
   private
     { Private declarations }
 
@@ -546,9 +550,12 @@ begin
     s := s + '    , ih.Address2 '#10;
     s := s + '    , ih.Address3 '#10;
     s := s + '    , ih.invRefrence AS Refrence '#10;
-    s := s + '    , ih.Total AS Amount '#10;
-    s := s + '    , ih.TotalWOVat AS WithOutVAT'#10;
-    s := s + '    , ih.TotalVat AS VAT '#10;
+    s := s + '    , ih.Total/ihCurrencyRate AS Amount '#10;
+    s := s + '    , ih.TotalWOVat/ihCurrencyRate AS WithOutVAT'#10;
+    s := s + '    , ih.TotalVat/ihCurrencyRate AS VAT '#10;
+    s := s + '    , ih.Total AS LocalAmount '#10;
+    s := s + '    , ih.TotalWOVat AS LocalWithOutVAT'#10;
+    s := s + '    , ih.TotalVat AS LocalVAT '#10;
     s := s + '    , ih.RoomGuest '#10;
     s := s + '    , ih.ihInvoiceDate AS InvoiceDate'#10;
     s := s + '    , ih.ihConfirmDate AS Confirmdate'#10;
@@ -755,7 +762,8 @@ end;
 procedure TfrmInvoiceList2.tvInvoiceHeadAmountGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
   var AProperties: TcxCustomEditProperties);
 begin
-AProperties := d.getCurrencyProperties(g.qNativeCurrency);
+  AProperties := d.getCurrencyProperties(ARecord.Values[tvInvoiceHeadCurrency.index]);;
+//AProperties := d.getCurrencyProperties(g.qNativeCurrency);
 end;
 
 procedure TfrmInvoiceList2.tvInvoiceHeadDblClick(Sender: TObject);
@@ -766,22 +774,31 @@ begin
   ViewInvoice2(InvoiceNumber, false, false, false,false, '');
 end;
 
+procedure TfrmInvoiceList2.tvInvoiceHeadLocalAmountGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
+  var AProperties: TcxCustomEditProperties);
+begin
+  AProperties := d.getCurrencyProperties(g.qNativeCurrency);
+end;
+
 procedure TfrmInvoiceList2.tvInvoiceHeadTaxesGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
   var AProperties: TcxCustomEditProperties);
 begin
-AProperties := d.getCurrencyProperties(g.qNativeCurrency);
+  AProperties := d.getCurrencyProperties(g.qNativeCurrency);
+//  AProperties := d.getCurrencyProperties(ARecord.Values[tvInvoiceHeadCurrency.index]);;
 end;
 
 procedure TfrmInvoiceList2.tvInvoiceHeadVATGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
   var AProperties: TcxCustomEditProperties);
 begin
-AProperties := d.getCurrencyProperties(g.qNativeCurrency);
+  AProperties := d.getCurrencyProperties(ARecord.Values[tvInvoiceHeadCurrency.index]);;
+//AProperties := d.getCurrencyProperties(g.qNativeCurrency);
 end;
 
 procedure TfrmInvoiceList2.tvInvoiceHeadWithOutVATGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
   var AProperties: TcxCustomEditProperties);
 begin
-AProperties := d.getCurrencyProperties(g.qNativeCurrency);
+  AProperties := d.getCurrencyProperties(ARecord.Values[tvInvoiceHeadCurrency.index]);;
+//AProperties := d.getCurrencyProperties(g.qNativeCurrency);
 end;
 
 //procedure TfrmInvoiceList2.LMDSpeedButton5Click(Sender : TObject);
