@@ -31,6 +31,8 @@ type
 
   ERoomerExecutionPlanException = class(Exception);
 
+  ERoomerDatasetException = class(Exception);
+
   TRoomerDataSet = class;
   TRoomerDatasetList = TObjectList<TRoomerDataSet>;
 
@@ -1896,7 +1898,7 @@ begin
 {$IFDEF DEBUG}
       CopyToClipboard(aSql + #13#10#13#10 + '-- ' + sResult);
 {$ENDIF}
-      raise Exception.Create('command execution failed:' + sResult);
+      raise ERoomerDatasetException.Create('command execution failed:' + sResult);
     end;
   end;
   FNumberOfAffectedRows := Result;
