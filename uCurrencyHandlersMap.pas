@@ -22,7 +22,7 @@ type
     constructor Create(currencyCodes : TStrings); overload;
     constructor Create; overload;
 
-    destructor Destroy;
+    destructor Destroy; override;
 
     function ConvertAmount(Amount : Double; FromCurrency, ToCurrency : String) : Double; overload;
     function ConvertAmount(Amount : Double; FromCurrencyId, ToCurrencyId : Integer) : Double; overload;
@@ -75,6 +75,7 @@ destructor TCurrencyHandlersMap.Destroy;
 begin
   FMapById.Free;
   FMapByCode.Free;
+  inherited;
 end;
 
 function TCurrencyHandlersMap.ListOfCurrencies: TStrings;
