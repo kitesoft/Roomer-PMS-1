@@ -251,7 +251,6 @@ object frmInvoiceList: TfrmInvoiceList
       TabOrder = 0
       LookAndFeel.Kind = lfStandard
       LookAndFeel.NativeStyle = False
-      ExplicitTop = 48
       object tvInvoices: TcxGridDBBandedTableView
         Navigator.Buttons.CustomButtons = <>
         Navigator.Buttons.Insert.Enabled = False

@@ -38,7 +38,6 @@ object frmMakeKreditInvoice: TfrmMakeKreditInvoice
       Caption = 'Create credit invoice by reference'
       TabOrder = 0
       SkinData.SkinSection = 'GROUPBOX'
-      Checked = False
       object edInvoiceNumber: TsEdit
         Left = 9
         Top = 20
@@ -133,7 +132,6 @@ object frmMakeKreditInvoice: TfrmMakeKreditInvoice
       Caption = 'Dates'
       TabOrder = 2
       SkinData.SkinSection = 'GROUPBOX'
-      Checked = False
       object sLabel2: TsLabel
         Left = 3
         Top = 17
@@ -190,7 +188,6 @@ object frmMakeKreditInvoice: TfrmMakeKreditInvoice
         ParentFont = False
         TabOrder = 0
         Text = '  -  -    '
-        CheckOnExit = True
         SkinData.SkinSection = 'EDIT'
         GlyphMode.Blend = 0
         GlyphMode.Grayed = False
@@ -212,7 +209,6 @@ object frmMakeKreditInvoice: TfrmMakeKreditInvoice
         ParentFont = False
         TabOrder = 1
         Text = '  -  -    '
-        CheckOnExit = True
         SkinData.SkinSection = 'EDIT'
         GlyphMode.Blend = 0
         GlyphMode.Grayed = False
@@ -227,7 +223,6 @@ object frmMakeKreditInvoice: TfrmMakeKreditInvoice
       Caption = 'Orginal info'
       TabOrder = 3
       SkinData.SkinSection = 'GROUPBOX'
-      Checked = False
       object __lblCustomer: TsLabel
         Left = 16
         Top = 21
@@ -314,7 +309,6 @@ object frmMakeKreditInvoice: TfrmMakeKreditInvoice
         ParentCtl3D = False
         TabOrder = 0
         SkinData.SkinSection = 'GROUPBOX'
-        Checked = False
         object lblTotal: TsLabel
           Left = 19
           Top = 19
@@ -365,7 +359,6 @@ object frmMakeKreditInvoice: TfrmMakeKreditInvoice
           TabOrder = 0
           CaptionLayout = clTopCenter
           SkinData.SkinSection = 'GROUPBOX'
-          Checked = False
           object __lblReservationIds: TsLabel
             Left = 14
             Top = 18

@@ -491,7 +491,8 @@ var
   '   , ih.CreditInvoice '#10+
   '   , ih.OriginalInvoice '#10+
   '   , ih.RoomGuest '#10+
-  '   , ih.ihInvoiceDate AS InvoiceDate '#10+
+  '   , date(ih.InvoiceDate) AS InvoiceDate '#10+
+//  '   , ih.ihInvoiceDate AS InvoiceDate '#10+
   '   , ih.ihPayDate AS dueDate '#10+
   '   , ih.invRefrence '#10+
   '   , ih.TotalStayTax '#10+
