@@ -40,7 +40,8 @@ type
     /// <summary>
     ///   Convert aAmount in the currency of this handler to the amount of the currency provided
     /// </summary>
-    function ConvertTo(aAmount: double; const aOtherCurrency: string): double;
+    function ConvertTo(aAmount: double; const aOtherCurrency: string): double; overload;
+    function ConvertTo(aAmount: double; aOtehrCurrencyHandler: TCurrencyHandler): double; overload;
     /// <summary>
     ///   Round aAmount to the number of decimals defined for the currency
     /// </summary>
@@ -83,7 +84,12 @@ begin
     raise ECurrencyHandlerException.CreateFmt('Currency code [%s] not found', [aOtherCurrency]);
 
   lrecOtherCurrency.ReadFromDataset(glb.CurrenciesSet);
-  Result := (aAmount * FCurrencyRec.Value) / lrecOtherCurrency.Value;
+  Result := (aAmount * Rate) / lrecOtherCurrency.Value;
+end;
+
+function TCurrencyHandler.ConvertTo(aAmount: double; aOtehrCurrencyHandler: TCurrencyHandler): double;
+begin
+  Result := (aAmount * Rate) / aOtehrCurrencyHandler.Rate;
 end;
 
 constructor TCurrencyHandler.Create(const aCurrencyId: Integer);
