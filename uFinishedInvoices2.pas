@@ -463,7 +463,7 @@ begin
 
     try
       IvI.UpdateInfo(invoicedata);
-      Ivi.GatherPayments(doExport,paymentData,invoiceData);
+      Ivi.GatherPayments(doExport);
 
 
       if ivi.KreditType = ktKredit then

@@ -6801,7 +6801,7 @@ begin
     IvI := TInvoiceInfo.Create(InvoiceNumber, PaymentData, invoiceData);
     try
       IvI.UpdateInfo(invoiceData);
-      IvI.GatherPayments(okExport, PaymentData, invoiceData);
+      IvI.GatherPayments(okExport);
 
       sCurrency := IvI.Currency;
 
@@ -7256,7 +7256,7 @@ begin
   IvI := TInvoiceInfo.Create(-1, PaymentData, invoiceData);
   try
     IvI.UpdateInfo(invoiceData);
-    IvI.GatherPayments(doExport, PaymentData, invoiceData);
+    IvI.GatherPayments(doExport);
 
     sCurrency := IvI.Currency;
 

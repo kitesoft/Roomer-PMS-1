@@ -623,8 +623,8 @@ object frmInvoice: TfrmInvoice
       object chkShowPackage: TsCheckBox
         Left = 724
         Top = 140
-        Width = 119
-        Height = 17
+        Width = 111
+        Height = 20
         Caption = 'Package on invoice'
         Checked = True
         State = cbChecked
@@ -990,6 +990,7 @@ object frmInvoice: TfrmInvoice
               OptionsData.DeletingConfirmation = False
               OptionsData.Editing = False
               OptionsData.Inserting = False
+              OptionsView.ColumnAutoWidth = True
               OptionsView.GroupByBox = False
               object tvPaymentsPayDate: TcxGridDBColumn
                 Caption = 'Date'
@@ -1001,9 +1002,22 @@ object frmInvoice: TfrmInvoice
                 DataBinding.FieldName = 'PayType'
                 Width = 78
               end
+              object tvPaymentscurrency: TcxGridDBColumn
+                Caption = 'Currency'
+                DataBinding.FieldName = 'currency'
+                Width = 54
+              end
               object tvPaymentsAmount: TcxGridDBColumn
                 DataBinding.FieldName = 'Amount'
+                PropertiesClassName = 'TcxCurrencyEditProperties'
+                OnGetProperties = tvPaymentsAmountGetProperties
                 Width = 84
+              end
+              object tvPaymentsnativeAmount: TcxGridDBColumn
+                Caption = 'Native'
+                DataBinding.FieldName = 'nativeAmount'
+                PropertiesClassName = 'TcxCurrencyEditProperties'
+                OnGetProperties = tvPaymentsnativeAmountGetProperties
               end
               object tvPaymentsDescription: TcxGridDBColumn
                 DataBinding.FieldName = 'Description'
@@ -1014,15 +1028,14 @@ object frmInvoice: TfrmInvoice
                 Width = 70
               end
               object tvPaymentsMemo: TcxGridDBColumn
-                DataBinding.FieldName = 'Memo'
+                Caption = 'Memo'
+                DataBinding.FieldName = 'notes'
                 PropertiesClassName = 'TcxMemoProperties'
                 Options.Editing = False
               end
               object tvPaymentsconfirmDate: TcxGridDBColumn
                 DataBinding.FieldName = 'confirmDate'
-              end
-              object tvPaymentsid: TcxGridDBColumn
-                DataBinding.FieldName = 'id'
+                OnGetDisplayText = tvPaymentsconfirmDateGetDisplayText
               end
             end
             object lvPayments: TcxGridLevel
@@ -2215,8 +2228,9 @@ object frmInvoice: TfrmInvoice
   object mPayments: TdxMemData
     Indexes = <>
     SortOptions = []
-    Left = 320
-    Top = 512
+    OnCalcFields = mPaymentsCalcFields
+    Left = 640
+    Top = 568
     object mPaymentsPayDate: TDateField
       FieldName = 'PayDate'
     end
@@ -2233,25 +2247,26 @@ object frmInvoice: TfrmInvoice
     object mPaymentsPayGroup: TWideStringField
       FieldName = 'PayGroup'
     end
-    object mPaymentsMemo: TMemoField
-      FieldName = 'Memo'
-      BlobType = ftMemo
-    end
     object mPaymentsconfirmDate: TDateTimeField
       FieldName = 'confirmDate'
     end
     object mPaymentsid: TIntegerField
       FieldName = 'id'
     end
-    object mPaymentsssss: TMemoField
-      FieldName = 'ssss'
-      BlobType = ftMemo
+    object mPaymentscurrency: TWideStringField
+      FieldName = 'currency'
     end
-    object mPaymentswww: TWideStringField
-      FieldName = 'www'
+    object mPaymentscurrencyrate: TFloatField
+      FieldName = 'currencyrate'
     end
-    object mPaymentsdddd: TDateField
-      FieldName = 'dddd'
+    object mPaymentsnativeAmount: TFloatField
+      FieldKind = fkCalculated
+      FieldName = 'nativeAmount'
+      Calculated = True
+    end
+    object mPaymentsnotes: TWideMemoField
+      FieldName = 'notes'
+      BlobType = ftWideMemo
     end
   end
   object mnuMoveItem: TPopupMenu

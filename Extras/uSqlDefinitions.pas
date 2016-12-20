@@ -2624,27 +2624,28 @@ select_telLog_refresh : string =
 
   select_GetInvoiceCurrency : string =
   ' SELECT '+
-  '    InvoiceNumber '+
-  '   , ItemNumber '+
-  '   , Currency '+
+  '    il.InvoiceNumber '+
+  '   , il.ItemNumber '+
+  '   , ih.ihCurrency as Currency '+
   ' FROM '+
-  '   invoicelines '+
+  '   invoicelines il'+
+  ' JOIN invoiceheads ih on ih.invoicenumber=il.invoicenumber '+
   ' WHERE '+
-  '   (invoiceNumber = %d ) LIMIT 1';
-  ///s := s + '   (invoiceNumber = ' +_db(invoiceNumber) + ') '+#10;
+  '   (il.invoiceNumber = %d ) LIMIT 1';
 
   select_GetInvoiceCurrencyAndReservationIds : string =
   ' SELECT '+
-  '    InvoiceNumber '+
-  '   , Reservation '+
-  '   , RoomReservation '+
-  '   , (SELECT Room FROM roomsdate WHERE RoomReservation=invoicelines.RoomReservation AND NOT ResFlag IN (''X'',''C'') LIMIT 1) AS Room '+
-  '   , ItemNumber '+
-  '   , Currency '+
+  '    il.InvoiceNumber '+
+  '   , il.Reservation '+
+  '   , il.RoomReservation '+
+  '   , (SELECT Room FROM roomsdate WHERE RoomReservation=il.RoomReservation AND NOT ResFlag IN (''X'',''C'') LIMIT 1) AS Room '+
+  '   , il.ItemNumber '+
+  '   , ihCurrency as Currency'+
   ' FROM '+
-  '   invoicelines '+
+  '   invoicelines il'+
+  ' JOIN invoiceheads ih on ih.invoicenumber=il.invoicenumber '+
   ' WHERE '+
-  '   (invoiceNumber = %d ) LIMIT 1';
+  '   (il.invoiceNumber = %d ) LIMIT 1';
 
   select_GetInvoiceCurrencyAndRate : string =
   ' SELECT '+
@@ -4684,6 +4685,7 @@ select_get_prepaid : string =
 '      SELECT '#10+
 '         InvoiceNumber '#10+
 '       , Amount '#10+
+'       , currencyrate '#10+
 '       , TypeIndex '#10+
 '      FROM '#10+
 '        Payments '#10+

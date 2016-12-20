@@ -27,9 +27,12 @@ type
     class function Create(const a: Currency; const c: TCurrencyCode): TAmount; overload; static; inline;
     class function Create(const a: integer; const c: TCurrencyCode): TAmount; overload; static; inline;
     class function Create(const a: double; const c: TCurrencyCode): TAmount; overload; static; inline;
+    class function Create(const a: Extended; const c: TCurrencyCode): TAmount; overload; static; inline;
 
     class operator Implicit(a: TAmount): Currency;
     class operator Implicit(a: Currency): TAmount;
+    class operator Implicit(a: Extended): TAmount;
+    class operator Implicit(a: Double): TAmount;
     class operator Implicit(a: TAmount): double;
     class operator Implicit(a: TAmount): integer;
 
@@ -38,6 +41,7 @@ type
     class operator Multiply(a: TAmount; d: double): TAmount;
     class operator Divide(a: TAmount; d: double): TAmount;
     class operator Multiply(a: TAmount; d: integer): TAmount;
+    class operator Multiply(d: integer; a: TAmount): TAmount;
     class operator Divide(a: TAmount; d: integer): TAmount;
 
     class operator Equal(a, b: TAmount): boolean;
@@ -45,6 +49,7 @@ type
     class operator GreaterThan(a, b: TAmount): boolean;
     class operator GreaterThanOrEqual(a, b: TAmount): boolean;
     class operator LessThan(a, b: TAmount): boolean;
+    class operator LessThan(a: TAmount; b: integer): boolean;
     class operator LessThanOrEqual(a, b: TAmount): boolean;
 
     function AsDisplayString: string;
@@ -160,6 +165,17 @@ begin
   Result := trunc(a.FValue);
 end;
 
+class operator TAmount.Implicit(a: Extended): TAmount;
+begin
+  Result := TAmount.Create(a, TAmountConfigurator.DefaultCurrency);
+end;
+
+class operator TAmount.Implicit(a: Double): TAmount;
+begin
+  Result := TAmount.Create(a, TAmountConfigurator.DefaultCurrency);
+end;
+
+
 class function TAmount.IsSameCurrency(a1, a2: TAmount): boolean;
 begin
   Result := a1.FCurCode = a2.FCurCode;
@@ -174,6 +190,11 @@ class operator TAmount.LessThan(a, b: TAmount): boolean;
 begin
   CheckSameCurrency(a, b);
   Result := a.FValue < b.FValue;
+end;
+
+class operator TAmount.LessThan(a: TAmount; b: integer): boolean;
+begin
+  Result := (a.FValue < b)
 end;
 
 class operator TAmount.LessThanOrEqual(a, b: TAmount): boolean;
@@ -194,6 +215,13 @@ begin
   Result.FValue := a.FValue * d;
 end;
 
+class operator TAmount.Multiply(d: integer; a: TAmount): TAmount;
+begin
+  Result := a * d;
+end;
+
+
+
 class operator TAmount.NotEqual(a, b: TAmount): boolean;
 begin
   Result := not (a = b);
@@ -210,6 +238,12 @@ function TAmount.ToCurrency(const aCurrCode: TCurrencyCode): TAmount;
 begin
   Result.FCurCode := aCurrCode;
   Result.FValue := CurrencyHandler.ConvertTo(FValue, aCurrCode);
+end;
+
+class function TAmount.Create(const a: Extended; const c: TCurrencyCode): TAmount;
+begin
+  Result.FCurCode := c;
+  Result.FValue := RoundDecimals(a, 4);
 end;
 
 initialization
