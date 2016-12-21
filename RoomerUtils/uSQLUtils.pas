@@ -5,6 +5,7 @@ interface
 uses
   SysUtils
   , uStringUtils
+  , uAmount
   ;
 
 
@@ -19,6 +20,7 @@ function _db(const aDate: TDateTime; aQuoted: boolean = true)  : string; overloa
 function _db(const aDate: TDate; aQuoted: boolean = true)     : string; overload;
 function _db(const aTime: TTime)        : string; overload;
 function _db(const aTimeStamp: TTimeStamp): string; overload;
+function _db(const aAmount: TAmount): string; overload;
 
 
 /// <summary>
@@ -132,6 +134,11 @@ begin
   s := TimeToStr(TimeStampToDateTime(aTimeStamp), SQLFormatSettings);
   if s.StartsWith('00:00') then s := '';
   Result := quotedstr(S);
+end;
+
+function _db(const aAmount: TAmount): string;
+begin
+  Result := _db(double(aAmount));
 end;
 
 function FloatToSQL(aValue: double): string;

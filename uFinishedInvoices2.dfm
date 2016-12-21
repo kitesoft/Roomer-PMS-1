@@ -361,7 +361,6 @@ object frmFinishedInvoices2: TfrmFinishedInvoices2
           Height = 230
           TabOrder = 0
           SkinData.SkinSection = 'GROUPBOX'
-          Checked = False
           object Label1: TsLabel
             Left = 67
             Top = 58

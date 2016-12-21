@@ -46,6 +46,7 @@ uses
   dxSkinOffice2007Green, dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver,
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver, dxSkinSpringTime, dxSkinStardust,
   dxSkinSummer2008, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue
+  , uAmount
 
   ;
 
@@ -75,25 +76,25 @@ type
     edAmount: TsCalcEdit;
     sSpeedButton1: TsButton;
     FormStore: TcxPropertiesStore;
+    lblCurrency: TsLabel;
+    lbCurrentCurrency: TsLabel;
     procedure btnOkClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
-    procedure FormClose(Sender: TObject; var Action: TCloseAction);
-    procedure FormDestroy(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure btnCancelClick(Sender: TObject);
     procedure sSpeedButton1Click(Sender: TObject);
     procedure tvPayTypeDblClick(Sender: TObject);
+    procedure edAmountChange(Sender: TObject);
   private
     { Private declarations }
     zCanClose : boolean;
+    FPayment: TAmount;
   public
     { Public declarations }
     rec : recDownPayment;
+    constructor Create(aOwner: TCOmponent); override;
   end;
-
-var
-  frmDownPayment : TfrmDownPayment;
 
 implementation
 
@@ -109,13 +110,10 @@ end;
 
 procedure TfrmDownPayment.btnOkClick(Sender: TObject);
 var
-  balance : double;
+  balance : TAmount;
 
 begin
   zCanClose := true;
-
-  balance := rec.InvoiceBalance-edAmount.value;
-
 
   if edAmount.value = 0 then
   begin
@@ -125,31 +123,37 @@ begin
     exit;
   end;
 
-
+  balance := TAmount.Create(rec.InvoiceBalance, rec.Currency) - FPayment; //edAmount.value;
 
   if NOT rec.NotInvoice then
     if (balance < 0) AND (NOT ctrlGetBoolean('AllowNegativeInvoice')) then
     begin
-      showmessage('Payments can not be higer than the invoice amount');
+      showmessage('Payments can not be higher than the invoice amount');
       edAmount.SetFocus;
       zCanClose := false;
       exit;
     end;
 
-  frmDownPayment.rec.Reservation     := rec.Reservation      ;
-  frmDownPayment.rec.RoomReservation := rec.RoomReservation  ;
-  frmDownPayment.rec.Invoice         := rec.Invoice          ;
-  frmDownPayment.rec.Amount          := edAmount.value;
-  frmDownPayment.rec.Description     := edDescription.text;
-  frmDownPayment.rec.Notes           := memNotes.Text;
-  frmDownPayment.rec.PaymentType     := kbmPayType.FieldByName('payType').asstring;
-  frmDownPayment.rec.InvoiceBalance  := balance;
+  rec.Reservation     := rec.Reservation      ;
+  rec.RoomReservation := rec.RoomReservation  ;
+  rec.Invoice         := rec.Invoice          ;
+  rec.Amount          := FPayment;
+  rec.Description     := edDescription.text;
+  rec.Notes           := memNotes.Text;
+  rec.PaymentType     := kbmPayType.FieldByName('payType').asstring;
+  rec.InvoiceBalance  := balance;
 end;
 
 
-procedure TfrmDownPayment.FormClose(Sender: TObject; var Action: TCloseAction);
+constructor TfrmDownPayment.Create(aOwner: TCOmponent);
 begin
+  inherited;
   //
+end;
+
+procedure TfrmDownPayment.edAmountChange(Sender: TObject);
+begin
+  FPayment := TAmount.Create(edAmount.Value, rec.Currency);
 end;
 
 procedure TfrmDownPayment.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -165,11 +169,6 @@ begin
   zCanClose := true;
 end;
 
-procedure TfrmDownPayment.FormDestroy(Sender: TObject);
-begin
-  //
-end;
-
 procedure TfrmDownPayment.FormShow(Sender: TObject);
 var
    rSet : TRoomerDataset;
@@ -178,14 +177,15 @@ var
    defaultType : string;
 
 begin
-  labReservation.Caption         := inttostr(frmDownPayment.rec.Reservation);
-  labRoomReservation.caption     := inttostr(frmDownPayment.rec.RoomReservation);
-  labInvoice.caption             := inttostr(frmDownPayment.rec.Invoice);
-  edAmount.Value                 := frmDownPayment.rec.Amount;
-  edDescription.text             := frmDownPayment.rec.Description;
-  memNotes.Text                  := frmDownPayment.rec.Notes;
+  labReservation.Caption         := inttostr(rec.Reservation);
+  labRoomReservation.caption     := inttostr(rec.RoomReservation);
+  labInvoice.caption             := inttostr(rec.Invoice);
+  lbCurrentCurrency.Caption      := rec.Currency;
+  edAmount.Value                 := rec.Amount;
+  edDescription.text             := rec.Description;
+  memNotes.Text                  := rec.Notes;
 
-  defaultType := frmDownPayment.rec.PaymentType;
+  defaultType := rec.PaymentType;
   //InvPriceGroup
 
   rSet := CreateNewDataSet;
@@ -210,7 +210,13 @@ end;
 
 procedure TfrmDownPayment.sSpeedButton1Click(Sender: TObject);
 begin
-  edAmount.value := rec.InvoiceBalance;
+  FPayment :=  TAmount.Create(rec.InvoiceBalance, rec.Currency);
+  edAmount.OnChange := nil;
+  try
+    edAmount.value := rec.InvoiceBalance;
+  finally
+    edAmount.OnChange := edAmountChange;
+  end;
 end;
 
 procedure TfrmDownPayment.tvPayTypeDblClick(Sender: TObject);

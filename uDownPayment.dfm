@@ -14,10 +14,8 @@ object frmDownPayment: TfrmDownPayment
   Font.Style = []
   OldCreateOrder = False
   Position = poMainFormCenter
-  OnClose = FormClose
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
-  OnDestroy = FormDestroy
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
@@ -47,8 +45,8 @@ object frmDownPayment: TfrmDownPayment
       SkinData.SkinSection = 'BUTTON'
     end
     object btnCancel: TsButton
-      Left = 386
-      Top = 2
+      Left = 391
+      Top = 1
       Width = 100
       Height = 25
       Anchors = [akTop, akRight]
@@ -76,7 +74,7 @@ object frmDownPayment: TfrmDownPayment
     ParentFont = False
     TabOrder = 0
     SkinData.SkinSection = 'GROUPBOX'
-    Checked = False
+    ExplicitTop = -6
     object labReservation: TsLabel
       Left = 96
       Top = 89
@@ -135,6 +133,21 @@ object frmDownPayment: TfrmDownPayment
       Alignment = taRightJustify
       Caption = 'Description :'
     end
+    object lblCurrency: TsLabel
+      Left = 97
+      Top = 15
+      Width = 54
+      Height = 13
+      Alignment = taRightJustify
+      Caption = 'Currency : '
+    end
+    object lbCurrentCurrency: TsLabel
+      Left = 157
+      Top = 15
+      Width = 38
+      Height = 13
+      Caption = '<auto>'
+    end
     object sSpeedButton1: TsButton
       Left = 251
       Top = 34
@@ -175,6 +188,7 @@ object frmDownPayment: TfrmDownPayment
       Font.Style = []
       ParentFont = False
       TabOrder = 0
+      OnChange = edAmountChange
       SkinData.SkinSection = 'EDIT'
       GlyphMode.Blend = 0
       GlyphMode.Grayed = False
@@ -195,7 +209,6 @@ object frmDownPayment: TfrmDownPayment
     ParentFont = False
     TabOrder = 1
     SkinData.SkinSection = 'GROUPBOX'
-    Checked = False
     object memNotes: TsMemo
       AlignWithMargins = True
       Left = 8

@@ -22,7 +22,7 @@ uses
   , cmpRoomerDataSet
   , cmpRoomerConnection
   , uUtils
-  , Generics.Collections
+  , Generics.Collections, uAmount
   ;
 
 type
@@ -156,9 +156,10 @@ type
     FpmDoExport : boolean;
     FpmDescription : string;
     FpmTypeIndex   : integer;
+    FpmCurrency: string;
+    FpmCurrencyRate: double;
   public
     constructor Create(LineNo : integer);
-    destructor Destroy; override;
   published
     property pmNo : integer read FpmNo write FpmNo;
     property pmCode : string read FpmCode write FpmCode;
@@ -167,6 +168,8 @@ type
     property pmDoExport : boolean read FpmDoExport write FpmDoExport;
     property pmDescription : string read FpmDescription write FpmDescription;
     property pmTypeIndex : integer read FpmTypeIndex write FpmTypeIndex;
+    property pmCurrency: string read FpmCurrency write FpmCurrency;
+    property pmCurrencyRate: double read FpmCurrencyRate write FpmCurrencyRate;
   end;
 
   /// *****************************************************************************
@@ -184,7 +187,7 @@ type
     FivhSplitNumber : integer;
 
     FCurrency : string;
-    FLocalCurrency : string;
+    FNativeCurrency : string;
     FCurrencyRate : double;
 
     FivhDate : TDate;
@@ -325,7 +328,8 @@ type
     function GetPayment(idx : integer) : TInvoicePayment;
     function GetPaymentCount : integer;
 
-    function AddPayment(pmCode : string; pmAmount : double; pmDate : TDateTime; pmDoExport : boolean; pmDescription : string; pmTypeIndex : integer) : integer;
+    function AddPayment(pmCode : string; pmAmount : double; pmDate : TDateTime; pmDoExport : boolean; pmDescription : string;
+                        pmTypeIndex : integer; const pmCurrency: string; pmCurrencyRate: double) : integer;
     function AddToVATPrice(idx : integer; Price_woVAT : double; Price_wVAT : double; VATAmount : double) : boolean;
 
     function GetVAT(idx : integer) : TInvoiceVATInfo;
@@ -348,7 +352,13 @@ type
     property PaymentList[idx : integer] : TInvoicePayment read GetPayment;
     property VATList[idx : integer] : TInvoiceVATInfo read GetVAT;
 
-    function GatherPayments(var doExport : boolean;PaymentData : recPaymentHolder; invoiceData : recInvoiceHeadHolder) : double;
+    /// <summary>
+    ///   Read payments from payments table and store them in the FPayments list.
+    /// </summary>
+    /// <returns>
+    ///   Total of all payments made, in native currency
+    /// </returns>
+    function GatherPayments(var doExport : boolean) : TAmount;
     function isPaid : boolean;
 
   published
@@ -395,7 +405,7 @@ type
     property CustomerInfo : TCustInfo read FCustomerInfo write FCustomerInfo;
 
     property Currency : string read FCurrency write FCurrency;
-    property LocalCurrency : string read FLocalCurrency write FLocalCurrency;
+    property LocalCurrency : string read FNativeCurrency write FNativeCurrency;
     property CurrencyRate : double read FCurrencyRate write FCurrencyRate;
     property CurrencyType : TCurrencyTypes read FCurrencyType write FCurrencyType;
 
@@ -649,12 +659,8 @@ begin
   FpmDoExport := true;
   FpmDescription := '';
   FpmTypeIndex    := 0;
-end;
-
-destructor TInvoicePayment.destroy;
-begin
-
-  inherited destroy;
+  FpmCurrency := '';
+  FpmCurrencyRate := 0.0;
 end;
 
 // *****************************************************************************
@@ -670,7 +676,7 @@ end;
 function TInvoiceInfo.getCurrencyType(sCurrency : string) : TCurrencyTypes;
 begin
   result := ctLocal;
-  if _trimlower(sCurrency) = FLocalCurrency then
+  if _trimlower(sCurrency) = FNativeCurrency then
     exit;
   result := ctForeigin;
 end;
@@ -728,7 +734,7 @@ begin
   FCurrency := '';
   FCurrencyRate := 0.00;
   FCurrencyType := ctLocal;
-  FLocalCurrency := AnsiUpperCase(trim(ctrlGetString('NativeCurrency')));
+  FNativeCurrency := AnsiUpperCase(trim(ctrlGetString('NativeCurrency')));
 
   FCompanyName := '';
   FCompanyAddress1 := '';
@@ -942,52 +948,47 @@ end;
 // --- Payments
 function TInvoiceInfo.GetPaymentCount : integer;
 begin
-  result := 0;
-  try
-    result := FPaymentList.Count;
-  except
-  end;
+   result := FPaymentList.Count;
 end;
 
 
 // --- Payments
-function TInvoiceInfo.AddPayment(pmCode : string; pmAmount : double; pmDate : TDateTime; pmDoExport : boolean; pmDescription : string; pmTypeIndex : integer) : integer;
+function TInvoiceInfo.AddPayment(pmCode : string; pmAmount : double; pmDate : TDateTime; pmDoExport: boolean; pmDescription: string;
+                                 pmTypeIndex : integer; const pmCurrency: string; pmCurrencyRate: double) : integer;
 var
   Payment : TInvoicePayment;
   iLast : integer;
 begin
   iLast := 0;
-  try
-    if GetPaymentCount > 0 then
-    begin
-      iLast := PaymentList[GetPaymentCount - 1].FpmNo;
-    end;
-  except
-  end;
+  if GetPaymentCount > 0 then
+    iLast := PaymentList[GetPaymentCount - 1].FpmNo;
 
   inc(iLast);
 
   Payment := TInvoicePayment.Create(iLast);
 
-  Payment.FpmCode        := pmCode;
-  Payment.FpmAmount      := pmAmount;
-  Payment.FpmDate        := pmDate;
-  Payment.FpmDoExport    := pmDoExport;
-  Payment.FpmDescription := pmDescription;
-  Payment.FpmTypeIndex   := pmTypeIndex;
+  Payment.pmCode        := pmCode;
+  Payment.pmAmount      := pmAmount;
+  Payment.pmDate        := pmDate;
+  Payment.pmDoExport    := pmDoExport;
+  Payment.pmDescription := pmDescription;
+  Payment.pmTypeIndex   := pmTypeIndex;
+  Payment.pmCurrency    := pmCurrency;
+  Payment.pmCurrencyRate := pmCurrencyRate;
 
   result := FPaymentList.Add(Payment);
 end;
 
 // --- Payments
-function TInvoiceInfo.GatherPayments(var doExport : boolean;PaymentData : recPaymentHolder; invoiceData : recInvoiceHeadHolder) : double;
+function TInvoiceInfo.GatherPayments(var doExport : boolean) : TAmount;
 var
-  tt : double;
+  tt : TAmount;
   pmCode        : string;
   pmAmount      : double;
   pmDate        : TDateTime;
   pmDescription : string;
   pmTypeIndex   : integer;
+  pmRate        : double;
   rSet          : TRoomerDataSet;
   s             : string;
 
@@ -995,12 +996,8 @@ var
 
 begin
   doExport := true;
-  tt := 0;
-  if FInvoicenumber = -1 then
-  begin
-
-
-  end else
+  tt := 0.0;
+  if FInvoicenumber <> -1 then
   begin
     rSet := CreateNewDataSet;
     try
@@ -1008,25 +1005,29 @@ begin
   // 	   CopyToClipboard(s);
   //     DebugMessage(''#10#10+s);
       hData.rSet_bySQL(rSet,s);
-      if not rSet.Eof then
+      while not rSet.Eof do
       begin
-        while not rSet.Eof do
-        begin
-          pmCode := rSet.fieldbyname('PayType').asString;
-          pmAmount := rSet.fieldbyname('Amount').AsFloat;
-          pmDate := SQLToDateTime(rSet.fieldbyname('PayDate').asString);
-          pmDescription := rSet.fieldbyname('Description').asstring;
-          pmTypeIndex   := rSet.fieldbyname('TypeIndex').asInteger;
+        pmCode := rSet.fieldbyname('PayType').asString;
+        pmAmount := rSet.fieldbyname('Amount').AsFloat;
 
-          if (pmCode <> '') and (pmAmount <> 0) then
-          begin
-            isExport := d.PayTypes_isExport(pmCode);
-            if not isExport then doExport := false;
-            tt := tt + pmAmount;
-            AddPayment(pmCode, pmAmount, pmDate,isExport,pmDescription,pmTypeIndex);
-          end;
-          rSet.Next;
+        if (pmCode <> '') and (pmAmount <> 0) then
+        begin
+          pmRate := rSet.fieldbyname('currencyrate').AsFloat;
+          tt := tt + TAmount(pmAmount * pmRate);
+
+          isExport := d.PayTypes_isExport(pmCode);
+          doExport := doExport And isExport;
+          AddPayment( pmCode,
+                      pmAmount,
+                      SQLToDateTime(rSet.fieldbyname('PayDate').asString),
+                      isExport,
+                      rSet.fieldbyname('Description').asstring,
+                      rSet.fieldbyname('TypeIndex').asInteger,
+                      rSet.fieldbyname('currency').asString,
+                      pmRate
+                      );
         end;
+        rSet.Next;
       end;
     finally
       freeandnil(rSet);
@@ -1463,32 +1464,34 @@ begin
   try
     sql:=
     '      SELECT '#10+
-    '         InvoiceNumber '#10+
-    '       , ItemNumber '#10+
-    '       , PurchaseDate '#10+
-    '       , ItemID '#10+
-    '       , Number '#10+
-    '       , Description '#10+
-    '       , Price '#10+
-    '       , VATType '#10+
-    '       , Total '#10+
-    '       , TotalWOVat '#10+
-    '       , Vat '#10+
-    '       , CurrencyRate '#10+
-    '       , Currency '#10+
-    '       , BreakfastPrice '#10+
-    '       , ID '#10+
-    '       , ilAccountKey '#10+
-    '       , importRefrence '#10+
-    '       , importSource '#10+
-    '       , isPackage '#10+
-    '       , RoomReservationAlias '#10+
+    '         il.InvoiceNumber '#10+
+    '       , il.ItemNumber '#10+
+    '       , il.PurchaseDate '#10+
+    '       , il.ItemID '#10+
+    '       , il.Number '#10+
+    '       , il.Description '#10+
+    '       , il.Price '#10+
+    '       , il.VATType '#10+
+    '       , il.Total '#10+
+    '       , il.TotalWOVat '#10+
+    '       , il.Vat '#10+
+    '       , ih.ihCurrencyRate as CurrencyRate '#10+
+    '       , ih.ihCurrency as Currency'#10+
+    '       , il.BreakfastPrice '#10+
+    '       , il.ID '#10+
+    '       , il.ilAccountKey '#10+
+    '       , il.importRefrence '#10+
+    '       , il.importSource '#10+
+    '       , il.isPackage '#10+
+    '       , il.RoomReservationAlias '#10+
     '      FROM '#10+
-    '        invoicelines '#10+
+    '        invoicelines il '#10+
+    '      JOIN '#10+
+    '        invoiceheads ih ON ih.invoicenumber=il.invoicenumber'#10+
     '      WHERE '#10+
-    '       (InvoiceNumber = %d) '#10+
+    '       (il.InvoiceNumber = %d) '#10+
     '     ORDER BY '#10+
-    '       ItemID ';
+    '       il.ItemID ';
 
     sql := format(sql, [InvoiceNumber]);
     if hData.rSet_bySQL(rSet,sql) then
@@ -1584,10 +1587,10 @@ begin
       begin
         Case rSet.FieldByName('typeIndex').asInteger of
           0 : begin
-                balance := balance+rSet.GetFloatValue(rSet.FieldByName('Amount'));
+                balance := balance + rSet.FieldByName('Amount').asFloat * rset.FieldByName('currencyrate').asfloat;
               end;
           1 : begin
-                prePaid := prePaid+rSet.GetFloatValue(rSet.FieldByName('Amount'));
+                prePaid := prePaid + rSet.FieldByName('Amount').asFloat * rset.FieldByName('currencyrate').asfloat;
               end;
         end;
         rSet.Next;
