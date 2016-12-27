@@ -551,10 +551,9 @@ type
     /// </summary>
     procedure RestoreTMPInvoicelines;
 
-    procedure SaveHeader(FTotal, fVat, fWOVat: Double;
-      aExecutionPlan: TRoomerExecutionPlan);
+    procedure SaveHeader(FTotal, fVat, fWOVat: Double; aExecutionPlan: TRoomerExecutionPlan; currencyChange : Boolean = False);
 
-    function SaveInvoice(iInvoiceNumber: integer): boolean;
+    function SaveInvoice(iInvoiceNumber: integer; currencyChange : Boolean = False): boolean;
 
     procedure CheckCurrencyChange(oldCurrency: string);
     procedure CheckRateChange;
@@ -583,7 +582,7 @@ type
     procedure SaveProforma(iInvoiceNumber: integer);
     procedure SaveProformaHeader(FTotal, fVat, fWOVat: Double);
     procedure SaveProformapayments;
-    procedure SaveAnd(doExit: boolean);
+    procedure SaveAnd(doExit: boolean; currencyChange : Boolean = False);
     procedure CreateCashInvoice(customer: string);
 
     function createAllStr: string;
@@ -4080,8 +4079,7 @@ begin
     d.roomerMainDataSet.DoCommand(REMOVE_REDUNDANT_INVOICES[i]);
 end;
 
-procedure TfrmInvoice.SaveHeader(FTotal, fVat, fWOVat: Double;
-  aExecutionPlan: TRoomerExecutionPlan);
+procedure TfrmInvoice.SaveHeader(FTotal, fVat, fWOVat: Double; aExecutionPlan: TRoomerExecutionPlan; currencyChange : Boolean = False);
 var
   iMultiplier: integer;
 var
@@ -4323,7 +4321,7 @@ begin
       (invoiceline.FText <> agrLines.Cells[col_Description, line]);
 end;
 
-function TfrmInvoice.SaveInvoice(iInvoiceNumber: integer): boolean;
+function TfrmInvoice.SaveInvoice(iInvoiceNumber: integer; currencyChange : Boolean = False): boolean;
 var
   rSet: TRoomerDataset;
   ItemTypeInfo: TItemTypeInfo;
@@ -4648,7 +4646,7 @@ begin
         end
         else
         begin
-          if NOT IsLineChanged(i, iCreditinvoiceMultiplier) then
+          if (NOT currencyChange) AND (NOT IsLineChanged(i, iCreditinvoiceMultiplier)) then
             continue;
 
           s := 'UPDATE invoicelines' +
@@ -4677,7 +4675,7 @@ begin
 
       end;
 
-      SaveHeader(FTotal, fTotalVAT, fTotalWOVat, lExecutionPlan);
+      SaveHeader(FTotal, fTotalVAT, fTotalWOVat, lExecutionPlan, currencyChange);
 
       if NOT lExecutionPlan.Execute(ptExec, True) then
         raise Exception.create(lExecutionPlan.ExecException);
@@ -5396,7 +5394,8 @@ begin
     if (zInvoiceNumber = -1) or (FnewSplitNumber = 1) then
     begin
       if not SelectPaymentTypes(_StrToFloat(edtBalance.Text), edtCustomer.Text,
-        ptInvoice, lstLocations, zInvoiceDate, zPayDate, zLocation) then
+        ptInvoice, edtCurrency.Text, _StrToFloat(edtRate.Text),
+        lstLocations, zInvoiceDate, zPayDate, zLocation) then
       begin
         exit;
       end;
@@ -6361,7 +6360,7 @@ begin
       end;
     end;
 
-    SaveAnd(false);
+    SaveAnd(false, true);
     FormCreate(nil);
     LoadInvoice;
     UpdateCaptions;
@@ -6944,12 +6943,12 @@ begin
   btnSaveChanges.Click;
 end;
 
-procedure TfrmInvoice.SaveAnd(doExit: boolean);
+procedure TfrmInvoice.SaveAnd(doExit: boolean; currencyChange : Boolean = False);
 begin
   try
     if zDoSave then
     begin
-      SaveInvoice(zInvoiceNumber);
+      SaveInvoice(zInvoiceNumber, currencyChange);
       chkChanged;
       if doExit then
         close;

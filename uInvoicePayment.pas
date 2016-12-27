@@ -71,6 +71,13 @@ type
     sSkinProvider1: TsSkinProvider;
     sLabel3: TsLabel;
     cbxLocation: TsComboBox;
+    __pnlCurrencies: TsPanel;
+    LblForeignCurrencyAmount: TsLabel;
+    LblLocalCurrencyAmount: TsLabel;
+    __LblForeignCurrency: TsLabel;
+    __LblLocalCurrency: TsLabel;
+    LblForeignCurrency: TsLabel;
+    LblLocalCurrency: TsLabel;
     procedure FormShow(Sender: TObject);
     procedure agrPayTypesSelectCell(Sender: TObject; ACol, ARow: Integer;
       var CanSelect: Boolean);
@@ -111,8 +118,12 @@ var
 function SelectPaymentTypes( Amount : Double;
                             Customer : string;
                             PaymentType : hdata.TPaymentTypes;
+                            Currency : String;
+                            CurrencyRate : Double;
                             var lst : TstringList;
-                            var aInvoiceDate : TDate; var aPayDate : TDate; var aLocation : string) : boolean;
+                            var aInvoiceDate : TDate;
+                            var aPayDate : TDate;
+                            var aLocation : string) : boolean;
 
 
 
@@ -131,8 +142,12 @@ uses
 function SelectPaymentTypes( Amount : Double;
                              Customer : string;
                              PaymentType : hdata.TPaymentTypes;
+                             Currency : String;
+                             CurrencyRate : Double;
                              var lst : TstringList;
-                             var aInvoiceDate : TDate; var aPayDate : TDate; var aLocation : string) : boolean;
+                             var aInvoiceDate : TDate;
+                             var aPayDate : TDate;
+                             var aLocation : string) : boolean;
 var
   i : integer;
   selected : string;
@@ -179,11 +194,20 @@ begin
       // frmInvoicePayment.Caption := 'Down payment';
       frmInvoicePayment.Caption := GetTranslatedText('shTx_InvoicePayment_DownPayment');
       frmInvoicePayment.panel2.visible := true;
+      frmInvoicePayment.__pnlCurrencies.Visible := False;
     end else
     begin
     //  frmInvoicePayment.Caption := 'Invocie Payment';
 	    frmInvoicePayment.Caption := GetTranslatedText('shTx_InvoicePayment_InvoicePayment');
       frmInvoicePayment.panel2.visible := false;
+      frmInvoicePayment.__pnlCurrencies.Visible := UpperCase(Currency) <> UpperCase(ctrlGetString('NativeCurrency'));
+      if frmInvoicePayment.__pnlCurrencies.Visible then
+      begin
+        frmInvoicePayment.__LblLocalCurrency.Caption := trim(_floattostr(Amount, 10, 2));
+        frmInvoicePayment.__LblForeignCurrency.Caption := trim(_floattostr(Amount / CurrencyRate, 10, 2));
+        frmInvoicePayment.LblLocalCurrency.Caption := ctrlGetString('NativeCurrency');
+        frmInvoicePayment.LblForeignCurrency.Caption := Currency;
+      end;
     end;
 
     if frmInvoicePayment.ShowModal <> mrOK then
