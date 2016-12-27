@@ -1995,8 +1995,8 @@ begin
 
         CopyToClipboard(sql);
         commands.Add(sql);
-        commands.Add('update channelrates set maxStayDirty = 0 where maxStayDirty != 0 AND maxStay < minstay;');
-        commands.Add('update channelrates set singleUsePriceDirty = 0 where singleUsePriceDirty != 0 AND singleUsePrice = 0;');
+        commands.Add('update channelrates set maxStayDirty = 0 where date>=CURRENT_DATE AND maxStayDirty != 0 AND maxStay < minstay;');
+        commands.Add('update channelrates set singleUsePriceDirty = 0 where date>=CURRENT_DATE AND singleUsePriceDirty != 0 AND singleUsePrice = 0;');
         RoomerDataSet.SystemFreeExecuteMultiple(commands);
       finally
         commands.Free;
@@ -2150,7 +2150,8 @@ begin
             Availability.Add(tempInt);
             SetAvailability.Add(TCellData(grid.Objects[iCol, iRow]).MaxValue);
             tempStr := format('UPDATE channelrates SET availability = %d, availabilityDirty = 1 ' +
-                              'WHERE date=''%s'' AND channelManager = %d AND planCodeId = %d AND roomClassId IN (SELECT id FROM roomtypegroups WHERE Active AND (Code=TopClass) AND (Code=''%s'' OR TopClass=''%s''))',
+                              'WHERE date=''%s'' AND channelManager = %d AND planCodeId = %d AND ' +
+                              'roomClassId IN (SELECT id FROM roomtypegroups WHERE Active AND (Code=TopClass) AND (Code=''%s'' OR TopClass=''%s''))',
                               [tempInt,
                                uDateUtils.dateToSqlString(TCellData(grid.Objects[iCol, iRow]).date),
                                TCellData(grid.Objects[iCol, iRow]).ChannelManagerId,
@@ -4013,6 +4014,7 @@ end;
 procedure TfrmChannelAvailabilityManager.ForceAvailabilityForCurrentPeriod;
 var
   iRow, iCol: integer;
+  pcData : TCellData;
 begin
   if PerformForcedAvailabilityUpdate then
   begin
@@ -4023,7 +4025,8 @@ begin
         begin
           if Assigned(grid.Objects[iCol, iRow]) AND (grid.Objects[iCol, iRow] IS TCellData) then
           begin
-            TCellData(grid.Objects[iCol, iRow]).ForceRefresh := true;
+            pcData := TCellData(grid.Objects[iCol, iRow]);
+            pcData.ForceRefresh := true;
           end;
           ForwardProject;
         end;

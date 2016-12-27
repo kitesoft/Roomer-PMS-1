@@ -861,8 +861,7 @@ begin
       try
         if lst.Count = 0 then
         begin
-          showmessage(format(GetTranslatedText('shTx_DayFinical_NoInvoicesForFromToDate'),
-            [dateToStr(dateFrom), dateToStr(dateTo)]));
+          showmessage(format(GetTranslatedText('shTx_DayFinical_NoInvoicesForFromToDate'), [dateToStr(dateFrom), dateToStr(dateTo)]));
           exit;
         end;
         zSQLInText := CreateSQLInText(lst);

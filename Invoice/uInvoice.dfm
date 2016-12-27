@@ -289,7 +289,6 @@ object frmInvoice: TfrmInvoice
         TabOrder = 9
         OnClick = rgrInvoiceTypeClick
         SkinData.SkinSection = 'GROUPBOX'
-        Checked = False
         ItemIndex = 1
         Items.Strings = (
           'Customer'
@@ -925,7 +924,6 @@ object frmInvoice: TfrmInvoice
                 Caption = 'Included taxes'
                 TabOrder = 5
                 SkinData.SkinSection = 'GROUPBOX'
-                Checked = False
                 object labLodgingTaxISK: TsLabel
                   Left = 12
                   Top = 16
@@ -1357,7 +1355,7 @@ object frmInvoice: TfrmInvoice
               SearchFooter.HintHighlight = 'Highlight occurrences'
               SearchFooter.MatchCaseCaption = 'Match case'
               SortSettings.DefaultFormat = ssAutomatic
-              Version = '8.1.2.0'
+              Version = '7.9.1.1'
               ColWidths = (
                 24
                 91
@@ -1372,10 +1370,6 @@ object frmInvoice: TfrmInvoice
         object tabRoomPrice: TTabSheet
           Caption = 'RoomPrice'
           TabVisible = False
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 1010
-          ExplicitHeight = 0
           object panTopRoomRates: TsPanel
             Left = 0
             Top = 0
@@ -1384,7 +1378,6 @@ object frmInvoice: TfrmInvoice
             Align = alTop
             TabOrder = 0
             SkinData.SkinSection = 'PANEL'
-            ExplicitWidth = 1010
             object cxGroupBox4: TsGroupBox
               AlignWithMargins = True
               Left = 230
@@ -1395,7 +1388,6 @@ object frmInvoice: TfrmInvoice
               Caption = 'Selected room'
               TabOrder = 0
               SkinData.SkinSection = 'GROUPBOX'
-              Checked = False
               object btdEditRoomRate: TsButton
                 Left = 8
                 Top = 14
@@ -1437,7 +1429,6 @@ object frmInvoice: TfrmInvoice
               Caption = 'Other properties'
               TabOrder = 1
               SkinData.SkinSection = 'GROUPBOX'
-              Checked = False
               object chkReCalcPrices: TsCheckBox
                 Left = 9
                 Top = 20
@@ -1475,7 +1466,6 @@ object frmInvoice: TfrmInvoice
               Caption = 'Back to Invoice'
               TabOrder = 2
               SkinData.SkinSection = 'GROUPBOX'
-              Checked = False
               DesignSize = (
                 220
                 77)
@@ -1514,7 +1504,6 @@ object frmInvoice: TfrmInvoice
             Align = alClient
             TabOrder = 1
             LookAndFeel.NativeStyle = False
-            ExplicitWidth = 1010
             object tvRoomRes: TcxGridDBTableView
               Navigator.Buttons.CustomButtons = <>
               DataController.DataSource = mRoomResDS

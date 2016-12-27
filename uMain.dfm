@@ -52,7 +52,6 @@ object frmMain: TfrmMain
     SunkenBorder = True
     UseOwnColor = True
     UseOwnSunkenBorder = True
-    ExplicitTop = 122
   end
   object panMain: TsPanel
     Left = 0
@@ -152,6 +151,7 @@ object frmMain: TfrmMain
           OnResize = grOneDayRoomsResize
           HintShowSizing = True
           OnEndColumnSize = grOneDayRoomsEndColumnSize
+          OnScrollCell = grOneDayRoomsScrollCell
           ActiveCellFont.Charset = DEFAULT_CHARSET
           ActiveCellFont.Color = clWindowText
           ActiveCellFont.Height = -11
@@ -281,6 +281,8 @@ object frmMain: TfrmMain
           SortSettings.HeaderMirrorColor = 16380385
           SortSettings.HeaderMirrorColorTo = 16182488
           Version = '7.9.1.1'
+          ExplicitLeft = 1
+          ExplicitTop = -2
           ColWidths = (
             47
             49
@@ -2961,6 +2963,7 @@ object frmMain: TfrmMain
           TabOrder = 5
           Visible = False
           SkinData.SkinSection = 'PANEL'
+          ExplicitLeft = 1
         end
       end
     end
