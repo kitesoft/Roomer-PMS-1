@@ -3838,7 +3838,8 @@ begin
     if InvoiceIndex > -1 then
       s := s + ' , InvoiceIndex = ' + _db(InvoiceIndex) + chr(10); // ATH var boolTostr
     s := s + ' WHERE Reservation = ' + inttostr(reservation) + chr(10);
-    s := s + ' AND roomreservation = ' + inttostr(RoomReservation) + chr(10);
+    if NOT GroupAccount then
+      s := s + ' AND roomreservation = ' + inttostr(RoomReservation) + chr(10);
 
     ExecutionPlan.AddExec(s);
 

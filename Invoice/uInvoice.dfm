@@ -637,8 +637,8 @@ object frmInvoice: TfrmInvoice
       object chkShowPackage: TsCheckBox
         Left = 724
         Top = 140
-        Width = 119
-        Height = 17
+        Width = 111
+        Height = 20
         Caption = 'Package on invoice'
         Checked = True
         State = cbChecked
@@ -1344,7 +1344,8 @@ object frmInvoice: TfrmInvoice
           SearchFooter.HintHighlight = 'Highlight occurrences'
           SearchFooter.MatchCaseCaption = 'Match case'
           SortSettings.DefaultFormat = ssAutomatic
-          Version = '8.1.2.0'
+          Version = '7.9.1.1'
+          ExplicitLeft = 17
           ColWidths = (
             24
             91
@@ -2258,15 +2259,8 @@ object frmInvoice: TfrmInvoice
     object mPaymentsid: TIntegerField
       FieldName = 'id'
     end
-    object mPaymentsssss: TMemoField
-      FieldName = 'ssss'
-      BlobType = ftMemo
-    end
-    object mPaymentswww: TWideStringField
-      FieldName = 'www'
-    end
-    object mPaymentsdddd: TDateField
-      FieldName = 'dddd'
+    object mPaymentsInvoiceIndex: TIntegerField
+      FieldName = 'InvoiceIndex'
     end
   end
   object mnuMoveItem: TPopupMenu

@@ -969,7 +969,7 @@ begin
     CopyToClipboard(lSQL);
     lExecPlan.AddQuery(lSQL);
 
-    lExecPlan.Execute;
+    lExecPlan.Execute(ptQuery);
 
     mRoomRes.LoadFromDataSet(lExecPlan.Results[0]);
     mRoomRates.LoadFromDataSet(lExecPlan.Results[1]);

@@ -250,9 +250,6 @@ type
     mPaymentsMemo: TMemoField;
     mPaymentsconfirmDate: TDateTimeField;
     mPaymentsid: TIntegerField;
-    mPaymentsssss: TMemoField;
-    mPaymentswww: TWideStringField;
-    mPaymentsdddd: TDateField;
     mnuMoveItem: TPopupMenu;
     mnuMoveRoom: TPopupMenu;
     T1: TMenuItem;
@@ -351,6 +348,7 @@ type
     mRoomRatesRentAmount: TFloatField;
     mRoomRatesNativeAmount: TFloatField;
     mRoomRatesGuestName: TWideStringField;
+    mPaymentsInvoiceIndex: TIntegerField;
     procedure FormCreate(Sender: TObject);
     procedure agrLinesMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: integer);
@@ -380,7 +378,6 @@ type
     procedure agrLinesGetCellColor(Sender: TObject; ARow, ACol: integer;
       AState: TGridDrawState; ABrush: TBrush; AFont: TFont);
     procedure sButton2Click(Sender: TObject);
-    procedure sButton3Click(Sender: TObject);
     procedure edtCustomerChange(Sender: TObject);
     procedure btnEditDownPaymentClick(Sender: TObject);
     procedure btnDeleteDownpaymentClick(Sender: TObject);
@@ -1850,20 +1847,6 @@ begin
   btnProforma.Enabled := True;
 end;
 
-procedure TfrmInvoice.sButton3Click(Sender: TObject);
-begin
-  zApply := True;
-  SaveAnd(false);
-  FormCreate(nil);
-  zFirsttime := false;
-  LoadInvoice;
-  loadInvoiceToMemtable(d.mInvoicelines_after);
-  UpdateCaptions;
-  btnExit.Enabled := True;
-  btnInvoice.Enabled := True;
-  btnProforma.Enabled := True;
-end;
-
 procedure TfrmInvoice.tvPaymentsCellDblClick(Sender: TcxCustomGridTableView;
   ACellViewInfo: TcxGridTableDataCellViewInfo; AButton: TMouseButton;
   AShift: TShiftState; var AHandled: boolean);
@@ -2380,10 +2363,10 @@ begin
     sql := 'SELECT CONVERT((SELECT GROUP_CONCAT(DISTINCT CONCAT(il1.InvoiceIndex, '';'', (SELECT SUM(il2.Total) FROM invoicelines il2 WHERE il2.RoomReservation=ih.RoomReservation '
       + 'AND il2.Reservation=ih.Reservation AND il2.InvoiceNumber=-1 AND il1.InvoiceIndex=il2.InvoiceIndex)) ORDER BY InvoiceIndex) '
       + 'FROM invoicelines il1 WHERE il1.RoomReservation=ih.RoomReservation AND il1.Reservation=ih.Reservation AND il1.InvoiceNumber=-1) USING utf8) AS InvoiceIndexes, '
-      + '(SELECT InvoiceIndex FROM roomreservations rr WHERE rr.RoomReservation=ih.RoomReservation) rrInvoiceIndex, '
+      + '(SELECT InvoiceIndex FROM roomreservations rr WHERE rr.RoomReservation = ih.RoomReservation OR rr.Reservation=ih.Reservation LIMIT 1) rrInvoiceIndex, '
       + '(SELECT GroupAccount FROM roomreservations rr WHERE rr.RoomReservation=ih.RoomReservation) rrGroupAccount, '
-      + '(SELECT SUM(RoomRate) FROM roomsdate rd WHERE rd.RoomReservation=ih.RoomReservation '
-      + 'AND rd.Reservation=ih.Reservation AND rd.Paid=0 AND (NOT rd.ResFlag IN (''C'',''X'',''N'',''O''))) AS rrInvoiceTotal, '
+      + '(SELECT SUM(RoomRate) FROM roomsdate rd WHERE (rd.RoomReservation=ih.RoomReservation '
+      + 'OR rd.Reservation=ih.Reservation) AND rd.Paid=0 AND (NOT rd.ResFlag IN (''C'',''X'',''N'',''O''))) AS rrInvoiceTotal, '
       + 'ih.Reservation, ' +
       'ih.RoomReservation, ' +
       'ih.SplitNumber, ' +
@@ -3976,7 +3959,7 @@ begin
         if EditRoomRates(lRoomreslist, FInvoiceIndex, zCurrentCurrency) then
         begin
           SaveAnd(false);
-          FormCreate(nil);
+//          FormCreate(nil);
           zFirsttime := false;
           LoadInvoice;
           loadInvoiceToMemtable(d.mInvoicelines_after);
@@ -6130,8 +6113,7 @@ end;
 procedure TfrmInvoice.MoveRoomToNewInvoiceIndex(rowIndex, toInvoiceIndex: integer);
 begin
   // if (MessageDlg('Move roomrent to Groupinvoice ' + chr(10) + 'and save other changes ?', mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
-  d.UpdateGroupAccountone(FReservation, FRoomReservation, FRoomReservation,
-    FRoomReservation = 0, toInvoiceIndex);
+  d.UpdateGroupAccountone(FReservation, FRoomReservation, FRoomReservation, FRoomReservation = 0, toInvoiceIndex);
   InvoiceIndex := FInvoiceIndex;
 end;
 
@@ -6361,7 +6343,7 @@ begin
     end;
 
     SaveAnd(false, true);
-    FormCreate(nil);
+//    FormCreate(nil);
     LoadInvoice;
     UpdateCaptions;
   end;
@@ -7247,6 +7229,7 @@ begin
       mPayments.FieldByName('Memo').asString := rec.Notes;
       mPayments.FieldByName('confirmDate').asdateTime := theData.confirmDate;
       mPayments.FieldByName('ID').asinteger := NewId;
+      mPayments.FieldByName('InvoiceIndex').asinteger := InvoiceIndex;
 
       mPayments.post;
       DisplayTotals;
