@@ -170,6 +170,7 @@ object frmMain: TfrmMain
             OnResize = grOneDayRoomsResize
             HintShowSizing = True
             OnEndColumnSize = grOneDayRoomsEndColumnSize
+            OnScrollCell = grOneDayRoomsScrollCell
             ActiveCellFont.Charset = DEFAULT_CHARSET
             ActiveCellFont.Color = clWindowText
             ActiveCellFont.Height = -11
@@ -2729,7 +2730,6 @@ object frmMain: TfrmMain
       Index = 2
     end
     object rbTabReports: TdxRibbonTab
-      Active = True
       Caption = 'Reports'
       Groups = <
         item
@@ -2811,6 +2811,7 @@ object frmMain: TfrmMain
       Index = 5
     end
     object rbTabChannels: TdxRibbonTab
+      Active = True
       Caption = 'Channels'
       Groups = <
         item

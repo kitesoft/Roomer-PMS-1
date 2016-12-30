@@ -2126,6 +2126,7 @@ begin
   if g.OpenRemoveRoom(zRoomReservation) then
   begin
     FReservationChangeStateHandler.UpdateRoomResStateChangeHandlers;
+    mRooms.delete;
     Display_rGrid(zRoomReservation);
   end;
 end;

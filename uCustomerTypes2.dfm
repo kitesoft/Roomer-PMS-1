@@ -1,30 +1,28 @@
-object frmCustomerTypes2: TfrmCustomerTypes2
-  Left = 0
-  Top = 0
+inherited frmCustomerTypes2: TfrmCustomerTypes2
   Caption = 'Market Segments'
   ClientHeight = 452
-  ClientWidth = 476
-  Color = clBtnFace
+  ClientWidth = 558
   Constraints.MinWidth = 470
-  Font.Charset = DEFAULT_CHARSET
-  Font.Color = clWindowText
   Font.Height = -11
-  Font.Name = 'Tahoma'
-  Font.Style = []
-  KeyPreview = True
-  OldCreateOrder = False
   Position = poOwnerFormCenter
   OnClose = FormClose
   OnCreate = FormCreate
-  OnKeyDown = FormKeyDown
   OnKeyPress = FormKeyPress
   OnShow = FormShow
+  ExplicitWidth = 574
+  ExplicitHeight = 491
   PixelsPerInch = 96
   TextHeight = 13
-  object sPanel1: TsPanel
+  inherited sbStatusBar: TsStatusBar
+    Top = 432
+    Width = 558
+    ExplicitTop = 432
+    ExplicitWidth = 558
+  end
+  object sPanel1: TsPanel [1]
     Left = 0
     Top = 0
-    Width = 476
+    Width = 558
     Height = 65
     Align = alTop
     TabOrder = 0
@@ -77,7 +75,6 @@ object frmCustomerTypes2: TfrmCustomerTypes2
       Images = DImages.PngImageList1
       Style = bsSplitButton
       TabOrder = 1
-      OnClick = btnOtherClick
       SkinData.SkinSection = 'BUTTON'
     end
     object edFilter: TsEdit
@@ -127,27 +124,19 @@ object frmCustomerTypes2: TfrmCustomerTypes2
       SkinData.SkinSection = 'BUTTON'
     end
   end
-  object sbMain: TsStatusBar
+  object panBtn: TsPanel [2]
     Left = 0
-    Top = 433
-    Width = 476
-    Height = 19
-    Panels = <>
-    SkinData.SkinSection = 'STATUSBAR'
-  end
-  object panBtn: TsPanel
-    Left = 0
-    Top = 400
-    Width = 476
+    Top = 399
+    Width = 558
     Height = 33
     Align = alBottom
     TabOrder = 2
     SkinData.SkinSection = 'PANEL'
     DesignSize = (
-      476
+      558
       33)
     object btnCancel: TsButton
-      Left = 386
+      Left = 468
       Top = 4
       Width = 85
       Height = 25
@@ -163,7 +152,7 @@ object frmCustomerTypes2: TfrmCustomerTypes2
       SkinData.SkinSection = 'BUTTON'
     end
     object BtnOk: TsButton
-      Left = 298
+      Left = 380
       Top = 4
       Width = 85
       Height = 25
@@ -178,11 +167,11 @@ object frmCustomerTypes2: TfrmCustomerTypes2
       SkinData.SkinSection = 'BUTTON'
     end
   end
-  object grData: TcxGrid
+  object grData: TcxGrid [3]
     Left = 0
     Top = 65
-    Width = 476
-    Height = 335
+    Width = 558
+    Height = 334
     Align = alClient
     TabOrder = 3
     LookAndFeel.NativeStyle = False
@@ -229,15 +218,18 @@ object frmCustomerTypes2: TfrmCustomerTypes2
       Navigator.Visible = True
       OnFocusedRecordChanged = tvDataFocusedRecordChanged
       DataController.DataSource = DS
+      DataController.Options = [dcoAssignGroupingValues, dcoAssignMasterDetailKeys]
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <>
       DataController.Summary.SummaryGroups = <>
       DataController.OnSortingChanged = tvDataDataControllerSortingChanged
       OptionsBehavior.AlwaysShowEditor = True
+      OptionsBehavior.FocusCellOnTab = True
       OptionsBehavior.IncSearch = True
       OptionsData.Appending = True
       OptionsData.CancelOnExit = False
       OptionsData.DeletingConfirmation = False
+      OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
       OptionsView.Indicator = True
       object tvDataRecId: TcxGridDBColumn
@@ -274,10 +266,19 @@ object frmCustomerTypes2: TfrmCustomerTypes2
       GridView = tvData
     end
   end
+  inherited cxsrRoomerStyleRepository: TcxStyleRepository
+    PixelsPerInch = 96
+    inherited dxssRoomerGridReportLink: TdxGridReportLinkStyleSheet
+      BuiltIn = True
+    end
+    inherited cxssRoomerGridTableView: TcxGridTableViewStyleSheet
+      BuiltIn = True
+    end
+  end
   object mnuOther: TPopupMenu
     Images = DImages.PngImageList1
-    Left = 134
-    Top = 56
+    Left = 102
+    Top = 176
     object mnuiPrint: TMenuItem
       Caption = 'Print'
       ImageIndex = 3

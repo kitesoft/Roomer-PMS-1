@@ -89,12 +89,13 @@ uses
   , cmpRoomerConnection, dxSkinsCore, dxSkinDarkSide, dxSkinDevExpressDarkStyle, dxSkinMcSkin, dxSkinOffice2013White,
   dxSkinsDefaultPainters, dxSkinscxPCPainter, cxSpinEdit, dxSkinsdxBarPainter, dxSkinsdxRibbonPainter, dxmdaset, dxSkinCaramel, dxSkinCoffee,
   dxSkinTheAsphaltWorld, dxPScxPivotGridLnk
+  ,uRoomerForm, cxPropertiesStore
 
 
   ;
 
 type
-  TfrmCustomerTypes2 = class(TForm)
+  TfrmCustomerTypes2 = class(TfrmBaseRoomerForm)
     sPanel1: TsPanel;
     btnDelete: TsButton;
     btnOther: TsButton;
@@ -107,7 +108,6 @@ type
     mnuiGridToHtml: TMenuItem;
     mnuiGridToText: TMenuItem;
     mnuiGridToXml: TMenuItem;
-    sbMain: TsStatusBar;
     edFilter: TsEdit;
     cLabFilter: TsLabel;
     btnClear: TsSpeedButton;
@@ -152,7 +152,6 @@ type
       ANewItemRecordFocusingChanged: Boolean);
     procedure tvDataDataControllerFilterChanged(Sender: TObject);
     procedure tvDataDataControllerSortingChanged(Sender: TObject);
-    procedure btnOtherClick(Sender: TObject);
     procedure btnDeleteClick(Sender: TObject);
     procedure mnuiPrintClick(Sender: TObject);
     procedure mnuiAllowGridEditClick(Sender: TObject);
@@ -165,7 +164,6 @@ type
     procedure edFilterChange(Sender: TObject);
     procedure btnInsertClick(Sender: TObject);
     procedure tvDataCustomerTypePropertiesValidate(Sender: TObject; var DisplayValue: Variant; var ErrorText: TCaption; var Error: Boolean);
-    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
   private
     { Private declarations }
     zFirstTime       : boolean;
@@ -179,6 +177,10 @@ type
     procedure changeAllowgridEdit;
     Procedure chkFilter;
     procedure applyFilter;
+  protected
+    procedure DoUpdateControls; override;
+    procedure DoLoadData; override;
+
 
 
   public
@@ -281,21 +283,11 @@ end;
 
 procedure TfrmCustomerTypes2.changeAllowgridEdit;
 begin
-  if zAllowGridEdit then
-  begin
-    tvDataID.Options.Editing             := false;
-    tvDataActive.Options.Editing         := true;
-    tvDataCustomerType.Options.Editing   := true;
-    tvDataDescription.Options.Editing    := true;
-    tvDataPriority.Options.Editing       := true;
-  end else
-  begin
-    tvDataID.Options.Editing             := false;
-    tvDataActive.Options.Editing         := false;
-    tvDataCustomerType.Options.Editing   := false;
-    tvDataDescription.Options.Editing    := false;
-    tvDataPriority.Options.Editing       := false;
-  end;
+  tvData.OptionsData.Editing := zAllowGridEdit;
+  tvData.OptionsData.Appending := zAllowGridEdit;
+  tvData.OptionsData.Deleting := zAllowGridEdit;
+  tvData.OptionsData.Inserting := zAllowGridEdit;
+  tvDataID.Options.Editing             := false;
 end;
 
 
@@ -315,6 +307,47 @@ begin
   end;
 end;
 
+
+procedure TfrmCustomerTypes2.DoLoadData;
+var
+  s    : string;
+  rSet : TRoomerDataSet;
+begin
+  inherited;
+  zFirstTime := true;
+  if zSortStr = '' then zSortStr := 'ID';
+  rSet := CreateNewDataSet;
+  try
+    s := format(select_CustomerTypes, [zSortStr]);
+    if rSet_bySQL(rSet,s) then
+    begin
+      if m_.active then m_.Close;
+      m_.LoadFromDataSet(rSet);
+    end;
+  finally
+    freeandnil(rSet);
+  end;
+end;
+
+procedure TfrmCustomerTypes2.DoUpdateControls;
+begin
+  inherited;
+  if ZAct = actLookup then
+  begin
+    mnuiAllowGridEdit.Checked := false;
+    panBtn.Visible := true;
+    btnEdit.Enabled := false;
+    btnInsert.Enabled := false;
+    btnDelete.Enabled := false;
+  end else
+  begin
+    mnuiAllowGridEdit.Checked := true;
+    panBtn.Visible := False;
+  end;
+  zAllowGridEdit := mnuiAllowGridEdit.Checked;
+  changeAllowGridEdit;
+  chkFilter;
+end;
 
 procedure TfrmCustomerTypes2.edFilterChange(Sender: TObject);
 begin
@@ -354,26 +387,9 @@ end;
 procedure TfrmCustomerTypes2.FormShow(Sender: TObject);
 begin
 //**
-  panBtn.Visible := False;
-  sbMain.Visible := false;
-
-  fillGridFromDataset(zData.ID);
   zFirstTime := true;
-  sbMain.SimpleText := zSortStr;
+  RefreshData;
 
-  if ZAct = actLookup then
-  begin
-    mnuiAllowGridEdit.Checked := false;
-    panBtn.Visible := true;
-  end else
-  begin
-    mnuiAllowGridEdit.Checked := true;
-    sbMain.Visible := true;
-  end;
-  //-C
-  zAllowGridEdit := mnuiAllowGridEdit.Checked;
-  changeAllowGridEdit;
-  chkFilter;
   zFirstTime := false;
 end;
 
@@ -389,35 +405,12 @@ begin
   end;
 end;
 
-procedure TfrmCustomerTypes2.FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
-begin
-  if Key = VK_ESCAPE then
-    btnCancel.Click;
-end;
-
 procedure TfrmCustomerTypes2.FormKeyPress(Sender: TObject; var Key: Char);
 begin
-  if ZAct = actLookup then
+  if (activecontrol <> edFilter) and (ZAct = actLookup) then
   begin
     if key = chr(13) then
-    begin
-      if activecontrol = edFilter then
-      begin
-      end else
-      begin
-        btnOk.click;
-      end;
-    end;
-
-    if key = chr(27) then
-    begin
-      if activecontrol = edFilter then
-      begin
-      end else
-      begin
-        btnCancel.click;
-      end;
-    end;
+      btnOk.click;
   end;
 end;
 
@@ -427,28 +420,23 @@ var
   s : string;
 begin
   fillHolder;
-(*
-  if hdata.payTypeExistsInOther(zData.PayType) then
-  begin
-    Showmessage('payType'+' ' + zData.Description + ' '+GetTranslatedText('shExistsInRelatedData')+' ' + chr(10) + GetTranslatedText('shCanNotDelete')+' ');
-    Abort;
-    exit;
-  end;
-*)
   s := '';
   s := s+GetTranslatedText('shDeleteMarketSegment')+' '+zData.Description+' '+chr(10);
   s := s+GetTranslatedText('shContinue');
 
   if MessageDlg(s,mtConfirmation, [mbYes, mbNo], 0) = mrYes then
-  begin
-    if not Del_CustomerType(zData) then
-    begin
-      abort;
+    try
+      if not Del_CustomerType(zData) then
+        abort;
+    except
+      on E: ERoomerDatasetException do
+      begin
+        abort;
+        raise Exception.Create('Cannot delete this record, operation aborted.');
+      end;
     end
-  end else
-  begin
-    abort
-  end;
+  else
+    abort;
 end;
 
 procedure TfrmCustomerTypes2.m_BeforeInsert(DataSet: TDataSet);
@@ -580,27 +568,6 @@ end;
 /////////////////////////////////////////////////////////////////////////////
 
 
-//procedure TfrmCustomerTypes2.tvDataCurrencyPropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
-//var
-//  theData : recCurrencyHolder;
-//begin
-////  fillholder;
-////  theData.Currency := zData.Currency;
-////  theData.ID := zData.CurrencyID;
-////
-////
-////  currencies(actlookup,theData);
-////
-////  if theData.Currency <> '' then
-////  begin
-////    m_.Edit;
-////    m_['currency']   := theData.Currency;
-////    m_['currencyID'] := theData.ID;
-////    m_.Post;
-////  end;
-//
-//end;
-
 procedure TfrmCustomerTypes2.tvDataCustomerTypePropertiesValidate(Sender: TObject; var DisplayValue: Variant; var ErrorText: TCaption;
   var Error: Boolean);
 var
@@ -664,7 +631,7 @@ begin
     s := s + ' DESC';
   end;
   zSortStr := s;
-  sbMain.SimpleText := s;
+
 end;
 
 //////////////////////////////////////////////////////////////////////////
@@ -675,11 +642,6 @@ end;
 procedure TfrmCustomerTypes2.BtnOkClick(Sender: TObject);
 begin
   fillHolder;
-end;
-
-procedure TfrmCustomerTypes2.btnOtherClick(Sender: TObject);
-begin
-  //**
 end;
 
 procedure TfrmCustomerTypes2.btnCancelClick(Sender: TObject);

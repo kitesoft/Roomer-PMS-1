@@ -535,6 +535,7 @@ var
 begin
   if firstTime then exit;
   zdtFrom := dtFrom.Date;
+  zdtTo := dtTo.Date;
 
   screen.Cursor := crHourGlass;
   rSet := CreateNewDataset;
@@ -557,7 +558,8 @@ begin
     s := s + '    , ih.TotalWOVat AS LocalWithOutVAT'#10;
     s := s + '    , ih.TotalVat AS LocalVAT '#10;
     s := s + '    , ih.RoomGuest '#10;
-    s := s + '    , ih.ihInvoiceDate AS InvoiceDate'#10;
+//    s := s + '    , ih.ihInvoiceDate AS InvoiceDate'#10;
+    s := s + '    , date(ih.InvoiceDate) AS InvoiceDate'#10;
     s := s + '    , ih.ihConfirmDate AS Confirmdate'#10;
     s := s + '    , ih.ihPayDate AS DueDate'#10;
     s := s + '    , ih.ihStaff AS Staff'#10;
@@ -581,7 +583,8 @@ begin
 
     if rbtDates.checked then
     begin
-      s := s + '    AND ((ih.ihInvoiceDate >= ' + _db(zdtFrom, true) + ')  AND (ih.ihInvoiceDate <= ' + _db(zDTTo, true)
+//      s := s + '    AND ((ih.ihInvoiceDate >= ' + _db(zdtFrom, true) + ')  AND (ih.ihInvoiceDate <= ' + _db(zDTTo, true)
+      s := s + '    AND ((ih.InvoiceDate >= ' + _db(zdtFrom, true) + ')  AND (ih.InvoiceDate <= ' + _db(zDTTo, true)
         + ')) ';
     end;
 

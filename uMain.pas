@@ -987,6 +987,7 @@ type
     procedure btnCleaningNotesClick(Sender: TObject);
     procedure acUpdateTranslationsExecute(Sender: TObject);
     procedure btnDefaultMasterRatesClick(Sender: TObject);
+    procedure grOneDayRoomsScrollCell(Sender: TObject; ACol, ARow, ScrollPosition, ScrollMin, ScrollMax: Integer);
 
   private
     FReservationsModel: TReservationsModel;
@@ -6523,6 +6524,11 @@ end;
 // Drag and drop
 //
 /// ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+procedure TfrmMain.grOneDayRoomsScrollCell(Sender: TObject; ACol, ARow, ScrollPosition, ScrollMin, ScrollMax: Integer);
+begin
+  timBlinker.Tag := 20;
+end;
 
 procedure TfrmMain.grOneDayRoomsStartDrag(Sender: TObject; var DragObject: TDragObject);
 var

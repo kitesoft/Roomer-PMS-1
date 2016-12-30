@@ -31,6 +31,8 @@ type
 
   ERoomerExecutionPlanException = class(Exception);
 
+  ERoomerDatasetException = class(Exception);
+
   TRoomerDataSet = class;
   TRoomerDatasetList = TObjectList<TRoomerDataSet>;
 
@@ -1896,7 +1898,7 @@ begin
 {$IFDEF DEBUG}
       CopyToClipboard(aSql + #13#10#13#10 + '-- ' + sResult);
 {$ENDIF}
-      raise Exception.Create('command execution failed:' + sResult);
+      raise ERoomerDatasetException.Create('command execution failed:' + sResult);
     end;
   end;
   FNumberOfAffectedRows := Result;
@@ -2339,7 +2341,7 @@ begin
   if transaction then
     BeginTransaction;
   try
-    if (PlanType = ptQuery) or (Plantype = ptAll) then
+    if ((PlanType = ptQuery) or (Plantype = ptAll)) AND (QueryCount > 0) then
     begin
       for i := 0 to QueryCount - 1 do
         queryResults.add(FRoomerDataSet.CreateNewDataset);
@@ -2353,7 +2355,7 @@ begin
 
     end;
 
-    if (PlanType = ptExec) or (Plantype = ptAll) then
+    if ((PlanType = ptExec) or (Plantype = ptAll)) AND (ExecCount > 0) then
     begin
       lSQLList := getSqlsAsTList(ptExec);
       try

@@ -517,6 +517,10 @@ object frmRptResInvoices: TfrmRptResInvoices
     end
     object tabFinishedInvoices: TsTabSheet
       Caption = 'Closed Invoice list'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object sPanel2: TsPanel
         Left = 0
         Top = 0
@@ -918,6 +922,10 @@ object frmRptResInvoices: TfrmRptResInvoices
     end
     object sTabSheet1: TsTabSheet
       Caption = 'Open Invoice list'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object sPanel4: TsPanel
         Left = 0
         Top = 0

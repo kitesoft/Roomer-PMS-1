@@ -89,7 +89,7 @@ inherited frmRoomPrices: TfrmRoomPrices
         Left = 5
         Top = 18
         Width = 258
-        Height = 20
+        Height = 17
         Caption = 'Auto update Null Price'
         Align = alTop
         Checked = True
@@ -171,7 +171,6 @@ inherited frmRoomPrices: TfrmRoomPrices
     Align = alClient
     TabOrder = 2
     LookAndFeel.NativeStyle = False
-    ExplicitTop = 91
     object tvRoomRes: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = mRoomResDS

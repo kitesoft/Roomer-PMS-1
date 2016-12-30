@@ -2328,7 +2328,7 @@ object frmDayFinical: TfrmDayFinical
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
       ReportDocument.Caption = 'Sums2'
-      ReportDocument.CreationDate = 42705.658064166670000000
+      ReportDocument.CreationDate = 42720.491159224530000000
       ReportTitle.TextAlignX = taLeft
       BuiltInReportLink = True
     end

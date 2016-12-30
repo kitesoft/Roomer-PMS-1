@@ -29,7 +29,7 @@ object frmBaseRoomerForm: TfrmBaseRoomerForm
       end
       item
         Text = 'Idle'
-        Width = 50
+        Width = 100
       end
       item
         Style = psOwnerDraw

@@ -371,6 +371,7 @@ type
     mPaymentsnativeAmount: TFloatField;
     tvPaymentsnativeAmount: TcxGridDBColumn;
     mPaymentsnotes: TWideMemoField;
+    mPaymentsInvoiceIndex: TIntegerField;
     procedure FormCreate(Sender: TObject);
     procedure agrLinesMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: integer);
@@ -399,7 +400,6 @@ type
     procedure agrLinesGetCellColor(Sender: TObject; ARow, ACol: integer;
       AState: TGridDrawState; ABrush: TBrush; AFont: TFont);
     procedure sButton2Click(Sender: TObject);
-    procedure sButton3Click(Sender: TObject);
     procedure edtCustomerChange(Sender: TObject);
     procedure btnEditDownPaymentClick(Sender: TObject);
     procedure btnDeleteDownpaymentClick(Sender: TObject);
@@ -584,10 +584,9 @@ type
     /// </summary>
     procedure RestoreTMPInvoicelines;
 
-    procedure SaveHeader(FTotal, fVat, fWOVat: Double;
-      aExecutionPlan: TRoomerExecutionPlan);
+    procedure SaveHeader(FTotal, fVat, fWOVat: Double; aExecutionPlan: TRoomerExecutionPlan; currencyChange : Boolean = False);
 
-    function SaveInvoice(iInvoiceNumber: integer): boolean;
+    function SaveInvoice(iInvoiceNumber: integer; currencyChange : Boolean = False): boolean;
 
     procedure CheckCurrencyChange(oldCurrency: string);
 
@@ -615,7 +614,7 @@ type
     procedure SaveProforma(iInvoiceNumber: integer);
     procedure SaveProformaHeader(FTotal, fVat, fWOVat: Double);
     procedure SaveProformapayments;
-    procedure SaveAnd(doExit: boolean);
+    procedure SaveAnd(doExit: boolean; currencyChange : Boolean = False);
     procedure CreateCashInvoice(customer: string);
 
     function createAllStr: string;
@@ -2449,10 +2448,10 @@ begin
     sql := 'SELECT CONVERT((SELECT GROUP_CONCAT(DISTINCT CONCAT(il1.InvoiceIndex, '';'', (SELECT SUM(il2.Total) FROM invoicelines il2 WHERE il2.RoomReservation=ih.RoomReservation '
       + 'AND il2.Reservation=ih.Reservation AND il2.InvoiceNumber=-1 AND il1.InvoiceIndex=il2.InvoiceIndex)) ORDER BY InvoiceIndex) '
       + 'FROM invoicelines il1 WHERE il1.RoomReservation=ih.RoomReservation AND il1.Reservation=ih.Reservation AND il1.InvoiceNumber=-1) USING utf8) AS InvoiceIndexes, '
-      + '(SELECT InvoiceIndex FROM roomreservations rr WHERE rr.RoomReservation=ih.RoomReservation) rrInvoiceIndex, '
+      + '(SELECT InvoiceIndex FROM roomreservations rr WHERE rr.RoomReservation = ih.RoomReservation OR rr.Reservation=ih.Reservation LIMIT 1) rrInvoiceIndex, '
       + '(SELECT GroupAccount FROM roomreservations rr WHERE rr.RoomReservation=ih.RoomReservation) rrGroupAccount, '
-      + '(SELECT SUM(RoomRate) FROM roomsdate rd WHERE rd.RoomReservation=ih.RoomReservation '
-      + 'AND rd.Reservation=ih.Reservation AND rd.Paid=0 AND (NOT rd.ResFlag IN (''C'',''X'',''N'',''O''))) AS rrInvoiceTotal, '
+      + '(SELECT SUM(RoomRate) FROM roomsdate rd WHERE (rd.RoomReservation=ih.RoomReservation '
+      + 'OR rd.Reservation=ih.Reservation) AND rd.Paid=0 AND (NOT rd.ResFlag IN (''C'',''X'',''N'',''O''))) AS rrInvoiceTotal, '
       + 'ih.Reservation, ' +
       'ih.RoomReservation, ' +
       'ih.SplitNumber, ' +
@@ -4037,7 +4036,7 @@ begin
         if EditRoomRates(lRoomreslist, FInvoiceIndex, zCurrentCurrency) then
         begin
           SaveAnd(false);
-          FormCreate(nil);
+//          FormCreate(nil);
           zFirsttime := false;
           LoadInvoice;
           loadInvoiceToMemtable(d.mInvoicelines_after);
@@ -4140,8 +4139,7 @@ begin
     d.roomerMainDataSet.DoCommand(REMOVE_REDUNDANT_INVOICES[i]);
 end;
 
-procedure TfrmInvoice.SaveHeader(FTotal, fVat, fWOVat: Double;
-  aExecutionPlan: TRoomerExecutionPlan);
+procedure TfrmInvoice.SaveHeader(FTotal, fVat, fWOVat: Double; aExecutionPlan: TRoomerExecutionPlan; currencyChange : Boolean = False);
 var
   iMultiplier: integer;
 var
@@ -4383,7 +4381,7 @@ begin
       (invoiceline.FText <> agrLines.Cells[col_Description, line]);
 end;
 
-function TfrmInvoice.SaveInvoice(iInvoiceNumber: integer): boolean;
+function TfrmInvoice.SaveInvoice(iInvoiceNumber: integer; currencyChange : Boolean = False): boolean;
 var
   rSet: TRoomerDataset;
   ItemTypeInfo: TItemTypeInfo;
@@ -4717,7 +4715,7 @@ begin
         end
         else
         begin
-          if NOT IsLineChanged(i, iCreditinvoiceMultiplier) then
+          if (NOT currencyChange) AND (NOT IsLineChanged(i, iCreditinvoiceMultiplier)) then
             continue;
 
           s := 'UPDATE invoicelines' +
@@ -4746,7 +4744,7 @@ begin
 
       end;
 
-      SaveHeader(FTotal, fTotalVAT, fTotalWOVat, lExecutionPlan);
+      SaveHeader(FTotal, fTotalVAT, fTotalWOVat, lExecutionPlan, currencyChange);
 
       if NOT lExecutionPlan.Execute(ptExec, True) then
         raise Exception.create(lExecutionPlan.ExecException);
@@ -6225,8 +6223,7 @@ end;
 procedure TfrmInvoice.MoveRoomToNewInvoiceIndex(rowIndex, toInvoiceIndex: integer);
 begin
   // if (MessageDlg('Move roomrent to Groupinvoice ' + chr(10) + 'and save other changes ?', mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
-  d.UpdateGroupAccountone(FReservation, FRoomReservation, FRoomReservation,
-    FRoomReservation = 0, toInvoiceIndex);
+  d.UpdateGroupAccountone(FReservation, FRoomReservation, FRoomReservation, FRoomReservation = 0, toInvoiceIndex);
   InvoiceIndex := FInvoiceIndex;
 end;
 
@@ -6456,8 +6453,8 @@ begin
       end;
     end;
 
-    SaveAnd(false);
-    FormCreate(nil);
+    SaveAnd(false, true);
+//    FormCreate(nil);
     LoadInvoice;
     UpdateCaptions;
   end;
@@ -7028,12 +7025,12 @@ begin
   btnSaveChanges.Click;
 end;
 
-procedure TfrmInvoice.SaveAnd(doExit: boolean);
+procedure TfrmInvoice.SaveAnd(doExit: boolean; currencyChange : Boolean = False);
 begin
   try
     if zDoSave then
     begin
-      SaveInvoice(zInvoiceNumber);
+      SaveInvoice(zInvoiceNumber, currencyChange);
       chkChanged;
       if doExit then
         close;
@@ -7334,6 +7331,7 @@ begin
       mPayments.FieldByName('notes').asString := rec.Notes;
       mPayments.FieldByName('confirmDate').asdateTime := theData.confirmDate;
       mPayments.FieldByName('ID').asinteger := NewId;
+      mPayments.FieldByName('InvoiceIndex').asinteger := InvoiceIndex;
 
       mPayments.post;
       DisplayTotals;

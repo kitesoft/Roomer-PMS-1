@@ -1342,7 +1342,8 @@ object frmInvoice: TfrmInvoice
           SearchFooter.HintHighlight = 'Highlight occurrences'
           SearchFooter.MatchCaseCaption = 'Match case'
           SortSettings.DefaultFormat = ssAutomatic
-          Version = '8.1.2.0'
+          Version = '7.9.1.1'
+          ExplicitLeft = 17
           ColWidths = (
             24
             91
@@ -2253,6 +2254,8 @@ object frmInvoice: TfrmInvoice
     object mPaymentsid: TIntegerField
       FieldName = 'id'
     end
+    object mPaymentsInvoiceIndex: TIntegerField
+      FieldName = 'InvoiceIndex'
     object mPaymentscurrency: TWideStringField
       FieldName = 'currency'
     end
