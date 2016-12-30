@@ -112,7 +112,7 @@ object frmHouseKeeping: TfrmHouseKeeping
     Top = 65
     Width = 900
     Height = 421
-    ActivePage = sTabSheet1
+    ActivePage = tabActions
     Align = alClient
     Style = tsFlatButtons
     TabHeight = 25
@@ -228,8 +228,7 @@ object frmHouseKeeping: TfrmHouseKeeping
         SearchFooter.HintHighlight = 'Highlight occurences'
         SearchFooter.MatchCaseCaption = 'Match case'
         SortSettings.DefaultFormat = ssAutomatic
-        Version = '8.1.2.0'
-        ExplicitTop = 41
+        Version = '7.9.1.1'
         RowHeights = (
           22
           22
@@ -263,7 +262,6 @@ object frmHouseKeeping: TfrmHouseKeeping
           TabOrder = 0
           OnClick = LMDSpeedButton6Click
           SkinData.SkinSection = 'BUTTON'
-          ExplicitTop = 2
         end
         object LMDSpeedButton12: TsButton
           AlignWithMargins = True
@@ -341,10 +339,14 @@ object frmHouseKeeping: TfrmHouseKeeping
           end
           object tvVarArrival: TcxGridDBColumn
             DataBinding.FieldName = 'Arrival'
+            OnCustomDrawCell = tvVarArrivalCustomDrawCell
+            Options.Editing = False
             Width = 77
           end
           object tvVarDeparture: TcxGridDBColumn
             DataBinding.FieldName = 'Departure'
+            OnCustomDrawCell = tvVarDepartureCustomDrawCell
+            Options.Editing = False
             Width = 83
           end
           object tvVarRoomDescription: TcxGridDBColumn

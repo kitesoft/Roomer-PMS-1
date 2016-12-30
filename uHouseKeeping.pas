@@ -221,6 +221,8 @@ type
     procedure ppHeaderBand1BeforePrint(Sender: TObject);
     procedure ppDetailBand1BeforePrint(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure tvVarArrivalCustomDrawCell(Sender: TcxCustomGridTableView; ACanvas: TcxCanvas; AViewInfo: TcxGridTableDataCellViewInfo; var ADone: Boolean);
+    procedure tvVarDepartureCustomDrawCell(Sender: TcxCustomGridTableView; ACanvas: TcxCanvas; AViewInfo: TcxGridTableDataCellViewInfo; var ADone: Boolean);
   private
     { Private declarations }
     MaidActions_: TRoomerDataSet;
@@ -232,6 +234,7 @@ type
     procedure UpdateAll;
     procedure GetData(insert : boolean);
     procedure CreateCross;
+    procedure DrawAsNotApplicable(var ADone: Boolean; ACanvas: TcxCanvas; AViewInfo: TcxGridTableDataCellViewInfo);
   public
     { Public declarations }
     zDate : Tdate;
@@ -310,6 +313,25 @@ end;
 procedure TfrmHouseKeeping.sButton4Click(Sender: TObject);
 begin
   //**
+end;
+
+procedure TfrmHouseKeeping.tvVarArrivalCustomDrawCell(Sender: TcxCustomGridTableView; ACanvas: TcxCanvas; AViewInfo: TcxGridTableDataCellViewInfo;
+  var ADone: Boolean);
+begin
+  if TRUNC(mvar_.FieldByName('Arrival').AsDateTime) <= 1 then
+  begin
+    DrawAsNotApplicable(ADone, ACanvas, AViewInfo);
+  end;
+end;
+
+procedure TfrmHouseKeeping.tvVarDepartureCustomDrawCell(Sender: TcxCustomGridTableView; ACanvas: TcxCanvas; AViewInfo: TcxGridTableDataCellViewInfo;
+  var ADone: Boolean);
+var ARect: Trect;
+begin
+  if TRUNC(mvar_.FieldByName('Departure').AsDateTime) <= 1 then
+  begin
+    DrawAsNotApplicable(ADone, ACanvas, AViewInfo);
+  end;
 end;
 
 procedure TfrmHouseKeeping.GetData(insert : boolean);
@@ -768,6 +790,7 @@ begin
               s := s+'  `roomreservations`.`RoomReservation` = %d '#10;
 
               s := format(s , [RoomReservation,RoomReservation]);
+              CopyToClipboard(s);
               if hData.rSet_bySQL(rRR,s) then
               begin
                 Arrival     := rRR.fieldbyname('rrArrival').asDateTime;
@@ -1132,6 +1155,16 @@ begin
     m_.EnableControls;
     screen.Cursor := crDefault;
   end;
+end;
+
+procedure TfrmHouseKeeping.DrawAsNotApplicable(var ADone: Boolean; ACanvas: TcxCanvas; AViewInfo: TcxGridTableDataCellViewInfo);
+var
+  ARect: TRect;
+begin
+  ARect := AViewInfo.Bounds;
+  ACanvas.FillRect(ARect);
+  ACanvas.TextOut(ARect.Left + 2, ARect.Top + 2, 'N/A');
+  ADone := True;
 end;
 
 end.
