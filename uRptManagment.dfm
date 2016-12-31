@@ -42,7 +42,6 @@ object frmRptManagment: TfrmRptManagment
       ParentFont = False
       TabOrder = 0
       SkinData.SkinSection = 'GROUPBOX'
-      Checked = False
       object cbxMonth: TsComboBox
         Left = 15
         Top = 20
@@ -146,7 +145,6 @@ object frmRptManagment: TfrmRptManagment
       ParentFont = False
       TabOrder = 2
       SkinData.SkinSection = 'GROUPBOX'
-      Checked = False
       object dtDateFrom: TsDateEdit
         Left = 16
         Top = 20
@@ -165,7 +163,6 @@ object frmRptManagment: TfrmRptManagment
         TabOrder = 0
         Text = '  -  -    '
         OnChange = dtDateFromChange
-        CheckOnExit = True
         SkinData.SkinSection = 'EDIT'
         GlyphMode.Blend = 0
         GlyphMode.Grayed = False
@@ -188,7 +185,6 @@ object frmRptManagment: TfrmRptManagment
         TabOrder = 1
         Text = '  -  -    '
         OnChange = dtDateFromChange
-        CheckOnExit = True
         SkinData.SkinSection = 'EDIT'
         GlyphMode.Blend = 0
         GlyphMode.Grayed = False
@@ -226,8 +222,6 @@ object frmRptManagment: TfrmRptManagment
     SkinData.SkinSection = 'PAGECONTROL'
     object tabStatGrid: TsTabSheet
       Caption = 'Data'
-      SkinData.CustomColor = False
-      SkinData.CustomFont = False
       ExplicitLeft = 0
       ExplicitTop = 0
       ExplicitWidth = 0
@@ -610,8 +604,6 @@ object frmRptManagment: TfrmRptManagment
     end
     object tabGraph: TsTabSheet
       Caption = 'Charts'
-      SkinData.CustomColor = False
-      SkinData.CustomFont = False
       ExplicitLeft = 0
       ExplicitTop = 0
       ExplicitWidth = 0
@@ -627,8 +619,6 @@ object frmRptManagment: TfrmRptManagment
         SkinData.SkinSection = 'PAGECONTROL'
         object tabOcc: TsTabSheet
           Caption = 'OCC'
-          SkinData.CustomColor = False
-          SkinData.CustomFont = False
           ExplicitLeft = 0
           ExplicitTop = 0
           ExplicitWidth = 0
