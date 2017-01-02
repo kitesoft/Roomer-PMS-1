@@ -4858,7 +4858,7 @@ begin
     rec := TrecItemHolder.create;
     rec.recHolder.Item := Item;
     theData.add(rec);
-    if openMultipleItems(actLookup, True, theData, [TShowItemOption.HideStockItems, TShowItemOption.HideSystemItems]) AND (theData.Count > 0) then
+    if openMultipleItems(actLookup, True, theData, [TShowItemOption.HideStockItems {, TShowItemOption.HideSystemItems}]) AND (theData.Count > 0) then
     begin
       if theData[0].recHolder.Item <> Item then // New item
       begin
@@ -4874,6 +4874,7 @@ begin
               if iStartRow = -1 then
                 iStartRow := agrLines.row;
 
+
               agrLines.Cells[col_Item, agrLines.row] := theData[i].recHolder.Item;
               agrLines.Cells[col_Description, agrLines.row] := trim(theData[i].recHolder.Description);
               agrLines.Objects[col_Item, agrLines.row] := nil;
@@ -4882,6 +4883,8 @@ begin
               agrLines.Cells[col_autogen, agrLines.row] := _GetCurrentTick;
               agrLines.Objects[col_Description, agrLines.row] := TObject(trunc(now)); // -- PurchaseDate !
               agrLines.Cells[col_date, agrLines.row] := datetostr(trunc(now));
+
+              CheckroomRentItem(agrLines.row);
 
               if NOT CheckIfWithdrawlAllowed_X(false, floattostr(theData[i].recHolder.Price)) then
               begin
