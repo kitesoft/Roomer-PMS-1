@@ -4946,7 +4946,7 @@ begin
     rec := TrecItemHolder.create;
     rec.recHolder.Item := Item;
     theData.add(rec);
-    if openMultipleItems(actLookup, True, theData, [TShowItemOption.HideStockItems, TShowItemOption.HideSystemItems]) AND (theData.Count > 0) then
+    if openMultipleItems(actLookup, True, theData, [TShowItemOption.HideStockItems {, TShowItemOption.HideSystemItems}]) AND (theData.Count > 0) then
     begin
       if theData[0].recHolder.Item <> Item then // New item
       begin
@@ -4972,14 +4972,7 @@ begin
               end;
               DisplayLine(agrLines.Row, idx);
 
-//              agrLines.Cells[col_Item, agrLines.row] := theData[i].recHolder.Item;
-//              agrLines.Cells[col_Description, agrLines.row] := trim(theData[i].recHolder.Description);
-//              agrLines.Objects[col_Item, agrLines.row] := nil;
-//              agrLines.Cells[col_ItemCount, agrLines.row] := _floattostr(1, vWidth, vDec);
-//              agrLines.Cells[col_ItemPrice, agrLines.row] := _floattostr(theData[i].recHolder.Price, vWidth, vDec);
-//              agrLines.Cells[col_autogen, agrLines.row] := _GetCurrentTick;
-//              agrLines.Objects[col_Description, agrLines.row] := TObject(trunc(now)); // -- PurchaseDate !
-//              agrLines.Cells[col_date, agrLines.row] := datetostr(trunc(now));
+              CheckroomRentItem(agrLines.row);
 
               if NOT CheckIfWithdrawlAllowed_X(false, floattostr(theData[i].recHolder.Price)) then
               begin
@@ -5631,13 +5624,13 @@ begin
           dLineTotalWOVat := dLineTotal - dLineVAT;
 
           // Ef kredit
-          dLinePrice := iMultiplier * dLinePrice;
+          dLinePrice := {iMultiplier *} dLinePrice;
           dLineTotal := iMultiplier * dLineTotal;
           dLineVAT := iMultiplier * dLineVAT;
           dLineTotalWOVat := iMultiplier * dLineTotalWOVat;
 
           try
-            ItemCount := _StrToFloat(agrLines.Cells[col_ItemCount, i]); // -96
+            ItemCount :=  iMultiplier * _StrToFloat(agrLines.Cells[col_ItemCount, i]); // -96
           Except
             ItemCount := 0;
           end;

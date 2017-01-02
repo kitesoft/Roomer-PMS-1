@@ -1342,8 +1342,9 @@ object frmInvoice: TfrmInvoice
           SearchFooter.HintHighlight = 'Highlight occurrences'
           SearchFooter.MatchCaseCaption = 'Match case'
           SortSettings.DefaultFormat = ssAutomatic
-          Version = '7.9.1.1'
+          Version = '8.1.2.0'
           ExplicitLeft = 17
+          ExplicitTop = 4
           ColWidths = (
             24
             91
