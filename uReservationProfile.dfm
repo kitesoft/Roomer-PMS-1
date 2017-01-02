@@ -536,10 +536,6 @@ object frmReservationProfile: TfrmReservationProfile
     object TabSheet3: TsTabSheet
       Caption = 'Main'
       TabVisible = False
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Panel3: TsPanel
         Left = 0
         Top = 0
@@ -590,10 +586,6 @@ object frmReservationProfile: TfrmReservationProfile
             SkinData.SkinSection = 'PAGECONTROL'
             object tsContact: TsTabSheet
               Caption = 'Contact'
-              ExplicitLeft = 0
-              ExplicitTop = 0
-              ExplicitWidth = 0
-              ExplicitHeight = 0
               object lblContactName: TsLabel
                 Left = 32
                 Top = 5
@@ -930,7 +922,7 @@ object frmReservationProfile: TfrmReservationProfile
                   ExplicitWidth = 175
                   inherited lblCountryName: TsLabel
                     Width = 3
-                    Height = 11
+                    Height = 14
                     Font.Height = -9
                     ExplicitWidth = 3
                     ExplicitHeight = 11
@@ -940,10 +932,6 @@ object frmReservationProfile: TfrmReservationProfile
             end
             object TabSheet4: TsTabSheet
               Caption = 'Customer'
-              ExplicitLeft = 0
-              ExplicitTop = 0
-              ExplicitWidth = 0
-              ExplicitHeight = 0
               object Label19: TsLabel
                 Left = 12
                 Top = 32
@@ -1236,10 +1224,6 @@ object frmReservationProfile: TfrmReservationProfile
             object TabSheet5: TsTabSheet
               Caption = 'Customer Tel / Email'
               ImageIndex = 1
-              ExplicitLeft = 0
-              ExplicitTop = 0
-              ExplicitWidth = 0
-              ExplicitHeight = 0
               object Label11: TsLabel
                 Left = 45
                 Top = 29
@@ -1721,7 +1705,7 @@ object frmReservationProfile: TfrmReservationProfile
                 ExplicitWidth = 159
                 inherited lblCountryName: TsLabel
                   Width = 3
-                  Height = 11
+                  Height = 14
                   Font.Height = -9
                   ExplicitWidth = 3
                   ExplicitHeight = 11
@@ -1751,7 +1735,7 @@ object frmReservationProfile: TfrmReservationProfile
                 ExplicitWidth = 159
                 inherited lblCountryName: TsLabel
                   Width = 3
-                  Height = 11
+                  Height = 14
                   Font.Height = -9
                   ExplicitWidth = 3
                   ExplicitHeight = 11
@@ -1980,16 +1964,12 @@ object frmReservationProfile: TfrmReservationProfile
     TabOrder = 2
     TabWidth = 150
     OnChange = mainPageChange
+    ActiveTabEnlarged = False
     ActiveIsBold = True
     ShowFocus = False
-    ActiveTabEnlarged = False
     SkinData.SkinSection = 'PAGECONTROL'
     object RoomsTab: TsTabSheet
       Caption = 'Rooms'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object grRooms: TcxGrid
         Left = 0
         Top = 86
@@ -2345,6 +2325,7 @@ object frmReservationProfile: TfrmReservationProfile
               end>
             Properties.ViewStyle = vsHideCursor
             Properties.OnButtonClick = tvRoomsdayCountPropertiesButtonClick
+            HeaderAlignmentHorz = taRightJustify
             Options.ShowEditButtons = isebAlways
             Width = 54
           end
@@ -2504,6 +2485,7 @@ object frmReservationProfile: TfrmReservationProfile
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = '0.00;0.00'
             OnGetProperties = tvGetCurrencyProperties
+            HeaderAlignmentHorz = taRightJustify
             HeaderHint = 'Avrage price (Unpaid rent-discount)'
             Options.Editing = False
             Options.ShowEditButtons = isebAlways
@@ -2562,6 +2544,7 @@ object frmReservationProfile: TfrmReservationProfile
             DataBinding.FieldName = 'RateOrPackagePerDay'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             OnGetProperties = tvGetCurrencyProperties
+            HeaderAlignmentHorz = taRightJustify
             Options.Editing = False
             Width = 57
           end
@@ -2624,6 +2607,7 @@ object frmReservationProfile: TfrmReservationProfile
             Properties.DisplayFormat = ',0.00;-,0.00'
             Properties.ReadOnly = True
             OnGetProperties = tvGetCurrencyProperties
+            HeaderAlignmentHorz = taRightJustify
             Options.Editing = False
             Width = 56
           end
@@ -2662,6 +2646,7 @@ object frmReservationProfile: TfrmReservationProfile
             DataBinding.FieldName = 'TotalUnpaidRoomRent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = '###0.00;###0.00'
+            HeaderAlignmentHorz = taRightJustify
             Options.Editing = False
             Width = 84
           end
@@ -2670,6 +2655,7 @@ object frmReservationProfile: TfrmReservationProfile
             DataBinding.FieldName = 'DiscountUnpaidRoomRent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = '###0.00;###0.00'
+            HeaderAlignmentHorz = taRightJustify
             Options.Editing = False
             Width = 52
           end
@@ -2678,11 +2664,13 @@ object frmReservationProfile: TfrmReservationProfile
             DataBinding.FieldName = 'unPaidRoomRent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = '###0.00;###0.00'
+            HeaderAlignmentHorz = taRightJustify
             Options.Editing = False
           end
           object tvRoomsunpaidRentNights: TcxGridDBColumn
             Caption = 'Rent Nights'
             DataBinding.FieldName = 'unpaidRentNights'
+            HeaderAlignmentHorz = taRightJustify
             Options.Editing = False
           end
           object tvRoomsPriceCode: TcxGridDBColumn
@@ -2695,9 +2683,11 @@ object frmReservationProfile: TfrmReservationProfile
           end
           object tvRoomsPersonsProfilesId: TcxGridDBColumn
             DataBinding.FieldName = 'PersonsProfilesId'
+            HeaderAlignmentHorz = taRightJustify
           end
           object tvRoomsManualChannelId: TcxGridDBColumn
             DataBinding.FieldName = 'ManualChannelId'
+            HeaderAlignmentHorz = taRightJustify
           end
           object tvRoomsblockMoveReason: TcxGridDBColumn
             Caption = 'Reason for move blocking'
@@ -2881,10 +2871,6 @@ object frmReservationProfile: TfrmReservationProfile
     object GuestsTab: TsTabSheet
       Caption = 'Guests'
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Panel10: TsPanel
         Left = 0
         Top = 0
@@ -2945,8 +2931,8 @@ object frmReservationProfile: TfrmReservationProfile
         object chkShowAllGuests: TsCheckBox
           Left = 333
           Top = 11
-          Width = 94
-          Height = 20
+          Width = 102
+          Height = 17
           Caption = 'Show all guests'
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 4
@@ -3369,18 +3355,20 @@ object frmReservationProfile: TfrmReservationProfile
           object lblSpecialRequests: TsLabel
             Left = 2
             Top = 15
-            Width = 81
+            Width = 250
             Height = 13
             Align = alTop
             Caption = 'Special Requests'
+            ExplicitWidth = 81
           end
           object lblNotes: TsLabel
             Left = 2
             Top = 101
-            Width = 28
+            Width = 250
             Height = 13
             Align = alTop
             Caption = 'Notes'
+            ExplicitWidth = 28
           end
           object edtSpecialRequests: TMemo
             AlignWithMargins = True
@@ -3485,10 +3473,6 @@ object frmReservationProfile: TfrmReservationProfile
     end
     object sTabSheet2: TsTabSheet
       Caption = 'Alerts'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object pnlAlertHolder: TsPanel
         Left = 0
         Top = 0
@@ -3503,10 +3487,6 @@ object frmReservationProfile: TfrmReservationProfile
     object InvoicesTab: TsTabSheet
       Caption = 'Afgehandelde facturen'
       ImageIndex = 2
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Panel11: TsPanel
         Left = 0
         Top = 0
@@ -4067,6 +4047,9 @@ object frmReservationProfile: TfrmReservationProfile
     end
     object mRoomsinfantcount: TIntegerField
       FieldName = 'infantcount'
+    end
+    object mRoomsAverageRoomRate: TFloatField
+      FieldName = 'AverageRoomRate'
     end
   end
   object mGuestRoomsDS: TDataSource
