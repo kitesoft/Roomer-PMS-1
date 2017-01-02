@@ -8,6 +8,7 @@ uses Generics.Collections,
      uDateUtils,
      uStringUtils,
      ComObj,
+     uAmount,
      MSXML;
 
 {.$define TestRunningTabsAPI}
@@ -31,7 +32,7 @@ type
     PayDate : TDateTime;
     PayType : String;
     AccountKey : String;
-    Amount : Double;
+    Amount : TAmount;
     Description : String;
     Notes : String;
     Staff : String;
@@ -74,6 +75,10 @@ type
 
   TPaymentLineList = TObjectList<TpaymentLine>;
 
+  /// <summary>
+  ///   Representation of one invoiceline as reported by runningTab endpoint.
+  ///  All amounts are in local currency, specified by Currency and CurrencyRates Property
+  /// </summary>
   TInvoiceLine = class
     InvoiceLineType : TInvoiceLineType;
     ID : Integer;
@@ -83,10 +88,10 @@ type
     AccountKey : String;
     Description : String;
     NumItems : Double;
-    PriceNet : Double;
-    PriceGross : Double;
-    FGrossAmount: double;
-    Vat : Double;
+    PriceNet : TAmount;
+    PriceGross : TAmount;
+    FGrossAmount: TAmount;
+    Vat : TAmount;
 
     VatCode : String;
     VatPercentage : Double;
@@ -99,14 +104,15 @@ type
 
     FXml : String;
     FInvoice : TInvoice;
+    FCurrency: string;
   private
     function GetXml: String;
     procedure SetXml(const Value: String);
     function GetLineTypeAsText: String;
     function GetInvoiceLineTypeFromText(value: String): TInvoiceLineType;
-    function GetTotal: Double;
-    function GetTotalVat: Double;
-    function GetTotalNet: Double;
+    function GetTotal: TAmount;
+    function GetTotalVat: TAmount;
+    function GetTotalNet: TAmount;
   public
     constructor Create(_Invoice : TInvoice;
                        _Type : TInvoiceLineType;
@@ -117,14 +123,13 @@ type
                        _AccountKey : String;
                        _Description : String;
                        _NumItems : Double;
-                       _PriceNet : Double;
-                       _PriceGross : Double;
-                       _GrossAmount: Double;
-                       _Vat : Double;
-
+                       _PriceNet : double;
+                       _PriceGross : double;
+                       _GrossAmount: double;
+                       _Vat : double;
                        _VatCode : String;
                        _VatPercentage : Double;
-
+                       _Currency: string;
                        _Nights : Integer = 0;
                        _Persons : Integer = 0;
                        _IsNew : Boolean = False); overload;
@@ -135,9 +140,9 @@ type
     property Dirty : Boolean read FChanged write FChanged;
     property Invoice : TInvoice read FInvoice write FInvoice;
     property isNew : Boolean read FisNew write FisNew;
-    property Total : Double read GetTotal;
-    property TotalNet : Double read GetTotalNet;
-    property TotalVat : Double read GetTotalVat;
+    property Total : TAmount read GetTotal;
+    property TotalNet : TAmount read GetTotalNet;
+    property TotalVat : TAmount read GetTotalVat;
     property Xml : String read GetXml write SetXml;
   end;
 
@@ -155,26 +160,26 @@ type
     function GetXml: String;
     procedure SetXml(const Value: String);
     function GetTabTypeAsString: String;
-    function GetTotalNetAmount: Double;
-    function GetTotalGrossAmount: Double;
-    function GetTotalVatAmount: Double;
-    function GetTotalPaidAmount: Double;
+    function GetTotalNetAmount: TAmount;
+    function GetTotalGrossAmount: TAmount;
+    function GetTotalVatAmount: TAmount;
+    function GetTotalPaidAmount: TAmount;
     function GetXmlFromCustomer: String;
     function GetChanged: Boolean;
     function GetLinesChanged: Boolean;
     function GetPaymentsChanged: Boolean;
     procedure DeletePayments;
     procedure DeleteItems;
-    function GetTotal: Double;
-    function GetTotalNet: Double;
-    function GetTotalVat: Double;
-    function GetBalance: Double;
-    function GetTotalPayments: Double;
+    function GetTotalNative: TAmount;
+    function GetTotalNetNative: TAmount;
+    function GetTotalVat: TAmount;
+    function GetBalanceNative: TAmount;
+    function GetTotalPaymentsNative: TAmount;
     procedure SetExpanded(const Value: Boolean);
-    function GetTotalRoomRent: Double;
-    function GetTotalSales: Double;
-    function GetTotalTaxes: Double;
-    function GetTotalForSpecificLineType(lt: TInvoiceLineType): Double;
+    function GetTotalRoomRent: TAmount;
+    function GetTotalSales: TAmount;
+    function GetTotalTaxes: TAmount;
+    function GetTotalForSpecificLineType(lt: TInvoiceLineType): TAmount;
     function GetNumberOfRentLines: Integer;
     function GetCurrency: string;
   public
@@ -191,13 +196,10 @@ type
 
     BookingId : String;
 
-    TotalStayTax : Double;
+    TotalStayTax : TAmount;
     TotalStayTaxNights : Integer;
 
     Location : String;
-
-
-
     //
     InvoiceDate : TDate;
     Customer : String;
@@ -216,8 +218,6 @@ type
 
     RoomGuest : String;
     Staff : String;
-
-
 
     constructor Create(_Type : TRoomerInvoiceType; _ID : Integer; _Reservation, _RoomReservation, _SplitNumber, _InvoiceNumber : Integer; _RoomNumber : String; _expanded : Boolean);
     destructor Destroy; override;
@@ -240,8 +240,8 @@ type
                      _ItemCode : String;
                      _Description : String;
                      _NumItems : Double;
-                     _Price : Double;
-                     _Amount: double;
+                     _Price : TAmount;
+                     _Amount: Tamount;
                      _Nights : Integer = 0;
                      _Persons : Integer = 0;
                      _ID : Integer = 0;
@@ -257,7 +257,7 @@ type
                         _Person : Integer;
                         _PayDate : TDateTime;
                         _PayType : String;
-                        _Amount : Double;
+                        _Amount : double;
                         _Description : String;
                         _Notes : String;
                         _Staff : String;
@@ -272,21 +272,17 @@ type
 
     procedure ChangeCurrency(_Currency : String; _CurrencyRate : Double);
     procedure SendInvoice;
-
-
-
-
     property Xml : String read GetXml write SetXml;
     property Dirty : Boolean read FChanged write FChanged;
     property isChanged : Boolean read GetChanged;
-    property TotalGross : Double read GetTotal;
-    property TotalNet : Double read GetTotalNet;
-    property TotalVat : Double read GetTotalVat;
-    property TotalPayments : Double read GetTotalPayments;
-    property TotalRoomRent : Double read GetTotalRoomRent;
-    property TotalSales : Double read GetTotalSales;
-    property TotalTaxes : Double read GetTotalTaxes;
-    property Balance : Double read GetBalance;
+    property TotalGrossNative : TAmount read GetTotalNative;
+    property TotalNetNative : TAmount read GetTotalNetNative;
+    property TotalVat : TAmount read GetTotalVat;
+    property TotalPaymentsNative : TAmount read GetTotalPaymentsNative;
+    property TotalRoomRent : TAmount read GetTotalRoomRent;
+    property TotalSales : TAmount read GetTotalSales;
+    property TotalTaxes : TAmount read GetTotalTaxes;
+    property Balance : Double read GetBalanceNative;
     property expanded : Boolean read FExpanded write SetExpanded;
     property NumberOfRentLines : Integer read GetNumberOfRentLines;
     property Currency: string read GetCurrency;
@@ -328,14 +324,12 @@ begin
                        glb.Items['AccountKey'],
                        _Description,
                        _NumItems,
-                       _Price / (1 + vatPercentage / 100),
-                       _Price,
-                       _Amount,
-                       _Price - (_Price / (1 + vatPercentage / 100)), // VAT
-
+                       TAmount.create(Currency, _Price / (1 + vatPercentage / 100)),
+                       TAmount.Create(Currency, _Price),
+                       TAmount.Create(Currency, _Amount),
+                       TAmount.Create(Currency, _Price - (_Price / (1 + vatPercentage / 100))), // VAT
                        vatCode,
                        vatPercentage,
-
                        _Nights,
                        _Persons,
                        _isNew);
@@ -382,7 +376,7 @@ begin
                                   _PayDate,
                                   _PayType,
                                   BookKey,
-                                  _Amount,
+                                  TAmount.Create(_Currency, _Amount),
                                   _Description,
                                   _Notes,
                                   _Staff,
@@ -482,9 +476,9 @@ begin
   end;
 end;
 
-function TInvoice.GetBalance: Double;
+function TInvoice.GetBalanceNative: TAmount;
 begin
-  result := TotalGross - TotalPayments;
+  result := TotalGrossNative - TotalPaymentsNative;
 end;
 
 function TInvoice.GetChanged: Boolean;
@@ -511,12 +505,12 @@ begin
   end;
 end;
 
-function TInvoice.GetTotalNet: Double;
+function TInvoice.GetTotalNetNative: TAmount;
 begin
-  result := GetTotalNetAmount * CurrencyRate;
+  result := TAmount(GetTotalNetAmount * CurrencyRate);
 end;
 
-function TInvoice.GetTotalNetAmount: Double;
+function TInvoice.GetTotalNetAmount: TAmount;
 var i: Integer;
 begin
   result := 0.00;
@@ -524,12 +518,12 @@ begin
     result := result + InvoiceLines[i].TotalNet;
 end;
 
-function TInvoice.GetTotal: Double;
+function TInvoice.GetTotalNative: TAmount;
 begin
-  result := GetTotalGrossAmount * CurrencyRate;
+  result := TAmount(GetTotalGrossAmount * CurrencyRate);
 end;
 
-function TInvoice.GetTotalGrossAmount: Double;
+function TInvoice.GetTotalGrossAmount: TAmount;
 var i: Integer;
 begin
   result := 0.00;
@@ -537,7 +531,7 @@ begin
     result := result + InvoiceLines[i].Total;
 end;
 
-function TInvoice.GetTotalPaidAmount: Double;
+function TInvoice.GetTotalPaidAmount: TAmount;
 var i: Integer;
 begin
   result := 0.00;
@@ -545,7 +539,7 @@ begin
     result := result + payments[i].Amount;
 end;
 
-function TInvoice.GetTotalPayments: Double;
+function TInvoice.GetTotalPaymentsNative: TAmount;
 var i : Integer;
     line: TPaymentLine;
 begin
@@ -553,11 +547,11 @@ begin
   for i := 0 to Payments.Count - 1 do
   begin
     line := Payments[i];
-    result := result + line.Amount * line.CurrencyRate;
+    result := result + TAmount(line.Amount * line.CurrencyRate);
   end;
 end;
 
-function TInvoice.GetTotalForSpecificLineType(lt : TInvoiceLineType) : Double;
+function TInvoice.GetTotalForSpecificLineType(lt : TInvoiceLineType) : TAmount;
 var i: Integer;
 begin
   result := 0.00;
@@ -566,28 +560,28 @@ begin
       result := result + InvoiceLines[i].Total;
 end;
 
-function TInvoice.GetTotalRoomRent: Double;
+function TInvoice.GetTotalRoomRent: TAmount;
 begin
   result := GetTotalForSpecificLineType(ltRoom);
   result := result - GetTotalForSpecificLineType(ltDiscount);
 end;
 
-function TInvoice.GetTotalSales: Double;
+function TInvoice.GetTotalSales: TAmount;
 begin
   result := GetTotalForSpecificLineType(ltSale);
 end;
 
-function TInvoice.GetTotalTaxes: Double;
+function TInvoice.GetTotalTaxes: TAmount;
 begin
   result := GetTotalForSpecificLineType(ltStayTax);
 end;
 
-function TInvoice.GetTotalVat: Double;
+function TInvoice.GetTotalVat: TAmount;
 begin
-  result := GetTotalVatAmount * CurrencyRate;
+  result := TAmount(GetTotalVatAmount * CurrencyRate);
 end;
 
-function TInvoice.GetTotalVatAmount: Double;
+function TInvoice.GetTotalVatAmount: TAmount;
 var i: Integer;
 begin
   result := 0.00;
@@ -799,8 +793,10 @@ begin
     node := nodes_tab.item[i];
     if node.attributes.getNamedItem('tabType').Text = GetTabTypeAsString then
     begin
+      FCurrency := node.attributes.getNamedItem('currency').text;
+      CurrencyRate := XMLToFloat(node.attributes.getNamedItem('currencyRate').text, 1.00);
 
-      // First products/invoice lines
+       // First products/invoice lines
       nodes_products := node.selectNodes('products/product');
       for j := 0 to nodes_products.length - 1 do
       begin
@@ -824,10 +820,6 @@ begin
         SetCustomerHeaderInfo(node_temp);
       end;
 
-      FCurrency := node.attributes.getNamedItem('currency').text;
-      CurrencyRate := XMLToFloat(node.attributes.getNamedItem('currencyRate').text, 1.00);
-
-
     end;
   end;
 
@@ -841,9 +833,10 @@ constructor TInvoiceLine.Create(_Invoice : TInvoice;
                                 _Index: Integer;
                                 _PurchaseDate: TDate;
                                 _ItemCode, _AccountKey, _Description: String;
-                                _NumItems, _PriceNet, _PriceGross, _GrossAmount, _Vat: Double;
+                                _NumItems, _PriceNet, _PriceGross, _GrossAmount, _Vat: double;
                                 _VatCode: String;
                                 _VatPercentage: Double;
+                                _Currency: string;
                                 _Nights : Integer = 0;
                                 _Persons : Integer = 0;
                                 _IsNew : Boolean = False);
@@ -856,14 +849,14 @@ begin
   AccountKey := _AccountKey;
   Description := _Description;
   NumItems := _NumItems;
-  PriceNet := _PriceNet;
-  PriceGross := _PriceGross;
-  FGRossAmount := _GrossAmount;
-  Vat := _Vat;
+  PriceNet := TAmount(_Currency, _PriceNet);
+  PriceGross := TAmount(_Currency, _PriceGross);
+  FGRossAmount := TAmount(_Currency, _GrossAmount);
+  Vat := TAmount(_Currency, _Vat);
 
   VatCode := _VatCode;
   VatPercentage := _VatPercentage;
-
+  Currency := _Currency;
 
   Nights := _Nights;
   Persons := _Persons;
@@ -891,7 +884,7 @@ begin
 
   VatCode := InvoiceLine.VatCode;
   VatPercentage := InvoiceLine.VatPercentage;
-
+  Currency := Invoiceline.Currency;
   Nights := InvoiceLine.Nights;
   Persons := InvoiceLine.Persons;
 
@@ -976,7 +969,7 @@ begin
 
   VatCode := '';
   VatPercentage := 0.00;
-
+  Currency := g.
   Nights := 0;
   Persons := 0;
 
@@ -1016,18 +1009,18 @@ begin
   end;
 end;
 
-function TInvoiceLine.GetTotal: Double;
+function TInvoiceLine.GetTotal: TAmount
 begin
 //  result := PriceGross * NumItems;
   Result := FGrossAmount;
 end;
 
-function TInvoiceLine.GetTotalNet: Double;
+function TInvoiceLine.GetTotalNet: TAmount;
 begin
   result := PriceNet * NumItems;
 end;
 
-function TInvoiceLine.GetTotalVat: Double;
+function TInvoiceLine.GetTotalVat: TAmount;
 begin
   result := Vat * NumItems;
 end;
@@ -1095,7 +1088,7 @@ begin
   PayDate := _PayDate;
   PayType := _PayType;
   AccountKey := _AccountKey;
-  Amount := _Amount;
+  Amount := TAmount.Create(_Amount, _Currency);
   Description := _Description;
   Notes := _Notes;
   Staff := _Staff;
@@ -1157,7 +1150,7 @@ begin
       PayDate := SqlStringToDate(node.childNodes[i].Text)
     else
     if node.childNodes[i].nodeName = 'amount' then
-      Amount := XMLToFloat(node.childNodes[i].Text, 0.00);
+      Amount := TAmount.Create(Currency, XMLToFloat(node.childNodes[i].Text, 0.00));
   end;
 
   FChanged := false;
@@ -1170,7 +1163,7 @@ begin
                    '<amount>%s</amount><description>%s</description><notes>%s</notes><paymentDate>%s</paymentDate></payment>',
                    [id, PayType, inttostr(paymentType), AccountKey,
                     Currency, FloatToXml(CurrencyRate, 5),
-                    FloatToXml(Amount * CurrencyRate, 2), XmlEncode_ex(Description, Description), XmlEncode_ex(notes, notes), DateToSqlString(PayDate)]);
+                    FloatToXml(Amount, 2), XmlEncode_ex(Description, Description), XmlEncode_ex(notes, notes), DateToSqlString(PayDate)]);
 
 end;
 
