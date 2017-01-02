@@ -1146,10 +1146,6 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
           Margins.Right = 2
           Margins.Bottom = 2
           Caption = 'Availabilities'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object Panel2: TsPanel
             Left = 0
             Top = 467
@@ -1432,10 +1428,6 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
           Margins.Right = 2
           Margins.Bottom = 2
           Caption = 'Rates'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object rateGrid: TAdvStringGrid
             Left = 0
             Top = 50
@@ -1613,6 +1605,8 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
             VAlignment = vtaCenter
             Version = '8.1.2.0'
             WordWrap = False
+            ExplicitLeft = 1
+            ExplicitTop = 47
             ColWidths = (
               400
               80
@@ -1857,8 +1851,8 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
             object cbxRateRestrictions: TsCheckBox
               Left = 5
               Top = 4
-              Width = 263
-              Height = 17
+              Width = 141
+              Height = 23
               Margins.Left = 2
               Margins.Top = 2
               Margins.Right = 2

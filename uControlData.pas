@@ -716,6 +716,7 @@ type
     cbTopClassAvaiabilityOrderActive: TsCheckBox;
     ceMasterRateCurrency: TsComboEdit;
     lblMasterRateCurrency: TsLabel;
+    cbxCurrencyCalculation: TsCheckBox;
     lblMasterRateCurrencyName: TsLabel;
     procedure FormCreate(Sender : TObject);
     procedure FormClose(Sender : TObject; var Action : TCloseAction);
@@ -1543,6 +1544,7 @@ g.ProcessAppIni(0);
     cbAllowDeleteItemsFromInvoice.Checked := glb.PMSSettings.AllowDeletingItemsFromInvoice;
     cbTopClassAvaiabilityOrderActive.Checked := glb.PMSSettings.TopClassAvaiabilityOrderActive;
     ceMasterRateCurrency.Text := glb.PMSSettings.MasterRateCurrency;
+    cbxCurrencyCalculation.Checked := glb.PMSSettings.MasterRateCurrencyConvert;
 
     edtRIIndexRoomRent.Value := rSethotelconfigurations.FieldByName('RoomInvoiceRoomRentIndex').AsInteger + 1;
     edtRIIndexPosItems.Value := rSethotelconfigurations.FieldByName('RoomInvoicePosItemIndex').AsInteger + 1;
@@ -2037,6 +2039,8 @@ begin
       glb.PMSSettings.AllowDeletingItemsFromInvoice := cbAllowDeleteItemsFromInvoice.Checked;
       glb.PMSSettings.TopClassAvaiabilityOrderActive := cbTopClassAvaiabilityOrderActive.Checked;
       glb.PMSSettings.MasterRateCurrency := ceMasterRateCurrency.Text;
+      glb.PMSSettings.MasterRateCurrencyConvert := cbxCurrencyCalculation.Checked;
+
 
       try
         rSethotelconfigurations.FieldByName('forceExternalCustomerIdCorrectness').AsBoolean := chkforceExternalCustomerIdCorrectness.Checked;
