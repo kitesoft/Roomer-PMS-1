@@ -5525,13 +5525,13 @@ begin
           dLineTotalWOVat := dLineTotal - dLineVAT;
 
           // Ef kredit
-          dLinePrice := iMultiplier * dLinePrice;
+          dLinePrice := {iMultiplier *} dLinePrice;
           dLineTotal := iMultiplier * dLineTotal;
           dLineVAT := iMultiplier * dLineVAT;
           dLineTotalWOVat := iMultiplier * dLineTotalWOVat;
 
           try
-            ItemCount := _StrToFloat(agrLines.Cells[col_ItemCount, i]); // -96
+            ItemCount :=  iMultiplier * _StrToFloat(agrLines.Cells[col_ItemCount, i]); // -96
           Except
             ItemCount := 0;
           end;

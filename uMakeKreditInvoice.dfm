@@ -59,8 +59,8 @@ object frmMakeKreditInvoice: TfrmMakeKreditInvoice
       object chkCreateNew: TsCheckBox
         Left = 8
         Top = 47
-        Width = 144
-        Height = 17
+        Width = 136
+        Height = 20
         Caption = 'Create new from orginal'
         TabOrder = 1
         OnClick = chkCreateNewClick

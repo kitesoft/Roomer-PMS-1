@@ -332,9 +332,9 @@ var
           PurchaseDate         := SQLToDateTime(kbmInvoiceLines['PurchaseDate']);
 //          InvoiceNumber        := kbmInvoiceLines['InvoiceNumber'];
           ItemID               := kbmInvoiceLines['ItemID'];
-          Number               := kbmInvoiceLines['Number'];
+          Number               := kbmInvoiceLines['Number']*-1;
           Description          := kbmInvoiceLines['Description'];
-          Price                := kbmInvoiceLines['Price']*-1;
+          Price                := kbmInvoiceLines['Price'];
           VATType              := kbmInvoiceLines['VATType'];
           Total                := kbmInvoiceLines['Total']*-1;
           TotalWOVAT           := kbmInvoiceLines['TotalWOVAT']*-1;
@@ -355,7 +355,7 @@ var
           ilAccountKey         := kbmInvoiceLines['ilAccountKey'];
           ItemCurrency         := kbmInvoiceLines['ItemCurrency'];
           ItemCurrencyRate     := kbmInvoiceLines['ItemCurrencyRate'];
-          Discount             := kbmInvoiceLines['Discount']*-1;
+          Discount             := kbmInvoiceLines['Discount'];
           Discount_isPrecent   := kbmInvoiceLines['Discount_isPrecent'];
           ImportRefrence       := kbmInvoiceLines['ImportRefrence'];
           ImportSource         := kbmInvoiceLines['ImportSource'];
