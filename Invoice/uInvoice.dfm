@@ -2256,6 +2256,7 @@ object frmInvoice: TfrmInvoice
     end
     object mPaymentsInvoiceIndex: TIntegerField
       FieldName = 'InvoiceIndex'
+    end
     object mPaymentscurrency: TWideStringField
       FieldName = 'currency'
     end
