@@ -11,6 +11,12 @@ uses
 type
   EAmountException = class(Exception);
 
+  /// <summary>
+  ///   An Amount is a value in a fixed currency. <br />
+  ///  Different amount can only be added or subtracted if they are of the same currency, otherwise an EAmountException will be raised. <br/>
+  ///  Mulitplying an amount or dividing an amount will always return a result of the same currency
+  ///  When a value is implicitly converted to an amount, then the native currency will be used, provided by the TAmountConfigurator
+  /// </summary>
   TAmount = record
   strict private
     FValue: Currency;
@@ -28,12 +34,15 @@ type
     class function Create(const a: integer; const c: TCurrencyCode): TAmount; overload; static; inline;
     class function Create(const a: double; const c: TCurrencyCode): TAmount; overload; static; inline;
     class function Create(const a: Extended; const c: TCurrencyCode): TAmount; overload; static; inline;
+    class function Create(const c: TCurrencyCode): TAmount; overload; static; inline;
+    class function Create(): TAmount; overload; static; inline;
 
     class operator Implicit(a: TAmount): Currency;
     class operator Implicit(a: Currency): TAmount;
     class operator Implicit(a: Extended): TAmount;
     class operator Implicit(a: Double): TAmount;
     class operator Implicit(a: TAmount): double;
+    class operator Implicit(a: TAmount): extended;
     class operator Implicit(a: TAmount): integer;
 
     class operator Add(a, b: TAmount): TAmount;
@@ -45,7 +54,9 @@ type
     class operator Divide(a: TAmount; d: integer): TAmount;
 
     class operator Equal(a, b: TAmount): boolean;
+    class operator Equal(a: TAmount; b: integer): boolean;
     class operator NotEqual(a, b: TAmount): boolean;
+    class operator NotEqual(a: TAmount; b: integer): boolean;
     class operator GreaterThan(a, b: TAmount): boolean;
     class operator GreaterThanOrEqual(a, b: TAmount): boolean;
     class operator LessThan(a, b: TAmount): boolean;
@@ -121,6 +132,11 @@ begin
   Result.FValue := a.FValue / d;
 end;
 
+class operator TAmount.Equal(a: TAmount; b: integer): boolean;
+begin
+  Result := (a.FValue <> b);
+end;
+
 class operator TAmount.Equal(a, b: TAmount): boolean;
 begin
   Result := IsSameCurrency(a,b) and (a.FValue = b.FValue);
@@ -176,6 +192,11 @@ begin
 end;
 
 
+class operator TAmount.Implicit(a: TAmount): extended;
+begin
+  Result := a.FValue;
+end;
+
 class function TAmount.IsSameCurrency(a1, a2: TAmount): boolean;
 begin
   Result := a1.FCurCode = a2.FCurCode;
@@ -222,6 +243,11 @@ end;
 
 
 
+class operator TAmount.NotEqual(a: TAmount; b: integer): boolean;
+begin
+  Result := a.FValue <> b;
+end;
+
 class operator TAmount.NotEqual(a, b: TAmount): boolean;
 begin
   Result := not (a = b);
@@ -244,6 +270,16 @@ class function TAmount.Create(const a: Extended; const c: TCurrencyCode): TAmoun
 begin
   Result.FCurCode := c;
   Result.FValue := RoundDecimals(a, 4);
+end;
+
+class function TAmount.Create(const c: TCurrencyCode): TAmount;
+begin
+  Result := TAmount.Create(0, c);
+end;
+
+class function TAmount.Create: TAmount;
+begin
+  Result := TAmount.Create(0, TAmountConfigurator.DefaultCurrency);
 end;
 
 initialization

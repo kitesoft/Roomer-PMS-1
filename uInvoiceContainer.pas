@@ -123,10 +123,10 @@ type
                        _AccountKey : String;
                        _Description : String;
                        _NumItems : Double;
-                       _PriceNet : double;
-                       _PriceGross : double;
-                       _GrossAmount: double;
-                       _Vat : double;
+                       _PriceNet : TAmount;
+                       _PriceGross : TAmount;
+                       _GrossAmount: TAmount;
+                       _Vat : TAmount;
                        _VatCode : String;
                        _VatPercentage : Double;
                        _Currency: string;
@@ -282,7 +282,7 @@ type
     property TotalRoomRent : TAmount read GetTotalRoomRent;
     property TotalSales : TAmount read GetTotalSales;
     property TotalTaxes : TAmount read GetTotalTaxes;
-    property Balance : Double read GetBalanceNative;
+    property Balance : TAmount read GetBalanceNative;
     property expanded : Boolean read FExpanded write SetExpanded;
     property NumberOfRentLines : Integer read GetNumberOfRentLines;
     property Currency: string read GetCurrency;
@@ -297,9 +297,9 @@ uses uAppGlobal, hData, uD, _Glob, cmpRoomerDataSet, uUtils, XmlUtils;
 function TInvoice.AddLine(_Type: TInvoiceLineType;
                           _ItemCode,
                           _Description: String;
-                          _NumItems,
-                          _Price: Double;
-                          _Amount: double;
+                          _NumItems: Double;
+                          _Price: TAmount;
+                          _Amount: TAmount;
                           _Nights : Integer = 0;
                           _Persons : Integer = 0;
                           _ID : Integer = 0;
@@ -324,12 +324,13 @@ begin
                        glb.Items['AccountKey'],
                        _Description,
                        _NumItems,
-                       TAmount.create(Currency, _Price / (1 + vatPercentage / 100)),
-                       TAmount.Create(Currency, _Price),
-                       TAmount.Create(Currency, _Amount),
-                       TAmount.Create(Currency, _Price - (_Price / (1 + vatPercentage / 100))), // VAT
+                       _Price / (1 + vatPercentage / 100),
+                       _Price,
+                       _Amount,
+                       _Price - (_Price / (1 + vatPercentage / 100)), // VAT
                        vatCode,
                        vatPercentage,
+                       FCurrency,
                        _Nights,
                        _Persons,
                        _isNew);
@@ -376,7 +377,7 @@ begin
                                   _PayDate,
                                   _PayType,
                                   BookKey,
-                                  TAmount.Create(_Currency, _Amount),
+                                  _Amount,
                                   _Description,
                                   _Notes,
                                   _Staff,
@@ -833,7 +834,7 @@ constructor TInvoiceLine.Create(_Invoice : TInvoice;
                                 _Index: Integer;
                                 _PurchaseDate: TDate;
                                 _ItemCode, _AccountKey, _Description: String;
-                                _NumItems, _PriceNet, _PriceGross, _GrossAmount, _Vat: double;
+                                _NumItems : Double; _PriceNet, _PriceGross, _GrossAmount, _Vat: TAmount;
                                 _VatCode: String;
                                 _VatPercentage: Double;
                                 _Currency: string;
@@ -849,14 +850,14 @@ begin
   AccountKey := _AccountKey;
   Description := _Description;
   NumItems := _NumItems;
-  PriceNet := TAmount(_Currency, _PriceNet);
-  PriceGross := TAmount(_Currency, _PriceGross);
-  FGRossAmount := TAmount(_Currency, _GrossAmount);
-  Vat := TAmount(_Currency, _Vat);
+  PriceNet := _PriceNet;
+  PriceGross := _PriceGross;
+  FGRossAmount := _GrossAmount;
+  Vat := _Vat;
 
   VatCode := _VatCode;
   VatPercentage := _VatPercentage;
-  Currency := _Currency;
+  FCurrency := _Currency;
 
   Nights := _Nights;
   Persons := _Persons;
@@ -884,7 +885,7 @@ begin
 
   VatCode := InvoiceLine.VatCode;
   VatPercentage := InvoiceLine.VatPercentage;
-  Currency := Invoiceline.Currency;
+  FCurrency := Invoiceline.FCurrency;
   Nights := InvoiceLine.Nights;
   Persons := InvoiceLine.Persons;
 
@@ -969,7 +970,7 @@ begin
 
   VatCode := '';
   VatPercentage := 0.00;
-  Currency := g.
+  FCurrency := ctrlGetString('NativeCurrency');
   Nights := 0;
   Persons := 0;
 
@@ -1009,7 +1010,7 @@ begin
   end;
 end;
 
-function TInvoiceLine.GetTotal: TAmount
+function TInvoiceLine.GetTotal: TAmount;
 begin
 //  result := PriceGross * NumItems;
   Result := FGrossAmount;
@@ -1150,7 +1151,7 @@ begin
       PayDate := SqlStringToDate(node.childNodes[i].Text)
     else
     if node.childNodes[i].nodeName = 'amount' then
-      Amount := TAmount.Create(Currency, XMLToFloat(node.childNodes[i].Text, 0.00));
+      Amount := TAmount.Create(XMLToFloat(node.childNodes[i].Text, 0.00), Currency);
   end;
 
   FChanged := false;

@@ -1894,20 +1894,6 @@ begin
   btnProforma.Enabled := True;
 end;
 
-procedure TfrmInvoice.sButton3Click(Sender: TObject);
-begin
-  zApply := True;
-  SaveAnd(false);
-  FormCreate(nil);
-  zFirsttime := false;
-  LoadInvoice;
-  loadInvoiceToMemtable(d.mInvoicelines_after);
-  UpdateCaptions;
-  btnExit.Enabled := True;
-  btnInvoice.Enabled := True;
-  btnProforma.Enabled := True;
-end;
-
 procedure TfrmInvoice.tvPaymentsAmountGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
   var AProperties: TcxCustomEditProperties);
 begin
@@ -5480,7 +5466,7 @@ begin
     if (zInvoiceNumber = -1) or (FnewSplitNumber = 1) then
     begin
       if not SelectPaymentTypes(FInvoiceLinesList.TotalBalance {_StrToFloat(edtBalance.Text)}, edtCustomer.Text,
-        ptInvoice, lstLocations, zInvoiceDate, zPayDate, zLocation) then
+        ptInvoice, FCurrentCurrencyHandler.CurrencyCode, FCurrentCurrencyHandler.Rate, lstLocations, zInvoiceDate, zPayDate, zLocation) then
       begin
         exit;
       end;

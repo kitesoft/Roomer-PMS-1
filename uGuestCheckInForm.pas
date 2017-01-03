@@ -666,14 +666,12 @@ begin
 
       sTabSheet1.Caption := GetTranslatedText('shTx_RoomEdit_Room') + ResSetGuest['RoomNumber'];
 
-      lbRoomRent.Caption := FCurrencyHandler.FormattedValue(lRoomInvoice.TotalRoomRent); //Trim(_floatToStr(ResSetGuest['TotalPrice'], 12, 2));
-      lbSales.Caption := FCurrencyHandler.FormattedValue(lRoomInvoice.TotalSales); //Trim(_floatToStr(ResSetGuest['CurrentSales'], 12, 2));
-      lbSubTotal.Caption := FCurrencyHandler.FormattedValue(lRoomInvoice.TotalRoomRent
-                                                             + lRoomInvoice.TotalSales
-                                                             + lRoomInvoice.TotalTaxes); // Trim(_floatToStr(ResSetGuest['TotalPrice'] + ResSetGuest['CurrentSales'], 12, 2));
-      lbPAyments.Caption := FCurrencyHandler.FormattedValue(lRoomInvoice.TotalPayments); //Trim(_floatToStr(ResSetGuest['CurrentPayments'], 12, 2));
-      lbTaxes.Caption := FCurrencyHandler.FormattedValue(lRoomInvoice.TotalTaxes); //Trim(_floatToStr(ExtraTaxes, 12, 2));
-      lbBalance.Caption := FCurrencyHandler.FormattedValue(lRoomInvoice.Balance);// Trim(_floatToStr(CurrentRealBalance, 12, 2));
+      lbRoomRent.Caption := lRoomInvoice.TotalRoomRent.AsDisplayString; //Trim(_floatToStr(ResSetGuest['TotalPrice'], 12, 2));
+      lbSales.Caption := lRoomInvoice.TotalSales.AsDisplayString; //Trim(_floatToStr(ResSetGuest['CurrentSales'], 12, 2));
+      lbSubTotal.Caption := (lRoomInvoice.TotalRoomRent + lRoomInvoice.TotalSales + lRoomInvoice.TotalTaxes).AsDisplayString; // Trim(_floatToStr(ResSetGuest['TotalPrice'] + ResSetGuest['CurrentSales'], 12, 2));
+      lbPAyments.Caption := lRoomInvoice.TotalPaymentsNative.AsDisplayString; //Trim(_floatToStr(ResSetGuest['CurrentPayments'], 12, 2));
+      lbTaxes.Caption := lRoomInvoice.TotalTaxes.AsDisplayString; //Trim(_floatToStr(ExtraTaxes, 12, 2));
+      lbBalance.Caption := lRoomInvoice.Balance.AsDisplayString;// Trim(_floatToStr(CurrentRealBalance, 12, 2));
       FCurrentRealBalance := lRoomInvoice.balance;
 
       edFax.Text := ResSetGuest['CompFax'];

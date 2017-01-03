@@ -138,14 +138,15 @@ begin
       if pnlRoomBalance.Visible then
       begin
         lbCurrency.Caption    := Currency;
-        lbRoomRent.Caption    := lCurrencyHandler.FormattedValue(TotalRoomRent);
-        lbSales.Caption       := lCurrencyHandler.FormattedValue(TotalSales);
-        lbTaxes.Caption       := lCurrencyHandler.FormattedValue(TotalTaxes);
-        lbSubTotal.Caption    := lCurrencyHandler.FormattedValue(lCurrencyHandler.RoundedValue(TotalRoomRent) +
-                                                                 lCurrencyHandler.RoundedValue(TotalSales) +
-                                                                 lCurrencyHandler.RoundedValue(TotalTaxes));
-        lbPayments.Caption    := lCurrencyHandler.FormattedValue(TotalPayments);
-        lbBalance.Caption     := lCurrencyHandler.FormattedValue(Balance);
+        lbRoomRent.Caption    := TotalRoomRent.AsDisplayString;// lCurrencyHandler.FormattedValue(TotalRoomRent);
+        lbSales.Caption       := TotalSales.AsDisplayString; // lCurrencyHandler.FormattedValue(TotalSales);
+        lbTaxes.Caption       := TotalTaxes.AsDisplayString; // lCurrencyHandler.FormattedValue(TotalTaxes);
+        lbSubTotal.Caption    := (TotalRoomRent + TotalSales + TotalTaxes).asDisplayString;
+                                  //lCurrencyHandler.FormattedValue(lCurrencyHandler.RoundedValue(TotalRoomRent) +
+                                 //                                lCurrencyHandler.RoundedValue(TotalSales) +
+                                 //                                lCurrencyHandler.RoundedValue(TotalTaxes));
+        lbPayments.Caption    := TotalPaymentsNative.AsDisplayString; // lCurrencyHandler.FormattedValue(TotalPaymentsNative);
+        lbBalance.Caption     := Balance.AsDisplayString; //.FormattedValue(Balance);
 
         __lblGroupBalance.Caption := format(GetTranslatedText('shUI_Checkout_RoomHeader'), [RoomNumber]);
       end;
@@ -162,14 +163,12 @@ begin
       if pnlGroupBalance.Visible then
       begin
         lbCurrencyGr.Caption  := Currency;
-        lbRoomRentGr.Caption  := lCurrencyHandler.FormattedValue(TotalRoomRent);
-        lbSalesGr.Caption     := lCurrencyHandler.FormattedValue(TotalSales);
-        lbTaxesGr.Caption     := lCurrencyHandler.FormattedValue(TotalTaxes);
-        lbSubTotalGr.Caption  := lCurrencyHandler.FormattedValue(lCurrencyHandler.RoundedValue(TotalRoomRent) +
-                                                                 lCurrencyHandler.RoundedValue(TotalSales) +
-                                                                 lCurrencyHandler.RoundedValue(TotalTaxes));
-        lbPaymentsGr.Caption  := lCurrencyHandler.FormattedValue(TotalPayments);
-        lbBalanceGr.Caption   := lCurrencyHandler.FormattedValue(Balance);
+        lbRoomRentGr.Caption  := TotalRoomRent.AsDisplayString;
+        lbSalesGr.Caption     := TotalSales.AsDisplayString;
+        lbTaxesGr.Caption     := TotalTaxes.AsDisplayString;
+        lbSubTotalGr.Caption  := (TotalRoomRent + TotalSales + TotalTaxes).AsDisplayString;
+        lbPaymentsGr.Caption  := TotalPaymentsNative.AsDisplayString;
+        lbBalanceGr.Caption   := Balance.AsDisplayString;
 
         __lblGroupBalance.Caption := format(GetTranslatedText('shUI_Checkout_GroupHeader'), [NumberOfRentLines]);
       end;
@@ -189,7 +188,7 @@ begin
     // NB: using pnlRoomBalance.Width twice because pnlGroupBalance has Align=alClient and its width would become 626
     Width := pnlRoomBalance.Width * iif(pnlRoomBalance.Visible, 1, 0) + pnlRoomBalance.Width * iif(pnlGroupBalance.Visible, 1, 0) + 6;
 
-  cbxForce.Visible := SameValue(FRoomInvoice.Balance, 0) AND not SameValue(FGroupInvoice.Balance, 0);
+  cbxForce.Visible := (FRoomInvoice.Balance = 0) AND (FGroupInvoice.Balance <> 0);
   if cbxForce.Visible then
     cbxForce.Left := pnlGroupBalance.Left + (pnlGroupBalance.Width - cbxForce.Width) div 2;
   BtnCheckOut.Enabled := ((NOT pnlRoomBalance.Visible) AND (NOT pnlGroupBalance.Visible or cbxForce.Checked));
