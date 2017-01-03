@@ -1254,6 +1254,7 @@ select_ReservationProfile_guestRoomsSQL : string =
 '   , roomreservations.rrArrival '+
 '   , roomreservations.rrDeparture '+
 '   , roomreservations.Room '+
+'   , roomreservations.InvoiceIndex '+
 '   , roomreservations.status '+
 '   , rooms.Description AS RoomDescription '+
 '   , rooms.Equipments '+
