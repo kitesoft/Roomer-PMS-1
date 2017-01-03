@@ -589,6 +589,8 @@ type
     lblGuestNationality: TsLabel;
     lblContactCountry: TsLabel;
     acChangeRoomType: TAction;
+    mRoomsAverageRoomRate: TFloatField;
+    mRoomsInvoiceIndex: TIntegerField;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -780,6 +782,7 @@ type
 
     zReservation: longInt;
     zRoomReservation: longInt;
+    zInvoiceIndex: Integer;
 
     zInitDateFrom, zInitDateTo: TDate;
 
@@ -2197,7 +2200,7 @@ end;
 procedure TfrmReservationProfile.OpenthisRoom1Click(Sender: TObject);
 begin
   try
-    EditInvoice(zReservation, zRoomReservation, 0, 0, 0, 0, false);
+    EditInvoice(zReservation, zRoomReservation, 0, 0, 0, zInvoiceIndex, false);
   finally
     Display_rGrid(zRoomReservation);
   end;
@@ -2236,6 +2239,7 @@ begin
     begin
       zGuestName := mRoomsGuestName.AsString;
       zRoomReservation := mRoomsRoomReservation.asInteger;
+      zInvoiceIndex := mRoomsInvoiceIndex.asInteger;
       d.RR_GetMemoBothTextForRoom(zRoomReservation, HiddenInfo, ChannelRequest);
       gbxRoomInformation.caption := 'Notes for Room : ' + mRoomsRoom.asstring;
       memRoomNotes.Lines.text := HiddenInfo;
@@ -2289,13 +2293,18 @@ end;
 
 procedure TfrmReservationProfile.mRoomsCalcFields(DataSet: TDataSet);
 begin
-  if mRoomsratePlanCode.AsString.IsEmpty then
-    if mRoomsUnPaidRentNights.asInteger <> 0 then
-      mRoomsunpaidRentPrice.AsFloat := mRoomsUnPaidRoomRent.AsFloat / mRoomsUnPaidRentNights.asInteger
-    else
-      mRoomsunpaidRentPrice.Clear
-  else
-    mRoomsunpaidRentPrice.AsFloat := DynamicRates.AverageRateStay(mRoomsratePlanCode.AsString, mRoomsRoomType.AsString, mRoomsArrival.AsDateTime, mRoomsDeparture.AsDateTime);
+// RPMS-796
+   mRoomsunpaidRentPrice.AsFloat := mRoomsAverageRoomRate.AsFloat;
+
+//  if mRoomsratePlanCode.AsString.IsEmpty then
+//    if mRoomsUnPaidRentNights.asInteger <> 0 then
+//      mRoomsunpaidRentPrice.AsFloat := mRoomsUnPaidRoomRent.AsFloat / mRoomsUnPaidRentNights.asInteger
+//    else
+//      mRoomsunpaidRentPrice.Clear
+//  else
+//    mRoomsunpaidRentPrice.AsFloat := DynamicRates.AverageRateStay(mRoomsratePlanCode.AsString, mRoomsRoomType.AsString, mRoomsArrival.AsDateTime, mRoomsDeparture.AsDateTime);
+
+
 
   mRoomsdayCount.asInteger := trunc(mRoomsDeparture.AsDateTime) - trunc( mRoomsArrival.ASDateTime);
 
@@ -2510,27 +2519,24 @@ begin
              '       AND resflag NOT IN (''X'' , ''C'')) AS RateOrPackagePerDay'#10;
     s := s + '    , rr.useStayTax '#10;
     s := s + '    , rr.ratePlanCode '#10;
+    s := s + '    , rr.InvoiceIndex '#10;
     s := s + '    , IF(ISNULL(ManualChannelId) OR ManualChannelId < 1, r.channel, ManualChannelId) AS ManualChannelId '#10;
     s := s + '    , RoomClass '#10;
     s := s + '    , blockMove '#10;
     s := s + '    , blockMoveReason '#10;
     s := s + '    , rrRoomAlias as RoomAlias '#10;
     s := s + '    , rrRoomTypeAlias as RoomTypeAlias '#10;
-    s := s + '    , (SELECT count(ID) FROM roomsdate WHERE (roomsdate.roomreservation=rr.roomreservation) AND (roomsdate.ResFlag <> '
-                    + _db(STATUS_DELETED) + ' )) AS unPaidRentNights '#10;
+    s := s + '    , (SELECT AVG(RoomRate) FROM roomsdate WHERE (roomsdate.roomreservation=rr.roomreservation) AND (roomsdate.ResFlag NOT IN (''X'',''C''))) AS AverageRoomRate '#10;
+    s := s + '    , (SELECT count(ID) FROM roomsdate WHERE (roomsdate.roomreservation=rr.roomreservation) AND roomsdate.Paid=0 AND (roomsdate.ResFlag NOT IN (''X'',''C''))) AS unPaidRentNights '#10;
     s := s + '    , IF(r.OutofOrderBlocking, r.name, (SELECT name FROM persons WHERE persons.roomreservation=rr.roomreservation ORDER BY MainName DESC LIMIT 1)) AS GuestName '#10;
     s := s + '    , numChildren as childrencount '#10;
     s := s + '    , numInfants as Infantcount '#10;
     s := s + '    , (SELECT PersonsProfilesId FROM persons WHERE persons.roomreservation=rr.roomreservation ORDER BY MainName DESC LIMIT 1) AS PersonsProfilesId '#10;
     s := s + '    , (SELECT count(ID) FROM persons WHERE persons.roomreservation=rr.roomreservation) AS GuestCount '#10;
-    s := s + '    , (SELECT SUM(RoomRate) FROM roomsdate WHERE (roomsdate.roomreservation=rr.roomreservation) AND (roomsdate.paid=0) AND (roomsdate.ResFlag <> '
-                    + _db(STATUS_DELETED) + ' )) AS unPaidRoomRent '#10;
-    s := s + '    , (SELECT SUM(IF(isPercentage, RoomRate*Discount/100, Discount)) FROM roomsdate WHERE (roomsdate.roomreservation=rr.roomreservation) AND (roomsdate.paid=0) AND (roomsdate.ResFlag <> '
-                    + _db(STATUS_DELETED) + ' ))  AS DiscountUnPaidRoomRent '#10;
-    s := s + '    , ((SELECT SUM(RoomRate) FROM roomsdate WHERE (roomsdate.roomreservation=rr.roomreservation) AND (roomsdate.paid=0) and (roomsdate.ResFlag <> '
-                    + _db(STATUS_DELETED) + ' )) '#10;
-    s := s + '       - (SELECT SUM(IF(isPercentage, RoomRate*Discount/100, Discount)) FROM roomsdate WHERE (roomsdate.roomreservation=rr.roomreservation) AND (roomsdate.paid=0) AND (roomsdate.ResFlag <> '
-                    + _db(STATUS_DELETED) + ' ))) AS TotalUnpaidRoomRent '#10;
+    s := s + '    , (SELECT SUM(RoomRate) FROM roomsdate WHERE (roomsdate.roomreservation=rr.roomreservation) AND (roomsdate.paid=0) AND (roomsdate.ResFlag NOT IN (''X'',''C''))) AS unPaidRoomRent '#10;
+    s := s + '    , (SELECT SUM(IF(isPercentage, RoomRate*Discount/100, Discount)) FROM roomsdate WHERE (roomsdate.roomreservation=rr.roomreservation) AND (roomsdate.paid=0) AND (roomsdate.ResFlag NOT IN (''X'',''C'')))  AS DiscountUnPaidRoomRent '#10;
+    s := s + '    , ((SELECT SUM(RoomRate) FROM roomsdate WHERE (roomsdate.roomreservation=rr.roomreservation) AND (roomsdate.paid=0) and (roomsdate.ResFlag NOT IN (''X'',''C''))) '#10;
+    s := s + '       - (SELECT SUM(IF(isPercentage, RoomRate*Discount/100, Discount)) FROM roomsdate WHERE (roomsdate.roomreservation=rr.roomreservation) AND (roomsdate.paid=0) AND (roomsdate.ResFlag NOT IN (''X'',''C'')))) AS TotalUnpaidRoomRent '#10;
     s := s + '    , (SELECT Description FROM roomtypegroups WHERE roomtypegroups.code=rr.roomclass) AS RoomClassDescription '#10;
     s := s + '    , rrs.StockitemsCount ';
     s := s + '    , rrs.StockitemsPrice ';

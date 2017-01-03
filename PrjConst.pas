@@ -1611,6 +1611,8 @@ begin
   constants.Add('MaxStayCanNotBeLowerThanMinStay', 'Max. stay can not be lower than min. stay.');
   constants.Add('SingleUseRateIsTooLow', 'Single use rate is too low.');
 
+  constants.Add('shTx_ViewRatesPerDay_AlreadyPaid', 'Already paid!');
+
 end;
 
 procedure AddConstants_OfflineReports;

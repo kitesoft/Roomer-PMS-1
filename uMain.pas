@@ -506,7 +506,6 @@ type
     btnDeleteCache: TdxBarLargeButton;
     btnPersonvipTypes: TdxBarLargeButton;
     btnContactTypes: TdxBarLargeButton;
-    btnDashboard: TdxBarLargeButton;
     tabDashboard: TsTabSheet;
     btnTurnover: TdxBarLargeButton;
     tvAllReservationsReservationName: TcxGridDBColumn;
@@ -888,7 +887,6 @@ type
     procedure btnDeleteCacheClick(Sender: TObject);
     procedure btnPersonvipTypesClick(Sender: TObject);
     procedure btnContactTypesClick(Sender: TObject);
-    procedure btnDashboardClick(Sender: TObject);
     procedure btnTurnoverClick(Sender: TObject);
     procedure rgrGroupreportStayTypeClick(Sender: TObject);
     procedure rgrGroupReportDateTypeClick(Sender: TObject);
@@ -11188,12 +11186,6 @@ procedure TfrmMain.btnDailyRevenuesClick(Sender: TObject);
 begin
   UserClickedDxLargeButton(Sender);
   ShowDailyRevenuesReport;
-end;
-
-procedure TfrmMain.btnDashboardClick(Sender: TObject);
-begin
-  UserClickedDxLargeButton(Sender);
-  ShowDashboard(self.handle, d.roomerMainDataSet);
 end;
 
 procedure TfrmMain.btnCommunicationTestClick(Sender: TObject);

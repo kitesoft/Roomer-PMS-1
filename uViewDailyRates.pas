@@ -14,12 +14,14 @@ type
     RateIncl : Double;
     Vat : Double;
     CityTax : Double;
+    Paid : Boolean;
   public
     constructor Create(_ADate : TDate;
                       _RateExcl : Double;
                       _RateIncl : Double;
                       _Vat : Double;
-                      _CityTax : Double);
+                      _CityTax : Double;
+                      _Paid : Boolean);
     function Clone : TDateRate;
   end;
 
@@ -38,6 +40,7 @@ type
     procedure FormShow(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure grDatesGridHint(Sender: TObject; ARow, ACol: Integer; var hintstr: string);
   private
     FRoomReservation: Integer;
     FViewList : TObjectList<TDateRate>;
@@ -85,8 +88,9 @@ uses uD,
      _Glob,
      uAppGlobal,
      uTaxCalc,
-     cmpRoomerDataSet
-     , uSQLUtils;
+     cmpRoomerDataSet,
+     uSQLUtils,
+     PrjConst;
 
 
 procedure ShowRatesForRoomReservation(RoomReservation : Integer);
@@ -149,7 +153,7 @@ begin
     if stayTaxPerRoom then
       Multiply := 1 / NumDays;
 
-    result := TDateRate.Create(ADate, RateExcl, RateIncl, VAT, CityTax * Multiply / CurrencyRate);
+    result := TDateRate.Create(ADate, RateExcl, RateIncl, VAT, CityTax * Multiply / CurrencyRate, False);
   end
   else
     raise Exception.Create('CreateDateRate(): Invalid parameters');
@@ -206,6 +210,7 @@ begin
          'RateIncl - RateExcl AS VAT, ' +
          'RateIncl, ' +
          'CityTaxInCl, ' +
+         'Paid, ' +
          'NumNights, ' +
          'NumGuests, ' +
          'IF(CityTaxIncl, 0, ' +
@@ -226,7 +231,7 @@ begin
          'Currency, ' +
          'CurrencyRate ' +
          'FROM ( ' +
-         'SELECT DATE(ADate) AS ADate, ' +
+         'SELECT Paid, DATE(ADate) AS ADate, ' +
          'RoomRate AS RateIncl, ' +
          'RoomRate / (1 + vc.VATPercentage/100) AS RateExcl, ' +
          'to_bool(IF(tx.INCL_EXCL=''INCLUDED'' OR ' +
@@ -263,7 +268,7 @@ begin
       Currency := rSet['Currency'];
     while NOT rSet.Eof do
     begin
-      FViewList.Add(TDateRate.Create(rSet['ADate'], rSet['RateExcl'], rSet['RateIncl'], rSet['VAT'], rSet['CityTaxPerDay']));
+      FViewList.Add(TDateRate.Create(rSet['ADate'], rSet['RateExcl'], rSet['RateIncl'], rSet['VAT'], rSet['CityTaxPerDay'], rSet['Paid']));
       rSet.Next;
     end;
   finally
@@ -307,6 +312,34 @@ begin
     ABrush.Color := clBlue;
     AFont.Color := clWhite;
     AFont.Style := [fsBold];
+  end else
+  if (ARow < grDates.RowCount - 1) AND (ARow > 0) then
+  begin
+    if Assigned(grDates.Objects[0, ARow]) AND
+       (grDates.Objects[0, ARow] IS TDateRate) AND
+       TDateRate(grDates.Objects[0, ARow]).Paid then
+    begin
+      if (ACol = 0)  then
+         AFont.Style := [fsStrikeOut]
+      else
+      begin
+         AFont.Style := [];
+         ABrush.Color := clLtGray;
+      end;
+    end;
+  end;
+end;
+
+procedure TFrmViewDailyRates.grDatesGridHint(Sender: TObject; ARow, ACol: Integer; var hintstr: string);
+begin
+  if (ARow < grDates.RowCount - 1) AND (ARow > 0) then
+  begin
+    if Assigned(grDates.Objects[0, ARow]) AND
+       (grDates.Objects[0, ARow] IS TDateRate) AND
+       TDateRate(grDates.Objects[0, ARow]).Paid then
+      HintStr := GetTranslatedText('shTx_ViewRatesPerDay_AlreadyPaid')
+    else
+      HintStr := '';
   end;
 end;
 
@@ -334,6 +367,7 @@ begin
   for DateRate IN FViewList do
   begin
     inc(iRow);
+    grDates.Objects[0, iRow] := DateRate;
     grDates.Cells[0, iRow] := uDateUtils.RoomerDateToString(DateRate.ADate);
     grDates.Cells[1, iRow] := trim(_floattostr(DateRate.RateExcl, 12, 2));
     grDates.Cells[2, iRow] := trim(_floattostr(DateRate.Vat, 12, 2));
@@ -396,16 +430,17 @@ end;
 
 function TDateRate.Clone: TDateRate;
 begin
-  result := TDateRate.Create(ADate, RateExcl, RateIncl, Vat, CityTax)
+  result := TDateRate.Create(ADate, RateExcl, RateIncl, Vat, CityTax, Paid)
 end;
 
-constructor TDateRate.Create(_ADate: TDate; _RateExcl, _RateIncl, _Vat, _CityTax: Double);
+constructor TDateRate.Create(_ADate: TDate; _RateExcl, _RateIncl, _Vat, _CityTax: Double; _Paid : Boolean);
 begin
     ADate := _ADate;
     RateExcl := _RateExcl;
     RateIncl := _RateIncl;
     Vat := _Vat;
     CityTax := _CityTax;
+    Paid := _Paid;
 end;
 
 end.

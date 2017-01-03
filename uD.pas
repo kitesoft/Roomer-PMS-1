@@ -809,31 +809,22 @@ var
   PROFORMA_INVOICE_NUMBER: Integer;
 {$IFDEF rmROOMERSSL}
 
-  const RoomerBase: String = 'https://secure.roomercloud.net';
-        RoomerBasePort: String = '443';
-        RoomerOpenAPIBase: String = 'https://secure.roomercloud.net';
-        RoomerOpenApiBasePort: String = '443';
+  const cRoomerBase: String = 'https://secure.roomercloud.net';
+        cRoomerBasePort: String = '443';
+        cRoomerOpenAPIBase: String = 'https://secure.roomercloud.net';
+        cRoomerOpenApiBasePort: String = '443';
 
 {$ELSE}
 
-  const RoomerBase: String = 'http://secure.roomercloud.net';
-        RoomerBasePort: String = '80';
-        RoomerOpenApiBasePort: String = '80';
-        RoomerOpenAPIBase: String = 'http://secure.roomercloud.net';
+  const cRoomerBase: String = 'http://secure.roomercloud.net';
+        cRoomerBasePort: String = '80';
+        cRoomerOpenApiBasePort: String = '80';
+        cRoomerOpenAPIBase: String = 'http://secure.roomercloud.net';
 
 {$ENDIF}
 
-  const RoomerStoreBase: String = 'http://store.roomercloud.net';
-        RoomerStoreBasePort: String = '8080';
-
-
-var
-  _RoomerBase,
-    _RoomerBasePort,
-    _RoomerOpenApiBasePort,
-    _RoomerOpenApiBase,
-    _RoomerStoreBase,
-    _RoomerStoreBasePort: String;
+  const cRoomerStoreBase: String = 'http://roomerstore.com';
+        cRoomerStoreBasePort: String = '80';
 
 var
   d: Td;
@@ -944,30 +935,9 @@ end;
 
 procedure Td.SetDefaultCloudConfig;
 begin
-  _RoomerBase := ParameterByName('RoomerBase');
-  if _RoomerBase = '' then
-    _RoomerBase := RoomerBase;
-  _RoomerBasePort := ParameterByName('Port');
-  if _RoomerBasePort = '' then
-    _RoomerBasePort := RoomerBasePort;
-
-  _RoomerStoreBase := ParameterByName('RoomerStoreBase');
-  if _RoomerStoreBase = '' then
-    _RoomerStoreBase := RoomerStoreBase;
-  _RoomerStoreBasePort := ParameterByName('RoomerStoreBasePort');
-  if _RoomerStoreBasePort = '' then
-    _RoomerStoreBasePort := RoomerStoreBasePort;
-  _RoomerOpenApiBasePort := ParameterByName('RoomerOpenApiBasePort');
-  if _RoomerOpenApiBasePort = '' then
-    _RoomerOpenApiBasePort := RoomerOpenApiBasePort;
-
-  _RoomerOpenApiBase := ParameterByName('OpenApiBase');
-  if _RoomerOpenApiBase = '' then
-    _RoomerOpenApiBase := RoomerOpenAPIBase;
-
-  RoomerOpenApiUri := _RoomerOpenApiBase + ':' + _RoomerOpenApiBasePort + '/roomer/openAPI/REST/';
-  RoomerStoreUri := _RoomerStoreBase + ':' + _RoomerStoreBasePort + '/';
-  RoomerApiUri := _RoomerBase + ':' + _RoomerBasePort + '/services/';
+  RoomerOpenApiUri := ParameterByName('OpenApiBase', cRoomerOpenAPIBase) + ':' + ParameterByName('RoomerOpenApiBasePort', cRoomerOpenApiBasePort) + '/roomer/openAPI/REST/';
+  RoomerStoreUri := ParameterByName('RoomerStoreBase', cRoomerStoreBase) + ':' + ParameterByName('RoomerStoreBasePort', cRoomerStoreBasePort) + '/';
+  RoomerApiUri := ParameterByName('RoomerBase', cRoomerBase) + ':' + ParameterByName('Port', cRoomerBasePort) + '/services/';
   RoomerApiEntitiesUri := RoomerApiUri + 'entities/';
   RoomerApiDatasetsUri := RoomerApiUri + 'datasets/';
 end;
@@ -976,17 +946,14 @@ procedure Td.SetCloudConfigByFile(filename: String);
 begin
   with TInifile.Create(TPath.Combine(ExtractFilePath(Application.ExeName), filename)) do
     try
-      _RoomerBase := ReadString('Cloud', 'RoomerBase', RoomerBase);
-      _RoomerBasePort := ReadString('Cloud', 'RoomerBasePort', RoomerBasePort);
-      _RoomerStoreBase := ReadString('Cloud', 'RoomerStoreBase', RoomerStoreBase);
-      _RoomerStoreBasePort := ReadString('Cloud', 'RoomerStoreBasePort', RoomerBase);
-      _RoomerOpenApiBase := ReadString('Cloud', 'RoomerOpenAPIBase', RoomerOpenAPIBase);
-      _RoomerOpenApiBasePort := ReadString('Cloud', 'RoomerOpenApiPort', RoomerOpenApiBasePort);
+      RoomerOpenApiUri := ReadString('Cloud', 'RoomerOpenAPIBase', cRoomerOpenAPIBase) + ':' +
+                          ReadString('Cloud', 'RoomerOpenApiPort', cRoomerOpenApiBasePort) +
+                          ReadString('Cloud', 'RoomerOpenApiRestPath', '/roomer/openAPI/REST/');
+      RoomerStoreUri := ReadString('Cloud', 'RoomerStoreBase', cRoomerStoreBase) + ':' +
+                        ReadString('Cloud', 'RoomerStoreBasePort', cRoomerStoreBasePort) + '/';
 
-      RoomerOpenApiUri := _RoomerOpenApiBase + ':' + _RoomerOpenApiBasePort + ReadString('Cloud', 'RoomerOpenApiRestPath', '/roomer/openAPI/REST/');
-      RoomerStoreUri := _RoomerStoreBase + ':' + _RoomerStoreBasePort + '/';
-
-      RoomerApiUri := _RoomerBase + ':' + _RoomerBasePort + '/services/';
+      RoomerApiUri := ReadString('Cloud', 'RoomerBase', cRoomerBase) + ':' +
+                      ReadString('Cloud', 'RoomerBasePort', cRoomerBasePort) + '/services/';
       RoomerApiEntitiesUri := RoomerApiUri + 'entities/';
       RoomerApiDatasetsUri := RoomerApiUri + 'datasets/';
     finally
@@ -6814,33 +6781,6 @@ begin
 
       copyText := _islErl(IvI.ivhPrintText, isForeign);
 
-      if IvI.KreditType = ktKredit then
-      begin
-        IvI.ivhTotal := IvI.ivhTotal * -1;
-        IvI.ivhTotal_woVat := IvI.ivhTotal_woVat * -1;
-        IvI.ivhTotal_VAT := IvI.ivhTotal_VAT * -1;
-        IvI.ivhTotal_Currency := IvI.ivhTotal_Currency * -1;
-        IvI.ivhTotalBreakFast := IvI.ivhTotalBreakFast * -1;
-
-        for i := 0 to IvI.lineCount - 1 do
-        begin
-          IvI.LinesList[i].Price := IvI.LinesList[i].Price * -1;
-          IvI.LinesList[i].TotalPrice := IvI.LinesList[i].TotalPrice * -1;
-        end;
-
-        for i := 0 to IvI.paymentCount - 1 do
-        begin
-          IvI.PaymentList[i].pmAmount := IvI.PaymentList[i].pmAmount * -1;
-        end;
-
-        for i := 0 to IvI.VATcount - 1 do
-        begin
-          IvI.VATList[i].Price_woVAT := IvI.VATList[i].Price_woVAT * -1;
-          IvI.VATList[i].Price_wVAT := IvI.VATList[i].Price_wVAT * -1;
-          IvI.VATList[i].VatAmount := IvI.VATList[i].VatAmount * -1;
-        end;
-      end;
-
       if d.mtHead_.Active then
         d.mtHead_.Close;
       d.mtHead_.Open;
@@ -6997,18 +6937,6 @@ begin
 
         for ii := 0 to pckTotalsList.Count - 1 do
         begin
-          // showmessage(inttostr(pckTotalsList[ii].RoomReservation)+'   '+pckTotalsList[ii].code+'   '+floattostr(pckTotalsList[ii].Amount));
-
-
-
-//          tmpCode           := ivi.ivhPackage;
-//          tmpDescription    := ivi.IvhPackageText; // ivhPackageName;
-//          if tmpCount <> 0 then tmpPrice := tmpAmount/tmpCount;
-//          tmpfoPrice        := tmpPrice/rate;
-//          tmpfoAmount       := tmpAmount/rate;
-//          tmpfoAmountWoVat  := tmpAmountWoVat/rate;
-//          tmpfoVatAmount    := tmpfoVatAmount/rate;
-
           tmpPrice := 0;
           if pckTotalsList[ii].ItemCount <> 0 then
           begin
@@ -7211,22 +7139,13 @@ begin
       if ctrlGetBoolean('xmlDoExport') then
       begin
 
-        if ctrlGetInteger('AccountType') = 1 then
-        begin
-          // Showmessage('Yfirf�rsla � St�lpa ');
-          // InvoiceToStolpiTilbod(silent);
-        end;
-
         if ctrlGetInteger('AccountType') = 2 then
         begin
-          // Showmessage('Export To TouchStore - TextRec');
           exportToSnertaTextRec(silent);
-          // exportToSnertaSimpleXML(silent);
         end;
 
         if ctrlGetInteger('AccountType') = 3 then
         begin
-          // Showmessage('Export To TouchStore - XML');
           exportToSnertaSimpleXML(silent);
         end;
 
