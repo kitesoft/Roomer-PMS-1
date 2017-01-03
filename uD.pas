@@ -6814,33 +6814,33 @@ begin
 
       copyText := _islErl(IvI.ivhPrintText, isForeign);
 
-      if IvI.KreditType = ktKredit then
-      begin
-        IvI.ivhTotal := IvI.ivhTotal * -1;
-        IvI.ivhTotal_woVat := IvI.ivhTotal_woVat * -1;
-        IvI.ivhTotal_VAT := IvI.ivhTotal_VAT * -1;
-        IvI.ivhTotal_Currency := IvI.ivhTotal_Currency * -1;
-        IvI.ivhTotalBreakFast := IvI.ivhTotalBreakFast * -1;
-
-        for i := 0 to IvI.lineCount - 1 do
-        begin
-          IvI.LinesList[i].Price := IvI.LinesList[i].Price * -1;
-          IvI.LinesList[i].TotalPrice := IvI.LinesList[i].TotalPrice * -1;
-        end;
-
-        for i := 0 to IvI.paymentCount - 1 do
-        begin
-          IvI.PaymentList[i].pmAmount := IvI.PaymentList[i].pmAmount * -1;
-        end;
-
-        for i := 0 to IvI.VATcount - 1 do
-        begin
-          IvI.VATList[i].Price_woVAT := IvI.VATList[i].Price_woVAT * -1;
-          IvI.VATList[i].Price_wVAT := IvI.VATList[i].Price_wVAT * -1;
-          IvI.VATList[i].VatAmount := IvI.VATList[i].VatAmount * -1;
-        end;
-      end;
-
+//      if IvI.KreditType = ktKredit then
+//      begin
+//        IvI.ivhTotal := IvI.ivhTotal * -1;
+//        IvI.ivhTotal_woVat := IvI.ivhTotal_woVat * -1;
+//        IvI.ivhTotal_VAT := IvI.ivhTotal_VAT * -1;
+//        IvI.ivhTotal_Currency := IvI.ivhTotal_Currency * -1;
+//        IvI.ivhTotalBreakFast := IvI.ivhTotalBreakFast * -1;
+//
+//        for i := 0 to IvI.lineCount - 1 do
+//        begin
+//          IvI.LinesList[i].Price := IvI.LinesList[i].Price * -1;
+//          IvI.LinesList[i].TotalPrice := IvI.LinesList[i].TotalPrice * -1;
+//        end;
+//
+//        for i := 0 to IvI.paymentCount - 1 do
+//        begin
+//          IvI.PaymentList[i].pmAmount := IvI.PaymentList[i].pmAmount * -1;
+//        end;
+//
+//        for i := 0 to IvI.VATcount - 1 do
+//        begin
+//          IvI.VATList[i].Price_woVAT := IvI.VATList[i].Price_woVAT * -1;
+//          IvI.VATList[i].Price_wVAT := IvI.VATList[i].Price_wVAT * -1;
+//          IvI.VATList[i].VatAmount := IvI.VATList[i].VatAmount * -1;
+//        end;
+//      end;
+//
       if d.mtHead_.Active then
         d.mtHead_.Close;
       d.mtHead_.Open;
