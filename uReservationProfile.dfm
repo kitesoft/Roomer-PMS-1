@@ -2480,13 +2480,13 @@ object frmReservationProfile: TfrmReservationProfile
             Width = 63
           end
           object tvRoomsunpaidRentPrice: TcxGridDBColumn
-            Caption = 'Room rate'
+            Caption = 'Avg. Room rate'
             DataBinding.FieldName = 'unpaidRentPrice'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = '0.00;0.00'
             OnGetProperties = tvGetCurrencyProperties
             HeaderAlignmentHorz = taRightJustify
-            HeaderHint = 'Avrage price (Unpaid rent-discount)'
+            HeaderHint = 'Average room rate'
             Options.Editing = False
             Options.ShowEditButtons = isebAlways
             Width = 74
@@ -2540,13 +2540,14 @@ object frmReservationProfile: TfrmReservationProfile
             Width = 24
           end
           object tvRoomsRateOrPackagePerDay: TcxGridDBColumn
-            Caption = 'Nightly rate'
+            Caption = 'Avg. Package-rate'
             DataBinding.FieldName = 'RateOrPackagePerDay'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             OnGetProperties = tvGetCurrencyProperties
             HeaderAlignmentHorz = taRightJustify
+            HeaderHint = 'Average package-rate'
             Options.Editing = False
-            Width = 57
+            Width = 96
           end
           object tvRoomsCurrency: TcxGridDBColumn
             DataBinding.FieldName = 'Currency'
@@ -3901,7 +3902,7 @@ object frmReservationProfile: TfrmReservationProfile
     AfterPost = mRoomsAfterPost
     AfterScroll = mRoomsAfterScroll
     OnCalcFields = mRoomsCalcFields
-    Left = 360
+    Left = 352
     Top = 424
     object mRoomsReservation: TIntegerField
       FieldName = 'Reservation'
@@ -4050,6 +4051,9 @@ object frmReservationProfile: TfrmReservationProfile
     end
     object mRoomsAverageRoomRate: TFloatField
       FieldName = 'AverageRoomRate'
+    end
+    object mRoomsInvoiceIndex: TIntegerField
+      FieldName = 'InvoiceIndex'
     end
   end
   object mGuestRoomsDS: TDataSource

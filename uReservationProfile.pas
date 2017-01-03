@@ -590,6 +590,7 @@ type
     lblContactCountry: TsLabel;
     acChangeRoomType: TAction;
     mRoomsAverageRoomRate: TFloatField;
+    mRoomsInvoiceIndex: TIntegerField;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -781,6 +782,7 @@ type
 
     zReservation: longInt;
     zRoomReservation: longInt;
+    zInvoiceIndex: Integer;
 
     zInitDateFrom, zInitDateTo: TDate;
 
@@ -2198,7 +2200,7 @@ end;
 procedure TfrmReservationProfile.OpenthisRoom1Click(Sender: TObject);
 begin
   try
-    EditInvoice(zReservation, zRoomReservation, 0, 0, 0, 0, false);
+    EditInvoice(zReservation, zRoomReservation, 0, 0, 0, zInvoiceIndex, false);
   finally
     Display_rGrid(zRoomReservation);
   end;
@@ -2237,6 +2239,7 @@ begin
     begin
       zGuestName := mRoomsGuestName.AsString;
       zRoomReservation := mRoomsRoomReservation.asInteger;
+      zInvoiceIndex := mRoomsInvoiceIndex.asInteger;
       d.RR_GetMemoBothTextForRoom(zRoomReservation, HiddenInfo, ChannelRequest);
       gbxRoomInformation.caption := 'Notes for Room : ' + mRoomsRoom.asstring;
       memRoomNotes.Lines.text := HiddenInfo;
@@ -2516,6 +2519,7 @@ begin
              '       AND resflag NOT IN (''X'' , ''C'')) AS RateOrPackagePerDay'#10;
     s := s + '    , rr.useStayTax '#10;
     s := s + '    , rr.ratePlanCode '#10;
+    s := s + '    , rr.InvoiceIndex '#10;
     s := s + '    , IF(ISNULL(ManualChannelId) OR ManualChannelId < 1, r.channel, ManualChannelId) AS ManualChannelId '#10;
     s := s + '    , RoomClass '#10;
     s := s + '    , blockMove '#10;
