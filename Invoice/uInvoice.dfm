@@ -637,8 +637,8 @@ object frmInvoice: TfrmInvoice
       object chkShowPackage: TsCheckBox
         Left = 724
         Top = 140
-        Width = 111
-        Height = 20
+        Width = 119
+        Height = 17
         Caption = 'Package on invoice'
         Checked = True
         State = cbChecked
@@ -1344,9 +1344,7 @@ object frmInvoice: TfrmInvoice
           SearchFooter.HintHighlight = 'Highlight occurrences'
           SearchFooter.MatchCaseCaption = 'Match case'
           SortSettings.DefaultFormat = ssAutomatic
-          Version = '8.1.2.0'
-          ExplicitLeft = 17
-          ExplicitTop = 4
+          Version = '7.9.1.1'
           ColWidths = (
             24
             91
