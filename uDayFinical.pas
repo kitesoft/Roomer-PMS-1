@@ -146,7 +146,7 @@ type
     mInvoiceHeadsCreditInvoice: TIntegerField;
     mInvoiceHeadsOriginalInvoice: TIntegerField;
     mInvoiceHeadsRoomGuest: TWideStringField;
-    mInvoiceHeadsInvoiceDate: TDateTimeField;
+    mInvoiceHeadsInvoiceDate: TDateField;
     mInvoiceHeadsdueDate: TDateTimeField;
     mInvoiceHeadsinvRefrence: TWideStringField;
     tvInvoiceHeadsRecId: TcxGridDBColumn;
