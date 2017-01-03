@@ -201,7 +201,7 @@ end;
 
 procedure TfrmRoomerLoginForm.FormActivate(Sender: TObject);
 begin
-  if not d.roomerMainDataSet.RoomerUri.StartsWith(RoomerBase) then
+  if not d.roomerMainDataSet.RoomerUri.StartsWith(cRoomerBase) then
     Caption := 'Roomer Login (' + d.roomerMainDataSet.RoomerUri + ')';
 end;
 

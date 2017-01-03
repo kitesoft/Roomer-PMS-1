@@ -407,7 +407,8 @@ begin
   FRoomerEntitiesUri := 'http://localhost:8080/services/entities/';
   FRoomerDatasetsUri := 'http://localhost:8080/services/datasets/';
 {$ELSE}
-  FStoreUri := 'http://store.roomercloud.net:8080/';
+//  FStoreUri := 'http://store.roomercloud.net:8080/';
+  FStoreURI := 'http://roomerstore.com:80/';
   FUri := 'http://mobile.roomercloud.net:8080/services/';
   FRoomerEntitiesUri := 'http://mobile.roomercloud.net:8080/services/entities/';
   FRoomerDatasetsUri := 'http://mobile.roomercloud.net:8080/services/datasets/';
@@ -1469,24 +1470,17 @@ var
   Stream: TFileStream;
 var
   _roomerClient: TRoomerHttpClient;
-{$IFNDEF USE_INDY}aResponseContentHeader: TALHTTPResponseHeader; {$ENDIF}
+  aResponseContentHeader: TALHTTPResponseHeader;
 begin
-{$IFNDEF USE_INDY}aResponseContentHeader := TALHTTPResponseHeader.Create;
-{$ENDIF}
+  aResponseContentHeader := TALHTTPResponseHeader.Create;
   Result := true;
   _roomerClient := CreateRoomerClient;
   try
     try
       SetOpenApiAuthHeaders(_roomerClient.RequestHeader);
-      // SentUri := OpenApiUri + Path + '/' + EncodeURIComponent(Filename);
       Stream := TFileStream.Create(destFilename, fmCreate);
       try
-{$IFDEF USE_INDY}
-        _roomerClient.handleRedirects := true; // Handle redirects
-        _roomerClient.Get(URI, Stream);
-{$ELSE}
         _roomerClient.Get(AnsiString(URI), Stream, aResponseContentHeader);
-{$ENDIF}
       finally
         Stream.Free;
       end;
@@ -1496,8 +1490,8 @@ begin
     end;
   finally
     FreeAndNil(_roomerClient);
+    aResponseContentHeader.Free;
   end;
-  // result := PostStreamAsString(activeRoomerDataSet.roomerClient, Url, Data, 'multipart/form-data');
 end;
 
 function TRoomerDataSet.PostFileOpenAPI(url: String; filename, keyString: String; FileType: String;

@@ -25,7 +25,7 @@ function IntegerListAsCdl(list: TList<Integer>; delimiter: char = ';'): String;
 procedure ClipboardCopy(const Str: string; iDelayMs: Integer = 500);
 procedure CopyToClipboard(const Str: string; iDelayMs: Integer = 500);
 procedure DebugMessage(const Str: string);
-function ParameterByName(name: String): String;
+function ParameterByName(const name: String; const aDefault: string=''): String;
 function XMLEncode(const AChaine: String): String;
 function XmlEncode_ex(Str: String; def: String): String;
 function BoolToString(value: boolean): string;
@@ -245,7 +245,7 @@ begin
 {$ENDIF}
 end;
 
-function ParameterByName(name: String): String;
+function ParameterByName(const name: String; const aDefault: string=''): String;
 var
   i, iNameLength: Integer;
   param: String;
@@ -264,6 +264,8 @@ begin
       result := copy(param, iNameLength + 1, Length(param));
     end;
   end;
+  if result = '' then
+    result := aDefault;
 end;
 
 function DelChars(const S: string; Chr: char): string;

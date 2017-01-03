@@ -59,7 +59,6 @@ procedure ShowRoomerAboutBox;
 procedure downloadCurrentVersion(Handle : THandle; RoomerDataSet : TRoomerDataSet);
 function checkNewVersion(Handle : THandle; RoomerDataSet : TRoomerDataSet) : boolean;
 procedure StartRemoteSupport(Handle : THandle; RoomerDataSet : TRoomerDataSet);
-procedure ShowDashboard(Handle : THandle; RoomerDataSet : TRoomerDataSet);
 procedure SetIgnoresToZero(RoomerDataSet : TRoomerDataSet);
 
 implementation
@@ -132,30 +131,6 @@ procedure TfrmAboutRoomer.Label1Click(Sender: TObject);
 begin
   checkNewVersion(handle, TRoomerDataSet.Create(nil));
 end;
-
-procedure ShowDashboard(Handle : THandle; RoomerDataSet : TRoomerDataSet);
-var
-    filename : String;
-    parameters : String;
-    sPath,
-    DashboardExeFilenameAndPath : String;
-begin
-  filename := 'RoomerDashboard.exe';
-  sPath := RoomerAppDataPath;
-  forceDirectories(sPath);
-
-  parameters := format('hotel=%s host=%s port=%s user=%s pass=%s date=2014-01-01',
-           [RoomerDataset.hotelId,
-            _RoomerBase,
-            _RoomerBasePort,
-            RoomerDataset.Username,
-            RoomerDataset.Password ]);
-
-  DashboardExeFilenameAndPath := TPath.Combine(sPath, filename);
-  FileDependencymanager.getAnyFileFromRoomerStore(filename, DashboardExeFilenameAndPath);
-  ExecuteFile(Handle, DashboardExeFilenameAndPath, parameters, []);
-end;
-
 
 
 procedure TfrmAboutRoomer.LabSupportEmailClick(Sender: TObject);
