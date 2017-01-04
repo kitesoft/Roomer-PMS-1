@@ -64,6 +64,7 @@ type
     class operator LessThanOrEqual(a, b: TAmount): boolean;
 
     function AsDisplayString: string;
+    function AsEditString: string;
     function ToCurrency(const aCurrCode: TCurrencyCode): TAmount;
     property CurrencyCode: TCurrencyCode read FCurCode;
   end;
@@ -99,6 +100,11 @@ end;
 function TAmount.AsDisplayString: string;
 begin
   Result := CurrencyHandler.FormattedValue(FValue);
+end;
+
+function TAmount.AsEditString: string;
+begin
+  Result := CurrencyHandler.EditValue(FValue);
 end;
 
 class procedure TAmount.CheckSameCurrency(a1, a2: TAmount);

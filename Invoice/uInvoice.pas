@@ -578,7 +578,7 @@ type
     /// </summary>
     function DisplayLine(iRow, idx: integer): integer;
 
-    procedure DisplayTotals(editCol: integer = -1; editRow: integer = -1; Value: Double = 0.00);
+    procedure DisplayTotals(editCol: integer = -1; editRow: integer = -1; aNativeValue: Double = 0.00);
     /// <summary>
     /// Move Invoicelines for property RoomReservation from tmpinvoicelines table to invoicelines table
     /// </summary>
@@ -1146,7 +1146,7 @@ begin
   result := iRow;
 end;
 
-procedure TfrmInvoice.DisplayTotals(editCol: integer = -1; editRow: integer = -1; Value: Double = 0.00);
+procedure TfrmInvoice.DisplayTotals(editCol: integer = -1; editRow: integer = -1; aNativeValue: Double = 0.00);
 var
 
   // dWork: Double;
@@ -1230,9 +1230,9 @@ begin
             begin
               try
                 if (editCol = col_ItemCount) AND (editRow = i) then
-                  itemAmount := Value * lInvLine.NativePrice // _StrToFloat(agrLines.Cells[col_ItemPrice, i])
+                  itemAmount := aNativeValue * lInvLine.NativePrice // _StrToFloat(agrLines.Cells[col_ItemPrice, i])
                 else if (editCol = col_ItemPrice) AND (editRow = i) then
-                  itemAmount := Value * lInvLine.Quantity // _StrToFloat(agrLines.Cells[col_ItemCount, i])
+                  itemAmount := aNativeValue * lInvLine.Quantity // _StrToFloat(agrLines.Cells[col_ItemCount, i])
                 else
                   itemAmount := lInvLine.Total; // _StrToFloat(agrLines.Cells[col_TotalPrice, i]);
               except
@@ -1381,20 +1381,23 @@ begin
   DisplayLine(iAddAt, idx);
 end;
 
- procedure TfrmInvoice.SetCurrentCurrency(const Value: string);
- begin
-   if (FCurrentCurrencyHandler = nil) or (FCurrentCurrencyHandler.CurrencyCode <> value) then
-   begin
-     FCurrentCurrencyHandler.free;
-     FCurrentCurrencyHandler := TCurrencyHandler.Create(Value);
+procedure TfrmInvoice.SetCurrentCurrency(const Value: string);
+begin
+  if (FCurrentCurrencyHandler = nil) or (FCurrentCurrencyHandler.CurrencyCode <> value) then
+  begin
+    FCurrentCurrencyHandler.free;
+    FCurrentCurrencyHandler := TCurrencyHandler.Create(Value);
 
-     edtCurrency.Text := FCurrentCurrencyHandler.CurrencyCode;
-     edtRate.Text :=  FloatToStr(FCurrentCurrencyHandler.Rate);
+    edtCurrency.Text := FCurrentCurrencyHandler.CurrencyCode;
+    edtRate.Text :=  FloatToStr(FCurrentCurrencyHandler.Rate);
+  end;
 
-     edtForeignCurrency.Visible :=  FCurrentCurrencyHandler.CurrencyCode <> FNativeCurrencyHandler.CurrencyCode;
-     clabForeignCurrency.Visible := edtForeignCurrency.Visible;
-   end;
- end;
+  if ComponentRunning(Self) then
+  begin
+    edtForeignCurrency.Visible :=  FCurrentCurrencyHandler.CurrencyCode <> FNativeCurrencyHandler.CurrencyCode;
+    clabForeignCurrency.Visible := edtForeignCurrency.Visible;
+  end;
+end;
 
 procedure TfrmInvoice.SetCurrentVisible;
 begin
@@ -3611,8 +3614,8 @@ begin
   tempInvoiceItemList := TInvoiceItemEntityList.create(True);
 
   FNativeCurrencyHandler := TCurrencyHandler.Create(ctrlGetString('NativeCurrency'));
-  FCurrentCurrencyHandler := TCurrencyHandler.Create(ctrlGetString('NativeCurrency'));
   inherited;
+  zCurrentCurrency := ctrlGetString('NativeCurrency');
 end;
 
 procedure TfrmInvoice.FormCreate(Sender: TObject);
@@ -3686,7 +3689,10 @@ end;
 procedure TfrmInvoice.FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
 begin
   if Key = VK_ESCAPE then
-    btnExit.Click;
+    if agrLines.EditMode then
+      agrLines.EditMode := false
+    else
+      btnExit.Click;
 end;
 
 procedure TfrmInvoice.FormResize(Sender: TObject);
@@ -4896,7 +4902,8 @@ end;
 procedure TfrmInvoice.agrLinesGetEditText(Sender: TObject; ACol, ARow: integer;
   var Value: string);
 begin
-  zCellValue := agrLines.Cells[ACol, ARow];
+  if aCol = col_ItemPrice then
+    Value := CellInvoiceLine(aRow).NativePrice.ToCurrency(zCurrentCurrency).AsEditString;
 end;
 
 procedure TfrmInvoice.agrLinesKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -5024,8 +5031,7 @@ begin
 
 end;
 
-function TfrmInvoice.CheckIfWithdrawlAllowed_X(Editing: boolean;
-  Value: String): boolean;
+function TfrmInvoice.CheckIfWithdrawlAllowed_X(Editing: boolean; Value: String): boolean;
 var
   currValue: Double;
   Amount: Double;
@@ -5034,7 +5040,8 @@ begin
   if FIsCredit then
     exit;
 
-  Amount := GridFloatValueFromString(Value);
+    // value is edited in currentCurrency
+  Amount := GridFloatValueFromString(Value) * FCurrentCurrencyHandler.Rate;
 
   if Editing then
   begin
@@ -5104,10 +5111,13 @@ var
 
   sTmp: string;
   iTmp: integer;
+  lInvLine: TInvoiceLine;
 begin
   Valid := True;
   agrLines.BeginUpdate;
   try
+    lInvLine := CellInvoiceLine(aRow);
+
     case ACol of
       - 1:
         ; // Do nothing...
@@ -5157,11 +5167,11 @@ begin
             agrLines.row := ARow - 1;
             agrLines.Col := 2;
             AddEmptyLine;
-            postMessage(handle, WM_FORMAT_LINE, 0, agrLines.row);
           end;
         end;
       col_Description:
         begin
+          lInvLine.FText := agrLines.Cells[ACol, ARow];
           chkChanged;
         end;
 
@@ -5169,46 +5179,44 @@ begin
         begin
           if agrLines.Cells[col_Item, ARow] = '' then
           begin
-            agrLines.Cells[col_ItemCount, ARow] := '';
-            agrLines.Cells[col_ItemPrice, ARow] := '';
-            agrLines.Cells[col_TotalPrice, ARow] := '';
+            lInvLine.Quantity := 0;
+//            agrLines.Cells[col_ItemCount, ARow] := '';
+//            agrLines.Cells[col_ItemPrice, ARow] := '';
+//            agrLines.Cells[col_TotalPrice, ARow] := '';
             agrLines.Cells[col_System, ARow] := '';
           end
           else
           begin
             chkChanged;
-
             if NOT CheckIfWithdrawlAllowed_X(True, Value) then
             begin
               Valid := false;
               exit;
             end;
-
+            linvLine.Quantity := GridFloatValueFromString(Value);
             agrLines.Cells[col_System, ARow] := '';
-            postMessage(handle, WM_FORMAT_LINE, 0, agrLines.row);
           end;
         end;
       col_ItemPrice:
         begin
           if agrLines.Cells[col_Item, ARow] = '' then
           begin
-            agrLines.Cells[col_ItemCount, ARow] := '';
-            agrLines.Cells[col_ItemPrice, ARow] := '';
-            agrLines.Cells[col_TotalPrice, ARow] := '';
+            lInvLine.NativePrice := 0.0;
+//            agrLines.Cells[col_ItemCount, ARow] := '';
+//            agrLines.Cells[col_ItemPrice, ARow] := '';
+//            agrLines.Cells[col_TotalPrice, ARow] := '';
             agrLines.Cells[col_System, ARow] := '';
           end
           else
           begin
             chkChanged;
-
             if NOT CheckIfWithdrawlAllowed_X(True, Value) then
             begin
               Valid := false;
               exit;
             end;
-
+            linvLine.NativePrice := GridFloatValueFromString(Value) * FCurrentCurrencyHandler.Rate;
             agrLines.Cells[col_System, ARow] := '';
-            postMessage(handle, WM_FORMAT_LINE, 0, agrLines.row);
           end;
         end;
     end;
@@ -5216,6 +5224,7 @@ begin
     agrLines.EndUpdate;
   end;
 
+  postMessage(handle, WM_FORMAT_LINE, 0, aRow);
   if ACol in [col_Item, col_ItemCount, col_ItemPrice] then
   begin
     calcAndAddAutoItems(FReservation); // 003

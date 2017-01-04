@@ -56,6 +56,11 @@ type
     /// </summary>
     function FormattedValue(aAmount: double): string;
     /// <summary>
+    ///   Format aAmount according to the formatsettings of the currency for editing purposes, so exclusing currencySign but with
+    ///  correct number of decimals
+    /// </summary>
+    function EditValue(aAmount: double): string;
+    /// <summary>
     ///   Get the CustomEditProperties component defined in uD , based on currencycode
     /// </summary>
     function GetcxEditProperties: TcxCurrencyEditProperties;
@@ -135,11 +140,14 @@ begin
   FFormatSettings.CurrencyDecimals := FCurrencyRec.Decimals;
 end;
 
+function TCurrencyHandler.EditValue(aAmount: double): string;
+begin
+  Result := FloatToStrF(RoundedValue(aAmount), ffFixed, 10, FFormatsettings.CurrencyDecimals, FFormatSettings);
+end;
+
 function TCurrencyHandler.FormattedValue(aAmount: double): string;
 begin
-//  Result := Format('%s %s', [FCurrencyRec.CurrencySign, FormatCurr(FCurrencyRec.Displayformat, RoundedValue(aAmount), FFormatSettings)]);
-//    Result := FormatCurr(FCurrencyRec.Displayformat, RoundedValue(aAmount), FFormatSettings);
-    Result := CurrToStrF(RoundedValue(aAmount), ffCurrency, FFormatsettings.CurrencyDecimals, FFormatSettings);
+  Result := CurrToStrF(RoundedValue(aAmount), ffCurrency, FFormatsettings.CurrencyDecimals, FFormatSettings);
 end;
 
 function TCurrencyHandler.GetCurrencyCode: string;
