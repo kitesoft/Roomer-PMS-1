@@ -2309,6 +2309,16 @@ var
     end;
   end;
 
+  procedure SetInvoiceTypeIndex(index : Integer);
+  begin
+    rgrInvoiceType.OnClick := nil;
+    try
+      rgrInvoiceType.itemIndex := index;
+    finally
+      rgrInvoiceType.OnClick := rgrInvoiceTypeClick;
+    end;
+  end;
+
 var
   list: TStringList;
   zRoomRSet: TRoomerDataset;
@@ -2363,7 +2373,9 @@ begin
     sql := 'SELECT CONVERT((SELECT GROUP_CONCAT(DISTINCT CONCAT(il1.InvoiceIndex, '';'', (SELECT SUM(il2.Total) FROM invoicelines il2 WHERE il2.RoomReservation=ih.RoomReservation '
       + 'AND il2.Reservation=ih.Reservation AND il2.InvoiceNumber=-1 AND il1.InvoiceIndex=il2.InvoiceIndex)) ORDER BY InvoiceIndex) '
       + 'FROM invoicelines il1 WHERE il1.RoomReservation=ih.RoomReservation AND il1.Reservation=ih.Reservation AND il1.InvoiceNumber=-1) USING utf8) AS InvoiceIndexes, '
-      + '(SELECT InvoiceIndex FROM roomreservations rr WHERE rr.RoomReservation = ih.RoomReservation OR rr.Reservation=ih.Reservation LIMIT 1) rrInvoiceIndex, '
+      + '(SELECT InvoiceIndex FROM roomreservations rr WHERE ' +
+      IIF(FRoomReservation > 0, 'rr.RoomReservation = ih.RoomReservation ', 'rr.Reservation=ih.Reservation ') +
+      ' LIMIT 1) rrInvoiceIndex, '
       + '(SELECT GroupAccount FROM roomreservations rr WHERE rr.RoomReservation=ih.RoomReservation) rrGroupAccount, '
       + '(SELECT SUM(RoomRate) FROM roomsdate rd WHERE (rd.RoomReservation=ih.RoomReservation '
       + 'OR rd.Reservation=ih.Reservation) AND rd.Paid=0 AND (NOT rd.ResFlag IN (''C'',''X'',''N'',''O''))) AS rrInvoiceTotal, '
@@ -2372,89 +2384,34 @@ begin
       'ih.SplitNumber, ' +
       'ih.InvoiceNumber, ' +
       'ih.InvoiceDate, ' +
-      'IFNULL((SELECT Customer FROM invoiceaddressees ia WHERE ia.invoiceNumber=ih.InvoiceNumber ' +
-      '        AND ia.Reservation=ih.Reservation ' +
-      '        AND ia.RoomReservation=ih.RoomReservation ' +
-      '        AND ia.SplitNumber=ih.SplitNumber ' +
-      '        AND ia.InvoiceIndex={InvoiceIndex} ' +
-      '       ), ih.Customer) AS Customer, ' +
-      'IFNULL((SELECT Name FROM invoiceaddressees ia WHERE ia.invoiceNumber=ih.InvoiceNumber ' +
-      '        AND ia.Reservation=ih.Reservation ' +
-      '        AND ia.RoomReservation=ih.RoomReservation ' +
-      '        AND ia.SplitNumber=ih.SplitNumber ' +
-      '        AND ia.InvoiceIndex={InvoiceIndex} ' +
-      '       ), ih.Name) AS Name, ' +
-      'IFNULL((SELECT Address1 FROM invoiceaddressees ia WHERE ia.invoiceNumber=ih.InvoiceNumber ' +
-      '        AND ia.Reservation=ih.Reservation ' +
-      '        AND ia.RoomReservation=ih.RoomReservation ' +
-      '        AND ia.SplitNumber=ih.SplitNumber ' +
-      '        AND ia.InvoiceIndex={InvoiceIndex} ' +
-      '       ), ih.Address1) AS Address1, ' +
-      'IFNULL((SELECT Address2 FROM invoiceaddressees ia WHERE ia.invoiceNumber=ih.InvoiceNumber ' +
-      '        AND ia.Reservation=ih.Reservation ' +
-      '        AND ia.RoomReservation=ih.RoomReservation ' +
-      '        AND ia.SplitNumber=ih.SplitNumber ' +
-      '        AND ia.InvoiceIndex={InvoiceIndex} ' +
-      '       ), ih.Address2) AS Address2, ' +
-      'IFNULL((SELECT Zip FROM invoiceaddressees ia WHERE ia.invoiceNumber=ih.InvoiceNumber ' +
-      '        AND ia.Reservation=ih.Reservation ' +
-      '        AND ia.RoomReservation=ih.RoomReservation ' +
-      '        AND ia.SplitNumber=ih.SplitNumber ' +
-      '        AND ia.InvoiceIndex={InvoiceIndex} ' +
-      '       ), ih.Address3) AS Address3, ' +
-      'IFNULL((SELECT City FROM invoiceaddressees ia WHERE ia.invoiceNumber=ih.InvoiceNumber ' +
-      '        AND ia.Reservation=ih.Reservation ' +
-      '        AND ia.RoomReservation=ih.RoomReservation ' +
-      '        AND ia.SplitNumber=ih.SplitNumber ' +
-      '        AND ia.InvoiceIndex={InvoiceIndex} ' +
-      '       ), ih.Address4) AS Address4, ' +
-      'IFNULL((SELECT Country FROM invoiceaddressees ia WHERE ia.invoiceNumber=ih.InvoiceNumber ' +
-      '        AND ia.Reservation=ih.Reservation ' +
-      '        AND ia.RoomReservation=ih.RoomReservation ' +
-      '        AND ia.SplitNumber=ih.SplitNumber ' +
-      '        AND ia.InvoiceIndex={InvoiceIndex} ' +
-      '       ), ih.Country) AS Country, ' +
+      'IFNULL(ia.Customer, ih.Customer) AS Customer, ' +
+      'IFNULL(ia.Name, ih.Name) AS Name, ' +
+      'IFNULL(ia.Address1, ih.Address1) AS Address1, ' +
+      'IFNULL(ia.Address2, ih.Address2) AS Address2, ' +
+      'IFNULL(ia.Zip, ih.Address3) AS Address3, ' +
+      'IFNULL(ia.City, ih.Address4) AS Address4, ' +
+      'IFNULL(ia.Country, ih.Country) AS Country, ' +
       'ih.Total, ' +
       'ih.TotalWOVAT, ' +
       'ih.TotalVAT, ' +
       'ih.TotalBreakFast, ' +
-      'IFNULL((SELECT ExtraText FROM invoiceaddressees ia WHERE ia.invoiceNumber=ih.InvoiceNumber ' +
-      '        AND ia.Reservation=ih.Reservation ' +
-      '        AND ia.RoomReservation=ih.RoomReservation ' +
-      '        AND ia.SplitNumber=ih.SplitNumber ' +
-      '        AND ia.InvoiceIndex={InvoiceIndex} ' +
-      '       ), ih.ExtraText) AS ExtraText, ' +
+      'IFNULL(ia.ExtraText, ih.ExtraText) AS ExtraText, ' +
       'ih.Finished, ' +
       'ih.ReportDate, ' +
       'ih.ReportTime, ' +
       'ih.CreditInvoice, ' +
       'ih.OriginalInvoice, ' +
-      'IFNULL((SELECT InvoiceType FROM invoiceaddressees ia WHERE ia.invoiceNumber=ih.InvoiceNumber ' +
-      '        AND ia.Reservation=ih.Reservation ' +
-      '        AND ia.RoomReservation=ih.RoomReservation ' +
-      '        AND ia.SplitNumber=ih.SplitNumber ' +
-      '        AND ia.InvoiceIndex={InvoiceIndex} ' +
-      '       ), ih.InvoiceType) AS InvoiceType, ' +
+      'IFNULL(ia.InvoiceType, ih.InvoiceType) AS InvoiceType, ' +
       'ih.ihTmp, ' +
       'ih.ID, ' +
-      'IFNULL((SELECT CustPID FROM invoiceaddressees ia WHERE ia.invoiceNumber=ih.InvoiceNumber ' +
-      '        AND ia.Reservation=ih.Reservation ' +
-      '        AND ia.RoomReservation=ih.RoomReservation ' +
-      '        AND ia.SplitNumber=ih.SplitNumber ' +
-      '        AND ia.InvoiceIndex={InvoiceIndex} ' +
-      '       ), ih.CustPID) AS custPID, ' +
+      'IFNULL(ia.CustPID, ih.CustPID) AS custPID, ' +
       'ih.RoomGuest, ' +
       'ih.ihDate, ' +
       'ih.ihStaff, ' +
       'ih.ihPayDate, ' +
       'ih.ihConfirmDate, ' +
       'ih.ihInvoiceDate, ' +
-      'IFNULL((SELECT ihCurrency FROM invoiceaddressees ia WHERE ia.invoiceNumber=ih.InvoiceNumber ' +
-      '        AND ia.Reservation=ih.Reservation ' +
-      '        AND ia.RoomReservation=ih.RoomReservation ' +
-      '        AND ia.SplitNumber=ih.SplitNumber ' +
-      '        AND ia.InvoiceIndex={InvoiceIndex} ' +
-      '       ), ih.ihCurrency) AS ihCurrency, ' +
+      'IFNULL(ia.ihCurrency, ih.ihCurrency) AS ihCurrency, ' +
       'ih.ihCurrencyRate, ' +
       'ih.invRefrence, ' +
       'ih.TotalStayTax, ' +
@@ -2463,16 +2420,19 @@ begin
       'ih.staff, ' +
       'ih.location, ' +
       'ih.externalInvoiceId ' +
-      'FROM invoiceheads ih where ih.Reservation = %d '#10 +
+      'FROM invoiceheads ih '+ #10 +
+      '     LEFT JOIN invoiceaddressees ia ON ia.invoiceNumber=ih.InvoiceNumber ' +
+      '        AND ia.Reservation=ih.Reservation ' +
+      '        AND ia.RoomReservation=ih.RoomReservation ' +
+      '        AND ia.SplitNumber=ih.SplitNumber ' +
+      '        AND ia.InvoiceIndex=%d ' +
+      'where ih.Reservation = %d '#10 +
       '   and ih.RoomReservation = %d and ih.SplitNumber = %d '#10 +
       '   and ih.InvoiceNumber = -1 and ih.Finished = 0';
     if zrSet.active then
       zrSet.close;
 
-    sTemp := inttostr(InvoiceIndex);
-    sql := ReplaceString(format(sql, [FReservation, FRoomReservation, FnewSplitNumber]),
-      '{InvoiceIndex}',
-      sTemp);
+    sql := format(sql, [InvoiceIndex, FReservation, FRoomReservation, FnewSplitNumber]);
 
     copytoclipboard(sql);
 
@@ -2497,23 +2457,23 @@ begin
         if zrSet.FieldByName('InvoiceType').asinteger = 4 then // Free text
         begin
           GetInvoiceHeader(FReservation, FRoomReservation, zrSet);
-          rgrInvoiceType.itemIndex := 4;
+          SetInvoiceTypeIndex(4);
         end
         else if zrSet.FieldByName('InvoiceType').asinteger = 1 then
         // Reservation customer
         begin
           GetReservationHeader(FReservation, FRoomReservation);
-          rgrInvoiceType.itemIndex := 1;
+          SetInvoiceTypeIndex(1);
         end
         else
         begin
-          rgrInvoiceType.itemIndex := zrSet.FieldByName('InvoiceType').asinteger;
+          SetInvoiceTypeIndex(zrSet.FieldByName('InvoiceType').asinteger);
         end;
 
         if FnewSplitNumber = 1 then // Kreditinvoice
         begin
           GetInvoiceHeader(FReservation, FRoomReservation);
-          rgrInvoiceType.itemIndex := 3;
+          SetInvoiceTypeIndex(3);
         end;
 
         btnGetCustomer.Enabled := rgrInvoiceType.itemIndex <> 1;
@@ -6787,6 +6747,7 @@ var
   rSet: TRoomerDataset;
   s: string;
   sql: string;
+  Customer : String;
 
 begin
   result := false;
@@ -6798,12 +6759,43 @@ begin
 
   rSet := CreateNewDataSet;
   try
-    sql := ' SELECT ' + '     Person ' + '   , RoomReservation ' +
-      '   , Reservation ' + '   , Name ' + '   , Address1 ' + '   , Address2 ' +
-      '   , Address3 ' + '   , Address4 ' + '   , Country  ' + '   , PID ' +
-      ' FROM ' + '   persons ' + '   WHERE ' +
-      '      (Reservation = %d) AND (RoomReservation = %d) ';
+//    sql := ' SELECT pe.Person, ' +
+//    ' pe.RoomReservation, ' +
+//    ' pe.Reservation, ' +
+//    ' IFNULL(ia.Customer, co.RackCustomer) AS Customer,' +
+//    ' IFNULL(ia.Name, pe.Name) AS Name,' +
+//    ' IFNULL(ia.Address1, pe.Address1) AS Address1, ' +
+//    ' IFNULL(ia.Address2, pe.Address2) AS Address2, ' +
+//    ' IFNULL(ia.Zip, pe.Address3) AS Address3, ' +
+//    ' IFNULL(ia.Country, pe.Address4) AS Address4, ' +
+//    ' IFNULL(ia.Country, pe.Country) AS Country, ' +
+//    ' pe.PID ' +
+//    ' FROM persons pe ' +
+//    '     LEFT JOIN invoiceaddressees ia ON ia.invoiceNumber=-1 ' +
+//    '        AND ia.Reservation=pe.Reservation ' +
+//    '        AND ia.RoomReservation=pe.RoomReservation ' +
+//    '        AND ia.SplitNumber=0 ' +
+//    '        AND ia.InvoiceIndex=%d, ' +
+//    '     control co ' +
+//    ' WHERE (pe.Reservation = %d) AND (pe.RoomReservation = %d) ';
+//    s := format(sql, [InvoiceIndex, Res, RoomRes]);
+
+    sql := ' SELECT pe.Person, ' +
+    ' pe.RoomReservation, ' +
+    ' pe.Reservation, ' +
+    ' co.RackCustomer AS Customer,' +
+    ' pe.Name,' +
+    ' pe.Address1 Address1, ' +
+    ' pe.Address2 AS Address2, ' +
+    ' pe.Address3 Address3, ' +
+    ' pe.Address4 Address4, ' +
+    ' pe.Country Country, ' +
+    ' pe.PID ' +
+    ' FROM persons pe, ' +
+    '     control co ' +
+    ' WHERE (pe.Reservation = %d) AND (pe.RoomReservation = %d) ';
     s := format(sql, [Res, RoomRes]);
+    CopyToClipboard(s);
     hData.rSet_bySQL(rSet, s);
 
     rSet.first;
@@ -6813,6 +6805,7 @@ begin
     Address3 := '';
     Address4 := '';
     Country := '';
+    Customer := ctrlGetString('RackCustomer');
 
     if not rSet.eof then
     begin
@@ -6823,9 +6816,10 @@ begin
       Address4 := rSet.FieldByName('Address4').asString;
       Country := rSet.FieldByName('Country').asString;
       PID := rSet.FieldByName('PID').asString;
+      Customer := rSet.FieldByName('Customer').asString;
     end;
 
-    edtCustomer.Text := ctrlGetString('RackCustomer');
+    edtCustomer.Text := Customer;
     edtName.Text := trim(name);
     edtPersonalId.Text := trim(PID);
     edtAddress1.Text := trim(Address1);

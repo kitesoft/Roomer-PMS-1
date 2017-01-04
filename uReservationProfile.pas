@@ -2200,7 +2200,7 @@ end;
 procedure TfrmReservationProfile.OpenthisRoom1Click(Sender: TObject);
 begin
   try
-    EditInvoice(zReservation, zRoomReservation, 0, 0, 0, zInvoiceIndex, false);
+    EditInvoice(zReservation, zRoomReservation, 0, zInvoiceIndex, 0, 0, false);
   finally
     Display_rGrid(zRoomReservation);
   end;
