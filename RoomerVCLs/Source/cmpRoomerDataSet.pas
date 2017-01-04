@@ -2,7 +2,7 @@ unit cmpRoomerDataSet;
 
 interface
 
-{$INCLUDE roomer.inc}
+{$INCLUDE ..\..\roomer.inc}
 
 uses
   System.SysUtils,

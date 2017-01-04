@@ -1,3 +1,4 @@
 [submodule "Extras/VSoft.CommandLineParser"]
 	path = Extras/VSoft.CommandLineParser
-	url = git@github.com:VSoftTechnologies/VSoft.CommandLineParser.git
+	url = https://github.com/VSoftTechnologies/VSoft.CommandLineParser.git
+	
