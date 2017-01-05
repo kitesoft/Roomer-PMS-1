@@ -23,7 +23,7 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
     Top = 0
     Width = 1128
     Height = 572
-    ActivePage = taReservation
+    ActivePage = tabRoomRates
     Align = alClient
     TabOrder = 0
     OnChange = pgcMainChange
@@ -158,9 +158,8 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
               Top = 13
               Width = 150
               Height = 21
-              Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
+              Font.Color = clWindowText
               Font.Height = -11
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -178,9 +177,8 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
               Top = 40
               Width = 253
               Height = 21
-              Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
+              Font.Color = clWindowText
               Font.Height = -11
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -345,9 +343,8 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
               Top = 43
               Width = 311
               Height = 21
-              Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
+              Font.Color = clWindowText
               Font.Height = -11
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -366,9 +363,8 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
               SkinData.SkinSection = 'COMBOBOX'
               VerticalAlignment = taAlignTop
               Style = csDropDownList
-              Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
+              Font.Color = clWindowText
               Font.Height = -11
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -391,7 +387,7 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
               Left = 459
               Top = 19
               Width = 20
-              Height = 20
+              Height = 16
               Margins.Left = 0
               Margins.Top = 0
               Margins.Right = 0
@@ -406,9 +402,8 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
               Top = 151
               Width = 311
               Height = 21
-              Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
+              Font.Color = clWindowText
               Font.Height = -11
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -424,9 +419,8 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
               Width = 150
               Height = 21
               CharCase = ecUpperCase
-              Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
+              Font.Color = clWindowText
               Font.Height = -11
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -447,9 +441,8 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
               SkinData.SkinSection = 'COMBOBOX'
               VerticalAlignment = taAlignTop
               Style = csDropDownList
-              Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
+              Font.Color = clWindowText
               Font.Height = -11
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -577,9 +570,8 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
               Top = 68
               Width = 65
               Height = 21
-              Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
+              Font.Color = clWindowText
               Font.Height = -11
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -602,10 +594,9 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
               Width = 150
               Height = 21
               AutoSize = False
-              Color = clWhite
               EditMask = '!99/99/9999;1; '
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
+              Font.Color = clWindowText
               Font.Height = -11
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -626,10 +617,9 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
               Width = 150
               Height = 21
               AutoSize = False
-              Color = clWhite
               EditMask = '!99/99/9999;1; '
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
+              Font.Color = clWindowText
               Font.Height = -11
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -826,9 +816,8 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
               Top = 66
               Width = 172
               Height = 21
-              Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
+              Font.Color = clWindowText
               Font.Height = -11
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -848,9 +837,8 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
               SkinData.SkinSection = 'COMBOBOX'
               VerticalAlignment = taAlignTop
               Style = csDropDownList
-              Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
+              Font.Color = clWindowText
               Font.Height = -11
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -869,9 +857,8 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
               Width = 150
               Height = 21
               CharCase = ecUpperCase
-              Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
+              Font.Color = clWindowText
               Font.Height = -11
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -890,9 +877,8 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
               Width = 150
               Height = 21
               CharCase = ecUpperCase
-              Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
+              Font.Color = clWindowText
               Font.Height = -11
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -910,9 +896,8 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
               Width = 150
               Height = 21
               CharCase = ecUpperCase
-              Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = 4473924
+              Font.Color = clWindowText
               Font.Height = -11
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -1092,9 +1077,8 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                   Top = 84
                   Width = 229
                   Height = 21
-                  Color = clWhite
                   Font.Charset = DEFAULT_CHARSET
-                  Font.Color = clBlack
+                  Font.Color = clWindowText
                   Font.Height = -11
                   Font.Name = 'Tahoma'
                   Font.Style = []
@@ -1109,9 +1093,8 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                   Top = 111
                   Width = 229
                   Height = 21
-                  Color = clWhite
                   Font.Charset = DEFAULT_CHARSET
-                  Font.Color = clBlack
+                  Font.Color = clWindowText
                   Font.Height = -11
                   Font.Name = 'Tahoma'
                   Font.Style = []
@@ -1126,9 +1109,8 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                   Top = 138
                   Width = 229
                   Height = 21
-                  Color = clWhite
                   Font.Charset = DEFAULT_CHARSET
-                  Font.Color = clBlack
+                  Font.Color = clWindowText
                   Font.Height = -11
                   Font.Name = 'Tahoma'
                   Font.Style = []
@@ -1143,9 +1125,8 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                   Top = 165
                   Width = 229
                   Height = 21
-                  Color = clWhite
                   Font.Charset = DEFAULT_CHARSET
-                  Font.Color = clBlack
+                  Font.Color = clWindowText
                   Font.Height = -11
                   Font.Name = 'Tahoma'
                   Font.Style = []
@@ -1158,8 +1139,8 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                 object chkContactIsGuest: TsCheckBox
                   Left = 18
                   Top = 19
-                  Width = 98
-                  Height = 20
+                  Width = 106
+                  Height = 17
                   Caption = 'Contact is guest'
                   Checked = True
                   State = cbChecked
@@ -1173,9 +1154,8 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                   Top = 191
                   Width = 90
                   Height = 21
-                  Color = clWhite
                   Font.Charset = DEFAULT_CHARSET
-                  Font.Color = clBlack
+                  Font.Color = clWindowText
                   Font.Height = -11
                   Font.Name = 'Tahoma'
                   Font.Style = []
@@ -1190,9 +1170,8 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                   Top = 191
                   Width = 90
                   Height = 21
-                  Color = clWhite
                   Font.Charset = DEFAULT_CHARSET
-                  Font.Color = clBlack
+                  Font.Color = clWindowText
                   Font.Height = -11
                   Font.Name = 'Tahoma'
                   Font.Style = []
@@ -1207,9 +1186,8 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                   Top = 218
                   Width = 229
                   Height = 21
-                  Color = clWhite
                   Font.Charset = DEFAULT_CHARSET
-                  Font.Color = clBlack
+                  Font.Color = clWindowText
                   Font.Height = -11
                   Font.Name = 'Tahoma'
                   Font.Style = []
@@ -1223,8 +1201,8 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                 object chkSendConfirmation: TsCheckBox
                   Left = 397
                   Top = 219
-                  Width = 148
-                  Height = 20
+                  Width = 156
+                  Height = 17
                   Caption = 'Send confirmation by email'
                   Enabled = False
                   TabOrder = 8
@@ -1241,9 +1219,8 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                   SkinData.SkinSection = 'COMBOBOX'
                   VerticalAlignment = taAlignTop
                   AutoComplete = False
-                  Color = clWhite
                   Font.Charset = DEFAULT_CHARSET
-                  Font.Color = clBlack
+                  Font.Color = clWindowText
                   Font.Height = -11
                   Font.Name = 'Tahoma'
                   Font.Style = []
@@ -1258,8 +1235,8 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                 object cbxAddToGuestProfiles: TsCheckBox
                   Left = 149
                   Top = 61
-                  Width = 120
-                  Height = 20
+                  Width = 128
+                  Height = 17
                   Caption = 'Add to guest profiles'
                   TabOrder = 10
                   Visible = False
@@ -1370,7 +1347,6 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                     Top = 13
                     Width = 116
                     Height = 21
-                    Color = clWhite
                     Font.Charset = DEFAULT_CHARSET
                     Font.Color = clRed
                     Font.Height = -11
@@ -1386,7 +1362,6 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                     Top = 38
                     Width = 116
                     Height = 21
-                    Color = clWhite
                     Font.Charset = DEFAULT_CHARSET
                     Font.Color = clRed
                     Font.Height = -11
@@ -2501,7 +2476,7 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
             Caption = 'Rate plan:'
           end
           object edtRatePlans: TsComboBox
-            Left = 7
+            Left = 3
             Top = 112
             Width = 186
             Height = 21
@@ -2509,9 +2484,8 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
             SkinData.SkinSection = 'COMBOBOX'
             VerticalAlignment = taAlignTop
             Style = csDropDownList
-            Color = clWhite
             Font.Charset = DEFAULT_CHARSET
-            Font.Color = clBlack
+            Font.Color = clWindowText
             Font.Height = -11
             Font.Name = 'Tahoma'
             Font.Style = []
@@ -2637,9 +2611,8 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                 Width = 65
                 Height = 21
                 Alignment = taRightJustify
-                Color = clWhite
                 Font.Charset = DEFAULT_CHARSET
-                Font.Color = clBlack
+                Font.Color = clWindowText
                 Font.Height = -11
                 Font.Name = 'Tahoma'
                 Font.Style = []
@@ -2677,9 +2650,8 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                 Width = 65
                 Height = 21
                 Alignment = taRightJustify
-                Color = clWhite
                 Font.Charset = DEFAULT_CHARSET
-                Font.Color = clBlack
+                Font.Color = clWindowText
                 Font.Height = -11
                 Font.Name = 'Tahoma'
                 Font.Style = []
@@ -2905,9 +2877,8 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
           object tvRoomResAvragePrice: TcxGridDBColumn
             Caption = 'Netto Rate'
             DataBinding.FieldName = 'AvragePrice'
-            PropertiesClassName = 'TcxCalcEditProperties'
-            Properties.DisplayFormat = '###0.00;###0.00'
-            Properties.OnEditValueChanged = tvRoomResAvragePricePropertiesEditValueChanged
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            OnGetProperties = tvRoomResGetCurrencyProperties
             Width = 73
           end
           object __tvRoomResColumn2: TcxGridDBColumn
@@ -2977,6 +2948,7 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00'
             Properties.ReadOnly = True
+            OnGetProperties = tvRoomResGetCurrencyProperties
           end
           object tvRoomResRateCount: TcxGridDBColumn
             Caption = 'Rate Count'
@@ -3005,6 +2977,7 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00'
             Properties.ReadOnly = True
+            OnGetProperties = tvRoomResGetCurrencyProperties
           end
           object tvRoomResAvrageDiscount: TcxGridDBColumn
             Caption = 'Average Discount'
@@ -3064,7 +3037,8 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
           object tvRoomRatesRate: TcxGridDBColumn
             Caption = 'Room Rate'
             DataBinding.FieldName = 'Rate'
-            PropertiesClassName = 'TcxCalcEditProperties'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            OnGetProperties = tvRoomResGetCurrencyProperties
           end
           object tvRoomRatesDiscount: TcxGridDBColumn
             DataBinding.FieldName = 'Discount'
@@ -3097,10 +3071,13 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
           object tvRoomRatesRentAmount: TcxGridDBColumn
             Caption = 'Total Rent'
             DataBinding.FieldName = 'RentAmount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            OnGetProperties = tvRoomResGetCurrencyProperties
           end
           object tvRoomRatesNativeAmount: TcxGridDBColumn
             Caption = 'Native'
             DataBinding.FieldName = 'NativeAmount'
+            OnGetProperties = tvRoomRatesNativeAmountGetProperties
           end
         end
         object lvRoomRes: TcxGridLevel
@@ -3231,9 +3208,8 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
         Height = 51
         Align = alClient
         BorderStyle = bsNone
-        Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
+        Font.Color = clWindowText
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -3292,9 +3268,8 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
         Height = 51
         Align = alClient
         BorderStyle = bsNone
-        Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
+        Font.Color = clWindowText
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []

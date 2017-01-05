@@ -6,27 +6,35 @@ uses
   cmpRoomerDataSet,
   SysUtils,
   classes
+  , uCurrencyHandlersMap
   ;
 
 type
   TDynamicRates = class
+  private
     chRates : TRoomerDataSet;
     arrival, departure : TDate;
     channelCode, chManCode : String;
-  private
+    FCurrHandlers: TCurrencyHandlersMap;
     procedure Clear;
+    procedure Deactivate;
   public
     constructor Create;
     destructor Destroy; override;
 
     procedure Prepare(_arrival, _departure : TDate; _channelCode, _chManCode : String);
-    function findRateByRateCode(ADate : TDate; numGuests : Integer; var roomPrice : Double; rateId : String) : Boolean;
-    function findRateForRoomType(ADate: TDate; RoomType: String; numGuests: Integer; var roomPrice: Double; var rateId: String): Boolean;
+    function findRateByRateCode(ADate : TDate; numGuests : Integer; const rateId : String; var roomPrice : Double; var aCurrCode: string) : Boolean;
+    function findRateForRoomType(ADate: TDate; RoomType: String; numGuests: Integer; var roomPrice: Double; var rateId: String; var aCurrCode: string): Boolean;
     procedure GetAllRateCodes(List: TStrings);
-    procedure Deactivate;
     function Active : Boolean;
-    function AverageRateStay(rate : String; roomType : String; arrival, departure : TDate) : Double;
-    procedure UpdateRoomReservation(RoomReservation: Integer; rate, roomType: String; arrival, departure: TDate);
+    /// <summary>
+    ///   Returns the average rate in native currency for a stay from arrival to departure in roomtype using RateplanCode
+    /// </summary>
+    function AverageRateStay(const aRatePlanCode : String; const roomType : String; arrival, departure : TDate) : Double;
+    /// <summary>
+    ///   Update Roomsdate and Roomreservations records for roomreservation with the actual nightrate resp average rate (in currency aCurrCode)
+    /// </summary>
+    procedure UpdateRoomReservation(RoomReservation: Integer; const aRatePlanCode: String; const roomType: String; arrival, departure: TDate; const aCurrCode: string);
   end;
 
 implementation
@@ -35,33 +43,36 @@ uses
   uDateUtils,
   ud,
   System.Generics.Collections,
-  _Glob, uSQLUtils;
+  _Glob, uSQLUtils
+  , uG
+  ;
 
 function TDynamicRates.Active: Boolean;
 begin
   result := assigned(chRates);
 end;
 
-function TDynamicRates.AverageRateStay(rate : String; roomType : String; arrival, departure: TDate): Double;
+function TDynamicRates.AverageRateStay(const aRatePlanCode : String; const roomType : String; arrival, departure: TDate): Double;
 var numDays : Integer;
     Counter : Integer;
+    lnativeRate: double;
 begin
-  numDays := TRUNC(departure) - TRUNC(arrival);
   result := 0.00;
-  if numDays < 1 then exit;
-
   if NOT assigned(chRates) then exit;
+
+  numDays := TRUNC(departure) - TRUNC(arrival);
+  if numDays < 1 then exit;
 
   chRates.First;
   Counter := 0;
   while NOT chRates.Eof do
   begin
-    if (chRates['rateCode'] = rate) AND
-//       (chRates['RoomType'] = roomType) AND
+    if (chRates['rateCode'] = aRatePlanCode) AND
        (chRates['date'] >= arrival) AND
        (chRates['date'] < departure) then
     begin
-      result := result + chRates['rate'];
+      lnativeRate := FCurrHandlers.ConvertAmount(chRates['rate'], chRates['chCurrencyCode'], g.qNativeCurrency);
+      result := result + lnativeRate;
       Inc(Counter);
     end;
     chRates.Next;
@@ -71,16 +82,13 @@ begin
   result := result / numDays;
 end;
 
-procedure TDynamicRates.UpdateRoomReservation(RoomReservation : Integer;
-          rate : String;
-          roomType : String;
-          arrival,
-          departure: TDate);
+procedure TDynamicRates.UpdateRoomReservation(RoomReservation: Integer; const aRatePlanCode: String; const roomType: String; arrival, departure: TDate; const aCurrCode: string);
 var SqlList : TList<String>;
     numDays : Integer;
     Total : Double;
     s : String;
     Counter : Integer;
+    lRate: double;
 begin
   numDays := TRUNC(departure) - TRUNC(arrival);
   Total := 0.00;
@@ -94,15 +102,15 @@ begin
     Counter := 0;
     while NOT chRates.Eof do
     begin
-      if (chRates['rateCode'] = rate) AND
-//         (chRates['RoomType'] = roomType) AND
+      if (chRates['rateCode'] = aRatePlanCode) AND
          (chRates['date'] >= arrival) AND
          (chRates['date'] < departure) then
       begin
-        Total := Total + chRates['rate'];
+        lRate := FCurrHandlers.ConvertAmount(chRates['rate'], chRates['chCurrencyCode'], aCurrCode);
+        Total := Total + lRate;
         s := format('UPDATE roomsdate SET RoomRate=%s WHERE ADate=%s AND RoomReservation=%d',
                     [
-                      _db(chRates.FieldByName('rate').AsFloat),
+                      _db(lRate),
                       _db(DateToSqlString(chRates['date'])),
                       RoomReservation
                     ]);
@@ -117,7 +125,7 @@ begin
     s := format('UPDATE roomreservations SET AvrageRate=%s, ratePlanCode=%s WHERE RoomReservation=%d',
                 [
                   _db(Total),
-                  _db(rate),
+                  _db(aRatePlanCode),
                   RoomReservation
                 ]);
     SqlList.Add(s);
@@ -140,6 +148,7 @@ begin
   departure := arrival + 1;
   channelCode := '';
   chManCode := '';
+  FCurrHandlers := TCurrencyHandlersMap.create;
 end;
 
 procedure TDynamicRates.Deactivate;
@@ -150,10 +159,11 @@ end;
 destructor TDynamicRates.Destroy;
 begin
   Clear;
+  FCurrHandlers.Free;
   inherited;
 end;
 
-function TDynamicRates.findRateByRateCode(ADate : TDate; numGuests : Integer; var roomPrice : Double; rateId : String) : Boolean;
+function TDynamicRates.findRateByRateCode(ADate : TDate; numGuests : Integer; const rateId : String; var roomPrice : Double; var aCurrCode: string) : Boolean;
 var iCount : Integer;
     finalized : Boolean;
 begin
@@ -171,6 +181,7 @@ begin
         if (chRates['numGuests']=numGuests) OR (iCount > 0) then
         begin
           roomPrice := chRates['rate'];
+          aCurrCode := chRates['chCurrencyCode'];
           result := True;
           finalized := True;
           Break;
@@ -184,7 +195,7 @@ begin
   until finalized;
 end;
 
-function TDynamicRates.findRateForRoomType(ADate : TDate; RoomType : String; numGuests : Integer; var roomPrice : Double; var rateId : String) : Boolean;
+function TDynamicRates.findRateForRoomType(ADate: TDate; RoomType: String; numGuests: Integer; var roomPrice: Double; var rateId: String; var aCurrCode: string): Boolean;
 var iCount : Integer;
     finalized : Boolean;
 begin
@@ -202,6 +213,7 @@ begin
         if (chRates['numGuests']=numGuests) OR (iCount > 0) then
         begin
           roomPrice := chRates['rate'];
+          aCurrCode := chRates['chCurrencyCode'];
           rateId := chRates['rateCode'];
           result := True;
           finalized := True;
