@@ -12,10 +12,9 @@
   {.$define rmForceOffline}       // Force detecting no internet connection
   {.$define rmROOMERSSL}
   {$define rmMONITOR_LEAKAGE}     // Report memory leaks on shutdown
-  {$define DISABLEOFFLINEREPORTS} // turn off offline reports for easier debugging
   {.$define UseEditInvoice2015}   //
 {$endif DEBUG}
 
-
+{$define DISABLEOFFLINEREPORTS} // turn off offline reports because of application hangs
 {$define UseFastMM}
 
