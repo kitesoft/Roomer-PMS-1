@@ -1,9 +1,9 @@
 { ---- Definitions by Serge V. Goncharov ---- }
 
 // << 3rdparty support start <<
-//{$DEFINE DEVEX2011}  // DevExpress, LookAndFeel.NativeStyle property must be False
+{$DEFINE DEVEX2011}  // DevExpress, LookAndFeel.NativeStyle property must be False
 //{$DEFINE DEVEX6}     // Old version of DevExpress components, earlier than v2011
-//{$DEFINE USEPNG}     // Support of TPngImageList from PngComponents
+{$DEFINE USEPNG}     // Support of TPngImageList from PngComponents
 //{$DEFINE TNTUNICODE} // Enable Unicode support by TntControls
 // >> 3rdparty support finish >>
 
