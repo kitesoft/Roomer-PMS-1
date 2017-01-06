@@ -211,17 +211,24 @@ begin
   result := false;
   while true do
   begin
-    if CopyFile(localFilename, exeName, false) then
-    begin
-      result := true;
-      Break;
-    end;
-    if MessageDlg('Unable to upgrade Roomer!' + #13#13 +
-      '[Retry] = Try to automatically close Roomer and retry the upgrade.' + #13 +
-      '[Cancel] = Cancel the upgrade for now.', mtConfirmation, [mbRetry, mbCancel], 0) = mrCancel then
-    begin
-      result := false;
-      Break;
+    try
+      if CopyFile(localFilename, exeName, false) then
+      begin
+        result := true;
+        Break;
+      end
+      else
+        RaiseLastOSError;
+
+    except on E: Exception do
+      if MessageDlg('Unable to upgrade Roomer!' + #13 +
+        'Error: ' + E.Message + #13#13 +
+        '[Retry] = Try to automatically close Roomer and retry the upgrade.' + #13 +
+        '[Cancel] = Cancel the upgrade for now.', mtConfirmation, [mbRetry, mbCancel], 0) = mrCancel then
+      begin
+        result := false;
+        Break;
+      end;
     end;
     KillTask(ExtractFilename(exeName));
     sleep(2000);

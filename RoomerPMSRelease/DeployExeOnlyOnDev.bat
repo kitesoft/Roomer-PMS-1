@@ -18,7 +18,7 @@ set answer=
 set /p answer="Type yes to start copying exe only to %target% ..."
 if "%answer%"=="yes" (
   %AWSCMD% s3 %awsprofile% %awsregion% cp Roomer.exe %target%/Roomer.exe
-  %AWSCMD% s3 %awsprofile% %awsregion% cp %target%/Roomer.exe %target%//roomer.exe
+  %AWSCMD% s3 %awsprofile% %awsregion% cp %target%/Roomer.exe %target%/roomer.exe
 ) else (
   echo Upload cancelled
 )
