@@ -302,7 +302,7 @@ object frmMain: TfrmMain
             SortSettings.HeaderColorTo = 16579058
             SortSettings.HeaderMirrorColor = 16380385
             SortSettings.HeaderMirrorColorTo = 16182488
-            Version = '7.9.1.1'
+            Version = '8.1.2.0'
             ColWidths = (
               47
               49
@@ -1106,7 +1106,7 @@ object frmMain: TfrmMain
               SortSettings.HeaderColorTo = 16579058
               SortSettings.HeaderMirrorColor = 16380385
               SortSettings.HeaderMirrorColorTo = 16182488
-              Version = '7.9.1.1'
+              Version = '8.1.2.0'
               ColWidths = (
                 73
                 20
@@ -1465,7 +1465,7 @@ object frmMain: TfrmMain
               SearchFooter.HintHighlight = 'Highlight occurences'
               SearchFooter.MatchCaseCaption = 'Match case'
               SortSettings.DefaultFormat = ssAutomatic
-              Version = '7.9.1.1'
+              Version = '8.1.2.0'
               ColWidths = (
                 64
                 64
@@ -2396,7 +2396,7 @@ object frmMain: TfrmMain
             HintPrevMonth = 'Previous Month'
             HintNextMonth = 'Next Month'
             HintNextYear = 'Next Year'
-            Version = '2.3.0.0'
+            Version = '2.3.1.1'
             TMSStyle = 0
           end
         end
@@ -2543,7 +2543,7 @@ object frmMain: TfrmMain
         ParentColor = False
         Transparent = True
         OnAnchorClick = mmoMessageAnchorClick
-        Version = '1.9.2.3'
+        Version = '1.9.2.6'
         ExplicitLeft = 87
         ExplicitWidth = 1019
       end
