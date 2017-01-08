@@ -24,9 +24,9 @@ object frmDayNotes: TfrmDayNotes
   object DateLabel1: TDateLabel
     Left = 480
     Top = 328
-    Width = 50
+    Width = 44
     Height = 13
-    Caption = '2-12-2016'
+    Caption = '5-1-2017'
     DateTimeFormat = 'd/m/yyyy'
     Version = '1.1.0.0'
     RefreshInterval = 0
@@ -56,10 +56,6 @@ object frmDayNotes: TfrmDayNotes
     SkinData.SkinSection = 'PAGECONTROL'
     object tabDayNotes: TsTabSheet
       Caption = 'Front'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object sGroupBox1: TsGroupBox
         Left = 0
         Top = 0
@@ -77,8 +73,8 @@ object frmDayNotes: TfrmDayNotes
           AlignWithMargins = True
           Left = 5
           Top = 18
-          Width = 351
-          Height = 64
+          Width = 803
+          Height = 90
           Align = alClient
           Alignment = taCenter
           Caption = 
@@ -97,6 +93,8 @@ object frmDayNotes: TfrmDayNotes
           HoverFont.Height = -11
           HoverFont.Name = 'Tahoma'
           HoverFont.Style = []
+          ExplicitWidth = 351
+          ExplicitHeight = 64
         end
       end
       object edCurrentDate: TEdit
@@ -112,10 +110,6 @@ object frmDayNotes: TfrmDayNotes
     object tabStatus: TsTabSheet
       Caption = 'Availibility status'
       ImageIndex = 3
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Panel3: TsPanel
         Left = 0
         Top = 33
@@ -275,9 +269,10 @@ object frmDayNotes: TfrmDayNotes
         TabOrder = 1
         Properties.CustomButtons.Buttons = <>
         LookAndFeel.NativeStyle = False
-        ClientRectBottom = 511
-        ClientRectRight = 813
-        ClientRectTop = 0
+        ClientRectBottom = 509
+        ClientRectLeft = 2
+        ClientRectRight = 811
+        ClientRectTop = 2
       end
       object Panel4: TsPanel
         Left = 0
@@ -370,10 +365,6 @@ object frmDayNotes: TfrmDayNotes
     object tabLog: TsTabSheet
       Caption = 'Log'
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Panel1: TsPanel
         Left = 0
         Top = 0
@@ -396,15 +387,13 @@ object frmDayNotes: TfrmDayNotes
         Properties.CustomButtons.Buttons = <>
         LookAndFeel.NativeStyle = False
         OnPageChanging = pageLogPageChanging
-        ClientRectBottom = 566
-        ClientRectRight = 813
-        ClientRectTop = 24
+        ClientRectBottom = 564
+        ClientRectLeft = 2
+        ClientRectRight = 811
+        ClientRectTop = 22
         object tabActionLog: TcxTabSheet
           Caption = 'Actions'
           ImageIndex = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object memLog: TsMemo
             Left = 0
             Top = 41
@@ -500,27 +489,22 @@ object frmDayNotes: TfrmDayNotes
         object tabImportLog: TcxTabSheet
           Caption = 'Import'
           ImageIndex = 1
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object Panel6: TsPanel
             Left = 0
             Top = 0
-            Width = 813
+            Width = 809
             Height = 65
             Align = alTop
             TabOrder = 0
             SkinData.SkinSection = 'PANEL'
-            ExplicitWidth = 809
             object pnlTopRow: TsPanel
               Left = 1
               Top = 1
-              Width = 811
+              Width = 807
               Height = 32
               Align = alTop
               BevelOuter = bvNone
               TabOrder = 0
-              ExplicitWidth = 807
               object cxLabel5: TsLabel
                 AlignWithMargins = True
                 Left = 126
@@ -662,7 +646,7 @@ object frmDayNotes: TfrmDayNotes
               end
               object cxButton5: TsButton
                 AlignWithMargins = True
-                Left = 721
+                Left = 717
                 Top = 3
                 Width = 87
                 Height = 26
@@ -671,18 +655,16 @@ object frmDayNotes: TfrmDayNotes
                 TabOrder = 2
                 OnClick = cxButton5Click
                 SkinData.SkinSection = 'BUTTON'
-                ExplicitLeft = 717
               end
             end
             object sPanel1: TsPanel
               Left = 1
               Top = 33
-              Width = 811
+              Width = 807
               Height = 31
               Align = alClient
               BevelOuter = bvNone
               TabOrder = 1
-              ExplicitWidth = 807
               object cxButton10: TsButton
                 AlignWithMargins = True
                 Left = 8
@@ -760,12 +742,11 @@ object frmDayNotes: TfrmDayNotes
           object Panel7: TsPanel
             Left = 0
             Top = 65
-            Width = 813
+            Width = 809
             Height = 326
             Align = alTop
             TabOrder = 1
             SkinData.SkinSection = 'PANEL'
-            ExplicitWidth = 809
             object gridImportLogs: TcxGrid
               Left = 1
               Top = 1
@@ -921,31 +902,28 @@ object frmDayNotes: TfrmDayNotes
           object cxSplitter1: TcxSplitter
             Left = 0
             Top = 391
-            Width = 813
+            Width = 809
             Height = 8
             HotZoneClassName = 'TcxMediaPlayer9Style'
             AlignSplitter = salTop
             Control = Panel7
-            ExplicitWidth = 8
           end
           object Panel8: TsPanel
             Left = 0
             Top = 399
-            Width = 813
+            Width = 809
             Height = 143
             Align = alClient
             TabOrder = 3
             SkinData.SkinSection = 'PANEL'
-            ExplicitWidth = 809
             object Panel9: TsPanel
               Left = 425
               Top = 1
-              Width = 387
+              Width = 383
               Height = 141
               Align = alClient
               TabOrder = 0
               SkinData.SkinSection = 'PANEL'
-              ExplicitWidth = 383
               object Panel10: TsPanel
                 Left = 1
                 Top = 1
@@ -973,9 +951,8 @@ object frmDayNotes: TfrmDayNotes
                 Width = 381
                 Height = 106
                 Align = alClient
-                Color = clWhite
                 Font.Charset = ANSI_CHARSET
-                Font.Color = clBlack
+                Font.Color = clWindowText
                 Font.Height = -13
                 Font.Name = 'Courier New'
                 Font.Style = []
@@ -1048,10 +1025,6 @@ object frmDayNotes: TfrmDayNotes
     object tabCurrentGuests: TsTabSheet
       Caption = 'In house'
       ImageIndex = 3
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Panel2: TsPanel
         Left = 0
         Top = 0
@@ -1653,5 +1626,11 @@ object frmDayNotes: TfrmDayNotes
     StorageType = stRegistry
     Left = 710
     Top = 152
+  end
+  object timRefresh: TTimer
+    Enabled = False
+    OnTimer = timRefreshTimer
+    Left = 640
+    Top = 376
   end
 end

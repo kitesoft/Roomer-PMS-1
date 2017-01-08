@@ -57,7 +57,7 @@ type
 
 
 // Ask the user for authentication credentials using the RoomerLoginForm
-function AskUserForCredentials(var aUsername: String; var aPassword: String; var aHotelId : String; aLastMessage : String): TLoginFormResult;
+function AskUserForCredentials(var aUsername: String; var aPassword: String; var aHotelId : String; aLastMessage : String; AuthValueIndex : Integer = -1): TLoginFormResult;
 
 
 const
@@ -74,11 +74,54 @@ uses uUtils,
      IOUtils,
      uStringUtils,
      uMain,
-     uAboutRoomer;
+     uAboutRoomer,
+     uSqlUtils,
+     cmpRoomerDataSet,
+     hData;
 
-function AskUserForCredentials(var aUsername: String; var aPassword: String; var aHotelId : String; aLastMessage : String): TLoginFormResult;
+function AskUserForCredentials(var aUsername: String; var aPassword: String; var aHotelId : String; aLastMessage : String; AuthValueIndex : Integer = -1): TLoginFormResult;
 var
   lLoginForm: TfrmRoomerLoginForm;
+
+  function CheckLoginCorrectness : Boolean;
+  var sql : String;
+      rSet : TRoomerDataset;
+  begin
+    result := True;
+    if AuthValueIndex = -1 then exit;
+
+    sql := format(
+           'SELECT sm.id FROM staffmembers sm ' +
+           'LEFT JOIN stafftypes st1 ON st1.StaffType=sm.StaffType ' +
+           'LEFT JOIN stafftypes st2 ON st2.StaffType=sm.StaffType1 ' +
+           'LEFT JOIN stafftypes st3 ON st3.StaffType=sm.StaffType2 ' +
+           'LEFT JOIN stafftypes st4 ON st4.StaffType=sm.StaffType3 ' +
+           'LEFT JOIN stafftypes st5 ON st5.StaffType=sm.StaffType4 ' +
+           'WHERE Initials=%s AND Password=%s ' +
+           'AND %d=0 ' +
+           'OR (%d>0 AND SUBSTR(IFNULL(st1.AuthValue, ''0''), %d, 1)=''1'') ' +
+           'OR (%d>0 AND SUBSTR(IFNULL(st2.AuthValue, ''0''), %d, 1)=''1'') ' +
+           'OR (%d>0 AND SUBSTR(IFNULL(st3.AuthValue, ''0''), %d, 1)=''1'') ' +
+           'OR (%d>0 AND SUBSTR(IFNULL(st4.AuthValue, ''0''), %d, 1)=''1'') ' +
+           'OR (%d>0 AND SUBSTR(IFNULL(st5.AuthValue, ''0''), %d, 1)=''1'') ',
+           [
+            _db(aUsername), _db(aPassword),
+
+            AuthValueIndex, AuthValueIndex,
+
+            AuthValueIndex, AuthValueIndex,
+            AuthValueIndex, AuthValueIndex,
+            AuthValueIndex, AuthValueIndex,
+            AuthValueIndex, AuthValueIndex,
+            AuthValueIndex, AuthValueIndex
+
+           ]);
+    rSet := CreateNewDataSet;
+    CopyToClipboard(sql);
+    hData.rSet_bySQL(rSet,sql);
+    rSet.First;
+    result := NOT rSet.Eof;
+  end;
 begin
   lLoginForm := TfrmRoomerLoginForm.Create(nil);
   try
@@ -94,6 +137,7 @@ begin
     lLoginForm.edtPassword.Text := '';
     lLoginForm.lblMessage.Caption := aLastMessage;
     lLoginForm.lblMessage.Visible := aLastMessage <> '';
+    lLoginForm.edtHotelCode.Enabled := AuthValueIndex = -1;
 
     lLoginForm.ShowModal;
     Result := TLoginFormResult(lLoginForm.Tag);
@@ -102,6 +146,8 @@ begin
       aHotelId := UpperCase(lLoginForm.edtHotelCode.Text);
       aUsername := lLoginForm.edtUsername.Text;
       aPassword := lLoginForm.edtPassword.Text;
+      if NOT CheckLoginCorrectness then
+        result := lrCancel;
     end;
   finally
     lLoginForm.Free;

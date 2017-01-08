@@ -74,7 +74,7 @@ begin
       password := '';
       if _FrmReservationCancellationDialog.AllowCancel OR
         ((MessageDlg(GetTranslatedText('shTxRemoveReservationWarning'), mtWarning, [mbYes, mbNo], 0) = mrYes) AND
-         openLogin(userName, password)) then
+         openLogin(userName, password, 1)) then
       begin
         d.roomerMainDataSet.SystemCancelReservation(Reservation, Format('User %s changed state to cancelled on %s',
           [d.roomerMainDataSet.userName, DateTimeToStr(now)]) + #13 + ReplaceString(_FrmReservationCancellationDialog.mmoReason.Text, '''','\'''));

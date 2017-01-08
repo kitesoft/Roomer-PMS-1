@@ -23,7 +23,7 @@ object fraCountryPanel: TfraCountryPanel
       Left = 63
       Top = 3
       Width = 4
-      Height = 14
+      Height = 13
       Align = alLeft
       Caption = '-'
       ParentFont = False
@@ -33,7 +33,6 @@ object fraCountryPanel: TfraCountryPanel
       Font.Height = -11
       Font.Name = 'Tahoma'
       Font.Style = []
-      ExplicitTop = 4
     end
     object edCountryCode: TsEdit
       AlignWithMargins = True

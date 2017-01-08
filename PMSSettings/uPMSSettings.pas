@@ -49,6 +49,8 @@ type
     procedure SetMasterRateCurrency(const Value: String);
     function GetMasterRateCurrencyConvert: boolean;
     procedure SetMasterRateCurrencyConvert(const Value: boolean);
+    function GetAllowTogglingOfCityTaxes: boolean;
+    procedure SetAllowTogglingOfCityTaxes(const Value: boolean);
 
   public
     constructor Create(aPMSDataset: TRoomerDataset);
@@ -73,6 +75,8 @@ type
 
     property AllowPaymentModification: boolean read GetAllowPaymentModification write SetAllowPaymentModification;
     property AllowDeletingItemsFromInvoice: boolean read GetAllowDeletingItemsFromInvoice write SetAllowDeletingItemsFromInvoice;
+    property AllowTogglingOfCityTaxes: boolean read GetAllowTogglingOfCityTaxes write SetAllowTogglingOfCityTaxes;
+
 
     property TopClassAvaiabilityOrderActive: boolean read GetTopClassAvaiabilityOrderActive write SetTopClassAvaiabilityOrderActive;
     property MasterRateDefaultsActive: boolean read GetMasterRateDefaultsActive write SetMasterRateDefaultsActive;
@@ -100,6 +104,7 @@ const
   cInvoiceHandlingShowAsPaidWhenZero = 'SHOW_AS_PAID_WHEN_ZERO';
   cAllowPaymentModifications = 'ALLOW_PAYMENT_MODIFICATIONS';
   cAllowDeletingItemsFromInvoice = 'ALLOW_DELETING_FROM_INVOICE';
+  cAllowTogglingOfCityTaxes = 'ALLOW_TOGGLING_OF_CITY_TAXES_INVOICE';
   cShowIncludedBreakfastOnInvoice = 'SHOW_INCLUDED_BREAKFAST_ON_INVOICE';
   cTopClassAvailabilityOrderActive = 'TOP_CLASS_AVAILABILITY_ORDER_ACTIVE';
   cMasterRateDefaultsActive = 'MASTER_RATE_DEFAULTS_ACTIVE';
@@ -196,6 +201,11 @@ begin
   SetSettingsAsBoolean(cInvoiceHandlingGroup, cAllowPaymentModifications, Value, True);
 end;
 
+procedure TPMSSettings.SetAllowTogglingOfCityTaxes(const Value: boolean);
+begin
+  SetSettingsAsBoolean(cInvoiceHandlingGroup, cAllowTogglingOfCityTaxes, Value, True);
+end;
+
 procedure TPmsSettings.SetBetaFunctionsAvailable(const Value: boolean);
 begin
   SetSettingsAsBoolean(cBetaFunctionsGroup, cBetaFunctionsAvailableName, Value, True);
@@ -252,6 +262,11 @@ end;
 function TPMSSettings.GetAllowPaymentModification: boolean;
 begin
   Result := GetSettingsAsBoolean(cInvoiceHandlingGroup , cAllowPaymentModifications, False, True);
+end;
+
+function TPMSSettings.GetAllowTogglingOfCityTaxes: boolean;
+begin
+  Result := GetSettingsAsBoolean(cInvoiceHandlingGroup, cAllowTogglingOfCityTaxes, False, True);
 end;
 
 function TPmsSettings.GetBetaFunctionsAvailable: boolean;

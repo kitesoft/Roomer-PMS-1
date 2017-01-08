@@ -2,7 +2,7 @@ unit uRoomerConfirmationDialogs;
 
 interface
 
-function openLogin(var userName, password : string) : boolean;
+function openLogin(var userName, password : string; AuthValueIndex : Integer = -1) : boolean;
 
 implementation
 
@@ -12,7 +12,7 @@ uses RoomerLoginForm,
      uD
      ;
 
-function openLogin(var userName, password : string) : boolean;
+function openLogin(var userName, password : string; AuthValueIndex : Integer = -1) : boolean;
 var hotelId : String;
     lastMessage : String;
 begin
@@ -21,7 +21,7 @@ begin
   hotelId     := g.qHotelCode;
 //  showmessage(username+' // '+password);
 
-  if (AskUserForCredentials(userName, password, hotelId, lastMessage) in cLoginFormSuccesfull) then
+  if (AskUserForCredentials(userName, password, hotelId, lastMessage, AuthValueIndex) in cLoginFormSuccesfull) then
   begin
       try
         d.roomerMainDataSet.Login(hotelId, username, password, 'ROOMERPMS', TRoomerVersionInfo.FileVersion);

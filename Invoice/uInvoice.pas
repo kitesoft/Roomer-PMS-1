@@ -3596,6 +3596,7 @@ begin
   btnEditDownPayment.Visible := glb.PMSSettings.AllowPaymentModification;
   btnDeleteDownpayment.Visible := glb.PMSSettings.AllowPaymentModification;
   btnRemoveItem.Visible := glb.PMSSettings.AllowDeletingItemsFromInvoice;
+  btnRemoveLodgingTax2.Visible := glb.PMSSettings.AllowTogglingOfCityTaxes;
 
   LoadInvoice;
   UpdateCaptions;

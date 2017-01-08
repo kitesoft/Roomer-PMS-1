@@ -202,6 +202,7 @@ type
     procedure m_NewRecord(DataSet: TDataSet);
     procedure FormDestroy(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure m_AfterScroll(DataSet: TDataSet);
   private
     { Private declarations }
     zFirstTime       : boolean;
@@ -280,6 +281,7 @@ var
   s    : string;
   rSet : TRoomerDataSet;
 begin
+  applyFilter;
   zFirstTime := true;
   if zSortStr = '' then zSortStr := 'ID';
   rSet := CreateNewDataSet;
@@ -384,15 +386,7 @@ end;
 
 procedure TfrmStaffMembers2.edFilterChange(Sender: TObject);
 begin
-  if edFilter.Text = '' then
-  begin
-    tvData.DataController.Filter.Root.Clear;
-    tvData.DataController.Filter.Active := false;
-  end else
-  begin
-    applyFilter;
-  end;
-
+  applyFilter;
 end;
 
 procedure TfrmStaffMembers2.applyFilter;
@@ -400,22 +394,27 @@ begin
   tvData.DataController.Filter.Options := [fcoCaseInsensitive];
   tvData.DataController.Filter.Root.BoolOperatorKind := fboOr;
   tvData.DataController.Filter.Root.Clear;
-  tvData.DataController.Filter.Root.AddItem(tvDataName     ,foLike,'%'+edFilter.Text+'%','%'+edFilter.Text+'%');
-  tvData.DataController.Filter.Root.AddItem(tvDataInitials ,foLike,'%'+edFilter.Text+'%','%'+edFilter.Text+'%');
-  tvData.DataController.Filter.Root.AddItem(tvDataStaffPId ,foLike,'%'+edFilter.Text+'%','%'+edFilter.Text+'%');
-  tvData.DataController.Filter.Root.AddItem(tvDataAddress1 ,foLike,'%'+edFilter.Text+'%','%'+edFilter.Text+'%');
-  tvData.DataController.Filter.Root.AddItem(tvDataAddress2 ,foLike,'%'+edFilter.Text+'%','%'+edFilter.Text+'%');
-  tvData.DataController.Filter.Root.AddItem(tvDataAddress3 ,foLike,'%'+edFilter.Text+'%','%'+edFilter.Text+'%');
-  tvData.DataController.Filter.Root.AddItem(tvDataAddress4 ,foLike,'%'+edFilter.Text+'%','%'+edFilter.Text+'%');
-  tvData.DataController.Filter.Root.AddItem(tvDatatel1     ,foLike,'%'+edFilter.Text+'%','%'+edFilter.Text+'%');
-  tvData.DataController.Filter.Root.AddItem(tvDatatel2     ,foLike,'%'+edFilter.Text+'%','%'+edFilter.Text+'%');
-  tvData.DataController.Filter.Root.AddItem(tvDataMobile   ,foLike,'%'+edFilter.Text+'%','%'+edFilter.Text+'%');
-  tvData.DataController.Filter.Root.AddItem(tvDataStaffType,foLike,'%'+edFilter.Text+'%','%'+edFilter.Text+'%');
-  tvData.DataController.Filter.Root.AddItem(tvDataStaffType1,foLike,'%'+edFilter.Text+'%','%'+edFilter.Text+'%');
-  tvData.DataController.Filter.Root.AddItem(tvDataStaffType2,foLike,'%'+edFilter.Text+'%','%'+edFilter.Text+'%');
-  tvData.DataController.Filter.Root.AddItem(tvDataStaffType3,foLike,'%'+edFilter.Text+'%','%'+edFilter.Text+'%');
-  tvData.DataController.Filter.Root.AddItem(tvDataStaffType4,foLike,'%'+edFilter.Text+'%','%'+edFilter.Text+'%');
-  tvData.DataController.Filter.Active := True;
+  if NOT glb.ValidateHelpContext(4) then
+    tvData.DataController.Filter.Root.AddItem(tvDataInitials ,foLike,'%'+g.qUser+'%','%'+g.qUser+'%');
+  if TRIM(edFilter.Text) <> '' then
+  begin
+    tvData.DataController.Filter.Root.AddItem(tvDataName     ,foLike,'%'+edFilter.Text+'%','%'+edFilter.Text+'%');
+    tvData.DataController.Filter.Root.AddItem(tvDataInitials ,foLike,'%'+edFilter.Text+'%','%'+edFilter.Text+'%');
+    tvData.DataController.Filter.Root.AddItem(tvDataStaffPId ,foLike,'%'+edFilter.Text+'%','%'+edFilter.Text+'%');
+    tvData.DataController.Filter.Root.AddItem(tvDataAddress1 ,foLike,'%'+edFilter.Text+'%','%'+edFilter.Text+'%');
+    tvData.DataController.Filter.Root.AddItem(tvDataAddress2 ,foLike,'%'+edFilter.Text+'%','%'+edFilter.Text+'%');
+    tvData.DataController.Filter.Root.AddItem(tvDataAddress3 ,foLike,'%'+edFilter.Text+'%','%'+edFilter.Text+'%');
+    tvData.DataController.Filter.Root.AddItem(tvDataAddress4 ,foLike,'%'+edFilter.Text+'%','%'+edFilter.Text+'%');
+    tvData.DataController.Filter.Root.AddItem(tvDatatel1     ,foLike,'%'+edFilter.Text+'%','%'+edFilter.Text+'%');
+    tvData.DataController.Filter.Root.AddItem(tvDatatel2     ,foLike,'%'+edFilter.Text+'%','%'+edFilter.Text+'%');
+    tvData.DataController.Filter.Root.AddItem(tvDataMobile   ,foLike,'%'+edFilter.Text+'%','%'+edFilter.Text+'%');
+    tvData.DataController.Filter.Root.AddItem(tvDataStaffType,foLike,'%'+edFilter.Text+'%','%'+edFilter.Text+'%');
+    tvData.DataController.Filter.Root.AddItem(tvDataStaffType1,foLike,'%'+edFilter.Text+'%','%'+edFilter.Text+'%');
+    tvData.DataController.Filter.Root.AddItem(tvDataStaffType2,foLike,'%'+edFilter.Text+'%','%'+edFilter.Text+'%');
+    tvData.DataController.Filter.Root.AddItem(tvDataStaffType3,foLike,'%'+edFilter.Text+'%','%'+edFilter.Text+'%');
+    tvData.DataController.Filter.Root.AddItem(tvDataStaffType4,foLike,'%'+edFilter.Text+'%','%'+edFilter.Text+'%');
+  end;
+  tvData.DataController.Filter.Active := tvData.DataController.Filter.Root.Count > 0;
 end;
 
 
@@ -767,6 +766,8 @@ end;
 
 procedure TfrmStaffMembers2.doEdit;
 begin
+  if NOT btnEdit.Enabled then exit;
+
   fillHolder;
   if openStaffMemberEdit(zData,false) then
   begin
@@ -852,6 +853,13 @@ begin
   grPrinter.PrintTitle := caption;
   prLink_grData.ReportTitle.Text := caption;
   grPrinter.Preview(true, prLink_grData);
+end;
+
+procedure TfrmStaffMembers2.m_AfterScroll(DataSet: TDataSet);
+begin
+//  if (NOT Assigned(DataSet)) OR DataSet.Eof OR DataSet.Bof then exit;
+//
+//  btnEdit.Enabled := (UpperCase(DataSet['Initials']) = UpperCase(g.qUser)) OR glb.ValidateHelpContext(4);
 end;
 
 procedure TfrmStaffMembers2.m_BeforeDelete(DataSet: TDataSet);

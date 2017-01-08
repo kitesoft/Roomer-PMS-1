@@ -82,7 +82,6 @@ object frmHiddenInfo: TfrmHiddenInfo
       ParentFont = False
       TabOrder = 1
       Text = '  -  -    '
-      CheckOnExit = True
       SkinData.SkinSection = 'EDIT'
       GlyphMode.Blend = 0
       GlyphMode.Grayed = False
@@ -107,8 +106,6 @@ object frmHiddenInfo: TfrmHiddenInfo
     SkinData.SkinSection = 'PAGECONTROL'
     object tabInformation: TsTabSheet
       Caption = 'Information'
-      SkinData.CustomColor = False
-      SkinData.CustomFont = False
       object panInformation: TsPanel
         Left = 0
         Top = 0
@@ -161,8 +158,6 @@ object frmHiddenInfo: TfrmHiddenInfo
     object tabViewLog: TsTabSheet
       Caption = 'Viewlog'
       ImageIndex = 1
-      SkinData.CustomColor = False
-      SkinData.CustomFont = False
       object panViewLog: TsPanel
         Left = 0
         Top = 0

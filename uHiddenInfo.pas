@@ -72,12 +72,11 @@ type
     gNotes : string;
     gDeleteOn : TdateTime;
     gViewLog : string;
-    gUserName : string;
-    gPassword : string;
+    gUserName : String;
 
     gRec : recHiddenInfoHolder;
 
-    function openLogin(var userName, password : string) : boolean;
+//    function openLogin(var userName, password : string) : boolean;
     function isChanged : boolean;
     function addToLog(user, action : string) : boolean;
 
@@ -91,6 +90,8 @@ type
 
 var
   frmHiddenInfo : TfrmHiddenInfo;
+
+function OpenHiddenForm(Refrence, RefrenceType : integer) : Boolean;
 
 implementation
 
@@ -106,27 +107,40 @@ uses
   , uRoomerVersionInfo, uSQLUtils;
 {$R *.dfm}
 
-
-
-function TfrmHiddenInfo.openLogin(var userName, password : string) : boolean;
+function openLogin(var userName, password : string) : boolean;
 var hotelId : String;
-    lastMessage : String;
 begin
   result      := false;
-  lastMessage := '';
   hotelId     := g.qHotelCode;
-//  showmessage(username+' // '+password);
 
-  if (AskUserForCredentials(userName, password, hotelId, lastMessage)  in cLoginFormSuccesfull) then
+  result := (AskUserForCredentials(userName, password, hotelId, '', 0)  in cLoginFormSuccesfull);
+end;
+
+function OpenHiddenForm(Refrence, RefrenceType : integer) : Boolean;
+var _frmHiddenInfo : TfrmHiddenInfo;
+    gUserName, gPassword : String;
+begin
+  if openLogin(gUserName, gPassword) then
   begin
-      try
-        d.roomerMainDataSet.Login(hotelId, username, password, 'ROOMERPMS', TRoomerVersionInfo.FileVersion);
+    _frmHiddenInfo := TfrmHiddenInfo.Create(nil);
+    try
+      _frmHiddenInfo.gUserName := gUserName;
+      _frmHiddenInfo.zRefrence := Refrence;
+      _frmHiddenInfo.zRefrenceType := RefrenceType;
+      _frmHiddenInfo.ShowModal;
+      if _frmHiddenInfo.modalresult = mrOK then
+      begin
         result := true;
-      except
-        result := false;
+      end
+      else
+      begin
+        result := false; // but who cares
       end;
+    finally
+      _frmHiddenInfo.free;
+      _frmHiddenInfo := nil;
+    end;
   end;
-
 end;
 
   procedure TfrmHiddenInfo.timCloseTimer(Sender : TObject);
@@ -148,8 +162,6 @@ end;
     gNotes := '';
     gDeleteOn := date + 3600;
     gViewLog := '';
-    gUserName := '';
-    gPassword := '';
     zRefrence := 0;
     zRefrenceType := 0;
     dtDeleteOn.date := gDeleteOn;
@@ -158,25 +170,11 @@ end;
 
   procedure TfrmHiddenInfo.FormShow(Sender : TObject);
   var
-    ok : boolean;
 
     outLst, innLst : TstringList;
   begin
     // **
-    ok := openLogin(gUserName, gPassword);
-    if not ok then
-    begin
-      timClose.Enabled := true;
-      exit;
-    end;
-
-    ok := d.doLogin(gUserName, gPassword);
-    if not ok then
-    begin
-      timClose.Enabled := true;
-      exit;
-    end;
-
+    addToLog(gUserName, 'Logged in');
     gId := d.hiddenInfo_Exists(zRefrence, zRefrenceType);
 
     if gId > 0 then
@@ -205,7 +203,6 @@ end;
 
     memViewLog.lines.Text         := gRec.ViewLog;
     dtDeleteOn.Date         := gRec.DeleteOn;
-    addToLog(gUserName, 'Logged in');
   end;
 
 function TfrmHiddenInfo.isChanged: boolean;

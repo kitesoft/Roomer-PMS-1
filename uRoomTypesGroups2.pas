@@ -235,6 +235,7 @@ type
     tvDataPAYMENTS_REQUIRED: TcxGridDBColumn;
     btnAvailabilityOrder: TsButton;
     cbTopClasses: TCheckBox;
+    chkActive: TCheckBox;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormKeyPress(Sender: TObject; var Key: Char);
@@ -279,6 +280,7 @@ type
     procedure tvDataBreakfastIncludedPropertiesEditValueChanged(Sender: TObject);
     procedure btnAvailabilityOrderClick(Sender: TObject);
     procedure cbTopClassesClick(Sender: TObject);
+    procedure chkActiveClick(Sender: TObject);
   private
     { Private declarations }
     zFirstTime       : boolean;
@@ -393,7 +395,6 @@ begin
   try
     s := format(select_RoomTypesGroups, [zSortStr]);
     CopyToClipboard(s);
-//    debugMessage()
     if rSet_bySQL(rSet,s, false) then
     begin
       if m_.active then m_.Close;
@@ -401,7 +402,8 @@ begin
       rSet.First;
       while not rSet.Eof do
       begin
-        if (NOT OnlyTopClasses) OR (UpperCase(rSet.FieldByName('Code').AsString) = UpperCase(rSet.FieldByName('TopClass').AsString)) then
+        if (chkActive.Checked = rSet.FieldByName('Active').AsBoolean) AND
+           ((NOT OnlyTopClasses) OR (UpperCase(rSet.FieldByName('Code').AsString) = UpperCase(rSet.FieldByName('TopClass').AsString))) then
         begin
           m_.append;
           m_.FieldByName('ID').AsInteger              := rSet.FieldByName('ID').AsInteger               ;
@@ -600,6 +602,17 @@ begin
     tvDataconnectLOSToMasterRate.Options.Editing         := zAllowGridEdit;
 end;
 
+
+procedure TfrmRoomTypesGroups2.chkActiveClick(Sender: TObject);
+begin
+  zFirstTime := false;
+  if tvdata.DataController.DataSet.State = dsEdit then
+  begin
+    tvdata.DataController.Post;
+  end;
+  fillGridFromDataset(zData.Code);
+  zFirstTime := false;
+end;
 
 procedure TfrmRoomTypesGroups2.chkFilter;
 var

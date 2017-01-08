@@ -718,6 +718,8 @@ type
     lblMasterRateCurrency: TsLabel;
     cbxCurrencyCalculation: TsCheckBox;
     lblMasterRateCurrencyName: TsLabel;
+    lbAllowTogglingOfCityTaxesOnInvoice: TsLabel;
+    cbAllowTogglingOfCityTaxesOnInvoice: TsCheckBox;
     procedure FormCreate(Sender : TObject);
     procedure FormClose(Sender : TObject; var Action : TCloseAction);
     procedure FormShow(Sender : TObject);
@@ -1545,6 +1547,7 @@ g.ProcessAppIni(0);
     cbTopClassAvaiabilityOrderActive.Checked := glb.PMSSettings.TopClassAvaiabilityOrderActive;
     ceMasterRateCurrency.Text := glb.PMSSettings.MasterRateCurrency;
     cbxCurrencyCalculation.Checked := glb.PMSSettings.MasterRateCurrencyConvert;
+    cbAllowTogglingOfCityTaxesOnInvoice.Checked := glb.PMSSettings.AllowTogglingOfCityTaxes;
 
     edtRIIndexRoomRent.Value := rSethotelconfigurations.FieldByName('RoomInvoiceRoomRentIndex').AsInteger + 1;
     edtRIIndexPosItems.Value := rSethotelconfigurations.FieldByName('RoomInvoicePosItemIndex').AsInteger + 1;
@@ -2040,6 +2043,7 @@ begin
       glb.PMSSettings.TopClassAvaiabilityOrderActive := cbTopClassAvaiabilityOrderActive.Checked;
       glb.PMSSettings.MasterRateCurrency := ceMasterRateCurrency.Text;
       glb.PMSSettings.MasterRateCurrencyConvert := cbxCurrencyCalculation.Checked;
+      glb.PMSSettings.AllowTogglingOfCityTaxes := cbAllowTogglingOfCityTaxesOnInvoice.Checked;
 
 
       try
