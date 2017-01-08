@@ -651,7 +651,7 @@ type
     procedure tvRoomsDocumentsPropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
     procedure cxButton5Click(Sender: TObject);
     procedure cxButton6Click(Sender: TObject);
-    procedure tvInvoiceHeadsAmountWithTaxGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
+    procedure tvGetNativeCurrentProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
       var AProperties: TcxCustomEditProperties);
     procedure tvInvoiceHeadsAmountNoTaxGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
       var AProperties: TcxCustomEditProperties);
@@ -2304,10 +2304,7 @@ begin
 //  else
 //    mRoomsunpaidRentPrice.AsFloat := DynamicRates.AverageRateStay(mRoomsratePlanCode.AsString, mRoomsRoomType.AsString, mRoomsArrival.AsDateTime, mRoomsDeparture.AsDateTime);
 
-
-
   mRoomsdayCount.asInteger := trunc(mRoomsDeparture.AsDateTime) - trunc( mRoomsArrival.ASDateTime);
-
   mRoomsdefGuestCount.AsInteger := glb.GET_RoomTypeNumberGuests_byRoomType(mRoomsRoomType.AsString);
 end;
 
@@ -2915,13 +2912,21 @@ var
 begin
   if NOT mRooms.Eof then
   begin
-    code := (tvRoomsratePlanCode.Properties AS TcxComboBoxProperties).Items[TcxComboBox(Sender).ItemIndex];
-    mRooms.Edit;
-    mRooms['ratePlanCode'] := code;
-    mRooms.Post;
+    mRooms.DisableControls;
+    try
+      code := (tvRoomsratePlanCode.Properties AS TcxComboBoxProperties).Items[TcxComboBox(Sender).ItemIndex];
+      DynamicRates.UpdateRoomReservation(mRooms['RoomReservation'], code, mRooms['RoomType'], mRooms['Arrival'], mRooms['Departure'], mRooms['Currency']);
 
-    DynamicRates.UpdateRoomReservation(mRooms['RoomReservation'], code, mRooms['RoomType'], mRooms['Arrival'],
-      mRooms['Departure']);
+      mRooms.Edit;
+      mRoomsratePlanCode.AsString := code;
+      //mRoomsAverageRoomRate.AsFloat := DynamicRates.AverageRateStay(mRoomsratePlanCode.AsString, mRoomsRoomType.AsString, mRoomsArrival.AsDateTime, mRoomsDeparture.AsDateTime);
+      mRooms.Post;
+
+      Display_rGrid(mRooms['RoomReservation']);
+
+    finally
+      mRooms.EnableControls;
+    end;
   end;
 end;
 
@@ -3862,7 +3867,7 @@ begin
   AProperties := d.getCurrencyProperties(g.qNativeCurrency);
 end;
 
-procedure TfrmReservationProfile.tvInvoiceHeadsAmountWithTaxGetProperties(Sender: TcxCustomGridTableItem;
+procedure TfrmReservationProfile.tvGetNativeCurrentProperties(Sender: TcxCustomGridTableItem;
   ARecord: TcxCustomGridRecord;
   var AProperties: TcxCustomEditProperties);
 begin

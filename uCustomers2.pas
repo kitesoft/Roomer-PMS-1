@@ -801,89 +801,94 @@ var
 begin
   if zFirstTime then exit;
 
-  initCustomerHolder(zData);
-  zData.ID                    := dataset.FieldByName('ID').AsInteger;
-  zData.Active                := dataset['Active'];
-  zData.Customer              := dataset['Customer'];
-  zData.Surname               := dataset['Surname'];
-  zData.Name                  := dataset['Name'];
-  zData.PID                   := dataset['PID'];
-  zData.CustomerType          := dataset['CustomerType'];
-  zData.Address1              := dataset['Address1'];
-  zData.Address2              := dataset['Address2'];
-  zData.Address3              := dataset['Address3'];
-  zData.Address4              := dataset['Address4'];
-  zData.Country               := dataset['Country'];
-  zData.Tel1                  := dataset['Tel1'];
-  zData.Tel2                  := dataset['Tel2'];
-  zData.Fax                   := dataset['Fax'];
-  zData.DiscountPercent       := dataset['DiscountPercent'];
-  zData.EmailAddress          := dataset['EmailAddress'];
-  zData.ContactPerson         := dataset['ContactPerson'];
-  zData.TravelAgency          := dataset['TravelAgency'];
-  zData.Currency              := dataset['Currency'];
-  zData.dele                  := dataset['dele'];
-  zData.pcID                  := dataset['pcID'];
-  zData.Homepage              := dataset['Homepage'];
-  zData.CountryName              := dataset['CountryName'];
-  zdata.CustomerTypeDescription  := dataset['CustomerTypeDescription'];
-  zData.pcCode                   := dataset['pcCode'];
-  zData.stayTaxIncluted          := dataset['stayTaxIncluted'];
-  zdata.notes                    := dataset.fieldbyname('notes').AsString;
-  zData.RatePlanId            := dataset['RatePlanId'];
+  m_.DisableControls;
+  try
+    initCustomerHolder(zData);
+    zData.ID                    := dataset.FieldByName('ID').AsInteger;
+    zData.Active                := dataset['Active'];
+    zData.Customer              := dataset['Customer'];
+    zData.Surname               := dataset['Surname'];
+    zData.Name                  := dataset['Name'];
+    zData.PID                   := dataset['PID'];
+    zData.CustomerType          := dataset['CustomerType'];
+    zData.Address1              := dataset['Address1'];
+    zData.Address2              := dataset['Address2'];
+    zData.Address3              := dataset['Address3'];
+    zData.Address4              := dataset['Address4'];
+    zData.Country               := dataset['Country'];
+    zData.Tel1                  := dataset['Tel1'];
+    zData.Tel2                  := dataset['Tel2'];
+    zData.Fax                   := dataset['Fax'];
+    zData.DiscountPercent       := dataset['DiscountPercent'];
+    zData.EmailAddress          := dataset['EmailAddress'];
+    zData.ContactPerson         := dataset['ContactPerson'];
+    zData.TravelAgency          := dataset['TravelAgency'];
+    zData.Currency              := dataset['Currency'];
+    zData.dele                  := dataset['dele'];
+    zData.pcID                  := dataset['pcID'];
+    zData.Homepage              := dataset['Homepage'];
+    zData.CountryName              := dataset['CountryName'];
+    zdata.CustomerTypeDescription  := dataset['CustomerTypeDescription'];
+    zData.pcCode                   := dataset['pcCode'];
+    zData.stayTaxIncluted          := dataset['stayTaxIncluted'];
+    zdata.notes                    := dataset.fieldbyname('notes').AsString;
+    zData.RatePlanId            := dataset['RatePlanId'];
 
 
-  if tvData.DataController.DataSource.State = dsEdit then
-  begin
-    oldCustCode := dataSet.FieldByName('Customer').OldValue;
-    if oldCustCode <> zData.Customer then
-      SetForeignKeyCheckValue(0);
-    try
-      if UPD_Customer(zData) then
-      begin
-        CustomerDepartments.CustomerId := zData.ID;
-        CustomerDepartments.PostChanges;
+    if tvData.DataController.DataSource.State = dsEdit then
+    begin
+      oldCustCode := dataSet.FieldByName('Customer').OldValue;
+      if oldCustCode <> zData.Customer then
+        SetForeignKeyCheckValue(0);
+      try
+        if UPD_Customer(zData) then
+        begin
+          CustomerDepartments.CustomerId := zData.ID;
+          CustomerDepartments.PostChanges;
+          if oldCustCode <> zData.Customer then
+            UpdateCustomerCode(oldCustCode, zData.Customer);
+          glb.ForceTableRefresh;
+        end else
+        begin
+          abort;
+          exit;
+        end;
+      finally
         if oldCustCode <> zData.Customer then
-          UpdateCustomerCode(oldCustCode, zData.Customer);
+          SetForeignKeyCheckValue(1);
+      end;
+    end;
+    if tvData.DataController.DataSource.State = dsInsert then
+    begin
+      if dataset.FieldByName('Customer').AsString = ''  then
+      begin
+        //showmessage('Customer is requierd - set value or use [ESC] to cancel ');
+        showmessage(GetTranslatedText('shTx_Customers2_Required'));
+        tvData.GetColumnByFieldName('Customer').Focused := True;
+        abort;
+        exit;
+      end;
+      if glb.LocateSpecificRecord('customers', 'Customer', dataset.FieldByName('Customer').AsString)  then
+      begin
+       showmessage(GetTranslatedText('shTx_CustomerEdit2_CustomerExists'));
+        tvData.GetColumnByFieldName('Customer').Focused := True;
+        abort;
+        exit;
+      end;
+      if ins_Customer(zData,nID) then
+      begin
+        m_.FieldByName('ID').AsInteger := nID;
+        CustomerDepartments.CustomerId := nID;
+        CustomerDepartments.PostChanges;
         glb.ForceTableRefresh;
       end else
       begin
         abort;
         exit;
       end;
-    finally
-      if oldCustCode <> zData.Customer then
-        SetForeignKeyCheckValue(1);
     end;
-  end;
-  if tvData.DataController.DataSource.State = dsInsert then
-  begin
-    if dataset.FieldByName('Customer').AsString = ''  then
-    begin
-      //showmessage('Customer is requierd - set value or use [ESC] to cancel ');
-	    showmessage(GetTranslatedText('shTx_Customers2_Required'));
-      tvData.GetColumnByFieldName('Customer').Focused := True;
-      abort;
-      exit;
-    end;
-    if glb.LocateSpecificRecord('customers', 'Customer', dataset.FieldByName('Customer').AsString)  then
-    begin
-	   showmessage(GetTranslatedText('shTx_CustomerEdit2_CustomerExists'));
-      tvData.GetColumnByFieldName('Customer').Focused := True;
-      abort;
-      exit;
-    end;
-    if ins_Customer(zData,nID) then
-    begin
-      m_.FieldByName('ID').AsInteger := nID;
-      CustomerDepartments.CustomerId := nID;
-      CustomerDepartments.PostChanges;
-      glb.ForceTableRefresh;
-    end else
-    begin
-      abort;
-      exit;
-    end;
+  finally
+    m_.EnableControls;
   end;
 end;
 

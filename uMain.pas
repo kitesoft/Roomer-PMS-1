@@ -12106,14 +12106,11 @@ end;
 
 procedure TfrmMain._RptNationality;
 begin
-  Application.CreateForm(TfrmNationalReport3, frmNationalReport3);
+  with TfrmNationalReport3.Create(nil) do
   try
-    if frmNationalReport3.ShowModal = mrOK then
-    begin
-      //
-    end;
+    ShowModal;
   finally
-    freeandNil(frmNationalReport3);
+    Free;
   end;
 end;
 

@@ -1964,9 +1964,9 @@ object frmReservationProfile: TfrmReservationProfile
     TabOrder = 2
     TabWidth = 150
     OnChange = mainPageChange
-    ActiveTabEnlarged = False
     ActiveIsBold = True
     ShowFocus = False
+    ActiveTabEnlarged = False
     SkinData.SkinSection = 'PAGECONTROL'
     object RoomsTab: TsTabSheet
       Caption = 'Rooms'
@@ -2466,6 +2466,7 @@ object frmReservationProfile: TfrmReservationProfile
             PropertiesClassName = 'TcxSpinEditProperties'
             Properties.AssignedValues.MinValue = True
             HeaderAlignmentHorz = taCenter
+            Width = 55
           end
           object tvRoomsdefGuestCount: TcxGridDBColumn
             DataBinding.FieldName = 'defGuestCount'
@@ -2543,7 +2544,7 @@ object frmReservationProfile: TfrmReservationProfile
             Caption = 'Avg. Package-rate'
             DataBinding.FieldName = 'RateOrPackagePerDay'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            OnGetProperties = tvGetCurrencyProperties
+            OnGetProperties = tvGetNativeCurrentProperties
             HeaderAlignmentHorz = taRightJustify
             HeaderHint = 'Average package-rate'
             Options.Editing = False
@@ -2552,7 +2553,7 @@ object frmReservationProfile: TfrmReservationProfile
           object tvRoomsCurrency: TcxGridDBColumn
             DataBinding.FieldName = 'Currency'
             Options.Editing = False
-            Width = 40
+            Width = 55
           end
           object tvRoomsisGroupAccount: TcxGridDBColumn
             Caption = 'Group'
@@ -2932,8 +2933,8 @@ object frmReservationProfile: TfrmReservationProfile
         object chkShowAllGuests: TsCheckBox
           Left = 333
           Top = 11
-          Width = 102
-          Height = 17
+          Width = 94
+          Height = 20
           Caption = 'Show all guests'
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 4
@@ -3614,7 +3615,7 @@ object frmReservationProfile: TfrmReservationProfile
             DataBinding.FieldName = 'AmountWithTax'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00'
-            OnGetProperties = tvInvoiceHeadsAmountWithTaxGetProperties
+            OnGetProperties = tvGetNativeCurrentProperties
             Options.Editing = False
           end
           object tvInvoiceHeadsAmountNoTax: TcxGridDBColumn
