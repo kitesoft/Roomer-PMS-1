@@ -805,8 +805,9 @@ object d: Td
     end
     object currencyISK2d: TcxEditRepositoryCurrencyItem
       Properties.Alignment.Horz = taRightJustify
-      Properties.DecimalPlaces = 2
-      Properties.DisplayFormat = ',0.00 kr'#39'.'#39';-,0.00 kr'#39'.'#39
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0 kr'#39'.'#39';-,0 kr'#39'.'#39
+      Properties.EditFormat = '0'
     end
     object currencyUSD2d: TcxEditRepositoryCurrencyItem
       Properties.Alignment.Horz = taRightJustify
@@ -822,6 +823,7 @@ object d: Td
       Properties.Alignment.Horz = taRightJustify
       Properties.DecimalPlaces = 2
       Properties.DisplayFormat = #163' ,0.00;'#163' -,0.00'
+      Properties.EditFormat = '0.00'
     end
     object CurrencyMXN2d: TcxEditRepositoryCurrencyItem
       Properties.Alignment.Horz = taRightJustify

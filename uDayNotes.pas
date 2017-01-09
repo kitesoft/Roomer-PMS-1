@@ -308,6 +308,7 @@ type
     cxButton13: TsButton;
     cxButton14: TsButton;
     cxButton15: TsButton;
+    timRefresh: TTimer;
     procedure FormCreate(Sender : TObject);
     procedure FormShow(Sender : TObject);
     procedure FormKeyDown(Sender : TObject; var Key : Word; Shift : TShiftState);
@@ -351,12 +352,14 @@ type
     procedure sButton4Click(Sender: TObject);
     procedure btnRefreshPivStatusClick(Sender: TObject);
     procedure Panel10DblClick(Sender: TObject);
+    procedure timRefreshTimer(Sender: TObject);
   private
     zDaysToShow : integer;
     zLeftIsExpand : boolean;
     zRightIsExpand : boolean;
 
     zCurrentDate : TDate;
+    procedure RestartTimer;
 
 
   public
@@ -368,6 +371,7 @@ type
     procedure GetCurrentGuests(aDate : TDate);
     procedure RefreshImPortLog;
     procedure RefreshRoomStatus;
+    procedure DoRefreshRoomStatus;
     procedure FormatLog;
     procedure ClearLog(firstLine : string);
 
@@ -900,6 +904,15 @@ begin
 end;
 
 procedure TfrmDayNotes.RefreshRoomStatus;
+begin
+
+  if (pageMain.ActivePage <> tabStatus) or (NOT Showing)  then
+    exit;
+
+  RestartTimer;
+end;
+
+procedure TfrmDayNotes.DoRefreshRoomStatus;
 var
   s : string;
   rSet : TRoomerDataSet;
@@ -941,7 +954,7 @@ begin
 
 	s := format(s, [ _db(zCurrentDate,true),_db(zCurrentDate,true), zDaysToShow]);
 
-//  copytoclipboard(s);
+  copytoclipboard(s);
 //  debugmessage(s);
 
   RSet := CreateNewDataSet;
@@ -960,6 +973,11 @@ begin
 
 end;
 
+procedure TfrmDayNotes.RestartTimer;
+begin
+  timRefresh.Enabled := False;
+  timRefresh.Enabled := True;
+end;
 
 procedure TfrmDayNotes.edDaysToShowPropertiesChange(Sender : TObject);
 begin
@@ -1217,6 +1235,12 @@ end;
 procedure TfrmDayNotes.sButton4Click(Sender: TObject);
 begin
   frmdayNotes.memLog.Perform(EM_LINESCROLL,0,-1)
+end;
+
+procedure TfrmDayNotes.timRefreshTimer(Sender: TObject);
+begin
+  timRefresh.Enabled := False;
+  DoRefreshRoomStatus;
 end;
 
 end.

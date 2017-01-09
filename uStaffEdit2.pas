@@ -246,6 +246,7 @@ begin
   chkActive.checked    := zData.Active          ;
   edInitials.Text      := zData.Initials        ;
   edPassword.Text      := zData.Password        ;
+  edtRepeatPassword.Text := zData.Password        ;
   edStaffPID.Text      := zData.StaffPID        ;
   edName.Text          := zData.Name            ;
   edAddress1.Text      := zData.Address1        ;
@@ -266,6 +267,7 @@ begin
   chkPmsOnly.checked    :=  zData.PmsOnly       ;
   ChkWindowsAuth.checked:=  zData.WindowsAuth   ;
 
+  sTabSheet2.TabVisible := glb.ValidateHelpContext(4);
 end;
 
 procedure TfrmStaffEdit2.FillLanguageCombo;

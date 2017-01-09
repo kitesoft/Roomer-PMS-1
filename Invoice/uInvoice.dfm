@@ -145,7 +145,7 @@ object frmInvoice: TfrmInvoice
       end
       object clabCustomer: TsLabel
         Left = 2
-        Top = 7
+        Top = 8
         Width = 103
         Height = 13
         Alignment = taRightJustify
@@ -378,7 +378,7 @@ object frmInvoice: TfrmInvoice
       end
       object edtCustomer: TsEdit
         Left = 111
-        Top = 4
+        Top = 8
         Width = 93
         Height = 17
         AutoSize = False
@@ -403,7 +403,7 @@ object frmInvoice: TfrmInvoice
       end
       object edtPersonalId: TsEdit
         Left = 111
-        Top = 27
+        Top = 28
         Width = 253
         Height = 17
         AutoSize = False
@@ -515,7 +515,7 @@ object frmInvoice: TfrmInvoice
       end
       object edtAddress4: TsEdit
         Left = 111
-        Top = 128
+        Top = 131
         Width = 253
         Height = 17
         AutoSize = False
@@ -1343,6 +1343,8 @@ object frmInvoice: TfrmInvoice
           SearchFooter.MatchCaseCaption = 'Match case'
           SortSettings.DefaultFormat = ssAutomatic
           Version = '8.1.2.0'
+          ExplicitLeft = 17
+          ExplicitTop = 4
           ColWidths = (
             24
             91

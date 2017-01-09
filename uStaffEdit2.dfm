@@ -81,8 +81,6 @@ object frmStaffEdit2: TfrmStaffEdit2
     SkinData.SkinSection = 'PAGECONTROL'
     object sTabSheet1: TsTabSheet
       Caption = 'Main'
-      SkinData.CustomColor = False
-      SkinData.CustomFont = False
       object gbxLoginInfo: TsGroupBox
         Left = 0
         Top = 0
@@ -92,7 +90,6 @@ object frmStaffEdit2: TfrmStaffEdit2
         Caption = 'Login information'
         TabOrder = 0
         SkinData.SkinSection = 'GROUPBOX'
-        Checked = False
         object pnlLoginInfo: TsPanel
           Left = 2
           Top = 15
@@ -276,7 +273,6 @@ object frmStaffEdit2: TfrmStaffEdit2
         Caption = 'Name'
         TabOrder = 1
         SkinData.SkinSection = 'GROUPBOX'
-        Checked = False
         object clabName: TsLabel
           Left = 2
           Top = 44
@@ -359,7 +355,6 @@ object frmStaffEdit2: TfrmStaffEdit2
         Caption = 'Address'
         TabOrder = 2
         SkinData.SkinSection = 'GROUPBOX'
-        Checked = False
         object edAddress1: TsEdit
           AlignWithMargins = True
           Left = 167
@@ -451,7 +446,6 @@ object frmStaffEdit2: TfrmStaffEdit2
         Caption = 'Language'
         TabOrder = 3
         SkinData.SkinSection = 'GROUPBOX'
-        Checked = False
         object clabStaffLanguage: TsLabel
           Left = 106
           Top = 44
@@ -531,15 +525,8 @@ object frmStaffEdit2: TfrmStaffEdit2
           ExplicitLeft = 165
           ExplicitTop = 16
           inherited pnlCountry: TsPanel
-            ExplicitWidth = 206
             inherited lblCountryName: TsLabel
               Height = 14
-            end
-            inherited edCountryCode: TsEdit
-              ExplicitLeft = 0
-            end
-            inherited btnGetCountry: TsButton
-              ExplicitLeft = 38
             end
           end
         end
@@ -558,7 +545,6 @@ object frmStaffEdit2: TfrmStaffEdit2
         Caption = 'Contact Information'
         TabOrder = 4
         SkinData.SkinSection = 'GROUPBOX'
-        Checked = False
         object gbxContact: TsLabel
           Left = 2
           Top = 18
@@ -710,8 +696,6 @@ object frmStaffEdit2: TfrmStaffEdit2
     end
     object sTabSheet2: TsTabSheet
       Caption = 'Authorization'
-      SkinData.CustomColor = False
-      SkinData.CustomFont = False
       ExplicitLeft = 0
       ExplicitTop = 0
       ExplicitWidth = 0
@@ -730,7 +714,6 @@ object frmStaffEdit2: TfrmStaffEdit2
         Caption = 'IP restrictions'
         TabOrder = 0
         SkinData.SkinSection = 'GROUPBOX'
-        Checked = False
         object memIPAddresses: TsMemo
           AlignWithMargins = True
           Left = 5
@@ -782,7 +765,6 @@ object frmStaffEdit2: TfrmStaffEdit2
         Caption = 'Authorization'
         TabOrder = 1
         SkinData.SkinSection = 'GROUPBOX'
-        Checked = False
         object cLabStaffType: TsLabel
           Left = 2
           Top = 25

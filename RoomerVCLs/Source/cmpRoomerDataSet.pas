@@ -2,7 +2,7 @@ unit cmpRoomerDataSet;
 
 interface
 
-{$INCLUDE roomer.inc}
+{$INCLUDE ..\..\roomer.inc}
 
 uses
   System.SysUtils,
@@ -230,17 +230,8 @@ type
 
     function HashedPassword(password: String): String;
     function SystemDownloadFileFromURI(URI, filename: String): boolean;
-//    function SystemUploadFile(filename: String; FileType: word; includeLastModified: boolean = true): boolean;
-//    function SystemDownloadFile(FileType: word; sourceFilename, destFilename: String): boolean;
-//    function SystemDownloadRoomerFile(sourceFilename, destFilename: String): boolean;
-
     procedure SystemMarkReservationAsNotified(id: Integer);
     function SystemDownloadRoomerBackup(destFilename: String): boolean;
-//    function SystemRoomerFile(filename: String): TFileEntity;
-//    function SystemListFiles(FileType: word): TFileList;
-//    function SystemDeleteFile(FileType: word; filename: String): boolean;
-//    function SystemRenameFile(FileType: word; filename, newFilename: String): boolean;
-//    function SystemFileExists(FileType: word; filename: String): boolean;
     procedure SystemPrepareChannelRates;
 
     function PostOpenAPI(url: String; Data: TStream): String;
@@ -360,8 +351,6 @@ resourcestring
   PROMOIR_ROOMER_HOTEL_ADD_PRIVATE_RESOURCES = 'Promoir-Roomer-Hotel-Add-Private-Resources';
   PROMOIR_ROOMER_HOTEL_PATH = 'Promoir-Roomer-Hotel-Add-Resources-Path';
 
-var
-  EXTRA_BUILD_ID: String;
 
 procedure Register;
 begin
@@ -691,41 +680,10 @@ end;
 
 procedure TRoomerDataSet.AddAuthenticationHeaders(aRoomerClient: TRoomerHttpClient);
 begin
-  aRoomerClient.AddAuthenticationHeaders(hotelId, username, password, FAppName, FAppVersion, EXTRA_BUILD_ID);
+  aRoomerClient.AddAuthenticationHeaders(hotelId, username, password, FAppName, FAppVersion, TRoomerVersionInfo.ExtraBuild);
   SetOpenApiAuthHeaders(aRoomerClient.RequestHeader);
 end;
 
-(*
-  function TRoomerDataSet.GetAsJSON(roomerClient:
-  TRoomerHttpClient
-  ; url: String): String;
-
-  var
-  _roomerClient: TRoomerHttpClient;
-
-  var retries : Integer;
-  begin
-  AssertOnlineMode;
-  _roomerClient := CreateRoomerClient;
-  try
-  AddAuthenticationHeaders(_roomerClient);
-  _roomerClient.RequestHeader.AcceptEncoding := 'UTF-8';
-  for retries := 1 to 3 do
-  begin
-  try
-  result := _roomerClient.Get(url);
-  Break;
-  except
-  if retries = 3 then
-  raise;
-  end;
-  end;
-  finally
-  FreeAndNil(_roomerClient);
-  end;
-  end;
-
-*)
 function TRoomerDataSet.PostAsJSON(const url, Data: String): String;
 var
   Stream: TStringStream;
@@ -1013,41 +971,6 @@ begin
   end;
 end;
 
-//function TRoomerDataSet.UploadFile(aRoomerClient: TRoomerHttpClient; const url, filename: String): boolean;
-//var
-//  Stream: TMemoryStream;
-//  contentType: String;
-//var
-//  retries: Integer;
-//begin
-//  Result := false;
-//  Stream := TMemoryStream.Create;
-//  try
-//    try
-//      Stream.LoadFromFile(filename);
-//      Stream.Position := 0;
-//      AddAuthenticationHeaders(aRoomerClient);
-//      if contentType = '' then
-//        contentType := 'application/octet-stream';
-//      aRoomerClient.contentType := contentType;
-//      for retries := 1 to 3 do
-//      begin
-//        try
-//          aRoomerClient.Post(AnsiString(url), Stream);
-//          Break;
-//        except
-//          if retries = 3 then
-//            raise;
-//        end;
-//      end;
-//      Result := true;
-//    except
-//      Result := false;
-//    end;
-//  finally
-//    Stream.Free;
-//  end;
-//end;
 
 function TRoomerDataSet.downloadUrlAsString(url: String; loggingInOut: Integer = 0; { 0/1/2 = neither/login/logout }
   SetLastAccess: boolean = true; contentType: String = ''; RaiseException: boolean = false): String;
@@ -1588,9 +1511,6 @@ begin
       filename := Copy(files[i], POS('=', files[i]) + 1, maxint);
       filePath := Copy(files[i], 1, POS('=', files[i]) - 1);
       contType := '';
-//      contType := GetMIMEtype(filename);
-//      if LENGTH(contType) < 4 then
-//        contType := 'application/' + copy(LowerCase(ExtractFileExt(Filename)), 2, maxint);
       contType := GetMIMEtype(filename);
       if LENGTH(contType) < 4 then
         contType := 'application/unknown';
@@ -1934,15 +1854,13 @@ begin
 
   res := loginViaPost(RoomerUri + 'authentication/login',
     format('hotelid=%s&username=%s&pwencoded=%s&appname=%s&appversion=%s&datasettype=0&extraBuild=%s',
-    [hotelId, username, pwmd5, appName, appVersion, EXTRA_BUILD_ID]));
+    [hotelId, username, pwmd5, appName, appVersion, TRoomerVersionInfo.ExtraBuild]));
   SetSessionLengthInSeconds(res);
   FLastAccess := now;
   FLoggedIn := true;
 end;
 
 function TRoomerDataSet.SwapHotel(hotelId: String; var username, password: String): boolean;
-// var
-// res: String;
 begin
   Result := Login(hotelId, FUsername, FPassword, FAppName, FAppVersion);
   if Result then
@@ -1950,12 +1868,6 @@ begin
     username := FUsername;
     password := FPassword;
   end;
-  // result := true;
-  // FHotelId := hotelId;
-  //
-  // res := downloadUrlAsString(RoomerUri + format('authentication/swaphotels?hotelid=%s', [hotelId]), 0, true);
-  // SetSessionLengthInSeconds(res);
-  // FLastAccess := now;
 end;
 
 function TRoomerDataSet.HashedPassword(password: String): String;
@@ -2102,100 +2014,16 @@ begin
     Result := 'templates';
 end;
 
-//function TRoomerDataSet.SystemDeleteFile(FileType: word; filename: String): boolean;
-//begin
-//  try
-//    GetAsString(FStoreUri + format('store/delete?hotelId=%s&filename=%s&location=%s',
-//      [FHotelId, EncodeURIComponent(extractFilename(filename)), locationName(FileType)]));
-//    Result := true;
-//  except
-//    Result := false;
-//  end;
-//end;
-//
-//function TRoomerDataSet.SystemRenameFile(FileType: word; filename, newFilename: String): boolean;
-//begin
-//  try
-//    GetAsString(FStoreUri + format('store/rename?hotelId=%s&filename=%s&newname=%s&location=%s',
-//      [FHotelId, EncodeURIComponent(extractFilename(filename)), EncodeURIComponent(extractFilename(newFilename)),
-//      locationName(FileType)]));
-//    Result := true;
-//  except
-//    Result := false;
-//  end;
-//end;
-
-//function TRoomerDataSet.SystemDownloadFile(FileType: word; sourceFilename, destFilename: String): boolean;
-//begin
-//  Result := DownloadFile(roomerClient, FStoreUri + format('store/get?hotelId=%s&filename=%s&location=%s',
-//    [FHotelId, extractFilename(sourceFilename), locationName(FileType)]), destFilename);
-//end;
-
 function TRoomerDataSet.SystemDownloadFileFromURI(URI, filename: String): boolean;
 begin
   Result := DownloadFile(roomerClient, URI, filename);
 end;
-
-//function TRoomerDataSet.SystemDownloadRoomerFile(sourceFilename, destFilename: String): boolean;
-//begin
-//  Result := DownloadFile(roomerClient, FStoreUri + format('store/roomer/%s', [extractFilename(sourceFilename)]),
-//    destFilename);
-//end;
 
 function TRoomerDataSet.SystemDownloadRoomerBackup(destFilename: String): boolean;
 begin
   Result := DownloadFile(roomerClient, FUri + 'pms/business/backup', destFilename);
 end;
 
-//function TRoomerDataSet.SystemRoomerFile(filename: String): TFileEntity;
-//var
-//  fileList: TFileList;
-//begin
-//  try
-//    fileList := TFileList.Create(String(GetAsString(FStoreUri + format('store/roomerinfo?hotelId=%s&filename=%s',
-//      [FHotelId, filename]))));
-//    if fileList.Count > 0 then
-//      Result := fileList.files[0]
-//    else
-//      Result := nil;
-//  except
-//    Result := nil;
-//  end;
-//end;
-
-//function TRoomerDataSet.SystemFileExists(FileType: word; filename: String): boolean;
-//var
-//  s: String;
-//begin
-//  s := String(GetAsString(FStoreUri + format('store/exists?hotelId=%s&location=%s&filename=%s',
-//    [FHotelId, locationName(FileType), extractFilename(filename)])));
-//  Result := LowerCase(s) = 'true';
-//end;
-
-//function TRoomerDataSet.SystemListFiles(FileType: word): TFileList;
-//var
-//  s: String;
-//begin
-//  s := GetAsString(FStoreUri + format('store/list?hotelId=%s&location=%s', [FHotelId, locationName(FileType)]));
-//  Result := TFileList.Create(s); // SplitStringToTStrings(#10, s);
-//end;
-
-//function TRoomerDataSet.SystemUploadFile(filename: String; FileType: word; includeLastModified: boolean = true)
-//  : boolean;
-//var
-//  DateOfFile: TDateTime;
-//  sTimeStamp: String;
-//begin
-//  sTimeStamp := '';
-//  if includeLastModified then
-//  begin
-//    FileAge(filename, DateOfFile);
-//    sTimeStamp := format('&timestamp=%s', [dateToJsonString(DateOfFile)]);
-//  end;
-//
-//  Result := UploadFile(roomerClient, FStoreUri + format('store/save?hotelId=%s&filename=%s&location=%s%s',
-//    [FHotelId, extractFilename(filename), locationName(FileType), sTimeStamp]), filename);
-//end;
 
 function TRoomerDataSet.SplitMultipleResultIntoDatasets(res: String): TList<TRoomerDataSet>;
 var
@@ -2428,7 +2256,5 @@ begin
   ownerId := _ownerId;
 end;
 
-initialization
-  EXTRA_BUILD_ID := TRoomerVersionInfo.ExtraBuild;
 
 end.

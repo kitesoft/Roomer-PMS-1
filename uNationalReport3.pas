@@ -318,9 +318,6 @@ type
     { Public declarations }
   end;
 
-var
-  frmNationalReport3 : TfrmNationalReport3;
-
 implementation
 
 uses
@@ -482,7 +479,7 @@ end;
 
 procedure TfrmNationalReport3.btnCollapseAllClick(Sender: TObject);
 begin
-tvAllGuests.DataController.Groups.FullCollapse;
+  tvAllGuests.DataController.Groups.FullCollapse;
 end;
 
 procedure TfrmNationalReport3.btnExitClick(Sender: TObject);
@@ -536,7 +533,6 @@ begin
 
   tvHagstofa1Country.Visible := true;
   tvHagstofa1CountryName.Visible := true;
-//  cvHagstofa1Chart.Categories.DataBinding.FieldName := 'CountryName';
   btnNationalStatisticsReport.Enabled := true;
 
   s :=
@@ -557,12 +553,9 @@ begin
   '    INNER JOIN persons ON countries.country = persons.Nationality '#10+ // persons.country '#10+
   '    INNER JOIN reservations ON persons.Reservation = reservations.Reservation '#10+
   '    INNER JOIN roomsdate ON persons.RoomReservation = roomsdate.RoomReservation AND (ADate >= %s) AND (ADate <= %s ) '#10+
-  ///ERROR Corrected
-//  '    INNER JOIN rooms on (rooms.room=roomsdate.room and rooms.wildcard=0 and rooms.active=1) '#10+
   ' WHERE '#10+
   '   (persons.RoomReservation IN %s )'#10+
   '      AND (((Resflag in (''G'',''P'',''L'',''D'',''O'',''A'')) AND (SUBSTR(roomsdate.room, 1, 1) != ''<'')) OR ((Resflag in (''G'',''D'')) AND (SUBSTR(roomsdate.room, 1, 1) = ''<''))) '#10+
-//  '      AND (SUBSTR(roomsdate.room, 1, 1) = ''<'' OR NOT ISNULL((SELECT 1 FROM rooms r WHERE r.room=roomsdate.room and r.wildcard=0 and r.active=1 and statistics=1 and hidden=0 LIMIT 1))) '#10+
   ' GROUP BY '#10+
   '   countries.OrderIndex, '#10+
   '   countries.Country, '#10+
@@ -571,39 +564,11 @@ begin
   '   countrygroups.GroupName '#10+
   ' ORDER BY orderIndex DESC ';
 
-//  'SELECT '#10+
-//  'countries.Country, '#10+
-//  'countries.CountryName, '#10+
-//  'countries.CountryGroup, '#10+
-//  'countries.OrderIndex, '#10+
-//  'countrygroups.GroupName, '#10+
-//  'COUNT(DISTINCT persons.RoomReservation) AS RoomReservationCount, '#10+
-//  'COUNT(persons.ID) AS GuestNights, '#10+
-//  'COUNT(DISTINCT persons.ID) AS GuestCount, '#10+
-//  'COUNT(DISTINCT persons.Reservation) AS ReservationCount '#10+
-//  'FROM '#10+
-//  '  countries '#10+
-//  '    INNER JOIN countrygroups ON countries.countrygroup = countrygroups.CountryGroup '#10+
-//  '    INNER JOIN persons ON countries.country = persons.country '#10+
-//  '    INNER JOIN reservations ON persons.Reservation = reservations.Reservation '#10+
-//  '    INNER JOIN roomsdate ON persons.RoomReservation = roomsdate.RoomReservation '#10+
-//  ' WHERE '#10+
-//  '   (persons.RoomReservation IN %s )'#10+
-//  '      AND (((Resflag in (''G'',''P'',''D'',''O'',''A'')) AND roomsdate.isNoRoom=0) OR ((Resflag in (''G'',''D'')) AND roomsdate.isNoRoom<>0)) '#10+
-//  ' GROUP BY '#10+
-//  '   countries.OrderIndex, '#10+
-//  '   countries.Country, '#10+
-//  '   countries.CountryName, '#10+
-//  '   countries.CountryGroup, '#10+
-//  '   countrygroups.GroupName '#10+
-//  ' ORDER BY orderIndex DESC ';
-
-
-
 
   rSet := CreateNewDataSet;
   try
     screen.Cursor := crHourGlass;
+    mHagstofa1.DisableControls;
     try
       s := format(s, [_db(zDateFrom, True), _db(zDateTo, True), zRoomReservationsList]);
       CopyToCLipboard(s);
@@ -617,95 +582,76 @@ begin
       if mHagstofa1.Active then mHagstofa1.Close;
       mHagstofa1.Open;
 
-      mHagstofa1.DisableControls;
-      try
-        totalnights := 0;
-        totalGuests := 0;
-        while not rSet.Eof do
-        begin
-          country              := rSet.FieldByName('Country').AsString;
-          countryName          := rSet.FieldByName('CountryName').AsString;
-          RoomReservationCount := rSet.FieldByName('RoomReservationCount').AsInteger;
-          ReservationCount     := rSet.FieldByName('ReservationCount').AsInteger;
-          CountryGroup         := rSet.FieldByName('CountryGroup').AsString;
-          GroupName            := rSet.FieldByName('GroupName').AsString;
-          GuestCount           := rSEt.FieldByName('GuestCount').AsInteger;;
-          GuestNights          := rSEt.FieldByName('GuestNights').AsInteger;
-          Orderindex           := rSEt.FieldByName('orderIndex').AsInteger;
+      totalnights := 0;
+      totalGuests := 0;
+      while not rSet.Eof do
+      begin
+        country              := rSet.FieldByName('Country').AsString;
+        countryName          := rSet.FieldByName('CountryName').AsString;
+        RoomReservationCount := rSet.FieldByName('RoomReservationCount').AsInteger;
+        ReservationCount     := rSet.FieldByName('ReservationCount').AsInteger;
+        CountryGroup         := rSet.FieldByName('CountryGroup').AsString;
+        GroupName            := rSet.FieldByName('GroupName').AsString;
+        GuestCount           := rSEt.FieldByName('GuestCount').AsInteger;;
+        GuestNights          := rSEt.FieldByName('GuestNights').AsInteger;
+        Orderindex           := rSEt.FieldByName('orderIndex').AsInteger;
 
-          totalNights := TotalNights+Guestnights;
-          totalGuests := TotalGuests+guestCount;
+        totalNights := TotalNights+Guestnights;
+        totalGuests := TotalGuests+guestCount;
 
-          mHagstofa1.Append;
-          mHagstofa1.fieldbyname('country').AsString               :=  country;
-          mHagstofa1.fieldbyname('countryName').AsString           :=  countryName;
-          mHagstofa1.fieldbyname('RoomReservationCount').AsInteger :=  RoomReservationCount;
-          mHagstofa1.fieldbyname('ReservationCount').AsInteger     :=  ReservationCount;
-          mHagstofa1.fieldbyname('CountryGroup').AsString          :=  CountryGroup;
-          mHagstofa1.fieldbyname('GroupName').AsString             :=  GroupName;
-          mHagstofa1.fieldbyname('Guests').AsInteger               :=  GuestCount;
-          mHagstofa1.fieldbyname('Nights').AsInteger               :=  GuestNights;
-          mHagstofa1.FieldByName('OrderIndex').AsInteger           :=  OrderIndex;
-          mHagstofa1.post;
-          rSet.Next;
-        end;
-
-        mHagstofa1.First;
-        while not mHagstofa1.Eof do
-        begin
-          Precent          := 0.00;
-          PrecentGuests   := 0.00;
-
-
-          GuestNights := mHagstofa1.fieldbyname('Nights').AsInteger;
-          if totalNights > 0 then
-          begin
-            precent := (GuestNights/totalNights)*100;
-          end;
-
-          GuestCount := mHagstofa1.fieldbyname('Guests').AsInteger;
-          if totalGuests > 0 then
-          begin
-            precentGuests := (GuestCount/totalGuests)*100;
-          end;
-
-          mHagstofa1.edit;
-          mHagstofa1.FieldByName('precent').AsFloat        :=  precent;
-          mHagstofa1.FieldByName('precentGuests').AsFloat  :=  precentGuests;
-          mHagstofa1.Post;
-
-          mHagstofa1.next;
-        end;
-
-        mHagstofa1.first;
-        zGuestCount := totalGuests;
-        zNightCount := totalNights;
-        updateSums;
-      finally
-        mHagstofa1.EnableControls;
-        screen.Cursor := crDefault;
+        mHagstofa1.Append;
+        mHagstofa1.fieldbyname('country').AsString               :=  country;
+        mHagstofa1.fieldbyname('countryName').AsString           :=  countryName;
+        mHagstofa1.fieldbyname('RoomReservationCount').AsInteger :=  RoomReservationCount;
+        mHagstofa1.fieldbyname('ReservationCount').AsInteger     :=  ReservationCount;
+        mHagstofa1.fieldbyname('CountryGroup').AsString          :=  CountryGroup;
+        mHagstofa1.fieldbyname('GroupName').AsString             :=  GroupName;
+        mHagstofa1.fieldbyname('Guests').AsInteger               :=  GuestCount;
+        mHagstofa1.fieldbyname('Nights').AsInteger               :=  GuestNights;
+        mHagstofa1.FieldByName('OrderIndex').AsInteger           :=  OrderIndex;
+        mHagstofa1.post;
+        rSet.Next;
       end;
+
+      mHagstofa1.First;
+      while not mHagstofa1.Eof do
+      begin
+        Precent          := 0.00;
+        PrecentGuests   := 0.00;
+
+
+        GuestNights := mHagstofa1.fieldbyname('Nights').AsInteger;
+        if totalNights > 0 then
+        begin
+          precent := (GuestNights/totalNights)*100;
+        end;
+
+        GuestCount := mHagstofa1.fieldbyname('Guests').AsInteger;
+        if totalGuests > 0 then
+        begin
+          precentGuests := (GuestCount/totalGuests)*100;
+        end;
+
+        mHagstofa1.edit;
+        mHagstofa1.FieldByName('precent').AsFloat        :=  precent;
+        mHagstofa1.FieldByName('precentGuests').AsFloat  :=  precentGuests;
+        mHagstofa1.Post;
+
+        mHagstofa1.next;
+      end;
+
+      mHagstofa1.first;
+      zGuestCount := totalGuests;
+      zNightCount := totalNights;
+      updateSums;
     finally
+      mHagstofa1.EnableControls;
       screen.Cursor := crDefault;
     end;
   finally
     freeandNil(rSet);
   end;
-
-
-
-
-  rSet := CreateNewDataSet;
-  try
-    screen.Cursor := crHourGlass;
-  finally
-    freeandNil(rSet);
-  end;
 end;
-
-
-
-
 
 procedure TfrmNationalReport3.getAllGuests;
 var
@@ -714,9 +660,6 @@ var
 begin
   rSet := CreateNewDataSet;
   try
-    screen.Cursor := crHourGlass;
-    mAllGuests.DisableControls;
-
     s :=
     ' SELECT DISTINCT'#10+
     '     roomreservations.Reservation '#10+
@@ -724,7 +667,6 @@ begin
     '   , reservations.Customer '#10+
     '   , persons.Name AS GuestName '#10+
     '   , persons.Person '#10+
-//    '   , persons.Country AS GuestsCountry'#10+
     '   , persons.Nationality AS GuestsCountry'#10+
     '   , countries.CountryName AS GuestCountryName '#10+
     '   , countrygroups.GroupName AS GuestGroupName '#10+#10+
@@ -745,7 +687,6 @@ begin
     '       countrygroups ON countries.CountryGroup = countrygroups.CountryGroup '#10+
     '     RIGHT OUTER JOIN '#10+
     '       roomreservations ON persons.RoomReservation = roomreservations.RoomReservation '#10+
-//    '     INNER JOIN rooms ro ON roomreservations.room=ro.room and ro.wildcard=0 and ro.active=1  '#10 +
     '     INNER JOIN rooms ro ON (roomreservations.room=ro.room or roomreservations.room=concat(''<'', roomreservations.roomreservation, ''>'')) and ro.active=1  '#10 +
     '     RIGHT OUTER JOIN '#10+
     '       reservations ON roomreservations.Reservation = reservations.Reservation '#10+
@@ -755,14 +696,15 @@ begin
     ' ORDER BY '#10+
     '   reservations.Reservation ';
 
-
+    screen.Cursor := crHourGlass;
+    mAllGuests.DisableControls;
     try
 
       s := format(s , [zRoomReservationsList]);
       CopyToClipboard(s);
       hData.rSet_bySQL(rSet,s);
 
-      if not mAllGuests.Active then mAllGuests.Close;
+      if mAllGuests.Active then mAllGuests.Close;
       mAllGuests.open;
       mAllGuests.LoadFromDataSet(rSet);
       mAllGuests.First;
@@ -777,12 +719,11 @@ begin
         mAllGuests.Post;
         mAllGuests.next;
       end;
-      mAllGuests.First;
-
 
     finally
       mAllGuests.EnableControls;
       tvAllGuests.DataController.Groups.FullExpand;
+      mAllGuests.First;
       screen.Cursor := crDefault;
     end;
   finally
@@ -873,17 +814,7 @@ end;
 
 procedure TfrmNationalReport3.btnNationalStatisticsReportClick(Sender: TObject);
 var
-  CountryGroup : string;
-  GroupName : string;
-  OrderIndex : integer;
   aReport   : TppReport;
-  Guests : integer;
-  Nights : integer;
-
-  countryName : string;
-  country     : string;
-
-
 begin
   if m.active then m.Close;
   m.Open;
@@ -893,24 +824,14 @@ begin
     mHagStofa1.First;
     while not mHagstofa1.eof do
     begin
-      GroupName  := '';
-
-      countryGroup := mHagstofa1.FieldByName('CountryGroup').AsString;
-      guests       := mHagstofa1.FieldByName('Guests').AsInteger;
-      Nights       := mHagstofa1.FieldByName('Nights').AsInteger;
-      GroupName    := mHagstofa1.FieldByName('GroupName').AsString;
-      OrderIndex   := mHagstofa1.FieldByName('OrderIndex').AsInteger;
-      Country      := mHagstofa1.fieldbyname('country').AsString;
-      CountryName  := mHagstofa1.fieldbyname('countryName').AsString;
-
       m.append;
-        m.FieldByName('countryGroup').AsString := countryGroup;
-        m.FieldByName('GroupName').AsString    := GroupName;
-        m.FieldByName('OrderIndex').AsInteger  := OrderIndex;
-        m.FieldByName('Guests').AsInteger      := Guests;
-        m.FieldByName('Nights').AsInteger      := Nights;
-        m.FieldByName('country').AsString      := country;
-        m.FieldByName('CountryName').AsString  := CountryName;
+        m.FieldByName('countryGroup').AsString := mHagstofa1.FieldByName('CountryGroup').AsString;
+        m.FieldByName('GroupName').AsString    := mHagstofa1.FieldByName('GroupName').AsString;
+        m.FieldByName('OrderIndex').AsInteger  := mHagstofa1.FieldByName('OrderIndex').AsInteger;
+        m.FieldByName('Guests').AsInteger      := mHagstofa1.FieldByName('Guests').AsInteger;
+        m.FieldByName('Nights').AsInteger      := mHagstofa1.FieldByName('Nights').AsInteger;
+        m.FieldByName('country').AsString      := mHagstofa1.fieldbyname('country').AsString;
+        m.FieldByName('CountryName').AsString  := mHagstofa1.fieldbyname('countryName').AsString;
       m.Post;
       mHagstofa1.Next;
     end;
@@ -943,13 +864,10 @@ var
   iReservation : integer;
   iRoomReservation : integer;
 begin
-   iReservation := mAllGuests.FieldByName('Reservation').AsInteger;
+  iReservation := mAllGuests.FieldByName('Reservation').AsInteger;
   iRoomReservation := mAllGuests.FieldByName('RoomReservation').AsInteger;
 
-  if EditReservation(iReservation, iRoomReservation) then
-  begin
-
-  end;
+  EditReservation(iReservation, iRoomReservation);
 end;
 
 procedure TfrmNationalReport3.dtDateFromChange(Sender : TObject);
@@ -968,12 +886,7 @@ procedure TfrmNationalReport3.edPrivateChange(Sender: TObject);
 var
   i : integer;
 begin
-  i := 0;
-  try
-    i := edPrivate.Value+edBuisiness.value+edConfress.value;
-  Except
-  end;
-
+  i := edPrivate.Value+edBuisiness.value+edConfress.value;
   LabTotalVisitType.caption := inttostr(i);
 end;
 

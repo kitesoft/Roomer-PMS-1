@@ -4964,10 +4964,6 @@ end;
 procedure TfrmMain.CheckInGroup;
 var
   lStateChanger: TReservationStateChangeHandler;
-  i : Integer;
-  lstRoomReservations : TStringList;
-  lstRoomReservationsStatus : TStringList;
-  ReservationCount : Integer;
 begin
 
   if GetSelectedRoomInformation then
@@ -7302,6 +7298,7 @@ begin
       try
         for i := RoomerMessages.Count - 1 downto 0 do
         begin
+          systemMessage := false;
           RoomerMessage := RoomerMessages.ActiveRoomerMessage[i];
           if Assigned(RoomerMessage) then
           begin
@@ -12106,14 +12103,11 @@ end;
 
 procedure TfrmMain._RptNationality;
 begin
-  Application.CreateForm(TfrmNationalReport3, frmNationalReport3);
+  with TfrmNationalReport3.Create(nil) do
   try
-    if frmNationalReport3.ShowModal = mrOK then
-    begin
-      //
-    end;
+    ShowModal;
   finally
-    freeandNil(frmNationalReport3);
+    Free;
   end;
 end;
 

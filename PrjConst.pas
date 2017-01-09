@@ -1704,7 +1704,7 @@ begin
   frmLodgingTaxReport2 := TfrmLodgingTaxReport2.Create(nil); frmLodgingTaxReport2.Free; frmLodgingTaxReport2 := nil;
   frmCancelReservation3 := TfrmCancelReservation3.Create(nil); frmCancelReservation3.Free; frmCancelReservation3 := nil;
   frmCancelReservation2 := TfrmCancelReservation2.Create(nil); frmCancelReservation2.Free; frmCancelReservation2 := nil;
-  frmNationalReport3 := TfrmNationalReport3.Create(nil); frmNationalReport3.Free; frmNationalReport3 := nil;
+  TfrmNationalReport3.Create(nil).Free;
   frmAddAccommodation := TfrmAddAccommodation.Create(nil); frmAddAccommodation.Free; frmAddAccommodation := nil;
   frmCountries := TfrmCountries.Create(nil); frmCountries.Free; frmCountries := nil;
   frmPayGroups := TfrmPayGroups.Create(nil); frmPayGroups.Free; frmPayGroups := nil;

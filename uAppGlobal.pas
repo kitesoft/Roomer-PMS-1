@@ -174,7 +174,6 @@ Type
     function GetTblseasons: TRoomerDataSet;
     function GetCustomersSet: TRoomerDataSet;
     procedure AssertComponent(Comp: TComponent);
-    function ValidateHelpContext(ctx: Integer): Boolean;
 //    Function ValidateHelpContext2(ctx : Integer) : Boolean;
     function GetPackages: TRoomerDataSet;
     function GetPackageItems: TRoomerDataSet;
@@ -219,6 +218,7 @@ Type
       function LocateSpecificRecordAndGetValue(table, field : String; value : Integer; fieldToGet: String; var resultingValue: Double): Boolean; overload;
 
       function IsValidInList(list: TSet_Of_Integer; intValue : Integer): Boolean;
+      function ValidateHelpContext(ctx: Integer): Boolean;
 
       procedure LoadStaticTables(startingUp : Boolean = False);
       procedure RefreshTablesWhenNeeded;

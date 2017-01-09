@@ -1589,23 +1589,7 @@ end;
 
 function TGlobalApplication.openHiddenInfo(Refrence, RefrenceType : integer): boolean;
 begin
-  frmHiddenInfo := TfrmHiddenInfo.Create(frmHiddenInfo);
-  try
-    frmHiddenInfo.zRefrence := Refrence;
-    frmHiddenInfo.zRefrenceType := RefrenceType;
-    frmHiddenInfo.ShowModal;
-    if frmHiddenInfo.modalresult = mrOK then
-    begin
-      result := true;
-    end
-    else
-    begin
-      result := false; // but who cares
-    end;
-  finally
-    frmHiddenInfo.free;
-    frmHiddenInfo := nil;
-  end;
+  result := OpenHiddenForm(Refrence, RefrenceType);
 end;
 
 function TGlobalApplication.strToStatusAttr(const aValue : string) : recStatusAttr;

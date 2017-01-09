@@ -32,7 +32,7 @@ object frmNationalReport3: TfrmNationalReport3
     Top = 117
     Width = 1079
     Height = 479
-    ActivePage = sheetNationalStatistics1
+    ActivePage = cxTabSheet1
     Align = alClient
     Style = tsButtons
     TabHeight = 25
@@ -42,12 +42,6 @@ object frmNationalReport3: TfrmNationalReport3
     object sheetNationalStatistics1: TsTabSheet
       Caption = 'Room Nights'
       ImageIndex = 1
-      SkinData.CustomColor = False
-      SkinData.CustomFont = False
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Panel2: TsPanel
         Left = 0
         Top = 0
@@ -219,12 +213,6 @@ object frmNationalReport3: TfrmNationalReport3
     object cxTabSheet1: TsTabSheet
       Caption = 'Guests'
       ImageIndex = 2
-      SkinData.CustomColor = False
-      SkinData.CustomFont = False
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Panel5: TsPanel
         Left = 0
         Top = 0
@@ -504,7 +492,6 @@ object frmNationalReport3: TfrmNationalReport3
       ParentFont = False
       TabOrder = 0
       SkinData.SkinSection = 'GROUPBOX'
-      Checked = False
       object dtDateFrom: TsDateEdit
         Left = 16
         Top = 17
@@ -526,7 +513,6 @@ object frmNationalReport3: TfrmNationalReport3
         TabOrder = 0
         Text = '  -  -    '
         OnChange = dtDateFromChange
-        CheckOnExit = True
         SkinData.SkinSection = 'EDIT'
         GlyphMode.Blend = 0
         GlyphMode.Grayed = False
@@ -552,7 +538,6 @@ object frmNationalReport3: TfrmNationalReport3
         TabOrder = 1
         Text = '  -  -    '
         OnChange = dtDateFromChange
-        CheckOnExit = True
         SkinData.SkinSection = 'EDIT'
         GlyphMode.Blend = 0
         GlyphMode.Grayed = False
@@ -572,7 +557,6 @@ object frmNationalReport3: TfrmNationalReport3
       ParentFont = False
       TabOrder = 1
       SkinData.SkinSection = 'GROUPBOX'
-      Checked = False
       object cbxMonth: TsComboBox
         Left = 15
         Top = 16
@@ -586,13 +570,14 @@ object frmNationalReport3: TfrmNationalReport3
         BoundLabel.Font.Style = []
         SkinData.SkinSection = 'COMBOBOX'
         VerticalAlignment = taAlignTop
+        Style = csDropDownList
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clBlack
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
-        ItemIndex = -1
+        ItemIndex = 0
         ParentFont = False
         TabOrder = 0
         Text = 'Choose a Month ...'
@@ -625,28 +610,32 @@ object frmNationalReport3: TfrmNationalReport3
         BoundLabel.Font.Style = []
         SkinData.SkinSection = 'COMBOBOX'
         VerticalAlignment = taAlignTop
+        Style = csDropDownList
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clBlack
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
-        ItemIndex = -1
+        ItemIndex = 0
         ParentFont = False
         TabOrder = 1
-        Text = 'Choose a year ...'
+        Text = 'Choose a Month ...'
         OnCloseUp = cbxMonthPropertiesCloseUp
         Items.Strings = (
-          'Choose year ...'
-          '2011'
-          '2012'
-          '2013'
-          '2014'
-          '2015'
-          '2016'
-          '2017'
-          '2018'
-          '2020')
+          'Choose a Month ...'
+          'January'
+          'February'
+          'March'
+          'April'
+          'may'
+          'June'
+          'July'
+          'august'
+          'September'
+          'October'
+          'November'
+          'December')
       end
     end
     object btnRefresh: TsButton
@@ -1055,11 +1044,12 @@ object frmNationalReport3: TfrmNationalReport3
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
+          NumbersOnly = True
           ParentFont = False
           TabOrder = 0
           OnChange = edPrivateChange
           SkinData.SkinSection = 'EDIT'
-          MaxValue = 0
+          MaxValue = 999999999
           MinValue = 0
           Value = 0
         end
@@ -1074,11 +1064,12 @@ object frmNationalReport3: TfrmNationalReport3
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
+          NumbersOnly = True
           ParentFont = False
           TabOrder = 1
           OnChange = edPrivateChange
           SkinData.SkinSection = 'EDIT'
-          MaxValue = 0
+          MaxValue = 999999999
           MinValue = 0
           Value = 0
         end
@@ -1093,11 +1084,12 @@ object frmNationalReport3: TfrmNationalReport3
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
+          NumbersOnly = True
           ParentFont = False
           TabOrder = 2
           OnChange = edPrivateChange
           SkinData.SkinSection = 'EDIT'
-          MaxValue = 0
+          MaxValue = 999999999
           MinValue = 0
           Value = 0
         end

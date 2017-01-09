@@ -18,13 +18,16 @@ type
   private
     function MakeListOfCurrencies : TStrings;
     procedure prepareCurrencyHandlers(List : TStrings);
+    function GetCurrencyHandler(const forCurrency: string): TCurrencyHandler;
   public
-    constructor Create(currencyCodes : TStrings = nil); overload;
+    constructor Create(currencyCodes : TStrings=nil);
 
     destructor Destroy; override;
 
     function ConvertAmount(Amount : Double; const FromCurrency, ToCurrency : String) : Double; overload;
     function ConvertAmount(Amount : Double; FromCurrencyId, ToCurrencyId : Integer) : Double; overload;
+
+    property CurrencyHandler[const forCurrency: string]: TCurrencyHandler read GetCurrencyHandler;
   end;
 
 
@@ -40,18 +43,20 @@ function TCurrencyHandlersMap.ConvertAmount(Amount: Double; const FromCurrency, 
 var HandlerFrom, HandlerTo : TCurrencyHandler;
 begin
   result := Amount;
-  if FMapByCode.TryGetValue(FromCurrency, HandlerFrom) AND
-     FMapByCode.TryGetValue(ToCurrency, HandlerTo) then
-       result := HandlerFrom.ConvertTo(Amount, HandlerTo);
+  if FromCurrency <> ToCurrency then
+    if FMapByCode.TryGetValue(FromCurrency, HandlerFrom) AND
+       FMapByCode.TryGetValue(ToCurrency, HandlerTo) then
+         result := HandlerFrom.ConvertTo(Amount, HandlerTo);
 end;
 
 function TCurrencyHandlersMap.ConvertAmount(Amount: Double; FromCurrencyId, ToCurrencyId: Integer): Double;
 var HandlerFrom, HandlerTo : TCurrencyHandler;
 begin
   result := Amount;
-  if FMapById.TryGetValue(FromCurrencyId, HandlerFrom) AND
-     FMapById.TryGetValue(ToCurrencyId, HandlerTo) then
-       result := HandlerFrom.ConvertTo(Amount, HandlerTo);
+  if FromCurrencyId <> ToCurrencyId then
+    if FMapById.TryGetValue(FromCurrencyId, HandlerFrom) AND
+       FMapById.TryGetValue(ToCurrencyId, HandlerTo) then
+         result := HandlerFrom.ConvertTo(Amount, HandlerTo);
 end;
 
 constructor TCurrencyHandlersMap.Create(currencyCodes: TStrings = nil);
@@ -81,6 +86,11 @@ begin
   inherited;
 end;
 
+function TCurrencyHandlersMap.GetCurrencyHandler(const forCurrency: string): TCurrencyHandler;
+begin
+  Result := FMapByCode.Items[forCurrency];
+end;
+
 function TCurrencyHandlersMap.MakeListOfCurrencies: TStrings;
 begin
   result := TStringList.Create;
@@ -96,13 +106,12 @@ procedure TCurrencyHandlersMap.prepareCurrencyHandlers(List: TStrings);
 var entry : TCurrencyHandler;
   i: Integer;
 begin
-
+  FMapByCode.Clear;
+  FMapById.Clear;
   for i := 0 to List.Count - 1 do
   begin
     entry := TCurrencyHandler.Create(List[i]);
     FMapByCode.Add(List[i], entry);
-
-    entry := TCurrencyHandler.Create(entry.CurrencyCode);
     FMapById.Add(entry.id, entry);
   end;
 

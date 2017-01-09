@@ -12973,7 +12973,7 @@ begin
   result := '';
   rSet := glb.ChannelManagersSet;
   rSet.First;
-  if glb.ChannelsSet.Locate('active', 1, []) then
+  if rSet.Locate('active', 1, []) then
   begin
     result := rSet.fieldbyname('code').asString;
   end;
