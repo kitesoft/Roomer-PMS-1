@@ -31,6 +31,7 @@ type
     procedure LoadData;
   public
     constructor Create(_ArrivalDate, _CheckOutDate : TDate; _NewReservation : TNewReservation);
+    destructor Destroy; override;
     function RoomTypeOverbooking(sType: String; NumRoomsToAdd: Integer): Boolean;
     function Overbookings: TStrings;
   End;
@@ -81,6 +82,12 @@ begin
   oNewReservation := _NewReservation;
 
   LoadData;
+end;
+
+destructor TAvailabilityPerDay.Destroy;
+begin
+  FRoomTypes.Free;
+  inherited;
 end;
 
 procedure TAvailabilityPerDay.LoadData;

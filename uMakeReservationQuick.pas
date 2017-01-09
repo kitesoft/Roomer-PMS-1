@@ -1371,13 +1371,13 @@ end;
 procedure TfrmMakeReservationQuick.tvRoomResGetCurrencyProperties(Sender: TcxCustomGridTableItem;
   ARecord: TcxCustomGridRecord; var AProperties: TcxCustomEditProperties);
 begin
-  aProperties := FCurrentCurrencyhandler.GetcxEditProperties;
+  aProperties := FCurrentCurrencyhandler.GetcxEditPropertiesKeepEvents(aProperties);
 end;
 
 procedure TfrmMakeReservationQuick.tvRoomRatesNativeAmountGetProperties(Sender: TcxCustomGridTableItem;
   ARecord: TcxCustomGridRecord; var AProperties: TcxCustomEditProperties);
 begin
-  aProperties := FCurrencyhandlers.CurrencyHandler[g.qNativeCurrency].GetcxEditProperties;
+  aProperties := FCurrencyhandlers.CurrencyHandler[g.qNativeCurrency].GetcxEditPropertiesKeepEvents(AProperties);
 end;
 
 procedure TfrmMakeReservationQuick.tvRoomResAvragePricePropertiesEditValueChanged(Sender: TObject);
