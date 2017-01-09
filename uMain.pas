@@ -4964,10 +4964,6 @@ end;
 procedure TfrmMain.CheckInGroup;
 var
   lStateChanger: TReservationStateChangeHandler;
-  i : Integer;
-  lstRoomReservations : TStringList;
-  lstRoomReservationsStatus : TStringList;
-  ReservationCount : Integer;
 begin
 
   if GetSelectedRoomInformation then
@@ -7302,6 +7298,7 @@ begin
       try
         for i := RoomerMessages.Count - 1 downto 0 do
         begin
+          systemMessage := false;
           RoomerMessage := RoomerMessages.ActiveRoomerMessage[i];
           if Assigned(RoomerMessage) then
           begin

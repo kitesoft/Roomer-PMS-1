@@ -110,9 +110,7 @@ uses
 function openLogin(var userName, password : string) : boolean;
 var hotelId : String;
 begin
-  result      := false;
   hotelId     := g.qHotelCode;
-
   result := (AskUserForCredentials(userName, password, hotelId, '', 0)  in cLoginFormSuccesfull);
 end;
 
@@ -120,6 +118,7 @@ function OpenHiddenForm(Refrence, RefrenceType : integer) : Boolean;
 var _frmHiddenInfo : TfrmHiddenInfo;
     gUserName, gPassword : String;
 begin
+  Result := false;
   if openLogin(gUserName, gPassword) then
   begin
     _frmHiddenInfo := TfrmHiddenInfo.Create(nil);
@@ -138,7 +137,6 @@ begin
       end;
     finally
       _frmHiddenInfo.free;
-      _frmHiddenInfo := nil;
     end;
   end;
 end;

@@ -976,8 +976,6 @@ end;
 procedure TfrmDayNotes.RestartTimer;
 begin
   timRefresh.Enabled := False;
-  timRefresh.Interval := 2000;
-  timRefresh.Interval := 1000;
   timRefresh.Enabled := True;
 end;
 

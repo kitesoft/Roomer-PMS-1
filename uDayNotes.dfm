@@ -26,7 +26,7 @@ object frmDayNotes: TfrmDayNotes
     Top = 328
     Width = 44
     Height = 13
-    Caption = '5-1-2017'
+    Caption = '9-1-2017'
     DateTimeFormat = 'd/m/yyyy'
     Version = '1.1.0.0'
     RefreshInterval = 0
