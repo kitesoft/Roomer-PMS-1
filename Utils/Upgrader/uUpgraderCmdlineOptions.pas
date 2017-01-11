@@ -50,9 +50,11 @@ var
   Msg: TStringbuilder;
 begin
   ParsedCmd := TOptionsRegistry.Parse;
-  result := not parsedCmd.HasErrors;
+  // Because exename can be specified through unnamed parameter (deprecated) or -e parameter those options cannot be set Required=True
+  // so an extra check is needed here
+  result := not parsedCmd.HasErrors and not TUpgraderCmdlineOptions.ExeName.IsEmpty;
 
-  if ParsedCmd.HasErrors then
+  if not Result then
   begin
     Msg := TStringBuilder.Create;
     try
@@ -63,7 +65,15 @@ begin
         begin
           Msg.Append(Value + #10);
         end);
-        ShowMessage(Msg.ToString);
+
+      with CreateMessageDialog(Msg.ToString, mtError, [mbClose]) do
+        try
+          ClientWidth := ClientWidth + 50;
+          ShowModal;
+        finally
+          Free;
+        end;
+
     finally
       Msg.Free;
     end;
@@ -82,12 +92,19 @@ procedure ConfigureCommandlineOptions;
 var
   option : IOptionDefintion;
 begin
+  option := TOptionsRegistry.RegisterUnNamedOption<string>('Full path to Executable to be replaced with download (deprecated, use -e)',
+    procedure(const value : string)
+    begin
+        TUpgraderCmdlineOptions.ExeName := value;
+    end);
+  option.Required := false;
+
   option := TOptionsRegistry.RegisterOption<string>('executable', 'e', 'Full path to Executable to be replaced with download',
     procedure(const value : string)
     begin
         TUpgraderCmdlineOptions.ExeName := value;
     end);
-  option.Required := True;
+  option.Required := False;
 
   option := TOptionsRegistry.RegisterOption<string>('store','s','URL of roomerstore, defaults to http://roomerstore.com/',
     procedure(const value : string)

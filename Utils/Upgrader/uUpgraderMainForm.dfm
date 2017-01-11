@@ -19,6 +19,9 @@ object frmUpgradeAgent: TfrmUpgradeAgent
   Scaled = False
   OnCreate = FormCreate
   OnShow = FormShow
+  DesignSize = (
+    410
+    429)
   PixelsPerInch = 96
   TextHeight = 16
   object Image2: TImage
@@ -293,7 +296,7 @@ object frmUpgradeAgent: TfrmUpgradeAgent
   end
   object Label2: TsLabel
     Left = 128
-    Top = 239
+    Top = 261
     Width = 68
     Height = 21
     Caption = 'Installing'
@@ -307,7 +310,7 @@ object frmUpgradeAgent: TfrmUpgradeAgent
   end
   object Label3: TsLabel
     Left = 128
-    Top = 286
+    Top = 308
     Width = 78
     Height = 21
     Caption = 'Reopening'
@@ -321,7 +324,7 @@ object frmUpgradeAgent: TfrmUpgradeAgent
   end
   object lblDownloaded: TsLabel
     Left = 128
-    Top = 215
+    Top = 239
     Width = 129
     Height = 16
     AutoSize = False
@@ -349,6 +352,23 @@ object frmUpgradeAgent: TfrmUpgradeAgent
     UseSkinColor = False
     ExplicitWidth = 4
   end
+  object lblURL: TsLabel
+    Left = 8
+    Top = 215
+    Width = 394
+    Height = 16
+    Alignment = taCenter
+    Anchors = [akLeft, akTop, akRight]
+    AutoSize = False
+    Caption = '<URL>'
+    ParentFont = False
+    Layout = tlCenter
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = 4473924
+    Font.Height = -13
+    Font.Name = 'Tahoma'
+    Font.Style = []
+  end
   object sProgressBar1: TsProgressBar
     Left = 64
     Top = 368
@@ -367,6 +387,6 @@ object frmUpgradeAgent: TfrmUpgradeAgent
     Interval = 100
     OnTimer = tmStartTimer
     Left = 168
-    Top = 344
+    Top = 16
   end
 end

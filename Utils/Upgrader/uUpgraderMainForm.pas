@@ -30,6 +30,7 @@ type
     sProgressBar1: TsProgressBar;
     lblDownloaded: TsLabel;
     lblExename: TsLabel;
+    lblURL: TsLabel;
     procedure FormShow(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure tmStartTimer(Sender: TObject);
@@ -162,6 +163,7 @@ var
   stream: TFileStream;
   aResponseContentHeader: TALHTTPResponseHeader;
 begin
+  lblURL.Caption := Url;
   aResponseContentHeader := TALHTTPResponseHeader.Create;
   stream := TFileStream.Create(filename, fmCreate);
   try
@@ -179,12 +181,10 @@ end;
 
 procedure TfrmUpgradeAgent.RemoveAllRoomerCaches;
 var
-  path: String;
   files: TStringDynArray;
   i: Integer;
 begin
   try
-//    path := TPath.Combine(uFileSystemUtils.LocalAppDataPath, 'Roomer');
     files := TDirectory.GetFiles(RoomerAppDataPath + '\', '*.src', TSearchOption.soAllDirectories);
     for i := LOW(files) to HIGH(files) do
       DeleteFile(files[i]);
@@ -221,7 +221,8 @@ begin
         RaiseLastOSError;
 
     except on E: Exception do
-      if MessageDlg('Unable to upgrade Roomer!' + #13 +
+      if MessageDlg('Unable to upgrade Roomer executable' + #13 +
+        'at ' + exeName + #13#13 +
         'Error: ' + E.Message + #13#13 +
         '[Retry] = Try to automatically close Roomer and retry the upgrade.' + #13 +
         '[Cancel] = Cancel the upgrade for now.', mtConfirmation, [mbRetry, mbCancel], 0) = mrCancel then
