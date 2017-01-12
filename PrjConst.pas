@@ -1357,9 +1357,9 @@ begin
   constants.Add('shUI_BookKeepReortSubtotal', 'Subtotal:');
 
   constants.Add('shUI_Reports_DOWNPAYMENT', 'Down payment');
-  constants.Add('shUI_Reports_ÖÖSALE', 'Invoices');
+  constants.Add('shUI_Reports_SALE', 'Invoices');
   constants.Add('shUI_Reports_PAYMENT', 'Payment');
-  constants.Add('shUI_Reports_ÖÖSALEITEMS', 'Item sales');
+  constants.Add('shUI_Reports_SALEITEMS', 'Item sales');
 
   constants.Add('shUI_Reports_Action', 'Action');
   constants.Add('shUI_Reports_Staff', 'Staff');
