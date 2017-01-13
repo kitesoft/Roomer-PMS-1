@@ -1728,7 +1728,7 @@ begin
   frmRoomCleanMaintenanceStatus := TfrmRoomCleanMaintenanceStatus.Create(nil); frmRoomCleanMaintenanceStatus.Free; frmRoomCleanMaintenanceStatus := nil;
   frmRates := TfrmRates.Create(nil); frmRates.Free; frmRates := nil;
   frmSeasons2 := TfrmSeasons2.Create(nil); frmSeasons2.Free; frmSeasons2 := nil;
-  frmRoomRates := TfrmRoomRates.Create(nil); frmRoomRates.Free; frmRoomRates := nil;
+  TfrmRoomRates.Create(nil).Free;
   frmRoomTypesGroups2 := TfrmRoomTypesGroups2.Create(nil); frmRoomTypesGroups2.Free; frmRoomTypesGroups2 := nil;
   frmRoomTypes2 := TfrmRoomTypes2.Create(nil); frmRoomTypes2.Free; frmRoomTypes2 := nil;
   frmPackageItems := TfrmPackageItems.Create(nil); frmPackageItems.Free; frmPackageItems := nil;
