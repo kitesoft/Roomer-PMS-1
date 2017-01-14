@@ -445,7 +445,7 @@ begin
                               '',
                               format('User %s deleted record with id %d, description: %s',
                                      [d.roomerMainDataSet.username,
-                                      DataSet['id'],
+                                      DataSet.FieldByName('id').AsInteger,
                                       descriptor]));
   end else
   if action = ADD_RECORD then

@@ -1336,6 +1336,7 @@ begin
   fillHolder;
   if openRoomTypeGroupEdit(zData, true, (tvDataRATE_PLAN_TYPE.Properties AS TcxComboBoxProperties).Items) then
   begin
+      zFirstTime := False;
       m_.edit;
       SetEditedValuesIn_M_Dataset;
       m_.Post;
