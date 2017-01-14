@@ -24,14 +24,14 @@ object frmRoomRates: TfrmRoomRates
     Left = 0
     Top = 0
     Width = 922
-    Height = 112
+    Height = 129
     Align = alTop
     Constraints.MinWidth = 830
     TabOrder = 0
     SkinData.SkinSection = 'PANEL'
     DesignSize = (
       922
-      112)
+      129)
     object cLabFilter: TsLabel
       Left = 19
       Top = 41
@@ -103,8 +103,7 @@ object frmRoomRates: TfrmRoomRates
       Left = 466
       Top = 1
       Width = 361
-      Height = 97
-      Caption = 'Filter'
+      Height = 118
       TabOrder = 3
       SkinData.SkinSection = 'GROUPBOX'
       object sSpeedButton1: TsSpeedButton
@@ -117,11 +116,12 @@ object frmRoomRates: TfrmRoomRates
         Images = DImages.PngImageList1
         ImageIndex = 8
       end
-      object labSeason: TsLabel
-        Left = 128
-        Top = 88
-        Width = 3
+      object lblSeasonText: TsLabel
+        Left = 127
+        Top = 94
+        Width = 50
         Height = 13
+        Caption = '<season>'
         ParentFont = False
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clBlack
@@ -167,6 +167,21 @@ object frmRoomRates: TfrmRoomRates
         Alignment = taRightJustify
         AutoSize = False
         Caption = 'Date range : '
+        ParentFont = False
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = []
+      end
+      object lblSeason: TsLabel
+        Left = 32
+        Top = 94
+        Width = 85
+        Height = 13
+        Alignment = taRightJustify
+        AutoSize = False
+        Caption = 'Season : '
         ParentFont = False
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clBlack
@@ -448,12 +463,14 @@ object frmRoomRates: TfrmRoomRates
   end
   object grData: TcxGrid
     Left = 0
-    Top = 112
+    Top = 129
     Width = 922
-    Height = 409
+    Height = 392
     Align = alClient
     TabOrder = 3
     LookAndFeel.NativeStyle = False
+    ExplicitTop = 112
+    ExplicitHeight = 409
     object tvData: TcxGridDBTableView
       OnDblClick = tvDataDblClick
       Navigator.Buttons.CustomButtons = <>
@@ -777,6 +794,7 @@ object frmRoomRates: TfrmRoomRates
     Left = 48
     Top = 176
     object prLink_grData: TdxGridReportLink
+      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -790,6 +808,7 @@ object frmRoomRates: TfrmRoomRates
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
       ReportDocument.CreationDate = 41334.495374884260000000
+      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
   end
