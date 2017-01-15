@@ -12,6 +12,7 @@ uses Generics.Collections,
      cmpRoomerDataSet,
      Data.Win.ADODB,
      Vcl.Dialogs,
+     Vcl.Graphics,
      Forms
      ;
 
@@ -632,14 +633,13 @@ var s : String;
 begin
   result := TStringList.Create;
 
-   frmRoomerDataConvertMain.sProgressBar2.Max := ResList.Count;
-   frmRoomerDataConvertMain.sProgressBar2.Position := 0;
-
+  frmRoomerDataConvertMain.lbStatus.Caption := 'Generating SQL statements...'; frmRoomerDataConvertMain.lbStatus.Font.Color := clGreen; frmRoomerDataConvertMain.lbStatus.Update;
+  frmRoomerDataConvertMain.prgWorking.Max := ResList.Count;
+  frmRoomerDataConvertMain.prgWorking.Position := 0;
 
   for i := 0 to ResList.Count - 1 do
   begin
     Res := ResList[i];
-    frmRoomerDataConvertMain.sProgressBar2.StepIt;
     s := 'INSERT INTO reservations ' +
         '(Reservation, ' +
         'Arrival, ' +
@@ -1317,7 +1317,7 @@ begin
              '{RoomType}', RoomRes.RoomType),
              '{RoomReservation}', inttostr(RoomRes.RoomReservation)),
              '{Reservation}', inttostr(Res.Reservation)),
-             '{ResFlag}', 'P'),
+             '{ResFlag}', RoomRes.Status),
              '{rdTmp}', ''),
              '{updated}', '0'),
              '{isNoRoom}', BoolToString_0_1(RoomRes.Room[1]='<')),
@@ -1347,6 +1347,9 @@ begin
 
 
     end;
+
+    frmRoomerDataConvertMain.prgWorking.StepIt; frmRoomerDataConvertMain.prgWorking.Update;
+    frmRoomerDataConvertMain.Breathe(i);
 
   end;
 end;
@@ -1694,6 +1697,7 @@ begin
         FreeAndNil(rSet);
       end;
       Status := valueOfName(RESERVATION_STATUS, 'P', container);
+      Status := IIF(Trim(Status)='', 'P', Status);
       ReservationDate := valueOfName(CREATION_DATE, dateToSqlString(trunc(now)), container);
       Staff := _staff;
       Information := GetUnknownFields(container); // container[5];
@@ -1775,6 +1779,7 @@ begin
 
         RoomInfo[iRoomCounter - 1].RoomType := valueOfName(XROOM_TYPE, '', container);
         RoomInfo[iRoomCounter - 1].Status := valueOfName(RESERVATION_STATUS, 'P', container);;
+        RoomInfo[iRoomCounter - 1].Status := IIF(Trim(RoomInfo[iRoomCounter - 1].Status)='', 'P', Status);
 
         if (temp = '') OR (RoomInfo[iRoomCounter - 1].Status='C') then
           RoomInfo[iRoomCounter - 1].Room := format('<%d>', [RoomResId])
@@ -1795,9 +1800,9 @@ begin
         begin
           PersId := PersId + 1;
 
-          Person := FindPerson(GetName(container), '',
-                        FilterZeroAsEmpty(valueOfName(GUEST_ADDRESS_LINE_1, '', container)),
-                        FilterZeroAsEmpty(valueOfName(GUEST_ADDRESS_LINE_4, '', container)));
+          Person := nil; // FindPerson(GetName(container), '',
+                         // FilterZeroAsEmpty(valueOfName(GUEST_ADDRESS_LINE_1, '', container)),
+                         // FilterZeroAsEmpty(valueOfName(GUEST_ADDRESS_LINE_4, '', container)));
 
           if NOT Assigned(Person) then
           begin
