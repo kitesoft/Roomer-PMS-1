@@ -634,6 +634,8 @@ begin
       finally
         m_Items.EnableControls;
       end;
+      if (tvData.Controller.SelectedRowCount > 0) then
+        tvData.Controller.SelectedRows[0].MakeVisible;
     end;
   finally
     rSet.Free;
