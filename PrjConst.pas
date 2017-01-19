@@ -1357,9 +1357,9 @@ begin
   constants.Add('shUI_BookKeepReortSubtotal', 'Subtotal:');
 
   constants.Add('shUI_Reports_DOWNPAYMENT', 'Down payment');
-  constants.Add('shUI_Reports_ÖÖSALE', 'Invoices');
+  constants.Add('shUI_Reports_SALE', 'Invoices');
   constants.Add('shUI_Reports_PAYMENT', 'Payment');
-  constants.Add('shUI_Reports_ÖÖSALEITEMS', 'Item sales');
+  constants.Add('shUI_Reports_SALEITEMS', 'Item sales');
 
   constants.Add('shUI_Reports_Action', 'Action');
   constants.Add('shUI_Reports_Staff', 'Staff');
@@ -1728,7 +1728,7 @@ begin
   frmRoomCleanMaintenanceStatus := TfrmRoomCleanMaintenanceStatus.Create(nil); frmRoomCleanMaintenanceStatus.Free; frmRoomCleanMaintenanceStatus := nil;
   frmRates := TfrmRates.Create(nil); frmRates.Free; frmRates := nil;
   frmSeasons2 := TfrmSeasons2.Create(nil); frmSeasons2.Free; frmSeasons2 := nil;
-  frmRoomRates := TfrmRoomRates.Create(nil); frmRoomRates.Free; frmRoomRates := nil;
+  TfrmRoomRates.Create(nil).Free;
   frmRoomTypesGroups2 := TfrmRoomTypesGroups2.Create(nil); frmRoomTypesGroups2.Free; frmRoomTypesGroups2 := nil;
   frmRoomTypes2 := TfrmRoomTypes2.Create(nil); frmRoomTypes2.Free; frmRoomTypes2 := nil;
   frmPackageItems := TfrmPackageItems.Create(nil); frmPackageItems.Free; frmPackageItems := nil;

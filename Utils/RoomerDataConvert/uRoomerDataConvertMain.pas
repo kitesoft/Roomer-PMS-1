@@ -19,6 +19,7 @@ uses
   , cmpRoomerDataSet
 
   , Vcl.ExtCtrls
+  , UbuntuProgress
 
   , sPanel
 
@@ -74,14 +75,14 @@ type
     bottomPanel: TsPanel;
     btnLogin: TsButton;
     btnLogout: TsButton;
-    sButton1: TsButton;
+    btnExcel: TsButton;
     sSkinManager1: TsSkinManager;
     sSkinProvider1: TsSkinProvider;
     StoreLogin: TcxPropertiesStore;
     edtHotel: TsEdit;
     sLabel3: TsLabel;
     btnProcessIntoRoomer: TsButton;
-    sProgressBar1: TsProgressBar;
+    prgWorking: TUbuntuProgress;
     sPageControl2: TsPageControl;
     sTabSheet1: TsTabSheet;
     sTabSheet3: TsTabSheet;
@@ -98,10 +99,10 @@ type
     memoResult: TsMemo;
     sPanel3: TsPanel;
     sButton2: TsButton;
-    sProgressBar2: TsProgressBar;
     sPageControl3: TsPageControl;
     sTabSheet4: TsTabSheet;
     sTabSheet5: TsTabSheet;
+    lbStatus: TsLabel;
     procedure FormCreate(Sender: TObject);
     procedure btnLoginClick(Sender: TObject);
     procedure btnLogoutClick(Sender: TObject);
@@ -111,17 +112,21 @@ type
     procedure btnImportCustomersClick(Sender: TObject);
     procedure edFilenameAfterDialog(Sender: TObject; var Name: string; var Action: Boolean);
     procedure sButton2Click(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure FormResize(Sender: TObject);
   private
     procedure getCounters(var ResId, RoomResId, PersId: Integer);
     procedure saveCounters(ResId, RoomResId, PersId: Integer);
     procedure getCustomerInfo(var custNum, custPId: String; var defaultChannel : String);
     procedure ExecStandardReservationImport(lines: TStrings; SkipEmtypRooms : boolean = False);
     procedure ExecStandardCustomersImport(lines: TStrings);
+    procedure PositionProgressBar;
 
     { Private declarations }
   public
     { Public declarations }
     CSVFileContent : TStringList;
+    procedure Breathe(iNum: Integer);
   end;
 
 var
@@ -151,6 +156,16 @@ begin
   CSVFileContent := TStringList.Create;
 end;
 
+procedure TfrmRoomerDataConvertMain.FormResize(Sender: TObject);
+begin
+  PositionProgressBar;
+end;
+
+procedure TfrmRoomerDataConvertMain.FormShow(Sender: TObject);
+begin
+  PositionProgressBar;
+end;
+
 procedure TfrmRoomerDataConvertMain.saveCounters(ResId, RoomResId, PersId : Integer);
 var rSet : TRoomerDataSet;
 begin
@@ -161,6 +176,11 @@ begin
   finally
     FreeAndNil(rSet);
   end;
+end;
+
+procedure TfrmRoomerDataConvertMain.Breathe(iNum : Integer);
+begin
+  if iNum mod 10 = 0 then Application.ProcessMessages;
 end;
 
 procedure TfrmRoomerDataConvertMain.sButton2Click(Sender: TObject);
@@ -192,21 +212,31 @@ begin
         sList.AddStrings(getReservationsSqlList);
         if sList.Count=0 then exit;
         try
+          lbStatus.Caption := 'Processing data into Roomer...'; lbStatus.Font.Color := clGreen; lbStatus.Update;
+          prgWorking.Max := sList.Count;
+          prgWorking.Position := 0;
           for i := 0 to sList.Count - 1 do
             if sList[i] <> '' then
             begin
               list.Add(sList[i]);
+              prgWorking.StepIt; prgWorking.Update;
+              Breathe(i);
+
               if list.Count > 200 then
               begin
+                prgWorking.ColorSet := csBlue; prgWorking.Update;
                 rSet.SystemFreeExecuteMultiple(list);
                 list.Clear;
+                prgWorking.ColorSet := csOriginal; prgWorking.Update;
               end;
             end;
 
           if list.Count > 0 then
           begin
+            prgWorking.ColorSet := csBlue; prgWorking.Update;
             rSet.SystemFreeExecuteMultiple(list);
             list.Clear;
+            prgWorking.ColorSet := csOriginal; prgWorking.Update;
           end;
 
 
@@ -234,8 +264,10 @@ begin
           processed.Free;
         end;
         rSet.SystemCommitTransaction;
+        lbStatus.Caption := 'Processing done!'; lbStatus.Font.Color := clBlue; lbStatus.Update;
       except
         rSet.SystemRollbackTransaction;
+        lbStatus.Caption := 'ERROR: Not able to Process data into Roomer!'; lbStatus.Font.Color := clRed; lbStatus.Update;
       end;
     finally
       FreeAndNil(rSet);
@@ -251,6 +283,12 @@ begin
     Cursor := crDefault;
     Application.ProcessMessages;
   end;
+end;
+
+procedure TfrmRoomerDataConvertMain.PositionProgressBar;
+begin
+  prgWorking.Left := btnExcel.Left + btnExcel.Width + 10;
+  prgWorking.Width := btnProcessIntoRoomer.Left - (btnExcel.Left + btnExcel.Width) - 20;
 end;
 
 procedure TfrmRoomerDataConvertMain.getCounters(var ResId, RoomResId, PersId : Integer);
@@ -365,6 +403,9 @@ var i : Integer;
 
     max : integer;
 
+    custList : TStrings;
+    resList : TStrings;
+
 begin
   Cursor := crHourglass;
   Application.ProcessMessages;
@@ -386,30 +427,55 @@ begin
       end;
     end;
 
-    sProgressBar1.Max := CSVFileContent.Count;
-    sProgressBar1.Position := 0;
+    lbStatus.Caption := 'Reading reservations...'; lbStatus.Font.Color := clGreen; lbStatus.Update;
+    prgWorking.Max := CSVFileContent.Count;
+    prgWorking.Position := 0;
 
-    for i := 1 to CSVFileContent.Count - 1 do
-    begin
-       memoResult.Text := inttostr(i);
-       memoResult.Text := memoResult.Text + '  ' + CSVFileContent[i];
-       CreateStandardReservationsLine(CSVFileContent[i], edtUsername.Text, ResId, RoomResId, PersId, custNum, custPID, defaultChannel, false);
-       sProgressBar1.StepIt;
+    memoResult.Lines.BeginUpdate;
+    try
+      for i := 1 to CSVFileContent.Count - 1 do
+      begin
+         memoResult.Text := inttostr(i);
+         memoResult.Text := memoResult.Text + '  ' + CSVFileContent[i];
+         CreateStandardReservationsLine(CSVFileContent[i], edtUsername.Text, ResId, RoomResId, PersId, custNum, custPID, defaultChannel, false);
+         prgWorking.StepIt; prgWorking.Update;
+         Breathe(i);
+      end;
+    finally
+      memoResult.Lines.EndUpdate;
     end;
 //    showmessage('Ok to continue');
     memoResult.Lines.Clear;
     memoResult.Lines.Add('USE home100_' + Lowercase(edtHotel.Text) + ';');
     memoResult.Lines.Add('');
-    memoResult.Lines.Add('-- Customers to add');
-    memoResult.Lines.AddStrings(getCustomersSqlList);
+    custList := getCustomersSqlList;
+    if custList.Count > 0 then
+    begin
+      memoResult.Lines.Add('-- Customers to add');
+      memoResult.Lines.AddStrings(custList);
+    end;
     memoResult.Lines.Add('');
-    memoResult.Lines.Add('-- Reservations to add');
-    memoResult.Lines.AddStrings(getReservationsSqlList);
+    resList := getReservationsSqlList;
+    if resList.Count > 0 then
+    begin
+      memoResult.Lines.Add('-- Reservations to add');
+      lbStatus.Caption := 'Creation done. Reading SQL statements into list...'; lbStatus.Font.Color := clPurple; lbStatus.Update;
+      memoResult.Lines.BeginUpdate;
+      try
+        memoResult.Lines.AddStrings(resList);
+      finally
+        memoResult.Lines.EndUpdate;
+      end;
+    end;
 
   //  if MessageDlg('Update Control table?', mtConfirmation, [mbYes, mbNo], 0) = mrYes then
   //  begin
-      saveCounters(ResId, RoomResId, PersId);
-      btnProcessIntoRoomer.Enabled := True;
+    lbStatus.Caption := 'Reading SQL statements done. Saving new reservation counter...'; lbStatus.Font.Color := clGreen; lbStatus.Update;
+    saveCounters(ResId, RoomResId, PersId);
+    btnProcessIntoRoomer.Enabled := True;
+
+    lbStatus.Caption := 'Preparation done - ready for [Process into Roomer]!';
+    lbStatus.Font.Color := clBlue; lbStatus.Update;
   //  end;
   finally
     Cursor := crDefault;

@@ -39,7 +39,7 @@ object frmInvoice: TfrmInvoice
     SkinData.SkinSection = 'PANEL'
     object lblChangedInvoiceActive: TsLabel
       Left = 0
-      Top = 157
+      Top = 166
       Width = 1096
       Height = 3
       Hint = 'Search Filter Active'
@@ -62,7 +62,7 @@ object frmInvoice: TfrmInvoice
       Left = 0
       Top = 0
       Width = 1096
-      Height = 157
+      Height = 166
       Align = alTop
       BevelOuter = bvNone
       ParentColor = True
@@ -70,7 +70,7 @@ object frmInvoice: TfrmInvoice
       SkinData.SkinSection = 'PANEL'
       DesignSize = (
         1096
-        157)
+        166)
       object clabCurrency: TsLabel
         Left = 661
         Top = 31
@@ -622,9 +622,9 @@ object frmInvoice: TfrmInvoice
       end
       object chkShowPackage: TsCheckBox
         Left = 724
-        Top = 140
-        Width = 111
-        Height = 20
+        Top = 143
+        Width = 119
+        Height = 17
         Caption = 'Package on invoice'
         Checked = True
         State = cbChecked
@@ -646,15 +646,17 @@ object frmInvoice: TfrmInvoice
     end
     object sPanel5: TsPanel
       Left = 0
-      Top = 160
+      Top = 169
       Width = 1096
-      Height = 502
+      Height = 493
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
+      ExplicitTop = 160
+      ExplicitHeight = 502
       object Panel2: TsPanel
         Left = 0
-        Top = 350
+        Top = 341
         Width = 1096
         Height = 152
         Align = alBottom
@@ -662,6 +664,7 @@ object frmInvoice: TfrmInvoice
         ParentColor = True
         TabOrder = 0
         SkinData.SkinSection = 'PANEL'
+        ExplicitTop = 350
         object memExtraText: TMemo
           Left = 1
           Top = 1
@@ -1206,7 +1209,7 @@ object frmInvoice: TfrmInvoice
         Left = 0
         Top = 91
         Width = 1040
-        Height = 259
+        Height = 250
         Align = alClient
         BevelOuter = bvNone
         Caption = 'sPanel1'
@@ -1216,11 +1219,12 @@ object frmInvoice: TfrmInvoice
         Padding.Bottom = 5
         TabOrder = 2
         SkinData.SkinSection = 'PANEL'
+        ExplicitHeight = 259
         object agrLines: TAdvStringGrid
           Left = 10
           Top = 5
           Width = 1020
-          Height = 249
+          Height = 240
           Cursor = crDefault
           Align = alClient
           BevelInner = bvNone
@@ -1360,9 +1364,10 @@ object frmInvoice: TfrmInvoice
         Left = 1043
         Top = 94
         Width = 50
-        Height = 253
+        Height = 244
         Align = alRight
         TabOrder = 1
+        ExplicitHeight = 253
         object pnlInvoiceIndex0: TsPanel
           Left = 3
           Top = 4

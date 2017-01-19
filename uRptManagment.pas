@@ -300,114 +300,202 @@ begin
   ExecutionPlan := d.roomerMainDataSet.CreateExecutionPlan;
   try
 
-  s := 'SELECT id, '+
-       'pd.date, '+
-       'DATE(IFNULL(ADate, pd.date)) AS ADate, '+
-       'soldRooms, '+
-       'revenue, '+
-       'totalDiscount, '+
-       'maxRate, '+
-       'minRate, '+
-       'averageRate, '+
-       'checkedInToday, '+
-       'arrivingRooms, '+
-       'noShow, '+
-       'departingRooms, '+
-       'departedRooms, '+
-       'occupiedRooms, '+
-       'totalRooms, '+
-       'totalGuests , '+
-       'occ, '+
-       'adr, '+
-       'revPar, '+
-       '(SELECT NativeCurrency FROM control LIMIT 1) AS localCurrency '+
-       'FROM '#10 ;
-  s := s + 'predefineddates pd '#10 ;
-  s := s + 'LEFT OUTER JOIN '#10 ;
-  s := s + ' ( '#10 ;
-  s := s + '	 SELECT baseData1.*, '#10 ;
-  s := s + '			soldRooms/totalRooms*100 AS occ, '#10 ;
-  s := s + '			revenue/soldRooms AS adr, '#10 ;
-  s := s + '			revenue/totalRooms as RevPar '#10 ;
-  s := s + '	 FROM ( '#10 ;
-  s := s + '		 SELECT DATE(pdd.date) AS ADate, '#10 ;
-  s := s + '				COUNT(rd.id) AS soldRooms, '#10 ;
-  s := s + '				SUM((IF(Discount > 0, RoomRate - IF(isPercentage, RoomRate * Discount / 100, Discount), RoomRate)) * curr.AValue) AS revenue, '#10 ;
-  s := s + '				SUM((IF(Discount > 0, IF(isPercentage, RoomRate * Discount / 100, Discount), 0)) * curr.AValue) AS totalDiscount, '#10 ;
-  s := s + '				MAX(RoomRate * curr.AValue) AS maxRate, '#10 ;
-  s := s + '				MIN(RoomRate * curr.AValue) AS minRate, '#10 ;
-  s := s + '				AVG(RoomRate * curr.AValue) AS averageRate, '#10 ;
-  s := s + '				(SELECT COUNT(rr2.id) FROM roomreservations  rr2 '#10 ;
-  s := s + '					JOIN rooms r on r.room=rr2.room and r.wildcard=0 and r.active=1 and statistics=1 and hidden=0 '#10 ;
-  s := s + '					WHERE rr2.Arrival=pdd.date AND rr2.Status='+_db(STATUS_ARRIVED)+') AS checkedInToday, '#10 ;
-  s := s + '				(SELECT COUNT(rr2.id) FROM roomreservations   rr2 '#10 ;
+//  s := 'SELECT id, '+
+//       'pd.date, '+
+//       'DATE(IFNULL(ADate, pd.date)) AS ADate, '+
+//       'soldRooms, '+
+//       'revenue, '+
+//       'totalDiscount, '+
+//       'maxRate, '+
+//       'minRate, '+
+//       'averageRate, '+
+//       'checkedInToday, '+
+//       'arrivingRooms, '+
+//       'noShow, '+
+//       'departingRooms, '+
+//       'departedRooms, '+
+//       'occupiedRooms, '+
+//       'totalRooms, '+
+//       'totalGuests , '+
+//       'occ, '+
+//       'adr, '+
+//       'revPar, '+
+//       '(SELECT NativeCurrency FROM control LIMIT 1) AS localCurrency '+
+//       'FROM '#10 ;
+//  s := s + 'predefineddates pd '#10 ;
+//  s := s + 'LEFT OUTER JOIN '#10 ;
+//  s := s + ' ( '#10 ;
+//  s := s + '	 SELECT baseData1.*, '#10 ;
+//  s := s + '			soldRooms/totalRooms*100 AS occ, '#10 ;
+//  s := s + '			revenue/soldRooms AS adr, '#10 ;
+//  s := s + '			revenue/totalRooms as RevPar '#10 ;
+//  s := s + '	 FROM ( '#10 ;
+//  s := s + '		 SELECT DATE(pdd.date) AS ADate, '#10 ;
+//  s := s + '				COUNT(rd.id) AS soldRooms, '#10 ;
+//  s := s + '				SUM((IF(Discount > 0, RoomRate - IF(isPercentage, RoomRate * Discount / 100, Discount), RoomRate)) * curr.AValue) AS revenue, '#10 ;
+//  s := s + '				SUM((IF(Discount > 0, IF(isPercentage, RoomRate * Discount / 100, Discount), 0)) * curr.AValue) AS totalDiscount, '#10 ;
+//  s := s + '				MAX(RoomRate * curr.AValue) AS maxRate, '#10 ;
+//  s := s + '				MIN(RoomRate * curr.AValue) AS minRate, '#10 ;
+//  s := s + '				AVG(RoomRate * curr.AValue) AS averageRate, '#10 ;
+//  s := s + '				(SELECT COUNT(rr2.id) FROM roomreservations  rr2 '#10 ;
 //  s := s + '					JOIN rooms r on r.room=rr2.room and r.wildcard=0 and r.active=1 and statistics=1 and hidden=0 '#10 ;
-  s := s + '					WHERE rr2.Arrival=pdd.date AND rr2.Status='+_db(STATUS_NOT_ARRIVED)+') AS arrivingRooms, '#10 ;
-  s := s + '				(SELECT COUNT(rr2.id) FROM roomreservations rr2 '#10 ;
+//  s := s + '					WHERE rr2.Arrival=pdd.date AND rr2.Status='+_db(STATUS_ARRIVED)+') AS checkedInToday, '#10 ;
+//  s := s + '				(SELECT COUNT(rr2.id) FROM roomreservations   rr2 '#10 ;
+////  s := s + '					JOIN rooms r on r.room=rr2.room and r.wildcard=0 and r.active=1 and statistics=1 and hidden=0 '#10 ;
+//  s := s + '					WHERE rr2.Arrival=pdd.date AND rr2.Status='+_db(STATUS_NOT_ARRIVED)+') AS arrivingRooms, '#10 ;
+//  s := s + '				(SELECT COUNT(rr2.id) FROM roomreservations rr2 '#10 ;
+////  s := s + '					JOIN rooms r on r.room=rr2.room and r.wildcard=0 and r.active=1 and statistics=1 and hidden=0 '#10 ;
+//  s := s + '					WHERE rr2.Arrival=DATE_ADD(pdd.date,INTERVAL -1 DAY) AND rr2.Status='+_db(STATUS_NO_SHOW)+') AS noShow, '#10 ;
+//  s := s + '				(SELECT COUNT(rr2.id) FROM roomreservations rr2 '#10 ;
+//  s := s + '					WHERE rr2.Departure=pdd.date AND rr2.Status='+_db(STATUS_ARRIVED)+') AS departingRooms, '#10 ;
+//  s := s + '				(SELECT COUNT(rr2.id) FROM roomreservations rr2 '#10 ;
 //  s := s + '					JOIN rooms r on r.room=rr2.room and r.wildcard=0 and r.active=1 and statistics=1 and hidden=0 '#10 ;
-  s := s + '					WHERE rr2.Arrival=DATE_ADD(pdd.date,INTERVAL -1 DAY) AND rr2.Status='+_db(STATUS_NO_SHOW)+') AS noShow, '#10 ;
-  s := s + '				(SELECT COUNT(rr2.id) FROM roomreservations rr2 '#10 ;
+//  s := s + '           WHERE rr2.Departure=pdd.date AND rr2.Status='+_db(STATUS_CHECKED_OUT)+') AS departedRooms, '#10 ;
+//  s := s + '				(SELECT COUNT(rd2.id) FROM roomsdate rd2 '#10 ;
+//  s := s + '					JOIN rooms r on r.room=rd2.room and r.wildcard=0 and r.active=1 and statistics=1 and hidden=0 '#10 ;
+//  s := s + '					WHERE ADate=pdd.date AND ResFlag='+_db(STATUS_ARRIVED)+') AS occupiedRooms, '#10 ;
+//  s := s + '				(SELECT COUNT(id) FROM rooms WHERE hidden=0 AND Active=1 AND Statistics=1 AND wildCard=0) AS totalRooms, '#10 ;
+//  s := s + '				SUM((SELECT COUNT(id) FROM persons WHERE RoomReservation=rd.RoomReservation)) AS totalGuests '#10 ;
+//  s := s + '		 FROM predefineddates pdd '#10 ;
+//  s := s + '		 JOIN roomsdate rd on pdd.date=rd.ADate AND (NOT rd.ResFlag IN ('+_db(STATUS_DELETED)+','+_db(STATUS_CANCELLED)+','+_db(STATUS_OPTIONAL)+')) '#10 ;
+//  s := s + '		 JOIN reservations r on r.Reservation=rd.Reservation AND r.outOfOrderBlocking=0 '#10 ;
+//  s := s + '		 JOIN currencies curr on curr.Currency=rd.Currency '#10 ;
+//  s := s + '		 WHERE '#10 ;
+//  s := s + '				((pdd.date>='+_db(zDateFrom,true)+' AND pdd.date<='+_db(zDateTo,true)+')) '#10 ;
+//  s := s + '		    AND (SUBSTR(rd.room, 1, 1) = ''<'' OR NOT ISNULL((SELECT 1 FROM rooms r WHERE r.room=rd.room and r.wildcard=0 and r.active=1 and statistics=1 and hidden=0 LIMIT 1))) '#10 ;
+//  s := s + '		 GROUP BY pdd.date '#10 ;
+//  s := s + '		 ORDER BY pdd.date '#10 ;
+//  s := s + '		 ) baseData1 '#10 ;
+//  s := s + '	UNION '#10 ;
+//  s := s + '	 SELECT baseData2.*, '#10 ;
+//  s := s + '			CAST(0.00 AS DECIMAL) AS occ, '#10 ;
+//  s := s + '			CAST(0.00 AS DECIMAL) AS adr, '#10 ;
+//  s := s + '			CAST(0.00 AS DECIMAL) AS revPar '#10 ;
+//  s := s + '	 FROM ( '#10 ;
+//  s := s + '		 SELECT DATE(pdd.date) AS ADate, '#10 ;
+//  s := s + '				CAST(0 AS SIGNED) AS soldRooms, '#10 ;
+//  s := s + '				CAST(0.00 AS DECIMAL) AS revenue, '#10 ;
+//  s := s + '				CAST(0.00 AS DECIMAL) AS totalDiscount, '#10 ;
+//  s := s + '				CAST(0.00 AS DECIMAL) AS maxRate, '#10 ;
+//  s := s + '				CAST(0.00 AS DECIMAL) AS minRate, '#10 ;
+//  s := s + '				CAST(0.00 AS DECIMAL) AS averageRate, '#10 ;
+//  s := s + '				CAST(0 AS SIGNED) AS checkedInToday, '#10 ;
+//  s := s + '				CAST(0 AS SIGNED) AS arrivingRooms, '#10 ;
+//  s := s + '				(SELECT COUNT(rr2.id) FROM roomreservations rr2 '#10 ;
+//  s := s + '                    WHERE rr2.Arrival=DATE_ADD(pdd.date,INTERVAL -1 DAY) AND rr2.Status='+_db(STATUS_NO_SHOW)+') AS noShow, '#10 ;
+//  s := s + '				(SELECT COUNT(rr2.id) FROM roomreservations rr2 '#10 ;
 //  s := s + '					JOIN rooms r on r.room=rr2.room and r.wildcard=0 and r.active=1 and statistics=1 and hidden=0 '#10 ;
-  s := s + '					WHERE rr2.Departure=pdd.date AND rr2.Status='+_db(STATUS_ARRIVED)+') AS departingRooms, '#10 ;
-  s := s + '				(SELECT COUNT(rr2.id) FROM roomreservations rr2 '#10 ;
-  s := s + '					JOIN rooms r on r.room=rr2.room and r.wildcard=0 and r.active=1 and statistics=1 and hidden=0 '#10 ;
-  s := s + '           WHERE rr2.Departure=pdd.date AND rr2.Status='+_db(STATUS_CHECKED_OUT)+') AS departedRooms, '#10 ;
-  s := s + '				(SELECT COUNT(rd2.id) FROM roomsdate rd2 '#10 ;
-  s := s + '					JOIN rooms r on r.room=rd2.room and r.wildcard=0 and r.active=1 and statistics=1 and hidden=0 '#10 ;
-  s := s + '					WHERE ADate=pdd.date AND ResFlag='+_db(STATUS_ARRIVED)+') AS occupiedRooms, '#10 ;
-  s := s + '				(SELECT COUNT(id) FROM rooms WHERE hidden=0 AND Active=1 AND Statistics=1 AND wildCard=0) AS totalRooms, '#10 ;
-  s := s + '				SUM((SELECT COUNT(id) FROM persons WHERE RoomReservation=rd.RoomReservation)) AS totalGuests '#10 ;
-  s := s + '		 FROM predefineddates pdd '#10 ;
-  s := s + '		 JOIN roomsdate rd on pdd.date=rd.ADate AND (NOT rd.ResFlag IN ('+_db(STATUS_DELETED)+','+_db(STATUS_CANCELLED)+','+_db(STATUS_OPTIONAL)+')) '#10 ;
-  s := s + '		 JOIN reservations r on r.Reservation=rd.Reservation AND r.outOfOrderBlocking=0 '#10 ;
-  s := s + '		 JOIN currencies curr on curr.Currency=rd.Currency '#10 ;
-//  s := s + '		 JOIN rooms r on rd.room = r.room and r.wildcard=0 and r.active=1 and statistics=1 and hidden=0 '#10 ;
-  s := s + '		 WHERE '#10 ;
-  s := s + '				((pdd.date>='+_db(zDateFrom,true)+' AND pdd.date<='+_db(zDateTo,true)+')) '#10 ;
-  s := s + '		    AND (SUBSTR(rd.room, 1, 1) = ''<'' OR NOT ISNULL((SELECT 1 FROM rooms r WHERE r.room=rd.room and r.wildcard=0 and r.active=1 and statistics=1 and hidden=0 LIMIT 1))) '#10 ;
-  s := s + '		 GROUP BY pdd.date '#10 ;
-  s := s + '		 ORDER BY pdd.date '#10 ;
-  s := s + '		 ) baseData1 '#10 ;
-  s := s + '	UNION '#10 ;
-  s := s + '	 SELECT baseData2.*, '#10 ;
-  s := s + '			CAST(0.00 AS DECIMAL) AS occ, '#10 ;
-  s := s + '			CAST(0.00 AS DECIMAL) AS adr, '#10 ;
-  s := s + '			CAST(0.00 AS DECIMAL) AS revPar '#10 ;
-  s := s + '	 FROM ( '#10 ;
-  s := s + '		 SELECT DATE(pdd.date) AS ADate, '#10 ;
-  s := s + '				CAST(0 AS SIGNED) AS soldRooms, '#10 ;
-  s := s + '				CAST(0.00 AS DECIMAL) AS revenue, '#10 ;
-  s := s + '				CAST(0.00 AS DECIMAL) AS totalDiscount, '#10 ;
-  s := s + '				CAST(0.00 AS DECIMAL) AS maxRate, '#10 ;
-  s := s + '				CAST(0.00 AS DECIMAL) AS minRate, '#10 ;
-  s := s + '				CAST(0.00 AS DECIMAL) AS averageRate, '#10 ;
-  s := s + '				CAST(0 AS SIGNED) AS checkedInToday, '#10 ;
-  s := s + '				CAST(0 AS SIGNED) AS arrivingRooms, '#10 ;
-  s := s + '				(SELECT COUNT(rr2.id) FROM roomreservations rr2 '#10 ;
+//  s := s + '                    WHERE rr2.Departure=pdd.date AND rr2.Status='+_db(STATUS_ARRIVED)+') AS departingRooms, '#10 ;
+//  s := s + '				(SELECT COUNT(rr2.id) FROM roomreservations rr2 '#10 ;
 //  s := s + '					JOIN rooms r on r.room=rr2.room and r.wildcard=0 and r.active=1 and statistics=1 and hidden=0 '#10 ;
-  s := s + '                    WHERE rr2.Arrival=DATE_ADD(pdd.date,INTERVAL -1 DAY) AND rr2.Status='+_db(STATUS_NO_SHOW)+') AS noShow, '#10 ;
-  s := s + '				(SELECT COUNT(rr2.id) FROM roomreservations rr2 '#10 ;
-  s := s + '					JOIN rooms r on r.room=rr2.room and r.wildcard=0 and r.active=1 and statistics=1 and hidden=0 '#10 ;
-  s := s + '                    WHERE rr2.Departure=pdd.date AND rr2.Status='+_db(STATUS_ARRIVED)+') AS departingRooms, '#10 ;
-  s := s + '				(SELECT COUNT(rr2.id) FROM roomreservations rr2 '#10 ;
-  s := s + '					JOIN rooms r on r.room=rr2.room and r.wildcard=0 and r.active=1 and statistics=1 and hidden=0 '#10 ;
-  s := s + '                    WHERE rr2.Departure=pdd.date AND rr2.Status='+_db(STATUS_CHECKED_OUT)+') AS departedRooms, '#10 ;
-  s := s + '				CAST(0 AS SIGNED) AS occupiedRooms, '#10 ;
-  s := s + '				(SELECT COUNT(id) FROM rooms WHERE hidden=0 AND Active=1 AND Statistics=1 AND wildCard=0) AS totalRooms, '#10 ;
-  s := s + '				CAST(0 AS SIGNED) AS totalGuests '#10 ;
-  s := s + '		 FROM predefineddates pdd '#10 ;
-  s := s + '		 WHERE '#10 ;
-  s := s + '				((pdd.date>='+_db(zDateFrom,true)+' AND pdd.date<='+_db(zDateTo,true)+')) '#10 ;
-  s := s + '		 AND ISNULL((SELECT id FROM roomsdate WHERE ADate=pdd.date AND NOT(ResFlag IN ('+_db(STATUS_DELETED)+','+_db(STATUS_CANCELLED)+')) LIMIT 1)) '#10 ;
-  s := s + '		 GROUP BY pdd.date '#10 ;
-  s := s + '		 ORDER BY pdd.date '#10 ;
-  s := s + '		 ) baseData2 '#10 ;
-  s := s + '	) AllData '#10 ;
-  s := s + ' on DATE(pd.date) = AllData.aDate '#10 ;
-  s := s + ' WHERE '#10 ;
-  s := s + '	((pd.date>='+_db(zDateFrom,true)+' AND pd.date<='+_db(zDateTo,true)+')) '#10 ;
-  s := s + ' ORDER BY date ';
+//  s := s + '                    WHERE rr2.Departure=pdd.date AND rr2.Status='+_db(STATUS_CHECKED_OUT)+') AS departedRooms, '#10 ;
+//  s := s + '				CAST(0 AS SIGNED) AS occupiedRooms, '#10 ;
+//  s := s + '				(SELECT COUNT(id) FROM rooms WHERE hidden=0 AND Active=1 AND Statistics=1 AND wildCard=0) AS totalRooms, '#10 ;
+//  s := s + '				CAST(0 AS SIGNED) AS totalGuests '#10 ;
+//  s := s + '		 FROM predefineddates pdd '#10 ;
+//  s := s + '		 WHERE '#10 ;
+//  s := s + '				((pdd.date>='+_db(zDateFrom,true)+' AND pdd.date<='+_db(zDateTo,true)+')) '#10 ;
+//  s := s + '		 AND ISNULL((SELECT id FROM roomsdate WHERE ADate=pdd.date AND NOT(ResFlag IN ('+_db(STATUS_DELETED)+','+_db(STATUS_CANCELLED)+')) LIMIT 1)) '#10 ;
+//  s := s + '		 GROUP BY pdd.date '#10 ;
+//  s := s + '		 ORDER BY pdd.date '#10 ;
+//  s := s + '		 ) baseData2 '#10 ;
+//  s := s + '	) AllData '#10 ;
+//  s := s + ' on DATE(pd.date) = AllData.aDate '#10 ;
+//  s := s + ' WHERE '#10 ;
+//  s := s + '	((pd.date>='+_db(zDateFrom,true)+' AND pd.date<='+_db(zDateTo,true)+')) '#10 ;
+//  s := s + ' ORDER BY date ';
 
+  s := 'SELECT id, pd.date, DATE(IFNULL(ADate, pd.date)) AS ADate, soldRooms, revenue, occ, adr, revPar, totalDiscount, maxRate, minRate, averageRate, ' +
+       '  checkedInToday, arrivingRooms, noShow, departingRooms, departedRooms, occupiedRooms, totalRooms, totalGuests, ' +
+       '  (SELECT NativeCurrency FROM control LIMIT 1) AS localCurrency ' +
+       'FROM predefineddates pd ' +
+       'LEFT OUTER JOIN ' +
+       ' ( ' +
+       '	 SELECT baseData1.*, ' +
+       '			soldRooms/totalRooms*100 AS occ, ' +
+       '			revenue/soldRooms AS adr, ' +
+       '			revenue/totalRooms as RevPar ' +
+       ' ' +
+       '	 FROM ( ' +
+       '		 SELECT DATE(pdd.date) AS ADate, ' +
+       '				COUNT(rd.id) AS soldRooms, ' +
+       '				SUM((IF(rd.Discount > 0, RoomRate - IF(isPercentage, RoomRate * rd.Discount / 100, rd.Discount), RoomRate)) * IFNULL(ih.ihCurrencyRate, curr.AValue)) AS revenue, ' +
+       '				SUM((IF(rd.Discount > 0, IF(isPercentage, RoomRate * rd.Discount / 100, rd.Discount), 0)) * IFNULL(ih.ihCurrencyRate, curr.AValue)) AS totalDiscount, ' +
+       '				MAX(RoomRate * IFNULL(ih.ihCurrencyRate, curr.AValue)) AS maxRate, ' +
+       '				MIN(RoomRate * IFNULL(ih.ihCurrencyRate, curr.AValue)) AS minRate, ' +
+       '				AVG(RoomRate * IFNULL(ih.ihCurrencyRate, curr.AValue)) AS averageRate, ' +
+       '				(SELECT COUNT(rr2.id) FROM roomreservations  rr2 ' +
+       '					JOIN rooms r on r.room=rr2.room and r.wildcard=0 and r.active=1 and statistics=1 and hidden=0 ' +
+       '					WHERE rr2.Arrival=pdd.date AND rr2.Status=''G'') AS checkedInToday, ' +
+       '				(SELECT COUNT(rr2.id) FROM roomreservations   rr2 ' +
+       '					WHERE rr2.Arrival=pdd.date AND rr2.Status=''P'') AS arrivingRooms, ' +
+       '				(SELECT COUNT(rr2.id) FROM roomreservations rr2 ' +
+       '					WHERE rr2.Arrival=DATE_ADD(pdd.date,INTERVAL -1 DAY) AND rr2.Status=''N'') AS noShow, ' +
+       '				(SELECT COUNT(rr2.id) FROM roomreservations rr2 ' +
+       '					WHERE rr2.Departure=pdd.date AND rr2.Status=''G'') AS departingRooms, ' +
+       '				(SELECT COUNT(rr2.id) FROM roomreservations rr2 ' +
+       '					JOIN rooms r on r.room=rr2.room and r.wildcard=0 and r.active=1 and statistics=1 and hidden=0 ' +
+       '           WHERE rr2.Departure=pdd.date AND rr2.Status=''D'') AS departedRooms, ' +
+       '				(SELECT COUNT(rd2.id) FROM roomsdate rd2 ' +
+       '					JOIN rooms r on r.room=rd2.room and r.wildcard=0 and r.active=1 and statistics=1 and hidden=0 ' +
+       '					WHERE ADate=pdd.date AND ResFlag=''G'') AS occupiedRooms, ' +
+       '				(SELECT COUNT(id) FROM rooms WHERE hidden=0 AND Active=1 AND Statistics=1 AND wildCard=0) AS totalRooms, ' +
+       '				SUM((SELECT COUNT(id) FROM persons WHERE RoomReservation=rd.RoomReservation)) AS totalGuests ' +
+       '		 FROM predefineddates pdd ' +
+       '		 JOIN roomsdate rd on pdd.date=rd.ADate AND (NOT rd.ResFlag IN (''X'',''C'',''O'')) ' +
+       '		 JOIN reservations r on r.Reservation=rd.Reservation AND r.outOfOrderBlocking=0 ' +
+       '         JOIN control c ' +
+       '         LEFT JOIN invoicelines il ON il.InvoiceNumber > 0 AND il.RoomReservationAlias=rd.RoomReservation AND il.ItemId=c.RoomRentItem ' +
+       '         LEFT JOIN (SELECT RoomReservation, InvoiceNumber, ihCurrency, ihCurrencyRate FROM invoiceheads ih WHERE ih.InvoiceNumber > 0) ih ON ih.InvoiceNumber=il.InvoiceNumber ' +
+       '		 JOIN currencies curr on curr.Currency=rd.Currency ' +
+       '		 WHERE ' +
+       '				((pdd.date>=%s AND pdd.date<=%s)) ' +
+       '		    AND (SUBSTR(rd.room, 1, 1) = ''<'' OR NOT ISNULL((SELECT 1 FROM rooms r WHERE r.room=rd.room and r.wildcard=0 and r.active=1 and statistics=1 and hidden=0 LIMIT 1))) ' +
+       '		 GROUP BY pdd.date ' +
+       '		 ORDER BY pdd.date ' +
+       '		 ) baseData1 ' +
+       '	UNION ' +
+       '	 SELECT baseData2.*, ' +
+       '			CAST(0.00 AS DECIMAL) AS occ, ' +
+       '			CAST(0.00 AS DECIMAL) AS adr, ' +
+       '			CAST(0.00 AS DECIMAL) AS revPar ' +
+       '	 FROM ( ' +
+       '		 SELECT DATE(pdd.date) AS ADate, ' +
+       '				CAST(0 AS SIGNED) AS soldRooms, ' +
+       '				CAST(0.00 AS DECIMAL) AS revenue, ' +
+       '				CAST(0.00 AS DECIMAL) AS totalDiscount, ' +
+       '				CAST(0.00 AS DECIMAL) AS maxRate, ' +
+       '				CAST(0.00 AS DECIMAL) AS minRate, ' +
+       '				CAST(0.00 AS DECIMAL) AS averageRate, ' +
+       '				CAST(0 AS SIGNED) AS checkedInToday, ' +
+       '				CAST(0 AS SIGNED) AS arrivingRooms, ' +
+       '				(SELECT COUNT(rr2.id) FROM roomreservations rr2 ' +
+       '                    WHERE rr2.Arrival=DATE_ADD(pdd.date,INTERVAL -1 DAY) AND rr2.Status=''N'') AS noShow, ' +
+       '				(SELECT COUNT(rr2.id) FROM roomreservations rr2 ' +
+       '					JOIN rooms r on r.room=rr2.room and r.wildcard=0 and r.active=1 and statistics=1 and hidden=0 ' +
+       '                    WHERE rr2.Departure=pdd.date AND rr2.Status=''G'') AS departingRooms, ' +
+       '				(SELECT COUNT(rr2.id) FROM roomreservations rr2 ' +
+       '					JOIN rooms r on r.room=rr2.room and r.wildcard=0 and r.active=1 and statistics=1 and hidden=0 ' +
+       '                    WHERE rr2.Departure=pdd.date AND rr2.Status=''D'') AS departedRooms, ' +
+       '				CAST(0 AS SIGNED) AS occupiedRooms, ' +
+       '				(SELECT COUNT(id) FROM rooms WHERE hidden=0 AND Active=1 AND Statistics=1 AND wildCard=0) AS totalRooms, ' +
+       '				CAST(0 AS SIGNED) AS totalGuests ' +
+       '		 FROM predefineddates pdd ' +
+       '		 WHERE ' +
+       '				((pdd.date>=%s AND pdd.date<=%s)) ' +
+       '		 AND ISNULL((SELECT id FROM roomsdate WHERE ADate=pdd.date AND NOT(ResFlag IN (''X'',''C'')) LIMIT 1)) ' +
+       '		 GROUP BY pdd.date ' +
+       '		 ORDER BY pdd.date ' +
+       '		 ) baseData2 ' +
+       '	) AllData ' +
+       ' on DATE(pd.date) = AllData.aDate ' +
+       ' WHERE ' +
+       '	((pd.date>=%s AND pd.date<=%s)) ' +
+       ' ORDER BY date ';
+
+    s := format(s, [_db(zDateFrom,true), _db(zDateTo,true),
+                    _db(zDateFrom,true), _db(zDateTo,true),
+                    _db(zDateFrom,true), _db(zDateTo,true)]);
     ExecutionPlan.AddQuery(s);
     CopyToClipboard(s);
     //////////////////// Execute!

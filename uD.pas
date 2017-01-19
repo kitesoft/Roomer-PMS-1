@@ -1595,17 +1595,21 @@ begin
         sql := format('UPDATE roomreservations rr, ' +
                       '       control c ' +
                       'Set AvrageRate=(SELECT SUM(RoomRate * Paid) FROM roomsdate rd WHERE rd.RoomReservation=rr.RoomReservation AND rd.ResFlag=rr.Status) ' +
+                      IIF(hasRooms, ', RoomRentPaymentInvoice=0 ', '') +
                       IIF(hasRooms, ', InvoiceIndex=' + inttostr(SelectedInvoiceIndex), '') + ' ' +
                       'WHERE RoomReservation IN (SELECT DISTINCT RoomReservationAlias FROM invoicelines WHERE InvoiceNumber=%d AND ItemId=c.RoomRentItem) ', [Invoice]);
         CopyToClipboard(sql);
         lExecutionPlan.AddExec(sql);
 
-        sql := format('UPDATE roomsdate rd, ' +
-                      '       control c ' +
-                      'Set Paid=0 ' +
-                      'WHERE RoomReservation IN (SELECT DISTINCT RoomReservationAlias FROM invoicelines WHERE InvoiceNumber=%d AND ItemId=c.RoomRentItem) ', [Invoice]);
-        CopyToClipboard(sql);
-        lExecutionPlan.AddExec(sql);
+        if hasRooms then
+        begin
+          sql := format('UPDATE roomsdate rd, ' +
+                        '       control c ' +
+                        'Set Paid=0, InvoiceNumber=0 ' +
+                        'WHERE RoomReservation IN (SELECT DISTINCT RoomReservationAlias FROM invoicelines WHERE InvoiceNumber=%d AND ItemId=c.RoomRentItem) ', [Invoice]);
+          CopyToClipboard(sql);
+          lExecutionPlan.AddExec(sql);
+        end;
 
         lExecutionPlan.Execute(ptExec);
 

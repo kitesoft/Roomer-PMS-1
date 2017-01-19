@@ -1587,7 +1587,9 @@ uses
     , uDayClosingTimes
     , uDayClosingTimesAPICaller
     , uDateTimeHelper
-    , uRptHouseKeeping, uReservationStateChangeHandler, uRptDailyRevenues
+    , uRptHouseKeeping
+    , uReservationStateChangeHandler
+    , uRptDailyRevenues
     , uRoomerVersionInfo
     , uSQLUtils
     , uMasterRateDefaults
@@ -12474,7 +12476,7 @@ procedure TfrmMain._HelpContent;
 var
   aUrl: string;
 begin
-  aUrl := { 1090 } 'http:\\www.roomerpms.com';
+  aUrl := { 1090 } 'http://www.roomerhotelsystem.com/manual/en_US/';
   try
     ShellExecute(self.WindowHandle, 'open', PChar(aUrl), nil, nil, SW_SHOWNORMAL);
   except

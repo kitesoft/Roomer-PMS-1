@@ -188,13 +188,14 @@ type
     dtFrom: TsDateEdit;
     dtTo: TsDateEdit;
     sSpeedButton1: TsSpeedButton;
-    labSeason: TsLabel;
+    lblSeasonText: TsLabel;
     sLabel1: TsLabel;
     sLabel2: TsLabel;
     sLabel3: TsLabel;
     chkActive: TsCheckBox;
     btnRefresh: TsButton;
     FormStore: TcxPropertiesStore;
+    lblSeason: TsLabel;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -248,8 +249,6 @@ type
     zSortStr         : string;
     zIsAddRow        : boolean;
 
-    zRackPriceCodeID   : integer;
-
     zPriceCodeID  : integer;
     zRateID       : integer;
     zSeasonId     : integer;
@@ -261,10 +260,8 @@ type
     Procedure fillGridFromDataset(iGoto : integer);
     procedure fillHolder;
     procedure changeAllowgridEdit;
-    function getPrevCode : string;
     Procedure chkFilter;
     procedure applyFilter;
-    function getDefaults(PriceCodeID, RateID, SeasonId, RoomTypeID, CurrencyID : integer ) : recwRoomRateHolder;
 
     procedure FillPriceCodesBOX(box : TcolumnComboBox;All:boolean; defID : integer);
     procedure FillCurrenciesBOX(box : TcolumnComboBox;All:boolean; defID : integer);
@@ -277,9 +274,6 @@ type
 
 function RoomRates(act : TActTableAction; var theData : recwRoomRateHolder) : boolean;
 
-
-var
-  frmRoomRates: TfrmRoomRates;
 
 implementation
 
@@ -304,16 +298,18 @@ uses
 //////////////////////////////////////////////////////////////////////////////////////////////
 
 function roomRates(act : TActTableAction; var theData : recwRoomRateHolder) : boolean;
+var
+  frm: TfrmRoomRates;
 begin
   result := false;
-  frmRoomRates := TfrmRoomRates.Create(frmRoomRates);
+  frm := TfrmRoomRates.Create(nil);
   try
-    frmRoomRates.zData := theData;
-    frmRoomRates.zAct := act;
-    frmRoomRates.ShowModal;
-    if frmRoomRates.modalresult = mrOk then
+    frm.zData := theData;
+    frm.zAct := act;
+    frm.ShowModal;
+    if frm.modalresult = mrOk then
     begin
-      theData := frmRoomRates.zData;
+      theData := frm.zData;
       result := true;
     end
     else
@@ -321,7 +317,7 @@ begin
       initwRoomRateHolder(theData);
     end;
   finally
-    freeandnil(frmRoomRates);
+    freeandnil(frm);
   end;
 end;
 
@@ -561,21 +557,12 @@ var
   active : boolean;
 begin
   m_.Close;
-  active := chkActive.checked;
 
   zFirstTime := true;
   if zSortStr = '' then zSortStr := 'ID';
   rSet := CreateNewDataSet;
   try
     s := sql(zPriceCodeID, zCurrencyID,zDateFrom, zDateTo,chkactive.checked,zSortStr);
-
-//    if Active then
-//    begin
-//      s := format(select_wRoomRates_justActive, [1,zSortStr]);
-//    end else
-//    begin
-//      s := format(select_wRoomRates, [zSortStr]);
-//    end;
 
     if rSet_bySQL(rSet,s) then
     begin
@@ -808,7 +795,7 @@ begin
   seasonHolder      := seasonHolderByID(zSeasonId );
   dtFrom.Date       := seasonHolder.seStartDate;
   dtTo.Date         := seasonHolder.seEndDate;
-  labSeason.Caption := seasonHolder.seDescription;
+  lblSeasonText.Caption := seasonHolder.seDescription;
 
   zRoomTypeID   := 0;  //
 
@@ -884,24 +871,12 @@ end;
 ////////////////////////////////////////////////////////////////////////////////////////
 // memory table
 ////////////////////////////////////////////////////////////////////////////////////////
-function TfrmRoomRates.getPrevCode: string;
-begin
-end;
 
 procedure TfrmRoomRates.m_BeforeDelete(DataSet: TDataSet);
 var
   s : string;
 begin
   fillHolder;
-(*
-  if hdata.payTypeExistsInOther(zData.PayType) then
-  begin
-    Showmessage('payType'+' ' + zData.Description + ' '+GetTranslatedText('shExistsInRelatedData')+' ' + chr(10) + GetTranslatedText('shCanNotDelete')+' ');
-    Abort;
-    exit;
-  end;
-*)
-
   s := '';
   s := s+GetTranslatedText('shDeleteRoomRate')+' '+zData.Description+' '+chr(10);
   s := s+GetTranslatedText('shContinue');
@@ -976,13 +951,6 @@ begin
   end;
   if tvData.DataController.DataSource.State = dsInsert then
   begin
-//    if dataset.FieldByName('Description').AsString = ''  then
-//    begin
-//      showmessage('Description is requierd - set value or use [ESC] to cancel ');
-//      tvData.GetColumnByFieldName('Description').Focused := True;
-//      abort;
-//      exit;
-//    end;
     if ins_roomRate(zData,nID) then
     begin
       m_.FieldByName('ID').AsInteger := nID;
@@ -993,174 +961,6 @@ begin
       exit;
     end;
   end;
-end;
-
-
-function TfrmRoomRates.getDefaults(PriceCodeID, RateID, SeasonId, RoomTypeID, CurrencyID : integer ) : recwRoomRateHolder;
-var
-  lstRSets : TRoomerDataSetList;
-  queries : TList<String>;
-
-  s,
-  sql : string;
-  i : integer;
-begin
-
-  initwRoomRateHolder(result);
-
-  queries := TList<String>.Create;
-  lstRSets := TRoomerDataSetList.Create(True);
-  try
-
-    queries.Add(format(
-      'SELECT '#10+
-      '   ID '#10 +
-      '  ,pcCode '#10 +
-      '  ,pcRack '#10 +
-      ' FROM '#10 +
-      '   tblpricecodes '#10 +
-      ' WHERE '#10 +
-      '   ID = %d ',
-      [PriceCodeID]));
-    lstRSets.Add(d.roomerMainDataSet.CreateNewDataset);
-
-    queries.Add(format(
-    'SELECT '#10+
-    '   ID '#10+
-    '  ,Currency '#10+
-    ' FROM '#10+
-    '   currencies '#10+
-    ' WHERE '#10+
-    '   ID = %d ',
-    [currencyID]));
-    lstRSets.Add(d.roomerMainDataSet.CreateNewDataset);
-
-
-//    queries.Add(format(
-//    'SELECT '#10+
-//    '   ID '#10+
-//    '  ,seStartDate '#10+
-//    '  ,seEndDate '#10+
-//    '  ,seDescription '#10+
-//    ' FROM '#10+
-//    '   tblseasons '#10+
-//    ' WHERE '#10+
-//    '   ID = %d ',
-//    [seasonID]));
-//    lstRSets.Add(d.roomerMainDataSet.CreateNewDataset);
-
-
-
-//    queries.Add(format(
-//    'SELECT '#10+
-//    '   ID '#10+
-//    '  ,RoomType '#10+
-//    '  ,NumberGuests '#10+
-//    ' FROM '#10+
-//    '   roomtypes '#10+
-//    ' WHERE '#10+
-//    '   ID = %d ',
-//    [roomtypeID]));
-//    lstRSets.Add(d.roomerMainDataSet.CreateNewDataset);
-
-
-//    queries.Add(format(
-//    ' SELECT '#10+
-//    '   ID '#10+
-//    '  ,Currency AS rateCurrency '#10+
-//    '  ,Rate1Person '#10+
-//    '  ,Rate2Persons '#10+
-//    '  ,Rate3Persons '#10+
-//    '  ,Rate4Persons '#10+
-//    '  ,Rate5Persons '#10+
-//    '  ,Rate6Persons '#10+
-//    '  ,RateExtraPerson '#10+
-//    '  ,RateExtraChildren '#10+
-//    '  ,RateExtraInfant '#10+
-//    ' FROM '#10+
-//    '   rates '#10+
-//    ' WHERE '#10+
-//    '   ID = %d ',
-//    [rateID]));
-//    lstRSets.Add(d.roomerMainDataSet.CreateNewDataset);
-
-    d.roomerMainDataSet.SystemFreeMultipleQuery(lstRSets,queries);
-    //tblpricecodes
-    with lstRSets[0] do
-    begin
-      First;
-      if not eof then
-      begin
-        zData.PriceCodeID       := lstRSets[0]['ID'];
-        zData.pcCode            := lstRSets[0]['pcCode'];
-        zData.pcRack            := lstRSets[0]['pcRack'];
-      end;
-    end;
-
-    //Currencies
-    with lstRSets[1] do
-    begin
-      First;
-      if not eof then
-      begin
-        zData.CurrencyID        := lstRSets[1]['ID'];
-        zData.Currency          := lstRSets[1]['Currency'];
-      end;
-    end;
-
-//    //Seasons
-//    with lstRSets[2] do
-//    begin
-//      First;
-//      if not eof then
-//      begin
-//        zData.SeasonID          := lstRSets[2]['ID'];
-//        zData.seStartDate       := lstRSets[2]['seStartDate'];
-//        zData.seEndDate         := lstRSets[2]['seEndDate'];
-//        zData.seDescription     := lstRSets[2]['seDescription'];
-//      end;
-//    end;
-//
-//    //RoomTypes
-//    with lstRSets[3] do
-//    begin
-//      First;
-//      if not eof then
-//      begin
-//        zData.RoomTypeID        := lstRSets[3]['ID'];
-//        zData.RoomType          := lstRSets[3]['RoomType'];
-//        zData.NumberGuests      := lstRSets[3]['NumberGuests'];
-//      end;
-//    end;
-
-//    //Rates
-//    with lstRSets[4] do
-//    begin
-//      First;
-//      if not eof then
-//      begin
-//        zData.RateID            := lstRSets[4]['ID'];
-//        zData.RateCurrency      := lstRSets[4]['RateCurrency'];
-//        zData.Rate1Person       := lstRSets[4]['Rate1Person'];
-//        zData.Rate2Persons      := lstRSets[4]['Rate2Persons'];
-//        zData.Rate3Persons      := lstRSets[4]['Rate3Persons'];
-//        zData.Rate4Persons      := lstRSets[4]['Rate4Persons'];
-//        zData.Rate5Persons      := lstRSets[4]['Rate5Persons'];
-//        zData.Rate6Persons      := lstRSets[4]['Rate6Persons'];
-//        zData.RateExtraPerson   := lstRSets[4]['RateExtraPerson'];
-//        zData.RateExtraChildren := lstRSets[4]['RateExtraChildren'];
-//        zData.RateExtraInfant   := lstRSets[4]['RateExtraInfant'];
-//      end;
-//    end;
-
-  finally
-    FreeAndNil(lstRSets);
-    freeAndNil(queries);
-  end;
-
-//  zData.DateFrom := zData.seStartDate;
-//  zData.DateTo   := zData.seEndDate;
-  result := zData;
 end;
 
 procedure TfrmRoomRates.m_NewRecord(DataSet: TDataSet);
@@ -1230,16 +1030,6 @@ begin
     errortext := displayvalue+'  '+GetTranslatedText('shNewValueExistInAnotherRecor');
     exit
   end;
-
-//  if tvData.DataController.DataSource.State = dsEdit then
-//  begin
-//    if hdata.payTypeExistsInOther(currValue) then
-//    begin
-//      error := true;
-//      errortext := displayvalue+' - '+GetTranslatedText('shOldValueUsedInRelatedDataC');
-//      exit;
-//    end;
-//  end;
 
 end;
 
@@ -1328,7 +1118,7 @@ begin
     zSeasonId := theData.ID;
     dtFrom.date := theData.seStartDate;
     dtTo.Date := theData.seEndDate;
-    labSeason.Caption := theData.seDescription;
+    lblSeasonText.Caption := theData.seDescription;
     btnRefresh.Click;
   end;
 end;
