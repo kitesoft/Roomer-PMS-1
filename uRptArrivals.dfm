@@ -43,7 +43,6 @@ inherited frmArrivalsReport: TfrmArrivalsReport
       ParentFont = False
       TabOrder = 0
       SkinData.SkinSection = 'GROUPBOX'
-      Checked = False
       object rbToday: TsRadioButton
         Left = 4
         Top = 21
@@ -90,7 +89,6 @@ inherited frmArrivalsReport: TfrmArrivalsReport
         ParentFont = False
         TabOrder = 3
         Text = '  -  -    '
-        CheckOnExit = True
         SkinData.SkinSection = 'EDIT'
         GlyphMode.Blend = 0
         GlyphMode.Grayed = False
@@ -114,7 +112,6 @@ inherited frmArrivalsReport: TfrmArrivalsReport
         ParentFont = False
         TabOrder = 4
         Text = '  -  -    '
-        CheckOnExit = True
         SkinData.SkinSection = 'EDIT'
         GlyphMode.Blend = 0
         GlyphMode.Grayed = False
@@ -524,6 +521,7 @@ inherited frmArrivalsReport: TfrmArrivalsReport
     object grdPrinterLink1: TdxGridReportLink
       Active = True
       Component = grArrivalsList
+      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -545,13 +543,14 @@ inherited frmArrivalsReport: TfrmArrivalsReport
       PrinterPage.ScaleMode = smFit
       PrinterPage._dxMeasurementUnits_ = 2
       PrinterPage._dxLastMU_ = 2
-      ReportDocument.CreationDate = 42697.547810138890000000
+      ReportDocument.CreationDate = 42754.599892291670000000
       ReportTitle.Font.Charset = DEFAULT_CHARSET
       ReportTitle.Font.Color = clBlack
       ReportTitle.Font.Height = -19
       ReportTitle.Font.Name = 'Arial'
       ReportTitle.Font.Style = [fsBold]
       ShrinkToPageWidth = True
+      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlack
       Font.Height = -11

@@ -57,7 +57,7 @@ uses
   sStatusBar,
   sLabel,
   cxCurrencyEdit,
-  uCurrencyHandler, cxCheckBox, uDImages;
+  cxCheckBox, uDImages;
 
 type
   ERoomPricesException = class(Exception);
@@ -191,7 +191,6 @@ type
     FRoomReservations: TStringlist;
     FCurrency: string;
     FCurrencyRate: double;
-    FCurrencyhandler: TCurrencyhandler;
     FInvoiceIndex: Integer;
     procedure EditRoomRateOneRoom(aRoomRes: Integer);
     procedure ApplyRateToOther(RoomReservation: Integer; const RoomType: string);
@@ -204,8 +203,6 @@ type
     procedure DoLoadData; override;
   public
     { Public declarations }
-    constructor Create(aOwner: TComponent); override;
-    destructor Destroy; override;
     property RoomReservations: TStringlist read FRoomReservations write FRoomReservations;
     property InvoiceIndex: Integer read FInvoiceIndex write FInvoiceIndex;
     property Currency: string read FCurrency write SetCurrency;
@@ -222,7 +219,7 @@ uses
   uSQLUtils,
   uReservationStateDefinitions,
   cmpRoomerDataset,
-  uUtils, uD;
+  uUtils, uD, uRoomerCurrencymanager;
 
 const
   // Params: Roomreservation, roomreservation and invoiceindex
@@ -336,14 +333,14 @@ procedure TfrmRoomPrices.tvRoomRatesNativeAmountGetProperties(Sender: TcxCustomG
   ARecord: TcxCustomGridRecord; var AProperties: TcxCustomEditProperties);
 begin
   inherited;
-  aProperties := d.getCurrencyProperties(g.qNativeCurrency);
+  AProperties := RoomerCurrencyManager.DefaultCurrencyDefinition.GetcxEditPropertiesKeepEvents(aProperties);
 end;
 
 procedure TfrmRoomPrices.tvRoomResAveragePriceGetProperties(Sender: TcxCustomGridTableItem;
   ARecord: TcxCustomGridRecord; var AProperties: TcxCustomEditProperties);
 begin
   inherited;
-  AProperties := FCurrencyhandler.GetcxEditPropertiesKeepEvents(aProperties);
+  AProperties := RoomerCurrencyManager.CurrencyDefinition[FCurrency].GetcxEditPropertiesKeepEvents(aProperties);
 end;
 
 procedure TfrmRoomPrices.tvRoomResAveragePricePropertiesEditValueChanged(Sender: TObject);
@@ -408,7 +405,7 @@ begin
     theData.isCreateRes := True;
 
     theData.Currency := FCurrency; // edtCurrency.Text;
-    theData.CurrencyRate := FCurrencyhandler.Rate;
+    theData.CurrencyRate := RoomerCurrencyManager.CurrencyDefinition[FCurrency].Rate;
 
     RoomReservation := mRoomRes.FieldByName('roomreservation').asinteger;
     theData.RoomType := mRoomRes.FieldByName('RoomType').asString;
@@ -536,12 +533,7 @@ begin
   if FCurrency <> Value then
   begin
     FCurrency := Value;
-    if assigned(FCurrencyhandler) then
-      FCurrencyhandler.Free;
-
-    FCurrencyhandler := TCurrencyhandler.Create(FCurrency);
-
-    lblCurrency.Caption := FCurrencyhandler.ShortDescription;
+    lblCurrency.Caption := RoomerCurrencyManager.CurrencyDefinition[FCurrency].ShortDescription;
   end;
 end;
 
@@ -931,18 +923,6 @@ begin
     mRoomRes.post;
   end;
 
-end;
-
-constructor TfrmRoomPrices.Create(aOwner: TComponent);
-begin
-  inherited;
-  FCurrencyhandler := TCurrencyhandler.Create(g.qNativeCurrency);
-end;
-
-destructor TfrmRoomPrices.Destroy;
-begin
-  FCurrencyhandler.Free;
-  inherited;
 end;
 
 procedure TfrmRoomPrices.DoLoadData;

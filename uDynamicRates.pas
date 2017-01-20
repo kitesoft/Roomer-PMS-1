@@ -6,7 +6,7 @@ uses
   cmpRoomerDataSet,
   SysUtils,
   classes
-  , uCurrencyHandlersMap
+  , uRoomerCurrencyManager
   ;
 
 type
@@ -15,7 +15,6 @@ type
     chRates : TRoomerDataSet;
     arrival, departure : TDate;
     channelCode, chManCode : String;
-    FCurrHandlers: TCurrencyHandlersMap;
     procedure Clear;
     procedure Deactivate;
   public
@@ -45,7 +44,7 @@ uses
   System.Generics.Collections,
   _Glob, uSQLUtils
   , uG
-  ;
+  , uAmount;
 
 function TDynamicRates.Active: Boolean;
 begin
@@ -55,9 +54,10 @@ end;
 function TDynamicRates.AverageRateStay(const aRatePlanCode : String; const roomType : String; arrival, departure: TDate): Double;
 var numDays : Integer;
     Counter : Integer;
-    lnativeRate: double;
+    lRate: TAmount;
+    lTotal: TAmount;
 begin
-  result := 0.00;
+  lTotal := 0;
   if NOT assigned(chRates) then exit;
 
   numDays := TRUNC(departure) - TRUNC(arrival);
@@ -71,27 +71,27 @@ begin
        (chRates['date'] >= arrival) AND
        (chRates['date'] < departure) then
     begin
-      lnativeRate := FCurrHandlers.ConvertAmount(chRates['rate'], chRates['chCurrencyCode'], g.qNativeCurrency);
-      result := result + lnativeRate;
+      lRate := TAmount.Create( chRates['rate'], chRates.FieldByName('chCurrencyCode').AsString);
+      lTotal := lTotal + lRate.ToCurrency(g.qNativeCurrency);
       Inc(Counter);
     end;
     chRates.Next;
     if Counter >= numDays then
       Break;
   end;
-  result := result / numDays;
+  result := lTotal / numDays;
 end;
 
 procedure TDynamicRates.UpdateRoomReservation(RoomReservation: Integer; const aRatePlanCode: String; const roomType: String; arrival, departure: TDate; const aCurrCode: string);
 var SqlList : TList<String>;
     numDays : Integer;
-    Total : Double;
+    Total : TAmount;
     s : String;
     Counter : Integer;
-    lRate: double;
+    lRate: TAmount;
 begin
   numDays := TRUNC(departure) - TRUNC(arrival);
-  Total := 0.00;
+  Total := TAmount.Create(0.00, aCurrCode);
   if numDays < 1 then exit;
 
   if NOT assigned(chRates) then exit;
@@ -106,8 +106,8 @@ begin
          (chRates['date'] >= arrival) AND
          (chRates['date'] < departure) then
       begin
-        lRate := FCurrHandlers.ConvertAmount(chRates['rate'], chRates['chCurrencyCode'], aCurrCode);
-        Total := Total + lRate;
+        lRate := TAmount.Create( chRates['rate'], chRates.FieldByName('chCurrencyCode').AsString);
+        Total := Total + lRate.ToCurrency(aCurrCode);
         s := format('UPDATE roomsdate SET RoomRate=%s WHERE ADate=%s AND RoomReservation=%d',
                     [
                       _db(lRate),
@@ -121,10 +121,10 @@ begin
       if Counter >= numDays then
         Break;
     end;
-    Total := Total / numDays;
+
     s := format('UPDATE roomreservations SET AvrageRate=%s, ratePlanCode=%s WHERE RoomReservation=%d',
                 [
-                  _db(Total),
+                  _db(Total / numDays),
                   _db(aRatePlanCode),
                   RoomReservation
                 ]);
@@ -148,7 +148,6 @@ begin
   departure := arrival + 1;
   channelCode := '';
   chManCode := '';
-  FCurrHandlers := TCurrencyHandlersMap.create;
 end;
 
 procedure TDynamicRates.Deactivate;
@@ -159,7 +158,6 @@ end;
 destructor TDynamicRates.Destroy;
 begin
   Clear;
-  FCurrHandlers.Free;
   inherited;
 end;
 

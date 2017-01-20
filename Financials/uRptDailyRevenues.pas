@@ -15,7 +15,7 @@ uses
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxClasses, cxGridCustomView, cxGrid,
   Vcl.ComCtrls, sStatusBar, sCheckBox, cxCalendar
   , cmpRoomerDataset, Vcl.Mask, sMaskEdit, sCustomComboEdit, sToolEdit
-  , uRoomerForm, dxSkinsdxStatusBarPainter, dxStatusBar, sGroupBox, sRadioButton, uCurrencyHandler, sSplitter,
+  , uRoomerForm, dxSkinsdxStatusBarPainter, dxStatusBar, sGroupBox, sRadioButton,sSplitter,
   dxPScxPivotGridLnk, AdvSmoothProgressBar
   ;
 
@@ -100,7 +100,6 @@ type
   private
     FRefreshingData: Boolean;
     FRecordSet: TRoomerDataSet;
-    FCurrencyhandler: TCurrencyHandler;
     procedure ShowError(const aOperation: string; const aMessage: string = '');
     procedure UpdateBalanceData;
     procedure SetSummaryDisplayFormat(aView: TcxGridDBTableView; const aFormat: string);
@@ -137,7 +136,7 @@ uses
   , uFinancialReportsAPICaller
   , cxEditRepositoryItems
   , Math
-  , uDayClosingTimesAPICaller;
+  , uDayClosingTimesAPICaller, uRoomerCurrencymanager;
 
 procedure ShowDailyRevenuesReport;
 begin
@@ -212,19 +211,17 @@ end;
 constructor TfrmRptDailyRevenues.Create(Owner: TComponent);
 begin
   FRecordSet := d.roomerMainDataSet.CreateNewDataset;
-  FCurrencyhandler := TCurrencyHandler.Create(g.qNativeCurrency);
   inherited;
 
-  SetSummaryDisplayFormat(tvPayments, FCurrencyhandler.GetcxEditProperties.DisplayFormat);
-  SetSummaryDisplayFormat(tvRevenues, FCurrencyhandler.GetcxEditProperties.DisplayFormat);
-  SetSummaryDisplayFormat(tvBalance, FCurrencyhandler.GetcxEditProperties.DisplayFormat);
+  SetSummaryDisplayFormat(tvPayments, RoomerCurrencyManager.DefaultCurrencyDefinition.GetcxEditProperties.DisplayFormat);
+  SetSummaryDisplayFormat(tvRevenues, RoomerCurrencyManager.DefaultCurrencyDefinition.GetcxEditProperties.DisplayFormat);
+  SetSummaryDisplayFormat(tvBalance, RoomerCurrencyManager.DefaultCurrencyDefinition.GetcxEditProperties.DisplayFormat);
 end;
 
 destructor TfrmRptDailyRevenues.Destroy;
 begin
   inherited;
   FRecordSet.Free;
-  FCurrencyhandler.Free;
 end;
 
 procedure TfrmRptDailyRevenues.DoLoadData;
@@ -382,7 +379,7 @@ procedure TfrmRptDailyRevenues.tvPaymentsTotalAmountGetProperties(Sender: TcxCus
   ARecord: TcxCustomGridRecord; var AProperties: TcxCustomEditProperties);
 begin
   inherited;
-  AProperties := FCurrencyhandler.GetcxEditProperties;
+  AProperties := RoomerCurrencyManager.DefaultCurrencyDefinition.GetcxEditProperties;
 end;
 
 procedure TfrmRptDailyRevenues.DoUpdateControls;

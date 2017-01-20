@@ -201,7 +201,6 @@ type
     procedure m_BeforeInsert(DataSet: TDataSet);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormShow(Sender: TObject);
-    procedure FormDestroy(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
 
   private
@@ -464,11 +463,6 @@ begin
   zAct        := actNone;
 
   PrepareUserInterface;
-end;
-
-procedure TfrmCurrencies.FormDestroy(Sender: TObject);
-begin
-  glb.EnableOrDisableTableRefresh('currencies', True);
 end;
 
 procedure TfrmCurrencies.FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);

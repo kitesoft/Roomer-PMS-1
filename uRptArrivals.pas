@@ -14,8 +14,8 @@ uses
   dxBkgnd, dxWrap, dxPrnDev, dxPSCompsProvider, dxPSFillPatterns, dxPSEdgePatterns, dxPSPDFExportCore, dxPSPDFExport,
   cxDrawTextUtils, dxPSPrVwStd, dxPSPrVwAdv, dxPSPrVwRibbon, dxPScxPageControlProducer, dxPScxGridLnk,
   dxPScxGridLayoutViewLnk, dxPScxEditorProducers, dxPScxExtEditorProducers, dxSkinsdxBarPainter, dxSkinsdxRibbonPainter,
-  dxPScxCommon, dxPSCore, dxStatusBar
-  , uCurrencyHandler, AdvSmoothProgressBar, Vcl.ComCtrls, sStatusBar, cxTextEdit  ;
+  dxPScxCommon, dxPSCore, dxStatusBar,
+  AdvSmoothProgressBar, Vcl.ComCtrls, sStatusBar, cxTextEdit  ;
 
 type
   TfrmArrivalsReport = class(TfrmBaseRoomerForm)
@@ -107,7 +107,6 @@ type
       ARecord: TcxCustomGridRecord; var AProperties: TcxCustomEditProperties);
   private
     FRefreshingdata: boolean;
-    FCurrencyhandler: TCurrencyHandler;
     { Private declarations }
     procedure SetManualDates(aFrom, aTo: TDate);
     function ConstructSQL: string;
@@ -116,8 +115,6 @@ type
     procedure DoUpdateControls; override;
     procedure DoShow; override;
   public
-    constructor Create(aOwner: TComponent); override;
-    destructor Destroy; override;
     { Public declarations }
   end;
 
@@ -148,7 +145,7 @@ uses
   , uInvoice
   , uReservationProfile
   , uRptbViewer
-  , uReservationStateChangeHandler, uReservationStateDefinitions;
+  , uReservationStateChangeHandler, uReservationStateDefinitions, uRoomerCurrencymanager;
 
 const
   cSQL = 'SELECT '#10 +
@@ -260,18 +257,6 @@ begin
   CopyToClipboard(Result);
 end;
 
-constructor TfrmArrivalsReport.Create(aOwner: TComponent);
-begin
-  FCurrencyhandler := TCurrencyHandler.Create(g.qNativeCurrency);
-  inherited;
-end;
-
-destructor TfrmArrivalsReport.Destroy;
-begin
-  inherited;
-  FCurrencyhandler.Free;
-end;
-
 procedure TfrmArrivalsReport.DoShow;
 begin
   inherited;
@@ -298,7 +283,7 @@ end;
 procedure TfrmArrivalsReport.grArrivalsListDBTableView1AverageRoomRateGetProperties(Sender: TcxCustomGridTableItem;
   ARecord: TcxCustomGridRecord; var AProperties: TcxCustomEditProperties);
 begin
-  AProperties := FCurrencyhandler.GetcxEditProperties;
+  AProperties := RoomerCurrencyManager.DefaultCurrencyDefinition.GetcxEditProperties;
 end;
 
 procedure TfrmArrivalsReport.grArrivalsListDBTableView1CellDblClick(Sender: TcxCustomGridTableView; ACellViewInfo: TcxGridTableDataCellViewInfo;

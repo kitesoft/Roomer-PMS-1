@@ -13,7 +13,7 @@ uses
   Vcl.ComCtrls,
   sPageControl, Vcl.OleCtrls, SHDocVw, mshtml, RoomerCloudEntities,
   AdvTimePickerDropDown, sEdit, sCheckBox, sComboBox,
-  uUtils, uCurrencyHandlersMap, Vcl.Menus, uD, sGroupBox, sBevel, UbuntuProgress, ActiveX, HTMLabel,
+  uUtils, uCurrencyManager, Vcl.Menus, uD, sGroupBox, sBevel, UbuntuProgress, ActiveX, HTMLabel,
   cxClasses, acImage, clisted, uRoomerThreadedRequest, cxGraphics, cxLookAndFeels, cxLookAndFeelPainters, dxSkinsCore, dxSkinCaramel, dxSkinCoffee,
   dxSkinDarkSide, dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, cxButtons, AdvEdit, AdvEdBtn, PlannerDatePicker,
   dxSkinBlack, dxSkinBlue, dxSkinDevExpressDarkStyle, dxSkinFoggy, dxSkinLiquidSky, dxSkinMcSkin, dxSkinOffice2013White, dxSkinWhiteprint, CheckComboBox,
@@ -438,9 +438,6 @@ type
 
     ThreadedDataGetter : TGetThreadedData;
 
-    CurrencyHandlersMap : TCurrencyHandlersMap;
-
-
     procedure ShowAvailabilityForSelectedChannelManager;
     function GetDateLabel(date: TDateTime): String;
     function EditableCell(_grid: TAdvStringGrid; ARow, ACol: integer): Boolean;
@@ -567,7 +564,7 @@ uses ioUtils, uMain, uDateUtils, uStringUtils, _glob, uAppGlobal, PrjConst,
   uFrmChannelCopyFrom, uRoomerMessageDialog, uDImages, uExcelProcessors, uG, uEmailExcelSheet, hData,
   uActivityLogs,
   UITypes
-  , uFloatUtils, uFileSystemUtils, uSQLUtils;
+  , uFloatUtils, uFileSystemUtils, uSQLUtils, uAmount;
 
 const
   BODY_START = '<body bgcolor="#0000FF"><font bgcolor="#0000FF" color="#FFFFFF">';
@@ -998,8 +995,6 @@ begin
   RoomerLanguage.TranslateThisForm(self);
   glb.PerformAuthenticationAssertion(self); PlaceFormOnVisibleMonitor(self);
 
-  CurrencyHandlersMap := TCurrencyHandlersMap.Create;
-
   imgHelp.Hint := format('<body bgcolor="#0000FF">Color definitions in grid:<br><hr><br>' + '<font %s color="#FFFFFF"> &nbsp;&nbsp;&nbsp;&nbsp;</font>' +
     '<font bgcolor="#0000FF" color="#FFFFFF"> Rate, availability or restriction has changed.</font><br>', [GetHTMLColor(clRed, true)]) +
     format('<font %s color="#FFFFFF"> &nbsp;&nbsp;&nbsp;&nbsp;</font>' + '<font bgcolor="#0000FF" color="#FFFFFF"> Stop sell is active.</font><br>',
@@ -1026,7 +1021,6 @@ var
 begin
   RoomerDataset.Free;
   AvailDict.Free;
-  CurrencyHandlersMap.Free;
   for i := 0 to cbxChannelManagers.Items.Count-1 do
   begin
     obj := cbxChannelManagers.Items.Objects[i];
@@ -4346,7 +4340,7 @@ function TfrmChannelAvailabilityManager.CorrectAmountByCurrency(price : Double; 
 begin
   result := price;
   if glb.PMSSettings.MasterRateCurrencyConvert then
-    result := CurrencyHandlersMap.ConvertAmount(price, fromCurrencyId, toCurrencyId);
+    result := TAmount.Create(price, fromCurrencyId).ToCurrency(toCurrencyId);
 end;
 
 procedure TfrmChannelAvailabilityManager.CorrectMasterRateLinkedCells(PriceData : TPriceData; ACol, ARow: integer);

@@ -94,8 +94,7 @@ uses
   dxSkinLondonLiquidSky, dxSkinMoneyTwins, dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green, dxSkinOffice2007Pink,
   dxSkinOffice2007Silver, dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinValentine,
-  dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, cxDropDownEdit, cxCheckBox, cxCalendar, cxCurrencyEdit,
-  uCurrencyHandler
+  dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, cxDropDownEdit, cxCheckBox, cxCalendar, cxCurrencyEdit
   ;
 
 type
@@ -275,7 +274,6 @@ type
       AViewInfo: TcxGridTableDataCellViewInfo; var ADone: Boolean);
     procedure GetPriceProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
       var AProperties: TcxCustomEditProperties);
-    procedure FormDestroy(Sender: TObject);
   private
     { Private declarations }
     financeLookupList : TKeyPairList;
@@ -288,7 +286,6 @@ type
     FAvailSet: TRoomerDataset;
 
     FLocateAfterPost: integer;
-    FCurrencyhandler: TCurrencyHandler;
 
     Procedure fillGridFromDataset(sGoto : string);
     procedure fillHolder;
@@ -355,7 +352,7 @@ uses
   , DateUtils
   , Math
   , uSQLUtils
-  ;
+  , uRoomerCurrencymanager;
 
 
 
@@ -850,12 +847,6 @@ begin
   zFirstTime  := true;
   zAct        := actNone;
   FAvailSet := TRoomerDataSet.Create(self);
-  FCurrencyhandler := TCurrencyHandler.Create(g.qNativeCurrency);
-end;
-
-procedure TfrmItems2.FormDestroy(Sender: TObject);
-begin
-  FCurrencyHandler.Free;
 end;
 
 procedure TfrmItems2.FormShow(Sender: TObject);
@@ -1292,7 +1283,7 @@ end;
 procedure TfrmItems2.GetPriceProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
   var AProperties: TcxCustomEditProperties);
 begin
-  AProperties := FCurrencyHandler.GetcxEditProperties;
+  AProperties := RoomerCurrencyManager.DefaultCurrencyDefinition.GetcxEditProperties;
 end;
 
 procedure TfrmItems2.tvDataDblClick(Sender: TObject);

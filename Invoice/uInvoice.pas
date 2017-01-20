@@ -46,8 +46,9 @@ uses
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinValentine,
   dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, cxButtons, sComboBox,
   sSpeedButton, AdvUtil
-  , uInvoiceEntities, uCurrencyHandler, uAmount, cxCurrencyEdit
-    ;
+  , uInvoiceEntities, uAmount, cxCurrencyEdit
+  , uRoomerCurrencyDefinition
+  ;
 
 type
   TCreditType = (ctManual, ctReference, ctErr);
@@ -510,17 +511,13 @@ type
     FReservation: integer;
     FRoomReservation: integer;
 
-     FNativeCurrencyHandler: TCurrencyHandler;
-     FCurrentCurrencyHandler: TCurrencyHandler;
+     FCurrentCurrencyDefinition: TRoomerCurrencyDefinition;
 
      function zCurrencyRate: Double;
      function GetCurrentCurrency: string;
      procedure SetCurrentCurrency(const Value: string);
-     function GetNativeCurrency: string;
-     procedure SetNativeCurrency(const Value: string);
      // Global currency and Rate
      property zCurrentCurrency: string read GetCurrentCurrency write SetCurrentCurrency;
-     property zNativeCurrency: string read GetNativeCurrency write SetNativeCurrency;
 
      procedure LoadInvoice;
     procedure loadInvoiceToMemtable(var m: TKbmMemTable);
@@ -742,7 +739,8 @@ uses
   UITypes
   , uFloatUtils
   , Math
-    , uVatCalculator, uSQLUtils, ufrmRoomPrices;
+    , uVatCalculator, uSQLUtils, ufrmRoomPrices
+    , uRoomerCurrencymanager;
 
 {$R *.DFM}
 
@@ -801,7 +799,6 @@ begin
     _frmInvoice.FnewSplitNumber := SplitNumber;
     _frmInvoice.FInvoiceIndex := InvoiceIndex;
     _frmInvoice.FIsCredit := bCredit;
-    _frmInvoice.zNativeCurrency := ctrlGetString('NativeCurrency');
     _frmInvoice.zFromKredit := FromKredit;
 
     _frmInvoice.ShowModal;
@@ -859,8 +856,6 @@ end;
 
 destructor TfrmInvoice.Destroy;
 begin
-   FNativeCurrencyHandler.Free;
-   FCurrentCurrencyHandler.Free;
   inherited;
 end;
 
@@ -1114,8 +1109,8 @@ begin
   agrLines.Cells[col_Item, iRow] := invoiceLine.FItem;
   agrLines.Cells[col_Description, iRow] := invoiceLine.FText;
   agrLines.Cells[col_ItemCount, iRow]   := trim(_floattostr(invoiceLine.FQuantity, vWidth, vDec));
-  agrLines.Cells[col_ItemPrice, iRow]   := invoiceLine.NativePrice.ToCurrency(FCurrentCurrencyHandler.CurrencyCode).AsDisplayString;
-  agrLines.Cells[col_TotalPrice, iRow]  := invoiceLine.Total.ToCurrency(FCurrentCurrencyHandler.CurrencyCode).AsDisplayString;
+  agrLines.Cells[col_ItemPrice, iRow]   := invoiceLine.NativePrice.ToCurrency(FCurrentCurrencyDefinition.CurrencyCode).AsDisplayString;
+  agrLines.Cells[col_TotalPrice, iRow]  := invoiceLine.Total.ToCurrency(FCurrentCurrencyDefinition.CurrencyCode).AsDisplayString;
   agrLines.Cells[col_System, iRow]      := '';
   agrLines.Cells[col_Reference, iRow]    := invoiceLine.FReference;
   agrLines.Cells[col_Source, iRow]      := invoiceLine.FSource;
@@ -1310,8 +1305,8 @@ begin
     edtDownPayments.Text := TAmount(double(getDownPayments)).AsDisplayString; // trim(_floattostr(TotalDownPayments, vWidth, vDec));
     edtBalance.Text := FInvoiceLinesList.TotalBalance.AsDisplayString; // TAmount(TotalBalance).AsDisplayString; // trim(_floattostr(TotalBalance, vWidth, vDec));
 
-    if (edtCurrency.Text <> '') and (edtCurrency.Text <> zNativeCurrency) then
-      edtForeignCurrency.Text :=TAmount(nativeTotal).ToCurrency(FCurrentCurrencyHandler.CurrencyCode).AsDisplayString; //  _floattostr((nativeTotal) / GetRate(edtCurrency.Text), vWidth, vDec);
+    if (edtCurrency.Text <> '') and (edtCurrency.Text <> RoomerCurrencyManager.DefaultCurrencyDefinition.CurrencyCode) then
+      edtForeignCurrency.Text :=TAmount(nativeTotal).ToCurrency(FCurrentCurrencyDefinition.CurrencyCode).AsDisplayString; //  _floattostr((nativeTotal) / GetRate(edtCurrency.Text), vWidth, vDec);
 
   finally
     Screen.Cursor := crDefault;
@@ -1383,18 +1378,17 @@ end;
 
 procedure TfrmInvoice.SetCurrentCurrency(const Value: string);
 begin
-  if (FCurrentCurrencyHandler = nil) or (FCurrentCurrencyHandler.CurrencyCode <> value) then
+   if (FCurrentCurrencyDefinition = nil) or (FCurrentCurrencyDefinition.CurrencyCode <> value) then
   begin
-    FCurrentCurrencyHandler.free;
-    FCurrentCurrencyHandler := TCurrencyHandler.Create(Value);
+    FCurrentCurrencyDefinition := RoomerCurrencyManager.CurrencyDefinition[Value];
 
-    edtCurrency.Text := FCurrentCurrencyHandler.CurrencyCode;
-    edtRate.Text :=  FloatToStr(FCurrentCurrencyHandler.Rate);
+    edtCurrency.Text := FCurrentCurrencyDefinition.CurrencyCode;
+    edtRate.Text :=  FloatToStr(FCurrentCurrencyDefinition.Rate);
   end;
 
   if ComponentRunning(Self) then
   begin
-    edtForeignCurrency.Visible :=  FCurrentCurrencyHandler.CurrencyCode <> FNativeCurrencyHandler.CurrencyCode;
+    edtForeignCurrency.Visible :=  FCurrentCurrencyDefinition.CurrencyCode <> RoomerCurrencyManager.DefaultCurrencyDefinition.CurrencyCode;
     clabForeignCurrency.Visible := edtForeignCurrency.Visible;
   end;
 end;
@@ -1490,8 +1484,8 @@ begin
   s := s + ', ' + _db(zInvoiceDate);
   s := s + ', ' + _db(zConfirmDate);
   s := s + ', ' + _db(zPayDate);
-  s := s + ', ' + _db(FCurrentCurrencyHandler.CurrencyCode);
-  s := s + ', ' + _db(FCurrentCurrencyHandler.Rate);
+  s := s + ', ' + _db(FCurrentCurrencyDefinition.CurrencyCode);
+  s := s + ', ' + _db(FCurrentCurrencyDefinition.Rate);
   s := s + ', ' + _db(zLocation);
 
   s := s + ')' + #10;
@@ -1900,7 +1894,7 @@ end;
 procedure TfrmInvoice.tvPaymentsAmountGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
   var AProperties: TcxCustomEditProperties);
 begin
-  aProperties := FCurrentCurrencyHandler.GetcxEditProperties;
+  aProperties := FCurrentCurrencyDefinition.GetcxEditProperties;
 end;
 
 procedure TfrmInvoice.tvPaymentsCellDblClick(Sender: TcxCustomGridTableView;
@@ -1927,7 +1921,7 @@ end;
 procedure TfrmInvoice.tvPaymentsnativeAmountGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
   var AProperties: TcxCustomEditProperties);
 begin
-  aProperties := FNativeCurrencyHandler.GetcxEditProperties;
+  aProperties := RoomerCurrencyManager.DefaultCurrencyDefinition.GetcxEditProperties;
 end;
 
 function TfrmInvoice.getDownPayments: Double;
@@ -2158,15 +2152,6 @@ begin
     shp2.Hint := '';
     shp2.Visible := false;
   end;
-end;
-
-procedure TfrmInvoice.SetNativeCurrency(const Value: string);
-begin
-   if (FNativeCurrencyHandler = nil) or (FNativeCurrencyHandler.CurrencyCode <> value) then
-   begin
-     FNativeCurrencyHandler.free;
-     FNativeCurrencyHandler := TCurrencyHandler.Create(Value);
-   end;
 end;
 
 procedure TfrmInvoice.shpInvoiceIndex0DragDrop(Sender, Source: TObject; X, Y: integer);
@@ -2794,12 +2779,12 @@ begin
                 RateDate := SQLToDate(rSet.FieldByName('ADate').asString);
 
                 rdCurrency := rSet.FieldByName('currency').AsString;
-                Rate := TAmount.Create(rSet.FieldByName('RoomRate').asFloat, rdCurrency).ToCurrency(FNativeCurrencyHandler.CurrencyCode);
+                Rate := TAmount.Create(rSet.FieldByName('RoomRate').asFloat, rdCurrency).ToCurrency(RoomerCurrencyManager.DefaultCurrencyDefinition.CurrencyCode);
 
                 isPercentage := rSet.FieldByName('isPercentage').asBoolean;
                 Discount := rSet.GetFloatValue(rSet.FieldByName('Discount'));
                 if not isPercentage then
-                  Discount := TAmount.Create(Discount, rdCurrency).ToCurrency(FNativeCurrencyHandler.CurrencyCode);
+                  Discount := TAmount.Create(Discount, rdCurrency).ToCurrency(RoomerCurrencyManager.DefaultCurrencyDefinition.CurrencyCode);
 
                 ShowDiscount := rSet.FieldByName('ShowDiscount').asBoolean;
                 isPaid := rSet.FieldByName('Paid').asBoolean;
@@ -3573,7 +3558,6 @@ begin
   FRoomInfoList := TRoomInfoList.create(True);
   tempInvoiceItemList := TInvoiceItemEntityList.create(True);
 
-  FNativeCurrencyHandler := TCurrencyHandler.Create(ctrlGetString('NativeCurrency'));
   inherited;
   zCurrentCurrency := ctrlGetString('NativeCurrency');
 end;
@@ -4311,8 +4295,8 @@ begin
   s := s + ', ' + _db(zConfirmDate, True);
   s := s + ', ' + _db(zPayDate, True);
   s := s + ', ' + _db(edtInvRefrence.Text);
-  s := s + ', ' + _db(FCurrentCurrencyHandler.CurrencyCode);
-  s := s + ', ' + _db(FCurrentCurrencyhandler.Rate);
+  s := s + ', ' + _db(FCurrentCurrencyDefinition.CurrencyCode);
+  s := s + ', ' + _db(FCurrentCurrencyDefinition.Rate);
   s := s + ', ' + _db(showPackage);
   s := s + ', ' + _db(zLocation);
   s := s + ')' + #10;
@@ -4329,8 +4313,8 @@ begin
   invoiceLine := CellInvoiceLine(line);
   if Assigned(invoiceLine) then
     result := (invoiceLine.Quantity <> _StrToFloat(agrLines.Cells[col_ItemCount, line])) OR
-      (FNativeCurrencyHandler.ConvertTo(invoiceLine.NativePrice, FCurrentCurrencyHandler) <> iMultiplier * _StrToFloat(agrLines.Cells[col_ItemPrice, line])) OR
-      (FNativeCurrencyHandler.ConvertTo(invoiceLine.Total, FCurrentCurrencyHandler) <> iMultiplier * _StrToFloat(agrLines.Cells[col_TotalPrice, line])) OR
+      (invoiceLine.NativePrice.ToCurrency(FCurrentCurrencyDefinition.CurrencyCode) <> iMultiplier * _StrToFloat(agrLines.Cells[col_ItemPrice, line])) OR
+      (invoiceLine.Total.ToCurrency(FCurrentCurrencyDefinition.CurrencyCode) <> iMultiplier * _StrToFloat(agrLines.Cells[col_TotalPrice, line])) OR
       (invoiceline.FText <> agrLines.Cells[col_Description, line]);
 end;
 
@@ -5002,7 +4986,7 @@ begin
     exit;
 
     // value is edited in currentCurrency
-  Amount := GridFloatValueFromString(Value) * FCurrentCurrencyHandler.Rate;
+  Amount := GridFloatValueFromString(Value) * FCurrentCurrencyDefinition.Rate;
 
   if Editing then
   begin
@@ -5034,9 +5018,9 @@ begin
     lInvLine := CellInvoiceLine(aRow);
     if assigned(lInvLine) then
     begin
-      agrLines.Cells[col_ItemPrice, ARow] :=  lInvLine.NativePrice.ToCurrency(FCurrentCurrencyHandler.CurrencyCode).AsDisplayString;
+      agrLines.Cells[col_ItemPrice, ARow] :=  lInvLine.NativePrice.ToCurrency(FCurrentCurrencyDefinition.CurrencyCode).AsDisplayString;
       agrLines.Cells[col_ItemCount, ARow] :=  _floattostr(linvLine.Quantity, vWidth, vDec);
-      agrLines.Cells[col_TotalPrice, ARow] := lInvLine.Total.ToCurrency(FCurrentCurrencyHandler.CurrencyCode).AsDisplayString;
+      agrLines.Cells[col_TotalPrice, ARow] := lInvLine.Total.ToCurrency(FCurrentCurrencyDefinition.CurrencyCode).AsDisplayString;
     end
     else
     begin
@@ -5061,7 +5045,7 @@ end;
 
 function TfrmInvoice.zCurrencyRate: Double;
 begin
-  result := FCurrentCurrencyHandler.Rate;
+  result := FCurrentCurrencyDefinition.Rate;
 end;
 
 procedure TfrmInvoice.agrLinesCellValidate(Sender: TObject; ACol, ARow: integer;
@@ -5176,7 +5160,7 @@ begin
               Valid := false;
               exit;
             end;
-            linvLine.NativePrice := GridFloatValueFromString(Value) * FCurrentCurrencyHandler.Rate;
+            linvLine.NativePrice := GridFloatValueFromString(Value) * FCurrentCurrencyDefinition.Rate;
             agrLines.Cells[col_System, ARow] := '';
           end;
         end;
@@ -5436,7 +5420,7 @@ begin
     if (zInvoiceNumber = -1) or (FnewSplitNumber = 1) then
     begin
       if not SelectPaymentTypes(FInvoiceLinesList.TotalBalance {_StrToFloat(edtBalance.Text)}, edtCustomer.Text,
-        ptInvoice, FCurrentCurrencyHandler.CurrencyCode, FCurrentCurrencyHandler.Rate, lstLocations, zInvoiceDate, zPayDate, zLocation) then
+        ptInvoice, FCurrentCurrencyDefinition.CurrencyCode, FCurrentCurrencyDefinition.Rate, lstLocations, zInvoiceDate, zPayDate, zLocation) then
       begin
         exit;
       end;
@@ -5594,10 +5578,10 @@ begin
           lRevenueCorrection := 0.0;
           lRevenueCorrectionVat := 0.0;
 
-          dLinePrice := FCurrentCurrencyHandler.ConvertTo(dLinePrice, FNativeCurrencyHandler);
-          dLineTotal := FCurrentCurrencyHandler.ConvertTo(dLineTotal, FNativeCurrencyHandler);
-          dLineVAT := FCurrentCurrencyHandler.ConvertTo(dLineVAT, FNativeCurrencyHandler);
-          dLineTotalWOVat := FCurrentCurrencyHandler.ConvertTo(dLineTotalWOVat, FNativeCurrencyHandler);
+          dLinePrice := TAmount.Create(dLinePrice, FCurrentCurrencyDefinition.CurrencyCode).toCurrency(RoomerCurrencyManager.DefaultCurrencyDefinition);
+          dLineTotal := TAmount.Create(dLineTotal, FCurrentCurrencyDefinition.CurrencyCode).toCurrency(RoomerCurrencyManager.DefaultCurrencyDefinition);
+          dLineVAT :=   TAmount.Create(dLineVAT, FCurrentCurrencyDefinition.CurrencyCode).toCurrency(RoomerCurrencyManager.DefaultCurrencyDefinition);
+          dLineTotalWOVat := TAmount.Create(dLineTotalWOVat, FCurrentCurrencyDefinition.CurrencyCode).toCurrency(RoomerCurrencyManager.DefaultCurrencyDefinition);
 
           // roomrent, ctax and roomrentdiscount
           if Item_isRoomRent(sItemID) then
@@ -5884,8 +5868,8 @@ begin
 
         s := s + ', ' + _db(dTotalStayTax);
         s := s + ', ' + _db(iTotalStayTaxNights);
-        s := s + ', ' + _db(FCurrentCurrencyHandler.CurrencyCode);
-        s := s + ', ' + _db(FCurrentCurrencyHandler.Rate);
+        s := s + ', ' + _db(FCurrentCurrencyDefinition.CurrencyCode);
+        s := s + ', ' + _db(FCurrentCurrencyDefinition.Rate);
         s := s + ', ' + _db(chkShowPackage.checked);
         s := s + ', ' + _db(zLocation);
         s := s + ', ' + _db(d.roomerMainDataSet.username);
@@ -6307,7 +6291,7 @@ begin
   if zCurrentCurrency <> oldCurrency then
   begin
     oldRate := GetRate(oldCurrency);
-    NewRate := FCurrentCurrencyHandler.Rate;
+    NewRate := FCurrentCurrencyDefinition.Rate;
 
     convert := oldRate / NewRate;
 
@@ -6558,7 +6542,7 @@ end;
 
 function TfrmInvoice.GetCurrentCurrency: string;
 begin
-  Result := FCurrentCurrencyHandler.CurrencyCode;
+  Result := FCurrentCurrencyDefinition.CurrencyCode;
 end;
 
 function TfrmInvoice.GetCustomerHeader(Res: integer): boolean;
@@ -6944,11 +6928,6 @@ begin
   end;
 end;
 
-function TfrmInvoice.GetNativeCurrency: string;
-begin
-  Result := FNativeCurrencyHandler.CurrencyCode;
-end;
-
 procedure TfrmInvoice.rgrInvoiceTypeClick(Sender: TObject);
 var
   s: string;
@@ -7263,9 +7242,9 @@ begin
   rec.reservation := FReservation;
   rec.RoomReservation := FRoomReservation;
   rec.Invoice := zInvoiceNumber;
-  rec.Currency := FCurrentCurrencyHandler.CurrencyCode;
-  rec.currencyrate := FCurrentCurrencyHandler.Rate;
-  rec.InvoiceBalance := FInvoiceLinesList.TotalBalance.ToCurrency(FCurrentCurrencyHandler.CurrencyCode);
+  rec.Currency := FCurrentCurrencyDefinition.CurrencyCode;
+  rec.currencyrate := FCurrentCurrencyDefinition.Rate;
+  rec.InvoiceBalance := FInvoiceLinesList.TotalBalance.ToCurrency(FCurrentCurrencyDefinition.CurrencyCode);
   rec.Amount := 0;
 
   if (rec.reservation = 0) and (rec.RoomReservation = 0) then
@@ -8533,8 +8512,8 @@ begin
   s := s + ', ' + _db(totalStayTax);
   s := s + ', ' + _db(totalStayTaxNights);
   s := s + ', ' + _db(zLocation);
-  s := s + ', ' + _db(FCurrentCurrencyHandler.CurrencyCode);
-  s := s + ', ' + _db(FCurrentCurrencyhandler.Rate);
+  s := s + ', ' + _db(FCurrentCurrencyDefinition.CurrencyCode);
+  s := s + ', ' + _db(FCurrentCurrencyDefinition.Rate);
 
   s := s + ')' + #10;
 

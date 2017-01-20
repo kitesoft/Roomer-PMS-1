@@ -11,7 +11,7 @@ uses
   dxSkinscxPCPainter, cxCustomData, cxFilter, cxData, cxDataStorage, cxEdit, cxNavigator, cxDBData, cxGridLevel,
   cxGridCustomTableView, cxGridTableView, cxGridBandedTableView, cxGridDBBandedTableView, cxGridCustomView, cxGrid,
   dxStatusBar, cxGridDBTableView, Vcl.Grids, Vcl.DBGrids, Vcl.Menus, _glob,
-  cxCurrencyEdit, uCurrencyHandler, cxCalendar, cxTimeEdit,
+  cxCurrencyEdit, cxCalendar, cxTimeEdit,
   uRoomerForm, dxPSGlbl, dxPSUtl, dxPSEngn, dxPrnPg, dxBkgnd, dxWrap, dxPrnDev, dxPSCompsProvider, dxPSFillPatterns,
   dxPSEdgePatterns, dxPSPDFExportCore, dxPSPDFExport, cxDrawTextUtils, dxPSPrVwStd, dxPSPrVwAdv, dxPSPrVwRibbon,
   dxPScxPageControlProducer, dxPScxGridLnk, dxPScxGridLayoutViewLnk, dxPScxEditorProducers, dxPScxExtEditorProducers,
@@ -93,11 +93,8 @@ type
     procedure tvDeparturesList2AverageRatePerNightGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
       var AProperties: TcxCustomEditProperties);
     procedure btnPrintGridClick(Sender: TObject);
-    procedure tvDeparturesListExpectedCheckOutTimeGetDisplayText(Sender: TcxCustomGridTableItem;
-      ARecord: TcxCustomGridRecord; var AText: string);
   private
     FRefreshingdata: boolean;
-    FCurrencyhandler: TCurrencyHandler;
     { Private declarations }
     procedure SetManualDates(aFrom, aTo: TDate);
     function getsql(DateFrom,DateTo : Tdate) : string;
@@ -105,9 +102,6 @@ type
     procedure DoUpdateControls; override;
     procedure DoLoadData; override;
   public
-    constructor Create(aOwner: TComponent); override;
-    destructor Destroy; override;
-
   end;
 
 
@@ -136,7 +130,7 @@ uses
   , uGuestCheckInForm
   , uInvoice
   , uReservationProfile
-  , uReservationStateDefinitions, uReservationStateChangeHandler, uInvoiceContainer, uSQLUtils;
+  , uReservationStateDefinitions, uReservationStateChangeHandler, uInvoiceContainer, uSQLUtils, uRoomerCurrencymanager;
 
 
 const
@@ -348,18 +342,6 @@ begin
   RefreshData;
 end;
 
-constructor TfrmDeparturesReport.Create(aOwner: TComponent);
-begin
-  FCurrencyhandler := TCurrencyHandler.Create(g.qNativeCurrency);
-  inherited;
-end;
-
-destructor TfrmDeparturesReport.Destroy;
-begin
-  inherited;
-  FCurrencyhandler.Free;
-end;
-
 procedure TfrmDeparturesReport.dtDateFromCloseUp(Sender: TObject);
 begin
  if dtDateFrom.Date > dtDateTo.Date then
@@ -450,14 +432,7 @@ procedure TfrmDeparturesReport.tvDeparturesList2AverageRatePerNightGetProperties
   Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
   var AProperties: TcxCustomEditProperties);
 begin
-  AProperties := FCurrencyhandler.GetcxEditProperties;
-end;
-
-procedure TfrmDeparturesReport.tvDeparturesListExpectedCheckOutTimeGetDisplayText(Sender: TcxCustomGridTableItem;
-  ARecord: TcxCustomGridRecord; var AText: string);
-begin
-  inherited;
-      //
+  AProperties := RoomerCurrencyManager.DefaultCurrencyDefinition.GetcxEditProperties;
 end;
 
 procedure TfrmDeparturesReport.DoUpdateControls;

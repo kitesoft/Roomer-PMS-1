@@ -187,6 +187,7 @@ Type
     function GetMaintenanceCodes: TRoomerDataSet;
     function GetMaintenanceRoomNotes: TRoomerDataSet;
     function GetStaffMembers: TRoomerDataset;
+    function GetTableEntity(const aTableName: string): TTableEntity;
 
    public
       constructor Create;
@@ -288,6 +289,7 @@ Type
 
       property PMSSettings: TPmsSettings read FPmsSettings;
 
+      property TableEntity[const aTableName: string]: TTableEntity read GetTableEntity;
    published
       property PreviousGuestsSet : TRoomerDataSet read FPreviousGuestsSet;
       property RoomsSet        : TRoomerDataSet read GetRoomsSet;
@@ -1523,6 +1525,11 @@ end;
 function TGlobalSettings.GetStaffMembers: TRoomerDataset;
 begin
   result := tablesList.Dataset['staffmembers'];
+end;
+
+function TGlobalSettings.GetTableEntity(const aTableName: string): TTableEntity;
+begin
+  Result := tablesList[aTableName];
 end;
 
 function TGlobalSettings.GetTblconvertgroups: TRoomerDataSet;

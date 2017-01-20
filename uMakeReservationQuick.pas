@@ -139,9 +139,7 @@ uses
   system.Generics.Collections,
   uDynamicRates,
   sListView,
-  cxTimeEdit, AdvSplitter, uFraCountryPanel
-  , uCurrencyHandlersMap
-  , uCurrencyHandler
+  cxTimeEdit, AdvSplitter, uFraCountryPanel, uRoomerCurrencyDefinition
     ;
 
 TYPE
@@ -751,8 +749,7 @@ type
     FDynamicRates: TDynamicRates;
 
     FNewReservation: TNewReservation;
-    FCurrencyhandlers: TCurrencyhandlersMap;
-    FCurrentCurrencyhandler: TCurrencyhandler;
+    FCurrentCurrencyDefinition: TRoomerCurrencyDefinition;
 
     procedure initCustomer;
     function RoomStatusFromInfo(statusText: string): integer;
@@ -797,8 +794,6 @@ type
     { Public declarations }
     procedure WndProc(var message: TMessage); override;
     property NewReservation: TNewReservation read FNewReservation write FNewReservation;
-    constructor Create(aOwner: TComponent); override;
-    destructor Destroy; override;
   end;
 
 var
@@ -834,7 +829,7 @@ uses
  , DateUtils
  , uSQLUtils
  , Math
- ;
+ , uAmount, uRoomerCurrencymanager;
 
 {$R *.dfm}
 
@@ -1152,7 +1147,7 @@ begin
 
         rateId := mRoomRes.FieldByName('RatePlanCode').AsString;
 
-        _FrmViewDailyRates.Currency := FCurrentCurrencyhandler.CurrencyCode;
+        _FrmViewDailyRates.Currency := FCurrentCurrencyDefinition.CurrencyCode;
         _FrmViewDailyRates.Clear;
         for ii := 0 to dayCount - 1 do
         begin
@@ -1160,12 +1155,12 @@ begin
           if mRoomRates.Locate('RateDate', ADate, []) then
           begin
             if FDynamicRates.active AND FDynamicRates.findRateByRateCode(trunc(Arrival) + ii, Guests, rateId, Rate, lRateCurrency) then
-              Rate := FCurrencyhandlers.ConvertAmount(Rate, lRateCurrency, FCurrentCurrencyhandler.CurrencyCode)
+              Rate := TAmount.Create(Rate, lRateCurrency).ToCurrency(FCurrentCurrencyDefinition)
             else
               Rate := mRoomRes.FieldByName('AvragePrice').AsFloat;
 
             _FrmViewDailyRates.Add(CreateDateRate(trunc(Arrival) + ii, Rate, edCustomer.Text, dayCount, Guests,
-                                    FCurrentCurrencyhandler.CurrencyCode));
+                                    FCurrentCurrencyDefinition.CurrencyCode));
           end;
         end;
 
@@ -1371,13 +1366,13 @@ end;
 procedure TfrmMakeReservationQuick.tvRoomResGetCurrencyProperties(Sender: TcxCustomGridTableItem;
   ARecord: TcxCustomGridRecord; var AProperties: TcxCustomEditProperties);
 begin
-  aProperties := FCurrentCurrencyhandler.GetcxEditPropertiesKeepEvents(aProperties);
+  aProperties := FCurrentCurrencyDefinition.GetcxEditPropertiesKeepEvents(aProperties);
 end;
 
 procedure TfrmMakeReservationQuick.tvRoomRatesNativeAmountGetProperties(Sender: TcxCustomGridTableItem;
   ARecord: TcxCustomGridRecord; var AProperties: TcxCustomEditProperties);
 begin
-  aProperties := FCurrencyhandlers.CurrencyHandler[g.qNativeCurrency].GetcxEditPropertiesKeepEvents(AProperties);
+  aProperties := RoomerCurrencymanager.DefaultCurrencyDefinition.GetcxEditPropertiesKeepEvents(AProperties);
 end;
 
 procedure TfrmMakeReservationQuick.tvRoomResAvragePricePropertiesEditValueChanged(Sender: TObject);
@@ -1597,7 +1592,7 @@ begin
             FDynamicRates.findRateByRateCode(aDate, mRoomRes['Guests'], rateId, Rate, lChannelCurrencyCode) then
           begin
             // Rate acuired, convert to selected currency
-            Rate := FCurrencyhandlers.ConvertAmount(Rate, lChannelCurrencyCode, FCurrentCurrencyhandler.CurrencyCode);
+            Rate := TAmount.Create(Rate, lChannelCurrencyCode).ToCurrency(FCurrentCurrencyDefinition);
             rateTotal := rateTotal + Rate;
 
             mRoomRates.edit;
@@ -1658,8 +1653,8 @@ begin
     RoomReservation := mRoomResroomreservation.AsInteger;
     Room := mRoomResRoom.asString;
     RoomType := mRoomResRoomType.AsString;
-    Currency := FCurrentCurrencyhandler.CurrencyCode;
-    CurrencyRate := FCurrentCurrencyhandler.Rate;
+    Currency := FCurrentCurrencyDefinition.CurrencyCode;
+    CurrencyRate := FCurrentCurrencyDefinition.Rate;
     guests := mRoomResGuests.AsInteger;
     childrenCount := mRoomResChildrenCount.asInteger;
     infantCount := mRoomResinfantCount.AsInteger;
@@ -1918,8 +1913,8 @@ begin
 
     initEditRoomPriceHolder(theData);
     theData.isCreateRes := true;
-    theData.Currency := FCurrentCurrencyhandler.CurrencyCode;
-    theData.CurrencyRate := FCurrentCurrencyhandler.Rate;
+    theData.Currency := FCurrentCurrencyDefinition.CurrencyCode;
+    theData.CurrencyRate := FCurrentCurrencyDefinition.Rate;
 
     RoomReservation := mRoomRes.FieldByName('roomreservation').AsInteger;
     theData.RoomType := mRoomRes.FieldByName('RoomType').AsString;
@@ -3126,12 +3121,6 @@ begin
 
 end;
 
-constructor TfrmMakeReservationQuick.Create(aOwner: TComponent);
-begin
-  FCurrencyhandlers := TCurrencyHandlersMap.Create;
-  inherited;
-end;
-
 procedure TfrmMakeReservationQuick.CreateRoomRes_Normal;
 var
   oSelectedRoomItem: TnewRoomReservationItem;
@@ -3741,7 +3730,7 @@ begin
     s := format(s, [_db(FirstArrival, true)
       , _db(LastDeparture, true)
       , priceID
-      , _db(FCurrentCurrencyhandler.CurrencyCode) + ',' + _db(g.qNativeCurrency)
+      , _db(FCurrentCurrencyDefinition.CurrencyCode) + ',' + _db(g.qNativeCurrency)
       , andRoomTypes
       ]);
 
@@ -3783,13 +3772,13 @@ begin
           FDynamicRates.findRateForRoomType(trunc(Arrival) + ii, RoomType, mRoomRes['Guests'], Rate, rateId, lRateCurrency) then
         begin
           // Rate acuired
-          Rate := FCurrencyhandlers.ConvertAmount(Rate, lRateCurrency,FCurrentCurrencyhandler.CurrencyCode);
+          Rate := TAmount.Create(Rate, lRateCurrency).ToCurrency(FCurrentCurrencyDefinition);
         end
         else
         begin
-          Rate := lclCalculatePrice(RoomType, priceId, FCurrentCurrencyhandler.CurrencyCode, trunc(Arrival) + ii);
+          Rate := lclCalculatePrice(RoomType, priceId, FCurrentCurrencyDefinition.CurrencyCode, trunc(Arrival) + ii);
           if Rate = 0 then
-            Rate := lclCalculatePrice(RoomType, priceId, g.qNativeCurrency, trunc(Arrival) + ii) / FCurrentCurrencyhandler.Rate;
+            Rate := lclCalculatePrice(RoomType, priceId, g.qNativeCurrency, trunc(Arrival) + ii) / FCurrentCurrencyDefinition.Rate;
         end;
 
         if isPercentage then
@@ -3798,7 +3787,7 @@ begin
           DiscountAmount := Min(Rate, Discount);
 
         RentAmount := max(0, Rate - DiscountAmount);
-        NativeAmount := RentAmount * FCurrentCurrencyhandler.Rate;
+        NativeAmount := RentAmount * FCurrentCurrencyDefinition.Rate;
 
         mRoomRates.append;
         try
@@ -3815,8 +3804,8 @@ begin
           mRoomRates.FieldByName('DiscountAmount').AsFloat := DiscountAmount;
           mRoomRates.FieldByName('RentAmount').AsFloat := RentAmount;
           mRoomRates.FieldByName('NativeAmount').AsFloat := NativeAmount;
-          mRoomRates.FieldByName('Currency').AsString := FCurrentCurrencyhandler.CurrencyCode;
-          mRoomRates.FieldByName('CurrencyRate').AsFloat := FCurrentCurrencyhandler.Rate;
+          mRoomRates.FieldByName('Currency').AsString := FCurrentCurrencyDefinition.CurrencyCode;
+          mRoomRates.FieldByName('CurrencyRate').AsFloat := FCurrentCurrencyDefinition.Rate;
           mRoomRates.post;
         except
           mRoomRates.Cancel;
@@ -3968,7 +3957,7 @@ begin
             FDynamicRates.findRateForRoomType(trunc(Arrival) + ii, RoomType, mRoomRes['Guests'], Rate, rateId, lRateCurrency) then
           begin
             // Rate acuired
-            Rate := FCurrencyhandlers.ConvertAmount(Rate, lRateCurrency, FCurrentCurrencyhandler.CurrencyCode);
+            Rate := TAmount.Create(Rate, lRateCurrency).ToCurrency(FCurrentCurrencyDefinition);
           end
           else
           begin
@@ -3979,7 +3968,7 @@ begin
               , Guests
               , childrenCount
               , infantCount
-              , FCurrentCurrencyhandler.CurrencyCode
+              , FCurrentCurrencyDefinition.CurrencyCode
               , priceID
               , Discount
               , ShowDiscount
@@ -3996,7 +3985,7 @@ begin
         else
           DiscountAmount := min(Rate, Discount);
         RentAmount := Rate - DiscountAmount;
-        NativeAmount := RentAmount * FCurrentCurrencyhandler.Rate;
+        NativeAmount := RentAmount * FCurrentCurrencyDefinition.Rate;
 
         mRoomRates.append;
         try
@@ -4014,8 +4003,8 @@ begin
           mRoomRates.FieldByName('DiscountAmount').AsFloat := DiscountAmount;
           mRoomRates.FieldByName('RentAmount').AsFloat := RentAmount;
           mRoomRates.FieldByName('NativeAmount').AsFloat := NativeAmount;
-          mRoomRates.FieldByName('Currency').AsString := FCurrentCurrencyhandler.CurrencyCode;
-          mRoomRates.FieldByName('CurrencyRate').AsFloat := FCurrentCurrencyhandler.rate;
+          mRoomRates.FieldByName('Currency').AsString := FCurrentCurrencyDefinition.CurrencyCode;
+          mRoomRates.FieldByName('CurrencyRate').AsFloat := FCurrentCurrencyDefinition.rate;
           mRoomRates.post;
         except
           mRoomRates.Cancel;
@@ -4116,7 +4105,7 @@ begin
   FNewReservation.HomeCustomer.RoomStatus := RoomStatusToInfo(cbxRoomStatus.ItemIndex);
   FNewReservation.HomeCustomer.MarketSegmentCode := edMarketSegmentCode.Text;
   FNewReservation.HomeCustomer.IsGroupInvoice := chkisGroupInvoice.Checked;
-  FNewReservation.HomeCustomer.Currency := FCurrentCurrencyhandler.CurrencyCode;
+  FNewReservation.HomeCustomer.Currency := FCurrentCurrencyDefinition.CurrencyCode;
   FNewReservation.HomeCustomer.PcCode := edPcCode.Text;
   FNewReservation.HomeCustomer.PID := edPID.Text;
   FNewReservation.HomeCustomer.CustomerName := edCustomerName.Text;
@@ -4210,7 +4199,7 @@ begin
     oSelectedRoomItem.ratePlanCode := mRoomRes.FieldByName('ratePlanCode').AsString;
     oSelectedRoomItem.ExpTOA := mRoomResExpectedTimeOfArrival.AsString;
     oSelectedRoomItem.ExpCOT := mRoomResExpectedCheckOutTime.AsString;
-    oSelectedRoomItem.oRates.SetCurrency(FCurrentCurrencyhandler.CurrencyCode);
+    oSelectedRoomItem.oRates.SetCurrency(FCurrentCurrencyDefinition.CurrencyCode);
     FNewReservation.newRoomReservations.RoomItemsList.Add(oSelectedRoomItem);
 
     mRoomRates.First;
@@ -4538,12 +4527,6 @@ begin
   end;
 end;
 
-destructor TfrmMakeReservationQuick.Destroy;
-begin
-  FCurrencyhandlers.Free;
-  inherited;
-end;
-
 procedure TfrmMakeReservationQuick.edCustomerChange(Sender: TObject);
 begin
   if customerValidate then
@@ -4679,7 +4662,7 @@ var
 begin
   if CurrencyValidate(edCurrency, clabCurrency, labCurrencyName) then
   begin
-    FCurrentCurrencyhandler := FCurrencyhandlers.CurrencyHandler[edCurrency.text];
+    FCurrentCurrencyDefinition := RoomerCurrencyManager.CurrencyDefinition[edCurrency.text];
 
     index := cbxIsRoomResDiscountPrec.ItemIndex;
     cbxIsRoomResDiscountPrec.Items.Clear;
@@ -4692,7 +4675,7 @@ begin
     else
       edRoomResDiscount.MaxValue := 99999999;
 
-    labCurrencyRate.Caption := floatTostr(FCurrentCurrencyhandler.Rate);
+    labCurrencyRate.Caption := floatTostr(FCurrentCurrencyDefinition.Rate);
   end;
 end;
 

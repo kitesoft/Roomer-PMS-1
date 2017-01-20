@@ -6,6 +6,7 @@ uses
   cmpRoomerDataset
   , Generics.Collections
   , SysUtils
+  , Classes
   ;
 
 type
@@ -19,10 +20,12 @@ type
     FRSet: TRoomerDataSet;
     FForceRefreshed : Boolean;
     FRefreshEnabled : Boolean;
+    FOnDataChanged: TNotifyEvent;
     function GetFilename: String;
     function ReadFromFile: String;
     procedure SaveToFile(data: String);
     function FileTimeStamp: TDateTime;
+    procedure notifyChanged;
   public
     constructor Create(tableName : String; baseTableAlwaysRefresh : Boolean = false; sqlExtension : String = '');
     destructor Destroy; override;
@@ -33,6 +36,7 @@ type
     property sql : String read FSql write FSql;
     property RSet : TRoomerDataSet read FRSet;
     property RefreshEnabled : Boolean read FRefreshEnabled write FRefreshEnabled;
+    property OnDataChanged: TNotifyEvent read FOnDataChanged write FOnDataChanged;
   end;
 
   TTableDictionary = class(TObjectDictionary<String, TTableEntity>)
@@ -57,12 +61,14 @@ implementation
 
 uses
   uD
+  , Data.DB
   , AdODB
   , uMessageList
   , uUtils
   , IOUtils
   , uStringUtils
-  , uFileSystemUtils, uAppGlobal;
+  , uFileSystemUtils
+  , uAppGlobal;
 
 { TTableDictionary }
 
@@ -170,6 +176,7 @@ begin
     SaveToFile(FRSet.SavedLastResult);
     FRSet.First;
     RoomerMessages.MarkTableAsRefreshed(FTableName);
+    notifyChanged;
   except
     raise ERefreshTableException.CreateFmt('Error while refreshing table [%s] from server', [FTableName]);
   end;
@@ -184,14 +191,15 @@ begin
   FRSet.CommandText := FSql;
   localData := ReadFromFile;
   if localData <> '' then
-  try
-    FRSet.OpenDataset(localData);
-    RoomerMessages.MarkTableAsRefreshed(FTableName, FileTimeStamp);
-  except
-    RefreshFromServer;
-  end
+    try
+      FRSet.OpenDataset(localData);
+      RoomerMessages.MarkTableAsRefreshed(FTableName, FileTimeStamp);
+    except
+      RefreshFromServer;
+    end
   else
     RefreshFromServer;
+  notifyChanged;
 end;
 
 procedure TTableEntity.SaveToFile(data : String);
@@ -211,16 +219,16 @@ begin
 end;
 
 function TTableEntity.GetFilename : String;
-//var sPath : String;
 begin
-//  sPath := TPath.Combine(LocalAppDataPath, 'Roomer');
-//  sPath := TPath.Combine(sPath, format('%s\datacache',[d.roomerMainDataSet.hotelId]));
   Result := TPath.Combine(glb.GetDataCacheLocation, format(cRoomerTableFileName, [FTableName]));
-//  forceDirectories(sPath);
-//
-//  result := TPath.Combine(sPath, format(cRoomerTableFileName, [FTableName]));
 end;
 
+
+procedure TTableEntity.notifyChanged;
+begin
+  if assigned(FOnDataChanged) and not FRSet.ControlsDisabled then
+    FOnDataChanged(Self);
+end;
 
 procedure TTableEntity.RefreshIfNeeded;
 begin

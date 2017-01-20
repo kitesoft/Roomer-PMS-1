@@ -225,7 +225,6 @@ uses
   uRptArrivals in 'uRptArrivals.pas' {frmArrivalsReport},
   ufrmReservationExtras in 'StockItems\ufrmReservationExtras.pas',
   uRptDepartures in 'uRptDepartures.pas' {frmDeparturesReport},
-  uCurrencyHandler in 'Currencies\uCurrencyHandler.pas',
   uFloatUtils in 'RoomerVCLs\Source\uFloatUtils.pas',
   uRptStockItems in 'uRptStockItems.pas' {frmRptStockItems},
   uOpenAPICaller in 'OpenAPI\uOpenAPICaller.pas',
@@ -262,8 +261,12 @@ uses
   uEmbDateStatistics in 'Embeddables\uEmbDateStatistics.pas' {frmEmbDateStatistics},
   uMasterRateDefaults in 'Rates\uMasterRateDefaults.pas' {frmMasterRateDefaults},
   uTopClassAvailabilityOrder in 'uTopClassAvailabilityOrder.pas' {FrmTopClassAvailabilityOrder},
-  uAmount in 'Currencies\uAmount.pas',
-  uAmountConfigurator in 'Currencies\uAmountConfigurator.pas';
+  uAmount in 'RoomerVCLs\Source\uAmount.pas',
+  uCurrencyConstants in 'RoomerVCLs\Source\uCurrencyConstants.pas',
+  uCurrencyDefinition in 'RoomerVCLs\Source\uCurrencyDefinition.pas',
+  uCurrencyManager in 'RoomerVCLs\Source\uCurrencyManager.pas',
+  uRoomerCurrencymanager in 'Currencies\uRoomerCurrencymanager.pas',
+  uRoomerCurrencyDefinition in 'Currencies\uRoomerCurrencyDefinition.pas';
 
 {$R *.RES}
 

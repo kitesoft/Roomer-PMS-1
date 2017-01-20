@@ -842,10 +842,9 @@ uses
   uFrmNotepad,
   ufrmReservationExtras
   , uInvoiceContainer
-  , uCurrencyHandler
   , uAccountTypeDefinitions, uBreakfastStateDefinitions, uSQLUtils, ufrmRoomPrices
   , uDateTimeHelper
-  ;
+  , uAmount, uRoomerCurrencymanager;
 
 {$R *.DFM}
 
@@ -3274,7 +3273,6 @@ var
   price: double;
   Nights: Integer;
   r: double;
-  lCurrencyHandler: TCurrencyHandler;
 begin
   Nights := 0;
   price := 0.00;
@@ -3293,25 +3291,13 @@ begin
     r := price / Nights;
   end;
 
-  lCurrencyHandler := TCurrencyHandler.Create(g.qNativeCurrency);
-  try
-    AText := lCurrencyhandler.FormattedValue(r) + ' ' + GetTranslatedText('shTx_FrmReservationprofile_PerNight');
-  finally
-    lCurrencyHandler.Free;
-  end;
+  AText := TAmount(r).AsDisplayString + ' ' + GetTranslatedText('shTx_FrmReservationprofile_PerNight');
 end;
 
 procedure TfrmReservationProfile.tvGetCurrencyProperties(Sender: TcxCustomGridTableItem;
   ARecord: TcxCustomGridRecord; var AProperties: TcxCustomEditProperties);
-var
-  lCurrencyHandler: TCurrencyHandler;
 begin
-  lCurrencyHandler := TCurrencyHandler.Create(mRoomsCurrency.AsString);
-  try
-    aProperties := lCurrencyHandler.GetcxEditProperties
-  finally
-    lCurrencyHandler.Free;
-  end;
+  aProperties := RoomerCurrencyManager.CurrencyDefinition[mRoomsCurrency.AsString].GetcxEditProperties
 end;
 
 procedure TfrmReservationProfile.tvRoomsunpaidRentPricePropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);

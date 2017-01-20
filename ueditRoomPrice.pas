@@ -58,7 +58,7 @@ uses
   dxSkinLondonLiquidSky, dxSkinMoneyTwins, dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green, dxSkinOffice2007Pink,
   dxSkinOffice2007Silver, dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinValentine,
-  dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, dxmdaset, cxCheckBox, cxCurrencyEdit, uCurrencyHandler
+  dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, dxmdaset, cxCheckBox, cxCurrencyEdit, uRoomerCurrencyDefinition
 
   ;
 
@@ -162,7 +162,7 @@ type
       var AProperties: TcxCustomEditProperties);
   private
     { Private declarations }
-    FCurrencyHandler: TCurrencyHandler;
+    FCurrencyDef: TRoomerCurrencyDefinition;
     FData: recEditRoomPriceHolder;
     procedure SetData(const Value: recEditRoomPriceHolder);
   public
@@ -490,7 +490,7 @@ end;
 
 procedure TfrmEditRoomPrice.FormDestroy(Sender: TObject);
 begin
-  FCurrencyHandler.Free;
+  FCurrencyDef.Free;
 end;
 
 procedure TfrmEditRoomPrice.FormShow(Sender: TObject);
@@ -579,10 +579,10 @@ begin
     FData.currencyRate := 1.0;
   end;
 
-  if Assigned(FCurrencyHandler) then
-    FCurrencyHandler.Free;
+  if Assigned(FCurrencyDef) then
+    FCurrencyDef.Free;
 
-  FCurrencyHandler := TCurrencyHandler.Create(FData.currency);
+  FCurrencyDef := TRoomerCurrencyDefinition.Create(FData.currency);
 end;
 
 procedure TfrmEditRoomPrice.tvRoomRatesNativeAmountGetProperties(Sender: TcxCustomGridTableItem;
@@ -594,7 +594,7 @@ end;
 procedure TfrmEditRoomPrice.tvRoomRatesRentAmountGetProperties(Sender: TcxCustomGridTableItem;
   ARecord: TcxCustomGridRecord; var AProperties: TcxCustomEditProperties);
 begin
-  aProperties := FCurrencyHandler.GetcxEditPropertiesKeepEvents(aProperties);
+  aProperties := FCurrencyDef.GetcxEditPropertiesKeepEvents(aProperties);
 end;
 
 end.

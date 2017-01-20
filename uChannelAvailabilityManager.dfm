@@ -1146,6 +1146,10 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
           Margins.Right = 2
           Margins.Bottom = 2
           Caption = 'Availabilities'
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object Panel2: TsPanel
             Left = 0
             Top = 467
@@ -1428,6 +1432,10 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
           Margins.Right = 2
           Margins.Bottom = 2
           Caption = 'Rates'
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object rateGrid: TAdvStringGrid
             Left = 0
             Top = 50
@@ -2418,7 +2426,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
           Left = 120
           Top = 5
           Width = 109
-          Height = 21
+          Height = 24
           Margins.Left = 5
           Margins.Top = 5
           Margins.Right = 2

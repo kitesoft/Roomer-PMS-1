@@ -38,7 +38,6 @@ inherited frmMasterRateDefaults: TfrmMasterRateDefaults
       Align = alBottom
       TabOrder = 0
       SkinData.SkinSection = 'PANEL'
-      ExplicitTop = 423
       DesignSize = (
         953
         33)
@@ -65,7 +64,6 @@ inherited frmMasterRateDefaults: TfrmMasterRateDefaults
       Height = 442
       Align = alClient
       TabOrder = 1
-      ExplicitHeight = 423
       object sSplitter1: TsSplitter
         Left = 267
         Top = 1
@@ -82,7 +80,6 @@ inherited frmMasterRateDefaults: TfrmMasterRateDefaults
         Align = alLeft
         BevelOuter = bvNone
         TabOrder = 0
-        ExplicitHeight = 421
         object lvRateCodes: TsListView
           Left = 0
           Top = 65
@@ -111,7 +108,6 @@ inherited frmMasterRateDefaults: TfrmMasterRateDefaults
           TabOrder = 0
           ViewStyle = vsReport
           OnChange = lvRateCodesChange
-          ExplicitHeight = 356
         end
         object sPanel3: TsPanel
           Left = 0
@@ -181,7 +177,6 @@ inherited frmMasterRateDefaults: TfrmMasterRateDefaults
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 1
-        ExplicitHeight = 421
         object grData: TcxGrid
           Left = 0
           Top = 65
@@ -190,7 +185,6 @@ inherited frmMasterRateDefaults: TfrmMasterRateDefaults
           Align = alClient
           TabOrder = 0
           LookAndFeel.NativeStyle = False
-          ExplicitHeight = 356
           object tvData: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             Navigator.Buttons.First.Visible = True
@@ -469,7 +463,6 @@ inherited frmMasterRateDefaults: TfrmMasterRateDefaults
     Left = 96
     Top = 192
     object prLink_grData: TdxGridReportLink
-      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -483,7 +476,6 @@ inherited frmMasterRateDefaults: TfrmMasterRateDefaults
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
       ReportDocument.CreationDate = 41334.495374884260000000
-      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
   end

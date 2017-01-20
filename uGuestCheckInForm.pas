@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, sEdit,
   sLabel, Vcl.ComCtrls, sPageControl, sButton, Vcl.ExtCtrls, sPanel, sComboBox, Vcl.Mask, sMaskEdit, sCustomComboEdit, sTooledit, sCheckBox, cmpRoomerDataSet,
   hData, uG, frxDesgn, frxClass, frxDBSet, System.Generics.Collections, uRoomerFilterComboBox
-  , uCurrencyHandler
+  , uRoomerCurrencymanager
     ;
 
 type
@@ -157,7 +157,6 @@ type
     procedure cbxMarketKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
   private
     FisCheckIn: Boolean;
-    FCurrencyhandler: TCurrencyHandler;
     FCurrentRealBalance: Double;
     ResSetGuest: TRoomerDataSet;
     rec: recDownPayment;
@@ -612,13 +611,11 @@ begin
   glb.PerformAuthenticationAssertion(self);
   PlaceFormOnVisibleMonitor(self);
 
-  FCurrencyhandler := nil;
   Prepare;
 end;
 
 procedure TFrmGuestCheckInForm.FormDestroy(Sender: TObject);
 begin
-  FCurrencyhandler.Free;
   Release;
 end;
 
@@ -657,12 +654,6 @@ begin
       PersonId := ResSetGuest['ID'];
       Customer := ResSetGuest['Customer'];
       NativeCurrency := ResSetGuest['NativeCurrency'];
-
-      if not assigned(FCurrencyhandler) or (not FCurrencyhandler.CurrencyCode.Equals(ResSetGuest['Currency'])) then
-      begin
-        FCurrencyhandler.Free;
-        FCurrencyhandler := TCurrencyHandler.Create(ResSetGuest.FieldByName('Currency').AsString);
-      end;
 
       sTabSheet1.Caption := GetTranslatedText('shTx_RoomEdit_Room') + ResSetGuest['RoomNumber'];
 

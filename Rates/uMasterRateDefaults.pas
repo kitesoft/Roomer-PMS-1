@@ -15,7 +15,7 @@ uses
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxClasses, cxGridCustomView, cxGrid,
   Vcl.ComCtrls, sStatusBar, sCheckBox, cxCalendar
   , cmpRoomerDataset, Vcl.Mask, sMaskEdit, sCustomComboEdit, sToolEdit, sSplitter, sListView, sComboBox, uRoomerForm,
-  cxCurrencyEdit, uCurrencyHandler
+  cxCurrencyEdit
   ;
 
 type
@@ -102,16 +102,12 @@ type
     FSelectedChannel : Integer;
     FSelectedPlanCode : Integer;
     FSelectedRate : Integer;
-    FCurrencyHandler: TCurrencyHandler;
     procedure prepareSelectableList;
     procedure prepareRateListview(rateList : String);
   protected
     procedure DoLoadData; override;
     { Private declarations }
   public
-    { Public declarations }
-    constructor Create(aOwner: TComponent); override;
-    destructor Destroy; override;
   end;
 
 
@@ -136,7 +132,7 @@ uses
   , uD
   , uDateUtils
   , uSqlUtils
-  ;
+  , uRoomerCurrencymanager;
 
 procedure EditMasterRateDefaults;
 begin
@@ -205,23 +201,6 @@ begin
    end;
 end;
 
-constructor TfrmMasterRateDefaults.Create(aOwner: TComponent);
-begin
-  inherited;
-  FCurrencyHandler := TCurrencyHandler.Create(g.qNativeCurrency);
-end;
-
-procedure TfrmMasterRateDefaults.edtLastDateChange(Sender: TObject);
-begin
-  RefreshData;
-end;
-
-destructor TfrmMasterRateDefaults.Destroy;
-begin
-  FCurrencyhandler.Free;
-  inherited;
-end;
-
 procedure TfrmMasterRateDefaults.DoLoadData;
 var rSet : TRoomerDataSet;
 begin
@@ -253,6 +232,11 @@ begin
       m_.EnableControls;
     end;
   end;
+end;
+
+procedure TfrmMasterRateDefaults.edtLastDateChange(Sender: TObject);
+begin
+  RefreshData;
 end;
 
 procedure TfrmMasterRateDefaults.FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -308,7 +292,7 @@ procedure TfrmMasterRateDefaults.tvDatapriceGetProperties(Sender: TcxCustomGridT
   var AProperties: TcxCustomEditProperties);
 begin
   inherited;
-  aProperties := FCurrencyHandler.GetcxEditProperties;
+  aProperties := RoomerCurrencyManager.DefaultCurrencyDefinition.GetcxEditProperties;
 end;
 
 procedure TfrmMasterRateDefaults.prepareRateListview(rateList : String);

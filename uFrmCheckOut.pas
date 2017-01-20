@@ -95,7 +95,6 @@ uses
   , uRoomerLanguage
   , uAppGlobal
   , uUtils
-  , uCurrencyHandler
   , Math
   ;
 
@@ -123,8 +122,6 @@ begin
 end;
 
 procedure TFrmCheckOut.DisplayInvoice;
-var
-  lCurrencyHandler: TCurrencyHandler;
 begin
   sLabel1.Visible := False;
   pnlRoomBalance.Visible := False;
@@ -132,48 +129,38 @@ begin
 
   if FRoomInvoice.InvoiceLines.Count > 0 then with FRoomInvoice do
   begin
-    lCurrencyHandler := TCurrencyHandler.Create(Currency);
-    try
-      pnlRoomBalance.Visible := not SameValue(lCurrencyHandler.RoundedValue(Balance), 0);
-      if pnlRoomBalance.Visible then
-      begin
-        lbCurrency.Caption    := Currency;
-        lbRoomRent.Caption    := TotalRoomRent.AsDisplayString;// lCurrencyHandler.FormattedValue(TotalRoomRent);
-        lbSales.Caption       := TotalSales.AsDisplayString; // lCurrencyHandler.FormattedValue(TotalSales);
-        lbTaxes.Caption       := TotalTaxes.AsDisplayString; // lCurrencyHandler.FormattedValue(TotalTaxes);
-        lbSubTotal.Caption    := (TotalRoomRent + TotalSales + TotalTaxes).asDisplayString;
-                                  //lCurrencyHandler.FormattedValue(lCurrencyHandler.RoundedValue(TotalRoomRent) +
-                                 //                                lCurrencyHandler.RoundedValue(TotalSales) +
-                                 //                                lCurrencyHandler.RoundedValue(TotalTaxes));
-        lbPayments.Caption    := TotalPaymentsNative.AsDisplayString; // lCurrencyHandler.FormattedValue(TotalPaymentsNative);
-        lbBalance.Caption     := Balance.AsDisplayString; //.FormattedValue(Balance);
+    pnlRoomBalance.Visible := (Balance <> 0);
+    if pnlRoomBalance.Visible then
+    begin
+      lbCurrency.Caption    := Currency;
+      lbRoomRent.Caption    := TotalRoomRent.AsDisplayString;// lCurrencyHandler.FormattedValue(TotalRoomRent);
+      lbSales.Caption       := TotalSales.AsDisplayString; // lCurrencyHandler.FormattedValue(TotalSales);
+      lbTaxes.Caption       := TotalTaxes.AsDisplayString; // lCurrencyHandler.FormattedValue(TotalTaxes);
+      lbSubTotal.Caption    := (TotalRoomRent + TotalSales + TotalTaxes).asDisplayString;
+                                //lCurrencyHandler.FormattedValue(lCurrencyHandler.RoundedValue(TotalRoomRent) +
+                               //                                lCurrencyHandler.RoundedValue(TotalSales) +
+                               //                                lCurrencyHandler.RoundedValue(TotalTaxes));
+      lbPayments.Caption    := TotalPaymentsNative.AsDisplayString; // lCurrencyHandler.FormattedValue(TotalPaymentsNative);
+      lbBalance.Caption     := Balance.AsDisplayString; //.FormattedValue(Balance);
 
-        __lblGroupBalance.Caption := format(GetTranslatedText('shUI_Checkout_RoomHeader'), [RoomNumber]);
-      end;
-    finally
-      lCurrencyHandler.Free;
+      __lblGroupBalance.Caption := format(GetTranslatedText('shUI_Checkout_RoomHeader'), [RoomNumber]);
     end;
   end;
 
   if FGroupInvoice.InvoiceLines.Count > 0 then with FGroupInvoice do
   begin
-    lCurrencyHandler := TCurrencyHandler.Create(Currency);
-    try
-      pnlGroupBalance.Visible := not SameValue(lCurrencyHandler.RoundedValue(Balance), 0);
-      if pnlGroupBalance.Visible then
-      begin
-        lbCurrencyGr.Caption  := Currency;
-        lbRoomRentGr.Caption  := TotalRoomRent.AsDisplayString;
-        lbSalesGr.Caption     := TotalSales.AsDisplayString;
-        lbTaxesGr.Caption     := TotalTaxes.AsDisplayString;
-        lbSubTotalGr.Caption  := (TotalRoomRent + TotalSales + TotalTaxes).AsDisplayString;
-        lbPaymentsGr.Caption  := TotalPaymentsNative.AsDisplayString;
-        lbBalanceGr.Caption   := Balance.AsDisplayString;
+    pnlGroupBalance.Visible := (Balance <> 0);
+    if pnlGroupBalance.Visible then
+    begin
+      lbCurrencyGr.Caption  := Currency;
+      lbRoomRentGr.Caption  := TotalRoomRent.AsDisplayString;
+      lbSalesGr.Caption     := TotalSales.AsDisplayString;
+      lbTaxesGr.Caption     := TotalTaxes.AsDisplayString;
+      lbSubTotalGr.Caption  := (TotalRoomRent + TotalSales + TotalTaxes).AsDisplayString;
+      lbPaymentsGr.Caption  := TotalPaymentsNative.AsDisplayString;
+      lbBalanceGr.Caption   := Balance.AsDisplayString;
 
-        __lblGroupBalance.Caption := format(GetTranslatedText('shUI_Checkout_GroupHeader'), [NumberOfRentLines]);
-      end;
-    finally
-      lCurrencyHandler.Free;
+      __lblGroupBalance.Caption := format(GetTranslatedText('shUI_Checkout_GroupHeader'), [NumberOfRentLines]);
     end;
   end;
 
