@@ -3873,7 +3873,6 @@ var
   ACol: integer;
   ARow: integer;
   ItemId: string;
-  tmpRoomReservation: integer;
   lRoomreslist: TStringlist;
 begin
 
@@ -3891,47 +3890,49 @@ begin
     (ARow >= agrLines.RowCount) then
     exit;
 
-  ItemId := agrLines.Cells[col_Item, ARow];
-  tmpRoomReservation := FRoomReservation;
-  selectedRoomReservation := -1;
+  if (ACol = col_Description) or (ACol = col_ItemCount) then
+    exit;
 
+  ItemId := agrLines.Cells[col_Item, ARow];
   if (ACol > 0) AND // Skip Checkbox column
     (((ItemId = g.qRoomRentItem) or (ItemId = g.qDiscountItem)) AND
     (isSystemLine(agrLines.row) = True)) then
   begin
-    if tmpRoomReservation = 0 then // �.e GroupInvoice
-    begin
-      try
-        tmpRoomReservation := TRoomInfo(agrLines.Objects[cRoomInfoAttachColumn, ARow]).RoomReservation;
-      except
-        tmpRoomReservation := -1;
-      end;
-    end;
 
-    selectedRoomReservation := tmpRoomReservation;
-    if (ACol = col_Description) or (ACol = col_ItemCount) then
-      exit;
-
-    if tmpRoomReservation <> -1 then
-    begin
       lRoomreslist := TStringlist.Create;
       try
-        lRoomreslist.Add(intToStr(tmpRoomReservation));
-        if EditRoomRates(lRoomreslist, FInvoiceIndex, zCurrentCurrency) then
+        if RoomReservation <> 0 then
+          lRoomreslist.Add(intToStr(RoomReservation))
+        else  // GroupInvoice, collect all roomres in this invoice
         begin
-          SaveAnd(false);
-//          FormCreate(nil);
-          zFirsttime := false;
-          LoadInvoice;
-          loadInvoiceToMemtable(d.mInvoicelines_after);
-          UpdateCaptions;
+          mRoomres.DisableControls;
+          try
+            mRoomres.First;
+            while not mRoomRes.Eof do
+            begin
+              lRoomResList.add(mRoomResroomreservation.AsString);
+              mRoomRes.Next;
+            end;
+          finally
+            mRoomRes.EnableControls;
+          end;
         end;
-      finally
-        lRoomResList.Free;
-      end;
 
+        if lRoomResList.Count > 0 then
+        begin
+          if EditRoomRates(lRoomreslist, FInvoiceIndex, zCurrentCurrency) then
+          begin
+            SaveAnd(false);
+            zFirsttime := false;
+            LoadInvoice;
+            loadInvoiceToMemtable(d.mInvoicelines_after);
+            UpdateCaptions;
+          end;
+        end;
+        exit;
+    finally
+      lRoomResList.Free;
     end;
-    exit;
   end;
 
   TAdvStringGrid(Sender).MouseToCell(X, Y, ACol, ARow);
