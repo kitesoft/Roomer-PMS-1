@@ -58,7 +58,6 @@ inherited frmRoomPrices: TfrmRoomPrices
         TabOrder = 1
         OnClick = btnApplyAllRoomtypesClick
         SkinData.SkinSection = 'BUTTON'
-        ExplicitLeft = 7
       end
       object btnApplySameRoomType: TsButton
         AlignWithMargins = True

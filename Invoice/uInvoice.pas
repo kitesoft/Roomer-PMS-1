@@ -3874,6 +3874,7 @@ var
   ARow: integer;
   ItemId: string;
   lRoomreslist: TStringlist;
+  lGotoRoomRes: integer;
 begin
 
   agrLines.MouseToCell(X, Y, ACol, ARow);
@@ -3898,7 +3899,7 @@ begin
     (((ItemId = g.qRoomRentItem) or (ItemId = g.qDiscountItem)) AND
     (isSystemLine(agrLines.row) = True)) then
   begin
-
+      lGotoRoomRes := -1;
       lRoomreslist := TStringlist.Create;
       try
         if RoomReservation <> 0 then
@@ -3912,6 +3913,9 @@ begin
             begin
               lRoomResList.add(mRoomResroomreservation.AsString);
               mRoomRes.Next;
+
+              if (agrLines.Objects[cRoomInfoAttachColumn, ARow] <> nil) and (agrLines.Objects[cRoomInfoAttachColumn, ARow] is TRoomInfo) then
+                lGotoRoomRes := TRoomInfo(agrLines.Objects[cRoomInfoAttachColumn, ARow]).RoomReservation;
             end;
           finally
             mRoomRes.EnableControls;
@@ -3920,7 +3924,7 @@ begin
 
         if lRoomResList.Count > 0 then
         begin
-          if EditRoomRates(lRoomreslist, FInvoiceIndex, zCurrentCurrency) then
+          if EditRoomRates(lRoomreslist, FInvoiceIndex, zCurrentCurrency, lGotoRoomRes) then
           begin
             SaveAnd(false);
             zFirsttime := false;
