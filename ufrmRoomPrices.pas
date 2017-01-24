@@ -193,6 +193,7 @@ type
     FCurrencyRate: double;
     FCurrencyhandler: TCurrencyhandler;
     FInvoiceIndex: Integer;
+    FStartAtRoomRes: integer;
     procedure EditRoomRateOneRoom(aRoomRes: Integer);
     procedure ApplyRateToOther(RoomReservation: Integer; const RoomType: string);
     procedure ApplyChanges;
@@ -209,9 +210,10 @@ type
     property RoomReservations: TStringlist read FRoomReservations write FRoomReservations;
     property InvoiceIndex: Integer read FInvoiceIndex write FInvoiceIndex;
     property Currency: string read FCurrency write SetCurrency;
+    property StartAtRoomRes: integer read FStartAtRoomRes write FStartAtRoomRes;
   end;
 
-function EditRoomRates(aRoomReservations: TStringlist; aInvoiceindex: Integer = -1; const aCurrency: string = ''): boolean;
+function EditRoomRates(aRoomReservations: TStringlist; aInvoiceindex: Integer = -1; const aCurrency: string = ''; aGotoRoomRes: integer = -1): boolean;
 
 implementation
 
@@ -282,7 +284,7 @@ const
 
 {$R *.dfm}
 
-function EditRoomRates(aRoomReservations: TStringlist; aInvoiceindex: Integer = -1; const aCurrency: string = ''): boolean;
+function EditRoomRates(aRoomReservations: TStringlist; aInvoiceindex: Integer = -1; const aCurrency: string = ''; aGotoRoomRes: integer = -1): boolean;
 var
   frm: TfrmRoomPrices;
   mr: integer;
@@ -295,6 +297,7 @@ begin
     frm.RoomReservations := aRoomReservations;
     frm.InvoiceIndex := aInvoiceindex;
     frm.Currency := iif(aCurrency = '', g.qNativeCurrency, aCurrency);
+    frm.StartAtRoomRes := aGotoRoomRes;
     mr := frm.ShowModal;
     result := (mr = mrok);
   finally
@@ -937,6 +940,7 @@ constructor TfrmRoomPrices.Create(aOwner: TComponent);
 begin
   inherited;
   FCurrencyhandler := TCurrencyhandler.Create(g.qNativeCurrency);
+  FStartAtRoomRes := -1;
 end;
 
 destructor TfrmRoomPrices.Destroy;
@@ -973,6 +977,9 @@ begin
 
     mRoomRes.LoadFromDataSet(lExecPlan.Results[0]);
     mRoomRates.LoadFromDataSet(lExecPlan.Results[1]);
+
+    if StartAtRoomRes >= 0 then
+      mRoomRes.Locate('roomreservation', StartAtRoomRes, []);
 
   finally
     lExecPlan.Free;

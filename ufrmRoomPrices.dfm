@@ -89,7 +89,7 @@ inherited frmRoomPrices: TfrmRoomPrices
         Left = 5
         Top = 18
         Width = 258
-        Height = 17
+        Height = 20
         Caption = 'Auto update Null Price'
         Align = alTop
         Checked = True

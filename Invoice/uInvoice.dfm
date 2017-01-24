@@ -637,8 +637,8 @@ object frmInvoice: TfrmInvoice
       object chkShowPackage: TsCheckBox
         Left = 724
         Top = 143
-        Width = 119
-        Height = 17
+        Width = 111
+        Height = 20
         Caption = 'Package on invoice'
         Checked = True
         State = cbChecked
@@ -666,8 +666,6 @@ object frmInvoice: TfrmInvoice
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitTop = 160
-      ExplicitHeight = 502
       object Panel2: TsPanel
         Left = 0
         Top = 341
@@ -678,7 +676,6 @@ object frmInvoice: TfrmInvoice
         ParentColor = True
         TabOrder = 0
         SkinData.SkinSection = 'PANEL'
-        ExplicitTop = 350
         object memExtraText: TMemo
           Left = 1
           Top = 1
@@ -1221,7 +1218,6 @@ object frmInvoice: TfrmInvoice
         Padding.Bottom = 5
         TabOrder = 2
         SkinData.SkinSection = 'PANEL'
-        ExplicitHeight = 259
         object agrLines: TAdvStringGrid
           Left = 10
           Top = 5
@@ -1348,8 +1344,7 @@ object frmInvoice: TfrmInvoice
           SearchFooter.HintHighlight = 'Highlight occurrences'
           SearchFooter.MatchCaseCaption = 'Match case'
           SortSettings.DefaultFormat = ssAutomatic
-          Version = '7.9.1.1'
-          ExplicitHeight = 249
+          Version = '8.1.2.0'
           ColWidths = (
             24
             91
@@ -1368,7 +1363,6 @@ object frmInvoice: TfrmInvoice
         Height = 244
         Align = alRight
         TabOrder = 1
-        ExplicitHeight = 253
         object pnlInvoiceIndex0: TsPanel
           Left = 3
           Top = 4
