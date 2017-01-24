@@ -445,7 +445,7 @@ begin
        '		 JOIN roomsdate rd on pdd.date=rd.ADate AND (NOT rd.ResFlag IN (''X'',''C'',''O'')) ' +
        '		 JOIN reservations r on r.Reservation=rd.Reservation AND r.outOfOrderBlocking=0 ' +
        '         JOIN control c ' +
-       '         LEFT JOIN invoicelines il ON il.InvoiceNumber > 0 AND il.RoomReservationAlias=rd.RoomReservation AND il.ItemId=c.RoomRentItem ' +
+       '         LEFT JOIN invoicelines il ON il.InvoiceNumber > 0 AND il.invoicenumber=rd.invoicenumber and il.RoomReservationAlias=rd.RoomReservation AND il.ItemId=c.RoomRentItem ' +
        '         LEFT JOIN (SELECT RoomReservation, InvoiceNumber, ihCurrency, ihCurrencyRate FROM invoiceheads ih WHERE ih.InvoiceNumber > 0) ih ON ih.InvoiceNumber=il.InvoiceNumber ' +
        '		 JOIN currencies curr on curr.Currency=rd.Currency ' +
        '		 WHERE ' +
