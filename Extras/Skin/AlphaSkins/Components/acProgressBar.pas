@@ -500,7 +500,9 @@ begin
 
       WM_PAINT: begin
         BeginPaint(Handle, PS);
-        Paint(TWMPaint(Message).DC);
+        if Visible or (csDesigning in ComponentState) then
+          Paint(TWMPaint(Message).DC);
+
         EndPaint(Handle, PS);
         Message.Result := 0;
         Exit;

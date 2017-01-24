@@ -11,12 +11,12 @@ uses
   {$IFNDEF DELPHI5}    Types,      {$ENDIF}
   {$IFDEF  LOGGED}     sDebugMsgs, {$ENDIF}
   {$IFDEF  FPC}        LMessages,  {$ENDIF}
-  sConst, sMaskData, sSkinMenus, sStyleSimply, sDefaults, acntUtils;
+  sConst, sMaskData, sSkinMenus, sStyleSimply, sDefaults, acntUtils, acntTypes;
 
 
 {$IFNDEF NOTFORHELP}
 const
-  acCurrentVersion = '11.21';
+  acCurrentVersion = '11.23';
 
 {$R sXB.res}   // Default ext borders
 {$R sOEff.res} // Default outer masks
@@ -28,8 +28,10 @@ const
 
 type
 {$IFNDEF NOTFORHELP}
+  TacSkinMode = (smInternal, smExtPacked, smExtUnpacked);
   TacSkinListData = record
     skName: string;
+    skSkinMode: TacSkinMode;
     skImageIndex: integer;
   end;
 
@@ -258,7 +260,7 @@ type
   end;
 
 
-  ThirdPartyList = class(TPersistent)
+  TsThirdPartyList = class(TPersistent)
   private
     FThirdEdits,
     FThirdButtons,
@@ -339,15 +341,13 @@ type
   private
     FScrollSize,
     FButtonsSize: integer;
-
     FOwner: TsSkinManager;
-    procedure SetScrollSize (const Value: integer);
-    procedure SetButtonsSize(const Value: integer);
+    procedure SetInteger(const Index, Value: integer);
   public
     constructor Create(AOwner: TsSkinManager);
   published
-    property ScrollSize:  integer read FScrollSize  write SetScrollSize  default -1;
-    property ButtonsSize: integer read FButtonsSize write SetButtonsSize default -1;
+    property ButtonsSize: integer index 0 read FButtonsSize write SetInteger default -1;
+    property ScrollSize:  integer index 1 read FScrollSize  write SetInteger default -1;
   end;
 
 
@@ -481,7 +481,7 @@ type
     FAnimEffects: TacAnimEffects;
     FActiveControl: hwnd;
     FSkinningRules: TacSkinningRules;
-    FThirdParty: ThirdPartyList;
+    FThirdParty: TsThirdPartyList;
     FEffects: TacSkinEffects;
     FScrollsOptions: TacScrollBarsSupport;
     FButtonsSupport: TacButtonsSupport;
@@ -496,9 +496,6 @@ type
 {$ENDIF}
     procedure ClearExtArray;
     function SearchExtFile(s: string): TBitmap;
-{$IFNDEF FPC}
-    procedure SetSkinnedPopups(const Value: boolean);
-{$ENDIF}
     function GetVersion: string;
     function GetSkinInfo: TacSkinInfo;
     procedure UpdateCurrentSkin;
@@ -508,13 +505,13 @@ type
 
     procedure SetActiveControl      (const Value: hwnd);
     procedure SetSkinDirectory      (const Value: string);
-    procedure SetActive             (const Value: boolean);
     procedure SetVersion            (const Value: string);
-    procedure SetHueOffset          (const Value: integer);
-    procedure SetBrightness         (const Value: integer);
-    procedure SetSaturation         (const Value: integer);
+    procedure SetActive             (const Value: boolean);
     procedure SetIsDefault          (const Value: boolean);
     procedure SetExtendedBorders    (const Value: boolean);
+{$IFNDEF FPC}
+    procedure SetSkinnedPopups      (const Value: boolean);
+{$ENDIF}
     procedure SetSkinName           (const Value: TsSkinName);
     procedure SetSkinInfo           (const Value: TacSkinInfo);
     procedure SetKeyList            (const Value: TStringList);
@@ -522,6 +519,7 @@ type
     procedure SetActiveGraphControl (const Value: TGraphicControl);
     procedure SetFSkinningRules     (const Value: TacSkinningRules);
     procedure SetCommonSections     (const Value: TStringList);
+    procedure SetInteger     (const Index, Value: integer);
   protected
     FActiveGraphControl: TGraphicControl;
 {$IFNDEF DELPHI2005}
@@ -585,12 +583,7 @@ type
     function GetTextureIndex(aSkinIndex: integer; const SkinSection, PropName: string): integer; overload;
     function GetTextureIndex(aSkinIndex: integer; const PropName: string): integer; overload;
     procedure GetSkinSections(sl: TStrings);
-(*
-    function MaskWidthTop    (MaskIndex: integer): integer; {$IFDEF WARN_DEPRECATED} deprecated; {$ENDIF}
-    function MaskWidthLeft   (MaskIndex: integer): integer; {$IFDEF WARN_DEPRECATED} deprecated; {$ENDIF}
-    function MaskWidthBottom (MaskIndex: integer): integer; {$IFDEF WARN_DEPRECATED} deprecated; {$ENDIF}
-    function MaskWidthRight  (MaskIndex: integer): integer; {$IFDEF WARN_DEPRECATED} deprecated; {$ENDIF}
-*)
+
     function IsValidSkinIndex(SkinIndex: integer): boolean;
     function IsValidImgIndex(ImageIndex: integer): boolean;
     // Getting colors
@@ -628,40 +621,42 @@ type
     property ActiveControl: hwnd read FActiveControl write SetActiveControl;
     property ActiveGraphControl: TGraphicControl read FActiveGraphControl write SetActiveGraphControl;
 {$ENDIF} // NOTFORHELP
+
   published
     property OnScaleModeChange: TScaleChangeEvent read FOnScaleModeChange write FOnScaleModeChange; // Declare before the Options property
 
     property Effects: TacSkinEffects read FEffects write FEffects;
-    property ExtendedBorders: boolean read GetExtendedBorders write SetExtendedBorders default False;
-{$IFNDEF FPC}
-    property SkinnedPopups: boolean read FSkinnedPopups write SetSkinnedPopups default True;
-{$ENDIF}
     property AnimEffects: TacAnimEffects read FAnimEffects write FAnimEffects;
     property ButtonsOptions: TacButtonsSupport read FButtonsSupport write FButtonsSupport;
-    property IsDefault: boolean read GetIsDefault write SetIsDefault default True;
-    property Active: boolean read FActive write SetActive default True;
+
+    property Active:          boolean read FActive            write SetActive default True;
+    property ExtendedBorders: boolean read GetExtendedBorders write SetExtendedBorders default False;
+    property IsDefault:       boolean read GetIsDefault       write SetIsDefault default True;
+{$IFNDEF FPC}
+    property SkinnedPopups:   boolean read FSkinnedPopups     write SetSkinnedPopups default True;
+{$ENDIF}
+
+    property Brightness: integer index 0 read FBrightness write SetInteger default 0;
+    property HueOffset:  integer index 1 read FHueOffset  write SetInteger default 0;
+    property Saturation: integer index 2 read FSaturation write SetInteger default 0;
+
     property CommonSections: TStringList read FCommonSections write SetCommonSections;
-    property Brightness: integer read FBrightness write SetBrightness default 0;
-    property Saturation: integer read FSaturation write SetSaturation default 0;
-    property HueOffset: integer read FHueOffset write SetHueOffset default 0;
+    property KeyList:        TStringList read FKeyList        write SetKeyList;
+
     property InternalSkins: TsStoredSkins read FBuiltInSkins write SetBuiltInSkins;
     property LabelsOptions: TacLabelsSupport read FLabelsSupport write FLabelsSupport;
     property MenuSupport: TacMenuSupport read FMenuSupport write FMenuSupport;
     property Options: TacOptions read FOptions write FOptions;
     property ScrollsOptions: TacScrollBarsSupport read FScrollsOptions write FScrollsOptions;
     property SkinDirectory: TsDirectory read FSkinDirectory write SetSkinDirectory;
-    property KeyList: TStringList read FKeyList write SetKeyList;
     property SkinName: TsSkinName read FSkinName write SetSkinName;
     property SkinInfo: TacSkinInfo read GetSkinInfo write SetSkinInfo;
     property SkinningRules: TacSkinningRules read FSkinningRules write SetFSkinningRules default [srStdForms, srStdDialogs, srThirdParty];
-    property ThirdParty: ThirdPartyList read FThirdParty write FThirdParty;
+    property ThirdParty: TsThirdPartyList read FThirdParty write FThirdParty;
     property Version: string read GetVersion write SetVersion stored False;
 
-    {:@event}
     property OnGetMenuExtraLineData: TacGetExtraLineData read FOnGetPopupLineData write FOnGetPopupLineData;
-    {:@event}
     property OnGetPopupItemData: TacGetPopupItemData read FOnGetPopupItemData write FOnGetPopupItemData;
-    {:@event}
     property OnSysDlgInit: TacSysDlgInit read FOnSysDlgInit write FOnSysDlgInit;
 
     property OnActivate:        TNotifyEvent read FOnActivate        write FOnActivate;
@@ -688,7 +683,6 @@ procedure UpdateCommonDlgs(sManager: TsSkinManager);
 {$ENDIF}
 procedure UpdatePreview(Handle: HWND; Enabled: boolean);
 function ChangeImageInSkin(const SkinSection, PropName, FileName: string; sm: TsSkinManager): boolean;
-//procedure ChangeSkinBrightness(sManager: TsSkinManager; Value: integer);
 function GetScrollSize     (sm: TsSkinManager): integer;
 function GetComboBtnSize   (sm: TsSkinManager): integer;
 procedure UpdateThirdNames (sm: TsSkinManager);
@@ -1612,7 +1606,7 @@ begin
   inherited Create(AOwner);
   FEffects := TacSkinEffects.Create;
   FEffects.Manager := Self;
-  FThirdParty := ThirdPartyList.Create;
+  FThirdParty := TsThirdPartyList.Create;
   FExtendedBorders := False;
   NoAutoUpdate := False;
   ShowState := saIgnore;
@@ -1621,13 +1615,15 @@ begin
 {$IFNDEF NOFONTSCALEPATCH}
   try
     i := ReadRegInt(HKEY_CURRENT_USER, 'Control Panel\Desktop\WindowMetrics', 'AppliedDPI');
+//    i := GetDeviceCaps(GetDC(0), LOGPIXELSX);
   except
     i := 0;
   end;
   case i of
-    144..MaxInt: SysFontScale := 2;
-    120..143:    SysFontScale := 1
-    else         SysFontScale := 0;
+    192..MaxInt: SysFontScale := 3; // 200 %
+    144..191:    SysFontScale := 2; // 150 %
+    120..143:    SysFontScale := 1  // 125 %
+    else         SysFontScale := 0; // 100 %
   end;
 {$ENDIF}
 
@@ -1779,47 +1775,35 @@ end;
 
 function TsSkinManager.GetExternalSkinNames(sl: TacStrings; SkinType: TacSkinTypes = stAllSkins): acString;
 var
-  FileInfo: TacSearchRec;
-  s, SkinPath: acString;
   stl: TacStringList;
-  DosCode: Integer;
+  iData: TacItemDrawData;
+  i: Integer;
 begin
   Result := '';
-  SkinPath := GetFullskinDirectory;
   sl.Clear;
-  stl := TacStringList.Create;
-  // External skins names loading
-  if acDirExists(SkinPath) then begin
-    s := SkinPath + '\*.*';
-    DosCode := acFindFirst(s, faDirectory, FileInfo);
-    try
-      while DosCode = 0 do begin
-        if FileInfo.Name[1] <> s_Dot then
-          if (SkinType in [stUnpacked, stAllSkins]) and
-                (FileInfo.Attr and faDirectory <> 0) and
-                  FileExists(SkinPath + s_Slash + FileInfo.Name + s_Slash + OptionsDatName) then begin
-            stl.Add(FileInfo.Name);
-            if Result = '' then
-              Result := FileInfo.Name;
-          end
-          else
-            if (SkinType in [stPacked, stAllSkins]) and (FileInfo.Attr and faDirectory = 0) and (ExtractFileExt(FileInfo.Name) = s_Dot + acSkinExt) then begin
-              s := FileInfo.Name;
-              Delete(s, pos(s_Dot + acSkinExt, LowerCase(s)), 4);
-              stl.Add(s);
-              if Result = '' then
-                Result := s;
-            end;
+  if sl is TStringList then
+    stl := TStringList(sl)
+  else
+    stl := TacStringList.Create;
 
-        DosCode := acFindNext(FileInfo);
+  for i := 0 to Length(SkinListController.SkinList) - 1 do
+    with SkinListController.SkinList[i] do
+      if skSkinMode <> smInternal then begin
+        iData := TacItemDrawData.Create;
+        iData.ImageIndex := skImageIndex;
+        stl.AddObject(skName, iData);
       end;
-    finally
-      acFindClose(FileInfo);
-    end;
-  end;
+
+  if sl.Count > 0 then
+    Result := sl[0]
+  else
+    Result := '';
+
   stl.Sort;
-  sl.Assign(stl);
-  FreeAndNil(stl);
+  if not (sl is TStringList) then begin
+    sl.Assign(stl);
+    FreeAndNil(stl);
+  end;
 end;
 
 
@@ -1867,54 +1851,39 @@ end;
 
 function TsSkinManager.GetSkinNames(sl: TacStrings; SkinType: TacSkinTypes = stAllSkins): acString;
 var
-  FileInfo: TacSearchRec;
-  s, SkinPath: acString;
   stl: TacStringList;
-  DosCode: Integer;
+  iData: TacItemDrawData;
+  i: Integer;
 begin
   Result := '';
-  SkinPath := GetFullskinDirectory;
   sl.Clear;
-  stl := TacStringList.Create;
-  // Internal skins names loading
-  if InternalSkins.Count > 0 then
-    for DosCode := 0 to InternalSkins.Count - 1 do begin
-      stl.Add(InternalSkins[DosCode].Name);
-      if Result = '' then
-        Result := InternalSkins[DosCode].Name;
-    end;
-  // External skins names loading
-  if acDirExists(SkinPath) then begin
-    s := SkinPath + '\*.*';
-    DosCode := acFindFirst(s, faDirectory, FileInfo);
-    try
-      while DosCode = 0 do begin
-        if FileInfo.Name[1] <> s_Dot then
-          if (SkinType in [stUnpacked, stAllSkins]) and
-                (FileInfo.Attr and faDirectory <> 0) and
-                  FileExists(SkinPath + s_Slash + FileInfo.Name + s_Slash + OptionsDatName) then begin
-            stl.Add(FileInfo.Name);
-            if Result = '' then
-              Result := FileInfo.Name;
-          end
-          else
-            if (SkinType in [stPacked, stAllSkins]) and (FileInfo.Attr and faDirectory = 0) and (ExtractFileExt(FileInfo.Name) = s_Dot + acSkinExt) then begin
-              s := FileInfo.Name;
-              Delete(s, pos(s_Dot + acSkinExt, LowerCase(s)), 4);
-              stl.Add(s);
-              if Result = '' then
-                Result := s;
-            end;
+  if sl is TStringList then
+    stl := TStringList(sl)
+  else
+    stl := TacStringList.Create;
 
-        DosCode := acFindNext(FileInfo);
+  for i := 0 to Length(SkinListController.SkinList) - 1 do
+    with SkinListController.SkinList[i] do begin
+      iData := TacItemDrawData.Create;
+      iData.ImageIndex := skImageIndex;
+
+      case SkinType of
+        stUnpacked: if skSkinMode <> smInternal then stl.AddObject(skName, iData);
+        stPacked:   if skSkinMode = smInternal  then stl.AddObject(skName, iData);
+        stAllSkins:                                  stl.AddObject(skName, iData);
       end;
-    finally
-      acFindClose(FileInfo);
     end;
-  end;
+
+  if sl.Count > 0 then
+    Result := sl[0]
+  else
+    Result := '';
+
   stl.Sort;
-  sl.Assign(stl);
-  FreeAndNil(stl);
+  if not (sl is TStringList) then begin
+    sl.Assign(stl);
+    FreeAndNil(stl);
+  end;
 end;
 
 
@@ -2560,15 +2529,7 @@ begin
   if iOldScale = 0 then
     iOldScale := iCurrentScale;
 
-  // If system scale not changed
-{
-  if SysFontScale = 0 then
-    iNewScale := aScalePercents[GetScale]
-  else
-}
-    iNewScale := aScalePercents[GetScale];
-//    iNewScale := 100;
-
+   iNewScale := aScalePercents[GetScale];
   if iNewScale <> iOldScale then
     with TAccessControl(Ctrl) do begin
       w := MulDiv(Width, iNewScale, iOldScale);
@@ -2673,24 +2634,6 @@ begin
 end;
 
 
-procedure TsSkinManager.SetHueOffset(const Value: integer);
-begin
-  if FHueOffset <> Value then begin
-    FHueOffset := Value;
-    UpdateCurrentSkin;
-  end;
-end;
-
-
-procedure TsSkinManager.SetSaturation(const Value: integer);
-begin
-  if FSaturation <> Value then begin
-    FSaturation := Value;
-    UpdateCurrentSkin;
-  end;
-end;
-
-
 function TsSkinManager.GetActiveEditColor: TColor;
 begin
   Result := Palette[pcEditBG];
@@ -2723,7 +2666,7 @@ end;
 
 function TsSkinManager.IsValidSkinIndex(SkinIndex: integer): boolean;
 begin
-  Result := {(CommonSkinData <> nil) and} (SkinIndex >= 0) and (SkinIndex < Length(gd));
+  Result := (SkinIndex >= 0) and (SkinIndex < Length(gd));
 end;
 
 
@@ -3609,7 +3552,6 @@ begin
       end;
     end;
   end;
-//  InitMaskIndexes;
   // Load a main color palette
   Palette[pcMainColor] := sf.ReadInteger(s_GlobalInfo, s_Color,     ColorToRGB(clBtnFace));
   Palette[pcLabelText] := sf.ReadInteger(s_GlobalInfo, s_FontColor, clBlack);
@@ -3806,6 +3748,32 @@ begin
     end;
   end;
   Result := -1;
+end;
+
+
+procedure TsSkinManager.SetInteger(const Index, Value: integer);
+var
+  i: integer;
+begin
+  case Index of
+    0: begin
+      i := LimitIt(Value, -100, 100);
+      if FBrightness <> i then begin
+        FBrightness := i;
+        UpdateCurrentSkin;
+      end;
+    end;
+
+    1: if FHueOffset <> Value then begin
+      FHueOffset := Value;
+      UpdateCurrentSkin;
+    end;
+
+    2: if FSaturation <> Value then begin
+      FSaturation := Value;
+      UpdateCurrentSkin;
+    end;
+  end;
 end;
 
 
@@ -4069,10 +4037,11 @@ begin
         except
           sp := nil;
         end;
-        if sp <> nil then begin
-          sp.DropSysMenu(Mouse.CursorPos.X, Mouse.CursorPos.Y);
-          Result := True;
-        end;
+        if sp <> nil then
+          with acMousePos do begin
+            sp.DropSysMenu(X, Y);
+            Result := True;
+          end;
       end;
 {$ENDIF}
 
@@ -4316,30 +4285,6 @@ begin
   end;
 end;
 
-{
-function TsSkinManager.MaskWidthBottom(MaskIndex: integer): integer;
-begin
-  Result := ma[MaskIndex].WB;
-end;
-
-
-function TsSkinManager.MaskWidthLeft(MaskIndex: integer): integer;
-begin
-  Result := ma[MaskIndex].WL;
-end;
-
-
-function TsSkinManager.MaskWidthRight(MaskIndex: integer): integer;
-begin
-  Result := ma[MaskIndex].WR;
-end;
-
-
-function TsSkinManager.MaskWidthTop(MaskIndex: integer): integer;
-begin
-  Result := ma[MaskIndex].WT;
-end;
-}
 
 procedure TsSkinManager.SetActiveControl(const Value: hwnd);
 var
@@ -4623,18 +4568,6 @@ begin
 end;
 
 
-procedure TsSkinManager.SetBrightness(const Value: integer);
-var
-  i: integer;
-begin
-  i := LimitIt(Value, -100, 100);
-  if FBrightness <> i then begin
-    FBrightness := i;
-    UpdateCurrentSkin;
-  end;
-end;
-
-
 procedure ScaleImageList(ImgList: TCustomImageList; Data: Longint);
 begin
   if ImgList is TsAlphaImageList then
@@ -4872,7 +4805,7 @@ begin
 end;
 
 
-function ThirdPartyList.GetString(const Index: Integer): string;
+function TsThirdPartyList.GetString(const Index: Integer): string;
 begin
   case Index of
     ord(tpEdit)         : Result := FThirdEdits;
@@ -4905,7 +4838,7 @@ begin
 end;
 
 
-procedure ThirdPartyList.SetString(const Index: Integer; const Value: string);
+procedure TsThirdPartyList.SetString(const Index: Integer; const Value: string);
 begin
   case Index of
     ord(tpEdit)         :   FThirdEdits         := Value;
@@ -4991,26 +4924,23 @@ begin
 end;
 
 
-procedure TacScrollBarsSupport.SetButtonsSize(const Value: integer);
-begin
-  if FButtonsSize <> Value then begin
-    FButtonsSize := Value;
-    if not (csLoading in FOwner.ComponentState) then
-      FOwner.RepaintForms(False);
-  end;
-end;
-
-
-procedure TacScrollBarsSupport.SetScrollSize(const Value: integer);
+procedure TacScrollBarsSupport.SetInteger(const Index, Value: integer);
 var
   M: TMessage;
 begin
-  if FScrollSize <> Value then begin
-    FScrollSize := Value;
-    if not (csLoading in FOwner.ComponentState) then begin
-      M.Msg := SM_ALPHACMD;
-      M.WParamHi := AC_REINITSCROLLS;
-      AppBroadCastS(M);
+  case Index of
+    0: if FButtonsSize <> Value then begin
+      FButtonsSize := Value;
+      if not (csLoading in FOwner.ComponentState) then
+        FOwner.RepaintForms(False);
+    end;
+
+    1: if FScrollSize <> Value then begin
+      FScrollSize := Value;
+      if not (csLoading in FOwner.ComponentState) then begin
+        M := MakeMessage(SM_ALPHACMD, WPARAM(AC_REINITSCROLLS shl 16), 0, 0);
+        AppBroadCastS(M);
+      end;
     end;
   end;
 end;
@@ -5092,11 +5022,9 @@ begin
   with TsSkinProvider(sp) do begin
     if Data and LF_UNLOCK = 0 then begin
       FFormState := FFormState or FS_FULLPAINTING;
-      if (BorderForm <> nil){ and (Data and LF_REDUCED <> 0)} then begin
-//        TsSkinProvider(sp).BorderForm.ResetRgn := True;
+      if BorderForm <> nil then
         TsSkinProvider(sp).BorderForm.UpdateExBordersPos(False);
-//        TsSkinProvider(sp).BorderForm.UpdateRgn;
-      end;
+
       FInAnimation := Data and LF_UNLOCK = 0;
       FFormState := FFormState or FS_LOCKED;
     end
@@ -5106,11 +5034,9 @@ begin
       SendAMessage(TsSkinProvider(sp).Form.Handle, AC_PREPARECACHE);
       FFormState := 0;
     end;
-    if BorderForm <> nil then begin
+    if BorderForm <> nil then
       BorderForm.ExBorderShowing := Data and LF_UNLOCK = 0;
-//      if Data = (LF_REDUCED or LF_UNLOCK) then
-//        BorderForm.UpdateExBordersPos(True);
-    end;
+
     TrySendMessage(Form.Handle, WM_SETREDRAW, Data and LF_UNLOCK, 0);
   end;
 end;
@@ -5207,9 +5133,6 @@ begin
         else
           Result := Value;
     end;
-{    if Value < SysScale then
-      Result := Value * 100 div SysScale
-    else}
 end;
 
 
@@ -5603,41 +5526,69 @@ var
           SkinList[l].skImageIndex := TsAlphaImageList(ImgList).Items.Count - 1;
 
       Delete(SkinList[l].skName, pos(s_Dot + acSkinExt, LowerCase(AName)), 4);
+      SkinList[l].skSkinMode := smExtPacked;
     end
     else begin
       if GetPreviewStream(Stream, SkinManager.InternalSkins[IntIndex].PackedData) then
         if TsAlphaImageList(ImgList).TryLoadFromPngStream(Stream) then
           SkinList[l].skImageIndex := TsAlphaImageList(ImgList).Items.Count - 1;
+
+      SkinList[l].skSkinMode := smInternal;
     end;
     Stream.Free;
   end;
 
 begin
   if [csLoading, csDestroying] * SkinManager.ComponentState = [] then begin
-    SetLength(SkinList, 0);
-    TsAlphaImageList(ImgList).Clear;
-    TsAlphaImageList(ImgList).Handle;
-
-    sp := NormalDir(SkinManager.GetFullskinDirectory);
-    // Internal skins names loading
-    if SkinManager.InternalSkins.Count > 0 then
-      for i := 0 to SkinManager.InternalSkins.Count - 1 do
-        AddSkin(SkinManager.InternalSkins[i].Name, i);
-
-    // External skins names loading
-    if acDirExists(sp) then begin
-  //    sp := sp + '\*.*';
-      DosCode := acFindFirst(sp + '*.*', faDirectory, FileInfo);
-      try
-        while DosCode = 0 do begin
-          if FileInfo.Name[1] <> s_Dot then
-            if (FileInfo.Attr and faDirectory = 0) and (ExtractFileExt(FileInfo.Name) = s_Dot + acSkinExt) then
-              AddSkin(FileInfo.Name, -1);
-
-          DosCode := acFindNext(FileInfo);
+    if (SkinManager <> DefaultManager) and (DefaultManager <> nil) and (SkinManager.SkinDirectory = DefaultManager.SkinDirectory) then begin
+      TsAlphaImageList(ImgList).Clear;
+      TsAlphaImageList(ImgList).Handle;
+      SetLength(SkinList, Length(DefaultManager.SkinListController.SkinList));
+      for i := 0 to Length(DefaultManager.SkinListController.SkinList) - 1 do begin
+        SkinList[i].skName       := DefaultManager.SkinListController.SkinList[i].skName;
+        SkinList[i].skSkinMode   := DefaultManager.SkinListController.SkinList[i].skSkinMode;
+        SkinList[i].skImageIndex := DefaultManager.SkinListController.SkinList[i].skImageIndex;
+      end;
+      for i := 0 to DefaultManager.SkinListController.ImgList.Count - 1 do
+        with TsImgListItem(TsAlphaImageList(ImgList).Items.Add) do begin
+          ImgData.LoadFromStream(TsAlphaImageList(DefaultManager.SkinListController.ImgList).Items[i].ImgData);
+          ImageFormat := ifPNG;
+{$IFNDEF DELPHI7UP}
+//          TsAlphaImageList(ImgList).CopyImages(DefaultManager.SkinListController.ImgList.Handle, i);
+{$ELSE}
+          TsAlphaImageList(ImgList).AddImage(TsAlphaImageList(DefaultManager.SkinListController.ImgList), i)
+{$ENDIF}
         end;
-      finally
-        acFindClose(FileInfo);
+
+{$IFNDEF DELPHI7UP}
+        TsAlphaImageList(ImgList).GenerateStdList;
+{$ENDIF}
+    end
+    else begin
+      SetLength(SkinList, 0);
+      TsAlphaImageList(ImgList).Clear;
+      TsAlphaImageList(ImgList).Handle;
+
+      sp := NormalDir(SkinManager.GetFullskinDirectory);
+      // Internal skins names loading
+      if SkinManager.InternalSkins.Count > 0 then
+        for i := 0 to SkinManager.InternalSkins.Count - 1 do
+          AddSkin(SkinManager.InternalSkins[i].Name, i);
+
+      // External skins names loading
+      if acDirExists(sp) then begin
+        DosCode := acFindFirst(sp + '*.*', faDirectory, FileInfo);
+        try
+          while DosCode = 0 do begin
+            if FileInfo.Name[1] <> s_Dot then
+              if (FileInfo.Attr and faDirectory = 0) and (ExtractFileExt(FileInfo.Name) = s_Dot + acSkinExt) then
+                AddSkin(FileInfo.Name, -1);
+
+            DosCode := acFindNext(FileInfo);
+          end;
+        finally
+          acFindClose(FileInfo);
+        end;
       end;
     end;
     SendListChanged;

@@ -48,6 +48,7 @@ type
     procedure DrawItem(Index: Integer; Rect: TRect; State: TOwnerDrawState); override;
     procedure CreateParams(var Params: TCreateParams); override;
     procedure AnimateCtrl(AState: integer);
+    procedure UninitPopup;
 {$IFNDEF DELPHI5}
     function GetItemHt: Integer; override;
     procedure SetDropDownCount(const Value: Integer); override;
@@ -378,11 +379,7 @@ end;
 
 destructor TsCustomComboBox.Destroy;
 begin
-  if lBoxHandle <> 0 then begin
-    SetWindowLong(lBoxHandle, GWL_STYLE, GetWindowLong(lBoxHandle, GWL_STYLE) and not WS_THICKFRAME or WS_BORDER);
-    UninitializeACScroll(lBoxHandle, True, False, ListSW);
-    lBoxHandle := 0;
-  end;
+  UninitPopup;
   FreeAndNil(FBoundLabel);
   FreeAndNil(FCommonData);
   inherited Destroy;
@@ -1221,7 +1218,7 @@ end;
 function TsCustomComboBox.HandleAlphaMsg(var Message: TMessage): boolean;
 var
   i: integer;
-  b: boolean;
+//  b: boolean;
 begin
   Result := True;
   case Message.WParamHi of
@@ -1229,12 +1226,7 @@ begin
       if ACUInt(Message.LParam) = ACUInt(SkinData.SkinManager) then begin
         HideGlow(SkinData.GlowID);
         CommonWndProc(Message, FCommonData);
-        if lBoxHandle <> 0 then begin
-          SetWindowLong(lBoxHandle, GWL_STYLE, GetWindowLong(lBoxHandle, GWL_STYLE) and not WS_THICKFRAME or WS_BORDER);
-          UninitializeACScroll(lBoxHandle, True, False, ListSW);
-          lBoxHandle := 0;
-        end;
-
+        UninitPopup;
         if not FCommonData.CustomColor then
           Color := clWindow;
 
@@ -1257,18 +1249,20 @@ begin
         Repaint;
       end;
 
-    AC_SETSCALE:
+    AC_SETSCALE: begin
+      UninitPopup;
       if BoundLabel <> nil then
         BoundLabel.UpdateScale(Message.LParam);
+    end;
 
     AC_SETNEWSKIN:
       if ACUInt(Message.LParam) = ACUInt(SkinData.SkinManager) then begin
-        b := SkinData.Skinned; // Remember if was not skinned, for recreating 
+//        b := SkinData.Skinned; // Remember if was not skinned, for recreating
         HideGlow(SkinData.GlowID);
         CommonWndProc(Message, FCommonData);
         UpdateIndexes;
-        if not b then
-          RecreateWnd;
+//        if not b then
+        RecreateWnd;
 
         if ListSW <> nil then
           ListSW.acWndProc(Message);
@@ -1303,6 +1297,16 @@ begin
     FVerticalAlignment := Value;
     SkinData.BGChanged := True;
     Invalidate;
+  end;
+end;
+
+
+procedure TsCustomComboBox.UninitPopup;
+begin
+  if lBoxHandle <> 0 then begin
+    SetWindowLong(lBoxHandle, GWL_STYLE, GetWindowLong(lBoxHandle, GWL_STYLE) and not WS_THICKFRAME or WS_BORDER);
+    UninitializeACScroll(lBoxHandle, True, False, ListSW);
+    lBoxHandle := 0;
   end;
 end;
 

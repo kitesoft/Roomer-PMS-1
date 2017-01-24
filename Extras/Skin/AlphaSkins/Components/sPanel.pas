@@ -1,7 +1,6 @@
 unit sPanel;
 {$I sDefs.inc}
 //{$DEFINE LOGGED}
-//+
 
 interface
 
@@ -295,8 +294,22 @@ begin
 
     if IsCached(FCommonData) and not SkinData.CustomColor or (Self is TsColorsPanel) or InAnimationProcess then begin
       i := GetClipBox(NewDC, R);
-      if (i = 0) {or IsRectEmpty(R) is not redrawn while resizing }then
+      if i = ERROR {or IsRectEmpty(R) is not redrawn while resizing }then
         Exit;
+
+      if i = NULLREGION then begin
+        b := False;
+        for I := 0 to ControlCount - 1 do
+          if Controls[i].Align = alNone then begin
+            b := True;
+            Break;
+          end;
+
+        if b and RectVisible(NewDC, MkRect(Self)) then begin
+          SkinData.FUpdating := True;
+          Exit;
+        end;
+      end;
 
       if not InUpdating(FCommonData) or (csPaintCopy in ControlState) then begin
         // If transparent and parent is resized
@@ -809,7 +822,7 @@ begin
       end;
 
       CM_SHOWINGCHANGED:
-        if {(SkinData.SkinManager.Options.OptimizingPriority = opMemory) and} Visible then
+        if Visible then
           FCommonData.FUpdating := False;
 
       WM_WINDOWPOSCHANGING:
@@ -824,13 +837,9 @@ begin
     inherited;
     case Message.Msg of
       WM_WINDOWPOSCHANGED, WM_SIZE:
-        if not InUpdating(FCommonData) then begin
-//          if FCommonData.BGChanged then
-//            Repaint;
-
+        if not InUpdating(FCommonData) then
           if Assigned(OnResize) and (Message.Msg = WM_SIZE) then
             OnResize(Self);
-        end;
 
       CM_ENABLEDCHANGED:
         FCommonData.Invalidate;
@@ -1291,14 +1300,13 @@ end;
 
 procedure TsGradientPanel.CopyCache(DC: hdc);
 var
-  R, cR: TRect;
   i: integer;
+  R, cR: TRect;
   SaveIndex: HDC;
   Child: TControl;
 begin
   SaveIndex := SaveDC(DC);
   cR := MkRect(Self);
-//  IntersectClipRect(DC, DstRect.Left, DstRect.Top, DstRect.Right, DstRect.Bottom);
   try
     for i := 0 to ControlCount - 1 do begin
       Child := Controls[i];
@@ -1308,7 +1316,7 @@ begin
       with Child do begin
         R := BoundsRect;
         if Visible and RectIsVisible(cR, R) then
-          if {(csDesigning in ComponentState) or} (csOpaque in ControlStyle) or (Child is TGraphicControl) then
+          if (csOpaque in ControlStyle) or (Child is TGraphicControl) then
             ExcludeClipRect(DC, R.Left, R.Top, R.Right, R.Bottom);
       end;
     end;
@@ -1316,8 +1324,6 @@ begin
   finally
     RestoreDC(DC, SaveIndex);
   end;
-
-//  BitBlt(DC, 0, 0, Width, Height, FCacheBmp.Canvas.Handle, 0, 0, SRCCOPY)
 end;
 
 
@@ -1363,7 +1369,7 @@ begin
       Exit;
 
     i := GetClipBox(NewDC, R);
-    if (i = 0) {or IsRectEmpty(R) is not redrawn while resizing }then
+    if i = 0 {or IsRectEmpty(R) is not redrawn while resizing }then
       Exit;
 
     CopyCache(NewDC);
@@ -1403,7 +1409,7 @@ begin
 
   R := MkRect(FCacheBmp);
   // Paint here
-  if (PaintData.CustomGradient = '') {or (PaintData.CustomGradient = 'N/A') }then begin
+  if PaintData.CustomGradient = '' then begin
     if FPaintData.Color1.UseSkinColor and (DefaultManager <> nil) and DefaultManager.CommonSkinData.Active then
       s1 := IntToStr(DefaultManager.Palette[pcMainColor])
     else
@@ -1570,11 +1576,8 @@ begin
 
       WM_ERASEBKGND: begin
         if not (csPaintCopy in ControlState) and (Message.WParam <> WParam(Message.LParam) {PerformEraseBackground, TntSpeedButtons}) then begin
-{          if not InUpdating(FCommonData) and not IsCached(SkinData) then
-            OurPaint(TWMPaint(Message).DC)
-          else}
-            if csDesigning in ComponentState then
-              inherited;
+          if csDesigning in ComponentState then
+            inherited;
         end
         else
           if Message.WParam <> 0 then begin // From PaintTo

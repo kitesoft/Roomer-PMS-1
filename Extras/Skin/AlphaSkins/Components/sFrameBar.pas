@@ -213,7 +213,7 @@ type
     property Spacing:    integer read GetSpacing  write SetSpacing    default 8;
 
     property Caption:       acString   read FCaption         write SetCaption;
-    property Cursor:        TCursor    read FCursor          write SetCursor;
+    property Cursor:        TCursor    read FCursor          write SetCursor default crDefault;
     property SkinSection:   string     read GetSkinSection   write SetSkinSection;
     property Tag:           Longint    read FTag             write FTag              default 0;
     property TextAlignment: TAlignment read GetTextAlignment write SetTextAlignment;
@@ -390,7 +390,7 @@ var
         ti.State := stOpened
       else
         if Steps > 0 then
-          while lTicks + acTimerInterval > GetTickCount do {wait here};
+          WaitTicks(lTicks);
     end;
   end;
 
@@ -453,12 +453,11 @@ var
         UpdateFrame(i, sHeight - Offset, sDiv, cWidth);
 
       inc(sHeight, FSpacing);
-      Exit;
     end
     else begin
       UpdateFrame(i, sHeight - Offset, sDiv, cWidth);
       if Steps > 0 then
-        while lTicks + acTimerInterval > GetTickCount do {wait here};
+        WaitTicks(lTicks);
     end;
   end;
 
@@ -469,7 +468,7 @@ begin
     if Items.UpdateCount <= 0 then begin
       DoAnimation := FAnimation and ((SkinData.SkinManager = nil) or SkinData.SkinManager.Effects.AllowAnimation);
       if not DontAnim and DoAnimation and ([csDesigning, csLoading] * ComponentState = []) and Visible then
-        Steps := acMaxIterations
+        Steps := acMaxIterations shr 1
       else
         Steps := 0;
 
@@ -1248,6 +1247,7 @@ begin
   TitleButton.OnClick := TitleButtonClick;
   FVisible := True;
   FImageIndex := -1;
+  FCursor := crDefault;
   State := stClosed;
   FOwner.FOwner.UpdatePositions;
 end;

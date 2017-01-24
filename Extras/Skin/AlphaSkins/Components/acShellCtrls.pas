@@ -2455,8 +2455,8 @@ begin
 {$ELSE}
       Selected := Node;
 {$ENDIF}
-      Node.MakeVisible;
       if Assigned(Node) then begin
+        Node.MakeVisible;
         if Assigned(FListView) then
           FListView.TreeUpdate(TacShellFolder(Node.Data).AbsoluteID);
 

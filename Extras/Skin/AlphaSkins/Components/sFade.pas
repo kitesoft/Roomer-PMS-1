@@ -1,6 +1,5 @@
 unit sFade;
 {$I sDefs.inc}
-//+
 
 interface
 {$R+}
@@ -11,12 +10,10 @@ uses
 
 
 function EventEnabled(Event: TacAnimatEvent; CurrentProperty: TacAnimatEvents; SkinManager: TsSkinManager = nil): boolean;
-//procedure DoChangeRect (Data: TsCommonData; State: integer; AAnimProc: TacAnimProc; AllowAnimation: boolean; Fast: boolean; R: TRect);
 procedure DoChangePaint(Data: TsCommonData; State: integer; AAnimProc: TacAnimProc; AllowAnimation: boolean; Fast: boolean; MakeGlowing: boolean = True);
 function UpdateGlowing_CB (Data: TObject; iIteration: integer): boolean;
 function UpdateGraphic_CB (Data: TObject; iIteration: integer): boolean;
 function UpdateWindow_CB  (Data: TObject; iIteration: integer): boolean;
-//function UpdateWndPart_CB (Data: TObject; iIteration: integer): boolean;
 
 
 implementation
@@ -43,7 +40,7 @@ begin
   if Data is TsCommonData then begin
     sd := TsCommonData(Data);
     if (sd.FOwnerControl <> nil) and not (csDestroying in sd.FOwnerControl.ComponentState) and (sd.AnimTimer.Iterations > 0) then
-      with sd.AnimTimer do begin
+      with sd.AnimTimer do
         if sd.AnimTimer.Iteration >= sd.AnimTimer.Iterations then begin
           if State <> 1 then
             HideGlow(sd.GlowID);
@@ -62,7 +59,6 @@ begin
             SetGlowAlpha(sd.GlowID, LimitIt(Round(sd.AnimTimer.Glow), 0, MaxByte));
           end;
         end;
-      end;
   end;
 end;
 
@@ -216,40 +212,6 @@ begin
   end;
 end;
 
-{
-function UpdateWndPart_CB(Data: TObject; iIteration: integer): boolean;
-var
-  b: byte;
-  DC: HDC;
-  R: TRect;
-  Bmp: TBitmap;
-  sd: TsCommonData;
-begin
-  Result := False;
-  if Data is TsCommonData then begin
-    sd := TsCommonData(Data);
-    if Assigned(sd.AnimTimer.BmpTo) and Assigned(sd.AnimTimer.BmpTo) and (sd.FOwnerControl is TWinControl) then begin
-      R := sd.AnimTimer.AnimRect;
-      Bmp := CreateBmp32(R);
-      BitBlt(Bmp.Canvas.Handle, 0, 0, Bmp.Width, Bmp.Height, sd.AnimTimer.BmpFrom.Canvas.Handle, R.Left, R.Top, SRCCOPY);
-      if sd.AnimTimer.Iterations <> 0 then
-        b := Round(MaxByte * (sd.AnimTimer.Iterations - iIteration) / sd.AnimTimer.Iterations)
-      else
-        b := 0;
-
-      SumBmpRect(Bmp, sd.AnimTimer.BmpTo, b, R, MkPoint);
-      DC := GetDC(TWinControl(sd.FOwnerControl).Handle);
-      try
-        BitBlt(DC, R.Left, R.Top, Bmp.Width, Bmp.Height, Bmp.Canvas.Handle, 0, 0, SRCCOPY);
-      finally
-        ReleaseDC(TWinControl(sd.FOwnerControl).Handle, DC);
-      end;
-      Bmp.Free;
-      Result := iIteration < acMaxIterations;
-    end;
-  end;
-end;
-}
 
 procedure AnimChange(SkinData: TsCommonData; State: integer; AAnimProc: TacAnimProc; Fast: boolean);
 var
@@ -258,10 +220,10 @@ begin
   with SkinData do begin
     i := GetNewTimer(AnimTimer, FOwnerControl, State);
     if (AnimTimer.State = -1) or (State <> AnimTimer.State) then begin // If not started already
-      if (AnimTimer.BmpOut = nil) or (SkinData.FCacheBmp.Width <> SkinData.AnimTimer.BmpOut.Width) or (SkinData.FCacheBmp.Height <> SkinData.AnimTimer.BmpOut.Height) then begin
+      if (AnimTimer.BmpOut = nil) or (SkinData.FCacheBmp.Width <> SkinData.AnimTimer.BmpOut.Width) or (SkinData.FCacheBmp.Height <> SkinData.AnimTimer.BmpOut.Height) then
         if AnimTimer.BmpOut <> nil then
           FreeAndNil(AnimTimer.BmpOut);
-      end;
+
       AnimTimer.CopyFrom(AnimTimer.BmpFrom, FCacheBmp, MkRect(FCacheBmp));
       if BGChanged then
         if FOwnerControl <> nil then begin
@@ -336,16 +298,4 @@ begin
     end;
 end;
 
-{
-procedure DoChangeRect(Data: TsCommonData; State: integer; AAnimProc: TacAnimProc; AllowAnimation: boolean; Fast: boolean; R: TRect);
-begin
-  if Data.Skinned then
-    if not aSkinChanging and AllowAnimation and not FadingForbidden and (Data.FCacheBmp <> nil) and not Data.BGChanged then begin
-      Data.BGChanged := True;
-      AnimChange(Data, State, AAnimProc, Fast);
-    end
-    else
-      Data.Invalidate;
-end;
-}
 end.

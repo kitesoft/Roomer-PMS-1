@@ -185,7 +185,7 @@ uses
 {$ENDIF}
 {$IFNDEF ALITE}
   sToolEdit, sComboBoxes, sBitBtn, sLabel, sStrEdit, acShellCtrls, acRootEdit, acPathDialog, sFrameBar,
-  sMemo, acAlphaHintsEdit, acNotebook, acAlphaHints, acImage, acSlider, sColorDialog, sGradBuilder,
+  sMemo, acAlphaHintsEdit, acNotebook, acAlphaHints, acImage, acSlider, sColorDialog, sGradBuilder, sGroupBox,
 {$ENDIF}
   sCommonData, sDefaults, sSkinManager, sMaskData, sSkinProps, sStoreUtils, sInternalSkins, sSpeedButton, sStyleSimply,
   sGradient, acAlphaImageList, sImgListEditor, ac3rdPartyEditor, acSkinInfo, acTitleBar, sSkinProvider;
@@ -283,8 +283,8 @@ begin
   RegisterPropertyEditor(TypeInfo(TsSkinName),     TsSkinManager,  'SkinName',      TsSkinNameProperty);
   RegisterPropertyEditor(TypeInfo(TsDirectory),    TsSkinManager,  'SkinDirectory', TsDirProperty);
   RegisterPropertyEditor(TypeInfo(TsStoredSkins),  TsSkinManager,  'InternalSkins', TsInternalSkinsProperty);
-  RegisterPropertyEditor(TypeInfo(ThirdPartyList), TsSkinManager,  'ThirdParty',    TacThirdPartyProperty);
-  RegisterPropertyEditor(TypeInfo(ThirdPartyList), TsSkinProvider, 'ThirdParty',    TacThirdPartyProperty);
+  RegisterPropertyEditor(TypeInfo(TsThirdPartyList), TsSkinManager,  'ThirdParty',    TacThirdPartyProperty);
+  RegisterPropertyEditor(TypeInfo(TsThirdPartyList), TsSkinProvider, 'ThirdParty',    TacThirdPartyProperty);
   RegisterPropertyEditor(TypeInfo(TacSkinInfo),    TsSkinManager,  'SkinInfo',      TacSkinInfoProperty);
 
 
@@ -309,6 +309,8 @@ begin
   RegisterPropertyEditor(TypeInfo(Integer), TsSpeedButton, 'ImageIndexPressed',  TacImageIndexEditor);
   RegisterPropertyEditor(TypeInfo(Integer), TsSpeedButton, 'ImageIndexDisabled', TacImageIndexEditor);
   RegisterPropertyEditor(TypeInfo(Integer), TsSpeedButton, 'ImageIndexSelected', TacImageIndexEditor);
+
+  RegisterPropertyEditor(TypeInfo(Integer), TsGroupBox,     'ImageIndex', TacImageIndexEditor);
 
   RegisterPropertyEditor(TypeInfo(Integer), TsBitBtn,              'ImageIndex',   TacImageIndexEditor);
   RegisterPropertyEditor(TypeInfo(TacStrValue), TsAlphaHints,      'TemplateName', TacTemplateNameProperty);

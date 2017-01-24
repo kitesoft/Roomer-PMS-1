@@ -1,7 +1,7 @@
 unit sDBLookupComboBox;
 {$I sDefs.inc}
 //{$DEFINE LOGGED}
-//+
+
 interface
 
 uses
@@ -358,59 +358,64 @@ begin
 {$IFDEF LOGGED}
   AddToLog(Message);
 {$ENDIF}
-  if Message.Msg = SM_ALPHACMD then
-    case Message.WParamHi of
-      AC_CTRLHANDLED: begin
-        Message.Result := 1;
-        Exit;
-      end;
-
-      AC_REMOVESKIN: begin
-        CommonWndProc(Message, FCommonData);
-        Color := clWindow;
-        if lBoxHandle <> 0 then begin
-          SetWindowLong(lBoxHandle, GWL_STYLE, GetWindowLong(lBoxHandle, GWL_STYLE) and not WS_THICKFRAME or WS_BORDER);
-          UninitializeACScroll(lBoxHandle, True, False, ListSW);
-          lBoxHandle := 0;
+  case Message.Msg of
+    SM_ALPHACMD:
+      case Message.WParamHi of
+        AC_CTRLHANDLED: begin
+          Message.Result := 1;
+          Exit;
         end;
-        Exit;
-      end;
 
-      AC_REFRESH: begin
-        CommonWndProc(Message, FCommonData);
-        if FCommonData.Skinned then begin
-          if not FCommonData.CustomColor then
-            Color := FCommonData.SkinManager.gd[FCommonData.SkinIndex].Props[0].Color;
-
-          if not FCommonData.CustomFont then
-            Font.Color := FCommonData.SkinManager.gd[FCommonData.SkinIndex].Props[0].FontColor.Color;
+        AC_REMOVESKIN: begin
+          CommonWndProc(Message, FCommonData);
+          Color := clWindow;
+          if lBoxHandle <> 0 then begin
+            SetWindowLong(lBoxHandle, GWL_STYLE, GetWindowLong(lBoxHandle, GWL_STYLE) and not WS_THICKFRAME or WS_BORDER);
+            UninitializeACScroll(lBoxHandle, True, False, ListSW);
+            lBoxHandle := 0;
+          end;
+          Exit;
         end;
-        Repaint;
-        Exit;
-      end;
 
-      AC_SETNEWSKIN: begin
-        CommonWndProc(Message, FCommonData);
-        Exit;
-      end;
+        AC_REFRESH: begin
+          CommonWndProc(Message, FCommonData);
+          if FCommonData.Skinned then begin
+            if not FCommonData.CustomColor then
+              Color := FCommonData.SkinManager.gd[FCommonData.SkinIndex].Props[0].Color;
 
-      AC_DROPPEDDOWN:
-        Message.WParamLo := integer(ListVisible);
-
-      AC_ENDPARENTUPDATE:
-        if FCommonData.Updating then begin
-          FCommonData.FUpdating := False;
+            if not FCommonData.CustomFont then
+              Font.Color := FCommonData.SkinManager.gd[FCommonData.SkinIndex].Props[0].FontColor.Color;
+          end;
           Repaint;
           Exit;
         end;
 
-      AC_GETDEFINDEX: begin
-        if FCommonData.SkinManager <> nil then
-          Message.Result := FCommonData.SkinManager.ConstData.Sections[ssComboBox] + 1;
+        AC_SETNEWSKIN: begin
+          CommonWndProc(Message, FCommonData);
+          Exit;
+        end;
 
-        Exit;
+        AC_DROPPEDDOWN:
+          Message.WParamLo := integer(ListVisible);
+
+        AC_ENDPARENTUPDATE:
+          if FCommonData.Updating then begin
+            FCommonData.FUpdating := False;
+            Repaint;
+            Exit;
+          end;
+
+        AC_GETDEFINDEX: begin
+          if FCommonData.SkinManager <> nil then
+            Message.Result := FCommonData.SkinManager.ConstData.Sections[ssComboBox] + 1;
+
+          Exit;
+        end;
       end;
-    end;
+
+    WM_MOUSEWHEEL:
+      Perform(WM_KEYDOWN, iff(Integer(Message.WParam) < 0, VK_DOWN, VK_UP), 0);
+  end;
 
   if not ControlIsReady(Self) or not FCommonData.Skinned then
     inherited
@@ -428,9 +433,6 @@ begin
 
           Exit;
         end;
-
-      WM_MOUSEWHEEL:
-        Perform(WM_KEYDOWN, iff(Integer(Message.WParam) < 0, VK_DOWN, VK_UP), 0);
 
       WM_KILLFOCUS, CM_EXIT: begin
         FCommonData.FFocused := False;

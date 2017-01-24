@@ -1,11 +1,11 @@
 unit sGroupBox;
 {$I sDefs.inc}
 //{$DEFINE LOGGED}
-//+
+
 interface
 
 uses
-  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, StdCtrls,
+  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, StdCtrls, ImgList,
   {$IFNDEF DELPHI5} Types, {$ENDIF}
   {$IFDEF TNTUNICODE} TntGraphics, TntControls, TntActnList, TntClasses, TntSysUtils, TntForms, TntStdCtrls, {$ENDIF}
   sCommonData, sRadioButton, sConst;
@@ -26,7 +26,7 @@ type
     FBottom: TacIntProperty;
 
     FControl: TControl;
-    procedure SetMargin(Index: Integer; Value: TacIntProperty);
+    procedure SetMargin(const Index: Integer; Value: TacIntProperty);
   public
     constructor Create(Control: TControl);
     procedure Invalidate;
@@ -50,61 +50,81 @@ type
     FChecked,
     FCheckBoxVisible: boolean;
 
-    FCaptionLayout: TsCaptionLayout;
+    FImageIndex,
     FCaptionYOffset: integer;
+
+    FCaptionMargin: TsMargin;
     FCommonData: TsCommonData;
     FCaptionSkin: TsSkinSection;
-    FCaptionMargin: TsMargin;
     FCaptionWidth: TacIntProperty;
+    FCaptionLayout: TsCaptionLayout;
 
     FOnCheckBoxChanged: TNotifyEvent;
+    FImageChangeLink: TChangeLink;
+    FImages: TCustomImageList;
     procedure WMFontChanged   (var Message: TMessage); message CM_FONTCHANGED;
     procedure CMEnabledChanged(var Message: TMessage); message CM_ENABLEDCHANGED;
-    procedure SetCaptionLayout  (const Value: TsCaptionLayout);
-    procedure SetCaptionYOffset (const Value: integer);
-    procedure SetCaptionSkin    (const Value: TsSkinSection);
-    procedure SetCaptionWidth   (const Value: TacIntProperty);
-    procedure SetCheckBoxVisible(const Value: boolean);
-    procedure SetChecked        (const Value: boolean);
+    procedure SetCaptionLayout(const Value: TsCaptionLayout);
+    procedure SetCaptionSkin  (const Value: TsSkinSection);
+    procedure SetCaptionWidth (const Value: TacIntProperty);
+    procedure SetImages       (const Value: TCustomImageList);
+
+    procedure SetInteger(const Index: Integer; const Value: integer); virtual;
+    procedure SetBoolean(const Index: Integer; const Value: boolean); virtual;
   protected
     CheckHot,
     CheckPressed: boolean;
+
+    TopRect,
+    TextRect,
+    GlyphRect,
+    CheckBoxRect: TRect;
+
+    TextIndex: integer;
+
+    procedure ImageListChange(Sender: TObject);
     procedure AdjustClientRect(var Rect: TRect); override;
     procedure WndProc(var Message: TMessage); override;
     function CheckBoxHeight: integer;
     function CheckBoxWidth: integer;
     function TextHeight: integer;
     function MouseInCheckBox: boolean;
-    function CheckBoxRect: TRect;
     function CheckBoxIndex: integer;
     procedure PaintCheckBoxSkin(Bmp: TBitmap; R: TRect; State: integer);
     procedure PaintCheckBoxStd (DC:  hdc;     R: TRect; State: integer);
     procedure RepaintCheckBox(State: integer; DoAnimation: boolean = False);
+    procedure Notification(AComponent: TComponent; Operation: TOperation); override;
   public
+    CaptionHeight: integer;
+    CaptionRect: TRect;
     procedure AfterConstruction; override;
     procedure Loaded; override;
-    function CaptionRect: TRect;
-    function CaptionHeight: integer;
+    procedure InitPaintData;
+    function ImageExists: boolean;
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
     procedure Paint; override;
     procedure PaintToDC(DC: hdc);
     function PrepareCache: boolean;
     procedure PaintCaptionArea(cRect: TRect; CI: TCacheInfo; AState: integer);
-    procedure WriteText(R: TRect; CI: TCacheInfo);
+    procedure WriteText(R: TRect);
   published
 {$ENDIF} // NOTFORHELP
     property CaptionLayout: TsCaptionLayout read FCaptionLayout write SetCaptionLayout default clTopLeft;
     property CaptionMargin: TsMargin read FCaptionMargin write FCaptionMargin;
-    property CaptionYOffset: integer read FCaptionYOffset write SetCaptionYOffset default 0;
     property SkinData: TsCommonData read FCommonData write FCommonData;
     property CaptionSkin: TsSkinSection read FCaptionSkin write SetCaptionSkin;
     property CaptionWidth: TacIntProperty read FCaptionWidth write SetCaptionWidth default 0;
+    property Images: TCustomImageList read FImages write SetImages;
+
+    property CaptionYOffset: integer index 0 read FCaptionYOffset write SetInteger default 0;
+    property ImageIndex:     integer index 1 read FImageIndex     write SetInteger default -1;
+
+    property CheckBoxVisible: boolean index 0 read FCheckBoxVisible write SetBoolean default False;
+    property Checked:         boolean index 1 read FChecked         write SetBoolean default False;
 {$IFDEF D2010}
     property Touch;
 {$ENDIF}
-    property CheckBoxVisible: boolean read FCheckBoxVisible write SetCheckBoxVisible default False;
-    property Checked: boolean read FChecked write SetChecked default False;
     property OnCheckBoxChanged: TNotifyEvent read FOnCheckBoxChanged write FOnCheckBoxChanged;
     property OnKeyDown;
     property OnKeyPress;
@@ -133,31 +153,30 @@ type
     procedure ButtonClick(Sender: TObject);
     procedure ItemsChange(Sender: TObject);
     procedure SetButtonCount(Value: Integer);
-    procedure SetColumns(Value: Integer);
-    procedure SetItemIndex(Value: Integer);
     procedure UpdateButtons;
     procedure WMSize          (var Message: TWMSize);  message WM_SIZE;
     procedure CMFontChanged   (var Message: TMessage); message CM_FONTCHANGED;
     procedure CMEnabledChanged(var Message: TMessage); message CM_ENABLEDCHANGED;
     function GetButtons(Index: Integer): TsRadioButton;
     procedure SetItems(Value: {$IFDEF TNTUNICODE}TTntStrings);{$ELSE}TStrings);{$ENDIF}
+    procedure SetInteger(const Index: integer; const Value: integer); override;
   protected
     procedure ReadState(Reader: TReader); override;
     procedure WndProc(var Message: TMessage); override;
   public
     FButtons: TList;
     procedure Loaded; override;
-    function CanModify(NewIndex: integer): Boolean; virtual;
+    function CanModify(NewIndex: integer): boolean; virtual;
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
-    procedure FlipChildren(AllLevels: Boolean); override;
+    procedure FlipChildren(AllLevels: boolean); override;
     procedure GetChildren(Proc: TGetChildProc; Root: TComponent); override;
     property Buttons[Index: Integer]: TsRadioButton read GetButtons;
   published
     property AnimatEvents: TacAnimatEvents read FAnimatEvents write FAnimatEvents default [aeGlobalDef];
 {$ENDIF} // NOTFORHELP
-    property Columns: Integer read FColumns write SetColumns default 1;
-    property ItemIndex: Integer read FItemIndex write SetItemIndex default -1;
+    property Columns:   integer index 10 read FColumns   write SetInteger default 1;
+    property ItemIndex: integer index 11 read FItemIndex write SetInteger default -1;
 {$IFDEF TNTUNICODE}
     property Items: TTntStrings read FItems write SetItems;
 {$ELSE}
@@ -177,10 +196,11 @@ uses
   {$IFDEF LOGGED}sDebugMsgs, {$ENDIF}
   {$IFDEF DELPHI7UP}Themes, {$ENDIF}
   acntUtils, sStyleSimply, sMessages, sVCLUtils, sGraphUtils, sSkinProps, sSkinManager, sAlphaGraph,
-  sDefaults, sMaskData, acThdTimer;
+  acntTypes, sDefaults, sMaskData, acThdTimer, sThirdParty, acAlphaImageList;
+
 
 const
-  CheckIndent = 2;
+  xOffset = 6;
 
 
 function UpdateCheckBox_CB(Data: TObject; iIteration: integer): boolean;
@@ -251,81 +271,6 @@ begin
 end;
 
 
-function TsGroupBox.CaptionHeight: integer;
-begin
-  Result := TextHeight + FCaptionYOffset + FCaptionMargin.Top + FCaptionMargin.Bottom;
-end;
-
-
-function TsGroupBox.CaptionRect: TRect;
-const
-  xOffset = 6;
-var
-  Margin, aTextWidth: integer;
-  aRect: TRect;
-begin
-  aRect.Top := 0;
-  aRect.Bottom := aRect.Top + CaptionHeight;
-  if FCaptionYOffset < 0 then
-    inc(aRect.Top, FCaptionYOffset);
-
-  Margin := FCaptionMargin.Left + FCaptionMargin.Right;
-  if CaptionWidth = 0 then begin
-    aTextWidth := acTextWidth(FCommonData.FCacheBmp.Canvas, Caption);
-    if FCaptionLayout = clTopCenter then
-      aRect.Left := (Width - aTextWidth - Margin - xOffset) div 2
-    else
-      if ((FCaptionLayout = clTopLeft) and not UseRightToLeftAlignment) or ((FCaptionLayout = clTopRight) and UseRightToLeftAlignment) then
-        aRect.Left := xOffset
-      else
-        aRect.Left := Width - aTextWidth - 2 * Margin - xOffset;
-
-    if aRect.Left < 0 then
-      aRect.Left := 0;
-
-    aRect.Right := aRect.Left + aTextWidth + 2 * Margin;
-    if aRect.Right > Width then
-      aRect.Right := Width;
-
-    if WidthOf(aRect) < 2 * BevelWidth then begin
-      aRect.Left := aRect.Left - BevelWidth;
-      aRect.Right := aRect.Right + BevelWidth;
-    end;
-  end
-  else begin
-    aTextWidth := CaptionWidth;
-    if FCaptionLayout = clTopCenter then
-      aRect.Left := (Width - aTextWidth - xOffset) div 2
-    else
-      if ((FCaptionLayout = clTopLeft) and not UseRightToLeftAlignment) or ((FCaptionLayout = clTopRight) and UseRightToLeftAlignment) then
-        aRect.Left := xOffset + FCaptionmargin.Left
-      else
-        aRect.Left := Width - aTextWidth - xOffset - FCaptionMargin.Right;
-
-    if aRect.Left < 0 then
-      aRect.Left := 0;
-
-    aRect.Right := aRect.Left + aTextWidth + FCaptionMargin.Left;
-    if aRect.Right > Width then
-      aRect.Right := Width;
-
-    if WidthOf(aRect) < 2 * BevelWidth then begin
-      aRect.Left := aRect.Left - BevelWidth;
-      aRect.Right := aRect.Right + BevelWidth;
-    end;
-  end;
-  Result := aRect;
-  if CheckBoxVisible then
-    if BidiMode = bdLeftToRight then begin
-      if CaptionLayout = clTopLeft then
-        OffsetRect(Result, CheckBoxWidth + CheckIndent, 0);
-    end
-    else
-      if CaptionLayout = clTopRight then
-        OffsetRect(Result, - CheckBoxWidth - CheckIndent, 0);
-end;
-
-
 function TsGroupBox.CheckBoxHeight: integer;
 var
   GlyphNdx: integer;
@@ -355,28 +300,6 @@ begin
 end;
 
 
-function TsGroupBox.CheckBoxRect: TRect;
-var
-  R: TRect;
-begin
-  if FCheckBoxVisible then begin
-    R := CaptionRect;
-    Result.Top := max(0, (HeightOf(R) - CheckBoxHeight) div 2);
-    Result.Bottom := Result.Top + CheckBoxHeight;
-    if BiDiMode = bdLeftToRight then begin
-      Result.Right := R.Left - CheckIndent;
-      Result.Left := Result.Right - CheckBoxWidth;
-    end
-    else begin
-      Result.Left := R.Right + CheckIndent;
-      Result.Right := Result.Left + CheckBoxWidth;
-    end;
-  end
-  else
-    Result := MkRect;
-end;
-
-
 function TsGroupBox.CheckBoxWidth: integer;
 var
   GlyphNdx: integer;
@@ -403,11 +326,14 @@ begin
   FCommonData := TsCommonData.Create(Self, True);
   FCommonData.COC := COC_TsGroupBox;
   inherited Create(AOwner);
+  FImageChangeLink := TChangeLink.Create;
+  FImageChangeLink.OnChange := ImageListChange;
   FCaptionLayout := clTopLeft;
   FCaptionYOffset := 0;
   FCaptionMargin := TsMargin.Create(Self);
   FCaptionWidth := 0;
   FCheckBoxVisible := False;
+  FImageIndex := -1;
   FChecked := False;
   CheckPressed := False;
   CheckHot := False;
@@ -417,8 +343,156 @@ end;
 destructor TsGroupBox.Destroy;
 begin
   FreeAndNil(FCommonData);
+  FreeAndNil(FImageChangeLink);
   FCaptionMargin.Free;
   inherited Destroy;
+end;
+
+
+function TsGroupBox.ImageExists: boolean;
+begin
+  Result := (Images <> nil) and IsValidIndex(FImageIndex, Images.Count);
+end;
+
+
+procedure TsGroupBox.ImageListChange(Sender: TObject);
+begin
+  FCommonData.Invalidate;
+end;
+
+
+procedure TsGroupBox.InitPaintData;
+var
+  iImgWidth,
+  iImgHeight,
+  iTextWidth,
+  iCheckWidth,
+  iCheckHeight,
+  iContentWidth: integer;
+begin
+  InitCacheBmp(SkinData);
+
+  iImgHeight := GetImageHeight(Images);
+  iImgWidth := GetImageWidth(Images);
+
+  CaptionHeight := TextHeight + FCaptionYOffset;
+  if ImageExists then
+    CaptionHeight := max(CaptionHeight, iImgHeight);
+
+  CaptionRect.Top := FCaptionMargin.Top;
+  CaptionRect.Bottom := CaptionRect.Top + CaptionHeight;
+
+  if FCaptionYOffset < 0 then
+    inc(CaptionRect.Top, FCaptionYOffset);
+
+  iTextWidth := acTextWidth(FCommonData.FCacheBmp.Canvas, Caption);
+  if CaptionWidth = 0 then
+    if ImageExists then
+      iContentWidth := iTextWidth + iImgWidth + acSpacing
+    else
+      iContentWidth := iTextWidth
+  else
+    iContentWidth := CaptionWidth;
+
+  if FCheckBoxVisible then begin
+    iCheckWidth := CheckBoxWidth;
+    iCheckHeight := CheckBoxHeight;
+    inc(iContentWidth, iCheckWidth + acSpacing);
+    CaptionHeight := max(CaptionHeight, iCheckHeight);
+  end
+  else begin
+    iCheckWidth := 0;
+    iCheckHeight := 0;
+  end;
+
+  if FCaptionLayout = clTopCenter then
+    CaptionRect.Left := (Width - iContentWidth) div 2
+  else
+    if (FCaptionLayout = clTopLeft) and not UseRightToLeftAlignment or (FCaptionLayout = clTopRight) and UseRightToLeftAlignment then
+      CaptionRect.Left := xOffset + FCaptionMargin.Left
+    else
+      CaptionRect.Left := Width - iContentWidth - FCaptionMargin.Right - xOffset;
+
+  if CaptionRect.Left < 0 then
+    CaptionRect.Left := 0;
+
+  CaptionRect.Right := CaptionRect.Left + iContentWidth;
+
+  if CaptionRect.Right >= Width then
+    CaptionRect.Right := Width - 1;
+
+  if iContentWidth < 2 * BevelWidth then begin
+    CaptionRect.Left := CaptionRect.Left - BevelWidth;
+    CaptionRect.Right := CaptionRect.Right + BevelWidth;
+  end;
+
+  if BiDiMode = bdLeftToRight then begin
+    if CheckBoxVisible then begin
+      CheckBoxRect.Left := CaptionRect.Left;
+      CheckBoxRect.Right := CheckBoxRect.Left + iCheckWidth;
+      if ImageExists then begin
+        GlyphRect.Left := CheckBoxRect.Right + acSpacing;
+        GlyphRect.Right := GlyphRect.Left + iImgWidth
+      end
+      else begin
+        GlyphRect.Left := CheckBoxRect.Right;
+        GlyphRect.Right := GlyphRect.Left;
+      end;
+      TextRect.Left := GlyphRect.Right + acSpacing;
+    end
+    else begin
+      CheckBoxRect := Rect(CaptionRect.Left, 0, CaptionRect.Left, 0);
+      GlyphRect.Left := CheckBoxRect.Right;
+      if ImageExists then begin
+        GlyphRect.Right := GlyphRect.Left + iImgWidth;
+        TextRect.Left := GlyphRect.Right + acSpacing;
+      end
+      else begin
+        GlyphRect.Right := GlyphRect.Left;
+        TextRect.Left := GlyphRect.Right;
+      end;
+    end;
+    TextRect.Right := TextRect.Left + iTextWidth;
+  end
+  else begin
+    if CheckBoxVisible then begin
+      CheckBoxRect.Right := CaptionRect.Right;
+      CheckBoxRect.Left := CheckBoxRect.Right - iCheckWidth;
+      if ImageExists then begin
+        GlyphRect.Right := CheckBoxRect.Left - acSpacing;
+        GlyphRect.Left := GlyphRect.Right - iImgWidth;
+      end
+      else begin
+        GlyphRect.Right := CheckBoxRect.Left;
+        GlyphRect.Left := CheckBoxRect.Right;
+      end;
+      TextRect.Right := GlyphRect.Left - acSpacing;
+    end
+    else begin
+      CheckBoxRect := Rect(CaptionRect.Right, 0, CaptionRect.Right, 0);
+      GlyphRect.Right := CheckBoxRect.Left;
+      if ImageExists then
+        GlyphRect.Left := GlyphRect.Right - iImgWidth
+      else
+        GlyphRect.Left := CheckBoxRect.Right;
+
+      TextRect.Right := GlyphRect.Left;
+    end;
+    TextRect.Left := TextRect.Right - iTextWidth;
+  end;
+
+  if CheckBoxVisible then begin
+    CheckBoxRect.Top := CaptionRect.Top + (CaptionHeight - iCheckHeight) div 2;
+    CheckBoxRect.Bottom := CheckBoxRect.Top + iCheckHeight;
+  end;
+  if ImageExists then begin
+    GlyphRect.Top := CaptionRect.Top + (CaptionHeight - iImgHeight) div 2;
+    GlyphRect.Bottom := CaptionRect.Top + iCheckHeight;
+  end;
+  TextRect.Top := CaptionRect.Top + (CaptionHeight - TextHeight) div 2;
+  TextRect.Bottom := TextRect.Top + TextHeight;
+
+  TopRect := Rect(0, 0, Width, CaptionHeight div 2 + FCaptionMargin.Top);
 end;
 
 
@@ -435,6 +509,14 @@ begin
 end;
 
 
+procedure TsGroupBox.Notification(AComponent: TComponent; Operation: TOperation);
+begin
+  inherited;
+  if (Operation = opRemove) and (AComponent = Images) then
+    Images := nil;
+end;
+
+
 procedure TsGroupBox.Paint;
 begin
   PaintToDC(Canvas.Handle)
@@ -444,12 +526,64 @@ end;
 procedure TsGroupBox.PaintCaptionArea(cRect: TRect; CI: TCacheInfo; AState: integer);
 var
   R: TRect;
+  C: TColor;
+  sIndex: integer;
+
+  function PaintCaptionBG: integer;
+  var
+    R: TRect;
+    Bmp: TBitmap;
+    LocalCI: TCacheInfo;
+  begin
+    if FCaptionSkin = '' then begin
+      LocalCI := CI;
+      Result := FCommonData.SkinManager.ConstData.Sections[ssTransparent];
+    end
+    else begin
+      LocalCI := MakeCacheInfo(FCommonData.FCacheBmp);
+      Result := FCommonData.SkinManager.GetSkinIndex(FCaptionSkin);
+    end;
+//    inc(LocalCI.X, CaptionMargin.Left);
+//    inc(LocalCI.Y, CaptionMargin.Top);
+    R.Left := CaptionRect.Left - CaptionMargin.Left;
+    R.Top := CaptionRect.Top - CaptionMargin.Top;
+    R.Right := CaptionRect.Right + CaptionMargin.Right;
+    R.Bottom := CaptionRect.Bottom + CaptionMargin.Bottom + 1;
+
+    Bmp := CreateBmp32(R);
+    Bmp.Canvas.Font.Assign(Font);
+    PaintItem(Result, LocalCI, True, integer(Focused or CheckHot), MkRect(Bmp), Point(Left + R.Left, Top + R.Top), Bmp, FCommonData.SkinManager);
+    BitBlt(FCommonData.FCacheBMP.Canvas.Handle, R.Left, R.Top, Bmp.Width, Bmp.Height, BMP.Canvas.Handle, 0, 0, SRCCOPY);
+    Bmp.Free;
+
+    if NeedParentFont(SkinData.SkinManager, Result, integer(CheckHot)) then
+      Result := GetFontIndex(Parent, Result, SkinData.SkinManager, integer(CheckHot));
+  end;
+
 begin
-  if Caption <> '' then
-    WriteText(cRect, CI);
+  TextIndex := PaintCaptionBG;
 
   if CheckBoxVisible then
     PaintCheckBoxSkin(FCommonData.FCacheBMP, CheckBoxRect, AState);
+
+  if ImageExists then
+    if (Images is TsAlphaImageList) and (SkinData.SkinManager <> nil) and SkinData.SkinManager.Effects.DiscoloredGlyphs then begin
+      sIndex := SkinData.SkinIndex;
+      if NeedParentFont(SkinData.SkinManager, sIndex, integer(CheckHot)) then
+        sIndex := GetFontIndex(Parent, sIndex, SkinData.SkinManager, integer(CheckHot));
+
+      if sIndex >= 0 then
+        C := SkinData.SkinManager.gd[sIndex].Props[0].Color
+      else
+        C := 0;
+
+      DrawAlphaImgList(Images, FCommonData.FCacheBMP, GlyphRect.Left, GlyphRect.Top, ImageIndex, 0, C, 0, 1, False)
+    end
+    else
+      Images.Draw(FCommonData.FCacheBMP.Canvas, GlyphRect.Left, GlyphRect.Top, ImageIndex, True);
+
+  if Caption <> '' then
+    WriteText(TextRect);
 
   if not Enabled then
     if CI.Ready then begin
@@ -499,13 +633,12 @@ var
     OuterRect: TRect;
     Box: TThemedButton;
     Details: TThemedElementDetails;
-    R: TRect;
   begin
     with Canvas do begin
       OuterRect := ClientRect;
-      OuterRect.Top := (CaptionRect.Bottom - CaptionRect.Top) div 2;
-      with CaptionRect do
-        ExcludeClipRect(Handle, Left, Top, Right, Bottom);
+      OuterRect.Top := CaptionMargin.Top + CaptionHeight div 2;
+//      with CaptionRect do
+//        ExcludeClipRect(Handle, Left, Top, Right, Bottom);
 
       if Enabled then
         Box := tbGroupBoxNormal
@@ -514,37 +647,28 @@ var
 
       Details := acThemeServices.GetElementDetails(Box);
       acThemeServices.DrawElement(Handle, Details, OuterRect);
+      FillDC(DC, Rect(CaptionRect.Left - CaptionMargin.Left,
+                                 CaptionRect.Top - CaptionMargin.Top,
+                                 CaptionRect.Right + CaptionMargin.Right,
+                                 CaptionRect.Bottom + CaptionMargin.Bottom), TacAccessControl(Parent).Color);
       SelectClipRgn(Handle, 0);
       if Text <> '' then begin
-        R := CaptionRect;
         SelectObject(DC, Font.Handle);
         SetTextColor(DC, ColorToRGB(Font.Color));
         SetBkMode(DC, TRANSPARENT);
-        acDrawText(DC, Text, R, DrawTextBiDiModeFlags(DT_SINGLELINE or DT_CENTER));
+        acDrawText(DC, Text, Self.TextRect, DrawTextBiDiModeFlags(DT_SINGLELINE or DT_CENTER));
       end;
-(*
-{$IFDEF DELPHI_XE2}
-      begin
-        R := CaptionRect;
-        acThemeServices.DrawText(Handle, Details, Caption, R, [tfLeft]);
-      end
-{$ELSE}
-        acThemeServices.DrawText(Handle, Details, Caption, CaptionRect, DT_LEFT, 0);
-{$ENDIF}
-*)
     end;
   end;
 {$ENDIF}
 
   procedure PaintGroupBox;
   var
-    H: Integer;
     R: TRect;
     Flags: Cardinal;
   begin
     with Canvas do begin
-      H := acTextHeight(Canvas, ZeroChar);
-      R := Rect(0, H div 2 - 1, Width, Height);
+      R := Rect(0, CaptionMargin.Top + CaptionHeight div 2 - 1, Width, Height);
       if Ctl3D then begin
         Inc(R.Left);
         Inc(R.Top);
@@ -557,12 +681,16 @@ var
         Brush.Color := clWindowFrame;
 
       FrameRect(R);
+
+      FillDC(Canvas.Handle, Rect(CaptionRect.Left - CaptionMargin.Left,
+                                 CaptionRect.Top - CaptionMargin.Top,
+                                 CaptionRect.Right + CaptionMargin.Right,
+                                 CaptionRect.Bottom + CaptionMargin.Bottom), TacAccessControl(Parent).Color);
+
       if Caption <> '' then begin
-        R := CaptionRect;
         Flags := DrawTextBiDiModeFlags(DT_SINGLELINE);
-        acDrawText(Handle, PacChar(Caption), R, Flags or DT_CALCRECT);
         Brush.Color := Color;
-        acDrawText(Handle, PacChar(Caption), R, Flags);
+        acDrawText(Handle, PacChar(Caption), Self.TextRect, Flags);
       end;
     end;
   end;
@@ -590,7 +718,8 @@ begin
         end;
   end
   else begin
-    Canvas.Font := Self.Font;
+    Canvas.Font.Assign(Self.Font);
+    InitPaintData;
 {$IFDEF DELPHI7UP}
     if acThemesEnabled then
       PaintThemedGroupBox
@@ -600,40 +729,35 @@ begin
 
     if CheckBoxVisible then
       PaintCheckBoxStd(DC, CheckBoxRect, integer(CheckHot));
+
+    if ImageExists then
+      Images.Draw(Canvas, GlyphRect.Left, GlyphRect.Top, ImageIndex, True);
   end
 end;
 
 
 function TsGroupBox.PrepareCache: boolean;
 var
-  cRect, aRect: TRect;
   CI: TCacheInfo;
   BG: TacBGInfo;
 begin
-  InitCacheBmp(SkinData);
   GetBGInfo(@BG, Parent);
   if BG.BgType = btNotReady then begin
     Result := False;
-    SkinData.FUpdating := True;
+    SkinData.Updating := True;
   end
   else begin
+    InitPaintData;
     CI := BGInfoToCI(@BG);
-    aRect := MkRect(Width, Height);
-    cRect := CaptionRect;
     // Caption BG painting
     if CI.Ready then
-      BitBlt(FCommonData.FCacheBmp.Canvas.Handle, aRect.Left, aRect.Top, Width, HeightOf(cRect), CI.Bmp.Canvas.Handle, Left + CI.X, Top + CI.Y, SRCCOPY)
+      BitBlt(FCommonData.FCacheBmp.Canvas.Handle, TopRect.Left, TopRect.Top, Width, TopRect.Bottom, CI.Bmp.Canvas.Handle, Left + CI.X, Top + CI.Y, SRCCOPY)
     else
       if Parent <> nil then
-        FillDC(FCommonData.FCacheBmp.Canvas.Handle, MkRect(Width, cRect.Bottom), CI.FillColor);
+        FillDC(FCommonData.FCacheBmp.Canvas.Handle, TopRect, CI.FillColor);
 
-    if FCaptionYOffset < 0 then
-      aRect.Top := 0
-    else
-      aRect.Top := HeightOf(cRect) div 2;
-
-    PaintItem(FCommonData, CI, False, 0, Rect(0, aRect.Top, Width, Height), Point(Left, Top + aRect.Top), FCommonData.FCacheBMP, True);
-    PaintCaptionArea(cRect, CI, 0);
+    PaintItem(FCommonData, CI, False, 0, Rect(0, TopRect.Bottom, Width, Height), Point(Left, Top + TopRect.Bottom), FCommonData.FCacheBMP, True);
+    PaintCaptionArea(CaptionRect, CI, 0);
     SkinData.PaintOuterEffects(Self, MkPoint);
     FCommonData.BGChanged := False;
     Result := True;
@@ -644,16 +768,17 @@ end;
 procedure TsGroupBox.RepaintCheckBox(State: integer; DoAnimation: boolean = False);
 var
   DC: hdc;
-  cRect, R: TRect;
+  cRect: TRect;
   i: integer;
 begin
-  if SkinData.Skinned then
+  if SkinData.Skinned then begin
+    cRect := CaptionRect;
+    cRect.Bottom := CaptionRect.Bottom + 1;
     if DoAnimation and SkinData.SkinManager.Effects.AllowAnimation and (State <> 2) then begin
       i := GetNewTimer(SkinData.AnimTimer, SkinData.FOwnerControl, State);
       if (SkinData.AnimTimer.State >= 0) and (State = SkinData.AnimTimer.State) then // Started already
         Exit;
 
-      cRect := SumRects(CaptionRect, CheckBoxRect);
       if SkinData.AnimTimer.BmpFrom <> nil then
         FreeAndNil(SkinData.AnimTimer.BmpFrom);
 
@@ -668,21 +793,37 @@ begin
 
       DC := GetDC(Handle);
       try
-        R := CheckBoxRect;
-        if SkinData.Skinned then begin
-          cRect := CaptionRect;
-          PaintCaptionArea(cRect, GetParentCache(SkinData), State);
-          cRect := SumRects(CaptionRect, R);
-          BitBlt(DC, cRect.Left, cRect.Top, WidthOf(cRect), HeightOf(cRect), SkinData.FCacheBmp.Canvas.Handle, cRect.Left, cRect.Top, SRCCOPY);
-        end
-        else
-          PaintCheckBoxStd(DC, R, State);
+        PaintCaptionArea(cRect, GetParentCache(SkinData), State);
+        BitBlt(DC, cRect.Left, cRect.Top, WidthOf(cRect), HeightOf(cRect), SkinData.FCacheBmp.Canvas.Handle, cRect.Left, cRect.Top, SRCCOPY);
       finally
         ReleaseDC(Handle, DC);
       end;
     end
+  end
   else
-    Repaint;
+    InvalidateRect(Handle, @CaptionRect, False);
+end;
+
+
+procedure TsGroupBox.SetBoolean(const Index: Integer; const Value: boolean);
+begin
+  case Index of
+    0: if FCheckBoxVisible <> Value then begin
+      FCheckBoxVisible := Value;
+      FCommonData.Invalidate;
+    end;
+
+    1: if FChecked <> Value then begin
+      FChecked := Value;
+      if not (csLoading in ComponentState) then begin
+        if not CheckPressed then
+          FCommonData.Invalidate;
+
+        if Assigned(OnCheckBoxChanged) then
+          OnCheckBoxChanged(Self);
+      end;
+    end;
+  end;
 end;
 
 
@@ -714,36 +855,37 @@ begin
 end;
 
 
-procedure TsGroupBox.SetCaptionYOffset(const Value: integer);
+procedure TsGroupBox.SetImages(const Value: TCustomImageList);
 begin
-  if FCaptionYOffset <> Value then begin
-    FCaptionYOffset := Value;
-    SkinData.Invalidate;
-  end;
-end;
+  if Images <> Value then begin
+    if Images <> nil then
+      Images.UnRegisterChanges(FImageChangeLink);
 
-
-procedure TsGroupBox.SetCheckBoxVisible(const Value: boolean);
-begin
-  if FCheckBoxVisible <> Value then begin
-    FCheckBoxVisible := Value;
+    FImages := Value;
+    if Images <> nil then begin
+      Images.RegisterChanges(FImageChangeLink);
+      Images.FreeNotification(Self);
+    end;
     FCommonData.Invalidate;
   end;
 end;
 
-procedure TsGroupBox.SetChecked(const Value: boolean);
-begin
-  if FChecked <> Value then begin
-    FChecked := Value;
-    if not (csLoading in ComponentState) then begin
-      if not CheckPressed then
-        FCommonData.Invalidate;
 
-      if Assigned(OnCheckBoxChanged) then
-        OnCheckBoxChanged(Self);
+procedure TsGroupBox.SetInteger(const Index, Value: integer);
+begin
+  case Index of
+    0: if FCaptionYOffset <> Value then begin
+      FCaptionYOffset := Value;
+      SkinData.Invalidate;
+    end;
+
+    1: if FImageIndex <> Value then begin
+      FImageIndex := Value;
+      SkinData.Invalidate;
     end;
   end;
 end;
+
 
 function TsGroupBox.TextHeight: integer;
 begin
@@ -818,8 +960,10 @@ begin
           PRect(Message.LParam)^ := MkRect(Width, Height);
           if FCaptionYOffset < 0 then
             PRect(Message.LParam)^.Top := 0
-          else
-            PRect(Message.LParam)^.Top := HeightOf(CaptionRect) div 2;
+          else begin
+            InitPaintData;
+            PRect(Message.LParam)^.Top := CaptionMargin.Top + CaptionHeight div 2;
+          end;
 
           OffsetRect(PRect(Message.LParam)^, Left, Top);
           Exit;
@@ -896,12 +1040,6 @@ begin
   else begin
     if Message.Msg = SM_ALPHACMD then
       case Message.WParamHi of
-{
-        AC_PREPARING: begin // Remove this case in the Beta
-          Message.Result := LRESULT(FCommonData.BGChanged or FCommonData.Updating);
-          Exit
-        end;
-}
         AC_ENDPARENTUPDATE: begin
           if FCommonData.FUpdating then begin
             if Showing and not InUpdating(FCommonData, True) then begin
@@ -999,76 +1137,19 @@ begin
 end;
 
 
-procedure TsGroupBox.WriteText(R: TRect; CI: TCacheInfo);
+procedure TsGroupBox.WriteText(R: TRect);
 var
-  sIndex: integer;
   Flags: Cardinal;
-  Bmp: TBitmap;
-  rText: TRect;
 begin
   Flags := DT_SINGLELINE or DT_VCENTER or iff((CaptionWidth = 0) or (CaptionLayout = clTopCenter), DT_CENTER, DT_END_ELLIPSIS);
   if UseRightToLeftReading then
     Flags := Flags or DT_RTLREADING;
 
-  if FCaptionSkin = '' then begin
-    CI := GetParentCache(FCommonData);
-    if CheckBoxVisible then begin
-      sIndex := SkinData.SkinManager.ConstData.Sections[ssCheckBox];
-      if BidiMode = bdLeftToRight then
-        R.Left := R.Left - CheckBoxWidth - CheckIndent - 2
-      else
-        R.Right := R.Right + CheckBoxWidth + CheckIndent + 2;
-    end
-    else
-      sIndex := SkinData.SkinManager.ConstData.Sections[ssTransparent];
-
-    if not CI.Ready then
-      FillDC(FCommonData.FCacheBmp.Canvas.Handle, R, CI.FillColor)
-    else
-      PaintItem(sIndex, CI, True, integer(Focused or CheckHot), R, Point(Left + R.Left, Top + R.Top), FCommonData.FCacheBmp, FCommonData.SkinManager);
-
-    if CheckBoxVisible then
-      if BidiMode = bdLeftToRight then
-        R.Left := R.Left + CheckBoxWidth + CheckIndent + 2
-      else
-        R.Left := R.Left - CheckBoxWidth - CheckIndent - 2;
-
-    inc(R.Left,    FCaptionMargin.Left);
-    inc(R.Top,     FCaptionMargin.Top);
-    inc(R.Right,  -FCaptionMargin.Right);
-    inc(R.Bottom, -FCaptionMargin.Bottom);
-    if {not CheckHot or }(sIndex < 0) then
-      sIndex := SkinData.SkinIndex;
-
-    if NeedParentFont(SkinData.SkinManager, sIndex, integer(CheckHot)) then begin
-      sIndex := GetFontIndex(Parent, sIndex, SkinData.SkinManager, integer(CheckHot));
-    end;
-
-    acWriteTextEx(FCommonData.FCacheBMP.Canvas, PacChar(Caption), True, R, Flags, sIndex, CheckHot, FCommonData.SkinManager);
-{
-    if CheckHot and (sIndex >= 0) then
-      acWriteTextEx(FCommonData.FCacheBMP.Canvas, PacChar(Caption), True, R, Flags, sIndex, CheckHot, FCommonData.SkinManager)
-    else
-      acWriteTextEx(FCommonData.FCacheBMP.Canvas, PacChar(Caption), True, R, Flags, SkinData, CheckHot, FCommonData.SkinManager);
-}
-  end
+  if not SkinData.CustomFont then
+    acWriteTextEx(FCommonData.FCacheBMP.Canvas, PacChar(Caption), True, TextRect, Flags, TextIndex, CheckHot, FCommonData.SkinManager)
   else begin
-    CI := MakeCacheInfo(FCommonData.FCacheBmp);
-    sIndex := FCommonData.SkinManager.GetSkinIndex(FCaptionSkin);
-
-    Bmp := CreateBmp32(R);
-    Bmp.Canvas.Font.Assign(Font);
-    PaintItem(sIndex, CI, True, integer(Focused or CheckHot), MkRect(Bmp), R.TopLeft, Bmp, FCommonData.SkinManager);
-
-    rText := Rect(FCaptionMargin.Left, FCaptionMargin.Top, Bmp.Width - FCaptionMargin.Right, Bmp.Height - FCaptionMargin.Bottom);
-    if not SkinData.CustomFont then
-      acWriteTextEx(BMP.Canvas, PacChar(Caption), True, rText, Flags, sIndex, CheckHot, FCommonData.SkinManager)
-    else begin
-      BMP.Canvas.Font.Assign(Font);
-      acWriteText(BMP.Canvas, PacChar(Caption), True, rText, Flags);
-    end;
-    BitBlt(FCommonData.FCacheBMP.Canvas.Handle, R.Left, R.Top, Bmp.Width, Bmp.Height, BMP.Canvas.Handle, 0, 0, SRCCOPY);
-    Bmp.Free;
+    FCommonData.FCacheBMP.Canvas.Font.Assign(Font);
+    acWriteText(FCommonData.FCacheBMP.Canvas, PacChar(Caption), True, TextRect, Flags);
   end;
 end;
 
@@ -1214,7 +1295,7 @@ begin
 end;
 
 
-function TsRadioGroup.CanModify(NewIndex: integer): Boolean;
+function TsRadioGroup.CanModify(NewIndex: integer): boolean;
 begin
   Result := True;
   if Assigned(FOnChanging) then
@@ -1338,44 +1419,55 @@ begin
 end;
 
 
-procedure TsRadioGroup.SetColumns(Value: Integer);
+procedure TsRadioGroup.SetInteger(const Index, Value: integer);
+var
+  i: integer;
 begin
-  if Value < 1 then
-    Value := 1
-  else
-    if Value > 16 then
-      Value := 16;
+  case Index of
+    10: begin
+      if Value < 1 then
+        i := 1
+      else
+        if Value > 16 then
+          i := 16
+        else
+          i := Value;
 
-  if FColumns <> Value then begin
-    FColumns := Value;
-    ArrangeButtons;
-    Invalidate;
-  end;
-end;
-
-
-procedure TsRadioGroup.SetItemIndex(Value: Integer);
-begin
-  if FReading then
-    FItemIndex := Value
-  else begin
-    if Value < -1 then
-      Value := -1
-    else
-      if Value >= FButtons.Count then
-        Value := FButtons.Count - 1;
-
-    if FItemIndex <> Value then begin
-      if FItemIndex >= 0 then
-        TsGroupButton(FButtons[FItemIndex]).Checked := False;
-
-      FItemIndex := Value;
-      if FItemIndex >= 0 then
-        TsGroupButton(FButtons[FItemIndex]).Checked := True;
-
-      if Assigned(FOnChange) then
-        FOnChange(Self);
+      if FColumns <> i then begin
+        FColumns := i;
+        ArrangeButtons;
+        Invalidate;
+      end;
     end;
+
+    11: begin
+      if FReading then
+        FItemIndex := Value
+      else begin
+        if Value < -1 then
+          i := -1
+        else
+          if Value >= FButtons.Count then
+            i := FButtons.Count - 1
+          else
+            i := Value;
+
+        if FItemIndex <> i then begin
+          if FItemIndex >= 0 then
+            TsGroupButton(FButtons[FItemIndex]).Checked := False;
+
+          FItemIndex := i;
+          if FItemIndex >= 0 then
+            TsGroupButton(FButtons[FItemIndex]).Checked := True;
+
+          if Assigned(FOnChange) then
+            FOnChange(Self);
+        end;
+      end;
+    end
+
+    else
+      inherited;
   end;
 end;
 
@@ -1440,7 +1532,7 @@ begin
 end;
 
 
-procedure TsMargin.SetMargin(Index: Integer; Value: TacIntProperty);
+procedure TsMargin.SetMargin(const Index: Integer; Value: TacIntProperty);
 begin
   case Index of
     0: if Value <> FLeft   then FLeft   := Value;

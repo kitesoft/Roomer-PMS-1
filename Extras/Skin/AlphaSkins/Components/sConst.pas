@@ -385,9 +385,9 @@ const
   HTCHILDMIN         = 103;
 
   acMultipNormal  = 2;
-  acMaxIterations = 10 {$IFDEF DEBUG} * 1 { Changing of animaton speed for tests } {$ENDIF};
-  acTimerInterval = 10;
-  acAnimationTime = acMaxIterations * acTimerInterval;
+  acMaxIterations = 6 {$IFDEF DEBUG} * 1 { Changing of animaton speed for tests } {$ENDIF};
+  acTimerInterval = 12;
+//  acAnimationTime = acMaxIterations * acTimerInterval;
 
   acImgTypes:  array [0..4]  of TacImgType = (itisaBorder, itisaTexture, itisaGlyph, itisaGlow, itisaPngGlyph);
   acFillModes: array [0..14] of TacFillMode = (fmTiled, fmStretched, fmTiledHorz, fmTiledVert, fmStretchHorzTop,
@@ -503,6 +503,7 @@ var
 {$ENDIF}
   acScrollBtnLength: integer = 16;
   acAddedTabSpacing: integer = 6;
+  acHtmlStdBreak: boolean = False;
   acSpacing: integer = 4;
 
   AppShowHint: boolean;
@@ -519,7 +520,7 @@ var
 
 
 type
-  TsCaptionLayout = (sclLeft, sclTopLeft, sclTopCenter, sclTopRight, sclLeftTop, sclBottomLeft, sclBottomCenter, sclBottomRight);
+  TsCaptionLayout = (sclLeft, sclTopLeft, sclTopCenter, sclTopRight, sclLeftTop, sclBottomLeft, sclBottomCenter, sclBottomRight, sclRight, sclRightTop);
 {$IFNDEF FPC}
   TDaysOfWeek = set of TCalDayOfWeek;         // Set of days of week
 {$ENDIF}
@@ -711,11 +712,7 @@ initialization
   FreeLibrary(Lib);
 
   acs_Calculator := 'Calculator';
-{
-  Lib := LoadLibrary('dinput.dll');
-  acLoadResStr(acs_Calculator, Lib, 673, s_Calculator);
-  FreeLibrary(Lib);
-}
+
   Lib := LoadLibrary('comdlg32.dll');
   acLoadResStr(acs_FileOpen,      Lib, 436,  s_FileOpen);
   acLoadResStr(acs_SelectDir,     Lib, 439,  s_SelectDir);
@@ -738,9 +735,6 @@ initialization
   acs_InvalidDate          := LoadStr(s_InvalidDate);
   acs_AvailSkins           := LoadStr(s_AvailSkins);
   acs_InternalSkin         := LoadStr(s_InternalSkin);
-
-//  acs_ErrorSettingCount    := LoadStr(s_ErrorSettingCount);
-//  acs_ListBoxMustBeVirtual := LoadStr(s_ListBoxMustBeVirtual);
 
   if acs_InvalidDate = '' then
     acs_InvalidDate := 'Invalid date';

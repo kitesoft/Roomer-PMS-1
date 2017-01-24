@@ -188,6 +188,7 @@ type
     procedure SetValue (NewValue: Extended);
     function CheckValue(NewValue: Extended): Extended;
     procedure CMExit      (var Message: TCMExit);       message CM_EXIT;
+    procedure WMSetText   (var Message: TMessage);      message WM_SETTEXT;
     procedure CMChanged   (var Message: TMessage);      message CM_CHANGED;
     procedure CMMouseWheel(var Message: TCMMouseWheel); message CM_MOUSEWHEEL;
     procedure WMPaste     (var Message: TWMPaste);      message WM_PASTE;
@@ -822,7 +823,6 @@ begin
   Loc.Bottom := ClientHeight + 1;  {+1 is workaround for windows paint bug}
   Loc.Right := ClientWidth - FButton.Width * Ord(FButton.Visible and ShowSpinButtons) + 1;
   SendMessage(Handle, EM_SETRECTNP, 0, LPARAM(@Loc));
-//  SendMessage(Handle, EM_GETRECT,   0, LPARAM(@Loc));  {debug}
 end;
 
 
@@ -958,14 +958,14 @@ begin
       if NewValue < FMinValue then
         Result := FMinValue
       else
-        if NewValue > FMaxValue then
+        if (NewValue > FMaxValue) and (FMaxValue <> 0) then
           Result := FMaxValue;
 
     if FMaxValue <> 0 then
       if NewValue > FMaxValue then
         Result := FMaxValue
       else
-        if NewValue < FMinValue then
+        if (NewValue < FMinValue) and (FMinValue <> 0) then
           Result := FMinValue
   end
   else
@@ -1023,18 +1023,6 @@ end;
 procedure TsSpinEdit.CMChanged(var Message: TMessage);
 begin
   inherited;
-//  if Value > MaxValue then
-//    Value := MaxValue;
-
-{  if not (csLoading in ComponentState) and not ValueChanging then begin
-    TextChanging := True;
-    if (Text = '') or (Text = CharMinus) or (Text = CharPlus) then
-      Value := 0
-    else
-      Value := StrToFloat(Text);
-
-    TextChanging := False;
-  end;}
 end;
 
 
@@ -1294,6 +1282,14 @@ begin
 end;
 
 
+procedure TsDecimalSpinEdit.WMSetText(var Message: TMessage);
+begin
+  inherited;
+  if Text = '' then
+    FValue := 0;
+end;
+
+
 destructor TsTimerSpeedButton.Destroy;
 begin
   if FRepeatTimer <> nil then
@@ -1495,8 +1491,8 @@ begin
     if SkinData.SkinIndex >= 0 then
       with SkinData, SkinManager.gd[SkinIndex] do
         if (CurrentState = 0) and (FOwner.FOwner <> nil) then
-          if FOwner.FOwner.FlatSpinButtons or NeedParentFont(SkinData, 0){(Props[0].Transparency = 100)} then
-            C := ColorToRGB({Props[0].FontColor.Color)//}FOwner.FOwner.Font.Color)
+          if FOwner.FOwner.FlatSpinButtons or NeedParentFont(SkinData, 0) then
+            C := ColorToRGB(FOwner.FOwner.Font.Color)
           else
             C := ColorToRGB(Props[0].FontColor.Color)
         else
@@ -1504,7 +1500,7 @@ begin
             if FOwner.FOwner.FlatSpinButtons or (Props[1].Transparency = 100) then
               C := ColorToRGB(Props[1].FontColor.Color)
             else
-              C := ColorToRGB(Props[0].FontColor.Color)//FOwner.FOwner.Font.Color
+              C := ColorToRGB(Props[0].FontColor.Color)
           else
             C := ColorToRGB(iff(Enabled, ColorToRGB(SkinManager.gd[FOwner.FOwner.SkinData.SkinIndex].Props[0].FontColor.Color), clGrayText))
     else

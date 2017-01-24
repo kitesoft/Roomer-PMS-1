@@ -1,6 +1,6 @@
 unit acAlphaImageList;
 {$I sDefs.inc}
-//+
+
 interface
 
 uses
@@ -205,7 +205,7 @@ implementation
 
 uses
   math, ShellAPI, Dialogs, ActiveX,
-  sAlphaGraph, sThirdParty, sSkinManager, sGraphUtils;
+  sAlphaGraph, sThirdParty, sSkinManager, sGraphUtils, acgpUtils;
 
 
 var
@@ -803,6 +803,7 @@ begin
           if (Items[Index].OrigWidth <> Image.Width) or (Items[Index].OrigHeight <> Image.Height) then begin // If must be scaled
             Image.PixelFormat := pf32bit;
             Stretch(Bmp, Image, Image.Width, Image.Height, ftMitchell);
+//            acgpStretchRect(Image, Bmp, 0, 0, Bmp.Width - 1, Bmp.Height - 1);
           end
           else
             Image.Assign(Bmp);
@@ -838,6 +839,7 @@ begin
             Bmp.LoadFromStream(Items[Index].ImgData);
             Image.PixelFormat := pf32bit;
             Stretch(Bmp, Image, Image.Width, Image.Height, ftMitchell);
+//            acgpStretchRect(Image, Bmp, 0, 0, Bmp.Width - 1, Bmp.Height - 1);
             FreeAndNil(Bmp);
           end
           else
@@ -937,6 +939,7 @@ begin
             Items[Index].ImgData.Seek(0, 0);
             LoadBmpFromPngStream(Bmp, Items[Index].ImgData);
             Stretch(Bmp, Result, aWidth, aHeight, ftMitchell);
+//            acgpStretchRect(Result, Bmp, 0, 0, Bmp.Width - 1, Bmp.Height - 1);
             FreeAndNil(Bmp);
           end
           else begin
@@ -975,6 +978,7 @@ begin
               CorrectPixelFrmt(Result);
             end;
             Stretch(Bmp, Result, aWidth, aHeight, ftMitchell);
+//            acgpStretchRect(Result, Bmp, 0, 0, Bmp.Width - 1, Bmp.Height - 1);
             FreeAndNil(Bmp);
           end
           else begin

@@ -1486,8 +1486,8 @@ end;
 procedure UpdateScrolls(const sw: TacScrollWnd; const Repaint: boolean = False);
 begin
   if sw <> nil then
-    if IsWindowVisible(sw.CtrlHandle) then
-      if (sw.SkinData = nil) or not sw.SkinData.FUpdating then
+    if (sw.SkinData = nil) or not sw.SkinData.FUpdating then
+      if IsWindowVisible(sw.CtrlHandle) then
         if (sw.sbarHorz <> nil) and (sw.sbarVert <> nil) then begin
           sw.sbarHorz.ScrollInfo.cbSize := SizeOf(TScrollInfo);
           sw.sbarHorz.ScrollInfo.fMask := SIF_ALL;
@@ -2932,10 +2932,16 @@ begin
             Result := HTSCROLL_THUMB
           else
             if (x >= R.Left + ButWidth) and (x < ThumbPos) then
-              Result := HTSCROLL_PAGELEFT
+              if GetAsyncKeyState(VK_SHIFT) < 0 then
+                Result := SB_THUMBPOSITION
+              else
+                Result := HTSCROLL_PAGELEFT
             else
               if (x >= ThumbPos + ThumbWidth) and (x < R.Right - ButWidth) then
-                Result := HTSCROLL_PAGERIGHT;
+                if GetAsyncKeyState(VK_SHIFT) < 0 then
+                  Result := SB_THUMBPOSITION
+                else
+                  Result := HTSCROLL_PAGERIGHT;
   end;
 end;
 
@@ -2966,10 +2972,16 @@ begin
             Result := HTSCROLL_THUMB
           else
             if (y >= R.Top + butHeight) and (y < thumbpos) then
-              Result := HTSCROLL_PAGELEFT
+              if GetAsyncKeyState(VK_SHIFT) < 0 then
+                Result := SB_THUMBPOSITION
+              else
+                Result := HTSCROLL_PAGELEFT
             else
               if (y >= thumbpos + thumbHeight) and (y < R.Bottom - butHeight) then
-                Result := HTSCROLL_PAGERIGHT;
+                if GetAsyncKeyState(VK_SHIFT) < 0 then
+                  Result := SB_THUMBPOSITION
+                else
+                  Result := HTSCROLL_PAGERIGHT;
   end;
 end;
 
@@ -3118,18 +3130,16 @@ const
 begin
   // Install a timer for the mouse-over events, if the mouse moves over one of the scrollbars
   hwndCurSB := Handle;
-  if wHitTest in [HTHSCROLL, HTVSCROLL] then begin
-    if uMouseOverScrollbar = SBTypes[wHitTest] then begin
-      Result := sw.CallPrevWndProc(Handle, WM_NCMOUSEMOVE, wHitTest, LParam);
-      Exit;
+  if wHitTest in [HTHSCROLL, HTVSCROLL] then
+    if uMouseOverScrollbar <> SBTypes[wHitTest] then begin
+      uLastHitTestPortion := HTSCROLL_NONE;
+      uHitTestPortion := HTSCROLL_NONE;
+      GetScrollRect(sw, SBTypes[wHitTest], Handle, MouseOverRect);
+      uMouseOverScrollbar := SBTypes[wHitTest];
+      uMouseOverId := SetTimer(Handle, COOLSB_TIMERID3, COOLSB_TIMERINTERVAL3, nil);
+      Ac_NCDraw(sw, Handle);
     end;
-    uLastHitTestPortion := HTSCROLL_NONE;
-    uHitTestPortion := HTSCROLL_NONE;
-    GetScrollRect(sw, SBTypes[wHitTest], Handle, MouseOverRect);
-    uMouseOverScrollbar := SBTypes[wHitTest];
-    uMouseOverId := SetTimer(Handle, COOLSB_TIMERID3, COOLSB_TIMERINTERVAL3, nil);
-    Ac_NCDraw(sw, Handle);
-  end;
+
   Result := sw.CallPrevWndProc(Handle, WM_NCMOUSEMOVE, wHitTest, LParam);
 end;
 
@@ -3298,6 +3308,18 @@ begin
       ReleaseDC(Handle, dc);
     end;
 
+    SB_THUMBPOSITION: begin
+      Ac_GetRealScrollRect(sb, R);
+      Ac_CalcThumbSize(sb, R, nThumbSize, nThumbPos);
+      rcThumbBounds := R;
+      nThumbMouseOffset := nThumbSize div 2;
+      case wParam of
+        HTHSCROLL: Ac_ThumbTrackHorz(sb, sw.CtrlHandle, pt.x, pt.y);
+        HTVSCROLL: Ac_ThumbTrackVert(sb, sw.CtrlHandle, pt.x, pt.y);
+      end;
+      Exit;
+    end;
+
     HTSCROLL_LEFT:
       if sb.fScrollFlags and ESB_DISABLE_LEFT <> 0 then
         Exit
@@ -3453,7 +3475,7 @@ begin
     if sw.fThumbTracking then
       Exit;
     // if the mouse moves outside the current scrollbar, then kill the timer..
-    GetCursorPos(pt);
+    pt := acMousePos;
     if not PtInRect(MouseOverRect, pt) then begin
       KillTimer(Handle, uMouseOverId);
       uMouseOverId := 0;
@@ -3500,7 +3522,7 @@ begin
       // we know where the mouse is each time the scroll timer goes off.
       // This is so we can stop sending scroll messages if the thumb moves
       // under the mouse.
-      GetCursorPos(pt);
+      pt := acMousePos;
       ScreenToClient(Handle, pt);
       if pt.X < 0 then
         pt.X := 0;
@@ -8443,7 +8465,7 @@ begin
         pOffset := 1;
       end
       else begin
-        GetCursorPos(pt);
+        pt := acMousePos;
         State := integer(PtInRect(Rect(R.Left + WndRect.Left, R.Top + WndRect.Top, R.Right + WndRect.Left, R.Bottom + WndRect.Top), pt))
       end;
 
@@ -10403,6 +10425,7 @@ begin
 
           WM_PRINT: begin
             SkinData.BGChanged := True;
+            SkinData.FUpdating := False;
             AC_WMPaint(TWMPaint(Message).DC);
             AC_WMNCPaint(TWMPaint(Message).DC);
             Exit;

@@ -236,7 +236,7 @@ begin
   if CanCalc and Assigned(FPopupWindow) and IsWindowVisible(FPopupWindow.Handle) then begin
 {$IFNDEF ALITE}
     TsCalcForm(FPopupWindow).OnKeyPress(FPopupWindow, Key);
-{$ENDIF}    
+{$ENDIF}
     Key := #0;
   end
   else begin
@@ -245,7 +245,7 @@ begin
 
     inherited KeyPress(Key);
     if not CharInSet(Key, [#3, #22]) then begin // Ctrl-C, Ctrl-V
-      if CanCalc and CharInSet(Key, [#43{'+'}, #45{'-'}, #47{'/'}, #42{'*'}, #37{'%'}]) then begin
+      if CanCalc and (CharInSet(Key, [#43{'+'}{, #45{'-'}, #47{'/'}, #42{'*'}, #37{'%'}]) or ((Key = #45) and (Pos('E', UpperCase(Text)) < 1))) then begin
         p := DWord(SendMessage(Handle, EM_GETSEL, 0, 0)) mod $10000;
         if p = 0 then begin
           if (Key <> #45) then

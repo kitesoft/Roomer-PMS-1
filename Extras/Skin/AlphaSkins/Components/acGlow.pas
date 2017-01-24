@@ -52,34 +52,8 @@ type
 
 
 var
-  FBlend: TBlendFunction;
   acgEffects: TacGlowEffects;
 
-{
-function HideGlow_CB(Data: TObject; Iteration: integer): boolean;
-var
-  sd: TsCommonData;
-  IterCount: integer;
-begin
-  Result := False;
-  if Data is TsCommonData then begin
-    sd := TsCommonData(Data);
-    if sd.GlowID >= 0 then begin
-      IterCount := sd.AnimTimer.Iterations;// acAnimationTime div acTimerInterval;
-      if IterCount <= Iteration then begin
-        HideGlow(sd.GlowID);
-
-        if (sd.AnimTimer <> nil) and not sd.AnimTimer.Destroyed then
-          FreeAndNil(sd.AnimTimer);
-      end
-      else begin
-        SetGlowAlpha(sd.GlowID, MaxByte - Round(MaxByte * Iteration / IterCount));
-        Result := True;
-      end;
-    end;
-  end;
-end;
-}
 
 function ShowGlow(const RealRect: TRect; const SkinSection, Name: string; const Margin, Alpha: integer; WndHandle: HWND; SkinData: TsCommonData = nil): integer;
 var
@@ -168,7 +142,6 @@ begin
       ID := -1;
       if sd.AnimTimer <> nil then
         StopTimer(sd);
-//        FreeAndNil(sd.AnimTimer);
     end;
   end;
 end;
@@ -265,6 +238,7 @@ var
   NewR: TRect;
   FBmpSize: TSize;
   FBmpTopLeft: TPoint;
+  FBlend: TBlendFunction;
   AddedStyle: {$IFDEF DELPHI7UP}NativeInt{$ELSE}longword{$ENDIF};
 begin
   if Wnd = nil then begin
@@ -278,7 +252,7 @@ begin
 
     FBmpSize.cx := WidthOf (R, True) + SkinManager.ma[MaskIndex].WL + SkinManager.ma[MaskIndex].WR - 2 * Margin;
     FBmpSize.cy := HeightOf(R, True) + SkinManager.ma[MaskIndex].WT + SkinManager.ma[MaskIndex].WB - 2 * Margin;
-    FBlend.SourceConstantAlpha := MaxByte;
+    InitBlendData(FBlend, MaxByte);
 
     CreateAlphaBmp(FBmpSize.cx, FBmpSize.cy);
 
@@ -295,7 +269,7 @@ begin
 
     Wnd.HandleNeeded;
     if Wnd.HandleAllocated then begin
-      AddedStyle := WS_EX_LAYERED{ or WS_EX_NOACTIVATE} or WS_EX_TRANSPARENT;// or WS_EX_TOOLWINDOW;
+      AddedStyle := WS_EX_LAYERED{ or WS_EX_NOACTIVATE} or WS_EX_TRANSPARENT;
       SetWindowLong(Wnd.Handle, GWL_EXSTYLE, GetWindowLong(Wnd.Handle, GWL_EXSTYLE) or AddedStyle);
 
       SetWindowPos(Wnd.Handle, h, NewR.Left, NewR.Top,
@@ -316,13 +290,6 @@ end;
 
 
 initialization
-  with FBlend do begin
-    BlendFlags := 0;
-    BlendOp := AC_SRC_OVER;
-    AlphaFormat := AC_SRC_ALPHA;
-    SourceConstantAlpha := MaxByte;
-  end;
-
 
 finalization
   ClearGlows;

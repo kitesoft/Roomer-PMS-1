@@ -296,7 +296,7 @@ begin
       Frame3D(Canvas, NCR, clBtnHighlight, clBtnShadow, FButton.BevelWidth);
       FillDC(Canvas.Handle, NCR, FButton.Color);
     end;
-    if {FShowCaption and }ContentPlacing <> scpBackground then
+    if ContentPlacing <> scpBackground then
       PaintContent(MkRect(FButton), Canvas);
   end;
 end;
@@ -374,7 +374,7 @@ begin
   if CanChange then begin
     Skinned := SkinData.Skinned;
     Changed := DoChange;
-    Flags := RDW_UPDATENOW or RDW_INVALIDATE{ or RDW_ERASE} or RDW_ALLCHILDREN;
+    Flags := RDW_UPDATENOW or RDW_INVALIDATE or RDW_ALLCHILDREN;
     if Orientation = coHorizontal then begin
       if BtnInBeginning then
         Target := Width - FButton.Width - ThumbMargin(asRight)
@@ -406,7 +406,7 @@ begin
           while abs(ThumbPos - Target) > 0.1 do begin
             lTicks := GetTickCount;
             SetRedraw(Handle, 0);
-            ThumbPos := ThumbPos - (ThumbPos - Target) / 4;
+            ThumbPos := ThumbPos - (ThumbPos - Target) / 3;
             FButton.SkinData.BGChanged := True;
             FButton.Left := Round(ThumbPos);
             i := FButton.Left + FButton.Width div 2;
@@ -424,7 +424,7 @@ begin
             end;
             SetRedraw(Handle, 1);
             RedrawWindow(Handle, nil, 0, Flags);
-            while lTicks + acTimerInterval > GetTickCount do ; // wait here
+            WaitTicks(lTicks);
           end;
           Bmp1.Free;
           Bmp2.Free;
@@ -439,7 +439,7 @@ begin
             ThumbPos := ThumbPos - (ThumbPos - Target) / 4;
             FButton.Left := Round(ThumbPos);
             RedrawWindow(Handle, nil, 0, Flags);
-            while lTicks + acTimerInterval > GetTickCount do ; // wait here
+            WaitTicks(lTicks);
           end;
         end;
         RedrawWindow(Handle, nil, 0, Flags);
@@ -503,7 +503,7 @@ begin
     end;
     UpdateButton;
     UpdateBtnFont;
-    RedrawWindow(FButton.Handle, nil, 0, RDW_UPDATENOW or RDW_INVALIDATE or RDW_FRAME);// or RDW_ERASE);
+    RedrawWindow(FButton.Handle, nil, 0, RDW_UPDATENOW or RDW_INVALIDATE or RDW_FRAME);
     if Assigned(FOnSliderChange) then
       FOnSliderChange(Self);
   end;
@@ -648,7 +648,6 @@ begin
       SkinData.FCacheBmp.Width := Width;
       SkinData.FCacheBmp.Height := Height;
       FillDC(SkinData.FCacheBmp.Canvas.Handle, MkRect(Self), Color);
-//      PaintItem(SkinData.SkinManager.ConstData.Sections[ssTransparent], GetParentCache(SkinData), False, 0, MkRect(Self), Point(Left, Top), SkinData.FCacheBMP, SkinData.SkinManager);
       Images.Draw(SkinData.FCacheBmp.Canvas, 0, 0, ifF(FSliderOn, FImageIndexOn, FImageIndexOff));
       BitBlt(DC, 0, 0, Width, Height, SkinData.FCacheBmp.Canvas.Handle, 0, 0, SRCCOPY);
     end
@@ -774,7 +773,7 @@ begin
   else
     PaintItem(SkinData.SkinIndex, CI, True, 0, MkRect(Self), Point(Left, Top), SkinData.FCacheBMP, SkinData.SkinManager);
 
-  if {FShowCaption and }(ContentPlacing = scpBackground) then
+  if ContentPlacing = scpBackground then
     PaintContent(ContentRect, SkinData.FCacheBmp.Canvas);
 
   SkinData.PaintOuterEffects(Self, MkPoint);
@@ -855,7 +854,6 @@ begin
     if Images <> nil then begin
       Images.RegisterChanges(FImageChangeLink);
       Images.FreeNotification(Self);
-//      AdjustSize;
     end;
     if (Visible or (csDesigning in ComponentState)) and (SkinData.CtrlSkinState and ACS_LOCKED = 0) then begin
       UpdateSize;
@@ -1258,10 +1256,8 @@ begin
       inherited;
     end;
 
-    CM_ENABLEDCHANGED: begin
+    CM_ENABLEDCHANGED:
       SkinData.Invalidate;
-//      FButton.Enabled := Enabled;
-    end;
 
     WM_NCPAINT, WM_ERASEBKGND:
 

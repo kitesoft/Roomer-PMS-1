@@ -86,7 +86,6 @@ begin
     end;
     try
       // If transparent and form resizing processed
-//      SkinData.BGChanged := True;
       SkinData.PaintOuterEffects(Self, MkPoint);
 
       if SkinData.BGChanged then
@@ -258,7 +257,6 @@ begin
         case Style of
           tsTabs: begin
             TabSkinIndex := ConstData.Tabs[tlSingle][acTabSides[TabPosition]].SkinIndex;
-//            TabMask      := ConstData.Tabs[tlSingle][acTabSides[TabPosition]].MaskIndex;
             TabSection   := ConstData.Tabs[tlSingle][acTabSides[TabPosition]].SkinSection;
             TabsCovering := CommonSkinData.TabsCovering;
           end;
@@ -266,20 +264,17 @@ begin
           tsButtons: begin
             TabSection := s_Button;
             TabSkinIndex := GetSkinIndex(TabSection);
-//            TabMask := GetMaskIndex(TabSection, s_BordersMask);
           end
 
           else begin
             TabSection := s_ToolButton;
             TabSkinIndex := GetSkinIndex(TabSection);
-//            TabMask := GetMaskIndex(TabSection, s_BordersMask);
           end;
         end;
         if TabSkinIndex >= 0 then begin
           if FCommonData.SkinManager.gd[TabSkinIndex].States <= TabState then
             TabState := FCommonData.SkinManager.gd[TabSkinIndex].States - 1;
 
-//        if IsValidImgIndex(TabMask) then begin // Drawing of tab
           TempBmp := CreateBmp32(aRect);
           try
             if (State = 2) and (Index = TabIndex) then
@@ -887,15 +882,18 @@ begin
           end;
         end;
 
-      TCM_SETCURSEL:
-        RedrawWindow(Handle, nil, 0, RDW_FRAME or RDW_INVALIDATE);
-
       WM_SIZE: begin
         CheckUpDown;
         GetWindowRect(Handle, R);
         if (WidthOf(R) < Width) or (HeightOf(R) < Height) then
           RedrawWindow(Handle, nil, 0, RDWA_NOCHILDREN);
       end;
+
+      TCM_SETCURSEL:
+        if [csReading, csLoading] * ComponentState = [] then begin
+          SkinData.BGChanged := True;
+          RedrawWindow(Handle, nil, 0, RDW_FRAME or RDW_INVALIDATE);
+        end;
 
       WM_MOVE:
         if [csReading, csLoading] * ComponentState = [] then

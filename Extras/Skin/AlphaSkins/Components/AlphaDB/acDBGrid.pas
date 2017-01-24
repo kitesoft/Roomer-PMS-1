@@ -790,12 +790,12 @@ begin
 end;
 
 
-function IsDigids(const Value: string): boolean;
+function IsDigits(const Value: string): boolean;
 var
   i: integer;
 begin
   Result := True;
-  for i := 0 to Length(Value) - 1 do
+  for i := 1 to Length(Value) do
     if not (Value[i] in ['1'..'0']) then begin
       Result := False;
       Exit;
@@ -851,7 +851,7 @@ begin
     ColWidth := ColWidth - (Rect.Bottom - Rect.Top);
 
   if TextWidth > ColWidth then begin
-    if (Field is TNumericField) and IsDigids(Value) then begin
+    if (Field is TNumericField) and IsDigits(Value) then begin
       for i := 1 to Length(Value) do
         if (Value[i] >= '0') and (Value[i] <= '9') then
           Value[i] := '#';

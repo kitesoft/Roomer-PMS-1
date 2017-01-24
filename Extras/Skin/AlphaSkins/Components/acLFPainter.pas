@@ -5,9 +5,10 @@ unit acLFPainter;
 // WARNING! This unit is compatible with Devexpress version 2011 and newer
 // for older versions used the acLFPainter6.pas unit
 
-//{$DEFINE VER16_1_4}   // cxGrid version 16.1.4 and newer
-//{$DEFINE VER14_1_2}
-//{$DEFINE VER13_2_2}
+{$DEFINE VER16_2_2}   // cxGrid version 16.2.2 and newer
+{$DEFINE VER16_1_4}
+{$DEFINE VER14_1_2}
+{$DEFINE VER13_2_2}
 {$DEFINE VER12_2_3}
 {$DEFINE VER12_1_6}
 {$DEFINE VER26}
@@ -263,7 +264,7 @@ type
     // ms outlook
     procedure CalculateSchedulerNavigationButtonRects(AIsNextButton: Boolean;
       ACollapsed: Boolean; APrevButtonTextSize: TSize; ANextButtonTextSize: TSize;
-      var ABounds: TRect; out ATextRect: TRect; out AArrowRect: TRect); override;
+      var ABounds: TRect; out ATextRect: TRect; out AArrowRect: TRect; {$IFDEF VER16_2_2} const AIsVertical: boolean = True{$ENDIF}); override;
     procedure DrawMonthHeader(ACanvas: TcxCanvas; const ABounds: TRect;
       const AText: string; ANeighbors: TcxNeighbors; const AViewParams: TcxViewParams;
       AArrows: {$IFDEF VER23} TcxArrowDirections {$ELSE} TcxHeaderArrows {$ENDIF}; ASideWidth: Integer; AOnDrawBackground: TcxDrawBackgroundEvent = nil); override;
@@ -272,13 +273,13 @@ type
       const ABounds, AProgress: TRect; AViewParams: TcxViewParams; ATransparent: Boolean); override;
     procedure DrawSchedulerNavigationButton(ACanvas: TcxCanvas;
       const ARect: TRect; AIsNextButton: Boolean; AState: TcxButtonState;
-      const AText: string; const ATextRect: TRect; const AArrowRect: TRect); override;
-    procedure DrawSchedulerNavigationButtonArrow(ACanvas: TcxCanvas; const ARect: TRect; AIsNextButton: Boolean; AColor: TColor); override;
+      const AText: string; const ATextRect: TRect; const AArrowRect: TRect; {$IFDEF VER16_2_2} const AIsVertical: boolean = True{$ENDIF}); override;
+    procedure DrawSchedulerNavigationButtonArrow(ACanvas: TcxCanvas; const ARect: TRect; AIsNextButton: Boolean; AColor: TColor; {$IFDEF VER16_2_2} const AIsVertical: boolean = True{$ENDIF}); override;
     procedure DrawSchedulerNavigatorButton(ACanvas: TcxCanvas; R: TRect; AState: TcxButtonState); override;
     procedure DrawSchedulerSplitterBorder(ACanvas: TcxCanvas; R: TRect; const AViewParams: TcxViewParams; AIsHorizontal: Boolean); override;
     function SchedulerEventProgressOffsets: TRect; override;
     procedure SchedulerNavigationButtonSizes(AIsNextButton: Boolean;
-      var ABorders: TRect; var AArrowSize: TSize; var AHasTextArea: Boolean); override;
+      var ABorders: TRect; var AArrowSize: TSize; var AHasTextArea: Boolean;{$IFDEF VER16_2_2} const AIsVertical: boolean = True{$ENDIF}); override;
     // chart view
     function ChartToolBoxDataLevelInfoBorderSize: Integer; override;
     // editors
@@ -377,7 +378,7 @@ type
     class procedure DrawPanelSeparator(AStatusBar: TdxCustomStatusBar; ACanvas: TcxCanvas; const R: TRect); override;
     class procedure DrawTopBorder(AStatusBar: TdxCustomStatusBar; ACanvas: TcxCanvas; const R: TRect); override;
     class function GetPanelColor(AStatusBar: TdxCustomStatusBar; APanel: TdxStatusBarPanel): TColor; override;
-    class procedure DrawSizeGrip(AStatusBar: TdxCustomStatusBar; ACanvas: TcxCanvas; R: TRect); override; // {$IFNDEF VER14_1_2}; AOverlapped: Boolean{$ENDIF}); override;
+    class procedure DrawSizeGrip(AStatusBar: TdxCustomStatusBar; ACanvas: TcxCanvas; R: TRect{$IFNDEF VER14_1_2}; AOverlapped: Boolean{$ENDIF}); override;
   end;
 {$endif}
 
@@ -394,7 +395,6 @@ uses
 
 var
   DefManager: TsSkinManager = nil;
-//  OldDXSkin: string;
 
 
 type
@@ -581,7 +581,8 @@ end;
 
 
 procedure TcxACLookAndFeelPainter.CalculateSchedulerNavigationButtonRects(
-  AIsNextButton, ACollapsed: Boolean; APrevButtonTextSize, ANextButtonTextSize: TSize; var ABounds: TRect; out ATextRect, AArrowRect: TRect);
+  AIsNextButton, ACollapsed: Boolean; APrevButtonTextSize, ANextButtonTextSize: TSize; var ABounds: TRect;
+  out ATextRect, AArrowRect: TRect; {$IFDEF VER16_2_2} const AIsVertical: boolean = True{$ENDIF});
 begin
   inherited CalculateSchedulerNavigationButtonRects(AIsNextButton, ACollapsed, APrevButtonTextSize, ANextButtonTextSize, ABounds, ATextRect, AArrowRect);
 end;
@@ -1281,7 +1282,6 @@ end;
 
 procedure TcxACLookAndFeelPainter.DrawBorder(ACanvas: TcxCanvas; R: TRect);
 var
-//  i,
   m: integer;
   Bmp: TBitmap;
 begin
@@ -1618,10 +1618,7 @@ begin
         State := 0;
     end;
 
-//    if (sIndex >= 0) and (DefaultManager.gd[sIndex].Props[min(State, ac_MaxPropsIndex)].Transparency < 80) then
-      C := DefaultManager.gd[sIndex].Props[min(State, ac_MaxPropsIndex)].FontColor.Color;
-{    else
-      C := DefaultManager.GetActiveEditFontColor;}
+    C := DefaultManager.gd[sIndex].Props[min(State, ac_MaxPropsIndex)].FontColor.Color;
 
     TmpBmp := CreateBmp32(ARect);
     BitBlt(TmpBmp.Canvas.Handle, 0, 0, TmpBmp.Width, TmpBmp.Height, ACanvas.Handle, ARect.Left, ARect.Top, SRCCOPY);
@@ -1734,7 +1731,6 @@ var
 begin
   if Skinned then begin
     i := DefaultManager.ConstData.RadioButton[True];
-//    DefaultManager.GetMaskIndex(DefaultManager.ConstData.IndexGLobalInfo, s_RadioButtonChecked);
     if DefaultManager.IsValidImgIndex(i) then
       Result := MkSize(DefaultManager.ma[i])
     else
@@ -1758,11 +1754,9 @@ var
   CI: TCacheInfo;
 begin
   if Skinned then begin
-//    i := DefaultManager.GetMaskIndex(DefaultManager.ConstData.IndexGLobalInfo, s_SmallIconClose);
     i := DefaultManager.ConstData.TitleGlyphs[tgSmallClose];
     if i < 0 then
       i := DefaultManager.ConstData.TitleGlyphs[tgClose];
-//      DefaultManager.GetMaskIndex(DefaultManager.ConstData.IndexGLobalInfo, s_BorderIconClose);
 
     if DefaultManager.IsValidImgIndex(i) then begin
       TmpBmp := CreateBmp32(R);
@@ -2233,7 +2227,7 @@ end;
 
 
 procedure TcxACLookAndFeelPainter.DrawSchedulerNavigationButton(ACanvas: TcxCanvas; const ARect: TRect; AIsNextButton: Boolean;
-  AState: TcxButtonState; const AText: string; const ATextRect, AArrowRect: TRect);
+  AState: TcxButtonState; const AText: string; const ATextRect, AArrowRect: TRect; {$IFDEF VER16_2_2} const AIsVertical: boolean = True{$ENDIF});
 var
   TmpBmp: TcxBitmap;
   cBmp: TBitmap;
@@ -2292,7 +2286,7 @@ begin
 end;
 
 
-procedure TcxACLookAndFeelPainter.DrawSchedulerNavigationButtonArrow(ACanvas: TcxCanvas; const ARect: TRect; AIsNextButton: Boolean; AColor: TColor);
+procedure TcxACLookAndFeelPainter.DrawSchedulerNavigationButtonArrow(ACanvas: TcxCanvas; const ARect: TRect; AIsNextButton: Boolean; AColor: TColor; {$IFDEF VER16_2_2} const AIsVertical: boolean = True{$ENDIF});
 begin
   if Skinned then
     AColor := DefaultManager.GetGlobalFontColor;
@@ -2309,7 +2303,6 @@ end;
 
 procedure TcxACLookAndFeelPainter.DrawSchedulerSplitterBorder(ACanvas: TcxCanvas; R: TRect; const AViewParams: TcxViewParams; AIsHorizontal: Boolean);
 begin
-//  if Skinned then ACanvas.FillRect(R, DefaultManager.GetGlobalColor) else
   inherited;
 end;
 
@@ -3086,7 +3079,7 @@ begin
 end;
 
 
-procedure TcxACLookAndFeelPainter.SchedulerNavigationButtonSizes(AIsNextButton: Boolean; var ABorders: TRect; var AArrowSize: TSize; var AHasTextArea: Boolean);
+procedure TcxACLookAndFeelPainter.SchedulerNavigationButtonSizes(AIsNextButton: Boolean; var ABorders: TRect; var AArrowSize: TSize; var AHasTextArea: Boolean;{$IFDEF VER16_2_2} const AIsVertical: boolean = True{$ENDIF});
 begin
   inherited;
 end;
@@ -3444,7 +3437,7 @@ begin
 end;
 
 
-class procedure TdxACStatusBarSkinPainter.DrawSizeGrip(AStatusBar: TdxCustomStatusBar; ACanvas: TcxCanvas; R: TRect); // {$IFNDEF VER14_1_2}; AOverlapped: Boolean{$ENDIF});
+class procedure TdxACStatusBarSkinPainter.DrawSizeGrip(AStatusBar: TdxCustomStatusBar; ACanvas: TcxCanvas; R: TRect{$IFNDEF VER14_1_2}; AOverlapped: Boolean{$ENDIF});
 var
   Bmp: TBitmap;
 begin

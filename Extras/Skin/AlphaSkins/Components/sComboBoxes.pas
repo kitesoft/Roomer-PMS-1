@@ -378,15 +378,7 @@ type
     property TabStop;
     property Text;
     property Visible;
-{
-    property OnChange;
-    property OnClick;
-    property OnContextPopup;
-    property OnDblClick;
-    property OnDragDrop;
-    property OnDragOver;
-    property OnDropDown;
-}
+
     property OnEndDock;
     property OnEndDrag;
     property OnEnter;
@@ -399,13 +391,6 @@ type
   end;
 
 
-{$IFNDEF NOTFORHELP}
-//var
-//  ColDlg: TColorDialog = nil;
-
-{$ENDIF} // NOTFORHELP
-
-
 implementation
 
 uses
@@ -416,7 +401,6 @@ uses
 
 
 const
-  gMargin = 4;
   StandardColorsCount = 16;
   ExtendedColorsCount = 4;
   NoColorSelected = TColor($FF000000);
@@ -470,7 +454,7 @@ begin
           end;
 
           Alpha := LimitIt(Round(Glow), 0, MaxByte);
-          if sd.AnimTimer.Iteration >= sd.AnimTimer.Iterations then begin
+          if sd.AnimTimer.Iteration >= sd.AnimTimer.Iterations then
             if (State = 0) and (Alpha > 0) then begin
               if sd.GlowID >= 0 then
                 SetGlowAlpha(sd.GlowID, Alpha);
@@ -489,8 +473,7 @@ begin
 
                 if not (State in [1, 3]) then
                   HideGlow(sd.GlowID);
-              end;
-          end
+              end
           else begin
             Result := True;
             if sd.GlowID >= 0 then
@@ -888,7 +871,7 @@ begin
         if odSelected in aState then
           Bmp.Canvas.Font.Color := SkinData.SkinManager.GetHighLightFontColor(True)
         else
-          Bmp.Canvas.Font.Color := GetFontColor;//FCommonData.SkinManager.GetActiveEditFontColor;
+          Bmp.Canvas.Font.Color := GetFontColor;
 
         Bmp.Canvas.Brush.Style := bsClear;
         AcDrawText(Bmp.Canvas.Handle, Items[aIndex], rText, DrawStyle);
@@ -1051,12 +1034,7 @@ begin
   end;
 end;
 
-{
-procedure TsCustomComboBoxEx.SetFDropDown(const Value: boolean);
-begin
-  FFDropDown := Value;
-end;
-}
+
 procedure TsCustomComboBoxEx.SetReadOnly(const Value: boolean);
 begin
   if FReadOnly <> Value then
@@ -1403,7 +1381,7 @@ begin
           if not DroppedDown or (Style = csExSimple) then begin
             GetWindowRect(Handle, R);
             P := acMousePos;
-            if not acMouseInControlDC(Self.Handle) {IsDCVisible({PtInRect(R, P)} and FCommonData.FMouseAbove then begin
+            if not acMouseInControlDC(Self.Handle) and FCommonData.FMouseAbove then begin
               FCommonData.FMouseAbove := False;
               State := 0;
               AnimateCtrl(0);
@@ -2115,7 +2093,7 @@ begin
             PopulateList;
       end;
 
-    CN_SYSKEYDOWN{,CN_KEYDOWN}:
+    CN_SYSKEYDOWN:
       if PopupMode = pmPickColor then
         case TWMKey(Message).CharCode of
           VK_DOWN:
@@ -2151,7 +2129,6 @@ begin
     WM_LBUTTONUP:
       if FDoClick then begin
         FDoClick := False;
-//        Application.ProcessMessages;
         TacSkinSelectForm(Parent.Parent).ClickBtn(Self);
       end;
   end;
@@ -2194,35 +2171,40 @@ end;
 procedure TacSkinSelectForm.InitFormData;
 begin
   ItemCount := Selector.ItemsEx.Count;
-  if Selector.ThumbSize <> tsSmall then
-    inc(ItemHeight, 20);
-
   if Selector.ShowNoSkin then
     inc(ItemCount);
 
-  ItemWidth := max(Selector.MinItemWidth, ThumbSizes[True, Selector.ThumbSize] + Selector.ItemMargin * 2);
-  ItemHeight := ThumbSizes[False, Selector.ThumbSize] + Selector.ItemMargin * 2;
+  ItemWidth := max(Selector.MinItemWidth, ThumbSizes[True, Selector.ThumbSize]);
+  ItemHeight := ThumbSizes[False, Selector.ThumbSize];
   if ufUpdateScale in UpdateFlags then begin
-    ItemWidth  := Selector.SkinData.SkinManager.ScaleInt(ItemWidth);
-    ItemHeight := Selector.SkinData.SkinManager.ScaleInt(ItemHeight);
+    ItemWidth  := Selector.SkinData.SkinManager.ScaleInt(ItemWidth + Selector.ItemMargin * 2);
+    ItemHeight := Selector.SkinData.SkinManager.ScaleInt(ItemHeight + Selector.ItemMargin * 2);
+    if Selector.ThumbSize <> tsSmall then
+      inc(ItemHeight, Selector.SkinData.SkinManager.ScaleInt(GetFontHeight(Selector.Handle)) + acSpacing);
+  end
+  else begin
+    inc(ItemWidth, Selector.ItemMargin * 2);
+    inc(ItemHeight, Selector.ItemMargin * 2);
+    if Selector.ThumbSize <> tsSmall then
+      inc(ItemHeight, GetFontHeight(Selector.Handle) + acSpacing);
   end;
-  if Selector.ThumbSize <> tsSmall then
-    inc(ItemHeight, GetFontHeight(Selector.Handle) + 4 {Spacing});
 
-  Height := min(Selector.RowCount, ItemCount div Selector.ColCount + integer((ItemCount mod Selector.ColCount) <> 0)) * ItemHeight + gMargin;
-  Width := min(Selector.ColCount, ItemCount) * ItemWidth + gMargin;
+  Height := min(Selector.RowCount, ItemCount div Selector.ColCount + integer((ItemCount mod Selector.ColCount) <> 0)) * ItemHeight + acSpacing * 2;
+  Width := min(Selector.ColCount, ItemCount) * ItemWidth + acSpacing * 2;
 
   if ufUpdateThumbs in UpdateFlags then begin
     ImgList.AlphaImageList := nil;
     ImgList.AlphaImageList := TsAlphaImageList(Selector.SkinData.SkinManager.SkinListController.ImgList);
     UpdateFlags := UpdateFlags - [ufUpdateThumbs];
   end;
-  ImgList.Width  := ThumbSizes[True,  Selector.ThumbSize];
-  ImgList.Height := ThumbSizes[False, Selector.ThumbSize];
   if ufUpdateScale in UpdateFlags then begin
-    ImgList.Width  := Selector.SkinData.SkinManager.ScaleInt(ImgList.Width);
-    ImgList.Height := Selector.SkinData.SkinManager.ScaleInt(ImgList.Height);
+    ImgList.Width  := Selector.SkinData.SkinManager.ScaleInt(ThumbSizes[True,  Selector.ThumbSize]);
+    ImgList.Height := Selector.SkinData.SkinManager.ScaleInt(ThumbSizes[False, Selector.ThumbSize]);
     UpdateFlags := UpdateFlags - [ufUpdateScale];
+  end
+  else begin
+    ImgList.Width  := ThumbSizes[True,  Selector.ThumbSize];
+    ImgList.Height := ThumbSizes[False, Selector.ThumbSize];
   end;
   ImgList.Loaded;
 end;
@@ -2253,7 +2235,7 @@ begin
 
     if Selector.MinItemWidth <= 0 then begin
       Self.Width := max(Self.Width, Selector.Width);
-      ItemWidth := (Self.Width - sbWidth - gMargin) div min(Selector.ColCount, ItemCount);
+      ItemWidth := (Self.Width - sbWidth - 2 * acSpacing) div min(Selector.ColCount, ItemCount);
     end;
 end;
 
@@ -2268,14 +2250,14 @@ var
     Result := TacSkinSelectBtn.Create(ScrollBox);
     Result.Width := ItemWidth;
     Result.Height := ItemHeight;
-    Result.Left := X * ItemWidth;
-    Result.Top := Y * ItemHeight;
+    Result.Left := X * ItemWidth + acSpacing;
+    Result.Top := Y * ItemHeight + acSpacing;
     Result.Parent := ScrollBox;
     Result.Visible := True;
     Result.Caption := ACaption;
     Result.ImageIndex := ImgIndex;
 {$IFDEF NOTSKINNEDCONTENT}
-    Result.SkinData.SkinSection := 'NA';
+    Result.SkinData.SkinSection := 'N/A';
 {$ELSE}
     Result.SkinData.SkinSection := s_MenuItem;
 {$ENDIF}
@@ -2572,6 +2554,7 @@ begin
           Form.UpdateBoxSize;
         end
         else begin
+          Form.UpdateFlags := Form.UpdateFlags + [ufUpdateScale];
           Form.UpdateControls;
           Form.UpdateBoxSize;
           Form.UpdateHotControl;

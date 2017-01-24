@@ -190,12 +190,7 @@ begin
     end;
     FBmpSize := MagnSize;
     FBmpTopLeft := MkPoint;
-    with FBlend do begin
-      BlendOp := AC_SRC_OVER;
-      BlendFlags := 0;
-      AlphaFormat := $01;
-      SourceConstantAlpha := MaxByte;
-    end;
+    InitBlendData(FBlend, MaxByte);
     CreateAlphaBmp;
     DC := GetDC(0);
     //  Animation is disabled
@@ -217,7 +212,7 @@ begin
             Break;
 
           if StepCount > 0 then
-            while lTicks + acTimerInterval > GetTickCount do {wait here};
+            WaitTicks(lTicks);
         end;
       end;
     end

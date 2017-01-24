@@ -1034,13 +1034,14 @@ end;
 procedure TsSpeedButton.SetButtonStyle(const Value: TToolButtonStyle);
 begin
   if FButtonStyle <> Value then begin
+{
     if not (csLoading in ComponentState) then
       if Value = tbsDropDown then
         Width := Width + ScaledAddWidth
       else
         if FButtonStyle = tbsDropdown then
           Width := Width - ScaledAddWidth;
-
+}
     FButtonStyle := Value;
     UpdateControl;
   end;

@@ -182,7 +182,6 @@ type
 {$IFNDEF NOTFORHELP}
   private
     FNormalFont: TFont;
-//    LinkClicking: boolean;
     procedure SetHoverFont (const Value: TFont);
     procedure SetNormalFont(const Value: TFont);
   protected
@@ -302,6 +301,7 @@ type
     FMaskBits: Pointer;
     FShadow: TsShadow;
     FKind: TsKind;
+    PrevCtrlWidth: integer;
     procedure SetAngle(const Value: integer);
   public
 {$IFNDEF FPC}
@@ -1118,8 +1118,6 @@ end;
 
 {$IFNDEF FPC}
 procedure TsLabelFX.AdjustBounds;
-//const
-//  WordWraps: array [Boolean] of Word = (0, DT_WORDBREAK);
 var
   DC: HDC;
   R: TRect;
@@ -1172,8 +1170,13 @@ begin
             taLeftJustify:  X := X - LeftTop + OffsTopLeft;
             taCenter:       X := X - (LeftTop - OffsTopLeft - RightBottom + OffsRightBottom) div 2;
             taRightJustify: begin
-              X := X + 2 * (OffsTopLeft + Width - RightBottom) - OldSize.cx;
-              X := X - ActSize.cx;
+              if PrevCtrlWidth = 0 then
+                PrevCtrlWidth := Width;
+
+              X := PrevCtrlWidth;
+              X := Left + X;
+              X := X - Size.cx;
+              PrevCtrlWidth := Size.cx;//Width;
             end;
           end;
 
@@ -1218,6 +1221,7 @@ begin
   FShadow := TsShadow.Create(AOwner, Self);
   FKind := TsKind.Create(Self);
   FMask := CreateBmp32;
+  PrevCtrlWidth := 0;
   FMaskBits := nil;
   IntPosChanging := False;
   FNeedInvalidate := True;

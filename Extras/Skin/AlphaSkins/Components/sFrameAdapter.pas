@@ -1,7 +1,6 @@
 unit sFrameAdapter;
 {$I sDefs.inc}
 //{$DEFINE LOGGED}
-//+
 
 interface
 
@@ -95,8 +94,8 @@ begin
     Frame := nil;
     Raise Exception.Create(acs_FrameAdapterError1);
   end;
-  if (FCommonData.SkinSection = ClassName) or (FCommonData.SkinSection = '') then
-    FCommonData.SkinSection := s_GroupBox;
+  if (FCommonData.SkinSection = ClassName) or (FCommonData.SkinSection = '') then // Comment
+    FCommonData.SkinSection := s_GroupBox;                                        // in Beta v12
 
   Frame := TFrame(AOwner);
   FCommonData.FOwnerControl := TControl(AOwner);
@@ -254,13 +253,13 @@ begin
           end;
 
           AC_GETDEFINDEX: begin
-  {$IFNDEF ALITE}
+{$IFNDEF ALITE}
             if SkinData.SkinSection <> '' then begin
               SkinData.UpdateIndexes;
               Message.Result := SkinData.SkinIndex + 1;
             end
             else
-  {$ENDIF}
+{$ENDIF}
               if SkinData.SkinManager <> nil then
                 Message.Result := SkinData.SkinManager.ConstData.Sections[ssTransparent] + 1;
 
@@ -276,12 +275,6 @@ begin
             Message.Result := LResult(SkinData);
             Exit;
           end;
-
-{          AC_SETSCALE:
-            begin
-              CommonMessage(Message, SkinData);
-              Exit;
-            end;}
         end;
 
       WM_SIZE:
@@ -471,6 +464,11 @@ begin
           RefreshScrolls(SkinData, ListSW);
           if srThirdParty in SkinData.SkinManager.SkinningRules then
             AddToAdapter(Frame);
+
+          if Frame.Visible then begin
+            SkinData.FUpdating := False;
+            Frame.Repaint;
+          end;
         end;
 
         WM_PAINT:

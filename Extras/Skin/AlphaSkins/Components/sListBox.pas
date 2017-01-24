@@ -114,9 +114,6 @@ begin
   ControlStyle := ControlStyle - [csOpaque];
   FAutoCompleteDelay := 500;
   FAutoHideScroll := True;
-//  if FCommonData.SkinSection = '' then
-//    FCommonData.SkinSection := s_Edit;
-
   FDisabledKind := DefDisabledKind;
   FBoundLabel := TsBoundLabel.Create(Self, FCommonData);
   DoubleBuffered := False;
@@ -351,9 +348,10 @@ end;
 
 procedure TsCustomListBox.WMPaint(var Message: TWMPaint);
 var
+  CurNdx, bw: integer;
   PS: TPaintStruct;
-  bw: integer;
   DC: hdc;
+  MemBmp: Graphics.TBitmap;
 
   procedure PaintListBox;
   var
@@ -384,7 +382,7 @@ var
             DrawItemStruct.itemState := DrawItemStruct.itemState or ODS_FOCUS;
         end
         else
-          if ItemIndex = i then begin
+          if CurNdx = i then begin
             DrawItemStruct.itemState := ODS_SELECTED;
             if Focused then
               DrawItemStruct.itemState := DrawItemStruct.itemState or ODS_FOCUS;
@@ -392,7 +390,7 @@ var
           else
             DrawItemStruct.itemState := 0;
 
-        DrawItemStruct.hDC := DC;
+        DrawItemStruct.hDC := MemBmp.Canvas.Handle;
         DrawItemStruct.CtlID := Handle;
         DrawItemStruct.hwndItem := Handle;
         DrawItemStruct.rcItem := R;
@@ -403,24 +401,24 @@ var
           DrawItemStruct.itemData := DWORD(Pointer(Items.Objects[I]))
         else
           DrawItemStruct.itemData := 0;
-          
+
         DrawItemStruct.itemID := I;
         Dispatch(DrawItemMsg);
       end
       else
         Break;
     end;
-    if R.Bottom < Height - 4 then
-      BitBlt(DC, R.Left, R.Bottom, Width, Height - R.Bottom - bw, FCommonData.FCacheBmp.Canvas.Handle, R.Left + bw, R.Bottom + bw, SRCCOPY);
+    if R.Bottom < Height - 2 * bw then
+      BitBlt(MemBmp.Canvas.Handle, R.Left, R.Bottom, Width, Height - R.Bottom - bw, FCommonData.FCacheBmp.Canvas.Handle, R.Left + bw, R.Bottom + bw, SRCCOPY);
 
-    if R.Right < Width - 4 then
-      BitBlt(DC, R.Right, 0, Width - bw - R.Right, R.Bottom, FCommonData.FCacheBmp.Canvas.Handle, R.Right, bw, SRCCOPY);
+    if R.Right < Width - 2 * bw then
+      BitBlt(MemBmp.Canvas.Handle, R.Right, 0, Width - bw - R.Right, R.Bottom, FCommonData.FCacheBmp.Canvas.Handle, R.Right, bw, SRCCOPY);
 
-    if R.Left > 2 then
-      BitBlt(DC, 0, MaxBottom, R.Left, Height - MaxBottom - bw, FCommonData.FCacheBmp.Canvas.Handle, bw, MaxBottom + bw, SRCCOPY);
+    if R.Left > bw then
+      BitBlt(MemBmp.Canvas.Handle, 0, MaxBottom, R.Left, Height - MaxBottom - bw, FCommonData.FCacheBmp.Canvas.Handle, bw, MaxBottom + bw, SRCCOPY);
 
-    if (R.Right > Width - 6) then
-      BitBlt(DC, MaxRight, 0, Width - MaxRight - bw, R.Bottom, FCommonData.FCacheBmp.Canvas.Handle, MaxRight + bw, bw, SRCCOPY);
+    if R.Right > Width - 2 * bw then
+      BitBlt(MemBmp.Canvas.Handle, MaxRight, 0, Width - MaxRight - bw, R.Bottom, FCommonData.FCacheBmp.Canvas.Handle, MaxRight + bw, bw, SRCCOPY);
 
     FullPaint := False;
   end;
@@ -432,29 +430,34 @@ begin
   end
   else}
     if (SkinData.Skinned or (Style in [{lbOwnerDrawFixed, }lbOwnerDrawVariable])) then begin
-      if Message.DC <> 0 then
-        DC := Message.DC
-      else begin
-        BeginPaint(Handle, PS);
-        DC := GetDC(Handle);
-      end;
+      BeginPaint(Handle, PS);
       if not InUpdating(SkinData) then begin
         if (BorderStyle <> bsNone) and (ListSW <> nil) then
           bw := iff(Ctl3d, ListSW.cxLeftEdge, 1)
         else
           bw := 0;
 
-        Canvas.Handle := DC;
+        MemBmp := CreateBmp32(Self);
+        MemBmp.Canvas.Lock;
+        Canvas.Handle := MemBmp.Canvas.Handle;
         Canvas.Lock;
         Canvas.Font.Assign(Font);
+        CurNdx := ItemIndex;
         PaintListBox;
         Canvas.UnLock;
         Canvas.Handle := 0;
+
+        if Message.DC <> 0 then
+          DC := Message.DC
+        else begin
+          DC := GetDC(Handle);
+        end;
+        BitBlt(DC, 0, 0, Width, Height, MemBmp.Canvas.Handle, 0, 0, SRCCOPY);
+        MemBmp.Free;
+        if Message.DC <> DC then
+          ReleaseDC(Handle, DC);
       end;
-      if Message.DC <> DC then begin
-        ReleaseDC(Handle, DC);
-        EndPaint(Handle, PS);
-      end;
+      EndPaint(Handle, PS);
     end
     else
       inherited;

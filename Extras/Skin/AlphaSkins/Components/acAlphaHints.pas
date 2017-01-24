@@ -410,8 +410,6 @@ uses
 {$R acHints.res}
 
 const
-//  SkinBorderWidth = 4;
-
   acAlignmentArray: array [TAlignment] of word = (DT_LEFT, DT_RIGHT, DT_CENTER);
 
 
@@ -846,7 +844,7 @@ begin
     else
       inc(Manager.FHintPos.Y, Image.ShadowSizes.Top);
 
-    inc(Manager.FHintPos.X, Image.OffsetHorz); // yello
+    inc(Manager.FHintPos.X, Image.OffsetHorz);
     inc(Manager.FHintPos.Y, Image.OffsetVert);
     FHintLocation := Manager.FHintPos;
   end;
@@ -1271,31 +1269,49 @@ begin
         Bmp.Canvas.Draw(GlyphPos.X, GlyphPos.Y, Manager.TmpShowData.Image);
     end;
 
-    if Manager.TmpShowData.Caption <> '' then
+    if Manager.TmpShowData.Caption <> '' then begin
       RCalc := R;
       acDrawText(Bmp.Canvas.Handle, PacChar(Manager.TmpShowData.Caption), RCalc, DT_NOPREFIX or DT_WORDBREAK or DT_CALCRECT);
       RText.Left := R.Left + (WidthOf(R) - WidthOf(RCalc)) div 2;
       RText.Top := R.Top + (HeightOf(R) - HeightOf(RCalc)) div 2;
       RText.Right := RText.Left + WidthOf(RCalc);
       RText.Bottom := RText.Top + HeightOf(RCalc);
+    end;
 
-      if Manager.Skinned then begin
+    if Manager.Skinned then begin
+      if Manager.FHTMLMode then begin
+        sHTML := TsHtml.Create;
+        sHTML.AlphaChannel := True;
+        sHTML.Init(Bmp, Manager.TmpShowData.Caption, rText);
+        sHTML.HtmlText(Lnks);
+        FreeAndNil(sHTML);
+      end
+      else begin
         Flags := DT_EXPANDTABS or DT_NOCLIP or DT_WORDBREAK or acAlignmentArray[Manager.TextAlignment] or DrawTextBiDiModeFlagsReadingOnly or DT_VCENTER;
         if Application.IsRightToLeft then
           Flags := Flags or DT_RTLREADING;
 
         WriteText32(Bmp, PacChar(Manager.TmpShowData.Caption), True, RText, Flags, SkinIndex, False, DefaultManager);
-      end
-      else begin
-        if (Template <> nil) then
-          Bmp.Canvas.Font.Color := Template.Font.Color;
-
-        Bmp.Canvas.Brush.Style := bsClear;
-        if Bmp.Canvas.Font.Color < 0 then
-          Bmp.Canvas.Font.Color := 0;
-
-        acDrawText(Bmp.Canvas.Handle, PacChar(Manager.TmpShowData.Caption), RText, acAlignmentArray[Manager.TextAlignment] or DT_NOPREFIX or DT_WORDBREAK or DrawTextBiDiModeFlagsReadingOnly or DT_VCENTER);
       end;
+    end
+    else begin
+      if (Template <> nil) then
+        Bmp.Canvas.Font.Color := Template.Font.Color;
+
+      Bmp.Canvas.Brush.Style := bsClear;
+      if Bmp.Canvas.Font.Color < 0 then
+        Bmp.Canvas.Font.Color := 0;
+
+      if Manager.FHTMLMode then begin
+        sHTML := TsHtml.Create;
+        sHTML.AlphaChannel := True;
+        sHTML.Init(Bmp, Manager.TmpShowData.Caption, rText);
+        sHTML.HtmlText(Lnks);
+        FreeAndNil(sHTML);
+      end
+      else
+        acDrawText(Bmp.Canvas.Handle, PacChar(Manager.TmpShowData.Caption), RText, acAlignmentArray[Manager.TextAlignment] or DT_NOPREFIX or DT_WORDBREAK or DrawTextBiDiModeFlagsReadingOnly or DT_VCENTER);
+    end;
   end
 
   else begin
@@ -1663,8 +1679,7 @@ var
   D0, S0, M0, SH0, D, S, M, SH: PRGBAArray_;
   x, y, DeltaD, DeltaS, DeltaM, DeltaSH: integer;
 begin
-  FBlend := DefBlend;
-  FBlend.SourceConstantAlpha := MaxByte;
+  InitBlendData(FBlend, MaxByte);
   if AlphaBmp <> nil then
     FreeAndNil(AlphaBmp);
     
@@ -1852,7 +1867,7 @@ begin
           lTicks := GetTickCount;
           Manager.AnimWindow.Left := Round(x);
           Manager.AnimWindow.Top  := Round(y);
-          while lTicks + acTimerInterval > GetTickCount do {wait here};
+          WaitTicks(lTicks);
         end;
         if (Manager.NewWindow <> nil) then
           FreeAndNil(Manager.NewWindow);
@@ -1874,7 +1889,7 @@ begin
           else
             Break;
 
-          while lTicks + acTimerInterval > GetTickCount do {wait here};
+          WaitTicks(lTicks);
         end;
       end;
     end;
@@ -2028,8 +2043,7 @@ begin
       AlphaBmp.Free;
 
     AlphaBmp := CreateBmp32(Width, Height);
-    FBlend := DefBlend;
-    FBlend.SourceConstantAlpha := MaxByte;
+    InitBlendData(FBlend, MaxByte);
     if Template <> nil then begin
       if Image.FImage.Empty and (Image.FImageData.Size > 0) then begin
         Image.FImageData.Seek(0, 0);
@@ -2767,7 +2781,6 @@ begin
   else
     SetClassLong(Result.Handle, GCL_STYLE, GetClassLong(Result.Handle, GCL_STYLE) or NCS_DROPSHADOW);
 
-//  Result.FormStyle := fsStayOnTop;
   ShowWindow(Result.Handle, SW_SHOWNOACTIVATE);
 end;
 
@@ -2787,13 +2800,6 @@ end;
 
 procedure TsAlphaHints.StartHideTimer(HideTime: integer = 0);
 begin
-{
-  if HideTimer <> nil then begin
-    HideTimer.OnTimer(HideTimer);
-    HideTimer.Enabled := False;
-    HideTimer.Free;
-  end;
-}
   if HideTimer = nil then
     HideTimer := TacThreadedTimer.Create(Self);
 
@@ -2836,8 +2842,7 @@ begin
   Step := 0;
   StepCount := max({10 * }DefAnimationTime div acTimerInterval, 1) * StepDivid;
   CurrentHintForm := HintForm;
-  FBlend := DefBlend;
-  FBlend.SourceConstantAlpha := 0;
+  InitBlendData(FBlend, 0);
   if Manager.Skinned and (DefaultManager.gd[CurrentHintForm.SkinIndex].Props[0].Transparency <> 100) then
     Transparency := Round(DefaultManager.gd[CurrentHintForm.SkinIndex].Props[0].Transparency * 2.55)
   else

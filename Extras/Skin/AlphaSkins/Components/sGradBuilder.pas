@@ -106,7 +106,7 @@ procedure KillForm;
 implementation
 
 uses math,
-  acntUtils, sStyleSimply, sGraphUtils, sColorDialog, acPopupController;
+  acntUtils, sStyleSimply, sGraphUtils, sColorDialog, acPopupController, sVCLUtils;
 
 
 const
@@ -277,15 +277,10 @@ end;
 
 procedure TGradBuilder.Panel2Click(Sender: TObject);
 var
-  m: TMouse;
   p: TPoint;
 begin
-  m := TMouse.Create;
-  p := m.CursorPos;
+  p := acMousePos;
   p := Panel2.ScreenToClient(p);
-  if Assigned(m) then
-    FreeAndNil(m);
-
   SetLength(a, Length(a) + 1);
   NewPoint(Panel2, p.y, clWhite);
   ReCalcData;
