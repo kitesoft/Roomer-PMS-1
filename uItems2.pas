@@ -322,6 +322,8 @@ type
     ///	</summary>
     property ShowItemsOfType: TShowItemOptionSet read FShowItemsOfType write FShowItemsOfType;
     property AllowGridEdit: boolean read FAllowGridEdit write SetAllowGridEdit;
+  public
+    destructor Destroy; override;
   end;
 
 function openItems(act : TActTableAction; Lookup : Boolean; var theData : recItemHolder; aShowTypes: TShowItemOptionSet = []) : boolean;
@@ -479,6 +481,12 @@ begin
   result.price      := kbmStockitemPricesprice.AsFloat;
 end;
 
+
+destructor TfrmItems2.Destroy;
+begin
+  financeLookupList.Free;
+  inherited;
+end;
 
 procedure TfrmItems2.GetSelectedItems(theData : TrecItemHolderList);
 var item : TrecItemHolder;
