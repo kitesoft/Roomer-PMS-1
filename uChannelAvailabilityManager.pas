@@ -17,7 +17,7 @@ uses
   cxClasses, acImage, clisted, uRoomerThreadedRequest, cxGraphics, cxLookAndFeels, cxLookAndFeelPainters, dxSkinsCore, dxSkinCaramel, dxSkinCoffee,
   dxSkinDarkSide, dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, cxButtons, AdvEdit, AdvEdBtn, PlannerDatePicker,
   dxSkinBlack, dxSkinBlue, dxSkinDevExpressDarkStyle, dxSkinFoggy, dxSkinLiquidSky, dxSkinMcSkin, dxSkinOffice2013White, dxSkinWhiteprint, CheckComboBox,
-  AdvUtil;
+  AdvUtil, sListBox, sCheckListBox;
 
 type
 
@@ -239,7 +239,7 @@ type
     sButton2: TsButton;
     cbMon: TsCheckBox;
     rateGrid: TAdvStringGrid;
-    sPanel10: TsPanel;
+    pnlPublishButtons: TsPanel;
     sPanel11: TsPanel;
     btnPublish: TsButton;
     Panel1: TsPanel;
@@ -257,7 +257,7 @@ type
     sButton1: TsButton;
     sButton3: TsButton;
     timRecalc: TTimer;
-    sPanel6: TsPanel;
+    pnlSubViews: TsPanel;
     cbxRateRestrictions: TsCheckBox;
     cbxPlanCodes: TsComboBox;
     sButton4: TsButton;
@@ -291,14 +291,11 @@ type
     edtSingleUsePrice: TsEdit;
     __cbxSingleUsePriceActive: TsCheckBox;
     lblSingleUsePrice: TsLabel;
-    ccChannels: TCheckComboBox;
     sLabel1: TsLabel;
     cbxShowSubrates: TsCheckBox;
     btnRecalcDescendantRates: TsButton;
     btnClearRoomClasses: TsButton;
     btnClearChannelSelection: TsButton;
-    btnClearChannelSelectionGrid: TsButton;
-    btnCheckAllChannel: TsButton;
     btnCheckAllBulkRoomClasses: TsButton;
     btnCheckAllBulkChannel: TsButton;
     pnlGridsWithLoadingCaption: TsPanel;
@@ -336,6 +333,20 @@ type
     lblDrawTime: TsLabel;
     timBlink: TTimer;
     timBringToFront: TTimer;
+    pnlChannels: TsPanel;
+    ccChannels: TCheckComboBox;
+    btnClearChannelSelectionGrid: TsButton;
+    btnCheckAllChannel: TsButton;
+    btnRefresh: TsButton;
+    pnlSelectView: TsPanel;
+    __cbxSelectAll: TsCheckBox;
+    __cblSelectChannels: TsCheckListBox;
+    sLabel2: TsLabel;
+    sLabel3: TsLabel;
+    sLabel4: TsLabel;
+    deStartDate: TsDateEdit;
+    sButton6: TsButton;
+    __cblVisibleDays: TsRadioGroup;
     procedure FormCreate(Sender: TObject);
     procedure timStartTimer(Sender: TObject);
     procedure gridDrawCell(Sender: TObject; ACol, ARow: integer; Rect: TRect; State: TGridDrawState);
@@ -420,6 +431,9 @@ type
     procedure FormDestroy(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure btnRefreshClick(Sender: TObject);
+    procedure __cbxSelectAllClick(Sender: TObject);
+    procedure sButton6Click(Sender: TObject);
   private
     { Private declarations }
     RoomerDataSet: TRoomerDataSet;
@@ -540,6 +554,20 @@ type
     procedure ReloadSelectedPeriod;
     function AnyRateOrRestrictionsChanges: Boolean;
     function CorrectAmountByCurrency(price: Double; fromCurrencyId, toCurrencyId: Integer): Double;
+    procedure LoadChannels;
+    function SelectedChannelCount: Integer;
+    function isChannelNameRow(iRow: integer): Boolean;
+    function getChannelNameRowOfRow(iCol, iRow: integer): Integer;
+    function isEmptyRow(iRow: integer): Boolean;
+    function GetSelectedRateSet(fromDate, toDate: TDate; withMasterRates: Boolean): TRoomerDataSet;
+    function GetSelectedChannelsAsCDL: String;
+    function OnlyMasterSelected: Boolean;
+    function IsMasterSelected: Boolean;
+    procedure postMasterRatesCalculations(sql: String);
+    function IsThisChannelSelected(id: Integer): Integer;
+    function CheckForChanges: Boolean;
+    procedure MakeMasterRatesDirty(sql: String);
+    procedure ShowHideSelectView(show: Boolean; init : Boolean = true);
   protected
     procedure CreateParams(var Params: TCreateParams); override;
   public
@@ -846,6 +874,18 @@ begin
     result := TPriceData(rateGrid.Objects[iCol, iPriceRow])
 end;
 
+function TfrmChannelAvailabilityManager.getChannelNameRowOfRow(iCol, iRow: integer): Integer;
+var
+  iPriceRow: integer;
+begin
+  result := 0;
+  if (iCol < 1) OR (iRow < 1) then
+    exit;
+  iPriceRow := findPriceRowFrom(iRow);
+  if isPriceRow(iPriceRow) then
+    result := iPriceRow - 1;
+end;
+
 function TfrmChannelAvailabilityManager.isCurrentlySelectedValueEdited(iCol, iRow: integer): Boolean;
 var
   PriceData: TPriceData;
@@ -900,6 +940,16 @@ end;
 function TfrmChannelAvailabilityManager.isPriceRow(iRow: integer): Boolean;
 begin
   result := (rateGrid.ColCount > 1) AND (iRow > 0) AND (Assigned(rateGrid.Objects[1, iRow]) AND (rateGrid.Objects[1, iRow] IS TPriceData));
+end;
+
+function TfrmChannelAvailabilityManager.isChannelNameRow(iRow: integer): Boolean;
+begin
+  result := rateGrid.Objects[0, iRow] = Pointer(20);
+end;
+
+function TfrmChannelAvailabilityManager.isEmptyRow(iRow: integer): Boolean;
+begin
+  result := rateGrid.Objects[0, iRow] = Pointer(21);
 end;
 
 function TfrmChannelAvailabilityManager.isPriceCell(iCol, iRow: integer): Boolean;
@@ -984,15 +1034,13 @@ end;
 
 procedure TfrmChannelAvailabilityManager.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 begin
-  CanClose := True;
-  if AnyRateOrRestrictionsChanges then
-    CanClose :=  MessageDLG(GetTranslatedText('shTx_ChannelAvailabilityManager_ChangesContinue'), mtWarning, [mbYes, mbCancel], 0) = mrYes;
+  CanClose := CheckForChanges;
 end;
 
 procedure TfrmChannelAvailabilityManager.FormCreate(Sender: TObject);
 begin
   RoomerDataSet := CreateNewDataSet;
-  pgcPages.Visible := False;
+//  pgcPages.Visible := False;
   cbxRateRestrictionsClick(cbxRateRestrictions);
 
   RoomerLanguage.TranslateThisForm(self);
@@ -1093,7 +1141,7 @@ procedure TfrmChannelAvailabilityManager.timStartTimer(Sender: TObject);
 var a, b : Boolean;
 begin
   timStart.enabled := false;
-  pgcPages.Visible := False;
+//  pgcPages.Visible := False;
   PrepareUserInterface;
 {$IFDEF DEBUG}
       lblReadTime.Visible := True;
@@ -1578,6 +1626,88 @@ begin
   end;
 end;
 
+procedure TfrmChannelAvailabilityManager.MakeMasterRatesDirty(sql : String);
+var s : String;
+begin
+  s := format('UPDATE channelmasteravailabilityrates cmr ' +
+       'JOIN (SELECT * FROM roomtypegroups rtgCR WHERE rtgCR.Active=1) AS rtgCR ON rtgCR.id=cmr.roomClassId ' +
+       'JOIN (SELECT * FROM roomtypegroups rtg WHERE Active=1) rtg ON rtg.TopClass=rtgCR.TopClass ' +
+       'JOIN channelrates cr ON cr.roomclassId=rtg.id AND cmr.channelManager=cmr.channelManager AND cmr.planCodeId=cmr.planCodeId AND cmr.date=cr.date ' +
+       'JOIN channels c ON c.Id=cr.channelId AND c.Active=1 ' +
+       'JOIN currencies cu ON cu.Id=c.currencyId ' +
+       'JOIN (SELECT IFNULL((SELECT value FROM pms_settings WHERE keyGroup=''RATES_AND_AVAILABILITY_FUNCTIONS'' AND `key`=''MASTER_RATE_CURRENCY'' LIMIT 1), (SELECT NativeCurrency FROM control LIMIT 1)) AS  masterCurrencyId) AS masterSettings ' +
+       'JOIN currencies cuMaster ON cuMaster.Currency=masterSettings.masterCurrencyId ' +
+       'JOIN hotelconfigurations hc ON hc.masterRatesActive=1 ' +
+       'SET ' +
+       'cmr.dirty=1, ' +
+       'cmr.singleUsePriceDirty=1, ' +
+       'cmr.minStayDirty=1, ' +
+       'cmr.maxStayDirty=1, ' +
+       'cmr.closedOnArrivalDirty=1, ' +
+       'cmr.closedOnDepartureDirty=1, ' +
+       'cmr.stopDirty=1, ' +
+       'cmr.lengthOfStayArrivalDateBasedDirty=1 ' +
+       ' ' +
+       'WHERE cmr.channelManager=1 AND cmr.planCodeId=8 ' +
+       'AND EXISTS(SELECT id FROM channelclassrelations ccr WHERE ccr.channelId=cr.channelId AND ccr.RoomClassId=rtg.id) ' +
+       'AND ( ' +
+       '%s ' +
+       ') ',
+       [
+         sql
+       ]
+       );
+  CopyToClipboard(s);
+  d.roomerMainDataSet.DoCommand(s);
+end;
+
+procedure TfrmChannelAvailabilityManager.postMasterRatesCalculations(sql : String);
+var s : String;
+begin
+  s := format('UPDATE channelmasteravailabilityrates cmr ' +
+       'JOIN (SELECT * FROM roomtypegroups rtgCR WHERE rtgCR.Active=1) AS rtgCR ON rtgCR.id=cmr.roomClassId ' +
+       'JOIN (SELECT * FROM roomtypegroups rtg WHERE Active=1) rtg ON rtg.TopClass=rtgCR.TopClass ' +
+       'JOIN channelrates cr ON cr.roomclassId=rtg.id AND cmr.channelManager=cmr.channelManager AND cmr.planCodeId=cmr.planCodeId AND cmr.date=cr.date ' +
+       'JOIN channels c ON c.Id=cr.channelId AND c.Active=1 ' +
+       'JOIN currencies cu ON cu.Id=c.currencyId ' +
+       'JOIN (SELECT IFNULL((SELECT value FROM pms_settings WHERE keyGroup=''RATES_AND_AVAILABILITY_FUNCTIONS'' AND `key`=''MASTER_RATE_CURRENCY'' LIMIT 1), (SELECT NativeCurrency FROM control LIMIT 1)) AS  masterCurrencyId) AS masterSettings ' +
+       'JOIN currencies cuMaster ON cuMaster.Currency=masterSettings.masterCurrencyId ' +
+       'JOIN hotelconfigurations hc ON hc.masterRatesActive=1 ' +
+       'SET cr.Price=IF(cmr.dirty AND rtg.connectRateToMasterRate=0, cr.Price, ' +
+       '(cmr.price + IF(rtg.RateDeviationType=''FIXED_AMOUNT'', rtg.masterRateRateDeviation, cmr.Price * rtg.masterRateRateDeviation / 100) ' +
+       ')) * cuMaster.AValue / cu.AValue, ' +
+       'cr.SingleUsePrice=(IF(cmr.singleUsePriceDirty AND rtg.connectSingleUseRateToMasterRate=0, cr.singleUsePrice, ' +
+       'cmr.singleUsePrice + IF(rtg.SingleUseRateDeviationType=''FIXED_AMOUNT'', rtg.masterRateSingleUseRateDeviation, cmr.singleUsePrice * rtg.masterRateSingleUseRateDeviation / 100) ' +
+       ')) * cuMaster.AValue / cu.AValue, ' +
+       'cr.MinStay=IF(cmr.minStayDirty AND rtg.connectMinStayToMasterRate=0, cr.MinStay, cmr.MinStay), ' +
+       'cr.MaxStay=IF(cmr.maxStayDirty AND rtg.connectMaxStayToMasterRate=0, cr.MaxStay, cmr.MaxStay), ' +
+       'cr.closedOnArrival=IF(cmr.closedOnArrivalDirty AND rtg.connectCOAToMasterRate=0, cr.closedOnArrival, cmr.closedOnArrival), ' +
+       'cr.closedOnDeparture=IF(cmr.closedOnDepartureDirty AND rtg.connectCODToMasterRate=0, cr.closedOnDeparture, cmr.closedOnDeparture), ' +
+       'cr.stop=IF(cmr.stopDirty AND rtg.connectStopSellToMasterRate=0, cr.stop, cmr.stop), ' +
+       'cr.lengthOfStayArrivalDateBased=IF(cmr.lengthOfStayArrivalDateBasedDirty AND rtg.connectLOSToMasterRate=0, cr.lengthOfStayArrivalDateBased, cmr.lengthOfStayArrivalDateBased), ' +
+       ' ' +
+       'cmr.dirty=0, ' +
+       'cmr.singleUsePriceDirty=0, ' +
+       'cmr.minStayDirty=0, ' +
+       'cmr.maxStayDirty=0, ' +
+       'cmr.closedOnArrivalDirty=0, ' +
+       'cmr.closedOnDepartureDirty=0, ' +
+       'cmr.stopDirty=0, ' +
+       'cmr.lengthOfStayArrivalDateBasedDirty=0 ' +
+       ' ' +
+       'WHERE cmr.channelManager=1 AND cmr.planCodeId=8 ' +
+       'AND EXISTS(SELECT id FROM channelclassrelations ccr WHERE ccr.channelId=cr.channelId AND ccr.RoomClassId=rtg.id) ' +
+       'AND ( ' +
+       '%s ' +
+       ') ',
+       [
+         sql
+       ]
+       );
+  CopyToClipboard(s);
+  d.roomerMainDataSet.DoCommand(s);
+end;
+
 procedure TfrmChannelAvailabilityManager.PublishSheet(OnlyCreateExcel: Boolean; AllowEditAndSendEmail : Boolean);
 var
   list: TList<String>;
@@ -1740,6 +1870,8 @@ var
     PriceToHotel : Double;
     iTypeIndex : Integer;
 
+    CalcSql : String;
+
 begin
   ExcelP := NIL;
   ChEntity := NIL;
@@ -1753,9 +1885,10 @@ begin
   topClasses := TStringlist.Create;
   topClasses.Sorted := True;
   topClasses.Duplicates := dupIgnore;
+  CalcSql := '';
   list := TList<String>.Create;
   try
-    for iMaster := 0 to 1 do
+    for iMaster := ABS(ORD(OnlyMasterSelected)) to 1 do
     begin
       for iRow := 1 to rateGrid.RowCount - 1 do
       begin
@@ -1770,6 +1903,16 @@ begin
               if PriceData.isEdited OR PriceData.ForcingUpdate then
               begin
                 sql := '';
+
+                if iMaster = 1 then
+                begin
+                  CalcSql := CalcSql + IIF(CalcSql='', '', ' OR ') +
+                    format('(cmr.date=''%s'' AND cmr.roomclassId=%d)',
+                    [
+                      DateToSqlString(PriceData.FDate),
+                      PriceData.FRoomTypeGroupId
+                    ]);
+                end;
 
                 buildSetStatement(PriceData.ForcingUpdate OR PriceData.FPriceDirty, sql, 'dirty', 'price', _db(PriceData.FPrice));
                 if PriceData.FPriceDirty then LogChanges(PriceData, RATE_EDIT);
@@ -1888,6 +2031,10 @@ begin
 
     end;
 
+    if CalcSql <> '' then
+       postMasterRatesCalculations(CalcSql);
+
+
     if g.qRatesManagedByRoomer then
       AddTopClassOccToRatesExcelSheet;
 
@@ -1916,8 +2063,12 @@ procedure TfrmChannelAvailabilityManager.btnRecalcDescendantRatesClick(Sender: T
 var iRow, iCol: Integer;
     PriceData : TPriceData;
     doExit : Boolean;
+    CalcSql : String;
 begin
+  if NOT CheckForChanges then exit;
+
   doExit := False;
+  CalcSql := '';
   BeginProject(RealNumberOfRateObjects);
   rateGrid.BeginUpdate;
   try
@@ -1929,8 +2080,15 @@ begin
       if assigned(PriceData) then
       begin
         if PriceData.channelId < 0 then
-          CorrectMasterRateLinkedCells(PriceData, iCol, iRow)
-        else
+        begin
+          CorrectMasterRateLinkedCells(PriceData, iCol, iRow);
+          CalcSql := CalcSql + IIF(CalcSql='', '', ' OR ') +
+            format('(cmr.date=''%s'' AND cmr.roomclassId=%d)',
+            [
+              DateToSqlString(PriceData.FDate),
+              PriceData.FRoomTypeGroupId
+            ]);
+        end else
         begin
           doExit := False;
           Break;
@@ -1945,6 +2103,35 @@ begin
     EndProject;
     rateGrid.EndUpdate;
   end;
+  if CalcSql <> '' then
+  begin
+     MakeMasterRatesDirty(CalcSql);
+     postMasterRatesCalculations(CalcSql);
+     RefreshGridsData;
+  end;
+end;
+
+procedure TfrmChannelAvailabilityManager.ShowHideSelectView(show : Boolean; init : Boolean = true);
+var
+  i: Integer;
+begin
+  if show AND init then
+  begin
+    __cblSelectChannels.Items.Clear;
+    __cblVisibleDays.Items.Clear;
+
+    __cblSelectChannels.Items.AddStrings(ccChannels.Items);
+    for i := 0 to ccChannels.Items.Count - 1 do
+      __cblSelectChannels.Checked[i] := ccChannels.Checked[i];
+
+    __cblVisibleDays.Items.AddStrings(__cbxVisibleDays.Items);
+    __cblVisibleDays.ItemIndex := __cbxVisibleDays.ItemIndex;
+
+    deStartDate.Date := Trunc(Now);
+  end;
+  pnlSelectView.Visible := show;
+  pnlPublishButtons.Visible := NOT show;
+  pnlSubViews.Visible := NOT show;
 end;
 
 procedure TfrmChannelAvailabilityManager.btnRefreshOneDayClick(Sender: TObject);
@@ -2442,23 +2629,133 @@ begin
   end;
 end;
 
+function TfrmChannelAvailabilityManager.SelectedChannelCount : Integer;
+var i : Integer;
+begin
+  result := 0;
+  for i := 0 to ccCHannels.Items.Count - 1 do
+    result := result + ABS(ORD(ccChannels.Checked[i]));
+end;
+
+function TfrmChannelAvailabilityManager.OnlyMasterSelected : Boolean;
+var i : Integer;
+    bMaster, bOther : Boolean;
+begin
+  result := False;
+  bMaster := False;
+  bOther := False;
+  for i := 0 to ccCHannels.Items.Count - 1 do
+    if ccChannels.Checked[i] AND (Integer(ccChannels.Items.Objects[i])=-1) then
+      bMaster := True
+    else if ccChannels.Checked[i] AND (Integer(ccChannels.Items.Objects[i])<>-1) then
+      bOther := True;
+
+  result := bMaster AND NOT bOther;
+end;
+
+function TfrmChannelAvailabilityManager.IsThisChannelSelected(id : Integer) : Integer;
+var i : Integer;
+begin
+  result := -1;
+  for i := 0 to ccCHannels.Items.Count - 1 do
+    if ccChannels.Checked[i] AND (Integer(ccChannels.Items.Objects[i])=id) then
+    begin
+      result := i;
+      Exit;
+    end;
+end;
+
+function TfrmChannelAvailabilityManager.IsMasterSelected : Boolean;
+begin
+  result := IsThisChannelSelected(-1) > -1;
+end;
+
+procedure TfrmChannelAvailabilityManager.LoadChannels;
+var rSet : TRoomerDataset;
+    i : Integer;
+    s : String;
+begin
+  ccChannels.Items.Clear;
+  cbxChannel.Items.Clear;
+
+  s := format(
+       'SELECT id, name, (SELECT masterRatesActive FROM hotelconfigurations LIMIT 1) AS masterRatesActive FROM channels c ' +
+       'WHERE c.Id IN (SELECT DISTINCT channelId FROM channelrates WHERE channelManager=%d AND planCodeId=%d) ' +
+       'AND c.Id IN (SELECT DISTINCT channelId FROM channelclassrelations crr WHERE crr.channelId=c.Id ) ' +
+       'AND c.Active',
+       [
+        GetChannelManagerId,
+        GetPlanCodeId
+       ]);
+  rSet := CreateNewDataSet;
+  try
+    hData.rSet_bySQL(rSet, s);
+    rSet.first;
+    if (NOT rSet.eof) AND (rSet.FieldByName('masterRatesActive').AsBoolean) then
+    begin
+      i := AddCheckEditItem(ccChannels, 'Master Rates', TObject(-1));
+      ccChannels.Checked[i] := True;
+      i := AddCheckEditItem(cbxChannel, 'Master Rates', TObject(-1));
+      cbxChannel.Checked[i] := True;
+    end;
+
+    while NOT rSet.eof do
+    begin
+      if rSet['id'] > 0 then
+      begin
+        i := AddCheckEditItem(ccChannels, rSet['name'], TObject(rSet.FieldByName('id').AsInteger));
+        ccChannels.Checked[i] := False;
+        i := AddCheckEditItem(cbxChannel, rSet['name'], TObject(rSet.FieldByName('id').AsInteger));
+        cbxChannel.Checked[i] := (rSet['id'] < 0);
+      end;
+      rSet.Next;
+    end;
+  finally
+    FreeAndNil(rSet);
+  end;
+
+//  if ccChannels.Items.Count > 0 then
+//    ccChannels.Checked[0] := True;
+end;
+
 procedure TfrmChannelAvailabilityManager.cbxChannelManagersChange(Sender: TObject);
 var
   cmIndex: integer;
+  WindowLocked : Boolean;
 begin
-  cmIndex := cbxChannelManagers.ItemIndex;
-  if cmIndex < 0 then
-    exit;
-  CurrentChannelMan := TChannelManagerValue(cbxChannelManagers.Items.Objects[cmIndex]);
-  pgcPages.ActivePageIndex := 1;
-  pgcPagesChange(pgcPages);
-  RefreshGridsData;
+  WindowLocked := LockWindowUpdate(self.Handle);
+  try
+    cmIndex := cbxChannelManagers.ItemIndex;
+    if cmIndex < 0 then
+      exit;
+    CurrentChannelMan := TChannelManagerValue(cbxChannelManagers.Items.Objects[cmIndex]);
+    pgcPages.ActivePageIndex := 1;
+    pgcPagesChange(pgcPages);
+    LoadChannels;
+    RefreshGridsData;
+    ShowHideSelectView(true);
+  finally
+    if WindowLocked then
+      LockWindowUpdate(0);
+  end;
 end;
 
 procedure TfrmChannelAvailabilityManager.RefreshGridsData;
 var MaxDate : Integer;
+
+   procedure AdjustSelectableBulkChannels;
+   var i : Integer;
+   begin
+     cbxChannel.Clear;
+     cbxChannel.Items.AddStrings(ccChannels.Items);
+      for i := cbxCHannel.Items.Count - 1 downto 0 do
+        if IsThisChannelSelected(Integer(ccChannels.Items.Objects[i])) = -1 then
+          cbxChannel.Items.Delete(i);
+   end;
+
 begin
   try
+    AdjustSelectableBulkChannels;
     if __cbxVisibleDays.ItemIndex = -1 then
        __cbxVisibleDays.ItemIndex := 0;
     NUMBER_OF_DAYS_DISPLAYED := StrToIntDef(__cbxVisibleDays.Items[__cbxVisibleDays.ItemIndex], 0) - 1;
@@ -2496,6 +2793,7 @@ begin
 //      cbxExtraRestrictions.Checked := false;
 //      cbxExtraRestrictions.Tag := 0;
 
+//      if SelectedChannelCount > 0 then
       ShowRatesForSelectedChannelManager;
       ShowAvailabilityForSelectedChannelManager;
 
@@ -3004,6 +3302,120 @@ begin
     result := cbx.Checked[i];
 end;
 
+function TfrmChannelAvailabilityManager.GetSelectedChannelsAsCDL : String;
+var i : Integer;
+begin
+  result := '';
+  for i := 0 to ccChannels.Items.Count -1 do
+    if ccChannels.Checked[i] then
+      result := result + IIF(result='', '', ',') + inttostr(Integer(ccChannels.Items.Objects[i]));
+end;
+
+function TfrmChannelAvailabilityManager.GetSelectedRateSet(fromDate, toDate : TDate; withMasterRates : Boolean) : TRoomerDataSet;
+var sql : String;
+begin
+  sql := IIF(withMasterRates AND IsMasterSelected, format('SELECT ' +
+         'cr.id, ' +
+         'cr.date, ' +
+         'cr.price, ' +
+         'cr.dirty, ' +
+         'cr.availability, ' +
+         'cr.availabilityDirty, ' +
+         'cr.minstay, ' +
+         'cr.minStayDirty, ' +
+         'cr.maxStay, ' +
+         'cr.maxStayDirty, ' +
+         'cr.closedOnArrival, ' +
+         'cr.closedOnArrivalDirty, ' +
+         'cr.closedOnDeparture, ' +
+         'cr.closedOnDepartureDirty, ' +
+         'cr.stop, ' +
+         'cr.stopDirty, ' +
+         'cr.lengthOfStayArrivalDateBased, ' +
+         'cr.lengthOfStayArrivalDateBasedDirty, ' +
+         'cr.singleUsePrice, ' +
+         'cr.singleUsePriceDirty, ' +
+         'cr.channelManager, ' +
+         'ch.id AS channelId, ' +
+         'ch.currencyId AS currencyId, ' +
+         'rtg.id AS roomClassId, ' +
+         'cr.planCodeId, ' +
+         'rtg.Description AS rtgDescription, rtg.Code AS rtgCode, rtg.TopClass AS rtgTopClass, rtg.sendRate, rtg.sendStopSell, rtg.sendMinStay, rtg.OrderIndex,rtg.connectRateToMasterRate, rtg.masterRateRateDeviation, rtg.RateDeviationType, ' +
+         'rtg.connectSingleUseRateToMasterRate, rtg.masterRateSingleUseRateDeviation, rtg.singleUseRateDeviationType, ' +
+         'rtg.connectStopSellToMasterRate, rtg.connectAvailabilityToMasterRate, rtg.connectMinStayToMasterRate, ' +
+         'rtg.connectMaxStayToMasterRate, rtg.connectCOAToMasterRate, rtg.connectCODToMasterRate, ' +
+         'rtg.connectLOSToMasterRate ' +
+         'FROM channelmasteravailabilityrates cr ' +
+         '    INNER JOIN roomtypegroups rtg ON rtg.id=cr.roomClassId AND rtg.TopClass=rtg.Code, ' +
+         '    (SELECT -1 AS id, (SELECT cu.id ' +
+         'FROM currencies cu ' +
+         'WHERE Currency = IFNULL((SELECT value FROM pms_settings WHERE keyGroup=''RATES_AND_AVAILABILITY_FUNCTIONS'' AND `key`=''MASTER_RATE_CURRENCY'' LIMIT 1), ' +
+         '   (SELECT NativeCurrency FROM control LIMIT 1))) AS currencyId) AS ch ' +
+         'WHERE cr.date>=''%s'' AND cr.date<=''%s'' ' +
+         'AND cr.channelManager=%d AND cr.planCodeId=%d ' +
+         ' ' +
+         'UNION ALL ',
+         [
+            DateToSqlString(fromDate),
+            DateToSqlString(toDate),
+            GetChannelManagerId,
+            GetPlanCodeId
+         ]), '') +
+
+         format('SELECT ' +
+         'cr.id, ' +
+         'cr.date, ' +
+         'cr.price, ' +
+         'cr.dirty, ' +
+         'cr.availability, ' +
+         'cr.availabilityDirty, ' +
+         'cr.minstay, ' +
+         'cr.minStayDirty, ' +
+         'cr.maxStay, ' +
+         'cr.maxStayDirty, ' +
+         'cr.closedOnArrival, ' +
+         'cr.closedOnArrivalDirty, ' +
+         'cr.closedOnDeparture, ' +
+         'cr.closedOnDepartureDirty, ' +
+         'cr.stop, ' +
+         'cr.stopDirty, ' +
+         'cr.lengthOfStayArrivalDateBased, ' +
+         'cr.lengthOfStayArrivalDateBasedDirty, ' +
+         'cr.singleUsePrice, ' +
+         'cr.singleUsePriceDirty, ' +
+         'cr.channelManager, ' +
+         'cr.channelId, ' +
+         'ch.currencyId, ' +
+         'cr.roomClassId, ' +
+         'cr.planCodeId, ' +
+         'rtg.Description AS rtgDescription, rtg.Code AS rtgCode, rtg.TopClass AS rtgTopClass, rtg.sendRate, rtg.sendStopSell, rtg.sendMinStay, rtg.OrderIndex,rtg.connectRateToMasterRate, rtg.masterRateRateDeviation, rtg.RateDeviationType, ' +
+         'rtg.connectSingleUseRateToMasterRate, rtg.masterRateSingleUseRateDeviation, rtg.singleUseRateDeviationType, ' +
+         'rtg.connectStopSellToMasterRate, rtg.connectAvailabilityToMasterRate, rtg.connectMinStayToMasterRate, ' +
+         'rtg.connectMaxStayToMasterRate, rtg.connectCOAToMasterRate, rtg.connectCODToMasterRate, ' +
+         'rtg.connectLOSToMasterRate ' +
+         'FROM channelrates cr ' +
+         '    JOIN roomtypegroups rtg ON rtg.id=cr.roomClassId AND rtg.Active=1 ' +
+         '    JOIN channels ch ON ch.ID=cr.channelId AND ch.Active=1 ' +
+         '    JOIN channelmanagers cm ON cm.ID=cr.channelManager AND cm.Active=1 ' +
+         '    JOIN channelplancodes cpc ON cpc.ID=cr.planCodeId AND cpc.Active=1 ' +
+         'WHERE cr.date>=''%s'' AND cr.date<=''%s'' ' +
+         'AND cr.channelManager=%d AND cr.planCodeId=%d ' +
+         'AND cr.channelId IN (%s) ' +
+         ' ' +
+         'ORDER BY channelId, OrderIndex, roomClassId, date',
+         [
+            DateToSqlString(fromDate),
+            DateToSqlString(toDate),
+            GetChannelManagerId,
+            GetPlanCodeId,
+            GetSelectedChannelsAsCDL
+         ]
+         );
+  CopyToClipboard(sql);
+  result := CreateNewDataSet;
+  hData.rSet_bySQL(result, sql, false);
+end;
+
 procedure TfrmChannelAvailabilityManager.ShowRatesForSelectedChannelManager;
 var
   i: integer;
@@ -3022,6 +3434,7 @@ var
   iCountLine: integer;
 
   tempSpaces : String;
+  sql : String;
 
   function anyDirectConnectionChannel(ASet : TRoomerDataSet) : Boolean;
   begin
@@ -3084,24 +3497,32 @@ begin
     if pcId < 0 then
       exit;
 
-    AvailSet := RoomerDataSet.ActivateNewDataset(RoomerDataSet.queryRoomer(
-                   format('SELECT CURRENT_DATE AS today, ch.id AS chId, ch.Name AS channelName, ch.directConnection, ch.rateRoundingType ' +
+    if SelectedChannelCount = 0 then
+    begin
+      rateGrid.RowCount := 1;
+      exit;
+    end;
+
+    sql := format('SELECT CURRENT_DATE AS today, ch.id AS chId, ch.Name AS channelName, ch.directConnection, ch.rateRoundingType ' +
                           ', to_bool((SELECT masterRatesActive FROM hotelconfigurations LIMIT 1)) AS masterRatesActive ' +
                           'FROM channelmanagers cm, ' +
                           '    channels ch ' +
                           'WHERE cm.id=%d ' +
                           'AND FIND_IN_SET(ch.id, cm.channels) ' +
                           'AND ch.activePlanCode=%d ' +
+                          'AND ch.id IN (%s) ' +
+
                           'UNION ALL ' +
                           'SELECT CURRENT_DATE AS today, ' +                                                                                             // 2 decimals
                           ' -1 AS chId, ''MASTER RATE'' AS channelName, EXISTS(SELECT id FROM channels WHERE directConnection LIMIT 1) AS directConnection, 5 AS rateRoundingType ' +
                           ', to_bool((SELECT masterRatesActive FROM hotelconfigurations LIMIT 1)) AS masterRatesActive ' +
-                          'ORDER BY IF(chId=-1, '''', channelName) ', [cmId, pcId])));
+                          'ORDER BY IF(chId=-1, '''', channelName) ', [cmId, pcId, GetSelectedChannelsAsCDL]);
+    AvailSet := RoomerDataSet.ActivateNewDataset(RoomerDataSet.queryRoomer(sql));
 
     cbxChannel.OnClickCheck := Nil;
     ccChannels.OnClickCheck := Nil;
-    cbxChannel.Items.Clear;
-    ccChannels.Items.Clear;
+//    cbxChannel.Items.Clear;
+//    ccChannels.Items.Clear;
     try
       AvailSet.First;
       if AvailSet.EOF then
@@ -3122,7 +3543,8 @@ begin
   {$IFDEF DEBUG}
       StartTimer(ReadTime);
   {$ENDIF}
-      rateSet := RoomerDataSet.ActivateNewDataset(RoomerDataSet.SystemGetChannelRates1812(startDate, NUMBER_OF_DAYS_DISPLAYED, channelId, cmId, pcId));
+//      rateSet := RoomerDataSet.ActivateNewDataset(RoomerDataSet.SystemGetChannelRates1812(startDate, NUMBER_OF_DAYS_DISPLAYED, channelId, cmId, pcId));
+      rateSet := GetSelectedRateSet(startDate, startDate + NUMBER_OF_DAYS_DISPLAYED, availSet['masterRatesActive']);
   {$IFDEF DEBUG}
       EndTimer(ReadTime, lblReadTime);
   {$ENDIF}
@@ -3173,15 +3595,10 @@ begin
           rateGrid.RowCount := iRow + 3;
           iLastRoomClassId := -2;
 
-          rateGrid.Cells[0, iRow] := '<font></font><body bgcolor="#0000FF"><p align="center"><font color="#FFFFFF" size="11"><b>' + AvailSet['channelName'] +
+          rateGrid.Cells[0, iRow] := '<font></font><body bgcolor="#0000FF"><p align="center"><font color="#FFFFFF" size="11"><b>' +
+            AvailSet['channelName'] +
             '</font></p></body>';
-          i := AddCheckEditItem(cbxChannel, AvailSet['channelName'], TObject(AvailSet.FieldByName('chid').AsInteger));
-          cbxChannel.Checked[i] := (AvailSet['chid'] < 0);
-          if AvailSet['chid'] > 0 then
-          begin
-            i := AddCheckEditItem(ccChannels, AvailSet['channelName'], TObject(AvailSet.FieldByName('chid').AsInteger));
-            ccChannels.Checked[i] := True;
-          end;
+          rateGrid.Objects[0, iRow] := Pointer(20);
 
           for i := 1 to FCurrentNumDays + 1 do
           begin
@@ -3333,6 +3750,7 @@ begin
 
           inc(iRow, 1); // * cbxRateRestrictions.Tag);
           rateGrid.RowCount := iRow;
+          rateGrid.Objects[0, iRow] := Pointer(21);
 
           AvailSet.next;
 
@@ -3990,17 +4408,25 @@ begin
   ccChannels.OnClickCheck := nil;
   try
     CheckOrUnCheckAllInCheckList(ccChannels, true);
-    ccChannelsClickCheck(ccChannels);
+//    ccChannelsClickCheck(ccChannels);
   finally
     ccChannels.OnClickCheck := ccChannelsClickCheck;
   end;
 end;
 
+function TfrmChannelAvailabilityManager.CheckForChanges : Boolean;
+begin
+  result := False;
+  if (NOT AnyRateOrRestrictionsChanges) OR (MessageDLG(GetTranslatedText('shTx_ChannelAvailabilityManager_ChangesContinue'), mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
+    result := True;
+end;
+
 procedure TfrmChannelAvailabilityManager.sButton1Click(Sender: TObject);
 begin
   // if MessageDLG('All changes will be lost. Continue?', mtConfirmation, [mbYes, mbNo], 0) = mrYes then
-  if (NOT AnyRateOrRestrictionsChanges) OR (MessageDLG(GetTranslatedText('shTx_ChannelAvailabilityManager_ChangesContinue'), mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
-    ReloadSelectedPeriod;
+  if CheckForChanges then
+    btnRefreshClick(nil);
+  //    ReloadSelectedPeriod;
 end;
 
 procedure TfrmChannelAvailabilityManager.sButton2Click(Sender: TObject);
@@ -4113,7 +4539,32 @@ end;
 
 procedure TfrmChannelAvailabilityManager.sButton5Click(Sender: TObject);
 begin
-  ForceRateUpdateForCurrentPeriod;
+  if CheckForChanges then
+    ForceRateUpdateForCurrentPeriod;
+end;
+
+procedure TfrmChannelAvailabilityManager.sButton6Click(Sender: TObject);
+var i : Integer;
+begin
+  ccChannels.OnClickCheck := nil;
+  try
+    for i := 0 to __cblSelectChannels.Items.Count - 1 do
+      ccChannels.Checked[i] := __cblSelectChannels.Checked[i];
+    __cbxVisibleDays.ItemIndex := __cblVisibleDays.ItemIndex;
+    dateEdit.Date := deStartDate.Date;
+  finally
+    ccChannels.OnClickCheck := ccChannelsClickCheck;
+  end;
+  btnRefresh.Click;
+  ShowHideSelectView(False, False);
+end;
+
+procedure TfrmChannelAvailabilityManager.btnRefreshClick(Sender: TObject);
+begin
+  if Assigned(Sender) AND (NOT CheckForChanges) then
+      exit;
+
+  RefreshGridsData;
 end;
 
 procedure TfrmChannelAvailabilityManager.CheckOrUnCheckAllInCheckList(cl : TCheckComboBox; checked : Boolean; skipMinValues : Boolean = False);
@@ -4140,10 +4591,12 @@ begin
   ccChannels.OnClickCheck := nil;
   try
     CheckOrUnCheckAllInCheckList(ccChannels, false);
-    ccChannelsClickCheck(ccChannels);
+//    ccChannelsClickCheck(ccChannels);
   finally
     ccChannels.OnClickCheck := ccChannelsClickCheck;
   end;
+  if SelectedChannelCount = 0 then
+    rateGrid.RowCount := 1;
 end;
 
 procedure TfrmChannelAvailabilityManager.__cbxMinimumStayActiveClick(Sender: TObject);
@@ -4171,6 +4624,22 @@ end;
 procedure TfrmChannelAvailabilityManager.ccChannelsClickCheck(Sender: TObject);
 begin
   HideShowExtraCells;
+  if SelectedChannelCount > 0 then
+  begin
+    pnlChannels.SkinData.CustomColor := False;
+//    RefreshGridsData;
+  end else
+    pnlChannels.SkinData.CustomColor := True;
+
+  btnRefresh.Enabled := NOT pnlChannels.SkinData.CustomColor;
+end;
+
+procedure TfrmChannelAvailabilityManager.__cbxSelectAllClick(Sender: TObject);
+var
+  i: Integer;
+begin
+  for i := 0 to __cblSelectChannels.Items.Count - 1 do
+    __cblSelectChannels.Checked[i] := __cbxSelectAll.Checked;
 end;
 
 procedure TfrmChannelAvailabilityManager.__cbxSingleUsePriceActiveClick(Sender: TObject);
@@ -4218,6 +4687,7 @@ procedure TfrmChannelAvailabilityManager.HideShowExtraCells;
 var
   iRow, iHeight: integer;
   PriceData : TPriceData;
+  i: Integer;
 CONST CHECK_BOX_CELL_HEIGHT = 22;
 
   procedure HideOrShowRow(iRow : Integer; iHeight : integer);
@@ -4239,61 +4709,67 @@ begin
       PriceData := getPriceDataOfRow(1, iRow);
       if isHiddenUnusedRow(iRow) then
         HideOrShowRow(iRow, 0);
+//      else if (NOT Assigned(PriceData)) AND ((isChannelNameRow(iRow) AND NOT isPriceRow(iRow + 1)) OR isEmptyRow(iRow)) then
+//         HideOrShowRow(iRow, 0)
+//      else
+//         HideOrShowRow(iRow, rateGrid.DefaultRowHeight);
       if Assigned(PriceData) then
       begin
           iHeight := ABS(ORD((PriceData.channelId = -1) OR IsIdCheckedInCheckListCombo(ccChannels, PriceData.channelId)));
 
-          // If sub-rate then hide it
           if (NOT cbxShowSubrates.Checked) then
             iHeight := ABS(ORD((iHeight > 0) AND (PriceData.FRoomTypeGroupCode = PriceData.RoomTypeTopClass)));
 
-          // Hidden, unused Row?
-//          if isHiddenUnusedRow(iRow) then
-//            HideOrShowRow(iRow, ABS(ORD(isHiddenUnusedRow(iRow))) * rateGrid.DefaultRowHeight);
-  //        if isHiddenUnusedRow(iRow) then
-  //          rateGrid.RowHeights[iRow] := 0
-
           if isPriceRow(iRow) then
             HideOrShowRow(iRow, rateGrid.DefaultRowHeight * iHeight)
-  //          rateGrid.RowHeights[iRow] := rateGrid.DefaultRowHeight * iHeight
+
+//          else if isChannelNameRow(iRow) then
+//            HideOrShowRow(iRow, rateGrid.DefaultRowHeight * iHeight)
+//
+//          else if isEmptyRow(iRow) then
+//            HideOrShowRow(iRow, rateGrid.DefaultRowHeight * iHeight)
 
           else if isAvailabilityRow(iRow) then
             HideOrShowRow(iRow, rateGrid.DefaultRowHeight * iHeight)
-  //          rateGrid.RowHeights[iRow] := rateGrid.DefaultRowHeight * iHeight
 
           else if isStopSellRow(iRow) then
             HideOrShowRow(iRow, CHECK_BOX_CELL_HEIGHT * ABS(ORD(cbxRateRestrictions.Checked)) * iHeight)
-  //          rateGrid.RowHeights[iRow] := CHECK_BOX_CELL_HEIGHT * ABS(ORD(cbxRateRestrictions.Checked)) * iHeight
 
           else if isMinStayRow(iRow) then
             HideOrShowRow(iRow, rateGrid.DefaultRowHeight * ABS(ORD(cbxRateRestrictions.Checked)) * iHeight)
-  //          rateGrid.RowHeights[iRow] := rateGrid.DefaultRowHeight * ABS(ORD(cbxRateRestrictions.Checked)) * iHeight
 
           else if isMaxStayRow(iRow) then
             HideOrShowRow(iRow, rateGrid.DefaultRowHeight * ABS(ORD(cbxRateRestrictions.Checked)) * iHeight)
-  //          rateGrid.RowHeights[iRow] := rateGrid.DefaultRowHeight * ABS(ORD(cbxRateRestrictions.Checked)) * iHeight
 
           else if isCloseOnArrivalRow(iRow) then
             HideOrShowRow(iRow, CHECK_BOX_CELL_HEIGHT * ABS(ORD(cbxRateRestrictions.Checked)) * iHeight)
-  //          rateGrid.RowHeights[iRow] := CHECK_BOX_CELL_HEIGHT * ABS(ORD(cbxExtraRestrictions.Checked)) * iHeight
 
           else if isClosedOnDepartureRow(iRow) then
             HideOrShowRow(iRow, CHECK_BOX_CELL_HEIGHT * ABS(ORD(cbxRateRestrictions.Checked)) * iHeight)
-  //          rateGrid.RowHeights[iRow] := CHECK_BOX_CELL_HEIGHT * ABS(ORD(cbxExtraRestrictions.Checked)) * iHeight
 
           else if isLOSArrivalDateBasedRow(iRow) then
             HideOrShowRow(iRow, CHECK_BOX_CELL_HEIGHT * ABS(ORD(cbxRateRestrictions.Checked)) * iHeight)
-  //          rateGrid.RowHeights[iRow] := CHECK_BOX_CELL_HEIGHT * ABS(ORD(cbxExtraRestrictions.Checked)) * iHeight
 
           else if isSingleUsePriceRow(iRow) then
             HideOrShowRow(iRow, rateGrid.DefaultRowHeight * ABS(ORD(cbxRateRestrictions.Checked)) * iHeight)
-  //          rateGrid.RowHeights[iRow] := rateGrid.DefaultRowHeight * ABS(ORD(cbxExtraRestrictions.Checked)) * iHeight;
 
-      end;
+      end
+//      else
+//      if isChannelNameRow(iRow) then
+//        HideOrShowRow(iRow, rateGrid.DefaultRowHeight * iHeight)
+
     end;
   finally
     rateGrid.EndUpdate;
   end;
+
+//  i := rateGrid.RowCount - 1;
+//  while (i > 1) AND (isChannelNameRow(i) OR isEmptyRow(i)) do
+//  begin
+//    rateGrid.RowCount := i; // HideOrShowRow(i, 0);
+//    dec(i);
+//  end;
+//
 end;
 
 procedure TfrmChannelAvailabilityManager.__cbxRateClick(Sender: TObject);
@@ -4368,7 +4844,7 @@ begin
           if (DestPriceData.connectRateToMasterRate AND isPriceRow(ARow)) then
           begin
              if DestPriceData.RateDeviationType = 'FIXED_AMOUNT' then
-               tmpValue := CorrectAmountByCurrency(PriceData.price, PriceData.FCurrencyId, DestPriceData.FCurrencyId) + DestPriceData.masterRateRateDeviation
+               tmpValue := CorrectAmountByCurrency(PriceData.price + DestPriceData.masterRateRateDeviation, PriceData.FCurrencyId, DestPriceData.FCurrencyId)
              else
                tmpValue := CorrectAmountByCurrency(PriceData.price, PriceData.FCurrencyId, DestPriceData.FCurrencyId) * (1 + DestPriceData.masterRateRateDeviation / 100);
              if tmpValue > 0.00 then

@@ -62,8 +62,9 @@ type
     FRoomerDataSet: TRoomerDataSet;
     FEventHandler: TNotifyEvent;
     procedure ThreadTerminate(Sender: TObject);
+    procedure Cancel;
   protected
-
+    dbThread : TDBThread;
   public
     constructor Create;
     destructor Destroy; override;
@@ -87,10 +88,24 @@ uses
   Dialogs;
 
 
+procedure TGetThreadedData.Cancel;
+begin
+  if assigned(dbThread) then
+    With dbThread do
+    begin
+      FreeOnTerminate := true;
+      OnTerminate := nil;
+      Terminate;
+      waitFor;
+    end;
+  try dbThread := nil; except end;
+end;
+
 procedure TGetThreadedData.Execute(const sql: String; aOnCompletionHandler: TNotifyEvent);
 begin
   FEventHandler := aOnCompletionHandler;
-  With TDBThread.Create(sql, nil) do
+  dbThread := TDBThread.Create(sql, nil);
+  With dbThread do
   begin
     FOperationType := OT_EXECUTE;
     FreeOnTerminate := true;
@@ -102,7 +117,8 @@ end;
 procedure TGetThreadedData.Post(const url, data: String; aOnCompletionHandler: TNotifyEvent);
 begin
   FEventHandler := aOnCompletionHandler;
-  with TDBThread.Create(url, data, OT_POST) do
+  dbThread := TDBThread.Create(url, data, OT_POST);
+  With dbThread do
   begin
     FreeOnTerminate := false;
     OnTerminate := ThreadTerminate;
@@ -142,6 +158,7 @@ end;
 
 destructor TGetThreadedData.Destroy;
 begin
+  Cancel;
   FRoomerDataSet.Free;
   inherited;
 end;
