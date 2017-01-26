@@ -300,6 +300,7 @@ type
     zAct   : TActTableAction;
     zData  : recCustomerHolder;
     AllowEdits : Boolean;
+    destructor Destroy; override;
   end;
 
 function openCustomers(act : TActTableAction; Lookup : Boolean; var theData : recCustomerHolder; AllowEdits : Boolean = True) : boolean;
@@ -759,6 +760,12 @@ end;
 
 
 
+destructor TfrmCustomers2.Destroy;
+begin
+  financeLookupList.Free;
+  inherited;
+end;
+
 procedure TfrmCustomers2.m_BeforeDelete(DataSet: TDataSet);
 var
   s : string;
@@ -1067,45 +1074,54 @@ end;
 function TfrmCustomers2.AssertCorrectness : Boolean;
 var config : Array_Of_THotelconfigurationsEntity;
     answer : Integer;
+    i: integer;
 begin
   result := true;
   if Lookup then
     exit;
+
   try
     config := d.roomerMainDataSet.Hotelconfigurations_Entities_FindAll;
-    if config[0].forceExternalProductIdCorrectness = 1 then
-    begin
-      screen.Cursor := crHourGlass;
-      m_.DisableControls;
-      try
-        m_.First;
-        if NOT m_.Eof then
-          if NOT assigned(financeLookupList) then
-            financeLookupList := d.RetrieveFinancesKeypair(FKP_CUSTOMERS);
-        while NOT m_.Eof do
-        begin
-          if (m_['PID'] = '') OR NOT d.KeyExists(financeLookupList, m_['PID']) then
+    try
+      if config[0].forceExternalProductIdCorrectness = 1 then
+      begin
+        screen.Cursor := crHourGlass;
+        m_.DisableControls;
+        try
+          m_.First;
+          if NOT m_.Eof then
+            if NOT assigned(financeLookupList) then
+              financeLookupList := d.RetrieveFinancesKeypair(FKP_CUSTOMERS);
+          while NOT m_.Eof do
           begin
-            answer := MessageDlg(format('Customer %s (%s %s) needs to have a Personal Id for bookkeeping.', [m_['Customer'], m_['Name'], m_['Surname']]), mtWarning, [mbOk, mbIgnore, mbCancel], 0, mbOk);
-            if answer = mrCancel then
+            if (m_['PID'] = '') OR NOT d.KeyExists(financeLookupList, m_['PID']) then
             begin
-              result := True;
-              exit;
-            end else
-            if answer = mrOk then
-            begin
-              result := False;
-              exit;
+              answer := MessageDlg(format('Customer %s (%s %s) needs to have a Personal Id for bookkeeping.', [m_['Customer'], m_['Name'], m_['Surname']]), mtWarning, [mbOk, mbIgnore, mbCancel], 0, mbOk);
+              if answer = mrCancel then
+              begin
+                result := True;
+                exit;
+              end else
+              if answer = mrOk then
+              begin
+                result := False;
+                exit;
+              end;
             end;
+            m_.Next;
           end;
-          m_.Next;
+        finally
+           screen.Cursor := crDefault;
+           m_.EnableControls;
         end;
-      finally
-         screen.Cursor := crDefault;
-         m_.EnableControls;
       end;
+    finally
+      for i := 0 to Length(config) -1 do
+        config[i].Free;
     end;
   except
+    on E: Exception do
+      raise Exception.CreateFmt('Error while retrieving hotel configurations: [%s]', [e.Message]);
   end;
 end;
 

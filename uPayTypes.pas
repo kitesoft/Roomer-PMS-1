@@ -227,6 +227,7 @@ type
     { Public declarations }
     zAct               : TActTableAction;
     zData              : recpayTypeHolder;
+    destructor Destroy; override;
   end;
 
 function payType(act : TActTableAction; Lookup : Boolean; var theData : recpayTypeHolder) : boolean;
@@ -450,6 +451,12 @@ begin
   end;
 end;
 
+
+destructor TfrmPayTypes.Destroy;
+begin
+  financePayTypeList.Free;
+  inherited;
+end;
 
 procedure TfrmPayTypes.ApplyFilter;
 begin
