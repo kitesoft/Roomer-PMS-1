@@ -1361,7 +1361,7 @@ type
     function QuickResPeriodRoomObj(var oNewReservation: TNewReservation): integer;
     function QuickResOneDayRoomObj(var oNewReservation: TNewReservation): integer;
 
-    procedure CreateProvideAllotment(Reservation: integer; showDetails: boolean = true);
+    procedure CreateProvideAllotment(Reservation: integer; aSHowDate: TDateTime = 0);
 
     procedure refreshGuestList;
     function getSortField: string;
@@ -1483,6 +1483,7 @@ type
     procedure DayClosingTimes;
     procedure DeActivateMessageTimerIfActive;
     procedure SetPMSVisibilities;
+    function GetDateUnderCursor: TDate;
 {$IFDEF USE_JCL}
     procedure LogException(ExceptObj: TObject; ExceptAddr: Pointer; IsOS: boolean);
 {$ENDIF}
@@ -4517,75 +4518,43 @@ begin
     btnRefreshOneDay.Click;
 end;
 
-procedure TfrmMain.CreateProvideAllotment(Reservation: integer; showDetails: boolean = true);
+procedure TfrmMain.CreateProvideAllotment(Reservation: integer; aShowDate: TDateTime = 0);
 var
-  iReservation: integer;
   oNewReservation: TNewReservation;
   oRestReservation: TNewReservation;
-
-  function OpenProvideAllotment(var oNewReservation, oRestReservation: TNewReservation; var restCount: integer)
-    : boolean;
-  begin
-    result := false;
-    Application.CreateForm(TfrmAllotmentToRes, frmAllotmentToRes);
-    try
-      frmAllotmentToRes.zReservation := Reservation;
-      frmAllotmentToRes.zRestCount := restCount;
-      frmAllotmentToRes.oNewReservation := oNewReservation;
-      frmAllotmentToRes.oRestReservation := oRestReservation;
-      if frmAllotmentToRes.ShowModal = mrOK then
-      begin
-        oNewReservation := frmAllotmentToRes.oNewReservation;
-        oRestReservation := frmAllotmentToRes.oRestReservation;
-        restCount := frmAllotmentToRes.zRestCount;
-        result := true;
-      end;
-    finally
-      frmAllotmentToRes.Free;
-      frmAllotmentToRes := nil;
-    end;
-  end;
-
-var
   restCount: integer;
 
 begin
-  d.roomerMainDataSet.SystemStartTransaction;
+  restCount := 0;
   try
-    restCount := 0;
-    try
-      oNewReservation := TNewReservation.Create(g.qHotelCode, g.qUser);
-    Except
-      // ATH Log exception
+    oNewReservation := TNewReservation.Create(g.qHotelCode, g.qUser);
+  Except
+    // ATH Log exception
+  end;
+
+  try
+    oRestReservation := TNewReservation.Create(g.qHotelCode, g.qUser);
+  Except
+    // ATH Log exception
+  end;
+
+  try
+    oNewReservation.resMedhod := rmAllotment;
+    oNewReservation.isQuick := false;
+
+    oRestReservation.resMedhod := rmAllotment;
+    oRestReservation.isQuick := false;
+
+    if not OpenProvideAllotment(Reservation, oNewReservation, oRestReservation, restCount, aSHowDate) then
+    begin
+      ShowMessage(GetTranslatedText('shTx_Main_ReservationCancelled'));
+      exit;
     end;
+    if not oNewReservation.ShowProfile then
+      exit;
 
+    d.roomerMainDataSet.SystemStartTransaction;
     try
-      oRestReservation := TNewReservation.Create(g.qHotelCode, g.qUser);
-    Except
-      // ATH Log exception
-    end;
-
-    try
-      // QuickResPeriodRoomObj(oNewReservation);
-      // Period_GetNewResDates(resDateFrom);
-
-      oNewReservation.resMedhod := rmAllotment;
-      oNewReservation.isQuick := false;
-
-      oRestReservation.resMedhod := rmAllotment;
-      oRestReservation.isQuick := false;
-
-      if not OpenProvideAllotment(oNewReservation, oRestReservation, restCount) then
-      begin
-        ShowMessage(GetTranslatedText('shTx_Main_ReservationCancelled'));
-        exit;
-      end;
-
-      // debugMessage(inttostr(restcount));
-
-      if not oNewReservation.ShowProfile then
-        exit;
-
       Screen.Cursor := crHourglass;
       try
         oNewReservation.CreateReservation(Reservation, false);
@@ -4593,38 +4562,30 @@ begin
         Screen.Cursor := crDefault;
       end;
 
-      iReservation := oNewReservation.Reservation;
-      if iReservation > 0 then
+      if (oNewReservation.Reservation > 0) and (restCount > 0) then
       begin
-        if restCount > 0 then
-        begin
-          Screen.Cursor := crHourglass;
-          try
-            oRestReservation.CreateReservation(-1, false);
-          finally
-            Screen.Cursor := crDefault;
-          end;
-        end;
-
-        if oNewReservation.ShowProfile then
-        begin
-          EditReservation(iReservation, 0)
-        end
-        else
-        begin
-          RefreshGrid;
+        Screen.Cursor := crHourglass;
+        try
+          oRestReservation.CreateReservation(-1, false);
+        finally
+          Screen.Cursor := crDefault;
         end;
       end;
-    finally
-      if oNewReservation <> nil then
-        freeandNil(oNewReservation);
-      if oRestReservation <> nil then
-        freeandNil(oRestReservation);
+
+      d.roomerMainDataSet.SystemCommitTransaction;
+    except
+      d.roomerMainDataSet.SystemRollbackTransaction;
+      raise;
     end;
-    d.roomerMainDataSet.SystemCommitTransaction;
-  except
-    d.roomerMainDataSet.SystemRollbackTransaction;
-    raise;
+
+    if oNewReservation.ShowProfile then
+      EditReservation(oNewReservation.Reservation, 0)
+    else
+      RefreshGrid;
+
+  finally
+    oNewReservation.Free;
+    oRestReservation.Free;
   end;
 end;
 
@@ -4634,7 +4595,7 @@ begin
     exit;
 
   if GetSelectedRoomInformation then
-    CreateProvideAllotment(_iReservation);
+    CreateProvideAllotment(_iReservation, GetDateUnderCursor);
 end;
 
 procedure TfrmMain.pmnuReservationRoomListClick(Sender: TObject);
@@ -4690,10 +4651,6 @@ begin
     ShowTimelyMessage(GetTranslatedText('shTx_FrmMain_NoCopiedReservationFoundInClipboard'));
 end;
 
-// ------------------------------------------------------------------------------
-// +2008.02.20 - Added 5Day Grid support
-//
-// ------------------------------------------------------------------------------
 procedure TfrmMain.OneDay_EditPerson;
 var
   theData: recPersonHolder;
@@ -4713,12 +4670,6 @@ begin
   end;
 
 end;
-
-// ------------------------------------------------------------------------------
-// +080226 - Added 5day Grid support
-//
-//
-// ------------------------------------------------------------------------------
 
 function TfrmMain.isCurrentPeriodCellWithReservation: boolean;
 begin
@@ -4781,22 +4732,11 @@ procedure TfrmMain.C4Click(Sender: TObject);
 var
   iRoomReservation: integer;
   iReservation: integer;
-//  sText, status, Room, name: String;
 begin
   if mAllReservations.eof OR mAllReservations.BOF then
     exit;
   iRoomReservation := mAllReservations['RoomReservation'];
   iReservation := mAllReservations['Reservation'];
-//  name := mAllReservations['ReservationName'];
-//  Room := mAllReservations['Room'];
-//  status := mAllReservations['Room'];
-//
-//  if g.qWarnCheckInDirtyRoom AND (NOT((status = 'R') OR (status = 'C'))) then
-//  begin
-//    sText := Format(GetTranslatedText('shTx_Various_RoomNotClean'), [Room]);
-//    if MessageDlg(sText, mtWarning, [mbYes, mbCancel], 0) <> mrYes then
-//      exit;
-//  end;
 
   CheckInARoom(iReservation, iRoomReservation);
 end;
@@ -5027,6 +4967,20 @@ begin
     end
     else
       ShowMessage(Format(GetTranslatedText('shCannotCheckoutRoom'), [sErr, _Room]));
+  end;
+end;
+
+function TfrmMain.GetDateUnderCursor: TDate;
+var
+  lCol: integer;
+begin
+  result := 0;
+  case ViewMode of
+    vmOneDay:     Result := dtDate.Date;
+    vmPeriod:     begin // use the date of the center of visible columns
+                    lCol := grPeriodRooms.ColCount div 2;
+                    Result := Period_ColToDate(lCol);
+                  end;
   end;
 end;
 
@@ -10101,12 +10055,10 @@ begin
 
   iRoomReservation := 0;
   AscIndex := -1;
-  // if  (ssShift in shift) or (ssCtrl in shift)  then
-  // begin
-  try
+  if (grPeriodRooms_NO.Objects[ACol, ARow] <> nil) and (grPeriodRooms_NO.Objects[ACol, ARow] is TResCell) then
+  begin
     iRoomReservation := (grPeriodRooms_NO.Objects[ACol, ARow] as TresCell).RoomReservation;
     AscIndex := (grPeriodRooms_NO.Objects[ACol, ARow] as TresCell).AscIndex;
-  except
   end;
 
   allow := (iRoomReservation > 0) and (AscIndex = 0);
