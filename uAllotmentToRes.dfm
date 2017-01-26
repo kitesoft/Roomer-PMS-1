@@ -10,9 +10,11 @@ object frmAllotmentToRes: TfrmAllotmentToRes
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
+  KeyPreview = True
   OldCreateOrder = False
   OnCreate = FormCreate
   OnDestroy = FormDestroy
+  OnKeyDown = FormKeyDown
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
@@ -50,8 +52,8 @@ object frmAllotmentToRes: TfrmAllotmentToRes
       SkinData.SkinSection = 'BUTTON'
     end
     object sButton5: TsButton
-      Left = 989
-      Top = 4
+      Left = 986
+      Top = 5
       Width = 78
       Height = 25
       Anchors = [akTop, akRight]
@@ -62,21 +64,20 @@ object frmAllotmentToRes: TfrmAllotmentToRes
       TabOrder = 1
       OnClick = sButton5Click
       SkinData.SkinSection = 'BUTTON'
-      ExplicitLeft = 1005
     end
     object sButton6: TsButton
       Left = 1070
-      Top = 4
+      Top = 5
       Width = 75
       Height = 25
       Anchors = [akTop, akRight]
+      Cancel = True
       Caption = 'Cancel'
       ImageIndex = 4
       Images = DImages.PngImageList1
       ModalResult = 2
       TabOrder = 2
       SkinData.SkinSection = 'BUTTON'
-      ExplicitLeft = 1086
     end
   end
   object panLeft: TsPanel
@@ -252,7 +253,7 @@ object frmAllotmentToRes: TfrmAllotmentToRes
           TabOrder = 0
           OnClick = sButton4Click
           SkinData.SkinSection = 'BUTTON'
-          ExplicitLeft = 373
+          ExplicitTop = 5
         end
       end
       object sGroupBox1: TsGroupBox
@@ -382,7 +383,7 @@ object frmAllotmentToRes: TfrmAllotmentToRes
       HoverRowCells = [hcNormal, hcSelected]
       OnGetCellColor = grProvideGetCellColor
       OnClickCell = grProvideClickCell
-      OnDblClickCell = grProvideDblClickCell
+      OnSelectionChanged = grProvideSelectionChanged
       DragDropSettings.ShowCells = False
       DragDropSettings.OleAcceptFiles = False
       DragDropSettings.OleAcceptText = False
@@ -1106,7 +1107,6 @@ object frmAllotmentToRes: TfrmAllotmentToRes
     SortID = 0
     SubLanguageID = 1
     LocaleID = 1024
-    BeforePost = mRrInfoBeforePost
     Left = 24
     Top = 384
     object mRrInfordID: TIntegerField
@@ -1423,6 +1423,7 @@ object frmAllotmentToRes: TfrmAllotmentToRes
   end
   object mRoomResDS: TDataSource
     DataSet = kbmRoomRes
+    OnDataChange = mRoomResDSDataChange
     Left = 432
     Top = 304
   end
