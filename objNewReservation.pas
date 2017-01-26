@@ -253,6 +253,7 @@ TYPE
     function getReservationDeparture: TDate;
 
     function TotalGuests: Integer;
+    function TotalPersons: integer;
 
     property XmlFileName: string read FXmlFileName write FXmlFileName;
     property Hotelcode: string read FHotelcode write FHotelcode;
@@ -710,6 +711,15 @@ begin
 end;
 
 function TnewRoomReservation.TotalGuests: Integer;
+var
+  lRoomRes: TnewRoomReservationItem;
+begin
+  Result := 0;
+  for lRoomres in RoomItemsList do
+    Result := Result + lRoomRes.GuestCount;
+end;
+
+function TnewRoomReservation.TotalPersons: integer;
 var
   lRoomRes: TnewRoomReservationItem;
 begin
