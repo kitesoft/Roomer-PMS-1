@@ -14,6 +14,11 @@ uses
 {$IFNDEF NOTFORHELP}
 
 type
+  TacItemDrawData = class(TObject)
+  public
+    ImageIndex: integer;
+  end;
+
   TacBounds = record
     BLeft, BTop, BWidth, BHeight: integer;
   end;
@@ -107,7 +112,6 @@ begin
   Tag := ExceptTag;
   BorderStyle := bsNone;
   Assert(not Visible);
-//  Visible := False;
 end;
 
 
@@ -116,7 +120,6 @@ begin
   inherited;
   SetWindowLong(Handle, GWL_EXSTYLE, GetWindowLong(Handle, GWL_EXSTYLE) or WS_EX_TOOLWINDOW or WS_EX_NOACTIVATE);
   SetClassLong(Handle, GCL_STYLE, GetClassLong(Handle, GCL_STYLE) and not NCS_DROPSHADOW);
-//  BorderStyle := bsNone;
 end;
 
 

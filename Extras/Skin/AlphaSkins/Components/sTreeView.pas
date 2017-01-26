@@ -1,7 +1,7 @@
 unit sTreeView;
 {$I sDefs.inc}
 //{$DEFINE LOGGED}
-//+
+
 interface
 
 uses
@@ -290,7 +290,7 @@ begin
         p := ScreenToClient(acMousePos);
 {$IFDEF DELPHI6UP}
         NodeAtPos := GetNodeAt(p.X, p.Y);
-        if (DragMode = dmAutomatic) and (GetCapture <> 0) {Mouse.IsDragging {False when dragged from other control ?} and (NodeAtPos <> nil) and HotTrack then begin
+        if (DragMode = dmAutomatic) and (GetCapture <> 0) and (NodeAtPos <> nil) and HotTrack then begin
           bSelected := NodeAtPos = Node;
           if GetCapture <> 0 then
             FLastHoverItem := NodeAtPos;
@@ -299,7 +299,7 @@ begin
 {$ENDIF}
         begin
           NodeAtPos := nil;
-          bSelected := ((((cdsSelected in State) or (Selected = Node)) {and (FRightNode = nil)}) or HotTrack and (cdsHot in State)) and (Focused or not HideSelection) or (FRightNode = Node);
+          bSelected := ((((cdsSelected in State) or (Selected = Node)) ) or HotTrack and (cdsHot in State)) and (Focused or not HideSelection) or (FRightNode = Node);
         end;
 
         nRect := Node.DisplayRect(True);
@@ -327,7 +327,7 @@ begin
         CI.Bmp := nil;
         CI.Ready := False;
         CI.FillColor := ColorToRGB(Canvas.Brush.Color);
-        if bSelected {or (cdsSelected in State)} then begin
+        if bSelected then begin
           sNdx := SkinData.SkinManager.ConstData.Sections[ssSelection];
 
           if RowBmp <> nil then
@@ -428,8 +428,7 @@ var
   b: boolean;
 begin
 {$IFDEF LOGGED}
-//  if Tag = 1 then
-    AddToLog(Message);
+  AddToLog(Message);
 {$ENDIF}
   case Message.Msg of
     SM_ALPHACMD:
@@ -445,7 +444,6 @@ begin
             i := MulDiv(i, Message.LParam, SkinData.ScalePercent);
             TreeView_SetItemHeight(Handle, i);
             RecreateWnd;
-//            CommonMessage(Message, SkinData);
             Exit;
           end;
 
@@ -468,11 +466,11 @@ begin
             RefreshTreeScrolls(SkinData, ListSW, Self is TsTreeViewEx);
             if FCommonData.Skinned then begin
               if not FCommonData.CustomColor then
-  {$IFNDEF DELPHI6UP}
+{$IFNDEF DELPHI6UP}
                 TreeView_SetBkColor(Handle, ColorToRGB(FCommonData.SkinManager.gd[FCommonData.SkinIndex].Props[0].Color))
-  {$ELSE}
+{$ELSE}
                 Color := FCommonData.SkinManager.gd[FCommonData.SkinIndex].Props[0].Color
-  {$ENDIF}
+{$ENDIF}
               else
                 if ListSW <> nil then
                   TacTreeViewWnd(ListSW).Color := Color;
@@ -502,8 +500,6 @@ begin
     inherited
   else begin
     case Message.Msg of
-//      CN_NOTIFY, TVM_GETITEMW: Exit;
-
       CM_VISIBLECHANGED, CM_ENABLEDCHANGED, WM_MOVE:
         FCommonData.BGChanged := True;
 
@@ -684,7 +680,7 @@ var
       DeltaX := BtnSize;
 
     if InitLine(Bmp, Pointer(D0), DeltaD) and InitLine(Ci.Bmp, Pointer(S0), DeltaS) then
-      for Y := 0 to BtnSize - 1 do 
+      for Y := 0 to BtnSize - 1 do
         if Rct.Top + Y + CI.Y < CI.Bmp.Height then begin
           D := Pointer(LongInt(D0) + DeltaD * (Rct.Top + Y));
           S := Pointer(LongInt(S0) + DeltaS * (Rct.Top + Y + CI.Y));
@@ -698,185 +694,181 @@ var
   end;
 
 begin
-  if {not (csDesigning in ComponentState) and} (Node <> nil) then begin
-//    if SkinData.Skinned then begin
-      bFocused := Focused;
-      if aDC = 0 then
-        DC := GetDC(Handle)
+  if Node <> nil then begin
+    bFocused := Focused;
+    if aDC = 0 then
+      DC := GetDC(Handle)
+    else
+      DC := aDC;
+
+    if ListSW <> nil then
+      bw := ListSW.cxLeftEdge
+    else
+      bw := 3 * integer(BorderStyle = bsSingle);
+
+    Canvas.Handle := DC;
+    // Init color and font properties
+    Canvas.Brush.Color := Color;
+    Canvas.Font.Assign(Font);
+    CallEvents;
+    nRect := Node.DisplayRect(False);
+    LastBottom := nRect.Bottom;
+    if DefaultDraw then begin
+      rText := Node.DisplayRect(True);
+      if nRect.Right < rText.Right + 1 then
+        nRect.Right := rText.Right + 1;
+
+      OffsetRect(rText, 0, - nRect.Top);
+      if HotTrack and (Images <> nil) then begin // Fix of glyphs painting std bug
+        cx := 5 + Images.Width;
+        dec(nRect.Left, cx);
+      end
       else
-        DC := aDC;
+        cx := 0;
 
-      if ListSW <> nil then
-        bw := ListSW.cxLeftEdge
-      else
-        bw := 3 * integer(BorderStyle = bsSingle);
-
-      Canvas.Handle := DC;
-      // Init color and font properties
-      Canvas.Brush.Color := Color;
-      Canvas.Font.Assign(Font);
-      CallEvents;
-      nRect := Node.DisplayRect(False);
-      LastBottom := nRect.Bottom;
-      if DefaultDraw then begin
-        rText := Node.DisplayRect(True);
-        if nRect.Right < rText.Right + 1 then
-          nRect.Right := rText.Right + 1;
-
-        OffsetRect(rText, 0, - nRect.Top);
-        if HotTrack and (Images <> nil) then begin // Fix of glyphs painting std bug
-          cx := 5 + Images.Width;
-          dec(nRect.Left, cx);
-        end
-        else
-          cx := 0;
-
-        Bmp := CreateBmp32(nRect);
-        Bmp.Canvas.Font.Assign(Canvas.Font);
-        aRect := MkRect(Bmp);
-        CI.Bmp := SkinData.FCacheBmp;
-        CI.Ready := True;
-        CI.FillColor := ColorToRGB(Canvas.Brush.Color);
-        CI.X := 0;
-        CI.Y := 0;
-        p := ScreenToClient(acMousePos);
+      Bmp := CreateBmp32(nRect);
+      Bmp.Canvas.Font.Assign(Canvas.Font);
+      aRect := MkRect(Bmp);
+      CI.Bmp := SkinData.FCacheBmp;
+      CI.Ready := True;
+      CI.FillColor := ColorToRGB(Canvas.Brush.Color);
+      CI.X := 0;
+      CI.Y := 0;
+      p := ScreenToClient(acMousePos);
 {$IFDEF DELPHI6UP}
-        if (DragMode = dmAutomatic) and Mouse.IsDragging and PtInRect(MkRect(Self), p) and HotTrack then begin
-          NodeAtPos := GetNodeAt(p.X, p.Y);
-          bSelected := NodeAtPos = Node;
-        end
-        else
+      if (DragMode = dmAutomatic) and Mouse.IsDragging and PtInRect(MkRect(Self), p) and HotTrack then begin
+        NodeAtPos := GetNodeAt(p.X, p.Y);
+        bSelected := NodeAtPos = Node;
+      end
+      else
 {$ENDIF}
-        begin
-          NodeAtPos := nil;
-          if {(cdsSelected in State) or }(Selected = Node) then
+      begin
+        NodeAtPos := nil;
+        if (Selected = Node) then
+          bSelected := True
+        else
+          if (FRightNode = Node) then
             bSelected := True
           else
-            if {(HotTrack and (cdsHot in State)) and (Focused or not HideSelection) or }(FRightNode = Node) then
-              bSelected := True
+            if HotTrack then begin
+              NodeAtPos := GetNodeAt(p.X, p.Y);
+              bSelected := NodeAtPos = Node;
+            end
             else
-              if HotTrack then begin
-                NodeAtPos := GetNodeAt(p.X, p.Y);
-                bSelected := NodeAtPos = Node;
-              end
-              else
-                bSelected := False;
-        end;
-        BitBlt(Bmp.Canvas.Handle, 0, 0, Bmp.Width, Bmp.Height, SkinData.FCacheBmp.Canvas.Handle, nRect.Left + bw, nRect.Top + bw, SRCCOPY);
-        OffsetRect(rText, 2, 0);
-        if bSelected or (HotTrack and (NodeAtPos = Node)) {or (cdsSelected in State) }then begin
-          sNdx := SkinData.SkinManager.ConstData.Sections[ssSelection];
-          InflateRect(rText, 1, 0);
-          if sNdx < 0 then
-            FillDC(Bmp.Canvas.Handle, rText, SkinData.SkinManager.GetHighLightColor(bFocused{(cdsFocused in State)} and bSelected))
-          else
-            PaintItem(sNdx, CI, True, integer(bFocused and bSelected or (HotTrack and (NodeAtPos <> nil))),
-                       Rect(rText.Left, rText.Top, min(rText.Right, SkinData.FCacheBmp.Width), rText.Bottom),
-                       nRect.TopLeft, Bmp, SkinData.SkinManager);
-//            PaintItem(sNdx, CI, True, integer(bFocused and bSelected or (HotTrack and (NodeAtPos <> nil))), rText, nRect.TopLeft, Bmp, SkinData.SkinManager);
-
-          if HotTrack and ((cdsHot in State) or (NodeAtPos = Node)) and (Selected <> Node) then
-            BlendTransRectangle(Bmp, 0, 0, CI.Bmp, MkRect(Bmp), Byte(180));
-
-          InflateRect(rText, -1, 0);
-        end
+              bSelected := False;
+      end;
+      BitBlt(Bmp.Canvas.Handle, 0, 0, Bmp.Width, Bmp.Height, SkinData.FCacheBmp.Canvas.Handle, nRect.Left + bw, nRect.Top + bw, SRCCOPY);
+      OffsetRect(rText, 2, 0);
+      if bSelected or (HotTrack and (NodeAtPos = Node)) then begin
+        sNdx := SkinData.SkinManager.ConstData.Sections[ssSelection];
+        InflateRect(rText, 1, 0);
+        if sNdx < 0 then
+          FillDC(Bmp.Canvas.Handle, rText, SkinData.SkinManager.GetHighLightColor(bFocused{(cdsFocused in State)} and bSelected))
         else
-          sNdx := -1;
+          PaintItem(sNdx, CI, True, integer(bFocused and bSelected or (HotTrack and (NodeAtPos <> nil))),
+                     Rect(rText.Left, rText.Top, min(rText.Right, SkinData.FCacheBmp.Width), rText.Bottom),
+                     nRect.TopLeft, Bmp, SkinData.SkinManager);
 
-        if HotTrack and (Images <> nil) then // Fix of glyphs painting std bug
-          Images.Draw(Bmp.Canvas, 2, (Bmp.Height - Images.Height) div 2, Node.ImageIndex);
+        if HotTrack and ((cdsHot in State) or (NodeAtPos = Node)) and (Selected <> Node) then
+          BlendTransRectangle(Bmp, 0, 0, CI.Bmp, MkRect(Bmp), Byte(180));
 
-        Bmp.Canvas.Font.Assign(Canvas.Font);
-
-        aRect.Left := aRect.Left + 1 + cx;
-        inc(rText.Left, 2);
-        DrawStyle := DT_NOPREFIX or DT_EXPANDTABS or DT_SINGLELINE or DT_VCENTER or DT_NOCLIP;
-        if sNdx < 0 then begin
-          if bSelected then
-            Bmp.Canvas.Font.Color := SkinData.SkinManager.GetHighLightFontColor(bFocused{cdsFocused in State});
-
-          Bmp.Canvas.Brush.Style := bsClear;
-          AcDrawText(Bmp.Canvas.Handle, {$IFDEF TNTUNICODE}TTntTreeNode{$ENDIF}(Node).Text, rText, DrawStyle);
-        end
-        else
-          acWriteTextEx(Bmp.Canvas, PacChar({$IFDEF TNTUNICODE}TTntTreeNode{$ENDIF}(Node).Text), True, rText, DrawStyle, sNdx, bFocused or (SkinData.FMouseAbove or (NodeAtPos = Node)) {and MayBeHot(SkinData)}, SkinData.SkinManager);
-
-        dec(rText.Left, 2);
-        OffsetRect(rText, -2, 0);
-        p := Point(rText.Left - 8, HeightOf(rText) div 2);
-        aRect.Right := rText.Left;
-        if Images <> nil then begin
-          aRect.Left := aRect.Right - Images.Width - 3;
-          dec(p.X, Images.Width + 3);
-          if IsValidIndex(Node.ImageIndex, Images.Count) then
-            Images.Draw(Bmp.Canvas, aRect.Left, (Bmp.Height - Images.Height) div 2, Node.ImageIndex);
-
-          aRect.Right := aRect.Left;
-        end;
-        if Checkboxes then begin
-          w := FCheckWidth;
-          h := FCheckHeight;
-          aRect.Top := (HeightOf(nRect) - h) div 2 + (HeightOf(nRect) - h) mod 2;
-          aRect.Left := aRect.Right - w;
-          aRect.Bottom := aRect.Top + h;
-          acDrawCheck(aRect, CheckBoxStates[integer(GetChecked(Node))], True, Bmp, CI, SkinData.SkinManager);
-          dec(p.X, w);
-        end;
-
-        LastItem := Items.GetNode(TreeView_GetLastVisible(Handle));
-        lType := LineType;
-        if lType and LT_LINEALL <> 0 then begin
-          Bmp.Canvas.Pen.Style := psDot;
-          BrushStyle.lbStyle := BS_SOLID;
-          BrushStyle.lbColor := BlendColors(ColorToRGB(Color), ColorToRGB(Bmp.Canvas.Font.Color), 102);
-          BrushStyle.lbHatch := 0;
-          PenHandle := ExtCreatePen(PS_GEOMETRIC or PS_DOT, Bmp.Canvas.Pen.Width, BrushStyle, 0, nil);
-          NewPen := TPen.Create;
-          NewPen.Handle := PenHandle;
-          Bmp.Canvas.Pen := NewPen;
-          Bmp.Canvas.MoveTo(p.X + 8, p.Y);
-          Bmp.Canvas.LineTo(p.X, p.Y);
-          Bmp.Canvas.Brush.Color := 0;
-          case lType and LT_LINEALL of
-            LT_FIRST: begin
-              Bmp.Canvas.MoveTo(p.X, p.Y + 1);
-              Bmp.Canvas.LineTo(p.X, Bmp.Height);
-            end;
-
-            LT_LAST: begin
-              Bmp.Canvas.MoveTo(p.X, 0);
-              Bmp.Canvas.LineTo(p.X, p.Y);
-              DrawParentLine(Node.Parent, Point(p.X, p.Y));
-            end;
-
-            LT_MIDDLE: begin
-              Bmp.Canvas.MoveTo(p.X, 0);
-              Bmp.Canvas.LineTo(p.X, Bmp.Height);
-              DrawParentLine(Node.Parent, Point(p.X, p.Y));
-            end;
-          end;
-          if Node.HasChildren then
-            PaintBtn(p, not Node.Expanded, MakeCacheInfo(SkinData.FCacheBmp, nRect.Left, nRect.Top));
-
-          NewPen.Free;
-        end;
-        if bFocused and (sNdx < 0) and bSelected then begin
-          InflateRect(aRect, 1, 0);
-          aRect.Left := 0;
-          DrawFocusRect(Bmp.Canvas.Handle, rText);
-        end;
-        if not Enabled then begin
-          DisabledKind := [dkBlended];
-          BmpDisabledKind(Bmp, DisabledKind, Parent, CI, Point(nRect.Left + bw, nRect.Top + bw));
-        end;
-        BitBlt(DC, nRect.Left, nRect.Top, Bmp.Width, Bmp.Height, Bmp.Canvas.Handle, 0, 0, SRCCOPY);
-        FreeAndNil(Bmp);
-        if aDC = 0 then
-          ReleaseDC(Handle, DC);
+        InflateRect(rText, -1, 0);
       end
+      else
+        sNdx := -1;
+
+      if HotTrack and (Images <> nil) then // Fix of glyphs painting std bug
+        Images.Draw(Bmp.Canvas, 2, (Bmp.Height - Images.Height) div 2, Node.ImageIndex);
+
+      Bmp.Canvas.Font.Assign(Canvas.Font);
+
+      aRect.Left := aRect.Left + 1 + cx;
+      inc(rText.Left, 2);
+      DrawStyle := DT_NOPREFIX or DT_EXPANDTABS or DT_SINGLELINE or DT_VCENTER or DT_NOCLIP;
+      if sNdx < 0 then begin
+        if bSelected then
+          Bmp.Canvas.Font.Color := SkinData.SkinManager.GetHighLightFontColor(bFocused);
+
+        Bmp.Canvas.Brush.Style := bsClear;
+        AcDrawText(Bmp.Canvas.Handle, {$IFDEF TNTUNICODE}TTntTreeNode{$ENDIF}(Node).Text, rText, DrawStyle);
+      end
+      else
+        acWriteTextEx(Bmp.Canvas, PacChar({$IFDEF TNTUNICODE}TTntTreeNode{$ENDIF}(Node).Text), True, rText, DrawStyle, sNdx, bFocused or (SkinData.FMouseAbove or (NodeAtPos = Node)) {and MayBeHot(SkinData)}, SkinData.SkinManager);
+
+      dec(rText.Left, 2);
+      OffsetRect(rText, -2, 0);
+      p := Point(rText.Left - 8, HeightOf(rText) div 2);
+      aRect.Right := rText.Left;
+      if Images <> nil then begin
+        aRect.Left := aRect.Right - Images.Width - 3;
+        dec(p.X, Images.Width + 3);
+        if IsValidIndex(Node.ImageIndex, Images.Count) then
+          Images.Draw(Bmp.Canvas, aRect.Left, (Bmp.Height - Images.Height) div 2, Node.ImageIndex);
+
+        aRect.Right := aRect.Left;
+      end;
+      if Checkboxes then begin
+        w := FCheckWidth;
+        h := FCheckHeight;
+        aRect.Top := (HeightOf(nRect) - h) div 2 + (HeightOf(nRect) - h) mod 2;
+        aRect.Left := aRect.Right - w;
+        aRect.Bottom := aRect.Top + h;
+        acDrawCheck(aRect, CheckBoxStates[integer(GetChecked(Node))], True, Bmp, CI, SkinData.SkinManager);
+        dec(p.X, w);
+      end;
+
+      LastItem := Items.GetNode(TreeView_GetLastVisible(Handle));
+      lType := LineType;
+      if lType and LT_LINEALL <> 0 then begin
+        Bmp.Canvas.Pen.Style := psDot;
+        BrushStyle.lbStyle := BS_SOLID;
+        BrushStyle.lbColor := BlendColors(ColorToRGB(Color), ColorToRGB(Bmp.Canvas.Font.Color), 102);
+        BrushStyle.lbHatch := 0;
+        PenHandle := ExtCreatePen(PS_GEOMETRIC or PS_DOT, Bmp.Canvas.Pen.Width, BrushStyle, 0, nil);
+        NewPen := TPen.Create;
+        NewPen.Handle := PenHandle;
+        Bmp.Canvas.Pen := NewPen;
+        Bmp.Canvas.MoveTo(p.X + 8, p.Y);
+        Bmp.Canvas.LineTo(p.X, p.Y);
+        Bmp.Canvas.Brush.Color := 0;
+        case lType and LT_LINEALL of
+          LT_FIRST: begin
+            Bmp.Canvas.MoveTo(p.X, p.Y + 1);
+            Bmp.Canvas.LineTo(p.X, Bmp.Height);
+          end;
+
+          LT_LAST: begin
+            Bmp.Canvas.MoveTo(p.X, 0);
+            Bmp.Canvas.LineTo(p.X, p.Y);
+            DrawParentLine(Node.Parent, Point(p.X, p.Y));
+          end;
+
+          LT_MIDDLE: begin
+            Bmp.Canvas.MoveTo(p.X, 0);
+            Bmp.Canvas.LineTo(p.X, Bmp.Height);
+            DrawParentLine(Node.Parent, Point(p.X, p.Y));
+          end;
+        end;
+        if Node.HasChildren then
+          PaintBtn(p, not Node.Expanded, MakeCacheInfo(SkinData.FCacheBmp, nRect.Left, nRect.Top));
+
+        NewPen.Free;
+      end;
+      if bFocused and (sNdx < 0) and bSelected then begin
+        InflateRect(aRect, 1, 0);
+        aRect.Left := 0;
+        DrawFocusRect(Bmp.Canvas.Handle, rText);
+      end;
+      if not Enabled then begin
+        DisabledKind := [dkBlended];
+        BmpDisabledKind(Bmp, DisabledKind, Parent, CI, Point(nRect.Left + bw, nRect.Top + bw));
+      end;
+      BitBlt(DC, nRect.Left, nRect.Top, Bmp.Width, Bmp.Height, Bmp.Canvas.Handle, 0, 0, SRCCOPY);
+      FreeAndNil(Bmp);
+      if aDC = 0 then
+        ReleaseDC(Handle, DC);
     end
-//    else
-//      CallEvents;
+  end
 end;
 
 
@@ -1175,7 +1167,7 @@ begin
       WM_SIZE:
         SkinData.BGChanged := True;
 
-      WM_PAINT: {if SkinData.Skinned then }begin
+      WM_PAINT: begin
         WMPaint(TWMPaint(Message));
         Exit;
       end;

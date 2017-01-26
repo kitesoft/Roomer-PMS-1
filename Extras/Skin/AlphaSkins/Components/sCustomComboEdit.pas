@@ -265,12 +265,6 @@ begin
   Flat := True;
 {$ENDIF}
   Cursor := crArrow;
-{
-  if FOwner.BiDiMode <> bdRightToLeft then
-    Align := alRight
-  else
-    Align := alLeft;
-}
   Top := 0;
   Width := 22;
   ShowCaption := False;
@@ -345,11 +339,6 @@ begin
     FPopupWindow.Visible := False;
     FPopupWindow.Width := FPopupWidth;
     FPopupWindow.Height := FPopupHeight;
-{    if SkinData.SkinManager <> nil then begin
-//      FPopupWindow.ScaleBy(Round(rScale[SkinData.SkinManager.GetScale] * 100), 100);
-      FPopupWindow.Width := SkinData.SkinManager.ScaleInt(FPopupWindow.Width);
-      FPopupWindow.Height := SkinData.SkinManager.ScaleInt(FPopupWindow.Height);
-    end;             }
     P := Parent.ClientToScreen(Point(Left, Top));
     Y := P.Y + Height;
 
@@ -591,7 +580,6 @@ begin
           end;
 
         AC_POPUPCLOSED: begin
-//          FPopupWindow := nil;
           PopupWindowClose;
           Exit;
         end;
@@ -664,6 +652,11 @@ begin
         
     CM_EXIT:
       Repaint;
+{
+    WM_NCCALCSIZE:
+      with TNCCalcSizeParams(Pointer(Message.LParam)^).rgrc[0] do
+        Right := Right - BtnWidth;
+}
   end
 end;
 
@@ -712,10 +705,15 @@ end;
 
 
 procedure TsCustomComboEdit.KeyPress(var Key: Char);
+var
+  Form: TCustomForm;
 begin
   if (Key = Char(VK_RETURN)) or (Key = Char(VK_ESCAPE)) then begin
     { must catch and remove this, since is actually multi-line }
-    GetParentForm(Self).Perform(CM_DIALOGKEY, Byte(Key), 0);
+    Form := GetParentForm(Self);
+    if Form.KeyPreview then
+      Form.Perform(CM_DIALOGKEY, Byte(Key), 0);
+      
     if Key = Char(VK_RETURN) then begin
       inherited KeyPress(Key);
       Key := #0;
@@ -780,7 +778,7 @@ var
   NewDC, SavedDC: hdc;
   PS: TPaintStruct;
 begin
-  if not InAnimationProcess {or (DC = 0)} then
+  if not InAnimationProcess then
     BeginPaint(Handle, PS);
 
   if DC = 0 then
@@ -799,7 +797,7 @@ begin
 
         UpdateCorners(SkinData, 0);
         BitBlt(NewDC, 0, 0, Width, Height, SkinData.FCacheBmp.Canvas.Handle, 0, 0, SRCCOPY);
-        if (not Focused{ControlIsActive(SkinData)} or (SkinData.PrintDC = NewDC)) and FButton.Visible then
+        if (not Focused or (SkinData.PrintDC = NewDC)) and FButton.Visible then
           FButton.PaintTo(NewDC, Point(FButton.Left + BtnOffset(Self), FButton.Top + BtnOffset(Self)));
 {$IFDEF DYNAMICCACHE}
         if Assigned(SkinData.FCacheBmp) then
@@ -818,7 +816,7 @@ begin
     if DC = 0 then
       ReleaseDC(Handle, NewDC);
 
-    if not InAnimationProcess {or (DC = 0) }then
+    if not InAnimationProcess then
       EndPaint(Handle, PS);
   end;
 end;
@@ -930,7 +928,10 @@ begin
 
     if Text <> '' then begin
       if PasswordChar <> #0 then
-        acFillString(aText, Length(aText), acChar(PasswordChar));
+        if PasswordChar = '*' then
+          acFillString(aText, Length(aText), acChar(#$25CF))
+        else
+          acFillString(aText, Length(aText), acChar(PasswordChar));
 
       SavedDC := SaveDC(Canvas.Handle);
       IntersectClipRect(Canvas.Handle, R.Left, R.Top, R.Right, R.Bottom);

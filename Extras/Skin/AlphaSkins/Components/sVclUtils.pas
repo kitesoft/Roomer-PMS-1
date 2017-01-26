@@ -1,7 +1,8 @@
 unit sVclUtils;
 {$I sDefs.inc}
 //{$DEFINE LOGGED}
-//+
+//{$DEFINE ACDEBUG}
+
 interface
 
 uses
@@ -136,6 +137,11 @@ var
   uxthemeLib: HModule = 0;
   Ac_SetWindowTheme: function(hwnd: HWND; pszSubAppName: LPCWSTR; pszSubIdList: LPCWSTR): HRESULT; stdcall;
   acHideTimer: TacHideTimer = nil;
+
+{$IFDEF ACDEBUG}
+  acDebugAnimBmp: TBitmap;
+{$ENDIF}
+
 {$IFDEF DELPHI_XE2}
   acThemeServices: TCustomStyleServices;
 {$ELSE}
@@ -154,12 +160,13 @@ implementation
 
 uses
   math, Buttons,
-  sStyleSimply, sMessages, sSkinManager, sThirdParty, sAlphaGraph, acGlow{$IFNDEF ALITE}, acAlphaHints{$ENDIF};
+  acGPUtils, sStyleSimply, sMessages, sSkinManager, sThirdParty, sAlphaGraph, acGlow{$IFNDEF ALITE}, acAlphaHints{$ENDIF};
 
 
 function acMousePos: TPoint;
 begin
-  GetCursorPos(Result);
+  if not GetCursorPos(Result) then
+    Result := Point(0, 0);
 end;
 
 
@@ -228,10 +235,10 @@ begin
   if (DefaultManager <> nil) and (DefaultManager.ActiveGraphControl <> nil) then
     Result := DefaultManager.ActiveGraphControl
   else begin
-    Result := FindVCLWindow(Mouse.CursorPos);
+    Result := FindVCLWindow(acMousePos);
     if Result <> nil then
       with TWinControl(Result) do begin
-        p := ScreenToClient(Mouse.CursorPos);
+        p := ScreenToClient(acMousePos);
         for i := ControlCount - 1 downto 0 do
           if PtInRect(Controls[i].BoundsRect, p) then begin
             Result := Controls[i];
@@ -332,23 +339,11 @@ begin
   end
   else begin
     DC := Bmp.Canvas.Handle;
-    if (SkinProvider = nil) or (TsSkinProvider(SkinProvider).BorderForm = nil) then
-{
-      if ((Ctrl.Width > Bmp.Width) or (Ctrl.Height > Bmp.Height)) and (Ctrl is TWinControl) and IsWindowVisible(TWinControl(Ctrl).Handle) then begin
-        cDC := GetWindowDC(TWinControl(Ctrl).Handle);
-        try
-          GetClipBox(cDC, ClipR);
-          IntersectClipRect(DC, ClipR.Left, ClipR.Top, ClipR.Right, ClipR.Bottom);
-        finally
-          ReleaseDC(TWinControl(Ctrl).Handle, DC);
-        end;
-      end
-      else
-}
-      begin
-        GetWindowRect(TWinControl(Ctrl).Handle, cR);
-        IntersectClipRect(DC, 0, 0, Ctrl.Width, Ctrl.Height);
-      end;
+    Bmp.Canvas.Lock;
+    if (SkinProvider = nil) or (TsSkinProvider(SkinProvider).BorderForm = nil) then begin
+      GetWindowRect(TWinControl(Ctrl).Handle, cR);
+      IntersectClipRect(DC, 0, 0, Ctrl.Width, Ctrl.Height);
+    end;
 
     if Ctrl is TWinControl then begin
       if (Ctrl is TForm) and (TForm(Ctrl).FormStyle = fsMDIForm) then
@@ -364,20 +359,20 @@ begin
 
       try
         if WndIsSkinned(TWinControl(Ctrl).Handle) then begin
-          SendAMessage  (TWinControl(Ctrl).Handle, AC_PRINTING, LPARAM(DC));
-          SendMessage(TWinControl(Ctrl).Handle, WM_PRINT, WPARAM(DC), 0);
-          SendAMessage  (TWinControl(Ctrl).Handle, AC_PRINTING, 0);
+          SendAMessage(TWinControl(Ctrl).Handle, AC_PRINTING, LPARAM(DC));
+          TrySendMessage(TWinControl(Ctrl).Handle, WM_PRINT, WPARAM(DC), 0);
+          SendAMessage(TWinControl(Ctrl).Handle, AC_PRINTING, 0);
         end
         else begin
           FillDC(DC, MkRect(TWinControl(Ctrl)), TacAccessControl(Ctrl).Color);
-//          SendMessage (TWinControl(Ctrl).Handle, WM_PRINT, WPARAM(DC), 0);
           TWinControl(Ctrl).PaintTo(DC, 0, 0);
         end;
       except
       end;
 
       PaintChildCtrls(TWinControl(Ctrl), Bmp);
-      if (SkinProvider <> nil) and (TsSkinProvider(SkinProvider).BorderForm <> nil) then begin // Remove it in v11 !!
+
+      if (SkinProvider <> nil) and (TsSkinProvider(SkinProvider).BorderForm <> nil) then begin
         cR := Ctrl.ClientRect;
         OffsetRect(cR, TsSkinProvider(SkinProvider).OffsetX, TsSkinProvider(SkinProvider).OffsetY);
         if cR.Bottom >= Bmp.Height then
@@ -385,6 +380,7 @@ begin
 
         FillAlphaRect(Bmp, cR, MaxByte); // Fill AlphaChannell in client area
       end;
+
       if (Ctrl is TTabsheet) and (TTabSheet(Ctrl).BorderWidth <> 0) then
         MoveWindowOrg(DC, -TTabSheet(Ctrl).BorderWidth, -TTabSheet(Ctrl).BorderWidth);
     end
@@ -393,6 +389,7 @@ begin
       Ctrl.Perform(WM_PRINT, WPARAM(DC), 0);
       SendAMessage(Ctrl, AC_PRINTING, 0);
     end;
+    Bmp.Canvas.Unlock;
   end;
 end;
 
@@ -565,6 +562,9 @@ begin
 
     if sp.SkinData.FCacheBmp <> nil then begin
       acDstBmp := CreateBmp32(sp.SkinData.FCacheBmp);
+{$IFDEF ACDEBUG}
+      acDebugAnimBmp := acDstBmp;
+{$ENDIF}
       acDstBmp.Canvas.Lock;
       SkinPaintTo(acDstBmp, sp.Form, 0, 0, sp);
       if sp.BorderForm = nil then
@@ -577,13 +577,9 @@ begin
         Flags := SWP_NOACTIVATE or SWP_NOREDRAW or SWP_NOCOPYBITS or SWP_NOOWNERZORDER or SWP_NOSENDCHANGING;
         FBmpTopLeft := MkPoint;
         if StepCount > 0 then
-          FBlend.SourceConstantAlpha := 0
+          InitBlendData(FBlend, 0)
         else
-          FBlend.SourceConstantAlpha := MaxTransparency;
-
-        FBlend.BlendOp := AC_SRC_OVER;
-        FBlend.BlendFlags := 0;
-        FBlend.AlphaFormat := AC_SRC_ALPHA;
+          InitBlendData(FBlend, MaxTransparency);
 
         cy := 0;
         cx := 0;
@@ -627,7 +623,6 @@ begin
 
         SetWindowPos(AnimForm.Handle, 0, 0, 0, 0, 0, SWPA_SHOW or SWP_NOMOVE or SWP_NOSIZE);
         ShowWindow(AnimForm.Handle, SW_SHOWNOACTIVATE);
-//        AnimForm.Show;
 
         SetWindowPos(AnimForm.Handle, h, AnimForm.Left, AnimForm.Top, FBmpSize.cx, FBmpSize.cy, Flags);// or SWP_NOREDRAW);
         AnimBmp := CreateBmp32(FBmpSize);
@@ -641,11 +636,10 @@ begin
             Anim_DoNext;
             lTicks := GetTickCount;
             UpdateLayeredWindow(AnimForm.Handle, DC, nil, @FBmpSize, AnimBmp.Canvas.Handle, @FBmpTopLeft, clNone, @FBlend, ULW_ALPHA);
-//            UpdateShadowPos(sp.Form.Handle, acBounds(sp.Form.Left + Round(l), sp.Form.Top + Round(t), Round(r - l), Round(b - t)), FBlend.SourceConstantAlpha);
             Anim_GoToNext;
             inc(i);
             if StepCount > 0 then
-              while lTicks + acTimerInterval > GetTickCount do {wait here};
+              WaitTicks(lTicks);
           end;
           FBlend.SourceConstantAlpha := MaxTransparency;
         end;
@@ -660,7 +654,6 @@ begin
           DoLayered(sp.Form.Handle, True, 0);
           ShowWindow(sp.Form.Handle, ShowCommands[sp.Form.WindowState]);
 
-//          SetWindowPos(sp.Form.Handle, AnimForm.Handle, 0, 0, 0, 0, SWP_NOMOVE + SWP_NOZORDER + SWP_NOACTIVATE + SWP_SHOWWINDOW);
           SetWindowPos(sp.Form.Handle, AnimForm.Handle, 0, 0, 0, 0, SWPA_ZORDER);
           UpdateBlend;
 
@@ -739,10 +732,7 @@ begin
     acHideTimer.FBmpSize := MkSize(acHideTimer.SrcBmp);
     acHideTimer.FBmpTopLeft := MkPoint;
 
-    acHideTimer.FBlend.SourceConstantAlpha := StartBlendValue;
-    acHideTimer.FBlend.BlendOp := AC_SRC_OVER;
-    acHideTimer.FBlend.BlendFlags := 0;
-    acHideTimer.FBlend.AlphaFormat := AC_SRC_ALPHA;
+    InitBlendData(acHideTimer.FBlend, StartBlendValue);
 
     acHideTimer.DC := GetDC(0);
 
@@ -756,7 +746,7 @@ begin
     if GetWindowLong(Form.Handle, GWL_EXSTYLE) and WS_EX_TOPMOST <> 0 then
       h := HWND_TOPMOST
     else
-      h := Form.Handle;//HWND_TOPMOST;
+      h := Form.Handle;
 
     SetWindowPos(Form.Handle, h, Form.Left, Form.Top, acHideTimer.FBmpSize.cx, acHideTimer.FBmpSize.cy, SWP_NOACTIVATE or SWP_NOREDRAW or SWP_NOCOPYBITS or SWP_NOOWNERZORDER or SWP_NOREDRAW);
     if acHideTimer.DstBmp <> nil then
@@ -775,7 +765,7 @@ begin
       while acHideTimer.i <= acHideTimer.StepCount do begin
         lTicks := GetTickCount;
         acHideTimer.OnTimerProc(acHideTimer);
-        while lTicks + acTimerInterval > GetTickCount do {wait here};
+        WaitTicks(lTicks);
       end;
   end;
 end;
@@ -813,6 +803,9 @@ begin
 
         AnimForm.WindowProc := sp.BorderForm.OldBorderProc;
         acDstBmp := CreateBmp32(sp.SkinData.FCacheBmp);
+{$IFDEF ACDEBUG}
+      acDebugAnimBmp := acDstBmp;
+{$ENDIF}
         BitBlt(acDstBmp.Canvas.Handle, 0, 0, sp.SkinData.FCacheBmp.Width, sp.SkinData.FCacheBmp.Height, sp.SkinData.FCacheBmp.Canvas.Handle, 0, 0, SRCCOPY);
         sp.BorderForm.AForm := nil;
 {.$IFDEF D2011}
@@ -832,6 +825,9 @@ begin
 
         DoLayered(sp.Form.Handle, True, 1);
         acDstBmp := CreateBmp32(sp.SkinData.FCacheBmp);
+{$IFDEF ACDEBUG}
+      acDebugAnimBmp := acDstBmp;
+{$ENDIF}
         BitBlt(acDstBmp.Canvas.Handle, 0, 0, sp.SkinData.FCacheBmp.Width, sp.SkinData.FCacheBmp.Height, sp.SkinData.FCacheBmp.Canvas.Handle, 0, 0, SRCCOPY);
         CleanPixelsByRects(sp.Rects, acDstBmp);
       end;
@@ -910,6 +906,9 @@ begin
 
     AnimForm.WindowProc := ListSW.BorderForm.OldBorderProc;
     acDstBmp := CreateBmp32(ListSW.SkinData.FCacheBmp);
+{$IFDEF ACDEBUG}
+      acDebugAnimBmp := acDstBmp;
+{$ENDIF}
     BitBlt(acDstBmp.Canvas.Handle, 0, 0, ListSW.SkinData.FCacheBmp.Width, ListSW.SkinData.FCacheBmp.Height, ListSW.SkinData.FCacheBmp.Canvas.Handle, 0, 0, SRCCOPY);
   end
   else begin
@@ -919,6 +918,9 @@ begin
       AnimForm := MakeCoverForm(ListSW.CtrlHandle);
 
     acDstBmp := CreateBmp32(ListSW.SkinData.FCacheBmp);
+{$IFDEF ACDEBUG}
+      acDebugAnimBmp := acDstBmp;
+{$ENDIF}
     BitBlt(acDstBmp.Canvas.Handle, 0, 0, acDstBmp.Width, acDstBmp.Height, ListSW.SkinData.FCacheBmp.Canvas.Handle, 0, 0, SRCCOPY);
   end;
   HideAnimForm(AnimForm, acDstBmp, ListSW.SkinData.SkinManager.AnimEffects.DialogHide.Time, MaxByte, ListSW.SkinData.SkinManager.AnimEffects.DialogHide.Mode, 0);
@@ -959,7 +961,6 @@ begin
   if (Manager <> nil) and Manager.Active then begin
     Manager.ShowHint(Pos, HintText, Application.HintHidePause);
     Result := Manager.HintWindow;
-//    Result := nil;
   end
   else
 {$ENDIF}
@@ -1127,15 +1128,11 @@ var
 
 begin
   InAnimationProcess := True;
-//  MaxTransparency := 250;
   if ListSW.BorderForm <> nil then
     AnimForm := ListSW.BorderForm.AForm
-  else //begin
+  else
     AnimForm := TacGlowForm.CreateNew(Application);
-//    AnimForm.BorderStyle := bsNone;
-//    AnimForm.Tag := ExceptTag;
-//    SetWindowLong(AnimForm.Handle, GWL_EXSTYLE, GetWindowLong(AnimForm.Handle, GWL_EXSTYLE) or WS_EX_TOOLWINDOW or WS_EX_NOACTIVATE);
-//  end;
+
   ListSW.PaintAll;
   GetClientRect(ListSW.CtrlHandle, cR);
   DstBmp := CreateBmp32(ListSW.SkinData.FCacheBmp);
@@ -1168,13 +1165,10 @@ begin
   Flags := SWP_NOACTIVATE or SWP_NOREDRAW or SWP_NOCOPYBITS or SWP_NOSENDCHANGING or SWP_NOOWNERZORDER;
   FBmpTopLeft := MkPoint;
   if StepCount > 0 then
-    FBlend.SourceConstantAlpha := 0
+    InitBlendData(FBlend, 0)
   else
-    FBlend.SourceConstantAlpha := MaxTransparency;
+    InitBlendData(FBlend, MaxTransparency);
 
-  FBlend.BlendOp := AC_SRC_OVER;
-  FBlend.BlendFlags := 0;
-  FBlend.AlphaFormat := AC_SRC_ALPHA;
   if ListSW.BorderForm <> nil then begin
     cy := SkinTitleHeight(ListSW.BorderForm) + ListSW.ShadowSize.Top - ListSW.CaptionHeight(False) - SysBorderWidth(ListSW.CtrlHandle, ListSW.BorderForm, False);
     cx := SkinBorderWidth(ListSW.BorderForm) - SysBorderWidth(ListSW.CtrlHandle, ListSW.BorderForm, False) + ListSW.ShadowSize.Left;
@@ -1189,7 +1183,7 @@ begin
     h := HWND_TOPMOST;
   end
   else
-    h := ListSW.CtrlHandle; // HWND_TOP; // GetWindow(ListSW.CtrlHandle, GW_HWNDPREV);
+    h := ListSW.CtrlHandle;
 
   DC := GetDC(0);
   SetWindowLong(AnimForm.Handle, GWL_EXSTYLE, GetWindowLong(AnimForm.Handle, GWL_EXSTYLE) or WS_EX_LAYERED or WS_EX_NOACTIVATE);
@@ -1212,7 +1206,7 @@ begin
       Anim_GoToNext;
       inc(i);
       if StepCount > 0 then
-        while lTicks + acTimerInterval > GetTickCount do {wait here};
+        WaitTicks(lTicks);
     end;
     FBlend.SourceConstantAlpha := MaxTransparency;
   end;
@@ -1338,10 +1332,11 @@ begin
           for X := 0 to bWidth do
             with S[X], D[X] do
               if (DR = SR) and (DG = SG) and (DB = SB) then
-                DI := 0
+                DA := 0
               else
                 DA := MaxByte;
         end;
+
     end;
 
     if ow = nil then
@@ -1352,7 +1347,8 @@ begin
       if ow = nil then
         Exit;
 
-      SetChildOrderAfter(ow, Ctrl);
+//      SetChildOrderAfter(ow, Ctrl);
+      ow.BringToFront;
       ow.BoundsRect := Ctrl.BoundsRect;
     end
     else
@@ -1460,9 +1456,9 @@ var
   D0, D: PRGBAArray_D;
   FBlend: TBlendFunction;
   bExtendedBorders: Boolean;
-  dx, dy, l, t, rr, bb, trans, prc, Percent1, Percent2, p: real;
+  dx, dy, l, t, rr, bb, trans, prc, Percent1, Percent2, p, BlurKef: real;
   NewBmp, BGBmp, BlurBmp, TmpBmp, AnimBmp, acDstBmp, OldAlphaBmp: TBitmap;
-  j, k, n, StepCount, cy, cx, Y, X, DeltaS, DeltaD: integer;
+  k, j, n, StepCount, cy, cx, Y, X, DeltaS, DeltaD: integer;
 
   procedure Anim_Init;
   begin
@@ -1521,343 +1517,347 @@ var
   end;
 
 begin
-  if not IsWindowVisible(Ctrl.Handle) or IsIconic(GetRootParent(Ctrl.Handle)) then
-    Exit;
-
-  InAnimationProcess := True;
-  if Ctrl is TCustomForm then
-    sp := TAccessProvider(TrySendMessage(Ctrl.Handle, SM_ALPHACMD, AC_GETPROVIDER_HI, 0))
-  else
-    sp := nil;
-
-  if (sp <> nil) and (sp.BorderForm <> nil) and acLayered then
-    bExtendedBorders := True
-  else
-    bExtendedBorders := False;
-
-  if acLayered and (Ctrl is TCustomForm) then begin
-    if sp.BorderForm <> nil then
-      if sp.CoverBmp <> nil then begin
-        OldAlphaBmp := sp.CoverBmp;
-        sp.CoverBmp := nil;
-      end
-      else begin
-        OldAlphaBmp := CreateBmp32;
-        OldAlphaBmp.Assign(sp.SkinData.FCacheBmp);
-      end;
-
-    sp.PaintAll;
-    if sp.SkinData.FCacheBmp = nil then begin
-      InAnimationProcess := False;
-      Exit;
-    end;
-    acDstBmp := CreateBmp32(sp.SkinData.FCacheBmp);
-    acDstBmp.Canvas.Lock;
-    SkinPaintTo(acDstBmp, Ctrl, 0, 0, sp);
-
-    if acDstBmp = nil then
-      Exit;
-
-    if sp.BorderForm = nil then
-      FillAlphaRect(acDstBmp, MkRect(acDstBmp), MaxByte);
-
-    acDstBmp.Canvas.UnLock;
-    StepCount := wTime div acTimerInterval;
-    Flags := SWP_NOACTIVATE or SWP_NOREDRAW or SWP_NOCOPYBITS or SWP_NOSIZE or SWP_NOMOVE; // or SWP_NOZORDER;
-
-    FBmpSize := MkSize(acDstBmp);
-    FBmpTopLeft := MkPoint;
-    if StepCount > 0 then
-      FBlend.SourceConstantAlpha := 0
+  if IsWindowVisible(Ctrl.Handle) and not IsIconic(GetRootParent(Ctrl.Handle)) then begin
+    InAnimationProcess := True;
+    if Ctrl is TCustomForm then
+      sp := TAccessProvider(TrySendMessage(Ctrl.Handle, SM_ALPHACMD, AC_GETPROVIDER_HI, 0))
     else
-      FBlend.SourceConstantAlpha := MaxTransparency;
+      sp := nil;
 
-    FBlend.BlendOp := AC_SRC_OVER;
-    FBlend.BlendFlags := 0;
-    FBlend.AlphaFormat := AC_SRC_ALPHA;
+    if (sp <> nil) and (sp.BorderForm <> nil) and acLayered then
+      bExtendedBorders := True
+    else
+      bExtendedBorders := False;
 
-    if sp.BorderForm <> nil then begin
-      if sp.BorderForm.AForm = nil then
-        sp.BorderForm.CreateNewForm;
-
-      sp.BorderForm.AForm.WindowProc := sp.BorderForm.OldBorderProc;
-      if sp.BorderForm.ParentHandle <> 0 then
-        SetWindowLong(sp.BorderForm.AForm.Handle, GWL_HWNDPARENT, LONG_PTR(sp.BorderForm.ParentHandle)); // Patch for ReportBuilder and similar windows
-
-      OldAlphaForm := sp.BorderForm.AForm;
-      sp.BorderForm.CreateNewForm;
-
-      if sp.FSysExHeight then
-        cy := sp.ShadowSize.Top
-      else
-        with sp.SkinData.SkinManager.CommonSkinData do
-          if IsZoomed(sp.Form.Handle) and (ExMaxHeight <> ExTitleHeight) then
-            cy := SkinTitleHeight(sp.BorderForm) + sp.ShadowSize.Top - SysCaptHeight(sp.Form) - SysBorderWidth(sp.Form.Handle, sp.BorderForm, False) + ExTitleHeight - ExMaxHeight
-          else
-            cy := SkinTitleHeight(sp.BorderForm) + sp.ShadowSize.Top - SysCaptHeight(sp.Form) - SysBorderWidth(sp.Form.Handle, sp.BorderForm, False);
-
-      cx := SkinBorderWidth(sp.BorderForm) - SysBorderWidth(sp.Form.Handle, sp.BorderForm, False) + sp.ShadowSize.Left;
-
-      GetWindowRect(Ctrl.Handle, fR);
-
-      sp.BorderForm.AForm.Left := fR.Left - cx;
-      sp.BorderForm.AForm.Top := fr.Top - cy;
-      sp.BorderForm.AForm.Width := FBmpSize.cx;
-      sp.BorderForm.AForm.Height := FBmpSize.cy;
-
-      h := GetNextWindow(sp.Form.Handle, GW_HWNDPREV);
-
-      SetWindowPos(sp.BorderForm.AForm.Handle, h, fR.Left - cx, fr.Top - cy, FBmpSize.cx, FBmpSize.cy, Flags);
-
-      DC := GetDC(0);
-      UpdateLayeredWindow(sp.BorderForm.AForm.Handle, DC, nil, @FBmpSize, acDstBmp.Canvas.Handle, @FBmpTopLeft, clNone, @FBlend, ULW_ALPHA);
-      ShowWindow(sp.BorderForm.AForm.Handle, SW_SHOWNOACTIVATE);
-
-      AnimBmp := CreateBmp32(FBmpSize);
-      FillDC(AnimBmp.Canvas.Handle, MkRect(AnimBmp), 0);
-
-      if StepCount > 0 then begin
-        Anim_Init;
-        j := 0;
-        while j <= StepCount do begin
-          lTicks := GetTickCount;
-          Anim_DoNext;
-          UpdateLayeredWindow(sp.BorderForm.AForm.Handle, DC, nil, @FBmpSize, AnimBmp.Canvas.Handle, @FBmpTopLeft, clNone, @FBlend, ULW_ALPHA);
-          SetFormBlendValue(OldAlphaForm.Handle, OldAlphaBmp, min(MaxByte, max(0, 3 * (MaxTransparency - FBlend.SourceConstantAlpha))));
-          Anim_GoToNext;
-          inc(j);
-          if StepCount > 0 then
-            while lTicks + acTimerInterval > GetTickCount do {wait here};
-        end;
-        FBlend.SourceConstantAlpha := MaxTransparency;
-      end;
-
-      ReleaseDC(0, DC);
-      InAnimationProcess := False;
-  {$IFDEF DELPHI7UP}
-      if sp.Form.AlphaBlend then
-        sp.Form.AlphaBlendValue := MaxTransparency;
-  {$ENDIF}
-      Ctrl.Perform(WM_SETREDRAW, 1, 0); // Vista
-
-      RedrawWindow(Ctrl.Handle, nil, 0, RDWA_ALLNOW);
-      SetWindowRgn(sp.BorderForm.AForm.Handle, sp.BorderForm.MakeRgn, False);
-      SetWindowPos(sp.BorderForm.AForm.Handle, 0, fR.Left - cx, fr.Top - cy, FBmpSize.cx, FBmpSize.cy, Flags or SWP_NOZORDER);
-      sp.BorderForm.UpdateExBordersPos(False);
-      FreeAndNil(OldAlphaBmp);
-      FreeAndNil(OldAlphaForm);
-    end
-    else begin
-      GetWindowRect(Ctrl.Handle, fR);
-
-      TacGlowForm(ow) := TacGlowForm.CreateNew(nil);
-//      TForm(ow) := TForm.Create(nil);
-//      TForm(ow).BorderStyle := bsNone;
-      //TForm(ow).Tag := ExceptTag;
-
-      ow.Left := Ctrl.Left;
-      ow.Top := Ctrl.Top;
-      ow.Width := Ctrl.Width;
-      ow.Height := Ctrl.Height;
-      if GetWindowLong(Ctrl.Handle, GWL_EXSTYLE) and WS_EX_TOPMOST <> 0 then begin
-        TForm(ow).FormStyle := fsStayOnTop;
-        h := HWND_TOPMOST
-      end
-      else
-        if sp.BorderForm <> nil then
-          h := sp.Form.Handle
-        else
-          h := GetWindow(sp.Form.Handle, GW_HWNDPREV);
-
-      SetWindowPos(ow.Handle, h, Ctrl.Left, Ctrl.Top, FBmpSize.cx, FBmpSize.cy, Flags and not SWP_NOMOVE);
-      DC := GetDC(0);
-      SetWindowLong(ow.Handle, GWL_EXSTYLE, GetWindowLong(ow.Handle, GWL_EXSTYLE) or WS_EX_LAYERED or WS_EX_NOACTIVATE);
-      UpdateLayeredWindow(ow.Handle, DC, nil, @FBmpSize, acDstBmp.Canvas.Handle, @FBmpTopLeft, clNone, @FBlend, ULW_ALPHA);
-
-      FillArOR(sp);
-      rgn := GetRgnFromArOR(sp);
-      SetWindowRgn(ow.Handle, rgn, False);
-
-      ShowWindow(ow.Handle, SW_SHOWNOACTIVATE);
-
-      AnimBmp := CreateBmp32(FBmpSize);
-      FillDC(AnimBmp.Canvas.Handle, MkRect(AnimBmp), 0);
-
-      if StepCount > 0 then begin
-        Anim_Init;
-        j := 0;
-        while j <= StepCount do begin
-          lTicks := GetTickCount;
-          Anim_DoNext;
-          UpdateLayeredWindow(ow.Handle, DC, nil, @FBmpSize, AnimBmp.Canvas.Handle, @FBmpTopLeft, clNone, @FBlend, ULW_ALPHA);
-          Anim_GoToNext;
-          inc(j);
-          if StepCount > 0 then
-            while lTicks + acTimerInterval > GetTickCount do {wait here};
-        end;
-        FBlend.SourceConstantAlpha := MaxTransparency;
-      end;
-      ReleaseDC(0, DC);
-      InAnimationProcess := False;
-  {$IFDEF DELPHI7UP}
-      if sp.Form.AlphaBlend then
-        sp.Form.AlphaBlendValue := MaxTransparency;
-  {$ENDIF}
-      Ctrl.Perform(WM_SETREDRAW, 1, 0); // Vista
-      RedrawWindow(Ctrl.Handle, nil, 0, RDWA_ALLNOW);
-      FreeAndNil(ow);
-    end;
-    FreeAndNil(AnimBmp);
-    FreeAndNil(acDstBmp);
-  end
-  else begin
-    if ow = nil then // If not initialized by developer
-      PrepareForAnimation(Ctrl);
-
-    if ow = nil then // Init was failed
-      Exit;
-
-    acDstBmp := CreateBmp32(Ctrl.width, Ctrl.Height);
-    // Finish picture
-    acDstBmp.Canvas.Lock;
-    SavedDC := SaveDC(acDstBmp.Canvas.Handle);
-    SkinPaintTo(acDstBmp, Ctrl);
-    if acDstBmp = nil then
-      Exit;
-
-    RestoreDC(acDstBmp.Canvas.Handle, SavedDC);
-    acDstBmp.Canvas.UnLock;
-    NewBmp := CreateBmp32(Ctrl.width, Ctrl.Height);
-    StepCount := wTime div acTimerInterval;
-    if not bExtendedBorders and (sp <> nil) then begin
-      sSkinProvider.FillArOR(TsSkinProvider(sp));
-      if ow = nil then
-        Exit;
-
-      SetWindowRgn(ow.Handle, sSkinProvider.GetRgnFromArOR(TsSkinProvider(sp)), False);
-    end;
-    if AnimType = atcBlur then begin
-      BGBmp := CreateBmpLike(acDstBmp);
-      BlurBmp := CreateBmpLike(acDstBmp);
-      TmpBmp := CreateBmp32;
-
-      BGInfo.DrawDC := BGBmp.Canvas.Handle;
-      BGInfo.R := MkRect(Ctrl);
-      BGInfo.Offset := MkPoint;
-      BGInfo.BgType := btUnknown;
-      BGBmp.Canvas.Lock;
-      GetBGInfo(@BGInfo, Ctrl.Handle, True);
-      BGBmp.Canvas.Unlock;
-      j := BGBmp.Width - 1;
-      if InitLine(BGBmp, Pointer(S0), DeltaS) and InitLine(acDstBmp, Pointer(D0), DeltaD) then // Leave not equal pixels only
-        for Y := 0 to BGBmp.Height - 1 do begin
-          S := Pointer(LongInt(S0) + DeltaS * Y);
-          D := Pointer(LongInt(D0) + DeltaD * Y);
-          for X := 0 to j do
-            with S[X], D[X] do
-              if (SR = DR) and (SG = DG) and (SB = DB) then
-                DI := 0
-              else
-                DA := MaxByte;
-        end;
-
-      BlurBmp.Assign(acDstBmp);
-    end
-    else begin
-      BGBmp := nil;
-      BlurBmp := nil;
-      TmpBmp := nil;
-    end;
-
-    DC := GetWindowDC(ow.Handle);
-    if StepCount > 0 then begin
-      prc := MaxByte / StepCount;
-      Percent1 := MaxByte - prc - 127;
-      Percent2 := MaxByte;
-      j := 0;
-      while (j <= StepCount) and (Percent2 >= 0) do begin
-        lTicks := GetTickCount;
-        // Animation
-        if AnimType = atcBlur then begin
-          // acAnimBmp - bitmap with controls (start)
-          // acAnimBmp2 - bitmap with BG (start)
-          // acDstBmp - bitmap with controls (finish)
-          // BGBmp - bitmap with BG (finish)
-          QBlur(acAnimBmp);
-          if j > 0 then begin
-            n := Length(acCtrlRects1);
-            NewBmp.Assign(BGBmp);
-            // Prepare image for each control
-            if Percent1 > 0 then
-              for k := 0 to n - 1 do begin
-                fR := acCtrlRects1[k];
-                InflateRect(fR, j * 2 + 1, j * 2 + 1);
-                TmpBmp.Width := WidthOf(fR, True);
-                TmpBmp.Height := HeightOf(fR, True);
-                StretchBlt(TmpBmp.Canvas.Handle, 0, 0, TmpBmp.Width, TmpBmp.Height, acAnimBmp.Canvas.Handle,
-                           acCtrlRects1[k].Left, acCtrlRects1[k].Top, WidthOf(acCtrlRects1[k]), HeightOf(acCtrlRects1[k]), SRCCOPY);
-                // Copy Bmp to NewBmp //
-                SumBmpRect32(NewBmp, fR, TmpBmp, MkPoint, Round(Percent1));
-              end;
-          end
-          else begin // Copy blured controls to NewBmp
-            NewBmp.Assign(BGBmp);
-            SumBmpRect32(NewBmp, MkRect(acAnimBmp), acAnimBmp, MkPoint, Round(Percent1));
-          end;
-          SumBmpRect32(NewBmp, MkRect(BlurBmp), BlurBmp, MkPoint, MaxByte - Round(Percent2));
-          // Blur End controls (prc - blend value)
-          BitBlt(DC, 0, 0, Ctrl.Width, Ctrl.Height, NewBmp.Canvas.Handle, 0, 0, SRCCOPY);
+    if acLayered and (Ctrl is TCustomForm) then begin
+      if sp.BorderForm <> nil then
+        if sp.CoverBmp <> nil then begin
+          OldAlphaBmp := sp.CoverBmp;
+          sp.CoverBmp := nil;
         end
         else begin
-          SumBitmapsByMask(NewBmp, acAnimBmp, acDstBmp, nil, max(0, Round(Percent2)));
-          BitBlt(DC, 0, 0, Ctrl.Width, Ctrl.Height, NewBmp.Canvas.Handle, 0, 0, SRCCOPY);
+          OldAlphaBmp := CreateBmp32;
+          OldAlphaBmp.Assign(sp.SkinData.FCacheBmp);
         end;
-        if Assigned(acMagnForm) then
-          SendMessage(acMagnForm.Handle, SM_ALPHACMD, AC_REFRESH_HI, 0);
 
-        inc(j);
-//        Percent1 := max(0, Percent1 - prc * j div 3);
-        Percent1 := max(0, Percent1 - prc);
-        Percent2 := Percent2 - prc;
-        if j > StepCount then
-          Break;
-
-        while lTicks + acTimerInterval{ * 20} > GetTickCount
-          do {wait here};
+      sp.PaintAll;
+      if sp.SkinData.FCacheBmp = nil then begin
+        InAnimationProcess := False;
+        Exit;
       end;
-    end;
-    if AnimType <> atcBlur then
+      acDstBmp := CreateBmp32(sp.SkinData.FCacheBmp);
+{$IFDEF ACDEBUG}
+      acDebugAnimBmp := acDstBmp;
+{$ENDIF}
+      acDstBmp.Canvas.Lock;
+      SkinPaintTo(acDstBmp, Ctrl, 0, 0, sp);
+
+      if acDstBmp = nil then
+        Exit;
+
+      if sp.BorderForm = nil then
+        FillAlphaRect(acDstBmp, MkRect(acDstBmp), MaxByte);
+
+      acDstBmp.Canvas.UnLock;
+      StepCount := wTime div acTimerInterval;
+      Flags := SWP_NOACTIVATE or SWP_NOREDRAW or SWP_NOCOPYBITS or SWP_NOSIZE or SWP_NOMOVE; // or SWP_NOZORDER;
+
+      FBmpSize := MkSize(acDstBmp);
+      FBmpTopLeft := MkPoint;
+      if StepCount > 0 then
+        InitBlendData(FBlend, 0)
+      else
+        InitBlendData(FBlend, MaxTransparency);
+
+      if sp.BorderForm <> nil then begin
+        if sp.BorderForm.AForm = nil then
+          sp.BorderForm.CreateNewForm;
+
+        sp.BorderForm.AForm.WindowProc := sp.BorderForm.OldBorderProc;
+        if sp.BorderForm.ParentHandle <> 0 then
+          SetWindowLong(sp.BorderForm.AForm.Handle, GWL_HWNDPARENT, LONG_PTR(sp.BorderForm.ParentHandle)); // Patch for ReportBuilder and similar windows
+
+        OldAlphaForm := sp.BorderForm.AForm;
+        sp.BorderForm.CreateNewForm;
+
+        if sp.FSysExHeight then
+          cy := sp.ShadowSize.Top
+        else
+          with sp.SkinData.SkinManager.CommonSkinData do
+            if IsZoomed(sp.Form.Handle) and (ExMaxHeight <> ExTitleHeight) then
+              cy := SkinTitleHeight(sp.BorderForm) + sp.ShadowSize.Top - SysCaptHeight(sp.Form) - SysBorderWidth(sp.Form.Handle, sp.BorderForm, False) + ExTitleHeight - ExMaxHeight
+            else
+              cy := SkinTitleHeight(sp.BorderForm) + sp.ShadowSize.Top - SysCaptHeight(sp.Form) - SysBorderWidth(sp.Form.Handle, sp.BorderForm, False);
+
+        cx := SkinBorderWidth(sp.BorderForm) - SysBorderWidth(sp.Form.Handle, sp.BorderForm, False) + sp.ShadowSize.Left;
+
+        GetWindowRect(Ctrl.Handle, fR);
+
+        sp.BorderForm.AForm.Left := fR.Left - cx;
+        sp.BorderForm.AForm.Top := fr.Top - cy;
+        sp.BorderForm.AForm.Width := FBmpSize.cx;
+        sp.BorderForm.AForm.Height := FBmpSize.cy;
+
+        h := GetNextWindow(sp.Form.Handle, GW_HWNDPREV);
+
+        SetWindowPos(sp.BorderForm.AForm.Handle, h, fR.Left - cx, fr.Top - cy, FBmpSize.cx, FBmpSize.cy, Flags);
+
+        DC := GetDC(0);
+        UpdateLayeredWindow(sp.BorderForm.AForm.Handle, DC, nil, @FBmpSize, acDstBmp.Canvas.Handle, @FBmpTopLeft, clNone, @FBlend, ULW_ALPHA);
+        ShowWindow(sp.BorderForm.AForm.Handle, SW_SHOWNOACTIVATE);
+
+        AnimBmp := CreateBmp32(FBmpSize);
+        FillDC(AnimBmp.Canvas.Handle, MkRect(AnimBmp), 0);
+
+        if StepCount > 0 then begin
+          Anim_Init;
+          j := 0;
+          while j <= StepCount do begin
+            lTicks := GetTickCount;
+            Anim_DoNext;
+            UpdateLayeredWindow(sp.BorderForm.AForm.Handle, DC, nil, @FBmpSize, AnimBmp.Canvas.Handle, @FBmpTopLeft, clNone, @FBlend, ULW_ALPHA);
+            SetFormBlendValue(OldAlphaForm.Handle, OldAlphaBmp, min(MaxByte, max(0, 3 * (MaxTransparency - FBlend.SourceConstantAlpha))));
+            Anim_GoToNext;
+            inc(j);
+            if StepCount > 0 then
+              WaitTicks(lTicks);
+          end;
+          FBlend.SourceConstantAlpha := MaxTransparency;
+        end;
+
+        ReleaseDC(0, DC);
+        InAnimationProcess := False;
+{$IFDEF DELPHI7UP}
+        if sp.Form.AlphaBlend then
+          sp.Form.AlphaBlendValue := MaxTransparency;
+{$ENDIF}
+        Ctrl.Perform(WM_SETREDRAW, 1, 0); // Vista
+
+        RedrawWindow(Ctrl.Handle, nil, 0, RDWA_ALLNOW);
+        SetWindowRgn(sp.BorderForm.AForm.Handle, sp.BorderForm.MakeRgn, False);
+        SetWindowPos(sp.BorderForm.AForm.Handle, 0, fR.Left - cx, fr.Top - cy, FBmpSize.cx, FBmpSize.cy, Flags or SWP_NOZORDER);
+        sp.BorderForm.UpdateExBordersPos(False);
+        FreeAndNil(OldAlphaBmp);
+        FreeAndNil(OldAlphaForm);
+      end
+      else begin
+        GetWindowRect(Ctrl.Handle, fR);
+
+        TacGlowForm(ow) := TacGlowForm.CreateNew(nil);
+  //      TForm(ow) := TForm.Create(nil);
+  //      TForm(ow).BorderStyle := bsNone;
+        //TForm(ow).Tag := ExceptTag;
+
+        ow.Left := Ctrl.Left;
+        ow.Top := Ctrl.Top;
+        ow.Width := Ctrl.Width;
+        ow.Height := Ctrl.Height;
+        if GetWindowLong(Ctrl.Handle, GWL_EXSTYLE) and WS_EX_TOPMOST <> 0 then begin
+          TForm(ow).FormStyle := fsStayOnTop;
+          h := HWND_TOPMOST
+        end
+        else
+          if sp.BorderForm <> nil then
+            h := sp.Form.Handle
+          else
+            h := GetWindow(sp.Form.Handle, GW_HWNDPREV);
+
+        SetWindowPos(ow.Handle, h, Ctrl.Left, Ctrl.Top, FBmpSize.cx, FBmpSize.cy, Flags and not SWP_NOMOVE);
+        DC := GetDC(0);
+        SetWindowLong(ow.Handle, GWL_EXSTYLE, GetWindowLong(ow.Handle, GWL_EXSTYLE) or WS_EX_LAYERED or WS_EX_NOACTIVATE);
+        UpdateLayeredWindow(ow.Handle, DC, nil, @FBmpSize, acDstBmp.Canvas.Handle, @FBmpTopLeft, clNone, @FBlend, ULW_ALPHA);
+
+        FillArOR(sp);
+        rgn := GetRgnFromArOR(sp);
+        SetWindowRgn(ow.Handle, rgn, False);
+
+        ShowWindow(ow.Handle, SW_SHOWNOACTIVATE);
+
+        AnimBmp := CreateBmp32(FBmpSize);
+        FillDC(AnimBmp.Canvas.Handle, MkRect(AnimBmp), 0);
+
+        if StepCount > 0 then begin
+          Anim_Init;
+          j := 0;
+          while j <= StepCount do begin
+            lTicks := GetTickCount;
+            Anim_DoNext;
+            UpdateLayeredWindow(ow.Handle, DC, nil, @FBmpSize, AnimBmp.Canvas.Handle, @FBmpTopLeft, clNone, @FBlend, ULW_ALPHA);
+            Anim_GoToNext;
+            inc(j);
+            if StepCount > 0 then
+              WaitTicks(lTicks);
+          end;
+          FBlend.SourceConstantAlpha := MaxTransparency;
+        end;
+        ReleaseDC(0, DC);
+        InAnimationProcess := False;
+    {$IFDEF DELPHI7UP}
+        if sp.Form.AlphaBlend then
+          sp.Form.AlphaBlendValue := MaxTransparency;
+    {$ENDIF}
+        Ctrl.Perform(WM_SETREDRAW, 1, 0); // Vista
+        RedrawWindow(Ctrl.Handle, nil, 0, RDWA_ALLNOW);
+        FreeAndNil(ow);
+      end;
+      FreeAndNil(AnimBmp);
+      FreeAndNil(acDstBmp);
+    end
+    else begin
+      if ow = nil then // If not initialized by developer
+        PrepareForAnimation(Ctrl);
+
+      if ow = nil then // Init was failed
+        Exit;
+
+      SetChildOrderAfter(ow, Ctrl);
+      acDstBmp := CreateBmp32(Ctrl.width, Ctrl.Height);
+{$IFDEF ACDEBUG}
+      acDebugAnimBmp := acDstBmp;
+{$ENDIF}
+      // Finish picture
+      acDstBmp.Canvas.Lock;
+      SavedDC := SaveDC(acDstBmp.Canvas.Handle);
+      SkinPaintTo(acDstBmp, Ctrl);
+      if acDstBmp = nil then
+        Exit;
+
+      RestoreDC(acDstBmp.Canvas.Handle, SavedDC);
+      acDstBmp.Canvas.UnLock;
+      NewBmp := CreateBmp32(Ctrl.width, Ctrl.Height);
+      StepCount := wTime div (acTimerInterval * 2);
+      if not bExtendedBorders and (sp <> nil) then begin
+        sSkinProvider.FillArOR(TsSkinProvider(sp));
+        if ow = nil then
+          Exit;
+
+        SetWindowRgn(ow.Handle, sSkinProvider.GetRgnFromArOR(TsSkinProvider(sp)), False);
+      end;
+      if AnimType = atcBlur then begin
+        BlurKef := 1 + 0.0005 * (1000 - min(999, wTime));
+        BGBmp := CreateBmpLike(acDstBmp);
+        BlurBmp := CreateBmpLike(acDstBmp);
+        TmpBmp := CreateBmp32;
+
+        BGInfo.DrawDC := BGBmp.Canvas.Handle;
+        BGInfo.R := MkRect(Ctrl);
+        BGInfo.Offset := MkPoint;
+        BGInfo.BgType := btUnknown;
+        BGBmp.Canvas.Lock;
+        GetBGInfo(@BGInfo, Ctrl.Handle, True);
+        BGBmp.Canvas.Unlock;
+        j := BGBmp.Width - 1;
+
+        if InitLine(BGBmp, Pointer(S0), DeltaS) and InitLine(acDstBmp, Pointer(D0), DeltaD) then // Leave not equal pixels only
+          for Y := 0 to BGBmp.Height - 1 do begin
+            S := Pointer(LongInt(S0) + DeltaS * Y);
+            D := Pointer(LongInt(D0) + DeltaD * Y);
+            for X := 0 to j do
+              with S[X], D[X] do
+                if (SR = DR) and (SG = DG) and (SB = DB) then
+                  DA := 0
+                else
+                  DA := MaxByte;
+          end;
+
+        BlurBmp.Assign(acDstBmp);
+      end
+      else begin
+        BlurKef := 1;
+        BGBmp := nil;
+        BlurBmp := nil;
+        TmpBmp := nil;
+      end;
+
+      DC := GetWindowDC(ow.Handle);
+      if StepCount > 0 then begin
+        prc := MaxByte / StepCount;
+        Percent1 := 180;
+        Percent2 := MaxByte;
+        j := 0;
+        while (Percent1 > 0) and (Percent2 > 0) do begin
+          lTicks := GetTickCount;
+          // Animation
+          if AnimType = atcBlur then begin
+            // acAnimBmp - bitmap with controls (start)
+            // acAnimBmp2 - bitmap with BG (start)
+            // acDstBmp - bitmap with controls (finish)
+            // BGBmp - bitmap with BG (finish)
+            QBlur(acAnimBmp);
+            if j > 0 then begin
+              n := Length(acCtrlRects1);
+              NewBmp.Assign(BGBmp);
+              // Prepare image for each control
+              if Percent1 > 1 then
+                for k := 0 to n - 1 do begin
+                  fR := acCtrlRects1[k];
+                  dx := WidthOf(fR);
+                  dy := HeightOf(fR);
+                  InflateRect(fR, j * 8, Round(j * 8 * dy / dx));
+                  TmpBmp.Width := WidthOf(fR, True);
+                  TmpBmp.Height := HeightOf(fR, True);
+                  StretchBlt(TmpBmp.Canvas.Handle, 0, 0, TmpBmp.Width, TmpBmp.Height, acAnimBmp.Canvas.Handle,
+                             acCtrlRects1[k].Left, acCtrlRects1[k].Top, WidthOf(acCtrlRects1[k]), HeightOf(acCtrlRects1[k]), SRCCOPY);
+                  // Copy Bmp to NewBmp //
+                  SumBmpRect32(NewBmp, fR, TmpBmp, MkPoint, Round(Percent1));
+                end;
+            end
+            else begin // Copy blured controls to NewBmp
+              NewBmp.Assign(BGBmp);
+              SumBmpRect32(NewBmp, MkRect(acAnimBmp), acAnimBmp, MkPoint, Round(Percent1));
+            end;
+            SumBmpRect32(NewBmp, MkRect(BlurBmp), BlurBmp, MkPoint, MaxByte - Round(Percent2));
+            // Blur End controls (prc - blend value)
+            BitBlt(DC, 0, 0, Ctrl.Width, Ctrl.Height, NewBmp.Canvas.Handle, 0, 0, SRCCOPY);
+            Percent1 := max(0, Percent1 / BlurKef);
+            Percent2 := Percent2 - prc;
+          end
+          else begin
+            SumBitmapsByMask(NewBmp, acAnimBmp, acDstBmp, nil, max(0, Round(Percent2)));
+            BitBlt(DC, 0, 0, Ctrl.Width, Ctrl.Height, NewBmp.Canvas.Handle, 0, 0, SRCCOPY);
+            Percent1 := Percent1 - prc;
+            Percent2 := Percent2 - prc;
+          end;
+          if Assigned(acMagnForm) then
+            SendMessage(acMagnForm.Handle, SM_ALPHACMD, AC_REFRESH_HI, 0);
+
+          inc(j);
+
+          WaitTicks(lTicks, acTimerInterval * 2);
+        end;
+      end;
       BitBlt(DC, 0, 0, Ctrl.width, Ctrl.Height, acDstBmp.Canvas.Handle, 0, 0, SRCCOPY);
 
-    if Assigned(acMagnForm) then
-      SendMessage(acMagnForm.Handle, SM_ALPHACMD, AC_REFRESH_HI, 0);
+      if Assigned(acMagnForm) then
+        SendMessage(acMagnForm.Handle, SM_ALPHACMD, AC_REFRESH_HI, 0);
 
-    InAnimationProcess := False;
-    if Ctrl.Visible then begin
-      Ctrl.Perform(WM_SETREDRAW, 1, 0); // Vista
-      SetFormBlendValue(ow.Handle, NewBmp, MaxByte);
-      if Win32MajorVersion >= 6 then
-        RedrawWindow(Ctrl.Handle, nil, 0, RDWA_ALLNOW);
+      InAnimationProcess := False;
+      if Ctrl.Visible then begin
+        Ctrl.Perform(WM_SETREDRAW, 1, 0); // Vista
+        SetFormBlendValue(ow.Handle, NewBmp, MaxByte);
+        if Win32MajorVersion >= 6 then
+          RedrawWindow(Ctrl.Handle, nil, 0, RDWA_ALLNOW);
 
-      if not (Ctrl is TCustomForm) or (DWord(GetWindowLong(Ctrl.Handle, GWL_EXSTYLE)) and WS_EX_LAYERED = 0) then
-        SetWindowPos(ow.Handle, 0, 0, 0, 0, 0, SWP_NOZORDER or SWP_HIDEWINDOW or SWP_NOREDRAW or SWP_NOACTIVATE);
+        if not (Ctrl is TCustomForm) or (DWord(GetWindowLong(Ctrl.Handle, GWL_EXSTYLE)) and WS_EX_LAYERED = 0) then
+          SetWindowPos(ow.Handle, 0, 0, 0, 0, 0, SWP_NOZORDER or SWP_HIDEWINDOW or SWP_NOREDRAW or SWP_NOACTIVATE);
+      end;
+      ReleaseDC(ow.Handle, DC);
+      FreeAndnil(ow);
+      FreeAndNil(NewBmp);
+      FreeAndNil(acAnimBmp);
+      FreeAndNil(acDstBmp);
+      if Assigned(acAnimBmp2) then
+        FreeAndNil(acAnimBmp2);
+
+      if Assigned(BGBmp) then
+        FreeAndNil(BGBmp);
+
+      if Assigned(TmpBmp) then
+        FreeAndNil(TmpBmp);
+
+      if Assigned(BlurBmp) then
+        FreeAndNil(BlurBmp);
     end;
-    ReleaseDC(ow.Handle, DC);
-    FreeAndnil(ow);
-    FreeAndNil(NewBmp);
-    FreeAndNil(acAnimBmp);
-    FreeAndNil(acDstBmp);
-    if Assigned(acAnimBmp2) then
-      FreeAndNil(acAnimBmp2);
-
-    if Assigned(BGBmp) then
-      FreeAndNil(BGBmp);
-
-    if Assigned(TmpBmp) then
-      FreeAndNil(TmpBmp);
-
-    if Assigned(BlurBmp) then
-      FreeAndNil(BlurBmp);
   end;
 end;
 
@@ -1866,17 +1866,16 @@ procedure SetParentUpdated(const wc: TWinControl); overload;
 var
   i: integer;
 begin
-  if not (csDesigning in wc.ComponentState) then
-    if not InAnimationProcess then
-      for i := 0 to wc.ControlCount - 1 do
-        if not (csDestroying in wc.Controls[i].ComponentState) then
-          if wc.Controls[i] is TWinControl then begin
-            if TWinControl(wc.Controls[i]).HandleAllocated and TWinControl(wc.Controls[i]).Showing then
-              TrySendMessage(TWinControl(wc.Controls[i]).Handle, SM_ALPHACMD, AC_ENDPARENTUPDATE_HI, 0);
-          end
-          else
-            if wc.Controls[i] is TControl then
-              TControl(wc.Controls[i]).Perform(SM_ALPHACMD, AC_ENDPARENTUPDATE_HI, 0);
+  if not (csDesigning in wc.ComponentState) and not InAnimationProcess then
+    for i := 0 to wc.ControlCount - 1 do
+      if not (csDestroying in wc.Controls[i].ComponentState) then
+        if wc.Controls[i] is TWinControl then begin
+          if TWinControl(wc.Controls[i]).HandleAllocated and TWinControl(wc.Controls[i]).Showing then
+            TrySendMessage(TWinControl(wc.Controls[i]).Handle, SM_ALPHACMD, AC_ENDPARENTUPDATE_HI, 0);
+        end
+        else
+          if wc.Controls[i] is TControl then
+            TControl(wc.Controls[i]).Perform(SM_ALPHACMD, AC_ENDPARENTUPDATE_HI, 0);
 end;
 
 
@@ -2156,7 +2155,6 @@ end;
 function SendAMessage(const Handle: hwnd; const Cmd: Integer; LParam: LPARAM = 0): LRESULT; overload;
 begin
   Result := TrySendMessage(Handle, SM_ALPHACMD, WPARAM(Word(Cmd)) shl 16, LParam);
-//  Result := SendMessage(Handle, SM_ALPHACMD, WPARAM(Word(Cmd)) shl 16, LParam);
 end;
 
 
@@ -2240,7 +2238,6 @@ end;
 
 function GetBoolMsg(const Control: TWinControl; const Cmd: Cardinal): boolean;
 begin
-//  Result := boolean(Control.Perform(SM_ALPHACMD, MakeWParam(0, Word(Cmd)), 0));
   Result := boolean(SendAMessage(Control, Cmd));
 end;
 
@@ -2344,7 +2341,7 @@ begin
         Exit;
 
       if Control.Controls[i] is TWincontrol then
-        with TWinControl(Control.Controls[i]) do begin
+        with TWinControl(Control.Controls[i]) do
           if not HandleAllocated then
             Perform(Msg, Wparam, LParam)
           else begin
@@ -2352,15 +2349,7 @@ begin
             if not WndIsSkinned(TWinControl(Control.Controls[i]).Handle) then
               if not Assigned(CheckDevEx) or not CheckDevEx(Control.Controls[i]) then
                 AlphaBroadCast(TWinControl(Control.Controls[i]), Message);
-          end;
-(*
-            if WndIsSkinned(TWinControl(Control.Controls[i]).Handle){ GetBoolMsg(TWinControl(Control.Controls[i]), AC_CTRLHANDLED)} then
-              TrySendMessage(Handle, Msg, WParam, LParam)
-            else
-              if not Assigned(CheckDevEx) or not CheckDevEx(Control.Controls[i]) then
-                AlphaBroadCast(TWinControl(Control.Controls[i]), Message);
-*)
-        end
+          end
       else
         Control.Controls[i].Perform(Msg, Wparam, LParam);
 
@@ -2646,13 +2635,9 @@ begin
   else
     b := False;
 
-  FBlend.BlendOp := AC_SRC_OVER;
-  FBlend.BlendFlags := 0;
-  FBlend.AlphaFormat := AC_SRC_ALPHA;
-  FBlend.SourceConstantAlpha := Value;
+  InitBlendData(FBlend, Value);
   FBmpSize := MkSize(Bmp);
   FBmpTopLeft := MkPoint;
-
   DC := GetDC(0);
   try
     if GetWindowLong(FormHandle, GWL_EXSTYLE) and WS_EX_LAYERED = 0 then begin

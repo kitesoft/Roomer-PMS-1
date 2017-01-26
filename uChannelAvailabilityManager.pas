@@ -3382,7 +3382,7 @@ begin
     finally
       cbxChannel.BulkChanging := False;
     end;
-
+    cbxChannelClickCheck(nil);
     ShowHideExtraOptions;
   finally
     pgcPages.Visible := True;

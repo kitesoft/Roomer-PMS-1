@@ -2,7 +2,7 @@ unit sSkinProvider;
 {$I sDefs.inc}
 //{$DEFINE LOGGED}
 //{$DEFINE DEBUG}
-//+
+
 interface
 
 uses
@@ -268,7 +268,7 @@ type
     FOnAfterAnimation: TacAfterAnimation;
     FOnSkinItemEx:     TAddItemExEvent;
     FFormHeader:       TacFormHeader;
-    FThirdParty:       ThirdPartyList;
+    FThirdParty:       TsThirdPartyList;
     FDisabledBlendValue: byte;
     FDisabledBlendColor: TColor;
 
@@ -579,10 +579,9 @@ type
     property TitleButtons: TsTitleButtons read FTitleButtons write SetTitleButtons;
     property TitleIcon: TsTitleIcon read FTitleIcon write FTitleIcon;
     property TitleSkin: TsSkinSection read FTitleSkin write SetTitleSkin;
-    property ThirdParty: ThirdPartyList read FThirdParty write FThirdParty;
+    property ThirdParty: TsThirdPartyList read FThirdParty write FThirdParty;
     property MenuLineSkin: TsSkinSection read FMenuLineSkin write SetMenuLineSkin;
 
-    {:@event}
     property OnAfterAnimation: TacAfterAnimation read FOnAfterAnimation write FOnAfterAnimation;
     property OnExtHitTest: TacNCHitTest    read FOnExtHitTest write FOnExtHitTest;
     property OnSkinItem:   TAddItemEvent   read FOnSkinItem   write FOnSkinItem;
@@ -1169,14 +1168,14 @@ begin
 end;
 
 
-procedure SetBlurBehindWindow(AHandle: HWND; AEnabled: Boolean; ARGN: HRGN);
+procedure SetBlurBehindWindow(AHandle: HWND; AEnabled: Boolean; ARGN: HRGN = 0);
 const
   DWM_BB_ENABLE = 1;
   DWM_BB_BLURREGION = 2;
 var
   _BlurBehind: TDWM_BLURBEHIND;
 begin
-  if hDWMAPI <> 0 then begin
+  if (hDWMAPI <> 0) and AeroIsEnabled then begin
     with _BlurBehind do begin
       dwFlags := DWM_BB_ENABLE;
       if ARGN <> 0 then
@@ -1224,7 +1223,7 @@ begin
         if sp.BorderForm <> nil then
           with sp.BorderForm do begin
             UpdateExBordersPos(False); // Repaint cache
-            SetBlurBehindWindow(AForm.Handle, False, 0);
+            SetBlurBehindWindow(AForm.Handle, False);
             CopyBmp(TacMinTimer(sp.FormTimer).SavedImage, sp.SkinData.FCacheBmp); // Save cache
             ExBorderShowing := True;
             SetWindowPos(AForm.Handle, GetTopWindow, 0, 0, 0, 0, SWPA_ZORDER);
@@ -1721,25 +1720,34 @@ begin
 end;
 
 
+var
+  iAeroStatus: integer = -1;
+
+
 function AeroIsEnabled: boolean;
 var
   b: Longbool;
 begin
-  Result := False;
-  if Win32MajorVersion >= 6 then begin
-    b := False;
-    if Assigned(_DwmIsCompositionEnabled) then
-      Result := _DwmIsCompositionEnabled(b) = S_OK
-    else begin
-      InitDwmApi;
-      if hDWMAPI > 0 then begin
-        _DwmIsCompositionEnabled := GetProcAddress(hDWMAPI, 'DwmIsCompositionEnabled');
-        if Assigned(_DwmIsCompositionEnabled) then
-          Result := _DwmIsCompositionEnabled(b) = S_OK;
-      end
+  if iAeroStatus < 0 then
+    Result := iAeroStatus > 0
+  else begin
+    Result := False;
+    if Win32MajorVersion >= 6 then begin
+      b := False;
+      if Assigned(_DwmIsCompositionEnabled) then
+        Result := _DwmIsCompositionEnabled(b) = S_OK
+      else begin
+        InitDwmApi;
+        if hDWMAPI > 0 then begin
+          _DwmIsCompositionEnabled := GetProcAddress(hDWMAPI, 'DwmIsCompositionEnabled');
+          if Assigned(_DwmIsCompositionEnabled) then
+            Result := _DwmIsCompositionEnabled(b) = S_OK;
+        end
+      end;
     end;
+    Result := Result and b;
+    iAeroStatus := integer(Result);
   end;
-  Result := Result and b;
 end;
 
 
@@ -2458,7 +2466,7 @@ var
   i: integer;
   sp: TsSkinProvider;
 begin
-  FThirdParty := ThirdPartyList.Create;
+  FThirdParty := TsThirdPartyList.Create;
   SetLength(ThirdLists, High(acThirdNames) + 1);
   for i := 0 to High(acThirdNames) do begin
     ThirdLists[i] := TStringList.Create;
@@ -3178,6 +3186,8 @@ end;
 procedure TsSkinProvider.NewWndProc(var Message: TMessage);
 begin
 {$IFDEF LOGGED}
+  if Form.Tag = 1 then
+
     AddToLog(Message);
 {$ENDIF}
   if (Message.Msg <> SM_ALPHACMD) or not AC_SMAlphaCmd_Common(Message) then
@@ -3215,6 +3225,10 @@ begin
     end
     else
       case Message.Msg of
+        WM_SETCURSOR:
+          if (FTitleBar = nil) or not IsValidIndex(CurrentHT - HTITEM, FTitleBar.Items.Count) then // If TitleItem.Cursor is not used
+            OldWndProc(Message);
+
         WM_DWMSENDICONICLIVEPREVIEWBITMAP:
           if ac_ChangeThumbPreviews then // Task menu support when not MainFormOnTaskBar
             Message.Result := LRESULT(SetPreviewBmp(Form.Handle, Self));
@@ -3225,6 +3239,20 @@ begin
               Result := LRESULT(SetThumbIcon(Form.Handle, Self, LParamHi, LParamLo));
 
         SM_ALPHACMD: AC_SMAlphaCmd_Skinned(Message);
+        CM_WININICHANGE: begin
+          OldWndProc(Message);
+          if BorderForm <> nil then
+            BorderForm.UpdateExBordersPos;
+        end;
+
+        WM_SETFOCUS: begin
+          OldWndProc(Message);
+          if Form.Visible and (BorderForm <> nil) and ((BorderForm.AForm = nil) or not IsWindowVisible(BorderForm.AForm.Handle)) then begin
+            FInAnimation := False;
+            BorderForm.UpdateExBordersPos(True);
+          end;
+        end;
+
         CM_COLORCHANGED:
           if FormState and (FS_ANIMSHOWING or FS_ANIMCLOSING) <> 0 then
             Exit;
@@ -3316,7 +3344,9 @@ begin
 {$IFNDEF NOWNDANIMATION}
         WM_CLOSE:             AC_WMClose(Message);
 {$ENDIF}
-        787:                  DropSysMenu(Mouse.CursorPos.X, Mouse.CursorPos.Y);
+        787: with acMousePos do
+          DropSysMenu(X, Y);
+
         45132, 48205:         Message.Result := 0
         else
           OldWndProc(Message);
@@ -3532,7 +3562,7 @@ procedure ShowHint(Btn: TsTitleButton);
 var
   p: TPoint;
 begin
-  if Btn.HintWnd = nil then begin
+  if (Btn.Hint <> '') and (Btn.HintWnd = nil) then begin
     p := acMousePos;
     if HintWindowClass = THintWindow then
       Btn.HintWnd := acShowHintWnd(Btn.Hint, Point(p.X + 8, p.Y + 16))
@@ -3592,10 +3622,13 @@ begin
             else
               if BetWeen(CurrentHT, HTITEM, HTITEM + MaxByte) then
                 if Assigned(FTitleBar) then
-                  with FTitleBar, Items[CurrentHT - HTITEM] do
-                    if CurrentHT - HTITEM < Items.Count then begin
+                  if CurrentHT - HTITEM < FTitleBar.Items.Count then
+                    with FTitleBar, Items[CurrentHT - HTITEM] do{
+                    if CurrentHT - HTITEM < Items.Count then} begin
                       if Assigned(OnMouseLeave) then
                         OnMouseLeave(Items[CurrentHT - HTITEM]);
+
+                      SetCursor(Screen.Cursors[crDefault]);
 
                       State := 0;
                       HideHintWnd(Items[CurrentHT - HTITEM]);
@@ -3628,6 +3661,7 @@ begin
           if Assigned(FTitleBar.Items[CurrentHT - HTITEM].OnMouseEnter) then
             FTitleBar.Items[CurrentHT - HTITEM].OnMouseEnter(FTitleBar.Items[CurrentHT - HTITEM]);
 
+          SetCursor(Screen.Cursors[FTitleBar.Items[CurrentHT - HTITEM].Cursor]);
           FTitleBar.Items[CurrentHT - HTITEM].State := 1;
           StartHintTimer(FTitleBar.Items[CurrentHT - HTITEM]);
         end;
@@ -6678,7 +6712,7 @@ var
   i: integer;
 {$ENDIF}
 begin
-  if not RgnChanging and not (csLoading in Form.ComponentState) then
+  if not RgnChanging and not (csLoading in Form.ComponentState) and (Form.FormStyle <> fsMDIChild) then
     with TWMWindowPosChanged(Message) do begin
       if Form.HandleAllocated and
            not IsZoomed(Form.Handle) and
@@ -6760,7 +6794,8 @@ begin
                 BorderForm.ExBorderShowing := False;
                 BorderForm.UpdateExBordersPos();
               end;
-              SetWindowPos(Form.Handle, 0, 0, 0, 0, 0, SWPA_NOCOPYBITS);
+              if IsWindowVisible(Form.Handle) then
+                SetWindowPos(Form.Handle, 0, 0, 0, 0, 0, SWPA_NOCOPYBITS);
             end;
     end
     // Resizing of form
@@ -7935,7 +7970,8 @@ begin
       FCommonData.CtrlSkinState := FCommonData.CtrlSkinState and not ACS_FAST;
       FCommonData.BGChanged := True;
     end;
-  	SetWindowPos(Form.Handle, 0, 0, 0, 0, 0, SWPA_NOCOPYBITS);
+    if IsWindowVisible(Form.Handle) then
+    	SetWindowPos(Form.Handle, 0, 0, 0, 0, 0, SWPA_NOCOPYBITS);
   end;
 end;
 
@@ -7978,7 +8014,7 @@ begin
   if (Message.WParam = 1) and Assigned(SkinData.SkinManager) {$IFDEF D2010}and (Form.ClassName <> 'TMessageForm'){$ENDIF} then
     SkinData.SkinManager.UpdateScale(Form);
 
-  if FDrawNonClientArea and not Application.Terminated then // If first showing
+  if FDrawNonClientArea and not Application.Terminated and Form.HandleAllocated then // If first showing
     if (Message.WParam = 0) and (SkinData.SkinManager <> nil) and SkinData.SkinManager.CommonSkinData.Active then
       if not IsIconic(Form.Handle) then begin
         if SkinData.SkinManager.ShowState <> saMinimize then // Closing
@@ -8474,7 +8510,7 @@ begin
       if GetWindowLong(Form.Handle, GWL_STYLE) and WS_SYSMENU <> 0 then begin
         SkinData.BGChanged := True;
         UpdateIconsIndexes;
-        if BorderForm <> nil then
+        if (BorderForm <> nil) or ExtBordersNeeded(Self) then
           bUpdateExBorders := True
         else begin
           SetWindowLong(Form.Handle, GWL_STYLE, GetWindowLong(Form.Handle, GWL_STYLE) and not WS_SYSMENU);
@@ -8486,7 +8522,10 @@ begin
              (BorderForm <> nil) and (FormState and FS_DISABLED = 0); { AlphaBlend is changed }
 
       if bUpdateExBorders then
-        BorderForm.UpdateExBordersPos;
+        if BorderForm <> nil then
+          BorderForm.UpdateExBordersPos
+        else
+          InitExBorders(SkinData.SkinManager.ExtendedBorders);
     end;
 end;
 
@@ -9451,25 +9490,25 @@ begin
 {$ENDIF}
     OldWndProc(Message);
     if not FInAnimation and (BorderForm <> nil) then begin
-      if Form.Visible and not IsIconic(Form.Handle) then begin
-        if (TWMWindowPosChanged(Message).WindowPos^.Flags and (SWP_NOREDRAW or SWP_DRAWFRAME) = 0) then
-          if FormState and (FS_DISABLED or FS_BLENDMOVING) = 0 then
-            if (TWMWindowPosChanged(Message).WindowPos^.Flags and 3 = 3) and (BorderForm.AForm <> nil) then
-              if AeroIsEnabled and (Application.MainForm = Form) and (GetActiveWindow = Form.Handle) then
-                SetWindowPos(BorderForm.AForm.Handle, BorderForm.GetTopWnd{HWND_TOPMOST}, 0, 0, 0, 0, SWPA_SHOWZORDERONLY)
+        if Form.Visible and not IsIconic(Form.Handle) then begin
+          if (TWMWindowPosChanged(Message).WindowPos^.Flags and (SWP_NOREDRAW or SWP_DRAWFRAME) = 0) then
+            if FormState and (FS_DISABLED or FS_BLENDMOVING) = 0 then
+              if (TWMWindowPosChanged(Message).WindowPos^.Flags and 3 = 3) and (BorderForm.AForm <> nil) then
+                if AeroIsEnabled and (Application.MainForm = Form) and (GetActiveWindow = Form.Handle) then
+                  SetWindowPos(BorderForm.AForm.Handle, BorderForm.GetTopWnd{HWND_TOPMOST}, 0, 0, 0, 0, SWPA_SHOWZORDERONLY)
+                else
+                  SetWindowPos(BorderForm.AForm.Handle, Form.Handle, 0, 0, 0, 0, SWPA_SHOWZORDERONLY)
               else
-                SetWindowPos(BorderForm.AForm.Handle, Form.Handle, 0, 0, 0, 0, SWPA_SHOWZORDERONLY)
-            else
-              BorderForm.UpdateExBordersPos(False); // Update z-order ( BDS )
+                BorderForm.UpdateExBordersPos(False); // Update z-order ( BDS )
 
-            SendOwnerToBack;
+              SendOwnerToBack;
+        end
+        else
+          if (BorderForm <> nil) and (FormState and FS_ANIMMINREST = 0) and
+               IsIconic(Form.Handle) and not Application.Terminated and not (csDestroying in Form.ComponentState) and (Form = Application.MainForm) then
+            FreeAndNil(BorderForm.AForm);
       end
-      else
-        if (BorderForm <> nil) and (FormState and FS_ANIMMINREST = 0) and
-             IsIconic(Form.Handle) and not Application.Terminated and not (csDestroying in Form.ComponentState) and (Form = Application.MainForm) then
-          FreeAndNil(BorderForm.AForm);
     end
-  end
   else
     OldWndProc(Message);
 end;
@@ -10814,9 +10853,13 @@ begin
         end;
     end;
 
-    WM_SETCURSOR:
-      if not Ex_WMSetCursor(TWMSetCursor(Message)) then
-        OldBorderProc(Message);
+    WM_SETCURSOR: begin
+      if (FOwner is TsSkinProvider) and Assigned(TsSkinProvider(FOwner).FTitleBar) and IsValidIndex(TsSkinProvider(FOwner).CurrentHT - HTITEM, TsSkinProvider(FOwner).TitleBar.Items.Count) then
+      // Skip, if TitleItem.Cursor is used
+      else
+        if not Ex_WMSetCursor(TWMSetCursor(Message)) then
+          OldBorderProc(Message);
+    end;
 
     WM_MOUSEACTIVATE: begin
       Message.Result := MA_NOACTIVATE;
@@ -11614,14 +11657,10 @@ begin
       FBmpTopLeft := MkPoint;
 {$IFDEF DELPHI6UP}
       if FOwner is TsSkinProvider and TsSkinProvider(FOwner).Form.AlphaBlend then
-        FBlend.SourceConstantAlpha := TsSkinProvider(FOwner).Form.AlphaBlendValue
+        InitBlendData(FBlend, TsSkinProvider(FOwner).Form.AlphaBlendValue)
       else
 {$ENDIF}
-        FBlend.SourceConstantAlpha := Blend;
-
-      FBlend.BlendOp := AC_SRC_OVER;
-      FBlend.BlendFlags := 0;
-      FBlend.AlphaFormat := AC_SRC_ALPHA;
+        InitBlendData(FBlend, Blend);
 
       if (AForm.Width <> w) or (AForm.Height <> h) then
         AForm.SetBounds(p.X, p.Y, w, h - yAeroTab);
@@ -11640,7 +11679,7 @@ begin
           SetBlurBehindWindow(AForm.Handle, True, bRgn);
         end
         else
-          SetBlurBehindWindow(AForm.Handle, False, 0);
+          SetBlurBehindWindow(AForm.Handle, False);
 
         if FormState and FS_BLENDMOVING <> 0 then
           SetWindowRgn(AForm.Handle, MakeRgn, False);
@@ -12308,10 +12347,7 @@ begin
     AForm.Width  := FBmpSize.cx;
     AForm.Height := FBmpSize.cy;
     FBmpTopLeft := MkPoint;
-    FBlend.SourceConstantAlpha := Blend;
-    FBlend.BlendOp := AC_SRC_OVER;
-    FBlend.BlendFlags := 0;
-    FBlend.AlphaFormat := AC_SRC_ALPHA;
+    InitBlendData(FBlend, Blend);
     SetWindowPos(AForm.Handle, iInsAfter, 0, 0, 0, 0, SWPA_ZORDER);
     DC := GetDC(0);
     SetWindowLong(AForm.Handle, GWL_EXSTYLE, GetWindowLong(AForm.Handle, GWL_EXSTYLE) or WS_EX_LAYERED or WS_EX_NOACTIVATE or WS_EX_TRANSPARENT);
@@ -12714,7 +12750,10 @@ begin
       Exit;
     end
     else
-      AnimForm.HandleNeeded;
+      if not (csDestroying in AnimForm.ComponentState) then
+        AnimForm.HandleNeeded
+      else
+        Exit;
 
     if not AnimForm.HandleAllocated then begin
       Enabled := False;
@@ -12748,7 +12787,7 @@ begin
   {$ENDIF}
             sp.BorderForm.ExBorderShowing := False;
 //            if (sp.BorderForm <> nil) and ((acWinVer < 6) or AeroIsEnabled) and (StepCount > 1) then
-            if sp.Form <> Application.MainForm then
+//            if sp.Form <> Application.MainForm then
               sp.BorderForm.UpdateExBordersPos;
           end
           else begin
@@ -13131,18 +13170,22 @@ end;
 
 
 procedure TsSkinProvider.UpdateLayerForm;
+{$IFDEF DELPHI6UP}
+var
+  AlphaBmp: TBitmap;
+  FBmpSize: TSize;
+  DC: hdc;
+  FBlend: TBlendFunction;
+  p, FBmpTopLeft: TPoint;
+{$ENDIF}
 begin
 {$IFDEF DELPHI6UP}
   if not Form.Enabled then begin
     if LayerForm = nil then begin
-      LayerForm := TacGlowForm.CreateNew(Form);
-      LayerForm.Tag := 2;
-      LayerForm.Color := FDisabledBlendColor;
-      TForm(LayerForm).Position := poDesigned;
-      TForm(LayerForm).AlphaBlend := True;
-      LayerForm.Enabled := False;
+      LayerForm := TacGlowForm.CreateNew(nil);
+      LayerForm.Color := 0;
+      SetWindowLong(LayerForm.Handle, GWL_EXSTYLE, GetWindowLong(LayerForm.Handle, GWL_EXSTYLE) or WS_EX_LAYERED);
     end;
-    TForm(LayerForm).AlphaBlendValue := MaxByte - FDisabledBlendValue;
     if BorderForm <> nil then begin
       LayerForm.Left   := Form.Left   - DiffBorder(BorderForm) - 1;
       LayerForm.Width  := Form.Width  + DiffBorder(BorderForm) * 2 + 2;
@@ -13152,7 +13195,21 @@ begin
     else
       LayerForm.BoundsRect := Form.BoundsRect;
 
-    SetWindowPos(LayerForm.Handle, 0, 0, 0, 0, 0, SWPA_SHOW or SWP_NOMOVE or SWP_NOSIZE);
+    AlphaBmp := CreateBmp32(LayerForm);
+    FillRect32(AlphaBmp, MkRect(AlphaBmp), FDisabledBlendColor);
+
+    FBmpSize := MkSize(AlphaBmp);
+    FBmpTopLeft := MkPoint;
+    InitBlendData(FBlend, MaxByte - FDisabledBlendValue);
+
+//    SetBlurBehindWindow(LayerForm.Handle, True);
+
+    DC := GetDC(0);
+    UpdateLayeredWindow(LayerForm.Handle, DC, @p, @FBmpSize, AlphaBmp.Canvas.Handle, @FBmpTopLeft, clNone, @FBlend, ULW_ALPHA);
+    ReleaseDC(0, DC);
+    AlphaBmp.Free;
+
+    SetWindowPos(LayerForm.Handle, 0, LayerForm.Left, LayerForm.Top, 0, 0, SWP_NOACTIVATE or SWP_NOREDRAW or SWP_SHOWWINDOW or SWP_NOSENDCHANGING or SWP_NOOWNERZORDER {or SWP_NOMOVE }or SWP_NOSIZE);
     LayerForm.Show;
   end
   else

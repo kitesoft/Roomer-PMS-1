@@ -288,19 +288,22 @@ end;
 
 
 procedure TsTrackEdit.CMChanged(var Message: TMessage);
+var
+  s: string;
 begin
   inherited;
   if not (csLoading in ComponentState) and not ValueChanging then begin
     TextChanging := True;
     if (Text = '') or (Text = CharMinus) or (Text = CharPlus) then
       Value := 0
-    else
+    else begin
+      s := DelChars(Text, {$IFDEF DELPHI_XE}FormatSettings.{$ENDIF}ThousandSeparator);
 {$IFDEF DELPHI6UP}
-      Value := StrToFloatDef(Text, 0);
+      Value := StrToFloatDef(s, 0);
 {$ELSE}
-      Value := StrToFloat(Text);
+      Value := StrToFloat(s);
 {$ENDIF}
-
+    end;
     TextChanging := False;
   end;
 end;
@@ -714,7 +717,7 @@ end;
 procedure TsTrackEdit.WndProc(var Message: TMessage);
 begin
 {$IFDEF LOGGED}
-  if TrackForm <> nil then
+//  if TrackForm <> nil then
     AddToLog(Message);
 {$ENDIF}
   case Message.Msg of

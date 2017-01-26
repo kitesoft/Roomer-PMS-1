@@ -1,7 +1,7 @@
 unit acPageScroller;
 {$I sDefs.inc}
 //{$DEFINE LOGGED}
-//+
+
 interface
 
 uses
@@ -281,9 +281,8 @@ begin
   AddToLog(Message);
 {$ENDIF}
   case Message.Msg of
-    SM_ALPHACMD: 
+    SM_ALPHACMD:
       case Message.WParamHi of
-
         AC_GETBG: begin
           inherited;
           if Orientation = soHorizontal then
@@ -339,13 +338,6 @@ begin
         TryStartTimer;
       end;
 
-    WM_PRINT: begin
-      inherited;
-      PaintBtn(TWMPaint(Message).DC, 0, SkinData.Skinned);
-      PaintBtn(TWMPaint(Message).DC, 1, SkinData.Skinned);
-      Exit;
-    end;
-
     WM_NCLBUTTONDOWN:
       if FHoverIndex >= 0 then begin
         SetBtnState(FHoverIndex, 2);
@@ -365,8 +357,8 @@ begin
           if BtnVisible(i) then begin
             if SkinData.BGChanged and SkinData.Skinned then
               PrepareCache;
-              
-            if not SkinData.Skinned or IsCached(SkinData) then begin
+
+            if not SkinData.Skinned or IsCached(SkinData) then
               if FMargin > 0 then begin
                 DC := GetWindowDC(Handle);
                 try
@@ -378,7 +370,7 @@ begin
                   ReleaseDC(Handle, DC);
                 end;
               end;
-            end;
+
             PaintBtn(0, i, SkinData.Skinned);
           end;
 
@@ -396,6 +388,19 @@ begin
     PGM_SETPOS: begin
       FPosition := Message.LParam;
       RecalcSize;
+    end;
+
+    WM_PRINT: begin
+      PaintBtn(TWMPaint(Message).DC, 0, SkinData.Skinned);
+      PaintBtn(TWMPaint(Message).DC, 1, SkinData.Skinned);
+      R := BtnRect(0);
+      if not IsRectEmpty(R) then begin
+        ExcludeClipRect(TWMPaint(Message).DC, R.Left, R.Top, R.Right, R.Bottom);
+        if Orientation = soHorizontal then
+          MoveWindowOrg(TWMPaint(Message).DC, WidthOf(R), 0)
+        else
+          MoveWindowOrg(TWMPaint(Message).DC, 0, HeightOf(R));
+      end;
     end;
   end;
 end;
@@ -430,16 +435,13 @@ begin
           Bmp.Free;
         end;
         if Iteration >= TacThreadedTimer(Data).Iterations then begin
-          if State = 0 then begin
+          if State = 0 then
             if b > 0 then begin
               Sleep(acTimerInterval);
               Result := UpdateBtn_CB(Data, Iteration);
             end
             else
               Result := False;
-
-            Exit;
-          end;
         end
         else
           Result := True;
@@ -514,9 +516,8 @@ begin
     inherited;
     ButtonSize := MulDiv(FButtonSize, M, D);
     for i := 0 to 1 do
-      if AnimTimers[i] <> nil then begin
+      if AnimTimers[i] <> nil then
         FreeAndNil(AnimTimers[i]);
-      end;
   end
   else
     inherited;
@@ -799,8 +800,8 @@ end;
 
 procedure TsPageScroller.DoScroll(Delta: integer);
 const
-  Speed = 5;
-  Steps = acMaxIterations * Speed;
+  Speed = 3;
+  Steps = acMaxIterations * Speed - 1;
 var
   i, cx, j1, j2: integer;
   Pos, Step, r: real;
@@ -852,8 +853,7 @@ begin
         Perform(WM_SETREDRAW, 1, 0);
         RedrawWindow(Control.Handle, nil, 0, Flags);
         Perform(WM_NCPAINT, 0, 0);
-        while lTicks + acTimerInterval > GetTickCount do
-          ; // wait here
+        WaitTicks(lTicks);
 
         if Abs(r) < 0.1 then
           Break;
@@ -987,16 +987,13 @@ begin
       if BtnNdx >= 0 then begin
         GetBGInfo(@BGInfo, Self);
         BGInfo.Offset := MkPoint;
-//        inc(BGInfo.Offset.X, R.Left);
-//        inc(BGInfo.Offset.Y, R.Top);
         CI := BGInfoToCI(@BGInfo);
-//        CI := MakeCacheInfo(SkinData.FCacheBmp, R.Left, R.Top);
         State := BtnState(Btn);
         if State > 2 then begin
           State := 0;
           b := True;
         end;
-        PaintItem(BtnNdx, CI, True, State, MkRect(Bmp), R.TopLeft{ MkPoint}, Bmp);
+        PaintItem(BtnNdx, CI, True, State, MkRect(Bmp), R.TopLeft, Bmp);
         if (State = 0) and (SkinData.SkinManager.gd[BtnNdx].Props[0].Transparency = 100) then
           iNdx := GetFontIndex(Self, SkinData.SkinIndex, SkinData.SkinManager)
         else

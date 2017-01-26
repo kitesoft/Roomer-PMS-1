@@ -1,7 +1,7 @@
 unit sScrollBar;
 {$I sDefs.inc}
 //{$DEFINE LOGGED}
-//+
+
 interface
 
 uses
@@ -452,14 +452,21 @@ begin
           end;
         end
         else
-          if PtInRect(Bar1Rect, Point(x,y)) then begin
+          if PtInRect(Bar1Rect, Point(x, y)) then begin
             ScrollCode := PageCodes1[Kind = sbVertical];
             if Bar1State <> 2 then begin
               Bar1State := 2;
               Bar2State := integer(BarIsHot);
               DrawingForbidden := True;
-              IncPos(-Math.Max(Integer(FSI.nPage), 1));
-              PrepareBarTimer;
+              if GetAsyncKeyState(VK_SHIFT) < 0 then begin
+                i := CoordToPosition(Point(x, y));
+                ScrollCode := SB_THUMBTRACK;//SB_THUMBPOSITION;
+                SetPos(i);
+              end
+              else begin
+                IncPos(-Math.Max(Integer(FSI.nPage), 1));
+                PrepareBarTimer;
+              end;
             end;
           end
           else begin
@@ -468,8 +475,15 @@ begin
               Bar1State := integer(BarIsHot);
               Bar2State := 2;
               DrawingForbidden := True;
-              IncPos(Math.Max(Integer(FSI.nPage), 1));
-              PrepareBarTimer;
+              if GetAsyncKeyState(VK_SHIFT) < 0 then begin
+                i := CoordToPosition(Point(x, y));
+                ScrollCode := SB_THUMBTRACK;//SB_THUMBPOSITION;
+                SetPos(i);
+              end
+              else begin
+                IncPos(Math.Max(Integer(FSI.nPage), 1));
+                PrepareBarTimer;
+              end;
             end;
           end;
 
@@ -755,8 +769,10 @@ begin
         end;
 
       AC_ENDPARENTUPDATE: begin
-        FCommonData.Updating := False;
-        Repaint;
+        if FCommonData.FUpdating then begin
+          if not InUpdating(FCommonData, True) then
+            Repaint;
+        end;
         Exit;
       end
     end;
@@ -1022,8 +1038,10 @@ end;
 procedure TsScrollBar.WMPaint(var Msg: TWMPaint);
 begin
   if DrawingForbidden or (not (csCreating in Controlstate) and Assigned(SkinData.SkinManager) and SkinData.SkinManager.CommonSkinData.Active and not (csDestroying in Componentstate)) then begin
-    if MustBeRecreated and not InAnimationProcess then
-      CheckRecreate
+    if MustBeRecreated {and not InAnimationProcess} then begin
+      CheckRecreate;
+      Paint(Msg.DC);
+    end
     else
       if not InUpdating(FCommonData) then
         Paint(Msg.DC);

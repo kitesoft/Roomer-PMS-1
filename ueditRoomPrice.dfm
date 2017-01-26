@@ -485,12 +485,14 @@ object frmEditRoomPrice: TfrmEditRoomPrice
       end
       object tvRoomRatesRate: TcxGridDBColumn
         DataBinding.FieldName = 'Rate'
-        PropertiesClassName = 'TcxCalcEditProperties'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        OnGetProperties = tvRoomRatesRentAmountGetProperties
         Width = 88
       end
       object tvRoomRatesDiscount: TcxGridDBColumn
         DataBinding.FieldName = 'Discount'
-        PropertiesClassName = 'TcxCalcEditProperties'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        OnGetProperties = tvRoomRatesRentAmountGetProperties
         Width = 68
       end
       object tvRoomRatesisPercentage: TcxGridDBColumn

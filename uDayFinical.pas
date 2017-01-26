@@ -743,6 +743,8 @@ begin
     __labLocationsList.caption := zLocationInString;
   end;
 
+  btnConfirm.Enabled := false;
+
 end;
 
 procedure TfrmDayFinical.ClearAllData;

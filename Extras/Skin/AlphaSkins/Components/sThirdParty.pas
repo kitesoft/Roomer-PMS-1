@@ -83,19 +83,25 @@ end;
 
 function GetImageWidth(ImgList: TCustomImageList): integer;
 begin
-  if ImgList is TsAlphaImageList then
-    Result := TsAlphaImageList(ImgList).Width
+  if ImgList <> nil then
+    if ImgList is TsAlphaImageList then
+      Result := TsAlphaImageList(ImgList).Width
+    else
+      Result := ImgList.Width
   else
-    Result := ImgList.Width;
+    Result := 0;
 end;
 
 
 function GetImageHeight(ImgList: TCustomImageList): integer;
 begin
-  if ImgList is TsAlphaImageList then
-    Result := TsAlphaImageList(ImgList).Height
+  if ImgList <> nil then
+    if ImgList is TsAlphaImageList then
+      Result := TsAlphaImageList(ImgList).Height
+    else
+      Result := ImgList.Height
   else
-    Result := ImgList.Height;
+    Result := 0;
 end;
 
 

@@ -35,7 +35,7 @@ type
 
 procedure CopyBmp(DstBmp, SrcBmp: TBitmap);
 procedure DrawColorArrow(const Canvas: TCanvas; const Color: TColor; R: TRect; const Direction: TacSide); overload;
-procedure DrawColorArrow(const aBmp: TBitmap;    const Color: TColor; R: TRect; const Direction: TacSide); overload;
+procedure DrawColorArrow(const aBmp: TBitmap;   const Color: TColor; R: TRect; const Direction: TacSide); overload;
 function InitLine(Bmp: TBitmap; var Line0: Pointer; var Delta: Integer): boolean;
 function MakeAngledFont(DC: hdc; Font: TFont; Orient: integer): hFont;
 procedure SetFontSmoothing(AFont: TFont);
@@ -154,7 +154,7 @@ procedure acTextRect (const Canvas: TCanvas; const Rect: TRect; X, Y: Integer; c
 function acGetTextExtent(const DC: HDC; const Str: acString; var Size: TSize): BOOL;
 
 procedure acDrawGlowForText(const DstBmp: TBitmap; Text: PacChar; aRect: TRect; Flags: Cardinal; Side: Cardinal; BlurSize: integer; Color: TColor; var MaskBmp: TBitmap);
-procedure Blur8(theBitmap: TBitmap; radius: double);
+procedure Blur8(Bmp: TBitmap; radius: double);
 
 procedure acWriteTextEx(const Canvas: TCanvas; const Text: PacChar; const Enabled: boolean; var aRect: TRect; const Flags: Cardinal; const SkinData: TsCommonData; const Hot: boolean; const SkinManager: TObject = nil); overload;
 procedure acWriteTextEx(const Canvas: TCanvas; const Text: PacChar; const Enabled: boolean; var aRect: TRect; const Flags: Cardinal; const SkinIndex: integer; const Hot: boolean; const SkinManager: TObject = nil); overload;
@@ -235,7 +235,7 @@ uses
   {$IFDEF TNTUNICODE} TntWindows, {$ENDIF}
   {$IFNDEF ALITE} sSplitter, {$ENDIF}
   {$IFNDEF FPC} acPng, {$ENDIF}
-  sVclUtils, acntTypes, sGradient, sAlphaGraph, sDefaults;
+  sVclUtils, acntTypes, sGradient, sAlphaGraph, sDefaults, acGPUtils;
 
 
 type
@@ -2869,21 +2869,21 @@ begin
 end;
 
 
-procedure Blur8(theBitmap: TBitmap; radius: double);
+procedure Blur8(Bmp: TBitmap; radius: double);
 var
   K: TKernel;
   P, ACol: PByteArray;
   R0, theRows: PByteArrays;
   bWidth, bHeight, DeltaR, Row, Col: integer;
 begin
-  with theBitmap do
+  with Bmp do
     if (HandleType = bmDIB) and (PixelFormat = pf8Bit) then begin
       bWidth := Width - 1;
       bHeight := Height - 1;
       MakeGaussianKernel(K, radius, MaxByte, 1);
       GetMem(theRows, Height * SizeOf(PByteArrays));
       GetMem(ACol, Height);
-      if InitLine(theBitmap, Pointer(R0), DeltaR) then begin
+      if InitLine(Bmp, Pointer(R0), DeltaR) then begin
         for Row := 0 to bHeight do
           theRows[Row] := Pointer(LongInt(R0) + DeltaR * Row);
 
@@ -2907,7 +2907,7 @@ begin
     end;
 end;
 
-
+(*
 type
   PPRows = ^TPRows;
   TPRows = array[0..4000] of PRGBAArray_S;
@@ -2993,8 +2993,19 @@ begin
 
   Move(P[0], theRow[0], (h + 1) * 4{Sizeof(TsColor_)});
 end;
+*)
 
+procedure QBlur(Bmp: TBitmap);
+var
+  TmpBmp: TBitmap;
+begin
+  TmpBmp := CreateBmp32(Bmp.Width div 4, Bmp.Height div 4);
+  acgpStretchRect(TmpBmp, Bmp, 0, 0, Bmp.Width - 1, Bmp.Height - 1);
+  acgpStretchRect(Bmp, TmpBmp, 0, 0, TmpBmp.Width - 1, TmpBmp.Height - 1);
+  TmpBmp.Free;
+end;
 
+{
 procedure QBlur(Bmp: TBitmap);
 var
   bWidth, bHeight, Row, Col, Delta: integer;
@@ -3005,8 +3016,8 @@ begin
   with Bmp do begin
     bWidth := Width - 1;
     bHeight := Height - 1;
-  GetMem(Rows, Bmp.Height * SizeOf(PRGBAArray));
-  GetMem(ACol, Bmp.Height * SizeOf(TsColor_));
+    GetMem(Rows, Bmp.Height * SizeOf(PRGBAArray));
+    GetMem(ACol, Bmp.Height * SizeOf(TsColor_));
 
     Rows[0] := Scanline[0];
     if Height > 1 then begin
@@ -3035,7 +3046,7 @@ begin
     ReAllocMem(P, 0);
   end;
 end;
-
+}
 
 procedure acWriteTextEx(const Canvas: TCanvas; const Text: PacChar; const Enabled: boolean; var aRect: TRect; const Flags: Cardinal; const SkinData: TsCommonData; const Hot: boolean; const SkinManager: TObject = nil);
 begin

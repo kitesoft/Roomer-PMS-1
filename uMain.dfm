@@ -52,6 +52,7 @@ object frmMain: TfrmMain
     SunkenBorder = True
     UseOwnColor = True
     UseOwnSunkenBorder = True
+    ExplicitTop = 122
   end
   object panMain: TsPanel
     Left = 0
@@ -112,7 +113,7 @@ object frmMain: TfrmMain
         Top = 1
         Width = 975
         Height = 302
-        ActivePage = tabOneDayView
+        ActivePage = tabPeriod
         Align = alClient
         TabOrder = 1
         OnChange = pageMainGridsChange
@@ -293,12 +294,13 @@ object frmMain: TfrmMain
             SearchFooter.HintFindPrev = 'Find previous occurence'
             SearchFooter.HintHighlight = 'Highlight occurences'
             SearchFooter.MatchCaseCaption = 'Match case'
+            SearchFooter.ResultFormat = '(%d of %d)'
             SortSettings.DefaultFormat = ssAutomatic
             SortSettings.HeaderColor = 16579058
             SortSettings.HeaderColorTo = 16579058
             SortSettings.HeaderMirrorColor = 16380385
             SortSettings.HeaderMirrorColorTo = 16182488
-            Version = '7.9.1.1'
+            Version = '8.2.4.1'
             ColWidths = (
               47
               49
@@ -1092,6 +1094,7 @@ object frmMain: TfrmMain
               SearchFooter.HintFindPrev = 'Find previous occurence'
               SearchFooter.HintHighlight = 'Highlight occurences'
               SearchFooter.MatchCaseCaption = 'Match case'
+              SearchFooter.ResultFormat = '(%d of %d)'
               SelectionColor = clHighlight
               SelectionTextColor = clHighlightText
               SizeWhileTyping.Height = True
@@ -1099,7 +1102,7 @@ object frmMain: TfrmMain
               SortSettings.HeaderColorTo = 16579058
               SortSettings.HeaderMirrorColor = 16380385
               SortSettings.HeaderMirrorColorTo = 16182488
-              Version = '7.9.1.1'
+              Version = '8.2.4.1'
               ColWidths = (
                 73
                 20
@@ -1319,7 +1322,6 @@ object frmMain: TfrmMain
             OnMoved = splitPeriodMoved
             Color = 6842472
             ParentColor = False
-            ExplicitTop = 157
           end
           object pnlPeriodNoRooms: TsPanel
             Left = 0
@@ -1457,8 +1459,9 @@ object frmMain: TfrmMain
               SearchFooter.HintFindPrev = 'Find previous occurence'
               SearchFooter.HintHighlight = 'Highlight occurences'
               SearchFooter.MatchCaseCaption = 'Match case'
+              SearchFooter.ResultFormat = '(%d of %d)'
               SortSettings.DefaultFormat = ssAutomatic
-              Version = '7.9.1.1'
+              Version = '8.2.4.1'
               ColWidths = (
                 64
                 64
@@ -1638,25 +1641,13 @@ object frmMain: TfrmMain
         end
         object tabFreeRooms: TsTabSheet
           Caption = 'tabFreeRooms'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
         end
         object tabDashboard: TsTabSheet
           Caption = 'tabDashboard'
           SkinData.SkinSection = 'TRANSPARENT'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
         end
         object tabRateQuery: TsTabSheet
           Caption = 'tabRateQuery'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
         end
       end
       object pnlStatSlider: TsPanel
@@ -2259,6 +2250,7 @@ object frmMain: TfrmMain
           Top = 0
           Width = 23
           Height = 31
+          DefaultHandling = True
           EmptyTextStyle = []
           Flat = False
           LabelFont.Charset = DEFAULT_CHARSET
@@ -2392,7 +2384,7 @@ object frmMain: TfrmMain
             HintPrevMonth = 'Previous Month'
             HintNextMonth = 'Next Month'
             HintNextYear = 'Next Year'
-            Version = '2.3.0.0'
+            Version = '2.3.1.2'
             TMSStyle = 0
           end
         end
@@ -2539,7 +2531,7 @@ object frmMain: TfrmMain
         ParentColor = False
         Transparent = True
         OnAnchorClick = mmoMessageAnchorClick
-        Version = '1.9.2.3'
+        Version = '1.9.2.7'
         ExplicitLeft = 87
         ExplicitWidth = 1019
       end

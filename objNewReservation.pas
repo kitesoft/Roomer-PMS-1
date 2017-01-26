@@ -253,6 +253,7 @@ TYPE
     function getReservationDeparture: TDate;
 
     function TotalGuests: Integer;
+    function TotalPersons: integer;
 
     property XmlFileName: string read FXmlFileName write FXmlFileName;
     property Hotelcode: string read FHotelcode write FHotelcode;
@@ -715,6 +716,15 @@ var
 begin
   Result := 0;
   for lRoomres in RoomItemsList do
+    Result := Result + lRoomRes.GuestCount;
+end;
+
+function TnewRoomReservation.TotalPersons: integer;
+var
+  lRoomRes: TnewRoomReservationItem;
+begin
+  Result := 0;
+  for lRoomres in RoomItemsList do
     Result := Result + lRoomRes.GuestCount + lRoomRes.ChildrenCount + lRoomRes.InfantCount;
 end;
 
@@ -725,28 +735,6 @@ end;
 
 { TNewReservation }
 
-//constructor TNewReservation.Create(aHotelCode, Staff: string);
-//begin
-//  FHotelcode := aHotelcode;
-//  FnewRoomReservations := TnewRoomReservation.Create(aHotelCode);
-//  FHomeCustomer := THomeCustomer.Create(aHotelCode, hData.ctrlGetString('RackCustomer')); //  '');
-//  FReservation := -1; //hData.RV_SetNewID();
-//
-//  FSendConfirmationEmail := False;
-//
-//  FShowProfile := false;
-//  FresMedhod := rmNormal;
-//  FIsQuick := true;
-//  FStaff := Staff;
-//
-//  FConnection := Connection;
-//  FLoglevel := loglevel;
-//  FLogPath := logpath;
-//  FPriceFound := true;
-//
-//  FAlertList := TAlertList.Create(0, 0, atUNKNOWN);
-//
-//end;
 
 constructor TNewReservation.Create(const aHotelCode, Staff: string;
                                                       const contactAddress1: string = '';

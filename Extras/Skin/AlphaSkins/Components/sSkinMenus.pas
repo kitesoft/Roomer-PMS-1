@@ -508,6 +508,7 @@ begin
             InflateRect(gRect, -1, -1);
           end;
         end;
+        DrawData.Reflected := False;
         DrawData.Grayed := (dgGrayed in DefDisabledGlyphKind) and not Item.Enabled or DrawData.SkinManager.Effects.DiscoloredGlyphs and not (odSelected in State);
         DrawData.DstBmp := ItemBmp;
         DrawData.Canvas := ItemBmp.Canvas;

@@ -1,6 +1,5 @@
 unit acntUtils;
 {$I sDefs.inc}
-//+
 
 interface
 
@@ -109,6 +108,8 @@ function ReplaceStr(const S, Srch, Replace: string): string;
 function IsEmptyStr(const S: AnsiString; const EmptyChars: TSysCharSet): Boolean;
 function IsIDERunning: boolean;
 function IsWOW64Proc: Windows.bool;
+procedure WaitTicks(ABeginTicks: longint; ADelay: integer = acTimerInterval);
+procedure InitBlendData(var AData: TBlendFunction; BlendValue: byte);
 {$ENDIF}
 
 { Returns True if value placed berween i1 and i2}
@@ -1015,6 +1016,23 @@ begin
   end
   else
     Result := False;
+end;
+
+
+procedure WaitTicks(ABeginTicks: longint; ADelay: integer = acTimerInterval);
+begin
+  while ABeginTicks + ADelay > GetTickCount do {wait here};
+end;
+
+
+procedure InitBlendData(var AData: TBlendFunction; BlendValue: byte);
+begin
+  with AData do begin
+    SourceConstantAlpha := BlendValue;
+    BlendOp := AC_SRC_OVER;
+    BlendFlags := 0;
+    AlphaFormat := AC_SRC_ALPHA;
+  end;
 end;
 
 

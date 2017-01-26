@@ -1,7 +1,7 @@
 unit sUpDown;
 {$I sDefs.inc}
 //{$DEFINE LOGGED}
-//+
+
 interface
 
 uses
@@ -162,22 +162,16 @@ begin
   case Message.Msg of
     SM_ALPHACMD:
       case Message.WParamHi of
-        AC_CTRLHANDLED: begin
+        AC_CTRLHANDLED:
           Message.Result := 1;
-          Exit;
-        end;
 
         AC_REMOVESKIN:
-          if Message.LParam = LPARAM(DefaultManager) then begin
+          if Message.LParam = LPARAM(DefaultManager) then
             Repaint;
-            Exit;
-          end;
 
         AC_REFRESH:
-          if Message.LParam = LPARAM(DefaultManager) then begin
+          if Message.LParam = LPARAM(DefaultManager) then
             Repaint;
-            Exit;
-          end
       end;
 
     WM_LBUTTONDBLCLK, WM_NCLBUTTONDBLCLK: begin
@@ -346,7 +340,6 @@ var
   c: TsColor;
   R: TRect;
   sSkinIndex, sArrowMask, sLimPosition, XOffset, YOffset: integer;
-  sSkinSection: string;
   SkinManager: TsSkinManager;
 begin
   if Parent is TsPageControl then begin
@@ -359,14 +352,13 @@ begin
   end;
   if Assigned(SkinManager) then begin
     with SkinManager.ConstData do begin
-      if ButtonSkin <> '' then begin
-        sSkinSection := ButtonSkin;
-        sSkinIndex := SkinManager.GetSkinIndex(sSkinSection);
-      end
-      else begin
-        sSkinIndex   := Scrolls[asTop].SkinIndex;
-        sSkinSection := Scrolls[asTop].SkinSection;
-      end;
+      if ButtonSkin <> '' then
+        sSkinIndex := SkinManager.GetSkinIndex(ButtonSkin)
+      else
+        sSkinIndex := UpDownBtns[asTop].SkinIndex;
+
+//        sSkinIndex   := Scrolls[asTop].SkinIndex;
+
       sArrowMask := Scrolls[Side].GlyphIndex;
 
       if Side in [asTop, asLeft] then begin
@@ -399,38 +391,27 @@ begin
           XOffset   := Width - Btn.Width;
         end;
       end;
-      if Assigned(SkinManager) then begin
-        R := MkRect(Btn.Width, Btn.Height);
-        CI := GetParentCacheHwnd(Handle);
-        PaintItem(sSkinIndex, CI, True, State, R, Point(Left + XOffset, Top + YOffset), Btn, SkinManager);
-      end;
+
+      R := MkRect(Btn.Width, Btn.Height);
+      PaintItem(sSkinIndex, GetParentCacheHwnd(Handle), True, State, R, Point(Left + XOffset, Top + YOffset), Btn, SkinManager);
+
       Ci.Bmp := Btn;
       CI.Ready := True;
       if sArrowMask >= 0 then begin
-        if SkinManager.ma[sArrowMask].Bmp = nil then begin
-          p.x := (Btn.Width  - SkinManager.ma[sArrowMask].Width) div 2;
-          p.y := (Btn.Height - SkinManager.ma[sArrowMask].Height) div 2;
-        end
-        else
-          if SkinManager.ma[sArrowMask].Bmp.Height div 2 < Btn.Height then begin
-            p.x := (Btn.Width  - SkinManager.ma[sArrowMask].Bmp.Width  div 3) div 2;
-            p.y := (Btn.Height - SkinManager.ma[sArrowMask].Bmp.Height div 2) div 2;
-          end;
-
-        if (p.x < 0) or (p.y < 0) then
-          Exit;
-
-        DrawSkinGlyph(Btn, p, State, 1, SkinManager.ma[sArrowMask], CI);
+        p.x := (Btn.Width  - SkinManager.ma[sArrowMask].Width) div 2;
+        p.y := (Btn.Height - SkinManager.ma[sArrowMask].Height) div 2;
+        if (p.x >= 0) and (p.y >= 0) then
+          DrawSkinGlyph(Btn, p, State, 1, SkinManager.ma[sArrowMask], CI);
       end
       else begin
         sArrowMask := GetFontIndex(Self, sSkinIndex, SkinManager, State); // Receive parent font if needed
         R := MkRect(Btn.Width, Btn.Height);
         if State = 2 then
-          if {CanOffset and }({not SkinData.Skinned or }(SkinManager <> nil) and SkinManager.ButtonsOptions.ShiftContentOnClick) then
+          if {CanOffset and }({not SkinData.Skinned or }{(SkinManager <> nil) and} SkinManager.ButtonsOptions.ShiftContentOnClick) then
             OffsetRect(R, 1, 1);
 
         if sArrowMask >= 0 then
-          DrawColorArrow(Btn, SkinManager.gd[sArrowMask].Props[math.min(integer(State > 0), SkinManager.gd[sArrowMask].States - 1)].FontColor.Color, R, Side)
+          DrawColorArrow(Btn, SkinManager.gd[sArrowMask].Props[State].FontColor.Color, R, Side)
         else
           DrawColorArrow(Btn, Font.Color, R, Side);
       end;

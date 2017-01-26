@@ -1,13 +1,13 @@
 unit sCommonData;
 {$I sDefs.inc}
 //{$DEFINE DEBUG}
-//+
+
 interface
 
 uses
   Windows, Graphics, Classes, Controls, SysUtils, extctrls, StdCtrls, Forms, Messages,
-  {$IFNDEF DELPHI5} Types, {$ENDIF}
   {$IFDEF FPC} LMessages, {$ENDIF}
+  {$IFNDEF DELPHI5} Types, {$ENDIF}
   {$IFDEF DELPHI_XE2} UItypes, {$ENDIF}
   sSkinManager, acntUtils, sConst, sLabel, acThdTimer;
 
@@ -54,6 +54,8 @@ type
     procedure SetSkinManager(const Value: TsSkinManager);
     procedure PaintOuter(PBGInfo: PacBGInfo; Data: Word);
     function GetSkinManager: TsSkinManager;
+
+    function ManagerStored: boolean;
   public
     SavedColor,
     SavedFontColor: TColor;
@@ -102,15 +104,14 @@ type
     property FOwnerControl: TControl read FFOwnerControl write SetFOwnerControl;
 {$ENDIF}
     constructor Create(AOwner: TObject; const CreateCacheBmp: boolean); virtual;
-    procedure ClearLinks;
     procedure UpdateIndexes(UpdateMain: boolean = True);
     procedure PaintOuterEffects(OwnerCtrl: TWinControl; Offset: TPoint);
     destructor Destroy; override;
     procedure InitCommonProp;
     procedure RemoveCommonProp;
-    procedure Loaded(UpdateColors: boolean = True);
     function RepaintIfMoved: boolean;
-    function ManagerStored: boolean;
+    procedure ClearLinks;
+    procedure Loaded(UpdateColors: boolean = True);
     function OwnerHandle: THandle;
 {$ENDIF} // NOTFORHELP
     procedure BeginUpdate;
@@ -186,17 +187,13 @@ type
     function GetFont: TFont;
     procedure UpdateAlignment;
     function GetUseSkin: boolean;
-    procedure DoClick         (Sender: TObject);
-    procedure SetFont         (const Value: TFont);
-    procedure SetActive       (const Value: boolean);
-    procedure SetUseSkin      (const Value: boolean);
-    procedure SetUseHTML      (const Value: boolean);
-    procedure SetMaxWidth     (const Value: integer);
-    procedure SetIndent       (const Value: integer);
-    procedure SetText         (const Value: acString);
-    procedure SetLayout       (const Value: TsCaptionLayout);
-    procedure SetEnabledAlways(const Value: boolean);
-    procedure SetAllowClick   (const Value: boolean);
+    procedure DoClick    (Sender: TObject);
+    procedure SetFont    (const Value: TFont);
+    procedure SetUseSkin (const Value: boolean);
+    procedure SetText    (const Value: acString);
+    procedure SetLayout  (const Value: TsCaptionLayout);
+    procedure SetInteger (const Index, Value: integer);
+    procedure SetBoolean (const Index: integer; const Value: boolean);
   public
     FActive: boolean;
     FTheLabel: TsEditLabel;
@@ -210,17 +207,19 @@ type
     procedure HandleOwnerMsg(const Message: TMessage; const OwnerControl: TControl);
   published
 {$ENDIF} // NOTFORHELP
-    property UseHTML: boolean read FUseHTML write SetUseHTML default False;
+    property UseHTML:       boolean index 0 read FUseHTML       write SetBoolean default False;
+    property Active:        boolean index 1 read FActive        write SetBoolean default False;
+    property AllowClick:    boolean index 2 read FAllowClick    write SetBoolean default False;
+    property EnabledAlways: boolean index 3 read FEnabledAlways write SetBoolean default False;
 
-    property Active: boolean read FActive write SetActive default False;
-    property AllowClick: boolean read FAllowClick write SetAllowClick default False;
+    property UseSkinColor:  boolean read GetUseSkin write SetUseSkin default True;
+
+    property Indent:   integer index 0 read FIndent   write SetInteger default 0;
+    property MaxWidth: integer index 1 read FMaxWidth write SetInteger default 0;
+
     property Caption: acString read FText write SetText;
-    property EnabledAlways: boolean read FEnabledAlways write SetEnabledAlways default False;
-    property Indent: integer read FIndent write SetIndent default 0;
     property Font: TFont read GetFont write SetFont stored DoStoreFont;
     property Layout: TsCaptionLayout read FLayout write SetLayout default sclLeft;
-    property MaxWidth: integer read FMaxWidth write SetMaxWidth default 0;
-    property UseSkinColor: boolean read GetUseSkin write SetUseSkin default True;
   end;
 
 {$IFNDEF NOTFORHELP}
@@ -841,7 +840,7 @@ begin
     ASkinIndex := SkinData.SkinIndex;
 
   with SkinData do
-    if SkinManager.Effects.AllowGlowing and SkinManager.IsValidSkinIndex(ASkinIndex) and not SkinManager.Options.NoMouseHover then begin
+    if SkinManager.Effects.AllowGlowing and SkinManager.IsValidSkinIndex(ASkinIndex) and not SkinManager.Options.NoMouseHover and (GetCapture = 0) then begin
       GlowCount := SkinManager.gd[ASkinIndex].GlowCount;
       if GlowCount > 0 then
         if FOwnerControl <> nil then begin
@@ -928,7 +927,7 @@ begin
     ChangeBitmapPixels(Bmp, ChangeColorHUE, SkinData.HUEOffset, clFuchsia);
 
   if SkinData.Saturation <> 0 then
-    ChangeBitmapPixels(Bmp, ChangeColorSaturation, LimitIt(SkinData.Saturation * 255 div 100, -MaxByte, MaxByte), clFuchsia);
+    ChangeBitmapPixels(Bmp, ChangeColorSaturation, LimitIt(SkinData.Saturation * MaxByte div 100, -MaxByte, MaxByte), clFuchsia);
 
   UpdateCorners(SkinData, State);
 end;
@@ -1031,8 +1030,6 @@ begin
   if not InUpdating(SkinData) then
     with SkinData do
       if (FOwnerControl <> niL) and (FOwnerControl.Parent <> nil) and FOwnerControl.Parent.HandleAllocated then begin
-//        FOwnerControl.Parent.Perform(SM_ALPHACMD, AC_SETBGCHANGED_HI + 1, 0);
-//        FOwnerControl.Parent.Perform(SM_ALPHACMD, AC_PREPARECACHE_HI + 1, 0);
         TrySendMessage(FOwnerControl.Parent.Handle, SM_ALPHACMD, AC_SETBGCHANGED shl 16, 0);
         SendAMessage(FOwnerControl.Parent.Handle, AC_PREPARECACHE);
       end;
@@ -1067,7 +1064,6 @@ begin
     if (SkinManager <> nil) and (FOwnerControl is TWinControl) and not (csLoading in FOwnerControl.ComponentState) then begin
       iScale := SkinManager.GetScale;
       if ScalePercent <> aScalePercents[iScale] then begin
-//        SkinData.SkinManager.UpdateScale(TWinControl(FOwnerControl));
         TWinControl(FOwnerControl).ScaleBy(aScalePercents[iScale], ScalePercent);
         ScalePercent := aScalePercents[iScale];
       end;
@@ -1078,11 +1074,6 @@ end;
 procedure UpdateData(const SkinData: TsCommonData);
 begin
   with SkinData do begin
-{
-    if (FOwnerControl <> nil) and (csDesigning in FOwnerControl.ComponentState) then
-      if FSkinSection = 'RADIOBUTTON' then // Remove in v11
-        FSkinSection := s_Transparent;
-}
     if SkinSection = '' then
       case COC of
         // Defining of the SkinIndex only
@@ -1092,7 +1083,8 @@ begin
         COC_TsTreeView, COC_TsCurrencyEdit, COC_TsSpinEdit..COC_TsListBox, COC_TsScrollBox,
         COC_TsDBEdit, COC_TsDBComboBox, COC_TsDBMemo, COC_TsDBListBox, COC_TsDBGrid,
         COC_TsStatusBar, COC_TsGauge, COC_TsMonthCalendar, COC_TsListView, COC_TsSlider, COC_TsFrameAdapter,
-        COC_TsDBLookupListBox, COC_TsDBLookupComboBox, COC_TsFileDirEdit..COC_TsDateEdit:
+        COC_TsDBLookupListBox, COC_TsDBLookupComboBox, COC_TsFileDirEdit..COC_TsDateEdit,
+        COC_TsCircleControl:
           UpdateIndexes;
 
         // Defining of the default SkinSection property
@@ -1227,7 +1219,6 @@ begin
   else
     if FOwnerObject is TsSkinProvider then
       TsSkinProvider(FOwnerObject).ProcessMessage(SM_ALPHACMD, AC_BEGINUPDATE_HI);
-//      TrySendMessage(TsSkinProvider(FOwnerObject).Form.Handle, SM_ALPHACMD, AC_BEGINUPDATE_HI, 0);
 end;
 
 
@@ -1323,7 +1314,6 @@ begin
     else
       if FOwnerObject is TsSkinProvider then
         TsSkinProvider(FOwnerObject).ProcessMessage(SM_ALPHACMD, AC_ENDUPDATE_HI);
-//        SendMessage(TsSkinProvider(FOwnerObject).Form.Handle, SM_ALPHACMD, AC_ENDUPDATE_HI, 0);
 
     if Repaint then
       Invalidate(True);
@@ -1409,7 +1399,6 @@ procedure TsCommonData.Loaded(UpdateColors: boolean = True);
 begin
   Loading := False;
   UpdateData(Self);
-//  UpdateScale(Self);
   if Skinned and Assigned(FOwnerControl) and Assigned(FOwnerControl.Parent) and not (csLoading in FOwnerControl.ComponentState) then begin
     if FOwnerControl is TWinControl then
       AddToAdapter(TWinControl(FOwnerControl));
@@ -1913,17 +1902,7 @@ begin
 
           AC_UPDATING:
             FUpdating := Message.WParamLo = 1;
-{
-          AC_MOUSEENTER: begin
-            M := MakeMessage(CM_MOUSEENTER, 0, 0, 0);
-            CommonWndProc(M, SkinData);
-          end;
 
-          AC_MOUSELEAVE: begin
-            M := MakeMessage(CM_MOUSELEAVE, 0, 0, 0);
-            CommonWndProc(M, SkinData);
-          end;
-}
           AC_PAINTOUTER:
             SkinData.PaintOuter(PacBGInfo(Message.LParam), Message.WParamLo);
 
@@ -1944,15 +1923,14 @@ begin
                     Message.Result := GetFontIndex(FOwnerControl.Parent, PacPaintInfo(Message.LParam))
                   else
                     Message.Result := GetFontIndex(GetParent(FSWHandle), PacPaintInfo(Message.LParam))
-                else {
-                  if GiveOwnFont or (PacPaintInfo(Message.LParam)^.State = 0) then} begin
-                    if States <= PacPaintInfo(Message.LParam)^.State then
-                      PacPaintInfo(Message.LParam)^.FontIndex := -1        // Use own child font
-                    else
-                      PacPaintInfo(Message.LParam)^.FontIndex := SkinIndex;
+                else  begin
+                  if States <= PacPaintInfo(Message.LParam)^.State then
+                    PacPaintInfo(Message.LParam)^.FontIndex := -1        // Use own child font
+                  else
+                    PacPaintInfo(Message.LParam)^.FontIndex := SkinIndex;
 
-                    Message.Result := 1;
-                  end;
+                  Message.Result := 1;
+                end;
 
           AC_CLEARCACHE:
             if FCacheBmp <> nil then begin
@@ -2609,15 +2587,6 @@ begin
 end;
 
 
-procedure TsBoundLabel.SetUseHTML(const Value: boolean);
-begin
-  if FUseHTML <> Value then begin
-    FUseHTML := Value;
-    AlignLabel;
-  end;
-end;
-
-
 procedure TsBoundLabel.AlignLabel;
 begin
   if Assigned(FTheLabel) then
@@ -2683,6 +2652,17 @@ begin
           sclBottomRight: begin
             Left := FocusControl.Left + FocusControl.Width - Width;
             Top  := FocusControl.Top  + FocusControl.Height + Indent;
+          end;
+
+
+          sclRight: begin
+            Left := FocusControl.Left + FocusControl.Width + 4 + Indent;
+            Top  := FocusControl.Top  + (FocusControl.Height - Height) div 2 - 1;
+          end;
+
+          sclRightTop: begin
+            Left := FocusControl.Left + FocusControl.Width + 4 + Indent;
+            Top  := FocusControl.Top  + 3;
           end;
         end;
         Parent := FCommonData.FOwnerControl.Parent;
@@ -2791,26 +2771,6 @@ begin
 end;
 
 
-procedure TsBoundLabel.SetActive(const Value: boolean);
-begin
-  if FActive <> Value then begin
-    FActive := Value;
-    UpdateVisibility;
-    SetAllowClick(FAllowClick); // Init the event
-  end;
-end;
-
-
-procedure TsBoundLabel.SetEnabledAlways(const Value: boolean);
-begin
-  if FEnabledAlways <> Value then begin
-    FEnabledAlways := Value;
-    if Active then
-      AlignLabel;
-  end;
-end;
-
-
 procedure TsBoundLabel.SetFont(const Value: TFont);
 begin
   if FTheLabel <> nil then begin
@@ -2823,12 +2783,20 @@ begin
 end;
 
 
-procedure TsBoundLabel.SetIndent(const Value: integer);
+procedure TsBoundLabel.SetInteger(const Index, Value: integer);
 begin
-  if FIndent <> Value then begin
-    FIndent := Value;
-    if Active then
-      AlignLabel;
+  case Index of
+    0: if FIndent <> Value then begin
+      FIndent := Value;
+      if Active then
+        AlignLabel;
+    end;
+
+    1: if FMaxWidth <> Value then begin
+      FMaxWidth := Value;
+      if Active then
+        AlignLabel;
+    end;
   end;
 end;
 
@@ -2838,16 +2806,6 @@ begin
   if FLayout <> Value then begin
     FLayout := Value;
     UpdateAlignment;
-    if Active then
-      AlignLabel;
-  end;
-end;
-
-
-procedure TsBoundLabel.SetMaxWidth(const Value: integer);
-begin
-  if FMaxWidth <> Value then begin
-    FMaxWidth := Value;
     if Active then
       AlignLabel;
   end;
@@ -2875,7 +2833,7 @@ end;
 
 const
   LayoutsArray: array [TsCaptionLayout] of TAlignment = (taRightJustify, taLeftJustify, taCenter, taRightJustify,
-                                                         taLeftJustify,  taLeftJustify, taCenter, taRightJustify);
+           taLeftJustify,  taLeftJustify, taCenter, taRightJustify, taLeftJustify, taLeftJustify);
 
 procedure TsBoundLabel.UpdateAlignment;
 begin
@@ -3003,18 +2961,39 @@ begin
 end;
 
 
-procedure TsBoundLabel.SetAllowClick(const Value: boolean);
+procedure TsBoundLabel.SetBoolean(const Index: integer; const Value: boolean);
 begin
-  FAllowClick := Value;
-  if FTheLabel <> nil then
-    if Value then begin
-      FTheLabel.OnClick := DoClick;
-      FTheLabel.OnDblClick := DoClick;
-    end
-    else begin
-      FTheLabel.OnClick := nil;
-      FTheLabel.OnDblClick := nil;
+  case Index of
+    0: if FUseHTML <> Value then begin
+      FUseHTML := Value;
+      AlignLabel;
     end;
+
+    1: if FActive <> Value then begin
+      FActive := Value;
+      UpdateVisibility;
+      SetBoolean(2, FAllowClick); // Init the event
+    end;
+
+    2: begin
+      FAllowClick := Value;
+      if FTheLabel <> nil then
+        if Value then begin
+          FTheLabel.OnClick := DoClick;
+          FTheLabel.OnDblClick := DoClick;
+        end
+        else begin
+          FTheLabel.OnClick := nil;
+          FTheLabel.OnDblClick := nil;
+        end;
+    end;
+
+    3: if FEnabledAlways <> Value then begin
+      FEnabledAlways := Value;
+      if Active then
+        AlignLabel;
+    end;
+  end;
 end;
 
 

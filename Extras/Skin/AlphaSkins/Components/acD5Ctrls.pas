@@ -896,8 +896,7 @@ begin
   case Message.Msg of
     WM_LBUTTONDOWN, WM_LBUTTONDBLCLK:
       if DragMode = dmAutomatic then begin
-        GetCursorPos(P);
-        P := ScreenToClient(P);
+        P := ScreenToClient(acMousePos);
         SendMessage(FEditHandle, WM_LBUTTONUP, 0, LPARAM(PointToSmallPoint(P)));
         BeginDrag(False);
       end;

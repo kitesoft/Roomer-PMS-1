@@ -1,7 +1,7 @@
 unit sMaskEdit;
 {$I sDefs.inc}
 //{$DEFINE LOGGED}
-//+
+
 interface
 
 
@@ -67,7 +67,6 @@ type
 implementation
 
 uses sStyleSimply, sVCLUtils, sMessages, acntUtils, sGraphUtils, sAlphaGraph, sSkinProps, sEdit;
-
 
 procedure TsMaskEdit.AfterConstruction;
 begin
@@ -212,7 +211,11 @@ begin
                   DT_NOPREFIX or DT_TOP or DT_EXTERNALLEADING or GetStringFlags(Self, {$IFDEF D2009}Alignment{$ELSE}taLeftJustify{$ENDIF}),
                   FCommonData, ControlIsActive(FCommonData))
   else begin
-    acFillString(aText, Length(aText), acChar(PasswordChar));
+    if PasswordChar = '*' then
+      acFillString(aText, Length(aText), acChar(#$25CF))
+    else
+      acFillString(aText, Length(aText), acChar(PasswordChar));
+
     acWriteTextEx(FCommonData.FCacheBMP.Canvas, PacChar(aText), True, R, DT_NOPREFIX or DT_TOP or GetStringFlags(Self, {$IFDEF D2009}Alignment{$ELSE}taLeftJustify{$ENDIF}), FCommonData, ControlIsActive(FCommonData));
   end;
 end;
@@ -270,7 +273,9 @@ begin
   if Message.Msg = SM_ALPHACMD then
     case Message.WParamHi of
       AC_SETSCALE: begin
-        if BoundLabel <> nil then BoundLabel.UpdateScale(Message.LParam);
+        if BoundLabel <> nil then
+          BoundLabel.UpdateScale(Message.LParam);
+
         Exit;
       end;
 

@@ -1,6 +1,6 @@
 unit acTitleBar;
 {$I sDefs.inc}
-//+
+
 interface
 
 uses
@@ -118,6 +118,7 @@ type
     FGroupIndex: integer;
 
     FName: string;
+    FCursor: TCursor;
     FStyle: TacBtnStyle;
     FContentSize: TSize;
     FAlign: TacItemAlign;
@@ -141,7 +142,7 @@ type
     procedure SetGroupIndex (const Value: integer);
     procedure SetStyle      (const Value: TacBtnStyle);
     procedure SetState      (const Value: integer);
-    procedure SetInteger    (const AIndex, Value: integer); // Calc size when AutoSize is True
+    procedure SetInteger    (const AIndex, Value: integer);
     function GetState: integer;
     procedure OnGlyphChange(Sender: TObject);
     procedure SetBoolean(const Index: Integer; const Value: boolean);
@@ -191,6 +192,7 @@ type
     property DropdownMenu: TPopupMenu read FDropdownMenu write FDropdownMenu;
     property FontData: TacFontData read FFontData write FFontData;
     property Glyph: TBitmap read FGlyph write SetGlyph;
+    property Cursor: TCursor read FCursor write FCursor default crDefault;
 
     property AutoSize : boolean index 0 read FAutoSize write SetBoolean default True;
     property Down     : boolean index 1 read FDown     write SetBoolean default False;
@@ -670,6 +672,8 @@ end;
 
 
 procedure TsTitleBar.Notification(AComponent: TComponent; Operation: TOperation);
+var
+  i: integer;
 begin
   inherited Notification(AComponent, Operation);
   if AComponent is TCustomImageList then
@@ -677,7 +681,15 @@ begin
       opRemove:
         if FImages = AComponent then
           FImages := nil;
-    end;
+    end
+  else
+    if AComponent is TPopupMenu then
+      case Operation of
+        opRemove:
+          for i := 0 to Items.Count - 1 do
+            if Items[i].DropdownMenu = AComponent then
+              Items[i].DropdownMenu := nil;
+      end
 end;
 
 
@@ -779,6 +791,7 @@ begin
   FHeight := 18;
   FWidth := 22;
   FTag := 0;
+  FCursor := crDefault;
 
   FDisabledImageIndex := -1;
   FImageIndex := -1;
@@ -1352,7 +1365,7 @@ var
   P, mPos: TPoint;
   R: TRect;
 begin
-  GetCursorPos(mPos);
+  mPos := acMousePos;
   if Item.ExtForm <> nil then
     p := Point(mPos.X - Item.ExtForm.Left, mPos.Y - Item.ExtForm.Top)
   else begin
@@ -1562,10 +1575,7 @@ begin
     AForm.Height := FBmpSize.cy;
 
     FBmpTopLeft := MkPoint;
-    FBlend.SourceConstantAlpha := Blend;
-    FBlend.BlendOp := AC_SRC_OVER;
-    FBlend.BlendFlags := 0;
-    FBlend.AlphaFormat := AC_SRC_ALPHA;
+    InitBlendData(FBlend, Blend);
 
     SetWindowPos(AForm.Handle, iInsAfter, 0, 0, 0, 0, Flags or SWP_NOMOVE or SWP_NOSIZE);
     DC := GetDC(0);

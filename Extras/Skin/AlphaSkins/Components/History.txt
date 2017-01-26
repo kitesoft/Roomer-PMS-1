@@ -1,5 +1,26 @@
 AlphaControls :: history
 
+07.01.2017 AlphaControls v11.23 Stable released
+
+* Added support of the DevExpress v16.2.2
+* Added the Images and ImageIndex properties in the TsGroupBox, TsRadioGroup and TsDBRadioGroup components
+* Improved work of the TsPageControl.AccessibleDisabledPages property
+* Most skins updated for using with 200% scaling mode
+* Improved animation with blur
+* Minor improvements and bugfixes
+
+14.11.2016 AlphaControls v11.22 Stable released
+
+  * Fixed error in using of the TTrayIcon component with some skins
+  * Solved issue in the TsMeter component with big Max values
+  * Added the Cursor property in items of the TsTitleBar component
+  * Added sclRight and sclRightTop layout types in the BoundLabel property
+  * Added support of Html mode in hints if TsAlphaHint.ShowHint procedure used
+  * Improved work of scrollbars with pressed Shift key
+  * Improved showing of ExtendedBorders after the Windows TaskBar moving
+  * Improved work of the PasswordChar property in the TsMaskEdit component
+  * A lot of minor improvements and bugfixes
+
 29.11.2016 AlphaControls v11.21 Stable released
 
   * Solved issue with non existing resource under C++ Builder

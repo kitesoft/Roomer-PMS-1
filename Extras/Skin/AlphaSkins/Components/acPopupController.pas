@@ -371,13 +371,9 @@ begin
     MaxTransparency := MaxByte;
 {$ENDIF}
     if StepCount > 0 then
-      FBlend.SourceConstantAlpha := 0
+      InitBlendData(FBlend, 0)
     else
-      FBlend.SourceConstantAlpha := MaxTransparency;
-
-    FBlend.BlendOp := AC_SRC_OVER;
-    FBlend.BlendFlags := 0;
-    FBlend.AlphaFormat := AC_SRC_ALPHA;
+      InitBlendData(FBlend, MaxTransparency);
 
     GetWindowRect(aForm.Handle, fR);
     h := HWND_TOPMOST;
@@ -419,7 +415,7 @@ begin
         Anim_GoToNext;
         inc(i);
         if StepCount > 0 then
-          while lTicks + acTimerInterval > GetTickCount do {wait here};
+          WaitTicks(lTicks);
       end;
       FBlend.SourceConstantAlpha := MaxTransparency;
     end;
@@ -537,10 +533,7 @@ procedure TacShadowForm.SetNewPos(aLeft, aTop, aWidth, aHeight: integer; BlendVa
         Rect(sbw, sbw, sbw, sbw),
         ShSizes, Rect(1, 1, 1, 1), False, False); // For internal shadows - stretch only allowed
 
-    FBlend.BlendOp := AC_SRC_OVER;
-    FBlend.BlendFlags := 0;
-    FBlend.AlphaFormat := AC_SRC_ALPHA;
-    FBlend.SourceConstantAlpha := BlendValue;
+    InitBlendData(FBlend, BlendValue);
     FBmpTopLeft := MkPoint;
 
     SetWindowLong(Handle, GWL_EXSTYLE, GetWindowLong(Handle, GWL_EXSTYLE) or WS_EX_LAYERED);

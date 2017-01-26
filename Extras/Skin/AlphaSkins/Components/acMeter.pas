@@ -401,14 +401,6 @@ begin
 
     Cache.Free;
     Cache := CreateBmp32(MeterSize);
-{
-    if FPaintData.Stretched and ((MeterSize.cy <> ColorLine.Height) or (MeterSize.cx <> ColorLine.Width)) then begin
-      TmpBmp := CreateBmp32(MeterSize);
-      Stretch(ColorLine, TmpBmp, MeterSize.cx, MeterSize.cy, ftMitchell);
-      ColorLine.Free;
-      ColorLine := TmpBmp;
-    end;
-}    
   end;
 end;
 
@@ -445,7 +437,7 @@ begin
     BGInfo.BgType := btUnknown;
     BGInfo.PleaseDraw := False;
     BGInfo.FillRect := MkRect;
-    SendMessage(Parent.Handle, SM_ALPHACMD, MakeWParam(0, AC_GETBG), LPARAM(@BGInfo));
+    SendMessage(Parent.Handle, SM_ALPHACMD, AC_GETBG_HI, LPARAM(@BGInfo));
     FillBG(Cache.Canvas.Handle, MkRect(Cache));
     PrepareCache;
     if Cache.Width < Width then
@@ -482,7 +474,7 @@ var
   s: string;
   C_: TsColor;
   MinMask: byte;
-  Delta: integer;
+  RealTickStepSmall, Delta: integer;
   TextSize: TSize;
   CustomBmp: TBitmap;
   S0, SA: PRGBAArray_;
@@ -603,6 +595,7 @@ begin
       acGPFillEllipse(Cache.Canvas.Handle, Margin, Margin, MeterSize.cx - 2 * Margin, MeterSize.cx - 2 * Margin, {FF000000 or }ColorToRGB(FPaintData.Color));
 
     if FShowTicks then begin
+      RealTickStepSmall := math.max(TickStepSmall, (Max - Min) div 240);
       i := Min;
       if FContentType = ctGradient then
         PaintBmp32(Cache, ColorLine);
@@ -626,7 +619,7 @@ begin
             DrawAngledText(Cache.Canvas, IntToStr(i), gr * 10, Coord2);
           end;
         end;
-        inc(i, TickStepSmall);
+        inc(i, RealTickStepSmall);
       end;
       // Ticks small
       i := Min;
@@ -636,7 +629,7 @@ begin
           Coord2 := GetLineCoord(PosToRad(i), Center.X - ArrowLength div 5);
           acGPDrawLine(Cache.Canvas.Handle, Coord1.X, Coord1.Y, Coord2.X, Coord2.Y, BlendColors(Font.Color, PaintData.Color, DefBlendDisabled), ArrowPenWidth);
         end;
-        inc(i, TickStepSmall);
+        inc(i, RealTickStepSmall);
       end;
     end;
   end

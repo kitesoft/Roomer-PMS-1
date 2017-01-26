@@ -492,6 +492,21 @@ begin
             LastPos := CurPos + integer(UppedText[CurPos + 1] = '&' {Skip second char});
         end;
 
+        #$D: if sConst.acHtmlStdBreak then begin
+          if CurPos > LastPos then
+            ShowCut(CurPos, LastPos);
+
+          LastPos := CurPos;
+          if CurrentRowHeight = 0 then
+             CurrentRowHeight := acTextHeight(Bitmap.Canvas, 'Yy');
+
+          NewRow;
+          CurX := Area.Left;
+        end;
+        
+//        #$A:
+//          CurX := Area.Left;
+
         '<':
           if UppedText[CurPos + 1] <> '<' then begin
             if CurPos > LastPos then

@@ -1,7 +1,7 @@
 unit sMonthCalendar;
 {$I sDefs.inc}
 //{$DEFINE LOGGED}
-//+
+
 interface
 
 uses Windows, Classes, Controls, SysUtils, Graphics, buttons, grids, messages, StdCtrls, forms, comctrls, Menus,
@@ -833,7 +833,9 @@ end;
 procedure TsMonthCalendar.MakePopup;
 var
   i: integer;
+  yName, mName: string;
   miRoot: TMenuItem;
+
 
   procedure MakeMenusForYear(aYear: integer; Items: TMenuItem);
   var
@@ -845,7 +847,7 @@ var
       mi.Tag := i;
       mi.Caption := IntToStr(i);
       if Items = PopMenu.Items then
-        mi.Caption := '  ' + mi.Caption;
+        mi.Caption := {'  ' + }mi.Caption;
 
       if i = Year then begin
         mi.Default := True;
@@ -865,12 +867,36 @@ var
     end;
   end;
 
+  procedure CheckItem(AItem: TMenuItem);
+  var
+    i: integer;
+    b: boolean;
+  begin
+    if AItem.Count = 0 then begin
+      AItem.Checked := (AItem.Parent.Caption = yName) and (AItem.Caption = mName);
+      AItem.Default := AItem.Checked;
+    end
+    else begin
+      b := False;
+      for i := 0 to AItem.Count - 1 do begin
+        CheckItem(AItem.Items[i]);
+        if AItem.Items[i].Checked then
+          b := True;
+      end;
+      AItem.Checked := b;
+      AItem.Default := b;
+    end;
+  end;
+
 begin
+  mName := {$IFDEF DELPHI_XE}FormatSettings.{$ENDIF}LongMonthNames[Month];
+  yName := IntToStr(Year);
   if PopMenu = nil then begin
     if PopMenu <> nil then
       PopMenu.Free;
 
     PopMenu := TPopupMenu.Create(Self);
+    PopMenu.AutoHotkeys := maManual;
     i := (Year - 4) - 10 * 5;
     while i < (Year - 4) do begin
       miRoot := TMenuItem.Create(Self);
@@ -888,7 +914,12 @@ begin
       PopMenu.Items.Add(miRoot);
       inc(i, 10);
     end;
-  end;
+  end
+  else
+    for i := 0 to PopMenu.Items.Count - 1 do
+      CheckItem(PopMenu.Items[i]);
+
+
   if SkinData.Skinned and SkinData.SkinManager.SkinnedPopups then
     Skindata.SkinManager.SkinableMenus.HookPopupMenu(PopMenu, True);
 end;
@@ -1573,8 +1604,7 @@ begin
     finally
       ReleaseDC(FGrid.Handle, DC);
     end;
-    while lTicks + acTimerInterval > GetTickCount do
-      ; // wait here
+    WaitTicks(lTicks);
   end;
   OldBmp.Free;
   NewBmp.Free;

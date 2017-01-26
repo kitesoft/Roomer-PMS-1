@@ -1,7 +1,7 @@
 unit sPageControl;
 {$I sDefs.inc}
 //{$DEFINE LOGGED}
-//+
+
 interface
 
 uses
@@ -446,7 +446,7 @@ var
   P: TPoint;
 begin
   with TCMHintShow(Message), HintInfo^ do begin
-    Item := GetTabUnderMouse(Point(CursorPos.X, CursorPos.Y));
+    Item := GetTabUnderMouse(CursorPos);
     if (Item >= 0) and (Pages[Item].Hint <> '') then begin
       P := ClientToScreen(CursorPos);
       P.X := P.X + GetSystemMetrics(SM_CXCURSOR) div 2;
@@ -1279,22 +1279,41 @@ begin
     end;
 
     CM_DIALOGKEY:
-      if (TWMKey(Message).CharCode = Ord(#9)) and (GetKeyState(VK_CONTROL) < 0) and (ActivePage <> nil) then begin
-        Page := nil;
-        if ActivePage.PageIndex = PageCount - 1 then
-          i := 0
-        else
-          i := ActivePage.PageIndex + 1;
+      if (TWMKey(Message).CharCode = Ord(#9)) and (ActivePage <> nil) then begin
+        if GetKeyState(VK_CONTROL) and $8000 = $8000 then begin
+          Page := nil;
 
-        while i < PageCount do begin
-          if Pages[i].TabVisible then begin
-            Page := TsTabSheet(Pages[i]);
-            Break;
+          if GetKeyState(VK_SHIFT) and $8000 = 0 then begin
+            if ActivePage.PageIndex = PageCount - 1 then
+              i := 0
+            else
+              i := ActivePage.PageIndex + 1;
+
+            while i < PageCount do begin
+              if Pages[i].TabVisible then begin
+                Page := TsTabSheet(Pages[i]);
+                Break;
+              end;
+              inc(i);
+            end;
+          end
+          else begin
+            if ActivePage.PageIndex = 0 then
+              i := PageCount - 1
+            else
+              i := ActivePage.PageIndex - 1;
+
+            while i >= 0 do begin
+              if Pages[i].TabVisible then begin
+                Page := TsTabSheet(Pages[i]);
+                Break;
+              end;
+              dec(i);
+            end;
           end;
-          inc(i);
+          if not CanBeActive(Page, Self) then
+            Exit;
         end;
-        if not CanBeActive(Page, Self) then
-          Exit;
       end;
 
     WM_KEYDOWN:
@@ -1510,8 +1529,13 @@ begin
                 if (Page = ActivePage) and CanFocus then
                   SetFocus;
 
-                if not CanBeActive(Page, Self) or (Page = ActivePage) then
+                if not CanBeActive(Page, Self)  then
                   Exit; // Preventing of the page activation
+
+                if Page = ActivePage then begin
+                  inherited;
+                  Exit;
+                end;
               end;
           end;
         end;
@@ -1781,9 +1805,13 @@ begin
       if FCommonData.Skinned and not SkinData.FUpdating then
         SkinData.BGChanged := True;
 
-    WM_LBUTTONDBLCLK:
+    WM_LBUTTONDBLCLK: begin
       if IsValidIndex(CurItem, PageCount) and ((Style <> tsTabs) or (TsTabSheet(Pages[CurItem]).TabType = ttButton)) then
         RepaintTab(CurItem, False); // If button is dblclicked
+
+      if Assigned(OnDblClick) then
+        OnDblClick(Self);
+    end;
 
     WM_CREATE:
       if HandleAllocated then begin
