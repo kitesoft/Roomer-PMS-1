@@ -77,7 +77,7 @@ object FrmHandleBookKeepingException: TFrmHandleBookKeepingException
       BorderStyle = bsNone
       Color = clWhite
       Font.Charset = DEFAULT_CHARSET
-      Font.Color = 2302755
+      Font.Color = clBlack
       Font.Height = -11
       Font.Name = 'Tahoma'
       Font.Style = []
@@ -159,7 +159,7 @@ object FrmHandleBookKeepingException: TFrmHandleBookKeepingException
     object sLabel8: TsLabel
       Left = 5
       Top = 15
-      Width = 117
+      Width = 488
       Height = 16
       Align = alTop
       Caption = 'Available Options:'
@@ -170,12 +170,13 @@ object FrmHandleBookKeepingException: TFrmHandleBookKeepingException
       Font.Height = -13
       Font.Name = 'Tahoma'
       Font.Style = [fsBold]
+      ExplicitWidth = 117
     end
     object rbRetry: TsRadioButton
       Left = 32
       Top = 265
-      Width = 140
-      Height = 20
+      Width = 148
+      Height = 19
       Caption = 'Retry posting the invoice'
       TabOrder = 0
       OnClick = rbRetryClick
@@ -184,8 +185,8 @@ object FrmHandleBookKeepingException: TFrmHandleBookKeepingException
     object rbIgnore: TsRadioButton
       Left = 32
       Top = 324
-      Width = 112
-      Height = 20
+      Width = 120
+      Height = 19
       Caption = 'Ignore the problem'
       TabOrder = 1
       OnClick = rbRetryClick
