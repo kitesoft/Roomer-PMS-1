@@ -90,15 +90,16 @@ uses
 
 procedure TGetThreadedData.Cancel;
 begin
-  if assigned(dbThread) then
-    With dbThread do
-    begin
-      FreeOnTerminate := true;
-      OnTerminate := nil;
-      Terminate;
-      waitFor;
-    end;
-  try dbThread := nil; except end;
+//  try
+//    if assigned(dbThread) then
+//      With dbThread do
+//      begin
+//        FreeOnTerminate := true;
+//        OnTerminate := nil;
+//        Terminate;
+//      end;
+//    dbThread := nil;
+//  except end;
 end;
 
 procedure TGetThreadedData.Execute(const sql: String; aOnCompletionHandler: TNotifyEvent);
@@ -129,7 +130,8 @@ end;
 procedure TGetThreadedData.Put(const url, data: String; aOnCompletionHandler: TNotifyEvent);
 begin
   FEventHandler := aOnCompletionHandler;
-  With TDBThread.Create(url, data, OT_PUT) do
+  dbThread := TDBThread.Create(url, data, OT_PUT);
+  With dbThread do
   begin
     FreeOnTerminate := true;
     OnTerminate := ThreadTerminate;
@@ -139,11 +141,13 @@ end;
 
 procedure TGetThreadedData.ThreadTerminate(Sender: TObject);
 begin
+  try
   FRoomerDataSet.RecordSet := TDBThread(Sender).RecordSet;
 //  if Assigned(FRoomerDataSet) then
 //    try FRoomerDataSet.LogoutUnaffected; except end;
   if assigned(FEventHandler) then
     FEventHandler(self);
+  except end;
 end;
 
 constructor TGetThreadedData.Create;

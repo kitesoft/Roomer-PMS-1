@@ -64,6 +64,7 @@ object frmAllotmentToRes: TfrmAllotmentToRes
       TabOrder = 1
       OnClick = sButton5Click
       SkinData.SkinSection = 'BUTTON'
+      ExplicitLeft = 1005
     end
     object sButton6: TsButton
       Left = 1070
@@ -78,6 +79,7 @@ object frmAllotmentToRes: TfrmAllotmentToRes
       ModalResult = 2
       TabOrder = 2
       SkinData.SkinSection = 'BUTTON'
+      ExplicitLeft = 1086
     end
   end
   object panLeft: TsPanel

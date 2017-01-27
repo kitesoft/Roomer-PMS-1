@@ -735,7 +735,7 @@ begin
     s := s + '   roomsdate rd '#10;
     s := s + ' WHERE '#10;
     s := s + '  (rd.Reservation = %d ) '#10;
-    s := s + '   AND (ResFlag <> ' + _db(STATUS_DELETED) + ' ) '; // **zxhj bætt við
+    s := s + '   AND (ResFlag <> ' + _db(STATUS_DELETED) + ' ) '; // **zxhj bï¿½tt viï¿½
 
     sql := format(s, [Reservation]);
     // copyToClipBoard(sql);
