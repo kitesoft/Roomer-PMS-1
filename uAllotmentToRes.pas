@@ -1,4 +1,4 @@
-unit uAllotmentToRes;
+﻿unit uAllotmentToRes;
 
 interface
 
@@ -427,6 +427,7 @@ type
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure mRoomResDSDataChange(Sender: TObject; Field: TField);
     procedure grProvideSelectionChanged(Sender: TObject; ALeft, ATop, ARight, ABottom: Integer);
+    procedure sPanel8DblClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -465,12 +466,10 @@ type
     procedure InitAll;
 
     function isValidAllotment(Reservation: integer): boolean;
-    function GetRooms: integer;
     function GetResInfo(ACol: integer = -1; ARow: integer = -1): RecRRInfoAlot;
     function AddRoomReservation(RoomReservation: integer): boolean;
     function Apply: boolean;
-    function GetRest: integer;
-    function AddRestRoomRservation(RoomReservation: integer): boolean;
+    function AddRestRoomReservation(RoomReservation: integer): boolean;
     function RoomsInAllotment: integer;
     function CalcOnePrice(RoomReservation: integer; NewRate: double = 0): boolean;
     procedure ReclacAllPrices;
@@ -478,6 +477,9 @@ type
     function SetRoomResProcessed(ACol, ARow, newRR: integer): boolean;
     procedure NavigateToDate(aDate: TDate);
     procedure UpdateControls;
+    procedure CreateRestAllotmentRoomreservations;
+    procedure CreateRoomReservationFromSelectedAllotments;
+    function HasAdjacentRoomReservation(aCol, aRow: integer; var aRoomreservation: integer): boolean;
 
   public
     { Public declarations }
@@ -488,7 +490,7 @@ type
     property ShowDate: TDateTime read FShowDate write FShowDate;
   end;
 
-  function OpenProvideAllotment(aAllotReservation: integer; oNewReservation, oRestReservation: TNewReservation; var restCount: integer; aShowDate: TDateTime = 0): boolean;
+  function OpenProvideAllotment(aAllotReservation: integer; var oNewReservation, oRestReservation: TNewReservation; var restCount: integer; aShowDate: TDateTime = 0): boolean;
 
 
 implementation
@@ -503,7 +505,9 @@ uses
   uReservationStateDefinitions,
   Math,
   uSQLUtils,
-  DateUtils;
+  DateUtils
+  , Generics.Collections
+  ;
 
 const
   cCountFixedRows = 2;
@@ -519,7 +523,7 @@ const
 
 { TfrmAllotmentToRes }
 
-function OpenProvideAllotment(aAllotReservation: integer; oNewReservation, oRestReservation: TNewReservation; var restCount: integer; aShowDate: TDateTime = 0): boolean;
+function OpenProvideAllotment(aAllotReservation: integer; var oNewReservation, oRestReservation: TNewReservation; var restCount: integer; aShowDate: TDateTime = 0): boolean;
 var
   frm: TfrmAllotmentToRes;
 begin
@@ -668,7 +672,7 @@ end;
 
 procedure TfrmAllotmentToRes.sButton4Click(Sender: TObject);
 begin
-  GetRooms;
+  CreateRoomReservationFromSelectedAllotments; //GetRooms;
   zRestCount := RoomsInAllotment;
 end;
 
@@ -1128,6 +1132,11 @@ begin
   sPanel4.width := width - 40;
 end;
 
+procedure TfrmAllotmentToRes.sPanel8DblClick(Sender: TObject);
+begin
+  sPanel4.Width := 40;
+end;
+
 procedure TfrmAllotmentToRes.timCloseTimer(Sender: TObject);
 begin
   timClose.Enabled := false;
@@ -1204,229 +1213,140 @@ begin
   UpdateControls;
 end;
 
-function TfrmAllotmentToRes.GetRooms: integer;
+
+function TfrmAllotmentToRes.HasAdjacentRoomReservation(aCol, aRow: integer; var aRoomreservation: integer): boolean;
 var
-  i: integer;
-  iRow: integer;
-  iCol: integer;
-  sCellContent: string;
-
-  ARow: integer;
-  ACol: integer;
-  FirstCol: integer;
-  LastCol: integer;
-
-  NextRow: integer;
-  NextFirstCol: integer;
-  NextLastCol: integer;
-
-  RoomReservation: integer;
-
+  lDate: TDate;
 begin
-  result := 0;
-  if mQuickRes.active then
-    mQuickRes.close;
-  mQuickRes.Open;
-  mQuickRes.SortFields := 'Row;FirstCol';
+  // Determine if new roomres already exist with same room and roomtype directly adjacent to this date,
+  // If so then use that roomreservation number
+  lDate := ColToDate(aCol);
 
-  for iRow := cCountFixedRows to grProvide.RowCount - 1 do
+  kbmRoomres.IndexFieldNames := 'room;roomtype';
+  kbmRoomRes.First;
+  Result := false;
+  while not kbmRoomRes.Eof do
   begin
-    for iCol := cCountFixedCols to grProvide.ColCount - 1 do
+    Result := (kbmRoomResRoom.AsString.StartsWith('<') or
+          (kbmRoomResRoom.AsString = grProvide.Cells[cColRoom, aRow]))
+          and (kbmRoomResRoomType.AsString = grProvide.Cells[cColRoomType, aRow])
+          and ((kbmRoomResArrival.AsDateTime = lDate+1) or (kbmRoomResDeparture.AsDateTime = lDate));
+    if Result then
     begin
-      sCellContent := trim(grProvide.Cells[iCol, iRow]);
-      if sCellContent <> '' then
-      begin
-        if grProvide.SelectedCells[iCol, iRow] then
-        begin
-          // aRoom := grProvide.cells[0, iRow];
-          ARow := iRow;
-
-          FirstCol := iCol;
-          LastCol := FirstCol + 1;
-
-          mQuickRes.append;
-          mQuickResRow.Asinteger := ARow;
-          mQuickResFirstCol.Asinteger := FirstCol;
-          mQuickResLastCol.Asinteger := LastCol;
-          mQuickRes.Post;
-        end;
-      end;
+      aRoomReservation := kbmRoomResRoomReservation.AsInteger;
+      Break;
     end;
+    kbmRoomRes.Next;
   end;
 
-  mQuickRes.First;
-  while not mQuickRes.eof do
-  begin
-    ARow := mQuickResRow.Asinteger;
-    LastCol := mQuickResLastCol.Asinteger;
-    if not mQuickRes.eof then
-    begin
-      mQuickRes.Next;
-      NextRow := mQuickResRow.Asinteger;
-      NextFirstCol := mQuickResFirstCol.Asinteger;
-      NextLastCol := mQuickResLastCol.Asinteger;
-
-      if (NextFirstCol = LastCol) and (ARow = NextRow) then
-      begin
-        mQuickRes.Prior;
-        mQuickRes.Edit;
-        mQuickResLastCol.Asinteger := NextLastCol;
-        mQuickRes.Post;
-
-        mQuickRes.Next;
-        mQuickRes.Delete;
-        mQuickRes.First;
-      end;
-    end
-    else
-      mQuickRes.Next;
-  end;
-
-  mQuickRes.First;
-  while not mQuickRes.eof do
-  begin
-    mQuickRes.Edit;
-    mQuickResLastCol.Asinteger := mQuickResLastCol.Asinteger - 1;
-    mQuickRes.Post;
-    mQuickRes.Next;
-  end;
-
-  mQuickRes.First;
-  while not mQuickRes.eof do
-  begin
-    ARow := mQuickResRow.Asinteger;
-    FirstCol := mQuickResFirstCol.Asinteger;
-    LastCol := mQuickResLastCol.Asinteger;
-
-    RoomReservation := -1;
-    // If there already is a roomres for this room for an adjacent period then merge that one with selected dates
-    if mRrInfo.Locate('row', ARow, []) and kbmRoomRes.Locate('room', mRrInfoRoom.AsString, []) then
-    begin
-      if (trunc(ColToDate(FirstCol)) = trunc(kbmRoomResDeparture.AsDateTime)) OR
-        (trunc(ColToDate(LastCol)) = trunc(kbmRoomResArrival.AsDateTime) - 1) then
-        RoomReservation := kbmRoomResRoomReservation.Asinteger;
-    end;
-    if RoomReservation = -1 then
-      RoomReservation := RR_SetNewID();
-
-    for i := FirstCol to LastCol do
-    begin
-      // **
-      ACol := i;
-      SetRoomResProcessed(ACol, ARow, RoomReservation);
-    end;
-    AddRoomReservation(RoomReservation);
-    mQuickRes.Next;
-  end;
-  FillData;
 end;
 
-function TfrmAllotmentToRes.GetRest: integer;
+procedure TfrmAllotmentToRes.CreateRoomReservationFromSelectedAllotments;
 var
-  i, ii: integer;
-  iRow: integer;
-  iCol: integer;
-
-  ARow: integer;
-  FirstCol: integer;
-  LastCol: integer;
-
-  NextRow: integer;
-  NextFirstCol: integer;
-  NextLastCol: integer;
-
-  RoomReservation: integer;
-
-  rrCount: integer;
-  sIDs: string;
-  lstIDS: Tstringlist;
-
+  r, c, i: integer;
+  lNewRR: integer;
+  lNewRRList: TList<integer>;
+  lAdjRR: integer;
 begin
-  result := 0;
-
-  lstIDS := Tstringlist.Create;
+  lNewRRList := TList<integer>.Create;
+  grProvide.BeginUpdate;
   try
-    if mQuickRes.active then
-      mQuickRes.close;
-    mQuickRes.Open;
-    mQuickRes.SortFields := 'Row;FirstCol';
-
-    for iRow := cCountFixedRows to grProvide.RowCount - 1 do
+    if grProvide.SelectedCellsCount > 0 then
     begin
-      if (grProvide.Cells[cColRoom, iRow] = '') and (grProvide.Cells[cColRoomType, iRow] = '') then
-        continue;
-
-      for iCol := cCountFixedCols to grProvide.ColCount - 1 do
+      for r := grProvide.Selection.Top to grProvide.Selection.Bottom do
       begin
-        // sCellContent := trim(grProvide.cells[iCol, iRow]);
+        if grProvide.Cells[cColRoomType, r] = '' then
+          Continue;
 
-        if mRrInfo.Locate('row;col', VarArrayOf([iRow, iCol]), []) and (mRrInfoProcessed.Asinteger <= 0) then
+        lnewRR := RR_SetNewID;
+        for c := grProvide.Selection.Left to grProvide.Selection.Right do
         begin
-          inc(result);
-          mQuickRes.append;
-          mQuickResRow.Asinteger := iRow;
-          mQuickResFirstCol.Asinteger := iCol;
-          mQuickResLastCol.Asinteger := iCol + 1;
-          mQuickRes.Post;
+          if HasAdjacentRoomReservation(c, r, lAdjRR) then
+          begin
+            SetROomResProcessed(c, r, lAdjRR);
+            if not lNewRRList.Contains(lAdjRR) then
+              lNewRRList.Add(lAdjRR);
+          end
+          else
+          begin
+            SetRoomResProcessed(c, r, lNewRR);
+            if not lNewRRList.Contains(lNewRR) then
+              lNewRRList.Add(lNewRR);
+          end;
+
         end;
       end;
+
+      for i in lNewRRList do
+        AddRoomReservation(i);
+
+      FillData;
     end;
 
-    if result = 0 then
-      exit;
-
-    mQuickRes.First;
-    while not mQuickRes.eof do
-    begin
-      ARow := mQuickResRow.Asinteger;
-      LastCol := mQuickResLastCol.Asinteger;
-      if not mQuickRes.eof then
-      begin
-        mQuickRes.Next;
-        NextRow := mQuickResRow.Asinteger;
-        NextFirstCol := mQuickResFirstCol.Asinteger;
-        NextLastCol := mQuickResLastCol.Asinteger;
-
-        if (NextFirstCol = LastCol) and (ARow = NextRow) then
-        begin
-          mQuickRes.Prior;
-          mQuickRes.Edit;
-          mQuickResLastCol.Asinteger := NextLastCol;
-          mQuickRes.Post;
-
-          mQuickRes.Next;
-          mQuickRes.Delete;
-          mQuickRes.First;
-        end;
-      end
-      else
-        mQuickRes.Next;
-    end;
-
-    rrCount := mQuickRes.RecordCount;
-    sIDs := RR_GetIDs(rrCount);
-    _glob._strTokenToStrings(sIDs, '|', lstIDS);
-
-    ii := -1;
-    mQuickRes.First;
-    while not mQuickRes.eof do
-    begin
-      inc(ii);
-      ARow := mQuickResRow.Asinteger;
-      FirstCol := mQuickResFirstCol.Asinteger;
-      LastCol := mQuickResLastCol.Asinteger - 1;
-
-      RoomReservation := strToint(lstIDS[ii]); // RR_SetNewID();
-
-      for i := FirstCol to LastCol do
-        SetRoomResProcessed(i, ARow, RoomReservation);
-
-      AddRestRoomRservation(RoomReservation);
-      mQuickRes.Next;
-    end;
   finally
-    freeandnil(lstIDS);
+    grProvide.EndUpdate;
+    lNewRRList.Free;
   end;
+end;
+
+procedure TfrmAllotmentToRes.CreateRestAllotmentRoomreservations;
+var
+  lCurRoom: string;
+  lCurRoomType: string;
+  lLastDate: TDate;
+  lRRId: integer;
+  lNewRRList: TList<integer>;
+  i: integer;
+begin
+
+  mRrInfo.DisableControls;
+  lNewRRList := TList<integer>.Create;
+  try
+    mRrInfo.IndexFieldNames := 'Room;Roomtype;Roomreservation;dtDate';
+
+    lCurRoom := '';
+    lCurRoomType := '';
+    mRrInfo.First;
+    lRRId := 0;
+
+    lLastDate := 0;
+    // Walk through all Allotment RR records that are not assigned to a new reservation and assign them a new
+    // roomreservation number (in Processed field) as long as they are the same room and roomtype and have consecutive dates
+    while not mRrInfo.Eof do
+    begin
+      if mRrInfoProcessed.AsInteger < 0 then
+      begin
+        if (lCurRoom <> mRrInfoRoom.asString) or (lCurRoomType <> mRrInfoRoomType.AsString) or
+           (lLastDate + 1 <> mRrInfodtDate.AsDateTime) then
+        begin
+          if lRRId <> 0 then
+            lNewRRList.add(lRRId);
+
+          lRRId := RR_SetNewID;
+          lCurRoom := mRrInfoRoom.asString;
+          lCurRoomType := mRrInfoRoomType.asString;
+        end;
+
+        mRrInfo.Edit;
+        mRrInfoProcessed.AsInteger := lRRId;
+        mRrInfo.Post;
+        lLastDate := mRrInfodtDate.AsDateTime;
+      end;
+
+      mRrInfo.Next;
+    end;
+
+    if lRRId <> 0 then
+      lNewRRList.add(lRRId);
+
+    for i in lNewRRList do
+      AddRestRoomReservation(i);
+
+  finally
+    lNewRRList.Free;
+    mRrInfo.EnableControls;
+  end;
+
 end;
 
 function TfrmAllotmentToRes.AddRoomReservation(RoomReservation: integer): boolean;
@@ -1940,13 +1860,10 @@ var
   rateIsPaid: boolean;
   roomIndex: integer;
   mainGuestName: string;
-  ii: integer;
 begin
 
   result := true;
-  repeat
-    ii := GetRest;
-  until ii = 0;
+  CreateRestAllotmentRoomreservations;
 
   customer := zReservationInfo.customer;
   oNewReservation.HomeCustomer.customer := customer;
@@ -2136,7 +2053,7 @@ begin
 
 end;
 
-function TfrmAllotmentToRes.AddRestRoomRservation(RoomReservation: integer): boolean;
+function TfrmAllotmentToRes.AddRestRoomReservation(RoomReservation: integer): boolean;
 var
   Room: string; // *
   RoomType: string; // *
@@ -2176,6 +2093,7 @@ var
   Currency: string;
   oSelectedRoomItem: TnewRoomReservationItem;
 begin
+
   Assert(RoomReservation <> 0, 'Roomreservation = 0');
   result := false;
 
