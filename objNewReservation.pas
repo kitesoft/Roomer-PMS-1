@@ -725,28 +725,6 @@ end;
 
 { TNewReservation }
 
-//constructor TNewReservation.Create(aHotelCode, Staff: string);
-//begin
-//  FHotelcode := aHotelcode;
-//  FnewRoomReservations := TnewRoomReservation.Create(aHotelCode);
-//  FHomeCustomer := THomeCustomer.Create(aHotelCode, hData.ctrlGetString('RackCustomer')); //  '');
-//  FReservation := -1; //hData.RV_SetNewID();
-//
-//  FSendConfirmationEmail := False;
-//
-//  FShowProfile := false;
-//  FresMedhod := rmNormal;
-//  FIsQuick := true;
-//  FStaff := Staff;
-//
-//  FConnection := Connection;
-//  FLoglevel := loglevel;
-//  FLogPath := logpath;
-//  FPriceFound := true;
-//
-//  FAlertList := TAlertList.Create(0, 0, atUNKNOWN);
-//
-//end;
 
 constructor TNewReservation.Create(const aHotelCode, Staff: string;
                                                       const contactAddress1: string = '';
