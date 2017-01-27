@@ -308,7 +308,98 @@ type
     sGroupBox4: TsGroupBox;
     btnReCalc: TsButton;
     btnReclacAllPrices: TsButton;
-    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    mRrInfordID: TIntegerField;
+    mRrInfoRoomReservation: TIntegerField;
+    mRrInfoReservation: TIntegerField;
+    mRrInfodtDate: TDateTimeField;
+    mRrInfoRoom: TStringField;
+    mRrInfoRoomType: TStringField;
+    mRrInfoResFlag: TStringField;
+    mRrInfoisNoRoom: TBooleanField;
+    mRrInfoPriceCode: TStringField;
+    mRrInfoRoomRate: TFloatField;
+    mRrInfoDiscount: TFloatField;
+    mRrInfoisPercentage: TBooleanField;
+    mRrInfoshowDiscount: TBooleanField;
+    mRrInfoPaid: TBooleanField;
+    mRrInfoCurrency: TStringField;
+    mRrInfoMainGuest: TStringField;
+    mRrInfonumChildren: TIntegerField;
+    mRrInfonumInfants: TIntegerField;
+    mRrInfonumGuests: TIntegerField;
+    mRrInfoRoomDescription: TStringField;
+    mRrInfoRoomtypeDescription: TStringField;
+    mRrInfoRoomCount: TIntegerField;
+    mRrInfoCol: TIntegerField;
+    mRrInfoRow: TIntegerField;
+    mRrInfoid: TAutoIncField;
+    mRrInfoProcessed: TIntegerField;
+    mRrInfoGroupAccount: TBooleanField;
+    kbmRoomResRoomReservation: TIntegerField;
+    kbmRoomResRoom: TStringField;
+    kbmRoomResRoomType: TStringField;
+    kbmRoomResGuests: TIntegerField;
+    kbmRoomResAvragePrice: TFloatField;
+    kbmRoomResRateCount: TIntegerField;
+    kbmRoomResRoomDescription: TStringField;
+    kbmRoomResRoomTypeDescription: TStringField;
+    kbmRoomResArrival: TDateTimeField;
+    kbmRoomResDeparture: TDateTimeField;
+    kbmRoomResChildrenCount: TIntegerField;
+    kbmRoomResinfantCount: TIntegerField;
+    kbmRoomResPriceCode: TStringField;
+    kbmRoomResAvrageDiscount: TFloatField;
+    kbmRoomResisPercentage: TBooleanField;
+    kbmRoomResMainGuest: TStringField;
+    kbmRoomRatesReservation: TIntegerField;
+    kbmRoomRatesRoomReservation: TIntegerField;
+    kbmRoomRatesRoomNumber: TStringField;
+    kbmRoomRatesRateDate: TDateTimeField;
+    kbmRoomRatesPriceCode: TStringField;
+    kbmRoomRatesRate: TFloatField;
+    kbmRoomRatesDiscount: TFloatField;
+    kbmRoomRatesisPercentage: TBooleanField;
+    kbmRoomRatesShowDiscount: TBooleanField;
+    kbmRoomRatesisPaid: TBooleanField;
+    kbmRoomRatesDiscountAmount: TFloatField;
+    kbmRoomRatesRentAmount: TFloatField;
+    kbmRoomRatesNativeAmount: TFloatField;
+    kbmrestRoomResRoomReservation: TIntegerField;
+    kbmrestRoomResRoom: TStringField;
+    kbmrestRoomResRoomType: TStringField;
+    kbmrestRoomResGuests: TIntegerField;
+    kbmrestRoomResAvragePrice: TFloatField;
+    kbmrestRoomResRateCount: TIntegerField;
+    kbmrestRoomResRoomDescription: TStringField;
+    kbmrestRoomResRoomTypeDescription: TStringField;
+    kbmrestRoomResArrival: TDateTimeField;
+    kbmrestRoomResDeparture: TDateTimeField;
+    kbmrestRoomResChildrenCount: TIntegerField;
+    kbmrestRoomResinfantCount: TIntegerField;
+    kbmrestRoomResPriceCode: TStringField;
+    kbmrestRoomResAvrageDiscount: TFloatField;
+    kbmrestRoomResisPercentage: TBooleanField;
+    kbmrestRoomResMainGuest: TStringField;
+    mRoomsRoom: TStringField;
+    mRoomsRoomType: TStringField;
+    mRoomsRoomDescription: TStringField;
+    mRoomsotherInfo: TStringField;
+    kbmRestRoomRatesReservation: TIntegerField;
+    kbmRestRoomRatesRoomReservation: TIntegerField;
+    kbmRestRoomRatesRoomNumber: TStringField;
+    kbmRestRoomRatesRateDate: TDateTimeField;
+    kbmRestRoomRatesPriceCode: TStringField;
+    kbmRestRoomRatesRate: TFloatField;
+    kbmRestRoomRatesDiscount: TFloatField;
+    kbmRestRoomRatesisPercentage: TBooleanField;
+    kbmRestRoomRatesShowDiscount: TBooleanField;
+    kbmRestRoomRatesisPaid: TBooleanField;
+    kbmRestRoomRatesDiscountAmount: TFloatField;
+    kbmRestRoomRatesRentAmount: TFloatField;
+    kbmRestRoomRatesNativeAmount: TFloatField;
+    mQuickResRow: TIntegerField;
+    mQuickResFirstCol: TIntegerField;
+    mQuickResLastCol: TIntegerField;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -909,11 +1000,6 @@ begin
   zNightCount := 0;
 end;
 
-procedure TfrmAllotmentToRes.FormClose(Sender: TObject; var Action: TCloseAction);
-begin
-  //**
-end;
-
 procedure TfrmAllotmentToRes.FormDestroy(Sender: TObject);
 begin
   FreeGridObjects;
@@ -1267,6 +1353,9 @@ begin
 
     for iRow := cCountFixedRows to grProvide.RowCount - 1 do
     begin
+      if (grProvide.Cells[cColRoom, iRow] = '') and (grProvide.Cells[cColRoomType, iRow] = '') then
+        continue;
+
       for iCol := cCountFixedCols to grProvide.ColCount - 1 do
       begin
         // sCellContent := trim(grProvide.cells[iCol, iRow]);
@@ -1411,8 +1500,8 @@ begin
     kbmRoomRates.DisableControls;
     try
       // If Roomres already exists, delete all prior info from roomres and roomrates
-      lclDeleteRoomResFromDataset(RoomReservation, kbmRoomRes.FieldByName('RoomReservation'));
-      lclDeleteRoomResFromDataset(RoomReservation, kbmRoomRates.FieldByName('RoomReservation'));
+      lclDeleteRoomResFromDataset(RoomReservation, kbmRoomResRoomReservation);
+      lclDeleteRoomResFromDataset(RoomReservation, kbmRoomRatesRoomReservation);
 
       sFilter := '(processed=' + inttostr(RoomReservation) + ')';
 
@@ -1567,9 +1656,7 @@ end;
 
 function TfrmAllotmentToRes.SetRoomResProcessed(ACol, ARow: integer; newRR: integer): boolean;
 begin
-  processed := -1;
   result := false;
-  info := GetResInfo(ACol,ARow);
   mRrInfo.SortFields := 'RoomRate;isPercentage;Discount';
   mRrInfo.sort([mtcoDescending]);
   if mRrInfo.Locate('processed;Row;col', VarArrayOf([-1, ARow, ACol]), []) then
@@ -1579,10 +1666,7 @@ begin
     mRrInfo.Post;
     mRrInfo.SortFields := 'RoomRate;isPercentage;Discount';
     mRrInfo.sort([]);
-    filldata;
     result := true;
-  end else
-  begin
   end;
 end;
 

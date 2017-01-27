@@ -2,8 +2,8 @@ object frmAllotmentToRes: TfrmAllotmentToRes
   Left = 0
   Top = 0
   Caption = 'Provide allotment'
-  ClientHeight = 505
-  ClientWidth = 1165
+  ClientHeight = 616
+  ClientWidth = 1149
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -12,7 +12,6 @@ object frmAllotmentToRes: TfrmAllotmentToRes
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
-  OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnKeyDown = FormKeyDown
@@ -20,23 +19,25 @@ object frmAllotmentToRes: TfrmAllotmentToRes
   PixelsPerInch = 96
   TextHeight = 13
   object sSplitter1: TsSplitter
-    Left = 585
+    Left = 569
     Top = 0
-    Height = 472
+    Height = 583
+    Align = alRight
     SkinData.SkinSection = 'SPLITTER'
     ExplicitLeft = 676
     ExplicitHeight = 614
   end
   object sPanel2: TsPanel
     Left = 0
-    Top = 472
-    Width = 1165
+    Top = 583
+    Width = 1149
     Height = 33
     Align = alBottom
     TabOrder = 0
     SkinData.SkinSection = 'PANEL'
+    ExplicitWidth = 1165
     DesignSize = (
-      1165
+      1149
       33)
     object btnHideShowAllotment: TsButton
       Left = 8
@@ -63,6 +64,7 @@ object frmAllotmentToRes: TfrmAllotmentToRes
       TabOrder = 1
       OnClick = sButton5Click
       SkinData.SkinSection = 'BUTTON'
+      ExplicitLeft = 1005
     end
     object sButton6: TsButton
       Left = 1070
@@ -77,28 +79,31 @@ object frmAllotmentToRes: TfrmAllotmentToRes
       ModalResult = 2
       TabOrder = 2
       SkinData.SkinSection = 'BUTTON'
+      ExplicitLeft = 1086
     end
   end
   object panLeft: TsPanel
     Left = 0
     Top = 0
-    Width = 585
-    Height = 472
-    Align = alLeft
+    Width = 569
+    Height = 583
+    Align = alClient
     TabOrder = 1
     SkinData.SkinSection = 'PANEL'
+    ExplicitWidth = 585
     object sPanel1: TsPanel
       Left = 1
       Top = 1
-      Width = 583
+      Width = 567
       Height = 248
       Align = alTop
       TabOrder = 0
       SkinData.SkinSection = 'PANEL'
+      ExplicitWidth = 583
       object sPanel8: TsPanel
         Left = 1
         Top = 1
-        Width = 581
+        Width = 565
         Height = 32
         Align = alTop
         Caption = 'Allotment'
@@ -110,6 +115,7 @@ object frmAllotmentToRes: TfrmAllotmentToRes
         ParentFont = False
         TabOrder = 0
         SkinData.SkinSection = 'MENUCAPTION'
+        ExplicitWidth = 581
       end
       object sGroupBox2: TsGroupBox
         AlignWithMargins = True
@@ -121,61 +127,84 @@ object frmAllotmentToRes: TfrmAllotmentToRes
         Caption = 'Show in cells'
         TabOrder = 1
         SkinData.SkinSection = 'GROUPBOX'
-        Checked = False
         object chkRoomCount: TsCheckBox
-          Left = 14
+          AlignWithMargins = True
+          Left = 17
           Top = 18
-          Width = 113
-          Height = 19
+          Width = 188
+          Height = 20
+          Margins.Left = 15
+          Margins.Bottom = 0
           Caption = 'Number of Rooms'
+          Align = alTop
           Checked = True
           State = cbChecked
           TabOrder = 0
+          OnClick = chkRoomCountClick
           SkinData.SkinSection = 'CHECKBOX'
           ImgChecked = 0
           ImgUnchecked = 0
         end
         object chkGuestName: TsCheckBox
-          Left = 14
-          Top = 53
-          Width = 85
-          Height = 19
+          AlignWithMargins = True
+          Left = 17
+          Top = 41
+          Width = 188
+          Height = 20
+          Margins.Left = 15
+          Margins.Bottom = 0
           Caption = 'Guest name'
+          Align = alTop
           Checked = True
           State = cbChecked
           TabOrder = 2
+          OnClick = chkGuestNameClick
           SkinData.SkinSection = 'CHECKBOX'
           ImgChecked = 0
           ImgUnchecked = 0
         end
         object chkPrice: TsCheckBox
-          Left = 14
-          Top = 70
-          Width = 192
-          Height = 19
+          AlignWithMargins = True
+          Left = 17
+          Top = 87
+          Width = 188
+          Height = 20
+          Margins.Left = 15
+          Margins.Bottom = 0
           Caption = 'Price info (Code - Price - Discount)'
+          Align = alTop
           TabOrder = 3
+          OnClick = chkPriceClick
           SkinData.SkinSection = 'CHECKBOX'
           ImgChecked = 0
           ImgUnchecked = 0
         end
         object chkNumGuests: TsCheckBox
-          Left = 13
-          Top = 36
-          Width = 113
-          Height = 19
+          AlignWithMargins = True
+          Left = 17
+          Top = 64
+          Width = 188
+          Height = 20
+          Margins.Left = 15
+          Margins.Bottom = 0
           Caption = 'Number of guests'
+          Align = alTop
           TabOrder = 1
+          OnClick = chkNumGuestsClick
           SkinData.SkinSection = 'CHECKBOX'
           ImgChecked = 0
           ImgUnchecked = 0
         end
         object chkShowRoomdescription: TsCheckBox
-          Left = 14
-          Top = 105
-          Width = 136
-          Height = 19
+          AlignWithMargins = True
+          Left = 17
+          Top = 110
+          Width = 188
+          Height = 20
+          Margins.Left = 15
+          Margins.Bottom = 0
           Caption = 'Show room description'
+          Align = alTop
           Checked = True
           State = cbChecked
           TabOrder = 4
@@ -185,11 +214,15 @@ object frmAllotmentToRes: TfrmAllotmentToRes
           ImgUnchecked = 0
         end
         object chkFitColumns: TsCheckBox
-          Left = 14
-          Top = 128
-          Width = 81
-          Height = 19
+          AlignWithMargins = True
+          Left = 17
+          Top = 133
+          Width = 188
+          Height = 20
+          Margins.Left = 15
+          Margins.Bottom = 0
           Caption = 'Fit columns'
+          Align = alTop
           TabOrder = 5
           OnClick = chkFitColumnsClick
           SkinData.SkinSection = 'CHECKBOX'
@@ -200,14 +233,15 @@ object frmAllotmentToRes: TfrmAllotmentToRes
       object sPanel6: TsPanel
         Left = 1
         Top = 205
-        Width = 581
+        Width = 565
         Height = 42
         Align = alBottom
         TabOrder = 2
         SkinData.SkinSection = 'PANEL'
+        ExplicitWidth = 581
         object sButton4: TsButton
           AlignWithMargins = True
-          Left = 373
+          Left = 357
           Top = 6
           Width = 204
           Height = 30
@@ -234,7 +268,6 @@ object frmAllotmentToRes: TfrmAllotmentToRes
         Caption = 'Allotment'
         TabOrder = 3
         SkinData.SkinSection = 'GROUPBOX'
-        Checked = False
         object clabFirstDate: TsLabel
           Left = 8
           Top = 22
@@ -321,8 +354,8 @@ object frmAllotmentToRes: TfrmAllotmentToRes
       Tag = 1
       Left = 1
       Top = 249
-      Width = 583
-      Height = 222
+      Width = 567
+      Height = 333
       Cursor = crDefault
       Align = alClient
       BevelInner = bvNone
@@ -466,13 +499,15 @@ object frmAllotmentToRes: TfrmAllotmentToRes
       SearchFooter.HintFindPrev = 'Find previous occurence'
       SearchFooter.HintHighlight = 'Highlight occurences'
       SearchFooter.MatchCaseCaption = 'Match case'
+      SearchFooter.ResultFormat = '(%d of %d)'
       SizeWhileTyping.Height = True
       SortSettings.DefaultFormat = ssAutomatic
       SortSettings.HeaderColor = 16579058
       SortSettings.HeaderColorTo = 16579058
       SortSettings.HeaderMirrorColor = 16380385
       SortSettings.HeaderMirrorColorTo = 16182488
-      Version = '8.1.2.0'
+      Version = '8.2.4.1'
+      ExplicitWidth = 583
       ColWidths = (
         132)
       RowHeights = (
@@ -489,13 +524,14 @@ object frmAllotmentToRes: TfrmAllotmentToRes
     end
   end
   object sPanel4: TsPanel
-    Left = 591
+    Left = 575
     Top = 0
     Width = 574
-    Height = 472
-    Align = alClient
+    Height = 583
+    Align = alRight
     TabOrder = 2
     SkinData.SkinSection = 'PANEL'
+    ExplicitLeft = 591
     object sLabel2: TsLabel
       Left = 240
       Top = 48
@@ -537,7 +573,6 @@ object frmAllotmentToRes: TfrmAllotmentToRes
         Caption = 'Reservation'
         TabOrder = 1
         SkinData.SkinSection = 'GROUPBOX'
-        Checked = False
         object cLabCountry: TsLabel
           Left = 19
           Top = 72
@@ -652,8 +687,8 @@ object frmAllotmentToRes: TfrmAllotmentToRes
       object chkIsGroupInvoice: TsCheckBox
         Left = 287
         Top = 180
-        Width = 100
-        Height = 19
+        Width = 92
+        Height = 20
         Caption = 'is Groupinvoice'
         TabOrder = 2
         SkinData.SkinSection = 'CHECKBOX'
@@ -693,7 +728,6 @@ object frmAllotmentToRes: TfrmAllotmentToRes
         Caption = 'Recalculate Roomprices'
         TabOrder = 4
         SkinData.SkinSection = 'GROUPBOX'
-        Checked = False
         object btnReCalc: TsButton
           Left = 12
           Top = 23
@@ -720,7 +754,7 @@ object frmAllotmentToRes: TfrmAllotmentToRes
       Left = 1
       Top = 249
       Width = 572
-      Height = 222
+      Height = 333
       Align = alClient
       TabOrder = 1
       LookAndFeel.NativeStyle = False
@@ -1077,6 +1111,95 @@ object frmAllotmentToRes: TfrmAllotmentToRes
     LocaleID = 1024
     Left = 24
     Top = 384
+    object mRrInfordID: TIntegerField
+      FieldName = 'rdID'
+    end
+    object mRrInfoRoomReservation: TIntegerField
+      FieldName = 'RoomReservation'
+    end
+    object mRrInfoReservation: TIntegerField
+      FieldName = 'Reservation'
+    end
+    object mRrInfodtDate: TDateTimeField
+      FieldName = 'dtDate'
+    end
+    object mRrInfoRoom: TStringField
+      FieldName = 'Room'
+      Size = 15
+    end
+    object mRrInfoRoomType: TStringField
+      FieldName = 'RoomType'
+      Size = 15
+    end
+    object mRrInfoResFlag: TStringField
+      FieldName = 'ResFlag'
+      Size = 1
+    end
+    object mRrInfoisNoRoom: TBooleanField
+      FieldName = 'isNoRoom'
+    end
+    object mRrInfoPriceCode: TStringField
+      FieldName = 'PriceCode'
+      Size = 15
+    end
+    object mRrInfoRoomRate: TFloatField
+      FieldName = 'RoomRate'
+    end
+    object mRrInfoDiscount: TFloatField
+      FieldName = 'Discount'
+    end
+    object mRrInfoisPercentage: TBooleanField
+      FieldName = 'isPercentage'
+    end
+    object mRrInfoshowDiscount: TBooleanField
+      FieldName = 'showDiscount'
+    end
+    object mRrInfoPaid: TBooleanField
+      FieldName = 'Paid'
+    end
+    object mRrInfoCurrency: TStringField
+      FieldName = 'Currency'
+      Size = 3
+    end
+    object mRrInfoMainGuest: TStringField
+      FieldName = 'MainGuest'
+      Size = 100
+    end
+    object mRrInfonumChildren: TIntegerField
+      FieldName = 'numChildren'
+    end
+    object mRrInfonumInfants: TIntegerField
+      FieldName = 'numInfants'
+    end
+    object mRrInfonumGuests: TIntegerField
+      FieldName = 'numGuests'
+    end
+    object mRrInfoRoomDescription: TStringField
+      FieldName = 'RoomDescription'
+      Size = 30
+    end
+    object mRrInfoRoomtypeDescription: TStringField
+      FieldName = 'RoomtypeDescription'
+      Size = 30
+    end
+    object mRrInfoRoomCount: TIntegerField
+      FieldName = 'RoomCount'
+    end
+    object mRrInfoCol: TIntegerField
+      FieldName = 'Col'
+    end
+    object mRrInfoRow: TIntegerField
+      FieldName = 'Row'
+    end
+    object mRrInfoid: TAutoIncField
+      FieldName = 'id'
+    end
+    object mRrInfoProcessed: TIntegerField
+      FieldName = 'Processed'
+    end
+    object mRrInfoGroupAccount: TBooleanField
+      FieldName = 'GroupAccount'
+    end
   end
   object mRrInfoDS: TDataSource
     DataSet = mRrInfo
@@ -1123,6 +1246,22 @@ object frmAllotmentToRes: TfrmAllotmentToRes
     LocaleID = 1024
     Left = 24
     Top = 480
+    object mRoomsRoom: TStringField
+      FieldName = 'Room'
+      Size = 15
+    end
+    object mRoomsRoomType: TStringField
+      FieldName = 'RoomType'
+      Size = 15
+    end
+    object mRoomsRoomDescription: TStringField
+      FieldName = 'RoomDescription'
+      Size = 50
+    end
+    object mRoomsotherInfo: TStringField
+      FieldName = 'otherInfo'
+      Size = 255
+    end
   end
   object mRoomsDS: TDataSource
     DataSet = mRooms
@@ -1229,6 +1368,60 @@ object frmAllotmentToRes: TfrmAllotmentToRes
     LocaleID = 1024
     Left = 360
     Top = 304
+    object kbmRoomResRoomReservation: TIntegerField
+      FieldName = 'RoomReservation'
+    end
+    object kbmRoomResRoom: TStringField
+      FieldName = 'Room'
+      Size = 10
+    end
+    object kbmRoomResRoomType: TStringField
+      FieldName = 'RoomType'
+      Size = 10
+    end
+    object kbmRoomResGuests: TIntegerField
+      FieldName = 'Guests'
+    end
+    object kbmRoomResAvragePrice: TFloatField
+      FieldName = 'AvragePrice'
+    end
+    object kbmRoomResRateCount: TIntegerField
+      FieldName = 'RateCount'
+    end
+    object kbmRoomResRoomDescription: TStringField
+      FieldName = 'RoomDescription'
+      Size = 30
+    end
+    object kbmRoomResRoomTypeDescription: TStringField
+      FieldName = 'RoomTypeDescription'
+      Size = 30
+    end
+    object kbmRoomResArrival: TDateTimeField
+      FieldName = 'Arrival'
+    end
+    object kbmRoomResDeparture: TDateTimeField
+      FieldName = 'Departure'
+    end
+    object kbmRoomResChildrenCount: TIntegerField
+      FieldName = 'ChildrenCount'
+    end
+    object kbmRoomResinfantCount: TIntegerField
+      FieldName = 'infantCount'
+    end
+    object kbmRoomResPriceCode: TStringField
+      FieldName = 'PriceCode'
+      Size = 10
+    end
+    object kbmRoomResAvrageDiscount: TFloatField
+      FieldName = 'AvrageDiscount'
+    end
+    object kbmRoomResisPercentage: TBooleanField
+      FieldName = 'isPercentage'
+    end
+    object kbmRoomResMainGuest: TStringField
+      FieldName = 'MainGuest'
+      Size = 100
+    end
   end
   object mRoomResDS: TDataSource
     DataSet = kbmRoomRes
@@ -1310,6 +1503,47 @@ object frmAllotmentToRes: TfrmAllotmentToRes
     LocaleID = 1024
     Left = 360
     Top = 368
+    object kbmRoomRatesReservation: TIntegerField
+      FieldName = 'Reservation'
+    end
+    object kbmRoomRatesRoomReservation: TIntegerField
+      FieldName = 'RoomReservation'
+    end
+    object kbmRoomRatesRoomNumber: TStringField
+      FieldName = 'RoomNumber'
+      Size = 10
+    end
+    object kbmRoomRatesRateDate: TDateTimeField
+      FieldName = 'RateDate'
+    end
+    object kbmRoomRatesPriceCode: TStringField
+      FieldName = 'PriceCode'
+      Size = 10
+    end
+    object kbmRoomRatesRate: TFloatField
+      FieldName = 'Rate'
+    end
+    object kbmRoomRatesDiscount: TFloatField
+      FieldName = 'Discount'
+    end
+    object kbmRoomRatesisPercentage: TBooleanField
+      FieldName = 'isPercentage'
+    end
+    object kbmRoomRatesShowDiscount: TBooleanField
+      FieldName = 'ShowDiscount'
+    end
+    object kbmRoomRatesisPaid: TBooleanField
+      FieldName = 'isPaid'
+    end
+    object kbmRoomRatesDiscountAmount: TFloatField
+      FieldName = 'DiscountAmount'
+    end
+    object kbmRoomRatesRentAmount: TFloatField
+      FieldName = 'RentAmount'
+    end
+    object kbmRoomRatesNativeAmount: TFloatField
+      FieldName = 'NativeAmount'
+    end
   end
   object kbmRoomRatesDS: TDataSource
     DataSet = kbmRoomRates
@@ -1353,6 +1587,15 @@ object frmAllotmentToRes: TfrmAllotmentToRes
     LocaleID = 1024
     Left = 96
     Top = 552
+    object mQuickResRow: TIntegerField
+      FieldName = 'Row'
+    end
+    object mQuickResFirstCol: TIntegerField
+      FieldName = 'FirstCol'
+    end
+    object mQuickResLastCol: TIntegerField
+      FieldName = 'LastCol'
+    end
   end
   object kbmrestRoomRes: TkbmMemTable
     Active = True
@@ -1447,6 +1690,60 @@ object frmAllotmentToRes: TfrmAllotmentToRes
     LocaleID = 1024
     Left = 360
     Top = 432
+    object kbmrestRoomResRoomReservation: TIntegerField
+      FieldName = 'RoomReservation'
+    end
+    object kbmrestRoomResRoom: TStringField
+      FieldName = 'Room'
+      Size = 10
+    end
+    object kbmrestRoomResRoomType: TStringField
+      FieldName = 'RoomType'
+      Size = 10
+    end
+    object kbmrestRoomResGuests: TIntegerField
+      FieldName = 'Guests'
+    end
+    object kbmrestRoomResAvragePrice: TFloatField
+      FieldName = 'AvragePrice'
+    end
+    object kbmrestRoomResRateCount: TIntegerField
+      FieldName = 'RateCount'
+    end
+    object kbmrestRoomResRoomDescription: TStringField
+      FieldName = 'RoomDescription'
+      Size = 30
+    end
+    object kbmrestRoomResRoomTypeDescription: TStringField
+      FieldName = 'RoomTypeDescription'
+      Size = 30
+    end
+    object kbmrestRoomResArrival: TDateTimeField
+      FieldName = 'Arrival'
+    end
+    object kbmrestRoomResDeparture: TDateTimeField
+      FieldName = 'Departure'
+    end
+    object kbmrestRoomResChildrenCount: TIntegerField
+      FieldName = 'ChildrenCount'
+    end
+    object kbmrestRoomResinfantCount: TIntegerField
+      FieldName = 'infantCount'
+    end
+    object kbmrestRoomResPriceCode: TStringField
+      FieldName = 'PriceCode'
+      Size = 10
+    end
+    object kbmrestRoomResAvrageDiscount: TFloatField
+      FieldName = 'AvrageDiscount'
+    end
+    object kbmrestRoomResisPercentage: TBooleanField
+      FieldName = 'isPercentage'
+    end
+    object kbmrestRoomResMainGuest: TStringField
+      FieldName = 'MainGuest'
+      Size = 100
+    end
   end
   object kbmrestRoomResDS: TDataSource
     DataSet = kbmrestRoomRes
@@ -1532,5 +1829,46 @@ object frmAllotmentToRes: TfrmAllotmentToRes
     LocaleID = 1024
     Left = 360
     Top = 504
+    object kbmRestRoomRatesReservation: TIntegerField
+      FieldName = 'Reservation'
+    end
+    object kbmRestRoomRatesRoomReservation: TIntegerField
+      FieldName = 'RoomReservation'
+    end
+    object kbmRestRoomRatesRoomNumber: TStringField
+      FieldName = 'RoomNumber'
+      Size = 10
+    end
+    object kbmRestRoomRatesRateDate: TDateTimeField
+      FieldName = 'RateDate'
+    end
+    object kbmRestRoomRatesPriceCode: TStringField
+      FieldName = 'PriceCode'
+      Size = 10
+    end
+    object kbmRestRoomRatesRate: TFloatField
+      FieldName = 'Rate'
+    end
+    object kbmRestRoomRatesDiscount: TFloatField
+      FieldName = 'Discount'
+    end
+    object kbmRestRoomRatesisPercentage: TBooleanField
+      FieldName = 'isPercentage'
+    end
+    object kbmRestRoomRatesShowDiscount: TBooleanField
+      FieldName = 'ShowDiscount'
+    end
+    object kbmRestRoomRatesisPaid: TBooleanField
+      FieldName = 'isPaid'
+    end
+    object kbmRestRoomRatesDiscountAmount: TFloatField
+      FieldName = 'DiscountAmount'
+    end
+    object kbmRestRoomRatesRentAmount: TFloatField
+      FieldName = 'RentAmount'
+    end
+    object kbmRestRoomRatesNativeAmount: TFloatField
+      FieldName = 'NativeAmount'
+    end
   end
 end
