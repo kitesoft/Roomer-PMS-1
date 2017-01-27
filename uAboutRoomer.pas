@@ -208,7 +208,7 @@ var
 begin
 
   Result := false;
-  if TRoomerVersionInfo.FileVersionOnServer(version) and not (TRoomerVersionInfo.IsPreRelease or TRoomerVersionInfo.IsDebug) and (version <> TROomerVersionInfo.FileVersion) then
+  if TRoomerVersionInfo.FileVersionOnServer(version) and not TRoomerVersionInfo.IsDebug and (version <> TROomerVersionInfo.FileVersion) then
   begin
     with TRoomerRegistryIniFile.Create(GetRoomerIniFilename) do
     try
