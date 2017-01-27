@@ -35,7 +35,6 @@ object frmAllotmentToRes: TfrmAllotmentToRes
     Align = alBottom
     TabOrder = 0
     SkinData.SkinSection = 'PANEL'
-    ExplicitWidth = 1165
     DesignSize = (
       1149
       33)
@@ -64,7 +63,6 @@ object frmAllotmentToRes: TfrmAllotmentToRes
       TabOrder = 1
       OnClick = sButton5Click
       SkinData.SkinSection = 'BUTTON'
-      ExplicitLeft = 1005
     end
     object sButton6: TsButton
       Left = 1070
@@ -79,7 +77,6 @@ object frmAllotmentToRes: TfrmAllotmentToRes
       ModalResult = 2
       TabOrder = 2
       SkinData.SkinSection = 'BUTTON'
-      ExplicitLeft = 1086
     end
   end
   object panLeft: TsPanel
@@ -90,7 +87,6 @@ object frmAllotmentToRes: TfrmAllotmentToRes
     Align = alClient
     TabOrder = 1
     SkinData.SkinSection = 'PANEL'
-    ExplicitWidth = 585
     object sPanel1: TsPanel
       Left = 1
       Top = 1
@@ -99,12 +95,12 @@ object frmAllotmentToRes: TfrmAllotmentToRes
       Align = alTop
       TabOrder = 0
       SkinData.SkinSection = 'PANEL'
-      ExplicitWidth = 583
       object sPanel8: TsPanel
         Left = 1
         Top = 1
         Width = 565
         Height = 32
+        Hint = 'Double click to maximize allotment panel'
         Align = alTop
         Caption = 'Allotment'
         Font.Charset = DEFAULT_CHARSET
@@ -114,8 +110,8 @@ object frmAllotmentToRes: TfrmAllotmentToRes
         Font.Style = [fsBold]
         ParentFont = False
         TabOrder = 0
+        OnDblClick = sPanel8DblClick
         SkinData.SkinSection = 'MENUCAPTION'
-        ExplicitWidth = 581
       end
       object sGroupBox2: TsGroupBox
         AlignWithMargins = True
@@ -132,7 +128,7 @@ object frmAllotmentToRes: TfrmAllotmentToRes
           Left = 17
           Top = 18
           Width = 188
-          Height = 20
+          Height = 17
           Margins.Left = 15
           Margins.Bottom = 0
           Caption = 'Number of Rooms'
@@ -148,9 +144,9 @@ object frmAllotmentToRes: TfrmAllotmentToRes
         object chkGuestName: TsCheckBox
           AlignWithMargins = True
           Left = 17
-          Top = 41
+          Top = 38
           Width = 188
-          Height = 20
+          Height = 17
           Margins.Left = 15
           Margins.Bottom = 0
           Caption = 'Guest name'
@@ -166,9 +162,9 @@ object frmAllotmentToRes: TfrmAllotmentToRes
         object chkPrice: TsCheckBox
           AlignWithMargins = True
           Left = 17
-          Top = 87
+          Top = 78
           Width = 188
-          Height = 20
+          Height = 17
           Margins.Left = 15
           Margins.Bottom = 0
           Caption = 'Price info (Code - Price - Discount)'
@@ -182,9 +178,9 @@ object frmAllotmentToRes: TfrmAllotmentToRes
         object chkNumGuests: TsCheckBox
           AlignWithMargins = True
           Left = 17
-          Top = 64
+          Top = 58
           Width = 188
-          Height = 20
+          Height = 17
           Margins.Left = 15
           Margins.Bottom = 0
           Caption = 'Number of guests'
@@ -198,9 +194,9 @@ object frmAllotmentToRes: TfrmAllotmentToRes
         object chkShowRoomdescription: TsCheckBox
           AlignWithMargins = True
           Left = 17
-          Top = 110
+          Top = 98
           Width = 188
-          Height = 20
+          Height = 17
           Margins.Left = 15
           Margins.Bottom = 0
           Caption = 'Show room description'
@@ -216,9 +212,9 @@ object frmAllotmentToRes: TfrmAllotmentToRes
         object chkFitColumns: TsCheckBox
           AlignWithMargins = True
           Left = 17
-          Top = 133
+          Top = 118
           Width = 188
-          Height = 20
+          Height = 17
           Margins.Left = 15
           Margins.Bottom = 0
           Caption = 'Fit columns'
@@ -238,7 +234,6 @@ object frmAllotmentToRes: TfrmAllotmentToRes
         Align = alBottom
         TabOrder = 2
         SkinData.SkinSection = 'PANEL'
-        ExplicitWidth = 581
         object sButton4: TsButton
           AlignWithMargins = True
           Left = 357
@@ -255,7 +250,6 @@ object frmAllotmentToRes: TfrmAllotmentToRes
           TabOrder = 0
           OnClick = sButton4Click
           SkinData.SkinSection = 'BUTTON'
-          ExplicitTop = 5
         end
       end
       object sGroupBox1: TsGroupBox
@@ -507,7 +501,6 @@ object frmAllotmentToRes: TfrmAllotmentToRes
       SortSettings.HeaderMirrorColor = 16380385
       SortSettings.HeaderMirrorColorTo = 16182488
       Version = '8.2.4.1'
-      ExplicitWidth = 583
       ColWidths = (
         132)
       RowHeights = (
@@ -531,7 +524,6 @@ object frmAllotmentToRes: TfrmAllotmentToRes
     Align = alRight
     TabOrder = 2
     SkinData.SkinSection = 'PANEL'
-    ExplicitLeft = 591
     object sLabel2: TsLabel
       Left = 240
       Top = 48
@@ -551,6 +543,7 @@ object frmAllotmentToRes: TfrmAllotmentToRes
         Top = 1
         Width = 570
         Height = 32
+        Hint = 'Double click to maximize reservation panel'
         Align = alTop
         Caption = 'Reservation'
         Font.Charset = DEFAULT_CHARSET
@@ -687,8 +680,8 @@ object frmAllotmentToRes: TfrmAllotmentToRes
       object chkIsGroupInvoice: TsCheckBox
         Left = 287
         Top = 180
-        Width = 92
-        Height = 20
+        Width = 100
+        Height = 17
         Caption = 'is Groupinvoice'
         TabOrder = 2
         SkinData.SkinSection = 'CHECKBOX'
