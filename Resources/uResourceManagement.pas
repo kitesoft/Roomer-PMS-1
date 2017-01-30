@@ -104,9 +104,8 @@ type
     procedure Refresh;
 
     procedure RemoveFileForUpload(filename: String);
-    function UploadFile(onlyFilename, filename: String): String;
     function DownloadResourceByName(name: String; var Subject: String): String;
-    function StaticResourceListAsStrings: TStrings;
+    procedure AddStaticResourcesAsStrings(aList: TStrings);
 
     property Count : Integer read GetCount;
     property Resource[index : Integer] : TResource read GetResource;
@@ -235,6 +234,10 @@ begin
           '',  // content type: 'image/' + ExtractFileExt(filename),
           ACCESS_RESTRICTED = Access);
     parseResourceXml(resultURI, path, resFilename, error, success);
+
+    if not path.ToLower.Contains(d.roomerMainDataSet.hotelId.ToLower) then
+      raise Exception.Create('Resource is stored in wrong bucket: ' + path);
+
     if success then
       d.roomerMainDataSet.SystemAddStaticResource(KeyString,
           onlyFilename,
@@ -291,14 +294,12 @@ begin
   end;
 end;
 
-function TRoomerResourceManagement.StaticResourceListAsStrings : TStrings;
-var i : Integer;
+procedure TRoomerResourceManagement.AddStaticResourcesAsStrings(aList: TStrings);
+var
+  o: TResource;
 begin
-  result := TStringlist.Create;
-  for i := 0 to Resources.Count - 1 do
-  begin
-    result.Add(Resources[i].ORIGINAL_NAME);
-  end;
+  for o in Resources do
+    aList.Add(o.ORIGINAL_NAME);
 end;
 
 function TRoomerResourceManagement.GetCount: Integer;
@@ -310,9 +311,6 @@ function TRoomerResourceManagement.GetTableInfo: TRoomerDataSet;
 var sql : String;
 begin
   result := CreateNewDataSet;
-  sql := format('SELECT * FROM home100.HOTEL_RESOURCES WHERE HOTEL_ID=''%s'' AND KEY_STRING=''%s''',
-                            [d.roomerMainDataset.hotelId, KeyString]);
-  rSet_bySQL(result, sql, false);
   result.OpenDataset(result.SystemGetStaticResourcesFiltered(KeyString));
 end;
 
@@ -365,34 +363,6 @@ procedure TRoomerResourceManagement.Refresh;
 begin
   GetResources;
   inherited;
-end;
-
-function TRoomerResourceManagement.UploadFile(onlyFilename, filename : String) : String;
-var resultURI : String;
-    path, resFilename, error : String;
-    success : Boolean;
-begin
-  result := '';
-  try
-    onlyFilename := ExtractFilename(filename);
-    filename := getNewFilenameIfNeeded(filename, ResourceParameters);
-    resultURI := d.roomerMainDataSet.PostFileOpenApi('staticresources',
-          filename,
-          KeyString,
-          '',  // content type: 'image/' + ExtractFileExt(filename),
-          ACCESS_RESTRICTED = Access);
-    parseResourceXml(resultURI, path, resFilename, error, success);
-    if success then
-      d.roomerMainDataSet.SystemAddStaticResource(KeyString,
-          onlyFilename,
-          path,
-          Access)
-    else
-      raise Exception.Create('Unable to upload file: ' + error);
-    result := path;
-  except
-    result := '';
-  end;
 end;
 
 { TResourceParameters }

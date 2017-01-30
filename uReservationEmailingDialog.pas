@@ -168,7 +168,7 @@ begin
 
   RoomerResourceManagement := TRoomerResourceManagement.Create(KeyString, ACCESS_RESTRICTED);
   try
-  edTemplate.Items.AddStrings(RoomerResourceManagement.StaticResourceListAsStrings);
+    RoomerResourceManagement.AddStaticResourcesAsStrings(edTemplate.Items);
   finally
     RoomerResourceManagement.Free;
   end;
@@ -199,7 +199,7 @@ begin
   try
     RoomerResourceManagement := TRoomerResourceManagement.Create(KeyString, ACCESS_RESTRICTED);
     try
-      edTemplate.Items.AddStrings(RoomerResourceManagement.StaticResourceListAsStrings);
+      RoomerResourceManagement.AddStaticResourcesAsStrings(edTemplate.Items);
       filename := RoomerResourceManagement.DownloadResourceByName(edTemplate.Items[edTemplate.ItemIndex], SubjectTemplate);
     finally
       RoomerResourceManagement.Free;
@@ -274,7 +274,7 @@ begin
   edTemplate.Items.Clear;
   RoomerResourceManagement := TRoomerResourceManagement.Create(KeyString, ACCESS_RESTRICTED);
   try
-    edTemplate.Items.AddStrings(RoomerResourceManagement.StaticResourceListAsStrings);
+    RoomerResourceManagement.AddStaticResourcesAsStrings(edTemplate.Items)
   finally
     RoomerResourceManagement.Free;
   end;

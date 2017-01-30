@@ -56,7 +56,7 @@ object frmControlData: TfrmControlData
         Left = 1
         Top = 1
         Width = 71
-        Height = 26
+        Height = 28
         Align = alLeft
         Caption = 'Select'
         ParentFont = False
@@ -65,7 +65,6 @@ object frmControlData: TfrmControlData
         Font.Height = -23
         Font.Name = 'Verdana'
         Font.Style = []
-        ExplicitHeight = 28
       end
     end
     object LMDBackPanel2: TsPanel
@@ -3280,6 +3279,10 @@ object frmControlData: TfrmControlData
         end
         object tsInvoiceSystem: TsTabSheet
           Caption = 'Invoice Settings'
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object LMDGroupBox5: TsGroupBox
             Left = 3
             Top = 3
@@ -5895,6 +5898,10 @@ object frmControlData: TfrmControlData
         end
         object AdvTabSheet3: TsTabSheet
           Caption = 'Channelmanager'
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object sGroupBox1: TsGroupBox
             AlignWithMargins = True
             Left = 3
@@ -6417,6 +6424,10 @@ object frmControlData: TfrmControlData
         end
         object AdvTabSheet6: TsTabSheet
           Caption = 'Accounting'
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object gbxForceExternalIdCorrectness: TsGroupBox
             AlignWithMargins = True
             Left = 3
@@ -6964,6 +6975,7 @@ object frmControlData: TfrmControlData
                     Top = 15
                     Width = 580
                     Height = 22
+                    DefaultHandling = True
                     EmptyTextStyle = []
                     Flat = False
                     LabelFont.Charset = DEFAULT_CHARSET
@@ -6983,7 +6995,7 @@ object frmControlData: TfrmControlData
                     TabOrder = 0
                     Text = ''
                     Visible = True
-                    Version = '1.3.6.0'
+                    Version = '1.5.0.0'
                     ButtonStyle = bsButton
                     ButtonWidth = 18
                     Etched = False
@@ -7280,7 +7292,7 @@ object frmControlData: TfrmControlData
                     Width = 145
                     Height = 22
                     Color = clWindow
-                    Version = '1.5.0.0'
+                    Version = '1.5.1.0'
                     Visible = True
                     Ctl3D = True
                     Columns = <
@@ -7337,7 +7349,7 @@ object frmControlData: TfrmControlData
                     Width = 145
                     Height = 22
                     Color = clWindow
-                    Version = '1.5.0.0'
+                    Version = '1.5.1.0'
                     Visible = True
                     Ctl3D = True
                     Columns = <
@@ -7538,6 +7550,7 @@ object frmControlData: TfrmControlData
                 Top = 17
                 Width = 383
                 Height = 22
+                DefaultHandling = True
                 EmptyTextStyle = []
                 Flat = False
                 LabelFont.Charset = DEFAULT_CHARSET
@@ -7556,7 +7569,7 @@ object frmControlData: TfrmControlData
                 TabOrder = 1
                 Text = ''
                 Visible = True
-                Version = '1.3.6.0'
+                Version = '1.5.0.0'
                 ButtonStyle = bsButton
                 ButtonWidth = 18
                 Etched = False
@@ -9158,6 +9171,10 @@ object frmControlData: TfrmControlData
             TabOrder = 0
             object tabGuestInformation: TsTabSheet
               Caption = 'Mandatory Guest information'
+              ExplicitLeft = 0
+              ExplicitTop = 0
+              ExplicitWidth = 0
+              ExplicitHeight = 0
               object clbMandatoryFields: TsCheckListBox
                 AlignWithMargins = True
                 Left = 20
