@@ -1229,15 +1229,11 @@ begin
           useInNationalReport := true;
           isNoRoom := false;
 
-          if RoomNumber = '' then
+          if (RoomNumber = '') or (RoomNumber.StartsWith('<')) then // Roomres could have been changed
           begin
             RoomNumber := '<' + inttostr(FnewRoomReservations.FRoomList[i].RoomReservation) + '>';
             isNoRoom := true;
             { TODO 3 -oHordur -cConvert to XE3 : When creating reservation in quick and room is noRoon then set RoomType to default roomtype }
-          end else
-          if copy(RoomNumber,1,1) = '<' then
-          begin
-            isNoRoom := true;
           end else
           begin
             useInNationalReport := glb.RoomsSet.FieldByName('useInNationalReport').AsBoolean;//GET_useInNationalReport_byRoom(RoomNumber);
