@@ -3,123 +3,24 @@ unit uChannels;
 interface
 
 uses
-    Winapi.Windows
-  , Winapi.Messages
-  , System.SysUtils
-  , System.Variants
-  , System.Classes
-  , Vcl.Graphics
-  , Vcl.Controls
-  , Vcl.Forms
-  , Vcl.Dialogs
-  , Vcl.Buttons
-  , Vcl.StdCtrls
-  , Vcl.ComCtrls
-  , Vcl.Menus
-  , Vcl.ExtCtrls
-  , Generics.Collections
-  , Data.DB
-  , shellapi
-  , _glob
-  , uAppGlobal
-  , Hdata
-  , ug
-  , uActivityLogs
-
-  , kbmMemTable
-
-  , sSkinProvider
-  , sSpeedButton
-  , sEdit
-  , sPageControl
-  , sStatusBar
-  , sLabel
-  , sButton
-  , sPanel
-
-  , dxCore
-  , cxGridExportLink
-  , cxGraphics
-  , cxControls
-  , cxLookAndFeels
-  , cxLookAndFeelPainters
-  , cxStyles
-  , cxCustomData
-  , cxFilter
-  , cxData
-  , cxDataStorage
-  , cxEdit
-  , cxNavigator
-  , cxDBData
-  , cxGridCustomTableView
-  , cxGridTableView
-  , cxGridDBTableView
-  , cxGridLevel
-  , cxClasses
-  , cxGridCustomView
-  , cxGrid
-  , cxTextEdit
-  , dxPSGlbl
-  , dxPSUtl
-  , dxPSEngn
-  , dxPrnPg
-  , dxBkgnd
-  , dxWrap
-  , dxPrnDev
-  , dxPSCompsProvider
-  , dxPSFillPatterns
-  , dxPSEdgePatterns
-  , dxPSPDFExportCore
-  , dxPSPDFExport
-  , cxDrawTextUtils
-  , dxPSPrVwStd
-  , dxPSPrVwAdv
-  , dxPSPrVwRibbon
-  , dxPScxPageControlProducer
-  , dxPScxGridLnk
-  , dxPScxGridLayoutViewLnk
-  , dxPScxEditorProducers
-  , dxPScxExtEditorProducers
-  , dxPSCore
-  , dxPScxCommon
-
-  , cmpRoomerDataSet
-  , cmpRoomerConnection
-  , dxmdaset
-  , cxButtonEdit
-  , cxCalc
-
-  , Vcl.Mask
-
-  , cxContainer
-  , cxMaskEdit
-  , cxDropDownEdit
-  , cxLookupEdit
-  , cxDBLookupEdit
-  , cxDBExtLookupComboBox
-  , cxDBLookupComboBox
-  , cxSpinEdit
-  , dxSkinsCore
-  , dxSkinsdxBarPainter
-  , dxSkinsdxRibbonPainter
-  , cxPropertiesStore
-  , cxColorComboBox
-  , cxCheckGroup
-  , cxRadioGroup
-  , dxPScxPivotGridLnk
-
-  , dxSkinDarkSide
-  , dxSkinDevExpressDarkStyle
-  , dxSkinMcSkin
-  , dxSkinOffice2013White
-  , dxSkinsDefaultPainters
-  , dxSkinscxPCPainter, dxSkinCaramel, dxSkinCoffee, dxSkinTheAsphaltWorld
-
+  Windows, cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxStyles, dxSkinsCore, dxSkinCaramel,
+  dxSkinCoffee, dxSkinDarkSide, dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinscxPCPainter, cxCustomData,
+  cxFilter, cxData, cxDataStorage, cxEdit, cxNavigator, Data.DB, cxDBData, cxTextEdit, cxColorComboBox, cxButtonEdit,
+  cxSpinEdit, cxCalc, cxDropDownEdit, dxPSGlbl, dxPSUtl, dxPSEngn, dxPrnPg, dxBkgnd, dxWrap, dxPrnDev,
+  dxPSCompsProvider, dxPSFillPatterns, dxPSEdgePatterns, dxPSPDFExportCore, dxPSPDFExport, cxDrawTextUtils, dxPSPrVwStd,
+  dxPSPrVwAdv, dxPSPrVwRibbon, dxPScxPageControlProducer, dxPScxGridLnk, dxPScxGridLayoutViewLnk, dxPScxEditorProducers,
+  dxPScxExtEditorProducers, dxSkinsdxBarPainter, dxSkinsdxRibbonPainter, dxmdaset, dxPSCore, dxPScxCommon, Vcl.Menus,
+  cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, Vcl.StdCtrls,
+  sButton, sEdit, Vcl.Buttons, sSpeedButton, Vcl.Controls, sLabel, Vcl.ExtCtrls, sPanel, cxClasses, cxPropertiesStore,
+  System.Classes, Vcl.ComCtrls, sStatusBar, VCL.Forms, dxCore
+  , uG
+  , hData
+  , uRoomerForm
    ;
 
 type
-  TfrmChannels = class(TForm)
-    sPanel1: TsPanel;
+  TfrmChannels = class(TfrmBaseRoomerForm)
+    pnlFilter: TsPanel;
     btnOther: TsButton;
     btnClose: TsButton;
     labFilterWarning: TsLabel;
@@ -132,11 +33,10 @@ type
     mnuiGridToHtml: TMenuItem;
     mnuiGridToText: TMenuItem;
     mnuiGridToXml: TMenuItem;
-    sbMain: TsStatusBar;
     edFilter: TsEdit;
     cLabFilter: TsLabel;
     btnClear: TsSpeedButton;
-    panBtn: TsPanel;
+    pnlButtons: TsPanel;
     btnCancel: TsButton;
     BtnOk: TsButton;
     DS: TDataSource;
@@ -170,7 +70,6 @@ type
     tvDataCurrency: TcxGridDBColumn;
     tvDatamanagedByChannelManager: TcxGridDBColumn;
     m_Currency: TWideStringField;
-    StoreMain: TcxPropertiesStore;
     m_push: TBooleanField;
     tvDatapush: TcxGridDBColumn;
     m_customerId: TIntegerField;
@@ -186,9 +85,9 @@ type
     tvDatacompensationPercentage: TcxGridDBColumn;
     tvDatahotelsBookingEngine: TcxGridDBColumn;
     m_RateRoundingText: TStringField;
-    Button1: TsButton;
-    Button2: TsButton;
-    Button3: TsButton;
+    btnPaymentMatrix: TsButton;
+    btnConfirmation: TsButton;
+    btnHotelNotifications: TsButton;
     m_CHANNEL_ARRANGES_PAYMENT: TBooleanField;
     tvDataCHANNEL_ARRANGES_PAYMENT: TcxGridDBColumn;
     btnInsert: TsButton;
@@ -202,6 +101,7 @@ type
     tvDataratesExcludingTaxes: TcxGridDBColumn;
     tvDatarateRoundingType1: TcxGridDBColumn;
     m_roomClasses: TWideStringField;
+    pnlToolbarButtons: TsPanel;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -219,7 +119,6 @@ type
     procedure tvDataDataControllerFilterChanged(Sender: TObject);
     procedure tvDataDataControllerSortingChanged(Sender: TObject);
     procedure btnCloseClick(Sender: TObject);
-    procedure btnOtherClick(Sender: TObject);
     procedure btnDeleteClick(Sender: TObject);
     procedure mnuiPrintClick(Sender: TObject);
     procedure mnuiAllowGridEditClick(Sender: TObject);
@@ -238,13 +137,12 @@ type
       AButtonIndex: Integer);
     procedure tvDataroomClassesPropertiesButtonClick(Sender: TObject;
       AButtonIndex: Integer);
-    procedure Button1Click(Sender: TObject);
-    procedure Button2Click(Sender: TObject);
-    procedure Button3Click(Sender: TObject);
+    procedure btnPaymentMatrixClick(Sender: TObject);
+    procedure btnConfirmationClick(Sender: TObject);
+    procedure btnHotelNotificationsClick(Sender: TObject);
     procedure btnInsertClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure tvDataactivePlanCodePropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
-    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
   private
     { Private declarations }
     zFirstTime: Boolean;
@@ -253,12 +151,15 @@ type
     zSortStr: string;
     zIsAddRow: Boolean;
 
-    Procedure fillGridFromDataset(iGoto: Integer);
     procedure fillHolder;
     procedure changeAllowgridEdit;
     Procedure chkFilter;
     procedure applyFilter;
     procedure RemoveRedundantRatesAndAvailabilities;
+
+  protected
+    procedure DoUpdateControls; override;
+    procedure DoLoadData; override;
 
   public
     { Public declarations }
@@ -266,29 +167,31 @@ type
     zData: recChannelHolder;
   end;
 
-function openChannels(act: TActTableAction;
-  var theData: recChannelHolder): Boolean;
-
-var
-  frmChannels: TfrmChannels;
+function openChannels(act: TActTableAction; var theData: recChannelHolder): Boolean;
 
 implementation
 
 {$R *.dfm}
 
 uses
-  uD
+  SysUtils
+  , uD
+  , uAppGlobal
+  , Dialogs
   , prjConst
   , uSqlDefinitions
+  , VCL.Graphics
+  , uActivityLogs
   , uCurrencies
   , uCustomerTypes2
   , uCustomers2
   , uMultiSelection
-  , uDImages
   , uUtils
   , u2DMatrix
   , UITypes
-
+  , cmpRoomerDataset
+  , cxGridExportLink
+  , ShellApi
   ;
 
 /// ///////////////////////////////////////////////////////////////////////////////////////////
@@ -322,18 +225,19 @@ begin
 end;
 
 
-function openChannels(act: TActTableAction;
-  var theData: recChannelHolder): Boolean;
+function openChannels(act: TActTableAction; var theData: recChannelHolder): Boolean;
+var
+  frm: TfrmChannels;
 begin
   result := false;
-  frmChannels := TfrmChannels.Create(frmChannels);
+  frm := TfrmChannels.Create(nil);
   try
-    frmChannels.zData := theData;
-    frmChannels.zAct := act;
-    frmChannels.ShowModal;
-    if frmChannels.modalresult = mrOk then
+    frm.zData := theData;
+    frm.zAct := act;
+    frm.ShowModal;
+    if frm.modalresult = mrOk then
     begin
-      theData := frmChannels.zData;
+      theData := frm.zData;
       result := true;
     end
     else
@@ -341,7 +245,7 @@ begin
       initChannelHolder(theData);
     end;
   finally
-    freeandnil(frmChannels);
+    frm.Free;
   end;
 end;
 
@@ -349,16 +253,17 @@ end;
 { Private declarations }
 /// ////////////////////////////////////////////////////////////////////
 
-Procedure TfrmChannels.fillGridFromDataset(iGoto: Integer);
+Procedure TfrmChannels.DoLoadData;
 var
   s: string;
   rSet: TRoomerDataSet;
-  rSetRoomClasses: TRoomerDataSet;
 begin
+  inherited;
+
   zFirstTime := true;
   if zSortStr = '' then
     zSortStr := 'ID';
-  rSet := CreateNewDataSet;
+  rset := CreateNewDataSet;
   try
     s := format(select_Channels, [zSortStr]);
     CopyToClipboard(s);
@@ -369,49 +274,48 @@ begin
       m_.LoadFromDataSet(rSet);
 
       m_.First;
-      rSet.First;
       while not m_.Eof do
       begin
         m_.Edit;
-        m_.FieldByName('rateRoundingText').AsString := roundint2text(m_.FieldByName('rateRoundingType').AsInteger);
-        rSetRoomClasses := CreateNewDataSet;
         try
-          rSet_bySQL(rSetRoomClasses,
-              format('SELECT Code FROM roomtypegroups WHERE id IN (SELECT roomClassId FROM channelclassrelations WHERE channelId=%d)', [m_.FieldByName('id').AsInteger]));
-          s := '';
-          rSetRoomClasses.First;
-          while NOT rSetRoomClasses.Eof do
-          begin
-            if s = '' then
-              s := rSetRoomClasses['Code']
-            else
-              s := s + ',' + rSetRoomClasses['Code'];
-            rSetRoomClasses.Next;
-          end;
-          m_.FieldByName('roomClasses').AsString := s;
-        finally
-          FreeAndNil(rSetRoomClasses);
+          m_.FieldByName('rateRoundingText').AsString := roundint2text(m_.FieldByName('rateRoundingType').AsInteger);
+          rSet_bySQL(rset, format('SELECT Group_concat(Code) as Codes FROM roomtypegroups WHERE id IN (SELECT roomClassId FROM channelclassrelations WHERE channelId=%d)', [m_.FieldByName('id').AsInteger]));
+          rSet.First;
+          m_.FieldByName('roomClasses').AsString := rSet.FieldByName('Codes').ASstring;
+          m_.Post;
+        except
+          m_.Cancel;
+          raise;
         end;
-        m_.Post;
-        rSet.Next;
         m_.Next;
       end;
 
-      if iGoto = 0 then
-      begin
-        m_.First;
-      end
-      else
-      begin
-        try
-          m_.Locate('ID', iGoto, []);
-        except
-        end;
-      end;
     end;
   finally
     freeandnil(rSet);
   end;
+end;
+
+procedure TfrmChannels.DoUpdateControls;
+begin
+  inherited;
+  pnlToolbarButtons.Visible := false;
+  btnClose.Visible := false;
+
+  if zAct = actLookup then
+  begin
+    mnuiAllowGridEdit.Checked := false;
+    pnlToolbarButtons.Visible := true;
+  end
+  else
+  begin
+    mnuiAllowGridEdit.Checked := true;
+    btnClose.Visible := true;
+  end;
+  zAllowGridEdit := mnuiAllowGridEdit.Checked;
+  changeAllowgridEdit;
+  chkFilter;
+  zFirstTime := false;
 end;
 
 procedure TfrmChannels.fillHolder;
@@ -526,9 +430,6 @@ end;
 
 procedure TfrmChannels.FormCreate(Sender: TObject);
 begin
-  RoomerLanguage.TranslateThisForm(self);
-     glb.PerformAuthenticationAssertion(self); PlaceFormOnVisibleMonitor(self);
-  // **
   zFirstTime := true;
   zAct := actNone;
   zIsAddRow := false;
@@ -542,31 +443,7 @@ end;
 procedure TfrmChannels.FormShow(Sender: TObject);
 begin
   glb.EnableOrDisableTableRefresh('channels', False);
-  // **
-  panBtn.Visible := false;
-  sbMain.Visible := false;
-  btnClose.Visible := false;
-
-  fillGridFromDataset(zData.ID);
-  zFirstTime := true;
-  sbMain.SimpleText := zSortStr;
-
-  if zAct = actLookup then
-  begin
-    mnuiAllowGridEdit.Checked := false;
-    panBtn.Visible := true;
-  end
-  else
-  begin
-    mnuiAllowGridEdit.Checked := true;
-    btnClose.Visible := true;
-    sbMain.Visible := true;
-  end;
-  // -C
-  zAllowGridEdit := mnuiAllowGridEdit.Checked;
-  changeAllowgridEdit;
-  chkFilter;
-  zFirstTime := false;
+  RefreshData;
 end;
 
 procedure TfrmChannels.FormClose(Sender: TObject; var Action: TCloseAction);
@@ -591,12 +468,6 @@ begin
   cmd_bySQL(s);
   s := 'DELETE FROM channelratesavailabilities WHERE NOT roomClassId IN (SELECT id FROM roomtypegroups WHERE Active)';
   cmd_bySQL(s);
-end;
-
-procedure TfrmChannels.FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
-begin
-  if Key = VK_ESCAPE then
-    Close;
 end;
 
 procedure TfrmChannels.FormKeyPress(Sender: TObject; var Key: Char);
@@ -836,27 +707,6 @@ end;
 /// //////////////////////////////////////////////////////////////////////////
 
 
-// procedure TfrmChannels2.tvDataCurrencyPropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
-// var
-// theData : recCurrencyHolder;
-// begin
-/// /  fillholder;
-/// /  theData.Currency := zData.Currency;
-/// /  theData.ID := zData.CurrencyID;
-/// /
-/// /
-/// /  currencies(actlookup,theData);
-/// /
-/// /  if theData.Currency <> '' then
-/// /  begin
-/// /    m_.Edit;
-/// /    m_['currency']   := theData.Currency;
-/// /    m_['currencyID'] := theData.ID;
-/// /    m_.Post;
-/// /  end;
-//
-// end;
-
 procedure TfrmChannels.tvDataactivePlanCodePropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
 begin
   LookupForDataItem('Channel Plan Code',
@@ -934,7 +784,6 @@ begin
       s := s + ' DESC';
   end;
   zSortStr := s;
-  sbMain.SimpleText := s;
 end;
 
 /// ///////////////////////////////////////////////////////////////////////
@@ -946,22 +795,17 @@ begin
   fillHolder;
 end;
 
-procedure TfrmChannels.btnOtherClick(Sender: TObject);
-begin
-  // **
-end;
-
-procedure TfrmChannels.Button1Click(Sender: TObject);
+procedure TfrmChannels.btnPaymentMatrixClick(Sender: TObject);
 begin
     EditPaymentAssuranceForChannels;
 end;
 
-procedure TfrmChannels.Button2Click(Sender: TObject);
+procedure TfrmChannels.btnConfirmationClick(Sender: TObject);
 begin
     EditChannelsEmailConfirmationMatrix;
 end;
 
-procedure TfrmChannels.Button3Click(Sender: TObject);
+procedure TfrmChannels.btnHotelNotificationsClick(Sender: TObject);
 begin
   EditChannelsHotelEmailMatrix;
 end;
@@ -990,12 +834,12 @@ end;
 
 procedure TfrmChannels.btnEditClick(Sender: TObject);
 begin
-  //**
+  m_.Edit;
 end;
 
 procedure TfrmChannels.btnInsertClick(Sender: TObject);
 begin
-  //**
+  m_.Insert;
 end;
 
 // ---------------------------------------------------------------------------

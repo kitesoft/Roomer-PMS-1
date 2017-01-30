@@ -1737,7 +1737,7 @@ begin
   TfrmStaffEdit2.Create(nil).Free;
   frmStaffMembers2 := TfrmStaffMembers2.Create(nil); frmStaffMembers2.Free; frmStaffMembers2 := nil;
   frmCustomerEdit2 := TfrmCustomerEdit2.Create(nil); frmCustomerEdit2.Free; frmCustomerEdit2 := nil;
-  frmChannels := TfrmChannels.Create(nil); frmChannels.Free; frmChannels := nil;
+  TfrmChannels.Create(nil).Free;
 //  frmSystemTriggers := TfrmSystemTriggers.Create(nil); frmSystemTriggers.Free; frmSystemTriggers := nil;
 //  frmCreatePassword := TfrmCreatePassword.Create(nil); frmCreatePassword.Free; frmCreatePassword := nil;
 //  frmSystemServers := TfrmSystemServers.Create(nil); frmSystemServers.Free; frmSystemServers := nil;
