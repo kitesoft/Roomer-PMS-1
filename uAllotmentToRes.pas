@@ -1799,7 +1799,10 @@ begin
           mRooms.append;
           mRoomsRoom.AsString := mRrInfoRoom.AsString;
           mRoomsRoomType.AsString := mRrInfoRoomType.AsString;
-          mRoomsRoomDescription.AsString := mRrInfoRoomDescription.AsString;
+          if mRrInfoisNoRoom.AsBoolean then
+            mRoomsRoomDescription.AsString := mRrInfoRoomtypeDescription.AsString
+          else
+            mRoomsRoomDescription.AsString := mRrInfoRoomDescription.AsString;
           mRooms.Post;
           strTmp := s;
         end;

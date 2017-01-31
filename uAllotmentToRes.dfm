@@ -128,7 +128,7 @@ object frmAllotmentToRes: TfrmAllotmentToRes
           Left = 17
           Top = 18
           Width = 188
-          Height = 17
+          Height = 20
           Margins.Left = 15
           Margins.Bottom = 0
           Caption = 'Number of Rooms'
@@ -144,9 +144,9 @@ object frmAllotmentToRes: TfrmAllotmentToRes
         object chkGuestName: TsCheckBox
           AlignWithMargins = True
           Left = 17
-          Top = 38
+          Top = 41
           Width = 188
-          Height = 17
+          Height = 20
           Margins.Left = 15
           Margins.Bottom = 0
           Caption = 'Guest name'
@@ -162,9 +162,9 @@ object frmAllotmentToRes: TfrmAllotmentToRes
         object chkPrice: TsCheckBox
           AlignWithMargins = True
           Left = 17
-          Top = 78
+          Top = 87
           Width = 188
-          Height = 17
+          Height = 20
           Margins.Left = 15
           Margins.Bottom = 0
           Caption = 'Price info (Code - Price - Discount)'
@@ -174,14 +174,14 @@ object frmAllotmentToRes: TfrmAllotmentToRes
           SkinData.SkinSection = 'CHECKBOX'
           ImgChecked = 0
           ImgUnchecked = 0
-          ExplicitTop = 81
+          ExplicitTop = 84
         end
         object chkNumGuests: TsCheckBox
           AlignWithMargins = True
           Left = 17
-          Top = 58
+          Top = 64
           Width = 188
-          Height = 17
+          Height = 20
           Margins.Left = 15
           Margins.Bottom = 0
           Caption = 'Number of guests'
@@ -195,9 +195,9 @@ object frmAllotmentToRes: TfrmAllotmentToRes
         object chkShowRoomdescription: TsCheckBox
           AlignWithMargins = True
           Left = 17
-          Top = 98
+          Top = 110
           Width = 188
-          Height = 17
+          Height = 20
           Margins.Left = 15
           Margins.Bottom = 0
           Caption = 'Show room description'
@@ -213,9 +213,9 @@ object frmAllotmentToRes: TfrmAllotmentToRes
         object chkFitColumns: TsCheckBox
           AlignWithMargins = True
           Left = 17
-          Top = 118
+          Top = 133
           Width = 188
-          Height = 17
+          Height = 20
           Margins.Left = 15
           Margins.Bottom = 0
           Caption = 'Fit columns'
@@ -681,8 +681,8 @@ object frmAllotmentToRes: TfrmAllotmentToRes
       object chkIsGroupInvoice: TsCheckBox
         Left = 287
         Top = 180
-        Width = 100
-        Height = 17
+        Width = 92
+        Height = 20
         Caption = 'is Groupinvoice'
         TabOrder = 2
         SkinData.SkinSection = 'CHECKBOX'
