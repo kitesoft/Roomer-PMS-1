@@ -410,7 +410,6 @@ type
 
     procedure sPanel7DblClick(Sender: TObject);
     procedure sButton4Click(Sender: TObject);
-    procedure grProvideClickCell(Sender: TObject; ARow, ACol: integer);
     function updateCellInfo(ACol, ARow: integer; newRR: integer): boolean;
     procedure chkFitColumnsClick(Sender: TObject);
     procedure btnHideShowAllotmentClick(Sender: TObject);
@@ -430,6 +429,7 @@ type
     procedure sPanel8DblClick(Sender: TObject);
     procedure tvRoomResRoomGetDisplayText(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
       var AText: string);
+    procedure grProvideDblClickCell(Sender: TObject; ARow, ACol: Integer);
 
   private
     { Private declarations }
@@ -847,8 +847,8 @@ var
 begin
   if grProvide.Objects[c, r] <> nil then
   begin
-    grProvide.Objects[c, r] := nil;
     grProvide.Objects[c, r].Free;
+    grProvide.Objects[c, r] := nil;
   end;
   grProvide.Cells[c, r] := '';
   rrInfo := InitRRInfo;
@@ -903,8 +903,8 @@ begin
   begin
     RoomCount := GetResInfo(col, row).RoomCount;
     RoomCount := RoomCount + 1;
-    grProvide.Objects[rcRec.col, rcRec.row] := nil;
     grProvide.Objects[rcRec.col, rcRec.row].Free;
+    grProvide.Objects[rcRec.col, rcRec.row] := nil;
   end;
 
   if RoomCount > 0 then
@@ -1179,15 +1179,9 @@ begin
   end;
 end;
 
-procedure TfrmAllotmentToRes.grProvideClickCell(Sender: TObject; ARow, ACol: integer);
-var
-  info: RecRRInfoAlot;
+procedure TfrmAllotmentToRes.grProvideDblClickCell(Sender: TObject; ARow, ACol: Integer);
 begin
-  if ARow >= cCountFixedRows then
-    if ACol >= cCountFixedCols then
-    begin
-      info := GetResInfo();
-    end;
+  sButton4.Click;
 end;
 
 procedure TfrmAllotmentToRes.grProvideGetCellColor(Sender: TObject; ARow, ACol: integer; AState: TGridDrawState;
@@ -1272,17 +1266,25 @@ begin
   try
     if grProvide.SelectedCellsCount > 0 then
     begin
-      for r := grProvide.Selection.Top to grProvide.Selection.Bottom do
+      for r := grProvide.FixedRows to grProvide.RowCount-1 do
       begin
         if grProvide.Cells[cColRoomType, r] = '' then
           Continue;
 
         lnewRR := GetNextFakeRRID; // RR_SetNewID;
-        for c := grProvide.Selection.Left to grProvide.Selection.Right do
+        for c := grProvide.FixedCols to grProvide.ColCount -1 do
         begin
+          if not grProvide.SelectedCells[c, r] or not Assigned(grProvide.Objects[c, r]) or not (grProvide.Objects[c, r] is TResCell)
+            or ((grProvide.Objects[c, r] as TResCell).RoomCount = 0) then
+          begin
+            // SKip unselected cells and cells with no availability, always starts a new RR
+            lnewRR := GetNextFakeRRID;
+            Continue;
+          end;
+
           if HasAdjacentRoomReservation(c, r, lAdjRR) then
           begin
-            SetROomResProcessed(c, r, lAdjRR);
+            SetRoomResProcessed(c, r, lAdjRR);
             if not lNewRRList.Contains(lAdjRR) then
               lNewRRList.Add(lAdjRR);
           end
@@ -1293,7 +1295,7 @@ begin
               lNewRRList.Add(lNewRR);
           end;
 
-        end;
+        end; // for c
       end;
 
       for i in lNewRRList do
