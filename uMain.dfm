@@ -121,6 +121,10 @@ object frmMain: TfrmMain
         object tabOneDayView: TsTabSheet
           Caption = 'tabOneDayView'
           ImageIndex = 8
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object grOneDayRooms: TAdvStringGrid
             Left = 0
             Top = 0
@@ -436,7 +440,7 @@ object frmMain: TfrmMain
               object lblNoRoom: TsLabel
                 Left = 3
                 Top = 59
-                Width = 76
+                Width = 50
                 Height = 13
                 Align = alBottom
                 Alignment = taCenter
@@ -447,7 +451,6 @@ object frmMain: TfrmMain
                 Font.Height = -11
                 Font.Name = 'Tahoma'
                 Font.Style = [fsBold]
-                ExplicitWidth = 50
               end
             end
           end
@@ -1641,13 +1644,25 @@ object frmMain: TfrmMain
         end
         object tabFreeRooms: TsTabSheet
           Caption = 'tabFreeRooms'
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
         end
         object tabDashboard: TsTabSheet
           Caption = 'tabDashboard'
           SkinData.SkinSection = 'TRANSPARENT'
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
         end
         object tabRateQuery: TsTabSheet
           Caption = 'tabRateQuery'
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
         end
       end
       object pnlStatSlider: TsPanel
@@ -4579,6 +4594,10 @@ object frmMain: TfrmMain
         item
           Visible = True
           ItemName = 'dxRptStockitems'
+        end
+        item
+          Visible = True
+          ItemName = 'dxUserActivityLog'
         end>
       OneOnRow = False
       Row = 0
@@ -4637,7 +4656,7 @@ object frmMain: TfrmMain
     object barinnReportsInvoices: TdxBar
       Caption = 'Invoices'
       CaptionButtons = <>
-      DockedLeft = 904
+      DockedLeft = 861
       DockedTop = 0
       FloatLeft = 1324
       FloatTop = 8
@@ -4901,7 +4920,7 @@ object frmMain: TfrmMain
     object barinnBar10: TdxBar
       Caption = 'Ledger'
       CaptionButtons = <>
-      DockedLeft = 1113
+      DockedLeft = 1070
       DockedTop = 0
       FloatLeft = -183
       FloatTop = 8
@@ -5865,6 +5884,15 @@ object frmMain: TfrmMain
       Visible = ivAlways
       LargeImageIndex = 89
       OnClick = btnDefaultMasterRatesClick
+    end
+    object dxUserActivityLog: TdxBarButton
+      Caption = 'ActivityLog'
+      Category = 0
+      Hint = 'Show Useractivity report'
+      Visible = ivAlways
+      ImageIndex = 97
+      LargeImageIndex = 97
+      OnClick = dxUserActivityLogClick
     end
     object mmnuFile: TdxBarSubItem
       Caption = '&File'

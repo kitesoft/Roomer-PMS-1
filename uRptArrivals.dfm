@@ -16,6 +16,7 @@ inherited frmArrivalsReport: TfrmArrivalsReport
     Align = alTop
     TabOrder = 0
     SkinData.SkinSection = 'PANEL'
+    ExplicitLeft = 8
     object btnRefresh: TsButton
       Left = 378
       Top = 14
@@ -43,7 +44,6 @@ inherited frmArrivalsReport: TfrmArrivalsReport
       ParentFont = False
       TabOrder = 0
       SkinData.SkinSection = 'GROUPBOX'
-      Checked = False
       object rbToday: TsRadioButton
         Left = 4
         Top = 21
@@ -90,7 +90,6 @@ inherited frmArrivalsReport: TfrmArrivalsReport
         ParentFont = False
         TabOrder = 3
         Text = '  -  -    '
-        CheckOnExit = True
         SkinData.SkinSection = 'EDIT'
         GlyphMode.Blend = 0
         GlyphMode.Grayed = False
@@ -114,7 +113,6 @@ inherited frmArrivalsReport: TfrmArrivalsReport
         ParentFont = False
         TabOrder = 4
         Text = '  -  -    '
-        CheckOnExit = True
         SkinData.SkinSection = 'EDIT'
         GlyphMode.Blend = 0
         GlyphMode.Grayed = False
@@ -163,7 +161,7 @@ inherited frmArrivalsReport: TfrmArrivalsReport
         AlignWithMargins = True
         Left = 271
         Top = 3
-        Width = 100
+        Width = 128
         Height = 37
         Align = alLeft
         Caption = 'Profile'
@@ -175,7 +173,7 @@ inherited frmArrivalsReport: TfrmArrivalsReport
       end
       object btnInvoice: TsButton
         AlignWithMargins = True
-        Left = 377
+        Left = 405
         Top = 3
         Width = 128
         Height = 37
@@ -188,6 +186,7 @@ inherited frmArrivalsReport: TfrmArrivalsReport
         TabOrder = 3
         OnClick = mnuRoomInvoiceClick
         SkinData.SkinSection = 'BUTTON'
+        ExplicitLeft = 377
       end
       object btnReport: TsButton
         AlignWithMargins = True
@@ -214,6 +213,7 @@ inherited frmArrivalsReport: TfrmArrivalsReport
     PopupMenu = pnmuGridMenu
     TabOrder = 1
     LookAndFeel.NativeStyle = False
+    ExplicitTop = 146
     object grArrivalsListDBTableView1: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       OnCellDblClick = grArrivalsListDBTableView1CellDblClick
@@ -524,6 +524,7 @@ inherited frmArrivalsReport: TfrmArrivalsReport
     object grdPrinterLink1: TdxGridReportLink
       Active = True
       Component = grArrivalsList
+      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -545,13 +546,14 @@ inherited frmArrivalsReport: TfrmArrivalsReport
       PrinterPage.ScaleMode = smFit
       PrinterPage._dxMeasurementUnits_ = 2
       PrinterPage._dxLastMU_ = 2
-      ReportDocument.CreationDate = 42697.547810138890000000
+      ReportDocument.CreationDate = 42766.491014212970000000
       ReportTitle.Font.Charset = DEFAULT_CHARSET
       ReportTitle.Font.Color = clBlack
       ReportTitle.Font.Height = -19
       ReportTitle.Font.Name = 'Arial'
       ReportTitle.Font.Style = [fsBold]
       ShrinkToPageWidth = True
+      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlack
       Font.Height = -11

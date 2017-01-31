@@ -695,6 +695,7 @@ type
     acUpdateTranslations: TAction;
     splStatistics: TsSplitter;
     btnDefaultMasterRates: TdxBarLargeButton;
+    dxUserActivityLog: TdxBarButton;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
@@ -984,6 +985,7 @@ type
     procedure acUpdateTranslationsExecute(Sender: TObject);
     procedure btnDefaultMasterRatesClick(Sender: TObject);
     procedure grOneDayRoomsScrollCell(Sender: TObject; ACol, ARow, ScrollPosition, ScrollMin, ScrollMax: Integer);
+    procedure dxUserActivityLogClick(Sender: TObject);
 
   private
     FReservationsModel: TReservationsModel;
@@ -1581,7 +1583,7 @@ uses
     , uRoomerVersionInfo
     , uSQLUtils
     , uMasterRateDefaults
-    ;
+    , uUserActivityReport;
 
 {$R *.DFM}
 {$R Cursors.res}
@@ -11308,6 +11310,11 @@ end;
 procedure TfrmMain.dxRptStockitemsClick(Sender: TObject);
 begin
   ShowStockItemsReport;
+end;
+
+procedure TfrmMain.dxUserActivityLogClick(Sender: TObject);
+begin
+  ShowUserActivityReport;
 end;
 
 procedure TfrmMain.ShowBookingConfirmationTemplates;

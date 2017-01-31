@@ -836,6 +836,12 @@
         <DCCReference Include="uCurrencyHandlersMap.pas"/>
         <DCCReference Include="OpenAPI\uCredentialsAPICaller.pas"/>
         <DCCReference Include="RoomerExceptionHandling.pas"/>
+        <DCCReference Include="OpenAPI\uHotelServicesAPICaller.pas"/>
+        <DCCReference Include="OpenAPI\schema\uRoomerHotelServicesCommunicationModel_RequestsResponses.pas"/>
+        <DCCReference Include="ActivityLogs\uUserActivityReport.pas">
+            <Form>frmUserActivityReport</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <None Include="Roomer.todo"/>
         <None Include="notes.txt"/>
         <None Include="Roomer.inc"/>
