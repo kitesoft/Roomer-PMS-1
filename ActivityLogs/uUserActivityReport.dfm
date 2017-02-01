@@ -22,7 +22,7 @@ inherited frmUserActivityReport: TfrmUserActivityReport
     TabOrder = 1
     SkinData.SkinSection = 'PANEL'
     object btnRefresh: TsButton
-      Left = 578
+      Left = 914
       Top = 18
       Width = 118
       Height = 26
@@ -49,8 +49,6 @@ inherited frmUserActivityReport: TfrmUserActivityReport
       ParentFont = False
       TabOrder = 0
       SkinData.SkinSection = 'GROUPBOX'
-      ExplicitTop = 0
-      ExplicitHeight = 94
       object lblFrom: TsLabel
         Left = 16
         Top = 19
@@ -209,8 +207,6 @@ inherited frmUserActivityReport: TfrmUserActivityReport
       ParentFont = False
       TabOrder = 3
       SkinData.SkinSection = 'GROUPBOX'
-      ExplicitTop = 3
-      ExplicitHeight = 94
       object lblCategory: TsLabel
         Left = 16
         Top = 22
@@ -249,7 +245,7 @@ inherited frmUserActivityReport: TfrmUserActivityReport
       end
     end
   end
-  object grArrivalsList: TcxGrid [2]
+  object grActivityLog: TcxGrid [2]
     Left = 0
     Top = 144
     Width = 1046
@@ -257,7 +253,7 @@ inherited frmUserActivityReport: TfrmUserActivityReport
     Align = alClient
     TabOrder = 2
     LookAndFeel.NativeStyle = False
-    object grArrivalsListDBTableView1: TcxGridDBTableView
+    object grActivityLogDBTableView1: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.Options = [dcoAssignGroupingValues, dcoAssignMasterDetailKeys, dcoSaveExpanding, dcoGroupsAlwaysExpanded]
       DataController.Summary.DefaultGroupSummaryItems = <
@@ -286,7 +282,7 @@ inherited frmUserActivityReport: TfrmUserActivityReport
       OptionsView.GroupFooters = gfAlwaysVisible
     end
     object lvArrivalsListLevel1: TcxGridLevel
-      GridView = grArrivalsListDBTableView1
+      GridView = grActivityLogDBTableView1
     end
   end
   inherited psRoomerBase: TcxPropertiesStore
@@ -311,7 +307,7 @@ inherited frmUserActivityReport: TfrmUserActivityReport
     Top = 432
     object grdPrinterLink1: TdxGridReportLink
       Active = True
-      Component = grArrivalsList
+      Component = grActivityLog
       PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
@@ -334,7 +330,7 @@ inherited frmUserActivityReport: TfrmUserActivityReport
       PrinterPage.ScaleMode = smFit
       PrinterPage._dxMeasurementUnits_ = 2
       PrinterPage._dxLastMU_ = 2
-      ReportDocument.CreationDate = 42766.496159293980000000
+      ReportDocument.CreationDate = 42767.476107314820000000
       ReportTitle.Font.Charset = DEFAULT_CHARSET
       ReportTitle.Font.Color = clBlack
       ReportTitle.Font.Height = -19

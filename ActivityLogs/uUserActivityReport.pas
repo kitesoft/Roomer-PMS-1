@@ -19,6 +19,19 @@ uses
   ;
 
 type
+
+
+  TListDataSource = class(TcxCustomDataSource)
+  private
+    FList  : TUserActivityLogFragment;
+  protected
+    function GetRecordCount: Integer; override;
+    function GetValue(ARecordHandle: TcxDataRecordHandle; AItemHandle: TcxDataItemHandle): Variant; override;
+  public
+    constructor Create(aList : TUserActivityLogFragment);
+  end;
+
+
   TfrmUserActivityReport = class(TfrmBaseRoomerForm)
     pnlFilter: TsPanel;
     btnRefresh: TsButton;
@@ -30,8 +43,8 @@ type
     btnProfile: TsButton;
     btnInvoice: TsButton;
     btnReport: TsButton;
-    grArrivalsList: TcxGrid;
-    grArrivalsListDBTableView1: TcxGridDBTableView;
+    grActivityLog: TcxGrid;
+    grActivityLogDBTableView1: TcxGridDBTableView;
     lvArrivalsListLevel1: TcxGridLevel;
     grdPrinter: TdxComponentPrinter;
     grdPrinterLink1: TdxGridReportLink;
@@ -55,7 +68,9 @@ type
     cbxActions: TsComboBox;
     procedure FormShow(Sender: TObject);
   private
+    FGridDataSource: TListDataSource;
     FCatsAndActions: TUserActivityCategoriesOverview;
+    FLogEventFragment: TUserActivityLogFragment;
     procedure PopulateComboboxes;
     { Private declarations }
 
@@ -77,7 +92,6 @@ uses
   ;
 
 {$R *.dfm}
-
 procedure ShowUserActivityReport;
 begin
   with TfrmUserActivityReport.Create(nil) do
@@ -87,6 +101,7 @@ begin
     Free;
   end;
 end;
+
 
 procedure TfrmUserActivityReport.PopulateComboboxes;
 var
@@ -108,18 +123,33 @@ constructor TfrmUserActivityReport.Create(aOwner: TComponent);
 begin
   inherited;
   FCatsAndActions := TUserActivityCategoriesOverview.Create;
+  FLogEventFragment := TUserActivityLogFragment.Create;
+  FGridDataSource := TListDataSource(FLogEventFragment);
+
+  grActivityLogDBTableView1.DataController.CustomDataSource := FGridDatasource;
 end;
 
 destructor TfrmUserActivityReport.Destroy;
 begin
   FCatsAndActions.Free;
+  FLogEventFragment.Free;
   inherited;
 end;
 
 procedure TfrmUserActivityReport.DoLoadData;
+var
+  lAPi: TUserActivityLogAPICaller;
 begin
   inherited;
+  FLogEventFragment.Clear;
+  lApi := TUserActivityLogAPICaller.Create;
+  try
+    if lApi.GetLogFragment(0,0,0,0,FLogEventFragment) then
+      FGridDatasource.DataChanged;
 
+  finally
+    lApi.Free;
+  end;
 end;
 
 procedure TfrmUserActivityReport.DoUpdateControls;
@@ -134,6 +164,49 @@ begin
   inherited;
 
   PopulateComboboxes;
+end;
+
+{ TListDataSource }
+
+constructor TListDataSource.Create(aList: TUserActivityLogFragment);
+begin
+  inherited Create;
+  FList := aList;
+end;
+
+function TListDataSource.GetRecordCount: Integer;
+begin
+  Result := FList.LogEventList.Count;
+end;
+
+function TListDataSource.GetValue(ARecordHandle: TcxDataRecordHandle; AItemHandle: TcxDataItemHandle): Variant;
+var
+  lRecordIndex: integer absolute aRecordHandle;
+  lFieldIndex: integer absolute aItemHandle;
+begin
+  Result := '';
+  if (lRecordIndex >= 0) and (lRecordIndex < Flist.LogEventList.Count) then
+  begin
+    case lFieldIndex of
+      0 : Result := FList.LogEventList[lRecordIndex].Description;
+      1 : Result := FList.LogEventList[lRecordIndex].DetailedDescription;
+      2 : Result := FList.LogEventList[lRecordIndex].MachineName;
+      3 : Result := FList.LogEventList[lRecordIndex].OldValue;
+      4 : Result := FList.LogEventList[lRecordIndex].NewValue;
+      5 : Result := FList.LogEventList[lRecordIndex].Code;
+      6 : Result := FList.LogEventList[lRecordIndex].UserId;
+      7 : Result := FList.LogEventList[lRecordIndex].Category;
+      8 : Result := FList.LogEventList[lRecordIndex].Action;
+      9 : Result := FList.LogEventList[lRecordIndex].ActionDateTime;
+      10 : Result := FList.LogEventList[lRecordIndex].ActionAffectsDate;
+      11 : Result := FList.LogEventList[lRecordIndex].UserLocation;
+      12 : Result := FList.LogEventList[lRecordIndex].Reservation;
+      13 : Result := FList.LogEventList[lRecordIndex].Roomreservation;
+      14 : Result := FList.LogEventList[lRecordIndex].id1;
+      15 : Result := FList.LogEventList[lRecordIndex].id2;
+      16 : Result := FList.LogEventList[lRecordIndex].id3;
+    end;
+  end;
 end;
 
 end.

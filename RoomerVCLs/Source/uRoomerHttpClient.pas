@@ -4,9 +4,11 @@ interface
 
 uses
     Classes
+  , SysUtils
   , ALWininetHttpClient
   , AlHttpCommon
   , ALHttpClient
+  , ALStringlist
     ;
 
 type
@@ -20,8 +22,15 @@ type
   end;
 
 
+  TRoomerHttpQueryparams = class(TALStringlist)
+  private
+  public
+    function AsUrltext: string;
+  end;
+
   TRoomerHttpClient = class(TALWinInetHTTPClient)
   private
+    FQueryParams: TRoomerHttpQueryParams;
     function GetContentType: string;
     procedure SetContentType(const Value: string);
     function GetAcceptEncoding: string;
@@ -29,6 +38,7 @@ type
   protected
   public
     constructor Create(aOwner: TComponent); override;
+    destructor Destroy; override;
     procedure AddAuthenticationHeaders(const aHotel, aUser, aPassword, aAppName, aAppVersion, aExtraBuild: String);
     function DeleteWithStatus(const aURL: String; var aResponse: String): THttpResultCode;
     function GetWithStatus(const aUrl: String; var aResponse: String): THttpResultCode;
@@ -38,13 +48,13 @@ type
 
     property ContentType: string read GetContentType write SetContentType;
     property AcceptEncoding: string read GetAcceptEncoding write SetAcceptEncoding;
+    property QueryParams: TRoomerHttpQueryparams read FQueryParams;
   end;
 
 implementation
 
 uses
-  SysUtils
-  , Windows
+  Windows
   , VCL.Forms
   , VCL.Controls
   ;
@@ -83,6 +93,11 @@ begin
     whttpIo_IGNORE_CERT_DATE_INVALID, whttpIo_KEEP_CONNECTION,
     whttpIo_NO_CACHE_WRITE, whttpIo_NO_UI, whttpIo_PRAGMA_NOCACHE,
     whttpIo_RELOAD, whttpIo_RESYNCHRONIZE];
+
+  FQueryParams := TRoomerHttpQueryParams.Create;
+  FQueryParams.Delimiter := '&';
+  FQueryParams.Duplicates := dupIgnore;
+  FQueryParams.CaseSensitive := false;
 end;
 
 function TRoomerHttpClient.DeleteWithStatus(const aURL: String; var aResponse: String): THttpResultCode;
@@ -113,6 +128,12 @@ begin
     lResponseContentStream.Free;
     lResponseContentHeader.Free;
   end;
+end;
+
+destructor TRoomerHttpClient.Destroy;
+begin
+  FQueryParams.Free;
+  inherited;
 end;
 
 procedure TRoomerHttpClient.Execute(const aRequestDataStream: TStream; aResponseContentStream: TStream;
@@ -147,6 +168,7 @@ function TRoomerHttpClient.GetWithStatus(const aUrl: String; var aResponse: Stri
 var
   lResponseContentStream: TStringStream;
   lResponseContentHeader: TALHTTPResponseHeader;
+  lURL: Ansistring;
 begin
   Result := -1;
   lResponseContentStream := nil;
@@ -154,6 +176,7 @@ begin
   try
     lResponseContentStream := TStringStream.Create('');
     lResponseContentHeader := TALHTTPResponseHeader.Create();
+    lUrl := AnsiString(aUrl + FQueryParams.AsUrltext);
     try
       inherited Get(AnsiString(aURL), lResponseContentStream, lResponseContentHeader);
       Result := StrToInt(lResponseContentHeader.StatusCode);
@@ -176,10 +199,12 @@ end;
 function TRoomerHttpClient.PostWithStatus(const aUrl: String; aPostDataStream: TStream): THttpResultCode;
 var
   lResponseContentHeader: TALHTTPResponseHeader;
+  lURL: Ansistring;
 begin
   Result := -1;
   lResponseContentHeader := TALHTTPResponseHeader.Create;
   try
+    lUrl := AnsiString(aUrl + FQueryParams.AsUrltext);
     try
       inherited Post(AnsiString(aURL), aPostDataStream, lResponseContentHeader);
       Result := lResponseContentHeader.StatusCode;
@@ -201,11 +226,13 @@ function TRoomerHttpClient.PutWithStatus(const aURL: string; aPutDataStream: TSt
 var
   lResponseContentStream: TStringStream;
   lResponseContentHeader: TALHTTPResponseHeader;
+  lURL: Ansistring;
 begin
   Result := -1;
   lResponseContentStream := nil;
   lResponseContentHeader := nil;
   try
+    lUrl := AnsiString(aUrl + FQueryParams.AsUrltext);
     lResponseContentStream := TStringStream.Create;
     lResponseContentHeader := TALHTTPResponseHeader.Create();
     try
@@ -234,6 +261,16 @@ end;
 procedure TRoomerHttpClient.SetContentType(const Value: string);
 begin
   RequestHeader.ContentType := AnsiString(value);
+end;
+
+
+{ TRoomerHttpQueryparams }
+
+function TRoomerHttpQueryparams.AsUrltext: string;
+begin
+  Result := '';
+  if Count > 0 then
+    Result := '?' + Text;
 end;
 
 { THttpResultCode }

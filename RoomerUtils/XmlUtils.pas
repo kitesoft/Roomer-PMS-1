@@ -17,10 +17,13 @@ function CreateXMLDocument( var Owner1: TComponent): TXMLDocument; overload;
 function XPATHSelect( const FocusNode: IXMLNode; const sXPath: string): TArray<IXMLNode>;
 function XPATHSelectFirst( const FocusNode: IXMLNode; const sXPath: string; var SelectedNode: IXMLNode): boolean;
 function GetAttributeValue(Node: IXMLDomNode; AttribName, defaultValue: String): String;
-
+function GetOptionalElementText(aNode: IXMLNode; const aElementName: string): string;
 
 function XMLToFloat(const aStringValue: string; aDefault: extended = 0.00): extended;
 function FloatToXML(aValue: double; aDecimals: integer = 0): string;
+function XMLToDateTime(const aStringValue: string): TDateTime;
+function XMLToDate(const aStringValue: string): TDate;
+function DateToXML(aDate: TDate): string;
 
 var
   // Fixed predefined formatsettings to be used when formatting from or to XML strings
@@ -28,7 +31,9 @@ var
 
 implementation
 
-uses uFloatUtils;
+uses
+  uFloatUtils
+  ;
 
 function GetAttributeValue(Node: IXMLDomNode; AttribName, defaultValue: String): String;
 var
@@ -41,6 +46,16 @@ begin
       Result := Node.Attributes.item[i].Text;
       Break;
     end;
+end;
+
+function GetOptionalElementText(aNode: IXMLNode; const aElementName: string): string;
+var
+  lNode: IXMLNOde;
+begin
+  Result := '';
+  lNode := aNode.ChildNodes.FindNode(aElementName);
+  if lNode <> nil then
+    Result := lNode.Text;
 end;
 
 
@@ -125,6 +140,21 @@ begin
   Result := StrToFloatDef(aStringValue, aDefault, XMLFormatSettings);
 end;
 
+function XMLToDateTime(const aStringValue: string): TDateTime;
+begin
+  Result := StrToDateTime(aStringValue, XMLFormatSettings);
+end;
+
+function XMLToDate(const aStringValue: string): TDate;
+begin
+  Result := StrToDate(aStringValue, XMLFormatSettings);
+end;
+
+function DateToXML(aDate: TDate): string;
+begin
+  Result := DateToStr(aDate, XMLFormatSettings);
+end;
+
 procedure InitXMLFormatSettings;
 begin
   with XMLFormatSettings do
@@ -133,7 +163,7 @@ begin
     ThousandSeparator := ',';
     DateSeparator := '-';
     TimeSeparator := ':';
-    ShortDateFormat := 'yy-mm-dd';
+    ShortDateFormat := 'yyyy-mm-dd';
     ShortTimeFormat := 'HH:mm';
   end;
 end;
