@@ -1,58 +1,50 @@
-object frmChannels: TfrmChannels
-  Left = 0
-  Top = 0
+inherited frmChannels: TfrmChannels
   Caption = 'Channels'
   ClientHeight = 500
   ClientWidth = 1092
-  Color = clBtnFace
   Constraints.MinWidth = 450
-  Font.Charset = DEFAULT_CHARSET
-  Font.Color = clWindowText
   Font.Height = -11
-  Font.Name = 'Tahoma'
-  Font.Style = []
-  KeyPreview = True
-  OldCreateOrder = False
-  Position = poMainFormCenter
   OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy
-  OnKeyDown = FormKeyDown
   OnKeyPress = FormKeyPress
   OnShow = FormShow
+  ExplicitWidth = 1108
+  ExplicitHeight = 539
   PixelsPerInch = 96
   TextHeight = 13
-  object sPanel1: TsPanel
-    Left = 0
-    Top = 0
+  inherited sbStatusBar: TsStatusBar
+    Top = 480
     Width = 1092
-    Height = 89
+    ExplicitTop = 500
+    ExplicitWidth = 1092
+  end
+  object pnlFilter: TsPanel [1]
+    Left = 0
+    Top = 37
+    Width = 1092
+    Height = 54
     Align = alTop
     Constraints.MinWidth = 450
     TabOrder = 0
     SkinData.SkinSection = 'PANEL'
-    DesignSize = (
-      1092
-      89)
     object labFilterWarning: TsLabel
       Left = 1
-      Top = 75
-      Width = 1090
+      Top = 40
+      Width = 3
       Height = 13
       Align = alBottom
       Alignment = taCenter
-      Caption = '-'
       ParentFont = False
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlack
       Font.Height = -11
       Font.Name = 'Tahoma'
       Font.Style = []
-      ExplicitWidth = 4
     end
     object cLabFilter: TsLabel
       Left = 19
-      Top = 41
+      Top = 12
       Width = 31
       Height = 13
       Alignment = taRightJustify
@@ -66,7 +58,7 @@ object frmChannels: TfrmChannels
     end
     object btnClear: TsSpeedButton
       Left = 265
-      Top = 39
+      Top = 9
       Width = 71
       Height = 20
       Caption = 'Clear'
@@ -75,37 +67,9 @@ object frmChannels: TfrmChannels
       Images = DImages.PngImageList1
       ImageIndex = 10
     end
-    object btnOther: TsButton
-      Left = 221
-      Top = 8
-      Width = 115
-      Height = 25
-      Caption = 'Other actions'
-      DropDownMenu = mnuOther
-      ImageIndex = 76
-      Images = DImages.PngImageList1
-      Style = bsSplitButton
-      TabOrder = 0
-      OnClick = btnOtherClick
-      SkinData.SkinSection = 'BUTTON'
-    end
-    object btnClose: TsButton
-      Left = 1002
-      Top = 8
-      Width = 80
-      Height = 25
-      Anchors = [akTop, akRight]
-      Caption = 'Close'
-      ImageIndex = 27
-      Images = DImages.PngImageList1
-      ModalResult = 8
-      TabOrder = 1
-      OnClick = btnCloseClick
-      SkinData.SkinSection = 'BUTTON'
-    end
     object edFilter: TsEdit
       Left = 56
-      Top = 39
+      Top = 9
       Width = 206
       Height = 21
       Color = clWhite
@@ -115,127 +79,27 @@ object frmChannels: TfrmChannels
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
-      TabOrder = 2
+      TabOrder = 0
       OnChange = edFilterChange
       SkinData.SkinSection = 'EDIT'
     end
-    object Button1: TsButton
-      Left = 342
-      Top = 8
-      Width = 140
-      Height = 25
-      Hint = 'Add new record'
-      Caption = 'Payment Matrix'
-      ImageIndex = 113
-      Images = DImages.PngImageList1
-      ParentShowHint = False
-      ShowHint = True
-      TabOrder = 3
-      OnClick = Button1Click
-      SkinData.SkinSection = 'BUTTON'
-    end
-    object Button2: TsButton
-      Left = 342
-      Top = 34
-      Width = 140
-      Height = 25
-      Hint = 'Add new record'
-      Caption = 'Confirmation emails'
-      ImageIndex = 113
-      Images = DImages.PngImageList1
-      ParentShowHint = False
-      ShowHint = True
-      TabOrder = 4
-      OnClick = Button2Click
-      SkinData.SkinSection = 'BUTTON'
-    end
-    object Button3: TsButton
-      Left = 342
-      Top = 60
-      Width = 140
-      Height = 25
-      Hint = 'Add new record'
-      Caption = 'Hotel notification emails'
-      ImageIndex = 113
-      Images = DImages.PngImageList1
-      ParentShowHint = False
-      ShowHint = True
-      TabOrder = 5
-      OnClick = Button3Click
-      SkinData.SkinSection = 'BUTTON'
-    end
-    object btnInsert: TsButton
-      Left = 7
-      Top = 9
-      Width = 70
-      Height = 24
-      Hint = 'Add new record'
-      Caption = 'New'
-      ImageIndex = 23
-      Images = DImages.PngImageList1
-      ParentShowHint = False
-      ShowHint = True
-      TabOrder = 6
-      OnClick = btnInsertClick
-      SkinData.SkinSection = 'BUTTON'
-    end
-    object btnEdit: TsButton
-      Left = 79
-      Top = 9
-      Width = 69
-      Height = 24
-      Hint = 'Edit current record'
-      Caption = 'Edit'
-      ImageIndex = 25
-      Images = DImages.PngImageList1
-      ParentShowHint = False
-      ShowHint = True
-      TabOrder = 7
-      OnClick = btnEditClick
-      SkinData.SkinSection = 'BUTTON'
-    end
-    object btnDelete: TsButton
-      Left = 151
-      Top = 9
-      Width = 69
-      Height = 24
-      Hint = 'Delete current record'
-      Caption = 'Delete'
-      ImageIndex = 24
-      Images = DImages.PngImageList1
-      ParentShowHint = False
-      ShowHint = True
-      TabOrder = 8
-      OnClick = btnDeleteClick
-      SkinData.SkinSection = 'BUTTON'
-    end
   end
-  object sbMain: TsStatusBar
+  object pnlButtons: TsPanel [2]
     Left = 0
-    Top = 481
+    Top = 443
     Width = 1092
-    Height = 19
-    Panels = <>
-    SkinData.SkinSection = 'STATUSBAR'
-  end
-  object panBtn: TsPanel
-    Left = 0
-    Top = 451
-    Width = 1092
-    Height = 30
+    Height = 37
     Align = alBottom
     TabOrder = 2
     SkinData.SkinSection = 'PANEL'
-    DesignSize = (
-      1092
-      30)
     object btnCancel: TsButton
+      AlignWithMargins = True
       Left = 1003
       Top = 4
       Width = 85
-      Height = 25
+      Height = 29
       Hint = 'Cancel and close'
-      Anchors = [akTop, akRight]
+      Align = alRight
       Caption = 'Cancel'
       ImageIndex = 4
       Images = DImages.PngImageList1
@@ -243,14 +107,16 @@ object frmChannels: TfrmChannels
       TabOrder = 0
       OnClick = btnCancelClick
       SkinData.SkinSection = 'BUTTON'
+      ExplicitHeight = 25
     end
     object BtnOk: TsButton
-      Left = 915
+      AlignWithMargins = True
+      Left = 912
       Top = 4
       Width = 85
-      Height = 25
+      Height = 29
       Hint = 'Apply and close'
-      Anchors = [akTop, akRight]
+      Align = alRight
       Caption = 'OK'
       ImageIndex = 82
       Images = DImages.PngImageList1
@@ -258,16 +124,20 @@ object frmChannels: TfrmChannels
       TabOrder = 1
       OnClick = BtnOkClick
       SkinData.SkinSection = 'BUTTON'
+      ExplicitLeft = 915
+      ExplicitHeight = 25
     end
   end
-  object grData: TcxGrid
+  object grData: TcxGrid [3]
     Left = 0
-    Top = 89
+    Top = 91
     Width = 1092
-    Height = 362
+    Height = 352
     Align = alClient
     TabOrder = 3
     LookAndFeel.NativeStyle = False
+    ExplicitTop = 85
+    ExplicitHeight = 340
     object tvData: TcxGridDBTableView
       OnDblClick = tvDataDblClick
       Navigator.Buttons.CustomButtons = <>
@@ -500,6 +370,155 @@ object frmChannels: TfrmChannels
       GridView = tvData
     end
   end
+  object pnlToolbarButtons: TsPanel [4]
+    Left = 0
+    Top = 0
+    Width = 1092
+    Height = 37
+    Align = alTop
+    TabOrder = 4
+    object btnClose: TsButton
+      AlignWithMargins = True
+      Left = 1008
+      Top = 4
+      Width = 80
+      Height = 29
+      Align = alRight
+      Caption = 'Close'
+      ImageIndex = 27
+      Images = DImages.PngImageList1
+      ModalResult = 8
+      TabOrder = 7
+      OnClick = btnCloseClick
+      SkinData.SkinSection = 'BUTTON'
+    end
+    object btnDelete: TsButton
+      AlignWithMargins = True
+      Left = 246
+      Top = 4
+      Width = 115
+      Height = 29
+      Hint = 'Delete current record'
+      Align = alLeft
+      Caption = 'Delete'
+      ImageIndex = 24
+      Images = DImages.PngImageList1
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 2
+      OnClick = btnDeleteClick
+      SkinData.SkinSection = 'BUTTON'
+    end
+    object btnEdit: TsButton
+      AlignWithMargins = True
+      Left = 125
+      Top = 4
+      Width = 115
+      Height = 29
+      Hint = 'Edit current record'
+      Align = alLeft
+      Caption = 'Edit'
+      ImageIndex = 25
+      Images = DImages.PngImageList1
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 1
+      OnClick = btnEditClick
+      SkinData.SkinSection = 'BUTTON'
+    end
+    object btnInsert: TsButton
+      AlignWithMargins = True
+      Left = 4
+      Top = 4
+      Width = 115
+      Height = 29
+      Hint = 'Add new record'
+      Align = alLeft
+      Caption = 'New'
+      ImageIndex = 23
+      Images = DImages.PngImageList1
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 0
+      OnClick = btnInsertClick
+      SkinData.SkinSection = 'BUTTON'
+    end
+    object btnOther: TsButton
+      AlignWithMargins = True
+      Left = 367
+      Top = 4
+      Width = 115
+      Height = 29
+      Align = alLeft
+      Caption = 'Other actions'
+      DropDownMenu = mnuOther
+      ImageIndex = 76
+      Images = DImages.PngImageList1
+      Style = bsSplitButton
+      TabOrder = 3
+      SkinData.SkinSection = 'BUTTON'
+    end
+    object btnPaymentMatrix: TsButton
+      AlignWithMargins = True
+      Left = 488
+      Top = 4
+      Width = 146
+      Height = 29
+      Hint = 'Add new record'
+      Align = alLeft
+      Caption = 'Payment Matrix'
+      ImageIndex = 113
+      Images = DImages.PngImageList1
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 4
+      OnClick = btnPaymentMatrixClick
+      SkinData.SkinSection = 'BUTTON'
+    end
+    object btnConfirmation: TsButton
+      AlignWithMargins = True
+      Left = 640
+      Top = 4
+      Width = 146
+      Height = 29
+      Hint = 'Add new record'
+      Align = alLeft
+      Caption = 'Confirmation emails'
+      ImageIndex = 113
+      Images = DImages.PngImageList1
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 5
+      OnClick = btnConfirmationClick
+      SkinData.SkinSection = 'BUTTON'
+    end
+    object btnHotelNotifications: TsButton
+      AlignWithMargins = True
+      Left = 792
+      Top = 4
+      Width = 146
+      Height = 29
+      Hint = 'Add new record'
+      Align = alLeft
+      Caption = 'Hotel notification emails'
+      ImageIndex = 113
+      Images = DImages.PngImageList1
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 6
+      OnClick = btnHotelNotificationsClick
+      SkinData.SkinSection = 'BUTTON'
+    end
+  end
+  inherited cxsrRoomerStyleRepository: TcxStyleRepository
+    PixelsPerInch = 96
+    inherited dxssRoomerGridReportLink: TdxGridReportLinkStyleSheet
+      BuiltIn = True
+    end
+    inherited cxssRoomerGridTableView: TcxGridTableViewStyleSheet
+      BuiltIn = True
+    end
+  end
   object mnuOther: TPopupMenu
     Left = 38
     Top = 152
@@ -651,21 +670,5 @@ object frmChannels: TfrmChannels
     object m_activePlanCode: TIntegerField
       FieldName = 'activePlanCode'
     end
-  end
-  object StoreMain: TcxPropertiesStore
-    Components = <
-      item
-        Component = Owner
-        Properties.Strings = (
-          'Height'
-          'Left'
-          'Position'
-          'Top'
-          'Width')
-      end>
-    StorageName = 'Software\Roomer\FormStatus\Channels'
-    StorageType = stRegistry
-    Left = 200
-    Top = 280
   end
 end

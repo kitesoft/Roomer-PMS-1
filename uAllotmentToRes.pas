@@ -1,4 +1,4 @@
-unit uAllotmentToRes;
+ï»¿unit uAllotmentToRes;
 
 interface
 
@@ -410,7 +410,6 @@ type
 
     procedure sPanel7DblClick(Sender: TObject);
     procedure sButton4Click(Sender: TObject);
-    procedure grProvideClickCell(Sender: TObject; ARow, ACol: integer);
     function updateCellInfo(ACol, ARow: integer; newRR: integer): boolean;
     procedure chkFitColumnsClick(Sender: TObject);
     procedure btnHideShowAllotmentClick(Sender: TObject);
@@ -427,6 +426,10 @@ type
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure mRoomResDSDataChange(Sender: TObject; Field: TField);
     procedure grProvideSelectionChanged(Sender: TObject; ALeft, ATop, ARight, ABottom: Integer);
+    procedure sPanel8DblClick(Sender: TObject);
+    procedure tvRoomResRoomGetDisplayText(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
+      var AText: string);
+    procedure grProvideDblClickCell(Sender: TObject; ARow, ACol: Integer);
 
   private
     { Private declarations }
@@ -446,6 +449,10 @@ type
     zAllotmentIsGroupInvoice: boolean;
     FShowDate: TDateTime;
 
+    // Last number used as a fake (negative) roomreservation number
+    FLastFakeRRNumber: integer;
+
+    function GetNextFakeRRID: integer;
     procedure GetRrData(Reservation: integer);
 
     // Fill grid grProvide
@@ -465,12 +472,10 @@ type
     procedure InitAll;
 
     function isValidAllotment(Reservation: integer): boolean;
-    function GetRooms: integer;
     function GetResInfo(ACol: integer = -1; ARow: integer = -1): RecRRInfoAlot;
     function AddRoomReservation(RoomReservation: integer): boolean;
     function Apply: boolean;
-    function GetRest: integer;
-    function AddRestRoomRservation(RoomReservation: integer): boolean;
+    function AddRestRoomReservation(FakeRoomReservation: integer): boolean;
     function RoomsInAllotment: integer;
     function CalcOnePrice(RoomReservation: integer; NewRate: double = 0): boolean;
     procedure ReclacAllPrices;
@@ -478,6 +483,9 @@ type
     function SetRoomResProcessed(ACol, ARow, newRR: integer): boolean;
     procedure NavigateToDate(aDate: TDate);
     procedure UpdateControls;
+    procedure CreateRestAllotmentRoomreservations;
+    procedure CreateRoomReservationFromSelectedAllotments;
+    function HasAdjacentRoomReservation(aCol, aRow: integer; var aRoomreservation: integer): boolean;
 
   public
     { Public declarations }
@@ -488,7 +496,7 @@ type
     property ShowDate: TDateTime read FShowDate write FShowDate;
   end;
 
-  function OpenProvideAllotment(aAllotReservation: integer; oNewReservation, oRestReservation: TNewReservation; var restCount: integer; aShowDate: TDateTime = 0): boolean;
+  function OpenProvideAllotment(aAllotReservation: integer; var oNewReservation, oRestReservation: TNewReservation; var restCount: integer; aShowDate: TDateTime = 0): boolean;
 
 
 implementation
@@ -503,7 +511,9 @@ uses
   uReservationStateDefinitions,
   Math,
   uSQLUtils,
-  DateUtils;
+  DateUtils
+  , Generics.Collections
+  ;
 
 const
   cCountFixedRows = 2;
@@ -517,9 +527,13 @@ const
   cColRoomDescription = 2;
   cColInfo = 3;
 
+  // Value of MRrInfoProcessed for items that are not converted to roomreservations
+  // Processed items have a fake, negative roomreservationr
+  cUnProcessed = 0;
+
 { TfrmAllotmentToRes }
 
-function OpenProvideAllotment(aAllotReservation: integer; oNewReservation, oRestReservation: TNewReservation; var restCount: integer; aShowDate: TDateTime = 0): boolean;
+function OpenProvideAllotment(aAllotReservation: integer; var oNewReservation, oRestReservation: TNewReservation; var restCount: integer; aShowDate: TDateTime = 0): boolean;
 var
   frm: TfrmAllotmentToRes;
 begin
@@ -623,7 +637,7 @@ begin
         if mRrInfoProcessed.Asinteger = RoomReservation then
         begin
           mRrInfo.Edit;
-          mRrInfoProcessed.Asinteger := -1;
+          mRrInfoProcessed.Asinteger := cUnProcessed;
           mRrInfo.Post;
         end;
         mRrInfo.Next;
@@ -668,7 +682,7 @@ end;
 
 procedure TfrmAllotmentToRes.sButton4Click(Sender: TObject);
 begin
-  GetRooms;
+  CreateRoomReservationFromSelectedAllotments; //GetRooms;
   zRestCount := RoomsInAllotment;
 end;
 
@@ -735,7 +749,7 @@ begin
     s := s + '   roomsdate rd '#10;
     s := s + ' WHERE '#10;
     s := s + '  (rd.Reservation = %d ) '#10;
-    s := s + '   AND (ResFlag <> ' + _db(STATUS_DELETED) + ' ) '; // **zxhj bætt við
+    s := s + '   AND (ResFlag <> ' + _db(STATUS_DELETED) + ' ) '; // **zxhj bï¿½tt viï¿½
 
     sql := format(s, [Reservation]);
     // copyToClipBoard(sql);
@@ -833,8 +847,8 @@ var
 begin
   if grProvide.Objects[c, r] <> nil then
   begin
-    grProvide.Objects[c, r] := nil;
     grProvide.Objects[c, r].Free;
+    grProvide.Objects[c, r] := nil;
   end;
   grProvide.Cells[c, r] := '';
   rrInfo := InitRRInfo;
@@ -889,8 +903,8 @@ begin
   begin
     RoomCount := GetResInfo(col, row).RoomCount;
     RoomCount := RoomCount + 1;
-    grProvide.Objects[rcRec.col, rcRec.row] := nil;
     grProvide.Objects[rcRec.col, rcRec.row].Free;
+    grProvide.Objects[rcRec.col, rcRec.row] := nil;
   end;
 
   if RoomCount > 0 then
@@ -956,7 +970,7 @@ begin
       row := mRrInfoRow.Asinteger;
       processed := mRrInfoProcessed.Asinteger;
 
-      if processed < 0 then
+      if processed = cUnProcessed then
       begin
         rrInfo := InitRRInfo;
         rrInfo.rdID := mRrInfordID.Asinteger;
@@ -998,6 +1012,8 @@ begin
   zReservation := 0;
   zFirstDate := 2;
   zNightCount := 0;
+
+  FLastFakeRRNumber := -1;
 end;
 
 procedure TfrmAllotmentToRes.FormDestroy(Sender: TObject);
@@ -1128,6 +1144,11 @@ begin
   sPanel4.width := width - 40;
 end;
 
+procedure TfrmAllotmentToRes.sPanel8DblClick(Sender: TObject);
+begin
+  sPanel4.Width := 40;
+end;
+
 procedure TfrmAllotmentToRes.timCloseTimer(Sender: TObject);
 begin
   timClose.Enabled := false;
@@ -1138,6 +1159,13 @@ procedure TfrmAllotmentToRes.tvRoomResGetCurrencyProperties(Sender: TcxCustomGri
   ARecord: TcxCustomGridRecord; var AProperties: TcxCustomEditProperties);
 begin
   d.getCurrencyProperties(g.qNativeCurrency);
+end;
+
+procedure TfrmAllotmentToRes.tvRoomResRoomGetDisplayText(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
+  var AText: string);
+begin
+  if aText.StartsWith('<') then
+    aText := '';
 end;
 
 function TfrmAllotmentToRes.GetResStatus(ACol, ARow: integer; var status: string): boolean;
@@ -1151,15 +1179,9 @@ begin
   end;
 end;
 
-procedure TfrmAllotmentToRes.grProvideClickCell(Sender: TObject; ARow, ACol: integer);
-var
-  info: RecRRInfoAlot;
+procedure TfrmAllotmentToRes.grProvideDblClickCell(Sender: TObject; ARow, ACol: Integer);
 begin
-  if ARow >= cCountFixedRows then
-    if ACol >= cCountFixedCols then
-    begin
-      info := GetResInfo();
-    end;
+  sButton4.Click;
 end;
 
 procedure TfrmAllotmentToRes.grProvideGetCellColor(Sender: TObject; ARow, ACol: integer; AState: TGridDrawState;
@@ -1204,229 +1226,148 @@ begin
   UpdateControls;
 end;
 
-function TfrmAllotmentToRes.GetRooms: integer;
+
+function TfrmAllotmentToRes.HasAdjacentRoomReservation(aCol, aRow: integer; var aRoomreservation: integer): boolean;
 var
-  i: integer;
-  iRow: integer;
-  iCol: integer;
-  sCellContent: string;
-
-  ARow: integer;
-  ACol: integer;
-  FirstCol: integer;
-  LastCol: integer;
-
-  NextRow: integer;
-  NextFirstCol: integer;
-  NextLastCol: integer;
-
-  RoomReservation: integer;
-
+  lDate: TDate;
 begin
-  result := 0;
-  if mQuickRes.active then
-    mQuickRes.close;
-  mQuickRes.Open;
-  mQuickRes.SortFields := 'Row;FirstCol';
+  // Determine if new roomres already exist with same room and roomtype directly adjacent to this date,
+  // If so then use that roomreservation number
+  lDate := ColToDate(aCol);
 
-  for iRow := cCountFixedRows to grProvide.RowCount - 1 do
+  kbmRoomres.IndexFieldNames := 'room;roomtype';
+  kbmRoomRes.First;
+  Result := false;
+  while not kbmRoomRes.Eof do
   begin
-    for iCol := cCountFixedCols to grProvide.ColCount - 1 do
+    Result := (kbmRoomResRoom.AsString.StartsWith('<') or
+          (kbmRoomResRoom.AsString = grProvide.Cells[cColRoom, aRow]))
+          and (kbmRoomResRoomType.AsString = grProvide.Cells[cColRoomType, aRow])
+          and ((kbmRoomResArrival.AsDateTime = lDate+1) or (kbmRoomResDeparture.AsDateTime = lDate));
+    if Result then
     begin
-      sCellContent := trim(grProvide.Cells[iCol, iRow]);
-      if sCellContent <> '' then
-      begin
-        if grProvide.SelectedCells[iCol, iRow] then
-        begin
-          // aRoom := grProvide.cells[0, iRow];
-          ARow := iRow;
-
-          FirstCol := iCol;
-          LastCol := FirstCol + 1;
-
-          mQuickRes.append;
-          mQuickResRow.Asinteger := ARow;
-          mQuickResFirstCol.Asinteger := FirstCol;
-          mQuickResLastCol.Asinteger := LastCol;
-          mQuickRes.Post;
-        end;
-      end;
+      aRoomReservation := kbmRoomResRoomReservation.AsInteger;
+      Break;
     end;
+    kbmRoomRes.Next;
   end;
 
-  mQuickRes.First;
-  while not mQuickRes.eof do
-  begin
-    ARow := mQuickResRow.Asinteger;
-    LastCol := mQuickResLastCol.Asinteger;
-    if not mQuickRes.eof then
-    begin
-      mQuickRes.Next;
-      NextRow := mQuickResRow.Asinteger;
-      NextFirstCol := mQuickResFirstCol.Asinteger;
-      NextLastCol := mQuickResLastCol.Asinteger;
-
-      if (NextFirstCol = LastCol) and (ARow = NextRow) then
-      begin
-        mQuickRes.Prior;
-        mQuickRes.Edit;
-        mQuickResLastCol.Asinteger := NextLastCol;
-        mQuickRes.Post;
-
-        mQuickRes.Next;
-        mQuickRes.Delete;
-        mQuickRes.First;
-      end;
-    end
-    else
-      mQuickRes.Next;
-  end;
-
-  mQuickRes.First;
-  while not mQuickRes.eof do
-  begin
-    mQuickRes.Edit;
-    mQuickResLastCol.Asinteger := mQuickResLastCol.Asinteger - 1;
-    mQuickRes.Post;
-    mQuickRes.Next;
-  end;
-
-  mQuickRes.First;
-  while not mQuickRes.eof do
-  begin
-    ARow := mQuickResRow.Asinteger;
-    FirstCol := mQuickResFirstCol.Asinteger;
-    LastCol := mQuickResLastCol.Asinteger;
-
-    RoomReservation := -1;
-    // If there already is a roomres for this room for an adjacent period then merge that one with selected dates
-    if mRrInfo.Locate('row', ARow, []) and kbmRoomRes.Locate('room', mRrInfoRoom.AsString, []) then
-    begin
-      if (trunc(ColToDate(FirstCol)) = trunc(kbmRoomResDeparture.AsDateTime)) OR
-        (trunc(ColToDate(LastCol)) = trunc(kbmRoomResArrival.AsDateTime) - 1) then
-        RoomReservation := kbmRoomResRoomReservation.Asinteger;
-    end;
-    if RoomReservation = -1 then
-      RoomReservation := RR_SetNewID();
-
-    for i := FirstCol to LastCol do
-    begin
-      // **
-      ACol := i;
-      SetRoomResProcessed(ACol, ARow, RoomReservation);
-    end;
-    AddRoomReservation(RoomReservation);
-    mQuickRes.Next;
-  end;
-  FillData;
 end;
 
-function TfrmAllotmentToRes.GetRest: integer;
+procedure TfrmAllotmentToRes.CreateRoomReservationFromSelectedAllotments;
 var
-  i, ii: integer;
-  iRow: integer;
-  iCol: integer;
-
-  ARow: integer;
-  FirstCol: integer;
-  LastCol: integer;
-
-  NextRow: integer;
-  NextFirstCol: integer;
-  NextLastCol: integer;
-
-  RoomReservation: integer;
-
-  rrCount: integer;
-  sIDs: string;
-  lstIDS: Tstringlist;
-
+  r, c, i: integer;
+  lNewRR: integer;
+  lNewRRList: TList<integer>;
+  lAdjRR: integer;
 begin
-  result := 0;
-
-  lstIDS := Tstringlist.Create;
+  lNewRRList := TList<integer>.Create;
+  grProvide.BeginUpdate;
   try
-    if mQuickRes.active then
-      mQuickRes.close;
-    mQuickRes.Open;
-    mQuickRes.SortFields := 'Row;FirstCol';
-
-    for iRow := cCountFixedRows to grProvide.RowCount - 1 do
+    if grProvide.SelectedCellsCount > 0 then
     begin
-      if (grProvide.Cells[cColRoom, iRow] = '') and (grProvide.Cells[cColRoomType, iRow] = '') then
-        continue;
-
-      for iCol := cCountFixedCols to grProvide.ColCount - 1 do
+      for r := grProvide.FixedRows to grProvide.RowCount-1 do
       begin
-        // sCellContent := trim(grProvide.cells[iCol, iRow]);
+        if grProvide.Cells[cColRoomType, r] = '' then
+          Continue;
 
-        if mRrInfo.Locate('row;col', VarArrayOf([iRow, iCol]), []) and (mRrInfoProcessed.Asinteger <= 0) then
+        lnewRR := GetNextFakeRRID; // RR_SetNewID;
+        for c := grProvide.FixedCols to grProvide.ColCount -1 do
         begin
-          inc(result);
-          mQuickRes.append;
-          mQuickResRow.Asinteger := iRow;
-          mQuickResFirstCol.Asinteger := iCol;
-          mQuickResLastCol.Asinteger := iCol + 1;
-          mQuickRes.Post;
-        end;
+          if not grProvide.SelectedCells[c, r] or not Assigned(grProvide.Objects[c, r]) or not (grProvide.Objects[c, r] is TResCell)
+            or ((grProvide.Objects[c, r] as TResCell).RoomCount = 0) then
+          begin
+            // SKip unselected cells and cells with no availability, always starts a new RR
+            lnewRR := GetNextFakeRRID;
+            Continue;
+          end;
+
+          if HasAdjacentRoomReservation(c, r, lAdjRR) then
+          begin
+            SetRoomResProcessed(c, r, lAdjRR);
+            if not lNewRRList.Contains(lAdjRR) then
+              lNewRRList.Add(lAdjRR);
+          end
+          else
+          begin
+            SetRoomResProcessed(c, r, lNewRR);
+            if not lNewRRList.Contains(lNewRR) then
+              lNewRRList.Add(lNewRR);
+          end;
+
+        end; // for c
       end;
+
+      for i in lNewRRList do
+        AddRoomReservation(i);
+
+      FillData;
     end;
 
-    if result = 0 then
-      exit;
-
-    mQuickRes.First;
-    while not mQuickRes.eof do
-    begin
-      ARow := mQuickResRow.Asinteger;
-      LastCol := mQuickResLastCol.Asinteger;
-      if not mQuickRes.eof then
-      begin
-        mQuickRes.Next;
-        NextRow := mQuickResRow.Asinteger;
-        NextFirstCol := mQuickResFirstCol.Asinteger;
-        NextLastCol := mQuickResLastCol.Asinteger;
-
-        if (NextFirstCol = LastCol) and (ARow = NextRow) then
-        begin
-          mQuickRes.Prior;
-          mQuickRes.Edit;
-          mQuickResLastCol.Asinteger := NextLastCol;
-          mQuickRes.Post;
-
-          mQuickRes.Next;
-          mQuickRes.Delete;
-          mQuickRes.First;
-        end;
-      end
-      else
-        mQuickRes.Next;
-    end;
-
-    rrCount := mQuickRes.RecordCount;
-    sIDs := RR_GetIDs(rrCount);
-    _glob._strTokenToStrings(sIDs, '|', lstIDS);
-
-    ii := -1;
-    mQuickRes.First;
-    while not mQuickRes.eof do
-    begin
-      inc(ii);
-      ARow := mQuickResRow.Asinteger;
-      FirstCol := mQuickResFirstCol.Asinteger;
-      LastCol := mQuickResLastCol.Asinteger - 1;
-
-      RoomReservation := strToint(lstIDS[ii]); // RR_SetNewID();
-
-      for i := FirstCol to LastCol do
-        SetRoomResProcessed(i, ARow, RoomReservation);
-
-      AddRestRoomRservation(RoomReservation);
-      mQuickRes.Next;
-    end;
   finally
-    freeandnil(lstIDS);
+    grProvide.EndUpdate;
+    lNewRRList.Free;
   end;
+end;
+
+procedure TfrmAllotmentToRes.CreateRestAllotmentRoomreservations;
+var
+  lCurRoom: string;
+  lCurRoomType: string;
+  lLastDate: TDate;
+  lRRId: integer;
+  lNewRRList: TList<integer>;
+  i: integer;
+begin
+
+  mRrInfo.DisableControls;
+  lNewRRList := TList<integer>.Create;
+  try
+    mRrInfo.IndexFieldNames := 'Room;Roomtype;Roomreservation;dtDate';
+
+    lCurRoom := '';
+    lCurRoomType := '';
+    mRrInfo.First;
+    lRRId := 0;
+
+    lLastDate := 0;
+    // Walk through all Allotment RR records that are not assigned to a new reservation and assign them a new
+    // fake roomreservation number (in Processed field) as long as they are the same room and roomtype and have consecutive dates
+    while not mRrInfo.Eof do
+    begin
+      if mRrInfoProcessed.AsInteger = cUnProcessed then
+      begin
+        if (lCurRoom <> mRrInfoRoom.asString) or (lCurRoomType <> mRrInfoRoomType.AsString) or
+           (lLastDate + 1 <> mRrInfodtDate.AsDateTime) then
+        begin
+          if lRRId <> 0 then
+            lNewRRList.add(lRRId);
+
+          lRRId := GetNextFakeRRID; // RR_SetNewID;
+          lCurRoom := mRrInfoRoom.asString;
+          lCurRoomType := mRrInfoRoomType.asString;
+        end;
+
+        mRrInfo.Edit;
+        mRrInfoProcessed.AsInteger := lRRId;
+        mRrInfo.Post;
+        lLastDate := mRrInfodtDate.AsDateTime;
+      end;
+
+      mRrInfo.Next;
+    end;
+
+    if lRRId <> 0 then
+      lNewRRList.add(lRRId);
+
+    for i in lNewRRList do
+      AddRestRoomReservation(i);
+
+  finally
+    lNewRRList.Free;
+    mRrInfo.EnableControls;
+  end;
+
 end;
 
 function TfrmAllotmentToRes.AddRoomReservation(RoomReservation: integer): boolean;
@@ -1659,7 +1600,7 @@ begin
   result := false;
   mRrInfo.SortFields := 'RoomRate;isPercentage;Discount';
   mRrInfo.sort([mtcoDescending]);
-  if mRrInfo.Locate('processed;Row;col', VarArrayOf([-1, ARow, ACol]), []) then
+  if mRrInfo.Locate('processed;Row;col', VarArrayOf([cUnProcessed, ARow, ACol]), []) then
   begin
     mRrInfo.Edit;
     mRrInfoProcessed.Asinteger := newRR;
@@ -1678,6 +1619,12 @@ begin
     FillData;
     result := true;
   end;
+end;
+
+function TfrmAllotmentToRes.GetNextFakeRRID: integer;
+begin
+  dec(FLastFakeRRNumber);
+  Result := FLastFakeRRNumber;
 end;
 
 function TfrmAllotmentToRes.GetResInfo(ACol: integer = -1; ARow: integer = -1): RecRRInfoAlot;
@@ -1852,7 +1799,10 @@ begin
           mRooms.append;
           mRoomsRoom.AsString := mRrInfoRoom.AsString;
           mRoomsRoomType.AsString := mRrInfoRoomType.AsString;
-          mRoomsRoomDescription.AsString := mRrInfoRoomDescription.AsString;
+          if mRrInfoisNoRoom.AsBoolean then
+            mRoomsRoomDescription.AsString := mRrInfoRoomtypeDescription.AsString
+          else
+            mRoomsRoomDescription.AsString := mRrInfoRoomDescription.AsString;
           mRooms.Post;
           strTmp := s;
         end;
@@ -1894,7 +1844,7 @@ begin
         mRrInfo.Edit;
         mRrInfoRow.Asinteger := row;
         mRrInfoCol.Asinteger := col;
-        mRrInfoProcessed.Asinteger := -1;
+        mRrInfoProcessed.Asinteger := cUnprocessed;
         mRrInfo.Post;
         mRrInfo.Next;
       end;
@@ -1940,13 +1890,10 @@ var
   rateIsPaid: boolean;
   roomIndex: integer;
   mainGuestName: string;
-  ii: integer;
 begin
 
   result := true;
-  repeat
-    ii := GetRest;
-  until ii = 0;
+  CreateRestAllotmentRoomreservations;
 
   customer := zReservationInfo.customer;
   oNewReservation.HomeCustomer.customer := customer;
@@ -2136,7 +2083,7 @@ begin
 
 end;
 
-function TfrmAllotmentToRes.AddRestRoomRservation(RoomReservation: integer): boolean;
+function TfrmAllotmentToRes.AddRestRoomReservation(FakeRoomReservation: integer): boolean;
 var
   Room: string; // *
   RoomType: string; // *
@@ -2176,7 +2123,8 @@ var
   Currency: string;
   oSelectedRoomItem: TnewRoomReservationItem;
 begin
-  Assert(RoomReservation <> 0, 'Roomreservation = 0');
+
+  Assert(FakeRoomReservation <> 0, 'FakeRoomreservation = 0');
   result := false;
 
   lstPrices := Tstringlist.Create;
@@ -2189,7 +2137,7 @@ begin
     kbmrestRoomRes.DisableControls;
     kbmRestRoomRates.DisableControls;
     try
-      sFilter := '(processed=' + inttostr(RoomReservation) + ')';
+      sFilter := '(processed=' + inttostr(FakeRoomReservation) + ')';
 
       mRrInfo.Filter := sFilter;
       mRrInfo.Filtered := true;
@@ -2205,10 +2153,10 @@ begin
       ChildrenCount := mRrInfonumChildren.Asinteger;
       InfantCount := mRrInfonumInfants.Asinteger;
 
-      RoomReservation := mRrInfoProcessed.Asinteger;
+//      FakeRoomReservation := mRrInfoProcessed.Asinteger;
       Room := mRrInfoRoom.AsString;
       if Room = '' then
-        Room := '<' + inttostr(RoomReservation) + '>';
+        Room := '<' + inttostr(FakeRoomReservation) + '>';
       RoomType := mRrInfoRoomType.AsString;
 
       ttPrice := 0.00;
@@ -2309,7 +2257,7 @@ begin
       end;
 
       kbmrestRoomRes.append;
-      kbmrestRoomResRoomReservation.Asinteger := RoomReservation;
+      kbmrestRoomResRoomReservation.Asinteger := FakeRoomReservation;
       kbmrestRoomResRoom.AsString := Room;
       kbmrestRoomResRoomType.AsString := RoomType;
       kbmrestRoomResGuests.Asinteger := Guests;
@@ -2327,7 +2275,7 @@ begin
       kbmrestRoomResMainGuest.AsString := MainGuest;
       kbmrestRoomRes.Post;
 
-      oSelectedRoomItem := TnewRoomReservationItem.Create(RoomReservation, Room, RoomType, '', Arrival, Departure,
+      oSelectedRoomItem := TnewRoomReservationItem.Create(FakeRoomReservation, Room, RoomType, '', Arrival, Departure,
         Guests, AvrageNetPrice, AvrageDiscount, isPercentage, RateCount, ChildrenCount, InfantCount, PriceCode,
         MainGuest, '');
       oRestReservation.newRoomReservations.RoomItemsList.Add(oSelectedRoomItem);

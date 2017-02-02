@@ -154,6 +154,7 @@ object FrmResources: TFrmResources
         TabOrder = 5
         OnClick = btnRenameClick
         SkinData.SkinSection = 'BUTTON'
+        ExplicitTop = 0
       end
       object btnSource: TsButton
         AlignWithMargins = True

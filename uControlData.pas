@@ -2270,7 +2270,7 @@ begin
   cbxInvoiceExport.Items.Clear;
   RoomerResourceManagement := TRoomerResourceManagement.Create(ANY_FILE, ACCESS_RESTRICTED);
   try
-    cbxInvoiceExport.Items.AddStrings(RoomerResourceManagement.StaticResourceListAsStrings);
+    RoomerResourceManagement.AddStaticResourcesAsStrings(cbxInvoiceExport.Items);
   finally
     RoomerResourceManagement.Free;
   end;
@@ -2291,7 +2291,7 @@ begin
   cbxQuery.Items.Clear;
   RoomerResourceManagement := TRoomerResourceManagement.Create(GUEST_EMAIL_TEMPLATE, ACCESS_RESTRICTED);
   try
-    cbxQuery.Items.AddStrings(RoomerResourceManagement.StaticResourceListAsStrings);
+    RoomerResourceManagement.AddStaticResourcesAsStrings(cbxQuery.Items);
   finally
     RoomerResourceManagement.Free;
   end;
@@ -2475,13 +2475,13 @@ begin
   cbxQuery.Items.Clear;
   RoomerResourceManagement := TRoomerResourceManagement.Create(GUEST_EMAIL_TEMPLATE, ACCESS_RESTRICTED);
   try
-    cbxQuery.Items.AddStrings(RoomerResourceManagement.StaticResourceListAsStrings);
+    RoomerResourceManagement.AddStaticResourcesAsStrings(cbxQuery.Items);
   finally
     RoomerResourceManagement.Free;
   end;
   RoomerResourceManagement := TRoomerResourceManagement.Create(ANY_FILE, ACCESS_RESTRICTED);
   try
-    cbxInvoiceExport.Items.AddStrings(RoomerResourceManagement.StaticResourceListAsStrings);
+    RoomerResourceManagement.AddStaticResourcesAsStrings(cbxInvoiceExport.Items);
   finally
     RoomerResourceManagement.Free;
   end;

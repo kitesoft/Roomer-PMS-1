@@ -35,7 +35,6 @@ object frmAllotmentToRes: TfrmAllotmentToRes
     Align = alBottom
     TabOrder = 0
     SkinData.SkinSection = 'PANEL'
-    ExplicitWidth = 1165
     DesignSize = (
       1149
       33)
@@ -88,7 +87,6 @@ object frmAllotmentToRes: TfrmAllotmentToRes
     Align = alClient
     TabOrder = 1
     SkinData.SkinSection = 'PANEL'
-    ExplicitWidth = 585
     object sPanel1: TsPanel
       Left = 1
       Top = 1
@@ -97,12 +95,12 @@ object frmAllotmentToRes: TfrmAllotmentToRes
       Align = alTop
       TabOrder = 0
       SkinData.SkinSection = 'PANEL'
-      ExplicitWidth = 583
       object sPanel8: TsPanel
         Left = 1
         Top = 1
         Width = 565
         Height = 32
+        Hint = 'Double click to maximize allotment panel'
         Align = alTop
         Caption = 'Allotment'
         Font.Charset = DEFAULT_CHARSET
@@ -112,8 +110,8 @@ object frmAllotmentToRes: TfrmAllotmentToRes
         Font.Style = [fsBold]
         ParentFont = False
         TabOrder = 0
+        OnDblClick = sPanel8DblClick
         SkinData.SkinSection = 'MENUCAPTION'
-        ExplicitWidth = 581
       end
       object sGroupBox2: TsGroupBox
         AlignWithMargins = True
@@ -176,6 +174,7 @@ object frmAllotmentToRes: TfrmAllotmentToRes
           SkinData.SkinSection = 'CHECKBOX'
           ImgChecked = 0
           ImgUnchecked = 0
+          ExplicitTop = 84
         end
         object chkNumGuests: TsCheckBox
           AlignWithMargins = True
@@ -236,7 +235,6 @@ object frmAllotmentToRes: TfrmAllotmentToRes
         Align = alBottom
         TabOrder = 2
         SkinData.SkinSection = 'PANEL'
-        ExplicitWidth = 581
         object sButton4: TsButton
           AlignWithMargins = True
           Left = 357
@@ -253,7 +251,6 @@ object frmAllotmentToRes: TfrmAllotmentToRes
           TabOrder = 0
           OnClick = sButton4Click
           SkinData.SkinSection = 'BUTTON'
-          ExplicitTop = 5
         end
       end
       object sGroupBox1: TsGroupBox
@@ -382,7 +379,7 @@ object frmAllotmentToRes: TfrmAllotmentToRes
       GridFixedLineColor = 13947601
       HoverRowCells = [hcNormal, hcSelected]
       OnGetCellColor = grProvideGetCellColor
-      OnClickCell = grProvideClickCell
+      OnDblClickCell = grProvideDblClickCell
       OnSelectionChanged = grProvideSelectionChanged
       DragDropSettings.ShowCells = False
       DragDropSettings.OleAcceptFiles = False
@@ -505,7 +502,6 @@ object frmAllotmentToRes: TfrmAllotmentToRes
       SortSettings.HeaderMirrorColor = 16380385
       SortSettings.HeaderMirrorColorTo = 16182488
       Version = '8.2.4.1'
-      ExplicitWidth = 583
       ColWidths = (
         132)
       RowHeights = (
@@ -529,7 +525,6 @@ object frmAllotmentToRes: TfrmAllotmentToRes
     Align = alRight
     TabOrder = 2
     SkinData.SkinSection = 'PANEL'
-    ExplicitLeft = 591
     object sLabel2: TsLabel
       Left = 240
       Top = 48
@@ -549,6 +544,7 @@ object frmAllotmentToRes: TfrmAllotmentToRes
         Top = 1
         Width = 570
         Height = 32
+        Hint = 'Double click to maximize reservation panel'
         Align = alTop
         Caption = 'Reservation'
         Font.Charset = DEFAULT_CHARSET
@@ -804,6 +800,7 @@ object frmAllotmentToRes: TfrmAllotmentToRes
         OptionsView.GroupByBox = False
         object tvRoomResRoom: TcxGridDBColumn
           DataBinding.FieldName = 'Room'
+          OnGetDisplayText = tvRoomResRoomGetDisplayText
           Options.Editing = False
         end
         object tvRoomResRoomDescription: TcxGridDBColumn

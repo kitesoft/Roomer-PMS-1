@@ -775,9 +775,9 @@ begin
   if S = '' then
     raise Exception.Create(GetTranslatedText('shUI_NameCannotBeEmpty'));
 
-  cmd := format('UPDATE hotelconfigurations SET DefaultChannelConfirmationEmail=''%s'' WHERE DefaultChannelConfirmationEmail=''%s''',
-             [S, item.Caption]);
-  d.roomerMainDataSet.DoCommand(cmd);
+//  cmd := format('UPDATE hotelconfigurations SET DefaultChannelConfirmationEmail=''%s'' WHERE DefaultChannelConfirmationEmail=''%s''',
+//             [S, item.Caption]);
+//  d.roomerMainDataSet.DoCommand(cmd);
 
   cmd := format('UPDATE home100.HOTEL_RESOURCES SET ORIGINAL_NAME=''%s'' WHERE HOTEL_ID=''%s'' AND ORIGINAL_NAME=''%s'' AND URI=''%s'' AND KEY_STRING=''%s''',
              [S, d.roomerMainDataSet.HotelId, item.Caption, item.SubItems[item.SubItems.Count - 1], KeyString]);
