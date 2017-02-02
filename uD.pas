@@ -3790,81 +3790,73 @@ procedure Td.UpdateGroupAccountOne(reservation, RoomReservation, RoomReservation
 var
   s: string;
   ExecutionPlan: TRoomerExecutionPlan;
-  AllOk: boolean;
 begin
   if not isAllRRSameCurrency(reservation) then
   begin
     showmessage(GetTranslatedText('shTx_D_CurrencyCancel'));
     exit;
   end;
-  AllOk := True;
-  ExecutionPlan := d.roomerMainDataSet.CreateExecutionPlan;
-  ExecutionPlan.BeginTransaction;
-  try
 
-    s := '';
-    s := s + ' UPDATE roomreservations ' + chr(10);
-    s := s + ' Set' + chr(10);
-    s := s + ' GroupAccount = ' + _db(GroupAccount) + chr(10); // ATH var boolTostr
-    if InvoiceIndex > -1 then
-      s := s + ' , InvoiceIndex = ' + _db(InvoiceIndex) + chr(10); // ATH var boolTostr
-    s := s + ' WHERE Reservation = ' + inttostr(reservation) + chr(10);
-    if NOT GroupAccount then
+  ExecutionPlan := d.roomerMainDataSet.CreateExecutionPlan;
+  try
+    ExecutionPlan.BeginTransaction;
+    try
+
+      s := '';
+      s := s + ' UPDATE roomreservations ' + chr(10);
+      s := s + ' Set' + chr(10);
+      s := s + ' GroupAccount = ' + _db(GroupAccount) + chr(10);
+      if InvoiceIndex > -1 then
+        s := s + ' , InvoiceIndex = ' + _db(InvoiceIndex) + chr(10);
+      s := s + ' WHERE Reservation = ' + inttostr(reservation) + chr(10);
       s := s + ' AND roomreservation = ' + inttostr(RoomReservation) + chr(10);
 
-    ExecutionPlan.AddExec(s);
-
-    if GroupAccount then
-    begin
-      s := '';
-      s := s + ' UPDATE invoicelines ' + chr(10);
-      s := s + ' Set' + chr(10);
-      s := s + ' Roomreservation = 0 ';
-      s := s + ' WHERE (Reservation = ' + inttostr(reservation) + ') AND (isPackage=1) ';
-      s := s + ' AND roomReservationAlias = ' + inttostr(RoomReservationAlias) + chr(10);
-      // copytoclipboard(s);
-      // debugmessage(s);
       ExecutionPlan.AddExec(s);
-    end
-    else
-    begin
-      s := '';
-      s := s + ' UPDATE invoicelines ' + chr(10);
-      s := s + ' Set' + chr(10);
-      s := s + ' Roomreservation =RoomreservationAlias ' + chr(10);
-      s := s + ' WHERE (Reservation = ' + inttostr(reservation) + ') AND (isPackage=1) ';
-      s := s + ' AND roomReservationAlias = ' + inttostr(RoomReservationAlias) + chr(10);
-      // copytoclipboard(s);
-      // debugmessage(s);
-      ExecutionPlan.AddExec(s);
-    end;
 
-    if ExecutionPlan.Execute(ptExec, False, False) then
-    begin
-      ExecutionPlan.CommitTransaction;
-    end
-    else
-      raise Exception.Create(ExecutionPlan.ExecException);
+      if GroupAccount then
+      begin
+        s := '';
+        s := s + ' UPDATE invoicelines ' + chr(10);
+        s := s + ' Set' + chr(10);
+        s := s + ' Roomreservation = 0 ';
+        s := s + ' WHERE (Reservation = ' + inttostr(reservation) + ') AND (isPackage=1) ';
+        s := s + ' AND roomReservationAlias = ' + inttostr(RoomReservationAlias) + chr(10);
+        // copytoclipboard(s);
+        // debugmessage(s);
+        ExecutionPlan.AddExec(s);
+      end
+      else
+      begin
+        s := '';
+        s := s + ' UPDATE invoicelines ' + chr(10);
+        s := s + ' Set' + chr(10);
+        s := s + ' Roomreservation =RoomreservationAlias ' + chr(10);
+        s := s + ' WHERE (Reservation = ' + inttostr(reservation) + ') AND (isPackage=1) ';
+        s := s + ' AND roomReservationAlias = ' + inttostr(RoomReservationAlias) + chr(10);
+        // copytoclipboard(s);
+        // debugmessage(s);
+        ExecutionPlan.AddExec(s);
+      end;
 
-  except
-    on e: Exception do
-    begin
-      AllOk := False;
+      if ExecutionPlan.Execute(ptExec, False, False) then
+        ExecutionPlan.CommitTransaction
+      else
+        raise Exception.Create(ExecutionPlan.ExecException);
+
+    except
+      ExecutionPlan.RollbackTransaction;
+      raise;
     end;
+  finally
+    Executionplan.Free;
   end;
 
-  freeandnil(ExecutionPlan);
-
-  if AllOk AND (InvoiceIndex > -1) then
+  if (InvoiceIndex > -1) then
   begin
     if GroupAccount then
-    begin
       UpdPaymentsWhenChangingReservationToGroup(reservation, RoomReservation)
-    end
     else
-    begin
       UpdPaymentsWhenChangingReservationToRoom(reservation, RoomReservation)
-    end;
   end;
 end;
 

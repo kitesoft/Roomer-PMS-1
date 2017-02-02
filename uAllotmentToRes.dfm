@@ -379,7 +379,7 @@ object frmAllotmentToRes: TfrmAllotmentToRes
       GridFixedLineColor = 13947601
       HoverRowCells = [hcNormal, hcSelected]
       OnGetCellColor = grProvideGetCellColor
-      OnClickCell = grProvideClickCell
+      OnDblClickCell = grProvideDblClickCell
       OnSelectionChanged = grProvideSelectionChanged
       DragDropSettings.ShowCells = False
       DragDropSettings.OleAcceptFiles = False
