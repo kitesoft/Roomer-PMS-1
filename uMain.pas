@@ -1092,9 +1092,6 @@ type
 
     GroupList: TGroupEntityList;
 
-    ExceptionsLoggingActive: boolean;
-    ExceptionLogPath: String;
-
     HoverPointOneDay: TPoint;
     HoverPointPeriod: TPoint;
     lastDate: TdateTime;
@@ -1156,8 +1153,6 @@ type
     procedure OneDayUpdatePage(aDate: TdateTime);
 
     procedure RestoreCurrentFont;
-
-    procedure ExceptionHandler(Sender: TObject; E: Exception);
 
     procedure CheckInGroup;
     procedure RemoveAReservation;
@@ -1484,9 +1479,6 @@ type
     procedure DeActivateMessageTimerIfActive;
     procedure SetPMSVisibilities;
     function GetDateUnderCursor: TDate;
-{$IFDEF USE_JCL}
-    procedure LogException(ExceptObj: TObject; ExceptAddr: Pointer; IsOS: boolean);
-{$ENDIF}
   public
     { Public declarations }
     StaffComm: TStaffCommunication;
@@ -1534,9 +1526,6 @@ implementation
 
 uses
   dbTables
-{$IFDEF USE_JCL}
-    , JclDebug, JclHookExcept, TypInfo
-{$ENDIF}
     , uD, uRubbishCollectors, uProvideARoom2,
   uInvoice,
   uTaxes,
@@ -2557,90 +2546,6 @@ begin
     end;
 end;
 
-{$IFDEF USE_JCL}
-
-
-procedure TfrmMain.LogException(ExceptObj: TObject; ExceptAddr: Pointer; IsOS: boolean);
-var
-  TmpS: string;
-  ModInfo: TJclLocationInfo;
-  i: integer;
-  ExceptionHandled: boolean;
-  HandlerLocation: Pointer;
-  ExceptFrame: TJclExceptFrame;
-
-begin
-  if ExceptionsLoggingActive then
-  begin
-    TmpS := 'Exception ' + ExceptObj.ClassName;
-    if ExceptObj is Exception then
-      TmpS := TmpS + ': ' + Exception(ExceptObj).message;
-    if IsOS then
-      TmpS := TmpS + ' (OS Exception)';
-    _textAppend(ExceptionLogPath, TmpS, true);
-    ModInfo := GetLocationInfo(ExceptAddr);
-    _textAppend(ExceptionLogPath, Format('  Exception occured at $%p (Module "%s", Procedure "%s", Unit "%s", Line %d)',
-      [ModInfo.Address, ModInfo.UnitName, ModInfo.ProcedureName, ModInfo.SourceName, ModInfo.LineNumber]), true);
-    if stExceptFrame in JclStackTrackingOptions then
-    begin
-      _textAppend(ExceptionLogPath, '  Except frame-dump:', true);
-      i := 0;
-      ExceptionHandled := false;
-      while ( { chkShowAllFrames.Checked or } not ExceptionHandled) and (i < JclLastExceptFrameList.Count) do
-      begin
-        ExceptFrame := JclLastExceptFrameList.Items[i];
-        ExceptionHandled := ExceptFrame.HandlerInfo(ExceptObj, HandlerLocation);
-        if (ExceptFrame.FrameKind = efkFinally) or (ExceptFrame.FrameKind = efkUnknown) or not ExceptionHandled then
-          HandlerLocation := ExceptFrame.CodeLocation;
-        ModInfo := GetLocationInfo(HandlerLocation);
-        TmpS := Format('    Frame at $%p (type: %s', [ExceptFrame.FrameLocation, GetEnumName(TypeInfo(TExceptFrameKind),
-          Ord(ExceptFrame.FrameKind))]);
-        if ExceptionHandled then
-          TmpS := TmpS + ', handles exception)'
-        else
-          TmpS := TmpS + ')';
-        _textAppend(ExceptionLogPath, TmpS, true);
-        if ExceptionHandled then
-          _textAppend(ExceptionLogPath, Format('      Handler at $%p', [HandlerLocation]), true)
-        else
-          _textAppend(ExceptionLogPath, Format('      Code at $%p', [HandlerLocation]), true);
-        _textAppend(ExceptionLogPath, Format('      Module "%s", Procedure "%s", Unit "%s", Line %d',
-          [ModInfo.UnitName, ModInfo.ProcedureName,
-          ModInfo.SourceName, ModInfo.LineNumber]), true);
-        inc(i);
-      end;
-    end;
-    _textAppend(ExceptionLogPath, '', true);
-  end;
-end;
-{$ENDIF}
-
-
-procedure TfrmMain.ExceptionHandler(Sender: TObject; E: Exception);
-begin
-  try
-    TSplashFormManager.TryHideForm;
-  except
-  end;
-  // --
-  if (E is EDivByZero) or (E is ERangeError) or (E is EStringListError) or (E is ERoomerOfflineAssertionException) or
-    (E is EInvalidPointer) or
-  // ( E is EOverflow          ) or
-  // ( E is EUnderflow         ) or
-    (E is EInvalidOp) or (E is EAbstractError) or (E is EIntOverflow) or (E is EAccessViolation) or (E is EControlC) or
-    (E is EPrivilege) or (E is EInvalidCast)
-    or (E is EVariantError) or (E is EAssertionFailed) or (E is EIntfCastError) or
-    (pos('out of bounds', ANSIlowercase(E.message)) > 0) then
-  begin
-    if ExceptionsLoggingActive then
-      ExceptionsLoggingActive := _textAppend(ExceptionLogPath, E.message, true);
-  end
-  else
-  begin
-    Application.ShowException(E);
-  end;
-end;
-
 procedure TfrmMain.PrepareSkinSelections;
 var
   i: integer;
@@ -2778,21 +2683,6 @@ begin
 
   ShowComponentNameOnHint := LowerCase(ParameterByName('ShowComponentNameOnHint')) = 'true';
 
-{$IFNDEF MONITOR_LEAKAGE}
-  ExceptionsLoggingActive := true;
-  ExceptionLogPath := ExtractFileDir(Application.ExeName);
-  // ExceptionLogPath := TPath.Combine(LocalAppDataPath, 'Roomer\logs');
-  if ParameterByName('LogPath') <> '' then
-    ExceptionLogPath := ParameterByName('LogPath');
-  forceDirectories(ExceptionLogPath);
-  ExceptionLogPath := Format('%s.log', [TPath.Combine(ExceptionLogPath, ExtractFilename(Application.ExeName))]);
-
-{$IFDEF USE_JCL}
-  JclAddExceptNotifier(LogException);
-{$ENDIF}
-  Application.OnException := ExceptionHandler;
-{$ENDIF}
-  pageMainGrids.ActivePageIndex := 0;
   zShowCaptions := true;
   barinn.HideAll;
   // FIX   StateSaver1.theOwner := TForm(Self);
@@ -2811,11 +2701,6 @@ begin
   curNoDrop := Screen.cursors[crNoDrop];
   curNoDropNew := loadcursor(hinstance, 'MOVESC');
   // LoadOneDayViewGridStatus;
-
-  Application.ShowHint := true;
-  Application.HintHidePause := 15000;
-  Application.HintPause := 500;
-
 
   tabsView.Font.Color := clWhite;
 
@@ -3662,12 +3547,6 @@ begin
   except
   end;
 
-{$IFDEF USE_JCL}
-  try
-    JclRemoveExceptNotifier(LogException);
-  except
-  end;
-{$ENDIF}
 end;
 
 procedure TfrmMain.FormCloseQuery(Sender: TObject; var CanClose: boolean);
@@ -13398,12 +13277,4 @@ begin
   ShowTimelyMessage(Format(GetTranslatedText('shTx_FrmMain_CopiedReservationToClipboard'), [reservationId]));
 end;
 
-{$IFDEF USE_JCL}
-
-initialization
-
-JclStackTrackingOptions := JclStackTrackingOptions + [stExceptFrame];
-// , stAllModules, stTraceAllExceptions, stMainThreadOnly ];
-JclStartExceptionTracking;
-{$ENDIF}
 end.

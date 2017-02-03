@@ -837,6 +837,7 @@
         </DCCReference>
         <DCCReference Include="Extras\_Glob.pas"/>
         <DCCReference Include="uCurrencyHandlersMap.pas"/>
+        <DCCReference Include="RoomerExceptionHandling.pas"/>
         <None Include="Roomer.todo"/>
         <None Include="notes.txt"/>
         <None Include="Roomer.inc"/>

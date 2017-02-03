@@ -15,6 +15,7 @@ uses
   FastMM4 in 'FastMM\FastMM4.pas',
   {$endif}
   Forms,
+  SysUtils,
   uMain in 'uMain.pas' {frmMain},
   uReservationObjects in 'uReservationObjects.pas',
   uAppGlobal in 'uAppGlobal.pas',
@@ -263,8 +264,13 @@ uses
   uTopClassAvailabilityOrder in 'uTopClassAvailabilityOrder.pas' {FrmTopClassAvailabilityOrder},
   _Glob in 'Extras\_Glob.pas',
   uCurrencyHandlersMap in 'uCurrencyHandlersMap.pas';
+  uCurrencyHandlersMap in 'uCurrencyHandlersMap.pas',
+  RoomerExceptionHandling in 'RoomerExceptionHandling.pas';
 
 {$R *.RES}
+
+var
+  RoomerExceptionHandler: TRoomerExceptionHandler;
 
 begin
   {$IFDEF rmMONITOR_LEAKAGE}
@@ -273,35 +279,44 @@ begin
   Application.MainformOnTaskbar := True;
   Application.Initialize;
   Application.Title := 'ROOMER - Next Generation Hotel Management System';
-  // reduce number of times that TAction.OnUpdate events are called
-  Application.ActionUpdateDelay := 10;
 
-  TSplashFormManager.Show;
+  RoomerExceptionHandler := TRoomerExceptionHandler.Create;
+  try
+    RoomerExceptionHandler.ExceptionsLoggingActive := true;
+    Application.OnException := RoomerExceptionHandler.ExceptionHandler;
 
-  Application.CreateForm(TD, D);
-  Application.CreateForm(TDReportData, DReportData);
-  TSplashFormManager.UpdateProgress('Loading forms...');
+    // reduce number of times that TAction.OnUpdate events are called
+    Application.ActionUpdateDelay := 10;
 
-  Application.CreateForm(TDImages, DImages);
+    Application.ShowHint := true;
+    Application.HintHidePause := 15000;
+    Application.HintPause := 500;
 
-  Application.CreateForm(TfrmMain, frmMain);
+    TSplashFormManager.Show;
 
-  if D.roomerMainDataSet.IsConnectedToInternet then
-  begin
-    Application.CreateForm(TfrmDaysStatistics, frmDaysStatistics);
-    Application.CreateForm(TfrmRateQuery, frmRateQuery);
-    Application.CreateForm(TfrmHomedate, frmHomedate);
-    Application.CreateForm(TfrmDayNotes, frmDayNotes);
-    Application.CreateForm(TfrmGoToRoomandDate, frmGoToRoomandDate);
-    Application.CreateForm(TFrmReservationHintHolder, FrmReservationHintHolder);
-    Application.CreateForm(TembPeriodView, embPeriodView);
-    Application.CreateForm(TembOccupancyView, embOccupancyView);
-  end
-  else
-  begin
+    Application.CreateForm(TD, D);
+    Application.CreateForm(TDReportData, DReportData);
+    TSplashFormManager.UpdateProgress('Loading forms...');
 
+    Application.CreateForm(TDImages, DImages);
+
+    Application.CreateForm(TfrmMain, frmMain);
+
+    if D.roomerMainDataSet.IsConnectedToInternet then
+    begin
+      Application.CreateForm(TfrmDaysStatistics, frmDaysStatistics);
+      Application.CreateForm(TfrmRateQuery, frmRateQuery);
+      Application.CreateForm(TfrmHomedate, frmHomedate);
+      Application.CreateForm(TfrmDayNotes, frmDayNotes);
+      Application.CreateForm(TfrmGoToRoomandDate, frmGoToRoomandDate);
+      Application.CreateForm(TFrmReservationHintHolder, FrmReservationHintHolder);
+      Application.CreateForm(TembPeriodView, embPeriodView);
+      Application.CreateForm(TembOccupancyView, embOccupancyView);
+    end;
+
+    Application.Run;
+  finally
+    RoomerExceptionHandler.Free;
   end;
-
-  Application.Run;
 end.
 
