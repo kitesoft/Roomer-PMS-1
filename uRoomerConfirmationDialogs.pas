@@ -10,7 +10,7 @@ uses RoomerLoginForm,
      uG,
      uRoomerVersionInfo,
      uD
-     ;
+     , uRoomerDefinitions;
 
 function openLogin(var userName, password : string; AuthValueIndex : Integer = -1) : boolean;
 var hotelId : String;
@@ -24,7 +24,7 @@ begin
   if (AskUserForCredentials(userName, password, hotelId, lastMessage, AuthValueIndex) in cLoginFormSuccesfull) then
   begin
       try
-        d.roomerMainDataSet.Login(hotelId, username, password, 'ROOMERPMS', TRoomerVersionInfo.FileVersion);
+        d.roomerMainDataSet.Login(hotelId, username, password, cOpenAPIAppicationID, TRoomerVersionInfo.FileVersion);
         result := true;
       except
         result := false;

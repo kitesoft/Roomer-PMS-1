@@ -13,6 +13,7 @@ const
   qcCompany        = 'Roomer';
   cRoomerFolder    = 'Roomer';
   qcApplication    = 'Roomer PMS';
+  cOpenAPIAppicationID = 'ROOMERPMS';
   testCompanyID    = '00';
   testCompanyName  = 'Hotel Trial';
   testExpDate      = 30;

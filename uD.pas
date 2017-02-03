@@ -406,7 +406,7 @@ type
     function PriceExistsByCodes(pcCode, seDescription, RoomType, Currency: string): boolean;
     function PriceExistsByCodesAndCurrency(pcCode, Currency: string): boolean;
 
-    function doLogin(login, password: string): boolean;
+    function ReadUserSettingsAndHotelConfigurations(login, password: string): boolean;
 
     // Seasons Table
     function GET_SeasonsDates_bySeasonID(seasonId: Integer; var seStartdate, seEndDate: TdateTime): boolean;
@@ -3357,7 +3357,7 @@ end;
 
 /// /*********************
 
-function Td.doLogin(login, password: string): boolean;
+function Td.ReadUserSettingsAndHotelConfigurations(login, password: string): boolean;
 var
   s: string;
   newStafflang: Integer;

@@ -391,7 +391,7 @@ type
     procedure RefreshRoomList;
     constructor Create;
     destructor Destroy; override;
-    procedure ProcessAppIni(aMethod : integer; initialRead : Boolean = false);
+    procedure ReadWriteSettingsToRegistry(aMethod : integer; initialRead : Boolean = false);
 
 //    function OpenZipCodes(var code : string) : boolean;
 
@@ -855,7 +855,7 @@ begin
       qComputerName := trim(string(theComputerName));
     end;
 
-    ProcessAppIni(0, true); // 0=Open 1=CloseGlbApp.SetFasta;
+    ReadWriteSettingsToRegistry(0, true); // 0=Open 1=CloseGlbApp.SetFasta;
 
     qGridsIniFileName := qProgramExePath + 'grids.ini';
 
@@ -1053,6 +1053,7 @@ begin
 end;
 
 procedure TGlobalApplication.ProcessAppIni(aMethod : integer; initialRead : Boolean = false);
+procedure TGlobalApplication.ReadWriteSettingsToRegistry(aMethod : integer; initialRead : Boolean = false);
 const
   secDiretories = 'Diretories';
   indLocalDataPath = 'Localdata_path';
@@ -1370,6 +1371,7 @@ procedure CloseApplication;
 begin
   // --
   G.ProcessAppIni(1); // 0=Open 1=CloseGlbApp.SetFasta;
+  G.ReadWriteSettingsToRegistry(1); // 0=Open 1=CloseGlbApp.SetFasta;
   G.free;
 end;
 /// end - Open and Close Application;

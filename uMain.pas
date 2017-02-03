@@ -2941,7 +2941,7 @@ begin
   EnableDisableFunctions(false);
 
   if not aFirstLogin then
-    g.ProcessAppIni(1);
+    g.ReadWriteSettingsToRegistry(1);
 
   userName := g.qUser;
   password := '';
@@ -2964,7 +2964,7 @@ begin
     end;
 
     if doLogin(userName, password, WrongLoginMessage, ExpiredMessage, lLoginFormCancelled, AutoLogin) then
-      okLogin := d.doLogin(userName, password);
+      okLogin := d.ReadUserSettingsAndHotelConfigurations(userName, password);
 
   until okLogin OR lLoginFormCancelled OR (tries >= 15);
 
@@ -3019,6 +3019,7 @@ begin
   d.roomerMainDataSet.ApplicationID := g.qApplicationID;
   d.roomerMainDataSet.AppSecret := g.qAppSecret;
   d.roomerMainDataSet.AppKey := g.qAppKey;
+  g.ReadWriteSettingsToRegistry(0);
 
   for i := 0 to pageMainGrids.PageCount - 1 do
   begin
