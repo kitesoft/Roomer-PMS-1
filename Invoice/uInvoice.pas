@@ -5352,10 +5352,6 @@ begin
         exit;
       end;
       TotalPayments := GatherPayments(stlPaySelections, days);
-{$IFDEF DEBUG}
-      if TotalPayments=-0.01 then
-         TotalPayments:=0.00;
-{$ENDIF}
 
       if round(TotalPayments) <> round(_StrToFloat(edtBalance.Text)) then
       begin
@@ -5687,8 +5683,10 @@ begin
               s := s + 'UPDATE roomreservations ' + #10;
               s := s + 'SET' + #10;
               s := s + '   RoomRentPaid1 = ' + _db(dLineTotal) + ' '#10;
-              s := s + '  ,RoomRentPaymentInvoice = ' + _db(zInvoiceNumber) + #10;
-              s := s + 'WHERE RoomReservation = ' + _db(invRoomReservation) + #10;
+              s := s + '  ,RoomRentPaymentInvoice = ' +
+                _db(zInvoiceNumber) + #10;
+              s := s + 'WHERE RoomReservation = ' +
+                _db(invRoomReservation) + #10;
               lExecutionPlan.AddExec(s);
 
               // update isPaid ef groupInvoice
@@ -5753,10 +5751,6 @@ begin
         s := s + ', ihCurrencyrate ' + #10; // **98
         s := s + ', showPackage ' + #10; // **98
         s := s + ', Location ' + #10; // **98
-{$IFDEF DEBUG}
-if TotalPayments = 0.0 then
-        s := s + ', ExternalInvoiceId ' + #10;
-{$ENDIF}
         s := s + ', staff ' + #10; // **98
 
         s := s + ')' + #10;
@@ -5804,18 +5798,6 @@ if TotalPayments = 0.0 then
         s := s + ', ' + _db(_StrToFloat(edtRate.Text));
         s := s + ', ' + _db(chkShowPackage.checked);
         s := s + ', ' + _db(zLocation);
-{$IFDEF DEBUG}
-if TotalPayments = 0.0 then
-begin
-              s := s + '  ,(SELECT SUBSTR(p.Notes, 44, POSITION('')'' IN p.Notes) - 44) AS DKInvoice ' +
-'FROM payments p ' +
-'WHERE SUBSTR(p.Notes, 1, 43)=''Received with reference (dkPos reikningur: '' ' +
-' AND p.InvoiceNumber=-1 ' +
-' AND p.Reservation=' + inttostr(FReservation) +
-' AND p.RoomReservation=' + inttostr(FRoomReservation) +
-' AND p.InvoiceIndex=' + _db(FInvoiceIndex) + ' LIMIT 1)' + #10;
-end;
-{$ENDIF}
         s := s + ', ' + _db(d.roomerMainDataSet.username);
 
         s := s + ')' + #10;
@@ -5839,91 +5821,85 @@ end;
 
         for i := 0 to stlPaySelections.Count - 1 do
         begin
-{$IFDEF DEBUG}
-          if TotalPayments <> 0.00 then
-          begin
-{$ENDIF}
-            PaymentDescription := _strTokenAt(stlPaySelections[i], '|', 2);
-            decodedate(zInvoiceDate, AYear, AMon, ADay);
-            // SQL 117 INSERxT Payments
-            s := '';
-            s := s + 'INSERT INTO payments' + #10;
-            s := s + '(' + #10;
-            s := s + '  Reservation' + '' + #10;
-            s := s + ', RoomReservation' + #10;
-            s := s + ', Person' + #10;
+          PaymentDescription := _strTokenAt(stlPaySelections[i], '|', 2);
+          decodedate(zInvoiceDate, AYear, AMon, ADay);
+          // SQL 117 INSERxT Payments
+          s := '';
+          s := s + 'INSERT INTO payments' + #10;
+          s := s + '(' + #10;
+          s := s + '  Reservation' + '' + #10;
+          s := s + ', RoomReservation' + #10;
+          s := s + ', Person' + #10;
 
-            s := s + ', Customer' + #10;
-            s := s + ', AutoGen' + #10;
-            s := s + ', InvoiceNumber' + #10;
-            s := s + ', PayDate' + #10;
+          s := s + ', Customer' + #10;
+          s := s + ', AutoGen' + #10;
+          s := s + ', InvoiceNumber' + #10;
+          s := s + ', PayDate' + #10;
 
-            s := s + ', PayType' + #10;
-            s := s + ', Amount' + #10;
-            s := s + ', Description' + #10;
+          s := s + ', PayType' + #10;
+          s := s + ', Amount' + #10;
+          s := s + ', Description' + #10;
 
-            s := s + ', CurrencyRate' + #10;
-            s := s + ', Currency' + #10;
+          s := s + ', CurrencyRate' + #10;
+          s := s + ', Currency' + #10;
 
-            s := s + ', TypeIndex' + #10;
+          s := s + ', TypeIndex' + #10;
 
-            s := s + ', AYear' + #10;
-            s := s + ', AMon' + #10;
-            s := s + ', ADay' + #10;
-            s := s + ', staff' + #10;
-            s := s + ', InvoiceIndex' + #10;
+          s := s + ', AYear' + #10;
+          s := s + ', AMon' + #10;
+          s := s + ', ADay' + #10;
+          s := s + ', staff' + #10;
+          s := s + ', InvoiceIndex' + #10;
 
-            s := s + ')' + #10;
-            s := s + 'Values' + #10;
-            s := s + '(' + #10;
+          s := s + ')' + #10;
+          s := s + 'Values' + #10;
+          s := s + '(' + #10;
 
-            s := s + '  ' + inttostr(FReservation);
-            s := s + ', ' + inttostr(FRoomReservation);
-            s := s + ', ' + inttostr(FnewSplitNumber);
+          s := s + '  ' + inttostr(FReservation);
+          s := s + ', ' + inttostr(FRoomReservation);
+          s := s + ', ' + inttostr(FnewSplitNumber);
 
-            s := s + ', ' + _db(sSelectedCustomer);
+          s := s + ', ' + _db(sSelectedCustomer);
 
-            ct := _GetCurrentTick;
-            s := s + ', ' + _db(ct);
+          ct := _GetCurrentTick;
+          s := s + ', ' + _db(ct);
 
-            s := s + ', ' + inttostr(zInvoiceNumber);
-            s := s + ', ' + _db(zInvoiceDate, True);
-            sTmp := _strTokenAt(stlPaySelections[i], '|', 0);
-            s := s + ', ' + _db(_strTokenAt(stlPaySelections[i], '|', 0));
-            s := s + ', ' + _CommaToDot
-              (trim(floattostr(iMultiplier *
-              _StrToFloat(_strTokenAt(stlPaySelections[i], '|', 1)))));
-            s := s + ', ' + _db(PaymentDescription + ' [' +
-              _strTokenAt(stlPaySelections[i], '|', 0) + ']');
-            s := s + ', ' + _CommaToDot(floattostr(zCurrencyRate));
-            s := s + ', ' + _db(edtCurrency.Text);
-            if PaymentType = ptInvoice then
-              s := s + ', 0'
-            else if PaymentType = ptDownPayment then
-              s := s + ', 1';
-            s := s + ', ' + inttostr(AYear);
-            s := s + ', ' + inttostr(AMon);
-            s := s + ', ' + inttostr(ADay);
-            s := s + ', ' + _db(d.roomerMainDataSet.username);
-            s := s + ', ' + _db(FInvoiceIndex);
-            s := s + ')';
+          s := s + ', ' + inttostr(zInvoiceNumber);
+          s := s + ', ' + _db(zInvoiceDate, True);
+          sTmp := _strTokenAt(stlPaySelections[i], '|', 0);
+          s := s + ', ' + _db(_strTokenAt(stlPaySelections[i], '|', 0));
+          s := s + ', ' + _CommaToDot
+            (trim(floattostr(iMultiplier *
+            _StrToFloat(_strTokenAt(stlPaySelections[i], '|', 1)))));
+          s := s + ', ' + _db(PaymentDescription + ' [' +
+            _strTokenAt(stlPaySelections[i], '|', 0) + ']');
+          s := s + ', ' + _CommaToDot(floattostr(zCurrencyRate));
+          s := s + ', ' + _db(edtCurrency.Text);
+          if PaymentType = ptInvoice then
+            s := s + ', 0'
+          else if PaymentType = ptDownPayment then
+            s := s + ', 1';
+          s := s + ', ' + inttostr(AYear);
+          s := s + ', ' + inttostr(AMon);
+          s := s + ', ' + inttostr(ADay);
+          s := s + ', ' + _db(d.roomerMainDataSet.username);
+          s := s + ', ' + _db(FInvoiceIndex);
+          s := s + ')';
 
-            lExecutionPlan.AddExec(s);
-            try
-              paymentValue := iMultiplier *
-                _StrToFloat(_strTokenAt(stlPaySelections[i], '|', 1));
-              paymentCode := _strTokenAt(stlPaySelections[i], '|', 0);
-              paymentStr := PaymentDescription + ' [' +
-                _strTokenAt(stlPaySelections[i], '|', 0) + ']';
+          lExecutionPlan.AddExec(s);
+          try
+            paymentValue := iMultiplier *
+              _StrToFloat(_strTokenAt(stlPaySelections[i], '|', 1));
+            paymentCode := _strTokenAt(stlPaySelections[i], '|', 0);
+            paymentStr := PaymentDescription + ' [' +
+              _strTokenAt(stlPaySelections[i], '|', 0) + ']';
 
-              lstActivity.add(CreateInvoiceActivityLog(g.qUser, FReservation,
-                FRoomReservation, FnewSplitNumber, ADD_PAYMENT, paymentCode,
-                paymentValue, zInvoiceNumber, paymentStr));
-            Except
-            end;
-{$IFDEF DEBUG}
+            lstActivity.add(CreateInvoiceActivityLog(g.qUser, FReservation,
+              FRoomReservation, FnewSplitNumber, ADD_PAYMENT, paymentCode,
+              paymentValue, zInvoiceNumber, paymentStr));
+          Except
           end;
-{$ENDIF}
+
           AllOk := True;
         end;
 
@@ -6004,12 +5980,8 @@ end;
           if dkAutoTransfer then
           begin
             // BOOK KEEPING / Finance
-{$IFDEF DEBUG}
-            remoteResult := '';
-            if TotalPayments <> 0.00 then
-{$ENDIF}
-
-            remoteResult := d.roomerMainDataSet.SystemSendInvoiceToBookkeeping(zInvoiceNumber);
+            remoteResult := d.roomerMainDataSet.SystemSendInvoiceToBookkeeping
+              (zInvoiceNumber);
             if remoteResult <> '' then
             begin
               HandleExceptionListFromBookKeepingSystem(zInvoiceNumber,

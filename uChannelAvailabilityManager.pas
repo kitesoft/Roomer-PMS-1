@@ -1635,8 +1635,7 @@ begin
        'JOIN channelrates cr ON cr.roomclassId=rtg.id AND cmr.channelManager=cmr.channelManager AND cmr.planCodeId=cmr.planCodeId AND cmr.date=cr.date ' +
        'JOIN channels c ON c.Id=cr.channelId AND c.Active=1 ' +
        'JOIN currencies cu ON cu.Id=c.currencyId ' +
-       'JOIN (SELECT IFNULL((SELECT value FROM pms_settings WHERE keyGroup=''RATES_AND_AVAILABILITY_FUNCTIONS'' AND `key`=''MASTER_RATE_CURRENCY'' LIMIT 1), (SELECT NativeCurrency FROM control LIMIT 1)) AS  masterCurrencyId, ' +
-       '     IFNULL((SELECT value FROM pms_settings WHERE keyGroup=''RATES_AND_AVAILABILITY_FUNCTIONS'' AND `key`=''MASTER_RATE_CURRENCY_CONERT_ACTIVE'' LIMIT 1), False) AS masterCurrencyConvertActive) AS masterSettings ' +
+       'JOIN (SELECT IFNULL((SELECT value FROM pms_settings WHERE keyGroup=''RATES_AND_AVAILABILITY_FUNCTIONS'' AND `key`=''MASTER_RATE_CURRENCY'' LIMIT 1), (SELECT NativeCurrency FROM control LIMIT 1)) AS  masterCurrencyId) AS masterSettings ' +
        'JOIN currencies cuMaster ON cuMaster.Currency=masterSettings.masterCurrencyId ' +
        'JOIN hotelconfigurations hc ON hc.masterRatesActive=1 ' +
        'SET ' +
@@ -1671,16 +1670,15 @@ begin
        'JOIN channelrates cr ON cr.roomclassId=rtg.id AND cmr.channelManager=cmr.channelManager AND cmr.planCodeId=cmr.planCodeId AND cmr.date=cr.date ' +
        'JOIN channels c ON c.Id=cr.channelId AND c.Active=1 ' +
        'JOIN currencies cu ON cu.Id=c.currencyId ' +
-       'JOIN (SELECT IFNULL((SELECT value FROM pms_settings WHERE keyGroup=''RATES_AND_AVAILABILITY_FUNCTIONS'' AND `key`=''MASTER_RATE_CURRENCY'' LIMIT 1), (SELECT NativeCurrency FROM control LIMIT 1)) AS  masterCurrencyId, ' +
-       '     IFNULL((SELECT value FROM pms_settings WHERE keyGroup=''RATES_AND_AVAILABILITY_FUNCTIONS'' AND `key`=''MASTER_RATE_CURRENCY_CONERT_ACTIVE'' LIMIT 1), ''FALSE'') AS masterCurrencyConvertActive) AS masterSettings ' +
+       'JOIN (SELECT IFNULL((SELECT value FROM pms_settings WHERE keyGroup=''RATES_AND_AVAILABILITY_FUNCTIONS'' AND `key`=''MASTER_RATE_CURRENCY'' LIMIT 1), (SELECT NativeCurrency FROM control LIMIT 1)) AS  masterCurrencyId) AS masterSettings ' +
        'JOIN currencies cuMaster ON cuMaster.Currency=masterSettings.masterCurrencyId ' +
        'JOIN hotelconfigurations hc ON hc.masterRatesActive=1 ' +
        'SET cr.Price=IF(cmr.dirty AND rtg.connectRateToMasterRate=0, cr.Price, ' +
        '(cmr.price + IF(rtg.RateDeviationType=''FIXED_AMOUNT'', rtg.masterRateRateDeviation, cmr.Price * rtg.masterRateRateDeviation / 100) ' +
-       ')) * IF(masterSettings.masterCurrencyConvertActive=''TRUE'', cuMaster.AValue / cu.AValue, 1), ' +
+       ')) * cuMaster.AValue / cu.AValue, ' +
        'cr.SingleUsePrice=(IF(cmr.singleUsePriceDirty AND rtg.connectSingleUseRateToMasterRate=0, cr.singleUsePrice, ' +
        'cmr.singleUsePrice + IF(rtg.SingleUseRateDeviationType=''FIXED_AMOUNT'', rtg.masterRateSingleUseRateDeviation, cmr.singleUsePrice * rtg.masterRateSingleUseRateDeviation / 100) ' +
-       ')) * IF(masterSettings.masterCurrencyConvertActive=''TRUE'', cuMaster.AValue / cu.AValue, 1), ' +
+       ')) * cuMaster.AValue / cu.AValue, ' +
        'cr.MinStay=IF(cmr.minStayDirty AND rtg.connectMinStayToMasterRate=0, cr.MinStay, cmr.MinStay), ' +
        'cr.MaxStay=IF(cmr.maxStayDirty AND rtg.connectMaxStayToMasterRate=0, cr.MaxStay, cmr.MaxStay), ' +
        'cr.closedOnArrival=IF(cmr.closedOnArrivalDirty AND rtg.connectCOAToMasterRate=0, cr.closedOnArrival, cmr.closedOnArrival), ' +
