@@ -9834,8 +9834,8 @@ begin
     s := s + ' FROM '#10;
     s := s + '   reservations '#10;
     s := s + ' WHERE ';
-    s := s + '   (invRefrence = %s) '#10;
-    s := s + '   AND (ResFlag <> ' + _db(STATUS_DELETED) + ' ) '; // **zxhj line added
+    s := s + '   (invRefrence = ''%s'') '#10;
+    s := s + '   AND (Status <> ' + _db(STATUS_DELETED) + ' ) '; // **zxhj line added
     s := s + ' LIMIT 1 ';
     s := format(s, [ref]);
     if hData.rSet_bySQL(rSet, s) then
