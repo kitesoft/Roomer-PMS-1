@@ -164,7 +164,6 @@
         <DCC_AssertionsAtRuntime>false</DCC_AssertionsAtRuntime>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_4_Win32)'!=''">
-        <VerInfo_PreRelease>true</VerInfo_PreRelease>
         <VerInfo_Build>4</VerInfo_Build>
         <VerInfo_Release>11</VerInfo_Release>
         <VerInfo_Debug>false</VerInfo_Debug>
