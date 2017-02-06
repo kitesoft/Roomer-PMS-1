@@ -965,6 +965,7 @@ begin
   constants.Add('shTx_SystemActions_DescriptionIsRequired', 'Description - is required - Use ESC to cancel');
   constants.Add('shTx_SystemActions_EditInGrid', 'edit in grid');
   constants.Add('shTx_Rates_DescriptionRequired', 'Description is required - set value or use [ESC] to cancel ');
+  constants.Add('shTx_Taxes_BookingItemRequired', 'Booking Item is required - set value or use [ESC] to cancel ');
   constants.Add('shTx_Rates_DescriptionIsRequired', 'Description - is required - Use ESC to cancel');
   constants.Add('shTx_Rates_DefaultForCurrenyAlreadyExists', 'Default for %s already exists - Use [ESC] to abandon changes');
   constants.Add('shTx_Rates_CurrencyIsRequired', 'Currency - is required');

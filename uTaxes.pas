@@ -578,6 +578,14 @@ begin
     Exit;
   end;
 
+  if zData.Booking_Item.IsEmpty then
+  begin
+    showmessage(GetTranslatedText('shTx_Taxes_BookingItemRequired'));
+    tvData.GetColumnByFieldName('Booking_item').Focused := True;
+    abort;
+    exit
+  end;
+
   if tvData.DataController.DataSource.State = dsEdit then
   begin
     if UPD_Taxes(zData) then
