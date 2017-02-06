@@ -35,3 +35,5 @@ if "%answer%"=="yes" (
   echo Copying to %target% cancelled
 )
 endlocal
+
+pause

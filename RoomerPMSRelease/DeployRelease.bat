@@ -30,3 +30,5 @@ if "%answer%"=="yes" (
   echo Copying to S3 cancelled
 )
 endlocal
+
+pause
