@@ -263,7 +263,6 @@ uses
   uMasterRateDefaults in 'Rates\uMasterRateDefaults.pas' {frmMasterRateDefaults},
   uTopClassAvailabilityOrder in 'uTopClassAvailabilityOrder.pas' {FrmTopClassAvailabilityOrder},
   _Glob in 'Extras\_Glob.pas',
-  uCurrencyHandlersMap in 'uCurrencyHandlersMap.pas';
   uCurrencyHandlersMap in 'uCurrencyHandlersMap.pas',
   RoomerExceptionHandling in 'RoomerExceptionHandling.pas';
 

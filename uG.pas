@@ -1024,7 +1024,7 @@ begin
       d.roomerMainDataSet.AppSecret := secret;
       d.roomerMainDataSet.ApplicationID := qApplicationID;
 
-      ProcessAppIni(1);
+      ReadWriteSettingsToRegistry(1);
     end;
   except
      // Fow now: Ignore
@@ -1052,7 +1052,6 @@ begin
   RegisterApplication;
 end;
 
-procedure TGlobalApplication.ProcessAppIni(aMethod : integer; initialRead : Boolean = false);
 procedure TGlobalApplication.ReadWriteSettingsToRegistry(aMethod : integer; initialRead : Boolean = false);
 const
   secDiretories = 'Diretories';
@@ -1370,7 +1369,6 @@ end;
 procedure CloseApplication;
 begin
   // --
-  G.ProcessAppIni(1); // 0=Open 1=CloseGlbApp.SetFasta;
   G.ReadWriteSettingsToRegistry(1); // 0=Open 1=CloseGlbApp.SetFasta;
   G.free;
 end;
