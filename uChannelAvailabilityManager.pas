@@ -344,8 +344,8 @@ type
     sLabel2: TsLabel;
     sLabel3: TsLabel;
     sLabel4: TsLabel;
-    deStartDate: TsDateEdit;
-    sButton6: TsButton;
+    deInitialStartDate: TsDateEdit;
+    btnInitialShow: TsButton;
     __cblVisibleDays: TsRadioGroup;
     procedure FormCreate(Sender: TObject);
     procedure timStartTimer(Sender: TObject);
@@ -433,7 +433,7 @@ type
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure btnRefreshClick(Sender: TObject);
     procedure __cbxSelectAllClick(Sender: TObject);
-    procedure sButton6Click(Sender: TObject);
+    procedure btnInitialShowClick(Sender: TObject);
   private
     { Private declarations }
     RoomerDataSet: TRoomerDataSet;
@@ -448,11 +448,11 @@ type
     anyDirectConnection : Boolean;
     onlyDirectConnection : Boolean;
 
-    startDate : TDateTime;
-
     ThreadedDataGetter : TGetThreadedData;
 
     CurrencyHandlersMap : TCurrencyHandlersMap;
+    FNumberOfDaysDisplayed : Integer;
+
 
 
     procedure ShowAvailabilityForSelectedChannelManager;
@@ -556,9 +556,6 @@ type
     function CorrectAmountByCurrency(price: Double; fromCurrencyId, toCurrencyId: Integer): Double;
     procedure LoadChannels;
     function SelectedChannelCount: Integer;
-    function isChannelNameRow(iRow: integer): Boolean;
-    function getChannelNameRowOfRow(iCol, iRow: integer): Integer;
-    function isEmptyRow(iRow: integer): Boolean;
     function GetSelectedRateSet(fromDate, toDate: TDate; withMasterRates: Boolean): TRoomerDataSet;
     function GetSelectedChannelsAsCDL: String;
     function OnlyMasterSelected: Boolean;
@@ -595,7 +592,9 @@ uses ioUtils, uMain, uDateUtils, uStringUtils, _glob, uAppGlobal, PrjConst,
   uFrmChannelCopyFrom, uRoomerMessageDialog, uDImages, uExcelProcessors, uG, uEmailExcelSheet, hData,
   uActivityLogs,
   UITypes
-  , uFloatUtils, uFileSystemUtils, uSQLUtils;
+  , uFloatUtils, uFileSystemUtils, uSQLUtils
+  , Math
+  ;
 
 const
   BODY_START = '<body bgcolor="#0000FF"><font bgcolor="#0000FF" color="#FFFFFF">';
@@ -607,8 +606,6 @@ const
   ACTIVE_SETTING_RESTRICTION = '<b>%s</b> = %d.<br>';
 
   MAX_UPDATES_PER_CALL =  600;
-
-  NUMBER_OF_DAYS_DISPLAYED : Integer = 14;
 
 procedure ShowChannelAvailabilityManager(embedPanel: TsPanel = nil; WindowCloseEvent: TNotifyEvent = nil);
 begin
@@ -713,17 +710,17 @@ end;
 
 procedure TfrmChannelAvailabilityManager.btnBackClick(Sender: TObject);
 begin
-  startDate := startDate - NUMBER_OF_DAYS_DISPLAYED;
-  if TRUNC(startDate) < TRUNC(now) then
-    startDate := TRUNC(now);
-  dateEdit.Date := startDate;
+  dateEdit.Date := max(Now, dateEdit.Date - FNumberOfDaysDisplayed);
+//  if TRUNC(startDate) < TRUNC(now) then
+//    startDate := TRUNC(now);
+//  dateEdit.Date := startDate;
   RefreshGridsData;
 end;
 
 procedure TfrmChannelAvailabilityManager.btnBeginClick(Sender: TObject);
 begin
-  startDate := TRUNC(now);
-  dateEdit.Date := startDate;
+  dateEdit.Date:= TRUNC(now);
+//  dateEdit.Date := startDate;
   RefreshGridsData;
 end;
 
@@ -734,17 +731,17 @@ end;
 
 procedure TfrmChannelAvailabilityManager.btnEndClick(Sender: TObject);
 begin
-  startDate := TRUNC(now + CurrentChannelMan.FNumDays - NUMBER_OF_DAYS_DISPLAYED);
-  dateEdit.Date := startDate;
+  dateEdit.Date := TRUNC(now + CurrentChannelMan.FNumDays - FNumberOfDaysDisplayed);
+//  dateEdit.Date := startDate;
   RefreshGridsData;
 end;
 
 procedure TfrmChannelAvailabilityManager.btnForwardClick(Sender: TObject);
 begin
-  startDate := startDate + NUMBER_OF_DAYS_DISPLAYED;
-  if TRUNC(startDate) > TRUNC(now + CurrentChannelMan.FNumDays) then
-    startDate := TRUNC(now + CurrentChannelMan.FNumDays - NUMBER_OF_DAYS_DISPLAYED);
-  dateEdit.Date := startDate;
+  dateEdit.Date := dateEdit.Date + FNumberOfDaysDisplayed;
+  if TRUNC(dateEdit.Date) > TRUNC(now + CurrentChannelMan.FNumDays) then
+    dateEdit.Date := TRUNC(now + CurrentChannelMan.FNumDays - FNumberOfDaysDisplayed);
+//  dateEdit.Date := startDate;
   RefreshGridsData;
 end;
 
@@ -766,7 +763,7 @@ begin
   CanAccept := (trunc(ADate) >= trunc(now)) AND (trunc(ADate) <= trunc(now) + CurrentChannelMan.FNumDays + 1);
   if CanAccept then
   begin
-    startDate := ADate;
+//    startDate := ADate;
     RefreshGridsData();
     iCol := 1;
     grid.ScrollInView(1, grid.Row);
@@ -874,18 +871,6 @@ begin
     result := TPriceData(rateGrid.Objects[iCol, iPriceRow])
 end;
 
-function TfrmChannelAvailabilityManager.getChannelNameRowOfRow(iCol, iRow: integer): Integer;
-var
-  iPriceRow: integer;
-begin
-  result := 0;
-  if (iCol < 1) OR (iRow < 1) then
-    exit;
-  iPriceRow := findPriceRowFrom(iRow);
-  if isPriceRow(iPriceRow) then
-    result := iPriceRow - 1;
-end;
-
 function TfrmChannelAvailabilityManager.isCurrentlySelectedValueEdited(iCol, iRow: integer): Boolean;
 var
   PriceData: TPriceData;
@@ -940,16 +925,6 @@ end;
 function TfrmChannelAvailabilityManager.isPriceRow(iRow: integer): Boolean;
 begin
   result := (rateGrid.ColCount > 1) AND (iRow > 0) AND (Assigned(rateGrid.Objects[1, iRow]) AND (rateGrid.Objects[1, iRow] IS TPriceData));
-end;
-
-function TfrmChannelAvailabilityManager.isChannelNameRow(iRow: integer): Boolean;
-begin
-  result := rateGrid.Objects[0, iRow] = Pointer(20);
-end;
-
-function TfrmChannelAvailabilityManager.isEmptyRow(iRow: integer): Boolean;
-begin
-  result := rateGrid.Objects[0, iRow] = Pointer(21);
 end;
 
 function TfrmChannelAvailabilityManager.isPriceCell(iCol, iRow: integer): Boolean;
@@ -1040,13 +1015,13 @@ end;
 procedure TfrmChannelAvailabilityManager.FormCreate(Sender: TObject);
 begin
   RoomerDataSet := CreateNewDataSet;
-//  pgcPages.Visible := False;
   cbxRateRestrictionsClick(cbxRateRestrictions);
 
   RoomerLanguage.TranslateThisForm(self);
   glb.PerformAuthenticationAssertion(self); PlaceFormOnVisibleMonitor(self);
 
   CurrencyHandlersMap := TCurrencyHandlersMap.Create;
+  FNumberOfDaysDisplayed := 14;
 
   imgHelp.Hint := format('<body bgcolor="#0000FF">Color definitions in grid:<br><hr><br>' + '<font %s color="#FFFFFF"> &nbsp;&nbsp;&nbsp;&nbsp;</font>' +
     '<font bgcolor="#0000FF" color="#FFFFFF"> Rate, availability or restriction has changed.</font><br>', [GetHTMLColor(clRed, true)]) +
@@ -1062,7 +1037,7 @@ begin
 
   pgcPages.ActivePageIndex := 0;
 
-  startDate := TRUNC(now); //AvailSet['today'];
+  dateEdit.Date := TRUNC(now);
   ThreadedDataGetter := TGetThreadedData.Create;
   timStart.enabled := true;
 end;
@@ -1141,7 +1116,6 @@ procedure TfrmChannelAvailabilityManager.timStartTimer(Sender: TObject);
 var a, b : Boolean;
 begin
   timStart.enabled := false;
-//  pgcPages.Visible := False;
   PrepareUserInterface;
 {$IFDEF DEBUG}
       lblReadTime.Visible := True;
@@ -1152,9 +1126,6 @@ begin
 {$IFDEF DEBUG}
       EndTimer(ReadTime, lblReadTime);
 {$ENDIF}
-
-  dateEdit.date := startDate;
-  dateEdit.OnAcceptDate := dateEditAcceptDate;
 
 {$IFDEF DEBUG}
       StartTimer(ReadTime);
@@ -1220,7 +1191,7 @@ function TfrmChannelAvailabilityManager.IsWeekend(ACol: integer): Boolean;
 begin
   result := false;
   if ACol > 0 then
-    result := (DayOfWeek(startDate + ACol - 1) IN [1, 7]);
+    result := (DayOfWeek(dateEdit.Date + ACol - 1) IN [1, 7]);
 end;
 
 function TfrmChannelAvailabilityManager.GetDateLabel(date: TDateTime): String;
@@ -1635,7 +1606,8 @@ begin
        'JOIN channelrates cr ON cr.roomclassId=rtg.id AND cmr.channelManager=cmr.channelManager AND cmr.planCodeId=cmr.planCodeId AND cmr.date=cr.date ' +
        'JOIN channels c ON c.Id=cr.channelId AND c.Active=1 ' +
        'JOIN currencies cu ON cu.Id=c.currencyId ' +
-       'JOIN (SELECT IFNULL((SELECT value FROM pms_settings WHERE keyGroup=''RATES_AND_AVAILABILITY_FUNCTIONS'' AND `key`=''MASTER_RATE_CURRENCY'' LIMIT 1), (SELECT NativeCurrency FROM control LIMIT 1)) AS  masterCurrencyId) AS masterSettings ' +
+       'JOIN (SELECT IFNULL((SELECT value FROM pms_settings WHERE keyGroup=''RATES_AND_AVAILABILITY_FUNCTIONS'' AND `key`=''MASTER_RATE_CURRENCY'' LIMIT 1), (SELECT NativeCurrency FROM control LIMIT 1)) AS  masterCurrencyId, ' +
+       '     IFNULL((SELECT value FROM pms_settings WHERE keyGroup=''RATES_AND_AVAILABILITY_FUNCTIONS'' AND `key`=''MASTER_RATE_CURRENCY_CONERT_ACTIVE'' LIMIT 1), False) AS masterCurrencyConvertActive) AS masterSettings ' +
        'JOIN currencies cuMaster ON cuMaster.Currency=masterSettings.masterCurrencyId ' +
        'JOIN hotelconfigurations hc ON hc.masterRatesActive=1 ' +
        'SET ' +
@@ -1670,15 +1642,16 @@ begin
        'JOIN channelrates cr ON cr.roomclassId=rtg.id AND cmr.channelManager=cmr.channelManager AND cmr.planCodeId=cmr.planCodeId AND cmr.date=cr.date ' +
        'JOIN channels c ON c.Id=cr.channelId AND c.Active=1 ' +
        'JOIN currencies cu ON cu.Id=c.currencyId ' +
-       'JOIN (SELECT IFNULL((SELECT value FROM pms_settings WHERE keyGroup=''RATES_AND_AVAILABILITY_FUNCTIONS'' AND `key`=''MASTER_RATE_CURRENCY'' LIMIT 1), (SELECT NativeCurrency FROM control LIMIT 1)) AS  masterCurrencyId) AS masterSettings ' +
+       'JOIN (SELECT IFNULL((SELECT value FROM pms_settings WHERE keyGroup=''RATES_AND_AVAILABILITY_FUNCTIONS'' AND `key`=''MASTER_RATE_CURRENCY'' LIMIT 1), (SELECT NativeCurrency FROM control LIMIT 1)) AS  masterCurrencyId, ' +
+       '     IFNULL((SELECT value FROM pms_settings WHERE keyGroup=''RATES_AND_AVAILABILITY_FUNCTIONS'' AND `key`=''MASTER_RATE_CURRENCY_CONERT_ACTIVE'' LIMIT 1), ''FALSE'') AS masterCurrencyConvertActive) AS masterSettings ' +
        'JOIN currencies cuMaster ON cuMaster.Currency=masterSettings.masterCurrencyId ' +
        'JOIN hotelconfigurations hc ON hc.masterRatesActive=1 ' +
        'SET cr.Price=IF(cmr.dirty AND rtg.connectRateToMasterRate=0, cr.Price, ' +
        '(cmr.price + IF(rtg.RateDeviationType=''FIXED_AMOUNT'', rtg.masterRateRateDeviation, cmr.Price * rtg.masterRateRateDeviation / 100) ' +
-       ')) * cuMaster.AValue / cu.AValue, ' +
+       ')) * IF(masterSettings.masterCurrencyConvertActive=''TRUE'', cuMaster.AValue / cu.AValue, 1), ' +
        'cr.SingleUsePrice=(IF(cmr.singleUsePriceDirty AND rtg.connectSingleUseRateToMasterRate=0, cr.singleUsePrice, ' +
        'cmr.singleUsePrice + IF(rtg.SingleUseRateDeviationType=''FIXED_AMOUNT'', rtg.masterRateSingleUseRateDeviation, cmr.singleUsePrice * rtg.masterRateSingleUseRateDeviation / 100) ' +
-       ')) * cuMaster.AValue / cu.AValue, ' +
+       ')) * IF(masterSettings.masterCurrencyConvertActive=''TRUE'', cuMaster.AValue / cu.AValue, 1), ' +
        'cr.MinStay=IF(cmr.minStayDirty AND rtg.connectMinStayToMasterRate=0, cr.MinStay, cmr.MinStay), ' +
        'cr.MaxStay=IF(cmr.maxStayDirty AND rtg.connectMaxStayToMasterRate=0, cr.MaxStay, cmr.MaxStay), ' +
        'cr.closedOnArrival=IF(cmr.closedOnArrivalDirty AND rtg.connectCOAToMasterRate=0, cr.closedOnArrival, cmr.closedOnArrival), ' +
@@ -1968,7 +1941,7 @@ begin
                   if glb.LocateSpecificRecord('channels', 'id', PriceData.FChannelId) then
                   begin
                     compensationPercentage := glb.ChannelsSet['compensationPercentage'];
-                    PriceToHotel := RoundTo(PriceData.FPrice / (1 + (compensationPercentage/100)), 0.01);
+                    PriceToHotel := uUtils.RoundTo(PriceData.FPrice / (1 + (compensationPercentage/100)), 0.01);
                     AddChannelToRatesExcelSheet(glb.ChannelsSet['channelManagerId'], glb.ChannelsSet['name'], '-------');
                     AddRateClassToRatesExcelSheet(PriceData.FRoomTypeGroupCode);
                     AddDateAndRateToRatesExcelSheet(PriceData.date, PriceData.FPrice, PriceToHotel, PriceData.stopSell, PriceData.FCOA, PriceData.minStay);
@@ -2127,7 +2100,7 @@ begin
     __cblVisibleDays.Items.AddStrings(__cbxVisibleDays.Items);
     __cblVisibleDays.ItemIndex := __cbxVisibleDays.ItemIndex;
 
-    deStartDate.Date := Trunc(Now);
+    deInitialStartDate.Date := Trunc(Now);
   end;
   pnlSelectView.Visible := show;
   pnlPublishButtons.Visible := NOT show;
@@ -2473,7 +2446,7 @@ var
 begin
   //
   lastDate := 0;
-  firstDate := startDate + FCurrentNumDays + 1;
+  firstDate := dateEdit.Date + FCurrentNumDays + 1;
   for i := 0 to ValueList.Count - 1 do
   begin
     if ValueList[i].ADate < firstDate then
@@ -2497,7 +2470,7 @@ begin
       for iRow := 0 to rateGrid.RowCount - 1 do
       begin
         if isAnyEditableRow(iRow) then
-          for iCol := trunc(firstDate) - trunc(startDate) + 1 to trunc(lastDate) - trunc(startDate) + 1 do
+          for iCol := trunc(firstDate) - trunc(dateEdit.Date) + 1 to trunc(lastDate) - trunc(dateEdit.Date) + 1 do
           begin
             PriceData := getPriceDataOfRow(iCol, iRow);
             if Assigned(PriceData) AND (PriceData.channelId = destChannelId) then
@@ -2641,7 +2614,6 @@ function TfrmChannelAvailabilityManager.OnlyMasterSelected : Boolean;
 var i : Integer;
     bMaster, bOther : Boolean;
 begin
-  result := False;
   bMaster := False;
   bOther := False;
   for i := 0 to ccCHannels.Items.Count - 1 do
@@ -2758,8 +2730,8 @@ begin
     AdjustSelectableBulkChannels;
     if __cbxVisibleDays.ItemIndex = -1 then
        __cbxVisibleDays.ItemIndex := 0;
-    NUMBER_OF_DAYS_DISPLAYED := StrToIntDef(__cbxVisibleDays.Items[__cbxVisibleDays.ItemIndex], 0) - 1;
-    if NUMBER_OF_DAYS_DISPLAYED < 0 then
+    FNumberOfDaysDisplayed := StrToIntDef(__cbxVisibleDays.Items[__cbxVisibleDays.ItemIndex], 0) - 1;
+    if FNumberOfDaysDisplayed < 0 then
     begin
       BlinkCombo;
       exit;
@@ -2770,12 +2742,12 @@ begin
     dateEdit.MaxDate := MaxDate;
 
 
-    dtBulkFrom.MinDate := startDate;
-    dtBulkFrom.MaxDate := startDate + NUMBER_OF_DAYS_DISPLAYED;
+    dtBulkFrom.MinDate := dateEdit.Date;
+    dtBulkFrom.MaxDate := dateEdit.Date + FNumberOfDaysDisplayed;
     if dtBulkFrom.MaxDate > MaxDate then
       dtBulkFrom.MaxDate := MaxDate;
-    dtBulkTo.MinDate := startDate;
-    dtBulkTo.MaxDate := startDate + NUMBER_OF_DAYS_DISPLAYED;
+    dtBulkTo.MinDate := dateEdit.Date;
+    dtBulkTo.MaxDate := dateEdit.Date + FNumberOfDaysDisplayed;
     if dtBulkTo.MaxDate > MaxDate then
       dtBulkTo.MaxDate := MaxDate;
     Screen.Cursor := crHourglass;
@@ -2829,10 +2801,10 @@ begin
   cmIndex := cbxChannelManagers.ItemIndex;
   if cmIndex < 0 then
     exit;
-  FCurrentNumDays := NUMBER_OF_DAYS_DISPLAYED; // ChannelMan.FNumDays;
+  FCurrentNumDays := FNumberOfDaysDisplayed; // ChannelMan.FNumDays;
 
-  sFrom := uDateUtils.dateToSqlString(startDate);
-  sTo := uDateUtils.dateToSqlString(startDate + FCurrentNumDays); // ChannelMan.FNumDays);
+  sFrom := uDateUtils.dateToSqlString(dateEdit.Date);
+  sTo := uDateUtils.dateToSqlString(dateEdit.Date+ FCurrentNumDays); // ChannelMan.FNumDays);
 
   sql := format('SELECT DISTINCT pdd.date, rtg.Code, rtg.searchCode, rtg.Description, getRoomClassAvailability(rtg.Code, pdd.date) AS freeRooms ' +
     ' FROM (SELECT Active, Code, Description, TopClass AS searchCode FROM ' + '     roomtypegroups) rtg, ' + '     predefineddates pdd ' +
@@ -2885,8 +2857,11 @@ end;
 
 procedure TfrmChannelAvailabilityManager.dtBulkToChange(Sender: TObject);
 begin
-  btnApplyBulk.enabled := (((edtAvail.Text <> '') AND (StrToIntDef(edtAvail.Text, 0) >= -1)) OR (cbxAvailType.ItemIndex >= 2 - pgcPages.ActivePageIndex) OR
-    (pgcPages.ActivePageIndex = 1)) AND (trunc(dtBulkFrom.date) >= trunc(startDate)) AND (trunc(dtBulkTo.date) >= trunc(dtBulkFrom.date));
+  btnApplyBulk.enabled := (
+                            ((edtAvail.Text <> '') AND (StrToIntDef(edtAvail.Text, 0) >= -1)) OR
+                            (cbxAvailType.ItemIndex >= 2 - pgcPages.ActivePageIndex) OR
+                            (pgcPages.ActivePageIndex = 1)) AND (trunc(dtBulkFrom.date) >= trunc(dateEdit.Date)) AND (trunc(dtBulkTo.date) >= trunc(dtBulkFrom.date));
+
   if dtBulkTo.date < dtBulkFrom.date then
     dtBulkTo.date := dtBulkFrom.date;
 end;
@@ -3081,15 +3056,15 @@ begin
     exit;
   ChannelMan := TChannelManagerValue(cbxChannelManagers.Items.Objects[cmIndex]);
   cmId := ChannelMan.FId;
-  FCurrentNumDays := NUMBER_OF_DAYS_DISPLAYED; // ChannelMan.FNumDays;
+  FCurrentNumDays := FNumberOfDaysDisplayed; // ChannelMan.FNumDays;
 
   pcIndex := cbxPlanCodes.ItemIndex;
   if pcIndex < 0 then
     exit;
   pcId := TPlanCodeValue(cbxPlanCodes.Items.Objects[pcIndex]).FId;
 
-  sFrom := uDateUtils.dateToSqlString(startDate);
-  sTo := uDateUtils.dateToSqlString(startDate + FCurrentNumDays); // ChannelMan.FNumDays);
+  sFrom := uDateUtils.dateToSqlString(dateEdit.Date);
+  sTo := uDateUtils.dateToSqlString(dateEdit.Date + FCurrentNumDays); // ChannelMan.FNumDays);
 
   sql := format('SELECT *, CONCAT(rtg.OrderIndex, ''x'', rtg.TopClass, ''x'', rtg.Code) AS OrderID FROM roomtypegroups rtg ' +
     'WHERE rtg.Active AND rtg.sendAvailability AND (ISNULL(rtg.TopClass) OR (rtg.TopClass='''') OR (rtg.TopClass=rtg.Code)) ' +
@@ -3112,7 +3087,7 @@ begin
 {$IFDEF DEBUG}
       StartTimer(ReadTime);
 {$ENDIF}
-      ASet := RoomerDataSet.ActivateNewDataset(RoomerDataSet.SystemGetAvailabilities(startDate, NUMBER_OF_DAYS_DISPLAYED, cmId, pcId));
+      ASet := RoomerDataSet.ActivateNewDataset(RoomerDataSet.SystemGetAvailabilities(dateEdit.Date, FNumberOfDaysDisplayed, cmId, pcId));
 {$IFDEF DEBUG}
       EndTimer(ReadTime, lblReadTime);
 {$ENDIF}
@@ -3466,7 +3441,6 @@ var
   end;
 
 var channels : String;
-    channelId : Integer;
     isCurrentDirectConnection : Boolean;
 
 begin
@@ -3476,7 +3450,7 @@ begin
   cmId := GetChannelManagerId;
   if cmId < 0 then
     exit;
-  FCurrentNumDays := NUMBER_OF_DAYS_DISPLAYED; //CurrentChannelMan.FNumDays;
+  FCurrentNumDays := FNumberOfDaysDisplayed; //CurrentChannelMan.FNumDays;
   pgcPages.Visible := False;
   try
 
@@ -3528,11 +3502,9 @@ begin
       if AvailSet.EOF then
         exit;
 
-      channelId := -1;
       if availSet['masterRatesActive'] then
       begin
         channels := '-2';
-        channelId := -2;
       end
       else
       begin
@@ -3543,8 +3515,7 @@ begin
   {$IFDEF DEBUG}
       StartTimer(ReadTime);
   {$ENDIF}
-//      rateSet := RoomerDataSet.ActivateNewDataset(RoomerDataSet.SystemGetChannelRates1812(startDate, NUMBER_OF_DAYS_DISPLAYED, channelId, cmId, pcId));
-      rateSet := GetSelectedRateSet(startDate, startDate + NUMBER_OF_DAYS_DISPLAYED, availSet['masterRatesActive']);
+      rateSet := GetSelectedRateSet(dateEdit.Date, dateEdit.Date + FNumberOfDaysDisplayed, availSet['masterRatesActive']);
   {$IFDEF DEBUG}
       EndTimer(ReadTime, lblReadTime);
   {$ENDIF}
@@ -3579,7 +3550,7 @@ begin
         rateGrid.RowCount := 2;
         rateGrid.ColCount := FCurrentNumDays + 2;
         for i := 1 to FCurrentNumDays + 1 do
-          rateGrid.Cells[i, 0] := GetDateLabel(startDate + i - 1);
+          rateGrid.Cells[i, 0] := GetDateLabel(dateEdit.Date + i - 1);
 
         iRow := 0;
         AvailSet.First;
@@ -3675,7 +3646,7 @@ begin
 
               end;
 
-              iRateCol := trunc(RateSet['date']) - trunc(startDate) + 1;
+              iRateCol := trunc(RateSet['date']) - trunc(dateEdit.Date) + 1;
               price := RateSet['price'];
 
               rateGrid.Cells[iRateCol, iRateRow] := Trim(FloatToStrF(price, ffFixed {ffNumber}, 12, NumDecimals(AvailSet['rateRoundingType'])));
@@ -4191,8 +4162,8 @@ end;
 
 procedure TfrmChannelAvailabilityManager.InitializeBulkOperation;
 begin
-  dtBulkFrom.date := startDate;
-  dtBulkTo.date := startDate;
+  dtBulkFrom.date := dateEdit.Date;
+  dtBulkTo.date := dateEdit.Date;
   edtAvail.Text := '';
   cbMon.Checked := true;
   cbTue.Checked := true;
@@ -4543,7 +4514,7 @@ begin
     ForceRateUpdateForCurrentPeriod;
 end;
 
-procedure TfrmChannelAvailabilityManager.sButton6Click(Sender: TObject);
+procedure TfrmChannelAvailabilityManager.btnInitialShowClick(Sender: TObject);
 var i : Integer;
 begin
   ccChannels.OnClickCheck := nil;
@@ -4551,7 +4522,7 @@ begin
     for i := 0 to __cblSelectChannels.Items.Count - 1 do
       ccChannels.Checked[i] := __cblSelectChannels.Checked[i];
     __cbxVisibleDays.ItemIndex := __cblVisibleDays.ItemIndex;
-    dateEdit.Date := deStartDate.Date;
+    dateEdit.Date := deInitialStartDate.Date;
   finally
     ccChannels.OnClickCheck := ccChannelsClickCheck;
   end;
@@ -4615,8 +4586,7 @@ procedure TfrmChannelAvailabilityManager.__cbxVisibleDaysCloseUp(Sender: TObject
 begin
   if StrToInt(__cbxVisibleDays.Items[__cbxVisibleDays.ItemIndex])=400 then
   begin
-    startDate := TRUNC(now);
-    dateEdit.Date := startDate;
+    dateEdit.Date:= TRUNC(now);
   end;
   RefreshGridsData;
 end;
@@ -4687,7 +4657,6 @@ procedure TfrmChannelAvailabilityManager.HideShowExtraCells;
 var
   iRow, iHeight: integer;
   PriceData : TPriceData;
-  i: Integer;
 CONST CHECK_BOX_CELL_HEIGHT = 22;
 
   procedure HideOrShowRow(iRow : Integer; iHeight : integer);
@@ -5401,44 +5370,9 @@ begin
 end;
 
 procedure TfrmChannelAvailabilityManager.rateGridKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
-var
-  iRow: integer;
 begin
   if Halting then
     exit;
-//  if Key = VK_DOWN then
-//  begin
-//    if TAdvStringGrid(Sender).Row <= TAdvStringGrid(Sender).RowCount - 1 then
-//    begin
-//      iRow := TAdvStringGrid(Sender).Row + 1;
-//      while ((iRow < TAdvStringGrid(Sender).RowCount) AND (TAdvStringGrid(Sender).RowHeights[iRow] < 9)) do
-//        iRow := iRow + 1;
-//      if iRow <= TAdvStringGrid(Sender).RowCount then
-//        TAdvStringGrid(Sender).Row := iRow - 1;
-//    end;
-//  end
-//  else if Key = VK_UP then
-//  begin
-//    if TAdvStringGrid(Sender).Row > 2 then
-//    begin
-//      iRow := TAdvStringGrid(Sender).Row - 1;
-//      while ((iRow > 1) AND (TAdvStringGrid(Sender).RowHeights[iRow] < 9)) do
-//        iRow := iRow - 1;
-//      if iRow > 1 then
-//        TAdvStringGrid(Sender).Row := iRow + 1;
-//    end;
-//  end;
-
-//  if Key = VK_DOWN then
-//  begin
-//    if TAdvStringGrid(Sender).Row <= TAdvStringGrid(Sender).RowCount - 1 then
-//      TAdvStringGrid(Sender).Row := TAdvStringGrid(Sender).Row + 1;
-//  end
-//  else if Key = VK_UP then
-//  begin
-//    if TAdvStringGrid(Sender).Row > 2 then
-//      TAdvStringGrid(Sender).Row := TAdvStringGrid(Sender).Row - 1;
-//  end;
 
   if NOT TAdvStringGrid(Sender).EditMode then
   begin

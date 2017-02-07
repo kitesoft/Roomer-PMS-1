@@ -5092,13 +5092,12 @@ begin
           end;
         end;
     end;
+    if ACol in [col_Item, col_ItemCount, col_ItemPrice] then
+    begin
+      calcAndAddAutoItems(FReservation); // 003
+    end;
   finally
     agrLines.EndUpdate;
-  end;
-
-  if ACol in [col_Item, col_ItemCount, col_ItemPrice] then
-  begin
-    calcAndAddAutoItems(FReservation); // 003
   end;
 end;
 
