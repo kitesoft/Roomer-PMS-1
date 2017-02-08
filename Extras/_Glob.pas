@@ -116,7 +116,6 @@ function _lineDate2Date(linedate : string) : Tdate;
 
 function _text2numText(aText : string) : string;
 function _numtext2Text(aText : string) : string;
-function _AddSlash(const S : string) : string;
 
 function _islerl(sText : string; erl : Boolean) : string;
 function _kMultiplyer(kredit : Boolean) : integer;
@@ -169,8 +168,6 @@ function _StatusToText(status : string) : string; deprecated 'Use TReservationSt
 function _BreakfastToText(included : Boolean) : string; deprecated 'Use TBreakfastState.AsReadableString';
 function _AccountTypeToText(isGroupAccount : Boolean) : string; deprecated 'Use TAccountType.AsReadableString';
 
-Function _textAppend(aFileName : string; line : string; addDate : boolean = false) : boolean;
-
 function _TimeStrToSec(TimeStr : string) : integer;
 
 function _appendLine(path : string; line : string) : boolean;
@@ -210,32 +207,6 @@ begin
   result := g.qProgramExePath + 'data\grids' + '.ini';
 end;
 
-
-Function _textAppend(aFileName : string; line : string; addDate : boolean = false) : boolean;
-var aTextFile : TextFile;
-    aText : String;
-begin
-  result := true;
-  try
-    AssignFile(aTextFile, aFileName);
-    try
-      if not fileExists(aFileName) then
-        rewrite(aTextFile)
-      else
-        append(aTextFile);
-      aText := line;
-      if addDate then
-        aText := format('%s %s | %s', [FormatDateTime('yyyy-mm-dd', now),
-                                       FormatDateTime('hh:nn:ss', now),
-                                       aText]);
-      writeln(aTextFile, aText);
-    finally
-      CloseFile(aTextfile);
-    end;
-  Except
-    result := false;
-  end;
-end;
 
 procedure _RestoreWinPos(vIni, vSection : string; var vForm : TForm);
 var
@@ -295,10 +266,6 @@ begin
   end;
 end;
 
-function _AddSlash(const S : string) : string;
-begin
-  Result := IncludeTrailingPathDelimiter(s);
-end;
 
 function _text2numText(aText : string) : string;
 var
@@ -2350,7 +2317,7 @@ var
 begin
   result := True;
   dateTimeTostring(sDate,'yyyymmdd',now);
-  FileName := _addslash(path)+sDate+'Log.txt';
+  FileName := IncludeTrailingPathDelimiter(path)+sDate+'Log.txt';
 
   if not fileExists(FileName) then
   begin

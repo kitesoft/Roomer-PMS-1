@@ -32,6 +32,7 @@ type
   ERoomerExecutionPlanException = class(Exception);
 
   ERoomerDatasetException = class(Exception);
+  ERegistrationException = class(Exception);
 
   TRoomerDataSet = class;
   TRoomerDatasetList = TObjectList<TRoomerDataSet>;
@@ -174,6 +175,8 @@ type
     function downloadUrlAsStringUsingPostThreaded(const url: String; const Data: String; SetLastAccess: boolean = true;
       loggingInOut: Integer = 0 { 0/1/2 = neither/login/logout }; const contentType: String = ''): String;
     function FreeQueryThreaded(const query: String; SetLastAccess: boolean = true): String;
+    procedure SetAppKey(const Value: String);
+    procedure SetAppSecret(const Value: String);
   protected
     { Protected declarations }
     FUsername: String;
@@ -257,7 +260,9 @@ type
 
     function SecondsLeft: Integer;
 
-    function RegisterApplication(hotelId, username, password, appId: String): String;
+    procedure RegisterApplication;
+    procedure ClearCredentials;
+
 
     // ******************************************************
 
@@ -306,8 +311,8 @@ type
     property ParentRoomerDataSet: TRoomerDataSet read FRoomerDataSet write FRoomerDataSet;
 
     property ApplicationId: String read FApplicationID write FApplicationID;
-    property AppKey: String read FAppKey write FAppKey;
-    property AppSecret: String read FAppSecret write FAppSecret;
+    property AppKey: String read FAppKey write SetAppKey;
+    property AppSecret: String read FAppSecret write SetAppSecret;
 
     property AfterScroll;
 
@@ -318,6 +323,7 @@ procedure Register;
 implementation
 
 uses
+  Soap.EncdDecd,
   JSonManager,
   md5hash,
   uDateUtils,
@@ -342,7 +348,10 @@ uses
   IdSSLOpenSSL
   , XMLUtils
   , uStandaloneRoomerVersionInfo
-  , uRoomerDefinitions;
+  , ActiveX
+  , ComObj
+  , uRoomerDefinitions
+  ;
 
 resourcestring
   PROMOIR_ROOMER_HOTEL_IDENTIFIER = 'Promoir-Roomer-Hotel-Identifier';
@@ -548,14 +557,75 @@ begin
   Result := FOpenApiUri;
 end;
 
-function TRoomerDataSet.RegisterApplication(hotelId, username, password, appId: String): String;
+procedure parseXml(xmlStr : String; var key, secret : String);
+
+  function decodeSecret(secret : String) : String;
+  var res : TBytes;
+      i : Integer;
+
+  begin
+    result := '';
+    res := Soap.EncdDecd.DecodeBase64(secret);
+    for i := LOW(res) to HIGH(res) do
+      result := result + char(res[i]);
+  end;
+
+
+var
+  xml: OLEVariant; // IXMLDOMDocument;
+  node, node1: OLEVariant; // IXMLDomNode;
+  nodeName : String;
+  nodes_row: OLEVariant; // IXMLDomNodeList;
+  i, l : Integer;
+begin
+  key := ''; secret := '';
+  Coinitialize(nil);
+  xml := CreateOleObject('Microsoft.XMLDOM') as IXMLDOMDocument;
+  xml.async := False;
+  xml.loadXML(xmlStr);
+  xml.SetProperty('SelectionNamespaces', 'xmlns:a="http://www.promoir.nl/roomer/application/registration/2014/04"');
+  // xmlns:ns10="http://www.promoir.nl/roomer/application/registration/2014/04"
+  nodes_row := xml.selectNodes('/a:ApplicationInstanceRegistrationResponse/a:registrationResponse');
+  for i := 0 to nodes_row.length - 1 do
+  begin
+    node := nodes_row.item(i);
+    for l := 0 to node.childNodes.length - 1 do
+    begin
+      node1 := node.childNodes(l);
+      nodeName := node1.nodeName;
+      // ns3:key
+      // 1234567
+      if (copy(nodeName, length(nodeName) - 2, 3) = 'key') then
+        key := node1.text
+      else if (copy(nodeName, length(nodeName) - 5, 6) = 'secret') then
+        secret := decodeSecret(node1.text);
+    end;
+  end;
+end;
+
+
+procedure TROomerDataset.ClearCredentials;
+begin
+  FAppKey := '';
+  FAppSecret := '';
+end;
+
+procedure TRoomerDataSet.RegisterApplication;
+var
+  res: String;
 begin
   try
-    Result := downloadUrlAsStringUsingPost(OpenApiUri + 'credentials/register' +
-      format('?hotelId=%s&user=%s&password=%s&appId=%s', [EncodeURIComponent(hotelId), EncodeURIComponent(username),
-      AnsiString(HashedPassword(password)), EncodeURIComponent(appId)]), '');
+    res := downloadUrlAsStringUsingPost(OpenApiUri + 'credentials/register' +
+                format('?hotelId=%s&user=%s&password=%s&appId=%s', [EncodeURIComponent(hotelId), EncodeURIComponent(username),
+                AnsiString(HashedPassword(password)), EncodeURIComponent(FApplicationID)]), '');
+
+    CopyToClipboard(res);
+    if res <> '' then
+      parseXml(res, FAppKey, FAppSecret);
+
   except
-    Result := '';
+    on E: Exception do
+      raise ERegistrationException.Create('Error while registering application: ' + e.message);
   end;
 end;
 
@@ -1852,12 +1922,17 @@ begin
   FHotelId := hotelId;
   pwmd5 := AnsiString(HashedPassword(password));
 
-  res := loginViaPost(RoomerUri + 'authentication/login',
-    format('hotelid=%s&username=%s&pwencoded=%s&appname=%s&appversion=%s&datasettype=0&extraBuild=%s',
-    [hotelId, username, pwmd5, appName, appVersion, TRoomerVersionInfo.ExtraBuild]));
-  SetSessionLengthInSeconds(res);
-  FLastAccess := now;
-  FLoggedIn := true;
+  try
+    res := loginViaPost(RoomerUri + 'authentication/login',
+                      format('hotelid=%s&username=%s&pwencoded=%s&appname=%s&appversion=%s&datasettype=0&extraBuild=%s',
+                      [hotelId, username, pwmd5, appName, appVersion, TRoomerVersionInfo.ExtraBuild]));
+    SetSessionLengthInSeconds(res);
+    FLastAccess := now;
+    FLoggedIn := true;
+  except
+    FLoggedIn := false;
+    Result := false;
+  end;
 end;
 
 function TRoomerDataSet.SwapHotel(hotelId: String; var username, password: String): boolean;
@@ -1901,7 +1976,7 @@ begin
     downloadUrlAsString(RoomerUri + 'logout', 2, false);
   except
   end;
-  AppKey := '';
+  ClearCredentials;
 end;
 
 procedure TRoomerDataSet.LogoutUnaffected;
@@ -1911,7 +1986,7 @@ begin
     roomerClient.Get(AnsiString(RoomerUri + 'logout'));
   except
   end;
-  AppKey := '';
+  ClearCredentials;
 end;
 
 function TRoomerDataSet.MyIpAddress: String;
@@ -1953,6 +2028,22 @@ end;
 function TRoomerDataSet.SecondsLeft: Integer;
 begin
   Result := SecondsBetween(IncSecond(FLastAccess, FSessionLengthSeconds), now);
+end;
+
+procedure TRoomerDataSet.SetAppKey(const Value: String);
+begin
+  if (FAppKey <> Value) then
+  begin
+    FAppKey := Value;
+  end;
+end;
+
+procedure TRoomerDataSet.SetAppSecret(const Value: String);
+begin
+  if (FAppSecret <> Value) then
+  begin
+    FAppSecret := Value;
+  end;
 end;
 
 procedure TRoomerDataSet.SetCommandText(const Value: String);

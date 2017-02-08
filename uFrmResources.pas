@@ -854,19 +854,6 @@ begin
   DropFileSource1.CopyToClipboard;
 end;
 
-
-//function TFrmResources.CreateFilePath(includePreface : Boolean = True) : String;
-//var preface : String;
-//begin
-//  preface := '';
-//  if includePreface then
-//    preface := getDirectUriAdditionIfApplicable(false);
-//  result := format('staticresources/%sresourcebundles/%s/%s%s/%s',
-//                     [preface,
-//                      UpperCase(d.roomerMainDataSet.hotelId),
-//                      g.qApplicationID, getPrivateUriAdditionIfApplicable(true), keyString]);
-//end;
-
 function TFrmResources.DownloadSelectedFile(destFilename : String) : Boolean;
 var item : TListItem;
 begin

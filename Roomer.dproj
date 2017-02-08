@@ -811,14 +811,12 @@
         <DCCReference Include="Definitions\uCleaningNotesDefinitions.pas"/>
         <DCCReference Include="RoomerForm\uRoomerDialogForm.pas">
             <Form>frmBaseRoomerDialogForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="RoomerUtils\uSQLUtils.pas"/>
         <DCCReference Include="RoomerVCLs\Source\uStringUtils.pas"/>
         <DCCReference Include="Definitions\uInvoiceDefinitions.pas"/>
         <DCCReference Include="Embeddables\uFraCountryPanel.pas">
             <Form>fraCountryPanel</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="ufrmRoomPrices.pas">
@@ -833,10 +831,10 @@
         </DCCReference>
         <DCCReference Include="uTopClassAvailabilityOrder.pas">
             <Form>FrmTopClassAvailabilityOrder</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Extras\_Glob.pas"/>
         <DCCReference Include="uCurrencyHandlersMap.pas"/>
+        <DCCReference Include="OpenAPI\uCredentialsAPICaller.pas"/>
         <DCCReference Include="RoomerExceptionHandling.pas"/>
         <None Include="Roomer.todo"/>
         <None Include="notes.txt"/>

@@ -3014,11 +3014,8 @@ begin
     uActivityLogs.LOGIN,
     'Success',
     'User ' + d.roomerMainDataSet.userName + ' successfully logged in.');
-  g.ReadWriteSettingsToRegistry(0);
 
-  d.roomerMainDataSet.ApplicationID := g.qApplicationID;
-  d.roomerMainDataSet.AppSecret := g.qAppSecret;
-  d.roomerMainDataSet.AppKey := g.qAppKey;
+  g.ReadWriteSettingsToRegistry(0);
 
   for i := 0 to pageMainGrids.PageCount - 1 do
   begin
@@ -3448,7 +3445,7 @@ begin
         else if (lLoginFormResult = lrLogin) and (NOT OffLineMode) AND d.roomerMainDataSet.IsConnectedToInternet AND
           d.roomerMainDataSet.RoomerPlatformAvailable then
         begin
-          d.roomerMainDataSet.LOGIN(lHotelID, userName, password, 'ROOMERPMS', TRoomerVersionInfo.FileVersion);
+          d.roomerMainDataSet.LOGIN(lHotelID, userName, password, cOpenAPIAppicationID, TRoomerVersionInfo.FileVersion);
           FOffLineMode := false;
         end
         else
@@ -3460,7 +3457,6 @@ begin
           d.roomerMainDataSet.SessionLengthSeconds := 1;
         end;
         lblAuthStatus.Caption := GetTranslatedText('shTx_AuthSuccess');
-        g.qHotelCode := lHotelID;
         timCheckSessionExpired.Enabled := true;
       except
         on E: Exception do
@@ -11278,7 +11274,7 @@ end;
 
 procedure TfrmMain.btnReRegisterPMSClick(Sender: TObject);
 begin
-  g.RemoveCurrentSecretKey;
+  g.UpdateCurrentSecretKey;
   MessageDlg(GetTranslatedText('shTxRoomerReRegisterPMS'), mtInformation, [mbOK], 0);
 end;
 
