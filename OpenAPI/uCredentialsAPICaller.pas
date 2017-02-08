@@ -14,6 +14,7 @@ type
   public
     /// <summary>
     ///   Implementation of creditials/{hotelId} endpoint to check if hotelid is in sync with AppKey of D.RoomerMainDataset
+    ///  Returns false
     /// </summary>
     function CheckHotelIdAndAppKey(const aHotelID: string): boolean;
   end;
@@ -40,7 +41,7 @@ begin
   try
     lURI := d.roomerMainDataSet.OpenApiUri + cResourcesURI + d.roomerMainDataset.URLEncode(aHotelId);
 
-    Result := roomerClient.GetWithStatus(lURI, lResponse) = 200;
+    Result := roomerClient.GetWithStatus(lURI, lResponse).StatusCode = 204 ;
     if Result then
       FLastErrorResponse := ''
     else

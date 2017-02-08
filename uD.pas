@@ -1071,6 +1071,7 @@ end;
 
 procedure Td.DataModuleDestroy(Sender: TObject);
 begin
+  roomerMainDataSet.Logout;
   lstVaribles.Free;
   lstValues.Free;
   lstCollect.Free;

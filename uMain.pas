@@ -483,7 +483,6 @@ type
     sPanel1: TsPanel;
     mmoMessage: THTMLabel;
     sButton2: TsButton;
-    timHalt: TTimer;
     btnLanguage: TdxBarLargeButton;
     btnChannelPlans: TdxBarLargeButton;
     btnReservationsList: TdxBarLargeButton;
@@ -864,7 +863,6 @@ type
     procedure sButton2Click(Sender: TObject);
     procedure grOneDayRoomsResize(Sender: TObject);
     procedure grOneDayRoomsEndColumnSize(Sender: TObject; ACol: integer);
-    procedure timHaltTimer(Sender: TObject);
     procedure grPeriodRoomsDrawCell(Sender: TObject; ACol, ARow: integer; Rect: TRect; State: TGridDrawState);
     procedure grPeriodRoomsGridHint(Sender: TObject; ARow, ACol: integer; var HintStr: string);
     procedure HTMLHint1ShowHint(var HintStr: string; var CanShow: boolean; var HintInfo: THintInfo);
@@ -1762,6 +1760,9 @@ end;
 procedure TfrmMain.performClearHotel(performLogout: boolean; hideWorkArea: boolean = true);
 begin
   timMessages.Enabled := false;
+
+  g.ReadWriteSettingsToRegistry(1);
+
   if NOT performLogout then
   begin
     lblAuthStatus.Caption := GetTranslatedText('shTx_Main_ForcedLogout') + ''#13''#10'' +
@@ -2940,9 +2941,6 @@ begin
 
   EnableDisableFunctions(false);
 
-  if not aFirstLogin then
-    g.ReadWriteSettingsToRegistry(1);
-
   userName := g.qUser;
   password := '';
   WrongLoginMessage := '';
@@ -3548,27 +3546,11 @@ end;
 procedure TfrmMain.FormCloseQuery(Sender: TObject; var CanClose: boolean);
 begin
   if LoginCancelled OR FRBEMode OR not FAlreadyIn then
-  begin
-    CanClose := true;
-  end
+    CanClose := true
   else
-  begin
     CanClose := RoomerMessageDialog(GetTranslatedText('sh1004'), mtConfirmation, [mbYes, mbNo], 'CloseRoomerMainForm',
       mrYes) = mrYes;
-    // CanClose := MessageDLG( { 1004 } GetTranslatedText('sh1004'),
-    // mtConfirmation, [mbYes, mbNo], 0) = mrYes;
-    if CanClose AND FAlreadyIn then
-      try
-        embOccupancyView.Reset;
-        // Application.ProcessMessages;
-        d.roomerMainDataSet.LOGOUT;
-        __lblUsername.Caption := 'N/A';
-      except
-      end;
-  end;
-{$IFNDEF DEBUG}
-  timHalt.Enabled := CanClose;
-{$ENDIF}
+
   AppIsClosing := CanClose;
 end;
 
@@ -7764,12 +7746,6 @@ begin
   end
   else
     timCheckSessionExpired.Enabled := true;
-end;
-
-procedure TfrmMain.timHaltTimer(Sender: TObject);
-begin
-  timHalt.Enabled := false;
-  ExitProcess(13);
 end;
 
 procedure TfrmMain.timHideTimeMessageTimer(Sender: TObject);
