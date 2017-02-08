@@ -483,7 +483,6 @@ type
     sPanel1: TsPanel;
     mmoMessage: THTMLabel;
     sButton2: TsButton;
-    timHalt: TTimer;
     btnLanguage: TdxBarLargeButton;
     btnChannelPlans: TdxBarLargeButton;
     btnReservationsList: TdxBarLargeButton;
@@ -864,7 +863,6 @@ type
     procedure sButton2Click(Sender: TObject);
     procedure grOneDayRoomsResize(Sender: TObject);
     procedure grOneDayRoomsEndColumnSize(Sender: TObject; ACol: integer);
-    procedure timHaltTimer(Sender: TObject);
     procedure grPeriodRoomsDrawCell(Sender: TObject; ACol, ARow: integer; Rect: TRect; State: TGridDrawState);
     procedure grPeriodRoomsGridHint(Sender: TObject; ARow, ACol: integer; var HintStr: string);
     procedure HTMLHint1ShowHint(var HintStr: string; var CanShow: boolean; var HintInfo: THintInfo);
@@ -1762,6 +1760,9 @@ end;
 procedure TfrmMain.performClearHotel(performLogout: boolean; hideWorkArea: boolean = true);
 begin
   timMessages.Enabled := false;
+
+  g.ReadWriteSettingsToRegistry(1);
+
   if NOT performLogout then
   begin
     lblAuthStatus.Caption := GetTranslatedText('shTx_Main_ForcedLogout') + ''#13''#10'' +
@@ -2940,9 +2941,6 @@ begin
 
   EnableDisableFunctions(false);
 
-  if not aFirstLogin then
-    g.ReadWriteSettingsToRegistry(1);
-
   userName := g.qUser;
   password := '';
   WrongLoginMessage := '';
@@ -3014,11 +3012,8 @@ begin
     uActivityLogs.LOGIN,
     'Success',
     'User ' + d.roomerMainDataSet.userName + ' successfully logged in.');
-  g.ReadWriteSettingsToRegistry(0);
 
-  d.roomerMainDataSet.ApplicationID := g.qApplicationID;
-  d.roomerMainDataSet.AppSecret := g.qAppSecret;
-  d.roomerMainDataSet.AppKey := g.qAppKey;
+  g.ReadWriteSettingsToRegistry(0);
 
   for i := 0 to pageMainGrids.PageCount - 1 do
   begin
@@ -3448,7 +3443,7 @@ begin
         else if (lLoginFormResult = lrLogin) and (NOT OffLineMode) AND d.roomerMainDataSet.IsConnectedToInternet AND
           d.roomerMainDataSet.RoomerPlatformAvailable then
         begin
-          d.roomerMainDataSet.LOGIN(lHotelID, userName, password, 'ROOMERPMS', TRoomerVersionInfo.FileVersion);
+          d.roomerMainDataSet.LOGIN(lHotelID, userName, password, cOpenAPIAppicationID, TRoomerVersionInfo.FileVersion);
           FOffLineMode := false;
         end
         else
@@ -3460,7 +3455,6 @@ begin
           d.roomerMainDataSet.SessionLengthSeconds := 1;
         end;
         lblAuthStatus.Caption := GetTranslatedText('shTx_AuthSuccess');
-        g.qHotelCode := lHotelID;
         timCheckSessionExpired.Enabled := true;
       except
         on E: Exception do
@@ -3552,27 +3546,11 @@ end;
 procedure TfrmMain.FormCloseQuery(Sender: TObject; var CanClose: boolean);
 begin
   if LoginCancelled OR FRBEMode OR not FAlreadyIn then
-  begin
-    CanClose := true;
-  end
+    CanClose := true
   else
-  begin
     CanClose := RoomerMessageDialog(GetTranslatedText('sh1004'), mtConfirmation, [mbYes, mbNo], 'CloseRoomerMainForm',
       mrYes) = mrYes;
-    // CanClose := MessageDLG( { 1004 } GetTranslatedText('sh1004'),
-    // mtConfirmation, [mbYes, mbNo], 0) = mrYes;
-    if CanClose AND FAlreadyIn then
-      try
-        embOccupancyView.Reset;
-        // Application.ProcessMessages;
-        d.roomerMainDataSet.LOGOUT;
-        __lblUsername.Caption := 'N/A';
-      except
-      end;
-  end;
-{$IFNDEF DEBUG}
-  timHalt.Enabled := CanClose;
-{$ENDIF}
+
   AppIsClosing := CanClose;
 end;
 
@@ -7770,12 +7748,6 @@ begin
     timCheckSessionExpired.Enabled := true;
 end;
 
-procedure TfrmMain.timHaltTimer(Sender: TObject);
-begin
-  timHalt.Enabled := false;
-  ExitProcess(13);
-end;
-
 procedure TfrmMain.timHideTimeMessageTimer(Sender: TObject);
 begin
   timHideTimeMessage.Enabled := false;
@@ -11278,7 +11250,7 @@ end;
 
 procedure TfrmMain.btnReRegisterPMSClick(Sender: TObject);
 begin
-  g.RemoveCurrentSecretKey;
+  g.UpdateCurrentSecretKey;
   MessageDlg(GetTranslatedText('shTxRoomerReRegisterPMS'), mtInformation, [mbOK], 0);
 end;
 

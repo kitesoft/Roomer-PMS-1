@@ -264,6 +264,7 @@ uses
   uTopClassAvailabilityOrder in 'uTopClassAvailabilityOrder.pas' {FrmTopClassAvailabilityOrder},
   _Glob in 'Extras\_Glob.pas',
   uCurrencyHandlersMap in 'uCurrencyHandlersMap.pas',
+  uCredentialsAPICaller in 'OpenAPI\uCredentialsAPICaller.pas',
   RoomerExceptionHandling in 'RoomerExceptionHandling.pas';
 
 {$R *.RES}
@@ -294,6 +295,8 @@ begin
     TSplashFormManager.Show;
 
     Application.CreateForm(TD, D);
+    D.ApplicationId := cOpenAPIAppicationID;
+
     Application.CreateForm(TDReportData, DReportData);
     TSplashFormManager.UpdateProgress('Loading forms...');
 

@@ -62,7 +62,7 @@ begin
   try
     lURI := d.roomerMainDataSet.OpenApiUri + cResourcesURI  + cDayClosingTimeURI + '/' + dateToSqlString(aDay);
 
-    Result := roomerClient.DeleteWithStatus(lURI, lResponse) = 200;
+    Result := roomerClient.DeleteWithStatus(lURI, lResponse).StatusCode = 200;
   finally
     roomerClient.Free;
   end;
@@ -91,7 +91,7 @@ begin
      if aDaysTo <> -1 then
       lUri := lURI + lSep + 'daysTo=' + dateToSqlString(aDaysTo);
 
-    Result := roomerClient.GetWithStatus(lURI, lResponse) = 200;
+    Result := roomerClient.GetWithStatus(lURI, lResponse).StatusCode = 200;
     if Result then
       aRSet.OpenDataset(lResponse);
   finally
@@ -115,7 +115,7 @@ begin
       roomerClient.RequestHeader.Accept := cAccMicrosoftDataset;
       lURI := lRSet.OpenApiUri + cResourcesURI + cRunningDayURI;
 
-      if roomerClient.GETWithStatus(lURI, lResponse) = 200 then
+      if roomerClient.GETWithStatus(lURI, lResponse).StatusCode = 200 then
       begin
         lRSet.OpenDataset(lResponse);
         Result := lRSet['runningday'];
@@ -134,7 +134,6 @@ function TDayClosingTimesAPICaller.CloseRunningDay: boolean;
 var
   roomerClient: TRoomerHttpClient;
   lURI: string;
-  lResponse: string;
   lStream: TStringStream;
 const
   cCloseCurrentURI = '/runningday/closenow';
@@ -145,7 +144,7 @@ begin
     try
       lURI := d.roomerMainDataSet.OpenApiUri + cResourcesURI + cCloseCurrentURI;
 
-      Result := roomerClient.POSTWithStatus(lURI, lStream, lResponse) = 200;
+      Result := roomerClient.POSTWithStatus(lURI, lStream).StatusCode = 200;
     finally
       lStream.Free;
     end;
@@ -211,7 +210,6 @@ function TDayClosingTimesAPICaller.InsertDayClosingTime(aDay, aClosingTime: TDat
 var
   roomerClient: TRoomerHttpClient;
   lURI: string;
-  lResponse: string;
   lStream: TStringStream;
 begin
   roomerClient := d.roomerMainDataSet.CreateRoomerClient(True);
@@ -223,7 +221,7 @@ begin
       lStream.WriteString( ConstructNewRequest(aDay, aClosingtime));
       lURI := d.roomerMainDataSet.OpenApiUri + cResourcesURI + cDayClosingTimeURI;
 
-      Result := roomerClient.POSTWithStatus(lURI, lStream, lResponse) = 200;
+      Result := roomerClient.POSTWithStatus(lURI, lStream).StatusCode = 200;
     finally
       lStream.Free;
     end;
@@ -248,7 +246,7 @@ begin
       lStream.WriteString( ConstructUpdateRequest(aDay, aClosingtime));
       lURI := d.roomerMainDataSet.OpenApiUri + cResourcesURI + cDayClosingTimeURI;
 
-      Result := roomerClient.PUTWithStatus(lURI, lStream, lResponse) = 200;
+      Result := roomerClient.PUTWithStatus(lURI, lStream, lResponse).StatusCode = 200;
     finally
       lStream.Free;
     end;

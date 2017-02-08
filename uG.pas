@@ -21,7 +21,6 @@ uses
   uUtils
   , ComObj
   , MSXML
-  , ActiveX
   , Soap.EncdDecd
   , objRoomList2
   //LocOnFly
@@ -173,7 +172,6 @@ type
 
     FqHotelList : TstringList;
 
-    FqHotelCode : string;
     FqHotelConnstr : string;
     FqHotelConnstr2 : string;
     FqHotelName : string;
@@ -222,9 +220,6 @@ type
     FqInPosMonitorChkSec : integer;
 
     FqTempPath: string;
-    FqApplicationID: string;
-    FqAppSecret: string;
-    FqAppKey: string;
 
      FqConfirmMinuteOfTheDay : integer;
      FqConfirmAuto           : boolean;
@@ -234,9 +229,11 @@ type
     // END ///////////  INI FILE GLOBALS ////////////////
 
     procedure InitializeApplicationGlobals;
-    function GetAppSecret: string;
     procedure Lock;
     procedure Unlock;
+
+    function GetHotelCode: string;
+    procedure RegisterApplication;
   public
     qConnected : boolean;
     mHelpFile : string;
@@ -407,7 +404,7 @@ type
     function StatusAttrToStr(const aValue : recStatusAttr) : string;
 
     procedure SetHotelToReportINI(dataname : string);
-    procedure RemoveCurrentSecretKey;
+    procedure UpdateCurrentSecretKey;
 
     /// /***********************
 
@@ -442,13 +439,10 @@ type
     procedure updateCurrentGuestList;
     function ChangeLang(newLangId : integer; doUpdate : boolean=true) : boolean;
 
-    procedure RegisterApplication;
-
-
   published
     property qHotelList : TstringList read FqHotelList write FqHotelList;
 
-    property qHotelCode : string read FqHotelCode write FqHotelCode;
+    property qHotelCode : string read GetHotelCode;
     property qHotelName : string read FqHotelName write FqHotelName;
     property qRoomCount : integer read FqRoomCount write FqRoomCount;
     property qMeetingsRoomCount : integer read FqMeetingsRoomCount write FqMeetingsRoomCount;
@@ -466,12 +460,6 @@ type
     // **  Values in ini
     property qLangID : integer read FqLangID write FqLangID;
     property qLogLevel : integer read FqLogLevel write FqLogLevel;
-
-    property qApplicationID : string read FqApplicationID write FqApplicationID;
-    property qAppKey : string read FqAppKey write FqAppKey;
-    property qAppSecret : string read GetAppSecret write FqAppSecret;
-
-
 
     property qCommandText : string read FqCommandText write FqCommandText;
 
@@ -514,7 +502,7 @@ type
   end;
 
 var
-  G : TGlobalApplication;
+  G : TGlobalApplication = nil;
   _HHwinHwnd : HWND = 0;
 
 
@@ -585,7 +573,8 @@ uses
   PrjConst,
   System.UITypes,
   uSQLUtils,
-  uRoomerConfirmationDialogs;
+  uRoomerConfirmationDialogs
+  , ActiveX;
 
 function GetNameCombination(order : Integer; Customer, Guest : String) : String;
 begin
@@ -801,7 +790,7 @@ begin
     // This method should not be called directly from the TGlobalApplication.Create because some of the methods used
     // expect the gloal var "G" to be created
 
-    qProgramPath := GetTempPath + 'Roomer\'; // LocalAppDataPath; // _AddSlash(ExtractFileDir(Application.ExeName));
+    qProgramPath := GetTempPath + 'Roomer\'; // LocalAppDataPath; // IncludeTrailingPathDelimiter(ExtractFileDir(Application.ExeName));
     qProgramExePath := LocalAppDataPath + 'Roomer\Storage\';
     ForceDirectories(qProgramPath);
     ForceDirectories(qProgramExePath);
@@ -911,6 +900,11 @@ end;
 
 
 
+function TGlobalApplication.GetHotelCode: string;
+begin
+  Result := d.roomerMainDataSet.hotelId;
+end;
+
 function TGlobalApplication.TestConnection(var Connstr, strResult : string) : boolean;
 var
   dbc : TRoomerConnection;
@@ -960,18 +954,20 @@ begin
   LeaveCriticalSection(Flock);
 end;
 
-function decodeSecret(secret : String) : String;
-var res : TBytes;
-    i : Integer;
-
-begin
-  result := '';
-  res := DecodeBase64(secret);
-  for i := LOW(res) to HIGH(res) do
-    result := result + char(res[i]);
-end;
 
 procedure parseXml(xmlStr : String; var key, secret : String);
+
+  function decodeSecret(secret : String) : String;
+  var res : TBytes;
+      i : Integer;
+  begin
+    result := '';
+    res := DecodeBase64(secret);
+    for i := LOW(res) to HIGH(res) do
+      result := result + char(res[i]);
+  end;
+
+
 var
   xml: OLEVariant; // IXMLDOMDocument;
   node, node1: OLEVariant; // IXMLDomNode;
@@ -1003,32 +999,11 @@ begin
     end;
   end;
 end;
+
 procedure TGlobalApplication.RegisterApplication;
-var res, key, secret : String;
 begin
-  try
-    qApplicationID := 'ROOMERPMS';
-    res := d.roomerMainDataSet.RegisterApplication(
-              d.roomerMainDataSet.hotelId,
-              d.roomerMainDataSet.username,
-              d.roomerMainDataSet.password,
-              qApplicationID);
-    CopyToClipboard(res);
-    if res <> '' then
-    begin
-      parseXml(res, key, secret);
-      qAppSecret := secret;
-      qAppKey := Key;
-
-      d.roomerMainDataSet.AppKey := Key;;
-      d.roomerMainDataSet.AppSecret := secret;
-      d.roomerMainDataSet.ApplicationID := qApplicationID;
-
-      ReadWriteSettingsToRegistry(1);
-    end;
-  except
-     // Fow now: Ignore
-  end;
+  d.roomerMainDataSet.RegisterApplication;
+  ReadWriteSettingsToRegistry(1);
 end;
 
 
@@ -1041,7 +1016,7 @@ const
   indAppKey = 'Application_Key';
   indAppSecret = 'Application_Secret';
 
-procedure TGlobalApplication.RemoveCurrentSecretKey;
+procedure TGlobalApplication.UpdateCurrentSecretKey;
 var
   AppRegGroup : String;
 begin
@@ -1049,7 +1024,8 @@ begin
   if Assigned(d) AND Assigned(d.roomerMainDataSet) AND (d.roomerMainDataSet.OpenApiUri <> '') then
      AppRegGroup := d.roomerMainDataSet.OpenApiUri;
   DeleteRegistryLocation('Software\Roomer\PMS\' + GetHotelIniFilename + '\' + AppRegGroup);
-  RegisterApplication;
+  d.roomerMainDataSet.RegisterApplication;
+  ReadWriteSettingsToRegistry(1);
 end;
 
 procedure TGlobalApplication.ReadWriteSettingsToRegistry(aMethod : integer; initialRead : Boolean = false);
@@ -1123,18 +1099,15 @@ begin
             if NOT initialRead then
             begin
               // [AppRegistration]
-              qApplicationID := ReadString(AppRegGroup, indApplicationID, '');
-              qAppKey := ReadString(AppRegGroup, indAppKey, '');
-              qAppSecret := ReadString(AppRegGroup, indAppSecret, '');
+              d.roomerMainDataSet.ApplicationID := ReadString(AppRegGroup, indApplicationID, '');
+              d.roomerMainDataSet.AppSecret := ReadString(AppRegGroup, indAppSecret, '');
+              d.roomerMainDataSet.AppKey := ReadString(AppRegGroup, indAppKey, '');
+              d.CheckAndCorrectCredentials(qHotelCode);
             end else
             begin
-              qAppKey := '';
-              qAppSecret := '';
+              d.roomerMainDataSet.AppKey := '';
+              d.roomerMainDataSet.AppSecret := '';
             end;
-
-//            d.roomerMainDataSet.ApplicationID := qApplicationID;
-//            d.roomerMainDataSet.AppSecret := qAppSecret;
-//            d.roomerMainDataSet.AppKey := qAppKey;
 
             // [misc]
             FBackupMachine := ReadBool(secMisc, indBackupMaschine, false);
@@ -1165,8 +1138,8 @@ begin
             qinPosMonitorUse    := ReadBool(secSystem, indinPosMonitorUse   , false);
             qinPosMonitorChkSec := ReadInteger(secSystem, indinPosMonitorChkSec, 15);
 
-            qInvoiceFormFileISL := Readstring(secReports, indInvoiceFormFileISL, _AddSlash(G.qProgramPath) + 'islInvoice.fr3');
-            qInvoiceFormFileERL := Readstring(secReports, indInvoiceFormFileERL, _AddSlash(G.qProgramPath) + 'erlInvoice.fr3');
+            qInvoiceFormFileISL := Readstring(secReports, indInvoiceFormFileISL, IncludeTrailingPathDelimiter(G.qProgramPath) + 'islInvoice.fr3');
+            qInvoiceFormFileERL := Readstring(secReports, indInvoiceFormFileERL, IncludeTrailingPathDelimiter(G.qProgramPath) + 'erlInvoice.fr3');
 
             qConfirmMinuteOfTheDay := ReadInteger(secSystem,indConfirmMinuteOfTheDay,0);
             qConfirmAuto := ReadBool(secSystem,indConfirmAuto,false);
@@ -1179,9 +1152,9 @@ begin
             if NOT initialRead then
             begin
               // [AppRegistration]
-              WriteString(AppRegGroup, indApplicationID, qApplicationID);
-              WriteString(AppRegGroup, indAppKey, qAppKey);
-              WriteString(AppRegGroup, indAppSecret, qAppSecret);
+              WriteString(AppRegGroup, indApplicationID, d.ApplicationId);
+              WriteString(AppRegGroup, indAppKey, d.roomerMainDataSet.AppKey);
+              WriteString(AppRegGroup, indAppSecret, d.roomerMainDataSet.AppSecret);
             end;
 
             // [misc]
@@ -1231,6 +1204,16 @@ begin
   end;
 end;
 
+//procedure TGlobalApplication.SetAppKey(const Value: string);
+//begin
+//  d.roomerMainDataSet.AppKey := Value;
+//end;
+
+//procedure TGlobalApplication.SetAppSecret(const Value: string);
+//begin
+//  d.roomerMainDataSet.AppSecret := Value;
+//end;
+
 procedure TGlobalApplication.SetHotelToReportINI(dataname : string);
 var
   Fname : string;
@@ -1257,14 +1240,6 @@ begin
     finally
       free;
     end;
-end;
-
-function TGlobalApplication.GetAppSecret: string;
-begin
-  if FqAppSecret = ''  then
-    RegisterApplication;
-
-  Result := FqAppSecret;
 end;
 
 procedure TGlobalApplication.openResDates(reservation, roomReservation
@@ -1361,6 +1336,7 @@ end;
 procedure OpenApplication;
 begin
   // --
+  G.Free;
   G := TGlobalApplication.Create;
   G.InitializeApplicationGlobals;
 end;
@@ -1370,7 +1346,7 @@ procedure CloseApplication;
 begin
   // --
   G.ReadWriteSettingsToRegistry(1); // 0=Open 1=CloseGlbApp.SetFasta;
-  G.free;
+  FreeAndNil(G);
 end;
 /// end - Open and Close Application;
 
@@ -1500,7 +1476,6 @@ var
   reservation : integer;
 
   userName, password : String;
-  _frmCancelReservation3 : TfrmCancelReservation3;
 begin
   screen.Cursor := crHourglass;
   try

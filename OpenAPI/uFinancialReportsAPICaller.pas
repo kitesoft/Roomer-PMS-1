@@ -62,7 +62,7 @@ begin
      if aDateTo <> -1 then
       lUri := lURI + lSep + 'dateTo=' + dateToSqlString(aDateTo);
 
-    Result := roomerClient.GetWithStatus(lURI, lResponse) = 200;
+    Result := roomerClient.GetWithStatus(lURI, lResponse).StatusCode = 200;
     if Result then
     begin
       FLastErrorResponse := '';
@@ -101,7 +101,7 @@ begin
      if aDateTo <> -1 then
       lUri := lURI + lSep + 'dateTo=' + dateToSqlString(aDateTo);
 
-    Result := roomerClient.GetWithStatus(lURI, lResponse) = 200;
+    Result := roomerClient.GetWithStatus(lURI, lResponse).StatusCode = 200;
     if Result then
     begin
       FLastErrorResponse := '';
@@ -140,7 +140,7 @@ begin
      if aDateTo <> -1 then
       lUri := lURI + lSep + 'dateTo=' + dateToSqlString(aDateTo);
 
-    Result := roomerClient.GetWithStatus(lURI, lResponse) = 200;
+    Result := roomerClient.GetWithStatus(lURI, lResponse).StatusCode = 200;
     if Result then
     begin
       FLastErrorResponse := '';
