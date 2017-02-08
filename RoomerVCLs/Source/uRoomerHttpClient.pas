@@ -178,7 +178,7 @@ begin
     lResponseContentHeader := TALHTTPResponseHeader.Create();
     lUrl := AnsiString(aUrl + FQueryParams.AsUrltext);
     try
-      inherited Get(AnsiString(aURL), lResponseContentStream, lResponseContentHeader);
+      inherited Get(AnsiString(lURL), lResponseContentStream, lResponseContentHeader);
       Result := StrToInt(lResponseContentHeader.StatusCode);
       aResponse := lResponseContentStream.DataString;
     except
@@ -206,7 +206,7 @@ begin
   try
     lUrl := AnsiString(aUrl + FQueryParams.AsUrltext);
     try
-      inherited Post(AnsiString(aURL), aPostDataStream, lResponseContentHeader);
+      inherited Post(AnsiString(lURL), aPostDataStream, lResponseContentHeader);
       Result := lResponseContentHeader.StatusCode;
     except
       on E: EALHTTPClientException do
@@ -236,7 +236,7 @@ begin
     lResponseContentStream := TStringStream.Create;
     lResponseContentHeader := TALHTTPResponseHeader.Create();
     try
-      inherited Put(AnsiString(aURL), aPutDataStream, lResponseContentStream, lResponseContentHeader);
+      inherited Put(AnsiString(lURL), aPutDataStream, lResponseContentStream, lResponseContentHeader);
       Result := lResponseContentHeader.StatusCode;
       aResponse := lResponseContentStream.DataString;
     except

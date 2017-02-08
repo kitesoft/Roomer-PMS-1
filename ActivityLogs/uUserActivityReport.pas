@@ -67,6 +67,7 @@ type
     cbxCategories: TsComboBox;
     cbxActions: TsComboBox;
     procedure FormShow(Sender: TObject);
+    procedure cbxCategoriesChange(Sender: TObject);
   private
     FGridDataSource: TListDataSource;
     FCatsAndActions: TUserActivityCategoriesOverview;
@@ -117,6 +118,17 @@ begin
 
   FCatsAndActions.AddCategoryNamesAsString(cbxCategories.Items);
   cbxCategories.ItemIndex := -1;
+
+end;
+
+procedure TfrmUserActivityReport.cbxCategoriesChange(Sender: TObject);
+begin
+  inherited;
+  cbxActions.Clear;
+
+  if (cbxCategories.ItemIndex >= 0) and (cbxCategories.ItemIndex <= FCatsAndActions.Categories.Count) then
+    cbxActions.Items.AddStrings(FCatsAndActions.Categories.Items[cbxCategories.ItemIndex].Actions);
+  UpdateControls;
 end;
 
 constructor TfrmUserActivityReport.Create(aOwner: TComponent);

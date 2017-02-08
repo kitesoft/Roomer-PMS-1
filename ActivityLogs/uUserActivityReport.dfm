@@ -114,6 +114,13 @@ inherited frmUserActivityReport: TfrmUserActivityReport
         Top = 19
         Width = 85
         Height = 21
+        Color = clWhite
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        ParentFont = False
         TabOrder = 2
         Text = '00:00:00'
         SkinData.SkinSection = 'EDIT'
@@ -123,6 +130,13 @@ inherited frmUserActivityReport: TfrmUserActivityReport
         Top = 46
         Width = 85
         Height = 21
+        Color = clWhite
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        ParentFont = False
         TabOrder = 3
         Text = '00:00:00'
         SkinData.SkinSection = 'EDIT'
@@ -231,6 +245,7 @@ inherited frmUserActivityReport: TfrmUserActivityReport
         Style = csDropDownList
         ItemIndex = -1
         TabOrder = 0
+        OnChange = cbxCategoriesChange
       end
       object cbxActions: TsComboBox
         Left = 80
@@ -308,7 +323,6 @@ inherited frmUserActivityReport: TfrmUserActivityReport
     object grdPrinterLink1: TdxGridReportLink
       Active = True
       Component = grActivityLog
-      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -330,14 +344,13 @@ inherited frmUserActivityReport: TfrmUserActivityReport
       PrinterPage.ScaleMode = smFit
       PrinterPage._dxMeasurementUnits_ = 2
       PrinterPage._dxLastMU_ = 2
-      ReportDocument.CreationDate = 42767.476107314820000000
+      ReportDocument.CreationDate = 42774.603589004630000000
       ReportTitle.Font.Charset = DEFAULT_CHARSET
       ReportTitle.Font.Color = clBlack
       ReportTitle.Font.Height = -19
       ReportTitle.Font.Name = 'Arial'
       ReportTitle.Font.Style = [fsBold]
       ShrinkToPageWidth = True
-      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlack
       Font.Height = -11
