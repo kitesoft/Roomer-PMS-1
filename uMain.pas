@@ -11328,15 +11328,27 @@ begin
 end;
 
 procedure TfrmMain.mniBookinglEmailTemplatesClick(Sender: TObject);
+var
+  lParams: THtmlResourceParameters;
 begin
-  StaticResources('Booking Confirmation Email Templates', GUEST_EMAIL_TEMPLATE, ACCESS_OPEN,
-    THtmlResourceParameters.Create);
+  lParams := THtmlResourceParameters.Create;
+  try
+    StaticResources('Booking Confirmation Email Templates', GUEST_EMAIL_TEMPLATE, ACCESS_OPEN, lParams);
+  finally
+    lParams.Free;
+  end;
 end;
 
 procedure TfrmMain.mniCancelEmailTemplatesClick(Sender: TObject);
+var
+  lParams: THtmlResourceParameters;
 begin
-  StaticResources('Cancellation Confirmation Email Templates', CANCEL_EMAIL_TEMPLATE, ACCESS_OPEN,
-    THtmlResourceParameters.Create);
+  lParams := THtmlResourceParameters.Create;
+  try
+    StaticResources('Cancellation Confirmation Email Templates', CANCEL_EMAIL_TEMPLATE, ACCESS_OPEN, lParams);
+  finally
+    lParams.Free;
+  end;
 end;
 
 procedure TfrmMain.edtSearchChange(Sender: TObject);

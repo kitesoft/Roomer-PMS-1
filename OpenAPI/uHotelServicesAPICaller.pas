@@ -10,20 +10,41 @@ uses
 type
   EUserActivityLogAPICallerException = class(EOpenAPICallerException);
 
+  /// <summary>
+  ///  Implementation of hotelservice/useractivitylogs/ endpoints <br />
+  ///  See <see href='https://promoir.atlassian.net/wiki/display/OAPI/User+Activity+Logs'>openAPI documentation</see>
+  ///  </summary>
   TUserActivityLogAPICaller = class(TBaseOpenAPICaller)
   const
-    cResourcesURI = 'hotelservices/';
-    cUserActivityLogsURI = 'useractivitylogs/';
-    cGetAllCategoriesURI = 'categories';
+    cResourcesURI = '/hotelservices';
+    cUserActivityLogsURI = '/useractivitylogs';
+    cGetAllCategoriesURI = '/categories';
   private
   public
+    type
+      TAPICallParameters = record
+        DoneAfterDate: TDate;
+        DoneBeforeDate: TDate;
+        AffectAfterDate: TDate;
+        AffectBeforeDate: TDate;
+        Category: string;
+        Action: string;
+        Reservation: integer;
+        RoomReservation: integer;
+      end;
+
     ///	<summary>
     ///	  Implementation of hotelservice/useractivitylogs/categories endpoint  <br />
-    ///  See <see href='https://promoir.atlassian.net/wiki/display/OAPI/User+Activity+Logs'>openAPI documentation</see>
     ///	</summary>
     function GetAllCategoriesAndActionsForHotel(aCategoriesAndActions: TUserActivityCategoriesOverview): boolean;
     function GetLogFragment(aDoneAfterDate: TDate; aDoneBeforeDate: TDate; aAffectAfterDate: TDate; aAffectBeforeDate: TDate;
-                            aLogFragment: TUserActivityLogFragment): boolean;
+                            aLogFragment: TUserActivityLogFragment): boolean; overload;
+    function GetLogFragment(aDoneAfterDate: TDate; aDoneBeforeDate: TDate; aAffectAfterDate: TDate; aAffectBeforeDate: TDate;
+                            const aCategory: string; aLogFragment: TUserActivityLogFragment): boolean; overload;
+    function GetLogFragment(aDoneAfterDate: TDate; aDoneBeforeDate: TDate; aAffectAfterDate: TDate; aAffectBeforeDate: TDate;
+                            const aCategory: string; const aAction: string; aLogFragment: TUserActivityLogFragment): boolean; overload;
+
+    function GetLogFragment(const aParams: TAPICallParameters; aLogFragment: TUserActivityLogFragment): boolean; overload;
   end;
 
 implementation
@@ -56,8 +77,8 @@ begin
   end;
 end;
 
-function TUserActivityLogAPICaller.GetLogFragment(aDoneAfterDate, aDoneBeforeDate, aAffectAfterDate, aAffectBeforeDate: TDate;
-                                                  aLogFragment: TUserActivityLogFragment): boolean;
+function TUserActivityLogAPICaller.GetLogFragment(aDoneAfterDate, aDoneBeforeDate, aAffectAfterDate,
+  aAffectBeforeDate: TDate; const aCategory, aAction: string; aLogFragment: TUserActivityLogFragment): boolean;
 var
   roomerClient: TRoomerHttpClient;
   lURI: string;
@@ -67,6 +88,14 @@ begin
   roomerClient := d.roomerMainDataSet.CreateRoomerClient(True);
   try
     lURI := d.roomerMainDataSet.OpenApiUri + cResourcesURI  + cUserActivityLogsURI;
+
+    if not aCategory.IsEmpty then
+    begin
+      lUri := lUri + '/' + d.RoomerMainDataset.UrlEncode(aCategory);
+      if not aAction.IsEmpty then
+        lUri := lUri + '/' + d.roomerMainDataSet.UrlEncode(aAction);
+    end;
+
     if aDoneAfterDate > 0 then
       roomerClient.QueryParams.Add('doneAfterDate=' + DateToXML(aDoneAfterDate));
     if aDoneBeforeDate > 0 then
@@ -86,4 +115,62 @@ begin
     roomerClient.Free;
   end;
 end;
+
+function TUserActivityLogAPICaller.GetLogFragment(aDoneAfterDate, aDoneBeforeDate, aAffectAfterDate,
+  aAffectBeforeDate: TDate; aLogFragment: TUserActivityLogFragment): boolean;
+begin
+  Result := GetLogFragment(aDoneAfterDate, aDoneBeforeDate, aAffectAfterDate, aAffectBeforeDate, '', '', aLogFragment);
+
+end;
+
+function TUserActivityLogAPICaller.GetLogFragment(aDoneAfterDate, aDoneBeforeDate, aAffectAfterDate,
+  aAffectBeforeDate: TDate; const aCategory: string; aLogFragment: TUserActivityLogFragment): boolean;
+begin
+  Result := GetLogFragment(aDoneAfterDate, aDoneBeforeDate, aAffectAfterDate, aAffectBeforeDate, aCategory, '', aLogFragment);
+end;
+
+function TUserActivityLogAPICaller.GetLogFragment(const aParams: TAPICallParameters; aLogFragment: TUserActivityLogFragment): boolean;
+var
+  roomerClient: TRoomerHttpClient;
+  lURI: string;
+  lResponse: string;
+  lStatus: integer;
+begin
+  Assert(Assigned(aLogFragment), 'No LogFragment object provided');
+
+  roomerClient := d.roomerMainDataSet.CreateRoomerClient(True);
+  try
+    lURI := d.roomerMainDataSet.OpenApiUri + cResourcesURI  + cUserActivityLogsURI;
+
+    if not aParams.Category.IsEmpty then
+    begin
+      lUri := lUri + '/' + d.RoomerMainDataset.UrlEncode(aParams.Category);
+      if not aParams.Action.IsEmpty then
+        lUri := lUri + '/' + d.roomerMainDataSet.UrlEncode(aParams.Action);
+    end;
+
+    if aParams.DoneAfterDate > 0 then
+      roomerClient.QueryParams.Add('doneAfterDate=' + DateToXML(aParams.DoneAfterDate));
+    if aParams.DoneBeforeDate > 0 then
+      roomerClient.QueryParams.Add('doneBeforeDate=' + DateToXML(aParams.DoneBeforeDate));
+    if aParams.AffectAfterDate > 0 then
+      roomerClient.QueryParams.Add('affectAfterDate='+ DateToXML(aParams.AffectAfterDate));
+    if aParams.AffectBeforeDate > 0 then
+      roomerClient.QueryParams.Add('affectBeforeDate='+ DateToXML(aParams.AffectBeforeDate));
+    if aParams.Reservation > 0 then
+      roomerClient.QueryParams.Add(Format('reservation=%d', [aParams.Reservation]));
+    if aParams.RoomReservation > 0 then
+      roomerClient.QueryParams.Add(Format('roomreservation=%d', [aParams.RoomReservation]));
+
+    lStatus := roomerClient.GetWithStatus(lURI, lResponse);
+    Result := lStatus = 200;
+    if Result then
+      aLogFragment.LoadFromXML(lResponse)
+    else
+      EUserActivityLogAPICallerException.CreateFmt('Error %d retrieving UserActivityLogFragment', [lStatus]);
+  finally
+    roomerClient.Free;
+  end;
+end;
+
 end.

@@ -15,22 +15,11 @@ uses
   cxGridCustomView, cxGridCustomTableView, cxGridDBTableView, cxGrid, Vcl.Mask, sMaskEdit, sCustomComboEdit, sToolEdit,
   sGroupBox, sButton, Vcl.ExtCtrls, sPanel, sComboBox
 
-  , uRoomerHotelServicesCommunicationModel_RequestsResponses
+  , uRoomerHotelServicesCommunicationModel_RequestsResponses, Data.Bind.DBScope, Data.Bind.Components,
+  Data.Bind.ObjectScope, Vcl.Grids, Vcl.DBGrids, Spring.Data.VirtualDataSet, Spring.Data.ObjectDataSet
   ;
 
 type
-
-
-  TListDataSource = class(TcxCustomDataSource)
-  private
-    FList  : TUserActivityLogFragment;
-  protected
-    function GetRecordCount: Integer; override;
-    function GetValue(ARecordHandle: TcxDataRecordHandle; AItemHandle: TcxDataItemHandle): Variant; override;
-  public
-    constructor Create(aList : TUserActivityLogFragment);
-  end;
-
 
   TfrmUserActivityReport = class(TfrmBaseRoomerForm)
     pnlFilter: TsPanel;
@@ -44,8 +33,8 @@ type
     btnInvoice: TsButton;
     btnReport: TsButton;
     grActivityLog: TcxGrid;
-    grActivityLogDBTableView1: TcxGridDBTableView;
-    lvArrivalsListLevel1: TcxGridLevel;
+    grActivityLogDBTableView: TcxGridDBTableView;
+    lvActivityLogsLevel: TcxGridLevel;
     grdPrinter: TdxComponentPrinter;
     grdPrinterLink1: TdxGridReportLink;
     pmnuInvoiceMenu: TPopupMenu;
@@ -63,13 +52,19 @@ type
     tmTo: TsTimePicker;
     gbxRestrictions: TsGroupBox;
     lblCategory: TsLabel;
-    lbAction: TsLabel;
     cbxCategories: TsComboBox;
-    cbxActions: TsComboBox;
+    odsActivityLogs: TObjectDataSet;
+    dsGrid: TDataSource;
+    edReservation: TsEdit;
+    edRoomreservation: TsEdit;
+    sLabel1: TsLabel;
+    sLabel2: TsLabel;
     procedure FormShow(Sender: TObject);
-    procedure cbxCategoriesChange(Sender: TObject);
+    procedure btnRefreshClick(Sender: TObject);
+    procedure cbxCategoriesKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure btnProfileClick(Sender: TObject);
+    procedure btnInvoiceClick(Sender: TObject);
   private
-    FGridDataSource: TListDataSource;
     FCatsAndActions: TUserActivityCategoriesOverview;
     FLogEventFragment: TUserActivityLogFragment;
     procedure PopulateComboboxes;
@@ -90,9 +85,16 @@ implementation
 
 uses
   uHotelServicesAPICaller
+  , Spring.Collections
+  , Math
+  , uActivityLogs
+  , uInvoice
+  , uReservationProfile
+  , TypInfo
   ;
 
 {$R *.dfm}
+
 procedure ShowUserActivityReport;
 begin
   with TfrmUserActivityReport.Create(nil) do
@@ -121,24 +123,52 @@ begin
 
 end;
 
-procedure TfrmUserActivityReport.cbxCategoriesChange(Sender: TObject);
+procedure TfrmUserActivityReport.btnInvoiceClick(Sender: TObject);
+var
+  lEvent: TUserActivityLogEventType;
 begin
   inherited;
-  cbxActions.Clear;
+  lEvent := odsActivityLogs.GetCurrentModel<TUserActivityLogEventType>;
+  EditInvoice(lEvent.Reservation, lEvent.Roomreservation, 0, 0, 0, 0, false);
+end;
 
-  if (cbxCategories.ItemIndex >= 0) and (cbxCategories.ItemIndex <= FCatsAndActions.Categories.Count) then
-    cbxActions.Items.AddStrings(FCatsAndActions.Categories.Items[cbxCategories.ItemIndex].Actions);
-  UpdateControls;
+procedure TfrmUserActivityReport.btnProfileClick(Sender: TObject);
+var
+  lEvent: TUserActivityLogEventType;
+begin
+  inherited;
+  lEvent := odsActivityLogs.GetCurrentModel<TUserActivityLogEventType>;
+  if EditReservation(lEvent.Reservation, lEvent.Roomreservation) then
+    RefreshData;
+
+end;
+
+procedure TfrmUserActivityReport.btnRefreshClick(Sender: TObject);
+begin
+  inherited;
+  RefreshData;
+end;
+
+procedure TfrmUserActivityReport.cbxCategoriesKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+begin
+  inherited;
+  if Key = VK_DELETE then
+  begin
+    cbxCategories.ItemIndex := -1;
+    Key := 0;
+  end;
 end;
 
 constructor TfrmUserActivityReport.Create(aOwner: TComponent);
+var
+  iList: IObjectList;
 begin
   inherited;
   FCatsAndActions := TUserActivityCategoriesOverview.Create;
   FLogEventFragment := TUserActivityLogFragment.Create;
-  FGridDataSource := TListDataSource(FLogEventFragment);
-
-  grActivityLogDBTableView1.DataController.CustomDataSource := FGridDatasource;
+  if Supports(FLogEventFragment.LogEventList, IObjectList, IList) then
+    odsActivityLogs.DataList := iList;
+  odsActivityLogs.Open;
 end;
 
 destructor TfrmUserActivityReport.Destroy;
@@ -151,13 +181,28 @@ end;
 procedure TfrmUserActivityReport.DoLoadData;
 var
   lAPi: TUserActivityLogAPICaller;
+  lParams: TUserActivityLogAPICaller.TAPICallParameters;
 begin
   inherited;
   FLogEventFragment.Clear;
   lApi := TUserActivityLogAPICaller.Create;
   try
-    if lApi.GetLogFragment(0,0,0,0,FLogEventFragment) then
-      FGridDatasource.DataChanged;
+    while grActivityLogDBTableView.ColumnCount > 0 do
+      grActivityLogDBTableView.Columns[0].Free;
+
+    lParams.DoneAfterDate := dtDateFrom.Date;
+    lParams.DoneBeforeDate := dtDateTo.Date;
+    lParams.AffectAfterDate := 0;
+    lParams.AffectBeforeDate := 0;
+    lParams.Category := cbxCategories.Text;
+    lParams.Action := '';
+    lParams.Reservation := StrToIntDef(edReservation.Text, 0);
+    lParams.RoomReservation := StrToIntDef(edRoomreservation.Text, 0);
+    lApi.GetLogFragment(lParams, FLogEventFragment);
+    odsActivityLogs.First;
+
+    // Update column definitions in view
+    grActivityLogDBTableView.DataController.CreateAllItems();
 
   finally
     lApi.Free;
@@ -165,60 +210,31 @@ begin
 end;
 
 procedure TfrmUserActivityReport.DoUpdateControls;
+var
+  lEvent: TUserActivityLogEventType;
 begin
   inherited;
   cbxCategories.Enabled := cbxCategories.Items.Count > 0;
-  cbxActions.Enabled := (cbxCategories.ItemIndex <> -1);
+
+  dtDateTo.Date := min(dtDateFrom.Date, dtDateTo.Date);
+
+  lEvent := odsActivityLogs.GetCurrentModel<TUserActivityLogEventType>;
+  if assigned(lEvent) then
+  begin
+    btnProfile.Enabled := (lEvent.Reservation > 0) or (lEvent.Roomreservation > 0);
+    btnInvoice.Enabled := (lEvent.Category.Equals(GetEnumName(TypeInfo(TActivityType), Ord(INVOICE)))
+                            and ((lEvent.Reservation > 0) or (lEvent.Roomreservation > 0)));
+  end;
 end;
 
 procedure TfrmUserActivityReport.FormShow(Sender: TObject);
 begin
   inherited;
-
+  dtDateFrom.Date := now;
+  dtDateTo.Date := now;
+  dtDateTo.MaxDate := now;
+  tmTo.Time := now;
   PopulateComboboxes;
-end;
-
-{ TListDataSource }
-
-constructor TListDataSource.Create(aList: TUserActivityLogFragment);
-begin
-  inherited Create;
-  FList := aList;
-end;
-
-function TListDataSource.GetRecordCount: Integer;
-begin
-  Result := FList.LogEventList.Count;
-end;
-
-function TListDataSource.GetValue(ARecordHandle: TcxDataRecordHandle; AItemHandle: TcxDataItemHandle): Variant;
-var
-  lRecordIndex: integer absolute aRecordHandle;
-  lFieldIndex: integer absolute aItemHandle;
-begin
-  Result := '';
-  if (lRecordIndex >= 0) and (lRecordIndex < Flist.LogEventList.Count) then
-  begin
-    case lFieldIndex of
-      0 : Result := FList.LogEventList[lRecordIndex].Description;
-      1 : Result := FList.LogEventList[lRecordIndex].DetailedDescription;
-      2 : Result := FList.LogEventList[lRecordIndex].MachineName;
-      3 : Result := FList.LogEventList[lRecordIndex].OldValue;
-      4 : Result := FList.LogEventList[lRecordIndex].NewValue;
-      5 : Result := FList.LogEventList[lRecordIndex].Code;
-      6 : Result := FList.LogEventList[lRecordIndex].UserId;
-      7 : Result := FList.LogEventList[lRecordIndex].Category;
-      8 : Result := FList.LogEventList[lRecordIndex].Action;
-      9 : Result := FList.LogEventList[lRecordIndex].ActionDateTime;
-      10 : Result := FList.LogEventList[lRecordIndex].ActionAffectsDate;
-      11 : Result := FList.LogEventList[lRecordIndex].UserLocation;
-      12 : Result := FList.LogEventList[lRecordIndex].Reservation;
-      13 : Result := FList.LogEventList[lRecordIndex].Roomreservation;
-      14 : Result := FList.LogEventList[lRecordIndex].id1;
-      15 : Result := FList.LogEventList[lRecordIndex].id2;
-      16 : Result := FList.LogEventList[lRecordIndex].id3;
-    end;
-  end;
 end;
 
 end.

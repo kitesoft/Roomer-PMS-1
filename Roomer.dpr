@@ -188,7 +188,7 @@ uses
   uExcelProcessors in 'RoomerVCLs\Source\uExcelProcessors.pas',
   uEmailExcelSheet in 'uEmailExcelSheet.pas' {FrmEmailExcelSheet},
   uRptTurnoverAndPayments in 'uRptTurnoverAndPayments.pas' {frmRptTurnoverAndPayments},
-  uActivityLogs in 'uActivityLogs.pas',
+  uActivityLogs in 'Activitylogs\uActivityLogs.pas',
   uInvoiceContainer in 'uInvoiceContainer.pas',
   XmlUtils in 'RoomerUtils\XmlUtils.pas',
   uInvoiceLineEdit in 'uInvoiceLineEdit.pas' {FrmInvoiceLineEdit},
@@ -298,7 +298,7 @@ begin
     TSplashFormManager.Show;
 
     Application.CreateForm(TD, D);
-    D.ApplicationId := cOpenAPIAppicationID;
+  D.ApplicationId := cOpenAPIAppicationID;
 
     Application.CreateForm(TDReportData, DReportData);
     TSplashFormManager.UpdateProgress('Loading forms...');

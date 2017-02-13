@@ -142,12 +142,12 @@ end;
 
 function XMLToDateTime(const aStringValue: string): TDateTime;
 begin
-  Result := StrToDateTime(aStringValue, XMLFormatSettings);
+  Result := StrToDateTimeDef(aStringValue, 0, XMLFormatSettings);
 end;
 
 function XMLToDate(const aStringValue: string): TDate;
 begin
-  Result := StrToDate(aStringValue, XMLFormatSettings);
+  Result := StrToDateDef(aStringValue, 0, XMLFormatSettings);
 end;
 
 function DateToXML(aDate: TDate): string;

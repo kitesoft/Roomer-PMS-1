@@ -11,13 +11,16 @@ type
   private
     FExceptionsLoggingActive: boolean;
     FExceptionLogPath: string;
+    FLogFileName: string;
     procedure SetExceptionLogPath(const Value: string);
+    function GetFullLogFilePath: string;
 
   public
 
     constructor Create(const aLogFileName: string = '');
     destructor Destroy; override;
-    
+    function AppendToLogfile(const line : string; addDate : boolean = false) : boolean;
+
     {$IFDEF USE_JCL}
     procedure LogException(ExceptObj: TObject; ExceptAddr: Pointer; IsOS: boolean);
     {$ENDIF}
@@ -25,13 +28,16 @@ type
 
     property ExceptionsLoggingActive: boolean read FExceptionsLoggingActive write FExceptionsLoggingActive;
     property ExceptionLogPath: string read FExceptionLogPath write SetExceptionLogPath;
+    property ExceptionLogFilename: string read FLogFileName write FLogFileName;
+    property FullLogfilePath: string read GetFullLogFilePath;
   end;
 
 
 implementation
 
 uses
-    uRoomerExceptions
+    Classes
+    , uRoomerExceptions
 {$IFDEF USE_JCL}
     , JclDebug, JclHookExcept, TypInfo
 {$ENDIF}
@@ -101,10 +107,19 @@ end;
 
 constructor TRoomerExceptionHandler.Create(const aLogFileName: string = '');
 begin
-  if ParameterByName('LogPath') <> '' then
-    ExceptionLogPath := ParameterByName('LogPath')
+  if not aLogFileName.IsEmpty then
+  begin
+    ExceptionLogPath := TPath.GetDirectoryName(aLogFileName);
+    ExceptionLogFilename := TPath.GetFileName(aLogFileName);
+  end
   else
-    ExceptionLogPath := Format('%s.log', [TPath.Combine(ExtractFileDir(Application.ExeName), ExtractFilename(Application.ExeName))]);
+  begin
+    if ParameterByName('LogPath') <> '' then
+      ExceptionLogPath := ParameterByName('LogPath')
+    else
+      ExceptionLogPath :=  TPath.GetDirectoryName(Application.ExeName);
+    ExceptionLogFilename := TPath.GetFileNameWithoutExtension(Application.ExeName) + '.log';
+  end;
 
 {$IFDEF USE_JCL}
   JclAddExceptNotifier(LogException);
@@ -124,28 +139,21 @@ begin
   inherited;
 end;
 
-function _textAppend(aFileName : string; line : string; addDate : boolean = false) : boolean;
+function TRoomerExceptionHandler.AppendToLogfile(const line : string; addDate : boolean = false) : boolean;
 var aTextFile : TextFile;
+    lFile: TFileStream;
     aText : String;
 begin
   result := true;
   try
-    AssignFile(aTextFile, aFileName);
-    try
-      if not fileExists(aFileName) then
-        rewrite(aTextFile)
-      else
-        append(aTextFile);
-      aText := line;
-      if addDate then
-        aText := format('%s %s | %s', [FormatDateTime('yyyy-mm-dd', now),
-                                       FormatDateTime('hh:nn:ss', now),
-                                       aText]);
-      writeln(aTextFile, aText);
-    finally
-      CloseFile(aTextfile);
-    end;
-  Except
+    aText := line;
+    if addDate then
+      aText := format('%s %s | %s', [FormatDateTime('yyyy-mm-dd', now),
+                                     FormatDateTime('hh:nn:ss', now),
+                                     aText]);
+
+    TFile.AppendAllText(FullLogfilePath, aText + #10#13);
+  except
     result := false;
   end;
 end;
@@ -168,12 +176,17 @@ begin
     (pos('out of bounds', ANSIlowercase(E.message)) > 0) then
   begin
     if ExceptionsLoggingActive then
-      ExceptionsLoggingActive := _textAppend(ExceptionLogPath, E.message, true);
+      ExceptionsLoggingActive := AppendToLogfile(E.message, true);
   end
   else
   begin
     Application.ShowException(E);
   end;
+end;
+
+function TRoomerExceptionHandler.GetFullLogFilePath: string;
+begin
+  Result := TPath.Combine(FExceptionLogPath, FLogFileName);
 end;
 
 procedure TRoomerExceptionHandler.SetExceptionLogPath(const Value: string);

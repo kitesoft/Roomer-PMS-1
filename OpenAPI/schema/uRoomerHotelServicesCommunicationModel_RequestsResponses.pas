@@ -5,7 +5,9 @@ interface
 uses
    Classes
    , SysUtils
-   , Generics.Collections
+   //, Generics.Collections
+   , Spring.Collections.Lists
+   , Spring.Collections
    , XMLIntf
    , OXmlPDOM
    ;
@@ -15,9 +17,9 @@ type
 
   TxsdBaseObject = class(TObject)
   protected
-    procedure SetPropertiesFromXMLNode(const aNode: PXMLNode); virtual; abstract;
+    procedure SetPropertiesFromXMLNode(const aNode: PXMLNode); virtual;
   public
-    function LoadFromXML(const aXML: string): boolean;
+    procedure LoadFromXML(const aXML: string);
     procedure Clear; virtual; abstract;
   end;
 
@@ -37,10 +39,10 @@ type
   //		</xsd:complexType>
   //	</xsd:element>
 {$ENDREGION}
-
+  {$M+}
   TUserActivityCategoriesOverview = class(TxsdBaseObject)
-  type
 
+  type
     TCategory = class
     private
         FName: string;
@@ -53,8 +55,11 @@ type
       property Actions: TStringlist read FActions;
     end;
 
+    TCategoryList = TObjectList<TCategory>;
+
   private
-    FCategories: TObjectList<TCategory>;
+    FCategories: IList<TCategory>;
+    function GetCategories: TCategoryList;
   protected
     procedure SetPropertiesFromXMLNode(const aNode: PXMLNode); override;
   public
@@ -64,7 +69,8 @@ type
     procedure Clear; override;
 
     procedure AddCategoryNamesAsString(aString: TStrings);
-    property Categories: TObjectList<TCategory> read FCategories;
+  published
+    property Categories: TCategoryList read GetCategories;
   end;
 
 {$REGION 'UserActivityLogEventType XSD definition'}
@@ -91,6 +97,7 @@ type
   //	</xsd:complexType>
 {$ENDREGION}
 
+  {$M+}
   TUserActivityLogEventType = class(TxsdBaseObject)
   private
     FDescription: string;
@@ -113,6 +120,8 @@ type
   protected
     procedure SetPropertiesFromXMLNode(const aNode: PXMLNode); override;
   public
+    procedure Clear; override;
+  published
     property Description: string read FDescription write FDescription;
     property DetailedDescription: string read FDetailedDescription write FDetailedDescription;
     property MachineName: string read FMachineName write FMachineName;
@@ -130,7 +139,6 @@ type
     property id1: string read Fid1 write Fid1;
     property id2: string read Fid2 write Fid2;
     property id3: string read Fid3 write Fid3;
-
   end;
 
   TUserActivityLogEventTypeList = TObjectList<TUserActivityLogEventType>;
@@ -145,16 +153,19 @@ type
   //	</xsd:element>
 {$ENDREGION}
 
+  {$M+}
   TUserActivityLogFragment = class(TxsdBaseObject)
   private
-    FLogEventList: TUserActivityLogEventTypeList;
+    FLogEventList: IList<TUserActivityLogEventType>;
+    function GetLogEventList: TUserActivityLogEventTypeList;
   public
     constructor Create;
     destructor Destroy; override;
 
     procedure SetPropertiesFromXMLNode(const aNode: PXMLNode); override;
     procedure Clear; override;
-    property LogEventList: TUserActivityLogEventTypeList read FLogEventList write FLogEventList;
+  published
+    property LogEventList: TUserActivityLogEventTypeList read GetLogEventList;
   end;
 
 implementation
@@ -162,6 +173,9 @@ implementation
 uses
   XMLUtils
   ;
+
+const
+  cNameSpaceURI = 'http://www.promoir.nl/roomer/services/hotel/2017/01';
 
 { TUserActivityCategoriesOverview }
 
@@ -183,38 +197,41 @@ end;
 
 constructor TUserActivityCategoriesOverview.Create;
 begin
-  FCategories := TObjectList<TCategory>.Create;
+  FCategories := TCategoryList.Create;
 end;
 
 destructor TUserActivityCategoriesOverview.Destroy;
 begin
-  FCategories.Free;
   inherited;
+end;
+
+function TUserActivityCategoriesOverview.GetCategories: TCategoryList;
+begin
+  Result := FCategories as TCategoryList;
 end;
 
 procedure TUserActivityCategoriesOverview.SetPropertiesFromXMLNode(const aNode: PXMLNode);
 var
-  node: PXMLNode;
-  actionNode: PXMLNode;
-  nodes_cat: IXMLNodeList;
-  nodes_act: IXMLNodeList;
+  lCategoryNode: PXMLNode;
+  lActionNode: PXMLNode;
+  lCatNodes: IXMLNodeList;
+  lActNodes: IXMLNodeList;
   lCat: TCategory;
-  i, j: integer;
 const
   cCategories= 'Category';
   cActions= 'Action';
-  cNameSpace = 'http://www.promoir.nl/roomer/services/hotel/2017/01';
 begin
   inherited;
-  if aNode.SelectNodesNS(cNameSpace, cCategories, nodes_cat) then
-  for node in nodes_cat do
+
+  if aNode.SelectNodesNS(cNameSpaceURI, cCategories, lCatNodes) then
+  for lCategoryNode in lCatNodes do
   begin
     lCat := TCategory.Create;
-    lCat.Name := node.Attributes['name'];
+    lCat.Name := lCategoryNode.Attributes['name'];
 
-    if node.SelectNodesNS(cNameSpace, cActions, nodes_act) then
-      for actionNode in nodes_act do
-        lCat.FActions.Add(actionNode.Text);
+    if lCategoryNode.SelectNodesNS(cNameSpaceURI, cActions, lActNodes) then
+      for lActionNode in lActNodes do
+        lCat.FActions.Add(lActionNode.Text);
 
     FCategories.Add(lCat);
   end;
@@ -235,27 +252,57 @@ end;
 
 { TUserActivityLogEventType }
 
+procedure TUserActivityLogEventType.Clear;
+begin
+  FDescription := '';
+  FDetailedDescription := '';
+  FMachineName := '';
+  FOldValue := '';
+  FNewValue := '';
+  FCode := '';
+  FUserId := '';
+  FCategory := '';
+  FAction := '';
+  FActionDateTime := 0;
+  FActionAffectsDate := 0;
+  FUserLocation := '';
+  FReservation := 0;
+  FRoomreservation := 0;
+  Fid1 := '';
+  Fid2 := '';
+  Fid3 := '';
+end;
+
 procedure TUserActivityLogEventType.SetPropertiesFromXMLNode(const aNode: PXMLNode);
+var
+  lnodeList: IXMLNodeList;
 begin
   inherited;
 
-//  FDescription := aNode.selectSingleNode('description').text;
-//  FDetailedDescription := aNode.selectSingleNode('detaileddescription').text;
-//  FMachineName := aNode.selectSingleNode('machinename').text;
-//  FOldValue := aNode.selectSingleNode('oldvalue').text;
-//  FNewValue := aNode.selectSingleNode('newvalue').text;
-//  FCode := aNode.selectSingleNode('code').text;
-//  FUserId := aNode.attributes.getNamedItem('UserId').text;
-//  FCategory := aNode.attributes.getNamedItem('Category').text;
-//  FAction := aNode.attributes.getNamedItem('Action').text;
-//  FActionDateTime := XMLTodateTime(aNode.attributes.getNamedItem('actionDateTime').text);
-//  FActionAffectsDate := XMLToDate(aNode.attributes.getNamedItem('actionAffectsDate').text);
-//  FUserLocation := aNode.attributes.getNamedItem('Userlocation').text;
-//  FReservation := StrToIntDef(aNode.attributes.getNamedItem('Reservation').text, 0);
-//  FRoomreservation := StrToIntDef(aNode.attributes.getNamedItem('Roomreservation').text, 0);
-//  Fid1 := aNode.attributes.getNamedItem('id1').text;
-//  Fid2 := aNode.attributes.getNamedItem('id2').text;
-//  Fid3 := aNode.attributes.getNamedItem('id3').text;
+  if aNode.SelectNodesNS(cNameSpaceURI, 'description', lNodeList, 1) then
+    FDescription := lNodeList.GetFirst.Text;
+  if aNode.SelectNodesNS(cNameSpaceURI, 'detailedDescription', lNodeList, 1) then
+    FDetailedDescription := lNodeList.GetFirst.Text;
+  if aNode.SelectNodesNS(cNameSpaceURI, 'machineName', lNodeList, 1) then
+    FMachineName := lNodeList.GetFirst.Text;
+  if aNode.SelectNodesNS(cNameSpaceURI, 'oldValue', lNodeList, 1) then
+    FOldVAlue:= lNodeList.GetFirst.Text;
+  if aNode.SelectNodesNS(cNameSpaceURI, 'newValue', lNodeList, 1) then
+    FNewValue := lNodeList.GetFirst.Text;
+  if aNode.SelectNodesNS(cNameSpaceURI, 'code', lNodeList, 1) then
+    FCode := lNodeList.GetFirst.Text;
+
+  FUserId := aNode.Attributes['userId'];
+  FCategory := aNode.Attributes['category'];
+  FAction := aNode.Attributes['action'];
+  FActionDateTime := XMLTodateTime(aNode.Attributes['actionDateTime']);
+  FActionAffectsDate := XMLToDate(aNode.Attributes['actionAffectsDate']);
+  FUserLocation := aNode.Attributes['userLocation'];
+  FReservation := StrToIntDef(aNode.Attributes['Reservation'], 0);
+  FRoomreservation := StrToIntDef(aNode.Attributes['Roomreservation'], 0);
+  Fid1 := aNode.Attributes['id1'];
+  Fid2 := aNode.Attributes['id2'];
+  Fid3 := aNode.Attributes['id3'];
 end;
 
 { TUserActivityLogFragment }
@@ -273,32 +320,37 @@ end;
 
 destructor TUserActivityLogFragment.Destroy;
 begin
-  FLogEventList.Free;
   inherited;
 end;
 
 
+function TUserActivityLogFragment.GetLogEventList: TUserActivityLogEventTypeList;
+begin
+  Result := FLogEventList as TUserActivityLogEventTypeList;
+end;
+
 procedure TUserActivityLogFragment.SetPropertiesFromXMLNode(const aNode: PXMLNode);
 var
-  node: PXMLNode;
-  nodes_event: IXMLNodeList;
+  lEventNode: PXMLNode;
+  lEventNodes: IXMLNodeList;
   lEvent: TUserActivityLogEventType;
-  i, j: integer;
+const
+  cFragment = '//UserActivityLogFragment/UserActivityLogEvent';
 begin
   inherited;
-//  nodes_event := aNode.selectNodes('/UserActivityLogEvent');
-//  for i := 0 to nodes_event.length - 1 do
-//  begin
-//    node := nodes_event.item[i];
-//    lEvent := TUserActivityLogEventType.Create;
-//    lEvent.SetPropertiesFromXMLNode(node);
-//    FLogEventList.Add(lEvent);
-//  end;
+
+  if aNode.SelectNodesNS(cNameSpaceURI, cFragment, lEventNodes) then
+  for lEventNode in lEventNodes do
+  begin
+    lEvent := TUserActivityLogEventType.Create;
+    lEvent.SetPropertiesFromXMLNode(lEventNode);
+    FLogEventList.Add(lEvent);
+  end;
 end;
 
 { TxsdBaseObject }
 
-function TxsdBaseObject.LoadFromXML(const aXML: string): boolean;
+procedure TxsdBaseObject.LoadFromXML(const aXML: string);
 var
   xmlDoc: IXMLDocument;
 begin
@@ -309,6 +361,11 @@ begin
     raise EXMLDocException.Create('XML Load error:' + xmlDoc.parseError.reason);
 
   SetPropertiesFromXMLNode(xmlDoc.DocumentElement);
+end;
+
+procedure TxsdBaseObject.SetPropertiesFromXMLNode(const aNode: PXMLNode);
+begin
+  Clear;
 end;
 
 end.

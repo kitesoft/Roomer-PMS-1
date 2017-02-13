@@ -17,28 +17,34 @@ inherited frmUserActivityReport: TfrmUserActivityReport
     Left = 0
     Top = 0
     Width = 1046
-    Height = 144
+    Height = 161
     Align = alTop
     TabOrder = 1
     SkinData.SkinSection = 'PANEL'
     object btnRefresh: TsButton
-      Left = 914
-      Top = 18
+      AlignWithMargins = True
+      Left = 543
+      Top = 11
       Width = 118
-      Height = 26
+      Height = 37
+      Margins.Top = 10
+      Align = alLeft
       Caption = 'Refresh'
+      Constraints.MaxHeight = 37
       Default = True
       ImageIndex = 28
       Images = DImages.PngImageList1
       TabOrder = 1
+      OnClick = btnRefreshClick
       SkinData.SkinSection = 'BUTTON'
+      ExplicitTop = 4
     end
     object gbxSelectDates: TsGroupBox
       AlignWithMargins = True
       Left = 4
       Top = 4
       Width = 277
-      Height = 93
+      Height = 110
       Align = alLeft
       Caption = 'Select dates'
       Font.Charset = DEFAULT_CHARSET
@@ -49,19 +55,22 @@ inherited frmUserActivityReport: TfrmUserActivityReport
       ParentFont = False
       TabOrder = 0
       SkinData.SkinSection = 'GROUPBOX'
+      ExplicitTop = 1
       object lblFrom: TsLabel
-        Left = 16
-        Top = 19
+        Left = 33
+        Top = 20
         Width = 28
         Height = 13
+        Alignment = taRightJustify
         Caption = 'From:'
       end
       object lblTo: TsLabel
-        Left = 16
+        Left = 45
         Top = 49
-        Width = 28
+        Width = 16
         Height = 13
-        Caption = 'From:'
+        Alignment = taRightJustify
+        Caption = 'To:'
       end
       object dtDateFrom: TsDateEdit
         Left = 66
@@ -144,13 +153,14 @@ inherited frmUserActivityReport: TfrmUserActivityReport
     end
     object pnlExportButtons: TsPanel
       Left = 1
-      Top = 100
+      Top = 117
       Width = 1044
       Height = 43
       Align = alBottom
       BevelOuter = bvNone
       TabOrder = 2
       SkinData.SkinSection = 'PANEL'
+      ExplicitTop = 100
       object btnExcel: TsButton
         AlignWithMargins = True
         Left = 3
@@ -175,6 +185,7 @@ inherited frmUserActivityReport: TfrmUserActivityReport
         ImageIndex = 37
         Images = DImages.PngImageList1
         TabOrder = 1
+        OnClick = btnProfileClick
         SkinData.SkinSection = 'BUTTON'
       end
       object btnInvoice: TsButton
@@ -189,6 +200,7 @@ inherited frmUserActivityReport: TfrmUserActivityReport
         Images = DImages.PngImageList1
         Style = bsSplitButton
         TabOrder = 2
+        OnClick = btnInvoiceClick
         SkinData.SkinSection = 'BUTTON'
       end
       object btnReport: TsButton
@@ -209,8 +221,8 @@ inherited frmUserActivityReport: TfrmUserActivityReport
       AlignWithMargins = True
       Left = 287
       Top = 4
-      Width = 277
-      Height = 93
+      Width = 250
+      Height = 110
       Align = alLeft
       Caption = 'Restrictions'
       Font.Charset = DEFAULT_CHARSET
@@ -222,54 +234,84 @@ inherited frmUserActivityReport: TfrmUserActivityReport
       TabOrder = 3
       SkinData.SkinSection = 'GROUPBOX'
       object lblCategory: TsLabel
-        Left = 16
-        Top = 22
+        Left = 56
+        Top = 19
         Width = 49
         Height = 13
         Caption = 'Category:'
       end
-      object lbAction: TsLabel
-        Left = 16
+      object sLabel1: TsLabel
+        Left = 43
         Top = 49
-        Width = 34
+        Width = 62
         Height = 13
-        Caption = 'Action:'
+        Caption = 'Reservation:'
+      end
+      object sLabel2: TsLabel
+        Left = 16
+        Top = 76
+        Width = 89
+        Height = 13
+        Caption = 'RoomReservation:'
       end
       object cbxCategories: TsComboBox
-        Left = 80
+        Left = 114
         Top = 19
-        Width = 145
+        Width = 121
         Height = 21
         Alignment = taLeftJustify
         VerticalAlignment = taAlignTop
         Style = csDropDownList
         ItemIndex = -1
+        Sorted = True
         TabOrder = 0
-        OnChange = cbxCategoriesChange
+        OnKeyDown = cbxCategoriesKeyDown
       end
-      object cbxActions: TsComboBox
-        Left = 80
+      object edReservation: TsEdit
+        Left = 114
         Top = 46
-        Width = 145
+        Width = 121
         Height = 21
-        Alignment = taLeftJustify
-        VerticalAlignment = taAlignTop
-        Style = csDropDownList
-        ItemIndex = -1
+        Color = clWhite
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        NumbersOnly = True
+        ParentFont = False
         TabOrder = 1
+      end
+      object edRoomreservation: TsEdit
+        Left = 114
+        Top = 73
+        Width = 121
+        Height = 21
+        Color = clWhite
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        NumbersOnly = True
+        ParentFont = False
+        TabOrder = 2
       end
     end
   end
   object grActivityLog: TcxGrid [2]
     Left = 0
-    Top = 144
+    Top = 161
     Width = 1046
-    Height = 480
+    Height = 463
     Align = alClient
     TabOrder = 2
     LookAndFeel.NativeStyle = False
-    object grActivityLogDBTableView1: TcxGridDBTableView
+    ExplicitTop = 144
+    ExplicitHeight = 480
+    object grActivityLogDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
+      DataController.DataSource = dsGrid
       DataController.Options = [dcoAssignGroupingValues, dcoAssignMasterDetailKeys, dcoSaveExpanding, dcoGroupsAlwaysExpanded]
       DataController.Summary.DefaultGroupSummaryItems = <
         item
@@ -292,20 +334,25 @@ inherited frmUserActivityReport: TfrmUserActivityReport
         end>
       DataController.Summary.SummaryGroups = <>
       FilterRow.Visible = True
+      OptionsData.CancelOnExit = False
+      OptionsData.Deleting = False
+      OptionsData.DeletingConfirmation = False
+      OptionsData.Editing = False
+      OptionsData.Inserting = False
       OptionsView.ColumnAutoWidth = True
       OptionsView.Footer = True
       OptionsView.GroupFooters = gfAlwaysVisible
     end
-    object lvArrivalsListLevel1: TcxGridLevel
-      GridView = grActivityLogDBTableView1
+    object lvActivityLogsLevel: TcxGridLevel
+      GridView = grActivityLogDBTableView
     end
   end
   inherited psRoomerBase: TcxPropertiesStore
-    Left = 632
-    Top = 72
+    Left = 744
+    Top = 80
   end
   inherited cxsrRoomerStyleRepository: TcxStyleRepository
-    Left = 528
+    Left = 664
     Top = 72
     PixelsPerInch = 96
     inherited dxssRoomerGridReportLink: TdxGridReportLinkStyleSheet
@@ -323,6 +370,7 @@ inherited frmUserActivityReport: TfrmUserActivityReport
     object grdPrinterLink1: TdxGridReportLink
       Active = True
       Component = grActivityLog
+      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -344,13 +392,14 @@ inherited frmUserActivityReport: TfrmUserActivityReport
       PrinterPage.ScaleMode = smFit
       PrinterPage._dxMeasurementUnits_ = 2
       PrinterPage._dxLastMU_ = 2
-      ReportDocument.CreationDate = 42774.603589004630000000
+      ReportDocument.CreationDate = 42779.348928043980000000
       ReportTitle.Font.Charset = DEFAULT_CHARSET
       ReportTitle.Font.Color = clBlack
       ReportTitle.Font.Height = -19
       ReportTitle.Font.Name = 'Arial'
       ReportTitle.Font.Style = [fsBold]
       ShrinkToPageWidth = True
+      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlack
       Font.Height = -11
@@ -394,5 +443,15 @@ inherited frmUserActivityReport: TfrmUserActivityReport
         Caption = 'Group invoice'
       end
     end
+  end
+  object odsActivityLogs: TObjectDataSet
+    TrackChanges = True
+    Left = 304
+    Top = 320
+  end
+  object dsGrid: TDataSource
+    DataSet = odsActivityLogs
+    Left = 384
+    Top = 312
   end
 end

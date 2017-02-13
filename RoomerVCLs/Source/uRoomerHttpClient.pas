@@ -22,9 +22,10 @@ type
   end;
 
 
-  TRoomerHttpQueryparams = class(TALStringlist)
+  TRoomerHttpQueryparams = class(TStringlist)
   private
   public
+    constructor Create; reintroduce;
     function AsUrltext: string;
   end;
 
@@ -270,7 +271,13 @@ function TRoomerHttpQueryparams.AsUrltext: string;
 begin
   Result := '';
   if Count > 0 then
-    Result := '?' + Text;
+    Result := '?' + DelimitedText;
+end;
+
+constructor TRoomerHttpQueryparams.Create;
+begin
+  inherited Create;
+  Delimiter := '&';
 end;
 
 { THttpResultCode }
