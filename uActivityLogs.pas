@@ -30,7 +30,7 @@ type
 
 
   TAvailabilityAction = (EDIT, BULK);
-  TRateAction = (RATE_EDIT, STOP_EDIT, MIN_EDIT, MAX_EDIT);
+  TRateAction = (RATE_EDIT, STOP_EDIT, MIN_EDIT, MAX_EDIT, COA_EDIT, COD_EDIT);
 
   TOfflineReportAction = (REPORTEXCEPTION);
 
@@ -91,16 +91,17 @@ procedure AddAvailabilityActivityLog(const user : String;
 procedure AddRateActivityLog(const user : String;
                              action : TRateAction;
                              const roomClass : String;
-                             rate : Double;
+                             oldRate: double;
+                             newRate : Double;
                              stop : Boolean;
                              min : Integer;
                              max : Integer;
                              date : TDate;
                              const moreInfo : String);
 
-procedure PushActivityLogs;
+procedure PushActivityLogs(aWaitForCompletion: boolean = false);
 
-procedure UserClickedDxLargeButton(Sender: TObject);
+procedure LogUserClickedButton(Sender: TObject);
 
 function CreateInvoiceActivityLog(const user : String;
                                 iReservation,
@@ -131,7 +132,12 @@ implementation
 
 uses Menus, sButton, sLabel, ud, ioUtils, uAppGlobal, uDateUtils, uStringUtils, dxBar
     , WinApi.Windows
-    , XmlUtils;
+    , XmlUtils
+    , Vcl.StdCtrls
+    , VCl.Controls
+    , VCL.Forms
+    , Math
+    ;
 
 
 function GetDataFileLocationWithName(activity: TActivityType): String;
@@ -459,13 +465,15 @@ end;
 procedure AddRateActivityLog(const user : String;
                              action : TRateAction;
                              const roomClass : String;
-                             rate : Double;
+                             oldRate: double;
+                             newRate : Double;
                              stop : Boolean;
                              min : Integer;
                              max : Integer;
                              date : TDate;
                              const moreInfo : String);
-var categoryName, actionName, sLine : String;
+var
+  categoryName, actionName, sLine : String;
 begin
   categoryName := GetEnumName(TypeInfo(TActivityType), ORD(AVAILABILITY));
   actionName := GetEnumName(TypeInfo(TRateAction), ORD(action));
@@ -476,8 +484,8 @@ begin
                             actionName,
                             moreinfo,
                             moreinfo,
-                            '',
-                            FloatToXml(rate, 2),
+                            iif(SameValue(oldrate, newrate), '', FloatToXML(oldRate, 2)),
+                            iif(SameValue(oldrate, newrate), '', FloatToXml(newrate, 2)),
                             roomClass,
                             0,
                             0,
@@ -488,13 +496,13 @@ begin
   AddToTextFile(GetDataFileLocationWithName(AVAILABILITY), sLine);
 end;
 
-procedure PushActivityLogs;
+procedure PushActivityLogs(aWaitForCompletion: boolean = false);
 var activity  : TActivityType;
     filename  : String;
     content   : TStringList;
     i         : Integer;
     list      : TStringList;
-    sql       : String;
+    logLine       : String;
 begin
   try
   list := TStringList.Create;
@@ -527,13 +535,19 @@ begin
 
     if list.Count > 0 then
     begin
-      sql := '<?xml version="1.0" encoding="UTF-8"?>' + #10 +
+      logLine := '<?xml version="1.0" encoding="UTF-8"?>' + #10 +
              '<logs>' + #10 +
                 list.Text +
              '</logs>' + #10;
-      if NOT Assigned(ActivityLogGetThreadedData) then
-         ActivityLogGetThreadedData := TGetThreadedData.Create;
-      ActivityLogGetThreadedData.Put('userlogs', 'logs=' + d.roomerMainDataSet.UrlEncode(sql), nil);
+
+      if aWaitForCompletion then
+        d.roomerMainDataSet.PutData('userlogs', 'logs=' + d.roomerMainDataSet.UrlEncode(logLine))
+      else
+      begin
+        if NOT Assigned(ActivityLogGetThreadedData) then
+           ActivityLogGetThreadedData := TGetThreadedData.Create;
+        ActivityLogGetThreadedData.Put('userlogs', 'logs=' + d.roomerMainDataSet.UrlEncode(logLine), nil);
+      end;
     end;
   finally
     list.Free;
@@ -545,23 +559,37 @@ begin
   end;
 end;
 
-procedure UserClickedDxLargeButton(Sender: TObject);
+procedure LogUserClickedButton(Sender: TObject);
+var
+  lParentForm: TCustomForm;
+  lParentName: string;
 begin
-  if Assigned(Sender) then
-    if (Sender IS TdxBarLargeButton) then
-       AddRoomerActivityLog(d.roomerMainDataSet.username, uActivityLogs.BUTTON_CLICK, TdxBarLargeButton(Sender).Name, 'User ' + d.roomerMainDataSet.username + ' clicked ' + TdxBarLargeButton(Sender).Caption + ' (' + TdxBarLargeButton(Sender).Name + ')')
-    else
-    if (Sender IS TMenuItem) then
-       AddRoomerActivityLog(d.roomerMainDataSet.username, uActivityLogs.BUTTON_CLICK, TMenuItem(Sender).Name, 'User ' + d.roomerMainDataSet.username + ' clicked ' + TMenuItem(Sender).Caption + ' (' + TMenuItem(Sender).Name + ')')
-    else
-    if (Sender IS TsButton) then
-       AddRoomerActivityLog(d.roomerMainDataSet.username, uActivityLogs.BUTTON_CLICK, TsButton(Sender).Name, 'User ' + d.roomerMainDataSet.username + ' clicked ' + TsButton(Sender).Caption + ' (' + TsButton(Sender).Name + ')')
-    else
-    if (Sender IS TsLabel) then
-       AddRoomerActivityLog(d.roomerMainDataSet.username, uActivityLogs.BUTTON_CLICK, TsLabel(Sender).Name, 'User ' + d.roomerMainDataSet.username + ' clicked ' + TsLabel(Sender).Caption + ' (' + TsLabel(Sender).Name + ')')
+  lParentForm := nil;
+  if (Sender is TControl) then
+    lParentForm := TCustomForm(GetParentOfType(TControl(Sender), TCustomForm))
+  else if (Sender is TComponent) then
+    lParentForm := TCustomForm(GetOwnerOfType(TComponent(Sender), TCustomForm));
 
+  if assigned(lParentForm) then
+    lParentName := lParentForm.Caption
+  else
+    lParentName := '<UNKNOWN>';
+
+  if Assigned(Sender) then
+    if (Sender IS TButton) then
+       AddRoomerActivityLog(d.roomerMainDataSet.username, uActivityLogs.BUTTON_CLICK, TButton(Sender).Name, 'User ' + d.roomerMainDataSet.username + ' clicked ' + TButton(Sender).Caption + ' (' + TsButton(Sender).Name + ') on form ' + lParentName)
+    else if (Sender IS TdxBarLargeButton) then
+       AddRoomerActivityLog(d.roomerMainDataSet.username, uActivityLogs.BUTTON_CLICK, TdxBarLargeButton(Sender).Name, 'User ' + d.roomerMainDataSet.username + ' clicked ' + TdxBarLargeButton(Sender).Caption + ' (' + TdxBarLargeButton(Sender).Name + ') on form ' + lParentName)
+    else if (Sender IS TMenuItem) then
+       AddRoomerActivityLog(d.roomerMainDataSet.username, uActivityLogs.BUTTON_CLICK, TMenuItem(Sender).Name, 'User ' + d.roomerMainDataSet.username + ' clicked ' + TMenuItem(Sender).Caption + ' (' + TMenuItem(Sender).Name + ') on form ' + lParentName)
+    else if (Sender IS TsButton) then
+       AddRoomerActivityLog(d.roomerMainDataSet.username, uActivityLogs.BUTTON_CLICK, TsButton(Sender).Name, 'User ' + d.roomerMainDataSet.username + ' clicked ' + TsButton(Sender).Caption + ' (' + TsButton(Sender).Name + ') on form ' + lParentName)
+    else if (Sender IS TLabel) then
+       AddRoomerActivityLog(d.roomerMainDataSet.username, uActivityLogs.BUTTON_CLICK, TLabel(Sender).Name, 'User ' + d.roomerMainDataSet.username + ' clicked ' + TLabel(Sender).Caption + ' (' + TsLabel(Sender).Name + ') on form ' + lParentName)
+    else if (Sender IS TComponent) then
+       AddRoomerActivityLog(d.roomerMainDataSet.username, uActivityLogs.BUTTON_CLICK, TComponent(Sender).Name, 'User ' + d.roomerMainDataSet.username + ' clicked <UNKNOWN> button (' + TComponent(Sender).Name + ') on form ' + lParentName)
     else
-       AddRoomerActivityLog(d.roomerMainDataSet.username, uActivityLogs.BUTTON_CLICK, '<UNKNOWN>', 'User ' + d.roomerMainDataSet.username + ' clicked <UNKNOWN> (<UNKNOWN>)');
+       AddRoomerActivityLog(d.roomerMainDataSet.username, uActivityLogs.BUTTON_CLICK, '<UNKNOWN Control>', 'User ' + d.roomerMainDataSet.username + ' clicked <UNKNOWN> (<UNKNOWN>) on form ' + lParentName);
 end;
 
 

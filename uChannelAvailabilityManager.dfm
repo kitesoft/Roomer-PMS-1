@@ -358,8 +358,8 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
         object cbMon: TsCheckBox
           Left = 96
           Top = 383
-          Width = 57
-          Height = 20
+          Width = 65
+          Height = 16
           Margins.Left = 2
           Margins.Top = 2
           Margins.Right = 2
@@ -375,8 +375,8 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
         object cbTue: TsCheckBox
           Left = 96
           Top = 400
-          Width = 58
-          Height = 20
+          Width = 66
+          Height = 16
           Margins.Left = 2
           Margins.Top = 2
           Margins.Right = 2
@@ -392,8 +392,8 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
         object cbWen: TsCheckBox
           Left = 96
           Top = 417
-          Width = 73
-          Height = 20
+          Width = 81
+          Height = 16
           Margins.Left = 2
           Margins.Top = 2
           Margins.Right = 2
@@ -409,8 +409,8 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
         object cbThu: TsCheckBox
           Left = 96
           Top = 435
-          Width = 63
-          Height = 20
+          Width = 71
+          Height = 16
           Margins.Left = 2
           Margins.Top = 2
           Margins.Right = 2
@@ -426,8 +426,8 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
         object cbFri: TsCheckBox
           Left = 216
           Top = 383
-          Width = 49
-          Height = 20
+          Width = 57
+          Height = 16
           Margins.Left = 2
           Margins.Top = 2
           Margins.Right = 2
@@ -443,8 +443,8 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
         object cbSat: TsCheckBox
           Left = 216
           Top = 400
-          Width = 61
-          Height = 20
+          Width = 69
+          Height = 16
           Margins.Left = 2
           Margins.Top = 2
           Margins.Right = 2
@@ -460,8 +460,8 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
         object cbSun: TsCheckBox
           Left = 216
           Top = 417
-          Width = 55
-          Height = 20
+          Width = 63
+          Height = 16
           Margins.Left = 2
           Margins.Top = 2
           Margins.Right = 2
@@ -629,7 +629,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
           Left = 114
           Top = 62
           Width = 20
-          Height = 20
+          Height = 16
           Margins.Left = 2
           Margins.Top = 2
           Margins.Right = 2
@@ -644,7 +644,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
           Left = 114
           Top = 112
           Width = 20
-          Height = 20
+          Height = 16
           Margins.Left = 2
           Margins.Top = 2
           Margins.Right = 2
@@ -769,7 +769,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
             Left = 13
             Top = 28
             Width = 20
-            Height = 20
+            Height = 16
             Margins.Left = 2
             Margins.Top = 2
             Margins.Right = 2
@@ -943,7 +943,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
             Left = 222
             Top = 26
             Width = 20
-            Height = 20
+            Height = 16
             Enabled = False
             TabOrder = 3
             SkinData.SkinSection = 'CHECKBOX'
@@ -954,7 +954,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
             Left = 336
             Top = 25
             Width = 20
-            Height = 20
+            Height = 16
             Enabled = False
             TabOrder = 4
             SkinData.SkinSection = 'CHECKBOX'
@@ -995,7 +995,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
           Left = 114
           Top = 87
           Width = 20
-          Height = 20
+          Height = 16
           Hint = 'Enable Single Use Price settings'
           Margins.Left = 2
           Margins.Top = 2
@@ -1405,8 +1405,8 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
               object cbxShowLinkedCells: TsCheckBox
                 Left = 5
                 Top = 2
-                Width = 113
-                Height = 20
+                Width = 121
+                Height = 17
                 Margins.Left = 2
                 Margins.Top = 2
                 Margins.Right = 2
@@ -1665,7 +1665,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
               OnClick = sButton3Click
               SkinData.SkinSection = 'BUTTON'
             end
-            object sButton5: TsButton
+            object btnForceUpdate: TsButton
               AlignWithMargins = True
               Left = 5
               Top = 3
@@ -1679,7 +1679,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
               DropDownMenu = pmnuForce
               Style = bsSplitButton
               TabOrder = 1
-              OnClick = sButton5Click
+              OnClick = btnForceUpdateClick
               SkinData.SkinSection = 'BUTTON'
             end
             object btnRecalcDescendantRates: TsButton
@@ -1846,7 +1846,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
             object cbxRateRestrictions: TsCheckBox
               Left = 5
               Top = 4
-              Width = 133
+              Width = 141
               Height = 23
               Margins.Left = 2
               Margins.Top = 2
@@ -1868,8 +1868,8 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
             object cbxShowSubrates: TsCheckBox
               Left = 411
               Top = 29
-              Width = 95
-              Height = 20
+              Width = 103
+              Height = 17
               Margins.Left = 2
               Margins.Top = 2
               Margins.Right = 2
@@ -1997,7 +1997,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
               Left = 7
               Top = 17
               Width = 20
-              Height = 20
+              Height = 16
               TabOrder = 0
               OnClick = __cbxSelectAllClick
               ImgChecked = 0
@@ -2414,7 +2414,6 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
             '180'
             '200'
             '400')
-          ExplicitTop = 4
         end
         object btnBegin: TcxButton
           AlignWithMargins = True
@@ -2462,7 +2461,6 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
           Font.Style = [fsBold]
           ParentFont = False
           OnClick = btnEndClick
-          ExplicitTop = 2
         end
       end
     end
@@ -3266,13 +3264,13 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
   object pmnuForce: TPopupMenu
     Left = 496
     Top = 464
-    object F1: TMenuItem
+    object mnuForceUpdatePeriode: TMenuItem
       Caption = 'Force update of currently selected period'
-      OnClick = F1Click
+      OnClick = mnuForceUpdatePeriodeClick
     end
-    object F2: TMenuItem
+    object mnuForceFullUpdate: TMenuItem
       Caption = 'Force full update'
-      OnClick = F2Click
+      OnClick = mnuForceFullUpdateClick
     end
   end
   object timBlink: TTimer

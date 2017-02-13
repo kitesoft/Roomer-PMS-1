@@ -2715,6 +2715,10 @@ end;
 procedure TfrmMain.FormDestroy(Sender: TObject);
 begin
   try
+    PushActivityLogs;
+  Except
+  end;
+  try
     SaveOneDayViewGridStatus;
   Except
   end;
@@ -4457,7 +4461,7 @@ end;
 
 procedure TfrmMain.pmnuReservationRoomListClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   OneDay_ShowTheNameList
 end;
 
@@ -4581,7 +4585,7 @@ end;
 
 procedure TfrmMain.mnuCancelRoomFromRoomReservationClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   CancelARoomReservation;
 end;
 
@@ -10345,19 +10349,19 @@ end;
 
 procedure TfrmMain.btnNewReservationClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   _NewReservation;
 end;
 
 procedure TfrmMain.btnRoomReservationClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   _Roomreservation;
 end;
 
 procedure TfrmMain.btnModifyReservationClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   _ModifyReservation;
 end;
 
@@ -10368,13 +10372,13 @@ end;
 
 procedure TfrmMain.btnCancelThisReservationClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   _CancelAReservation;
 end;
 
 procedure TfrmMain.btnRoomGuestsClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   _RoomGuests;
 end;
 
@@ -10383,7 +10387,7 @@ procedure TfrmMain.btnDeleteCacheClick(Sender: TObject);
 var
   path: String;
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   if MessageDlg(GetTranslatedText('shTx_Refresh_Local_Data_Cache'), mtConfirmation, [mbYes, mbNo], 0) = mrYes then
   begin
     Cursor := crHourglass;
@@ -10416,7 +10420,7 @@ end;
 
 procedure TfrmMain.btnDeleteReservationClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   _RemoveAReservation;
 end;
 
@@ -10425,7 +10429,7 @@ var
   sRoom: string;
   aDate: Tdate;
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   // **
   aDate := Date;
   Application.CreateForm(TfrmRptDownPayments, frmRptDownPayments);
@@ -10455,13 +10459,13 @@ end;
 
 procedure TfrmMain.btnRemoveThisRoomClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   _RemoveThisRoom
 end;
 
 procedure TfrmMain.btnRepArrivalsClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   ShowArrivalsReport;
 end;
 
@@ -10479,13 +10483,13 @@ end;
 
 procedure TfrmMain.btnRefreshClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   _Refresh;
 end;
 
 procedure TfrmMain.btnChangeDateClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   _ChangeDate;
 end;
 
@@ -10493,37 +10497,37 @@ procedure TfrmMain.btnChannelPlansClick(Sender: TObject);
 var
   theData: recChannelPlanCodeHolder;
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   ChannelPlanCodes(actNone, theData);
 end;
 
 procedure TfrmMain.btnChannelsClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   _Channels
 end;
 
 procedure TfrmMain.btnChannelToggleRulesClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   ShowCheannelTogglingRules;
 end;
 
 procedure TfrmMain.btnCheckInGroupClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   _CheckInGroup
 end;
 
 procedure TfrmMain.btnCheckInRoomClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   _CheckInRoom;
 end;
 
 procedure TfrmMain.btnCheckOutRoomClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   _CheckOutRoom;
 end;
 
@@ -10531,7 +10535,7 @@ procedure TfrmMain.btnCleaningNotesClick(Sender: TObject);
 var
   theData: recCleaningNotesHolder;
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   if openCleaningNotes(actNone, false, theData) then;
 end;
 
@@ -10546,7 +10550,7 @@ end;
 
 procedure TfrmMain.btnCloseClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   _Close;
 end;
 
@@ -10564,7 +10568,7 @@ end;
 
 procedure TfrmMain.btnCloseCurrentDayClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   CloseFinancialDay;
 end;
 
@@ -10580,31 +10584,31 @@ end;
 
 procedure TfrmMain.btnLostAndFoundClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   _LostAndFound;
 end;
 
 procedure TfrmMain.btnDayNotesClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   _DayNotes;
 end;
 
 procedure TfrmMain.btnCashInvoiceClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   _CashInvoice;
 end;
 
 procedure TfrmMain.btnCreditInvoiceClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   _CreditInvoice;
 end;
 
 procedure TfrmMain.btnRoomInvoiceClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   _RoomInvoice;
 end;
 
@@ -10617,7 +10621,7 @@ end;
 
 procedure TfrmMain.btnGroupInvoiceClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   _GroupInvoice;
 end;
 
@@ -10642,7 +10646,7 @@ end;
 
 procedure TfrmMain.btnFinishedInvoicesClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   _FinishedInvoices;
 end;
 
@@ -10706,37 +10710,37 @@ end;
 
 procedure TfrmMain.btnOpenInvoicesClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   _OpenInvoices;
 end;
 
 procedure TfrmMain.btnClosedInvoicesAllDetailedListClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   _ClosedInvoicesDetailed
 end;
 
 procedure TfrmMain.btnClosedInvoicesAllSimpleListClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   _ClosedInvoicesSimple
 end;
 
 procedure TfrmMain.btnClosedInvoicesThisCustomerClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   _ClosedInvoicesThisCustomer;
 end;
 
 procedure TfrmMain.btnClosedInvoicesThisreservationClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   _ClosedInvoicesThisReservation;
 end;
 
 procedure TfrmMain.btnClosedInvoicesThisRoomClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   _ClosedInvoicesThisRoom;
 end;
 
@@ -10744,7 +10748,7 @@ end;
 
 procedure TfrmMain.btnNextDayClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   _Nextday;
 end;
 
@@ -10763,7 +10767,7 @@ procedure TfrmMain.btnTaxesClick(Sender: TObject);
 var
   theData: recTaxesHolder;
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   if Taxes(actNone, theData) then;
   InitializeTaxes;
 end;
@@ -10788,55 +10792,55 @@ end;
 
 procedure TfrmMain.btnTextBasedTemplatesClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   StaticResources('Text based templates', TEXT_BASED_TEMPLATES, ACCESS_OPEN, TTextResourceParameters.Create);
 end;
 
 procedure TfrmMain.btnToDayClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   _Today;
 end;
 
 procedure TfrmMain.btnTotallistClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   rptTotalList;
 end;
 
 procedure TfrmMain.btnPreviusDayClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   _PreviusDay;
 end;
 
 procedure TfrmMain.btnDayViewClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   _DayView;
 end;
 
 procedure TfrmMain.btnPeriodViewClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   _PeriodView;
 end;
 
 procedure TfrmMain.btnPersonvipTypesClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   _PersonvipTypesList;
 end;
 
 procedure TfrmMain.btnMeetingsViewClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   _GuestListView
 end;
 
 procedure TfrmMain.btnMaidsClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   _RptMaidsList;
 end;
 
@@ -10845,7 +10849,7 @@ var
   act: TActTableAction;
   theData: recChannelManagerHolder;
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   act := actNone;
   initChannelManagerHolder(theData);
   if ChannelManager(act, theData) then
@@ -10858,67 +10862,67 @@ end;
 
 procedure TfrmMain.btnManagmentStatClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   rptManagment;
 end;
 
 procedure TfrmMain.btnDayClosingTimesClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   DayClosingTimes;
 end;
 
 procedure TfrmMain.btnDayFinalClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   _RptDayFinal
 end;
 
 procedure TfrmMain.btnRptCustInvoices2Click(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   _RptCustomersInvoiceAllPayTypes;
 end;
 
 procedure TfrmMain.btnRptCustInvoicesClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   RptResInvoices
 end;
 
 procedure TfrmMain.btnRptDeparturesClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   ShowDeparturesReport;
 end;
 
 procedure TfrmMain.btnRptFinanceForecastClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   _RptFinancieForecast
 end;
 
 procedure TfrmMain.btnRptNationalReportClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   _RptNationality
 end;
 
 procedure TfrmMain.btnRoomsClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   _RoomList;
 end;
 
 procedure TfrmMain.btnRoomTypeGroupsClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   _RoomTypeGroupsList;
 end;
 
 procedure TfrmMain.btnRoomTypesClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   _RoomTypeList;
 end;
 
@@ -10934,13 +10938,13 @@ end;
 
 procedure TfrmMain.btnLocationsClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   _LocationsList
 end;
 
 procedure TfrmMain.btnLodgingTaxReportClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   _RptLodgingTax;
 end;
 
@@ -10951,7 +10955,7 @@ end;
 
 procedure TfrmMain.btnSetNoroomClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
 
 end;
 
@@ -10962,31 +10966,31 @@ end;
 
 procedure TfrmMain.btnProvideARoomClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   _ProvideARoom;
 end;
 
 procedure TfrmMain.btnSerachGuestsClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   _SearchAllGuests;
 end;
 
 procedure TfrmMain.btnCustomerListClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   _CustomersList;
 end;
 
 procedure TfrmMain.btnCustomerTypeListClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   _CustomerTypeList;
 end;
 
 procedure TfrmMain.btnDailyRevenuesClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   ShowDailyRevenuesReport;
 end;
 
@@ -10997,67 +11001,67 @@ end;
 
 procedure TfrmMain.btnConfirmAllottedBookingClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   ConfirmABooking;
 end;
 
 procedure TfrmMain.btnContactTypesClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   _PersonContactTypeList;
 end;
 
 procedure TfrmMain.btnCountriesListClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   _CountyList;
 end;
 
 procedure TfrmMain.btnCountryGroupsListClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   _CountryGroupList;
 end;
 
 procedure TfrmMain.btnCurrenciesListClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   _CurrencyList;
 end;
 
 procedure TfrmMain.btnVatCodesListClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   _VatCodesList
 end;
 
 procedure TfrmMain.btnPackagesClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   _packages;
 end;
 
 procedure TfrmMain.btnPaymentGroupListClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   _PayGroupList
 end;
 
 procedure TfrmMain.btnPaymentTypesListClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   _PayTypesList
 end;
 
 procedure TfrmMain.btnItemsListClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   _ItemsList
 end;
 
 procedure TfrmMain.btnItemTypeListClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   _ItemTypeList;
   itemTypeInfoRent.Itemtype := '';
   itemTypeInfoTax.Itemtype := '';
@@ -11065,19 +11069,19 @@ end;
 
 procedure TfrmMain.btnEmailTemplatesClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   mnuEmailTemplates.PopupFromCursorPos;
 end;
 
 procedure TfrmMain.btnEmployeeListClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   _EmployeeList;
 end;
 
 procedure TfrmMain.btnEmployeeTypesListClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   _EmployeeTypesList;
 end;
 
@@ -11134,25 +11138,25 @@ end;
 
 procedure TfrmMain.btnPhonePricesClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   _PhonePrices;
 end;
 
 procedure TfrmMain.btnRoomPriceClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   _RoomRates;
 end;
 
 procedure TfrmMain.btnRoomPriceTypesClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   _PriceCodes;
 end;
 
 procedure TfrmMain.btnSeasonsClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   _Seasons
 end;
 
@@ -11183,7 +11187,7 @@ end;
 
 procedure TfrmMain.btnSettingsClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   _Settings;
 
   SetPMSVisibilities;
@@ -11200,13 +11204,13 @@ end;
 
 procedure TfrmMain.btnLanguageClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   _Language
 end;
 
 procedure TfrmMain.btnTurnoverClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   if isStayTaxExcluded then
   begin
     OpenRptTurnoverAndPayments2;
@@ -11219,7 +11223,7 @@ end;
 
 procedure TfrmMain.btnShowHideStatClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   // if NOT pnlStatSlider.Visible then
   // OpenWindowFromRight(pnlStatSlider.Handle)
   // else
@@ -11233,13 +11237,13 @@ end;
 
 procedure TfrmMain.btnSimpleHouseKeepingClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   ShowHouseKeepingreport(now);
 end;
 
 procedure TfrmMain.dxBarLargeButton4Click(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   StaticResources('Files', ANY_FILE, ACCESS_RESTRICTED);
 end;
 
@@ -11261,31 +11265,31 @@ end;
 
 procedure TfrmMain.btnWebAccessibleFilesClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   StaticResources('Files', ANY_FILE, ACCESS_OPEN);
 end;
 
 procedure TfrmMain.btnCashierReportClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   RptCashier;
 end;
 
 procedure TfrmMain.btnBookKeepingQueriesClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   RptBookkeeping;
 end;
 
 procedure TfrmMain.btnBookKeepingCodesClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   BookKeepingCodes(actNone, '');
 end;
 
 procedure TfrmMain.btnClearWindowCacheClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   if MessageDlg(GetTranslatedText('shTx_ClearWindowsCacheAndClose'), mtConfirmation, [mbYes, mbCancel], 0) = mrYes then
   begin
     DeleteRegistryLocation('Software\Roomer\FormStatus');
@@ -11295,13 +11299,13 @@ end;
 
 procedure TfrmMain.btnRptNotesClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   RptNotes;
 end;
 
 procedure TfrmMain.dxBarSubItem1Click(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   ShowChannelAvailabilityManager();
 end;
 
@@ -11341,13 +11345,13 @@ end;
 
 procedure TfrmMain.btnResStatClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   ShowReservationStatistics;
 end;
 
 procedure TfrmMain.btnReservationNotesClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   if GetSelectedRoomInformation then
   begin
     if g.openresMemo(_iReservation) then
@@ -11362,7 +11366,7 @@ var
   aDate: Tdate;
   frm: TfrmRptReservations;
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   // **
   aDate := Date;
   sRoom := '';
@@ -11411,7 +11415,7 @@ end;
 
 procedure TfrmMain.btnShowHideHintClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   if Sender = nil then
   begin
     g.qShowhint := NOT btnShowHideHint.Down;
@@ -11425,43 +11429,43 @@ end;
 
 procedure TfrmMain.btnQuicReservationClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   CreateQuickReservation(true);
 end;
 
 procedure TfrmMain.btnVariblesClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   _VariblesList;
 end;
 
 procedure TfrmMain.btnVariblesGroupsClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   _VariblesGroupList;
 end;
 
 procedure TfrmMain.BtnMaidJobScriptsClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   _MaidJobScripts
 end;
 
 procedure TfrmMain.btnRateRulesClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
 
 end;
 
 procedure TfrmMain.btnRatesClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   _Rates;
 end;
 
 procedure TfrmMain.btnHideCancelledBookingsClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   btnRefreshOneDay.Click;
 end;
 
@@ -12429,7 +12433,7 @@ var
   aRoom: string;
   aDate: Tdate;
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   aRoom := '';
   aDate := Date - 1;
   if g.openGoToRoomAndDate(aRoom, aDate) then
@@ -13090,13 +13094,13 @@ end;
 
 procedure TfrmMain.btnGuestProfilesClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   GuestProfiles(actNone);
 end;
 
 procedure TfrmMain.btnGuestsClick(Sender: TObject);
 begin
-  UserClickedDxLargeButton(Sender);
+  LogUserClickedButton(Sender);
   rptGuests;
 end;
 

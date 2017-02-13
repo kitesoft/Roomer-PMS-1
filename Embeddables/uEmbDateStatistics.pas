@@ -737,6 +737,7 @@ begin
     StatusCont := FAvailListContainer[grdRoomClasses.row - 1];
     StatusCont.AnyStop := AnyCheckedStopItems;
 
+    //TODO: Shouldn't this be "StopDirty=1" ???
     s := Format('UPDATE channelrates SET dirty=1, Stop=%d ' + 'WHERE id=%d', [Value, TMenuItem(Sender).Tag]);
     if not cmd_bySQL(s) then
     begin
