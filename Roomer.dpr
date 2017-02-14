@@ -266,7 +266,7 @@ uses
   uCurrencyHandlersMap in 'uCurrencyHandlersMap.pas',
   uHotelServicesAPICaller in 'OpenAPI\uHotelServicesAPICaller.pas',
   uRoomerHotelServicesCommunicationModel_RequestsResponses in 'OpenAPI\schema\uRoomerHotelServicesCommunicationModel_RequestsResponses.pas',
-  uUserActivityReport in 'ActivityLogs\uUserActivityReport.pas' {frmUserActivityReport},
+  uRptUserActivity in 'ActivityLogs\uRptUserActivity.pas' {frmUserActivityReport},
   uCredentialsAPICaller in 'OpenAPI\uCredentialsAPICaller.pas',
   RoomerExceptionHandling in 'RoomerExceptionHandling.pas';
 

@@ -35,15 +35,12 @@ type
 
     ///	<summary>
     ///	  Implementation of hotelservice/useractivitylogs/categories endpoint  <br />
+    ///  retrieving all used categories an actions
     ///	</summary>
     function GetAllCategoriesAndActionsForHotel(aCategoriesAndActions: TUserActivityCategoriesOverview): boolean;
-    function GetLogFragment(aDoneAfterDate: TDate; aDoneBeforeDate: TDate; aAffectAfterDate: TDate; aAffectBeforeDate: TDate;
-                            aLogFragment: TUserActivityLogFragment): boolean; overload;
-    function GetLogFragment(aDoneAfterDate: TDate; aDoneBeforeDate: TDate; aAffectAfterDate: TDate; aAffectBeforeDate: TDate;
-                            const aCategory: string; aLogFragment: TUserActivityLogFragment): boolean; overload;
-    function GetLogFragment(aDoneAfterDate: TDate; aDoneBeforeDate: TDate; aAffectAfterDate: TDate; aAffectBeforeDate: TDate;
-                            const aCategory: string; const aAction: string; aLogFragment: TUserActivityLogFragment): boolean; overload;
-
+    ///	<summary>
+    ///	  Implementation of hotelservice/useractivitylogs[/{categories}[/{action}]] endpoint  <br />
+    ///	</summary>
     function GetLogFragment(const aParams: TAPICallParameters; aLogFragment: TUserActivityLogFragment): boolean; overload;
   end;
 
@@ -77,58 +74,6 @@ begin
   end;
 end;
 
-function TUserActivityLogAPICaller.GetLogFragment(aDoneAfterDate, aDoneBeforeDate, aAffectAfterDate,
-  aAffectBeforeDate: TDate; const aCategory, aAction: string; aLogFragment: TUserActivityLogFragment): boolean;
-var
-  roomerClient: TRoomerHttpClient;
-  lURI: string;
-  lResponse: string;
-  lStatus: integer;
-begin
-  roomerClient := d.roomerMainDataSet.CreateRoomerClient(True);
-  try
-    lURI := d.roomerMainDataSet.OpenApiUri + cResourcesURI  + cUserActivityLogsURI;
-
-    if not aCategory.IsEmpty then
-    begin
-      lUri := lUri + '/' + d.RoomerMainDataset.UrlEncode(aCategory);
-      if not aAction.IsEmpty then
-        lUri := lUri + '/' + d.roomerMainDataSet.UrlEncode(aAction);
-    end;
-
-    if aDoneAfterDate > 0 then
-      roomerClient.QueryParams.Add('doneAfterDate=' + DateToXML(aDoneAfterDate));
-    if aDoneBeforeDate > 0 then
-      roomerClient.QueryParams.Add('doneBeforeDate=' + DateToXML(aDoneBeforeDate));
-    if aAffectAfterDate > 0 then
-      roomerClient.QueryParams.Add('affectAfterDate='+ DateToXML(aAffectAfterDate));
-    if aAffectBeforeDate > 0 then
-      roomerClient.QueryParams.Add('affectBeforeDate='+ DateToXML(aAffectBeforeDate));
-
-    lStatus := roomerClient.GetWithStatus(lURI, lResponse);
-    Result := lStatus = 200;
-    if Result then
-      aLogFragment.LoadFromXML(lResponse)
-    else
-      EUserActivityLogAPICallerException.CreateFmt('Error %d retrieving UserActivityLogFragment', [lStatus]);
-  finally
-    roomerClient.Free;
-  end;
-end;
-
-function TUserActivityLogAPICaller.GetLogFragment(aDoneAfterDate, aDoneBeforeDate, aAffectAfterDate,
-  aAffectBeforeDate: TDate; aLogFragment: TUserActivityLogFragment): boolean;
-begin
-  Result := GetLogFragment(aDoneAfterDate, aDoneBeforeDate, aAffectAfterDate, aAffectBeforeDate, '', '', aLogFragment);
-
-end;
-
-function TUserActivityLogAPICaller.GetLogFragment(aDoneAfterDate, aDoneBeforeDate, aAffectAfterDate,
-  aAffectBeforeDate: TDate; const aCategory: string; aLogFragment: TUserActivityLogFragment): boolean;
-begin
-  Result := GetLogFragment(aDoneAfterDate, aDoneBeforeDate, aAffectAfterDate, aAffectBeforeDate, aCategory, '', aLogFragment);
-end;
-
 function TUserActivityLogAPICaller.GetLogFragment(const aParams: TAPICallParameters; aLogFragment: TUserActivityLogFragment): boolean;
 var
   roomerClient: TRoomerHttpClient;
@@ -158,9 +103,9 @@ begin
     if aParams.AffectBeforeDate > 0 then
       roomerClient.QueryParams.Add('affectBeforeDate='+ DateToXML(aParams.AffectBeforeDate));
     if aParams.Reservation > 0 then
-      roomerClient.QueryParams.Add(Format('reservation=%d', [aParams.Reservation]));
+      roomerClient.QueryParams.Add(Format('reservationId=%d', [aParams.Reservation]));
     if aParams.RoomReservation > 0 then
-      roomerClient.QueryParams.Add(Format('roomreservation=%d', [aParams.RoomReservation]));
+      roomerClient.QueryParams.Add(Format('roomReservationId=%d', [aParams.RoomReservation]));
 
     lStatus := roomerClient.GetWithStatus(lURI, lResponse);
     Result := lStatus = 200;

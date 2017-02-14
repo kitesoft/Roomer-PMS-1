@@ -1583,7 +1583,7 @@ uses
     , uRoomerVersionInfo
     , uSQLUtils
     , uMasterRateDefaults
-    , uUserActivityReport;
+    , uRptUserActivity;
 
 {$R *.DFM}
 {$R Cursors.res}

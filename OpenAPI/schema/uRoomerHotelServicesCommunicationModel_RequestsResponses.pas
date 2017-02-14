@@ -122,23 +122,23 @@ type
   public
     procedure Clear; override;
   published
-    property Description: string read FDescription write FDescription;
-    property DetailedDescription: string read FDetailedDescription write FDetailedDescription;
-    property MachineName: string read FMachineName write FMachineName;
-    property OldValue: string read FOldValue write FOldValue;
-    property NewValue: string read FNewValue write FNewValue;
-    property Code: string read FCode write FCode;
+    property ActionDateTime: TDateTime read FActionDateTime write FActionDateTime;
     property UserId: string read FUserId write FUserId;
     property Category: string read FCategory write FCategory;
     property Action: string read FAction write FAction;
-    property ActionDateTime: TDateTime read FActionDateTime write FActionDateTime;
+    property Description: string read FDescription write FDescription;
+    property DetailedDescription: string read FDetailedDescription write FDetailedDescription;
+    property OldValue: string read FOldValue write FOldValue;
+    property NewValue: string read FNewValue write FNewValue;
+    property Code: string read FCode write FCode;
     property ActionAffectsDate: TDate read FActionAffectsDate write FActionAffectsDate;
-    property UserLocation: string read FUserLocation write FUserLocation;
     property Reservation: integer read FReservation write FReservation;
     property Roomreservation: integer read FRoomreservation write FRoomreservation;
     property id1: string read Fid1 write Fid1;
     property id2: string read Fid2 write Fid2;
     property id3: string read Fid3 write Fid3;
+    property UserLocation: string read FUserLocation write FUserLocation;
+    property MachineName: string read FMachineName write FMachineName;
   end;
 
   TUserActivityLogEventTypeList = TObjectList<TUserActivityLogEventType>;
@@ -298,8 +298,8 @@ begin
   FActionDateTime := XMLTodateTime(aNode.Attributes['actionDateTime']);
   FActionAffectsDate := XMLToDate(aNode.Attributes['actionAffectsDate']);
   FUserLocation := aNode.Attributes['userLocation'];
-  FReservation := StrToIntDef(aNode.Attributes['Reservation'], 0);
-  FRoomreservation := StrToIntDef(aNode.Attributes['Roomreservation'], 0);
+  FReservation := StrToIntDef(aNode.Attributes['reservation'], 0);
+  FRoomreservation := StrToIntDef(aNode.Attributes['roomReservation'], 0);
   Fid1 := aNode.Attributes['id1'];
   Fid2 := aNode.Attributes['id2'];
   Fid3 := aNode.Attributes['id3'];
@@ -338,13 +338,17 @@ const
   cFragment = '//UserActivityLogFragment/UserActivityLogEvent';
 begin
   inherited;
-
-  if aNode.SelectNodesNS(cNameSpaceURI, cFragment, lEventNodes) then
-  for lEventNode in lEventNodes do
-  begin
-    lEvent := TUserActivityLogEventType.Create;
-    lEvent.SetPropertiesFromXMLNode(lEventNode);
-    FLogEventList.Add(lEvent);
+  FLogEventList.OnChanged.Enabled := false;
+  try
+    if aNode.SelectNodesNS(cNameSpaceURI, cFragment, lEventNodes) then
+    for lEventNode in lEventNodes do
+    begin
+      lEvent := TUserActivityLogEventType.Create;
+      lEvent.SetPropertiesFromXMLNode(lEventNode);
+      FLogEventList.Add(lEvent);
+    end;
+  finally
+    FLogEventList.OnChanged.Enabled := true;
   end;
 end;
 
