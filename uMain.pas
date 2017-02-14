@@ -2717,7 +2717,7 @@ end;
 procedure TfrmMain.FormDestroy(Sender: TObject);
 begin
   try
-    PushActivityLogs;
+    PushActivityLogs(true);
   Except
   end;
   try
