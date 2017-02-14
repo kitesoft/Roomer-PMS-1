@@ -159,6 +159,7 @@ function ComponentRunning(aComponent: TComponent): boolean;
 function RunningInMainThread: boolean;
 
 function GetParentOfType(aControl: TControl; aClassType: TClass): TControl;
+function GetOwnerOfType(aComp: TComponent; aClassType: TClass): TComponent;
 
 function StringIndexInSet(Selector : string; CaseList: array of string): Integer;
 
@@ -1693,10 +1694,20 @@ end;
 function GetParentOfType(aControl: TControl; aClassType: TClass): TControl;
 begin
   Result := aControl.Parent;
-  while Assigned(Result) and (result.ClassType <> aClassType) do
+  while Assigned(Result) and (not result.ClassType.InheritsFrom(aClassType)) do
     Result := Result.parent;
 end;
+
+function GetOwnerOfType(aComp: TComponent; aClassType: TClass): TComponent;
+begin
+  Result := aComp.Owner;
+  while Assigned(Result) and (not result.ClassType.InheritsFrom(aClassType)) do
+    Result := Result.Owner;
+end;
+
 { TIntValue }
+
+
 
 constructor TIntValue.Create(value: integer);
 begin

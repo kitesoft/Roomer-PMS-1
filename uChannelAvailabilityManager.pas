@@ -81,11 +81,11 @@ type
   TfrmChannelAvailabilityManager = class;
 
   TPriceData = class
-  private
+  strict private
     FDate: TDateTime;
     FChannelManager: integer;
     FId: integer;
-    FOldValue: Double;
+    FOldPrice: Double;
     FPrice: Double;
     FChannelId: integer;
     FRateRoundingType: integer;
@@ -93,7 +93,7 @@ type
     FRoomTypeGroupCode, FRoomTypeTopClass: String;
     FStopSell: Boolean;
     FMinStay: integer;
-    ForcingUpdate: Boolean;
+    FForcingUpdate: Boolean;
 
     FAvailability: integer;
     FMaxStay: integer;
@@ -128,7 +128,6 @@ type
     procedure SetMaxStay(const value: integer);
     procedure SetSingleUsePrice(const value: Double);
     procedure setMinStay(const value: integer);
-    function isEdited: Boolean;
     procedure setStopSell(const value: Boolean);
   public
     constructor Create(_Id: integer; const roomtypeGroupCode, _roomTypeTopClass: String; date: TDateTime;
@@ -156,6 +155,7 @@ type
     destructor Destroy; override;
 
     procedure ClearEdited;
+    function isEdited: Boolean;
 
     property Id: integer read FId;
     property stopSell: Boolean read FStopSell Write setStopSell;
@@ -165,8 +165,8 @@ type
     property roomTypeGroupId: integer read FRoomTypeGroupId;
     property roomtypeGroupCode: String read FRoomTypeGroupCode;
     property RoomTypeTopClass: String read FRoomTypeTopClass;
-
-    property price: Double read FPrice write SetPrice;
+    property OldPrice: double read FOldPrice;
+    property Price: Double read FPrice write SetPrice;
     property Availability: integer read FAvailability write SetAvailability;
     property MaxStay: integer read FMaxStay write SetMaxStay;
     property COA: Boolean read FCOA write SetCOA;
@@ -192,6 +192,20 @@ type
     property connectCOAToMasterRate : Boolean read FconnectCOAToMasterRate write FconnectCOAToMasterRate;
     property connectCODToMasterRate : Boolean read FconnectCODToMasterRate write FconnectCODToMasterRate;
     property connectLOSToMasterRate : Boolean read FconnectLOSToMasterRate write FconnectLOSToMasterRate;
+
+    property PriceDirty: boolean read FPriceDirty;
+    property AvailabilityDirty: boolean read FAvailabilityDirty;
+    property StopSellDirty: boolean read FStopSellDirty;
+    property MaxStayDirty: boolean read FMaxStayDirty;
+    property MinStayDirty: boolean read FMinStayDirty;
+    property COADirty: boolean read FCOADirty;
+    property CODDirty: boolean read FCODDirty;
+    property LOSArrivalDateBasedDirty: boolean read FLOSArrivalDateBasedDirty write FLOSArrivalDateBasedDirty;
+    property SingleUsePriceDirty: boolean read FSingleUsePriceDirty;
+
+    property ForcingUpdate: boolean read FForcingUpdate write FForcingUpdate;
+    property CurrencyId: integer read FCurrencyId write FCurrencyId;
+
   end;
 
   TDictionaryItem = class
@@ -261,7 +275,7 @@ type
     cbxRateRestrictions: TsCheckBox;
     cbxPlanCodes: TsComboBox;
     sButton4: TsButton;
-    sButton5: TsButton;
+    btnForceUpdate: TsButton;
     pnlProgress: TsPanel;
     prgSaving: TUbuntuProgress;
     lblReadSave: TsLabel;
@@ -310,8 +324,8 @@ type
     btnBegin: TcxButton;
     btnEnd: TcxButton;
     pmnuForce: TPopupMenu;
-    F1: TMenuItem;
-    F2: TMenuItem;
+    mnuForceUpdatePeriode: TMenuItem;
+    mnuForceFullUpdate: TMenuItem;
     btnStopSell_Off: TsButton;
     btnStopSell_On: TsButton;
     btnStopSell_Clear: TsButton;
@@ -388,7 +402,7 @@ type
     procedure rateGridCheckBoxChange(Sender: TObject; ACol, ARow: integer; State: Boolean);
     procedure cbxRateRestrictionsClick(Sender: TObject);
     procedure sButton4Click(Sender: TObject);
-    procedure sButton5Click(Sender: TObject);
+    procedure btnForceUpdateClick(Sender: TObject);
     procedure gridEditCellDone(Sender: TObject; ACol, ARow: integer);
     procedure gridClipboardAfterPasteCell(Sender: TObject; ACol, ARow: integer; value: string);
     procedure cbxShowLinkedCellsClick(Sender: TObject);
@@ -418,8 +432,8 @@ type
     procedure btnBackClick(Sender: TObject);
     procedure btnBeginClick(Sender: TObject);
     procedure btnEndClick(Sender: TObject);
-    procedure F1Click(Sender: TObject);
-    procedure F2Click(Sender: TObject);
+    procedure mnuForceUpdatePeriodeClick(Sender: TObject);
+    procedure mnuForceFullUpdateClick(Sender: TObject);
     procedure btnStopSell_OffClick(Sender: TObject);
     procedure btnStopSell_OnClick(Sender: TObject);
     procedure btnStopSell_ClearClick(Sender: TObject);
@@ -883,25 +897,25 @@ begin
   if Assigned(PriceData) then
   begin
     if isPriceRow(iRow) then
-      result := PriceData.FPriceDirty
+      result := PriceData.PriceDirty
     else if isAvailabilityRow(iRow) then
-      result := PriceData.FAvailabilityDirty
+      result := PriceData.AvailabilityDirty
     else if isStopSellRow(iRow) then
-      result := PriceData.FStopSellDirty
+      result := PriceData.StopSellDirty
     else if isMinStayRow(iRow) then
-      result := PriceData.FMinStayDirty
+      result := PriceData.MinStayDirty
     else if isMaxStayRow(iRow) then
-      result := PriceData.FMaxStayDirty
+      result := PriceData.MaxStayDirty
     else if isCloseOnArrivalRow(iRow) then
-      result := PriceData.FCOADirty
+      result := PriceData.COADirty
     else if isClosedOnDepartureRow(iRow) then
-      result := PriceData.FCODDirty
+      result := PriceData.CODDirty
     else if isLOSArrivalDateBasedRow(iRow) then
-      result := PriceData.FLOSArrivalDateBasedDirty
+      result := PriceData.LOSArrivalDateBasedDirty
     else if isSingleUsePriceRow(iRow) then
-      result := PriceData.FSingleUsePriceDirty
+      result := PriceData.SingleUsePriceDirty
     else if isStopSellRow(iRow) then
-      result := PriceData.FSingleUsePriceDirty;
+      result := PriceData.SingleUsePriceDirty;
   end;
 end;
 
@@ -1580,15 +1594,15 @@ begin
           if ((PriceData.channelId > -1) AND (iMaster=0)) OR
              ((PriceData.channelId < 0) AND (iMaster=1)) then
           begin
-            result := PriceData.FPriceDirty OR
+            result := PriceData.PriceDirty OR
 //                      PriceData.FAvailabilityDirty
-                      PriceData.FStopSellDirty OR
-                      PriceData.FMaxStayDirty OR
-                      PriceData.FMinStayDirty OR
-                      PriceData.FCOADirty OR
-                      PriceData.FCODDirty OR
-                      PriceData.FLOSArrivalDateBasedDirty OR
-                      PriceData.FSingleUsePriceDirty;
+                      PriceData.StopSellDirty OR
+                      PriceData.MaxStayDirty OR
+                      PriceData.MinStayDirty OR
+                      PriceData.COADirty OR
+                      PriceData.CODDirty OR
+                      PriceData.LOSArrivalDateBasedDirty OR
+                      PriceData.SingleUsePriceDirty;
             if result then exit;
           end;
         end;
@@ -1826,15 +1840,45 @@ var
       end;
 
       procedure LogChanges(PriceData : TPriceData; RateAction : TRateAction);
+      var
+        lOldVAlue, lNewValue: double;
       begin
+        case RateAction of
+          RATE_EDIT:  begin
+                        lOldValue := PriceData.OldPrice ;
+                        lNewValue := PriceData.Price;
+                      end;
+          STOP_EDIT:  begin
+                        lOldValue := ord(not PriceData.stopSell);
+                        lNewValue := ord(PriceData.stopSell);
+                      end;
+          MIN_EDIT:  begin
+                        lOldValue := NAN;
+                        lNewValue := PriceData.MinStay;
+                      end;
+          MAX_EDIT:  begin
+                        lOldValue := NAN;
+                        lNewValue := PriceData.MaxStay;
+                      end;
+          COA_EDIT:  begin
+                        lOldValue := ord(not PriceData.COA);
+                        lNewValue := ord(PriceData.COA);
+                      end;
+          COD_EDIT:  begin
+                        lOldValue := ord(not PriceData.COD);
+                        lNewValue := ord(PriceData.COD);
+                      end;
+        end;
+
         AddRateActivityLog(d.roomerMainDataSet.username,
                            RateAction,
                            PriceData.roomtypeGroupCode,
-                           PriceData.FPrice,
-                           PriceData.FStopSell,
-                           PriceData.FMinStay,
-                           PriceData.FMaxStay,
-                           PriceData.FDate,
+                           lOldvalue, //PriceData.OldPrice,
+                           lNewValue, //PriceData.Price,
+                           PriceData.StopSell,
+                           PriceData.MinStay,
+                           PriceData.MaxStay,
+                           PriceData.Date,
                            '');
       end;
 
@@ -1882,69 +1926,70 @@ begin
                   CalcSql := CalcSql + IIF(CalcSql='', '', ' OR ') +
                     format('(cmr.date=''%s'' AND cmr.roomclassId=%d)',
                     [
-                      DateToSqlString(PriceData.FDate),
-                      PriceData.FRoomTypeGroupId
+                      DateToSqlString(PriceData.Date),
+                      PriceData.RoomTypeGroupId
                     ]);
                 end;
 
-                buildSetStatement(PriceData.ForcingUpdate OR PriceData.FPriceDirty, sql, 'dirty', 'price', _db(PriceData.FPrice));
-                if PriceData.FPriceDirty then LogChanges(PriceData, RATE_EDIT);
+                buildSetStatement(PriceData.ForcingUpdate OR PriceData.PriceDirty, sql, 'dirty', 'price', _db(PriceData.Price));
+                if PriceData.PriceDirty then LogChanges(PriceData, RATE_EDIT);
 
-                if PriceData.FMaxStayDirty AND (PriceData.FMinStay > PriceData.FMaxStay) then
-                  PriceData.FMaxStayDirty := False;
+                  // Moved to buildSetStatement further down
+//                if PriceData.MaxStayDirty AND (PriceData.MinStay > PriceData.MaxStay) then
+//                  PriceData.MaxStayDirty := False;
+
+                if PriceData.MinStayDirty then LogChanges(PriceData, MIN_EDIT);
+                if PriceData.MaxStayDirty and (PriceData.MinStay <= PriceData.MaxStay)  then LogChanges(PriceData, MAX_EDIT);
 
                 buildSetStatementMinMax(sql,
-                                        PriceData.FMinStayDirty OR (PriceData.ForcingUpdate AND (PriceData.FMinStay >= 0)),
-                                        PriceData.FMaxStayDirty OR (PriceData.ForcingUpdate AND (PriceData.FMaxStay >= 0)),
-                                        PriceData.FMinStay,
-                                        PriceData.FMaxStay);
+                                        PriceData.MinStayDirty OR (PriceData.ForcingUpdate AND (PriceData.MinStay >= 0)),
+                                        (PriceData.MaxStayDirty AND (PriceData.MaxStay >= PriceData.minStay)) OR (PriceData.ForcingUpdate AND (PriceData.MaxStay >= 0)),
+                                        PriceData.MinStay,
+                                        PriceData.MaxStay);
 
-                if PriceData.FMinStayDirty then LogChanges(PriceData, MIN_EDIT);
+                if PriceData.COADirty then LogChanges(PriceData, COA_EDIT);
+                buildSetStatement(PriceData.ForcingUpdate OR PriceData.COADirty, sql, 'closedOnArrivalDirty', 'closedOnArrival', BoolToString_0_1(PriceData.COA));
+                if PriceData.CODDirty then LogChanges(PriceData, COD_EDIT);
+                buildSetStatement(PriceData.ForcingUpdate OR PriceData.CODDirty, sql, 'closedOnDepartureDirty', 'closedOnDeparture', BoolToString_0_1(PriceData.COD));
 
-                if PriceData.FMaxStayDirty then LogChanges(PriceData, MAX_EDIT);
+                if PriceData.StopSellDirty then LogChanges(PriceData, STOP_EDIT);
+                buildSetStatement(PriceData.ForcingUpdate OR PriceData.StopSellDirty, sql, 'stopDirty', 'stop', BoolToString_0_1(PriceData.StopSell));
 
-                buildSetStatement(PriceData.ForcingUpdate OR PriceData.FCOADirty, sql, 'closedOnArrivalDirty', 'closedOnArrival', BoolToString_0_1(PriceData.FCOA));
-                buildSetStatement(PriceData.ForcingUpdate OR PriceData.FCODDirty, sql, 'closedOnDepartureDirty', 'closedOnDeparture',
-                  BoolToString_0_1(PriceData.FCOD));
-
-                buildSetStatement(PriceData.ForcingUpdate OR PriceData.FStopSellDirty, sql, 'stopDirty', 'stop', BoolToString_0_1(PriceData.FStopSell));
-                if PriceData.FStopSellDirty then LogChanges(PriceData, STOP_EDIT);
-
-                if PriceData.FLOSArrivalDateBased AND (PriceData.FMinStay <= 1) ANd (PriceData.FMaxStay < 1) then
+                if PriceData.LOSArrivalDateBased AND (PriceData.MinStay <= 1) ANd (PriceData.MaxStay < 1) then
                 begin
-                  PriceData.FLOSArrivalDateBased := False;
-                  PriceData.FLOSArrivalDateBasedDirty := True;
+                  PriceData.LOSArrivalDateBased := False;
+                  PriceData.LOSArrivalDateBasedDirty := True;
                   iTypeIndex := findRowTypeIndex(iRow, 7);
                   if iTypeIndex > -1 then
                     SetCheckBoxCellValue(iCol, iTypeIndex, PriceData.LOSArrivalDateBased);
                 end;
 
 
-                buildSetStatement(PriceData.FLOSArrivalDateBasedDirty OR
-                         (PriceData.FLOSArrivalDateBased AND ((PriceData.FMinStayDirty OR (PriceData.ForcingUpdate AND (PriceData.FMinStay > 0))) OR
-                          (PriceData.FMaxStayDirty OR (PriceData.ForcingUpdate AND (PriceData.FMaxStay > 0))))), sql, 'lengthOfStayArrivalDateBasedDirty',
-                  'lengthOfStayArrivalDateBased', BoolToString_0_1(PriceData.FLOSArrivalDateBased));
-                buildSetStatement(((PriceData.FSingleUsePriceDirty OR PriceData.ForcingUpdate) AND
-                     (PriceData.FSingleUsePrice > 0)), sql, 'singleUsePriceDirty', 'singleUsePrice', _db(PriceData.FSingleUsePrice));
+                buildSetStatement(PriceData.LOSArrivalDateBasedDirty OR
+                         (PriceData.LOSArrivalDateBased AND ((PriceData.MinStayDirty OR (PriceData.ForcingUpdate AND (PriceData.MinStay > 0))) OR
+                          (PriceData.MaxStayDirty OR (PriceData.ForcingUpdate AND (PriceData.MaxStay > 0))))), sql, 'lengthOfStayArrivalDateBasedDirty',
+                  'lengthOfStayArrivalDateBased', BoolToString_0_1(PriceData.LOSArrivalDateBased));
+                buildSetStatement(((PriceData.SingleUsePriceDirty OR PriceData.ForcingUpdate) AND
+                     (PriceData.SingleUsePrice > 0)), sql, 'singleUsePriceDirty', 'singleUsePrice', _db(PriceData.SingleUsePrice));
 
-                if g.qRatesManagedByRoomer AND (PriceData.FChannelId > 0) AND PriceData.isEdited AND PriceData.FPriceDirty then
+                if g.qRatesManagedByRoomer AND (PriceData.ChannelId > 0) AND PriceData.PriceDirty then
                 begin
                   if PriceData.date < lowDate then lowDate := PriceData.date;
                   if PriceData.date > hiDate then hiDate := PriceData.date;
                   PrepareRatesExcelSheet;
-                  iNumRooms := NumRoomsOfTopClass(PriceData.FRoomTypeTopClass);
+                  iNumRooms := NumRoomsOfTopClass(PriceData.RoomTypeTopClass);
 
-                  topClasses.Add(PriceData.FRoomTypeTopClass);
+                  topClasses.Add(PriceData.RoomTypeTopClass);
                   s := DateToSqlString(PriceData.date);
                   dates.Add(s);
-                  AddTopClassToRatesExcelSheet(PriceData.FRoomTypeGroupCode, iNumRooms);
-                  if glb.LocateSpecificRecord('channels', 'id', PriceData.FChannelId) then
+                  AddTopClassToRatesExcelSheet(PriceData.RoomTypeGroupCode, iNumRooms);
+                  if glb.LocateSpecificRecord('channels', 'id', PriceData.ChannelId) then
                   begin
                     compensationPercentage := glb.ChannelsSet['compensationPercentage'];
-                    PriceToHotel := uUtils.RoundTo(PriceData.FPrice / (1 + (compensationPercentage/100)), 0.01);
+                    PriceToHotel := uUtils.RoundTo(PriceData.Price / (1 + (compensationPercentage/100)), 0.01);
                     AddChannelToRatesExcelSheet(glb.ChannelsSet['channelManagerId'], glb.ChannelsSet['name'], '-------');
-                    AddRateClassToRatesExcelSheet(PriceData.FRoomTypeGroupCode);
-                    AddDateAndRateToRatesExcelSheet(PriceData.date, PriceData.FPrice, PriceToHotel, PriceData.stopSell, PriceData.FCOA, PriceData.minStay);
+                    AddRateClassToRatesExcelSheet(PriceData.RoomTypeGroupCode);
+                    AddDateAndRateToRatesExcelSheet(PriceData.date, PriceData.Price, PriceToHotel, PriceData.stopSell, PriceData.COA, PriceData.minStay);
                   end;
                 end;
 
@@ -2029,6 +2074,7 @@ end;
 
 procedure TfrmChannelAvailabilityManager.btnPublishClick(Sender: TObject);
 begin
+  LogUserClickedButton(Sender);
   PublishSheet(False, True);
 end;
 
@@ -2038,6 +2084,8 @@ var iRow, iCol: Integer;
     doExit : Boolean;
     CalcSql : String;
 begin
+  LogUserClickedButton(Sender);
+
   if NOT CheckForChanges then exit;
 
   doExit := False;
@@ -2058,8 +2106,8 @@ begin
           CalcSql := CalcSql + IIF(CalcSql='', '', ' OR ') +
             format('(cmr.date=''%s'' AND cmr.roomclassId=%d)',
             [
-              DateToSqlString(PriceData.FDate),
-              PriceData.FRoomTypeGroupId
+              DateToSqlString(PriceData.Date),
+              PriceData.RoomTypeGroupId
             ]);
         end else
         begin
@@ -2209,16 +2257,18 @@ begin
   Application.ProcessMessages;
 end;
 
-procedure TfrmChannelAvailabilityManager.F1Click(Sender: TObject);
+procedure TfrmChannelAvailabilityManager.mnuForceUpdatePeriodeClick(Sender: TObject);
 begin
+  LogUserClickedButton(Sender);
   case pgcPages.ActivePageIndex of
     0 : ForceAvailabilityForCurrentPeriod;
     1 : ForceRateUpdateForCurrentPeriod;
   end;
 end;
 
-procedure TfrmChannelAvailabilityManager.F2Click(Sender: TObject);
+procedure TfrmChannelAvailabilityManager.mnuForceFullUpdateClick(Sender: TObject);
 begin
+  LogUserClickedButton(Sender);
   case pgcPages.ActivePageIndex of
     0 : ForceFullAvailability;
     1 : ForceFullRates;
@@ -2475,7 +2525,7 @@ begin
             PriceData := getPriceDataOfRow(iCol, iRow);
             if Assigned(PriceData) AND (PriceData.channelId = destChannelId) then
             begin
-              if (ValueList[i].RoomClassId = PriceData.roomTypeGroupId) AND (trunc(ValueList[i].ADate) = trunc(PriceData.FDate)) then
+              if (ValueList[i].RoomClassId = PriceData.roomTypeGroupId) AND (trunc(ValueList[i].ADate) = trunc(PriceData.Date)) then
               begin
                 if (ValueList[i].ValueType = vtPrice) AND isPriceCell(iCol, iRow) then
                   SetRateCellValue(iCol, iRow, PriceData, ValueList[i].value)
@@ -2529,7 +2579,7 @@ begin
   if isAnyEditableRow(rateGrid.Row) then
   begin
     PriceData := getPriceDataOfRow(rateGrid.Col, rateGrid.Row);
-    chId := PriceData.FChannelId;
+    chId := PriceData.ChannelId;
     if CopyChannelSettings(chId, CurrentChannelMan.FId, GetPlanCodeId) then
       AssignChanges(chId);
   end;
@@ -3943,7 +3993,7 @@ begin
 
     if (IsIdCheckedInCheckListCombo(cbxChannel, PriceData.channelId)) then
     begin
-      if InPlaceEditing OR ((trunc(PriceData.date) >= trunc(dtBulkFrom.date)) and (trunc(PriceData.FDate) <= trunc(dtBulkTo.date)) AND
+      if InPlaceEditing OR ((trunc(PriceData.date) >= trunc(dtBulkFrom.date)) and (trunc(PriceData.Date) <= trunc(dtBulkTo.date)) AND
         (IsIdCheckedInCheckListCombo(cbxRoomTypes, PriceData.roomTypeGroupId)) AND
         DayOfWeekIsIncludes(PriceData.date)) then
       begin
@@ -3984,7 +4034,7 @@ begin
               else if cbDCAvailabilityType.ItemIndex in [1] then // Auto
                 iIntValue := -1
               else if cbDCAvailabilityType.ItemIndex in [2] then // Current
-                iIntValue := locateAvailabilityFromRoomTypeCodeAndDate(PriceData.FRoomTypeTopClass, PriceData.date);
+                iIntValue := locateAvailabilityFromRoomTypeCodeAndDate(PriceData.RoomTypeTopClass, PriceData.date);
 
               if (iIntValue = -MaxInt) then
                 raise Exception.Create('Incorrect availability value');
@@ -4508,8 +4558,9 @@ begin
   end;
 end;
 
-procedure TfrmChannelAvailabilityManager.sButton5Click(Sender: TObject);
+procedure TfrmChannelAvailabilityManager.btnForceUpdateClick(Sender: TObject);
 begin
+  LogUserClickedButton(Sender);
   if CheckForChanges then
     ForceRateUpdateForCurrentPeriod;
 end;
@@ -4687,7 +4738,7 @@ begin
           iHeight := ABS(ORD((PriceData.channelId = -1) OR IsIdCheckedInCheckListCombo(ccChannels, PriceData.channelId)));
 
           if (NOT cbxShowSubrates.Checked) then
-            iHeight := ABS(ORD((iHeight > 0) AND (PriceData.FRoomTypeGroupCode = PriceData.RoomTypeTopClass)));
+            iHeight := ABS(ORD((iHeight > 0) AND (PriceData.RoomTypeGroupCode = PriceData.RoomTypeTopClass)));
 
           if isPriceRow(iRow) then
             HideOrShowRow(iRow, rateGrid.DefaultRowHeight * iHeight)
@@ -4777,7 +4828,7 @@ begin
         PriceData := getPriceDataOfRow(ACol, ARow);
       if Assigned(PriceData) then
       begin
-        CanEdit := PriceData.FRoomTypeGroupCode = PriceData.FRoomTypeTopClass;
+        CanEdit := PriceData.RoomTypeGroupCode = PriceData.RoomTypeTopClass;
       end;
     end;
 end;
@@ -4813,9 +4864,9 @@ begin
           if (DestPriceData.connectRateToMasterRate AND isPriceRow(ARow)) then
           begin
              if DestPriceData.RateDeviationType = 'FIXED_AMOUNT' then
-               tmpValue := CorrectAmountByCurrency(PriceData.price + DestPriceData.masterRateRateDeviation, PriceData.FCurrencyId, DestPriceData.FCurrencyId)
+               tmpValue := CorrectAmountByCurrency(PriceData.price + DestPriceData.masterRateRateDeviation, PriceData.CurrencyId, DestPriceData.CurrencyId)
              else
-               tmpValue := CorrectAmountByCurrency(PriceData.price, PriceData.FCurrencyId, DestPriceData.FCurrencyId) * (1 + DestPriceData.masterRateRateDeviation / 100);
+               tmpValue := CorrectAmountByCurrency(PriceData.price, PriceData.CurrencyId, DestPriceData.CurrencyId) * (1 + DestPriceData.masterRateRateDeviation / 100);
              if tmpValue > 0.00 then
                DestPriceData.price := tmpValue;
              SetRateCellValue(ACol, i, DestPriceData, DestPriceData.price);
@@ -4824,9 +4875,9 @@ begin
           if (DestPriceData.connectSingleUseRateToMasterRate AND isSingleUsePriceRow(ARow)) then
           begin
              if DestPriceData.SingleUseRateDeviationType = 'FIXED_AMOUNT' then
-               tmpValue := CorrectAmountByCurrency(PriceData.SingleUsePrice, PriceData.FCurrencyId, DestPriceData.FCurrencyId) + DestPriceData.masterRateSingleUseRateDeviation
+               tmpValue := CorrectAmountByCurrency(PriceData.SingleUsePrice, PriceData.CurrencyId, DestPriceData.CurrencyId) + DestPriceData.masterRateSingleUseRateDeviation
              else
-               tmpValue := CorrectAmountByCurrency(PriceData.SingleUsePrice, PriceData.FCurrencyId, DestPriceData.FCurrencyId) * (1 + DestPriceData.masterRateSingleUseRateDeviation / 100);
+               tmpValue := CorrectAmountByCurrency(PriceData.SingleUsePrice, PriceData.CurrencyId, DestPriceData.CurrencyId) * (1 + DestPriceData.masterRateSingleUseRateDeviation / 100);
              if tmpValue > 0.00 then
                DestPriceData.SingleUsePrice := tmpValue;
              SetSingleUsePriceCellValue(ACol, i, DestPriceData, DestPriceData.SingleUsePrice);
@@ -5264,7 +5315,7 @@ begin
   if Assigned(PriceData) then
   begin
     ABrush.Color := frmMain.sSkinManager1.GetGlobalColor;
-    if isAvailabilityRow(ARow) AND (PriceData.FRoomTypeGroupCode <> PriceData.FRoomTypeTopClass) then
+    if isAvailabilityRow(ARow) AND (PriceData.RoomTypeGroupCode <> PriceData.RoomTypeTopClass) then
     begin
       ABrush.Style := bsDiagCross;
       AFont.Color := ABrush.Color;
@@ -5273,7 +5324,7 @@ begin
 
     if isAvailabilityRow(ARow) then
     begin
-      available := locateAvailabilityFromRoomTypeCodeAndDate(PriceData.FRoomTypeTopClass, PriceData.FDate);
+      available := locateAvailabilityFromRoomTypeCodeAndDate(PriceData.RoomTypeTopClass, PriceData.Date);
       if available < PriceData.Availability then
       begin
         ABrush.Color := $000080FF;
@@ -5342,7 +5393,7 @@ begin
       if Assigned(PriceData) then
       begin
         ExtraLine := '<hr><br>';
-        available := locateAvailabilityFromRoomTypeCodeAndDate(PriceData.FRoomTypeTopClass, PriceData.date);
+        available := locateAvailabilityFromRoomTypeCodeAndDate(PriceData.RoomTypeTopClass, PriceData.date);
         hintstr := BODY_START;
 
         if PriceData.isEdited then
@@ -5587,7 +5638,6 @@ constructor TPriceData.Create(_Id: integer; const roomtypeGroupCode, _roomTypeTo
   );
 begin
   ForcingUpdate := false;
-  FOldValue := 0.00;
 
   FId := _Id;
   FChannelId := channelId;
@@ -5603,7 +5653,7 @@ begin
   FStopSell := stopSell;
 
   FPrice := price;
-  FOldValue := price;
+  FOldPrice := price;
 
   FAvailability := _Availability;
   FMaxStay := _MaxStay;
