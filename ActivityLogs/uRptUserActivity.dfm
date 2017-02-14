@@ -23,7 +23,7 @@ inherited frmUserActivityReport: TfrmUserActivityReport
     SkinData.SkinSection = 'PANEL'
     object btnRefresh: TsButton
       AlignWithMargins = True
-      Left = 543
+      Left = 455
       Top = 11
       Width = 118
       Height = 37
@@ -42,7 +42,7 @@ inherited frmUserActivityReport: TfrmUserActivityReport
       AlignWithMargins = True
       Left = 4
       Top = 4
-      Width = 277
+      Width = 189
       Height = 110
       Align = alLeft
       Caption = 'Select dates'
@@ -116,38 +116,6 @@ inherited frmUserActivityReport: TfrmUserActivityReport
         DialogTitle = 'Date to select'
         Weekends = [dowLocaleDefault]
       end
-      object tmFrom: TsTimePicker
-        Left = 177
-        Top = 19
-        Width = 85
-        Height = 21
-        Color = clWhite
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
-        Font.Height = -11
-        Font.Name = 'Tahoma'
-        Font.Style = []
-        ParentFont = False
-        TabOrder = 2
-        Text = '00:00:00'
-        SkinData.SkinSection = 'EDIT'
-      end
-      object tmTo: TsTimePicker
-        Left = 177
-        Top = 46
-        Width = 85
-        Height = 21
-        Color = clWhite
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
-        Font.Height = -11
-        Font.Name = 'Tahoma'
-        Font.Style = []
-        ParentFont = False
-        TabOrder = 3
-        Text = '00:00:00'
-        SkinData.SkinSection = 'EDIT'
-      end
     end
     object pnlExportButtons: TsPanel
       Left = 1
@@ -216,7 +184,7 @@ inherited frmUserActivityReport: TfrmUserActivityReport
     end
     object gbxRestrictions: TsGroupBox
       AlignWithMargins = True
-      Left = 287
+      Left = 199
       Top = 4
       Width = 250
       Height = 110
@@ -230,6 +198,7 @@ inherited frmUserActivityReport: TfrmUserActivityReport
       ParentFont = False
       TabOrder = 3
       SkinData.SkinSection = 'GROUPBOX'
+      ExplicitLeft = 287
       object lblCategory: TsLabel
         Left = 56
         Top = 19
@@ -304,7 +273,6 @@ inherited frmUserActivityReport: TfrmUserActivityReport
     Align = alClient
     TabOrder = 2
     LookAndFeel.NativeStyle = False
-    ExplicitTop = 163
     object grActivityLogDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = dsGrid
@@ -365,7 +333,6 @@ inherited frmUserActivityReport: TfrmUserActivityReport
     object grdPrinterLink1: TdxGridReportLink
       Active = True
       Component = grActivityLog
-      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -387,14 +354,13 @@ inherited frmUserActivityReport: TfrmUserActivityReport
       PrinterPage.ScaleMode = smFit
       PrinterPage._dxMeasurementUnits_ = 2
       PrinterPage._dxLastMU_ = 2
-      ReportDocument.CreationDate = 42780.520920127320000000
+      ReportDocument.CreationDate = 42780.691533668980000000
       ReportTitle.Font.Charset = DEFAULT_CHARSET
       ReportTitle.Font.Color = clBlack
       ReportTitle.Font.Height = -19
       ReportTitle.Font.Name = 'Arial'
       ReportTitle.Font.Style = [fsBold]
       ShrinkToPageWidth = True
-      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlack
       Font.Height = -11

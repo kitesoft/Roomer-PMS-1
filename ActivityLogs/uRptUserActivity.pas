@@ -45,8 +45,6 @@ type
     mnuGroupInvoice: TMenuItem;
     lblFrom: TsLabel;
     lblTo: TsLabel;
-    tmFrom: TsTimePicker;
-    tmTo: TsTimePicker;
     gbxRestrictions: TsGroupBox;
     lblCategory: TsLabel;
     cbxCategories: TsComboBox;
@@ -269,8 +267,8 @@ begin
   dtDateFrom.Date := now;
   dtDateTo.Date := now;
   dtDateTo.MaxDate := now;
-  tmTo.Time := now;
   PopulateComboboxes;
+  btnRefresh.Constraints.MaxHeight := 37;
 end;
 
 function TfrmUserActivityReport.GetCurrentEvent: TUserActivityLogEventType;

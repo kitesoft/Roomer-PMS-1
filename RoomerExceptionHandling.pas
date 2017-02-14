@@ -140,9 +140,8 @@ begin
 end;
 
 function TRoomerExceptionHandler.AppendToLogfile(const line : string; addDate : boolean = false) : boolean;
-var aTextFile : TextFile;
-    lFile: TFileStream;
-    aText : String;
+var
+  aText : String;
 begin
   result := true;
   try
