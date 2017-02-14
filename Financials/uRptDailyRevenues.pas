@@ -137,7 +137,7 @@ uses
   , uFinancialReportsAPICaller
   , cxEditRepositoryItems
   , Math
-  , uDayClosingTimesAPICaller;
+  , uDayClosingTimesAPICaller, uActivityLogs;
 
 procedure ShowDailyRevenuesReport;
 begin
@@ -153,6 +153,7 @@ procedure TfrmRptDailyRevenues.btnCloseCurrentDayClick(Sender: TObject);
 var
   lCaller: TDayClosingTimesAPICaller;
 begin
+  LogUserClickedButton(Sender);
   lCaller := TDayClosingTimesAPICaller.Create;
   try
     lCaller.CloseRunningDayGuarded;
