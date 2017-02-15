@@ -1147,6 +1147,10 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
           Margins.Right = 2
           Margins.Bottom = 2
           Caption = 'Availabilities'
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object Panel2: TsPanel
             Left = 0
             Top = 467
@@ -2414,7 +2418,6 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
             '180'
             '200'
             '400')
-          ExplicitTop = 4
         end
         object btnBegin: TcxButton
           AlignWithMargins = True
@@ -2462,7 +2465,6 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
           Font.Style = [fsBold]
           ParentFont = False
           OnClick = btnEndClick
-          ExplicitTop = 2
         end
       end
     end
