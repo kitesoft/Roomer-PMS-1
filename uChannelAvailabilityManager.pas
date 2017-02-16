@@ -1617,7 +1617,7 @@ begin
   s := format('UPDATE channelmasteravailabilityrates cmr ' +
        'JOIN (SELECT * FROM roomtypegroups rtgCR WHERE rtgCR.Active=1) AS rtgCR ON rtgCR.id=cmr.roomClassId ' +
        'JOIN (SELECT * FROM roomtypegroups rtg WHERE Active=1) rtg ON rtg.TopClass=rtgCR.TopClass ' +
-       'JOIN channelrates cr ON cr.roomclassId=rtg.id AND cmr.channelManager=cmr.channelManager AND cmr.planCodeId=cmr.planCodeId AND cmr.date=cr.date ' +
+       'JOIN channelrates cr ON cr.roomclassId=rtg.id AND cr.channelManager=cmr.channelManager AND cr.planCodeId=cmr.planCodeId AND cmr.date=cr.date ' +
        'JOIN channels c ON c.Id=cr.channelId AND c.Active=1 ' +
        'JOIN currencies cu ON cu.Id=c.currencyId ' +
        'JOIN (SELECT IFNULL((SELECT value FROM pms_settings WHERE keyGroup=''RATES_AND_AVAILABILITY_FUNCTIONS'' AND `key`=''MASTER_RATE_CURRENCY'' LIMIT 1), (SELECT NativeCurrency FROM control LIMIT 1)) AS  masterCurrencyId, ' +
@@ -1634,13 +1634,16 @@ begin
        'cmr.stopDirty=1, ' +
        'cmr.lengthOfStayArrivalDateBasedDirty=1 ' +
        ' ' +
-       'WHERE cmr.channelManager=1 AND cmr.planCodeId=8 ' +
-       'AND EXISTS(SELECT id FROM channelclassrelations ccr WHERE ccr.channelId=cr.channelId AND ccr.RoomClassId=rtg.id) ' +
-       'AND ( ' +
-       '%s ' +
-       ') ',
+       'WHERE cmr.channelManager=%d '+#10+
+       '  AND cmr.planCodeId=%d ' + #10+
+       '  AND EXISTS(SELECT id FROM channelclassrelations ccr WHERE ccr.channelId=cr.channelId AND ccr.RoomClassId=rtg.id) ' +
+       '  AND ( ' +
+       ' %s ' +
+       ' ) ',
        [
-         sql
+        GetChannelManagerId,
+        GetPlanCodeId,
+        sql
        ]
        );
   CopyToClipboard(s);
@@ -1650,45 +1653,113 @@ end;
 procedure TfrmChannelAvailabilityManager.postMasterRatesCalculations(sql : String);
 var s : String;
 begin
-  s := format('UPDATE channelmasteravailabilityrates cmr ' +
-       'JOIN (SELECT * FROM roomtypegroups rtgCR WHERE rtgCR.Active=1) AS rtgCR ON rtgCR.id=cmr.roomClassId ' +
-       'JOIN (SELECT * FROM roomtypegroups rtg WHERE Active=1) rtg ON rtg.TopClass=rtgCR.TopClass ' +
-       'JOIN channelrates cr ON cr.roomclassId=rtg.id AND cmr.channelManager=cmr.channelManager AND cmr.planCodeId=cmr.planCodeId AND cmr.date=cr.date ' +
-       'JOIN channels c ON c.Id=cr.channelId AND c.Active=1 ' +
-       'JOIN currencies cu ON cu.Id=c.currencyId ' +
-       'JOIN (SELECT IFNULL((SELECT value FROM pms_settings WHERE keyGroup=''RATES_AND_AVAILABILITY_FUNCTIONS'' AND `key`=''MASTER_RATE_CURRENCY'' LIMIT 1), (SELECT NativeCurrency FROM control LIMIT 1)) AS  masterCurrencyId, ' +
-       '     IFNULL((SELECT value FROM pms_settings WHERE keyGroup=''RATES_AND_AVAILABILITY_FUNCTIONS'' AND `key`=''MASTER_RATE_CURRENCY_CONERT_ACTIVE'' LIMIT 1), ''FALSE'') AS masterCurrencyConvertActive) AS masterSettings ' +
-       'JOIN currencies cuMaster ON cuMaster.Currency=masterSettings.masterCurrencyId ' +
-       'JOIN hotelconfigurations hc ON hc.masterRatesActive=1 ' +
-       'SET cr.Price=IF(cmr.dirty AND rtg.connectRateToMasterRate=0, cr.Price, ' +
-       '(cmr.price + IF(rtg.RateDeviationType=''FIXED_AMOUNT'', rtg.masterRateRateDeviation, cmr.Price * rtg.masterRateRateDeviation / 100) ' +
-       ')) * IF(masterSettings.masterCurrencyConvertActive=''TRUE'', cuMaster.AValue / cu.AValue, 1), ' +
-       'cr.SingleUsePrice=(IF(cmr.singleUsePriceDirty AND rtg.connectSingleUseRateToMasterRate=0, cr.singleUsePrice, ' +
-       'cmr.singleUsePrice + IF(rtg.SingleUseRateDeviationType=''FIXED_AMOUNT'', rtg.masterRateSingleUseRateDeviation, cmr.singleUsePrice * rtg.masterRateSingleUseRateDeviation / 100) ' +
-       ')) * IF(masterSettings.masterCurrencyConvertActive=''TRUE'', cuMaster.AValue / cu.AValue, 1), ' +
-       'cr.MinStay=IF(cmr.minStayDirty AND rtg.connectMinStayToMasterRate=0, cr.MinStay, cmr.MinStay), ' +
-       'cr.MaxStay=IF(cmr.maxStayDirty AND rtg.connectMaxStayToMasterRate=0, cr.MaxStay, cmr.MaxStay), ' +
-       'cr.closedOnArrival=IF(cmr.closedOnArrivalDirty AND rtg.connectCOAToMasterRate=0, cr.closedOnArrival, cmr.closedOnArrival), ' +
-       'cr.closedOnDeparture=IF(cmr.closedOnDepartureDirty AND rtg.connectCODToMasterRate=0, cr.closedOnDeparture, cmr.closedOnDeparture), ' +
-       'cr.stop=IF(cmr.stopDirty AND rtg.connectStopSellToMasterRate=0, cr.stop, cmr.stop), ' +
-       'cr.lengthOfStayArrivalDateBased=IF(cmr.lengthOfStayArrivalDateBasedDirty AND rtg.connectLOSToMasterRate=0, cr.lengthOfStayArrivalDateBased, cmr.lengthOfStayArrivalDateBased), ' +
-       ' ' +
-       'cmr.dirty=0, ' +
-       'cmr.singleUsePriceDirty=0, ' +
-       'cmr.minStayDirty=0, ' +
-       'cmr.maxStayDirty=0, ' +
-       'cmr.closedOnArrivalDirty=0, ' +
-       'cmr.closedOnDepartureDirty=0, ' +
-       'cmr.stopDirty=0, ' +
-       'cmr.lengthOfStayArrivalDateBasedDirty=0 ' +
-       ' ' +
-       'WHERE cmr.channelManager=1 AND cmr.planCodeId=8 ' +
-       'AND EXISTS(SELECT id FROM channelclassrelations ccr WHERE ccr.channelId=cr.channelId AND ccr.RoomClassId=rtg.id) ' +
-       'AND ( ' +
-       '%s ' +
-       ') ',
+  s := format('UPDATE channelmasteravailabilityrates cmr ' +#10+
+       'JOIN (SELECT * FROM roomtypegroups rtgCR WHERE rtgCR.Active=1) AS rtgCR ON rtgCR.id=cmr.roomClassId ' +#10+
+       'JOIN (SELECT * FROM roomtypegroups rtg WHERE Active=1) rtg ON rtg.TopClass=rtgCR.TopClass ' +#10+
+       'JOIN channelrates cr ON cr.roomclassId=rtg.id AND cr.channelManager=cmr.channelManager AND cr.planCodeId=cmr.planCodeId AND cmr.date=cr.date ' +#10+
+       'JOIN channels c ON c.Id=cr.channelId AND c.Active=1 ' +#10+
+       'JOIN currencies cu ON cu.Id=c.currencyId ' +#10+
+       'JOIN (SELECT IFNULL((SELECT value FROM pms_settings WHERE keyGroup=''RATES_AND_AVAILABILITY_FUNCTIONS'' AND `key`=''MASTER_RATE_CURRENCY'' LIMIT 1), (SELECT NativeCurrency FROM control LIMIT 1)) AS  masterCurrencyId, ' +#10+
+       '     IFNULL((SELECT value FROM pms_settings WHERE keyGroup=''RATES_AND_AVAILABILITY_FUNCTIONS'' AND `key`=''MASTER_RATE_CURRENCY_CONERT_ACTIVE'' LIMIT 1), ''FALSE'') AS masterCurrencyConvertActive) AS masterSettings ' +#10+
+       'JOIN currencies cuMaster ON cuMaster.Currency=masterSettings.masterCurrencyId ' +#10+
+       'JOIN hotelconfigurations hc ON hc.masterRatesActive=1 ' +#10+
+
+//       'SET cr.Price=IF(cmr.dirty AND rtg.connectRateToMasterRate=0, cr.Price, ' +#10+
+//       '                (cmr.price + IF(rtg.RateDeviationType=''FIXED_AMOUNT'', rtg.masterRateRateDeviation, cmr.Price * rtg.masterRateRateDeviation / 100) ' +#10+
+//       ')) * IF(masterSettings.masterCurrencyConvertActive=''TRUE'', cuMaster.AValue / cu.AValue, 1), ' +#10+
+
+       'SET '+
+       ' cr.Price = CASE WHEN cmr.dirty AND rtg.connectRateToMasterRate '+#10+
+       '                 THEN '+#10+
+       '                   (cmr.Price + ' +#10+
+       '                    IF(rtg.RateDeviationType=''FIXED_AMOUNT'', ' +#10+
+       '                        rtg.masterRateRateDeviation, ' +#10+
+       '                        cmr.Price * rtg.masterRateRateDeviation / 100 ' +#10+
+       '                      ) ' +#10+
+       '                   ) * IF(masterSettings.masterCurrencyConvertActive=''TRUE'', ' +#10+
+       '                          cuMaster.AValue / cu.AValue, ' +#10+
+       '                          1 ' +#10+
+       '                         ) ' +#10+
+       '                 ELSE cr.Price ' +#10+
+       '            END, '+#10+
+
+
+//       'cr.SingleUsePrice = (IF(cmr.singleUsePriceDirty AND rtg.connectSingleUseRateToMasterRate=0, cr.singleUsePrice, ' +#10+
+//       'cmr.singleUsePrice + IF(rtg.SingleUseRateDeviationType=''FIXED_AMOUNT'', '+
+//       '                        rtg.masterRateSingleUseRateDeviation, ' +#10+
+//       '                        cmr.singleUsePrice * rtg.masterRateSingleUseRateDeviation / 100) ' +#10+
+//       ')) * IF(masterSettings.masterCurrencyConvertActive=''TRUE'', cuMaster.AValue / cu.AValue, 1), ' +#10+
+
+       ' cr.singleUsePrice = CASE WHEN cmr.singleUsePriceDirty AND rtg.connectSingleUseRateToMasterRate ' +#10+
+       '                          THEN '+#10+
+       '                           (cmr.singleUsePrice + ' +#10+
+       '                                     IF(rtg.SingleUseRateDeviationType=''FIXED_AMOUNT'', ' +#10+
+       '                                           rtg.masterRateSingleUseRateDeviation, ' +#10+
+       '                                           cmr.singleUsePrice * rtg.masterRateSingleUseRateDeviation / 100 ' +#10+
+       '                                      ) ' +#10+
+       '                           ) * IF(masterSettings.masterCurrencyConvertActive=''TRUE'', ' +#10+
+       '                                    cuMaster.AValue / cu.AValue, ' +#10+
+       '                                    1 ' +#10+
+       '                                ) ' +#10+
+       '                          ELSE cr.singleUsePrice '+#10+
+       '                     END, ' +#10+
+
+
+//       'cr.MinStay=IF(cmr.minStayDirty AND rtg.connectMinStayToMasterRate=0, cr.MinStay, cmr.MinStay), ' +#10+
+       ' cr.MinStay = CASE WHEN cmr.minStayDirty AND rtg.connectMinStayToMasterRate ' +#10+
+       '                   THEN cmr.MinStay '+#10+
+       '                   ELSE cr.MinStay '+#10+
+       '              END, ' +#10+
+
+//       'cr.MaxStay=IF(cmr.maxStayDirty AND rtg.connectMaxStayToMasterRate=0, cr.MaxStay, cmr.MaxStay), ' +#10+
+       ' cr.MaxStay = CASE WHEN cmr.maxStayDirty AND rtg.connectMaxStayToMasterRate ' +#10+
+       '                   THEN cmr.MaxStay '+#10+
+       '                   ELSE cr.MaxStay '+#10+
+       '              END, ' +#10+
+
+//       'cr.closedOnArrival=IF(cmr.closedOnArrivalDirty AND rtg.connectCOAToMasterRate=0, cr.closedOnArrival, cmr.closedOnArrival), ' +#10+
+       ' cr.closedOnArrival = CASE WHEN cmr.closedOnArrivalDirty AND rtg.connectCOAToMasterRate ' +#10+
+       '                           THEN cmr.closedOnArrival '+#10+
+       '                           ELSE cr.closedOnArrival '+#10+
+       '                      END, ' +#10+
+
+//       'cr.closedOnDeparture=IF(cmr.closedOnDepartureDirty AND rtg.connectCODToMasterRate=0, cr.closedOnDeparture, cmr.closedOnDeparture), ' +#10+
+       ' cr.closedOnDeparture = CASE WHEN cmr.closedOnDepartureDirty AND rtg.connectCODToMasterRate ' +#10+
+       '                             THEN cmr.closedOnDeparture '+#10+
+       '                             ELSE cr.closedOnDeparture '+#10+
+       '                        END, ' +#10+
+
+//       'cr.stop=IF(cmr.stopDirty AND rtg.connectStopSellToMasterRate=0, cr.stop, cmr.stop), ' +#10+
+       ' cr.stop = CASE WHEN cmr.stopDirty AND rtg.connectStopSellToMasterRate '+#10+
+       '                THEN cmr.stop '+#10+
+       '                ELSE cr.stop  '+#10+
+       '           END, ' +#10+
+
+//       'cr.lengthOfStayArrivalDateBased=IF(cmr.lengthOfStayArrivalDateBasedDirty AND rtg.connectLOSToMasterRate=0, cr.lengthOfStayArrivalDateBased, cmr.lengthOfStayArrivalDateBased), ' +#10+
+       ' cr.lengthOfStayArrivalDateBased = CASE WHEN cmr.lengthOfStayArrivalDateBasedDirty AND rtg.connectLOSToMasterRate '+#10+
+       '                                        THEN cmr.lengthOfStayArrivalDateBased '+#10+
+       '                                        ELSE cr.lengthOfStayArrivalDateBased '+#10+
+       '                                   END, ' +#10+
+
+       'cmr.dirty=0, ' +#10+
+       'cmr.singleUsePriceDirty=0, ' +#10+
+       'cmr.minStayDirty=0, ' +#10+
+       'cmr.maxStayDirty=0, ' +#10+
+       'cmr.closedOnArrivalDirty=0, ' +#10+
+       'cmr.closedOnDepartureDirty=0, ' +#10+
+       'cmr.stopDirty=0, ' +#10+
+       'cmr.lengthOfStayArrivalDateBasedDirty=0 ' +#10+
+       ' ' +#10+
+       'WHERE cmr.channelManager=%d ' +#10+
+       '  AND cmr.planCodeId=%d ' +#10+
+       '  AND EXISTS(SELECT id FROM channelclassrelations ccr WHERE ccr.channelId=cr.channelId AND ccr.RoomClassId=rtg.id) ' +#10+
+       'AND ( ' +#10+
+       '%s ' +#10+
+       '    ) ',
        [
-         sql
+        GetChannelManagerId,
+        GetPlanCodeId,
+        sql
        ]
        );
   CopyToClipboard(s);
@@ -2923,7 +2994,7 @@ begin
   cbxChannelManagers.OnChange := nil;
   cbxChannelManagers.Items.BeginUpdate;
   try
-    cbxChannelManagers.Items.Clear;    
+    cbxChannelManagers.Items.Clear;
     ASet := RoomerDataSet.ActivateNewDataset
       (RoomerDataSet.queryRoomer
       ('SELECT id, description, maintenanceDays  FROM channelmanagers WHERE active AND (NOT ISNULL(channels)) AND channels<>'''''));
