@@ -418,7 +418,7 @@ type
     pnlNoRoomDrop: TsPanel;
     arrowImage: TImage;
     lblNoRoom: TsLabel;
-    btnRefreshOneDay: TcxButton;
+    btnRefreshOneDay: TsButton;
     tabsView: TsTabControl;
     sSkinManager1: TsSkinManager;
     timCheckSessionExpired: TTimer;
@@ -445,7 +445,7 @@ type
     N12: TMenuItem;
     dxSkinController1: TdxSkinController;
     tabFreeRooms: TsTabSheet;
-    btnGotoToday: TcxButton;
+    btnGotoToday: TsButton;
     btnChannels: TdxBarLargeButton;
     btnServers: TdxBarButton;
     btnActions: TdxBarButton;
@@ -453,7 +453,7 @@ type
     btnPackages: TdxBarLargeButton;
     btnRates: TdxBarLargeButton;
     lblLoading: TsLabel;
-    btnForward: TcxButton;
+    btnForward: TsButton;
     ilBackForth: TsAlphaImageList;
     cxBarEditItem1: TcxBarEditItem;
     dxBarSubItem2: TdxBarSubItem;
@@ -592,7 +592,7 @@ type
     btnGuests: TdxBarLargeButton;
     pnlViewType: TsPanel;
     cbxViewTypes: TsComboBox;
-    btnBack: TcxButton;
+    btnBack: TsButton;
     pnlBottomViewSettings: TsPanel;
     pnlOccupancyViewButtons: TPanel;
     btnOccupancyViewHide: TSpeedButton;

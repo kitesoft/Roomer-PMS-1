@@ -121,10 +121,6 @@ object frmMain: TfrmMain
         object tabOneDayView: TsTabSheet
           Caption = 'tabOneDayView'
           ImageIndex = 8
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object grOneDayRooms: TAdvStringGrid
             Left = 0
             Top = 0
@@ -440,7 +436,7 @@ object frmMain: TfrmMain
               object lblNoRoom: TsLabel
                 Left = 3
                 Top = 59
-                Width = 50
+                Width = 76
                 Height = 13
                 Align = alBottom
                 Alignment = taCenter
@@ -451,6 +447,7 @@ object frmMain: TfrmMain
                 Font.Height = -11
                 Font.Name = 'Tahoma'
                 Font.Style = [fsBold]
+                ExplicitWidth = 50
               end
             end
           end
@@ -1644,25 +1641,13 @@ object frmMain: TfrmMain
         end
         object tabFreeRooms: TsTabSheet
           Caption = 'tabFreeRooms'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
         end
         object tabDashboard: TsTabSheet
           Caption = 'tabDashboard'
           SkinData.SkinSection = 'TRANSPARENT'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
         end
         object tabRateQuery: TsTabSheet
           Caption = 'tabRateQuery'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
         end
       end
       object pnlStatSlider: TsPanel
@@ -2403,7 +2388,7 @@ object frmMain: TfrmMain
             TMSStyle = 0
           end
         end
-        object btnRefreshOneDay: TcxButton
+        object btnRefreshOneDay: TsButton
           AlignWithMargins = True
           Left = 6
           Top = 4
@@ -2415,23 +2400,20 @@ object frmMain: TfrmMain
           Margins.Right = 0
           Margins.Bottom = 0
           Align = alLeft
-          LookAndFeel.NativeStyle = False
-          OptionsImage.ImageIndex = 28
-          OptionsImage.Images = DImages.PngImageList1
-          SpeedButtonOptions.CanBeFocused = False
-          SpeedButtonOptions.Flat = True
-          SpeedButtonOptions.Transparent = True
-          TabOrder = 0
-          OnMouseEnter = tabsViewMouseEnter
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clCaptionText
           Font.Height = -13
           Font.Name = 'Tahoma'
           Font.Style = [fsBold]
+          ImageAlignment = iaCenter
+          ImageIndex = 28
+          Images = DImages.PngImageList1
           ParentFont = False
+          TabOrder = 0
           OnClick = btnRefreshOneDayClick
+          OnMouseEnter = tabsViewMouseEnter
         end
-        object btnGotoToday: TcxButton
+        object btnGotoToday: TsButton
           AlignWithMargins = True
           Left = 107
           Top = 4
@@ -2443,23 +2425,19 @@ object frmMain: TfrmMain
           Margins.Right = 5
           Margins.Bottom = 0
           Align = alRight
-          LookAndFeel.NativeStyle = False
-          OptionsImage.ImageIndex = 51
-          OptionsImage.Images = DImages.PngImageList1
-          SpeedButtonOptions.CanBeFocused = False
-          SpeedButtonOptions.Flat = True
-          SpeedButtonOptions.Transparent = True
-          TabOrder = 1
-          OnMouseEnter = tabsViewMouseEnter
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clCaptionText
           Font.Height = -13
           Font.Name = 'Tahoma'
           Font.Style = [fsBold]
+          ImageIndex = 51
+          Images = DImages.PngImageList1
           ParentFont = False
+          TabOrder = 1
           OnClick = btnToDayClick
+          OnMouseEnter = tabsViewMouseEnter
         end
-        object btnForward: TcxButton
+        object btnForward: TsButton
           AlignWithMargins = True
           Left = 64
           Top = 4
@@ -2470,23 +2448,20 @@ object frmMain: TfrmMain
           Margins.Right = 0
           Margins.Bottom = 0
           Align = alLeft
-          LookAndFeel.NativeStyle = False
-          OptionsImage.ImageIndex = 3
-          OptionsImage.Images = DImages.ilGuests
-          SpeedButtonOptions.CanBeFocused = False
-          SpeedButtonOptions.Flat = True
-          SpeedButtonOptions.Transparent = True
-          TabOrder = 2
-          OnMouseEnter = tabsViewMouseEnter
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clCaptionText
           Font.Height = -13
           Font.Name = 'Tahoma'
           Font.Style = [fsBold]
+          ImageAlignment = iaCenter
+          ImageIndex = 3
+          Images = DImages.ilGuests
           ParentFont = False
+          TabOrder = 2
           OnClick = btnBackForwardClick
+          OnMouseEnter = tabsViewMouseEnter
         end
-        object btnBack: TcxButton
+        object btnBack: TsButton
           AlignWithMargins = True
           Left = 36
           Top = 4
@@ -2497,16 +2472,12 @@ object frmMain: TfrmMain
           Margins.Right = 0
           Margins.Bottom = 0
           Align = alLeft
-          LookAndFeel.Kind = lfFlat
-          LookAndFeel.NativeStyle = False
-          OptionsImage.ImageIndex = 2
-          OptionsImage.Images = DImages.ilGuests
-          SpeedButtonOptions.CanBeFocused = False
-          SpeedButtonOptions.Flat = True
-          SpeedButtonOptions.Transparent = True
+          ImageAlignment = iaCenter
+          ImageIndex = 2
+          Images = DImages.ilGuests
           TabOrder = 3
-          OnMouseEnter = tabsViewMouseEnter
           OnClick = btnBackForwardClick
+          OnMouseEnter = tabsViewMouseEnter
         end
       end
     end
@@ -24022,13 +23993,15 @@ object frmMain: TfrmMain
       #10'TParamListBox'#13#10'TParamCheckList'#13#10'TfrxPreviewWorkspace'#13#10'TfrxScrol' +
       'lBox'#13#10'TQRPreview'#13#10'TDBListBox'#13#10'TDBMemo'#13#10'TDBLookupListBox'#13#10'TDBRich' +
       'Edit'#13#10'TDBCtrlGrid'#13#10'TDBEdit'#13#10
-    ThirdParty.ThirdButtons = 'TButton'#13#10
+    ThirdParty.ThirdButtons = 'TButton'#13#10'TcxButton'#13#10
     ThirdParty.ThirdBitBtns = 'TBitBtn'#13#10
     ThirdParty.ThirdCheckBoxes = 'TCheckBox'#13#10'TRadioButton'#13#10'TGroupButton'#13#10'TDBCheckBox'#13#10
     ThirdParty.ThirdGroupBoxes = 'TGroupBox'#13#10'TRadioGroup'#13#10'TDBRadioGroup'#13#10
     ThirdParty.ThirdListViews = 'TListView'#13#10'TAdvListView'#13#10
     ThirdParty.ThirdPanels = 'TPanel'#13#10'TfrxTBPanel'#13#10'TDBNavigator'#13#10'TDBCtrlPanel'#13#10'TsPanel'#13#10
-    ThirdParty.ThirdGrids = 'TtringGrid'#13#10'TDrawGrid'#13#10'TAdvStringGrid'#13#10'TDBAdvGrid'#13#10'TDBGrid'#13#10
+    ThirdParty.ThirdGrids = 
+      'TtringGrid'#13#10'TDrawGrid'#13#10'TAdvStringGrid'#13#10'TDBAdvGrid'#13#10'TDBGrid'#13#10'TcxG' +
+      'rid'#13#10
     ThirdParty.ThirdTreeViews = 'TTreeView'#13#10'THTMLTreeview'#13#10'TParamTreeview'#13#10'TDBTreeView'#13#10
     ThirdParty.ThirdComboBoxes = 
       'TComboBox'#13#10'TColorBox'#13#10'TDBLUCombo'#13#10'TAdvComboBox'#13#10'TLUCombo'#13#10'TAdvDB' +
