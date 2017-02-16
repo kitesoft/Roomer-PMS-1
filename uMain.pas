@@ -2941,6 +2941,7 @@ var
 
   tmpUserLang: integer;
   lLoginFormCancelled: boolean;
+  lSavedEventHandler: TNotifyEvent;
 
 begin
   tmpUserLang := g.qUserLanguage;
@@ -3070,8 +3071,21 @@ begin
     TSplashFormManager.UpdateProgress('Loading global settings...');
     d.ctrlGetGlobalValues;
 
-    cbxNameOrder.ItemIndex := g.qNameOrder;
-    cbxNameOrderPeriod.ItemIndex := g.qNameOrderPeriod;
+    lSavedEventHandler := cbxNameOrder.OnChange;
+    try
+      cbxNameOrder.OnChange := nil;
+      cbxNameOrder.ItemIndex := g.qNameOrder;
+    finally
+      cbxNameOrder.OnChange := lSavedEventHandler;
+    end;
+
+    lSavedEventHandler := cbxNameOrderPeriod.OnChange;
+    try
+      cbxNameOrderPeriod.OnChange := nil;
+      cbxNameOrderPeriod.ItemIndex := g.qNameOrderPeriod;
+    finally
+      cbxNameOrderPeriod.OnChange := lSavedEventHandler;
+    end;
 
     d.chkInPosMonitor;
     d.chkConfirmMonitor;
@@ -3089,10 +3103,6 @@ begin
     grOneDayRooms.DefaultRowHeight := g.qOneDayRowHeight;
     TSplashFormManager.UpdateProgress('Updating current guests list...');
     g.updateCurrentGuestlist;
-
-  //  HideRoomerSplash;
-  // not needed,already done when destroying splashform
-  //  frmRoomerSplash.NilInternetEvents;
 
     if NOT OffLineMode then
       rgrGroupreportStayType.ItemIndex := 2;

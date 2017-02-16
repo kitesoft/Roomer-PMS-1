@@ -522,6 +522,7 @@ begin
 
     //-- Query all rooms reserved this period:
     try
+    try
     rSet := nil;
 //    if NOT d.roomerMainDataSet.OfflineMode then
       rSet := d.roomerMainDataSet.ActivateNewDataset(d.roomerMainDataSet.SystemGetDayGrid(_FromDate, _ToDate, '', SkipCancelled));
@@ -696,6 +697,11 @@ begin
         end;
 
       end;
+    except
+      on E: Exception do
+        ShowMessage(Format('There was an error while reading reservation [%d]: '#10#13 + E.Message, [iReservation] ));
+
+    end;
     finally
       freeandnil(rSet);
     end;
