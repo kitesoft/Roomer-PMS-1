@@ -38,6 +38,7 @@ object FrmMessagesTemplates: TFrmMessagesTemplates
       Margins.Right = 2
       Margins.Bottom = 2
       Align = alTop
+      Alignment = taCenter
       Caption = 'Roomer System Messages'
       ParentFont = False
       Font.Charset = DEFAULT_CHARSET
@@ -63,9 +64,7 @@ object FrmMessagesTemplates: TFrmMessagesTemplates
       Color = clWhite
       ParentColor = False
       TabOrder = 0
-      SkinData.CustomColor = True
-      SkinData.CustomFont = True
-      SkinData.SkinSection = 'PANEL_LOW'
+      SkinData.SkinSection = 'PANEL'
       object pnlDesignTime: TsPanel
         Left = 0
         Top = 0
@@ -109,7 +108,7 @@ object FrmMessagesTemplates: TFrmMessagesTemplates
           OnClick = HTMLabel2Click
           OnMouseLeave = MessageAreaMouseLeave
           OnMouseEnter = MessageAreaMouseEnter
-          Version = '1.9.2.6'
+          Version = '1.9.2.7'
           ExplicitWidth = 164
         end
         object sPanel1: TsPanel
@@ -173,6 +172,7 @@ object FrmMessagesTemplates: TFrmMessagesTemplates
             Margins.Bottom = 2
             Align = alClient
             AutoSize = False
+            SkinSection = 'CHECKBOX'
             Caption = 'R'
             ParentFont = False
             Layout = tlCenter
