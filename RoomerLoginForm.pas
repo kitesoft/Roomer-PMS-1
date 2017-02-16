@@ -7,7 +7,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, acPNG, cxLookAndFeels, sSkinProvider, cxPropertiesStore, sLabel, cxClasses, dxGDIPlusClasses, cxGraphics, cxLookAndFeelPainters, Vcl.Menus, dxSkinsCore, dxSkinCaramel, dxSkinCoffee,
-  dxSkinDarkSide, dxSkinTheAsphaltWorld, cxButtons, dxSkinsDefaultPainters;
+  dxSkinDarkSide, dxSkinTheAsphaltWorld, cxButtons, dxSkinsDefaultPainters, sSkinManager, sButton;
 
 type
   // Dialog asking user for credentials, When closed the result is stored in the Tag property, using ord(TLoginformResult)
@@ -19,13 +19,13 @@ type
     lbPassword: TLabel;
     edtPassword: TEdit;
     pnlButtons: TPanel;
-    btLogin: TcxButton;
-    btCancel: TcxButton;
+    btLogin: TsButton;
+    btCancel: TsButton;
     imgRoomer: TImage;
     StoreLogin: TcxPropertiesStore;
     lblMessage: TsLabel;
     lblServerProblem: TsLabel;
-    btOffline: TcxButton;
+    btOffline: TsButton;
     timTopmostOff: TTimer;
     procedure btLoginClick(Sender: TObject);
     procedure btCancelClick(Sender: TObject);
