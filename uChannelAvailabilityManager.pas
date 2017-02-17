@@ -227,8 +227,8 @@ type
     ImageList1: TImageList;
     FormStore: TcxPropertiesStore;
     pgcPages: TsPageControl;
-    sTabSheet1: TsTabSheet;
-    sTabSheet2: TsTabSheet;
+    tsAvailabilities: TsTabSheet;
+    tsRates: TsTabSheet;
     Panel2: TsPanel;
     sPanel1: TsPanel;
     btnSave: TsButton;
@@ -236,22 +236,6 @@ type
     grid: TAdvStringGrid;
     pnlBulkChanges: TsPanel;
     lblBulkUpdate: TsLabel;
-    lblAmountType: TsLabel;
-    Label3: TsLabel;
-    Label4: TsLabel;
-    edtAvail: TsEdit;
-    cbxRoomTypes: TCheckComboBox;
-    dtBulkFrom: TsDateEdit;
-    dtBulkTo: TsDateEdit;
-    cbTue: TsCheckBox;
-    cbWen: TsCheckBox;
-    cbFri: TsCheckBox;
-    cbThu: TsCheckBox;
-    cbSat: TsCheckBox;
-    cbSun: TsCheckBox;
-    btnApplyBulk: TsButton;
-    sButton2: TsButton;
-    cbMon: TsCheckBox;
     rateGrid: TAdvStringGrid;
     pnlPublishButtons: TsPanel;
     sPanel11: TsPanel;
@@ -260,8 +244,6 @@ type
     lblEditing: TsLabel;
     sPanel9: TsPanel;
     cbxChannelManagers: TsComboBox;
-    cbxChannel: TCheckComboBox;
-    lblChannel: TsLabel;
     mnuRates: TPopupMenu;
     C1: TMenuItem;
     P1: TMenuItem;
@@ -281,20 +263,14 @@ type
     lblReadSave: TsLabel;
     sPanel3: TsPanel;
     cbxShowLinkedCells: TsCheckBox;
-    cbxAvailType: TsComboBox;
     pnlHolder: TsPanel;
     btnClose: TsButton;
-    lblDCAvailability: TsLabel;
-    edtDCAvailbility: TsEdit;
-    cbDCAvailabilityType: TsComboBox;
-    __cbxRate: TsCheckBox;
-    __cbxAvailability: TsCheckBox;
     pnlHideEdits: TsPanel;
     sPanel4: TsPanel;
     Image1: TImage;
     sPanel5: TsPanel;
     pnlRestrictions: TsPanel;
-    __cbxMinimumStayActive: TsCheckBox;
+    __cbxRestrictions: TsCheckBox;
     lblMinStay: TsLabel;
     edtMinStay: TsEdit;
     edtMaximumStay: TsEdit;
@@ -302,27 +278,19 @@ type
     N2: TMenuItem;
     C3: TMenuItem;
     imgHelp: TsImage;
-    edtSingleUsePrice: TsEdit;
-    __cbxSingleUsePriceActive: TsCheckBox;
-    lblSingleUsePrice: TsLabel;
-    sLabel1: TsLabel;
     cbxShowSubrates: TsCheckBox;
     btnRecalcDescendantRates: TsButton;
-    btnClearRoomClasses: TsButton;
-    btnClearChannelSelection: TsButton;
-    btnCheckAllBulkRoomClasses: TsButton;
-    btnCheckAllBulkChannel: TsButton;
     pnlGridsWithLoadingCaption: TsPanel;
     sPanel7: TsPanel;
     wwDBDateTimePicker1: TPlannerDatePicker;
-    btnRefreshOneDay: TcxButton;
-    btnForward: TcxButton;
-    btnBack: TcxButton;
+    btnRefreshOneDay: TsButton;
+    btnForward: TsButton;
+    btnBack: TsButton;
     dateEdit: TsDateEdit;
     lblVisibleDays: TsLabel;
     __cbxVisibleDays: TsComboBox;
-    btnBegin: TcxButton;
-    btnEnd: TcxButton;
+    btnBegin: TsButton;
+    btnEnd: TsButton;
     pmnuForce: TPopupMenu;
     mnuForceUpdatePeriode: TMenuItem;
     mnuForceFullUpdate: TMenuItem;
@@ -340,11 +308,7 @@ type
     cbxClosedOnDeparture: TsLabel;
     cbxStayThrough: TsCheckBox;
     cbxBasedOnArrival: TsCheckBox;
-    lblStayThrough: TsLabel;
-    lblBasedOnArrival: TsLabel;
     btnPrepareExcel: TsButton;
-    lblReadTime: TsLabel;
-    lblDrawTime: TsLabel;
     timBlink: TTimer;
     timBringToFront: TTimer;
     pnlChannels: TsPanel;
@@ -361,6 +325,50 @@ type
     deInitialStartDate: TsDateEdit;
     btnInitialShow: TsButton;
     __cblVisibleDays: TsRadioGroup;
+    pnlSelection: TsPanel;
+    pnlBulkButtons: TsPanel;
+    sButton2: TsButton;
+    btnApplyBulk: TsButton;
+    lblReadTime: TsLabel;
+    lblDrawTime: TsLabel;
+    pnlBulkRateChannels: TsPanel;
+    lblChannel: TsLabel;
+    cbxChannel: TCheckComboBox;
+    btnClearChannelSelection: TsButton;
+    btnCheckAllBulkChannel: TsButton;
+    sLabel6: TsLabel;
+    pnlBulkSelection: TsPanel;
+    Label3: TsLabel;
+    Label4: TsLabel;
+    sLabel1: TsLabel;
+    sLabel5: TsLabel;
+    cbxRoomTypes: TCheckComboBox;
+    dtBulkFrom: TsDateEdit;
+    dtBulkTo: TsDateEdit;
+    btnClearRoomClasses: TsButton;
+    btnCheckAllBulkRoomClasses: TsButton;
+    cbMon: TsCheckBox;
+    cbTue: TsCheckBox;
+    cbWen: TsCheckBox;
+    cbThu: TsCheckBox;
+    cbFri: TsCheckBox;
+    cbSat: TsCheckBox;
+    cbSun: TsCheckBox;
+    pnlBulkModifications: TsPanel;
+    pnlBulkChangeRate: TsPanel;
+    lblAmountType: TsLabel;
+    __cbxRate: TsCheckBox;
+    edtAvail: TsEdit;
+    cbxAvailType: TsComboBox;
+    pnlSingleUseRateChange: TsPanel;
+    lblSingleUsePrice: TsLabel;
+    __cbxSingleUsePriceActive: TsCheckBox;
+    edtSingleUsePrice: TsEdit;
+    pnlBulkChangesAvail: TsPanel;
+    lblDCAvailability: TsLabel;
+    edtDCAvailbility: TsEdit;
+    cbDCAvailabilityType: TsComboBox;
+    __cbxAvailability: TsCheckBox;
     procedure FormCreate(Sender: TObject);
     procedure timStartTimer(Sender: TObject);
     procedure gridDrawCell(Sender: TObject; ACol, ARow: integer; Rect: TRect; State: TGridDrawState);
@@ -412,7 +420,7 @@ type
     procedure cbDCAvailabilityTypeChange(Sender: TObject);
     procedure __cbxRateClick(Sender: TObject);
     procedure __cbxAvailabilityClick(Sender: TObject);
-    procedure __cbxMinimumStayActiveClick(Sender: TObject);
+    procedure __cbxRestrictionsClick(Sender: TObject);
     procedure __cbxSingleUsePriceActiveClick(Sender: TObject);
     procedure pnlBulkChangesResize(Sender: TObject);
     procedure rateGridCellChanging(Sender: TObject; OldRow, OldCol, NewRow, NewCol: integer; var Allow: Boolean);
@@ -448,6 +456,7 @@ type
     procedure btnRefreshClick(Sender: TObject);
     procedure __cbxSelectAllClick(Sender: TObject);
     procedure btnInitialShowClick(Sender: TObject);
+    procedure pgcPagesChanging(Sender: TObject; var AllowChange: Boolean);
   private
     { Private declarations }
     RoomerDataSet: TRoomerDataSet;
@@ -559,7 +568,6 @@ type
     procedure SetButtonOnOff(btn: TSButton; SetOn: Boolean);
     procedure PostRatesList(const tableName : String; list: TList<String>);
     procedure PublishSheet(OnlyCreateExcel: Boolean; AllowEditAndSendEmail : Boolean);
-    procedure ShowHideExtraOptions;
     procedure BlinkCombo;
     function buildSetStatementMinMax(var oldResultValue: String; minDirty, maxDirty: Boolean; minValue, maxValue: Integer): String;
     procedure CleanUpRedundantRoomClassesInAvailbilities;
@@ -579,6 +587,7 @@ type
     function CheckForChanges: Boolean;
     procedure MakeMasterRatesDirty(sql: String);
     procedure ShowHideSelectView(show: Boolean; init : Boolean = true);
+    procedure UpdateControls;
   protected
     procedure CreateParams(var Params: TCreateParams); override;
   public
@@ -725,16 +734,12 @@ end;
 procedure TfrmChannelAvailabilityManager.btnBackClick(Sender: TObject);
 begin
   dateEdit.Date := max(Now, dateEdit.Date - FNumberOfDaysDisplayed);
-//  if TRUNC(startDate) < TRUNC(now) then
-//    startDate := TRUNC(now);
-//  dateEdit.Date := startDate;
   RefreshGridsData;
 end;
 
 procedure TfrmChannelAvailabilityManager.btnBeginClick(Sender: TObject);
 begin
   dateEdit.Date:= TRUNC(now);
-//  dateEdit.Date := startDate;
   RefreshGridsData;
 end;
 
@@ -746,7 +751,6 @@ end;
 procedure TfrmChannelAvailabilityManager.btnEndClick(Sender: TObject);
 begin
   dateEdit.Date := TRUNC(now + CurrentChannelMan.FNumDays - FNumberOfDaysDisplayed);
-//  dateEdit.Date := startDate;
   RefreshGridsData;
 end;
 
@@ -755,7 +759,6 @@ begin
   dateEdit.Date := dateEdit.Date + FNumberOfDaysDisplayed;
   if TRUNC(dateEdit.Date) > TRUNC(now + CurrentChannelMan.FNumDays) then
     dateEdit.Date := TRUNC(now + CurrentChannelMan.FNumDays - FNumberOfDaysDisplayed);
-//  dateEdit.Date := startDate;
   RefreshGridsData;
 end;
 
@@ -777,7 +780,6 @@ begin
   CanAccept := (trunc(ADate) >= trunc(now)) AND (trunc(ADate) <= trunc(now) + CurrentChannelMan.FNumDays + 1);
   if CanAccept then
   begin
-//    startDate := ADate;
     RefreshGridsData();
     iCol := 1;
     grid.ScrollInView(1, grid.Row);
@@ -1664,10 +1666,6 @@ begin
        'JOIN currencies cuMaster ON cuMaster.Currency=masterSettings.masterCurrencyId ' +#10+
        'JOIN hotelconfigurations hc ON hc.masterRatesActive=1 ' +#10+
 
-//       'SET cr.Price=IF(cmr.dirty AND rtg.connectRateToMasterRate=0, cr.Price, ' +#10+
-//       '                (cmr.price + IF(rtg.RateDeviationType=''FIXED_AMOUNT'', rtg.masterRateRateDeviation, cmr.Price * rtg.masterRateRateDeviation / 100) ' +#10+
-//       ')) * IF(masterSettings.masterCurrencyConvertActive=''TRUE'', cuMaster.AValue / cu.AValue, 1), ' +#10+
-
        'SET '+
        ' cr.Price = CASE WHEN cmr.dirty AND rtg.connectRateToMasterRate '+#10+
        '                 THEN '+#10+
@@ -1682,13 +1680,6 @@ begin
        '                         ) ' +#10+
        '                 ELSE cr.Price ' +#10+
        '            END, '+#10+
-
-
-//       'cr.SingleUsePrice = (IF(cmr.singleUsePriceDirty AND rtg.connectSingleUseRateToMasterRate=0, cr.singleUsePrice, ' +#10+
-//       'cmr.singleUsePrice + IF(rtg.SingleUseRateDeviationType=''FIXED_AMOUNT'', '+
-//       '                        rtg.masterRateSingleUseRateDeviation, ' +#10+
-//       '                        cmr.singleUsePrice * rtg.masterRateSingleUseRateDeviation / 100) ' +#10+
-//       ')) * IF(masterSettings.masterCurrencyConvertActive=''TRUE'', cuMaster.AValue / cu.AValue, 1), ' +#10+
 
        ' cr.singleUsePrice = CASE WHEN cmr.singleUsePriceDirty AND rtg.connectSingleUseRateToMasterRate ' +#10+
        '                          THEN '+#10+
@@ -1705,37 +1696,31 @@ begin
        '                     END, ' +#10+
 
 
-//       'cr.MinStay=IF(cmr.minStayDirty AND rtg.connectMinStayToMasterRate=0, cr.MinStay, cmr.MinStay), ' +#10+
        ' cr.MinStay = CASE WHEN cmr.minStayDirty AND rtg.connectMinStayToMasterRate ' +#10+
        '                   THEN cmr.MinStay '+#10+
        '                   ELSE cr.MinStay '+#10+
        '              END, ' +#10+
 
-//       'cr.MaxStay=IF(cmr.maxStayDirty AND rtg.connectMaxStayToMasterRate=0, cr.MaxStay, cmr.MaxStay), ' +#10+
        ' cr.MaxStay = CASE WHEN cmr.maxStayDirty AND rtg.connectMaxStayToMasterRate ' +#10+
        '                   THEN cmr.MaxStay '+#10+
        '                   ELSE cr.MaxStay '+#10+
        '              END, ' +#10+
 
-//       'cr.closedOnArrival=IF(cmr.closedOnArrivalDirty AND rtg.connectCOAToMasterRate=0, cr.closedOnArrival, cmr.closedOnArrival), ' +#10+
        ' cr.closedOnArrival = CASE WHEN cmr.closedOnArrivalDirty AND rtg.connectCOAToMasterRate ' +#10+
        '                           THEN cmr.closedOnArrival '+#10+
        '                           ELSE cr.closedOnArrival '+#10+
        '                      END, ' +#10+
 
-//       'cr.closedOnDeparture=IF(cmr.closedOnDepartureDirty AND rtg.connectCODToMasterRate=0, cr.closedOnDeparture, cmr.closedOnDeparture), ' +#10+
        ' cr.closedOnDeparture = CASE WHEN cmr.closedOnDepartureDirty AND rtg.connectCODToMasterRate ' +#10+
        '                             THEN cmr.closedOnDeparture '+#10+
        '                             ELSE cr.closedOnDeparture '+#10+
        '                        END, ' +#10+
 
-//       'cr.stop=IF(cmr.stopDirty AND rtg.connectStopSellToMasterRate=0, cr.stop, cmr.stop), ' +#10+
        ' cr.stop = CASE WHEN cmr.stopDirty AND rtg.connectStopSellToMasterRate '+#10+
        '                THEN cmr.stop '+#10+
        '                ELSE cr.stop  '+#10+
        '           END, ' +#10+
 
-//       'cr.lengthOfStayArrivalDateBased=IF(cmr.lengthOfStayArrivalDateBasedDirty AND rtg.connectLOSToMasterRate=0, cr.lengthOfStayArrivalDateBased, cmr.lengthOfStayArrivalDateBased), ' +#10+
        ' cr.lengthOfStayArrivalDateBased = CASE WHEN cmr.lengthOfStayArrivalDateBasedDirty AND rtg.connectLOSToMasterRate '+#10+
        '                                        THEN cmr.lengthOfStayArrivalDateBased '+#10+
        '                                        ELSE cr.lengthOfStayArrivalDateBased '+#10+
@@ -1914,6 +1899,8 @@ var
       var
         lOldVAlue, lNewValue: double;
       begin
+        lOldValue := 0;
+        lNewValue := 0;
         case RateAction of
           RATE_EDIT:  begin
                         lOldValue := PriceData.OldPrice ;
@@ -2004,10 +1991,6 @@ begin
 
                 buildSetStatement(PriceData.ForcingUpdate OR PriceData.PriceDirty, sql, 'dirty', 'price', _db(PriceData.Price));
                 if PriceData.PriceDirty then LogChanges(PriceData, RATE_EDIT);
-
-                  // Moved to buildSetStatement further down
-//                if PriceData.MaxStayDirty AND (PriceData.MinStay > PriceData.MaxStay) then
-//                  PriceData.MaxStayDirty := False;
 
                 if PriceData.MinStayDirty then LogChanges(PriceData, MIN_EDIT);
                 if PriceData.MaxStayDirty and (PriceData.MinStay <= PriceData.MaxStay)  then LogChanges(PriceData, MAX_EDIT);
@@ -2224,6 +2207,7 @@ begin
   pnlSelectView.Visible := show;
   pnlPublishButtons.Visible := NOT show;
   pnlSubViews.Visible := NOT show;
+  sPanel4.Enabled := not Show;
 end;
 
 procedure TfrmChannelAvailabilityManager.btnRefreshOneDayClick(Sender: TObject);
@@ -2670,6 +2654,7 @@ end;
 procedure TfrmChannelAvailabilityManager.cbxChannelClickCheck(Sender: TObject);
 begin
   LoadRoomTypeGroupsForBulk;
+  UpdateControls;
 end;
 
 function TfrmChannelAvailabilityManager.AddCheckEditItem(comp : TCheckComboBox; line : String; obj : TObject) : Integer;
@@ -2807,8 +2792,6 @@ begin
     FreeAndNil(rSet);
   end;
 
-//  if ccChannels.Items.Count > 0 then
-//    ccChannels.Checked[0] := True;
 end;
 
 procedure TfrmChannelAvailabilityManager.cbxChannelManagersChange(Sender: TObject);
@@ -2882,11 +2865,8 @@ begin
         grid.EndUpdate;
         rateGrid.EndUpdate;
       end;
-      sTabSheet1.TabVisible := true; // NOT onlyDirectConnection;
-//      cbxExtraRestrictions.Checked := false;
-//      cbxExtraRestrictions.Tag := 0;
+      tsAvailabilities.TabVisible := true; // NOT onlyDirectConnection;
 
-//      if SelectedChannelCount > 0 then
       ShowRatesForSelectedChannelManager;
       ShowAvailabilityForSelectedChannelManager;
 
@@ -2906,11 +2886,7 @@ begin
 
   HideShowExtraCells;
 
-  pnlRestrictions.Visible := TsCheckBox(Sender).Checked AND (pgcPages.ActivePageIndex IN [1]);
-  lblSingleUsePrice.Visible := TsCheckBox(Sender).Checked AND (pgcPages.ActivePageIndex IN [1]);
-  __cbxSingleUsePriceActive.Visible := TsCheckBox(Sender).Checked AND (pgcPages.ActivePageIndex IN [1]);
-  edtSingleUsePrice.Visible := TsCheckBox(Sender).Checked AND (pgcPages.ActivePageIndex IN [1]);
-
+  UpdateControls;
 end;
 
 procedure TfrmChannelAvailabilityManager.GetStatusOfRoomClasses;
@@ -2978,13 +2954,9 @@ end;
 
 procedure TfrmChannelAvailabilityManager.dtBulkToChange(Sender: TObject);
 begin
-  btnApplyBulk.enabled := (
-                            ((edtAvail.Text <> '') AND (StrToIntDef(edtAvail.Text, 0) >= -1)) OR
-                            (cbxAvailType.ItemIndex >= 2 - pgcPages.ActivePageIndex) OR
-                            (pgcPages.ActivePageIndex = 1)) AND (trunc(dtBulkFrom.date) >= trunc(dateEdit.Date)) AND (trunc(dtBulkTo.date) >= trunc(dtBulkFrom.date));
-
   if dtBulkTo.date < dtBulkFrom.date then
     dtBulkTo.date := dtBulkFrom.date;
+  UpdateControls;
 end;
 
 function TfrmChannelAvailabilityManager.LoadChannelManagers: Boolean;
@@ -3616,8 +3588,6 @@ begin
 
     cbxChannel.OnClickCheck := Nil;
     ccChannels.OnClickCheck := Nil;
-//    cbxChannel.Items.Clear;
-//    ccChannels.Items.Clear;
     try
       AvailSet.First;
       if AvailSet.EOF then
@@ -3730,18 +3700,6 @@ begin
                   inc(iCountLine);
                 end;
 
-//                if isCurrentDirectConnection OR (anyDirectConnection AND (chId = -2)) then
-//                begin
-//                  rateGrid.Cells[0, iRateRow + iCountLine] := '<font></font><p align="right"><b>Availability</p>';
-//                  rateGrid.Objects[0, iRateRow + iCountLine] := Pointer(11); // Disabled!! Pointer(1);
-//                end
-//                else
-//                begin
-//                  rateGrid.Cells[0, iRateRow + iCountLine] := '<font></font><p align="right"><b>Not used</p>';
-//                  rateGrid.Objects[0, iRateRow + iCountLine] := Pointer(11);
-//                end;
-//                inc(iCountLine);
-
                 rateGrid.Cells[0, iRateRow + iCountLine] := '<font></font><p align="right"><b>Minimum stay</p>';
                 rateGrid.Objects[0, iRateRow + iCountLine] := Pointer(3);
                 inc(iCountLine);
@@ -3816,12 +3774,6 @@ begin
                 rateGrid.Cells[iRateCol, iRateRow + iCountLine] := Trim(FloatToStrF(RateSet['singleUsePrice'], ffFixed, 12, NumDecimals(AvailSet['rateRoundingType'])));
                 inc(iCountLine);
               end;
-
-//              if isCurrentDirectConnection OR (anyDirectConnection AND (chId = -2)) then
-//              begin
-//                rateGrid.Cells[iRateCol, iRateRow + iCountLine] := inttostr(RateSet['availability']);
-//              end;
-//              inc(iCountLine);
 
               rateGrid.Cells[iRateCol, iRateRow + iCountLine] := inttostr(RateSet['minstay']);
               inc(iCountLine);
@@ -3899,7 +3851,6 @@ begin
       cbxChannel.BulkChanging := False;
     end;
     cbxChannelClickCheck(nil);
-    ShowHideExtraOptions;
   finally
     pgcPages.Visible := True;
   end;
@@ -4125,7 +4076,7 @@ begin
               CorrectMasterRateLinkedCells(PriceData, iCol, iTypeIndex);
             end;
           end;
-          if __cbxMinimumStayActive.Checked then
+          if __cbxRestrictions.Checked then
           begin
             if edtMinStay.Text <> '' then
             begin
@@ -4170,7 +4121,7 @@ begin
               CorrectMasterRateLinkedCells(PriceData, iCol, iTypeIndex);
             end;
           end;
-          if __cbxMinimumStayActive.Checked then
+          if __cbxRestrictions.Checked then
           begin
             if cbxBasedOnArrival.Checked AND NOT cbxStayThrough.Checked then
             begin
@@ -4304,12 +4255,12 @@ end;
 procedure TfrmChannelAvailabilityManager.pgcPagesChange(Sender: TObject);
 begin
   try
-    pnlBulkChanges.Visible := pgcPages.ActivePageIndex IN [0, 1];
-    lblChannel.Visible := pgcPages.ActivePageIndex IN [1];
-    cbxChannel.Visible := pgcPages.ActivePageIndex IN [1];
-    btnClearChannelSelection.Visible := pgcPages.ActivePageIndex IN [1];
-    btnCheckAllBulkChannel.Visible := pgcPages.ActivePageIndex IN [1];
-    pnlRestrictions.Visible := pgcPages.ActivePageIndex IN [1];
+
+    lblChannel.Enabled := pgcPages.ActivePageIndex IN [1];
+    cbxChannel.Enabled := pgcPages.ActivePageIndex IN [1];
+    btnClearChannelSelection.Enabled := pgcPages.ActivePageIndex IN [1];
+    btnCheckAllBulkChannel.Enabled:= pgcPages.ActivePageIndex IN [1];
+
     cbxAvailType.Items.Clear;
 
     case pgcPages.ActivePageIndex of
@@ -4346,20 +4297,15 @@ begin
   cbxRateRestrictionsClick(cbxRateRestrictions);
 end;
 
+procedure TfrmChannelAvailabilityManager.pgcPagesChanging(Sender: TObject; var AllowChange: Boolean);
+begin
+  AllowChange := not pnlSelectView.Visible;
+end;
+
 procedure TfrmChannelAvailabilityManager.pnlBulkChangesResize(Sender: TObject);
 begin
   pnlHideEdits.Visible := pnlBulkChanges.Width <> sPanel4.Width;
 end;
-
-procedure TfrmChannelAvailabilityManager.ShowHideExtraOptions;
-begin
-  __cbxSingleUsePriceActive.Visible := anyDirectConnection;
-  edtSingleUsePrice.Visible := anyDirectConnection;
-  lblSingleUsePrice.Visible := anyDirectConnection;
-
-//  cbxExtraRestrictions.Visible := true; // anyDirectConnection; Made active on 2016-01-14
-end;
-
 
 procedure TfrmChannelAvailabilityManager.sPanel4Click(Sender: TObject);
 begin
@@ -4370,19 +4316,7 @@ begin
   if pnlBulkChanges.Width = sPanel4.Width then
   begin
 
-    __cbxSingleUsePriceActive.Visible := anyDirectConnection;
-    edtSingleUsePrice.Visible := anyDirectConnection;
-    lblSingleUsePrice.Visible := anyDirectConnection;
-
-//    cbxExtraRestrictions.Visible := true; // anyDirectConnection;  Made active on 2016-01-14
-    pnlRestrictions.Height := 169;
-
-    cbxBasedOnArrival.enabled := __cbxMinimumStayActive.Checked;
-    cbxStayThrough.enabled := __cbxMinimumStayActive.Checked;
-
-    lblBulkUpdate.Visible := true;
-    edtMinStay.Visible := pgcPages.ActivePageIndex = 1;
-    lblMinStay.Visible := edtMinStay.Visible;
+    lblBulkUpdate.enabled := true;
 
     if pgcPages.ActivePageIndex = 1 then
     begin
@@ -4435,16 +4369,14 @@ begin
   end
   else
   begin
-    lblBulkUpdate.Visible := false;
+    lblBulkUpdate.enabled := false;
     pnlBulkChanges.Width := sPanel4.Width;
     ImageList1.GetIcon(1, Image1.Picture.Icon);
   end;
   pnlBulkChanges.Invalidate;
   pnlBulkChanges.Update;
 
-  __cbxRateClick(__cbxRate);
-  __cbxSingleUsePriceActiveClick(__cbxSingleUsePriceActive);
-  __cbxAvailabilityClick(__cbxAvailability);
+  UpdateControls;
 end;
 
 { TCellData }
@@ -4692,16 +4624,9 @@ begin
     rateGrid.RowCount := 1;
 end;
 
-procedure TfrmChannelAvailabilityManager.__cbxMinimumStayActiveClick(Sender: TObject);
+procedure TfrmChannelAvailabilityManager.__cbxRestrictionsClick(Sender: TObject);
 begin
-  lblMinStay.enabled := __cbxMinimumStayActive.Checked;
-  edtMinStay.enabled := __cbxMinimumStayActive.Checked;
-  lblMaximumStay.enabled := __cbxMinimumStayActive.Checked;
-  edtMaximumStay.enabled := __cbxMinimumStayActive.Checked;
-  cbxStayThrough.enabled := __cbxMinimumStayActive.Checked;
-  cbxBasedOnArrival.enabled := __cbxMinimumStayActive.Checked;
-  lblStayThrough.enabled := __cbxMinimumStayActive.Checked;
-  lblBasedOnArrival.enabled := __cbxMinimumStayActive.Checked;
+  UpdateControls;
 end;
 
 procedure TfrmChannelAvailabilityManager.__cbxVisibleDaysCloseUp(Sender: TObject);
@@ -4736,8 +4661,7 @@ end;
 
 procedure TfrmChannelAvailabilityManager.__cbxSingleUsePriceActiveClick(Sender: TObject);
 begin
-  edtSingleUsePrice.enabled := __cbxSingleUsePriceActive.Checked;
-  lblSingleUsePrice.enabled := __cbxSingleUsePriceActive.Checked;
+  UpdateControls;
 end;
 
 procedure TfrmChannelAvailabilityManager.cbDCAvailabilityTypeChange(Sender: TObject);
@@ -4800,10 +4724,6 @@ begin
       PriceData := getPriceDataOfRow(1, iRow);
       if isHiddenUnusedRow(iRow) then
         HideOrShowRow(iRow, 0);
-//      else if (NOT Assigned(PriceData)) AND ((isChannelNameRow(iRow) AND NOT isPriceRow(iRow + 1)) OR isEmptyRow(iRow)) then
-//         HideOrShowRow(iRow, 0)
-//      else
-//         HideOrShowRow(iRow, rateGrid.DefaultRowHeight);
       if Assigned(PriceData) then
       begin
           iHeight := ABS(ORD((PriceData.channelId = -1) OR IsIdCheckedInCheckListCombo(ccChannels, PriceData.channelId)));
@@ -4813,12 +4733,6 @@ begin
 
           if isPriceRow(iRow) then
             HideOrShowRow(iRow, rateGrid.DefaultRowHeight * iHeight)
-
-//          else if isChannelNameRow(iRow) then
-//            HideOrShowRow(iRow, rateGrid.DefaultRowHeight * iHeight)
-//
-//          else if isEmptyRow(iRow) then
-//            HideOrShowRow(iRow, rateGrid.DefaultRowHeight * iHeight)
 
           else if isAvailabilityRow(iRow) then
             HideOrShowRow(iRow, rateGrid.DefaultRowHeight * iHeight)
@@ -4845,29 +4759,16 @@ begin
             HideOrShowRow(iRow, rateGrid.DefaultRowHeight * ABS(ORD(cbxRateRestrictions.Checked)) * iHeight)
 
       end
-//      else
-//      if isChannelNameRow(iRow) then
-//        HideOrShowRow(iRow, rateGrid.DefaultRowHeight * iHeight)
-
     end;
   finally
     rateGrid.EndUpdate;
   end;
 
-//  i := rateGrid.RowCount - 1;
-//  while (i > 1) AND (isChannelNameRow(i) OR isEmptyRow(i)) do
-//  begin
-//    rateGrid.RowCount := i; // HideOrShowRow(i, 0);
-//    dec(i);
-//  end;
-//
 end;
 
 procedure TfrmChannelAvailabilityManager.__cbxRateClick(Sender: TObject);
 begin
-  edtAvail.enabled := __cbxRate.Checked;
-  lblAmountType.enabled := __cbxRate.Checked;
-  cbxAvailType.enabled := __cbxRate.Checked;
+  UpdateControls;
 end;
 
 
@@ -5667,6 +5568,39 @@ begin
     begin
       getPriceOfSpecificCell;
     end;
+end;
+
+
+procedure TfrmChannelAvailabilityManager.UpdateControls;
+begin
+  pnlBulkRateChannels.Visible := pgcPages.ActivePage = tsRates;
+  pnlBulkModifications.Visible := pgcPages.ActivePage = tsRates;
+  pnlSingleUseRateChange.Visible := (pgcPages.ActivePage = tsRates);
+  pnlSingleUseRateChange.Enabled :=  cbxRateRestrictions.Checked;
+  pnlBulkChangesAvail.Visible := pgcPages.ActivePage = tsAvailabilities;
+
+  lblSingleUsePrice.Enabled := __cbxSingleUsePriceActive.Checked;
+  edtSingleUsePrice.Enabled := __cbxSingleUsePriceActive.Checked;
+
+  // Restrictions panel
+  pnlRestrictions.Visible := cbxRateRestrictions.Checked and (pgcPages.ActivePage = tsRates);
+  lblAmountType.Enabled := __cbxRate.Checked;
+  edtAvail.Enabled := __cbxRate.Checked;
+  cbxAvailType.Enabled := __cbxRate.Checked;
+
+  edtMinStay.enabled := __cbxRestrictions.Checked;
+  lblMinStay.enabled := __cbxRestrictions.Checked;
+  lblMaximumStay.enabled := __cbxRestrictions.Checked;
+  edtMaximumStay.enabled := __cbxRestrictions.Checked;
+  cbxStayThrough.enabled := __cbxRestrictions.Checked;
+  cbxBasedOnArrival.enabled := __cbxRestrictions.Checked;
+
+  btnApplyBulk.enabled := (
+                            ((edtAvail.Text <> '') AND (StrToIntDef(edtAvail.Text, 0) >= -1)) OR
+                            (cbxAvailType.ItemIndex >= 2 - pgcPages.ActivePageIndex) OR
+                            (pgcPages.ActivePageIndex = 1)) AND (trunc(dtBulkFrom.date) >= trunc(dateEdit.Date)) AND (trunc(dtBulkTo.date) >= trunc(dtBulkFrom.date));
+
+  pnlBulkRateChannels.Top := 0; // Keep on top
 end;
 
 { TPriceData }
