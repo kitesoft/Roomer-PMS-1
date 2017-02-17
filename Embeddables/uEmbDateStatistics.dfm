@@ -87,6 +87,8 @@ inherited frmEmbDateStatistics: TfrmEmbDateStatistics
         Top = 417
         Height = 221
         Caption = 'Room types'
+        ParentBackground = True
+        ParentColor = True
         TabOrder = 0
         object grdRoomStates: TAdvStringGrid
           Left = 0
@@ -249,6 +251,7 @@ inherited frmEmbDateStatistics: TfrmEmbDateStatistics
         Top = 177
         Height = 240
         Caption = 'Chart'
+        ParentColor = True
         TabOrder = 1
         object chrtRoomStats: TChart
           Left = 0
@@ -320,6 +323,8 @@ inherited frmEmbDateStatistics: TfrmEmbDateStatistics
         Top = 0
         Height = 177
         Caption = 'Room Classes'
+        ParentBackground = True
+        ParentColor = True
         TabOrder = 2
         object grdRoomClasses: TAdvStringGrid
           Left = 0
@@ -469,7 +474,6 @@ inherited frmEmbDateStatistics: TfrmEmbDateStatistics
           ShowDesignHelper = False
           SortSettings.DefaultFormat = ssAutomatic
           Version = '8.2.4.1'
-          ExplicitTop = 5
           RowHeights = (
             19
             19

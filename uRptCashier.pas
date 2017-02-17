@@ -29,7 +29,7 @@ uses
   dxSkinOffice2013White, dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver, dxSkinSpringTime,
   dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
   dxSkinXmas2008Blue, dxSkinscxPCPainter, ppStrtch, ppSubRpt, Vcl.Menus, cxButtons, cxExtEditRepositoryItems, cxEditRepositoryItems,
-  AdvUtil;
+  AdvUtil, sSkinManager, dxSkinsForm;
 
 type
   TPaymentTotal = class
@@ -179,8 +179,8 @@ type
     ppLine7: TppLine;
     ppLine8: TppLine;
     ppLabBalance: TppLabel;
-    btnBack: TcxButton;
-    btnForward: TcxButton;
+    btnBack: TsButton;
+    btnForward: TsButton;
     kbmReportDS: TDataSource;
     ppLabel6: TppLabel;
     erGrid: TcxEditRepository;

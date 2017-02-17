@@ -56,7 +56,6 @@ object frmRptCashier: TfrmRptCashier
       ParentFont = False
       TabOrder = 1
       SkinData.SkinSection = 'GROUPBOX'
-      Checked = False
       object sLabel1: TsLabel
         Left = 102
         Top = 27
@@ -99,7 +98,6 @@ object frmRptCashier: TfrmRptCashier
         ParentFont = False
         TabOrder = 0
         Text = '  -  -    '
-        CheckOnExit = True
         SkinData.SkinSection = 'EDIT'
         GlyphMode.Blend = 0
         GlyphMode.Grayed = False
@@ -114,7 +112,6 @@ object frmRptCashier: TfrmRptCashier
         Margins.Top = 2
         Margins.Right = 2
         Margins.Bottom = 2
-        AutoDropWidthSize = True
         Color = 3355443
         Font.Charset = DEFAULT_CHARSET
         Font.Color = 15724527
@@ -125,8 +122,7 @@ object frmRptCashier: TfrmRptCashier
         TabOrder = 1
         Visible = False
         OnChange = cbxStaffChange
-        Items.Strings = (
-          'All Room Types')
+        AutoDropWidthSize = True
         DropWidth = 121
         DropHeight = 400
         DropFont.Charset = DEFAULT_CHARSET
@@ -134,11 +130,18 @@ object frmRptCashier: TfrmRptCashier
         DropFont.Height = -11
         DropFont.Name = 'Tahoma'
         DropFont.Style = []
+        Items.Strings = (
+          'All Room Types')
+        LabelFont.Charset = DEFAULT_CHARSET
+        LabelFont.Color = clWindowText
+        LabelFont.Height = -11
+        LabelFont.Name = 'Tahoma'
+        LabelFont.Style = []
         TextDelimiter = '|'
         TextEndChar = ''
         TextStartChar = ''
         OnClickCheck = cbxStaffClickCheck
-        Version = '1.3.9.2'
+        Version = '1.4.0.0'
       end
       object btnClearStaff: TsButton
         Left = 503
@@ -164,7 +167,7 @@ object frmRptCashier: TfrmRptCashier
         OnClick = btnCheckAllStaffClick
         SkinData.SkinSection = 'BUTTON'
       end
-      object btnBack: TcxButton
+      object btnBack: TsButton
         AlignWithMargins = True
         Left = 298
         Top = 22
@@ -174,17 +177,12 @@ object frmRptCashier: TfrmRptCashier
         Margins.Top = 0
         Margins.Right = 0
         Margins.Bottom = 0
-        LookAndFeel.Kind = lfFlat
-        LookAndFeel.NativeStyle = False
-        OptionsImage.ImageIndex = 2
-        OptionsImage.Images = DImages.ilGuests
-        SpeedButtonOptions.CanBeFocused = False
-        SpeedButtonOptions.Flat = True
-        SpeedButtonOptions.Transparent = True
+        ImageIndex = 2
+        Images = DImages.ilGuests
         TabOrder = 4
         OnClick = btnBackClick
       end
-      object btnForward: TcxButton
+      object btnForward: TsButton
         AlignWithMargins = True
         Left = 329
         Top = 22
@@ -194,19 +192,15 @@ object frmRptCashier: TfrmRptCashier
         Margins.Top = 0
         Margins.Right = 0
         Margins.Bottom = 0
-        LookAndFeel.NativeStyle = False
-        OptionsImage.ImageIndex = 3
-        OptionsImage.Images = DImages.ilGuests
-        SpeedButtonOptions.CanBeFocused = False
-        SpeedButtonOptions.Flat = True
-        SpeedButtonOptions.Transparent = True
-        TabOrder = 5
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clCaptionText
         Font.Height = -13
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
+        ImageIndex = 3
+        Images = DImages.ilGuests
         ParentFont = False
+        TabOrder = 5
         OnClick = btnForwardClick
       end
       object cbxShifts: TsComboBox
@@ -247,7 +241,7 @@ object frmRptCashier: TfrmRptCashier
         Left = 366
         Top = 25
         Width = 120
-        Height = 19
+        Height = 17
         Caption = 'By selected user(s)'
         TabOrder = 7
         OnClick = cbxByUsersClick
@@ -264,7 +258,6 @@ object frmRptCashier: TfrmRptCashier
       Caption = 'Totals'
       TabOrder = 2
       SkinData.SkinSection = 'GROUPBOX'
-      Checked = False
       object lblTotalsale: TsLabel
         Left = 73
         Top = 21
@@ -345,12 +338,6 @@ object frmRptCashier: TfrmRptCashier
     object tabStatGrid: TsTabSheet
       Caption = 'Data'
       TabVisible = False
-      SkinData.CustomColor = False
-      SkinData.CustomFont = False
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object sPanel1: TsPanel
         Left = 0
         Top = 0
@@ -496,19 +483,14 @@ object frmRptCashier: TfrmRptCashier
         SearchFooter.HintFindPrev = 'Find previous occurrence'
         SearchFooter.HintHighlight = 'Highlight occurrences'
         SearchFooter.MatchCaseCaption = 'Match case'
+        SearchFooter.ResultFormat = '(%d of %d)'
         SortSettings.DefaultFormat = ssAutomatic
-        Version = '8.1.2.0'
+        Version = '8.2.4.1'
         WordWrap = False
       end
     end
     object sTabSheet1: TsTabSheet
       Caption = 'Cashier functions'
-      SkinData.CustomColor = False
-      SkinData.CustomFont = False
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object grGet: TcxGrid
         Left = 0
         Top = 43
@@ -517,6 +499,7 @@ object frmRptCashier: TfrmRptCashier
         Align = alClient
         TabOrder = 0
         LookAndFeel.NativeStyle = False
+        LookAndFeel.SkinName = ''
         object tvGet: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = kbmGetDS
@@ -737,12 +720,6 @@ object frmRptCashier: TfrmRptCashier
     end
     object sTabSheet2: TsTabSheet
       Caption = 'Received Payments'
-      SkinData.CustomColor = False
-      SkinData.CustomFont = False
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object sPanel2: TsPanel
         Left = 0
         Top = 0
@@ -995,7 +972,7 @@ object frmRptCashier: TfrmRptCashier
     PrinterSetup.BinName = 'Default'
     PrinterSetup.DocumentName = 'Report'
     PrinterSetup.Orientation = poLandscape
-    PrinterSetup.PaperName = 'A4'
+    PrinterSetup.PaperName = 'A4 210 x 297 mm'
     PrinterSetup.PrinterName = 'Default'
     PrinterSetup.SaveDeviceSettings = False
     PrinterSetup.mmMarginBottom = 6350
@@ -1456,7 +1433,7 @@ object frmRptCashier: TfrmRptCashier
           PrinterSetup.BinName = 'Default'
           PrinterSetup.DocumentName = 'Report'
           PrinterSetup.Orientation = poLandscape
-          PrinterSetup.PaperName = 'A4'
+          PrinterSetup.PaperName = 'A4 210 x 297 mm'
           PrinterSetup.PrinterName = 'Default'
           PrinterSetup.SaveDeviceSettings = False
           PrinterSetup.mmMarginBottom = 6350
