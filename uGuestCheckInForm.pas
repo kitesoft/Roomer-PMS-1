@@ -134,6 +134,8 @@ type
     dsForm: TfrxDBDataset;
     chkCountryForAllGuests: TsCheckBox;
     shpNationality: TShape;
+    lblNativeCurrencyBalanceText: TsLabel;
+    lblNativeCurrencyBalance: TsLabel;
     procedure FormCreate(Sender: TObject);
     procedure cbxGuaranteeTypesCloseUp(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -158,6 +160,7 @@ type
   private
     FisCheckIn: Boolean;
     FCurrencyhandler: TCurrencyHandler;
+    FLocalCurrencyhandler: TCurrencyHandler;
     FCurrentRealBalance: Double;
     ResSetGuest: TRoomerDataSet;
     rec: recDownPayment;
@@ -613,6 +616,7 @@ begin
   PlaceFormOnVisibleMonitor(self);
 
   FCurrencyhandler := nil;
+
   Prepare;
 end;
 
@@ -658,9 +662,17 @@ begin
       Customer := ResSetGuest['Customer'];
       NativeCurrency := ResSetGuest['NativeCurrency'];
 
+      if not assigned(FLocalCurrencyhandler) or (not FCurrencyhandler.CurrencyCode.Equals(NativeCurrency)) then
+      begin
+        if assigned(FLocalCurrencyhandler) then
+          FLocalCurrencyhandler.Free;
+        FLocalCurrencyhandler := TCurrencyHandler.Create(NativeCurrency);
+      end;
+
       if not assigned(FCurrencyhandler) or (not FCurrencyhandler.CurrencyCode.Equals(ResSetGuest['Currency'])) then
       begin
-        FCurrencyhandler.Free;
+        if assigned(FCurrencyhandler) then
+          FCurrencyhandler.Free;
         FCurrencyhandler := TCurrencyHandler.Create(ResSetGuest.FieldByName('Currency').AsString);
       end;
 
@@ -673,7 +685,10 @@ begin
                                                              + lRoomInvoice.TotalTaxes); // Trim(_floatToStr(ResSetGuest['TotalPrice'] + ResSetGuest['CurrentSales'], 12, 2));
       lbPAyments.Caption := FCurrencyHandler.FormattedValue(lRoomInvoice.TotalPayments); //Trim(_floatToStr(ResSetGuest['CurrentPayments'], 12, 2));
       lbTaxes.Caption := FCurrencyHandler.FormattedValue(lRoomInvoice.TotalTaxes); //Trim(_floatToStr(ExtraTaxes, 12, 2));
-      lbBalance.Caption := FCurrencyHandler.FormattedValue(lRoomInvoice.Balance);// Trim(_floatToStr(CurrentRealBalance, 12, 2));
+      lbBalance.Caption := FCurrencyHandler.FormattedValue(lRoomInvoice.Balance / lRoomInvoice.CurrencyRate);// Trim(_floatToStr(CurrentRealBalance, 12, 2));
+      lblNativeCurrencyBalance.Caption := FLocalCurrencyHandler.FormattedValue(lRoomInvoice.Balance);
+      lblNativeCurrencyBalance.Visible := UpperCase(NativeCurrency) <> UpperCase(ResSetGuest['Currency']);
+      lblNativeCurrencyBalanceText.Visible := lblNativeCurrencyBalance.Visible;
       FCurrentRealBalance := lRoomInvoice.balance;
 
       edFax.Text := ResSetGuest['CompFax'];
