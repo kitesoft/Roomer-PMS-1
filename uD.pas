@@ -3419,6 +3419,7 @@ begin
             g.qGroupInvoicePosItemIndex := rSet['GroupInvoicePosItemIndex'];
 
             g.qDynamicRatesActive := rSet['DynamicRatesActive'];
+            g.qSendInvoicesToFinancePacket := rSet['AutoInvoiceTransfer'];
 
             newStafflang := rSet.FieldByName('StaffLanguage').AsInteger;
 
