@@ -113,7 +113,7 @@ object frmMain: TfrmMain
         Top = 1
         Width = 975
         Height = 302
-        ActivePage = tabOneDayView
+        ActivePage = tabPeriod
         Align = alClient
         TabOrder = 1
         OnChange = pageMainGridsChange
@@ -121,6 +121,10 @@ object frmMain: TfrmMain
         object tabOneDayView: TsTabSheet
           Caption = 'tabOneDayView'
           ImageIndex = 8
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object grOneDayRooms: TAdvStringGrid
             Left = 0
             Top = 0
@@ -294,12 +298,13 @@ object frmMain: TfrmMain
             SearchFooter.HintFindPrev = 'Find previous occurence'
             SearchFooter.HintHighlight = 'Highlight occurences'
             SearchFooter.MatchCaseCaption = 'Match case'
+            SearchFooter.ResultFormat = '(%d of %d)'
             SortSettings.DefaultFormat = ssAutomatic
             SortSettings.HeaderColor = 16579058
             SortSettings.HeaderColorTo = 16579058
             SortSettings.HeaderMirrorColor = 16380385
             SortSettings.HeaderMirrorColorTo = 16182488
-            Version = '7.9.1.1'
+            Version = '8.2.4.1'
             ColWidths = (
               47
               49
@@ -435,7 +440,7 @@ object frmMain: TfrmMain
               object lblNoRoom: TsLabel
                 Left = 3
                 Top = 59
-                Width = 76
+                Width = 50
                 Height = 13
                 Align = alBottom
                 Alignment = taCenter
@@ -446,7 +451,6 @@ object frmMain: TfrmMain
                 Font.Height = -11
                 Font.Name = 'Tahoma'
                 Font.Style = [fsBold]
-                ExplicitWidth = 50
               end
             end
           end
@@ -1093,6 +1097,7 @@ object frmMain: TfrmMain
               SearchFooter.HintFindPrev = 'Find previous occurence'
               SearchFooter.HintHighlight = 'Highlight occurences'
               SearchFooter.MatchCaseCaption = 'Match case'
+              SearchFooter.ResultFormat = '(%d of %d)'
               SelectionColor = clHighlight
               SelectionTextColor = clHighlightText
               SizeWhileTyping.Height = True
@@ -1100,7 +1105,7 @@ object frmMain: TfrmMain
               SortSettings.HeaderColorTo = 16579058
               SortSettings.HeaderMirrorColor = 16380385
               SortSettings.HeaderMirrorColorTo = 16182488
-              Version = '7.9.1.1'
+              Version = '8.2.4.1'
               ColWidths = (
                 73
                 20
@@ -1320,6 +1325,7 @@ object frmMain: TfrmMain
             OnMoved = splitPeriodMoved
             Color = 6842472
             ParentColor = False
+            ExplicitTop = 157
           end
           object pnlPeriodNoRooms: TsPanel
             Left = 0
@@ -1457,8 +1463,9 @@ object frmMain: TfrmMain
               SearchFooter.HintFindPrev = 'Find previous occurence'
               SearchFooter.HintHighlight = 'Highlight occurences'
               SearchFooter.MatchCaseCaption = 'Match case'
+              SearchFooter.ResultFormat = '(%d of %d)'
               SortSettings.DefaultFormat = ssAutomatic
-              Version = '7.9.1.1'
+              Version = '8.2.4.1'
               ColWidths = (
                 64
                 64
@@ -1638,13 +1645,25 @@ object frmMain: TfrmMain
         end
         object tabFreeRooms: TsTabSheet
           Caption = 'tabFreeRooms'
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
         end
         object tabDashboard: TsTabSheet
           Caption = 'tabDashboard'
           SkinData.SkinSection = 'TRANSPARENT'
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
         end
         object tabRateQuery: TsTabSheet
           Caption = 'tabRateQuery'
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
         end
       end
       object pnlStatSlider: TsPanel
@@ -1660,7 +1679,7 @@ object frmMain: TfrmMain
         object lblBusyDownloading: TsLabel
           Left = 0
           Top = 158
-          Width = 304
+          Width = 73
           Height = 13
           Margins.Left = 10
           Margins.Top = 0
@@ -1678,12 +1697,11 @@ object frmMain: TfrmMain
           Font.Name = 'Tahoma'
           Font.Style = []
           UseSkinColor = False
-          ExplicitWidth = 73
         end
         object lblCacheNotification: TsLabel
           Left = 0
           Top = 145
-          Width = 304
+          Width = 86
           Height = 13
           Margins.Left = 10
           Margins.Top = 0
@@ -1701,7 +1719,6 @@ object frmMain: TfrmMain
           Font.Name = 'Tahoma'
           Font.Style = []
           UseSkinColor = False
-          ExplicitWidth = 86
         end
         object pnlStatistics: TsScrollBox
           Left = 0
@@ -2003,7 +2020,7 @@ object frmMain: TfrmMain
             Left = 159
             Top = 4
             Width = 94
-            Height = 24
+            Height = 23
             Margins.Left = 10
             Margins.Top = 4
             Align = alLeft
@@ -2016,7 +2033,6 @@ object frmMain: TfrmMain
             Font.Height = -17
             Font.Name = 'Segoe UI'
             Font.Style = [fsBold]
-            ExplicitHeight = 23
           end
           object dtDate: TsDateEdit
             AlignWithMargins = True
@@ -2247,6 +2263,7 @@ object frmMain: TfrmMain
           Top = 0
           Width = 23
           Height = 31
+          DefaultHandling = True
           EmptyTextStyle = []
           Flat = False
           LabelFont.Charset = DEFAULT_CHARSET
@@ -2380,11 +2397,11 @@ object frmMain: TfrmMain
             HintPrevMonth = 'Previous Month'
             HintNextMonth = 'Next Month'
             HintNextYear = 'Next Year'
-            Version = '2.3.0.0'
+            Version = '2.3.1.2'
             TMSStyle = 0
           end
         end
-        object btnRefreshOneDay: TcxButton
+        object btnRefreshOneDay: TsButton
           AlignWithMargins = True
           Left = 6
           Top = 4
@@ -2396,23 +2413,20 @@ object frmMain: TfrmMain
           Margins.Right = 0
           Margins.Bottom = 0
           Align = alLeft
-          LookAndFeel.NativeStyle = False
-          OptionsImage.ImageIndex = 28
-          OptionsImage.Images = DImages.PngImageList1
-          SpeedButtonOptions.CanBeFocused = False
-          SpeedButtonOptions.Flat = True
-          SpeedButtonOptions.Transparent = True
-          TabOrder = 0
-          OnMouseEnter = tabsViewMouseEnter
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clCaptionText
           Font.Height = -13
           Font.Name = 'Tahoma'
           Font.Style = [fsBold]
+          ImageAlignment = iaCenter
+          ImageIndex = 28
+          Images = DImages.PngImageList1
           ParentFont = False
+          TabOrder = 0
           OnClick = btnRefreshOneDayClick
+          OnMouseEnter = tabsViewMouseEnter
         end
-        object btnGotoToday: TcxButton
+        object btnGotoToday: TsButton
           AlignWithMargins = True
           Left = 107
           Top = 4
@@ -2424,23 +2438,19 @@ object frmMain: TfrmMain
           Margins.Right = 5
           Margins.Bottom = 0
           Align = alRight
-          LookAndFeel.NativeStyle = False
-          OptionsImage.ImageIndex = 51
-          OptionsImage.Images = DImages.PngImageList1
-          SpeedButtonOptions.CanBeFocused = False
-          SpeedButtonOptions.Flat = True
-          SpeedButtonOptions.Transparent = True
-          TabOrder = 1
-          OnMouseEnter = tabsViewMouseEnter
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clCaptionText
           Font.Height = -13
           Font.Name = 'Tahoma'
           Font.Style = [fsBold]
+          ImageIndex = 51
+          Images = DImages.PngImageList1
           ParentFont = False
+          TabOrder = 1
           OnClick = btnToDayClick
+          OnMouseEnter = tabsViewMouseEnter
         end
-        object btnForward: TcxButton
+        object btnForward: TsButton
           AlignWithMargins = True
           Left = 64
           Top = 4
@@ -2451,23 +2461,20 @@ object frmMain: TfrmMain
           Margins.Right = 0
           Margins.Bottom = 0
           Align = alLeft
-          LookAndFeel.NativeStyle = False
-          OptionsImage.ImageIndex = 3
-          OptionsImage.Images = DImages.ilGuests
-          SpeedButtonOptions.CanBeFocused = False
-          SpeedButtonOptions.Flat = True
-          SpeedButtonOptions.Transparent = True
-          TabOrder = 2
-          OnMouseEnter = tabsViewMouseEnter
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clCaptionText
           Font.Height = -13
           Font.Name = 'Tahoma'
           Font.Style = [fsBold]
+          ImageAlignment = iaCenter
+          ImageIndex = 3
+          Images = DImages.ilGuests
           ParentFont = False
+          TabOrder = 2
           OnClick = btnBackForwardClick
+          OnMouseEnter = tabsViewMouseEnter
         end
-        object btnBack: TcxButton
+        object btnBack: TsButton
           AlignWithMargins = True
           Left = 36
           Top = 4
@@ -2478,16 +2485,12 @@ object frmMain: TfrmMain
           Margins.Right = 0
           Margins.Bottom = 0
           Align = alLeft
-          LookAndFeel.Kind = lfFlat
-          LookAndFeel.NativeStyle = False
-          OptionsImage.ImageIndex = 2
-          OptionsImage.Images = DImages.ilGuests
-          SpeedButtonOptions.CanBeFocused = False
-          SpeedButtonOptions.Flat = True
-          SpeedButtonOptions.Transparent = True
+          ImageAlignment = iaCenter
+          ImageIndex = 2
+          Images = DImages.ilGuests
           TabOrder = 3
-          OnMouseEnter = tabsViewMouseEnter
           OnClick = btnBackForwardClick
+          OnMouseEnter = tabsViewMouseEnter
         end
       end
     end
@@ -2527,7 +2530,7 @@ object frmMain: TfrmMain
         ParentColor = False
         Transparent = True
         OnAnchorClick = mmoMessageAnchorClick
-        Version = '1.9.2.3'
+        Version = '1.9.2.7'
         ExplicitLeft = 87
         ExplicitWidth = 1019
       end
@@ -2584,8 +2587,8 @@ object frmMain: TfrmMain
       object lblTimeMessage: TsLabel
         Left = 0
         Top = 0
-        Width = 1035
-        Height = 41
+        Width = 265
+        Height = 24
         Align = alClient
         Alignment = taCenter
         Caption = '<Timely messages panel>'
@@ -2597,8 +2600,6 @@ object frmMain: TfrmMain
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         UseSkinColor = False
-        ExplicitWidth = 265
-        ExplicitHeight = 24
       end
     end
     object pnlOffline: TsPanel
@@ -3077,7 +3078,7 @@ object frmMain: TfrmMain
     object lblHotelName: TsLabel
       Left = 0
       Top = 33
-      Width = 301
+      Width = 140
       Height = 22
       Align = alBottom
       Alignment = taCenter
@@ -3088,7 +3089,6 @@ object frmMain: TfrmMain
       Font.Height = -18
       Font.Name = 'Tahoma'
       Font.Style = []
-      ExplicitWidth = 140
     end
   end
   object pnlRBE: TsPanel
@@ -4575,6 +4575,10 @@ object frmMain: TfrmMain
         item
           Visible = True
           ItemName = 'dxRptStockitems'
+        end
+        item
+          Visible = True
+          ItemName = 'dxUserActivityLog'
         end>
       OneOnRow = False
       Row = 0
@@ -4633,7 +4637,7 @@ object frmMain: TfrmMain
     object barinnReportsInvoices: TdxBar
       Caption = 'Invoices'
       CaptionButtons = <>
-      DockedLeft = 904
+      DockedLeft = 861
       DockedTop = 0
       FloatLeft = 1324
       FloatTop = 8
@@ -4897,7 +4901,7 @@ object frmMain: TfrmMain
     object barinnBar10: TdxBar
       Caption = 'Ledger'
       CaptionButtons = <>
-      DockedLeft = 1113
+      DockedLeft = 1070
       DockedTop = 0
       FloatLeft = -183
       FloatTop = 8
@@ -5861,6 +5865,15 @@ object frmMain: TfrmMain
       Visible = ivAlways
       LargeImageIndex = 89
       OnClick = btnDefaultMasterRatesClick
+    end
+    object dxUserActivityLog: TdxBarButton
+      Caption = 'ActivityLog'
+      Category = 0
+      Hint = 'Show Useractivity report'
+      Visible = ivAlways
+      ImageIndex = 97
+      LargeImageIndex = 97
+      OnClick = dxUserActivityLogClick
     end
     object mmnuFile: TdxBarSubItem
       Caption = '&File'
@@ -23990,13 +24003,15 @@ object frmMain: TfrmMain
       #10'TParamListBox'#13#10'TParamCheckList'#13#10'TfrxPreviewWorkspace'#13#10'TfrxScrol' +
       'lBox'#13#10'TQRPreview'#13#10'TDBListBox'#13#10'TDBMemo'#13#10'TDBLookupListBox'#13#10'TDBRich' +
       'Edit'#13#10'TDBCtrlGrid'#13#10'TDBEdit'#13#10
-    ThirdParty.ThirdButtons = 'TButton'#13#10
+    ThirdParty.ThirdButtons = 'TButton'#13#10'TcxButton'#13#10
     ThirdParty.ThirdBitBtns = 'TBitBtn'#13#10
     ThirdParty.ThirdCheckBoxes = 'TCheckBox'#13#10'TRadioButton'#13#10'TGroupButton'#13#10'TDBCheckBox'#13#10
     ThirdParty.ThirdGroupBoxes = 'TGroupBox'#13#10'TRadioGroup'#13#10'TDBRadioGroup'#13#10
     ThirdParty.ThirdListViews = 'TListView'#13#10'TAdvListView'#13#10
     ThirdParty.ThirdPanels = 'TPanel'#13#10'TfrxTBPanel'#13#10'TDBNavigator'#13#10'TDBCtrlPanel'#13#10'TsPanel'#13#10
-    ThirdParty.ThirdGrids = 'TtringGrid'#13#10'TDrawGrid'#13#10'TAdvStringGrid'#13#10'TDBAdvGrid'#13#10'TDBGrid'#13#10
+    ThirdParty.ThirdGrids = 
+      'TtringGrid'#13#10'TDrawGrid'#13#10'TAdvStringGrid'#13#10'TDBAdvGrid'#13#10'TDBGrid'#13#10'TcxG' +
+      'rid'#13#10
     ThirdParty.ThirdTreeViews = 'TTreeView'#13#10'THTMLTreeview'#13#10'TParamTreeview'#13#10'TDBTreeView'#13#10
     ThirdParty.ThirdComboBoxes = 
       'TComboBox'#13#10'TColorBox'#13#10'TDBLUCombo'#13#10'TAdvComboBox'#13#10'TLUCombo'#13#10'TAdvDB' +
@@ -24399,13 +24414,6 @@ object frmMain: TfrmMain
     OnTimer = timMessagesTimer
     Left = 760
     Top = 584
-  end
-  object timHalt: TTimer
-    Enabled = False
-    Interval = 2000
-    OnTimer = timHaltTimer
-    Left = 64
-    Top = 592
   end
   object timHideTimeMessage: TTimer
     Enabled = False

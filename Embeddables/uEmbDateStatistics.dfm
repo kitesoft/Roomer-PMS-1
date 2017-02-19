@@ -11,7 +11,7 @@ inherited frmEmbDateStatistics: TfrmEmbDateStatistics
     Top = 657
     Width = 319
     ExplicitTop = 657
-    ExplicitWidth = 324
+    ExplicitWidth = 319
   end
   object pnlStatistics: TsPanel [1]
     Left = 0
@@ -30,7 +30,6 @@ inherited frmEmbDateStatistics: TfrmEmbDateStatistics
     ParentFont = False
     TabOrder = 0
     SkinData.SkinSection = 'PANEL'
-    ExplicitWidth = 324
     object lblPropertyStatus: TsLabel
       Left = 0
       Top = 0
@@ -88,9 +87,9 @@ inherited frmEmbDateStatistics: TfrmEmbDateStatistics
         Top = 417
         Height = 221
         Caption = 'Room types'
+        ParentBackground = True
+        ParentColor = True
         TabOrder = 0
-        ExplicitTop = 372
-        ExplicitWidth = 322
         object grdRoomStates: TAdvStringGrid
           Left = 0
           Top = 0
@@ -225,12 +224,12 @@ inherited frmEmbDateStatistics: TfrmEmbDateStatistics
           SearchFooter.HintFindPrev = 'Find previous occurrence'
           SearchFooter.HintHighlight = 'Highlight occurrences'
           SearchFooter.MatchCaseCaption = 'Match case'
+          SearchFooter.ResultFormat = '(%d of %d)'
           SelectionColor = 15790320
           SelectionColorTo = 15387318
           ShowDesignHelper = False
           SortSettings.DefaultFormat = ssAutomatic
-          Version = '8.1.2.0'
-          ExplicitWidth = 320
+          Version = '8.2.4.1'
           ColWidths = (
             70
             12
@@ -252,11 +251,12 @@ inherited frmEmbDateStatistics: TfrmEmbDateStatistics
         Top = 177
         Height = 240
         Caption = 'Chart'
+        ParentColor = True
         TabOrder = 1
         object chrtRoomStats: TChart
           Left = 0
           Top = 0
-          Width = 315
+          Width = 298
           Height = 214
           Margins.Left = 10
           Margins.Top = 0
@@ -285,7 +285,6 @@ inherited frmEmbDateStatistics: TfrmEmbDateStatistics
           BevelOuter = bvNone
           Color = clWhite
           TabOrder = 0
-          ExplicitHeight = 167
           PrintMargins = (
             15
             6
@@ -324,8 +323,9 @@ inherited frmEmbDateStatistics: TfrmEmbDateStatistics
         Top = 0
         Height = 177
         Caption = 'Room Classes'
+        ParentBackground = True
+        ParentColor = True
         TabOrder = 2
-        ExplicitWidth = 322
         object grdRoomClasses: TAdvStringGrid
           Left = 0
           Top = 0
@@ -468,12 +468,12 @@ inherited frmEmbDateStatistics: TfrmEmbDateStatistics
           SearchFooter.HintFindPrev = 'Find previous occurrence'
           SearchFooter.HintHighlight = 'Highlight occurrences'
           SearchFooter.MatchCaseCaption = 'Match case'
+          SearchFooter.ResultFormat = '(%d of %d)'
           SelectionColor = 15790320
           SelectionColorTo = 15387318
           ShowDesignHelper = False
           SortSettings.DefaultFormat = ssAutomatic
-          Version = '8.1.2.0'
-          ExplicitWidth = 320
+          Version = '8.2.4.1'
           RowHeights = (
             19
             19

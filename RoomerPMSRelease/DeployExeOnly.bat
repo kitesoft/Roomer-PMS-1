@@ -18,3 +18,5 @@ if "%answer%"=="yes" (
 ) else (
   echo Upload cancelled
 )
+
+pause

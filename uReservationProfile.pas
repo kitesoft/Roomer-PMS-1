@@ -1156,10 +1156,10 @@ begin
     zInitDateTo := dtDeparture.Date;
 
     UpdateInfoLabels;
+    UpdateStateActions;
   finally
     FreeAndNil(rSet);
     mRooms.EnableControls;
-    UpdateStateActions;
     screen.Cursor := crDefault;
     pnlDataWait.Hide;
   end;
@@ -2453,6 +2453,10 @@ var
     channelId: Integer;
     channelCode, chManCode: String;
   begin
+
+    if mRooms.IsEmpty then
+      Exit;
+
     arrival := now + 2000;
     departure := 0;
 

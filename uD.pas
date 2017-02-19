@@ -249,6 +249,7 @@ type
 
     function getRoomTypeColors(sRoomType: string): recStatusAttr;
     procedure roomerMainDataSetSessionExpired(Sender: TObject);
+    procedure roomerMainDatasetCredentialsChanged(Sender: TObject);
     procedure kbmRoomRentOnInvoice_BeforePost(DataSet: TDataSet);
     procedure mInvoiceHeadsBeforePost(DataSet: TDataSet);
     procedure confirmMonitorTimer(Sender: TObject);
@@ -269,6 +270,8 @@ type
     procedure SelectCloudConfig;
     procedure SetDefaultCloudConfig;
     procedure SetCloudConfigByFile(filename: String);
+    function GetApplicationId: string;
+    procedure SetApplicationid(const Value: string);
   public
     { Public declarations }
     qConnected: boolean;
@@ -406,7 +409,7 @@ type
     function PriceExistsByCodes(pcCode, seDescription, RoomType, Currency: string): boolean;
     function PriceExistsByCodesAndCurrency(pcCode, Currency: string): boolean;
 
-    function doLogin(login, password: string): boolean;
+    function ReadUserSettingsAndHotelConfigurations(login, password: string): boolean;
 
     // Seasons Table
     function GET_SeasonsDates_bySeasonID(seasonId: Integer; var seStartdate, seEndDate: TdateTime): boolean;
@@ -798,6 +801,9 @@ type
       );
     procedure GenerateOfflineReports;
     function CheckOutRoom(reservation, RoomReservation: Integer; Room: String): boolean;
+
+    procedure CheckAndCorrectCredentials(const aHotelCode: string);
+    property ApplicationId: string read GetApplicationId write SetApplicationid;
   end;
 
 function CreateNewDataSet: TRoomerDataSet;
@@ -854,7 +860,7 @@ uses
     , uAlerts
     , uFrmCheckOut
     , UITypes
-    , uVatCalculator, uTableEntityList, uSQLUtils;
+    , uVatCalculator, uTableEntityList, uSQLUtils, uCredentialsAPICaller;
 
 {$R *.dfm}
 
@@ -1065,6 +1071,7 @@ end;
 
 procedure Td.DataModuleDestroy(Sender: TObject);
 begin
+  roomerMainDataSet.Logout;
   lstVaribles.Free;
   lstValues.Free;
   lstCollect.Free;
@@ -3357,7 +3364,7 @@ end;
 
 /// /*********************
 
-function Td.doLogin(login, password: string): boolean;
+function Td.ReadUserSettingsAndHotelConfigurations(login, password: string): boolean;
 var
   s: string;
   newStafflang: Integer;
@@ -4007,6 +4014,11 @@ begin
   finally
     freeandnil(rSet);
   end;
+end;
+
+function Td.GetApplicationId: string;
+begin
+  Result := d.roomerMainDataSet.ApplicationId;
 end;
 
 function Td.GetBreakfastIncluted(reservation, RoomReservation: Integer): boolean;
@@ -4672,6 +4684,11 @@ begin
   if not cmd_bySQL(s) then
   begin
   end;
+end;
+
+procedure Td.SetApplicationid(const Value: string);
+begin
+  d.roomerMainDataSet.ApplicationId := Value;
 end;
 
 function Td.GetCustomerPreferences(CustomerID: string): string;
@@ -5977,7 +5994,7 @@ begin
   lstSnerta := tstringList.Create;
   try
     snertaPath := ctrlGetString('snPath');
-    snertaPath := _Addslash(snertaPath);
+    snertaPath := IncludeTrailingPathDelimiter(snertaPath);
     if not DirectoryExists(snertaPath) then
     begin
       showmessage(format(GetTranslatedText('shTx_D_FolderNotFound'), [snertaPath, g.qProgramExePath]));
@@ -6149,22 +6166,22 @@ begin
 
     if lstSnerta.Count > 0 then
     begin
-      if fileExists(_Addslash(snertaPath) + sInvoiceNumber + '.txt') then
+      if fileExists(IncludeTrailingPathDelimiter(snertaPath) + sInvoiceNumber + '.txt') then
       begin
-        // FINATH aFile.DeleteFiles(_Addslash(snertaPath) + sInvoiceNumber + '.txt')
+        // FINATH aFile.DeleteFiles(IncludeTrailingPathDelimiter(snertaPath) + sInvoiceNumber + '.txt')
         try
-          SysUtils.DeleteFile(_Addslash(snertaPath) + sInvoiceNumber + '.txt')
+          SysUtils.DeleteFile(IncludeTrailingPathDelimiter(snertaPath) + sInvoiceNumber + '.txt')
         except
           { TODO 5 -oHordur -cConvert to XE3 :  Create exception and log }
         end;
 
       end;
 
-      snFileName := _Addslash(snertaPath) + sInvoiceNumber + '.sn';
+      snFileName := IncludeTrailingPathDelimiter(snertaPath) + sInvoiceNumber + '.sn';
       lstSnerta.SaveToFile(snFileName);
       sFileName := snFileName;
       try
-        SysUtils.RenameFile(sFileName, _Addslash(snertaPath) + sInvoiceNumber + '.txt');
+        SysUtils.RenameFile(sFileName, IncludeTrailingPathDelimiter(snertaPath) + sInvoiceNumber + '.txt');
       except
         { TODO 5 -oHordur -cConvert to XE3 :  Create exception and log }
       end;
@@ -6372,7 +6389,7 @@ begin
     lstSnerta := tstringList.Create;
     try
       snertaPathXML := g.qsnPathXML;
-      snertaPathXML := _Addslash(snertaPathXML);
+      snertaPathXML := IncludeTrailingPathDelimiter(snertaPathXML);
 
       if not DirectoryExists(snertaPathXML) then
       begin
@@ -6677,7 +6694,7 @@ begin
       end
       else
       begin
-        filename := _Addslash(snertaPathXML) + sInvoiceNumber + '.xml';
+        filename := IncludeTrailingPathDelimiter(snertaPathXML) + sInvoiceNumber + '.xml';
 
         if fileExists(filename) then
         begin
@@ -7541,7 +7558,7 @@ begin
         filename := '';
 
         snertaPath := g.qsnPathXML;
-        snertaPath := _Addslash(snertaPath);
+        snertaPath := IncludeTrailingPathDelimiter(snertaPath);
 
         if not DirectoryExists(snertaPath) then
         begin
@@ -7554,7 +7571,7 @@ begin
 
         end;
 
-        filename := _Addslash(snertaPath) + 'customers.txt';
+        filename := IncludeTrailingPathDelimiter(snertaPath) + 'customers.txt';
         if fileExists(filename) then
         begin
           try
@@ -7671,7 +7688,7 @@ begin
         if not rSet.eof then
         begin
           snertaPath := g.qsnPathXML;
-          snertaPath := _Addslash(snertaPath);
+          snertaPath := IncludeTrailingPathDelimiter(snertaPath);
           if not DirectoryExists(snertaPath) then
           begin
             snertaPath := g.qProgramExePath;
@@ -7682,7 +7699,7 @@ begin
             showmessage(format(GetTranslatedText('shTx_D_PathChange'), [snertaPath]));
           end;
 
-          filename := _Addslash(snertaPath) + 'Rooms.txt';
+          filename := IncludeTrailingPathDelimiter(snertaPath) + 'Rooms.txt';
 
           if fileExists(filename) then
           begin
@@ -8006,7 +8023,7 @@ begin
       end;
 
       snertaPathCurrentGuestsXML := g.qsnPathCurrentGuestsXML;
-      snertaPathCurrentGuestsXML := _Addslash(snertaPathCurrentGuestsXML);
+      snertaPathCurrentGuestsXML := IncludeTrailingPathDelimiter(snertaPathCurrentGuestsXML);
 
       if not DirectoryExists(snertaPathCurrentGuestsXML) then
       begin
@@ -8018,7 +8035,7 @@ begin
         snertaPathCurrentGuestsXML := g.qProgramExePath;
       end;
 
-      filename := _Addslash(snertaPathCurrentGuestsXML) + 'currentguests' + '.xml';
+      filename := IncludeTrailingPathDelimiter(snertaPathCurrentGuestsXML) + 'currentguests' + '.xml';
 
       if fileExists(filename) then
       begin
@@ -10535,6 +10552,23 @@ end;
 const
   AlreadyLoggingIn: boolean = False;
 
+procedure Td.roomerMainDatasetCredentialsChanged(Sender: TObject);
+var
+  lCred: TCredentialsAPICaller;
+begin
+  if not d.roomerMainDataSet.AppKey.IsEmpty then
+  begin
+    lCred := TCredentialsAPICaller.Create;
+    try
+      if not lCred.CheckHotelIdAndAppKey(d.roomerMainDataSet.hotelId) then
+        g.UpdateCurrentSecretKey;
+    finally
+      lCred.Free;
+    end;
+  end;
+
+end;
+
 procedure Td.roomerMainDataSetSessionExpired(Sender: TObject);
 var
   res: boolean;
@@ -11568,6 +11602,19 @@ end;
 procedure Td.CheckoutReservation(aReservation: integer);
 begin
    d.roomerMaindataset.SystemSetRoomStatusOfReservation(aReservation, rsDeparted.AsStatusChar);
+end;
+
+procedure Td.CheckAndCorrectCredentials(const aHotelCode: string);
+var
+  lCred: TCredentialsAPICaller;
+begin
+  lCred := TCredentialsAPICaller.Create;
+  try
+    if not lCred.CheckHotelIdAndAppKey(aHotelCode) then
+      d.roomerMainDataSet.RegisterApplication;
+  finally
+    lCred.Free;
+  end;
 end;
 
 procedure Td.CheckInGuest(RoomReservation: Integer);

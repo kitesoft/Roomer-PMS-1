@@ -432,64 +432,71 @@ object frmRoomerLoginForm: TfrmRoomerLoginForm
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 3
-    object btLogin: TcxButton
-      Left = 224
-      Top = 4
+    object btLogin: TsButton
+      AlignWithMargins = True
+      Left = 212
+      Top = 2
       Width = 111
-      Height = 25
+      Height = 29
       Margins.Left = 2
       Margins.Top = 2
       Margins.Right = 2
       Margins.Bottom = 2
+      Align = alRight
       Caption = 'Login'
       Default = True
-      LookAndFeel.NativeStyle = False
+      ImageIndex = 26
+      Images = DImages.PngImageList1
       ModalResult = 1
-      OptionsImage.ImageIndex = 26
-      OptionsImage.Images = DImages.PngImageList1
-      SpeedButtonOptions.Flat = True
-      SpeedButtonOptions.Transparent = True
       TabOrder = 1
       OnClick = btLoginClick
+      SkinData.SkinSection = 'BUTTON'
+      ExplicitLeft = 224
+      ExplicitTop = 4
+      ExplicitHeight = 25
     end
-    object btCancel: TcxButton
-      Left = 339
-      Top = 4
-      Width = 97
-      Height = 25
+    object btCancel: TsButton
+      AlignWithMargins = True
+      Left = 327
+      Top = 2
+      Width = 111
+      Height = 29
       Margins.Left = 2
       Margins.Top = 2
       Margins.Right = 2
       Margins.Bottom = 2
+      Align = alRight
       Cancel = True
       Caption = 'Cancel'
-      LookAndFeel.NativeStyle = False
+      ImageIndex = 10
+      Images = DImages.PngImageList1
       ModalResult = 2
-      OptionsImage.ImageIndex = 10
-      OptionsImage.Images = DImages.PngImageList1
-      SpeedButtonOptions.CanBeFocused = False
-      SpeedButtonOptions.Flat = True
       TabOrder = 2
       OnClick = btCancelClick
+      SkinData.SkinSection = 'BUTTON'
+      ExplicitLeft = 339
+      ExplicitTop = 4
+      ExplicitHeight = 25
     end
-    object btOffline: TcxButton
-      Left = 109
-      Top = 4
+    object btOffline: TsButton
+      AlignWithMargins = True
+      Left = 97
+      Top = 2
       Width = 111
-      Height = 25
+      Height = 29
       Margins.Left = 2
       Margins.Top = 2
       Margins.Right = 2
       Margins.Bottom = 2
+      Align = alRight
       Caption = 'Offline Login'
-      LookAndFeel.NativeStyle = False
+      ImageIndex = 26
+      Images = DImages.PngImageList1
       ModalResult = 1
-      OptionsImage.ImageIndex = 26
-      OptionsImage.Images = DImages.PngImageList1
-      SpeedButtonOptions.Flat = True
-      SpeedButtonOptions.Transparent = True
       TabOrder = 0
       OnClick = btOfflineClick
+      SkinData.SkinSection = 'BUTTON'
+      ExplicitTop = 4
     end
   end
   object StoreLogin: TcxPropertiesStore

@@ -912,7 +912,7 @@ begin
   try
     FUpdatingCOntrols := True;
 
-g.ProcessAppIni(0);
+g.ReadWriteSettingsToRegistry(0);
     edInvoiceFormFileISL.Text := g.qInvoiceFormFileISL;
     defFile := FileDependencyManager.getLocalInvoiceFilePath(false);
 
@@ -2235,7 +2235,7 @@ begin
     glb.PMSSettings.EditAllGuestsNationality := cbxChangeNationality.Checked;
     glb.PMSSettings.ShowInvoiceAsPaidWhenStatusIsZero := cbxShowRoomAsPaidWhenZero.Checked;
 
-    g.ProcessAppIni(1);
+    g.ReadWriteSettingsToRegistry(1);
   except
     on E: Exception do
       MessageDlg(Format('Error occured during updating of PMS Settings:' + #10 + '%s', [E.Message]), mtError, [mbOK], 0);

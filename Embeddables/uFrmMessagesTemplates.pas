@@ -161,6 +161,8 @@ begin
 //  SkinData.SkinSection := '';
   ParentColor := True;
   Top := 10000;
+  SkinData.SkinManager := frmMain.sSkinManager1;
+
 
 end;
 
@@ -201,6 +203,8 @@ begin
 //  FButtonPanel.SkinData.CustomFont := True;
 //  FButtonPanel.SkinData.SkinSection := '';
   FButtonPanel.Width := 28;
+  FButtonPanel.SkinData.SkinManager := frmMain.sSkinManager1;
+  FButtonPanel.SkinData.SkinSection := 'PANEL';
 end;
 
 procedure TMessagePanel.CreateImagePanel;
@@ -214,6 +218,8 @@ begin
 //  FImagePanel.SkinData.CustomFont := True;
 //  FImagePanel.SkinData.SkinSection := '';
   FImagePanel.Width := 30;
+  FImagePanel.SkinData.SkinManager := frmMain.sSkinManager1;
+  FImagePanel.SkinData.SkinSection := 'PANEL';
 end;
 
 procedure TMessagePanel.CreateButtonPanelImage;
@@ -230,6 +236,8 @@ begin
   FImage.Font.Color := $00FF8000;
   FImage.Font.Size := 16;
   FImage.Layout := tlCenter;
+  FImage.SkinManager := frmMain.sSkinManager1;
+  FImage.SkinSection := 'LABEL';
 end;
 
 procedure TMessagePanel.CreateButtonPanelText;
@@ -240,11 +248,13 @@ begin
   FText.WordWrap := True;
   FText.Cursor := crHandPoint;
   FText.AutoSize := False;
-  FText.Transparent := True;
+//  FText.Transparent := True;
   FText.Caption := '';
   FText.Font.Size := 8;
   FText.Font.Name := 'Tahoma';
   FText.Font.Style := [];
+  FText.SkinManager := frmMain.sSkinManager1;
+  FText.SkinSection := 'PANEL';
 end;
 
 procedure TMessagePanel.CreateButtonPanelReadButton;
@@ -258,8 +268,8 @@ begin
   FReadButton.Top := -1;
 //  FReadButton.SkinData.CustomColor := False;
 //  FReadButton.SkinData.CustomFont := False;
-//  FReadButton.SkinData.SkinManager := frmMain.sSkinManager1;
-//  FReadButton.SkinData.SkinSection := 'BUTTON';
+  FReadButton.SkinData.SkinManager := frmMain.sSkinManager1;
+  FReadButton.SkinData.SkinSection := 'BUTTON';
 ////  FReadButton.Height := 42;
 ////  FReadButton.Width := 27;
 end;

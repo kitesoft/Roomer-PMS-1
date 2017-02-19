@@ -2204,6 +2204,7 @@ begin
   rSet.ParentRoomerDataSet := d.roomerMainDataSet;
   rSet.CommandType := cmdText;
   if doLowerCase then
+    //TODO: Why call FilterTableNames() if afterwards the whole statement is converted to lowercase?
     rSet.CommandText := LowerCase(FilterTablenames(sSQL))
   else
     rSet.CommandText := FilterTablenames(sSQL);

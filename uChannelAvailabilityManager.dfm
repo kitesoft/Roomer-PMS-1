@@ -2,8 +2,8 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
   Left = 0
   Top = 0
   Caption = 'Channel Availability'
-  ClientHeight = 601
-  ClientWidth = 1104
+  ClientHeight = 656
+  ClientWidth = 1254
   Color = clBtnFace
   DoubleBuffered = True
   Font.Charset = DEFAULT_CHARSET
@@ -24,8 +24,8 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
   object pnlHolder: TsPanel
     Left = 0
     Top = 0
-    Width = 1104
-    Height = 601
+    Width = 1254
+    Height = 656
     Margins.Left = 2
     Margins.Top = 2
     Margins.Right = 2
@@ -40,7 +40,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
       Left = 0
       Top = 31
       Width = 475
-      Height = 557
+      Height = 612
       Margins.Left = 2
       Margins.Top = 2
       Margins.Right = 2
@@ -54,163 +54,47 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
         Left = 0
         Top = 0
         Width = 431
-        Height = 557
+        Height = 612
         Align = alClient
         BevelOuter = bvNone
+        Caption = '-'
         ParentBackground = False
         TabOrder = 0
         SkinData.SkinSection = 'PANEL'
+        DesignSize = (
+          431
+          612)
         object lblBulkUpdate: TsLabel
-          Left = 15
-          Top = 12
-          Width = 177
-          Height = 18
+          Left = 0
+          Top = 0
+          Width = 431
+          Height = 34
           Margins.Left = 2
           Margins.Top = 2
           Margins.Right = 2
           Margins.Bottom = 2
+          Align = alTop
+          Alignment = taCenter
+          AutoSize = False
           Caption = 'Bulk availability update'
           ParentFont = False
+          Layout = tlCenter
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
           Font.Height = -15
           Font.Name = 'Tahoma'
           Font.Style = [fsBold]
         end
-        object lblAmountType: TsLabel
-          Left = 15
-          Top = 64
-          Width = 27
-          Height = 13
-          Margins.Left = 2
-          Margins.Top = 2
-          Margins.Right = 2
-          Margins.Bottom = 2
-          Caption = 'Rate'
-          Enabled = False
-          ParentFont = False
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = [fsBold]
-        end
-        object Label3: TsLabel
-          Left = 15
-          Top = 166
-          Width = 36
-          Height = 13
-          Margins.Left = 2
-          Margins.Top = 2
-          Margins.Right = 2
-          Margins.Bottom = 2
-          Caption = 'Period'
-          ParentFont = False
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = [fsBold]
-        end
-        object Label4: TsLabel
-          Left = 238
-          Top = 166
-          Width = 12
-          Height = 13
-          Margins.Left = 2
-          Margins.Top = 2
-          Margins.Right = 2
-          Margins.Bottom = 2
-          Caption = 'To'
-          ParentFont = False
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = []
-        end
-        object lblChannel: TsLabel
-          Left = 15
-          Top = 39
-          Width = 45
-          Height = 13
-          Margins.Left = 2
-          Margins.Top = 2
-          Margins.Right = 2
-          Margins.Bottom = 2
-          Caption = 'Channel'
-          ParentFont = False
-          Visible = False
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = [fsBold]
-        end
-        object lblDCAvailability: TsLabel
-          Left = 15
-          Top = 114
-          Width = 63
-          Height = 13
-          Margins.Left = 2
-          Margins.Top = 2
-          Margins.Right = 2
-          Margins.Bottom = 2
-          Caption = 'Availability'
-          Enabled = False
-          ParentFont = False
-          Visible = False
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = [fsBold]
-        end
-        object lblSingleUsePrice: TsLabel
-          Left = 15
-          Top = 89
-          Width = 89
-          Height = 13
-          Margins.Left = 2
-          Margins.Top = 2
-          Margins.Right = 2
-          Margins.Bottom = 2
-          Caption = 'Single-use Rate'
-          Enabled = False
-          ParentFont = False
-          Visible = False
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = [fsBold]
-        end
-        object sLabel1: TsLabel
-          Left = 15
-          Top = 140
-          Width = 65
-          Height = 13
-          Margins.Left = 2
-          Margins.Top = 2
-          Margins.Right = 2
-          Margins.Bottom = 2
-          Caption = 'Roomtypes'
-          ParentFont = False
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = [fsBold]
-        end
         object lblReadTime: TsLabel
-          Left = 30
-          Top = 477
+          Left = 5
+          Top = 544
           Width = 52
           Height = 13
           Margins.Left = 2
           Margins.Top = 2
           Margins.Right = 2
           Margins.Bottom = 2
+          Anchors = [akLeft, akBottom]
           Caption = 'Read time:'
           ParentFont = False
           Visible = False
@@ -221,14 +105,15 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
           Font.Style = []
         end
         object lblDrawTime: TsLabel
-          Left = 30
-          Top = 494
+          Left = 5
+          Top = 561
           Width = 52
           Height = 13
           Margins.Left = 2
           Margins.Top = 2
           Margins.Right = 2
           Margins.Bottom = 2
+          Anchors = [akLeft, akBottom]
           Caption = 'Draw time:'
           ParentFont = False
           Visible = False
@@ -238,433 +123,21 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
           Font.Name = 'Tahoma'
           Font.Style = []
         end
-        object edtAvail: TsEdit
-          Left = 136
-          Top = 61
-          Width = 68
-          Height = 21
-          Margins.Left = 2
-          Margins.Top = 2
-          Margins.Right = 2
-          Margins.Bottom = 2
-          Color = clWhite
-          Enabled = False
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          ParentFont = False
-          ParentShowHint = False
-          ShowHint = True
-          TabOrder = 4
-          OnChange = dtBulkToChange
-          SkinData.SkinSection = 'EDIT'
-          BoundLabel.Font.Charset = DEFAULT_CHARSET
-          BoundLabel.Font.Color = clWindowText
-          BoundLabel.Font.Height = -13
-          BoundLabel.Font.Name = 'Tahoma'
-          BoundLabel.Font.Style = []
-        end
-        object cbxRoomTypes: TCheckComboBox
-          Left = 114
-          Top = 137
-          Width = 251
-          Height = 22
-          Margins.Left = 2
-          Margins.Top = 2
-          Margins.Right = 2
-          Margins.Bottom = 2
-          AutoComplete = False
-          DropDownCount = 16
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          ParentFont = False
-          TabOrder = 11
-          Items.Strings = (
-            'All Room Types')
-          Caption = ''
-          BulkChanging = False
-        end
-        object dtBulkFrom: TsDateEdit
-          Left = 114
-          Top = 163
-          Width = 115
-          Height = 20
-          Margins.Left = 2
-          Margins.Top = 2
-          Margins.Right = 2
-          Margins.Bottom = 2
-          AutoSize = False
-          Color = clWhite
-          EditMask = '!99/99/9999;1; '
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          MaxLength = 10
-          ParentFont = False
-          TabOrder = 14
-          Text = '  -  -    '
-          OnChange = dtBulkToChange
-          BoundLabel.Font.Charset = DEFAULT_CHARSET
-          BoundLabel.Font.Color = clWindowText
-          BoundLabel.Font.Height = -13
-          BoundLabel.Font.Name = 'Tahoma'
-          BoundLabel.Font.Style = []
-          SkinData.SkinSection = 'EDIT'
-          GlyphMode.Blend = 0
-          GlyphMode.Grayed = False
-          ShowWeeks = True
-          DialogTitle = 'Period from'
-        end
-        object dtBulkTo: TsDateEdit
-          Left = 303
-          Top = 163
-          Width = 124
-          Height = 20
-          Margins.Left = 2
-          Margins.Top = 2
-          Margins.Right = 2
-          Margins.Bottom = 2
-          AutoSize = False
-          Color = clWhite
-          EditMask = '!99/99/9999;1; '
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          MaxLength = 10
-          ParentFont = False
-          TabOrder = 15
-          Text = '  -  -    '
-          OnChange = dtBulkToChange
-          BoundLabel.Font.Charset = DEFAULT_CHARSET
-          BoundLabel.Font.Color = clWindowText
-          BoundLabel.Font.Height = -13
-          BoundLabel.Font.Name = 'Tahoma'
-          BoundLabel.Font.Style = []
-          SkinData.SkinSection = 'EDIT'
-          GlyphMode.Blend = 0
-          GlyphMode.Grayed = False
-          ShowWeeks = True
-          DialogTitle = 'Period to'
-        end
-        object cbMon: TsCheckBox
-          Left = 96
-          Top = 383
-          Width = 65
-          Height = 16
-          Margins.Left = 2
-          Margins.Top = 2
-          Margins.Right = 2
-          Margins.Bottom = 2
-          Caption = 'Monday'
-          Checked = True
-          State = cbChecked
-          TabOrder = 17
-          SkinData.SkinSection = 'CHECKBOX'
-          ImgChecked = 0
-          ImgUnchecked = 0
-        end
-        object cbTue: TsCheckBox
-          Left = 96
-          Top = 400
-          Width = 66
-          Height = 16
-          Margins.Left = 2
-          Margins.Top = 2
-          Margins.Right = 2
-          Margins.Bottom = 2
-          Caption = 'Tuesday'
-          Checked = True
-          State = cbChecked
-          TabOrder = 18
-          SkinData.SkinSection = 'CHECKBOX'
-          ImgChecked = 0
-          ImgUnchecked = 0
-        end
-        object cbWen: TsCheckBox
-          Left = 96
-          Top = 417
-          Width = 81
-          Height = 16
-          Margins.Left = 2
-          Margins.Top = 2
-          Margins.Right = 2
-          Margins.Bottom = 2
-          Caption = 'Wednesday'
-          Checked = True
-          State = cbChecked
-          TabOrder = 19
-          SkinData.SkinSection = 'CHECKBOX'
-          ImgChecked = 0
-          ImgUnchecked = 0
-        end
-        object cbThu: TsCheckBox
-          Left = 96
-          Top = 435
-          Width = 71
-          Height = 16
-          Margins.Left = 2
-          Margins.Top = 2
-          Margins.Right = 2
-          Margins.Bottom = 2
-          Caption = 'Thursday'
-          Checked = True
-          State = cbChecked
-          TabOrder = 20
-          SkinData.SkinSection = 'CHECKBOX'
-          ImgChecked = 0
-          ImgUnchecked = 0
-        end
-        object cbFri: TsCheckBox
-          Left = 216
-          Top = 383
-          Width = 57
-          Height = 16
-          Margins.Left = 2
-          Margins.Top = 2
-          Margins.Right = 2
-          Margins.Bottom = 2
-          Caption = 'Friday'
-          Checked = True
-          State = cbChecked
-          TabOrder = 21
-          SkinData.SkinSection = 'CHECKBOX'
-          ImgChecked = 0
-          ImgUnchecked = 0
-        end
-        object cbSat: TsCheckBox
-          Left = 216
-          Top = 400
-          Width = 69
-          Height = 16
-          Margins.Left = 2
-          Margins.Top = 2
-          Margins.Right = 2
-          Margins.Bottom = 2
-          Caption = 'Saturday'
-          Checked = True
-          State = cbChecked
-          TabOrder = 22
-          SkinData.SkinSection = 'CHECKBOX'
-          ImgChecked = 0
-          ImgUnchecked = 0
-        end
-        object cbSun: TsCheckBox
-          Left = 216
-          Top = 417
-          Width = 63
-          Height = 16
-          Margins.Left = 2
-          Margins.Top = 2
-          Margins.Right = 2
-          Margins.Bottom = 2
-          Caption = 'Sunday'
-          Checked = True
-          State = cbChecked
-          TabOrder = 23
-          SkinData.SkinSection = 'CHECKBOX'
-          ImgChecked = 0
-          ImgUnchecked = 0
-        end
-        object btnApplyBulk: TsButton
-          Left = 317
-          Top = 525
-          Width = 84
-          Height = 25
-          Margins.Left = 2
-          Margins.Top = 2
-          Margins.Right = 2
-          Margins.Bottom = 2
-          Caption = 'Apply'
-          Enabled = False
-          TabOrder = 24
-          OnClick = btnApplyBulkClick
-          SkinData.SkinSection = 'BUTTON'
-        end
-        object sButton2: TsButton
-          Left = 223
-          Top = 525
-          Width = 84
-          Height = 25
-          Margins.Left = 2
-          Margins.Top = 2
-          Margins.Right = 2
-          Margins.Bottom = 2
-          Caption = 'Cancel'
-          TabOrder = 25
-          OnClick = sButton2Click
-          SkinData.SkinSection = 'BUTTON'
-        end
-        object cbxChannel: TCheckComboBox
-          Left = 114
-          Top = 36
-          Width = 251
-          Height = 22
-          Margins.Left = 2
-          Margins.Top = 2
-          Margins.Right = 2
-          Margins.Bottom = 2
-          AutoComplete = False
-          DropDownCount = 16
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          ParentFont = False
-          TabOrder = 0
-          Visible = False
-          Caption = ''
-          OnClickCheck = cbxChannelClickCheck
-          BulkChanging = False
-        end
-        object cbxAvailType: TsComboBox
-          Left = 208
-          Top = 61
-          Width = 216
-          Height = 21
-          Margins.Left = 2
-          Margins.Top = 2
-          Margins.Right = 2
-          Margins.Bottom = 2
-          Alignment = taLeftJustify
-          BoundLabel.Font.Charset = DEFAULT_CHARSET
-          BoundLabel.Font.Color = clWindowText
-          BoundLabel.Font.Height = -13
-          BoundLabel.Font.Name = 'Tahoma'
-          BoundLabel.Font.Style = []
-          SkinData.SkinSection = 'COMBOBOX'
-          VerticalAlignment = taAlignTop
-          Style = csDropDownList
-          Color = clWhite
-          Enabled = False
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          ItemIndex = 0
-          ParentFont = False
-          TabOrder = 5
-          Text = 'Type availability'
-          OnChange = cbxAvailTypeChange
-          Items.Strings = (
-            'Type availability'
-            'Set Max Availability'
-            'Set Auto Availability'
-            'Set Current Availability')
-        end
-        object edtDCAvailbility: TsEdit
-          Left = 136
-          Top = 111
-          Width = 68
-          Height = 21
-          Margins.Left = 2
-          Margins.Top = 2
-          Margins.Right = 2
-          Margins.Bottom = 2
-          Enabled = False
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          ParentFont = False
-          ParentShowHint = False
-          ShowHint = True
-          TabOrder = 9
-          Visible = False
-          OnChange = dtBulkToChange
-          SkinData.SkinSection = 'EDIT'
-          BoundLabel.Font.Charset = DEFAULT_CHARSET
-          BoundLabel.Font.Color = clWindowText
-          BoundLabel.Font.Height = -13
-          BoundLabel.Font.Name = 'Tahoma'
-          BoundLabel.Font.Style = []
-        end
-        object cbDCAvailabilityType: TsComboBox
-          Left = 208
-          Top = 111
-          Width = 216
-          Height = 21
-          Margins.Left = 2
-          Margins.Top = 2
-          Margins.Right = 2
-          Margins.Bottom = 2
-          Alignment = taLeftJustify
-          BoundLabel.Font.Charset = DEFAULT_CHARSET
-          BoundLabel.Font.Color = clWindowText
-          BoundLabel.Font.Height = -13
-          BoundLabel.Font.Name = 'Tahoma'
-          BoundLabel.Font.Style = []
-          SkinData.SkinSection = 'COMBOBOX'
-          VerticalAlignment = taAlignTop
-          Style = csDropDownList
-          Color = clWhite
-          Enabled = False
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          ItemIndex = -1
-          ParentFont = False
-          TabOrder = 10
-          Visible = False
-          OnChange = cbDCAvailabilityTypeChange
-          Items.Strings = (
-            'Manually enter availability'
-            'Set to calculate availability automatically'
-            'Set to actual # of available rooms')
-        end
-        object __cbxRate: TsCheckBox
-          Left = 114
-          Top = 62
-          Width = 20
-          Height = 16
-          Margins.Left = 2
-          Margins.Top = 2
-          Margins.Right = 2
-          Margins.Bottom = 2
-          TabOrder = 3
-          OnClick = __cbxRateClick
-          SkinData.SkinSection = 'CHECKBOX'
-          ImgChecked = 0
-          ImgUnchecked = 0
-        end
-        object __cbxAvailability: TsCheckBox
-          Left = 114
-          Top = 112
-          Width = 20
-          Height = 16
-          Margins.Left = 2
-          Margins.Top = 2
-          Margins.Right = 2
-          Margins.Bottom = 2
-          TabOrder = 8
-          Visible = False
-          OnClick = __cbxAvailabilityClick
-          SkinData.SkinSection = 'CHECKBOX'
-          ImgChecked = 0
-          ImgUnchecked = 0
-        end
         object pnlRestrictions: TsPanel
-          Left = 17
-          Top = 209
-          Width = 409
+          AlignWithMargins = True
+          Left = 3
+          Top = 290
+          Width = 425
           Height = 169
-          TabOrder = 16
+          Align = alTop
+          AutoSize = True
+          Padding.Top = 3
+          Padding.Bottom = 3
+          TabOrder = 0
           SkinData.SkinSection = 'PANEL'
+          ExplicitLeft = 1
           object lblMinStay: TsLabel
-            Left = 38
+            Left = 134
             Top = 7
             Width = 64
             Height = 13
@@ -683,8 +156,8 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
             Font.Style = []
           end
           object lblMaximumStay: TsLabel
-            Left = 111
-            Top = 7
+            Left = 134
+            Top = 36
             Width = 68
             Height = 13
             Margins.Left = 2
@@ -702,72 +175,49 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
             Font.Style = []
           end
           object cbxStopSell: TsLabel
-            Left = 173
-            Top = 66
+            Left = 144
+            Top = 83
             Width = 37
             Height = 12
             Alignment = taRightJustify
             Caption = 'Stop sell'
           end
           object cbxClosedOnArrival: TsLabel
-            Left = 130
-            Top = 97
+            Left = 101
+            Top = 114
             Width = 80
             Height = 12
             Alignment = taRightJustify
             Caption = 'Closed On Arrival'
           end
           object cbxClosedOnDeparture: TsLabel
-            Left = 115
-            Top = 128
+            Left = 86
+            Top = 145
             Width = 95
             Height = 12
             Alignment = taRightJustify
             Caption = 'Closed On Departure'
           end
-          object lblStayThrough: TsLabel
-            Left = 189
-            Top = 8
-            Width = 92
-            Height = 13
-            Margins.Left = 2
-            Margins.Top = 2
-            Margins.Right = 2
-            Margins.Bottom = 2
-            Alignment = taCenter
-            AutoSize = False
-            Caption = 'Stay through'
-            Enabled = False
-            ParentFont = False
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clBlack
-            Font.Height = -11
-            Font.Name = 'Tahoma'
-            Font.Style = []
-          end
-          object lblBasedOnArrival: TsLabel
-            Left = 285
+          object sLabel6: TsLabel
+            Left = 10
             Top = 7
-            Width = 118
+            Width = 68
             Height = 13
             Margins.Left = 2
             Margins.Top = 2
             Margins.Right = 2
             Margins.Bottom = 2
-            Alignment = taCenter
-            AutoSize = False
-            Caption = 'Based on arrival'
-            Enabled = False
+            Caption = 'Restrictions'
             ParentFont = False
             Font.Charset = DEFAULT_CHARSET
             Font.Color = clBlack
             Font.Height = -11
             Font.Name = 'Tahoma'
-            Font.Style = []
+            Font.Style = [fsBold]
           end
-          object __cbxMinimumStayActive: TsCheckBox
-            Left = 13
-            Top = 28
+          object __cbxRestrictions: TsCheckBox
+            Left = 106
+            Top = 7
             Width = 20
             Height = 16
             Margins.Left = 2
@@ -775,15 +225,15 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
             Margins.Right = 2
             Margins.Bottom = 2
             TabOrder = 0
-            OnClick = __cbxMinimumStayActiveClick
+            OnClick = __cbxRestrictionsClick
             SkinData.SkinSection = 'CHECKBOX'
             ImgChecked = 0
             ImgUnchecked = 0
           end
           object edtMinStay: TsEdit
-            Left = 37
-            Top = 24
-            Width = 56
+            Left = 218
+            Top = 4
+            Width = 66
             Height = 21
             Margins.Left = 2
             Margins.Top = 2
@@ -811,9 +261,9 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
             BoundLabel.Font.Style = []
           end
           object edtMaximumStay: TsEdit
-            Left = 111
-            Top = 24
-            Width = 56
+            Left = 218
+            Top = 33
+            Width = 66
             Height = 21
             Margins.Left = 2
             Margins.Top = 2
@@ -841,8 +291,8 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
             BoundLabel.Font.Style = []
           end
           object btnStopSell_Off: TsButton
-            Left = 223
-            Top = 61
+            Left = 194
+            Top = 78
             Width = 67
             Height = 25
             Caption = 'Off'
@@ -853,8 +303,8 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
             SkinData.SkinSection = 'BUTTON'
           end
           object btnStopSell_On: TsButton
-            Left = 305
-            Top = 61
+            Left = 333
+            Top = 78
             Width = 67
             Height = 25
             Caption = 'On'
@@ -865,17 +315,18 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
             SkinData.SkinSection = 'BUTTON'
           end
           object btnStopSell_Clear: TsButton
-            Left = 290
-            Top = 61
-            Width = 15
+            Left = 267
+            Top = 78
+            Width = 60
             Height = 25
+            Caption = 'Clear'
             TabOrder = 6
             OnClick = btnStopSell_ClearClick
             SkinData.SkinSection = 'BUTTON'
           end
           object btnCloseOnArrival_Off: TsButton
-            Left = 222
-            Top = 92
+            Left = 194
+            Top = 109
             Width = 67
             Height = 25
             Caption = 'Off'
@@ -886,17 +337,18 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
             SkinData.SkinSection = 'BUTTON'
           end
           object btnCloseOnArrival_Clear: TsButton
-            Left = 290
-            Top = 92
-            Width = 15
+            Left = 267
+            Top = 109
+            Width = 60
             Height = 25
+            Caption = 'Clear'
             TabOrder = 9
             OnClick = btnStopSell_ClearClick
             SkinData.SkinSection = 'BUTTON'
           end
           object btnCloseOnArrival_On: TsButton
-            Left = 305
-            Top = 92
+            Left = 333
+            Top = 109
             Width = 67
             Height = 25
             Caption = 'On'
@@ -907,8 +359,8 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
             SkinData.SkinSection = 'BUTTON'
           end
           object btnCloseOnDeparture_Off: TsButton
-            Left = 223
-            Top = 123
+            Left = 194
+            Top = 140
             Width = 67
             Height = 25
             Caption = 'Off'
@@ -919,8 +371,8 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
             SkinData.SkinSection = 'BUTTON'
           end
           object btnCloseOnDeparture_On: TsButton
-            Left = 305
-            Top = 123
+            Left = 333
+            Top = 140
             Width = 67
             Height = 25
             Caption = 'On'
@@ -931,19 +383,21 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
             SkinData.SkinSection = 'BUTTON'
           end
           object btnCloseOnDeparture_Clear: TsButton
-            Left = 290
-            Top = 123
-            Width = 15
+            Left = 267
+            Top = 140
+            Width = 60
             Height = 25
+            Caption = 'Clear'
             TabOrder = 12
             OnClick = btnStopSell_ClearClick
             SkinData.SkinSection = 'BUTTON'
           end
           object cbxStayThrough: TsCheckBox
-            Left = 222
-            Top = 26
-            Width = 20
+            Left = 305
+            Top = 7
+            Width = 88
             Height = 16
+            Caption = 'Stay through'
             Enabled = False
             TabOrder = 3
             SkinData.SkinSection = 'CHECKBOX'
@@ -951,10 +405,11 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
             ImgUnchecked = 0
           end
           object cbxBasedOnArrival: TsCheckBox
-            Left = 336
-            Top = 25
-            Width = 20
+            Left = 305
+            Top = 36
+            Width = 102
             Height = 16
+            Caption = 'Based on Arrival'
             Enabled = False
             TabOrder = 4
             SkinData.SkinSection = 'CHECKBOX'
@@ -962,101 +417,772 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
             ImgUnchecked = 0
           end
         end
-        object edtSingleUsePrice: TsEdit
-          Left = 136
-          Top = 87
-          Width = 68
-          Height = 21
-          Margins.Left = 2
-          Margins.Top = 2
-          Margins.Right = 2
-          Margins.Bottom = 2
-          Alignment = taRightJustify
-          Color = clWhite
-          Enabled = False
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          ParentFont = False
-          ParentShowHint = False
-          ShowHint = True
-          TabOrder = 7
-          OnChange = dtBulkToChange
-          SkinData.SkinSection = 'EDIT'
-          BoundLabel.Font.Charset = DEFAULT_CHARSET
-          BoundLabel.Font.Color = clWindowText
-          BoundLabel.Font.Height = -13
-          BoundLabel.Font.Name = 'Tahoma'
-          BoundLabel.Font.Style = []
-        end
-        object __cbxSingleUsePriceActive: TsCheckBox
-          Left = 114
-          Top = 87
-          Width = 20
-          Height = 16
-          Hint = 'Enable Single Use Price settings'
-          Margins.Left = 2
-          Margins.Top = 2
-          Margins.Right = 2
-          Margins.Bottom = 2
-          TabOrder = 6
-          OnClick = __cbxSingleUsePriceActiveClick
-          SkinData.SkinSection = 'CHECKBOX'
-          ImgChecked = 0
-          ImgUnchecked = 0
-        end
-        object btnClearRoomClasses: TsButton
-          Left = 370
-          Top = 136
-          Width = 24
-          Height = 22
-          Hint = 'Unselect/uncheck all'
-          Caption = '[ ]'
-          TabOrder = 12
-          OnClick = btnClearRoomClassesClick
-          SkinData.SkinSection = 'BUTTON'
-        end
-        object btnClearChannelSelection: TsButton
-          Left = 370
-          Top = 36
-          Width = 24
-          Height = 22
-          Hint = 'Unselect/uncheck all'
-          Caption = '[ ]'
+        object pnlSelection: TsPanel
+          AlignWithMargins = True
+          Left = 3
+          Top = 37
+          Width = 425
+          Height = 156
+          Align = alTop
+          ShowCaption = False
           TabOrder = 1
-          OnClick = btnClearChannelSelectionClick
-          SkinData.SkinSection = 'BUTTON'
+          object pnlBulkRateChannels: TsPanel
+            AlignWithMargins = True
+            Left = 1
+            Top = 4
+            Width = 423
+            Height = 22
+            Margins.Left = 0
+            Margins.Right = 0
+            Align = alTop
+            AutoSize = True
+            BevelOuter = bvNone
+            TabOrder = 0
+            object lblChannel: TsLabel
+              Left = 13
+              Top = 3
+              Width = 45
+              Height = 13
+              Margins.Left = 2
+              Margins.Top = 2
+              Margins.Right = 2
+              Margins.Bottom = 2
+              Caption = 'Channel'
+              ParentFont = False
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clBlack
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = [fsBold]
+            end
+            object cbxChannel: TCheckComboBox
+              Left = 109
+              Top = 0
+              Width = 251
+              Height = 22
+              Margins.Left = 2
+              Margins.Top = 2
+              Margins.Right = 2
+              Margins.Bottom = 2
+              AutoComplete = False
+              DropDownCount = 16
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = []
+              ParentColor = True
+              ParentFont = False
+              TabOrder = 0
+              Caption = ''
+              OnClickCheck = cbxChannelClickCheck
+              BulkChanging = False
+            end
+            object btnClearChannelSelection: TsButton
+              Left = 370
+              Top = 0
+              Width = 24
+              Height = 22
+              Hint = 'Unselect/uncheck all'
+              Caption = '[ ]'
+              TabOrder = 1
+              OnClick = btnClearChannelSelectionClick
+              SkinData.SkinSection = 'BUTTON'
+            end
+            object btnCheckAllBulkChannel: TsButton
+              Left = 397
+              Top = 0
+              Width = 24
+              Height = 22
+              Hint = 'Select/Check all'
+              Caption = '[x]'
+              TabOrder = 2
+              OnClick = btnCheckAllBulkChannelClick
+              SkinData.SkinSection = 'BUTTON'
+            end
+          end
+          object pnlBulkSelection: TsPanel
+            AlignWithMargins = True
+            Left = 1
+            Top = 32
+            Width = 423
+            Height = 116
+            Margins.Left = 0
+            Margins.Right = 0
+            Align = alTop
+            AutoSize = True
+            BevelOuter = bvNone
+            TabOrder = 1
+            object Label3: TsLabel
+              Left = 13
+              Top = 29
+              Width = 36
+              Height = 13
+              Margins.Left = 2
+              Margins.Top = 2
+              Margins.Right = 2
+              Margins.Bottom = 2
+              Caption = 'Period'
+              ParentFont = False
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clBlack
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = [fsBold]
+            end
+            object Label4: TsLabel
+              Left = 277
+              Top = 29
+              Width = 14
+              Height = 13
+              Margins.Left = 2
+              Margins.Top = 2
+              Margins.Right = 2
+              Margins.Bottom = 2
+              Alignment = taRightJustify
+              Caption = 'To'
+              ParentFont = False
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clBlack
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = [fsBold]
+            end
+            object sLabel1: TsLabel
+              Left = 13
+              Top = 3
+              Width = 65
+              Height = 13
+              Margins.Left = 2
+              Margins.Top = 2
+              Margins.Right = 2
+              Margins.Bottom = 2
+              Caption = 'Roomtypes'
+              ParentFont = False
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clBlack
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = [fsBold]
+            end
+            object sLabel5: TsLabel
+              Left = 13
+              Top = 58
+              Width = 59
+              Height = 13
+              Margins.Left = 2
+              Margins.Top = 2
+              Margins.Right = 2
+              Margins.Bottom = 2
+              Caption = 'Weekdays'
+              ParentFont = False
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clBlack
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = [fsBold]
+            end
+            object cbxRoomTypes: TCheckComboBox
+              Left = 109
+              Top = 0
+              Width = 251
+              Height = 22
+              Margins.Left = 2
+              Margins.Top = 2
+              Margins.Right = 2
+              Margins.Bottom = 2
+              AutoComplete = False
+              DropDownCount = 16
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = []
+              ParentColor = True
+              ParentFont = False
+              TabOrder = 0
+              Items.Strings = (
+                'All Room Types')
+              Caption = ''
+              BulkChanging = False
+            end
+            object dtBulkFrom: TsDateEdit
+              Left = 109
+              Top = 26
+              Width = 124
+              Height = 22
+              Margins.Left = 2
+              Margins.Top = 2
+              Margins.Right = 2
+              Margins.Bottom = 2
+              AutoSize = False
+              Color = clWhite
+              EditMask = '!99/99/9999;1; '
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clBlack
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = []
+              MaxLength = 10
+              ParentFont = False
+              TabOrder = 1
+              Text = '  -  -    '
+              OnChange = dtBulkToChange
+              BoundLabel.Font.Charset = DEFAULT_CHARSET
+              BoundLabel.Font.Color = clWindowText
+              BoundLabel.Font.Height = -13
+              BoundLabel.Font.Name = 'Tahoma'
+              BoundLabel.Font.Style = []
+              SkinData.SkinSection = 'EDIT'
+              GlyphMode.Blend = 0
+              GlyphMode.Grayed = False
+              ShowWeeks = True
+              DialogTitle = 'Period from'
+            end
+            object dtBulkTo: TsDateEdit
+              Left = 297
+              Top = 26
+              Width = 124
+              Height = 22
+              Margins.Left = 2
+              Margins.Top = 2
+              Margins.Right = 2
+              Margins.Bottom = 2
+              AutoSize = False
+              Color = clWhite
+              EditMask = '!99/99/9999;1; '
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clBlack
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = []
+              MaxLength = 10
+              ParentFont = False
+              TabOrder = 2
+              Text = '  -  -    '
+              OnChange = dtBulkToChange
+              BoundLabel.Font.Charset = DEFAULT_CHARSET
+              BoundLabel.Font.Color = clWindowText
+              BoundLabel.Font.Height = -13
+              BoundLabel.Font.Name = 'Tahoma'
+              BoundLabel.Font.Style = []
+              SkinData.SkinSection = 'EDIT'
+              GlyphMode.Blend = 0
+              GlyphMode.Grayed = False
+              ShowWeeks = True
+              DialogTitle = 'Period to'
+            end
+            object btnClearRoomClasses: TsButton
+              Left = 370
+              Top = 0
+              Width = 24
+              Height = 22
+              Hint = 'Unselect/uncheck all'
+              Caption = '[ ]'
+              TabOrder = 3
+              OnClick = btnClearRoomClassesClick
+              SkinData.SkinSection = 'BUTTON'
+            end
+            object btnCheckAllBulkRoomClasses: TsButton
+              Left = 397
+              Top = 0
+              Width = 24
+              Height = 22
+              Hint = 'Select/Check all'
+              Caption = '[x]'
+              TabOrder = 4
+              OnClick = btnCheckAllBulkRoomClassesClick
+              SkinData.SkinSection = 'BUTTON'
+            end
+            object cbMon: TsCheckBox
+              Left = 117
+              Top = 58
+              Width = 65
+              Height = 16
+              Margins.Left = 2
+              Margins.Top = 2
+              Margins.Right = 2
+              Margins.Bottom = 2
+              Caption = 'Monday'
+              Checked = True
+              State = cbChecked
+              TabOrder = 5
+              SkinData.SkinSection = 'CHECKBOX'
+              ImgChecked = 0
+              ImgUnchecked = 0
+            end
+            object cbTue: TsCheckBox
+              Left = 117
+              Top = 79
+              Width = 66
+              Height = 16
+              Margins.Left = 2
+              Margins.Top = 2
+              Margins.Right = 2
+              Margins.Bottom = 2
+              Caption = 'Tuesday'
+              Checked = True
+              State = cbChecked
+              TabOrder = 6
+              SkinData.SkinSection = 'CHECKBOX'
+              ImgChecked = 0
+              ImgUnchecked = 0
+            end
+            object cbWen: TsCheckBox
+              Left = 117
+              Top = 100
+              Width = 81
+              Height = 16
+              Margins.Left = 2
+              Margins.Top = 2
+              Margins.Right = 2
+              Margins.Bottom = 2
+              Caption = 'Wednesday'
+              Checked = True
+              State = cbChecked
+              TabOrder = 7
+              SkinData.SkinSection = 'CHECKBOX'
+              ImgChecked = 0
+              ImgUnchecked = 0
+            end
+            object cbThu: TsCheckBox
+              Left = 226
+              Top = 58
+              Width = 71
+              Height = 16
+              Margins.Left = 2
+              Margins.Top = 2
+              Margins.Right = 2
+              Margins.Bottom = 2
+              Caption = 'Thursday'
+              Checked = True
+              State = cbChecked
+              TabOrder = 8
+              SkinData.SkinSection = 'CHECKBOX'
+              ImgChecked = 0
+              ImgUnchecked = 0
+            end
+            object cbFri: TsCheckBox
+              Left = 226
+              Top = 79
+              Width = 57
+              Height = 16
+              Margins.Left = 2
+              Margins.Top = 2
+              Margins.Right = 2
+              Margins.Bottom = 2
+              Caption = 'Friday'
+              Checked = True
+              State = cbChecked
+              TabOrder = 9
+              SkinData.SkinSection = 'CHECKBOX'
+              ImgChecked = 0
+              ImgUnchecked = 0
+            end
+            object cbSat: TsCheckBox
+              Left = 338
+              Top = 58
+              Width = 69
+              Height = 16
+              Margins.Left = 2
+              Margins.Top = 2
+              Margins.Right = 2
+              Margins.Bottom = 2
+              Caption = 'Saturday'
+              Checked = True
+              State = cbChecked
+              TabOrder = 10
+              SkinData.SkinSection = 'CHECKBOX'
+              ImgChecked = 0
+              ImgUnchecked = 0
+            end
+            object cbSun: TsCheckBox
+              Left = 340
+              Top = 79
+              Width = 63
+              Height = 16
+              Margins.Left = 2
+              Margins.Top = 2
+              Margins.Right = 2
+              Margins.Bottom = 2
+              Caption = 'Sunday'
+              Checked = True
+              State = cbChecked
+              TabOrder = 11
+              SkinData.SkinSection = 'CHECKBOX'
+              ImgChecked = 0
+              ImgUnchecked = 0
+            end
+          end
         end
-        object btnCheckAllBulkRoomClasses: TsButton
-          Left = 400
-          Top = 136
-          Width = 24
-          Height = 22
-          Hint = 'Select/Check all'
-          Caption = '[x]'
-          TabOrder = 13
-          OnClick = btnCheckAllBulkRoomClassesClick
-          SkinData.SkinSection = 'BUTTON'
-        end
-        object btnCheckAllBulkChannel: TsButton
-          Left = 400
-          Top = 36
-          Width = 24
-          Height = 22
-          Hint = 'Select/Check all'
-          Caption = '[x]'
+        object pnlBulkButtons: TsPanel
+          AlignWithMargins = True
+          Left = 3
+          Top = 580
+          Width = 425
+          Height = 29
+          Align = alBottom
           TabOrder = 2
-          OnClick = btnCheckAllBulkChannelClick
-          SkinData.SkinSection = 'BUTTON'
+          object sButton2: TsButton
+            AlignWithMargins = True
+            Left = 338
+            Top = 3
+            Width = 84
+            Height = 23
+            Margins.Left = 2
+            Margins.Top = 2
+            Margins.Right = 2
+            Margins.Bottom = 2
+            Align = alRight
+            Caption = 'Cancel'
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
+            TabOrder = 0
+            OnClick = sButton2Click
+            SkinData.SkinSection = 'BUTTON'
+          end
+          object btnApplyBulk: TsButton
+            AlignWithMargins = True
+            Left = 250
+            Top = 3
+            Width = 84
+            Height = 23
+            Margins.Left = 2
+            Margins.Top = 2
+            Margins.Right = 2
+            Margins.Bottom = 2
+            Align = alRight
+            Caption = 'Apply'
+            Enabled = False
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
+            TabOrder = 1
+            OnClick = btnApplyBulkClick
+            SkinData.SkinSection = 'BUTTON'
+          end
+        end
+        object pnlBulkModifications: TsPanel
+          AlignWithMargins = True
+          Left = 3
+          Top = 199
+          Width = 425
+          Height = 85
+          Align = alTop
+          AutoSize = True
+          TabOrder = 3
+          SkinData.SkinSection = 'PANEL'
+          object pnlBulkChangeRate: TsPanel
+            AlignWithMargins = True
+            Left = 1
+            Top = 4
+            Width = 423
+            Height = 23
+            Margins.Left = 0
+            Margins.Right = 0
+            Align = alTop
+            AutoSize = True
+            BevelOuter = bvNone
+            TabOrder = 0
+            object lblAmountType: TsLabel
+              Left = 13
+              Top = 5
+              Width = 91
+              Height = 13
+              Margins.Left = 2
+              Margins.Top = 2
+              Margins.Right = 2
+              Margins.Bottom = 2
+              SkinSection = 'LABEL'
+              Caption = '<AmountType>'
+              Enabled = False
+              ParentFont = False
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clBlack
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = [fsBold]
+            end
+            object __cbxRate: TsCheckBox
+              Left = 109
+              Top = 3
+              Width = 20
+              Height = 16
+              Margins.Left = 2
+              Margins.Top = 2
+              Margins.Right = 2
+              Margins.Bottom = 2
+              TabOrder = 0
+              OnClick = __cbxRateClick
+              SkinData.SkinSection = 'CHECKBOX'
+              ImgChecked = 0
+              ImgUnchecked = 0
+            end
+            object edtAvail: TsEdit
+              Left = 133
+              Top = 0
+              Width = 68
+              Height = 21
+              Margins.Left = 2
+              Margins.Top = 2
+              Margins.Right = 2
+              Margins.Bottom = 2
+              Color = 14540253
+              Enabled = False
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = 4013373
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = []
+              ParentFont = False
+              ParentShowHint = False
+              ShowHint = True
+              TabOrder = 1
+              OnChange = dtBulkToChange
+              SkinData.SkinSection = 'PANEL'
+              BoundLabel.Font.Charset = DEFAULT_CHARSET
+              BoundLabel.Font.Color = clWindowText
+              BoundLabel.Font.Height = -13
+              BoundLabel.Font.Name = 'Tahoma'
+              BoundLabel.Font.Style = []
+            end
+            object cbxAvailType: TsComboBox
+              Left = 208
+              Top = 0
+              Width = 213
+              Height = 21
+              Margins.Left = 2
+              Margins.Top = 2
+              Margins.Right = 2
+              Margins.Bottom = 2
+              Alignment = taLeftJustify
+              BoundLabel.Font.Charset = DEFAULT_CHARSET
+              BoundLabel.Font.Color = clWindowText
+              BoundLabel.Font.Height = -13
+              BoundLabel.Font.Name = 'Tahoma'
+              BoundLabel.Font.Style = []
+              SkinData.SkinSection = 'COMBOBOX'
+              VerticalAlignment = taAlignTop
+              Style = csDropDownList
+              Color = clWhite
+              Enabled = False
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clBlack
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = []
+              ItemIndex = 0
+              ParentFont = False
+              TabOrder = 2
+              Text = 'Type availability'
+              OnChange = cbxAvailTypeChange
+              Items.Strings = (
+                'Type availability'
+                'Set Max Availability'
+                'Set Auto Availability'
+                'Set Current Availability')
+            end
+          end
+          object pnlSingleUseRateChange: TsPanel
+            AlignWithMargins = True
+            Left = 1
+            Top = 33
+            Width = 423
+            Height = 21
+            Margins.Left = 0
+            Margins.Right = 0
+            Align = alTop
+            AutoSize = True
+            BevelOuter = bvNone
+            TabOrder = 1
+            object lblSingleUsePrice: TsLabel
+              Left = 13
+              Top = 4
+              Width = 89
+              Height = 13
+              Margins.Left = 2
+              Margins.Top = 2
+              Margins.Right = 2
+              Margins.Bottom = 2
+              Caption = 'Single-use Rate'
+              Enabled = False
+              ParentFont = False
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clBlack
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = [fsBold]
+            end
+            object __cbxSingleUsePriceActive: TsCheckBox
+              Left = 109
+              Top = 4
+              Width = 20
+              Height = 16
+              Hint = 'Enable Single Use Price settings'
+              Margins.Left = 2
+              Margins.Top = 2
+              Margins.Right = 2
+              Margins.Bottom = 2
+              TabOrder = 0
+              OnClick = __cbxSingleUsePriceActiveClick
+              SkinData.SkinSection = 'CHECKBOX'
+              ImgChecked = 0
+              ImgUnchecked = 0
+            end
+            object edtSingleUsePrice: TsEdit
+              Left = 133
+              Top = 0
+              Width = 68
+              Height = 21
+              Margins.Left = 2
+              Margins.Top = 2
+              Margins.Right = 2
+              Margins.Bottom = 2
+              Alignment = taRightJustify
+              Color = clWhite
+              Enabled = False
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clBlack
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = []
+              ParentFont = False
+              ParentShowHint = False
+              ShowHint = True
+              TabOrder = 1
+              OnChange = dtBulkToChange
+              SkinData.SkinSection = 'EDIT'
+              BoundLabel.Font.Charset = DEFAULT_CHARSET
+              BoundLabel.Font.Color = clWindowText
+              BoundLabel.Font.Height = -13
+              BoundLabel.Font.Name = 'Tahoma'
+              BoundLabel.Font.Style = []
+            end
+          end
+          object pnlBulkChangesAvail: TsPanel
+            AlignWithMargins = True
+            Left = 1
+            Top = 60
+            Width = 423
+            Height = 21
+            Margins.Left = 0
+            Margins.Right = 0
+            Align = alTop
+            AutoSize = True
+            BevelOuter = bvNone
+            TabOrder = 2
+            ExplicitTop = 63
+            ExplicitHeight = 23
+            object lblDCAvailability: TsLabel
+              Left = 13
+              Top = 3
+              Width = 81
+              Height = 13
+              Margins.Left = 2
+              Margins.Top = 2
+              Margins.Right = 2
+              Margins.Bottom = 2
+              Caption = 'DC Availability'
+              Enabled = False
+              ParentFont = False
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clBlack
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = [fsBold]
+            end
+            object edtDCAvailbility: TsEdit
+              Left = 133
+              Top = 0
+              Width = 68
+              Height = 21
+              Margins.Left = 2
+              Margins.Top = 2
+              Margins.Right = 2
+              Margins.Bottom = 2
+              Color = clWhite
+              Enabled = False
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clBlack
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = []
+              ParentFont = False
+              ParentShowHint = False
+              ShowHint = True
+              TabOrder = 0
+              OnChange = dtBulkToChange
+              SkinData.SkinSection = 'EDIT'
+              BoundLabel.Font.Charset = DEFAULT_CHARSET
+              BoundLabel.Font.Color = clWindowText
+              BoundLabel.Font.Height = -13
+              BoundLabel.Font.Name = 'Tahoma'
+              BoundLabel.Font.Style = []
+            end
+            object cbDCAvailabilityType: TsComboBox
+              Left = 208
+              Top = 0
+              Width = 213
+              Height = 21
+              Margins.Left = 2
+              Margins.Top = 2
+              Margins.Right = 2
+              Margins.Bottom = 2
+              Alignment = taLeftJustify
+              BoundLabel.Font.Charset = DEFAULT_CHARSET
+              BoundLabel.Font.Color = clWindowText
+              BoundLabel.Font.Height = -13
+              BoundLabel.Font.Name = 'Tahoma'
+              BoundLabel.Font.Style = []
+              SkinData.SkinSection = 'COMBOBOX'
+              VerticalAlignment = taAlignTop
+              Style = csDropDownList
+              Color = clWhite
+              Enabled = False
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clBlack
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = []
+              ItemIndex = -1
+              ParentFont = False
+              TabOrder = 1
+              OnChange = cbDCAvailabilityTypeChange
+              Items.Strings = (
+                'Manually enter availability'
+                'Set to calculate availability automatically'
+                'Set to actual # of available rooms')
+            end
+            object __cbxAvailability: TsCheckBox
+              Left = 109
+              Top = 3
+              Width = 20
+              Height = 16
+              Margins.Left = 2
+              Margins.Top = 2
+              Margins.Right = 2
+              Margins.Bottom = 2
+              TabOrder = 2
+              OnClick = __cbxAvailabilityClick
+              SkinData.SkinSection = 'CHECKBOX'
+              ImgChecked = 0
+              ImgUnchecked = 0
+            end
+          end
         end
       end
       object sPanel4: TsPanel
         Left = 431
         Top = 0
         Width = 44
-        Height = 557
+        Height = 612
         Margins.Left = 2
         Margins.Top = 2
         Margins.Right = 2
@@ -1086,7 +1212,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
           Left = 35
           Top = 2
           Width = 7
-          Height = 553
+          Height = 608
           Margins.Left = 2
           Margins.Top = 2
           Margins.Right = 2
@@ -1104,8 +1230,8 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
     object pnlGridsWithLoadingCaption: TsPanel
       Left = 475
       Top = 31
-      Width = 629
-      Height = 557
+      Width = 779
+      Height = 612
       Align = alClient
       BevelOuter = bvNone
       Caption = 'Loading data...'
@@ -1124,13 +1250,13 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
       object pgcPages: TsPageControl
         Left = 0
         Top = 0
-        Width = 629
-        Height = 525
+        Width = 779
+        Height = 580
         Margins.Left = 2
         Margins.Top = 2
         Margins.Right = 2
         Margins.Bottom = 2
-        ActivePage = sTabSheet2
+        ActivePage = tsAvailabilities
         Align = alClient
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
@@ -1140,8 +1266,10 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
         ParentFont = False
         TabOrder = 0
         OnChange = pgcPagesChange
+        OnChanging = pgcPagesChanging
+        TabsLineSkin = 'PAGECONTROL'
         SkinData.SkinSection = 'PAGECONTROL'
-        object sTabSheet1: TsTabSheet
+        object tsAvailabilities: TsTabSheet
           Margins.Left = 2
           Margins.Top = 2
           Margins.Right = 2
@@ -1149,8 +1277,8 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
           Caption = 'Availabilities'
           object Panel2: TsPanel
             Left = 0
-            Top = 467
-            Width = 621
+            Top = 522
+            Width = 771
             Height = 30
             Margins.Left = 2
             Margins.Top = 2
@@ -1180,7 +1308,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
               SkinData.SkinSection = 'BUTTON'
             end
             object sPanel1: TsPanel
-              Left = 510
+              Left = 660
               Top = 0
               Width = 111
               Height = 30
@@ -1211,8 +1339,8 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
           object sPanel2: TsPanel
             Left = 0
             Top = 0
-            Width = 621
-            Height = 467
+            Width = 771
+            Height = 522
             Margins.Left = 2
             Margins.Top = 2
             Margins.Right = 2
@@ -1224,8 +1352,8 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
             object grid: TAdvStringGrid
               Left = 0
               Top = 21
-              Width = 621
-              Height = 446
+              Width = 771
+              Height = 501
               Cursor = crDefault
               Align = alClient
               BevelInner = bvNone
@@ -1367,6 +1495,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
               SearchFooter.HintFindPrev = 'Find previous occurence'
               SearchFooter.HintHighlight = 'Highlight occurences'
               SearchFooter.MatchCaseCaption = 'Match case'
+              SearchFooter.ResultFormat = '(%d of %d)'
               SelectionColor = clYellow
               SelectionTextColor = clRed
               ShowSelection = False
@@ -1377,8 +1506,10 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
               URLColor = clBlack
               ValidChars = '0123456789'
               VAlignment = vtaCenter
-              Version = '7.9.1.1'
+              Version = '8.2.4.1'
               WordWrap = False
+              ExplicitLeft = 1
+              ExplicitTop = 18
               ColWidths = (
                 250
                 80
@@ -1391,7 +1522,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
             object sPanel3: TsPanel
               Left = 0
               Top = 0
-              Width = 621
+              Width = 771
               Height = 21
               Margins.Left = 2
               Margins.Top = 2
@@ -1420,7 +1551,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
             end
           end
         end
-        object sTabSheet2: TsTabSheet
+        object tsRates: TsTabSheet
           Margins.Left = 2
           Margins.Top = 2
           Margins.Right = 2
@@ -1429,8 +1560,8 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
           object rateGrid: TAdvStringGrid
             Left = 0
             Top = 54
-            Width = 621
-            Height = 413
+            Width = 771
+            Height = 468
             Cursor = crDefault
             Align = alClient
             BevelInner = bvNone
@@ -1591,6 +1722,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
             SearchFooter.HintFindPrev = 'Find previous occurence'
             SearchFooter.HintHighlight = 'Highlight occurences'
             SearchFooter.MatchCaseCaption = 'Match case'
+            SearchFooter.ResultFormat = '(%d of %d)'
             ShowSelection = False
             SortSettings.DefaultFormat = ssAutomatic
             SortSettings.Show = True
@@ -1602,7 +1734,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
             URLColor = clBlack
             ValidChars = '0123456789+-!%*/'
             VAlignment = vtaCenter
-            Version = '7.9.1.1'
+            Version = '8.2.4.1'
             WordWrap = False
             ColWidths = (
               400
@@ -1615,8 +1747,8 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
           end
           object pnlPublishButtons: TsPanel
             Left = 0
-            Top = 467
-            Width = 621
+            Top = 522
+            Width = 771
             Height = 30
             Margins.Left = 2
             Margins.Top = 2
@@ -1663,7 +1795,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
               OnClick = sButton3Click
               SkinData.SkinSection = 'BUTTON'
             end
-            object sButton5: TsButton
+            object btnForceUpdate: TsButton
               AlignWithMargins = True
               Left = 5
               Top = 3
@@ -1677,7 +1809,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
               DropDownMenu = pmnuForce
               Style = bsSplitButton
               TabOrder = 1
-              OnClick = sButton5Click
+              OnClick = btnForceUpdateClick
               SkinData.SkinSection = 'BUTTON'
             end
             object btnRecalcDescendantRates: TsButton
@@ -1696,7 +1828,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
               SkinData.SkinSection = 'BUTTON'
             end
             object sPanel11: TsPanel
-              Left = 392
+              Left = 542
               Top = 0
               Width = 229
               Height = 30
@@ -1742,7 +1874,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
           object pnlSubViews: TsPanel
             Left = 0
             Top = 0
-            Width = 621
+            Width = 771
             Height = 54
             Margins.Left = 2
             Margins.Top = 2
@@ -1753,7 +1885,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
             TabOrder = 2
             SkinData.SkinSection = 'PANEL'
             object imgHelp: TsImage
-              Left = 579
+              Left = 729
               Top = 0
               Width = 42
               Height = 54
@@ -1897,6 +2029,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
                 Width = 244
                 Height = 22
                 AutoComplete = False
+                Style = csDropDownList
                 DropDownCount = 16
                 TabOrder = 0
                 Items.Strings = (
@@ -1947,13 +2080,13 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
           object pnlSelectView: TsPanel
             Left = 0
             Top = 54
-            Width = 621
-            Height = 413
+            Width = 771
+            Height = 468
             Align = alClient
             TabOrder = 3
             object sLabel2: TsLabel
-              Left = 86
-              Top = 48
+              Left = 29
+              Top = 17
               Width = 123
               Height = 13
               Caption = 'Rate plans / Channels'
@@ -1965,8 +2098,8 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
               Font.Style = [fsBold]
             end
             object sLabel3: TsLabel
-              Left = 289
-              Top = 48
+              Left = 232
+              Top = 17
               Width = 66
               Height = 13
               Caption = 'Visible days'
@@ -1978,8 +2111,8 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
               Font.Style = [fsBold]
             end
             object sLabel4: TsLabel
-              Left = 289
-              Top = 250
+              Left = 232
+              Top = 219
               Width = 61
               Height = 13
               Caption = 'Starting at'
@@ -1991,8 +2124,8 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
               Font.Style = [fsBold]
             end
             object __cbxSelectAll: TsCheckBox
-              Left = 64
-              Top = 48
+              Left = 7
+              Top = 17
               Width = 20
               Height = 16
               TabOrder = 0
@@ -2001,14 +2134,13 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
               ImgUnchecked = 0
             end
             object __cblSelectChannels: TsCheckListBox
-              Left = 66
-              Top = 67
+              Left = 9
+              Top = 36
               Width = 199
               Height = 254
               BorderStyle = bsSingle
-              Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
+              Font.Color = clWindowText
               Font.Height = -11
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -2018,11 +2150,11 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
               ParentFont = False
               TabOrder = 1
             end
-            object deStartDate: TsDateEdit
+            object deInitialStartDate: TsDateEdit
               AlignWithMargins = True
-              Left = 290
-              Top = 268
-              Width = 95
+              Left = 216
+              Top = 237
+              Width = 112
               Height = 21
               Margins.Left = 5
               Margins.Top = 2
@@ -2050,18 +2182,18 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
               GlyphMode.Grayed = False
               ShowWeeks = True
             end
-            object sButton6: TsButton
-              Left = 294
-              Top = 296
-              Width = 91
+            object btnInitialShow: TsButton
+              Left = 214
+              Top = 262
+              Width = 114
               Height = 25
               Caption = 'Show'
               TabOrder = 3
-              OnClick = sButton6Click
+              OnClick = btnInitialShowClick
             end
             object __cblVisibleDays: TsRadioGroup
-              Left = 271
-              Top = 60
+              Left = 214
+              Top = 29
               Width = 114
               Height = 184
               TabOrder = 4
@@ -2081,8 +2213,8 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
       end
       object sPanel7: TsPanel
         Left = 0
-        Top = 525
-        Width = 629
+        Top = 580
+        Width = 779
         Height = 32
         Align = alBottom
         Alignment = taLeftJustify
@@ -2097,9 +2229,8 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
         Padding.Bottom = 3
         ParentColor = True
         ParentFont = False
+        ShowCaption = False
         TabOrder = 1
-        SkinData.CustomColor = True
-        SkinData.CustomFont = True
         SkinData.SkinSection = 'PANEL'
         object lblVisibleDays: TsLabel
           AlignWithMargins = True
@@ -2112,6 +2243,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
           Margins.Right = 2
           Margins.Bottom = 2
           Align = alLeft
+          SkinSection = 'LABEL'
           Caption = 'Visible days:'
           ParentFont = False
           Font.Charset = DEFAULT_CHARSET
@@ -2126,6 +2258,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
           Top = 0
           Width = 23
           Height = 31
+          DefaultHandling = True
           EmptyTextStyle = []
           Flat = False
           LabelFont.Charset = DEFAULT_CHARSET
@@ -2143,6 +2276,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
           ReadOnly = True
           TabOrder = 0
           Text = ''
+          Transparent = True
           Visible = False
           Version = '1.9.0.0'
           ButtonStyle = bsDropDown
@@ -2258,11 +2392,11 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
             HintPrevMonth = 'Previous Month'
             HintNextMonth = 'Next Month'
             HintNextYear = 'Next Year'
-            Version = '2.3.0.0'
+            Version = '2.3.1.2'
             TMSStyle = 0
           end
         end
-        object btnRefreshOneDay: TcxButton
+        object btnRefreshOneDay: TsButton
           AlignWithMargins = True
           Left = 162
           Top = 4
@@ -2274,21 +2408,19 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
           Margins.Right = 0
           Margins.Bottom = 0
           Align = alLeft
-          LookAndFeel.NativeStyle = False
-          OptionsImage.ImageIndex = 28
-          SpeedButtonOptions.CanBeFocused = False
-          SpeedButtonOptions.Flat = True
-          SpeedButtonOptions.Transparent = True
-          TabOrder = 2
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clCaptionText
           Font.Height = -13
           Font.Name = 'Tahoma'
           Font.Style = [fsBold]
+          ImageIndex = 28
+          Images = DImages.PngImageList1
           ParentFont = False
+          TabOrder = 2
           OnClick = btnRefreshOneDayClick
+          SkinData.SkinSection = 'BUTTON'
         end
-        object btnForward: TcxButton
+        object btnForward: TsButton
           AlignWithMargins = True
           Left = 348
           Top = 4
@@ -2299,22 +2431,18 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
           Margins.Right = 0
           Margins.Bottom = 0
           Align = alLeft
-          LookAndFeel.NativeStyle = False
-          OptionsImage.ImageIndex = 3
-          OptionsImage.Images = DImages.ilGuests
-          SpeedButtonOptions.CanBeFocused = False
-          SpeedButtonOptions.Flat = True
-          SpeedButtonOptions.Transparent = True
-          TabOrder = 6
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clCaptionText
           Font.Height = -13
           Font.Name = 'Tahoma'
           Font.Style = [fsBold]
+          ImageIndex = 3
+          Images = DImages.ilGuests
           ParentFont = False
+          TabOrder = 6
           OnClick = btnForwardClick
         end
-        object btnBack: TcxButton
+        object btnBack: TsButton
           AlignWithMargins = True
           Left = 220
           Top = 4
@@ -2325,13 +2453,8 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
           Margins.Right = 0
           Margins.Bottom = 0
           Align = alLeft
-          LookAndFeel.Kind = lfFlat
-          LookAndFeel.NativeStyle = False
-          OptionsImage.ImageIndex = 2
-          OptionsImage.Images = DImages.ilGuests
-          SpeedButtonOptions.CanBeFocused = False
-          SpeedButtonOptions.Flat = True
-          SpeedButtonOptions.Transparent = True
+          ImageIndex = 2
+          Images = DImages.ilGuests
           TabOrder = 4
           OnClick = btnBackClick
         end
@@ -2386,7 +2509,6 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
           BoundLabel.Font.Height = -13
           BoundLabel.Font.Name = 'Tahoma'
           BoundLabel.Font.Style = []
-          SkinData.CustomColor = True
           SkinData.SkinSection = 'COMBOBOX'
           VerticalAlignment = taAlignTop
           Color = clWhite
@@ -2411,7 +2533,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
             '200'
             '400')
         end
-        object btnBegin: TcxButton
+        object btnBegin: TsButton
           AlignWithMargins = True
           Left = 192
           Top = 4
@@ -2422,17 +2544,12 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
           Margins.Right = 0
           Margins.Bottom = 0
           Align = alLeft
-          LookAndFeel.Kind = lfFlat
-          LookAndFeel.NativeStyle = False
-          OptionsImage.ImageIndex = 9
-          OptionsImage.Images = DImages.ilGuests
-          SpeedButtonOptions.CanBeFocused = False
-          SpeedButtonOptions.Flat = True
-          SpeedButtonOptions.Transparent = True
+          ImageIndex = 9
+          Images = DImages.ilGuests
           TabOrder = 3
           OnClick = btnBeginClick
         end
-        object btnEnd: TcxButton
+        object btnEnd: TsButton
           AlignWithMargins = True
           Left = 378
           Top = 4
@@ -2443,19 +2560,15 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
           Margins.Right = 0
           Margins.Bottom = 0
           Align = alLeft
-          LookAndFeel.NativeStyle = False
-          OptionsImage.ImageIndex = 10
-          OptionsImage.Images = DImages.ilGuests
-          SpeedButtonOptions.CanBeFocused = False
-          SpeedButtonOptions.Flat = True
-          SpeedButtonOptions.Transparent = True
-          TabOrder = 7
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clCaptionText
           Font.Height = -13
           Font.Name = 'Tahoma'
           Font.Style = [fsBold]
+          ImageIndex = 10
+          Images = DImages.ilGuests
           ParentFont = False
+          TabOrder = 7
           OnClick = btnEndClick
         end
       end
@@ -2463,7 +2576,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
     object Panel1: TsPanel
       Left = 0
       Top = 0
-      Width = 1104
+      Width = 1254
       Height = 31
       Margins.Left = 2
       Margins.Top = 2
@@ -2474,13 +2587,13 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
       TabOrder = 0
       SkinData.SkinSection = 'PANEL'
       DesignSize = (
-        1104
+        1254
         31)
       object lblEditing: TsLabel
         AlignWithMargins = True
         Left = 337
         Top = 8
-        Width = 759
+        Width = 909
         Height = 21
         Margins.Left = 2
         Margins.Top = 8
@@ -2593,7 +2706,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
         end
       end
       object btnClose: TsButton
-        Left = 1022
+        Left = 1172
         Top = 3
         Width = 78
         Height = 26
@@ -2608,8 +2721,8 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
     end
     object pnlProgress: TsPanel
       Left = 0
-      Top = 588
-      Width = 1104
+      Top = 643
+      Width = 1254
       Height = 13
       Margins.Left = 2
       Margins.Top = 2
@@ -3260,13 +3373,13 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
   object pmnuForce: TPopupMenu
     Left = 496
     Top = 464
-    object F1: TMenuItem
+    object mnuForceUpdatePeriode: TMenuItem
       Caption = 'Force update of currently selected period'
-      OnClick = F1Click
+      OnClick = mnuForceUpdatePeriodeClick
     end
-    object F2: TMenuItem
+    object mnuForceFullUpdate: TMenuItem
       Caption = 'Force full update'
-      OnClick = F2Click
+      OnClick = mnuForceFullUpdateClick
     end
   end
   object timBlink: TTimer
