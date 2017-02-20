@@ -384,7 +384,6 @@ type
     qExcluteNoshow      : boolean;
 
     qDynamicRatesActive : Boolean;
-    qSendInvoicesToFinancePacket : Boolean;
 
     procedure RefreshRoomList;
     constructor Create;

@@ -28,6 +28,10 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
     SkinData.SkinSection = 'PAGECONTROL'
     object sTabSheet1: TsTabSheet
       Caption = 'Room 101'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object sPanel1: TsPanel
         Left = 0
         Top = 0
@@ -67,6 +71,10 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
           object sTabSheet2: TsTabSheet
             Caption = 'Guest Info'
             SkinData.SkinSection = 'TRANSPARENT'
+            ExplicitLeft = 0
+            ExplicitTop = 0
+            ExplicitWidth = 0
+            ExplicitHeight = 0
             object sLabel6: TsLabel
               Left = 97
               Top = 126
@@ -612,8 +620,8 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
             object cbActiveLiveSearch: TsCheckBox
               Left = 190
               Top = 47
-              Width = 82
-              Height = 17
+              Width = 74
+              Height = 20
               Caption = 'Live search'
               TabOrder = 21
               OnClick = cbActiveLiveSearchClick
@@ -675,8 +683,8 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
             object chkCountryForAllGuests: TsCheckBox
               Left = 190
               Top = 532
-              Width = 252
-              Height = 17
+              Width = 244
+              Height = 20
               Hint = 
                 'When checked the selected country will be set for all guests of ' +
                 'this room that don'#39't already have a country set'
@@ -690,6 +698,10 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
           end
           object sTabSheet6: TsTabSheet
             Caption = 'Company'
+            ExplicitLeft = 0
+            ExplicitTop = 0
+            ExplicitWidth = 0
+            ExplicitHeight = 0
             object sLabel22: TsLabel
               Left = 11
               Top = 24
@@ -1030,7 +1042,7 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
         end
         object sLabel10: TsLabel
           Left = 103
-          Top = 274
+          Top = 256
           Width = 80
           Height = 13
           Alignment = taRightJustify
@@ -1160,7 +1172,7 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
         end
         object sLabel44: TsLabel
           Left = 16
-          Top = 241
+          Top = 223
           Width = 68
           Height = 16
           Caption = 'Guarantee'
@@ -1174,7 +1186,7 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
         object shpGuarantee: TShape
           Tag = 16
           Left = 342
-          Top = 272
+          Top = 254
           Width = 16
           Height = 17
           Brush.Color = clRed
@@ -1199,39 +1211,10 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
           AutoSize = False
           Caption = '0.00'
         end
-        object lblNativeCurrencyBalanceText: TsLabel
-          Left = 44
-          Top = 212
-          Width = 139
-          Height = 13
-          Alignment = taRightJustify
-          Caption = 'Native currency balance:'
-          ParentFont = False
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = [fsBold]
-        end
-        object lblNativeCurrencyBalance: TsLabel
-          Left = 193
-          Top = 212
-          Width = 80
-          Height = 13
-          Alignment = taRightJustify
-          AutoSize = False
-          Caption = '0.00'
-          ParentFont = False
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = [fsBold]
-        end
         object cbxGuaranteeTypes: TsComboBox
           Tag = 16
           Left = 187
-          Top = 271
+          Top = 253
           Width = 149
           Height = 21
           Alignment = taLeftJustify
@@ -1257,7 +1240,7 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
         end
         object pgGuaranteeTypes: TsPageControl
           Left = 16
-          Top = 312
+          Top = 294
           Width = 326
           Height = 170
           ActivePage = sTabSheet3
@@ -1265,6 +1248,10 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
           SkinData.SkinSection = 'PAGECONTROL'
           object sTabSheet3: TsTabSheet
             Caption = 'Credit card'
+            ExplicitLeft = 0
+            ExplicitTop = 0
+            ExplicitWidth = 0
+            ExplicitHeight = 0
             object sLabel12: TsLabel
               Left = 66
               Top = 69
@@ -1303,6 +1290,10 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
           end
           object sTabSheet4: TsTabSheet
             Caption = 'Cash'
+            ExplicitLeft = 0
+            ExplicitTop = 0
+            ExplicitWidth = 0
+            ExplicitHeight = 0
             object sLabel16: TsLabel
               Left = 38
               Top = 21
@@ -1383,9 +1374,17 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
           end
           object sTabSheet5: TsTabSheet
             Caption = 'None'
+            ExplicitLeft = 0
+            ExplicitTop = 0
+            ExplicitWidth = 0
+            ExplicitHeight = 0
           end
           object sTabSheet7: TsTabSheet
             Caption = 'Select'
+            ExplicitLeft = 0
+            ExplicitTop = 0
+            ExplicitWidth = 0
+            ExplicitHeight = 0
           end
         end
       end

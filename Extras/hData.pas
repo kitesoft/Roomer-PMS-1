@@ -2125,7 +2125,7 @@ Function changeNoRoomRoomtypeReturnSelection(Reservation, RoomReservation: integ
 function updateRdResFlag(id: integer; Status: string): boolean;
 function updateRdResFlagByRRandDate(RoomReservation: integer; sDate: string; Status: string; SetPaid : Boolean = False; isPaid : Boolean = False): boolean;
 
-//function DKAutoTransfer : boolean;
+function DKAutoTransfer : boolean;
 
 function GetTaxesHolder : recTaxesHolder;
 procedure initCityTaxResultHolder(var rec: recCityTaxResultHolder);
@@ -4495,25 +4495,25 @@ begin
 end;
 
 
-//function DKAutoTransfer : boolean;
-// var
-//   Rset : TRoomerDataSet;
-//   s : string;
-//begin
-//   result := true;
-//   RSet := CreateNewDataSet;
-//   try
-//     s := '';
-//     s := s + 'SELECT AutoInvoiceTransfer '+#10;
-//     s := s + 'FROM hotelconfigurations  ';
-//     if rSet_bySQL(rSet,s) then
-//     begin
-//       result := Rset.FieldByName('AutoInvoiceTransfer').AsBoolean;
-//     end;
-//   finally
-//     freeandnil(Rset);
-//   end;
-//end;
+function DKAutoTransfer : boolean;
+ var
+   Rset : TRoomerDataSet;
+   s : string;
+begin
+   result := true;
+   RSet := CreateNewDataSet;
+   try
+     s := '';
+     s := s + 'SELECT AutoInvoiceTransfer '+#10;
+     s := s + 'FROM hotelconfigurations  ';
+     if rSet_bySQL(rSet,s) then
+     begin
+       result := Rset.FieldByName('AutoInvoiceTransfer').AsBoolean;
+     end;
+   finally
+     freeandnil(Rset);
+   end;
+end;
 
 
 function ctrlGetBoolean(aField: string): boolean;

@@ -650,7 +650,6 @@ type
     procedure AddIncludedBreakfastToLinesAndGrid(aIncludedBreakfastCount: integer; iAddAt: integer = 0);
     procedure RemoveAutoBreakfastItems;
     function ItemKindOnRow(aRow: Integer): TItemKind;
-    procedure SendInvoicesToFinancePacket(zInvoiceNumber);
 
     property InvoiceIndex: integer read FInvoiceIndex write SetInvoiceIndex;
     property AnyRowChecked: boolean read GetAnyRowChecked;
@@ -5975,8 +5974,20 @@ begin
       try
         result := True;
         try
-          SendInvoicesToFinancePacket(zInvoiceNumber);
           ViewInvoice2(zInvoiceNumber, True, false, True, chkShowPackage.checked, zEmailAddress);
+
+          if dkAutoTransfer then
+          begin
+            // BOOK KEEPING / Finance
+            remoteResult := d.roomerMainDataSet.SystemSendInvoiceToBookkeeping
+              (zInvoiceNumber);
+            if remoteResult <> '' then
+            begin
+              HandleExceptionListFromBookKeepingSystem(zInvoiceNumber,
+                remoteResult);
+            end;
+
+          end;
 
           d.roomerMainDataSet.SystempackagesCreateHeaderIfNotExists
             (FRoomReservation, FRoomReservation);
@@ -6021,20 +6032,6 @@ begin
   finally
     FreeAndNil(lstLocations);
     FreeAndNil(lstActivity);
-  end;
-end;
-
-procedure TfrmInvoice.SendInvoicesToFinancePacket(zInvoiceNumber);
-var remoteResult : String;
-begin
-  if g.qSendInvoicesToFinancePacket then
-  begin
-    // BOOK KEEPING / Finance
-    remoteResult := d.roomerMainDataSet.SystemSendInvoiceToBookkeeping(zInvoiceNumber);
-    if remoteResult <> '' then
-    begin
-      HandleExceptionListFromBookKeepingSystem(zInvoiceNumber, remoteResult);
-    end;
   end;
 end;
 
