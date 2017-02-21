@@ -159,7 +159,6 @@ uses uAppGlobal,
 
   uEmailExcelSheet,
 //  uInvoice2015,
-  uInvoiceLineEdit,
   uFrmMergePortfolios,
   uStaffComm,
   uFrmCheckOut,
@@ -1814,7 +1813,6 @@ begin
   FrmEmailExcelSheet := TFrmEmailExcelSheet.Create(nil); FrmEmailExcelSheet.Free; FrmEmailExcelSheet := nil;
 
   frmRptTurnoverAndPayments := TfrmRptTurnoverAndPayments.Create(nil); frmRptTurnoverAndPayments.Free; frmRptTurnoverAndPayments := nil;
-  FrmInvoiceLineEdit := TFrmInvoiceLineEdit.Create(nil); FrmInvoiceLineEdit.Free; FrmInvoiceLineEdit := nil;
   frmMergePortfolios := TfrmMergePortfolios.Create(nil); frmMergePortfolios.Free; frmMergePortfolios := nil;
   frmStaffComm := TfrmStaffComm.Create(nil); frmStaffComm.Free; frmStaffComm := nil;
   FrmCheckOut := TFrmCheckOut.Create(nil); FrmCheckOut.Free; FrmCheckOut := nil;

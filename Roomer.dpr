@@ -191,7 +191,6 @@ uses
   uActivityLogs in 'Activitylogs\uActivityLogs.pas',
   uInvoiceContainer in 'uInvoiceContainer.pas',
   XmlUtils in 'RoomerUtils\XmlUtils.pas',
-  uInvoiceLineEdit in 'uInvoiceLineEdit.pas' {FrmInvoiceLineEdit},
   uFrmMergePortfolios in 'uFrmMergePortfolios.pas' {frmMergePortfolios},
   uStaffCommunication in 'uStaffCommunication.pas',
   uStaffComm in 'uStaffComm.pas' {frmStaffComm},
