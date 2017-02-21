@@ -3269,7 +3269,7 @@ end;
 
 procedure TfrmInvoice.CalcAndAddIncludedBreakFast(aReservation: integer; aRoominvoiceLinesList: TInvoiceRoomEntityList);
 begin
-  if glb.PMSSettings.ShowIncludedBreakfastOnInvoice then
+  if glb.PMSSettings.InvoiceSettings.ShowIncludedBreakfastOnInvoice then
   begin
     AddIncludedBreakfastToLinesAndGrid(aRoomInvoiceLinesList.IncludedBreakfastCount, FindLastRoomRentLine + 1);
     DisplayTotals;
@@ -3593,10 +3593,10 @@ end;
 
 procedure TfrmInvoice.FormShow(Sender: TObject);
 begin
-  btnEditDownPayment.Visible := glb.PMSSettings.AllowPaymentModification;
-  btnDeleteDownpayment.Visible := glb.PMSSettings.AllowPaymentModification;
-  btnRemoveItem.Visible := glb.PMSSettings.AllowDeletingItemsFromInvoice;
-  btnRemoveLodgingTax2.Visible := glb.PMSSettings.AllowTogglingOfCityTaxes;
+  btnEditDownPayment.Visible := glb.PMSSettings.InvoiceSettings.AllowPaymentModification;
+  btnDeleteDownpayment.Visible := glb.PMSSettings.InvoiceSettings.AllowPaymentModification;
+  btnRemoveItem.Visible := glb.PMSSettings.InvoiceSettings.AllowDeletingItemsFromInvoice;
+  btnRemoveLodgingTax2.Visible := glb.PMSSettings.InvoiceSettings.AllowTogglingOfCityTaxes;
 
   LoadInvoice;
   UpdateCaptions;

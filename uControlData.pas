@@ -1321,9 +1321,7 @@ g.ReadWriteSettingsToRegistry(0);
     cbxBackupMachine.Checked := g.BackupMachine;
     cbxLocationPerRoomType.Checked := g.qLocationPerRoomType;
     cbxWithdrawalWithoutGuarantee.Checked := NOT g.qRestrictWithdrawalWithoutGuarantee;
-    cbxExpandRoomRent.Checked := g.qExpandRoomRentOnInvoice;
-
-
+    cbxExpandRoomRent.Checked :=  glb.PMSSettings.InvoiceSettings.RoomRentPerDayOninvoice;
 
     chkConfirmAuto.checked := g.qConfirmAuto;
     edConfirmMinuteOfTheDay.value  := g.qConfirmMinuteOfTheDay;
@@ -1541,13 +1539,13 @@ g.ReadWriteSettingsToRegistry(0);
     except
     end;
 
-    cbShowIncludedBreakfastOnInvoice.Checked := glb.PMSSettings.ShowIncludedBreakfastOnInvoice;
-    cbAllowPaymentModification.Checked := glb.PMSSettings.AllowPaymentModification;
-    cbAllowDeleteItemsFromInvoice.Checked := glb.PMSSettings.AllowDeletingItemsFromInvoice;
-    cbTopClassAvaiabilityOrderActive.Checked := glb.PMSSettings.TopClassAvaiabilityOrderActive;
-    ceMasterRateCurrency.Text := glb.PMSSettings.MasterRateCurrency;
-    cbxCurrencyCalculation.Checked := glb.PMSSettings.MasterRateCurrencyConvert;
-    cbAllowTogglingOfCityTaxesOnInvoice.Checked := glb.PMSSettings.AllowTogglingOfCityTaxes;
+    cbShowIncludedBreakfastOnInvoice.Checked := glb.PMSSettings.InvoiceSettings.ShowIncludedBreakfastOnInvoice;
+    cbAllowPaymentModification.Checked := glb.PMSSettings.InvoiceSettings.AllowPaymentModification;
+    cbAllowDeleteItemsFromInvoice.Checked := glb.PMSSettings.InvoiceSettings.AllowDeletingItemsFromInvoice;
+    cbTopClassAvaiabilityOrderActive.Checked := glb.PMSSettings.MasterRatesSettings.TopClassAvaiabilityOrderActive;
+    ceMasterRateCurrency.Text := glb.PMSSettings.MasterRatesSettings.MasterRateCurrency;
+    cbxCurrencyCalculation.Checked := glb.PMSSettings.MasterRatesSettings.MasterRateCurrencyConvert;
+    cbAllowTogglingOfCityTaxesOnInvoice.Checked := glb.PMSSettings.InvoiceSettings.AllowTogglingOfCityTaxes;
 
     edtRIIndexRoomRent.Value := rSethotelconfigurations.FieldByName('RoomInvoiceRoomRentIndex').AsInteger + 1;
     edtRIIndexPosItems.Value := rSethotelconfigurations.FieldByName('RoomInvoicePosItemIndex').AsInteger + 1;
@@ -1596,8 +1594,8 @@ g.ReadWriteSettingsToRegistry(0);
     edWinterStartsday.MaxValue := iTmp;
     edWinterStartsday.Value := WinterStartsDay;
 
-    cbxChangeNationality.Checked := glb.PMSSettings.EditAllGuestsNationality;
-    cbxShowRoomAsPaidWhenZero.Checked := glb.PMSSettings.ShowInvoiceAsPaidWhenStatusIsZero;
+    cbxChangeNationality.Checked := glb.PMSSettings.ReservationProfileSettings.EditAllGuestsNationality;
+    cbxShowRoomAsPaidWhenZero.Checked := glb.PMSSettings.InvoiceSettings.ShowInvoiceAsPaidWhenStatusIsZero;
 
   finally
     FUpdatingCOntrols := False;
@@ -1902,11 +1900,8 @@ begin
       g.BackupMachine := cbxBackupMachine.Checked;
       g.qLocationPerRoomType := cbxLocationPerRoomType.Checked;
       g.qRestrictWithdrawalWithoutGuarantee := NOT cbxWithdrawalWithoutGuarantee.Checked;
-      g.qExpandRoomRentOnInvoice := cbxExpandRoomRent.Checked;
 
-
-
-
+      glb.PMSSettings.InvoiceSettings.RoomRentPerDayOninvoice := cbxExpandRoomRent.Checked;
 
       g.qConfirmAuto := chkConfirmAuto.checked;
       g.qConfirmMinuteOfTheDay := edConfirmMinuteOfTheDay.value;
@@ -2037,13 +2032,13 @@ begin
       except
       end;
 
-      glb.PMSSettings.ShowIncludedBreakfastOnInvoice := cbShowIncludedBreakfastOnInvoice.Checked;
-      glb.PMSSettings.AllowPaymentModification := cbAllowPaymentModification.Checked;
-      glb.PMSSettings.AllowDeletingItemsFromInvoice := cbAllowDeleteItemsFromInvoice.Checked;
-      glb.PMSSettings.TopClassAvaiabilityOrderActive := cbTopClassAvaiabilityOrderActive.Checked;
-      glb.PMSSettings.MasterRateCurrency := ceMasterRateCurrency.Text;
-      glb.PMSSettings.MasterRateCurrencyConvert := cbxCurrencyCalculation.Checked;
-      glb.PMSSettings.AllowTogglingOfCityTaxes := cbAllowTogglingOfCityTaxesOnInvoice.Checked;
+      glb.PMSSettings.InvoiceSettings.ShowIncludedBreakfastOnInvoice := cbShowIncludedBreakfastOnInvoice.Checked;
+      glb.PMSSettings.InvoiceSettings.AllowPaymentModification := cbAllowPaymentModification.Checked;
+      glb.PMSSettings.InvoiceSettings.AllowDeletingItemsFromInvoice := cbAllowDeleteItemsFromInvoice.Checked;
+      glb.PMSSettings.MasterRatesSettings.TopClassAvaiabilityOrderActive := cbTopClassAvaiabilityOrderActive.Checked;
+      glb.PMSSettings.MasterRatesSettings.MasterRateCurrency := ceMasterRateCurrency.Text;
+      glb.PMSSettings.MasterRatesSettings.MasterRateCurrencyConvert := cbxCurrencyCalculation.Checked;
+      glb.PMSSettings.InvoiceSettings.AllowTogglingOfCityTaxes := cbAllowTogglingOfCityTaxesOnInvoice.Checked;
 
 
       try
@@ -2232,8 +2227,8 @@ begin
       g.qReportPrinter := cbxReportPrinter.Items[idx];
     end;
 
-    glb.PMSSettings.EditAllGuestsNationality := cbxChangeNationality.Checked;
-    glb.PMSSettings.ShowInvoiceAsPaidWhenStatusIsZero := cbxShowRoomAsPaidWhenZero.Checked;
+    glb.PMSSettings.ReservationProfileSettings.EditAllGuestsNationality := cbxChangeNationality.Checked;
+    glb.PMSSettings.InvoiceSettings.ShowInvoiceAsPaidWhenStatusIsZero := cbxShowRoomAsPaidWhenZero.Checked;
 
     g.ReadWriteSettingsToRegistry(1);
   except

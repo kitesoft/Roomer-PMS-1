@@ -3410,7 +3410,6 @@ begin
             g.qDefaultSendCCEmailToHotel := rSet['DefaultSendCCEmailToHotel'];
             g.qRatesManagedByRoomer := rSet['RatesManagedByRoomer'];
             g.qRestrictWithdrawalWithoutGuarantee := rSet['RestrictWithdrawalToGuarantee'];
-            g.qExpandRoomRentOnInvoice := rSet['ExpandedRoomStayOnInvoice'];
 
             g.qStayd3pActive := rSet['stays3PId'] > 0;
 

@@ -6,41 +6,68 @@ uses
   SysUtils
   , cmpRoomerDataset
   , uMandatoryFIeldDefinitions
+  , uPMSSettingsAccessor
   ;
 
 type
 
-  EPMSSettingsKeyValueNotFound = class(Exception);
-
-
-  /// <summary>
-  ///   Provides access to PMS configuration-items stored in PMSSettings table in database
-  /// </summary>
-  TPMSSettings = class
+  TPMSSettingsGroup = class
   private
-    FPMSDataset: TRoomerDataset;
-    procedure PutSettingsValue(KeyGroup, Key, Value: String; CreateIfNotExists : Boolean = False);
-    function GetSettingsAsBoolean(KeyGroup, Key : String; ExceptionOnNotFound : Boolean = false; Default : Boolean = False) : Boolean;
-    procedure SetSettingsAsBoolean(KeyGroup, Key: String; Value : Boolean; CreateIfNotExists: Boolean = False);
-    function GetSettingsAsInteger(KeyGroup, Key : String; ExceptionOnNotFound : Boolean = false; Default : Integer = 0) : Integer;
-    procedure SetSettingsAsInteger(KeyGroup, Key : String; Value : Integer; CreateIfNotExists : Boolean = False);
-    function GetSettingsAsString(KeyGroup, Key : String; ExceptionOnNotFound : Boolean = false; Default : String = '') : String;
-    procedure SetSettingsAsString(KeyGroup, Key : String; Value : String; CreateIfNotExists : Boolean = False);
+    FPMSAccessor: TPMSSettingsAccessor;
+  protected
+    function GetKeyGroup: string; virtual; abstract;
+    procedure SaveSetting(const aKey: string; const aValue: string; aOptions: TPMSSettingsGetSetOptions = [psoCreateIfNotExists]); overload;
+    procedure SaveSetting(const aKey: string; const aValue: boolean; aOptions: TPMSSettingsGetSetOptions = [psoCreateIfNotExists]); overload;
+    procedure SaveSetting(const aKey: string; const aValue: integer; aOptions: TPMSSettingsGetSetOptions = [psoCreateIfNotExists]); overload;
+    function GetSettingsAsBoolean(const aKey : String; aDefault : Boolean = False; aOptions: TPMSSettingsGetSetOptions = []) : Boolean;
+    function GetSettingsAsInteger(const aKey : String; aDefault : Integer = 0; aOptions: TPMSSettingsGetSetOptions = []) : Integer;
+    function GetSettingsAsString(const aKey : String; const aDefault : String = ''; aOptions: TPMSSettingsGetSetOptions = []) : String;
+  public
+    constructor Create(aAccessor: TPMSSettingsAccessor);
+  end;
 
-    function GetMandatoryCheckinFields: TMandatoryCheckInFieldSet;
-    procedure SetMandatoryCheckinFields(const Value: TMandatoryCheckInFieldSet);
-    function GetBetaFunctionsAvailable: boolean;
-    procedure SetBetaFunctionsAvailable(const Value: boolean);
-    function GetEditAllGuestsNationality: boolean;
-    procedure SetEditAllGuestsNationality(const Value: boolean);
+
+  TPMSSettingsInvoice = class(TPMSSettingsGroup)
+  private const
+    cInvoiceHandlingGroup = 'INVOICE_HANDLING_FUNCTIONS';
+    cInvoiceHandlingShowAsPaidWhenZero = 'SHOW_AS_PAID_WHEN_ZERO';
+    cAllowPaymentModifications = 'ALLOW_PAYMENT_MODIFICATIONS';
+    cAllowDeletingItemsFromInvoice = 'ALLOW_DELETING_FROM_INVOICE';
+    cAllowTogglingOfCityTaxes = 'ALLOW_TOGGLING_OF_CITY_TAXES_INVOICE';
+    cShowIncludedBreakfastOnInvoice = 'SHOW_INCLUDED_BREAKFAST_ON_INVOICE';
+    cShowRoomRentPerDay = 'SHOW_ROOMRENT_PER_DAY';
+  private
     function GetShowInvoiceAsPaidWhenStatusIsZero: boolean;
     procedure SetShowInvoiceAsPaidWhenStatusIsZero(const Value: boolean);
-    function GetShowIncludedBreakfastOnInvoice: boolean;
-    procedure SetShowIncludedBreakfastOnInvoice(const Value: boolean);
-    function GetAllowPaymentModification: boolean;
-    procedure SetAllowPaymentModification(const Value: boolean);
     function GetAllowDeletingItemsFromInvoice: boolean;
+    function GetAllowPaymentModification: boolean;
+    function GetAllowTogglingOfCityTaxes: boolean;
+    function GetShowIncludedBreakfastOnInvoice: boolean;
     procedure SetAllowDeletingItemsFromInvoice(const Value: boolean);
+    procedure SetAllowPaymentModification(const Value: boolean);
+    procedure SetAllowTogglingOfCityTaxes(const Value: boolean);
+    procedure SetShowIncludedBreakfastOnInvoice(const Value: boolean);
+    function GetRoomRentPerDayOninvoice: boolean;
+    procedure SetRoomRentPerDayOninvoice(const Value: boolean);
+  protected
+    function GetKeyGroup: string; override;
+  public
+    property ShowInvoiceAsPaidWhenStatusIsZero: boolean read GetShowInvoiceAsPaidWhenStatusIsZero write SetShowInvoiceAsPaidWhenStatusIsZero;
+    property ShowIncludedBreakfastOnInvoice: boolean read GetShowIncludedBreakfastOnInvoice write SetShowIncludedBreakfastOnInvoice;
+    property AllowPaymentModification: boolean read GetAllowPaymentModification write SetAllowPaymentModification;
+    property AllowDeletingItemsFromInvoice: boolean read GetAllowDeletingItemsFromInvoice write SetAllowDeletingItemsFromInvoice;
+    property AllowTogglingOfCityTaxes: boolean read GetAllowTogglingOfCityTaxes write SetAllowTogglingOfCityTaxes;
+    property RoomRentPerDayOninvoice: boolean read GetRoomRentPerDayOninvoice write SetRoomRentPerDayOninvoice;
+  end;
+
+  TPMSSettingsRatesAvailabilities = class(TPMSSettingsGroup)
+  private const
+    cRatesAndAvailabilitiesGroup = 'RATES_AND_AVAILABILITY_FUNCTIONS';
+    cTopClassAvailabilityOrderActive = 'TOP_CLASS_AVAILABILITY_ORDER_ACTIVE';
+    cMasterRateDefaultsActive = 'MASTER_RATE_DEFAULTS_ACTIVE';
+    cMasterRateCurrency = 'MASTER_RATE_CURRENCY';
+    cMasterRateCurrencyActive = 'MASTER_RATE_CURRENCY_CONERT_ACTIVE';
+  private
     function GetTopClassAvaiabilityOrderActive: boolean;
     procedure SetTopClassAvaiabilityOrderActive(const Value: boolean);
     function GetMasterRateDefaultsActive: boolean;
@@ -49,11 +76,56 @@ type
     procedure SetMasterRateCurrency(const Value: String);
     function GetMasterRateCurrencyConvert: boolean;
     procedure SetMasterRateCurrencyConvert(const Value: boolean);
-    function GetAllowTogglingOfCityTaxes: boolean;
-    procedure SetAllowTogglingOfCityTaxes(const Value: boolean);
+
+  protected
+    function GetKeyGroup: string; override;
+  public
+    property TopClassAvaiabilityOrderActive: boolean read GetTopClassAvaiabilityOrderActive write SetTopClassAvaiabilityOrderActive;
+    property MasterRateDefaultsActive: boolean read GetMasterRateDefaultsActive write SetMasterRateDefaultsActive;
+    property MasterRateCurrency: String read GetMasterRateCurrency write SetMasterRateCurrency;
+    property MasterRateCurrencyConvert: boolean read GetMasterRateCurrencyConvert write SetMasterRateCurrencyConvert;
+  end;
+
+  TPMSSettingsReservationProfile = class(TPMSSettingsGroup)
+  private const
+    cReservationProfileGroup = 'RESERVATIONPROFILE_FUNCTIONS';
+    cAllGuestsNationality = 'EDIT_ALLGUESTS_NATIONALITY';
+
+  private
+    function GetEditAllGuestsNationality: boolean;
+    procedure SetEditAllGuestsNationality(const Value: boolean);
+  protected
+    function GetKeyGroup: string; override;
+  public
+    /// <summary>
+    ///   If true then the reservation profile window contains function to change nationality of all guests
+    /// </summary>
+    property EditAllGuestsNationality: boolean read GetEditAllGuestsNationality write SetEditAllGuestsNationality;
+  end;
+
+  /// <summary>
+  ///   Provides access to PMS configuration-items stored in PMSSettings table in database
+  /// </summary>
+  TPMSSettings = class
+  private
+    FInvoiceSettings: TPMSSettingsInvoice;
+    FPMSSettingsAccessor: TPMSSettingsAccessor;
+    FMasterRatesSettings: TPMSSettingsRatesAvailabilities;
+    FReservationProfileSettngs: TPMSSettingsReservationProfile;
+  protected
+
+    function GetMandatoryCheckinFields: TMandatoryCheckInFieldSet;
+    procedure SetMandatoryCheckinFields(const Value: TMandatoryCheckInFieldSet);
+    function GetBetaFunctionsAvailable: boolean;
+    procedure SetBetaFunctionsAvailable(const Value: boolean);
 
   public
     constructor Create(aPMSDataset: TRoomerDataset);
+    destructor Destroy; override;
+
+    property InvoiceSettings: TPMSSettingsInvoice read FInvoiceSettings;
+    property MasterRatesSettings: TPMSSettingsRatesAvailabilities read FMasterRatesSettings;
+    property ReservationProfileSettings: TPMSSettingsReservationProfile read FReservationProfileSettngs;
 
     /// <summary>
     ///   Currently enabled TMandatoryCheckinFields in PMS settings
@@ -63,27 +135,8 @@ type
     ///   If true then functions marked as Beta are available in the PMS
     /// </summary>
     property BetaFunctionsAvailable: boolean read GetBetaFunctionsAvailable write SetBetaFunctionsAvailable;
-    /// <summary>
-    ///   If true then the reservation profile window contains function to change nationality of all guests
-    /// </summary>
-    property EditAllGuestsNationality: boolean read GetEditAllGuestsNationality write SetEditAllGuestsNationality;
-    /// <summary>
-    ///   If true then the room will appear as paid in the main-window of Roomer when the invoice balance for the Room-rent is zero
-    /// </summary>
-    property ShowInvoiceAsPaidWhenStatusIsZero: boolean read GetShowInvoiceAsPaidWhenStatusIsZero write SetShowInvoiceAsPaidWhenStatusIsZero;
-    property ShowIncludedBreakfastOnInvoice: boolean read GetShowIncludedBreakfastOnInvoice write SetShowIncludedBreakfastOnInvoice;
-
-    property AllowPaymentModification: boolean read GetAllowPaymentModification write SetAllowPaymentModification;
-    property AllowDeletingItemsFromInvoice: boolean read GetAllowDeletingItemsFromInvoice write SetAllowDeletingItemsFromInvoice;
-    property AllowTogglingOfCityTaxes: boolean read GetAllowTogglingOfCityTaxes write SetAllowTogglingOfCityTaxes;
-
-
-    property TopClassAvaiabilityOrderActive: boolean read GetTopClassAvaiabilityOrderActive write SetTopClassAvaiabilityOrderActive;
-    property MasterRateDefaultsActive: boolean read GetMasterRateDefaultsActive write SetMasterRateDefaultsActive;
-    property MasterRateCurrency: String read GetMasterRateCurrency write SetMasterRateCurrency;
-    property MasterRateCurrencyConvert: boolean read GetMasterRateCurrencyConvert write SetMasterRateCurrencyConvert;
-
   end;
+
 
 implementation
 
@@ -95,140 +148,35 @@ uses
 
 const
   cBetaFunctionsGroup = 'BETA_FUNCTIONS';
-  cAllGuestsNationalityGroup = 'RESERVATIONPROFILE_FUNCTIONS';
-  cInvoiceHandlingGroup = 'INVOICE_HANDLING_FUNCTIONS';
-  cRatesAndAvailabilitiesGroup = 'RATES_AND_AVAILABILITY_FUNCTIONS';
-
   cBetaFunctionsAvailableName = 'BETA_FUNCTIONS_AVAILABLE';
-  cAllGuestsNationality = 'EDIT_ALLGUESTS_NATIONALITY';
-  cInvoiceHandlingShowAsPaidWhenZero = 'SHOW_AS_PAID_WHEN_ZERO';
-  cAllowPaymentModifications = 'ALLOW_PAYMENT_MODIFICATIONS';
-  cAllowDeletingItemsFromInvoice = 'ALLOW_DELETING_FROM_INVOICE';
-  cAllowTogglingOfCityTaxes = 'ALLOW_TOGGLING_OF_CITY_TAXES_INVOICE';
-  cShowIncludedBreakfastOnInvoice = 'SHOW_INCLUDED_BREAKFAST_ON_INVOICE';
-  cTopClassAvailabilityOrderActive = 'TOP_CLASS_AVAILABILITY_ORDER_ACTIVE';
-  cMasterRateDefaultsActive = 'MASTER_RATE_DEFAULTS_ACTIVE';
-  cMasterRateCurrency = 'MASTER_RATE_CURRENCY';
-  cMasterRateCurrencyActive = 'MASTER_RATE_CURRENCY_CONERT_ACTIVE';
 
-procedure TPmsSettings.PutSettingsValue(KeyGroup, Key, Value : String; CreateIfNotExists : Boolean = False);
-begin
-  if FPMSDataset.Locate('KeyGroup;key', VarArrayOf([KeyGroup, Key]), []) then
-  begin
-    FPMSDataset.Edit;
-    try
-      FPMSDataset['value'] := Value;
-      FPMSDataset.Post;
-    except
-      FPMSDataset.Cancel;
-      raise;
-    end;
-  end else
-  if CreateIfNotExists then
-  begin
-    FPMSDataset.Insert;
-    try
-      FPMSDataset['KeyGroup'] := KeyGroup;
-      FPMSDataset['Key'] := Key;
-      FPMSDataset['value'] := Value;
-      FPMSDataset.Post;
-    except
-      FPMSDataset.Cancel;
-      raise;
-    end;
-  end;
-end;
 
 constructor TPmsSettings.Create(aPMSDataset: TRoomerDataset);
 begin
-  FPMSDataset := aPMSDataset;
+  FPMSSettingsAccessor := TPMSSettingsAccessor.Create(aPMSDataset);
+  FInvoiceSettings := TPMSSettingsInvoice.Create(FPMSSettingsAccessor);
+  FMasterRatesSettings := TPMSSettingsRatesAvailabilities.Create(FPMSSettingsAccessor);
+  FReservationProfileSettngs := TPMSSettingsReservationProfile.Create(FPMSSettingsAccessor);
 end;
 
-function TPmsSettings.GetSettingsAsBoolean(KeyGroup, Key : String; ExceptionOnNotFound : Boolean = false; Default : Boolean = False) : Boolean;
+destructor TPmsSettings.Destroy;
 begin
-  result := Default;
-  if FPMSDataset.Locate('KeyGroup;key', VarArrayOf([KeyGroup, Key]), []) then
-    result := FPMSDataset['value'] = 'TRUE'
-  else
-    if ExceptionOnNotFound then
-      raise EPMSSettingsKeyValueNotFound.Create('Key ' + Key + ' was not found in settings.');
+  FPMSSettingsAccessor.Free;
+  FInvoiceSettings.Free;
+  FMasterRatesSettings.Free;
+  FReservationProfileSettngs.Free;
+  inherited;
 end;
 
-function TPmsSettings.GetSettingsAsInteger(KeyGroup, Key : String; ExceptionOnNotFound : Boolean = false; Default : Integer = 0) : Integer;
-begin
-  result := Default;
-  if FPMSDataset.Locate('KeyGroup;key', VarArrayOf([KeyGroup, Key]), []) then
-    result := StrToIntDef(FPMSDataset['value'], Default)
-  else
-    if ExceptionOnNotFound then
-      raise EPMSSettingsKeyValueNotFound.Create('Key ' + Key + ' was not found in settings.');
-end;
-
-
-procedure TPmsSettings.SetSettingsAsInteger(KeyGroup, Key : String; Value : Integer; CreateIfNotExists : Boolean = False);
-begin
-  PutSettingsValue(KeyGroup, Key, IntToStr(Value), CreateIfNotExists);
-end;
-
-
-function TPmsSettings.GetSettingsAsString(KeyGroup, Key : String; ExceptionOnNotFound : Boolean = false; Default : String = '') : String;
-begin
-  result := Default;
-  if FPMSDataset.Locate('KeyGroup;key', VarArrayOf([KeyGroup, Key]), []) then
-    result := FPMSDataset['value']
-  else
-    if ExceptionOnNotFound then
-      raise EPMSSettingsKeyValueNotFound.Create('Key ' + Key + ' was not found in settings.');
-end;
-
-procedure TPmsSettings.SetSettingsAsString(KeyGroup, Key : String; Value : String; CreateIfNotExists : Boolean = False);
-begin
-  PutSettingsValue(KeyGroup, Key, Value, CreateIfNotExists);
-end;
-
-procedure TPmsSettings.SetSettingsAsBoolean(KeyGroup, Key : String; Value : Boolean; CreateIfNotExists : Boolean = False);
-begin
-  PutSettingsValue(KeyGroup, Key, IIF(Value, 'TRUE', 'FALSE'), CreateIfNotExists);
-end;
-
-procedure TPMSSettings.SetAllowDeletingItemsFromInvoice(const Value: boolean);
-begin
-  SetSettingsAsBoolean(cInvoiceHandlingGroup, cAllowDeletingItemsFromInvoice, Value, True);
-end;
-
-procedure TPMSSettings.SetAllowPaymentModification(const Value: boolean);
-begin
-  SetSettingsAsBoolean(cInvoiceHandlingGroup, cAllowPaymentModifications, Value, True);
-end;
-
-procedure TPMSSettings.SetAllowTogglingOfCityTaxes(const Value: boolean);
-begin
-  SetSettingsAsBoolean(cInvoiceHandlingGroup, cAllowTogglingOfCityTaxes, Value, True);
-end;
 
 procedure TPmsSettings.SetBetaFunctionsAvailable(const Value: boolean);
 begin
-  SetSettingsAsBoolean(cBetaFunctionsGroup, cBetaFunctionsAvailableName, Value, True);
+  FPMSSettingsAccessor.SaveSetting(cBetaFunctionsGroup, cBetaFunctionsAvailableName, Value);
 end;
 
-procedure TPMSSettings.SetEditAllGuestsNationality(const Value: boolean);
+procedure TPMSSettingsRatesAvailabilities.SetTopClassAvaiabilityOrderActive(const Value: boolean);
 begin
-  SetSettingsAsBoolean(cAllGuestsNationalityGroup, cAllGuestsNationality, Value, True);
-end;
-
-procedure TPMSSettings.SetShowIncludedBreakfastOnInvoice(const Value: boolean);
-begin
-  SetSettingsAsBoolean(cInvoiceHandlingGroup, cShowIncludedBreakfastOnInvoice, Value, True);
-end;
-
-procedure TPMSSettings.SetShowInvoiceAsPaidWhenStatusIsZero(const Value: boolean);
-begin
-  SetSettingsAsBoolean(cInvoiceHandlingGroup, cInvoiceHandlingShowAsPaidWhenZero, Value, True);
-end;
-
-procedure TPMSSettings.SetTopClassAvaiabilityOrderActive(const Value: boolean);
-begin
-  SetSettingsAsBoolean(cRatesAndAvailabilitiesGroup, cTopClassAvailabilityOrderActive, Value, True);
+  SaveSetting(cTopClassAvailabilityOrderActive, Value);
 end;
 
 procedure TPmsSettings.SetMandatoryCheckinFields(const Value: TMandatoryCheckInFieldSet);
@@ -236,62 +184,33 @@ var
   lMF: TMandatoryCheckinField;
 begin
   for lMF := low(lMF) to high(lMF) do
-    SetSettingsAsBoolean(lMF.PMSSettingGroup, lMF.PMSSettingName, (lMF in Value), True);
+    FPMSSettingsAccessor.SaveSetting(lMF.PMSSettingGroup, lMF.PMSSettingName, (lMF in Value));
 end;
 
-procedure TPMSSettings.SetMasterRateCurrency(const Value: String);
+procedure TPMSSettingsRatesAvailabilities.SetMasterRateCurrency(const Value: String);
 begin
-  SetSettingsAsString(cRatesAndAvailabilitiesGroup, cMasterRateCurrency, Value, True);
+  SaveSetting(cMasterRateCurrency, Value);
 end;
 
-procedure TPMSSettings.SetMasterRateCurrencyConvert(const Value: boolean);
+procedure TPMSSettingsRatesAvailabilities.SetMasterRateCurrencyConvert(const Value: boolean);
 begin
-  SetSettingsAsBoolean(cRatesAndAvailabilitiesGroup, cMasterRateCurrencyActive, Value, True);
+  SaveSetting(cMasterRateCurrencyActive, Value);
 end;
 
-procedure TPMSSettings.SetMasterRateDefaultsActive(const Value: boolean);
+procedure TPMSSettingsRatesAvailabilities.SetMasterRateDefaultsActive(const Value: boolean);
 begin
-  SetSettingsAsBoolean(cRatesAndAvailabilitiesGroup, cMasterRateDefaultsActive, Value, True);
+  SaveSetting(cMasterRateDefaultsActive, Value);
 end;
 
-function TPMSSettings.GetAllowDeletingItemsFromInvoice: boolean;
-begin
-  Result := GetSettingsAsBoolean(cInvoiceHandlingGroup , cAllowDeletingItemsFromInvoice, False, True);
-end;
-
-function TPMSSettings.GetAllowPaymentModification: boolean;
-begin
-  Result := GetSettingsAsBoolean(cInvoiceHandlingGroup , cAllowPaymentModifications, False, True);
-end;
-
-function TPMSSettings.GetAllowTogglingOfCityTaxes: boolean;
-begin
-  Result := GetSettingsAsBoolean(cInvoiceHandlingGroup, cAllowTogglingOfCityTaxes, False, True);
-end;
 
 function TPmsSettings.GetBetaFunctionsAvailable: boolean;
 begin
-  Result := GetSettingsAsBoolean(cBetaFunctionsGroup , cBetaFunctionsAvailableName, False, False );
+  Result := FPMSSettingsAccessor.GetSettingsAsBoolean(cBetaFunctionsGroup , cBetaFunctionsAvailableName, False );
 end;
 
-function TPMSSettings.GetEditAllGuestsNationality: boolean;
+function TPMSSettingsRatesAvailabilities.GetTopClassAvaiabilityOrderActive: boolean;
 begin
-  Result := GetSettingsAsBoolean(cAllGuestsNationalityGroup, cAllGuestsNationality, False, True );
-end;
-
-function TPMSSettings.GetShowIncludedBreakfastOnInvoice: boolean;
-begin
-  Result := GetSettingsAsBoolean(cInvoiceHandlingGroup, cShowIncludedBreakfastOnInvoice, False, False);
-end;
-
-function TPMSSettings.GetShowInvoiceAsPaidWhenStatusIsZero: boolean;
-begin
-  Result := GetSettingsAsBoolean(cInvoiceHandlingGroup, cInvoiceHandlingShowAsPaidWhenZero, False);
-end;
-
-function TPMSSettings.GetTopClassAvaiabilityOrderActive: boolean;
-begin
-  Result := GetSettingsAsBoolean(cRatesAndAvailabilitiesGroup, cTopClassAvailabilityOrderActive, False, False);
+  Result := GetSettingsAsBoolean(cTopClassAvailabilityOrderActive, False);
 end;
 
 function TPmsSettings.GetMandatoryCheckinFields: TMandatoryCheckInFieldSet;
@@ -300,23 +219,151 @@ var
 begin
   Result := [];
   for lMF := low(lMF) to high(lMF) do
-    if GetSettingsAsBoolean(lMF.PMsSettingGroup, lMF.PMSSettingName, False, True) then
+    if FPMSSettingsAccessor.GetSettingsAsBoolean(lMF.PMsSettingGroup, lMF.PMSSettingName, True) then
       Include(Result, lMF);
 end;
 
-function TPMSSettings.GetMasterRateCurrency: String;
+function TPMSSettingsRatesAvailabilities.GetKeyGroup: string;
 begin
-  Result := GetSettingsAsString(cRatesAndAvailabilitiesGroup, cMasterRateCurrency, False, ctrlGetString('NativeCurrency'));
+  Result := cRatesAndAvailabilitiesGroup;
 end;
 
-function TPMSSettings.GetMasterRateCurrencyConvert: boolean;
+function TPMSSettingsRatesAvailabilities.GetMasterRateCurrency: String;
 begin
-  Result := GetSettingsAsBoolean(cRatesAndAvailabilitiesGroup, cMasterRateCurrencyActive, False, False);
+  Result := GetSettingsAsString(cMasterRateCurrency, ctrlGetString('NativeCurrency'));
 end;
 
-function TPMSSettings.GetMasterRateDefaultsActive: boolean;
+function TPMSSettingsRatesAvailabilities.GetMasterRateCurrencyConvert: boolean;
 begin
-  Result := GetSettingsAsBoolean(cRatesAndAvailabilitiesGroup, cMasterRateDefaultsActive, False, False);
+  Result := GetSettingsAsBoolean(cMasterRateCurrencyActive, False);
+end;
+
+function TPMSSettingsRatesAvailabilities.GetMasterRateDefaultsActive: boolean;
+begin
+  Result := GetSettingsAsBoolean(cMasterRateDefaultsActive, False);
+end;
+
+
+
+{ TPMSSettingsInvoice }
+
+function TPMSSettingsInvoice.GetKeyGroup: string;
+begin
+  Result := cInvoiceHandlingGroup;
+end;
+
+function TPMSSettingsInvoice.GetRoomRentPerDayOninvoice: boolean;
+begin
+  result := GetSettingsAsBoolean(cShowRoomRentPerDay, false);
+end;
+
+function TPMSSettingsInvoice.GetAllowDeletingItemsFromInvoice: boolean;
+begin
+  Result := GetSettingsAsBoolean(cAllowDeletingItemsFromInvoice, True);
+end;
+
+function TPMSSettingsInvoice.GetAllowPaymentModification: boolean;
+begin
+  Result := GetSettingsAsBoolean(cAllowPaymentModifications, True);
+end;
+
+function TPMSSettingsInvoice.GetAllowTogglingOfCityTaxes: boolean;
+begin
+  Result := GetSettingsAsBoolean(cAllowTogglingOfCityTaxes, True);
+end;
+
+function TPMSSettingsInvoice.GetShowIncludedBreakfastOnInvoice: boolean;
+begin
+  Result := GetSettingsAsBoolean(cShowIncludedBreakfastOnInvoice, False);
+end;
+
+function TPMSSettingsInvoice.GetShowInvoiceAsPaidWhenStatusIsZero: boolean;
+begin
+  Result := GetSettingsAsBoolean(cInvoiceHandlingShowAsPaidWhenZero, False);
+end;
+
+procedure TPMSSettingsInvoice.SetAllowDeletingItemsFromInvoice(const Value: boolean);
+begin
+  SaveSetting(cAllowDeletingItemsFromInvoice, Value);
+end;
+
+procedure TPMSSettingsInvoice.SetAllowPaymentModification(const Value: boolean);
+begin
+  SaveSetting(cAllowPaymentModifications, Value);
+end;
+
+procedure TPMSSettingsInvoice.SetAllowTogglingOfCityTaxes(const Value: boolean);
+begin
+  SaveSetting(cAllowTogglingOfCityTaxes, Value);
+end;
+
+procedure TPMSSettingsInvoice.SetRoomRentPerDayOninvoice(const Value: boolean);
+begin
+  SaveSetting(cShowRoomRentPerDay, Value);
+end;
+
+procedure TPMSSettingsInvoice.SetShowIncludedBreakfastOnInvoice(const Value: boolean);
+begin
+  SaveSetting(cShowIncludedBreakfastOnInvoice, Value);
+end;
+
+procedure TPMSSettingsInvoice.SetShowInvoiceAsPaidWhenStatusIsZero(const Value: boolean);
+begin
+  SaveSetting(cInvoiceHandlingShowAsPaidWhenZero, Value);
+end;
+
+{ TPMSSettingsGroup }
+
+constructor TPMSSettingsGroup.Create(aAccessor: TPMSSettingsAccessor);
+begin
+  FPMSAccessor := aAccessor;
+end;
+
+procedure TPMSSettingsGroup.SaveSetting(const aKey, aValue: string; aOptions: TPMSSettingsGetSetOptions = [psoCreateIfNotExists]);
+begin
+  FPMSAccessor.SaveSetting(GetKeyGroup, aKey, aValue, aOptions);
+end;
+
+procedure TPMSSettingsGroup.SaveSetting(const aKey: string; const aValue: boolean; aOptions: TPMSSettingsGetSetOptions = [psoCreateIfNotExists]);
+begin
+  FPMSAccessor.SaveSetting(GetKeyGroup, aKey, aValue, aOptions);
+end;
+
+function TPMSSettingsGroup.GetSettingsAsBoolean(const aKey : String; aDefault : Boolean = False; aOptions: TPMSSettingsGetSetOptions = []) : Boolean;
+begin
+  Result := FPMSAccessor.GetSettingsAsBoolean(GetKeyGroup, aKey, aDefault, aOptions);
+end;
+
+function TPMSSettingsGroup.GetSettingsAsInteger(const aKey: String; aDefault: Integer; aOptions: TPMSSettingsGetSetOptions): Integer;
+begin
+  Result := FPMSAccessor.GetSettingsAsInteger(GetKeyGroup, aKey, aDefault, aOptions);
+end;
+
+function TPMSSettingsGroup.GetSettingsAsString(const aKey: String; const aDefault: String; aOptions: TPMSSettingsGetSetOptions): String;
+begin
+  Result := FPMSAccessor.GetSettingsAsString(GetKeyGroup, aKey, aDefault, aOptions);
+end;
+
+procedure TPMSSettingsGroup.SaveSetting(const aKey: string; const aValue: integer; aOptions: TPMSSettingsGetSetOptions = [psoCreateIfNotExists]);
+begin
+  FPMSAccessor.SaveSetting(GetKeyGroup, aKey, aValue, aOptions);
+end;
+
+{ TPMSsettingsReservationProfile }
+
+function TPMSsettingsReservationProfile.GetEditAllGuestsNationality: boolean;
+begin
+  Result := GetSettingsAsBoolean(cAllGuestsNationality, False);
+end;
+
+function TPMSsettingsReservationProfile.GetKeyGroup: string;
+begin
+  Result := cReservationProfileGroup;
+end;
+
+procedure TPMSsettingsReservationProfile.SetEditAllGuestsNationality(const Value: boolean);
+begin
+  SaveSetting(cAllGuestsNationality, Value);
 end;
 
 end.

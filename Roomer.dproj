@@ -844,6 +844,7 @@
         </DCCReference>
         <DCCReference Include="OpenAPI\uCredentialsAPICaller.pas"/>
         <DCCReference Include="RoomerExceptionHandling.pas"/>
+        <DCCReference Include="PMSSettings\uPMSSettingsAccessor.pas"/>
         <None Include="Roomer.todo"/>
         <None Include="notes.txt"/>
         <None Include="Roomer.inc"/>

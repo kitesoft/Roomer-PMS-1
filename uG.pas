@@ -275,7 +275,6 @@ type
     qDefaultSendCCEmailToHotel : Boolean;
     qRatesManagedByRoomer : Boolean;
     qRestrictWithdrawalWithoutGuarantee : Boolean;
-    qExpandRoomRentOnInvoice : Boolean;
 
     qStayd3pActive : Boolean;
 

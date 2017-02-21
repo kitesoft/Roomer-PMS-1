@@ -5588,7 +5588,7 @@ function TfrmMain.getInvoiceMadeColor(PaymentInvoice: integer; NoRent: boolean;
   offColor, onColor, onGroupColor: integer; GroupAccount: boolean): integer;
 begin
   result := offColor;
-  if (NoRent AND glb.PMSSettings.ShowInvoiceAsPaidWhenStatusIsZero) then
+  if (NoRent AND glb.PMSSettings.InvoiceSettings.ShowInvoiceAsPaidWhenStatusIsZero) then
     exit;
 
   case PaymentInvoice of
@@ -11191,7 +11191,7 @@ end;
 
 procedure TfrmMain.SetPMSVisibilities;
 begin
-  if glb.PMSSettings.MasterRateDefaultsActive then
+  if glb.PMSSettings.MasterRatesSettings.MasterRateDefaultsActive then
     btnDefaultMasterRates.Visible := ivAlways
   else
     btnDefaultMasterRates.Visible := ivNever;

@@ -268,7 +268,8 @@ uses
   uRoomerHotelServicesCommunicationModel_RequestsResponses in 'OpenAPI\schema\uRoomerHotelServicesCommunicationModel_RequestsResponses.pas',
   uRptUserActivity in 'ActivityLogs\uRptUserActivity.pas' {frmUserActivityReport},
   uCredentialsAPICaller in 'OpenAPI\uCredentialsAPICaller.pas',
-  RoomerExceptionHandling in 'RoomerExceptionHandling.pas';
+  RoomerExceptionHandling in 'RoomerExceptionHandling.pas',
+  uPMSSettingsAccessor in 'PMSSettings\uPMSSettingsAccessor.pas';
 
 {$R *.RES}
 
@@ -298,7 +299,7 @@ begin
     TSplashFormManager.Show;
 
     Application.CreateForm(TD, D);
-    D.ApplicationId := cOpenAPIAppicationID;
+  D.ApplicationId := cOpenAPIAppicationID;
 
     Application.CreateForm(TDReportData, DReportData);
     TSplashFormManager.UpdateProgress('Loading forms...');
