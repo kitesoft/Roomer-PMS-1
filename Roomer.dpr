@@ -271,7 +271,8 @@ uses
   RoomerExceptionHandling in 'RoomerExceptionHandling.pas',
   uRoomerHotelServicesCommunicationModel_RunningTabs in 'OpenAPI\schema\uRoomerHotelServicesCommunicationModel_RunningTabs.pas',
   uRoomerSchema in 'OpenAPI\schema\uRoomerSchema.pas',
-  uServicesRunningTabAPICaller in 'OpenAPI\uServicesRunningTabAPICaller.pas';
+  uServicesRunningTabAPICaller in 'OpenAPI\uServicesRunningTabAPICaller.pas',
+  uInvoiceOnObjects in 'Invoice\uInvoiceOnObjects.pas' {frmInvoiceObjects};
 
 {$R *.RES}
 

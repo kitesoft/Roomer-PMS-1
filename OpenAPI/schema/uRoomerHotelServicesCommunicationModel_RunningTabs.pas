@@ -73,20 +73,20 @@ type
     FAccountKey: string;
     FGrossPrice: double;
     FVatAmount: TVatAmount;
+    FParent: integer;
     function GetTotalGrossAmount: double;
     function GetTotalNetAmount: double;
     function GetTotalVatAmount: double;
-    function GetItemVatAmount: double;
   protected
     procedure SetPropertiesFromXMLNode(const aNode: PXMLNode); override;
   public
     constructor Create;
     destructor Destroy; override;
     procedure Clear; override;
-    property TotalNetAmount: double read GetTotalNetAmount;
     property TotalVatAmount: double read GetTotalVatAmount;
     property TotalGrossAmount: double read GetTotalGrossAmount;
   published
+    property Parent: integer read FParent write FParent;
     property Index_: integer read FIndex write FIndex;
     property ProductType: TProductType read FProductType write FProductType;
     property ItemType: string read FItemType write FItemType;
@@ -94,32 +94,62 @@ type
 
     property Description: string read FDescription write FDescription;
     property PurchaseDate: TDateTime read FPurchaseDate write FPurchaseDate;
+    property InvoiceIndex: integer read FInvoiceIndex write FInvoiceIndex;
+    property Room: string read FRoom write FRoom;
+    property Source: string read FSource write FSource;
+    property GuestName: string read FGuestName write FGuestName;
+
+
     property Quantity: double read FQuantity write FQuantity;
     property NettoPrice: double read FNettoPrice write FNettoPrice;
     property GrossPrice: double read FGrossPrice write FGrossPrice;
     property ItemVatAmount: TVatAmount read FVatAmount write FVatAmount;
+
+    property TotalNetAmount: double read GetTotalNetAmount;
   end;
   TRunnningTabProductList = TObjectList<TRunningTabProduct>;
 
 
   TRunningTabPayment = class(TxsdBaseObject)
     type
-      TPaymenttype = (itUnknown, itRoomRent, itStayTax, itDiscount, itSale);
-      TPaymentTypeHelper = record helper for TPaymentType
-      public
-        class function FromString(const Value: string): TPaymentType; static;
-      end;
+      TPaymenttype = (iptDownPayment, iptInvoicePayment);
 
   private
+    FCurrencyCode: String;
+    FAutoGen: String;
+    FNotes: String;
+    FCUrrencyRate: Double;
+    FPaymentType: Integer;
+    FPersonId: Integer;
+    FInvoicePaymentType: TPaymenttype;
+    FAmount: Double;
+    FDescription: String;
+    FStaff: String;
+    FPayDate: TDate;
+    FAccountKey: String;
+    FID: Integer;
+    FPayTypeCode: string;
   protected
     procedure SetPropertiesFromXMLNode(const aNode: PXMLNode); override;
   public
-    constructor Create;
-    destructor Destroy; override;
     procedure Clear; override;
   published
+    property InvoicePaymentType: TPaymenttype read FInvoicePaymentType write FInvoicePaymentType;
+    property AutoGen: String read FAutoGen write FAutoGen;
+    property ID: Integer read Fid write FID;
+    property PaymentType: Integer read FPaymentType write FPaymentType;
+    property PayTypeCode: string read FPayTypeCode write FPayTypeCode;
+    property PersonId: Integer read FPersonId write FPersonId;
+    property PayDate: TDate read FPayDate write FPayDate;
+    property AccountKey: String read FAccountKey write FAccountKey;
+    property Amount: Double read FAmount write FAmount;
+    property Description: String read FDescription write FDescription;
+    property Notes: String read FNotes write FNotes;
+    property Staff: String read FStaff write FStaff;
+    property CurrencyCode: String read FCurrencyCode write FCurrencyCode;
+    property CurrencyRate: Double read FCUrrencyRate write FCurrencyRate;
   end;
-  TRunnningTabPay,entList = TObjectList<TRunningTabPayment>;
+  TRunningTabPaymentList = TObjectList<TRunningTabPayment>;
 
   TRunningTab = class(TxsdBaseObject)
   type
@@ -134,13 +164,15 @@ type
     FDescription: string;
     FCurrency: string;
     FProductList: IList<TRunningTabProduct>;
+    FPaymentList: IList<TRunningTabPayment>;
     FRunningTabCustomer: TRunningTabCustomer;
     FTotalVatAmount: double;
     FTotalNetAmount: double;
     FTotalGrossAmount: double;
     FBalance: double;
-    function GetRunningsTabProductList: TRunnningTabProductList;
+    function GetRunningTabProductList: TRunnningTabProductList;
     function GetRunningTabCustomer: TRunningTabCustomer;
+    function GetRunningTabPaymentList: TRunningTabPaymentList;
   protected
     procedure SetPropertiesFromXMLNode(const aNode: PXMLNode); override;
   public
@@ -158,7 +190,8 @@ type
     property Balance: double read FBalance write FBalance;
 
     property Customer: TRunningTabCustomer read GetRunningTabCustomer;
-    property ProductList: TRunnningTabProductList read GetRunningsTabProductList;
+    property ProductList: TRunnningTabProductList read GetRunningTabProductList;
+    property PaymentList: TRunningTabPaymentList read GetRunningTabPaymentList;
   end;
 
   TRunningTabList = TObjectlist<TRunningTab>;
@@ -257,11 +290,6 @@ begin
   inherited;
 end;
 
-function TRunningTabProduct.GetItemVatAmount: double;
-begin
-  Result := FGrossPrice
-end;
-
 function TRunningTabProduct.GetTotalGrossAmount: double;
 begin
   Result := FQuantity * FGrossPrice;
@@ -283,7 +311,7 @@ var
 begin
   inherited;
 
-  if aNode.SelectNodesNS(cNameSpaceURI, 'text', lNodeList, 1) then
+  if aNode.SelectNodesNS(cNameSpaceURI, 'text1', lNodeList, 1) then
     FDescription := lNodeList.GetFirst.Text;
   if aNode.SelectNodesNS(cNameSpaceURI, 'purchaseDate', lNodeList, 1) then
     FPurchaseDate := XMLToDate(lNodeList.GetFirst.Text);
@@ -300,6 +328,10 @@ begin
   FProductType:= TProductType.FromString( aNode.Attributes['type']);
   FItemType := aNode.Attributes['roomerId'];
   FAccountKey := aNode.Attributes['accountKey'];
+  FInvoiceIndex := StrToIntDef(aNode.Attributes['invoiceIndex'], -1);
+  FRoom := aNode.Attributes['room'];
+  FSource := aNode.Attributes['source'];
+  FGuestName := aNode.Attributes['guestName'];
 end;
 
 { TRunningTabsOverview }
@@ -367,8 +399,6 @@ begin
 end;
 
 procedure TVATAmount.SetPropertiesFromXMLNode(const aNode: PXMLNode);
-var
-  lnodeList: IXMLNodeList;
 begin
   inherited;
 
@@ -416,6 +446,7 @@ begin
   inherited;
   FRunningTabCustomer := TRunningTabCustomer.Create;
   FProductList := TRunnningTabProductList.Create;
+  FPaymentList := TRunningTabPaymentList.Create;
 end;
 
 destructor TRunningTab.Destroy;
@@ -424,7 +455,12 @@ begin
   inherited;
 end;
 
-function TRunningTab.GetRunningsTabProductList: TRunnningTabProductList;
+function TRunningTab.GetRunningTabPaymentList: TRunningTabPaymentList;
+begin
+  Result := FPaymentList as TRunningTabPaymentList;
+end;
+
+function TRunningTab.GetRunningTabProductList: TRunnningTabProductList;
 begin
   Result := FProductList as TRunnningTabProductList;
 end;
@@ -439,6 +475,7 @@ var
   lnodeList: IXMLNodeList;
   lProdNode: PXMLNode;
   lProduct: TRunningTabProduct;
+  lPayment: TRunningTabPayment;
 begin
   inherited;
 
@@ -466,6 +503,20 @@ begin
   finally
     FProductList.OnChanged.Enabled := true;
   end;
+
+  FPaymentList.onChanged.Enabled := false;
+  try
+    if aNode.SelectNodesNS(cNameSpaceURI, 'payments/payment', lNodeList) then
+      for lProdNode in lnodeList do
+      begin
+        lPayment := TRunningTabPayment.Create;
+        lPayment.SetPropertiesFromXMLNode(lProdNode);
+        FPaymentList.Add(lPayment);
+      end;
+  finally
+    FProductList.OnChanged.Enabled := true;
+  end;
+
 end;
 
 { TRunningTab.TRunningTabTypeHelper }
@@ -478,6 +529,53 @@ begin
     Result := ttGroup
   else
     Result := ttUnknown;
+end;
+
+{ TRunningTabPayment }
+
+procedure TRunningTabPayment.Clear;
+begin
+  inherited;
+  FCurrencyCode := '';
+  FAutoGen := '';
+  FNotes := '';
+  FCUrrencyRate := 1;
+  FPaymentType := 0;
+  FPayTypeCode := '';
+  FPersonId := 0;
+  FInvoicePaymentType := iptInvoicePayment;
+  FAmount := 0;
+  FDescription := '';
+  FStaff := '';
+  FPayDate := 0;
+  FAccountKey := '';
+  FID := -1;
+end;
+
+procedure TRunningTabPayment.SetPropertiesFromXMLNode(const aNode: PXMLNode);
+var
+  lnodeList: IXMLNodeList;
+begin
+  inherited;
+  InvoicePaymentType := iptInvoicePayment;
+  ID := StrToIntdef(aNode.Attributes['id'], -1);
+  PaymentType := StrToIntdef(aNode.Attributes['paymentType'], -1);
+  PayTypeCode := aNode.Attributes['roomerCode'];
+  AccountKey := aNode.Attributes['accountKey'];
+  CurrencyCode := aNode.Attributes['currency'];
+  CurrencyRate := XMLToFloat(aNode.Attributes['currencyRate'], 1.00);
+
+  if aNode.SelectNodesNS(cNameSpaceURI, 'description', lNodeList, 1) then
+    FDescription:=  lNodeList.GetFirst.Text;
+
+  if aNode.SelectNodesNS(cNameSpaceURI, 'notes', lNodeList, 1) then
+    FNotes :=  lNodeList.GetFirst.Text;
+
+  if aNode.SelectNodesNS(cNameSpaceURI, 'paymentDate', lNodeList, 1) then
+    FPayDate :=  XMLToDate(lNodeList.GetFirst.Text);
+
+  if aNode.SelectNodesNS(cNameSpaceURI, 'amount', lNodeList, 1) then
+    FAmount := XMLToFloat(lNodeList.GetFirst.Text, 0.00);
 end;
 
 end.

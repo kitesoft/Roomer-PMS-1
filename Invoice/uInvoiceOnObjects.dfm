@@ -1,4 +1,4 @@
-object frmInvoice: TfrmInvoice
+inherited frmInvoiceObjects: TfrmInvoiceObjects
   Left = 686
   Top = 154
   HorzScrollBar.Visible = False
@@ -6,58 +6,33 @@ object frmInvoice: TfrmInvoice
   BorderIcons = [biMinimize, biMaximize]
   ClientHeight = 681
   ClientWidth = 1096
-  Color = clBtnFace
   Constraints.MinWidth = 910
   DoubleBuffered = True
-  Font.Charset = DEFAULT_CHARSET
-  Font.Color = clWindowText
   Font.Height = -11
-  Font.Name = 'Tahoma'
-  Font.Style = []
-  KeyPreview = True
   Menu = MainMenu1
-  OldCreateOrder = False
   Position = poDesigned
   Scaled = False
-  ShowHint = True
-  OnCreate = FormCreate
-  OnDestroy = FormDestroy
-  OnKeyDown = FormKeyDown
-  OnResize = FormResize
-  OnShow = FormShow
+  ExplicitWidth = 1112
+  ExplicitHeight = 740
   PixelsPerInch = 96
   TextHeight = 13
-  object PANmAIN: TsPanel
+  inherited sbStatusBar: TsStatusBar
+    Top = 661
+    Width = 1096
+    ExplicitTop = 642
+    ExplicitWidth = 1096
+  end
+  object pnlMain: TsPanel [1]
     Left = 0
     Top = 0
     Width = 1096
-    Height = 662
+    Height = 661
     Align = alClient
     BevelOuter = bvNone
     Color = clWhite
     TabOrder = 1
     SkinData.SkinSection = 'PANEL'
-    object lblChangedInvoiceActive: TsLabel
-      Left = 0
-      Top = 166
-      Width = 1096
-      Height = 3
-      Hint = 'Search Filter Active'
-      Align = alTop
-      AutoSize = False
-      Color = clRed
-      ParentColor = False
-      ParentFont = False
-      Visible = False
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = 15789037
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      UseSkinColor = False
-      ExplicitTop = 27
-      ExplicitWidth = 1153
-    end
+    ExplicitHeight = 642
     object Panel1: TsPanel
       Left = 0
       Top = 0
@@ -271,7 +246,6 @@ object frmInvoice: TfrmInvoice
         ParentFont = False
         ReadOnly = True
         TabOrder = 10
-        OnDblClick = edtCurrencyDblClick
         SkinData.SkinSection = 'EDIT'
         BoundLabel.Font.Charset = DEFAULT_CHARSET
         BoundLabel.Font.Color = clWindowText
@@ -287,7 +261,6 @@ object frmInvoice: TfrmInvoice
         Caption = 'Invoice header method'
         ParentBackground = False
         TabOrder = 9
-        OnClick = rgrInvoiceTypeClick
         SkinData.SkinSection = 'GROUPBOX'
         ItemIndex = 1
         Items.Strings = (
@@ -313,7 +286,6 @@ object frmInvoice: TfrmInvoice
         ParentFont = False
         ReadOnly = True
         TabOrder = 12
-        OnDblClick = edtRateDblClick
         SkinData.SkinSection = 'EDIT'
         BoundLabel.Font.Charset = DEFAULT_CHARSET
         BoundLabel.Font.Color = clWindowText
@@ -351,7 +323,6 @@ object frmInvoice: TfrmInvoice
         Height = 20
         Caption = 'Get..'
         TabOrder = 11
-        OnClick = edtCurrencyDblClick
         SkinData.SkinSection = 'BUTTON'
       end
       object btnGetRate: TsButton
@@ -361,7 +332,6 @@ object frmInvoice: TfrmInvoice
         Height = 20
         Caption = 'Get..'
         TabOrder = 13
-        OnClick = edtRateDblClick
         SkinData.SkinSection = 'BUTTON'
       end
       object edtRoomGuest: TsEdit
@@ -403,8 +373,6 @@ object frmInvoice: TfrmInvoice
         MaxLength = 15
         ParentFont = False
         TabOrder = 0
-        OnChange = edtCustomerChange
-        OnDblClick = edtCustomerDblClick
         SkinData.SkinSection = 'EDIT'
         BoundLabel.Font.Charset = DEFAULT_CHARSET
         BoundLabel.Font.Color = clWindowText
@@ -428,7 +396,6 @@ object frmInvoice: TfrmInvoice
         MaxLength = 15
         ParentFont = False
         TabOrder = 3
-        OnDblClick = edtCustomerDblClick
         SkinData.SkinSection = 'EDIT'
         BoundLabel.Font.Charset = DEFAULT_CHARSET
         BoundLabel.Font.Color = clWindowText
@@ -553,7 +520,6 @@ object frmInvoice: TfrmInvoice
         Height = 17
         Caption = 'Clear addresses'
         TabOrder = 2
-        OnClick = btnClearAddressesClick
         SkinData.SkinSection = 'BUTTON'
       end
       object btnExit: TcxButton
@@ -573,7 +539,6 @@ object frmInvoice: TfrmInvoice
         SpeedButtonOptions.Flat = True
         TabOrder = 17
         WordWrap = True
-        OnClick = btnExitClick
       end
       object btnInvoice: TcxButton
         Left = 929
@@ -626,7 +591,6 @@ object frmInvoice: TfrmInvoice
         TabOrder = 16
         Text = '0'
         Visible = False
-        OnChange = edtTotalChange
         SkinData.SkinSection = 'EDIT'
         BoundLabel.Font.Charset = DEFAULT_CHARSET
         BoundLabel.Font.Color = clWindowText
@@ -654,21 +618,22 @@ object frmInvoice: TfrmInvoice
         Height = 17
         Caption = '...'
         TabOrder = 1
-        OnClick = edtCustomerDblClick
         SkinData.SkinSection = 'BUTTON'
       end
     end
     object sPanel5: TsPanel
       Left = 0
-      Top = 169
+      Top = 166
       Width = 1096
-      Height = 493
+      Height = 495
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
+      ExplicitTop = 169
+      ExplicitHeight = 473
       object Panel2: TsPanel
         Left = 0
-        Top = 341
+        Top = 343
         Width = 1096
         Height = 152
         Align = alBottom
@@ -676,6 +641,7 @@ object frmInvoice: TfrmInvoice
         ParentColor = True
         TabOrder = 0
         SkinData.SkinSection = 'PANEL'
+        ExplicitTop = 321
         object memExtraText: TMemo
           Left = 1
           Top = 1
@@ -797,7 +763,6 @@ object frmInvoice: TfrmInvoice
             ParentFont = False
             ReadOnly = True
             TabOrder = 0
-            OnChange = edtTotalChange
             SkinData.SkinSection = 'EDIT'
             BoundLabel.Font.Charset = DEFAULT_CHARSET
             BoundLabel.Font.Color = clWindowText
@@ -822,7 +787,6 @@ object frmInvoice: TfrmInvoice
             ParentFont = False
             ReadOnly = True
             TabOrder = 1
-            OnChange = edtTotalChange
             SkinData.SkinSection = 'EDIT'
             BoundLabel.Font.Charset = DEFAULT_CHARSET
             BoundLabel.Font.Color = clWindowText
@@ -847,7 +811,6 @@ object frmInvoice: TfrmInvoice
             ParentFont = False
             ReadOnly = True
             TabOrder = 2
-            OnChange = edtTotalChange
             SkinData.SkinSection = 'EDIT'
             BoundLabel.Font.Charset = DEFAULT_CHARSET
             BoundLabel.Font.Color = clWindowText
@@ -872,7 +835,6 @@ object frmInvoice: TfrmInvoice
             ParentFont = False
             ReadOnly = True
             TabOrder = 3
-            OnChange = edtTotalChange
             SkinData.SkinSection = 'EDIT'
             BoundLabel.Font.Charset = DEFAULT_CHARSET
             BoundLabel.Font.Color = clWindowText
@@ -897,7 +859,6 @@ object frmInvoice: TfrmInvoice
             ParentFont = False
             ReadOnly = True
             TabOrder = 4
-            OnChange = edtTotalChange
             SkinData.SkinSection = 'EDIT'
             BoundLabel.Font.Charset = DEFAULT_CHARSET
             BoundLabel.Font.Color = clWindowText
@@ -993,10 +954,8 @@ object frmInvoice: TfrmInvoice
             TabOrder = 1
             LookAndFeel.NativeStyle = False
             object tvPayments: TcxGridDBTableView
-              OnMouseDown = tvPaymentsMouseDown
               Navigator.Buttons.CustomButtons = <>
-              OnCellDblClick = tvPaymentsCellDblClick
-              DataController.DataSource = PaymentsDS
+              DataController.DataSource = dsPaymentObjects
               DataController.Summary.DefaultGroupSummaryItems = <>
               DataController.Summary.FooterSummaryItems = <>
               DataController.Summary.SummaryGroups = <>
@@ -1125,7 +1084,6 @@ object frmInvoice: TfrmInvoice
           Height = 40
           Caption = 'Toggle lodging tax'
           TabOrder = 7
-          OnClick = btnRemoveLodgingTax2Click
           SkinData.SkinSection = 'BUTTON'
         end
         object btnReservationNotes: TsButton
@@ -1135,7 +1093,6 @@ object frmInvoice: TfrmInvoice
           Height = 40
           Caption = 'Reservation notes'
           TabOrder = 5
-          OnClick = btnReservationNotesClick
           SkinData.SkinSection = 'BUTTON'
         end
         object btnSaveChanges: TsButton
@@ -1155,7 +1112,6 @@ object frmInvoice: TfrmInvoice
           ParentFont = False
           TabOrder = 8
           Visible = False
-          OnClick = btnSaveChangesClick
           SkinData.CustomFont = True
           SkinData.ColorTone = clRed
         end
@@ -1169,7 +1125,6 @@ object frmInvoice: TfrmInvoice
           AutoSize = True
           BevelOuter = bvNone
           TabOrder = 9
-          OnResize = pnlPaymentButtonsResize
           SkinData.SkinSection = 'PANEL'
           object btnAddDownPayment: TsButton
             Left = 0
@@ -1189,7 +1144,6 @@ object frmInvoice: TfrmInvoice
             Align = alRight
             Caption = 'Edit Down Payment'
             TabOrder = 1
-            OnClick = btnEditDownPaymentClick
             SkinData.SkinSection = 'BUTTON'
           end
           object btnDeleteDownpayment: TsButton
@@ -1200,7 +1154,6 @@ object frmInvoice: TfrmInvoice
             Align = alRight
             Caption = 'Delete Down Payment'
             TabOrder = 2
-            OnClick = btnDeleteDownpaymentClick
             SkinData.SkinSection = 'BUTTON'
           end
         end
@@ -1209,7 +1162,7 @@ object frmInvoice: TfrmInvoice
         Left = 0
         Top = 91
         Width = 1040
-        Height = 250
+        Height = 252
         Align = alClient
         BevelOuter = bvNone
         Caption = 'sPanel1'
@@ -1219,247 +1172,17 @@ object frmInvoice: TfrmInvoice
         Padding.Bottom = 5
         TabOrder = 2
         SkinData.SkinSection = 'PANEL'
-        object agrLines: TAdvStringGrid
-          Left = 10
-          Top = 5
-          Width = 1020
-          Height = 240
-          Cursor = crDefault
-          Align = alClient
-          BevelInner = bvNone
-          BevelOuter = bvNone
-          BorderStyle = bsNone
-          ColCount = 7
-          DefaultRowHeight = 19
-          DrawingStyle = gdsClassic
-          FixedCols = 0
-          RowCount = 2
-          Font.Charset = ANSI_CHARSET
-          Font.Color = clBlack
-          Font.Height = -12
-          Font.Name = 'Courier New'
-          Font.Style = []
-          Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goColSizing, goEditing, goThumbTracking]
-          ParentFont = False
-          ScrollBars = ssBoth
-          TabOrder = 0
-          OnDrawCell = agrLinesDrawCell
-          OnGetEditText = agrLinesGetEditText
-          OnKeyDown = agrLinesKeyDown
-          OnMouseDown = agrLinesMouseDown
-          HoverRowCells = [hcNormal, hcSelected]
-          OnGetCellColor = agrLinesGetCellColor
-          OnGetAlignment = agrLinesGetAlignment
-          OnRowChanging = agrLinesRowChanging
-          OnDblClickCell = agrLinesDblClickCell
-          OnCanEditCell = agrLinesCanEditCell
-          OnCellValidate = agrLinesCellValidate
-          OnCheckBoxClick = agrLinesCheckBoxClick
-          OnColumnSize = agrLinesColumnSize
-          ActiveCellFont.Charset = DEFAULT_CHARSET
-          ActiveCellFont.Color = clWindowText
-          ActiveCellFont.Height = -13
-          ActiveCellFont.Name = 'Tahoma'
-          ActiveCellFont.Style = [fsBold]
-          ControlLook.FixedGradientHoverFrom = clGray
-          ControlLook.FixedGradientHoverTo = clWhite
-          ControlLook.FixedGradientDownFrom = clGray
-          ControlLook.FixedGradientDownTo = clSilver
-          ControlLook.DropDownHeader.Font.Charset = DEFAULT_CHARSET
-          ControlLook.DropDownHeader.Font.Color = clWindowText
-          ControlLook.DropDownHeader.Font.Height = -13
-          ControlLook.DropDownHeader.Font.Name = 'Tahoma'
-          ControlLook.DropDownHeader.Font.Style = []
-          ControlLook.DropDownHeader.Visible = True
-          ControlLook.DropDownHeader.Buttons = <>
-          ControlLook.DropDownFooter.Font.Charset = DEFAULT_CHARSET
-          ControlLook.DropDownFooter.Font.Color = clWindowText
-          ControlLook.DropDownFooter.Font.Height = -13
-          ControlLook.DropDownFooter.Font.Name = 'Tahoma'
-          ControlLook.DropDownFooter.Font.Style = []
-          ControlLook.DropDownFooter.Visible = True
-          ControlLook.DropDownFooter.Buttons = <>
-          Filter = <>
-          FilterDropDown.Font.Charset = DEFAULT_CHARSET
-          FilterDropDown.Font.Color = clWindowText
-          FilterDropDown.Font.Height = -13
-          FilterDropDown.Font.Name = 'Tahoma'
-          FilterDropDown.Font.Style = []
-          FilterDropDownClear = '(All)'
-          FilterEdit.TypeNames.Strings = (
-            'Starts with'
-            'Ends with'
-            'Contains'
-            'Not contains'
-            'Equal'
-            'Not equal'
-            'Larger than'
-            'Smaller than'
-            'Clear')
-          FixedColWidth = 24
-          FixedRowHeight = 19
-          FixedFont.Charset = DEFAULT_CHARSET
-          FixedFont.Color = clWindowText
-          FixedFont.Height = -13
-          FixedFont.Name = 'Tahoma'
-          FixedFont.Style = [fsBold]
-          FloatFormat = '%.2f'
-          HoverButtons.Buttons = <>
-          HoverButtons.Position = hbLeftFromColumnLeft
-          HTMLSettings.ImageFolder = 'images'
-          HTMLSettings.ImageBaseName = 'img'
-          PrintSettings.DateFormat = 'dd/mm/yyyy'
-          PrintSettings.Font.Charset = DEFAULT_CHARSET
-          PrintSettings.Font.Color = clWindowText
-          PrintSettings.Font.Height = -13
-          PrintSettings.Font.Name = 'Tahoma'
-          PrintSettings.Font.Style = []
-          PrintSettings.FixedFont.Charset = DEFAULT_CHARSET
-          PrintSettings.FixedFont.Color = clWindowText
-          PrintSettings.FixedFont.Height = -13
-          PrintSettings.FixedFont.Name = 'Tahoma'
-          PrintSettings.FixedFont.Style = []
-          PrintSettings.HeaderFont.Charset = DEFAULT_CHARSET
-          PrintSettings.HeaderFont.Color = clWindowText
-          PrintSettings.HeaderFont.Height = -13
-          PrintSettings.HeaderFont.Name = 'Tahoma'
-          PrintSettings.HeaderFont.Style = []
-          PrintSettings.FooterFont.Charset = DEFAULT_CHARSET
-          PrintSettings.FooterFont.Color = clWindowText
-          PrintSettings.FooterFont.Height = -13
-          PrintSettings.FooterFont.Name = 'Tahoma'
-          PrintSettings.FooterFont.Style = []
-          PrintSettings.PageNumSep = '/'
-          ScrollWidth = 21
-          SearchFooter.FindNextCaption = 'Find &next'
-          SearchFooter.FindPrevCaption = 'Find &previous'
-          SearchFooter.Font.Charset = DEFAULT_CHARSET
-          SearchFooter.Font.Color = clWindowText
-          SearchFooter.Font.Height = -13
-          SearchFooter.Font.Name = 'Tahoma'
-          SearchFooter.Font.Style = []
-          SearchFooter.HighLightCaption = 'Highlight'
-          SearchFooter.HintClose = 'Close'
-          SearchFooter.HintFindNext = 'Find next occurrence'
-          SearchFooter.HintFindPrev = 'Find previous occurrence'
-          SearchFooter.HintHighlight = 'Highlight occurrences'
-          SearchFooter.MatchCaseCaption = 'Match case'
-          SearchFooter.ResultFormat = '(%d of %d)'
-          SortSettings.DefaultFormat = ssAutomatic
-          Version = '8.2.4.1'
-          ColWidths = (
-            24
-            91
-            348
-            88
-            83
-            91
-            31)
-          object cxDBTreeList1: TcxDBTreeList
-            Left = 296
-            Top = 40
-            Width = 625
-            Height = 221
-            Hint = ''
-            Bands = <
-              item
-                Caption.Text = 'Band1'
-              end>
-            DataController.DataSource = dsInvoicelineObjects
-            DataController.ParentField = 'Parent'
-            DataController.KeyField = 'Index_'
-            Font.Charset = ANSI_CHARSET
-            Font.Color = clBlack
-            Font.Height = -13
-            Font.Name = 'Arial'
-            Font.Style = []
-            Navigator.Buttons.CustomButtons = <>
-            OptionsView.Footer = True
-            ParentFont = False
-            RootValue = 0
-            TabOrder = 4
-            object cxDBTreeList1cxDBTreeListColumn7: TcxDBTreeListColumn
-              PropertiesClassName = 'TcxCheckBoxProperties'
-              Caption.AlignHorz = taCenter
-              MinWidth = 25
-              Width = 25
-              Position.ColIndex = 0
-              Position.RowIndex = 0
-              Position.BandIndex = 0
-              Summary.FooterSummaryItems = <
-                item
-                  AlignHorz = taLeftJustify
-                  AlignVert = vaTop
-                  Kind = skCount
-                end>
-              Summary.GroupFooterSummaryItems = <>
-            end
-            object cxDBTreeList1cxDBTreeListColumn1: TcxDBTreeListColumn
-              DataBinding.FieldName = 'Description'
-              Position.ColIndex = 1
-              Position.RowIndex = 0
-              Position.BandIndex = 0
-              Summary.FooterSummaryItems = <>
-              Summary.GroupFooterSummaryItems = <>
-            end
-            object cxDBTreeList1cxDBTreeListColumn2: TcxDBTreeListColumn
-              DataBinding.FieldName = 'ItemType'
-              Position.ColIndex = 2
-              Position.RowIndex = 0
-              Position.BandIndex = 0
-              Summary.FooterSummaryItems = <>
-              Summary.GroupFooterSummaryItems = <>
-            end
-            object cxDBTreeList1cxDBTreeListColumn3: TcxDBTreeListColumn
-              DataBinding.FieldName = 'PurchaseDate'
-              Position.ColIndex = 3
-              Position.RowIndex = 0
-              Position.BandIndex = 0
-              Summary.FooterSummaryItems = <>
-              Summary.GroupFooterSummaryItems = <>
-            end
-            object cxDBTreeList1cxDBTreeListColumn4: TcxDBTreeListColumn
-              PropertiesClassName = 'TcxCalcEditProperties'
-              DataBinding.FieldName = 'Quantity'
-              Position.ColIndex = 4
-              Position.RowIndex = 0
-              Position.BandIndex = 0
-              Summary.FooterSummaryItems = <>
-              Summary.GroupFooterSummaryItems = <>
-            end
-            object cxDBTreeList1cxDBTreeListColumn5: TcxDBTreeListColumn
-              PropertiesClassName = 'TcxCurrencyEditProperties'
-              DataBinding.FieldName = 'Nettoprice'
-              Position.ColIndex = 5
-              Position.RowIndex = 0
-              Position.BandIndex = 0
-              Summary.FooterSummaryItems = <>
-              Summary.GroupFooterSummaryItems = <>
-            end
-            object cxDBTreeList1cxDBTreeListColumn6: TcxDBTreeListColumn
-              PropertiesClassName = 'TcxCurrencyEditProperties'
-              DataBinding.FieldName = 'TotalnetAmount'
-              Position.ColIndex = 6
-              Position.RowIndex = 0
-              Position.BandIndex = 0
-              Summary.FooterSummaryItems = <
-                item
-                  AlignHorz = taLeftJustify
-                  Kind = skSum
-                end>
-              Summary.GroupFooterSummaryItems = <>
-            end
-          end
-        end
+        ExplicitHeight = 230
       end
       object sPanel4: TsPanel
         AlignWithMargins = True
         Left = 1043
         Top = 94
         Width = 50
-        Height = 244
+        Height = 246
         Align = alRight
         TabOrder = 1
+        ExplicitHeight = 224
         object pnlInvoiceIndex0: TsPanel
           Left = 3
           Top = 4
@@ -1477,9 +1200,6 @@ object frmInvoice: TfrmInvoice
           ParentBackground = False
           ParentFont = False
           TabOrder = 0
-          OnClick = pnlInvoiceIndex0Click
-          OnDragDrop = pnlInvoiceIndex0DragDrop
-          OnDragOver = pnlInvoiceIndex0DragOver
           SkinData.CustomColor = True
           SkinData.CustomFont = True
           object shpInvoiceIndex0: TShape
@@ -1490,9 +1210,6 @@ object frmInvoice: TfrmInvoice
             Align = alLeft
             Brush.Color = clRed
             Pen.Style = psClear
-            OnDragDrop = shpInvoiceIndex0DragDrop
-            OnDragOver = shpInvoiceIndex0DragOver
-            OnMouseUp = shpInvoiceIndex0MouseUp
             ExplicitLeft = 1
             ExplicitTop = 1
             ExplicitHeight = 29
@@ -1505,9 +1222,6 @@ object frmInvoice: TfrmInvoice
             Align = alLeft
             Brush.Color = clBlue
             Pen.Style = psClear
-            OnDragDrop = shpInvoiceIndex0DragDrop
-            OnDragOver = shpInvoiceIndex0DragOver
-            OnMouseUp = shpInvoiceIndex0MouseUp
             ExplicitLeft = 24
             ExplicitTop = 1
             ExplicitHeight = 29
@@ -1531,9 +1245,6 @@ object frmInvoice: TfrmInvoice
           ParentBackground = False
           ParentFont = False
           TabOrder = 1
-          OnClick = pnlInvoiceIndex0Click
-          OnDragDrop = pnlInvoiceIndex0DragDrop
-          OnDragOver = pnlInvoiceIndex0DragOver
           SkinData.CustomColor = True
           SkinData.CustomFont = True
           object shpInvoiceIndex1: TShape
@@ -1543,9 +1254,6 @@ object frmInvoice: TfrmInvoice
             Height = 27
             Align = alLeft
             Pen.Style = psClear
-            OnDragDrop = shpInvoiceIndex0DragDrop
-            OnDragOver = shpInvoiceIndex0DragOver
-            OnMouseUp = shpInvoiceIndex0MouseUp
             ExplicitLeft = 17
             ExplicitHeight = 29
           end
@@ -1556,9 +1264,6 @@ object frmInvoice: TfrmInvoice
             Height = 27
             Align = alLeft
             Pen.Style = psClear
-            OnDragDrop = shpInvoiceIndex0DragDrop
-            OnDragOver = shpInvoiceIndex0DragOver
-            OnMouseUp = shpInvoiceIndex0MouseUp
             ExplicitLeft = 27
             ExplicitHeight = 29
           end
@@ -1581,9 +1286,6 @@ object frmInvoice: TfrmInvoice
           ParentBackground = False
           ParentFont = False
           TabOrder = 2
-          OnClick = pnlInvoiceIndex0Click
-          OnDragDrop = pnlInvoiceIndex0DragDrop
-          OnDragOver = pnlInvoiceIndex0DragOver
           SkinData.CustomColor = True
           SkinData.CustomFont = True
           object shpInvoiceIndex2: TShape
@@ -1593,9 +1295,6 @@ object frmInvoice: TfrmInvoice
             Height = 27
             Align = alLeft
             Pen.Style = psClear
-            OnDragDrop = shpInvoiceIndex0DragDrop
-            OnDragOver = shpInvoiceIndex0DragOver
-            OnMouseUp = shpInvoiceIndex0MouseUp
             ExplicitLeft = 17
             ExplicitHeight = 29
           end
@@ -1606,9 +1305,6 @@ object frmInvoice: TfrmInvoice
             Height = 27
             Align = alLeft
             Pen.Style = psClear
-            OnDragDrop = shpInvoiceIndex0DragDrop
-            OnDragOver = shpInvoiceIndex0DragOver
-            OnMouseUp = shpInvoiceIndex0MouseUp
             ExplicitLeft = 27
             ExplicitHeight = 29
           end
@@ -1631,9 +1327,6 @@ object frmInvoice: TfrmInvoice
           ParentBackground = False
           ParentFont = False
           TabOrder = 3
-          OnClick = pnlInvoiceIndex0Click
-          OnDragDrop = pnlInvoiceIndex0DragDrop
-          OnDragOver = pnlInvoiceIndex0DragOver
           SkinData.CustomColor = True
           SkinData.CustomFont = True
           object shpInvoiceIndex3: TShape
@@ -1643,9 +1336,6 @@ object frmInvoice: TfrmInvoice
             Height = 27
             Align = alLeft
             Pen.Style = psClear
-            OnDragDrop = shpInvoiceIndex0DragDrop
-            OnDragOver = shpInvoiceIndex0DragOver
-            OnMouseUp = shpInvoiceIndex0MouseUp
             ExplicitLeft = 17
             ExplicitHeight = 29
           end
@@ -1656,9 +1346,6 @@ object frmInvoice: TfrmInvoice
             Height = 27
             Align = alLeft
             Pen.Style = psClear
-            OnDragDrop = shpInvoiceIndex0DragDrop
-            OnDragOver = shpInvoiceIndex0DragOver
-            OnMouseUp = shpInvoiceIndex0MouseUp
             ExplicitLeft = 27
             ExplicitHeight = 29
           end
@@ -1681,9 +1368,6 @@ object frmInvoice: TfrmInvoice
           ParentBackground = False
           ParentFont = False
           TabOrder = 4
-          OnClick = pnlInvoiceIndex0Click
-          OnDragDrop = pnlInvoiceIndex0DragDrop
-          OnDragOver = pnlInvoiceIndex0DragOver
           SkinData.CustomColor = True
           SkinData.CustomFont = True
           object shpInvoiceIndex4: TShape
@@ -1693,9 +1377,6 @@ object frmInvoice: TfrmInvoice
             Height = 27
             Align = alLeft
             Pen.Style = psClear
-            OnDragDrop = shpInvoiceIndex0DragDrop
-            OnDragOver = shpInvoiceIndex0DragOver
-            OnMouseUp = shpInvoiceIndex0MouseUp
             ExplicitLeft = 17
             ExplicitHeight = 29
           end
@@ -1706,9 +1387,6 @@ object frmInvoice: TfrmInvoice
             Height = 27
             Align = alLeft
             Pen.Style = psClear
-            OnDragDrop = shpInvoiceIndex0DragDrop
-            OnDragOver = shpInvoiceIndex0DragOver
-            OnMouseUp = shpInvoiceIndex0MouseUp
             ExplicitLeft = 27
             ExplicitHeight = 29
           end
@@ -1731,9 +1409,6 @@ object frmInvoice: TfrmInvoice
           ParentBackground = False
           ParentFont = False
           TabOrder = 5
-          OnClick = pnlInvoiceIndex0Click
-          OnDragDrop = pnlInvoiceIndex0DragDrop
-          OnDragOver = pnlInvoiceIndex0DragOver
           SkinData.CustomColor = True
           SkinData.CustomFont = True
           object shpInvoiceIndex5: TShape
@@ -1743,9 +1418,6 @@ object frmInvoice: TfrmInvoice
             Height = 27
             Align = alLeft
             Pen.Style = psClear
-            OnDragDrop = shpInvoiceIndex0DragDrop
-            OnDragOver = shpInvoiceIndex0DragOver
-            OnMouseUp = shpInvoiceIndex0MouseUp
             ExplicitLeft = 17
             ExplicitHeight = 29
           end
@@ -1756,9 +1428,6 @@ object frmInvoice: TfrmInvoice
             Height = 27
             Align = alLeft
             Pen.Style = psClear
-            OnDragDrop = shpInvoiceIndex0DragDrop
-            OnDragOver = shpInvoiceIndex0DragOver
-            OnMouseUp = shpInvoiceIndex0MouseUp
             ExplicitLeft = 27
             ExplicitHeight = 29
           end
@@ -1781,9 +1450,6 @@ object frmInvoice: TfrmInvoice
           ParentBackground = False
           ParentFont = False
           TabOrder = 6
-          OnClick = pnlInvoiceIndex0Click
-          OnDragDrop = pnlInvoiceIndex0DragDrop
-          OnDragOver = pnlInvoiceIndex0DragOver
           SkinData.CustomColor = True
           SkinData.CustomFont = True
           object shpInvoiceIndex6: TShape
@@ -1793,9 +1459,6 @@ object frmInvoice: TfrmInvoice
             Height = 27
             Align = alLeft
             Pen.Style = psClear
-            OnDragDrop = shpInvoiceIndex0DragDrop
-            OnDragOver = shpInvoiceIndex0DragOver
-            OnMouseUp = shpInvoiceIndex0MouseUp
             ExplicitLeft = 17
             ExplicitHeight = 29
           end
@@ -1806,9 +1469,6 @@ object frmInvoice: TfrmInvoice
             Height = 27
             Align = alLeft
             Pen.Style = psClear
-            OnDragDrop = shpInvoiceIndex0DragDrop
-            OnDragOver = shpInvoiceIndex0DragOver
-            OnMouseUp = shpInvoiceIndex0MouseUp
             ExplicitLeft = 27
             ExplicitHeight = 29
           end
@@ -1831,9 +1491,6 @@ object frmInvoice: TfrmInvoice
           ParentBackground = False
           ParentFont = False
           TabOrder = 7
-          OnClick = pnlInvoiceIndex0Click
-          OnDragDrop = pnlInvoiceIndex0DragDrop
-          OnDragOver = pnlInvoiceIndex0DragOver
           SkinData.CustomColor = True
           SkinData.CustomFont = True
           object shpInvoiceIndex7: TShape
@@ -1843,9 +1500,6 @@ object frmInvoice: TfrmInvoice
             Height = 27
             Align = alLeft
             Pen.Style = psClear
-            OnDragDrop = shpInvoiceIndex0DragDrop
-            OnDragOver = shpInvoiceIndex0DragOver
-            OnMouseUp = shpInvoiceIndex0MouseUp
             ExplicitLeft = 17
             ExplicitHeight = 29
           end
@@ -1856,9 +1510,6 @@ object frmInvoice: TfrmInvoice
             Height = 27
             Align = alLeft
             Pen.Style = psClear
-            OnDragDrop = shpInvoiceIndex0DragDrop
-            OnDragOver = shpInvoiceIndex0DragOver
-            OnMouseUp = shpInvoiceIndex0MouseUp
             ExplicitLeft = 27
             ExplicitHeight = 29
           end
@@ -1881,9 +1532,6 @@ object frmInvoice: TfrmInvoice
           ParentBackground = False
           ParentFont = False
           TabOrder = 8
-          OnClick = pnlInvoiceIndex0Click
-          OnDragDrop = pnlInvoiceIndex0DragDrop
-          OnDragOver = pnlInvoiceIndex0DragOver
           SkinData.CustomColor = True
           SkinData.CustomFont = True
           object shpInvoiceIndex8: TShape
@@ -1893,9 +1541,6 @@ object frmInvoice: TfrmInvoice
             Height = 27
             Align = alLeft
             Pen.Style = psClear
-            OnDragDrop = shpInvoiceIndex0DragDrop
-            OnDragOver = shpInvoiceIndex0DragOver
-            OnMouseUp = shpInvoiceIndex0MouseUp
             ExplicitLeft = 0
             ExplicitHeight = 29
           end
@@ -1906,9 +1551,6 @@ object frmInvoice: TfrmInvoice
             Height = 27
             Align = alLeft
             Pen.Style = psClear
-            OnDragDrop = shpInvoiceIndex0DragDrop
-            OnDragOver = shpInvoiceIndex0DragOver
-            OnMouseUp = shpInvoiceIndex0MouseUp
             ExplicitLeft = 27
             ExplicitHeight = 29
           end
@@ -1931,9 +1573,6 @@ object frmInvoice: TfrmInvoice
           ParentBackground = False
           ParentFont = False
           TabOrder = 9
-          OnClick = pnlInvoiceIndex0Click
-          OnDragDrop = pnlInvoiceIndex0DragDrop
-          OnDragOver = pnlInvoiceIndex0DragOver
           SkinData.CustomColor = True
           SkinData.CustomFont = True
           object shpInvoiceIndex9: TShape
@@ -1943,9 +1582,6 @@ object frmInvoice: TfrmInvoice
             Height = 27
             Align = alLeft
             Pen.Style = psClear
-            OnDragDrop = shpInvoiceIndex0DragDrop
-            OnDragOver = shpInvoiceIndex0DragOver
-            OnMouseUp = shpInvoiceIndex0MouseUp
             ExplicitLeft = 1
             ExplicitTop = 1
             ExplicitHeight = 29
@@ -1957,78 +1593,120 @@ object frmInvoice: TfrmInvoice
             Height = 27
             Align = alLeft
             Pen.Style = psClear
-            OnDragDrop = shpInvoiceIndex0DragDrop
-            OnDragOver = shpInvoiceIndex0DragOver
-            OnMouseUp = shpInvoiceIndex0MouseUp
             ExplicitLeft = 25
             ExplicitTop = 1
             ExplicitHeight = 29
           end
         end
       end
-      object cxGrid1: TcxGrid
-        Left = 2
-        Top = 347
-        Width = 400
-        Height = 150
-        DragMode = dmAutomatic
+      object cxDBTreeList1: TcxDBTreeList
+        Left = 0
+        Top = 91
+        Width = 1040
+        Height = 252
+        Hint = ''
+        Align = alClient
+        Bands = <
+          item
+            Caption.Text = 'Band1'
+          end>
+        DataController.DataSource = dsInvoicelinesObjects
+        DataController.ParentField = 'Parent'
+        DataController.KeyField = 'Index_'
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clBlack
+        Font.Height = -12
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        Navigator.Buttons.CustomButtons = <>
+        OptionsView.Footer = True
+        ParentFont = False
+        RootValue = 0
         TabOrder = 4
-        LookAndFeel.NativeStyle = False
-        object cxGridDBTableView1: TcxGridDBTableView
-          OnMouseDown = tvPaymentsMouseDown
-          Navigator.Buttons.CustomButtons = <>
-          OnCellDblClick = tvPaymentsCellDblClick
-          DataController.DataSource = dsPaymentObjects
-          DataController.Summary.DefaultGroupSummaryItems = <>
-          DataController.Summary.FooterSummaryItems = <>
-          DataController.Summary.SummaryGroups = <>
-          OptionsData.CancelOnExit = False
-          OptionsData.Deleting = False
-          OptionsData.DeletingConfirmation = False
-          OptionsData.Editing = False
-          OptionsData.Inserting = False
-          OptionsView.GroupByBox = False
-          object cxGridDBColumn1: TcxGridDBColumn
-            Caption = 'Date'
-            DataBinding.FieldName = 'PayDate'
-            Width = 75
-          end
-          object cxGridDBColumn2: TcxGridDBColumn
-            Caption = 'Type'
-            DataBinding.FieldName = 'PayTypeCode'
-            Width = 78
-          end
-          object cxGridDBColumn3: TcxGridDBColumn
-            DataBinding.FieldName = 'Amount'
-            Width = 84
-          end
-          object cxGridDBColumn4: TcxGridDBColumn
-            DataBinding.FieldName = 'Description'
-            Width = 128
-          end
-          object cxGridDBColumn5: TcxGridDBColumn
-            DataBinding.FieldName = 'PayGroup'
-            Width = 70
-          end
-          object cxGridDBColumn6: TcxGridDBColumn
-            DataBinding.FieldName = 'Memo'
-            PropertiesClassName = 'TcxMemoProperties'
-            Options.Editing = False
-          end
+        ExplicitHeight = 230
+        object cxDBTreeList1cxDBTreeListColumn7: TcxDBTreeListColumn
+          PropertiesClassName = 'TcxCheckBoxProperties'
+          Caption.AlignHorz = taCenter
+          MinWidth = 25
+          Width = 25
+          Position.ColIndex = 0
+          Position.RowIndex = 0
+          Position.BandIndex = 0
+          Summary.FooterSummaryItems = <>
+          Summary.GroupFooterSummaryItems = <>
         end
-        object cxGridLevel1: TcxGridLevel
-          GridView = cxGridDBTableView1
+        object cxDBTreeList1cxDBTreeListColumn1: TcxDBTreeListColumn
+          DataBinding.FieldName = 'Description'
+          Options.Editing = False
+          Position.ColIndex = 1
+          Position.RowIndex = 0
+          Position.BandIndex = 0
+          Summary.FooterSummaryItems = <>
+          Summary.GroupFooterSummaryItems = <>
+        end
+        object cxDBTreeList1cxDBTreeListColumn2: TcxDBTreeListColumn
+          DataBinding.FieldName = 'ItemType'
+          Options.Editing = False
+          Position.ColIndex = 2
+          Position.RowIndex = 0
+          Position.BandIndex = 0
+          Summary.FooterSummaryItems = <>
+          Summary.GroupFooterSummaryItems = <>
+        end
+        object cxDBTreeList1cxDBTreeListColumn3: TcxDBTreeListColumn
+          DataBinding.FieldName = 'PurchaseDate'
+          Options.Editing = False
+          Position.ColIndex = 3
+          Position.RowIndex = 0
+          Position.BandIndex = 0
+          Summary.FooterSummaryItems = <>
+          Summary.GroupFooterSummaryItems = <>
+        end
+        object cxDBTreeList1cxDBTreeListColumn4: TcxDBTreeListColumn
+          PropertiesClassName = 'TcxCalcEditProperties'
+          DataBinding.FieldName = 'Quantity'
+          Options.Editing = False
+          Position.ColIndex = 4
+          Position.RowIndex = 0
+          Position.BandIndex = 0
+          Summary.FooterSummaryItems = <>
+          Summary.GroupFooterSummaryItems = <>
+        end
+        object cxDBTreeList1cxDBTreeListColumn5: TcxDBTreeListColumn
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          DataBinding.FieldName = 'Nettoprice'
+          Options.Editing = False
+          Position.ColIndex = 5
+          Position.RowIndex = 0
+          Position.BandIndex = 0
+          Summary.FooterSummaryItems = <>
+          Summary.GroupFooterSummaryItems = <>
+        end
+        object cxDBTreeList1cxDBTreeListColumn6: TcxDBTreeListColumn
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          DataBinding.FieldName = 'TotalnetAmount'
+          Options.Editing = False
+          Position.ColIndex = 6
+          Position.RowIndex = 0
+          Position.BandIndex = 0
+          Summary.FooterSummaryItems = <
+            item
+              AlignHorz = taLeftJustify
+              Kind = skSum
+            end>
+          Summary.GroupFooterSummaryItems = <>
         end
       end
     end
   end
-  object FriendlyStatusBar1: TsStatusBar
-    Left = 0
-    Top = 662
-    Width = 1096
-    Height = 19
-    Panels = <>
-    SkinData.SkinSection = 'STATUSBAR'
+  inherited cxsrRoomerStyleRepository: TcxStyleRepository
+    PixelsPerInch = 96
+    inherited dxssRoomerGridReportLink: TdxGridReportLinkStyleSheet
+      BuiltIn = True
+    end
+    inherited cxssRoomerGridTableView: TcxGridTableViewStyleSheet
+      BuiltIn = True
+    end
   end
   object MainMenu1: TMainMenu
     Left = 372
@@ -2042,11 +1720,9 @@ object frmInvoice: TfrmInvoice
       object S1: TMenuItem
         Caption = 'Sa&ve'
         ShortCut = 16467
-        OnClick = S1Click
       end
       object Exit1: TMenuItem
         Caption = 'Close'
-        OnClick = Exit1Click
       end
       object N1: TMenuItem
         Caption = '-'
@@ -2250,18 +1926,15 @@ object frmInvoice: TfrmInvoice
     object actSaveAndExit: TAction
       Category = 'File'
       Caption = 'Save and close'
-      OnExecute = actSaveAndExitExecute
     end
     object actPrintInvoice: TAction
       Category = 'Invoice'
       Caption = 'To invoice'
-      OnExecute = actPrintInvoiceExecute
     end
     object actPrintProforma: TAction
       Category = 'Invoice'
       Caption = 'Print proforma'
       ImageIndex = 30
-      OnExecute = actPrintProformaExecute
     end
     object actInvoiceProperties: TAction
       Caption = 'Properties'
@@ -2269,42 +1942,35 @@ object frmInvoice: TfrmInvoice
     object actDownPayment: TAction
       Category = 'Invoice'
       Caption = 'Add Down payment'
-      OnExecute = actDownPaymentExecute
     end
     object actInfo: TAction
       Category = 'Invoice'
       Caption = 'Reservation notes'
-      OnExecute = actInfoExecute
     end
     object actAddLine: TAction
       Category = 'Lines'
       Caption = 'Add item'
       ShortCut = 113
-      OnExecute = actAddLineExecute
     end
     object actDelLine: TAction
       Category = 'Lines'
       Caption = 'Remove item'
       ShortCut = 16430
-      OnExecute = actDelLineExecute
     end
     object actRRtoTemp: TAction
       Category = 'Lines'
       Caption = 'Room to temp'
       ShortCut = 115
-      OnExecute = actRRtoTempExecute
     end
     object actItemToTemp: TAction
       Category = 'Lines'
       Caption = 'Item to temp'
       ShortCut = 114
-      OnExecute = actItemToTempExecute
     end
     object actItemToGroupInvoice: TAction
       Category = 'Lines'
       Caption = 'Item to groupinvoice'
       ShortCut = 116
-      OnExecute = actItemToGroupInvoiceExecute
     end
     object actCompressLines: TAction
       Category = 'Lines'
@@ -2317,13 +1983,6 @@ object frmInvoice: TfrmInvoice
       Category = 'Lines'
       Caption = 'Action2'
     end
-  end
-  object timCloseInvoice: TTimer
-    Enabled = False
-    Interval = 100
-    OnTimer = timCloseInvoiceTimer
-    Left = 57
-    Top = 405
   end
   object StoreMain: TcxPropertiesStore
     Components = <
@@ -2366,60 +2025,18 @@ object frmInvoice: TfrmInvoice
     Left = 448
     Top = 312
   end
-  object PaymentsDS: TDataSource
-    DataSet = mPayments
-    Left = 736
-    Top = 568
-  end
   object rptDsLines: TfrxDBDataset
     UserName = 'rptDsLines'
     CloseDataSource = False
     BCDToCurrency = False
-    Left = 224
-    Top = 312
-  end
-  object mPayments: TdxMemData
-    Indexes = <>
-    SortOptions = []
-    Left = 656
-    Top = 568
-    object mPaymentsPayDate: TDateField
-      FieldName = 'PayDate'
-    end
-    object mPaymentsPayType: TWideStringField
-      FieldName = 'PayType'
-    end
-    object mPaymentsAmount: TFloatField
-      FieldName = 'Amount'
-    end
-    object mPaymentsDescription: TWideStringField
-      FieldName = 'Description'
-      Size = 60
-    end
-    object mPaymentsPayGroup: TWideStringField
-      FieldName = 'PayGroup'
-    end
-    object mPaymentsMemo: TMemoField
-      FieldName = 'Memo'
-      BlobType = ftMemo
-    end
-    object mPaymentsconfirmDate: TDateTimeField
-      FieldName = 'confirmDate'
-    end
-    object mPaymentsid: TIntegerField
-      FieldName = 'id'
-    end
-    object mPaymentsInvoiceIndex: TIntegerField
-      FieldName = 'InvoiceIndex'
-    end
+    Left = 1048
+    Top = 144
   end
   object mnuMoveItem: TPopupMenu
-    OnPopup = mnuMoveItemPopup
-    Left = 544
-    Top = 336
+    Left = 312
+    Top = 176
     object T1: TMenuItem
       Caption = 'To group invoice'
-      OnClick = T1Click
     end
     object mnuMoveItemToSpecifiedRoomAndInvoiceIndex: TMenuItem
       Caption = 'To room invoice'
@@ -2434,16 +2051,13 @@ object frmInvoice: TfrmInvoice
     end
   end
   object mnuMoveRoom: TPopupMenu
-    OnPopup = mnuMoveRoomPopup
-    Left = 448
-    Top = 376
+    Left = 464
+    Top = 176
     object mnuMoveRoomRentFromRoomInvoiceToGroup: TMenuItem
       Caption = 'To group invoice'
-      OnClick = mnuMoveRoomRentFromRoomInvoiceToGroupClick
     end
     object mnuMoveRoomRentFromGroupToNormalRoomInvoice: TMenuItem
       Caption = 'To room invoice'
-      OnClick = mnuMoveRoomRentFromGroupToNormalRoomInvoiceClick
     end
     object N7: TMenuItem
       Caption = '-'
@@ -2455,8 +2069,8 @@ object frmInvoice: TfrmInvoice
     end
   end
   object mnuInvoiceIndex: TPopupMenu
-    Left = 632
-    Top = 352
+    Left = 1008
+    Top = 400
     object I1: TMenuItem
       Tag = -1
       Caption = 'Invoice index'
@@ -2469,197 +2083,60 @@ object frmInvoice: TfrmInvoice
     end
     object N01: TMenuItem
       Caption = '1'
-      OnClick = N91Click
     end
     object N11: TMenuItem
       Tag = 1
       Caption = '2'
-      OnClick = N91Click
     end
     object N31: TMenuItem
       Tag = 2
       Caption = '3'
-      OnClick = N91Click
     end
     object N41: TMenuItem
       Tag = 3
       Caption = '4'
-      OnClick = N91Click
     end
     object N51: TMenuItem
       Tag = 4
       Caption = '5'
-      OnClick = N91Click
     end
     object N61: TMenuItem
       Tag = 5
       Caption = '6'
-      OnClick = N91Click
     end
     object N71: TMenuItem
       Tag = 6
       Caption = '7'
-      OnClick = N91Click
     end
     object N81: TMenuItem
       Tag = 7
       Caption = '8'
-      OnClick = N91Click
     end
     object N91: TMenuItem
       Tag = 8
       Caption = '9'
-      OnClick = N91Click
     end
     object N12: TMenuItem
       Tag = 9
       Caption = '10'
     end
   end
-  object mRoomRes: TdxMemData
-    Indexes = <
-      item
-        FieldName = 'Room'
-        SortOptions = []
-      end>
-    SortOptions = []
-    Left = 152
-    Top = 408
-    object mRoomResReservation: TIntegerField
-      FieldName = 'Reservation'
-    end
-    object mRoomResroomreservation: TIntegerField
-      FieldName = 'roomreservation'
-    end
-    object mRoomResRoom: TStringField
-      FieldName = 'Room'
-      Size = 10
-    end
-    object mRoomResRoomType: TStringField
-      FieldName = 'RoomType'
-      Size = 10
-    end
-    object mRoomResGuests: TIntegerField
-      FieldName = 'Guests'
-    end
-    object mRoomResAvragePrice: TFloatField
-      FieldName = 'AvragePrice'
-    end
-    object mRoomResRateCount: TIntegerField
-      FieldName = 'RateCount'
-    end
-    object mRoomResRoomDescription: TStringField
-      FieldName = 'RoomDescription'
-      Size = 30
-    end
-    object mRoomResRoomTypeDescription: TStringField
-      FieldName = 'RoomTypeDescription'
-      Size = 30
-    end
-    object mRoomResArrival: TDateTimeField
-      FieldName = 'Arrival'
-    end
-    object mRoomResDeparture: TDateTimeField
-      FieldName = 'Departure'
-    end
-    object mRoomResChildrenCount: TIntegerField
-      FieldName = 'ChildrenCount'
-    end
-    object mRoomResinfantCount: TIntegerField
-      FieldName = 'infantCount'
-    end
-    object mRoomResPriceCode: TStringField
-      FieldName = 'PriceCode'
-      Size = 10
-    end
-    object mRoomResAvrageDiscount: TFloatField
-      FieldName = 'AvrageDiscount'
-    end
-    object mRoomResisPercentage: TBooleanField
-      FieldName = 'isPercentage'
-    end
-    object mRoomResPackage: TWideStringField
-      FieldName = 'Package'
-    end
-    object mRoomResInvoiceIndex: TIntegerField
-      FieldName = 'InvoiceIndex'
-    end
-    object mRoomResGroupAccount: TBooleanField
-      FieldName = 'GroupAccount'
-    end
-    object mRoomResGuestName: TWideStringField
-      FieldName = 'GuestName'
-      Size = 60
-    end
-  end
-  object mRoomRates: TdxMemData
-    Indexes = <>
-    SortOptions = []
-    Left = 224
-    Top = 408
-    object mRoomRatesReservation: TIntegerField
-      FieldName = 'Reservation'
-    end
-    object mRoomRatesroomreservation: TIntegerField
-      FieldName = 'roomreservation'
-    end
-    object mRoomRatesRoomNumber: TStringField
-      FieldName = 'RoomNumber'
-      Size = 10
-    end
-    object mRoomRatesRateDate: TDateTimeField
-      FieldName = 'RateDate'
-    end
-    object mRoomRatesPriceCode: TStringField
-      FieldName = 'PriceCode'
-      Size = 10
-    end
-    object mRoomRatesRate: TFloatField
-      FieldName = 'Rate'
-    end
-    object mRoomRatesDiscount: TFloatField
-      FieldName = 'Discount'
-    end
-    object mRoomRatesisPercentage: TBooleanField
-      FieldName = 'isPercentage'
-    end
-    object mRoomRatesShowDiscount: TBooleanField
-      FieldName = 'ShowDiscount'
-    end
-    object mRoomRatesisPaid: TBooleanField
-      FieldName = 'isPaid'
-    end
-    object mRoomRatesDiscountAmount: TFloatField
-      FieldName = 'DiscountAmount'
-    end
-    object mRoomRatesRentAmount: TFloatField
-      FieldName = 'RentAmount'
-    end
-    object mRoomRatesNativeAmount: TFloatField
-      FieldName = 'NativeAmount'
-    end
-    object mRoomRatesGuestName: TWideStringField
-      FieldName = 'GuestName'
-      Size = 60
-    end
-  end
   object odsPayments: TObjectDataSet
-    Left = 96
-    Top = 528
+    Left = 672
+    Top = 584
   end
   object dsPaymentObjects: TDataSource
     DataSet = odsPayments
-    Left = 160
-    Top = 528
+    Left = 736
+    Top = 584
   end
   object odsInvoicelines: TObjectDataSet
-    Left = 608
-    Top = 448
+    Left = 784
+    Top = 320
   end
-  object dsInvoicelineObjects: TDataSource
-    AutoEdit = False
+  object dsInvoicelinesObjects: TDataSource
     DataSet = odsInvoicelines
-    Left = 560
-    Top = 440
+    Left = 784
+    Top = 368
   end
 end

@@ -46,7 +46,10 @@ uses
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinValentine,
   dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, cxButtons, sComboBox,
   sSpeedButton, AdvUtil
-  , uInvoiceEntities
+  , uInvoiceEntities, Spring.Data.VirtualDataSet, Spring.Data.ObjectDataSet, uInvoiceContainer
+  , uServicesRunningTabAPICaller
+  , uRoomerHotelServicesCommunicationModel_RunningTabs, cxTL, cxTLdxBarBuiltInMenu, cxInplaceContainer, cxTLData, cxDBTL,
+  cxCurrencyEdit, cxCheckBox
     ;
 
 type
@@ -349,6 +352,28 @@ type
     mRoomRatesNativeAmount: TFloatField;
     mRoomRatesGuestName: TWideStringField;
     mPaymentsInvoiceIndex: TIntegerField;
+    cxGrid1: TcxGrid;
+    cxGridDBTableView1: TcxGridDBTableView;
+    cxGridDBColumn1: TcxGridDBColumn;
+    cxGridDBColumn2: TcxGridDBColumn;
+    cxGridDBColumn3: TcxGridDBColumn;
+    cxGridDBColumn4: TcxGridDBColumn;
+    cxGridDBColumn5: TcxGridDBColumn;
+    cxGridDBColumn6: TcxGridDBColumn;
+    cxGridLevel1: TcxGridLevel;
+    pnlPayments: TsPanel;
+    odsPayments: TObjectDataSet;
+    dsPaymentObjects: TDataSource;
+    cxDBTreeList1: TcxDBTreeList;
+    odsInvoicelines: TObjectDataSet;
+    dsInvoicelineObjects: TDataSource;
+    cxDBTreeList1cxDBTreeListColumn1: TcxDBTreeListColumn;
+    cxDBTreeList1cxDBTreeListColumn2: TcxDBTreeListColumn;
+    cxDBTreeList1cxDBTreeListColumn3: TcxDBTreeListColumn;
+    cxDBTreeList1cxDBTreeListColumn4: TcxDBTreeListColumn;
+    cxDBTreeList1cxDBTreeListColumn5: TcxDBTreeListColumn;
+    cxDBTreeList1cxDBTreeListColumn6: TcxDBTreeListColumn;
+    cxDBTreeList1cxDBTreeListColumn7: TcxDBTreeListColumn;
     procedure FormCreate(Sender: TObject);
     procedure agrLinesMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: integer);
@@ -485,6 +510,7 @@ type
     FTotalRoomDiscount: Double;
     FReservation: integer;
     FRoomReservation: integer;
+    FRunningtabOverview: TRunningTabsOverview;
 
     procedure LoadInvoice;
     procedure loadInvoiceToMemtable(var m: TKbmMemTable);
@@ -706,7 +732,9 @@ uses
   UITypes
   , uFloatUtils
   , Math
-    , uVatCalculator, uSQLUtils, ufrmRoomPrices;
+    , uVatCalculator, uSQLUtils, ufrmRoomPrices
+  , Spring.Collections
+  ;
 
 {$R *.DFM}
 
@@ -3592,6 +3620,9 @@ begin
 end;
 
 procedure TfrmInvoice.FormShow(Sender: TObject);
+var
+  lAPI: TRunningTabAPICaller;
+  iList: IObjectList;
 begin
   btnEditDownPayment.Visible := glb.PMSSettings.AllowPaymentModification;
   btnDeleteDownpayment.Visible := glb.PMSSettings.AllowPaymentModification;
@@ -3600,6 +3631,23 @@ begin
 
   LoadInvoice;
   UpdateCaptions;
+
+  FRunningtabOverview := TRunningTabsOverview.Create;
+  lApi := TRunningTabAPICaller.Create;
+  try
+    lApi.GetRunningTabRoomRes(FRoomReservation, true, FRUnningTabOverview);
+    if Supports(FRUnningTabOverview.RunningTabList.First.PaymentList, IObjectList, IList) then
+      odsPayments.DataList := iList;
+    odsPayments.Open;
+
+    if Supports(FRUnningTabOverview.RunningTabList.First.ProductList, IObjectList, IList) then
+      odsInvoicelines.DataList := iList;
+    odsInvoicelines.Open;
+    odsInvoiceLines.First;
+    cxDBTreeList1.Refresh;
+  finally
+    lApi.free;
+  end;
 
   sPanel4.Visible := NOT(IsCashInvoice OR FIsCredit {or zFakeGroup});
   Exit1.Enabled := True;
