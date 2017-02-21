@@ -813,12 +813,14 @@
         <DCCReference Include="Definitions\uCleaningNotesDefinitions.pas"/>
         <DCCReference Include="RoomerForm\uRoomerDialogForm.pas">
             <Form>frmBaseRoomerDialogForm</Form>
+            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="RoomerUtils\uSQLUtils.pas"/>
         <DCCReference Include="RoomerVCLs\Source\uStringUtils.pas"/>
         <DCCReference Include="Definitions\uInvoiceDefinitions.pas"/>
         <DCCReference Include="Embeddables\uFraCountryPanel.pas">
             <Form>fraCountryPanel</Form>
+            <FormType>dfm</FormType>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="ufrmRoomPrices.pas">
@@ -833,6 +835,7 @@
         </DCCReference>
         <DCCReference Include="uTopClassAvailabilityOrder.pas">
             <Form>FrmTopClassAvailabilityOrder</Form>
+            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Extras\_Glob.pas"/>
         <DCCReference Include="uCurrencyHandlersMap.pas"/>
@@ -840,10 +843,12 @@
         <DCCReference Include="OpenAPI\schema\uRoomerHotelServicesCommunicationModel_RequestsResponses.pas"/>
         <DCCReference Include="ActivityLogs\uRptUserActivity.pas">
             <Form>frmUserActivityReport</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="OpenAPI\uCredentialsAPICaller.pas"/>
         <DCCReference Include="RoomerExceptionHandling.pas"/>
+        <DCCReference Include="OpenAPI\schema\uRoomerHotelServicesCommunicationModel_RunningTabs.pas"/>
+        <DCCReference Include="OpenAPI\schema\uRoomerSchema.pas"/>
+        <DCCReference Include="OpenAPI\uServicesRunningTabAPICaller.pas"/>
         <None Include="Roomer.todo"/>
         <None Include="notes.txt"/>
         <None Include="Roomer.inc"/>
