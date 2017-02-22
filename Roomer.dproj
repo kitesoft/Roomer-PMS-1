@@ -701,9 +701,6 @@
         <DCCReference Include="Activitylogs\uActivityLogs.pas"/>
         <DCCReference Include="uInvoiceContainer.pas"/>
         <DCCReference Include="RoomerUtils\XmlUtils.pas"/>
-        <DCCReference Include="uInvoiceLineEdit.pas">
-            <Form>FrmInvoiceLineEdit</Form>
-        </DCCReference>
         <DCCReference Include="uFrmMergePortfolios.pas">
             <Form>frmMergePortfolios</Form>
         </DCCReference>

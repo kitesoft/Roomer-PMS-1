@@ -142,7 +142,7 @@ object frmControlData: TfrmControlData
         Top = 1
         Width = 1101
         Height = 743
-        ActivePage = tsBetaFunctions
+        ActivePage = tsInvoiceSystem
         Align = alClient
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
@@ -9070,9 +9070,6 @@ object frmControlData: TfrmControlData
             ExplicitHeight = 674
             object tabGuestInformation: TsTabSheet
               Caption = 'Mandatory Guest information'
-              ExplicitLeft = 0
-              ExplicitWidth = 1045
-              ExplicitHeight = 645
               object clbMandatoryFields: TsCheckListBox
                 AlignWithMargins = True
                 Left = 20
