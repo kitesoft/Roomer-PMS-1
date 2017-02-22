@@ -77,7 +77,6 @@ object frmRptDownPayments: TfrmRptDownPayments
       ParentFont = False
       TabOrder = 1
       SkinData.SkinSection = 'GROUPBOX'
-      Checked = False
       object cbxMonth: TsComboBox
         Left = 15
         Top = 18
@@ -181,7 +180,6 @@ object frmRptDownPayments: TfrmRptDownPayments
       ParentFont = False
       TabOrder = 0
       SkinData.SkinSection = 'GROUPBOX'
-      Checked = False
       object dtDateFrom: TsDateEdit
         Left = 16
         Top = 18
@@ -200,7 +198,6 @@ object frmRptDownPayments: TfrmRptDownPayments
         TabOrder = 0
         Text = '  -  -    '
         OnChange = dtDateFromChange
-        CheckOnExit = True
         SkinData.SkinSection = 'EDIT'
         GlyphMode.Blend = 0
         GlyphMode.Grayed = False
@@ -223,7 +220,6 @@ object frmRptDownPayments: TfrmRptDownPayments
         TabOrder = 1
         Text = '  -  -    '
         OnChange = dtDateFromChange
-        CheckOnExit = True
         SkinData.SkinSection = 'EDIT'
         GlyphMode.Blend = 0
         GlyphMode.Grayed = False
@@ -253,7 +249,6 @@ object frmRptDownPayments: TfrmRptDownPayments
       TabOrder = 2
       OnClick = rgrInvoicedClick
       SkinData.SkinSection = 'GROUPBOX'
-      Checked = False
       ItemIndex = 2
       Items.Strings = (
         'All'
@@ -269,7 +264,6 @@ object frmRptDownPayments: TfrmRptDownPayments
       TabOrder = 3
       OnClick = rgrInvoicedClick
       SkinData.SkinSection = 'GROUPBOX'
-      Checked = False
       ItemIndex = 0
       Items.Strings = (
         'All'
@@ -302,8 +296,6 @@ object frmRptDownPayments: TfrmRptDownPayments
     object sTabSheet1: TsTabSheet
       Caption = 'sTabSheet1'
       TabVisible = False
-      SkinData.CustomColor = False
-      SkinData.CustomFont = False
       ExplicitLeft = 0
       ExplicitTop = 0
       ExplicitWidth = 0

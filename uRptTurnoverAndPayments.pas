@@ -1090,7 +1090,7 @@ begin
     iReservation := d.kbmpaymentList_.FieldByName('Reservation').asinteger;
     iRoomReservation := d.kbmpaymentList_.FieldByName('RoomReservation')
       .asinteger;
-    EditInvoice(iReservation, iRoomReservation, 0, 0, 0, 0, false);
+    EditInvoice(iReservation, iRoomReservation, 0, 0, false);
   end;
 end;
 
@@ -1131,7 +1131,7 @@ begin
     Departure := Date;
     iReservation := d.kbmRoomsDate_.FieldByName('Reservation').asinteger;
     iRoomReservation := d.kbmRoomsDate_.FieldByName('RoomReservation').asinteger;
-    EditInvoice(iReservation, iRoomReservation, 0, 0, 0, 0, false);
+    EditInvoice(iReservation, iRoomReservation, 0, 0, false);
   end;
 end;
 
@@ -1170,7 +1170,7 @@ begin
     Departure := Date;
     iReservation := DReportData.kbmUnconfirmedInvoicelines_.FieldByName('Reservation').asinteger;
     iRoomReservation := DReportData.kbmUnconfirmedInvoicelines_.FieldByName('RoomReservation').asinteger;
-    EditInvoice(iReservation, iRoomReservation, 0, 0, 0, 0, false);
+    EditInvoice(iReservation, iRoomReservation, 0, 0, false);
   end;
 end;
 
@@ -1235,7 +1235,7 @@ begin
     iReservation := d.mInvoiceHeads.FieldByName('Reservation').asinteger;
     iRoomReservation := d.mInvoiceHeads.FieldByName('RoomReservation')
       .asinteger;
-    EditInvoice(iReservation, iRoomReservation, 0, 0, 0, 0, false);
+    EditInvoice(iReservation, iRoomReservation, 0, 0, false);
   end;
 end;
 
@@ -1729,7 +1729,7 @@ begin
     iReservation := d.kbmRoomRentOnInvoice_.FieldByName('Reservation').asinteger;
     iRoomReservation := d.kbmRoomRentOnInvoice_.FieldByName('RoomReservation')
       .asinteger;
-    EditInvoice(iReservation, iRoomReservation, 0, 0, 0, 0, false);
+    EditInvoice(iReservation, iRoomReservation, 0, 0, false);
   end;
 end;
 

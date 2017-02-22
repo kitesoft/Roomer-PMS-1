@@ -241,13 +241,13 @@ end;
 
 procedure TFrmCheckOut.btnGroupInvoiceClick(Sender: TObject);
 begin
-  EditInvoice(Reservation, 0, 0, 0, 0, 0, false);
+  EditInvoice(Reservation, 0, 0, 0, false);
   ReloadInvoiceStatuses;
 end;
 
 procedure TFrmCheckOut.btnRoomInvoiceClick(Sender: TObject);
 begin
-  EditInvoice(Reservation, RoomReservation, 0, 0, 0, 0, false);
+  EditInvoice(Reservation, RoomReservation, 0, 0, false);
   ReloadInvoiceStatuses;
 end;
 

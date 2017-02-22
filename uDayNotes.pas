@@ -828,7 +828,7 @@ begin
       iReservation := mCurrentGuests_.fieldbyname('Reservation').asinteger;
     end;
 
-    EditInvoice(iReservation, 0, 0, 0, 0, 0, false);
+    EditInvoice(iReservation, 0, 0, 0, false);
   end;
 end;
 
@@ -850,7 +850,7 @@ begin
       iReservation := mCurrentGuests_.fieldbyname('Reservation').asinteger;
       iRoomReservation := mCurrentGuests_.fieldbyname('RoomReservation').asinteger;
     end;
-    EditInvoice(iReservation, iRoomReservation, 0, 0, 0, 0, false);
+    EditInvoice(iReservation, iRoomReservation, 0, 0, false);
   end;
 end;
 

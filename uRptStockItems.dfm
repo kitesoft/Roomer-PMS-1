@@ -52,7 +52,6 @@ object frmRptStockItems: TfrmRptStockItems
       ParentFont = False
       TabOrder = 0
       SkinData.SkinSection = 'GROUPBOX'
-      Checked = False
       object rbToday: TsRadioButton
         Left = 4
         Top = 21
@@ -99,7 +98,6 @@ object frmRptStockItems: TfrmRptStockItems
         ParentFont = False
         TabOrder = 3
         Text = '  -  -    '
-        CheckOnExit = True
         SkinData.SkinSection = 'EDIT'
         GlyphMode.Blend = 0
         GlyphMode.Grayed = False
@@ -123,7 +121,6 @@ object frmRptStockItems: TfrmRptStockItems
         ParentFont = False
         TabOrder = 4
         Text = '  -  -    '
-        CheckOnExit = True
         SkinData.SkinSection = 'EDIT'
         GlyphMode.Blend = 0
         GlyphMode.Grayed = False

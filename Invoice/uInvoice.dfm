@@ -1355,101 +1355,6 @@ object frmInvoice: TfrmInvoice
             83
             91
             31)
-          object cxDBTreeList1: TcxDBTreeList
-            Left = 296
-            Top = 40
-            Width = 625
-            Height = 221
-            Hint = ''
-            Bands = <
-              item
-                Caption.Text = 'Band1'
-              end>
-            DataController.DataSource = dsInvoicelineObjects
-            DataController.ParentField = 'Parent'
-            DataController.KeyField = 'Index_'
-            Font.Charset = ANSI_CHARSET
-            Font.Color = clBlack
-            Font.Height = -13
-            Font.Name = 'Arial'
-            Font.Style = []
-            Navigator.Buttons.CustomButtons = <>
-            OptionsView.Footer = True
-            ParentFont = False
-            RootValue = 0
-            TabOrder = 4
-            object cxDBTreeList1cxDBTreeListColumn7: TcxDBTreeListColumn
-              PropertiesClassName = 'TcxCheckBoxProperties'
-              Caption.AlignHorz = taCenter
-              MinWidth = 25
-              Width = 25
-              Position.ColIndex = 0
-              Position.RowIndex = 0
-              Position.BandIndex = 0
-              Summary.FooterSummaryItems = <
-                item
-                  AlignHorz = taLeftJustify
-                  AlignVert = vaTop
-                  Kind = skCount
-                end>
-              Summary.GroupFooterSummaryItems = <>
-            end
-            object cxDBTreeList1cxDBTreeListColumn1: TcxDBTreeListColumn
-              DataBinding.FieldName = 'Description'
-              Position.ColIndex = 1
-              Position.RowIndex = 0
-              Position.BandIndex = 0
-              Summary.FooterSummaryItems = <>
-              Summary.GroupFooterSummaryItems = <>
-            end
-            object cxDBTreeList1cxDBTreeListColumn2: TcxDBTreeListColumn
-              DataBinding.FieldName = 'ItemType'
-              Position.ColIndex = 2
-              Position.RowIndex = 0
-              Position.BandIndex = 0
-              Summary.FooterSummaryItems = <>
-              Summary.GroupFooterSummaryItems = <>
-            end
-            object cxDBTreeList1cxDBTreeListColumn3: TcxDBTreeListColumn
-              DataBinding.FieldName = 'PurchaseDate'
-              Position.ColIndex = 3
-              Position.RowIndex = 0
-              Position.BandIndex = 0
-              Summary.FooterSummaryItems = <>
-              Summary.GroupFooterSummaryItems = <>
-            end
-            object cxDBTreeList1cxDBTreeListColumn4: TcxDBTreeListColumn
-              PropertiesClassName = 'TcxCalcEditProperties'
-              DataBinding.FieldName = 'Quantity'
-              Position.ColIndex = 4
-              Position.RowIndex = 0
-              Position.BandIndex = 0
-              Summary.FooterSummaryItems = <>
-              Summary.GroupFooterSummaryItems = <>
-            end
-            object cxDBTreeList1cxDBTreeListColumn5: TcxDBTreeListColumn
-              PropertiesClassName = 'TcxCurrencyEditProperties'
-              DataBinding.FieldName = 'Nettoprice'
-              Position.ColIndex = 5
-              Position.RowIndex = 0
-              Position.BandIndex = 0
-              Summary.FooterSummaryItems = <>
-              Summary.GroupFooterSummaryItems = <>
-            end
-            object cxDBTreeList1cxDBTreeListColumn6: TcxDBTreeListColumn
-              PropertiesClassName = 'TcxCurrencyEditProperties'
-              DataBinding.FieldName = 'TotalnetAmount'
-              Position.ColIndex = 6
-              Position.RowIndex = 0
-              Position.BandIndex = 0
-              Summary.FooterSummaryItems = <
-                item
-                  AlignHorz = taLeftJustify
-                  Kind = skSum
-                end>
-              Summary.GroupFooterSummaryItems = <>
-            end
-          end
         end
       end
       object sPanel4: TsPanel
@@ -1964,60 +1869,6 @@ object frmInvoice: TfrmInvoice
             ExplicitTop = 1
             ExplicitHeight = 29
           end
-        end
-      end
-      object cxGrid1: TcxGrid
-        Left = 2
-        Top = 347
-        Width = 400
-        Height = 150
-        DragMode = dmAutomatic
-        TabOrder = 4
-        LookAndFeel.NativeStyle = False
-        object cxGridDBTableView1: TcxGridDBTableView
-          OnMouseDown = tvPaymentsMouseDown
-          Navigator.Buttons.CustomButtons = <>
-          OnCellDblClick = tvPaymentsCellDblClick
-          DataController.DataSource = dsPaymentObjects
-          DataController.Summary.DefaultGroupSummaryItems = <>
-          DataController.Summary.FooterSummaryItems = <>
-          DataController.Summary.SummaryGroups = <>
-          OptionsData.CancelOnExit = False
-          OptionsData.Deleting = False
-          OptionsData.DeletingConfirmation = False
-          OptionsData.Editing = False
-          OptionsData.Inserting = False
-          OptionsView.GroupByBox = False
-          object cxGridDBColumn1: TcxGridDBColumn
-            Caption = 'Date'
-            DataBinding.FieldName = 'PayDate'
-            Width = 75
-          end
-          object cxGridDBColumn2: TcxGridDBColumn
-            Caption = 'Type'
-            DataBinding.FieldName = 'PayTypeCode'
-            Width = 78
-          end
-          object cxGridDBColumn3: TcxGridDBColumn
-            DataBinding.FieldName = 'Amount'
-            Width = 84
-          end
-          object cxGridDBColumn4: TcxGridDBColumn
-            DataBinding.FieldName = 'Description'
-            Width = 128
-          end
-          object cxGridDBColumn5: TcxGridDBColumn
-            DataBinding.FieldName = 'PayGroup'
-            Width = 70
-          end
-          object cxGridDBColumn6: TcxGridDBColumn
-            DataBinding.FieldName = 'Memo'
-            PropertiesClassName = 'TcxMemoProperties'
-            Options.Editing = False
-          end
-        end
-        object cxGridLevel1: TcxGridLevel
-          GridView = cxGridDBTableView1
         end
       end
     end
@@ -2642,24 +2493,5 @@ object frmInvoice: TfrmInvoice
       FieldName = 'GuestName'
       Size = 60
     end
-  end
-  object odsPayments: TObjectDataSet
-    Left = 96
-    Top = 528
-  end
-  object dsPaymentObjects: TDataSource
-    DataSet = odsPayments
-    Left = 160
-    Top = 528
-  end
-  object odsInvoicelines: TObjectDataSet
-    Left = 608
-    Top = 448
-  end
-  object dsInvoicelineObjects: TDataSource
-    AutoEdit = False
-    DataSet = odsInvoicelines
-    Left = 560
-    Top = 440
   end
 end

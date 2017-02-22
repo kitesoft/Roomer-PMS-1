@@ -377,12 +377,12 @@ end;
 
 procedure TfrmRptStockItems.mnuRoomInvoiceClick(Sender: TObject);
 begin
-  EditInvoice(kbmStockItemsReservation.AsInteger, kbmStockItemsRoomReservation.AsInteger, 0, 0, 0, 0, false);
+  EditInvoice(kbmStockItemsReservation.AsInteger, kbmStockItemsRoomReservation.AsInteger, 0, 0, false);
 end;
 
 procedure TfrmRptStockItems.mnuGroupInvoiceClick(Sender: TObject);
 begin
-  EditInvoice(kbmStockItemsReservation.AsInteger, 0, 0, 0, 0, 0, false);
+  EditInvoice(kbmStockItemsReservation.AsInteger, 0, 0, 0, false);
 end;
 
 end.
