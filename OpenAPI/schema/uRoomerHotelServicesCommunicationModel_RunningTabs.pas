@@ -26,6 +26,7 @@ type
     FCountryCode: string;
   protected
     procedure SetPropertiesFromXMLNode(const aNode: PXMLNode); override;
+    procedure AddPropertiesToXMLNode(const aNode: PXMLNode); override;
     class function GetNodeName: string; override;
     class function GetNameSpaceURI: string; override;
   public
@@ -48,6 +49,7 @@ type
     FAmount: double;
   protected
     procedure SetPropertiesFromXMLNode(const aNode: PXMLNode); override;
+    procedure AddPropertiesToXMLNode(const aNode: PXMLNode); override;
     class function GetNodeName: string; override;
     class function GetNameSpaceURI: string; override;
   public
@@ -64,6 +66,7 @@ type
       TProductTypeHelper = record helper for TProductType
       public
         class function FromString(const Value: string): TProductType; static;
+        function asString: string;
       end;
 
   private
@@ -87,6 +90,7 @@ type
     function GetTotalVatAmount: double;
   protected
     procedure SetPropertiesFromXMLNode(const aNode: PXMLNode); override;
+    procedure AddPropertiesToXMLNode(const aNode: PXMLNode); override;
     class function GetNodeName: string; override;
     class function GetNameSpaceURI: string; override;
   public
@@ -146,6 +150,7 @@ type
     FPayTypeCode: string;
   protected
     procedure SetPropertiesFromXMLNode(const aNode: PXMLNode); override;
+    procedure AddPropertiesToXMLNode(const aNode: PXMLNode); override;
     class function GetNodeName: string; override;
     class function GetNameSpaceURI: string; override;
   public
@@ -260,6 +265,20 @@ const
 
 { TRunningTabCustomer }
 
+procedure TRunningTabCustomer.AddPropertiesToXMLNode(const aNode: PXMLNode);
+begin
+  inherited;
+
+  aNode.Attributes['roomerCode'] := CustomerCode;
+  aNode.Attributes['PID'] := IntToStr(PersonId);
+  aNode.AddChild('name').Text := Name;
+  aNode.AddChild('address1').Text := Address1;
+  aNode.AddChild('address2').Text := Address2;
+  aNode.AddChild('zip').Text := Zipcode;
+  aNode.AddChild('country').Text := CountryCode;
+
+end;
+
 procedure TRunningTabCustomer.Clear;
 begin
   inherited;
@@ -305,6 +324,28 @@ begin
 end;
 
 { TRunningTabProduct }
+
+procedure TRunningTabProduct.AddPropertiesToXMLNode(const aNode: PXMLNode);
+begin
+  inherited;
+
+
+  aNode.Attributes['index'] := IntToStr(Index_);
+  aNode.Attributes['type'] := ProductType.AsString;
+  aNode.Attributes['roomerId'] := ItemType;
+  aNode.Attributes['accountKey'] := AccountKey;
+  aNode.Attributes['invoiceIndex'] := IntToStr(InvoiceIndex);
+  aNode.Attributes['room'] := Room;
+  aNode.Attributes['source'] := Source;
+  aNode.Attributes['guestName'] := GuestName;
+
+  aNode.AddChild('text1').Text := Description;
+  aNode.AddChild('purchaseDate').Text := DateToXML(PurchaseDate);
+  aNode.AddChild('numItems').Text := FloatToXML(Quantity);
+  aNode.AddChild('itemNetPrice').Text := FloatToXML(NettoPrice);
+  aNode.AddChild('itemGrossPrice').Text := FLoatToXML(GrossPrice);
+  ItemVatAmount.AddPropertiesToXMLNode(aNode.AddChild(''));
+end;
 
 procedure TRunningTabProduct.Clear;
 begin
@@ -451,6 +492,14 @@ end;
 
 { TVATAmount }
 
+procedure TVATAmount.AddPropertiesToXMLNode(const aNode: PXMLNode);
+begin
+  inherited;
+  aNode.Attributes['roomerCode'] := Vatcode;
+  aNode.Attributes['percentage'] := FloatToXML(Percentage);
+  aNode.Text := FloatToXML(Amount);
+end;
+
 procedure TVATAmount.Clear;
 begin
   inherited;
@@ -480,6 +529,18 @@ end;
 
 { TRunningTabProduct.TProductTypeHelper }
 
+function TRunningTabProduct.TProductTypeHelper.asString: string;
+begin
+  case Self of
+    itRoomRent: Result := 'ROOMRENT';
+    itStayTax:  Result := 'STAYTAX';
+    itDiscount: Result := 'DISCOUNT';
+    itSale:     Result := 'SALE';
+  else
+    Result := 'UNKNOWN';
+  end;
+end;
+
 class function TRunningTabProduct.TProductTypeHelper.FromString(const Value: string): TProductType;
 begin
   if Value.ToUpper.Equals('ROOMRENT') then
@@ -488,7 +549,7 @@ begin
     result := itStayTax
   else if Value.ToUpper.Equals('DISCOUNT') then
     result := itDiscount
-  else if Value.ToUpper.Equals('Sale') then
+  else if Value.ToUpper.Equals('SALE') then
     result := itSale
   else
     Result := itUnknown;
@@ -504,7 +565,6 @@ var
   lPay: TRunningTabPayment;
 begin
   inherited;
-  aNode.NodeName := 'runningTab';
 
   aNode.Attributes['tabType'] := TabType.AsString;
   aNode.Attributes['description'] := Description;
@@ -626,6 +686,24 @@ begin
 end;
 
 { TRunningTabPayment }
+
+procedure TRunningTabPayment.AddPropertiesToXMLNode(const aNode: PXMLNode);
+begin
+  inherited;
+//  aNOde.Attributes[''] := InvoicePaymentType := iptInvoicePayment;
+  aNode.Attributes['id'] := IntToStr(ID);
+  aNode.Attributes['paymentType'] := IntToStr(PaymentType);
+  aNode.Attributes['roomerCode'] := PayTypeCode;
+  aNode.Attributes['accountKey'] := AccountKey;
+  aNode.Attributes['currency'] := CurrencyCode;
+  aNode.Attributes['currencyRate'] := FloatToXML(CurrencyRate);
+
+  aNode.AddChild('description').Text := Description;
+  aNode.AddChild('notes').Text := Notes;
+  aNode.AddChild('paymentDate').Text := DateToXML(PayDate);
+  aNode.AddChild('amount').Text := FloatToXML(Amount);
+
+end;
 
 procedure TRunningTabPayment.Clear;
 begin

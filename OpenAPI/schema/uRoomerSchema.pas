@@ -45,6 +45,7 @@ implementation
 procedure TxsdBaseObject.LoadFromXML(const aXML: string);
 var
   xmlDoc: IXMLDocument;
+  lNodeList: IXMLNodeList;
 begin
   Clear;
   xmlDoc := TXMLDocument.Create;
@@ -52,7 +53,8 @@ begin
   if assigned(xmlDoc.parseError) then
     raise EXMLDocException.Create('XML Load error:' + xmlDoc.parseError.reason);
 
-  SetPropertiesFromXMLNode(xmlDoc.DocumentElement);
+  if xmlDoc.DocumentElement.SelectNodesNS(GetNameSpaceURI, GetNodeName, lNodeList) then
+    SetPropertiesFromXMLNode(lNodeList.GetFirst);
 end;
 
 procedure TxsdBaseObject.AddPropertiesToXMLNode(const aNode: PXMLNode);
