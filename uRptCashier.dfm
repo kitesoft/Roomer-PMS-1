@@ -338,6 +338,10 @@ object frmRptCashier: TfrmRptCashier
     object tabStatGrid: TsTabSheet
       Caption = 'Data'
       TabVisible = False
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object sPanel1: TsPanel
         Left = 0
         Top = 0
@@ -491,6 +495,10 @@ object frmRptCashier: TfrmRptCashier
     end
     object sTabSheet1: TsTabSheet
       Caption = 'Cashier functions'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object grGet: TcxGrid
         Left = 0
         Top = 43
@@ -720,6 +728,10 @@ object frmRptCashier: TfrmRptCashier
     end
     object sTabSheet2: TsTabSheet
       Caption = 'Received Payments'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object sPanel2: TsPanel
         Left = 0
         Top = 0
@@ -972,7 +984,7 @@ object frmRptCashier: TfrmRptCashier
     PrinterSetup.BinName = 'Default'
     PrinterSetup.DocumentName = 'Report'
     PrinterSetup.Orientation = poLandscape
-    PrinterSetup.PaperName = 'A4 210 x 297 mm'
+    PrinterSetup.PaperName = 'A4'
     PrinterSetup.PrinterName = 'Default'
     PrinterSetup.SaveDeviceSettings = False
     PrinterSetup.mmMarginBottom = 6350
@@ -1433,7 +1445,7 @@ object frmRptCashier: TfrmRptCashier
           PrinterSetup.BinName = 'Default'
           PrinterSetup.DocumentName = 'Report'
           PrinterSetup.Orientation = poLandscape
-          PrinterSetup.PaperName = 'A4 210 x 297 mm'
+          PrinterSetup.PaperName = 'A4'
           PrinterSetup.PrinterName = 'Default'
           PrinterSetup.SaveDeviceSettings = False
           PrinterSetup.mmMarginBottom = 6350

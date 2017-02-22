@@ -922,7 +922,7 @@ begin
   end
   else
   begin
-    EditInvoice(iReservation, iRoomReservation, 0, 0, 0, 0, false);
+    EditInvoice(iReservation, iRoomReservation, 0, 0, false);
   end;
 end;
 

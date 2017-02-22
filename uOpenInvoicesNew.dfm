@@ -66,7 +66,6 @@ object frmOpenInvoicesNew: TfrmOpenInvoicesNew
       ParentFont = False
       TabOrder = 2
       SkinData.SkinSection = 'GROUPBOX'
-      Checked = False
       object dtedFrom: TsDateEdit
         Left = 16
         Top = 18
@@ -84,7 +83,6 @@ object frmOpenInvoicesNew: TfrmOpenInvoicesNew
         ParentFont = False
         TabOrder = 0
         Text = '  -  -    '
-        CheckOnExit = True
         SkinData.SkinSection = 'EDIT'
         GlyphMode.Blend = 0
         GlyphMode.Grayed = False
@@ -106,7 +104,6 @@ object frmOpenInvoicesNew: TfrmOpenInvoicesNew
         ParentFont = False
         TabOrder = 1
         Text = '  -  -    '
-        CheckOnExit = True
         SkinData.SkinSection = 'EDIT'
         GlyphMode.Blend = 0
         GlyphMode.Grayed = False
@@ -125,8 +122,6 @@ object frmOpenInvoicesNew: TfrmOpenInvoicesNew
     object sTabSheet2: TsTabSheet
       Caption = 'Rent'
       TabVisible = False
-      SkinData.CustomColor = False
-      SkinData.CustomFont = False
       ExplicitLeft = 0
       ExplicitTop = 0
       ExplicitWidth = 0

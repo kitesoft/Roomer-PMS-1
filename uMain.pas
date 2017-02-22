@@ -4642,7 +4642,7 @@ begin
     exit;
   iRoomReservation := mAllReservations['RoomReservation'];
   iReservation := mAllReservations['Reservation'];
-  EditInvoice(iReservation, iRoomReservation, 0, 0, 0, 0, false);
+  EditInvoice(iReservation, iRoomReservation, 0, 0, false);
 end;
 
 procedure TfrmMain.G4Click(Sender: TObject);
@@ -4652,7 +4652,7 @@ begin
   if mAllReservations.eof OR mAllReservations.BOF then
     exit;
   iReservation := mAllReservations['Reservation'];
-  EditInvoice(iReservation, 0, 0, 0, 0, 0, false);
+  EditInvoice(iReservation, 0, 0, 0, false);
 end;
 
 function TfrmMain.GetActivePeriodGrid: TAdvStringGrid;
@@ -4928,7 +4928,7 @@ begin
       EditInvoice2015(_iReservation, _iRoomReservation, 0, false, false, '', g.qExpandRoomRentOnInvoice)
     else
 {$ENDIF}
-      EditInvoice(_iReservation, _iRoomReservation, 0, _InvoiceIndex, 0, 0, false);
+      EditInvoice(_iReservation, _iRoomReservation, 0, _InvoiceIndex, false);
   end;
 end;
 
@@ -11618,12 +11618,12 @@ begin
   begin
     if d.qrres = 0 then
     begin
-      EditInvoice(d.qRes, 0, 0, 0, 0, 0, false);
+      EditInvoice(d.qRes, 0, 0, 0, false);
     end
     else
     begin
       // This is not groupinvoice
-      EditInvoice(d.qRes, d.qrres, 0, 0, 0, 0, false);
+      EditInvoice(d.qRes, d.qrres, 0, 0, false);
     end;
   end;
 
@@ -11643,12 +11643,12 @@ begin
   begin
     if d.qrres = 0 then
     begin
-      EditInvoice(d.qRes, 0, 0, 0, 0, 0, false);
+      EditInvoice(d.qRes, 0, 0, 0, false);
     end
     else
     begin
       // This is not groupinvoice
-      EditInvoice(d.qRes, d.qrres, 0, 0, 0, 0, false);
+      EditInvoice(d.qRes, d.qrres, 0, 0, false);
     end;
   end;
 
@@ -11660,7 +11660,7 @@ end;
 procedure TfrmMain._CashInvoice;
 begin
   try
-    EditInvoice(0, 0, 2, 0, 0, 0, false);
+    EditInvoice(0, 0, 2, 0, false);
   finally
   end;
 end;

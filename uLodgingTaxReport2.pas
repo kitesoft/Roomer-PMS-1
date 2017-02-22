@@ -972,7 +972,7 @@ begin
     exit;
 
   iReservation := mInvoiceHeads.FieldByName('Reservation').Asinteger;
-  EditInvoice(iReservation, 0, 0, 0, 0, 0, false);
+  EditInvoice(iReservation, 0, 0, 0, false);
 end;
 
 procedure TfrmLodgingTaxReport2.OpenthisRoom1Click(Sender : TObject);
@@ -985,7 +985,7 @@ begin
 
   iReservation := mInvoiceHeads.FieldByName('Reservation').Asinteger;
   iRoomReservation := mInvoiceHeads.FieldByName('RoomReservation').Asinteger; ;
-  EditInvoice(iReservation, iRoomReservation, 0, 0, 0, 0, false);
+  EditInvoice(iReservation, iRoomReservation, 0, 0, false);
 end;
 
 // -------------------------------------------------------------------------------

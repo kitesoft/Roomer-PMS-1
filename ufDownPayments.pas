@@ -727,7 +727,7 @@ begin
   begin
     iReservation := kbmPayments_.FieldByName('Reservation').AsInteger;
     iRoomReservation := kbmPayments_.FieldByName('RoomReservation').AsInteger;
-    EditInvoice(iReservation, iRoomReservation, 0, 0, 0, 0, false);
+    EditInvoice(iReservation, iRoomReservation, 0, 0, false);
   end;
 end;
 

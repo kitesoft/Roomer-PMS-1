@@ -673,8 +673,7 @@ type
 var
   frmInvoice: TfrmInvoice;
 
-procedure EditInvoice(reservation, RoomReservation, SplitNumber, InvoiceIndex: integer;
-  Arrival, Departure: TDate; bCredit: boolean; FromKredit: boolean = false);
+procedure EditInvoice(reservation, RoomReservation, SplitNumber, InvoiceIndex: integer; bCredit: boolean; FromKredit: boolean = false);
 
 implementation
 
@@ -753,8 +752,7 @@ const
     'DELETE FROM payments WHERE InvoiceNumber > 1000000000'
     );
 
-procedure EditInvoice(reservation, RoomReservation, SplitNumber, InvoiceIndex: integer;
-  Arrival, Departure: TDate; bCredit: boolean; FromKredit: boolean = false);
+procedure EditInvoice(reservation, RoomReservation, SplitNumber, InvoiceIndex: integer; bCredit: boolean; FromKredit: boolean = false);
 var
   _frmInvoice: TfrmInvoice;
 begin
