@@ -93,8 +93,10 @@ object frmControlData: TfrmControlData
         ReadOnly = True
         TabOrder = 0
         OnChange = tvSelectionChange
+        OnChanging = tvSelectionChanging
+        OnCustomDrawItem = tvSelectionCustomDrawItem
         Items.NodeData = {
-          030B000000280000000000000001000000FFFFFFFFFFFFFFFF00000000000000
+          030C000000280000000000000001000000FFFFFFFFFFFFFFFF00000000000000
           0000000000010548006F00740065006C00260000000000000002000000FFFFFF
           FFFFFFFFFF000000000000000000000000010449004400270073002C00000000
           00000009000000FFFFFFFFFFFFFFFF000000000000000003000000010749006E
@@ -120,8 +122,11 @@ object frmControlData: TfrmControlData
           FFFFFFFFFF000000000000000000000000010C52006500730065007200760061
           00740069006F006E007300480000000000000013000000FFFFFFFFFFFFFFFF00
           000000000000000000000001154D0061006E006400610074006F007200790020
-          0069006E0066006F0072006D006100740069006F006E00}
+          0069006E0066006F0072006D006100740069006F006E003A0000000000000014
+          000000FFFFFFFFFFFFFFFF000000000000000000000000010E42006500740061
+          002000460075006E006300740069006F006E007300}
         SkinData.SkinSection = 'EDIT'
+        ExplicitTop = -2
       end
     end
     object __LMDBackPanel3: TsPanel
@@ -147,6 +152,8 @@ object frmControlData: TfrmControlData
         ParentFont = False
         TabOrder = 0
         SkinData.SkinSection = 'PAGECONTROL'
+        ExplicitLeft = 5
+        ExplicitTop = -2
         object tsNull: TsTabSheet
           Caption = 'tsNull'
           SkinData.SkinSection = 'FORM'
@@ -9050,17 +9057,17 @@ object frmControlData: TfrmControlData
           Caption = 'Mandatory info'
           object pcMandatoryInfo: TsPageControl
             AlignWithMargins = True
-            Left = 20
-            Top = 20
-            Width = 1053
-            Height = 674
-            Margins.Left = 20
-            Margins.Top = 20
-            Margins.Right = 20
-            Margins.Bottom = 20
+            Left = 3
+            Top = 3
+            Width = 1087
+            Height = 708
             ActivePage = tabGuestInformation
             Align = alClient
             TabOrder = 0
+            ExplicitLeft = 20
+            ExplicitTop = 20
+            ExplicitWidth = 1053
+            ExplicitHeight = 674
             object tabGuestInformation: TsTabSheet
               Caption = 'Mandatory Guest information'
               object clbMandatoryFields: TsCheckListBox
@@ -9068,7 +9075,7 @@ object frmControlData: TfrmControlData
                 Left = 20
                 Top = 53
                 Width = 390
-                Height = 582
+                Height = 616
                 Margins.Left = 20
                 Margins.Top = 20
                 Margins.Bottom = 10
@@ -9082,15 +9089,21 @@ object frmControlData: TfrmControlData
                 Font.Style = []
                 ParentFont = False
                 TabOrder = 0
-                SkinData.SkinSection = 'EDIT'
+                SkinData.SkinSection = 'GROUPBOX'
+                DblClickToggle = True
+                ExplicitLeft = 10
+                ExplicitTop = 37
               end
               object pnlManInfoButtons: TsPanel
                 Left = 0
                 Top = 0
-                Width = 1045
+                Width = 1079
                 Height = 33
                 Align = alTop
                 TabOrder = 1
+                SkinData.SkinSection = 'GROUPBOX'
+                ExplicitLeft = -6
+                ExplicitTop = -2
                 object btnMFSelectNone: TsButton
                   AlignWithMargins = True
                   Left = 120
@@ -9116,6 +9129,33 @@ object frmControlData: TfrmControlData
                   OnClick = btnMFSelectAllClick
                 end
               end
+            end
+          end
+        end
+        object tsBetaFunctions: TsTabSheet
+          Caption = 'Beta Functions'
+          ExplicitLeft = 5
+          ExplicitTop = 26
+          object gbxInvoiceBeta: TsGroupBox
+            Left = 0
+            Top = 0
+            Width = 1093
+            Height = 105
+            Align = alTop
+            Caption = 'Invoice Beta functionaity'
+            TabOrder = 0
+            ExplicitLeft = 56
+            ExplicitTop = 56
+            ExplicitWidth = 185
+            object cbxObjectsInvoice: TsCheckBox
+              Left = 24
+              Top = 24
+              Width = 214
+              Height = 20
+              Caption = 'Use new Invoiceform using Objects'
+              TabOrder = 0
+              ImgChecked = 0
+              ImgUnchecked = 0
             end
           end
         end

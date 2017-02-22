@@ -720,6 +720,9 @@ type
     lblMasterRateCurrencyName: TsLabel;
     lbAllowTogglingOfCityTaxesOnInvoice: TsLabel;
     cbAllowTogglingOfCityTaxesOnInvoice: TsCheckBox;
+    tsBetaFunctions: TsTabSheet;
+    gbxInvoiceBeta: TsGroupBox;
+    cbxObjectsInvoice: TsCheckBox;
     procedure FormCreate(Sender : TObject);
     procedure FormClose(Sender : TObject; var Action : TCloseAction);
     procedure FormShow(Sender : TObject);
@@ -782,6 +785,9 @@ type
     procedure btnMFSelectNoneClick(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure ceMasterRateCurrencyDblClick(Sender: TObject);
+    procedure tvSelectionCustomDrawItem(Sender: TCustomTreeView; Node: TTreeNode; State: TCustomDrawState;
+      var DefaultDraw: Boolean);
+    procedure tvSelectionChanging(Sender: TObject; Node: TTreeNode; var AllowChange: Boolean);
 
   private
     { private declarations }
@@ -908,6 +914,8 @@ var
   winterStartsDay : integer;
 
   ManadatoryFields: TMandatoryCheckinField;
+  lNode: TTreeNode;
+  i: Integer;
 begin
   try
     FUpdatingCOntrols := True;
@@ -1597,6 +1605,21 @@ g.ReadWriteSettingsToRegistry(0);
     cbxChangeNationality.Checked := glb.PMSSettings.ReservationProfileSettings.EditAllGuestsNationality;
     cbxShowRoomAsPaidWhenZero.Checked := glb.PMSSettings.InvoiceSettings.ShowInvoiceAsPaidWhenStatusIsZero;
 
+    for i := 0 to tvSelection.Items.Count-1 do
+    begin
+      lNode := tvSelection.Items[i];
+      if mainPage.Pages[lNode.SelectedIndex] = tsBetaFunctions then
+      begin
+        lNode.Enabled := glb.PMSSettings.BetaFunctionality.BetaFunctionsAvailable;
+        Break;
+      end;
+    end;
+
+    if glb.PMSSettings.BetaFunctionality.BetaFunctionsAvailable then
+    begin
+      cbxObjectsInvoice.Checked := glb.PMSSettings.BetaFunctionality.UseInvoiceOnObjectsForm;
+    end;
+
   finally
     FUpdatingCOntrols := False;
   end;
@@ -2230,6 +2253,12 @@ begin
     glb.PMSSettings.ReservationProfileSettings.EditAllGuestsNationality := cbxChangeNationality.Checked;
     glb.PMSSettings.InvoiceSettings.ShowInvoiceAsPaidWhenStatusIsZero := cbxShowRoomAsPaidWhenZero.Checked;
 
+    if glb.PMSSettings.BetaFunctionality.BetaFunctionsAvailable then
+    begin
+      glb.PMSSettings.BetaFunctionality.UseInvoiceOnObjectsForm := cbxObjectsInvoice.Checked;
+    end;
+
+
     g.ReadWriteSettingsToRegistry(1);
   except
     on E: Exception do
@@ -2589,22 +2618,33 @@ procedure TfrmControlData.tvSelectionChange(Sender : TObject; Node : TTreeNode);
 var
   idx : Integer;
 begin
-  idx := tvSelection.Selected.SelectedIndex;
-  try
-  mainPage.ActivePageIndex := idx;
-  except end;
-  //****** LMDLImage1.ListIndex := idx;
+  if Node.Enabled then
+  begin
+    idx := tvSelection.Selected.SelectedIndex;
+    try
+      mainPage.ActivePageIndex := idx;
+    except end;
 
-  if idx = 0 then
-  begin
-    //labHeader.Caption := 'Veldu undirli� ' + Node.Text;
-	labHeader.Caption := format(GetTranslatedText('shTx_ControlData_Indent'), [Node.Text]);
-  end
-  else
-  begin
-    labHeader.Caption := Node.Text;
+    if idx = 0 then
+      labHeader.Caption := format(GetTranslatedText('shTx_ControlData_Indent'), [Node.Text])
+    else
+      labHeader.Caption := Node.Text;
   end;
 end;
+
+
+procedure TfrmControlData.tvSelectionChanging(Sender: TObject; Node: TTreeNode; var AllowChange: Boolean);
+begin
+  AllowChange := Node.Enabled;
+end;
+
+procedure TfrmControlData.tvSelectionCustomDrawItem(Sender: TCustomTreeView; Node: TTreeNode; State: TCustomDrawState;
+  var DefaultDraw: Boolean);
+begin
+  if cdsDisabled in State then
+    Sender.Canvas.Font.Color := clGray;
+end;
+
 
 procedure TfrmControlData.FormDestroy(Sender : TObject);
 var

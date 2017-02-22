@@ -103,6 +103,27 @@ type
     property EditAllGuestsNationality: boolean read GetEditAllGuestsNationality write SetEditAllGuestsNationality;
   end;
 
+  TPMSSettingsBetaFunctionality = class(TPMSSettingsGroup)
+  private const
+    cBetaFunctionsGroup = 'BETA_FUNCTIONS';
+    cBetaFunctionsAvailableName = 'BETA_FUNCTIONS_AVAILABLE';
+    cBetaFunctionUseInvoiceOnObjectsForm = 'INVOICE_ON_OBJECTS_FORM';
+
+  private
+    function GetBetaFunctionsAvailable: boolean;
+    procedure SetBetaFunctionsAvailable(const Value: boolean);
+    function GetUseInvocieOnObjectsForm: boolean;
+    procedure SetUseInvocieOnObjectsForm(const Value: boolean);
+  protected
+    function GetKeyGroup: string; override;
+  public
+    /// <summary>
+    ///   If true then functions marked as Beta are available in the PMS
+    /// </summary>
+    property BetaFunctionsAvailable: boolean read GetBetaFunctionsAvailable write SetBetaFunctionsAvailable;
+    property UseInvoiceOnObjectsForm: boolean read GetUseInvocieOnObjectsForm write SetUseInvocieOnObjectsForm;
+  end;
+
   /// <summary>
   ///   Provides access to PMS configuration-items stored in PMSSettings table in database
   /// </summary>
@@ -112,12 +133,11 @@ type
     FPMSSettingsAccessor: TPMSSettingsAccessor;
     FMasterRatesSettings: TPMSSettingsRatesAvailabilities;
     FReservationProfileSettngs: TPMSSettingsReservationProfile;
+    FBetaFunctionality: TPMSSettingsBetaFunctionality;
   protected
 
     function GetMandatoryCheckinFields: TMandatoryCheckInFieldSet;
     procedure SetMandatoryCheckinFields(const Value: TMandatoryCheckInFieldSet);
-    function GetBetaFunctionsAvailable: boolean;
-    procedure SetBetaFunctionsAvailable(const Value: boolean);
 
   public
     constructor Create(aPMSDataset: TRoomerDataset);
@@ -126,15 +146,12 @@ type
     property InvoiceSettings: TPMSSettingsInvoice read FInvoiceSettings;
     property MasterRatesSettings: TPMSSettingsRatesAvailabilities read FMasterRatesSettings;
     property ReservationProfileSettings: TPMSSettingsReservationProfile read FReservationProfileSettngs;
+    property BetaFunctionality: TPMSSettingsBetaFunctionality read FBetaFunctionality;
 
     /// <summary>
     ///   Currently enabled TMandatoryCheckinFields in PMS settings
     /// </summary>
     property MandatoryCheckinFields: TMandatoryCheckInFieldSet read GetMandatoryCheckinFields write SetMandatoryCheckinFields;
-    /// <summary>
-    ///   If true then functions marked as Beta are available in the PMS
-    /// </summary>
-    property BetaFunctionsAvailable: boolean read GetBetaFunctionsAvailable write SetBetaFunctionsAvailable;
   end;
 
 
@@ -146,17 +163,13 @@ uses
   , hData
   ;
 
-const
-  cBetaFunctionsGroup = 'BETA_FUNCTIONS';
-  cBetaFunctionsAvailableName = 'BETA_FUNCTIONS_AVAILABLE';
-
-
 constructor TPmsSettings.Create(aPMSDataset: TRoomerDataset);
 begin
   FPMSSettingsAccessor := TPMSSettingsAccessor.Create(aPMSDataset);
   FInvoiceSettings := TPMSSettingsInvoice.Create(FPMSSettingsAccessor);
   FMasterRatesSettings := TPMSSettingsRatesAvailabilities.Create(FPMSSettingsAccessor);
   FReservationProfileSettngs := TPMSSettingsReservationProfile.Create(FPMSSettingsAccessor);
+  FBetaFunctionality := TPMSSettingsBetaFunctionality.Create(FPMSSettingsAccessor);
 end;
 
 destructor TPmsSettings.Destroy;
@@ -165,14 +178,10 @@ begin
   FInvoiceSettings.Free;
   FMasterRatesSettings.Free;
   FReservationProfileSettngs.Free;
+  FBetaFunctionality.Free;
   inherited;
 end;
 
-
-procedure TPmsSettings.SetBetaFunctionsAvailable(const Value: boolean);
-begin
-  FPMSSettingsAccessor.SaveSetting(cBetaFunctionsGroup, cBetaFunctionsAvailableName, Value);
-end;
 
 procedure TPMSSettingsRatesAvailabilities.SetTopClassAvaiabilityOrderActive(const Value: boolean);
 begin
@@ -200,12 +209,6 @@ end;
 procedure TPMSSettingsRatesAvailabilities.SetMasterRateDefaultsActive(const Value: boolean);
 begin
   SaveSetting(cMasterRateDefaultsActive, Value);
-end;
-
-
-function TPmsSettings.GetBetaFunctionsAvailable: boolean;
-begin
-  Result := FPMSSettingsAccessor.GetSettingsAsBoolean(cBetaFunctionsGroup , cBetaFunctionsAvailableName, False );
 end;
 
 function TPMSSettingsRatesAvailabilities.GetTopClassAvaiabilityOrderActive: boolean;
@@ -364,6 +367,33 @@ end;
 procedure TPMSsettingsReservationProfile.SetEditAllGuestsNationality(const Value: boolean);
 begin
   SaveSetting(cAllGuestsNationality, Value);
+end;
+
+{ TPMSSettingsBetaFunctions }
+
+function TPMSSettingsBetaFunctionality.GetBetaFunctionsAvailable: boolean;
+begin
+  Result := GetSettingsAsBoolean(cBetaFunctionsAvailableName, False);
+end;
+
+function TPMSSettingsBetaFunctionality.GetKeyGroup: string;
+begin
+  Result := cBetaFunctionsGroup;
+end;
+
+function TPMSSettingsBetaFunctionality.GetUseInvocieOnObjectsForm: boolean;
+begin
+  Result := GetSettingsAsBoolean(cBetaFunctionUseInvoiceOnObjectsForm, false);
+end;
+
+procedure TPMSSettingsBetaFunctionality.SetBetaFunctionsAvailable(const Value: boolean);
+begin
+  SaveSetting(cBetaFunctionsAvailableName, Value);
+end;
+
+procedure TPMSSettingsBetaFunctionality.SetUseInvocieOnObjectsForm(const Value: boolean);
+begin
+  SaveSetting(cBetaFunctionUseInvoiceOnObjectsForm, Value);
 end;
 
 end.
