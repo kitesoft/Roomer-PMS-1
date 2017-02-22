@@ -1180,6 +1180,8 @@ object frmInvoice: TfrmInvoice
             Align = alRight
             TabOrder = 0
             SkinData.SkinSection = 'BUTTON'
+            ExplicitLeft = -6
+            ExplicitTop = -2
           end
           object btnEditDownPayment: TsButton
             Left = 131

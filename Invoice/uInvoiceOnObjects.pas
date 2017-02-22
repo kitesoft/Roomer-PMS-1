@@ -3,55 +3,17 @@
 interface
 
 uses
-  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  Grids, ExtCtrls, ComCtrls, StdCtrls, ImgList, Menus, Buttons, Data.DB,
-  Data.Win.ADODB
-
-    , uDateUtils, ActnList, System.Actions, Generics.Collections, variants,
-  cmpRoomerDataSet
-
-    , _glob, hData, ug, uUtils, kbmMemTable
-
-    , uTaxCalc
-
-    , AdvObj, BaseGrid, AdvGrid
-
-    , sPanel, sEdit, sLabel, sGroupBox, sStatusBar, sButton, sSkinProvider,
-  sPageControl
-
-    , cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxStyles,
-  dxSkinsCore, dxSkinDarkSide, dxSkinDevExpressDarkStyle, dxSkinMcSkin,
-  dxSkinOffice2013White, dxSkinsDefaultPainters, dxSkinscxPCPainter,
-  cxCustomData, cxFilter, cxData, cxDataStorage, cxEdit, cxNavigator, cxDBData,
-  cxMemo,
-  cxButtonEdit, cxSpinEdit, cxCalc, cxContainer
-
-    , frxExportMail, frxExportImage, frxExportRTF, frxExportHTML, frxClass,
-  frxExportPDF, frxDesgn, frxDBSet
-
-    , cxPropertiesStore, sCheckBox, cxTextEdit, cxMaskEdit, cxDropDownEdit,
-  cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
-  cxClasses,
-  cxGridCustomView, cxGrid
-
-    , dxmdaset, dxSkinCaramel, dxSkinCoffee, dxSkinTheAsphaltWorld, dxSkinBlack,
-  dxSkinBlue, dxSkinBlueprint, dxSkinDarkRoom,
-  dxSkinDevExpressStyle, dxSkinFoggy, dxSkinGlassOceans, dxSkinHighContrast,
-  dxSkiniMaginary, dxSkinLilian, dxSkinLiquidSky,
-  dxSkinLondonLiquidSky, dxSkinMoneyTwins, dxSkinOffice2007Black,
-  dxSkinOffice2007Blue, dxSkinOffice2007Green, dxSkinOffice2007Pink,
-  dxSkinOffice2007Silver, dxSkinOffice2010Black, dxSkinOffice2010Blue,
-  dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
-  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
-  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinValentine,
-  dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, cxButtons, sComboBox,
-  sSpeedButton, AdvUtil
-  , uInvoiceEntities, Spring.Data.VirtualDataSet, Spring.Data.ObjectDataSet, uInvoiceContainer
-  , uServicesRunningTabAPICaller
-  , uRoomerHotelServicesCommunicationModel_RunningTabs, cxTL, cxTLdxBarBuiltInMenu, cxInplaceContainer, cxTLData, cxDBTL,
-  cxCurrencyEdit, cxCheckBox
-  ,uRoomerForm, dxPScxCommon, dxPScxGridLnk
-    ;
+  uRoomerForm
+  , cxGraphics, cxLookAndFeels, cxLookAndFeelPainters, Vcl.Menus, dxSkinsCore, dxSkinCaramel, dxSkinCoffee,
+  dxSkinDarkSide, dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, cxControls, cxStyles, dxSkinscxPCPainter, cxCustomData,
+  cxFilter, cxData, cxDataStorage, cxEdit, cxNavigator, Data.DB, cxDBData, cxMemo, cxTL, cxCheckBox, cxMaskEdit, cxCalc,
+  cxCurrencyEdit, cxTLdxBarBuiltInMenu, Spring.Data.VirtualDataSet, Spring.Data.ObjectDataSet, frxClass, frxDBSet,
+  System.Classes, System.Actions, Vcl.ActnList, Vcl.ImgList, Vcl.Controls, cxInplaceContainer, cxDBTL, cxTLData,
+  Vcl.ExtCtrls, cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid,
+  Vcl.StdCtrls, sCheckBox, cxButtons, sButton, sGroupBox, sEdit, sLabel, sPanel, dxPScxCommon, dxPScxGridLnk, cxClasses,
+  cxPropertiesStore, Vcl.ComCtrls, sStatusBar
+  , uRoomerHotelServicesCommunicationModel_RunningTabs
+  ;
 
 type
 
@@ -157,7 +119,6 @@ type
     edtDownPayments: TsEdit;
     clabBalance: TsLabel;
     edtBalance: TsEdit;
-    tvPaymentsid: TcxGridDBColumn;
     rptDsLines: TfrxDBDataset;
     clabForeignCurrency: TsLabel;
     edtForeignCurrency: TsEdit;
@@ -235,7 +196,7 @@ type
     odsPayments: TObjectDataSet;
     dsPaymentObjects: TDataSource;
     odsInvoicelines: TObjectDataSet;
-    cxDBTreeList1: TcxDBTreeList;
+    tlInvoiceLines: TcxDBTreeList;
     cxDBTreeList1cxDBTreeListColumn7: TcxDBTreeListColumn;
     cxDBTreeList1cxDBTreeListColumn1: TcxDBTreeListColumn;
     cxDBTreeList1cxDBTreeListColumn2: TcxDBTreeListColumn;
@@ -244,6 +205,9 @@ type
     cxDBTreeList1cxDBTreeListColumn5: TcxDBTreeListColumn;
     cxDBTreeList1cxDBTreeListColumn6: TcxDBTreeListColumn;
     dsInvoicelinesObjects: TDataSource;
+    procedure FormShow(Sender: TObject);
+    procedure tvPaymentsPayGroupGetDisplayText(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
+      var AText: string);
   private
     FRunningTabOverView: TRunningTabsOverview;
     FReservation: integer;
@@ -258,38 +222,15 @@ type
     property RoomReservation: integer read FRoomReservation write FRoomReservation;
   end;
 
-procedure EditInvoice(reservation, RoomReservation, SplitNumber, InvoiceIndex: integer;
-  Arrival, Departure: TDate; bCredit: boolean; FromKredit: boolean = false);
-
 implementation
 
 uses
   Spring.Collections
-  ;
+  , uServicesRunningTabAPICaller
+  , SysUtils
+  , uAppGlobal;
 
 {$R *.DFM}
-
-
-procedure EditInvoice(reservation, RoomReservation, SplitNumber, InvoiceIndex: integer;
-  Arrival, Departure: TDate; bCredit: boolean; FromKredit: boolean = false);
-var
-  _frmInvoice: TfrmInvoiceObjects;
-begin
-  _frmInvoice := TfrmInvoiceObjects.create(nil);
-  try
-    _frmInvoice.reservation := reservation;
-    _frmInvoice.RoomReservation := RoomReservation;
-//    _frmInvoice.FnewSplitNumber := SplitNumber;
-//    _frmInvoice.FInvoiceIndex := InvoiceIndex;
-//    _frmInvoice.FIsCredit := bCredit;
-//    _frmInvoice.zNativeCurrency := ctrlGetString('NativeCurrency');
-//    _frmInvoice.zFromKredit := FromKredit;
-
-    _frmInvoice.ShowModal;
-  finally
-    FreeAndNil(_frmInvoice);
-  end;
-end;
 
 
 { TfrmInvoiceObjects }
@@ -344,6 +285,26 @@ end;
 procedure TfrmInvoiceObjects.DoUpdateControls;
 begin
   inherited;
+
+end;
+
+procedure TfrmInvoiceObjects.FormShow(Sender: TObject);
+begin
+  inherited;
+  RefreshData;
+end;
+
+procedure TfrmInvoiceObjects.tvPaymentsPayGroupGetDisplayText(Sender: TcxCustomGridTableItem;
+  ARecord: TcxCustomGridRecord; var AText: string);
+var
+  lPayment: TRunningTabPayment;
+begin
+  inherited;
+  lPayment := odsPayments.GetCurrentModel<TRunningTabPayment>;
+  if assigned(lPayment) and glb.Paytypesset.Locate('payType', lPayment.PaytypeCode, []) then
+    aText := glb.Paytypesset.FieldByName('payGroup').asString
+  else
+    aText := '';
 
 end;
 

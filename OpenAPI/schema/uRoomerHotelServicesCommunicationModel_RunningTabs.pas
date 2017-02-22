@@ -26,6 +26,8 @@ type
     FCountryCode: string;
   protected
     procedure SetPropertiesFromXMLNode(const aNode: PXMLNode); override;
+    class function GetNodeName: string; override;
+    class function GetNameSpaceURI: string; override;
   public
     procedure Clear; override;
   published
@@ -46,6 +48,8 @@ type
     FAmount: double;
   protected
     procedure SetPropertiesFromXMLNode(const aNode: PXMLNode); override;
+    class function GetNodeName: string; override;
+    class function GetNameSpaceURI: string; override;
   public
     procedure Clear; override;
   published
@@ -74,11 +78,17 @@ type
     FGrossPrice: double;
     FVatAmount: TVatAmount;
     FParent: integer;
+    FRoom: string;
+    FSource: string;
+    FInvoiceIndex: integer;
+    FGuestName: string;
     function GetTotalGrossAmount: double;
     function GetTotalNetAmount: double;
     function GetTotalVatAmount: double;
   protected
     procedure SetPropertiesFromXMLNode(const aNode: PXMLNode); override;
+    class function GetNodeName: string; override;
+    class function GetNameSpaceURI: string; override;
   public
     constructor Create;
     destructor Destroy; override;
@@ -107,12 +117,17 @@ type
 
     property TotalNetAmount: double read GetTotalNetAmount;
   end;
-  TRunnningTabProductList = TObjectList<TRunningTabProduct>;
+
+  TRunnningTabProductList = class(TxsdBaseObjectList<TRunningTabProduct>)
+  protected
+    class function GetNodeName: string; override;
+    class function GetNameSpaceURI: string; override;
+  end;
 
 
   TRunningTabPayment = class(TxsdBaseObject)
     type
-      TPaymenttype = (iptDownPayment, iptInvoicePayment);
+      TInvoicePaymenttype = (iptDownPayment, iptInvoicePayment);
 
   private
     FCurrencyCode: String;
@@ -121,7 +136,7 @@ type
     FCUrrencyRate: Double;
     FPaymentType: Integer;
     FPersonId: Integer;
-    FInvoicePaymentType: TPaymenttype;
+    FInvoicePaymentType: TInvoicePaymenttype;
     FAmount: Double;
     FDescription: String;
     FStaff: String;
@@ -131,10 +146,12 @@ type
     FPayTypeCode: string;
   protected
     procedure SetPropertiesFromXMLNode(const aNode: PXMLNode); override;
+    class function GetNodeName: string; override;
+    class function GetNameSpaceURI: string; override;
   public
     procedure Clear; override;
   published
-    property InvoicePaymentType: TPaymenttype read FInvoicePaymentType write FInvoicePaymentType;
+    property InvoicePaymentType: TInvoicePaymenttype read FInvoicePaymentType write FInvoicePaymentType;
     property AutoGen: String read FAutoGen write FAutoGen;
     property ID: Integer read Fid write FID;
     property PaymentType: Integer read FPaymentType write FPaymentType;
@@ -149,7 +166,12 @@ type
     property CurrencyCode: String read FCurrencyCode write FCurrencyCode;
     property CurrencyRate: Double read FCUrrencyRate write FCurrencyRate;
   end;
-  TRunningTabPaymentList = TObjectList<TRunningTabPayment>;
+
+  TRunningTabPaymentList = class(TxsdBaseObjectList<TRunningTabPayment>)
+  protected
+    class function GetNodeName: string; override;
+    class function GetNameSpaceURI: string; override;
+  end;
 
   TRunningTab = class(TxsdBaseObject)
   type
@@ -157,6 +179,7 @@ type
       TRunningTabTypeHelper = record helper for TRunningTabType
       public
         class function FromString(const Value: string): TRunningTabType; static;
+        function AsString: string;
       end;
   private
     FTabType: TRunningTabType;
@@ -175,6 +198,9 @@ type
     function GetRunningTabPaymentList: TRunningTabPaymentList;
   protected
     procedure SetPropertiesFromXMLNode(const aNode: PXMLNode); override;
+    procedure AddPropertiesToXMLNode(const aNode: PXMLNode); override;
+    class function GetNodeName: string; override;
+    class function GetNameSpaceURI: string; override;
   public
     constructor Create;
     destructor Destroy; override;
@@ -194,7 +220,11 @@ type
     property PaymentList: TRunningTabPaymentList read GetRunningTabPaymentList;
   end;
 
-  TRunningTabList = TObjectlist<TRunningTab>;
+  TRunningTabList = class(TxsdBaseObjectList<TRunningTab>)
+  protected
+    class function GetNodeName: string; override;
+  end;
+
 
   TRunningTabsOverview = class(TxsdBaseObject)
   private
@@ -205,6 +235,8 @@ type
     function GetRunningTabList: TRunningTabList;
   protected
     procedure SetPropertiesFromXMLNode(const aNode: PXMLNode); override;
+    procedure AddPropertiesToXMLNode(const aNode: PXMLNode); override;
+    class function GetNodeName: string; override;
   public
     constructor Create;
     destructor Destroy; override;
@@ -223,7 +255,7 @@ uses
   ;
 
 const
-  cNameSpaceURI = '';
+  GetNameSpaceURI = '';
 
 
 { TRunningTabCustomer }
@@ -241,21 +273,31 @@ begin
   FCountryCode := '';
 end;
 
+class function TRunningTabCustomer.GetNameSpaceURI: string;
+begin
+  Result := '';
+end;
+
+class function TRunningTabCustomer.GetNodeName: string;
+begin
+  Result := 'customer';
+end;
+
 procedure TRunningTabCustomer.SetPropertiesFromXMLNode(const aNode: PXMLNode);
 var
   lnodeList: IXMLNodeList;
 begin
   inherited;
 
-  if aNode.SelectNodesNS(cNameSpaceURI, 'name', lNodeList, 1) then
+  if aNode.SelectNodesNS(GetNameSpaceURI, 'name', lNodeList, 1) then
     FName := lNodeList.GetFirst.Text;
-  if aNode.SelectNodesNS(cNameSpaceURI, 'address1', lNodeList, 1) then
+  if aNode.SelectNodesNS(GetNameSpaceURI, 'address1', lNodeList, 1) then
     FAddress1 := lNodeList.GetFirst.Text;
-  if aNode.SelectNodesNS(cNameSpaceURI, 'address2', lNodeList, 1) then
+  if aNode.SelectNodesNS(GetNameSpaceURI, 'address2', lNodeList, 1) then
     FAddress2 := lNodeList.GetFirst.Text;
-  if aNode.SelectNodesNS(cNameSpaceURI, 'zip', lNodeList, 1) then
+  if aNode.SelectNodesNS(GetNameSpaceURI, 'zip', lNodeList, 1) then
     FZipcode := lNodeList.GetFirst.Text;
-  if aNode.SelectNodesNS(cNameSpaceURI, 'country', lNodeList, 1) then
+  if aNode.SelectNodesNS(GetNameSpaceURI, 'country', lNodeList, 1) then
     FCOuntryCode := lNodeList.GetFirst.Text;
 
   FCustomerCode := aNode.Attributes['roomerCode'];
@@ -277,6 +319,11 @@ begin
   FAccountKey := '';
   FGrossPrice := 0;
   FVatAmount.Clear;
+  FParent := -1;
+  FRoom := '';
+  FSource:= '';
+  FInvoiceIndex := 0;
+  FGuestName := '';
 end;
 
 constructor TRunningTabProduct.Create;
@@ -288,6 +335,16 @@ destructor TRunningTabProduct.Destroy;
 begin
   FVatAmount.Free;
   inherited;
+end;
+
+class function TRunningTabProduct.GetNameSpaceURI: string;
+begin
+  Result := '';
+end;
+
+class function TRunningTabProduct.GetNodeName: string;
+begin
+  Result := 'product';
 end;
 
 function TRunningTabProduct.GetTotalGrossAmount: double;
@@ -311,17 +368,17 @@ var
 begin
   inherited;
 
-  if aNode.SelectNodesNS(cNameSpaceURI, 'text1', lNodeList, 1) then
+  if aNode.SelectNodesNS(GetNameSpaceURI, 'text1', lNodeList, 1) then
     FDescription := lNodeList.GetFirst.Text;
-  if aNode.SelectNodesNS(cNameSpaceURI, 'purchaseDate', lNodeList, 1) then
+  if aNode.SelectNodesNS(GetNameSpaceURI, 'purchaseDate', lNodeList, 1) then
     FPurchaseDate := XMLToDate(lNodeList.GetFirst.Text);
-  if aNode.SelectNodesNS(cNameSpaceURI, 'numItems', lNodeList, 1) then
+  if aNode.SelectNodesNS(GetNameSpaceURI, 'numItems', lNodeList, 1) then
     FQuantity:=  XMLToFloat(lNodeList.GetFirst.Text);
-  if aNode.SelectNodesNS(cNameSpaceURI, 'itemNetPrice', lNodeList, 1) then
+  if aNode.SelectNodesNS(GetNameSpaceURI, 'itemNetPrice', lNodeList, 1) then
     FNettoPrice := XMLToFloat(lNodeList.GetFirst.Text);
-  if aNode.SelectNodesNS(cNameSpaceURI, 'itemGrossPrice', lNodeList, 1) then
+  if aNode.SelectNodesNS(GetNameSpaceURI, 'itemGrossPrice', lNodeList, 1) then
     FGrossPrice := XMLToFloat(lNodeList.GetFirst.Text);
-  if aNode.SelectNodesNS(cNameSpaceURI, 'itemVatAmount', lNodeList, 1) then
+  if aNode.SelectNodesNS(GetNameSpaceURI, 'itemVatAmount', lNodeList, 1) then
     FVatAmount.SetPropertiesFromXMLNode(lNodeList.GetFirst);
 
   FIndex := StrToIntDef(aNode.Attributes['index'], -1);
@@ -335,6 +392,20 @@ begin
 end;
 
 { TRunningTabsOverview }
+
+procedure TRunningTabsOverview.AddPropertiesToXMLNode(const aNode: PXMLNode);
+var
+  lRunTab: TRunningTab;
+begin
+  inherited;
+  aNode.NodeName := 'runningTabs';
+
+  aNode.Attributes['room'] := FRoom;
+  aNode.Attributes['roomReservationdId'] := IntToStr(FRoomreservationId);
+  aNode.Attributes['reservationdId'] := IntToStr(FReservationId);
+  for lRunTab in FRunningTabList do
+    lRunTab.AddPropertiesToXMLNode(aNode.AddChild(''));
+end;
 
 procedure TRunningTabsOverview.Clear;
 begin
@@ -357,16 +428,17 @@ begin
   inherited;
 end;
 
+class function TRunningTabsOverview.GetNodeName: string;
+begin
+  Result := '';
+end;
+
 function TRunningTabsOverview.GetRunningTabList: TRunningTabList;
 begin
   Result := FRunningTabList as TRunningTabList;
 end;
 
 procedure TRunningTabsOverview.SetPropertiesFromXMLNode(const aNode: PXMLNode);
-var
-  lnodeList: IXMLNodeList;
-  lTabNode: PXMLNode;
-  lRunningTab: TRunningTab;
 begin
   inherited;
 
@@ -374,18 +446,7 @@ begin
   FRoomReservationid := StrToIntDef( aNode.Attributes['roomReservationId'], 0);
   FReservationId := StrToIntDef(aNode.Attributes['reservationId'], 0);
 
-  FRunningTabList.onChanged.Enabled := false;
-  try
-    if aNode.SelectNodesNS(cNameSpaceURI, 'runningTab', lNodeList) then
-      for lTabNode in lnodeList do
-      begin
-        lRunningTab := TRunningTab.Create;
-        lRunningTab.SetPropertiesFromXMLNode(lTabNode);
-        FRunningTabList.Add(lRunningTab);
-      end;
-  finally
-    FRunningTabList.OnChanged.Enabled := true;
-  end;
+  RunningTabList.SetPropertiesFromXMLNode(aNode);
 end;
 
 { TVATAmount }
@@ -396,6 +457,16 @@ begin
   FVATCode := '';
   FPercentage := 0;
   FAmount := 0;
+end;
+
+class function TVATAmount.GetNameSpaceURI: string;
+begin
+  Result := '';
+end;
+
+class function TVATAmount.GetNodeName: string;
+begin
+  Result := 'itemVatAmount';
 end;
 
 procedure TVATAmount.SetPropertiesFromXMLNode(const aNode: PXMLNode);
@@ -426,6 +497,33 @@ end;
 
 { TRunningTab }
 
+
+procedure TRunningTab.AddPropertiesToXMLNode(const aNode: PXMLNode);
+var
+  lProd: TRunningTabProduct;
+  lPay: TRunningTabPayment;
+begin
+  inherited;
+  aNode.NodeName := 'runningTab';
+
+  aNode.Attributes['tabType'] := TabType.AsString;
+  aNode.Attributes['description'] := Description;
+  aNode.Attributes['currency'] := Currency;
+  aNode.Attributes['currenyRate'] := FloatToXML(CurrencyRate);
+  aNode.Attributes['totalNetAmount'] := FloatToXML(TotalNetAmount);
+  aNode.Attributes['totalVatAmount'] := FloatToXML(TotalVatAmount);
+  aNode.Attributes['totalGrossAmount'] := FloatToXML(TotalGrossAmount);
+  aNode.Attributes['balance'] := FloatToXML(Balance);
+
+  FRunningTabCustomer.AddPropertiesToXMLNode(aNode.AddChild(''));
+
+  for lProd in FProductList do
+    lProd.AddPropertiesToXMLNode(aNode.AddChild(''));
+
+  for lPay in FPaymentList do
+    lPay.AddPropertiesToXMLNode(aNode.AddChild(''));
+
+end;
 
 procedure TRunningTab.Clear;
 begin
@@ -465,6 +563,16 @@ begin
   Result := FProductList as TRunnningTabProductList;
 end;
 
+class function TRunningTab.GetNameSpaceURI: string;
+begin
+  Result := '';
+end;
+
+class function TRunningTab.GetNodeName: string;
+begin
+  Result := 'runningTab';
+end;
+
 function TRunningTab.GetRunningTabCustomer: TRunningTabCustomer;
 begin
   Result := FRunningTabCustomer;
@@ -473,13 +581,10 @@ end;
 procedure TRunningTab.SetPropertiesFromXMLNode(const aNode: PXMLNode);
 var
   lnodeList: IXMLNodeList;
-  lProdNode: PXMLNode;
-  lProduct: TRunningTabProduct;
-  lPayment: TRunningTabPayment;
 begin
   inherited;
 
-  FTabType := TRunningTabType.FromString(aNode.Attributes['tapType']);
+  FTabType := TRunningTabType.FromString(aNode.Attributes['tabType']);
   FDescription := aNode.Attributes['description'];
   FCurrency := aNode.Attributes['currency'];
   FCurrencyRate := XMLToFloat(aNode.Attributes['currencyRate']);
@@ -488,38 +593,27 @@ begin
   FTotalGrossAmount := XMLToFloat(aNode.Attributes['totalGrossAmount']);
   FBalance := XMLToFloat(aNode.Attributes['balance']);
 
-  if aNode.SelectNodesNS(cNameSpaceURI, 'customer', lNodeList, 1) then
+  if aNode.SelectNodesNS(FRunningTabCustomer.GetNameSpaceURI, FRunningTabCustomer.GetNodeName, lNodeList, 1) then
     FRunningTabCustomer.SetPropertiesFromXMLNode(lNodeList.GetFirst);
 
-  FProductList.onChanged.Enabled := false;
-  try
-    if aNode.SelectNodesNS(cNameSpaceURI, 'products/product', lNodeList) then
-      for lProdNode in lnodeList do
-      begin
-        lProduct := TRunningTabProduct.Create;
-        lProduct.SetPropertiesFromXMLNode(lProdNode);
-        FProductList.Add(lProduct);
-      end;
-  finally
-    FProductList.OnChanged.Enabled := true;
-  end;
+  if aNode.SelectNodesNS(ProductList.GetNameSpaceURI, ProductList.GetNodeName, lNodeList, 1) then
+    ProductList.SetPropertiesFromXMLNode(lNodeList.GetFirst());
 
-  FPaymentList.onChanged.Enabled := false;
-  try
-    if aNode.SelectNodesNS(cNameSpaceURI, 'payments/payment', lNodeList) then
-      for lProdNode in lnodeList do
-      begin
-        lPayment := TRunningTabPayment.Create;
-        lPayment.SetPropertiesFromXMLNode(lProdNode);
-        FPaymentList.Add(lPayment);
-      end;
-  finally
-    FProductList.OnChanged.Enabled := true;
-  end;
-
+  if aNode.SelectNodesNS(PaymentList.GetNameSpaceURI, PaymentList.GetNodeName, lNodeList, 1) then
+    PaymentList.SetPropertiesFromXMLNode(lNodeList.GetFirst());
 end;
 
 { TRunningTab.TRunningTabTypeHelper }
+
+function TRunningTab.TRunningTabTypeHelper.AsString: string;
+begin
+  case Self of
+    ttRoom: Result := 'ROOM';
+    ttGroup: Result := 'GROUP';
+  else
+    Result := 'UNKNONW';
+  end;
+end;
 
 class function TRunningTab.TRunningTabTypeHelper.FromString(const Value: string): TRunningTabType;
 begin
@@ -552,6 +646,16 @@ begin
   FID := -1;
 end;
 
+class function TRunningTabPayment.GetNameSpaceURI: string;
+begin
+  Result := '';
+end;
+
+class function TRunningTabPayment.GetNodeName: string;
+begin
+  Result := 'payment';
+end;
+
 procedure TRunningTabPayment.SetPropertiesFromXMLNode(const aNode: PXMLNode);
 var
   lnodeList: IXMLNodeList;
@@ -565,17 +669,48 @@ begin
   CurrencyCode := aNode.Attributes['currency'];
   CurrencyRate := XMLToFloat(aNode.Attributes['currencyRate'], 1.00);
 
-  if aNode.SelectNodesNS(cNameSpaceURI, 'description', lNodeList, 1) then
+  if aNode.SelectNodesNS(GetNameSpaceURI, 'description', lNodeList, 1) then
     FDescription:=  lNodeList.GetFirst.Text;
 
-  if aNode.SelectNodesNS(cNameSpaceURI, 'notes', lNodeList, 1) then
+  if aNode.SelectNodesNS(GetNameSpaceURI, 'notes', lNodeList, 1) then
     FNotes :=  lNodeList.GetFirst.Text;
 
-  if aNode.SelectNodesNS(cNameSpaceURI, 'paymentDate', lNodeList, 1) then
+  if aNode.SelectNodesNS(GetNameSpaceURI, 'paymentDate', lNodeList, 1) then
     FPayDate :=  XMLToDate(lNodeList.GetFirst.Text);
 
-  if aNode.SelectNodesNS(cNameSpaceURI, 'amount', lNodeList, 1) then
+  if aNode.SelectNodesNS(GetNameSpaceURI, 'amount', lNodeList, 1) then
     FAmount := XMLToFloat(lNodeList.GetFirst.Text, 0.00);
+end;
+
+{ TRunningTabPaymentList }
+
+class function TRunningTabPaymentList.GetNameSpaceURI: string;
+begin
+  Result := '';
+end;
+
+class function TRunningTabPaymentList.GetNodeName: string;
+begin
+  Result := 'payments';
+end;
+
+{ TRunnningTabProductList }
+
+class function TRunnningTabProductList.GetNameSpaceURI: string;
+begin
+  Result := '';
+end;
+
+class function TRunnningTabProductList.GetNodeName: string;
+begin
+  Result := 'products';
+end;
+
+{ TRunningTabList }
+
+class function TRunningTabList.GetNodeName: string;
+begin
+  Result := 'runningTabs';
 end;
 
 end.

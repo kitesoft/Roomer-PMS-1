@@ -4,6 +4,7 @@ inherited frmInvoiceObjects: TfrmInvoiceObjects
   HorzScrollBar.Visible = False
   VertScrollBar.Visible = False
   BorderIcons = [biMinimize, biMaximize]
+  Caption = 'Invoice'
   ClientHeight = 681
   ClientWidth = 1096
   Constraints.MinWidth = 910
@@ -12,6 +13,8 @@ inherited frmInvoiceObjects: TfrmInvoiceObjects
   Menu = MainMenu1
   Position = poDesigned
   Scaled = False
+  OnShow = FormShow
+  ExplicitTop = -11
   ExplicitWidth = 1112
   ExplicitHeight = 740
   PixelsPerInch = 96
@@ -19,7 +22,7 @@ inherited frmInvoiceObjects: TfrmInvoiceObjects
   inherited sbStatusBar: TsStatusBar
     Top = 661
     Width = 1096
-    ExplicitTop = 642
+    ExplicitTop = 661
     ExplicitWidth = 1096
   end
   object pnlMain: TsPanel [1]
@@ -32,7 +35,6 @@ inherited frmInvoiceObjects: TfrmInvoiceObjects
     Color = clWhite
     TabOrder = 1
     SkinData.SkinSection = 'PANEL'
-    ExplicitHeight = 642
     object Panel1: TsPanel
       Left = 0
       Top = 0
@@ -629,8 +631,6 @@ inherited frmInvoiceObjects: TfrmInvoiceObjects
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitTop = 169
-      ExplicitHeight = 473
       object Panel2: TsPanel
         Left = 0
         Top = 343
@@ -641,7 +641,6 @@ inherited frmInvoiceObjects: TfrmInvoiceObjects
         ParentColor = True
         TabOrder = 0
         SkinData.SkinSection = 'PANEL'
-        ExplicitTop = 321
         object memExtraText: TMemo
           Left = 1
           Top = 1
@@ -953,6 +952,8 @@ inherited frmInvoiceObjects: TfrmInvoiceObjects
             DragMode = dmAutomatic
             TabOrder = 1
             LookAndFeel.NativeStyle = False
+            ExplicitLeft = 6
+            ExplicitTop = 22
             object tvPayments: TcxGridDBTableView
               Navigator.Buttons.CustomButtons = <>
               DataController.DataSource = dsPaymentObjects
@@ -972,31 +973,31 @@ inherited frmInvoiceObjects: TfrmInvoiceObjects
               end
               object tvPaymentsPayType: TcxGridDBColumn
                 Caption = 'Type'
-                DataBinding.FieldName = 'PayType'
+                DataBinding.FieldName = 'PayTypeCode'
                 Width = 78
               end
               object tvPaymentsAmount: TcxGridDBColumn
+                Caption = 'Native Amount'
                 DataBinding.FieldName = 'Amount'
                 Width = 84
               end
               object tvPaymentsDescription: TcxGridDBColumn
                 DataBinding.FieldName = 'Description'
-                Width = 128
+                Width = 164
               end
               object tvPaymentsPayGroup: TcxGridDBColumn
-                DataBinding.FieldName = 'PayGroup'
+                Caption = 'Paygroup'
+                OnGetDisplayText = tvPaymentsPayGroupGetDisplayText
                 Width = 70
               end
               object tvPaymentsMemo: TcxGridDBColumn
                 DataBinding.FieldName = 'Memo'
                 PropertiesClassName = 'TcxMemoProperties'
                 Options.Editing = False
+                Width = 128
               end
               object tvPaymentsconfirmDate: TcxGridDBColumn
                 DataBinding.FieldName = 'confirmDate'
-              end
-              object tvPaymentsid: TcxGridDBColumn
-                DataBinding.FieldName = 'id'
               end
             end
             object lvPayments: TcxGridLevel
@@ -1172,7 +1173,6 @@ inherited frmInvoiceObjects: TfrmInvoiceObjects
         Padding.Bottom = 5
         TabOrder = 2
         SkinData.SkinSection = 'PANEL'
-        ExplicitHeight = 230
       end
       object sPanel4: TsPanel
         AlignWithMargins = True
@@ -1182,7 +1182,6 @@ inherited frmInvoiceObjects: TfrmInvoiceObjects
         Height = 246
         Align = alRight
         TabOrder = 1
-        ExplicitHeight = 224
         object pnlInvoiceIndex0: TsPanel
           Left = 3
           Top = 4
@@ -1599,7 +1598,7 @@ inherited frmInvoiceObjects: TfrmInvoiceObjects
           end
         end
       end
-      object cxDBTreeList1: TcxDBTreeList
+      object tlInvoiceLines: TcxDBTreeList
         Left = 0
         Top = 91
         Width = 1040
@@ -1623,7 +1622,7 @@ inherited frmInvoiceObjects: TfrmInvoiceObjects
         ParentFont = False
         RootValue = 0
         TabOrder = 4
-        ExplicitHeight = 230
+        ExplicitTop = 89
         object cxDBTreeList1cxDBTreeListColumn7: TcxDBTreeListColumn
           PropertiesClassName = 'TcxCheckBoxProperties'
           Caption.AlignHorz = taCenter
@@ -1638,7 +1637,8 @@ inherited frmInvoiceObjects: TfrmInvoiceObjects
         object cxDBTreeList1cxDBTreeListColumn1: TcxDBTreeListColumn
           DataBinding.FieldName = 'Description'
           Options.Editing = False
-          Position.ColIndex = 1
+          Width = 407
+          Position.ColIndex = 2
           Position.RowIndex = 0
           Position.BandIndex = 0
           Summary.FooterSummaryItems = <>
@@ -1647,7 +1647,8 @@ inherited frmInvoiceObjects: TfrmInvoiceObjects
         object cxDBTreeList1cxDBTreeListColumn2: TcxDBTreeListColumn
           DataBinding.FieldName = 'ItemType'
           Options.Editing = False
-          Position.ColIndex = 2
+          Width = 100
+          Position.ColIndex = 1
           Position.RowIndex = 0
           Position.BandIndex = 0
           Summary.FooterSummaryItems = <>
@@ -1656,6 +1657,7 @@ inherited frmInvoiceObjects: TfrmInvoiceObjects
         object cxDBTreeList1cxDBTreeListColumn3: TcxDBTreeListColumn
           DataBinding.FieldName = 'PurchaseDate'
           Options.Editing = False
+          Width = 100
           Position.ColIndex = 3
           Position.RowIndex = 0
           Position.BandIndex = 0
@@ -1666,6 +1668,7 @@ inherited frmInvoiceObjects: TfrmInvoiceObjects
           PropertiesClassName = 'TcxCalcEditProperties'
           DataBinding.FieldName = 'Quantity'
           Options.Editing = False
+          Width = 100
           Position.ColIndex = 4
           Position.RowIndex = 0
           Position.BandIndex = 0
@@ -1676,6 +1679,7 @@ inherited frmInvoiceObjects: TfrmInvoiceObjects
           PropertiesClassName = 'TcxCurrencyEditProperties'
           DataBinding.FieldName = 'Nettoprice'
           Options.Editing = False
+          Width = 100
           Position.ColIndex = 5
           Position.RowIndex = 0
           Position.BandIndex = 0
@@ -1686,6 +1690,7 @@ inherited frmInvoiceObjects: TfrmInvoiceObjects
           PropertiesClassName = 'TcxCurrencyEditProperties'
           DataBinding.FieldName = 'TotalnetAmount'
           Options.Editing = False
+          Width = 100
           Position.ColIndex = 6
           Position.RowIndex = 0
           Position.BandIndex = 0

@@ -706,8 +706,8 @@ uses
   UITypes
   , uFloatUtils
   , Math
-    , uVatCalculator, uSQLUtils, ufrmRoomPrices
-  , Spring.Collections
+  , uVatCalculator, uSQLUtils, ufrmRoomPrices
+  , uInvoiceOnObjects
   ;
 
 {$R *.DFM}
@@ -758,20 +758,41 @@ const
 procedure EditInvoice(reservation, RoomReservation, SplitNumber, InvoiceIndex: integer; bCredit: boolean; FromKredit: boolean = false);
 var
   _frmInvoice: TfrmInvoice;
+  frm: TfrmInvoiceObjects;
 begin
-  _frmInvoice := TfrmInvoice.create(nil);
-  try
-    _frmInvoice.reservation := reservation;
-    _frmInvoice.RoomReservation := RoomReservation;
-    _frmInvoice.FnewSplitNumber := SplitNumber;
-    _frmInvoice.FInvoiceIndex := InvoiceIndex;
-    _frmInvoice.FIsCredit := bCredit;
-    _frmInvoice.zNativeCurrency := ctrlGetString('NativeCurrency');
-    _frmInvoice.zFromKredit := FromKredit;
+  if glb.PMSSettings.BetaFunctionality.UseInvoiceOnObjectsForm then
+  begin
+    frm := TfrmInvoiceObjects.Create(nil);
+    try
+      frm.reservation := reservation;
+      frm.RoomReservation := RoomReservation;
+//      frm.FnewSplitNumber := SplitNumber;
+//      frm.FInvoiceIndex := InvoiceIndex;
+//      frm.FIsCredit := bCredit;
+//      frm.zNativeCurrency := ctrlGetString('NativeCurrency');
+//      frm.zFromKredit := FromKredit;
 
-    _frmInvoice.ShowModal;
-  finally
-    FreeAndNil(_frmInvoice);
+      frm.ShowModal;
+    finally
+      frm.Free;
+    end;
+  end
+  else
+  begin
+    _frmInvoice := TfrmInvoice.create(nil);
+    try
+      _frmInvoice.reservation := reservation;
+      _frmInvoice.RoomReservation := RoomReservation;
+      _frmInvoice.FnewSplitNumber := SplitNumber;
+      _frmInvoice.FInvoiceIndex := InvoiceIndex;
+      _frmInvoice.FIsCredit := bCredit;
+      _frmInvoice.zNativeCurrency := ctrlGetString('NativeCurrency');
+      _frmInvoice.zFromKredit := FromKredit;
+
+      _frmInvoice.ShowModal;
+    finally
+      FreeAndNil(_frmInvoice);
+    end;
   end;
 end;
 
