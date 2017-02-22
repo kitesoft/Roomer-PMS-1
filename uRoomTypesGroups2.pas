@@ -696,7 +696,7 @@ end;
 procedure TfrmRoomTypesGroups2.PrepareUserInterface;
 begin
 //**
-  btnAvailabilityOrder.Visible := glb.PMSSettings.TopClassAvaiabilityOrderActive;
+  btnAvailabilityOrder.Visible := glb.PMSSettings.MasterRatesSettings.TopClassAvaiabilityOrderActive;
 
   tvDatasendAvailability.Visible := NOT frmMain.RBEMode;
   tvDatasendRate.Visible := NOT frmMain.RBEMode;

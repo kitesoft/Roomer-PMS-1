@@ -999,7 +999,7 @@ begin
   fraGuestCountry.OnCountryChange := btnChangeCountryAllGuestsClick;
   fraContactCountry.AllowEdit := False;
 
-  pnlAllGuestsNationality.Visible := glb.PMSSettings.EditAllGuestsNationality;
+  pnlAllGuestsNationality.Visible := glb.PMSSettings.ReservationProfileSettings.EditAllGuestsNationality;
 end;
 
 procedure TfrmReservationProfile.FormCreate(Sender: TObject);

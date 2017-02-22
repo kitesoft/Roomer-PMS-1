@@ -4813,7 +4813,7 @@ end;
 function TfrmChannelAvailabilityManager.CorrectAmountByCurrency(price : Double; fromCurrencyId, toCurrencyId : Integer) : Double;
 begin
   result := price;
-  if glb.PMSSettings.MasterRateCurrencyConvert then
+  if glb.PMSSettings.MasterRatesSettings.MasterRateCurrencyConvert then
     result := CurrencyHandlersMap.ConvertAmount(price, fromCurrencyId, toCurrencyId);
 end;
 

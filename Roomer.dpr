@@ -269,6 +269,7 @@ uses
   uRptUserActivity in 'ActivityLogs\uRptUserActivity.pas' {frmUserActivityReport},
   uCredentialsAPICaller in 'OpenAPI\uCredentialsAPICaller.pas',
   RoomerExceptionHandling in 'RoomerExceptionHandling.pas',
+  uPMSSettingsAccessor in 'PMSSettings\uPMSSettingsAccessor.pas',
   uRoomerHotelServicesCommunicationModel_RunningTabs in 'OpenAPI\schema\uRoomerHotelServicesCommunicationModel_RunningTabs.pas',
   uRoomerSchema in 'OpenAPI\schema\uRoomerSchema.pas',
   uServicesRunningTabAPICaller in 'OpenAPI\uServicesRunningTabAPICaller.pas',

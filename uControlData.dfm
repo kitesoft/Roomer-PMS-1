@@ -56,7 +56,7 @@ object frmControlData: TfrmControlData
         Left = 1
         Top = 1
         Width = 71
-        Height = 28
+        Height = 26
         Align = alLeft
         Caption = 'Select'
         ParentFont = False
@@ -65,6 +65,7 @@ object frmControlData: TfrmControlData
         Font.Height = -23
         Font.Name = 'Verdana'
         Font.Style = []
+        ExplicitHeight = 28
       end
     end
     object LMDBackPanel2: TsPanel
@@ -92,8 +93,10 @@ object frmControlData: TfrmControlData
         ReadOnly = True
         TabOrder = 0
         OnChange = tvSelectionChange
+        OnChanging = tvSelectionChanging
+        OnCustomDrawItem = tvSelectionCustomDrawItem
         Items.NodeData = {
-          030B000000280000000000000001000000FFFFFFFFFFFFFFFF00000000000000
+          030C000000280000000000000001000000FFFFFFFFFFFFFFFF00000000000000
           0000000000010548006F00740065006C00260000000000000002000000FFFFFF
           FFFFFFFFFF000000000000000000000000010449004400270073002C00000000
           00000009000000FFFFFFFFFFFFFFFF000000000000000003000000010749006E
@@ -119,8 +122,11 @@ object frmControlData: TfrmControlData
           FFFFFFFFFF000000000000000000000000010C52006500730065007200760061
           00740069006F006E007300480000000000000013000000FFFFFFFFFFFFFFFF00
           000000000000000000000001154D0061006E006400610074006F007200790020
-          0069006E0066006F0072006D006100740069006F006E00}
+          0069006E0066006F0072006D006100740069006F006E003A0000000000000014
+          000000FFFFFFFFFFFFFFFF000000000000000000000000010E42006500740061
+          002000460075006E006300740069006F006E007300}
         SkinData.SkinSection = 'EDIT'
+        ExplicitTop = -2
       end
     end
     object __LMDBackPanel3: TsPanel
@@ -136,7 +142,7 @@ object frmControlData: TfrmControlData
         Top = 1
         Width = 1101
         Height = 743
-        ActivePage = AdvTabSheet3
+        ActivePage = tsBetaFunctions
         Align = alClient
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
@@ -146,20 +152,14 @@ object frmControlData: TfrmControlData
         ParentFont = False
         TabOrder = 0
         SkinData.SkinSection = 'PAGECONTROL'
+        ExplicitLeft = 5
+        ExplicitTop = -2
         object tsNull: TsTabSheet
           Caption = 'tsNull'
           SkinData.SkinSection = 'FORM'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
         end
         object tsCompany: TsTabSheet
           Caption = 'Company'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object gbxCompany: TsGroupBox
             Left = 3
             Top = 4
@@ -458,6 +458,9 @@ object frmControlData: TfrmControlData
               inherited pnlCountry: TsPanel
                 Width = 218
                 ExplicitWidth = 218
+                inherited lblCountryName: TsLabel
+                  Height = 14
+                end
               end
             end
           end
@@ -859,10 +862,6 @@ object frmControlData: TfrmControlData
         end
         object tsSystemItemIDs: TsTabSheet
           Caption = 'ID Numbers'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object cbxIdNumbers: TsGroupBox
             AlignWithMargins = True
             Left = 3
@@ -1166,10 +1165,6 @@ object frmControlData: TfrmControlData
         end
         object tsInvoiceTexts: TsTabSheet
           Caption = 'Invoice texts'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object AdvPageControl2: TsPageControl
             Left = 0
             Top = 0
@@ -1187,10 +1182,6 @@ object frmControlData: TfrmControlData
             SkinData.SkinSection = 'PAGECONTROL'
             object tsInvTexts_Laser1: TsTabSheet
               Caption = '1'
-              ExplicitLeft = 0
-              ExplicitTop = 0
-              ExplicitWidth = 0
-              ExplicitHeight = 0
               object gbxInvoiceHead: TsGroupBox
                 Left = 4
                 Top = 4
@@ -2175,10 +2166,6 @@ object frmControlData: TfrmControlData
             end
             object tsInvTexts_Laser2: TsTabSheet
               Caption = '2'
-              ExplicitLeft = 0
-              ExplicitTop = 0
-              ExplicitWidth = 0
-              ExplicitHeight = 0
               object gbxVATlist: TsGroupBox
                 Left = 440
                 Top = 6
@@ -2956,10 +2943,6 @@ object frmControlData: TfrmControlData
             end
             object AdvTabSheet15: TsTabSheet
               Caption = '3'
-              ExplicitLeft = 0
-              ExplicitTop = 0
-              ExplicitWidth = 0
-              ExplicitHeight = 0
               object GroupBox3: TsGroupBox
                 AlignWithMargins = True
                 Left = 3
@@ -3279,10 +3262,6 @@ object frmControlData: TfrmControlData
         end
         object tsInvoiceSystem: TsTabSheet
           Caption = 'Invoice Settings'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object LMDGroupBox5: TsGroupBox
             Left = 3
             Top = 3
@@ -3648,7 +3627,7 @@ object frmControlData: TfrmControlData
               Left = 249
               Top = 20
               Width = 20
-              Height = 16
+              Height = 20
               TabOrder = 0
               SkinData.SkinSection = 'CHECKBOX'
               ImgChecked = 0
@@ -3658,7 +3637,7 @@ object frmControlData: TfrmControlData
               Left = 249
               Top = 40
               Width = 20
-              Height = 16
+              Height = 20
               TabOrder = 1
               SkinData.SkinSection = 'CHECKBOX'
               ImgChecked = 0
@@ -3770,7 +3749,7 @@ object frmControlData: TfrmControlData
               Left = 447
               Top = 39
               Width = 20
-              Height = 16
+              Height = 20
               TabOrder = 2
               SkinData.SkinSection = 'CHECKBOX'
               ImgChecked = 0
@@ -3780,7 +3759,7 @@ object frmControlData: TfrmControlData
               Left = 447
               Top = 58
               Width = 20
-              Height = 16
+              Height = 20
               TabOrder = 3
               SkinData.SkinSection = 'CHECKBOX'
               ImgChecked = 0
@@ -3908,7 +3887,7 @@ object frmControlData: TfrmControlData
               Left = 139
               Top = 41
               Width = 20
-              Height = 16
+              Height = 20
               TabOrder = 0
               SkinData.SkinSection = 'CHECKBOX'
               ImgChecked = 0
@@ -4147,7 +4126,7 @@ object frmControlData: TfrmControlData
               Left = 256
               Top = 37
               Width = 20
-              Height = 16
+              Height = 20
               TabOrder = 0
               SkinData.SkinSection = 'CHECKBOX'
               ImgChecked = 0
@@ -4157,7 +4136,7 @@ object frmControlData: TfrmControlData
               Left = 256
               Top = 15
               Width = 20
-              Height = 16
+              Height = 20
               TabOrder = 1
               SkinData.SkinSection = 'CHECKBOX'
               ImgChecked = 0
@@ -4167,7 +4146,7 @@ object frmControlData: TfrmControlData
               Left = 256
               Top = 58
               Width = 20
-              Height = 16
+              Height = 20
               Margins.Left = 2
               Margins.Top = 2
               Margins.Right = 2
@@ -4181,7 +4160,7 @@ object frmControlData: TfrmControlData
               Left = 256
               Top = 78
               Width = 20
-              Height = 16
+              Height = 20
               Margins.Left = 2
               Margins.Top = 2
               Margins.Right = 2
@@ -4220,7 +4199,7 @@ object frmControlData: TfrmControlData
               Left = 192
               Top = 21
               Width = 20
-              Height = 16
+              Height = 20
               TabOrder = 0
               SkinData.SkinSection = 'CHECKBOX'
               ImgChecked = 0
@@ -4323,7 +4302,7 @@ object frmControlData: TfrmControlData
               Left = 447
               Top = 18
               Width = 20
-              Height = 16
+              Height = 20
               TabOrder = 0
               SkinData.SkinSection = 'CHECKBOX'
               ImgChecked = 0
@@ -4333,7 +4312,7 @@ object frmControlData: TfrmControlData
               Left = 447
               Top = 58
               Width = 20
-              Height = 16
+              Height = 20
               TabOrder = 1
               SkinData.SkinSection = 'CHECKBOX'
               ImgChecked = 0
@@ -4343,7 +4322,7 @@ object frmControlData: TfrmControlData
               Left = 447
               Top = 38
               Width = 20
-              Height = 16
+              Height = 20
               TabOrder = 2
               SkinData.SkinSection = 'CHECKBOX'
               ImgChecked = 0
@@ -4353,7 +4332,7 @@ object frmControlData: TfrmControlData
               Left = 447
               Top = 77
               Width = 20
-              Height = 16
+              Height = 20
               TabOrder = 3
               SkinData.SkinSection = 'CHECKBOX'
               ImgChecked = 0
@@ -4363,7 +4342,7 @@ object frmControlData: TfrmControlData
               Left = 447
               Top = 97
               Width = 20
-              Height = 16
+              Height = 20
               TabOrder = 4
               SkinData.SkinSection = 'CHECKBOX'
               ImgChecked = 0
@@ -4373,7 +4352,7 @@ object frmControlData: TfrmControlData
               Left = 447
               Top = 116
               Width = 20
-              Height = 16
+              Height = 20
               TabOrder = 5
               SkinData.SkinSection = 'CHECKBOX'
               ImgChecked = 0
@@ -4383,10 +4362,6 @@ object frmControlData: TfrmControlData
         end
         object tsInvoiceRouting: TsTabSheet
           Caption = 'Invoice Routing'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object sGroupBox15: TsGroupBox
             AlignWithMargins = True
             Left = 3
@@ -4598,10 +4573,6 @@ object frmControlData: TfrmControlData
         end
         object tsRoomStatusColors: TsTabSheet
           Caption = 'Room Status Texts'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object LMDGroupBox3: TsGroupBox
             AlignWithMargins = True
             Left = 3
@@ -4919,10 +4890,6 @@ object frmControlData: TfrmControlData
         object tsMail: TsTabSheet
           Caption = 'Mail'
           TabVisible = False
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object sLabel5: TsLabel
             Left = 24
             Top = 17
@@ -5162,10 +5129,6 @@ object frmControlData: TfrmControlData
         end
         object tsLookMainScreen: TsTabSheet
           Caption = 'tsLookMainScreen'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object GroupBox1: TsGroupBox
             AlignWithMargins = True
             Left = 3
@@ -5554,10 +5517,6 @@ object frmControlData: TfrmControlData
         end
         object tsInvoiceMain: TsTabSheet
           Caption = 'tsInvoiceMain'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object LMDGroupBox10: TsGroupBox
             AlignWithMargins = True
             Left = 3
@@ -5714,10 +5673,6 @@ object frmControlData: TfrmControlData
         end
         object tsInvEmail: TsTabSheet
           Caption = 'Reservations'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object LMDGroupBox25: TsGroupBox
             AlignWithMargins = True
             Left = 3
@@ -5898,10 +5853,6 @@ object frmControlData: TfrmControlData
         end
         object AdvTabSheet3: TsTabSheet
           Caption = 'Channelmanager'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object sGroupBox1: TsGroupBox
             AlignWithMargins = True
             Left = 3
@@ -6355,7 +6306,7 @@ object frmControlData: TfrmControlData
               Left = 436
               Top = 20
               Width = 20
-              Height = 16
+              Height = 20
               TabOrder = 0
               SkinData.SkinSection = 'CHECKBOX'
               ImgChecked = 0
@@ -6365,7 +6316,7 @@ object frmControlData: TfrmControlData
               Left = 436
               Top = 42
               Width = 20
-              Height = 16
+              Height = 20
               TabOrder = 1
               SkinData.SkinSection = 'CHECKBOX'
               ImgChecked = 0
@@ -6375,7 +6326,7 @@ object frmControlData: TfrmControlData
               Left = 436
               Top = 65
               Width = 20
-              Height = 16
+              Height = 20
               TabOrder = 2
               SkinData.SkinSection = 'CHECKBOX'
               ImgChecked = 0
@@ -6406,8 +6357,8 @@ object frmControlData: TfrmControlData
             object cbxCurrencyCalculation: TsCheckBox
               Left = 632
               Top = 64
-              Width = 182
-              Height = 18
+              Width = 174
+              Height = 20
               Caption = 'Perform currency calculation'
               TabOrder = 4
               ImgChecked = 0
@@ -6417,17 +6368,9 @@ object frmControlData: TfrmControlData
         end
         object AdvTabSheet5: TsTabSheet
           Caption = '-'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
         end
         object AdvTabSheet6: TsTabSheet
           Caption = 'Accounting'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object gbxForceExternalIdCorrectness: TsGroupBox
             AlignWithMargins = True
             Left = 3
@@ -6810,10 +6753,6 @@ object frmControlData: TfrmControlData
         end
         object AdvTabSheet7: TsTabSheet
           Caption = 'Pos'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object LMDSimplePanel2: TsPanel
             Left = 0
             Top = 0
@@ -6914,10 +6853,6 @@ object frmControlData: TfrmControlData
             SkinData.SkinSection = 'PAGECONTROL'
             object AdvTabSheet8: TsTabSheet
               Caption = 'Nothing'
-              ExplicitLeft = 0
-              ExplicitTop = 0
-              ExplicitWidth = 0
-              ExplicitHeight = 0
               object clabNoAccontConnection: TsLabel
                 Left = 8
                 Top = 8
@@ -6934,10 +6869,6 @@ object frmControlData: TfrmControlData
             end
             object AdvTabSheet9: TsTabSheet
               Caption = 'poster'
-              ExplicitLeft = 0
-              ExplicitTop = 0
-              ExplicitWidth = 0
-              ExplicitHeight = 0
               object LMDSimplePanel3: TsPanel
                 Left = 0
                 Top = 0
@@ -7022,10 +6953,6 @@ object frmControlData: TfrmControlData
                 SkinData.SkinSection = 'PAGECONTROL'
                 object AdvTabSheet12: TsTabSheet
                   Caption = '-'
-                  ExplicitLeft = 0
-                  ExplicitTop = 0
-                  ExplicitWidth = 0
-                  ExplicitHeight = 0
                   object LMDSimpleLabel70: TsLabel
                     Left = 6
                     Top = 20
@@ -7495,10 +7422,6 @@ object frmControlData: TfrmControlData
             end
             object AdvTabSheet10: TsTabSheet
               Caption = 'Touch Text Entries'
-              ExplicitLeft = 0
-              ExplicitTop = 0
-              ExplicitWidth = 0
-              ExplicitHeight = 0
               object LMDSimpleLabel71: TsLabel
                 Left = 26
                 Top = 20
@@ -7708,33 +7631,17 @@ object frmControlData: TfrmControlData
             end
             object AdvTabSheet11: TsTabSheet
               Caption = 'TOK Windows'
-              ExplicitLeft = 0
-              ExplicitTop = 0
-              ExplicitWidth = 0
-              ExplicitHeight = 0
             end
           end
         end
         object AdvTabSheet13: TsTabSheet
           Caption = 'AdvTabSheet13'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
         end
         object AdvTabSheet14: TsTabSheet
           Caption = 'Quick Booking'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
         end
         object tsIncomingMonitor: TsTabSheet
           Caption = 'Incoming Monitor'#13#10
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object LMDGroupBox23: TsGroupBox
             AlignWithMargins = True
             Left = 3
@@ -7887,10 +7794,6 @@ object frmControlData: TfrmControlData
         end
         object tsColors: TsTabSheet
           Caption = 'tsColors'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object Panel4: TsPanel
             Left = 0
             Top = 0
@@ -9152,35 +9055,30 @@ object frmControlData: TfrmControlData
         end
         object tabMandatory: TsTabSheet
           Caption = 'Mandatory info'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object pcMandatoryInfo: TsPageControl
             AlignWithMargins = True
-            Left = 20
-            Top = 20
-            Width = 1053
-            Height = 674
-            Margins.Left = 20
-            Margins.Top = 20
-            Margins.Right = 20
-            Margins.Bottom = 20
+            Left = 3
+            Top = 3
+            Width = 1087
+            Height = 708
             ActivePage = tabGuestInformation
             Align = alClient
             TabOrder = 0
+            ExplicitLeft = 20
+            ExplicitTop = 20
+            ExplicitWidth = 1053
+            ExplicitHeight = 674
             object tabGuestInformation: TsTabSheet
               Caption = 'Mandatory Guest information'
               ExplicitLeft = 0
-              ExplicitTop = 0
-              ExplicitWidth = 0
-              ExplicitHeight = 0
+              ExplicitWidth = 1045
+              ExplicitHeight = 645
               object clbMandatoryFields: TsCheckListBox
                 AlignWithMargins = True
                 Left = 20
                 Top = 53
                 Width = 390
-                Height = 582
+                Height = 616
                 Margins.Left = 20
                 Margins.Top = 20
                 Margins.Bottom = 10
@@ -9194,15 +9092,21 @@ object frmControlData: TfrmControlData
                 Font.Style = []
                 ParentFont = False
                 TabOrder = 0
-                SkinData.SkinSection = 'EDIT'
+                SkinData.SkinSection = 'GROUPBOX'
+                DblClickToggle = True
+                ExplicitLeft = 10
+                ExplicitTop = 37
               end
               object pnlManInfoButtons: TsPanel
                 Left = 0
                 Top = 0
-                Width = 1045
+                Width = 1079
                 Height = 33
                 Align = alTop
                 TabOrder = 1
+                SkinData.SkinSection = 'GROUPBOX'
+                ExplicitLeft = -6
+                ExplicitTop = -2
                 object btnMFSelectNone: TsButton
                   AlignWithMargins = True
                   Left = 120
@@ -9228,6 +9132,33 @@ object frmControlData: TfrmControlData
                   OnClick = btnMFSelectAllClick
                 end
               end
+            end
+          end
+        end
+        object tsBetaFunctions: TsTabSheet
+          Caption = 'Beta Functions'
+          ExplicitLeft = 5
+          ExplicitTop = 26
+          object gbxInvoiceBeta: TsGroupBox
+            Left = 0
+            Top = 0
+            Width = 1093
+            Height = 105
+            Align = alTop
+            Caption = 'Invoice Beta functionaity'
+            TabOrder = 0
+            ExplicitLeft = 56
+            ExplicitTop = 56
+            ExplicitWidth = 185
+            object cbxObjectsInvoice: TsCheckBox
+              Left = 24
+              Top = 24
+              Width = 214
+              Height = 20
+              Caption = 'Use new Invoiceform using Objects'
+              TabOrder = 0
+              ImgChecked = 0
+              ImgUnchecked = 0
             end
           end
         end

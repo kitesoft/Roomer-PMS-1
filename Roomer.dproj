@@ -846,6 +846,7 @@
         </DCCReference>
         <DCCReference Include="OpenAPI\uCredentialsAPICaller.pas"/>
         <DCCReference Include="RoomerExceptionHandling.pas"/>
+        <DCCReference Include="PMSSettings\uPMSSettingsAccessor.pas"/>
         <DCCReference Include="OpenAPI\schema\uRoomerHotelServicesCommunicationModel_RunningTabs.pas"/>
         <DCCReference Include="OpenAPI\schema\uRoomerSchema.pas"/>
         <DCCReference Include="OpenAPI\uServicesRunningTabAPICaller.pas"/>
