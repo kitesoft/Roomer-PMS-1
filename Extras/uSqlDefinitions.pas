@@ -2476,7 +2476,6 @@ select_telLog_refresh : string =
     ' , (SELECT WarnCheckInDirtyRoom FROM hotelconfigurations LIMIT 1) WarnCheckInDirtyRoom '+
     ' , (SELECT WarnWhenOverbooking FROM hotelconfigurations LIMIT 1) WarnWhenOverbooking '+
     ' , (SELECT WarnMoveRoomToNewRoomtype FROM hotelconfigurations LIMIT 1) WarnMoveRoomToNewRoomtype '+
-    ' , (SELECT AutoInvoiceTransfer FROM hotelconfigurations LIMIT 1) AutoInvoiceTransfer '+
 
     ' , (SELECT DefaultSendCCEmailToHotel FROM hotelconfigurations LIMIT 1) DefaultSendCCEmailToHotel '+
     ' , (SELECT RatesManagedByRoomer FROM hotelconfigurations LIMIT 1) RatesManagedByRoomer '+

@@ -425,12 +425,11 @@ function TFrmPostInvoices.GetExportTemplate : String;
 var rSet : TRoomerDataSet;
 begin
   rSet := CreateNewDataSet;
-  rSet_bySQL(rSet, 'SELECT to_bool(IFNULL((SELECT 1 FROM home100.hotelservices WHERE active=1 AND hotelId=SUBSTR(DATABASE(), 9, 15) AND serviceType=''FINANCE'' LIMIT 1), 0)) AS financeConnected, InvoiceExportFilename FROM hotelconfigurations LIMIT 1');
-//  rSet_bySQL(rSet, 'SELECT (SELECT 1 FROM home100.hotelservices WHERE active=1 AND hotelId=SUBSTR(DATABASE(), 9, 15) AND serviceType=''FINANCE'' LIMIT 1) AS financeConnected, InvoiceExportFilename FROM hotelconfigurations LIMIT 1');
+  rSet_bySQL(rSet, 'SELECT (SELECT 1 FROM home100.hotelservices WHERE active=1 AND hotelId=SUBSTR(DATABASE(), 9, 15) AND serviceType=''FINANCE'' LIMIT 1) AS financeConnected, InvoiceExportFilename FROM hotelconfigurations LIMIT 1');
   rSet.First;
   if NOT rSet.Eof then
   begin
-    if rSet['financeConnected'] then
+    if rSet['financeConnected'] = 1 then
       result := ''
     else
       result := rSet['InvoiceExportFilename'];
