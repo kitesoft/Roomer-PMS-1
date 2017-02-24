@@ -89,7 +89,7 @@ type
     sButton5: TsButton;
     lbPayment: TsLabel;
     rptForm: TfrxReport;
-    frxDesigner1: TfrxDesigner;
+    fdRegFormDesigner: TfrxDesigner;
     sLabel32: TsLabel;
     edTitle: TsEdit;
     sLabel33: TsLabel;
@@ -155,6 +155,7 @@ type
     procedure cbxMarketChange(Sender: TObject);
     procedure edCountryChange(Sender: TObject);
     procedure cbxMarketKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    function fdRegFormDesignerSaveReport(Report: TfrxReport; SaveAs: Boolean): Boolean;
   private
     FisCheckIn: Boolean;
     FCurrencyhandler: TCurrencyHandler;
@@ -1043,6 +1044,21 @@ begin
   LoadGuestInfo;
 
   FillQuickFind;
+end;
+
+function TFrmGuestCheckInForm.fdRegFormDesignerSaveReport(Report: TfrxReport; SaveAs: Boolean): Boolean;
+begin
+  if (not SaveAs) and Report.FileName.ToLower.Equals(FileDependencyManager.getRegistrationFormFilePath.ToLower) then
+  begin
+    FileDependencyManager.sendChangedFile(Report.FileName);
+    Result := true;
+  end
+  else
+  begin
+    Result := ((rptForm.Designer as TfrxDesignerForm) <> nil) and TfrxDesignerForm(rptForm.Designer).SaveFile(SaveAs, false);
+    if Result and Report.FileName.ToLower.Equals(FileDependencyManager.getRegistrationFormFilePath.ToLower) then
+      FileDependencyManager.sendChangedFile(Report.FileName);
+    end;
 end;
 
 procedure TFrmGuestCheckInForm.Prepare;
