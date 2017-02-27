@@ -1,0 +1,41 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+	  <ProjectGuid>{624986FA-A7F7-4F65-944F-B4291D80BD68}</ProjectGuid>
+  </PropertyGroup>
+  <ProjectExtensions>
+    <Borland.Personality>Default.Personality.12</Borland.Personality>
+    <Borland.ProjectType />
+    <BorlandProject>
+  <BorlandProject xmlns=""> <Default.Personality> </Default.Personality> </BorlandProject></BorlandProject>
+  </ProjectExtensions>
+  <Target Name="CustomDrawDemo">
+    <MSBuild Projects="CustomDrawDemo\CustomDrawDemoD19.dproj" Targets="" />
+  </Target>
+  <Target Name="EditorsInPlaceDemo">
+    <MSBuild Projects="EditorsInPlaceDemo\EditorsInPlaceDemoD19.dproj" Targets="" />
+  </Target>
+  <Target Name="ProviderModeDemo">
+    <MSBuild Projects="ProviderModeDemo\ProviderModeDemoD19.dproj" Targets="" />
+  </Target>
+  <Target Name="RTTIInspectorDemo">
+    <MSBuild Projects="RTTIInspectorDemo\RTTIInspectorDemoD19.dproj" Targets="" />
+  </Target>
+  <Target Name="SimpleVerticalGridDemo">
+    <MSBuild Projects="SimpleVerticalGridDemo\SimpleVerticalGridDemoD19.dproj" Targets="" />
+  </Target>
+  <Target Name="StylesMultiDemo">
+    <MSBuild Projects="StylesMultiDemo\StylesMultiDemoD19.dproj" Targets="" />
+  </Target>
+  <Target Name="StylesSimpleDemo">
+    <MSBuild Projects="STYLESSIMPLEDEMO\StylesSimpleDemoD19.dproj" Targets="" />
+  </Target>
+  <Target Name="RowsMultiEditorsDemo">
+    <MSBuild Projects="RowsMultiEditorsDemo\RowsMultiEditorsDemoD19.dproj" Targets="" />
+  </Target>
+  <Target Name="EditorsInPlaceValidationDemo">
+    <MSBuild Projects="EditorsInPlaceValidationDemo\EditorsInPlaceValidationDemoD19.dproj" Targets="" />
+  </Target>
+  <Target Name="Build">
+    <CallTarget Targets="CustomDrawDemoD19;EditorsInPlaceDemoD19;ProviderModeDemoD19;RTTIInspectorDemoD19;SimpleVerticalGridDemoD19;StylesMultiDemoD19;StylesSimpleDemoD19;RowsMultiEditorsDemoD19;EditorsInPlaceValidationDemoD19" />
+  </Target>
+</Project>

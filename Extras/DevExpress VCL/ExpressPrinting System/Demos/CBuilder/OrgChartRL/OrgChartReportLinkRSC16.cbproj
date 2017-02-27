@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{7B927959-BE6E-4A23-B699-8664961396FB}</ProjectGuid>
+    <ProjectVersion>12.2</ProjectVersion>
+    <MainSource>OrgChartReportLink.cpp</MainSource>
+    <Config Condition="'$(Config)'==''">Base</Config>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Config)'=='Base' or '$(Base)'!=''">
+    <Base>true</Base>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Base)'!=''">
+    <Multithreaded>true</Multithreaded>
+    <AllPackageLibs>rtl.lib;vcl.lib;vclimg.lib;dxPSdxDBOCLnkRS16.lib;dxPSdxOCLnkRS16.lib;dxPSCoreRS16.lib;dxDBOrRS16.lib;dxOrgCRS16.lib;vcldb.lib;dbrtl.lib;bdertl.lib;adortl.lib;;vclx.lib;cxLibraryRS16.lib;dxThemeRS16.lib;dxCoreRS16.lib;dxGDIPlusRS16.lib;cxPageControlRS16.lib;cxEditorsRS16.lib;cxDataRS16.lib;dxmdsRS16.lib;dxPScxCommonRS16.lib;dxPScxExtCommonRS16.lib;dxPScxPCProdRS16.lib;dxPSLnksRS16.lib;dxPSPrVwAdvRS16.lib;dsnap.lib</AllPackageLibs>
+    <LinkPackageImports></LinkPackageImports>
+    <ProjectType>CppVCLApplication</ProjectType>
+    <DCC_CBuilderOutput>JPHNE</DCC_CBuilderOutput>
+   <IncludePath>$(BDS)\include;$(BDS)\include\dinkumware;$(BDS)\include\windows\;$(BDS)\include\windows\vcl;$(BDS)\include\windows\rtl;..\Common;..</IncludePath>
+   <ILINK_LibraryPath>$(BDS)\lib;$(BDS)\lib\win32\release;$(BDS)\lib\win32\release\psdk;..\Common;..</ILINK_LibraryPath>
+    <BCC_wpar>false</BCC_wpar>
+  </PropertyGroup>
+  <ItemGroup>
+    <ResFiles Include="OrgChartReportLink.res">
+    </ResFiles>
+    <CppCompile Include="OrgChartReportLink.cpp"> </CppCompile>
+    <CppCompile Include="OrgChartRLMain.cpp">
+      <Form>OrgChartRLMainForm</Form>
+    </CppCompile>
+    <CppCompile Include="..\Common\AboutDemoForm.cpp">
+      <Form>formAboutDemo</Form>
+    </CppCompile>
+    <CppCompile Include="..\Common\DemoBasicMain.cpp">
+      <Form>DemoBasicMainForm</Form>
+    </CppCompile>
+    <FormResources Include="OrgChartRLMain.dfm" />
+    <FormResources Include="..\Common\AboutDemoForm.dfm" />
+    <FormResources Include="..\Common\DemoBasicMain.dfm" />
+  </ItemGroup>
+  <Import Project="$(BDS)\Bin\CodeGear.Cpp.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Cpp.Targets')"/>
+  <ProjectExtensions>
+    <Borland.Personality>CPlusPlusBuilder.Personality.12</Borland.Personality>
+    <Borland.ProjectType>CppVCLApplication</Borland.ProjectType>
+    <BorlandProject>
+      <CPlusPlusBuilder.Personality>
+      </CPlusPlusBuilder.Personality>
+    </BorlandProject>
+    <ProjectFileVersion>12</ProjectFileVersion>
+  </ProjectExtensions>
+</Project>

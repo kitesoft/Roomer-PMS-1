@@ -1,0 +1,171 @@
+:Base ExpressPivotGrid.hlp
+:Title ExpressPivotGrid Suite
+:Index ExpressPivotGrid Suite=ExpressPivotGrid.hlp
+1 ExpressPivotGrid Suite
+2 Overview=Overview
+2 What's New=CD_Whats_New_in_v2
+2 Known Issues and Important Changes List=CD_Known_Issues_and_Important_Changes_List
+2 Fundamentals
+3 Fundamentals (Overview)=CD_Fundamentals>Feature
+3 Information Presentation Basics=CD_Information_presentation_basics
+3 Hierarchical Value Presentation=CD_Hierarchical_value_presentation
+2 Feature Center
+3 Feature Center=CD_Features_Feature_Center>Feature
+3 Data Exchange
+4 Data Exchange (Overview)=CD_Features_Data_Exchange
+4 Bind to a Data Source=CD_DataExchange_Bind_to_a_Data_Source
+4 Bind to an OLAP Data Source=CD_DataExchange_Bind_to_an_OLAP_Data_Source
+4 Export Data=CD_DataExchange_Export_Data
+4 Print Data=CD_DataExchange_Print_Data
+4 Copy Data to the Clipboard=CD_DataExchange_Copy_Data_to_the_Clipboard
+3 Layout Features
+4 Layout Features (Overview)=CD_Features_Layout_Features
+4 Customization Form=CD_Customization_Form
+4 Data Cell Layout=CD_LayoutFeatures_Data_Cell_Layout
+4 Field Location and Order=CD_LayoutFeatures_Field_Location_and_Order
+4 Hierarchical Value Arrangement=CD_LayoutFeatures_Hierarchical_Value_Arrangement
+4 Save and Restore Layout=CD_LayoutFeatures_Save_and_Restore_Layout
+3 Data-Related Features
+4 Data-Related Features (Overview)=CD_Features_Data-Related_Features
+4 Data Cell Content=CD_DataRelatedFeatures_Data_Cell_Content
+4 Filter Data=CD_DataRelatedFeatures_Filter_Data
+4 Format Cells and Values=CD_DataRelatedFeatures_Format_Cells_and_Values
+4 Get Underlying Data=CD_DataRelatedFeatures_Get_Underlying_Data
+4 Group Values on Axes=CD_DataRelatedFeatures_Group_Values_on_Axes
+4 Sort Data and Display Top N Values=CD_DataRelatedFeatures_Sort_Data_and_Display_Top_N_Values
+4 Totals and Grand Totals=CD_DataRelatedFeatures_Totals_and_Grand_Totals
+3 Focus and Navigation
+4 Focus and Navigation (Overview)=CD_Features_Focus_and_Navigation
+4 Focusing Cells=CD_Features_FocusNavigation_Focusing_Cells
+4 Navigation and Scrolling=CD_Features_FocusNavigation_Navigation_and_Scrolling
+4 Selection=CD_Features_FocusNavigation_Selection
+3 Appearance
+4 Appearance (Overview)=CD_Appearance
+4 Style Customization=CD_Styling_the_ExpressPivotGrid
+4 Custom Draw=CD_Custom_Draw
+3 Miscellaneous
+4 Miscellaneous (Overview)=CD_Features_Miscellaneous
+4 Localization=CD_Miscellaneous_Localization
+4 Hints=CD_Miscellaneous_Hints
+2 Visual Elements
+3 Visual Elements (Overview)=CD_Visual_Elements>Feature
+3 Background=Background
+3 Column Field=Column_Field
+3 Column Header Area=Column_Header_Area
+3 Data Cell=Data_Cell
+3 Data Field=Term_Data_Field
+3 Data Field Anchor=Data_Field_Anchor
+3 Data Header Area=Data_Header_Area
+3 Expand Button=Expand_Button
+3 Field=Term_Field
+3 Field Value=Field_Value
+3 Filter Button and Dropdown=Filter_Button_and_Dropdown
+3 Filter Field=Filter_Field
+3 Filter Header Area=Filter_Header_Area
+3 Filter Header Area Separator=Filter_Header_Area_Separator
+3 Grand Totals=Grand_Totals
+3 Grouping Value=Term_Grouping_Value
+3 Header Area=Header_Area
+3 Prefilter Panel=Prefilter_Panel
+3 Prefilter Dropdown=Prefilter_Dropdown
+3 Prefilter MRU List Button=Prefilter_MRU_List_Button
+3 Row Field=Row_Field
+3 Row Header Area=Row_Header_Area
+3 Totals (Subtotals)=Subtotals
+2 Design-Time Features
+3 Design-Time Features (Overview)=CD_Features_DesignTime>Feature
+3 Designer Dialog=CD_Features_DesignTime_Designer_Dialog
+3 On-Form Object Access=CD_Features_DesignTime_OnForm_Object_Access
+2 End-User Capabilities
+3 End-User Capabilities (Overview)=CD_EndUser_Capabilities>Feature
+3 Controlling the Visibility of Fields=CD_EndUser_Capabilities_Controlling_the_Visibility_of_Fields
+3 Expanding and Collapsing Grouping Columns and Rows=CD_EndUser_Capabilities_Expanding_and_Collapsing_Grouping_Columns_and_Rows
+3 Filtering=CD_EndUser_Capabilities_Filtering
+3 Navigating Through Cells=CD_EndUser_Capabilities_Navigating_Through_Cells
+3 Reordering Fields=CD_EndUser_Capabilities_Reordering_Fields
+3 Resizing Columns=CD_EndUser_Capabilities_Resizing_Columns
+3 Selecting Cells=CD_EndUser_Capabilities_Selecting_Cells
+3 Sorting=CD_EndUser_Capabilities_Sorting
+2 Member Tables
+3 Member Table: Access Cell Values=CD_MemberTable_Access_Cell_Values
+3 Member Table: Appearance=CD_Member_Table_Appearance
+3 Member Table: Bind to a Data Source=CD_MemberTable_Bind_to_a_Data_Source
+3 Member Table: Export Data=CD_MemberTable_Export_Data
+3 Member Table: Filter Data=CD_MemberTable_Filter_Data
+3 Member Table: Focusing Cells=CD_MemberTable_Focusing_Cells
+3 Member Table: Format Cells and Values=CD_MemberTable_Format_Cells_and_Values
+3 Member Table: Get Underlying Data=CD_MemberTable_Get_Underlying_Data
+3 Member Table: Group Values on Axes=CD_MemberTable_Group_Values_on_Axes
+3 Member Table: Hierarchical Value Arrangement=CD_MemberTable_Hierarchical_Value_Arrangement
+3 Member Table: Navigation and Scrolling=CD_MemberTable_Navigation_and_Scrolling
+3 Member Table: Save and Restore Layout=CD_MemberTable_Save_and_Restore_Layout
+3 Member Table: Selecting Cells=CD_MemberTable_Selecting_Cells
+3 Member Table: Sort Data and Display Top N Values=CD_MemberTable_Sort_Data_and_Display_Top_N_Values
+3 Member Table: Summaries=CD_MemberTable_Summaries
+3 Member Table: Summary Variation=CD_MemberTable_Summary_Variation
+3 Member Table: Totals and Grand Totals=CD_MemberTable_Totals_and_Grand_Totals
+2 Task-Based Help
+3 Task-Based Help (Overview)=CD_TaskBased_Help>Feature
+2 Reference
+3 Units
+4 cxCustomPivotGrid=IDH_Unit_cxCustomPivotGrid
+4 cxDBPivotGrid=IDH_Unit_cxDBPivotGrid
+4 cxExportPivotGridLink=IDH_Unit_cxExportPivotGridLink
+4 cxPivotGrid=IDH_Unit_cxPivotGrid
+4 cxPivotGridChartConnection=IDH_Unit_cxPivotGridChartConnection
+4 cxPivotGridOLAPDataSource=IDH_Unit_cxPivotGridOLAPDataSource
+3 Controls
+4 TcxDBPivotGrid=IDH_Class_TcxDBPivotGrid
+4 TcxPivotGrid=IDH_Class_TcxPivotGrid
+4 TcxPivotGridChartConnection=IDH_Class_TcxPivotGridChartConnection
+4 TcxPivotGridDrillDownDataSet=IDH_Class_TcxPivotGridDrillDownDataSet
+4 TcxPivotGridOLAPDataSource=IDH_Class_TcxPivotGridOLAPDataSource
+4 TcxPivotGridSummaryDataSet=IDH_Class_TcxPivotGridSummaryDataSet
+3 Fields
+4 TcxDBPivotGridField=IDH_Class_TcxDBPivotGridField
+4 TcxPivotGridField=IDH_Class_TcxPivotGridField
+3 Options
+4 TcxPivotGridCustomOptions=IDH_Class_TcxPivotGridCustomOptions
+4 TcxPivotGridFieldOptions=IDH_Class_TcxPivotGridFieldOptions
+4 TcxPivotGridOptionsBehavior=IDH_Class_TcxPivotGridOptionsBehavior
+4 TcxPivotGridOptionsCustomize=IDH_Class_TcxPivotGridOptionsCustomize
+4 TcxPivotGridOptionsData=IDH_Class_TcxPivotGridOptionsData
+4 TcxPivotGridOptionsDataField=IDH_Class_TcxPivotGridOptionsDataField
+4 TcxPivotGridOptionsPrefilter=IDH_Class_TcxPivotGridOptionsPrefilter
+4 TcxPivotGridOptionsSelection=IDH_Class_TcxPivotGridOptionsSelection
+4 TcxPivotGridOptionsView=IDH_Class_TcxPivotGridOptionsView
+3 Styles
+4 TcxPivotGridCustomStyles=IDH_Class_TcxPivotGridCustomStyles
+4 TcxPivotGridFieldStyles=IDH_Class_TcxPivotGridFieldStyles
+4 TcxPivotGridStyles=IDH_Class_TcxPivotGridStyles
+4 TcxPivotGridStyleSheet=IDH_Class_TcxPivotGridStyleSheet
+3 Miscellaneous Classes and Types
+4 TcxOLAPKPIType=IDH_Type_TcxOLAPKPIType
+4 TcxPivotGridCrossCell=IDH_Class_TcxPivotGridCrossCell
+4 TcxPivotGridCrossCellSummary=IDH_Class_TcxPivotGridCrossCellSummary
+4 TcxPivotGridCustomTotal=IDH_Class_TcxPivotGridCustomTotal
+4 TcxPivotGridCalculationBaseType type=IDH_TcxPivotGridOptionsData_CalculationBase
+4 TcxPivotGridChartViewSourceData type=IDH_TcxPivotGridChartConnection_SourceData
+4 TcxPivotGridChartViewSourceForCategories type=IDH_TcxPivotGridChartConnection_SourceForCategories
+4 TcxPivotGridDataFieldArea type=IDH_Type_TcxPivotGridDataFieldArea
+4 TcxPivotGridFieldArea type=IDH_Type_TcxPivotGridFieldArea
+4 TcxPivotGridFieldDataVisibility type=IDH_TcxPivotGridField_DataVisibility
+4 TcxPivotGridOLAPFieldType=IDH_Type_TcxPivotGridOLAPFieldType
+4 TcxPivotGridOLAPFieldSortMode=IDH_Type_TcxPivotGridOLAPFieldSortMode
+4 TcxPivotGridOLAPKPIGraphicType=IDH_Type_TcxPivotGridOLAPKPIGraphicType
+4 TcxPivotGridOptionsSelectionInclude type=IDH_TcxPivotGridOptionsSelection_IncludeCells
+4 TcxPivotGridOptionsSelectionIncludes type=IDH_TcxPivotGridOptionsSelection_IncludeCells
+4 TcxPivotGridFieldHeaderPopupMenuItem type=IDH_Type_TcxPivotGridFieldHeaderPopupMenuItems
+4 TcxPivotGridGroupValuePopupMenuItem type=IDH_Type_TcxPivotGridGroupValuePopupMenuItems
+4 TcxPivotGridPrefilterPosition type=IDH_TcxPivotGridOptionsPrefilter_Position
+4 TcxPivotGridPrefilterVisible type=IDH_TcxPivotGridOptionsPrefilter_Visible
+4 TcxPivotGridSummaryType type=IDH_Type_TcxPivotGridSummaryType
+4 TcxPivotGridTotalsLocation type=IDH_Type_TcxPivotGridTotalsLocation
+3 Routines
+4 cxExportPivotGridToExcel=IDH_cxExportPivotGridLink_cxExportPivotGridToExcel
+4 cxExportPivotGridToFile=IDH_cxExportPivotGridLink_cxExportPivotGridToFile
+4 cxExportPivotGridToHTML=IDH_cxExportPivotGridLink_cxExportPivotGridToHTML
+4 cxExportPivotGridToText=IDH_cxExportPivotGridLink_cxExportPivotGridToText
+4 cxExportPivotGridToXLSX=IDH_cxExportPivotGridLink_cxExportPivotGridToXLSX
+4 cxExportPivotGridToXML=IDH_cxExportPivotGridLink_cxExportPivotGridToXML
+4 cxPivotGridOLAPCreateConnectionString=IDH_cxPivotGridOLAPCreateConnectionString

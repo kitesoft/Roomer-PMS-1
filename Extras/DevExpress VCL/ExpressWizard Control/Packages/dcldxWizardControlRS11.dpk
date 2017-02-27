@@ -1,0 +1,44 @@
+package dcldxWizardControlRS11;
+
+{$R *.res}
+{$R dxWizardControlReg.dcr}
+{$DEBUGINFO OFF}
+{$LOCALSYMBOLS OFF}
+{$OPTIMIZATION ON}
+{$STACKFRAMES OFF}
+{$ASSERTIONS OFF}
+{$BOOLEVAL OFF}
+{$EXTENDEDSYNTAX ON}
+{$IMPORTEDDATA ON}
+{$IOCHECKS ON}
+{$LONGSTRINGS ON}
+{$OPENSTRINGS ON}
+{$OVERFLOWCHECKS OFF}
+{$RANGECHECKS OFF}
+{$REFERENCEINFO OFF}
+{$SAFEDIVIDE OFF}
+{$TYPEDADDRESS OFF}
+{$VARSTRINGCHECKS ON}
+{$WRITEABLECONST ON}
+{$MINENUMSIZE 1}
+{$IMAGEBASE $400000}
+{$DESCRIPTION 'ExpressWizardControl by Developer Express Inc.'}
+{$DESIGNONLY}
+{$IMPLICITBUILD OFF}
+
+requires
+  designide,
+  rtl,
+  vcl,
+  vclimg,
+  vclx,
+  dcldxCoreRS11,
+  dclcxLibraryRS11,
+  dxWizardControlRS11;
+
+contains
+  dxWizardControlReg,
+  dxWizardControlFormWizard,
+  dxWizardControlFormWizardReg,
+  dxWizardControlPageCollectionEditor;
+end.

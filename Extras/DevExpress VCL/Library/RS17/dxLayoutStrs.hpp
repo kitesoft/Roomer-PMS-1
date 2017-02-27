@@ -1,0 +1,185 @@
+// CodeGear C++Builder
+// Copyright (c) 1995, 2012 by Embarcadero Technologies, Inc.
+// All rights reserved
+
+// (DO NOT EDIT: machine generated header) 'dxLayoutStrs.pas' rev: 24.00 (Win32)
+
+#ifndef DxlayoutstrsHPP
+#define DxlayoutstrsHPP
+
+#pragma delphiheader begin
+#pragma option push
+#pragma option -w-      // All warnings off
+#pragma option -Vx      // Zero-length empty class member 
+#pragma pack(push,8)
+#include <System.hpp>	// Pascal unit
+#include <SysInit.hpp>	// Pascal unit
+
+//-- user supplied -----------------------------------------------------------
+
+namespace Dxlayoutstrs
+{
+//-- type declarations -------------------------------------------------------
+//-- var, const, procedure ---------------------------------------------------
+extern PACKAGE System::ResourceString _sdxLayoutControlContainerCannotBeControl;
+#define Dxlayoutstrs_sdxLayoutControlContainerCannotBeControl System::LoadResourceString(&Dxlayoutstrs::_sdxLayoutControlContainerCannotBeControl)
+extern PACKAGE System::ResourceString _sdxLayoutControlControlIsUsed;
+#define Dxlayoutstrs_sdxLayoutControlControlIsUsed System::LoadResourceString(&Dxlayoutstrs::_sdxLayoutControlControlIsUsed)
+extern PACKAGE System::ResourceString _sdxLayoutControlNewGroupCaption;
+#define Dxlayoutstrs_sdxLayoutControlNewGroupCaption System::LoadResourceString(&Dxlayoutstrs::_sdxLayoutControlNewGroupCaption)
+extern PACKAGE System::ResourceString _sdxLayoutControlRoot;
+#define Dxlayoutstrs_sdxLayoutControlRoot System::LoadResourceString(&Dxlayoutstrs::_sdxLayoutControlRoot)
+extern PACKAGE System::ResourceString _sdxLayoutControlNewItemCaption;
+#define Dxlayoutstrs_sdxLayoutControlNewItemCaption System::LoadResourceString(&Dxlayoutstrs::_sdxLayoutControlNewItemCaption)
+extern PACKAGE System::ResourceString _sdxLayoutControlNewEmptySpaceItemCaption;
+#define Dxlayoutstrs_sdxLayoutControlNewEmptySpaceItemCaption System::LoadResourceString(&Dxlayoutstrs::_sdxLayoutControlNewEmptySpaceItemCaption)
+extern PACKAGE System::ResourceString _sdxLayoutControlNewSeparatorItemCaption;
+#define Dxlayoutstrs_sdxLayoutControlNewSeparatorItemCaption System::LoadResourceString(&Dxlayoutstrs::_sdxLayoutControlNewSeparatorItemCaption)
+extern PACKAGE System::ResourceString _sdxLayoutControlNewLabeledItemCaption;
+#define Dxlayoutstrs_sdxLayoutControlNewLabeledItemCaption System::LoadResourceString(&Dxlayoutstrs::_sdxLayoutControlNewLabeledItemCaption)
+extern PACKAGE System::ResourceString _sdxLayoutControlNewSplitterItemCaption;
+#define Dxlayoutstrs_sdxLayoutControlNewSplitterItemCaption System::LoadResourceString(&Dxlayoutstrs::_sdxLayoutControlNewSplitterItemCaption)
+extern PACKAGE System::ResourceString _sdxLayoutControlNewHiddenGroup;
+#define Dxlayoutstrs_sdxLayoutControlNewHiddenGroup System::LoadResourceString(&Dxlayoutstrs::_sdxLayoutControlNewHiddenGroup)
+extern PACKAGE System::ResourceString _sdxLayoutControlCustomizeFormCaption;
+#define Dxlayoutstrs_sdxLayoutControlCustomizeFormCaption System::LoadResourceString(&Dxlayoutstrs::_sdxLayoutControlCustomizeFormCaption)
+extern PACKAGE System::ResourceString _sdxLayoutControlCustomizeFormAddAuxiliaryItem;
+#define Dxlayoutstrs_sdxLayoutControlCustomizeFormAddAuxiliaryItem System::LoadResourceString(&Dxlayoutstrs::_sdxLayoutControlCustomizeFormAddAuxiliaryItem)
+extern PACKAGE System::ResourceString _sdxLayoutControlCustomizeFormAddGroup;
+#define Dxlayoutstrs_sdxLayoutControlCustomizeFormAddGroup System::LoadResourceString(&Dxlayoutstrs::_sdxLayoutControlCustomizeFormAddGroup)
+extern PACKAGE System::ResourceString _sdxLayoutControlCustomizeFormAddItem;
+#define Dxlayoutstrs_sdxLayoutControlCustomizeFormAddItem System::LoadResourceString(&Dxlayoutstrs::_sdxLayoutControlCustomizeFormAddItem)
+extern PACKAGE System::ResourceString _sdxLayoutControlCustomizeFormAddEmptySpaceItem;
+#define Dxlayoutstrs_sdxLayoutControlCustomizeFormAddEmptySpaceItem System::LoadResourceString(&Dxlayoutstrs::_sdxLayoutControlCustomizeFormAddEmptySpaceItem)
+extern PACKAGE System::ResourceString _sdxLayoutControlCustomizeFormAddSeparatorItem;
+#define Dxlayoutstrs_sdxLayoutControlCustomizeFormAddSeparatorItem System::LoadResourceString(&Dxlayoutstrs::_sdxLayoutControlCustomizeFormAddSeparatorItem)
+extern PACKAGE System::ResourceString _sdxLayoutControlCustomizeFormAddSplitterItem;
+#define Dxlayoutstrs_sdxLayoutControlCustomizeFormAddSplitterItem System::LoadResourceString(&Dxlayoutstrs::_sdxLayoutControlCustomizeFormAddSplitterItem)
+extern PACKAGE System::ResourceString _sdxLayoutControlCustomizeFormAddLabeledItem;
+#define Dxlayoutstrs_sdxLayoutControlCustomizeFormAddLabeledItem System::LoadResourceString(&Dxlayoutstrs::_sdxLayoutControlCustomizeFormAddLabeledItem)
+extern PACKAGE System::ResourceString _sdxLayoutControlCustomizeFormDelete;
+#define Dxlayoutstrs_sdxLayoutControlCustomizeFormDelete System::LoadResourceString(&Dxlayoutstrs::_sdxLayoutControlCustomizeFormDelete)
+extern PACKAGE System::ResourceString _sdxLayoutControlCustomizeFormDeleteHint;
+#define Dxlayoutstrs_sdxLayoutControlCustomizeFormDeleteHint System::LoadResourceString(&Dxlayoutstrs::_sdxLayoutControlCustomizeFormDeleteHint)
+extern PACKAGE System::ResourceString _sdxLayoutControlCustomizeFormAlignBy;
+#define Dxlayoutstrs_sdxLayoutControlCustomizeFormAlignBy System::LoadResourceString(&Dxlayoutstrs::_sdxLayoutControlCustomizeFormAlignBy)
+extern PACKAGE System::ResourceString _sdxLayoutControlCustomizeFormClose;
+#define Dxlayoutstrs_sdxLayoutControlCustomizeFormClose System::LoadResourceString(&Dxlayoutstrs::_sdxLayoutControlCustomizeFormClose)
+extern PACKAGE System::ResourceString _sdxLayoutControlCustomizeFormExpandAll;
+#define Dxlayoutstrs_sdxLayoutControlCustomizeFormExpandAll System::LoadResourceString(&Dxlayoutstrs::_sdxLayoutControlCustomizeFormExpandAll)
+extern PACKAGE System::ResourceString _sdxLayoutControlCustomizeFormCollapseAll;
+#define Dxlayoutstrs_sdxLayoutControlCustomizeFormCollapseAll System::LoadResourceString(&Dxlayoutstrs::_sdxLayoutControlCustomizeFormCollapseAll)
+extern PACKAGE System::ResourceString _sdxLayoutControlCustomizeFormAlignLeftSide;
+#define Dxlayoutstrs_sdxLayoutControlCustomizeFormAlignLeftSide System::LoadResourceString(&Dxlayoutstrs::_sdxLayoutControlCustomizeFormAlignLeftSide)
+extern PACKAGE System::ResourceString _sdxLayoutControlCustomizeFormAlignRightSide;
+#define Dxlayoutstrs_sdxLayoutControlCustomizeFormAlignRightSide System::LoadResourceString(&Dxlayoutstrs::_sdxLayoutControlCustomizeFormAlignRightSide)
+extern PACKAGE System::ResourceString _sdxLayoutControlCustomizeFormAlignTopSide;
+#define Dxlayoutstrs_sdxLayoutControlCustomizeFormAlignTopSide System::LoadResourceString(&Dxlayoutstrs::_sdxLayoutControlCustomizeFormAlignTopSide)
+extern PACKAGE System::ResourceString _sdxLayoutControlCustomizeFormAlignBottomSide;
+#define Dxlayoutstrs_sdxLayoutControlCustomizeFormAlignBottomSide System::LoadResourceString(&Dxlayoutstrs::_sdxLayoutControlCustomizeFormAlignBottomSide)
+extern PACKAGE System::ResourceString _sdxLayoutControlCustomizeFormAlignNone;
+#define Dxlayoutstrs_sdxLayoutControlCustomizeFormAlignNone System::LoadResourceString(&Dxlayoutstrs::_sdxLayoutControlCustomizeFormAlignNone)
+extern PACKAGE System::ResourceString _sdxLayoutControlCustomizeFormTreeViewGroup;
+#define Dxlayoutstrs_sdxLayoutControlCustomizeFormTreeViewGroup System::LoadResourceString(&Dxlayoutstrs::_sdxLayoutControlCustomizeFormTreeViewGroup)
+extern PACKAGE System::ResourceString _sdxLayoutControlCustomizeFormListViewGroup;
+#define Dxlayoutstrs_sdxLayoutControlCustomizeFormListViewGroup System::LoadResourceString(&Dxlayoutstrs::_sdxLayoutControlCustomizeFormListViewGroup)
+extern PACKAGE System::ResourceString _sdxLayoutControlCustomizeFormTabbedView;
+#define Dxlayoutstrs_sdxLayoutControlCustomizeFormTabbedView System::LoadResourceString(&Dxlayoutstrs::_sdxLayoutControlCustomizeFormTabbedView)
+extern PACKAGE System::ResourceString _sdxLayoutControlCustomizeFormTreeView;
+#define Dxlayoutstrs_sdxLayoutControlCustomizeFormTreeView System::LoadResourceString(&Dxlayoutstrs::_sdxLayoutControlCustomizeFormTreeView)
+extern PACKAGE System::ResourceString _sdxLayoutControlCustomizeFormStore;
+#define Dxlayoutstrs_sdxLayoutControlCustomizeFormStore System::LoadResourceString(&Dxlayoutstrs::_sdxLayoutControlCustomizeFormStore)
+extern PACKAGE System::ResourceString _sdxLayoutControlCustomizeFormRestore;
+#define Dxlayoutstrs_sdxLayoutControlCustomizeFormRestore System::LoadResourceString(&Dxlayoutstrs::_sdxLayoutControlCustomizeFormRestore)
+extern PACKAGE System::ResourceString _sdxLayoutControlCustomizeFormRename;
+#define Dxlayoutstrs_sdxLayoutControlCustomizeFormRename System::LoadResourceString(&Dxlayoutstrs::_sdxLayoutControlCustomizeFormRename)
+extern PACKAGE System::ResourceString _sdxLayoutControlCustomizeFormUndo;
+#define Dxlayoutstrs_sdxLayoutControlCustomizeFormUndo System::LoadResourceString(&Dxlayoutstrs::_sdxLayoutControlCustomizeFormUndo)
+extern PACKAGE System::ResourceString _sdxLayoutControlCustomizeFormRedo;
+#define Dxlayoutstrs_sdxLayoutControlCustomizeFormRedo System::LoadResourceString(&Dxlayoutstrs::_sdxLayoutControlCustomizeFormRedo)
+extern PACKAGE System::ResourceString _sdxLayoutControlCustomizeFormHAlign;
+#define Dxlayoutstrs_sdxLayoutControlCustomizeFormHAlign System::LoadResourceString(&Dxlayoutstrs::_sdxLayoutControlCustomizeFormHAlign)
+extern PACKAGE System::ResourceString _sdxLayoutControlCustomizeFormHAlignLeft;
+#define Dxlayoutstrs_sdxLayoutControlCustomizeFormHAlignLeft System::LoadResourceString(&Dxlayoutstrs::_sdxLayoutControlCustomizeFormHAlignLeft)
+extern PACKAGE System::ResourceString _sdxLayoutControlCustomizeFormHAlignCenter;
+#define Dxlayoutstrs_sdxLayoutControlCustomizeFormHAlignCenter System::LoadResourceString(&Dxlayoutstrs::_sdxLayoutControlCustomizeFormHAlignCenter)
+extern PACKAGE System::ResourceString _sdxLayoutControlCustomizeFormHAlignRight;
+#define Dxlayoutstrs_sdxLayoutControlCustomizeFormHAlignRight System::LoadResourceString(&Dxlayoutstrs::_sdxLayoutControlCustomizeFormHAlignRight)
+extern PACKAGE System::ResourceString _sdxLayoutControlCustomizeFormHAlignClient;
+#define Dxlayoutstrs_sdxLayoutControlCustomizeFormHAlignClient System::LoadResourceString(&Dxlayoutstrs::_sdxLayoutControlCustomizeFormHAlignClient)
+extern PACKAGE System::ResourceString _sdxLayoutControlCustomizeFormHAlignParent;
+#define Dxlayoutstrs_sdxLayoutControlCustomizeFormHAlignParent System::LoadResourceString(&Dxlayoutstrs::_sdxLayoutControlCustomizeFormHAlignParent)
+extern PACKAGE System::ResourceString _sdxLayoutControlCustomizeFormVAlign;
+#define Dxlayoutstrs_sdxLayoutControlCustomizeFormVAlign System::LoadResourceString(&Dxlayoutstrs::_sdxLayoutControlCustomizeFormVAlign)
+extern PACKAGE System::ResourceString _sdxLayoutControlCustomizeFormVAlignTop;
+#define Dxlayoutstrs_sdxLayoutControlCustomizeFormVAlignTop System::LoadResourceString(&Dxlayoutstrs::_sdxLayoutControlCustomizeFormVAlignTop)
+extern PACKAGE System::ResourceString _sdxLayoutControlCustomizeFormVAlignCenter;
+#define Dxlayoutstrs_sdxLayoutControlCustomizeFormVAlignCenter System::LoadResourceString(&Dxlayoutstrs::_sdxLayoutControlCustomizeFormVAlignCenter)
+extern PACKAGE System::ResourceString _sdxLayoutControlCustomizeFormVAlignBottom;
+#define Dxlayoutstrs_sdxLayoutControlCustomizeFormVAlignBottom System::LoadResourceString(&Dxlayoutstrs::_sdxLayoutControlCustomizeFormVAlignBottom)
+extern PACKAGE System::ResourceString _sdxLayoutControlCustomizeFormVAlignClient;
+#define Dxlayoutstrs_sdxLayoutControlCustomizeFormVAlignClient System::LoadResourceString(&Dxlayoutstrs::_sdxLayoutControlCustomizeFormVAlignClient)
+extern PACKAGE System::ResourceString _sdxLayoutControlCustomizeFormVAlignParent;
+#define Dxlayoutstrs_sdxLayoutControlCustomizeFormVAlignParent System::LoadResourceString(&Dxlayoutstrs::_sdxLayoutControlCustomizeFormVAlignParent)
+extern PACKAGE System::ResourceString _sdxLayoutControlCustomizeFormDirection;
+#define Dxlayoutstrs_sdxLayoutControlCustomizeFormDirection System::LoadResourceString(&Dxlayoutstrs::_sdxLayoutControlCustomizeFormDirection)
+extern PACKAGE System::ResourceString _sdxLayoutControlCustomizeFormDirectionHorizontal;
+#define Dxlayoutstrs_sdxLayoutControlCustomizeFormDirectionHorizontal System::LoadResourceString(&Dxlayoutstrs::_sdxLayoutControlCustomizeFormDirectionHorizontal)
+extern PACKAGE System::ResourceString _sdxLayoutControlCustomizeFormDirectionVertical;
+#define Dxlayoutstrs_sdxLayoutControlCustomizeFormDirectionVertical System::LoadResourceString(&Dxlayoutstrs::_sdxLayoutControlCustomizeFormDirectionVertical)
+extern PACKAGE System::ResourceString _sdxLayoutControlCustomizeFormDirectionTabbed;
+#define Dxlayoutstrs_sdxLayoutControlCustomizeFormDirectionTabbed System::LoadResourceString(&Dxlayoutstrs::_sdxLayoutControlCustomizeFormDirectionTabbed)
+extern PACKAGE System::ResourceString _sdxLayoutControlCustomizeFormTextPosition;
+#define Dxlayoutstrs_sdxLayoutControlCustomizeFormTextPosition System::LoadResourceString(&Dxlayoutstrs::_sdxLayoutControlCustomizeFormTextPosition)
+extern PACKAGE System::ResourceString _sdxLayoutControlCustomizeFormTextPositionLeft;
+#define Dxlayoutstrs_sdxLayoutControlCustomizeFormTextPositionLeft System::LoadResourceString(&Dxlayoutstrs::_sdxLayoutControlCustomizeFormTextPositionLeft)
+extern PACKAGE System::ResourceString _sdxLayoutControlCustomizeFormTextPositionTop;
+#define Dxlayoutstrs_sdxLayoutControlCustomizeFormTextPositionTop System::LoadResourceString(&Dxlayoutstrs::_sdxLayoutControlCustomizeFormTextPositionTop)
+extern PACKAGE System::ResourceString _sdxLayoutControlCustomizeFormTextPositionRight;
+#define Dxlayoutstrs_sdxLayoutControlCustomizeFormTextPositionRight System::LoadResourceString(&Dxlayoutstrs::_sdxLayoutControlCustomizeFormTextPositionRight)
+extern PACKAGE System::ResourceString _sdxLayoutControlCustomizeFormTextPositionBottom;
+#define Dxlayoutstrs_sdxLayoutControlCustomizeFormTextPositionBottom System::LoadResourceString(&Dxlayoutstrs::_sdxLayoutControlCustomizeFormTextPositionBottom)
+extern PACKAGE System::ResourceString _sdxLayoutControlCustomizeFormCaptionAlignHorz;
+#define Dxlayoutstrs_sdxLayoutControlCustomizeFormCaptionAlignHorz System::LoadResourceString(&Dxlayoutstrs::_sdxLayoutControlCustomizeFormCaptionAlignHorz)
+extern PACKAGE System::ResourceString _sdxLayoutControlCustomizeFormCaptionAlignHorzLeft;
+#define Dxlayoutstrs_sdxLayoutControlCustomizeFormCaptionAlignHorzLeft System::LoadResourceString(&Dxlayoutstrs::_sdxLayoutControlCustomizeFormCaptionAlignHorzLeft)
+extern PACKAGE System::ResourceString _sdxLayoutControlCustomizeFormCaptionAlignHorzCenter;
+#define Dxlayoutstrs_sdxLayoutControlCustomizeFormCaptionAlignHorzCenter System::LoadResourceString(&Dxlayoutstrs::_sdxLayoutControlCustomizeFormCaptionAlignHorzCenter)
+extern PACKAGE System::ResourceString _sdxLayoutControlCustomizeFormCaptionAlignHorzRight;
+#define Dxlayoutstrs_sdxLayoutControlCustomizeFormCaptionAlignHorzRight System::LoadResourceString(&Dxlayoutstrs::_sdxLayoutControlCustomizeFormCaptionAlignHorzRight)
+extern PACKAGE System::ResourceString _sdxLayoutControlCustomizeFormCaptionAlignVert;
+#define Dxlayoutstrs_sdxLayoutControlCustomizeFormCaptionAlignVert System::LoadResourceString(&Dxlayoutstrs::_sdxLayoutControlCustomizeFormCaptionAlignVert)
+extern PACKAGE System::ResourceString _sdxLayoutControlCustomizeFormCaptionAlignVertTop;
+#define Dxlayoutstrs_sdxLayoutControlCustomizeFormCaptionAlignVertTop System::LoadResourceString(&Dxlayoutstrs::_sdxLayoutControlCustomizeFormCaptionAlignVertTop)
+extern PACKAGE System::ResourceString _sdxLayoutControlCustomizeFormCaptionAlignVertCenter;
+#define Dxlayoutstrs_sdxLayoutControlCustomizeFormCaptionAlignVertCenter System::LoadResourceString(&Dxlayoutstrs::_sdxLayoutControlCustomizeFormCaptionAlignVertCenter)
+extern PACKAGE System::ResourceString _sdxLayoutControlCustomizeFormCaptionAlignVertBottom;
+#define Dxlayoutstrs_sdxLayoutControlCustomizeFormCaptionAlignVertBottom System::LoadResourceString(&Dxlayoutstrs::_sdxLayoutControlCustomizeFormCaptionAlignVertBottom)
+extern PACKAGE System::ResourceString _sdxLayoutControlCustomizeFormItemCaption;
+#define Dxlayoutstrs_sdxLayoutControlCustomizeFormItemCaption System::LoadResourceString(&Dxlayoutstrs::_sdxLayoutControlCustomizeFormItemCaption)
+extern PACKAGE System::ResourceString _sdxLayoutControlCustomizeFormGroupBorder;
+#define Dxlayoutstrs_sdxLayoutControlCustomizeFormGroupBorder System::LoadResourceString(&Dxlayoutstrs::_sdxLayoutControlCustomizeFormGroupBorder)
+extern PACKAGE System::ResourceString _sdxLayoutControlCustomizeFormGroupExpandButton;
+#define Dxlayoutstrs_sdxLayoutControlCustomizeFormGroupExpandButton System::LoadResourceString(&Dxlayoutstrs::_sdxLayoutControlCustomizeFormGroupExpandButton)
+extern PACKAGE System::ResourceString _sdxLayoutControlCustomizeFormGroup;
+#define Dxlayoutstrs_sdxLayoutControlCustomizeFormGroup System::LoadResourceString(&Dxlayoutstrs::_sdxLayoutControlCustomizeFormGroup)
+extern PACKAGE System::ResourceString _sdxLayoutControlCustomizeFormUngroup;
+#define Dxlayoutstrs_sdxLayoutControlCustomizeFormUngroup System::LoadResourceString(&Dxlayoutstrs::_sdxLayoutControlCustomizeFormUngroup)
+extern PACKAGE System::ResourceString _sdxLayoutControlEditFormOK;
+#define Dxlayoutstrs_sdxLayoutControlEditFormOK System::LoadResourceString(&Dxlayoutstrs::_sdxLayoutControlEditFormOK)
+extern PACKAGE System::ResourceString _sdxLayoutControlEditFormCancel;
+#define Dxlayoutstrs_sdxLayoutControlEditFormCancel System::LoadResourceString(&Dxlayoutstrs::_sdxLayoutControlEditFormCancel)
+extern PACKAGE System::ResourceString _sdxLayoutControlDesignerCaptionFormat;
+#define Dxlayoutstrs_sdxLayoutControlDesignerCaptionFormat System::LoadResourceString(&Dxlayoutstrs::_sdxLayoutControlDesignerCaptionFormat)
+extern PACKAGE System::ResourceString _sdxLayoutControlCustomizeFormShowBorder;
+#define Dxlayoutstrs_sdxLayoutControlCustomizeFormShowBorder System::LoadResourceString(&Dxlayoutstrs::_sdxLayoutControlCustomizeFormShowBorder)
+}	/* namespace Dxlayoutstrs */
+#if !defined(DELPHIHEADER_NO_IMPLICIT_NAMESPACE_USE) && !defined(NO_USING_NAMESPACE_DXLAYOUTSTRS)
+using namespace Dxlayoutstrs;
+#endif
+#pragma pack(pop)
+#pragma option pop
+
+#pragma delphiheader end.
+//-- end unit ----------------------------------------------------------------
+#endif	// DxlayoutstrsHPP

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{BE6C901C-8AC4-41D1-9E4A-00A4373F726D}</ProjectGuid>
+    <ProjectVersion>14.6</ProjectVersion>
+    <MainSource>SpreadSheetRL.cpp</MainSource>
+    <Config Condition="'$(Config)'==''">Base</Config>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Config)'=='Base' or '$(Base)'!=''">
+    <Base>true</Base>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Base)'!=''">
+    <Multithreaded>true</Multithreaded>
+    <AllPackageLibs>rtl.lib;vcl.lib;vclimg.lib;dxPScxSSLnkRS18.lib;cxSpreadSheetRS18.lib;VCLX.lib;dxPSCoreRS18.lib;dxThemeRS18.lib;cxLibraryRS18.lib;vcldb.lib;dbrtl.lib;adortl.lib;;dxCoreRS18.lib;dxGDIPlusRS18.lib;cxPageControlRS18.lib;cxEditorsRS18.lib;cxDataRS18.lib;dxmdsRS18.lib;dxPScxCommonRS18.lib;dxPScxExtCommonRS18.lib;dxPScxPCProdRS18.lib;dxPSLnksRS18.lib</AllPackageLibs>
+    <LinkPackageImports></LinkPackageImports>
+    <ProjectType>CppVCLApplication</ProjectType>
+    <DCC_CBuilderOutput>JPHNE</DCC_CBuilderOutput>
+   <IncludePath>$(IncludePath);..\Common;..</IncludePath>
+   <ILINK_LibraryPath>$(ILINK_LibraryPath);..\Common;..</ILINK_LibraryPath>
+    <DCC_Namespace>WinApi;Vcl;System;System.Win;Vcl.Imaging;Data;Data.Win;Bde;Xml;Xml.Win;Vcl.Shell;VclTee;Datasnap;Vcl.Samples;$(DCC_Namespace)</DCC_Namespace>
+    <BCC_wpar>false</BCC_wpar>
+  </PropertyGroup>
+  <ItemGroup>
+    <ResFiles Include="SpreadSheetRL.res">
+    </ResFiles>
+    <CppCompile Include="SpreadSheetRL.cpp"> </CppCompile>
+    <CppCompile Include="SpreadSheetRLMain.cpp">
+      <Form>SpreadSheetRLForm</Form>
+    </CppCompile>
+    <CppCompile Include="SpreadSheetRLModify.cpp">
+      <Form>SpreadSheetRLModifyForm</Form>
+    </CppCompile>
+    <CppCompile Include="..\Common\AboutDemoForm.cpp">
+      <Form>formAboutDemo</Form>
+    </CppCompile>
+    <CppCompile Include="..\Common\DemoBasicMain.cpp">
+      <Form>DemoBasicMainForm</Form>
+    </CppCompile>
+    <FormResources Include="SpreadSheetRLMain.dfm" />
+    <FormResources Include="SpreadSheetRLModify.dfm" />
+    <FormResources Include="..\Common\AboutDemoForm.dfm" />
+    <FormResources Include="..\Common\DemoBasicMain.dfm" />
+  </ItemGroup>
+  <Import Project="$(BDS)\Bin\CodeGear.Cpp.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Cpp.Targets')"/>
+  <ProjectExtensions>
+    <Borland.Personality>CPlusPlusBuilder.Personality.12</Borland.Personality>
+    <Borland.ProjectType>CppVCLApplication</Borland.ProjectType>
+    <BorlandProject>
+      <CPlusPlusBuilder.Personality>
+      </CPlusPlusBuilder.Personality>
+      <Platforms>
+        <Platform value="Win32">True</Platform>
+        <Platform value="Win64">True</Platform>
+      </Platforms>
+    </BorlandProject>
+    <ProjectFileVersion>12</ProjectFileVersion>
+  </ProjectExtensions>
+</Project>

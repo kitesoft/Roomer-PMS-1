@@ -1,0 +1,17 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ProjectExtensions>
+    <Borland.Personality>Default.Personality</Borland.Personality>
+    <Borland.ProjectType />
+    <BorlandProject>
+  <BorlandProject xmlns=""> <Default.Personality> </Default.Personality> </BorlandProject></BorlandProject>
+  </ProjectExtensions>
+  <Target Name="RealtorWorld">
+    <MSBuild Projects="RealtorWorld\RealtorWorldRSC11.cbproj" Targets="" />
+  </Target>
+  <Target Name="FrameAnimationDemo">
+    <MSBuild Projects="FrameAnimationDemo\FrameAnimationDemoRSC11.cbproj" Targets="" />
+  </Target>
+  <Target Name="Build">
+    <CallTarget Targets="RealtorWorldRSC11;FrameAnimationDemoRSC11" />
+  </Target>
+</Project>

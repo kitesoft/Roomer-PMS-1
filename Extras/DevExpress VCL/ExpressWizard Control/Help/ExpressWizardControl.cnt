@@ -1,0 +1,16 @@
+:Base ExpressWizardControl.hlp
+:Title ExpressWizardControl Suite
+:Index ExpressWizardControl Suite=ExpressWizardControl.hlp
+1 ExpressWizardControl Suite
+2 Overview=CD_ExpressWizardControl_Overview
+2 Concepts
+3 Wizard Control=CD_WizardControl
+3 Wizard Pages=CD_WizardControl_WizardPages
+2 Resource Strings
+3 ExpressWizard Control: Resource Strings=CD_WizardControl_Resource_Strings
+2 Reference
+3 Units
+4 dxCustomWizardControl=IDH_Unit_dxCustomWizardControl
+4 dxWizardControl=IDH_Unit_dxWizardControl
+3 Controls
+4 TdxWizardControl=IDH_Class_TdxWizardControl
