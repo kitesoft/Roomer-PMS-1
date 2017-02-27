@@ -1,0 +1,79 @@
+package TMSScripter_IDE;
+
+{$R *.res}
+{$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
+{$ALIGN 8}
+{$ASSERTIONS ON}
+{$BOOLEVAL OFF}
+{$DEBUGINFO ON}
+{$EXTENDEDSYNTAX ON}
+{$IMPORTEDDATA ON}
+{$IOCHECKS ON}
+{$LOCALSYMBOLS ON}
+{$LONGSTRINGS ON}
+{$OPENSTRINGS ON}
+{$OPTIMIZATION OFF}
+{$OVERFLOWCHECKS OFF}
+{$RANGECHECKS OFF}
+{$REFERENCEINFO ON}
+{$SAFEDIVIDE OFF}
+{$STACKFRAMES ON}
+{$TYPEDADDRESS OFF}
+{$VARSTRINGCHECKS ON}
+{$WRITEABLECONST OFF}
+{$MINENUMSIZE 1}
+{$IMAGEBASE $400000}
+{$DEFINE DEBUG}
+{$ENDIF IMPLICITBUILDING}
+{$DESCRIPTION 'TMS Scripter - IDE Package'}
+{$LIBSUFFIX '190'}
+{$RUNONLY}
+{$IMPLICITBUILD OFF}
+
+requires
+  rtl,
+  TMSScripter,
+  TMSScripter_Memo,
+  TMSScripter_VCL,
+  dbrtl,
+  vcldb,
+  vclx;
+
+contains
+  atMemoInterface in '..\..\source\ide\atMemoInterface.pas',
+  CollectionInspEditor in '..\..\source\ide\CollectionInspEditor.pas',
+  componentinspector in '..\..\source\ide\componentinspector.pas',
+  DatasetFieldsEditor in '..\..\source\ide\DatasetFieldsEditor.pas' {fmDatasetFieldsEditor},
+  DesignerAddControls in '..\..\source\ide\DesignerAddControls.pas' {frmDesignerAddControls},
+  DesignerAlignDialog in '..\..\source\ide\DesignerAlignDialog.pas' {frmAlign},
+  DesignerAlignPalette in '..\..\source\ide\DesignerAlignPalette.pas' {frmAlignmentPalette},
+  DesignerControlsEditor in '..\..\source\ide\DesignerControlsEditor.pas' {frmDesignerControlsEditor},
+  designeroptionsdialog in '..\..\source\ide\designeroptionsdialog.pas' {frmDesignerOptions},
+  designersizedialog in '..\..\source\ide\designersizedialog.pas' {frmSize},
+  DesignerTabOrderDialog in '..\..\source\ide\DesignerTabOrderDialog.pas' {frmTabOrder},
+  DFEAddFields in '..\..\source\ide\DFEAddFields.pas' {fmDFEAddFields},
+  DFENewField in '..\..\source\ide\DFENewField.pas' {fmDFENewField},
+  dideactions in '..\..\source\ide\dideactions.pas' {dmIDEActions},
+  fIDEEditor in '..\..\source\ide\fIDEEditor.pas',
+  fLibraryBrowser in '..\..\source\ide\fLibraryBrowser.pas' {fmLibraryBrowser},
+  fObjectInspector in '..\..\source\ide\fObjectInspector.pas',
+  FormDesigner in '..\..\source\ide\FormDesigner.pas',
+  fSelectLanguage in '..\..\source\ide\fSelectLanguage.pas' {fmSelectLanguage},
+  fSelectUnit in '..\..\source\ide\fSelectUnit.pas' {fmSelectUnit},
+  fToolPalette in '..\..\source\ide\fToolPalette.pas',
+  fWatches in '..\..\source\ide\fWatches.pas',
+  IDEDialog in '..\..\source\ide\IDEDialog.pas',
+  idemain in '..\..\source\ide\idemain.pas',
+  imagelisteditor in '..\..\source\ide\imagelisteditor.pas' {fmImageListEditor},
+  inspectorcontrols in '..\..\source\ide\inspectorcontrols.pas',
+  ListViewInspEditor in '..\..\source\ide\ListViewInspEditor.pas',
+  MenuInspEditor in '..\..\source\ide\MenuInspEditor.pas',
+  MenuInspIDEEditor in '..\..\source\ide\MenuInspIDEEditor.pas' {frmMenuIDEEditor},
+  PictureInspEditor in '..\..\source\ide\PictureInspEditor.pas' {frmPicture},
+  PropertyInspEditors in '..\..\source\ide\PropertyInspEditors.pas',
+  PropertyList in '..\..\source\ide\PropertyList.pas',
+  StringsInspEditor in '..\..\source\ide\StringsInspEditor.pas' {frmStrings},
+  TreeViewInspEditor in '..\..\source\ide\TreeViewInspEditor.pas',
+  fWatchProperties in '..\..\source\ide\fWatchProperties.pas' {fmWatchProperties};
+
+end.

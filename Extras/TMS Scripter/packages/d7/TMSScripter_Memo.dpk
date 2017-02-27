@@ -1,0 +1,52 @@
+package TMSScripter_Memo;
+
+{$R *.res}
+{$ALIGN 8}
+{$ASSERTIONS ON}
+{$BOOLEVAL OFF}
+{$DEBUGINFO ON}
+{$EXTENDEDSYNTAX ON}
+{$IMPORTEDDATA ON}
+{$IOCHECKS ON}
+{$LOCALSYMBOLS ON}
+{$LONGSTRINGS ON}
+{$OPENSTRINGS ON}
+{$OPTIMIZATION OFF}
+{$OVERFLOWCHECKS OFF}
+{$RANGECHECKS OFF}
+{$REFERENCEINFO ON}
+{$SAFEDIVIDE OFF}
+{$STACKFRAMES ON}
+{$TYPEDADDRESS OFF}
+{$VARSTRINGCHECKS ON}
+{$WRITEABLECONST OFF}
+{$MINENUMSIZE 1}
+{$IMAGEBASE $400000}
+{$DEFINE DEBUG}
+{$DESCRIPTION 'TMS Scripter - Memo Package'}
+{$LIBSUFFIX '70'}
+{$RUNONLY}
+{$IMPLICITBUILD OFF}
+
+requires
+  rtl,
+  vcl;
+
+contains
+  ScrCodeHint in '..\..\source\memo\ScrCodeHint.pas',
+  ScrCodeList in '..\..\source\memo\ScrCodeList.pas',
+  ScrCodeListDD in '..\..\source\memo\ScrCodeListDD.pas',
+  ScrCodeListLib in '..\..\source\memo\ScrCodeListLib.pas',
+  ScrFindDialogForm in '..\..\source\memo\ScrFindDialogForm.pas' {ScrFindDlgForm},
+  ScrMbs in '..\..\source\memo\ScrMbs.pas',
+  ScrMdd in '..\..\source\memo\ScrMdd.pas',
+  ScrMemo in '..\..\source\memo\ScrMemo.pas',
+  ScrMemoAC in '..\..\source\memo\ScrMemoAC.pas' {ACMemo},
+  ScrMemoEd in '..\..\source\memo\ScrMemoEd.pas',
+  ScrMemoStylerManager in '..\..\source\memo\ScrMemoStylerManager.pas',
+  ScrMps in '..\..\source\memo\ScrMps.pas',
+  ScrReplaceDialogForm in '..\..\source\memo\ScrReplaceDialogForm.pas' {ScrReplaceDlgForm},
+  ScrRTFEng in '..\..\source\memo\ScrRTFEng.pas',
+  ScrStyleIf in '..\..\source\memo\ScrStyleIf.pas';
+
+end.

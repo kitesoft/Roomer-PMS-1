@@ -1,0 +1,46 @@
+package TMSScripter_Legacy;
+
+{$R *.res}
+{$ALIGN 8}
+{$ASSERTIONS ON}
+{$BOOLEVAL OFF}
+{$DEBUGINFO ON}
+{$EXTENDEDSYNTAX ON}
+{$IMPORTEDDATA ON}
+{$IOCHECKS ON}
+{$LOCALSYMBOLS ON}
+{$LONGSTRINGS ON}
+{$OPENSTRINGS ON}
+{$OPTIMIZATION OFF}
+{$OVERFLOWCHECKS OFF}
+{$RANGECHECKS OFF}
+{$REFERENCEINFO ON}
+{$SAFEDIVIDE OFF}
+{$STACKFRAMES ON}
+{$TYPEDADDRESS OFF}
+{$VARSTRINGCHECKS ON}
+{$WRITEABLECONST OFF}
+{$MINENUMSIZE 1}
+{$IMAGEBASE $400000}
+{$DEFINE DEBUG}
+{$DESCRIPTION 'TMS Scripter - Legacy Package'}
+{$LIBSUFFIX '70'}
+{$RUNONLY}
+{$IMPLICITBUILD OFF}
+
+requires
+  rtl,
+  TMSScripter_Memo,
+  TMSScripter,
+  inet;
+
+contains
+  ATSCRIPTDEBUG in '..\..\source\legacy\ATSCRIPTDEBUG.pas',
+  atscriptdebugform in '..\..\source\legacy\atscriptdebugform.pas' {DebugForm},
+  FormScript in '..\..\source\legacy\FormScript.pas',
+  fWatchViewer in '..\..\source\legacy\fWatchViewer.pas' {fmWatchViewer},
+  ScriptCtrls in '..\..\source\legacy\ScriptCtrls.pas',
+  atWebScriptPP in '..\..\source\legacy\atWebScriptPP.pas',
+  fWatchPropertiesLegacy in '..\..\source\legacy\fWatchPropertiesLegacy.pas' {fmWatchPropertiesLegacy};
+
+end.

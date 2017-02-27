@@ -1,0 +1,168 @@
+﻿	<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+		<PropertyGroup>
+			<ProjectGuid>{C7A3EAED-8034-4C37-828B-5701688746AE}</ProjectGuid>
+		</PropertyGroup>
+		<ItemGroup>
+			<Projects Include="TMSScripter.dproj">
+				<Dependencies/>
+			</Projects>
+			<Projects Include="TMSScripter_Memo.dproj">
+				<Dependencies/>
+			</Projects>
+			<Projects Include="dclTMSScripter_Memo.dproj">
+				<Dependencies/>
+			</Projects>
+			<Projects Include="TMSScripter_Imports_RTL.dproj">
+				<Dependencies/>
+			</Projects>
+			<Projects Include="TMSScripter_Imports_VCL.dproj">
+				<Dependencies/>
+			</Projects>
+			<Projects Include="TMSScripter_Imports_DB.dproj">
+				<Dependencies/>
+			</Projects>
+			<Projects Include="TMSScripter_Imports_ADODB.dproj">
+				<Dependencies/>
+			</Projects>
+			<Projects Include="TMSScripter_FMX.dproj">
+				<Dependencies/>
+			</Projects>
+			<Projects Include="TMSScripter_VCL.dproj">
+				<Dependencies/>
+			</Projects>
+			<Projects Include="TMSScripter_IDE.dproj">
+				<Dependencies/>
+			</Projects>
+			<Projects Include="TMSScripter_Legacy.dproj">
+				<Dependencies/>
+			</Projects>
+			<Projects Include="dclTMSScripter.dproj">
+				<Dependencies/>
+			</Projects>
+		</ItemGroup>
+		<ProjectExtensions>
+			<Borland.Personality>Default.Personality.12</Borland.Personality>
+			<Borland.ProjectType/>
+			<BorlandProject>
+				<Default.Personality/>
+			</BorlandProject>
+		</ProjectExtensions>
+		<Target Name="TMSScripter">
+			<MSBuild Projects="TMSScripter.dproj"/>
+		</Target>
+		<Target Name="TMSScripter:Clean">
+			<MSBuild Projects="TMSScripter.dproj" Targets="Clean"/>
+		</Target>
+		<Target Name="TMSScripter:Make">
+			<MSBuild Projects="TMSScripter.dproj" Targets="Make"/>
+		</Target>
+		<Target Name="TMSScripter_Memo">
+			<MSBuild Projects="TMSScripter_Memo.dproj"/>
+		</Target>
+		<Target Name="TMSScripter_Memo:Clean">
+			<MSBuild Projects="TMSScripter_Memo.dproj" Targets="Clean"/>
+		</Target>
+		<Target Name="TMSScripter_Memo:Make">
+			<MSBuild Projects="TMSScripter_Memo.dproj" Targets="Make"/>
+		</Target>
+		<Target Name="dclTMSScripter_Memo">
+			<MSBuild Projects="dclTMSScripter_Memo.dproj"/>
+		</Target>
+		<Target Name="dclTMSScripter_Memo:Clean">
+			<MSBuild Projects="dclTMSScripter_Memo.dproj" Targets="Clean"/>
+		</Target>
+		<Target Name="dclTMSScripter_Memo:Make">
+			<MSBuild Projects="dclTMSScripter_Memo.dproj" Targets="Make"/>
+		</Target>
+		<Target Name="TMSScripter_Imports_RTL">
+			<MSBuild Projects="TMSScripter_Imports_RTL.dproj"/>
+		</Target>
+		<Target Name="TMSScripter_Imports_RTL:Clean">
+			<MSBuild Projects="TMSScripter_Imports_RTL.dproj" Targets="Clean"/>
+		</Target>
+		<Target Name="TMSScripter_Imports_RTL:Make">
+			<MSBuild Projects="TMSScripter_Imports_RTL.dproj" Targets="Make"/>
+		</Target>
+		<Target Name="TMSScripter_Imports_VCL">
+			<MSBuild Projects="TMSScripter_Imports_VCL.dproj"/>
+		</Target>
+		<Target Name="TMSScripter_Imports_VCL:Clean">
+			<MSBuild Projects="TMSScripter_Imports_VCL.dproj" Targets="Clean"/>
+		</Target>
+		<Target Name="TMSScripter_Imports_VCL:Make">
+			<MSBuild Projects="TMSScripter_Imports_VCL.dproj" Targets="Make"/>
+		</Target>
+		<Target Name="TMSScripter_Imports_DB">
+			<MSBuild Projects="TMSScripter_Imports_DB.dproj"/>
+		</Target>
+		<Target Name="TMSScripter_Imports_DB:Clean">
+			<MSBuild Projects="TMSScripter_Imports_DB.dproj" Targets="Clean"/>
+		</Target>
+		<Target Name="TMSScripter_Imports_DB:Make">
+			<MSBuild Projects="TMSScripter_Imports_DB.dproj" Targets="Make"/>
+		</Target>
+		<Target Name="TMSScripter_Imports_ADODB">
+			<MSBuild Projects="TMSScripter_Imports_ADODB.dproj"/>
+		</Target>
+		<Target Name="TMSScripter_Imports_ADODB:Clean">
+			<MSBuild Projects="TMSScripter_Imports_ADODB.dproj" Targets="Clean"/>
+		</Target>
+		<Target Name="TMSScripter_Imports_ADODB:Make">
+			<MSBuild Projects="TMSScripter_Imports_ADODB.dproj" Targets="Make"/>
+		</Target>
+		<Target Name="TMSScripter_FMX">
+			<MSBuild Projects="TMSScripter_FMX.dproj"/>
+		</Target>
+		<Target Name="TMSScripter_FMX:Clean">
+			<MSBuild Projects="TMSScripter_FMX.dproj" Targets="Clean"/>
+		</Target>
+		<Target Name="TMSScripter_FMX:Make">
+			<MSBuild Projects="TMSScripter_FMX.dproj" Targets="Make"/>
+		</Target>
+		<Target Name="TMSScripter_VCL">
+			<MSBuild Projects="TMSScripter_VCL.dproj"/>
+		</Target>
+		<Target Name="TMSScripter_VCL:Clean">
+			<MSBuild Projects="TMSScripter_VCL.dproj" Targets="Clean"/>
+		</Target>
+		<Target Name="TMSScripter_VCL:Make">
+			<MSBuild Projects="TMSScripter_VCL.dproj" Targets="Make"/>
+		</Target>
+		<Target Name="TMSScripter_IDE">
+			<MSBuild Projects="TMSScripter_IDE.dproj"/>
+		</Target>
+		<Target Name="TMSScripter_IDE:Clean">
+			<MSBuild Projects="TMSScripter_IDE.dproj" Targets="Clean"/>
+		</Target>
+		<Target Name="TMSScripter_IDE:Make">
+			<MSBuild Projects="TMSScripter_IDE.dproj" Targets="Make"/>
+		</Target>
+		<Target Name="TMSScripter_Legacy">
+			<MSBuild Projects="TMSScripter_Legacy.dproj"/>
+		</Target>
+		<Target Name="TMSScripter_Legacy:Clean">
+			<MSBuild Projects="TMSScripter_Legacy.dproj" Targets="Clean"/>
+		</Target>
+		<Target Name="TMSScripter_Legacy:Make">
+			<MSBuild Projects="TMSScripter_Legacy.dproj" Targets="Make"/>
+		</Target>
+		<Target Name="dclTMSScripter">
+			<MSBuild Projects="dclTMSScripter.dproj"/>
+		</Target>
+		<Target Name="dclTMSScripter:Clean">
+			<MSBuild Projects="dclTMSScripter.dproj" Targets="Clean"/>
+		</Target>
+		<Target Name="dclTMSScripter:Make">
+			<MSBuild Projects="dclTMSScripter.dproj" Targets="Make"/>
+		</Target>
+		<Target Name="Build">
+			<CallTarget Targets="TMSScripter;TMSScripter_Memo;dclTMSScripter_Memo;TMSScripter_Imports_RTL;TMSScripter_Imports_VCL;TMSScripter_Imports_DB;TMSScripter_Imports_ADODB;TMSScripter_FMX;TMSScripter_VCL;TMSScripter_IDE;TMSScripter_Legacy;dclTMSScripter"/>
+		</Target>
+		<Target Name="Clean">
+			<CallTarget Targets="TMSScripter:Clean;TMSScripter_Memo:Clean;dclTMSScripter_Memo:Clean;TMSScripter_Imports_RTL:Clean;TMSScripter_Imports_VCL:Clean;TMSScripter_Imports_DB:Clean;TMSScripter_Imports_ADODB:Clean;TMSScripter_FMX:Clean;TMSScripter_VCL:Clean;TMSScripter_IDE:Clean;TMSScripter_Legacy:Clean;dclTMSScripter:Clean"/>
+		</Target>
+		<Target Name="Make">
+			<CallTarget Targets="TMSScripter:Make;TMSScripter_Memo:Make;dclTMSScripter_Memo:Make;TMSScripter_Imports_RTL:Make;TMSScripter_Imports_VCL:Make;TMSScripter_Imports_DB:Make;TMSScripter_Imports_ADODB:Make;TMSScripter_FMX:Make;TMSScripter_VCL:Make;TMSScripter_IDE:Make;TMSScripter_Legacy:Make;dclTMSScripter:Make"/>
+		</Target>
+		<Import Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')" Project="$(BDS)\Bin\CodeGear.Group.Targets"/>
+	</Project>
