@@ -1835,6 +1835,8 @@ function IVH_SetNewID: integer;
 function IVH_RestoreID: integer;
 function IVH_GetLastID: integer;
 
+procedure SendInvoicesToFinancePacket(zInvoiceNumber: integer);
+
 function NumberOfInvoiceLines(iReservation, iRoomReservation, iSplitNumber: integer; InvoiceIndex : Integer = -1): integer;
 function GetRate(Currency: string): double;
 
@@ -2125,17 +2127,11 @@ Function changeNoRoomRoomtypeReturnSelection(Reservation, RoomReservation: integ
 function updateRdResFlag(id: integer; Status: string): boolean;
 function updateRdResFlagByRRandDate(RoomReservation: integer; sDate: string; Status: string; SetPaid : Boolean = False; isPaid : Boolean = False): boolean;
 
-//function DKAutoTransfer : boolean;
-
 function GetTaxesHolder : recTaxesHolder;
 procedure initCityTaxResultHolder(var rec: recCityTaxResultHolder);
 
 function StoreDescriptionExist(ss: string): boolean;
 function propertiesstoreGetText(ss: string) : string;
-
-// var
-// roomerConnection : TRoomerConnection;
-// roomerDataSet : TRoomerDataSet;
 
 implementation
 
@@ -2148,7 +2144,7 @@ uses
   uActivityLogs,
   uAvailabilityPerDay,
   PrjConst
-  , uSQLUtils, uInvoiceDefinitions;
+  , uSQLUtils, uInvoiceDefinitions, uFrmHandleBookKeepingException;
 
 procedure SetForeignKeyCheckValue(value : Byte);
 begin
@@ -4494,28 +4490,6 @@ begin
   result := glb.ControlSet.fieldbyname(aField).asInteger;
 end;
 
-
-//function DKAutoTransfer : boolean;
-// var
-//   Rset : TRoomerDataSet;
-//   s : string;
-//begin
-//   result := true;
-//   RSet := CreateNewDataSet;
-//   try
-//     s := '';
-//     s := s + 'SELECT AutoInvoiceTransfer '+#10;
-//     s := s + 'FROM hotelconfigurations  ';
-//     if rSet_bySQL(rSet,s) then
-//     begin
-//       result := Rset.FieldByName('AutoInvoiceTransfer').AsBoolean;
-//     end;
-//   finally
-//     freeandnil(Rset);
-//   end;
-//end;
-
-
 function ctrlGetBoolean(aField: string): boolean;
 begin
   result := glb.ControlSet[aField];
@@ -4819,6 +4793,20 @@ begin
     end;
   finally
     freeandnil(rSet);
+  end;
+end;
+
+procedure SendInvoicesToFinancePacket(zInvoiceNumber: integer);
+var remoteResult : String;
+begin
+  if g.qSendInvoicesToFinancePacket then
+  begin
+    // BOOK KEEPING / Finance
+    remoteResult := d.roomerMainDataSet.SystemSendInvoiceToBookkeeping(zInvoiceNumber);
+    if remoteResult <> '' then
+    begin
+      HandleFinanceBookKeepingExceptions(zInvoiceNumber, remoteResult);
+    end;
   end;
 end;
 

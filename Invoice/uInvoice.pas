@@ -595,8 +595,6 @@ type
     function LocateDate(recordSet: TRoomerDataset; field: String;
       Value: TDate): boolean;
     procedure GetTaxTypes(TaxResultInvoiceLines: TInvoiceTaxEntityList);
-    procedure HandleExceptionListFromBookKeepingSystem(invoiceNumber: integer;
-      ErrorList: String);
     function FindLastRoomRentLine: integer;
     procedure UpdateItemInvoiceLinesForTaxCalculations;
     function CheckIfWithdrawlAllowed_X(Editing: boolean; Value: String)
@@ -650,7 +648,6 @@ type
     procedure AddIncludedBreakfastToLinesAndGrid(aIncludedBreakfastCount: integer; iAddAt: integer = 0);
     procedure RemoveAutoBreakfastItems;
     function ItemKindOnRow(aRow: Integer): TItemKind;
-    procedure SendInvoicesToFinancePacket(zInvoiceNumber);
 
     property InvoiceIndex: integer read FInvoiceIndex write SetInvoiceIndex;
     property AnyRowChecked: boolean read GetAnyRowChecked;
@@ -6020,26 +6017,6 @@ begin
     FreeAndNil(lstLocations);
     FreeAndNil(lstActivity);
   end;
-end;
-
-procedure TfrmInvoice.SendInvoicesToFinancePacket(zInvoiceNumber);
-var remoteResult : String;
-begin
-  if g.qSendInvoicesToFinancePacket then
-  begin
-    // BOOK KEEPING / Finance
-    remoteResult := d.roomerMainDataSet.SystemSendInvoiceToBookkeeping(zInvoiceNumber);
-    if remoteResult <> '' then
-    begin
-      HandleExceptionListFromBookKeepingSystem(zInvoiceNumber, remoteResult);
-    end;
-  end;
-end;
-
-procedure TfrmInvoice.HandleExceptionListFromBookKeepingSystem
-  (invoiceNumber: integer; ErrorList: String);
-begin
-  HandleFinanceBookKeepingExceptions(invoiceNumber, ErrorList);
 end;
 
 // -- The original Invoice contains a special field which links it to the
