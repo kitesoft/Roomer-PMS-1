@@ -1,0 +1,62 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+	  <ProjectGuid>{624986FA-A7F7-4F65-944F-B4291D80BD68}</ProjectGuid>
+  </PropertyGroup>
+  <ProjectExtensions>
+    <Borland.Personality>Default.Personality.12</Borland.Personality>
+    <Borland.ProjectType />
+    <BorlandProject>
+  <BorlandProject xmlns=""> <Default.Personality> </Default.Personality> </BorlandProject></BorlandProject>
+  </ProjectExtensions>
+  <Target Name="BandedDemo">
+    <MSBuild Projects="BandedDemo\BandedDemoRSC16.cbproj" Targets="" />
+  </Target>
+  <Target Name="BandedFixedDemo">
+    <MSBuild Projects="BandedFixedDemo\BandedFixedDemoRSC16.cbproj" Targets="" />
+  </Target>
+  <Target Name="ColumnsMultiEditorsDemo">
+    <MSBuild Projects="ColumnsMultiEditorsDemo\ColumnsMultiEditorsDemoRSC16.cbproj" Targets="" />
+  </Target>
+  <Target Name="CheckGroupsDemo">
+    <MSBuild Projects="CheckGroupsDemo\CheckGroupsDemoRSC16.cbproj" Targets="" />
+  </Target>
+  <Target Name="CustomDrawDemo">
+    <MSBuild Projects="CustomDrawDemo\CustomDrawDemoRSC16.cbproj" Targets="" />
+  </Target>
+  <Target Name="DragDropDemo">
+    <MSBuild Projects="DragDropDemo\DragDropDemoRSC16.cbproj" Targets="" />
+  </Target>
+  <Target Name="EditorsInPlaceDemo">
+    <MSBuild Projects="EditorsInPlaceDemo\EditorsInPlaceDemoRSC16.cbproj" Targets="" />
+  </Target>
+  <Target Name="VirtualModeDemo">
+    <MSBuild Projects="VirtualModeDemo\VirtualModeDemoRSC16.cbproj" Targets="" />
+  </Target>
+  <Target Name="ProviderModeDemo">
+    <MSBuild Projects="ProviderModeDemo\ProviderModeDemoRSC16.cbproj" Targets="" />
+  </Target>
+  <Target Name="SimpleListDemo">
+    <MSBuild Projects="SimpleListDemo\SimpleListDemoRSC16.cbproj" Targets="" />
+  </Target>
+  <Target Name="SimpleTreeDemo">
+    <MSBuild Projects="SimpleTreeDemo\SimpleTreeDemoRSC16.cbproj" Targets="" />
+  </Target>
+  <Target Name="StylesMultiDemo">
+    <MSBuild Projects="StylesMultiDemo\StylesMultiDemoRSC16.cbproj" Targets="" />
+  </Target>
+  <Target Name="StylesSimpleDemo">
+    <MSBuild Projects="StylesSimpleDemo\StylesSimpleDemoRSC16.cbproj" Targets="" />
+  </Target>
+  <Target Name="SummariesDemo">
+    <MSBuild Projects="SummariesDemo\SummariesDemoRSC16.cbproj" Targets="" />
+  </Target>
+  <Target Name="UnboundModeDemo">
+    <MSBuild Projects="UnboundModeDemo\UnboundModeDemoRSC16.cbproj" Targets="" />
+  </Target>
+  <Target Name="EditorsInPlaceValidationDemo">
+    <MSBuild Projects="EditorsInPlaceValidationDemo\EditorsInPlaceValidationDemoRSC16.cbproj" Targets="" />
+  </Target>
+  <Target Name="Build">
+    <CallTarget Targets="BandedDemoRSC16;BandedFixedDemoRSC16;ColumnsMultiEditorsDemoRSC16;CheckGroupsDemoRSC16;CustomDrawDemoRSC16;DragDropDemoRSC16;EditorsInPlaceDemoRSC16;VirtualModeDemoRSC16;ProviderModeDemoRSC16;SimpleListDemoRSC16;SimpleTreeDemoRSC16;StylesMultiDemoRSC16;StylesSimpleDemoRSC16;SummariesDemoRSC16;UnboundModeDemoRSC16;EditorsInPlaceValidationDemoRSC16" />
+  </Target>
+</Project>

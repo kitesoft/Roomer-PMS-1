@@ -1,0 +1,47 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+	  <ProjectGuid>{624986FA-A7F7-4F65-944F-B4291D80BD68}</ProjectGuid>
+  </PropertyGroup>
+  <ProjectExtensions>
+    <Borland.Personality>Default.Personality.12</Borland.Personality>
+    <Borland.ProjectType />
+    <BorlandProject>
+  <BorlandProject xmlns=""> <Default.Personality> </Default.Personality> </BorlandProject></BorlandProject>
+  </ProjectExtensions>
+  <Target Name="DBBasedExplorer">
+    <MSBuild Projects="DB ReportExplorer\DBBasedExplorerRSC18.cbproj" Targets="" />
+  </Target>
+  <Target Name="EQGridReportLink">
+    <MSBuild Projects="EQGridRL\EQGridReportLinkRSC18.cbproj" Targets="" />
+  </Target>
+  <Target Name="FlowChartReportLink">
+    <MSBuild Projects="FlowChartRL\FlowChartReportLinkRSC18.cbproj" Targets="" />
+  </Target>
+  <Target Name="LayoutControlReportLink">
+    <MSBuild Projects="LayoutControlRL\LayoutControlReportLinkRSC18.cbproj" Targets="" />
+  </Target>
+  <Target Name="OrgChartReportLink">
+    <MSBuild Projects="OrgChartRL\OrgChartReportLinkRSC18.cbproj" Targets="" />
+  </Target>
+  <Target Name="ReportExplorer">
+    <MSBuild Projects="ReportExplorer\ReportExplorerRSC18.cbproj" Targets="" />
+  </Target>
+  <Target Name="SchedulerLink">
+    <MSBuild Projects="SchedulerRL\SchedulerLinkRSC18.cbproj" Targets="" />
+  </Target>
+  <Target Name="SpreadSheetRL">
+    <MSBuild Projects="SpreadSheetRL\SpreadSheetRLRSC18.cbproj" Targets="" />
+  </Target>
+  <Target Name="StandardReportLink">
+    <MSBuild Projects="StandardRL\StandardReportLinkRSC18.cbproj" Targets="" />
+  </Target>
+  <Target Name="PivotGridReportLink">
+    <MSBuild Projects="PivotGridRL\PivotGridReportLinkRSC18.cbproj" Targets="" />
+  </Target>
+  <Target Name="cxTreeListReportLink">
+    <MSBuild Projects="cxTreeListRL\cxTreeListReportLinkRSC18.cbproj" Targets="" />
+  </Target>
+  <Target Name="Build">
+    <CallTarget Targets="DBBasedExplorerRSC18;EQGridReportLinkRSC18;FlowChartReportLinkRSC18;LayoutControlReportLinkRSC18;OrgChartReportLinkRSC18;ReportExplorerRSC18;SchedulerLinkRSC18;SpreadSheetRLRSC18;StandardReportLinkRSC18;PivotGridReportLinkRSC18;cxTreeListReportLinkRSC18" />
+  </Target>
+</Project>

@@ -1,0 +1,50 @@
+package TMSScripter_Imports_RTL;
+
+{$R *.res}
+{$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
+{$ALIGN 8}
+{$ASSERTIONS ON}
+{$BOOLEVAL OFF}
+{$DEBUGINFO ON}
+{$EXTENDEDSYNTAX ON}
+{$IMPORTEDDATA ON}
+{$IOCHECKS ON}
+{$LOCALSYMBOLS ON}
+{$LONGSTRINGS ON}
+{$OPENSTRINGS ON}
+{$OPTIMIZATION OFF}
+{$OVERFLOWCHECKS OFF}
+{$RANGECHECKS OFF}
+{$REFERENCEINFO ON}
+{$SAFEDIVIDE OFF}
+{$STACKFRAMES ON}
+{$TYPEDADDRESS OFF}
+{$VARSTRINGCHECKS ON}
+{$WRITEABLECONST OFF}
+{$MINENUMSIZE 1}
+{$IMAGEBASE $400000}
+{$DEFINE DEBUG}
+{$ENDIF IMPLICITBUILDING}
+{$DESCRIPTION 'TMS Scripter - RTL Import Package'}
+{$LIBSUFFIX '180'}
+{$RUNONLY}
+{$IMPLICITBUILD OFF}
+
+requires
+  rtl,
+  TMSScripter;
+
+contains
+  ap_Classes in '..\..\source\imports\rtl\ap_Classes.pas',
+  ap_Contnrs in '..\..\source\imports\rtl\ap_Contnrs.pas',
+  ap_DateUtils in '..\..\source\imports\rtl\ap_DateUtils.pas',
+  ap_IniFiles in '..\..\source\imports\rtl\ap_IniFiles.pas',
+  ap_Math in '..\..\source\imports\rtl\ap_Math.pas',
+  ap_StrUtils in '..\..\source\imports\rtl\ap_StrUtils.pas',
+  ap_System in '..\..\source\imports\rtl\ap_System.pas',
+  ap_SysUtils in '..\..\source\imports\rtl\ap_SysUtils.pas',
+  ap_Types in '..\..\source\imports\rtl\ap_Types.pas',
+  ap_Variants in '..\..\source\imports\rtl\ap_Variants.pas',
+  ap_Windows in '..\..\source\imports\rtl\ap_Windows.pas';
+
+end.

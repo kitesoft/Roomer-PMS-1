@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{9CF0EFEA-70C4-4257-B34A-FCCECED141F6}</ProjectGuid>
+    <ProjectVersion>14.4</ProjectVersion>
+    <MainSource>dbtrprnp.cpp</MainSource>
+    <Config Condition="'$(Config)'==''">Base</Config>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Config)'=='Base' or '$(Base)'!=''">
+    <Base>true</Base>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Base)'!=''">
+    <Multithreaded>true</Multithreaded>
+    <AllPackageLibs>rtl.lib;vcl.lib;vclimg.lib;vclx.lib;Qrpt.lib;dxtrmdRS17.lib;dxmdsRS17.lib;dxComnRS17.lib;dxdbtrRS17.lib;vcldb.lib;dbrtl.lib;adortl.lib;;dxCoreRS17.lib;dxThemeRS17.lib;dxGDIPlusRS17.lib;cxLibraryRS17.lib</AllPackageLibs>
+    <LinkPackageImports></LinkPackageImports>
+    <ProjectType>CppVCLApplication</ProjectType>
+    <DCC_CBuilderOutput>JPHNE</DCC_CBuilderOutput>
+   <IncludePath>$(IncludePath);..\Common;..</IncludePath>
+   <ILINK_LibraryPath>$(ILINK_LibraryPath);..\Common;..</ILINK_LibraryPath>
+    <DCC_Namespace>WinApi;Vcl;System;System.Win;Vcl.Imaging;Data;Data.Win;Bde;Xml;Xml.Win;Vcl.Shell;VclTee;Datasnap;Vcl.Samples;$(DCC_Namespace)</DCC_Namespace>
+    <BCC_wpar>false</BCC_wpar>
+  </PropertyGroup>
+  <ItemGroup>
+    <CppCompile Include="dbtrprnp.cpp"> </CppCompile>
+    <CppCompile Include="DBTrPrnmain.cpp">
+      <Form>FMain</Form>
+    </CppCompile>
+    <CppCompile Include="dbtreeqr.cpp">
+      <Form>QRListForm</Form>
+    </CppCompile>
+    <FormResources Include="DBTrPrnmain.dfm" />
+    <FormResources Include="dbtreeqr.dfm" />
+  </ItemGroup>
+  <Import Project="$(BDS)\Bin\CodeGear.Cpp.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Cpp.Targets')"/>
+  <ProjectExtensions>
+    <Borland.Personality>CPlusPlusBuilder.Personality.12</Borland.Personality>
+    <Borland.ProjectType>CppVCLApplication</Borland.ProjectType>
+    <BorlandProject>
+      <CPlusPlusBuilder.Personality>
+      </CPlusPlusBuilder.Personality>
+      <Platforms>
+        <Platform value="Win32">True</Platform>
+        <Platform value="Win64">True</Platform>
+      </Platforms>
+    </BorlandProject>
+    <ProjectFileVersion>12</ProjectFileVersion>
+  </ProjectExtensions>
+</Project>

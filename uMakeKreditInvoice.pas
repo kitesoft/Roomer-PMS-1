@@ -493,14 +493,7 @@ begin
   if saveInvoice then
   begin
 
-    if dkAutoTransfer then
-    begin
-      remoteResult := d.roomerMainDataSet.SystemSendInvoiceToBookkeeping(zKeditInvoiceNumber);
-      if remoteResult <> '' then
-      begin
-        HandleExceptionListFromBookKeepingSystem(zKeditInvoiceNumber, remoteResult);
-      end;
-    end;
+    SendInvoicesToFinancePacket(zKeditInvoiceNumber);
     ViewInvoice2(zKeditInvoiceNumber, true, false, true, ShowPackage, EmailAddress);
     if zdoRestore then
     begin

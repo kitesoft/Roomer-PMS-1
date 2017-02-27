@@ -340,32 +340,20 @@ uses
 
 function TfrmNationalReport3.getRoomReservationsList : string;
 var
-  s      : string;
   rrList : TstringList;
-  i      : integer;
 begin
   rrList := d.RRlst_DepartureNationalReportByLocation(zDateFrom, zDateTo,zLocationList);
   try
-    s := '';
-    for i := 0 to rrList.Count - 1 do
-    begin
-      s := s+rrList[i]+',';
-    end;
-    if length(s) > 0 then
-    begin
-      delete(s,length(s),1);
-      s := '('+s+')'
-    end else
-    begin
-      s := '(-1)'
-    end;
+    if rrList.Count > 0 then
+      result := ' (' + rrList.DelimitedText + ') '
+    else
+      result := '(-1)';
 
     zRoomReservationCount := rrList.count;
     updateSums;
   finally
     freeandNil(rrList);
   end;
-  result := s;
 end;
 
 procedure TfrmNationalReport3.ppHeaderBand1BeforePrint(Sender: TObject);

@@ -80,7 +80,6 @@ uses
   uAboutRoomer in 'uAboutRoomer.pas' {frmAboutRoomer},
   uChannelAvailabilityManager in 'uChannelAvailabilityManager.pas' {frmChannelAvailabilityManager},
   ueditRoomPrice in 'ueditRoomPrice.pas' {frmEditRoomPrice},
-  hData in 'Extras\hData.pas',
   uRoomCleanMaintenanceStatus in 'uRoomCleanMaintenanceStatus.pas' {frmRoomCleanMaintenanceStatus},
   uRunWithElevatedOption in 'uRunWithElevatedOption.pas',
   uRates in 'uRates.pas' {frmRates},
@@ -103,7 +102,6 @@ uses
   uRegistryServices in 'uRegistryServices.pas',
   uUtils in 'RoomerUtils\uUtils.pas',
   uPersonContactType in 'uPersonContactType.pas' {frmPersonContactType},
-  uSqlDefinitions in 'Extras\uSqlDefinitions.pas',
   uChannelManager in 'uChannelManager.pas' {frmChannelManager},
   uCommunicationTest in 'uCommunicationTest.pas' {frmCommunicationTest},
   uHouseKeeping in 'uHouseKeeping.pas' {frmHouseKeeping},
@@ -249,7 +247,6 @@ uses
   uPMSSettings in 'PMSSettings\uPMSSettings.pas',
   uTableEntityList in 'TableCache\uTableEntityList.pas',
   uMessageList in 'uMessageList.pas',
-  uRoomerVersionInfo in 'Extras\uRoomerVersionInfo.pas',
   uCleaningNotesDefinitions in 'Definitions\uCleaningNotesDefinitions.pas',
   uRoomerDialogForm in 'RoomerForm\uRoomerDialogForm.pas' {frmBaseRoomerDialogForm},
   uSQLUtils in 'RoomerUtils\uSQLUtils.pas',
@@ -261,7 +258,6 @@ uses
   uEmbDateStatistics in 'Embeddables\uEmbDateStatistics.pas' {frmEmbDateStatistics},
   uMasterRateDefaults in 'Rates\uMasterRateDefaults.pas' {frmMasterRateDefaults},
   uTopClassAvailabilityOrder in 'uTopClassAvailabilityOrder.pas' {FrmTopClassAvailabilityOrder},
-  _Glob in 'Extras\_Glob.pas',
   uCurrencyHandlersMap in 'uCurrencyHandlersMap.pas',
   uHotelServicesAPICaller in 'OpenAPI\uHotelServicesAPICaller.pas',
   uRoomerHotelServicesCommunicationModel_RequestsResponses in 'OpenAPI\schema\uRoomerHotelServicesCommunicationModel_RequestsResponses.pas',
@@ -272,7 +268,11 @@ uses
   uRoomerHotelServicesCommunicationModel_RunningTabs in 'OpenAPI\schema\uRoomerHotelServicesCommunicationModel_RunningTabs.pas',
   uRoomerSchema in 'OpenAPI\schema\uRoomerSchema.pas',
   uServicesRunningTabAPICaller in 'OpenAPI\uServicesRunningTabAPICaller.pas',
-  uInvoiceOnObjects in 'Invoice\uInvoiceOnObjects.pas' {frmInvoiceObjects};
+  uInvoiceOnObjects in 'Invoice\uInvoiceOnObjects.pas' {frmInvoiceObjects},
+  _Glob in 'Data\_Glob.pas',
+  hData in 'Data\hData.pas',
+  uSqlDefinitions in 'Data\uSqlDefinitions.pas',
+  uRoomerVersionInfo in 'RoomerUtils\uRoomerVersionInfo.pas';
 
 {$R *.RES}
 

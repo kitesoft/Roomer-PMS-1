@@ -409,7 +409,6 @@
         <DCCReference Include="ueditRoomPrice.pas">
             <Form>frmEditRoomPrice</Form>
         </DCCReference>
-        <DCCReference Include="Extras\hData.pas"/>
         <DCCReference Include="uRoomCleanMaintenanceStatus.pas">
             <Form>frmRoomCleanMaintenanceStatus</Form>
         </DCCReference>
@@ -466,7 +465,6 @@
         <DCCReference Include="uPersonContactType.pas">
             <Form>frmPersonContactType</Form>
         </DCCReference>
-        <DCCReference Include="Extras\uSqlDefinitions.pas"/>
         <DCCReference Include="uChannelManager.pas">
             <Form>frmChannelManager</Form>
         </DCCReference>
@@ -806,7 +804,6 @@
         <DCCReference Include="PMSSettings\uPMSSettings.pas"/>
         <DCCReference Include="TableCache\uTableEntityList.pas"/>
         <DCCReference Include="uMessageList.pas"/>
-        <DCCReference Include="Extras\uRoomerVersionInfo.pas"/>
         <DCCReference Include="Definitions\uCleaningNotesDefinitions.pas"/>
         <DCCReference Include="RoomerForm\uRoomerDialogForm.pas">
             <Form>frmBaseRoomerDialogForm</Form>
@@ -834,7 +831,6 @@
             <Form>FrmTopClassAvailabilityOrder</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="Extras\_Glob.pas"/>
         <DCCReference Include="uCurrencyHandlersMap.pas"/>
         <DCCReference Include="OpenAPI\uHotelServicesAPICaller.pas"/>
         <DCCReference Include="OpenAPI\schema\uRoomerHotelServicesCommunicationModel_RequestsResponses.pas"/>
@@ -850,6 +846,10 @@
         <DCCReference Include="Invoice\uInvoiceOnObjects.pas">
             <Form>frmInvoiceObjects</Form>
         </DCCReference>
+        <DCCReference Include="Data\_Glob.pas"/>
+        <DCCReference Include="Data\hData.pas"/>
+        <DCCReference Include="Data\uSqlDefinitions.pas"/>
+        <DCCReference Include="RoomerUtils\uRoomerVersionInfo.pas"/>
         <None Include="Roomer.todo"/>
         <None Include="notes.txt"/>
         <None Include="Roomer.inc"/>

@@ -1,0 +1,44 @@
+package dcldxWizardControlD7;
+
+{$R *.res}
+{$R dxWizardControlReg.dcr}
+{$DEBUGINFO OFF}
+{$LOCALSYMBOLS OFF}
+{$OPTIMIZATION ON}
+{$STACKFRAMES OFF}
+{$ASSERTIONS OFF}
+{$BOOLEVAL OFF}
+{$EXTENDEDSYNTAX ON}
+{$IMPORTEDDATA ON}
+{$IOCHECKS ON}
+{$LONGSTRINGS ON}
+{$OPENSTRINGS ON}
+{$OVERFLOWCHECKS OFF}
+{$RANGECHECKS OFF}
+{$REFERENCEINFO OFF}
+{$SAFEDIVIDE OFF}
+{$TYPEDADDRESS OFF}
+{$VARSTRINGCHECKS ON}
+{$WRITEABLECONST ON}
+{$MINENUMSIZE 1}
+{$IMAGEBASE $400000}
+{$DESCRIPTION 'ExpressWizardControl by Developer Express Inc.'}
+{$DESIGNONLY}
+{$IMPLICITBUILD OFF}
+
+requires
+  designide,
+  rtl,
+  vcl,
+  vcljpg,
+  vclx,
+  dcldxCoreD7,
+  dclcxLibraryD7,
+  dxWizardControlD7;
+
+contains
+  dxWizardControlReg,
+  dxWizardControlFormWizard,
+  dxWizardControlFormWizardReg,
+  dxWizardControlPageCollectionEditor;
+end.

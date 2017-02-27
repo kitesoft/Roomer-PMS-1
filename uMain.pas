@@ -4396,22 +4396,16 @@ var
   oNewReservation: TNewReservation;
   oRestReservation: TNewReservation;
   restCount: integer;
-
+  lSucceeded: boolean;
 begin
   restCount := 0;
+
+  oNewReservation := nil;
+  oRestReservation := nil;
   try
     oNewReservation := TNewReservation.Create(g.qHotelCode, g.qUser);
-  Except
-    // ATH Log exception
-  end;
-
-  try
     oRestReservation := TNewReservation.Create(g.qHotelCode, g.qUser);
-  Except
-    // ATH Log exception
-  end;
 
-  try
     oNewReservation.resMedhod := rmAllotment;
     oNewReservation.isQuick := false;
 
@@ -4428,38 +4422,34 @@ begin
 
     d.roomerMainDataSet.SystemStartTransaction;
     try
+      lSucceeded := false;
       Screen.Cursor := crHourglass;
       try
-        oNewReservation.CreateReservation(Reservation, false);
+        // Notice that CreateReservation already catches any exceptions and show message to user and returns false
+        lSucceeded := oNewReservation.CreateReservation(Reservation, false);
+        if lSucceeded and (oNewReservation.Reservation > 0) and (restCount > 0) then
+          lSucceeded := oRestReservation.CreateReservation(-1, false);
+
+        if lSucceeded then
+          d.roomerMainDataSet.SystemCommitTransaction
+        else
+          d.roomerMainDataSet.SystemRollbackTransaction;
       finally
         Screen.Cursor := crDefault;
       end;
 
-      if (oNewReservation.Reservation > 0) and (restCount > 0) then
-      begin
-        Screen.Cursor := crHourglass;
-        try
-          oRestReservation.CreateReservation(-1, false);
-        finally
-          Screen.Cursor := crDefault;
-        end;
-      end;
-
-      d.roomerMainDataSet.SystemCommitTransaction;
     except
+      // in theory not reachable
       d.roomerMainDataSet.SystemRollbackTransaction;
       raise;
     end;
-
-    if oNewReservation.ShowProfile then
-      EditReservation(oNewReservation.Reservation, 0)
-    else
-      RefreshGrid;
-
   finally
     oNewReservation.Free;
     oRestReservation.Free;
   end;
+
+  if lSucceeded then
+    EditReservation(oNewReservation.Reservation, 0)
 end;
 
 procedure TfrmMain.pmnuProvideAllotmentClick(Sender: TObject);

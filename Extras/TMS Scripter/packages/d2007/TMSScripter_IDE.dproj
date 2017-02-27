@@ -1,0 +1,177 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<PropertyGroup>
+		<ProjectGuid>{FB5B4AA5-F211-412C-B48F-417622D84B44}</ProjectGuid>
+		<MainSource>TMSScripter_IDE.dpk</MainSource>
+		<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+		<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+		<DCC_DCCCompiler>DCC32</DCC_DCCCompiler>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+		<Version>7.0</Version>
+		<DCC_DebugInformation>False</DCC_DebugInformation>
+		<DCC_LocalDebugSymbols>False</DCC_LocalDebugSymbols>
+		<DCC_SymbolReferenceInfo>0</DCC_SymbolReferenceInfo>
+		<DCC_Define>RELEASE</DCC_Define>
+		<DCC_Description>TMS Scripter - IDE Package</DCC_Description>
+		<DCC_OutputNeverBuildDcps>true</DCC_OutputNeverBuildDcps>
+		<DCC_CBuilderOutput>All</DCC_CBuilderOutput>
+		<RuntimeOnlyPackage>true</RuntimeOnlyPackage>
+		<DllSuffix>100</DllSuffix>
+		<DCC_DcuOutput>.\Win32\Release</DCC_DcuOutput>
+		<DCC_BplOutput>..\bpl\Win32</DCC_BplOutput>
+		<DCC_BpiOutput>.\$(Platform)\Release</DCC_BpiOutput>
+		<DCC_DcpOutput>.\Win32\Release</DCC_DcpOutput>
+		<DCC_HppOutput>.\$(Platform)\Release</DCC_HppOutput>
+		<DCC_ObjOutput>.\$(Platform)\Release</DCC_ObjOutput>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+		<Version>7.0</Version>
+		<DCC_Description>TMS Scripter - IDE Package</DCC_Description>
+		<DCC_OutputNeverBuildDcps>true</DCC_OutputNeverBuildDcps>
+		<DCC_CBuilderOutput>All</DCC_CBuilderOutput>
+		<RuntimeOnlyPackage>true</RuntimeOnlyPackage>
+		<DllSuffix>100</DllSuffix>
+		<DCC_DcuOutput>.\Win32\Release</DCC_DcuOutput>
+		<DCC_BplOutput>..\bpl\Win32</DCC_BplOutput>
+		<DCC_BpiOutput>.\$(Platform)\Release</DCC_BpiOutput>
+		<DCC_DcpOutput>.\Win32\Release</DCC_DcpOutput>
+		<DCC_HppOutput>.\$(Platform)\Release</DCC_HppOutput>
+		<DCC_ObjOutput>.\$(Platform)\Release</DCC_ObjOutput>
+	</PropertyGroup>
+	<ProjectExtensions>
+		<Borland.Personality>Delphi.Personality</Borland.Personality>
+		<Borland.ProjectType>Package</Borland.ProjectType>
+		<BorlandProject>
+			<BorlandProject>
+				<Delphi.Personality>
+					<Parameters>
+						<Parameters Name="UseLauncher">False</Parameters>
+						<Parameters Name="LoadAllSymbols">True</Parameters>
+						<Parameters Name="LoadUnspecifiedSymbols">False</Parameters>
+					</Parameters>
+					<Package_Options>
+						<Package_Options Name="ImplicitBuild">True</Package_Options>
+						<Package_Options Name="DesigntimeOnly">False</Package_Options>
+						<Package_Options Name="RuntimeOnly">False</Package_Options>
+					</Package_Options>
+					<VersionInfo>
+						<VersionInfo Name="IncludeVerInfo">True</VersionInfo>
+						<VersionInfo Name="AutoIncBuild">False</VersionInfo>
+						<VersionInfo Name="MajorVer">1</VersionInfo>
+						<VersionInfo Name="MinorVer">0</VersionInfo>
+						<VersionInfo Name="Release">0</VersionInfo>
+						<VersionInfo Name="Build">0</VersionInfo>
+						<VersionInfo Name="Debug">False</VersionInfo>
+						<VersionInfo Name="PreRelease">False</VersionInfo>
+						<VersionInfo Name="Special">False</VersionInfo>
+						<VersionInfo Name="Private">False</VersionInfo>
+						<VersionInfo Name="DLL">False</VersionInfo>
+						<VersionInfo Name="Locale">1033</VersionInfo>
+						<VersionInfo Name="CodePage">1252</VersionInfo>
+					</VersionInfo>
+					<VersionInfoKeys>
+						<VersionInfoKeys Name="CompanyName"/>
+						<VersionInfoKeys Name="FileDescription"/>
+						<VersionInfoKeys Name="FileVersion">1.0.0.0</VersionInfoKeys>
+						<VersionInfoKeys Name="InternalName"/>
+						<VersionInfoKeys Name="LegalCopyright"/>
+						<VersionInfoKeys Name="LegalTrademarks"/>
+						<VersionInfoKeys Name="OriginalFilename"/>
+						<VersionInfoKeys Name="ProductName"/>
+						<VersionInfoKeys Name="ProductVersion">1.0.0.0</VersionInfoKeys>
+						<VersionInfoKeys Name="Comments"/>
+					</VersionInfoKeys>
+					<Source>
+						<Source Name="MainSource">TMSScripter_IDE.dpk</Source>
+					</Source>
+				</Delphi.Personality>
+			</BorlandProject>
+		</BorlandProject>
+	</ProjectExtensions>
+	<Import Project="$(MSBuildBinPath)\Borland.Delphi.Targets"/>
+	<ItemGroup>
+		<DelphiCompile Include="TMSScripter_IDE.dpk">
+			<MainSource>MainSource</MainSource>
+		</DelphiCompile>
+		<DCCReference Include="rtl.dcp"/>
+		<DCCReference Include="TMSScripter.dcp"/>
+		<DCCReference Include="TMSScripter_Memo.dcp"/>
+		<DCCReference Include="TMSScripter_VCL.dcp"/>
+		<DCCReference Include="dbrtl.dcp"/>
+		<DCCReference Include="vcldb.dcp"/>
+		<DCCReference Include="vclx.dcp"/>
+		<DCCReference Include="..\..\source\ide\atMemoInterface.pas"/>
+		<DCCReference Include="..\..\source\ide\CollectionInspEditor.pas"/>
+		<DCCReference Include="..\..\source\ide\componentinspector.pas"/>
+		<DCCReference Include="..\..\source\ide\DatasetFieldsEditor.pas">
+			<Form>fmDatasetFieldsEditor</Form>
+		</DCCReference>
+		<DCCReference Include="..\..\source\ide\DesignerAddControls.pas">
+			<Form>frmDesignerAddControls</Form>
+		</DCCReference>
+		<DCCReference Include="..\..\source\ide\DesignerAlignDialog.pas">
+			<Form>frmAlign</Form>
+		</DCCReference>
+		<DCCReference Include="..\..\source\ide\DesignerAlignPalette.pas">
+			<Form>frmAlignmentPalette</Form>
+		</DCCReference>
+		<DCCReference Include="..\..\source\ide\DesignerControlsEditor.pas">
+			<Form>frmDesignerControlsEditor</Form>
+		</DCCReference>
+		<DCCReference Include="..\..\source\ide\designeroptionsdialog.pas">
+			<Form>frmDesignerOptions</Form>
+		</DCCReference>
+		<DCCReference Include="..\..\source\ide\designersizedialog.pas">
+			<Form>frmSize</Form>
+		</DCCReference>
+		<DCCReference Include="..\..\source\ide\DesignerTabOrderDialog.pas">
+			<Form>frmTabOrder</Form>
+		</DCCReference>
+		<DCCReference Include="..\..\source\ide\DFEAddFields.pas">
+			<Form>fmDFEAddFields</Form>
+		</DCCReference>
+		<DCCReference Include="..\..\source\ide\DFENewField.pas">
+			<Form>fmDFENewField</Form>
+		</DCCReference>
+		<DCCReference Include="..\..\source\ide\dideactions.pas">
+			<Form>dmIDEActions</Form>
+		</DCCReference>
+		<DCCReference Include="..\..\source\ide\fIDEEditor.pas"/>
+		<DCCReference Include="..\..\source\ide\fLibraryBrowser.pas">
+			<Form>fmLibraryBrowser</Form>
+		</DCCReference>
+		<DCCReference Include="..\..\source\ide\fObjectInspector.pas"/>
+		<DCCReference Include="..\..\source\ide\FormDesigner.pas"/>
+		<DCCReference Include="..\..\source\ide\fSelectLanguage.pas">
+			<Form>fmSelectLanguage</Form>
+		</DCCReference>
+		<DCCReference Include="..\..\source\ide\fSelectUnit.pas">
+			<Form>fmSelectUnit</Form>
+		</DCCReference>
+		<DCCReference Include="..\..\source\ide\fToolPalette.pas"/>
+		<DCCReference Include="..\..\source\ide\fWatches.pas"/>
+		<DCCReference Include="..\..\source\ide\IDEDialog.pas"/>
+		<DCCReference Include="..\..\source\ide\idemain.pas"/>
+		<DCCReference Include="..\..\source\ide\imagelisteditor.pas">
+			<Form>fmImageListEditor</Form>
+		</DCCReference>
+		<DCCReference Include="..\..\source\ide\inspectorcontrols.pas"/>
+		<DCCReference Include="..\..\source\ide\ListViewInspEditor.pas"/>
+		<DCCReference Include="..\..\source\ide\MenuInspEditor.pas"/>
+		<DCCReference Include="..\..\source\ide\MenuInspIDEEditor.pas">
+			<Form>frmMenuIDEEditor</Form>
+		</DCCReference>
+		<DCCReference Include="..\..\source\ide\PictureInspEditor.pas">
+			<Form>frmPicture</Form>
+		</DCCReference>
+		<DCCReference Include="..\..\source\ide\PropertyInspEditors.pas"/>
+		<DCCReference Include="..\..\source\ide\PropertyList.pas"/>
+		<DCCReference Include="..\..\source\ide\StringsInspEditor.pas">
+			<Form>frmStrings</Form>
+		</DCCReference>
+		<DCCReference Include="..\..\source\ide\TreeViewInspEditor.pas"/>
+		<DCCReference Include="..\..\source\ide\fWatchProperties.pas">
+			<Form>fmWatchProperties</Form>
+		</DCCReference>
+	</ItemGroup>
+</Project>

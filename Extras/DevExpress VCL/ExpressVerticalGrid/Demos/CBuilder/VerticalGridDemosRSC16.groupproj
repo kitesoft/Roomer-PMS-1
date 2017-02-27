@@ -1,0 +1,41 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+	  <ProjectGuid>{624986FA-A7F7-4F65-944F-B4291D80BD68}</ProjectGuid>
+  </PropertyGroup>
+  <ProjectExtensions>
+    <Borland.Personality>Default.Personality.12</Borland.Personality>
+    <Borland.ProjectType />
+    <BorlandProject>
+  <BorlandProject xmlns=""> <Default.Personality> </Default.Personality> </BorlandProject></BorlandProject>
+  </ProjectExtensions>
+  <Target Name="CustomDrawDemo">
+    <MSBuild Projects="CustomDrawDemo\CustomDrawDemoRSC16.cbproj" Targets="" />
+  </Target>
+  <Target Name="EditorsInPlaceDemo">
+    <MSBuild Projects="EditorsInPlaceDemo\EditorsInPlaceDemoRSC16.cbproj" Targets="" />
+  </Target>
+  <Target Name="ProviderModeDemo">
+    <MSBuild Projects="ProviderModeDemo\ProviderModeDemoRSC16.cbproj" Targets="" />
+  </Target>
+  <Target Name="RowsMultiEditorsDemo">
+    <MSBuild Projects="RowsMultiEditorsDemo\RowsMultiEditorsDemoRSC16.cbproj" Targets="" />
+  </Target>
+  <Target Name="RTTIInspectorDemo">
+    <MSBuild Projects="RTTIInspectorDemo\RTTIInspectorDemoRSC16.cbproj" Targets="" />
+  </Target>
+  <Target Name="SimpleVerticalGridDemo">
+    <MSBuild Projects="SimpleVerticalGridDemo\SimpleVerticalGridDemoRSC16.cbproj" Targets="" />
+  </Target>
+  <Target Name="StylesMultiDemo">
+    <MSBuild Projects="StylesMultiDemo\StylesMultiDemoRSC16.cbproj" Targets="" />
+  </Target>
+  <Target Name="StylesSimpleDemo">
+    <MSBuild Projects="StylesSimpleDemo\StylesSimpleDemoRSC16.cbproj" Targets="" />
+  </Target>
+  <Target Name="EditorsInPlaceValidationDemo">
+    <MSBuild Projects="EditorsInPlaceValidationDemo\EditorsInPlaceValidationDemoRSC16.cbproj" Targets="" />
+  </Target>
+  <Target Name="Build">
+    <CallTarget Targets="CustomDrawDemoRSC16;EditorsInPlaceDemoRSC16;ProviderModeDemoRSC16;RowsMultiEditorsDemoRSC16;RTTIInspectorDemoRSC16;SimpleVerticalGridDemoRSC16;StylesMultiDemoRSC16;StylesSimpleDemoRSC16;EditorsInPlaceValidationDemoRSC16" />
+  </Target>
+</Project>

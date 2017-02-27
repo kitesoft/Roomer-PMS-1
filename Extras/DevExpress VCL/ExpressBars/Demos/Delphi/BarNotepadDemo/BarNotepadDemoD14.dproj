@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{E0D54710-121C-4BCA-84DB-978B4F6A895B}</ProjectGuid>
+    <MainSource>BarNotepadDemo.dpr</MainSource>
+    <Config Condition="'$(Config)'==''">Base</Config>
+    <DCC_DCCCompiler>DCC32</DCC_DCCCompiler>
+    <ProjectVersion>12.0</ProjectVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Config)'=='Base' or '$(Base)'!=''">
+    <Base>true</Base>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Base)'!=''">
+  </PropertyGroup>
+  <ProjectExtensions>
+    <Borland.Personality>Delphi.Personality.12</Borland.Personality>
+    <Borland.ProjectType>VCLApplication</Borland.ProjectType>
+    <BorlandProject>
+      <Delphi.Personality>
+        <Source>
+          <Source Name="MainSource">BarNotepadDemo.dpr</Source>
+        </Source>
+      </Delphi.Personality>
+    </BorlandProject>
+    <ProjectFileVersion>12</ProjectFileVersion>
+  </ProjectExtensions>
+</Project>

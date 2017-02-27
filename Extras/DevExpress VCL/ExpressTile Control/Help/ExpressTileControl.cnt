@@ -1,0 +1,18 @@
+:Base ExpressTileControl.hlp
+:Title ExpressTileControl Suite
+:Index ExpressTileControl Suite=ExpressTileControl.hlp
+1 ExpressTileControl Suite
+2 Overview=CD_ExpressTileControl_Overview
+2 Known Issues and Important Changes List=CD_Known_Issues_and_Important_Changes_List
+2 Concepts
+3 Tile Control=CD_TileControl
+3 Tile Groups and Items=CD_Tile_Groups_and_Items
+3 Tile Detail Pages=CD_Tile_Detail_Pages
+3 Tile Action Bars=CD_Tile_Action_Bars
+3 Tile Control Title=CD_Tile_Control_Title
+2 Reference
+3 Units
+4 dxCustomTileControl=IDH_Unit_dxCustomTileControl
+4 dxTileControl=IDH_Unit_dxTileControl
+3 Controls
+4 TdxTileControl=IDH_Class_TdxTileControl

@@ -1,0 +1,724 @@
+**********************************************************************
+Author: TMS Software
+        Copyright © 1996-2016
+        E-mail: info@tmssoftware.com
+        Web: http://www.tmssoftware.com
+**********************************************************************
+
+
+TMS VCL Chart : Fast multipane financial graphs & feature rich charting components
+for Windows and for IntraWeb
+
+
+Files :
+-------
+  AdvChartD7.zip : component files for Delphi 7
+  AdvChartSetup.zip : component files for Delphi 2007 & C++Builder 2007
+  TMSAdvChartD2009.zip : component files for Delphi 2009 & C++Builder 2009
+  TMSAdvChartD2010.zip : component files for Delphi 2010 & C++Builder 2010
+  TMSAdvChart.zip : component files for Delphi XE & C++Builder XE
+  TMSAdvChartXE2.zip : component files for Delphi XE2 & C++Builder XE2
+  TMSAdvChartXE3.zip : component files for Delphi XE3 & C++Builder XE3
+  TMSAdvChartXE4.zip : component files for Delphi XE4 & C++Builder XE4
+  TMSAdvChartXE5.zip : component files for Delphi XE5 & C++Builder XE5
+  TMSAdvChartXE6.zip : component files for Delphi XE5 & C++Builder XE6
+  TMSAdvChartXE7.zip : component files for Delphi XE7 & C++Builder XE7
+  TMSAdvChartXE8.zip : component files for Delphi XE8 & C++Builder XE8
+  TMSAdvChartXE9.zip : component files for Delphi 10 Seattle & C++Builder 10 Seattle
+
+  ChartDemo.zip : Overview demo of the Chart features
+
+
+Release 4.2.0.2:
+-----------------
+
+TAdvChartView & TDBAdvChartView : fast multi-pane & DB-aware chart component
+
+  * Single or multi pane chart view component
+  * Wide range of chart types: Line, Bar, Area, Pie, Spider, Donut, Band, Stacked Bars, Stacked Area, OHLC, CandleStick, Histogram, Bubble, Error, ...
+  * Different Bar shapes such as Cylinder and Pyramid
+  * Horizontal Charts 
+  * Logarithmic Y-Scale
+  * X-Axis groups
+  * Grouped Stacked Bars
+  * X-axis with index of date/time unit indication
+  * Y-axis with auto ranging, minor & major value indication along Y-axis, multiple Y-axis values for different series supported
+  * Support for annotations & legend
+  * Panes with scrolling, scaling, splitter, drag & drop, synchronized scrolling with mouse or keyboard
+  * Highly configurable crosshairs with value indication at series, Y-axis, tracker & crosshair support along multiple panes
+  * Navigator bar to help for scrolling series along X-axis
+  * Floating tracker window to see values at crosshairs
+  * Configurable grid & bands
+  * Configurable margins for chart & chart background image
+  * Printing support, export to bitmap support
+  * Support for persisting chart settings to file
+  * Interface component to synchronise automatically with TAdvStringGrid / TDBAdvGrid
+  * DB-aware panes and series
+  * Separate PDF export component
+
+TAdvGDIPChartView & TDBAdvGDIPChartView : GDI+ enabled multi-pane & DB-aware chart component
+
+  * Advanced GDI+ enabled version of TAdvChartView
+  * Anti-aliased chart drawing
+  * Complex gradient support
+  * Support charts with opacity & opacity gradients
+  * Support for PNG images with alpha transparency for chart markers, textures
+  * GDI+ hatches for chart fills
+  * Shadows on bars, lines, areas, legend
+  * Optional glass mirror effect support
+  * Zoom control window with full scroll range
+
+  
+TIWAdvChart : chart for IntraWeb
+
+
+History :
+---------
+  v1.0 : 
+    first release
+
+  v1.5 : 
+
+    New : Pie Chart support for GDI / GDI+ with legend and exploded slices.
+    New : Pie Chart support for GDI / GDI+ in Serie Editor.
+    New : Pie Chart offset angle.
+    New : Display normal and percentage values on the pie slices.
+    New : TTIWAdvChart component for using charts in IntraWeb.
+    Improved : Display of normal and percentage values on serie points.
+    Fixed : Display values rounding problem on chartview resize event.
+    Fixed : Access violation when opening Serie Editor.
+    Fixed : Paint issue designtime / runtime when opening editors.
+    Fixed : Negative width of GDI+ mirror effect causing invalid parameter error.
+
+  v1.5.0.1 :
+
+    Fixed: Problem with Drawing 1 point for bar, histogram, candlestick ohlc. 
+    Fixed: Removing ctNone from Legend 
+    Fixed:  Changing Color when drawing Bar, Histogram chart type if Width = 1 pixel. 
+    Improved repaint handling on mouseleave 
+
+  v1.5.0.2 :
+    
+    Fixed: Text Display in Y-Axis.
+
+  v1.5.0.3 : 
+  
+    Fixed Updating AdvGdipchartview after changes are saved in Pane editor.
+    Fixed Free Collection object on Cancel gives invalid pointer exception.
+    Fixed Infinitive While loop when Major or Minor – unit equals 0.
+
+  v1.5.0.4 : 
+     
+    New : support for C++Builder 6
+    Fixed: PictureChanged repaint event added in AdvChartView / AdvChartViewGdip
+    Fixed: PaneById for AdvChartViewGDIP
+    Fixed: Zero line correction for stacked chart types
+    Improved: Taborder for Pane, Serie and Annotation Editors
+    Improved: independent collection in Editors
+
+  v1.5.0.5 :
+    
+    Fixed: Access Violation when starting editors with speedbutton
+
+  v1.6.0.0 : 
+    
+    New: Donut Chart support for GDI / GDI+ with modes normal and stacked
+    New: Band Chart support for GDI / GDI+
+    New: Annotation Line Shape support
+    New: AddLineSerie to draw a line with a given start and end point.
+    New: XYToPaneSerie to find the closest serie matching the X and Y value.
+    Improved: Pane and Serie access by name
+    Improved: GDI+ drawing
+
+  v1.6.1.0 : 
+    New: Pie position and pie legend position
+    Fixed: Access Violation when starting serie editor through property pane
+
+  v1.6.1.1:
+    Fixed: no Autorange when scrolling
+
+  v1.6.2.0 : 
+    Fixed: OnXaxisGetValue never called.
+    Fixed: position of Drag Drop Form
+    Fixed: angle on text left and text right on Y-Axis
+    Improved: XAxis zooming   
+    Improved: SerieMouseDown and SerieMouseUp new parameter Button: TMouseButton
+
+  v1.6.3.0 : 
+    Fixed: XAxis zooming issue.
+    Fixed: Editors multi-screen position   
+    Fixed: Pie & Donut legend position
+    Fixed: Pie & Donut printing  
+    Improved: margin left and right chart overlapping.
+    Improved: Pie & Donut default slice colors
+
+  v1.6.3.1 : 
+    Fixed: Border width on bar chart
+    Fixed: Gradient draw on bar chart
+
+  v1.7.0.0 :
+    New: ctHalfPie and ctHalfDonut chart types.
+    New: Capability to select points on chart with mouse or programmatically with Serie.SelectedIndex
+    New: Exposed event OnSelectSerieIndex
+    New: Capability to directly set X-axis values per serie (via overloaded functions AddSinglePoint)
+    Improved: Bar chart drawing
+    Fixed: stacked/summed values limited to stacked chart types only
+    Fixed: rotated with startangle pie/donut slice values position.
+    Fixed: issue with zerobased autorange charts
+
+  v1.7.0.1 :
+    Improved AutoRange EnabledZeroBased and CommonZeroBased with 5% offset on maximum
+
+  v1.7.1.0 :
+    New : Minor tickmarks
+    New : RangeTo and RangeFrom maximum and minimum scroll values
+    Fixed : Event OnHorizontalScroll not called
+
+  v1.7.1.1 : Fixed : issue with SetSinglePoint, SetSingleDateTime and SetMultiPoints 
+
+  v1.7.2.0 : New : function GetChartPointAtCrossHair 
+
+  v1.7.2.1 : Fixed : issue with drawing points when added with SetArraySize
+
+  v1.7.3.0 : New : function GetPrintScale to use within Custom X-AxisDrawing to calculate correct font size.
+           : Improved : Chart legend drawing and text positioning
+           : Improved : Chart title drawing and text positioning
+           : Fixed : Issue with Mouse-actions when mixing scaling and scrolling
+           : Fixed : Issue with setting only YAxisShowValues on the Crosshair
+           : Fixed : Navigator not Auto-scaling YAxis when scrolling left or right
+           : Fixed : Issue with Annotations autosize text and calculation of background rectangle
+
+  v2.0.0.0 : New : Pane, Serie and Annotation Editor properties to disable renaming, removing, adding and reordering.
+           : New : SizedPie, VarRadiusPie and Spider chart
+           : New : DB-aware chart
+           : New : ShowInLegend to hide/show series from the legend
+           : New : Methods AddMovingAverage, AddTrendLine, AddTrendChannel, AddTrendChannelBand, AddBandSerie
+           : New : Methods MoveSerie and Serie.Move to move series in the collection
+           : New : 3D Effect with variable 3D offset
+           : New : GDI+ Zoom control window
+	   : Improved : SaveToFile Y-Values font
+           : Improved : X-Axis values major and minor unit drawing
+           : Fixed : Issue with GDIplus printing
+           : Fixed : Issue with Pie legend border color
+           : Fixed : Issue with saving Y-Values angle in Serie Editor
+           : Fixed : Issue with Serie Events after Editor dialog is shown at runtime
+           : Fixed : Issue with Serie events after starting Editor
+           : Fixed : Issue with legend drawing when charttype = ctNone
+           : Fixed : Issue with drawing one bar
+           : Fixed : Value not visible when choosing arCommonZeroBased
+          
+  v2.0.0.1 : Fixed : Issue with ctArea GDI+ 3D drawing
+           : Fixed : Issue with 1 slice and value 0
+           : Fixed : Issue with displaying tracker values
+           : Fixed : Issue with SaveToFile and LoadFromFile Pane.Visible property
+
+  v2.0.0.2 : Fixed : Issue with missing files DBAdvChartViewReg.pas and DBAdvChartViewGDIPReg.pas
+  
+  v2.1.0.0 : New : function CreateMetaFile
+           : New : LoadFromCSV and SaveToCSV to load or save chartpoints to a CSV file
+           : Improved : SaveToImage
+           : Fixed : Issue with GDI+ Pie colors
+           : Fixed : Issue with PointInPie division by zero
+         
+  V2.1.0.1 : Fixed : Issue with SelectedMark in GDI+ Pie
+
+  v2.1.0.2 : Improved : Event OnResize exposed
+           : Fixed : Issue in GDI+ Editor with saving Autorange of SliderControl
+        
+  v2.1.0.3 : Improved : Annotation Shapes in GDI+
+
+  v2.1.0.4 : Improved : Hide grid lines with setting color to clNone
+           : Fixed : Issue with selecting negative bars         
+
+  v2.1.0.5 : Fixed : cleaned up unwanted red line in 3D mode
+
+  v2.5.0.0 : New : Cylinder / Pyramid shapes for the ctBar, ctStackedBar and ctStackedPercentageBar chart types (property BarShape on Serie level)
+           : New : Horizontal Charts (property ChartMode on Series level)
+           : New : Logarithmic YScale (property Logarithmic on Serie level)
+           : New : Text values on bars
+           : Improved : Y-Axis values not depending on Chart Margins
+           : Improved : Apply button added in designer to see updates instantly
+           : Smaller improvements and fixes
+
+  v2.5.0.1 : Improved : Marker Picture drawing
+           : Fixed : Issue with selecting Markers
+           : Fixed : Issue with TChartSeriePoint record defined twice
+
+  v2.5.1.0 : New : Added OnDrawChart event to draw on top of chart 
+           : Fixed : Issue with Database support on frames
+
+  V2.5.1.1 : Fixed : Issue in designtime on systems older than Windows XP
+
+  v2.5.1.2 : Fixed : Issue with AddTrendLine endx
+           : Fixed : Issue with Selected marker color and line color
+
+  v2.5.1.3 : Fixed : Small issue with refreshing points
+           : Fixed : Issue with divided by zero when using DateTime X-Axis UnitType
+
+  v2.6.0.0 : New : Introducing Digital Line type (ctDigitalLine)
+
+  v2.6.0.1 : Improved : Faster loading of saved chart settings
+
+  v2.7.0.0 : New : Introducing property Marker.IncreaseDecreaseMode type to use Increase and Decrease colors on markers
+           : New : Visible property On Serie level to easily show hide series
+           : New : Boxplot chart type
+           : New : AddParetoLine method to add a new Pareto type bar and line combination
+           : New : 3D visualization of the YAxis and XAxis
+
+  v2.7.0.1 : Fixed : Issue with color range in AdvChartTypeSelector
+
+  v2.8.0.0 : New : XYLine and XYMarker chart type
+           : New : AddSingleXYPoint, AddDoubleXYPoint overload to add custom X values for XY chart types
+           : New : Display new X values on XAxis (Serie.Xaxis.XYValues)
+
+  v2.8.0.1 : Improved : Logarithmic Power function limited for invalid floating point operation
+
+  v2.8.1.0 : New : procedure RemovePoint, property MaximumPoints to remove and set maximum points,
+             the first point is delete when the next point is added over the limit.
+           : Fixed : Issue with displaying values
+
+  v2.8.1.1 : Fixed : Issue with displaying stacked values if total = 0
+           : Fixed : Issue at runtime with editors spin edit empty text values
+
+  v2.8.1.2 : Fixed : Issue in Cylinder shape drawing with zero values
+           : Fixed : Issue with DrawPoints range error
+
+  v2.8.1.3 : Fixed : Drawing fixes in Cylinder type
+
+  v2.8.1.4 : Improved AutoUnits in X-Grid
+           : Fixed : Issue with comparevalue
+           
+  v2.8.1.5 : Fixed : Issue with XY values on GetChartPointAtSerie
+
+  v2.8.1.6 : Improved : Added UseFullRange property to recalculate full range of points
+
+  v2.9.0.0 :  New : Intraweb XI support
+           :  New : Optional Automatically create panes when loading settings from file (breaking change: re-save old chart settings files)
+           :  Fixed : Issue with SaveToFile
+           :  Fixed : Issue with Loading Crosshair Positions from ini file
+
+  v2.9.1.0 : New : Delphi and C++Builder XE support
+
+  v2.9.5.0 : New : DB-aware chart for IntraWeb TTIWDBAdvChart added
+             New : IntraWeb XI support added      
+             Fixed : Issue with LoadFromCSV and SaveToCSV
+
+  v2.9.5.1 : Fixed : Issue with unused properties text on X-Axis
+
+
+  v3.0.0.0 : New : function XYToChartPoint
+           : New : X-Axis Groups with different line types
+           : New : Grouped Stacked Bars
+           : New : Click events on X-Axis, Y-Axis, Legend and Serie points
+           : New : RangePercentMargin to automatically calculate extra margin to the Maximum of the serie Y-Values.
+           : Improved : undefined points for line types
+           : Fixed : Issue with pie slices zero values
+           : Fixed : Boxplot gradient colors
+
+  v3.0.5.0 : New : Added ValueFormatType property to switch between Format function and FormatFloat function.
+           : New : Legend alignment property added
+           : Improved : Exposed basic control properties
+           : Improved : Pie legend drawing
+           : Fixed : Issue with selecting markers in XY chart types
+           : Fixed : Issue with mousemove access violation in empty chart
+           : Fixed : Issue with multiple pane crosshairs
+           : Fixed : Issue with text angle left and right y-axis
+           : Fixed : Issue with autosizing and text left and right y-Axis
+           : Smaller fixes and improvements
+
+  v3.0.6.0 : New : Gantt chart type
+           : New : EnableInteraction property to enable/disable interaction on mousemove (legend, x and y-axis, and data points interaction)
+           : Improved : digital line drawing
+           : Improved : multi Pane interaction
+           : Improved : Redesign of X-Axis datetime
+           : Improved : SetAutoYAxisSize to automatically set Y-Axis maximum size for all panes
+           : Improved : Reduce XY function to only one function : XYToSeriePoint on ChartView level and XYToSeriePoint on Pane level
+           : Fixed : Issue with legend drawing Pie
+           : Fixed : Issue with clicking line type charts and bar charts
+
+  v3.0.6.1 : Fixed : Issue with datetime conversion in gantt chart
+
+
+  
+v3.0.6.2 : Fixed : Issue with xyline type in combination with datetime values
+
+
+  
+v3.0.7.0 : New : DrawFromStartDate to switch between Range StartDate and added values through SingleDateTime.
+
+
+  
+v3.0.7.1 : Fixed : Issue with DrawSelectedSlice and SelectedMark property
+: Fixed : Issue with empty Area charts
+
+
+  
+v3.0.7.2 : Fixed : Issue with Left and Right size Y-Axis
+: Fixed : Issue with undefined points on XYLine chart
+
+
+  
+v3.0.7.3 : Fixed : Issue with Explicit properties in editors
+
+
+  
+v3.0.7.4 : Fixed : Issue with text position on pie with startingangle > 0
+
+
+  
+v3.0.7.5 : Fixed : Issue with selecting serie index on XY charts
+
+
+  
+v3.0.7.6 : Fixed : Issue with YAxis values displaying in zoomcontrol
+
+
+  
+v3.0.7.8 : Fixed : Issue with XY chart types and scrolling
+
+
+v3.0.8.0 : New : Tag property on Pane, Serie and TChartPoint level
+         : Fixed : Issue with XY chart types and hints
+         : Fixed : Issue with selecting panes
+
+v3.0.8.1 : Fixed : Issue with deleting panes at runtime
+
+v3.0.8.2 : Fixed : Issue with point index / crosshairs
+
+v3.0.8.3 : Fixed : Issue with focused pane index
+
+  
+v3.0.8.4 : Fixed : Remaining issue with Point index on same X-Values on XY chart types
+v3.0.8.5 : Fixed : Issue with Crosshairs with invisible series
+
+
+  
+v3.0.8.6 : Fixed : Issue with values not showing in XY chart mode.
+
+
+  
+v3.0.9.0 : New : XScaleOffset boolean property to enable or disable charts that start without offset
+
+
+  
+v3.0.9.1 : Fixed : Initialize random values for designtime preview
+
+
+  
+v3.0.9.2 : Fixed : Issue with drawing vertical values in bars
+
+
+  
+v3.0.10.0 : New : Support for IntraWeb 12.0 and 12.1
+
+
+  
+v3.0.10.1 : Fixed : Issue with packages in Registered distribution
+
+
+  
+v3.0.10.2 : Improved : Help files for XE2
+
+
+  
+v3.0.11.0 : Fixed : Issue with packages and demos in IntraWeb 12.0 and 12.1
+
+
+  
+v3.0.11.1 : Fixed : Issue with pane editor persistence of X-Axis UnitType
+
+v3.0.11.2 : Fixed : Access violation when double-clicking chart in XE2
+
+v3.1.0.0 : New : XE3 Support
+
+  
+v3.1.0.1 : Improved : OnGetCountChartType / OnGetCountGroupedChartType to draw multiple series on the same position
+: Fixed : Issue in Intraweb charts
+
+
+  
+v3.1.0.2 : Fixed : Issue with editors delete key
+
+v3.1.1.0 : New : OnBeforeDrawSeries / OnAfterDrawSeries events
+
+  
+v3.5.0.0 : New : OpenGL 3D Pie Chart.
+
+
+  
+v3.5.1.0 : New : ValueOffsetX and ValueOffsetY properties on serie level to position values
+: Fixed : Issue with serie crosshairs when used in zoom control
+
+
+  
+v3.5.2.0 : New : CtrlZooming property on pane level to zoom with a draggable area and the CTRL Key.
+: New : OnGetCrossHairValue event to customize crosshair values
+: Fixed : Issue with X-Grid line position
+: Fixed : Issue with crosshair line drawing
+
+
+  
+v3.5.2.1 : Fixed : Issue with Delphi 2007 package
+
+
+  
+v3.5.2.2 : Fixed : Issue with 3D Form editor
+
+
+  
+v3.5.2.3 : Fixed : Issue with intraweb chart in combination with regions
+
+
+  
+v3.6.0.0 : New : Delphi & C++Builder XE4 support
+: New : 64-bit support
+: Improved : title position vertical with VerticalAlignment property
+: Fixed : Issue with title and 3D enabled charts
+
+
+  
+v3.6.0.1 : Fixed : Issue with form files
+
+
+  
+v3.6.0.2 : Fixed : Issue with OnLegendClick
+
+
+  
+v3.6.0.3 : Fixed : Issue with IntraWeb package for C++Builder
+
+
+  
+v3.6.0.4 : Fixed : Issue with memory leak when creating multiple instances in TAdvChartView3D
+
+
+  
+v3.6.1.0 : New : Intraweb 12.2.x support
+: New : Intraweb 14.0.x support
+: New : XE4 Intraweb support
+
+
+  
+v3.6.1.1 : Fixed : Issue with Top and Left properties not being used
+
+
+  
+v3.6.2.0 : New : PercentageFormat property
+: New : OnGetLabelValue event
+
+
+  
+v3.6.3.0 : New : Display spider values outside grid area with OnGetGridPieLineValue
+
+
+  
+v3.6.3.1 : Fixed : Issue with explicit properties in DFM file
+
+
+  
+v3.6.4.0 : New : SaveToStream method
+: New : XE5 support
+: Fixed: Issue with maximum vertex count, causing wrong shading
+
+
+  
+v3.6.4.1 : Fixed : Issue displaying crosshairs in combination with zoomcontrol
+
+
+  
+
+v3.6.5.0 : New : Intraweb 14 support in XE5
+
+
+  
+v3.7.0.0 : New : Funnel Chart type
+
+
+  
+
+v3.7.0.1 : Fixed : Issue with ZoomControl.Assign()
+: Fixed : Issue with selecting point in XY charts
+
+
+  
+v3.7.0.2 : Fixed: Issue with charttype xyline and undefined points
+
+
+  
+
+v3.7.0.3 : Fixed : Issues with handling one point pie chart click / selection detection
+
+
+  
+v3.7.0.4 : Fixed : Issue with pie slice detection
+
+
+  
+v3.7.0.5 : Fixed : Issue with demo due to recent changes
+
+
+  
+
+v3.7.0.6 : Fixed : Issue with pie slice drawing with small values
+
+
+  
+v3.8.0.0 : New : XE6 Support
+: Improved : Undefined area chart points
+
+
+  
+v3.8.0.1 : Improved : Moving average calculation
+
+
+  
+
+v3.8.0.2 : New : XE6 Intraweb Support
+: Fixed : Issue with intialization of rects in X-Axis calculation
+
+
+  
+v3.8.0.3 : Fixed : Issue with out of range exception when drawing annotations
+
+
+  
+v3.8.0.4 : Improved : Gantt annotation drawing
+: Fixed : Issue with small pie values and single point pie charts
+
+
+  
+v3.8.1.0 : New : XE7 Support
+
+
+  
+v3.8.1.1 : Fixed : Issue with horizontal / vertical lines not visible
+
+
+  
+v3.8.1.2 : Fixed : Issue with C++Builder compilation in AdvOpenGLUtil
+: Fixed : Issue with XE7 tmsdefs.inc file for Intraweb
+
+
+  
+
+v3.8.1.3 : Fixed : Issue with assignment of events
+
+
+  
+
+v3.8.1.4 : Fixed : Issue with C++ linker on CreateMetaFile (use CreateMeta instead)
+
+
+  
+v3.8.1.5 : Improved : FieldByName Text instead of AsString for X-Axis field value
+
+
+  
+
+v3.8.1.6 : Fixed : Issues with compilation in C++Builder 2009
+
+
+  
+
+v3.8.1.7 : Fixed : Issue with DB version updating and managing connections
+
+
+  
+v3.8.1.8 : Fixed : Issue with placement of crosshair values
+
+v3.8.1.9 : Improved : Intraweb Packages for XE7 with iw14.0.x support
+v3.8.2.0 : Improved : Automated installer improvement for file caching issues
+         : Fixed : Issue with xscale offset and CTRL zooming
+v3.8.2.1 : Improved : X-axis label generation in chart from a TAdvStringGrid via TAdvChartLink
+v3.8.2.2 : Fixed : Issue with canvas region not applied when drawing
+v3.8.2.3 : Fixed : Issue with updating values in tracker for XY type charts
+v3.8.3.0 : New : Support for Delphi XE8 & C++Builder XE8 Prof, Ent. Architect added
+         : Fixed : Issue with x-axis values not drawn under certain circumstances
+         : Fixed : Issue with values returned from CTRL zooming region not valid
+         : Fixed : Issue with mouse interaction on series that are not visible
+v3.8.3.1 : Improved : Drawing of crosshair values
+v3.8.4.0 : New : ctXYDigitalLine chart type
+v3.8.4.1 : Fixed : Issue with C++Builder 64-bit linking with GDI+ version
+v3.8.4.2 : Improved : Intraweb Packages for XE8 with iw14.0.0 support
+v3.8.4.3 : Re-upload of v3.8.4.2
+v3.8.4.4 : Improved : Added missing iw14.0.X package for XE8
+v3.8.4.5 : Improved : Multiline text drawing in title bar when align = taAlignTop
+v3.8.5.0 : New : Support for Delphi 10 Seattle & C++Builder 10 Seattle Prof, Ent. Architect added
+v3.8.6.0 : New : Intraweb Packages for Delphi 10 Seattle with iw14.0.0 support
+v3.8.6.1 : Fixed : Issue with zooming in and small values out of range now limited with ZOOMMIN constant
+         : Fixed : Issue with Intraweb package dependencies
+v3.8.7.0 : New : Pie slice click detection in AdvChartView3D through an OnItemClick event
+v3.8.7.1 : Fixed : Issue with tickmark calculation on x-axis
+v3.9.0.0 : New : virtual mode
+         : Fixed : Range check error
+         : Fixed : Issue with crosshair drawing
+v3.9.0.1 : Fixed : Issue with xy conversion persistence
+v3.9.1.0 : New : ZoomingTouchMode to allow zooming an area without the CTRL key
+         : Fixed : Issue with drawing of markers and values in horizontal mode
+v3.9.1.1 : Fixed : Issue with tickmarks still drawing with defaultdraw := false in OnYAxisDrawValue event
+v3.9.1.2 : Fixed : Issue with X-Axis value added through AddSingleXYPoint not drawn at the correct position.
+v4.0.0.0 : New : TAdvChartViewPDFIO component to export Chart to PDF
+v4.0.0.1 : Fixed : Issue with setting color in TAdvChartView3D
+v4.0.1.0 : New: Intraweb Packages for Delphi 10 Seattle with iw14.0.x support
+         : Fixed : Division by zero when drawing gradients
+v4.0.1.1 : Fixed : Issue updating correct version number
+v4.1.0.0 : New : RAD Studio 10.1 Berlin Support
+v4.1.1.0 : New : Intraweb Packages for Delphi 10.1 Berlin with iw14.0.x support
+v4.1.1.1 : Fixed : Various fixes and improvements in editors and drawing
+v4.1.1.2 : Fixed : Issues in handling ctrl zooming
+v4.1.1.3 : Fixed : Missing Intraweb 14 packages for Delphi 2009, 2010 and XE
+v4.2.0.0 : New : Popup toolbar to configure series visuals (XE2 and newer)
+         : Improved : Product name change for consistency
+v4.2.0.1 : Improved : X-Axis and Y-Axis Auto-size by default and are not visible when setting the ChartType to a pie chart variant
+         : Fixed : Issue with clearing data in DB version of TAdvChartView
+         : Fixed : Issue with "Show Sample Values" option not being persisted
+
+
+  
+v4.2.0.2 : Fixed: Issue with detecting negative bars
+
+Usage:
+------
+ Use of TMS software components in applications requires a license.
+ A license can be obtained by registration. A single developer license
+ registration is available as well as a site license.
+ With the purchase of one single developer license, one developer in
+ the company is entitled to:
+ - use of registered version that contains full source code and no
+   limitations 
+ - free updates for a full version cycle
+ - free email priority support & access to support newsgroups
+ - discounts to purchases of other products
+
+ With a site license, multiple developers in the company are entitled
+ to:
+ - use of registered version that contains full source code and no
+   limitations 
+ - add additional developers at any time who make use of the components
+ - free updates for a full version cycle
+ - free email priority support & access to support newsgroups
+ - discounts to purchases of other products
+
+ Online order information can be found at:
+ http://www.tmssoftware.com/site/orders.asp
+
+Note: 
+-----
+
+ The components are also part of the TMS Component Pack bundle, see 
+ http://www.tmssoftware.com/site/tmspack.asp
+
+
+Help, hints, tips, bug reports:
+-------------------------------
+ Send any questions/remarks/suggestions to : help@tmssoftware.com
+
+ Before contacting support about a possible issue with the component
+ you encounter, make sure that you are using the latest version of the 
+ component.
+ If a problem persists with the latest version, provide information 
+ about which Delphi or C++Builder version you are using as well as
+ the operating system and if possible, steps to reproduce the problem
+ you encounter. That will guarantee the fastest turnaround times for
+ your support case. 
+

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{66B8D8C0-58DF-44F6-9877-F5AD77AF9499}</ProjectGuid>
+    <MainSource>UnboundModeDemo.dpr</MainSource>
+    <Config Condition="'$(Config)'==''">Base</Config>
+    <DCC_DCCCompiler>DCC32</DCC_DCCCompiler>
+    <ProjectVersion>12.2</ProjectVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Config)'=='Base' or '$(Base)'!=''">
+    <Base>true</Base>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Base)'!=''">
+  </PropertyGroup>
+  <ProjectExtensions>
+    <Borland.Personality>Delphi.Personality.12</Borland.Personality>
+    <Borland.ProjectType>VCLApplication</Borland.ProjectType>
+    <BorlandProject>
+      <Delphi.Personality>
+        <Source>
+          <Source Name="MainSource">UnboundModeDemo.dpr</Source>
+        </Source>
+      </Delphi.Personality>
+    </BorlandProject>
+    <ProjectFileVersion>12</ProjectFileVersion>
+  </ProjectExtensions>
+</Project>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{3859FA7A-14B1-4B96-A1A3-817B38E9C69B}</ProjectGuid>
+    <MainSource>ColumnsMultiEditorsDemo.dpr</MainSource>
+    <Config Condition="'$(Config)'==''">Base</Config>
+    <DCC_DCCCompiler>DCC32</DCC_DCCCompiler>
+    <ProjectVersion>12.2</ProjectVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Config)'=='Base' or '$(Base)'!=''">
+    <Base>true</Base>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Base)'!=''">
+  </PropertyGroup>
+  <ProjectExtensions>
+    <Borland.Personality>Delphi.Personality.12</Borland.Personality>
+    <Borland.ProjectType>VCLApplication</Borland.ProjectType>
+    <BorlandProject>
+      <Delphi.Personality>
+        <Source>
+          <Source Name="MainSource">ColumnsMultiEditorsDemo.dpr</Source>
+        </Source>
+      </Delphi.Personality>
+    </BorlandProject>
+    <ProjectFileVersion>12</ProjectFileVersion>
+  </ProjectExtensions>
+</Project>

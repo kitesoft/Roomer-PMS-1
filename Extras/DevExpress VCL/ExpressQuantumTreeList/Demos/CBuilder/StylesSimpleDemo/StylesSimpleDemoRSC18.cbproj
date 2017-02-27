@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{4185667F-E0D3-4138-9A88-FBF01642CE7F}</ProjectGuid>
+    <ProjectVersion>14.6</ProjectVersion>
+    <MainSource>StylesSimpleDemo.cpp</MainSource>
+    <Config Condition="'$(Config)'==''">Base</Config>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Config)'=='Base' or '$(Base)'!=''">
+    <Base>true</Base>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Base)'!=''">
+    <Multithreaded>true</Multithreaded>
+    <AllPackageLibs>rtl.lib;vcl.lib;vclimg.lib;vcldb.lib;dbrtl.lib;adortl.lib;cxLibraryRS18.lib;dxGDIPlusRS18.lib;dxThemeRS18.lib;cxTreeListRS18.lib;cxEditorsRS18.lib;cxExportRS18.lib;cxDataRS18.lib;;vclx.lib;dxCoreRS18.lib;cxPageControlRS18.lib;dxmdsRS18.lib</AllPackageLibs>
+    <LinkPackageImports></LinkPackageImports>
+    <ProjectType>CppVCLApplication</ProjectType>
+    <DCC_CBuilderOutput>JPHNE</DCC_CBuilderOutput>
+   <IncludePath>$(IncludePath);..\Common;..</IncludePath>
+   <ILINK_LibraryPath>$(ILINK_LibraryPath);..\Common;..</ILINK_LibraryPath>
+    <DCC_Namespace>WinApi;Vcl;System;System.Win;Vcl.Imaging;Data;Data.Win;Bde;Xml;Xml.Win;Vcl.Shell;VclTee;Datasnap;Vcl.Samples;$(DCC_Namespace)</DCC_Namespace>
+    <BCC_wpar>false</BCC_wpar>
+  </PropertyGroup>
+  <ItemGroup>
+    <ResFiles Include="StylesSimpleDemo.res">
+    </ResFiles>
+    <CppCompile Include="StylesSimpleDemo.cpp"> </CppCompile>
+    <CppCompile Include="StylesSimpleDemoMain.cpp">
+      <Form>StylesSimpleDemoMainForm</Form>
+    </CppCompile>
+    <CppCompile Include="StylesSimpleDemoData.cpp">
+      <Form>StylesSimpleDemoDataDM</Form>
+    </CppCompile>
+    <CppCompile Include="..\Common\DemoRating.cpp">
+      <Form>DemoRatingForm</Form>
+    </CppCompile>
+    <CppCompile Include="..\Common\DemoUtils.cpp"> </CppCompile>
+    <CppCompile Include="..\Common\AboutDemoForm.cpp">
+      <Form>formAboutDemo</Form>
+    </CppCompile>
+    <CppCompile Include="..\Common\DemoBasicMain.cpp">
+      <Form>DemoBasicMainForm</Form>
+    </CppCompile>
+    <CppCompile Include="StylesSimpleDemoEdit.cpp">
+      <Form>StylesSimpleDemoEditForm</Form>
+    </CppCompile>
+    <CppCompile Include="StylesSimpleDemoStylesDialog.cpp">
+      <Form>StylesSimpleDemoStylesDialogForm</Form>
+    </CppCompile>
+    <FormResources Include="StylesSimpleDemoMain.dfm" />
+    <FormResources Include="StylesSimpleDemoData.dfm" />
+    <FormResources Include="..\Common\DemoRating.dfm" />
+    <FormResources Include="..\Common\AboutDemoForm.dfm" />
+    <FormResources Include="..\Common\DemoBasicMain.dfm" />
+    <FormResources Include="StylesSimpleDemoEdit.dfm" />
+    <FormResources Include="StylesSimpleDemoStylesDialog.dfm" />
+  </ItemGroup>
+  <Import Project="$(BDS)\Bin\CodeGear.Cpp.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Cpp.Targets')"/>
+  <ProjectExtensions>
+    <Borland.Personality>CPlusPlusBuilder.Personality.12</Borland.Personality>
+    <Borland.ProjectType>CppVCLApplication</Borland.ProjectType>
+    <BorlandProject>
+      <CPlusPlusBuilder.Personality>
+      </CPlusPlusBuilder.Personality>
+      <Platforms>
+        <Platform value="Win32">True</Platform>
+        <Platform value="Win64">True</Platform>
+      </Platforms>
+    </BorlandProject>
+    <ProjectFileVersion>12</ProjectFileVersion>
+  </ProjectExtensions>
+</Project>

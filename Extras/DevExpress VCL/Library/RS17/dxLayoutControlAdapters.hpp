@@ -1,0 +1,97 @@
+// CodeGear C++Builder
+// Copyright (c) 1995, 2012 by Embarcadero Technologies, Inc.
+// All rights reserved
+
+// (DO NOT EDIT: machine generated header) 'dxLayoutControlAdapters.pas' rev: 24.00 (Win32)
+
+#ifndef DxlayoutcontroladaptersHPP
+#define DxlayoutcontroladaptersHPP
+
+#pragma delphiheader begin
+#pragma option push
+#pragma option -w-      // All warnings off
+#pragma option -Vx      // Zero-length empty class member 
+#pragma pack(push,8)
+#include <System.hpp>	// Pascal unit
+#include <SysInit.hpp>	// Pascal unit
+#include <System.Classes.hpp>	// Pascal unit
+#include <dxLayoutContainer.hpp>	// Pascal unit
+
+//-- user supplied -----------------------------------------------------------
+
+namespace Dxlayoutcontroladapters
+{
+//-- type declarations -------------------------------------------------------
+class DELPHICLASS TdxLayoutComboAdapter;
+#pragma pack(push,4)
+class PASCALIMPLEMENTATION TdxLayoutComboAdapter : public Dxlayoutcontainer::TdxCustomLayoutControlAdapter
+{
+	typedef Dxlayoutcontainer::TdxCustomLayoutControlAdapter inherited;
+	
+protected:
+	virtual bool __fastcall AllowCheckSize(void);
+public:
+	/* TdxCustomLayoutControlAdapter.Create */ inline __fastcall virtual TdxLayoutComboAdapter(Dxlayoutcontainer::TdxLayoutItem* AItem) : Dxlayoutcontainer::TdxCustomLayoutControlAdapter(AItem) { }
+	
+public:
+	/* TPersistent.Destroy */ inline __fastcall virtual ~TdxLayoutComboAdapter(void) { }
+	
+};
+
+#pragma pack(pop)
+
+class DELPHICLASS TdxLayoutPanelAdapter;
+#pragma pack(push,4)
+class PASCALIMPLEMENTATION TdxLayoutPanelAdapter : public Dxlayoutcontainer::TdxCustomLayoutControlAdapter
+{
+	typedef Dxlayoutcontainer::TdxCustomLayoutControlAdapter inherited;
+	
+protected:
+	virtual bool __fastcall NeedBorder(void);
+	virtual bool __fastcall UseItemColor(void);
+public:
+	/* TdxCustomLayoutControlAdapter.Create */ inline __fastcall virtual TdxLayoutPanelAdapter(Dxlayoutcontainer::TdxLayoutItem* AItem) : Dxlayoutcontainer::TdxCustomLayoutControlAdapter(AItem) { }
+	
+public:
+	/* TPersistent.Destroy */ inline __fastcall virtual ~TdxLayoutPanelAdapter(void) { }
+	
+};
+
+#pragma pack(pop)
+
+class DELPHICLASS TdxButtonControlAdapter;
+#pragma pack(push,4)
+class PASCALIMPLEMENTATION TdxButtonControlAdapter : public Dxlayoutcontainer::TdxCustomLayoutControlAdapter
+{
+	typedef Dxlayoutcontainer::TdxCustomLayoutControlAdapter inherited;
+	
+private:
+	bool FChanged;
+	int FStyles;
+	NativeUInt __fastcall GetHandle(void);
+	
+protected:
+	virtual void __fastcall BeginCustomization(void);
+	virtual void __fastcall EndCustomization(void);
+	__property NativeUInt Handle = {read=GetHandle, nodefault};
+public:
+	/* TdxCustomLayoutControlAdapter.Create */ inline __fastcall virtual TdxButtonControlAdapter(Dxlayoutcontainer::TdxLayoutItem* AItem) : Dxlayoutcontainer::TdxCustomLayoutControlAdapter(AItem) { }
+	
+public:
+	/* TPersistent.Destroy */ inline __fastcall virtual ~TdxButtonControlAdapter(void) { }
+	
+};
+
+#pragma pack(pop)
+
+//-- var, const, procedure ---------------------------------------------------
+}	/* namespace Dxlayoutcontroladapters */
+#if !defined(DELPHIHEADER_NO_IMPLICIT_NAMESPACE_USE) && !defined(NO_USING_NAMESPACE_DXLAYOUTCONTROLADAPTERS)
+using namespace Dxlayoutcontroladapters;
+#endif
+#pragma pack(pop)
+#pragma option pop
+
+#pragma delphiheader end.
+//-- end unit ----------------------------------------------------------------
+#endif	// DxlayoutcontroladaptersHPP

@@ -1,0 +1,641 @@
+
+      ////////////////////////////////////////////////// 
+      //   I M P O R T A N T    R E M A R K  !!!!!    //
+      //                                              //  
+      //  For a succesful install of the components,  //
+      //       follow  A L L  steps below             //
+      //                                              //   
+      //////////////////////////////////////////////////
+
+
+Installation :
+--------------
+
+ Unzipping files
+ _______________
+
+ For Delphi 7,2006,2007,2009,2010,XE,XE2,XE3,XE4,XE5,XE6,XE7,XE8 & C++Builder 2006,2007,2009,2010,XE,XE2,XE3,XE4,XE5,XE6,XE7,XE8
+ -------------------------------------------------------------------------------------------------------------------------------
+
+ Unzip the appropriate distribution file for your IDE into a separate directory,
+ further referred to as {$TMSDIR} 
+
+ Delphi 7              : AdvChartD7.zip
+ Delphi 2006 VCL Win32 : AdvChartD2006.zip 
+ Delphi 2007 VCL Win32 : AdvChartD2007.zip 
+ Delphi 2009 VCL Win32 : AdvChartD2009.zip 
+ Delphi 2010 VCL Win32 : AdvChartD2010.zip 
+ Delphi XE VCL Win32   : AdvChartXE.zip
+ Delphi XE2 VCL Win32  : AdvChartXE2.zip
+ Delphi XE3 VCL Win32  : AdvChartXE3.zip
+ Delphi XE4 VCL Win32  : AdvChartXE4.zip
+ Delphi XE5 VCL Win32  : AdvChartXE5.zip
+ Delphi XE6 VCL Win32  : AdvChartXE6.zip
+ Delphi XE6 VCL Win32  : AdvChartXE7.zip
+ Delphi XE6 VCL Win32  : AdvChartXE8.zip
+ 
+ C++Builder 2006       : AdvChartD2006.zip 
+ C++Builder 2007       : AdvChartD2006.zip 
+ C++Builder 2009       : AdvChartD2009.zip 
+ C++Builder 2010       : AdvChartD2010.zip 
+ C++Builder XE2        : AdvChartXE2.zip 
+ C++Builder XE3        : AdvChartXE3.zip 
+ C++Builder XE4        : AdvChartXE4.zip 
+ C++Builder XE5        : AdvChartXE5.zip 
+ C++Builder XE6        : AdvChartXE6.zip 
+ C++Builder XE6        : AdvChartXE7.zip 
+ C++Builder XE6        : AdvChartXE8.zip 
+
+ Setting library paths
+ _____________________
+
+ For Delphi 7
+ ---------------------------------
+ Under Tools, Environment Options, Library, add the directory where
+ the TMS components have been installed {$TMSDIR} to the library path
+
+
+ For Delphi 2005 VCL Win32 components
+ ------------------------------------
+ 
+ Under Tools, Environment Options, Library, add the directory where
+ the TMS components have been installed {$TMSDIR} to the Win32 library path
+
+
+ For Delphi 2006 VCL Win32 components
+ ------------------------------------
+ 
+ Under Tools, Environment Options, Library, add the directory where
+ the TMS components have been installed {$TMSDIR} to the Win32 library path
+
+
+ For C++Builder 2006 VCL Win32 components
+ ----------------------------------------
+ 
+ Under Tools, Environment Options, Library, add the directory where
+ the TMS components have been installed {$TMSDIR} to the Win32 include & library path
+
+
+ For Delphi 2007 VCL Win32 components
+ ------------------------------------
+ 
+ Under Tools, Environment Options, Library, add the directory where
+ the TMS components have been installed {$TMSDIR} to the Win32 library path
+
+
+ For C++Builder 2007 VCL Win32 components
+ ----------------------------------------
+ 
+ Under Tools, Environment Options, Library, add the directory where
+ the TMS components have been installed {$TMSDIR} to the Win32 include & library path
+
+ For Delphi 2009 VCL Win32 components
+ ------------------------------------
+ 
+ Under Tools, Environment Options, Library, add the directory where
+ the TMS components have been installed {$TMSDIR} to the Win32 library path
+
+
+ For C++Builder 2009 VCL Win32 components
+ ----------------------------------------
+ 
+ Under Tools, Environment Options, Library, add the directory where
+ the TMS components have been installed {$TMSDIR} to the Win32 include & library path
+
+
+ For Delphi 2010 VCL Win32 components
+ ------------------------------------
+ 
+ Under Tools, Environment Options, Library, add the directory where
+ the TMS components have been installed {$TMSDIR} to the Win32 library path
+
+
+ For C++Builder 2010 VCL Win32 components
+ ----------------------------------------
+ 
+ Under Tools, Environment Options, Library, add the directory where
+ the TMS components have been installed {$TMSDIR} to the Win32 include & library path
+
+ For Delphi XE VCL Win32 components
+ ------------------------------------
+ 
+ Under Tools, Environment Options, Library, add the directory where
+ the TMS components have been installed {$TMSDIR} to the Win32 library path
+
+
+ For C++Builder XE VCL Win32 components
+ ----------------------------------------
+ 
+ Under Tools, Environment Options, Library, add the directory where
+ the TMS components have been installed {$TMSDIR} to the Win32 include & library path
+
+ For Delphi XE2 VCL Win32 components
+ ------------------------------------
+ 
+ Under Tools, Environment Options, Library, add the directory where
+ the TMS components have been installed {$TMSDIR} to the Win32 library path
+
+
+ For C++Builder XE2 VCL Win32 components
+ ----------------------------------------
+ 
+ Under Tools, Environment Options, Library, add the directory where
+ the TMS components have been installed {$TMSDIR} to the Win32 include & library path
+
+ For Delphi XE3 VCL Win32 components
+ ------------------------------------
+ 
+ Under Tools, Environment Options, Library, add the directory where
+ the TMS components have been installed {$TMSDIR} to the Win32 library path
+
+
+ For C++Builder XE3 VCL Win32 components
+ ----------------------------------------
+ 
+ Under Tools, Environment Options, Library, add the directory where
+ the TMS components have been installed {$TMSDIR} to the Win32 include & library path
+
+
+ For Delphi XE4 VCL Win32 components
+ ------------------------------------
+ 
+ Under Tools, Environment Options, Library, add the directory where
+ the TMS components have been installed {$TMSDIR} to the Win32 library path
+
+
+ For C++Builder XE4 VCL Win32 components
+ ----------------------------------------
+ 
+ Under Tools, Environment Options, Library, add the directory where
+ the TMS components have been installed {$TMSDIR} to the Win32 include & library path
+
+
+ For Delphi XE5 VCL Win32 components
+ ------------------------------------
+ 
+ Under Tools, Environment Options, Library, add the directory where
+ the TMS components have been installed {$TMSDIR} to the Win32 library path
+
+
+ For C++Builder XE5 VCL Win32 components
+ ----------------------------------------
+ 
+ Under Tools, Environment Options, Library, add the directory where
+ the TMS components have been installed {$TMSDIR} to the Win32 include & library path
+
+ For Delphi XE6 VCL Win32 components
+ ------------------------------------
+ 
+ Under Tools, Environment Options, Library, add the directory where
+ the TMS components have been installed {$TMSDIR} to the Win32 library path
+
+
+ For C++Builder XE6 VCL Win32 components
+ ----------------------------------------
+ 
+ Under Tools, Environment Options, Library, add the directory where
+ the TMS components have been installed {$TMSDIR} to the Win32 include & library path
+
+ For Delphi XE7 VCL Win32 components
+ ------------------------------------
+ 
+ Under Tools, Environment Options, Library, add the directory where
+ the TMS components have been installed {$TMSDIR} to the Win32 library path
+
+
+ For C++Builder XE7 VCL Win32 components
+ ----------------------------------------
+ 
+ Under Tools, Environment Options, Library, add the directory where
+ the TMS components have been installed {$TMSDIR} to the Win32 include & library path
+
+ For Delphi XE8 VCL Win32 components
+ ------------------------------------
+ 
+ Under Tools, Environment Options, Library, add the directory where
+ the TMS components have been installed {$TMSDIR} to the Win32 library path
+
+
+ For C++Builder XE8 VCL Win32 components
+ ----------------------------------------
+ 
+ Under Tools, Environment Options, Library, add the directory where
+ the TMS components have been installed {$TMSDIR} to the Win32 include & library path
+
+
+ Installing components
+ _____________________
+
+ In Delphi or C++Builder, select File, Open
+ and browse for the appropriate package file.
+
+  Delphi 7  : AdvChartPkgD7.DPK 
+
+  After opening the package file, choose Compile and after
+  compilation, select Install
+
+
+  For Delphi 2006
+  ---------------
+
+  VCL Win32 component
+
+  In the IDE, select File, Open
+  browse for AdvChartPkgD2006.bdsproj
+  From the project manager, right click on the AdvChartPkgD2006.bdsproj project and from the menu, choose
+  Install VCL package
+
+
+  For C++Builder 2006
+  -------------------
+
+  VCL Win32 component
+
+  In the IDE, select Component, Install packages
+  Select Add package and browse for AdvChartPkgD2006.bpl
+
+
+  For Delphi 2007 
+  ---------------
+
+  In the IDE, select File, Open
+  browse for AdvChartPkgD2007.dproj
+  From the project manager, right click on the AdvChartPkgD2007.dproj project and from the menu, choose
+  Install VCL package
+
+
+  For C++Builder 2007 
+  -------------------
+
+  In the IDE, select Component, Install packages
+  Select Add package and browse for AdvChartPkgD2006.bpl
+
+  For Delphi 2009
+  ---------------
+
+  In the IDE, select File, Open
+  browse for AdvChartPkgD2009.dproj
+  From the project manager, right click on the AdvChartPkgD2009.dproj project and from the menu, choose
+  Install VCL package
+
+
+  For C++Builder 2009 
+  -------------------
+
+  In the IDE, select Component, Install packages
+  Select Add package and browse for AdvChartPkgD2009.bpl
+
+  For Delphi 2010
+  ---------------
+
+  In the IDE, select File, Open
+  browse for AdvChartPkgD2010.dproj
+  From the project manager, right click on the AdvChartPkgD2010.dproj project and from the menu, choose
+  Install VCL package
+
+
+  For C++Builder 2010
+  -------------------
+
+  In the IDE, select Component, Install packages
+  Select Add package and browse for AdvChartPkgD2010.bpl
+
+  For Delphi XE
+  ---------------
+
+  In the IDE, select File, Open
+  browse for AdvChartPkgD2011.dproj
+  From the project manager, right click on the AdvChartPkgD2011.dproj project and from the menu, choose
+  Install VCL package
+
+
+  For C++Builder XE
+  -------------------
+
+  In the IDE, select Component, Install packages
+  Select Add package and browse for AdvChartPkgD2011.bpl
+
+  For Delphi XE2
+  ---------------
+
+  In the IDE, select File, Open
+  browse for AdvChartPkgDXE2.dproj
+  From the project manager, right click on the AdvChartPkgDXE2.dproj project and from the menu, choose
+  Install VCL package
+
+
+  For C++Builder XE2
+  -------------------
+
+  In the IDE, select Component, Install packages
+  Select Add package and browse for AdvChartPkgDXE2.bpl
+
+  For Delphi XE3
+  ---------------
+
+  In the IDE, select File, Open
+  browse for AdvChartPkgDXE3.dproj
+  From the project manager, right click on the AdvChartPkgDXE3.dproj project and from the menu, choose
+  Install VCL package
+
+  For Delphi XE4
+  ---------------
+
+  In the IDE, select File, Open
+  browse for AdvChartPkgDXE4.dproj
+  From the project manager, right click on the AdvChartPkgDXE4.dproj project and from the menu, choose
+  Install VCL package
+
+  For Delphi XE5
+  ---------------
+
+  In the IDE, select File, Open
+  browse for AdvChartPkgDXE5.dproj
+  From the project manager, right click on the AdvChartPkgDXE5.dproj project and from the menu, choose
+  Install VCL package
+
+  For Delphi XE6
+  ---------------
+
+  In the IDE, select File, Open
+  browse for AdvChartPkgDXE6.dproj
+  From the project manager, right click on the AdvChartPkgDXE6.dproj project and from the menu, choose
+  Install VCL package
+
+  For Delphi XE7
+  ---------------
+
+  In the IDE, select File, Open
+  browse for AdvChartPkgDXE7.dproj
+  From the project manager, right click on the AdvChartPkgDXE7.dproj project and from the menu, choose
+  Install VCL package
+
+  For Delphi XE8
+  ---------------
+
+  In the IDE, select File, Open
+  browse for AdvChartPkgDXE8.dproj
+  From the project manager, right click on the AdvChartPkgDXE8.dproj project and from the menu, choose
+  Install VCL package
+
+
+  For C++Builder XE3
+  -------------------
+
+  In the IDE, select Component, Install packages
+  Select Add package and browse for AdvChartPkgDXE3.bpl
+
+
+  For C++Builder XE4
+  -------------------
+
+  In the IDE, select Component, Install packages
+  Select Add package and browse for AdvChartPkgDXE4.bpl
+
+  For C++Builder XE5
+  -------------------
+
+  In the IDE, select Component, Install packages
+  Select Add package and browse for AdvChartPkgDXE5.bpl
+
+  For C++Builder XE6
+  -------------------
+
+  In the IDE, select Component, Install packages
+  Select Add package and browse for AdvChartPkgDXE6.bpl
+
+  For C++Builder XE7
+  -------------------
+
+  In the IDE, select Component, Install packages
+  Select Add package and browse for AdvChartPkgDXE7.bpl
+
+  For C++Builder XE8
+  -------------------
+
+  In the IDE, select Component, Install packages
+  Select Add package and browse for AdvChartPkgDXE8.bpl
+
+
+
+
+ Installing TMS IntraWeb Chart for IntraWeb 12 / IntraWeb 14
+ ___________________________________________________________
+
+
+NOTE: 
+FOR ADDITIONAL QUESTIONS: see http://www.tmssoftware.com/site/support.asp
+AND http://www.tmssoftware.com/site/faq.asp
+
+
+PLEASE PERFORM ALL STEPS LISTED!
+
+
+1) Open a COMMAND prompt in Windows in folder where software is installed
+
+
+2) Set build variables by executing following .BAT files
+
+   for RAD Studio 2009:
+   "c:\Program Files (x86)\CodeGear\RAD Studio\6.0\bin\rsvars.bat"
+ 
+   for RAD Studio 2010:
+   "c:\Program Files (x86)\Embarcadero\RAD Studio\7.0\bin\rsvars.bat"
+
+   for RAD Studio XE:
+   "c:\Program Files (x86)\Embarcadero\RAD Studio\8.0\bin\rsvars.bat"
+
+   for RAD Studio XE2:
+   "c:\Program Files (x86)\Embarcadero\RAD Studio\9.0\bin\rsvars.bat"
+ 
+   for RAD Studio XE3:
+   "c:\Program Files (x86)\Embarcadero\RAD Studio\10.0\bin\rsvars.bat"
+
+   for RAD Studio XE4:
+   "c:\Program Files (x86)\Embarcadero\RAD Studio\11.0\bin\rsvars.bat"
+
+   for RAD Studio XE5:
+   "c:\Program Files (x86)\Embarcadero\RAD Studio\12.0\bin\rsvars.bat"
+
+   for RAD Studio XE6:
+   "c:\Program Files (x86)\Embarcadero\Studio\14.0\bin\rsvars.bat"
+
+   for RAD Studio XE7:
+   "c:\Program Files (x86)\Embarcadero\Studio\15.0\bin\rsvars.bat"
+
+   for RAD Studio XE8:
+   "c:\Program Files (x86)\Embarcadero\Studio\16.0\bin\rsvars.bat"
+
+
+3) Set correct include file
+
+   IntraWeb 12.0.x: Rename TMSDEFS12.inc to TMSDEFS.INC 
+   IntraWeb 12.1.x: Rename TMSDEFS121.inc to TMSDEFS.INC 
+   IntraWeb 12.2.x: Rename TMSDEFS122.inc to TMSDEFS.INC
+   IntraWeb 14.0.x: Rename TMSDEFS140.inc to TMSDEFS.INC
+ 
+    
+4) Build package files by executing MSBUILD:
+
+   Using following suffixes for package files depending on RAD Studio version:
+
+   RAD Studio 2009: xx -> 2009
+   RAD Studio 2010: xx -> 2010
+   RAD Studio XE: xx -> 2011
+   RAD Studio XE2: xx -> XE2
+   RAD Studio XE3: xx -> XE3
+   RAD Studio XE4: xx -> XE4
+   RAD Studio XE5: xx -> XE5
+   RAD Studio XE6: xx -> XE6
+   RAD Studio XE7: xx -> XE7
+   RAD Studio XE8: xx -> XE8
+
+   IntraWeb 12.x.x / RAD Studio 2009 - XE4
+
+   msbuild IW12TMSChartDxx.dproj
+
+
+   IntraWeb 14.0.0 / RAD Studio XE3 - XE8
+
+   msbuild IW14TMSChartDxx.dproj
+
+
+   IntraWeb 14.0.x / RAD Studio 2009 - XE2
+
+   msbuild IW14TMSChartDxx.dproj
+
+
+   IntraWeb 14.0.x / RAD Studio XE3 - XE7
+
+   msbuild IW14TMSChartDxxUPD.dproj
+
+
+  Installing online help
+  ______________________
+
+  Delphi 7
+  -----------------------------
+
+  Go through menu Help, Customize and add following file to the Index tab:
+  
+  Delphi 7     : AdvChartViewD7.HLP
+
+  For Delphi 7 it is required to first put the AdvChartViewDx.ALS file in the
+  {$DELPHI}\Help directory !
+
+
+  Delphi 2006 & C++Builder 2006
+  -----------------------------
+
+  Close the Delphi 2006 IDE
+  Execute RegHelp2 /i AdvChartViewdBDS4w.hxx (Delphi 2006)
+  Execute RegHelp2 /i AdvChartViewbBDS4w.hxx (C++Builder 2006)
+  Restart the IDE
+
+
+  Delphi 2007 & C++Builder 2007
+  -----------------------------
+
+  Close the Delphi 2007 IDE
+  Execute RegHelp2 /i AdvChartViewdBDS5w.hxx (Delphi 2007)
+  Execute RegHelp2 /i AdvChartViewbBDS5w.hxx (C++Builder 2007)
+  Restart the IDE
+
+
+  Delphi 2009 & C++Builder 2009
+  -----------------------------
+
+  Close the Delphi 2009 IDE
+  Execute RegHelp2 /i AdvChartViewdRS2009w.hxx (Delphi 2009)
+  Execute RegHelp2 /i AdvChartViewbRS2009w.hxx (C++Builder 2009)
+  Restart the IDE
+
+
+  Delphi 2010 & C++Builder 2010
+  -----------------------------
+
+  Close the Delphi 2010 IDE
+  Execute RegHelp2 /i AdvChartViewdRS2010w.hxx (Delphi 2010)
+  Execute RegHelp2 /i AdvChartViewbRS2010w.hxx (C++Builder 2010)
+  Restart the IDE
+
+
+  Delphi XE & C++Builder XE
+  -----------------------------
+
+  Close the IDE
+  Execute RegHelp2 /i AdvChartViewdRSXE.hxx (Delphi XE)
+  Execute RegHelp2 /i AdvChartViewbRSXE.hxx (C++Builder XE)
+  Restart the IDE
+
+
+  Delphi XE2 & C++Builder XE2
+  -----------------------------
+
+  Close the IDE
+  Execute RegHelp2 /i AdvChartViewdRSXE2.hxx (Delphi XE2)
+  Execute RegHelp2 /i AdvChartViewbRSXE2.hxx (C++Builder XE2)
+  Restart the IDE
+
+  Delphi XE3 & C++Builder XE3
+  -----------------------------
+
+  Close the IDE
+  Execute RegHelp2 /i AdvChartViewdRSXE3.hxx (Delphi XE3)
+  Execute RegHelp2 /i AdvChartViewbRSXE3.hxx (C++Builder XE3)
+  Restart the IDE
+
+  Delphi XE4 & C++Builder XE4
+  -----------------------------
+
+  Close the IDE
+  Execute RegHelp2 /i AdvChartViewdRSXE4.hxx (Delphi XE4)
+  Execute RegHelp2 /i AdvChartViewbRSXE4.hxx (C++Builder XE4)
+  Restart the IDE
+
+
+Tips:
+-----
+1) Installing component updates
+-------------------------------
+
+Before installing component updates, make sure to remove FIRST ALL previous version files.
+
+This includes:
+
+for Delphi:
+all related .DCU, .DCP, .BPL files 
+
+for C++Builder:
+all related .DCU, .HPP, .OBJ, .BPI, .DCP, .TDS, .LIB files 
+
+Note that Delphi or C++Builder could have generated files in the 
+{$DELPHI}\Projects\Lib folder or \Windows\System32 folder.
+
+
+
+2) Installing multiple binary distributed trial versions
+--------------------------------------------------------
+
+As Delphi & C++Builder perform strict binary compatibility checks on binary distributed units such as trial versions of the components, this can cause a problem when using multiple different binary component distributions that have a shared unit (for example: PictureContainer.DCU unit, AdvEdit.DCU unit ...) This will prevent the installation of multiple binary trial distributions at the same time in Delphi or C++Builder. The only workaround to use these different trial distribution is to install these in different folders and use the different component packages alternatingly. This binary compatibility issue is of course not present when using the full source based registered version distributions.
+
+
+3) IDE versions
+---------------
+TMS software generates binary trial versions with the latest service pack levels for Borland IDEs. Make sure that you have the latest Borland update packs installed. 
+For Delphi 6, make sure that the RTL3 update is also installed. If this is not the case, this can for some components result in the error : "Unit XXXXX was compiled with a different version of VarUtils.VarDateFromStr". 
+
+
+4) Property errors after component updates
+------------------------------------------
+If a property error occurs after installing a component update upon opening an existing form file in your applications, ignore this error, save the form file and reopen. The problem should have disappeared.
+
+
+5) Components disappearing from the palette after installing a component update
+-------------------------------------------------------------------------------
+Delphi or C++Builder has most likely moved the component to hidden components because of the uninstall. Go to the Configure Palette menu and unhide the component and these should reappear correct on the component palette.
+
+
+6) Latest information
+---------------------
+Check http://www.tmssoftware.com/tips.htm

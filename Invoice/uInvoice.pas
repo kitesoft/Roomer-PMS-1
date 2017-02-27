@@ -596,8 +596,6 @@ type
     function LocateDate(recordSet: TRoomerDataset; field: String;
       Value: TDate): boolean;
     procedure GetTaxTypes(TaxResultInvoiceLines: TInvoiceTaxEntityList);
-    procedure HandleExceptionListFromBookKeepingSystem(invoiceNumber: integer;
-      ErrorList: String);
     function FindLastRoomRentLine: integer;
     procedure UpdateItemInvoiceLinesForTaxCalculations;
     function CheckIfWithdrawlAllowed_X(Editing: boolean; Value: String)
@@ -5996,20 +5994,8 @@ begin
       try
         result := True;
         try
+          SendInvoicesToFinancePacket(zInvoiceNumber);
           ViewInvoice2(zInvoiceNumber, True, false, True, chkShowPackage.checked, zEmailAddress);
-
-          if dkAutoTransfer then
-          begin
-            // BOOK KEEPING / Finance
-            remoteResult := d.roomerMainDataSet.SystemSendInvoiceToBookkeeping
-              (zInvoiceNumber);
-            if remoteResult <> '' then
-            begin
-              HandleExceptionListFromBookKeepingSystem(zInvoiceNumber,
-                remoteResult);
-            end;
-
-          end;
 
           d.roomerMainDataSet.SystempackagesCreateHeaderIfNotExists
             (FRoomReservation, FRoomReservation);
@@ -6055,12 +6041,6 @@ begin
     FreeAndNil(lstLocations);
     FreeAndNil(lstActivity);
   end;
-end;
-
-procedure TfrmInvoice.HandleExceptionListFromBookKeepingSystem
-  (invoiceNumber: integer; ErrorList: String);
-begin
-  HandleFinanceBookKeepingExceptions(invoiceNumber, ErrorList);
 end;
 
 // -- The original Invoice contains a special field which links it to the

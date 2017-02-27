@@ -1,0 +1,3168 @@
+===============================================================================
+Log File:             	D:\Development\Libraries\DevExpress VCL\Setup\H2Reg_Log.txt
+Date:                 	9-2-2016 12:18:16
+Operating System:      	Windows NT 6.2 (Build 9200) No Service Pack
+SysLocale.DefaultLCID: 	0x0413 (1043)
+SysLocale.PriLangID:   	0x0013 (19)
+SysLocale.SubLangID:   	0x0001 (1)
+DecimalSeparator:      	,
+-------------------------------------------------------------------------------
+EXE Path =          	D:\Development\Libraries\DevExpress VCL\Setup\h2reg.exe
+EXE Version =       	1.7.0.0
+Cmdline Param(s) =  	-r | -q | -a | CmdFile=D:\Development\Libraries\DevExpress | VCL\ExpressLibrary\Help\ExpressCrossPlatformLibrary.tmp
+Actual CmdLine =  	"D:\Development\Libraries\DevExpress VCL\Setup\h2reg.exe" -r -q -a CmdFile=D:\Development\Libraries\DevExpress VCL\ExpressLibrary\Help\ExpressCrossPlatformLibrary.tmp
+_RunDir =           	D:\Development\Libraries\DevExpress VCL\Setup
+_ModuleName =       	h2reg.exe
+_ModuleDir =        	D:\Development\Libraries\DevExpress VCL\Setup
+_ModulePath =        	D:\Development\Libraries\DevExpress VCL\Setup\h2reg.exe
+Module Version =       	1.7.0.0
+-------------------------------------------------------------------------------
+_hhInstalled =      	YES
+_hhVerStr =         	6.2.10586.0
+_hhFriendlyVerStr = 	> 1.4a
+-------------------------------------------------------------------------------
+_ieInstalled =      	YES
+_ieVerStr =         	6.2.10586.0
+_ieFriendlyVerStr = 	Internet Explorer 6 (Windows Server 2003)
+===============================================================================
+MS Help 2.x Runtime Found: YES
+    2.7.61224.0, C:\Program Files (x86)\Common Files\Microsoft Shared\Help\hxds.dll
+    2.7.61224.0, C:\Program Files (x86)\Common Files\Microsoft Shared\Help\hxvz.dll
+NT Admin Log On: YES
+PC Language ID = nl
+-------------------------------------------------------------------------------
+Quiet Mode (-Q): Yes
+Registration Mode (-R): Yes
+UnRegistration Mode (-U): No
+Append Log Mode (-A): Yes
+No NT Admin Check (-N): No
+Merge Indexes Mode (-M): No
+Cmd Script File (CmdFile=): D:\Development\Libraries\DevExpress VCL\ExpressLibrary\Help\ExpressCrossPlatformLibrary.tmp
+User Dir 1 (UserDir1=): 
+User Dir 2 (UserDir2=): 
+User Dir 3 (UserDir3=): 
+User Dir 4 (UserDir4=): 
+===============================================================================
+CmdFile = D:\Development\Libraries\DevExpress VCL\ExpressLibrary\Help\ExpressCrossPlatformLibrary.tmp
+<windir> = C:\Windows
+<winsysdir> = C:\Windows\system32
+<programfilesdir> = C:\Program Files (x86)
+<exedir> = D:\Development\Libraries\DevExpress VCL\Setup
+<exedirparent> = D:\Development\Libraries\DevExpress VCL
+<cmdfiledir> = D:\Development\Libraries\DevExpress VCL\ExpressLibrary\Help
+<cmdfiledirparent> = D:\Development\Libraries\DevExpress VCL\ExpressLibrary
+<userdir1> = 
+<userdir1parent> = 
+<userdir2> = 
+<userdir2parent> = 
+<userdir3> = 
+<userdir3parent> = 
+<userdir4> = 
+<userdir4parent> = 
+-------------------------------------------------------------------------------
+[Reg_Namespace]
+ExpressCrossPlatformLibrary.rs_xe3|ExpressCrossPlatformLibrary.HxC|
+
+[Reg_Title]
+ExpressCrossPlatformLibrary.rs_xe3|ExpressCrossPlatformLibrary|1033|ExpressCrossPlatformLibrary.HxS|ExpressCrossPlatformLibrary.HxS||||||
+
+[Reg_Filter]
+ExpressCrossPlatformLibrary.rs_xe3|DevExpress VCL 13.1 Products|("DocSet"="DXVCL")
+ExpressCrossPlatformLibrary.rs_xe3|Express Cross Platform Library|("DocSet"="ExpressCrossPlatformLibrary")
+
+[Reg_Plugin]
+embarcadero.rs_xe3|_DEFAULT|ExpressCrossPlatformLibrary.rs_xe3|_DEFAULT|
+
+[UnReg_Namespace]
+ExpressCrossPlatformLibrary.rs_xe3
+
+[UnReg_Title]
+ExpressCrossPlatformLibrary.rs_xe3|ExpressCrossPlatformLibrary|1033
+
+[UnReg_Plugin]
+embarcadero.rs_xe3|_DEFAULT|ExpressCrossPlatformLibrary.rs_xe3|_DEFAULT|
+
+[UnReg_Filter]
+ExpressCrossPlatformLibrary.rs_xe3|DevExpress VCL 13.1 Products
+ExpressCrossPlatformLibrary.rs_xe3|Express Cross Platform Library
+-------------------------------------------------------------------------------
+12:18:16   [Reg_Namespace] - Lines To Process = 1
+12:18:16     <nsName>="ExpressCrossPlatformLibrary.rs_xe3"
+12:18:16     <nsColfile>="D:\Development\Libraries\DevExpress VCL\ExpressLibrary\Help\ExpressCrossPlatformLibrary.HxC"
+12:18:16     <nsDesc>=""
+12:18:16     +Mode = Not Enabled
+12:18:16    -->Registered OK
+-------------------------------------------------------------------------------
+12:18:16   [Reg_Title] - Lines To Process = 1
+12:18:16     <nsName>="ExpressCrossPlatformLibrary.rs_xe3"
+12:18:16     <TitleID>="ExpressCrossPlatformLibrary"
+12:18:16     <LangID>="1033"
+12:18:16     <HxS_HelpFile>="D:\Development\Libraries\DevExpress VCL\ExpressLibrary\Help\ExpressCrossPlatformLibrary.HxS"
+12:18:16     <HxI_IndexFile>="D:\Development\Libraries\DevExpress VCL\ExpressLibrary\Help\ExpressCrossPlatformLibrary.HxS"
+12:18:16     <HxQ_QueryFile>=""
+12:18:16     <HxR_AttrQueryFile>=""
+12:18:16     <HxsMediaLoc>=""
+12:18:16     <HxqMediaLoc>=""
+12:18:16     <HxrMediaLoc>=""
+12:18:16     <SampleMediaLoc>=""
+12:18:16    -->Registered OK
+-------------------------------------------------------------------------------
+12:18:16   [Reg_Plugin] - Lines To Process = 1
+12:18:16     <nsName_Parent>="embarcadero.rs_xe3"
+12:18:16     <HxT_Parent>="_DEFAULT"
+12:18:16     <nsName_Child>="ExpressCrossPlatformLibrary.rs_xe3"
+12:18:16     <HxT_Child>="_DEFAULT"
+12:18:16     <HxA_Child>=""
+12:18:16   Plug Child "ExpressCrossPlatformLibrary.rs_xe3" into "embarcadero.rs_xe3"
+12:18:16    -->Registered OK
+-------------------------------------------------------------------------------
+12:18:16   [Reg_Filter] - Lines To Process = 2
+12:18:16     <nsName>="ExpressCrossPlatformLibrary.rs_xe3"
+12:18:16     <FilterName>="DevExpress VCL 13.1 Products"
+12:18:16     <FilterQueryStr>="("DocSet"="DXVCL")"
+12:18:16    -->Registered OK
+12:18:16   
+12:18:16     <nsName>="ExpressCrossPlatformLibrary.rs_xe3"
+12:18:16     <FilterName>="Express Cross Platform Library"
+12:18:16     <FilterQueryStr>="("DocSet"="ExpressCrossPlatformLibrary")"
+12:18:16    -->Registered OK
+===============================================================================
+
+--END OF FILE--
+
+===============================================================================
+Log File:             	D:\Development\Libraries\DevExpress VCL\Setup\H2Reg_Log.txt
+Date:                 	9-2-2016 12:18:17
+Operating System:      	Windows NT 6.2 (Build 9200) No Service Pack
+SysLocale.DefaultLCID: 	0x0413 (1043)
+SysLocale.PriLangID:   	0x0013 (19)
+SysLocale.SubLangID:   	0x0001 (1)
+DecimalSeparator:      	,
+-------------------------------------------------------------------------------
+EXE Path =          	D:\Development\Libraries\DevExpress VCL\Setup\h2reg.exe
+EXE Version =       	1.7.0.0
+Cmdline Param(s) =  	-r | -q | -a | CmdFile=D:\Development\Libraries\DevExpress | VCL\ExpressPageControl\Help\ExpressPageControl.tmp
+Actual CmdLine =  	"D:\Development\Libraries\DevExpress VCL\Setup\h2reg.exe" -r -q -a CmdFile=D:\Development\Libraries\DevExpress VCL\ExpressPageControl\Help\ExpressPageControl.tmp
+_RunDir =           	D:\Development\Libraries\DevExpress VCL\Setup
+_ModuleName =       	h2reg.exe
+_ModuleDir =        	D:\Development\Libraries\DevExpress VCL\Setup
+_ModulePath =        	D:\Development\Libraries\DevExpress VCL\Setup\h2reg.exe
+Module Version =       	1.7.0.0
+-------------------------------------------------------------------------------
+_hhInstalled =      	YES
+_hhVerStr =         	6.2.10586.0
+_hhFriendlyVerStr = 	> 1.4a
+-------------------------------------------------------------------------------
+_ieInstalled =      	YES
+_ieVerStr =         	6.2.10586.0
+_ieFriendlyVerStr = 	Internet Explorer 6 (Windows Server 2003)
+===============================================================================
+MS Help 2.x Runtime Found: YES
+    2.7.61224.0, C:\Program Files (x86)\Common Files\Microsoft Shared\Help\hxds.dll
+    2.7.61224.0, C:\Program Files (x86)\Common Files\Microsoft Shared\Help\hxvz.dll
+NT Admin Log On: YES
+PC Language ID = nl
+-------------------------------------------------------------------------------
+Quiet Mode (-Q): Yes
+Registration Mode (-R): Yes
+UnRegistration Mode (-U): No
+Append Log Mode (-A): Yes
+No NT Admin Check (-N): No
+Merge Indexes Mode (-M): No
+Cmd Script File (CmdFile=): D:\Development\Libraries\DevExpress VCL\ExpressPageControl\Help\ExpressPageControl.tmp
+User Dir 1 (UserDir1=): 
+User Dir 2 (UserDir2=): 
+User Dir 3 (UserDir3=): 
+User Dir 4 (UserDir4=): 
+===============================================================================
+CmdFile = D:\Development\Libraries\DevExpress VCL\ExpressPageControl\Help\ExpressPageControl.tmp
+<windir> = C:\Windows
+<winsysdir> = C:\Windows\system32
+<programfilesdir> = C:\Program Files (x86)
+<exedir> = D:\Development\Libraries\DevExpress VCL\Setup
+<exedirparent> = D:\Development\Libraries\DevExpress VCL
+<cmdfiledir> = D:\Development\Libraries\DevExpress VCL\ExpressPageControl\Help
+<cmdfiledirparent> = D:\Development\Libraries\DevExpress VCL\ExpressPageControl
+<userdir1> = 
+<userdir1parent> = 
+<userdir2> = 
+<userdir2parent> = 
+<userdir3> = 
+<userdir3parent> = 
+<userdir4> = 
+<userdir4parent> = 
+-------------------------------------------------------------------------------
+[Reg_Namespace]
+ExpressPageControl.rs_xe3|ExpressPageControl.HxC|
+
+[Reg_Title]
+ExpressPageControl.rs_xe3|ExpressPageControl|1033|ExpressPageControl.HxS|ExpressPageControl.HxS||||||
+
+[Reg_Filter]
+ExpressPageControl.rs_xe3|DevExpress VCL 13.1 Products|("DocSet"="DXVCL")
+ExpressPageControl.rs_xe3|ExpressPageControl Suite|("DocSet"="ExpressPageControl")
+
+[Reg_Plugin]
+embarcadero.rs_xe3|_DEFAULT|ExpressPageControl.rs_xe3|_DEFAULT|
+
+[UnReg_Namespace]
+ExpressPageControl.rs_xe3
+
+[UnReg_Title]
+ExpressPageControl.rs_xe3|ExpressPageControl|1033
+
+[UnReg_Plugin]
+embarcadero.rs_xe3|_DEFAULT|ExpressPageControl.rs_xe3|_DEFAULT|
+
+[UnReg_Filter]
+ExpressPageControl.rs_xe3|DevExpress VCL 13.1 Products
+ExpressPageControl.rs_xe3|ExpressPageControl Suite
+-------------------------------------------------------------------------------
+12:18:18   [Reg_Namespace] - Lines To Process = 1
+12:18:18     <nsName>="ExpressPageControl.rs_xe3"
+12:18:18     <nsColfile>="D:\Development\Libraries\DevExpress VCL\ExpressPageControl\Help\ExpressPageControl.HxC"
+12:18:18     <nsDesc>=""
+12:18:18     +Mode = Not Enabled
+12:18:18    -->Registered OK
+-------------------------------------------------------------------------------
+12:18:18   [Reg_Title] - Lines To Process = 1
+12:18:18     <nsName>="ExpressPageControl.rs_xe3"
+12:18:18     <TitleID>="ExpressPageControl"
+12:18:18     <LangID>="1033"
+12:18:18     <HxS_HelpFile>="D:\Development\Libraries\DevExpress VCL\ExpressPageControl\Help\ExpressPageControl.HxS"
+12:18:18     <HxI_IndexFile>="D:\Development\Libraries\DevExpress VCL\ExpressPageControl\Help\ExpressPageControl.HxS"
+12:18:18     <HxQ_QueryFile>=""
+12:18:18     <HxR_AttrQueryFile>=""
+12:18:18     <HxsMediaLoc>=""
+12:18:18     <HxqMediaLoc>=""
+12:18:18     <HxrMediaLoc>=""
+12:18:18     <SampleMediaLoc>=""
+12:18:18    -->Registered OK
+-------------------------------------------------------------------------------
+12:18:18   [Reg_Plugin] - Lines To Process = 1
+12:18:18     <nsName_Parent>="embarcadero.rs_xe3"
+12:18:18     <HxT_Parent>="_DEFAULT"
+12:18:18     <nsName_Child>="ExpressPageControl.rs_xe3"
+12:18:18     <HxT_Child>="_DEFAULT"
+12:18:18     <HxA_Child>=""
+12:18:18   Plug Child "ExpressPageControl.rs_xe3" into "embarcadero.rs_xe3"
+12:18:18    -->Registered OK
+-------------------------------------------------------------------------------
+12:18:18   [Reg_Filter] - Lines To Process = 2
+12:18:18     <nsName>="ExpressPageControl.rs_xe3"
+12:18:18     <FilterName>="DevExpress VCL 13.1 Products"
+12:18:18     <FilterQueryStr>="("DocSet"="DXVCL")"
+12:18:18    -->Registered OK
+12:18:18   
+12:18:18     <nsName>="ExpressPageControl.rs_xe3"
+12:18:18     <FilterName>="ExpressPageControl Suite"
+12:18:18     <FilterQueryStr>="("DocSet"="ExpressPageControl")"
+12:18:18    -->Registered OK
+===============================================================================
+
+--END OF FILE--
+
+===============================================================================
+Log File:             	D:\Development\Libraries\DevExpress VCL\Setup\H2Reg_Log.txt
+Date:                 	9-2-2016 12:18:22
+Operating System:      	Windows NT 6.2 (Build 9200) No Service Pack
+SysLocale.DefaultLCID: 	0x0413 (1043)
+SysLocale.PriLangID:   	0x0013 (19)
+SysLocale.SubLangID:   	0x0001 (1)
+DecimalSeparator:      	,
+-------------------------------------------------------------------------------
+EXE Path =          	D:\Development\Libraries\DevExpress VCL\Setup\h2reg.exe
+EXE Version =       	1.7.0.0
+Cmdline Param(s) =  	-r | -q | -a | CmdFile=D:\Development\Libraries\DevExpress | VCL\ExpressDataController\Help\ExpressDataController.tmp
+Actual CmdLine =  	"D:\Development\Libraries\DevExpress VCL\Setup\h2reg.exe" -r -q -a CmdFile=D:\Development\Libraries\DevExpress VCL\ExpressDataController\Help\ExpressDataController.tmp
+_RunDir =           	D:\Development\Libraries\DevExpress VCL\Setup
+_ModuleName =       	h2reg.exe
+_ModuleDir =        	D:\Development\Libraries\DevExpress VCL\Setup
+_ModulePath =        	D:\Development\Libraries\DevExpress VCL\Setup\h2reg.exe
+Module Version =       	1.7.0.0
+-------------------------------------------------------------------------------
+_hhInstalled =      	YES
+_hhVerStr =         	6.2.10586.0
+_hhFriendlyVerStr = 	> 1.4a
+-------------------------------------------------------------------------------
+_ieInstalled =      	YES
+_ieVerStr =         	6.2.10586.0
+_ieFriendlyVerStr = 	Internet Explorer 6 (Windows Server 2003)
+===============================================================================
+MS Help 2.x Runtime Found: YES
+    2.7.61224.0, C:\Program Files (x86)\Common Files\Microsoft Shared\Help\hxds.dll
+    2.7.61224.0, C:\Program Files (x86)\Common Files\Microsoft Shared\Help\hxvz.dll
+NT Admin Log On: YES
+PC Language ID = nl
+-------------------------------------------------------------------------------
+Quiet Mode (-Q): Yes
+Registration Mode (-R): Yes
+UnRegistration Mode (-U): No
+Append Log Mode (-A): Yes
+No NT Admin Check (-N): No
+Merge Indexes Mode (-M): No
+Cmd Script File (CmdFile=): D:\Development\Libraries\DevExpress VCL\ExpressDataController\Help\ExpressDataController.tmp
+User Dir 1 (UserDir1=): 
+User Dir 2 (UserDir2=): 
+User Dir 3 (UserDir3=): 
+User Dir 4 (UserDir4=): 
+===============================================================================
+CmdFile = D:\Development\Libraries\DevExpress VCL\ExpressDataController\Help\ExpressDataController.tmp
+<windir> = C:\Windows
+<winsysdir> = C:\Windows\system32
+<programfilesdir> = C:\Program Files (x86)
+<exedir> = D:\Development\Libraries\DevExpress VCL\Setup
+<exedirparent> = D:\Development\Libraries\DevExpress VCL
+<cmdfiledir> = D:\Development\Libraries\DevExpress VCL\ExpressDataController\Help
+<cmdfiledirparent> = D:\Development\Libraries\DevExpress VCL\ExpressDataController
+<userdir1> = 
+<userdir1parent> = 
+<userdir2> = 
+<userdir2parent> = 
+<userdir3> = 
+<userdir3parent> = 
+<userdir4> = 
+<userdir4parent> = 
+-------------------------------------------------------------------------------
+[Reg_Namespace]
+ExpressDataController.rs_xe3|ExpressDataController.HxC|
+
+[Reg_Title]
+ExpressDataController.rs_xe3|ExpressDataController|1033|ExpressDataController.HxS|ExpressDataController.HxS||||||
+
+[Reg_Filter]
+ExpressDataController.rs_xe3|DevExpress VCL 13.1 Products|("DocSet"="DXVCL")
+ExpressDataController.rs_xe3|ExpressDataController|("DocSet"="ExpressDataController")
+
+[Reg_Plugin]
+embarcadero.rs_xe3|_DEFAULT|ExpressDataController.rs_xe3|_DEFAULT|
+
+[UnReg_Namespace]
+ExpressDataController.rs_xe3
+
+[UnReg_Title]
+ExpressDataController.rs_xe3|ExpressDataController|1033
+
+[UnReg_Plugin]
+embarcadero.rs_xe3|_DEFAULT|ExpressDataController.rs_xe3|_DEFAULT|
+
+[UnReg_Filter]
+ExpressDataController.rs_xe3|DevExpress VCL 13.1 Products
+ExpressDataController.rs_xe3|ExpressDataController
+-------------------------------------------------------------------------------
+12:18:23   [Reg_Namespace] - Lines To Process = 1
+12:18:23     <nsName>="ExpressDataController.rs_xe3"
+12:18:23     <nsColfile>="D:\Development\Libraries\DevExpress VCL\ExpressDataController\Help\ExpressDataController.HxC"
+12:18:23     <nsDesc>=""
+12:18:23     +Mode = Not Enabled
+12:18:23    -->Registered OK
+-------------------------------------------------------------------------------
+12:18:23   [Reg_Title] - Lines To Process = 1
+12:18:23     <nsName>="ExpressDataController.rs_xe3"
+12:18:23     <TitleID>="ExpressDataController"
+12:18:23     <LangID>="1033"
+12:18:23     <HxS_HelpFile>="D:\Development\Libraries\DevExpress VCL\ExpressDataController\Help\ExpressDataController.HxS"
+12:18:23     <HxI_IndexFile>="D:\Development\Libraries\DevExpress VCL\ExpressDataController\Help\ExpressDataController.HxS"
+12:18:23     <HxQ_QueryFile>=""
+12:18:23     <HxR_AttrQueryFile>=""
+12:18:23     <HxsMediaLoc>=""
+12:18:23     <HxqMediaLoc>=""
+12:18:23     <HxrMediaLoc>=""
+12:18:23     <SampleMediaLoc>=""
+12:18:23    -->Registered OK
+-------------------------------------------------------------------------------
+12:18:23   [Reg_Plugin] - Lines To Process = 1
+12:18:23     <nsName_Parent>="embarcadero.rs_xe3"
+12:18:23     <HxT_Parent>="_DEFAULT"
+12:18:23     <nsName_Child>="ExpressDataController.rs_xe3"
+12:18:23     <HxT_Child>="_DEFAULT"
+12:18:23     <HxA_Child>=""
+12:18:23   Plug Child "ExpressDataController.rs_xe3" into "embarcadero.rs_xe3"
+12:18:23    -->Registered OK
+-------------------------------------------------------------------------------
+12:18:23   [Reg_Filter] - Lines To Process = 2
+12:18:23     <nsName>="ExpressDataController.rs_xe3"
+12:18:23     <FilterName>="DevExpress VCL 13.1 Products"
+12:18:23     <FilterQueryStr>="("DocSet"="DXVCL")"
+12:18:23    -->Registered OK
+12:18:23   
+12:18:23     <nsName>="ExpressDataController.rs_xe3"
+12:18:23     <FilterName>="ExpressDataController"
+12:18:23     <FilterQueryStr>="("DocSet"="ExpressDataController")"
+12:18:23    -->Registered OK
+===============================================================================
+
+--END OF FILE--
+
+===============================================================================
+Log File:             	D:\Development\Libraries\DevExpress VCL\Setup\H2Reg_Log.txt
+Date:                 	9-2-2016 12:18:28
+Operating System:      	Windows NT 6.2 (Build 9200) No Service Pack
+SysLocale.DefaultLCID: 	0x0413 (1043)
+SysLocale.PriLangID:   	0x0013 (19)
+SysLocale.SubLangID:   	0x0001 (1)
+DecimalSeparator:      	,
+-------------------------------------------------------------------------------
+EXE Path =          	D:\Development\Libraries\DevExpress VCL\Setup\h2reg.exe
+EXE Version =       	1.7.0.0
+Cmdline Param(s) =  	-r | -q | -a | CmdFile=D:\Development\Libraries\DevExpress | VCL\ExpressEditors | Library\Help\ExpressEditors.tmp
+Actual CmdLine =  	"D:\Development\Libraries\DevExpress VCL\Setup\h2reg.exe" -r -q -a CmdFile=D:\Development\Libraries\DevExpress VCL\ExpressEditors Library\Help\ExpressEditors.tmp
+_RunDir =           	D:\Development\Libraries\DevExpress VCL\Setup
+_ModuleName =       	h2reg.exe
+_ModuleDir =        	D:\Development\Libraries\DevExpress VCL\Setup
+_ModulePath =        	D:\Development\Libraries\DevExpress VCL\Setup\h2reg.exe
+Module Version =       	1.7.0.0
+-------------------------------------------------------------------------------
+_hhInstalled =      	YES
+_hhVerStr =         	6.2.10586.0
+_hhFriendlyVerStr = 	> 1.4a
+-------------------------------------------------------------------------------
+_ieInstalled =      	YES
+_ieVerStr =         	6.2.10586.0
+_ieFriendlyVerStr = 	Internet Explorer 6 (Windows Server 2003)
+===============================================================================
+MS Help 2.x Runtime Found: YES
+    2.7.61224.0, C:\Program Files (x86)\Common Files\Microsoft Shared\Help\hxds.dll
+    2.7.61224.0, C:\Program Files (x86)\Common Files\Microsoft Shared\Help\hxvz.dll
+NT Admin Log On: YES
+PC Language ID = nl
+-------------------------------------------------------------------------------
+Quiet Mode (-Q): Yes
+Registration Mode (-R): Yes
+UnRegistration Mode (-U): No
+Append Log Mode (-A): Yes
+No NT Admin Check (-N): No
+Merge Indexes Mode (-M): No
+Cmd Script File (CmdFile=): D:\Development\Libraries\DevExpress VCL\ExpressEditors Library\Help\ExpressEditors.tmp
+User Dir 1 (UserDir1=): 
+User Dir 2 (UserDir2=): 
+User Dir 3 (UserDir3=): 
+User Dir 4 (UserDir4=): 
+===============================================================================
+CmdFile = D:\Development\Libraries\DevExpress VCL\ExpressEditors Library\Help\ExpressEditors.tmp
+<windir> = C:\Windows
+<winsysdir> = C:\Windows\system32
+<programfilesdir> = C:\Program Files (x86)
+<exedir> = D:\Development\Libraries\DevExpress VCL\Setup
+<exedirparent> = D:\Development\Libraries\DevExpress VCL
+<cmdfiledir> = D:\Development\Libraries\DevExpress VCL\ExpressEditors Library\Help
+<cmdfiledirparent> = D:\Development\Libraries\DevExpress VCL\ExpressEditors Library
+<userdir1> = 
+<userdir1parent> = 
+<userdir2> = 
+<userdir2parent> = 
+<userdir3> = 
+<userdir3parent> = 
+<userdir4> = 
+<userdir4parent> = 
+-------------------------------------------------------------------------------
+[Reg_Namespace]
+ExpressEditors.rs_xe3|ExpressEditors.HxC|
+
+[Reg_Title]
+ExpressEditors.rs_xe3|ExpressEditors|1033|ExpressEditors.HxS|ExpressEditors.HxS||||||
+
+[Reg_Filter]
+ExpressEditors.rs_xe3|DevExpress VCL 13.1 Products|("DocSet"="DXVCL")
+ExpressEditors.rs_xe3|ExpressEditors|("DocSet"="ExpressEditors")
+
+[Reg_Plugin]
+embarcadero.rs_xe3|_DEFAULT|ExpressEditors.rs_xe3|_DEFAULT|
+
+[UnReg_Namespace]
+ExpressEditors.rs_xe3
+
+[UnReg_Title]
+ExpressEditors.rs_xe3|ExpressEditors|1033
+
+[UnReg_Plugin]
+embarcadero.rs_xe3|_DEFAULT|ExpressEditors.rs_xe3|_DEFAULT|
+
+[UnReg_Filter]
+ExpressEditors.rs_xe3|DevExpress VCL 13.1 Products
+ExpressEditors.rs_xe3|ExpressEditors
+-------------------------------------------------------------------------------
+12:18:28   [Reg_Namespace] - Lines To Process = 1
+12:18:28     <nsName>="ExpressEditors.rs_xe3"
+12:18:28     <nsColfile>="D:\Development\Libraries\DevExpress VCL\ExpressEditors Library\Help\ExpressEditors.HxC"
+12:18:28     <nsDesc>=""
+12:18:28     +Mode = Not Enabled
+12:18:28    -->Registered OK
+-------------------------------------------------------------------------------
+12:18:28   [Reg_Title] - Lines To Process = 1
+12:18:28     <nsName>="ExpressEditors.rs_xe3"
+12:18:28     <TitleID>="ExpressEditors"
+12:18:28     <LangID>="1033"
+12:18:28     <HxS_HelpFile>="D:\Development\Libraries\DevExpress VCL\ExpressEditors Library\Help\ExpressEditors.HxS"
+12:18:28     <HxI_IndexFile>="D:\Development\Libraries\DevExpress VCL\ExpressEditors Library\Help\ExpressEditors.HxS"
+12:18:28     <HxQ_QueryFile>=""
+12:18:28     <HxR_AttrQueryFile>=""
+12:18:28     <HxsMediaLoc>=""
+12:18:28     <HxqMediaLoc>=""
+12:18:28     <HxrMediaLoc>=""
+12:18:28     <SampleMediaLoc>=""
+12:18:28    -->Registered OK
+-------------------------------------------------------------------------------
+12:18:28   [Reg_Plugin] - Lines To Process = 1
+12:18:28     <nsName_Parent>="embarcadero.rs_xe3"
+12:18:28     <HxT_Parent>="_DEFAULT"
+12:18:28     <nsName_Child>="ExpressEditors.rs_xe3"
+12:18:28     <HxT_Child>="_DEFAULT"
+12:18:28     <HxA_Child>=""
+12:18:28   Plug Child "ExpressEditors.rs_xe3" into "embarcadero.rs_xe3"
+12:18:28    -->Registered OK
+-------------------------------------------------------------------------------
+12:18:28   [Reg_Filter] - Lines To Process = 2
+12:18:28     <nsName>="ExpressEditors.rs_xe3"
+12:18:28     <FilterName>="DevExpress VCL 13.1 Products"
+12:18:28     <FilterQueryStr>="("DocSet"="DXVCL")"
+12:18:28    -->Registered OK
+12:18:28   
+12:18:28     <nsName>="ExpressEditors.rs_xe3"
+12:18:28     <FilterName>="ExpressEditors"
+12:18:28     <FilterQueryStr>="("DocSet"="ExpressEditors")"
+12:18:28    -->Registered OK
+===============================================================================
+
+--END OF FILE--
+
+===============================================================================
+Log File:             	D:\Development\Libraries\DevExpress VCL\Setup\H2Reg_Log.txt
+Date:                 	9-2-2016 12:18:29
+Operating System:      	Windows NT 6.2 (Build 9200) No Service Pack
+SysLocale.DefaultLCID: 	0x0413 (1043)
+SysLocale.PriLangID:   	0x0013 (19)
+SysLocale.SubLangID:   	0x0001 (1)
+DecimalSeparator:      	,
+-------------------------------------------------------------------------------
+EXE Path =          	D:\Development\Libraries\DevExpress VCL\Setup\h2reg.exe
+EXE Version =       	1.7.0.0
+Cmdline Param(s) =  	-r | -q | -a | CmdFile=D:\Development\Libraries\DevExpress | VCL\ExpressWizard | Control\Help\ExpressWizardControl.tmp
+Actual CmdLine =  	"D:\Development\Libraries\DevExpress VCL\Setup\h2reg.exe" -r -q -a CmdFile=D:\Development\Libraries\DevExpress VCL\ExpressWizard Control\Help\ExpressWizardControl.tmp
+_RunDir =           	D:\Development\Libraries\DevExpress VCL\Setup
+_ModuleName =       	h2reg.exe
+_ModuleDir =        	D:\Development\Libraries\DevExpress VCL\Setup
+_ModulePath =        	D:\Development\Libraries\DevExpress VCL\Setup\h2reg.exe
+Module Version =       	1.7.0.0
+-------------------------------------------------------------------------------
+_hhInstalled =      	YES
+_hhVerStr =         	6.2.10586.0
+_hhFriendlyVerStr = 	> 1.4a
+-------------------------------------------------------------------------------
+_ieInstalled =      	YES
+_ieVerStr =         	6.2.10586.0
+_ieFriendlyVerStr = 	Internet Explorer 6 (Windows Server 2003)
+===============================================================================
+MS Help 2.x Runtime Found: YES
+    2.7.61224.0, C:\Program Files (x86)\Common Files\Microsoft Shared\Help\hxds.dll
+    2.7.61224.0, C:\Program Files (x86)\Common Files\Microsoft Shared\Help\hxvz.dll
+NT Admin Log On: YES
+PC Language ID = nl
+-------------------------------------------------------------------------------
+Quiet Mode (-Q): Yes
+Registration Mode (-R): Yes
+UnRegistration Mode (-U): No
+Append Log Mode (-A): Yes
+No NT Admin Check (-N): No
+Merge Indexes Mode (-M): No
+Cmd Script File (CmdFile=): D:\Development\Libraries\DevExpress VCL\ExpressWizard Control\Help\ExpressWizardControl.tmp
+User Dir 1 (UserDir1=): 
+User Dir 2 (UserDir2=): 
+User Dir 3 (UserDir3=): 
+User Dir 4 (UserDir4=): 
+===============================================================================
+CmdFile = D:\Development\Libraries\DevExpress VCL\ExpressWizard Control\Help\ExpressWizardControl.tmp
+<windir> = C:\Windows
+<winsysdir> = C:\Windows\system32
+<programfilesdir> = C:\Program Files (x86)
+<exedir> = D:\Development\Libraries\DevExpress VCL\Setup
+<exedirparent> = D:\Development\Libraries\DevExpress VCL
+<cmdfiledir> = D:\Development\Libraries\DevExpress VCL\ExpressWizard Control\Help
+<cmdfiledirparent> = D:\Development\Libraries\DevExpress VCL\ExpressWizard Control
+<userdir1> = 
+<userdir1parent> = 
+<userdir2> = 
+<userdir2parent> = 
+<userdir3> = 
+<userdir3parent> = 
+<userdir4> = 
+<userdir4parent> = 
+-------------------------------------------------------------------------------
+[Reg_Namespace]
+ExpressWizardControl.rs_xe3|ExpressWizardControl.HxC|
+
+[Reg_Title]
+ExpressWizardControl.rs_xe3|ExpressWizardControl|1033|ExpressWizardControl.HxS|ExpressWizardControl.HxS||||||
+
+[Reg_Filter]
+ExpressWizardControl.rs_xe3|DevExpress VCL 13.1 Products|("DocSet"="DXVCL")
+ExpressWizardControl.rs_xe3|ExpressWizard Control|("DocSet"="ExpressWizardControl")
+
+[Reg_Plugin]
+embarcadero.rs_xe3|_DEFAULT|ExpressWizardControl.rs_xe3|_DEFAULT|
+
+[UnReg_Namespace]
+ExpressWizardControl.rs_xe3
+
+[UnReg_Title]
+ExpressWizardControl.rs_xe3|ExpressWizardControl|1033
+
+[UnReg_Plugin]
+embarcadero.rs_xe3|_DEFAULT|ExpressWizardControl.rs_xe3|_DEFAULT|
+
+[UnReg_Filter]
+ExpressWizardControl.rs_xe3|DevExpress VCL 13.1 Products
+ExpressWizardControl.rs_xe3|ExpressWizard Control
+-------------------------------------------------------------------------------
+12:18:29   [Reg_Namespace] - Lines To Process = 1
+12:18:29     <nsName>="ExpressWizardControl.rs_xe3"
+12:18:29     <nsColfile>="D:\Development\Libraries\DevExpress VCL\ExpressWizard Control\Help\ExpressWizardControl.HxC"
+12:18:29     <nsDesc>=""
+12:18:29     +Mode = Not Enabled
+12:18:29    -->Registered OK
+-------------------------------------------------------------------------------
+12:18:29   [Reg_Title] - Lines To Process = 1
+12:18:29     <nsName>="ExpressWizardControl.rs_xe3"
+12:18:29     <TitleID>="ExpressWizardControl"
+12:18:29     <LangID>="1033"
+12:18:29     <HxS_HelpFile>="D:\Development\Libraries\DevExpress VCL\ExpressWizard Control\Help\ExpressWizardControl.HxS"
+12:18:29     <HxI_IndexFile>="D:\Development\Libraries\DevExpress VCL\ExpressWizard Control\Help\ExpressWizardControl.HxS"
+12:18:29     <HxQ_QueryFile>=""
+12:18:29     <HxR_AttrQueryFile>=""
+12:18:29     <HxsMediaLoc>=""
+12:18:29     <HxqMediaLoc>=""
+12:18:29     <HxrMediaLoc>=""
+12:18:29     <SampleMediaLoc>=""
+12:18:29    -->Registered OK
+-------------------------------------------------------------------------------
+12:18:29   [Reg_Plugin] - Lines To Process = 1
+12:18:29     <nsName_Parent>="embarcadero.rs_xe3"
+12:18:29     <HxT_Parent>="_DEFAULT"
+12:18:29     <nsName_Child>="ExpressWizardControl.rs_xe3"
+12:18:29     <HxT_Child>="_DEFAULT"
+12:18:29     <HxA_Child>=""
+12:18:29   Plug Child "ExpressWizardControl.rs_xe3" into "embarcadero.rs_xe3"
+12:18:29    -->Registered OK
+-------------------------------------------------------------------------------
+12:18:29   [Reg_Filter] - Lines To Process = 2
+12:18:29     <nsName>="ExpressWizardControl.rs_xe3"
+12:18:29     <FilterName>="DevExpress VCL 13.1 Products"
+12:18:29     <FilterQueryStr>="("DocSet"="DXVCL")"
+12:18:29    -->Registered OK
+12:18:29   
+12:18:29     <nsName>="ExpressWizardControl.rs_xe3"
+12:18:29     <FilterName>="ExpressWizard Control"
+12:18:29     <FilterQueryStr>="("DocSet"="ExpressWizardControl")"
+12:18:29    -->Registered OK
+===============================================================================
+
+--END OF FILE--
+
+===============================================================================
+Log File:             	D:\Development\Libraries\DevExpress VCL\Setup\H2Reg_Log.txt
+Date:                 	9-2-2016 12:18:36
+Operating System:      	Windows NT 6.2 (Build 9200) No Service Pack
+SysLocale.DefaultLCID: 	0x0413 (1043)
+SysLocale.PriLangID:   	0x0013 (19)
+SysLocale.SubLangID:   	0x0001 (1)
+DecimalSeparator:      	,
+-------------------------------------------------------------------------------
+EXE Path =          	D:\Development\Libraries\DevExpress VCL\Setup\h2reg.exe
+EXE Version =       	1.7.0.0
+Cmdline Param(s) =  	-r | -q | -a | CmdFile=D:\Development\Libraries\DevExpress | VCL\ExpressBars\Help\ExpressBars.tmp
+Actual CmdLine =  	"D:\Development\Libraries\DevExpress VCL\Setup\h2reg.exe" -r -q -a CmdFile=D:\Development\Libraries\DevExpress VCL\ExpressBars\Help\ExpressBars.tmp
+_RunDir =           	D:\Development\Libraries\DevExpress VCL\Setup
+_ModuleName =       	h2reg.exe
+_ModuleDir =        	D:\Development\Libraries\DevExpress VCL\Setup
+_ModulePath =        	D:\Development\Libraries\DevExpress VCL\Setup\h2reg.exe
+Module Version =       	1.7.0.0
+-------------------------------------------------------------------------------
+_hhInstalled =      	YES
+_hhVerStr =         	6.2.10586.0
+_hhFriendlyVerStr = 	> 1.4a
+-------------------------------------------------------------------------------
+_ieInstalled =      	YES
+_ieVerStr =         	6.2.10586.0
+_ieFriendlyVerStr = 	Internet Explorer 6 (Windows Server 2003)
+===============================================================================
+MS Help 2.x Runtime Found: YES
+    2.7.61224.0, C:\Program Files (x86)\Common Files\Microsoft Shared\Help\hxds.dll
+    2.7.61224.0, C:\Program Files (x86)\Common Files\Microsoft Shared\Help\hxvz.dll
+NT Admin Log On: YES
+PC Language ID = nl
+-------------------------------------------------------------------------------
+Quiet Mode (-Q): Yes
+Registration Mode (-R): Yes
+UnRegistration Mode (-U): No
+Append Log Mode (-A): Yes
+No NT Admin Check (-N): No
+Merge Indexes Mode (-M): No
+Cmd Script File (CmdFile=): D:\Development\Libraries\DevExpress VCL\ExpressBars\Help\ExpressBars.tmp
+User Dir 1 (UserDir1=): 
+User Dir 2 (UserDir2=): 
+User Dir 3 (UserDir3=): 
+User Dir 4 (UserDir4=): 
+===============================================================================
+CmdFile = D:\Development\Libraries\DevExpress VCL\ExpressBars\Help\ExpressBars.tmp
+<windir> = C:\Windows
+<winsysdir> = C:\Windows\system32
+<programfilesdir> = C:\Program Files (x86)
+<exedir> = D:\Development\Libraries\DevExpress VCL\Setup
+<exedirparent> = D:\Development\Libraries\DevExpress VCL
+<cmdfiledir> = D:\Development\Libraries\DevExpress VCL\ExpressBars\Help
+<cmdfiledirparent> = D:\Development\Libraries\DevExpress VCL\ExpressBars
+<userdir1> = 
+<userdir1parent> = 
+<userdir2> = 
+<userdir2parent> = 
+<userdir3> = 
+<userdir3parent> = 
+<userdir4> = 
+<userdir4parent> = 
+-------------------------------------------------------------------------------
+[Reg_Namespace]
+ExpressBars.rs_xe3|ExpressBars.HxC|
+
+[Reg_Title]
+ExpressBars.rs_xe3|ExpressBars|1033|ExpressBars.HxS|ExpressBars.HxS||||||
+
+[Reg_Filter]
+ExpressBars.rs_xe3|DevExpress VCL 13.1 Products|("DocSet"="DXVCL")
+ExpressBars.rs_xe3|ExpressBars Suite|("DocSet"="ExpressBars")
+
+[Reg_Plugin]
+embarcadero.rs_xe3|_DEFAULT|ExpressBars.rs_xe3|_DEFAULT|
+
+[UnReg_Namespace]
+ExpressBars.rs_xe3
+
+[UnReg_Title]
+ExpressBars.rs_xe3|ExpressBars|1033
+
+[UnReg_Plugin]
+embarcadero.rs_xe3|_DEFAULT|ExpressBars.rs_xe3|_DEFAULT|
+
+[UnReg_Filter]
+ExpressBars.rs_xe3|DevExpress VCL 13.1 Products
+ExpressBars.rs_xe3|ExpressBars Suite
+-------------------------------------------------------------------------------
+12:18:36   [Reg_Namespace] - Lines To Process = 1
+12:18:36     <nsName>="ExpressBars.rs_xe3"
+12:18:36     <nsColfile>="D:\Development\Libraries\DevExpress VCL\ExpressBars\Help\ExpressBars.HxC"
+12:18:36     <nsDesc>=""
+12:18:36     +Mode = Not Enabled
+12:18:36    -->Registered OK
+-------------------------------------------------------------------------------
+12:18:36   [Reg_Title] - Lines To Process = 1
+12:18:36     <nsName>="ExpressBars.rs_xe3"
+12:18:36     <TitleID>="ExpressBars"
+12:18:36     <LangID>="1033"
+12:18:36     <HxS_HelpFile>="D:\Development\Libraries\DevExpress VCL\ExpressBars\Help\ExpressBars.HxS"
+12:18:36     <HxI_IndexFile>="D:\Development\Libraries\DevExpress VCL\ExpressBars\Help\ExpressBars.HxS"
+12:18:36     <HxQ_QueryFile>=""
+12:18:36     <HxR_AttrQueryFile>=""
+12:18:36     <HxsMediaLoc>=""
+12:18:36     <HxqMediaLoc>=""
+12:18:36     <HxrMediaLoc>=""
+12:18:36     <SampleMediaLoc>=""
+12:18:36    -->Registered OK
+-------------------------------------------------------------------------------
+12:18:36   [Reg_Plugin] - Lines To Process = 1
+12:18:36     <nsName_Parent>="embarcadero.rs_xe3"
+12:18:36     <HxT_Parent>="_DEFAULT"
+12:18:36     <nsName_Child>="ExpressBars.rs_xe3"
+12:18:36     <HxT_Child>="_DEFAULT"
+12:18:36     <HxA_Child>=""
+12:18:36   Plug Child "ExpressBars.rs_xe3" into "embarcadero.rs_xe3"
+12:18:36    -->Registered OK
+-------------------------------------------------------------------------------
+12:18:36   [Reg_Filter] - Lines To Process = 2
+12:18:36     <nsName>="ExpressBars.rs_xe3"
+12:18:36     <FilterName>="DevExpress VCL 13.1 Products"
+12:18:36     <FilterQueryStr>="("DocSet"="DXVCL")"
+12:18:36    -->Registered OK
+12:18:36   
+12:18:36     <nsName>="ExpressBars.rs_xe3"
+12:18:36     <FilterName>="ExpressBars Suite"
+12:18:36     <FilterQueryStr>="("DocSet"="ExpressBars")"
+12:18:36    -->Registered OK
+===============================================================================
+
+--END OF FILE--
+
+===============================================================================
+Log File:             	D:\Development\Libraries\DevExpress VCL\Setup\H2Reg_Log.txt
+Date:                 	9-2-2016 12:18:37
+Operating System:      	Windows NT 6.2 (Build 9200) No Service Pack
+SysLocale.DefaultLCID: 	0x0413 (1043)
+SysLocale.PriLangID:   	0x0013 (19)
+SysLocale.SubLangID:   	0x0001 (1)
+DecimalSeparator:      	,
+-------------------------------------------------------------------------------
+EXE Path =          	D:\Development\Libraries\DevExpress VCL\Setup\h2reg.exe
+EXE Version =       	1.7.0.0
+Cmdline Param(s) =  	-r | -q | -a | CmdFile=D:\Development\Libraries\DevExpress | VCL\ExpressDocking | Library\Help\ExpressDockingLibrary.tmp
+Actual CmdLine =  	"D:\Development\Libraries\DevExpress VCL\Setup\h2reg.exe" -r -q -a CmdFile=D:\Development\Libraries\DevExpress VCL\ExpressDocking Library\Help\ExpressDockingLibrary.tmp
+_RunDir =           	D:\Development\Libraries\DevExpress VCL\Setup
+_ModuleName =       	h2reg.exe
+_ModuleDir =        	D:\Development\Libraries\DevExpress VCL\Setup
+_ModulePath =        	D:\Development\Libraries\DevExpress VCL\Setup\h2reg.exe
+Module Version =       	1.7.0.0
+-------------------------------------------------------------------------------
+_hhInstalled =      	YES
+_hhVerStr =         	6.2.10586.0
+_hhFriendlyVerStr = 	> 1.4a
+-------------------------------------------------------------------------------
+_ieInstalled =      	YES
+_ieVerStr =         	6.2.10586.0
+_ieFriendlyVerStr = 	Internet Explorer 6 (Windows Server 2003)
+===============================================================================
+MS Help 2.x Runtime Found: YES
+    2.7.61224.0, C:\Program Files (x86)\Common Files\Microsoft Shared\Help\hxds.dll
+    2.7.61224.0, C:\Program Files (x86)\Common Files\Microsoft Shared\Help\hxvz.dll
+NT Admin Log On: YES
+PC Language ID = nl
+-------------------------------------------------------------------------------
+Quiet Mode (-Q): Yes
+Registration Mode (-R): Yes
+UnRegistration Mode (-U): No
+Append Log Mode (-A): Yes
+No NT Admin Check (-N): No
+Merge Indexes Mode (-M): No
+Cmd Script File (CmdFile=): D:\Development\Libraries\DevExpress VCL\ExpressDocking Library\Help\ExpressDockingLibrary.tmp
+User Dir 1 (UserDir1=): 
+User Dir 2 (UserDir2=): 
+User Dir 3 (UserDir3=): 
+User Dir 4 (UserDir4=): 
+===============================================================================
+CmdFile = D:\Development\Libraries\DevExpress VCL\ExpressDocking Library\Help\ExpressDockingLibrary.tmp
+<windir> = C:\Windows
+<winsysdir> = C:\Windows\system32
+<programfilesdir> = C:\Program Files (x86)
+<exedir> = D:\Development\Libraries\DevExpress VCL\Setup
+<exedirparent> = D:\Development\Libraries\DevExpress VCL
+<cmdfiledir> = D:\Development\Libraries\DevExpress VCL\ExpressDocking Library\Help
+<cmdfiledirparent> = D:\Development\Libraries\DevExpress VCL\ExpressDocking Library
+<userdir1> = 
+<userdir1parent> = 
+<userdir2> = 
+<userdir2parent> = 
+<userdir3> = 
+<userdir3parent> = 
+<userdir4> = 
+<userdir4parent> = 
+-------------------------------------------------------------------------------
+[Reg_Namespace]
+ExpressDockingLibrary.rs_xe3|ExpressDockingLibrary.HxC|
+
+[Reg_Title]
+ExpressDockingLibrary.rs_xe3|ExpressDockingLibrary|1033|ExpressDockingLibrary.HxS|ExpressDockingLibrary.HxS||||||
+
+[Reg_Filter]
+ExpressDockingLibrary.rs_xe3|DevExpress VCL 13.1 Products|("DocSet"="DXVCL")
+ExpressDockingLibrary.rs_xe3|ExpressDocking Library|("DocSet"="ExpressDockingLibrary")
+
+[Reg_Plugin]
+embarcadero.rs_xe3|_DEFAULT|ExpressDockingLibrary.rs_xe3|_DEFAULT|
+
+[UnReg_Namespace]
+ExpressDockingLibrary.rs_xe3
+
+[UnReg_Title]
+ExpressDockingLibrary.rs_xe3|ExpressDockingLibrary|1033
+
+[UnReg_Plugin]
+embarcadero.rs_xe3|_DEFAULT|ExpressDockingLibrary.rs_xe3|_DEFAULT|
+
+[UnReg_Filter]
+ExpressDockingLibrary.rs_xe3|DevExpress VCL 13.1 Products
+ExpressDockingLibrary.rs_xe3|ExpressDocking Library
+-------------------------------------------------------------------------------
+12:18:38   [Reg_Namespace] - Lines To Process = 1
+12:18:38     <nsName>="ExpressDockingLibrary.rs_xe3"
+12:18:38     <nsColfile>="D:\Development\Libraries\DevExpress VCL\ExpressDocking Library\Help\ExpressDockingLibrary.HxC"
+12:18:38     <nsDesc>=""
+12:18:38     +Mode = Not Enabled
+12:18:38    -->Registered OK
+-------------------------------------------------------------------------------
+12:18:38   [Reg_Title] - Lines To Process = 1
+12:18:38     <nsName>="ExpressDockingLibrary.rs_xe3"
+12:18:38     <TitleID>="ExpressDockingLibrary"
+12:18:38     <LangID>="1033"
+12:18:38     <HxS_HelpFile>="D:\Development\Libraries\DevExpress VCL\ExpressDocking Library\Help\ExpressDockingLibrary.HxS"
+12:18:38     <HxI_IndexFile>="D:\Development\Libraries\DevExpress VCL\ExpressDocking Library\Help\ExpressDockingLibrary.HxS"
+12:18:38     <HxQ_QueryFile>=""
+12:18:38     <HxR_AttrQueryFile>=""
+12:18:38     <HxsMediaLoc>=""
+12:18:38     <HxqMediaLoc>=""
+12:18:38     <HxrMediaLoc>=""
+12:18:38     <SampleMediaLoc>=""
+12:18:38    -->Registered OK
+-------------------------------------------------------------------------------
+12:18:38   [Reg_Plugin] - Lines To Process = 1
+12:18:38     <nsName_Parent>="embarcadero.rs_xe3"
+12:18:38     <HxT_Parent>="_DEFAULT"
+12:18:38     <nsName_Child>="ExpressDockingLibrary.rs_xe3"
+12:18:38     <HxT_Child>="_DEFAULT"
+12:18:38     <HxA_Child>=""
+12:18:38   Plug Child "ExpressDockingLibrary.rs_xe3" into "embarcadero.rs_xe3"
+12:18:38    -->Registered OK
+-------------------------------------------------------------------------------
+12:18:38   [Reg_Filter] - Lines To Process = 2
+12:18:38     <nsName>="ExpressDockingLibrary.rs_xe3"
+12:18:38     <FilterName>="DevExpress VCL 13.1 Products"
+12:18:38     <FilterQueryStr>="("DocSet"="DXVCL")"
+12:18:38    -->Registered OK
+12:18:38   
+12:18:38     <nsName>="ExpressDockingLibrary.rs_xe3"
+12:18:38     <FilterName>="ExpressDocking Library"
+12:18:38     <FilterQueryStr>="("DocSet"="ExpressDockingLibrary")"
+12:18:38    -->Registered OK
+===============================================================================
+
+--END OF FILE--
+
+===============================================================================
+Log File:             	D:\Development\Libraries\DevExpress VCL\Setup\H2Reg_Log.txt
+Date:                 	9-2-2016 12:18:40
+Operating System:      	Windows NT 6.2 (Build 9200) No Service Pack
+SysLocale.DefaultLCID: 	0x0413 (1043)
+SysLocale.PriLangID:   	0x0013 (19)
+SysLocale.SubLangID:   	0x0001 (1)
+DecimalSeparator:      	,
+-------------------------------------------------------------------------------
+EXE Path =          	D:\Development\Libraries\DevExpress VCL\Setup\h2reg.exe
+EXE Version =       	1.7.0.0
+Cmdline Param(s) =  	-r | -q | -a | CmdFile=D:\Development\Libraries\DevExpress | VCL\ExpressLayout | Control\Help\ExpressLayoutControl.tmp
+Actual CmdLine =  	"D:\Development\Libraries\DevExpress VCL\Setup\h2reg.exe" -r -q -a CmdFile=D:\Development\Libraries\DevExpress VCL\ExpressLayout Control\Help\ExpressLayoutControl.tmp
+_RunDir =           	D:\Development\Libraries\DevExpress VCL\Setup
+_ModuleName =       	h2reg.exe
+_ModuleDir =        	D:\Development\Libraries\DevExpress VCL\Setup
+_ModulePath =        	D:\Development\Libraries\DevExpress VCL\Setup\h2reg.exe
+Module Version =       	1.7.0.0
+-------------------------------------------------------------------------------
+_hhInstalled =      	YES
+_hhVerStr =         	6.2.10586.0
+_hhFriendlyVerStr = 	> 1.4a
+-------------------------------------------------------------------------------
+_ieInstalled =      	YES
+_ieVerStr =         	6.2.10586.0
+_ieFriendlyVerStr = 	Internet Explorer 6 (Windows Server 2003)
+===============================================================================
+MS Help 2.x Runtime Found: YES
+    2.7.61224.0, C:\Program Files (x86)\Common Files\Microsoft Shared\Help\hxds.dll
+    2.7.61224.0, C:\Program Files (x86)\Common Files\Microsoft Shared\Help\hxvz.dll
+NT Admin Log On: YES
+PC Language ID = nl
+-------------------------------------------------------------------------------
+Quiet Mode (-Q): Yes
+Registration Mode (-R): Yes
+UnRegistration Mode (-U): No
+Append Log Mode (-A): Yes
+No NT Admin Check (-N): No
+Merge Indexes Mode (-M): No
+Cmd Script File (CmdFile=): D:\Development\Libraries\DevExpress VCL\ExpressLayout Control\Help\ExpressLayoutControl.tmp
+User Dir 1 (UserDir1=): 
+User Dir 2 (UserDir2=): 
+User Dir 3 (UserDir3=): 
+User Dir 4 (UserDir4=): 
+===============================================================================
+CmdFile = D:\Development\Libraries\DevExpress VCL\ExpressLayout Control\Help\ExpressLayoutControl.tmp
+<windir> = C:\Windows
+<winsysdir> = C:\Windows\system32
+<programfilesdir> = C:\Program Files (x86)
+<exedir> = D:\Development\Libraries\DevExpress VCL\Setup
+<exedirparent> = D:\Development\Libraries\DevExpress VCL
+<cmdfiledir> = D:\Development\Libraries\DevExpress VCL\ExpressLayout Control\Help
+<cmdfiledirparent> = D:\Development\Libraries\DevExpress VCL\ExpressLayout Control
+<userdir1> = 
+<userdir1parent> = 
+<userdir2> = 
+<userdir2parent> = 
+<userdir3> = 
+<userdir3parent> = 
+<userdir4> = 
+<userdir4parent> = 
+-------------------------------------------------------------------------------
+[Reg_Namespace]
+ExpressLayoutControl.rs_xe3|ExpressLayoutControl.HxC|
+
+[Reg_Title]
+ExpressLayoutControl.rs_xe3|ExpressLayoutControl|1033|ExpressLayoutControl.HxS|ExpressLayoutControl.HxS||||||
+
+[Reg_Filter]
+ExpressLayoutControl.rs_xe3|DevExpress VCL 13.1 Products|("DocSet"="DXVCL")
+ExpressLayoutControl.rs_xe3|ExpressLayout Control|("DocSet"="ExpressLayoutControl")
+
+[Reg_Plugin]
+embarcadero.rs_xe3|_DEFAULT|ExpressLayoutControl.rs_xe3|_DEFAULT|
+
+[UnReg_Namespace]
+ExpressLayoutControl.rs_xe3
+
+[UnReg_Title]
+ExpressLayoutControl.rs_xe3|ExpressLayoutControl|1033
+
+[UnReg_Plugin]
+embarcadero.rs_xe3|_DEFAULT|ExpressLayoutControl.rs_xe3|_DEFAULT|
+
+[UnReg_Filter]
+ExpressLayoutControl.rs_xe3|DevExpress VCL 13.1 Products
+ExpressLayoutControl.rs_xe3|ExpressLayout Control
+-------------------------------------------------------------------------------
+12:18:40   [Reg_Namespace] - Lines To Process = 1
+12:18:40     <nsName>="ExpressLayoutControl.rs_xe3"
+12:18:40     <nsColfile>="D:\Development\Libraries\DevExpress VCL\ExpressLayout Control\Help\ExpressLayoutControl.HxC"
+12:18:40     <nsDesc>=""
+12:18:40     +Mode = Not Enabled
+12:18:40    -->Registered OK
+-------------------------------------------------------------------------------
+12:18:40   [Reg_Title] - Lines To Process = 1
+12:18:40     <nsName>="ExpressLayoutControl.rs_xe3"
+12:18:40     <TitleID>="ExpressLayoutControl"
+12:18:40     <LangID>="1033"
+12:18:40     <HxS_HelpFile>="D:\Development\Libraries\DevExpress VCL\ExpressLayout Control\Help\ExpressLayoutControl.HxS"
+12:18:40     <HxI_IndexFile>="D:\Development\Libraries\DevExpress VCL\ExpressLayout Control\Help\ExpressLayoutControl.HxS"
+12:18:40     <HxQ_QueryFile>=""
+12:18:40     <HxR_AttrQueryFile>=""
+12:18:40     <HxsMediaLoc>=""
+12:18:40     <HxqMediaLoc>=""
+12:18:40     <HxrMediaLoc>=""
+12:18:40     <SampleMediaLoc>=""
+12:18:40    -->Registered OK
+-------------------------------------------------------------------------------
+12:18:40   [Reg_Plugin] - Lines To Process = 1
+12:18:40     <nsName_Parent>="embarcadero.rs_xe3"
+12:18:40     <HxT_Parent>="_DEFAULT"
+12:18:40     <nsName_Child>="ExpressLayoutControl.rs_xe3"
+12:18:40     <HxT_Child>="_DEFAULT"
+12:18:40     <HxA_Child>=""
+12:18:40   Plug Child "ExpressLayoutControl.rs_xe3" into "embarcadero.rs_xe3"
+12:18:40    -->Registered OK
+-------------------------------------------------------------------------------
+12:18:40   [Reg_Filter] - Lines To Process = 2
+12:18:40     <nsName>="ExpressLayoutControl.rs_xe3"
+12:18:40     <FilterName>="DevExpress VCL 13.1 Products"
+12:18:40     <FilterQueryStr>="("DocSet"="DXVCL")"
+12:18:40    -->Registered OK
+12:18:40   
+12:18:40     <nsName>="ExpressLayoutControl.rs_xe3"
+12:18:40     <FilterName>="ExpressLayout Control"
+12:18:40     <FilterQueryStr>="("DocSet"="ExpressLayoutControl")"
+12:18:40    -->Registered OK
+===============================================================================
+
+--END OF FILE--
+
+===============================================================================
+Log File:             	D:\Development\Libraries\DevExpress VCL\Setup\H2Reg_Log.txt
+Date:                 	9-2-2016 12:18:42
+Operating System:      	Windows NT 6.2 (Build 9200) No Service Pack
+SysLocale.DefaultLCID: 	0x0413 (1043)
+SysLocale.PriLangID:   	0x0013 (19)
+SysLocale.SubLangID:   	0x0001 (1)
+DecimalSeparator:      	,
+-------------------------------------------------------------------------------
+EXE Path =          	D:\Development\Libraries\DevExpress VCL\Setup\h2reg.exe
+EXE Version =       	1.7.0.0
+Cmdline Param(s) =  	-r | -q | -a | CmdFile=D:\Development\Libraries\DevExpress | VCL\ExpressScheduler\Help\ExpressScheduler.tmp
+Actual CmdLine =  	"D:\Development\Libraries\DevExpress VCL\Setup\h2reg.exe" -r -q -a CmdFile=D:\Development\Libraries\DevExpress VCL\ExpressScheduler\Help\ExpressScheduler.tmp
+_RunDir =           	D:\Development\Libraries\DevExpress VCL\Setup
+_ModuleName =       	h2reg.exe
+_ModuleDir =        	D:\Development\Libraries\DevExpress VCL\Setup
+_ModulePath =        	D:\Development\Libraries\DevExpress VCL\Setup\h2reg.exe
+Module Version =       	1.7.0.0
+-------------------------------------------------------------------------------
+_hhInstalled =      	YES
+_hhVerStr =         	6.2.10586.0
+_hhFriendlyVerStr = 	> 1.4a
+-------------------------------------------------------------------------------
+_ieInstalled =      	YES
+_ieVerStr =         	6.2.10586.0
+_ieFriendlyVerStr = 	Internet Explorer 6 (Windows Server 2003)
+===============================================================================
+MS Help 2.x Runtime Found: YES
+    2.7.61224.0, C:\Program Files (x86)\Common Files\Microsoft Shared\Help\hxds.dll
+    2.7.61224.0, C:\Program Files (x86)\Common Files\Microsoft Shared\Help\hxvz.dll
+NT Admin Log On: YES
+PC Language ID = nl
+-------------------------------------------------------------------------------
+Quiet Mode (-Q): Yes
+Registration Mode (-R): Yes
+UnRegistration Mode (-U): No
+Append Log Mode (-A): Yes
+No NT Admin Check (-N): No
+Merge Indexes Mode (-M): No
+Cmd Script File (CmdFile=): D:\Development\Libraries\DevExpress VCL\ExpressScheduler\Help\ExpressScheduler.tmp
+User Dir 1 (UserDir1=): 
+User Dir 2 (UserDir2=): 
+User Dir 3 (UserDir3=): 
+User Dir 4 (UserDir4=): 
+===============================================================================
+CmdFile = D:\Development\Libraries\DevExpress VCL\ExpressScheduler\Help\ExpressScheduler.tmp
+<windir> = C:\Windows
+<winsysdir> = C:\Windows\system32
+<programfilesdir> = C:\Program Files (x86)
+<exedir> = D:\Development\Libraries\DevExpress VCL\Setup
+<exedirparent> = D:\Development\Libraries\DevExpress VCL
+<cmdfiledir> = D:\Development\Libraries\DevExpress VCL\ExpressScheduler\Help
+<cmdfiledirparent> = D:\Development\Libraries\DevExpress VCL\ExpressScheduler
+<userdir1> = 
+<userdir1parent> = 
+<userdir2> = 
+<userdir2parent> = 
+<userdir3> = 
+<userdir3parent> = 
+<userdir4> = 
+<userdir4parent> = 
+-------------------------------------------------------------------------------
+[Reg_Namespace]
+ExpressScheduler.rs_xe3|ExpressScheduler.HxC|
+
+[Reg_Title]
+ExpressScheduler.rs_xe3|ExpressScheduler|1033|ExpressScheduler.HxS|ExpressScheduler.HxS||||||
+
+[Reg_Filter]
+ExpressScheduler.rs_xe3|DevExpress VCL 13.1 Products|("DocSet"="DXVCL")
+ExpressScheduler.rs_xe3|ExpressScheduler Suite|("DocSet"="ExpressScheduler")
+
+[Reg_Plugin]
+embarcadero.rs_xe3|_DEFAULT|ExpressScheduler.rs_xe3|_DEFAULT|
+
+[UnReg_Namespace]
+ExpressScheduler.rs_xe3
+
+[UnReg_Title]
+ExpressScheduler.rs_xe3|ExpressScheduler|1033
+
+[UnReg_Plugin]
+embarcadero.rs_xe3|_DEFAULT|ExpressScheduler.rs_xe3|_DEFAULT|
+
+[UnReg_Filter]
+ExpressScheduler.rs_xe3|DevExpress VCL 13.1 Products
+ExpressScheduler.rs_xe3|ExpressScheduler Suite
+-------------------------------------------------------------------------------
+12:18:43   [Reg_Namespace] - Lines To Process = 1
+12:18:43     <nsName>="ExpressScheduler.rs_xe3"
+12:18:43     <nsColfile>="D:\Development\Libraries\DevExpress VCL\ExpressScheduler\Help\ExpressScheduler.HxC"
+12:18:43     <nsDesc>=""
+12:18:43     +Mode = Not Enabled
+12:18:43    -->Registered OK
+-------------------------------------------------------------------------------
+12:18:43   [Reg_Title] - Lines To Process = 1
+12:18:43     <nsName>="ExpressScheduler.rs_xe3"
+12:18:43     <TitleID>="ExpressScheduler"
+12:18:43     <LangID>="1033"
+12:18:43     <HxS_HelpFile>="D:\Development\Libraries\DevExpress VCL\ExpressScheduler\Help\ExpressScheduler.HxS"
+12:18:43     <HxI_IndexFile>="D:\Development\Libraries\DevExpress VCL\ExpressScheduler\Help\ExpressScheduler.HxS"
+12:18:43     <HxQ_QueryFile>=""
+12:18:43     <HxR_AttrQueryFile>=""
+12:18:43     <HxsMediaLoc>=""
+12:18:43     <HxqMediaLoc>=""
+12:18:43     <HxrMediaLoc>=""
+12:18:43     <SampleMediaLoc>=""
+12:18:43    -->Registered OK
+-------------------------------------------------------------------------------
+12:18:43   [Reg_Plugin] - Lines To Process = 1
+12:18:43     <nsName_Parent>="embarcadero.rs_xe3"
+12:18:43     <HxT_Parent>="_DEFAULT"
+12:18:43     <nsName_Child>="ExpressScheduler.rs_xe3"
+12:18:43     <HxT_Child>="_DEFAULT"
+12:18:43     <HxA_Child>=""
+12:18:43   Plug Child "ExpressScheduler.rs_xe3" into "embarcadero.rs_xe3"
+12:18:43    -->Registered OK
+-------------------------------------------------------------------------------
+12:18:43   [Reg_Filter] - Lines To Process = 2
+12:18:43     <nsName>="ExpressScheduler.rs_xe3"
+12:18:43     <FilterName>="DevExpress VCL 13.1 Products"
+12:18:43     <FilterQueryStr>="("DocSet"="DXVCL")"
+12:18:43    -->Registered OK
+12:18:43   
+12:18:43     <nsName>="ExpressScheduler.rs_xe3"
+12:18:43     <FilterName>="ExpressScheduler Suite"
+12:18:43     <FilterQueryStr>="("DocSet"="ExpressScheduler")"
+12:18:43    -->Registered OK
+===============================================================================
+
+--END OF FILE--
+
+===============================================================================
+Log File:             	D:\Development\Libraries\DevExpress VCL\Setup\H2Reg_Log.txt
+Date:                 	9-2-2016 12:18:44
+Operating System:      	Windows NT 6.2 (Build 9200) No Service Pack
+SysLocale.DefaultLCID: 	0x0413 (1043)
+SysLocale.PriLangID:   	0x0013 (19)
+SysLocale.SubLangID:   	0x0001 (1)
+DecimalSeparator:      	,
+-------------------------------------------------------------------------------
+EXE Path =          	D:\Development\Libraries\DevExpress VCL\Setup\h2reg.exe
+EXE Version =       	1.7.0.0
+Cmdline Param(s) =  	-r | -q | -a | CmdFile=D:\Development\Libraries\DevExpress | VCL\ExpressQuantumTreeList\Help\ExpressQuantumTreeList.tmp
+Actual CmdLine =  	"D:\Development\Libraries\DevExpress VCL\Setup\h2reg.exe" -r -q -a CmdFile=D:\Development\Libraries\DevExpress VCL\ExpressQuantumTreeList\Help\ExpressQuantumTreeList.tmp
+_RunDir =           	D:\Development\Libraries\DevExpress VCL\Setup
+_ModuleName =       	h2reg.exe
+_ModuleDir =        	D:\Development\Libraries\DevExpress VCL\Setup
+_ModulePath =        	D:\Development\Libraries\DevExpress VCL\Setup\h2reg.exe
+Module Version =       	1.7.0.0
+-------------------------------------------------------------------------------
+_hhInstalled =      	YES
+_hhVerStr =         	6.2.10586.0
+_hhFriendlyVerStr = 	> 1.4a
+-------------------------------------------------------------------------------
+_ieInstalled =      	YES
+_ieVerStr =         	6.2.10586.0
+_ieFriendlyVerStr = 	Internet Explorer 6 (Windows Server 2003)
+===============================================================================
+MS Help 2.x Runtime Found: YES
+    2.7.61224.0, C:\Program Files (x86)\Common Files\Microsoft Shared\Help\hxds.dll
+    2.7.61224.0, C:\Program Files (x86)\Common Files\Microsoft Shared\Help\hxvz.dll
+NT Admin Log On: YES
+PC Language ID = nl
+-------------------------------------------------------------------------------
+Quiet Mode (-Q): Yes
+Registration Mode (-R): Yes
+UnRegistration Mode (-U): No
+Append Log Mode (-A): Yes
+No NT Admin Check (-N): No
+Merge Indexes Mode (-M): No
+Cmd Script File (CmdFile=): D:\Development\Libraries\DevExpress VCL\ExpressQuantumTreeList\Help\ExpressQuantumTreeList.tmp
+User Dir 1 (UserDir1=): 
+User Dir 2 (UserDir2=): 
+User Dir 3 (UserDir3=): 
+User Dir 4 (UserDir4=): 
+===============================================================================
+CmdFile = D:\Development\Libraries\DevExpress VCL\ExpressQuantumTreeList\Help\ExpressQuantumTreeList.tmp
+<windir> = C:\Windows
+<winsysdir> = C:\Windows\system32
+<programfilesdir> = C:\Program Files (x86)
+<exedir> = D:\Development\Libraries\DevExpress VCL\Setup
+<exedirparent> = D:\Development\Libraries\DevExpress VCL
+<cmdfiledir> = D:\Development\Libraries\DevExpress VCL\ExpressQuantumTreeList\Help
+<cmdfiledirparent> = D:\Development\Libraries\DevExpress VCL\ExpressQuantumTreeList
+<userdir1> = 
+<userdir1parent> = 
+<userdir2> = 
+<userdir2parent> = 
+<userdir3> = 
+<userdir3parent> = 
+<userdir4> = 
+<userdir4parent> = 
+-------------------------------------------------------------------------------
+[Reg_Namespace]
+ExpressQuantumTreeList.rs_xe3|ExpressQuantumTreeList.HxC|
+
+[Reg_Title]
+ExpressQuantumTreeList.rs_xe3|ExpressQuantumTreeList|1033|ExpressQuantumTreeList.HxS|ExpressQuantumTreeList.HxS||||||
+
+[Reg_Filter]
+ExpressQuantumTreeList.rs_xe3|DevExpress VCL 13.1 Products|("DocSet"="DXVCL")
+ExpressQuantumTreeList.rs_xe3|ExpressQuantumTreeList Suite|("DocSet"="ExpressQuantumTreeList")
+
+[Reg_Plugin]
+embarcadero.rs_xe3|_DEFAULT|ExpressQuantumTreeList.rs_xe3|_DEFAULT|
+
+[UnReg_Namespace]
+ExpressQuantumTreeList.rs_xe3
+
+[UnReg_Title]
+ExpressQuantumTreeList.rs_xe3|ExpressQuantumTreeList|1033
+
+[UnReg_Plugin]
+embarcadero.rs_xe3|_DEFAULT|ExpressQuantumTreeList.rs_xe3|_DEFAULT|
+
+[UnReg_Filter]
+ExpressQuantumTreeList.rs_xe3|DevExpress VCL 13.1 Products
+ExpressQuantumTreeList.rs_xe3|ExpressQuantumTreeList Suite
+-------------------------------------------------------------------------------
+12:18:44   [Reg_Namespace] - Lines To Process = 1
+12:18:44     <nsName>="ExpressQuantumTreeList.rs_xe3"
+12:18:44     <nsColfile>="D:\Development\Libraries\DevExpress VCL\ExpressQuantumTreeList\Help\ExpressQuantumTreeList.HxC"
+12:18:44     <nsDesc>=""
+12:18:44     +Mode = Not Enabled
+12:18:44    -->Registered OK
+-------------------------------------------------------------------------------
+12:18:44   [Reg_Title] - Lines To Process = 1
+12:18:44     <nsName>="ExpressQuantumTreeList.rs_xe3"
+12:18:44     <TitleID>="ExpressQuantumTreeList"
+12:18:44     <LangID>="1033"
+12:18:44     <HxS_HelpFile>="D:\Development\Libraries\DevExpress VCL\ExpressQuantumTreeList\Help\ExpressQuantumTreeList.HxS"
+12:18:45     <HxI_IndexFile>="D:\Development\Libraries\DevExpress VCL\ExpressQuantumTreeList\Help\ExpressQuantumTreeList.HxS"
+12:18:45     <HxQ_QueryFile>=""
+12:18:45     <HxR_AttrQueryFile>=""
+12:18:45     <HxsMediaLoc>=""
+12:18:45     <HxqMediaLoc>=""
+12:18:45     <HxrMediaLoc>=""
+12:18:45     <SampleMediaLoc>=""
+12:18:45    -->Registered OK
+-------------------------------------------------------------------------------
+12:18:45   [Reg_Plugin] - Lines To Process = 1
+12:18:45     <nsName_Parent>="embarcadero.rs_xe3"
+12:18:45     <HxT_Parent>="_DEFAULT"
+12:18:45     <nsName_Child>="ExpressQuantumTreeList.rs_xe3"
+12:18:45     <HxT_Child>="_DEFAULT"
+12:18:45     <HxA_Child>=""
+12:18:45   Plug Child "ExpressQuantumTreeList.rs_xe3" into "embarcadero.rs_xe3"
+12:18:45    -->Registered OK
+-------------------------------------------------------------------------------
+12:18:45   [Reg_Filter] - Lines To Process = 2
+12:18:45     <nsName>="ExpressQuantumTreeList.rs_xe3"
+12:18:45     <FilterName>="DevExpress VCL 13.1 Products"
+12:18:45     <FilterQueryStr>="("DocSet"="DXVCL")"
+12:18:45    -->Registered OK
+12:18:45   
+12:18:45     <nsName>="ExpressQuantumTreeList.rs_xe3"
+12:18:45     <FilterName>="ExpressQuantumTreeList Suite"
+12:18:45     <FilterQueryStr>="("DocSet"="ExpressQuantumTreeList")"
+12:18:45    -->Registered OK
+===============================================================================
+
+--END OF FILE--
+
+===============================================================================
+Log File:             	D:\Development\Libraries\DevExpress VCL\Setup\H2Reg_Log.txt
+Date:                 	9-2-2016 12:18:48
+Operating System:      	Windows NT 6.2 (Build 9200) No Service Pack
+SysLocale.DefaultLCID: 	0x0413 (1043)
+SysLocale.PriLangID:   	0x0013 (19)
+SysLocale.SubLangID:   	0x0001 (1)
+DecimalSeparator:      	,
+-------------------------------------------------------------------------------
+EXE Path =          	D:\Development\Libraries\DevExpress VCL\Setup\h2reg.exe
+EXE Version =       	1.7.0.0
+Cmdline Param(s) =  	-r | -q | -a | CmdFile=D:\Development\Libraries\DevExpress | VCL\ExpressQuantumGrid\Help\ExpressQuantumGrid.tmp
+Actual CmdLine =  	"D:\Development\Libraries\DevExpress VCL\Setup\h2reg.exe" -r -q -a CmdFile=D:\Development\Libraries\DevExpress VCL\ExpressQuantumGrid\Help\ExpressQuantumGrid.tmp
+_RunDir =           	D:\Development\Libraries\DevExpress VCL\Setup
+_ModuleName =       	h2reg.exe
+_ModuleDir =        	D:\Development\Libraries\DevExpress VCL\Setup
+_ModulePath =        	D:\Development\Libraries\DevExpress VCL\Setup\h2reg.exe
+Module Version =       	1.7.0.0
+-------------------------------------------------------------------------------
+_hhInstalled =      	YES
+_hhVerStr =         	6.2.10586.0
+_hhFriendlyVerStr = 	> 1.4a
+-------------------------------------------------------------------------------
+_ieInstalled =      	YES
+_ieVerStr =         	6.2.10586.0
+_ieFriendlyVerStr = 	Internet Explorer 6 (Windows Server 2003)
+===============================================================================
+MS Help 2.x Runtime Found: YES
+    2.7.61224.0, C:\Program Files (x86)\Common Files\Microsoft Shared\Help\hxds.dll
+    2.7.61224.0, C:\Program Files (x86)\Common Files\Microsoft Shared\Help\hxvz.dll
+NT Admin Log On: YES
+PC Language ID = nl
+-------------------------------------------------------------------------------
+Quiet Mode (-Q): Yes
+Registration Mode (-R): Yes
+UnRegistration Mode (-U): No
+Append Log Mode (-A): Yes
+No NT Admin Check (-N): No
+Merge Indexes Mode (-M): No
+Cmd Script File (CmdFile=): D:\Development\Libraries\DevExpress VCL\ExpressQuantumGrid\Help\ExpressQuantumGrid.tmp
+User Dir 1 (UserDir1=): 
+User Dir 2 (UserDir2=): 
+User Dir 3 (UserDir3=): 
+User Dir 4 (UserDir4=): 
+===============================================================================
+CmdFile = D:\Development\Libraries\DevExpress VCL\ExpressQuantumGrid\Help\ExpressQuantumGrid.tmp
+<windir> = C:\Windows
+<winsysdir> = C:\Windows\system32
+<programfilesdir> = C:\Program Files (x86)
+<exedir> = D:\Development\Libraries\DevExpress VCL\Setup
+<exedirparent> = D:\Development\Libraries\DevExpress VCL
+<cmdfiledir> = D:\Development\Libraries\DevExpress VCL\ExpressQuantumGrid\Help
+<cmdfiledirparent> = D:\Development\Libraries\DevExpress VCL\ExpressQuantumGrid
+<userdir1> = 
+<userdir1parent> = 
+<userdir2> = 
+<userdir2parent> = 
+<userdir3> = 
+<userdir3parent> = 
+<userdir4> = 
+<userdir4parent> = 
+-------------------------------------------------------------------------------
+[Reg_Namespace]
+ExpressQuantumGrid.rs_xe3|ExpressQuantumGrid.HxC|
+
+[Reg_Title]
+ExpressQuantumGrid.rs_xe3|ExpressQuantumGrid|1033|ExpressQuantumGrid.HxS|ExpressQuantumGrid.HxS||||||
+
+[Reg_Filter]
+ExpressQuantumGrid.rs_xe3|DevExpress VCL 13.1 Products|("DocSet"="DXVCL")
+ExpressQuantumGrid.rs_xe3|ExpressQuantumGrid Suite|("DocSet"="ExpressQuantumGrid")
+
+[Reg_Plugin]
+embarcadero.rs_xe3|_DEFAULT|ExpressQuantumGrid.rs_xe3|_DEFAULT|
+
+[UnReg_Namespace]
+ExpressQuantumGrid.rs_xe3
+
+[UnReg_Title]
+ExpressQuantumGrid.rs_xe3|ExpressQuantumGrid|1033
+
+[UnReg_Plugin]
+embarcadero.rs_xe3|_DEFAULT|ExpressQuantumGrid.rs_xe3|_DEFAULT|
+
+[UnReg_Filter]
+ExpressQuantumGrid.rs_xe3|DevExpress VCL 13.1 Products
+ExpressQuantumGrid.rs_xe3|ExpressQuantumGrid Suite
+-------------------------------------------------------------------------------
+12:18:49   [Reg_Namespace] - Lines To Process = 1
+12:18:49     <nsName>="ExpressQuantumGrid.rs_xe3"
+12:18:49     <nsColfile>="D:\Development\Libraries\DevExpress VCL\ExpressQuantumGrid\Help\ExpressQuantumGrid.HxC"
+12:18:49     <nsDesc>=""
+12:18:49     +Mode = Not Enabled
+12:18:49    -->Registered OK
+-------------------------------------------------------------------------------
+12:18:49   [Reg_Title] - Lines To Process = 1
+12:18:49     <nsName>="ExpressQuantumGrid.rs_xe3"
+12:18:49     <TitleID>="ExpressQuantumGrid"
+12:18:49     <LangID>="1033"
+12:18:49     <HxS_HelpFile>="D:\Development\Libraries\DevExpress VCL\ExpressQuantumGrid\Help\ExpressQuantumGrid.HxS"
+12:18:49     <HxI_IndexFile>="D:\Development\Libraries\DevExpress VCL\ExpressQuantumGrid\Help\ExpressQuantumGrid.HxS"
+12:18:49     <HxQ_QueryFile>=""
+12:18:49     <HxR_AttrQueryFile>=""
+12:18:49     <HxsMediaLoc>=""
+12:18:49     <HxqMediaLoc>=""
+12:18:49     <HxrMediaLoc>=""
+12:18:49     <SampleMediaLoc>=""
+12:18:49    -->Registered OK
+-------------------------------------------------------------------------------
+12:18:49   [Reg_Plugin] - Lines To Process = 1
+12:18:49     <nsName_Parent>="embarcadero.rs_xe3"
+12:18:49     <HxT_Parent>="_DEFAULT"
+12:18:49     <nsName_Child>="ExpressQuantumGrid.rs_xe3"
+12:18:49     <HxT_Child>="_DEFAULT"
+12:18:49     <HxA_Child>=""
+12:18:49   Plug Child "ExpressQuantumGrid.rs_xe3" into "embarcadero.rs_xe3"
+12:18:49    -->Registered OK
+-------------------------------------------------------------------------------
+12:18:49   [Reg_Filter] - Lines To Process = 2
+12:18:49     <nsName>="ExpressQuantumGrid.rs_xe3"
+12:18:49     <FilterName>="DevExpress VCL 13.1 Products"
+12:18:49     <FilterQueryStr>="("DocSet"="DXVCL")"
+12:18:49    -->Registered OK
+12:18:49   
+12:18:49     <nsName>="ExpressQuantumGrid.rs_xe3"
+12:18:49     <FilterName>="ExpressQuantumGrid Suite"
+12:18:49     <FilterQueryStr>="("DocSet"="ExpressQuantumGrid")"
+12:18:49    -->Registered OK
+===============================================================================
+
+--END OF FILE--
+
+===============================================================================
+Log File:             	D:\Development\Libraries\DevExpress VCL\Setup\H2Reg_Log.txt
+Date:                 	9-2-2016 12:18:50
+Operating System:      	Windows NT 6.2 (Build 9200) No Service Pack
+SysLocale.DefaultLCID: 	0x0413 (1043)
+SysLocale.PriLangID:   	0x0013 (19)
+SysLocale.SubLangID:   	0x0001 (1)
+DecimalSeparator:      	,
+-------------------------------------------------------------------------------
+EXE Path =          	D:\Development\Libraries\DevExpress VCL\Setup\h2reg.exe
+EXE Version =       	1.7.0.0
+Cmdline Param(s) =  	-r | -q | -a | CmdFile=D:\Development\Libraries\DevExpress | VCL\ExpressVerticalGrid\Help\ExpressVerticalGrid.tmp
+Actual CmdLine =  	"D:\Development\Libraries\DevExpress VCL\Setup\h2reg.exe" -r -q -a CmdFile=D:\Development\Libraries\DevExpress VCL\ExpressVerticalGrid\Help\ExpressVerticalGrid.tmp
+_RunDir =           	D:\Development\Libraries\DevExpress VCL\Setup
+_ModuleName =       	h2reg.exe
+_ModuleDir =        	D:\Development\Libraries\DevExpress VCL\Setup
+_ModulePath =        	D:\Development\Libraries\DevExpress VCL\Setup\h2reg.exe
+Module Version =       	1.7.0.0
+-------------------------------------------------------------------------------
+_hhInstalled =      	YES
+_hhVerStr =         	6.2.10586.0
+_hhFriendlyVerStr = 	> 1.4a
+-------------------------------------------------------------------------------
+_ieInstalled =      	YES
+_ieVerStr =         	6.2.10586.0
+_ieFriendlyVerStr = 	Internet Explorer 6 (Windows Server 2003)
+===============================================================================
+MS Help 2.x Runtime Found: YES
+    2.7.61224.0, C:\Program Files (x86)\Common Files\Microsoft Shared\Help\hxds.dll
+    2.7.61224.0, C:\Program Files (x86)\Common Files\Microsoft Shared\Help\hxvz.dll
+NT Admin Log On: YES
+PC Language ID = nl
+-------------------------------------------------------------------------------
+Quiet Mode (-Q): Yes
+Registration Mode (-R): Yes
+UnRegistration Mode (-U): No
+Append Log Mode (-A): Yes
+No NT Admin Check (-N): No
+Merge Indexes Mode (-M): No
+Cmd Script File (CmdFile=): D:\Development\Libraries\DevExpress VCL\ExpressVerticalGrid\Help\ExpressVerticalGrid.tmp
+User Dir 1 (UserDir1=): 
+User Dir 2 (UserDir2=): 
+User Dir 3 (UserDir3=): 
+User Dir 4 (UserDir4=): 
+===============================================================================
+CmdFile = D:\Development\Libraries\DevExpress VCL\ExpressVerticalGrid\Help\ExpressVerticalGrid.tmp
+<windir> = C:\Windows
+<winsysdir> = C:\Windows\system32
+<programfilesdir> = C:\Program Files (x86)
+<exedir> = D:\Development\Libraries\DevExpress VCL\Setup
+<exedirparent> = D:\Development\Libraries\DevExpress VCL
+<cmdfiledir> = D:\Development\Libraries\DevExpress VCL\ExpressVerticalGrid\Help
+<cmdfiledirparent> = D:\Development\Libraries\DevExpress VCL\ExpressVerticalGrid
+<userdir1> = 
+<userdir1parent> = 
+<userdir2> = 
+<userdir2parent> = 
+<userdir3> = 
+<userdir3parent> = 
+<userdir4> = 
+<userdir4parent> = 
+-------------------------------------------------------------------------------
+[Reg_Namespace]
+ExpressVerticalGrid.rs_xe3|ExpressVerticalGrid.HxC|
+
+[Reg_Title]
+ExpressVerticalGrid.rs_xe3|ExpressVerticalGrid|1033|ExpressVerticalGrid.HxS|ExpressVerticalGrid.HxS||||||
+
+[Reg_Filter]
+ExpressVerticalGrid.rs_xe3|DevExpress VCL 13.1 Products|("DocSet"="DXVCL")
+ExpressVerticalGrid.rs_xe3|ExpressVerticalGrid|("DocSet"="ExpressVerticalGrid")
+
+[Reg_Plugin]
+embarcadero.rs_xe3|_DEFAULT|ExpressVerticalGrid.rs_xe3|_DEFAULT|
+
+[UnReg_Namespace]
+ExpressVerticalGrid.rs_xe3
+
+[UnReg_Title]
+ExpressVerticalGrid.rs_xe3|ExpressVerticalGrid|1033
+
+[UnReg_Plugin]
+embarcadero.rs_xe3|_DEFAULT|ExpressVerticalGrid.rs_xe3|_DEFAULT|
+
+[UnReg_Filter]
+ExpressVerticalGrid.rs_xe3|DevExpress VCL 13.1 Products
+ExpressVerticalGrid.rs_xe3|ExpressVerticalGrid
+-------------------------------------------------------------------------------
+12:18:50   [Reg_Namespace] - Lines To Process = 1
+12:18:50     <nsName>="ExpressVerticalGrid.rs_xe3"
+12:18:50     <nsColfile>="D:\Development\Libraries\DevExpress VCL\ExpressVerticalGrid\Help\ExpressVerticalGrid.HxC"
+12:18:50     <nsDesc>=""
+12:18:50     +Mode = Not Enabled
+12:18:50    -->Registered OK
+-------------------------------------------------------------------------------
+12:18:50   [Reg_Title] - Lines To Process = 1
+12:18:50     <nsName>="ExpressVerticalGrid.rs_xe3"
+12:18:50     <TitleID>="ExpressVerticalGrid"
+12:18:50     <LangID>="1033"
+12:18:50     <HxS_HelpFile>="D:\Development\Libraries\DevExpress VCL\ExpressVerticalGrid\Help\ExpressVerticalGrid.HxS"
+12:18:50     <HxI_IndexFile>="D:\Development\Libraries\DevExpress VCL\ExpressVerticalGrid\Help\ExpressVerticalGrid.HxS"
+12:18:50     <HxQ_QueryFile>=""
+12:18:50     <HxR_AttrQueryFile>=""
+12:18:50     <HxsMediaLoc>=""
+12:18:50     <HxqMediaLoc>=""
+12:18:50     <HxrMediaLoc>=""
+12:18:50     <SampleMediaLoc>=""
+12:18:50    -->Registered OK
+-------------------------------------------------------------------------------
+12:18:50   [Reg_Plugin] - Lines To Process = 1
+12:18:50     <nsName_Parent>="embarcadero.rs_xe3"
+12:18:50     <HxT_Parent>="_DEFAULT"
+12:18:50     <nsName_Child>="ExpressVerticalGrid.rs_xe3"
+12:18:51     <HxT_Child>="_DEFAULT"
+12:18:51     <HxA_Child>=""
+12:18:51   Plug Child "ExpressVerticalGrid.rs_xe3" into "embarcadero.rs_xe3"
+12:18:51    -->Registered OK
+-------------------------------------------------------------------------------
+12:18:51   [Reg_Filter] - Lines To Process = 2
+12:18:51     <nsName>="ExpressVerticalGrid.rs_xe3"
+12:18:51     <FilterName>="DevExpress VCL 13.1 Products"
+12:18:51     <FilterQueryStr>="("DocSet"="DXVCL")"
+12:18:51    -->Registered OK
+12:18:51   
+12:18:51     <nsName>="ExpressVerticalGrid.rs_xe3"
+12:18:51     <FilterName>="ExpressVerticalGrid"
+12:18:51     <FilterQueryStr>="("DocSet"="ExpressVerticalGrid")"
+12:18:51    -->Registered OK
+===============================================================================
+
+--END OF FILE--
+
+===============================================================================
+Log File:             	D:\Development\Libraries\DevExpress VCL\Setup\H2Reg_Log.txt
+Date:                 	9-2-2016 12:18:51
+Operating System:      	Windows NT 6.2 (Build 9200) No Service Pack
+SysLocale.DefaultLCID: 	0x0413 (1043)
+SysLocale.PriLangID:   	0x0013 (19)
+SysLocale.SubLangID:   	0x0001 (1)
+DecimalSeparator:      	,
+-------------------------------------------------------------------------------
+EXE Path =          	D:\Development\Libraries\DevExpress VCL\Setup\h2reg.exe
+EXE Version =       	1.7.0.0
+Cmdline Param(s) =  	-r | -q | -a | CmdFile=D:\Development\Libraries\DevExpress | VCL\ExpressMemData\Help\ExpressMemData.tmp
+Actual CmdLine =  	"D:\Development\Libraries\DevExpress VCL\Setup\h2reg.exe" -r -q -a CmdFile=D:\Development\Libraries\DevExpress VCL\ExpressMemData\Help\ExpressMemData.tmp
+_RunDir =           	D:\Development\Libraries\DevExpress VCL\Setup
+_ModuleName =       	h2reg.exe
+_ModuleDir =        	D:\Development\Libraries\DevExpress VCL\Setup
+_ModulePath =        	D:\Development\Libraries\DevExpress VCL\Setup\h2reg.exe
+Module Version =       	1.7.0.0
+-------------------------------------------------------------------------------
+_hhInstalled =      	YES
+_hhVerStr =         	6.2.10586.0
+_hhFriendlyVerStr = 	> 1.4a
+-------------------------------------------------------------------------------
+_ieInstalled =      	YES
+_ieVerStr =         	6.2.10586.0
+_ieFriendlyVerStr = 	Internet Explorer 6 (Windows Server 2003)
+===============================================================================
+MS Help 2.x Runtime Found: YES
+    2.7.61224.0, C:\Program Files (x86)\Common Files\Microsoft Shared\Help\hxds.dll
+    2.7.61224.0, C:\Program Files (x86)\Common Files\Microsoft Shared\Help\hxvz.dll
+NT Admin Log On: YES
+PC Language ID = nl
+-------------------------------------------------------------------------------
+Quiet Mode (-Q): Yes
+Registration Mode (-R): Yes
+UnRegistration Mode (-U): No
+Append Log Mode (-A): Yes
+No NT Admin Check (-N): No
+Merge Indexes Mode (-M): No
+Cmd Script File (CmdFile=): D:\Development\Libraries\DevExpress VCL\ExpressMemData\Help\ExpressMemData.tmp
+User Dir 1 (UserDir1=): 
+User Dir 2 (UserDir2=): 
+User Dir 3 (UserDir3=): 
+User Dir 4 (UserDir4=): 
+===============================================================================
+CmdFile = D:\Development\Libraries\DevExpress VCL\ExpressMemData\Help\ExpressMemData.tmp
+<windir> = C:\Windows
+<winsysdir> = C:\Windows\system32
+<programfilesdir> = C:\Program Files (x86)
+<exedir> = D:\Development\Libraries\DevExpress VCL\Setup
+<exedirparent> = D:\Development\Libraries\DevExpress VCL
+<cmdfiledir> = D:\Development\Libraries\DevExpress VCL\ExpressMemData\Help
+<cmdfiledirparent> = D:\Development\Libraries\DevExpress VCL\ExpressMemData
+<userdir1> = 
+<userdir1parent> = 
+<userdir2> = 
+<userdir2parent> = 
+<userdir3> = 
+<userdir3parent> = 
+<userdir4> = 
+<userdir4parent> = 
+-------------------------------------------------------------------------------
+[Reg_Namespace]
+ExpressMemData.rs_xe3|ExpressMemData.HxC|
+
+[Reg_Title]
+ExpressMemData.rs_xe3|ExpressMemData|1033|ExpressMemData.HxS|ExpressMemData.HxS||||||
+
+[Reg_Filter]
+ExpressMemData.rs_xe3|DevExpress VCL 13.1 Products|("DocSet"="DXVCL")
+ExpressMemData.rs_xe3|ExpressMemData|("DocSet"="ExpressMemData")
+
+[Reg_Plugin]
+embarcadero.rs_xe3|_DEFAULT|ExpressMemData.rs_xe3|_DEFAULT|
+
+[UnReg_Namespace]
+ExpressMemData.rs_xe3
+
+[UnReg_Title]
+ExpressMemData.rs_xe3|ExpressMemData|1033
+
+[UnReg_Plugin]
+embarcadero.rs_xe3|_DEFAULT|ExpressMemData.rs_xe3|_DEFAULT|
+
+[UnReg_Filter]
+ExpressMemData.rs_xe3|DevExpress VCL 13.1 Products
+ExpressMemData.rs_xe3|ExpressMemData
+-------------------------------------------------------------------------------
+12:18:52   [Reg_Namespace] - Lines To Process = 1
+12:18:52     <nsName>="ExpressMemData.rs_xe3"
+12:18:52     <nsColfile>="D:\Development\Libraries\DevExpress VCL\ExpressMemData\Help\ExpressMemData.HxC"
+12:18:52     <nsDesc>=""
+12:18:52     +Mode = Not Enabled
+12:18:52    -->Registered OK
+-------------------------------------------------------------------------------
+12:18:52   [Reg_Title] - Lines To Process = 1
+12:18:52     <nsName>="ExpressMemData.rs_xe3"
+12:18:52     <TitleID>="ExpressMemData"
+12:18:52     <LangID>="1033"
+12:18:52     <HxS_HelpFile>="D:\Development\Libraries\DevExpress VCL\ExpressMemData\Help\ExpressMemData.HxS"
+12:18:52     <HxI_IndexFile>="D:\Development\Libraries\DevExpress VCL\ExpressMemData\Help\ExpressMemData.HxS"
+12:18:52     <HxQ_QueryFile>=""
+12:18:52     <HxR_AttrQueryFile>=""
+12:18:52     <HxsMediaLoc>=""
+12:18:52     <HxqMediaLoc>=""
+12:18:52     <HxrMediaLoc>=""
+12:18:52     <SampleMediaLoc>=""
+12:18:52    -->Registered OK
+-------------------------------------------------------------------------------
+12:18:52   [Reg_Plugin] - Lines To Process = 1
+12:18:52     <nsName_Parent>="embarcadero.rs_xe3"
+12:18:52     <HxT_Parent>="_DEFAULT"
+12:18:52     <nsName_Child>="ExpressMemData.rs_xe3"
+12:18:52     <HxT_Child>="_DEFAULT"
+12:18:52     <HxA_Child>=""
+12:18:52   Plug Child "ExpressMemData.rs_xe3" into "embarcadero.rs_xe3"
+12:18:52    -->Registered OK
+-------------------------------------------------------------------------------
+12:18:52   [Reg_Filter] - Lines To Process = 2
+12:18:52     <nsName>="ExpressMemData.rs_xe3"
+12:18:52     <FilterName>="DevExpress VCL 13.1 Products"
+12:18:52     <FilterQueryStr>="("DocSet"="DXVCL")"
+12:18:52    -->Registered OK
+12:18:52   
+12:18:52     <nsName>="ExpressMemData.rs_xe3"
+12:18:52     <FilterName>="ExpressMemData"
+12:18:52     <FilterQueryStr>="("DocSet"="ExpressMemData")"
+12:18:52    -->Registered OK
+===============================================================================
+
+--END OF FILE--
+
+===============================================================================
+Log File:             	D:\Development\Libraries\DevExpress VCL\Setup\H2Reg_Log.txt
+Date:                 	9-2-2016 12:18:53
+Operating System:      	Windows NT 6.2 (Build 9200) No Service Pack
+SysLocale.DefaultLCID: 	0x0413 (1043)
+SysLocale.PriLangID:   	0x0013 (19)
+SysLocale.SubLangID:   	0x0001 (1)
+DecimalSeparator:      	,
+-------------------------------------------------------------------------------
+EXE Path =          	D:\Development\Libraries\DevExpress VCL\Setup\h2reg.exe
+EXE Version =       	1.7.0.0
+Cmdline Param(s) =  	-r | -q | -a | CmdFile=D:\Development\Libraries\DevExpress | VCL\ExpressSpellChecker\Help\ExpressSpellChecker.tmp
+Actual CmdLine =  	"D:\Development\Libraries\DevExpress VCL\Setup\h2reg.exe" -r -q -a CmdFile=D:\Development\Libraries\DevExpress VCL\ExpressSpellChecker\Help\ExpressSpellChecker.tmp
+_RunDir =           	D:\Development\Libraries\DevExpress VCL\Setup
+_ModuleName =       	h2reg.exe
+_ModuleDir =        	D:\Development\Libraries\DevExpress VCL\Setup
+_ModulePath =        	D:\Development\Libraries\DevExpress VCL\Setup\h2reg.exe
+Module Version =       	1.7.0.0
+-------------------------------------------------------------------------------
+_hhInstalled =      	YES
+_hhVerStr =         	6.2.10586.0
+_hhFriendlyVerStr = 	> 1.4a
+-------------------------------------------------------------------------------
+_ieInstalled =      	YES
+_ieVerStr =         	6.2.10586.0
+_ieFriendlyVerStr = 	Internet Explorer 6 (Windows Server 2003)
+===============================================================================
+MS Help 2.x Runtime Found: YES
+    2.7.61224.0, C:\Program Files (x86)\Common Files\Microsoft Shared\Help\hxds.dll
+    2.7.61224.0, C:\Program Files (x86)\Common Files\Microsoft Shared\Help\hxvz.dll
+NT Admin Log On: YES
+PC Language ID = nl
+-------------------------------------------------------------------------------
+Quiet Mode (-Q): Yes
+Registration Mode (-R): Yes
+UnRegistration Mode (-U): No
+Append Log Mode (-A): Yes
+No NT Admin Check (-N): No
+Merge Indexes Mode (-M): No
+Cmd Script File (CmdFile=): D:\Development\Libraries\DevExpress VCL\ExpressSpellChecker\Help\ExpressSpellChecker.tmp
+User Dir 1 (UserDir1=): 
+User Dir 2 (UserDir2=): 
+User Dir 3 (UserDir3=): 
+User Dir 4 (UserDir4=): 
+===============================================================================
+CmdFile = D:\Development\Libraries\DevExpress VCL\ExpressSpellChecker\Help\ExpressSpellChecker.tmp
+<windir> = C:\Windows
+<winsysdir> = C:\Windows\system32
+<programfilesdir> = C:\Program Files (x86)
+<exedir> = D:\Development\Libraries\DevExpress VCL\Setup
+<exedirparent> = D:\Development\Libraries\DevExpress VCL
+<cmdfiledir> = D:\Development\Libraries\DevExpress VCL\ExpressSpellChecker\Help
+<cmdfiledirparent> = D:\Development\Libraries\DevExpress VCL\ExpressSpellChecker
+<userdir1> = 
+<userdir1parent> = 
+<userdir2> = 
+<userdir2parent> = 
+<userdir3> = 
+<userdir3parent> = 
+<userdir4> = 
+<userdir4parent> = 
+-------------------------------------------------------------------------------
+[Reg_Namespace]
+ExpressSpellChecker.rs_xe3|ExpressSpellChecker.HxC|
+
+[Reg_Title]
+ExpressSpellChecker.rs_xe3|ExpressSpellChecker|1033|ExpressSpellChecker.HxS|ExpressSpellChecker.HxS||||||
+
+[Reg_Filter]
+ExpressSpellChecker.rs_xe3|DevExpress VCL 13.1 Products|("DocSet"="DXVCL")
+ExpressSpellChecker.rs_xe3|ExpressSpellChecker|("DocSet"="ExpressSpellChecker")
+
+[Reg_Plugin]
+embarcadero.rs_xe3|_DEFAULT|ExpressSpellChecker.rs_xe3|_DEFAULT|
+
+[UnReg_Namespace]
+ExpressSpellChecker.rs_xe3
+
+[UnReg_Title]
+ExpressSpellChecker.rs_xe3|ExpressSpellChecker|1033
+
+[UnReg_Plugin]
+embarcadero.rs_xe3|_DEFAULT|ExpressSpellChecker.rs_xe3|_DEFAULT|
+
+[UnReg_Filter]
+ExpressSpellChecker.rs_xe3|DevExpress VCL 13.1 Products
+ExpressSpellChecker.rs_xe3|ExpressSpellChecker
+-------------------------------------------------------------------------------
+12:18:53   [Reg_Namespace] - Lines To Process = 1
+12:18:53     <nsName>="ExpressSpellChecker.rs_xe3"
+12:18:53     <nsColfile>="D:\Development\Libraries\DevExpress VCL\ExpressSpellChecker\Help\ExpressSpellChecker.HxC"
+12:18:53     <nsDesc>=""
+12:18:53     +Mode = Not Enabled
+12:18:53    -->Registered OK
+-------------------------------------------------------------------------------
+12:18:53   [Reg_Title] - Lines To Process = 1
+12:18:53     <nsName>="ExpressSpellChecker.rs_xe3"
+12:18:53     <TitleID>="ExpressSpellChecker"
+12:18:53     <LangID>="1033"
+12:18:53     <HxS_HelpFile>="D:\Development\Libraries\DevExpress VCL\ExpressSpellChecker\Help\ExpressSpellChecker.HxS"
+12:18:53     <HxI_IndexFile>="D:\Development\Libraries\DevExpress VCL\ExpressSpellChecker\Help\ExpressSpellChecker.HxS"
+12:18:53     <HxQ_QueryFile>=""
+12:18:53     <HxR_AttrQueryFile>=""
+12:18:53     <HxsMediaLoc>=""
+12:18:53     <HxqMediaLoc>=""
+12:18:53     <HxrMediaLoc>=""
+12:18:53     <SampleMediaLoc>=""
+12:18:53    -->Registered OK
+-------------------------------------------------------------------------------
+12:18:53   [Reg_Plugin] - Lines To Process = 1
+12:18:53     <nsName_Parent>="embarcadero.rs_xe3"
+12:18:53     <HxT_Parent>="_DEFAULT"
+12:18:53     <nsName_Child>="ExpressSpellChecker.rs_xe3"
+12:18:53     <HxT_Child>="_DEFAULT"
+12:18:53     <HxA_Child>=""
+12:18:53   Plug Child "ExpressSpellChecker.rs_xe3" into "embarcadero.rs_xe3"
+12:18:53    -->Registered OK
+-------------------------------------------------------------------------------
+12:18:53   [Reg_Filter] - Lines To Process = 2
+12:18:53     <nsName>="ExpressSpellChecker.rs_xe3"
+12:18:53     <FilterName>="DevExpress VCL 13.1 Products"
+12:18:53     <FilterQueryStr>="("DocSet"="DXVCL")"
+12:18:54    -->Registered OK
+12:18:54   
+12:18:54     <nsName>="ExpressSpellChecker.rs_xe3"
+12:18:54     <FilterName>="ExpressSpellChecker"
+12:18:54     <FilterQueryStr>="("DocSet"="ExpressSpellChecker")"
+12:18:54    -->Registered OK
+===============================================================================
+
+--END OF FILE--
+
+===============================================================================
+Log File:             	D:\Development\Libraries\DevExpress VCL\Setup\H2Reg_Log.txt
+Date:                 	9-2-2016 12:18:55
+Operating System:      	Windows NT 6.2 (Build 9200) No Service Pack
+SysLocale.DefaultLCID: 	0x0413 (1043)
+SysLocale.PriLangID:   	0x0013 (19)
+SysLocale.SubLangID:   	0x0001 (1)
+DecimalSeparator:      	,
+-------------------------------------------------------------------------------
+EXE Path =          	D:\Development\Libraries\DevExpress VCL\Setup\h2reg.exe
+EXE Version =       	1.7.0.0
+Cmdline Param(s) =  	-r | -q | -a | CmdFile=D:\Development\Libraries\DevExpress | VCL\ExpressSpreadSheet\Help\ExpressSpreadSheet.tmp
+Actual CmdLine =  	"D:\Development\Libraries\DevExpress VCL\Setup\h2reg.exe" -r -q -a CmdFile=D:\Development\Libraries\DevExpress VCL\ExpressSpreadSheet\Help\ExpressSpreadSheet.tmp
+_RunDir =           	D:\Development\Libraries\DevExpress VCL\Setup
+_ModuleName =       	h2reg.exe
+_ModuleDir =        	D:\Development\Libraries\DevExpress VCL\Setup
+_ModulePath =        	D:\Development\Libraries\DevExpress VCL\Setup\h2reg.exe
+Module Version =       	1.7.0.0
+-------------------------------------------------------------------------------
+_hhInstalled =      	YES
+_hhVerStr =         	6.2.10586.0
+_hhFriendlyVerStr = 	> 1.4a
+-------------------------------------------------------------------------------
+_ieInstalled =      	YES
+_ieVerStr =         	6.2.10586.0
+_ieFriendlyVerStr = 	Internet Explorer 6 (Windows Server 2003)
+===============================================================================
+MS Help 2.x Runtime Found: YES
+    2.7.61224.0, C:\Program Files (x86)\Common Files\Microsoft Shared\Help\hxds.dll
+    2.7.61224.0, C:\Program Files (x86)\Common Files\Microsoft Shared\Help\hxvz.dll
+NT Admin Log On: YES
+PC Language ID = nl
+-------------------------------------------------------------------------------
+Quiet Mode (-Q): Yes
+Registration Mode (-R): Yes
+UnRegistration Mode (-U): No
+Append Log Mode (-A): Yes
+No NT Admin Check (-N): No
+Merge Indexes Mode (-M): No
+Cmd Script File (CmdFile=): D:\Development\Libraries\DevExpress VCL\ExpressSpreadSheet\Help\ExpressSpreadSheet.tmp
+User Dir 1 (UserDir1=): 
+User Dir 2 (UserDir2=): 
+User Dir 3 (UserDir3=): 
+User Dir 4 (UserDir4=): 
+===============================================================================
+CmdFile = D:\Development\Libraries\DevExpress VCL\ExpressSpreadSheet\Help\ExpressSpreadSheet.tmp
+<windir> = C:\Windows
+<winsysdir> = C:\Windows\system32
+<programfilesdir> = C:\Program Files (x86)
+<exedir> = D:\Development\Libraries\DevExpress VCL\Setup
+<exedirparent> = D:\Development\Libraries\DevExpress VCL
+<cmdfiledir> = D:\Development\Libraries\DevExpress VCL\ExpressSpreadSheet\Help
+<cmdfiledirparent> = D:\Development\Libraries\DevExpress VCL\ExpressSpreadSheet
+<userdir1> = 
+<userdir1parent> = 
+<userdir2> = 
+<userdir2parent> = 
+<userdir3> = 
+<userdir3parent> = 
+<userdir4> = 
+<userdir4parent> = 
+-------------------------------------------------------------------------------
+[Reg_Namespace]
+ExpressSpreadSheet.rs_xe3|ExpressSpreadSheet.HxC|
+
+[Reg_Title]
+ExpressSpreadSheet.rs_xe3|ExpressSpreadSheet|1033|ExpressSpreadSheet.HxS|ExpressSpreadSheet.HxS||||||
+
+[Reg_Filter]
+ExpressSpreadSheet.rs_xe3|DevExpress VCL 13.1 Products|("DocSet"="DXVCL")
+ExpressSpreadSheet.rs_xe3|ExpressSpreadSheet|("DocSet"="ExpressSpreadSheet")
+
+[Reg_Plugin]
+embarcadero.rs_xe3|_DEFAULT|ExpressSpreadSheet.rs_xe3|_DEFAULT|
+
+[UnReg_Namespace]
+ExpressSpreadSheet.rs_xe3
+
+[UnReg_Title]
+ExpressSpreadSheet.rs_xe3|ExpressSpreadSheet|1033
+
+[UnReg_Plugin]
+embarcadero.rs_xe3|_DEFAULT|ExpressSpreadSheet.rs_xe3|_DEFAULT|
+
+[UnReg_Filter]
+ExpressSpreadSheet.rs_xe3|DevExpress VCL 13.1 Products
+ExpressSpreadSheet.rs_xe3|ExpressSpreadSheet
+-------------------------------------------------------------------------------
+12:18:55   [Reg_Namespace] - Lines To Process = 1
+12:18:55     <nsName>="ExpressSpreadSheet.rs_xe3"
+12:18:55     <nsColfile>="D:\Development\Libraries\DevExpress VCL\ExpressSpreadSheet\Help\ExpressSpreadSheet.HxC"
+12:18:55     <nsDesc>=""
+12:18:55     +Mode = Not Enabled
+12:18:55    -->Registered OK
+-------------------------------------------------------------------------------
+12:18:55   [Reg_Title] - Lines To Process = 1
+12:18:55     <nsName>="ExpressSpreadSheet.rs_xe3"
+12:18:55     <TitleID>="ExpressSpreadSheet"
+12:18:55     <LangID>="1033"
+12:18:55     <HxS_HelpFile>="D:\Development\Libraries\DevExpress VCL\ExpressSpreadSheet\Help\ExpressSpreadSheet.HxS"
+12:18:55     <HxI_IndexFile>="D:\Development\Libraries\DevExpress VCL\ExpressSpreadSheet\Help\ExpressSpreadSheet.HxS"
+12:18:55     <HxQ_QueryFile>=""
+12:18:55     <HxR_AttrQueryFile>=""
+12:18:55     <HxsMediaLoc>=""
+12:18:55     <HxqMediaLoc>=""
+12:18:55     <HxrMediaLoc>=""
+12:18:55     <SampleMediaLoc>=""
+12:18:55    -->Registered OK
+-------------------------------------------------------------------------------
+12:18:55   [Reg_Plugin] - Lines To Process = 1
+12:18:55     <nsName_Parent>="embarcadero.rs_xe3"
+12:18:55     <HxT_Parent>="_DEFAULT"
+12:18:55     <nsName_Child>="ExpressSpreadSheet.rs_xe3"
+12:18:55     <HxT_Child>="_DEFAULT"
+12:18:55     <HxA_Child>=""
+12:18:55   Plug Child "ExpressSpreadSheet.rs_xe3" into "embarcadero.rs_xe3"
+12:18:55    -->Registered OK
+-------------------------------------------------------------------------------
+12:18:55   [Reg_Filter] - Lines To Process = 2
+12:18:55     <nsName>="ExpressSpreadSheet.rs_xe3"
+12:18:55     <FilterName>="DevExpress VCL 13.1 Products"
+12:18:55     <FilterQueryStr>="("DocSet"="DXVCL")"
+12:18:55    -->Registered OK
+12:18:55   
+12:18:55     <nsName>="ExpressSpreadSheet.rs_xe3"
+12:18:55     <FilterName>="ExpressSpreadSheet"
+12:18:55     <FilterQueryStr>="("DocSet"="ExpressSpreadSheet")"
+12:18:55    -->Registered OK
+===============================================================================
+
+--END OF FILE--
+
+===============================================================================
+Log File:             	D:\Development\Libraries\DevExpress VCL\Setup\H2Reg_Log.txt
+Date:                 	9-2-2016 12:18:56
+Operating System:      	Windows NT 6.2 (Build 9200) No Service Pack
+SysLocale.DefaultLCID: 	0x0413 (1043)
+SysLocale.PriLangID:   	0x0013 (19)
+SysLocale.SubLangID:   	0x0001 (1)
+DecimalSeparator:      	,
+-------------------------------------------------------------------------------
+EXE Path =          	D:\Development\Libraries\DevExpress VCL\Setup\h2reg.exe
+EXE Version =       	1.7.0.0
+Cmdline Param(s) =  	-r | -q | -a | CmdFile=D:\Development\Libraries\DevExpress | VCL\ExpressTile | Control\Help\ExpressTileControl.tmp
+Actual CmdLine =  	"D:\Development\Libraries\DevExpress VCL\Setup\h2reg.exe" -r -q -a CmdFile=D:\Development\Libraries\DevExpress VCL\ExpressTile Control\Help\ExpressTileControl.tmp
+_RunDir =           	D:\Development\Libraries\DevExpress VCL\Setup
+_ModuleName =       	h2reg.exe
+_ModuleDir =        	D:\Development\Libraries\DevExpress VCL\Setup
+_ModulePath =        	D:\Development\Libraries\DevExpress VCL\Setup\h2reg.exe
+Module Version =       	1.7.0.0
+-------------------------------------------------------------------------------
+_hhInstalled =      	YES
+_hhVerStr =         	6.2.10586.0
+_hhFriendlyVerStr = 	> 1.4a
+-------------------------------------------------------------------------------
+_ieInstalled =      	YES
+_ieVerStr =         	6.2.10586.0
+_ieFriendlyVerStr = 	Internet Explorer 6 (Windows Server 2003)
+===============================================================================
+MS Help 2.x Runtime Found: YES
+    2.7.61224.0, C:\Program Files (x86)\Common Files\Microsoft Shared\Help\hxds.dll
+    2.7.61224.0, C:\Program Files (x86)\Common Files\Microsoft Shared\Help\hxvz.dll
+NT Admin Log On: YES
+PC Language ID = nl
+-------------------------------------------------------------------------------
+Quiet Mode (-Q): Yes
+Registration Mode (-R): Yes
+UnRegistration Mode (-U): No
+Append Log Mode (-A): Yes
+No NT Admin Check (-N): No
+Merge Indexes Mode (-M): No
+Cmd Script File (CmdFile=): D:\Development\Libraries\DevExpress VCL\ExpressTile Control\Help\ExpressTileControl.tmp
+User Dir 1 (UserDir1=): 
+User Dir 2 (UserDir2=): 
+User Dir 3 (UserDir3=): 
+User Dir 4 (UserDir4=): 
+===============================================================================
+CmdFile = D:\Development\Libraries\DevExpress VCL\ExpressTile Control\Help\ExpressTileControl.tmp
+<windir> = C:\Windows
+<winsysdir> = C:\Windows\system32
+<programfilesdir> = C:\Program Files (x86)
+<exedir> = D:\Development\Libraries\DevExpress VCL\Setup
+<exedirparent> = D:\Development\Libraries\DevExpress VCL
+<cmdfiledir> = D:\Development\Libraries\DevExpress VCL\ExpressTile Control\Help
+<cmdfiledirparent> = D:\Development\Libraries\DevExpress VCL\ExpressTile Control
+<userdir1> = 
+<userdir1parent> = 
+<userdir2> = 
+<userdir2parent> = 
+<userdir3> = 
+<userdir3parent> = 
+<userdir4> = 
+<userdir4parent> = 
+-------------------------------------------------------------------------------
+[Reg_Namespace]
+ExpressTileControl.rs_xe3|ExpressTileControl.HxC|
+
+[Reg_Title]
+ExpressTileControl.rs_xe3|ExpressTileControl|1033|ExpressTileControl.HxS|ExpressTileControl.HxS||||||
+
+[Reg_Filter]
+ExpressTileControl.rs_xe3|DevExpress VCL 13.1 Products|("DocSet"="DXVCL")
+ExpressTileControl.rs_xe3|ExpressTile Control|("DocSet"="ExpressTileControl")
+
+[Reg_Plugin]
+embarcadero.rs_xe3|_DEFAULT|ExpressTileControl.rs_xe3|_DEFAULT|
+
+[UnReg_Namespace]
+ExpressTileControl.rs_xe3
+
+[UnReg_Title]
+ExpressTileControl.rs_xe3|ExpressTileControl|1033
+
+[UnReg_Plugin]
+embarcadero.rs_xe3|_DEFAULT|ExpressTileControl.rs_xe3|_DEFAULT|
+
+[UnReg_Filter]
+ExpressTileControl.rs_xe3|DevExpress VCL 13.1 Products
+ExpressTileControl.rs_xe3|ExpressTile Control
+-------------------------------------------------------------------------------
+12:18:57   [Reg_Namespace] - Lines To Process = 1
+12:18:57     <nsName>="ExpressTileControl.rs_xe3"
+12:18:57     <nsColfile>="D:\Development\Libraries\DevExpress VCL\ExpressTile Control\Help\ExpressTileControl.HxC"
+12:18:57     <nsDesc>=""
+12:18:57     +Mode = Not Enabled
+12:18:57    -->Registered OK
+-------------------------------------------------------------------------------
+12:18:57   [Reg_Title] - Lines To Process = 1
+12:18:57     <nsName>="ExpressTileControl.rs_xe3"
+12:18:57     <TitleID>="ExpressTileControl"
+12:18:57     <LangID>="1033"
+12:18:57     <HxS_HelpFile>="D:\Development\Libraries\DevExpress VCL\ExpressTile Control\Help\ExpressTileControl.HxS"
+12:18:57     <HxI_IndexFile>="D:\Development\Libraries\DevExpress VCL\ExpressTile Control\Help\ExpressTileControl.HxS"
+12:18:57     <HxQ_QueryFile>=""
+12:18:57     <HxR_AttrQueryFile>=""
+12:18:57     <HxsMediaLoc>=""
+12:18:57     <HxqMediaLoc>=""
+12:18:57     <HxrMediaLoc>=""
+12:18:57     <SampleMediaLoc>=""
+12:18:57    -->Registered OK
+-------------------------------------------------------------------------------
+12:18:57   [Reg_Plugin] - Lines To Process = 1
+12:18:57     <nsName_Parent>="embarcadero.rs_xe3"
+12:18:57     <HxT_Parent>="_DEFAULT"
+12:18:57     <nsName_Child>="ExpressTileControl.rs_xe3"
+12:18:57     <HxT_Child>="_DEFAULT"
+12:18:57     <HxA_Child>=""
+12:18:57   Plug Child "ExpressTileControl.rs_xe3" into "embarcadero.rs_xe3"
+12:18:57    -->Registered OK
+-------------------------------------------------------------------------------
+12:18:57   [Reg_Filter] - Lines To Process = 2
+12:18:57     <nsName>="ExpressTileControl.rs_xe3"
+12:18:57     <FilterName>="DevExpress VCL 13.1 Products"
+12:18:57     <FilterQueryStr>="("DocSet"="DXVCL")"
+12:18:57    -->Registered OK
+12:18:57   
+12:18:57     <nsName>="ExpressTileControl.rs_xe3"
+12:18:57     <FilterName>="ExpressTile Control"
+12:18:57     <FilterQueryStr>="("DocSet"="ExpressTileControl")"
+12:18:57    -->Registered OK
+===============================================================================
+
+--END OF FILE--
+
+===============================================================================
+Log File:             	D:\Development\Libraries\DevExpress VCL\Setup\H2Reg_Log.txt
+Date:                 	9-2-2016 12:18:58
+Operating System:      	Windows NT 6.2 (Build 9200) No Service Pack
+SysLocale.DefaultLCID: 	0x0413 (1043)
+SysLocale.PriLangID:   	0x0013 (19)
+SysLocale.SubLangID:   	0x0001 (1)
+DecimalSeparator:      	,
+-------------------------------------------------------------------------------
+EXE Path =          	D:\Development\Libraries\DevExpress VCL\Setup\h2reg.exe
+EXE Version =       	1.7.0.0
+Cmdline Param(s) =  	-r | -q | -a | CmdFile=D:\Development\Libraries\DevExpress | VCL\ExpressNavBar\Help\ExpressNavBar.tmp
+Actual CmdLine =  	"D:\Development\Libraries\DevExpress VCL\Setup\h2reg.exe" -r -q -a CmdFile=D:\Development\Libraries\DevExpress VCL\ExpressNavBar\Help\ExpressNavBar.tmp
+_RunDir =           	D:\Development\Libraries\DevExpress VCL\Setup
+_ModuleName =       	h2reg.exe
+_ModuleDir =        	D:\Development\Libraries\DevExpress VCL\Setup
+_ModulePath =        	D:\Development\Libraries\DevExpress VCL\Setup\h2reg.exe
+Module Version =       	1.7.0.0
+-------------------------------------------------------------------------------
+_hhInstalled =      	YES
+_hhVerStr =         	6.2.10586.0
+_hhFriendlyVerStr = 	> 1.4a
+-------------------------------------------------------------------------------
+_ieInstalled =      	YES
+_ieVerStr =         	6.2.10586.0
+_ieFriendlyVerStr = 	Internet Explorer 6 (Windows Server 2003)
+===============================================================================
+MS Help 2.x Runtime Found: YES
+    2.7.61224.0, C:\Program Files (x86)\Common Files\Microsoft Shared\Help\hxds.dll
+    2.7.61224.0, C:\Program Files (x86)\Common Files\Microsoft Shared\Help\hxvz.dll
+NT Admin Log On: YES
+PC Language ID = nl
+-------------------------------------------------------------------------------
+Quiet Mode (-Q): Yes
+Registration Mode (-R): Yes
+UnRegistration Mode (-U): No
+Append Log Mode (-A): Yes
+No NT Admin Check (-N): No
+Merge Indexes Mode (-M): No
+Cmd Script File (CmdFile=): D:\Development\Libraries\DevExpress VCL\ExpressNavBar\Help\ExpressNavBar.tmp
+User Dir 1 (UserDir1=): 
+User Dir 2 (UserDir2=): 
+User Dir 3 (UserDir3=): 
+User Dir 4 (UserDir4=): 
+===============================================================================
+CmdFile = D:\Development\Libraries\DevExpress VCL\ExpressNavBar\Help\ExpressNavBar.tmp
+<windir> = C:\Windows
+<winsysdir> = C:\Windows\system32
+<programfilesdir> = C:\Program Files (x86)
+<exedir> = D:\Development\Libraries\DevExpress VCL\Setup
+<exedirparent> = D:\Development\Libraries\DevExpress VCL
+<cmdfiledir> = D:\Development\Libraries\DevExpress VCL\ExpressNavBar\Help
+<cmdfiledirparent> = D:\Development\Libraries\DevExpress VCL\ExpressNavBar
+<userdir1> = 
+<userdir1parent> = 
+<userdir2> = 
+<userdir2parent> = 
+<userdir3> = 
+<userdir3parent> = 
+<userdir4> = 
+<userdir4parent> = 
+-------------------------------------------------------------------------------
+[Reg_Namespace]
+ExpressNavBar.rs_xe3|ExpressNavBar.HxC|
+
+[Reg_Title]
+ExpressNavBar.rs_xe3|ExpressNavBar|1033|ExpressNavBar.HxS|ExpressNavBar.HxS||||||
+
+[Reg_Filter]
+ExpressNavBar.rs_xe3|DevExpress VCL 13.1 Products|("DocSet"="DXVCL")
+ExpressNavBar.rs_xe3|ExpressNavBar Suite|("DocSet"="ExpressNavBar")
+
+[Reg_Plugin]
+embarcadero.rs_xe3|_DEFAULT|ExpressNavBar.rs_xe3|_DEFAULT|
+
+[UnReg_Namespace]
+ExpressNavBar.rs_xe3
+
+[UnReg_Title]
+ExpressNavBar.rs_xe3|ExpressNavBar|1033
+
+[UnReg_Plugin]
+embarcadero.rs_xe3|_DEFAULT|ExpressNavBar.rs_xe3|_DEFAULT|
+
+[UnReg_Filter]
+ExpressNavBar.rs_xe3|DevExpress VCL 13.1 Products
+ExpressNavBar.rs_xe3|ExpressNavBar Suite
+-------------------------------------------------------------------------------
+12:18:59   [Reg_Namespace] - Lines To Process = 1
+12:18:59     <nsName>="ExpressNavBar.rs_xe3"
+12:18:59     <nsColfile>="D:\Development\Libraries\DevExpress VCL\ExpressNavBar\Help\ExpressNavBar.HxC"
+12:18:59     <nsDesc>=""
+12:18:59     +Mode = Not Enabled
+12:18:59    -->Registered OK
+-------------------------------------------------------------------------------
+12:18:59   [Reg_Title] - Lines To Process = 1
+12:18:59     <nsName>="ExpressNavBar.rs_xe3"
+12:18:59     <TitleID>="ExpressNavBar"
+12:18:59     <LangID>="1033"
+12:18:59     <HxS_HelpFile>="D:\Development\Libraries\DevExpress VCL\ExpressNavBar\Help\ExpressNavBar.HxS"
+12:18:59     <HxI_IndexFile>="D:\Development\Libraries\DevExpress VCL\ExpressNavBar\Help\ExpressNavBar.HxS"
+12:18:59     <HxQ_QueryFile>=""
+12:18:59     <HxR_AttrQueryFile>=""
+12:18:59     <HxsMediaLoc>=""
+12:18:59     <HxqMediaLoc>=""
+12:18:59     <HxrMediaLoc>=""
+12:18:59     <SampleMediaLoc>=""
+12:18:59    -->Registered OK
+-------------------------------------------------------------------------------
+12:18:59   [Reg_Plugin] - Lines To Process = 1
+12:18:59     <nsName_Parent>="embarcadero.rs_xe3"
+12:18:59     <HxT_Parent>="_DEFAULT"
+12:18:59     <nsName_Child>="ExpressNavBar.rs_xe3"
+12:18:59     <HxT_Child>="_DEFAULT"
+12:18:59     <HxA_Child>=""
+12:18:59   Plug Child "ExpressNavBar.rs_xe3" into "embarcadero.rs_xe3"
+12:18:59    -->Registered OK
+-------------------------------------------------------------------------------
+12:18:59   [Reg_Filter] - Lines To Process = 2
+12:18:59     <nsName>="ExpressNavBar.rs_xe3"
+12:18:59     <FilterName>="DevExpress VCL 13.1 Products"
+12:18:59     <FilterQueryStr>="("DocSet"="DXVCL")"
+12:18:59    -->Registered OK
+12:18:59   
+12:18:59     <nsName>="ExpressNavBar.rs_xe3"
+12:18:59     <FilterName>="ExpressNavBar Suite"
+12:18:59     <FilterQueryStr>="("DocSet"="ExpressNavBar")"
+12:18:59    -->Registered OK
+===============================================================================
+
+--END OF FILE--
+
+===============================================================================
+Log File:             	D:\Development\Libraries\DevExpress VCL\Setup\H2Reg_Log.txt
+Date:                 	9-2-2016 12:19:11
+Operating System:      	Windows NT 6.2 (Build 9200) No Service Pack
+SysLocale.DefaultLCID: 	0x0413 (1043)
+SysLocale.PriLangID:   	0x0013 (19)
+SysLocale.SubLangID:   	0x0001 (1)
+DecimalSeparator:      	,
+-------------------------------------------------------------------------------
+EXE Path =          	D:\Development\Libraries\DevExpress VCL\Setup\h2reg.exe
+EXE Version =       	1.7.0.0
+Cmdline Param(s) =  	-r | -q | -a | CmdFile=D:\Development\Libraries\DevExpress | VCL\ExpressSkins | Library\Help\ExpressSkinsLibrary.tmp
+Actual CmdLine =  	"D:\Development\Libraries\DevExpress VCL\Setup\h2reg.exe" -r -q -a CmdFile=D:\Development\Libraries\DevExpress VCL\ExpressSkins Library\Help\ExpressSkinsLibrary.tmp
+_RunDir =           	D:\Development\Libraries\DevExpress VCL\Setup
+_ModuleName =       	h2reg.exe
+_ModuleDir =        	D:\Development\Libraries\DevExpress VCL\Setup
+_ModulePath =        	D:\Development\Libraries\DevExpress VCL\Setup\h2reg.exe
+Module Version =       	1.7.0.0
+-------------------------------------------------------------------------------
+_hhInstalled =      	YES
+_hhVerStr =         	6.2.10586.0
+_hhFriendlyVerStr = 	> 1.4a
+-------------------------------------------------------------------------------
+_ieInstalled =      	YES
+_ieVerStr =         	6.2.10586.0
+_ieFriendlyVerStr = 	Internet Explorer 6 (Windows Server 2003)
+===============================================================================
+MS Help 2.x Runtime Found: YES
+    2.7.61224.0, C:\Program Files (x86)\Common Files\Microsoft Shared\Help\hxds.dll
+    2.7.61224.0, C:\Program Files (x86)\Common Files\Microsoft Shared\Help\hxvz.dll
+NT Admin Log On: YES
+PC Language ID = nl
+-------------------------------------------------------------------------------
+Quiet Mode (-Q): Yes
+Registration Mode (-R): Yes
+UnRegistration Mode (-U): No
+Append Log Mode (-A): Yes
+No NT Admin Check (-N): No
+Merge Indexes Mode (-M): No
+Cmd Script File (CmdFile=): D:\Development\Libraries\DevExpress VCL\ExpressSkins Library\Help\ExpressSkinsLibrary.tmp
+User Dir 1 (UserDir1=): 
+User Dir 2 (UserDir2=): 
+User Dir 3 (UserDir3=): 
+User Dir 4 (UserDir4=): 
+===============================================================================
+CmdFile = D:\Development\Libraries\DevExpress VCL\ExpressSkins Library\Help\ExpressSkinsLibrary.tmp
+<windir> = C:\Windows
+<winsysdir> = C:\Windows\system32
+<programfilesdir> = C:\Program Files (x86)
+<exedir> = D:\Development\Libraries\DevExpress VCL\Setup
+<exedirparent> = D:\Development\Libraries\DevExpress VCL
+<cmdfiledir> = D:\Development\Libraries\DevExpress VCL\ExpressSkins Library\Help
+<cmdfiledirparent> = D:\Development\Libraries\DevExpress VCL\ExpressSkins Library
+<userdir1> = 
+<userdir1parent> = 
+<userdir2> = 
+<userdir2parent> = 
+<userdir3> = 
+<userdir3parent> = 
+<userdir4> = 
+<userdir4parent> = 
+-------------------------------------------------------------------------------
+[Reg_Namespace]
+ExpressSkinsLibrary.rs_xe3|ExpressSkinsLibrary.HxC|
+
+[Reg_Title]
+ExpressSkinsLibrary.rs_xe3|ExpressSkinsLibrary|1033|ExpressSkinsLibrary.HxS|ExpressSkinsLibrary.HxS||||||
+
+[Reg_Filter]
+ExpressSkinsLibrary.rs_xe3|DevExpress VCL 13.1 Products|("DocSet"="DXVCL")
+ExpressSkinsLibrary.rs_xe3|ExpressSkins Library|("DocSet"="ExpressSkinsLibrary")
+
+[Reg_Plugin]
+embarcadero.rs_xe3|_DEFAULT|ExpressSkinsLibrary.rs_xe3|_DEFAULT|
+
+[UnReg_Namespace]
+ExpressSkinsLibrary.rs_xe3
+
+[UnReg_Title]
+ExpressSkinsLibrary.rs_xe3|ExpressSkinsLibrary|1033
+
+[UnReg_Plugin]
+embarcadero.rs_xe3|_DEFAULT|ExpressSkinsLibrary.rs_xe3|_DEFAULT|
+
+[UnReg_Filter]
+ExpressSkinsLibrary.rs_xe3|DevExpress VCL 13.1 Products
+ExpressSkinsLibrary.rs_xe3|ExpressSkins Library
+-------------------------------------------------------------------------------
+12:19:12   [Reg_Namespace] - Lines To Process = 1
+12:19:12     <nsName>="ExpressSkinsLibrary.rs_xe3"
+12:19:12     <nsColfile>="D:\Development\Libraries\DevExpress VCL\ExpressSkins Library\Help\ExpressSkinsLibrary.HxC"
+12:19:12     <nsDesc>=""
+12:19:12     +Mode = Not Enabled
+12:19:12    -->Registered OK
+-------------------------------------------------------------------------------
+12:19:12   [Reg_Title] - Lines To Process = 1
+12:19:12     <nsName>="ExpressSkinsLibrary.rs_xe3"
+12:19:12     <TitleID>="ExpressSkinsLibrary"
+12:19:12     <LangID>="1033"
+12:19:12     <HxS_HelpFile>="D:\Development\Libraries\DevExpress VCL\ExpressSkins Library\Help\ExpressSkinsLibrary.HxS"
+12:19:12     <HxI_IndexFile>="D:\Development\Libraries\DevExpress VCL\ExpressSkins Library\Help\ExpressSkinsLibrary.HxS"
+12:19:12     <HxQ_QueryFile>=""
+12:19:12     <HxR_AttrQueryFile>=""
+12:19:12     <HxsMediaLoc>=""
+12:19:12     <HxqMediaLoc>=""
+12:19:12     <HxrMediaLoc>=""
+12:19:12     <SampleMediaLoc>=""
+12:19:12    -->Registered OK
+-------------------------------------------------------------------------------
+12:19:12   [Reg_Plugin] - Lines To Process = 1
+12:19:12     <nsName_Parent>="embarcadero.rs_xe3"
+12:19:12     <HxT_Parent>="_DEFAULT"
+12:19:12     <nsName_Child>="ExpressSkinsLibrary.rs_xe3"
+12:19:12     <HxT_Child>="_DEFAULT"
+12:19:12     <HxA_Child>=""
+12:19:12   Plug Child "ExpressSkinsLibrary.rs_xe3" into "embarcadero.rs_xe3"
+12:19:12    -->Registered OK
+-------------------------------------------------------------------------------
+12:19:12   [Reg_Filter] - Lines To Process = 2
+12:19:12     <nsName>="ExpressSkinsLibrary.rs_xe3"
+12:19:12     <FilterName>="DevExpress VCL 13.1 Products"
+12:19:12     <FilterQueryStr>="("DocSet"="DXVCL")"
+12:19:12    -->Registered OK
+12:19:12   
+12:19:12     <nsName>="ExpressSkinsLibrary.rs_xe3"
+12:19:12     <FilterName>="ExpressSkins Library"
+12:19:12     <FilterQueryStr>="("DocSet"="ExpressSkinsLibrary")"
+12:19:12    -->Registered OK
+===============================================================================
+
+--END OF FILE--
+
+===============================================================================
+Log File:             	D:\Development\Libraries\DevExpress VCL\Setup\H2Reg_Log.txt
+Date:                 	9-2-2016 12:19:19
+Operating System:      	Windows NT 6.2 (Build 9200) No Service Pack
+SysLocale.DefaultLCID: 	0x0413 (1043)
+SysLocale.PriLangID:   	0x0013 (19)
+SysLocale.SubLangID:   	0x0001 (1)
+DecimalSeparator:      	,
+-------------------------------------------------------------------------------
+EXE Path =          	D:\Development\Libraries\DevExpress VCL\Setup\h2reg.exe
+EXE Version =       	1.7.0.0
+Cmdline Param(s) =  	-r | -q | -a | CmdFile=D:\Development\Libraries\DevExpress | VCL\ExpressPrinting | System\Help\ExpressPrintingSystem.tmp
+Actual CmdLine =  	"D:\Development\Libraries\DevExpress VCL\Setup\h2reg.exe" -r -q -a CmdFile=D:\Development\Libraries\DevExpress VCL\ExpressPrinting System\Help\ExpressPrintingSystem.tmp
+_RunDir =           	D:\Development\Libraries\DevExpress VCL\Setup
+_ModuleName =       	h2reg.exe
+_ModuleDir =        	D:\Development\Libraries\DevExpress VCL\Setup
+_ModulePath =        	D:\Development\Libraries\DevExpress VCL\Setup\h2reg.exe
+Module Version =       	1.7.0.0
+-------------------------------------------------------------------------------
+_hhInstalled =      	YES
+_hhVerStr =         	6.2.10586.0
+_hhFriendlyVerStr = 	> 1.4a
+-------------------------------------------------------------------------------
+_ieInstalled =      	YES
+_ieVerStr =         	6.2.10586.0
+_ieFriendlyVerStr = 	Internet Explorer 6 (Windows Server 2003)
+===============================================================================
+MS Help 2.x Runtime Found: YES
+    2.7.61224.0, C:\Program Files (x86)\Common Files\Microsoft Shared\Help\hxds.dll
+    2.7.61224.0, C:\Program Files (x86)\Common Files\Microsoft Shared\Help\hxvz.dll
+NT Admin Log On: YES
+PC Language ID = nl
+-------------------------------------------------------------------------------
+Quiet Mode (-Q): Yes
+Registration Mode (-R): Yes
+UnRegistration Mode (-U): No
+Append Log Mode (-A): Yes
+No NT Admin Check (-N): No
+Merge Indexes Mode (-M): No
+Cmd Script File (CmdFile=): D:\Development\Libraries\DevExpress VCL\ExpressPrinting System\Help\ExpressPrintingSystem.tmp
+User Dir 1 (UserDir1=): 
+User Dir 2 (UserDir2=): 
+User Dir 3 (UserDir3=): 
+User Dir 4 (UserDir4=): 
+===============================================================================
+CmdFile = D:\Development\Libraries\DevExpress VCL\ExpressPrinting System\Help\ExpressPrintingSystem.tmp
+<windir> = C:\Windows
+<winsysdir> = C:\Windows\system32
+<programfilesdir> = C:\Program Files (x86)
+<exedir> = D:\Development\Libraries\DevExpress VCL\Setup
+<exedirparent> = D:\Development\Libraries\DevExpress VCL
+<cmdfiledir> = D:\Development\Libraries\DevExpress VCL\ExpressPrinting System\Help
+<cmdfiledirparent> = D:\Development\Libraries\DevExpress VCL\ExpressPrinting System
+<userdir1> = 
+<userdir1parent> = 
+<userdir2> = 
+<userdir2parent> = 
+<userdir3> = 
+<userdir3parent> = 
+<userdir4> = 
+<userdir4parent> = 
+-------------------------------------------------------------------------------
+[Reg_Namespace]
+ExpressPrintingSystem.rs_xe3|ExpressPrintingSystem.HxC|
+
+[Reg_Title]
+ExpressPrintingSystem.rs_xe3|ExpressPrintingSystem|1033|ExpressPrintingSystem.HxS|ExpressPrintingSystem.HxS||||||
+
+[Reg_Filter]
+ExpressPrintingSystem.rs_xe3|DevExpress VCL 13.1 Products|("DocSet"="DXVCL")
+ExpressPrintingSystem.rs_xe3|ExpressPrinting System|("DocSet"="ExpressPrintingSystem")
+
+[Reg_Plugin]
+embarcadero.rs_xe3|_DEFAULT|ExpressPrintingSystem.rs_xe3|_DEFAULT|
+
+[UnReg_Namespace]
+ExpressPrintingSystem.rs_xe3
+
+[UnReg_Title]
+ExpressPrintingSystem.rs_xe3|ExpressPrintingSystem|1033
+
+[UnReg_Plugin]
+embarcadero.rs_xe3|_DEFAULT|ExpressPrintingSystem.rs_xe3|_DEFAULT|
+
+[UnReg_Filter]
+ExpressPrintingSystem.rs_xe3|DevExpress VCL 13.1 Products
+ExpressPrintingSystem.rs_xe3|ExpressPrinting System
+-------------------------------------------------------------------------------
+12:19:19   [Reg_Namespace] - Lines To Process = 1
+12:19:19     <nsName>="ExpressPrintingSystem.rs_xe3"
+12:19:19     <nsColfile>="D:\Development\Libraries\DevExpress VCL\ExpressPrinting System\Help\ExpressPrintingSystem.HxC"
+12:19:19     <nsDesc>=""
+12:19:19     +Mode = Not Enabled
+12:19:19    -->Registered OK
+-------------------------------------------------------------------------------
+12:19:19   [Reg_Title] - Lines To Process = 1
+12:19:19     <nsName>="ExpressPrintingSystem.rs_xe3"
+12:19:19     <TitleID>="ExpressPrintingSystem"
+12:19:19     <LangID>="1033"
+12:19:19     <HxS_HelpFile>="D:\Development\Libraries\DevExpress VCL\ExpressPrinting System\Help\ExpressPrintingSystem.HxS"
+12:19:19     <HxI_IndexFile>="D:\Development\Libraries\DevExpress VCL\ExpressPrinting System\Help\ExpressPrintingSystem.HxS"
+12:19:19     <HxQ_QueryFile>=""
+12:19:19     <HxR_AttrQueryFile>=""
+12:19:19     <HxsMediaLoc>=""
+12:19:19     <HxqMediaLoc>=""
+12:19:19     <HxrMediaLoc>=""
+12:19:19     <SampleMediaLoc>=""
+12:19:20    -->Registered OK
+-------------------------------------------------------------------------------
+12:19:20   [Reg_Plugin] - Lines To Process = 1
+12:19:20     <nsName_Parent>="embarcadero.rs_xe3"
+12:19:20     <HxT_Parent>="_DEFAULT"
+12:19:20     <nsName_Child>="ExpressPrintingSystem.rs_xe3"
+12:19:20     <HxT_Child>="_DEFAULT"
+12:19:20     <HxA_Child>=""
+12:19:20   Plug Child "ExpressPrintingSystem.rs_xe3" into "embarcadero.rs_xe3"
+12:19:20    -->Registered OK
+-------------------------------------------------------------------------------
+12:19:20   [Reg_Filter] - Lines To Process = 2
+12:19:20     <nsName>="ExpressPrintingSystem.rs_xe3"
+12:19:20     <FilterName>="DevExpress VCL 13.1 Products"
+12:19:20     <FilterQueryStr>="("DocSet"="DXVCL")"
+12:19:20    -->Registered OK
+12:19:20   
+12:19:20     <nsName>="ExpressPrintingSystem.rs_xe3"
+12:19:20     <FilterName>="ExpressPrinting System"
+12:19:20     <FilterQueryStr>="("DocSet"="ExpressPrintingSystem")"
+12:19:20    -->Registered OK
+===============================================================================
+
+--END OF FILE--
+
+===============================================================================
+Log File:             	D:\Development\Libraries\DevExpress VCL\Setup\H2Reg_Log.txt
+Date:                 	9-2-2016 12:19:22
+Operating System:      	Windows NT 6.2 (Build 9200) No Service Pack
+SysLocale.DefaultLCID: 	0x0413 (1043)
+SysLocale.PriLangID:   	0x0013 (19)
+SysLocale.SubLangID:   	0x0001 (1)
+DecimalSeparator:      	,
+-------------------------------------------------------------------------------
+EXE Path =          	D:\Development\Libraries\DevExpress VCL\Setup\h2reg.exe
+EXE Version =       	1.7.0.0
+Cmdline Param(s) =  	-r | -q | -a | CmdFile=D:\Development\Libraries\DevExpress | VCL\ExpressPivotGrid\Help\ExpressPivotGrid.tmp
+Actual CmdLine =  	"D:\Development\Libraries\DevExpress VCL\Setup\h2reg.exe" -r -q -a CmdFile=D:\Development\Libraries\DevExpress VCL\ExpressPivotGrid\Help\ExpressPivotGrid.tmp
+_RunDir =           	D:\Development\Libraries\DevExpress VCL\Setup
+_ModuleName =       	h2reg.exe
+_ModuleDir =        	D:\Development\Libraries\DevExpress VCL\Setup
+_ModulePath =        	D:\Development\Libraries\DevExpress VCL\Setup\h2reg.exe
+Module Version =       	1.7.0.0
+-------------------------------------------------------------------------------
+_hhInstalled =      	YES
+_hhVerStr =         	6.2.10586.0
+_hhFriendlyVerStr = 	> 1.4a
+-------------------------------------------------------------------------------
+_ieInstalled =      	YES
+_ieVerStr =         	6.2.10586.0
+_ieFriendlyVerStr = 	Internet Explorer 6 (Windows Server 2003)
+===============================================================================
+MS Help 2.x Runtime Found: YES
+    2.7.61224.0, C:\Program Files (x86)\Common Files\Microsoft Shared\Help\hxds.dll
+    2.7.61224.0, C:\Program Files (x86)\Common Files\Microsoft Shared\Help\hxvz.dll
+NT Admin Log On: YES
+PC Language ID = nl
+-------------------------------------------------------------------------------
+Quiet Mode (-Q): Yes
+Registration Mode (-R): Yes
+UnRegistration Mode (-U): No
+Append Log Mode (-A): Yes
+No NT Admin Check (-N): No
+Merge Indexes Mode (-M): No
+Cmd Script File (CmdFile=): D:\Development\Libraries\DevExpress VCL\ExpressPivotGrid\Help\ExpressPivotGrid.tmp
+User Dir 1 (UserDir1=): 
+User Dir 2 (UserDir2=): 
+User Dir 3 (UserDir3=): 
+User Dir 4 (UserDir4=): 
+===============================================================================
+CmdFile = D:\Development\Libraries\DevExpress VCL\ExpressPivotGrid\Help\ExpressPivotGrid.tmp
+<windir> = C:\Windows
+<winsysdir> = C:\Windows\system32
+<programfilesdir> = C:\Program Files (x86)
+<exedir> = D:\Development\Libraries\DevExpress VCL\Setup
+<exedirparent> = D:\Development\Libraries\DevExpress VCL
+<cmdfiledir> = D:\Development\Libraries\DevExpress VCL\ExpressPivotGrid\Help
+<cmdfiledirparent> = D:\Development\Libraries\DevExpress VCL\ExpressPivotGrid
+<userdir1> = 
+<userdir1parent> = 
+<userdir2> = 
+<userdir2parent> = 
+<userdir3> = 
+<userdir3parent> = 
+<userdir4> = 
+<userdir4parent> = 
+-------------------------------------------------------------------------------
+[Reg_Namespace]
+ExpressPivotGrid.rs_xe3|ExpressPivotGrid.HxC|
+
+[Reg_Title]
+ExpressPivotGrid.rs_xe3|ExpressPivotGrid|1033|ExpressPivotGrid.HxS|ExpressPivotGrid.HxS||||||
+
+[Reg_Filter]
+ExpressPivotGrid.rs_xe3|DevExpress VCL 13.1 Products|("DocSet"="DXVCL")
+ExpressPivotGrid.rs_xe3|ExpressPivotGrid Suite|("DocSet"="ExpressPivotGrid")
+
+[Reg_Plugin]
+embarcadero.rs_xe3|_DEFAULT|ExpressPivotGrid.rs_xe3|_DEFAULT|
+
+[UnReg_Namespace]
+ExpressPivotGrid.rs_xe3
+
+[UnReg_Title]
+ExpressPivotGrid.rs_xe3|ExpressPivotGrid|1033
+
+[UnReg_Plugin]
+embarcadero.rs_xe3|_DEFAULT|ExpressPivotGrid.rs_xe3|_DEFAULT|
+
+[UnReg_Filter]
+ExpressPivotGrid.rs_xe3|DevExpress VCL 13.1 Products
+ExpressPivotGrid.rs_xe3|ExpressPivotGrid Suite
+-------------------------------------------------------------------------------
+12:19:22   [Reg_Namespace] - Lines To Process = 1
+12:19:22     <nsName>="ExpressPivotGrid.rs_xe3"
+12:19:22     <nsColfile>="D:\Development\Libraries\DevExpress VCL\ExpressPivotGrid\Help\ExpressPivotGrid.HxC"
+12:19:22     <nsDesc>=""
+12:19:22     +Mode = Not Enabled
+12:19:22    -->Registered OK
+-------------------------------------------------------------------------------
+12:19:22   [Reg_Title] - Lines To Process = 1
+12:19:22     <nsName>="ExpressPivotGrid.rs_xe3"
+12:19:22     <TitleID>="ExpressPivotGrid"
+12:19:22     <LangID>="1033"
+12:19:22     <HxS_HelpFile>="D:\Development\Libraries\DevExpress VCL\ExpressPivotGrid\Help\ExpressPivotGrid.HxS"
+12:19:22     <HxI_IndexFile>="D:\Development\Libraries\DevExpress VCL\ExpressPivotGrid\Help\ExpressPivotGrid.HxS"
+12:19:22     <HxQ_QueryFile>=""
+12:19:22     <HxR_AttrQueryFile>=""
+12:19:22     <HxsMediaLoc>=""
+12:19:22     <HxqMediaLoc>=""
+12:19:22     <HxrMediaLoc>=""
+12:19:22     <SampleMediaLoc>=""
+12:19:22    -->Registered OK
+-------------------------------------------------------------------------------
+12:19:22   [Reg_Plugin] - Lines To Process = 1
+12:19:22     <nsName_Parent>="embarcadero.rs_xe3"
+12:19:22     <HxT_Parent>="_DEFAULT"
+12:19:22     <nsName_Child>="ExpressPivotGrid.rs_xe3"
+12:19:22     <HxT_Child>="_DEFAULT"
+12:19:22     <HxA_Child>=""
+12:19:22   Plug Child "ExpressPivotGrid.rs_xe3" into "embarcadero.rs_xe3"
+12:19:22    -->Registered OK
+-------------------------------------------------------------------------------
+12:19:22   [Reg_Filter] - Lines To Process = 2
+12:19:22     <nsName>="ExpressPivotGrid.rs_xe3"
+12:19:22     <FilterName>="DevExpress VCL 13.1 Products"
+12:19:22     <FilterQueryStr>="("DocSet"="DXVCL")"
+12:19:22    -->Registered OK
+12:19:22   
+12:19:22     <nsName>="ExpressPivotGrid.rs_xe3"
+12:19:22     <FilterName>="ExpressPivotGrid Suite"
+12:19:22     <FilterQueryStr>="("DocSet"="ExpressPivotGrid")"
+12:19:22    -->Registered OK
+===============================================================================
+
+--END OF FILE--
+
+===============================================================================
+Log File:             	D:\Development\Libraries\DevExpress VCL\Setup\H2Reg_Log.txt
+Date:                 	9-2-2016 12:19:24
+Operating System:      	Windows NT 6.2 (Build 9200) No Service Pack
+SysLocale.DefaultLCID: 	0x0413 (1043)
+SysLocale.PriLangID:   	0x0013 (19)
+SysLocale.SubLangID:   	0x0001 (1)
+DecimalSeparator:      	,
+-------------------------------------------------------------------------------
+EXE Path =          	D:\Development\Libraries\DevExpress VCL\Setup\h2reg.exe
+EXE Version =       	1.7.0.0
+Cmdline Param(s) =  	-r | -q | -a | CmdFile=D:\Development\Libraries\DevExpress | VCL\ExpressDBTree | Suite\Help\ExpressDBTree.tmp
+Actual CmdLine =  	"D:\Development\Libraries\DevExpress VCL\Setup\h2reg.exe" -r -q -a CmdFile=D:\Development\Libraries\DevExpress VCL\ExpressDBTree Suite\Help\ExpressDBTree.tmp
+_RunDir =           	D:\Development\Libraries\DevExpress VCL\Setup
+_ModuleName =       	h2reg.exe
+_ModuleDir =        	D:\Development\Libraries\DevExpress VCL\Setup
+_ModulePath =        	D:\Development\Libraries\DevExpress VCL\Setup\h2reg.exe
+Module Version =       	1.7.0.0
+-------------------------------------------------------------------------------
+_hhInstalled =      	YES
+_hhVerStr =         	6.2.10586.0
+_hhFriendlyVerStr = 	> 1.4a
+-------------------------------------------------------------------------------
+_ieInstalled =      	YES
+_ieVerStr =         	6.2.10586.0
+_ieFriendlyVerStr = 	Internet Explorer 6 (Windows Server 2003)
+===============================================================================
+MS Help 2.x Runtime Found: YES
+    2.7.61224.0, C:\Program Files (x86)\Common Files\Microsoft Shared\Help\hxds.dll
+    2.7.61224.0, C:\Program Files (x86)\Common Files\Microsoft Shared\Help\hxvz.dll
+NT Admin Log On: YES
+PC Language ID = nl
+-------------------------------------------------------------------------------
+Quiet Mode (-Q): Yes
+Registration Mode (-R): Yes
+UnRegistration Mode (-U): No
+Append Log Mode (-A): Yes
+No NT Admin Check (-N): No
+Merge Indexes Mode (-M): No
+Cmd Script File (CmdFile=): D:\Development\Libraries\DevExpress VCL\ExpressDBTree Suite\Help\ExpressDBTree.tmp
+User Dir 1 (UserDir1=): 
+User Dir 2 (UserDir2=): 
+User Dir 3 (UserDir3=): 
+User Dir 4 (UserDir4=): 
+===============================================================================
+CmdFile = D:\Development\Libraries\DevExpress VCL\ExpressDBTree Suite\Help\ExpressDBTree.tmp
+<windir> = C:\Windows
+<winsysdir> = C:\Windows\system32
+<programfilesdir> = C:\Program Files (x86)
+<exedir> = D:\Development\Libraries\DevExpress VCL\Setup
+<exedirparent> = D:\Development\Libraries\DevExpress VCL
+<cmdfiledir> = D:\Development\Libraries\DevExpress VCL\ExpressDBTree Suite\Help
+<cmdfiledirparent> = D:\Development\Libraries\DevExpress VCL\ExpressDBTree Suite
+<userdir1> = 
+<userdir1parent> = 
+<userdir2> = 
+<userdir2parent> = 
+<userdir3> = 
+<userdir3parent> = 
+<userdir4> = 
+<userdir4parent> = 
+-------------------------------------------------------------------------------
+[Reg_Namespace]
+ExpressDBTree.rs_xe3|ExpressDBTree.HxC|
+
+[Reg_Title]
+ExpressDBTree.rs_xe3|ExpressDBTree|1033|ExpressDBTree.HxS|ExpressDBTree.HxS||||||
+
+[Reg_Filter]
+ExpressDBTree.rs_xe3|DevExpress VCL 13.1 Products|("DocSet"="DXVCL")
+ExpressDBTree.rs_xe3|ExpressDBTree Suite|("DocSet"="ExpressDBTree")
+
+[Reg_Plugin]
+embarcadero.rs_xe3|_DEFAULT|ExpressDBTree.rs_xe3|_DEFAULT|
+
+[UnReg_Namespace]
+ExpressDBTree.rs_xe3
+
+[UnReg_Title]
+ExpressDBTree.rs_xe3|ExpressDBTree|1033
+
+[UnReg_Plugin]
+embarcadero.rs_xe3|_DEFAULT|ExpressDBTree.rs_xe3|_DEFAULT|
+
+[UnReg_Filter]
+ExpressDBTree.rs_xe3|DevExpress VCL 13.1 Products
+ExpressDBTree.rs_xe3|ExpressDBTree Suite
+-------------------------------------------------------------------------------
+12:19:24   [Reg_Namespace] - Lines To Process = 1
+12:19:24     <nsName>="ExpressDBTree.rs_xe3"
+12:19:24     <nsColfile>="D:\Development\Libraries\DevExpress VCL\ExpressDBTree Suite\Help\ExpressDBTree.HxC"
+12:19:24     <nsDesc>=""
+12:19:24     +Mode = Not Enabled
+12:19:24    -->Registered OK
+-------------------------------------------------------------------------------
+12:19:24   [Reg_Title] - Lines To Process = 1
+12:19:24     <nsName>="ExpressDBTree.rs_xe3"
+12:19:24     <TitleID>="ExpressDBTree"
+12:19:24     <LangID>="1033"
+12:19:24     <HxS_HelpFile>="D:\Development\Libraries\DevExpress VCL\ExpressDBTree Suite\Help\ExpressDBTree.HxS"
+12:19:24     <HxI_IndexFile>="D:\Development\Libraries\DevExpress VCL\ExpressDBTree Suite\Help\ExpressDBTree.HxS"
+12:19:24     <HxQ_QueryFile>=""
+12:19:24     <HxR_AttrQueryFile>=""
+12:19:24     <HxsMediaLoc>=""
+12:19:24     <HxqMediaLoc>=""
+12:19:24     <HxrMediaLoc>=""
+12:19:24     <SampleMediaLoc>=""
+12:19:24    -->Registered OK
+-------------------------------------------------------------------------------
+12:19:24   [Reg_Plugin] - Lines To Process = 1
+12:19:24     <nsName_Parent>="embarcadero.rs_xe3"
+12:19:24     <HxT_Parent>="_DEFAULT"
+12:19:24     <nsName_Child>="ExpressDBTree.rs_xe3"
+12:19:24     <HxT_Child>="_DEFAULT"
+12:19:24     <HxA_Child>=""
+12:19:24   Plug Child "ExpressDBTree.rs_xe3" into "embarcadero.rs_xe3"
+12:19:24    -->Registered OK
+-------------------------------------------------------------------------------
+12:19:24   [Reg_Filter] - Lines To Process = 2
+12:19:24     <nsName>="ExpressDBTree.rs_xe3"
+12:19:24     <FilterName>="DevExpress VCL 13.1 Products"
+12:19:24     <FilterQueryStr>="("DocSet"="DXVCL")"
+12:19:24    -->Registered OK
+12:19:24   
+12:19:24     <nsName>="ExpressDBTree.rs_xe3"
+12:19:24     <FilterName>="ExpressDBTree Suite"
+12:19:24     <FilterQueryStr>="("DocSet"="ExpressDBTree")"
+12:19:24    -->Registered OK
+===============================================================================
+
+--END OF FILE--
+
+===============================================================================
+Log File:             	D:\Development\Libraries\DevExpress VCL\Setup\H2Reg_Log.txt
+Date:                 	9-2-2016 12:19:25
+Operating System:      	Windows NT 6.2 (Build 9200) No Service Pack
+SysLocale.DefaultLCID: 	0x0413 (1043)
+SysLocale.PriLangID:   	0x0013 (19)
+SysLocale.SubLangID:   	0x0001 (1)
+DecimalSeparator:      	,
+-------------------------------------------------------------------------------
+EXE Path =          	D:\Development\Libraries\DevExpress VCL\Setup\h2reg.exe
+EXE Version =       	1.7.0.0
+Cmdline Param(s) =  	-r | -q | -a | CmdFile=D:\Development\Libraries\DevExpress | VCL\ExpressOrgChart\Help\ExpressOrgChart.tmp
+Actual CmdLine =  	"D:\Development\Libraries\DevExpress VCL\Setup\h2reg.exe" -r -q -a CmdFile=D:\Development\Libraries\DevExpress VCL\ExpressOrgChart\Help\ExpressOrgChart.tmp
+_RunDir =           	D:\Development\Libraries\DevExpress VCL\Setup
+_ModuleName =       	h2reg.exe
+_ModuleDir =        	D:\Development\Libraries\DevExpress VCL\Setup
+_ModulePath =        	D:\Development\Libraries\DevExpress VCL\Setup\h2reg.exe
+Module Version =       	1.7.0.0
+-------------------------------------------------------------------------------
+_hhInstalled =      	YES
+_hhVerStr =         	6.2.10586.0
+_hhFriendlyVerStr = 	> 1.4a
+-------------------------------------------------------------------------------
+_ieInstalled =      	YES
+_ieVerStr =         	6.2.10586.0
+_ieFriendlyVerStr = 	Internet Explorer 6 (Windows Server 2003)
+===============================================================================
+MS Help 2.x Runtime Found: YES
+    2.7.61224.0, C:\Program Files (x86)\Common Files\Microsoft Shared\Help\hxds.dll
+    2.7.61224.0, C:\Program Files (x86)\Common Files\Microsoft Shared\Help\hxvz.dll
+NT Admin Log On: YES
+PC Language ID = nl
+-------------------------------------------------------------------------------
+Quiet Mode (-Q): Yes
+Registration Mode (-R): Yes
+UnRegistration Mode (-U): No
+Append Log Mode (-A): Yes
+No NT Admin Check (-N): No
+Merge Indexes Mode (-M): No
+Cmd Script File (CmdFile=): D:\Development\Libraries\DevExpress VCL\ExpressOrgChart\Help\ExpressOrgChart.tmp
+User Dir 1 (UserDir1=): 
+User Dir 2 (UserDir2=): 
+User Dir 3 (UserDir3=): 
+User Dir 4 (UserDir4=): 
+===============================================================================
+CmdFile = D:\Development\Libraries\DevExpress VCL\ExpressOrgChart\Help\ExpressOrgChart.tmp
+<windir> = C:\Windows
+<winsysdir> = C:\Windows\system32
+<programfilesdir> = C:\Program Files (x86)
+<exedir> = D:\Development\Libraries\DevExpress VCL\Setup
+<exedirparent> = D:\Development\Libraries\DevExpress VCL
+<cmdfiledir> = D:\Development\Libraries\DevExpress VCL\ExpressOrgChart\Help
+<cmdfiledirparent> = D:\Development\Libraries\DevExpress VCL\ExpressOrgChart
+<userdir1> = 
+<userdir1parent> = 
+<userdir2> = 
+<userdir2parent> = 
+<userdir3> = 
+<userdir3parent> = 
+<userdir4> = 
+<userdir4parent> = 
+-------------------------------------------------------------------------------
+[Reg_Namespace]
+ExpressOrgChart.rs_xe3|ExpressOrgChart.HxC|
+
+[Reg_Title]
+ExpressOrgChart.rs_xe3|ExpressOrgChart|1033|ExpressOrgChart.HxS|ExpressOrgChart.HxS||||||
+
+[Reg_Filter]
+ExpressOrgChart.rs_xe3|DevExpress VCL 13.1 Products|("DocSet"="DXVCL")
+ExpressOrgChart.rs_xe3|ExpressOrgChart|("DocSet"="ExpressOrgChart")
+
+[Reg_Plugin]
+embarcadero.rs_xe3|_DEFAULT|ExpressOrgChart.rs_xe3|_DEFAULT|
+
+[UnReg_Namespace]
+ExpressOrgChart.rs_xe3
+
+[UnReg_Title]
+ExpressOrgChart.rs_xe3|ExpressOrgChart|1033
+
+[UnReg_Plugin]
+embarcadero.rs_xe3|_DEFAULT|ExpressOrgChart.rs_xe3|_DEFAULT|
+
+[UnReg_Filter]
+ExpressOrgChart.rs_xe3|DevExpress VCL 13.1 Products
+ExpressOrgChart.rs_xe3|ExpressOrgChart
+-------------------------------------------------------------------------------
+12:19:26   [Reg_Namespace] - Lines To Process = 1
+12:19:26     <nsName>="ExpressOrgChart.rs_xe3"
+12:19:26     <nsColfile>="D:\Development\Libraries\DevExpress VCL\ExpressOrgChart\Help\ExpressOrgChart.HxC"
+12:19:26     <nsDesc>=""
+12:19:26     +Mode = Not Enabled
+12:19:26    -->Registered OK
+-------------------------------------------------------------------------------
+12:19:26   [Reg_Title] - Lines To Process = 1
+12:19:26     <nsName>="ExpressOrgChart.rs_xe3"
+12:19:26     <TitleID>="ExpressOrgChart"
+12:19:26     <LangID>="1033"
+12:19:26     <HxS_HelpFile>="D:\Development\Libraries\DevExpress VCL\ExpressOrgChart\Help\ExpressOrgChart.HxS"
+12:19:26     <HxI_IndexFile>="D:\Development\Libraries\DevExpress VCL\ExpressOrgChart\Help\ExpressOrgChart.HxS"
+12:19:26     <HxQ_QueryFile>=""
+12:19:26     <HxR_AttrQueryFile>=""
+12:19:26     <HxsMediaLoc>=""
+12:19:26     <HxqMediaLoc>=""
+12:19:26     <HxrMediaLoc>=""
+12:19:26     <SampleMediaLoc>=""
+12:19:26    -->Registered OK
+-------------------------------------------------------------------------------
+12:19:26   [Reg_Plugin] - Lines To Process = 1
+12:19:26     <nsName_Parent>="embarcadero.rs_xe3"
+12:19:26     <HxT_Parent>="_DEFAULT"
+12:19:26     <nsName_Child>="ExpressOrgChart.rs_xe3"
+12:19:26     <HxT_Child>="_DEFAULT"
+12:19:26     <HxA_Child>=""
+12:19:26   Plug Child "ExpressOrgChart.rs_xe3" into "embarcadero.rs_xe3"
+12:19:26    -->Registered OK
+-------------------------------------------------------------------------------
+12:19:26   [Reg_Filter] - Lines To Process = 2
+12:19:26     <nsName>="ExpressOrgChart.rs_xe3"
+12:19:26     <FilterName>="DevExpress VCL 13.1 Products"
+12:19:26     <FilterQueryStr>="("DocSet"="DXVCL")"
+12:19:26    -->Registered OK
+12:19:26   
+12:19:26     <nsName>="ExpressOrgChart.rs_xe3"
+12:19:26     <FilterName>="ExpressOrgChart"
+12:19:26     <FilterQueryStr>="("DocSet"="ExpressOrgChart")"
+12:19:26    -->Registered OK
+===============================================================================
+
+--END OF FILE--
+
+===============================================================================
+Log File:             	D:\Development\Libraries\DevExpress VCL\Setup\H2Reg_Log.txt
+Date:                 	9-2-2016 12:19:27
+Operating System:      	Windows NT 6.2 (Build 9200) No Service Pack
+SysLocale.DefaultLCID: 	0x0413 (1043)
+SysLocale.PriLangID:   	0x0013 (19)
+SysLocale.SubLangID:   	0x0001 (1)
+DecimalSeparator:      	,
+-------------------------------------------------------------------------------
+EXE Path =          	D:\Development\Libraries\DevExpress VCL\Setup\h2reg.exe
+EXE Version =       	1.7.0.0
+Cmdline Param(s) =  	-r | -q | -a | CmdFile=D:\Development\Libraries\DevExpress | VCL\ExpressFlowChart\Help\ExpressFlowChart.tmp
+Actual CmdLine =  	"D:\Development\Libraries\DevExpress VCL\Setup\h2reg.exe" -r -q -a CmdFile=D:\Development\Libraries\DevExpress VCL\ExpressFlowChart\Help\ExpressFlowChart.tmp
+_RunDir =           	D:\Development\Libraries\DevExpress VCL\Setup
+_ModuleName =       	h2reg.exe
+_ModuleDir =        	D:\Development\Libraries\DevExpress VCL\Setup
+_ModulePath =        	D:\Development\Libraries\DevExpress VCL\Setup\h2reg.exe
+Module Version =       	1.7.0.0
+-------------------------------------------------------------------------------
+_hhInstalled =      	YES
+_hhVerStr =         	6.2.10586.0
+_hhFriendlyVerStr = 	> 1.4a
+-------------------------------------------------------------------------------
+_ieInstalled =      	YES
+_ieVerStr =         	6.2.10586.0
+_ieFriendlyVerStr = 	Internet Explorer 6 (Windows Server 2003)
+===============================================================================
+MS Help 2.x Runtime Found: YES
+    2.7.61224.0, C:\Program Files (x86)\Common Files\Microsoft Shared\Help\hxds.dll
+    2.7.61224.0, C:\Program Files (x86)\Common Files\Microsoft Shared\Help\hxvz.dll
+NT Admin Log On: YES
+PC Language ID = nl
+-------------------------------------------------------------------------------
+Quiet Mode (-Q): Yes
+Registration Mode (-R): Yes
+UnRegistration Mode (-U): No
+Append Log Mode (-A): Yes
+No NT Admin Check (-N): No
+Merge Indexes Mode (-M): No
+Cmd Script File (CmdFile=): D:\Development\Libraries\DevExpress VCL\ExpressFlowChart\Help\ExpressFlowChart.tmp
+User Dir 1 (UserDir1=): 
+User Dir 2 (UserDir2=): 
+User Dir 3 (UserDir3=): 
+User Dir 4 (UserDir4=): 
+===============================================================================
+CmdFile = D:\Development\Libraries\DevExpress VCL\ExpressFlowChart\Help\ExpressFlowChart.tmp
+<windir> = C:\Windows
+<winsysdir> = C:\Windows\system32
+<programfilesdir> = C:\Program Files (x86)
+<exedir> = D:\Development\Libraries\DevExpress VCL\Setup
+<exedirparent> = D:\Development\Libraries\DevExpress VCL
+<cmdfiledir> = D:\Development\Libraries\DevExpress VCL\ExpressFlowChart\Help
+<cmdfiledirparent> = D:\Development\Libraries\DevExpress VCL\ExpressFlowChart
+<userdir1> = 
+<userdir1parent> = 
+<userdir2> = 
+<userdir2parent> = 
+<userdir3> = 
+<userdir3parent> = 
+<userdir4> = 
+<userdir4parent> = 
+-------------------------------------------------------------------------------
+[Reg_Namespace]
+ExpressFlowChart.rs_xe3|ExpressFlowChart.HxC|
+
+[Reg_Title]
+ExpressFlowChart.rs_xe3|ExpressFlowChart|1033|ExpressFlowChart.HxS|ExpressFlowChart.HxS||||||
+
+[Reg_Filter]
+ExpressFlowChart.rs_xe3|DevExpress VCL 13.1 Products|("DocSet"="DXVCL")
+ExpressFlowChart.rs_xe3|ExpressFlowChart|("DocSet"="ExpressFlowChart")
+
+[Reg_Plugin]
+embarcadero.rs_xe3|_DEFAULT|ExpressFlowChart.rs_xe3|_DEFAULT|
+
+[UnReg_Namespace]
+ExpressFlowChart.rs_xe3
+
+[UnReg_Title]
+ExpressFlowChart.rs_xe3|ExpressFlowChart|1033
+
+[UnReg_Plugin]
+embarcadero.rs_xe3|_DEFAULT|ExpressFlowChart.rs_xe3|_DEFAULT|
+
+[UnReg_Filter]
+ExpressFlowChart.rs_xe3|DevExpress VCL 13.1 Products
+ExpressFlowChart.rs_xe3|ExpressFlowChart
+-------------------------------------------------------------------------------
+12:19:27   [Reg_Namespace] - Lines To Process = 1
+12:19:27     <nsName>="ExpressFlowChart.rs_xe3"
+12:19:27     <nsColfile>="D:\Development\Libraries\DevExpress VCL\ExpressFlowChart\Help\ExpressFlowChart.HxC"
+12:19:27     <nsDesc>=""
+12:19:27     +Mode = Not Enabled
+12:19:27    -->Registered OK
+-------------------------------------------------------------------------------
+12:19:27   [Reg_Title] - Lines To Process = 1
+12:19:27     <nsName>="ExpressFlowChart.rs_xe3"
+12:19:27     <TitleID>="ExpressFlowChart"
+12:19:27     <LangID>="1033"
+12:19:27     <HxS_HelpFile>="D:\Development\Libraries\DevExpress VCL\ExpressFlowChart\Help\ExpressFlowChart.HxS"
+12:19:27     <HxI_IndexFile>="D:\Development\Libraries\DevExpress VCL\ExpressFlowChart\Help\ExpressFlowChart.HxS"
+12:19:27     <HxQ_QueryFile>=""
+12:19:27     <HxR_AttrQueryFile>=""
+12:19:27     <HxsMediaLoc>=""
+12:19:27     <HxqMediaLoc>=""
+12:19:27     <HxrMediaLoc>=""
+12:19:27     <SampleMediaLoc>=""
+12:19:27    -->Registered OK
+-------------------------------------------------------------------------------
+12:19:27   [Reg_Plugin] - Lines To Process = 1
+12:19:27     <nsName_Parent>="embarcadero.rs_xe3"
+12:19:27     <HxT_Parent>="_DEFAULT"
+12:19:27     <nsName_Child>="ExpressFlowChart.rs_xe3"
+12:19:27     <HxT_Child>="_DEFAULT"
+12:19:27     <HxA_Child>=""
+12:19:27   Plug Child "ExpressFlowChart.rs_xe3" into "embarcadero.rs_xe3"
+12:19:27    -->Registered OK
+-------------------------------------------------------------------------------
+12:19:27   [Reg_Filter] - Lines To Process = 2
+12:19:27     <nsName>="ExpressFlowChart.rs_xe3"
+12:19:27     <FilterName>="DevExpress VCL 13.1 Products"
+12:19:27     <FilterQueryStr>="("DocSet"="DXVCL")"
+12:19:27    -->Registered OK
+12:19:27   
+12:19:27     <nsName>="ExpressFlowChart.rs_xe3"
+12:19:27     <FilterName>="ExpressFlowChart"
+12:19:27     <FilterQueryStr>="("DocSet"="ExpressFlowChart")"
+12:19:27    -->Registered OK
+===============================================================================
+
+--END OF FILE--
+
+===============================================================================
+Log File:             	D:\Development\Libraries\DevExpress VCL\Setup\H2Reg_Log.txt
+Date:                 	9-2-2016 12:19:27
+Operating System:      	Windows NT 6.2 (Build 9200) No Service Pack
+SysLocale.DefaultLCID: 	0x0413 (1043)
+SysLocale.PriLangID:   	0x0013 (19)
+SysLocale.SubLangID:   	0x0001 (1)
+DecimalSeparator:      	,
+-------------------------------------------------------------------------------
+EXE Path =          	D:\Development\Libraries\DevExpress VCL\Setup\h2reg.exe
+EXE Version =       	1.7.0.0
+Cmdline Param(s) =  	-r | -q | -a | CmdFile=D:\Development\Libraries\DevExpress | VCL\ExpressFlowChart\Help\ExpressFlowChartEditor.tmp
+Actual CmdLine =  	"D:\Development\Libraries\DevExpress VCL\Setup\h2reg.exe" -r -q -a CmdFile=D:\Development\Libraries\DevExpress VCL\ExpressFlowChart\Help\ExpressFlowChartEditor.tmp
+_RunDir =           	D:\Development\Libraries\DevExpress VCL\Setup
+_ModuleName =       	h2reg.exe
+_ModuleDir =        	D:\Development\Libraries\DevExpress VCL\Setup
+_ModulePath =        	D:\Development\Libraries\DevExpress VCL\Setup\h2reg.exe
+Module Version =       	1.7.0.0
+-------------------------------------------------------------------------------
+_hhInstalled =      	YES
+_hhVerStr =         	6.2.10586.0
+_hhFriendlyVerStr = 	> 1.4a
+-------------------------------------------------------------------------------
+_ieInstalled =      	YES
+_ieVerStr =         	6.2.10586.0
+_ieFriendlyVerStr = 	Internet Explorer 6 (Windows Server 2003)
+===============================================================================
+MS Help 2.x Runtime Found: YES
+    2.7.61224.0, C:\Program Files (x86)\Common Files\Microsoft Shared\Help\hxds.dll
+    2.7.61224.0, C:\Program Files (x86)\Common Files\Microsoft Shared\Help\hxvz.dll
+NT Admin Log On: YES
+PC Language ID = nl
+-------------------------------------------------------------------------------
+Quiet Mode (-Q): Yes
+Registration Mode (-R): Yes
+UnRegistration Mode (-U): No
+Append Log Mode (-A): Yes
+No NT Admin Check (-N): No
+Merge Indexes Mode (-M): No
+Cmd Script File (CmdFile=): D:\Development\Libraries\DevExpress VCL\ExpressFlowChart\Help\ExpressFlowChartEditor.tmp
+User Dir 1 (UserDir1=): 
+User Dir 2 (UserDir2=): 
+User Dir 3 (UserDir3=): 
+User Dir 4 (UserDir4=): 
+===============================================================================
+CmdFile = D:\Development\Libraries\DevExpress VCL\ExpressFlowChart\Help\ExpressFlowChartEditor.tmp
+<windir> = C:\Windows
+<winsysdir> = C:\Windows\system32
+<programfilesdir> = C:\Program Files (x86)
+<exedir> = D:\Development\Libraries\DevExpress VCL\Setup
+<exedirparent> = D:\Development\Libraries\DevExpress VCL
+<cmdfiledir> = D:\Development\Libraries\DevExpress VCL\ExpressFlowChart\Help
+<cmdfiledirparent> = D:\Development\Libraries\DevExpress VCL\ExpressFlowChart
+<userdir1> = 
+<userdir1parent> = 
+<userdir2> = 
+<userdir2parent> = 
+<userdir3> = 
+<userdir3parent> = 
+<userdir4> = 
+<userdir4parent> = 
+-------------------------------------------------------------------------------
+[Reg_Namespace]
+ExpressFlowChartEditor.rs_xe3|ExpressFlowChartEditor.HxC|
+
+[Reg_Title]
+ExpressFlowChartEditor.rs_xe3|ExpressFlowChartEditor|1033|ExpressFlowChartEditor.HxS|ExpressFlowChartEditor.HxS||||||
+
+[Reg_Filter]
+ExpressFlowChartEditor.rs_xe3|DevExpress VCL 13.1 Products|("DocSet"="DXVCL")
+ExpressFlowChartEditor.rs_xe3|ExpressFlowChart Editor|("DocSet"="ExpressFlowChartEditor")
+
+[Reg_Plugin]
+embarcadero.rs_xe3|_DEFAULT|ExpressFlowChartEditor.rs_xe3|_DEFAULT|
+
+[UnReg_Namespace]
+ExpressFlowChartEditor.rs_xe3
+
+[UnReg_Title]
+ExpressFlowChartEditor.rs_xe3|ExpressFlowChartEditor|1033
+
+[UnReg_Plugin]
+embarcadero.rs_xe3|_DEFAULT|ExpressFlowChartEditor.rs_xe3|_DEFAULT|
+
+[UnReg_Filter]
+ExpressFlowChartEditor.rs_xe3|DevExpress VCL 13.1 Products
+ExpressFlowChartEditor.rs_xe3|ExpressFlowChart Editor
+-------------------------------------------------------------------------------
+12:19:27   [Reg_Namespace] - Lines To Process = 1
+12:19:27     <nsName>="ExpressFlowChartEditor.rs_xe3"
+12:19:27     <nsColfile>="D:\Development\Libraries\DevExpress VCL\ExpressFlowChart\Help\ExpressFlowChartEditor.HxC"
+12:19:27     <nsDesc>=""
+12:19:27     +Mode = Not Enabled
+12:19:27    -->Registered OK
+-------------------------------------------------------------------------------
+12:19:27   [Reg_Title] - Lines To Process = 1
+12:19:27     <nsName>="ExpressFlowChartEditor.rs_xe3"
+12:19:27     <TitleID>="ExpressFlowChartEditor"
+12:19:27     <LangID>="1033"
+12:19:27     <HxS_HelpFile>="D:\Development\Libraries\DevExpress VCL\ExpressFlowChart\Help\ExpressFlowChartEditor.HxS"
+12:19:27     <HxI_IndexFile>="D:\Development\Libraries\DevExpress VCL\ExpressFlowChart\Help\ExpressFlowChartEditor.HxS"
+12:19:27     <HxQ_QueryFile>=""
+12:19:27     <HxR_AttrQueryFile>=""
+12:19:27     <HxsMediaLoc>=""
+12:19:27     <HxqMediaLoc>=""
+12:19:27     <HxrMediaLoc>=""
+12:19:28     <SampleMediaLoc>=""
+12:19:28    -->Registered OK
+-------------------------------------------------------------------------------
+12:19:28   [Reg_Plugin] - Lines To Process = 1
+12:19:28     <nsName_Parent>="embarcadero.rs_xe3"
+12:19:28     <HxT_Parent>="_DEFAULT"
+12:19:28     <nsName_Child>="ExpressFlowChartEditor.rs_xe3"
+12:19:28     <HxT_Child>="_DEFAULT"
+12:19:28     <HxA_Child>=""
+12:19:28   Plug Child "ExpressFlowChartEditor.rs_xe3" into "embarcadero.rs_xe3"
+12:19:28    -->Registered OK
+-------------------------------------------------------------------------------
+12:19:28   [Reg_Filter] - Lines To Process = 2
+12:19:28     <nsName>="ExpressFlowChartEditor.rs_xe3"
+12:19:28     <FilterName>="DevExpress VCL 13.1 Products"
+12:19:28     <FilterQueryStr>="("DocSet"="DXVCL")"
+12:19:28    -->Registered OK
+12:19:28   
+12:19:28     <nsName>="ExpressFlowChartEditor.rs_xe3"
+12:19:28     <FilterName>="ExpressFlowChart Editor"
+12:19:28     <FilterQueryStr>="("DocSet"="ExpressFlowChartEditor")"
+12:19:28    -->Registered OK
+===============================================================================
+
+--END OF FILE--
+

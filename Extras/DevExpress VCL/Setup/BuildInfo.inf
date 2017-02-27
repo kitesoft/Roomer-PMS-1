@@ -1,0 +1,283 @@
+<Setup>
+  <Parts>
+    <Part Name="Core" Directory="ExpressCore Library"/>
+    <Part Name="Theme" Directory="XP Theme Manager">
+      <RequiredParts>
+        <Part Name="Core"/>
+      </RequiredParts>
+    </Part>
+    <Part Name="GDIPlus" Directory="ExpressGDI+ Library"/>
+    <Part Name="Common" Directory="ExpressCommon Library">
+      <RequiredParts>
+        <Part Name="Core"/>
+      </RequiredParts>
+    </Part>
+    <Part Name="Library" Directory="ExpressLibrary">
+      <RequiredParts>
+        <Part Name="Core"/>
+        <Part Name="Theme"/>
+        <Part Name="GDIPlus"/>
+      </RequiredParts>
+    </Part>
+    <Part Name="PageControl" Directory="ExpressPageControl">
+      <RequiredParts>
+        <Part Name="Library"/>
+      </RequiredParts>
+    </Part>
+    <Part Name="DataController" Directory="ExpressDataController">
+      <RequiredParts>
+        <Part Name="Library"/>
+      </RequiredParts>
+    </Part>
+    <Part Name="Editors" Directory="ExpressEditors Library">
+      <RequiredParts>
+        <Part Name="Library"/>
+        <Part Name="DataController"/>
+      </RequiredParts>
+    </Part>
+    <Part Name="WizardControl" Directory="ExpressWizard Control">
+      <RequiredParts>
+        <Part Name="Library"/>
+        <Part Name="Editors"/>
+      </RequiredParts>
+    </Part>
+    <Part Name="Bars" Directory="ExpressBars">
+      <RequiredParts>
+        <Part Name="Common"/>
+        <Part Name="PageControl"/>
+        <Part Name="Editors"/>
+      </RequiredParts>
+    </Part>
+    <Part Name="DockingLibrary" Directory="ExpressDocking Library">
+      <RequiredParts>
+        <Part Name="Library"/>
+        <Part Name="PageControl"/>
+      </RequiredParts>
+    </Part>
+    <Part Name="Export" Directory="ExpressExport Library">
+      <RequiredParts>
+        <Part Name="Editors"/>
+      </RequiredParts>
+    </Part>
+    <Part Name="LayoutControl" Directory="ExpressLayout Control">
+      <RequiredParts>
+        <Part Name="Common"/>
+        <Part Name="Editors"/>
+        <Part Name="PageControl"/>
+      </RequiredParts>
+    </Part>
+    <Part Name="Scheduler" Directory="ExpressScheduler">
+      <RequiredParts>
+        <Part Name="Editors"/>
+        <Part Name="Export"/>
+      </RequiredParts>
+    </Part>
+    <Part Name="TreeList" Directory="ExpressQuantumTreeList">
+      <RequiredParts>
+        <Part Name="Editors"/>
+        <Part Name="Export"/>
+        <Part Name="PageControl"/>
+      </RequiredParts>
+    </Part>
+    <Part Name="Grid" Directory="ExpressQuantumGrid">
+      <RequiredParts>
+        <Part Name="LayoutControl"/>
+        <Part Name="Export"/>
+      </RequiredParts>
+    </Part>
+    <Part Name="VerticalGrid" Directory="ExpressVerticalGrid">
+      <RequiredParts>
+        <Part Name="Editors"/>
+        <Part Name="Export"/>
+      </RequiredParts>
+    </Part>
+    <Part Name="MemData" Directory="ExpressMemData">
+      <RequiredParts>
+        <Part Name="Library"/>
+      </RequiredParts>
+    </Part>
+    <Part Name="SpellChecker" Directory="ExpressSpellChecker">
+      <RequiredParts>
+        <Part Name="Editors"/>
+      </RequiredParts>
+    </Part>
+    <Part Name="SpreadSheet" Directory="ExpressSpreadSheet">
+      <RequiredParts>
+        <Part Name="Library"/>
+      </RequiredParts>
+    </Part>
+    <Part Name="TileControl" Directory="ExpressTile Control">
+      <RequiredParts>
+        <Part Name="Library"/>
+        <Part Name="PageControl"/>
+        <Part Name="Editors"/>
+      </RequiredParts>
+    </Part>
+    <Part Name="NavBar" Directory="ExpressNavBar">
+      <RequiredParts>
+        <Part Name="Library"/>
+      </RequiredParts>
+    </Part>
+    <Part Name="Skins" Directory="ExpressSkins Library">
+      <RequiredParts>
+        <Part Name="Library"/>
+      </RequiredParts>
+    </Part>
+    <Part Name="PrintingSystem" Directory="ExpressPrinting System">
+      <RequiredParts>
+        <Part Name="Common"/>
+        <Part Name="PageControl"/>
+        <Part Name="Editors"/>
+        <Part Name="Export"/>
+      </RequiredParts>
+    </Part>
+    <Part Name="PivotGrid" Directory="ExpressPivotGrid">
+      <RequiredParts>
+        <Part Name="Editors"/>
+        <Part Name="Export"/>
+        <Part Name="MemData"/>
+      </RequiredParts>
+    </Part>
+    <Part Name="DBTreeView" Directory="ExpressDBTree Suite">
+      <RequiredParts>
+        <Part Name="Library"/>
+        <Part Name="MemData"/>
+      </RequiredParts>
+    </Part>
+    <Part Name="OrgChart" Directory="ExpressOrgChart">
+      <RequiredParts>
+        <Part Name="Library"/>
+      </RequiredParts>
+    </Part>
+    <Part Name="FlowChart" Directory="ExpressFlowChart">
+      <RequiredParts>
+        <Part Name="Core"/>
+        <Part Name="GDIPlus"/>
+        <Part Name="Library"/>
+      </RequiredParts>
+    </Part>
+  </Parts>
+  <Products>
+    <Product Name="ExpressBars">
+      <Parts>
+        <Part Name="Bars" IsMain="True"/>
+        <Part Name="DockingLibrary"/>
+        <Part Name="MemData"/>
+      </Parts>
+    </Product>
+    <Product Name="ExpressDBTree Suite">
+      <Parts>
+        <Part Name="DBTreeView" IsMain="True"/>
+        <Part Name="Core"/>
+        <Part Name="Common"/>
+        <Part Name="MemData"/>
+      </Parts>
+    </Product>
+    <Product Name="ExpressFlowChart">
+      <Parts>
+        <Part Name="FlowChart" IsMain="True"/>
+        <Part Name="Core"/>
+        <Part Name="MemData"/>
+      </Parts>
+    </Product>
+    <Product Name="ExpressLayout Control">
+      <Parts>
+        <Part Name="LayoutControl" IsMain="True"/>
+        <Part Name="MemData"/>
+      </Parts>
+    </Product>
+    <Product Name="ExpressNavBar">
+      <Parts>
+        <Part Name="NavBar" IsMain="True"/>
+        <Part Name="Theme"/>
+        <Part Name="GDIPlus"/>
+        <Part Name="Core"/>
+        <Part Name="Library"/>
+      </Parts>
+    </Product>
+    <Product Name="ExpressOrgChart">
+      <Parts>
+        <Part Name="OrgChart" IsMain="True"/>
+        <Part Name="Core"/>
+        <Part Name="MemData"/>
+        <Part Name="Library"/>
+        <Part Name="GDIPlus"/>
+        <Part Name="Theme"/>
+      </Parts>
+    </Product>
+    <Product Name="ExpressPivotGrid">
+      <Parts>
+        <Part Name="PivotGrid" IsMain="True"/>
+      </Parts>
+    </Product>
+    <Product Name="ExpressPrinting System">
+      <Parts>
+        <Part Name="PrintingSystem" IsMain="True"/>
+        <Part Name="Core"/>
+        <Part Name="Common"/>
+        <Part Name="Library"/>
+        <Part Name="GDIPlus"/>
+        <Part Name="Editors"/>
+        <Part Name="Export"/>
+        <Part Name="Theme"/>
+        <Part Name="PageControl"/>
+        <Part Name="DataController"/>
+        <Part Name="MemData"/>
+      </Parts>
+    </Product>
+    <Product Name="ExpressQuantumGrid">
+      <Parts>
+        <Part Name="Grid" IsMain="True"/>
+        <Part Name="MemData"/>
+      </Parts>
+    </Product>
+    <Product Name="ExpressQuantumTreeList">
+      <Parts>
+        <Part Name="TreeList" IsMain="True"/>
+        <Part Name="MemData"/>
+      </Parts>
+    </Product>
+    <Product Name="ExpressScheduler">
+      <Parts>
+        <Part Name="Scheduler" IsMain="True"/>
+        <Part Name="MemData"/>
+      </Parts>
+    </Product>
+    <Product Name="ExpressSkins Library">
+      <Parts>
+        <Part Name="Skins" IsMain="True"/>
+      </Parts>
+    </Product>
+    <Product Name="ExpressSpellChecker">
+      <Parts>
+        <Part Name="SpellChecker" IsMain="True"/>
+        <Part Name="MemData"/>
+      </Parts>
+    </Product>
+    <Product Name="ExpressSpreadSheet">
+      <Parts>
+        <Part Name="SpreadSheet" IsMain="True"/>
+        <Part Name="Core"/>
+        <Part Name="Library"/>
+        <Part Name="GDIPlus"/>
+        <Part Name="Theme"/>
+      </Parts>
+    </Product>
+    <Product Name="ExpressTile Control">
+      <Parts>
+        <Part Name="TileControl" IsMain="True"/>
+      </Parts>
+    </Product>
+    <Product Name="ExpressVerticalGrid">
+      <Parts>
+        <Part Name="VerticalGrid" IsMain="True"/>
+        <Part Name="MemData"/>
+      </Parts>
+    </Product>
+    <Product Name="ExpressWizard Control">
+      <Parts>
+        <Part Name="WizardControl" IsMain="True"/>
+      </Parts>
+    </Product>
+  </Products>
+</Setup>

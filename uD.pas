@@ -3419,6 +3419,7 @@ begin
             g.qGroupInvoicePosItemIndex := rSet['GroupInvoicePosItemIndex'];
 
             g.qDynamicRatesActive := rSet['DynamicRatesActive'];
+            g.qSendInvoicesToFinancePacket := rSet['AutoInvoiceTransfer'];
 
             newStafflang := rSet.FieldByName('StaffLanguage').AsInteger;
 
@@ -10095,6 +10096,7 @@ begin
     s := s + ' INNER JOIN locations l ON  r.Location = l.Location ' + #10;
   end;
   s := s + '  WHERE (ADate >= %s) AND (ADate <= %s ) AND (rr.useInNationalReport = 1 )' + #10;
+  s := s + '  and not resflag in (''C'', ''X'') ' + #10;
   if Location <> '' then
   begin
     s := s + ' AND (l.Location in (' + Location + ') ) ' + #10;

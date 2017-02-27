@@ -1,0 +1,267 @@
+{
+    "dxe3": {
+        "Win32": {
+            "InstallMode": "BuildSource",
+            "Packages": [
+                {
+                    "FileName": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\..\\bpl\\Win32\\TMSScripter170.bpl",
+                    "SymLinkFile": "c:\\users\\Bas\\Documents\\bpl\\Win32\\TMSScripter170.bpl",
+                    "WindowsPathDir": "",
+                    "DcuOutputDir": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\.\\Win32\\Release",
+                    "DebugDcuOutputDir": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\.\\Win32\\Debug"
+                },
+                {
+                    "FileName": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\..\\bpl\\Win32\\TMSScripter_Memo170.bpl",
+                    "SymLinkFile": "c:\\users\\Bas\\Documents\\bpl\\Win32\\TMSScripter_Memo170.bpl",
+                    "WindowsPathDir": "",
+                    "DcuOutputDir": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\.\\Win32\\Release",
+                    "DebugDcuOutputDir": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\.\\Win32\\Debug"
+                },
+                {
+                    "FileName": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\..\\bpl\\Win32\\TMSScripter_Imports_RTL170.bpl",
+                    "SymLinkFile": "c:\\users\\Bas\\Documents\\bpl\\Win32\\TMSScripter_Imports_RTL170.bpl",
+                    "WindowsPathDir": "",
+                    "DcuOutputDir": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\.\\Win32\\Release",
+                    "DebugDcuOutputDir": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\.\\Win32\\Debug"
+                },
+                {
+                    "FileName": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\..\\bpl\\Win32\\TMSScripter_Imports_VCL170.bpl",
+                    "SymLinkFile": "c:\\users\\Bas\\Documents\\bpl\\Win32\\TMSScripter_Imports_VCL170.bpl",
+                    "WindowsPathDir": "",
+                    "DcuOutputDir": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\.\\Win32\\Release",
+                    "DebugDcuOutputDir": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\.\\Win32\\Debug"
+                },
+                {
+                    "FileName": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\..\\bpl\\Win32\\TMSScripter_Imports_DB170.bpl",
+                    "SymLinkFile": "c:\\users\\Bas\\Documents\\bpl\\Win32\\TMSScripter_Imports_DB170.bpl",
+                    "WindowsPathDir": "",
+                    "DcuOutputDir": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\.\\Win32\\Release",
+                    "DebugDcuOutputDir": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\.\\Win32\\Debug"
+                },
+                {
+                    "FileName": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\..\\bpl\\Win32\\TMSScripter_Imports_ADODB170.bpl",
+                    "SymLinkFile": "c:\\users\\Bas\\Documents\\bpl\\Win32\\TMSScripter_Imports_ADODB170.bpl",
+                    "WindowsPathDir": "",
+                    "DcuOutputDir": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\.\\Win32\\Release",
+                    "DebugDcuOutputDir": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\.\\Win32\\Debug"
+                },
+                {
+                    "FileName": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\..\\bpl\\Win32\\TMSScripter_FMX170.bpl",
+                    "SymLinkFile": "c:\\users\\Bas\\Documents\\bpl\\Win32\\TMSScripter_FMX170.bpl",
+                    "WindowsPathDir": "",
+                    "DcuOutputDir": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\.\\Win32\\Release",
+                    "DebugDcuOutputDir": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\.\\Win32\\Debug"
+                },
+                {
+                    "FileName": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\..\\bpl\\Win32\\TMSScripter_VCL170.bpl",
+                    "SymLinkFile": "c:\\users\\Bas\\Documents\\bpl\\Win32\\TMSScripter_VCL170.bpl",
+                    "WindowsPathDir": "",
+                    "DcuOutputDir": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\.\\Win32\\Release",
+                    "DebugDcuOutputDir": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\.\\Win32\\Debug"
+                },
+                {
+                    "FileName": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\..\\bpl\\Win32\\TMSScripter_IDE170.bpl",
+                    "SymLinkFile": "c:\\users\\Bas\\Documents\\bpl\\Win32\\TMSScripter_IDE170.bpl",
+                    "WindowsPathDir": "",
+                    "DcuOutputDir": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\.\\Win32\\Release",
+                    "DebugDcuOutputDir": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\.\\Win32\\Debug"
+                },
+                {
+                    "FileName": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\..\\bpl\\Win32\\TMSScripter_Legacy170.bpl",
+                    "SymLinkFile": "c:\\users\\Bas\\Documents\\bpl\\Win32\\TMSScripter_Legacy170.bpl",
+                    "WindowsPathDir": "",
+                    "DcuOutputDir": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\.\\Win32\\Release",
+                    "DebugDcuOutputDir": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\.\\Win32\\Debug"
+                },
+                {
+                    "FileName": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\..\\bpl\\Win32\\dclTMSScripter170.bpl",
+                    "SymLinkFile": "c:\\users\\Bas\\Documents\\bpl\\Win32\\dclTMSScripter170.bpl",
+                    "WindowsPathDir": "",
+                    "Registered": true,
+                    "DcuOutputDir": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\.\\Win32\\Release",
+                    "DebugDcuOutputDir": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\.\\Win32\\Debug"
+                },
+                {
+                    "FileName": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\..\\bpl\\Win32\\dclTMSScripter_Memo170.bpl",
+                    "SymLinkFile": "c:\\users\\Bas\\Documents\\bpl\\Win32\\dclTMSScripter_Memo170.bpl",
+                    "WindowsPathDir": "",
+                    "Registered": true,
+                    "DcuOutputDir": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\.\\Win32\\Release",
+                    "DebugDcuOutputDir": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\.\\Win32\\Debug"
+                }
+            ],
+            "Paths": [
+                {
+                    "PathType": "DebugDcuPath",
+                    "Value": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\.\\Win32\\Debug"
+                },
+                {
+                    "PathType": "DelphiSearchPath",
+                    "Value": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\.\\Win32\\Release;C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\imports\\extra"
+                },
+                {
+                    "PathType": "CppLibraryPath",
+                    "Value": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\.\\Win32\\Release;C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\imports\\extra"
+                },
+                {
+                    "PathType": "CppIncludePath",
+                    "Value": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\.\\Win32\\Release;C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\imports\\extra"
+                },
+                {
+                    "PathType": "DelphiBrowsingPath",
+                    "Value": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\core;C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\fmx;C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\ide;C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\imports\\adodb;C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\imports\\db;C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\imports\\extra;C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\imports\\rtl;C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\imports\\vcl;C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\imports\\vcldb;C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\legacy;C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\memo;C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\vcl"
+                },
+                {
+                    "PathType": "CppBrowsingPath",
+                    "Value": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\core;C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\fmx;C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\ide;C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\imports\\adodb;C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\imports\\db;C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\imports\\extra;C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\imports\\rtl;C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\imports\\vcl;C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\imports\\vcldb;C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\legacy;C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\memo;C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\vcl"
+                }
+            ]
+        },
+        "Win64": {
+            "InstallMode": "BuildSource",
+            "Packages": [
+                {
+                    "FileName": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\..\\bpl\\Win64\\TMSScripter170.bpl",
+                    "SymLinkFile": "C:\\Users\\Public\\Documents\\RAD Studio\\10.0\\Bpl\\Win64\\TMSScripter170.bpl",
+                    "WindowsPathDir": "",
+                    "DcuOutputDir": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\.\\Win64\\Release",
+                    "DebugDcuOutputDir": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\.\\Win64\\Debug"
+                },
+                {
+                    "FileName": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\..\\bpl\\Win64\\TMSScripter_Memo170.bpl",
+                    "SymLinkFile": "C:\\Users\\Public\\Documents\\RAD Studio\\10.0\\Bpl\\Win64\\TMSScripter_Memo170.bpl",
+                    "WindowsPathDir": "",
+                    "DcuOutputDir": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\.\\Win64\\Release",
+                    "DebugDcuOutputDir": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\.\\Win64\\Debug"
+                },
+                {
+                    "FileName": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\..\\bpl\\Win64\\TMSScripter_Imports_RTL170.bpl",
+                    "SymLinkFile": "C:\\Users\\Public\\Documents\\RAD Studio\\10.0\\Bpl\\Win64\\TMSScripter_Imports_RTL170.bpl",
+                    "WindowsPathDir": "",
+                    "DcuOutputDir": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\.\\Win64\\Release",
+                    "DebugDcuOutputDir": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\.\\Win64\\Debug"
+                },
+                {
+                    "FileName": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\..\\bpl\\Win64\\TMSScripter_Imports_VCL170.bpl",
+                    "SymLinkFile": "C:\\Users\\Public\\Documents\\RAD Studio\\10.0\\Bpl\\Win64\\TMSScripter_Imports_VCL170.bpl",
+                    "WindowsPathDir": "",
+                    "DcuOutputDir": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\.\\Win64\\Release",
+                    "DebugDcuOutputDir": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\.\\Win64\\Debug"
+                },
+                {
+                    "FileName": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\..\\bpl\\Win64\\TMSScripter_Imports_DB170.bpl",
+                    "SymLinkFile": "C:\\Users\\Public\\Documents\\RAD Studio\\10.0\\Bpl\\Win64\\TMSScripter_Imports_DB170.bpl",
+                    "WindowsPathDir": "",
+                    "DcuOutputDir": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\.\\Win64\\Release",
+                    "DebugDcuOutputDir": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\.\\Win64\\Debug"
+                },
+                {
+                    "FileName": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\..\\bpl\\Win64\\TMSScripter_Imports_ADODB170.bpl",
+                    "SymLinkFile": "C:\\Users\\Public\\Documents\\RAD Studio\\10.0\\Bpl\\Win64\\TMSScripter_Imports_ADODB170.bpl",
+                    "WindowsPathDir": "",
+                    "DcuOutputDir": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\.\\Win64\\Release",
+                    "DebugDcuOutputDir": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\.\\Win64\\Debug"
+                },
+                {
+                    "FileName": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\..\\bpl\\Win64\\TMSScripter_FMX170.bpl",
+                    "SymLinkFile": "C:\\Users\\Public\\Documents\\RAD Studio\\10.0\\Bpl\\Win64\\TMSScripter_FMX170.bpl",
+                    "WindowsPathDir": "",
+                    "DcuOutputDir": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\.\\Win64\\Release",
+                    "DebugDcuOutputDir": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\.\\Win64\\Debug"
+                },
+                {
+                    "FileName": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\..\\bpl\\Win64\\TMSScripter_VCL170.bpl",
+                    "SymLinkFile": "C:\\Users\\Public\\Documents\\RAD Studio\\10.0\\Bpl\\Win64\\TMSScripter_VCL170.bpl",
+                    "WindowsPathDir": "",
+                    "DcuOutputDir": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\.\\Win64\\Release",
+                    "DebugDcuOutputDir": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\.\\Win64\\Debug"
+                },
+                {
+                    "FileName": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\..\\bpl\\Win64\\TMSScripter_IDE170.bpl",
+                    "SymLinkFile": "C:\\Users\\Public\\Documents\\RAD Studio\\10.0\\Bpl\\Win64\\TMSScripter_IDE170.bpl",
+                    "WindowsPathDir": "",
+                    "DcuOutputDir": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\.\\Win64\\Release",
+                    "DebugDcuOutputDir": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\.\\Win64\\Debug"
+                },
+                {
+                    "FileName": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\..\\bpl\\Win64\\TMSScripter_Legacy170.bpl",
+                    "SymLinkFile": "C:\\Users\\Public\\Documents\\RAD Studio\\10.0\\Bpl\\Win64\\TMSScripter_Legacy170.bpl",
+                    "WindowsPathDir": "",
+                    "DcuOutputDir": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\.\\Win64\\Release",
+                    "DebugDcuOutputDir": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\.\\Win64\\Debug"
+                }
+            ],
+            "Paths": [
+                {
+                    "PathType": "DebugDcuPath",
+                    "Value": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\.\\Win64\\Debug"
+                },
+                {
+                    "PathType": "DelphiSearchPath",
+                    "Value": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\.\\Win64\\Release;C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\imports\\extra"
+                },
+                {
+                    "PathType": "CppLibraryPath",
+                    "Value": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\.\\Win64\\Release;C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\imports\\extra"
+                },
+                {
+                    "PathType": "CppIncludePath",
+                    "Value": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\.\\Win64\\Release;C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\imports\\extra"
+                },
+                {
+                    "PathType": "DelphiBrowsingPath",
+                    "Value": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\core;C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\fmx;C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\ide;C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\imports\\adodb;C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\imports\\db;C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\imports\\extra;C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\imports\\rtl;C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\imports\\vcl;C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\imports\\vcldb;C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\legacy;C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\memo;C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\vcl"
+                },
+                {
+                    "PathType": "CppBrowsingPath",
+                    "Value": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\core;C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\fmx;C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\ide;C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\imports\\adodb;C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\imports\\db;C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\imports\\extra;C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\imports\\rtl;C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\imports\\vcl;C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\imports\\vcldb;C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\legacy;C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\memo;C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\vcl"
+                }
+            ]
+        },
+        "OSX32": {
+            "InstallMode": "BuildSource",
+            "Packages": [
+                {
+                    "FileName": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\..\\bpl\\OSX32\\bplTMSScripter170.dylib",
+                    "SymLinkFile": "",
+                    "WindowsPathDir": "",
+                    "DcuOutputDir": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\.\\OSX32\\Release",
+                    "DebugDcuOutputDir": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\.\\OSX32\\Debug"
+                },
+                {
+                    "FileName": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\..\\bpl\\OSX32\\bplTMSScripter_FMX170.dylib",
+                    "SymLinkFile": "",
+                    "WindowsPathDir": "",
+                    "DcuOutputDir": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\.\\OSX32\\Release",
+                    "DebugDcuOutputDir": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\.\\OSX32\\Debug"
+                }
+            ],
+            "Paths": [
+                {
+                    "PathType": "DebugDcuPath",
+                    "Value": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\.\\OSX32\\Debug"
+                },
+                {
+                    "PathType": "DelphiSearchPath",
+                    "Value": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\.\\OSX32\\Release;C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\imports\\extra"
+                },
+                {
+                    "PathType": "CppLibraryPath",
+                    "Value": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\.\\OSX32\\Release;C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\imports\\extra"
+                },
+                {
+                    "PathType": "CppIncludePath",
+                    "Value": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\packages\\dxe3\\.\\OSX32\\Release;C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\imports\\extra"
+                },
+                {
+                    "PathType": "DelphiBrowsingPath",
+                    "Value": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\core;C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\fmx;C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\ide;C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\imports\\adodb;C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\imports\\db;C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\imports\\extra;C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\imports\\rtl;C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\imports\\vcl;C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\imports\\vcldb;C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\legacy;C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\memo;C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\vcl"
+                },
+                {
+                    "PathType": "CppBrowsingPath",
+                    "Value": "C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\core;C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\fmx;C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\ide;C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\imports\\adodb;C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\imports\\db;C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\imports\\extra;C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\imports\\rtl;C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\imports\\vcl;C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\imports\\vcldb;C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\legacy;C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\memo;C:\\Users\\Bas\\Documents\\Sources\\TMS Scripter\\source\\vcl"
+                }
+            ]
+        }
+    }
+}

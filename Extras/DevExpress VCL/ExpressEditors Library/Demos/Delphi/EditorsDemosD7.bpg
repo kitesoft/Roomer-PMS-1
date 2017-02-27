@@ -1,0 +1,48 @@
+#------------------------------------------------------------------------------
+VERSION = BWS.01
+#------------------------------------------------------------------------------
+!ifndef ROOT
+ROOT = $(MAKEDIR)\..
+!endif
+#------------------------------------------------------------------------------
+MAKE = $(ROOT)\bin\make.exe -$(MAKEFLAGS) -f$**
+DCC = $(ROOT)\bin\dcc32.exe $**
+BRCC = $(ROOT)\bin\brcc32.exe $**
+#------------------------------------------------------------------------------
+PROJECTS = AlertWindowDemo.exe AlertWindowCustomDrawDemo.exe EditorsLookupDemo.exe EditorsMaskDemo.exe \
+EditorsStylesDemo.exe BreadcrumbEditDemo.exe DBBreadcrumbEditDemo.exe ShellBreadcrumbEditDemo.exe \
+EditorsValidationDemo.exe ImageViewerDemo.exe
+#------------------------------------------------------------------------------
+default: $(PROJECTS)
+#------------------------------------------------------------------------------
+
+
+AlertWindowDemo.exe: AlertWindowDemo\AlertWindowDemo.dpr
+  $(DCC)
+
+AlertWindowCustomDrawDemo.exe: AlertWindowCustomDrawDemo\AlertWindowCustomDrawDemo.dpr
+  $(DCC)
+
+EditorsLookupDemo.exe: EditorsLookupDemo\EditorsLookupDemo.dpr
+  $(DCC)
+
+EditorsMaskDemo.exe: EditorsMaskDemo\EditorsMaskDemo.dpr
+  $(DCC)
+
+EditorsStylesDemo.exe: EditorsStylesDemo\EditorsStylesDemo.dpr
+  $(DCC)
+
+BreadcrumbEditDemo.exe: BreadcrumbEditDemo\BreadcrumbEditDemo.dpr
+  $(DCC)
+
+DBBreadcrumbEditDemo.exe: DBBreadcrumbEditDemo\DBBreadcrumbEditDemo.dpr
+  $(DCC)
+
+ShellBreadcrumbEditDemo.exe: ShellBreadcrumbEditDemo\ShellBreadcrumbEditDemo.dpr
+  $(DCC)
+
+EditorsValidationDemo.exe: EditorsValidationDemo\EditorsValidationDemo.dpr
+  $(DCC)
+
+ImageViewerDemo.exe: ImageViewerDemo\ImageViewerDemo.dpr
+  $(DCC)

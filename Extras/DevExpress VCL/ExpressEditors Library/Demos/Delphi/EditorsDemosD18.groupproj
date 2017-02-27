@@ -1,0 +1,44 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+	  <ProjectGuid>{624986FA-A7F7-4F65-944F-B4291D80BD68}</ProjectGuid>
+  </PropertyGroup>
+  <ProjectExtensions>
+    <Borland.Personality>Default.Personality.12</Borland.Personality>
+    <Borland.ProjectType />
+    <BorlandProject>
+  <BorlandProject xmlns=""> <Default.Personality> </Default.Personality> </BorlandProject></BorlandProject>
+  </ProjectExtensions>
+  <Target Name="AlertWindowDemo">
+    <MSBuild Projects="AlertWindowDemo\AlertWindowDemoD18.dproj" Targets="" />
+  </Target>
+  <Target Name="AlertWindowCustomDrawDemo">
+    <MSBuild Projects="AlertWindowCustomDrawDemo\AlertWindowCustomDrawDemoD18.dproj" Targets="" />
+  </Target>
+  <Target Name="EditorsLookupDemo">
+    <MSBuild Projects="EditorsLookupDemo\EditorsLookupDemoD18.dproj" Targets="" />
+  </Target>
+  <Target Name="EditorsMaskDemo">
+    <MSBuild Projects="EditorsMaskDemo\EditorsMaskDemoD18.dproj" Targets="" />
+  </Target>
+  <Target Name="EditorsStylesDemo">
+    <MSBuild Projects="EditorsStylesDemo\EditorsStylesDemoD18.dproj" Targets="" />
+  </Target>
+  <Target Name="BreadcrumbEditDemo">
+    <MSBuild Projects="BreadcrumbEditDemo\BreadcrumbEditDemoD18.dproj" Targets="" />
+  </Target>
+  <Target Name="DBBreadcrumbEditDemo">
+    <MSBuild Projects="DBBreadcrumbEditDemo\DBBreadcrumbEditDemoD18.dproj" Targets="" />
+  </Target>
+  <Target Name="ShellBreadcrumbEditDemo">
+    <MSBuild Projects="ShellBreadcrumbEditDemo\ShellBreadcrumbEditDemoD18.dproj" Targets="" />
+  </Target>
+  <Target Name="EditorsValidationDemo">
+    <MSBuild Projects="EditorsValidationDemo\EditorsValidationDemoD18.dproj" Targets="" />
+  </Target>
+  <Target Name="ImageViewerDemo">
+    <MSBuild Projects="ImageViewerDemo\ImageViewerDemoD18.dproj" Targets="" />
+  </Target>
+  <Target Name="Build">
+    <CallTarget Targets="AlertWindowDemoD18;AlertWindowCustomDrawDemoD18;EditorsLookupDemoD18;EditorsMaskDemoD18;EditorsStylesDemoD18;BreadcrumbEditDemoD18;DBBreadcrumbEditDemoD18;ShellBreadcrumbEditDemoD18;EditorsValidationDemoD18;ImageViewerDemoD18" />
+  </Target>
+</Project>

@@ -1,0 +1,111 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<PropertyGroup>
+		<ProjectGuid>{B133F559-B7D2-41B8-A19A-9CD6E8E5B868}</ProjectGuid>
+		<MainSource>dclTMSScripter.dpk</MainSource>
+		<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+		<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+		<DCC_DCCCompiler>DCC32</DCC_DCCCompiler>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+		<Version>7.0</Version>
+		<DCC_DebugInformation>False</DCC_DebugInformation>
+		<DCC_LocalDebugSymbols>False</DCC_LocalDebugSymbols>
+		<DCC_SymbolReferenceInfo>0</DCC_SymbolReferenceInfo>
+		<DCC_Define>RELEASE</DCC_Define>
+		<DCC_Description>TMS Scripter - Design-Time Package</DCC_Description>
+		<DCC_OutputNeverBuildDcps>true</DCC_OutputNeverBuildDcps>
+		<DCC_CBuilderOutput>All</DCC_CBuilderOutput>
+		<DesignOnlyPackage>true</DesignOnlyPackage>
+		<DllSuffix>100</DllSuffix>
+		<DCC_DcuOutput>.\Win32\Release</DCC_DcuOutput>
+		<DCC_BplOutput>..\bpl\Win32</DCC_BplOutput>
+		<DCC_BpiOutput>.\$(Platform)\Release</DCC_BpiOutput>
+		<DCC_DcpOutput>.\Win32\Release</DCC_DcpOutput>
+		<DCC_HppOutput>.\$(Platform)\Release</DCC_HppOutput>
+		<DCC_ObjOutput>.\$(Platform)\Release</DCC_ObjOutput>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+		<Version>7.0</Version>
+		<DCC_Description>TMS Scripter - Design-Time Package</DCC_Description>
+		<DCC_OutputNeverBuildDcps>true</DCC_OutputNeverBuildDcps>
+		<DCC_CBuilderOutput>All</DCC_CBuilderOutput>
+		<DesignOnlyPackage>true</DesignOnlyPackage>
+		<DllSuffix>100</DllSuffix>
+		<DCC_DcuOutput>.\Win32\Release</DCC_DcuOutput>
+		<DCC_BplOutput>..\bpl\Win32</DCC_BplOutput>
+		<DCC_BpiOutput>.\$(Platform)\Release</DCC_BpiOutput>
+		<DCC_DcpOutput>.\Win32\Release</DCC_DcpOutput>
+		<DCC_HppOutput>.\$(Platform)\Release</DCC_HppOutput>
+		<DCC_ObjOutput>.\$(Platform)\Release</DCC_ObjOutput>
+	</PropertyGroup>
+	<ProjectExtensions>
+		<Borland.Personality>Delphi.Personality</Borland.Personality>
+		<Borland.ProjectType>Package</Borland.ProjectType>
+		<BorlandProject>
+			<BorlandProject>
+				<Delphi.Personality>
+					<Parameters>
+						<Parameters Name="UseLauncher">False</Parameters>
+						<Parameters Name="LoadAllSymbols">True</Parameters>
+						<Parameters Name="LoadUnspecifiedSymbols">False</Parameters>
+					</Parameters>
+					<Package_Options>
+						<Package_Options Name="ImplicitBuild">True</Package_Options>
+						<Package_Options Name="DesigntimeOnly">False</Package_Options>
+						<Package_Options Name="RuntimeOnly">False</Package_Options>
+					</Package_Options>
+					<VersionInfo>
+						<VersionInfo Name="IncludeVerInfo">True</VersionInfo>
+						<VersionInfo Name="AutoIncBuild">False</VersionInfo>
+						<VersionInfo Name="MajorVer">1</VersionInfo>
+						<VersionInfo Name="MinorVer">0</VersionInfo>
+						<VersionInfo Name="Release">0</VersionInfo>
+						<VersionInfo Name="Build">0</VersionInfo>
+						<VersionInfo Name="Debug">False</VersionInfo>
+						<VersionInfo Name="PreRelease">False</VersionInfo>
+						<VersionInfo Name="Special">False</VersionInfo>
+						<VersionInfo Name="Private">False</VersionInfo>
+						<VersionInfo Name="DLL">False</VersionInfo>
+						<VersionInfo Name="Locale">1033</VersionInfo>
+						<VersionInfo Name="CodePage">1252</VersionInfo>
+					</VersionInfo>
+					<VersionInfoKeys>
+						<VersionInfoKeys Name="CompanyName"/>
+						<VersionInfoKeys Name="FileDescription"/>
+						<VersionInfoKeys Name="FileVersion">1.0.0.0</VersionInfoKeys>
+						<VersionInfoKeys Name="InternalName"/>
+						<VersionInfoKeys Name="LegalCopyright"/>
+						<VersionInfoKeys Name="LegalTrademarks"/>
+						<VersionInfoKeys Name="OriginalFilename"/>
+						<VersionInfoKeys Name="ProductName"/>
+						<VersionInfoKeys Name="ProductVersion">1.0.0.0</VersionInfoKeys>
+						<VersionInfoKeys Name="Comments"/>
+					</VersionInfoKeys>
+					<Source>
+						<Source Name="MainSource">dclTMSScripter.dpk</Source>
+					</Source>
+				</Delphi.Personality>
+			</BorlandProject>
+		</BorlandProject>
+	</ProjectExtensions>
+	<Import Project="$(MSBuildBinPath)\Borland.Delphi.Targets"/>
+	<ItemGroup>
+		<DelphiCompile Include="dclTMSScripter.dpk">
+			<MainSource>MainSource</MainSource>
+		</DelphiCompile>
+		<DCCReference Include="..\..\source\design\dclTMSScripter.dcr"/>
+		<DCCReference Include="..\..\source\design\dclTMSScripter_IDE.dcr"/>
+		<DCCReference Include="rtl.dcp"/>
+		<DCCReference Include="TMSScripter.dcp"/>
+		<DCCReference Include="TMSScripter_Memo.dcp"/>
+		<DCCReference Include="TMSScripter_IDE.dcp"/>
+		<DCCReference Include="TMSScripter_VCL.dcp"/>
+		<DCCReference Include="designide.dcp"/>
+		<DCCReference Include="TMSScripter_Legacy.dcp"/>
+		<DCCReference Include="..\..\source\design\EditScript.pas">
+			<Form>ScriptEditForm</Form>
+		</DCCReference>
+		<DCCReference Include="..\..\source\design\IDEReg.pas"/>
+		<DCCReference Include="..\..\source\design\RegScrpt.pas"/>
+	</ItemGroup>
+</Project>

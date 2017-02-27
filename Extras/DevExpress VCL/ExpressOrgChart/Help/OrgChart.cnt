@@ -1,0 +1,22 @@
+:Base OrgChart.hlp
+:Title ExpressOrgChart Suite
+:Index ExpressOrgChart Suite=OrgChart.hlp
+1 ExpressOrgChart Suite
+2 Overview=CD_Overview
+2 Getting Started=GettingStarted
+2 Known Issues and Important Changes List=CD_Known_Issues_and_Important_Changes_List
+2 DxOrgChart Components
+3 dxorgchr Unit=IDH_Unit_dxorgchr
+3 Controls
+4 TdxCustomOrgChart=IDH_Class_TdxCustomOrgChart
+4 TdxOrgChart=IDH_Class_TdxOrgChart
+3 Objects
+4 TdxOcNode=IDH_Class_TdxOcNode
+2 DxDbOrgChart Components
+3 dxdborgc Unit=IDH_Unit_dxdborgc
+3 Controls
+4 TdxDbOrgChart=IDH_Class_TdxDbOrgChart
+3 Objects
+4 TdxDbOcNode=IDH_Class_TdxDbOcNode
+2 Routines
+3 ShowOrgChartEditor=IDH_dxorgchr_ShowOrgChartEditor

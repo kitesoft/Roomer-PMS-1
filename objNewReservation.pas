@@ -1170,8 +1170,6 @@ begin
         if Transactional then
           ExecutionPlan.BeginTransaction;
 
-        if (DeleteResNr > 0) then
-          d.roomerMainDataSet.SystemRemoveReservation(DeleteResNr, False, False);
 
         TotalGuests := FnewRoomReservations.TotalGuests;
 
@@ -1180,6 +1178,23 @@ begin
 
 
         FReservation := hData.RV_SetNewID();
+
+        if (DeleteResNr > 0) then
+        begin
+         try
+           lstReservationActivity.add(CreateReservationActivityLog(g.quser
+                                                 ,DeleteResNr
+                                                 ,0
+                                                 ,DELETE_RESERVATION
+                                                 ,'' //old value
+                                                 ,''
+                                                 ,Format('Deleting before creating new reservation %d', [FReservation])
+                                   ));
+         Except
+         end;
+         d.roomerMainDataSet.SystemRemoveReservation(DeleteResNr, False, False);
+        end;
+
         init;
         CreateReservation;
         createReservationInvoiceHead;

@@ -1,0 +1,44 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+	  <ProjectGuid>{624986FA-A7F7-4F65-944F-B4291D80BD68}</ProjectGuid>
+  </PropertyGroup>
+  <ProjectExtensions>
+    <Borland.Personality>Default.Personality.12</Borland.Personality>
+    <Borland.ProjectType />
+    <BorlandProject>
+  <BorlandProject xmlns=""> <Default.Personality> </Default.Personality> </BorlandProject></BorlandProject>
+  </ProjectExtensions>
+  <Target Name="AlertWindowDemo">
+    <MSBuild Projects="AlertWindowDemo\AlertWindowDemoRSC14.cbproj" Targets="" />
+  </Target>
+  <Target Name="AlertWindowCustomDrawDemo">
+    <MSBuild Projects="AlertWindowCustomDrawDemo\AlertWindowCustomDrawDemoRSC14.cbproj" Targets="" />
+  </Target>
+  <Target Name="EditorsLookupDemo">
+    <MSBuild Projects="EditorsLookupDemo\EditorsLookupDemoRSC14.cbproj" Targets="" />
+  </Target>
+  <Target Name="EditorsMaskDemo">
+    <MSBuild Projects="EditorsMaskDemo\EditorsMaskDemoRSC14.cbproj" Targets="" />
+  </Target>
+  <Target Name="EditorsStylesDemo">
+    <MSBuild Projects="EditorsStylesDemo\EditorsStylesDemoRSC14.cbproj" Targets="" />
+  </Target>
+  <Target Name="BreadcrumbEditDemo">
+    <MSBuild Projects="BreadcrumbEditDemo\BreadcrumbEditDemoRSC14.cbproj" Targets="" />
+  </Target>
+  <Target Name="DBBreadcrumbEditDemo">
+    <MSBuild Projects="DBBreadcrumbEditDemo\DBBreadcrumbEditDemoRSC14.cbproj" Targets="" />
+  </Target>
+  <Target Name="ShellBreadcrumbEditDemo">
+    <MSBuild Projects="ShellBreadcrumbEditDemo\ShellBreadcrumbEditDemoRSC14.cbproj" Targets="" />
+  </Target>
+  <Target Name="EditorsValidationDemo">
+    <MSBuild Projects="EditorsValidationDemo\EditorsValidationDemoRSC14.cbproj" Targets="" />
+  </Target>
+  <Target Name="ImageViewerDemo">
+    <MSBuild Projects="ImageViewerDemo\ImageViewerDemoRSC14.cbproj" Targets="" />
+  </Target>
+  <Target Name="Build">
+    <CallTarget Targets="AlertWindowDemoRSC14;AlertWindowCustomDrawDemoRSC14;EditorsLookupDemoRSC14;EditorsMaskDemoRSC14;EditorsStylesDemoRSC14;BreadcrumbEditDemoRSC14;DBBreadcrumbEditDemoRSC14;ShellBreadcrumbEditDemoRSC14;EditorsValidationDemoRSC14;ImageViewerDemoRSC14" />
+  </Target>
+</Project>

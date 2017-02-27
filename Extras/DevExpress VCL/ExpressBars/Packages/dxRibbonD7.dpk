@@ -1,0 +1,58 @@
+package dxRibbonD7;
+
+{$R *.res}
+{$IFDEF DXDEBUGMODE}
+  {$DEBUGINFO ON}
+  {$LOCALSYMBOLS ON}
+  {$OPTIMIZATION OFF}
+  {$STACKFRAMES ON}
+{$ELSE}
+  {$DEBUGINFO OFF}
+  {$LOCALSYMBOLS OFF}
+  {$OPTIMIZATION ON}
+  {$STACKFRAMES OFF}
+{$ENDIF}
+{$ALIGN 8}
+{$ASSERTIONS OFF}
+{$BOOLEVAL OFF}
+{$EXTENDEDSYNTAX ON}
+{$IMPORTEDDATA ON}
+{$IOCHECKS ON}
+{$LONGSTRINGS ON}
+{$OPENSTRINGS ON}
+{$OVERFLOWCHECKS OFF}
+{$RANGECHECKS OFF}
+{$REFERENCEINFO OFF}
+{$SAFEDIVIDE OFF}
+{$TYPEDADDRESS OFF}
+{$VARSTRINGCHECKS ON}
+{$WRITEABLECONST ON}
+{$MINENUMSIZE 1}
+{$IMAGEBASE $400000}
+{$DESCRIPTION 'ExpressBars Ribbon controls by Developer Express Inc.'}
+{$RUNONLY}
+{$IMPLICITBUILD OFF}
+
+requires
+  dxCoreD7,
+  dxThemeD7,
+  cxLibraryD7,
+  dxGDIPlusD7,
+  cxEditorsD7,
+  dxBarD7;
+
+contains
+  dxRibbon,
+  dxRibbonForm,
+  dxRibbonFormCaptionHelper,
+  dxRibbonGallery,
+  dxRibbonGroupLayoutCalculator,
+  dxRibbonBackstageView,
+  dxRibbonBackstageViewGalleryControl,
+  dxRibbonSkins,
+  dxRibbonMiniToolbar,
+  dxRibbonStatusBar,
+  dxRibbonRadialMenu,
+  dxSkinChooserGallery;
+
+end.

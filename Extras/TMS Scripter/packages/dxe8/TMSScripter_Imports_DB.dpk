@@ -1,0 +1,47 @@
+package TMSScripter_Imports_DB;
+
+{$R *.res}
+{$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
+{$ALIGN 8}
+{$ASSERTIONS ON}
+{$BOOLEVAL OFF}
+{$DEBUGINFO ON}
+{$EXTENDEDSYNTAX ON}
+{$IMPORTEDDATA ON}
+{$IOCHECKS ON}
+{$LOCALSYMBOLS ON}
+{$LONGSTRINGS ON}
+{$OPENSTRINGS ON}
+{$OPTIMIZATION OFF}
+{$OVERFLOWCHECKS OFF}
+{$RANGECHECKS OFF}
+{$REFERENCEINFO ON}
+{$SAFEDIVIDE OFF}
+{$STACKFRAMES ON}
+{$TYPEDADDRESS OFF}
+{$VARSTRINGCHECKS ON}
+{$WRITEABLECONST OFF}
+{$MINENUMSIZE 1}
+{$IMAGEBASE $400000}
+{$DEFINE DEBUG}
+{$ENDIF IMPLICITBUILDING}
+{$DESCRIPTION 'TMS Scripter - DB Import Package'}
+{$LIBSUFFIX '220'}
+{$RUNONLY}
+{$IMPLICITBUILD OFF}
+
+requires
+  rtl,
+  TMSScripter_Imports_RTL,
+  vcl,
+  dbrtl,
+  vcldb;
+
+contains
+  ap_DB in '..\..\source\imports\db\ap_DB.pas',
+  ap_DBCtrls in '..\..\source\imports\vcldb\ap_DBCtrls.pas',
+  ap_DBGrids in '..\..\source\imports\vcldb\ap_DBGrids.pas',
+  ap_FMTBcd in '..\..\source\imports\db\ap_FMTBcd.pas',
+  ap_SqlTimSt in '..\..\source\imports\db\ap_SqlTimSt.pas';
+
+end.

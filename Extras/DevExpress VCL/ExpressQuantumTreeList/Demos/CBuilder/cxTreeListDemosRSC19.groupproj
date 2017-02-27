@@ -1,0 +1,62 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+	  <ProjectGuid>{624986FA-A7F7-4F65-944F-B4291D80BD68}</ProjectGuid>
+  </PropertyGroup>
+  <ProjectExtensions>
+    <Borland.Personality>Default.Personality.12</Borland.Personality>
+    <Borland.ProjectType />
+    <BorlandProject>
+  <BorlandProject xmlns=""> <Default.Personality> </Default.Personality> </BorlandProject></BorlandProject>
+  </ProjectExtensions>
+  <Target Name="BandedDemo">
+    <MSBuild Projects="BandedDemo\BandedDemoRSC19.cbproj" Targets="" />
+  </Target>
+  <Target Name="BandedFixedDemo">
+    <MSBuild Projects="BandedFixedDemo\BandedFixedDemoRSC19.cbproj" Targets="" />
+  </Target>
+  <Target Name="ColumnsMultiEditorsDemo">
+    <MSBuild Projects="ColumnsMultiEditorsDemo\ColumnsMultiEditorsDemoRSC19.cbproj" Targets="" />
+  </Target>
+  <Target Name="CheckGroupsDemo">
+    <MSBuild Projects="CheckGroupsDemo\CheckGroupsDemoRSC19.cbproj" Targets="" />
+  </Target>
+  <Target Name="CustomDrawDemo">
+    <MSBuild Projects="CustomDrawDemo\CustomDrawDemoRSC19.cbproj" Targets="" />
+  </Target>
+  <Target Name="DragDropDemo">
+    <MSBuild Projects="DragDropDemo\DragDropDemoRSC19.cbproj" Targets="" />
+  </Target>
+  <Target Name="EditorsInPlaceDemo">
+    <MSBuild Projects="EditorsInPlaceDemo\EditorsInPlaceDemoRSC19.cbproj" Targets="" />
+  </Target>
+  <Target Name="VirtualModeDemo">
+    <MSBuild Projects="VirtualModeDemo\VirtualModeDemoRSC19.cbproj" Targets="" />
+  </Target>
+  <Target Name="ProviderModeDemo">
+    <MSBuild Projects="ProviderModeDemo\ProviderModeDemoRSC19.cbproj" Targets="" />
+  </Target>
+  <Target Name="SimpleListDemo">
+    <MSBuild Projects="SimpleListDemo\SimpleListDemoRSC19.cbproj" Targets="" />
+  </Target>
+  <Target Name="SimpleTreeDemo">
+    <MSBuild Projects="SimpleTreeDemo\SimpleTreeDemoRSC19.cbproj" Targets="" />
+  </Target>
+  <Target Name="StylesMultiDemo">
+    <MSBuild Projects="StylesMultiDemo\StylesMultiDemoRSC19.cbproj" Targets="" />
+  </Target>
+  <Target Name="StylesSimpleDemo">
+    <MSBuild Projects="StylesSimpleDemo\StylesSimpleDemoRSC19.cbproj" Targets="" />
+  </Target>
+  <Target Name="SummariesDemo">
+    <MSBuild Projects="SummariesDemo\SummariesDemoRSC19.cbproj" Targets="" />
+  </Target>
+  <Target Name="UnboundModeDemo">
+    <MSBuild Projects="UnboundModeDemo\UnboundModeDemoRSC19.cbproj" Targets="" />
+  </Target>
+  <Target Name="EditorsInPlaceValidationDemo">
+    <MSBuild Projects="EditorsInPlaceValidationDemo\EditorsInPlaceValidationDemoRSC19.cbproj" Targets="" />
+  </Target>
+  <Target Name="Build">
+    <CallTarget Targets="BandedDemoRSC19;BandedFixedDemoRSC19;ColumnsMultiEditorsDemoRSC19;CheckGroupsDemoRSC19;CustomDrawDemoRSC19;DragDropDemoRSC19;EditorsInPlaceDemoRSC19;VirtualModeDemoRSC19;ProviderModeDemoRSC19;SimpleListDemoRSC19;SimpleTreeDemoRSC19;StylesMultiDemoRSC19;StylesSimpleDemoRSC19;SummariesDemoRSC19;UnboundModeDemoRSC19;EditorsInPlaceValidationDemoRSC19" />
+  </Target>
+</Project>
