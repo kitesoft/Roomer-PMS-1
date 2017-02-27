@@ -409,7 +409,6 @@
         <DCCReference Include="ueditRoomPrice.pas">
             <Form>frmEditRoomPrice</Form>
         </DCCReference>
-        <DCCReference Include="Extras\hData.pas"/>
         <DCCReference Include="uRoomCleanMaintenanceStatus.pas">
             <Form>frmRoomCleanMaintenanceStatus</Form>
         </DCCReference>
@@ -466,7 +465,6 @@
         <DCCReference Include="uPersonContactType.pas">
             <Form>frmPersonContactType</Form>
         </DCCReference>
-        <DCCReference Include="Extras\uSqlDefinitions.pas"/>
         <DCCReference Include="uChannelManager.pas">
             <Form>frmChannelManager</Form>
         </DCCReference>
@@ -806,7 +804,6 @@
         <DCCReference Include="PMSSettings\uPMSSettings.pas"/>
         <DCCReference Include="TableCache\uTableEntityList.pas"/>
         <DCCReference Include="uMessageList.pas"/>
-        <DCCReference Include="Extras\uRoomerVersionInfo.pas"/>
         <DCCReference Include="Definitions\uCleaningNotesDefinitions.pas"/>
         <DCCReference Include="RoomerForm\uRoomerDialogForm.pas">
             <Form>frmBaseRoomerDialogForm</Form>
@@ -831,7 +828,6 @@
         <DCCReference Include="uTopClassAvailabilityOrder.pas">
             <Form>FrmTopClassAvailabilityOrder</Form>
         </DCCReference>
-        <DCCReference Include="Extras\_Glob.pas"/>
         <DCCReference Include="uCurrencyHandlersMap.pas"/>
         <DCCReference Include="OpenAPI\uHotelServicesAPICaller.pas"/>
         <DCCReference Include="OpenAPI\schema\uRoomerHotelServicesCommunicationModel_RequestsResponses.pas"/>
@@ -842,6 +838,10 @@
         <DCCReference Include="OpenAPI\uCredentialsAPICaller.pas"/>
         <DCCReference Include="RoomerExceptionHandling.pas"/>
         <DCCReference Include="PMSSettings\uPMSSettingsAccessor.pas"/>
+        <DCCReference Include="Data\_Glob.pas"/>
+        <DCCReference Include="Data\hData.pas"/>
+        <DCCReference Include="Data\uSqlDefinitions.pas"/>
+        <DCCReference Include="RoomerUtils\uRoomerVersionInfo.pas"/>
         <None Include="Roomer.todo"/>
         <None Include="notes.txt"/>
         <None Include="Roomer.inc"/>

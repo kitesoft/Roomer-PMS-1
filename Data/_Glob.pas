@@ -2,8 +2,6 @@
 
 interface
 
-{$i versions.inc}
-
 uses
   UITypes,
   Windows,
