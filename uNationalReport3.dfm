@@ -32,7 +32,7 @@ object frmNationalReport3: TfrmNationalReport3
     Top = 117
     Width = 1079
     Height = 479
-    ActivePage = cxTabSheet1
+    ActivePage = sheetNationalStatistics1
     Align = alClient
     Style = tsButtons
     TabHeight = 25
@@ -130,16 +130,6 @@ object frmNationalReport3: TfrmNationalReport3
               Kind = skCount
               FieldName = 'CountryGroup'
               Column = tvNationalStatistics1CountryGroup
-            end
-            item
-              Kind = skSum
-              FieldName = 'ReservationCount'
-              Column = tvNationalStatistics1ReservationCount
-            end
-            item
-              Kind = skSum
-              FieldName = 'RoomReservationCount'
-              Column = tvNationalStatistics1RoomReservationCount
             end>
           DataController.Summary.SummaryGroups = <>
           OptionsBehavior.IncSearch = True
