@@ -84,7 +84,7 @@ uses
   dxSkinLondonLiquidSky, dxSkinMoneyTwins, dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green, dxSkinOffice2007Pink,
   dxSkinOffice2007Silver, dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinValentine,
-  dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue
+  dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, Vcl.Menus
   ;
 
 type
@@ -159,6 +159,10 @@ type
     tvInvoiceHeadLocalAmount: TcxGridDBBandedColumn;
     tvInvoiceHeadLocalWithOutVAT: TcxGridDBBandedColumn;
     tvInvoiceHeadLocalVAT: TcxGridDBBandedColumn;
+    PopupMenu1: TPopupMenu;
+    mnuExport: TMenuItem;
+    N1: TMenuItem;
+    mnuExportability: TMenuItem;
     procedure rbtDatesClick(Sender : TObject);
     procedure FormCreate(Sender : TObject);
     procedure cbxPeriodChange(Sender : TObject);
@@ -193,9 +197,16 @@ type
       var AProperties: TcxCustomEditProperties);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure tvInvoiceHeadLocalAmountGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord; var AProperties: TcxCustomEditProperties);
+    procedure PopupMenu1Popup(Sender: TObject);
+    procedure mnuExportClick(Sender: TObject);
+    procedure mnuExportabilityClick(Sender: TObject);
+    procedure m22_BeforePost(DataSet: TDataSet);
+    procedure tvInvoiceHeadEditing(Sender: TcxCustomGridTableView; AItem: TcxCustomGridTableItem; var AAllow: Boolean);
   private
     { Private declarations }
 
+    bIsFinanceSystemConnected : Boolean;
+    initialRead : Boolean;
     zSortField : string;
     zSortDir : string;
 
@@ -210,6 +221,7 @@ type
     function GetSelectedInvoices : String;
     function GetExportTemplate: String;
     procedure InitSelections;
+    function IsFinanceSystemConnected: Boolean;
   public
     { Public declarations }
     dirArr : array [1 .. 20] of boolean;
@@ -243,7 +255,9 @@ uses
   , PrjConst
   , uDImages
   , uFrmPostInvoices
-  , uSQLUtils;
+  , uSQLUtils
+  , uFrmHandleBookKeepingException
+  ;
 
 {$R *.dfm}
 (*
@@ -534,133 +548,138 @@ var
 
 begin
   if firstTime then exit;
-  zdtFrom := dtFrom.Date;
-  zdtTo := dtTo.Date;
-
-  screen.Cursor := crHourGlass;
-  rSet := CreateNewDataset;
+  initialRead := True;
   try
-    s := s + 'SELECT '#10;
-    s := s + '      ih.externalInvoiceId '#10;
-    s := s + '    , ih.Reservation '#10;
-    s := s + '    , ih.RoomReservation '#10;
-    s := s + '    , ih.InvoiceNumber '#10;
-    s := s + '    , ih.Customer '#10;
-    s := s + '    , ih.Name AS NameOnInvoice'#10;
-    s := s + '    , ih.Address1 '#10;
-    s := s + '    , ih.Address2 '#10;
-    s := s + '    , ih.Address3 '#10;
-    s := s + '    , ih.invRefrence AS Refrence '#10;
-    s := s + '    , ih.Total/ihCurrencyRate AS Amount '#10;
-    s := s + '    , ih.TotalWOVat/ihCurrencyRate AS WithOutVAT'#10;
-    s := s + '    , ih.TotalVat/ihCurrencyRate AS VAT '#10;
-    s := s + '    , ih.Total AS LocalAmount '#10;
-    s := s + '    , ih.TotalWOVat AS LocalWithOutVAT'#10;
-    s := s + '    , ih.TotalVat AS LocalVAT '#10;
-    s := s + '    , ih.RoomGuest '#10;
-//    s := s + '    , ih.ihInvoiceDate AS InvoiceDate'#10;
-    s := s + '    , date(ih.InvoiceDate) AS InvoiceDate'#10;
-    s := s + '    , ih.ihConfirmDate AS Confirmdate'#10;
-    s := s + '    , ih.ihPayDate AS DueDate'#10;
-    s := s + '    , ih.ihStaff AS Staff'#10;
-    s := s + '    , ih.custPID AS CompanyId'#10;
-    s := s + '    , ih.ihcurrency AS Currency'#10;
-    s := s + '    , ih.ihcurrencyRate AS CurrencyRate'#10;
-    s := s + '    , ih.totalStayTax AS Taxes'#10;
-    s := s + '    , ih.TotalStayTaxNights Taxunits'#10;
-    s := s + '    , (if(ih.Splitnumber=1,'+_db('CREDIT')+','+_db('DEBIT')+')) AS CreditType '#10;
-    s := s + '    , (ih.Total div ih.ihCurrencyRate) AS CurrencyAmount '#10;
-    s := s + '    , (if(ih.Reservation = 0 and ih.Roomreservation=0,' + _db(GetTranslatedText('shUI_Reports_InvoiceTypeCash')) +
-                     ',if(ih.Reservation > 0 and ih.Roomreservation=0,'+ _db(GetTranslatedText('shUI_Reports_InvoiceTypeGroup')) + ',' + _db(GetTranslatedText('shUI_Reports_InvoiceTypeRoom')) + '))) AS Invoicetype '#10;
-    s := s + '    , (IF(ih.CreditInvoice<>0,ih.CreditInvoice,if(ih.OriginalInvoice<>0,ih.OriginalInvoice,0))) AS Link'#10;
-    s := s + '    , (SELECT surName FROM customers WHERE Customer = ih.Customer Limit 1) As CustomerName'#10;
-    s := s + '    , (SELECT GROUP_CONCAT(PayType) FROM payments WHERE InvoiceNumber=ih.InvoiceNumber) AS paytypes'#10;
-    s := s + '    , (SELECT GROUP_CONCAT(Amount) FROM payments WHERE InvoiceNumber=ih.InvoiceNumber) AS payments'#10;
-    s := s + '     FROM '#10;
-    s := s + '        invoiceheads ih '#10;
-    s := s + '    WHERE '#10;
-    s := s + '      (ih.invoicenumber > 0) '#10;
+    zdtFrom := dtFrom.Date;
+    zdtTo := dtTo.Date;
 
-    if rbtDates.checked then
-    begin
-//      s := s + '    AND ((ih.ihInvoiceDate >= ' + _db(zdtFrom, true) + ')  AND (ih.ihInvoiceDate <= ' + _db(zDTTo, true)
-      s := s + '    AND ((ih.InvoiceDate >= ' + _db(zdtFrom, true) + ')  AND (ih.InvoiceDate <= ' + _db(zDTTo, true)
-        + ')) ';
-    end;
+    screen.Cursor := crHourGlass;
+    rSet := CreateNewDataset;
+    try
+      s := s + 'SELECT '#10;
+      s := s + '      ih.externalInvoiceId '#10;
+      s := s + '    , ih.Reservation '#10;
+      s := s + '    , ih.RoomReservation '#10;
+      s := s + '    , ih.InvoiceNumber '#10;
+      s := s + '    , ih.Customer '#10;
+      s := s + '    , ih.Name AS NameOnInvoice'#10;
+      s := s + '    , ih.Address1 '#10;
+      s := s + '    , ih.Address2 '#10;
+      s := s + '    , ih.Address3 '#10;
+      s := s + '    , ih.invRefrence AS Refrence '#10;
+      s := s + '    , ih.Total/ihCurrencyRate AS Amount '#10;
+      s := s + '    , ih.TotalWOVat/ihCurrencyRate AS WithOutVAT'#10;
+      s := s + '    , ih.TotalVat/ihCurrencyRate AS VAT '#10;
+      s := s + '    , ih.Total AS LocalAmount '#10;
+      s := s + '    , ih.TotalWOVat AS LocalWithOutVAT'#10;
+      s := s + '    , ih.TotalVat AS LocalVAT '#10;
+      s := s + '    , ih.RoomGuest '#10;
+  //    s := s + '    , ih.ihInvoiceDate AS InvoiceDate'#10;
+      s := s + '    , date(ih.InvoiceDate) AS InvoiceDate'#10;
+      s := s + '    , ih.ihConfirmDate AS Confirmdate'#10;
+      s := s + '    , ih.ihPayDate AS DueDate'#10;
+      s := s + '    , ih.ihStaff AS Staff'#10;
+      s := s + '    , ih.custPID AS CompanyId'#10;
+      s := s + '    , ih.ihcurrency AS Currency'#10;
+      s := s + '    , ih.ihcurrencyRate AS CurrencyRate'#10;
+      s := s + '    , ih.totalStayTax AS Taxes'#10;
+      s := s + '    , ih.TotalStayTaxNights Taxunits'#10;
+      s := s + '    , (if(ih.Splitnumber=1,'+_db('CREDIT')+','+_db('DEBIT')+')) AS CreditType '#10;
+      s := s + '    , (ih.Total div ih.ihCurrencyRate) AS CurrencyAmount '#10;
+      s := s + '    , (if(ih.Reservation = 0 and ih.Roomreservation=0,' + _db(GetTranslatedText('shUI_Reports_InvoiceTypeCash')) +
+                       ',if(ih.Reservation > 0 and ih.Roomreservation=0,'+ _db(GetTranslatedText('shUI_Reports_InvoiceTypeGroup')) + ',' + _db(GetTranslatedText('shUI_Reports_InvoiceTypeRoom')) + '))) AS Invoicetype '#10;
+      s := s + '    , (IF(ih.CreditInvoice<>0,ih.CreditInvoice,if(ih.OriginalInvoice<>0,ih.OriginalInvoice,0))) AS Link'#10;
+      s := s + '    , (SELECT surName FROM customers WHERE Customer = ih.Customer Limit 1) As CustomerName'#10;
+      s := s + '    , (SELECT GROUP_CONCAT(PayType) FROM payments WHERE InvoiceNumber=ih.InvoiceNumber) AS paytypes'#10;
+      s := s + '    , (SELECT GROUP_CONCAT(Amount) FROM payments WHERE InvoiceNumber=ih.InvoiceNumber) AS payments'#10;
+      s := s + '     FROM '#10;
+      s := s + '        invoiceheads ih '#10;
+      s := s + '    WHERE '#10;
+      s := s + '      (ih.invoicenumber > 0) '#10;
 
-    if (rbtInvoices.checked) or (rbtLast.checked) then
-    begin
-      s := s + '    AND ((ih.InvoiceNumber >= ' + _db(zInvoiceFrom) + ')  AND (ih.InvoiceNumber <= ' + _db(zInvoiceTo) + ')) ';
-    end;
-
-    if (rbtFreeText.checked) then
-    begin
-      case cbxTxtType.ItemIndex of
-        0 :
-          begin // InvoiceNumber;
-            s := s + '  AND (ih.InvoiceNumber=' + _db(edtFreeText.Text) + ') ';
-          end;
-        1 :
-          begin // Kennitala;
-            s := s + '  AND (custPID=' + _db(edtFreeText.Text) + ') ';
-          end;
-        2 :
-          begin // Customer N�mer;
-            s := s + '  AND (Customer=' + _db(edtFreeText.Text) + ') ';
-          end;
-        3 :
-          begin // Nafn Gests e�a Fyrirt�kis;
-            s := s + '  AND ((Name LIKE ' + _db('%' + edtFreeText.Text + '%') + ') OR (RoomGuest LIKE ' + _db('%' + edtFreeText.Text + '%') + ')) ';
-          end;
-        4 :
-          begin // N�mer b�kunnar;
-            if _isInteger(edtFreeText.Text) then
-            begin
-              s := s + '  AND (Reservation=' + edtFreeText.Text + ') ';
-            end
-            else
-            begin
-			        showmessage(GetTranslatedText('shTx_InvoiceList2_BookingNumber'));
-            end;
-          end;
-        5 :
-          begin // N�mer herbergja b�kunnar;
-            if _isInteger(edtFreeText.Text) then
-            begin
-              s := s + '  AND (RoomReservation=' + edtFreeText.Text + ') ';
-            end
-            else
-            begin
-      			  showmessage(GetTranslatedText('shTx_InvoiceList2_BookingNumber'))
-            end;
-          end;
+      if rbtDates.checked then
+      begin
+  //      s := s + '    AND ((ih.ihInvoiceDate >= ' + _db(zdtFrom, true) + ')  AND (ih.ihInvoiceDate <= ' + _db(zDTTo, true)
+        s := s + '    AND ((ih.InvoiceDate >= ' + _db(zdtFrom, true) + ')  AND (ih.InvoiceDate <= ' + _db(zDTTo, true)
+          + ')) ';
       end;
-    end;
-    s := s + ' ORDER BY ';
-    s := s + '   ih.InvoiceNumber DESC';
 
-    copytoclipboard(s);
-//    debugMessage(s);
-
-    if hData.rSet_bySQL(rSet,s) then
-    begin
-       m22_.DisableControls;
-      try
-        if m22_.active then m22_.Close;
-        m22_.open;
-        LoadKbmMemtableFromDataSetQuiet(m22_,rset,[]);
-        InitSelections;
-      finally
-         m22_.EnableControls;
+      if (rbtInvoices.checked) or (rbtLast.checked) then
+      begin
+        s := s + '    AND ((ih.InvoiceNumber >= ' + _db(zInvoiceFrom) + ')  AND (ih.InvoiceNumber <= ' + _db(zInvoiceTo) + ')) ';
       end;
-      m22_.First;
-    end else
-    begin
+
+      if (rbtFreeText.checked) then
+      begin
+        case cbxTxtType.ItemIndex of
+          0 :
+            begin // InvoiceNumber;
+              s := s + '  AND (ih.InvoiceNumber=' + _db(edtFreeText.Text) + ') ';
+            end;
+          1 :
+            begin // Kennitala;
+              s := s + '  AND (custPID=' + _db(edtFreeText.Text) + ') ';
+            end;
+          2 :
+            begin // Customer N�mer;
+              s := s + '  AND (Customer=' + _db(edtFreeText.Text) + ') ';
+            end;
+          3 :
+            begin // Nafn Gests e�a Fyrirt�kis;
+              s := s + '  AND ((Name LIKE ' + _db('%' + edtFreeText.Text + '%') + ') OR (RoomGuest LIKE ' + _db('%' + edtFreeText.Text + '%') + ')) ';
+            end;
+          4 :
+            begin // N�mer b�kunnar;
+              if _isInteger(edtFreeText.Text) then
+              begin
+                s := s + '  AND (Reservation=' + edtFreeText.Text + ') ';
+              end
+              else
+              begin
+                showmessage(GetTranslatedText('shTx_InvoiceList2_BookingNumber'));
+              end;
+            end;
+          5 :
+            begin // N�mer herbergja b�kunnar;
+              if _isInteger(edtFreeText.Text) then
+              begin
+                s := s + '  AND (RoomReservation=' + edtFreeText.Text + ') ';
+              end
+              else
+              begin
+                showmessage(GetTranslatedText('shTx_InvoiceList2_BookingNumber'))
+              end;
+            end;
+        end;
+      end;
+      s := s + ' ORDER BY ';
+      s := s + '   ih.InvoiceNumber DESC';
+
+      copytoclipboard(s);
+  //    debugMessage(s);
+
+      if hData.rSet_bySQL(rSet,s) then
+      begin
+         m22_.DisableControls;
+        try
+          if m22_.active then m22_.Close;
+          m22_.open;
+          LoadKbmMemtableFromDataSetQuiet(m22_,rset,[]);
+          InitSelections;
+        finally
+           m22_.EnableControls;
+        end;
+        m22_.First;
+      end else
+      begin
+      end;
+    finally
+      freeandnil(rSet);
+      screen.Cursor := crDefault;
+      zRecordCount := m22_.RecordCount;
     end;
   finally
-    freeandnil(rSet);
-    screen.Cursor := crDefault;
-    zRecordCount := m22_.RecordCount;
+    initialRead := False;
   end;
 end;
 
@@ -726,6 +745,7 @@ end;
 procedure TfrmInvoiceList2.FormShow(Sender : TObject);
 begin
 
+  bIsFinanceSystemConnected := IsFinanceSystemConnected;
   cbxPeriod.ItemIndex := 0;
   cbxTxtType.ItemIndex := 0;
   zLastInvoiceID := hdata.IVH_GetLastID();
@@ -775,6 +795,14 @@ var
 begin
   InvoiceNumber := m22_.fieldbyname('InvoiceNumber').AsInteger;
   ViewInvoice2(InvoiceNumber, false, false, false,false, '');
+end;
+
+procedure TfrmInvoiceList2.tvInvoiceHeadEditing(Sender: TcxCustomGridTableView; AItem: TcxCustomGridTableItem; var AAllow: Boolean);
+begin
+  AAllow := IsAltKeyPressed AND
+            ((tvInvoiceHead.DataController.DataSource.DataSet.FieldByName('externalInvoiceId').AsInteger IN [0,1]) OR
+            (MessageDlg('It looks as if this invoice has already been sent to bookkeeping.' + #13 +
+                        'Are you sure you want to change it''s value?', mtWarning, [mbYes, mbNo], 0) = mrYes));
 end;
 
 procedure TfrmInvoiceList2.tvInvoiceHeadLocalAmountGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
@@ -911,6 +939,105 @@ begin
   ShellExecute(Handle, 'OPEN', PChar(sFilename + '.xls'), nil, nil, sw_shownormal);
 end;
 
+procedure TfrmInvoiceList2.m22_BeforePost(DataSet: TDataSet);
+var InvoiceNumber : Integer;
+    Sql : String;
+begin
+  if NOT initialRead then
+  begin
+    Sql := format('UPDATE invoiceheads SET externalInvoiceId=%d WHERE InvoiceNumber=%d',
+           [
+             DataSet.FieldByName('externalInvoiceId').AsInteger,
+             DataSet.FieldByName('InvoiceNumber').AsInteger
+           ]);
+    d.roomerMainDataSet.DoCommand(Sql);
+  end;
+end;
+
+procedure TfrmInvoiceList2.mnuExportabilityClick(Sender: TObject);
+var v : Variant;
+    i : Integer;
+    Bkm : TcxBookmark;
+begin
+  with tvInvoiceHead do
+  begin
+    DataController.BeginLocate;
+    DataController.DataSet.DisableControls;
+    for i := 0 to PRED(Controller.SelectedRowCount ) do
+    begin
+      Bkm := DataController.GetSelectedBookmark(I);
+      if DataController.DataSet.BookmarkValid(TBookmark(Bkm)) then
+      begin
+        DataController.DataSet.GotoBookmark(TBookmark(Bkm));
+        if (DataController.DataSet.FieldByName('externalInvoiceId').AsInteger IN [0,1]) then
+        begin
+          DataController.DataSet.Edit;
+          DataController.DataSet['externalInvoiceId']:= IIF(DataController.DataSet['externalInvoiceId'] = 1, 0, 1);
+          DataController.DataSet.Post;
+        end;
+      end;
+    end;
+    DataController.EndLocate;
+    DataController.DataSet.EnableControls;
+  end;
+end;
+
+procedure TfrmInvoiceList2.mnuExportClick(Sender: TObject);
+var v : Variant;
+    i,
+    invNumber : Integer;
+    Bkm : TcxBookmark;
+    remoteResult : String;
+begin
+  with tvInvoiceHead do
+  begin
+    DataController.BeginLocate;
+    DataController.DataSet.DisableControls;
+    for i := 0 to PRED(Controller.SelectedRowCount ) do
+    begin
+      Bkm := DataController.GetSelectedBookmark(I);
+      if DataController.DataSet.BookmarkValid(TBookmark(Bkm)) then
+      begin
+        DataController.DataSet.GotoBookmark(TBookmark(Bkm));
+        if (DataController.DataSet.FieldByName('externalInvoiceId').AsInteger IN [0,1]) then
+        begin
+          invNumber := DataController.DataSet['InvoiceNumber'];
+          remoteResult := d.roomerMainDataSet.SystemSendInvoiceToBookkeeping(invNumber);
+          if remoteResult <> '' then
+          begin
+            HandleFinanceBookKeepingExceptions(invNumber, remoteResult);
+          end;
+        end;
+      end;
+    end;
+    DataController.EndLocate;
+    DataController.DataSet.EnableControls;
+  end;
+end;
+
+function TfrmInvoiceList2.IsFinanceSystemConnected : Boolean;
+var rSet : TRoomerDataSet;
+begin
+  rSet := CreateNewDataSet;
+  rSet_bySQL(rSet, 'SELECT to_bool(IFNULL((SELECT 1 FROM home100.hotelservices WHERE active=1 AND hotelId=SUBSTR(DATABASE(), 9, 15) AND serviceType=''FINANCE'' LIMIT 1), 0)) AS financeConnected, InvoiceExportFilename FROM hotelconfigurations LIMIT 1');
+  rSet.First;
+  if NOT rSet.Eof then
+  begin
+    if rSet['financeConnected'] then
+      result := True
+    else
+      result := False;
+  end else
+    result := False;
+end;
+
+
+procedure TfrmInvoiceList2.PopupMenu1Popup(Sender: TObject);
+begin
+  mnuExportability.Enabled := tvInvoiceHead.Controller.SelectedRowCount > 0;
+  mnuExport.Enabled := bIsFinanceSystemConnected AND (tvInvoiceHead.Controller.SelectedRowCount > 0);
+end;
+
 //procedure TfrmInvoiceList2.LMDSpeedButton7Click(Sender : TObject);
 //var
 //  InvoiceNumber : integer;
@@ -930,4 +1057,5 @@ end;
 //end;
 
 end.
+
 
