@@ -24,6 +24,7 @@ type
   private
   public
     function GetRunningTabRoomRes(aRoomReservationId: integer; aRunningTabAOverview: TRunningTabsOverview; aOptions: TRunningTabOptions = []): boolean;
+    function DeleteRunningTabProductItem(aLineID: integer): boolean;
   end;
 
 implementation
@@ -37,13 +38,29 @@ uses
   , uUtils
   ;
 
+function TRunningTabAPICaller.DeleteRunningTabProductItem(aLineID: integer): boolean;
+const
+  cEndPoint = '/delete/item';
+var
+  lURI: string;
+  Xml: string;
+begin
+  lURI := cRunningTabURI  + cEndPoint + '/' + IntToSTr(aLineId);
+
+  try
+    Xml := d.roomerMainDataSet.DeleteData(lURI);
+    Result := true;
+  except
+    on E: Exception do
+      raise EServicesRunningTabAPICallerException.CreateFmt('Error during deleting invoice item  [%d]', [ aLineID]);
+  end;
+
+end;
+
 function TRunningTabAPICaller.GetRunningTabRoomRes(aRoomReservationId: integer; aRunningTabAOverview: TRunningTabsOverview;
                                                    aOptions: TRunningTabOptions ): boolean;
 var
-//  roomerClient: TRoomerHttpClient;
   lURI: string;
-//  lResponse: string;
-//  lStatus: integer;
   Xml: string;
   lParams: TRoomerHttpQueryparams;
 const

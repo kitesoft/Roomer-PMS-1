@@ -85,6 +85,7 @@ type
     FSource: string;
     FInvoiceIndex: integer;
     FGuestName: string;
+    FID: integer;
     function GetTotalGrossAmount: double;
     function GetTotalNetAmount: double;
     function GetTotalVatAmount: double;
@@ -99,6 +100,7 @@ type
     procedure Clear; override;
     property TotalVatAmount: double read GetTotalVatAmount;
     property TotalGrossAmount: double read GetTotalGrossAmount;
+    property ID: integer read FID write FID;
   published
     property Parent: integer read FParent write FParent;
     property Index_: integer read FIndex write FIndex;
@@ -149,6 +151,7 @@ type
     FID: Integer;
     FPayTypeCode: string;
     FInvoiceIndex: integer;
+    FLineID: integer;
   protected
     procedure SetPropertiesFromXMLNode(const aNode: PXMLNode); override;
     procedure AddPropertiesToXMLNode(const aNode: PXMLNode); override;
@@ -424,6 +427,7 @@ begin
   if aNode.SelectNodesNS(GetNameSpaceURI, 'itemVatAmount', lNodeList, 1) then
     FVatAmount.SetPropertiesFromXMLNode(lNodeList.GetFirst);
 
+  FID := StrTointDef(aNode.Attributes['id'], -1);
   FIndex := StrToIntDef(aNode.Attributes['index'], -1);
   FProductType:= TProductType.FromString( aNode.Attributes['type']);
   FItemType := aNode.Attributes['roomerId'];
@@ -740,6 +744,7 @@ var
   lnodeList: IXMLNodeList;
 begin
   inherited;
+
   InvoicePaymentType := iptInvoicePayment;
   ID := StrToIntdef(aNode.Attributes['id'], -1);
   PaymentType := StrToIntdef(aNode.Attributes['paymentType'], -1);

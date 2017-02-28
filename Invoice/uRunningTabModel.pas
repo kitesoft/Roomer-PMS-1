@@ -13,7 +13,7 @@ type
   /// <summary>
   ///   Class adapting the runningtab result for use in the invoiceOnObjects form
   /// </summary>
-  TRunningTabModelAdapter = class
+  TRunningTabViewAdapter = class
   private
     FRunningTabsOverview: TRunningTabsOverview;
     function GetInvoicelinesList(aIndex: integer): IObjectList;
@@ -39,18 +39,18 @@ uses
 
 { TRunningTabModelAdapter }
 
-constructor TRunningTabModelAdapter.Create;
+constructor TRunningTabViewAdapter.Create;
 begin
   FRunningTabsOverview := TRunningTabsOverview.Create;
 end;
 
-destructor TRunningTabModelAdapter.Destroy;
+destructor TRunningTabViewAdapter.Destroy;
 begin
   FRunningTabsOverview.Free;
   inherited;
 end;
 
-function TRunningTabModelAdapter.GetInvoicelinesList(aIndex: integer): IObjectList;
+function TRunningTabViewAdapter.GetInvoicelinesList(aIndex: integer): IObjectList;
 var
   Predicate: Spring.TPredicate<TRunningTabProduct>;
   Product: TRunningTabProduct;
@@ -71,7 +71,7 @@ begin
   end;
 end;
 
-function TRunningTabModelAdapter.GetPaymentsList(aIndex: integer): IObjectList;
+function TRunningTabViewAdapter.GetPaymentsList(aIndex: integer): IObjectList;
 var
   Predicate: Spring.TPredicate<TRunningTabPayment>;
   Payment: TRunningTabPayment;
@@ -92,7 +92,7 @@ begin
   end;
 end;
 
-function TRunningTabModelAdapter.InvoiceIndexNotEmpty(aIndex: integer): boolean;
+function TRunningTabViewAdapter.InvoiceIndexNotEmpty(aIndex: integer): boolean;
 var
   Predicate: Spring.TPredicate<TRunningTabProduct>;
   Product: TRunningTabProduct;
@@ -107,7 +107,7 @@ begin
   Result := (FRunningTabsOverview.RunningTabList.Count > 0) and FRunningTabsOverview.RunningTabList.First.ProductList.Where(Predicate).Any;
 end;
 
-function TRunningTabModelAdapter.TotalInvoiceLinesGrossAmount(aIndex: integer): double;
+function TRunningTabViewAdapter.TotalInvoiceLinesGrossAmount(aIndex: integer): double;
 var
   Predicate: Spring.TPredicate<TRunningTabProduct>;
   Product: TRunningTabProduct;

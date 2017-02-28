@@ -42,7 +42,7 @@ type
     clabCurrency: TsLabel;
     edtCurrency: TsEdit;
     rgrInvoiceType: TsRadioGroup;
-    act: TActionList;
+    alInvoices: TActionList;
     actSaveAndExit: TAction;
     actPrintInvoice: TAction;
     actPrintProforma: TAction;
@@ -178,14 +178,23 @@ type
     procedure FormShow(Sender: TObject);
     procedure tvPaymentsPayGroupGetDisplayText(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
       var AText: string);
-    procedure pnlInvoiceIndex0Click(Sender: TObject);
     procedure tsInvocieIndexChange(Sender: TObject);
+    procedure btnRemoveItemClick(Sender: TObject);
+    procedure odsInvoicelinesBeforeDelete(DataSet: TDataSet);
+    procedure actDelLineUpdate(Sender: TObject);
+    procedure actDelLineExecute(Sender: TObject);
+    procedure tlInvoiceLinesStartDrag(Sender: TObject; var DragObject: TDragObject);
+    procedure tsInvocieIndexDragDrop(Sender, Source: TObject; X, Y: Integer);
+    procedure tsInvocieIndexDockOver(Sender: TObject; Source: TDragDockObject; X, Y: Integer; State: TDragState;
+      var Accept: Boolean);
   private
-    FRunningTabModel: TRunningTabModelAdapter;
+    FRunningTabModel: TRunningTabViewAdapter;
     FReservation: integer;
     FRoomReservation: integer;
     FActiveInvoiceIndex: integer;
     procedure SetActiveInvoiceIndex(const Value: integer);
+    procedure DeleteCurrentItem;
+    function GetCurrentInvoiceLine: TRunningTabProduct;
   protected
     procedure DoUpdateControls; override;
     procedure DoLoadData; override;
@@ -206,6 +215,8 @@ uses
   , uAppGlobal
   , Graphics
   , uUtils
+  , Dialogs
+  , PrjConst
   ;
 
 {$R *.DFM}
@@ -213,10 +224,61 @@ uses
 
 { TfrmInvoiceObjects }
 
+procedure TfrmInvoiceObjects.actDelLineExecute(Sender: TObject);
+begin
+  inherited;
+  odsInvoicelines.Delete;
+end;
+
+procedure TfrmInvoiceObjects.actDelLineUpdate(Sender: TObject);
+var
+  lInvLine: TRunningTabProduct;
+begin
+  inherited;
+  lInvLine := GetCurrentInvoiceLine;
+  actDelLine.Enabled := Assigned(lInvLine) and (lInvLine.ProductType = itSale);
+end;
+
+procedure TfrmInvoiceObjects.btnRemoveItemClick(Sender: TObject);
+begin
+  inherited;
+  DeleteCurrentItem;
+  RefreshData;
+end;
+
+function TfrmInvoiceObjects.GetCurrentInvoiceLine: TRunningTabProduct;
+begin
+  if odsInvoicelines.Active and (odsInvoicelines.RecordCount > 0) then
+    Result := odsInvoicelines.GetCurrentModel<TRunningTabProduct>
+  else
+    Result := nil;
+end;
+
+procedure TfrmInvoiceObjects.odsInvoicelinesBeforeDelete(DataSet: TDataSet);
+begin
+  inherited;
+  if MessageDlg(GetTranslatedText('shTx_Invoice_DeleteItem'), mtConfirmation, [mbYes, mbNo], 0) <> mrYes then
+    Abort;
+end;
+
+procedure TfrmInvoiceObjects.DeleteCurrentItem();
+var
+  lRunningTabAPI: TRunningTabAPICaller;
+begin
+
+  lRunningTabAPI := TRunningTabAPICaller.Create;
+  try
+    lRunningTabAPI.DeleteRunningTabProductItem(GetCurrentInvoiceLine.ID);
+  finally
+    lRunningTabAPI.Free;
+  end;
+end;
+
+
 constructor TfrmInvoiceObjects.Create(aOwner: TComponent);
 begin
   inherited;
-  FRunningTabModel := TRunningTabModelAdapter.Create;
+  FRunningTabModel := TRunningTabViewAdapter.Create;
 end;
 
 destructor TfrmInvoiceObjects.Destroy;
@@ -262,8 +324,6 @@ begin
 
   odsPayments.DataList := FRunningTabModel.PaymentsList[FActiveInvoiceIndex];
   odsInvoicelines.DataList := FRunningTabModel.InvoicelinesList[FActiveInvoiceIndex];
-
-  tsInvocieIndex.Repaint;
 end;
 
 procedure TfrmInvoiceObjects.FormShow(Sender: TObject);
@@ -272,22 +332,35 @@ begin
   RefreshData;
 end;
 
-procedure TfrmInvoiceObjects.pnlInvoiceIndex0Click(Sender: TObject);
-begin
-  inherited;
-  ActiveInvoiceIndex := TsPanel(Sender).Tag;
-end;
-
 procedure TfrmInvoiceObjects.SetActiveInvoiceIndex(const Value: integer);
 begin
   FActiveInvoiceIndex := Value;
   UpdateControls;
 end;
 
+procedure TfrmInvoiceObjects.tlInvoiceLinesStartDrag(Sender: TObject; var DragObject: TDragObject);
+begin
+  inherited;
+   //
+end;
+
 procedure TfrmInvoiceObjects.tsInvocieIndexChange(Sender: TObject);
 begin
   inherited;
   ActiveInvoiceIndex := tsInvocieIndex.TabIndex;
+end;
+
+procedure TfrmInvoiceObjects.tsInvocieIndexDockOver(Sender: TObject; Source: TDragDockObject; X, Y: Integer;
+  State: TDragState; var Accept: Boolean);
+begin
+  inherited;
+ //
+end;
+
+procedure TfrmInvoiceObjects.tsInvocieIndexDragDrop(Sender, Source: TObject; X, Y: Integer);
+begin
+  inherited;
+ //
 end;
 
 procedure TfrmInvoiceObjects.tvPaymentsPayGroupGetDisplayText(Sender: TcxCustomGridTableItem;

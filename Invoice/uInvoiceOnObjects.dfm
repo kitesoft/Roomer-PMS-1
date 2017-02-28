@@ -1200,6 +1200,8 @@ inherited frmInvoiceObjects: TfrmInvoiceObjects
           TabIndex = 0
           TabWidth = 25
           OnChange = tsInvocieIndexChange
+          OnDockOver = tsInvocieIndexDockOver
+          OnDragDrop = tsInvocieIndexDragDrop
           object tlInvoiceLines: TcxDBTreeList
             Left = 4
             Top = 4
@@ -1214,19 +1216,26 @@ inherited frmInvoiceObjects: TfrmInvoiceObjects
             DataController.DataSource = dsInvoicelinesObjects
             DataController.ParentField = 'Parent'
             DataController.KeyField = 'Index_'
+            DragCursor = crDrag
+            DragMode = dmAutomatic
             Font.Charset = ANSI_CHARSET
             Font.Color = clBlack
             Font.Height = -12
             Font.Name = 'Tahoma'
             Font.Style = []
             Navigator.Buttons.CustomButtons = <>
+            OptionsSelection.CellSelect = False
             OptionsView.Footer = True
             ParentFont = False
             RootValue = 0
             TabOrder = 0
+            OnStartDrag = tlInvoiceLinesStartDrag
+            ExplicitLeft = 3
+            ExplicitTop = 5
             object cxDBTreeList1cxDBTreeListColumn7: TcxDBTreeListColumn
               PropertiesClassName = 'TcxCheckBoxProperties'
               Caption.AlignHorz = taCenter
+              Caption.Text = 'Selected'
               MinWidth = 25
               Width = 25
               Position.ColIndex = 0
@@ -1528,7 +1537,7 @@ inherited frmInvoiceObjects: TfrmInvoiceObjects
       BE7B000000000000FEFF00000000000000000000000000000000000000000000
       000000000000}
   end
-  object act: TActionList
+  object alInvoices: TActionList
     Left = 136
     Top = 300
     object actSaveAndExit: TAction
@@ -1564,6 +1573,8 @@ inherited frmInvoiceObjects: TfrmInvoiceObjects
       Category = 'Lines'
       Caption = 'Remove item'
       ShortCut = 16430
+      OnExecute = actDelLineExecute
+      OnUpdate = actDelLineUpdate
     end
     object actRRtoTemp: TAction
       Category = 'Lines'
@@ -1739,6 +1750,7 @@ inherited frmInvoiceObjects: TfrmInvoiceObjects
     Top = 584
   end
   object odsInvoicelines: TObjectDataSet
+    BeforeDelete = odsInvoicelinesBeforeDelete
     Left = 784
     Top = 320
   end
