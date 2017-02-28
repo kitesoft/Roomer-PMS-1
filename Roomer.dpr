@@ -272,7 +272,8 @@ uses
   _Glob in 'Data\_Glob.pas',
   hData in 'Data\hData.pas',
   uSqlDefinitions in 'Data\uSqlDefinitions.pas',
-  uRoomerVersionInfo in 'RoomerUtils\uRoomerVersionInfo.pas';
+  uRoomerVersionInfo in 'RoomerUtils\uRoomerVersionInfo.pas',
+  uRunningTabModel in 'Invoice\uRunningTabModel.pas';
 
 {$R *.RES}
 

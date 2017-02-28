@@ -14,7 +14,6 @@ inherited frmInvoiceObjects: TfrmInvoiceObjects
   Position = poDesigned
   Scaled = False
   OnShow = FormShow
-  ExplicitTop = -11
   ExplicitWidth = 1112
   ExplicitHeight = 740
   PixelsPerInch = 96
@@ -35,7 +34,7 @@ inherited frmInvoiceObjects: TfrmInvoiceObjects
     Color = clWhite
     TabOrder = 1
     SkinData.SkinSection = 'PANEL'
-    object Panel1: TsPanel
+    object pnlHeader: TsPanel
       Left = 0
       Top = 0
       Width = 1096
@@ -623,7 +622,7 @@ inherited frmInvoiceObjects: TfrmInvoiceObjects
         SkinData.SkinSection = 'BUTTON'
       end
     end
-    object sPanel5: TsPanel
+    object pnlDetails: TsPanel
       Left = 0
       Top = 166
       Width = 1096
@@ -631,7 +630,7 @@ inherited frmInvoiceObjects: TfrmInvoiceObjects
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
-      object Panel2: TsPanel
+      object pnlBottom: TsPanel
         Left = 0
         Top = 343
         Width = 1096
@@ -660,7 +659,7 @@ inherited frmInvoiceObjects: TfrmInvoiceObjects
           ScrollBars = ssVertical
           TabOrder = 0
         end
-        object sPanel2: TsPanel
+        object pnlTotals: TsPanel
           Left = 337
           Top = 1
           Width = 256
@@ -952,8 +951,6 @@ inherited frmInvoiceObjects: TfrmInvoiceObjects
             DragMode = dmAutomatic
             TabOrder = 1
             LookAndFeel.NativeStyle = False
-            ExplicitLeft = 6
-            ExplicitTop = 22
             object tvPayments: TcxGridDBTableView
               Navigator.Buttons.CustomButtons = <>
               DataController.DataSource = dsPaymentObjects
@@ -1006,14 +1003,14 @@ inherited frmInvoiceObjects: TfrmInvoiceObjects
           end
         end
       end
-      object Panel4: TsPanel
+      object pnlButtons: TsPanel
         Left = 0
         Top = 0
         Width = 1096
         Height = 91
         Align = alTop
         BevelOuter = bvNone
-        TabOrder = 3
+        TabOrder = 2
         SkinData.SkinSection = 'PANEL'
         DesignSize = (
           1096
@@ -1159,547 +1156,153 @@ inherited frmInvoiceObjects: TfrmInvoiceObjects
           end
         end
       end
-      object sPanel1: TsPanel
+      object pnlLines: TsPanel
         Left = 0
         Top = 91
-        Width = 1040
+        Width = 1096
         Height = 252
         Align = alClient
         BevelOuter = bvNone
-        Caption = 'sPanel1'
+        Caption = 'pnlLines'
         Padding.Left = 10
         Padding.Top = 5
         Padding.Right = 10
         Padding.Bottom = 5
-        TabOrder = 2
-        SkinData.SkinSection = 'PANEL'
-      end
-      object sPanel4: TsPanel
-        AlignWithMargins = True
-        Left = 1043
-        Top = 94
-        Width = 50
-        Height = 246
-        Align = alRight
         TabOrder = 1
-        object pnlInvoiceIndex0: TsPanel
-          Left = 3
-          Top = 4
-          Width = 42
-          Height = 31
-          Alignment = taRightJustify
-          BevelInner = bvLowered
-          Caption = '1 '
-          Color = 16764840
+        SkinData.SkinSection = 'PANEL'
+        ExplicitWidth = 1040
+        object tsInvocieIndex: TsTabControl
+          Left = 10
+          Top = 5
+          Width = 1076
+          Height = 242
+          Align = alClient
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
-          Font.Height = -16
+          Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
-          ParentBackground = False
+          MultiLine = True
           ParentFont = False
+          RaggedRight = True
           TabOrder = 0
-          SkinData.CustomColor = True
-          SkinData.CustomFont = True
-          object shpInvoiceIndex0: TShape
-            Left = 2
-            Top = 2
-            Width = 8
-            Height = 27
-            Align = alLeft
-            Brush.Color = clRed
-            Pen.Style = psClear
-            ExplicitLeft = 1
-            ExplicitTop = 1
-            ExplicitHeight = 29
+          TabPosition = tpRight
+          Tabs.Strings = (
+            '1'
+            '2'
+            '3'
+            '4'
+            '5'
+            '6'
+            '7'
+            '8'
+            '9')
+          TabIndex = 0
+          TabWidth = 25
+          OnChange = tsInvocieIndexChange
+          object tlInvoiceLines: TcxDBTreeList
+            Left = 4
+            Top = 4
+            Width = 1048
+            Height = 234
+            Hint = ''
+            Align = alClient
+            Bands = <
+              item
+                Caption.Text = 'Band1'
+              end>
+            DataController.DataSource = dsInvoicelinesObjects
+            DataController.ParentField = 'Parent'
+            DataController.KeyField = 'Index_'
+            Font.Charset = ANSI_CHARSET
+            Font.Color = clBlack
+            Font.Height = -12
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            Navigator.Buttons.CustomButtons = <>
+            OptionsView.Footer = True
+            ParentFont = False
+            RootValue = 0
+            TabOrder = 0
+            object cxDBTreeList1cxDBTreeListColumn7: TcxDBTreeListColumn
+              PropertiesClassName = 'TcxCheckBoxProperties'
+              Caption.AlignHorz = taCenter
+              MinWidth = 25
+              Width = 25
+              Position.ColIndex = 0
+              Position.RowIndex = 0
+              Position.BandIndex = 0
+              Summary.FooterSummaryItems = <>
+              Summary.GroupFooterSummaryItems = <>
+            end
+            object cxDBTreeList1cxDBTreeListColumn1: TcxDBTreeListColumn
+              DataBinding.FieldName = 'Description'
+              Options.Editing = False
+              Width = 407
+              Position.ColIndex = 2
+              Position.RowIndex = 0
+              Position.BandIndex = 0
+              Summary.FooterSummaryItems = <>
+              Summary.GroupFooterSummaryItems = <>
+            end
+            object cxDBTreeList1cxDBTreeListColumn2: TcxDBTreeListColumn
+              DataBinding.FieldName = 'ItemType'
+              Options.Editing = False
+              Width = 100
+              Position.ColIndex = 1
+              Position.RowIndex = 0
+              Position.BandIndex = 0
+              Summary.FooterSummaryItems = <>
+              Summary.GroupFooterSummaryItems = <>
+            end
+            object cxDBTreeList1cxDBTreeListColumn3: TcxDBTreeListColumn
+              DataBinding.FieldName = 'PurchaseDate'
+              Options.Editing = False
+              Width = 100
+              Position.ColIndex = 3
+              Position.RowIndex = 0
+              Position.BandIndex = 0
+              Summary.FooterSummaryItems = <>
+              Summary.GroupFooterSummaryItems = <>
+            end
+            object cxDBTreeList1cxDBTreeListColumn4: TcxDBTreeListColumn
+              PropertiesClassName = 'TcxCalcEditProperties'
+              DataBinding.FieldName = 'Quantity'
+              Options.Editing = False
+              Width = 100
+              Position.ColIndex = 4
+              Position.RowIndex = 0
+              Position.BandIndex = 0
+              Summary.FooterSummaryItems = <>
+              Summary.GroupFooterSummaryItems = <>
+            end
+            object cxDBTreeList1cxDBTreeListColumn5: TcxDBTreeListColumn
+              PropertiesClassName = 'TcxCurrencyEditProperties'
+              DataBinding.FieldName = 'Nettoprice'
+              Options.Editing = False
+              Width = 100
+              Position.ColIndex = 5
+              Position.RowIndex = 0
+              Position.BandIndex = 0
+              Summary.FooterSummaryItems = <>
+              Summary.GroupFooterSummaryItems = <>
+            end
+            object cxDBTreeList1cxDBTreeListColumn6: TcxDBTreeListColumn
+              PropertiesClassName = 'TcxCurrencyEditProperties'
+              DataBinding.FieldName = 'TotalnetAmount'
+              Options.Editing = False
+              Width = 100
+              Position.ColIndex = 6
+              Position.RowIndex = 0
+              Position.BandIndex = 0
+              Summary.FooterSummaryItems = <
+                item
+                  AlignHorz = taLeftJustify
+                  Kind = skSum
+                end>
+              Summary.GroupFooterSummaryItems = <>
+            end
           end
-          object shpInvoiceIndexRR0: TShape
-            Left = 10
-            Top = 2
-            Width = 8
-            Height = 27
-            Align = alLeft
-            Brush.Color = clBlue
-            Pen.Style = psClear
-            ExplicitLeft = 24
-            ExplicitTop = 1
-            ExplicitHeight = 29
-          end
-        end
-        object pnlInvoiceIndex1: TsPanel
-          Tag = 1
-          Left = 3
-          Top = 41
-          Width = 42
-          Height = 31
-          Alignment = taRightJustify
-          BevelInner = bvLowered
-          Caption = '2 '
-          Color = clWhite
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -16
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          ParentBackground = False
-          ParentFont = False
-          TabOrder = 1
-          SkinData.CustomColor = True
-          SkinData.CustomFont = True
-          object shpInvoiceIndex1: TShape
-            Left = 2
-            Top = 2
-            Width = 8
-            Height = 27
-            Align = alLeft
-            Pen.Style = psClear
-            ExplicitLeft = 17
-            ExplicitHeight = 29
-          end
-          object shpInvoiceIndexRR1: TShape
-            Left = 10
-            Top = 2
-            Width = 8
-            Height = 27
-            Align = alLeft
-            Pen.Style = psClear
-            ExplicitLeft = 27
-            ExplicitHeight = 29
-          end
-        end
-        object pnlInvoiceIndex2: TsPanel
-          Tag = 2
-          Left = 3
-          Top = 78
-          Width = 42
-          Height = 31
-          Alignment = taRightJustify
-          BevelInner = bvLowered
-          Caption = '3 '
-          Color = clWhite
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -16
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          ParentBackground = False
-          ParentFont = False
-          TabOrder = 2
-          SkinData.CustomColor = True
-          SkinData.CustomFont = True
-          object shpInvoiceIndex2: TShape
-            Left = 2
-            Top = 2
-            Width = 8
-            Height = 27
-            Align = alLeft
-            Pen.Style = psClear
-            ExplicitLeft = 17
-            ExplicitHeight = 29
-          end
-          object shpInvoiceIndexRR2: TShape
-            Left = 10
-            Top = 2
-            Width = 8
-            Height = 27
-            Align = alLeft
-            Pen.Style = psClear
-            ExplicitLeft = 27
-            ExplicitHeight = 29
-          end
-        end
-        object pnlInvoiceIndex3: TsPanel
-          Tag = 3
-          Left = 3
-          Top = 115
-          Width = 42
-          Height = 31
-          Alignment = taRightJustify
-          BevelInner = bvLowered
-          Caption = '4 '
-          Color = clWhite
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -16
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          ParentBackground = False
-          ParentFont = False
-          TabOrder = 3
-          SkinData.CustomColor = True
-          SkinData.CustomFont = True
-          object shpInvoiceIndex3: TShape
-            Left = 2
-            Top = 2
-            Width = 8
-            Height = 27
-            Align = alLeft
-            Pen.Style = psClear
-            ExplicitLeft = 17
-            ExplicitHeight = 29
-          end
-          object shpInvoiceIndexRR3: TShape
-            Left = 10
-            Top = 2
-            Width = 8
-            Height = 27
-            Align = alLeft
-            Pen.Style = psClear
-            ExplicitLeft = 27
-            ExplicitHeight = 29
-          end
-        end
-        object pnlInvoiceIndex4: TsPanel
-          Tag = 4
-          Left = 3
-          Top = 151
-          Width = 42
-          Height = 31
-          Alignment = taRightJustify
-          BevelInner = bvLowered
-          Caption = '5 '
-          Color = clWhite
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -16
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          ParentBackground = False
-          ParentFont = False
-          TabOrder = 4
-          SkinData.CustomColor = True
-          SkinData.CustomFont = True
-          object shpInvoiceIndex4: TShape
-            Left = 2
-            Top = 2
-            Width = 8
-            Height = 27
-            Align = alLeft
-            Pen.Style = psClear
-            ExplicitLeft = 17
-            ExplicitHeight = 29
-          end
-          object shpInvoiceIndexRR4: TShape
-            Left = 10
-            Top = 2
-            Width = 8
-            Height = 27
-            Align = alLeft
-            Pen.Style = psClear
-            ExplicitLeft = 27
-            ExplicitHeight = 29
-          end
-        end
-        object pnlInvoiceIndex5: TsPanel
-          Tag = 5
-          Left = 3
-          Top = 189
-          Width = 42
-          Height = 31
-          Alignment = taRightJustify
-          BevelInner = bvLowered
-          Caption = '6 '
-          Color = clWhite
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -16
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          ParentBackground = False
-          ParentFont = False
-          TabOrder = 5
-          SkinData.CustomColor = True
-          SkinData.CustomFont = True
-          object shpInvoiceIndex5: TShape
-            Left = 2
-            Top = 2
-            Width = 8
-            Height = 27
-            Align = alLeft
-            Pen.Style = psClear
-            ExplicitLeft = 17
-            ExplicitHeight = 29
-          end
-          object shpInvoiceIndexRR5: TShape
-            Left = 10
-            Top = 2
-            Width = 8
-            Height = 27
-            Align = alLeft
-            Pen.Style = psClear
-            ExplicitLeft = 27
-            ExplicitHeight = 29
-          end
-        end
-        object pnlInvoiceIndex6: TsPanel
-          Tag = 6
-          Left = 3
-          Top = 226
-          Width = 42
-          Height = 31
-          Alignment = taRightJustify
-          BevelInner = bvLowered
-          Caption = '7 '
-          Color = clWhite
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -16
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          ParentBackground = False
-          ParentFont = False
-          TabOrder = 6
-          SkinData.CustomColor = True
-          SkinData.CustomFont = True
-          object shpInvoiceIndex6: TShape
-            Left = 2
-            Top = 2
-            Width = 8
-            Height = 27
-            Align = alLeft
-            Pen.Style = psClear
-            ExplicitLeft = 17
-            ExplicitHeight = 29
-          end
-          object shpInvoiceIndexRR6: TShape
-            Left = 10
-            Top = 2
-            Width = 8
-            Height = 27
-            Align = alLeft
-            Pen.Style = psClear
-            ExplicitLeft = 27
-            ExplicitHeight = 29
-          end
-        end
-        object pnlInvoiceIndex7: TsPanel
-          Tag = 7
-          Left = 3
-          Top = 263
-          Width = 42
-          Height = 31
-          Alignment = taRightJustify
-          BevelInner = bvLowered
-          Caption = '8 '
-          Color = clWhite
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -16
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          ParentBackground = False
-          ParentFont = False
-          TabOrder = 7
-          SkinData.CustomColor = True
-          SkinData.CustomFont = True
-          object shpInvoiceIndex7: TShape
-            Left = 2
-            Top = 2
-            Width = 8
-            Height = 27
-            Align = alLeft
-            Pen.Style = psClear
-            ExplicitLeft = 17
-            ExplicitHeight = 29
-          end
-          object shpInvoiceIndexRR7: TShape
-            Left = 10
-            Top = 2
-            Width = 8
-            Height = 27
-            Align = alLeft
-            Pen.Style = psClear
-            ExplicitLeft = 27
-            ExplicitHeight = 29
-          end
-        end
-        object pnlInvoiceIndex8: TsPanel
-          Tag = 8
-          Left = 3
-          Top = 300
-          Width = 42
-          Height = 31
-          Alignment = taRightJustify
-          BevelInner = bvLowered
-          Caption = '9 '
-          Color = clWhite
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -16
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          ParentBackground = False
-          ParentFont = False
-          TabOrder = 8
-          SkinData.CustomColor = True
-          SkinData.CustomFont = True
-          object shpInvoiceIndex8: TShape
-            Left = 2
-            Top = 2
-            Width = 8
-            Height = 27
-            Align = alLeft
-            Pen.Style = psClear
-            ExplicitLeft = 0
-            ExplicitHeight = 29
-          end
-          object shpInvoiceIndexRR8: TShape
-            Left = 10
-            Top = 2
-            Width = 8
-            Height = 27
-            Align = alLeft
-            Pen.Style = psClear
-            ExplicitLeft = 27
-            ExplicitHeight = 29
-          end
-        end
-        object pnlInvoiceIndex9: TsPanel
-          Tag = 9
-          Left = 3
-          Top = 337
-          Width = 42
-          Height = 31
-          Alignment = taRightJustify
-          BevelInner = bvLowered
-          Caption = '10 '
-          Color = clWhite
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -16
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          ParentBackground = False
-          ParentFont = False
-          TabOrder = 9
-          SkinData.CustomColor = True
-          SkinData.CustomFont = True
-          object shpInvoiceIndex9: TShape
-            Left = 2
-            Top = 2
-            Width = 8
-            Height = 27
-            Align = alLeft
-            Pen.Style = psClear
-            ExplicitLeft = 1
-            ExplicitTop = 1
-            ExplicitHeight = 29
-          end
-          object shpInvoiceIndexRR9: TShape
-            Left = 10
-            Top = 2
-            Width = 8
-            Height = 27
-            Align = alLeft
-            Pen.Style = psClear
-            ExplicitLeft = 25
-            ExplicitTop = 1
-            ExplicitHeight = 29
-          end
-        end
-      end
-      object tlInvoiceLines: TcxDBTreeList
-        Left = 0
-        Top = 91
-        Width = 1040
-        Height = 252
-        Hint = ''
-        Align = alClient
-        Bands = <
-          item
-            Caption.Text = 'Band1'
-          end>
-        DataController.DataSource = dsInvoicelinesObjects
-        DataController.ParentField = 'Parent'
-        DataController.KeyField = 'Index_'
-        Font.Charset = ANSI_CHARSET
-        Font.Color = clBlack
-        Font.Height = -12
-        Font.Name = 'Tahoma'
-        Font.Style = []
-        Navigator.Buttons.CustomButtons = <>
-        OptionsView.Footer = True
-        ParentFont = False
-        RootValue = 0
-        TabOrder = 4
-        ExplicitTop = 89
-        object cxDBTreeList1cxDBTreeListColumn7: TcxDBTreeListColumn
-          PropertiesClassName = 'TcxCheckBoxProperties'
-          Caption.AlignHorz = taCenter
-          MinWidth = 25
-          Width = 25
-          Position.ColIndex = 0
-          Position.RowIndex = 0
-          Position.BandIndex = 0
-          Summary.FooterSummaryItems = <>
-          Summary.GroupFooterSummaryItems = <>
-        end
-        object cxDBTreeList1cxDBTreeListColumn1: TcxDBTreeListColumn
-          DataBinding.FieldName = 'Description'
-          Options.Editing = False
-          Width = 407
-          Position.ColIndex = 2
-          Position.RowIndex = 0
-          Position.BandIndex = 0
-          Summary.FooterSummaryItems = <>
-          Summary.GroupFooterSummaryItems = <>
-        end
-        object cxDBTreeList1cxDBTreeListColumn2: TcxDBTreeListColumn
-          DataBinding.FieldName = 'ItemType'
-          Options.Editing = False
-          Width = 100
-          Position.ColIndex = 1
-          Position.RowIndex = 0
-          Position.BandIndex = 0
-          Summary.FooterSummaryItems = <>
-          Summary.GroupFooterSummaryItems = <>
-        end
-        object cxDBTreeList1cxDBTreeListColumn3: TcxDBTreeListColumn
-          DataBinding.FieldName = 'PurchaseDate'
-          Options.Editing = False
-          Width = 100
-          Position.ColIndex = 3
-          Position.RowIndex = 0
-          Position.BandIndex = 0
-          Summary.FooterSummaryItems = <>
-          Summary.GroupFooterSummaryItems = <>
-        end
-        object cxDBTreeList1cxDBTreeListColumn4: TcxDBTreeListColumn
-          PropertiesClassName = 'TcxCalcEditProperties'
-          DataBinding.FieldName = 'Quantity'
-          Options.Editing = False
-          Width = 100
-          Position.ColIndex = 4
-          Position.RowIndex = 0
-          Position.BandIndex = 0
-          Summary.FooterSummaryItems = <>
-          Summary.GroupFooterSummaryItems = <>
-        end
-        object cxDBTreeList1cxDBTreeListColumn5: TcxDBTreeListColumn
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          DataBinding.FieldName = 'Nettoprice'
-          Options.Editing = False
-          Width = 100
-          Position.ColIndex = 5
-          Position.RowIndex = 0
-          Position.BandIndex = 0
-          Summary.FooterSummaryItems = <>
-          Summary.GroupFooterSummaryItems = <>
-        end
-        object cxDBTreeList1cxDBTreeListColumn6: TcxDBTreeListColumn
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          DataBinding.FieldName = 'TotalnetAmount'
-          Options.Editing = False
-          Width = 100
-          Position.ColIndex = 6
-          Position.RowIndex = 0
-          Position.BandIndex = 0
-          Summary.FooterSummaryItems = <
-            item
-              AlignHorz = taLeftJustify
-              Kind = skSum
-            end>
-          Summary.GroupFooterSummaryItems = <>
         end
       end
     end
@@ -2074,7 +1677,7 @@ inherited frmInvoiceObjects: TfrmInvoiceObjects
     end
   end
   object mnuInvoiceIndex: TPopupMenu
-    Left = 1008
+    Left = 936
     Top = 400
     object I1: TMenuItem
       Tag = -1

@@ -3,7 +3,7 @@
 interface
 
 uses
-  uRoomerForm
+  uRoomerForm, Types
   , cxGraphics, cxLookAndFeels, cxLookAndFeelPainters, Vcl.Menus, dxSkinsCore, dxSkinCaramel, dxSkinCoffee,
   dxSkinDarkSide, dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, cxControls, cxStyles, dxSkinscxPCPainter, cxCustomData,
   cxFilter, cxData, cxDataStorage, cxEdit, cxNavigator, Data.DB, cxDBData, cxMemo, cxTL, cxCheckBox, cxMaskEdit, cxCalc,
@@ -12,7 +12,7 @@ uses
   Vcl.ExtCtrls, cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid,
   Vcl.StdCtrls, sCheckBox, cxButtons, sButton, sGroupBox, sEdit, sLabel, sPanel, dxPScxCommon, dxPScxGridLnk, cxClasses,
   cxPropertiesStore, Vcl.ComCtrls, sStatusBar
-  , uRoomerHotelServicesCommunicationModel_RunningTabs
+  , uRoomerHotelServicesCommunicationModel_RunningTabs, uRunningTabModel, sTabControl
   ;
 
 type
@@ -38,7 +38,7 @@ type
     RemoveRoomRenttemporarity1: TMenuItem;
     N4: TMenuItem;
     SendItemToGroupInvoice: TMenuItem;
-    Panel1: TsPanel;
+    pnlHeader: TsPanel;
     clabCurrency: TsLabel;
     edtCurrency: TsEdit;
     rgrInvoiceType: TsRadioGroup;
@@ -80,9 +80,9 @@ type
     clabAddress: TsLabel;
     cLabName: TsLabel;
     btnClearAddresses: TsButton;
-    Panel2: TsPanel;
+    pnlBottom: TsPanel;
     memExtraText: TMemo;
-    Panel4: TsPanel;
+    pnlButtons: TsPanel;
     btnRoomToTemp: TsButton;
     btnAddItem: TsButton;
     btnItemToTmp: TsButton;
@@ -91,12 +91,12 @@ type
     btnMoveRoom: TsButton;
     btnRemoveLodgingTax2: TsButton;
     btnReservationNotes: TsButton;
-    sPanel1: TsPanel;
+    pnlLines: TsPanel;
     btnExit: TcxButton;
     btnInvoice: TcxButton;
     btnProforma: TcxButton;
     labTmpStatus: TsLabel;
-    sPanel2: TsPanel;
+    pnlTotals: TsPanel;
     clabTotalwoVAT: TsLabel;
     clavVAT: TsLabel;
     clabInvoiceTotal: TsLabel;
@@ -137,18 +137,7 @@ type
     mnuMoveRoomRentFromRoomInvoiceToGroup: TMenuItem;
     mnuMoveRoomRentFromGroupToNormalRoomInvoice: TMenuItem;
     btnGetCustomer: TsButton;
-    sPanel5: TsPanel;
-    sPanel4: TsPanel;
-    pnlInvoiceIndex0: TsPanel;
-    pnlInvoiceIndex1: TsPanel;
-    pnlInvoiceIndex2: TsPanel;
-    pnlInvoiceIndex3: TsPanel;
-    pnlInvoiceIndex4: TsPanel;
-    pnlInvoiceIndex5: TsPanel;
-    pnlInvoiceIndex6: TsPanel;
-    pnlInvoiceIndex7: TsPanel;
-    pnlInvoiceIndex8: TsPanel;
-    pnlInvoiceIndex9: TsPanel;
+    pnlDetails: TsPanel;
     mnuInvoiceIndex: TPopupMenu;
     N01: TMenuItem;
     N11: TMenuItem;
@@ -162,26 +151,6 @@ type
     I1: TMenuItem;
     N5: TMenuItem;
     N12: TMenuItem;
-    shpInvoiceIndex0: TShape;
-    shpInvoiceIndexRR0: TShape;
-    shpInvoiceIndex9: TShape;
-    shpInvoiceIndexRR9: TShape;
-    shpInvoiceIndex1: TShape;
-    shpInvoiceIndexRR1: TShape;
-    shpInvoiceIndex2: TShape;
-    shpInvoiceIndexRR2: TShape;
-    shpInvoiceIndex3: TShape;
-    shpInvoiceIndexRR3: TShape;
-    shpInvoiceIndex4: TShape;
-    shpInvoiceIndexRR4: TShape;
-    shpInvoiceIndex5: TShape;
-    shpInvoiceIndexRR5: TShape;
-    shpInvoiceIndex6: TShape;
-    shpInvoiceIndexRR6: TShape;
-    shpInvoiceIndex7: TShape;
-    shpInvoiceIndexRR7: TShape;
-    shpInvoiceIndex8: TShape;
-    shpInvoiceIndexRR8: TShape;
     btnSaveChanges: TsButton;
     S1: TMenuItem;
     N6: TMenuItem;
@@ -205,13 +174,18 @@ type
     cxDBTreeList1cxDBTreeListColumn5: TcxDBTreeListColumn;
     cxDBTreeList1cxDBTreeListColumn6: TcxDBTreeListColumn;
     dsInvoicelinesObjects: TDataSource;
+    tsInvocieIndex: TsTabControl;
     procedure FormShow(Sender: TObject);
     procedure tvPaymentsPayGroupGetDisplayText(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
       var AText: string);
+    procedure pnlInvoiceIndex0Click(Sender: TObject);
+    procedure tsInvocieIndexChange(Sender: TObject);
   private
-    FRunningTabOverView: TRunningTabsOverview;
+    FRunningTabModel: TRunningTabModelAdapter;
     FReservation: integer;
     FRoomReservation: integer;
+    FActiveInvoiceIndex: integer;
+    procedure SetActiveInvoiceIndex(const Value: integer);
   protected
     procedure DoUpdateControls; override;
     procedure DoLoadData; override;
@@ -220,6 +194,7 @@ type
     destructor Destroy; override;
     property Reservation: integer read FReservation write FReservation;
     property RoomReservation: integer read FRoomReservation write FRoomReservation;
+    property ActiveInvoiceIndex: integer read FActiveInvoiceIndex write SetActiveInvoiceIndex;
   end;
 
 implementation
@@ -228,7 +203,10 @@ uses
   Spring.Collections
   , uServicesRunningTabAPICaller
   , SysUtils
-  , uAppGlobal;
+  , uAppGlobal
+  , Graphics
+  , uUtils
+  ;
 
 {$R *.DFM}
 
@@ -238,14 +216,14 @@ uses
 constructor TfrmInvoiceObjects.Create(aOwner: TComponent);
 begin
   inherited;
-  FRunningTabOverView := TRunningTabsOverview.Create;
+  FRunningTabModel := TRunningTabModelAdapter.Create;
 end;
 
 destructor TfrmInvoiceObjects.Destroy;
 begin
   odsPayments.Close;
   odsInvoicelines.Close;
-  FRunningTabOverView.Free;
+  FRunningTabModel.Free;
   inherited;
 end;
 
@@ -263,13 +241,9 @@ begin
     odsInvoicelines.Close;
     lRunningTabApi := TRunningTabAPICaller.Create;
     try
-      lRunningTabAPI.GetRunningTabRoomRes(FRoomReservation, True, FRunningTabOverView);
+      lRunningTabAPI.GetRunningTabRoomRes(FRoomReservation, FRunningTabModel.RunningTabsOverview, [TRunningTabAPICaller.TRunningTabOption.SplitOnInvoiceIndex]);
 
-      if Supports(FRunningTabOverView.RunningTabList.First.PaymentList, IObjectList, lList) then
-        odsPayments.DataList := lList;
-
-      if Supports(FRunningTabOverView.RunningTabList.First.ProductList, IObjectList, lList) then
-        odsInvoicelines.DataList := lList;
+      UpdateControls;
     finally
       lRunningTabAPI.Free;
     end;
@@ -286,12 +260,34 @@ procedure TfrmInvoiceObjects.DoUpdateControls;
 begin
   inherited;
 
+  odsPayments.DataList := FRunningTabModel.PaymentsList[FActiveInvoiceIndex];
+  odsInvoicelines.DataList := FRunningTabModel.InvoicelinesList[FActiveInvoiceIndex];
+
+  tsInvocieIndex.Repaint;
 end;
 
 procedure TfrmInvoiceObjects.FormShow(Sender: TObject);
 begin
   inherited;
   RefreshData;
+end;
+
+procedure TfrmInvoiceObjects.pnlInvoiceIndex0Click(Sender: TObject);
+begin
+  inherited;
+  ActiveInvoiceIndex := TsPanel(Sender).Tag;
+end;
+
+procedure TfrmInvoiceObjects.SetActiveInvoiceIndex(const Value: integer);
+begin
+  FActiveInvoiceIndex := Value;
+  UpdateControls;
+end;
+
+procedure TfrmInvoiceObjects.tsInvocieIndexChange(Sender: TObject);
+begin
+  inherited;
+  ActiveInvoiceIndex := tsInvocieIndex.TabIndex;
 end;
 
 procedure TfrmInvoiceObjects.tvPaymentsPayGroupGetDisplayText(Sender: TcxCustomGridTableItem;

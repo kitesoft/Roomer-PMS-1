@@ -18,9 +18,12 @@ type
   const
     cResourcesURI = '/services';
     cRunningTabURI = '/runningTab';
+  type
+    TRunningTabOption = (SplitOnInvoiceIndex);
+    TRUnningTabOptions = set of TRunningTabOption;
   private
   public
-    function GetRunningTabRoomRes(aRoomReservationId: integer; aIncludeDetails: boolean; aRunningTabAOverview: TRunningTabsOverview): boolean;
+    function GetRunningTabRoomRes(aRoomReservationId: integer; aRunningTabAOverview: TRunningTabsOverview; aOptions: TRunningTabOptions = []): boolean;
   end;
 
 implementation
@@ -34,34 +37,42 @@ uses
   , uUtils
   ;
 
-function TRunningTabAPICaller.GetRunningTabRoomRes(aRoomReservationId: integer; aIncludeDetails: boolean;
-                                                    aRunningTabAOverview: TRunningTabsOverview): boolean;
+function TRunningTabAPICaller.GetRunningTabRoomRes(aRoomReservationId: integer; aRunningTabAOverview: TRunningTabsOverview;
+                                                   aOptions: TRunningTabOptions ): boolean;
 var
 //  roomerClient: TRoomerHttpClient;
   lURI: string;
 //  lResponse: string;
 //  lStatus: integer;
   Xml: string;
+  lParams: TRoomerHttpQueryparams;
 const
   cEndpoint = '/id';
 begin
-//  roomerClient := d.roomerMainDataSet.CreateRoomerClient(True);
-//  try
-    lURI := cRunningTabURI  + cEndPoint + '/' + IntToSTr(aRoomReservationId) + '?expanded' + iif(aIncludeDetails, 'true', 'false');
+  lURI := cRunningTabURI  + cEndPoint + '/' + IntToSTr(aRoomReservationId);
 
+  if (aOptions <> []) then
+  begin
+    lUri := lUri + '?';
+    lParams := TRoomerHttpQueryparams.Create;
     try
-      Xml := d.roomerMainDataSet.downloadRoomerUrlAsString(lURI);
-      aRunningTabAOverview.LoadFromXML(Xml);
-      Result := true;
-    except
-      on E: Exception do
-        raise EServicesRunningTabAPICallerException.CreateFmt('Error during retrieval of invoice for roomreservation [%d]', [ aRoomReservationId]);
-    end;
+      if (TRunningTabOption.SplitOnInvoiceIndex in aOptions) then
+        lParams.Add('splitInvoice=true');
 
-//    lStatus := roomerClient.GetWithStatus(lURI, lResponse);
-//    Result := lStatus = 200;
-//  finally
-//    roomerClient.Free;
-//  end;
+      lUri := lUri + lParams.AsURLText;
+    finally
+      lParams.Free;
+    end;
+  end;
+
+  try
+    Xml := d.roomerMainDataSet.downloadRoomerUrlAsString(lURI);
+    aRunningTabAOverview.LoadFromXML(Xml);
+    Result := true;
+  except
+    on E: Exception do
+      raise EServicesRunningTabAPICallerException.CreateFmt('Error during retrieval of invoice for roomreservation [%d]', [ aRoomReservationId]);
+  end;
+
 end;
 end.

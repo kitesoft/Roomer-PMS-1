@@ -53,8 +53,11 @@ begin
   if assigned(xmlDoc.parseError) then
     raise EXMLDocException.Create('XML Load error:' + xmlDoc.parseError.reason);
 
-  if xmlDoc.DocumentElement.SelectNodesNS(GetNameSpaceURI, GetNodeName, lNodeList) then
-    SetPropertiesFromXMLNode(lNodeList.GetFirst);
+  if GetNodeName.IsEmpty or GetNameSpaceURI.IsEmpty then
+    SetPropertiesFromXMLNode(xmldoc.DocumentElement)
+  else
+    if xmlDoc.DocumentElement.SelectNodesNS(GetNameSpaceURI, GetNodeName, lNodeList) then
+      SetPropertiesFromXMLNode(lNodeList.GetFirst);
 end;
 
 procedure TxsdBaseObject.AddPropertiesToXMLNode(const aNode: PXMLNode);

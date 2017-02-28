@@ -41,7 +41,7 @@ type
     property City: string read FCity write FCity;
     property CountryCode: string read FCountryCode write FCountryCode;
   end;
-
+//
   TVATAmount = class(TxsdBaseObject)
   private
     FVATCode: string;
@@ -59,7 +59,7 @@ type
     property Percentage: double read FPercentage write FPercentage;
     property Amount: double read FAmount write FAmount;
   end;
-
+//
   TRunningTabProduct  = class(TxsdBaseObject)
     type
       TProducttype = (itUnknown, itRoomRent, itStayTax, itDiscount, itSale);
@@ -103,7 +103,7 @@ type
     property Parent: integer read FParent write FParent;
     property Index_: integer read FIndex write FIndex;
     property ProductType: TProductType read FProductType write FProductType;
-    property ItemType: string read FItemType write FItemType;
+    property Item: string read FItemType write FItemType;
     property AccountKey: string read FAccountKey write FAccountKey;
 
     property Description: string read FDescription write FDescription;
@@ -127,7 +127,7 @@ type
     class function GetNodeName: string; override;
     class function GetNameSpaceURI: string; override;
   end;
-
+//
 
   TRunningTabPayment = class(TxsdBaseObject)
     type
@@ -148,6 +148,7 @@ type
     FAccountKey: String;
     FID: Integer;
     FPayTypeCode: string;
+    FInvoiceIndex: integer;
   protected
     procedure SetPropertiesFromXMLNode(const aNode: PXMLNode); override;
     procedure AddPropertiesToXMLNode(const aNode: PXMLNode); override;
@@ -170,6 +171,7 @@ type
     property Staff: String read FStaff write FStaff;
     property CurrencyCode: String read FCurrencyCode write FCurrencyCode;
     property CurrencyRate: Double read FCUrrencyRate write FCurrencyRate;
+    property InvoiceIndex: integer read FInvoiceIndex write FInvoiceIndex;
   end;
 
   TRunningTabPaymentList = class(TxsdBaseObjectList<TRunningTabPayment>)
@@ -332,7 +334,7 @@ begin
 
   aNode.Attributes['index'] := IntToStr(Index_);
   aNode.Attributes['type'] := ProductType.AsString;
-  aNode.Attributes['roomerId'] := ItemType;
+  aNode.Attributes['roomerId'] := Item;
   aNode.Attributes['accountKey'] := AccountKey;
   aNode.Attributes['invoiceIndex'] := IntToStr(InvoiceIndex);
   aNode.Attributes['room'] := Room;
@@ -459,7 +461,6 @@ end;
 
 constructor TRunningTabsOverview.Create;
 begin
-  inherited;
   FRunningTabList := TRunningTabList.Create;
 end;
 
@@ -746,6 +747,7 @@ begin
   AccountKey := aNode.Attributes['accountKey'];
   CurrencyCode := aNode.Attributes['currency'];
   CurrencyRate := XMLToFloat(aNode.Attributes['currencyRate'], 1.00);
+  FInvoiceIndex := StrToIntDef(aNode.Attributes['invoiceIndex'], -1);
 
   if aNode.SelectNodesNS(GetNameSpaceURI, 'description', lNodeList, 1) then
     FDescription:=  lNodeList.GetFirst.Text;
