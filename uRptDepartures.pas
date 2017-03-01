@@ -16,7 +16,7 @@ uses
   dxPSEdgePatterns, dxPSPDFExportCore, dxPSPDFExport, cxDrawTextUtils, dxPSPrVwStd, dxPSPrVwAdv, dxPSPrVwRibbon,
   dxPScxPageControlProducer, dxPScxGridLnk, dxPScxGridLayoutViewLnk, dxPScxEditorProducers, dxPScxExtEditorProducers,
   dxSkinsdxBarPainter, dxSkinsdxRibbonPainter, dxPScxCommon, dxPSCore, cxLabel, AdvSmoothProgressBar, Vcl.ComCtrls,
-  sStatusBar, cxTextEdit;
+  sStatusBar, cxTextEdit, cxCheckBox;
 
 type
   TfrmDeparturesReport = class(TfrmBaseRoomerForm)
@@ -78,6 +78,8 @@ type
     cxStyle14: TcxStyle;
     dxGridReportLinkStyleSheet1: TdxGridReportLinkStyleSheet;
     btnPrintGrid: TsButton;
+    tvDeparturesListGroupAccount: TcxGridDBColumn;
+    tvDeparturesListGroupInvoiceBalance: TcxGridDBColumn;
     procedure rbRadioButtonClick(Sender: TObject);
     procedure btnExcelClick(Sender: TObject);
     procedure btnRefreshClick(Sender: TObject);
@@ -95,6 +97,8 @@ type
     procedure btnPrintGridClick(Sender: TObject);
     procedure tvDeparturesListExpectedCheckOutTimeGetDisplayText(Sender: TcxCustomGridTableItem;
       ARecord: TcxCustomGridRecord; var AText: string);
+    procedure tvDeparturesListGroupInvoiceBalanceGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
+      var AProperties: TcxCustomEditProperties);
   private
     FRefreshingdata: boolean;
     FCurrencyhandler: TCurrencyHandler;
@@ -158,6 +162,8 @@ begin
     s := s + ' CompanyName, '#10;
     s := s + ' CAST(Arrival AS DATE) AS Arrival, '#10;
     s := s + ' CAST(Departure AS DATE) AS Departure, '#10;
+    s := s + ' GroupAccount, '#10;
+    s := s + ' IF(GroupAccount, GetGroupInvoiceBalance(Reservation), 0.00) AS GroupInvoiceBalance, '#10;
     s := s + ' RoomType, '#10;
     s := s + ' NumGuests, '#10;
     s := s + ' AvrageRate as AverageRatePerNight, '#10;
@@ -174,6 +180,7 @@ begin
     s := s + '        cu.Surname AS CompanyName, '#10;
     s := s + '        rr.Arrival , '#10;
     s := s + '        rr.Departure, '#10;
+    s := s + '        rr.GroupAccount, '#10;
     s := s + '        if (Paid=1, 0, ROUND(SUM(RateWithDiscount + IFNULL(IF(CityTaxIncl, 0, CityTaxPerDay), 0.00)), 2) * CurrencyRate) AS TotalRent, '#10;
     s := s + '        IFNULL((SELECT '#10;
     s := s + '                    SUM(Number * Price) '#10;
@@ -458,6 +465,12 @@ procedure TfrmDeparturesReport.tvDeparturesListExpectedCheckOutTimeGetDisplayTex
 begin
   inherited;
       //
+end;
+
+procedure TfrmDeparturesReport.tvDeparturesListGroupInvoiceBalanceGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
+  var AProperties: TcxCustomEditProperties);
+begin
+  AProperties := FCurrencyhandler.GetcxEditProperties;
 end;
 
 procedure TfrmDeparturesReport.DoUpdateControls;

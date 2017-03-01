@@ -83,7 +83,7 @@ object frmInvoiceList2: TfrmInvoiceList2
         Enabled = False
         EditMask = '!99/99/9999;1; '
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = 4473924
+        Font.Color = clBlack
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -106,7 +106,7 @@ object frmInvoiceList2: TfrmInvoiceList2
         Enabled = False
         EditMask = '!99/99/9999;1; '
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = 4473924
+        Font.Color = clBlack
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -122,7 +122,7 @@ object frmInvoiceList2: TfrmInvoiceList2
       object rbtDates: TsRadioButton
         Left = 4
         Top = 19
-        Width = 79
+        Width = 82
         Height = 19
         Caption = 'Date range'
         TabOrder = 2
@@ -132,7 +132,7 @@ object frmInvoiceList2: TfrmInvoiceList2
       object rbtInvoices: TsRadioButton
         Left = 4
         Top = 42
-        Width = 93
+        Width = 96
         Height = 19
         Caption = 'Number range'
         TabOrder = 3
@@ -156,7 +156,7 @@ object frmInvoiceList2: TfrmInvoiceList2
         Color = clWhite
         Enabled = False
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = 4473924
+        Font.Color = clBlack
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -187,7 +187,7 @@ object frmInvoiceList2: TfrmInvoiceList2
         Color = clWhite
         Enabled = False
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = 4473924
+        Font.Color = clBlack
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -204,7 +204,7 @@ object frmInvoiceList2: TfrmInvoiceList2
       object rbtFreeText: TsRadioButton
         Left = 4
         Top = 68
-        Width = 72
+        Width = 75
         Height = 19
         Caption = 'Text filter'
         TabOrder = 6
@@ -214,7 +214,7 @@ object frmInvoiceList2: TfrmInvoiceList2
       object rbtLast: TsRadioButton
         Left = 4
         Top = 92
-        Width = 45
+        Width = 48
         Height = 19
         Caption = 'Last'
         Checked = True
@@ -240,7 +240,7 @@ object frmInvoiceList2: TfrmInvoiceList2
         Color = clWhite
         Enabled = False
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = 4473924
+        Font.Color = clBlack
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -263,7 +263,7 @@ object frmInvoiceList2: TfrmInvoiceList2
         Height = 21
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = 4473924
+        Font.Color = clBlack
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -282,7 +282,7 @@ object frmInvoiceList2: TfrmInvoiceList2
         Height = 21
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = 4473924
+        Font.Color = clBlack
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -301,7 +301,7 @@ object frmInvoiceList2: TfrmInvoiceList2
         Height = 21
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = 4473924
+        Font.Color = clBlack
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -472,7 +472,7 @@ object frmInvoiceList2: TfrmInvoiceList2
       Height = 21
       Color = clWhite
       Font.Charset = DEFAULT_CHARSET
-      Font.Color = 4473924
+      Font.Color = clBlack
       Font.Height = -11
       Font.Name = 'Tahoma'
       Font.Style = []
@@ -490,7 +490,9 @@ object frmInvoiceList2: TfrmInvoiceList2
     Align = alClient
     TabOrder = 2
     LookAndFeel.NativeStyle = False
+    ExplicitLeft = -1
     object tvInvoiceHead: TcxGridDBBandedTableView
+      PopupMenu = PopupMenu1
       OnDblClick = tvInvoiceHeadDblClick
       Navigator.Buttons.CustomButtons = <>
       Navigator.Buttons.PriorPage.Enabled = False
@@ -503,6 +505,8 @@ object frmInvoiceList2: TfrmInvoiceList2
       Navigator.Buttons.Cancel.Enabled = False
       Navigator.InfoPanel.Visible = True
       Navigator.Visible = True
+      OnEditing = tvInvoiceHeadEditing
+      DataController.DataModeController.GridMode = True
       DataController.DataSource = mDS
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <
@@ -545,6 +549,7 @@ object frmInvoiceList2: TfrmInvoiceList2
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
       OptionsData.Inserting = False
+      OptionsSelection.MultiSelect = True
       OptionsView.Footer = True
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
@@ -584,7 +589,6 @@ object frmInvoiceList2: TfrmInvoiceList2
       object tvInvoiceHeadexternalInvoiceId: TcxGridDBBandedColumn
         Caption = 'External #'
         DataBinding.FieldName = 'externalInvoiceId'
-        Options.Editing = False
         Width = 54
         Position.BandIndex = 1
         Position.ColIndex = 0
@@ -719,6 +723,7 @@ object frmInvoiceList2: TfrmInvoiceList2
       object tvInvoiceHeadpaytypes: TcxGridDBBandedColumn
         Caption = 'Pay types'
         DataBinding.FieldName = 'paytypes'
+        Options.Editing = False
         Width = 86
         Position.BandIndex = 1
         Position.ColIndex = 12
@@ -727,6 +732,7 @@ object frmInvoiceList2: TfrmInvoiceList2
       object tvInvoiceHeadpayments: TcxGridDBBandedColumn
         Caption = 'Paid amounts'
         DataBinding.FieldName = 'payments'
+        Options.Editing = False
         Width = 77
         Position.BandIndex = 1
         Position.ColIndex = 13
@@ -1063,7 +1069,24 @@ object frmInvoiceList2: TfrmInvoiceList2
     SortID = 0
     SubLanguageID = 1
     LocaleID = 1024
+    BeforePost = m22_BeforePost
     Left = 344
     Top = 432
+  end
+  object PopupMenu1: TPopupMenu
+    OnPopup = PopupMenu1Popup
+    Left = 696
+    Top = 392
+    object mnuExport: TMenuItem
+      Caption = 'Export selected invoices'
+      OnClick = mnuExportClick
+    end
+    object N1: TMenuItem
+      Caption = '-'
+    end
+    object mnuExportability: TMenuItem
+      Caption = 'Toggle exportability of selected invoices'
+      OnClick = mnuExportabilityClick
+    end
   end
 end

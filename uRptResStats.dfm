@@ -43,7 +43,6 @@ object frmRptResStats: TfrmRptResStats
       ParentFont = False
       TabOrder = 0
       SkinData.SkinSection = 'GROUPBOX'
-      Checked = False
       object dtDateFrom: TsDateEdit
         Left = 16
         Top = 18
@@ -62,7 +61,6 @@ object frmRptResStats: TfrmRptResStats
         TabOrder = 0
         Text = '  -  -    '
         OnChange = dtDateFromChange
-        CheckOnExit = True
         SkinData.SkinSection = 'EDIT'
         GlyphMode.Blend = 0
         GlyphMode.Grayed = False
@@ -85,7 +83,6 @@ object frmRptResStats: TfrmRptResStats
         TabOrder = 1
         Text = '  -  -    '
         OnChange = dtDateToChange
-        CheckOnExit = True
         SkinData.SkinSection = 'EDIT'
         GlyphMode.Blend = 0
         GlyphMode.Grayed = False
@@ -105,7 +102,6 @@ object frmRptResStats: TfrmRptResStats
       ParentFont = False
       TabOrder = 1
       SkinData.SkinSection = 'GROUPBOX'
-      Checked = False
       object cbxMonth: TsComboBox
         Left = 7
         Top = 18
@@ -203,7 +199,6 @@ object frmRptResStats: TfrmRptResStats
       Anchors = [akTop, akRight]
       TabOrder = 3
       SkinData.SkinSection = 'TRANSPARENT'
-      Checked = False
       DesignSize = (
         671
         113)
@@ -216,7 +211,6 @@ object frmRptResStats: TfrmRptResStats
         Caption = 'Use Room with status of : '
         TabOrder = 0
         SkinData.SkinSection = 'GROUPBOX'
-        Checked = False
         object chkExcluteWaitingList: TsCheckBox
           Left = 14
           Top = 17
@@ -336,7 +330,6 @@ object frmRptResStats: TfrmRptResStats
         Caption = 'Use NO Rooms with status of : '
         TabOrder = 1
         SkinData.SkinSection = 'GROUPBOX'
-        Checked = False
         object chkExcluteWaitingListNoRooms: TsCheckBox
           Left = 14
           Top = 17
@@ -476,19 +469,13 @@ object frmRptResStats: TfrmRptResStats
     Top = 115
     Width = 1128
     Height = 569
-    ActivePage = SheetMainResult
+    ActivePage = sheetMainData
     Align = alClient
     TabOrder = 1
     SkinData.SkinSection = 'PAGECONTROL'
     object SheetMainResult: TsTabSheet
       Caption = 'Result'
       OnShow = SheetMainResultShow
-      SkinData.CustomColor = False
-      SkinData.CustomFont = False
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Panel1: TPanel
         Left = 320
         Top = 0
@@ -515,12 +502,6 @@ object frmRptResStats: TfrmRptResStats
             object sTabSheet2: TsTabSheet
               Caption = 'Result'
               OnShow = sTabSheet2Show
-              SkinData.CustomColor = False
-              SkinData.CustomFont = False
-              ExplicitLeft = 0
-              ExplicitTop = 0
-              ExplicitWidth = 0
-              ExplicitHeight = 0
               object pg001: TcxDBPivotGrid
                 Left = 0
                 Top = 33
@@ -1186,12 +1167,6 @@ object frmRptResStats: TfrmRptResStats
             end
             object sTabSheet3: TsTabSheet
               Caption = 'Graph'
-              SkinData.CustomColor = False
-              SkinData.CustomFont = False
-              ExplicitLeft = 0
-              ExplicitTop = 0
-              ExplicitWidth = 0
-              ExplicitHeight = 0
               object cxGrid: TcxGrid
                 Left = 0
                 Top = 0
@@ -1227,7 +1202,6 @@ object frmRptResStats: TfrmRptResStats
           AlignSplitter = salTop
           NativeBackground = False
           Control = Panel5
-          ExplicitWidth = 8
         end
         object Panel6: TPanel
           Left = 1
@@ -1473,35 +1447,22 @@ object frmRptResStats: TfrmRptResStats
           ParentFont = False
           TabOrder = 1
           SkinData.SkinSection = 'GROUPBOX'
-          Checked = False
         end
       end
     end
     object sheetMainData: TsTabSheet
       Caption = 'Data'
-      SkinData.CustomColor = False
-      SkinData.CustomFont = False
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object pageData: TsPageControl
         Left = 0
         Top = 0
         Width = 1120
         Height = 541
-        ActivePage = sTabSheet7
+        ActivePage = sTabSheet9
         Align = alClient
         TabOrder = 0
         SkinData.SkinSection = 'PAGECONTROL'
         object sTabSheet7: TsTabSheet
           Caption = 'Reservations'
-          SkinData.CustomColor = False
-          SkinData.CustomFont = False
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object Panel2: TsPanel
             Left = 0
             Top = 0
@@ -2024,12 +1985,6 @@ object frmRptResStats: TfrmRptResStats
         end
         object sTabSheet8: TsTabSheet
           Caption = 'Roominvoice'
-          SkinData.CustomColor = False
-          SkinData.CustomFont = False
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object sPanel1: TsPanel
             Left = 0
             Top = 0
@@ -2204,12 +2159,6 @@ object frmRptResStats: TfrmRptResStats
         end
         object sTabSheet9: TsTabSheet
           Caption = 'Groupinvoice'
-          SkinData.CustomColor = False
-          SkinData.CustomFont = False
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object sPanel3: TsPanel
             Left = 0
             Top = 0
@@ -2292,8 +2241,9 @@ object frmRptResStats: TfrmRptResStats
                   Column = tvGroupInvoiceSumsavragePrice
                 end
                 item
+                  Format = ',0.00;-,0.00'
                   Kind = skSum
-                  FieldName = ',0.00;-,0.00'
+                  FieldName = 'Total'
                   Column = tvGroupInvoiceSumsTotal
                 end
                 item
@@ -2891,7 +2841,6 @@ object frmRptResStats: TfrmRptResStats
     end
     object prLinkGrDrill: TdxGridReportLink
       Component = grDrill
-      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -2904,7 +2853,6 @@ object frmRptResStats: TfrmRptResStats
       PrinterPage.PageSize.Y = 297000
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
-      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
   end
