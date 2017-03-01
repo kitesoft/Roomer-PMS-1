@@ -115,8 +115,8 @@ type
     cbxDefClosedToArrival: TsCheckBox;
     cbxDefClosedToDeparture: TsCheckBox;
     btnAutocharge: TsButton;
-    sLabel31: TsLabel;
-    sLabel32: TsLabel;
+    lbExtraCalcType: TsLabel;
+    lbExtraDevValue: TsLabel;
     edtMasterRateExtraRateDeviation: TsEdit;
     edtMasterRateExtraSingleUseRateDeviation: TsEdit;
     cmbExtraSingleUseRateDeviationType: TsComboBox;
