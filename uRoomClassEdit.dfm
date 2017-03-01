@@ -3,7 +3,7 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
   Top = 0
   Caption = 'Edit Room Class'
   ClientHeight = 623
-  ClientWidth = 745
+  ClientWidth = 948
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -22,16 +22,17 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
   object panBtn: TsPanel
     Left = 5
     Top = 590
-    Width = 735
+    Width = 938
     Height = 33
     Align = alBottom
     TabOrder = 0
     SkinData.SkinSection = 'PANEL'
+    ExplicitWidth = 735
     DesignSize = (
-      735
+      938
       33)
     object btnCancel: TsButton
-      Left = 643
+      Left = 846
       Top = 4
       Width = 85
       Height = 25
@@ -44,9 +45,10 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
       ModalResult = 2
       TabOrder = 0
       SkinData.SkinSection = 'BUTTON'
+      ExplicitLeft = 643
     end
     object BtnOk: TsButton
-      Left = 551
+      Left = 754
       Top = 4
       Width = 85
       Height = 25
@@ -59,29 +61,30 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
       ModalResult = 1
       TabOrder = 1
       SkinData.SkinSection = 'BUTTON'
+      ExplicitLeft = 551
     end
   end
   object pageMain: TsPageControl
     Left = 5
     Top = 5
-    Width = 735
+    Width = 938
     Height = 585
-    ActivePage = sTabSheet2
+    ActivePage = sTabSheet3
     Align = alClient
     Style = tsFlatButtons
     TabHeight = 25
     TabOrder = 1
     TabWidth = 100
     SkinData.SkinSection = 'PAGECONTROL'
+    ExplicitWidth = 735
     object sTabSheet1: TsTabSheet
       Caption = 'Main'
       TabSkin = 'TRANSPARENT'
-      SkinData.CustomColor = False
-      SkinData.CustomFont = False
+      ExplicitWidth = 898
       object gbxGuest: TsGroupBox
         Left = 0
         Top = 0
-        Width = 727
+        Width = 930
         Height = 171
         Align = alTop
         Caption = 'Rate Code information'
@@ -93,7 +96,7 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
         ParentFont = False
         TabOrder = 0
         SkinData.SkinSection = 'GROUPBOX'
-        Checked = False
+        ExplicitWidth = 898
         object clabInitials: TsLabel
           Left = 2
           Top = 39
@@ -252,8 +255,8 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
         object cbxActive: TsCheckBox
           Left = 122
           Top = 15
-          Width = 56
-          Height = 20
+          Width = 64
+          Height = 17
           Caption = 'Active'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -357,7 +360,7 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
         AlignWithMargins = True
         Left = 0
         Top = 175
-        Width = 727
+        Width = 930
         Height = 164
         Margins.Left = 0
         Margins.Top = 4
@@ -373,7 +376,7 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
         ParentFont = False
         TabOrder = 1
         SkinData.SkinSection = 'GROUPBOX'
-        Checked = False
+        ExplicitWidth = 898
         object clabPassword: TsLabel
           Left = 3
           Top = 23
@@ -534,7 +537,7 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
         AlignWithMargins = True
         Left = 0
         Top = 343
-        Width = 727
+        Width = 930
         Height = 104
         Margins.Left = 0
         Margins.Top = 4
@@ -550,7 +553,7 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
         ParentFont = False
         TabOrder = 2
         SkinData.SkinSection = 'GROUPBOX'
-        Checked = False
+        ExplicitWidth = 898
         object sLabel8: TsLabel
           Left = 2
           Top = 21
@@ -684,7 +687,7 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
         AlignWithMargins = True
         Left = 0
         Top = 451
-        Width = 727
+        Width = 930
         Height = 93
         Margins.Left = 0
         Margins.Top = 4
@@ -700,12 +703,12 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
         ParentFont = False
         TabOrder = 3
         SkinData.SkinSection = 'GROUPBOX'
-        Checked = False
+        ExplicitWidth = 898
         object cbxBreakfastIncluded: TsCheckBox
           Left = 227
           Top = 16
-          Width = 66
-          Height = 20
+          Width = 74
+          Height = 17
           Caption = 'Breakfast'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -721,8 +724,8 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
         object cbxHalfBoard: TsCheckBox
           Left = 227
           Top = 42
-          Width = 71
-          Height = 20
+          Width = 79
+          Height = 17
           Caption = 'Half-board'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -738,8 +741,8 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
         object cbxFullBoard: TsCheckBox
           Left = 227
           Top = 67
-          Width = 68
-          Height = 20
+          Width = 76
+          Height = 17
           Caption = 'Full-board'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -756,13 +759,12 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
     end
     object sTabSheet2: TsTabSheet
       Caption = 'Default values'
-      SkinData.CustomColor = False
-      SkinData.CustomFont = False
+      ExplicitWidth = 727
       object sGroupBox1: TsGroupBox
         AlignWithMargins = True
         Left = 0
         Top = 241
-        Width = 727
+        Width = 930
         Height = 172
         Margins.Left = 0
         Margins.Top = 4
@@ -778,7 +780,7 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
         ParentFont = False
         TabOrder = 0
         SkinData.SkinSection = 'GROUPBOX'
-        Checked = False
+        ExplicitWidth = 727
         object sLabel1: TsLabel
           Left = 8
           Top = 103
@@ -844,8 +846,8 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
         object cbxNonRefundable: TsCheckBox
           Left = 235
           Top = 24
-          Width = 95
-          Height = 20
+          Width = 103
+          Height = 17
           Caption = 'Non-refundable'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -904,7 +906,7 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
         AlignWithMargins = True
         Left = 0
         Top = 417
-        Width = 727
+        Width = 930
         Height = 126
         Margins.Left = 0
         Margins.Top = 4
@@ -920,12 +922,12 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
         ParentFont = False
         TabOrder = 1
         SkinData.SkinSection = 'GROUPBOX'
-        Checked = False
+        ExplicitWidth = 727
         object cbxsendAvailability: TsCheckBox
           Left = 227
           Top = 16
-          Width = 97
-          Height = 20
+          Width = 105
+          Height = 17
           Caption = 'Send availability'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -941,8 +943,8 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
         object cbxsendRate: TsCheckBox
           Left = 227
           Top = 42
-          Width = 67
-          Height = 20
+          Width = 75
+          Height = 17
           Caption = 'Send rate'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -958,8 +960,8 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
         object cbxsendStopSell: TsCheckBox
           Left = 227
           Top = 68
-          Width = 86
-          Height = 20
+          Width = 94
+          Height = 17
           Caption = 'Send stop sell'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -975,8 +977,8 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
         object cbxsendMinStay: TsCheckBox
           Left = 227
           Top = 94
-          Width = 87
-          Height = 20
+          Width = 95
+          Height = 17
           Caption = 'Send min stay'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -994,7 +996,7 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
         AlignWithMargins = True
         Left = 0
         Top = 4
-        Width = 727
+        Width = 930
         Height = 233
         Margins.Left = 0
         Margins.Top = 4
@@ -1010,7 +1012,7 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
         ParentFont = False
         TabOrder = 2
         SkinData.SkinSection = 'GROUPBOX'
-        Checked = False
+        ExplicitWidth = 727
         object sLabel9: TsLabel
           Left = 8
           Top = 50
@@ -1089,8 +1091,8 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
         object cbxDefStopSale: TsCheckBox
           Left = 235
           Top = 24
-          Width = 60
-          Height = 20
+          Width = 68
+          Height = 17
           Caption = 'Stop sell'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -1192,8 +1194,8 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
         object cbxDefClosedToArrival: TsCheckBox
           Left = 235
           Top = 181
-          Width = 99
-          Height = 20
+          Width = 107
+          Height = 17
           Caption = 'Closed to Arrival'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -1209,8 +1211,8 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
         object cbxDefClosedToDeparture: TsCheckBox
           Left = 235
           Top = 204
-          Width = 117
-          Height = 20
+          Width = 125
+          Height = 17
           Caption = 'Closed to Departure'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -1227,13 +1229,12 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
     end
     object sTabSheet3: TsTabSheet
       Caption = 'Master rate'
-      SkinData.CustomColor = False
-      SkinData.CustomFont = False
+      ExplicitWidth = 727
       object sGroupBox4: TsGroupBox
         AlignWithMargins = True
         Left = 0
         Top = 4
-        Width = 727
+        Width = 930
         Height = 285
         Margins.Left = 0
         Margins.Top = 4
@@ -1249,7 +1250,7 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
         ParentFont = False
         TabOrder = 0
         SkinData.SkinSection = 'GROUPBOX'
-        Checked = False
+        ExplicitWidth = 727
         object sLabel17: TsLabel
           Left = 243
           Top = 32
@@ -1264,7 +1265,7 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
           Font.Style = [fsBold]
         end
         object sLabel18: TsLabel
-          Left = 368
+          Left = 348
           Top = 32
           Width = 88
           Height = 13
@@ -1278,7 +1279,7 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
           Font.Style = [fsBold]
         end
         object sLabel19: TsLabel
-          Left = 498
+          Left = 477
           Top = 32
           Width = 127
           Height = 13
@@ -1441,11 +1442,38 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
           Font.Name = 'Tahoma'
           Font.Style = []
         end
+        object sLabel31: TsLabel
+          Left = 766
+          Top = 32
+          Width = 126
+          Height = 13
+          Caption = 'Extra Calculation Type'
+          ParentFont = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = [fsBold]
+        end
+        object sLabel32: TsLabel
+          Left = 637
+          Top = 32
+          Width = 120
+          Height = 13
+          Alignment = taRightJustify
+          Caption = 'Extra deviation value'
+          ParentFont = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = [fsBold]
+        end
         object cbxconnectRateToMasterRate: TsCheckBox
           Left = 257
           Top = 58
           Width = 20
-          Height = 20
+          Height = 16
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -11
@@ -1478,16 +1506,16 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
         object sPanel1: TsPanel
           Left = 26
           Top = 48
-          Width = 614
-          Height = 4
+          Width = 889
+          Height = 6
           BevelEdges = [beTop]
           BevelOuter = bvLowered
           BorderStyle = bsSingle
-          TabOrder = 2
+          TabOrder = 17
           SkinData.SkinSection = 'PANEL'
         end
         object cmbRateDeviationType: TsComboBox
-          Left = 498
+          Left = 477
           Top = 57
           Width = 118
           Height = 21
@@ -1502,7 +1530,7 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
           Font.Style = []
           ItemIndex = 0
           ParentFont = False
-          TabOrder = 3
+          TabOrder = 2
           Text = 'FIXED_AMOUNT'
           Items.Strings = (
             'FIXED_AMOUNT'
@@ -1512,14 +1540,14 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
           Left = 257
           Top = 84
           Width = 20
-          Height = 20
+          Height = 16
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
           ParentFont = False
-          TabOrder = 4
+          TabOrder = 5
           SkinData.SkinSection = 'CHECKBOX'
           ImgChecked = 0
           ImgUnchecked = 0
@@ -1538,12 +1566,12 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
           Font.Name = 'Tahoma'
           Font.Style = []
           ParentFont = False
-          TabOrder = 5
+          TabOrder = 6
           OnKeyPress = edtdefRateKeyPress
           SkinData.SkinSection = 'EDIT'
         end
         object cmbsingleUseRateDeviationType: TsComboBox
-          Left = 498
+          Left = 477
           Top = 83
           Width = 118
           Height = 21
@@ -1558,7 +1586,7 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
           Font.Style = []
           ItemIndex = 0
           ParentFont = False
-          TabOrder = 6
+          TabOrder = 7
           Text = 'FIXED_AMOUNT'
           Items.Strings = (
             'FIXED_AMOUNT'
@@ -1568,14 +1596,14 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
           Left = 257
           Top = 110
           Width = 20
-          Height = 20
+          Height = 16
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
           ParentFont = False
-          TabOrder = 7
+          TabOrder = 10
           Visible = False
           SkinData.SkinSection = 'CHECKBOX'
           ImgChecked = 0
@@ -1585,71 +1613,7 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
           Left = 257
           Top = 160
           Width = 20
-          Height = 20
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          ParentFont = False
-          TabOrder = 8
-          SkinData.SkinSection = 'CHECKBOX'
-          ImgChecked = 0
-          ImgUnchecked = 0
-        end
-        object cbxconnectMaxStayToMasterRate: TsCheckBox
-          Left = 257
-          Top = 185
-          Width = 20
-          Height = 20
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          ParentFont = False
-          TabOrder = 9
-          SkinData.SkinSection = 'CHECKBOX'
-          ImgChecked = 0
-          ImgUnchecked = 0
-        end
-        object cbxconnectCOAToMasterRate: TsCheckBox
-          Left = 257
-          Top = 210
-          Width = 20
-          Height = 20
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          ParentFont = False
-          TabOrder = 10
-          SkinData.SkinSection = 'CHECKBOX'
-          ImgChecked = 0
-          ImgUnchecked = 0
-        end
-        object cbxconnectCODToMasterRate: TsCheckBox
-          Left = 257
-          Top = 235
-          Width = 20
-          Height = 20
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          ParentFont = False
-          TabOrder = 11
-          SkinData.SkinSection = 'CHECKBOX'
-          ImgChecked = 0
-          ImgUnchecked = 0
-        end
-        object cbxconnectLOSToMasterRate: TsCheckBox
-          Left = 257
-          Top = 259
-          Width = 20
-          Height = 20
+          Height = 16
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -11
@@ -1661,11 +1625,11 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
           ImgChecked = 0
           ImgUnchecked = 0
         end
-        object cbxconnectStopSellToMasterRate: TsCheckBox
+        object cbxconnectMaxStayToMasterRate: TsCheckBox
           Left = 257
-          Top = 135
+          Top = 185
           Width = 20
-          Height = 20
+          Height = 16
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -11
@@ -1676,6 +1640,150 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
           SkinData.SkinSection = 'CHECKBOX'
           ImgChecked = 0
           ImgUnchecked = 0
+        end
+        object cbxconnectCOAToMasterRate: TsCheckBox
+          Left = 257
+          Top = 210
+          Width = 20
+          Height = 16
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 14
+          SkinData.SkinSection = 'CHECKBOX'
+          ImgChecked = 0
+          ImgUnchecked = 0
+        end
+        object cbxconnectCODToMasterRate: TsCheckBox
+          Left = 257
+          Top = 235
+          Width = 20
+          Height = 16
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 15
+          SkinData.SkinSection = 'CHECKBOX'
+          ImgChecked = 0
+          ImgUnchecked = 0
+        end
+        object cbxconnectLOSToMasterRate: TsCheckBox
+          Left = 257
+          Top = 259
+          Width = 20
+          Height = 16
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 16
+          SkinData.SkinSection = 'CHECKBOX'
+          ImgChecked = 0
+          ImgUnchecked = 0
+        end
+        object cbxconnectStopSellToMasterRate: TsCheckBox
+          Left = 257
+          Top = 135
+          Width = 20
+          Height = 16
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 11
+          SkinData.SkinSection = 'CHECKBOX'
+          ImgChecked = 0
+          ImgUnchecked = 0
+        end
+        object edtMasterRateExtraRateDeviation: TsEdit
+          Left = 637
+          Top = 57
+          Width = 113
+          Height = 21
+          Alignment = taRightJustify
+          Color = clWhite
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 3
+          OnKeyPress = edtdefRateKeyPress
+          SkinData.SkinSection = 'EDIT'
+        end
+        object edtMasterRateExtraSingleUseRateDeviation: TsEdit
+          Left = 637
+          Top = 83
+          Width = 113
+          Height = 21
+          Alignment = taRightJustify
+          Color = clWhite
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 8
+          OnKeyPress = edtdefRateKeyPress
+          SkinData.SkinSection = 'EDIT'
+        end
+        object cmbExtraSingleUseRateDeviationType: TsComboBox
+          Left = 766
+          Top = 83
+          Width = 142
+          Height = 21
+          Alignment = taLeftJustify
+          SkinData.SkinSection = 'COMBOBOX'
+          VerticalAlignment = taAlignTop
+          Color = clWhite
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ItemIndex = -1
+          ParentFont = False
+          TabOrder = 9
+          Text = 'FIXED_AMOUNT'
+          Items.Strings = (
+            'FIXED_AMOUNT'
+            'PERCENTAGE'
+            'DEVIATED_PERCENTAGE')
+        end
+        object cmbExtraRateDeviationType: TsComboBox
+          Left = 766
+          Top = 57
+          Width = 142
+          Height = 21
+          Alignment = taLeftJustify
+          SkinData.SkinSection = 'COMBOBOX'
+          VerticalAlignment = taAlignTop
+          Color = clWhite
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ItemIndex = -1
+          ParentFont = False
+          TabOrder = 4
+          Text = 'FIXED_AMOUNT'
+          Items.Strings = (
+            'FIXED_AMOUNT'
+            'PERCENTAGE'
+            'DEVIATED_PERCENTAGE')
         end
       end
     end

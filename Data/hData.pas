@@ -1204,6 +1204,11 @@ type
 
     RATE_PLAN_TYPE: String;
 
+    masterRateExtraRateDeviation: Double;
+    extraRateDeviationType: String;
+    masterRateExtraSingleUseRateDeviation: Double;
+    extraSingleUseRateDeviationType: String;
+
     prepaidPercentage : Double;
   end;
 
@@ -10454,6 +10459,11 @@ begin
     RATE_PLAN_TYPE := 'STANDARD';
     prepaidPercentage := 100;
 
+    masterRateExtraRateDeviation := 0.00;
+    extraRateDeviationType := 'FIXED_AMOUNT';
+    masterRateExtraSingleUseRateDeviation := 0.00;
+    extraSingleUseRateDeviationType := 'FIXED_AMOUNT';
+
   end;
 end;
 
@@ -10525,6 +10535,10 @@ begin
   s := s + '   ,connectCODToMasterRate = ' + _db(theData.connectCODToMasterRate) + ' ' + #10;
   s := s + '   ,connectLOSToMasterRate = ' + _db(theData.connectLOSToMasterRate) + ' ' + #10;
   s := s + '   ,RATE_PLAN_TYPE = ' + _db(theData.RATE_PLAN_TYPE) + ' ' + #10;
+  s := s + '   ,masterRateExtraRateDeviation = ' + _db(theData.masterRateExtraRateDeviation) + ' ' + #10;
+  s := s + '   ,extraRateDeviationType = ' + _db(theData.extraRateDeviationType) + ' ' + #10;
+  s := s + '   ,masterRateExtraSingleUseRateDeviation = ' + _db(theData.masterRateExtraSingleUseRateDeviation) + ' ' + #10;
+  s := s + '   ,extraSingleUseRateDeviationType = ' + _db(theData.extraSingleUseRateDeviationType) + '  ' + #10;
   s := s + '   ,prepaidPercentage = ' + _db(theData.prepaidPercentage) + ' ' + #10;
   s := s + ' WHERE ' + #10;
   s := s + '   (ID = ' + _db(theData.id) + ') ';
@@ -10587,6 +10601,10 @@ begin
   s := s + ' ,connectCODToMasterRate ' + #10;
   s := s + ' ,connectLOSToMasterRate ' + #10;
   s := s + ' ,RATE_PLAN_TYPE ' + #10;
+  s := s + ' ,masterRateExtraRateDeviation = ' + #10;
+  s := s + ' ,extraRateDeviationType = ' + #10;
+  s := s + ' ,masterRateExtraSingleUseRateDeviation = ' + #10;
+  s := s + ' ,extraSingleUseRateDeviationType = ' + #10;
   s := s + ' ,prepaidPercentage ' + #10;
   s := s + '  ) ' + #10;
   s := s + '   VALUES ' + #10;
@@ -10640,6 +10658,10 @@ begin
   s := s + '  ,' + _db(theData.connectCODToMasterRate) + ' ' + #10;
   s := s + '  ,' + _db(theData.connectLOSToMasterRate) + ' ' + #10;
   s := s + '  ,' + _db(theData.RATE_PLAN_TYPE) + ' ' + #10;
+  s := s + '  ,' + _db(theData.masterRateExtraRateDeviation) + ' ' + #10;
+  s := s + '  ,' + _db(theData.extraRateDeviationType) + ' ' + #10;
+  s := s + '  ,' + _db(theData.masterRateExtraSingleUseRateDeviation) + ' ' + #10;
+  s := s + '  ,' + _db(theData.extraSingleUseRateDeviationType) + '  ' + #10;
   s := s + '  ,' + _db(theData.prepaidPercentage) + ' ' + #10;
   s := s + '   )';
   result := cmd_bySQL(s);

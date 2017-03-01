@@ -236,6 +236,14 @@ type
     btnAvailabilityOrder: TsButton;
     cbTopClasses: TCheckBox;
     chkActive: TCheckBox;
+    m_masterRateExtraRateDeviation: TFloatField;
+    m_extraRateDeviationType: TWideStringField;
+    m_masterRateExtraSingleUseRateDeviation: TFloatField;
+    m_extraSingleUseRateDeviationType: TWideStringField;
+    tvDatamasterRateExtraRateDeviation: TcxGridDBColumn;
+    tvDataextraRateDeviationType: TcxGridDBColumn;
+    tvDatamasterRateExtraSingleUseRateDeviation: TcxGridDBColumn;
+    tvDataextraSingleUseRateDeviationType: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormKeyPress(Sender: TObject; var Key: Char);
@@ -459,6 +467,10 @@ begin
           m_['connectCODToMasterRate'] := rSet['connectCODToMasterRate'];
           m_['connectLOSToMasterRate'] := rSet['connectLOSToMasterRate'];
           m_['RATE_PLAN_TYPE'] := rSet['RATE_PLAN_TYPE'];
+          m_['masterRateExtraRateDeviation'] := rSet['masterRateExtraRateDeviation'];
+          m_['extraRateDeviationType'] := rSet['extraRateDeviationType'];
+          m_['masterRateExtraSingleUseRateDeviation'] := rSet['masterRateExtraSingleUseRateDeviation'];
+          m_['extraSingleUseRateDeviationType'] := rSet['extraSingleUseRateDeviationType'];
 
           m_.Post;
         end;
@@ -535,6 +547,11 @@ begin
   zData.connectLOSToMasterRate := m_['connectLOSToMasterRate'];
   zData.RATE_PLAN_TYPE := m_['RATE_PLAN_TYPE'];
 
+  zData.masterRateExtraRateDeviation := m_['masterRateExtraRateDeviation'];
+  zData.extraRateDeviationType := m_['extraRateDeviationType'];
+  zData.masterRateExtraSingleUseRateDeviation := m_['masterRateExtraSingleUseRateDeviation'];
+  zData.extraSingleUseRateDeviationType := m_['extraSingleUseRateDeviationType'];
+
 end;
 
 
@@ -600,6 +617,12 @@ begin
     tvDataconnectCOAToMasterRate.Options.Editing         := zAllowGridEdit;
     tvDataconnectCODToMasterRate.Options.Editing         := zAllowGridEdit;
     tvDataconnectLOSToMasterRate.Options.Editing         := zAllowGridEdit;
+
+    tvDatamasterRateExtraRateDeviation.Options.Editing         := zAllowGridEdit;
+    tvDataextraRateDeviationType.Options.Editing         := zAllowGridEdit;
+    tvDatamasterRateExtraSingleUseRateDeviation.Options.Editing         := zAllowGridEdit;
+    tvDataextraSingleUseRateDeviationType.Options.Editing         := zAllowGridEdit;
+
 end;
 
 
@@ -837,7 +860,13 @@ begin
     zData.connectCODToMasterRate := m_['connectCODToMasterRate'];
     zData.connectLOSToMasterRate := m_['connectLOSToMasterRate'];
     zData.RATE_PLAN_TYPE := m_['RATE_PLAN_TYPE'];
-//    zData.prepaidPercentage := m_['prepaidPercentage'];
+
+    zData.masterRateExtraRateDeviation := m_['masterRateExtraRateDeviation'];
+    zData.extraRateDeviationType := m_['extraRateDeviationType'];
+    zData.masterRateExtraSingleUseRateDeviation := m_['masterRateExtraSingleUseRateDeviation'];
+    zData.extraSingleUseRateDeviationType := m_['extraSingleUseRateDeviationType'];
+
+    //    zData.prepaidPercentage := m_['prepaidPercentage'];
   end;
 end;
 
@@ -1020,6 +1049,12 @@ begin
   dataset['connectCODToMasterRate'] := false;
   dataset['connectLOSToMasterRate'] := false;
   dataset['RATE_PLAN_TYPE'] := 'STANDARD';
+
+  dataset['masterRateExtraRateDeviation'] := 0.00;
+  dataset['extraRateDeviationType'] := 'PERCENTAGE';;
+  dataset['masterRateExtraSingleUseRateDeviation'] := 0.00;
+  dataset['extraSingleUseRateDeviationType'] := 'PERCENTAGE';;
+
 end;
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -1322,7 +1357,12 @@ begin
   m_['connectCODToMasterRate'] := zData.connectCODToMasterRate;
   m_['connectLOSToMasterRate'] := zData.connectLOSToMasterRate;
   m_['RATE_PLAN_TYPE'] := zData.RATE_PLAN_TYPE;
-//  m_['prepaidPercentage'] := zData.prepaidPercentage;
+
+  m_['masterRateExtraRateDeviation'] := zData.masterRateExtraRateDeviation;
+  m_['extraRateDeviationType'] := zData.extraRateDeviationType;
+  m_['masterRateExtraSingleUseRateDeviation'] := zData.masterRateExtraSingleUseRateDeviation;
+  m_['extraSingleUseRateDeviationType'] := zData.extraSingleUseRateDeviationType;
+  //  m_['prepaidPercentage'] := zData.prepaidPercentage;
 end;
 
 procedure TfrmRoomTypesGroups2.btnEditClick(Sender: TObject);

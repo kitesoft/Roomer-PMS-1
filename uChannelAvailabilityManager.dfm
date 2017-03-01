@@ -135,7 +135,6 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
           Padding.Bottom = 3
           TabOrder = 0
           SkinData.SkinSection = 'PANEL'
-          ExplicitLeft = 1
           object lblMinStay: TsLabel
             Left = 134
             Top = 7
@@ -884,7 +883,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
             Left = 1
             Top = 4
             Width = 423
-            Height = 23
+            Height = 21
             Margins.Left = 0
             Margins.Right = 0
             Align = alTop
@@ -993,7 +992,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
           object pnlSingleUseRateChange: TsPanel
             AlignWithMargins = True
             Left = 1
-            Top = 33
+            Top = 31
             Width = 423
             Height = 21
             Margins.Left = 0
@@ -1069,7 +1068,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
           object pnlBulkChangesAvail: TsPanel
             AlignWithMargins = True
             Left = 1
-            Top = 60
+            Top = 58
             Width = 423
             Height = 21
             Margins.Left = 0
@@ -1078,8 +1077,6 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
             AutoSize = True
             BevelOuter = bvNone
             TabOrder = 2
-            ExplicitTop = 63
-            ExplicitHeight = 23
             object lblDCAvailability: TsLabel
               Left = 13
               Top = 3
@@ -1256,7 +1253,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
         Margins.Top = 2
         Margins.Right = 2
         Margins.Bottom = 2
-        ActivePage = tsAvailabilities
+        ActivePage = tsRates
         Align = alClient
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
@@ -1275,10 +1272,6 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
           Margins.Right = 2
           Margins.Bottom = 2
           Caption = 'Availabilities'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object Panel2: TsPanel
             Left = 0
             Top = 522
@@ -1510,10 +1503,8 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
               URLColor = clBlack
               ValidChars = '0123456789'
               VAlignment = vtaCenter
-              Version = '8.2.4.1'
+              Version = '8.2.5.2'
               WordWrap = False
-              ExplicitLeft = 1
-              ExplicitTop = 18
               ColWidths = (
                 250
                 80
@@ -1561,10 +1552,6 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
           Margins.Right = 2
           Margins.Bottom = 2
           Caption = 'Rates'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object rateGrid: TAdvStringGrid
             Left = 0
             Top = 54
@@ -1742,7 +1729,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
             URLColor = clBlack
             ValidChars = '0123456789+-!%*/'
             VAlignment = vtaCenter
-            Version = '8.2.4.1'
+            Version = '8.2.5.2'
             WordWrap = False
             ColWidths = (
               400
@@ -2147,8 +2134,9 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
               Width = 199
               Height = 254
               BorderStyle = bsSingle
+              Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = clWindowText
+              Font.Color = clBlack
               Font.Height = -11
               Font.Name = 'Tahoma'
               Font.Style = []

@@ -250,6 +250,7 @@ object frmRoomTypesGroups2: TfrmRoomTypesGroups2
       Align = alClient
       TabOrder = 3
       LookAndFeel.NativeStyle = False
+      ExplicitTop = 104
       object tvData: TcxGridDBTableView
         OnDblClick = tvDataDblClick
         Navigator.Buttons.CustomButtons = <>
@@ -649,6 +650,28 @@ object frmRoomTypesGroups2: TfrmRoomTypesGroups2
           DataBinding.FieldName = 'connectLOSToMasterRate'
           Width = 153
         end
+        object tvDatamasterRateExtraRateDeviation: TcxGridDBColumn
+          DataBinding.FieldName = 'masterRateExtraRateDeviation'
+        end
+        object tvDataextraRateDeviationType: TcxGridDBColumn
+          DataBinding.FieldName = 'extraRateDeviationType'
+          PropertiesClassName = 'TcxComboBoxProperties'
+          Properties.Items.Strings = (
+            'PERCENTAGE'
+            'FIXED_AMOUNT'
+            'DEVIATED_PERCENTAGE')
+        end
+        object tvDatamasterRateExtraSingleUseRateDeviation: TcxGridDBColumn
+          DataBinding.FieldName = 'masterRateExtraSingleUseRateDeviation'
+        end
+        object tvDataextraSingleUseRateDeviationType: TcxGridDBColumn
+          DataBinding.FieldName = 'extraSingleUseRateDeviationType'
+          PropertiesClassName = 'TcxComboBoxProperties'
+          Properties.Items.Strings = (
+            'PERCENTAGE'
+            'FIXED_AMOUNT'
+            'DEVIATED_PERCENTAGE')
+        end
       end
       object lvData: TcxGridLevel
         GridView = tvData
@@ -707,6 +730,7 @@ object frmRoomTypesGroups2: TfrmRoomTypesGroups2
     Left = 96
     Top = 192
     object prLink_grData: TdxGridReportLink
+      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -720,10 +744,12 @@ object frmRoomTypesGroups2: TfrmRoomTypesGroups2
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
       ReportDocument.CreationDate = 41334.495374884260000000
+      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
   end
   object m_: TdxMemData
+    Active = True
     Indexes = <>
     SortOptions = []
     BeforeInsert = m_BeforeInsert
@@ -900,6 +926,20 @@ object frmRoomTypesGroups2: TfrmRoomTypesGroups2
     object m_PAYMENTS_REQUIRED: TWideStringField
       FieldName = 'PAYMENTS_REQUIRED'
       Size = 255
+    end
+    object m_masterRateExtraRateDeviation: TFloatField
+      FieldName = 'masterRateExtraRateDeviation'
+    end
+    object m_extraRateDeviationType: TWideStringField
+      FieldName = 'extraRateDeviationType'
+      Size = 25
+    end
+    object m_masterRateExtraSingleUseRateDeviation: TFloatField
+      FieldName = 'masterRateExtraSingleUseRateDeviation'
+    end
+    object m_extraSingleUseRateDeviationType: TWideStringField
+      FieldName = 'extraSingleUseRateDeviationType'
+      Size = 25
     end
   end
   object FormStore: TcxPropertiesStore
