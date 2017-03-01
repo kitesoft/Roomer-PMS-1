@@ -14,16 +14,24 @@ uses
 type
   EXMLDocException = class(Exception);
 
-  TxsdBaseObject = class(TObject)
+  TxsdBaseObject = class(TPersistent)
+  private
+    FIsDirty: boolean;
   protected
     class function GetNodeName: string; virtual; abstract;
     class function GetNameSpaceURI: string; virtual;
+    procedure SetIsDirty(Value: boolean);
+    procedure AssignTo(Dest: TPersistent); override;
   public
+    function Clone: TxsdBaseObject;
     procedure LoadFromXML(const aXML: string);
     function AsXMLDocument: IXMLDocument;
-    procedure Clear; virtual; abstract;
+    procedure Assign(Source: TPersistent); override;
+    procedure Clear; virtual;
     procedure SetPropertiesFromXMLNode(const aNode: PXMLNode); virtual;
     procedure AddPropertiesToXMLNode(const aNode: PXMLNode); virtual;
+
+    property IsDirty: boolean read FIsDirty;
   end;
 
 
@@ -34,10 +42,16 @@ type
     class function GetNameSpaceURI: string; virtual; abstract;
     procedure SetPropertiesFromXMLNode(const aNode: PXMLNode); virtual;
     procedure AddPropertiesToXMLNode(const aNode: PXMLNode); virtual;
+
+    procedure CopyAllDirtyItemsInto(aObjectList: TxsdBaseObjectList<T>);
   end;
 
 
 implementation
+
+uses
+  Spring.Collections.Base
+  ;
 
 
 { TxsdBaseObject }
@@ -65,6 +79,28 @@ begin
   aNode.NodeName := GetNodeName;
 end;
 
+procedure TxsdBaseObject.Assign(Source: TPersistent);
+var
+  lNode: PXMLNode;
+  lXMLDoc:IXMLDocument;
+begin
+  if (Source.ClassType = ClassType) then
+  begin
+    lXMLDoc := CreateXMLDoc;
+    lNode := lXMLDoc.DocumentElement.AddChild(GetNodeName);
+    TxsdBaseObject(Source).AddPropertiesToXMLNode(lNode);
+    SetPropertiesFromXMLNode(lNode);
+  end
+  else
+    inherited;
+end;
+
+procedure TxsdBaseObject.AssignTo(Dest: TPersistent);
+begin
+  inherited;
+
+end;
+
 function TxsdBaseObject.AsXMLDocument: IXMLDocument;
 begin
   Clear;
@@ -72,9 +108,25 @@ begin
   AddPropertiesToXMLNode(Result.AddChild(''));
 end;
 
+procedure TxsdBaseObject.Clear;
+begin
+  FIsDirty := false;
+end;
+
+function TxsdBaseObject.Clone: TxsdBaseObject;
+begin
+  Result := TxsdBaseObject(Self.ClassType.Create);
+  Result.Assign(Self);
+end;
+
 class function TxsdBaseObject.GetNameSpaceURI: string;
 begin
   Result := '';
+end;
+
+procedure TxsdBaseObject.SetIsDirty(Value: boolean);
+begin
+  FIsDirty := Value;
 end;
 
 procedure TxsdBaseObject.SetPropertiesFromXMLNode(const aNode: PXMLNode);
@@ -91,6 +143,22 @@ begin
   aNode.NodeName := GetNodeName;
   for lItem in Self do
     lItem.AddPropertiesToXMLNode(aNode.AddChild(''));
+end;
+
+procedure TxsdBaseObjectList<T>.CopyAllDirtyItemsInto(aObjectList: TxsdBaseObjectList<T>);
+var
+  lPredicate: Spring.TPredicate<T>;
+  lEnumerable: IEnumerable<TxsdBaseObject>;
+  lObject: T;
+begin
+  lPredicate :=  function(const aObject: T): boolean
+                              begin
+                                Result := aObject.IsDirty;
+                              end;
+
+  for lObject in Self.Where(lPredicate) do
+    aObjectList.Add(lObject.Clone);
+
 end;
 
 procedure TxsdBaseObjectList<T>.SetPropertiesFromXMLNode(const aNode: PXMLNode);

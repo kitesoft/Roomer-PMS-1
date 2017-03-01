@@ -24,6 +24,11 @@ type
   private
   public
     function GetRunningTabRoomRes(aRoomReservationId: integer; aRunningTabAOverview: TRunningTabsOverview; aOptions: TRunningTabOptions = []): boolean;
+    /// <summary>
+    ///   Process the provided runningTab parts and add new invoicelines or update existing invoicelines accordingly. The aRunningTab ojbect is
+    ///  update with the new resulting data.
+    /// </summary>
+    function AddOrUpdateRunningTab(aRunningTabsOverview: TRunningTabsOverview; aOptions: TRUnningTabOptions = []): boolean;
     function DeleteRunningTabProductItem(aLineID: integer): boolean;
   end;
 
@@ -37,6 +42,41 @@ uses
   , XmlUtils
   , uUtils
   ;
+
+function TRunningTabAPICaller.AddOrUpdateRunningTab(aRunningTabsOverview: TRunningTabsOverview; aOptions: TRUnningTabOptions): boolean;
+const
+  cEndPoint = '/add';
+var
+  lURI: string;
+  Xml: string;
+  lParams: TRoomerHttpQueryparams;
+begin
+  lURI := cRunningTabURI  + cEndPoint;
+
+  if (aOptions <> []) then
+  begin
+    lUri := lUri + '?';
+    lParams := TRoomerHttpQueryparams.Create;
+    try
+      if (TRunningTabOption.SplitOnInvoiceIndex in aOptions) then
+        lParams.Add('splitInvoice=true');
+
+      lUri := lUri + lParams.AsURLText;
+    finally
+      lParams.Free;
+    end;
+  end;
+
+  try
+    Xml := d.roomerMainDataSet.PutData(lURI, aRunningTabsOverview.AsXMLDocument.XML);
+    aRunningTabsOverview.LoadFromXML(Xml);
+    Result := true;
+  except
+    on E: Exception do
+      raise EServicesRunningTabAPICallerException.Create('Error during add or update of running tab');
+  end;
+
+end;
 
 function TRunningTabAPICaller.DeleteRunningTabProductItem(aLineID: integer): boolean;
 const

@@ -129,7 +129,7 @@ type
     class function GetNodeName: string; override;
     class function GetNameSpaceURI: string; override;
   end;
-//
+
 
   TRunningTabPayment = class(TxsdBaseObject)
     type

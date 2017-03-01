@@ -187,6 +187,8 @@ type
     procedure tsInvocieIndexDragDrop(Sender, Source: TObject; X, Y: Integer);
     procedure tsInvocieIndexDockOver(Sender: TObject; Source: TDragDockObject; X, Y: Integer; State: TDragState;
       var Accept: Boolean);
+    procedure actAddLineExecute(Sender: TObject);
+    procedure odsInvoicelinesNewRecord(DataSet: TDataSet);
   private
     FRunningTabModel: TRunningTabViewAdapter;
     FReservation: integer;
@@ -223,6 +225,12 @@ uses
 
 
 { TfrmInvoiceObjects }
+
+procedure TfrmInvoiceObjects.actAddLineExecute(Sender: TObject);
+begin
+  inherited;
+  odsInvoiceLines.Insert;
+end;
 
 procedure TfrmInvoiceObjects.actDelLineExecute(Sender: TObject);
 begin
@@ -261,6 +269,19 @@ begin
     Abort;
 end;
 
+procedure TfrmInvoiceObjects.odsInvoicelinesNewRecord(DataSet: TDataSet);
+begin
+  inherited;
+
+  with GetCurrentInvoiceLine do
+  begin
+    PurchaseDate := Now;
+    ProductType := itSale;
+    InvoiceIndex := ActiveInvoiceIndex;
+  end;
+
+end;
+
 procedure TfrmInvoiceObjects.DeleteCurrentItem();
 var
   lRunningTabAPI: TRunningTabAPICaller;
@@ -292,7 +313,6 @@ end;
 procedure TfrmInvoiceObjects.DoLoadData;
 var
   lRunningTabAPI: TRunningTabAPICaller;
-  lList: IObjectList;
 begin
   inherited;
 
@@ -324,6 +344,7 @@ begin
 
   odsPayments.DataList := FRunningTabModel.PaymentsList[FActiveInvoiceIndex];
   odsInvoicelines.DataList := FRunningTabModel.InvoicelinesList[FActiveInvoiceIndex];
+	
 end;
 
 procedure TfrmInvoiceObjects.FormShow(Sender: TObject);

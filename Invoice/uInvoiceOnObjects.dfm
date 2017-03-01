@@ -1170,7 +1170,6 @@ inherited frmInvoiceObjects: TfrmInvoiceObjects
         Padding.Bottom = 5
         TabOrder = 1
         SkinData.SkinSection = 'PANEL'
-        ExplicitWidth = 1040
         object tsInvocieIndex: TsTabControl
           Left = 10
           Top = 5
@@ -1230,8 +1229,6 @@ inherited frmInvoiceObjects: TfrmInvoiceObjects
             RootValue = 0
             TabOrder = 0
             OnStartDrag = tlInvoiceLinesStartDrag
-            ExplicitLeft = 3
-            ExplicitTop = 5
             object cxDBTreeList1cxDBTreeListColumn7: TcxDBTreeListColumn
               PropertiesClassName = 'TcxCheckBoxProperties'
               Caption.AlignHorz = taCenter
@@ -1568,6 +1565,7 @@ inherited frmInvoiceObjects: TfrmInvoiceObjects
       Category = 'Lines'
       Caption = 'Add item'
       ShortCut = 113
+      OnExecute = actAddLineExecute
     end
     object actDelLine: TAction
       Category = 'Lines'
@@ -1751,6 +1749,7 @@ inherited frmInvoiceObjects: TfrmInvoiceObjects
   end
   object odsInvoicelines: TObjectDataSet
     BeforeDelete = odsInvoicelinesBeforeDelete
+    OnNewRecord = odsInvoicelinesNewRecord
     Left = 784
     Top = 320
   end
