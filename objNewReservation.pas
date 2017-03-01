@@ -297,7 +297,7 @@ TYPE
     FSendConfirmationEmail: Boolean;
     FAlertList: TAlertList;
     FMarket: TReservationMarketType;
-    procedure DeleteReservation(Reservation: integer);
+//    procedure DeleteReservation(aReservation: integer);
   protected
     FReservation: integer;
   public
@@ -983,7 +983,7 @@ var
     channel := channels_getDefault();
   end;
 
-  procedure CreateReservation;
+  procedure InsertNewReservation;
   begin
     hData.initReservationHolderRec(reservationData, staff);
 
@@ -1057,7 +1057,7 @@ var
 //    end;
   end;
 
-  procedure createReservationInvoiceHead;
+  procedure InsertNewReservationInvoiceHead;
   begin
     initInvoiceHeadHolderRec(invoiceHeadData);
     invoiceHeadData.Reservation := Reservation;
@@ -1196,8 +1196,8 @@ begin
         end;
 
         init;
-        CreateReservation;
-        createReservationInvoiceHead;
+        InsertNewReservation;
+        InsertNewReservationInvoiceHead;
 
         for i := 0 to FnewRoomReservations.RoomCount - 1 do
         begin
@@ -1397,7 +1397,10 @@ begin
             numGuests := 1;
           end;
 
-          iLastPerson := strToInt(lstIDs[guestIndex]); //PE_SetNewID();
+          if guestIndex >= LstIds.Count then // correct for erroneous initial count of guest in rare circumstances
+            iLastperson := PE_SetNewID()
+          else
+            iLastPerson := strToInt(lstIDs[guestIndex]); //PE_SetNewID();
           inc(guestIndex);
 
           GuestCompany := Customer;
@@ -1654,11 +1657,11 @@ begin
         begin
           inc(CheckCount);
           ExecutionPlan.Clear;
-          CreateReservation;
+          InsertNewReservation; // try again??
           ExecutionPlan.Execute(ptExec, True, True);
           if NOT RV_Exists(FReservation) then
           begin
-            DeleteReservation(FReservation);
+            d.roomerMainDataSet.SystemRemoveReservation(FReservation);
             if CheckCount >= 3 then
               raise Exception.Create(format(GetTranslatedText('shTx_ReservationIdNotFound'), [FReservation]));
           end;
@@ -1760,25 +1763,25 @@ begin
   end;
 end;
 
-procedure TNewReservation.DeleteReservation(Reservation : integer);
-var cmdList : TList<String>;
-begin
-  cmdList := TList<String>.Create;
-  try
-    cmdList.Add('DELETE from reservations WHERE reservation=' + inttostr(Reservation));
-    cmdList.Add('DELETE from roomreservations WHERE reservation=' + inttostr(Reservation));
-    cmdList.Add('DELETE from invoiceheads WHERE reservation=' + inttostr(Reservation));
-
-    //**zxhj ATH EKKI breyta resstatus h�r
-    cmdList.Add('DELETE from roomsdate WHERE reservation=' + inttostr(Reservation));
-
-    cmdList.Add('DELETE from persons WHERE reservation=' + inttostr(Reservation));
-    cmdList.Add('DELETE from invoicelines WHERE reservation=' + inttostr(Reservation));
-    d.roomerMainDataSet.SystemFreeExecuteMultiple(cmdList)
-  finally
-    cmdList.Free;
-  end;
-end;
+//procedure TNewReservation.DeleteReservation(aReservation : integer);
+//var cmdList : TList<String>;
+//begin
+//  cmdList := TList<String>.Create;
+//  try
+//    cmdList.Add('DELETE from reservations WHERE reservation=' + inttostr(aReservation));
+//    cmdList.Add('DELETE from roomreservations WHERE reservation=' + inttostr(aReservation));
+//    cmdList.Add('DELETE from invoiceheads WHERE reservation=' + inttostr(aReservation));
+//
+//    //**zxhj ATH EKKI breyta resstatus h�r
+//    cmdList.Add('DELETE from roomsdate WHERE reservation=' + inttostr(aReservation));
+//
+//    cmdList.Add('DELETE from persons WHERE reservation=' + inttostr(aReservation));
+//    cmdList.Add('DELETE from invoicelines WHERE reservation=' + inttostr(aReservation));
+//    d.roomerMainDataSet.SystemFreeExecuteMultiple(cmdList)
+//  finally
+//    cmdList.Free;
+//  end;
+//end;
 
 { TReservationExtra }
 
