@@ -1531,6 +1531,7 @@ uses
   uTaxes,
   clipbrd,
   sndkey32, uReservationProfile, uGuestProfile2, uSplashRoomer, uAboutRoomer,
+  uFrmBusyMessage,
   uControlData, uInvoiceList, uGuestCheckInForm
     , uFinishedInvoices2
     , uRoomCleanMaintenanceStatus
@@ -4426,14 +4427,18 @@ begin
       Screen.Cursor := crHourglass;
       try
         // Notice that CreateReservation already catches any exceptions and show message to user and returns false
+        frmBusyMessage.ShowMessage(GetTranslatedText('shTx_Working_On_Allotment'), GetTranslatedText('shTx_Creating_New_Booking'));
         lSucceeded := oNewReservation.CreateReservation(-1, false);
 
         if lSucceeded and (oNewReservation.Reservation > 0) then
           if (restCount > 0) then
-            // Create a new allotment with the remaining rooms, remove the old allotment
-            lSucceeded := oRestReservation.CreateReservation(aAllotmentResId, false)
-          else // no restcount, allotment is empty, just remove the old allotment
           begin
+            // Create a new allotment with the remaining rooms, remove the old allotment
+            frmBusyMessage.ChangeMessage(GetTranslatedText('shTx_Rearranging_Allotment'));
+            lSucceeded := oRestReservation.CreateReservation(aAllotmentResId, false)
+          end else // no restcount, allotment is empty, just remove the old allotment
+          begin
+            frmBusyMessage.ChangeMessage(GetTranslatedText('shTx_Removing_Allotment_Traces'));
             WriteReservationActivityLog(CreateReservationActivityLog(g.quser, aAllotmentResId ,0 ,DELETE_RESERVATION ,'' ,''
                                                                 ,Format('Deleting empty allotment reservationId %d', [aAllotmentResId])));
             d.roomerMainDataSet.SystemRemoveReservation(aAllotmentResId, False, False);
@@ -4442,7 +4447,10 @@ begin
         if lSucceeded then
           d.roomerMainDataSet.SystemCommitTransaction
         else
+        begin
+          frmBusyMessage.ChangeMessage(GetTranslatedText('shTx_Processing_Failed_Rolling_Back'));
           d.roomerMainDataSet.SystemRollbackTransaction;
+        end;
       finally
         Screen.Cursor := crDefault;
       end;
@@ -4453,10 +4461,12 @@ begin
       raise;
     end;
 
+    frmBusyMessage.HideMessage;
     if lSucceeded then
       EditReservation(oNewReservation.Reservation, 0)
 
   finally
+    frmBusyMessage.HideMessage;
     oNewReservation.Free;
     oRestReservation.Free;
   end;

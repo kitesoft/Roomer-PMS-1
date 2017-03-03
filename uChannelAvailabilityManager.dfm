@@ -126,7 +126,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
         object pnlRestrictions: TsPanel
           AlignWithMargins = True
           Left = 3
-          Top = 290
+          Top = 288
           Width = 425
           Height = 169
           Align = alTop
@@ -873,7 +873,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
           Left = 3
           Top = 199
           Width = 425
-          Height = 85
+          Height = 83
           Align = alTop
           AutoSize = True
           TabOrder = 3
@@ -890,6 +890,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
             AutoSize = True
             BevelOuter = bvNone
             TabOrder = 0
+            ExplicitLeft = 3
             object lblAmountType: TsLabel
               Left = 13
               Top = 5

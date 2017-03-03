@@ -13,6 +13,7 @@ object frmHomedate: TfrmHomedate
   Font.Style = []
   FormStyle = fsStayOnTop
   GlassFrame.Enabled = True
+  KeyPreview = True
   OldCreateOrder = False
   Position = poDefault
   OnActivate = FormActivate
@@ -53,16 +54,15 @@ object frmHomedate: TfrmHomedate
       ParentFont = False
       TabOrder = 0
       Text = '  -  -  '
-      CheckOnExit = True
       BoundLabel.Font.Charset = DEFAULT_CHARSET
       BoundLabel.Font.Color = clWindowText
       BoundLabel.Font.Height = -13
       BoundLabel.Font.Name = 'Tahoma'
       BoundLabel.Font.Style = []
       SkinData.SkinSection = 'EDIT'
-      ShowButton = False
       GlyphMode.Blend = 0
       GlyphMode.Grayed = False
+      ShowButton = False
       YearDigits = dyTwo
     end
     object sPanel1: TsPanel

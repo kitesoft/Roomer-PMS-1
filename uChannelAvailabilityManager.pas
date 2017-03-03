@@ -5646,10 +5646,10 @@ end;
 procedure TfrmChannelAvailabilityManager.UpdateControls;
 begin
   pnlBulkRateChannels.Visible := pgcPages.ActivePage = tsRates;
-  pnlBulkModifications.Visible := pgcPages.ActivePage = tsRates;
+  pnlBulkModifications.Visible := (pgcPages.ActivePage = tsRates) OR (pgcPages.ActivePage = tsAvailabilities);
   pnlSingleUseRateChange.Visible := (pgcPages.ActivePage = tsRates);
   pnlSingleUseRateChange.Enabled :=  cbxRateRestrictions.Checked;
-  pnlBulkChangesAvail.Visible := pgcPages.ActivePage = tsAvailabilities;
+  pnlBulkChangesAvail.Visible := False; // Is currently not being used! pgcPages.ActivePage = tsAvailabilities;
 
   lblSingleUsePrice.Enabled := __cbxSingleUsePriceActive.Checked;
   edtSingleUsePrice.Enabled := __cbxSingleUsePriceActive.Checked;

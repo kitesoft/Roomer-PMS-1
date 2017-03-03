@@ -211,6 +211,8 @@ object frmCancelReservation3: TfrmCancelReservation3
       Align = alClient
       TabOrder = 0
       LookAndFeel.NativeStyle = False
+      ExplicitLeft = 0
+      ExplicitTop = 36
       object tvRooms: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         Navigator.Buttons.First.Visible = True
@@ -421,7 +423,7 @@ object frmCancelReservation3: TfrmCancelReservation3
   end
   object mRoomsDS: TDataSource
     DataSet = mRooms
-    Left = 240
-    Top = 313
+    Left = 248
+    Top = 321
   end
 end

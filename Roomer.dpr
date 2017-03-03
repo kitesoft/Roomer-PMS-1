@@ -268,7 +268,8 @@ uses
   _Glob in 'Data\_Glob.pas',
   hData in 'Data\hData.pas',
   uSqlDefinitions in 'Data\uSqlDefinitions.pas',
-  uRoomerVersionInfo in 'RoomerUtils\uRoomerVersionInfo.pas';
+  uRoomerVersionInfo in 'RoomerUtils\uRoomerVersionInfo.pas',
+  uFrmBusyMessage in 'Dialogs\uFrmBusyMessage.pas' {frmBusyMessage};
 
 {$R *.RES}
 
@@ -298,7 +299,7 @@ begin
     TSplashFormManager.Show;
 
     Application.CreateForm(TD, D);
-  D.ApplicationId := cOpenAPIAppicationID;
+    D.ApplicationId := cOpenAPIAppicationID;
 
     Application.CreateForm(TDReportData, DReportData);
     TSplashFormManager.UpdateProgress('Loading forms...');
@@ -306,6 +307,8 @@ begin
     Application.CreateForm(TDImages, DImages);
 
     Application.CreateForm(TfrmMain, frmMain);
+
+    Application.CreateForm(TfrmBusyMessage, frmBusyMessage);
 
     if D.roomerMainDataSet.IsConnectedToInternet then
     begin

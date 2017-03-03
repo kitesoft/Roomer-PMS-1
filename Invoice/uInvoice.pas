@@ -201,9 +201,9 @@ type
     btnReservationNotes: TsButton;
     sPanel1: TsPanel;
     agrLines: TAdvStringGrid;
-    btnExit: TcxButton;
-    btnInvoice: TcxButton;
-    btnProforma: TcxButton;
+    btnExit: TsButton;
+    btnInvoice: TsButton;
+    btnProforma: TsButton;
     labTmpStatus: TsLabel;
     sPanel2: TsPanel;
     clabTotalwoVAT: TsLabel;
