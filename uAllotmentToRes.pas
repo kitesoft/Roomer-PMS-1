@@ -734,10 +734,14 @@ var
   s: string;
   sql: string;
 
-  rset1, rset2, rset3: TRoomerDataset;
+  rset1, rset2: TRoomerDataset;
   ExecutionPlan: TRoomerExecutionPlan;
+  NotAllowedFlags,
+  RemovedFlags : String;
 begin
   result := true;
+  NotAllowedFlags := _db('A') + ',' + _db('P') + ',' + _db('X') + ',' + _db('O') + ',' + _db('L');
+  RemovedFlags := _db('X') + ',' + _db('C');
   ExecutionPlan := d.roomerMainDataSet.CreateExecutionPlan;
   try
     // **zxhj
@@ -749,28 +753,25 @@ begin
     s := s + '   roomsdate rd '#10;
     s := s + ' WHERE '#10;
     s := s + '  (rd.Reservation = %d ) '#10;
-    s := s + '   AND (ResFlag <> ' + _db(STATUS_DELETED) + ' ) '; // **zxhj b�tt vi�
+    s := s + '   AND (ResFlag NOT IN (' + RemovedFlags + ') ) '; // **zxhj b�tt vi�
 
     sql := format(s, [Reservation]);
     // copyToClipBoard(sql);
     // Debugmessage(sql);
     ExecutionPlan.AddQuery(sql); // 0
 
-    s := '';
-    s := s + ' SELECT DISTINCT '#10;
-    s := s + '    rd.resFlag '#10;
-    s := s + ' FROM '#10;
-    s := s + '   roomsdate rd '#10;
-    s := s + ' WHERE '#10;
-    s := s + '   (rd.resFlag not in (' + _db('A') + ',' + _db('P') + ',' + _db('X') + ',' + _db('O') + ',' + _db('L') +
-      ')) '#10; // **zxhj breytti
-    s := s + '   AND (rd.Reservation = %d ) '#10;
-    s := s + ' LIMIT 1 '#10;
-
-    sql := format(s, [Reservation]);
-    // copyToClipBoard(sql);
-    // Debugmessage(sql);
-    ExecutionPlan.AddQuery(sql); // 0
+//    s := '';
+//    s := s + ' SELECT DISTINCT '#10;
+//    s := s + '    rd.resFlag '#10;
+//    s := s + ' FROM '#10;
+//    s := s + '   roomsdate rd '#10;
+//    s := s + ' WHERE '#10;
+//    s := s + '   (rd.resFlag not in (' + NotAllowedFlags + ')) '#10; // **zxhj breytti
+//    s := s + '   AND (rd.Reservation = %d ) '#10;
+//    s := s + ' LIMIT 1 '#10;
+//
+//    sql := format(s, [Reservation]);
+//    ExecutionPlan.AddQuery(sql); // 0
 
     s := '';
     s := s + ' SELECT '#10;
@@ -779,7 +780,7 @@ begin
     s := s + '   roomsdate rd '#10;
     s := s + ' WHERE '#10;
     s := s + '   (paid=1) and (rd.Reservation = %d ) '#10;
-    s := s + '   AND (ResFlag <> ' + _db(STATUS_DELETED) + ' ) '; // **zxhj line added
+    s := s + '   AND (ResFlag = ''A'' ) '; // **zxhj line added
     s := s + ' LIMIT 1 '#10;
 
     sql := format(s, [Reservation]);
@@ -793,26 +794,34 @@ begin
 
       zResFlag := '';
       rset1 := ExecutionPlan.Results[0];
-      if rset1.RecordCount > 1 then
+      if rset1.RecordCount > 1 then // More than one statusses are not allowed. All should be with status 'A'
       begin
         result := false;
       end
       else
       begin
-        zResFlag := rset1.FieldByName('ResFlag').AsString;
-        labResStatus.Caption := zResFlag;
+        if rset1.RecordCount > 0 then // At least one - the one with 'A'...
+        begin
+          zResFlag := rset1.FieldByName('ResFlag').AsString;
+          labResStatus.Caption := zResFlag;
+          result := zResFlag = 'A';
+        end else
+          result := false;
       end;
 
-      rset2 := ExecutionPlan.Results[1];
-      if rset2.RecordCount > 0 then
-      begin
-        result := false;
-      end;
+//      rset2 := ExecutionPlan.Results[1];
+//      if rset2.RecordCount > 0 then
+//      begin
+//        result := false;
+//      end;
 
-      rset3 := ExecutionPlan.Results[2];
-      if rset3.RecordCount > 0 then
+      if result then
       begin
-        result := false;
+        rset2 := ExecutionPlan.Results[1];
+        if rset2.RecordCount > 0 then // Noi date is allowed to be already paid in an allotment!
+        begin
+          result := false;
+        end;
       end;
 
     finally
