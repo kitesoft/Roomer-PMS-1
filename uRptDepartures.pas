@@ -16,7 +16,7 @@ uses
   dxPSEdgePatterns, dxPSPDFExportCore, dxPSPDFExport, cxDrawTextUtils, dxPSPrVwStd, dxPSPrVwAdv, dxPSPrVwRibbon,
   dxPScxPageControlProducer, dxPScxGridLnk, dxPScxGridLayoutViewLnk, dxPScxEditorProducers, dxPScxExtEditorProducers,
   dxSkinsdxBarPainter, dxSkinsdxRibbonPainter, dxPScxCommon, dxPSCore, cxLabel, AdvSmoothProgressBar, Vcl.ComCtrls,
-  sStatusBar, cxTextEdit, cxCheckBox;
+  sStatusBar, cxTextEdit, cxCheckBox, dxPScxPivotGridLnk;
 
 type
   TfrmDeparturesReport = class(TfrmBaseRoomerForm)

@@ -1356,7 +1356,7 @@ type
     function QuickResPeriodRoomObj(var oNewReservation: TNewReservation): integer;
     function QuickResOneDayRoomObj(var oNewReservation: TNewReservation): integer;
 
-    procedure CreateProvideAllotment(Reservation: integer; aSHowDate: TDateTime = 0);
+    procedure CreateProvideAllotment(aAllotmentResId: integer; aSHowDate: TDateTime = 0);
 
     procedure refreshGuestList;
     function getSortField: string;
@@ -1435,13 +1435,11 @@ type
     function CheckInARoom(iReservation, iRoomReservation: integer): boolean;
     procedure CheckOutARoom(const Room: String; iRoomReservation, iReservation: integer);
     procedure SetDateWithoutEvents(aDate: TdateTime);
-    procedure ActivateHint(HintPoint: TPoint; comp: TWinControl);
     procedure EnterRateQueryView(aDate: integer);
     procedure SetOffLineMode(const Value: boolean);
     procedure MyRoundedRect(Canvas: TCanvas; X1, Y1, X2, Y2: integer; DoRoundCorners: boolean = true);
     procedure PlaceRoomerOnCurrentMonitor;
     function GetActivePeriodGrid: TAdvStringGrid;
-    procedure DebugLog(const Msg: String);
     procedure HandleSkinManagerChange;
     procedure RefreshStats(force: boolean = false);
     function LongestColText(Grid: TAdvStringGrid; col: integer; startAtRow: integer = 1): integer;
@@ -1531,6 +1529,7 @@ uses
   uTaxes,
   clipbrd,
   sndkey32, uReservationProfile, uGuestProfile2, uSplashRoomer, uAboutRoomer,
+  uFrmBusyMessage,
   uControlData, uInvoiceList, uGuestCheckInForm
     , uFinishedInvoices2
     , uRoomCleanMaintenanceStatus
@@ -1935,19 +1934,6 @@ begin
   if cbxStatDay.ItemIndex < 0 then
     cbxStatDay.ItemIndex := 0;
   cbxStatDay.Update;
-end;
-
-procedure TfrmMain.DebugLog(const Msg: String);
-begin
-{$IFDEF DEBUG}
-  try
-    if assigned(frmDayNotes) then
-      frmDayNotes.xDoLog('DEBUG', Msg);
-    Application.ProcessMessages;
-  except
-
-  end;
-{$ENDIF}
 end;
 
 procedure TfrmMain.GetLeavingGuestIndexes(var idxRoom: integer; var idxReservation: integer; ACol, ARow: integer);
@@ -4391,7 +4377,7 @@ begin
     btnRefreshOneDay.Click;
 end;
 
-procedure TfrmMain.CreateProvideAllotment(Reservation: integer; aShowDate: TDateTime = 0);
+procedure TfrmMain.CreateProvideAllotment(aAllotmentResId: integer; aShowDate: TDateTime = 0);
 var
   oNewReservation: TNewReservation;
   oRestReservation: TNewReservation;
@@ -4412,7 +4398,7 @@ begin
     oRestReservation.resMedhod := rmAllotment;
     oRestReservation.isQuick := false;
 
-    if not OpenProvideAllotment(Reservation, oNewReservation, oRestReservation, restCount, aSHowDate) then
+    if not OpenProvideAllotment(aAllotmentResId, oNewReservation, oRestReservation, restCount, aSHowDate) then
     begin
       ShowMessage(GetTranslatedText('shTx_Main_ReservationCancelled'));
       exit;
@@ -4422,34 +4408,55 @@ begin
 
     d.roomerMainDataSet.SystemStartTransaction;
     try
-      lSucceeded := false;
       Screen.Cursor := crHourglass;
       try
         // Notice that CreateReservation already catches any exceptions and show message to user and returns false
-        lSucceeded := oNewReservation.CreateReservation(Reservation, false);
-        if lSucceeded and (oNewReservation.Reservation > 0) and (restCount > 0) then
-          lSucceeded := oRestReservation.CreateReservation(-1, false);
+        frmBusyMessage.ShowMessage(GetTranslatedText('shTx_Working_On_Allotment'), GetTranslatedText('shTx_Creating_New_Booking'));
+        lSucceeded := oNewReservation.CreateReservation(-1, false);
+
+        if lSucceeded and (oNewReservation.Reservation > 0) then
+          if (restCount > 0) then
+          begin
+            // Create a new allotment with the remaining rooms, remove the old allotment
+            frmBusyMessage.ChangeMessage(GetTranslatedText('shTx_Rearranging_Allotment'));
+
+            //TODO: CAll CreateReservation in its own thread so the UI stays responsive
+            lSucceeded := oRestReservation.CreateReservation(aAllotmentResId, false)
+          end else // no restcount, allotment is empty, just remove the old allotment
+          begin
+            frmBusyMessage.ChangeMessage(GetTranslatedText('shTx_Removing_Allotment_Traces'));
+            WriteReservationActivityLog(CreateReservationActivityLog(g.quser, aAllotmentResId ,0 ,DELETE_RESERVATION ,'' ,''
+                                                                ,Format('Deleting empty allotment reservationId %d', [aAllotmentResId])));
+            d.roomerMainDataSet.SystemRemoveReservation(aAllotmentResId, False, False);
+          end;
 
         if lSucceeded then
           d.roomerMainDataSet.SystemCommitTransaction
         else
+        begin
+          frmBusyMessage.ChangeMessage(GetTranslatedText('shTx_Processing_Failed_Rolling_Back'));
           d.roomerMainDataSet.SystemRollbackTransaction;
+        end;
       finally
         Screen.Cursor := crDefault;
       end;
 
     except
-      // in theory not reachable
+      // in theory not reachable but when the rollback causes an exception
       d.roomerMainDataSet.SystemRollbackTransaction;
       raise;
     end;
+
+    frmBusyMessage.HideMessage;
+    if lSucceeded then
+      EditReservation(oNewReservation.Reservation, 0)
+
   finally
+    frmBusyMessage.HideMessage;
     oNewReservation.Free;
     oRestReservation.Free;
   end;
 
-  if lSucceeded then
-    EditReservation(oNewReservation.Reservation, 0)
 end;
 
 procedure TfrmMain.pmnuProvideAllotmentClick(Sender: TObject);
@@ -5551,15 +5558,6 @@ begin
 
   end;
 
-end;
-
-procedure TfrmMain.ActivateHint(HintPoint: TPoint; comp: TWinControl);
-begin
-  zHintPoint := HintPoint;
-  zHintComp := comp;
-  // Application.CancelHint;
-  comp.ShowHint := true;
-  Application.ActivateHint(zHintPoint);
 end;
 
 function TfrmMain.getChannelColor(Reservation: TSingleReservations): integer;
@@ -13125,7 +13123,6 @@ end;
 
 procedure TfrmMain.GuestListReport;
 var
-  aReport: TppReport;
   sFilter: string;
   s: string;
   sortField: string;

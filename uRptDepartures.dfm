@@ -12,7 +12,7 @@ inherited frmDeparturesReport: TfrmDeparturesReport
     Top = 565
     Width = 1103
     ExplicitTop = 565
-    ExplicitWidth = 1055
+    ExplicitWidth = 1103
   end
   object pnlFilter: TsPanel [1]
     Left = 0
@@ -22,7 +22,6 @@ inherited frmDeparturesReport: TfrmDeparturesReport
     Align = alTop
     TabOrder = 0
     SkinData.SkinSection = 'PANEL'
-    ExplicitWidth = 1055
     object btnRefresh: TsButton
       Left = 398
       Top = 9
@@ -135,7 +134,6 @@ inherited frmDeparturesReport: TfrmDeparturesReport
       BevelOuter = bvNone
       TabOrder = 2
       SkinData.SkinSection = 'PANEL'
-      ExplicitWidth = 1053
       object btnExcel: TsButton
         AlignWithMargins = True
         Left = 3
@@ -207,7 +205,6 @@ inherited frmDeparturesReport: TfrmDeparturesReport
         TabOrder = 4
         OnClick = btnPrintGridClick
         SkinData.SkinSection = 'BUTTON'
-        ExplicitLeft = 922
       end
     end
   end
@@ -220,8 +217,6 @@ inherited frmDeparturesReport: TfrmDeparturesReport
     PopupMenu = pnmuGridMenu
     TabOrder = 1
     LookAndFeel.NativeStyle = False
-    ExplicitLeft = -1
-    ExplicitTop = 146
     object tvDeparturesList: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DeparturesListDS
@@ -544,7 +539,7 @@ inherited frmDeparturesReport: TfrmDeparturesReport
       PrinterPage.ScaleMode = smFit
       PrinterPage._dxMeasurementUnits_ = 2
       PrinterPage._dxLastMU_ = 2
-      ReportDocument.CreationDate = 42794.567049479170000000
+      ReportDocument.CreationDate = 42795.709837476850000000
       ReportTitle.Font.Charset = DEFAULT_CHARSET
       ReportTitle.Font.Color = clBlack
       ReportTitle.Font.Height = -19

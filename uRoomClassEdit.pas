@@ -115,6 +115,12 @@ type
     cbxDefClosedToArrival: TsCheckBox;
     cbxDefClosedToDeparture: TsCheckBox;
     btnAutocharge: TsButton;
+    lbExtraCalcType: TsLabel;
+    lbExtraDevValue: TsLabel;
+    edtMasterRateExtraRateDeviation: TsEdit;
+    edtMasterRateExtraSingleUseRateDeviation: TsEdit;
+    cmbExtraSingleUseRateDeviationType: TsComboBox;
+    cmbExtraRateDeviationType: TsComboBox;
     procedure cbxconnectRateToMasterRateValueChanged(Sender: TObject);
     procedure cbxconnectSingleUseRateToMasterRateValueChanged(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -256,6 +262,12 @@ begin
   cbxconnectCOAToMasterRate.Checked := zData.connectCOAToMasterRate;
   cbxconnectCODToMasterRate.Checked := zData.connectCODToMasterRate;
   cbxconnectLOSToMasterRate.Checked := zData.connectLOSToMasterRate;
+
+  edtmasterRateExtraRateDeviation.Text := FloatToStr(zData.masterRateExtraRateDeviation);
+  cmbextraRateDeviationType.Text := zData.extraRateDeviationType;
+  edtmasterRateExtraSingleUseRateDeviation.Text := FloatToStr(zData.masterRateExtraSingleUseRateDeviation);
+  cmbextraSingleUseRateDeviationType.Text := zData.extraSingleUseRateDeviationType;
+
 end;
 
 procedure TFrmRoomClassEdit.sButton1Click(Sender: TObject);
@@ -391,6 +403,12 @@ begin
   zData.connectCODToMasterRate := cbxconnectCODToMasterRate.Checked;
   zData.connectLOSToMasterRate := cbxconnectLOSToMasterRate.Checked;
   zData.RATE_PLAN_TYPE := cbxRatePlanType.Text;
+
+  zData.masterRateExtraRateDeviation := _StrToFloat(edtmasterRateExtraRateDeviation.Text);
+  zData.extraRateDeviationType := cmbextraRateDeviationType.Text;
+  zData.masterRateExtraSingleUseRateDeviation := _StrToFloat(edtmasterRateExtraSingleUseRateDeviation.Text);
+  zData.extraSingleUseRateDeviationType := cmbextraSingleUseRateDeviationType.Text;
+
 end;
 
 

@@ -179,7 +179,7 @@ object frmInvoice: TfrmInvoice
       end
       object clabCountry: TsLabel
         Left = 2
-        Top = 131
+        Top = 128
         Width = 103
         Height = 13
         Alignment = taRightJustify
@@ -526,7 +526,7 @@ object frmInvoice: TfrmInvoice
       end
       object edtAddress4: TsEdit
         Left = 111
-        Top = 131
+        Top = 128
         Width = 253
         Height = 17
         AutoSize = False
@@ -556,57 +556,51 @@ object frmInvoice: TfrmInvoice
         OnClick = btnClearAddressesClick
         SkinData.SkinSection = 'BUTTON'
       end
-      object btnExit: TcxButton
+      object btnExit: TsButton
         Left = 929
-        Top = 2
+        Top = 5
         Width = 161
         Height = 44
         Hint = 'Close form'
         Anchors = [akTop, akRight]
         Caption = 'Close'
-        LookAndFeel.NativeStyle = False
+        ImageIndex = 4
+        Images = DImages.cxLargeImagesFlat
         ModalResult = 1
-        OptionsImage.ImageIndex = 4
-        OptionsImage.Images = DImages.cxLargeImagesFlat
         ParentShowHint = False
         ShowHint = True
-        SpeedButtonOptions.Flat = True
         TabOrder = 17
-        WordWrap = True
         OnClick = btnExitClick
+        SkinData.SkinSection = 'BUTTON'
       end
-      object btnInvoice: TcxButton
+      object btnInvoice: TsButton
         Left = 929
-        Top = 96
+        Top = 99
         Width = 161
         Height = 41
         Action = actPrintInvoice
         Anchors = [akTop, akRight]
         Caption = 'Pay and Print'
-        LookAndFeel.NativeStyle = False
-        OptionsImage.ImageIndex = 59
-        OptionsImage.Images = DImages.cxLargeImagesFlat
+        ImageIndex = 59
+        Images = DImages.cxLargeImagesFlat
         ParentShowHint = False
         ShowHint = True
-        SpeedButtonOptions.Flat = True
         TabOrder = 19
-        WordWrap = True
+        SkinData.SkinSection = 'BUTTON'
       end
-      object btnProforma: TcxButton
+      object btnProforma: TsButton
         Left = 929
-        Top = 49
+        Top = 53
         Width = 161
         Height = 41
         Action = actPrintProforma
         Anchors = [akTop, akRight]
-        LookAndFeel.NativeStyle = False
-        OptionsImage.ImageIndex = 3
-        OptionsImage.Images = DImages.cxLargeImagesFlat
+        ImageIndex = 3
+        Images = DImages.cxLargeImagesFlat
         ParentShowHint = False
         ShowHint = True
-        SpeedButtonOptions.Flat = True
         TabOrder = 18
-        WordWrap = True
+        SkinData.SkinSection = 'BUTTON'
       end
       object edtForeignCurrency: TsEdit
         Left = 724
@@ -1346,7 +1340,7 @@ object frmInvoice: TfrmInvoice
           SearchFooter.MatchCaseCaption = 'Match case'
           SearchFooter.ResultFormat = '(%d of %d)'
           SortSettings.DefaultFormat = ssAutomatic
-          Version = '8.2.4.1'
+          Version = '8.2.5.2'
           ColWidths = (
             24
             91

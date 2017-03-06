@@ -110,6 +110,12 @@ type
     FmasterRateSingleUseRateDeviation: Double;
     FRateDeviationType: String;
     FmasterRateRateDeviation: Double;
+
+    FExtramasterRateRateDeviation: Double;
+    FExtraRateDeviationType: String;
+    FExtramasterRateSingleUseRateDeviation: Double;
+    FExtrasingleUseRateDeviationType: String;
+
     FconnectMaxStayToMasterRate: Boolean;
     FconnectCOAToMasterRate: Boolean;
     FconnectCODToMasterRate: Boolean;
@@ -141,6 +147,12 @@ type
       _connectSingleUseRateToMasterRate : Boolean;
       _masterRateSingleUseRateDeviation : Double;
       const _singleUseRateDeviationType : String;
+
+      _ExtramasterRateRateDeviation: Double;
+      const _ExtraRateDeviationType: String;
+      _ExtramasterRateSingleUseRateDeviation: Double;
+      const _ExtrasingleUseRateDeviationType: String;
+
 
       _connectStopSellToMasterRate : Boolean;
       _connectAvailabilityToMasterRate : Boolean;
@@ -184,6 +196,11 @@ type
     property connectSingleUseRateToMasterRate : Boolean read FconnectSingleUseRateToMasterRate write FconnectSingleUseRateToMasterRate;
     property masterRateSingleUseRateDeviation : Double read FmasterRateSingleUseRateDeviation write FmasterRateSingleUseRateDeviation;
     property singleUseRateDeviationType : String read FsingleUseRateDeviationType write FsingleUseRateDeviationType;
+
+    property masterRateExtraRateDeviation : Double read FExtramasterRateRateDeviation write FExtramasterRateRateDeviation;
+    property extraRateDeviationType : String read FExtraRateDeviationType write FExtraRateDeviationType;
+    property masterRateExtraSingleUseRateDeviation : Double read FExtramasterRateSingleUseRateDeviation write FExtramasterRateSingleUseRateDeviation;
+    property extraSingleUseRateDeviationType : String read FExtrasingleUseRateDeviationType write FExtrasingleUseRateDeviationType;
 
     property connectStopSellToMasterRate : Boolean read FconnectStopSellToMasterRate write FconnectStopSellToMasterRate;
     property connectAvailabilityToMasterRate : Boolean read FconnectAvailabilityToMasterRate write FconnectAvailabilityToMasterRate;
@@ -1668,12 +1685,13 @@ begin
 
        'SET '+
        ' cr.Price = CASE WHEN cmr.dirty AND rtg.connectRateToMasterRate '+#10+
-       '                 THEN '+#10+
-       '                   (cmr.Price + ' +#10+
-       '                    IF(rtg.RateDeviationType=''FIXED_AMOUNT'', ' +#10+
-       '                        rtg.masterRateRateDeviation, ' +#10+
-       '                        cmr.Price * rtg.masterRateRateDeviation / 100 ' +#10+
-       '                      ) ' +#10+
+       '                                  THEN ' + #10 +
+       '                   ( ' + #10 +
+       '                   cmr.Price + home100.GetCalculatedAmountAddedWithFixedOrPercentage(cmr.Price, rtg.masterRateRateDeviation, rtg.RateDeviationType) + ' +#10+
+       '                   home100.GetCalculatedAmountAddedWithFixedOrPercentage(IF(rtg.extraRateDeviationType=''DEVIATED_PERCENTAGE'', ' +#10+
+       '                                 cmr.Price + home100.GetCalculatedAmountAddedWithFixedOrPercentage(cmr.Price, rtg.masterRateRateDeviation, rtg.RateDeviationType), ' +#10+
+       '                                 cmr.Price), ' +#10+
+       '					rtg.masterRateExtraRateDeviation, IF(rtg.extraRateDeviationType=''DEVIATED_PERCENTAGE'', ''PERCENTAGE'', rtg.extraRateDeviationType)) ' +#10+
        '                   ) * IF(masterSettings.masterCurrencyConvertActive=''TRUE'', ' +#10+
        '                          cuMaster.AValue / cu.AValue, ' +#10+
        '                          1 ' +#10+
@@ -1683,11 +1701,12 @@ begin
 
        ' cr.singleUsePrice = CASE WHEN cmr.singleUsePriceDirty AND rtg.connectSingleUseRateToMasterRate ' +#10+
        '                          THEN '+#10+
-       '                           (cmr.singleUsePrice + ' +#10+
-       '                                     IF(rtg.SingleUseRateDeviationType=''FIXED_AMOUNT'', ' +#10+
-       '                                           rtg.masterRateSingleUseRateDeviation, ' +#10+
-       '                                           cmr.singleUsePrice * rtg.masterRateSingleUseRateDeviation / 100 ' +#10+
-       '                                      ) ' +#10+
+       '                          ( ' +#10+
+       '                   cmr.singleUsePrice + home100.GetCalculatedAmountAddedWithFixedOrPercentage(cmr.SingleUsePrice, rtg.masterRateSingleUseRateDeviation, rtg.SingleUseRateDeviationType) + ' +#10+
+       '                   home100.GetCalculatedAmountAddedWithFixedOrPercentage(IF(rtg.extraSingleUseRateDeviationType=''DEVIATED_PERCENTAGE'', ' +#10+
+       '                                 cmr.singleUsePrice + home100.GetCalculatedAmountAddedWithFixedOrPercentage(cmr.SingleUsePrice, rtg.masterRateSingleUseRateDeviation, rtg.SingleUseRateDeviationType), ' +#10+
+       '                                 cmr.singleUsePrice), ' +#10+
+       '					rtg.masterRateExtraSingleUseRateDeviation, IF(rtg.extraSingleUseRateDeviationType=''DEVIATED_PERCENTAGE'', ''PERCENTAGE'', rtg.extraSingleUseRateDeviationType)) ' +#10+
        '                           ) * IF(masterSettings.masterCurrencyConvertActive=''TRUE'', ' +#10+
        '                                    cuMaster.AValue / cu.AValue, ' +#10+
        '                                    1 ' +#10+
@@ -3412,7 +3431,11 @@ begin
          'rtg.connectSingleUseRateToMasterRate, rtg.masterRateSingleUseRateDeviation, rtg.singleUseRateDeviationType, ' +
          'rtg.connectStopSellToMasterRate, rtg.connectAvailabilityToMasterRate, rtg.connectMinStayToMasterRate, ' +
          'rtg.connectMaxStayToMasterRate, rtg.connectCOAToMasterRate, rtg.connectCODToMasterRate, ' +
-         'rtg.connectLOSToMasterRate ' +
+         'rtg.connectLOSToMasterRate, ' +
+         'rtg.masterRateExtraRateDeviation, ' +
+         'rtg.extraRateDeviationType, ' +
+         'rtg.masterRateExtraSingleUseRateDeviation, ' +
+         'rtg.extraSingleUseRateDeviationType ' +
          'FROM channelmasteravailabilityrates cr ' +
          '    INNER JOIN roomtypegroups rtg ON rtg.id=cr.roomClassId AND rtg.TopClass=rtg.Code, ' +
          '    (SELECT -1 AS id, (SELECT cu.id ' +
@@ -3460,7 +3483,11 @@ begin
          'rtg.connectSingleUseRateToMasterRate, rtg.masterRateSingleUseRateDeviation, rtg.singleUseRateDeviationType, ' +
          'rtg.connectStopSellToMasterRate, rtg.connectAvailabilityToMasterRate, rtg.connectMinStayToMasterRate, ' +
          'rtg.connectMaxStayToMasterRate, rtg.connectCOAToMasterRate, rtg.connectCODToMasterRate, ' +
-         'rtg.connectLOSToMasterRate ' +
+         'rtg.connectLOSToMasterRate, ' +
+         'rtg.masterRateExtraRateDeviation, ' +
+         'rtg.extraRateDeviationType, ' +
+         'rtg.masterRateExtraSingleUseRateDeviation, ' +
+         'rtg.extraSingleUseRateDeviationType ' +
          'FROM channelrates cr ' +
          '    JOIN roomtypegroups rtg ON rtg.id=cr.roomClassId AND rtg.Active=1 ' +
          '    JOIN channels ch ON ch.ID=cr.channelId AND ch.Active=1 ' +
@@ -3754,6 +3781,11 @@ begin
                 RateSet['connectSingleUseRateToMasterRate'],
                 RateSet['masterRateSingleUseRateDeviation'],
                 RateSet['singleUseRateDeviationType'],
+
+                RateSet['masterRateExtraRateDeviation'],
+                RateSet['extraRateDeviationType'],
+                RateSet['masterRateExtraSingleUseRateDeviation'],
+                RateSet['extraSingleUseRateDeviationType'],
 
                 RateSet['connectStopSellToMasterRate'],
                 RateSet['connectAvailabilityToMasterRate'],
@@ -4823,6 +4855,26 @@ var
   DestPriceData : TPriceData;
   cbValue : Boolean;
   tmpValue : Double;
+
+  function Calc(BaseAmount,
+                DeviatedAmount,
+                ExtraDeviation : Double;
+                ExtraDeviationType : String) : Double;
+  begin
+    if ExtraDeviationType='DEVIATED_PERCENTAGE' then
+    begin
+      result := DeviatedAmount * (1 + ExtraDeviation / 100);
+    end else
+    if ExtraDeviationType='PERCENTAGE' then
+    begin
+      result := DeviatedAmount + (BaseAmount * ExtraDeviation / 100);
+    end else
+    if ExtraDeviationType='FIXED_AMOUNT' then
+    begin
+      result := DeviatedAmount + ExtraDeviation;
+    end else
+      result := DeviatedAmount;
+  end;
 begin
   if PriceData.channelId = -1 then
   begin
@@ -4836,9 +4888,19 @@ begin
           if (DestPriceData.connectRateToMasterRate AND isPriceRow(ARow)) then
           begin
              if DestPriceData.RateDeviationType = 'FIXED_AMOUNT' then
-               tmpValue := CorrectAmountByCurrency(PriceData.price + DestPriceData.masterRateRateDeviation, PriceData.CurrencyId, DestPriceData.CurrencyId)
+               tmpValue := CorrectAmountByCurrency(
+                   Calc(PriceData.price,
+                        PriceData.price + DestPriceData.masterRateRateDeviation,
+                        DestPriceData.masterRateExtraRateDeviation,
+                        DestPriceData.extraRateDeviationType),
+                   PriceData.CurrencyId, DestPriceData.CurrencyId)
              else
-               tmpValue := CorrectAmountByCurrency(PriceData.price, PriceData.CurrencyId, DestPriceData.CurrencyId) * (1 + DestPriceData.masterRateRateDeviation / 100);
+               tmpValue := CorrectAmountByCurrency(
+                   Calc(PriceData.price,
+                        PriceData.price * (1 + DestPriceData.masterRateRateDeviation / 100),
+                        DestPriceData.masterRateExtraRateDeviation,
+                        DestPriceData.extraRateDeviationType),
+                   PriceData.CurrencyId, DestPriceData.CurrencyId);
              if tmpValue > 0.00 then
                DestPriceData.price := tmpValue;
              SetRateCellValue(ACol, i, DestPriceData, DestPriceData.price);
@@ -4847,9 +4909,19 @@ begin
           if (DestPriceData.connectSingleUseRateToMasterRate AND isSingleUsePriceRow(ARow)) then
           begin
              if DestPriceData.SingleUseRateDeviationType = 'FIXED_AMOUNT' then
-               tmpValue := CorrectAmountByCurrency(PriceData.SingleUsePrice, PriceData.CurrencyId, DestPriceData.CurrencyId) + DestPriceData.masterRateSingleUseRateDeviation
+               tmpValue := CorrectAmountByCurrency(
+                  Calc(PriceData.SingleUsePrice,
+                       PriceData.SingleUsePrice + DestPriceData.masterRateSingleUseRateDeviation,
+                       DestPriceData.masterRateExtraSingleUseRateDeviation,
+                       DestPriceData.extraSingleUseRateDeviationType),
+                  PriceData.CurrencyId, DestPriceData.CurrencyId)
              else
-               tmpValue := CorrectAmountByCurrency(PriceData.SingleUsePrice, PriceData.CurrencyId, DestPriceData.CurrencyId) * (1 + DestPriceData.masterRateSingleUseRateDeviation / 100);
+               tmpValue := CorrectAmountByCurrency(
+                  Calc(PriceData.SingleUsePrice,
+                       PriceData.SingleUsePrice * (1 + DestPriceData.masterRateSingleUseRateDeviation / 100),
+                       DestPriceData.masterRateExtraSingleUseRateDeviation,
+                       DestPriceData.extraSingleUseRateDeviationType),
+                  PriceData.CurrencyId, DestPriceData.CurrencyId);
              if tmpValue > 0.00 then
                DestPriceData.SingleUsePrice := tmpValue;
              SetSingleUsePriceCellValue(ACol, i, DestPriceData, DestPriceData.SingleUsePrice);
@@ -5574,10 +5646,10 @@ end;
 procedure TfrmChannelAvailabilityManager.UpdateControls;
 begin
   pnlBulkRateChannels.Visible := pgcPages.ActivePage = tsRates;
-  pnlBulkModifications.Visible := pgcPages.ActivePage = tsRates;
+  pnlBulkModifications.Visible := (pgcPages.ActivePage = tsRates) OR (pgcPages.ActivePage = tsAvailabilities);
   pnlSingleUseRateChange.Visible := (pgcPages.ActivePage = tsRates);
   pnlSingleUseRateChange.Enabled :=  cbxRateRestrictions.Checked;
-  pnlBulkChangesAvail.Visible := pgcPages.ActivePage = tsAvailabilities;
+  pnlBulkChangesAvail.Visible := False; // Is currently not being used! pgcPages.ActivePage = tsAvailabilities;
 
   lblSingleUsePrice.Enabled := __cbxSingleUsePriceActive.Checked;
   edtSingleUsePrice.Enabled := __cbxSingleUsePriceActive.Checked;
@@ -5630,6 +5702,11 @@ constructor TPriceData.Create(_Id: integer; const roomtypeGroupCode, _roomTypeTo
   _connectSingleUseRateToMasterRate : Boolean;
   _masterRateSingleUseRateDeviation : Double;
   const _singleUseRateDeviationType : String;
+
+  _ExtramasterRateRateDeviation: Double;
+  const _ExtraRateDeviationType: String;
+  _ExtramasterRateSingleUseRateDeviation: Double;
+  const _ExtrasingleUseRateDeviationType: String;
 
   _connectStopSellToMasterRate : Boolean;
   _connectAvailabilityToMasterRate : Boolean;
@@ -5686,6 +5763,11 @@ begin
   connectSingleUseRateToMasterRate := _connectSingleUseRateToMasterRate;
   masterRateSingleUseRateDeviation := _masterRateSingleUseRateDeviation;
   singleUseRateDeviationType := _singleUseRateDeviationType;
+
+  FExtramasterRateRateDeviation := _ExtramasterRateRateDeviation;
+  FExtraRateDeviationType := _ExtraRateDeviationType;
+  FExtramasterRateSingleUseRateDeviation := _ExtramasterRateSingleUseRateDeviation;
+  FExtrasingleUseRateDeviationType := _ExtrasingleUseRateDeviationType;
 
   connectStopSellToMasterRate := _connectStopSellToMasterRate;
   connectAvailabilityToMasterRate := _connectAvailabilityToMasterRate;

@@ -27,6 +27,8 @@ const
   ptExec = $0001;
   ptQuery = $0002;
 
+  MAX_EXECUTES_PER_ROUND = 500;
+
 type
 
   ERoomerExecutionPlanException = class(Exception);
@@ -2250,6 +2252,7 @@ var
   i: Integer;
   res: String;
   lSQLList: TList<string>;
+  tmpList: TList<string>;
 begin
   if transaction then
     BeginTransaction;
@@ -2272,7 +2275,30 @@ begin
     begin
       lSQLList := getSqlsAsTList(ptExec);
       try
-        res := RoomerDataSet.SystemFreeExecuteMultiple(lSQLList);
+        while lSQLList.Count > 0 do
+        begin
+          tmpList := TList<String>.Create;
+          try
+            for i := 0 to lSQLList.Count - 1 do
+            begin
+              tmpList.Add(lSQLList[i]);
+              if i + 1 = MAX_EXECUTES_PER_ROUND then
+              begin
+                res := RoomerDataSet.SystemFreeExecuteMultiple(tmpList);
+                lSQLList.DeleteRange(0, MAX_EXECUTES_PER_ROUND);
+                Break;
+              end;
+            end;
+          finally
+            tmpList.Free;
+          end;
+
+          if (lSQLList.Count > 0) AND (lSQLList.Count < MAX_EXECUTES_PER_ROUND) then
+          begin
+            res := RoomerDataSet.SystemFreeExecuteMultiple(lSQLList);
+            lSQLList.Clear;
+          end;
+        end;
       finally
         lSQLList.Free;
       end;

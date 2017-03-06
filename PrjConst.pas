@@ -24,6 +24,7 @@ uses uAppGlobal,
   uReservationProfile,
   uInvoicePayment,
   uControlData,
+  uFrmBusyMessage,
   uFinishedInvoices2,
 //  uRoomStatus,
   uCreditPrompt,
@@ -1613,6 +1614,12 @@ begin
 
   constants.Add('shTx_ViewRatesPerDay_AlreadyPaid', 'Already paid!');
 
+  constants.Add('shTx_Working_On_Allotment', 'Working on allotment...');
+  constants.Add('shTx_Creating_New_Booking', 'Creating a new booking');
+  constants.Add('shTx_Rearranging_Allotment', 'Rearranging the full allotment');
+  constants.Add('shTx_Removing_Allotment_Traces', 'Removing allotment traces');
+
+  constants.Add('shTx_Processing_Failed_Rolling_Back', 'The process failed. Rolling back to previous state...');
 end;
 
 procedure AddConstants_OfflineReports;
@@ -1856,6 +1863,8 @@ begin
   TfrmRptDailyRevenues.Create(nil).Free;
   TfrmHouseKeepingReport.Create(nil).Free;
   TfrmDayClosingTimes.Create(nil).Free;
+
+  TfrmBusyMessage.Create(nil).Free;
 
 
 end;

@@ -8,6 +8,7 @@ uses
   , Data.DB
   , cmpRoomerDataSet
   , cmpRoomerConnection
+  , uRoomerThreadedRequest
   , uPriceOBJ
   , objHomeCustomer
   , objRoomRates
@@ -297,7 +298,9 @@ TYPE
     FSendConfirmationEmail: Boolean;
     FAlertList: TAlertList;
     FMarket: TReservationMarketType;
-    procedure DeleteReservation(Reservation: integer);
+    FThreadedDataPutter : TGetThreadedData;
+    procedure RemoveRemnants(ResId: Integer);
+//    procedure DeleteReservation(aReservation: integer);
   protected
     FReservation: integer;
   public
@@ -349,6 +352,8 @@ uses
   uAppGlobal,
   uGuestPortfolioEdit,
   uActivityLogs
+  , uFrmBusyMessage
+  , uUtils
   , DateUtils
   , uDateUtils
   , Math
@@ -742,6 +747,7 @@ constructor TNewReservation.Create(const aHotelCode, Staff: string;
                                                       const contactAddress3: string = '';
                                                       const contactAddress4: string = '');
 begin
+  FThreadedDataPutter := nil;
   FHotelcode := Hotelcode;
   FnewRoomReservations := TnewRoomReservation.Create(aHotelCode);
 
@@ -771,6 +777,7 @@ begin
   FAlertList.Free;
   FHomeCustomer.Free;
   FNewRoomReservations.Free;
+  FThreadedDataPutter.Free;
   inherited;
 end;
 
@@ -810,6 +817,16 @@ const UPDATE_QUERY = 'INSERT INTO home100.DOORCODE_MESSAGE_SCHEDULE('
         + ')';
 
 
+procedure TNewReservation.RemoveRemnants(ResId : Integer);
+var s, s1 : String;
+begin
+  frmBusyMessage.ChangeMessage(GetTranslatedText('shTx_Removing_Allotment_Traces'));
+  FThreadedDataPutter := TGetThreadedData.Create;
+  s := format('resapi/booking/remove/reservation2/%d', [ResId]);
+  s1 := format('transactional=%s&reason=%s&request=%s&information=%s&canceltype=%d&makecopy=%s', [BoolToString(False), '', '', '', 0, BoolToString(False)]);
+  FThreadedDataPutter.Post(s, s1, nil);
+//  d.roomerMainDataSet.SystemRemoveReservation(DeleteResNr, False, False);
+end;
 
 Function TNewReservation.CreateReservation(DeleteResNr : integer=-1; Transactional : Boolean = true): Boolean;
 var
@@ -983,7 +1000,7 @@ var
     channel := channels_getDefault();
   end;
 
-  procedure CreateReservation;
+  procedure InsertNewReservation;
   begin
     hData.initReservationHolderRec(reservationData, staff);
 
@@ -1057,7 +1074,7 @@ var
 //    end;
   end;
 
-  procedure createReservationInvoiceHead;
+  procedure InsertNewReservationInvoiceHead;
   begin
     initInvoiceHeadHolderRec(invoiceHeadData);
     invoiceHeadData.Reservation := Reservation;
@@ -1123,7 +1140,8 @@ var
   TotalGuests : integer;
 
   sID      : string     ;
-  lstIDs   : TStringLIst;
+  lstIDs   : TStringList;
+  lstRRIDs : TStringList;
   GuestIndex : integer;
   roomnotes : string;
   packageID : integer;
@@ -1150,8 +1168,13 @@ var
   CurrencyRate : Double;
   ItemInfo: recItemPlusHolder;
 
+  stlRoomsDateData : TStrings;
+
+  doRemoveRemnants : Boolean;
 
 begin
+  Result := False;
+  doRemoveRemnants := False;
   FReservation := -1;
   CheckCount   := 0;
   Discount     := 0;
@@ -1163,13 +1186,14 @@ begin
   lstReservationActivity := TStringList.Create;
 
   lstIDs := TstringList.Create;
+  lstRRIDs := TstringList.Create;
+  stlRoomsDateData := TStringList.Create;
   ExecutionPlan := d.roomerMainDataSet.CreateExecutionPlan;
   try
     repeat
       try
         if Transactional then
           ExecutionPlan.BeginTransaction;
-
 
         TotalGuests := FnewRoomReservations.TotalGuests;
 
@@ -1192,17 +1216,20 @@ begin
                                    ));
          Except
          end;
-         d.roomerMainDataSet.SystemRemoveReservation(DeleteResNr, False, False);
+         doRemoveRemnants := True;
         end;
 
         init;
-        CreateReservation;
-        createReservationInvoiceHead;
+        InsertNewReservation;
+        InsertNewReservationInvoiceHead;
+
+        sId := RR_GetIDs(FnewRoomReservations.RoomCount);
+        _glob._strTokenToStrings(sID,'|',lstRRIDs);
 
         for i := 0 to FnewRoomReservations.RoomCount - 1 do
         begin
           if FnewRoomReservations.FRoomList[i].RoomReservation < 1 then
-            FnewRoomReservations.FRoomList[i].RoomReservation := RR_SetNewID();
+            FnewRoomReservations.FRoomList[i].RoomReservation := strToInt(lstRRIDs[i]); // RR_SetNewID();
 
           FnewRoomReservations.FRoomList[i].Reservation     := FReservation;
 
@@ -1351,6 +1378,7 @@ begin
           ExecutionPlan.AddExec(SQL_INS_InvoiceHead(invoiceHeadData));
 
           // Now Create RoomsDates  for this room
+          stlRoomsDateData.Clear;
           initRoomsDateHolderRec(roomsDateData);
           roomsDateData.Room                 := RoomNumber;
           roomsDateData.RoomType             := RoomType;
@@ -1389,15 +1417,23 @@ begin
             roomsDateData.RoomRentUnBilled     := 0; //FnewRoomReservations.FRoomList[i].FRates.RateItemsList[RateIndex].getRate;  //10000;  {set value}
             roomsDateData.RoomDiscountUnBilled := 0;
 
-            ExecutionPlan.AddExec(SQL_INS_RoomsDate(roomsDateData));
+            stlRoomsDateData.Add(SQL_INS_RoomsDate_Multiple(roomsDateData));
+//            ExecutionPlan.AddExec(SQL_INS_RoomsDate(roomsDateData));
           end;
+
+          s := SQL_INS_RoomsDate_1stPart + JoinStringsNoQuote(stlRoomsDateData, ',');
+          CopyToClipboard(s);
+          ExecutionPlan.AddExec(s);
 
           if RoomStatus = 'B' then
           begin
             numGuests := 1;
           end;
 
-          iLastPerson := strToInt(lstIDs[guestIndex]); //PE_SetNewID();
+          if guestIndex >= LstIds.Count then // correct for erroneous initial count of guest in rare circumstances
+            iLastperson := PE_SetNewID()
+          else
+            iLastPerson := strToInt(lstIDs[guestIndex]); //PE_SetNewID();
           inc(guestIndex);
 
           GuestCompany := Customer;
@@ -1464,7 +1500,10 @@ begin
           begin
             for ii := 2 to numGuests do
             begin
-              iLastPerson := strToInt(lstIDs[guestIndex]); //PE_SetNewID();
+              if guestIndex >= LstIds.Count then // correct for erroneous initial count of guest in rare circumstances
+                iLastperson := PE_SetNewID()
+              else
+                iLastPerson := strToInt(lstIDs[guestIndex]); //PE_SetNewID();
               inc(guestIndex);
               personData.Person := iLastPerson;
               personData.name := 'RoomGuest';
@@ -1641,7 +1680,7 @@ begin
         end; // for 0 to roomcount
 
 
-        if not ExecutionPlan.Execute(ptExec, not Transactional, not Transactional) then
+        if not ExecutionPlan.Execute(ptExec, False, False) then // not Transactional, not Transactional) then
           raise Exception.Create(ExecutionPlan.ExecException);
 
 
@@ -1650,25 +1689,9 @@ begin
         FAlertList.Reservation := FReservation;
         FAlertList.postChanges;
 
-        if NOT isOk then
-        begin
-          inc(CheckCount);
-          ExecutionPlan.Clear;
-          CreateReservation;
-          ExecutionPlan.Execute(ptExec, True, True);
-          if NOT RV_Exists(FReservation) then
-          begin
-            DeleteReservation(FReservation);
-            if CheckCount >= 3 then
-              raise Exception.Create(format(GetTranslatedText('shTx_ReservationIdNotFound'), [FReservation]));
-          end;
-        end;
-
 {$Optimization Off}
         d.roomerMainDataSet.SystemAddToDoorCodeSchedules(FReservation);
 {$Optimization On}
-
-
 
         for i := 0 to FnewRoomReservations.RoomCount - 1 do
         begin
@@ -1691,7 +1714,7 @@ begin
 
 
         for newRoomReservationItem in FnewRoomReservations.FRoomList do
-          newRoomReservationItem.Extras.Post(not Transactional);
+          newRoomReservationItem.Extras.Post(False); // not Transactional);
 
 
         if FHomeCustomer.CreatePersonProfileId then
@@ -1736,7 +1759,7 @@ begin
       begin
         try
           if LstReservationActivity[i] <> '' then
-               WriteReservationActivityLog(LstReservationActivity[i]);
+            WriteReservationActivityLog(LstReservationActivity[i]);
         Except
         end;
       end;
@@ -1745,40 +1768,26 @@ begin
       begin
         try
           if LstInvoiceActivity[i] <> '' then
-               WriteInvoiceActivityLog(LstInvoiceActivity[i]);
+            WriteInvoiceActivityLog(LstInvoiceActivity[i]);
         Except
         end;
       end;
     end;
 
+  if doRemoveRemnants then
+    RemoveRemnants(DeleteResNr);
+
 
   finally
     freeandNil(ExecutionPlan);
     freeandNil(lstIDs);
+    freeandNil(lstRRIDs);
+    freeAndNil(stlRoomsDateData);
     freeandNil(lstReservationActivity);
     freeandNil(lstInvoiceActivity);
   end;
 end;
 
-procedure TNewReservation.DeleteReservation(Reservation : integer);
-var cmdList : TList<String>;
-begin
-  cmdList := TList<String>.Create;
-  try
-    cmdList.Add('DELETE from reservations WHERE reservation=' + inttostr(Reservation));
-    cmdList.Add('DELETE from roomreservations WHERE reservation=' + inttostr(Reservation));
-    cmdList.Add('DELETE from invoiceheads WHERE reservation=' + inttostr(Reservation));
-
-    //**zxhj ATH EKKI breyta resstatus h�r
-    cmdList.Add('DELETE from roomsdate WHERE reservation=' + inttostr(Reservation));
-
-    cmdList.Add('DELETE from persons WHERE reservation=' + inttostr(Reservation));
-    cmdList.Add('DELETE from invoicelines WHERE reservation=' + inttostr(Reservation));
-    d.roomerMainDataSet.SystemFreeExecuteMultiple(cmdList)
-  finally
-    cmdList.Free;
-  end;
-end;
 
 { TReservationExtra }
 

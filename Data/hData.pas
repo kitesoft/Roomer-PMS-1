@@ -1204,6 +1204,11 @@ type
 
     RATE_PLAN_TYPE: String;
 
+    masterRateExtraRateDeviation: Double;
+    extraRateDeviationType: String;
+    masterRateExtraSingleUseRateDeviation: Double;
+    extraSingleUseRateDeviationType: String;
+
     prepaidPercentage : Double;
   end;
 
@@ -1601,6 +1606,8 @@ procedure initRoomReservationHolderRec(var rec: recRoomReservationHolder);
 procedure initRoomsDateHolderRec(var rec: recRoomsDateHolder);
 
 function SQL_INS_RoomsDate(theData: recRoomsDateHolder): string;
+function SQL_INS_RoomsDate_1stPart: string;
+function SQL_INS_RoomsDate_Multiple(theData: recRoomsDateHolder): string;
 
 function INS_RoomsDate(theData: recRoomsDateHolder): boolean;
 
@@ -4086,6 +4093,77 @@ begin
   s := s + '    ,Currency ' + #10;
   s := s + ' ) ' + #10;
   s := s + ' VALUES ' + #10;
+  s := s + ' ( ' + #10;
+  s := s + '    ' + _db(theData.ADate) + #10;
+  s := s + '  , ' + _db(theData.Room) + #10;
+  s := s + '  , ' + _db(theData.RoomType) + #10;
+  s := s + '  , ' + _db(theData.RoomReservation) + #10;
+  s := s + '  , ' + _db(theData.Reservation) + #10;
+  s := s + '  , ' + _db(theData.ResFlag) + #10;
+  s := s + '  , ' + _db(theData.rdTmp) + #10;
+  s := s + '  , ' + _db(theData.updated) + #10;
+  s := s + '  , ' + _db(theData.isNoRoom) + #10;
+  s := s + '  , ' + _db(theData.RoomRentBilled) + #10;
+  s := s + '  , ' + _db(theData.RoomRentUnBilled) + #10;
+  s := s + '  , ' + _db(theData.RoomDiscountBilled) + #10;
+  s := s + '  , ' + _db(theData.RoomDiscountUnBilled) + #10;
+  s := s + '  , ' + _db(theData.ItemsBilled) + #10;
+  s := s + '  , ' + _db(theData.ItemsUnbilled) + #10;
+  s := s + '  , ' + _db(theData.TaxesBilled) + #10;
+  s := s + '  , ' + _db(theData.TaxesUnbilled) + #10;
+  s := s + '  , ' + _db(theData.PriceCode) + #10;
+  s := s + '  , ' + _db(theData.RoomRate) + #10;
+  s := s + '  , ' + _db(theData.Discount) + #10;
+  s := s + '  , ' + _db(theData.isPercentage) + #10;
+  s := s + '  , ' + _db(theData.showDiscount) + #10;
+  s := s + '  , ' + _db(theData.Paid) + #10;
+  s := s + '  , ' + _db(theData.Currency) + #10;
+  s := s + ' ) ';
+  result := s;
+end;
+
+function SQL_INS_RoomsDate_1stPart: string;
+var
+  s: string;
+begin
+  s := '';
+  s := s + 'INSERT INTO roomsdate ' + #10;
+  s := s + ' ( ' + #10;
+  s := s + '     ADate ' + #10;
+  s := s + '    ,Room ' + #10;
+  s := s + '    ,RoomType ' + #10;
+  s := s + '    ,RoomReservation ' + #10;
+  s := s + '    ,Reservation ' + #10;
+  s := s + '    ,ResFlag ' + #10;
+  s := s + '    ,rdTmp ' + #10;
+  s := s + '    ,updated ' + #10;
+  s := s + '    ,isNoRoom ' + #10;
+  s := s + '    ,RoomRentBilled ' + #10;
+  s := s + '    ,RoomRentUnBilled ' + #10;
+  s := s + '    ,RoomDiscountBilled ' + #10;
+  s := s + '    ,RoomDiscountUnBilled ' + #10;
+  s := s + '    ,ItemsBilled ' + #10;
+  s := s + '    ,ItemsUnbilled ' + #10;
+  s := s + '    ,TaxesBilled ' + #10;
+  s := s + '    ,TaxesUnbilled ' + #10;
+  s := s + '    ,PriceCode ' + #10;
+  s := s + '    ,RoomRate ' + #10;
+  s := s + '    ,Discount ' + #10;
+  s := s + '    ,isPercentage ' + #10;
+  s := s + '    ,showDiscount ' + #10;
+  s := s + '    ,Paid ' + #10;
+  s := s + '    ,Currency ' + #10;
+  s := s + ' ) ' + #10;
+  s := s + ' VALUES ' + #10;
+
+  result := s;
+end;
+
+function SQL_INS_RoomsDate_Multiple(theData: recRoomsDateHolder): string;
+var
+  s: string;
+begin
+  s := '';
   s := s + ' ( ' + #10;
   s := s + '    ' + _db(theData.ADate) + #10;
   s := s + '  , ' + _db(theData.Room) + #10;
@@ -10454,6 +10532,11 @@ begin
     RATE_PLAN_TYPE := 'STANDARD';
     prepaidPercentage := 100;
 
+    masterRateExtraRateDeviation := 0.00;
+    extraRateDeviationType := 'FIXED_AMOUNT';
+    masterRateExtraSingleUseRateDeviation := 0.00;
+    extraSingleUseRateDeviationType := 'FIXED_AMOUNT';
+
   end;
 end;
 
@@ -10525,6 +10608,10 @@ begin
   s := s + '   ,connectCODToMasterRate = ' + _db(theData.connectCODToMasterRate) + ' ' + #10;
   s := s + '   ,connectLOSToMasterRate = ' + _db(theData.connectLOSToMasterRate) + ' ' + #10;
   s := s + '   ,RATE_PLAN_TYPE = ' + _db(theData.RATE_PLAN_TYPE) + ' ' + #10;
+  s := s + '   ,masterRateExtraRateDeviation = ' + _db(theData.masterRateExtraRateDeviation) + ' ' + #10;
+  s := s + '   ,extraRateDeviationType = ' + _db(theData.extraRateDeviationType) + ' ' + #10;
+  s := s + '   ,masterRateExtraSingleUseRateDeviation = ' + _db(theData.masterRateExtraSingleUseRateDeviation) + ' ' + #10;
+  s := s + '   ,extraSingleUseRateDeviationType = ' + _db(theData.extraSingleUseRateDeviationType) + '  ' + #10;
   s := s + '   ,prepaidPercentage = ' + _db(theData.prepaidPercentage) + ' ' + #10;
   s := s + ' WHERE ' + #10;
   s := s + '   (ID = ' + _db(theData.id) + ') ';
@@ -10587,6 +10674,10 @@ begin
   s := s + ' ,connectCODToMasterRate ' + #10;
   s := s + ' ,connectLOSToMasterRate ' + #10;
   s := s + ' ,RATE_PLAN_TYPE ' + #10;
+  s := s + ' ,masterRateExtraRateDeviation = ' + #10;
+  s := s + ' ,extraRateDeviationType = ' + #10;
+  s := s + ' ,masterRateExtraSingleUseRateDeviation = ' + #10;
+  s := s + ' ,extraSingleUseRateDeviationType = ' + #10;
   s := s + ' ,prepaidPercentage ' + #10;
   s := s + '  ) ' + #10;
   s := s + '   VALUES ' + #10;
@@ -10640,6 +10731,10 @@ begin
   s := s + '  ,' + _db(theData.connectCODToMasterRate) + ' ' + #10;
   s := s + '  ,' + _db(theData.connectLOSToMasterRate) + ' ' + #10;
   s := s + '  ,' + _db(theData.RATE_PLAN_TYPE) + ' ' + #10;
+  s := s + '  ,' + _db(theData.masterRateExtraRateDeviation) + ' ' + #10;
+  s := s + '  ,' + _db(theData.extraRateDeviationType) + ' ' + #10;
+  s := s + '  ,' + _db(theData.masterRateExtraSingleUseRateDeviation) + ' ' + #10;
+  s := s + '  ,' + _db(theData.extraSingleUseRateDeviationType) + '  ' + #10;
   s := s + '  ,' + _db(theData.prepaidPercentage) + ' ' + #10;
   s := s + '   )';
   result := cmd_bySQL(s);

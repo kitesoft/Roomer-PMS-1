@@ -152,6 +152,7 @@ procedure SetFormTopmostOff(Form : TForm);
 function GetEnumAsString(enum : PTypeInfo; value : Integer) : String;
 
 function JoinStrings(list : TStrings; Delimiter : Char; QuoteChar : Char = '''') : String;
+function JoinStringsNoQuote(list : TStrings; Delimiter : Char) : String;
 procedure SplitString(text : String; list : TStrings; Delimiter : Char; QuoteChar : Char = '''');
 function linuxLFCRToWindows(source : String) : String;
 
@@ -192,6 +193,15 @@ begin
   list.Delimiter := Delimiter;
   list.QuoteChar := QuoteChar;
   result := list.CommaText;
+end;
+
+function JoinStringsNoQuote(list : TStrings; Delimiter : Char) : String;
+var
+  i: Integer;
+begin
+  result := '';
+  for i := 0 to list.Count - 1 do
+    result := result + IIF(result = '', '', Delimiter) + list[i];
 end;
 
 procedure SplitString(text : String; list : TStrings; Delimiter : Char; QuoteChar : Char = '''');

@@ -272,8 +272,9 @@ uses
   _Glob in 'Data\_Glob.pas',
   hData in 'Data\hData.pas',
   uSqlDefinitions in 'Data\uSqlDefinitions.pas',
-  uRoomerVersionInfo in 'RoomerUtils\uRoomerVersionInfo.pas',
+  uFrmBusyMessage in 'Dialogs\uFrmBusyMessage.pas' {frmBusyMessage};
   uRunningTabModel in 'Invoice\uRunningTabModel.pas';
+  uRoomerVersionInfo in 'RoomerUtils\uRoomerVersionInfo.pas',
 
 {$R *.RES}
 
@@ -303,7 +304,7 @@ begin
     TSplashFormManager.Show;
 
     Application.CreateForm(TD, D);
-  D.ApplicationId := cOpenAPIAppicationID;
+    D.ApplicationId := cOpenAPIAppicationID;
 
     Application.CreateForm(TDReportData, DReportData);
     TSplashFormManager.UpdateProgress('Loading forms...');

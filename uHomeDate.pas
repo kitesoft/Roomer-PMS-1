@@ -56,13 +56,13 @@ uses
 
 procedure TfrmHomedate.Button1Click(Sender: TObject);
 begin
-  dtHome.SetFocus;
+//  dtHome.SetFocus;
   Close;
 end;
 
 procedure TfrmHomedate.Button2Click(Sender: TObject);
 begin
-  dtHome.SetFocus;
+//  dtHome.SetFocus;
   returnToHome;
 end;
 
@@ -96,7 +96,7 @@ end;
 
 procedure TfrmHomedate.returnToHome;
 begin
-    frmMain.dtDate.Date := StrToDate(dtHome.Text); // dtHome.Date;
+    frmMain.dtDate.Date := dtHome.Date; // StrToDate(dtHome.Text); // dtHome.Date;
     Close;
 end;
 
