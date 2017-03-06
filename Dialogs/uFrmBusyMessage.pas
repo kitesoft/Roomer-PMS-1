@@ -61,13 +61,14 @@ procedure TfrmBusyMessage.UpdateFromThreadViaQueue;
 var
   i: integer;
 begin
-  while Visible do
+  while frmBusyMessage.Showing do
   begin
-    Sleep(100);
+    Sleep(300);
     TThread.Queue(nil,
       procedure begin
-        Marquee.Update;
-        Update;
+        frmBusyMessage.Marquee.Step(10);
+        frmBusyMessage.Marquee.Update;
+        frmBusyMessage.Update;
       end);
   end;
 end;
