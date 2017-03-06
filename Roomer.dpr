@@ -308,8 +308,6 @@ begin
 
     Application.CreateForm(TfrmMain, frmMain);
 
-    Application.CreateForm(TfrmBusyMessage, frmBusyMessage);
-
     if D.roomerMainDataSet.IsConnectedToInternet then
     begin
       Application.CreateForm(TfrmDaysStatistics, frmDaysStatistics);

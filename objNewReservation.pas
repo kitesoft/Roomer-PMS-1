@@ -298,7 +298,7 @@ TYPE
     FSendConfirmationEmail: Boolean;
     FAlertList: TAlertList;
     FMarket: TReservationMarketType;
-    ThreadedDataPutter : TGetThreadedData;
+    FThreadedDataPutter : TGetThreadedData;
     procedure RemoveRemnants(ResId: Integer);
 //    procedure DeleteReservation(aReservation: integer);
   protected
@@ -747,7 +747,7 @@ constructor TNewReservation.Create(const aHotelCode, Staff: string;
                                                       const contactAddress3: string = '';
                                                       const contactAddress4: string = '');
 begin
-  ThreadedDataPutter := nil;
+  FThreadedDataPutter := nil;
   FHotelcode := Hotelcode;
   FnewRoomReservations := TnewRoomReservation.Create(aHotelCode);
 
@@ -777,8 +777,7 @@ begin
   FAlertList.Free;
   FHomeCustomer.Free;
   FNewRoomReservations.Free;
-  if Assigned(ThreadedDataPutter) then
-     ThreadedDataPutter.Free;
+  FThreadedDataPutter.Free;
   inherited;
 end;
 
@@ -822,10 +821,10 @@ procedure TNewReservation.RemoveRemnants(ResId : Integer);
 var s, s1 : String;
 begin
   frmBusyMessage.ChangeMessage(GetTranslatedText('shTx_Removing_Allotment_Traces'));
-  ThreadedDataPutter := TGetThreadedData.Create;
+  FThreadedDataPutter := TGetThreadedData.Create;
   s := format('resapi/booking/remove/reservation2/%d', [ResId]);
   s1 := format('transactional=%s&reason=%s&request=%s&information=%s&canceltype=%d&makecopy=%s', [BoolToString(False), '', '', '', 0, BoolToString(False)]);
-  ThreadedDataPutter.Post(s, s1, nil);
+  FThreadedDataPutter.Post(s, s1, nil);
 //  d.roomerMainDataSet.SystemRemoveReservation(DeleteResNr, False, False);
 end;
 
@@ -1690,25 +1689,9 @@ begin
         FAlertList.Reservation := FReservation;
         FAlertList.postChanges;
 
-//        if NOT isOk then
-//        begin
-//          inc(CheckCount);
-//          ExecutionPlan.Clear;
-//          InsertNewReservation; // try again??
-//          ExecutionPlan.Execute(ptExec, False, False);
-//          if NOT RV_Exists(FReservation) then
-//          begin
-//            d.roomerMainDataSet.SystemRemoveReservation(FReservation);
-//            if CheckCount >= 3 then
-//              raise Exception.Create(format(GetTranslatedText('shTx_ReservationIdNotFound'), [FReservation]));
-//          end;
-//        end;
-
 {$Optimization Off}
         d.roomerMainDataSet.SystemAddToDoorCodeSchedules(FReservation);
 {$Optimization On}
-
-
 
         for i := 0 to FnewRoomReservations.RoomCount - 1 do
         begin
@@ -1776,7 +1759,7 @@ begin
       begin
         try
           if LstReservationActivity[i] <> '' then
-               WriteReservationActivityLog(LstReservationActivity[i]);
+            WriteReservationActivityLog(LstReservationActivity[i]);
         Except
         end;
       end;
@@ -1785,7 +1768,7 @@ begin
       begin
         try
           if LstInvoiceActivity[i] <> '' then
-               WriteInvoiceActivityLog(LstInvoiceActivity[i]);
+            WriteInvoiceActivityLog(LstInvoiceActivity[i]);
         Except
         end;
       end;
@@ -1805,25 +1788,6 @@ begin
   end;
 end;
 
-//procedure TNewReservation.DeleteReservation(aReservation : integer);
-//var cmdList : TList<String>;
-//begin
-//  cmdList := TList<String>.Create;
-//  try
-//    cmdList.Add('DELETE from reservations WHERE reservation=' + inttostr(aReservation));
-//    cmdList.Add('DELETE from roomreservations WHERE reservation=' + inttostr(aReservation));
-//    cmdList.Add('DELETE from invoiceheads WHERE reservation=' + inttostr(aReservation));
-//
-//    //**zxhj ATH EKKI breyta resstatus h�r
-//    cmdList.Add('DELETE from roomsdate WHERE reservation=' + inttostr(aReservation));
-//
-//    cmdList.Add('DELETE from persons WHERE reservation=' + inttostr(aReservation));
-//    cmdList.Add('DELETE from invoicelines WHERE reservation=' + inttostr(aReservation));
-//    d.roomerMainDataSet.SystemFreeExecuteMultiple(cmdList)
-//  finally
-//    cmdList.Free;
-//  end;
-//end;
 
 { TReservationExtra }
 

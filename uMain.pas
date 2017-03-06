@@ -1435,13 +1435,11 @@ type
     function CheckInARoom(iReservation, iRoomReservation: integer): boolean;
     procedure CheckOutARoom(const Room: String; iRoomReservation, iReservation: integer);
     procedure SetDateWithoutEvents(aDate: TdateTime);
-    procedure ActivateHint(HintPoint: TPoint; comp: TWinControl);
     procedure EnterRateQueryView(aDate: integer);
     procedure SetOffLineMode(const Value: boolean);
     procedure MyRoundedRect(Canvas: TCanvas; X1, Y1, X2, Y2: integer; DoRoundCorners: boolean = true);
     procedure PlaceRoomerOnCurrentMonitor;
     function GetActivePeriodGrid: TAdvStringGrid;
-    procedure DebugLog(const Msg: String);
     procedure HandleSkinManagerChange;
     procedure RefreshStats(force: boolean = false);
     function LongestColText(Grid: TAdvStringGrid; col: integer; startAtRow: integer = 1): integer;
@@ -1936,19 +1934,6 @@ begin
   if cbxStatDay.ItemIndex < 0 then
     cbxStatDay.ItemIndex := 0;
   cbxStatDay.Update;
-end;
-
-procedure TfrmMain.DebugLog(const Msg: String);
-begin
-{$IFDEF DEBUG}
-  try
-    if assigned(frmDayNotes) then
-      frmDayNotes.xDoLog('DEBUG', Msg);
-    Application.ProcessMessages;
-  except
-
-  end;
-{$ENDIF}
 end;
 
 procedure TfrmMain.GetLeavingGuestIndexes(var idxRoom: integer; var idxReservation: integer; ACol, ARow: integer);
@@ -4423,7 +4408,6 @@ begin
 
     d.roomerMainDataSet.SystemStartTransaction;
     try
-      lSucceeded := false;
       Screen.Cursor := crHourglass;
       try
         // Notice that CreateReservation already catches any exceptions and show message to user and returns false
@@ -4435,6 +4419,8 @@ begin
           begin
             // Create a new allotment with the remaining rooms, remove the old allotment
             frmBusyMessage.ChangeMessage(GetTranslatedText('shTx_Rearranging_Allotment'));
+
+            //TODO: CAll CreateReservation in its own thread so the UI stays responsive
             lSucceeded := oRestReservation.CreateReservation(aAllotmentResId, false)
           end else // no restcount, allotment is empty, just remove the old allotment
           begin
@@ -5572,15 +5558,6 @@ begin
 
   end;
 
-end;
-
-procedure TfrmMain.ActivateHint(HintPoint: TPoint; comp: TWinControl);
-begin
-  zHintPoint := HintPoint;
-  zHintComp := comp;
-  // Application.CancelHint;
-  comp.ShowHint := true;
-  Application.ActivateHint(zHintPoint);
 end;
 
 function TfrmMain.getChannelColor(Reservation: TSingleReservations): integer;
@@ -13146,7 +13123,6 @@ end;
 
 procedure TfrmMain.GuestListReport;
 var
-  aReport: TppReport;
   sFilter: string;
   s: string;
   sortField: string;
