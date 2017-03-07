@@ -16,7 +16,7 @@ inherited frmChannels: TfrmChannels
   inherited sbStatusBar: TsStatusBar
     Top = 480
     Width = 1092
-    ExplicitTop = 500
+    ExplicitTop = 480
     ExplicitWidth = 1092
   end
   object pnlFilter: TsPanel [1]
@@ -31,7 +31,7 @@ inherited frmChannels: TfrmChannels
     object labFilterWarning: TsLabel
       Left = 1
       Top = 40
-      Width = 3
+      Width = 1090
       Height = 13
       Align = alBottom
       Alignment = taCenter
@@ -41,6 +41,7 @@ inherited frmChannels: TfrmChannels
       Font.Height = -11
       Font.Name = 'Tahoma'
       Font.Style = []
+      ExplicitWidth = 3
     end
     object cLabFilter: TsLabel
       Left = 19
@@ -107,7 +108,6 @@ inherited frmChannels: TfrmChannels
       TabOrder = 0
       OnClick = btnCancelClick
       SkinData.SkinSection = 'BUTTON'
-      ExplicitHeight = 25
     end
     object BtnOk: TsButton
       AlignWithMargins = True
@@ -124,8 +124,6 @@ inherited frmChannels: TfrmChannels
       TabOrder = 1
       OnClick = BtnOkClick
       SkinData.SkinSection = 'BUTTON'
-      ExplicitLeft = 915
-      ExplicitHeight = 25
     end
   end
   object grData: TcxGrid [3]
@@ -136,8 +134,8 @@ inherited frmChannels: TfrmChannels
     Align = alClient
     TabOrder = 3
     LookAndFeel.NativeStyle = False
-    ExplicitTop = 85
-    ExplicitHeight = 340
+    ExplicitLeft = 56
+    ExplicitTop = 96
     object tvData: TcxGridDBTableView
       OnDblClick = tvDataDblClick
       Navigator.Buttons.CustomButtons = <>
@@ -179,6 +177,7 @@ inherited frmChannels: TfrmChannels
       Navigator.Buttons.Filter.Visible = True
       Navigator.InfoPanel.Visible = True
       Navigator.Visible = True
+      OnEditing = tvDataEditing
       OnFocusedRecordChanged = tvDataFocusedRecordChanged
       DataController.DataSource = DS
       DataController.Summary.DefaultGroupSummaryItems = <>
@@ -210,6 +209,7 @@ inherited frmChannels: TfrmChannels
       object tvDatadirectConnection: TcxGridDBColumn
         Caption = 'Direct Connection'
         DataBinding.FieldName = 'directConnection'
+        PropertiesClassName = 'TcxCheckBoxProperties'
         Width = 97
       end
       object tvDataname: TcxGridDBColumn

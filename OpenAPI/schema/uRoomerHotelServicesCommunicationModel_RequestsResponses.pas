@@ -8,20 +8,12 @@ uses
    //, Generics.Collections
    , Spring.Collections.Lists
    , Spring.Collections
+   , uRoomerSchema
    , XMLIntf
    , OXmlPDOM
    ;
 
 type
-  EXMLDocException = class(Exception);
-
-  TxsdBaseObject = class(TObject)
-  protected
-    procedure SetPropertiesFromXMLNode(const aNode: PXMLNode); virtual;
-  public
-    procedure LoadFromXML(const aXML: string);
-    procedure Clear; virtual; abstract;
-  end;
 
 {$REGION 'UserActivityCategoriesOverview XSD definition'}
   //	<xsd:element name="UserActivityCategoriesOverview">
@@ -41,12 +33,15 @@ type
 {$ENDREGION}
   {$M+}
   TUserActivityCategoriesOverview = class(TxsdBaseObject)
-
   type
-    TCategory = class
+    TCategory = class(TxsdBaseObject)
     private
         FName: string;
         FActions: TStringlist;
+    protected
+      procedure SetPropertiesFromXMLNode(const aNode: PXMLNode); override;
+      class function GetNameSpaceURI: string; override;
+      class function GetNodeName: string; override;
     public
       constructor Create;
       destructor Destroy; override;
@@ -55,13 +50,19 @@ type
       property Actions: TStringlist read FActions;
     end;
 
-    TCategoryList = TObjectList<TCategory>;
+
+    TCategoryList = class(TxsdBaseObjectList<TCategory>)
+    public
+      class function GetNodeName: string; override;
+      class function GetNameSpaceURI: string; override;
+    end;
 
   private
     FCategories: IList<TCategory>;
     function GetCategories: TCategoryList;
   protected
     procedure SetPropertiesFromXMLNode(const aNode: PXMLNode); override;
+    class function GetNodeName: string; override;
   public
     constructor Create;
     destructor Destroy; override;
@@ -119,6 +120,8 @@ type
     Fid3: string;
   protected
     procedure SetPropertiesFromXMLNode(const aNode: PXMLNode); override;
+    class function GetNodeName: string; override;
+    class function GetNameSpaceURI: string; override;
   public
     procedure Clear; override;
   published
@@ -141,7 +144,8 @@ type
     property MachineName: string read FMachineName write FMachineName;
   end;
 
-  TUserActivityLogEventTypeList = TObjectList<TUserActivityLogEventType>;
+  TUserActivityLogEventTypeList = class(TxsdBaseObjectList<TUserActivityLogEventType>)
+  end;
 
 {$REGION 'UserActivityLogFragment XSD definition'}
   //  <xsd:element name="UserActivityLogFragment">
@@ -158,6 +162,9 @@ type
   private
     FLogEventList: IList<TUserActivityLogEventType>;
     function GetLogEventList: TUserActivityLogEventTypeList;
+  protected
+    class function GetNodeName: string; override;
+    class function GetNameSpaceURI: string; override;
   public
     constructor Create;
     destructor Destroy; override;
@@ -210,6 +217,11 @@ begin
   Result := FCategories as TCategoryList;
 end;
 
+class function TUserActivityCategoriesOverview.GetNodeName: string;
+begin
+  result := 'categories';
+end;
+
 procedure TUserActivityCategoriesOverview.SetPropertiesFromXMLNode(const aNode: PXMLNode);
 var
   lCategoryNode: PXMLNode;
@@ -217,24 +229,9 @@ var
   lCatNodes: IXMLNodeList;
   lActNodes: IXMLNodeList;
   lCat: TCategory;
-const
-  cCategories= 'Category';
-  cActions= 'Action';
 begin
   inherited;
-
-  if aNode.SelectNodesNS(cNameSpaceURI, cCategories, lCatNodes) then
-  for lCategoryNode in lCatNodes do
-  begin
-    lCat := TCategory.Create;
-    lCat.Name := lCategoryNode.Attributes['name'];
-
-    if lCategoryNode.SelectNodesNS(cNameSpaceURI, cActions, lActNodes) then
-      for lActionNode in lActNodes do
-        lCat.FActions.Add(lActionNode.Text);
-
-    FCategories.Add(lCat);
-  end;
+  Categories.SetPropertiesFromXMLNode(aNode);
 end;
 
 { TUserActivityCategoriesOverview.TCategory }
@@ -248,6 +245,28 @@ destructor TUserActivityCategoriesOverview.TCategory.Destroy;
 begin
   FActions.Free;
   inherited;
+end;
+
+class function TUserActivityCategoriesOverview.TCategory.GetNameSpaceURI: string;
+begin
+  Result := cNameSpaceURI;
+end;
+
+class function TUserActivityCategoriesOverview.TCategory.GetNodeName: string;
+begin
+  Result := 'category';
+end;
+
+procedure TUserActivityCategoriesOverview.TCategory.SetPropertiesFromXMLNode(const aNode: PXMLNode);
+var
+  lNodeList: IXMLNodelist;
+  lNode: PXMLNOde;
+begin
+  inherited;
+  Name := aNode.Attributes['name'];
+  if aNode.SelectNodesNS(GetNameSpaceURI, 'action', lNodeList) then
+    for lNode in lNodeList do
+      FActions.Add(lNode.Text);
 end;
 
 { TUserActivityLogEventType }
@@ -273,23 +292,33 @@ begin
   Fid3 := '';
 end;
 
+class function TUserActivityLogEventType.GetNameSpaceURI: string;
+begin
+  Result := cNameSpaceURI;
+end;
+
+class function TUserActivityLogEventType.GetNodeName: string;
+begin
+  Result := 'UserActivityLogEventType';
+end;
+
 procedure TUserActivityLogEventType.SetPropertiesFromXMLNode(const aNode: PXMLNode);
 var
   lnodeList: IXMLNodeList;
 begin
   inherited;
 
-  if aNode.SelectNodesNS(cNameSpaceURI, 'description', lNodeList, 1) then
+  if aNode.SelectNodesNS(GetNameSpaceURI, 'description', lNodeList, 1) then
     FDescription := lNodeList.GetFirst.Text;
-  if aNode.SelectNodesNS(cNameSpaceURI, 'detailedDescription', lNodeList, 1) then
+  if aNode.SelectNodesNS(GetNameSpaceURI, 'detailedDescription', lNodeList, 1) then
     FDetailedDescription := lNodeList.GetFirst.Text;
-  if aNode.SelectNodesNS(cNameSpaceURI, 'machineName', lNodeList, 1) then
+  if aNode.SelectNodesNS(GetNameSpaceURI, 'machineName', lNodeList, 1) then
     FMachineName := lNodeList.GetFirst.Text;
-  if aNode.SelectNodesNS(cNameSpaceURI, 'oldValue', lNodeList, 1) then
+  if aNode.SelectNodesNS(GetNameSpaceURI, 'oldValue', lNodeList, 1) then
     FOldVAlue:= lNodeList.GetFirst.Text;
-  if aNode.SelectNodesNS(cNameSpaceURI, 'newValue', lNodeList, 1) then
+  if aNode.SelectNodesNS(GetNameSpaceURI, 'newValue', lNodeList, 1) then
     FNewValue := lNodeList.GetFirst.Text;
-  if aNode.SelectNodesNS(cNameSpaceURI, 'code', lNodeList, 1) then
+  if aNode.SelectNodesNS(GetNameSpaceURI, 'code', lNodeList, 1) then
     FCode := lNodeList.GetFirst.Text;
 
   FUserId := aNode.Attributes['userId'];
@@ -329,47 +358,34 @@ begin
   Result := FLogEventList as TUserActivityLogEventTypeList;
 end;
 
+class function TUserActivityLogFragment.GetNameSpaceURI: string;
+begin
+  result := cNameSpaceURI;
+end;
+
+class function TUserActivityLogFragment.GetNodeName: string;
+begin
+  Result := 'UserActivityLogFragment';
+end;
+
 procedure TUserActivityLogFragment.SetPropertiesFromXMLNode(const aNode: PXMLNode);
-var
-  lEventNode: PXMLNode;
-  lEventNodes: IXMLNodeList;
-  lEvent: TUserActivityLogEventType;
-const
-  cFragment = '//UserActivityLogFragment/UserActivityLogEvent';
 begin
   inherited;
-  FLogEventList.OnChanged.Enabled := false;
-  try
-    if aNode.SelectNodesNS(cNameSpaceURI, cFragment, lEventNodes) then
-    for lEventNode in lEventNodes do
-    begin
-      lEvent := TUserActivityLogEventType.Create;
-      lEvent.SetPropertiesFromXMLNode(lEventNode);
-      FLogEventList.Add(lEvent);
-    end;
-  finally
-    FLogEventList.OnChanged.Enabled := true;
-  end;
+  LogEventList.SetPropertiesFromXMLNode(aNode);
 end;
 
-{ TxsdBaseObject }
 
-procedure TxsdBaseObject.LoadFromXML(const aXML: string);
-var
-  xmlDoc: IXMLDocument;
+{ TUserActivityCategoriesOverview.TCategoryList }
+
+class function TUserActivityCategoriesOverview.TCategoryList.GetNameSpaceURI: string;
 begin
-  Clear;
-  xmlDoc := TXMLDocument.Create;
-  xmlDoc.LoadFromXML(aXML);
-  if assigned(xmlDoc.parseError) then
-    raise EXMLDocException.Create('XML Load error:' + xmlDoc.parseError.reason);
-
-  SetPropertiesFromXMLNode(xmlDoc.DocumentElement);
+  Result := cNameSpaceURI;
 end;
 
-procedure TxsdBaseObject.SetPropertiesFromXMLNode(const aNode: PXMLNode);
+class function TUserActivityCategoriesOverview.TCategoryList.GetNodeName: string;
 begin
-  Clear;
+  Result := 'category';
 end;
+
 
 end.
