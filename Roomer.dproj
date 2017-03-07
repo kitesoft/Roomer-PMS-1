@@ -2,11 +2,7 @@
     <PropertyGroup>
         <ProjectGuid>{436E2CCE-115E-475F-9C3E-19C03F70A4D0}</ProjectGuid>
         <MainSource>Roomer.dpr</MainSource>
-<<<<<<< HEAD
         <Config Condition="'$(Config)'==''">DebugBas</Config>
-=======
-        <Config Condition="'$(Config)'==''">releaseBas</Config>
->>>>>>> master
         <DCC_DCCCompiler>DCC32</DCC_DCCCompiler>
         <ProjectVersion>14.3</ProjectVersion>
         <FrameworkType>VCL</FrameworkType>
@@ -854,15 +850,10 @@
         <DCCReference Include="Data\_Glob.pas"/>
         <DCCReference Include="Data\hData.pas"/>
         <DCCReference Include="Data\uSqlDefinitions.pas"/>
-        <DCCReference Include="RoomerUtils\uRoomerVersionInfo.pas"/>
-<<<<<<< HEAD
-        <DCCReference Include="Invoice\uRunningTabModel.pas"/>
-=======
         <DCCReference Include="Dialogs\uFrmBusyMessage.pas">
             <Form>frmBusyMessage</Form>
             <FormType>dfm</FormType>
         </DCCReference>
->>>>>>> master
         <None Include="Roomer.todo"/>
         <None Include="notes.txt"/>
         <None Include="Roomer.inc"/>
