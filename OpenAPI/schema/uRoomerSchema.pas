@@ -37,9 +37,9 @@ type
 
   TxsdBaseObjectList<T: TxsdBaseObject, constructor> = class(TObjectList<T>)
   protected
+    class function GetNodeName: string; virtual;
+    class function GetNameSpaceURI: string; virtual;
   public
-    class function GetNodeName: string; virtual; abstract;
-    class function GetNameSpaceURI: string; virtual; abstract;
     procedure SetPropertiesFromXMLNode(const aNode: PXMLNode); virtual;
     procedure AddPropertiesToXMLNode(const aNode: PXMLNode); virtual;
 
@@ -70,7 +70,8 @@ begin
   if GetNodeName.IsEmpty or GetNameSpaceURI.IsEmpty then
     SetPropertiesFromXMLNode(xmldoc.DocumentElement)
   else
-    if xmlDoc.DocumentElement.SelectNodesNS(GetNameSpaceURI, GetNodeName, lNodeList) then
+    if xmlDoc.DocumentElement.SelectNodesNS(GetNameSpaceURI, '/' + GetNodeName, lNodeList) or
+       xmlDoc.DocumentElement.SelectNodesNS(GetNameSpaceURI,  GetNodeName, lNodeList) then
       SetPropertiesFromXMLNode(lNodeList.GetFirst);
 end;
 
@@ -140,7 +141,6 @@ procedure TxsdBaseObjectList<T>.AddPropertiesToXMLNode(const aNode: PXMLNode);
 var
   lItem: T;
 begin
-  aNode.NodeName := GetNodeName;
   for lItem in Self do
     lItem.AddPropertiesToXMLNode(aNode.AddChild(''));
 end;
@@ -159,6 +159,16 @@ begin
   for lObject in Self.Where(lPredicate) do
     aObjectList.Add(lObject.Clone);
 
+end;
+
+class function TxsdBaseObjectList<T>.GetNameSpaceURI: string;
+begin
+  Result := '';
+end;
+
+class function TxsdBaseObjectList<T>.GetNodeName: string;
+begin
+  Result := '';
 end;
 
 procedure TxsdBaseObjectList<T>.SetPropertiesFromXMLNode(const aNode: PXMLNode);

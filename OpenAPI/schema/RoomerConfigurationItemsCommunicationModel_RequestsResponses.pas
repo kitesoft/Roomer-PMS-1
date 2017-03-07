@@ -14,7 +14,7 @@ uses
 
 type
 
-{$REGION 'ChannelInventoryType XSD definition'}
+{$REGION 'ChannelInventoryItemType XSD definition'}
 //  <complexType name="TChannelInventoryItemType">
 //  		<annotation>
 //  			<documentation>This complex type gives the general structure of a channel inventory item (i.e. a channel supported by
@@ -28,10 +28,10 @@ type
 {$ENDREGION}
 
   {$M+}
-  TChannelInventoryItemType = class(TxsdBaseObject)
-  const
+  TChannelInventoryItemType = class abstract(TxsdBaseObject)
+  private const
     cNameSpaceURI = 'http://roomer.promoir.nl/datamodel/canonical/basetypes/2014/01/';
-    cNodeName = 'TChannelInventoryItemType';
+    cNodeName = 'ChannelInventoryitemType';
   private
     FChannelLongCode: string;
     FChannelCode: string;
@@ -51,10 +51,17 @@ type
     property CanBeDirectConnectChannel: boolean read FCanBeDirectConnectChannel write FCanBeDirectConnectChannel;
   end;
 
-  TChannelInventoryItemTypeList = class(TxsdBaseObjectList<TChannelInventoryItemType>)
+  TChannelInventory = class(TChannelInventoryItemType)
+  private const
+    cNameSpaceURI = 'http://www.promoir.nl/roomer/configuration/2015/12';
+    cNodeName = 'ChannelInventory';
   protected
-    class function GetNodeName: string; virtual; abstract;
-    class function GetNameSpaceURI: string; virtual; abstract;
+    class function GetNodeName: string; override;
+    class function GetNameSpaceURI: string; override;
+  end;
+
+  TChannelInventoryList = class(TxsdBaseObjectList<TChannelInventory>)
+  protected
   end;
 
 
@@ -69,13 +76,14 @@ type
 {$ENDREGION}
 
   {$M+}
-  TUserActivityCategoriesOverview = class(TxsdBaseObject)
+  TChannelInventoryOverview = class(TxsdBaseObject)
   const
     cNameSpaceURI = 'http://www.promoir.nl/roomer/configuration/2015/12';
     cNodeName = 'ChannelInventoryOverview';
   private
-    FChannelInventoriesList: IList<TChannelInventoryItemType>;
-    function GetChannelInventoriesList: TChannelInventoryItemTypeList;
+    FChannelInventoriesList: IList<TChannelInventory>;
+    function GetChannelInventoriesList: TChannelInventoryList;
+    function GetChannelByCode(const aCode: string): TChannelInventory;
   protected
     procedure SetPropertiesFromXMLNode(const aNode: PXMLNode); override;
     class function GetNodeName: string; override;
@@ -85,9 +93,10 @@ type
     destructor Destroy; override;
 
     procedure Clear; override;
-
+    function FindChannelByCode(const aCode: string; var aChannel: TChannelInventory): boolean;
+    property ChannelByCode[const aCode: string]: TChannelInventory read GetChannelByCode;
   published
-    property ChannelInventoriesList: TChannelInventoryItemTypeList read GetChannelInventoriesList;
+    property ChannelInventoriesList: TChannelInventoryList read GetChannelInventoriesList;
   end;
 
 implementation
@@ -96,41 +105,60 @@ uses
   XMLUtils
   ;
 
-{ TUserActivityCategoriesOverview }
+{ TChannelInventoryOverview }
 
-procedure TUserActivityCategoriesOverview.Clear;
+procedure TChannelInventoryOverview.Clear;
 begin
   inherited;
   ChannelInventoriesList.Clear;
 end;
 
-constructor TUserActivityCategoriesOverview.Create;
+constructor TChannelInventoryOverview.Create;
 begin
-  FChannelInventoriesList :=  TChannelInventoryItemTypeList.Create;
+  FChannelInventoriesList :=  TChannelInventoryList.Create;
 end;
 
-destructor TUserActivityCategoriesOverview.Destroy;
+destructor TChannelInventoryOverview.Destroy;
 begin
 
   inherited;
 end;
 
-function TUserActivityCategoriesOverview.GetChannelInventoriesList: TChannelInventoryItemTypeList;
+function TChannelInventoryOverview.FindChannelByCode(const aCode: string; var aChannel: TChannelInventory): boolean;
+var
+  lChannel: TChannelInventory;
 begin
-  Result := FChannelInventoriesList as TChannelInventoryItemTypeList;
+  Result := False;
+  for lChannel in ChannelInventoriesList do
+    if lChannel.FChannelCode.Equals(aCode) then
+    begin
+      result := true;
+      aChannel := lChannel;
+    end;
 end;
 
-class function TUserActivityCategoriesOverview.GetNameSpaceURI: string;
+function TChannelInventoryOverview.GetChannelByCode(const aCode: string): TChannelInventory;
+begin
+  if not FindChannelByCode(aCode, Result) then
+    raise Exception.Create('Channel not found in inventory.');
+end;
+
+function TChannelInventoryOverview.GetChannelInventoriesList: TChannelInventoryList;
+begin
+  Result := FChannelInventoriesList as TChannelInventoryList;
+end;
+
+class function TChannelInventoryOverview.GetNameSpaceURI: string;
 begin
   Result := cNameSpaceURI;
 end;
 
-class function TUserActivityCategoriesOverview.GetNodeName: string;
+class function TChannelInventoryOverview.GetNodeName: string;
 begin
   Result := cNodeName;
 end;
 
-procedure TUserActivityCategoriesOverview.SetPropertiesFromXMLNode(const aNode: PXMLNode);
+procedure TChannelInventoryOverview.SetPropertiesFromXMLNode(const aNode: PXMLNode);
 begin
   inherited;
   ChannelInventoriesList.SetPropertiesFromXMLNode(aNode);
@@ -164,6 +192,18 @@ begin
   FChannelCode := aNode.Attributes['channelCode'];
   FChannelName := aNode.Attributes['channelName'];
   FCanBeDirectConnectChannel := XMLToBool(aNode.Attributes['canBeDirectConnectChannel']);
+end;
+
+{ TChannelInventory }
+
+class function TChannelInventory.GetNameSpaceURI: string;
+begin
+  Result := cNameSpaceURI;
+end;
+
+class function TChannelInventory.GetNodeName: string;
+begin
+  Result := cNodeName;
 end;
 
 end.

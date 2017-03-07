@@ -271,7 +271,8 @@ uses
   uRoomerVersionInfo in 'RoomerUtils\uRoomerVersionInfo.pas',
   uFrmBusyMessage in 'Dialogs\uFrmBusyMessage.pas' {frmBusyMessage},
   uRoomerSchema in 'OpenAPI\schema\uRoomerSchema.pas',
-  RoomerConfigurationItemsCommunicationModel_RequestsResponses in 'OpenAPI\schema\RoomerConfigurationItemsCommunicationModel_RequestsResponses.pas';
+  RoomerConfigurationItemsCommunicationModel_RequestsResponses in 'OpenAPI\schema\RoomerConfigurationItemsCommunicationModel_RequestsResponses.pas',
+  uConfigurationItemsAPICaller in 'OpenAPI\uConfigurationItemsAPICaller.pas';
 
 {$R *.RES}
 
