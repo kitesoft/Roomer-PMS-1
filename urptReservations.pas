@@ -823,7 +823,6 @@ begin
     s := s+' ,rr.invBreakfast '#10;
     s := s+' ,rr.Currency '#10;
     s := s+' ,rr.Discount '#10;
-    s := s+' ,rr.Percentage '#10;
     s := s+' ,rr.PriceType '#10;
     s := s+' ,rr.RoomType '#10;
     s := s+' ,rr.PMInfo '#10;
@@ -1024,7 +1023,6 @@ begin
     s := s+' ,rr.invBreakfast '#10;
     s := s+' ,rr.Currency '#10;
     s := s+' ,rr.Discount '#10;
-    s := s+' ,rr.Percentage '#10;
     s := s+' ,rr.PriceType '#10;
     s := s+' ,rr.RoomType '#10;
     s := s+' ,rr.PMInfo '#10;

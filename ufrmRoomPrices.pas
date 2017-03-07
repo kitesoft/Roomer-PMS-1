@@ -244,7 +244,6 @@ const
     ' ,rr.AvrageRate as AveragePrice '#10 +
     ' ,rr.RateCount '#10 +
     ' ,rr.Discount as AverageDiscount '#10 +
-//    ' ,rr.Percentage as IsPercentage '#10 +
     ' ,rr.Groupaccount '#10 +
     ' ,rr.Package '#10 +
     ' ,CAST(rr.Arrival as DATE) as Arrival '#10 +

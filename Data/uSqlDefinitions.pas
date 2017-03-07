@@ -1494,7 +1494,6 @@ select_RoomProfile_Display : string =
 ', rr.Price3To               as RR_Price3To '+
 ', rr.Currency               as RR_Currency '+
 ', rr.Discount               as RR_Discount '+
-', rr.Percentage             as RR_Percentage '+
 ', rr.PriceType              as RR_PriceType '+
 ', rr.Arrival                as RR_Arrival '+
 ', rr.Departure              as RR_Departure '+
@@ -6298,7 +6297,6 @@ begin
   s := s+' rr.Price3To, '+#10;
   s := s+' rr.Currency, '+#10;
   s := s+' rr.Discount, '+#10;
-  s := s+' rr.Percentage, '+#10;
   s := s+' rr.PriceType, '+#10;
   s := s+' rr.Arrival, '+#10;
   s := s+' rr.Departure, '+#10;
@@ -6396,7 +6394,6 @@ begin
   s := s+' rr.GroupAccount, '+#10; //
   s := s+' rr.invBreakfast, '+#10;
   s := s+' rr.Discount, '+#10; //
-  s := s+' rr.Percentage, '+#10; //
   s := s+' rr.PriceType, '+#10; //
   s := s+' rr.RoomType, '+#10; //
   s := s+' rr.rrDescription, '+#10; //

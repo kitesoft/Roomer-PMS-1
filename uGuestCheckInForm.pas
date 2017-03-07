@@ -143,7 +143,6 @@ type
     procedure sButton3Click(Sender: TObject);
     procedure sButton4Click(Sender: TObject);
     procedure sButton5Click(Sender: TObject);
-    procedure sPanel2DblClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure sButton2Click(Sender: TObject);
     procedure sButton6Click(Sender: TObject);
@@ -1011,12 +1010,6 @@ begin
   end;
 
   btNoPortfolio.Visible := btnPortfolio.Tag > 0;
-end;
-
-procedure TFrmGuestCheckInForm.sPanel2DblClick(Sender: TObject);
-begin
-  if IsControlKeyPressed then
-    FormDesignMode;
 end;
 
 procedure TFrmGuestCheckInForm.FormDesignMode;

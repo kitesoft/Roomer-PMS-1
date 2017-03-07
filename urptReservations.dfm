@@ -18,7 +18,7 @@ inherited frmRptReservations: TfrmRptReservations
     Top = 624
     Width = 1234
     ExplicitTop = 624
-    ExplicitWidth = 1094
+    ExplicitWidth = 1234
   end
   object pnlHolder: TsPanel [1]
     Left = 0
@@ -33,7 +33,6 @@ inherited frmRptReservations: TfrmRptReservations
     BevelOuter = bvNone
     TabOrder = 0
     SkinData.SkinSection = 'PANEL'
-    ExplicitWidth = 1094
     object pageMain: TsPageControl
       Left = 0
       Top = 117
@@ -44,13 +43,9 @@ inherited frmRptReservations: TfrmRptReservations
       TabOrder = 0
       OnChange = pageMainChange
       SkinData.SkinSection = 'PAGECONTROL'
-      ExplicitWidth = 1094
-      ExplicitHeight = 487
       object tabReservation: TsTabSheet
         Caption = 'Reservations'
         ImageIndex = 2
-        ExplicitWidth = 1086
-        ExplicitHeight = 459
         object Panel5: TsPanel
           Left = 0
           Top = 0
@@ -59,7 +54,6 @@ inherited frmRptReservations: TfrmRptReservations
           Align = alTop
           TabOrder = 0
           SkinData.SkinSection = 'PANEL'
-          ExplicitWidth = 1086
           object btnGuestsExcel: TsButton
             AlignWithMargins = True
             Left = 4
@@ -152,8 +146,6 @@ inherited frmRptReservations: TfrmRptReservations
           PopupMenu = PopupMenu1
           TabOrder = 1
           LookAndFeel.NativeStyle = False
-          ExplicitLeft = 3
-          ExplicitTop = 20
           object tvReservations: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             Navigator.Buttons.Insert.Visible = False
@@ -582,6 +574,8 @@ inherited frmRptReservations: TfrmRptReservations
       end
       object tabRoom: TsTabSheet
         Caption = 'Rooms'
+        ExplicitLeft = 0
+        ExplicitTop = 0
         ExplicitWidth = 1086
         ExplicitHeight = 459
         object grRooms: TcxGrid
@@ -1054,7 +1048,6 @@ inherited frmRptReservations: TfrmRptReservations
       Anchors = [akTop, akRight]
       TabOrder = 2
       SkinData.SkinSection = 'PANEL'
-      ExplicitWidth = 1094
       DesignSize = (
         1234
         117)
@@ -1289,7 +1282,6 @@ inherited frmRptReservations: TfrmRptReservations
         TabOrder = 5
         OnClick = btnCloseClick
         SkinData.SkinSection = 'BUTTON'
-        ExplicitLeft = 975
       end
     end
   end
