@@ -695,7 +695,7 @@ type
     acUpdateTranslations: TAction;
     splStatistics: TsSplitter;
     btnDefaultMasterRates: TdxBarLargeButton;
-    dxUserActivityLog: TdxBarButton;
+    dxUserActivityLog: TdxBarLargeButton;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
