@@ -1043,6 +1043,7 @@ function TFrmGuestCheckInForm.fdRegFormDesignerSaveReport(Report: TfrxReport; Sa
 begin
   if (not SaveAs) and Report.FileName.ToLower.Equals(FileDependencyManager.getRegistrationFormFilePath.ToLower) then
   begin
+    Report.SaveToFile(Report.FileName);
     FileDependencyManager.sendChangedFile(Report.FileName);
     Result := true;
   end
@@ -1051,7 +1052,7 @@ begin
     Result := ((rptForm.Designer as TfrxDesignerForm) <> nil) and TfrxDesignerForm(rptForm.Designer).SaveFile(SaveAs, false);
     if Result and Report.FileName.ToLower.Equals(FileDependencyManager.getRegistrationFormFilePath.ToLower) then
       FileDependencyManager.sendChangedFile(Report.FileName);
-    end;
+  end;
 end;
 
 procedure TFrmGuestCheckInForm.Prepare;
