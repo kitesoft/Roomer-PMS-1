@@ -269,7 +269,9 @@ uses
   hData in 'Data\hData.pas',
   uSqlDefinitions in 'Data\uSqlDefinitions.pas',
   uRoomerVersionInfo in 'RoomerUtils\uRoomerVersionInfo.pas',
-  uFrmBusyMessage in 'Dialogs\uFrmBusyMessage.pas' {frmBusyMessage};
+  uFrmBusyMessage in 'Dialogs\uFrmBusyMessage.pas' {frmBusyMessage},
+  uRoomerSchema in 'OpenAPI\schema\uRoomerSchema.pas',
+  RoomerConfigurationItemsCommunicationModel_RequestsResponses in 'OpenAPI\schema\RoomerConfigurationItemsCommunicationModel_RequestsResponses.pas';
 
 {$R *.RES}
 
@@ -299,7 +301,7 @@ begin
     TSplashFormManager.Show;
 
     Application.CreateForm(TD, D);
-    D.ApplicationId := cOpenAPIAppicationID;
+  D.ApplicationId := cOpenAPIAppicationID;
 
     Application.CreateForm(TDReportData, DReportData);
     TSplashFormManager.UpdateProgress('Loading forms...');
