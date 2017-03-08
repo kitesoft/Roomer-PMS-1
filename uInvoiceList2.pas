@@ -519,9 +519,9 @@ end;
 
 procedure TfrmInvoiceList2.edLastCountChange(Sender: TObject);
 begin
-//  zLast := edtLast.Value;
-//  zInvoiceTo := zLastInvoiceID;
-//  zInvoiceFrom := zLastInvoiceID - zLast + 1;
+  zLast := edtLast.Value;
+  zInvoiceTo := zLastInvoiceID;
+  zInvoiceFrom := zLastInvoiceID - zLast + 1;
 //  if zLast < 100 then
 //    RunQuery;
 end;
