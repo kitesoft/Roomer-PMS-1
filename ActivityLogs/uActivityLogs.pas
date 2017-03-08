@@ -79,7 +79,7 @@ procedure AddReservationActivityLog(const user : String;
                                     action : TReservationAction;
                                     const OldValue : String;
                                     const NewValue : String;
-                                    const moreInfo : String);
+                                    const moreInfo : String = '');
 
 procedure AddAvailabilityActivityLog(const user : String;
                                      action : TAvailabilityAction;
@@ -264,7 +264,7 @@ procedure AddReservationActivityLog(const user : String;
                                     action : TReservationAction;
                                     const OldValue : String;
                                     const NewValue : String;
-                                    const moreInfo : String);
+                                    const moreInfo : String = '');
 var categoryName, actionName, sLine : String;
 begin
   categoryName := GetEnumName(TypeInfo(TActivityType), Ord(RESERVATION));

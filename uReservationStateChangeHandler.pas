@@ -29,6 +29,7 @@ type
     function CatchAll: boolean; virtual; abstract;
     function GetReservationState: TReservationState; virtual;
     procedure UpdateCurrentState; virtual; abstract;
+    procedure AddChangeToUserActivityLog(aOldvalue, aNewValue: TReservationState); virtual; abstract;
   public
     constructor Create;
 
@@ -45,6 +46,7 @@ type
     function CheckOut: boolean; override;
     function CatchAll: boolean; override;
     procedure UpdateCurrentState; override;
+    procedure AddChangeToUserActivityLog(aOldvalue, aNewValue: TReservationState); override;
   public
     constructor Create(aReservation, aRoomReservation: integer); overload;
     constructor Create(aRoomresObj: TRoomReservationBasicObj); overload;
@@ -63,6 +65,7 @@ type
     function CheckOut: boolean; override;
     function CatchAll: boolean; override;
     procedure UpdateCurrentState; override;
+    procedure AddChangeToUserActivityLog(aOldValue, aNewValue: TReservationState); override;
   public
     constructor Create(aReservation: integer); reintroduce;
     destructor Destroy; override;
@@ -93,7 +96,8 @@ uses
   , uAppGlobal
   , uG
   , Windows
-  ;
+  , uActivityLogs
+  , uUtils;
 
 { TReservationStateChangeHandler }
 
@@ -113,6 +117,7 @@ begin
   if not ChangeIsAllowed(aNewState) then
     raise EInvalidReservationStateChange.CreateFmt('ReservationState cannot be changed from [%s] to [%s]', [lOldState.AsReadableString, aNewState.AsReadableString]);
 
+  AddChangeToUserActivityLog(lOldState, aNewState);
   lExecuteChangeFunc := DispatchChangeHandler(lOldState, aNewState);
   if Assigned(lExecuteChangeFunc) then
     Result := lExecuteChangeFunc();
@@ -157,8 +162,6 @@ begin
     if FConfirmed OR (MessageDlg(Format(GetTranslatedText('shCheckInGroupOfRoom'), [lRoom]), mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
     begin
 
-s:=GetTickCOunt;
-
       for lRoomHandler in FRoomStateChangers.Values do
       begin
         if lRoomHandler.ChangeIsAllowed(rsGuests) then
@@ -168,8 +171,6 @@ s:=GetTickCOunt;
         end;
       end;
       d.CheckInReservation(FReservation);
-
-  OutputDebugString(PChar('time:  ' + IntToStr(trunc((GetTickCount - s) /1000))));
 
       g.updateCurrentGuestlist;
       Result := True;
@@ -222,6 +223,11 @@ begin
   FConfirmed := False;
   FRoomStateChangers:= TObjectDictionary<integer, TRoomReservationStateChangeHandler>.Create([doOwnsValues]);
   AddRoomResChangeSetHandlers;
+end;
+
+procedure TReservationStateChangeHandler.AddChangeToUserActivityLog(aOldValue, aNewValue: TReservationState);
+begin
+  AddReservationActivityLog(g.qUser, FReservation, 0, CHANGE_ROOMRESERVATION_STATUS, aOldValue.AsReadableString, aNewValue.AsReadableString);
 end;
 
 procedure TReservationStateChangehandler.AddRoomResChangeSetHandlers;
@@ -381,6 +387,11 @@ begin
         lRoomHandler.FCurrentStateDirty := True;
      Result := True;
   end;
+end;
+
+procedure TRoomReservationStateChangeHandler.AddChangeToUserActivityLog(aOldvalue, aNewValue: TReservationState);
+begin
+  AddReservationActivityLog(g.qUser, FReservation, FRoomReservation, CHANGE_ROOMRESERVATION_STATUS, aOldValue.AsReadableString, aNewValue.AsReadableString);
 end;
 
 function TRoomreservationStateChangeHandler.Catchall: boolean;
