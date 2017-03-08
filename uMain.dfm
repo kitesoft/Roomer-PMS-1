@@ -5871,12 +5871,11 @@ object frmMain: TfrmMain
       LargeImageIndex = 89
       OnClick = btnDefaultMasterRatesClick
     end
-    object dxUserActivityLog: TdxBarButton
+    object dxUserActivityLog: TdxBarLargeButton
       Caption = 'ActivityLog'
       Category = 0
       Hint = 'Show Useractivity report'
       Visible = ivAlways
-      ImageIndex = 97
       LargeImageIndex = 97
       OnClick = dxUserActivityLogClick
     end
