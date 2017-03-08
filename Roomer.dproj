@@ -854,6 +854,11 @@
             <Form>frmBusyMessage</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="OpenAPI\schema\RoomerFinancialDataModel_ModelObjects.pas"/>
+        <DCCReference Include="OpenAPI\schema\uRoomerCanonicalDataModel_BaseTypes.pas"/>
+        <DCCReference Include="OpenAPI\schema\uRoomerCanonicalDataModel_SimpleTypes.pas"/>
+        <DCCReference Include="Invoice\uRunningTabModel.pas"/>
+        <DCCReference Include="RoomerUtils\uRoomerVersionInfo.pas"/>
         <None Include="Roomer.todo"/>
         <None Include="notes.txt"/>
         <None Include="Roomer.inc"/>

@@ -76,7 +76,8 @@ end;
 
 procedure TxsdBaseObject.AddPropertiesToXMLNode(const aNode: PXMLNode);
 begin
-  aNode.NodeName := GetNodeName;
+  if aNode.NodeName.IsEmpty then
+    aNode.NodeName := GetNodeName;
 end;
 
 procedure TxsdBaseObject.Assign(Source: TPersistent);

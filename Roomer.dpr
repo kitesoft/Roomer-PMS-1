@@ -272,8 +272,14 @@ uses
   _Glob in 'Data\_Glob.pas',
   hData in 'Data\hData.pas',
   uSqlDefinitions in 'Data\uSqlDefinitions.pas',
-  uFrmBusyMessage in 'Dialogs\uFrmBusyMessage.pas' {frmBusyMessage};
+  uFrmBusyMessage in 'Dialogs\uFrmBusyMessage.pas' {frmBusyMessage},
+  RoomerFinancialDataModel_ModelObjects in 'OpenAPI\schema\RoomerFinancialDataModel_ModelObjects.pas',
+  uRoomerCanonicalDataModel_BaseTypes in 'OpenAPI\schema\uRoomerCanonicalDataModel_BaseTypes.pas',
+  uRoomerCanonicalDataModel_SimpleTypes in 'OpenAPI\schema\uRoomerCanonicalDataModel_SimpleTypes.pas',
   uRunningTabModel in 'Invoice\uRunningTabModel.pas',
+  uRoomerVersionInfo in 'RoomerUtils\uRoomerVersionInfo.pas';
+
+uRunningTabModel in 'Invoice\uRunningTabModel.pas',
   uRoomerVersionInfo in 'RoomerUtils\uRoomerVersionInfo.pas';
 
 {$R *.RES}
@@ -304,7 +310,7 @@ begin
     TSplashFormManager.Show;
 
     Application.CreateForm(TD, D);
-    D.ApplicationId := cOpenAPIAppicationID;
+  D.ApplicationId := cOpenAPIAppicationID;
 
     Application.CreateForm(TDReportData, DReportData);
     TSplashFormManager.UpdateProgress('Loading forms...');
