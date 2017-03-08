@@ -823,7 +823,8 @@ begin
   frmBusyMessage.ChangeMessage(GetTranslatedText('shTx_Removing_Allotment_Traces'));
   FThreadedDataPutter := TGetThreadedData.Create;
   s := format('resapi/booking/remove/reservation2/%d', [ResId]);
-  s1 := format('transactional=%s&reason=%s&request=%s&information=%s&canceltype=%d&makecopy=%s', [BoolToString(False), '', '', '', 0, BoolToString(False)]);
+  s1 := format('transactional=%s&reason=%s&request=%s&information=%s&canceltype=%d&makecopy=%s',
+                  [BoolToString(False), 'Removing remnants after creating new reservation from allotment', '', '', 0, BoolToString(False)]);
   FThreadedDataPutter.Post(s, s1, nil);
 //  d.roomerMainDataSet.SystemRemoveReservation(DeleteResNr, False, False);
 end;
