@@ -1930,7 +1930,6 @@ begin
       PriceCode := RoomReservationRentHolder.PriceType;
       AvrageRate := RoomReservationRentHolder.AvrageRate;
       AvrageDiscount := RoomReservationRentHolder.Discount;
-      isPercentage := RoomReservationRentHolder.Percentage;
       rateCount := 1;
 
       useInNationalReport := true;

@@ -1208,7 +1208,7 @@ type
     function Period_RoomAndDateToCell(const Room: string; aDate: Tdate): recColRow;
 
     function Period_GetNewResDates(var dtFrom: TdateTime): boolean;
-    function Period_GetResInfo(ACol: integer; ARow: integer; gridTag: integer): RecRRInfo;
+    function Period_GetResInfo(ACol: integer; ARow: integer; gridTag: integer): RecRDInfo;
 
     procedure Period_MergeGrid;
     procedure Period_RestoreRowHeights;
@@ -1407,7 +1407,7 @@ type
     procedure SetFilterColorsOff;
     procedure SetFilterColorsOn;
     procedure EnterPeriodDragFilter;
-    procedure FillRoomOnTheMove(RoomExternal: boolean; row, col: integer; rri: RecRRInfo);
+    procedure FillRoomOnTheMove(RoomExternal: boolean; row, col: integer; rri: RecRDInfo);
     procedure EnterPeriodDragFilterExternal;
     function ActiveGrid: TAdvStringGrid;
     procedure ApplyFiltersToPeriodView(Grid: TAdvStringGrid);
@@ -1443,12 +1443,12 @@ type
     procedure HandleSkinManagerChange;
     procedure RefreshStats(force: boolean = false);
     function LongestColText(Grid: TAdvStringGrid; col: integer; startAtRow: integer = 1): integer;
-    procedure GetPriceInfo(rri: RecRRInfo; var CurrencySign: String; var PricePerDay, DiscountPerDay, PriceTotal,
+    procedure GetPriceInfo(rri: RecRDInfo; var CurrencySign: String; var PricePerDay, DiscountPerDay, PriceTotal,
       DiscountTotal: Double);
     function GetCaptText(Canvas: TCanvas; const OriginalText: String; MaxWidth: integer): String;
     procedure PlacePeriodViewTypePanel;
     procedure ApplicationCancelHint;
-    function OneDay_GetResInfo(ACol, ARow, iReservation, iRoomReservation: integer): RecRRInfo;
+    function OneDay_GetResInfo(ACol, ARow, iReservation, iRoomReservation: integer): RecRDInfo;
     procedure CorrectBottomPeriodInterface;
     // function GetSelectedRoomInformation(var iReservation, iRoomReservation: Integer; var Arrival, Departure: TDate): Boolean;
     function GetSelectedRoomInformation: boolean;
@@ -1864,7 +1864,7 @@ end;
 
 procedure TfrmMain.EnterPeriodDragFilter;
 var
-  rri: RecRRInfo;
+  rri: RecRDInfo;
 begin
   // splitPeriod.CloseSplitter; splitPeriod.Top := panPeriodRooms.Height;
   rri := Period_GetResInfo(grPeriodRooms.col, grPeriodRooms.row, grPeriodRooms.Tag);
@@ -1874,7 +1874,7 @@ end;
 
 procedure TfrmMain.EnterPeriodDragFilterExternal;
 var
-  rri: RecRRInfo;
+  rri: RecRDInfo;
 begin
   // splitPeriod.OpenSplitter; splitPeriod.Top := panPeriodRooms.Height;
   rri := Period_GetResInfo(grPeriodRooms_NO.col, grPeriodRooms_NO.row, grPeriodRooms_NO.Tag);
@@ -1882,7 +1882,7 @@ begin
     FillRoomOnTheMove(true, grPeriodRooms_NO.row, grPeriodRooms_NO.col, rri);
 end;
 
-procedure TfrmMain.FillRoomOnTheMove(RoomExternal: boolean; row, col: integer; rri: RecRRInfo);
+procedure TfrmMain.FillRoomOnTheMove(RoomExternal: boolean; row, col: integer; rri: RecRDInfo);
 var
   iTemp: integer;
 begin
@@ -4856,7 +4856,7 @@ end;
 
 function TfrmMain.GetSelectedRoomInformation: boolean;
 var
-  rri: RecRRInfo;
+  rri: RecRDInfo;
   active: boolean;
 begin
   result := false;
@@ -7450,7 +7450,7 @@ var
   _grid: TAdvStringGrid;
   Rect: TRect;
   Point: TPoint;
-  rri: RecRRInfo;
+  rri: RecRDInfo;
   newRoom: String;
   isCtrlOn, isFiltering: boolean;
 
@@ -8372,7 +8372,7 @@ begin
   result := dtFrom > now - 100;
 end;
 
-function TfrmMain.OneDay_GetResInfo(ACol: integer; ARow: integer; iReservation, iRoomReservation: integer): RecRRInfo;
+function TfrmMain.OneDay_GetResInfo(ACol: integer; ARow: integer; iReservation, iRoomReservation: integer): RecRDInfo;
 begin
   result.Reservation := FReservationsModel.Reservations[iReservation].Reservation;
   result.RoomReservation := FReservationsModel.Reservations[iReservation].Rooms[iRoomReservation].RoomRes;
@@ -8401,7 +8401,6 @@ begin
 
   result.Price := FReservationsModel.Reservations[iReservation].Rooms[iRoomReservation].Price;
   result.Discount := FReservationsModel.Reservations[iReservation].Rooms[iRoomReservation].Discount;
-  result.Percentage := FReservationsModel.Reservations[iReservation].Rooms[iRoomReservation].Percentage;
   result.Information := FReservationsModel.Reservations[iReservation].Information;
   result.PMInfo := FReservationsModel.Reservations[iReservation].PMInfo;
   result.PriceType := FReservationsModel.Reservations[iReservation].Rooms[iRoomReservation].PriceType;
@@ -8423,7 +8422,7 @@ begin
   result.InvoiceIndex := FReservationsModel.Reservations[iReservation].Rooms[iRoomReservation].InvoiceIndex;
 end;
 
-function TfrmMain.Period_GetResInfo(ACol: integer; ARow: integer; gridTag: integer): RecRRInfo;
+function TfrmMain.Period_GetResInfo(ACol: integer; ARow: integer; gridTag: integer): RecRDInfo;
 var
   resCell: TresCell;
   Grid: TAdvStringGrid;
@@ -8475,7 +8474,6 @@ begin
 
   result.Price := resCell.Price;
   result.Discount := resCell.Discount;
-  result.Percentage := resCell.Percentage;
   result.Information := resCell.Information;
   result.PMInfo := resCell.PMInfo;
   result.PriceType := resCell.PriceType;
@@ -8737,7 +8735,7 @@ end;
 
 procedure TfrmMain.grPeriodRoomsStartDrag(Sender: TObject; var DragObject: TDragObject);
 var
-  rri: RecRRInfo;
+  rri: RecRDInfo;
   _grid: TAdvStringGrid;
 begin
   _grid := grPeriodRooms;
@@ -9256,7 +9254,7 @@ end;
 procedure TfrmMain.grPeriodRoomsMouseMove(Sender: TObject; Shift: TShiftState; X, Y: integer);
 var
   ACol, ARow: integer;
-  rri: RecRRInfo;
+  rri: RecRDInfo;
   Grid: TAdvStringGrid;
 begin
   Grid := TAdvStringGrid(Sender);
@@ -9340,15 +9338,14 @@ begin
   end;
 end;
 
-procedure TfrmMain.GetPriceInfo(rri: RecRRInfo; var CurrencySign: String; var PricePerDay, DiscountPerDay, PriceTotal,
+procedure TfrmMain.GetPriceInfo(rri: RecRDInfo; var CurrencySign: String; var PricePerDay, DiscountPerDay, PriceTotal,
   DiscountTotal: Double);
 var
   discountAmount: Double;
 begin
-  CurrencySign := '€';
   if rri.Discount <> 0 then
   begin
-    if rri.Percentage then
+    if rri.IsPercentage then
     begin
       discountAmount := rri.Price / ((100 - rri.Discount) / 100); // ro.Price * ro.Discount / 100;
       PricePerDay := discountAmount;
@@ -9516,7 +9513,7 @@ procedure TfrmMain.grPeriodRoomsDrawCell(Sender: TObject; ACol, ARow: integer; R
 var
   iNights, iTempColor, iRes, dx, i: integer;
   chRect: TRect;
-  rri: RecRRInfo;
+  rri: RecRDInfo;
   Grid: TAdvStringGrid;
   Text, s, sType, sStatus, sRoom: String;
   tempString: String;
@@ -10004,7 +10001,7 @@ var
   Rect: TRect;
   sRoom: string;
   //
-  rri: RecRRInfo;
+  rri: RecRDInfo;
   Grid: TAdvStringGrid;
   cellWidth, cellHeight: integer;
 
@@ -10243,7 +10240,7 @@ var
   borderColor: TColor;
   Left, Top, Right, Bottom: integer;
 
-  rri: RecRRInfo;
+  rri: RecRDInfo;
 
 begin
   if (ACol > grPeriodRooms_NO.FixedCols - 1) and (ARow > grPeriodRooms_NO.FixedRows - 1) and

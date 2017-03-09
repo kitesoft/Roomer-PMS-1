@@ -750,7 +750,6 @@ type
     avrageRate: double;
     Currency: string;
     Discount: double;
-    Percentage: boolean;
   end;
 
   recRoomsDateRentInfo = record
@@ -3049,7 +3048,6 @@ begin
     avrageRate := 0.00;
     Currency := '';
     Discount := 0.00;
-    Percentage := true;
   end;
 end;
 
@@ -6010,8 +6008,7 @@ begin
     s := s + '  `PriceType`, '#10;
     s := s + '  `AvrageRate`, '#10;
     s := s + '  `Currency`, '#10;
-    s := s + '  `Discount`, '#10;
-    s := s + '  `Percentage` '#10;
+    s := s + '  `Discount` '#10;
     s := s + 'FROM '#10;
     s := s + '  `roomreservations` '#10;
     s := s + 'WHERE '#10;
@@ -6027,7 +6024,6 @@ begin
       avrageRate := rSet.GetFloatValue(rSet.fieldbyname('AvrageRate'));
       Currency := rSet.fieldbyname('Currency').asString;
       Discount := rSet.GetFloatValue(rSet.fieldbyname('Discount'));
-      Percentage := rSet.fieldbyname('Percentage').Asboolean;
 
       result.RoomReservation := RoomReservation;
       result.Reservation := Reservation;
@@ -6035,7 +6031,6 @@ begin
       result.avrageRate := avrageRate;
       result.Currency := Currency;
       result.Discount := Discount;
-      result.Percentage := Percentage;
     end;
   finally
     freeandnil(rSet);
