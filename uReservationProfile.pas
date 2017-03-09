@@ -591,6 +591,8 @@ type
     acChangeRoomType: TAction;
     mRoomsAverageRoomRate: TFloatField;
     mRoomsInvoiceIndex: TIntegerField;
+    sLabel4: TsLabel;
+    edtBookingId: TsEdit;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -1137,6 +1139,7 @@ begin
         lblCustomerType.caption := d.GET_CustomerTypesDescription_byCustomerType(edtType.text);
 
         edtInvRefrence.text := trim(fieldbyname('invRefrence').asstring);
+        edtBookingId.Text := edtInvRefrence.text;
         OutOfOrderBlocking := fieldbyname('outOfOrderBlocking').AsBoolean;
 
         SetMarketItemIndex(fieldbyname('market').asString);

@@ -8,7 +8,7 @@ uses
   Data.Win.ADODB
 
     , uDateUtils, ActnList, System.Actions, Generics.Collections, variants,
-  cmpRoomerDataSet
+  cmpRoomerDataSet, uRoomerThreadedRequest
 
     , _glob, hData, ug, uUtils, kbmMemTable
 
@@ -485,6 +485,8 @@ type
     FTotalRoomDiscount: Double;
     FReservation: integer;
     FRoomReservation: integer;
+
+    FThreadedDataPutter : TGetThreadedData;
 
     procedure LoadInvoice;
     procedure loadInvoiceToMemtable(var m: TKbmMemTable);
@@ -3510,6 +3512,7 @@ end;
 
 procedure TfrmInvoice.FormCreate(Sender: TObject);
 begin
+  FThreadedDataPutter := nil;
   zErr := false;
   zFirsttime := True;
   zApply := false;
@@ -3547,6 +3550,7 @@ end;
 procedure TfrmInvoice.FormDestroy(Sender: TObject);
 begin
   try
+    try FThreadedDataPutter.Free; except end;
     OnResize := nil;
     SelectableRooms.free;
     SelectableExternalRooms.free;
@@ -5970,7 +5974,7 @@ begin
       try
         result := True;
         try
-          SendInvoicesToFinancePacket(zInvoiceNumber);
+          SendInvoicesToFinancePacketThreaded(FThreadedDataPutter, zInvoiceNumber);
           ViewInvoice2(zInvoiceNumber, True, false, True, chkShowPackage.checked, zEmailAddress);
 
           d.roomerMainDataSet.SystempackagesCreateHeaderIfNotExists
