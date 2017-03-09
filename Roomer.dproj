@@ -197,6 +197,7 @@
         <VerInfo_AutoGenVersion>false</VerInfo_AutoGenVersion>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_3)'!=''">
+        <DCC_DebugDCUs>true</DCC_DebugDCUs>
         <DCC_MapFile>3</DCC_MapFile>
         <DCC_RemoteDebug>true</DCC_RemoteDebug>
         <DCC_Optimize>false</DCC_Optimize>

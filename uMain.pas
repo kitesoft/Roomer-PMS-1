@@ -12612,7 +12612,7 @@ begin
       begin
         aRoom := grOneDayRooms.cells[0, iRow];
         // oSelectedRoomItem := TSelectedRoomItem.Create(aRoom,Arrival,departure,0);
-        oSelectedRoomItem := TnewRoomReservationItem.Create(0, aRoom, '', '', Arrival, Departure, 0, 0, 0, true, 0, 0,
+        oSelectedRoomItem := TnewRoomReservationItem.Create(0, aRoom, '', '', Arrival, Departure, 0, 0, 0, 0, 0,
           0, '', '', '');
         oNewReservation.newRoomReservations.RoomItemsList.Add(oSelectedRoomItem);
       end
@@ -12633,7 +12633,7 @@ begin
       begin
         aRoom := grOneDayRooms.cells[7, iRow];
         // oSelectedRoomItem := TSelectedRoomItem.Create(aRoom,Arrival,departure,0);
-        oSelectedRoomItem := TnewRoomReservationItem.Create(0, aRoom, '', '', Arrival, Departure, 0, 0, 0, true, 0, 0,
+        oSelectedRoomItem := TnewRoomReservationItem.Create(0, aRoom, '', '', Arrival, Departure, 0, 0, 0, 0, 0,
           0, '', '', '');
         oNewReservation.newRoomReservations.RoomItemsList.Add(oSelectedRoomItem);
       end;
@@ -12722,7 +12722,7 @@ begin
     Arrival := d.mQuickRes.FieldByName('DateFrom').AsDateTime;
     Departure := d.mQuickRes.FieldByName('DateTo').AsDateTime;
     // oSelectedRoomItem := TSelectedRoomItem.Create(aRoom,Arrival,departure,0);
-    oSelectedRoomItem := TnewRoomReservationItem.Create(0, aRoom, '', '', Arrival, Departure, 0, 0, 0, true, 0, 0, 0,
+    oSelectedRoomItem := TnewRoomReservationItem.Create(0, aRoom, '', '', Arrival, Departure, 0, 0, 0, 0, 0, 0,
       '', '', '');
     oNewReservation.newRoomReservations.RoomItemsList.Add(oSelectedRoomItem);
     d.mQuickRes.next;

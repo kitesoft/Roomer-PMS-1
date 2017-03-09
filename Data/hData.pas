@@ -467,7 +467,6 @@ type
     Price3To: string;
     Currency: string;
     Discount: double;
-    Percentage: boolean;
     PriceType: string;
     Arrival: string;
     Departure: string;
@@ -1650,8 +1649,6 @@ function SP_INS_RoomReservation(theData: recRoomReservationHolder): boolean;
 function SQL_INS_RoomReservation(theData: recRoomReservationHolder): string;
 function SP_INS_DelRoomReservation(theData: recRoomReservationHolder): boolean;
 
-function INS_DelPerson(theData: recPersonHolder): boolean;
-
 function SP_UPD_tblRoomStatusByDateRangeAndRoomType(RoomType: string; available: integer; FromDate, ToDate: Tdate): boolean;
 
 // function SP_GET_Item_ByItem(var theData : recItemHolder; Connection : TRoomerConnection; loglevel : integer=0; logpath : string='') : boolean;
@@ -1868,7 +1865,6 @@ function Country_GetDefault(): string;
 function Item_GetDescription(Item: string): string;
 function Item_GetPrice(Item: string): double;
 
-procedure ins_delRoomReservationInfo_NOT_USED_ANYMORE(RoomReservation: integer; CancelStaff, CancelReason, CancelInformation: string; CancelType: integer);
 
 function Room_GetRec(Room: string): recRoomInfo;
 function Customer_GetHolder(Customer: string): recCustomerHolderEX;
@@ -2860,7 +2856,6 @@ begin
     Currency := g.qNativeCurrency;
     // ctrlGetString('NativeCurrency', Connection,loglevel,logPath);
     Discount := 0.00;
-    Percentage := true;
     PriceType := '';
     Arrival := _db(TDate(date), false);
     Departure := _db(TDate(IncDay(date, 1)), false);;
@@ -3857,7 +3852,6 @@ begin
     b.Append('   ,`Price3To` ' + #10);
     b.Append('   ,`Currency` ' + #10);
     b.Append('   ,`Discount` ' + #10);
-    b.Append('   ,`Percentage` ' + #10);
     b.Append('   ,`PriceType` ' + #10);
     b.Append('   ,`Arrival` ' + #10);
     b.Append('   ,`Departure` ' + #10);
@@ -3908,7 +3902,6 @@ begin
     b.Append('  , ' + _db(theData.Price3To) + #10);
     b.Append('  , ' + _db(theData.Currency) + #10);
     b.Append('  , ' + _db(theData.Discount) + #10);
-    b.Append('  , ' + _db(theData.Percentage) + #10);
     b.Append('  , ' + _db(theData.PriceType) + #10);
     b.Append('  , ' + _db(theData.Arrival) + #10);
     b.Append('  , ' + _db(theData.Departure) + #10);
@@ -3979,7 +3972,6 @@ begin
   s := s + '  ,Price3To ' + #10;
   s := s + '  ,Currency ' + #10;
   s := s + '  ,Discount ' + #10;
-  s := s + '  ,Percentage ' + #10;
   s := s + '  ,PriceType ' + #10;
   s := s + '  ,Arrival ' + #10;
   s := s + '  ,Departure ' + #10;
@@ -4027,7 +4019,6 @@ begin
   s := s + '  , ' + _db(theData.Price3To) + #10;
   s := s + '  , ' + _db(theData.Currency) + #10;
   s := s + '  , ' + _db(theData.Discount) + #10;
-  s := s + '  , ' + _db(theData.Percentage) + #10;
   s := s + '  , ' + _db(theData.PriceType) + #10;
   s := s + '  , ' + _db(theData.Arrival) + #10;
   s := s + '  , ' + _db(theData.Departure) + #10;
@@ -4264,65 +4255,6 @@ begin
   end;
 end;
 
-function INS_DelPerson(theData: recPersonHolder): boolean;
-var
-  s: string;
-begin
-  s := '';
-  s := s + 'INSERT INTO tbldelpersons ' + #10;
-  s := s + ' ( ' + #10;
-  s := s + '    Person ' + #10;
-  s := s + '   ,RoomReservation ' + #10;
-  s := s + '   ,Reservation ' + #10;
-  s := s + '   ,Name ' + #10;
-  s := s + '   ,Surname ' + #10;
-  s := s + '   ,Address1 ' + #10;
-  s := s + '   ,Address2 ' + #10;
-  s := s + '   ,Address3 ' + #10;
-  s := s + '   ,Address4 ' + #10;
-  s := s + '   ,Country ' + #10;
-  s := s + '   ,Company ' + #10;
-  s := s + '   ,GuestType ' + #10;
-  s := s + '   ,Information ' + #10;
-  s := s + '   ,PID ' + #10;
-  s := s + '   ,MainName ' + #10;
-  s := s + '   ,Customer ' + #10;
-  s := s + '   ,peTmp ' + #10;
-  s := s + '   ,hgrID ' + #10;
-  // s := s+ '   ,HallReservation '+#10;
-  // s := s+ '   ,Tel1 '+#10;
-  // s := s+ '   ,Tel2 '+#10;
-  // s := s+ '   ,Fax '+#10;
-  // s := s+ '   ,Email '+#10;
-  s := s + '    ) ' + #10;
-  s := s + '    VALUES ' + #10;
-  s := s + '    ( ' + #10;
-  s := s + '     ' + _db(theData.Person) + #10;
-  s := s + '   , ' + _db(theData.RoomReservation) + #10;
-  s := s + '   , ' + _db(theData.Reservation) + #10;
-  s := s + '   , ' + _db(theData.name) + #10;
-  s := s + '   , ' + _db(theData.Surname) + #10;
-  s := s + '   , ' + _db(theData.Address1) + #10;
-  s := s + '   , ' + _db(theData.Address2) + #10;
-  s := s + '   , ' + _db(theData.Address3) + #10;
-  s := s + '   , ' + _db(theData.Address4) + #10;
-  s := s + '   , ' + _db(theData.Country) + #10;
-  s := s + '   , ' + _db(theData.Company) + #10;
-  s := s + '   , ' + _db(theData.GuestType) + #10;
-  s := s + '   , ' + _db(theData.Information) + #10;
-  s := s + '   , ' + _db(theData.PID) + #10;
-  s := s + '   , ' + _db(theData.MainName) + #10;
-  s := s + '   , ' + _db(theData.Customer) + #10;
-  s := s + '   , ' + _db(theData.peTmp) + #10;
-  s := s + '   , ' + _db(theData.hgrID) + #10;
-  // s := s+ '   , '  + _db(theData.tel1)+#10;
-  // s := s+ '   , '  + _db(theData.tel2)+#10;
-  // s := s+ '   , '  + _db(theData.fax)+#10;
-  // s := s+ '   , '  + _db(theData.Email)+#10;
-  s := s + ' ) ' + #10;
-  result := cmd_bySQL(s);
-end;
-
 function SP_GET_RoomReservation(RoomReservation: integer): recRoomReservationHolder;
 var
   rSet: TRoomerDataSet;
@@ -4353,7 +4285,6 @@ begin
       result.Price3To := rSet.fieldbyname('Price3To').asString;
       result.Currency := rSet.fieldbyname('Currency').asString;
       result.Discount := rSet.fieldbyname('Discount').AsFloat;
-      result.Percentage := rSet['Percentage'];
       result.PriceType := rSet.fieldbyname('PriceType').asString;
       result.Arrival := rSet.fieldbyname('Arrival').asString;
       result.Departure := rSet.fieldbyname('Departure').asString;
@@ -6137,76 +6068,6 @@ begin
       Arrival := rSet.fieldbyname('rrArrival').AsDateTime;
       Departure := rSet.fieldbyname('rrDeparture').AsDateTime;
       result := trunc(Departure) - trunc(Arrival);
-    end;
-  finally
-    freeandnil(rSet);
-  end;
-end;
-
-procedure ins_delRoomReservationInfo_NOT_USED_ANYMORE(RoomReservation: integer; CancelStaff, CancelReason, CancelInformation: string; CancelType: integer);
-var
-  s: string;
-  roomReservationRec: recRoomReservationHolder;
-  reservationRec: recReservationHolder;
-  personRec: recPersonHolder;
-
-  rSet: TRoomerDataSet;
-begin
-  roomReservationRec := SP_GET_RoomReservation(RoomReservation);
-
-  roomReservationRec.CancelDate := now;
-  roomReservationRec.CancelStaff := CancelStaff;
-  roomReservationRec.CancelReason := CancelReason;
-  roomReservationRec.CancelInformation := CancelInformation;
-  roomReservationRec.CancelType := CancelType;
-
-  SP_INS_DelRoomReservation(roomReservationRec);
-
-  s := '';
-  s := s + ' DELETE ' + #10;
-  s := s + '   FROM ' + #10;
-  s := s + '     tbldelreservations ' + #10;
-  s := s + ' WHERE ' + #10;
-  s := s + '   Reservation = ' + inttostr(roomReservationRec.Reservation);
-  if not cmd_bySQL(s) then
-  begin
-  end;
-
-  reservationRec := SP_GET_Reservation(roomReservationRec.Reservation);
-  SP_INS_DelReservation(reservationRec);
-
-  rSet := CreateNewDataSet;
-  try
-    // lstParams.Clear;
-    // lstParams.Add('@roomreservation=' + inttoStr(roomReservation));
-    // S_execute(guestSet, 'GET_Person_By_roomreservation', lstParams);
-    s := format(select_Person_By_roomreservation, [RoomReservation]);
-    if hData.rSet_bySQL(rSet, s) then
-    begin
-      while not rSet.Eof do
-      begin
-        initPersonHolder(personRec);
-        personRec.Person := rSet.fieldbyname('person').asInteger;
-        personRec.RoomReservation := rSet.fieldbyname('RoomReservation').asInteger;
-        personRec.Reservation := rSet.fieldbyname('reservation').asInteger;
-        personRec.name := rSet.fieldbyname('name').asString;
-        personRec.Surname := rSet.fieldbyname('surName').asString;
-        personRec.Address1 := rSet.fieldbyname('Address1').asString;
-        personRec.Address2 := rSet.fieldbyname('Address2').asString;
-        personRec.Address3 := rSet.fieldbyname('Address3').asString;
-        personRec.Address4 := rSet.fieldbyname('Address4').asString;
-        personRec.Country := rSet.fieldbyname('Country').asString;
-        personRec.GuestType := rSet.fieldbyname('GuestType').asString;
-        personRec.Information := rSet.fieldbyname('Information').asString;
-        personRec.PID := rSet.fieldbyname('PID').asString;
-        personRec.MainName := rSet['MainName'];
-        personRec.Customer := rSet.fieldbyname('Customer').asString;
-        personRec.peTmp := rSet.fieldbyname('peTmp').asString;
-        personRec.hgrID := rSet.fieldbyname('hgrID').asInteger;
-        personRec.HallReservation := rSet.fieldbyname('HallReservation').asInteger;
-        INS_DelPerson(personRec);
-        rSet.Next;
-      end;
     end;
   finally
     freeandnil(rSet);

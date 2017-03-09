@@ -412,7 +412,6 @@ type
     mSelectTypesPriorityRule: TStringField;
     tvSelectTypePriorityRule: TcxGridDBColumn;
     tvRoomResAvrageDiscount: TcxGridDBColumn;
-    tvRoomResisPercentage: TcxGridDBColumn;
     StoreMain: TcxPropertiesStore;
     panRoomNotes: TsPanel;
     clabPaymentNotes: TsLabel;
@@ -515,7 +514,6 @@ type
     mRoomResinfantCount: TIntegerField;
     mRoomResPriceCode: TStringField;
     mRoomResAvrageDiscount: TFloatField;
-    mRoomResisPercentage: TBooleanField;
     mRoomResPackage: TWideStringField;
     mROomResPersonsProfilesID: TIntegerField;
     mRoomRates: TdxMemData;
@@ -547,7 +545,7 @@ type
     FloatField3: TFloatField;
     FloatField4: TFloatField;
     FloatField5: TFloatField;
-    mRR_: TdxMemData;
+    mRatesEdit: TdxMemData;
     IntegerField3: TIntegerField;
     IntegerField4: TIntegerField;
     StringField8: TStringField;
@@ -929,7 +927,6 @@ begin
   RateCount := mRoomRes.FieldByName('RateCount').AsInteger;
   PriceCode := mRoomRes.FieldByName('PriceCode').AsString;
   AvrageDiscount := mRoomRes.FieldByName('AvrageDiscount').AsFloat;
-  isPercentage := mRoomRes.FieldByName('isPercentage').AsBoolean;
   ManualChannelId := mRoomRes.FieldByName('ManualChannelId').AsInteger;
   ratePlanCode := mRoomRes.FieldByName('ratePlanCode').AsString;
 
@@ -1010,7 +1007,6 @@ begin
         mRoomRes.FieldByName('RateCount').AsInteger := RateCount;
         mRoomRes.FieldByName('PriceCode').AsString := PriceCode;
         mRoomRes.FieldByName('AvrageDiscount').AsFloat := AvrageDiscount;
-        mRoomRes.FieldByName('isPercentage').AsBoolean := isPercentage;
         mRoomRes.FieldByName('ManualChannelId').AsInteger := ManualChannelId;
         mRoomRes.FieldByName('ratePlanCode').AsString := ratePlanCode;
         mRoomRes.post;
@@ -1909,8 +1905,8 @@ begin
   isPercentage := true;
   applyType := 0;
 
-  if mRR_.active then
-    mRR_.Close;
+  if mRatesEdit.active then
+    mRatesEdit.Close;
   lstPrices := TstringList.Create;
   try
     lstPrices.Sorted := true;
@@ -1926,58 +1922,58 @@ begin
     theData.Guests := mRoomRes.FieldByName('Guests').AsInteger;
     theData.childrenCount := mRoomRes.FieldByName('childrenCount').AsInteger;
     theData.infantCount := mRoomRes.FieldByName('infantCount').AsInteger;
-    mRR_.Open;
+    mRatesEdit.Open;
 
     mRoomRates.First;
     while not mRoomRates.eof do
     begin
       if mRoomRates.FieldByName('roomreservation').AsInteger = RoomReservation then
       begin
-        mRR_.append;
-        mRR_.FieldByName('Reservation').AsInteger := mRoomRates.FieldByName('Reservation').AsInteger;
-        mRR_.FieldByName('RoomReservation').AsInteger := mRoomRates.FieldByName('RoomReservation').AsInteger;
-        mRR_.FieldByName('RoomNumber').AsString := mRoomRates.FieldByName('RoomNumber').AsString;
-        mRR_.FieldByName('PriceCode').AsString := mRoomRates.FieldByName('PriceCode').AsString;
-        mRR_.FieldByName('RateDate').AsDateTime := mRoomRates.FieldByName('RateDate').AsDateTime;
-        mRR_.FieldByName('Rate').AsFloat := mRoomRates.FieldByName('Rate').AsFloat;
-        mRR_.FieldByName('Discount').AsFloat := mRoomRates.FieldByName('Discount').AsFloat;
-        mRR_.FieldByName('isPercentage').AsBoolean := mRoomRates.FieldByName('isPercentage').AsBoolean;
-        mRR_.FieldByName('ShowDiscount').AsBoolean := mRoomRates.FieldByName('ShowDiscount').AsBoolean;
-        mRR_.FieldByName('isPaid').AsBoolean := mRoomRates.FieldByName('isPaid').AsBoolean;
-        mRR_.FieldByName('DiscountAmount').AsFloat := mRoomRates.FieldByName('DiscountAmount').AsFloat;
-        mRR_.FieldByName('RentAmount').AsFloat := mRoomRates.FieldByName('RentAmount').AsFloat;
-        mRR_.FieldByName('NativeAmount').AsFloat := mRoomRates.FieldByName('NativeAmount').AsFloat;
-        mRR_.FieldByName('Currency').AsString := mRoomRates.FieldByName('Currency').AsString;
-        mRR_.FieldByName('CurrencyRate').AsFloat := mRoomRates.FieldByName('CurrencyRate').AsFloat;
-        mRR_.post;
+        mRatesEdit.append;
+        mRatesEdit.FieldByName('Reservation').AsInteger := mRoomRates.FieldByName('Reservation').AsInteger;
+        mRatesEdit.FieldByName('RoomReservation').AsInteger := mRoomRates.FieldByName('RoomReservation').AsInteger;
+        mRatesEdit.FieldByName('RoomNumber').AsString := mRoomRates.FieldByName('RoomNumber').AsString;
+        mRatesEdit.FieldByName('PriceCode').AsString := mRoomRates.FieldByName('PriceCode').AsString;
+        mRatesEdit.FieldByName('RateDate').AsDateTime := mRoomRates.FieldByName('RateDate').AsDateTime;
+        mRatesEdit.FieldByName('Rate').AsFloat := mRoomRates.FieldByName('Rate').AsFloat;
+        mRatesEdit.FieldByName('Discount').AsFloat := mRoomRates.FieldByName('Discount').AsFloat;
+        mRatesEdit.FieldByName('isPercentage').AsBoolean := mRoomRates.FieldByName('isPercentage').AsBoolean;
+        mRatesEdit.FieldByName('ShowDiscount').AsBoolean := mRoomRates.FieldByName('ShowDiscount').AsBoolean;
+        mRatesEdit.FieldByName('isPaid').AsBoolean := mRoomRates.FieldByName('isPaid').AsBoolean;
+        mRatesEdit.FieldByName('DiscountAmount').AsFloat := mRoomRates.FieldByName('DiscountAmount').AsFloat;
+        mRatesEdit.FieldByName('RentAmount').AsFloat := mRoomRates.FieldByName('RentAmount').AsFloat;
+        mRatesEdit.FieldByName('NativeAmount').AsFloat := mRoomRates.FieldByName('NativeAmount').AsFloat;
+        mRatesEdit.FieldByName('Currency').AsString := mRoomRates.FieldByName('Currency').AsString;
+        mRatesEdit.FieldByName('CurrencyRate').AsFloat := mRoomRates.FieldByName('CurrencyRate').AsFloat;
+        mRatesEdit.post;
       end;
       mRoomRates.next;
     end;
 
-    mRR_.First;
+    mRatesEdit.First;
 
-    theData.room := mRR_.FieldByName('roomNumber').AsString;
+    theData.room := mRatesEdit.FieldByName('roomNumber').AsString;
     ttAmount := 0;
     ttDiscount := 0;
     AmountCount := 0;
-    if editRoomPrice(actNone, theData, mRR_, applyType) then
+    if editRoomPrice(actNone, theData, mRatesEdit, applyType) then
     begin
-      mRR_.First;
-      while not mRR_.eof do
+      mRatesEdit.First;
+      while not mRatesEdit.eof do
       begin
-        Reservation := mRR_.FieldByName('Reservation').AsInteger;
-        RoomReservation := mRR_.FieldByName('RoomReservation').AsInteger;
-        RoomNumber := mRR_.FieldByName('RoomNumber').AsString;
-        PriceCode := mRR_.FieldByName('PriceCode').AsString;
-        RateDate := mRR_.FieldByName('RateDate').AsDateTime;
-        Rate := mRR_.FieldByName('Rate').AsFloat;
-        Discount := mRR_.FieldByName('Discount').AsFloat;
-        isPercentage := mRR_.FieldByName('isPercentage').AsBoolean;
-        ShowDiscount := mRR_.FieldByName('ShowDiscount').AsBoolean;
-        isPaid := mRR_.FieldByName('isPaid').AsBoolean;
-        DiscountAmount := mRR_.FieldByName('DiscountAmount').AsFloat;
-        RentAmount := mRR_.FieldByName('RentAmount').AsFloat;
-        NativeAmount := mRR_.FieldByName('NativeAmount').AsFloat;
+        Reservation := mRatesEdit.FieldByName('Reservation').AsInteger;
+        RoomReservation := mRatesEdit.FieldByName('RoomReservation').AsInteger;
+        RoomNumber := mRatesEdit.FieldByName('RoomNumber').AsString;
+        PriceCode := mRatesEdit.FieldByName('PriceCode').AsString;
+        RateDate := mRatesEdit.FieldByName('RateDate').AsDateTime;
+        Rate := mRatesEdit.FieldByName('Rate').AsFloat;
+        Discount := mRatesEdit.FieldByName('Discount').AsFloat;
+        isPercentage := mRatesEdit.FieldByName('isPercentage').AsBoolean;
+        ShowDiscount := mRatesEdit.FieldByName('ShowDiscount').AsBoolean;
+        isPaid := mRatesEdit.FieldByName('isPaid').AsBoolean;
+        DiscountAmount := mRatesEdit.FieldByName('DiscountAmount').AsFloat;
+        RentAmount := mRatesEdit.FieldByName('RentAmount').AsFloat;
+        NativeAmount := mRatesEdit.FieldByName('NativeAmount').AsFloat;
 
         lstPrices.Add(floatTostr(RentAmount));
         inc(AmountCount);
@@ -2002,8 +1998,7 @@ begin
           mRoomRates.FieldByName('NativeAmount').AsFloat := NativeAmount;
           mRoomRates.post;
         end;
-        // memReservationGeneralInfo.Lines.Add(floattostr(rate));
-        mRR_.next;
+        mRatesEdit.next;
       end;
 
       if mRoomRes.Locate('RoomReservation', RoomReservation, []) then
@@ -2024,8 +2019,8 @@ begin
       end;
     end;
   finally
-    if mRR_.active then
-      mRR_.Close;
+    if mRatesEdit.active then
+      mRatesEdit.Close;
     FreeAndNil(lstPrices);
   end;
 
@@ -2522,7 +2517,6 @@ begin
   tvRoomResStockItemsCount.Visible := NOT FOutOfOrderBlocking;
   tvRoomResStockitemsPrice.Visible := NOT FOutOfOrderBlocking;
   tvRoomResAvrageDiscount.Visible := NOT FOutOfOrderBlocking;
-  tvRoomResisPercentage.Visible := NOT FOutOfOrderBlocking;
   tvRoomResPriceCode.Visible := NOT FOutOfOrderBlocking;
   tvRoomResRatePlanCode.Visible := NOT FOutOfOrderBlocking;
 
@@ -3175,7 +3169,7 @@ begin
         room := mSelectRooms.FieldByName('room').AsString;
         RoomType := mSelectRooms.FieldByName('RoomType').AsString;
         NumberGuests := mSelectRooms.FieldByName('NumberGuests').AsInteger;
-        oSelectedRoomItem := TnewRoomReservationItem.Create(0, room, RoomType, '', Arrival, Departure, NumberGuests, 0, 0, true, 0, 0, 0, '', '', '');
+        oSelectedRoomItem := TnewRoomReservationItem.Create(0, room, RoomType, '', Arrival, Departure, NumberGuests, 0, 0, 0, 0, 0, '', '', '');
         FNewReservation.newRoomReservations.RoomItemsList.Add(oSelectedRoomItem);
       end;
       mSelectRooms.next;
@@ -3196,7 +3190,7 @@ begin
       for i := 1 to NumberNoRoom do
       begin
         oSelectedRoomItem := TnewRoomReservationItem.Create(0, room, RoomType, '', Arrival, Departure, NumberGuests, 0,
-          0, true, 0, 0, 0, '', '', '');
+          0, 0, 0, 0, '', '', '');
         FNewReservation.newRoomReservations.RoomItemsList.Add(oSelectedRoomItem);
       end;
     end;
@@ -3266,7 +3260,6 @@ begin
         mRoomResAvragePrice.AsFloat := 0;
         mRoomResRateCount.AsFloat := 0;
         mRoomResAvrageDiscount.AsFloat := 0;
-        mRoomResisPercentage.AsBoolean := true;
 
         mRoomResManualChannelId.AsInteger := 0;
         mRoomResratePlanCode.AsString := '';
@@ -4185,7 +4178,6 @@ begin
     childrenCount := mRoomRes.FieldByName('ChildrenCount').AsInteger;
     infantCount := mRoomRes.FieldByName('infantCount').AsInteger;
     PriceCode := mRoomRes.FieldByName('PriceCode').AsString;
-    isPercentage := mRoomRes.FieldByName('isPercentage').AsBoolean;
     mainGuestName := mRoomRes.FieldByName('MainGuest').AsString;
     RoomNotes := mRoomRes.FieldByName('roomNotes').AsString;
 
@@ -4204,7 +4196,7 @@ begin
     end;
 
     oSelectedRoomItem := TnewRoomReservationItem.Create(RoomReservation, room, RoomType, package, Arrival, Departure,
-      guestCount, AvragePrice, AvrageDiscount, isPercentage, RateCount, childrenCount, infantCount, PriceCode,
+      guestCount, AvragePrice, AvrageDiscount, RateCount, childrenCount, infantCount, PriceCode,
       mainGuestName, RoomNotes);
     oSelectedRoomItem.ManualChannelId := mRoomRes.FieldByName('ManualChannelId').AsInteger;
     oSelectedRoomItem.ratePlanCode := mRoomRes.FieldByName('ratePlanCode').AsString;

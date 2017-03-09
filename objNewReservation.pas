@@ -101,7 +101,6 @@ TYPE
     FGuestCount: integer;
     FAvragePrice: Double;
     FAvrageDiscount : Double;
-    FisPercentage : boolean;
     FRateCount: integer;
     FChildrenCount: integer;
     FInfantCount: integer;
@@ -134,7 +133,6 @@ TYPE
     function getGuestCount: integer;
     function getAvragePrice: Double;
     function getAvrageDiscount: Double;
-    function getIsPercentage : boolean;
     function getRateCount: integer;
     function getChildrenCount: integer;
     function getInfantCount: integer;
@@ -152,7 +150,6 @@ TYPE
     procedure SetGuestCount(Value: integer);
     procedure SetAvragePrice(Value: Double);
     procedure SetAvrageDiscount(Value: Double);
-    procedure SetIsPercentage(Value: boolean);
     procedure setRateCount(Value: integer);
     procedure setChildrenCount(Value: integer);
     procedure setInfantCount(Value: integer);
@@ -172,7 +169,6 @@ TYPE
                        aGuestCount: integer;
                        aAvragePrice: Double;
                        aAvrageDiscount: Double;
-                       isPercentage : boolean;
                        aRateCount: integer;
                        aChildrenCount: integer;
                        aInfantCount: integer;
@@ -195,7 +191,6 @@ TYPE
     property GuestCount     : integer   read getGuestCount      write SetGuestCount         ;
     property AvragePrice    : Double    read getAvragePrice     write SetAvragePrice        ;
     property AvrageDiscount : Double    read getAvrageDiscount  write SetAvrageDiscount     ;
-    property isPercentage   : boolean   read getisPercentage    write SetisPercentage       ;
     property RateCount      : integer   read getRateCount       write setRateCount          ;
     property ChildrenCount  : integer   read getChildrenCount   write setChildrenCount      ;
     property InfantCount    : integer   read getInfantCount     write setInfantCount        ;
@@ -375,7 +370,6 @@ constructor TnewRoomReservationItem.Create(aRoomReservation: integer;
                                      aGuestCount: integer;
                                      aAvragePrice: Double;
                                      aAvrageDiscount: Double;
-                                     isPercentage : boolean;
                                      aRateCount: integer;
                                      aChildrenCount: integer;
                                      aInfantCount: integer;
@@ -396,7 +390,6 @@ begin
   setGuestCount(aGuestCount);
   setAvragePrice(aAvragePrice);
   setAvrageDiscount(aAvrageDiscount);
-  setisPercentage(isPercentage);
   setRateCount(aRateCount);
   setChildrenCount(aChildrenCount);
   setInfantCount(aInfantCount);
@@ -475,11 +468,6 @@ end;
 function TnewRoomReservationItem.getAvrageDiscount: Double;
 begin
   result := FAvrageDiscount;
-end;
-
-function TnewRoomReservationItem.getisPercentage: boolean;
-begin
-  result := FisPercentage;
 end;
 
 
@@ -568,11 +556,6 @@ end;
 procedure TnewRoomReservationItem.SetAvrageDiscount(Value: Double);
 begin
   FAvrageDiscount := Value;
-end;
-
-procedure TnewRoomReservationItem.SetisPercentage(Value: boolean);
-begin
-  FisPercentage := Value;
 end;
 
 procedure TnewRoomReservationItem.setChildrenCount(Value: integer);
@@ -1255,7 +1238,6 @@ begin
 
           AvrageRate     := FnewRoomReservations.FRoomList[i].FAvragePrice;
           AvrageDiscount := FnewRoomReservations.FRoomList[i].FAvrageDiscount;
-          isPercentage   := FnewRoomReservations.FRoomList[i].FisPercentage;
           rateCount      := FnewRoomReservations.FRoomList[i].FRateCount;
 
           roomNotes := FnewRoomReservations.FRoomList[i].FNotes;
@@ -1313,7 +1295,6 @@ begin
           roomReservationData.invBreakfast    := FnewRoomReservations.FRoomList[i].FBreakfast AND FnewRoomReservations.FRoomList[i].FBreakfastIncluded;
           roomReservationData.Currency        := Currency;
           roomReservationData.Discount        := Discount;
-          roomReservationData.Percentage      := isPercentage;
           roomReservationData.PriceType       := PriceCode;
           roomReservationData.Arrival         := _db(Arrival, false);
           roomReservationData.Departure       := _db(Departure, false);

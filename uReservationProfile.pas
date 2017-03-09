@@ -1961,7 +1961,6 @@ begin
       roomReservationData.rrRoomAlias := '';
       roomReservationData.rrRoomTypeAlias := RoomType;
       roomReservationData.Discount := AvrageDiscount;
-      roomReservationData.Percentage := isPercentage;
       roomReservationData.useInNationalReport := useInNationalReport;
       roomReservationData.RoomRentPaid1 := 0.00;
       roomReservationData.RoomRentPaid2 := 0.00;

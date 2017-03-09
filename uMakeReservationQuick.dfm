@@ -2704,7 +2704,6 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
         Align = alClient
         TabOrder = 0
         LookAndFeel.NativeStyle = False
-        ExplicitTop = 139
         object tvRoomRes: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           Navigator.InfoPanel.Visible = True
@@ -2991,11 +2990,6 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
           object tvRoomResAvrageDiscount: TcxGridDBColumn
             Caption = 'Average Discount'
             DataBinding.FieldName = 'AvrageDiscount'
-            Options.Editing = False
-          end
-          object tvRoomResisPercentage: TcxGridDBColumn
-            Caption = '%'
-            DataBinding.FieldName = 'isPercentage'
             Options.Editing = False
           end
           object tvRoomResPriceCode: TcxGridDBColumn
@@ -4120,9 +4114,6 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
     object mRoomResAvrageDiscount: TFloatField
       FieldName = 'AvrageDiscount'
     end
-    object mRoomResisPercentage: TBooleanField
-      FieldName = 'isPercentage'
-    end
     object mRoomResPackage: TWideStringField
       FieldName = 'Package'
     end
@@ -4268,7 +4259,7 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
       FieldName = 'CurrencyRate'
     end
   end
-  object mRR_: TdxMemData
+  object mRatesEdit: TdxMemData
     Indexes = <>
     SortOptions = []
     Left = 752

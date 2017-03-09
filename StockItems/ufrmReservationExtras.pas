@@ -162,7 +162,7 @@ begin
       if (am_Extras = nil) then
       begin
         with aResDataHolder do
-          lRoomRes := TnewRoomReservationItem.Create(RoomReservation, Room, RoomType, '', ArrivalDate, DepartureDate, guests, 0, 0, false, 0, childrenCount, infantCount, '', '', '');
+          lRoomRes := TnewRoomReservationItem.Create(RoomReservation, Room, RoomType, '', ArrivalDate, DepartureDate, guests, 0, 0, 0, childrenCount, infantCount, '', '', '');
         lRoomRes.Reservation := aResDataHolder.Reservation;
         lExtrasList := TReservationExtrasList.Create(lRoomres);
         try
@@ -267,7 +267,7 @@ begin
   mExtras.DisableControls;
   try
     with theData do
-      lRoomRes := TnewRoomReservationItem.Create(RoomReservation, Room, RoomType, '', ArrivalDate, DepartureDate, guests, 0, 0, false, 0, childrenCount, infantCount, '', '', '');
+      lRoomRes := TnewRoomReservationItem.Create(RoomReservation, Room, RoomType, '', ArrivalDate, DepartureDate, guests, 0, 0, 0, childrenCount, infantCount, '', '', '');
     try
       lExtras := TReservationExtrasList.Create(lRoomRes);
       try

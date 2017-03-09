@@ -32,7 +32,6 @@ object frmReservationExtras: TfrmReservationExtras
       Caption = 'Room info'
       TabOrder = 0
       SkinData.SkinSection = 'GROUPBOX'
-      Checked = False
       object clabRoom: TsLabel
         Left = 12
         Top = 16
