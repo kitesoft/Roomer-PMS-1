@@ -1090,7 +1090,6 @@ begin
       edContactAddress2.Text := glb.PreviousGuestsSet['Address2'];
       edContactAddress3.Text := glb.PreviousGuestsSet['Address3'];
       edContactAddress4.Text := glb.PreviousGuestsSet['Address4'];
-      fraCountry.CountryCode := glb.PersonProfiles['Country'];
       s := glb.PreviousGuestsSet['Tel1'];
       if s = '' then
         s := glb.PreviousGuestsSet['Tel2'];
@@ -1105,7 +1104,6 @@ begin
       edContactAddress2.Text := glb.PersonProfiles['Address2'];
       edContactAddress3.Text := glb.PersonProfiles['Zip'];
       edContactAddress4.Text := glb.PersonProfiles['City'];
-      fraCountry.CountryCode := glb.PersonProfiles['Country'];
       s := glb.PersonProfiles['TelMobile'];
       if s = '' then
         s := glb.PersonProfiles['TelLandLine'];
@@ -2588,6 +2586,7 @@ begin
       edtRoom.Text := glb.PersonProfiles['Room'];
       edtRoomType.Text := glb.PersonProfiles['RoomType'];
 
+      fraCountry.CountryCode := glb.PersonProfiles['Country'];
       SetProfileAlertVisibility;
     end;
   end;
