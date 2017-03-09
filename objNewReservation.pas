@@ -1423,7 +1423,8 @@ begin
           GuestInformation := '';
           GuestPID := '';
 
-          initPersonHolder(personData);
+
+          initPersonHolderFromProfileID(personData, FHomeCustomer.PersonProfileId);
           personData.Person := iLastPerson;
           personData.RoomReservation := FnewRoomReservations.FRoomList[i].RoomReservation;
           personData.Reservation := FReservation;
@@ -1443,13 +1444,15 @@ begin
           personData.Address2 := ContactAddress2;
           personData.Address3 := ContactAddress3;
           personData.Address4 := ContactAddress4;
-//0810-hj           personData.Country := ContactCountry;
-          personData.Country := Country;
-          personData.Nationality := Country;
-          personData.PersonsProfilesId := FHomeCustomer.PersonProfileId;
+          if not Country.IsEmpty then
+          begin
+            if personData.Country.Equals(personData.Nationality) then
+              personData.Nationality := Country;
+            personData.Country := Country;
+          end;
 
-          personData.Tel1 := ContactPhone;
-          personData.Tel2 := ContactPhone2;
+          personData.Tel2 := ContactPhone;
+          personData.Tel1 := ContactPhone2;
           personData.Email := ContactEmail;
 
           personData.Company := GuestCompany;
@@ -1461,7 +1464,6 @@ begin
           personData.peTmp := '';
           personData.hgrID := -1;
           personData.HallReservation := -1;
-
 
           // FirstGuest
           ExecutionPlan.AddExec(SQL_INS_Person(personData));

@@ -603,7 +603,7 @@ begin
     shpMarket.Visible := (cbxMarket.ItemIndex < 0);
     shpCountry.Visible := (Trim(edCountry.Text) = '') OR (Trim(edCountry.Text) = '00') OR (SameText(lbCountryName.Caption, GetTranslatedText('shNotF_star')));
   end;
-  BtnOk.Enabled := NOT AnyTShapeVisible;
+  BtnOk.Enabled := Not isCheckIn or NOT AnyTShapeVisible;
 end;
 
 procedure TFrmGuestCheckInForm.FormCreate(Sender: TObject);
@@ -803,7 +803,9 @@ end;
 
 procedure TFrmGuestCheckInForm.sButton2Click(Sender: TObject);
 begin
-  PrintReport;
+  SaveGuestInfo;
+  if GetGuestInfoRSet(ResSetGuest, Roomreservation, '') then
+    PrintReport;
 end;
 
 procedure TFrmGuestCheckInForm.PrintReportForRoomList(const aRoomList: string);

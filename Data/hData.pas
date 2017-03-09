@@ -610,59 +610,58 @@ type
 
 
   recPersonHolder = record
-    id: integer;   {}
-    Person: integer;  {}
-    RoomReservation: integer;
-    Reservation: integer;
+    id                       : integer;
+    Person                   : integer;
+    RoomReservation          : integer;
+    Reservation              : integer;
 
-    PersonsProfilesId : Integer; {New}
-    title : string; {New}
-    name: string;
-    Surname: string;
-    Address1: string;
-    Address2: string;
-    Address3: string;
-    Address4: string;
-    Country: string;
+    PersonsProfilesId        : Integer;
+    Title                    : string;
+    Name                     : string;
+    Surname                  : string;
+    Address1                 : string;
+    Address2                 : string;
+    Address3                 : string;
+    Address4                 : string;
+    Country                  : string;
 
-    Tel1: string;
-    Tel2: string;
-    Fax: string;
-    Email: string;
+    Tel1                     : string;
+    Tel2                     : string;
+    Fax                      : string;
+    Email                    : string;
 
-    GuestType: string;
-    Information: string;
+    GuestType                : string;
+    Information              : string;
 
-    Nationality : string; {New}
-    PID: string;
-    MainName: boolean;
+    Nationality              : string;
+    PID                      : string;
+    MainName                 : boolean;
 
-    Customer: string;
+    Customer                 : string;
 
-    Company        : string;           //   `Company` varchar(100) DEFAULT '',
-    CompanyName    : string;           //   `CompanyName` varchar(100) DEFAULT NULL,
-    CompAddress1   : string;           //   `CompAddress1` varchar(100) DEFAULT NULL,
-    CompAddress2   : string;           //   `CompAddress2` varchar(100) DEFAULT NULL,
-    CompZip        : string;           //   `CompZip` varchar(45) DEFAULT NULL,
-    CompCity       : string;           //   `CompCity` varchar(100) DEFAULT NULL,
-    CompCountry    : string;           //   `CompCountry` varchar(2) DEFAULT NULL,
-    CompTel        : string;           //   `CompTel` varchar(40) DEFAULT NULL,
-    CompEmail      : string;           //   `CompEmail` varchar(255) DEFAULT NULL,
+    Company                  : string;
+    CompanyName              : string;
+    CompAddress1             : string;
+    CompAddress2             : string;
+    CompZip                  : string;
+    CompCity                 : string;
+    CompCountry              : string;
+    CompTel                  : string;
+    CompEmail                : string;
 
-    CompFax        : string;           //   `CompFax` varchar(40) DEFAULT NULL,
-    CompVATNumber  : string;           //   `CompVATNumber` varchar(45) DEFAULT NULL,
+    CompFax                  : string;
+    CompVATNumber            : string;
+    peTmp                    : string;
+    hgrID                    : Integer;
+    HallReservation          : Integer;
 
-    peTmp          : string;
-    hgrID          : integer;
-    HallReservation: integer;
-
-    state                    : string;
-    sourceId                 : String;
+    State                    : string;
+    SourceId                 : String;
     PersonalIdentificationId : string;
-    DateOfBirth              : TdateTime;
+    DateOfBirth              : TDateTime;
     SocialSecurityNumber     : string;
-    confirmDate              : TdateTime;
-    lastUpdate               : TdateTime;
+    ConfirmDate              : TDateTime;
+    LastUpdate               : TDateTime;
   end;
 
   recResInfo = record
@@ -2083,6 +2082,7 @@ function INS_Packageitem(theData: recPackageItemHolder; var NewID: integer): boo
 function Packageitem_TotalByPackageID(packageId: integer): double;
 
 procedure initPersonHolder(var rec: recPersonHolder);
+procedure initPersonHolderFromProfileID(var personData: recPersonHolder; aProfileId: integer);
 function INS_Person(theData: recPersonHolder; var NewID: integer): boolean;
 function SQL_INS_Person(theData: recPersonHolder): string;
 
@@ -13736,12 +13736,59 @@ end;
 //
 //
 /// //////////////////////////////////////////////////////////////////
+procedure initPersonHolderFromProfileID(var personData: recPersonHolder; aProfileId: integer);
+begin
+  initPersonHolder(personData);
+
+  if glb.LocateSpecificRecord('personprofiles', 'ID', aProfileId) then
+    with personData do
+    begin
+      PersonsProfilesId        := aProfileId;
+      id                       := aProfileId;
+      Title                    := glb.PersonProfiles['title'];
+      Name                     := glb.PersonProfiles['FirstName'];
+      Surname                  := glb.PersonProfiles['LastName'];
+      Address1                 := glb.PersonProfiles['Address1'];
+      Address2                 := glb.PersonProfiles['Address2'];
+      Address3                 := glb.PersonProfiles['Zip'];
+      Address4                 := glb.PersonProfiles['City'];
+      Country                  := glb.PersonProfiles['Country'];
+      State                    := glb.PersonProfiles['State'];
+
+      Tel1                     := glb.PersonProfiles['TelMobile'];
+      Tel2                     := glb.PersonProfiles['TelLandLine'];
+      Fax                      := glb.PersonProfiles['TelFax'];
+      Email                    := glb.PersonProfiles['Email'];
+
+      Information              := glb.PersonProfiles['Information'];
+
+      Nationality              := glb.PersonProfiles['Nationality'];
+      Customer                 := glb.PersonProfiles['CustomerCode'];
+
+      Company                  := glb.PersonProfiles['CompanyName'];
+      CompanyName              := glb.PersonProfiles['CompanyName'];
+      CompAddress1             := glb.PersonProfiles['CompAddress1'];
+      CompAddress2             := glb.PersonProfiles['CompAddress2'];
+      CompZip                  := glb.PersonProfiles['CompZip'];
+      CompCity                 := glb.PersonProfiles['CompCity'];
+      CompCountry              := glb.PersonProfiles['CompCountry'];
+      CompTel                  := glb.PersonProfiles['CompTel'];
+      CompEmail                := glb.PersonProfiles['CompEmail'];
+      CompFax                  := glb.PersonProfiles['CompFax'];
+      CompVATNumber            := glb.PersonProfiles['CompVATNumber'];
+
+      PersonalIdentificationId := glb.PersonProfiles['PassportNumber'];
+      DateOfBirth              := glb.PersonProfiles['DateOfBirth'];
+      SocialSecurityNumber     := glb.PersonProfiles['SocialSecurityNumber'];
+      LastUpdate               := glb.PersonProfiles['lastUpdate'];
+    end;
+
+end;
 
 procedure initPersonHolder(var rec: recPersonHolder);
 begin
   with rec do
   begin
-    {id}
     Person := -1;
     RoomReservation := -1;
     Reservation := -1;
@@ -13786,13 +13833,13 @@ begin
     hgrID := -1;
     HallReservation := -1;
 
-//    state := '';
-//    sourceId                 : String;
-//    PersonalIdentificationId : string;
-//    DateOfBirth              : TdateTime;
-//    SocialSecurityNumber     : string;
-//    confirmDate              : TdateTime;
-//    lastUpdate               : TdateTime;
+    state := '';
+    sourceId := '';
+    PersonalIdentificationId := '';
+    DateOfBirth := 0;
+    SocialSecurityNumber  := '';
+    confirmDate := 0;
+    lastUpdate := 0;
 
   end;
 end;
@@ -13847,6 +13894,9 @@ begin
   s := s + '   ,Tel2 ' + #10;
   s := s + '   ,Fax ' + #10;
   s := s + '   ,Email ' + #10;
+  s := s + '   ,Title' + #10;
+  s := s + '   ,SocialSecurityNumber ' + #10;
+  s := s + '   ,PersonalIdentificationId' + #10;
   s := s + '  ) ' + #10;
   s := s + '  VALUES ' + #10;
   s := s + '  ( ' + #10;
@@ -13873,7 +13923,6 @@ begin
   s := s + ' , ' + _db(theData.CompEmail) + #10;
   s := s + ' , ' + _db(theData.PersonsProfilesId) + #10;
 
-
   s := s + ' , ' + _db(theData.GuestType) + #10;
   s := s + ' , ' + _db(theData.Information) + #10;
   s := s + ' , ' + _db(theData.PID) + #10;
@@ -13886,6 +13935,9 @@ begin
   s := s + ' , ' + _db(theData.Tel2) + #10;
   s := s + ' , ' + _db(theData.Fax) + #10;
   s := s + ' , ' + _db(theData.Email) + #10;
+  s := s + ' , ' + _db(theData.Title) + #10;
+  s := s + ' , ' + _db(theData.SocialSecurityNumber) + #10;
+  s := s + ' , ' + _db(theData.PersonalIdentificationId) + #10;
   s := s + '  ) ';
   result := s;
 end;
