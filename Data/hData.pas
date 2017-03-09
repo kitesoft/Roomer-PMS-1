@@ -22,6 +22,7 @@ uses
   , System.Generics.Collections
   , uReservationStateDefinitions
   , uRoomReservationOBJ
+  , uRoomerThreadedRequest
   ;
 
 const
@@ -1839,6 +1840,7 @@ function IVH_RestoreID: integer;
 function IVH_GetLastID: integer;
 
 procedure SendInvoicesToFinancePacket(zInvoiceNumber: integer);
+procedure SendInvoicesToFinancePacketThreaded(var FThreadedDataPutter : TGetThreadedData; zInvoiceNumber: integer);
 
 function NumberOfInvoiceLines(iReservation, iRoomReservation, iSplitNumber: integer; InvoiceIndex : Integer = -1): integer;
 function GetRate(Currency: string): double;
@@ -4814,6 +4816,23 @@ begin
     begin
       HandleFinanceBookKeepingExceptions(zInvoiceNumber, remoteResult);
     end;
+  end;
+end;
+
+procedure SendInvoicesToFinancePacketThreaded(var FThreadedDataPutter : TGetThreadedData; zInvoiceNumber: integer);
+var s, s1 : String;
+begin
+  if g.qSendInvoicesToFinancePacket then
+  begin
+    // BOOK KEEPING / Finance
+//    remoteResult := d.roomerMainDataSet.SystemSendInvoiceToBookkeeping(zInvoiceNumber);
+    FThreadedDataPutter := TGetThreadedData.Create;
+    s := format('financekeys/%d', [zInvoiceNumber]);
+    FThreadedDataPutter.Put(s, '', nil);
+//    if remoteResult <> '' then
+//    begin
+//      HandleFinanceBookKeepingExceptions(zInvoiceNumber, remoteResult);
+//    end;
   end;
 end;
 

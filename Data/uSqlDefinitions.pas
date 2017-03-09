@@ -779,6 +779,8 @@ select_InvoiceSummeryOBJ_InvoiceInfo_GatherPayments : string =
 '   , CurrencyRate '+
 '   , Currency '+
 '   , TypeIndex '+
+'   , SourceUserId '+
+'   , SourceUserFullname '+
 ' FROM '+
 '   payments '+
 ' WHERE '+
