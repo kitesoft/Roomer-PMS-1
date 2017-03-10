@@ -3550,7 +3550,6 @@ end;
 procedure TfrmInvoice.FormDestroy(Sender: TObject);
 begin
   try
-    try FThreadedDataPutter.Free; except end;
     OnResize := nil;
     SelectableRooms.free;
     SelectableExternalRooms.free;
@@ -3571,7 +3570,7 @@ begin
       mRoomRates.close;
 
     TaxTypes.free;
-
+    FThreadedDataPutter.Free;
   except
   end;
 

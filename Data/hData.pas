@@ -4897,9 +4897,10 @@ begin
   begin
     // BOOK KEEPING / Finance
 //    remoteResult := d.roomerMainDataSet.SystemSendInvoiceToBookkeeping(zInvoiceNumber);
-    FThreadedDataPutter := TGetThreadedData.Create;
-    s := format('financekeys/%d', [zInvoiceNumber]);
-    FThreadedDataPutter.Put(s, '', nil);
+  FThreadedDataPutter.Free;
+  FThreadedDataPutter := TGetThreadedData.Create;
+  s := format('financekeys/%d', [zInvoiceNumber]);
+  FThreadedDataPutter.Put(s, '', nil);
 //    if remoteResult <> '' then
 //    begin
 //      HandleFinanceBookKeepingExceptions(zInvoiceNumber, remoteResult);
