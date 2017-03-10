@@ -11688,26 +11688,12 @@ end;
 procedure TfrmMain._ClosedInvoicesDetailed;
 var
   sRoom: string;
+  lArrival: TDate;
 begin
   sRoom := '';
-
-  Application.CreateForm(TfrmInvoiceList2, frmInvoiceList2);
-  try
-    if frmInvoiceList2.ShowModal = mrOK then
-    begin
-      if frmInvoiceList2.zRoom <> '' then
-      begin
-        dtDate.Date := trunc(frmInvoiceList2.zArrival);
-        // RefreshGrid;
-        sRoom := frmInvoiceList2.zRoom;
-      end;
-    end;
-  finally
-    frmInvoiceList2.Free;
-  end;
-
-  if sRoom <> '' then
+  if ShowClosedInvoicesDetailed(sRoom, lArrival) then
   begin
+    dtDate.Date := lArrival;
     zRoom := sRoom;
     timBlink.Enabled := true;
   end;

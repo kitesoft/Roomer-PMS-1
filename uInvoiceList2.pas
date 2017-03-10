@@ -85,10 +85,11 @@ uses
   dxSkinOffice2007Silver, dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinValentine,
   dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, Vcl.Menus
+  , uRoomerForm, dxPScxCommon, dxPScxGridLnk, sStatusBar
   ;
 
 type
-  TfrmInvoiceList2 = class(TForm)
+  TfrmInvoiceList2 = class(TfrmBaseRoomerForm)
     LMDSimplePanel1: TsPanel;
     LMDGroupBox1: TsGroupBox;
     dtFrom: TsDateEdit;
@@ -159,7 +160,7 @@ type
     tvInvoiceHeadLocalAmount: TcxGridDBBandedColumn;
     tvInvoiceHeadLocalWithOutVAT: TcxGridDBBandedColumn;
     tvInvoiceHeadLocalVAT: TcxGridDBBandedColumn;
-    PopupMenu1: TPopupMenu;
+    pmnuExportMenu: TPopupMenu;
     mnuExport: TMenuItem;
     N1: TMenuItem;
     mnuExportability: TMenuItem;
@@ -195,13 +196,14 @@ type
       var AProperties: TcxCustomEditProperties);
     procedure tvInvoiceHeadWithOutVATGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
       var AProperties: TcxCustomEditProperties);
-    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure tvInvoiceHeadLocalAmountGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord; var AProperties: TcxCustomEditProperties);
-    procedure PopupMenu1Popup(Sender: TObject);
+    procedure pmnuExportMenuPopup(Sender: TObject);
     procedure mnuExportClick(Sender: TObject);
     procedure mnuExportabilityClick(Sender: TObject);
-    procedure m22_BeforePost(DataSet: TDataSet);
     procedure tvInvoiceHeadEditing(Sender: TcxCustomGridTableView; AItem: TcxCustomGridTableItem; var AAllow: Boolean);
+    procedure tvInvoiceHeadSelectionChanged(Sender: TcxCustomGridTableView);
+    procedure tvInvoiceHeadexternalInvoiceIdGetDisplayText(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
+      var AText: string);
   private
     { Private declarations }
 
@@ -215,17 +217,17 @@ type
 
     firstTime : boolean;
 
-    procedure RunQuery;
     procedure ViewInvoice;
     procedure ApplyFilter;
     function GetSelectedInvoices : String;
     function GetExportTemplate: String;
     procedure InitSelections;
     function IsFinanceSystemConnected: Boolean;
+  protected
+    procedure DoUpdateControls; override;
+    procedure DoLoadData; override;
   public
     { Public declarations }
-    dirArr : array [1 .. 20] of boolean;
-
     zFilterby : integer; // 1=period 2=invoicenumber 3=FreeText 4=InvoiceNumber
     zPeriodIndex : integer;
     zdtFrom : Tdate;
@@ -240,8 +242,7 @@ type
     zArrival : Tdate;
   end;
 
-var
-  frmInvoiceList2 : TfrmInvoiceList2;
+function ShowClosedInvoicesDetailed(var aReturnToRoom: string; var aReturnToDate: TDate): boolean;
 
 implementation
 
@@ -260,22 +261,24 @@ uses
   ;
 
 {$R *.dfm}
-(*
-  function SQLDateStr( Date: TDateTime ): string;
-  var y, m, d : word;
-  sy, sm, sd : string;
 
-  sTmp : string;
 
-  begin
-  decodeDate( Date, y, m, d );
-  str( y:1, sy );
-  str( m:1, sm );
-  str( d:1, sd );
-  sTmp :=  sm + '/' + sd + '/' + sy;
-  result := quotedstr(sTmp);
+function ShowClosedInvoicesDetailed(var aReturnToRoom: string; var aReturnToDate: TDate): boolean;
+var
+  lFrm: TfrmInvoiceList2;
+begin
+  lFrm := TfrmInvoiceList2.Create(nil);
+  try
+    Result := lFrm.ShowModal = mrOK;
+    if Result then
+    begin
+      aReturnToRoom := lFrm.zRoom;
+      aReturnToDate := lFrm.zArrival;
+    end;
+  finally
+    lFrm.Free;
   end;
-*)
+end;
 
 procedure TfrmInvoiceList2.rbtDatesClick(Sender : TObject);
 begin
@@ -303,21 +306,12 @@ begin
     zInvoiceTo := zLastInvoiceID;
     zInvoiceFrom := zLastInvoiceID - zLast + 1;
     if zLast < 100 then
-      RunQuery;
+      RefreshData;
   end;
 end;
 
 procedure TfrmInvoiceList2.FormCreate(Sender : TObject);
-var
-  i : integer;
 begin
-  RoomerLanguage.TranslateThisForm(self);
-   glb.PerformAuthenticationAssertion(self); PlaceFormOnVisibleMonitor(self);
-  for i := 1 to 20 do
-  begin
-    dirArr[i] := false;
-  end;
-
   zSortField := 'InvoiceNumber';
   zSortDir := '';
 
@@ -332,27 +326,8 @@ begin
   zInvoiceTo := 0;
   zLast := 0;
   zText := '';
-  zTextType := 0; // 0= Reikningsn�mer
-  // 1= Kennitala
-  // 2= Nafn Gests e�a Fyrirt�kis
-  // 3= Nafn � Reikningi
-  // 4= B�kunn n�mer
-  // 5= Herbergjab�kunn
-
+  zTextType := 0;
   zPeriodIndex := 1;
-  // 0=� dag
-  // 1=� g�r
-  // 2=S��ustu 3 daga
-  // 3=S��ustu 5 daga
-  // 4=S��ustu 10 daga
-  // 5=� �essari viku
-  // 6=� s��ustu viku
-  // 7=� �essum m�nu�i
-  // 8=� s��asta m�nu�i
-  // 9=� �essu �ri
-  // 10=� s��asta �ri
-  // 11=Fr� upphafi
-
   edtLast.Value := 50;
   zLast := edtLast.Value;
 
@@ -363,24 +338,21 @@ begin
   tvInvoiceHeadRowSelected.Visible := GetExportTemplate <> '';
 end;
 
-procedure TfrmInvoiceList2.FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
-begin
-  if Key = VK_ESCAPE then
-    Close;
-end;
-
+//TODO: Move to a global property, dependend on existing link to financial system
 function TfrmInvoiceList2.GetExportTemplate : String;
 var rSet : TRoomerDataSet;
 begin
   rSet := CreateNewDataSet;
-  rSet_bySQL(rSet, 'SELECT InvoiceExportFilename FROM hotelconfigurations LIMIT 1');
-  rSet.First;
-  if NOT rSet.Eof then
-  begin
-    result := rSet['InvoiceExportFilename'];
-
-  end else
-    result := '';
+  try
+    rSet_bySQL(rSet, 'SELECT InvoiceExportFilename FROM hotelconfigurations LIMIT 1');
+    rSet.First;
+    if NOT rSet.Eof then
+      result := rSet['InvoiceExportFilename']
+    else
+      result := '';
+  finally
+    rSet.Free;
+  end;
 end;
 
 procedure TfrmInvoiceList2.cbxPeriodChange(Sender : TObject);
@@ -470,7 +442,7 @@ begin
         dtTo.Date := Date;
       end;
   end;
-  RunQuery;
+  RefreshData;
 end;
 
 procedure TfrmInvoiceList2.cbxTxtTypeChange(Sender : TObject);
@@ -522,8 +494,6 @@ begin
   zLast := edtLast.Value;
   zInvoiceTo := zLastInvoiceID;
   zInvoiceFrom := zLastInvoiceID - zLast + 1;
-//  if zLast < 100 then
-//    RunQuery;
 end;
 
 procedure TfrmInvoiceList2.edtFreeTextChange(Sender : TObject);
@@ -541,13 +511,29 @@ begin
   zDTTo := dtTo.Date;
 end;
 
-procedure TfrmInvoiceList2.RunQuery;
+procedure TfrmInvoiceList2.DoUpdateControls;
+begin
+  inherited;
+
+  if bIsFinanceSystemConnected then
+    tvInvoiceHead.PopupMenu := pmnuExportMenu
+  else
+    tvInvoiceHead.PopupMenu := nil;
+
+  btnExport.Visible := bIsFinanceSystemConnected;
+  btnExport.Enabled := tvInvoiceHead.Controller.SelectedRowCount > 0;
+
+  tvInvoiceHeadexternalInvoiceId.Visible := bIsFinanceSystemConnected;
+end;
+
+procedure TfrmInvoiceList2.DoLoadData;
 var
   s : string;
   rSet : TroomerDataSet;
 
 begin
-  if firstTime then exit;
+  inherited;
+
   initialRead := True;
   try
     zdtFrom := dtFrom.Date;
@@ -739,7 +725,7 @@ end;
 
 procedure TfrmInvoiceList2.LMDSpeedButton3Click(Sender : TObject);
 begin
-  RunQuery;
+  RefreshData;
 end;
 
 procedure TfrmInvoiceList2.FormShow(Sender : TObject);
@@ -751,7 +737,7 @@ begin
   zLastInvoiceID := hdata.IVH_GetLastID();
   firstTime := false;
 
-  frmInvoiceList2.ActiveControl := edtLast;
+  ActiveControl := edtLast;
 
   if rbtLast.checked then
   begin
@@ -760,7 +746,6 @@ begin
     zInvoiceFrom := zLastInvoiceID - zLast + 1;
   end;
 
-  RunQuery;
 end;
 
 procedure TfrmInvoiceList2.edtInvoiceFromChange(Sender: TObject);
@@ -786,7 +771,6 @@ procedure TfrmInvoiceList2.tvInvoiceHeadAmountGetProperties(Sender: TcxCustomGri
   var AProperties: TcxCustomEditProperties);
 begin
   AProperties := d.getCurrencyProperties(ARecord.Values[tvInvoiceHeadCurrency.index]);;
-//AProperties := d.getCurrencyProperties(g.qNativeCurrency);
 end;
 
 procedure TfrmInvoiceList2.tvInvoiceHeadDblClick(Sender: TObject);
@@ -805,41 +789,43 @@ begin
                         'Are you sure you want to change it''s value?', mtWarning, [mbYes, mbNo], 0) = mrYes));
 end;
 
+procedure TfrmInvoiceList2.tvInvoiceHeadexternalInvoiceIdGetDisplayText(Sender: TcxCustomGridTableItem;
+  ARecord: TcxCustomGridRecord; var AText: string);
+begin
+  inherited;
+  if aRecord.Values[tvInvoiceHeadexternalInvoiceId.Index] = 1 then
+    aText := GetTranslatedText('shTx_InvoiceList2_ExportDisabled');
+end;
+
 procedure TfrmInvoiceList2.tvInvoiceHeadLocalAmountGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
   var AProperties: TcxCustomEditProperties);
 begin
   AProperties := d.getCurrencyProperties(g.qNativeCurrency);
 end;
 
+procedure TfrmInvoiceList2.tvInvoiceHeadSelectionChanged(Sender: TcxCustomGridTableView);
+begin
+  inherited;
+  UpdateControls;
+end;
+
 procedure TfrmInvoiceList2.tvInvoiceHeadTaxesGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
   var AProperties: TcxCustomEditProperties);
 begin
   AProperties := d.getCurrencyProperties(g.qNativeCurrency);
-//  AProperties := d.getCurrencyProperties(ARecord.Values[tvInvoiceHeadCurrency.index]);;
 end;
 
 procedure TfrmInvoiceList2.tvInvoiceHeadVATGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
   var AProperties: TcxCustomEditProperties);
 begin
   AProperties := d.getCurrencyProperties(ARecord.Values[tvInvoiceHeadCurrency.index]);;
-//AProperties := d.getCurrencyProperties(g.qNativeCurrency);
 end;
 
 procedure TfrmInvoiceList2.tvInvoiceHeadWithOutVATGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
   var AProperties: TcxCustomEditProperties);
 begin
   AProperties := d.getCurrencyProperties(ARecord.Values[tvInvoiceHeadCurrency.index]);;
-//AProperties := d.getCurrencyProperties(g.qNativeCurrency);
 end;
-
-//procedure TfrmInvoiceList2.LMDSpeedButton5Click(Sender : TObject);
-//var
-//  InvoiceNumber : integer;
-//begin
-//  InvoiceNumber := m22_.fieldbyname('invoicenumber').AsInteger;
-//  d.CreateMtFields;
-//  d.InsertMTdata(InvoiceNumber, true, false,false);
-//end;
 
 procedure TfrmInvoiceList2.btnClearClick(Sender: TObject);
 begin
@@ -859,10 +845,7 @@ begin
 	  showmessage(GetTranslatedText('shTx_InvoiceList2_CashAccount'));
     exit;
   end;
-  if EditReservation(iReservation, iRoomReservation) then
-  begin
-    // **
-  end;
+  EditReservation(iReservation, iRoomReservation);
 end;
 
 procedure TfrmInvoiceList2.LMDSpeedButton1Click(Sender : TObject);
@@ -888,10 +871,7 @@ begin
   theData.Reservation := iReservation;
   theData.name := sName;
 
-  if openGuestProfile(actNone,theData) then
-  begin
-    //**
-  end;
+  openGuestProfile(actNone,theData);
 end;
 
 procedure TfrmInvoiceList2.LMDButton1Click(Sender : TObject);
@@ -939,122 +919,111 @@ begin
   ShellExecute(Handle, 'OPEN', PChar(sFilename + '.xls'), nil, nil, sw_shownormal);
 end;
 
-procedure TfrmInvoiceList2.m22_BeforePost(DataSet: TDataSet);
-var InvoiceNumber : Integer;
-    Sql : String;
-begin
-  if NOT initialRead then
-  begin
-    Sql := format('UPDATE invoiceheads SET externalInvoiceId=%d WHERE InvoiceNumber=%d',
-           [
-             DataSet.FieldByName('externalInvoiceId').AsInteger,
-             DataSet.FieldByName('InvoiceNumber').AsInteger
-           ]);
-    d.roomerMainDataSet.DoCommand(Sql);
-  end;
-end;
-
 procedure TfrmInvoiceList2.mnuExportabilityClick(Sender: TObject);
-var v : Variant;
-    i : Integer;
-    Bkm : TcxBookmark;
+var i: integer;
+    lInvNumber: integer;
+    lDisableExport: boolean;
+    lUpdatePlan: TROomerExecutionPlan;
+    lSelected: TcxCustomGridRow;
+const
+  cSQLUpdateLine = 'UPDATE invoiceheads SET externalInvoiceId=%d WHERE InvoiceNumber=%d';
 begin
   with tvInvoiceHead do
   begin
     DataController.BeginLocate;
     DataController.DataSet.DisableControls;
-    for i := 0 to PRED(Controller.SelectedRowCount ) do
-    begin
-      Bkm := DataController.GetSelectedBookmark(I);
-      if DataController.DataSet.BookmarkValid(TBookmark(Bkm)) then
+    lUpdatePLan := TRoomerExecutionPlan.Create(d.roomerMainDataSet);
+    try
+      for i := 0 to PRED(Controller.SelectedRowCount ) do
       begin
-        DataController.DataSet.GotoBookmark(TBookmark(Bkm));
-        if (DataController.DataSet.FieldByName('externalInvoiceId').AsInteger IN [0,1]) then
+        lSelected := Controller.SelectedRows[i];
+        if integer(lSelected.Values[tvInvoiceHeadexternalInvoiceId.Index]) in [0, 1] then
         begin
-          DataController.DataSet.Edit;
-          DataController.DataSet['externalInvoiceId']:= IIF(DataController.DataSet['externalInvoiceId'] = 1, 0, 1);
-          DataController.DataSet.Post;
+          lInvNumber := lSelected.Values[tvInvoiceHeadInvoiceNumber.Index];
+          lUpdatePLan.AddExec(Format(cSQLUpdateLine, [1 - integer(lSelected.Values[tvInvoiceHeadexternalInvoiceId.Index]), lInvNumber]));
         end;
       end;
+
+      if lUpdatePlan.ExecCount > 0 then
+        if lUpdatePlan.Execute(ptExec, True, True) then
+          for i := 0 to PRED(Controller.SelectedRowCount ) do
+          begin
+            lSelected := Controller.SelectedRows[i];
+            lInvNumber := lSelected.Values[tvInvoiceHeadInvoiceNumber.Index];
+            with DataController.DataSet do
+              if Locate('invoiceNumber', lInvNumber, []) then
+              begin
+                Edit;
+                try
+                  FieldByName('externalInvoiceId').AsInteger := 1 - FieldByName('externalInvoiceId').AsInteger;
+                  Post;
+                except
+                  Cancel;
+                end;
+              end;
+          end;
+    finally
+      DataController.EndLocate;
+      DataController.DataSet.EnableControls;
+      lUpdatePLan.Free;
     end;
-    DataController.EndLocate;
-    DataController.DataSet.EnableControls;
   end;
 end;
 
 procedure TfrmInvoiceList2.mnuExportClick(Sender: TObject);
-var v : Variant;
-    i,
-    invNumber : Integer;
-    Bkm : TcxBookmark;
+var i,
+    linvNumber : Integer;
+    lSelected : TcxCustomGridRow;
     remoteResult : String;
+    lUpdateNeeded: boolean;
 begin
   with tvInvoiceHead do
   begin
+    lUpdateNeeded := false;
     DataController.BeginLocate;
     DataController.DataSet.DisableControls;
-    for i := 0 to PRED(Controller.SelectedRowCount ) do
-    begin
-      Bkm := DataController.GetSelectedBookmark(I);
-      if DataController.DataSet.BookmarkValid(TBookmark(Bkm)) then
+    try
+      for i := 0 to PRED(Controller.SelectedRowCount ) do
       begin
-        DataController.DataSet.GotoBookmark(TBookmark(Bkm));
-        if (DataController.DataSet.FieldByName('externalInvoiceId').AsInteger IN [0,1]) then
+        lSelected := Controller.SelectedRows[i];
+        if integer(lSelected.Values[tvInvoiceHeadexternalInvoiceId.Index]) in [0, 1] then
         begin
-          invNumber := DataController.DataSet['InvoiceNumber'];
-          remoteResult := d.roomerMainDataSet.SystemSendInvoiceToBookkeeping(invNumber);
+          lInvNumber := lSelected.Values[tvInvoiceHeadInvoiceNumber.Index];
+          remoteResult := d.roomerMainDataSet.SystemSendInvoiceToBookkeeping(linvNumber);
           if remoteResult <> '' then
-          begin
-            HandleFinanceBookKeepingExceptions(invNumber, remoteResult);
-          end;
+            HandleFinanceBookKeepingExceptions(linvNumber, remoteResult)
+          else
+            lUpdateNeeded := true;
         end;
       end;
+
+      if lUpdateNeeded then
+        RefreshData;
+    finally
+      DataController.EndLocate;
+      DataController.DataSet.EnableControls;
     end;
-    DataController.EndLocate;
-    DataController.DataSet.EnableControls;
   end;
 end;
 
+
+//TODO: This sould be implemented as a global property
 function TfrmInvoiceList2.IsFinanceSystemConnected : Boolean;
 var rSet : TRoomerDataSet;
 begin
   rSet := CreateNewDataSet;
   rSet_bySQL(rSet, 'SELECT to_bool(IFNULL((SELECT 1 FROM home100.hotelservices WHERE active=1 AND hotelId=SUBSTR(DATABASE(), 9, 15) AND serviceType=''FINANCE'' LIMIT 1), 0)) AS financeConnected, InvoiceExportFilename FROM hotelconfigurations LIMIT 1');
   rSet.First;
-  if NOT rSet.Eof then
-  begin
-    if rSet['financeConnected'] then
-      result := True
-    else
-      result := False;
-  end else
-    result := False;
+  Result := NOT rSet.Eof and rSet['financeConnected'];
 end;
 
 
-procedure TfrmInvoiceList2.PopupMenu1Popup(Sender: TObject);
+procedure TfrmInvoiceList2.pmnuExportMenuPopup(Sender: TObject);
 begin
   mnuExportability.Enabled := tvInvoiceHead.Controller.SelectedRowCount > 0;
-  mnuExport.Enabled := bIsFinanceSystemConnected AND (tvInvoiceHead.Controller.SelectedRowCount > 0);
+  mnuExport.Enabled := (tvInvoiceHead.Controller.SelectedRowCount > 0);
 end;
 
-//procedure TfrmInvoiceList2.LMDSpeedButton7Click(Sender : TObject);
-//var
-//  InvoiceNumber : integer;
-//  i : integer;
-//begin
-//  i := 0;
-//  m22_.First;
-//  while not m22_.Eof do
-//  begin
-//    inc(i);
-//    InvoiceNumber := m22_.fieldbyname('invoicenumber').AsInteger;
-//    d.CreateMtFields;
-//    d.InsertMTdata(InvoiceNumber, true, true,false);
-//    application.ProcessMessages;
-//    m22_.Next;
-//  end;
-//end;
 
 end.
 

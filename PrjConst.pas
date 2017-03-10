@@ -803,6 +803,7 @@ begin
   constants.Add('shTx_InvoiceList2_GroupInvoice', 'This is a group invoice');
   constants.Add('shTx_InvoiceList2_NotRoomInvoice', 'This invoice is not the Room invoice');
   constants.Add('shTx_InvoiceList2_NoRoomFound', 'No room found');
+  constants.Add('shTx_InvoiceList2_ExportDisabled', '<export disabled>');
 
   constants.Add('shTx_InvoicePayment_DownPayment', 'Down payment');
   constants.Add('shTx_InvoicePayment_InvoicePayment', 'Invoice Payment');
@@ -1696,7 +1697,7 @@ begin
 //  frmStatisticsForcast := TfrmStatisticsForcast.Create(nil); frmStatisticsForcast.Free; frmStatisticsForcast := nil;
   frmDayFinical := TfrmDayFinical.Create(nil); frmDayFinical.Free; frmDayFinical := nil;
   frmConvertGroups := TfrmConvertGroups.Create(nil); frmConvertGroups.Free; frmConvertGroups := nil;
-  frmInvoiceList2 := TfrmInvoiceList2.Create(nil); frmInvoiceList2.Free; frmInvoiceList2 := nil;
+  TfrmInvoiceList2.Create(nil).Free;
 //  frmRptCustomer := TfrmRptCustomer.Create(nil); frmRptCustomer.Free; frmRptCustomer := nil;
 //frmDayNotes := TfrmDayNotes.Create(nil); frmDayNotes.Free; frmDayNotes := nil;
   frmChangeRRdates := TfrmChangeRRdates.Create(nil); frmChangeRRdates.Free; frmChangeRRdates := nil;
