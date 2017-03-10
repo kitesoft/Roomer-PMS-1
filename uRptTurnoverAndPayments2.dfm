@@ -141,7 +141,7 @@ object frmRptTurnoverAndPayments2: TfrmRptTurnoverAndPayments2
         Left = 15
         Top = 18
         Width = 107
-        Height = 19
+        Height = 17
         Caption = 'Get unconfirmed'
         TabOrder = 0
         OnClick = chkGetUnconfirmedClick
@@ -244,10 +244,6 @@ object frmRptTurnoverAndPayments2: TfrmRptTurnoverAndPayments2
     SkinData.SkinSection = 'PAGECONTROL'
     object sTabSheet1: TsTabSheet
       Caption = 'Sum Turnover'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object sPanel1: TsPanel
         Left = 0
         Top = 0
@@ -862,7 +858,7 @@ object frmRptTurnoverAndPayments2: TfrmRptTurnoverAndPayments2
           OnClick = btnInvoiceListExcelClick
           SkinData.SkinSection = 'BUTTON'
         end
-        object btnInvoiceListExpandAll: TcxButton
+        object btnInvoiceListExpandAll: TsButton
           Left = 804
           Top = 2
           Width = 75
@@ -872,7 +868,7 @@ object frmRptTurnoverAndPayments2: TfrmRptTurnoverAndPayments2
           TabOrder = 1
           OnClick = btnInvoiceListExpandAllClick
         end
-        object btnInvoiceListContractAll: TcxButton
+        object btnInvoiceListContractAll: TsButton
           Left = 883
           Top = 2
           Width = 76
