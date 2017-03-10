@@ -24,7 +24,7 @@ begin
   if (AskUserForCredentials(userName, password, hotelId, lastMessage, AuthValueIndex) in cLoginFormSuccesfull) then
   begin
       try
-        d.roomerMainDataSet.Login(hotelId, username, password, cOpenAPIAppicationID, TRoomerVersionInfo.FileVersion);
+        d.roomerMainDataSet.Login(hotelId, username, password, cOpenAPIApplicationID, TRoomerVersionInfo.FileVersion);
         result := true;
       except
         result := false;

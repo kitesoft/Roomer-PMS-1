@@ -3445,7 +3445,7 @@ begin
         else if (lLoginFormResult = lrLogin) and (NOT OffLineMode) AND d.roomerMainDataSet.IsConnectedToInternet AND
           d.roomerMainDataSet.RoomerPlatformAvailable then
         begin
-          d.roomerMainDataSet.LOGIN(lHotelID, userName, password, cOpenAPIAppicationID, TRoomerVersionInfo.FileVersion);
+          d.roomerMainDataSet.LOGIN(lHotelID, userName, password, cOpenAPIApplicationID, TRoomerVersionInfo.FileVersion);
           FOffLineMode := false;
         end
         else

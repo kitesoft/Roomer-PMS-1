@@ -52,7 +52,6 @@ object frmMain: TfrmMain
     SunkenBorder = True
     UseOwnColor = True
     UseOwnSunkenBorder = True
-    ExplicitTop = 122
   end
   object panMain: TsPanel
     Left = 0
@@ -162,6 +161,8 @@ object frmMain: TfrmMain
             OnMouseUp = grOneDayRoomsMouseUp
             OnStartDrag = grOneDayRoomsStartDrag
             ActiveRowColor = clWhite
+            GridLineColor = 15527152
+            GridFixedLineColor = 13947601
             HoverRowCells = [hcNormal, hcSelected]
             OnGetCellPrintColor = grOneDayRoomsGetCellPrintColor
             OnGridHint = grOneDayRoomsGridHint
@@ -302,7 +303,7 @@ object frmMain: TfrmMain
             SortSettings.HeaderColorTo = 16579058
             SortSettings.HeaderMirrorColor = 16380385
             SortSettings.HeaderMirrorColorTo = 16182488
-            Version = '8.2.5.2'
+            Version = '8.2.4.1'
             ColWidths = (
               47
               49
@@ -860,6 +861,10 @@ object frmMain: TfrmMain
         object tabPeriod: TsTabSheet
           Caption = 'tabPeriod'
           ImageIndex = 2
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object sLabel2: TsLabel
             Left = 224
             Top = 400
@@ -1103,7 +1108,7 @@ object frmMain: TfrmMain
               SortSettings.HeaderColorTo = 16579058
               SortSettings.HeaderMirrorColor = 16380385
               SortSettings.HeaderMirrorColorTo = 16182488
-              Version = '8.2.5.2'
+              Version = '8.2.4.1'
               ColWidths = (
                 73
                 20
@@ -1323,6 +1328,7 @@ object frmMain: TfrmMain
             OnMoved = splitPeriodMoved
             Color = 6842472
             ParentColor = False
+            ExplicitTop = 157
           end
           object pnlPeriodNoRooms: TsPanel
             Left = 0
@@ -1462,7 +1468,7 @@ object frmMain: TfrmMain
               SearchFooter.MatchCaseCaption = 'Match case'
               SearchFooter.ResultFormat = '(%d of %d)'
               SortSettings.DefaultFormat = ssAutomatic
-              Version = '8.2.5.2'
+              Version = '8.2.4.1'
               ColWidths = (
                 64
                 64
@@ -1676,7 +1682,7 @@ object frmMain: TfrmMain
         object lblBusyDownloading: TsLabel
           Left = 0
           Top = 158
-          Width = 304
+          Width = 73
           Height = 13
           Margins.Left = 10
           Margins.Top = 0
@@ -1694,12 +1700,11 @@ object frmMain: TfrmMain
           Font.Name = 'Tahoma'
           Font.Style = []
           UseSkinColor = False
-          ExplicitWidth = 73
         end
         object lblCacheNotification: TsLabel
           Left = 0
           Top = 145
-          Width = 304
+          Width = 86
           Height = 13
           Margins.Left = 10
           Margins.Top = 0
@@ -1717,7 +1722,6 @@ object frmMain: TfrmMain
           Font.Name = 'Tahoma'
           Font.Style = []
           UseSkinColor = False
-          ExplicitWidth = 86
         end
         object pnlStatistics: TsScrollBox
           Left = 0
@@ -2019,7 +2023,7 @@ object frmMain: TfrmMain
             Left = 159
             Top = 4
             Width = 94
-            Height = 24
+            Height = 23
             Margins.Left = 10
             Margins.Top = 4
             Align = alLeft
@@ -2032,7 +2036,6 @@ object frmMain: TfrmMain
             Font.Height = -17
             Font.Name = 'Segoe UI'
             Font.Style = [fsBold]
-            ExplicitHeight = 23
           end
           object dtDate: TsDateEdit
             AlignWithMargins = True
@@ -2530,7 +2533,7 @@ object frmMain: TfrmMain
         ParentColor = False
         Transparent = True
         OnAnchorClick = mmoMessageAnchorClick
-        Version = '1.9.2.8'
+        Version = '1.9.2.7'
         ExplicitLeft = 87
         ExplicitWidth = 1019
       end
@@ -2587,8 +2590,8 @@ object frmMain: TfrmMain
       object lblTimeMessage: TsLabel
         Left = 0
         Top = 0
-        Width = 1035
-        Height = 41
+        Width = 265
+        Height = 24
         Align = alClient
         Alignment = taCenter
         Caption = '<Timely messages panel>'
@@ -2600,8 +2603,6 @@ object frmMain: TfrmMain
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         UseSkinColor = False
-        ExplicitWidth = 265
-        ExplicitHeight = 24
       end
     end
     object pnlOffline: TsPanel
@@ -3080,7 +3081,7 @@ object frmMain: TfrmMain
     object lblHotelName: TsLabel
       Left = 0
       Top = 33
-      Width = 301
+      Width = 140
       Height = 22
       Align = alBottom
       Alignment = taCenter
@@ -3091,7 +3092,6 @@ object frmMain: TfrmMain
       Font.Height = -18
       Font.Name = 'Tahoma'
       Font.Style = []
-      ExplicitWidth = 140
     end
   end
   object pnlRBE: TsPanel

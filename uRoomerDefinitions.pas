@@ -13,7 +13,7 @@ const
   qcCompany        = 'Roomer';
   cRoomerFolder    = 'Roomer';
   qcApplication    = 'Roomer PMS';
-  cOpenAPIAppicationID = 'ROOMERPMS';
+  cOpenAPIApplicationID = 'ROOMERPMS';
   testCompanyID    = '00';
   testCompanyName  = 'Hotel Trial';
   testExpDate      = 30;
@@ -31,6 +31,16 @@ const
   TIM_HALF_HOUR    = TIM_MINUTE * 30;
   TIM_HOUR         = TIM_MINUTE * 60;
   TIM_DAY          = TIM_HOUR * 24;
+
+
+  // Registry keys
+const
+  secAppRegistration = 'AppReg';
+  indApplicationID = 'Application_ID';
+  indAppKey = 'Application_Key';
+  indAppSecret = 'Application_Secret';
+
+
 
 const
   peExportNot     = 0;
