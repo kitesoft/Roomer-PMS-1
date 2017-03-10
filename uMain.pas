@@ -1352,9 +1352,9 @@ type
 
     procedure RefreshOneDayGrid;
 
-    procedure CreateQuickReservation(isQuick: boolean; showDetails: boolean = true; Blocked: boolean = false);
-    function QuickResPeriodRoomObj(var oNewReservation: TNewReservation): integer;
-    function QuickResOneDayRoomObj(var oNewReservation: TNewReservation): integer;
+    procedure CreateQuickReservation(isQuick: boolean);
+    function AddNewRoomResFromSelectionPeriodGrid(var aNewReservation: TNewReservation): integer;
+    function AddNewRoomResFromSelectionDayGrid(var aNewReservation: TNewReservation): integer;
 
     procedure CreateProvideAllotment(aAllotmentResId: integer; aSHowDate: TDateTime = 0);
 
@@ -4414,7 +4414,7 @@ begin
         frmBusyMessage.ShowMessage(GetTranslatedText('shTx_Working_On_Allotment'), GetTranslatedText('shTx_Creating_New_Booking'));
         lSucceeded := oNewReservation.CreateReservation(-1, false);
 
-        if lSucceeded and (oNewReservation.Reservation > 0) then
+        if lSucceeded and (oNewReservation.ReservationId > 0) then
           if (restCount > 0) then
           begin
             // Create a new allotment with the remaining rooms, remove the old allotment
@@ -4449,7 +4449,7 @@ begin
 
     frmBusyMessage.HideMessage;
     if lSucceeded then
-      EditReservation(oNewReservation.Reservation, 0)
+      EditReservation(oNewReservation.ReservationId, 0)
 
   finally
     frmBusyMessage.HideMessage;
@@ -12465,46 +12465,24 @@ begin
   end;
 end;
 
-procedure TfrmMain.CreateQuickReservation(isQuick: boolean; showDetails: boolean = true; Blocked: boolean = false);
+procedure TfrmMain.CreateQuickReservation(isQuick: boolean);
 var
   iReservation: integer;
   oNewReservation: TNewReservation;
-
-  confEmailSent: boolean;
-
-  function OpenQuickDetails(var oNewReservation: TNewReservation): boolean;
-  begin
-    frmMakeReservationQuick := TfrmMakeReservationQuick.Create(frmMakeReservationQuick);
-    try
-      frmMakeReservationQuick.NewReservation := oNewReservation;
-      frmMakeReservationQuick.ShowModal;
-      result := frmMakeReservationQuick.ModalResult = mrOK;
-    finally
-      frmMakeReservationQuick.Free;
-      frmMakeReservationQuick := nil;
-    end;
-  end;
-
+  lAdded: integer;
 begin
-  confEmailSent := false;
   oNewReservation := TNewReservation.Create(g.qHotelCode, g.qUser);
 
   try
     if isQuick then
     begin
       if ViewMode = vmOneDay then
-      begin
-        QuickResOneDayRoomObj(oNewReservation);
-      end
+        lAdded := AddNewRoomResFromSelectionDayGrid(oNewReservation)
       else
-      begin
-        QuickResPeriodRoomObj(oNewReservation);
-      end;
+        lAdded := AddNewRoomResFromSelectionPeriodGrid(oNewReservation);
 
-      if oNewReservation.newRoomReservations.RoomCount = 0 then
-      begin
+      if lAdded = 0 then
         exit;
-      end;
     end
     else
     begin
@@ -12521,52 +12499,23 @@ begin
 
     oNewReservation.resMedhod := rmNormal;
     oNewReservation.isQuick := isQuick;
-    if showDetails then
+    if not ShowNewReservationForm(oNewReservation) then
     begin
-      if not OpenQuickDetails(oNewReservation) then
-      begin
-        RoomerMessageDialog(GetTranslatedText('shTx_Main_ReservationCancelled'), mtConfirmation, [mbOk],
-          'MainFormReservationCancelledMessage', mrOK);
-        exit;
-      end;
+      RoomerMessageDialog(GetTranslatedText('shTx_Main_ReservationCancelled'), mtConfirmation, [mbOk],
+        'MainFormReservationCancelledMessage', mrOK);
+      exit;
     end;
 
-    Screen.Cursor := crHourglass;
-    try
-      // frmdayNotes.memLog.Clear;
-      // frmdayNotes.memLog.Lines.Add('---'+Caption+'-----');
-      // frmdayNotes.memLog.Lines.Add('');
-      oNewReservation.CreateReservation;
-      if oNewReservation.SendConfirmationEmail then
-      begin
-        if SendNewReservationConfirmation(oNewReservation.Reservation) then
-          // d.roomerMainDataSet.SendConfirmationEmailOpenAPI(oNewReservation.Reservation);
-          confEmailSent := true;
-      end;
-
-    finally
-      Screen.Cursor := crDefault;
-    end;
-
-    if confEmailSent then
+    if oNewReservation.ConfirmationEmailSent then
       MessageDlg(GetTranslatedText('shTxConfirmationEmailHasBeenSent'), mtConfirmation, [mbOk], 0);
 
-    iReservation := oNewReservation.Reservation;
-    if iReservation > 0 then
-    begin
-      if oNewReservation.ShowProfile then
-      begin
-        EditReservation(iReservation, 0)
-      end
-      else
-      begin
-        RefreshGrid;
-      end;
-    end;
+    if oNewReservation.ShowProfile and (oNewReservation.ReservationId > 0) then
+        EditReservation(oNewReservation.ReservationId, 0)
+    else
+      RefreshGrid;
 
   finally
-    if oNewReservation <> nil then
-      freeandNil(oNewReservation);
+    oNewReservation.Free;
   end;
 end;
 
@@ -12575,7 +12524,7 @@ begin
   CreateQuickReservation(true);
 end;
 
-function TfrmMain.QuickResOneDayRoomObj(var oNewReservation: TNewReservation): integer;
+function TfrmMain.AddNewRoomResFromSelectionDayGrid(var aNewReservation: TNewReservation): integer;
 var
   iRow, iCol: integer;
   sDepartureCell: string;
@@ -12608,10 +12557,9 @@ begin
       if (sDepartureCell = '') or (strToDate(sDepartureCell) = zOneDay_dtDate) then
       begin
         aRoom := grOneDayRooms.cells[0, iRow];
-        // oSelectedRoomItem := TSelectedRoomItem.Create(aRoom,Arrival,departure,0);
-        oSelectedRoomItem := TnewRoomReservationItem.Create(0, aRoom, '', '', Arrival, Departure, 0, 0, 0, 0, 0,
-          0, '', '', '');
-        oNewReservation.newRoomReservations.RoomItemsList.Add(oSelectedRoomItem);
+        oSelectedRoomItem := TnewRoomReservationItem.Create(aRoom, Arrival, Departure);
+        aNewReservation.newRoomReservations.RoomItemsList.Add(oSelectedRoomItem);
+        inc(Result);
       end
     end;
 
@@ -12629,16 +12577,15 @@ begin
       if (sDepartureCell = '') or (strToDate(sDepartureCell) = zOneDay_dtDate) then
       begin
         aRoom := grOneDayRooms.cells[7, iRow];
-        // oSelectedRoomItem := TSelectedRoomItem.Create(aRoom,Arrival,departure,0);
-        oSelectedRoomItem := TnewRoomReservationItem.Create(0, aRoom, '', '', Arrival, Departure, 0, 0, 0, 0, 0,
-          0, '', '', '');
-        oNewReservation.newRoomReservations.RoomItemsList.Add(oSelectedRoomItem);
+        oSelectedRoomItem := TnewRoomReservationItem.Create(aRoom, Arrival, Departure);
+        aNewReservation.newRoomReservations.RoomItemsList.Add(oSelectedRoomItem);
+        inc(Result);
       end;
     end;
   end;
 end;
 
-function TfrmMain.QuickResPeriodRoomObj(var oNewReservation: TNewReservation): integer;
+function TfrmMain.AddNewRoomResFromSelectionPeriodGrid(var aNewReservation: TNewReservation): integer;
 var
   iRow: integer;
   iCol: integer;
@@ -12699,7 +12646,7 @@ begin
       if (dtDateFromNext = Departure) and (aRoom = RoomNext) then
       begin
         d.mQuickRes.Prior;
-        d.mQuickRes.EDIT;
+        d.mQuickRes.Edit;
         d.mQuickRes.FieldByName('DateTo').AsDateTime := dtDateToNext;
         d.mQuickRes.Post;
 
@@ -12718,10 +12665,9 @@ begin
     aRoom := d.mQuickRes.FieldByName('Room').asString;
     Arrival := d.mQuickRes.FieldByName('DateFrom').AsDateTime;
     Departure := d.mQuickRes.FieldByName('DateTo').AsDateTime;
-    // oSelectedRoomItem := TSelectedRoomItem.Create(aRoom,Arrival,departure,0);
-    oSelectedRoomItem := TnewRoomReservationItem.Create(0, aRoom, '', '', Arrival, Departure, 0, 0, 0, 0, 0, 0,
-      '', '', '');
-    oNewReservation.newRoomReservations.RoomItemsList.Add(oSelectedRoomItem);
+    oSelectedRoomItem := TnewRoomReservationItem.Create(aRoom, Arrival, Departure);
+    aNewReservation.newRoomReservations.RoomItemsList.Add(oSelectedRoomItem);
+    inc(Result);
     d.mQuickRes.next;
   end;
 

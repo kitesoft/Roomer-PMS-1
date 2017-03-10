@@ -163,35 +163,7 @@ TYPE
 
 type
   TfrmMakeReservationQuick = class(TForm)
-    pgcMain: TsPageControl;
-    taReservation: TsTabSheet;
-    tabSelectType: TsTabSheet;
-    panTop: TsPanel;
-    Panel2: TsPanel;
-    gbxGetCustomer: TsGroupBox;
-    clabCustomer: TsLabel;
-    labCustomerName: TsLabel;
-    gbxGetReservation: TsGroupBox;
-    clabReservationName: TsLabel;
-    edReservationName: TsEdit;
-    cbxRoomStatus: TsComboBox;
-    clabGroupInvoice: TsLabel;
-    chkisGroupInvoice: TsCheckBox;
-    labMarketSegmentName: TsLabel;
-    pgcMoreInfo: TsPageControl;
-    tabCustomerDetails: TsTabSheet;
-    clabTel2: TsLabel;
-    tabContactDetails: TsTabSheet;
     mRoomResDS: TDataSource;
-    gbxDates: TsGroupBox;
-    edNights: TsSpinEdit;
-    dtArrival: TsDateEdit;
-    dtDeparture: TsDateEdit;
-    __lblArrivalWeekday: TsLabel;
-    __lblDepartureWeekday: TsLabel;
-    clabArrival: TsLabel;
-    clabdeparture: TsLabel;
-    clabNights: TsLabel;
     mSelectTypes: TdxMemData;
     StringField2: TStringField;
     StringField4: TStringField;
@@ -212,83 +184,9 @@ type
     Panel11: TsPanel;
     clabGeneralNotes: TsLabel;
     memReservationGeneralInfo: TsMemo;
-    tabSelectRooms: TsTabSheet;
-    tabRoomRates: TsTabSheet;
-    panTopRoomRates: TsPanel;
-    grRoomRes: TcxGrid;
-    tvRoomRes: TcxGridDBTableView;
-    lvRoomRes: TcxGridLevel;
-    panSelectRoomsTop: TsPanel;
-    grSelectRooms: TcxGrid;
-    lvSelectRooms: TcxGridLevel;
-    panSelectTypesTop: TsPanel;
-    grSelectType: TcxGrid;
-    tvSelectType: TcxGridDBTableView;
-    tvSelectTypeRecId: TcxGridDBColumn;
-    tvSelectTyperoomType: TcxGridDBColumn;
-    tvSelectTypeRoomTypeDescription: TcxGridDBColumn;
-    tvSelectTypeSelected: TcxGridDBColumn;
-    lvSelectType: TcxGridLevel;
-    DELETE_kbmRoomRes: TkbmMemTable;
-    tvRoomResRoom: TcxGridDBColumn;
-    tvRoomResRoomType: TcxGridDBColumn;
-    tvRoomResGuests: TcxGridDBColumn;
-    tvRoomResRoomDescription: TcxGridDBColumn;
-    tvRoomResRoomTypeDescription: TcxGridDBColumn;
-    tvRoomResDeparture: TcxGridDBColumn;
-    tvRoomResArrival: TcxGridDBColumn;
-    tvRoomResChildrenCount: TcxGridDBColumn;
-    tvRoomResinfantCount: TcxGridDBColumn;
-    tvRoomResRoomReservation: TcxGridDBColumn;
-    tvRoomResAvragePrice: TcxGridDBColumn;
-    tvRoomResRateCount: TcxGridDBColumn;
-    DELETE_kbmRoomRates: TkbmMemTable;
     mRoomRatesDS: TDataSource;
-    lvRoomRates: TcxGridLevel;
-    tvRoomRates: TcxGridDBTableView;
-    tvRoomRatesReservation: TcxGridDBColumn;
-    tvRoomRatesRoomReservation: TcxGridDBColumn;
-    tvRoomRatesRoomNumber: TcxGridDBColumn;
-    tvRoomRatesRateDate: TcxGridDBColumn;
-    tvRoomRatesPriceCode: TcxGridDBColumn;
-    tvRoomRatesRate: TcxGridDBColumn;
-    tvRoomRatesDiscount: TcxGridDBColumn;
-    tvRoomRatesisPercentage: TcxGridDBColumn;
-    tvRoomRatesShowDiscount: TcxGridDBColumn;
-    tvRoomRatesisPaid: TcxGridDBColumn;
-    tvRoomRatesDiscountAmount: TcxGridDBColumn;
-    tvRoomRatesRentAmount: TcxGridDBColumn;
-    tvRoomRatesNativeAmount: TcxGridDBColumn;
-    gbxSelectedRoom: TsGroupBox;
-    btdEditRoomRate: TsButton;
-    sPanel1: TsPanel;
-    clabPID: TsLabel;
-    clabCustomerName: TsLabel;
-    clabAddress1: TsLabel;
-    clabWebSite: TsLabel;
-    clabEmail: TsLabel;
-    clabFax: TsLabel;
-    clabTel1: TsLabel;
-    edPID: TsEdit;
-    edCustomerName: TsEdit;
-    edAddress1: TsEdit;
-    edAddress2: TsEdit;
-    edAddress3: TsEdit;
-    edTel1: TsEdit;
-    edTel2: TsEdit;
-    edFax: TsEdit;
-    edEmailAddress: TsEdit;
-    edHomePage: TsEdit;
-    sPanel3: TsPanel;
-    gbxContact: TsGroupBox;
-    clabContactPerson: TsLabel;
-    gbxProfileAlert: TsGroupBox;
     timAlert: TTimer;
-    tvRoomResColumn1: TcxGridDBColumn;
-    tvRoomResPriceCode: TcxGridDBColumn;
     mSelectTypesNoRooms: TIntegerField;
-    tvSelectTypeNoRooms: TcxGridDBColumn;
-    sPanel4: TsPanel;
     mDS: TDataSource;
     mOcc_: TdxMemData;
     StringField7: TStringField;
@@ -320,7 +218,6 @@ type
     m_nrBlocked: TIntegerField;
     m_FreeRooms: TIntegerField;
     m_Description: TStringField;
-    tvSelectRooms: TcxGridDBBandedTableView;
     mSelectRoomsRoomType: TStringField;
     mSelectRoomsDescription: TStringField;
     mSelectRoomsDetailedDescription: TMemoField;
@@ -357,61 +254,14 @@ type
     mSelectRoomsHairdryer: TBooleanField;
     mSelectRoomsInternetPlug: TBooleanField;
     mSelectRoomsFax: TBooleanField;
-    tvSelectRoomsRecId: TcxGridDBBandedColumn;
-    tvSelectRoomsID: TcxGridDBBandedColumn;
-    tvSelectRoomsActive: TcxGridDBBandedColumn;
-    tvSelectRoomsRoom: TcxGridDBBandedColumn;
-    tvSelectRoomsRoomType: TcxGridDBBandedColumn;
-    tvSelectRoomsDescription: TcxGridDBBandedColumn;
-    tvSelectRoomsDetailedDescription: TcxGridDBBandedColumn;
-    tvSelectRoomsSqrMeters: TcxGridDBBandedColumn;
-    tvSelectRoomsBedSize: TcxGridDBBandedColumn;
-    tvSelectRoomsEquipments: TcxGridDBBandedColumn;
-    tvSelectRoomsBookable: TcxGridDBBandedColumn;
-    tvSelectRoomsStatistics: TcxGridDBBandedColumn;
-    tvSelectRoomsStatus: TcxGridDBBandedColumn;
-    tvSelectRoomsOrderIndex: TcxGridDBBandedColumn;
-    tvSelectRoomshidden: TcxGridDBBandedColumn;
-    tvSelectRoomsLocation: TcxGridDBBandedColumn;
-    tvSelectRoomsFloor: TcxGridDBBandedColumn;
-    tvSelectRoomsDorm: TcxGridDBBandedColumn;
-    tvSelectRoomsuseInNationalReport: TcxGridDBBandedColumn;
-    tvSelectRoomsLocationDescription: TcxGridDBBandedColumn;
-    tvSelectRoomsRoomTypeDescription: TcxGridDBBandedColumn;
-    tvSelectRoomsRoomTypeGroupDescription: TcxGridDBBandedColumn;
-    tvSelectRoomsBath: TcxGridDBBandedColumn;
-    tvSelectRoomsShower: TcxGridDBBandedColumn;
     mSelectRoomsNumberGuests: TIntegerField;
     mSelectRoomsRoomTypeGroup: TStringField;
-    tvSelectRoomsNumberGuests: TcxGridDBBandedColumn;
-    tvSelectRoomsRoomTypeGroup: TcxGridDBBandedColumn;
     mSelectRoomsSelect: TBooleanField;
-    tvSelectRoomsSelect: TcxGridDBBandedColumn;
     mSelectRoomstmp: TStringField;
-    tvSelectRoomstmp: TcxGridDBBandedColumn;
     mSelectTypesAvailable: TIntegerField;
-    tvSelectTypeAvailable: TcxGridDBColumn;
     mSelectTypesTotalFree: TIntegerField;
-    tvSelectTypeTotalFree: TcxGridDBColumn;
-    gbxSelStatus: TsGroupBox;
-    chkExcluteWaitingList: TsCheckBox;
-    chkExcluteAllotment: TsCheckBox;
-    chkExcluteOrder: TsCheckBox;
-    chkExcluteNoShow: TsCheckBox;
-    chkExcluteDeparted: TsCheckBox;
-    chkExcluteBlocked: TsCheckBox;
-    chkExcluteGuest: TsCheckBox;
-    sLabel2: TsLabel;
-    labTotalSelected: TsLabel;
-    sLabel3: TsLabel;
-    labTotalRoomsSelected: TsLabel;
-    sLabel5: TsLabel;
-    sLabel6: TsLabel;
     mSelectTypesRoomsSelected: TIntegerField;
-    tvSelectTypeRoomsSelected: TcxGridDBColumn;
     mSelectTypesPriorityRule: TStringField;
-    tvSelectTypePriorityRule: TcxGridDBColumn;
-    tvRoomResAvrageDiscount: TcxGridDBColumn;
     StoreMain: TcxPropertiesStore;
     panRoomNotes: TsPanel;
     clabPaymentNotes: TsLabel;
@@ -424,80 +274,16 @@ type
     m_ID: TIntegerField;
     m_active: TBooleanField;
     mCurrencyDS: TDataSource;
-    sPanel7: TsPanel;
-    cxButton1: TsButton;
-    sLabel9: TsLabel;
-    edInvRefrence: TsEdit;
-    sButton3: TsButton;
-    sButton4: TsButton;
-    tvRoomResMainGuest: TcxGridDBColumn;
-    DELETE_kbmRoomRatesTmp: TkbmMemTable;
     btnClearLog: TsButton;
     sButton2: TsButton;
     sButton5: TsButton;
     sButton6: TsButton;
     sButton7: TsButton;
-    edCustomer: TsEdit;
-    btnGetCustomer: TsSpeedButton;
-    btnGetLastCustomer: TsSpeedButton;
-    edMarketSegmentCode: TsEdit;
-    btnGetMarketSegment: TsSpeedButton;
-    clabContactAddress: TsLabel;
-    edContactAddress1: TsEdit;
-    edContactAddress2: TsEdit;
-    edContactAddress3: TsEdit;
-    edContactAddress4: TsEdit;
-    chkContactIsGuest: TsCheckBox;
-    clabContactPhone: TsLabel;
-    edContactPhone: TsEdit;
-    clabContactFax: TsLabel;
-    edContactFax: TsEdit;
-    clabContactEmail: TsLabel;
-    edContactEmail: TsEdit;
-    edtSpecialRequests: TMemo;
     mnuFinish: TPopupMenu;
     mnuFinishAndShow: TMenuItem;
     memReservationPaymentInfo: TsMemo;
-    gbxRate: TsGroupBox;
-    clabCurrency: TsLabel;
-    clabDiscountPerc: TsLabel;
-    clabPcCode: TsLabel;
-    labCurrencyName: TsLabel;
-    labCurrencyRate: TsLabel;
-    btnGetCurrency: TsSpeedButton;
-    sSpeedButton2: TsSpeedButton;
-    labPcCodeName: TsLabel;
-    edRoomResDiscount: TsSpinEdit;
-    cbxIsRoomResDiscountPrec: TsComboBox;
-    edCurrency: TsEdit;
-    edPcCode: TsEdit;
-    gbxRefresh: TsGroupBox;
-    btnRefresh: TsButton;
-    sButton1: TsButton;
-    clabMarketSegmentCode: TsLabel;
-    clabReservationType: TsLabel;
     memRoomNotes: TDBMemo;
-    sLabPackage: TsLabel;
-    edPackage: TsEdit;
-    sSpeedButton3: TsSpeedButton;
-    labPackageDescription: TsLabel;
-    tvRoomResPackage: TcxGridDBColumn;
-    tvRoomResPackagePrice: TcxGridDBColumn;
-    btnAutoSelectRooms: TsButton;
-    btnSetAllAsNoRoom: TsButton;
-    chkSendConfirmation: TsCheckBox;
-    lblContactZip: TsLabel;
-    lblContactCity: TsLabel;
-    lblPortfolio: TsLabel;
-    edtPortfolio: TsEdit;
-    btnPortfolio: TsSpeedButton;
-    btnPortfolioLookup: TsSpeedButton;
-    edContactPerson: TRoomerFilterComboBox;
-    cbxAddToGuestProfiles: TsCheckBox;
     timNew: TTimer;
-    lblNew: TsLabel;
-    tvRoomRatesCurrency: TcxGridDBColumn;
-    tvRoomRatesCurrencyRate: TcxGridDBColumn;
     mRoomRes: TdxMemData;
     mRoomResReservation: TIntegerField;
     mRoomResroomreservation: TIntegerField;
@@ -563,15 +349,220 @@ type
     FloatField12: TFloatField;
     mRoomResRatePlanCode: TStringField;
     mRoomResManualChannelId: TIntegerField;
-    tvRoomResRatePlanCode: TcxGridDBColumn;
-    sLabel1: TsLabel;
     cxStyleRepository1: TcxStyleRepository;
     cxStyle1: TcxStyle;
     cxStyle2: TcxStyle;
     cxStyle3: TcxStyle;
+    mRoomResExpectedTimeOfArrival: TStringField;
+    mRoomResExpectedCheckOutTime: TStringField;
+    mRoomResStockItemsCount: TIntegerField;
+    mRoomResStockitemsPrice: TFloatField;
+    mExtras: TdxMemData;
+    mExtrasRoomreservation: TIntegerField;
+    mExtrasItemid: TIntegerField;
+    mExtrasCount: TIntegerField;
+    mExtrasPricePerItemPerDay: TFloatField;
+    mExtrasFromdate: TDateTimeField;
+    mExtrasToDate: TDateTimeField;
+    mExtrasItem: TStringField;
+    mExtrasDescription: TStringField;
+    mExtrasTotalPrice: TFloatField;
+    m_nrWaitingListNonOptional: TIntegerField;
+    m_occWaitingListNonOptional: TIntegerField;
+    pgcMain: TsPageControl;
+    taReservation: TsTabSheet;
+    panTop: TsPanel;
+    Panel2: TsPanel;
+    gbxGetCustomer: TsGroupBox;
+    clabCustomer: TsLabel;
+    labCustomerName: TsLabel;
+    btnGetCustomer: TsSpeedButton;
+    btnGetLastCustomer: TsSpeedButton;
+    lblPortfolio: TsLabel;
+    btnPortfolio: TsSpeedButton;
+    btnPortfolioLookup: TsSpeedButton;
+    edCustomer: TsEdit;
+    edtPortfolio: TsEdit;
+    gbxGetReservation: TsGroupBox;
+    clabReservationName: TsLabel;
+    clabGroupInvoice: TsLabel;
+    labMarketSegmentName: TsLabel;
+    sLabel9: TsLabel;
+    btnGetMarketSegment: TsSpeedButton;
+    clabMarketSegmentCode: TsLabel;
+    clabReservationType: TsLabel;
+    lblMarket: TsLabel;
+    lblCountry: TsLabel;
+    edReservationName: TsEdit;
+    cbxRoomStatus: TsComboBox;
+    chkisGroupInvoice: TsCheckBox;
+    edInvRefrence: TsEdit;
+    edMarketSegmentCode: TsEdit;
+    cbxMarket: TsComboBox;
+    fraCountry: TfraCountryPanel;
+    gbxDates: TsGroupBox;
+    clabArrival: TsLabel;
+    __lblArrivalWeekday: TsLabel;
+    __lblDepartureWeekday: TsLabel;
+    clabdeparture: TsLabel;
+    clabNights: TsLabel;
+    edNights: TsSpinEdit;
+    dtArrival: TsDateEdit;
+    dtDeparture: TsDateEdit;
+    gbxRate: TsGroupBox;
+    clabCurrency: TsLabel;
+    clabDiscountPerc: TsLabel;
+    clabPcCode: TsLabel;
+    labCurrencyName: TsLabel;
+    labCurrencyRate: TsLabel;
+    btnGetCurrency: TsSpeedButton;
+    sSpeedButton2: TsSpeedButton;
+    labPcCodeName: TsLabel;
+    sLabPackage: TsLabel;
+    sSpeedButton3: TsSpeedButton;
+    labPackageDescription: TsLabel;
+    edRoomResDiscount: TsSpinEdit;
+    cbxIsRoomResDiscountPrec: TsComboBox;
+    edCurrency: TsEdit;
+    edPcCode: TsEdit;
+    edPackage: TsEdit;
+    pgcMoreInfo: TsPageControl;
+    tabContactDetails: TsTabSheet;
+    sPanel3: TsPanel;
+    AdvSplitter1: TAdvSplitter;
+    gbxContact: TsGroupBox;
+    clabContactPerson: TsLabel;
+    clabContactAddress: TsLabel;
+    clabContactPhone: TsLabel;
+    clabContactFax: TsLabel;
+    clabContactEmail: TsLabel;
+    lblContactZip: TsLabel;
+    lblContactCity: TsLabel;
+    lblNew: TsLabel;
+    edContactAddress1: TsEdit;
+    edContactAddress2: TsEdit;
+    edContactAddress3: TsEdit;
+    edContactAddress4: TsEdit;
+    chkContactIsGuest: TsCheckBox;
+    edContactPhone: TsEdit;
+    edContactFax: TsEdit;
+    edContactEmail: TsEdit;
+    chkSendConfirmation: TsCheckBox;
+    edContactPerson: TRoomerFilterComboBox;
+    cbxAddToGuestProfiles: TsCheckBox;
+    gbxProfileAlert: TsGroupBox;
+    lblSpecialRequests: TsLabel;
+    lblNotes: TsLabel;
+    edtSpecialRequests: TMemo;
+    edtNotes: TMemo;
+    gbxRoomAlert: TsGroupBox;
+    lblRoomType: TsLabel;
+    lblRoom: TsLabel;
+    edtRoom: TsEdit;
+    edtRoomType: TsEdit;
+    gbxCustomerAlert: TsGroupBox;
+    memCustomerAlert: TMemo;
+    tabCustomerDetails: TsTabSheet;
+    clabTel2: TsLabel;
+    sPanel1: TsPanel;
+    clabPID: TsLabel;
+    clabCustomerName: TsLabel;
+    clabAddress1: TsLabel;
+    clabWebSite: TsLabel;
+    clabEmail: TsLabel;
+    clabFax: TsLabel;
+    clabTel1: TsLabel;
+    edPID: TsEdit;
+    edCustomerName: TsEdit;
+    edAddress1: TsEdit;
+    edAddress2: TsEdit;
+    edAddress3: TsEdit;
+    edTel1: TsEdit;
+    edTel2: TsEdit;
+    edFax: TsEdit;
+    edEmailAddress: TsEdit;
+    edHomePage: TsEdit;
+    tabSelectType: TsTabSheet;
+    panSelectTypesTop: TsPanel;
+    gbxSelStatus: TsGroupBox;
+    chkExcluteWaitingList: TsCheckBox;
+    chkExcluteAllotment: TsCheckBox;
+    chkExcluteOrder: TsCheckBox;
+    chkExcluteNoShow: TsCheckBox;
+    chkExcluteDeparted: TsCheckBox;
+    chkExcluteBlocked: TsCheckBox;
+    chkExcluteGuest: TsCheckBox;
+    chkExcludeWaitingListNonOptional: TsCheckBox;
+    sPanel7: TsPanel;
+    sLabel1: TsLabel;
+    cxButton1: TsButton;
+    grSelectType: TcxGrid;
+    tvSelectType: TcxGridDBTableView;
+    tvSelectTypeRecId: TcxGridDBColumn;
+    tvSelectTyperoomType: TcxGridDBColumn;
+    tvSelectTypeRoomTypeDescription: TcxGridDBColumn;
+    tvSelectTypeAvailable: TcxGridDBColumn;
+    tvSelectTypeSelected: TcxGridDBColumn;
+    tvSelectTypeTotalFree: TcxGridDBColumn;
+    tvSelectTypeNoRooms: TcxGridDBColumn;
+    tvSelectTypeRoomsSelected: TcxGridDBColumn;
+    tvSelectTypePriorityRule: TcxGridDBColumn;
+    lvSelectType: TcxGridLevel;
+    sPanel4: TsPanel;
+    tabSelectRooms: TsTabSheet;
+    panSelectRoomsTop: TsPanel;
+    sLabel2: TsLabel;
+    labTotalSelected: TsLabel;
+    sLabel3: TsLabel;
+    labTotalRoomsSelected: TsLabel;
+    sLabel5: TsLabel;
+    sLabel6: TsLabel;
+    btnAutoSelectRooms: TsButton;
+    btnSetAllAsNoRoom: TsButton;
+    cbxFilterSelectedTypes: TsCheckBox;
+    grSelectRooms: TcxGrid;
+    tvSelectRooms: TcxGridDBBandedTableView;
+    tvSelectRoomsSelect: TcxGridDBBandedColumn;
+    tvSelectRoomsRoom: TcxGridDBBandedColumn;
+    tvSelectRoomsDescription: TcxGridDBBandedColumn;
+    tvSelectRoomsRoomType: TcxGridDBBandedColumn;
+    tvSelectRoomsRoomTypeDescription: TcxGridDBBandedColumn;
+    tvSelectRoomsRoomTypeGroup: TcxGridDBBandedColumn;
+    tvSelectRoomsRoomTypeGroupDescription: TcxGridDBBandedColumn;
+    tvSelectRoomsStatus: TcxGridDBBandedColumn;
+    tvSelectRoomsLocation: TcxGridDBBandedColumn;
+    tvSelectRoomsLocationDescription: TcxGridDBBandedColumn;
+    tvSelectRoomsFloor: TcxGridDBBandedColumn;
+    tvSelectRoomsNumberGuests: TcxGridDBBandedColumn;
+    tvSelectRoomsEquipments: TcxGridDBBandedColumn;
+    tvSelectRoomsSqrMeters: TcxGridDBBandedColumn;
+    tvSelectRoomsBedSize: TcxGridDBBandedColumn;
+    tvSelectRoomsBath: TcxGridDBBandedColumn;
+    tvSelectRoomsShower: TcxGridDBBandedColumn;
+    tvSelectRoomsActive: TcxGridDBBandedColumn;
+    tvSelectRoomsOrderIndex: TcxGridDBBandedColumn;
+    tvSelectRoomsuseInNationalReport: TcxGridDBBandedColumn;
+    tvSelectRoomsBookable: TcxGridDBBandedColumn;
+    tvSelectRoomsStatistics: TcxGridDBBandedColumn;
+    tvSelectRoomshidden: TcxGridDBBandedColumn;
+    tvSelectRoomsRecId: TcxGridDBBandedColumn;
+    tvSelectRoomsID: TcxGridDBBandedColumn;
+    tvSelectRoomsDorm: TcxGridDBBandedColumn;
+    tvSelectRoomsDetailedDescription: TcxGridDBBandedColumn;
+    tvSelectRoomstmp: TcxGridDBBandedColumn;
+    lvSelectRooms: TcxGridLevel;
+    tabRoomRates: TsTabSheet;
+    panTopRoomRates: TsPanel;
+    gbxSelectedRoom: TsGroupBox;
+    btdEditRoomRate: TsButton;
+    sButton3: TsButton;
+    sButton4: TsButton;
+    gbxRefresh: TsGroupBox;
+    btnRefresh: TsButton;
+    sButton1: TsButton;
     sPanel5: TsPanel;
-    edtRatePlans: TsComboBox;
     lblRatePlan: TsLabel;
+    edtRatePlans: TsComboBox;
     chkAutoUpdateNullPrice: TsCheckBox;
     pgcExtraAndAlert: TsPageControl;
     sTabSheet1: TsTabSheet;
@@ -592,44 +583,50 @@ type
     cbxBreakfastGrp: TsCheckBox;
     cbxExtraBedGrp: TsCheckBox;
     Alerts: TsTabSheet;
-    __tvRoomResColumn2: TcxGridDBColumn;
-    AdvSplitter1: TAdvSplitter;
-    gbxCustomerAlert: TsGroupBox;
-    memCustomerAlert: TMemo;
-    lblSpecialRequests: TsLabel;
-    lblNotes: TsLabel;
-    edtNotes: TMemo;
-    gbxRoomAlert: TsGroupBox;
-    lblRoomType: TsLabel;
-    lblRoom: TsLabel;
-    edtRoom: TsEdit;
-    edtRoomType: TsEdit;
+    grRoomRes: TcxGrid;
+    tvRoomRes: TcxGridDBTableView;
+    tvRoomResRoomReservation: TcxGridDBColumn;
+    tvRoomResColumn1: TcxGridDBColumn;
+    tvRoomResRoom: TcxGridDBColumn;
+    tvRoomResRoomDescription: TcxGridDBColumn;
+    tvRoomResRoomType: TcxGridDBColumn;
+    tvRoomResRoomTypeDescription: TcxGridDBColumn;
+    tvRoomResArrival: TcxGridDBColumn;
     tvRoomResExpectedTimeOfArrival: TcxGridDBColumn;
+    tvRoomResDeparture: TcxGridDBColumn;
     tvRoomResexpectedCheckouttime: TcxGridDBColumn;
-    mRoomResExpectedTimeOfArrival: TStringField;
-    mRoomResExpectedCheckOutTime: TStringField;
-    cbxMarket: TsComboBox;
-    lblMarket: TsLabel;
-    mRoomResStockItemsCount: TIntegerField;
+    tvRoomResGuests: TcxGridDBColumn;
+    tvRoomResChildrenCount: TcxGridDBColumn;
+    tvRoomResinfantCount: TcxGridDBColumn;
+    tvRoomResMainGuest: TcxGridDBColumn;
+    tvRoomResRatePlanCode: TcxGridDBColumn;
+    tvRoomResAvragePrice: TcxGridDBColumn;
+    __tvRoomResColumn2: TcxGridDBColumn;
+    tvRoomResPackage: TcxGridDBColumn;
+    tvRoomResPackagePrice: TcxGridDBColumn;
+    tvRoomResRateCount: TcxGridDBColumn;
     tvRoomResStockItemsCount: TcxGridDBColumn;
-    mRoomResStockitemsPrice: TFloatField;
     tvRoomResStockitemsPrice: TcxGridDBColumn;
-    mExtras: TdxMemData;
-    mExtrasRoomreservation: TIntegerField;
-    mExtrasItemid: TIntegerField;
-    mExtrasCount: TIntegerField;
-    mExtrasPricePerItemPerDay: TFloatField;
-    mExtrasFromdate: TDateTimeField;
-    mExtrasToDate: TDateTimeField;
-    mExtrasItem: TStringField;
-    mExtrasDescription: TStringField;
-    mExtrasTotalPrice: TFloatField;
-    m_nrWaitingListNonOptional: TIntegerField;
-    m_occWaitingListNonOptional: TIntegerField;
-    chkExcludeWaitingListNonOptional: TsCheckBox;
-    cbxFilterSelectedTypes: TsCheckBox;
-    fraCountry: TfraCountryPanel;
-    lblCountry: TsLabel;
+    tvRoomResAvrageDiscount: TcxGridDBColumn;
+    tvRoomResPriceCode: TcxGridDBColumn;
+    tvRoomRates: TcxGridDBTableView;
+    tvRoomRatesReservation: TcxGridDBColumn;
+    tvRoomRatesRoomReservation: TcxGridDBColumn;
+    tvRoomRatesRoomNumber: TcxGridDBColumn;
+    tvRoomRatesRateDate: TcxGridDBColumn;
+    tvRoomRatesPriceCode: TcxGridDBColumn;
+    tvRoomRatesRate: TcxGridDBColumn;
+    tvRoomRatesDiscount: TcxGridDBColumn;
+    tvRoomRatesisPercentage: TcxGridDBColumn;
+    tvRoomRatesShowDiscount: TcxGridDBColumn;
+    tvRoomRatesisPaid: TcxGridDBColumn;
+    tvRoomRatesDiscountAmount: TcxGridDBColumn;
+    tvRoomRatesCurrency: TcxGridDBColumn;
+    tvRoomRatesCurrencyRate: TcxGridDBColumn;
+    tvRoomRatesRentAmount: TcxGridDBColumn;
+    tvRoomRatesNativeAmount: TcxGridDBColumn;
+    lvRoomRes: TcxGridLevel;
+    lvRoomRates: TcxGridLevel;
     procedure FormShow(Sender: TObject);
     procedure edCustomerDblClick(Sender: TObject);
     procedure edCustomerExit(Sender: TObject);
@@ -799,8 +796,7 @@ type
     destructor Destroy; override;
   end;
 
-var
-  frmMakeReservationQuick: TfrmMakeReservationQuick;
+function ShowNewReservationForm(var aNewReservation: TNewReservation): boolean;
 
 implementation
 
@@ -840,6 +836,33 @@ uses
 const
   WM_SET_COMBO_TEXT = WM_User + 101;
   WM_SET_EMPTY_TEXT = WM_User + 102;
+
+
+function ShowNewReservationForm(var aNewReservation: TNewReservation): boolean;
+var
+  frm: TfrmMakeReservationQuick;
+begin
+  frm := TfrmMakeReservationQuick.Create(nil);
+  try
+    frm.NewReservation := aNewReservation;
+    Result := frm.ShowModal = mrOk;
+
+    if Result then
+    begin
+      Screen.Cursor := crHourglass;
+      try
+        aNewReservation.CreateReservation;
+      finally
+        Screen.Cursor := crDefault;
+      end;
+    end;
+
+  finally
+    frm.Free;
+  end;
+end;
+
+
 
 function TfrmMakeReservationQuick.RoomStatusFromInfo(statusText: string): integer;
 begin
@@ -2011,7 +2034,6 @@ begin
           mRoomRes.FieldByName('RateCount').AsInteger := RateCount;
           mRoomRes.FieldByName('PriceCode').AsString := PriceCode;
           mRoomRes.FieldByName('AvrageDiscount').AsFloat := AvrageDiscount;
-          mRoomRes.FieldByName('isPercentage').AsBoolean := isPercentage;
           mRoomRes.post;
         end;
       end;
@@ -3750,7 +3772,7 @@ begin
       RoomReservation := mRoomRes.FieldByName('roomReservation').AsInteger;
 
       i := FNewReservation.newRoomReservations.FindRoomFromRoomReservation(RoomReservation, 0);
-      FNewReservation.newRoomReservations.RoomItemsList[i].oRates.RateItemsList.Clear;
+      FNewReservation.newRoomReservations.RoomItemsList[i].Rates.RateItemsList.Clear;
 
       room := mRoomRes.FieldByName('room').AsString;
       Arrival := mRoomRes.FieldByName('arrival').AsDateTime;
@@ -3834,7 +3856,6 @@ begin
         mRoomRes.FieldByName('AvragePrice').AsFloat := rateAvrage;
         mRoomRes.FieldByName('RateCount').AsFloat := RateCount;
         mRoomRes.FieldByName('AvrageDiscount').AsFloat := discountAvrage;
-        mRoomRes.FieldByName('isPercentage').AsBoolean := isPercentage;
 
         mRoomRes.FieldByName('ManualChannelId').AsInteger := channelId;
         mRoomRes.FieldByName('ratePlanCode').AsString := rateId;
@@ -3925,7 +3946,7 @@ begin
       until not found;
 
       i := FNewReservation.newRoomReservations.FindRoomFromRoomReservation(RoomReservation, 0);
-      FNewReservation.newRoomReservations.RoomItemsList[i].oRates.RateItemsList.Clear;
+      FNewReservation.newRoomReservations.RoomItemsList[i].Rates.RateItemsList.Clear;
 
       room := mRoomRes.FieldByName('room').AsString;
       Arrival := mRoomRes.FieldByName('arrival').AsDateTime;
@@ -3964,7 +3985,7 @@ begin
           end
           else
           begin
-            Rate := FNewReservation.newRoomReservations.RoomItemsList[i].oRates.GetDayRate
+            Rate := FNewReservation.newRoomReservations.RoomItemsList[i].Rates.GetDayRate
               (RoomType
               , room
               , ADate
@@ -4034,7 +4055,6 @@ begin
         mRoomRes.FieldByName('AvragePrice').AsFloat := rateAvrage;
         mRoomRes.FieldByName('RateCount').AsFloat := RateCount;
         mRoomRes.FieldByName('AvrageDiscount').AsFloat := discountAvrage;
-        mRoomRes.FieldByName('isPercentage').AsBoolean := isPercentage;
 
         mRoomRes.FieldByName('ManualChannelId').AsInteger := channelId;
         mRoomRes.FieldByName('ratePlanCode').AsString := rateId;
@@ -4162,11 +4182,7 @@ begin
     begin
       AvragePrice := glb.GetRateInclusive(-1, ctrlGetString('RoomRentItem'),
         mRoomRes.FieldByName('AvragePrice').AsFloat);
-      if mRoomRes.FieldByName('isPercentage').AsBoolean then
-        AvrageDiscount := mRoomRes.FieldByName('AvrageDiscount').AsFloat
-      else
-        AvrageDiscount := glb.GetRateInclusive(-1, ctrlGetString('RoomRentItem'), mRoomRes.FieldByName('AvrageDiscount')
-          .AsFloat);
+      AvrageDiscount := mRoomRes.FieldByName('AvrageDiscount').AsFloat;
     end
     else
     begin
@@ -4201,7 +4217,7 @@ begin
     oSelectedRoomItem.ratePlanCode := mRoomRes.FieldByName('ratePlanCode').AsString;
     oSelectedRoomItem.ExpTOA := mRoomResExpectedTimeOfArrival.AsString;
     oSelectedRoomItem.ExpCOT := mRoomResExpectedCheckOutTime.AsString;
-    oSelectedRoomItem.oRates.SetCurrency(FCurrentCurrencyhandler.CurrencyCode);
+    oSelectedRoomItem.Rates.SetCurrency(FCurrentCurrencyhandler.CurrencyCode);
     FNewReservation.newRoomReservations.RoomItemsList.Add(oSelectedRoomItem);
 
     mRoomRates.First;
@@ -4233,7 +4249,7 @@ begin
         rateItem := TRateItem.Create(Rate, RateDate, rateDiscount, rateShowDiscount, rateIsPercentage, rateIsPaid,
                                       ratePriceCode, rateRoomNumber, -1, RoomReservation);
 
-        oSelectedRoomItem.oRates.RateItemsList.Add(rateItem);
+        oSelectedRoomItem.Rates.RateItemsList.Add(rateItem);
 
         oSelectedRoomItem.Breakfast := cbxBreakfast.Checked;
         oSelectedRoomItem.BreakfastIncluded := cbxBreakfastIncl.Checked;

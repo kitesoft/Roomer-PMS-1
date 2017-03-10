@@ -9227,33 +9227,8 @@ begin
 end;
 
 function RR_GetIDs(Count: integer): string;
-// var
-// Rset : TRoomerDataSet;
-// s : string;
-// i : integer;
-// Lastid : integer;
 begin
   result := StringReplace(d.roomerMainDataSet.SystemMultipleNewRoomReservationIds(Count), ',', '|', [rfReplaceAll, rfIgnoreCase]);
-  // RSet := CreateNewDataSet;
-  // try
-  // s := 'SELECT LastRoomRes,ID FROM [control] ';
-  // if hData.rSet_bySQL(rSet,s) then
-  // begin
-  // lastId := Rset.fieldbyname('LastRoomRes').asInteger;
-  // result := '';
-  // for I := 1 to count do
-  // begin
-  // lastID := lastID+1;
-  // result := result+inttostr(LastId)+'|'
-  // end;
-  // if length(result) > 0 then delete(result,length(result),1);
-  // Rset.edit;
-  // Rset.fieldbyname('LastRoomRes').asInteger := LastID;
-  // Rset.Post;
-  // end;
-  // finally
-  // freeandnil(Rset);
-  // end;
 end;
 
 function Persons_GetIDs(Count: integer): string;

@@ -1960,7 +1960,7 @@ begin
       GuestCount, AvragePrice, AvrageDiscount, RateCount, ChildrenCount, InfantCount, PriceCode,
       mainGuestName, '');
     oNewReservation.newRoomReservations.RoomItemsList.Add(oSelectedRoomItem);
-    oNewReservation.newRoomReservations.RoomItemsList[roomIndex].oRates.SetCurrency(labCurrency.Caption);
+    oNewReservation.newRoomReservations.RoomItemsList[roomIndex].Rates.SetCurrency(labCurrency.Caption);
 
     kbmRoomRates.Filter := '(Roomreservation=' + inttostr(RoomReservation) + ')';
     kbmRoomRates.Filtered := true;
@@ -1978,7 +1978,7 @@ begin
       rateIsPaid := kbmRoomRatesisPaid.AsBoolean;
       rateItem := TRateItem.Create(rate, rateDate, rateDiscount, rateShowDiscount, rateIsPercentage, rateIsPaid,
         ratePriceCode, rateRoomNumber, -1, RoomReservation);
-      oNewReservation.newRoomReservations.RoomItemsList[roomIndex].oRates.RateItemsList.Add(rateItem);
+      oNewReservation.newRoomReservations.RoomItemsList[roomIndex].Rates.RateItemsList.Add(rateItem);
       kbmRoomRates.Next;
     end;
     inc(roomIndex);
@@ -2055,7 +2055,7 @@ begin
         GuestCount, AvragePrice, AvrageDiscount, RateCount, ChildrenCount, InfantCount, PriceCode,
         mainGuestName, '');
       oRestReservation.newRoomReservations.RoomItemsList.Add(oSelectedRoomItem);
-      oRestReservation.newRoomReservations.RoomItemsList[roomIndex].oRates.SetCurrency(labCurrency.Caption);
+      oRestReservation.newRoomReservations.RoomItemsList[roomIndex].Rates.SetCurrency(labCurrency.Caption);
 
       kbmRestRoomRates.Filter := '(Roomreservation=' + inttostr(RoomReservation) + ')';
       kbmRestRoomRates.Filtered := true;
@@ -2073,7 +2073,7 @@ begin
         rateIsPaid := kbmRestRoomRatesisPaid.AsBoolean;
         rateItem := TRateItem.Create(rate, rateDate, rateDiscount, rateShowDiscount, rateIsPercentage, rateIsPaid,
           ratePriceCode, rateRoomNumber, -1, RoomReservation);
-        oRestReservation.newRoomReservations.RoomItemsList[roomIndex].oRates.RateItemsList.Add(rateItem);
+        oRestReservation.newRoomReservations.RoomItemsList[roomIndex].Rates.RateItemsList.Add(rateItem);
         kbmRestRoomRates.Next;
       end;
       inc(roomIndex);
@@ -2385,7 +2385,7 @@ begin
       until not found;
 
       i := oNewReservation.newRoomReservations.FindRoomFromRoomReservation(RoomReservation, 0);
-      oNewReservation.newRoomReservations.RoomItemsList[i].oRates.RateItemsList.Clear;
+      oNewReservation.newRoomReservations.RoomItemsList[i].Rates.RateItemsList.Clear;
 
       Room := kbmRoomResRoom.AsString;
       Arrival := kbmRoomResArrival.AsDateTime;
@@ -2415,7 +2415,7 @@ begin
         end
         else
         begin
-          rate := oNewReservation.newRoomReservations.RoomItemsList[i].oRates.GetDayRate(RoomType, Room, aDate, Guests,
+          rate := oNewReservation.newRoomReservations.RoomItemsList[i].Rates.GetDayRate(RoomType, Room, aDate, Guests,
             ChildrenCount, InfantCount, Currency, priceID, Discount, showDiscount, isPercentage, IsPaid, false
 
             );

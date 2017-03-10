@@ -851,6 +851,7 @@
         <DCCReference Include="OpenAPI\schema\uRoomerSchema.pas"/>
         <DCCReference Include="OpenAPI\schema\RoomerConfigurationItemsCommunicationModel_RequestsResponses.pas"/>
         <DCCReference Include="OpenAPI\uConfigurationItemsAPICaller.pas"/>
+        <DCCReference Include="RoomerVCLs\Source\uRoomerIDList.pas"/>
         <None Include="Roomer.todo"/>
         <None Include="notes.txt"/>
         <None Include="Roomer.inc"/>

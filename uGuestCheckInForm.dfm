@@ -1415,7 +1415,7 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
     PrintOptions.Printer = 'Default'
     PrintOptions.PrintOnSheet = 0
     ReportOptions.CreateDate = 42022.613734120400000000
-    ReportOptions.LastChange = 42429.950693055560000000
+    ReportOptions.LastChange = 42803.562451203700000000
     ScriptLanguage = 'PascalScript'
     ScriptText.Strings = (
       'begin'
@@ -33255,7 +33255,7 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
         ParentFont = False
       end
       object frxDBDataset1address2: TfrxMemoView
-        Left = 9.559060000000001000
+        Left = 9.559060000000000000
         Top = 426.299320000000000000
         Width = 332.598640000000000000
         Height = 18.897650000000000000
@@ -33977,6 +33977,36 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
         Font.Style = []
         Memo.UTF8W = (
           '[frxDBDataset1."creditcardexpiry"]')
+        ParentFont = False
+      end
+      object Memo33: TfrxMemoView
+        Left = 362.834880000000000000
+        Top = 491.338900000000000000
+        Width = 173.858380000000000000
+        Height = 18.897650000000000000
+        ShowHint = False
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        Memo.UTF8W = (
+          'Social security number')
+        ParentFont = False
+      end
+      object Memo34: TfrxMemoView
+        Left = 363.205010000000000000
+        Top = 510.457020000000000000
+        Width = 343.937230000000000000
+        Height = 18.897650000000000000
+        ShowHint = False
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -13
+        Font.Name = 'Arial'
+        Font.Style = []
+        Memo.UTF8W = (
+          '[frxDBDataset1."SocialSecurityNumber"]')
         ParentFont = False
       end
     end

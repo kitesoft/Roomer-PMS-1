@@ -175,7 +175,8 @@ TYPE
                        aPriceCode : string;
                        aMainGuestName : string;
                        notes : string
-                       );
+                       ); overload;
+    constructor Create(const aRoomNumber: string; aArrival: TDate; aDeparture: TDate); overload;
 
     destructor Destroy; override;
     property Reservation: integer read FReservation write FReservation;
@@ -206,7 +207,7 @@ TYPE
     property ExtraBedCost  : Double    read FExtraBedCost   write FExtraBedCost      ;
     property ExtraBedCostGroupAccount  : Boolean    read FExtraBedCostGroupAccount   write FExtraBedCostGroupAccount      ;
 
-    property oRates         : TRates    read FRates             write FRates                ;
+    property Rates         : TRates    read FRates             write FRates                ;
 
     property ManualChannelId  : Integer read FManualChannelId   write FManualChannelId      ;
     property ratePlanCode  : String     read FratePlanCode      write FratePlanCode         ;
@@ -294,10 +295,11 @@ TYPE
     FAlertList: TAlertList;
     FMarket: TReservationMarketType;
     FThreadedDataPutter : TGetThreadedData;
+    FCOnfirmationEmailSent: boolean;
     procedure RemoveRemnants(ResId: Integer);
 //    procedure DeleteReservation(aReservation: integer);
   protected
-    FReservation: integer;
+    FReservationId: integer;
   public
 //    constructor Create(aHotelCode, Staff: string);  overload;
     constructor Create(const aHotelCode, Staff: string;  const contactAddress1: string = '';
@@ -308,6 +310,7 @@ TYPE
     destructor Destroy; override;
 
     Function CreateReservation(DeleteResNr : integer=-1; Transactional : Boolean = true) : Boolean;
+    procedure SendConfirmationEmailIfNeeded;
 
     property Hotelcode: string read FHotelcode write FHotelcode;
 
@@ -320,7 +323,7 @@ TYPE
     property IsQuick: Boolean read FIsQuick write FIsQuick;
 
     // Values not available until after create
-    property Reservation: integer read FReservation write FReservation;
+    property ReservationId: integer read FReservationId write FReservationId;
     property PriceFound: Boolean read FPriceFound write FPriceFound;
 
     // Hdata parameters
@@ -331,6 +334,7 @@ TYPE
     property Staff: string read FStaff write FStaff;
     property OutOfOrderBlocking: Boolean read FOutOfOrderBlocking write FOutOfOrderBlocking;
     property SendConfirmationEmail: Boolean read FSendConfirmationEmail write FSendConfirmationEmail;
+    property ConfirmationEmailSent: boolean read FCOnfirmationEmailSent;
 
     property AlertList : TAlertList read FAlertList write FAlertList;
 
@@ -352,7 +356,7 @@ uses
   , DateUtils
   , uDateUtils
   , Math
-  , uSQLUtils;
+  , uSQLUtils, uReservationEmailingDialog, uRoomerIDList;
 
 const
   cSTOCKITEM_IMPORTREFERENCE = 'STOCKITEM';
@@ -405,6 +409,11 @@ begin
   FExtraBedIncluded := False;
   FExtraBedCost := 0.00;
 
+end;
+
+constructor TnewRoomReservationItem.Create(const aRoomNumber: string; aArrival, aDeparture: TDate);
+begin
+  Create(0, aRoomNumber, '', '', aArrival, aDeparture, 0, 0, 0, 0, 0, 0, '', '', '');
 end;
 
 destructor TnewRoomReservationItem.Destroy;
@@ -738,7 +747,7 @@ begin
     FHomeCustomer := THomeCustomer.Create(aHotelCode, hData.ctrlGetString('RackCustomer'))
   else
     FHomeCustomer := THomeCustomer.Create(aHotelCode, '',contactAddress1,contactAddress2,contactaddress3,contactAddress4);
-  FReservation := -1; //hData.RV_SetNewID();
+  FReservationId := -1; //hData.RV_SetNewID();
 
   FShowProfile := false;
   FresMedhod := rmNormal;
@@ -810,6 +819,12 @@ begin
                   [BoolToString(False), 'Removing remnants after creating new reservation from allotment', '', '', 0, BoolToString(False)]);
   FThreadedDataPutter.Post(s, s1, nil);
 //  d.roomerMainDataSet.SystemRemoveReservation(DeleteResNr, False, False);
+end;
+
+procedure TNewReservation.SendConfirmationEmailIfNeeded;
+begin
+  if SendConfirmationEmail then
+    FCOnfirmationEmailSent := SendNewReservationConfirmation(ReservationId);
 end;
 
 Function TNewReservation.CreateReservation(DeleteResNr : integer=-1; Transactional : Boolean = true): Boolean;
@@ -928,6 +943,7 @@ var
   ExpCOT: string;
   newRoomReservationItem: TnewRoomReservationItem;
   lRevenueCorrection: Double;
+  lNewRoomRes: TnewRoomReservationItem;
 
   procedure init;
   begin
@@ -988,7 +1004,7 @@ var
   begin
     hData.initReservationHolderRec(reservationData, staff);
 
-    reservationData.Reservation := FReservation;
+    reservationData.Reservation := FReservationId;
     Arrival          := FnewRoomReservations.FRoomList[0].FArrival;
     Departure        := FnewRoomReservations.FRoomList[0].FDeparture;;
 
@@ -1040,7 +1056,7 @@ var
     ExecutionPlan.AddExec(SQL_INS_Reservation(reservationData));
     //***Log reservation
     lstReservationActivity.add(CreateReservationActivityLog(g.quser
-                                                 ,FReservation
+                                                 ,FReservationId
                                                  ,-1 //Roomreservation
                                                  ,NEW_RESERVATION
                                                  ,'' //old value
@@ -1061,7 +1077,7 @@ var
   procedure InsertNewReservationInvoiceHead;
   begin
     initInvoiceHeadHolderRec(invoiceHeadData);
-    invoiceHeadData.Reservation := Reservation;
+    invoiceHeadData.Reservation := ReservationId;
     invoiceHeadData.RoomReservation := 0;
     invoiceHeadData.SplitNumber := 0;
     invoiceHeadData.InvoiceNumber := -1;
@@ -1123,10 +1139,9 @@ var
 
   TotalGuests : integer;
 
-  sID      : string     ;
-  lstIDs   : TStringList;
-  lstRRIDs : TStringList;
-  GuestIndex : integer;
+  lstRRIDs  : TIDList;
+  lstGuestIDs   : TIDlist;
+
   roomnotes : string;
   packageID : integer;
 
@@ -1159,18 +1174,17 @@ var
 begin
   Result := False;
   doRemoveRemnants := False;
-  FReservation := -1;
+  FReservationId := -1;
   CheckCount   := 0;
   Discount     := 0;
   isOk         := True;
-  GuestIndex   := 0;
 //  iRoomReservation := -1;
 
   lstInvoiceActivity := TStringList.Create;
   lstReservationActivity := TStringList.Create;
 
-  lstIDs := TstringList.Create;
-  lstRRIDs := TstringList.Create;
+  lstGuestIDs := TIDList.Create;
+  lstRRIDs := TIDlist.Create;
   stlRoomsDateData := TStringList.Create;
   ExecutionPlan := d.roomerMainDataSet.CreateExecutionPlan;
   try
@@ -1181,11 +1195,9 @@ begin
 
         TotalGuests := FnewRoomReservations.TotalGuests;
 
-        sId := persons_GetIDs(TotalGuests);
-        _glob._strTokenToStrings(sID,'|',lstIDs);
+        lstGuestIDs.FillFromString(persons_GetIDs(TotalGuests));
 
-
-        FReservation := hData.RV_SetNewID();
+        FReservationId := hData.RV_SetNewID();
 
         if (DeleteResNr > 0) then
         begin
@@ -1196,7 +1208,7 @@ begin
                                                  ,DELETE_RESERVATION
                                                  ,'' //old value
                                                  ,''
-                                                 ,Format('Deleting before creating new reservation %d', [FReservation])
+                                                 ,Format('Deleting before creating new reservation %d', [FReservationId])
                                    ));
          Except
          end;
@@ -1207,43 +1219,42 @@ begin
         InsertNewReservation;
         InsertNewReservationInvoiceHead;
 
-        sId := RR_GetIDs(FnewRoomReservations.RoomCount);
-        _glob._strTokenToStrings(sID,'|',lstRRIDs);
+        lstRRIDs.FillFromString(RR_GetIDs(FnewRoomReservations.RoomCount));
 
-        for i := 0 to FnewRoomReservations.RoomCount - 1 do
+        for lNewRoomRes in FnewRoomReservations.RoomItemsList do
         begin
-          if FnewRoomReservations.FRoomList[i].RoomReservation < 1 then
-            FnewRoomReservations.FRoomList[i].RoomReservation := strToInt(lstRRIDs[i]); // RR_SetNewID();
+          if lNewRoomRes.RoomReservation < 1 then
+            lNewRoomRes.RoomReservation := lstRRIDs.ExtractNext;
 
-          FnewRoomReservations.FRoomList[i].Reservation     := FReservation;
+          lNewRoomRes.Reservation     := FReservationId;
 
-          RoomNumber       := FnewRoomReservations.FRoomList[i].FRoomNumber;
+          RoomNumber       := lNewRoomRes.RoomNumber;
 
           if (RoomNumber <> '') AND (copy(RoomNumber,1,1) <> '<') then  glb.LocateRoom(RoomNumber);
 
-          Arrival          := FnewRoomReservations.FRoomList[i].FArrival;
-          Departure        := FnewRoomReservations.FRoomList[i].FDeparture;;
+          Arrival          := lNewRoomRes.Arrival;
+          Departure        := lNewRoomRes.Departure;;
 
-          RoomType         := FnewRoomReservations.FRoomList[i].FRoomType;
-          Package          := FnewRoomReservations.FRoomList[i].FPackage;
+          RoomType         := lNewRoomRes.RoomType;
+          Package          := lNewRoomRes.Package;
 
-//          iRoomReservation := FnewRoomReservations.FRoomList[i].FRoomReservation;
+//          iRoomReservation := lNewRoomRes.FRoomReservation;
 
-          numGuests        := FnewRoomReservations.FRoomList[i].FGuestCount;
-          numChildren      := FnewRoomReservations.FRoomList[i].FChildrenCount;
-          numInfants       := FnewRoomReservations.FRoomList[i].FInfantCount;
+          numGuests        := lNewRoomRes.GuestCount;
+          numChildren      := lNewRoomRes.ChildrenCount;
+          numInfants       := lNewRoomRes.InfantCount;
 
-          PriceCode     := FnewRoomReservations.FRoomList[i].FPriceCode;
-          MainGuestName := FnewRoomReservations.FRoomList[i].FMainGuestName;
+          PriceCode     := lNewRoomRes.PriceCode;
+          MainGuestName := lNewRoomRes.MainGuestName;
 
-          AvrageRate     := FnewRoomReservations.FRoomList[i].FAvragePrice;
-          AvrageDiscount := FnewRoomReservations.FRoomList[i].FAvrageDiscount;
-          rateCount      := FnewRoomReservations.FRoomList[i].FRateCount;
+          AvrageRate     := lNewRoomRes.AvragePrice;
+          AvrageDiscount := lNewRoomRes.AvrageDiscount;
+          rateCount      := lNewRoomRes.RateCount;
 
-          roomNotes := FnewRoomReservations.FRoomList[i].FNotes;
+          roomNotes := lNewRoomRes.Notes;
 
-          ExpTOA := FnewRoomReservations.FRoomList[i].ExpTOA;
-          ExpCOT := FnewRoomReservations.FRoomList[i].ExpCOT;
+          ExpTOA := lNewRoomRes.ExpTOA;
+          ExpCOT := lNewRoomRes.ExpCOT;
 
 
           if roomType = '' then
@@ -1256,7 +1267,7 @@ begin
 
           if (RoomNumber = '') or (RoomNumber.StartsWith('<')) then // Roomres could have been changed
           begin
-            RoomNumber := '<' + inttostr(FnewRoomReservations.FRoomList[i].RoomReservation) + '>';
+            RoomNumber := '<' + inttostr(lNewRoomRes.RoomReservation) + '>';
             isNoRoom := true;
             { TODO 3 -oHordur -cConvert to XE3 : When creating reservation in quick and room is noRoon then set RoomType to default roomtype }
           end else
@@ -1285,14 +1296,14 @@ begin
 
           initRoomReservationHolderRec(roomReservationData);
 
-          roomReservationData.ManualChannelId := FnewRoomReservations.FRoomList[i].ManualChannelId;
-          roomReservationData.ratePlanCode    := FnewRoomReservations.FRoomList[i].ratePlanCode;
-          roomReservationData.RoomReservation := FnewRoomReservations.FRoomList[i].RoomReservation;
+          roomReservationData.ManualChannelId := lNewRoomRes.ManualChannelId;
+          roomReservationData.ratePlanCode    := lNewRoomRes.ratePlanCode;
+          roomReservationData.RoomReservation := lNewRoomRes.RoomReservation;
           roomReservationData.Room            := RoomNumber;
-          roomReservationData.Reservation     := FReservation;
+          roomReservationData.Reservation     := ReservationId;
           roomReservationData.status          := RoomStatus;
           roomReservationData.GroupAccount    := isGroupInvoice;
-          roomReservationData.invBreakfast    := FnewRoomReservations.FRoomList[i].FBreakfast AND FnewRoomReservations.FRoomList[i].FBreakfastIncluded;
+          roomReservationData.invBreakfast    := lNewRoomRes.FBreakfast AND lNewRoomRes.FBreakfastIncluded;
           roomReservationData.Currency        := Currency;
           roomReservationData.Discount        := Discount;
           roomReservationData.PriceType       := PriceCode;
@@ -1346,7 +1357,7 @@ begin
     //***Log roomreservation
          try
            lstReservationActivity.add(CreateReservationActivityLog(g.quser
-                                                 ,FReservation
+                                                 ,FReservationId
                                                  ,roomReservationData.RoomReservation
                                                  ,NEW_ROOMRESERVATION
                                                  ,'' //old value
@@ -1356,7 +1367,7 @@ begin
          Except
          end;
 
-          invoiceHeadData.RoomReservation := FnewRoomReservations.FRoomList[i].RoomReservation;
+          invoiceHeadData.RoomReservation := lNewRoomRes.RoomReservation;
           ExecutionPlan.AddExec(SQL_INS_InvoiceHead(invoiceHeadData));
 
           // Now Create RoomsDates  for this room
@@ -1364,8 +1375,8 @@ begin
           initRoomsDateHolderRec(roomsDateData);
           roomsDateData.Room                 := RoomNumber;
           roomsDateData.RoomType             := RoomType;
-          roomsDateData.RoomReservation      := FnewRoomReservations.FRoomList[i].RoomReservation;
-          roomsDateData.Reservation          := FReservation;
+          roomsDateData.RoomReservation      := lNewRoomRes.RoomReservation;
+          roomsDateData.Reservation          := FReservationId;
           roomsDateData.ResFlag              := RoomStatus;
           roomsDateData.isNoRoom             := false;  {set value}
           roomsDateData.RoomRentBilled       := 0;
@@ -1374,7 +1385,7 @@ begin
           roomsDateData.ItemsUnbilled        := 0;
           roomsDateData.TaxesBilled          := 0;
           roomsDateData.Paid                 := false;
-          roomsDateData.Currency             := FnewRoomReservations.FRoomList[i].FRates.getCurrency;   // 'ISK';  {set value}
+          roomsDateData.Currency             := lNewRoomRes.FRates.getCurrency;   // 'ISK';  {set value}
           roomsDateData.PriceCode            := PriceCode;
 
           if copy(RoomNumber, 1, 1) = '<' then
@@ -1386,17 +1397,17 @@ begin
             lDate := ii;
             sDate := _db(lDate, false);
             roomsDateData.ADate := sDate;
-            RateIndex := FnewRoomReservations.FRoomList[i].FRates.FindRateByDate(ii, 0);
+            RateIndex := lNewRoomRes.FRates.FindRateByDate(ii, 0);
 
 
 
-            roomsDateData.isPercentage         := FnewRoomReservations.FRoomList[i].FRates.RateItemsList[RateIndex].GetIsPercentage;   {set value}                                         ;
-            roomsDateData.showDiscount         := FnewRoomReservations.FRoomList[i].FRates.RateItemsList[RateIndex].GetShowDiscount;
-            roomsDateData.RoomRate             := FnewRoomReservations.FRoomList[i].FRates.RateItemsList[RateIndex].getRate ; {set value}
-            roomsDateData.Discount             := FnewRoomReservations.FRoomList[i].FRates.RateItemsList[RateIndex].getDiscount;
-            roomsDateData.PriceCode            := FnewRoomReservations.FRoomList[i].FRates.RateItemsList[RateIndex].GetPriceCode;
+            roomsDateData.isPercentage         := lNewRoomRes.FRates.RateItemsList[RateIndex].GetIsPercentage;   {set value}                                         ;
+            roomsDateData.showDiscount         := lNewRoomRes.FRates.RateItemsList[RateIndex].GetShowDiscount;
+            roomsDateData.RoomRate             := lNewRoomRes.FRates.RateItemsList[RateIndex].getRate ; {set value}
+            roomsDateData.Discount             := lNewRoomRes.FRates.RateItemsList[RateIndex].getDiscount;
+            roomsDateData.PriceCode            := lNewRoomRes.FRates.RateItemsList[RateIndex].GetPriceCode;
             roomsDateData.TaxesUnbilled        := 0; {set value}
-            roomsDateData.RoomRentUnBilled     := 0; //FnewRoomReservations.FRoomList[i].FRates.RateItemsList[RateIndex].getRate;  //10000;  {set value}
+            roomsDateData.RoomRentUnBilled     := 0; //lNewRoomRes.FRates.RateItemsList[RateIndex].getRate;  //10000;  {set value}
             roomsDateData.RoomDiscountUnBilled := 0;
 
             stlRoomsDateData.Add(SQL_INS_RoomsDate_Multiple(roomsDateData));
@@ -1412,11 +1423,10 @@ begin
             numGuests := 1;
           end;
 
-          if guestIndex >= LstIds.Count then // correct for erroneous initial count of guest in rare circumstances
+          if lstGuestIDs.IsEmpty then // correct for erroneous initial count of guest in rare circumstances
             iLastperson := PE_SetNewID()
           else
-            iLastPerson := strToInt(lstIDs[guestIndex]); //PE_SetNewID();
-          inc(guestIndex);
+            iLastPerson := lstGuestIDs.ExtractNext;
 
           GuestCompany := Customer;
           GuestType := RoomType;
@@ -1426,8 +1436,8 @@ begin
 
           initPersonHolderFromProfileID(personData, FHomeCustomer.PersonProfileId);
           personData.Person := iLastPerson;
-          personData.RoomReservation := FnewRoomReservations.FRoomList[i].RoomReservation;
-          personData.Reservation := FReservation;
+          personData.RoomReservation := lNewRoomRes.RoomReservation;
+          personData.Reservation := FReservationId;
           personData.name        := copy(MainGuestName,1,100);
           personData.Surname     := copy(reservationName,1,100);
 
@@ -1469,7 +1479,7 @@ begin
           ExecutionPlan.AddExec(SQL_INS_Person(personData));
            try
              lstReservationActivity.add(CreateReservationActivityLog(g.quser
-                                                   ,FReservation
+                                                   ,FReservationId
                                                    ,roomReservationData.RoomReservation
                                                    ,CHANGE_NUMBER_OF_GUESTS
                                                    ,'0' //old value
@@ -1484,11 +1494,10 @@ begin
           begin
             for ii := 2 to numGuests do
             begin
-              if guestIndex >= LstIds.Count then // correct for erroneous initial count of guest in rare circumstances
+              if lstGuestIDs.IsEmpty then // correct for erroneous initial count of guest in rare circumstances
                 iLastperson := PE_SetNewID()
               else
-                iLastPerson := strToInt(lstIDs[guestIndex]); //PE_SetNewID();
-              inc(guestIndex);
+                iLastPerson := lstGuestIDs.ExtractNext;
               personData.Person := iLastPerson;
               personData.name := 'RoomGuest';
               personData.MainName := false;
@@ -1498,7 +1507,7 @@ begin
               ExecutionPlan.AddExec(SQL_INS_Person(personData));
               try
                 lstreservationActivity.add(CreateReservationActivityLog(g.quser
-                                                       ,FReservation
+                                                       ,FReservationId
                                                        ,roomReservationData.RoomReservation
                                                        ,CHANGE_NUMBER_OF_GUESTS
                                                        ,inttostr(ii-1) //old value
@@ -1511,14 +1520,14 @@ begin
             end;
           end;
 
-          if FnewRoomReservations.FRoomList[i].FBreakfast AND (NOT FnewRoomReservations.FRoomList[i].FBreakfastIncluded) then
+          if lNewRoomRes.Breakfast AND (NOT lNewRoomRes.FBreakfastIncluded) then
           begin
             initInvoiceLineHolderRec(InvoicelineData);
             Item := ctrlGetString('BreakFastItem');
             ItemInfo := d.Item_Get_Data(Item);
 
             numItems     := numGuests * iDayCount;
-//            if FnewRoomReservations.FRoomList[i].FBreakfastIncluded then
+//            if lNewRoomRes.FBreakfastIncluded then
 //            begin
 //              Price                 := 0;
 //              lRevenueCorrection    := ItemInfo.Price * numItems;
@@ -1526,7 +1535,7 @@ begin
 //            end
 //            else
 //            begin
-              Price                 := FnewRoomReservations.FRoomList[i].FBreakfastCost;
+              Price                 := lNewRoomRes.FBreakfastCost;
               lRevenueCorrection    := 0;
               itemDescription       := ItemInfo.Description;
 //            end;
@@ -1540,11 +1549,11 @@ begin
             decodedate(now, AYear, AMon, ADay);
             invoiceLineData.ItemID          := Item;
             invoiceLineData.AutoGen         := _db(_GetCurrentTick);
-            invoiceLineData.Reservation     := FReservation;
-            if FnewRoomReservations.FRoomList[i].FBreakfastCostGroupAccount then
+            invoiceLineData.Reservation     := FReservationId;
+            if lNewRoomRes.FBreakfastCostGroupAccount then
               invoiceLineData.RoomReservation := 0
             else
-              invoiceLineData.RoomReservation := FnewRoomReservations.FRoomList[i].RoomReservation;
+              invoiceLineData.RoomReservation := lNewRoomRes.RoomReservation;
             invoiceLineData.PurchaseDate    := date;
             invoiceLineData.InvoiceNumber   := -1;
             invoiceLineData.Description     := itemDescription;
@@ -1590,7 +1599,7 @@ begin
 
           end;
 
-          if FnewRoomReservations.FRoomList[i].FExtraBed AND (NOT FnewRoomReservations.FRoomList[i].FExtraBedIncluded) then
+          if lNewRoomRes.FExtraBed AND (NOT lNewRoomRes.FExtraBedIncluded) then
           begin
             glb.LocateSpecificRecordAndGetValue('currencies', 'Currency', Currency, 'AValue', CurrencyRate);
 
@@ -1601,7 +1610,7 @@ begin
 
 
             ItemInfo := d.Item_Get_Data(Item);
-            Price        := FnewRoomReservations.FRoomList[i].FExtraBedCost;
+            Price        := lNewRoomRes.FExtraBedCost;
             numItems     := 1.00; // numGuests.;
             Total        := price*numItems;
 
@@ -1612,11 +1621,11 @@ begin
             decodedate(now, AYear, AMon, ADay);
             invoiceLineData.ItemID          := Item;
             invoiceLineData.AutoGen         := _db(_GetCurrentTick);
-            invoiceLineData.Reservation     := FReservation;
-            if FnewRoomReservations.FRoomList[i].FExtraBedCostGroupAccount then
+            invoiceLineData.Reservation     := FReservationId;
+            if lNewRoomRes.FExtraBedCostGroupAccount then
               invoiceLineData.RoomReservation := 0
             else
-              invoiceLineData.RoomReservation := FnewRoomReservations.FRoomList[i].RoomReservation;
+              invoiceLineData.RoomReservation := lNewRoomRes.RoomReservation;
             invoiceLineData.PurchaseDate    := date;
             invoiceLineData.InvoiceNumber   := -1;
             invoiceLineData.Description     := itemDescription;
@@ -1668,38 +1677,30 @@ begin
           raise Exception.Create(ExecutionPlan.ExecException);
 
 
-        isOk := RV_Exists(FReservation) ;
+        isOk := RV_Exists(FReservationId) ;
 
-        FAlertList.Reservation := FReservation;
+        FAlertList.Reservation := FReservationId;
         FAlertList.postChanges;
 
 {$Optimization Off}
-        d.roomerMainDataSet.SystemAddToDoorCodeSchedules(FReservation);
+        d.roomerMainDataSet.SystemAddToDoorCodeSchedules(FReservationId);
 {$Optimization On}
 
-        for i := 0 to FnewRoomReservations.RoomCount - 1 do
+        for lNewRoomRes in FnewRoomReservations.RoomItemsList do
         begin
-          if FnewRoomReservations.FRoomList[i].FPackage <> '' then
+          if lNewRoomRes.Package <> '' then
           begin
-            rr :=  FnewRoomReservations.FRoomList[i].FRoomReservation;
+            rr :=  lNewRoomRes.RoomReservation;
             rrAlias := rr;
             if isGroupInvoice then
-            begin
               rr  := 0;
-            end;
-            d.roomerMainDataSet.SystempackagesAdd(
-                FnewRoomReservations.FRoomList[i].FPackage,
-                rr,
-                rrAlias,
-                FnewRoomReservations.FRoomList[i].FAvragePrice,
-                FnewRoomReservations.FRoomList[i].FRates.getCurrency);
+
+            d.roomerMainDataSet.SystempackagesAdd(lNewRoomRes.Package, rr, rrAlias, lNewRoomRes.AvragePrice, lNewRoomRes.Rates.getCurrency);
           end;
+
+          lNewRoomRes.Extras.Post(False); // not Transactional);
+
         end;
-
-
-        for newRoomReservationItem in FnewRoomReservations.FRoomList do
-          newRoomReservationItem.Extras.Post(False); // not Transactional);
-
 
         if FHomeCustomer.CreatePersonProfileId then
         begin
@@ -1707,12 +1708,12 @@ begin
           begin
             rNewSet := CreateNewDataset;
             try
-              if hData.rSet_bySQL(rNewSet, format('SELECT Person FROM persons WHERE MainName=1 AND RoomReservation=%d', [FnewRoomReservations.FRoomList[0].FRoomReservation])) then
+              if hData.rSet_bySQL(rNewSet, format('SELECT Person FROM persons WHERE MainName=1 AND RoomReservation=%d', [FnewRoomReservations.RoomItemsList[0].RoomReservation])) then
               begin
                 rNewSet.First;
                 iProfileId := CreateNewGuest(glb.PersonProfiles, rNewSet['Person']);
                 if iProfileId > 0 then
-                  cmd_bySQL(format('UPDATE persons SET PersonsProfilesId=%d WHERE MainName=1 AND Reservation=%d', [iProfileId, FReservation]));
+                  cmd_bySQL(format('UPDATE persons SET PersonsProfilesId=%d WHERE MainName=1 AND Reservation=%d', [iProfileId, FReservationId]));
               end;
             finally
               rNewSet.Free;
@@ -1761,10 +1762,11 @@ begin
   if doRemoveRemnants then
     RemoveRemnants(DeleteResNr);
 
+  SendConfirmationEmailIfNeeded;
 
   finally
     freeandNil(ExecutionPlan);
-    freeandNil(lstIDs);
+    freeandNil(lstGuestIDs);
     freeandNil(lstRRIDs);
     freeAndNil(stlRoomsDateData);
     freeandNil(lstReservationActivity);

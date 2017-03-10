@@ -1721,7 +1721,7 @@ begin
   frmCountryGroups := TfrmCountryGroups.Create(nil); frmCountryGroups.Free; frmCountryGroups := nil;
   frmVatCodes := TfrmVatCodes.Create(nil); frmVatCodes.Free; frmVatCodes := nil;
   frmRebuildReservationStats := TfrmRebuildReservationStats.Create(nil); frmRebuildReservationStats.Free; frmRebuildReservationStats := nil;
-  frmMakeReservationQuick := TfrmMakeReservationQuick.Create(nil); frmMakeReservationQuick.Free; frmMakeReservationQuick := nil;
+  TfrmMakeReservationQuick.Create(nil).Free;
   TfrmRoomerSplash.Create(nil).Free;
 
   TfrmRoomerLoginForm.Create(nil).Free;
