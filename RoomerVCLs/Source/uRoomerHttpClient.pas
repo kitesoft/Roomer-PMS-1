@@ -187,6 +187,12 @@ begin
       begin
         if E.StatusCode > 0 then
           Result := E.StatusCode
+      end;
+      on E: Exception do
+      begin
+//        if E.StatusCode > 0 then
+//          Result := E.StatusCode
+        Result := 400;
       end
       else
         raise;

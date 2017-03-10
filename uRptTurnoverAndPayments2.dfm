@@ -140,8 +140,8 @@ object frmRptTurnoverAndPayments2: TfrmRptTurnoverAndPayments2
       object chkGetUnconfirmed: TsCheckBox
         Left = 15
         Top = 18
-        Width = 107
-        Height = 17
+        Width = 99
+        Height = 20
         Caption = 'Get unconfirmed'
         TabOrder = 0
         OnClick = chkGetUnconfirmedClick
@@ -270,7 +270,7 @@ object frmRptTurnoverAndPayments2: TfrmRptTurnoverAndPayments2
           AlignWithMargins = True
           Left = 138
           Top = 4
-          Width = 145
+          Width = 137
           Height = 35
           Caption = 'Report per product type'
           Align = alLeft
