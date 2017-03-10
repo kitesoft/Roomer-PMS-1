@@ -112,7 +112,7 @@ object frmMain: TfrmMain
         Top = 1
         Width = 975
         Height = 302
-        ActivePage = tabPeriod
+        ActivePage = tabOneDayView
         Align = alClient
         TabOrder = 1
         OnChange = pageMainGridsChange
@@ -120,10 +120,6 @@ object frmMain: TfrmMain
         object tabOneDayView: TsTabSheet
           Caption = 'tabOneDayView'
           ImageIndex = 8
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object grOneDayRooms: TAdvStringGrid
             Left = 0
             Top = 0
@@ -439,7 +435,7 @@ object frmMain: TfrmMain
               object lblNoRoom: TsLabel
                 Left = 3
                 Top = 59
-                Width = 50
+                Width = 76
                 Height = 13
                 Align = alBottom
                 Alignment = taCenter
@@ -450,6 +446,7 @@ object frmMain: TfrmMain
                 Font.Height = -11
                 Font.Name = 'Tahoma'
                 Font.Style = [fsBold]
+                ExplicitWidth = 50
               end
             end
           end
@@ -487,33 +484,30 @@ object frmMain: TfrmMain
                 'All')
               OnChanging = rgrGroupreportStayTypeChanging
             end
-            object btnGroupReportExpandAll: TcxButton
+            object btnGroupReportExpandAll: TsButton
               Left = 136
               Top = 11
               Width = 117
               Height = 22
               Caption = 'Expand All'
-              LookAndFeel.NativeStyle = False
               TabOrder = 1
               OnClick = btnGroupReportExpandAllClick
             end
-            object btnGroupreportCollapseAll: TcxButton
+            object btnGroupreportCollapseAll: TsButton
               Left = 136
               Top = 39
               Width = 117
               Height = 21
               Caption = 'Collapse All'
-              LookAndFeel.NativeStyle = False
               TabOrder = 2
               OnClick = btnGroupreportCollapseAllClick
             end
-            object btnGuestListExcel: TcxButton
+            object btnGuestListExcel: TsButton
               Left = 136
               Top = 66
               Width = 117
               Height = 22
               Caption = 'Excel'
-              LookAndFeel.NativeStyle = False
               TabOrder = 3
               OnClick = btnGuestListExcelClick
             end
@@ -565,24 +559,22 @@ object frmMain: TfrmMain
                 ImgChecked = 0
                 ImgUnchecked = 0
               end
-              object btnGroupReportShow: TcxButton
+              object btnGroupReportShow: TsButton
                 Left = 74
                 Top = 58
                 Width = 80
                 Height = 21
                 Caption = 'Show'
-                LookAndFeel.NativeStyle = False
                 TabOrder = 2
                 OnClick = btnGroupReportShowClick
               end
             end
-            object btnBreakfastGuests: TcxButton
+            object btnBreakfastGuests: TsButton
               Left = 394
               Top = 11
               Width = 110
               Height = 21
               Caption = 'Breakfast guests'
-              LookAndFeel.NativeStyle = False
               TabOrder = 5
               Visible = False
               OnClick = btnBreakfastGuestsClick
@@ -1648,25 +1640,13 @@ object frmMain: TfrmMain
         end
         object tabFreeRooms: TsTabSheet
           Caption = 'tabFreeRooms'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
         end
         object tabDashboard: TsTabSheet
           Caption = 'tabDashboard'
           SkinData.SkinSection = 'TRANSPARENT'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
         end
         object tabRateQuery: TsTabSheet
           Caption = 'tabRateQuery'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
         end
       end
       object pnlStatSlider: TsPanel
@@ -1827,6 +1807,8 @@ object frmMain: TfrmMain
           OnMouseEnter = tabsViewMouseEnter
           SkinData.SkinSection = 'PAGECONTROL'
           SkinData.OuterEffects.Visibility = ovAlways
+          ExplicitLeft = -2
+          ExplicitTop = 3
         end
       end
       object __PanGridsHeader: TsPanel
@@ -1978,7 +1960,7 @@ object frmMain: TfrmMain
             OnMouseEnter = tabsViewMouseEnter
             OnRightButtonClick = btnClearSearchClick
           end
-          object btnSearchForGuests: TcxButton
+          object btnSearchForGuests: TsButton
             AlignWithMargins = True
             Left = 446
             Top = 3
@@ -1989,12 +1971,8 @@ object frmMain: TfrmMain
             Margins.Top = 0
             Margins.Right = 5
             Margins.Bottom = 0
-            LookAndFeel.NativeStyle = False
-            OptionsImage.ImageIndex = 26
-            OptionsImage.Images = DImages.PngImageList1
-            SpeedButtonOptions.CanBeFocused = False
-            SpeedButtonOptions.Flat = True
-            SpeedButtonOptions.Transparent = True
+            ImageIndex = 26
+            Images = DImages.PngImageList1
             TabOrder = 1
             OnClick = btnSerachGuestsClick
           end
