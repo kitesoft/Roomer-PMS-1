@@ -217,8 +217,8 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
           object __cbxRestrictions: TsCheckBox
             Left = 106
             Top = 7
-            Width = 20
-            Height = 16
+            Width = 17
+            Height = 13
             Margins.Left = 2
             Margins.Top = 2
             Margins.Right = 2
@@ -242,7 +242,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
             Color = clWhite
             Enabled = False
             Font.Charset = DEFAULT_CHARSET
-            Font.Color = clBlack
+            Font.Color = 4473924
             Font.Height = -11
             Font.Name = 'Tahoma'
             Font.Style = []
@@ -272,7 +272,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
             Color = clWhite
             Enabled = False
             Font.Charset = DEFAULT_CHARSET
-            Font.Color = clBlack
+            Font.Color = 4473924
             Font.Height = -11
             Font.Name = 'Tahoma'
             Font.Style = []
@@ -394,7 +394,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
           object cbxStayThrough: TsCheckBox
             Left = 305
             Top = 7
-            Width = 88
+            Width = 85
             Height = 16
             Caption = 'Stay through'
             Enabled = False
@@ -406,7 +406,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
           object cbxBasedOnArrival: TsCheckBox
             Left = 305
             Top = 36
-            Width = 102
+            Width = 99
             Height = 16
             Caption = 'Based on Arrival'
             Enabled = False
@@ -618,7 +618,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
               Color = clWhite
               EditMask = '!99/99/9999;1; '
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
+              Font.Color = 4473924
               Font.Height = -11
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -651,7 +651,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
               Color = clWhite
               EditMask = '!99/99/9999;1; '
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
+              Font.Color = 4473924
               Font.Height = -11
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -696,7 +696,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
             object cbMon: TsCheckBox
               Left = 117
               Top = 58
-              Width = 65
+              Width = 62
               Height = 16
               Margins.Left = 2
               Margins.Top = 2
@@ -713,7 +713,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
             object cbTue: TsCheckBox
               Left = 117
               Top = 79
-              Width = 66
+              Width = 63
               Height = 16
               Margins.Left = 2
               Margins.Top = 2
@@ -730,7 +730,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
             object cbWen: TsCheckBox
               Left = 117
               Top = 100
-              Width = 81
+              Width = 78
               Height = 16
               Margins.Left = 2
               Margins.Top = 2
@@ -747,7 +747,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
             object cbThu: TsCheckBox
               Left = 226
               Top = 58
-              Width = 71
+              Width = 68
               Height = 16
               Margins.Left = 2
               Margins.Top = 2
@@ -764,7 +764,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
             object cbFri: TsCheckBox
               Left = 226
               Top = 79
-              Width = 57
+              Width = 54
               Height = 16
               Margins.Left = 2
               Margins.Top = 2
@@ -781,7 +781,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
             object cbSat: TsCheckBox
               Left = 338
               Top = 58
-              Width = 69
+              Width = 66
               Height = 16
               Margins.Left = 2
               Margins.Top = 2
@@ -798,7 +798,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
             object cbSun: TsCheckBox
               Left = 340
               Top = 79
-              Width = 63
+              Width = 60
               Height = 16
               Margins.Left = 2
               Margins.Top = 2
@@ -890,7 +890,6 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
             AutoSize = True
             BevelOuter = bvNone
             TabOrder = 0
-            ExplicitLeft = 3
             object lblAmountType: TsLabel
               Left = 13
               Top = 5
@@ -913,8 +912,8 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
             object __cbxRate: TsCheckBox
               Left = 109
               Top = 3
-              Width = 20
-              Height = 16
+              Width = 17
+              Height = 13
               Margins.Left = 2
               Margins.Top = 2
               Margins.Right = 2
@@ -934,10 +933,10 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
               Margins.Top = 2
               Margins.Right = 2
               Margins.Bottom = 2
-              Color = 14540253
+              Color = 16645629
               Enabled = False
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = 4013373
+              Font.Color = 4473924
               Font.Height = -11
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -974,7 +973,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
               Color = clWhite
               Enabled = False
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
+              Font.Color = 4473924
               Font.Height = -11
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -1023,8 +1022,8 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
             object __cbxSingleUsePriceActive: TsCheckBox
               Left = 109
               Top = 4
-              Width = 20
-              Height = 16
+              Width = 17
+              Height = 13
               Hint = 'Enable Single Use Price settings'
               Margins.Left = 2
               Margins.Top = 2
@@ -1049,7 +1048,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
               Color = clWhite
               Enabled = False
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
+              Font.Color = 4473924
               Font.Height = -11
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -1108,7 +1107,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
               Color = clWhite
               Enabled = False
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
+              Font.Color = 4473924
               Font.Height = -11
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -1145,7 +1144,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
               Color = clWhite
               Enabled = False
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
+              Font.Color = 4473924
               Font.Height = -11
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -1161,8 +1160,8 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
             object __cbxAvailability: TsCheckBox
               Left = 109
               Top = 3
-              Width = 20
-              Height = 16
+              Width = 17
+              Height = 13
               Margins.Left = 2
               Margins.Top = 2
               Margins.Right = 2
@@ -1531,7 +1530,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
               object cbxShowLinkedCells: TsCheckBox
                 Left = 5
                 Top = 2
-                Width = 121
+                Width = 118
                 Height = 17
                 Margins.Left = 2
                 Margins.Top = 2
@@ -1972,7 +1971,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
             object cbxRateRestrictions: TsCheckBox
               Left = 5
               Top = 4
-              Width = 141
+              Width = 138
               Height = 23
               Margins.Left = 2
               Margins.Top = 2
@@ -1994,7 +1993,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
             object cbxShowSubrates: TsCheckBox
               Left = 411
               Top = 29
-              Width = 103
+              Width = 100
               Height = 17
               Margins.Left = 2
               Margins.Top = 2
@@ -2122,8 +2121,8 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
             object __cbxSelectAll: TsCheckBox
               Left = 7
               Top = 17
-              Width = 20
-              Height = 16
+              Width = 17
+              Height = 13
               TabOrder = 0
               OnClick = __cbxSelectAllClick
               ImgChecked = 0
@@ -2137,7 +2136,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
               BorderStyle = bsSingle
               Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
+              Font.Color = 4473924
               Font.Height = -11
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -2161,7 +2160,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
               Color = clWhite
               EditMask = '!99/99/9999;1; '
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
+              Font.Color = 4473924
               Font.Height = -11
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -2470,7 +2469,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
           Color = clWhite
           EditMask = '!99/99/9999;1; '
           Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
+          Font.Color = 4473924
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
@@ -2510,7 +2509,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
           VerticalAlignment = taAlignTop
           Color = clWhite
           Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
+          Font.Color = 4473924
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
@@ -2661,7 +2660,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
           Style = csDropDownList
           Color = clWhite
           Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
+          Font.Color = 4473924
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
@@ -2692,7 +2691,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
           Style = csDropDownList
           Color = clWhite
           Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
+          Font.Color = 4473924
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []

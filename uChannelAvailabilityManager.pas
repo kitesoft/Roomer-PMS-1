@@ -93,10 +93,12 @@ type
     FRoomTypeGroupCode, FRoomTypeTopClass: String;
     FStopSell: Boolean;
     FMinStay: integer;
+    FOldMinStay: integer;
     FForcingUpdate: Boolean;
 
     FAvailability: integer;
     FMaxStay: integer;
+    FOLdMaxStay: integer;
     FCOA: Boolean;
     FCOD: Boolean;
     FLOSArrivalDateBased: Boolean;
@@ -172,6 +174,7 @@ type
     property Id: integer read FId;
     property stopSell: Boolean read FStopSell Write setStopSell;
     property minStay: integer read FMinStay Write setMinStay;
+    property oldMinStay: integer read FOldMinStay;
     property channelId: integer read FChannelId;
     property rateRoundingType: integer read FRateRoundingType;
     property roomTypeGroupId: integer read FRoomTypeGroupId;
@@ -181,6 +184,7 @@ type
     property Price: Double read FPrice write SetPrice;
     property Availability: integer read FAvailability write SetAvailability;
     property MaxStay: integer read FMaxStay write SetMaxStay;
+    property oldMaxStay: integer read FOldMaxStay;
     property COA: Boolean read FCOA write SetCOA;
     property COD: Boolean read FCOD write SetCOD;
     property LOSArrivalDateBased: Boolean read FLOSArrivalDateBased write SetLOSArrivalDateBased;
@@ -1930,11 +1934,11 @@ var
                         lNewValue := ord(PriceData.stopSell);
                       end;
           MIN_EDIT:  begin
-                        lOldValue := NAN;
+                        lOldValue := PriceData.OldMinStay;
                         lNewValue := PriceData.MinStay;
                       end;
           MAX_EDIT:  begin
-                        lOldValue := NAN;
+                        lOldValue := PriceData.OldMaxStay;
                         lNewValue := PriceData.MaxStay;
                       end;
           COA_EDIT:  begin
@@ -5732,6 +5736,7 @@ begin
   FCurrencyId := _CurrencyId;
 
   FMinStay := minStay;
+  FOldMinStay := minStay;
   FStopSell := stopSell;
 
   FPrice := price;
@@ -5739,6 +5744,7 @@ begin
 
   FAvailability := _Availability;
   FMaxStay := _MaxStay;
+  FOldMaxStay := _MaxStay;
   FCOA := _COA;
   FCOD := _COD;
   FLOSArrivalDateBased := _LOSArrivalDateBased;
