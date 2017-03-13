@@ -5666,12 +5666,9 @@ begin
           // copytoclipboard(s);
           lExecutionPlan.AddExec(s);
 
-          try
-            lstActivity.add(CreateInvoiceActivityLog(g.qUser, FReservation,
-              FRoomReservation, FnewSplitNumber, ADD_LINE, sItemID, dLineTotal,
-              zInvoiceNumber, sDescription));
-          Except
-          end;
+          lstActivity.add(CreateInvoiceActivityLog(g.qUser, FReservation,
+            FRoomReservation, FnewSplitNumber, ADD_LINE, sItemID, dLineTotal,
+            zInvoiceNumber, sDescription));
 
           if RoomRentPaid then
             if invRoomReservation > 0 then
@@ -5885,18 +5882,14 @@ begin
           s := s + ')';
 
           lExecutionPlan.AddExec(s);
-          try
-            paymentValue := iMultiplier *
-              _StrToFloat(_strTokenAt(stlPaySelections[i], '|', 1));
-            paymentCode := _strTokenAt(stlPaySelections[i], '|', 0);
-            paymentStr := PaymentDescription + ' [' +
-              _strTokenAt(stlPaySelections[i], '|', 0) + ']';
 
-            lstActivity.add(CreateInvoiceActivityLog(g.qUser, FReservation,
-              FRoomReservation, FnewSplitNumber, ADD_PAYMENT, paymentCode,
-              paymentValue, zInvoiceNumber, paymentStr));
-          Except
-          end;
+          paymentValue := iMultiplier * _StrToFloat(_strTokenAt(stlPaySelections[i], '|', 1));
+          paymentCode := _strTokenAt(stlPaySelections[i], '|', 0);
+          paymentStr := PaymentDescription + ' [' + _strTokenAt(stlPaySelections[i], '|', 0) + ']';
+
+          lstActivity.add(CreateInvoiceActivityLog(g.qUser, FReservation,
+            FRoomReservation, FnewSplitNumber, ADD_PAYMENT, paymentCode,
+            paymentValue, zInvoiceNumber, paymentStr));
 
           AllOk := True;
         end;
@@ -5980,20 +5973,14 @@ begin
             (FRoomReservation, FRoomReservation);
 
         finally
-          try
             lstActivity.add(CreateInvoiceActivityLog(g.qUser, FReservation,
               FRoomReservation, FnewSplitNumber, PAY_AND_PRINT,
               inttostr(zInvoiceNumber), FTotal, 0, 'Invoice added '));
-          Except
-          end;
 
           for i := 0 to lstActivity.Count - 1 do
           begin
-            try
-              if lstActivity[i] <> '' then
-                WriteInvoiceActivityLog(lstActivity[i]);
-            Except
-            end;
+            if lstActivity[i] <> '' then
+              WriteInvoiceActivityLog(lstActivity[i]);
           end;
         end;
 
@@ -7071,15 +7058,10 @@ begin
     if cmd_bySQL(s) then
     begin
       mPayments.delete;
-      try
-        AddInvoiceActivityLog(g.qUser, rec.reservation, rec.RoomReservation, 1
-          // field typeindex 0 = invoice payment 1 = downpayment
-          , DELETE_PAYMENT, rec.PaymentType, rec.Amount, zInvoiceNumber,
-          rec.Description);
-      Except
-
-      end;
-
+      AddInvoiceActivityLog(g.qUser, rec.reservation, rec.RoomReservation, 1
+        // field typeindex 0 = invoice payment 1 = downpayment
+        , DELETE_PAYMENT, rec.PaymentType, rec.Amount, zInvoiceNumber,
+        rec.Description);
     end;
 
     DisplayTotals;
@@ -7131,15 +7113,10 @@ begin
 
       if cmd_bySQL(s) then
       begin
-        try
-          AddInvoiceActivityLog(g.qUser, rec.reservation, rec.RoomReservation, 1
+        AddInvoiceActivityLog(g.qUser, rec.reservation, rec.RoomReservation, 1
             // field typeindex 0 = invoice payment 1 = downpayment
             , DELETE_PAYMENT, rec.PaymentType, rec.Amount, zInvoiceNumber,
             rec.Description);
-        Except
-
-        end;
-
       end;
 
       DisplayTotals;
@@ -8330,13 +8307,9 @@ begin
 
   if isOK then
   begin
-    try
-      AddInvoiceActivityLog(g.qUser, FReservation, FRoomReservation,
-        FnewSplitNumber, PRINT_PROFORMA, '', FTotal, iInvoiceNumber,
-        'Print Proforma');
-    Except
-
-    end;
+    AddInvoiceActivityLog(g.qUser, FReservation, FRoomReservation,
+      FnewSplitNumber, PRINT_PROFORMA, '', FTotal, iInvoiceNumber,
+      'Print Proforma');
   end;
 
 end;

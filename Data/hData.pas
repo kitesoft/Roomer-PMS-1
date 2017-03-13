@@ -3463,19 +3463,15 @@ begin
   if result then
   begin
     NewID := GetLastID('payments');
-    try
-          AddInvoiceActivityLog(g.quser
-                               ,theData.reservation
-                               ,theData.RoomReservation
-                               ,theData.TypeIndex
-                               ,ADD_PAYMENT
-                               ,theData.PayType
-                               ,theData.Amount
-                               ,theData.InvoiceNumber
-                               ,theData.Description);
-    Except
-    end;
-
+    AddInvoiceActivityLog(g.quser
+                         ,theData.reservation
+                         ,theData.RoomReservation
+                         ,theData.TypeIndex
+                         ,ADD_PAYMENT
+                         ,theData.PayType
+                         ,theData.Amount
+                         ,theData.InvoiceNumber
+                         ,theData.Description);
   end;
 
 end;
