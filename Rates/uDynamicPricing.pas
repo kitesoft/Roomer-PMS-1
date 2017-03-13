@@ -533,12 +533,12 @@ procedure TfrmDynamicPricing.DeleteSelectedPriceRule(DataSet: TDataSet);
 var s : String;
 begin
   s := 'DELETE FROM home100.DYNAMIC_PRICING_RULES ' +
-       format('WHERE HOTEL_ID = ''%s'' ', [DataSet['HOTEL_ID']]) +
-       format('AND ROOMTYPEGROUP_CODE = ''%s'' ', [DataSet['ROOMTYPEGROUP_CODE']]) +
-       format('AND MIN_AVAIL = ''%d'' ', [DataSet['MIN_AVAIL']]) +
-       format('AND MAX_AVAIL = ''%d'' ', [DataSet['MAX_AVAIL']]) +
-       format('AND START_DATE_RANGE = ''%d'' ', [dateToSqlString(DataSet['START_DATE_RANGE'])]) +
-       format('AND END_DATE_RANGE = ''%d'' ', [dateToSqlString(DataSet['END_DATE_RANGE'])]);
+       format('WHERE HOTEL_ID = %s ', [_db(m_Hotel_id.asString)]) +
+       format('AND ROOMTYPEGROUP_CODE = %s ', [_db(m_ROOMTYPEGROUP_CODE.AsString)]) +
+       format('AND MIN_AVAIL = %s ', [_db(m_MIN_AVAIL.AsInteger)]) +
+       format('AND MAX_AVAIL = %s ', [_db(m_MAX_AVAIL.AsInteger)]) +
+       format('AND START_DATE_RANGE = %s ', [_db(m_START_DATE_RANGE.AsDateTime)]) +
+       format('AND END_DATE_RANGE = %s ', [_db(m_END_DATE_RANGE.AsDateTime)]);
   d.roomerMainDataSet.DoCommand(s);
 end;
 

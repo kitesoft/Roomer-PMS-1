@@ -6132,7 +6132,7 @@ begin
       'JOIN channels ch ON ch.channelManagerId=dpr.CHANNEL_ID ' +
       'JOIN channelmanagers cm ON cm.code=dpr.CHANNEL_MANAGER_ID ' +
       format('WHERE HOTEL_ID = ''%s'' ', [d.roomerMainDataSet.hotelId]) +
-      format('AND END_DATE_RANGE > %s ', [_db(dateToSqlString(now))]) +
+      format('AND END_DATE_RANGE >= %s ', [_db(dateToSqlString(now))]) +
       iif(TRIM(chManCode) = '', '', format('AND CHANNEL_MANAGER_ID = ''%s'' ', [chManCode])) +
       iif(TRIM(channelCode) = '', '', format('AND CHANNEL_ID = ''%s'' ', [channelCode]))+
       iif(TRIM(RoomClass) = '', '', format('AND ROOMTYPEGROUP_CODE = ''%s'' ', [RoomClass])) +
