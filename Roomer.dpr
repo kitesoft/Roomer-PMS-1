@@ -325,6 +325,7 @@ begin
 
     Application.Run;
   finally
+    Application.OnException := nil;
     RoomerExceptionHandler.Free;
   end;
 end.
