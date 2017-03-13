@@ -316,9 +316,9 @@ type
     tvAllReservationshidden: TcxGridDBColumn;
     tvAllReservationsEquipments: TcxGridDBColumn;
     lvAllReservations: TcxGridLevel;
-    btnGroupReportExpandAll: TcxButton;
-    btnGroupreportCollapseAll: TcxButton;
-    btnGuestListExcel: TcxButton;
+    btnGroupReportExpandAll: TsButton;
+    btnGroupreportCollapseAll: TsButton;
+    btnGuestListExcel: TsButton;
     rptbGroups: TppReport;
     ppParameterList1: TppParameterList;
     dplGroups: TppDBPipeline;
@@ -458,7 +458,7 @@ type
     cxBarEditItem1: TcxBarEditItem;
     dxBarSubItem2: TdxBarSubItem;
     __dxBarCombo1: TdxBarCombo;
-    btnGroupReportShow: TcxButton;
+    btnGroupReportShow: TsButton;
     rbTabExternal: TdxRibbonTab;
     barinnBar12: TdxBar;
     barinnBar3: TdxBar;
@@ -572,10 +572,10 @@ type
     __cbxHotels: TsComboBox;
     pnlOffline: TsPanel;
     btnGoOnline: TsButton;
-    btnSearchForGuests: TcxButton;
+    btnSearchForGuests: TsButton;
     timBlinker: TTimer;
     dxBarLargeButton2: TdxBarLargeButton;
-    btnBreakfastGuests: TcxButton;
+    btnBreakfastGuests: TsButton;
     btnLostAndFound: TdxBarLargeButton;
     btnRptNotes: TdxBarLargeButton;
     pnlDayStatus: TsPanel;
@@ -2697,7 +2697,6 @@ begin
 
   frmDateStatistics := TfrmEmbDateStatistics.Create(self);
   frmDateStatistics.pnlStatistics.Parent := pnlStatistics;
-
 end;
 
 procedure TfrmMain.FormDestroy(Sender: TObject);
@@ -2730,12 +2729,6 @@ begin
     FrmMessagesTemplates.Free;
   Except
   end;
-  // Strange place, but destroying in finalization of uActivityLogs gives a InvalidPointer when freeing FSQL TStringlist of TRoomerDataset
-  try
-    freeandNil(ActivityLogGetThreadedData);
-  Except
-  end;
-
   zOneDay_stlTakenTypes.Free;
 end;
 
@@ -3445,7 +3438,7 @@ begin
         else if (lLoginFormResult = lrLogin) and (NOT OffLineMode) AND d.roomerMainDataSet.IsConnectedToInternet AND
           d.roomerMainDataSet.RoomerPlatformAvailable then
         begin
-          d.roomerMainDataSet.LOGIN(lHotelID, userName, password, cOpenAPIAppicationID, TRoomerVersionInfo.FileVersion);
+          d.roomerMainDataSet.Login(lHotelID, userName, password, TRoomerVersionInfo.FileVersion);
           FOffLineMode := false;
         end
         else
@@ -11686,26 +11679,12 @@ end;
 procedure TfrmMain._ClosedInvoicesDetailed;
 var
   sRoom: string;
+  lArrival: TDate;
 begin
   sRoom := '';
-
-  Application.CreateForm(TfrmInvoiceList2, frmInvoiceList2);
-  try
-    if frmInvoiceList2.ShowModal = mrOK then
-    begin
-      if frmInvoiceList2.zRoom <> '' then
-      begin
-        dtDate.Date := trunc(frmInvoiceList2.zArrival);
-        // RefreshGrid;
-        sRoom := frmInvoiceList2.zRoom;
-      end;
-    end;
-  finally
-    frmInvoiceList2.Free;
-  end;
-
-  if sRoom <> '' then
+  if ShowClosedInvoicesDetailed(sRoom, lArrival) then
   begin
+    dtDate.Date := lArrival;
     zRoom := sRoom;
     timBlink.Enabled := true;
   end;

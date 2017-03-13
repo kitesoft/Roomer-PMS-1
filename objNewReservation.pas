@@ -294,7 +294,6 @@ TYPE
     FSendConfirmationEmail: Boolean;
     FAlertList: TAlertList;
     FMarket: TReservationMarketType;
-    FThreadedDataPutter : TGetThreadedData;
     FCOnfirmationEmailSent: boolean;
     procedure RemoveRemnants(ResId: Integer);
 //    procedure DeleteReservation(aReservation: integer);
@@ -739,7 +738,6 @@ constructor TNewReservation.Create(const aHotelCode, Staff: string;
                                                       const contactAddress3: string = '';
                                                       const contactAddress4: string = '');
 begin
-  FThreadedDataPutter := nil;
   FHotelcode := Hotelcode;
   FnewRoomReservations := TnewRoomReservation.Create(aHotelCode);
 
@@ -769,7 +767,6 @@ begin
   FAlertList.Free;
   FHomeCustomer.Free;
   FNewRoomReservations.Free;
-  FThreadedDataPutter.Free;
   inherited;
 end;
 
@@ -810,15 +807,22 @@ const UPDATE_QUERY = 'INSERT INTO home100.DOORCODE_MESSAGE_SCHEDULE('
 
 
 procedure TNewReservation.RemoveRemnants(ResId : Integer);
-var s, s1 : String;
+var
+  s, s1 : String;
+  lPostThreadedData : TPutOrPostDataThreaded;
+
+
 begin
   frmBusyMessage.ChangeMessage(GetTranslatedText('shTx_Removing_Allotment_Traces'));
-  FThreadedDataPutter := TGetThreadedData.Create;
-  s := format('resapi/booking/remove/reservation2/%d', [ResId]);
-  s1 := format('transactional=%s&reason=%s&request=%s&information=%s&canceltype=%d&makecopy=%s',
-                  [BoolToString(False), 'Removing remnants after creating new reservation from allotment', '', '', 0, BoolToString(False)]);
-  FThreadedDataPutter.Post(s, s1, nil);
-//  d.roomerMainDataSet.SystemRemoveReservation(DeleteResNr, False, False);
+  lPostThreadedData := TPutOrPostDataThreaded.Create;
+  try
+    s := format('resapi/booking/remove/reservation2/%d', [ResId]);
+    s1 := format('transactional=%s&reason=%s&request=%s&information=%s&canceltype=%d&makecopy=%s',
+                    [BoolToString(False), 'Removing remnants after creating new reservation from allotment', '', '', 0, BoolToString(False)]);
+    lPostThreadedData.Post(s, s1, nil);
+  finally
+    lPostThreadedData.Free;
+  end;
 end;
 
 procedure TNewReservation.SendConfirmationEmailIfNeeded;
@@ -1201,7 +1205,6 @@ begin
 
         if (DeleteResNr > 0) then
         begin
-         try
            lstReservationActivity.add(CreateReservationActivityLog(g.quser
                                                  ,DeleteResNr
                                                  ,0
@@ -1210,8 +1213,6 @@ begin
                                                  ,''
                                                  ,Format('Deleting before creating new reservation %d', [FReservationId])
                                    ));
-         Except
-         end;
          doRemoveRemnants := True;
         end;
 
@@ -1355,7 +1356,6 @@ begin
           ExecutionPlan.AddExec(SQL_INS_RoomReservation(roomReservationData));
 
     //***Log roomreservation
-         try
            lstReservationActivity.add(CreateReservationActivityLog(g.quser
                                                  ,FReservationId
                                                  ,roomReservationData.RoomReservation
@@ -1364,8 +1364,6 @@ begin
                                                  ,roomReservationData.Room //New vlaue
                                                  ,'Roomtype :'+roomReservationData.Roomtype+' Status :'+roomReservationData.Status //Moreinfo
                                    ));
-         Except
-         end;
 
           invoiceHeadData.RoomReservation := lNewRoomRes.RoomReservation;
           ExecutionPlan.AddExec(SQL_INS_InvoiceHead(invoiceHeadData));
@@ -1477,7 +1475,6 @@ begin
 
           // FirstGuest
           ExecutionPlan.AddExec(SQL_INS_Person(personData));
-           try
              lstReservationActivity.add(CreateReservationActivityLog(g.quser
                                                    ,FReservationId
                                                    ,roomReservationData.RoomReservation
@@ -1486,8 +1483,6 @@ begin
                                                    ,'1' //New vlaue
                                                    ,'Add Main Guest :'+personData.name //Moreinfo
                                      ));
-           Except
-           end;
 
 
           if numGuests > 1 then
@@ -1505,7 +1500,6 @@ begin
 
               // rest of the Guests
               ExecutionPlan.AddExec(SQL_INS_Person(personData));
-              try
                 lstreservationActivity.add(CreateReservationActivityLog(g.quser
                                                        ,FReservationId
                                                        ,roomReservationData.RoomReservation
@@ -1514,8 +1508,6 @@ begin
                                                        ,inttostr(ii) //New vlaue
                                                        ,'Add Guest :'+personData.name //Moreinfo
                                          ));
-              Except
-              end;
 
             end;
           end;
@@ -1583,7 +1575,6 @@ begin
             invoiceLineData.RevenueCorrection  := lRevenueCorrection;
             ExecutionPlan.AddExec(SQL_INS_InvoiceLine(invoiceLineData));
             //***Add invoice log here
-            try
                lstInvoiceActivity.add(CreateInvoiceActivityLog(g.quser
                                      ,invoiceLineData.Reservation
                                      ,invoiceLineData.RoomReservation
@@ -1593,9 +1584,6 @@ begin
                                      ,invoiceLineData.Total
                                      ,-1
                                      ,invoiceLineData.Description));
-            Except
-            end;
-
 
           end;
 
@@ -1655,7 +1643,6 @@ begin
             invoiceLineData.InvoiceIndex       := 0;
             ExecutionPlan.AddExec(SQL_INS_InvoiceLine(invoiceLineData));
             //***Add invoice log here
-            try
                lstInvoiceActivity.add(CreateInvoiceActivityLog(g.quser
                                      ,invoiceLineData.Reservation
                                      ,invoiceLineData.RoomReservation
@@ -1665,9 +1652,6 @@ begin
                                      ,invoiceLineData.Total
                                      ,-1
                                      ,invoiceLineData.Description));
-            Except
-            end;
-
 
           end;
         end; // for 0 to roomcount
@@ -1742,20 +1726,14 @@ begin
       //Write logs
       for i := 0 to lstReservationActivity.Count-1 do
       begin
-        try
-          if LstReservationActivity[i] <> '' then
-            WriteReservationActivityLog(LstReservationActivity[i]);
-        Except
-        end;
+        if LstReservationActivity[i] <> '' then
+          WriteReservationActivityLog(LstReservationActivity[i]);
       end;
 
       for i := 0 to lstInvoiceActivity.Count-1 do
       begin
-        try
-          if LstInvoiceActivity[i] <> '' then
-            WriteInvoiceActivityLog(LstInvoiceActivity[i]);
-        Except
-        end;
+        if LstInvoiceActivity[i] <> '' then
+          WriteInvoiceActivityLog(LstInvoiceActivity[i]);
       end;
     end;
 

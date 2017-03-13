@@ -7,6 +7,15 @@ uses
   ;
 
 type
+  ERoomerException = class(Exception)
+  public
+    /// <summary>
+    ///   If set to false, the exception will only be logged (if logging is active) and the user will not be
+    ///  notified.
+    /// </summary>
+    function ShowToUSer: boolean; virtual;
+  end;
+
   TRoomerExceptionHandler = class(TObject)
   private
     FExceptionsLoggingActive: boolean;
@@ -164,15 +173,14 @@ begin
     TSplashFormManager.TryHideForm;
   except
   end;
-  // --
+
   if (E is EDivByZero) or (E is ERangeError) or (E is ERoomerOfflineAssertionException) or
     (E is EInvalidPointer) or
-  // ( E is EOverflow          ) or
-  // ( E is EUnderflow         ) or
     (E is EInvalidOp) or (E is EAbstractError) or (E is EIntOverflow) or (E is EAccessViolation) or (E is EControlC) or
     (E is EPrivilege) or (E is EInvalidCast)
     or (E is EVariantError) or (E is EAssertionFailed) or (E is EIntfCastError) or
-    (pos('out of bounds', ANSIlowercase(E.message)) > 0) then
+    (pos('out of bounds', ANSIlowercase(E.message)) > 0)  or
+    (E is ERoomerException and not ERoomerException(E).SHowToUser) then
   begin
     if ExceptionsLoggingActive then
       ExceptionsLoggingActive := AppendToLogfile(E.message, true);
@@ -192,6 +200,13 @@ procedure TRoomerExceptionHandler.SetExceptionLogPath(const Value: string);
 begin
   FExceptionLogPath := Value;
   forceDirectories(ExceptionLogPath);
+end;
+
+{ ERoomerException }
+
+function ERoomerException.ShowToUSer: boolean;
+begin
+  Result := false;
 end;
 
 initialization

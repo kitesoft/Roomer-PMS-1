@@ -1839,7 +1839,7 @@ function IVH_RestoreID: integer;
 function IVH_GetLastID: integer;
 
 procedure SendInvoicesToFinancePacket(zInvoiceNumber: integer);
-procedure SendInvoicesToFinancePacketThreaded(var FThreadedDataPutter : TGetThreadedData; zInvoiceNumber: integer);
+procedure SendInvoicesToFinancePacketThreaded(zInvoiceNumber: integer);
 
 function NumberOfInvoiceLines(iReservation, iRoomReservation, iSplitNumber: integer; InvoiceIndex : Integer = -1): integer;
 function GetRate(Currency: string): double;
@@ -3456,19 +3456,15 @@ begin
   if result then
   begin
     NewID := GetLastID('payments');
-    try
-          AddInvoiceActivityLog(g.quser
-                               ,theData.reservation
-                               ,theData.RoomReservation
-                               ,theData.TypeIndex
-                               ,ADD_PAYMENT
-                               ,theData.PayType
-                               ,theData.Amount
-                               ,theData.InvoiceNumber
-                               ,theData.Description);
-    Except
-    end;
-
+    AddInvoiceActivityLog(g.quser
+                         ,theData.reservation
+                         ,theData.RoomReservation
+                         ,theData.TypeIndex
+                         ,ADD_PAYMENT
+                         ,theData.PayType
+                         ,theData.Amount
+                         ,theData.InvoiceNumber
+                         ,theData.Description);
   end;
 
 end;
@@ -4819,20 +4815,20 @@ begin
   end;
 end;
 
-procedure SendInvoicesToFinancePacketThreaded(var FThreadedDataPutter : TGetThreadedData; zInvoiceNumber: integer);
-var s, s1 : String;
+procedure SendInvoicesToFinancePacketThreaded(zInvoiceNumber: integer);
+var
+  s, s1 : String;
+  lPutThreadedData: TPutOrPostDataThreaded;
 begin
   if g.qSendInvoicesToFinancePacket then
   begin
-    // BOOK KEEPING / Finance
-//    remoteResult := d.roomerMainDataSet.SystemSendInvoiceToBookkeeping(zInvoiceNumber);
-    FThreadedDataPutter := TGetThreadedData.Create;
-    s := format('financekeys/%d', [zInvoiceNumber]);
-    FThreadedDataPutter.Put(s, '', nil);
-//    if remoteResult <> '' then
-//    begin
-//      HandleFinanceBookKeepingExceptions(zInvoiceNumber, remoteResult);
-//    end;
+    lPutThreadedData := TPutOrPostDataThreaded.Create;
+    try
+      s := format('financekeys/%d', [zInvoiceNumber]);
+      lPutThreadedData.Put(s, '', nil);
+    finally
+      lPutThreadedData.Free;
+    end;
   end;
 end;
 

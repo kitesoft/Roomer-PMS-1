@@ -1,24 +1,20 @@
-object frmInvoiceList2: TfrmInvoiceList2
+inherited frmInvoiceList2: TfrmInvoiceList2
   Left = 738
   Top = 198
   Caption = 'Detailed Invoice List'
   ClientHeight = 616
   ClientWidth = 1133
-  Color = clBtnFace
-  Font.Charset = DEFAULT_CHARSET
-  Font.Color = clWindowText
   Font.Height = -11
-  Font.Name = 'Tahoma'
-  Font.Style = []
-  KeyPreview = True
-  OldCreateOrder = False
   Position = poOwnerFormCenter
   OnCreate = FormCreate
-  OnKeyDown = FormKeyDown
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
-  object LMDSimplePanel1: TsPanel
+  inherited sbStatusBar: TsStatusBar
+    Top = 596
+    Width = 1133
+  end
+  object LMDSimplePanel1: TsPanel [1]
     Left = 0
     Top = 0
     Width = 1133
@@ -69,7 +65,7 @@ object frmInvoiceList2: TfrmInvoiceList2
         Default = True
         ImageIndex = 28
         Images = DImages.PngImageList1
-        TabOrder = 9
+        TabOrder = 12
         OnClick = LMDSpeedButton3Click
         SkinData.SkinSection = 'BUTTON'
       end
@@ -89,7 +85,7 @@ object frmInvoiceList2: TfrmInvoiceList2
         Font.Style = []
         MaxLength = 10
         ParentFont = False
-        TabOrder = 0
+        TabOrder = 4
         Text = '  -  -    '
         OnChange = dtFromChange
         SkinData.SkinSection = 'EDIT'
@@ -112,7 +108,7 @@ object frmInvoiceList2: TfrmInvoiceList2
         Font.Style = []
         MaxLength = 10
         ParentFont = False
-        TabOrder = 1
+        TabOrder = 5
         Text = '  -  -    '
         OnChange = dtToChange
         SkinData.SkinSection = 'EDIT'
@@ -122,20 +118,20 @@ object frmInvoiceList2: TfrmInvoiceList2
       object rbtDates: TsRadioButton
         Left = 4
         Top = 19
-        Width = 82
-        Height = 19
+        Width = 74
+        Height = 20
         Caption = 'Date range'
-        TabOrder = 2
+        TabOrder = 0
         OnClick = rbtDatesClick
         SkinData.SkinSection = 'CHECKBOX'
       end
       object rbtInvoices: TsRadioButton
         Left = 4
         Top = 42
-        Width = 96
-        Height = 19
+        Width = 88
+        Height = 20
         Caption = 'Number range'
-        TabOrder = 3
+        TabOrder = 1
         OnClick = rbtDatesClick
         SkinData.SkinSection = 'CHECKBOX'
       end
@@ -162,7 +158,7 @@ object frmInvoiceList2: TfrmInvoiceList2
         Font.Style = []
         ItemIndex = -1
         ParentFont = False
-        TabOrder = 4
+        TabOrder = 6
         OnChange = cbxPeriodChange
         Items.Strings = (
           ' - None Selected -'
@@ -192,7 +188,7 @@ object frmInvoiceList2: TfrmInvoiceList2
         Font.Name = 'Tahoma'
         Font.Style = []
         ParentFont = False
-        TabOrder = 5
+        TabOrder = 9
         OnChange = edtFreeTextChange
         SkinData.SkinSection = 'EDIT'
         BoundLabel.Font.Charset = DEFAULT_CHARSET
@@ -204,21 +200,21 @@ object frmInvoiceList2: TfrmInvoiceList2
       object rbtFreeText: TsRadioButton
         Left = 4
         Top = 68
-        Width = 75
-        Height = 19
+        Width = 67
+        Height = 20
         Caption = 'Text filter'
-        TabOrder = 6
+        TabOrder = 2
         OnClick = rbtDatesClick
         SkinData.SkinSection = 'CHECKBOX'
       end
       object rbtLast: TsRadioButton
         Left = 4
         Top = 92
-        Width = 48
-        Height = 19
+        Width = 40
+        Height = 20
         Caption = 'Last'
         Checked = True
-        TabOrder = 7
+        TabOrder = 3
         TabStop = True
         OnClick = rbtDatesClick
         SkinData.SkinSection = 'CHECKBOX'
@@ -246,7 +242,7 @@ object frmInvoiceList2: TfrmInvoiceList2
         Font.Style = []
         ItemIndex = -1
         ParentFont = False
-        TabOrder = 8
+        TabOrder = 10
         OnChange = cbxTxtTypeChange
         Items.Strings = (
           'Invoice Number'
@@ -268,7 +264,7 @@ object frmInvoiceList2: TfrmInvoiceList2
         Font.Name = 'Tahoma'
         Font.Style = []
         ParentFont = False
-        TabOrder = 10
+        TabOrder = 11
         OnChange = edLastCountChange
         SkinData.SkinSection = 'EDIT'
         MaxValue = 99
@@ -287,7 +283,7 @@ object frmInvoiceList2: TfrmInvoiceList2
         Font.Name = 'Tahoma'
         Font.Style = []
         ParentFont = False
-        TabOrder = 11
+        TabOrder = 7
         OnChange = edtInvoiceFromChange
         SkinData.SkinSection = 'EDIT'
         MaxValue = 999999
@@ -306,7 +302,7 @@ object frmInvoiceList2: TfrmInvoiceList2
         Font.Name = 'Tahoma'
         Font.Style = []
         ParentFont = False
-        TabOrder = 12
+        TabOrder = 8
         OnChange = edtInvoiceToChange
         SkinData.SkinSection = 'EDIT'
         MaxValue = 999999
@@ -432,7 +428,7 @@ object frmInvoiceList2: TfrmInvoiceList2
       end
     end
   end
-  object sPanel1: TsPanel
+  object sPanel1: TsPanel [2]
     Left = 0
     Top = 183
     Width = 1133
@@ -455,9 +451,9 @@ object frmInvoiceList2: TfrmInvoiceList2
       Font.Style = []
     end
     object btnClear: TsSpeedButton
-      Left = 311
+      Left = 322
       Top = 6
-      Width = 59
+      Width = 100
       Height = 21
       Caption = 'Clear'
       OnClick = btnClearClick
@@ -468,7 +464,7 @@ object frmInvoiceList2: TfrmInvoiceList2
     object edFilter: TsEdit
       Left = 107
       Top = 6
-      Width = 206
+      Width = 209
       Height = 21
       Color = clWhite
       Font.Charset = DEFAULT_CHARSET
@@ -482,17 +478,15 @@ object frmInvoiceList2: TfrmInvoiceList2
       SkinData.SkinSection = 'EDIT'
     end
   end
-  object grInvoiceHead: TcxGrid
+  object grInvoiceHead: TcxGrid [3]
     Left = 0
     Top = 216
     Width = 1133
-    Height = 400
+    Height = 380
     Align = alClient
     TabOrder = 2
     LookAndFeel.NativeStyle = False
-    ExplicitLeft = -1
     object tvInvoiceHead: TcxGridDBBandedTableView
-      PopupMenu = PopupMenu1
       OnDblClick = tvInvoiceHeadDblClick
       Navigator.Buttons.CustomButtons = <>
       Navigator.Buttons.PriorPage.Enabled = False
@@ -505,8 +499,9 @@ object frmInvoiceList2: TfrmInvoiceList2
       Navigator.Buttons.Cancel.Enabled = False
       Navigator.InfoPanel.Visible = True
       Navigator.Visible = True
+      FilterBox.Visible = fvNever
       OnEditing = tvInvoiceHeadEditing
-      DataController.DataModeController.GridMode = True
+      OnSelectionChanged = tvInvoiceHeadSelectionChanged
       DataController.DataSource = mDS
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <
@@ -545,6 +540,7 @@ object frmInvoiceList2: TfrmInvoiceList2
           Column = tvInvoiceHeadLocalVAT
         end>
       DataController.Summary.SummaryGroups = <>
+      Filtering.ColumnFilteredItemsList = True
       OptionsData.CancelOnExit = False
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
@@ -589,6 +585,7 @@ object frmInvoiceList2: TfrmInvoiceList2
       object tvInvoiceHeadexternalInvoiceId: TcxGridDBBandedColumn
         Caption = 'External #'
         DataBinding.FieldName = 'externalInvoiceId'
+        OnGetDisplayText = tvInvoiceHeadexternalInvoiceIdGetDisplayText
         Width = 54
         Position.BandIndex = 1
         Position.ColIndex = 0
@@ -879,6 +876,15 @@ object frmInvoiceList2: TfrmInvoiceList2
       GridView = tvInvoiceHead
     end
   end
+  inherited cxsrRoomerStyleRepository: TcxStyleRepository
+    PixelsPerInch = 96
+    inherited dxssRoomerGridReportLink: TdxGridReportLinkStyleSheet
+      BuiltIn = True
+    end
+    inherited cxssRoomerGridTableView: TcxGridTableViewStyleSheet
+      BuiltIn = True
+    end
+  end
   object FormStore: TcxPropertiesStore
     Components = <
       item
@@ -1069,12 +1075,11 @@ object frmInvoiceList2: TfrmInvoiceList2
     SortID = 0
     SubLanguageID = 1
     LocaleID = 1024
-    BeforePost = m22_BeforePost
     Left = 344
     Top = 432
   end
-  object PopupMenu1: TPopupMenu
-    OnPopup = PopupMenu1Popup
+  object pmnuExportMenu: TPopupMenu
+    OnPopup = pmnuExportMenuPopup
     Left = 696
     Top = 392
     object mnuExport: TMenuItem

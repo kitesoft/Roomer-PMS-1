@@ -303,7 +303,7 @@ begin
     TSplashFormManager.Show;
 
     Application.CreateForm(TD, D);
-  D.ApplicationId := cOpenAPIAppicationID;
+    D.ApplicationId := cOpenAPIApplicationID;
 
     Application.CreateForm(TDReportData, DReportData);
     TSplashFormManager.UpdateProgress('Loading forms...');
@@ -326,6 +326,7 @@ begin
 
     Application.Run;
   finally
+    Application.OnException := nil;
     RoomerExceptionHandler.Free;
   end;
 end.

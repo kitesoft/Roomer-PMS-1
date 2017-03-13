@@ -200,8 +200,6 @@ end;
 procedure TfrmBaseRoomerForm.Loaded;
 begin
   psRoomerBase.StorageName := 'Software\Roomer\FormStatus\' + classname;
-  psRoomerBase.Components[0].Component := Self;
-
   inherited;
   BusyState := fsIdle;
 end;

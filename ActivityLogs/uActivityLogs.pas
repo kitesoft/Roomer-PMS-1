@@ -4,9 +4,12 @@ interface
 
 uses SysUtils, Classes, uUtils, TypInfo,
      uRoomerThreadedRequest
+     , RoomerExceptionHandling
      ;
 
 type
+
+  EActivityLogException = class(ERoomerException);
 
   TActivityType = (ROOMER, INVOICE, RESERVATION, AVAILABILITY, RATE, TABLE_CHANGE, OFFLINEREPORT);
   TRoomerAction = (LOGIN, LOGOUT, BUTTON_CLICK, ERROR);
@@ -126,8 +129,6 @@ function CreateReservationActivityLog(const user : String;
 
 function WriteReservationActivityLog(const sLine : String) : String;
 
-var ActivityLogGetThreadedData : TGetThreadedData = nil;
-
 implementation
 
 uses Menus, sButton, sLabel, ud, ioUtils, uAppGlobal, uDateUtils, uStringUtils, dxBar
@@ -136,6 +137,7 @@ uses Menus, sButton, sLabel, ud, ioUtils, uAppGlobal, uDateUtils, uStringUtils, 
     , Vcl.StdCtrls
     , VCl.Controls
     , VCL.Forms
+    , VCL.Dialogs
     , Math
     ;
 
@@ -233,7 +235,12 @@ end;
 
 function WriteInvoiceActivityLog(const sLine : String) : String;
 begin
-  AddToTextFile(GetDataFileLocationWithName(INVOICE), sLine);
+  try
+    AddToTextFile(GetDataFileLocationWithName(INVOICE), sLine);
+  except
+    on e: Exception do
+      raise EActivityLogException.Create('Error when writing InvoiceActivity to activitylogs: '  +  #13#10 + E.Message);
+  end;
 end;
 
 procedure AddInvoiceActivityLog(const user : String;
@@ -267,25 +274,30 @@ procedure AddReservationActivityLog(const user : String;
                                     const moreInfo : String = '');
 var categoryName, actionName, sLine : String;
 begin
-  categoryName := GetEnumName(TypeInfo(TActivityType), Ord(RESERVATION));
-  actionName := GetEnumName(TypeInfo(TReservationAction), Ord(action));
+  try
+    categoryName := GetEnumName(TypeInfo(TActivityType), Ord(RESERVATION));
+    actionName := GetEnumName(TypeInfo(TReservationAction), Ord(action));
 
-  sLine := CreateXmlElement(user,
-                            uDateUtils.dateTimeToXmlString(now),
-                            categoryName,
-                            actionName,
-                            moreinfo,
-                            moreinfo,
-                            OldValue,
-                            NewValue,
-                            '',
-                            iReservation,
-                            iRoomReservation,
-                            0,
-                            0,
-                            0,
-                            '');
-  AddToTextFile(GetDataFileLocationWithName(RESERVATION), sLine);
+    sLine := CreateXmlElement(user,
+                              uDateUtils.dateTimeToXmlString(now),
+                              categoryName,
+                              actionName,
+                              moreinfo,
+                              moreinfo,
+                              OldValue,
+                              NewValue,
+                              '',
+                              iReservation,
+                              iRoomReservation,
+                              0,
+                              0,
+                              0,
+                              '');
+    AddToTextFile(GetDataFileLocationWithName(RESERVATION), sLine);
+  except
+    on e: Exception do
+      raise EActivityLogException.Create('Error when writing ReservationActivity to activitylogs: '  +  #13#10 + E.Message);
+  end;
 end;
 
 procedure AddTableChangeActivityLog(const user : String;
@@ -297,25 +309,30 @@ procedure AddTableChangeActivityLog(const user : String;
                                     const moreInfo : String);
 var categoryName, actionName, sLine : String;
 begin
-  categoryName := GetEnumName(TypeInfo(TActivityType), Ord(TABLE_CHANGE));
-  actionName := GetEnumName(TypeInfo(TTableAction), Ord(action));
+  try
+    categoryName := GetEnumName(TypeInfo(TActivityType), Ord(TABLE_CHANGE));
+    actionName := GetEnumName(TypeInfo(TTableAction), Ord(action));
 
-  sLine := CreateXmlElement(user,
-                            uDateUtils.dateTimeToXmlString(now),
-                            categoryName,
-                            actionName,
-                            moreinfo,
-                            moreinfo,
-                            OldValue,
-                            NewValue,
-                            TableName,
-                            0,
-                            0,
-                            RecId,
-                            0,
-                            0,
-                            '');
-  AddToTextFile(GetDataFileLocationWithName(TABLE_CHANGE), sLine);
+    sLine := CreateXmlElement(user,
+                              uDateUtils.dateTimeToXmlString(now),
+                              categoryName,
+                              actionName,
+                              moreinfo,
+                              moreinfo,
+                              OldValue,
+                              NewValue,
+                              TableName,
+                              0,
+                              0,
+                              RecId,
+                              0,
+                              0,
+                              '');
+    AddToTextFile(GetDataFileLocationWithName(TABLE_CHANGE), sLine);
+  except
+    on e: Exception do
+      raise EActivityLogException.Create('Error when writing tablechange to activitylogs: '  +  #13#10 + E.Message);
+  end;
 end;
 
 
@@ -352,7 +369,12 @@ end;
 
 function WriteReservationActivityLog(const sLine : String) : String;
 begin
-  AddToTextFile(GetDataFileLocationWithName(RESERVATION), sLine);
+  try
+    AddToTextFile(GetDataFileLocationWithName(RESERVATION), sLine);
+  except
+    on e: Exception do
+      raise EActivityLogException.Create('Error when writing Reservationactivity to activitylogs: ' + #10#13 + sLine +  #13#10 + E.Message);
+  end;
 end;
 
 
@@ -368,28 +390,32 @@ var
   categoryName: string;
   actionName: string;
 begin
+  try
+    categoryName := GetEnumName(TypeInfo(TActivityType), ORD(OFFLINEREPORT));
+    actionName := GetEnumName(TypeInfo(TRoomerAction), ORD(action));
 
-  categoryName := GetEnumName(TypeInfo(TActivityType), ORD(OFFLINEREPORT));
-  actionName := GetEnumName(TypeInfo(TRoomerAction), ORD(action));
 
 
-
-  sLine := CreateXmlElement(user,
-                            uDateUtils.dateTimeToXmlString(now),
-                            categoryName + ': ' + reportname,
-                            actionName,
-                            result,
-                            moreinfo,
-                            '',
-                            '',
-                            '',
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            '');
-  AddToTextFile(GetDataFileLocationWithName(OFFLINEREPORT), sLine);
+    sLine := CreateXmlElement(user,
+                              uDateUtils.dateTimeToXmlString(now),
+                              categoryName + ': ' + reportname,
+                              actionName,
+                              result,
+                              moreinfo,
+                              '',
+                              '',
+                              '',
+                              0,
+                              0,
+                              0,
+                              0,
+                              0,
+                              '');
+    AddToTextFile(GetDataFileLocationWithName(OFFLINEREPORT), sLine);
+  except
+    on e: Exception do
+      raise EActivityLogException.Create('Error when writing OfflinereportActivity to activitylogs: '  +  #13#10 + E.Message);
+  end;
 
 end;
 
@@ -408,29 +434,33 @@ procedure AddRoomerActivityLog(const user : String;
                                const ADate : String = '');
 var categoryName, actionName, sLine : String;
 begin
+  if d.roomerMainDataSet.hotelId = '' then
+    exit;
+
   try
-    if d.roomerMainDataSet.hotelId = '' then exit;
-  except exit; end;
+    categoryName := GetEnumName(TypeInfo(TActivityType), ORD(ROOMER));
+    actionName := GetEnumName(TypeInfo(TRoomerAction), ORD(action));
 
-  categoryName := GetEnumName(TypeInfo(TActivityType), ORD(ROOMER));
-  actionName := GetEnumName(TypeInfo(TRoomerAction), ORD(action));
-
-  sLine := CreateXmlElement(user,
-                            uDateUtils.dateTimeToXmlString(now),
-                            categoryName,
-                            actionName,
-                            moreinfo,
-                            moreinfo,
-                            OldValue,
-                            NewValue,
-                            Code,
-                            Reservation,
-                            RoomReservation,
-                            ID_1,
-                            ID_2,
-                            ID_3,
-                            ADate);
-  AddToTextFile(GetDataFileLocationWithName(ROOMER), sLine);
+    sLine := CreateXmlElement(user,
+                              uDateUtils.dateTimeToXmlString(now),
+                              categoryName,
+                              actionName,
+                              moreinfo,
+                              moreinfo,
+                              OldValue,
+                              NewValue,
+                              Code,
+                              Reservation,
+                              RoomReservation,
+                              ID_1,
+                              ID_2,
+                              ID_3,
+                              ADate);
+    AddToTextFile(GetDataFileLocationWithName(ROOMER), sLine);
+  except
+    on e: Exception do
+      raise EActivityLogException.Create('Error when writing RoomerPMS activity to activitylogs: ' + E.Message);
+  end;
 end;
 
 procedure AddAvailabilityActivityLog(const user : String;
@@ -441,25 +471,30 @@ procedure AddAvailabilityActivityLog(const user : String;
                                      const moreInfo : String);
 var categoryName, actionName, sLine : String;
 begin
-  categoryName := GetEnumName(TypeInfo(TActivityType), ORD(AVAILABILITY));
-  actionName := GetEnumName(TypeInfo(TAvailabilityAction), ORD(action));
+  try
+    categoryName := GetEnumName(TypeInfo(TActivityType), ORD(AVAILABILITY));
+    actionName := GetEnumName(TypeInfo(TAvailabilityAction), ORD(action));
 
-  sLine := CreateXmlElement(user,
-                            uDateUtils.dateTimeToXmlString(now),
-                            categoryName,
-                            actionName,
-                            moreinfo,
-                            moreinfo,
-                            '',
-                            inttostr(iAvailability),
-                            roomClass,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            uDateUtils.dateTimeToXmlString(date));
-  AddToTextFile(GetDataFileLocationWithName(AVAILABILITY), sLine);
+    sLine := CreateXmlElement(user,
+                              uDateUtils.dateTimeToXmlString(now),
+                              categoryName,
+                              actionName,
+                              moreinfo,
+                              moreinfo,
+                              '',
+                              inttostr(iAvailability),
+                              roomClass,
+                              0,
+                              0,
+                              0,
+                              0,
+                              0,
+                              uDateUtils.dateTimeToXmlString(date));
+    AddToTextFile(GetDataFileLocationWithName(AVAILABILITY), sLine);
+  except
+    on e: Exception do
+      raise EActivityLogException.Create('Error when writing AvailabilityActivity to activitylogs: '  +  #13#10 + E.Message);
+  end;
 end;
 
 procedure AddRateActivityLog(const user : String;
@@ -475,25 +510,31 @@ procedure AddRateActivityLog(const user : String;
 var
   categoryName, actionName, sLine : String;
 begin
-  categoryName := GetEnumName(TypeInfo(TActivityType), ORD(AVAILABILITY));
-  actionName := GetEnumName(TypeInfo(TRateAction), ORD(action));
+  try
+    categoryName := GetEnumName(TypeInfo(TActivityType), ORD(AVAILABILITY));
+    actionName := GetEnumName(TypeInfo(TRateAction), ORD(action));
 
-  sLine := CreateXmlElement(user,
-                            uDateUtils.dateTimeToXmlString(now),
-                            categoryName,
-                            actionName,
-                            moreinfo,
-                            moreinfo,
-                            iif(SameValue(oldrate, newrate), '', FloatToXML(oldRate, 2)),
-                            iif(SameValue(oldrate, newrate), '', FloatToXml(newrate, 2)),
-                            roomClass,
-                            0,
-                            0,
-                            ORD(Stop),
-                            min,
-                            max,
-                            uDateUtils.dateTimeToXmlString(date));
-  AddToTextFile(GetDataFileLocationWithName(AVAILABILITY), sLine);
+    sLine := CreateXmlElement(user,
+                              uDateUtils.dateTimeToXmlString(now),
+                              categoryName,
+                              actionName,
+                              moreinfo,
+                              moreinfo,
+                              iif(SameValue(oldrate, newrate), '', FloatToXML(oldRate, 2)),
+                              iif(SameValue(oldrate, newrate), '', FloatToXml(newrate, 2)),
+                              roomClass,
+                              0,
+                              0,
+                              ORD(Stop),
+                              min,
+                              max,
+                              uDateUtils.dateTimeToXmlString(date));
+    AddToTextFile(GetDataFileLocationWithName(AVAILABILITY), sLine);
+  except
+    on e: Exception do
+      raise EActivityLogException.Create('Error when writing RateActivity to activitylogs: '  +  #13#10 + E.Message);
+  end;
+
 end;
 
 procedure PushActivityLogs(aWaitForCompletion: boolean = false);
@@ -503,59 +544,62 @@ var activity  : TActivityType;
     i         : Integer;
     list      : TStringList;
     logLine       : String;
+    lPutThreadedData: TPutOrPostDataThreaded;
 begin
   try
-  list := TStringList.Create;
-  try
-    for activity := LOW(TActivityType) to HIGH(TActivityType) do
-    begin
-      filename := GetDataFileLocationWithName(activity);
-      if FileExists(filename) then
+    list := TStringList.Create;
+    try
+      for activity := LOW(TActivityType) to HIGH(TActivityType) do
       begin
-        if FileExists(filename + '.busy') then
-          SysUtils.DeleteFile(filename + '.busy');
-        if SysUtils.RenameFile(filename, filename + '.busy') then
+        filename := GetDataFileLocationWithName(activity);
+        if FileExists(filename) then
         begin
-          filename := filename + '.busy';
-          content := TStringList.Create;
-          try
-            content.LoadFromFile(filename);
-            for i := 0 to content.Count - 1 do
-              list.Add(content[i]);
+          if FileExists(filename + '.busy') then
+            SysUtils.DeleteFile(filename + '.busy');
+          if SysUtils.RenameFile(filename, filename + '.busy') then
+          begin
+            filename := filename + '.busy';
+            content := TStringList.Create;
+            try
+              content.LoadFromFile(filename);
+              for i := 0 to content.Count - 1 do
+                list.Add(content[i]);
 
-            // Then delete the file...
-            SysUtils.DeleteFile(filename);
+              // Then delete the file...
+              SysUtils.DeleteFile(filename);
+            finally
+              content.Free;
+            end;
+          end;
+        end;
+
+      end;
+
+      if list.Count > 0 then
+      begin
+        logLine := '<?xml version="1.0" encoding="UTF-8"?>' + #10 +
+               '<logs>' + #10 +
+                  list.Text +
+               '</logs>' + #10;
+
+        if aWaitForCompletion then
+          d.roomerMainDataSet.PutData('userlogs', 'logs=' + d.roomerMainDataSet.UrlEncode(logLine))
+        else
+        begin
+          lPutThreadedData := TPutOrPostDataThreaded.Create;
+          try
+            lPutThreadedData.Put('userlogs', 'logs=' + d.roomerMainDataSet.UrlEncode(logLine), nil);
           finally
-            content.Free;
+            lPutThreadedData.Free;
           end;
         end;
       end;
-
+    finally
+      list.Free;
     end;
-
-    if list.Count > 0 then
-    begin
-      logLine := '<?xml version="1.0" encoding="UTF-8"?>' + #10 +
-             '<logs>' + #10 +
-                list.Text +
-             '</logs>' + #10;
-
-      if aWaitForCompletion then
-        d.roomerMainDataSet.PutData('userlogs', 'logs=' + d.roomerMainDataSet.UrlEncode(logLine))
-      else
-      begin
-        if NOT Assigned(ActivityLogGetThreadedData) then
-           ActivityLogGetThreadedData := TGetThreadedData.Create;
-        ActivityLogGetThreadedData.Put('userlogs', 'logs=' + d.roomerMainDataSet.UrlEncode(logLine), nil);
-      end;
-    end;
-  finally
-    list.Free;
-  end;
   except
-     on e: Exception do begin
-        // TODO - Ignore for the time being
-     end;
+     on e: Exception do
+      raise EActivityLogException.Create('Error when pushing activitylogs to server: ' + E.Message);
   end;
 end;
 
@@ -596,8 +640,5 @@ end;
 initialization
 
 finalization
-  // Destruction should be here, but generates an InvalidPointererror when destroying SQL TStringlist of TROomerdataset
-  // Destruction is now in the FormDestroy of uMain
-//  FreeAndNil(ActivityLogGetThreadedData);
 
 end.

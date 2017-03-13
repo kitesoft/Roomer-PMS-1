@@ -11217,7 +11217,6 @@ begin
   result := True;
   try
     roomerMainDataSet.SystemMoveRoom(RoomReservation, NewRoom);
-    try
       AddReservationActivityLog(g.qUser
         , -1
         , RoomReservation
@@ -11225,8 +11224,6 @@ begin
         , ''
         , NewRoom
         , '');
-    Except
-    end;
   except
     result := False;
   end;
@@ -15948,11 +15945,8 @@ begin
 
     for i := 0 to lstActivity.Count - 1 do
     begin
-      try
-        if lstActivity[i] <> '' then
-          WriteInvoiceActivityLog(lstActivity[i]);
-      Except
-      end;
+      if lstActivity[i] <> '' then
+        WriteInvoiceActivityLog(lstActivity[i]);
     end;
   finally
     freeandnil(lstActivity);
