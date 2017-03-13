@@ -298,7 +298,6 @@ TYPE
     FSendConfirmationEmail: Boolean;
     FAlertList: TAlertList;
     FMarket: TReservationMarketType;
-    FThreadedDataPutter : TGetThreadedData;
     procedure RemoveRemnants(ResId: Integer);
 //    procedure DeleteReservation(aReservation: integer);
   protected
@@ -747,7 +746,6 @@ constructor TNewReservation.Create(const aHotelCode, Staff: string;
                                                       const contactAddress3: string = '';
                                                       const contactAddress4: string = '');
 begin
-  FThreadedDataPutter := nil;
   FHotelcode := Hotelcode;
   FnewRoomReservations := TnewRoomReservation.Create(aHotelCode);
 
@@ -777,7 +775,6 @@ begin
   FAlertList.Free;
   FHomeCustomer.Free;
   FNewRoomReservations.Free;
-  FThreadedDataPutter.Free;
   inherited;
 end;
 
@@ -818,15 +815,22 @@ const UPDATE_QUERY = 'INSERT INTO home100.DOORCODE_MESSAGE_SCHEDULE('
 
 
 procedure TNewReservation.RemoveRemnants(ResId : Integer);
-var s, s1 : String;
+var
+  s, s1 : String;
+  lPostThreadedData : TPutOrPostDataThreaded;
+
+
 begin
   frmBusyMessage.ChangeMessage(GetTranslatedText('shTx_Removing_Allotment_Traces'));
-  FThreadedDataPutter := TGetThreadedData.Create;
-  s := format('resapi/booking/remove/reservation2/%d', [ResId]);
-  s1 := format('transactional=%s&reason=%s&request=%s&information=%s&canceltype=%d&makecopy=%s',
-                  [BoolToString(False), 'Removing remnants after creating new reservation from allotment', '', '', 0, BoolToString(False)]);
-  FThreadedDataPutter.Post(s, s1, nil);
-//  d.roomerMainDataSet.SystemRemoveReservation(DeleteResNr, False, False);
+  lPostThreadedData := TPutOrPostDataThreaded.Create;
+  try
+    s := format('resapi/booking/remove/reservation2/%d', [ResId]);
+    s1 := format('transactional=%s&reason=%s&request=%s&information=%s&canceltype=%d&makecopy=%s',
+                    [BoolToString(False), 'Removing remnants after creating new reservation from allotment', '', '', 0, BoolToString(False)]);
+    lPostThreadedData.Post(s, s1, nil);
+  finally
+    lPostThreadedData.Free;
+  end;
 end;
 
 Function TNewReservation.CreateReservation(DeleteResNr : integer=-1; Transactional : Boolean = true): Boolean;

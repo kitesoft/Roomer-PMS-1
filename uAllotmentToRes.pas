@@ -739,7 +739,6 @@ var
   NotAllowedFlags,
   RemovedFlags : String;
 begin
-  result := true;
   NotAllowedFlags := _db('A') + ',' + _db('P') + ',' + _db('X') + ',' + _db('O') + ',' + _db('L');
   RemovedFlags := _db('X') + ',' + _db('C');
   ExecutionPlan := d.roomerMainDataSet.CreateExecutionPlan;
@@ -1180,11 +1179,16 @@ end;
 function TfrmAllotmentToRes.GetResStatus(ACol, ARow: integer; var status: string): boolean;
 begin
   result := false;
-  if grProvide.Objects[ACol, ARow] <> nil then
+  if (grProvide.Objects[ACol, ARow] <> nil) then
   begin
-    status := (grProvide.Objects[ACol, ARow] as TresCell).ResFlag;
-    status := Uppercase(status);
-    result := true;
+    if grProvide.Objects[ACol, ARow] is TResCell then
+    begin
+      status := (grProvide.Objects[ACol, ARow] as TresCell).ResFlag;
+      status := Uppercase(status);
+      result := true;
+    end
+    else
+      result := false;
   end;
 end;
 
@@ -1202,6 +1206,9 @@ var
   BColor, FColor: TColor;
 
 begin
+  if not ComponentRunning(grProvide) then
+    Exit;
+
   colDate := ColToDate(ACol);
   weekDay := dayOfWeek(colDate);
   ABrush.color := frmMain.sSkinManager1.GetActiveEditColor;
@@ -1220,8 +1227,7 @@ begin
       ABrush.color := HexToTColor('FFDCDC');
     end;
 
-    GetResStatus(ACol, ARow, status);
-    if ResStatusToColor(status, BColor, FColor) then
+    if GetResStatus(ACol, ARow, status) and ResStatusToColor(status, BColor, FColor) then
     begin
       ABrush.color := BColor;
       AFont.color := FColor;

@@ -144,7 +144,7 @@ Type
 
     tablesList : TTableDictionary;
     FPreviousGuestsSet: TRoomerDataSet;
-    FPreviousGuestsReload : TGetThreadedData;
+    FPreviousGuestsReload : TGetSQLDataThreaded;
     FPmsSettings: TPmsSettings;
 
       procedure AddRoomType( sType : string; iNumber, NumGuests : integer );
@@ -385,7 +385,7 @@ begin
 
   FPMSSettings := TPmsSettings.Create(GetPmsSettingsSet);
 
-  FPreviousGuestsReload := TGetThreadedData.Create;
+  FPreviousGuestsReload := TGetSQLDataThreaded.Create;
   FPreviousGuestsSet := nil;
   ReloadPreviousGuests;
 
@@ -462,7 +462,7 @@ begin
   end;
 end;
 
-var PreviousGuestsReload : TGetThreadedData = nil;
+var PreviousGuestsReload : TGetSQLDataThreaded = nil;
 
 procedure TGlobalSettings.ReloadPreviousGuests;
 const PREV_GUESTS_SQL = 'SELECT DISTINCT * FROM ' +

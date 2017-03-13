@@ -492,7 +492,7 @@ type
     anyDirectConnection : Boolean;
     onlyDirectConnection : Boolean;
 
-    ThreadedDataGetter : TGetThreadedData;
+    ThreadedDataGetter : TGetSQLDataThreaded;
 
     CurrencyHandlersMap : TCurrencyHandlersMap;
     FNumberOfDaysDisplayed : Integer;
@@ -1075,7 +1075,7 @@ begin
   pgcPages.ActivePageIndex := 0;
 
   dateEdit.Date := TRUNC(now);
-  ThreadedDataGetter := TGetThreadedData.Create;
+  ThreadedDataGetter := TGetSQLDataThreaded.Create;
   timStart.enabled := true;
 end;
 

@@ -8,44 +8,17 @@ uses
   Data.Win.ADODB
 
     , uDateUtils, ActnList, System.Actions, Generics.Collections, variants,
-  cmpRoomerDataSet, uRoomerThreadedRequest
+  cmpRoomerDataSet, cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxStyles, dxSkinsCore, dxSkinCaramel,
+  dxSkinCoffee, dxSkinDarkSide, dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinscxPCPainter, cxCustomData,
+  cxFilter, cxData, cxDataStorage, cxEdit, cxNavigator, cxDBData, cxMemo, AdvUtil, dxmdaset, frxClass, frxDBSet,
+  cxPropertiesStore, sStatusBar, AdvObj, BaseGrid, AdvGrid, cxGridLevel, cxGridCustomTableView, cxGridTableView,
+  cxGridDBTableView, cxClasses, cxGridCustomView, cxGrid, sCheckBox, sButton, sGroupBox, sEdit, sLabel, sPanel,
 
-    , _glob, hData, ug, uUtils, kbmMemTable
+    _glob, hData, ug, uUtils, kbmMemTable
 
     , uTaxCalc
+    , frxExportMail, frxExportImage, frxExportRTF, frxExportHTML
 
-    , AdvObj, BaseGrid, AdvGrid
-
-    , sPanel, sEdit, sLabel, sGroupBox, sStatusBar, sButton, sSkinProvider,
-  sPageControl
-
-    , cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxStyles,
-  dxSkinsCore, dxSkinDarkSide, dxSkinDevExpressDarkStyle, dxSkinMcSkin,
-  dxSkinOffice2013White, dxSkinsDefaultPainters, dxSkinscxPCPainter,
-  cxCustomData, cxFilter, cxData, cxDataStorage, cxEdit, cxNavigator, cxDBData,
-  cxMemo,
-  cxButtonEdit, cxSpinEdit, cxCalc, cxContainer
-
-    , frxExportMail, frxExportImage, frxExportRTF, frxExportHTML, frxClass,
-  frxExportPDF, frxDesgn, frxDBSet
-
-    , cxPropertiesStore, sCheckBox, cxTextEdit, cxMaskEdit, cxDropDownEdit,
-  cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
-  cxClasses,
-  cxGridCustomView, cxGrid
-
-    , dxmdaset, dxSkinCaramel, dxSkinCoffee, dxSkinTheAsphaltWorld, dxSkinBlack,
-  dxSkinBlue, dxSkinBlueprint, dxSkinDarkRoom,
-  dxSkinDevExpressStyle, dxSkinFoggy, dxSkinGlassOceans, dxSkinHighContrast,
-  dxSkiniMaginary, dxSkinLilian, dxSkinLiquidSky,
-  dxSkinLondonLiquidSky, dxSkinMoneyTwins, dxSkinOffice2007Black,
-  dxSkinOffice2007Blue, dxSkinOffice2007Green, dxSkinOffice2007Pink,
-  dxSkinOffice2007Silver, dxSkinOffice2010Black, dxSkinOffice2010Blue,
-  dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
-  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
-  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinValentine,
-  dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, cxButtons, sComboBox,
-  sSpeedButton, AdvUtil
   , uInvoiceEntities
     ;
 
@@ -485,8 +458,6 @@ type
     FTotalRoomDiscount: Double;
     FReservation: integer;
     FRoomReservation: integer;
-
-    FThreadedDataPutter : TGetThreadedData;
 
     procedure LoadInvoice;
     procedure loadInvoiceToMemtable(var m: TKbmMemTable);
@@ -3512,7 +3483,6 @@ end;
 
 procedure TfrmInvoice.FormCreate(Sender: TObject);
 begin
-  FThreadedDataPutter := nil;
   zErr := false;
   zFirsttime := True;
   zApply := false;
@@ -3570,7 +3540,6 @@ begin
       mRoomRates.close;
 
     TaxTypes.free;
-    FThreadedDataPutter.Free;
   except
   end;
 
@@ -5966,7 +5935,7 @@ begin
       try
         result := True;
         try
-          SendInvoicesToFinancePacketThreaded(FThreadedDataPutter, zInvoiceNumber);
+          SendInvoicesToFinancePacketThreaded( zInvoiceNumber);
           ViewInvoice2(zInvoiceNumber, True, false, True, chkShowPackage.checked, zEmailAddress);
 
           d.roomerMainDataSet.SystempackagesCreateHeaderIfNotExists

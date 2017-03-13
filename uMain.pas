@@ -2729,12 +2729,6 @@ begin
     FrmMessagesTemplates.Free;
   Except
   end;
-  // Strange place, but destroying in finalization of uActivityLogs gives a InvalidPointer when freeing FSQL TStringlist of TRoomerDataset
-  try
-    freeandNil(ActivityLogGetThreadedData);
-  Except
-  end;
-
   zOneDay_stlTakenTypes.Free;
 end;
 

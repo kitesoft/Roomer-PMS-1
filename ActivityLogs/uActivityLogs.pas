@@ -129,8 +129,6 @@ function CreateReservationActivityLog(const user : String;
 
 function WriteReservationActivityLog(const sLine : String) : String;
 
-var ActivityLogGetThreadedData : TGetThreadedData = nil;
-
 implementation
 
 uses Menus, sButton, sLabel, ud, ioUtils, uAppGlobal, uDateUtils, uStringUtils, dxBar
@@ -546,6 +544,7 @@ var activity  : TActivityType;
     i         : Integer;
     list      : TStringList;
     logLine       : String;
+    lPutThreadedData: TPutOrPostDataThreaded;
 begin
   try
     list := TStringList.Create;
@@ -587,9 +586,12 @@ begin
           d.roomerMainDataSet.PutData('userlogs', 'logs=' + d.roomerMainDataSet.UrlEncode(logLine))
         else
         begin
-          if NOT Assigned(ActivityLogGetThreadedData) then
-             ActivityLogGetThreadedData := TGetThreadedData.Create;
-          ActivityLogGetThreadedData.Put('userlogs', 'logs=' + d.roomerMainDataSet.UrlEncode(logLine), nil);
+          lPutThreadedData := TPutOrPostDataThreaded.Create;
+          try
+            lPutThreadedData.Put('userlogs', 'logs=' + d.roomerMainDataSet.UrlEncode(logLine), nil);
+          finally
+            lPutThreadedData.Free;
+          end;
         end;
       end;
     finally
@@ -638,8 +640,5 @@ end;
 initialization
 
 finalization
-  // Destruction should be here, but generates an InvalidPointererror when destroying SQL TStringlist of TROomerdataset
-  // Destruction is now in the FormDestroy of uMain
-//  FreeAndNil(ActivityLogGetThreadedData);
 
 end.
