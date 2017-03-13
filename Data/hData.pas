@@ -10689,10 +10689,10 @@ begin
   s := s + ' ,connectCODToMasterRate ' + #10;
   s := s + ' ,connectLOSToMasterRate ' + #10;
   s := s + ' ,RATE_PLAN_TYPE ' + #10;
-  s := s + ' ,masterRateExtraRateDeviation = ' + #10;
-  s := s + ' ,extraRateDeviationType = ' + #10;
-  s := s + ' ,masterRateExtraSingleUseRateDeviation = ' + #10;
-  s := s + ' ,extraSingleUseRateDeviationType = ' + #10;
+  s := s + ' ,masterRateExtraRateDeviation ' + #10;
+  s := s + ' ,extraRateDeviationType ' + #10;
+  s := s + ' ,masterRateExtraSingleUseRateDeviation ' + #10;
+  s := s + ' ,extraSingleUseRateDeviationType ' + #10;
   s := s + ' ,prepaidPercentage ' + #10;
   s := s + '  ) ' + #10;
   s := s + '   VALUES ' + #10;
