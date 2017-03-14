@@ -301,7 +301,6 @@ type
     mRoomResinfantCount: TIntegerField;
     mRoomResPriceCode: TStringField;
     mRoomResAvrageDiscount: TFloatField;
-    mRoomResisPercentage: TBooleanField;
     mRoomResPackage: TWideStringField;
     mRoomResInvoiceIndex: TIntegerField;
     mRoomResGroupAccount: TBooleanField;
@@ -2633,7 +2632,6 @@ begin
           RateCount := zRoomRSet.FieldByName('rateCount').asinteger;
           AvrageDiscount := zRoomRSet.GetFloatValue
             (zRoomRSet.FieldByName('discount'));
-          isPercentage := zRoomRSet.FieldByName('Percentage').asBoolean;
 
           mRoomRes.append;
           mRoomRes.FieldByName('RoomReservation').asinteger := lRoomReservation;
@@ -2652,7 +2650,6 @@ begin
           mRoomRes.FieldByName('InfantCount').asinteger := infantCount;
           mRoomRes.FieldByName('PriceCode').asString := PriceCode;
           mRoomRes.FieldByName('AvrageDiscount').asfloat := AvrageDiscount;
-          mRoomRes.FieldByName('isPercentage').asBoolean := isPercentage; //TODO: using IsPercentage of Roomreservation is wrong, should use percentage of Roomsdate
           mRoomRes.FieldByName('InvoiceIndex').asinteger := FInvoiceIndex;
           mRoomRes.FieldByName('GroupAccount').asBoolean := zRoomRSet['GroupAccount'];
 

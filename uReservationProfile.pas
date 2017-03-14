@@ -1933,7 +1933,6 @@ begin
       PriceCode := RoomReservationRentHolder.PriceType;
       AvrageRate := RoomReservationRentHolder.AvrageRate;
       AvrageDiscount := RoomReservationRentHolder.Discount;
-      isPercentage := RoomReservationRentHolder.Percentage;
       rateCount := 1;
 
       useInNationalReport := true;
@@ -1964,7 +1963,6 @@ begin
       roomReservationData.rrRoomAlias := '';
       roomReservationData.rrRoomTypeAlias := RoomType;
       roomReservationData.Discount := AvrageDiscount;
-      roomReservationData.Percentage := isPercentage;
       roomReservationData.useInNationalReport := useInNationalReport;
       roomReservationData.RoomRentPaid1 := 0.00;
       roomReservationData.RoomRentPaid2 := 0.00;

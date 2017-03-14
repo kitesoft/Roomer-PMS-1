@@ -107,51 +107,6 @@ const GET_ALL_ROOMRESERVATIONS_ARRIVING_ON_SPECIFIED_DATE_FILTER_RESERVATION_ID=
                '         p.Name ';
 
 var
-// BJORN PUT BACK !!!
-  XXXXselect_lstRR_CurrentlyCheckedIn : string =
-  ' SELECT '+
-  '    roomsdate.ADate '+
-  '   , roomsdate.Room '+
-  '   , roomsdate.RoomType '+
-  '   , roomsdate.RoomReservation '+
-  '   , roomsdate.Reservation '+
-  '   , roomsdate.ResFlag '+
-  '   , roomreservations.Arrival '+
-  '   , roomreservations.Departure '+
-  ' FROM '+
-  '   roomsdate INNER JOIN '+
-  '     roomreservations ON roomsdate.RoomReservation = roomreservations.RoomReservation '+
-  ' WHERE '+
-  '   ((roomsdate.ADate =  %s ) AND (roomsdate.ResFlag = ''G'' )) '+
-  ' OR '+
-  '   ((roomsdate.ADate =  %s ) AND (roomsdate.ResFlag = ''G'' )'+
-  '   AND (roomreservations.Departure =  %s )) ';
-
-  xxxxselect_isRrCurrentlyCheckedIn : string =
-  ' SELECT '+
-  '     roomsdate.ADate '+
-  '   , roomsdate.ResFlag '+
-  '   , roomreservations.Departure '+
-  ' FROM '+
-  '   roomsdate '+
-  '     INNER JOIN '+
-  '   roomreservations ON roomsdate.RoomReservation = roomreservations.RoomReservation '+
-  ' WHERE '+
-  '   (roomsdate.RoomReservation =  %d ) '+
-  '     AND (roomsdate.ADate =  %s ) '+
-  '     AND (roomsdate.ResFlag = ''G'' ) '+
-  '   OR '+
-  '   (roomsdate.RoomReservation = %d) '+
-  '     AND (roomsdate.ADate =  %s ) '+
-  '     AND (roomsdate.ResFlag =  ''G'' ) '+
-  '     AND (roomreservations.Departure =   %s ) ';
-
-
-
-
-///////// END BJORN PUT BACK !!!
-
-
   ///unit objHomeCustomer
   ///1. customer Field nvarchar(15)
   ///TESTD ok
@@ -685,58 +640,6 @@ var
   ' AND (resDate<= %s ) ' ;  //_db(zCurrentDate + zDaysToShow - 1)
 
 
- // TRSTED NOT
- select_RebuildReservationStats_GetRoomReservations : string =
-   ' SELECT '#10+
-   '     ID '#10+
-   '   , RoomReservation '#10+
-   '   , Reservation '#10+
-   '   , Room '#10+
-   '   , RoomType '#10+
-   '   , Status As ResStatus'#10+
-   '   , rrArrival AS Arrival '#10+
-   '   , rrDeparture AS Departure '#10+
-   '   , ExpectedTimeOfArrival  '#10+
-   '   , ExpectedCheckoutTime '#10+
-   '   , RoomRentPaymentInvoice '#10+
-   '   , GroupAccount AS isGroupAccount '#10+
-   '   , Currency '#10+
-   '   , Discount '#10+
-   '   , Percentage '#10+
-   '   , PriceType '#10+
-   '   , RoomPrice1 '#10+
-   '   , Price1From '#10+
-   '   , Price1To '#10+
-   '   , RoomRentPaid1 '#10+
-   '   , RoomPrice2 '#10+
-   '   , Price2From '#10+
-   '   , Price2To '#10+
-   '   , RoomRentPaid2 '#10+
-   '   , RoomPrice3 '#10+
-   '   , Price3From '#10+
-   '   , Price3To '#10+
-   '   , RoomRentPaid3 '#10+
-   '   , invBreakfast AS inclBreakfast '#10+
-   '   , useinNationalReport '#10+
-   '   , useStayTax '#10+
-   ' FROM '#10+
-   '   roomreservations '#10+
-   ' WHERE '#10+
-   '    (RoomReservation in %s ) ';
-
- 
-
-  //TESTED NOT
-
-  //TESTED NOT
-
-  //TESTED NOT
-
-  //TESTED NOT
-
-  //TESTED NOT
-
-
   //TESTED NOT
   select_Invoice_CheckCurrencyChange : string =
   ' SELECT '+
@@ -1035,45 +938,6 @@ select_OpenInvoicesNew_Execute3 : string =
 '   AND  (Arrival >= %s ) '#10+   //quotedStr(zsDateFrom)
 '   AND  (Arrival <= %s ) '#10 ;  //quotedStr(zsDateTo)
 
-//TESTED NOT
-select_OpenInvoicesNew_Execute4 : string =
-' SELECT '#10+
-'   RoomReservation '#10+
-'  ,Room '#10+
-'  ,Reservation '#10+
-'  ,Status '#10+
-'  ,GroupAccount '#10+
-'  ,invBreakfast '#10+
-'  ,RoomPrice1 '#10+
-'  ,Price1From '#10+
-'  ,Price1To '#10+
-'  ,RoomPrice2 '#10+
-'  ,Price2From '#10+
-'  ,Price2To '#10+
-'  ,RoomPrice3 '#10+
-'  ,Price3From '#10+
-'  ,Price3To '#10+
-'  ,Currency '#10+
-'  ,Discount '#10+
-'  ,Percentage '#10+
-'  ,PriceType '#10+
-'  ,Arrival '#10+
-'  ,Departure '#10+
-'  ,RoomType '#10+
-'  ,RoomRentPaid1 '#10+
-'  ,RoomRentPaid2 '#10+
-'  ,RoomRentPaid3 '#10+
-'  ,RoomRentPaymentInvoice '#10+
-'  ,rrIsNoRoom '#10+
-'  ,rrDeparture '#10+
-'  ,rrArrival '#10+
-' FROM roomreservations '#10+
-'  WHERE '#10+
-'    ((Reservation = %d )'#10+   //iReservation
-'    AND (RoomReservation = %d ))'#10+ //iRoomReservation
-'   AND  (Arrival >= %s ) '#10+  // quotedStr(zsDateFrom)
-'   AND  (Arrival <= %s ) '#10 ;  //quotedStr(zsDateTo)
-
 
 /////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
@@ -1234,6 +1098,58 @@ select_ProvideARoom2_MoveToRoomEnhs : string =
 /////////////////////////////////////////////////////
 /////////////////////////////////////////////////////
 /////////////////////////////////////////////////////
+
+select_RoomReservation : string =
+'  SELECT '#10+
+'     ID '#10+
+'    ,RoomReservation '#10+
+'    ,Room '#10+
+'    ,Reservation '#10+
+'    ,Status '#10+
+'    ,GroupAccount '#10+
+'    ,invBreakfast '#10+
+'    ,RoomPrice1 '#10+
+'    ,Price1From '#10+
+'    ,Price1To '#10+
+'    ,RoomPrice2 '#10+
+'    ,Price2From '#10+
+'    ,Price2To '#10+
+'    ,RoomPrice3 '#10+
+'    ,Price3From '#10+
+'    ,Price3To '#10+
+'    ,Currency '#10+
+'    ,Discount '#10+
+'    ,PriceType '#10+
+'    ,Arrival '#10+
+'    ,Departure '#10+
+'    ,RoomType '#10+
+'    ,PMInfo '#10+
+'    ,HiddenInfo '#10+
+'    ,RoomRentPaid1 '#10+
+'    ,RoomRentPaid2 '#10+
+'    ,RoomRentPaid3 '#10+
+'    ,RoomRentPaymentInvoice '#10+
+'    ,Hallres '#10+
+'    ,rrTmp '#10+
+'    ,rrDescription '#10+
+'    ,rrArrival '#10+
+'    ,rrDeparture '#10+
+'    ,rrIsNoRoom '#10+
+'    ,rrRoomAlias '#10+
+'    ,rrRoomTypeAlias '#10+
+'    ,useStayTax '#10+
+'    ,useInNationalReport '#10+
+'    ,blockMove '#10+
+'    ,blockMoveReason '#10+
+'    ,numGuests '#10+
+'    ,numChildren '#10+
+'    ,numInfants, AvrageRate, rateCount,package '#10+
+'    ,ExpectedTimeOfArrival '#10+
+'    ,ExpectedCheckoutTime'#10+
+'  FROM '#10+
+'    [RoomReservations] '#10+
+'  WHERE '#10+
+'    RoomReservation = %d ';
 
 //TESTED NOT
 select_ReservationProfile_Display : string =
@@ -2498,39 +2414,10 @@ select_telLog_refresh : string =
     ///s := s + '(Initials = ' + quotedstr(login) + ') '+#10;
 
 
-
-
-
-  select_GetOLDRoomPrices : string =
-  ' SELECT '+
-  '     Room  '+
-  '   , RoomPrice1 '+
-  '   , RoomPrice2 '+
-  '   , RoomPrice3 '+
-  '   , Price1From '+
-  '   , Price2From '+
-  '   , Price3From '+
-  '   , Price1To '+
-  '   , Price2To '+
-  '   , Price3To '+
-  '   , discount '+
-  '   , percentage '+
-  '  FROM '+
-  '   roomreservations '+
-  ' WHERE RoomReservation = %d ';
-
   select_GetRoomReservatiaonArrival : string =
   ' SELECT rrArrival '+
   ' FROM roomreservations  '+
   ' WHERE Roomreservation = %d ';
-  ///s := s + ' WHERE Roomreservation =' + inttostr(RoomReservation) + ' '+#10;
-
-
-
-  ///  s := s + '       (ADate > ' + quotedstr(sDate) + ')'+#10;
-///  s := s + '   AND (Room = ' + quotedstr(Room) + ')'+#10;
-///  s := s + '   AND (RoomReservation <> ' + inttostr(RoomReservation) + ') '+#10;
-///  s := s + ' ORDER BY Adate '+#10;
 
   select_LastRoomReservatiaon : string =
   ' SELECT '+
@@ -3344,25 +3231,6 @@ select_getRoomTypeFromRR : string =
     '   (Reservation = %d) AND (GroupAccount <> 0) ';
     ///s := s+'   (Reservation = '+_db(Reservation)+') AND (GroupAccount = 1) '+#10;
 
-      select_rrGetDiscount : string =
-      ' SELECT '+
-      '     RoomReservation '+
-      '   , Discount '+
-      '   , Percentage '+
-      ' FROM roomreservations '+
-      ' WHERE (RoomReservation = %d) ';
-      ///s := s+' WHERE (RoomReservation = '+_db(roomreservation)+') '+#10;
-
-      select_rrEditDiscount : string =
-      ' SELECT '+
-      '     RoomReservation '+
-      '   , Discount '+
-      '   , Percentage '+
-      '   , ID '+
-      ' FROM roomreservations '+
-      ' WHERE (RoomReservation =  %s ) ';
-      ///s := s+' WHERE (RoomReservation = '+_db(roomreservation)+') '+#10;
-
 
   select_UpdateStatusSimple1 : string =
   ' SELECT Room,roomtype,arrival,departure,status,roomreservation FROM roomreservations '+
@@ -3807,33 +3675,6 @@ select_RV_openInvoiceItemCount : string =
 
 select_RV_openInvoiceItemAmount : string =
 ' SELECT * from control';
-
-select_RR_unpaidRoomRent : string =
-' SELECT '#10+
-'     RoomReservation '#10+
-'   , Reservation '#10+
-'   , GroupAccount '#10+
-'   , RoomPrice1 '#10+
-'   , Price1From '#10+
-'   , Price1To '#10+
-'   , RoomPrice2 '#10+
-'   , Price2From '#10+
-'   , Price2To '#10+
-'   , RoomPrice3 '#10+
-'   , Price3From '#10+
-'   , Price3To '#10+
-'   , Currency '#10+
-'   , Discount '#10+
-'   , Percentage '#10+
-'   , PriceType '#10+
-'   , RoomRentPaid1 '#10+
-'   , RoomRentPaid2 '#10+
-'   , RoomRentPaid3 '#10+
-'   , RoomRentPaymentInvoice '#10+
-' FROM '#10+
-'   roomreservations '#10+
-' WHERE '#10+
-'   (RoomReservation =%d) ';  //' + _db(iRoomReservation) + '
 
 select_Room_GetRec : string =
 ' SELECT '#10+
@@ -4751,62 +4592,6 @@ select_Reservation : string =
 'WHERE '#10+
 ' Reservation = %d ';
 //	@Reservation int
-
-select_RoomReservation : string =
-'  SELECT '#10+
-'     ID '#10+
-'    ,RoomReservation '#10+
-'    ,Room '#10+
-'    ,Reservation '#10+
-'    ,Status '#10+
-'    ,GroupAccount '#10+
-'    ,invBreakfast '#10+
-'    ,RoomPrice1 '#10+
-'    ,Price1From '#10+
-'    ,Price1To '#10+
-'    ,RoomPrice2 '#10+
-'    ,Price2From '#10+
-'    ,Price2To '#10+
-'    ,RoomPrice3 '#10+
-'    ,Price3From '#10+
-'    ,Price3To '#10+
-'    ,Currency '#10+
-'    ,Discount '#10+
-'    ,Percentage '#10+
-'    ,PriceType '#10+
-'    ,Arrival '#10+
-'    ,Departure '#10+
-'    ,RoomType '#10+
-'    ,PMInfo '#10+
-'    ,HiddenInfo '#10+
-'    ,RoomRentPaid1 '#10+
-'    ,RoomRentPaid2 '#10+
-'    ,RoomRentPaid3 '#10+
-'    ,RoomRentPaymentInvoice '#10+
-'    ,Hallres '#10+
-'    ,rrTmp '#10+
-'    ,rrDescription '#10+
-'    ,rrArrival '#10+
-'    ,rrDeparture '#10+
-'    ,rrIsNoRoom '#10+
-'    ,rrRoomAlias '#10+
-'    ,rrRoomTypeAlias '#10+
-'    ,useStayTax '#10+
-'    ,useInNationalReport '#10+
-'    ,blockMove '#10+
-'    ,blockMoveReason '#10+
-'    ,numGuests '#10+
-'    ,numChildren '#10+
-'    ,numInfants, AvrageRate, rateCount,package '#10+
-'    ,ExpectedTimeOfArrival '#10+
-'    ,ExpectedCheckoutTime'#10+
-'  FROM '#10+
-'    [RoomReservations] '#10+
-'  WHERE '#10+
-'    RoomReservation = %d ';
-
-//@RoomReservation int
-
 
 
 select_inv_PaymentsByPeriod : string =
@@ -5850,32 +5635,6 @@ select_channels : string = 'SELECT id, name, active, channelmanagerid, ' +
 'ORDER BY ' +
 ' %s ' +
 ') tmp';
-//'SELECT '#10+
-//'  `channels`.`id`,'#10+
-//'  `channels`.`name`,'#10+
-//'  `channels`.`active`,'#10+
-//'  `channels`.`channelManagerId`,'#10+
-//'  `channels`.`minAlotment`,'#10+
-//'  `channels`.`defaultAvailability`,'#10+
-//'  `channels`.`defaultPricePP`,'#10+
-//'  `channels`.`marketSegment`,'#10+
-//'  `channels`.`currencyId`,'#10+
-//'  `channels`.`managedByChannelManager`,'#10+
-//'  `channels`.`defaultChannel`,'#10+
-//'  `channels`.`push`,'#10+
-//'  `channels`.`customerId`,'#10+
-//'  `channels`.`color`,'#10+
-//'  `channels`.`rateRoundingType`,'#10+
-//'  `channels`.`compensationPercentage`,'#10+
-//'  `channels`.`hotelsBookingEngine`,'#10+
-//'  `currencies`.`Currency`,'#10+
-//'  CONCAT('''',(SELECT GROUP_CONCAT(CODE) FROM roomtypegroups WHERE id IN (SELECT roomClassId FROM channelclassrelations WHERE channelId=channels.id))) AS roomClasses ' +
-//'FROM'#10+
-//'  `channels`'#10+
-//'  INNER JOIN `currencies` ON (`channels`.`currencyId` = `currencies`.`ID`)'#10+
-//' ORDER BY '#10+
-//'   %s ';
-
 
 select_systemServers : string =
 'SELECT '#10+
@@ -6639,118 +6398,6 @@ end;
     end;
 
 
-(*
-    //Create function  skip for now
-    function ReservationsModel_Execute : string =
-    'SELECT  '+
-    ' rv.Customer '+
-    ' , rv.Reservation '+
-    ' , rv.Name '+
-    ' , rv.Arrival '+
-    ' , rv.Departure '+
-    ' , rv.InputSource '+
-    ' , rv.WebConfirmed '+
-    ' , rr.Arrival as RoomArrival '+
-    ' , rr.Departure as RoomDeparture '+
-    ' , rr.room as rrRoom '+
-    ' , rv.ReservationDate '+
-    ' , rv.Staff '+
-    ' , rv.Information as rvInformation '+
-    ' , rv.Tel1 '+
-    ' , rv.Tel2 '+
-    ' , rv.Fax '+
-    ' , rv.PMInfo as rvPMInfo '+
-    ' , rv.HiddenInfo as rvHiddenInfo '+
-    ' , rd.ADate '+
-    ' , rd.Room '+
-    ' , rd.RoomType '+
-    ' , rr.Status '+
-    ' , rr.RoomReservation '+
-    ' , rr.Currency '+
-    ' , rr.RoomPrice1 '+
-    ' , rr.Discount '+
-    ' , rr.Percentage '+
-    ' , rr.PriceType '+
-    ' , rr.HallRes AS rrHallRes '+
-    ' , rr.PMInfo as rrPMInfo '+
-    ' , rr.HiddenInfo as rrHiddenInfo '+
-    ' , rr.RoomRentPaymentInvoice '+
-    ' , pe.Person '+
-    ' , pe.Surname '+
-    ' , pe.Name as peName '+
-    ' , pe.Address1 '+
-    ' , pe.Address2 '+
-    ' , pe.Address3 '+
-    ' , pe.Address4 '+
-    ' , pe.Country '+
-    ' , pe.GuestType '+
-    ' , pe.Information '+
-    '      , ( '+
-    ' SELECT TOP (1) '+
-    '      ih.Total '+
-    '  FROM '+
-    '     invoiceheads ih '+
-    '  WHERE '+
-    '    (Total > 0) AND (ih.InvoiceNumber = - 1) AND (ih.RoomReservation = rr.roomReservation) '+
-    '    ) as TotalNoRent '+
-
-    '  FROM '+
-
-    '       reservations rv '+
-    '     ,  roomsdate rd '+
-    '     , roomreservations rr '+
-    '     , persons pe '+
-    '  WHERE '+
-    ' (';
-///
-///    if _FromDate + 1 = _ToDate then
-///    begin
-///      s := s + '       rd.ADate = ' + _db(_FromDate,true)+chr(10)
-///    end
-///    else
-///    begin
-///      s := s + '       ( rd.ADate >= ' + _db(_FromDate,true)+chr(10);
-///      s := s + '   and   rd.ADate <  ' + _db(_ToDate,true) + ')'+chr(10);
-///    end;
-///    s := s + '   or  ( rr.Departure = ' + _db(_ToDate - 1,true) + ')'+chr(10);
-///    s := s + ' )'+chr(10);
-///
-///    case _ReservationState of
-///      rsUnKnown :
-///        ;
-///      rsReservations :
-///        s := s + ' and   rr.Status = ''P'''+chr(10);
-///      rsGuests :
-///        s := s + ' and   rr.Status = ''G'''+chr(10);
-///      rsDeparted :
-///        s := s + ' and   rr.Status = ''D'''+chr(10);
-///      rsReserved :
-///        s := s + ' and   rr.Status = ''R'''+chr(10);
-///      rsOverbooked :
-///        s := s + ' and   rr.Status = ''O'''+chr(10);
-///      rsAlotment :
-///        s := s + ' and   rr.Status = ''A'''+chr(10);
-///      rsNoShow :
-///        s := s + ' and   rr.Status = ''N'''+chr(10);
-///      rsBlocked :
-///        s := s + ' and   rr.Status = ''B'''+chr(10);
-///      rsAll :
-///        ;
-///      rsCurrent :
-///        begin
-///          s := s + ' and ( '+chr(10);
-///          s := s + '       rr.Status = ''P'''+chr(10);
-///          s := s + '  or   rr.Status = ''G'''+chr(10);
-///          s := s + '     ) '+chr(10);
-///        end;
-///    end;
-///
-///    s := s + ' and   rv.Reservation = rr.Reservation'+chr(10);
-///    s := s + ' and   rd.RoomReservation = rr.RoomReservation'+chr(10);
-///    s := s + ' and   rr.RoomReservation = pe.RoomReservation'+chr(10);
-///    s := s + ' order by rv.Reservation, rr.RoomReservation, pe.person'+chr(10);
-
-*)
     //NOT Tested
     function select_ReservationProfile_RegulateRoomDates(bAll : boolean) : string;
     var

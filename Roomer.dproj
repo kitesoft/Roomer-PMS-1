@@ -194,6 +194,7 @@
         <VerInfo_AutoGenVersion>false</VerInfo_AutoGenVersion>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_3)'!=''">
+        <DCC_DebugDCUs>true</DCC_DebugDCUs>
         <DCC_MapFile>3</DCC_MapFile>
         <DCC_RemoteDebug>true</DCC_RemoteDebug>
         <DCC_Optimize>false</DCC_Optimize>
@@ -848,6 +849,7 @@
         <DCCReference Include="OpenAPI\schema\uRoomerSchema.pas"/>
         <DCCReference Include="OpenAPI\schema\RoomerConfigurationItemsCommunicationModel_RequestsResponses.pas"/>
         <DCCReference Include="OpenAPI\uConfigurationItemsAPICaller.pas"/>
+        <DCCReference Include="RoomerVCLs\Source\uRoomerIDList.pas"/>
         <None Include="Roomer.todo"/>
         <None Include="notes.txt"/>
         <None Include="Roomer.inc"/>

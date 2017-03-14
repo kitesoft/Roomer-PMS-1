@@ -59,7 +59,7 @@ uses
 
 Type
 
-  RecRRInfo = record
+  RecRDInfo = record
     RoomReservation: integer;
     Reservation: integer;
     Channel: integer;
@@ -73,7 +73,7 @@ Type
     CustomerName: string;
     PaymentInvoice: integer;
     GroupAccount: boolean;
-    Percentage: boolean;
+    IsPercentage: boolean;
     PriceType: String;
     Currency: String;
 

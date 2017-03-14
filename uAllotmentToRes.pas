@@ -119,7 +119,7 @@ uses
   dxSkinWhiteprint,
   dxSkinXmas2008Blue,
   AdvUtil,
-  cxCurrencyEdit;
+  cxCurrencyEdit, cxCheckBox, cxCalendar;
 
 type
   recColRow = record
@@ -180,7 +180,7 @@ TYPE
 
 TYPE
 
-  RecRRInfoAlot = record
+  RecRRDateInfoAlot = record
     rdID: integer;
     RoomReservation: integer;
     Reservation: integer;
@@ -210,8 +210,8 @@ type
     sSplitter1: TsSplitter;
     sPanel4: TsPanel;
     sPanel5: TsPanel;
-    mRrInfo: TkbmMemTable;
-    mRrInfoDS: TDataSource;
+    mRRDateInfo: TkbmMemTable;
+    mRRDateInfoDS: TDataSource;
     mRooms: TkbmMemTable;
     sPanel1: TsPanel;
     sPanel7: TsPanel;
@@ -286,7 +286,6 @@ type
     tvRoomResRateCount: TcxGridDBColumn;
     tvRoomResRoomReservation: TcxGridDBColumn;
     tvRoomResAvrageDiscount: TcxGridDBColumn;
-    tvRoomResisPercentage: TcxGridDBColumn;
     tvRoomResPriceCode: TcxGridDBColumn;
     tvRoomRates: TcxGridDBTableView;
     tvRoomRatesReservation: TcxGridDBColumn;
@@ -308,33 +307,33 @@ type
     sGroupBox4: TsGroupBox;
     btnReCalc: TsButton;
     btnReclacAllPrices: TsButton;
-    mRrInfordID: TIntegerField;
-    mRrInfoRoomReservation: TIntegerField;
-    mRrInfoReservation: TIntegerField;
-    mRrInfodtDate: TDateTimeField;
-    mRrInfoRoom: TStringField;
-    mRrInfoRoomType: TStringField;
-    mRrInfoResFlag: TStringField;
-    mRrInfoisNoRoom: TBooleanField;
-    mRrInfoPriceCode: TStringField;
-    mRrInfoRoomRate: TFloatField;
-    mRrInfoDiscount: TFloatField;
-    mRrInfoisPercentage: TBooleanField;
-    mRrInfoshowDiscount: TBooleanField;
-    mRrInfoPaid: TBooleanField;
-    mRrInfoCurrency: TStringField;
-    mRrInfoMainGuest: TStringField;
-    mRrInfonumChildren: TIntegerField;
-    mRrInfonumInfants: TIntegerField;
-    mRrInfonumGuests: TIntegerField;
-    mRrInfoRoomDescription: TStringField;
-    mRrInfoRoomtypeDescription: TStringField;
-    mRrInfoRoomCount: TIntegerField;
-    mRrInfoCol: TIntegerField;
-    mRrInfoRow: TIntegerField;
-    mRrInfoid: TAutoIncField;
-    mRrInfoProcessed: TIntegerField;
-    mRrInfoGroupAccount: TBooleanField;
+    mRRDateInfordID: TIntegerField;
+    mRRDateInfoRoomReservation: TIntegerField;
+    mRRDateInfoReservation: TIntegerField;
+    mRRDateInfodtDate: TDateTimeField;
+    mRRDateInfoRoom: TStringField;
+    mRRDateInfoRoomType: TStringField;
+    mRRDateInfoResFlag: TStringField;
+    mRRDateInfoisNoRoom: TBooleanField;
+    mRRDateInfoPriceCode: TStringField;
+    mRRDateInfoRoomRate: TFloatField;
+    mRRDateInfoDiscount: TFloatField;
+    mRRDateInfoisPercentage: TBooleanField;
+    mRRDateInfoshowDiscount: TBooleanField;
+    mRRDateInfoPaid: TBooleanField;
+    mRRDateInfoCurrency: TStringField;
+    mRRDateInfoMainGuest: TStringField;
+    mRRDateInfonumChildren: TIntegerField;
+    mRRDateInfonumInfants: TIntegerField;
+    mRRDateInfonumGuests: TIntegerField;
+    mRRDateInfoRoomDescription: TStringField;
+    mRRDateInfoRoomtypeDescription: TStringField;
+    mRRDateInfoRoomCount: TIntegerField;
+    mRRDateInfoCol: TIntegerField;
+    mRRDateInfoRow: TIntegerField;
+    mRRDateInfoid: TAutoIncField;
+    mRRDateInfoProcessed: TIntegerField;
+    mRRDateInfoGroupAccount: TBooleanField;
     kbmRoomResRoomReservation: TIntegerField;
     kbmRoomResRoom: TStringField;
     kbmRoomResRoomType: TStringField;
@@ -349,7 +348,6 @@ type
     kbmRoomResinfantCount: TIntegerField;
     kbmRoomResPriceCode: TStringField;
     kbmRoomResAvrageDiscount: TFloatField;
-    kbmRoomResisPercentage: TBooleanField;
     kbmRoomResMainGuest: TStringField;
     kbmRoomRatesReservation: TIntegerField;
     kbmRoomRatesRoomReservation: TIntegerField;
@@ -378,7 +376,6 @@ type
     kbmrestRoomResinfantCount: TIntegerField;
     kbmrestRoomResPriceCode: TStringField;
     kbmrestRoomResAvrageDiscount: TFloatField;
-    kbmrestRoomResisPercentage: TBooleanField;
     kbmrestRoomResMainGuest: TStringField;
     mRoomsRoom: TStringField;
     mRoomsRoomType: TStringField;
@@ -430,6 +427,8 @@ type
     procedure tvRoomResRoomGetDisplayText(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
       var AText: string);
     procedure grProvideDblClickCell(Sender: TObject; ARow, ACol: Integer);
+    procedure tvRoomRatesDiscountGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
+      var AProperties: TcxCustomEditProperties);
 
   private
     { Private declarations }
@@ -459,12 +458,12 @@ type
     procedure FillgrProvideWithRooms;
     procedure SetDateHeads;
     procedure InitCell(c, r: integer);
-    function SetCell(rrInfo: RecRRInfoAlot; col, row: integer; setText: boolean): recColRow;
+    function SetCell(rrDateInfo: RecRRDateInfoAlot; col, row: integer; setText: boolean): recColRow;
     function DateToCol(aDate: Tdate): integer;
     function RoomAndDateToCell(Room, RoomType: string; aDate: Tdate): recColRow;
     function RoomAndTypeToRow(Room, RoomType: string): integer;
 
-    function InitRRInfo: RecRRInfoAlot;
+    function InitRRDateInfo: RecRRDateInfoAlot;
     function ColToDate(ACol: integer): TdateTime;
 
     function GetResStatus(ACol, ARow: integer; var status: string): boolean;
@@ -472,7 +471,7 @@ type
     procedure InitAll;
 
     function isValidAllotment(Reservation: integer): boolean;
-    function GetResInfo(ACol: integer = -1; ARow: integer = -1): RecRRInfoAlot;
+    function GetResInfo(ACol: integer = -1; ARow: integer = -1): RecRRDateInfoAlot;
     function AddRoomReservation(RoomReservation: integer): boolean;
     function Apply: boolean;
     function AddRestRoomReservation(FakeRoomReservation: integer): boolean;
@@ -527,7 +526,7 @@ const
   cColRoomDescription = 2;
   cColInfo = 3;
 
-  // Value of MRrInfoProcessed for items that are not converted to roomreservations
+  // Value of mRRDateInfoProcessed for items that are not converted to roomreservations
   // Processed items have a fake, negative roomreservationr
   cUnProcessed = 0;
 
@@ -626,24 +625,24 @@ begin
     exit;
 
   kbmRoomRes.DisableControls;
-  mRrInfo.DisableControls;
+  mRRDateInfo.DisableControls;
   kbmRoomRates.DisableControls;
   try
     RoomReservation := kbmRoomResRoomReservation.Asinteger;
     try
-      mRrInfo.First;
-      while not mRrInfo.eof do
+      mRRDateInfo.First;
+      while not mRRDateInfo.eof do
       begin
-        if mRrInfoProcessed.Asinteger = RoomReservation then
+        if mRRDateInfoProcessed.Asinteger = RoomReservation then
         begin
-          mRrInfo.Edit;
-          mRrInfoProcessed.Asinteger := cUnProcessed;
-          mRrInfo.Post;
+          mRRDateInfo.Edit;
+          mRRDateInfoProcessed.Asinteger := cUnProcessed;
+          mRRDateInfo.Post;
         end;
-        mRrInfo.Next;
+        mRRDateInfo.Next;
       end;
     finally
-      // mRRinfo.Filtered := false;
+      // mRRDateInfo.Filtered := false;
     end;
     kbmRoomRes.Delete;
     kbmRoomRates.Filter := '(Roomreservation=' + inttostr(RoomReservation) + ')';
@@ -660,7 +659,7 @@ begin
     end;
   finally
     kbmRoomRes.EnableControls;
-    mRrInfo.EnableControls;
+    mRRDateInfo.EnableControls;
     kbmRoomRates.EnableControls;
   end;
   FillData;
@@ -851,7 +850,7 @@ end;
 
 procedure TfrmAllotmentToRes.InitCell(c, r: integer);
 var
-  rrInfo: RecRRInfoAlot;
+  rrInfo: RecRRDateInfoAlot;
 begin
   if grProvide.Objects[c, r] <> nil then
   begin
@@ -859,7 +858,7 @@ begin
     grProvide.Objects[c, r] := nil;
   end;
   grProvide.Cells[c, r] := '';
-  rrInfo := InitRRInfo;
+  rrInfo := InitRRDateInfo;
 
   grProvide.Objects[c, r] := TresCell.Create(rrInfo.rdID, rrInfo.RoomReservation, rrInfo.Reservation, rrInfo.dtDate,
     rrInfo.Room, rrInfo.RoomType, rrInfo.ResFlag, rrInfo.isNoRoom, rrInfo.PriceCode, rrInfo.RoomRate, rrInfo.Discount,
@@ -867,7 +866,7 @@ begin
     rrInfo.numChildren, rrInfo.numInfants, rrInfo.RoomCount);
 end;
 
-Function TfrmAllotmentToRes.InitRRInfo: RecRRInfoAlot;
+Function TfrmAllotmentToRes.InitRRDateInfo: RecRRDateInfoAlot;
 begin
   result.rdID := -1;
   result.RoomReservation := 0;
@@ -891,7 +890,7 @@ begin
   result.RoomCount := 0;
 end;
 
-function TfrmAllotmentToRes.SetCell(rrInfo: RecRRInfoAlot; col, row: integer; setText: boolean): recColRow;
+function TfrmAllotmentToRes.SetCell(rrDateInfo: RecRRDateInfoAlot; col, row: integer; setText: boolean): recColRow;
 var
   rcRec: recColRow;
   s, ss: string;
@@ -900,7 +899,7 @@ var
 
 begin
   RoomCount := 0;
-  rcRec := RoomAndDateToCell(rrInfo.Room, rrInfo.RoomType, rrInfo.dtDate);
+  rcRec := RoomAndDateToCell(rrDateInfo.Room, rrDateInfo.RoomType, rrDateInfo.dtDate);
 
   if col <> -1 then
     rcRec.col := col;
@@ -923,22 +922,22 @@ begin
       if chkRoomCount.Checked then
         s := s + '[' + inttostr(RoomCount) + ']';
       if chkNumGuests.Checked then
-        s := s + '[' + inttostr(rrInfo.numGuests) + ']';
+        s := s + '[' + inttostr(rrDateInfo.numGuests) + ']';
       if chkGuestName.Checked then
-        s := s + ' ' + rrInfo.MainGuest;
+        s := s + ' ' + rrDateInfo.MainGuest;
       if chkPrice.Checked then
       begin
         ss := '%';
-        if rrInfo.isPercentage = false then
-          ss := ' ' + rrInfo.Currency;
-        s := s + ' ' + FloatTostr(rrInfo.RoomRate) + rrInfo.Currency + '-' + FloatTostr(rrInfo.Discount) + ss;
+        if rrDateInfo.isPercentage = false then
+          ss := ' ' + rrDateInfo.Currency;
+        s := s + ' ' + FloatTostr(rrDateInfo.RoomRate) + rrDateInfo.Currency + '-' + FloatTostr(rrDateInfo.Discount) + ss;
       end;
       grProvide.Cells[rcRec.col, rcRec.row] := s;
     end;
-    grProvide.Objects[rcRec.col, rcRec.row] := TresCell.Create(rrInfo.rdID, rrInfo.RoomReservation, rrInfo.Reservation,
-      rrInfo.dtDate, rrInfo.Room, rrInfo.RoomType, rrInfo.ResFlag, rrInfo.isNoRoom, rrInfo.PriceCode, rrInfo.RoomRate,
-      rrInfo.Discount, rrInfo.isPercentage, rrInfo.showDiscount, rrInfo.Paid, rrInfo.Currency, rrInfo.MainGuest,
-      rrInfo.numGuests, rrInfo.numChildren, rrInfo.numInfants, RoomCount);
+    grProvide.Objects[rcRec.col, rcRec.row] := TresCell.Create(rrDateInfo.rdID, rrDateInfo.RoomReservation, rrDateInfo.Reservation,
+      rrDateInfo.dtDate, rrDateInfo.Room, rrDateInfo.RoomType, rrDateInfo.ResFlag, rrDateInfo.isNoRoom, rrDateInfo.PriceCode, rrDateInfo.RoomRate,
+      rrDateInfo.Discount, rrDateInfo.isPercentage, rrDateInfo.showDiscount, rrDateInfo.Paid, rrDateInfo.Currency, rrDateInfo.MainGuest,
+      rrDateInfo.numGuests, rrDateInfo.numChildren, rrDateInfo.numInfants, RoomCount);
 
   end
   else
@@ -961,52 +960,52 @@ end;
 
 procedure TfrmAllotmentToRes.FillData;
 var
-  rrInfo: RecRRInfoAlot;
+  rrInfo: RecRRDateInfoAlot;
   rcRec: recColRow;
   col, row: integer;
   processed: integer;
 begin
   InitAll;
 
-  mRrInfo.DisableControls;
+  mRRDateInfo.DisableControls;
   screen.Cursor := crHourglass;
   try
-    mRrInfo.First;
-    while not mRrInfo.eof do
+    mRRDateInfo.First;
+    while not mRRDateInfo.eof do
     begin
-      col := mRrInfoCol.Asinteger;
-      row := mRrInfoRow.Asinteger;
-      processed := mRrInfoProcessed.Asinteger;
+      col := mRRDateInfoCol.Asinteger;
+      row := mRRDateInfoRow.Asinteger;
+      processed := mRRDateInfoProcessed.Asinteger;
 
       if processed = cUnProcessed then
       begin
-        rrInfo := InitRRInfo;
-        rrInfo.rdID := mRrInfordID.Asinteger;
-        rrInfo.RoomReservation := mRrInfoRoomReservation.Asinteger;
-        rrInfo.Reservation := mRrInfoReservation.Asinteger;
-        rrInfo.dtDate := mRrInfodtDate.AsDateTime;
-        rrInfo.Room := mRrInfoRoom.AsString;
-        rrInfo.RoomType := mRrInfoRoomType.AsString;
-        rrInfo.ResFlag := mRrInfoResFlag.AsString;
-        rrInfo.isNoRoom := mRrInfoisNoRoom.AsBoolean;
-        rrInfo.PriceCode := mRrInfoPriceCode.AsString;
-        rrInfo.RoomRate := mRrInfoRoomRate.AsFloat;
-        rrInfo.Discount := mRrInfoDiscount.AsFloat;
-        rrInfo.isPercentage := mRrInfoisPercentage.AsBoolean;
-        rrInfo.showDiscount := mRrInfoshowDiscount.AsBoolean;
-        rrInfo.Paid := mRrInfoPaid.AsBoolean;
-        rrInfo.Currency := mRrInfoCurrency.AsString;
-        rrInfo.MainGuest := mRrInfoMainGuest.AsString;
-        rrInfo.numGuests := mRrInfonumGuests.Asinteger;
-        rrInfo.numChildren := mRrInfonumChildren.Asinteger;
-        rrInfo.numInfants := mRrInfonumInfants.Asinteger;
-        rrInfo.RoomCount := mRrInfoRoomCount.Asinteger;
+        rrInfo := InitRRDateInfo;
+        rrInfo.rdID := mRRDateInfordID.Asinteger;
+        rrInfo.RoomReservation := mRRDateInfoRoomReservation.Asinteger;
+        rrInfo.Reservation := mRRDateInfoReservation.Asinteger;
+        rrInfo.dtDate := mRRDateInfodtDate.AsDateTime;
+        rrInfo.Room := mRRDateInfoRoom.AsString;
+        rrInfo.RoomType := mRRDateInfoRoomType.AsString;
+        rrInfo.ResFlag := mRRDateInfoResFlag.AsString;
+        rrInfo.isNoRoom := mRRDateInfoisNoRoom.AsBoolean;
+        rrInfo.PriceCode := mRRDateInfoPriceCode.AsString;
+        rrInfo.RoomRate := mRRDateInfoRoomRate.AsFloat;
+        rrInfo.Discount := mRRDateInfoDiscount.AsFloat;
+        rrInfo.isPercentage := mRRDateInfoisPercentage.AsBoolean;
+        rrInfo.showDiscount := mRRDateInfoshowDiscount.AsBoolean;
+        rrInfo.Paid := mRRDateInfoPaid.AsBoolean;
+        rrInfo.Currency := mRRDateInfoCurrency.AsString;
+        rrInfo.MainGuest := mRRDateInfoMainGuest.AsString;
+        rrInfo.numGuests := mRRDateInfonumGuests.Asinteger;
+        rrInfo.numChildren := mRRDateInfonumChildren.Asinteger;
+        rrInfo.numInfants := mRRDateInfonumInfants.Asinteger;
+        rrInfo.RoomCount := mRRDateInfoRoomCount.Asinteger;
         rcRec := SetCell(rrInfo, col, row, true);
       end;
-      mRrInfo.Next;
+      mRRDateInfo.Next;
     end;
   finally
-    mRrInfo.EnableControls;
+    mRRDateInfo.EnableControls;
     screen.Cursor := crDefault;
   end;
 end;
@@ -1161,6 +1160,13 @@ procedure TfrmAllotmentToRes.timCloseTimer(Sender: TObject);
 begin
   timClose.Enabled := false;
   close;
+end;
+
+procedure TfrmAllotmentToRes.tvRoomRatesDiscountGetProperties(Sender: TcxCustomGridTableItem;
+  ARecord: TcxCustomGridRecord; var AProperties: TcxCustomEditProperties);
+begin
+  if not aRecord.Values[tvRoomRatesisPercentage.Index] then
+    tvRoomResGetCurrencyProperties(Sender, aRecord, AProperties);
 end;
 
 procedure TfrmAllotmentToRes.tvRoomResGetCurrencyProperties(Sender: TcxCustomGridTableItem;
@@ -1335,41 +1341,41 @@ var
   i: integer;
 begin
 
-  mRrInfo.DisableControls;
+  mRRDateInfo.DisableControls;
   lNewRRList := TList<integer>.Create;
   try
-    mRrInfo.IndexFieldNames := 'Room;Roomtype;Roomreservation;dtDate';
+    mRRDateInfo.IndexFieldNames := 'Room;Roomtype;Roomreservation;dtDate';
 
     lCurRoom := '';
     lCurRoomType := '';
-    mRrInfo.First;
+    mRRDateInfo.First;
     lRRId := 0;
 
     lLastDate := 0;
     // Walk through all Allotment RR records that are not assigned to a new reservation and assign them a new
     // fake roomreservation number (in Processed field) as long as they are the same room and roomtype and have consecutive dates
-    while not mRrInfo.Eof do
+    while not mRRDateInfo.Eof do
     begin
-      if mRrInfoProcessed.AsInteger = cUnProcessed then
+      if mRRDateInfoProcessed.AsInteger = cUnProcessed then
       begin
-        if (lCurRoom <> mRrInfoRoom.asString) or (lCurRoomType <> mRrInfoRoomType.AsString) or
-           (lLastDate + 1 <> mRrInfodtDate.AsDateTime) then
+        if (lCurRoom <> mRRDateInfoRoom.asString) or (lCurRoomType <> mRRDateInfoRoomType.AsString) or
+           (lLastDate + 1 <> mRRDateInfodtDate.AsDateTime) then
         begin
           if lRRId <> 0 then
             lNewRRList.add(lRRId);
 
           lRRId := GetNextFakeRRID; // RR_SetNewID;
-          lCurRoom := mRrInfoRoom.asString;
-          lCurRoomType := mRrInfoRoomType.asString;
+          lCurRoom := mRRDateInfoRoom.asString;
+          lCurRoomType := mRRDateInfoRoomType.asString;
         end;
 
-        mRrInfo.Edit;
-        mRrInfoProcessed.AsInteger := lRRId;
-        mRrInfo.Post;
-        lLastDate := mRrInfodtDate.AsDateTime;
+        mRRDateInfo.Edit;
+        mRRDateInfoProcessed.AsInteger := lRRId;
+        mRRDateInfo.Post;
+        lLastDate := mRRDateInfodtDate.AsDateTime;
       end;
 
-      mRrInfo.Next;
+      mRRDateInfo.Next;
     end;
 
     if lRRId <> 0 then
@@ -1380,7 +1386,7 @@ begin
 
   finally
     lNewRRList.Free;
-    mRrInfo.EnableControls;
+    mRRDateInfo.EnableControls;
   end;
 
 end;
@@ -1451,7 +1457,7 @@ begin
     lstPrices.Duplicates := dupIgnore;
 
     screen.Cursor := crHourglass;
-    mRrInfo.DisableControls;
+    mRRDateInfo.DisableControls;
     kbmRoomRes.DisableControls;
     kbmRoomRates.DisableControls;
     try
@@ -1461,25 +1467,24 @@ begin
 
       sFilter := '(processed=' + inttostr(RoomReservation) + ')';
 
-      mRrInfo.Filter := sFilter;
-      mRrInfo.Filtered := true;
-      mRrInfo.First;
+      mRRDateInfo.Filter := sFilter;
+      mRRDateInfo.Filtered := true;
+      mRRDateInfo.First;
 
-      RoomDescription := mRrInfoRoomDescription.AsString;
-      RoomTypeDescription := mRrInfoRoomDescription.AsString;
-      MainGuest := mRrInfoMainGuest.AsString;
-      isPercentage := mRrInfoisPercentage.AsBoolean;
-      PriceCode := mRrInfoPriceCode.AsString;
+      RoomDescription := mRRDateInfoRoomDescription.AsString;
+      RoomTypeDescription := mRRDateInfoRoomDescription.AsString;
+      MainGuest := mRRDateInfoMainGuest.AsString;
+      PriceCode := mRRDateInfoPriceCode.AsString;
 
-      Guests := mRrInfonumGuests.Asinteger;
-      ChildrenCount := mRrInfonumChildren.Asinteger;
-      InfantCount := mRrInfonumInfants.Asinteger;
+      Guests := mRRDateInfonumGuests.Asinteger;
+      ChildrenCount := mRRDateInfonumChildren.Asinteger;
+      InfantCount := mRRDateInfonumInfants.Asinteger;
 
-      RoomReservation := mRrInfoProcessed.Asinteger;
-      Room := mRrInfoRoom.AsString;
+      RoomReservation := mRRDateInfoProcessed.Asinteger;
+      Room := mRRDateInfoRoom.AsString;
       if Room = '' then
         Room := '<' + inttostr(RoomReservation) + '>';
-      RoomType := mRrInfoRoomType.AsString;
+      RoomType := mRRDateInfoRoomType.AsString;
 
       ttPrice := 0.00;
       ttDiscount := 0.00;
@@ -1490,21 +1495,21 @@ begin
 
       tmpDeparture := 0;
       tmpArrival := date + 10000;
-      mRrInfo.First;
-      while not mRrInfo.eof do
+      mRRDateInfo.First;
+      while not mRRDateInfo.eof do
       begin
-        RoomRate := mRrInfoRoomRate.AsFloat;
-        Discount := mRrInfoDiscount.AsFloat;
+        RoomRate := mRRDateInfoRoomRate.AsFloat;
+        Discount := mRRDateInfoDiscount.AsFloat;
 
         lstPrices.Add(FloatTostr(RoomRate));
         ttPriceCount := ttPriceCount + 1;
         ttPrice := ttPrice + RoomRate;
         ttDiscount := ttDiscount + Discount;
 
-        tmpArrival := min(tmpArrival, mRrInfodtDate.AsDateTime);
-        tmpDeparture := max(tmpDeparture, mRrInfodtDate.AsDateTime);
+        tmpArrival := min(tmpArrival, mRRDateInfodtDate.AsDateTime);
+        tmpDeparture := max(tmpDeparture, mRRDateInfodtDate.AsDateTime);
 
-        mRrInfo.Next;
+        mRRDateInfo.Next;
       end;
 
       Arrival := tmpArrival;
@@ -1520,12 +1525,12 @@ begin
       Departure := Departure + 1;
 
       ttNetPrice := 0;
-      mRrInfo.First;
-      while not mRrInfo.eof do
+      mRRDateInfo.First;
+      while not mRRDateInfo.eof do
       begin
-        RoomRate := mRrInfoRoomRate.AsFloat;
-        Discount := mRrInfoDiscount.AsFloat;
-        isPercentage := mRrInfoisPercentage.AsBoolean;
+        RoomRate := mRRDateInfoRoomRate.AsFloat;
+        Discount := mRRDateInfoDiscount.AsFloat;
+        isPercentage := mRRDateInfoisPercentage.AsBoolean;
 
         DiscountAmount := 0;
 
@@ -1551,21 +1556,21 @@ begin
         ttNetPrice := ttNetPrice + RentAmount;
 
         kbmRoomRates.append;
-        kbmRoomRatesReservation.Asinteger := mRrInfoReservation.Asinteger;
-        kbmRoomRatesRoomReservation.Asinteger := mRrInfoProcessed.Asinteger;
-        kbmRoomRatesRoomNumber.AsString := mRrInfoRoom.AsString;
-        kbmRoomRatesRateDate.AsDateTime := mRrInfodtDate.AsDateTime;
-        kbmRoomRatesPriceCode.AsString := mRrInfoPriceCode.AsString;
+        kbmRoomRatesReservation.Asinteger := mRRDateInfoReservation.Asinteger;
+        kbmRoomRatesRoomReservation.Asinteger := mRRDateInfoProcessed.Asinteger;
+        kbmRoomRatesRoomNumber.AsString := mRRDateInfoRoom.AsString;
+        kbmRoomRatesRateDate.AsDateTime := mRRDateInfodtDate.AsDateTime;
+        kbmRoomRatesPriceCode.AsString := mRRDateInfoPriceCode.AsString;
         kbmRoomRatesRate.AsFloat := RoomRate;
         kbmRoomRatesDiscount.AsFloat := Discount;
         kbmRoomRatesisPercentage.AsBoolean := isPercentage;
-        kbmRoomRatesShowDiscount.AsBoolean := mRrInfoshowDiscount.AsBoolean;
+        kbmRoomRatesShowDiscount.AsBoolean := mRRDateInfoshowDiscount.AsBoolean;
         kbmRoomRatesisPaid.AsBoolean := false;
         kbmRoomRatesDiscountAmount.AsFloat := DiscountAmount;
         kbmRoomRatesRentAmount.AsFloat := RentAmount;
         kbmRoomRatesNativeAmount.AsFloat := NativeAmount;
         kbmRoomRates.Post;
-        mRrInfo.Next;
+        mRRDateInfo.Next;
       end;
 
       AvrageNetPrice := 0;
@@ -1589,19 +1594,18 @@ begin
       kbmRoomResinfantCount.Asinteger := InfantCount;
       kbmRoomResPriceCode.AsString := PriceCode;
       kbmRoomResAvrageDiscount.AsFloat := AvrageDiscount;
-      kbmRoomResisPercentage.AsBoolean := isPercentage;
       kbmRoomResMainGuest.AsString := MainGuest;
       kbmRoomRes.Post;
 
       oSelectedRoomItem := TnewRoomReservationItem.Create(RoomReservation, Room, RoomType, '', Arrival, Departure,
-        Guests, AvrageNetPrice, AvrageDiscount, isPercentage, RateCount, ChildrenCount, InfantCount, PriceCode,
+        Guests, AvrageNetPrice, AvrageDiscount, RateCount, ChildrenCount, InfantCount, PriceCode,
         MainGuest, '');
       oNewReservation.newRoomReservations.RoomItemsList.Add(oSelectedRoomItem);
-      mRrInfo.Filtered := false;
+      mRRDateInfo.Filtered := false;
     finally
       kbmRoomRes.EnableControls;
       kbmRoomRates.EnableControls;
-      mRrInfo.EnableControls;
+      mRRDateInfo.EnableControls;
       screen.Cursor := crDefault;
     end;
   finally
@@ -1613,15 +1617,15 @@ end;
 function TfrmAllotmentToRes.SetRoomResProcessed(ACol, ARow: integer; newRR: integer): boolean;
 begin
   result := false;
-  mRrInfo.SortFields := 'RoomRate;isPercentage;Discount';
-  mRrInfo.sort([mtcoDescending]);
-  if mRrInfo.Locate('processed;Row;col', VarArrayOf([cUnProcessed, ARow, ACol]), []) then
+  mRRDateInfo.SortFields := 'RoomRate;isPercentage;Discount';
+  mRRDateInfo.sort([mtcoDescending]);
+  if mRRDateInfo.Locate('processed;Row;col', VarArrayOf([cUnProcessed, ARow, ACol]), []) then
   begin
-    mRrInfo.Edit;
-    mRrInfoProcessed.Asinteger := newRR;
-    mRrInfo.Post;
-    mRrInfo.SortFields := 'RoomRate;isPercentage;Discount';
-    mRrInfo.sort([]);
+    mRRDateInfo.Edit;
+    mRRDateInfoProcessed.Asinteger := newRR;
+    mRRDateInfo.Post;
+    mRRDateInfo.SortFields := 'RoomRate;isPercentage;Discount';
+    mRRDateInfo.sort([]);
     result := true;
   end;
 end;
@@ -1642,7 +1646,7 @@ begin
   Result := FLastFakeRRNumber;
 end;
 
-function TfrmAllotmentToRes.GetResInfo(ACol: integer = -1; ARow: integer = -1): RecRRInfoAlot;
+function TfrmAllotmentToRes.GetResInfo(ACol: integer = -1; ARow: integer = -1): RecRRDateInfoAlot;
 var
   resCell: TresCell;
 begin
@@ -1753,7 +1757,7 @@ begin
     ExecutionPlan.AddQuery(sql); // 1
 
     screen.Cursor := crHourglass;
-    mRrInfo.DisableControls;
+    mRRDateInfo.DisableControls;
     try
       ExecutionPlan.Execute(ptQuery);
 
@@ -1771,57 +1775,57 @@ begin
 
       rset1 := ExecutionPlan.Results[1];
 
-      if mRrInfo.active then
-        mRrInfo.close;
-      mRrInfo.Open;
-      LoadKbmMemtableFromDataSetQuiet(mRrInfo, rset1, []);
+      if mRRDateInfo.active then
+        mRRDateInfo.close;
+      mRRDateInfo.Open;
+      LoadKbmMemtableFromDataSetQuiet(mRRDateInfo, rset1, []);
 
-      mRrInfo.SortFields := 'Room;RoomType';
-      mRrInfo.sort([]);
+      mRRDateInfo.SortFields := 'Room;RoomType';
+      mRRDateInfo.sort([]);
 
-      mRrInfo.First;
+      mRRDateInfo.First;
 
-      while not mRrInfo.eof do
+      while not mRRDateInfo.eof do
       begin
-        Room := mRrInfoRoom.AsString;
+        Room := mRRDateInfoRoom.AsString;
         if copy(Room, 1, 1) = '<' then
         begin
-          mRrInfo.Edit;
-          mRrInfoisNoRoom.AsBoolean := true;
-          mRrInfoRoom.AsString := '';
-          mRrInfo.Post;
+          mRRDateInfo.Edit;
+          mRRDateInfoisNoRoom.AsBoolean := true;
+          mRRDateInfoRoom.AsString := '';
+          mRRDateInfo.Post;
         end;
-        mRrInfo.Next;
+        mRRDateInfo.Next;
       end;
 
-      mRrInfo.First;
+      mRRDateInfo.First;
       labResRooms.Caption := inttostr(rset1.RecordCount);
-      labCurrency.Caption := mRrInfoCurrency.AsString;;
-      chkIsGroupInvoice.Checked := mRrInfoGroupAccount.AsBoolean;
-      zAllotmentIsGroupInvoice := mRrInfoGroupAccount.AsBoolean;
+      labCurrency.Caption := mRRDateInfoCurrency.AsString;;
+      chkIsGroupInvoice.Checked := mRRDateInfoGroupAccount.AsBoolean;
+      zAllotmentIsGroupInvoice := mRRDateInfoGroupAccount.AsBoolean;
 
-      labPriceCode.Caption := mRrInfoPriceCode.AsString;
+      labPriceCode.Caption := mRRDateInfoPriceCode.AsString;
 
       if mRooms.active then
         mRooms.close;
       mRooms.Open;
       strTmp := '';
-      while not mRrInfo.eof do
+      while not mRRDateInfo.eof do
       begin
-        s := mRrInfoRoom.AsString + mRrInfoRoomType.AsString;
+        s := mRRDateInfoRoom.AsString + mRRDateInfoRoomType.AsString;
         if s <> strTmp then
         begin
           mRooms.append;
-          mRoomsRoom.AsString := mRrInfoRoom.AsString;
-          mRoomsRoomType.AsString := mRrInfoRoomType.AsString;
-          if mRrInfoisNoRoom.AsBoolean then
-            mRoomsRoomDescription.AsString := mRrInfoRoomtypeDescription.AsString
+          mRoomsRoom.AsString := mRRDateInfoRoom.AsString;
+          mRoomsRoomType.AsString := mRRDateInfoRoomType.AsString;
+          if mRRDateInfoisNoRoom.AsBoolean then
+            mRoomsRoomDescription.AsString := mRRDateInfoRoomtypeDescription.AsString
           else
-            mRoomsRoomDescription.AsString := mRrInfoRoomDescription.AsString;
+            mRoomsRoomDescription.AsString := mRRDateInfoRoomDescription.AsString;
           mRooms.Post;
           strTmp := s;
         end;
-        mRrInfo.Next;
+        mRRDateInfo.Next;
       end;
 
       mRooms.SortFields := 'RoomType;room';
@@ -1849,26 +1853,26 @@ begin
 
       SetDateHeads;
       FillgrProvideWithRooms;
-      mRrInfo.First;
-      while not mRrInfo.eof do
+      mRRDateInfo.First;
+      while not mRRDateInfo.eof do
       begin
-        col := DateToCol(mRrInfodtDate.AsDateTime);
-        Room := mRrInfoRoom.AsString;
-        RoomType := mRrInfoRoomType.AsString;
+        col := DateToCol(mRRDateInfodtDate.AsDateTime);
+        Room := mRRDateInfoRoom.AsString;
+        RoomType := mRRDateInfoRoomType.AsString;
         row := RoomAndTypeToRow(Room, RoomType);
-        mRrInfo.Edit;
-        mRrInfoRow.Asinteger := row;
-        mRrInfoCol.Asinteger := col;
-        mRrInfoProcessed.Asinteger := cUnprocessed;
-        mRrInfo.Post;
-        mRrInfo.Next;
+        mRRDateInfo.Edit;
+        mRRDateInfoRow.Asinteger := row;
+        mRRDateInfoCol.Asinteger := col;
+        mRRDateInfoProcessed.Asinteger := cUnprocessed;
+        mRRDateInfo.Post;
+        mRRDateInfo.Next;
       end;
 
-      mRrInfo.SortFields := 'RoomRate;isPercentage;Discount';
+      mRRDateInfo.SortFields := 'RoomRate;isPercentage;Discount';
       FillData;
     finally
       screen.Cursor := crDefault;
-      mRrInfo.EnableControls;
+      mRRDateInfo.EnableControls;
     end;
   finally
     ExecutionPlan.Free;
@@ -1889,7 +1893,6 @@ var
   RoomReservation: integer;
   AvragePrice: double;
   AvrageDiscount: double;
-  isPercentage: boolean;
   RateCount: integer;
   ChildrenCount: integer;
   InfantCount: integer;
@@ -1967,14 +1970,13 @@ begin
     ChildrenCount := kbmRoomResChildrenCount.Asinteger;
     InfantCount := kbmRoomResinfantCount.Asinteger;
     PriceCode := kbmRoomResPriceCode.AsString;
-    isPercentage := kbmRoomResisPercentage.AsBoolean;
     mainGuestName := kbmRoomResMainGuest.AsString;
 
     oSelectedRoomItem := TnewRoomReservationItem.Create(RoomReservation, Room, RoomType, '', Arrival, Departure,
-      GuestCount, AvragePrice, AvrageDiscount, isPercentage, RateCount, ChildrenCount, InfantCount, PriceCode,
+      GuestCount, AvragePrice, AvrageDiscount, RateCount, ChildrenCount, InfantCount, PriceCode,
       mainGuestName, '');
     oNewReservation.newRoomReservations.RoomItemsList.Add(oSelectedRoomItem);
-    oNewReservation.newRoomReservations.RoomItemsList[roomIndex].oRates.SetCurrency(labCurrency.Caption);
+    oNewReservation.newRoomReservations.RoomItemsList[roomIndex].Rates.SetCurrency(labCurrency.Caption);
 
     kbmRoomRates.Filter := '(Roomreservation=' + inttostr(RoomReservation) + ')';
     kbmRoomRates.Filtered := true;
@@ -1992,7 +1994,7 @@ begin
       rateIsPaid := kbmRoomRatesisPaid.AsBoolean;
       rateItem := TRateItem.Create(rate, rateDate, rateDiscount, rateShowDiscount, rateIsPercentage, rateIsPaid,
         ratePriceCode, rateRoomNumber, -1, RoomReservation);
-      oNewReservation.newRoomReservations.RoomItemsList[roomIndex].oRates.RateItemsList.Add(rateItem);
+      oNewReservation.newRoomReservations.RoomItemsList[roomIndex].Rates.RateItemsList.Add(rateItem);
       kbmRoomRates.Next;
     end;
     inc(roomIndex);
@@ -2063,14 +2065,13 @@ begin
       ChildrenCount := kbmrestRoomResChildrenCount.Asinteger;
       InfantCount := kbmrestRoomResinfantCount.Asinteger;
       PriceCode := kbmrestRoomResPriceCode.AsString;
-      isPercentage := kbmrestRoomResisPercentage.AsBoolean;
       mainGuestName := kbmrestRoomResMainGuest.AsString;
 
       oSelectedRoomItem := TnewRoomReservationItem.Create(RoomReservation, Room, RoomType, '', Arrival, Departure,
-        GuestCount, AvragePrice, AvrageDiscount, isPercentage, RateCount, ChildrenCount, InfantCount, PriceCode,
+        GuestCount, AvragePrice, AvrageDiscount, RateCount, ChildrenCount, InfantCount, PriceCode,
         mainGuestName, '');
       oRestReservation.newRoomReservations.RoomItemsList.Add(oSelectedRoomItem);
-      oRestReservation.newRoomReservations.RoomItemsList[roomIndex].oRates.SetCurrency(labCurrency.Caption);
+      oRestReservation.newRoomReservations.RoomItemsList[roomIndex].Rates.SetCurrency(labCurrency.Caption);
 
       kbmRestRoomRates.Filter := '(Roomreservation=' + inttostr(RoomReservation) + ')';
       kbmRestRoomRates.Filtered := true;
@@ -2088,7 +2089,7 @@ begin
         rateIsPaid := kbmRestRoomRatesisPaid.AsBoolean;
         rateItem := TRateItem.Create(rate, rateDate, rateDiscount, rateShowDiscount, rateIsPercentage, rateIsPaid,
           ratePriceCode, rateRoomNumber, -1, RoomReservation);
-        oRestReservation.newRoomReservations.RoomItemsList[roomIndex].oRates.RateItemsList.Add(rateItem);
+        oRestReservation.newRoomReservations.RoomItemsList[roomIndex].Rates.RateItemsList.Add(rateItem);
         kbmRestRoomRates.Next;
       end;
       inc(roomIndex);
@@ -2148,31 +2149,30 @@ begin
     lstPrices.Duplicates := dupIgnore;
 
     screen.Cursor := crHourglass;
-    mRrInfo.DisableControls;
+    mRRDateInfo.DisableControls;
     kbmrestRoomRes.DisableControls;
     kbmRestRoomRates.DisableControls;
     try
       sFilter := '(processed=' + inttostr(FakeRoomReservation) + ')';
 
-      mRrInfo.Filter := sFilter;
-      mRrInfo.Filtered := true;
-      mRrInfo.First;
+      mRRDateInfo.Filter := sFilter;
+      mRRDateInfo.Filtered := true;
+      mRRDateInfo.First;
 
-      RoomDescription := mRrInfoRoomDescription.AsString;
-      RoomTypeDescription := mRrInfoRoomtypeDescription.AsString;
-      MainGuest := mRrInfoMainGuest.AsString;
-      isPercentage := mRrInfoisPercentage.AsBoolean;
-      PriceCode := mRrInfoPriceCode.AsString;
+      RoomDescription := mRRDateInfoRoomDescription.AsString;
+      RoomTypeDescription := mRRDateInfoRoomtypeDescription.AsString;
+      MainGuest := mRRDateInfoMainGuest.AsString;
+      PriceCode := mRRDateInfoPriceCode.AsString;
 
-      Guests := mRrInfonumGuests.Asinteger;
-      ChildrenCount := mRrInfonumChildren.Asinteger;
-      InfantCount := mRrInfonumInfants.Asinteger;
+      Guests := mRRDateInfonumGuests.Asinteger;
+      ChildrenCount := mRRDateInfonumChildren.Asinteger;
+      InfantCount := mRRDateInfonumInfants.Asinteger;
 
-//      FakeRoomReservation := mRrInfoProcessed.Asinteger;
-      Room := mRrInfoRoom.AsString;
+//      FakeRoomReservation := mRRDateInfoProcessed.Asinteger;
+      Room := mRRDateInfoRoom.AsString;
       if Room = '' then
         Room := '<' + inttostr(FakeRoomReservation) + '>';
-      RoomType := mRrInfoRoomType.AsString;
+      RoomType := mRRDateInfoRoomType.AsString;
 
       ttPrice := 0.00;
       ttDiscount := 0.00;
@@ -2185,26 +2185,26 @@ begin
       Departure := tmpDeparture;
       tmpArrival := date + 10000;
       Arrival := tmpArrival;
-      mRrInfo.First;
-      while not mRrInfo.eof do
+      mRRDateInfo.First;
+      while not mRRDateInfo.eof do
       begin
-        RoomRate := mRrInfoRoomRate.AsFloat;
-        Discount := mRrInfoDiscount.AsFloat;
+        RoomRate := mRRDateInfoRoomRate.AsFloat;
+        Discount := mRRDateInfoDiscount.AsFloat;
 
         lstPrices.Add(FloatTostr(RoomRate));
         ttPriceCount := ttPriceCount + 1;
         ttPrice := ttPrice + RoomRate;
         ttDiscount := ttDiscount + Discount;
 
-        if tmpArrival >= mRrInfodtDate.AsDateTime then
-          Arrival := mRrInfodtDate.AsDateTime;
-        if tmpDeparture <= mRrInfodtDate.AsDateTime then
-          Departure := mRrInfodtDate.AsDateTime;
+        if tmpArrival >= mRRDateInfodtDate.AsDateTime then
+          Arrival := mRRDateInfodtDate.AsDateTime;
+        if tmpDeparture <= mRRDateInfodtDate.AsDateTime then
+          Departure := mRRDateInfodtDate.AsDateTime;
 
         tmpArrival := Arrival;
         tmpDeparture := Departure;
 
-        mRrInfo.Next;
+        mRRDateInfo.Next;
       end;
 
       AvrageDiscount := 0;
@@ -2217,12 +2217,12 @@ begin
       Departure := Departure + 1;
 
       ttNetPrice := 0;
-      mRrInfo.First;
-      while not mRrInfo.eof do
+      mRRDateInfo.First;
+      while not mRRDateInfo.eof do
       begin
-        RoomRate := mRrInfoRoomRate.AsFloat;
-        Discount := mRrInfoDiscount.AsFloat;
-        isPercentage := mRrInfoisPercentage.AsBoolean;
+        RoomRate := mRRDateInfoRoomRate.AsFloat;
+        Discount := mRRDateInfoDiscount.AsFloat;
+        isPercentage := mRRDateInfoisPercentage.AsBoolean;
 
         DiscountAmount := 0;
 
@@ -2248,21 +2248,21 @@ begin
         ttNetPrice := ttNetPrice + RentAmount;
 
         kbmRestRoomRates.append;
-        kbmRestRoomRatesReservation.Asinteger := mRrInfoReservation.Asinteger;
-        kbmRestRoomRatesRoomReservation.Asinteger := mRrInfoProcessed.Asinteger;
-        kbmRestRoomRatesRoomNumber.AsString := mRrInfoRoom.AsString;
-        kbmRestRoomRatesRateDate.AsDateTime := mRrInfodtDate.AsDateTime;
-        kbmRestRoomRatesPriceCode.AsString := mRrInfoPriceCode.AsString;
+        kbmRestRoomRatesReservation.Asinteger := mRRDateInfoReservation.Asinteger;
+        kbmRestRoomRatesRoomReservation.Asinteger := mRRDateInfoProcessed.Asinteger;
+        kbmRestRoomRatesRoomNumber.AsString := mRRDateInfoRoom.AsString;
+        kbmRestRoomRatesRateDate.AsDateTime := mRRDateInfodtDate.AsDateTime;
+        kbmRestRoomRatesPriceCode.AsString := mRRDateInfoPriceCode.AsString;
         kbmRestRoomRatesRate.AsFloat := RoomRate;
         kbmRestRoomRatesDiscount.AsFloat := Discount;
         kbmRestRoomRatesisPercentage.AsBoolean := isPercentage;
-        kbmRestRoomRatesShowDiscount.AsBoolean := mRrInfoshowDiscount.AsBoolean;
+        kbmRestRoomRatesShowDiscount.AsBoolean := mRRDateInfoshowDiscount.AsBoolean;
         kbmRestRoomRatesisPaid.AsBoolean := false;
         kbmRestRoomRatesDiscountAmount.AsFloat := DiscountAmount;
         kbmRestRoomRatesRentAmount.AsFloat := RentAmount;
         kbmRestRoomRatesNativeAmount.AsFloat := NativeAmount;
         kbmRestRoomRates.Post;
-        mRrInfo.Next;
+        mRRDateInfo.Next;
       end;
 
       AvrageNetPrice := 0;
@@ -2286,19 +2286,18 @@ begin
       kbmrestRoomResinfantCount.Asinteger := InfantCount;
       kbmrestRoomResPriceCode.AsString := PriceCode;
       kbmrestRoomResAvrageDiscount.AsFloat := AvrageDiscount;
-      kbmrestRoomResisPercentage.AsBoolean := isPercentage;
       kbmrestRoomResMainGuest.AsString := MainGuest;
       kbmrestRoomRes.Post;
 
       oSelectedRoomItem := TnewRoomReservationItem.Create(FakeRoomReservation, Room, RoomType, '', Arrival, Departure,
-        Guests, AvrageNetPrice, AvrageDiscount, isPercentage, RateCount, ChildrenCount, InfantCount, PriceCode,
+        Guests, AvrageNetPrice, AvrageDiscount, RateCount, ChildrenCount, InfantCount, PriceCode,
         MainGuest, '');
       oRestReservation.newRoomReservations.RoomItemsList.Add(oSelectedRoomItem);
-      mRrInfo.Filtered := false;
+      mRRDateInfo.Filtered := false;
     finally
       kbmrestRoomRes.EnableControls;
       kbmRestRoomRates.EnableControls;
-      mRrInfo.EnableControls;
+      mRRDateInfo.EnableControls;
       screen.Cursor := crDefault;
     end;
   finally
@@ -2402,7 +2401,7 @@ begin
       until not found;
 
       i := oNewReservation.newRoomReservations.FindRoomFromRoomReservation(RoomReservation, 0);
-      oNewReservation.newRoomReservations.RoomItemsList[i].oRates.RateItemsList.Clear;
+      oNewReservation.newRoomReservations.RoomItemsList[i].Rates.RateItemsList.Clear;
 
       Room := kbmRoomResRoom.AsString;
       Arrival := kbmRoomResArrival.AsDateTime;
@@ -2432,7 +2431,7 @@ begin
         end
         else
         begin
-          rate := oNewReservation.newRoomReservations.RoomItemsList[i].oRates.GetDayRate(RoomType, Room, aDate, Guests,
+          rate := oNewReservation.newRoomReservations.RoomItemsList[i].Rates.GetDayRate(RoomType, Room, aDate, Guests,
             ChildrenCount, InfantCount, Currency, priceID, Discount, showDiscount, isPercentage, IsPaid, false
 
             );
@@ -2493,7 +2492,6 @@ begin
       kbmRoomResAvragePrice.AsFloat := rateAvrage;
       kbmRoomResRateCount.AsFloat := RateCount;
       kbmRoomResAvrageDiscount.AsFloat := discountAvrage;
-      kbmRoomResisPercentage.AsBoolean := isPercentage;
       kbmRoomRes.Post;
     end;
   finally

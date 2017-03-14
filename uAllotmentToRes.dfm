@@ -174,7 +174,6 @@ object frmAllotmentToRes: TfrmAllotmentToRes
           SkinData.SkinSection = 'CHECKBOX'
           ImgChecked = 0
           ImgUnchecked = 0
-          ExplicitTop = 81
         end
         object chkNumGuests: TsCheckBox
           AlignWithMargins = True
@@ -501,7 +500,7 @@ object frmAllotmentToRes: TfrmAllotmentToRes
       SortSettings.HeaderColorTo = 16579058
       SortSettings.HeaderMirrorColor = 16380385
       SortSettings.HeaderMirrorColorTo = 16182488
-      Version = '8.2.5.2'
+      Version = '8.2.4.1'
       ColWidths = (
         132)
       RowHeights = (
@@ -877,12 +876,8 @@ object frmAllotmentToRes: TfrmAllotmentToRes
         end
         object tvRoomResAvrageDiscount: TcxGridDBColumn
           DataBinding.FieldName = 'AvrageDiscount'
-          PropertiesClassName = 'TcxCalcEditProperties'
-          Options.Editing = False
-        end
-        object tvRoomResisPercentage: TcxGridDBColumn
-          Caption = '%'
-          DataBinding.FieldName = 'isPercentage'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          OnGetProperties = tvRoomResGetCurrencyProperties
           Options.Editing = False
         end
         object tvRoomResPriceCode: TcxGridDBColumn
@@ -922,6 +917,7 @@ object frmAllotmentToRes: TfrmAllotmentToRes
         object tvRoomRatesRateDate: TcxGridDBColumn
           Caption = 'Date'
           DataBinding.FieldName = 'RateDate'
+          PropertiesClassName = 'TcxDateEditProperties'
         end
         object tvRoomRatesPriceCode: TcxGridDBColumn
           Caption = 'Price code'
@@ -930,14 +926,19 @@ object frmAllotmentToRes: TfrmAllotmentToRes
         object tvRoomRatesRate: TcxGridDBColumn
           Caption = 'Room Rate'
           DataBinding.FieldName = 'Rate'
-          PropertiesClassName = 'TcxCalcEditProperties'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          OnGetProperties = tvRoomResGetCurrencyProperties
         end
         object tvRoomRatesDiscount: TcxGridDBColumn
           DataBinding.FieldName = 'Discount'
+          PropertiesClassName = 'TcxCalcEditProperties'
+          Properties.DisplayFormat = '0.0 %'
+          OnGetProperties = tvRoomRatesDiscountGetProperties
         end
         object tvRoomRatesisPercentage: TcxGridDBColumn
           Caption = 'is %'
           DataBinding.FieldName = 'isPercentage'
+          PropertiesClassName = 'TcxCheckBoxProperties'
         end
         object tvRoomRatesShowDiscount: TcxGridDBColumn
           Caption = 'Show Discount'
@@ -952,14 +953,20 @@ object frmAllotmentToRes: TfrmAllotmentToRes
         object tvRoomRatesDiscountAmount: TcxGridDBColumn
           Caption = 'Total discount'
           DataBinding.FieldName = 'DiscountAmount'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          OnGetProperties = tvRoomResGetCurrencyProperties
         end
         object tvRoomRatesRentAmount: TcxGridDBColumn
           Caption = 'Total Rent'
           DataBinding.FieldName = 'RentAmount'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          OnGetProperties = tvRoomResGetCurrencyProperties
         end
         object tvRoomRatesNativeAmount: TcxGridDBColumn
           Caption = 'Native'
           DataBinding.FieldName = 'NativeAmount'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          OnGetProperties = tvRoomResGetCurrencyProperties
         end
       end
       object lvRoomRes: TcxGridLevel
@@ -970,7 +977,7 @@ object frmAllotmentToRes: TfrmAllotmentToRes
       end
     end
   end
-  object mRrInfo: TkbmMemTable
+  object mRRDateInfo: TkbmMemTable
     Active = True
     DesignActivation = True
     AttachedAutoRefresh = True
@@ -1106,98 +1113,98 @@ object frmAllotmentToRes: TfrmAllotmentToRes
     LocaleID = 1024
     Left = 24
     Top = 384
-    object mRrInfordID: TIntegerField
+    object mRRDateInfordID: TIntegerField
       FieldName = 'rdID'
     end
-    object mRrInfoRoomReservation: TIntegerField
+    object mRRDateInfoRoomReservation: TIntegerField
       FieldName = 'RoomReservation'
     end
-    object mRrInfoReservation: TIntegerField
+    object mRRDateInfoReservation: TIntegerField
       FieldName = 'Reservation'
     end
-    object mRrInfodtDate: TDateTimeField
+    object mRRDateInfodtDate: TDateTimeField
       FieldName = 'dtDate'
     end
-    object mRrInfoRoom: TStringField
+    object mRRDateInfoRoom: TStringField
       FieldName = 'Room'
       Size = 15
     end
-    object mRrInfoRoomType: TStringField
+    object mRRDateInfoRoomType: TStringField
       FieldName = 'RoomType'
       Size = 15
     end
-    object mRrInfoResFlag: TStringField
+    object mRRDateInfoResFlag: TStringField
       FieldName = 'ResFlag'
       Size = 1
     end
-    object mRrInfoisNoRoom: TBooleanField
+    object mRRDateInfoisNoRoom: TBooleanField
       FieldName = 'isNoRoom'
     end
-    object mRrInfoPriceCode: TStringField
+    object mRRDateInfoPriceCode: TStringField
       FieldName = 'PriceCode'
       Size = 15
     end
-    object mRrInfoRoomRate: TFloatField
+    object mRRDateInfoRoomRate: TFloatField
       FieldName = 'RoomRate'
     end
-    object mRrInfoDiscount: TFloatField
+    object mRRDateInfoDiscount: TFloatField
       FieldName = 'Discount'
     end
-    object mRrInfoisPercentage: TBooleanField
+    object mRRDateInfoisPercentage: TBooleanField
       FieldName = 'isPercentage'
     end
-    object mRrInfoshowDiscount: TBooleanField
+    object mRRDateInfoshowDiscount: TBooleanField
       FieldName = 'showDiscount'
     end
-    object mRrInfoPaid: TBooleanField
+    object mRRDateInfoPaid: TBooleanField
       FieldName = 'Paid'
     end
-    object mRrInfoCurrency: TStringField
+    object mRRDateInfoCurrency: TStringField
       FieldName = 'Currency'
       Size = 3
     end
-    object mRrInfoMainGuest: TStringField
+    object mRRDateInfoMainGuest: TStringField
       FieldName = 'MainGuest'
       Size = 100
     end
-    object mRrInfonumChildren: TIntegerField
+    object mRRDateInfonumChildren: TIntegerField
       FieldName = 'numChildren'
     end
-    object mRrInfonumInfants: TIntegerField
+    object mRRDateInfonumInfants: TIntegerField
       FieldName = 'numInfants'
     end
-    object mRrInfonumGuests: TIntegerField
+    object mRRDateInfonumGuests: TIntegerField
       FieldName = 'numGuests'
     end
-    object mRrInfoRoomDescription: TStringField
+    object mRRDateInfoRoomDescription: TStringField
       FieldName = 'RoomDescription'
       Size = 30
     end
-    object mRrInfoRoomtypeDescription: TStringField
+    object mRRDateInfoRoomtypeDescription: TStringField
       FieldName = 'RoomtypeDescription'
       Size = 30
     end
-    object mRrInfoRoomCount: TIntegerField
+    object mRRDateInfoRoomCount: TIntegerField
       FieldName = 'RoomCount'
     end
-    object mRrInfoCol: TIntegerField
+    object mRRDateInfoCol: TIntegerField
       FieldName = 'Col'
     end
-    object mRrInfoRow: TIntegerField
+    object mRRDateInfoRow: TIntegerField
       FieldName = 'Row'
     end
-    object mRrInfoid: TAutoIncField
+    object mRRDateInfoid: TAutoIncField
       FieldName = 'id'
     end
-    object mRrInfoProcessed: TIntegerField
+    object mRRDateInfoProcessed: TIntegerField
       FieldName = 'Processed'
     end
-    object mRrInfoGroupAccount: TBooleanField
+    object mRRDateInfoGroupAccount: TBooleanField
       FieldName = 'GroupAccount'
     end
   end
-  object mRrInfoDS: TDataSource
-    DataSet = mRrInfo
+  object mRRDateInfoDS: TDataSource
+    DataSet = mRRDateInfo
     Left = 80
     Top = 384
   end
@@ -1338,10 +1345,6 @@ object frmAllotmentToRes: TfrmAllotmentToRes
         DataType = ftFloat
       end
       item
-        Name = 'isPercentage'
-        DataType = ftBoolean
-      end
-      item
         Name = 'MainGuest'
         DataType = ftString
         Size = 100
@@ -1409,9 +1412,6 @@ object frmAllotmentToRes: TfrmAllotmentToRes
     end
     object kbmRoomResAvrageDiscount: TFloatField
       FieldName = 'AvrageDiscount'
-    end
-    object kbmRoomResisPercentage: TBooleanField
-      FieldName = 'isPercentage'
     end
     object kbmRoomResMainGuest: TStringField
       FieldName = 'MainGuest'
@@ -1660,10 +1660,6 @@ object frmAllotmentToRes: TfrmAllotmentToRes
         DataType = ftFloat
       end
       item
-        Name = 'isPercentage'
-        DataType = ftBoolean
-      end
-      item
         Name = 'MainGuest'
         DataType = ftString
         Size = 100
@@ -1731,9 +1727,6 @@ object frmAllotmentToRes: TfrmAllotmentToRes
     end
     object kbmrestRoomResAvrageDiscount: TFloatField
       FieldName = 'AvrageDiscount'
-    end
-    object kbmrestRoomResisPercentage: TBooleanField
-      FieldName = 'isPercentage'
     end
     object kbmrestRoomResMainGuest: TStringField
       FieldName = 'MainGuest'

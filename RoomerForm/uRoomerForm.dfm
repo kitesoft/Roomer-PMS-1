@@ -37,6 +37,7 @@ object frmBaseRoomerForm: TfrmBaseRoomerForm
       end>
     OnDrawPanel = sbStatusBarDrawPanel
     SkinData.SkinSection = 'STATUSBAR'
+    ExplicitWidth = 537
   end
   object psRoomerBase: TcxPropertiesStore
     Components = <

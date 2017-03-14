@@ -1722,17 +1722,14 @@ begin
   frmCountryGroups := TfrmCountryGroups.Create(nil); frmCountryGroups.Free; frmCountryGroups := nil;
   frmVatCodes := TfrmVatCodes.Create(nil); frmVatCodes.Free; frmVatCodes := nil;
   frmRebuildReservationStats := TfrmRebuildReservationStats.Create(nil); frmRebuildReservationStats.Free; frmRebuildReservationStats := nil;
-  frmMakeReservationQuick := TfrmMakeReservationQuick.Create(nil); frmMakeReservationQuick.Free; frmMakeReservationQuick := nil;
+  TfrmMakeReservationQuick.Create(nil).Free;
   TfrmRoomerSplash.Create(nil).Free;
 
-  // No need for global variable
-  //  frmRoomerLoginForm := TfrmRoomerLoginForm.Create(nil); frmRoomerLoginForm.Free; frmRoomerLoginForm := nil;
   TfrmRoomerLoginForm.Create(nil).Free;
 
   frmAboutRoomer := TfrmAboutRoomer.Create(nil); frmAboutRoomer.Free; frmAboutRoomer := nil;
-//  frmManageFilesOnServer := TfrmManageFilesOnServer.Create(nil); frmManageFilesOnServer.Free; frmManageFilesOnServer := nil;
   frmChannelAvailabilityManager := TfrmChannelAvailabilityManager.Create(nil); frmChannelAvailabilityManager.Free; frmChannelAvailabilityManager := nil;
-  frmEditRoomPrice := TfrmEditRoomPrice.Create(nil); frmEditRoomPrice.Free; frmEditRoomPrice := nil;
+  TfrmEditRoomPrice.Create(nil).Free;
   frmRoomCleanMaintenanceStatus := TfrmRoomCleanMaintenanceStatus.Create(nil); frmRoomCleanMaintenanceStatus.Free; frmRoomCleanMaintenanceStatus := nil;
   frmRates := TfrmRates.Create(nil); frmRates.Free; frmRates := nil;
   frmSeasons2 := TfrmSeasons2.Create(nil); frmSeasons2.Free; frmSeasons2 := nil;

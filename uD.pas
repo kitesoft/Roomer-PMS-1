@@ -752,9 +752,6 @@ type
     Function GroupAccountCount(reservation: Integer): Integer;
     Function BreakFastInclutedCount(reservation: Integer): Integer;
 
-    function rrGetDiscount(RoomReservation: Integer; var DiscountType: Integer; var DiscountAmount: Double): boolean;
-    function rrEditDiscount(RoomReservation: Integer; DiscountType: Integer; DiscountAmount: Double): boolean;
-
     procedure UpdateStatusSimple(reservation, RoomReservation: Integer; newStatus: string);
 
     function SetAsNoRoom(RoomReservation: Integer): boolean;
@@ -11005,76 +11002,6 @@ begin
   end;
 end;
 
-function Td.rrGetDiscount(RoomReservation: Integer; var DiscountType: Integer; var DiscountAmount: Double): boolean;
-var
-  rSet: TRoomerDataSet;
-  s: string;
-  Discount: Double;
-  Percentage: boolean;
-begin
-  result := False;
-
-  rSet := CreateNewDataSet;
-  try
-    // s := s+' SELECT '+chr(10);
-    // s := s+'     RoomReservation '+chr(10);
-    // s := s+'   , Discount '+chr(10);
-    // s := s+'   , Percentage '+chr(10);
-    // s := s+' FROM RoomReservations '+chr(10);
-    // s := s+' WHERE (RoomReservation = '+_db(roomreservation)+') '+chr(10);
-    s := format(select_rrGetDiscount, [RoomReservation]);
-    if hData.rSet_bySQL(rSet, s) then
-    begin
-      Discount := rSet.FieldByName('discount').AsFloat;
-      Percentage := rSet['Percentage'];
-
-      DiscountType := 0;
-      if not Percentage then
-      begin
-        DiscountType := 1;
-      end;
-      DiscountAmount := Discount;
-    end;
-  finally
-    freeandnil(rSet);
-  end;
-end;
-
-function Td.rrEditDiscount(RoomReservation: Integer; DiscountType: Integer; DiscountAmount: Double): boolean;
-var
-  rSet: TRoomerDataSet;
-  s: string;
-  Discount: Double;
-  Percentage: boolean;
-begin
-  result := False;
-
-  rSet := CreateNewDataSet;
-  try
-    // s := s+' SELECT '+chr(10);
-    // s := s+'     RoomReservation '+chr(10);
-    // s := s+'   , Discount '+chr(10);
-    // s := s+'   , Percentage '+chr(10);
-    // s := s+' FROM RoomReservations '+chr(10);
-    // s := s+' WHERE (RoomReservation = '+_db(roomreservation)+') '+chr(10);
-    s := format(select_rrEditDiscount, [RoomReservation]);
-    if hData.rSet_bySQL(rSet, s) then
-    begin
-      Discount := DiscountAmount;;
-      Percentage := True;
-
-      if DiscountType = 1 then
-        Percentage := False;
-      rSet.edit;
-      rSet.FieldByName('discount').asFloat := Discount;
-      rSet.FieldByName('Percentage').asBoolean := Percentage;
-      rSet.post; // ID ADDED
-      result := True;
-    end;
-  finally
-    freeandnil(rSet);
-  end;
-end;
 
 /// /////////////////////////////////////////////////////////////////////////////
 

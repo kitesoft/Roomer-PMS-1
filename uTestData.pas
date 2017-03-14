@@ -1065,7 +1065,6 @@ begin
                                                                GuestCount,
                                                                AvragePrice,
                                                                AvrageDiscount,
-                                                               false,
                                                                rateCount,
                                                                ChildrenCount,
                                                                InfantCount,
@@ -1086,7 +1085,7 @@ begin
               rateShowDiscount := false;
               rateIsPaid       := false;
               rateItem := TRateItem.Create(rate,rateDate,rateDiscount,rateShowDiscount,rateIsPercentage,rateisPaid,ratePriceCode,rateRoomNumber,-1,roomreservation);
-              oNewReservation.newRoomReservations.RoomItemsList[i-1].oRates.RateItemsList.Add(rateItem);
+              oNewReservation.newRoomReservations.RoomItemsList[i-1].Rates.RateItemsList.Add(rateItem);
             end;
             KbmRoomRes.Next;
 
@@ -2524,7 +2523,6 @@ begin
                                                                  GuestCount,
                                                                  AvragePrice,
                                                                  AvrageDiscount,
-                                                                 false,
                                                                  rateCount,
                                                                  ChildrenCount,
                                                                  InfantCount,
@@ -2545,7 +2543,7 @@ begin
                 rateShowDiscount := false;
                 rateIsPaid       := false;
                 rateItem := TRateItem.Create(rate,rateDate,rateDiscount,rateShowDiscount,rateIsPercentage,rateisPaid,ratePriceCode,rateRoomNumber,-1,roomreservation);
-                oNewReservation.newRoomReservations.RoomItemsList[i-1].oRates.RateItemsList.Add(rateItem);
+                oNewReservation.newRoomReservations.RoomItemsList[i-1].Rates.RateItemsList.Add(rateItem);
               end;
               mResourcebookings.Next;
 
@@ -2624,7 +2622,6 @@ begin
                                                                  GuestCount,
                                                                  AvragePrice,
                                                                  AvrageDiscount,
-                                                                 false,
                                                                  rateCount,
                                                                  ChildrenCount,
                                                                  InfantCount,
@@ -2645,7 +2642,7 @@ begin
               rateShowDiscount := false;
               rateIsPaid       := false;
               rateItem := TRateItem.Create(rate,rateDate,rateDiscount,rateShowDiscount,rateIsPercentage,rateisPaid,ratePriceCode,rateRoomNumber,-1,roomreservation);
-              oNewReservation.newRoomReservations.RoomItemsList[i-1].oRates.RateItemsList.Add(rateItem);
+              oNewReservation.newRoomReservations.RoomItemsList[i-1].Rates.RateItemsList.Add(rateItem);
             end;
             mAllocations.Next;
 
@@ -3074,7 +3071,6 @@ begin
                                                                  GuestCount,
                                                                  AvragePrice,
                                                                  AvrageDiscount,
-                                                                 false,
                                                                  rateCount,
                                                                  ChildrenCount,
                                                                  InfantCount,
@@ -3095,7 +3091,7 @@ begin
               rateShowDiscount := false;
               rateIsPaid       := false;
               rateItem := TRateItem.Create(rate,rateDate,rateDiscount,rateShowDiscount,rateIsPercentage,rateisPaid,ratePriceCode,rateRoomNumber,-1,roomreservation);
-              oNewReservation.newRoomReservations.RoomItemsList[i-1].oRates.RateItemsList.Add(rateItem);
+              oNewReservation.newRoomReservations.RoomItemsList[i-1].Rates.RateItemsList.Add(rateItem);
             end;
             mAllocations.Next;
 

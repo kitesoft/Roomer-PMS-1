@@ -89,7 +89,7 @@ inherited frmRoomPrices: TfrmRoomPrices
         Left = 5
         Top = 18
         Width = 258
-        Height = 20
+        Height = 17
         Caption = 'Auto update Null Price'
         Align = alTop
         Checked = True
@@ -154,11 +154,12 @@ inherited frmRoomPrices: TfrmRoomPrices
         AlignWithMargins = True
         Left = 5
         Top = 18
-        Width = 60
+        Width = 175
         Height = 13
         Align = alTop
         Alignment = taCenter
         Caption = '<autofilled>'
+        ExplicitWidth = 60
       end
     end
   end
@@ -209,8 +210,10 @@ inherited frmRoomPrices: TfrmRoomPrices
         end>
       DataController.Summary.SummaryGroups = <>
       Images = DImages.PngImageList1
+      OptionsBehavior.FocusCellOnTab = True
       OptionsData.DeletingConfirmation = False
       OptionsData.Inserting = False
+      OptionsView.ColumnAutoWidth = True
       OptionsView.Footer = True
       OptionsView.FooterAutoHeight = True
       OptionsView.FooterMultiSummaries = True
@@ -297,6 +300,7 @@ inherited frmRoomPrices: TfrmRoomPrices
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.OnEditValueChanged = tvRoomResAveragePricePropertiesEditValueChanged
         OnGetProperties = tvRoomResAveragePriceGetProperties
+        Width = 100
       end
       object tvRoomResPackage: TcxGridDBColumn
         DataBinding.FieldName = 'Package'
@@ -320,6 +324,8 @@ inherited frmRoomPrices: TfrmRoomPrices
       end
       object tvRoomResRoomReservation: TcxGridDBColumn
         DataBinding.FieldName = 'RoomReservation'
+        Visible = False
+        MinWidth = 0
       end
     end
     object tvRoomRates: TcxGridDBTableView
@@ -332,6 +338,7 @@ inherited frmRoomPrices: TfrmRoomPrices
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <>
       DataController.Summary.SummaryGroups = <>
+      OptionsBehavior.FocusCellOnTab = True
       OptionsData.CancelOnExit = False
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
@@ -368,6 +375,8 @@ inherited frmRoomPrices: TfrmRoomPrices
       object tvRoomRatesDiscount: TcxGridDBColumn
         DataBinding.FieldName = 'Discount'
         PropertiesClassName = 'TcxCalcEditProperties'
+        Properties.DisplayFormat = '0.0 %'
+        OnGetProperties = tvRoomRatesDiscountGetProperties
         Width = 70
       end
       object tvRoomRatesisPercentage: TcxGridDBColumn

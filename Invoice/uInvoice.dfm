@@ -2419,9 +2419,6 @@ object frmInvoice: TfrmInvoice
     object mRoomResAvrageDiscount: TFloatField
       FieldName = 'AvrageDiscount'
     end
-    object mRoomResisPercentage: TBooleanField
-      FieldName = 'isPercentage'
-    end
     object mRoomResPackage: TWideStringField
       FieldName = 'Package'
     end
