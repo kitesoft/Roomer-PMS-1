@@ -3439,7 +3439,9 @@ begin
         begin
           lHotelID := AutoLogin;
           // sleep(1000);
-          d.roomerMainDataSet.SwapHotel(lHotelID, userName, password)
+          Result := d.roomerMainDataSet.SwapHotel(lHotelID, userName, password);
+          if not Result then
+            lTryAutoLogin := '';
         end
         else if (lLoginFormResult = lrLogin) and (NOT OffLineMode) AND d.roomerMainDataSet.IsConnectedToInternet AND
           d.roomerMainDataSet.RoomerPlatformAvailable then
@@ -10405,11 +10407,8 @@ begin
 end;
 
 procedure TfrmMain.RemoveLanguagesFilesAndRefresh(Refresh: boolean = true);
-var
-  path: String;
 begin
-  path := glb.GetLanguageLocation;
-  DeleteAllFiles(TPath.Combine(path, 'RoomerLanguage*.src'));
+  DeleteAllFiles(TPath.Combine(glb.GetLanguageLocation, 'RoomerLanguage*.src'));
   if Refresh then
   begin
     RoomerLanguage.LoadLanguage(true);
