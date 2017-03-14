@@ -2940,19 +2940,18 @@ end;
 procedure TfrmReservationProfile.tvRoomsStatusTextPropertiesChange(Sender: TObject);
 var
   lStateChanger: TRoomReservationStateChangeHandler;
-  lNewStatus: TReservationState;
+  lNewState: TReservationState;
   cbx: TcxCombobox;
 begin
   cbx := TcxComboBox(Sender);
-  lNewStatus :=  TReservationState(cbx.Properties.Items.Objects[cbx.ItemIndex]);
-
+  lNewState :=  TReservationState(cbx.Properties.Items.Objects[cbx.ItemIndex]);
   lStateChanger := FReservationChangeStateHandler.RoomStateChangeHandler[zRoomReservation];
   try
-    if lNewStatus.IsUserSelectable and lStateChanger.ChangeState(lNewStatus) then
+    if lNewState.IsUserSelectable and (lNewState <> lStateChanger.CurrentState) and lStateChanger.ChangeState(lNewState) then
     begin
       mRooms.DisableControls;
       try
-        mRoomsStatus.AsString := lNewStatus.AsStatusChar;
+        mRoomsStatus.AsString := lNewState.AsStatusChar;
         mRooms.Post
       finally
         mRooms.EnableControls;
@@ -2961,13 +2960,8 @@ begin
     else
       mRooms.Cancel;
   except
-    on E: EInvalidReservationStateChange do
-    begin
-      MessageDlg(E.Message, mtError, [mbOK], 0);
-      mRooms.Cancel;
-    end
-    else
-      mRooms.Cancel;
+    mRooms.Cancel;
+    raise;
   end;
 
 end;
