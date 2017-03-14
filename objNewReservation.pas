@@ -424,7 +424,7 @@ end;
 
 function TnewRoomReservationItem.getRateCount: integer;
 begin
-  result := RateCount;
+  result := FRateCount;
 end;
 
 function TnewRoomReservationItem.getRoomNumber: string;

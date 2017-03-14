@@ -831,7 +831,7 @@ begin
     if contentType = '' then
       _roomerClient.contentType := '*/*;charset=utf-8'
     else
-    _roomerClient.contentType := contentType;
+      _roomerClient.contentType := contentType;
     _roomerClient.AcceptEncoding := 'UTF-8';
     for retries := 1 to 3 do
     begin

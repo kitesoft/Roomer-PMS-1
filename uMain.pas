@@ -12058,12 +12058,6 @@ begin
      GenerateTranslateTextTableForConstants;
      GenerateTranslateTextTableForAllForms;
      TranslateOpenForms;
-     try
-       frmHomedate.Show;
-       RoomerLanguage.TranslateThisForm(frmRptManagment);
-       frmHomedate.Hide;
-     except
-     end;
    finally
      RoomerLanguage.PerformDBUpdatesWhenUnknownEntitiesFound := false;
    end;
