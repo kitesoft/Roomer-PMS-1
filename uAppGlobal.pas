@@ -878,7 +878,7 @@ function TGlobalSettings.GetLanguageLocation: String;
 begin
 //  result := TPath.Combine(LocalAppDataPath, 'Roomer');
 //  result := TPath.Combine(result, 'Languages');
-  Result := TPath.Combine(GetHotelAppDataLocation, 'Languages');
+  Result := TPath.Combine(RoomerAppDataPath, 'Languages');
   forceDirectories(result);
 end;
 
