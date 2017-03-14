@@ -1034,12 +1034,6 @@ begin
     RemoveData;
   except end;
 
-  try FreeAndNil(rateGrid); except end;
-  try FreeAndNil(grid); except end;
-  try FreeAndNil(cbxShowLinkedCells); except end;
-  try FreeAndNil(cbxRateRestrictions); except end;
-  try FreeAndNil(pgcPages); except end;
-
   action := caFree;
   CHANNELMANAGER_IS_OPEN := False;
 end;
