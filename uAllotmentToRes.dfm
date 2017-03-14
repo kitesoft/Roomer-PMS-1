@@ -876,7 +876,8 @@ object frmAllotmentToRes: TfrmAllotmentToRes
         end
         object tvRoomResAvrageDiscount: TcxGridDBColumn
           DataBinding.FieldName = 'AvrageDiscount'
-          PropertiesClassName = 'TcxCalcEditProperties'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          OnGetProperties = tvRoomResGetCurrencyProperties
           Options.Editing = False
         end
         object tvRoomResPriceCode: TcxGridDBColumn
@@ -916,6 +917,7 @@ object frmAllotmentToRes: TfrmAllotmentToRes
         object tvRoomRatesRateDate: TcxGridDBColumn
           Caption = 'Date'
           DataBinding.FieldName = 'RateDate'
+          PropertiesClassName = 'TcxDateEditProperties'
         end
         object tvRoomRatesPriceCode: TcxGridDBColumn
           Caption = 'Price code'
@@ -924,14 +926,19 @@ object frmAllotmentToRes: TfrmAllotmentToRes
         object tvRoomRatesRate: TcxGridDBColumn
           Caption = 'Room Rate'
           DataBinding.FieldName = 'Rate'
-          PropertiesClassName = 'TcxCalcEditProperties'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          OnGetProperties = tvRoomResGetCurrencyProperties
         end
         object tvRoomRatesDiscount: TcxGridDBColumn
           DataBinding.FieldName = 'Discount'
+          PropertiesClassName = 'TcxCalcEditProperties'
+          Properties.DisplayFormat = '0.0 %'
+          OnGetProperties = tvRoomRatesDiscountGetProperties
         end
         object tvRoomRatesisPercentage: TcxGridDBColumn
           Caption = 'is %'
           DataBinding.FieldName = 'isPercentage'
+          PropertiesClassName = 'TcxCheckBoxProperties'
         end
         object tvRoomRatesShowDiscount: TcxGridDBColumn
           Caption = 'Show Discount'
@@ -946,14 +953,20 @@ object frmAllotmentToRes: TfrmAllotmentToRes
         object tvRoomRatesDiscountAmount: TcxGridDBColumn
           Caption = 'Total discount'
           DataBinding.FieldName = 'DiscountAmount'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          OnGetProperties = tvRoomResGetCurrencyProperties
         end
         object tvRoomRatesRentAmount: TcxGridDBColumn
           Caption = 'Total Rent'
           DataBinding.FieldName = 'RentAmount'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          OnGetProperties = tvRoomResGetCurrencyProperties
         end
         object tvRoomRatesNativeAmount: TcxGridDBColumn
           Caption = 'Native'
           DataBinding.FieldName = 'NativeAmount'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          OnGetProperties = tvRoomResGetCurrencyProperties
         end
       end
       object lvRoomRes: TcxGridLevel

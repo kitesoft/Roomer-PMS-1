@@ -119,7 +119,7 @@ uses
   dxSkinWhiteprint,
   dxSkinXmas2008Blue,
   AdvUtil,
-  cxCurrencyEdit;
+  cxCurrencyEdit, cxCheckBox, cxCalendar;
 
 type
   recColRow = record
@@ -427,6 +427,8 @@ type
     procedure tvRoomResRoomGetDisplayText(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
       var AText: string);
     procedure grProvideDblClickCell(Sender: TObject; ARow, ACol: Integer);
+    procedure tvRoomRatesDiscountGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
+      var AProperties: TcxCustomEditProperties);
 
   private
     { Private declarations }
@@ -1158,6 +1160,13 @@ procedure TfrmAllotmentToRes.timCloseTimer(Sender: TObject);
 begin
   timClose.Enabled := false;
   close;
+end;
+
+procedure TfrmAllotmentToRes.tvRoomRatesDiscountGetProperties(Sender: TcxCustomGridTableItem;
+  ARecord: TcxCustomGridRecord; var AProperties: TcxCustomEditProperties);
+begin
+  if not aRecord.Values[tvRoomRatesisPercentage.Index] then
+    tvRoomResGetCurrencyProperties(Sender, aRecord, AProperties);
 end;
 
 procedure TfrmAllotmentToRes.tvRoomResGetCurrencyProperties(Sender: TcxCustomGridTableItem;

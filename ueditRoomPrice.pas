@@ -573,7 +573,8 @@ end;
 procedure TfrmEditRoomPrice.tvRoomRatesRentAmountGetProperties(Sender: TcxCustomGridTableItem;
   ARecord: TcxCustomGridRecord; var AProperties: TcxCustomEditProperties);
 begin
-  aProperties := FCurrencyHandler.GetcxEditPropertiesKeepEvents(aProperties);
+  if not aRecord.Values[tvRoomRatesisPercentage.Index] then
+    aProperties := FCurrencyHandler.GetcxEditPropertiesKeepEvents(aProperties);
 end;
 
 end.

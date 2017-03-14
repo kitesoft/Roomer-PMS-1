@@ -1,30 +1,30 @@
 inherited frmEditRoomPrice: TfrmEditRoomPrice
   Caption = 'Edit roomprice'
-  ClientHeight = 486
-  ClientWidth = 681
+  ClientHeight = 497
+  ClientWidth = 732
   Font.Height = -11
   Position = poOwnerFormCenter
   OnDestroy = FormDestroy
-  ExplicitWidth = 697
-  ExplicitHeight = 525
+  ExplicitWidth = 748
+  ExplicitHeight = 536
   PixelsPerInch = 96
   TextHeight = 13
   inherited sbStatusBar: TsStatusBar
-    Top = 466
-    Width = 681
-    ExplicitTop = 379
-    ExplicitWidth = 665
+    Top = 477
+    Width = 732
+    ExplicitTop = 466
+    ExplicitWidth = 681
   end
   object Panel1: TsPanel [1]
     Left = 0
     Top = 0
-    Width = 681
+    Width = 732
     Height = 136
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
     SkinData.SkinSection = 'PANEL'
-    ExplicitWidth = 665
+    ExplicitWidth = 681
     object gbxForAllDates: TsGroupBox
       AlignWithMargins = True
       Left = 3
@@ -220,13 +220,13 @@ inherited frmEditRoomPrice: TfrmEditRoomPrice
       AlignWithMargins = True
       Left = 419
       Top = 3
-      Width = 259
+      Width = 310
       Height = 130
       Align = alClient
       Caption = 'Room info'
       TabOrder = 1
       SkinData.SkinSection = 'GROUPBOX'
-      ExplicitWidth = 243
+      ExplicitWidth = 259
       object clabRoom: TsLabel
         Left = 12
         Top = 16
@@ -400,13 +400,13 @@ inherited frmEditRoomPrice: TfrmEditRoomPrice
   object grRoomRates: TcxGrid [2]
     Left = 0
     Top = 136
-    Width = 681
-    Height = 274
+    Width = 732
+    Height = 304
     Align = alClient
     TabOrder = 1
     LookAndFeel.NativeStyle = False
-    ExplicitWidth = 665
-    ExplicitHeight = 243
+    ExplicitWidth = 681
+    ExplicitHeight = 274
     object tvRoomRates: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = kbmRoomRatesDS
@@ -450,6 +450,7 @@ inherited frmEditRoomPrice: TfrmEditRoomPrice
           Column = tvRoomRatesDiscountAmount
         end>
       DataController.Summary.SummaryGroups = <>
+      OptionsBehavior.FocusCellOnTab = True
       OptionsView.ColumnAutoWidth = True
       OptionsView.Footer = True
       OptionsView.FooterAutoHeight = True
@@ -492,6 +493,7 @@ inherited frmEditRoomPrice: TfrmEditRoomPrice
       object tvRoomRatesDiscount: TcxGridDBColumn
         DataBinding.FieldName = 'Discount'
         PropertiesClassName = 'TcxCalcEditProperties'
+        Properties.DisplayFormat = '0.0 %'
         OnGetProperties = tvRoomRatesRentAmountGetProperties
         Width = 68
       end
@@ -539,70 +541,100 @@ inherited frmEditRoomPrice: TfrmEditRoomPrice
   end
   object Panel2: TsPanel [3]
     Left = 0
-    Top = 410
-    Width = 681
-    Height = 56
+    Top = 440
+    Width = 732
+    Height = 37
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 2
     SkinData.SkinSection = 'PANEL'
-    ExplicitTop = 0
-    ExplicitWidth = 665
+    ExplicitTop = 429
+    ExplicitWidth = 681
     object btnCancel: TsButton
-      Left = 529
-      Top = 6
+      AlignWithMargins = True
+      Left = 625
+      Top = 3
       Width = 104
-      Height = 44
+      Height = 31
+      Align = alRight
       Cancel = True
       Caption = 'Cancel'
       ImageIndex = 10
       Images = DImages.PngImageList1
       ModalResult = 2
-      TabOrder = 0
+      TabOrder = 3
       SkinData.SkinSection = 'BUTTON'
+      ExplicitLeft = 529
+      ExplicitTop = 6
+      ExplicitHeight = 44
     end
     object btnOK: TsButton
-      Left = 16
-      Top = 6
+      AlignWithMargins = True
+      Left = 3
+      Top = 3
       Width = 157
-      Height = 43
+      Height = 31
+      Align = alLeft
       Caption = 'Apply to this room'
       Default = True
       ImageIndex = 82
       Images = DImages.PngImageList1
       ModalResult = 1
-      TabOrder = 1
+      TabOrder = 0
       OnClick = btnOKClick
       SkinData.SkinSection = 'BUTTON'
+      ExplicitLeft = 16
+      ExplicitTop = 6
+      ExplicitHeight = 43
     end
     object sButton1: TsButton
-      Left = 175
-      Top = 6
+      AlignWithMargins = True
+      Left = 166
+      Top = 3
       Width = 157
-      Height = 43
+      Height = 31
+      Align = alLeft
       Caption = 'Apply all rooms of this Roomtytpe'
-      Default = True
+      ImageIndex = 82
+      Images = DImages.PngImageList1
+      ModalResult = 1
+      TabOrder = 1
+      OnClick = sButton1Click
+      SkinData.SkinSection = 'BUTTON'
+      ExplicitLeft = 175
+      ExplicitTop = 6
+      ExplicitHeight = 43
+    end
+    object sButton2: TsButton
+      AlignWithMargins = True
+      Left = 329
+      Top = 3
+      Width = 157
+      Height = 31
+      Align = alLeft
+      Caption = 'Apply all rooms'
       ImageIndex = 82
       Images = DImages.PngImageList1
       ModalResult = 1
       TabOrder = 2
-      OnClick = sButton1Click
-      SkinData.SkinSection = 'BUTTON'
-    end
-    object sButton2: TsButton
-      Left = 338
-      Top = 6
-      Width = 157
-      Height = 43
-      Caption = 'Apply all rooms'
-      Default = True
-      ImageIndex = 82
-      Images = DImages.PngImageList1
-      ModalResult = 1
-      TabOrder = 3
       OnClick = sButton2Click
       SkinData.SkinSection = 'BUTTON'
+      ExplicitLeft = 338
+      ExplicitTop = 6
+      ExplicitHeight = 43
     end
+  end
+  inherited psRoomerBase: TcxPropertiesStore
+    Components = <
+      item
+        Component = frmBaseRoomerForm.Owner
+        Properties.Strings = (
+          'Height'
+          'Left'
+          'Top'
+          'Width'
+          'Position')
+      end>
   end
   inherited cxsrRoomerStyleRepository: TcxStyleRepository
     PixelsPerInch = 96
