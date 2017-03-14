@@ -59,7 +59,7 @@ uses
 
 Type
 
-  RecRRInfo = record
+  RecRDInfo = record
     RoomReservation: integer;
     Reservation: integer;
     Channel: integer;
@@ -73,7 +73,7 @@ Type
     CustomerName: string;
     PaymentInvoice: integer;
     GroupAccount: boolean;
-    Percentage: boolean;
+    IsPercentage: boolean;
     PriceType: String;
     Currency: String;
 
@@ -144,7 +144,7 @@ Type
 
     tablesList : TTableDictionary;
     FPreviousGuestsSet: TRoomerDataSet;
-    FPreviousGuestsReload : TGetThreadedData;
+    FPreviousGuestsReload : TGetSQLDataThreaded;
     FPmsSettings: TPmsSettings;
 
       procedure AddRoomType( sType : string; iNumber, NumGuests : integer );
@@ -385,7 +385,7 @@ begin
 
   FPMSSettings := TPmsSettings.Create(GetPmsSettingsSet);
 
-  FPreviousGuestsReload := TGetThreadedData.Create;
+  FPreviousGuestsReload := TGetSQLDataThreaded.Create;
   FPreviousGuestsSet := nil;
   ReloadPreviousGuests;
 
@@ -462,7 +462,7 @@ begin
   end;
 end;
 
-var PreviousGuestsReload : TGetThreadedData = nil;
+var PreviousGuestsReload : TGetSQLDataThreaded = nil;
 
 procedure TGlobalSettings.ReloadPreviousGuests;
 const PREV_GUESTS_SQL = 'SELECT DISTINCT * FROM ' +
@@ -878,7 +878,7 @@ function TGlobalSettings.GetLanguageLocation: String;
 begin
 //  result := TPath.Combine(LocalAppDataPath, 'Roomer');
 //  result := TPath.Combine(result, 'Languages');
-  Result := TPath.Combine(GetHotelAppDataLocation, 'Languages');
+  Result := TPath.Combine(RoomerAppDataPath, 'Languages');
   forceDirectories(result);
 end;
 

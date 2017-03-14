@@ -143,7 +143,6 @@ type
     procedure sButton3Click(Sender: TObject);
     procedure sButton4Click(Sender: TObject);
     procedure sButton5Click(Sender: TObject);
-    procedure sPanel2DblClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure sButton2Click(Sender: TObject);
     procedure sButton6Click(Sender: TObject);
@@ -604,7 +603,7 @@ begin
     shpMarket.Visible := (cbxMarket.ItemIndex < 0);
     shpCountry.Visible := (Trim(edCountry.Text) = '') OR (Trim(edCountry.Text) = '00') OR (SameText(lbCountryName.Caption, GetTranslatedText('shNotF_star')));
   end;
-  BtnOk.Enabled := NOT AnyTShapeVisible;
+  BtnOk.Enabled := Not isCheckIn or NOT AnyTShapeVisible;
 end;
 
 procedure TFrmGuestCheckInForm.FormCreate(Sender: TObject);
@@ -804,7 +803,9 @@ end;
 
 procedure TFrmGuestCheckInForm.sButton2Click(Sender: TObject);
 begin
-  PrintReport;
+  SaveGuestInfo;
+  if GetGuestInfoRSet(ResSetGuest, Roomreservation, '') then
+    PrintReport;
 end;
 
 procedure TFrmGuestCheckInForm.PrintReportForRoomList(const aRoomList: string);
@@ -1013,12 +1014,6 @@ begin
   btNoPortfolio.Visible := btnPortfolio.Tag > 0;
 end;
 
-procedure TFrmGuestCheckInForm.sPanel2DblClick(Sender: TObject);
-begin
-  if IsControlKeyPressed then
-    FormDesignMode;
-end;
-
 procedure TFrmGuestCheckInForm.FormDesignMode;
 var
   filename: String;
@@ -1050,6 +1045,7 @@ function TFrmGuestCheckInForm.fdRegFormDesignerSaveReport(Report: TfrxReport; Sa
 begin
   if (not SaveAs) and Report.FileName.ToLower.Equals(FileDependencyManager.getRegistrationFormFilePath.ToLower) then
   begin
+    Report.SaveToFile(Report.FileName);
     FileDependencyManager.sendChangedFile(Report.FileName);
     Result := true;
   end
@@ -1058,7 +1054,7 @@ begin
     Result := ((rptForm.Designer as TfrxDesignerForm) <> nil) and TfrxDesignerForm(rptForm.Designer).SaveFile(SaveAs, false);
     if Result and Report.FileName.ToLower.Equals(FileDependencyManager.getRegistrationFormFilePath.ToLower) then
       FileDependencyManager.sendChangedFile(Report.FileName);
-    end;
+  end;
 end;
 
 procedure TFrmGuestCheckInForm.Prepare;

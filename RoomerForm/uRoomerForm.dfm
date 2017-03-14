@@ -3,7 +3,7 @@ object frmBaseRoomerForm: TfrmBaseRoomerForm
   Top = 0
   Caption = 'Base Roomer Form'
   ClientHeight = 253
-  ClientWidth = 537
+  ClientWidth = 663
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,7 +19,7 @@ object frmBaseRoomerForm: TfrmBaseRoomerForm
   object sbStatusBar: TsStatusBar
     Left = 0
     Top = 233
-    Width = 537
+    Width = 663
     Height = 20
     Color = 15130321
     Panels = <
@@ -37,10 +37,12 @@ object frmBaseRoomerForm: TfrmBaseRoomerForm
       end>
     OnDrawPanel = sbStatusBarDrawPanel
     SkinData.SkinSection = 'STATUSBAR'
+    ExplicitWidth = 537
   end
   object psRoomerBase: TcxPropertiesStore
     Components = <
       item
+        Component = Owner
         Properties.Strings = (
           'Height'
           'Left'

@@ -591,6 +591,8 @@ type
     acChangeRoomType: TAction;
     mRoomsAverageRoomRate: TFloatField;
     mRoomsInvoiceIndex: TIntegerField;
+    sLabel4: TsLabel;
+    edtBookingId: TsEdit;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -1137,6 +1139,7 @@ begin
         lblCustomerType.caption := d.GET_CustomerTypesDescription_byCustomerType(edtType.text);
 
         edtInvRefrence.text := trim(fieldbyname('invRefrence').asstring);
+        edtBookingId.Text := edtInvRefrence.text;
         OutOfOrderBlocking := fieldbyname('outOfOrderBlocking').AsBoolean;
 
         SetMarketItemIndex(fieldbyname('market').asString);
@@ -1930,7 +1933,6 @@ begin
       PriceCode := RoomReservationRentHolder.PriceType;
       AvrageRate := RoomReservationRentHolder.AvrageRate;
       AvrageDiscount := RoomReservationRentHolder.Discount;
-      isPercentage := RoomReservationRentHolder.Percentage;
       rateCount := 1;
 
       useInNationalReport := true;
@@ -1961,7 +1963,6 @@ begin
       roomReservationData.rrRoomAlias := '';
       roomReservationData.rrRoomTypeAlias := RoomType;
       roomReservationData.Discount := AvrageDiscount;
-      roomReservationData.Percentage := isPercentage;
       roomReservationData.useInNationalReport := useInNationalReport;
       roomReservationData.RoomRentPaid1 := 0.00;
       roomReservationData.RoomRentPaid2 := 0.00;
@@ -2937,19 +2938,18 @@ end;
 procedure TfrmReservationProfile.tvRoomsStatusTextPropertiesChange(Sender: TObject);
 var
   lStateChanger: TRoomReservationStateChangeHandler;
-  lNewStatus: TReservationState;
+  lNewState: TReservationState;
   cbx: TcxCombobox;
 begin
   cbx := TcxComboBox(Sender);
-  lNewStatus :=  TReservationState(cbx.Properties.Items.Objects[cbx.ItemIndex]);
-
+  lNewState :=  TReservationState(cbx.Properties.Items.Objects[cbx.ItemIndex]);
   lStateChanger := FReservationChangeStateHandler.RoomStateChangeHandler[zRoomReservation];
   try
-    if lNewStatus.IsUserSelectable and lStateChanger.ChangeState(lNewStatus) then
+    if lNewState.IsUserSelectable and (lNewState <> lStateChanger.CurrentState) and lStateChanger.ChangeState(lNewState) then
     begin
       mRooms.DisableControls;
       try
-        mRoomsStatus.AsString := lNewStatus.AsStatusChar;
+        mRoomsStatus.AsString := lNewState.AsStatusChar;
         mRooms.Post
       finally
         mRooms.EnableControls;
@@ -2958,13 +2958,8 @@ begin
     else
       mRooms.Cancel;
   except
-    on E: EInvalidReservationStateChange do
-    begin
-      MessageDlg(E.Message, mtError, [mbOK], 0);
-      mRooms.Cancel;
-    end
-    else
-      mRooms.Cancel;
+    mRooms.Cancel;
+    raise;
   end;
 
 end;

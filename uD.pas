@@ -752,9 +752,6 @@ type
     Function GroupAccountCount(reservation: Integer): Integer;
     Function BreakFastInclutedCount(reservation: Integer): Integer;
 
-    function rrGetDiscount(RoomReservation: Integer; var DiscountType: Integer; var DiscountAmount: Double): boolean;
-    function rrEditDiscount(RoomReservation: Integer; DiscountType: Integer; DiscountAmount: Double): boolean;
-
     procedure UpdateStatusSimple(reservation, RoomReservation: Integer; newStatus: string);
 
     function SetAsNoRoom(RoomReservation: Integer): boolean;
@@ -7002,6 +6999,8 @@ begin
         d.mtPayments_.FieldByName('foAmount').asFloat := IvI.PaymentList[i].pmAmount / Rate;
         d.mtPayments_.FieldByName('Description').Asstring := IvI.PaymentList[i].pmDescription;
         d.mtPayments_.FieldByName('TypeIndex').AsInteger := IvI.PaymentList[i].pmTypeIndex;
+        d.mtPayments_.FieldByName('SourceUserId').AsString := IvI.PaymentList[i].pmExternalUser;
+        d.mtPayments_.FieldByName('SourceUserFullname').AsString := IvI.PaymentList[i].pmExternalUserName;
 
         d.mtPayments_.post
       end;
@@ -7351,6 +7350,8 @@ begin
       d.mtPayments_.FieldByName('foAmount').asFloat := IvI.PaymentList[i].pmAmount / Rate;
       d.mtPayments_.FieldByName('Description').Asstring := IvI.PaymentList[i].pmDescription;
       d.mtPayments_.FieldByName('TypeIndex').AsInteger := IvI.PaymentList[i].pmTypeIndex;
+      d.mtPayments_.FieldByName('SourceUserId').AsString := IvI.PaymentList[i].pmExternalUser;
+      d.mtPayments_.FieldByName('SourceUserFullname').AsString := IvI.PaymentList[i].pmExternalUserName;
 
       d.mtPayments_.post
     end;
@@ -11001,76 +11002,6 @@ begin
   end;
 end;
 
-function Td.rrGetDiscount(RoomReservation: Integer; var DiscountType: Integer; var DiscountAmount: Double): boolean;
-var
-  rSet: TRoomerDataSet;
-  s: string;
-  Discount: Double;
-  Percentage: boolean;
-begin
-  result := False;
-
-  rSet := CreateNewDataSet;
-  try
-    // s := s+' SELECT '+chr(10);
-    // s := s+'     RoomReservation '+chr(10);
-    // s := s+'   , Discount '+chr(10);
-    // s := s+'   , Percentage '+chr(10);
-    // s := s+' FROM RoomReservations '+chr(10);
-    // s := s+' WHERE (RoomReservation = '+_db(roomreservation)+') '+chr(10);
-    s := format(select_rrGetDiscount, [RoomReservation]);
-    if hData.rSet_bySQL(rSet, s) then
-    begin
-      Discount := rSet.FieldByName('discount').AsFloat;
-      Percentage := rSet['Percentage'];
-
-      DiscountType := 0;
-      if not Percentage then
-      begin
-        DiscountType := 1;
-      end;
-      DiscountAmount := Discount;
-    end;
-  finally
-    freeandnil(rSet);
-  end;
-end;
-
-function Td.rrEditDiscount(RoomReservation: Integer; DiscountType: Integer; DiscountAmount: Double): boolean;
-var
-  rSet: TRoomerDataSet;
-  s: string;
-  Discount: Double;
-  Percentage: boolean;
-begin
-  result := False;
-
-  rSet := CreateNewDataSet;
-  try
-    // s := s+' SELECT '+chr(10);
-    // s := s+'     RoomReservation '+chr(10);
-    // s := s+'   , Discount '+chr(10);
-    // s := s+'   , Percentage '+chr(10);
-    // s := s+' FROM RoomReservations '+chr(10);
-    // s := s+' WHERE (RoomReservation = '+_db(roomreservation)+') '+chr(10);
-    s := format(select_rrEditDiscount, [RoomReservation]);
-    if hData.rSet_bySQL(rSet, s) then
-    begin
-      Discount := DiscountAmount;;
-      Percentage := True;
-
-      if DiscountType = 1 then
-        Percentage := False;
-      rSet.edit;
-      rSet.FieldByName('discount').asFloat := Discount;
-      rSet.FieldByName('Percentage').asBoolean := Percentage;
-      rSet.post; // ID ADDED
-      result := True;
-    end;
-  finally
-    freeandnil(rSet);
-  end;
-end;
 
 /// /////////////////////////////////////////////////////////////////////////////
 
@@ -11286,7 +11217,6 @@ begin
   result := True;
   try
     roomerMainDataSet.SystemMoveRoom(RoomReservation, NewRoom);
-    try
       AddReservationActivityLog(g.qUser
         , -1
         , RoomReservation
@@ -11294,8 +11224,6 @@ begin
         , ''
         , NewRoom
         , '');
-    Except
-    end;
   except
     result := False;
   end;
@@ -11779,6 +11707,8 @@ begin
   d.mtPayments_.FieldDefs.Add('foAmount', ftFloat);
   d.mtPayments_.FieldDefs.Add('Description', ftWideString, 100);
   d.mtPayments_.FieldDefs.Add('TypeIndex', ftInteger);
+  d.mtPayments_.FieldDefs.Add('SourceUserId', ftWideString, 100);
+  d.mtPayments_.FieldDefs.Add('SourceUserFullname', ftWideString, 100);
 
   if d.mtVAT_.Active then
     d.mtVAT_.Close;
@@ -16015,11 +15945,8 @@ begin
 
     for i := 0 to lstActivity.Count - 1 do
     begin
-      try
-        if lstActivity[i] <> '' then
-          WriteInvoiceActivityLog(lstActivity[i]);
-      Except
-      end;
+      if lstActivity[i] <> '' then
+        WriteInvoiceActivityLog(lstActivity[i]);
     end;
   finally
     freeandnil(lstActivity);

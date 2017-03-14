@@ -24,6 +24,8 @@ function FloatToXML(aValue: double; aDecimals: integer = 0): string;
 function XMLToDateTime(const aStringValue: string): TDateTime;
 function XMLToDate(const aStringValue: string): TDate;
 function DateToXML(aDate: TDate): string;
+function XMLToBool(const aBoolValue: string; aDefault: boolean = false): boolean;
+function BoolToXML(aValue: boolean): string;
 
 var
   // Fixed predefined formatsettings to be used when formatting from or to XML strings
@@ -33,7 +35,7 @@ implementation
 
 uses
   uFloatUtils
-  ;
+  , uStringUtils;
 
 function GetAttributeValue(Node: IXMLDomNode; AttribName, defaultValue: String): String;
 var
@@ -154,6 +156,17 @@ function DateToXML(aDate: TDate): string;
 begin
   Result := DateToStr(aDate, XMLFormatSettings);
 end;
+
+function XMLToBool(const aBoolValue: string; aDefault: boolean = false): boolean;
+begin
+  Result := aBoolValue.ToLower.Equals('true') or aBoolValue.Equals('1');
+end;
+
+function BoolToXML(aValue: boolean): string;
+begin
+  Result := BoolToString(aValue);
+end;
+
 
 procedure InitXMLFormatSettings;
 begin

@@ -8,45 +8,18 @@ uses
   Data.Win.ADODB
 
     , uDateUtils, ActnList, System.Actions, Generics.Collections, variants,
-  cmpRoomerDataSet
+  cmpRoomerDataSet, cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxStyles, dxSkinsCore, dxSkinCaramel,
+  dxSkinCoffee, dxSkinDarkSide, dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinscxPCPainter, cxCustomData,
+  cxFilter, cxData, cxDataStorage, cxEdit, cxNavigator, cxDBData, cxMemo, AdvUtil, dxmdaset, frxClass, frxDBSet,
+  cxPropertiesStore, sStatusBar, AdvObj, BaseGrid, AdvGrid, cxGridLevel, cxGridCustomTableView, cxGridTableView,
+  cxGridDBTableView, cxClasses, cxGridCustomView, cxGrid, sCheckBox, sButton, sGroupBox, sEdit, sLabel, sPanel,
 
-    , _glob, hData, ug, uUtils, kbmMemTable
+    _glob, hData, ug, uUtils, kbmMemTable
 
     , uTaxCalc
+    , frxExportMail, frxExportImage, frxExportRTF, frxExportHTML
 
-    , AdvObj, BaseGrid, AdvGrid
-
-    , sPanel, sEdit, sLabel, sGroupBox, sStatusBar, sButton, sSkinProvider,
-  sPageControl
-
-    , cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxStyles,
-  dxSkinsCore, dxSkinDarkSide, dxSkinDevExpressDarkStyle, dxSkinMcSkin,
-  dxSkinOffice2013White, dxSkinsDefaultPainters, dxSkinscxPCPainter,
-  cxCustomData, cxFilter, cxData, cxDataStorage, cxEdit, cxNavigator, cxDBData,
-  cxMemo,
-  cxButtonEdit, cxSpinEdit, cxCalc, cxContainer
-
-    , frxExportMail, frxExportImage, frxExportRTF, frxExportHTML, frxClass,
-  frxExportPDF, frxDesgn, frxDBSet
-
-    , cxPropertiesStore, sCheckBox, cxTextEdit, cxMaskEdit, cxDropDownEdit,
-  cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
-  cxClasses,
-  cxGridCustomView, cxGrid
-
-    , dxmdaset, dxSkinCaramel, dxSkinCoffee, dxSkinTheAsphaltWorld, dxSkinBlack,
-  dxSkinBlue, dxSkinBlueprint, dxSkinDarkRoom,
-  dxSkinDevExpressStyle, dxSkinFoggy, dxSkinGlassOceans, dxSkinHighContrast,
-  dxSkiniMaginary, dxSkinLilian, dxSkinLiquidSky,
-  dxSkinLondonLiquidSky, dxSkinMoneyTwins, dxSkinOffice2007Black,
-  dxSkinOffice2007Blue, dxSkinOffice2007Green, dxSkinOffice2007Pink,
-  dxSkinOffice2007Silver, dxSkinOffice2010Black, dxSkinOffice2010Blue,
-  dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
-  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
-  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinValentine,
-  dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, cxButtons, sComboBox,
-  sSpeedButton, AdvUtil
-  , uInvoiceEntities, Spring.Data.VirtualDataSet, Spring.Data.ObjectDataSet, uInvoiceContainer
+  , uInvoiceEntities
     ;
 
 type
@@ -328,7 +301,6 @@ type
     mRoomResinfantCount: TIntegerField;
     mRoomResPriceCode: TStringField;
     mRoomResAvrageDiscount: TFloatField;
-    mRoomResisPercentage: TBooleanField;
     mRoomResPackage: TWideStringField;
     mRoomResInvoiceIndex: TIntegerField;
     mRoomResGroupAccount: TBooleanField;
@@ -2684,7 +2656,6 @@ begin
           RateCount := zRoomRSet.FieldByName('rateCount').asinteger;
           AvrageDiscount := zRoomRSet.GetFloatValue
             (zRoomRSet.FieldByName('discount'));
-          isPercentage := zRoomRSet.FieldByName('Percentage').asBoolean;
 
           mRoomRes.append;
           mRoomRes.FieldByName('RoomReservation').asinteger := lRoomReservation;
@@ -2703,7 +2674,6 @@ begin
           mRoomRes.FieldByName('InfantCount').asinteger := infantCount;
           mRoomRes.FieldByName('PriceCode').asString := PriceCode;
           mRoomRes.FieldByName('AvrageDiscount').asfloat := AvrageDiscount;
-          mRoomRes.FieldByName('isPercentage').asBoolean := isPercentage; //TODO: using IsPercentage of Roomreservation is wrong, should use percentage of Roomsdate
           mRoomRes.FieldByName('InvoiceIndex').asinteger := FInvoiceIndex;
           mRoomRes.FieldByName('GroupAccount').asBoolean := zRoomRSet['GroupAccount'];
 
@@ -3591,7 +3561,6 @@ begin
       mRoomRates.close;
 
     TaxTypes.free;
-
   except
   end;
 
@@ -5687,12 +5656,9 @@ begin
           // copytoclipboard(s);
           lExecutionPlan.AddExec(s);
 
-          try
-            lstActivity.add(CreateInvoiceActivityLog(g.qUser, FReservation,
-              FRoomReservation, FnewSplitNumber, ADD_LINE, sItemID, dLineTotal,
-              zInvoiceNumber, sDescription));
-          Except
-          end;
+          lstActivity.add(CreateInvoiceActivityLog(g.qUser, FReservation,
+            FRoomReservation, FnewSplitNumber, ADD_LINE, sItemID, dLineTotal,
+            zInvoiceNumber, sDescription));
 
           if RoomRentPaid then
             if invRoomReservation > 0 then
@@ -5906,18 +5872,14 @@ begin
           s := s + ')';
 
           lExecutionPlan.AddExec(s);
-          try
-            paymentValue := iMultiplier *
-              _StrToFloat(_strTokenAt(stlPaySelections[i], '|', 1));
-            paymentCode := _strTokenAt(stlPaySelections[i], '|', 0);
-            paymentStr := PaymentDescription + ' [' +
-              _strTokenAt(stlPaySelections[i], '|', 0) + ']';
 
-            lstActivity.add(CreateInvoiceActivityLog(g.qUser, FReservation,
-              FRoomReservation, FnewSplitNumber, ADD_PAYMENT, paymentCode,
-              paymentValue, zInvoiceNumber, paymentStr));
-          Except
-          end;
+          paymentValue := iMultiplier * _StrToFloat(_strTokenAt(stlPaySelections[i], '|', 1));
+          paymentCode := _strTokenAt(stlPaySelections[i], '|', 0);
+          paymentStr := PaymentDescription + ' [' + _strTokenAt(stlPaySelections[i], '|', 0) + ']';
+
+          lstActivity.add(CreateInvoiceActivityLog(g.qUser, FReservation,
+            FRoomReservation, FnewSplitNumber, ADD_PAYMENT, paymentCode,
+            paymentValue, zInvoiceNumber, paymentStr));
 
           AllOk := True;
         end;
@@ -5994,27 +5956,21 @@ begin
       try
         result := True;
         try
-          SendInvoicesToFinancePacket(zInvoiceNumber);
+          SendInvoicesToFinancePacketThreaded( zInvoiceNumber);
           ViewInvoice2(zInvoiceNumber, True, false, True, chkShowPackage.checked, zEmailAddress);
 
           d.roomerMainDataSet.SystempackagesCreateHeaderIfNotExists
             (FRoomReservation, FRoomReservation);
 
         finally
-          try
             lstActivity.add(CreateInvoiceActivityLog(g.qUser, FReservation,
               FRoomReservation, FnewSplitNumber, PAY_AND_PRINT,
               inttostr(zInvoiceNumber), FTotal, 0, 'Invoice added '));
-          Except
-          end;
 
           for i := 0 to lstActivity.Count - 1 do
           begin
-            try
-              if lstActivity[i] <> '' then
-                WriteInvoiceActivityLog(lstActivity[i]);
-            Except
-            end;
+            if lstActivity[i] <> '' then
+              WriteInvoiceActivityLog(lstActivity[i]);
           end;
         end;
 
@@ -7092,15 +7048,10 @@ begin
     if cmd_bySQL(s) then
     begin
       mPayments.delete;
-      try
-        AddInvoiceActivityLog(g.qUser, rec.reservation, rec.RoomReservation, 1
-          // field typeindex 0 = invoice payment 1 = downpayment
-          , DELETE_PAYMENT, rec.PaymentType, rec.Amount, zInvoiceNumber,
-          rec.Description);
-      Except
-
-      end;
-
+      AddInvoiceActivityLog(g.qUser, rec.reservation, rec.RoomReservation, 1
+        // field typeindex 0 = invoice payment 1 = downpayment
+        , DELETE_PAYMENT, rec.PaymentType, rec.Amount, zInvoiceNumber,
+        rec.Description);
     end;
 
     DisplayTotals;
@@ -7152,15 +7103,10 @@ begin
 
       if cmd_bySQL(s) then
       begin
-        try
-          AddInvoiceActivityLog(g.qUser, rec.reservation, rec.RoomReservation, 1
+        AddInvoiceActivityLog(g.qUser, rec.reservation, rec.RoomReservation, 1
             // field typeindex 0 = invoice payment 1 = downpayment
             , DELETE_PAYMENT, rec.PaymentType, rec.Amount, zInvoiceNumber,
             rec.Description);
-        Except
-
-        end;
-
       end;
 
       DisplayTotals;
@@ -8351,13 +8297,9 @@ begin
 
   if isOK then
   begin
-    try
-      AddInvoiceActivityLog(g.qUser, FReservation, FRoomReservation,
-        FnewSplitNumber, PRINT_PROFORMA, '', FTotal, iInvoiceNumber,
-        'Print Proforma');
-    Except
-
-    end;
+    AddInvoiceActivityLog(g.qUser, FReservation, FRoomReservation,
+      FnewSplitNumber, PRINT_PROFORMA, '', FTotal, iInvoiceNumber,
+      'Print Proforma');
   end;
 
 end;

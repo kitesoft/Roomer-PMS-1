@@ -86,6 +86,8 @@ var
   frm2DMatrix: Tfrm2DMatrix;
 begin
   selection := TStringList.Create;
+
+  //TODO: Free the objects in the channelmanagers array!
   channelManagers := d.roomerMainDataSet.Channelmanagers_Entities_FindAll;
   for i := Low(channelManagers) to High(channelManagers) do
     if channelManagers[i].active <> 0 then

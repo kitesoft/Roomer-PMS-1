@@ -3,20 +3,87 @@ unit uChannels;
 interface
 
 uses
-  Windows, cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxStyles, dxSkinsCore, dxSkinCaramel,
-  dxSkinCoffee, dxSkinDarkSide, dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinscxPCPainter, cxCustomData,
-  cxFilter, cxData, cxDataStorage, cxEdit, cxNavigator, Data.DB, cxDBData, cxTextEdit, cxColorComboBox, cxButtonEdit,
-  cxSpinEdit, cxCalc, cxDropDownEdit, dxPSGlbl, dxPSUtl, dxPSEngn, dxPrnPg, dxBkgnd, dxWrap, dxPrnDev,
-  dxPSCompsProvider, dxPSFillPatterns, dxPSEdgePatterns, dxPSPDFExportCore, dxPSPDFExport, cxDrawTextUtils, dxPSPrVwStd,
-  dxPSPrVwAdv, dxPSPrVwRibbon, dxPScxPageControlProducer, dxPScxGridLnk, dxPScxGridLayoutViewLnk, dxPScxEditorProducers,
-  dxPScxExtEditorProducers, dxSkinsdxBarPainter, dxSkinsdxRibbonPainter, dxmdaset, dxPSCore, dxPScxCommon, Vcl.Menus,
-  cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, Vcl.StdCtrls,
-  sButton, sEdit, Vcl.Buttons, sSpeedButton, Vcl.Controls, sLabel, Vcl.ExtCtrls, sPanel, cxClasses, cxPropertiesStore,
-  System.Classes, Vcl.ComCtrls, sStatusBar, VCL.Forms, dxCore
-  , uG
-  , hData
-  , uRoomerForm
-   ;
+  Windows,
+  cxGraphics,
+  cxControls,
+  cxLookAndFeels,
+  cxLookAndFeelPainters,
+  cxStyles,
+  dxSkinsCore,
+  dxSkinCaramel,
+  dxSkinCoffee,
+  dxSkinDarkSide,
+  dxSkinTheAsphaltWorld,
+  dxSkinsDefaultPainters,
+  dxSkinscxPCPainter,
+  cxCustomData,
+  cxFilter,
+  cxData,
+  cxDataStorage,
+  cxEdit,
+  cxNavigator,
+  Data.DB,
+  cxDBData,
+  cxTextEdit,
+  cxColorComboBox,
+  cxButtonEdit,
+  cxSpinEdit,
+  cxCalc,
+  cxDropDownEdit,
+  dxPSGlbl,
+  dxPSUtl,
+  dxPSEngn,
+  dxPrnPg,
+  dxBkgnd,
+  dxWrap,
+  dxPrnDev,
+  dxPSCompsProvider,
+  dxPSFillPatterns,
+  dxPSEdgePatterns,
+  dxPSPDFExportCore,
+  dxPSPDFExport,
+  cxDrawTextUtils,
+  dxPSPrVwStd,
+  dxPSPrVwAdv,
+  dxPSPrVwRibbon,
+  dxPScxPageControlProducer,
+  dxPScxGridLnk,
+  dxPScxGridLayoutViewLnk,
+  dxPScxEditorProducers,
+  dxPScxExtEditorProducers,
+  dxSkinsdxBarPainter,
+  dxSkinsdxRibbonPainter,
+  dxmdaset,
+  dxPSCore,
+  dxPScxCommon,
+  Vcl.Menus,
+  cxGridLevel,
+  cxGridCustomTableView,
+  cxGridTableView,
+  cxGridDBTableView,
+  cxGridCustomView,
+  cxGrid,
+  Vcl.StdCtrls,
+  sButton,
+  sEdit,
+  Vcl.Buttons,
+  sSpeedButton,
+  Vcl.Controls,
+  sLabel,
+  Vcl.ExtCtrls,
+  sPanel,
+  cxClasses,
+  cxPropertiesStore,
+  System.Classes,
+  Vcl.ComCtrls,
+  sStatusBar,
+  Vcl.Forms,
+  dxCore,
+  uG,
+  hData,
+  uRoomerForm,
+  RoomerConfigurationItemsCommunicationModel_RequestsResponses,
+  cxCheckBox;
 
 type
   TfrmChannels = class(TfrmBaseRoomerForm)
@@ -114,8 +181,7 @@ type
     procedure BtnOkClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure tvDataFocusedRecordChanged(Sender: TcxCustomGridTableView;
-      APrevFocusedRecord, AFocusedRecord: TcxCustomGridRecord;
-      ANewItemRecordFocusingChanged: Boolean);
+      APrevFocusedRecord, AFocusedRecord: TcxCustomGridRecord; ANewItemRecordFocusingChanged: Boolean);
     procedure tvDataDataControllerFilterChanged(Sender: TObject);
     procedure tvDataDataControllerSortingChanged(Sender: TObject);
     procedure btnCloseClick(Sender: TObject);
@@ -129,20 +195,17 @@ type
     procedure btnEditClick(Sender: TObject);
     procedure btnClearClick(Sender: TObject);
     procedure edFilterChange(Sender: TObject);
-    procedure tvDataCurrencyPropertiesButtonClick(Sender: TObject;
-      AButtonIndex: Integer);
-    procedure tvDatamarketSegmentPropertiesButtonClick(Sender: TObject;
-      AButtonIndex: Integer);
-    procedure tvDatacustomerIdPropertiesButtonClick(Sender: TObject;
-      AButtonIndex: Integer);
-    procedure tvDataroomClassesPropertiesButtonClick(Sender: TObject;
-      AButtonIndex: Integer);
+    procedure tvDataCurrencyPropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
+    procedure tvDatamarketSegmentPropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
+    procedure tvDatacustomerIdPropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
+    procedure tvDataroomClassesPropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
     procedure btnPaymentMatrixClick(Sender: TObject);
     procedure btnConfirmationClick(Sender: TObject);
     procedure btnHotelNotificationsClick(Sender: TObject);
     procedure btnInsertClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure tvDataactivePlanCodePropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
+    procedure tvDataEditing(Sender: TcxCustomGridTableView; AItem: TcxCustomGridTableItem; var AAllow: Boolean);
   private
     { Private declarations }
     zFirstTime: Boolean;
@@ -151,11 +214,14 @@ type
     zSortStr: string;
     zIsAddRow: Boolean;
 
+    FChannelInventory: TChannelInventoryOverview;
+
     procedure fillHolder;
     procedure changeAllowgridEdit;
     Procedure chkFilter;
     procedure applyFilter;
     procedure RemoveRedundantRatesAndAvailabilities;
+    procedure GetChannelInventory;
 
   protected
     procedure DoUpdateControls; override;
@@ -165,6 +231,9 @@ type
     { Public declarations }
     zAct: TActTableAction;
     zData: recChannelHolder;
+
+    constructor Create(aOwner: TComponent); override;
+    destructor Destroy; override;
   end;
 
 function openChannels(act: TActTableAction; var theData: recChannelHolder): Boolean;
@@ -174,56 +243,67 @@ implementation
 {$R *.dfm}
 
 uses
-  SysUtils
-  , uD
-  , uAppGlobal
-  , Dialogs
-  , prjConst
-  , uSqlDefinitions
-  , VCL.Graphics
-  , uActivityLogs
-  , uCurrencies
-  , uCustomerTypes2
-  , uCustomers2
-  , uMultiSelection
-  , uUtils
-  , u2DMatrix
-  , UITypes
-  , cmpRoomerDataset
-  , cxGridExportLink
-  , ShellApi
-  ;
+  SysUtils,
+  uD,
+  uAppGlobal,
+  Dialogs,
+  prjConst,
+  uSqlDefinitions,
+  Vcl.Graphics,
+  uActivityLogs,
+  uCurrencies,
+  uCustomerTypes2,
+  uCustomers2,
+  uMultiSelection,
+  uUtils,
+  u2DMatrix,
+  UITypes,
+  cmpRoomerDataset,
+  cxGridExportLink,
+  ShellApi,
+  uConfigurationItemsAPICaller;
 
 /// ///////////////////////////////////////////////////////////////////////////////////////////
 // unit global functions
 /// ///////////////////////////////////////////////////////////////////////////////////////////
 
-function roundint2text(aInt : integer) : string;
+function roundint2text(aInt: Integer): string;
 begin
-  case aint of
-    1 : result := 'Round to nearest whole number';
-    2 : result := 'Round up to whole number';
-    3 : result := 'Round down to whole number';
-    4 : result := 'Round to 1 decimal';
-    5 : result := 'Round to 2 decimals';
-    6 : result := 'Round to 3 decimals';
+  case aInt of
+    1:
+      result := 'Round to nearest whole number';
+    2:
+      result := 'Round up to whole number';
+    3:
+      result := 'Round down to whole number';
+    4:
+      result := 'Round to 1 decimal';
+    5:
+      result := 'Round to 2 decimals';
+    6:
+      result := 'Round to 3 decimals';
   else
     result := 'No rounding';
   end;
 end;
 
-
-function roundText2int(aText : string) : integer;
+function roundText2int(aText: string): Integer;
 begin
-  if atext =  'Round to nearest whole number' then result := 1
-  else if atext =  'Round up to whole number' then result := 2
-  else if atext =  'Round down to whole number' then result := 3
-  else if atext =  'Round to 1 decimal' then result := 4
-  else if atext =  'Round to 2 decimals' then result := 5
-  else if atext =  'Round to 3 decimals' then result := 6
-  else {if atext =  'No rounding' then} result := 0;
+  if aText = 'Round to nearest whole number' then
+    result := 1
+  else if aText = 'Round up to whole number' then
+    result := 2
+  else if aText = 'Round down to whole number' then
+    result := 3
+  else if aText = 'Round to 1 decimal' then
+    result := 4
+  else if aText = 'Round to 2 decimals' then
+    result := 5
+  else if aText = 'Round to 3 decimals' then
+    result := 6
+  else { if atext =  'No rounding' then }
+    result := 0;
 end;
-
 
 function openChannels(act: TActTableAction; var theData: recChannelHolder): Boolean;
 var
@@ -253,6 +333,26 @@ end;
 { Private declarations }
 /// ////////////////////////////////////////////////////////////////////
 
+destructor TfrmChannels.Destroy;
+begin
+  FChannelInventory.Free;
+  inherited;
+end;
+
+procedure TfrmChannels.GetChannelInventory;
+var
+  lConfigAPICaller: TConfigurationItemsAPICaller;
+begin
+
+  lConfigAPICaller := TConfigurationItemsAPICaller.Create;
+  try
+    lConfigAPICaller.GetChannelInventoryItems(FChannelInventory);
+  finally
+    lConfigAPICaller.Free;
+  end;
+
+end;
+
 Procedure TfrmChannels.DoLoadData;
 var
   s: string;
@@ -263,8 +363,10 @@ begin
   zFirstTime := true;
   if zSortStr = '' then
     zSortStr := 'ID';
-  rset := CreateNewDataSet;
+  rSet := CreateNewDataSet;
   try
+    GetChannelInventory;
+
     s := format(select_Channels, [zSortStr]);
     CopyToClipboard(s);
     if rSet_bySQL(rSet, s) then
@@ -278,10 +380,12 @@ begin
       begin
         m_.Edit;
         try
-          m_.FieldByName('rateRoundingText').AsString := roundint2text(m_.FieldByName('rateRoundingType').AsInteger);
-          rSet_bySQL(rset, format('SELECT Group_concat(Code) as Codes FROM roomtypegroups WHERE id IN (SELECT roomClassId FROM channelclassrelations WHERE channelId=%d)', [m_.FieldByName('id').AsInteger]));
+          m_RateRoundingText.AsString := roundint2text(m_rateRoundingType.AsInteger);
+          rSet_bySQL(rSet,
+            format('SELECT Group_concat(Code) as Codes FROM roomtypegroups WHERE id IN (SELECT roomClassId FROM channelclassrelations WHERE channelId=%d)',
+            [m_ID.AsInteger]));
           rSet.First;
-          m_.FieldByName('roomClasses').AsString := rSet.FieldByName('Codes').ASstring;
+          m_roomClasses.AsString := rSet.FieldByName('Codes').AsString;
           m_.Post;
         except
           m_.Cancel;
@@ -299,19 +403,12 @@ end;
 procedure TfrmChannels.DoUpdateControls;
 begin
   inherited;
-  pnlToolbarButtons.Visible := false;
-  btnClose.Visible := false;
+  mnuiAllowGridEdit.Checked := (zAct <> actLookup);
+  pnlToolbarButtons.Visible := (zAct <> actLookup);
+  btnClose.Visible := (zAct <> actLookup);
 
-  if zAct = actLookup then
-  begin
-    mnuiAllowGridEdit.Checked := false;
-    pnlToolbarButtons.Visible := true;
-  end
-  else
-  begin
-    mnuiAllowGridEdit.Checked := true;
-    btnClose.Visible := true;
-  end;
+  pnlButtons.Visible := (zAct = actLookup);
+
   zAllowGridEdit := mnuiAllowGridEdit.Checked;
   changeAllowgridEdit;
   chkFilter;
@@ -321,29 +418,29 @@ end;
 procedure TfrmChannels.fillHolder;
 begin
   initChannelHolder(zData);
-  zData.ID := m_.FieldByName('ID').AsInteger;
-  zData.active := m_['Active'];
-  zData.name := m_['name'];
-  zData.channelManagerId := m_['channelManagerId'];
-  zData.minAlotment := m_['minAlotment'];
-  zData.defaultAvailability := m_['defaultAvailability'];
-  zData.defaultPricePP := m_['defaultPricePP'];
-  zData.marketSegment := m_['marketSegment'];
-  zData.currencyId := m_['currencyId'];
-  zData.managedByChannelManager := m_['managedByChannelManager'];
-  zData.CHANNEL_ARRANGES_PAYMENT := m_['CHANNEL_ARRANGES_PAYMENT'];
-  zData.defaultChannel := m_['defaultChannel'];
-  zData.push := m_['push'];
-  zData.customerId := m_['customerId'];
-  zData.color := m_['color'];
-  zData.currency := m_['currency'];
-  zData.roomClasses := m_['roomClasses'];
-  zData.hotelsBookingEngine := m_['hotelsBookingEngine'];
-  zData.compensationPercentage := m_['compensationPercentage'];
-  zData.directConnection := m_['directConnection'];
-  zData.Rounding := m_['rateRoundingType'];
-  zData.activePlanCode := m_['activePlanCode'];
-  zData.ratesExcludingTaxes := m_['ratesExcludingTaxes'];
+  zData.ID                       := m_ID.AsInteger;
+  zData.active                   := m_Active.AsBoolean;
+  zData.name                     := m_name.AsString;
+  zData.channelManagerId         := m_channelManagerId.AsString;
+  zData.minAlotment              := m_minAlotment.AsInteger;
+  zData.defaultAvailability      := m_defaultAvailability.AsInteger;
+  zData.defaultPricePP           := m_defaultPricePP.AsFloat;
+  zData.marketSegment            := m_marketSegment.AsString;
+  zData.currencyId               := m_currencyId.AsInteger;
+  zData.managedByChannelManager  := m_managedByChannelManager.AsBoolean;
+  zData.CHANNEL_ARRANGES_PAYMENT := m_CHANNEL_ARRANGES_PAYMENT.AsBoolean;
+  zData.defaultChannel           := m_default.AsBoolean;
+  zData.push                     := m_push.AsBoolean;
+  zData.customerId               := m_customerId.AsInteger;
+  zData.color                    := m_color.AsString;
+  zData.currency                 := m_Currency.AsString;
+  zData.roomClasses              := m_roomClasses.AsString;
+  zData.hotelsBookingEngine      := m_hotelsBookingEngine.AsBoolean;
+  zData.compensationPercentage   := m_compensationPercentage.AsFloat;
+  zData.directConnection         := m_directConnection.AsBoolean;
+  zData.Rounding                 := m_rateRoundingType.AsInteger;
+  zData.activePlanCode           := m_activePlanCode.AsInteger;
+  zData.ratesExcludingTaxes      := m_ratesExcludingTaxes.AsBoolean;
 
 end;
 
@@ -369,7 +466,6 @@ begin
   tvDatadirectConnection.Options.Editing := zAllowGridEdit;
   tvDataactivePlanCode.Options.Editing := zAllowGridEdit;
   tvDataratesExcludingTaxes.Options.Editing := zAllowGridEdit;
-
 end;
 
 procedure TfrmChannels.chkFilter;
@@ -387,13 +483,18 @@ begin
     labFilterWarning.color := clMoneyGreen;
     labFilterWarning.Font.Style := [fsBold]; // -C
     // labFilterWarning.caption    := shFilterOn+' - '+inttostr(rc2)+' '+shRecordsOf+' '+inttostr(rc1)+' '+shAreVisible+' ';;
-    labFilterWarning.caption := format(GetTranslatedText('shFilterOnRecordsOf'),
-      [rc2, rC1]);
+    labFilterWarning.caption := format(GetTranslatedText('shFilterOnRecordsOf'), [rc2, rC1]);
   end
   else
   begin
     labFilterWarning.Visible := false;
   end;
+end;
+
+constructor TfrmChannels.Create(aOwner: TComponent);
+begin
+  inherited;
+  FChannelInventory := TChannelInventoryOverview.Create;
 end;
 
 procedure TfrmChannels.edFilterChange(Sender: TObject);
@@ -415,12 +516,11 @@ begin
   tvData.DataController.Filter.Options := [fcoCaseInsensitive];
   tvData.DataController.Filter.Root.BoolOperatorKind := fboOr;
   tvData.DataController.Filter.Root.Clear;
-  tvData.DataController.Filter.Root.AddItem(tvDataname, foLike,
-    '%' + edFilter.text + '%', '%' + edFilter.text + '%');
-  tvData.DataController.Filter.Root.AddItem(tvDatachannelManagerId, foLike,
-    '%' + edFilter.text + '%', '%' + edFilter.text + '%');
-  tvData.DataController.Filter.Root.AddItem(tvDataCurrency, foLike,
-    '%' + edFilter.text + '%', '%' + edFilter.text + '%');
+  tvData.DataController.Filter.Root.AddItem(tvDataname, foLike, '%' + edFilter.text + '%', '%' + edFilter.text + '%');
+  tvData.DataController.Filter.Root.AddItem(tvDatachannelManagerId, foLike, '%' + edFilter.text + '%',
+    '%' + edFilter.text + '%');
+  tvData.DataController.Filter.Root.AddItem(tvDataCurrency, foLike, '%' + edFilter.text + '%',
+    '%' + edFilter.text + '%');
   tvData.DataController.Filter.active := true;
 end;
 
@@ -437,18 +537,18 @@ end;
 
 procedure TfrmChannels.FormDestroy(Sender: TObject);
 begin
-  glb.EnableOrDisableTableRefresh('channels', True);
+  glb.EnableOrDisableTableRefresh('channels', true);
 end;
 
 procedure TfrmChannels.FormShow(Sender: TObject);
 begin
-  glb.EnableOrDisableTableRefresh('channels', False);
+  glb.EnableOrDisableTableRefresh('channels', false);
   RefreshData;
 end;
 
 procedure TfrmChannels.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
-  glb.EnableOrDisableTableRefresh('channels', True);
+  glb.EnableOrDisableTableRefresh('channels', true);
   if tvData.DataController.DataSet.State = dsInsert then
   begin
     tvData.DataController.Post;
@@ -457,7 +557,10 @@ begin
   begin
     tvData.DataController.Post;
   end;
-  try RemoveRedundantRatesAndAvailabilities; except end;
+  try
+    RemoveRedundantRatesAndAvailabilities;
+  except
+  end;
 end;
 
 Procedure TfrmChannels.RemoveRedundantRatesAndAvailabilities;
@@ -505,18 +608,9 @@ var
   s: string;
 begin
   fillHolder;
-  (*
-    if hdata.payTypeExistsInOther(zData.PayType) then
-    begin
-    Showmessage('payType'+' ' + zData.Description + ' '+GetTranslatedText('shExistsInRelatedData')+' ' + chr(10) + GetTranslatedText('shCanNotDelete')+' ');
-    Abort;
-    exit;
-    end;
-  *)
 
   s := '';
-  s := s + GetTranslatedText('shDeleteChannel') + ' ' + zData.name + ' '
-    + chr(10);
+  s := s + GetTranslatedText('shDeleteChannel') + ' ' + zData.name + ' ' + chr(10);
   s := s + GetTranslatedText('shContinue');
 
   if MessageDlg(s, mtConfirmation, [mbYes, mbNo], 0) = mrYes then
@@ -524,8 +618,10 @@ begin
     if not Del_Channel(zData) then
     begin
       abort;
-    end else
-      glb.LogChanges(DataSet, 'channels', DELETE_RECORD, 'Channel ID = ' + zData.channelManagerId + ', name = ' + zData.Name);
+    end
+    else
+      glb.LogChanges(DataSet, 'channels', DELETE_RECORD, 'Channel ID = ' + zData.channelManagerId + ', name = ' +
+        zData.name);
   end
   else
   begin
@@ -537,9 +633,8 @@ procedure TfrmChannels.m_BeforeInsert(DataSet: TDataSet);
 begin
   if zFirstTime then
     exit;
-  tvData.GetColumnByFieldName('channelManagerId').Focused := true;
+  tvDatachannelManagerId.Focused := true;
 end;
-
 
 procedure TfrmChannels.m_BeforePost(DataSet: TDataSet);
 var
@@ -566,8 +661,7 @@ begin
   zData.color := DataSet['color'];
   zData.currency := DataSet['currency'];
 
-  zData.Rounding := roundtext2Int(DataSet['rateRoundingtext']);
-
+  zData.Rounding := roundText2int(DataSet['rateRoundingtext']);
 
   zData.roomClasses := DataSet['roomClasses'];
   zData.hotelsBookingEngine := DataSet['hotelsBookingEngine'];
@@ -600,7 +694,8 @@ begin
     end;
     if ins_Channel(zData, nID) then
     begin
-      glb.LogChanges(DataSet, 'channels', ADD_RECORD, 'Channel ID = ' + zData.channelManagerId + ', name = ' + zData.Name);
+      glb.LogChanges(DataSet, 'channels', ADD_RECORD, 'Channel ID = ' + zData.channelManagerId + ', name = ' +
+        zData.name);
       glb.ForceTableRefresh;
     end
     else
@@ -626,13 +721,13 @@ begin
   DataSet['push'] := true;
   DataSet['customerId'] := GetCustomerId(ctrlGetString('rackCustomer'));
   DataSet['color'] := '15793151';
-  DataSet['rateRoundingType']       := 1;
-  DataSet['rateRoundingText']       := roundint2text(DataSet['rateRoundingType']);
-  DataSet['roomClasses']            := '';
-  DataSet['hotelsBookingEngine']    := false;
+  DataSet['rateRoundingType'] := 1;
+  DataSet['rateRoundingText'] := roundint2text(DataSet['rateRoundingType']);
+  DataSet['roomClasses'] := '';
+  DataSet['hotelsBookingEngine'] := false;
   DataSet['compensationPercentage'] := 0;
-  DataSet['directConnection'] := False;
-  DataSet['ratesExcludingTaxes'] := False;
+  DataSet['directConnection'] := false;
+  DataSet['ratesExcludingTaxes'] := false;
   if glb.LocateSpecificRecord('channelplancodes', 'Code', 'PLAN') then
     DataSet['activePlanCode'] := glb.ChannelPlanCodes['ID'];
 
@@ -642,9 +737,8 @@ end;
 // table View Functions
 /// /////////////////////////////////////////////////////////////////////////////////////
 
-procedure TfrmChannels.tvDataFocusedRecordChanged
-  (Sender: TcxCustomGridTableView; APrevFocusedRecord, AFocusedRecord
-  : TcxCustomGridRecord; ANewItemRecordFocusingChanged: Boolean);
+procedure TfrmChannels.tvDataFocusedRecordChanged(Sender: TcxCustomGridTableView;
+  APrevFocusedRecord, AFocusedRecord: TcxCustomGridRecord; ANewItemRecordFocusingChanged: Boolean);
 begin
   if AFocusedRecord = nil then
   begin
@@ -656,8 +750,7 @@ begin
   end;
 end;
 
-procedure TfrmChannels.tvDatamarketSegmentPropertiesButtonClick(Sender: TObject;
-  AButtonIndex: Integer);
+procedure TfrmChannels.tvDatamarketSegmentPropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
 var
   theData: recCustomerTypeHolder;
 begin
@@ -670,27 +763,23 @@ begin
   begin
     if tvData.DataController.DataSource.State <> dsInsert then
       m_.Edit;
-    m_['marketSegment'] := theData.customerType;
+    m_marketSegment.AsString := theData.customerType;
     // m_['currencyID'] := theData.ID;
   end;
 end;
 
-procedure TfrmChannels.tvDataroomClassesPropertiesButtonClick(Sender: TObject;
-  AButtonIndex: Integer);
+procedure TfrmChannels.tvDataroomClassesPropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
 var
   newValue: String;
 begin
-  newValue := LookupForDataItem('Room Classes', glb.RoomTypeGroups, 'Code',
-    'Description', m_['roomClasses'], true, false, 'Active', nil, '');
+  newValue := LookupForDataItem('Room Classes', glb.RoomTypeGroups, 'Code', 'Description', m_roomClasses.AsString, true,
+    false, 'Active', nil, '');
 
-//  CopyToClipboard(m_['roomClasses']);
-//  DebugMessage(m_['roomClasses']);
-
-  if newValue <> m_['roomclasses'] then
+  if newValue <> m_roomClasses.AsString then
   begin
     m_.Edit;
-    m_['roomClasses'] := newValue;
-    d.roomerMainDataSet.SystemCorrectRoomClasses(m_['id'], newValue);
+    m_roomClasses.AsString := newValue;
+    d.roomerMainDataSet.SystemCorrectRoomClasses(m_ID.AsInteger, newValue);
   end;
 end;
 
@@ -702,27 +791,31 @@ begin
   end;
 end;
 
+procedure TfrmChannels.tvDataEditing(Sender: TcxCustomGridTableView; AItem: TcxCustomGridTableItem;
+  var AAllow: Boolean);
+var
+  lChannel: TChannelInventory;
+begin
+  inherited;
+  if (AItem.Index <> tvDatadirectConnection.Index) then
+    AAllow := true
+  else
+    AAllow := FChannelInventory.FindChannelByCode(m_channelManagerId.AsString, lChannel) and
+      lChannel.CanBeDirectConnectChannel;
+
+end;
+
 /// /////////////////////////////////////////////////////////////////////////
 // Filter
 /// //////////////////////////////////////////////////////////////////////////
 
-
 procedure TfrmChannels.tvDataactivePlanCodePropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
 begin
-  LookupForDataItem('Channel Plan Code',
-                  glb.ChannelPlanCodes,
-                  'Id',
-                  'Description',
-                  m_['activePlanCode'],
-                  False,
-                  True,
-                  'active',
-                  m_,
-                  'activePlanCode');
+  LookupForDataItem('Channel Plan Code', glb.ChannelPlanCodes, 'Id', 'Description', m_activePlanCode.AsString, false,
+    true, 'active', m_, 'activePlanCode');
 end;
 
-procedure TfrmChannels.tvDataCurrencyPropertiesButtonClick(Sender: TObject;
-  AButtonIndex: Integer);
+procedure TfrmChannels.tvDataCurrencyPropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
 var
   theData: recCurrencyHolder;
 begin
@@ -735,16 +828,15 @@ begin
   begin
     if tvData.DataController.DataSource.State <> dsInsert then
       m_.Edit;
-    m_['currency'] := theData.currency;
-    m_['currencyID'] := theData.ID;
+    m_Currency.AsString := theData.currency;
+    m_currencyId.AsInteger := theData.ID;
   end;
 end;
 
-procedure TfrmChannels.tvDatacustomerIdPropertiesButtonClick(Sender: TObject;
-  AButtonIndex: Integer);
+procedure TfrmChannels.tvDatacustomerIdPropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
 var
   theData: recCustomerHolder;
-  sCustomer : String;
+  sCustomer: String;
 begin
   fillHolder;
   sCustomer := '';
@@ -757,7 +849,7 @@ begin
   begin
     if tvData.DataController.DataSource.State <> dsInsert then
       m_.Edit;
-    m_['customerId'] := theData.ID;
+    m_customerId.AsInteger := theData.ID;
   end;
 end;
 
@@ -797,12 +889,12 @@ end;
 
 procedure TfrmChannels.btnPaymentMatrixClick(Sender: TObject);
 begin
-    EditPaymentAssuranceForChannels;
+  EditPaymentAssuranceForChannels;
 end;
 
 procedure TfrmChannels.btnConfirmationClick(Sender: TObject);
 begin
-    EditChannelsEmailConfirmationMatrix;
+  EditChannelsEmailConfirmationMatrix;
 end;
 
 procedure TfrmChannels.btnHotelNotificationsClick(Sender: TObject);
@@ -868,8 +960,7 @@ var
 begin
   sFilename := g.qProgramPath + caption;
   ExportGridToExcel(sFilename, grData, true, true, true);
-  ShellExecute(Handle, 'OPEN', PChar(sFilename + '.xls'), nil, nil,
-    sw_shownormal);
+  ShellExecute(Handle, 'OPEN', PChar(sFilename + '.xls'), nil, nil, sw_shownormal);
   // To export ot xlsx form then use this
   // ExportGridToXLSX(sFilename, grData, true, true, true);
   // ShellExecute(Handle, 'OPEN', PChar(sFilename + '.xlsx'), nil, nil, sw_shownormal);
@@ -881,8 +972,7 @@ var
 begin
   sFilename := g.qProgramPath + caption;
   ExportGridToHtml(sFilename, grData, true, true);
-  ShellExecute(Handle, 'OPEN', PChar(sFilename + '.html'), nil, nil,
-    sw_shownormal);
+  ShellExecute(Handle, 'OPEN', PChar(sFilename + '.html'), nil, nil, sw_shownormal);
 end;
 
 procedure TfrmChannels.mnuiGridToTextClick(Sender: TObject);
@@ -891,8 +981,7 @@ var
 begin
   sFilename := g.qProgramPath + caption;
   ExportGridToText(sFilename, grData, true, true, ';', '', '', 'txt');
-  ShellExecute(Handle, 'OPEN', PChar(sFilename + '.txt'), nil, nil,
-    sw_shownormal);
+  ShellExecute(Handle, 'OPEN', PChar(sFilename + '.txt'), nil, nil, sw_shownormal);
 end;
 
 procedure TfrmChannels.mnuiGridToXmlClick(Sender: TObject);
@@ -901,8 +990,7 @@ var
 begin
   sFilename := g.qProgramPath + caption;
   ExportGridToXml(sFilename, grData, true, true);
-  ShellExecute(Handle, 'OPEN', PChar(sFilename + '.xml'), nil, nil,
-    sw_shownormal);
+  ShellExecute(Handle, 'OPEN', PChar(sFilename + '.xml'), nil, nil, sw_shownormal);
 end;
 
 end.

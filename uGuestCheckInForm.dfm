@@ -28,10 +28,6 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
     SkinData.SkinSection = 'PAGECONTROL'
     object sTabSheet1: TsTabSheet
       Caption = 'Room 101'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object sPanel1: TsPanel
         Left = 0
         Top = 0
@@ -71,10 +67,6 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
           object sTabSheet2: TsTabSheet
             Caption = 'Guest Info'
             SkinData.SkinSection = 'TRANSPARENT'
-            ExplicitLeft = 0
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
             object sLabel6: TsLabel
               Left = 97
               Top = 126
@@ -698,10 +690,6 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
           end
           object sTabSheet6: TsTabSheet
             Caption = 'Company'
-            ExplicitLeft = 0
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
             object sLabel22: TsLabel
               Left = 11
               Top = 24
@@ -1023,7 +1011,6 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
         Padding.Right = 5
         Padding.Bottom = 5
         TabOrder = 1
-        OnDblClick = sPanel2DblClick
         SkinData.SkinSection = 'TRANSPARENT'
         object sLabel8: TsLabel
           Left = 6
@@ -1248,10 +1235,6 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
           SkinData.SkinSection = 'PAGECONTROL'
           object sTabSheet3: TsTabSheet
             Caption = 'Credit card'
-            ExplicitLeft = 0
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
             object sLabel12: TsLabel
               Left = 66
               Top = 69
@@ -1290,10 +1273,6 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
           end
           object sTabSheet4: TsTabSheet
             Caption = 'Cash'
-            ExplicitLeft = 0
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
             object sLabel16: TsLabel
               Left = 38
               Top = 21
@@ -1374,17 +1353,9 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
           end
           object sTabSheet5: TsTabSheet
             Caption = 'None'
-            ExplicitLeft = 0
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
           end
           object sTabSheet7: TsTabSheet
             Caption = 'Select'
-            ExplicitLeft = 0
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
           end
         end
       end
@@ -1444,7 +1415,7 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
     PrintOptions.Printer = 'Default'
     PrintOptions.PrintOnSheet = 0
     ReportOptions.CreateDate = 42022.613734120400000000
-    ReportOptions.LastChange = 42429.950693055560000000
+    ReportOptions.LastChange = 42803.562451203700000000
     ScriptLanguage = 'PascalScript'
     ScriptText.Strings = (
       'begin'
@@ -33284,7 +33255,7 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
         ParentFont = False
       end
       object frxDBDataset1address2: TfrxMemoView
-        Left = 9.559060000000001000
+        Left = 9.559060000000000000
         Top = 426.299320000000000000
         Width = 332.598640000000000000
         Height = 18.897650000000000000
@@ -34006,6 +33977,36 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
         Font.Style = []
         Memo.UTF8W = (
           '[frxDBDataset1."creditcardexpiry"]')
+        ParentFont = False
+      end
+      object Memo33: TfrxMemoView
+        Left = 362.834880000000000000
+        Top = 491.338900000000000000
+        Width = 173.858380000000000000
+        Height = 18.897650000000000000
+        ShowHint = False
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        Memo.UTF8W = (
+          'Social security number')
+        ParentFont = False
+      end
+      object Memo34: TfrxMemoView
+        Left = 363.205010000000000000
+        Top = 510.457020000000000000
+        Width = 343.937230000000000000
+        Height = 18.897650000000000000
+        ShowHint = False
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -13
+        Font.Name = 'Arial'
+        Font.Style = []
+        Memo.UTF8W = (
+          '[frxDBDataset1."SocialSecurityNumber"]')
         ParentFont = False
       end
     end

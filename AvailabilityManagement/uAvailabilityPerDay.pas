@@ -68,7 +68,7 @@ end;
 procedure TAvailabilityPerDay.CollectTypes;
 var i : Integer;
 begin
-  FRoomTypes := TStringList.Create;
+  FRoomTypes.Clear;
   for i := 0 to oNewReservation.newRoomReservations.RoomCount - 1 do
     if FRoomTypes.IndexOf(AnsiLowerCase(oNewReservation.newRoomReservations.RoomItemsList[i].RoomType)) <= 0 then
       FRoomTypes.Add(AnsiLowerCase(oNewReservation.newRoomReservations.RoomItemsList[i].RoomType));
@@ -80,7 +80,7 @@ begin
   ArrivalDate := _ArrivalDate;
   CheckOutDate := _CheckOutDate;
   oNewReservation := _NewReservation;
-
+  FRoomTypes := TStringList.Create;
   LoadData;
 end;
 

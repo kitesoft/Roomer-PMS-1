@@ -70,9 +70,9 @@ type
     procedure pnlHintMouseEnter(Sender: TObject);
   private
     currentControl : TObject;
-    rri: RecRRInfo;
+    rri: RecRDInfo;
     procedure PlaceHint(X, Y, CellWidth, CellHeight: Integer);
-    procedure ReadInfo(rri: RecRRInfo);
+    procedure ReadInfo(rri: RecRDInfo);
     procedure CM_MenuClosed(var msg: TMessage) ; message CM_MENU_CLOSED;
     procedure CM_ExitMenuLoop(var msg: TMessage) ; message CM_EXIT_MENU_LOOP;
      { Private declarations }
@@ -82,7 +82,7 @@ type
     procedure Release;
     procedure CancelHint;
 
-    procedure ActivateHint(X, Y, CellWidth, CellHeight : Integer; rri: RecRRInfo);
+    procedure ActivateHint(X, Y, CellWidth, CellHeight : Integer; rri: RecRDInfo);
 
 
   end;
@@ -101,7 +101,7 @@ uses clipbrd
 
 { TFrmReservationHintHolder }
 
-procedure TFrmReservationHintHolder.ActivateHint(X, Y, CellWidth, CellHeight: Integer; rri: RecRRInfo);
+procedure TFrmReservationHintHolder.ActivateHint(X, Y, CellWidth, CellHeight: Integer; rri: RecRDInfo);
 begin
   self.rri := rri;
   pnlHint.Left := X + CellWidth - 4;
@@ -115,7 +115,7 @@ begin
   timHide.Enabled := True;
 end;
 
-procedure GetPriceInfo(rri: RecRRInfo;
+procedure GetPriceInfo(rri: RecRDInfo;
             var TotalPrice, TotalDiscount, TotalPriceNetto, PriceNight, DiscountNight, PriceNightNetto : Double;
             var CurrencyLetter : String);
 var discountAmount : Double;
@@ -129,7 +129,7 @@ begin
   CurrencyLetter := '€';
   if rri.Discount <> 0 then
   begin
-    if rri.Percentage then
+    if rri.IsPercentage then
     begin
       discountAmount := rri.Price / ((100-rri.Discount)/100); // ro.Price * ro.Discount / 100;
       PriceNight := discountAmount;
@@ -163,7 +163,7 @@ begin
       result := 'Manually entered reservation';
 end;
 
-function GetBookingId(rri: RecRRInfo) : String;
+function GetBookingId(rri: RecRDInfo) : String;
 begin
   result := rri.BookingId;
   if trim(result) = '' then
@@ -177,7 +177,7 @@ begin
     result := trim(_floatToStr(value, 12, 0));
 end;
 
-procedure TFrmReservationHintHolder.ReadInfo(rri: RecRRInfo);
+procedure TFrmReservationHintHolder.ReadInfo(rri: RecRDInfo);
 var TotalPrice, TotalDiscount, TotalPriceNetto, PriceNight, DiscountNight, PriceNightNetto : Double;
     CurrencyLetter : String;
     backColor, fontColor : TColor;
@@ -214,7 +214,7 @@ begin
   // <P align="right">€ 123.000,00<br><U>- (10) € 12.300,00</U><br><B>€ 11.000,00</B></P>
   if rri.Discount <> 0 then
   begin
-      if rri.Percentage then
+      if rri.IsPercentage then
       begin
         __hlblTotal.HTMLText.Text := format('<P align="right">%s %s<br><U>(%s) %s -%s</U><br><B>%s %s</B><br></P>',
               [

@@ -65,7 +65,7 @@ object FrmReservationHintHolder: TFrmReservationHintHolder
       ParentFont = False
       PopupMenu = PopupMenu1
       Transparent = True
-      Version = '1.9.2.6'
+      Version = '1.9.2.7'
     end
     object clbStatus: TsLabel
       Left = 16
@@ -423,7 +423,7 @@ object FrmReservationHintHolder: TFrmReservationHintHolder
       Transparent = True
       OnMouseDown = pnlHintMouseDown
       OnMouseUp = pnlHintMouseUp
-      Version = '1.9.2.6'
+      Version = '1.9.2.7'
     end
     object __hlblDaily: THTMLabel
       Left = 282
@@ -442,7 +442,7 @@ object FrmReservationHintHolder: TFrmReservationHintHolder
       ParentFont = False
       PopupMenu = PopupMenu1
       Transparent = True
-      Version = '1.9.2.6'
+      Version = '1.9.2.7'
     end
     object Shape1: TShape
       Left = 151
@@ -486,7 +486,7 @@ object FrmReservationHintHolder: TFrmReservationHintHolder
       Transparent = True
       OnMouseDown = pnlHintMouseDown
       OnMouseUp = pnlHintMouseUp
-      Version = '1.9.2.6'
+      Version = '1.9.2.7'
     end
     object Shape2: TShape
       Left = 18
@@ -570,7 +570,7 @@ object FrmReservationHintHolder: TFrmReservationHintHolder
       Transparent = True
       OnMouseDown = pnlHintMouseDown
       OnMouseUp = pnlHintMouseUp
-      Version = '1.9.2.6'
+      Version = '1.9.2.7'
     end
     object sLabel5: TsLabel
       Left = 297
@@ -623,7 +623,7 @@ object FrmReservationHintHolder: TFrmReservationHintHolder
       Transparent = True
       OnMouseDown = pnlHintMouseDown
       OnMouseUp = pnlHintMouseUp
-      Version = '1.9.2.6'
+      Version = '1.9.2.7'
     end
     object sLabel3: TsLabel
       Left = 16

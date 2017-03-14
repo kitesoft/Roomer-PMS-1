@@ -20,38 +20,6 @@ uses
 
 TYPE
 
-//******  DataLayout *******//
-//ID	             int            NO Auto
-//Customer        nvarchar(15)   NO
-//Surname         nvarchar(100)  YES
-//Name            nvarchar(100)  YES
-//PID             nvarchar(15)   YES
-//Address1        nvarchar(100)  YES
-//Address2        nvarchar(100)  YES
-//Address3        nvarchar(100)  YES
-//Address4        nvarchar(100)  YES
-//Tel1            nvarchar(15)   YES
-//Tel2            nvarchar(15)   YES
-//Fax             nvarchar(15)   YES
-{From country}
-//Country         nvarchar(2)    YES
-{From CustomerType}
-//CustomerType    nvarchar(5)    YES
-//DiscountPercent float          YES
-{From ReserVation}
-//EmailAddress    nvarchar(100)  YES
-//Homepage        nvarchar(100)  YES
-//ContactPerson   nvarchar(100)  YES
-{From ReserVation}
-{From ReserVation}
-{From ReserVation}
-//TravelAgency    bit	          NO
-//Currency        nvarchar(5)    YES
-{??}
-//pcID            int            YES
-{From pcId}
-//Active          bit            YES
-
 {$M+}
   THomeCustomer = class(TObject)
   private
@@ -111,13 +79,9 @@ TYPE
     FPersonProfileId: Integer;
     FCreatePersonProfileId: Boolean;
 
-
     procedure initVaribles;
     function Customer_Get(customer : string) : boolean;
-
   protected
-
-
   public
     constructor Create(const HotelCode, Customer : string); overload;
     constructor Create(const HotelCode, customer : string; contactAddress1,contactAddress2,contactAddress3,contactAddress4 : string); overload;
@@ -181,7 +145,6 @@ TYPE
      property HotelCode                 : string  read FHotelCode                  write FHotelCode                ;
      property contactIsMainGuest        : boolean read FContactIsMainGuest         write FContactIsMainGuest      ;
      property CustomerRatePlanId        : Integer read FCustomerRatePlanId         write FCustomerRatePlanId      ;
-
   end;
 
 

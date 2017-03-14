@@ -1,22 +1,22 @@
 inherited frmEmbDateStatistics: TfrmEmbDateStatistics
   Caption = 'Statistics'
   ClientHeight = 677
-  ClientWidth = 319
+  ClientWidth = 534
   Font.Height = -11
-  ExplicitWidth = 335
+  ExplicitWidth = 550
   ExplicitHeight = 716
   PixelsPerInch = 96
   TextHeight = 13
   inherited sbStatusBar: TsStatusBar
     Top = 657
-    Width = 319
+    Width = 534
     ExplicitTop = 657
-    ExplicitWidth = 319
+    ExplicitWidth = 534
   end
   object pnlStatistics: TsPanel [1]
     Left = 0
     Top = 0
-    Width = 319
+    Width = 534
     Height = 657
     Align = alClient
     BevelOuter = bvNone
@@ -33,7 +33,7 @@ inherited frmEmbDateStatistics: TfrmEmbDateStatistics
     object lblPropertyStatus: TsLabel
       Left = 0
       Top = 0
-      Width = 319
+      Width = 534
       Height = 21
       Margins.Left = 10
       Margins.Top = 0
@@ -53,7 +53,7 @@ inherited frmEmbDateStatistics: TfrmEmbDateStatistics
     object lblDateStatistics: TsLabel
       Left = 0
       Top = 21
-      Width = 319
+      Width = 534
       Height = 18
       Margins.Left = 10
       Margins.Top = 0
@@ -73,7 +73,7 @@ inherited frmEmbDateStatistics: TfrmEmbDateStatistics
     object pgrStatisticsPanelGroup: TCategoryPanelGroup
       Left = 0
       Top = 39
-      Width = 319
+      Width = 534
       Height = 618
       VertScrollBar.Tracking = True
       Align = alClient
@@ -93,7 +93,7 @@ inherited frmEmbDateStatistics: TfrmEmbDateStatistics
         object grdRoomStates: TAdvStringGrid
           Left = 0
           Top = 0
-          Width = 298
+          Width = 513
           Height = 195
           Cursor = crDefault
           Margins.Left = 10
@@ -256,7 +256,7 @@ inherited frmEmbDateStatistics: TfrmEmbDateStatistics
         object chrtRoomStats: TChart
           Left = 0
           Top = 0
-          Width = 298
+          Width = 513
           Height = 214
           Margins.Left = 10
           Margins.Top = 0
@@ -329,7 +329,7 @@ inherited frmEmbDateStatistics: TfrmEmbDateStatistics
         object grdRoomClasses: TAdvStringGrid
           Left = 0
           Top = 0
-          Width = 298
+          Width = 513
           Height = 172
           Cursor = crDefault
           Margins.Left = 10
@@ -487,21 +487,15 @@ inherited frmEmbDateStatistics: TfrmEmbDateStatistics
   inherited psRoomerBase: TcxPropertiesStore
     Components = <
       item
-        Component = cpnlChart
+        Component = frmBaseRoomerForm.Owner
         Properties.Strings = (
-          'Collapsed')
-      end
-      item
-        Component = cpnlRoomClasses
-        Properties.Strings = (
-          'Collapsed')
-      end
-      item
-        Component = cpnlRoomtypes
-        Properties.Strings = (
-          'Collapsed')
+          'Height'
+          'Left'
+          'Top'
+          'Width'
+          'Position')
       end>
-    Left = 104
+    Left = 112
     Top = 8
   end
   inherited cxsrRoomerStyleRepository: TcxStyleRepository

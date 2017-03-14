@@ -42,12 +42,6 @@ object frmRptReservationsCust: TfrmRptReservationsCust
       SkinData.SkinSection = 'PAGECONTROL'
       object tabRoom: TsTabSheet
         Caption = 'Rooms'
-        SkinData.CustomColor = False
-        SkinData.CustomFont = False
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object grRooms: TcxGrid
           Left = 0
           Top = 44
@@ -593,7 +587,6 @@ object frmRptReservationsCust: TfrmRptReservationsCust
         ParentFont = False
         TabOrder = 0
         SkinData.SkinSection = 'GROUPBOX'
-        Checked = False
         object cbxMonth: TsComboBox
           Left = 15
           Top = 20
@@ -697,7 +690,6 @@ object frmRptReservationsCust: TfrmRptReservationsCust
         ParentFont = False
         TabOrder = 2
         SkinData.SkinSection = 'GROUPBOX'
-        Checked = False
         object dtDateFrom: TsDateEdit
           Left = 16
           Top = 20
@@ -716,7 +708,6 @@ object frmRptReservationsCust: TfrmRptReservationsCust
           TabOrder = 0
           Text = '  -  -    '
           OnChange = dtDateFromChange
-          CheckOnExit = True
           SkinData.SkinSection = 'EDIT'
           GlyphMode.Blend = 0
           GlyphMode.Grayed = False
@@ -739,7 +730,6 @@ object frmRptReservationsCust: TfrmRptReservationsCust
           TabOrder = 1
           Text = '  -  -    '
           OnChange = dtDateFromChange
-          CheckOnExit = True
           SkinData.SkinSection = 'EDIT'
           GlyphMode.Blend = 0
           GlyphMode.Grayed = False
@@ -769,7 +759,6 @@ object frmRptReservationsCust: TfrmRptReservationsCust
         Caption = 'Date range for..'
         TabOrder = 4
         SkinData.SkinSection = 'GROUPBOX'
-        Checked = False
         ItemIndex = 0
         Items.Strings = (
           'Reservation made'
@@ -803,7 +792,6 @@ object frmRptReservationsCust: TfrmRptReservationsCust
         ParentFont = False
         TabOrder = 6
         SkinData.SkinSection = 'GROUPBOX'
-        Checked = False
         object btnGetCustomer: TsSpeedButton
           Left = 104
           Top = 18

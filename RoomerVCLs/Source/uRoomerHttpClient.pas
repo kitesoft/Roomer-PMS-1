@@ -187,7 +187,7 @@ begin
       begin
         if E.StatusCode > 0 then
           Result := E.StatusCode
-      end
+      end;
       else
         raise;
     end;
@@ -214,7 +214,7 @@ begin
       begin
         if E.StatusCode > 0 then
           Result := E.StatusCode
-      end
+      end;
       else
         raise;
     end;

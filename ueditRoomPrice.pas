@@ -59,6 +59,7 @@ uses
   dxSkinOffice2007Silver, dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinValentine,
   dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, dxmdaset, cxCheckBox, cxCurrencyEdit, uCurrencyHandler
+  , uRoomerForm, dxPScxCommon, dxPScxGridLnk, cxPropertiesStore, Vcl.ComCtrls, sStatusBar
 
   ;
 
@@ -77,7 +78,7 @@ type
 
 
 type
-  TfrmEditRoomPrice = class(TForm)
+  TfrmEditRoomPrice = class(TfrmBaseRoomerForm)
     Panel1: TsPanel;
     _kbmRoomRates: TkbmMemTable;
     kbmRoomRatesDS: TDataSource;
@@ -141,9 +142,6 @@ type
     mRoomRatesDiscountAmount: TFloatField;
     mRoomRatesRentAmount: TFloatField;
     mRoomRatesNativeAmount: TFloatField;
-    labRecs: TsLabel;
-    procedure FormCreate(Sender: TObject);
-    procedure FormShow(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure edPcCodePropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
     procedure btnApplyRateClick(Sender: TObject);
@@ -155,7 +153,6 @@ type
     procedure sButton2Click(Sender: TObject);
     procedure btnSelectPriceCodeClick(Sender: TObject);
     procedure mRoomRatesBeforePost(DataSet: TDataSet);
-    procedure btnApplyRuleClick(Sender: TObject);
     procedure tvRoomRatesNativeAmountGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
       var AProperties: TcxCustomEditProperties);
     procedure tvRoomRatesRentAmountGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
@@ -165,6 +162,8 @@ type
     FCurrencyHandler: TCurrencyHandler;
     FData: recEditRoomPriceHolder;
     procedure SetData(const Value: recEditRoomPriceHolder);
+  protected
+    procedure DoUpdateControls; override;
   public
     { Public declarations }
     zAct  : TActTableAction;
@@ -175,8 +174,6 @@ type
 function editRoomPrice(act : TActTableAction; var theData : recEditRoomPriceHolder; var m_ : TdxMemData; var applyType  : integer) : boolean;
 procedure initEditRoomPriceHolder(var theData : recEditRoomPriceHolder );
 
-var
-  frmEditRoomPrice: TfrmEditRoomPrice;
 
 implementation
 
@@ -207,10 +204,12 @@ begin
   end;
 end;
 
-function editRoomPrice(act : TActTableAction; var theData : recEditRoomPriceHolder;var m_ : TdxMemData; var applyType : integer) : boolean;
+function editRoomPrice(act : TActTableAction; var theData : recEditRoomPriceHolder; var m_ : TdxMemData; var applyType : integer) : boolean;
+var
+  frmEditRoomPrice: TfrmEditRoomPrice;
 begin
   result := false;
-  frmEditRoomPrice := TfrmEditRoomPrice.Create(frmEditRoomPrice);
+  frmEditRoomPrice := TfrmEditRoomPrice.Create(nil);
   try
     frmEditRoomPrice.zData := theData;
     frmEditRoomPrice.zAct := act;
@@ -221,13 +220,9 @@ begin
     begin
       applyType := frmEditRoomPrice.ApplyType;
       theData := frmEditRoomPrice.zData;
-
-     // showmessage(floattostr(frmEditRoomPrice.mRoomRates['Rate']));
-
       if m_.Active then m_.Close;
       m_.Open;
       m_.LoadFromDataSet(frmEditRoomPrice.mRoomRates);
-//      aRate := m_.FieldByName('Rate').AsFloat;
       result := true;
     end
     else
@@ -235,7 +230,7 @@ begin
       initEditRoomPriceHolder(theData);
     end;
   finally
-    freeandnil(frmEditRoomPrice);
+    frmEditRoomPrice.Free;
   end;
 end;
 
@@ -449,11 +444,6 @@ begin
   end;
 end;
 
-procedure TfrmEditRoomPrice.btnApplyRuleClick(Sender: TObject);
-begin
-//
-end;
-
 procedure TfrmEditRoomPrice.btnOKClick(Sender: TObject);
 begin
   ApplyType := 1;
@@ -469,6 +459,23 @@ begin
   end;
 end;
 
+procedure TfrmEditRoomPrice.DoUpdateControls;
+begin
+  inherited;
+  labCurrency.caption  := zData.currency+' - rate '+floattostr(zData.currencyRate);
+  labRoom.Caption      := zData.room;
+  labRoomType.Caption  := zData.roomType;
+  labAudults.Caption   := inttostr(zData.guests);
+  labChildren.Caption  := inttostr(zData.childrenCount);
+  labInfants.Caption   := inttostr(zData.infantCount);
+
+  if not mRoomRates.eof then
+  begin
+    edPcCode.text := mRoomRates.FieldByName('PriceCode').AsString;
+    if mRoomRates.FieldByName('isPercentage').AsBoolean = false then cbxIsRoomResDiscountPrec.ItemIndex := 1; //
+  end;
+end;
+
 procedure TfrmEditRoomPrice.edPcCodePropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
 var
   theData : recPriceCodeHolder;
@@ -479,46 +486,10 @@ begin
   end;
 end;
 
-procedure TfrmEditRoomPrice.FormCreate(Sender: TObject);
-begin
-  RoomerLanguage.TranslateThisForm(self);
-     glb.PerformAuthenticationAssertion(self);
-  PlaceFormOnVisibleMonitor(self);
-  //**
-  applyType := 0;
-end;
-
 procedure TfrmEditRoomPrice.FormDestroy(Sender: TObject);
 begin
   FCurrencyHandler.Free;
 end;
-
-procedure TfrmEditRoomPrice.FormShow(Sender: TObject);
-var
-  recCount : integer;
-begin
-  labCurrency.caption  := zData.currency+' - rate '+floattostr(zData.currencyRate);
-  labRoom.Caption      := zData.room;
-  labRoomType.Caption  := zData.roomType;
-  labAudults.Caption   := inttostr(zData.guests);
-  labChildren.Caption  := inttostr(zData.childrenCount);
-  labInfants.Caption   := inttostr(zData.infantCount);
-
-  recCount := mRoomRates.RecordCount;
-  labRecs.caption := inttostr(recCount);
-
-  cbxIsRoomResDiscountPrec.Items.Add(zData.currency);
-  cbxIsRoomResDiscountPrec.ItemIndex := 0;
-  mRoomRates.First;
-  if not mRoomRates.eof then
-  begin
-    edPcCode.text := mRoomRates.FieldByName('PriceCode').AsString;
-    if mRoomRates.FieldByName('isPercentage').AsBoolean = false then cbxIsRoomResDiscountPrec.ItemIndex := 1; //
-  end;
-end;
-
-
-
 
 procedure TfrmEditRoomPrice._kbmRoomRatesBeforePost(DataSet: TDataSet);
 var
@@ -579,10 +550,18 @@ begin
     FData.currencyRate := 1.0;
   end;
 
-  if Assigned(FCurrencyHandler) then
-    FCurrencyHandler.Free;
-
+  FCurrencyHandler.Free;
   FCurrencyHandler := TCurrencyHandler.Create(FData.currency);
+
+  with cbxIsRoomResDiscountPrec do
+  begin
+    Clear;
+    ItemS.Add('%');
+    Items.Add(zData.currency);
+    ItemIndex := 0;
+  end;
+
+  UpdateControls;
 end;
 
 procedure TfrmEditRoomPrice.tvRoomRatesNativeAmountGetProperties(Sender: TcxCustomGridTableItem;
@@ -594,7 +573,8 @@ end;
 procedure TfrmEditRoomPrice.tvRoomRatesRentAmountGetProperties(Sender: TcxCustomGridTableItem;
   ARecord: TcxCustomGridRecord; var AProperties: TcxCustomEditProperties);
 begin
-  aProperties := FCurrencyHandler.GetcxEditPropertiesKeepEvents(aProperties);
+  if not aRecord.Values[tvRoomRatesisPercentage.Index] then
+    aProperties := FCurrencyHandler.GetcxEditPropertiesKeepEvents(aProperties);
 end;
 
 end.

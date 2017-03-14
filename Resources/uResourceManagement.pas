@@ -225,30 +225,26 @@ var resultURI : String;
     success : Boolean;
 begin
   result := '';
-  try
 //    onlyFilename := ExtractFilename(filename);
-    filename := getNewFilenameIfNeeded(filename, ResourceParameters);
-    resultURI := d.roomerMainDataSet.PostFileOpenApi('staticresources',
-          filename,
-          KeyString,
-          '',  // content type: 'image/' + ExtractFileExt(filename),
-          ACCESS_RESTRICTED = Access);
-    parseResourceXml(resultURI, path, resFilename, error, success);
+  filename := getNewFilenameIfNeeded(filename, ResourceParameters);
+  resultURI := d.roomerMainDataSet.PostFileOpenApi('staticresources',
+        filename,
+        KeyString,
+        '',  // content type: 'image/' + ExtractFileExt(filename),
+        ACCESS_RESTRICTED = Access);
+  parseResourceXml(resultURI, path, resFilename, error, success);
 
-    if not path.ToLower.Contains(d.roomerMainDataSet.hotelId.ToLower) then
-      raise Exception.Create('Resource is stored in wrong bucket: ' + path);
+  if not path.ToLower.Contains(d.roomerMainDataSet.hotelId.ToLower) then
+    raise Exception.Create('Resource is stored in wrong bucket: ' + path);
 
-    if success then
-      d.roomerMainDataSet.SystemAddStaticResource(KeyString,
-          onlyFilename,
-          path,
-          Access)
-    else
-      raise Exception.Create('Unable to upload file: ' + error);
-    result := path;
-  except
-    result := '';
-  end;
+  if success then
+    d.roomerMainDataSet.SystemAddStaticResource(KeyString,
+        onlyFilename,
+        path,
+        Access)
+  else
+    raise Exception.CreateFmt('Unable to upload file to [%s]: %s ', [path, error]);
+  result := path;
 end;
 
 function DownloadResource(sourceFilename, destFilename : String) : Boolean;

@@ -27,7 +27,7 @@ type
     FItemsOnInvoice: boolean;
     FDiscount: Double;
     FPMInfo: String;
-    FPercentage: boolean;
+    FIsPercentage: boolean;
     FPriceType: String;
     FCurrency: String;
     FNumGuests: integer;
@@ -77,7 +77,7 @@ type
     property Discount: Double read FDiscount write FDiscount;
     property Information: String read FInformation write FInformation;
     property PMInfo: String read FPMInfo write FPMInfo;
-    property Percentage: boolean read FPercentage write FPercentage;
+    property IsPercentage: boolean read FIsPercentage write FIsPercentage;
     property PriceType: String read FPriceType write FPriceType;
     property Currency: String read FCurrency write FCurrency;
     property numGuests: integer read FNumGuests write FNumGuests;
@@ -125,7 +125,7 @@ begin
   FisNoRoom := isNoRoom;
   FDate := Date;
   FCustomerName := CustomerName;
-  FPercentage := Percentage;
+  FIsPercentage := Percentage;
 
   FInformation := Information;
   FFax := Fax;

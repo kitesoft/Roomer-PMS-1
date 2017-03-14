@@ -56,12 +56,13 @@ type
   end;
 
   // Execute a sql statement or REST call in a separate thread, on termination of that thread the
-  // supplied TNotifyEvent is called.
-  TGetThreadedData = class(TObject)
+  // result is assigned to RoomerDataset and the supplied TNotifyEvent is called.
+  // This class should not be used if the sql results is not needed or POST or PUT calls are needed
+  TGetSQLDataThreaded = class(TObject)
   private
     FRoomerDataSet: TRoomerDataSet;
     FEventHandler: TNotifyEvent;
-    procedure ThreadTerminate(Sender: TObject);
+    procedure ThreadTerminateAfterGet(Sender: TObject);
     procedure Cancel;
   protected
     dbThread : TDBThread;
@@ -71,10 +72,25 @@ type
 
     // Execute SQL statement, on completion the result is in Dataset
     procedure Execute(const sql: String; aOnCompletionHandler: TNotifyEvent);
+    property RoomerDataSet: TRoomerDataSet read FRoomerDataSet;
+  end;
+
+  // Execute a POST or PUT REST call in a separate thread, on termination of that thread the
+  // OnCompletion event is executed. If no CompletionEvent is provided then the thread is terminated and the result is discarded
+  TPutOrPostDataThreaded = class(TObject)
+  private
+    FEventHandler: TNotifyEvent;
+    procedure Cancel;
+    procedure ThreadTerminateAfterPost(Sender: TObject);
+  protected
+    dbThread : TDBThread;
+  public
+    constructor Create;
+    destructor Destroy; override;
+
+    // Execute REST Call
     procedure Put(const url, data: String; aOnCompletionHandler: TNotifyEvent);
     procedure Post(const url, data: String; aOnCompletionHandler: TNotifyEvent);
-
-    property RoomerDataSet: TRoomerDataSet read FRoomerDataSet;
   end;
 
 implementation
@@ -88,7 +104,7 @@ uses
   Dialogs;
 
 
-procedure TGetThreadedData.Cancel;
+procedure TGetSQLDataThreaded.Cancel;
 begin
 //  try
 //    if assigned(dbThread) then
@@ -102,7 +118,7 @@ begin
 //  except end;
 end;
 
-procedure TGetThreadedData.Execute(const sql: String; aOnCompletionHandler: TNotifyEvent);
+procedure TGetSQLDataThreaded.Execute(const sql: String; aOnCompletionHandler: TNotifyEvent);
 begin
   FEventHandler := aOnCompletionHandler;
   dbThread := TDBThread.Create(sql, nil);
@@ -110,47 +126,23 @@ begin
   begin
     FOperationType := OT_EXECUTE;
     FreeOnTerminate := true;
-    OnTerminate := ThreadTerminate;
+    OnTerminate := ThreadTerminateAfterGet;
     Start;
   end;
 end;
 
-procedure TGetThreadedData.Post(const url, data: String; aOnCompletionHandler: TNotifyEvent);
-begin
-  FEventHandler := aOnCompletionHandler;
-  dbThread := TDBThread.Create(url, data, OT_POST);
-  With dbThread do
-  begin
-    FreeOnTerminate := false;
-    OnTerminate := ThreadTerminate;
-    Start;
-  end;
-end;
-
-procedure TGetThreadedData.Put(const url, data: String; aOnCompletionHandler: TNotifyEvent);
-begin
-  FEventHandler := aOnCompletionHandler;
-  dbThread := TDBThread.Create(url, data, OT_PUT);
-  With dbThread do
-  begin
-    FreeOnTerminate := true;
-    OnTerminate := ThreadTerminate;
-    Start;
-  end;
-end;
-
-procedure TGetThreadedData.ThreadTerminate(Sender: TObject);
+procedure TGetSQLDataThreaded.ThreadTerminateAfterGet(Sender: TObject);
 begin
   try
-  FRoomerDataSet.RecordSet := TDBThread(Sender).RecordSet;
-//  if Assigned(FRoomerDataSet) then
-//    try FRoomerDataSet.LogoutUnaffected; except end;
-  if assigned(FEventHandler) then
-    FEventHandler(self);
-  except end;
+    if assigned(FROomerDataset) then
+      FRoomerDataSet.RecordSet := TDBThread(Sender).RecordSet;
+    if assigned(FEventHandler) then
+      FEventHandler(self);
+  except
+  end;
 end;
 
-constructor TGetThreadedData.Create;
+constructor TGetSQLDataThreaded.Create;
 begin
   inherited;
 {$IFDEF rmMONITOR_LEAKAGE}
@@ -160,7 +152,7 @@ begin
   FRoomerDataSet.RoomerDataSet := nil;
 end;
 
-destructor TGetThreadedData.Destroy;
+destructor TGetSQLDataThreaded.Destroy;
 begin
   Cancel;
   FRoomerDataSet.Free;
@@ -208,10 +200,10 @@ begin
         FRoomerDataSet.Free;
       end;
     except
-//      {ifdef DEBUG}
-//      on E: Exception do
-//        MessageDlg(Format('Exception occured when executing thread [%s]'+ #10 + ' Messsge [%s]', [classname, e.Message]), mtError, [mbOK], 0);
-//      {endif}
+      {ifdef DEBUG}
+      on E: Exception do
+        MessageDlg(Format('Exception occured when executing thread [%s]'+ #10 + ' Messsge [%s]', [classname, e.Message]), mtError, [mbOK], 0);
+      {endif}
     end;
   finally
     CoUnInitialize;
@@ -250,6 +242,64 @@ begin
   FRoomerDataSet.CommandText := aCommand;
   FRoomerDataSet.Open(false, false, true);
   FRecordSet := FRoomerDataSet.RecordSet; // keep recordset
+end;
+
+{ TPostThreadedData }
+
+procedure TPutOrPostDataThreaded.Cancel;
+begin
+
+end;
+
+constructor TPutOrPostDataThreaded.Create;
+begin
+  inherited;
+{$IFDEF rmMONITOR_LEAKAGE}
+  ReportMemoryLeaksOnShutDown := IsDebuggerPresent();
+{$ENDIF}
+end;
+
+destructor TPutOrPostDataThreaded.Destroy;
+begin
+  Cancel;
+  inherited;
+end;
+
+procedure TPutOrPostDataThreaded.Post(const url, data: String; aOnCompletionHandler: TNotifyEvent);
+begin
+  FEventHandler := aOnCompletionHandler;
+  dbThread := TDBThread.Create(url, data, OT_POST);
+  With dbThread do
+  begin
+    FreeOnTerminate := not Assigned(FEventHandler);
+    if assigned(FEventHandler) then
+      OnTerminate := ThreadTerminateAfterPost
+    else
+      OnTerminate := nil;
+    Start;
+  end;
+end;
+
+procedure TPutOrPostDataThreaded.Put(const url, data: String; aOnCompletionHandler: TNotifyEvent);
+begin
+  FEventHandler := aOnCompletionHandler;
+  dbThread := TDBThread.Create(url, data, OT_PUT);
+  With dbThread do
+  begin
+    FreeOnTerminate := not Assigned(FEventHandler);
+    if assigned(FEventHandler) then
+      OnTerminate := ThreadTerminateAfterPost
+    else
+      OnTerminate := nil;
+    Start;
+  end;
+
+end;
+
+procedure TPutOrPostDataThreaded.ThreadTerminateAfterPost(Sender: TObject);
+begin
+  if assigned(FEventHandler) then
+    FEventHandler(Self);
 end;
 
 end.
