@@ -151,7 +151,6 @@ type
     FID: Integer;
     FPayTypeCode: string;
     FInvoiceIndex: integer;
-    FLineID: integer;
   protected
     procedure SetPropertiesFromXMLNode(const aNode: PXMLNode); override;
     procedure AddPropertiesToXMLNode(const aNode: PXMLNode); override;

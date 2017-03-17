@@ -1,0 +1,81 @@
+<InvoiceResponse xmlns="http://www.promoir.nl/roomer/booking/2014/02" xmlns:ns2="http://roomer.promoir.nl/datamodel/canonical/datastructures/2014/01/" xmlns:ns3="http://roomer.promoir.nl/datamodel/canonical/basetypes/2014/01/" xmlns:ns4="http://roomer.promoir.nl/datamodel/canonical/simpletypes/2014/01/" xmlns:ns5="http://roomer.promoir.nl/datamodel/financial/modelobjects/2014/01/" xmlns:ns6="http://roomer.promoir.nl/datamodel/booking/modelobjects/2014/01/" xmlns:ns7="http://roomer.promoir.nl/datamodel/payment/basetypes/2014/01/" xmlns:ns8="http://roomer.promoir.nl/datamodel/housing/modelobjects/2014/01/" xmlns:ns9="http://roomer.promoir.nl/datamodel/payment/modelobjects/2014/01/" xmlns:ns10="http://roomer.promoir.nl/datamodel/inventory/modelobjects/2015/11/" xmlns:ns11="http://www.promoir.nl/roomer/application/registration/2014/04" xmlns:ns12="http://www.promoir.nl/roomer/static/resources/2014/04" xmlns:ns13="http://www.promoir.nl/roomer/inventory/2014/08" xmlns:ns14="http://www.promoir.nl/roomer/configuration/2015/12" xmlns:ns15="http://www.promoir.nl/roomer/pos/2014/03" xmlns:ns16="http://www.promoir.nl/roomer/financials/2016/08" xmlns:ns17="http://www.promoir.nl/roomer/services/hotel/2017/01">
+   <invoice id="inv399796" reservation="2589" roomReservation="21577" index="0" type="CREDIT" state="OPEN" date="2017-02-06+01:00" printedBy="bs">
+      <ns5:LineItem index="0" creatorId="ROOMER" creationType="ROOMER_SYSTEM">
+         <ns5:SalesItem status="UNPAID" applicationDate="2017-02-06+01:00" id="it280917" description="Room 105, 06-02 - 07-02" productId="ROOM" number="1.0" purchaseDateTime="2017-02-06T00:00:00.000+01:00">
+            <ns5:unitPrice currency="EUR" amount="132"/>
+            <ns5:convertedUnitPrice currency="EUR" amount="132.0"/>
+            <ns5:conversionRate from="EUR" to="EUR" factor="1.0" date="2017-03-17T16:21:28.479+01:00"/>
+            <ns5:totalPrice currency="EUR" amount="132"/>
+            <ns5:PaymentUnitPrice currency="EUR" amount="132.0"/>
+            <ns5:PaymentConversionRate from="EUR" to="EUR" factor="1" date="2017-03-17T16:21:28.479+01:00"/>
+            <ns5:TotalPriceGross currency="EUR" amount="124.528302"/>
+            <ns5:TotalConvertedPriceGross currency="EUR" amount="124.5283019"/>
+            <ns5:TotalConvertedPriceNet currency="EUR" amount="132.0"/>
+            <ns5:TotalPaymentPriceGross currency="EUR" amount="124.5283019"/>
+            <ns5:TotalPaymentPriceNet currency="EUR" amount="132.0"/>
+            <ns5:ApplicableTax description="VAT 6 loing descriptionasda" currency="EUR" amount="7.4716981"/>
+         </ns5:SalesItem>
+      </ns5:LineItem>
+      <ns5:LineItem index="3" creatorId="ROOMER" creationType="ROOMER_SYSTEM">
+         <ns5:SalesItem status="UNPAID" applicationDate="2017-02-06+01:00" id="it76207" description="Glas Chardonnay" productId="1015" number="1.0" purchaseDateTime="2017-02-06T00:00:00.000+01:00">
+            <ns5:unitPrice currency="EUR" amount="2"/>
+            <ns5:convertedUnitPrice currency="EUR" amount="2.0"/>
+            <ns5:conversionRate from="EUR" to="EUR" factor="1.0" date="2017-03-17T16:21:28.480+01:00"/>
+            <ns5:totalPrice currency="EUR" amount="2"/>
+            <ns5:PaymentUnitPrice currency="EUR" amount="2.0"/>
+            <ns5:PaymentConversionRate from="EUR" to="EUR" factor="1" date="2017-03-17T16:21:28.480+01:00"/>
+            <ns5:TotalPriceGross currency="EUR" amount="1.8867925"/>
+            <ns5:TotalConvertedPriceGross currency="EUR" amount="1.8867925"/>
+            <ns5:TotalConvertedPriceNet currency="EUR" amount="2.0"/>
+            <ns5:TotalPaymentPriceGross currency="EUR" amount="1.8867925"/>
+            <ns5:TotalPaymentPriceNet currency="EUR" amount="2.0"/>
+            <ns5:ApplicableTax description="vat2" currency="EUR" amount="0.1132075"/>
+         </ns5:SalesItem>
+      </ns5:LineItem>
+      <ns5:LineItem index="4" creatorId="ROOMER" creationType="ROOMER_SYSTEM">
+         <ns5:SalesItem status="UNPAID" applicationDate="2017-02-06+01:00" id="it76208" description="Caffe latte" productId="10227" number="1.0" purchaseDateTime="2017-02-06T00:00:00.000+01:00">
+            <ns5:unitPrice currency="EUR" amount="21"/>
+            <ns5:convertedUnitPrice currency="EUR" amount="21.0"/>
+            <ns5:conversionRate from="EUR" to="EUR" factor="1.0" date="2017-03-17T16:21:28.480+01:00"/>
+            <ns5:totalPrice currency="EUR" amount="21"/>
+            <ns5:PaymentUnitPrice currency="EUR" amount="21.0"/>
+            <ns5:PaymentConversionRate from="EUR" to="EUR" factor="1" date="2017-03-17T16:21:28.480+01:00"/>
+            <ns5:TotalPriceGross currency="EUR" amount="16.6666667"/>
+            <ns5:TotalConvertedPriceGross currency="EUR" amount="16.6666667"/>
+            <ns5:TotalConvertedPriceNet currency="EUR" amount="21.0"/>
+            <ns5:TotalPaymentPriceGross currency="EUR" amount="16.6666667"/>
+            <ns5:TotalPaymentPriceNet currency="EUR" amount="21.0"/>
+            <ns5:ApplicableTax description="Ãštskattur v/25,5%" currency="EUR" amount="4.3333333"/>
+         </ns5:SalesItem>
+      </ns5:LineItem>
+      <ns5:LineItem index="5" creatorId="ROOMER" creationType="ROOMER_SYSTEM">
+         <ns5:SalesItem status="UNPAID" applicationDate="2017-02-06+01:00" id="it76209" description="Lasergame Extra (vanaf 19:00/w" productId="10103" number="1.0" purchaseDateTime="2017-02-06T00:00:00.000+01:00">
+            <ns5:unitPrice currency="EUR" amount="157"/>
+            <ns5:convertedUnitPrice currency="EUR" amount="157.0"/>
+            <ns5:conversionRate from="EUR" to="EUR" factor="1.0" date="2017-03-17T16:21:28.480+01:00"/>
+            <ns5:totalPrice currency="EUR" amount="157"/>
+            <ns5:PaymentUnitPrice currency="EUR" amount="157.0"/>
+            <ns5:PaymentConversionRate from="EUR" to="EUR" factor="1" date="2017-03-17T16:21:28.480+01:00"/>
+            <ns5:TotalPriceGross currency="EUR" amount="129.752066"/>
+            <ns5:TotalConvertedPriceGross currency="EUR" amount="129.7520661"/>
+            <ns5:TotalConvertedPriceNet currency="EUR" amount="157.0"/>
+            <ns5:TotalPaymentPriceGross currency="EUR" amount="129.7520661"/>
+            <ns5:TotalPaymentPriceNet currency="EUR" amount="157.0"/>
+            <ns5:ApplicableTax description="Dutch high VAT percentage" currency="EUR" amount="27.2479339"/>
+         </ns5:SalesItem>
+      </ns5:LineItem>
+      <ns5:CustomerData customer="0000000066" customerReference=""/>
+      <ns5:GuestData>
+         <ns5:Name>Booking Button</ns5:Name>
+         <ns5:Address>
+            <ns3:Address/>
+            <ns3:PostalCode/>
+            <ns3:Locality/>
+         </ns5:Address>
+      </ns5:GuestData>
+      <ns5:CurrencyData>
+         <ns5:InvoiceCurrency>EUR</ns5:InvoiceCurrency>
+         <ns5:ConversionFromHotelCurrency from="EUR" to="EUR" factor="1.0" date="2017-03-17T16:21:18.047+01:00"/>
+      </ns5:CurrencyData>
+   </invoice>
+</InvoiceResponse>

@@ -20,6 +20,35 @@ type
 
 {$SCOPEDENUMS ON}
 
+{$REGION 'RemarksType xsd definition'}
+  //	<complexType name="RemarksType">
+  //		<annotation>
+  //			<documentation>This complextype describes the list of remarks that is included in different domain types within
+  //				Roomer.
+  //			</documentation>
+  //		</annotation>
+  //		<sequence>
+  //			<element name="remark" type="string" minOccurs="1" maxOccurs="unbounded" />
+  //		</sequence>
+  //	</complexType>
+{$ENDREGION}
+  TxsdRemarksType = class abstract(TxsdBaseObject)
+  private const
+    cChildNodeName = 'remark';
+  private
+    FRemarksList: TList<string>;
+  public
+    constructor Create;
+    destructor Destroy; override;
+
+    procedure Clear;
+    procedure SetPropertiesFromXMLNode(const aNode: PXMLNode); override;
+    procedure AddPropertiesToXMLNode(const aNode: PXMLNode); override;
+
+  published
+    property RemarksList: TList<string> read FRemarksList write FRemarksList;
+  end;
+
 {$REGION 'SimplifiedAddressType xsd definition'}
   //<complexType name="SimplifiedAddressType">
   //		<sequence>
@@ -59,11 +88,13 @@ type
   //		<attribute name="amount" type="decimal" use="required" />
   //	</attributeGroup>
 {$ENDREGION}
-
   TxsdAmountGroup = class(TxsdBaseObject)
   private
     FCurrency: TxsdISO4217CurrencyCode;
     FAmount: double;
+  public
+    procedure SetPropertiesFromXMLNode(const aNode: PXMLNode); override;
+    procedure AddPropertiesToXMLNode(const aNode: PXMLNode); override;
   published
     property Currency: TxsdISO4217CurrencyCode read FCurrency write FCurrency;
     property Amount: double read FAmount write FAmount;
@@ -72,6 +103,8 @@ type
 implementation
 
 { TxsdSimplifiedAddressType }
+
+uses uExceptionUtils, XmlUtils;
 
 procedure TxsdSimplifiedAddressType.AddPropertiesToXMLNode(const aNode: PXMLNode);
 begin
@@ -98,6 +131,55 @@ begin
     FRegion := lNodeList.GetFirst.Text;
   if aNode.SelectNodesNS(GetNameSpaceURI, 'Country', lNodeList, 1) then
     FCountry := TxsdISO31661alpha2CountryCode.FromString(lNodeList.GetFirst.Text);
+end;
+
+{ TxsdRemarksType }
+
+procedure TxsdRemarksType.AddPropertiesToXMLNode(const aNode: PXMLNode);
+begin
+  inherited;
+  RaiseMethodNotImplementedException;
+end;
+
+procedure TxsdRemarksType.Clear;
+begin
+  FRemarksList.Clear;
+end;
+
+constructor TxsdRemarksType.Create;
+begin
+  FRemarksList := TList<string>.Create;
+end;
+
+destructor TxsdRemarksType.Destroy;
+begin
+  inherited;
+  FRemarksList.Free;
+end;
+
+procedure TxsdRemarksType.SetPropertiesFromXMLNode(const aNode: PXMLNode);
+var
+  lCHildNode: PXMLNode;
+begin
+  inherited;
+  for lChildNode in aNode.ChildNodes do
+    if lChildNode.NodeName.Equals(cChildNodeName) then
+      FRemarksList.Add(lChildNode.Text);
+end;
+
+{ TxsdAmountGroup }
+
+procedure TxsdAmountGroup.AddPropertiesToXMLNode(const aNode: PXMLNode);
+begin
+  inherited;
+  RaiseMethodNotImplementedException;
+end;
+
+procedure TxsdAmountGroup.SetPropertiesFromXMLNode(const aNode: PXMLNode);
+begin
+  inherited;
+  FCurrency := TxsdISO4217CurrencyCode.FromString(aNOde.Attributes['currency']);
+  FAmount := XMLToFloat(aNode.Attributes['amount']);
 end;
 
 end.

@@ -12,7 +12,7 @@ uses
    ;
 
 type
-  EXMLDocException = class(Exception);
+  ERoomerSchemaException = class(Exception);
 
   TxsdBaseObject = class(TPersistent)
   private
@@ -33,6 +33,8 @@ type
 
     property IsDirty: boolean read FIsDirty;
   end;
+
+  TxsdBaseObjectClass = class of TxsdBaseObject;
 
 
   TxsdBaseObjectList<T: TxsdBaseObject, constructor> = class(TObjectList<T>)
@@ -65,7 +67,7 @@ begin
   xmlDoc := TXMLDocument.Create;
   xmlDoc.LoadFromXML(aXML);
   if assigned(xmlDoc.parseError) then
-    raise EXMLDocException.Create('XML Load error:' + xmlDoc.parseError.reason);
+    raise ERoomerSchemaException.Create('XML Load error:' + xmlDoc.parseError.reason);
 
   if GetNodeName.IsEmpty or GetNameSpaceURI.IsEmpty then
     SetPropertiesFromXMLNode(xmldoc.DocumentElement)
@@ -170,6 +172,7 @@ var
 begin
   onChanged.Enabled := false;
   try
+    Clear;
     if aNode.SelectNodesNS(T.GetNameSpaceURI, T.GetNodeName, lNodeList) then
       for lNode in lNodeList do
       begin

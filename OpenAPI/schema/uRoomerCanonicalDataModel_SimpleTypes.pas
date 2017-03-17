@@ -466,13 +466,12 @@ implementation
 { TxsdISO31661alpha2CountryCodeHelper }
 
 uses
-  uUtils
-  , TypInfo
+  TypInfo
   ;
 
 function TxsdISO31661alpha2CountryCodeHelper.asString: String;
 begin
-  Result := Copy(GetEnumAsString(TypeInfo(TxsdISO31661alpha2CountryCode), ord(Self)), 1, 2);
+  Result := Copy(GetEnumName(TypeInfo(TxsdISO31661alpha2CountryCode), ord(Self)), 1, 2);
 end;
 
 class function TxsdISO31661alpha2CountryCodeHelper.FromString(const aString: string): TxsdISO31661alpha2CountryCode;
@@ -490,7 +489,7 @@ end;
 
 function TxsdISO4217CurrencyCodeHelper.AsString: String;
 begin
-  Result := Copy(GetEnumAsString(TypeInfo(TxsdISO4217CurrencyCode), ord(Self)), 1, 3);
+  Result := Copy(GetEnumName(TypeInfo(TxsdISO4217CurrencyCode), ord(Self)), 1, 3);
 end;
 
 class function TxsdISO4217CurrencyCodeHelper.FromString(const aString: string): TxsdISO4217CurrencyCode;

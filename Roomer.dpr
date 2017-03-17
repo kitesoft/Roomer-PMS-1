@@ -274,19 +274,14 @@ uses
   uSqlDefinitions in 'Data\uSqlDefinitions.pas',
   uRoomerVersionInfo in 'RoomerUtils\uRoomerVersionInfo.pas',
   uFrmBusyMessage in 'Dialogs\uFrmBusyMessage.pas' {frmBusyMessage},
-  uRoomerSchema in 'OpenAPI\schema\uRoomerSchema.pas',
   RoomerConfigurationItemsCommunicationModel_RequestsResponses in 'OpenAPI\schema\RoomerConfigurationItemsCommunicationModel_RequestsResponses.pas',
   uConfigurationItemsAPICaller in 'OpenAPI\uConfigurationItemsAPICaller.pas',
-  uRoomerIDList in 'RoomerVCLs\Source\uRoomerIDList.pas';
-  uFrmBusyMessage in 'Dialogs\uFrmBusyMessage.pas' {frmBusyMessage},
+  uRoomerIDList in 'RoomerVCLs\Source\uRoomerIDList.pas',
   RoomerFinancialDataModel_ModelObjects in 'OpenAPI\schema\RoomerFinancialDataModel_ModelObjects.pas',
   uRoomerCanonicalDataModel_BaseTypes in 'OpenAPI\schema\uRoomerCanonicalDataModel_BaseTypes.pas',
   uRoomerCanonicalDataModel_SimpleTypes in 'OpenAPI\schema\uRoomerCanonicalDataModel_SimpleTypes.pas',
   uRunningTabModel in 'Invoice\uRunningTabModel.pas',
-  uRoomerVersionInfo in 'RoomerUtils\uRoomerVersionInfo.pas';
-
-uRunningTabModel in 'Invoice\uRunningTabModel.pas',
-  uRoomerVersionInfo in 'RoomerUtils\uRoomerVersionInfo.pas';
+  RoomerBookingCommunicationModel_RequestsResponses in 'OpenAPI\schema\RoomerBookingCommunicationModel_RequestsResponses.pas';
 
 {$R *.RES}
 
