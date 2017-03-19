@@ -4444,6 +4444,7 @@ begin
 
     except
       // in theory not reachable but when the rollback causes an exception
+      lSucceeded := False;
       d.roomerMainDataSet.SystemRollbackTransaction;
       raise;
     end;

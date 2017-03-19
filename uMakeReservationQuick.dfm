@@ -23,7 +23,7 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
     Top = 0
     Width = 1128
     Height = 572
-    ActivePage = tabRoomRates
+    ActivePage = taReservation
     Align = alClient
     TabOrder = 0
     OnChange = pgcMainChange
@@ -388,7 +388,7 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
               Left = 459
               Top = 19
               Width = 20
-              Height = 16
+              Height = 20
               Margins.Left = 0
               Margins.Top = 0
               Margins.Right = 0
@@ -1142,8 +1142,8 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                 object chkContactIsGuest: TsCheckBox
                   Left = 18
                   Top = 19
-                  Width = 106
-                  Height = 17
+                  Width = 98
+                  Height = 20
                   Caption = 'Contact is guest'
                   Checked = True
                   State = cbChecked
@@ -1204,8 +1204,8 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                 object chkSendConfirmation: TsCheckBox
                   Left = 397
                   Top = 219
-                  Width = 156
-                  Height = 17
+                  Width = 148
+                  Height = 20
                   Caption = 'Send confirmation by email'
                   Enabled = False
                   TabOrder = 8
@@ -1239,8 +1239,8 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                 object cbxAddToGuestProfiles: TsCheckBox
                   Left = 149
                   Top = 61
-                  Width = 128
-                  Height = 17
+                  Width = 120
+                  Height = 20
                   Caption = 'Add to guest profiles'
                   TabOrder = 10
                   Visible = False
@@ -1415,6 +1415,10 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
             Caption = 'Customer Details'
             ImageIndex = 1
             TabVisible = False
+            ExplicitLeft = 0
+            ExplicitTop = 0
+            ExplicitWidth = 0
+            ExplicitHeight = 0
             object clabTel2: TsLabel
               Left = 204
               Top = 125
@@ -1703,6 +1707,10 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
     object tabSelectType: TsTabSheet
       Caption = 'Select Types'
       ImageIndex = 1
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object panSelectTypesTop: TsPanel
         Left = 0
         Top = 0
@@ -1974,6 +1982,10 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
     object tabSelectRooms: TsTabSheet
       Caption = 'Select Rooms'
       ImageIndex = 2
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object panSelectRoomsTop: TsPanel
         Left = 0
         Top = 0
@@ -2502,8 +2514,8 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
           object chkAutoUpdateNullPrice: TsCheckBox
             Left = 7
             Top = 18
-            Width = 134
-            Height = 17
+            Width = 126
+            Height = 20
             Caption = 'Auto update Null Price'
             Checked = True
             State = cbChecked
@@ -2590,8 +2602,8 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
               object cbxBreakfast: TsCheckBox
                 Left = 29
                 Top = 30
-                Width = 74
-                Height = 17
+                Width = 66
+                Height = 20
                 Caption = 'Breakfast'
                 TabOrder = 0
                 OnClick = cbxBreakfastClick
@@ -2603,7 +2615,7 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                 Left = 129
                 Top = 32
                 Width = 20
-                Height = 16
+                Height = 20
                 TabOrder = 1
                 OnClick = cbxBreakfastClick
                 SkinData.SkinSection = 'CHECKBOX'
@@ -2631,7 +2643,7 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                 Left = 129
                 Top = 59
                 Width = 20
-                Height = 16
+                Height = 20
                 TabOrder = 4
                 OnClick = cbxBreakfastClick
                 SkinData.SkinSection = 'CHECKBOX'
@@ -2641,8 +2653,8 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
               object cbxExtraBed: TsCheckBox
                 Left = 29
                 Top = 57
-                Width = 75
-                Height = 17
+                Width = 67
+                Height = 20
                 Caption = 'Extra bed'
                 TabOrder = 5
                 OnClick = cbxBreakfastClick
@@ -2671,7 +2683,7 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                 Left = 351
                 Top = 32
                 Width = 20
-                Height = 16
+                Height = 20
                 TabOrder = 3
                 OnClick = cbxBreakfastClick
                 SkinData.SkinSection = 'CHECKBOX'
@@ -2682,7 +2694,7 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                 Left = 351
                 Top = 59
                 Width = 20
-                Height = 16
+                Height = 20
                 TabOrder = 7
                 OnClick = cbxBreakfastClick
                 SkinData.SkinSection = 'CHECKBOX'
@@ -2693,6 +2705,10 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
           end
           object Alerts: TsTabSheet
             Caption = 'Alerts'
+            ExplicitLeft = 0
+            ExplicitTop = 0
+            ExplicitWidth = 0
+            ExplicitHeight = 0
           end
         end
       end
@@ -2704,7 +2720,6 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
         Align = alClient
         TabOrder = 0
         LookAndFeel.NativeStyle = False
-        ExplicitTop = 139
         object tvRoomRes: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           Navigator.InfoPanel.Visible = True

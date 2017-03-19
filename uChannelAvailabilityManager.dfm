@@ -992,7 +992,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
           object pnlSingleUseRateChange: TsPanel
             AlignWithMargins = True
             Left = 1
-            Top = 31
+            Top = 33
             Width = 423
             Height = 21
             Margins.Left = 0
@@ -1001,6 +1001,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
             AutoSize = True
             BevelOuter = bvNone
             TabOrder = 1
+            ExplicitTop = 31
             object lblSingleUsePrice: TsLabel
               Left = 13
               Top = 4
@@ -1068,7 +1069,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
           object pnlBulkChangesAvail: TsPanel
             AlignWithMargins = True
             Left = 1
-            Top = 58
+            Top = 60
             Width = 423
             Height = 21
             Margins.Left = 0
@@ -1077,6 +1078,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
             AutoSize = True
             BevelOuter = bvNone
             TabOrder = 2
+            ExplicitTop = 58
             object lblDCAvailability: TsLabel
               Left = 13
               Top = 3
@@ -1272,6 +1274,10 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
           Margins.Right = 2
           Margins.Bottom = 2
           Caption = 'Availabilities'
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object Panel2: TsPanel
             Left = 0
             Top = 522
@@ -1552,6 +1558,10 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
           Margins.Right = 2
           Margins.Bottom = 2
           Caption = 'Rates'
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object rateGrid: TAdvStringGrid
             Left = 0
             Top = 54

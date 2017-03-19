@@ -174,7 +174,6 @@ object frmAllotmentToRes: TfrmAllotmentToRes
           SkinData.SkinSection = 'CHECKBOX'
           ImgChecked = 0
           ImgUnchecked = 0
-          ExplicitTop = 81
         end
         object chkNumGuests: TsCheckBox
           AlignWithMargins = True
