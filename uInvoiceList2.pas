@@ -85,7 +85,7 @@ uses
   dxSkinOffice2007Silver, dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinValentine,
   dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, Vcl.Menus
-  , uRoomerForm, dxPScxCommon, dxPScxGridLnk, sStatusBar
+  , uRoomerForm, dxPScxCommon, dxPScxGridLnk, sStatusBar, cxCheckBox
   ;
 
 type
@@ -164,6 +164,7 @@ type
     mnuExport: TMenuItem;
     N1: TMenuItem;
     mnuExportability: TMenuItem;
+    tvInvoiceHeadexportAllowed: TcxGridDBBandedColumn;
     procedure rbtDatesClick(Sender : TObject);
     procedure FormCreate(Sender : TObject);
     procedure cbxPeriodChange(Sender : TObject);
@@ -204,6 +205,11 @@ type
     procedure tvInvoiceHeadSelectionChanged(Sender: TcxCustomGridTableView);
     procedure tvInvoiceHeadexternalInvoiceIdGetDisplayText(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
       var AText: string);
+    procedure tvInvoiceHeadexportAllowedCustomDrawCell(Sender: TcxCustomGridTableView; ACanvas: TcxCanvas; AViewInfo: TcxGridTableDataCellViewInfo;
+      var ADone: Boolean);
+    procedure tvInvoiceHeadexportAllowedGetPropertiesForEdit(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
+      var AProperties: TcxCustomEditProperties);
+    procedure m22_BeforePost(DataSet: TDataSet);
   private
     { Private declarations }
 
@@ -544,6 +550,7 @@ begin
     try
       s := s + 'SELECT '#10;
       s := s + '      ih.externalInvoiceId '#10;
+      s := s + '    , ih.exportAllowed '#10;
       s := s + '    , ih.Reservation '#10;
       s := s + '    , ih.RoomReservation '#10;
       s := s + '    , ih.InvoiceNumber '#10;
@@ -667,6 +674,8 @@ begin
   finally
     initialRead := False;
   end;
+
+  tvInvoiceHeadexportAllowed.Options.Editing := bIsFinanceSystemConnected;
 end;
 
 procedure TfrmInvoiceList2.sButton1Click(Sender: TObject);
@@ -783,10 +792,37 @@ end;
 
 procedure TfrmInvoiceList2.tvInvoiceHeadEditing(Sender: TcxCustomGridTableView; AItem: TcxCustomGridTableItem; var AAllow: Boolean);
 begin
-  AAllow := IsAltKeyPressed AND
+  AAllow := (AItem=tvInvoiceHeadexportAllowed) OR
+            (IsAltKeyPressed AND
             ((tvInvoiceHead.DataController.DataSource.DataSet.FieldByName('externalInvoiceId').AsInteger IN [0,1]) OR
             (MessageDlg('It looks as if this invoice has already been sent to bookkeeping.' + #13 +
-                        'Are you sure you want to change it''s value?', mtWarning, [mbYes, mbNo], 0) = mrYes));
+                        'Are you sure you want to change it''s value?', mtWarning, [mbYes, mbNo], 0) = mrYes)));
+end;
+
+procedure TfrmInvoiceList2.tvInvoiceHeadexportAllowedCustomDrawCell(Sender: TcxCustomGridTableView; ACanvas: TcxCanvas; AViewInfo: TcxGridTableDataCellViewInfo;
+  var ADone: Boolean);
+var ARecord : TcxCustomGridRecord;
+    Value : Variant;
+    Index : Integer;
+begin
+  ARecord := aViewInfo.RecordViewInfo.GridRecord;
+  Index := aViewInfo.Item.Index - 1;
+  Value := ARecord.Values[Index];
+  if VarIsEmpty(Value) or VarIsNull(Value) or (VarAsType(Value, varInteger) > 1) then
+  begin
+    ACanvas.FillRect(AViewInfo.EditBounds, clGray);
+    ADone := True;
+  end;
+end;
+
+procedure TfrmInvoiceList2.tvInvoiceHeadexportAllowedGetPropertiesForEdit(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
+  var AProperties: TcxCustomEditProperties);
+var Value : Variant;
+    Index : Integer;
+begin
+  Index := Sender.Index - 1;
+  Value := ARecord.Values[Index];
+  AProperties.ReadOnly := VarIsEmpty(Value) or VarIsNull(Value) or (VarAsType(Value, varInteger) > 1);
 end;
 
 procedure TfrmInvoiceList2.tvInvoiceHeadexternalInvoiceIdGetDisplayText(Sender: TcxCustomGridTableItem;
@@ -919,6 +955,22 @@ begin
   ShellExecute(Handle, 'OPEN', PChar(sFilename + '.xls'), nil, nil, sw_shownormal);
 end;
 
+procedure TfrmInvoiceList2.m22_BeforePost(DataSet: TDataSet);
+var InvoiceNumber : Integer;
+    Sql : String;
+begin
+  if NOT initialRead then
+  begin
+    Sql := format('UPDATE invoiceheads SET externalInvoiceId=%d, exportAllowed=%d WHERE InvoiceNumber=%d',
+           [
+             DataSet.FieldByName('externalInvoiceId').AsInteger,
+             IIF(DataSet.FieldByName('exportAllowed').AsBoolean, 1, 0),
+             DataSet.FieldByName('InvoiceNumber').AsInteger
+           ]);
+    d.roomerMainDataSet.DoCommand(Sql);
+  end;
+end;
+
 procedure TfrmInvoiceList2.mnuExportabilityClick(Sender: TObject);
 var i: integer;
     lInvNumber: integer;
@@ -926,7 +978,7 @@ var i: integer;
     lUpdatePlan: TROomerExecutionPlan;
     lSelected: TcxCustomGridRow;
 const
-  cSQLUpdateLine = 'UPDATE invoiceheads SET externalInvoiceId=%d WHERE InvoiceNumber=%d';
+  cSQLUpdateLine = 'UPDATE invoiceheads SET exportAllowed=%d WHERE InvoiceNumber=%d';
 begin
   with tvInvoiceHead do
   begin
@@ -940,7 +992,7 @@ begin
         if integer(lSelected.Values[tvInvoiceHeadexternalInvoiceId.Index]) in [0, 1] then
         begin
           lInvNumber := lSelected.Values[tvInvoiceHeadInvoiceNumber.Index];
-          lUpdatePLan.AddExec(Format(cSQLUpdateLine, [1 - integer(lSelected.Values[tvInvoiceHeadexternalInvoiceId.Index]), lInvNumber]));
+          lUpdatePLan.AddExec(Format(cSQLUpdateLine, [IIF(lSelected.Values[tvInvoiceHeadexportAllowed.Index], 0, 1), lInvNumber]));
         end;
       end;
 
@@ -955,7 +1007,7 @@ begin
               begin
                 Edit;
                 try
-                  FieldByName('externalInvoiceId').AsInteger := 1 - FieldByName('externalInvoiceId').AsInteger;
+                  FieldByName('exportAllowed').AsBoolean := NOT FieldByName('externalInvoiceId').AsBoolean;
                   Post;
                 except
                   Cancel;
@@ -986,7 +1038,7 @@ begin
       for i := 0 to PRED(Controller.SelectedRowCount ) do
       begin
         lSelected := Controller.SelectedRows[i];
-        if integer(lSelected.Values[tvInvoiceHeadexternalInvoiceId.Index]) in [0, 1] then
+        if integer(lSelected.Values[tvInvoiceHeadexternalInvoiceId.Index]) in [0] then
         begin
           lInvNumber := lSelected.Values[tvInvoiceHeadInvoiceNumber.Index];
           remoteResult := d.roomerMainDataSet.SystemSendInvoiceToBookkeeping(linvNumber);
@@ -1020,8 +1072,8 @@ end;
 
 procedure TfrmInvoiceList2.pmnuExportMenuPopup(Sender: TObject);
 begin
-  mnuExportability.Enabled := tvInvoiceHead.Controller.SelectedRowCount > 0;
-  mnuExport.Enabled := (tvInvoiceHead.Controller.SelectedRowCount > 0);
+  mnuExportability.Enabled := bIsFinanceSystemConnected AND (tvInvoiceHead.Controller.SelectedRowCount > 0);
+  mnuExport.Enabled        := bIsFinanceSystemConnected AND (tvInvoiceHead.Controller.SelectedRowCount > 0);
 end;
 
 

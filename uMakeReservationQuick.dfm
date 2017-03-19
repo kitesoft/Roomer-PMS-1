@@ -1529,7 +1529,7 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                 end
                 object chkSendConfirmation: TsCheckBox
                   Left = 397
-                  Top = 220
+                  Top = 219
                   Width = 148
                   Height = 20
                   Caption = 'Send confirmation by email'
@@ -1564,7 +1564,7 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                 end
                 object cbxAddToGuestProfiles: TsCheckBox
                   Left = 149
-                  Top = 64
+                  Top = 61
                   Width = 120
                   Height = 20
                   Caption = 'Add to guest profiles'
@@ -1743,6 +1743,10 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
             Caption = 'Customer Details'
             ImageIndex = 1
             TabVisible = False
+            ExplicitLeft = 0
+            ExplicitTop = 0
+            ExplicitWidth = 0
+            ExplicitHeight = 0
             object clabTel2: TsLabel
               Left = 204
               Top = 125
@@ -2031,6 +2035,10 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
     object tabSelectType: TsTabSheet
       Caption = 'Select Types'
       ImageIndex = 1
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object panSelectTypesTop: TsPanel
         Left = 0
         Top = 0
@@ -2302,6 +2310,10 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
     object tabSelectRooms: TsTabSheet
       Caption = 'Select Rooms'
       ImageIndex = 2
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object panSelectRoomsTop: TsPanel
         Left = 0
         Top = 0
@@ -3021,6 +3033,10 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
           end
           object Alerts: TsTabSheet
             Caption = 'Alerts'
+            ExplicitLeft = 0
+            ExplicitTop = 0
+            ExplicitWidth = 0
+            ExplicitHeight = 0
           end
         end
       end
