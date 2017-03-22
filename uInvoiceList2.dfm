@@ -8,11 +8,14 @@ inherited frmInvoiceList2: TfrmInvoiceList2
   Position = poOwnerFormCenter
   OnCreate = FormCreate
   OnShow = FormShow
+  ExplicitWidth = 1149
+  ExplicitHeight = 655
   PixelsPerInch = 96
   TextHeight = 13
   inherited sbStatusBar: TsStatusBar
     Top = 596
     Width = 1133
+    OnDrawPanel = nil
     ExplicitTop = 596
     ExplicitWidth = 1133
   end
@@ -502,7 +505,7 @@ inherited frmInvoiceList2: TfrmInvoiceList2
       Navigator.InfoPanel.Visible = True
       Navigator.Visible = True
       FilterBox.Visible = fvNever
-      OnEditing = tvInvoiceHeadEditing
+      OnCellClick = tvInvoiceHeadCellClick
       OnSelectionChanged = tvInvoiceHeadSelectionChanged
       DataController.DataSource = mDS
       DataController.Summary.DefaultGroupSummaryItems = <>
@@ -587,21 +590,10 @@ inherited frmInvoiceList2: TfrmInvoiceList2
       object tvInvoiceHeadexternalInvoiceId: TcxGridDBBandedColumn
         Caption = 'External #'
         DataBinding.FieldName = 'externalInvoiceId'
-        OnGetDisplayText = tvInvoiceHeadexternalInvoiceIdGetDisplayText
-        Width = 62
+        Options.Editing = False
+        Width = 63
         Position.BandIndex = 1
         Position.ColIndex = 0
-        Position.RowIndex = 0
-      end
-      object tvInvoiceHeadexportAllowed: TcxGridDBBandedColumn
-        Caption = 'Exportable'
-        DataBinding.FieldName = 'exportAllowed'
-        PropertiesClassName = 'TcxCheckBoxProperties'
-        OnCustomDrawCell = tvInvoiceHeadexportAllowedCustomDrawCell
-        OnGetPropertiesForEdit = tvInvoiceHeadexportAllowedGetPropertiesForEdit
-        Width = 61
-        Position.BandIndex = 1
-        Position.ColIndex = 1
         Position.RowIndex = 0
       end
       object tvInvoiceHeadInvoiceDate: TcxGridDBBandedColumn
@@ -662,9 +654,19 @@ inherited frmInvoiceList2: TfrmInvoiceList2
         PropertiesClassName = 'TcxCurrencyEditProperties'
         OnGetProperties = tvInvoiceHeadLocalAmountGetProperties
         Options.Editing = False
-        Width = 96
+        Width = 95
         Position.BandIndex = 1
         Position.ColIndex = 2
+        Position.RowIndex = 0
+      end
+      object tvInvoiceHeadexportAllowed: TcxGridDBBandedColumn
+        Caption = 'Exportable'
+        DataBinding.FieldName = 'exportAllowed'
+        PropertiesClassName = 'TcxCheckBoxProperties'
+        Options.Editing = False
+        Width = 63
+        Position.BandIndex = 1
+        Position.ColIndex = 1
         Position.RowIndex = 0
       end
       object tvInvoiceHeadLocalWithOutVAT: TcxGridDBBandedColumn
@@ -673,7 +675,7 @@ inherited frmInvoiceList2: TfrmInvoiceList2
         PropertiesClassName = 'TcxCurrencyEditProperties'
         OnGetProperties = tvInvoiceHeadLocalAmountGetProperties
         Options.Editing = False
-        Width = 99
+        Width = 100
         Position.BandIndex = 1
         Position.ColIndex = 3
         Position.RowIndex = 0
@@ -694,7 +696,7 @@ inherited frmInvoiceList2: TfrmInvoiceList2
         PropertiesClassName = 'TcxCurrencyEditProperties'
         OnGetProperties = tvInvoiceHeadAmountGetProperties
         Options.Editing = False
-        Width = 62
+        Width = 61
         Position.BandIndex = 1
         Position.ColIndex = 5
         Position.RowIndex = 0
@@ -705,7 +707,7 @@ inherited frmInvoiceList2: TfrmInvoiceList2
         PropertiesClassName = 'TcxCurrencyEditProperties'
         OnGetProperties = tvInvoiceHeadWithOutVATGetProperties
         Options.Editing = False
-        Width = 73
+        Width = 71
         Position.BandIndex = 1
         Position.ColIndex = 6
         Position.RowIndex = 0
@@ -715,7 +717,7 @@ inherited frmInvoiceList2: TfrmInvoiceList2
         PropertiesClassName = 'TcxCurrencyEditProperties'
         OnGetProperties = tvInvoiceHeadVATGetProperties
         Options.Editing = False
-        Width = 32
+        Width = 31
         Position.BandIndex = 1
         Position.ColIndex = 7
         Position.RowIndex = 0
@@ -725,7 +727,7 @@ inherited frmInvoiceList2: TfrmInvoiceList2
         PropertiesClassName = 'TcxCurrencyEditProperties'
         OnGetProperties = tvInvoiceHeadTaxesGetProperties
         Options.Editing = False
-        Width = 35
+        Width = 38
         Position.BandIndex = 1
         Position.ColIndex = 8
         Position.RowIndex = 0
@@ -752,7 +754,7 @@ inherited frmInvoiceList2: TfrmInvoiceList2
         Caption = 'Tax units'
         DataBinding.FieldName = 'Taxunits'
         Options.Editing = False
-        Width = 34
+        Width = 33
         Position.BandIndex = 1
         Position.ColIndex = 9
         Position.RowIndex = 0
@@ -761,7 +763,7 @@ inherited frmInvoiceList2: TfrmInvoiceList2
         Caption = 'Curr.'
         DataBinding.FieldName = 'Currency'
         Options.Editing = False
-        Width = 35
+        Width = 36
         Position.BandIndex = 1
         Position.ColIndex = 10
         Position.RowIndex = 0
@@ -770,7 +772,7 @@ inherited frmInvoiceList2: TfrmInvoiceList2
         Caption = 'Rate'
         DataBinding.FieldName = 'CurrencyRate'
         Options.Editing = False
-        Width = 38
+        Width = 37
         Position.BandIndex = 1
         Position.ColIndex = 11
         Position.RowIndex = 0
@@ -781,7 +783,7 @@ inherited frmInvoiceList2: TfrmInvoiceList2
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00;-,0.00'
         Options.Editing = False
-        Width = 52
+        Width = 51
         Position.BandIndex = 1
         Position.ColIndex = 12
         Position.RowIndex = 0
@@ -1104,7 +1106,6 @@ inherited frmInvoiceList2: TfrmInvoiceList2
     SortID = 0
     SubLanguageID = 1
     LocaleID = 1024
-    BeforePost = m22_BeforePost
     Left = 344
     Top = 432
   end
@@ -1122,6 +1123,10 @@ inherited frmInvoiceList2: TfrmInvoiceList2
     object mnuExportability: TMenuItem
       Caption = 'Toggle exportability of selected invoices'
       OnClick = mnuExportabilityClick
+    end
+    object E1: TMenuItem
+      Caption = 'Edit finance export properties'
+      OnClick = E1Click
     end
   end
 end

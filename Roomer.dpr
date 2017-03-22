@@ -273,7 +273,8 @@ uses
   uRoomerSchema in 'OpenAPI\schema\uRoomerSchema.pas',
   RoomerConfigurationItemsCommunicationModel_RequestsResponses in 'OpenAPI\schema\RoomerConfigurationItemsCommunicationModel_RequestsResponses.pas',
   uConfigurationItemsAPICaller in 'OpenAPI\uConfigurationItemsAPICaller.pas',
-  uRoomerIDList in 'RoomerVCLs\Source\uRoomerIDList.pas';
+  uRoomerIDList in 'RoomerVCLs\Source\uRoomerIDList.pas',
+  uEditFinanceExportProperties in 'uEditFinanceExportProperties.pas' {frmEditFinanceExportProperties};
 
 {$R *.RES}
 

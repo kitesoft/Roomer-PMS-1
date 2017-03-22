@@ -20,6 +20,7 @@ uses
   , Grids
   , StdCtrls
   , ExtCtrls
+  , System.Generics.Collections
 
   , kbmMemTable
   , hdata
@@ -165,6 +166,7 @@ type
     N1: TMenuItem;
     mnuExportability: TMenuItem;
     tvInvoiceHeadexportAllowed: TcxGridDBBandedColumn;
+    E1: TMenuItem;
     procedure rbtDatesClick(Sender : TObject);
     procedure FormCreate(Sender : TObject);
     procedure cbxPeriodChange(Sender : TObject);
@@ -201,15 +203,10 @@ type
     procedure pmnuExportMenuPopup(Sender: TObject);
     procedure mnuExportClick(Sender: TObject);
     procedure mnuExportabilityClick(Sender: TObject);
-    procedure tvInvoiceHeadEditing(Sender: TcxCustomGridTableView; AItem: TcxCustomGridTableItem; var AAllow: Boolean);
     procedure tvInvoiceHeadSelectionChanged(Sender: TcxCustomGridTableView);
-    procedure tvInvoiceHeadexternalInvoiceIdGetDisplayText(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
-      var AText: string);
-    procedure tvInvoiceHeadexportAllowedCustomDrawCell(Sender: TcxCustomGridTableView; ACanvas: TcxCanvas; AViewInfo: TcxGridTableDataCellViewInfo;
-      var ADone: Boolean);
-    procedure tvInvoiceHeadexportAllowedGetPropertiesForEdit(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
-      var AProperties: TcxCustomEditProperties);
-    procedure m22_BeforePost(DataSet: TDataSet);
+    procedure E1Click(Sender: TObject);
+    procedure tvInvoiceHeadCellClick(Sender: TcxCustomGridTableView; ACellViewInfo: TcxGridTableDataCellViewInfo; AButton: TMouseButton; AShift: TShiftState;
+      var AHandled: Boolean);
   private
     { Private declarations }
 
@@ -229,6 +226,7 @@ type
     function GetExportTemplate: String;
     procedure InitSelections;
     function IsFinanceSystemConnected: Boolean;
+    procedure EditCurrentProperties;
   protected
     procedure DoUpdateControls; override;
     procedure DoLoadData; override;
@@ -248,6 +246,15 @@ type
     zArrival : Tdate;
   end;
 
+type TExportPropertiesHolder = class
+     private
+       InvoiceNumber : Integer;
+       ExternalId : Integer;
+       ExportAllowed : Boolean;
+     public
+       constructor Create(_InvoiceNumber : Integer; _ExternalId : Integer; _ExportAllowed : Boolean);
+     end;
+
 function ShowClosedInvoicesDetailed(var aReturnToRoom: string; var aReturnToDate: TDate): boolean;
 
 implementation
@@ -264,6 +271,7 @@ uses
   , uFrmPostInvoices
   , uSQLUtils
   , uFrmHandleBookKeepingException
+  , uEditFinanceExportProperties
   ;
 
 {$R *.dfm}
@@ -517,6 +525,57 @@ begin
   zDTTo := dtTo.Date;
 end;
 
+procedure TfrmInvoiceList2.E1Click(Sender: TObject);
+var i: integer;
+    lInvNumber: integer;
+    lDisableExport: boolean;
+    lSelected: TcxCustomGridRow;
+    bValue : Boolean;
+    iExternalId : Integer;
+
+    List : TObjectList<TExportPropertiesHolder>;
+
+begin
+  with tvInvoiceHead do
+  begin
+    DataController.BeginLocate;
+    DataController.DataSet.DisableControls;
+    List := TObjectList<TExportPropertiesHolder>.Create;
+    try
+      for i := 0 to PRED(Controller.SelectedRowCount ) do
+      begin
+        lSelected := Controller.SelectedRows[i];
+        lInvNumber := lSelected.Values[tvInvoiceHeadInvoiceNumber.Index];
+        bValue := Boolean(lSelected.Values[tvInvoiceHeadexportAllowed.Index]);
+        iExternalId := lSelected.Values[tvInvoiceHeadexternalInvoiceId.Index];
+        editFinanceExportProperties(lInvNumber, iExternalId, bValue);
+        List.Add(TExportPropertiesHolder.Create(lInvNumber, iExternalId, bValue));
+      end;
+
+          for i := 0 to PRED(List.Count) do
+          begin
+            lInvNumber := List[i].InvoiceNumber;
+            with DataController.DataSet do
+              if Locate('invoiceNumber', lInvNumber, []) then
+              begin
+                Edit;
+                try
+                  FieldByName('exportAllowed').AsBoolean := List[i].ExportAllowed;
+                  FieldByName('externalInvoiceId').AsInteger := List[i].ExternalId;
+                  Post;
+                except
+                  Cancel;
+                end;
+              end;
+          end;
+    finally
+      List.Free;
+      DataController.EndLocate;
+      DataController.DataSet.EnableControls;
+    end;
+  end;
+end;
+
 procedure TfrmInvoiceList2.DoUpdateControls;
 begin
   inherited;
@@ -674,8 +733,6 @@ begin
   finally
     initialRead := False;
   end;
-
-  tvInvoiceHeadexportAllowed.Options.Editing := bIsFinanceSystemConnected;
 end;
 
 procedure TfrmInvoiceList2.sButton1Click(Sender: TObject);
@@ -782,55 +839,56 @@ begin
   AProperties := d.getCurrencyProperties(ARecord.Values[tvInvoiceHeadCurrency.index]);;
 end;
 
+procedure TfrmInvoiceList2.tvInvoiceHeadCellClick(Sender: TcxCustomGridTableView; ACellViewInfo: TcxGridTableDataCellViewInfo; AButton: TMouseButton;
+  AShift: TShiftState; var AHandled: Boolean);
+begin
+  if IsAltKeyPressed then
+    EditCurrentProperties;
+end;
+
+procedure TfrmInvoiceList2.EditCurrentProperties;
+var
+  InvoiceNumber : integer;
+  exportable : Boolean;
+  externalId : Integer;
+  lSelected: TcxCustomGridRow;
+begin
+  InvoiceNumber := m22_.fieldbyname('InvoiceNumber').AsInteger;
+  exportable := m22_.fieldbyname('exportAllowed').AsBoolean;
+  externalId := m22_.fieldbyname('externalInvoiceId').AsInteger;
+  editFinanceExportProperties(InvoiceNumber, externalId, exportable);
+  with tvInvoiceHead do
+  begin
+    DataController.BeginLocate;
+    DataController.DataSet.DisableControls;
+    try
+            with DataController.DataSet do
+              if Locate('invoiceNumber', InvoiceNumber, []) then
+              begin
+                Edit;
+                try
+                  FieldByName('exportAllowed').AsBoolean := exportable;
+                  FieldByName('externalInvoiceId').AsInteger := externalId;
+                  Post;
+                except
+                  Cancel;
+                end;
+              end;
+    finally
+      DataController.EndLocate;
+      DataController.DataSet.EnableControls;
+    end;
+  end;
+end;
+
 procedure TfrmInvoiceList2.tvInvoiceHeadDblClick(Sender: TObject);
 var
   InvoiceNumber : integer;
 begin
-  InvoiceNumber := m22_.fieldbyname('InvoiceNumber').AsInteger;
-  ViewInvoice2(InvoiceNumber, false, false, false,false, '');
-end;
-
-procedure TfrmInvoiceList2.tvInvoiceHeadEditing(Sender: TcxCustomGridTableView; AItem: TcxCustomGridTableItem; var AAllow: Boolean);
-begin
-  AAllow := (AItem=tvInvoiceHeadexportAllowed) OR
-            (IsAltKeyPressed AND
-            ((tvInvoiceHead.DataController.DataSource.DataSet.FieldByName('externalInvoiceId').AsInteger IN [0,1]) OR
-            (MessageDlg('It looks as if this invoice has already been sent to bookkeeping.' + #13 +
-                        'Are you sure you want to change it''s value?', mtWarning, [mbYes, mbNo], 0) = mrYes)));
-end;
-
-procedure TfrmInvoiceList2.tvInvoiceHeadexportAllowedCustomDrawCell(Sender: TcxCustomGridTableView; ACanvas: TcxCanvas; AViewInfo: TcxGridTableDataCellViewInfo;
-  var ADone: Boolean);
-var ARecord : TcxCustomGridRecord;
-    Value : Variant;
-    Index : Integer;
-begin
-  ARecord := aViewInfo.RecordViewInfo.GridRecord;
-  Index := aViewInfo.Item.Index - 1;
-  Value := ARecord.Values[Index];
-  if VarIsEmpty(Value) or VarIsNull(Value) or (VarAsType(Value, varInteger) > 1) then
-  begin
-    ACanvas.FillRect(AViewInfo.EditBounds, clGray);
-    ADone := True;
-  end;
-end;
-
-procedure TfrmInvoiceList2.tvInvoiceHeadexportAllowedGetPropertiesForEdit(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
-  var AProperties: TcxCustomEditProperties);
-var Value : Variant;
-    Index : Integer;
-begin
-  Index := Sender.Index - 1;
-  Value := ARecord.Values[Index];
-  AProperties.ReadOnly := VarIsEmpty(Value) or VarIsNull(Value) or (VarAsType(Value, varInteger) > 1);
-end;
-
-procedure TfrmInvoiceList2.tvInvoiceHeadexternalInvoiceIdGetDisplayText(Sender: TcxCustomGridTableItem;
-  ARecord: TcxCustomGridRecord; var AText: string);
-begin
-  inherited;
-  if aRecord.Values[tvInvoiceHeadexternalInvoiceId.Index] = 1 then
-    aText := GetTranslatedText('shTx_InvoiceList2_ExportDisabled');
+  if IsAltKeyPressed then
+    EditCurrentProperties
+  else
+    btnViewInvoiceClick(Sender);
 end;
 
 procedure TfrmInvoiceList2.tvInvoiceHeadLocalAmountGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
@@ -955,28 +1013,13 @@ begin
   ShellExecute(Handle, 'OPEN', PChar(sFilename + '.xls'), nil, nil, sw_shownormal);
 end;
 
-procedure TfrmInvoiceList2.m22_BeforePost(DataSet: TDataSet);
-var InvoiceNumber : Integer;
-    Sql : String;
-begin
-  if NOT initialRead then
-  begin
-    Sql := format('UPDATE invoiceheads SET externalInvoiceId=%d, exportAllowed=%d WHERE InvoiceNumber=%d',
-           [
-             DataSet.FieldByName('externalInvoiceId').AsInteger,
-             IIF(DataSet.FieldByName('exportAllowed').AsBoolean, 1, 0),
-             DataSet.FieldByName('InvoiceNumber').AsInteger
-           ]);
-    d.roomerMainDataSet.DoCommand(Sql);
-  end;
-end;
-
 procedure TfrmInvoiceList2.mnuExportabilityClick(Sender: TObject);
 var i: integer;
     lInvNumber: integer;
     lDisableExport: boolean;
     lUpdatePlan: TROomerExecutionPlan;
     lSelected: TcxCustomGridRow;
+    bValue : Boolean;
 const
   cSQLUpdateLine = 'UPDATE invoiceheads SET exportAllowed=%d WHERE InvoiceNumber=%d';
 begin
@@ -989,11 +1032,12 @@ begin
       for i := 0 to PRED(Controller.SelectedRowCount ) do
       begin
         lSelected := Controller.SelectedRows[i];
-        if integer(lSelected.Values[tvInvoiceHeadexternalInvoiceId.Index]) in [0, 1] then
-        begin
+//        if integer(lSelected.Values[tvInvoiceHeadexternalInvoiceId.Index]) in [0, 1] then
+//        begin
           lInvNumber := lSelected.Values[tvInvoiceHeadInvoiceNumber.Index];
-          lUpdatePLan.AddExec(Format(cSQLUpdateLine, [IIF(lSelected.Values[tvInvoiceHeadexportAllowed.Index], 0, 1), lInvNumber]));
-        end;
+          bValue := NOT Boolean(lSelected.Values[tvInvoiceHeadexportAllowed.Index]);
+          lUpdatePLan.AddExec(Format(cSQLUpdateLine, [IIF(bValue, 1, 0), lInvNumber]));
+//        end;
       end;
 
       if lUpdatePlan.ExecCount > 0 then
@@ -1007,7 +1051,7 @@ begin
               begin
                 Edit;
                 try
-                  FieldByName('exportAllowed').AsBoolean := NOT FieldByName('externalInvoiceId').AsBoolean;
+                  FieldByName('exportAllowed').AsBoolean := NOT FieldByName('exportAllowed').AsBoolean;
                   Post;
                 except
                   Cancel;
@@ -1038,7 +1082,7 @@ begin
       for i := 0 to PRED(Controller.SelectedRowCount ) do
       begin
         lSelected := Controller.SelectedRows[i];
-        if integer(lSelected.Values[tvInvoiceHeadexternalInvoiceId.Index]) in [0] then
+        if integer(lSelected.Values[tvInvoiceHeadexternalInvoiceId.Index]) in [0, 1] then
         begin
           lInvNumber := lSelected.Values[tvInvoiceHeadInvoiceNumber.Index];
           remoteResult := d.roomerMainDataSet.SystemSendInvoiceToBookkeeping(linvNumber);
@@ -1072,10 +1116,19 @@ end;
 
 procedure TfrmInvoiceList2.pmnuExportMenuPopup(Sender: TObject);
 begin
-  mnuExportability.Enabled := bIsFinanceSystemConnected AND (tvInvoiceHead.Controller.SelectedRowCount > 0);
-  mnuExport.Enabled        := bIsFinanceSystemConnected AND (tvInvoiceHead.Controller.SelectedRowCount > 0);
+  mnuExportability.Enabled := tvInvoiceHead.Controller.SelectedRowCount > 0;
+  mnuExport.Enabled := (tvInvoiceHead.Controller.SelectedRowCount > 0);
 end;
 
+
+{ TExportPropertiesHolder }
+
+constructor TExportPropertiesHolder.Create(_InvoiceNumber, _ExternalId: Integer; _ExportAllowed: Boolean);
+begin
+  InvoiceNumber := _InvoiceNumber;
+  ExternalId := _ExternalId;
+  ExportAllowed := _ExportAllowed;
+end;
 
 end.
 
