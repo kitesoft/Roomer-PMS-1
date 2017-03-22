@@ -11688,6 +11688,7 @@ end;
 procedure TfrmMain._ClosedInvoicesDetailed;
 var
   sRoom: string;
+  frmInvoiceList2 : TfrmInvoiceList2;
 begin
   sRoom := '';
 

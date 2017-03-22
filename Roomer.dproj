@@ -845,6 +845,10 @@
             <Form>frmBusyMessage</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="uEditFinanceExportProperties.pas">
+            <Form>frmEditFinanceExportProperties</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <None Include="Roomer.todo"/>
         <None Include="notes.txt"/>
         <None Include="Roomer.inc"/>

@@ -185,6 +185,8 @@ uses uAppGlobal,
   , uRptDailyRevenues
   , uRptHouseKeeping
   , uDayClosingTimes
+
+  , uEditFinanceExportProperties
   ;
 
 
@@ -1696,7 +1698,7 @@ begin
 //  frmStatisticsForcast := TfrmStatisticsForcast.Create(nil); frmStatisticsForcast.Free; frmStatisticsForcast := nil;
   frmDayFinical := TfrmDayFinical.Create(nil); frmDayFinical.Free; frmDayFinical := nil;
   frmConvertGroups := TfrmConvertGroups.Create(nil); frmConvertGroups.Free; frmConvertGroups := nil;
-  frmInvoiceList2 := TfrmInvoiceList2.Create(nil); frmInvoiceList2.Free; frmInvoiceList2 := nil;
+  TfrmInvoiceList2.Create(nil).Free;
 //  frmRptCustomer := TfrmRptCustomer.Create(nil); frmRptCustomer.Free; frmRptCustomer := nil;
 //frmDayNotes := TfrmDayNotes.Create(nil); frmDayNotes.Free; frmDayNotes := nil;
   frmChangeRRdates := TfrmChangeRRdates.Create(nil); frmChangeRRdates.Free; frmChangeRRdates := nil;
@@ -1865,6 +1867,7 @@ begin
   TfrmDayClosingTimes.Create(nil).Free;
 
   TfrmBusyMessage.Create(nil).Free;
+  TfrmEditFinanceExportProperties.Create(nil).Free;
 
 
 end;

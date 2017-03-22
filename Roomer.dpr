@@ -269,7 +269,8 @@ uses
   hData in 'Data\hData.pas',
   uSqlDefinitions in 'Data\uSqlDefinitions.pas',
   uRoomerVersionInfo in 'RoomerUtils\uRoomerVersionInfo.pas',
-  uFrmBusyMessage in 'Dialogs\uFrmBusyMessage.pas' {frmBusyMessage};
+  uFrmBusyMessage in 'Dialogs\uFrmBusyMessage.pas' {frmBusyMessage},
+  uEditFinanceExportProperties in 'uEditFinanceExportProperties.pas' {frmEditFinanceExportProperties};
 
 {$R *.RES}
 

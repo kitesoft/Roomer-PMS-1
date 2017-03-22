@@ -1,24 +1,25 @@
-object frmInvoiceList2: TfrmInvoiceList2
+inherited frmInvoiceList2: TfrmInvoiceList2
   Left = 738
   Top = 198
   Caption = 'Detailed Invoice List'
   ClientHeight = 616
   ClientWidth = 1133
-  Color = clBtnFace
-  Font.Charset = DEFAULT_CHARSET
-  Font.Color = clWindowText
   Font.Height = -11
-  Font.Name = 'Tahoma'
-  Font.Style = []
-  KeyPreview = True
-  OldCreateOrder = False
   Position = poOwnerFormCenter
   OnCreate = FormCreate
-  OnKeyDown = FormKeyDown
   OnShow = FormShow
+  ExplicitWidth = 1149
+  ExplicitHeight = 655
   PixelsPerInch = 96
   TextHeight = 13
-  object LMDSimplePanel1: TsPanel
+  inherited sbStatusBar: TsStatusBar
+    Top = 596
+    Width = 1133
+    OnDrawPanel = nil
+    ExplicitTop = 596
+    ExplicitWidth = 1133
+  end
+  object LMDSimplePanel1: TsPanel [1]
     Left = 0
     Top = 0
     Width = 1133
@@ -69,7 +70,7 @@ object frmInvoiceList2: TfrmInvoiceList2
         Default = True
         ImageIndex = 28
         Images = DImages.PngImageList1
-        TabOrder = 9
+        TabOrder = 12
         OnClick = LMDSpeedButton3Click
         SkinData.SkinSection = 'BUTTON'
       end
@@ -89,7 +90,7 @@ object frmInvoiceList2: TfrmInvoiceList2
         Font.Style = []
         MaxLength = 10
         ParentFont = False
-        TabOrder = 0
+        TabOrder = 4
         Text = '  -  -    '
         OnChange = dtFromChange
         SkinData.SkinSection = 'EDIT'
@@ -112,7 +113,7 @@ object frmInvoiceList2: TfrmInvoiceList2
         Font.Style = []
         MaxLength = 10
         ParentFont = False
-        TabOrder = 1
+        TabOrder = 5
         Text = '  -  -    '
         OnChange = dtToChange
         SkinData.SkinSection = 'EDIT'
@@ -125,7 +126,7 @@ object frmInvoiceList2: TfrmInvoiceList2
         Width = 82
         Height = 19
         Caption = 'Date range'
-        TabOrder = 2
+        TabOrder = 0
         OnClick = rbtDatesClick
         SkinData.SkinSection = 'CHECKBOX'
       end
@@ -135,7 +136,7 @@ object frmInvoiceList2: TfrmInvoiceList2
         Width = 96
         Height = 19
         Caption = 'Number range'
-        TabOrder = 3
+        TabOrder = 1
         OnClick = rbtDatesClick
         SkinData.SkinSection = 'CHECKBOX'
       end
@@ -162,7 +163,7 @@ object frmInvoiceList2: TfrmInvoiceList2
         Font.Style = []
         ItemIndex = -1
         ParentFont = False
-        TabOrder = 4
+        TabOrder = 6
         OnChange = cbxPeriodChange
         Items.Strings = (
           ' - None Selected -'
@@ -192,7 +193,7 @@ object frmInvoiceList2: TfrmInvoiceList2
         Font.Name = 'Tahoma'
         Font.Style = []
         ParentFont = False
-        TabOrder = 5
+        TabOrder = 9
         OnChange = edtFreeTextChange
         SkinData.SkinSection = 'EDIT'
         BoundLabel.Font.Charset = DEFAULT_CHARSET
@@ -207,7 +208,7 @@ object frmInvoiceList2: TfrmInvoiceList2
         Width = 75
         Height = 19
         Caption = 'Text filter'
-        TabOrder = 6
+        TabOrder = 2
         OnClick = rbtDatesClick
         SkinData.SkinSection = 'CHECKBOX'
       end
@@ -218,7 +219,7 @@ object frmInvoiceList2: TfrmInvoiceList2
         Height = 19
         Caption = 'Last'
         Checked = True
-        TabOrder = 7
+        TabOrder = 3
         TabStop = True
         OnClick = rbtDatesClick
         SkinData.SkinSection = 'CHECKBOX'
@@ -246,7 +247,7 @@ object frmInvoiceList2: TfrmInvoiceList2
         Font.Style = []
         ItemIndex = -1
         ParentFont = False
-        TabOrder = 8
+        TabOrder = 10
         OnChange = cbxTxtTypeChange
         Items.Strings = (
           'Invoice Number'
@@ -268,7 +269,7 @@ object frmInvoiceList2: TfrmInvoiceList2
         Font.Name = 'Tahoma'
         Font.Style = []
         ParentFont = False
-        TabOrder = 10
+        TabOrder = 11
         OnChange = edLastCountChange
         SkinData.SkinSection = 'EDIT'
         MaxValue = 99
@@ -287,7 +288,7 @@ object frmInvoiceList2: TfrmInvoiceList2
         Font.Name = 'Tahoma'
         Font.Style = []
         ParentFont = False
-        TabOrder = 11
+        TabOrder = 7
         OnChange = edtInvoiceFromChange
         SkinData.SkinSection = 'EDIT'
         MaxValue = 999999
@@ -306,7 +307,7 @@ object frmInvoiceList2: TfrmInvoiceList2
         Font.Name = 'Tahoma'
         Font.Style = []
         ParentFont = False
-        TabOrder = 12
+        TabOrder = 8
         OnChange = edtInvoiceToChange
         SkinData.SkinSection = 'EDIT'
         MaxValue = 999999
@@ -432,7 +433,7 @@ object frmInvoiceList2: TfrmInvoiceList2
       end
     end
   end
-  object sPanel1: TsPanel
+  object sPanel1: TsPanel [2]
     Left = 0
     Top = 183
     Width = 1133
@@ -455,9 +456,9 @@ object frmInvoiceList2: TfrmInvoiceList2
       Font.Style = []
     end
     object btnClear: TsSpeedButton
-      Left = 311
+      Left = 322
       Top = 6
-      Width = 59
+      Width = 100
       Height = 21
       Caption = 'Clear'
       OnClick = btnClearClick
@@ -468,7 +469,7 @@ object frmInvoiceList2: TfrmInvoiceList2
     object edFilter: TsEdit
       Left = 107
       Top = 6
-      Width = 206
+      Width = 209
       Height = 21
       Color = clWhite
       Font.Charset = DEFAULT_CHARSET
@@ -482,16 +483,15 @@ object frmInvoiceList2: TfrmInvoiceList2
       SkinData.SkinSection = 'EDIT'
     end
   end
-  object grInvoiceHead: TcxGrid
+  object grInvoiceHead: TcxGrid [3]
     Left = 0
     Top = 216
     Width = 1133
-    Height = 400
+    Height = 380
     Align = alClient
     TabOrder = 2
     LookAndFeel.NativeStyle = False
     object tvInvoiceHead: TcxGridDBBandedTableView
-      PopupMenu = PopupMenu1
       OnDblClick = tvInvoiceHeadDblClick
       Navigator.Buttons.CustomButtons = <>
       Navigator.Buttons.PriorPage.Enabled = False
@@ -504,8 +504,9 @@ object frmInvoiceList2: TfrmInvoiceList2
       Navigator.Buttons.Cancel.Enabled = False
       Navigator.InfoPanel.Visible = True
       Navigator.Visible = True
-      OnEditing = tvInvoiceHeadEditing
-      DataController.DataModeController.GridMode = True
+      FilterBox.Visible = fvNever
+      OnCellClick = tvInvoiceHeadCellClick
+      OnSelectionChanged = tvInvoiceHeadSelectionChanged
       DataController.DataSource = mDS
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <
@@ -544,6 +545,7 @@ object frmInvoiceList2: TfrmInvoiceList2
           Column = tvInvoiceHeadLocalVAT
         end>
       DataController.Summary.SummaryGroups = <>
+      Filtering.ColumnFilteredItemsList = True
       OptionsData.CancelOnExit = False
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
@@ -588,20 +590,10 @@ object frmInvoiceList2: TfrmInvoiceList2
       object tvInvoiceHeadexternalInvoiceId: TcxGridDBBandedColumn
         Caption = 'External #'
         DataBinding.FieldName = 'externalInvoiceId'
-        Width = 62
+        Options.Editing = False
+        Width = 63
         Position.BandIndex = 1
         Position.ColIndex = 0
-        Position.RowIndex = 0
-      end
-      object tvInvoiceHeadexportAllowed: TcxGridDBBandedColumn
-        Caption = 'Exportable'
-        DataBinding.FieldName = 'exportAllowed'
-        PropertiesClassName = 'TcxCheckBoxProperties'
-        OnCustomDrawCell = tvInvoiceHeadexportAllowedCustomDrawCell
-        OnGetPropertiesForEdit = tvInvoiceHeadexportAllowedGetPropertiesForEdit
-        Width = 61
-        Position.BandIndex = 1
-        Position.ColIndex = 1
         Position.RowIndex = 0
       end
       object tvInvoiceHeadInvoiceDate: TcxGridDBBandedColumn
@@ -662,9 +654,19 @@ object frmInvoiceList2: TfrmInvoiceList2
         PropertiesClassName = 'TcxCurrencyEditProperties'
         OnGetProperties = tvInvoiceHeadLocalAmountGetProperties
         Options.Editing = False
-        Width = 96
+        Width = 95
         Position.BandIndex = 1
         Position.ColIndex = 2
+        Position.RowIndex = 0
+      end
+      object tvInvoiceHeadexportAllowed: TcxGridDBBandedColumn
+        Caption = 'Exportable'
+        DataBinding.FieldName = 'exportAllowed'
+        PropertiesClassName = 'TcxCheckBoxProperties'
+        Options.Editing = False
+        Width = 63
+        Position.BandIndex = 1
+        Position.ColIndex = 1
         Position.RowIndex = 0
       end
       object tvInvoiceHeadLocalWithOutVAT: TcxGridDBBandedColumn
@@ -673,7 +675,7 @@ object frmInvoiceList2: TfrmInvoiceList2
         PropertiesClassName = 'TcxCurrencyEditProperties'
         OnGetProperties = tvInvoiceHeadLocalAmountGetProperties
         Options.Editing = False
-        Width = 99
+        Width = 100
         Position.BandIndex = 1
         Position.ColIndex = 3
         Position.RowIndex = 0
@@ -694,7 +696,7 @@ object frmInvoiceList2: TfrmInvoiceList2
         PropertiesClassName = 'TcxCurrencyEditProperties'
         OnGetProperties = tvInvoiceHeadAmountGetProperties
         Options.Editing = False
-        Width = 62
+        Width = 61
         Position.BandIndex = 1
         Position.ColIndex = 5
         Position.RowIndex = 0
@@ -705,7 +707,7 @@ object frmInvoiceList2: TfrmInvoiceList2
         PropertiesClassName = 'TcxCurrencyEditProperties'
         OnGetProperties = tvInvoiceHeadWithOutVATGetProperties
         Options.Editing = False
-        Width = 73
+        Width = 71
         Position.BandIndex = 1
         Position.ColIndex = 6
         Position.RowIndex = 0
@@ -715,7 +717,7 @@ object frmInvoiceList2: TfrmInvoiceList2
         PropertiesClassName = 'TcxCurrencyEditProperties'
         OnGetProperties = tvInvoiceHeadVATGetProperties
         Options.Editing = False
-        Width = 32
+        Width = 31
         Position.BandIndex = 1
         Position.ColIndex = 7
         Position.RowIndex = 0
@@ -725,7 +727,7 @@ object frmInvoiceList2: TfrmInvoiceList2
         PropertiesClassName = 'TcxCurrencyEditProperties'
         OnGetProperties = tvInvoiceHeadTaxesGetProperties
         Options.Editing = False
-        Width = 35
+        Width = 38
         Position.BandIndex = 1
         Position.ColIndex = 8
         Position.RowIndex = 0
@@ -752,7 +754,7 @@ object frmInvoiceList2: TfrmInvoiceList2
         Caption = 'Tax units'
         DataBinding.FieldName = 'Taxunits'
         Options.Editing = False
-        Width = 34
+        Width = 33
         Position.BandIndex = 1
         Position.ColIndex = 9
         Position.RowIndex = 0
@@ -761,7 +763,7 @@ object frmInvoiceList2: TfrmInvoiceList2
         Caption = 'Curr.'
         DataBinding.FieldName = 'Currency'
         Options.Editing = False
-        Width = 35
+        Width = 36
         Position.BandIndex = 1
         Position.ColIndex = 10
         Position.RowIndex = 0
@@ -770,7 +772,7 @@ object frmInvoiceList2: TfrmInvoiceList2
         Caption = 'Rate'
         DataBinding.FieldName = 'CurrencyRate'
         Options.Editing = False
-        Width = 38
+        Width = 37
         Position.BandIndex = 1
         Position.ColIndex = 11
         Position.RowIndex = 0
@@ -781,7 +783,7 @@ object frmInvoiceList2: TfrmInvoiceList2
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00;-,0.00'
         Options.Editing = False
-        Width = 52
+        Width = 51
         Position.BandIndex = 1
         Position.ColIndex = 12
         Position.RowIndex = 0
@@ -887,6 +889,15 @@ object frmInvoiceList2: TfrmInvoiceList2
     end
     object lvInvoiceHead: TcxGridLevel
       GridView = tvInvoiceHead
+    end
+  end
+  inherited cxsrRoomerStyleRepository: TcxStyleRepository
+    PixelsPerInch = 96
+    inherited dxssRoomerGridReportLink: TdxGridReportLinkStyleSheet
+      BuiltIn = True
+    end
+    inherited cxssRoomerGridTableView: TcxGridTableViewStyleSheet
+      BuiltIn = True
     end
   end
   object FormStore: TcxPropertiesStore
@@ -1083,12 +1094,11 @@ object frmInvoiceList2: TfrmInvoiceList2
     SortID = 0
     SubLanguageID = 1
     LocaleID = 1024
-    BeforePost = m22_BeforePost
     Left = 344
     Top = 432
   end
-  object PopupMenu1: TPopupMenu
-    OnPopup = PopupMenu1Popup
+  object pmnuExportMenu: TPopupMenu
+    OnPopup = pmnuExportMenuPopup
     Left = 696
     Top = 392
     object mnuExport: TMenuItem
@@ -1101,6 +1111,10 @@ object frmInvoiceList2: TfrmInvoiceList2
     object mnuExportability: TMenuItem
       Caption = 'Toggle exportability of selected invoices'
       OnClick = mnuExportabilityClick
+    end
+    object E1: TMenuItem
+      Caption = 'Edit finance export properties'
+      OnClick = E1Click
     end
   end
 end

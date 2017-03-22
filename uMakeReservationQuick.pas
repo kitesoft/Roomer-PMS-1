@@ -4373,16 +4373,20 @@ begin
   Result := PriceCodeExist(sValue);
 
   priceID := PriceCode_ID(sValue);
+  try
   if not Result then
   begin
-    ed.SetFocus;
     labName.Font.Color := clRed;
     labName.Caption := GetTranslatedText('shNotF_star');
+    ed.SetFocus;
   end
   else
   begin
     labName.Font.Color := clBlack;
     labName.Caption := PriceCode_Description(priceID);
+  end;
+  except
+
   end;
 end;
 
