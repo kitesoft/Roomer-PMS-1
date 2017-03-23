@@ -16,6 +16,7 @@ type
 
 {$SCOPEDENUMS ON}
   TxsdISO31661alpha2CountryCode = (
+      Unknown,         // mapped to '00' string
 			AF,
 			AX,
 			AL,
@@ -478,11 +479,16 @@ class function TxsdISO31661alpha2CountryCodeHelper.FromString(const aString: str
 var
   lOrd: integer;
 begin
-  lOrd := GetEnumValue(TypeInfo(TxsdISO31661alpha2CountryCode), aString);
-  if lOrd < 0 then
-    lOrd := GetEnumValue(TypeInfo(TxsdISO31661alpha2CountryCode), aString + '_');
+  if aString = '00' then
+    Result := TxsdISO31661alpha2CountryCode.Unknown
+  else
+  begin
+    lOrd := GetEnumValue(TypeInfo(TxsdISO31661alpha2CountryCode), aString);
+    if lOrd < 0 then
+      lOrd := GetEnumValue(TypeInfo(TxsdISO31661alpha2CountryCode), aString + '_');
 
-  Result := TxsdISO31661alpha2CountryCode(lOrd);
+    Result := TxsdISO31661alpha2CountryCode(lOrd);
+  end;
 end;
 
 { TxsdISO4217CurrencyCodeHelper }

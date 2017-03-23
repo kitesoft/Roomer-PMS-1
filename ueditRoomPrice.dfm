@@ -12,8 +12,8 @@ inherited frmEditRoomPrice: TfrmEditRoomPrice
   inherited sbStatusBar: TsStatusBar
     Top = 477
     Width = 732
-    ExplicitTop = 466
-    ExplicitWidth = 681
+    ExplicitTop = 477
+    ExplicitWidth = 732
   end
   object Panel1: TsPanel [1]
     Left = 0
@@ -24,7 +24,6 @@ inherited frmEditRoomPrice: TfrmEditRoomPrice
     BevelOuter = bvNone
     TabOrder = 0
     SkinData.SkinSection = 'PANEL'
-    ExplicitWidth = 681
     object gbxForAllDates: TsGroupBox
       AlignWithMargins = True
       Left = 3
@@ -226,7 +225,6 @@ inherited frmEditRoomPrice: TfrmEditRoomPrice
       Caption = 'Room info'
       TabOrder = 1
       SkinData.SkinSection = 'GROUPBOX'
-      ExplicitWidth = 259
       object clabRoom: TsLabel
         Left = 12
         Top = 16
@@ -405,8 +403,6 @@ inherited frmEditRoomPrice: TfrmEditRoomPrice
     Align = alClient
     TabOrder = 1
     LookAndFeel.NativeStyle = False
-    ExplicitWidth = 681
-    ExplicitHeight = 274
     object tvRoomRates: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = kbmRoomRatesDS
@@ -515,6 +511,7 @@ inherited frmEditRoomPrice: TfrmEditRoomPrice
         Caption = 'Total Discount '
         DataBinding.FieldName = 'DiscountAmount'
         PropertiesClassName = 'TcxCurrencyEditProperties'
+        OnGetProperties = tvRoomRatesRentAmountGetProperties
         Options.Editing = False
         Width = 92
       end
@@ -548,8 +545,6 @@ inherited frmEditRoomPrice: TfrmEditRoomPrice
     BevelOuter = bvNone
     TabOrder = 2
     SkinData.SkinSection = 'PANEL'
-    ExplicitTop = 429
-    ExplicitWidth = 681
     object btnCancel: TsButton
       AlignWithMargins = True
       Left = 625
@@ -564,9 +559,6 @@ inherited frmEditRoomPrice: TfrmEditRoomPrice
       ModalResult = 2
       TabOrder = 3
       SkinData.SkinSection = 'BUTTON'
-      ExplicitLeft = 529
-      ExplicitTop = 6
-      ExplicitHeight = 44
     end
     object btnOK: TsButton
       AlignWithMargins = True
@@ -583,9 +575,6 @@ inherited frmEditRoomPrice: TfrmEditRoomPrice
       TabOrder = 0
       OnClick = btnOKClick
       SkinData.SkinSection = 'BUTTON'
-      ExplicitLeft = 16
-      ExplicitTop = 6
-      ExplicitHeight = 43
     end
     object sButton1: TsButton
       AlignWithMargins = True
@@ -601,9 +590,6 @@ inherited frmEditRoomPrice: TfrmEditRoomPrice
       TabOrder = 1
       OnClick = sButton1Click
       SkinData.SkinSection = 'BUTTON'
-      ExplicitLeft = 175
-      ExplicitTop = 6
-      ExplicitHeight = 43
     end
     object sButton2: TsButton
       AlignWithMargins = True
@@ -619,9 +605,6 @@ inherited frmEditRoomPrice: TfrmEditRoomPrice
       TabOrder = 2
       OnClick = sButton2Click
       SkinData.SkinSection = 'BUTTON'
-      ExplicitLeft = 338
-      ExplicitTop = 6
-      ExplicitHeight = 43
     end
   end
   inherited psRoomerBase: TcxPropertiesStore

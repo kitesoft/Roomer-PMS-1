@@ -58,7 +58,7 @@ type
   TxsdInvoice = class(TxsdExtendedInvoiceType)
   private const
     cNodeName = 'invoice';
-  protected
+  public
     class function GetNameSpaceURI: string; override;
     class function GetNodeName: string; override;
   end;
@@ -77,7 +77,7 @@ type
   TxsdInvoiceResponse = class(TxsdBaseObjectList<TxsdInvoice>)
   private const
     cNodeName = 'InvoiceResponse';
-  protected
+  public
     class function GetNameSpaceURI: string; override;
     class function GetNodeName: string; override;
   end;

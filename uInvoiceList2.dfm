@@ -8,11 +8,15 @@ inherited frmInvoiceList2: TfrmInvoiceList2
   Position = poOwnerFormCenter
   OnCreate = FormCreate
   OnShow = FormShow
+  ExplicitWidth = 1149
+  ExplicitHeight = 655
   PixelsPerInch = 96
   TextHeight = 13
   inherited sbStatusBar: TsStatusBar
     Top = 596
     Width = 1133
+    ExplicitTop = 596
+    ExplicitWidth = 1133
   end
   object LMDSimplePanel1: TsPanel [1]
     Left = 0
@@ -118,8 +122,8 @@ inherited frmInvoiceList2: TfrmInvoiceList2
       object rbtDates: TsRadioButton
         Left = 4
         Top = 19
-        Width = 74
-        Height = 20
+        Width = 82
+        Height = 19
         Caption = 'Date range'
         TabOrder = 0
         OnClick = rbtDatesClick
@@ -128,8 +132,8 @@ inherited frmInvoiceList2: TfrmInvoiceList2
       object rbtInvoices: TsRadioButton
         Left = 4
         Top = 42
-        Width = 88
-        Height = 20
+        Width = 96
+        Height = 19
         Caption = 'Number range'
         TabOrder = 1
         OnClick = rbtDatesClick
@@ -200,8 +204,8 @@ inherited frmInvoiceList2: TfrmInvoiceList2
       object rbtFreeText: TsRadioButton
         Left = 4
         Top = 68
-        Width = 67
-        Height = 20
+        Width = 75
+        Height = 19
         Caption = 'Text filter'
         TabOrder = 2
         OnClick = rbtDatesClick
@@ -210,8 +214,8 @@ inherited frmInvoiceList2: TfrmInvoiceList2
       object rbtLast: TsRadioButton
         Left = 4
         Top = 92
-        Width = 40
-        Height = 20
+        Width = 48
+        Height = 19
         Caption = 'Last'
         Checked = True
         TabOrder = 3
@@ -486,6 +490,7 @@ inherited frmInvoiceList2: TfrmInvoiceList2
     Align = alClient
     TabOrder = 2
     LookAndFeel.NativeStyle = False
+    ExplicitTop = 211
     object tvInvoiceHead: TcxGridDBBandedTableView
       OnDblClick = tvInvoiceHeadDblClick
       Navigator.Buttons.CustomButtons = <>
@@ -875,6 +880,18 @@ inherited frmInvoiceList2: TfrmInvoiceList2
     object lvInvoiceHead: TcxGridLevel
       GridView = tvInvoiceHead
     end
+  end
+  inherited psRoomerBase: TcxPropertiesStore
+    Components = <
+      item
+        Component = frmBaseRoomerForm.Owner
+        Properties.Strings = (
+          'Height'
+          'Left'
+          'Top'
+          'Width'
+          'Position')
+      end>
   end
   inherited cxsrRoomerStyleRepository: TcxStyleRepository
     PixelsPerInch = 96

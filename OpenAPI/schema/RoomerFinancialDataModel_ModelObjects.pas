@@ -104,12 +104,17 @@ type
 //	</complexType>
 {$ENDREGION}
   TxsdPaymentType = class(TxsdInvoiceLineEntryType)
+  private const
+    cNodeName = 'PaymentItem';
   private
     FID: string;
     FPaymentReference: string;
     FPaymentMethod: string;
     FDate: TDateTime;
     FAmount: TxsdAmountGroup;
+  protected
+    class function GetNameSpaceURI: string; override;
+    class function GetNodeName: string; override;
   public
     procedure SetPropertiesFromXMLNode(const aNode: PXMLNode); override;
     procedure AddPropertiesToXMLNode(const aNode: PXMLNode); override;
@@ -129,10 +134,15 @@ type
 //	</complexType>
 {$ENDREGION}
   TxsdTextEntryType = class(TxsdInvoiceLineEntryType)
+  private const
+    cNodeName = 'TextItem';
   private
     FID: string;
     FText: string;
     FDate: TDate;
+  protected
+    class function GetNameSpaceURI: string; override;
+    class function GetNodeName: string; override;
   public
     procedure SetPropertiesFromXMLNode(const aNode: PXMLNode); override;
     procedure AddPropertiesToXMLNode(const aNode: PXMLNode); override;
@@ -200,32 +210,6 @@ type
     class function FromString(const aString: string): TxsdBillableEntryStatus; static;
     function AsString: String;
   end;
-
-{$REGION 'DiscountBillableEntryType XSD Definition'}
-  //	<complexType name="DiscountBillableEntryType">
-  //		<complexContent>
-  //			<extension base="rmrfmo:ExtendedBillableEntryType">
-  //				<attribute name="appliesTo" type="string">
-  //					<annotation>
-  //						<documentation>A reference to the ID attribute of the BillableEntry to which this discount is being applied (if there is one; otherwise this is a general discount for the entire invoice).</documentation>
-  //					</annotation>
-  //				</attribute>
-  //			</extension>
-  //		</complexContent>
-  //	</complexType>
-
-{$ENDREGION}
-  TxsdDiscountBillableEntryType = class(TxsdBillableEntryType)
-  private
-    FAppliesTo: string;
-  public
-    procedure Clear; override;
-    procedure SetPropertiesFromXMLNode(const aNode: PXMLNode); override;
-    procedure AddPropertiesToXMLNode(const aNode: PXMLNode); override;
-  published
-    property AppliesTo: string read FAppliesTo write FAppliesTo;
-  end;
-
   TxsdAmount = TxsdAmountGroup;
 
 {$REGION 'ExtendedBillableEntryType xsd definition'}
@@ -298,6 +282,42 @@ type
     property Status: TxsdBillableEntryStatus read FStatus write FStatus;
     property ApplicationDate: TDate read FApplicationDate write FApplicationDate;
     property PaymentDateTime: TDateTime read FPaymentDateTime write FPaymentDateTime;
+  end;
+
+
+{$REGION 'DiscountBillableEntryType XSD Definition'}
+  //	<complexType name="DiscountBillableEntryType">
+  //		<complexContent>
+  //			<extension base="rmrfmo:ExtendedBillableEntryType">
+  //				<attribute name="appliesTo" type="string">
+  //					<annotation>
+  //						<documentation>A reference to the ID attribute of the BillableEntry to which this discount is being applied (if there is one; otherwise this is a general discount for the entire invoice).</documentation>
+  //					</annotation>
+  //				</attribute>
+  //			</extension>
+  //		</complexContent>
+  //	</complexType>
+
+{$ENDREGION}
+  {$M+}
+  TxsdDiscountBillableEntryType = class(TxsdExtendedBillableEntryType)
+  private const
+    cNodeName = 'DiscountItem';
+  private
+    FAppliesTo: string;
+    FDIscountIsPercentage: boolean;
+    FDiscount: double;
+  protected
+    class function GetNodeName: string; override;
+    class function GetNameSpaceURI: string; override;
+  public
+    procedure Clear; override;
+    procedure SetPropertiesFromXMLNode(const aNode: PXMLNode); override;
+    procedure AddPropertiesToXMLNode(const aNode: PXMLNode); override;
+  published
+    property AppliesTo: string read FAppliesTo write FAppliesTo;
+    property DiscountIsPercentage: boolean read FDIscountIsPercentage write FDiscountIsPercentage;
+    property Discount: double read FDiscount write FDiscount;
   end;
 
   TxsdCurrencyData = class(TxsdBaseObject)
@@ -395,14 +415,6 @@ type
   end;
 
   TxsdGuestAddress = class(TxsdSimplifiedAddressType)
-  private const
-    cNodeName = 'GuestData';
-  protected
-    class function GetNameSpaceURI: string; override;
-    class function GetNodeName: string; override;
-  public
-    procedure SetPropertiesFromXMLNode(const aNode: PXMLNode); override;
-    procedure AddPropertiesToXMLNode(const aNode: PXMLNode); override;
   end;
 
   TxsdGuestData = class(TxsdBaseObject)
@@ -659,30 +671,6 @@ begin
     ConversionFromHotelCurrency.SetPropertiesFromXMLNode(lNodeList.GetFirst);
 end;
 
-{ TxsdGuestAddress }
-
-procedure TxsdGuestAddress.AddPropertiesToXMLNode(const aNode: PXMLNode);
-begin
-  inherited;
-  RaiseMethodNotImplementedException;
-end;
-
-class function TxsdGuestAddress.GetNameSpaceURI: string;
-begin
-  Result := cRmrfmoNameSpaceURI;
-end;
-
-class function TxsdGuestAddress.GetNodeName: string;
-begin
-  Result := cNodeName;
-end;
-
-procedure TxsdGuestAddress.SetPropertiesFromXMLNode(const aNode: PXMLNode);
-begin
-  inherited;
-  RaiseMethodNotImplementedException;
-end;
-
 { TxsdGuestData }
 
 procedure TxsdGuestData.AddPropertiesToXMLNode(const aNode: PXMLNode);
@@ -727,7 +715,7 @@ begin
   if aNode.SelectNodesNS(GetNameSpaceURI, 'Name', lNodeList, 1) then
     FName := lnodeList.GetFirst.Text;
 
-  if aNode.SelectNodesNS(GetNameSpaceURI, FAddress.GetNodeName, lNodeList, 1) then
+  if aNode.SelectNodesNS(GetNameSpaceURI, 'Address', lNodeList, 1) then
     FAddress.SetPropertiesFromXMLNode(lnodeList.GetFirst);
 
 end;
@@ -1082,10 +1070,22 @@ begin
   FAppliesTo := '';
 end;
 
+class function TxsdDiscountBillableEntryType.GetNameSpaceURI: string;
+begin
+  Result := cRmrfmoNameSpaceURI
+end;
+
+class function TxsdDiscountBillableEntryType.GetNodeName: string;
+begin
+  Result := cNodeName;
+end;
+
 procedure TxsdDiscountBillableEntryType.SetPropertiesFromXMLNode(const aNode: PXMLNode);
 begin
   inherited;
   FAppliesTo := aNode.Attributes['appliesTo'];
+  FDIscountIsPercentage := XMLToBool(aNode.Attributes['isPercentage']);
+  FDIscount := xmlToFloat(aNode.Attributes['discount']);
 end;
 
 { TxsdTextEntryType }
@@ -1094,6 +1094,16 @@ procedure TxsdTextEntryType.AddPropertiesToXMLNode(const aNode: PXMLNode);
 begin
   inherited;
   RaiseMethodNotImplementedException;
+end;
+
+class function TxsdTextEntryType.GetNameSpaceURI: string;
+begin
+  Result := cRmrfmoNameSpaceURI;
+end;
+
+class function TxsdTextEntryType.GetNodeName: string;
+begin
+  Result := cNodeName;
 end;
 
 procedure TxsdTextEntryType.SetPropertiesFromXMLNode(const aNode: PXMLNode);
@@ -1110,6 +1120,16 @@ procedure TxsdPaymentType.AddPropertiesToXMLNode(const aNode: PXMLNode);
 begin
   inherited;
   RaiseMethodNotImplementedException;
+end;
+
+class function TxsdPaymentType.GetNameSpaceURI: string;
+begin
+  Result := cRmrfmoNameSpaceURI;
+end;
+
+class function TxsdPaymentType.GetNodeName: string;
+begin
+  Result := cNodeName;
 end;
 
 procedure TxsdPaymentType.SetPropertiesFromXMLNode(const aNode: PXMLNode);

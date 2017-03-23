@@ -28,6 +28,8 @@ type
   published
     procedure TestSetuptearDown;
     procedure TestLoadInvoiceResponseXML;
+    procedure TestLoadComplexInvoiceResponseXML;
+    procedure TestLoadComplexInvoiceResponseWithDiscountsXML;
   end;
 
 implementation
@@ -46,7 +48,59 @@ begin
   FSUT.Free;
 end;
 
-procedure TestTxsdInvoiceResponse.TestLoadInvoiceResponseXML;
+procedure TestTxsdInvoiceResponse.TestLoadComplexInvoiceResponseWithDiscountsXML;
+const
+  cResponseFile = '..\..\XMLData\InvoiceResponseWithDiscount.xml';
+var
+  xmlDoc: IXMLDocument;
+begin
+  xmlDoc := TXMLDocument.Create;
+  xmlDoc.LoadFromFile(cResponseFile);
+
+  CheckFalse(Assigned(xmlDoc.ParseError), 'Errors during parsing of XML file');
+
+  FSUT.SetPropertiesFromXMLNode(xmlDoc.DocumentElement.FirstChild);
+
+  CheckEquals(1, FSUT.Count);
+  CheckEquals('22822', FSUT.Items[0].RoomReservation);
+  CheckEquals(9 , FSUT.Items[0].LineItemList.Count);
+
+  // Check on a discount lineitem
+  CheckIs(FSUT.Items[0].LineItemList[7].Item, TxsdDiscountBillableEntryType);
+  CheckEquals('GBP', TxsdDiscountBillableEntryType(FSUT.Items[0].LineItemList[7].Item).UnitPrice.Currency.AsString);
+  CheckTrue(SameValue(6.98676749, TxsdDiscountBillableEntryType(FSUT.Items[0].LineItemList[7].Item).UnitPrice.Amount));
+
+end;
+
+procedure TestTxsdInvoiceResponse.TestLoadComplexInvoiceResponseXML;
+const
+  cResponseFile = '..\..\XMLData\InvoiceResponseComplex.xml';
+var
+  xmlDoc: IXMLDocument;
+begin
+  xmlDoc := TXMLDocument.Create;
+  xmlDoc.LoadFromFile(cResponseFile);
+
+  CheckFalse(Assigned(xmlDoc.ParseError), 'Errors during parsing of XML file');
+
+  FSUT.SetPropertiesFromXMLNode(xmlDoc.DocumentElement.FirstChild);
+
+  CheckEquals(1, FSUT.Count);
+  CheckEquals('2589', FSUT.Items[0].Reservation);
+  CheckEquals(4 , FSUT.Items[0].LineItemList.Count);
+
+  CheckEquals('Booking Button',  FSUT.Items[0].GuestData.Name);
+  CheckEquals('Raupplaan 20',  FSut.items[0].GuestData.Address.Address);
+  CheckEquals('NL', FSut.items[0].GuestData.Address.Country.AsString);
+
+  checkEquals('EUR', FSut.items[0].CurrencyData.InvoiceCurrency.AsString);
+  checkEquals('EUR', FSut.items[0].CurrencyData.ConversionFromHotelCurrency.From.AsString);
+  checkEquals('EUR', FSut.items[0].CurrencyData.ConversionFromHotelCurrency.To_.AsString);
+  checkTrue(SameValue(1.0, FSut.items[0].CurrencyData.ConversionFromHotelCurrency.Factor));
+
+end;
+
+procedure TestTxsdInvoiceResponse.TestLoadInvoiceResponseXML;
 const
   cResponseFile = '..\..\XMLData\InvoiceResponse.xml';
 var

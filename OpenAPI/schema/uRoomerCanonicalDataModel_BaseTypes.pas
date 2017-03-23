@@ -62,6 +62,8 @@ type
 {$ENDREGION}
 
   TxsdSimplifiedAddressType = class(TxsdBaseObject)
+  private const
+    cNodeName = 'Address';
   private
     FPostcalCode: string;
     FLocality: string;
@@ -69,6 +71,8 @@ type
     FAddress: string;
     FRegion: string;
   public
+    class function GetNameSpaceURI: string; override;
+    class function GetNodeName: string; override;
     procedure SetPropertiesFromXMLNode(const aNode: PXMLNode); override;
     procedure AddPropertiesToXMLNode(const aNode: PXMLNode); override;
   published
@@ -116,6 +120,16 @@ begin
   aNode.AddChild('Country').Text := FCountry.asString;
 end;
 
+class function TxsdSimplifiedAddressType.GetNameSpaceURI: string;
+begin
+  Result := cRmrbtNameSpaceURI;
+end;
+
+class function TxsdSimplifiedAddressType.GetNodeName: string;
+begin
+  Result := cNodeName;
+end;
+
 procedure TxsdSimplifiedAddressType.SetPropertiesFromXMLNode(const aNode: PXMLNode);
 var
   lNodeList: IXMLNodeList;
@@ -123,7 +137,7 @@ begin
   inherited;
   if aNode.SelectNodesNS(GetNameSpaceURI, 'Address', lNodeList, 1) then
     FAddress := lNodeList.GetFirst.Text;
-  if aNode.SelectNodesNS(GetNameSpaceURI, 'Postalcode', lNodeList, 1) then
+  if aNode.SelectNodesNS(GetNameSpaceURI, 'PostalCode', lNodeList, 1) then
     FPostcalCode := lNodeList.GetFirst.Text;
   if aNode.SelectNodesNS(GetNameSpaceURI, 'Locality', lNodeList, 1) then
     FLocality := lNodeList.GetFirst.Text;

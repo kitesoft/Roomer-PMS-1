@@ -861,6 +861,7 @@
         <DCCReference Include="OpenAPI\schema\uRoomerCanonicalDataModel_SimpleTypes.pas"/>
         <DCCReference Include="Invoice\uRunningTabModel.pas"/>
         <DCCReference Include="OpenAPI\schema\RoomerBookingCommunicationModel_RequestsResponses.pas"/>
+        <DCCReference Include="OpenAPI\uBookingsRunningTabAPICaller.pas"/>
         <None Include="Roomer.todo"/>
         <None Include="notes.txt"/>
         <None Include="Roomer.inc"/>
