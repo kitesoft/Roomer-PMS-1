@@ -25,12 +25,12 @@ type
     FCity: string;
     FCountryCode: string;
   protected
+  public
+    procedure Clear; override;
     procedure SetPropertiesFromXMLNode(const aNode: PXMLNode); override;
     procedure AddPropertiesToXMLNode(const aNode: PXMLNode); override;
     class function GetNodeName: string; override;
     class function GetNameSpaceURI: string; override;
-  public
-    procedure Clear; override;
   published
     property CustomerCode: string read FCustomerCode write FCustomerCode;
     property PersonId: integer read FPersonId write FPersonId;
@@ -47,13 +47,12 @@ type
     FVATCode: string;
     FPercentage: double;
     FAmount: double;
-  protected
+  public
+    procedure Clear; override;
     procedure SetPropertiesFromXMLNode(const aNode: PXMLNode); override;
     procedure AddPropertiesToXMLNode(const aNode: PXMLNode); override;
     class function GetNodeName: string; override;
     class function GetNameSpaceURI: string; override;
-  public
-    procedure Clear; override;
   published
     property VATCode: string read FVATCode write FVATCode;
     property Percentage: double read FPercentage write FPercentage;
@@ -89,15 +88,14 @@ type
     function GetTotalGrossAmount: double;
     function GetTotalNetAmount: double;
     function GetTotalVatAmount: double;
-  protected
-    procedure SetPropertiesFromXMLNode(const aNode: PXMLNode); override;
-    procedure AddPropertiesToXMLNode(const aNode: PXMLNode); override;
-    class function GetNodeName: string; override;
-    class function GetNameSpaceURI: string; override;
   public
     constructor Create;
     destructor Destroy; override;
     procedure Clear; override;
+    procedure SetPropertiesFromXMLNode(const aNode: PXMLNode); override;
+    procedure AddPropertiesToXMLNode(const aNode: PXMLNode); override;
+    class function GetNodeName: string; override;
+    class function GetNameSpaceURI: string; override;
     property TotalVatAmount: double read GetTotalVatAmount;
     property TotalGrossAmount: double read GetTotalGrossAmount;
     property ID: integer read FID write FID;
@@ -125,7 +123,7 @@ type
   end;
 
   TRunnningTabProductList = class(TxsdBaseObjectList<TRunningTabProduct>)
-  protected
+  public
     class function GetNodeName: string; override;
     class function GetNameSpaceURI: string; override;
   end;
@@ -151,13 +149,12 @@ type
     FID: Integer;
     FPayTypeCode: string;
     FInvoiceIndex: integer;
-  protected
+  public
+    procedure Clear; override;
     procedure SetPropertiesFromXMLNode(const aNode: PXMLNode); override;
     procedure AddPropertiesToXMLNode(const aNode: PXMLNode); override;
     class function GetNodeName: string; override;
     class function GetNameSpaceURI: string; override;
-  public
-    procedure Clear; override;
   published
     property InvoicePaymentType: TInvoicePaymenttype read FInvoicePaymentType write FInvoicePaymentType;
     property AutoGen: String read FAutoGen write FAutoGen;
@@ -177,7 +174,7 @@ type
   end;
 
   TRunningTabPaymentList = class(TxsdBaseObjectList<TRunningTabPayment>)
-  protected
+  public
     class function GetNodeName: string; override;
     class function GetNameSpaceURI: string; override;
   end;
@@ -205,15 +202,14 @@ type
     function GetRunningTabProductList: TRunnningTabProductList;
     function GetRunningTabCustomer: TRunningTabCustomer;
     function GetRunningTabPaymentList: TRunningTabPaymentList;
-  protected
-    procedure SetPropertiesFromXMLNode(const aNode: PXMLNode); override;
-    procedure AddPropertiesToXMLNode(const aNode: PXMLNode); override;
-    class function GetNodeName: string; override;
-    class function GetNameSpaceURI: string; override;
   public
     constructor Create;
     destructor Destroy; override;
     procedure Clear; override;
+    procedure SetPropertiesFromXMLNode(const aNode: PXMLNode); override;
+    procedure AddPropertiesToXMLNode(const aNode: PXMLNode); override;
+    class function GetNodeName: string; override;
+    class function GetNameSpaceURI: string; override;
   published
     property TabType: TRunningTabType read FTabType write FTabType;
     property Description: string read FDescription write FDescription;
@@ -230,7 +226,7 @@ type
   end;
 
   TRunningTabList = class(TxsdBaseObjectList<TRunningTab>)
-  protected
+  public
     class function GetNodeName: string; override;
   end;
 
@@ -243,13 +239,13 @@ type
     FRunningTabList: IList<TRunningTab>;
     function GetRunningTabList: TRunningTabList;
   protected
-    procedure SetPropertiesFromXMLNode(const aNode: PXMLNode); override;
-    procedure AddPropertiesToXMLNode(const aNode: PXMLNode); override;
     class function GetNodeName: string; override;
   public
     constructor Create;
     destructor Destroy; override;
     procedure Clear; override;
+    procedure SetPropertiesFromXMLNode(const aNode: PXMLNode); override;
+    procedure AddPropertiesToXMLNode(const aNode: PXMLNode); override;
   published
     property Room: string read FRoom write FRoom;
     property ReservationId: integer read FReservationId write FReservationId;

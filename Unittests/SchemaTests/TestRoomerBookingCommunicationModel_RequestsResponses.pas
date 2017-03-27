@@ -22,6 +22,8 @@ type
   TestTxsdInvoiceResponse = class(TTestCase)
   strict private
     FSUT: TxsdInvoiceResponse;
+  private
+    procedure LoadSUTFromXML(const filename: string);
   public
     procedure SetUp; override;
     procedure TearDown; override;
@@ -30,6 +32,7 @@ type
     procedure TestLoadInvoiceResponseXML;
     procedure TestLoadComplexInvoiceResponseXML;
     procedure TestLoadComplexInvoiceResponseWithDiscountsXML;
+    procedure TestLoadComplexInvoiceResponseWithTaxesXML;
   end;
 
 implementation
@@ -48,19 +51,23 @@ begin
   FSUT.Free;
 end;
 
-procedure TestTxsdInvoiceResponse.TestLoadComplexInvoiceResponseWithDiscountsXML;
-const
-  cResponseFile = '..\..\XMLData\InvoiceResponseWithDiscount.xml';
+procedure TestTxsdInvoiceResponse.LoadSUTFromXML(const filename: string);
 var
   xmlDoc: IXMLDocument;
 begin
   xmlDoc := TXMLDocument.Create;
-  xmlDoc.LoadFromFile(cResponseFile);
+  xmlDoc.LoadFromFile(filename);
 
   CheckFalse(Assigned(xmlDoc.ParseError), 'Errors during parsing of XML file');
 
   FSUT.SetPropertiesFromXMLNode(xmlDoc.DocumentElement.FirstChild);
+end;
 
+procedure TestTxsdInvoiceResponse.TestLoadComplexInvoiceResponseWithDiscountsXML;
+const
+  cResponseFile = '..\..\XMLData\InvoiceResponseWithDiscount.xml';
+begin
+  LoadSUTFromXML(cResponseFile);
   CheckEquals(1, FSUT.Count);
   CheckEquals('22822', FSUT.Items[0].RoomReservation);
   CheckEquals(9 , FSUT.Items[0].LineItemList.Count);
@@ -68,22 +75,37 @@ begin
   // Check on a discount lineitem
   CheckIs(FSUT.Items[0].LineItemList[7].Item, TxsdDiscountBillableEntryType);
   CheckEquals('GBP', TxsdDiscountBillableEntryType(FSUT.Items[0].LineItemList[7].Item).UnitPrice.Currency.AsString);
-  CheckTrue(SameValue(6.98676749, TxsdDiscountBillableEntryType(FSUT.Items[0].LineItemList[7].Item).UnitPrice.Amount));
+  CheckTrue(SameValue(8.69565217, TxsdDiscountBillableEntryType(FSUT.Items[0].LineItemList[7].Item).UnitPrice.Amount));
 
+end;
+
+procedure TestTxsdInvoiceResponse.TestLoadComplexInvoiceResponseWithTaxesXML;
+const
+  cResponseFile = '..\..\XMLData\InvoiceResponseWithDiscount.xml';
+var
+  sum: double;
+  taxList: TxsdApplicableTaxesList;
+  tax: TxsdApplicableTax;
+begin
+  LoadSUTFromXML(cResponseFile);
+
+  // Check taxes
+  CheckIs(FSUT.Items[0].LineItemList[0].Item, TxsdExtendedBillableEntryType);
+
+  taxList := TxsdExtendedBillableEntryType(FSUT.Items[0].LineItemList[0].Item).ApplicableTaxList;
+  CheckEquals(3, taxList.Count);
+  sum := 0.0;
+  for tax in taxList do
+    sum := sum + tax.Amount.Amount;
+
+  CheckTrue(SameValue(16.1771945, sum));
 end;
 
 procedure TestTxsdInvoiceResponse.TestLoadComplexInvoiceResponseXML;
 const
   cResponseFile = '..\..\XMLData\InvoiceResponseComplex.xml';
-var
-  xmlDoc: IXMLDocument;
 begin
-  xmlDoc := TXMLDocument.Create;
-  xmlDoc.LoadFromFile(cResponseFile);
-
-  CheckFalse(Assigned(xmlDoc.ParseError), 'Errors during parsing of XML file');
-
-  FSUT.SetPropertiesFromXMLNode(xmlDoc.DocumentElement.FirstChild);
+  LoadSUTFromXML(cResponseFile);
 
   CheckEquals(1, FSUT.Count);
   CheckEquals('2589', FSUT.Items[0].Reservation);
@@ -102,18 +124,9 @@ end;
 
 procedure TestTxsdInvoiceResponse.TestLoadInvoiceResponseXML;
 const
-  cResponseFile = '..\..\XMLData\InvoiceResponse.xml';
-var
-  xmlDoc: IXMLDocument;
-const
   cInvoiceResponseFile = '..\..\XMLData\InvoiceResponse.xml';
 begin
-  xmlDoc := TXMLDocument.Create;
-  xmlDoc.LoadFromFile(cInvoiceResponseFile);
-
-  CheckFalse(Assigned(xmlDoc.ParseError), 'Errors during parsing of XML file');
-
-  FSUT.SetPropertiesFromXMLNode(xmlDoc.DocumentElement.FirstChild);
+  LoadSUTFromXML(cInvoiceResponseFile);
 
   CheckEquals(1, FSUT.Count);
   CheckEquals('2060', FSUT.Items[0].Reservation);

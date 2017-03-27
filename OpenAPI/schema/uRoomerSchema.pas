@@ -14,11 +14,11 @@ uses
 type
   ERoomerSchemaException = class(Exception);
 
-  TxsdBaseObject = class(TPersistent)
+  TxsdBaseObject = class abstract (TPersistent)
   private
     FIsDirty: boolean;
   protected
-    class function GetNodeName: string; virtual; abstract;
+    class function GetNodeName: string; virtual;
     class function GetNameSpaceURI: string; virtual;
     procedure SetIsDirty(Value: boolean);
     procedure AssignTo(Dest: TPersistent); override;
@@ -37,11 +37,11 @@ type
   TxsdBaseObjectClass = class of TxsdBaseObject;
 
 
-  TxsdBaseObjectList<T: TxsdBaseObject, constructor> = class(TObjectList<T>)
+  TxsdBaseObjectList<T: TxsdBaseObject, constructor> = class abstract(TObjectList<T>)
   protected
   public
-    class function GetNodeName: string; virtual; abstract;
-    class function GetNameSpaceURI: string; virtual; abstract;
+    class function GetNodeName: string; virtual;
+    class function GetNameSpaceURI: string; virtual;
     procedure SetPropertiesFromXMLNode(const aNode: PXMLNode); virtual;
     procedure AddPropertiesToXMLNode(const aNode: PXMLNode); virtual;
 
@@ -127,6 +127,11 @@ begin
   Result := '';
 end;
 
+class function TxsdBaseObject.GetNodeName: string;
+begin
+  Result := '';
+end;
+
 procedure TxsdBaseObject.SetIsDirty(Value: boolean);
 begin
   FIsDirty := Value;
@@ -162,6 +167,16 @@ begin
   for lObject in Self.Where(lPredicate) do
     aObjectList.Add(lObject.Clone);
 
+end;
+
+class function TxsdBaseObjectList<T>.GetNameSpaceURI: string;
+begin
+  Result := '';
+end;
+
+class function TxsdBaseObjectList<T>.GetNodeName: string;
+begin
+  Result := '';
 end;
 
 procedure TxsdBaseObjectList<T>.SetPropertiesFromXMLNode(const aNode: PXMLNode);

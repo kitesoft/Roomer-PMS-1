@@ -51,15 +51,19 @@ type
   //		<attributeGroup ref="rmrbt:AmountGroup"/>
   //	</complexType>
 {$ENDREGION}
-  TxsdTaxType = class(TxsdBaseObject)
+  TxsdTaxType = class abstract(TxsdBaseObject)
   private
     FDescription: string;
     FAmount: TxsdAmountGroup;
+  public
+    constructor Create;
+    destructor Destroy; override;
+    procedure SetPropertiesFromXMLNode(const aNode: PXMLNode); override;
+    procedure AddPropertiesToXMLNode(const aNode: PXMLNode); override;
   published
     property Description: string read FDescription write FDescription;
     property Amount: TxsdAmountGroup read FAmount write FAmount;
   end;
-
 
 {$REGION 'CurrencyConversionRateType xsd definition'}
   //	<complexType name="CurrencyConversionRateType">
@@ -212,6 +216,17 @@ type
   end;
   TxsdAmount = TxsdAmountGroup;
 
+  TxsdApplicableTax = class(TxsdTaxType)
+  private const
+    cNodeName = 'ApplicableTax';
+  public
+    class function GetNameSpaceURI: string; override;
+    class function GetNodeName: string; override;
+  end;
+
+  TxsdApplicableTaxesList = class(TxsdBaseObjectList<TxsdApplicableTax>)
+  end;
+
 {$REGION 'ExtendedBillableEntryType xsd definition'}
   //	<complexType name="ExtendedBillableEntryType">
   //		<complexContent>
@@ -255,12 +270,13 @@ type
     FTotalPriceGross: TxsdAmountType;
     FTotalConvertedPriceGross: TxsdAmountType;
     FTotalConvertedPriceNet: TxsdAmountType;
-    FApplicableTax: TxsdTaxType;
+    FApplicableTaxList: IList<TxsdApplicableTax>;
     FStatus: TxsdBillableEntryStatus;
     FApplicationDate: TDate;
     FPaymentDateTime: TDateTime;
     FTotalPaymentPriceNet: TxsdAmount;
     FTotalPaymentPriceGross: TxsdAmount;
+    function GetApplicableTaxList: TxsdApplicableTaxesList;
   protected
     class function GetNameSpaceURI: string; override;
     class function GetNodeName: string; override;
@@ -278,7 +294,7 @@ type
     property TotalConvertedPriceNet: TxsdAmountType read FTotalConvertedPriceNet write FTotalConvertedPriceNet;
     property TotalPaymentPriceGross: TxsdAmount read FTotalPaymentPriceGross write FTotalPaymentPriceGross;
     property TotalPaymentPriceNet: TxsdAmount read FTotalPaymentPriceNet write FTotalPaymentPriceNet;
-    property ApplicableTax: TxsdTaxType read FApplicableTax write FApplicableTax;
+    property ApplicableTaxList: TxsdApplicableTaxesList read GetApplicableTaxList;
     property Status: TxsdBillableEntryStatus read FStatus write FStatus;
     property ApplicationDate: TDate read FApplicationDate write FApplicationDate;
     property PaymentDateTime: TDateTime read FPaymentDateTime write FPaymentDateTime;
@@ -882,7 +898,6 @@ end;
 
 class function TxsdInvoiceLineEntryType.CreateInvoiceLineEntryType(aNode: PXMLNode): TxsdInvoiceLineEntryType;
 var
-  lClass: TxsdInvoiceLineEntryTypeClass;
   lNodes: IXMLNodeList;
 begin
   if aNode.SelectNodesNS(TxsdExtendedBillableEntryType.GetNameSpaceURI, TxsdExtendedBillableEntryType.GetnodeName, lNodes ) then
@@ -915,7 +930,7 @@ begin
   FTotalPriceGross.Clear;
   FTotalConvertedPriceGross.Clear;
   FTotalConvertedPriceNet.Clear;
-  FApplicableTax.Clear;
+  FApplicableTaxList.Clear;
   FApplicationDate := 0;
   FPaymentDateTime := 0;
   FTotalPaymentPriceNet.Clear;
@@ -930,9 +945,9 @@ begin
   FTotalPriceGross := TxsdAmountType.Create;;
   FTotalConvertedPriceGross := TxsdAmountType.Create;;
   FTotalConvertedPriceNet := TxsdAmountType.Create;;
-  FApplicableTax := TxsdTaxType.Create;;
   FTotalPaymentPriceNet := TxsdAmountType .Create;;
   FTotalPaymentPriceGross := TxsdAmountType .Create;;
+  FApplicableTaxList := TxsdApplicableTaxesList.Create;
 end;
 
 destructor TxsdExtendedBillableEntryType.Destroy;
@@ -943,9 +958,13 @@ begin
   FTotalPriceGross.Free;
   FTotalConvertedPriceGross.Free;
   FTotalConvertedPriceNet.Free;
-  FApplicableTax.Free;
   FTotalPaymentPriceNet.Free;
   FTotalPaymentPriceGross.Free;
+end;
+
+function TxsdExtendedBillableEntryType.GetApplicableTaxList: TxsdApplicableTaxesList;
+begin
+  Result := FApplicableTaxList as TxsdApplicableTaxesList;
 end;
 
 class function TxsdExtendedBillableEntryType.GetNameSpaceURI: string;
@@ -988,8 +1007,7 @@ begin
   if aNode.SelectNodesNS(GetNameSpaceURI, 'TotalPaymentPriceGross', lNodeList, 1) then
     FTotalPaymentPriceGross.SetPropertiesFromXMLNode(lNodeList.GetFirst);
 
-  if aNode.SelectNodesNS(GetNameSpaceURI, 'ApplicableTax', lNodeList, 1) then
-    FApplicableTax.SetPropertiesFromXMLNode(lNodeList.GetFirst);
+  ApplicableTaxList.SetPropertiesFromXMLNode(aNode);
 
 end;
 
@@ -1140,6 +1158,45 @@ begin
   FPaymentMethod := aNode.Attributes['paymentMethod'];
   FDate := XMLToDateTime(aNode.Attributes['date']);
 
+  FAmount.SetPropertiesFromXMLNode(aNode);
+end;
+
+{ TxsdApplicableTax }
+
+class function TxsdApplicableTax.GetNameSpaceURI: string;
+begin
+  Result := cRmrfmoNameSpaceURI;
+end;
+
+class function TxsdApplicableTax.GetNodeName: string;
+begin
+  Result := cNodeName;
+end;
+
+{ TxsdTaxType }
+
+procedure TxsdTaxType.AddPropertiesToXMLNode(const aNode: PXMLNode);
+begin
+  inherited;
+  RaiseMethodNotImplementedException;
+end;
+
+constructor TxsdTaxType.Create;
+begin
+  inherited;
+  FAmount := TxsdAmountGroup.Create;
+end;
+
+destructor TxsdTaxType.Destroy;
+begin
+  FAmount.Free;
+  inherited;
+end;
+
+procedure TxsdTaxType.SetPropertiesFromXMLNode(const aNode: PXMLNode);
+begin
+  inherited;
+  FDescription := aNode.Attributes['description'];
   FAmount.SetPropertiesFromXMLNode(aNode);
 end;
 
