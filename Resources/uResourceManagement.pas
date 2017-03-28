@@ -18,6 +18,8 @@ const
   CANCEL_EMAIL_TEMPLATE = 'CANCEL_EMAIL_TEMPLATE';
   HOTEL_SQL_RESOURCE = 'HOTEL_SQL_RESOURCE';
   TEXT_BASED_TEMPLATES = 'TEXT_BASED_TEMPLATES';
+  PRE_ARRIVAL_EMAIL_TEMPLATE = 'PRE_ARRIVAL_MAIL_TEMPLATE';
+  POST_DEPARTURE_MAIL_TEMPLATE = 'POST_DEPARTURE_MAIL_TEMPLATE';
 
   ACCESS_OPEN = 'OPEN';
   ACCESS_RESTRICTED = 'RESTRICTED';
@@ -25,12 +27,10 @@ const
 type
 
   TResourceParameters = class
-    FPerformTransformation : Boolean;
     FDefaultFileFilter : String;
   private
-    constructor Create(_PerformTransformation : Boolean; _FileFilter : String);
+    constructor Create(const _FileFilter : String);
   public
-    property PerformTransformation : Boolean read FPerformTransformation;
     property DefaultFileFilter : String read FDefaultFileFilter;
   end;
 
@@ -363,9 +363,8 @@ end;
 
 { TResourceParameters }
 
-constructor TResourceParameters.Create(_PerformTransformation: Boolean; _FileFilter : String);
+constructor TResourceParameters.Create(const _FileFilter : String);
 begin
-  FPerformTransformation := _PerformTransformation;
   FDefaultFileFilter := _FileFilter;
 end;
 
@@ -373,7 +372,7 @@ end;
 
 constructor TImageResourceParameters.Create(_MaxWidth, _MaxHeight: Integer; _BackColor : TColor);
 begin
-  inherited Create(true, 'Images (*.jpg;*.png;*.bmp;*.gif)|*.jpg;*.png;*.bmp;*.gif|Videos (*.wmv;*.avi;*.mp4)|*.wmv;*.avi;*.mp4|Sound (*.mp3)|*.mp3|Any file (*.*)|*.*');
+  inherited Create('Images (*.jpg;*.png;*.bmp;*.gif)|*.jpg;*.png;*.bmp;*.gif|Videos (*.wmv;*.avi;*.mp4)|*.wmv;*.avi;*.mp4|Sound (*.mp3)|*.mp3|Any file (*.*)|*.*');
   MaxWidth := _MaxWidth;
   MaxHeight := _MaxHeight;
   BackColor := _BackColor;
@@ -383,21 +382,21 @@ end;
 
 constructor THtmlResourceParameters.Create;
 begin
-  inherited Create(true, 'Html files (*.htm;*.html)|*.htm;*.html|Text files (*.txt)|*.txt|Any file (*.*)|*.*');
+  inherited Create('Html files (*.htm;*.html)|*.htm;*.html|Text files (*.txt)|*.txt|Any file (*.*)|*.*');
 end;
 
 { TSqlResourceParameters }
 
 constructor TSqlResourceParameters.Create;
 begin
-  inherited Create(true, 'Sql files (*.sql)|*.sql|Text files (*.txt)|*.txt|Any file (*.*)|*.*');
+  inherited Create('Sql files (*.sql)|*.sql|Text files (*.txt)|*.txt|Any file (*.*)|*.*');
 end;
 
 { TTextResourceParameters }
 
 constructor TTextResourceParameters.Create;
 begin
-  inherited Create(true, 'Text files (*.txt)|*.txt|Any file (*.*)|*.*');
+  inherited Create('Text files (*.txt)|*.txt|Any file (*.*)|*.*');
 end;
 
 

@@ -696,6 +696,8 @@ type
     splStatistics: TsSplitter;
     btnDefaultMasterRates: TdxBarLargeButton;
     dxUserActivityLog: TdxBarLargeButton;
+    dbbPreArrivalEmailTemplate: TdxBarButton;
+    dbbPostDepartureEmailTemplate: TdxBarButton;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
@@ -986,6 +988,8 @@ type
     procedure btnDefaultMasterRatesClick(Sender: TObject);
     procedure grOneDayRoomsScrollCell(Sender: TObject; ACol, ARow, ScrollPosition, ScrollMin, ScrollMax: Integer);
     procedure dxUserActivityLogClick(Sender: TObject);
+    procedure dbbPostDepartureEmailTemplateClick(Sender: TObject);
+    procedure dbbPreArrivalEmailTemplateClick(Sender: TObject);
 
   private
     FReservationsModel: TReservationsModel;
@@ -11318,13 +11322,37 @@ begin
   mniCancelEmailTemplatesClick(nil);
 end;
 
+procedure TfrmMain.dbbPostDepartureEmailTemplateClick(Sender: TObject);
+var
+  lParams: THtmlResourceParameters;
+begin
+  lParams := THtmlResourceParameters.Create;
+  try
+    StaticResources(TdxBarButton(Sender).Caption, POST_DEPARTURE_MAIL_TEMPLATE, ACCESS_OPEN, lParams);
+  finally
+    lParams.Free;
+  end;
+end;
+
+procedure TfrmMain.dbbPreArrivalEmailTemplateClick(Sender: TObject);
+var
+  lParams: THtmlResourceParameters;
+begin
+  lParams := THtmlResourceParameters.Create;
+  try
+    StaticResources(TdxBarButton(Sender).Caption, PRE_ARRIVAL_EMAIL_TEMPLATE, ACCESS_OPEN, lParams);
+  finally
+    lParams.Free;
+  end;
+end;
+
 procedure TfrmMain.mniBookinglEmailTemplatesClick(Sender: TObject);
 var
   lParams: THtmlResourceParameters;
 begin
   lParams := THtmlResourceParameters.Create;
   try
-    StaticResources('Booking Confirmation Email Templates', GUEST_EMAIL_TEMPLATE, ACCESS_OPEN, lParams);
+    StaticResources(TdxBarButton(Sender).Caption, GUEST_EMAIL_TEMPLATE, ACCESS_OPEN, lParams);
   finally
     lParams.Free;
   end;
@@ -11336,7 +11364,7 @@ var
 begin
   lParams := THtmlResourceParameters.Create;
   try
-    StaticResources('Cancellation Confirmation Email Templates', CANCEL_EMAIL_TEMPLATE, ACCESS_OPEN, lParams);
+    StaticResources(TdxBarButton(Sender).Caption, CANCEL_EMAIL_TEMPLATE, ACCESS_OPEN, lParams);
   finally
     lParams.Free;
   end;
@@ -12196,6 +12224,7 @@ procedure TfrmMain.DayClosingTimes;
 begin
   EditDayClosingTimes;
 end;
+
 
 // #######################  Employee  ########################################
 

@@ -1,29 +1,27 @@
-object FrmResources: TFrmResources
-  Left = 0
-  Top = 0
+inherited FrmResources: TFrmResources
   Caption = 'Resources'
   ClientHeight = 518
   ClientWidth = 871
-  Color = clBtnFace
-  Font.Charset = DEFAULT_CHARSET
-  Font.Color = clWindowText
   Font.Height = -10
-  Font.Name = 'Tahoma'
-  Font.Style = []
-  KeyPreview = True
-  OldCreateOrder = False
-  Position = poMainFormCenter
   OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy
-  OnKeyDown = FormKeyDown
+  OnShow = FormShow
+  ExplicitWidth = 887
+  ExplicitHeight = 557
   PixelsPerInch = 96
   TextHeight = 12
-  object pnlHolder: TsPanel
+  inherited sbStatusBar: TsStatusBar
+    Top = 498
+    Width = 871
+    ExplicitTop = 498
+    ExplicitWidth = 871
+  end
+  object pnlHolder: TsPanel [1]
     Left = 0
     Top = 0
     Width = 871
-    Height = 518
+    Height = 498
     Margins.Left = 2
     Margins.Top = 2
     Margins.Right = 2
@@ -47,16 +45,14 @@ object FrmResources: TFrmResources
       OnDragDrop = lvResourcesDragDrop
       OnDragOver = lvResourcesDragOver
       SkinData.SkinSection = 'PANEL'
-      DesignSize = (
-        871
-        75)
       object btnInsert: TsButton
         AlignWithMargins = True
         Left = 3
         Top = 3
         Width = 114
-        Height = 42
+        Height = 36
         Hint = 'Add new record'
+        Margins.Bottom = 9
         Align = alLeft
         Caption = 'New'
         ImageIndex = 23
@@ -72,8 +68,9 @@ object FrmResources: TFrmResources
         Left = 243
         Top = 3
         Width = 114
-        Height = 42
+        Height = 36
         Hint = 'Delete current record'
+        Margins.Bottom = 9
         Align = alLeft
         Caption = 'Delete'
         Enabled = False
@@ -86,11 +83,13 @@ object FrmResources: TFrmResources
         SkinData.SkinSection = 'BUTTON'
       end
       object btnClose: TsButton
-        Left = 765
-        Top = 5
+        AlignWithMargins = True
+        Left = 768
+        Top = 3
         Width = 100
-        Height = 25
-        Anchors = [akTop, akRight]
+        Height = 36
+        Margins.Bottom = 9
+        Align = alRight
         Cancel = True
         Caption = 'Close'
         ImageIndex = 27
@@ -105,8 +104,9 @@ object FrmResources: TFrmResources
         Left = 123
         Top = 3
         Width = 114
-        Height = 42
+        Height = 36
         Hint = 'Delete current record'
+        Margins.Bottom = 9
         Align = alLeft
         Caption = 'View'
         Enabled = False
@@ -123,8 +123,9 @@ object FrmResources: TFrmResources
         Left = 483
         Top = 3
         Width = 114
-        Height = 42
+        Height = 36
         Hint = 'Delete current record'
+        Margins.Bottom = 9
         Align = alLeft
         Caption = 'Edit'
         Enabled = False
@@ -142,8 +143,9 @@ object FrmResources: TFrmResources
         Left = 363
         Top = 3
         Width = 114
-        Height = 42
+        Height = 36
         Hint = 'Delete current record'
+        Margins.Bottom = 9
         Align = alLeft
         Caption = 'Name and subject'
         Enabled = False
@@ -154,15 +156,15 @@ object FrmResources: TFrmResources
         TabOrder = 5
         OnClick = btnRenameClick
         SkinData.SkinSection = 'BUTTON'
-        ExplicitTop = 0
       end
       object btnSource: TsButton
         AlignWithMargins = True
         Left = 603
         Top = 3
         Width = 114
-        Height = 42
+        Height = 36
         Hint = 'Delete current record'
+        Margins.Bottom = 9
         Align = alLeft
         Caption = 'Source'
         Enabled = False
@@ -185,7 +187,7 @@ object FrmResources: TFrmResources
         TabOrder = 7
         object sLabel1: TsLabel
           Left = 91
-          Top = 6
+          Top = 4
           Width = 26
           Height = 12
           Alignment = taRightJustify
@@ -193,7 +195,7 @@ object FrmResources: TFrmResources
         end
         object edtFilter: TButtonedEdit
           Left = 123
-          Top = 3
+          Top = 1
           Width = 234
           Height = 20
           Images = DImages.cxSmallImagesFlat
@@ -210,14 +212,14 @@ object FrmResources: TFrmResources
       Left = 2
       Top = 77
       Width = 867
-      Height = 397
+      Height = 377
       Margins.Left = 2
       Margins.Top = 2
       Margins.Right = 2
       Margins.Bottom = 2
       Align = alClient
       BorderStyle = bsNone
-      Color = 4210752
+      Color = clWhite
       Columns = <
         item
           Caption = 'Filename'
@@ -244,6 +246,8 @@ object FrmResources: TFrmResources
       Font.Name = 'Tahoma'
       Font.Style = []
       FlatScrollBars = True
+      GridLines = True
+      HideSelection = False
       MultiSelect = True
       RowSelect = True
       ParentFont = False
@@ -261,7 +265,7 @@ object FrmResources: TFrmResources
     end
     object sPanel2: TsPanel
       Left = 0
-      Top = 476
+      Top = 456
       Width = 871
       Height = 42
       Align = alBottom
@@ -269,15 +273,13 @@ object FrmResources: TFrmResources
       TabOrder = 2
       Visible = False
       SkinData.SkinSection = 'PANEL'
-      DesignSize = (
-        871
-        42)
       object sButton1: TsButton
-        Left = 753
-        Top = 5
+        AlignWithMargins = True
+        Left = 756
+        Top = 3
         Width = 112
-        Height = 26
-        Anchors = [akRight, akBottom]
+        Height = 36
+        Align = alRight
         Cancel = True
         Caption = 'Cancel'
         ImageIndex = 27
@@ -287,11 +289,12 @@ object FrmResources: TFrmResources
         SkinData.SkinSection = 'BUTTON'
       end
       object sButton2: TsButton
-        Left = 637
-        Top = 5
+        AlignWithMargins = True
+        Left = 640
+        Top = 3
         Width = 110
-        Height = 26
-        Anchors = [akRight, akBottom]
+        Height = 36
+        Align = alRight
         Caption = 'OK'
         Default = True
         ImageIndex = 82
@@ -302,21 +305,26 @@ object FrmResources: TFrmResources
       end
     end
   end
-  object FormStore: TcxPropertiesStore
+  inherited psRoomerBase: TcxPropertiesStore
     Components = <
       item
-        Component = Owner
+        Component = frmBaseRoomerForm.Owner
         Properties.Strings = (
           'Height'
           'Left'
-          'Position'
           'Top'
-          'Width')
+          'Width'
+          'Position')
       end>
-    StorageName = 'Software\Roomer\FormStatus\StaticResources2'
-    StorageType = stRegistry
-    Left = 311
-    Top = 176
+  end
+  inherited cxsrRoomerStyleRepository: TcxStyleRepository
+    PixelsPerInch = 96
+    inherited dxssRoomerGridReportLink: TdxGridReportLinkStyleSheet
+      BuiltIn = True
+    end
+    inherited cxssRoomerGridTableView: TcxGridTableViewStyleSheet
+      BuiltIn = True
+    end
   end
   object PopupMenu1: TPopupMenu
     OnPopup = PopupMenu1Popup

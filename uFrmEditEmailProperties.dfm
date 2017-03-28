@@ -40,9 +40,6 @@ object FrmEditEmailProperties: TFrmEditEmailProperties
     BevelOuter = bvNone
     TabOrder = 0
     SkinData.SkinSection = 'PANEL'
-    ExplicitLeft = -322
-    ExplicitTop = 220
-    ExplicitWidth = 803
     DesignSize = (
       597
       42)
@@ -82,7 +79,7 @@ object FrmEditEmailProperties: TFrmEditEmailProperties
     Height = 21
     Color = clWhite
     Font.Charset = DEFAULT_CHARSET
-    Font.Color = 2302755
+    Font.Color = clBlack
     Font.Height = -11
     Font.Name = 'Tahoma'
     Font.Style = []
@@ -97,7 +94,7 @@ object FrmEditEmailProperties: TFrmEditEmailProperties
     Height = 21
     Color = clWhite
     Font.Charset = DEFAULT_CHARSET
-    Font.Color = 2302755
+    Font.Color = clBlack
     Font.Height = -11
     Font.Name = 'Tahoma'
     Font.Style = []
