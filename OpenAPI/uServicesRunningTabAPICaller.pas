@@ -30,7 +30,7 @@ type
     /// </summary>
     function AddOrUpdateRunningTab(aRunningTabsOverview: TRunningTabsOverview; aOptions: TRUnningTabOptions = []): boolean;
     function DeleteRunningTabProductItem(aLineID: integer): boolean;
-  end;
+  end deprecated;
 
 implementation
 

@@ -12,7 +12,7 @@ uses
   Vcl.ExtCtrls, cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid,
   Vcl.StdCtrls, sCheckBox, cxButtons, sButton, sGroupBox, sEdit, sLabel, sPanel, dxPScxCommon, dxPScxGridLnk, cxClasses,
   cxPropertiesStore, Vcl.ComCtrls, sStatusBar
-  , uRoomerHotelServicesCommunicationModel_RunningTabs, uRunningTabModel, sTabControl
+  , uRunningTabInvoiceViewAdapter, sTabControl, RoomerFinancialDataModel_ModelObjects
   ;
 
 type
@@ -190,13 +190,13 @@ type
     procedure actAddLineExecute(Sender: TObject);
     procedure odsInvoicelinesNewRecord(DataSet: TDataSet);
   private
-    FRunningTabModel: TRunningTabViewAdapter;
+    FRunningTabModel: TRunningTabInvoiceViewAdapter;
     FReservation: integer;
     FRoomReservation: integer;
     FActiveInvoiceIndex: integer;
     procedure SetActiveInvoiceIndex(const Value: integer);
     procedure DeleteCurrentItem;
-    function GetCurrentInvoiceLine: TRunningTabProduct;
+    function GetCurrentInvoiceLine: TxsdInvoiceLineType;
   protected
     procedure DoUpdateControls; override;
     procedure DoLoadData; override;
@@ -212,7 +212,7 @@ implementation
 
 uses
   Spring.Collections
-  , uServicesRunningTabAPICaller
+  , uBookingsRunningTabAPICaller
   , SysUtils
   , uAppGlobal
   , Graphics
@@ -240,11 +240,11 @@ end;
 
 procedure TfrmInvoiceObjects.actDelLineUpdate(Sender: TObject);
 var
-  lInvLine: TRunningTabProduct;
+  lInvLine: TxsdInvoiceLineType;
 begin
   inherited;
   lInvLine := GetCurrentInvoiceLine;
-  actDelLine.Enabled := Assigned(lInvLine) and (lInvLine.ProductType = itSale);
+  actDelLine.Enabled := Assigned(lInvLine); // and (lInvLine.Item. = itSale);
 end;
 
 procedure TfrmInvoiceObjects.btnRemoveItemClick(Sender: TObject);
@@ -254,10 +254,10 @@ begin
   RefreshData;
 end;
 
-function TfrmInvoiceObjects.GetCurrentInvoiceLine: TRunningTabProduct;
+function TfrmInvoiceObjects.GetCurrentInvoiceLine: TxsdInvoiceLineType;
 begin
   if odsInvoicelines.Active and (odsInvoicelines.RecordCount > 0) then
-    Result := odsInvoicelines.GetCurrentModel<TRunningTabProduct>
+    Result := odsInvoicelines.GetCurrentModel<TxsdInvoiceLineType>
   else
     Result := nil;
 end;
@@ -275,31 +275,31 @@ begin
 
   with GetCurrentInvoiceLine do
   begin
-    PurchaseDate := Now;
-    ProductType := itSale;
-    InvoiceIndex := ActiveInvoiceIndex;
+//    PurchaseDate := Now;
+//    ProductType := itSale;
+//    InvoiceIndex := ActiveInvoiceIndex;
   end;
 
 end;
 
 procedure TfrmInvoiceObjects.DeleteCurrentItem();
-var
-  lRunningTabAPI: TRunningTabAPICaller;
+//var
+//  lRunningTabAPI: TRunningTabAPICaller;
 begin
-
-  lRunningTabAPI := TRunningTabAPICaller.Create;
-  try
-    lRunningTabAPI.DeleteRunningTabProductItem(GetCurrentInvoiceLine.ID);
-  finally
-    lRunningTabAPI.Free;
-  end;
+//
+//  lRunningTabAPI := TRunningTabAPICaller.Create;
+//  try
+//    lRunningTabAPI.DeleteRunningTabProductItem(GetCurrentInvoiceLine.ID);
+//  finally
+//    lRunningTabAPI.Free;
+//  end;
 end;
 
 
 constructor TfrmInvoiceObjects.Create(aOwner: TComponent);
 begin
   inherited;
-  FRunningTabModel := TRunningTabViewAdapter.Create;
+  FRunningTabModel := TRunningTabInvoiceViewAdapter.Create;
 end;
 
 destructor TfrmInvoiceObjects.Destroy;
@@ -312,7 +312,7 @@ end;
 
 procedure TfrmInvoiceObjects.DoLoadData;
 var
-  lRunningTabAPI: TRunningTabAPICaller;
+  lRunningTabAPI: TBookingsRunningTabAPICaller;
 begin
   inherited;
 
@@ -321,9 +321,9 @@ begin
   try
     odsPayments.Close;
     odsInvoicelines.Close;
-    lRunningTabApi := TRunningTabAPICaller.Create;
+    lRunningTabApi := TBookingsRunningTabAPICaller.Create;
     try
-      lRunningTabAPI.GetRunningTabRoomRes(FRoomReservation, FRunningTabModel.RunningTabsOverview, [TRunningTabAPICaller.TRunningTabOption.SplitOnInvoiceIndex]);
+      lRunningTabAPI.GetRunningTabRoomRes(FReservation, FRoomReservation, 0, FRunningTabModel.RunningTabsOverview);
 
       UpdateControls;
     finally
@@ -386,16 +386,16 @@ end;
 
 procedure TfrmInvoiceObjects.tvPaymentsPayGroupGetDisplayText(Sender: TcxCustomGridTableItem;
   ARecord: TcxCustomGridRecord; var AText: string);
-var
-  lPayment: TRunningTabPayment;
+//var
+//  lPayment: TRunningTabPayment;
 begin
-  inherited;
-  lPayment := odsPayments.GetCurrentModel<TRunningTabPayment>;
-  if assigned(lPayment) and glb.Paytypesset.Locate('payType', lPayment.PaytypeCode, []) then
-    aText := glb.Paytypesset.FieldByName('payGroup').asString
-  else
-    aText := '';
-
+//  inherited;
+//  lPayment := odsPayments.GetCurrentModel<TRunningTabPayment>;
+//  if assigned(lPayment) and glb.Paytypesset.Locate('payType', lPayment.PaytypeCode, []) then
+//    aText := glb.Paytypesset.FieldByName('payGroup').asString
+//  else
+//    aText := '';
+//
 end;
 
 initialization

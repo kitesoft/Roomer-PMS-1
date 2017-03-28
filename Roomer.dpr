@@ -282,7 +282,9 @@ uses
   uRoomerCanonicalDataModel_SimpleTypes in 'OpenAPI\schema\uRoomerCanonicalDataModel_SimpleTypes.pas',
   uRunningTabModel in 'Invoice\uRunningTabModel.pas',
   RoomerBookingCommunicationModel_RequestsResponses in 'OpenAPI\schema\RoomerBookingCommunicationModel_RequestsResponses.pas',
-  uBookingsRunningTabAPICaller in 'OpenAPI\uBookingsRunningTabAPICaller.pas';
+  uBookingsRunningTabAPICaller in 'OpenAPI\uBookingsRunningTabAPICaller.pas',
+  uRunningTabInvoiceViewAdapter in 'Invoice\uRunningTabInvoiceViewAdapter.pas',
+  uExceptionUtils in 'RoomerUtils\uExceptionUtils.pas';
 
 {$R *.RES}
 
@@ -311,15 +313,15 @@ begin
 
     TSplashFormManager.Show;
 
-    AApplication.CreateForm(TD, D);
-  .ApplicationId := cOpenAPIApplicationID;
+    Application.CreateForm(TD, D);
+    D.ApplicationId := cOpenAPIApplicationID;
 
-    AApplication.CreateForm(TDReportData, DReportData);
-  SplashFormManager.UpdateProgress('Loading forms...');
+    Application.CreateForm(TDReportData, DReportData);
+    TSplashFormManager.UpdateProgress('Loading forms...');
 
-    AApplication.CreateForm(TDImages, DImages);
-  Application.CreateForm(TfrmMain, frmMain);
-  f D.roomerMainDataSet.IsConnectedToInternet then
+    Application.CreateForm(TDImages, DImages);
+    Application.CreateForm(TfrmMain, frmMain);
+    if D.roomerMainDataSet.IsConnectedToInternet then
     begin
       Application.CreateForm(TfrmDaysStatistics, frmDaysStatistics);
       Application.CreateForm(TfrmRateQuery, frmRateQuery);

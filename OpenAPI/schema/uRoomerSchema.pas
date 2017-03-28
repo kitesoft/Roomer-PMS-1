@@ -44,6 +44,7 @@ type
     class function GetNameSpaceURI: string; virtual;
     procedure SetPropertiesFromXMLNode(const aNode: PXMLNode); virtual;
     procedure AddPropertiesToXMLNode(const aNode: PXMLNode); virtual;
+    procedure LoadFromXML(const aXML: string);
 
     procedure CopyAllDirtyItemsInto(aObjectList: TxsdBaseObjectList<T>);
   end;
@@ -177,6 +178,20 @@ end;
 class function TxsdBaseObjectList<T>.GetNodeName: string;
 begin
   Result := '';
+end;
+
+procedure TxsdBaseObjectList<T>.LoadFromXML(const aXML: string);
+var
+  xmlDoc: IXMLDocument;
+  lNodeList: IXMLNodeList;
+begin
+  Clear;
+  xmlDoc := TXMLDocument.Create;
+  xmlDoc.LoadFromXML(aXML);
+  if assigned(xmlDoc.parseError) then
+    raise ERoomerSchemaException.Create('XML Load error:' + xmlDoc.parseError.reason);
+
+  SetPropertiesFromXMLNode(xmldoc.DocumentElement)
 end;
 
 procedure TxsdBaseObjectList<T>.SetPropertiesFromXMLNode(const aNode: PXMLNode);
