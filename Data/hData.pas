@@ -22,6 +22,7 @@ uses
   , System.Generics.Collections
   , uReservationStateDefinitions
   , uRoomReservationOBJ
+  , uRoomerThreadedRequest
   ;
 
 const
@@ -467,7 +468,6 @@ type
     Price3To: string;
     Currency: string;
     Discount: double;
-    Percentage: boolean;
     PriceType: string;
     Arrival: string;
     Departure: string;
@@ -610,59 +610,58 @@ type
 
 
   recPersonHolder = record
-    id: integer;   {}
-    Person: integer;  {}
-    RoomReservation: integer;
-    Reservation: integer;
+    id                       : integer;
+    Person                   : integer;
+    RoomReservation          : integer;
+    Reservation              : integer;
 
-    PersonsProfilesId : Integer; {New}
-    title : string; {New}
-    name: string;
-    Surname: string;
-    Address1: string;
-    Address2: string;
-    Address3: string;
-    Address4: string;
-    Country: string;
+    PersonsProfilesId        : Integer;
+    Title                    : string;
+    Name                     : string;
+    Surname                  : string;
+    Address1                 : string;
+    Address2                 : string;
+    Address3                 : string;
+    Address4                 : string;
+    Country                  : string;
 
-    Tel1: string;
-    Tel2: string;
-    Fax: string;
-    Email: string;
+    Tel1                     : string;
+    Tel2                     : string;
+    Fax                      : string;
+    Email                    : string;
 
-    GuestType: string;
-    Information: string;
+    GuestType                : string;
+    Information              : string;
 
-    Nationality : string; {New}
-    PID: string;
-    MainName: boolean;
+    Nationality              : string;
+    PID                      : string;
+    MainName                 : boolean;
 
-    Customer: string;
+    Customer                 : string;
 
-    Company        : string;           //   `Company` varchar(100) DEFAULT '',
-    CompanyName    : string;           //   `CompanyName` varchar(100) DEFAULT NULL,
-    CompAddress1   : string;           //   `CompAddress1` varchar(100) DEFAULT NULL,
-    CompAddress2   : string;           //   `CompAddress2` varchar(100) DEFAULT NULL,
-    CompZip        : string;           //   `CompZip` varchar(45) DEFAULT NULL,
-    CompCity       : string;           //   `CompCity` varchar(100) DEFAULT NULL,
-    CompCountry    : string;           //   `CompCountry` varchar(2) DEFAULT NULL,
-    CompTel        : string;           //   `CompTel` varchar(40) DEFAULT NULL,
-    CompEmail      : string;           //   `CompEmail` varchar(255) DEFAULT NULL,
+    Company                  : string;
+    CompanyName              : string;
+    CompAddress1             : string;
+    CompAddress2             : string;
+    CompZip                  : string;
+    CompCity                 : string;
+    CompCountry              : string;
+    CompTel                  : string;
+    CompEmail                : string;
 
-    CompFax        : string;           //   `CompFax` varchar(40) DEFAULT NULL,
-    CompVATNumber  : string;           //   `CompVATNumber` varchar(45) DEFAULT NULL,
+    CompFax                  : string;
+    CompVATNumber            : string;
+    peTmp                    : string;
+    hgrID                    : Integer;
+    HallReservation          : Integer;
 
-    peTmp          : string;
-    hgrID          : integer;
-    HallReservation: integer;
-
-    state                    : string;
-    sourceId                 : String;
+    State                    : string;
+    SourceId                 : String;
     PersonalIdentificationId : string;
-    DateOfBirth              : TdateTime;
+    DateOfBirth              : TDateTime;
     SocialSecurityNumber     : string;
-    confirmDate              : TdateTime;
-    lastUpdate               : TdateTime;
+    ConfirmDate              : TDateTime;
+    LastUpdate               : TDateTime;
   end;
 
   recResInfo = record
@@ -751,7 +750,6 @@ type
     avrageRate: double;
     Currency: string;
     Discount: double;
-    Percentage: boolean;
   end;
 
   recRoomsDateRentInfo = record
@@ -1650,8 +1648,6 @@ function SP_INS_RoomReservation(theData: recRoomReservationHolder): boolean;
 function SQL_INS_RoomReservation(theData: recRoomReservationHolder): string;
 function SP_INS_DelRoomReservation(theData: recRoomReservationHolder): boolean;
 
-function INS_DelPerson(theData: recPersonHolder): boolean;
-
 function SP_UPD_tblRoomStatusByDateRangeAndRoomType(RoomType: string; available: integer; FromDate, ToDate: Tdate): boolean;
 
 // function SP_GET_Item_ByItem(var theData : recItemHolder; Connection : TRoomerConnection; loglevel : integer=0; logpath : string='') : boolean;
@@ -1843,6 +1839,7 @@ function IVH_RestoreID: integer;
 function IVH_GetLastID: integer;
 
 procedure SendInvoicesToFinancePacket(zInvoiceNumber: integer);
+procedure SendInvoicesToFinancePacketThreaded(zInvoiceNumber: integer);
 
 function NumberOfInvoiceLines(iReservation, iRoomReservation, iSplitNumber: integer; InvoiceIndex : Integer = -1): integer;
 function GetRate(Currency: string): double;
@@ -1868,7 +1865,6 @@ function Country_GetDefault(): string;
 function Item_GetDescription(Item: string): string;
 function Item_GetPrice(Item: string): double;
 
-procedure ins_delRoomReservationInfo_NOT_USED_ANYMORE(RoomReservation: integer; CancelStaff, CancelReason, CancelInformation: string; CancelType: integer);
 
 function Room_GetRec(Room: string): recRoomInfo;
 function Customer_GetHolder(Customer: string): recCustomerHolderEX;
@@ -2086,6 +2082,7 @@ function INS_Packageitem(theData: recPackageItemHolder; var NewID: integer): boo
 function Packageitem_TotalByPackageID(packageId: integer): double;
 
 procedure initPersonHolder(var rec: recPersonHolder);
+procedure initPersonHolderFromProfileID(var personData: recPersonHolder; aProfileId: integer);
 function INS_Person(theData: recPersonHolder; var NewID: integer): boolean;
 function SQL_INS_Person(theData: recPersonHolder): string;
 
@@ -2860,7 +2857,6 @@ begin
     Currency := g.qNativeCurrency;
     // ctrlGetString('NativeCurrency', Connection,loglevel,logPath);
     Discount := 0.00;
-    Percentage := true;
     PriceType := '';
     Arrival := _db(TDate(date), false);
     Departure := _db(TDate(IncDay(date, 1)), false);;
@@ -3054,7 +3050,6 @@ begin
     avrageRate := 0.00;
     Currency := '';
     Discount := 0.00;
-    Percentage := true;
   end;
 end;
 
@@ -3461,19 +3456,15 @@ begin
   if result then
   begin
     NewID := GetLastID('payments');
-    try
-          AddInvoiceActivityLog(g.quser
-                               ,theData.reservation
-                               ,theData.RoomReservation
-                               ,theData.TypeIndex
-                               ,ADD_PAYMENT
-                               ,theData.PayType
-                               ,theData.Amount
-                               ,theData.InvoiceNumber
-                               ,theData.Description);
-    Except
-    end;
-
+    AddInvoiceActivityLog(g.quser
+                         ,theData.reservation
+                         ,theData.RoomReservation
+                         ,theData.TypeIndex
+                         ,ADD_PAYMENT
+                         ,theData.PayType
+                         ,theData.Amount
+                         ,theData.InvoiceNumber
+                         ,theData.Description);
   end;
 
 end;
@@ -3857,7 +3848,6 @@ begin
     b.Append('   ,`Price3To` ' + #10);
     b.Append('   ,`Currency` ' + #10);
     b.Append('   ,`Discount` ' + #10);
-    b.Append('   ,`Percentage` ' + #10);
     b.Append('   ,`PriceType` ' + #10);
     b.Append('   ,`Arrival` ' + #10);
     b.Append('   ,`Departure` ' + #10);
@@ -3908,7 +3898,6 @@ begin
     b.Append('  , ' + _db(theData.Price3To) + #10);
     b.Append('  , ' + _db(theData.Currency) + #10);
     b.Append('  , ' + _db(theData.Discount) + #10);
-    b.Append('  , ' + _db(theData.Percentage) + #10);
     b.Append('  , ' + _db(theData.PriceType) + #10);
     b.Append('  , ' + _db(theData.Arrival) + #10);
     b.Append('  , ' + _db(theData.Departure) + #10);
@@ -3979,7 +3968,6 @@ begin
   s := s + '  ,Price3To ' + #10;
   s := s + '  ,Currency ' + #10;
   s := s + '  ,Discount ' + #10;
-  s := s + '  ,Percentage ' + #10;
   s := s + '  ,PriceType ' + #10;
   s := s + '  ,Arrival ' + #10;
   s := s + '  ,Departure ' + #10;
@@ -4027,7 +4015,6 @@ begin
   s := s + '  , ' + _db(theData.Price3To) + #10;
   s := s + '  , ' + _db(theData.Currency) + #10;
   s := s + '  , ' + _db(theData.Discount) + #10;
-  s := s + '  , ' + _db(theData.Percentage) + #10;
   s := s + '  , ' + _db(theData.PriceType) + #10;
   s := s + '  , ' + _db(theData.Arrival) + #10;
   s := s + '  , ' + _db(theData.Departure) + #10;
@@ -4264,65 +4251,6 @@ begin
   end;
 end;
 
-function INS_DelPerson(theData: recPersonHolder): boolean;
-var
-  s: string;
-begin
-  s := '';
-  s := s + 'INSERT INTO tbldelpersons ' + #10;
-  s := s + ' ( ' + #10;
-  s := s + '    Person ' + #10;
-  s := s + '   ,RoomReservation ' + #10;
-  s := s + '   ,Reservation ' + #10;
-  s := s + '   ,Name ' + #10;
-  s := s + '   ,Surname ' + #10;
-  s := s + '   ,Address1 ' + #10;
-  s := s + '   ,Address2 ' + #10;
-  s := s + '   ,Address3 ' + #10;
-  s := s + '   ,Address4 ' + #10;
-  s := s + '   ,Country ' + #10;
-  s := s + '   ,Company ' + #10;
-  s := s + '   ,GuestType ' + #10;
-  s := s + '   ,Information ' + #10;
-  s := s + '   ,PID ' + #10;
-  s := s + '   ,MainName ' + #10;
-  s := s + '   ,Customer ' + #10;
-  s := s + '   ,peTmp ' + #10;
-  s := s + '   ,hgrID ' + #10;
-  // s := s+ '   ,HallReservation '+#10;
-  // s := s+ '   ,Tel1 '+#10;
-  // s := s+ '   ,Tel2 '+#10;
-  // s := s+ '   ,Fax '+#10;
-  // s := s+ '   ,Email '+#10;
-  s := s + '    ) ' + #10;
-  s := s + '    VALUES ' + #10;
-  s := s + '    ( ' + #10;
-  s := s + '     ' + _db(theData.Person) + #10;
-  s := s + '   , ' + _db(theData.RoomReservation) + #10;
-  s := s + '   , ' + _db(theData.Reservation) + #10;
-  s := s + '   , ' + _db(theData.name) + #10;
-  s := s + '   , ' + _db(theData.Surname) + #10;
-  s := s + '   , ' + _db(theData.Address1) + #10;
-  s := s + '   , ' + _db(theData.Address2) + #10;
-  s := s + '   , ' + _db(theData.Address3) + #10;
-  s := s + '   , ' + _db(theData.Address4) + #10;
-  s := s + '   , ' + _db(theData.Country) + #10;
-  s := s + '   , ' + _db(theData.Company) + #10;
-  s := s + '   , ' + _db(theData.GuestType) + #10;
-  s := s + '   , ' + _db(theData.Information) + #10;
-  s := s + '   , ' + _db(theData.PID) + #10;
-  s := s + '   , ' + _db(theData.MainName) + #10;
-  s := s + '   , ' + _db(theData.Customer) + #10;
-  s := s + '   , ' + _db(theData.peTmp) + #10;
-  s := s + '   , ' + _db(theData.hgrID) + #10;
-  // s := s+ '   , '  + _db(theData.tel1)+#10;
-  // s := s+ '   , '  + _db(theData.tel2)+#10;
-  // s := s+ '   , '  + _db(theData.fax)+#10;
-  // s := s+ '   , '  + _db(theData.Email)+#10;
-  s := s + ' ) ' + #10;
-  result := cmd_bySQL(s);
-end;
-
 function SP_GET_RoomReservation(RoomReservation: integer): recRoomReservationHolder;
 var
   rSet: TRoomerDataSet;
@@ -4353,7 +4281,6 @@ begin
       result.Price3To := rSet.fieldbyname('Price3To').asString;
       result.Currency := rSet.fieldbyname('Currency').asString;
       result.Discount := rSet.fieldbyname('Discount').AsFloat;
-      result.Percentage := rSet['Percentage'];
       result.PriceType := rSet.fieldbyname('PriceType').asString;
       result.Arrival := rSet.fieldbyname('Arrival').asString;
       result.Departure := rSet.fieldbyname('Departure').asString;
@@ -4884,6 +4811,23 @@ begin
     if remoteResult <> '' then
     begin
       HandleFinanceBookKeepingExceptions(zInvoiceNumber, remoteResult);
+    end;
+  end;
+end;
+
+procedure SendInvoicesToFinancePacketThreaded(zInvoiceNumber: integer);
+var
+  s, s1 : String;
+  lPutThreadedData: TPutOrPostDataThreaded;
+begin
+  if g.qSendInvoicesToFinancePacket then
+  begin
+    lPutThreadedData := TPutOrPostDataThreaded.Create;
+    try
+      s := format('financekeys/%d', [zInvoiceNumber]);
+      lPutThreadedData.Put(s, '', nil);
+    finally
+      lPutThreadedData.Free;
     end;
   end;
 end;
@@ -6079,8 +6023,7 @@ begin
     s := s + '  `PriceType`, '#10;
     s := s + '  `AvrageRate`, '#10;
     s := s + '  `Currency`, '#10;
-    s := s + '  `Discount`, '#10;
-    s := s + '  `Percentage` '#10;
+    s := s + '  `Discount` '#10;
     s := s + 'FROM '#10;
     s := s + '  `roomreservations` '#10;
     s := s + 'WHERE '#10;
@@ -6096,7 +6039,6 @@ begin
       avrageRate := rSet.GetFloatValue(rSet.fieldbyname('AvrageRate'));
       Currency := rSet.fieldbyname('Currency').asString;
       Discount := rSet.GetFloatValue(rSet.fieldbyname('Discount'));
-      Percentage := rSet.fieldbyname('Percentage').Asboolean;
 
       result.RoomReservation := RoomReservation;
       result.Reservation := Reservation;
@@ -6104,7 +6046,6 @@ begin
       result.avrageRate := avrageRate;
       result.Currency := Currency;
       result.Discount := Discount;
-      result.Percentage := Percentage;
     end;
   finally
     freeandnil(rSet);
@@ -6137,76 +6078,6 @@ begin
       Arrival := rSet.fieldbyname('rrArrival').AsDateTime;
       Departure := rSet.fieldbyname('rrDeparture').AsDateTime;
       result := trunc(Departure) - trunc(Arrival);
-    end;
-  finally
-    freeandnil(rSet);
-  end;
-end;
-
-procedure ins_delRoomReservationInfo_NOT_USED_ANYMORE(RoomReservation: integer; CancelStaff, CancelReason, CancelInformation: string; CancelType: integer);
-var
-  s: string;
-  roomReservationRec: recRoomReservationHolder;
-  reservationRec: recReservationHolder;
-  personRec: recPersonHolder;
-
-  rSet: TRoomerDataSet;
-begin
-  roomReservationRec := SP_GET_RoomReservation(RoomReservation);
-
-  roomReservationRec.CancelDate := now;
-  roomReservationRec.CancelStaff := CancelStaff;
-  roomReservationRec.CancelReason := CancelReason;
-  roomReservationRec.CancelInformation := CancelInformation;
-  roomReservationRec.CancelType := CancelType;
-
-  SP_INS_DelRoomReservation(roomReservationRec);
-
-  s := '';
-  s := s + ' DELETE ' + #10;
-  s := s + '   FROM ' + #10;
-  s := s + '     tbldelreservations ' + #10;
-  s := s + ' WHERE ' + #10;
-  s := s + '   Reservation = ' + inttostr(roomReservationRec.Reservation);
-  if not cmd_bySQL(s) then
-  begin
-  end;
-
-  reservationRec := SP_GET_Reservation(roomReservationRec.Reservation);
-  SP_INS_DelReservation(reservationRec);
-
-  rSet := CreateNewDataSet;
-  try
-    // lstParams.Clear;
-    // lstParams.Add('@roomreservation=' + inttoStr(roomReservation));
-    // S_execute(guestSet, 'GET_Person_By_roomreservation', lstParams);
-    s := format(select_Person_By_roomreservation, [RoomReservation]);
-    if hData.rSet_bySQL(rSet, s) then
-    begin
-      while not rSet.Eof do
-      begin
-        initPersonHolder(personRec);
-        personRec.Person := rSet.fieldbyname('person').asInteger;
-        personRec.RoomReservation := rSet.fieldbyname('RoomReservation').asInteger;
-        personRec.Reservation := rSet.fieldbyname('reservation').asInteger;
-        personRec.name := rSet.fieldbyname('name').asString;
-        personRec.Surname := rSet.fieldbyname('surName').asString;
-        personRec.Address1 := rSet.fieldbyname('Address1').asString;
-        personRec.Address2 := rSet.fieldbyname('Address2').asString;
-        personRec.Address3 := rSet.fieldbyname('Address3').asString;
-        personRec.Address4 := rSet.fieldbyname('Address4').asString;
-        personRec.Country := rSet.fieldbyname('Country').asString;
-        personRec.GuestType := rSet.fieldbyname('GuestType').asString;
-        personRec.Information := rSet.fieldbyname('Information').asString;
-        personRec.PID := rSet.fieldbyname('PID').asString;
-        personRec.MainName := rSet['MainName'];
-        personRec.Customer := rSet.fieldbyname('Customer').asString;
-        personRec.peTmp := rSet.fieldbyname('peTmp').asString;
-        personRec.hgrID := rSet.fieldbyname('hgrID').asInteger;
-        personRec.HallReservation := rSet.fieldbyname('HallReservation').asInteger;
-        INS_DelPerson(personRec);
-        rSet.Next;
-      end;
     end;
   finally
     freeandnil(rSet);
@@ -9352,33 +9223,8 @@ begin
 end;
 
 function RR_GetIDs(Count: integer): string;
-// var
-// Rset : TRoomerDataSet;
-// s : string;
-// i : integer;
-// Lastid : integer;
 begin
   result := StringReplace(d.roomerMainDataSet.SystemMultipleNewRoomReservationIds(Count), ',', '|', [rfReplaceAll, rfIgnoreCase]);
-  // RSet := CreateNewDataSet;
-  // try
-  // s := 'SELECT LastRoomRes,ID FROM [control] ';
-  // if hData.rSet_bySQL(rSet,s) then
-  // begin
-  // lastId := Rset.fieldbyname('LastRoomRes').asInteger;
-  // result := '';
-  // for I := 1 to count do
-  // begin
-  // lastID := lastID+1;
-  // result := result+inttostr(LastId)+'|'
-  // end;
-  // if length(result) > 0 then delete(result,length(result),1);
-  // Rset.edit;
-  // Rset.fieldbyname('LastRoomRes').asInteger := LastID;
-  // Rset.Post;
-  // end;
-  // finally
-  // freeandnil(Rset);
-  // end;
 end;
 
 function Persons_GetIDs(Count: integer): string;
@@ -10674,10 +10520,10 @@ begin
   s := s + ' ,connectCODToMasterRate ' + #10;
   s := s + ' ,connectLOSToMasterRate ' + #10;
   s := s + ' ,RATE_PLAN_TYPE ' + #10;
-  s := s + ' ,masterRateExtraRateDeviation = ' + #10;
-  s := s + ' ,extraRateDeviationType = ' + #10;
-  s := s + ' ,masterRateExtraSingleUseRateDeviation = ' + #10;
-  s := s + ' ,extraSingleUseRateDeviationType = ' + #10;
+  s := s + ' ,masterRateExtraRateDeviation ' + #10;
+  s := s + ' ,extraRateDeviationType ' + #10;
+  s := s + ' ,masterRateExtraSingleUseRateDeviation ' + #10;
+  s := s + ' ,extraSingleUseRateDeviationType ' + #10;
   s := s + ' ,prepaidPercentage ' + #10;
   s := s + '  ) ' + #10;
   s := s + '   VALUES ' + #10;
@@ -13861,12 +13707,59 @@ end;
 //
 //
 /// //////////////////////////////////////////////////////////////////
+procedure initPersonHolderFromProfileID(var personData: recPersonHolder; aProfileId: integer);
+begin
+  initPersonHolder(personData);
+
+  if glb.LocateSpecificRecord('personprofiles', 'ID', aProfileId) then
+    with personData do
+    begin
+      PersonsProfilesId        := aProfileId;
+      id                       := aProfileId;
+      Title                    := glb.PersonProfiles['title'];
+      Name                     := glb.PersonProfiles['FirstName'];
+      Surname                  := glb.PersonProfiles['LastName'];
+      Address1                 := glb.PersonProfiles['Address1'];
+      Address2                 := glb.PersonProfiles['Address2'];
+      Address3                 := glb.PersonProfiles['Zip'];
+      Address4                 := glb.PersonProfiles['City'];
+      Country                  := glb.PersonProfiles['Country'];
+      State                    := glb.PersonProfiles['State'];
+
+      Tel1                     := glb.PersonProfiles['TelMobile'];
+      Tel2                     := glb.PersonProfiles['TelLandLine'];
+      Fax                      := glb.PersonProfiles['TelFax'];
+      Email                    := glb.PersonProfiles['Email'];
+
+      Information              := glb.PersonProfiles['Information'];
+
+      Nationality              := glb.PersonProfiles['Nationality'];
+      Customer                 := glb.PersonProfiles['CustomerCode'];
+
+      Company                  := glb.PersonProfiles['CompanyName'];
+      CompanyName              := glb.PersonProfiles['CompanyName'];
+      CompAddress1             := glb.PersonProfiles['CompAddress1'];
+      CompAddress2             := glb.PersonProfiles['CompAddress2'];
+      CompZip                  := glb.PersonProfiles['CompZip'];
+      CompCity                 := glb.PersonProfiles['CompCity'];
+      CompCountry              := glb.PersonProfiles['CompCountry'];
+      CompTel                  := glb.PersonProfiles['CompTel'];
+      CompEmail                := glb.PersonProfiles['CompEmail'];
+      CompFax                  := glb.PersonProfiles['CompFax'];
+      CompVATNumber            := glb.PersonProfiles['CompVATNumber'];
+
+      PersonalIdentificationId := glb.PersonProfiles['PassportNumber'];
+      DateOfBirth              := glb.PersonProfiles['DateOfBirth'];
+      SocialSecurityNumber     := glb.PersonProfiles['SocialSecurityNumber'];
+      LastUpdate               := glb.PersonProfiles['lastUpdate'];
+    end;
+
+end;
 
 procedure initPersonHolder(var rec: recPersonHolder);
 begin
   with rec do
   begin
-    {id}
     Person := -1;
     RoomReservation := -1;
     Reservation := -1;
@@ -13911,13 +13804,13 @@ begin
     hgrID := -1;
     HallReservation := -1;
 
-//    state := '';
-//    sourceId                 : String;
-//    PersonalIdentificationId : string;
-//    DateOfBirth              : TdateTime;
-//    SocialSecurityNumber     : string;
-//    confirmDate              : TdateTime;
-//    lastUpdate               : TdateTime;
+    state := '';
+    sourceId := '';
+    PersonalIdentificationId := '';
+    DateOfBirth := 0;
+    SocialSecurityNumber  := '';
+    confirmDate := 0;
+    lastUpdate := 0;
 
   end;
 end;
@@ -13972,6 +13865,9 @@ begin
   s := s + '   ,Tel2 ' + #10;
   s := s + '   ,Fax ' + #10;
   s := s + '   ,Email ' + #10;
+  s := s + '   ,Title' + #10;
+  s := s + '   ,SocialSecurityNumber ' + #10;
+  s := s + '   ,PersonalIdentificationId' + #10;
   s := s + '  ) ' + #10;
   s := s + '  VALUES ' + #10;
   s := s + '  ( ' + #10;
@@ -13998,7 +13894,6 @@ begin
   s := s + ' , ' + _db(theData.CompEmail) + #10;
   s := s + ' , ' + _db(theData.PersonsProfilesId) + #10;
 
-
   s := s + ' , ' + _db(theData.GuestType) + #10;
   s := s + ' , ' + _db(theData.Information) + #10;
   s := s + ' , ' + _db(theData.PID) + #10;
@@ -14011,6 +13906,9 @@ begin
   s := s + ' , ' + _db(theData.Tel2) + #10;
   s := s + ' , ' + _db(theData.Fax) + #10;
   s := s + ' , ' + _db(theData.Email) + #10;
+  s := s + ' , ' + _db(theData.Title) + #10;
+  s := s + ' , ' + _db(theData.SocialSecurityNumber) + #10;
+  s := s + ' , ' + _db(theData.PersonalIdentificationId) + #10;
   s := s + '  ) ';
   result := s;
 end;

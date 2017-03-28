@@ -361,7 +361,6 @@ object frmFinishedInvoices2: TfrmFinishedInvoices2
           Height = 230
           TabOrder = 0
           SkinData.SkinSection = 'GROUPBOX'
-          Checked = False
           object Label1: TsLabel
             Left = 67
             Top = 58
@@ -683,6 +682,7 @@ object frmFinishedInvoices2: TfrmFinishedInvoices2
           Top = 7
           Width = 100
           Height = 17
+          Cursor = crArrow
           AutoSize = False
           BorderStyle = bsNone
           Color = clWhite
@@ -706,6 +706,7 @@ object frmFinishedInvoices2: TfrmFinishedInvoices2
           Top = 99
           Width = 100
           Height = 18
+          Cursor = crArrow
           AutoSize = False
           BorderStyle = bsNone
           Color = clWhite
@@ -776,6 +777,7 @@ object frmFinishedInvoices2: TfrmFinishedInvoices2
           Top = 123
           Width = 100
           Height = 16
+          Cursor = crArrow
           AutoSize = False
           BorderStyle = bsNone
           Color = clWhite
@@ -799,6 +801,7 @@ object frmFinishedInvoices2: TfrmFinishedInvoices2
           Top = 30
           Width = 100
           Height = 17
+          Cursor = crArrow
           AutoSize = False
           BorderStyle = bsNone
           Color = clWhite
@@ -822,6 +825,7 @@ object frmFinishedInvoices2: TfrmFinishedInvoices2
           Top = 76
           Width = 100
           Height = 17
+          Cursor = crArrow
           AutoSize = False
           BorderStyle = bsNone
           Color = clWhite
@@ -845,6 +849,7 @@ object frmFinishedInvoices2: TfrmFinishedInvoices2
           Top = 145
           Width = 100
           Height = 17
+          Cursor = crArrow
           AutoSize = False
           BorderStyle = bsNone
           Color = clWhite
@@ -868,6 +873,7 @@ object frmFinishedInvoices2: TfrmFinishedInvoices2
           Top = 168
           Width = 100
           Height = 17
+          Cursor = crArrow
           AutoSize = False
           BorderStyle = bsNone
           Color = clWhite
@@ -914,6 +920,7 @@ object frmFinishedInvoices2: TfrmFinishedInvoices2
           Top = 53
           Width = 100
           Height = 17
+          Cursor = crArrow
           AutoSize = False
           BorderStyle = bsNone
           Color = clWhite
@@ -923,7 +930,9 @@ object frmFinishedInvoices2: TfrmFinishedInvoices2
           Font.Name = 'Courier New'
           Font.Style = []
           ParentFont = False
+          ParentShowHint = False
           ReadOnly = True
+          ShowHint = True
           TabOrder = 11
           SkinData.SkinSection = 'EDIT'
           BoundLabel.Font.Charset = DEFAULT_CHARSET
@@ -937,6 +946,7 @@ object frmFinishedInvoices2: TfrmFinishedInvoices2
           Top = 191
           Width = 100
           Height = 17
+          Cursor = crArrow
           AutoSize = False
           BorderStyle = bsNone
           Color = clWhite
@@ -1199,8 +1209,8 @@ object frmFinishedInvoices2: TfrmFinishedInvoices2
             object LMDSimpleLabel1: TsLabel
               Left = 0
               Top = 0
-              Width = 80
-              Height = 13
+              Width = 338
+              Height = 21
               Align = alClient
               Alignment = taCenter
               Caption = 'VAT Summary'
@@ -1212,6 +1222,8 @@ object frmFinishedInvoices2: TfrmFinishedInvoices2
               Font.Height = -11
               Font.Name = 'Tahoma'
               Font.Style = [fsBold]
+              ExplicitWidth = 80
+              ExplicitHeight = 13
             end
           end
           object agrVSK: TAdvStringGrid
@@ -1325,8 +1337,9 @@ object frmFinishedInvoices2: TfrmFinishedInvoices2
             SearchFooter.HintFindPrev = 'Find previous occurence'
             SearchFooter.HintHighlight = 'Highlight occurences'
             SearchFooter.MatchCaseCaption = 'Match case'
+            SearchFooter.ResultFormat = '(%d of %d)'
             SortSettings.DefaultFormat = ssAutomatic
-            Version = '8.1.2.0'
+            Version = '8.2.5.2'
             RowHeights = (
               18
               21
@@ -1355,8 +1368,8 @@ object frmFinishedInvoices2: TfrmFinishedInvoices2
             object LMDSimpleLabel2: TsLabel
               Left = 0
               Top = 0
-              Width = 109
-              Height = 13
+              Width = 343
+              Height = 21
               Align = alClient
               Alignment = taCenter
               Caption = 'Payment Summary'
@@ -1368,6 +1381,8 @@ object frmFinishedInvoices2: TfrmFinishedInvoices2
               Font.Height = -11
               Font.Name = 'Tahoma'
               Font.Style = [fsBold]
+              ExplicitWidth = 109
+              ExplicitHeight = 13
             end
           end
           object agrPayments: TAdvStringGrid
@@ -1481,8 +1496,9 @@ object frmFinishedInvoices2: TfrmFinishedInvoices2
             SearchFooter.HintFindPrev = 'Find previous occurence'
             SearchFooter.HintHighlight = 'Highlight occurences'
             SearchFooter.MatchCaseCaption = 'Match case'
+            SearchFooter.ResultFormat = '(%d of %d)'
             SortSettings.DefaultFormat = ssAutomatic
-            Version = '8.1.2.0'
+            Version = '8.2.5.2'
             RowHeights = (
               19
               21
@@ -1600,8 +1616,9 @@ object frmFinishedInvoices2: TfrmFinishedInvoices2
         SearchFooter.HintFindPrev = 'Find previous occurence'
         SearchFooter.HintHighlight = 'Highlight occurences'
         SearchFooter.MatchCaseCaption = 'Match case'
+        SearchFooter.ResultFormat = '(%d of %d)'
         SortSettings.DefaultFormat = ssAutomatic
-        Version = '8.1.2.0'
+        Version = '8.2.5.2'
         RowHeights = (
           19
           21

@@ -272,9 +272,19 @@ uses
   _Glob in 'Data\_Glob.pas',
   hData in 'Data\hData.pas',
   uSqlDefinitions in 'Data\uSqlDefinitions.pas',
-  uFrmBusyMessage in 'Dialogs\uFrmBusyMessage.pas' {frmBusyMessage};
+  uRoomerVersionInfo in 'RoomerUtils\uRoomerVersionInfo.pas',
+  uFrmBusyMessage in 'Dialogs\uFrmBusyMessage.pas' {frmBusyMessage},
+  RoomerConfigurationItemsCommunicationModel_RequestsResponses in 'OpenAPI\schema\RoomerConfigurationItemsCommunicationModel_RequestsResponses.pas',
+  uConfigurationItemsAPICaller in 'OpenAPI\uConfigurationItemsAPICaller.pas',
+  uRoomerIDList in 'RoomerVCLs\Source\uRoomerIDList.pas',
+  RoomerFinancialDataModel_ModelObjects in 'OpenAPI\schema\RoomerFinancialDataModel_ModelObjects.pas',
+  uRoomerCanonicalDataModel_BaseTypes in 'OpenAPI\schema\uRoomerCanonicalDataModel_BaseTypes.pas',
+  uRoomerCanonicalDataModel_SimpleTypes in 'OpenAPI\schema\uRoomerCanonicalDataModel_SimpleTypes.pas',
   uRunningTabModel in 'Invoice\uRunningTabModel.pas',
-  uRoomerVersionInfo in 'RoomerUtils\uRoomerVersionInfo.pas';
+  RoomerBookingCommunicationModel_RequestsResponses in 'OpenAPI\schema\RoomerBookingCommunicationModel_RequestsResponses.pas',
+  uBookingsRunningTabAPICaller in 'OpenAPI\uBookingsRunningTabAPICaller.pas',
+  uRunningTabInvoiceViewAdapter in 'Invoice\uRunningTabInvoiceViewAdapter.pas',
+  uExceptionUtils in 'RoomerUtils\uExceptionUtils.pas';
 
 {$R *.RES}
 
@@ -304,15 +314,13 @@ begin
     TSplashFormManager.Show;
 
     Application.CreateForm(TD, D);
-    D.ApplicationId := cOpenAPIAppicationID;
+    D.ApplicationId := cOpenAPIApplicationID;
 
     Application.CreateForm(TDReportData, DReportData);
     TSplashFormManager.UpdateProgress('Loading forms...');
 
     Application.CreateForm(TDImages, DImages);
-
     Application.CreateForm(TfrmMain, frmMain);
-
     if D.roomerMainDataSet.IsConnectedToInternet then
     begin
       Application.CreateForm(TfrmDaysStatistics, frmDaysStatistics);
@@ -327,6 +335,7 @@ begin
 
     Application.Run;
   finally
+    Application.OnException := nil;
     RoomerExceptionHandler.Free;
   end;
 end.

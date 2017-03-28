@@ -421,7 +421,6 @@ begin
              '    MainName, ' +
              '    Price, ' +
              '    Discount, ' +
-             '    Percentage, ' +
              '    PriceType, ' +
              '    Currency, ' +
 //             '    CurrencyRate, ' +
@@ -490,7 +489,6 @@ begin
         s := s + ', rv.PMInfo ';
         s := s + ', rr.AvrageRate AS Price ';
         s := s + ', rr.Discount AS Discount ';
-        s := s + ', rr.Percentage AS Percentage ';
         s := s + ', rr.PriceType AS PriceType ';
         s := s + ', rd.Currency AS Currency ';
         s := s + ', (SELECT id FROM invoicelines WHERE InvoiceNumber=-1 AND roomreservation=rd.roomreservation LIMIT 1) AS ItemsOnInvoice ';

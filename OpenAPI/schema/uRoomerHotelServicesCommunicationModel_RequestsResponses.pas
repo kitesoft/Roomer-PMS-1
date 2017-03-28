@@ -61,13 +61,13 @@ type
     FCategories: IList<TCategory>;
     function GetCategories: TCategoryList;
   protected
-    procedure SetPropertiesFromXMLNode(const aNode: PXMLNode); override;
-    class function GetNodeName: string; override;
   public
     constructor Create;
     destructor Destroy; override;
 
     procedure Clear; override;
+    procedure SetPropertiesFromXMLNode(const aNode: PXMLNode); override;
+    class function GetNodeName: string; override;
 
     procedure AddCategoryNamesAsString(aString: TStrings);
   published
@@ -119,11 +119,11 @@ type
     Fid2: string;
     Fid3: string;
   protected
+  public
+    procedure Clear; override;
     procedure SetPropertiesFromXMLNode(const aNode: PXMLNode); override;
     class function GetNodeName: string; override;
     class function GetNameSpaceURI: string; override;
-  public
-    procedure Clear; override;
   published
     property ActionDateTime: TDateTime read FActionDateTime write FActionDateTime;
     property UserId: string read FUserId write FUserId;
@@ -223,12 +223,6 @@ begin
 end;
 
 procedure TUserActivityCategoriesOverview.SetPropertiesFromXMLNode(const aNode: PXMLNode);
-var
-  lCategoryNode: PXMLNode;
-  lActionNode: PXMLNode;
-  lCatNodes: IXMLNodeList;
-  lActNodes: IXMLNodeList;
-  lCat: TCategory;
 begin
   inherited;
   Categories.SetPropertiesFromXMLNode(aNode);

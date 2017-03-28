@@ -194,6 +194,7 @@ TYPE
     { Private declarations }
     zForeign : boolean;
     zNative : string;
+    externalUsers : String;
     procedure DisplayTab;
     procedure DisplayInvoice(InvoiceNumber : integer );
     function  Display : boolean;
@@ -456,6 +457,8 @@ begin
   initPaymentHolderRec(PaymentData);
   initInvoiceHeadHolderRec(invoiceData);
 
+  externalUsers := '';
+
   initGrid;
   zInvoiceNumber := invoiceNumber;
   IvI := TInvoiceInfo.create(zInvoiceNumber,paymentData,invoiceData);
@@ -605,12 +608,22 @@ begin
         agrPayments.RowCount := iRowIndex + 1;
 //        agrPayments.RowHeights[iRowIndex] := 18;
         agrPayments.Cells[colPaymentType   ,iRowIndex] := ivi.PaymentList[i].pmCode;
+        if ivi.PaymentList[i].pmExternalUser <> '' then
+        begin
+          if ivi.PaymentList[i].pmTypeIndex = 0 then
+            edtStaff.Text := ivi.PaymentList[i].pmExternalUser;
+          externalUsers := externalUsers +
+                           IIF(externalUsers = '', '', ',') +
+                           format('%s %s', [ivi.PaymentList[i].pmExternalUser, ivi.PaymentList[i].pmExternalUserName]) +
+                           #13#10;
+        end;
         agrPayments.Cells[colPaymentAmount ,iRowIndex] := _FloatToStr(ivi.PaymentList[i].pmAmount , vWidth, vDec );
         TotalPayments := TotalPayments + ivi.PaymentList[i].pmAmount;
         dateTimeToString(s,'dd.mm.yyyy',ivi.PaymentList[i].pmDate);
         agrPayments.Cells[colPaymentDate   ,iRowIndex] := S;
       end;
 
+      edtStaff.Hint := externalUsers;
       if ivi.paymentCount > 1 then
       begin
         inc(iRowIndex);

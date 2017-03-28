@@ -12,13 +12,13 @@ uses
    ;
 
 type
-  EXMLDocException = class(Exception);
+  ERoomerSchemaException = class(Exception);
 
-  TxsdBaseObject = class(TPersistent)
+  TxsdBaseObject = class abstract (TPersistent)
   private
     FIsDirty: boolean;
   protected
-    class function GetNodeName: string; virtual; abstract;
+    class function GetNodeName: string; virtual;
     class function GetNameSpaceURI: string; virtual;
     procedure SetIsDirty(Value: boolean);
     procedure AssignTo(Dest: TPersistent); override;
@@ -34,14 +34,17 @@ type
     property IsDirty: boolean read FIsDirty;
   end;
 
+  TxsdBaseObjectClass = class of TxsdBaseObject;
 
-  TxsdBaseObjectList<T: TxsdBaseObject, constructor> = class(TObjectList<T>)
+
+  TxsdBaseObjectList<T: TxsdBaseObject, constructor> = class abstract(TObjectList<T>)
   protected
   public
-    class function GetNodeName: string; virtual; abstract;
-    class function GetNameSpaceURI: string; virtual; abstract;
+    class function GetNodeName: string; virtual;
+    class function GetNameSpaceURI: string; virtual;
     procedure SetPropertiesFromXMLNode(const aNode: PXMLNode); virtual;
     procedure AddPropertiesToXMLNode(const aNode: PXMLNode); virtual;
+    procedure LoadFromXML(const aXML: string);
 
     procedure CopyAllDirtyItemsInto(aObjectList: TxsdBaseObjectList<T>);
   end;
@@ -65,7 +68,7 @@ begin
   xmlDoc := TXMLDocument.Create;
   xmlDoc.LoadFromXML(aXML);
   if assigned(xmlDoc.parseError) then
-    raise EXMLDocException.Create('XML Load error:' + xmlDoc.parseError.reason);
+    raise ERoomerSchemaException.Create('XML Load error:' + xmlDoc.parseError.reason);
 
   if GetNodeName.IsEmpty or GetNameSpaceURI.IsEmpty then
     SetPropertiesFromXMLNode(xmldoc.DocumentElement)
@@ -76,7 +79,8 @@ end;
 
 procedure TxsdBaseObject.AddPropertiesToXMLNode(const aNode: PXMLNode);
 begin
-  aNode.NodeName := GetNodeName;
+  if aNode.NodeName.IsEmpty then
+    aNode.NodeName := GetNodeName;
 end;
 
 procedure TxsdBaseObject.Assign(Source: TPersistent);
@@ -124,6 +128,11 @@ begin
   Result := '';
 end;
 
+class function TxsdBaseObject.GetNodeName: string;
+begin
+  Result := '';
+end;
+
 procedure TxsdBaseObject.SetIsDirty(Value: boolean);
 begin
   FIsDirty := Value;
@@ -161,6 +170,30 @@ begin
 
 end;
 
+class function TxsdBaseObjectList<T>.GetNameSpaceURI: string;
+begin
+  Result := '';
+end;
+
+class function TxsdBaseObjectList<T>.GetNodeName: string;
+begin
+  Result := '';
+end;
+
+procedure TxsdBaseObjectList<T>.LoadFromXML(const aXML: string);
+var
+  xmlDoc: IXMLDocument;
+  lNodeList: IXMLNodeList;
+begin
+  Clear;
+  xmlDoc := TXMLDocument.Create;
+  xmlDoc.LoadFromXML(aXML);
+  if assigned(xmlDoc.parseError) then
+    raise ERoomerSchemaException.Create('XML Load error:' + xmlDoc.parseError.reason);
+
+  SetPropertiesFromXMLNode(xmldoc.DocumentElement)
+end;
+
 procedure TxsdBaseObjectList<T>.SetPropertiesFromXMLNode(const aNode: PXMLNode);
 var
   lItem: T;
@@ -169,6 +202,7 @@ var
 begin
   onChanged.Enabled := false;
   try
+    Clear;
     if aNode.SelectNodesNS(T.GetNameSpaceURI, T.GetNodeName, lNodeList) then
       for lNode in lNodeList do
       begin

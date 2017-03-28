@@ -183,7 +183,6 @@ type
     { Protected declarations }
     FUsername: String;
     FPassword: String;
-    FAppName: String;
     FAppVersion: String;
     FHotelId: String;
     FLastSql: String;
@@ -217,9 +216,7 @@ type
     procedure markMessageAsRead(id: Integer);
     function KeepSessionAlive: String;
 
-    function ReLogin: boolean;
-    function Login(hotelId: String; username: String; password: String; appName: String; appVersion: String;
-      RightRangeMin: Integer = 90; RightRangeMax: Integer = 100): boolean;
+    procedure Login(const hotelId: String; const username: String; const password: String; const appVersion: String);
     function RoomerAdminLogin(username: String; password: String; appName: String; appVersion: String): boolean;
     procedure Logout;
     procedure LogoutUnaffected;
@@ -455,7 +452,6 @@ begin
   Result.FHotelId := self.FHotelId;
   Result.FPassword := self.FPassword;
   Result.FUsername := self.FUsername;
-  Result.FAppName := self.FAppName;
   Result.FAppVersion := self.FAppVersion;
   Result.AppKey := self.AppKey;
   Result.ApplicationId := self.ApplicationId;
@@ -663,11 +659,6 @@ begin
     Result := FreeQueryThreaded(aSql, SetLastAccess);
 end;
 
-function TRoomerDataSet.ReLogin: boolean;
-begin
-  Result := Login(hotelId, username, password, FAppName, FAppVersion);
-end;
-
 function TRoomerDataSet.RoomerAdminLogin(username, password, appName, appVersion: String): boolean;
 var
   pwmd5: String;
@@ -752,7 +743,7 @@ end;
 
 procedure TRoomerDataSet.AddAuthenticationHeaders(aRoomerClient: TRoomerHttpClient);
 begin
-  aRoomerClient.AddAuthenticationHeaders(hotelId, username, password, FAppName, FAppVersion, TRoomerVersionInfo.ExtraBuild);
+  aRoomerClient.AddAuthenticationHeaders(hotelId, username, password, FApplicationID, FAppVersion, TRoomerVersionInfo.ExtraBuild);
   SetOpenApiAuthHeaders(aRoomerClient.RequestHeader);
 end;
 
@@ -840,7 +831,7 @@ begin
     if contentType = '' then
       _roomerClient.contentType := '*/*;charset=utf-8'
     else
-    _roomerClient.contentType := contentType;
+      _roomerClient.contentType := contentType;
     _roomerClient.AcceptEncoding := 'UTF-8';
     for retries := 1 to 3 do
     begin
@@ -1910,16 +1901,13 @@ begin
   Result := hotelsList;
 end;
 
-function TRoomerDataSet.Login(hotelId: String; username, password: String; appName: String; appVersion: String;
-  RightRangeMin: Integer = 90; RightRangeMax: Integer = 100): boolean;
+procedure TRoomerDataSet.Login(const hotelId: String; const username: String; const password: String; const appVersion: String);
 var
   pwmd5: AnsiString;
   res: String;
 begin
-  Result := true;
   FUsername := username;
   FPassword := password;
-  FAppName := appName;
   FAppVersion := appVersion;
   FHotelId := hotelId;
   pwmd5 := AnsiString(HashedPassword(password));
@@ -1927,24 +1915,21 @@ begin
   try
     res := loginViaPost(RoomerUri + 'authentication/login',
                       format('hotelid=%s&username=%s&pwencoded=%s&appname=%s&appversion=%s&datasettype=0&extraBuild=%s',
-                      [hotelId, username, pwmd5, appName, appVersion, TRoomerVersionInfo.ExtraBuild]));
+                      [hotelId, username, pwmd5, FApplicationId, appVersion, TRoomerVersionInfo.ExtraBuild]));
     SetSessionLengthInSeconds(res);
     FLastAccess := now;
     FLoggedIn := true;
   except
     FLoggedIn := false;
-    Result := false;
+    raise;
   end;
 end;
 
 function TRoomerDataSet.SwapHotel(hotelId: String; var username, password: String): boolean;
 begin
-  Result := Login(hotelId, FUsername, FPassword, FAppName, FAppVersion);
-  if Result then
-  begin
-    username := FUsername;
-    password := FPassword;
-  end;
+  Login(hotelId, FUsername, FPassword, FAppVersion);
+  username := FUsername;
+  password := FPassword;
 end;
 
 function TRoomerDataSet.HashedPassword(password: String): String;

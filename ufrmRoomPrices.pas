@@ -187,6 +187,8 @@ type
     procedure FormShow(Sender: TObject);
     procedure tvRoomRatesNativeAmountGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
       var AProperties: TcxCustomEditProperties);
+    procedure tvRoomRatesDiscountGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
+      var AProperties: TcxCustomEditProperties);
   private
     FRoomReservations: TStringlist;
     FCurrency: string;
@@ -244,7 +246,6 @@ const
     ' ,rr.AvrageRate as AveragePrice '#10 +
     ' ,rr.RateCount '#10 +
     ' ,rr.Discount as AverageDiscount '#10 +
-//    ' ,rr.Percentage as IsPercentage '#10 +
     ' ,rr.Groupaccount '#10 +
     ' ,rr.Package '#10 +
     ' ,CAST(rr.Arrival as DATE) as Arrival '#10 +
@@ -333,6 +334,14 @@ end;
 procedure TfrmRoomPrices.btnRatePerDateClick(Sender: TObject);
 begin
   EditRoomRateOneRoom(mRoomRes.FieldByName('roomreservation').asinteger);
+end;
+
+procedure TfrmRoomPrices.tvRoomRatesDiscountGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
+  var AProperties: TcxCustomEditProperties);
+begin
+  inherited;
+  if not aRecord.Values[tvRoomRatesisPercentage.Index] then
+    aProperties := FCurrencyhandler.GetcxEditProperties;
 end;
 
 procedure TfrmRoomPrices.tvRoomRatesNativeAmountGetProperties(Sender: TcxCustomGridTableItem;

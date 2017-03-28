@@ -233,7 +233,6 @@ type
     procedure Unlock;
 
     function GetHotelCode: string;
-    procedure RegisterApplication;
   public
     qConnected : boolean;
     mHelpFile : string;
@@ -1000,21 +999,9 @@ begin
   end;
 end;
 
-procedure TGlobalApplication.RegisterApplication;
-begin
-  d.roomerMainDataSet.RegisterApplication;
-  ReadWriteSettingsToRegistry(1);
-end;
-
 
 // ************************************************ \\
 // START init Rec
-
-const
-  secAppRegistration = 'AppReg';
-  indApplicationID = 'Application_ID';
-  indAppKey = 'Application_Key';
-  indAppSecret = 'Application_Secret';
 
 procedure TGlobalApplication.UpdateCurrentSecretKey;
 var
@@ -1099,7 +1086,7 @@ begin
             if NOT initialRead then
             begin
               // [AppRegistration]
-              d.roomerMainDataSet.ApplicationID := ReadString(AppRegGroup, indApplicationID, '');
+              d.roomerMainDataSet.ApplicationID := ReadString(AppRegGroup, indApplicationID, cOpenAPIApplicationID);
               d.roomerMainDataSet.AppSecret := ReadString(AppRegGroup, indAppSecret, '');
               d.roomerMainDataSet.AppKey := ReadString(AppRegGroup, indAppKey, '');
               d.CheckAndCorrectCredentials(qHotelCode);

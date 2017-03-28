@@ -59,8 +59,6 @@ object frmTestData: TfrmTestData
     TabOrder = 2
     object sTabSheet1: TsTabSheet
       Caption = 'Booking.com'
-      SkinData.CustomColor = False
-      SkinData.CustomFont = False
       ExplicitLeft = 0
       ExplicitTop = 0
       ExplicitWidth = 0
@@ -122,8 +120,6 @@ object frmTestData: TfrmTestData
         object sheetUpdateNames: TsTabSheet
           Caption = 'Update Names'
           TabVisible = False
-          SkinData.CustomColor = False
-          SkinData.CustomFont = False
           ExplicitLeft = 0
           ExplicitTop = 0
           ExplicitWidth = 0
@@ -214,8 +210,8 @@ object frmTestData: TfrmTestData
               GlyphMode.Grayed = False
               DirectInput = False
               AcceptFiles = True
-              DefaultExt = 'CSV'
               FilterIndex = 2
+              DefaultExt = 'CSV'
               Filter = 'All files (*.*)|*.*|Comma seperated value (*.csv)|*.csv'
             end
             object edCountry: TcxButtonEdit
@@ -243,6 +239,7 @@ object frmTestData: TfrmTestData
               Top = 65
               Width = 298
               Height = 21
+              DefaultHandling = True
               EmptyText = 'Enter text to filter grid'
               EmptyTextStyle = []
               Flat = False
@@ -264,7 +261,7 @@ object frmTestData: TfrmTestData
               TabOrder = 4
               Text = ''
               Visible = True
-              Version = '1.3.6.0'
+              Version = '1.5.0.0'
               ButtonStyle = bsButton
               ButtonWidth = 42
               ButtonHint = 'Clear filter'
@@ -280,7 +277,6 @@ object frmTestData: TfrmTestData
               Caption = 'Update'
               TabOrder = 5
               SkinData.SkinSection = 'GROUPBOX'
-              Checked = False
               object sLabel1: TsLabel
                 Left = 16
                 Top = 27
@@ -457,8 +453,6 @@ object frmTestData: TfrmTestData
         object sheetChangeDates: TsTabSheet
           Caption = 'Change Dates'
           TabVisible = False
-          SkinData.CustomColor = False
-          SkinData.CustomFont = False
           ExplicitLeft = 0
           ExplicitTop = 0
           ExplicitWidth = 0
@@ -466,8 +460,6 @@ object frmTestData: TfrmTestData
         end
         object sTabSheet5: TsTabSheet
           Caption = 'Getbooking.com'
-          SkinData.CustomColor = False
-          SkinData.CustomFont = False
           ExplicitLeft = 0
           ExplicitTop = 0
           ExplicitWidth = 0
@@ -1049,8 +1041,6 @@ object frmTestData: TfrmTestData
     end
     object DK: TsTabSheet
       Caption = 'DK'
-      SkinData.CustomColor = False
-      SkinData.CustomFont = False
       ExplicitLeft = 0
       ExplicitTop = 0
       ExplicitWidth = 0

@@ -1340,7 +1340,7 @@ object frmInvoice: TfrmInvoice
           SearchFooter.MatchCaseCaption = 'Match case'
           SearchFooter.ResultFormat = '(%d of %d)'
           SortSettings.DefaultFormat = ssAutomatic
-          Version = '8.2.5.2'
+          Version = '8.2.4.1'
           ColWidths = (
             24
             91
@@ -2418,9 +2418,6 @@ object frmInvoice: TfrmInvoice
     end
     object mRoomResAvrageDiscount: TFloatField
       FieldName = 'AvrageDiscount'
-    end
-    object mRoomResisPercentage: TBooleanField
-      FieldName = 'isPercentage'
     end
     object mRoomResPackage: TWideStringField
       FieldName = 'Package'

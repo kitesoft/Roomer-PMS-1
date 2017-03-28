@@ -1,0 +1,157 @@
+<xml>
+<ns2:InvoiceResponse xmlns:ns1="http://roomer.promoir.nl/datamodel/financial/modelobjects/2014/01/" xmlns:ns2="http://www.promoir.nl/roomer/booking/2014/02" xmlns:ns3="http://roomer.promoir.nl/datamodel/canonical/basetypes/2014/01/" xmlns:ns4="http://roomer.promoir.nl/datamodel/housing/modelobjects/2014/01/" xmlns:ns5="http://roomer.promoir.nl/datamodel/canonical/simpletypes/2014/01/" xmlns:ns6="http://roomer.promoir.nl/datamodel/canonical/datastructures/2014/01/" xmlns:ns7="http://roomer.promoir.nl/datamodel/booking/modelobjects/2014/01/" xmlns:ns8="http://roomer.promoir.nl/datamodel/payment/basetypes/2014/01/" xmlns:ns9="http://roomer.promoir.nl/datamodel/payment/modelobjects/2014/01/" xmlns:ns10="http://roomer.promoir.nl/datamodel/inventory/modelobjects/2015/11/" xmlns:ns11="http://www.promoir.nl/roomer/application/registration/2014/04" xmlns:ns12="http://www.promoir.nl/roomer/static/resources/2014/04" xmlns:ns13="http://www.promoir.nl/roomer/inventory/2014/08" xmlns:ns14="http://www.promoir.nl/roomer/configuration/2015/12" xmlns:ns15="http://www.promoir.nl/roomer/pos/2014/03" xmlns:ns16="http://www.promoir.nl/roomer/financials/2016/08" xmlns:ns17="http://www.promoir.nl/roomer/services/hotel/2017/01">
+   <ns2:invoice id="inv401041" reservation="2736" roomReservation="22822" index="0" type="CREDIT" state="OPEN" date="2017-03-21+01:00" printedBy="bs">
+      <ns1:LineItem index="0" creatorId="ROOMER" creationType="ROOMER_SYSTEM">
+         <ns1:SalesItem status="UNPAID" applicationDate="2017-03-22+01:00" id="it322270" description="Room 105 on 22-03" productId="ROOM" number="1.0" purchaseDateTime="2017-03-22T00:00:00.000+01:00">
+            <ns1:unitPrice currency="GBP" amount="91.1153119"/>
+            <ns1:convertedUnitPrice currency="EUR" amount="104.7826087"/>
+            <ns1:conversionRate from="GBP" to="EUR" factor="1.15" date="2017-03-27T13:55:24.366+02:00"/>
+            <ns1:totalPrice currency="GBP" amount="91.1153119"/>
+            <ns1:PaymentUnitPrice currency="EUR" amount="104.7826087"/>
+            <ns1:PaymentConversionRate from="EUR" to="EUR" factor="1" date="2017-03-27T13:55:24.366+02:00"/>
+            <ns1:TotalPriceGross currency="GBP" amount="85.9578414"/>
+            <ns1:TotalConvertedPriceGross currency="EUR" amount="98.8515176"/>
+            <ns1:TotalConvertedPriceNet currency="EUR" amount="104.7826087"/>
+            <ns1:TotalPaymentPriceGross currency="EUR" amount="98.8515176"/>
+            <ns1:TotalPaymentPriceNet currency="EUR" amount="104.7826087"/>
+            <ns1:ApplicableTax description="City tax 105 for 1 night(s)" currency="EUR" amount="10.0"/>
+            <ns1:ApplicableTax description="VAT 6 loing descriptionasda on CTAX" currency="EUR" amount="0.2461034"/>
+            <ns1:ApplicableTax description="VAT 6 loing descriptionasda" currency="EUR" amount="5.9310911"/>
+         </ns1:SalesItem>
+      </ns1:LineItem>
+      <ns1:LineItem index="0" creatorId="ROOMER" creationType="ROOMER_SYSTEM">
+         <ns1:SalesItem status="UNPAID" applicationDate="2017-03-20+01:00" id="it322266" description="Room 105 on 20-03" productId="ROOM" number="1.0" purchaseDateTime="2017-03-20T00:00:00.000+01:00">
+            <ns1:unitPrice currency="GBP" amount="92.8241966"/>
+            <ns1:convertedUnitPrice currency="EUR" amount="106.7478261"/>
+            <ns1:conversionRate from="GBP" to="EUR" factor="1.15" date="2017-03-27T13:55:24.367+02:00"/>
+            <ns1:totalPrice currency="GBP" amount="92.8241966"/>
+            <ns1:PaymentUnitPrice currency="EUR" amount="106.7478261"/>
+            <ns1:PaymentConversionRate from="EUR" to="EUR" factor="1" date="2017-03-27T13:55:24.367+02:00"/>
+            <ns1:TotalPriceGross currency="GBP" amount="87.5699968"/>
+            <ns1:TotalConvertedPriceGross currency="EUR" amount="100.7054963"/>
+            <ns1:TotalConvertedPriceNet currency="EUR" amount="106.7478261"/>
+            <ns1:TotalPaymentPriceGross currency="EUR" amount="100.7054963"/>
+            <ns1:TotalPaymentPriceNet currency="EUR" amount="106.7478261"/>
+            <ns1:ApplicableTax description="City tax 105 for 1 night(s)" currency="EUR" amount="10.0"/>
+            <ns1:ApplicableTax description="VAT 6 loing descriptionasda on CTAX" currency="EUR" amount="0.2461034"/>
+            <ns1:ApplicableTax description="VAT 6 loing descriptionasda" currency="EUR" amount="6.0423298"/>
+         </ns1:SalesItem>
+      </ns1:LineItem>
+      <ns1:LineItem index="0" creatorId="ROOMER" creationType="ROOMER_SYSTEM">
+         <ns1:SalesItem status="UNPAID" applicationDate="2017-03-21+01:00" id="it322269" description="Room 105 on 21-03" productId="ROOM" number="1.0" purchaseDateTime="2017-03-21T00:00:00.000+01:00">
+            <ns1:unitPrice currency="GBP" amount="92.8241966"/>
+            <ns1:convertedUnitPrice currency="EUR" amount="106.7478261"/>
+            <ns1:conversionRate from="GBP" to="EUR" factor="1.15" date="2017-03-27T13:55:24.367+02:00"/>
+            <ns1:totalPrice currency="GBP" amount="92.8241966"/>
+            <ns1:PaymentUnitPrice currency="EUR" amount="106.7478261"/>
+            <ns1:PaymentConversionRate from="EUR" to="EUR" factor="1" date="2017-03-27T13:55:24.367+02:00"/>
+            <ns1:TotalPriceGross currency="GBP" amount="87.5699968"/>
+            <ns1:TotalConvertedPriceGross currency="EUR" amount="100.7054963"/>
+            <ns1:TotalConvertedPriceNet currency="EUR" amount="106.7478261"/>
+            <ns1:TotalPaymentPriceGross currency="EUR" amount="100.7054963"/>
+            <ns1:TotalPaymentPriceNet currency="EUR" amount="106.7478261"/>
+            <ns1:ApplicableTax description="City tax 105 for 1 night(s)" currency="EUR" amount="10.0"/>
+            <ns1:ApplicableTax description="VAT 6 loing descriptionasda on CTAX" currency="EUR" amount="0.2461034"/>
+            <ns1:ApplicableTax description="VAT 6 loing descriptionasda" currency="EUR" amount="6.0423298"/>
+         </ns1:SalesItem>
+      </ns1:LineItem>
+      <ns1:LineItem index="4" creatorId="ROOMER" creationType="ROOMER_SYSTEM">
+         <ns1:SalesItem status="UNPAID" applicationDate="2017-03-20+01:00" id="it76260" description="Glas Grillo" productId="1016" number="1.0" purchaseDateTime="2017-03-20T00:00:00.000+01:00">
+            <ns1:unitPrice currency="GBP" amount="2.83553878"/>
+            <ns1:convertedUnitPrice currency="EUR" amount="3.2608696"/>
+            <ns1:conversionRate from="GBP" to="EUR" factor="1.15" date="2017-03-27T13:55:24.367+02:00"/>
+            <ns1:totalPrice currency="GBP" amount="2.83553878"/>
+            <ns1:PaymentUnitPrice currency="EUR" amount="3.2608696"/>
+            <ns1:PaymentConversionRate from="EUR" to="EUR" factor="1" date="2017-03-27T13:55:24.367+02:00"/>
+            <ns1:TotalPriceGross currency="GBP" amount="2.67503652"/>
+            <ns1:TotalConvertedPriceGross currency="EUR" amount="3.076292"/>
+            <ns1:TotalConvertedPriceNet currency="EUR" amount="3.2608696"/>
+            <ns1:TotalPaymentPriceGross currency="EUR" amount="3.076292"/>
+            <ns1:TotalPaymentPriceNet currency="EUR" amount="3.2608696"/>
+            <ns1:ApplicableTax description="vat2" currency="EUR" amount="0.1845776"/>
+         </ns1:SalesItem>
+      </ns1:LineItem>
+      <ns1:LineItem index="5" creatorId="ROOMER" creationType="ROOMER_SYSTEM">
+         <ns1:SalesItem status="UNPAID" applicationDate="2017-03-20+01:00" id="it76261" description="Espresso" productId="102" number="4.0" purchaseDateTime="2017-03-20T00:00:00.000+01:00">
+            <ns1:unitPrice currency="GBP" amount="1.81474478"/>
+            <ns1:convertedUnitPrice currency="EUR" amount="2.0869565"/>
+            <ns1:conversionRate from="GBP" to="EUR" factor="1.15" date="2017-03-27T13:55:24.367+02:00"/>
+            <ns1:totalPrice currency="GBP" amount="7.25897922"/>
+            <ns1:PaymentUnitPrice currency="EUR" amount="2.0869565"/>
+            <ns1:PaymentConversionRate from="EUR" to="EUR" factor="1" date="2017-03-27T13:55:24.367+02:00"/>
+            <ns1:TotalPriceGross currency="GBP" amount="5.99915635"/>
+            <ns1:TotalConvertedPriceGross currency="EUR" amount="6.8990298"/>
+            <ns1:TotalConvertedPriceNet currency="EUR" amount="8.3478261"/>
+            <ns1:TotalPaymentPriceGross currency="EUR" amount="6.8990298"/>
+            <ns1:TotalPaymentPriceNet currency="EUR" amount="8.3478261"/>
+            <ns1:ApplicableTax description="Dutch high VAT percentage" currency="EUR" amount="1.4487963"/>
+         </ns1:SalesItem>
+      </ns1:LineItem>
+      <ns1:LineItem index="6" creatorId="ROOMER" creationType="ROOMER_SYSTEM">
+         <ns1:TextItem id="it76262" text="This is a text item without pricing info" date="2017-03-21+01:00"/>
+      </ns1:LineItem>
+      <ns1:LineItem index="0" creatorId="ROOMER" creationType="ROOMER_SYSTEM">
+         <ns1:DiscountItem appliesTo="it322269" isPercentage="true" discountPercentage="7.0" status="UNPAID" applicationDate="2017-03-21+01:00" description="Room discount" productId="ROOM" number="1.0" purchaseDateTime="2017-03-21T00:00:00.000+01:00">
+            <ns1:unitPrice currency="GBP" amount="6.98676749"/>
+            <ns1:convertedUnitPrice currency="EUR" amount="8.03478260869564"/>
+            <ns1:conversionRate from="GBP" to="EUR" factor="1.15" date="2017-03-27T13:55:24.369+02:00"/>
+            <ns1:totalPrice currency="GBP" amount="20.9603025"/>
+            <ns1:PaymentUnitPrice currency="EUR" amount="8.03478260869564"/>
+            <ns1:PaymentConversionRate from="EUR" to="EUR" factor="1" date="2017-03-27T13:55:24.369+02:00"/>
+            <ns1:TotalPriceGross currency="GBP" amount="19.7738702"/>
+            <ns1:TotalConvertedPriceGross currency="EUR" amount="22.73995077932728"/>
+            <ns1:TotalConvertedPriceNet currency="EUR" amount="24.10434782608692"/>
+            <ns1:TotalPaymentPriceGross currency="EUR" amount="22.73995077932728"/>
+            <ns1:TotalPaymentPriceNet currency="EUR" amount="24.10434782608692"/>
+            <ns1:ApplicableTax description="VAT 6 loing descriptionasda" currency="EUR" amount="1.3643970467596382"/>
+         </ns1:DiscountItem>
+      </ns1:LineItem>
+      <ns1:LineItem index="0" creatorId="ROOMER" creationType="ROOMER_SYSTEM">
+         <ns1:DiscountItem appliesTo="it322270" isPercentage="false" status="UNPAID" applicationDate="2017-03-22+01:00" description="Room discount" productId="ROOM" number="1.0" purchaseDateTime="2017-03-22T00:00:00.000+01:00">
+            <ns1:unitPrice currency="GBP" amount="8.69565217"/>
+            <ns1:convertedUnitPrice currency="EUR" amount="10.0"/>
+            <ns1:conversionRate from="GBP" to="EUR" factor="1.15" date="2017-03-27T13:55:24.369+02:00"/>
+            <ns1:totalPrice currency="GBP" amount="26.0869565"/>
+            <ns1:PaymentUnitPrice currency="EUR" amount="10.0"/>
+            <ns1:PaymentConversionRate from="EUR" to="EUR" factor="1" date="2017-03-27T13:55:24.369+02:00"/>
+            <ns1:TotalPriceGross currency="GBP" amount="24.6103363"/>
+            <ns1:TotalConvertedPriceGross currency="EUR" amount="28.30188679245283"/>
+            <ns1:TotalConvertedPriceNet currency="EUR" amount="30.0"/>
+            <ns1:TotalPaymentPriceGross currency="EUR" amount="28.30188679245283"/>
+            <ns1:TotalPaymentPriceNet currency="EUR" amount="30.0"/>
+            <ns1:ApplicableTax description="VAT 6 loing descriptionasda" currency="EUR" amount="1.6981132075471699"/>
+         </ns1:DiscountItem>
+      </ns1:LineItem>
+      <ns1:LineItem index="0" creatorId="ROOMER" creationType="ROOMER_SYSTEM">
+         <ns1:DiscountItem appliesTo="it322266" isPercentage="true" discountPercentage="7.0" status="UNPAID" applicationDate="2017-03-20+01:00" description="Room discount" productId="ROOM" number="1.0" purchaseDateTime="2017-03-20T00:00:00.000+01:00">
+            <ns1:unitPrice currency="GBP" amount="6.98676749"/>
+            <ns1:convertedUnitPrice currency="EUR" amount="8.03478260869564"/>
+            <ns1:conversionRate from="GBP" to="EUR" factor="1.15" date="2017-03-27T13:55:24.370+02:00"/>
+            <ns1:totalPrice currency="GBP" amount="20.9603025"/>
+            <ns1:PaymentUnitPrice currency="EUR" amount="8.03478260869564"/>
+            <ns1:PaymentConversionRate from="EUR" to="EUR" factor="1" date="2017-03-27T13:55:24.370+02:00"/>
+            <ns1:TotalPriceGross currency="GBP" amount="19.7738702"/>
+            <ns1:TotalConvertedPriceGross currency="EUR" amount="22.73995077932728"/>
+            <ns1:TotalConvertedPriceNet currency="EUR" amount="24.10434782608692"/>
+            <ns1:TotalPaymentPriceGross currency="EUR" amount="22.73995077932728"/>
+            <ns1:TotalPaymentPriceNet currency="EUR" amount="24.10434782608692"/>
+            <ns1:ApplicableTax description="VAT 6 loing descriptionasda" currency="EUR" amount="1.3643970467596382"/>
+         </ns1:DiscountItem>
+      </ns1:LineItem>
+      <ns1:CustomerData customer="0000000070" customerReference=""/>
+      <ns1:GuestData>
+         <ns1:Name>Bas Schouten</ns1:Name>
+         <ns1:Address>
+            <ns3:Address>Raupplaan 20</ns3:Address>
+            <ns3:PostalCode>5673 AX</ns3:PostalCode>
+            <ns3:Locality>Nuenen</ns3:Locality>
+            <ns3:Country>NL</ns3:Country>
+         </ns1:Address>
+      </ns1:GuestData>
+      <ns1:CurrencyData>
+         <ns1:InvoiceCurrency>GBP</ns1:InvoiceCurrency>
+         <ns1:ConversionFromHotelCurrency from="EUR" to="GBP" factor="1.15" date="2017-03-27T13:55:24.161+02:00"/>
+      </ns1:CurrencyData>
+   </ns2:invoice>
+</ns2:InvoiceResponse>
+</xml>

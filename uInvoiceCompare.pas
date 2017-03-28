@@ -479,16 +479,9 @@ begin
 
   for i := 0 to zListActivity.Count-1 do
   begin
-    try
-      if zListActivity[i] <> '' then
-        WriteInvoiceActivityLog(zListActivity[i]);
-    Except
-    end;
+    if zListActivity[i] <> '' then
+      WriteInvoiceActivityLog(zListActivity[i]);
   end;
-
-
-
-
 end;
 
 end.

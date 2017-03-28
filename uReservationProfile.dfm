@@ -412,7 +412,7 @@ object frmReservationProfile: TfrmReservationProfile
       end
       object Label24: TsLabel
         Left = 55
-        Top = 39
+        Top = 41
         Width = 42
         Height = 11
         Alignment = taRightJustify
@@ -493,7 +493,7 @@ object frmReservationProfile: TfrmReservationProfile
       TabOrder = 3
       SkinData.SkinSection = 'GROUPBOX'
       object lblReservationNumber: TsLabel
-        Left = 34
+        Left = 84
         Top = 19
         Width = 63
         Height = 11
@@ -506,8 +506,22 @@ object frmReservationProfile: TfrmReservationProfile
         Font.Name = 'Tahoma'
         Font.Style = []
       end
+      object sLabel4: TsLabel
+        Left = 37
+        Top = 40
+        Width = 110
+        Height = 11
+        Alignment = taRightJustify
+        Caption = 'Source/channel booking id:'
+        ParentFont = False
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -9
+        Font.Name = 'Tahoma'
+        Font.Style = []
+      end
       object edtReservationNumber: TsEdit
-        Left = 103
+        Left = 150
         Top = 15
         Width = 121
         Height = 19
@@ -520,6 +534,22 @@ object frmReservationProfile: TfrmReservationProfile
         ParentFont = False
         ReadOnly = True
         TabOrder = 0
+        SkinData.SkinSection = 'EDIT'
+      end
+      object edtBookingId: TsEdit
+        Left = 150
+        Top = 36
+        Width = 121
+        Height = 19
+        Color = clWhite
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -9
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        ParentFont = False
+        ReadOnly = True
+        TabOrder = 1
         SkinData.SkinSection = 'EDIT'
       end
     end
@@ -536,10 +566,6 @@ object frmReservationProfile: TfrmReservationProfile
     object TabSheet3: TsTabSheet
       Caption = 'Main'
       TabVisible = False
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Panel3: TsPanel
         Left = 0
         Top = 0
@@ -584,7 +610,7 @@ object frmReservationProfile: TfrmReservationProfile
             Top = 1
             Width = 248
             Height = 202
-            ActivePage = tsContact
+            ActivePage = TabSheet4
             Align = alClient
             TabOrder = 0
             SkinData.SkinSection = 'PAGECONTROL'
@@ -946,10 +972,6 @@ object frmReservationProfile: TfrmReservationProfile
             end
             object TabSheet4: TsTabSheet
               Caption = 'Customer'
-              ExplicitLeft = 0
-              ExplicitTop = 0
-              ExplicitWidth = 0
-              ExplicitHeight = 0
               object Label19: TsLabel
                 Left = 12
                 Top = 32
@@ -997,7 +1019,7 @@ object frmReservationProfile: TfrmReservationProfile
               end
               object Label4: TsLabel
                 Left = 12
-                Top = 145
+                Top = 137
                 Width = 51
                 Height = 11
                 Alignment = taRightJustify
@@ -1727,7 +1749,7 @@ object frmReservationProfile: TfrmReservationProfile
                 ExplicitWidth = 159
                 inherited lblCountryName: TsLabel
                   Width = 3
-                  Height = 11
+                  Height = 14
                   Font.Height = -9
                   ExplicitWidth = 3
                   ExplicitHeight = 11
@@ -1757,7 +1779,7 @@ object frmReservationProfile: TfrmReservationProfile
                 ExplicitWidth = 159
                 inherited lblCountryName: TsLabel
                   Width = 3
-                  Height = 11
+                  Height = 14
                   Font.Height = -9
                   ExplicitWidth = 3
                   ExplicitHeight = 11
@@ -1992,10 +2014,6 @@ object frmReservationProfile: TfrmReservationProfile
     SkinData.SkinSection = 'PAGECONTROL'
     object RoomsTab: TsTabSheet
       Caption = 'Rooms'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object grRooms: TcxGrid
         Left = 0
         Top = 86

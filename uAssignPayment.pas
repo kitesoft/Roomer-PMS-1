@@ -462,18 +462,15 @@ begin
       s := s+'       (ID = '+_db(rec.id)+') '+#10;
       if cmd_bySQL(s) then
       begin
-        try
-              AddInvoiceActivityLog(g.quser
-                                   ,newroomreservation
-                                   ,newReservation
-                                   ,1
-                                   ,CHANGE_PAYMENT
-                                   ,payType
-                                   ,edAmount.value
-                                   ,-1
-                                   ,edDescription.text);
-        Except
-        end;
+         AddInvoiceActivityLog(g.quser
+                               ,newroomreservation
+                               ,newReservation
+                               ,1
+                               ,CHANGE_PAYMENT
+                               ,payType
+                               ,edAmount.value
+                               ,-1
+                               ,edDescription.text);
         modalresult := mrOK;
       end;
     end;
@@ -563,19 +560,15 @@ begin
     begin
       modalresult := mrOK;
 //**log** update payment
-        try
-              AddInvoiceActivityLog(g.quser
-                                   ,0
-                                   ,rec.Reservation
-                                   ,1
-                                   ,CHANGE_PAYMENT
-                                   ,payType
-                                   ,edAmount.value
-                                   ,-1
-                                   ,'Set payment to Groupinvoice : ' +edDescription.text);
-        Except
-        end;
-
+            AddInvoiceActivityLog(g.quser
+                                 ,0
+                                 ,rec.Reservation
+                                 ,1
+                                 ,CHANGE_PAYMENT
+                                 ,payType
+                                 ,edAmount.value
+                                 ,-1
+                                 ,'Set payment to Groupinvoice : ' +edDescription.text);
     end;
   end;
 end;
@@ -648,18 +641,15 @@ begin
       if cmd_bySQL(s) then
       begin
         modalresult := mrOK;
-        try
-              AddInvoiceActivityLog(g.quser
-                                   ,roomreservation
-                                   ,rec.Reservation
-                                   ,1
-                                   ,CHANGE_PAYMENT
-                                   ,payType
-                                   ,edAmount.value
-                                   ,-1
-                                   ,'Set payment to Room : ' +edDescription.text);
-        Except
-        end;
+        AddInvoiceActivityLog(g.quser
+                             ,roomreservation
+                             ,rec.Reservation
+                             ,1
+                             ,CHANGE_PAYMENT
+                             ,payType
+                             ,edAmount.value
+                             ,-1
+                             ,'Set payment to Room : ' +edDescription.text);
       end;
     end;
   end;
@@ -698,18 +688,15 @@ begin
       if cmd_bySQL(s) then
       begin
         modalresult := mrOK;
-        try
-              AddInvoiceActivityLog(g.quser
-                                   ,newroomreservation
-                                   ,newReservation
-                                   ,1
-                                   ,CHANGE_PAYMENT
-                                   ,payType
-                                   ,edAmount.value
-                                   ,-1
-                                   ,edDescription.text);
-        Except
-        end;
+        AddInvoiceActivityLog(g.quser
+                             ,newroomreservation
+                             ,newReservation
+                             ,1
+                             ,CHANGE_PAYMENT
+                             ,payType
+                             ,edAmount.value
+                             ,-1
+                             ,edDescription.text);
       end;
     end;
   end;
@@ -735,19 +722,15 @@ begin
   s := s+'       (ID = '+_db(rec.id)+') '+#10;
   if cmd_bySQL(s) then
   begin
-
-        try
-              AddInvoiceActivityLog(g.quser
-                                   ,rec.Reservation
-                                   ,rec.RoomReservation
-                                   ,1
-                                   ,CHANGE_PAYMENT
-                                   ,payType
-                                   ,edAmount.value
-                                   ,-1
-                                   ,edDescription.text);
-        Except
-        end;
+    AddInvoiceActivityLog(g.quser
+                         ,rec.Reservation
+                         ,rec.RoomReservation
+                         ,1
+                         ,CHANGE_PAYMENT
+                         ,payType
+                         ,edAmount.value
+                         ,-1
+                         ,edDescription.text);
   end;
 end;
 

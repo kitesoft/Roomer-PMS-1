@@ -25,7 +25,6 @@ uses
     , ImgList
     , kbmMemTable
     , Vcl.Forms
-    , TypInfo
     ;
 
 type
@@ -149,8 +148,6 @@ procedure LoadKbmMemtableFromDataSetQuiet(kbmTable : TkbmCustomMemTable; Source:
 procedure SetFormTopmostOn(Form : TForm);
 procedure SetFormTopmostOff(Form : TForm);
 
-function GetEnumAsString(enum : PTypeInfo; value : Integer) : String;
-
 function JoinStrings(list : TStrings; Delimiter : Char; QuoteChar : Char = '''') : String;
 function JoinStringsNoQuote(list : TStrings; Delimiter : Char) : String;
 procedure SplitString(text : String; list : TStrings; Delimiter : Char; QuoteChar : Char = '''');
@@ -164,10 +161,10 @@ function GetOwnerOfType(aComp: TComponent; aClassType: TClass): TComponent;
 
 function StringIndexInSet(Selector : string; CaseList: array of string): Integer;
 
-
 implementation
 
 uses System.SysUtils, clipbrd{$IFNDEF ROOMER_UTIL}{$IFNDEF RBE_BUILD}, PrjConst{$ENDIF}{$ENDIF}, uFloatUtils;
+
 
 function linuxLFCRToWindows(source : String) : String;
 begin
@@ -307,11 +304,6 @@ begin
   finally
     stream.Free;
   end;
-end;
-
-function GetEnumAsString(enum : PTypeInfo; value : Integer) : String;
-begin
-  result  := GetEnumName(enum,value) ;
 end;
 
 procedure SetFormTopmostOn(Form : TForm);
