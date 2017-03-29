@@ -4868,10 +4868,6 @@ object frmMain: TfrmMain
         item
           Visible = True
           ItemName = 'btnEmailTemplates'
-        end
-        item
-          Visible = True
-          ItemName = 'btnTextBasedTemplates'
         end>
       OneOnRow = False
       Row = 0
@@ -5595,14 +5591,6 @@ object frmMain: TfrmMain
       Visible = ivAlways
       LargeImageIndex = 78
       OnClick = btnHotelSpecificSqlQueriesClick
-    end
-    object btnTextBasedTemplates: TdxBarLargeButton
-      Caption = 'Text based templates'
-      Category = 0
-      Hint = 'Text based templates'
-      Visible = ivAlways
-      LargeImageIndex = 94
-      OnClick = btnTextBasedTemplatesClick
     end
     object btnBookKeepingQueries: TdxBarLargeButton
       Caption = 'Book keeping queries'

@@ -941,7 +941,6 @@ type
     procedure btnGuestProfilesClick(Sender: TObject);
     procedure btnBookKeepingCodesClick(Sender: TObject);
     procedure btnHotelSpecificSqlQueriesClick(Sender: TObject);
-    procedure btnTextBasedTemplatesClick(Sender: TObject);
     procedure btnBookKeepingQueriesClick(Sender: TObject);
     procedure FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure mniBookinglEmailTemplatesClick(Sender: TObject);
@@ -10781,12 +10780,6 @@ begin
   finally
     frmTestData.Free;
   end;
-end;
-
-procedure TfrmMain.btnTextBasedTemplatesClick(Sender: TObject);
-begin
-  LogUserClickedButton(Sender);
-  StaticResources('Text based templates', TEXT_BASED_TEMPLATES, ACCESS_OPEN, TTextResourceParameters.Create);
 end;
 
 procedure TfrmMain.btnToDayClick(Sender: TObject);
