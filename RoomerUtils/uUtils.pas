@@ -164,6 +164,7 @@ function GetOwnerOfType(aComp: TComponent; aClassType: TClass): TComponent;
 
 function StringIndexInSet(Selector : string; CaseList: array of string): Integer;
 
+function CountItemsInSet(aSetValue: integer): byte;
 
 implementation
 
@@ -1713,6 +1714,21 @@ begin
   Result := aComp.Owner;
   while Assigned(Result) and (not result.ClassType.InheritsFrom(aClassType)) do
     Result := Result.Owner;
+end;
+
+function CountItemsInSet(aSetValue: integer) : byte;
+var
+  Mask, Count : integer;
+begin
+  Mask := $80000000;
+  Count := 0;
+  While Mask <> 0 do
+    begin
+      if aSetValue and Mask <> 0 then
+        inc(Count);
+      Mask := Mask shr 1;
+    end;
+  Result := Count;
 end;
 
 { TIntValue }

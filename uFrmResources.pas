@@ -6,24 +6,29 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, sPanel, uDImages, Vcl.StdCtrls, sButton,
   cmpRoomerDataSet, hData, Vcl.ComCtrls, sListView, Vcl.ExtDlgs, sDialogs, cxClasses, cxPropertiesStore,
-  System.IOUtils, Vcl.Menus, uMailDrop, uAppGlobal
+  Vcl.Menus, uMailDrop, uAppGlobal
   , ComObj
   , MSXML
   , ActiveX
   , clipbrd
   , uResourceManagement
   , Soap.EncdDecd, DragDrop, DropTarget, DropComboTarget, DropSource, DragDropFile, sLabel
-  , uRoomerForm, cxGridTableView, cxStyles, dxPScxCommon, dxPScxGridLnk, sStatusBar
+  , uRoomerForm, cxGridTableView, cxStyles, dxPScxCommon, dxPScxGridLnk, sStatusBar, uResourceTypeDefinitions,
+  cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, dxSkinsCore, dxSkinCaramel, dxSkinCoffee,
+  dxSkinDarkSide, dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinscxPCPainter, cxCustomData, cxFilter, cxData,
+  cxDataStorage, cxEdit, cxNavigator, Data.DB, cxDBData, Spring.Data.VirtualDataSet, Spring.Data.ObjectDataSet,
+  cxGridLevel, cxGridCustomView, cxGridCustomTableView, cxGridDBTableView, cxGrid, cxTextEdit
   ;
 
 type
+
+  EFrmResourcesException = class(Exception);
 
   TFrmResources = class(TfrmBaseRoomerForm)
     sPanel1: TsPanel;
     btnInsert: TsButton;
     btnDelete: TsButton;
     btnClose: TsButton;
-    lvResources: TListView;
     btnView: TsButton;
     PopupMenu1: TPopupMenu;
     D1: TMenuItem;
@@ -45,21 +50,25 @@ type
     P1: TMenuItem;
     C2: TMenuItem;
     N2: TMenuItem;
+    tvResources: TcxGridDBTableView;
+    lvlResources: TcxGridLevel;
+    grData: TcxGrid;
+    dsResources: TObjectDataSet;
+    dsGrid: TDataSource;
+    tvResourcesID: TcxGridDBColumn;
+    tvResourcesOriginalName: TcxGridDBColumn;
+    tvResourcesResourceType: TcxGridDBColumn;
+    tvResourcesExtraInfo: TcxGridDBColumn;
+    tvResourcesURI: TcxGridDBColumn;
+    tvResourcesUser: TcxGridDBColumn;
+    tvResourcesLastModified: TcxGridDBColumn;
     DropFileSource1: TDropFileSource;
-    sPanel3: TsPanel;
-    sLabel1: TsLabel;
-    edtFilter: TButtonedEdit;
-    timFilter: TTimer;
     procedure FormCreate(Sender: TObject);
     procedure btnInsertClick(Sender: TObject);
-    procedure lvResourcesSelectItem(Sender: TObject; Item: TListItem; Selected: Boolean);
     procedure btnDeleteClick(Sender: TObject);
-    procedure lvResourcesDblClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure D1Click(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
-    procedure lvResourcesDragOver(Sender, Source: TObject; X, Y: Integer; State: TDragState; var Accept: Boolean);
-    procedure lvResourcesDragDrop(Sender, Source: TObject; X, Y: Integer);
     procedure btnCloseClick(Sender: TObject);
     procedure btnEditClick(Sender: TObject);
     procedure lvResourcesEdited(Sender: TObject; Item: TListItem; var S: string);
@@ -70,33 +79,37 @@ type
     procedure P1Click(Sender: TObject);
     procedure C2Click(Sender: TObject);
     procedure PopupMenu1Popup(Sender: TObject);
-    procedure lvResourcesColumnClick(Sender: TObject; Column: TListColumn);
-    procedure lvResourcesCompare(Sender: TObject; Item1, Item2: TListItem; Data: Integer; var Compare: Integer);
-    procedure edtFilterChange(Sender: TObject);
-    procedure timFilterTimer(Sender: TObject);
-    procedure edtFilterRightButtonClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
+    procedure tvResourcesCellDblClick(Sender: TcxCustomGridTableView; ACellViewInfo: TcxGridTableDataCellViewInfo;
+      AButton: TMouseButton; AShift: TShiftState; var AHandled: Boolean);
+    procedure dsResourcesAfterScroll(DataSet: TDataSet);
+    procedure tvResourcesResourceTypeGetDisplayText(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
+      var AText: string);
+    procedure btnViewClick(Sender: TObject);
+    procedure dsResourcesBeforeDelete(DataSet: TDataSet);
   private
     { Private declarations }
-    Descending: Boolean;
-    SortedColumn: Integer;
     CollectionOfOpenedFiles : TStringList;
     FResourceManagement : TRoomerResourceManagement;
 //    procedure WMDROPFILES(var msg : TWMDropFiles) ; message WM_DROPFILES;
-
-    procedure DisplayResources;
+    FAccess: TResourceAccessType;
+    FResourceTypes: TResourceTypeSet;
+    FSingleResourceType: TResourceType;
+    FKeyStringParam: string;
     procedure DownloadAndOpenSelectedResource;
     function DownloadSelectedFile(destFilename: String): Boolean;
-    function Download: String;
-    procedure DeleteCurrent;
-    function FilenameInList(filename: String): Boolean;
+    function DownloadSelected: String;
+    procedure DeleteSelected;
     procedure InitControls;
+    procedure SetKeyString(const Value: string);
+    function MakeFileNameUnique(const aOrgFilename: string): string;
+    procedure SetResourceTypes(const Value: TResourceTypeSet);
+    function GetCurrentResource: TResource; inline;
   protected
     procedure DoUpdateControls; override;
     procedure DoLoadData; override;
   public
     { Public declarations }
-    FKeyString, access : String;
     FResourceParameters : TResourceParameters;
 
     embedded : Boolean;
@@ -106,7 +119,10 @@ type
 
     procedure RemoveFileForUpload(filename: String);
 
-    property Keystring: string read FKeyString write FKeyString;
+    property Keystring: string write SetKeyString; // deprated, use ResourceTypes
+    property ResourceTypes: TResourceTypeSet read FResourceTypes write SetResourceTypes;
+    property KeystringParameter: string read FKeyStringParam write FKeyStringParam;
+    property Access: TResourceAccessType read FAccess write FAccess;
     property ResourceParameters : TResourceParameters read FResourceParameters write FResourceParameters;
   end;
 
@@ -118,7 +134,10 @@ var
 procedure StaticResources(const sCaption, keyString, access : String;
               _ResourceParameters : TResourceParameters = nil;
               embedPanel : TsPanel = nil;
-              WindowCloseEvent : TNotifyEvent = nil);
+              WindowCloseEvent : TNotifyEvent = nil); overload; deprecated 'Use StaticResources with TResourceTypeSet parameter';
+
+procedure StaticResources(const sCaption: string; resourceTypes: TResourceTypeSet; accessType: TResourceAccessType; aKeystringparam: string = '';
+              _ResourceParameters : TResourceParameters = nil); overload;
 
 implementation
 
@@ -140,6 +159,8 @@ uses  uD
     , uDateUtils
     , uFrmNotepad
     , uFrmEditEmailProperties
+    , System.IOUtils
+    , Spring.Collections
     ;
 
 procedure StaticResources(const sCaption, keyString, access : String;
@@ -152,7 +173,7 @@ begin
   try
     _FrmResources.Caption := sCaption;
     _FrmResources.keyString := keyString;
-    _FrmResources.access := access;
+    _FrmResources.access := TResourceAccessType.FromString(access);
     _FrmResources.ResourceParameters := _ResourceParameters;
     _FrmResources.embedded := (embedPanel <> nil);
     _FrmResources.EmbedWindowCloseEvent := WindowCloseEvent;
@@ -172,6 +193,26 @@ begin
       FreeAndNil(_FrmResources);
   end;
 end;
+
+procedure StaticResources(const sCaption: string; resourceTypes: TResourceTypeSet; accessType: TResourceAccessType; aKeystringparam: string = '';
+              _ResourceParameters : TResourceParameters = nil);
+var
+  frm : TFrmResources;
+begin
+  frm := TFrmResources.Create(nil);
+  try
+    frm.Caption := sCaption;
+    frm.ResourceTypes := resourceTypes;
+    frm.KeystringParameter := aKeyStringParam;
+    frm.access := accessType;
+    frm.ResourceParameters := _ResourceParameters;
+    frm.ShowModal;
+    FileDependencyManager.ResetDependencyFileList;
+  finally
+    frm.Free;
+  end;
+end;
+
 
 function Download(url, filename : String) : String;
 begin
@@ -220,13 +261,13 @@ end;
 procedure TFrmResources.D1Click(Sender: TObject);
 var filename : String;
 begin
-  if NOT Assigned(lvResources.Selected) then
+  if GetCurrentResource = nil then
     exit;
 
   if Assigned(ResourceParameters) then
     dlgSaveFile.Filter := ResourceParameters.DefaultFileFilter;
 
-  dlgSaveFile.FileName := lvResources.Selected.Caption;
+  dlgSaveFile.FileName := GetCurrentResource.FORIGINAL_NAME;
   if dlgSaveFile.Execute then
   begin
     filename := ExtractFilename(dlgSaveFile.FileName);
@@ -248,22 +289,23 @@ end;
 
 procedure TFrmResources.btnDeleteClick(Sender: TObject);
 begin
-  DeleteCurrent;
+  dsResources.Delete;
 end;
 
-procedure TFrmResources.DeleteCurrent;
-var i : Integer;
-    item : TListItem;
+procedure TFrmResources.DeleteSelected;
+var
+    lRes: TResource;
 begin
-  for i := lvResources.Items.Count - 1 downto 0 do
-  begin
-    item := lvResources.Items[i];
-    if item.Selected then
+  dsResources.DisableControls;
+  try
+    lres := GetCurrentResource;
+    if (lRes <> nil) then
     begin
-      d.roomerMainDataSet.DeleteFileResourceOpenAPI(item.SubItems[item.SubItems.Count - 1]);
-      d.roomerMainDataSet.SystemDeleteStaticResource(Integer(item.Data));
-      lvResources.Items.Delete(i);
+      d.roomerMainDataSet.DeleteFileResourceOpenAPI(lRes.URI);
+      d.roomerMainDataSet.SystemDeleteStaticResource(lRes.ID);
     end;
+  finally
+    dsResources.EnableControls;
   end;
 end;
 
@@ -280,76 +322,52 @@ begin
   end;
 end;
 
+function TFrmResources.GetCurrentResource: TResource;
+begin
+  Result := dsResources.GetCurrentModel<TResource>;
+end;
+
 
 procedure TFrmResources.btnEditClick(Sender: TObject);
 var filename : String;
-    Strings : TStrings;
     cmd,
     OrigName,
     Subject,
     path : String;
+    lRes: TResource;
 begin
-  fileName := Download;
-  if filename <> '' then
+  lRes := GetCurrentResource;
+  if assigned(lres) then
   begin
-    if (ResourceParameters IS THtmlResourceParameters) then
+
+    fileName := DownloadSelected;
+    if filename <> '' then
     begin
-      Subject := lvResources.Selected.SubItems[2];
-      OrigName := lvResources.Selected.Caption;
-      if EditHtmlFile(filename) then
+      if (ResourceParameters IS THtmlResourceParameters) then
       begin
-        DeleteCurrent;
-        ReCodeFile(filename);
-        path := UploadFileToResources(keyString, access, ExtractFilename(filename), filename, ResourceParameters);
+        Subject := lRes.EXTRA_INFO;
+        OrigName := lRes.ORIGINAL_NAME;
+        if EditHtmlFile(filename) then
+        begin
+          DeleteSelected;
+          ReCodeFile(filename);
+          path := UploadFileToResources(lRes.KEY_STRING, access.ToString, ExtractFilename(filename), filename, ResourceParameters);
 
-        cmd := format('UPDATE home100.HOTEL_RESOURCES SET ORIGINAL_NAME=''%s'', EXTRA_INFO=''%s'' WHERE HOTEL_ID=''%s'' AND ORIGINAL_NAME=''%s'' AND URI=''%s'' AND KEY_STRING=''%s''',
-                   [ OrigName,
-                     Subject,
-                     d.roomerMainDataSet.HotelId,
-                     OrigName,
-                     path,
-                     KeyString
-                   ]);
-        d.roomerMainDataSet.DoCommand(cmd);
+          cmd := format('UPDATE home100.HOTEL_RESOURCES SET ORIGINAL_NAME=''%s'', EXTRA_INFO=''%s'' WHERE HOTEL_ID=''%s'' AND ORIGINAL_NAME=''%s'' AND URI=''%s'' AND KEY_STRING=''%s''',
+                     [ OrigName,
+                       Subject,
+                       d.roomerMainDataSet.HotelId,
+                       OrigName,
+                       path,
+                       lRes.KEY_STRING
+                     ]);
+          d.roomerMainDataSet.DoCommand(cmd);
+        end;
       end;
-    end else
-    if (ResourceParameters IS TSqlResourceParameters) then
-    begin
-      Strings := TStringList.Create;
-      Strings.LoadFromFile(filename);
-      Strings.Text := EditText('SQL Query ' + ExtractFilename(filename), Strings.Text);
-      Strings.SaveToFile(filename);
-
-      DeleteCurrent;
-      UploadFileToResources(keyString, access, ExtractFilename(filename), filename, ResourceParameters);
-    end else
-    if (ResourceParameters IS TTextResourceParameters) then
-    begin
-      Strings := TStringList.Create;
-      Strings.LoadFromFile(filename);
-      Strings.Text := EditText('Text template ' + ExtractFilename(filename), Strings.Text);
-      Strings.SaveToFile(filename);
-
-      DeleteCurrent;
-      UploadFileToResources(keyString, access, ExtractFilename(filename), filename, ResourceParameters);
     end;
-
-    RefreshData;
   end;
 end;
 
-function TFrmResources.FilenameInList(filename : String) : Boolean;
-var
-  i: Integer;
-begin
-  result := False;
-  for i := 0 to lvResources.Items.Count - 1 do
-    if Lowercase(lvResources.Items[i].Caption) = LowerCase(filename) then
-    begin
-      result := True;
-      Break;
-    end;
-end;
 
 const NEW_RESERVATION_SOURCE = '<P style="TEXT-ALIGN: right" align=right><FONT face=Verdana><STRONG><FONT color=maroon><FONT size=5>Test Hotel Roomer</FONT><BR></FONT></STRONG> ' +
                                   '<FONT size=1>Bosscheweg 107&nbsp;12-14<BR>5282 WV Boxtel<BR>Netherlands<BR>Tel: +31 85 27 36 150<BR>date/time: ${currentDatetime}<BR>---<BR></FONT><FONT size=2>Booking date: ${bookingDatetime}<BR>Hotel Booking id: ${bookingRoomerId}</FONT></FONT></P> ' +
@@ -386,176 +404,132 @@ const CANCEL_RESERVATION_SOURCE = '<DIV class=WordSection1> ' +
                                   '<P><FONT face=Verdana>Test Hotel Roomer</FONT></P> ' +
                                   '<P><FONT face=Verdana>T. 085 27 36 150</FONT></P>';
 
+function TFrmResources.MakeFileNameUnique(const aOrgFilename: string): string;
+var
+  lPathAndFilename: string;
+  lExtension: string;
+  lTryFullPath: string;
+  cnt: integer;
+const
+  cCntFmt = '(%d)';
+begin
+  lPathAndFIleName := TPath.Combine(TPath.GetTempPath, aOrgFilename);
+  lExtension := TPath.GetExtension(lPathAndFilename);
+  lPathAndFilename := TPath.GetFileNameWithoutExtension(lPathAndFilename);
+
+  lTryFullPath := lPathAndFilename + lExtension;
+  cnt := 0;
+  while FileExists(lTryFullPath) or FResourceManagement.FilenameInList(TPath.GetFileName(lTryFullPath)) do
+  begin
+    inc(cnt);
+    lTryFullPath := lPathAndFilename + Format(cCntFmt, [cnt]) + lExtension;
+
+    if cnt > 1024 then
+      raise EFrmResourcesException.Create('Cannot create unique filename for new resource');
+  end;
+
+  Result := lTryFullPath;
+end;
 
 procedure TFrmResources.btnInsertClick(Sender: TObject);
-var i : Integer;
-    ext, tempDir, filename, Subject : String;
+var filename, Subject : String;
     Strings : TStrings;
-    _FrmEditEmailProperties : TFrmEditEmailProperties;
+    frm : TFrmEditEmailProperties;
     cmd, uri : String;
+    lResType: TResourceType;
 begin
   if Assigned(ResourceParameters) AND
      (ResourceParameters IS THtmlResourceParameters) then
   begin
-    i := 0;
-    ext := '.html';
-    tempDir := GetTempDir;
     Subject := '';
-    if KeyString=GUEST_EMAIL_TEMPLATE then
-    begin
-      filename := 'Booking_Confirmation_' + dateToSqlString(now) + ext;
-      Subject := 'Thank you for your booking';
-    end else
-    if KeyString=CANCEL_EMAIL_TEMPLATE then
-    begin
-      filename := 'Cancel_Confirmation_' + dateToSqlString(now) + ext;
-      Subject := 'We are sorry you are not staying with us';
-    end else
-    if KeyString=PRE_ARRIVAL_EMAIL_TEMPLATE then
-    begin
-      filename := 'Pre_arrival_email' + dateToSqlString(now) + ext;
-      Subject := 'We are looking forward to your arrival';
-    end else
-    if KeyString=POST_DEPARTURE_MAIL_TEMPLATE then
-    begin
-      filename := 'Post_departure_email' + dateToSqlString(now) + ext;
-      Subject := 'Thannks you for having stayed at our hotel';
-    end;
-    while FilenameInList(filename) do
-    begin
-      inc(i);
-      if KeyString=GUEST_EMAIL_TEMPLATE then
-        filename := 'Booking_Confirmation_' + dateToSqlString(now) + '(' + inttostr(i) + ')' + ext
-      else if KeyString=CANCEL_EMAIL_TEMPLATE then
-        filename := 'Cancel_Confirmation_' + dateToSqlString(now) + '(' + inttostr(i) + ')' + ext
-      else if KeyString=POST_DEPARTURE_MAIL_TEMPLATE then
-        filename := 'Post_departure_email' + dateToSqlString(now) + '(' + inttostr(i) + ')' + ext
-      else if KeyString=PRE_ARRIVAL_EMAIL_TEMPLATE then
-        filename := 'Pre_arrival_email' + dateToSqlString(now) + '(' + inttostr(i) + ')' + ext
-      else
-        filename := 'eml_' + dateToSqlString(now) + '(' + inttostr(i) + ')' + ext;
-    end;
 
-    _FrmEditEmailProperties := TFrmEditEmailProperties.Create(nil);
+    frm := TFrmEditEmailProperties.Create(nil);
     try
-      if ResourceParameters IS THtmlResourceParameters then
+      frm.ResourceTypes := ResourceTypes;
+      if frm.ShowModal = mrOk then
       begin
-        _FrmEditEmailProperties.edtName.Text := filename;
-        _FrmEditEmailProperties.edtSubject.Text := Subject;
-        if _FrmEditEmailProperties.ShowModal = mrOk then
-        begin
-          if _FrmEditEmailProperties.edtName.Text = '' then
-            raise Exception.Create(GetTranslatedText('shUI_NameCannotBeEmpty'));
+        if frm.edtName.Text = '' then
+          raise Exception.Create(GetTranslatedText('shUI_NameCannotBeEmpty'));
 
-          filename := TPath.Combine(tempDir, _FrmEditEmailProperties.edtName.Text);
-          Strings := TStringList.Create;
-          try
-            if KeyString=GUEST_EMAIL_TEMPLATE then
-              Strings.Text := NEW_RESERVATION_SOURCE
-            else
-            if KeyString=CANCEL_EMAIL_TEMPLATE then
-              Strings.Text := CANCEL_RESERVATION_SOURCE;
-            Strings.SaveToFile(filename);
-          finally
-            Strings.Free;
-          end;
-          if EditHtmlFile(filename, true) then
-          begin
-            ReCodeFile(filename);
-            uri := UploadFileToResources(keyString, access, ExtractFilename(filename), filename, ResourceParameters);
-
-            cmd := format('UPDATE home100.HOTEL_RESOURCES SET EXTRA_INFO=''%s'' WHERE HOTEL_ID=''%s'' AND ORIGINAL_NAME=''%s'' AND URI=''%s'' AND KEY_STRING=''%s''',
-                     [ _FrmEditEmailProperties.edtSubject.Text,
-                       d.roomerMainDataSet.HotelId,
-                       _FrmEditEmailProperties.edtName.Text,
-                       uri, KeyString
-                     ]);
-            d.roomerMainDataSet.DoCommand(cmd);
-
-            RefreshData;
-          end;
+        Filename := MakeFilenameUnique(frm.edtName.Text);
+        lResType := frm.SelectedResourceType;
+        Strings := TStringList.Create;
+        try
+          if lResType = rtGuestEmailTemplate then
+            Strings.Text := NEW_RESERVATION_SOURCE
+          else
+          if lResType = rtCancelEmailTemplate then
+            Strings.Text := CANCEL_RESERVATION_SOURCE;
+          Strings.SaveToFile(filename);
+        finally
+          Strings.Free;
         end;
-      end else
-        lvResources.Selected.EditCaption;
+        if EditHtmlFile(filename, true) then
+        begin
+          ReCodeFile(filename);
+          uri := UploadFileToResources(lResType.ToKeyString(FKeyStringParam), access.ToString, ExtractFilename(filename), filename, ResourceParameters);
+
+          cmd := format('UPDATE home100.HOTEL_RESOURCES SET EXTRA_INFO=''%s'' WHERE HOTEL_ID=''%s'' AND ORIGINAL_NAME=''%s'' AND URI=''%s'' AND KEY_STRING=''%s''',
+                   [ frm.edtSubject.Text,
+                     d.roomerMainDataSet.HotelId,
+                     frm.edtName.Text,
+                     uri, lResType.ToKeyString(FKeyStringParam)
+                   ]);
+          d.roomerMainDataSet.DoCommand(cmd);
+
+          RefreshData;
+        end;
+      end;
     finally
-      FreeAndNil(_FrmEditEmailProperties);
+      FreeAndNil(frm);
     end;
-
-
-  end else
-  if Assigned(ResourceParameters) AND
-     (ResourceParameters IS TSqlResourceParameters) then
+  end
+  else
   begin
-    i := 0;
-    ext := '.sql';
-    tempDir := GetTempDir;
-    filename := 'sql_' + dateToSqlString(now) + ext;
-    while FilenameInList(filename) do
-    begin
-      inc(i);
-      filename := 'sql_' + dateToSqlString(now) + '(' + inttostr(i) + ')' + ext;
-    end;
-    fileName := InputBox('New SQL file', 'Please enter a name for the new file', filename);
-    if filename <> '' then
-    begin
-      filename := TPath.Combine(tempDir, filename);
-      Strings := TStringList.Create;
-      Strings.Text := EditText('SQL Query ' + ExtractFilename(filename), Strings.Text);
-      Strings.SaveToFile(filename);
 
-      DeleteCurrent;
-      UploadFileToResources(keyString, access, ExtractFilename(filename), filename, ResourceParameters);
-      RefreshData;
-    end;
-  end else
-  if Assigned(ResourceParameters) AND
-     (ResourceParameters IS TTextResourceParameters) then
-  begin
-    i := 0;
-    ext := '.txt';
-    tempDir := GetTempDir;
-    filename := 'text_' + dateToSqlString(now) + ext;
-    while FilenameInList(filename) do
-    begin
-      inc(i);
-      filename := 'text_' + dateToSqlString(now) + '(' + inttostr(i) + ')' + ext;
-    end;
-    fileName := InputBox('New text file', 'Please enter a name for the new file', filename);
-    if filename <> '' then
-    begin
-      filename := TPath.Combine(tempDir, filename);
-      Strings := TStringList.Create;
-      Strings.Text := EditText('Text template ' + ExtractFilename(filename), Strings.Text);
-      Strings.SaveToFile(filename);
-
-      DeleteCurrent;
-      UploadFileToResources(keyString, access, ExtractFilename(filename), filename, ResourceParameters);
-      RefreshData;
-    end;
-  end else
-  begin
+    if FResourceTypes.Count <> 1 then
+      raise EFrmResourcesException.Create('Multiple resourcetypes set erroneously.')
+    else
     if Assigned(ResourceParameters) then
       dlgSaveFile.Filter := ResourceParameters.DefaultFileFilter;
 
     if dlgOpenFile.Execute then
     begin
-      for i := 0 to dlgOpenFile.Files.Count - 1 do
+      for filename in dlgOpenFile.Files  do
       begin
-        filename := dlgOpenFile.Files[i];
-        UploadFileToResources(keyString, access, ExtractFilename(filename), filename, ResourceParameters);
-        RefreshData;
+        UploadFileToResources(FSingleResourceType.ToKeyString(FKeyStringParam), access.ToString, ExtractFilename(filename), filename, ResourceParameters);
       end;
+      RefreshData;
     end;
   end;
 end;
 
 procedure TFrmResources.DoLoadData;
+var
+  IList: IObjectList;
 begin
   inherited;
-  FResourceManagement.Free;
-  FResourceManagement := TRoomerResourceManagement.Create(KeyString, Access, ResourceParameters);
+  dsResources.DisableControls;
+  try
+    FResourceManagement.Free;
+    FResourceManagement := TRoomerResourceManagement.Create(FResourceTypes, Access, ResourceParameters, FKeyStringParam);
 
-  DisplayResources;
+    if Supports(FResourceManagement.Resources, IObjectList, IList) then
+    begin
+      dsResources.DataList := Ilist;
+      dsResources.Active := true;
+
+    end
+    else
+      dsResources.Active := false;
+
+  finally
+    dsResources.EnableControls;
+  end;
+  tvResourcesResourceType.ApplyBestFit();
+  tvResourcesOriginalName.ApplyBestFit();
+  tvResourcesUser.ApplyBestFit();
+
 end;
 
 
@@ -563,37 +537,40 @@ procedure TFrmResources.btnRenameClick(Sender: TObject);
 var
   _FrmEditEmailProperties: TFrmEditEmailProperties;
   cmd : String;
+  lRes: TResource;
 begin
-  if lvResources.Selected <> nil then
+  lRes := GetCurrentResource;
+  if lRes <> nil then
   begin
     _FrmEditEmailProperties := TFrmEditEmailProperties.Create(nil);
     try
       if ResourceParameters IS THtmlResourceParameters then
       begin
-        _FrmEditEmailProperties.edtName.Text := lvResources.Selected.Caption;
-        _FrmEditEmailProperties.edtSubject.Text := lvResources.Selected.SubItems[2];
+        _FrmEditEmailProperties.edtName.Text := lRes.ORIGINAL_NAME;
+        _FrmEditEmailProperties.edtSubject.Text := lres.FEXTRA_INFO;
+        _FrmEditEmailProperties.ResourceTypes := [lres.ResourceType];
         if _FrmEditEmailProperties.ShowModal = mrOk then
         begin
           if _FrmEditEmailProperties.edtName.Text = '' then
             raise Exception.Create(GetTranslatedText('shUI_NameCannotBeEmpty'));
 
           cmd := format('UPDATE hotelconfigurations SET DefaultChannelConfirmationEmail=''%s'' WHERE DefaultChannelConfirmationEmail=''%s''',
-                     [_FrmEditEmailProperties.edtName.Text, lvResources.Selected.Caption]);
+                     [_FrmEditEmailProperties.edtName.Text, lRes.FORIGINAL_NAME]);
           d.roomerMainDataSet.DoCommand(cmd);
 
           cmd := format('UPDATE home100.HOTEL_RESOURCES SET ORIGINAL_NAME=''%s'', EXTRA_INFO=''%s'' WHERE HOTEL_ID=''%s'' AND ORIGINAL_NAME=''%s'' AND URI=''%s'' AND KEY_STRING=''%s''',
                      [ _FrmEditEmailProperties.edtName.Text,
                        _FrmEditEmailProperties.edtSubject.Text,
                        d.roomerMainDataSet.HotelId,
-                       lvResources.Selected.Caption,
-                       lvResources.Selected.SubItems[lvResources.Selected.SubItems.Count - 1], KeyString
+                       lRes.ORIGINAL_NAME,
+                       lRes.URI,
+                       lRes.KEY_STRING
                      ]);
           d.roomerMainDataSet.DoCommand(cmd);
-          lvResources.Selected.Caption := _FrmEditEmailProperties.edtName.Text;
-          lvResources.Selected.SubItems[2] := _FrmEditEmailProperties.edtSubject.Text;
+          lRes.ORIGINAL_NAME := _FrmEditEmailProperties.edtName.Text;
+          lRes.EXTRA_INFO := _FrmEditEmailProperties.edtSubject.Text;
         end;
-      end else
-        lvResources.Selected.EditCaption;
+      end;
     finally
       FreeAndNil(_FrmEditEmailProperties);
     end;
@@ -606,176 +583,64 @@ var filename : String;
     OrigName,
     Subject,
     path : String;
+    lRes: TResource;
 begin
-  fileName := Download;
-  if filename <> '' then
+  lRes := GetCurrentResource;
+  if lRes <> nil then
   begin
-    if (ResourceParameters IS THtmlResourceParameters) then
+    fileName := DownloadSelected;
+    if filename <> '' then
     begin
-      Subject := lvResources.Selected.SubItems[2];
-      OrigName := lvResources.Selected.Caption;
-      if EditHtmlSource(filename) then
+      if (ResourceParameters IS THtmlResourceParameters) then
       begin
-        DeleteCurrent;
-        ReCodeFile(filename);
-        path := UploadFileToResources(keyString, access, ExtractFilename(filename), filename, ResourceParameters);
-
-        cmd := format('UPDATE home100.HOTEL_RESOURCES SET ORIGINAL_NAME=''%s'', EXTRA_INFO=''%s'' WHERE HOTEL_ID=''%s'' AND ORIGINAL_NAME=''%s'' AND URI=''%s'' AND KEY_STRING=''%s''',
-                   [ OrigName,
-                     Subject,
-                     d.roomerMainDataSet.HotelId,
-                     OrigName,
-                     path,
-                     KeyString
-                   ]);
-        d.roomerMainDataSet.DoCommand(cmd);
-
-        Refreshdata;
-      end;
-    end;
-  end;
-end;
-
-procedure TFrmResources.edtFilterChange(Sender: TObject);
-begin
-  timFilter.Enabled := False;
-  timFilter.Interval := 500;
-  timFilter.Enabled := True;
-end;
-
-procedure TFrmResources.edtFilterRightButtonClick(Sender: TObject);
-begin
-  edtFilter.Text := '';
-end;
-
-procedure TFrmResources.DisplayResources;
-var i : Integer;
-    item : TListItem;
-    srch : String;
-    date, user : String;
-    filter : String;
-begin
-  lvResources.Items.Clear;
-  lvResources.Items.BeginUpdate;
-  filter := UpperCase(edtFilter.Text);
-  try
-    for i := 0 to FResourceManagement.Count - 1 do
-
-    begin
-      if access = 'OPEN' then
-        srch := '/direct/'
-      else
-        srch := '/private/';
-      if (LowerCase(FResourceManagement.Resources[i].KEY_STRING) = LowerCase(KeyString)) AND (POS(srch, FResourceManagement.Resources[i].URI) > 0) then
-      begin
-        user := '';
-        glb.LocateSpecificRecordAndGetValue('staffmembers', 'id', FResourceManagement.Resources[i].USER_ID, 'Initials', user);
-        date := uDateUtils.RoomerDateTimeToString(FResourceManagement.Resources[i].LAST_MODIFIED);
-        if (filter = '') OR
-           (
-            (POS(filter, UpperCase(FResourceManagement.Resources[i].ORIGINAL_NAME)) > 0) OR
-            (POS(filter, UpperCase(FResourceManagement.Resources[i].FEXTRA_INFO)) > 0) OR
-            (POS(filter, UpperCase(FResourceManagement.Resources[i].FURI)) > 0) OR
-            (POS(filter, UpperCase(user)) > 0) OR
-            (POS(filter, UpperCase(date)) > 0)
-           ) then
+        Subject := lRes.EXTRA_INFO;
+        OrigName := lRes.FORIGINAL_NAME;
+        if EditHtmlSource(filename) then
         begin
-          item := lvResources.Items.Add;
-          item.Caption := FResourceManagement.Resources[i].ORIGINAL_NAME;
-          item.Data := Pointer(FResourceManagement.Resources[i].ID);
-          item.SubItems.Add(user);
-          item.SubItems.Add(date);
-          if (ResourceParameters IS THtmlResourceParameters) then
-            item.SubItems.Add(TRIM(FResourceManagement.Resources[i].EXTRA_INFO));
-          item.SubItems.Add(TRIM(FResourceManagement.Resources[i].URI));
+          ReCodeFile(filename);
+          path := UploadFileToResources(lRes.KEY_STRING, access.ToString, ExtractFilename(filename), filename, ResourceParameters);
+
+          cmd := format('UPDATE home100.HOTEL_RESOURCES SET ORIGINAL_NAME=''%s'', EXTRA_INFO=''%s'' WHERE HOTEL_ID=''%s'' AND ORIGINAL_NAME=''%s'' AND URI=''%s'' AND KEY_STRING=''%s''',
+                     [ OrigName,
+                       Subject,
+                       d.roomerMainDataSet.HotelId,
+                       OrigName,
+                       path,
+                       lres.KEY_STRING
+                     ]);
+          d.roomerMainDataSet.DoCommand(cmd);
+
+          Refreshdata;
         end;
       end;
     end;
-  finally
-    lvResources.Items.EndUpdate;
   end;
 end;
 
-procedure TFrmResources.lvResourcesColumnClick(Sender: TObject; Column: TListColumn);
+procedure TFrmResources.btnViewClick(Sender: TObject);
 begin
-  TListView(Sender).SortType := stNone;
-  if Column.Index<>SortedColumn then
-  begin
-    SortedColumn := Column.Index;
-    Descending := False;
-  end
-  else
-    Descending := not Descending;
-  TListView(Sender).SortType := stText;
-end;
-
-procedure TFrmResources.lvResourcesCompare(Sender: TObject; Item1, Item2: TListItem; Data: Integer; var Compare: Integer);
-begin
-  if SortedColumn = 0 then
-     Compare := CompareText(Item1.Caption, Item2.Caption)
-  else
-  if SortedColumn <> 0 then
-  begin
-    if SortedColumn = 2 then
-      Compare := CompareText(uDateUtils.DateTimeToDBString(uDateUtils.RoomerStringToDateTime(Item1.SubItems[SortedColumn-1])),
-                             uDateUtils.DateTimeToDBString(uDateUtils.RoomerStringToDateTime(Item2.SubItems[SortedColumn-1])))
-    else
-      Compare := CompareText(Item1.SubItems[SortedColumn-1], Item2.SubItems[SortedColumn-1]);
-  end;
-  if Descending then Compare := -Compare;
-end;
-
-procedure TFrmResources.lvResourcesDblClick(Sender: TObject);
-begin
+  inherited;
   DownloadAndOpenSelectedResource;
 end;
 
-procedure TFrmResources.lvResourcesDragDrop(Sender, Source: TObject; X, Y: Integer);
-var maildrop : TOlMailDrop;
-    i : Integer;
-begin
-  if (Source is TOlMailDrop) then
-  begin
-     maildrop:=TOlMailDrop(Source);
-     for i:=0 to maildrop.ItemCount-1 do
-     begin
-        with lvResources.Items.Add do
-        begin
-           Caption:=maildrop.Items[i].From;
-           SubItems.Add(d.roomerMainDataSet.username);
-           SubItems.Add(uDateUtils.RoomerDateTimeToString(now));
-           SubItems.Add(maildrop.Items[i].Subject);
-//           SubItems.Add(maildrop.Items[i].Received);
-//           SubItems.Add(maildrop.Items[i].Size);
-           // Body is also available
-           // maildrop.Items[i].Body
-        end;
-     end;
-  end;
-end;
-
-procedure TFrmResources.lvResourcesDragOver(Sender, Source: TObject; X, Y: Integer; State: TDragState; var Accept: Boolean);
-begin
-  Accept := True; // (Source is TOlMailDrop);
-end;
-
 procedure TFrmResources.lvResourcesEdited(Sender: TObject; Item: TListItem; var S: string);
-var cmd : String;
+//var cmd : String;
 begin
-  if S = '' then
-    raise Exception.Create(GetTranslatedText('shUI_NameCannotBeEmpty'));
-
-  cmd := format('UPDATE home100.HOTEL_RESOURCES SET ORIGINAL_NAME=''%s'' WHERE HOTEL_ID=''%s'' AND ORIGINAL_NAME=''%s'' AND URI=''%s'' AND KEY_STRING=''%s''',
-             [S, d.roomerMainDataSet.HotelId, item.Caption, item.SubItems[item.SubItems.Count - 1], KeyString]);
-  d.roomerMainDataSet.DoCommand(cmd);
-
+//  if S = '' then
+//    raise Exception.Create(GetTranslatedText('shUI_NameCannotBeEmpty'));
+//
+//  cmd := format('UPDATE home100.HOTEL_RESOURCES SET ORIGINAL_NAME=''%s'' WHERE HOTEL_ID=''%s'' AND ORIGINAL_NAME=''%s'' AND URI=''%s'' AND KEY_STRING=''%s''',
+//             [S, d.roomerMainDataSet.HotelId, item.Caption, item.SubItems[item.SubItems.Count - 1],
+//              TResource(Item.data).KEY_STRING]);
+//  d.roomerMainDataSet.DoCommand(cmd);
+//
 end;
 
 procedure TFrmResources.DownloadAndOpenSelectedResource;
 var filename, tmpFile : String;
 begin
   Screen.Cursor := crHourglass;
-  fileName := Download;
+  fileName := DownloadSelected;
   if filename <> '' then
   begin
     tmpFile := filename;
@@ -787,82 +652,84 @@ begin
         if FileExists(tmpFile) then DeleteFile(tmpFile);
         TFile.Move(filename, tmpFile);
       end;
-    end else
-    if (ResourceParameters IS TTextResourceParameters) then
-    begin
-      tmpFile := TPath.Combine(GetTempDir, changeFileExt(filename, '.txt'));
-      if UpperCase(tmpFile) <> UpperCase(filename) then
-      begin
-        if FileExists(tmpFile) then DeleteFile(tmpFile);
-        TFile.Move(filename, tmpFile);
-      end;
     end;
-
-    if NOT (ResourceParameters IS TSqlResourceParameters) then
-      ShellExecute(Self.WindowHandle, 'open', PChar(tmpFile), nil, nil, SW_SHOWNORMAL);
     CollectionOfOpenedFiles.Add(tmpFile);
   end;
 end;
 
-function TFrmResources.Download : String;
-var filename : String;
+function TFrmResources.DownloadSelected : String;
+var
+  filename : String;
+  lRes: TResource;
 begin
   result := '';
-  Screen.Cursor := crHourglass;
-  try
-    if lvResources.Selected <> nil then
-    begin
-      fileName := TPath.Combine(GetTempDir, lvResources.Selected.Caption);
+  lRes := GetCurrentResource;
+  if lRes <> nil then
+  begin
+    Screen.Cursor := crHourglass;
+    try
+      fileName := TPath.Combine(GetTempDir, lRes.ORIGINAL_NAME);
       if DownloadSelectedFile(filename) then
         result := filename;
+    finally
+      Screen.Cursor := crDefault;
     end;
-  finally
-    Screen.Cursor := crDefault;
   end;
 end;
 
 procedure TFrmResources.C1Click(Sender: TObject);
-var item : TListItem;
 begin
-  if lvResources.Selected <> nil then
-  begin
-    item := lvResources.Selected;
-    Clipboard.AsText := item.SubItems[item.SubItems.Count - 1];
-  end;
+  if GetCurrentResource <> nil then
+    Clipboard.AsText := GetCurrentResource.URI;
 end;
 
 procedure TFrmResources.C2Click(Sender: TObject);
 var filename : String;
 begin
-  fileName := Download;
+  fileName := DownloadSelected;
   DropFileSource1.Files.Clear;
   DropFileSource1.Files.Add(filename);
   DropFileSource1.CopyToClipboard;
 end;
 
 function TFrmResources.DownloadSelectedFile(destFilename : String) : Boolean;
-var item : TListItem;
+var
+  lRes: TResource;
 begin
   Result := false;
-  if lvResources.Selected <> nil then
+  lRes := GetCurrentResource;
+  if lRes <> nil then
   begin
-    item := lvResources.Selected;
     if FileExists(destFilename) then
       DeleteFile(destFilename);
 
-    result := DownloadResource(item.SubItems[item.SubItems.Count - 1], destFilename);
+    result := DownloadResource(lRes.URI, destFilename);
   end;
 end;
 
 procedure TFrmResources.DropComboTarget1Drop(Sender: TObject; ShiftState: TShiftState; APoint: TPoint; var Effect: Integer);
 begin
-  DropComboTargetDrop(keyString, access, Sender AS TDropComboTarget, ShiftState, APoint, Effect);
+  DropComboTargetDrop(FSingleResourceType.ToKeyString(FKeyStringParam) , access.ToString, Sender AS TDropComboTarget, ShiftState, APoint, Effect);
   RefreshData;
 end;
 
-procedure TFrmResources.lvResourcesSelectItem(Sender: TObject; Item: TListItem; Selected: Boolean);
+procedure TFrmResources.dsResourcesAfterScroll(DataSet: TDataSet);
 begin
+  inherited;
   UpdateControls;
+end;
+
+
+procedure TFrmResources.dsResourcesBeforeDelete(DataSet: TDataSet);
+begin
+  inherited;
+  if MessageDlg(GetTranslatedText('shTx_ResourceManager_Delete_Resource'), mtConfirmation, mbYesNo, 0) = mrYes then
+  begin
+    DeleteSelected;
+    RefreshData;
+  end
+  else
+    Abort;
 end;
 
 procedure TFrmResources.P1Click(Sender: TObject);
@@ -877,61 +744,58 @@ begin
 end;
 
 procedure TfrmResources.InitControls;
-var
-  col : TListColumn;
 begin
-  if NOT (ResourceParameters IS THtmlResourceParameters) then
-  begin
-    lvResources.Columns.Clear;
-    col := lvResources.Columns.Add;
-    col.Width := 250;
-    col.Caption := '';
+//  if NOT (ResourceParameters IS THtmlResourceParameters) then
+//  begin
+//    lvResources.Columns.Clear;
+//    col := lvResources.Columns.Add;
+//    col.Width := 250;
+//    col.Caption := '';
+//
+//    col := lvResources.Columns.Add;
+//    col.Width := 50;
+//    col.Caption := '';
+//
+//    col := lvResources.Columns.Add;
+//    col.Width := 130;
+//    col.Caption := '';
+//
+//    col := lvResources.Columns.Add;
+//    col.Width := 450;
+//    col.Caption := 'URI';
+//
+//  end else
 
-    col := lvResources.Columns.Add;
-    col.Width := 50;
-    col.Caption := '';
-
-    col := lvResources.Columns.Add;
-    col.Width := 130;
-    col.Caption := '';
-
-    col := lvResources.Columns.Add;
-    col.Width := 450;
-    col.Caption := 'URI';
-
-  end else
-    lvResources.Columns[3].Caption := GetTranslatedText('shUI_Subject');
-
-  lvResources.Columns[0].Caption := GetTranslatedText('shUI_Filename');
-  lvResources.Columns[1].Caption := GetTranslatedText('shUI_User');
-  lvResources.Columns[2].Caption := GetTranslatedText('shUI_DateTime');
+//  lvResources.Columns[1].Caption := GetTranslatedText('shUI_Filename');
+//  lvResources.Columns[2].Caption := GetTranslatedText('shUI_User');
+//  lvResources.Columns[3].Caption := GetTranslatedText('shUI_DateTime');
+//  lvResources.Columns[4].Caption := GetTranslatedText('shUI_Subject');
+//
+  tvResourcesExtraInfo.Visible := (ResourceTypes * cEmailTemplateResourceTypes <> []);
 
 end;
 
 procedure TFrmResources.DoUpdateControls;
+var
+  lRes: TResource;
 begin
   inherited;
+  lRes := GetCurrentResource;
+  btnDelete.Enabled := lRes <> nil;
+  btnRename.Enabled := lRes <> nil;
 
-  btnDelete.Enabled := lvResources.Selected <> nil;
-  btnRename.Enabled := lvResources.Selected <> nil;
-  btnView.Enabled := (lvResources.Selected <> nil) AND
-                      (NOT (ResourceParameters IS TSqlResourceParameters));
-  btnEdit.Visible := Assigned(ResourceParameters) AND
-                     (
-                       (ResourceParameters IS THtmlResourceParameters) OR
-                       (ResourceParameters IS TSqlResourceParameters) OR
-                       (ResourceParameters IS TTextResourceParameters)
-                     );
-
-  btnEdit.Enabled := (lvResources.Selected <> nil);
+  btnEdit.Visible := Assigned(ResourceParameters) AND (ResourceParameters IS THtmlResourceParameters);
+  btnEdit.Enabled := (lRes <> nil);
 
   btnSource.Visible :=  Assigned(ResourceParameters) AND (ResourceParameters IS THtmlResourceParameters);
-  btnSource.Enabled := (lvResources.Selected <> nil);
+  btnSource.Enabled := (lRes <> nil);
 
-  v1.Enabled := lvResources.Selected <> nil;
-  d1.Enabled := lvResources.Selected <> nil;
-  d2.Enabled := lvResources.Selected <> nil;
-  c2.Enabled := lvResources.Selected <> nil;
+  btnView.Enabled := Assigned(ResourceParameters) AND (ResourceParameters IS THtmlResourceParameters) and (lRes <> nil);
+
+  v1.Enabled := lRes <> nil;
+  d1.Enabled := lRes <> nil;
+  d2.Enabled := lRes <> nil;
+  c2.Enabled := lRes <> nil;
 
 end;
 
@@ -940,11 +804,34 @@ begin
   FResourceManagement.RemoveFileForUpload(filename);
 end;
 
-procedure TFrmResources.timFilterTimer(Sender: TObject);
+procedure TFrmResources.SetKeyString(const Value: string);
 begin
-  timFilter.Enabled := false;
-  DisplayResources;
+  ResourceTypes := [TResourceType.FromString(Value)];
 end;
 
+procedure TFrmResources.SetResourceTypes(const Value: TResourceTypeSet);
+var
+  lType: TResourceType;
+begin
+  FResourceTypes := Value;
+  if FResourceTypes.Count = 1 then
+    for lType in FResourceTypes do
+      FSingleResourceType := lType
+end;
+
+
+procedure TFrmResources.tvResourcesCellDblClick(Sender: TcxCustomGridTableView;
+  ACellViewInfo: TcxGridTableDataCellViewInfo; AButton: TMouseButton; AShift: TShiftState; var AHandled: Boolean);
+begin
+  inherited;
+  DownloadAndOpenSelectedResource;
+end;
+
+procedure TFrmResources.tvResourcesResourceTypeGetDisplayText(Sender: TcxCustomGridTableItem;
+  ARecord: TcxCustomGridRecord; var AText: string);
+begin
+  inherited;
+  aText := FResourceManagement.Resources[aRecord.Index].ResourceType.AsReadableString();
+end;
 
 end.

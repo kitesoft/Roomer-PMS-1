@@ -844,7 +844,7 @@ uses
   , uMandatoryFieldDefinitions
   , UITYpes
 
-  ;
+  , uResourceTypeDefinitions;
 {$R *.DFM}
 
 procedure TfrmControlData.calcRequestInterval;
@@ -2292,7 +2292,7 @@ begin
   frmMain.dxBarLargeButton4Click(nil);
   idx := cbxInvoiceExport.ItemIndex;
   cbxInvoiceExport.Items.Clear;
-  RoomerResourceManagement := TRoomerResourceManagement.Create(ANY_FILE, ACCESS_RESTRICTED);
+  RoomerResourceManagement := TRoomerResourceManagement.Create(TResourceType.rtAnyFile, TResourceAccessType.ratRestricted);
   try
     RoomerResourceManagement.AddStaticResourcesAsStrings(cbxInvoiceExport.Items);
   finally
@@ -2310,10 +2310,10 @@ procedure TfrmControlData.btnResourcesClick(Sender: TObject);
 var idx : Integer;
     RoomerResourceManagement : TRoomerResourceManagement;
 begin
-  frmMain.ShowBookingConfirmationTemplates;
+  //frmMain.ShowBookingConfirmationTemplates;
   idx := cbxQuery.ItemIndex;
   cbxQuery.Items.Clear;
-  RoomerResourceManagement := TRoomerResourceManagement.Create(GUEST_EMAIL_TEMPLATE, ACCESS_RESTRICTED);
+  RoomerResourceManagement := TRoomerResourceManagement.Create(TResourceType.rtGuestEmailTemplate, TResourceAccessType.ratRestricted);
   try
     RoomerResourceManagement.AddStaticResourcesAsStrings(cbxQuery.Items);
   finally
@@ -2497,13 +2497,13 @@ begin
   end;
 
   cbxQuery.Items.Clear;
-  RoomerResourceManagement := TRoomerResourceManagement.Create(GUEST_EMAIL_TEMPLATE, ACCESS_RESTRICTED);
+  RoomerResourceManagement := TRoomerResourceManagement.Create(TResourceType.rtGuestEmailTemplate, TResourceAccessType.ratRestricted);
   try
     RoomerResourceManagement.AddStaticResourcesAsStrings(cbxQuery.Items);
   finally
     RoomerResourceManagement.Free;
   end;
-  RoomerResourceManagement := TRoomerResourceManagement.Create(ANY_FILE, ACCESS_RESTRICTED);
+  RoomerResourceManagement := TRoomerResourceManagement.Create(TResourceType.rtAnyFile, TResourceAccessType.ratRestricted);
   try
     RoomerResourceManagement.AddStaticResourcesAsStrings(cbxInvoiceExport.Items);
   finally

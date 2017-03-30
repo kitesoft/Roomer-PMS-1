@@ -1,27 +1,26 @@
 inherited FrmResources: TFrmResources
   Caption = 'Resources'
-  ClientHeight = 518
-  ClientWidth = 871
-  Font.Height = -10
+  ClientHeight = 561
+  ClientWidth = 991
   OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnShow = FormShow
-  ExplicitWidth = 887
-  ExplicitHeight = 557
+  ExplicitWidth = 1007
+  ExplicitHeight = 600
   PixelsPerInch = 96
-  TextHeight = 12
+  TextHeight = 13
   inherited sbStatusBar: TsStatusBar
-    Top = 498
-    Width = 871
+    Top = 541
+    Width = 991
     ExplicitTop = 498
     ExplicitWidth = 871
   end
   object pnlHolder: TsPanel [1]
     Left = 0
     Top = 0
-    Width = 871
-    Height = 498
+    Width = 991
+    Height = 541
     Margins.Left = 2
     Margins.Top = 2
     Margins.Right = 2
@@ -30,11 +29,13 @@ inherited FrmResources: TFrmResources
     BevelOuter = bvNone
     TabOrder = 0
     SkinData.SkinSection = 'PANEL'
+    ExplicitWidth = 871
+    ExplicitHeight = 498
     object sPanel1: TsPanel
       Left = 0
       Top = 0
-      Width = 871
-      Height = 75
+      Width = 991
+      Height = 48
       Margins.Left = 2
       Margins.Top = 2
       Margins.Right = 2
@@ -42,8 +43,6 @@ inherited FrmResources: TFrmResources
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 0
-      OnDragDrop = lvResourcesDragDrop
-      OnDragOver = lvResourcesDragOver
       SkinData.SkinSection = 'PANEL'
       object btnInsert: TsButton
         AlignWithMargins = True
@@ -84,7 +83,7 @@ inherited FrmResources: TFrmResources
       end
       object btnClose: TsButton
         AlignWithMargins = True
-        Left = 768
+        Left = 888
         Top = 3
         Width = 100
         Height = 36
@@ -98,6 +97,7 @@ inherited FrmResources: TFrmResources
         TabOrder = 2
         OnClick = btnCloseClick
         SkinData.SkinSection = 'BUTTON'
+        ExplicitLeft = 768
       end
       object btnView: TsButton
         AlignWithMargins = True
@@ -115,7 +115,7 @@ inherited FrmResources: TFrmResources
         ParentShowHint = False
         ShowHint = True
         TabOrder = 3
-        OnClick = lvResourcesDblClick
+        OnClick = btnViewClick
         SkinData.SkinSection = 'BUTTON'
       end
       object btnEdit: TsButton
@@ -177,105 +177,22 @@ inherited FrmResources: TFrmResources
         OnClick = btnSourceClick
         SkinData.SkinSection = 'BUTTON'
       end
-      object sPanel3: TsPanel
-        Left = 0
-        Top = 48
-        Width = 871
-        Height = 27
-        Align = alBottom
-        BevelOuter = bvNone
-        TabOrder = 7
-        object sLabel1: TsLabel
-          Left = 91
-          Top = 4
-          Width = 26
-          Height = 12
-          Alignment = taRightJustify
-          Caption = 'Filter:'
-        end
-        object edtFilter: TButtonedEdit
-          Left = 123
-          Top = 1
-          Width = 234
-          Height = 20
-          Images = DImages.cxSmallImagesFlat
-          RightButton.ImageIndex = 10
-          RightButton.Visible = True
-          TabOrder = 0
-          OnChange = edtFilterChange
-          OnRightButtonClick = edtFilterRightButtonClick
-        end
-      end
-    end
-    object lvResources: TListView
-      AlignWithMargins = True
-      Left = 2
-      Top = 77
-      Width = 867
-      Height = 377
-      Margins.Left = 2
-      Margins.Top = 2
-      Margins.Right = 2
-      Margins.Bottom = 2
-      Align = alClient
-      BorderStyle = bsNone
-      Color = clWhite
-      Columns = <
-        item
-          Caption = 'Filename'
-          Width = 250
-        end
-        item
-          Caption = 'User'
-        end
-        item
-          Caption = 'Date/Time'
-          Width = 130
-        end
-        item
-          Caption = 'Subject'
-          Width = 250
-        end
-        item
-          Caption = 'URI'
-          Width = 350
-        end>
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clBlack
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      FlatScrollBars = True
-      GridLines = True
-      HideSelection = False
-      MultiSelect = True
-      RowSelect = True
-      ParentFont = False
-      PopupMenu = PopupMenu1
-      SortType = stText
-      TabOrder = 1
-      ViewStyle = vsReport
-      OnColumnClick = lvResourcesColumnClick
-      OnCompare = lvResourcesCompare
-      OnDblClick = lvResourcesDblClick
-      OnEdited = lvResourcesEdited
-      OnDragDrop = lvResourcesDragDrop
-      OnDragOver = lvResourcesDragOver
-      OnSelectItem = lvResourcesSelectItem
     end
     object sPanel2: TsPanel
       Left = 0
-      Top = 456
-      Width = 871
+      Top = 499
+      Width = 991
       Height = 42
       Align = alBottom
       BevelOuter = bvNone
-      TabOrder = 2
+      TabOrder = 1
       Visible = False
       SkinData.SkinSection = 'PANEL'
+      ExplicitTop = 456
+      ExplicitWidth = 871
       object sButton1: TsButton
         AlignWithMargins = True
-        Left = 756
+        Left = 876
         Top = 3
         Width = 112
         Height = 36
@@ -287,10 +204,11 @@ inherited FrmResources: TFrmResources
         ModalResult = 2
         TabOrder = 0
         SkinData.SkinSection = 'BUTTON'
+        ExplicitLeft = 756
       end
       object sButton2: TsButton
         AlignWithMargins = True
-        Left = 640
+        Left = 760
         Top = 3
         Width = 110
         Height = 36
@@ -302,6 +220,68 @@ inherited FrmResources: TFrmResources
         ModalResult = 1
         TabOrder = 1
         SkinData.SkinSection = 'BUTTON'
+        ExplicitLeft = 640
+      end
+    end
+    object grData: TcxGrid
+      Left = 0
+      Top = 48
+      Width = 991
+      Height = 451
+      Align = alClient
+      PopupMenu = PopupMenu1
+      TabOrder = 2
+      ExplicitTop = 45
+      object tvResources: TcxGridDBTableView
+        Navigator.Buttons.CustomButtons = <>
+        OnCellDblClick = tvResourcesCellDblClick
+        DataController.DataSource = dsGrid
+        DataController.Summary.DefaultGroupSummaryItems = <>
+        DataController.Summary.FooterSummaryItems = <>
+        DataController.Summary.SummaryGroups = <>
+        OptionsData.Deleting = False
+        OptionsData.Editing = False
+        OptionsData.Inserting = False
+        OptionsSelection.CellSelect = False
+        Styles.StyleSheet = cxssRoomerGridTableView
+        object tvResourcesID: TcxGridDBColumn
+          DataBinding.FieldName = 'ID'
+          Visible = False
+        end
+        object tvResourcesResourceType: TcxGridDBColumn
+          Caption = 'Reource Type'
+          DataBinding.FieldName = 'ResourceType'
+          PropertiesClassName = 'TcxTextEditProperties'
+          OnGetDisplayText = tvResourcesResourceTypeGetDisplayText
+          Width = 163
+        end
+        object tvResourcesOriginalName: TcxGridDBColumn
+          Caption = 'File name'
+          DataBinding.FieldName = 'original_name'
+          Width = 191
+        end
+        object tvResourcesExtraInfo: TcxGridDBColumn
+          Caption = 'Subject'
+          DataBinding.FieldName = 'EXTRA_INFO'
+          Width = 210
+        end
+        object tvResourcesURI: TcxGridDBColumn
+          Caption = 'Address'
+          DataBinding.FieldName = 'URI'
+          Width = 261
+        end
+        object tvResourcesUser: TcxGridDBColumn
+          DataBinding.FieldName = 'User'
+          BestFitMaxWidth = 64
+        end
+        object tvResourcesLastModified: TcxGridDBColumn
+          Caption = 'Last modified'
+          DataBinding.FieldName = 'LAST_MODIFIED'
+          Width = 133
+        end
+      end
+      object lvlResources: TcxGridLevel
+        GridView = tvResources
       end
     end
   end
@@ -346,7 +326,7 @@ inherited FrmResources: TFrmResources
     object V1: TMenuItem
       Caption = 'View'
       Default = True
-      OnClick = lvResourcesDblClick
+      OnClick = btnViewClick
     end
     object D1: TMenuItem
       Caption = 'Download'
@@ -386,25 +366,29 @@ inherited FrmResources: TFrmResources
       'mp4|Sound (*.mp3)|*.mp3'
     FilterIndex = 0
     Left = 160
-    Top = 112
+    Top = 136
   end
   object DropComboTarget1: TDropComboTarget
     DragTypes = [dtCopy, dtLink]
     OnDrop = DropComboTarget1Drop
-    Target = Owner
+    Target = grData
     Left = 372
     Top = 304
+  end
+  object dsResources: TObjectDataSet
+    AfterScroll = dsResourcesAfterScroll
+    BeforeDelete = dsResourcesBeforeDelete
+    Left = 408
+    Top = 152
+  end
+  object dsGrid: TDataSource
+    DataSet = dsResources
+    Left = 488
+    Top = 144
   end
   object DropFileSource1: TDropFileSource
     DragTypes = [dtCopy]
     Left = 368
-    Top = 384
-  end
-  object timFilter: TTimer
-    Enabled = False
-    Interval = 500
-    OnTimer = timFilterTimer
-    Left = 296
-    Top = 240
+    Top = 368
   end
 end

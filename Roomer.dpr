@@ -273,7 +273,8 @@ uses
   uRoomerSchema in 'OpenAPI\schema\uRoomerSchema.pas',
   RoomerConfigurationItemsCommunicationModel_RequestsResponses in 'OpenAPI\schema\RoomerConfigurationItemsCommunicationModel_RequestsResponses.pas',
   uConfigurationItemsAPICaller in 'OpenAPI\uConfigurationItemsAPICaller.pas',
-  uRoomerIDList in 'RoomerVCLs\Source\uRoomerIDList.pas';
+  uRoomerIDList in 'RoomerVCLs\Source\uRoomerIDList.pas',
+  uResourceTypeDefinitions in 'Resources\uResourceTypeDefinitions.pas';
 
 {$R *.RES}
 
@@ -303,7 +304,7 @@ begin
     TSplashFormManager.Show;
 
     Application.CreateForm(TD, D);
-    D.ApplicationId := cOpenAPIApplicationID;
+  D.ApplicationId := cOpenAPIApplicationID;
 
     Application.CreateForm(TDReportData, DReportData);
     TSplashFormManager.UpdateProgress('Loading forms...');

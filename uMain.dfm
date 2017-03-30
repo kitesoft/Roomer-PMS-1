@@ -2051,6 +2051,7 @@ object frmMain: TfrmMain
             DirectInput = False
             ShowWeeks = True
             PopupWidth = 250
+            ExplicitTop = 6
           end
           object pnlStaffComm: TsPanel
             AlignWithMargins = True
@@ -5482,8 +5483,7 @@ object frmMain: TfrmMain
       HelpContext = 6
       Hint = 'Email Templates'
       Visible = ivAlways
-      ButtonStyle = bsDropDown
-      DropDownMenu = mnuEmailTemplates
+      DropDownEnabled = False
       LargeImageIndex = 115
       OnClick = btnEmailTemplatesClick
     end
@@ -5604,7 +5604,6 @@ object frmMain: TfrmMain
       Caption = 'Booking confirmations'
       Category = 0
       Visible = ivAlways
-      OnClick = mniBookinglEmailTemplatesClick
       ItemLinks = <>
       ItemOptions.ShowShortCuts = True
     end
@@ -5612,7 +5611,6 @@ object frmMain: TfrmMain
       Caption = 'Cancellation confirmations'
       Category = 0
       Visible = ivAlways
-      OnClick = mniCancelEmailTemplatesClick
       ItemLinks = <>
     end
     object dxBarSeparator6: TdxBarSeparator
@@ -5632,14 +5630,12 @@ object frmMain: TfrmMain
       Category = 0
       Hint = 'Booking confirmations'
       Visible = ivAlways
-      OnClick = mniBookinglEmailTemplatesClick
     end
     object dxBarButton4: TdxBarButton
       Caption = 'Cancellation confirmations'
       Category = 0
       Hint = 'Cancellation confirmations'
       Visible = ivAlways
-      OnClick = mniCancelEmailTemplatesClick
     end
     object dxBarLargeButton5: TdxBarLargeButton
       Caption = 'New Button'
@@ -5848,14 +5844,12 @@ object frmMain: TfrmMain
       Category = 0
       Hint = 'Pre-arrival email template'
       Visible = ivAlways
-      OnClick = dbbPreArrivalEmailTemplateClick
     end
     object dbbPostDepartureEmailTemplate: TdxBarButton
       Caption = 'Post-departure email template'
       Category = 0
       Hint = 'Post-departure email template'
       Visible = ivAlways
-      OnClick = dbbPostDepartureEmailTemplateClick
     end
     object mmnuFile: TdxBarSubItem
       Caption = '&File'
@@ -24505,29 +24499,6 @@ object frmMain: TfrmMain
     OnTimer = timBlinkerTimer
     Left = 656
     Top = 600
-  end
-  object mnuEmailTemplates: TdxBarPopupMenu
-    BarManager = barinn
-    ItemLinks = <
-      item
-        Visible = True
-        ItemName = 'dxBarButton3'
-      end
-      item
-        Visible = True
-        ItemName = 'dxBarButton4'
-      end
-      item
-        Visible = True
-        ItemName = 'dbbPreArrivalEmailTemplate'
-      end
-      item
-        Visible = True
-        ItemName = 'dbbPostDepartureEmailTemplate'
-      end>
-    UseOwnFont = False
-    Left = 360
-    Top = 468
   end
   object ApplicationEvents1: TApplicationEvents
     OnMessage = ApplicationEvents1Message

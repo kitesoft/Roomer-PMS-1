@@ -1621,6 +1621,24 @@ begin
   constants.Add('shTx_Removing_Allotment_Traces', 'Removing allotment traces');
 
   constants.Add('shTx_Processing_Failed_Rolling_Back', 'The process failed. Rolling back to previous state...');
+
+  constants.Add('shTx_ResourceAccesType_OPEN', 'Public');
+  constants.Add('shTx_ResourceAccesType_RESTRICTED', 'Private');
+
+  constants.Add('shTx_ResourceType_ANYFILE', 'Any file');
+  constants.Add('shTx_ResourceType_GUEST_EMAIL', 'Confirmation email template');
+  constants.Add('shTx_ResourceType_CANCEL_EMAIL', 'Cancellation email template');
+  constants.Add('shTx_ResourceType_PRE_ARRIVAL_EMAIL', 'Pre-arrival email template');
+  constants.Add('shTx_ResourceType_POST_DEPARTURE_EMAIL', 'Post-departure email template');
+  constants.Add('shTx_ResourceType_ROOM_IMAGE', 'Room image');
+  constants.Add('shTx_ResourceType_ROOM_CLASS_IMAGE', 'Roomclass image');
+  constants.Add('shTx_ResourceType_CUSTOMER_DOCUMENT', 'Customer document');
+  constants.Add('shTx_ResourceType_BOOKING', 'Reservation document');
+  constants.Add('shTx_ResourceType_ROOM_BOOKING', 'Room reservation document');
+  constants.Add('shTx_ResourceType_GUEST', 'Guest document');
+
+  constants.Add('shTx_ResourceManager_Delete_Resource', 'Deleting this resource. Are you sure?');
+
 end;
 
 procedure AddConstants_OfflineReports;

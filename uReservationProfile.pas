@@ -847,7 +847,7 @@ uses
   , uCurrencyHandler
   , uAccountTypeDefinitions, uBreakfastStateDefinitions, uSQLUtils, ufrmRoomPrices
   , uDateTimeHelper
-  ;
+  , uResourceTypeDefinitions;
 
 {$R *.DFM}
 
@@ -1803,9 +1803,7 @@ end;
 
 procedure TfrmReservationProfile.acShowDocumentsExecute(Sender: TObject);
 begin
-  StaticResources('Reservation Resources',
-    format(BOOKING_STATIC_RESOURCES, [inttostr(zReservation)]),
-    ACCESS_RESTRICTED);
+  StaticResources('Reservation Resources', [TResourceType.rtBooking], TResourceAccessType.ratRestricted, inttostr(zReservation));
 end;
 
 procedure TfrmReservationProfile.acShowHiddenMemoExecute(Sender: TObject);

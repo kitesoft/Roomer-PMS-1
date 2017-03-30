@@ -632,10 +632,8 @@ type
     btnHotelSpecificSqlQueries: TdxBarLargeButton;
     barinnBar1: TdxBar;
     barinnBar9: TdxBar;
-    btnTextBasedTemplates: TdxBarLargeButton;
     barinnBar10: TdxBar;
     btnBookKeepingQueries: TdxBarLargeButton;
-    mnuEmailTemplates: TdxBarPopupMenu;
     mniBookinglEmailTemplates: TdxBarSubItem;
     mniCancelEmailTemplates: TdxBarSubItem;
     R1: TMenuItem;
@@ -943,8 +941,6 @@ type
     procedure btnHotelSpecificSqlQueriesClick(Sender: TObject);
     procedure btnBookKeepingQueriesClick(Sender: TObject);
     procedure FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
-    procedure mniBookinglEmailTemplatesClick(Sender: TObject);
-    procedure mniCancelEmailTemplatesClick(Sender: TObject);
     procedure R1Click(Sender: TObject);
     procedure C6Click(Sender: TObject);
     procedure btnEmailTemplatesClick(Sender: TObject);
@@ -987,8 +983,6 @@ type
     procedure btnDefaultMasterRatesClick(Sender: TObject);
     procedure grOneDayRoomsScrollCell(Sender: TObject; ACol, ARow, ScrollPosition, ScrollMin, ScrollMax: Integer);
     procedure dxUserActivityLogClick(Sender: TObject);
-    procedure dbbPostDepartureEmailTemplateClick(Sender: TObject);
-    procedure dbbPreArrivalEmailTemplateClick(Sender: TObject);
 
   private
     FReservationsModel: TReservationsModel;
@@ -1509,8 +1503,6 @@ type
     function IsInRoomTypes(const RoomType, RTAvailable: string): boolean;
     procedure SetExtraSkinColors;
     procedure RemoveLanguagesFilesAndRefresh(Refresh: boolean = true);
-    procedure ShowBookingConfirmationTemplates;
-    procedure ShowCancelConfirmationTemplates;
     procedure ShowTimelyMessage(const sMessage: string);
 
     property RBEMode: boolean read FRBEMode write SetRBEMode;
@@ -1585,7 +1577,7 @@ uses
     , uRoomerVersionInfo
     , uSQLUtils
     , uMasterRateDefaults
-    , uRptUserActivity;
+    , uRptUserActivity, uResourceTypeDefinitions;
 
 {$R *.DFM}
 {$R Cursors.res}
@@ -11053,12 +11045,6 @@ begin
   itemTypeInfoTax.Itemtype := '';
 end;
 
-procedure TfrmMain.btnEmailTemplatesClick(Sender: TObject);
-begin
-  LogUserClickedButton(Sender);
-  mnuEmailTemplates.PopupFromCursorPos;
-end;
-
 procedure TfrmMain.btnEmployeeListClick(Sender: TObject);
 begin
   LogUserClickedButton(Sender);
@@ -11305,59 +11291,14 @@ begin
   ShowUserActivityReport;
 end;
 
-procedure TfrmMain.ShowBookingConfirmationTemplates;
-begin
-  mniBookinglEmailTemplatesClick(nil);
-end;
-
-procedure TfrmMain.ShowCancelConfirmationTemplates;
-begin
-  mniCancelEmailTemplatesClick(nil);
-end;
-
-procedure TfrmMain.dbbPostDepartureEmailTemplateClick(Sender: TObject);
+procedure TfrmMain.btnEmailTemplatesClick(Sender: TObject);
 var
   lParams: THtmlResourceParameters;
 begin
+  LogUserClickedButton(Sender);
   lParams := THtmlResourceParameters.Create;
   try
-    StaticResources(TdxBarButton(Sender).Caption, POST_DEPARTURE_MAIL_TEMPLATE, ACCESS_OPEN, lParams);
-  finally
-    lParams.Free;
-  end;
-end;
-
-procedure TfrmMain.dbbPreArrivalEmailTemplateClick(Sender: TObject);
-var
-  lParams: THtmlResourceParameters;
-begin
-  lParams := THtmlResourceParameters.Create;
-  try
-    StaticResources(TdxBarButton(Sender).Caption, PRE_ARRIVAL_EMAIL_TEMPLATE, ACCESS_OPEN, lParams);
-  finally
-    lParams.Free;
-  end;
-end;
-
-procedure TfrmMain.mniBookinglEmailTemplatesClick(Sender: TObject);
-var
-  lParams: THtmlResourceParameters;
-begin
-  lParams := THtmlResourceParameters.Create;
-  try
-    StaticResources(TdxBarButton(Sender).Caption, GUEST_EMAIL_TEMPLATE, ACCESS_OPEN, lParams);
-  finally
-    lParams.Free;
-  end;
-end;
-
-procedure TfrmMain.mniCancelEmailTemplatesClick(Sender: TObject);
-var
-  lParams: THtmlResourceParameters;
-begin
-  lParams := THtmlResourceParameters.Create;
-  try
-    StaticResources(TdxBarButton(Sender).Caption, CANCEL_EMAIL_TEMPLATE, ACCESS_OPEN, lParams);
+    StaticResources(TdxBarButton(Sender).Caption, cEmailTemplateResourceTypes, TResourceAccessType.ratOpen, '', lParams);
   finally
     lParams.Free;
   end;
