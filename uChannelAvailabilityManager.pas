@@ -1697,6 +1697,8 @@ begin
        '                 ELSE cr.Price ' +#10+
        '            END, '+#10+
 
+       ' cr.dirty = cmr.dirty AND rtg.connectRateToMasterRate, '+#10+
+
        ' cr.singleUsePrice = CASE WHEN cmr.singleUsePriceDirty AND rtg.connectSingleUseRateToMasterRate ' +#10+
        '                          THEN '+#10+
        '                          ( ' +#10+
@@ -1712,36 +1714,50 @@ begin
        '                          ELSE cr.singleUsePrice '+#10+
        '                     END, ' +#10+
 
+       ' cr.singleUsePriceDirty = cmr.singleUsePriceDirty AND rtg.connectSingleUseRateToMasterRate, ' +#10+
+
 
        ' cr.MinStay = CASE WHEN cmr.minStayDirty AND rtg.connectMinStayToMasterRate ' +#10+
        '                   THEN cmr.MinStay '+#10+
        '                   ELSE cr.MinStay '+#10+
        '              END, ' +#10+
 
+       ' cr.MinStayDirty = cmr.minStayDirty AND rtg.connectMinStayToMasterRate, ' +#10+
+
        ' cr.MaxStay = CASE WHEN cmr.maxStayDirty AND rtg.connectMaxStayToMasterRate ' +#10+
        '                   THEN cmr.MaxStay '+#10+
        '                   ELSE cr.MaxStay '+#10+
        '              END, ' +#10+
+
+       ' cr.MaxStayDirty = cmr.maxStayDirty AND rtg.connectMaxStayToMasterRate, ' +#10+
 
        ' cr.closedOnArrival = CASE WHEN cmr.closedOnArrivalDirty AND rtg.connectCOAToMasterRate ' +#10+
        '                           THEN cmr.closedOnArrival '+#10+
        '                           ELSE cr.closedOnArrival '+#10+
        '                      END, ' +#10+
 
+       ' cr.closedOnArrivalDirty = cmr.closedOnArrivalDirty AND rtg.connectCOAToMasterRate, ' +#10+
+
        ' cr.closedOnDeparture = CASE WHEN cmr.closedOnDepartureDirty AND rtg.connectCODToMasterRate ' +#10+
        '                             THEN cmr.closedOnDeparture '+#10+
        '                             ELSE cr.closedOnDeparture '+#10+
        '                        END, ' +#10+
+
+       ' cr.closedOnDepartureDirty = cmr.closedOnDepartureDirty AND rtg.connectCODToMasterRate, ' +#10+
 
        ' cr.stop = CASE WHEN cmr.stopDirty AND rtg.connectStopSellToMasterRate '+#10+
        '                THEN cmr.stop '+#10+
        '                ELSE cr.stop  '+#10+
        '           END, ' +#10+
 
+       ' cr.stopDirty = cmr.stopDirty AND rtg.connectStopSellToMasterRate, '+#10+
+
        ' cr.lengthOfStayArrivalDateBased = CASE WHEN cmr.lengthOfStayArrivalDateBasedDirty AND rtg.connectLOSToMasterRate '+#10+
        '                                        THEN cmr.lengthOfStayArrivalDateBased '+#10+
        '                                        ELSE cr.lengthOfStayArrivalDateBased '+#10+
        '                                   END, ' +#10+
+
+       ' cr.lengthOfStayArrivalDateBasedDirty = cmr.lengthOfStayArrivalDateBasedDirty AND rtg.connectLOSToMasterRate, '+#10+
 
        'cmr.dirty=0, ' +#10+
        'cmr.singleUsePriceDirty=0, ' +#10+

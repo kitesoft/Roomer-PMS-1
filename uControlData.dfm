@@ -82,9 +82,8 @@ object frmControlData: TfrmControlData
         Width = 154
         Height = 743
         Align = alClient
-        Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
+        Font.Color = clWindowText
         Font.Height = -12
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -141,7 +140,7 @@ object frmControlData: TfrmControlData
         Top = 1
         Width = 1101
         Height = 743
-        ActivePage = tsSystemItemIDs
+        ActivePage = tsCompany
         Align = alClient
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText

@@ -185,6 +185,8 @@ uses uAppGlobal,
   , uRptDailyRevenues
   , uRptHouseKeeping
   , uDayClosingTimes
+
+  , uEditFinanceExportProperties
   ;
 
 
@@ -1881,6 +1883,7 @@ begin
   TfrmDayClosingTimes.Create(nil).Free;
 
   TfrmBusyMessage.Create(nil).Free;
+  TfrmEditFinanceExportProperties.Create(nil).Free;
 
 
 end;

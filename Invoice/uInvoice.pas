@@ -5932,7 +5932,8 @@ begin
       try
         result := True;
         try
-          SendInvoicesToFinancePacketThreaded( zInvoiceNumber);
+//          SendInvoicesToFinancePacketThreaded(FThreadedDataPutter, zInvoiceNumber);
+          remoteResult := d.roomerMainDataSet.SystemSendInvoiceToBookkeeping(zInvoiceNumber);
           ViewInvoice2(zInvoiceNumber, True, false, True, chkShowPackage.checked, zEmailAddress);
 
           d.roomerMainDataSet.SystempackagesCreateHeaderIfNotExists

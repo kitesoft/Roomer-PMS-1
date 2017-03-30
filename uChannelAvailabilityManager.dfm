@@ -126,7 +126,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
         object pnlRestrictions: TsPanel
           AlignWithMargins = True
           Left = 3
-          Top = 288
+          Top = 290
           Width = 425
           Height = 169
           Align = alTop
@@ -135,6 +135,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
           Padding.Bottom = 3
           TabOrder = 0
           SkinData.SkinSection = 'PANEL'
+          ExplicitTop = 288
           object lblMinStay: TsLabel
             Left = 134
             Top = 7
@@ -505,7 +506,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
             Left = 1
             Top = 32
             Width = 423
-            Height = 116
+            Height = 120
             Margins.Left = 0
             Margins.Right = 0
             Align = alTop
@@ -873,7 +874,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
           Left = 3
           Top = 199
           Width = 425
-          Height = 83
+          Height = 85
           Align = alTop
           AutoSize = True
           TabOrder = 3
@@ -883,7 +884,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
             Left = 1
             Top = 4
             Width = 423
-            Height = 21
+            Height = 23
             Margins.Left = 0
             Margins.Right = 0
             Align = alTop
@@ -992,9 +993,9 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
           object pnlSingleUseRateChange: TsPanel
             AlignWithMargins = True
             Left = 1
-            Top = 31
+            Top = 33
             Width = 423
-            Height = 21
+            Height = 24
             Margins.Left = 0
             Margins.Right = 0
             Align = alTop
@@ -1068,9 +1069,9 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
           object pnlBulkChangesAvail: TsPanel
             AlignWithMargins = True
             Left = 1
-            Top = 58
+            Top = 63
             Width = 423
-            Height = 21
+            Height = 23
             Margins.Left = 0
             Margins.Right = 0
             Align = alTop
@@ -1503,7 +1504,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
               URLColor = clBlack
               ValidChars = '0123456789'
               VAlignment = vtaCenter
-              Version = '8.2.4.1'
+              Version = '8.2.5.2'
               WordWrap = False
               ColWidths = (
                 250
@@ -1729,7 +1730,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
             URLColor = clBlack
             ValidChars = '0123456789+-!%*/'
             VAlignment = vtaCenter
-            Version = '8.2.4.1'
+            Version = '8.2.5.2'
             WordWrap = False
             ColWidths = (
               400
