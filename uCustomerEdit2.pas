@@ -212,7 +212,7 @@ uses
   , uFrmResources
   , uResourceManagement
   , uDImages
-  , uUtils;
+  , uUtils, uResourceTypeDefinitions;
 
 
 function openCustomerEdit(var theData : recCustomerHolder; isInsert : boolean; _financeCustomerList : TKeyPairList = nil) : boolean;
@@ -376,9 +376,7 @@ end;
 
 procedure TfrmCustomerEdit2.btnDocumentsClick(Sender: TObject);
 begin
-  StaticResources('Customer Resources',
-        format(CUSTOMER_DOCUMENTS_STATIC_RESOURCE_PATTERN, [edCustomer.Text]),
-        ACCESS_RESTRICTED);
+  StaticResources('Customer Resources',[TResourceType.rtCustomerDocument], TResourceAccessType.ratRestricted, edCustomer.Text);
 end;
 
 (*

@@ -63,6 +63,7 @@ type
     tvResourcesUser: TcxGridDBColumn;
     tvResourcesLastModified: TcxGridDBColumn;
     DropFileSource1: TDropFileSource;
+    tvResourcesColumn1: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure btnInsertClick(Sender: TObject);
     procedure btnDeleteClick(Sender: TObject);
@@ -87,6 +88,8 @@ type
       var AText: string);
     procedure btnViewClick(Sender: TObject);
     procedure dsResourcesBeforeDelete(DataSet: TDataSet);
+    procedure tvResourcesColumn1GetDisplayText(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
+      var AText: string);
   private
     { Private declarations }
     CollectionOfOpenedFiles : TStringList;
@@ -267,7 +270,7 @@ begin
   if Assigned(ResourceParameters) then
     dlgSaveFile.Filter := ResourceParameters.DefaultFileFilter;
 
-  dlgSaveFile.FileName := GetCurrentResource.FORIGINAL_NAME;
+  dlgSaveFile.FileName := GetCurrentResource.ORIGINAL_NAME;
   if dlgSaveFile.Execute then
   begin
     filename := ExtractFilename(dlgSaveFile.FileName);
@@ -547,7 +550,7 @@ begin
       if ResourceParameters IS THtmlResourceParameters then
       begin
         _FrmEditEmailProperties.edtName.Text := lRes.ORIGINAL_NAME;
-        _FrmEditEmailProperties.edtSubject.Text := lres.FEXTRA_INFO;
+        _FrmEditEmailProperties.edtSubject.Text := lres.EXTRA_INFO;
         _FrmEditEmailProperties.ResourceTypes := [lres.ResourceType];
         if _FrmEditEmailProperties.ShowModal = mrOk then
         begin
@@ -555,7 +558,7 @@ begin
             raise Exception.Create(GetTranslatedText('shUI_NameCannotBeEmpty'));
 
           cmd := format('UPDATE hotelconfigurations SET DefaultChannelConfirmationEmail=''%s'' WHERE DefaultChannelConfirmationEmail=''%s''',
-                     [_FrmEditEmailProperties.edtName.Text, lRes.FORIGINAL_NAME]);
+                     [_FrmEditEmailProperties.edtName.Text, lRes.ORIGINAL_NAME]);
           d.roomerMainDataSet.DoCommand(cmd);
 
           cmd := format('UPDATE home100.HOTEL_RESOURCES SET ORIGINAL_NAME=''%s'', EXTRA_INFO=''%s'' WHERE HOTEL_ID=''%s'' AND ORIGINAL_NAME=''%s'' AND URI=''%s'' AND KEY_STRING=''%s''',
@@ -594,7 +597,7 @@ begin
       if (ResourceParameters IS THtmlResourceParameters) then
       begin
         Subject := lRes.EXTRA_INFO;
-        OrigName := lRes.FORIGINAL_NAME;
+        OrigName := lRes.ORIGINAL_NAME;
         if EditHtmlSource(filename) then
         begin
           ReCodeFile(filename);
@@ -825,6 +828,13 @@ procedure TFrmResources.tvResourcesCellDblClick(Sender: TcxCustomGridTableView;
 begin
   inherited;
   DownloadAndOpenSelectedResource;
+end;
+
+procedure TFrmResources.tvResourcesColumn1GetDisplayText(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
+  var AText: string);
+begin
+  inherited;
+  aText := FResourceManagement.Resource[ARecord.Index].Access.AsReadableString;
 end;
 
 procedure TFrmResources.tvResourcesResourceTypeGetDisplayText(Sender: TcxCustomGridTableItem;

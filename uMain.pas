@@ -11216,7 +11216,7 @@ end;
 procedure TfrmMain.dxBarLargeButton4Click(Sender: TObject);
 begin
   LogUserClickedButton(Sender);
-  StaticResources('Files', ANY_FILE, ACCESS_RESTRICTED);
+  StaticResources('Files', [TResourceType.rtAnyFile], TResourceAccessType.ratRestricted);
 end;
 
 procedure TfrmMain.btnDefaultMasterRatesClick(Sender: TObject);
@@ -11238,7 +11238,7 @@ end;
 procedure TfrmMain.btnWebAccessibleFilesClick(Sender: TObject);
 begin
   LogUserClickedButton(Sender);
-  StaticResources('Files', ANY_FILE, ACCESS_OPEN);
+  StaticResources('Files', [TResourceType.rtAnyFile], TResourceAccessType.ratOpen);
 end;
 
 procedure TfrmMain.btnCashierReportClick(Sender: TObject);
@@ -12402,7 +12402,6 @@ end;
 
 procedure TfrmMain.CreateQuickReservation(isQuick: boolean);
 var
-  iReservation: integer;
   oNewReservation: TNewReservation;
   lAdded: integer;
 begin
@@ -12831,7 +12830,7 @@ begin
             ResLine := mainGuests + ' / ' + ReservationName;
 
             Currency := rSet.FieldByName('Currency').asString;
-            AverageRate := rSet.GetFloatValue(rSet.FieldByName('AverageRate'));
+            AverageRate := rSet.FieldByName('AverageRate').AsFloat;
             numDays := rSet.FieldByName('NumDays').asinteger;
             TotalRate := numDays * AverageRate;
             Adults := rSet.FieldByName('NumGuests').asinteger;

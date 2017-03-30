@@ -49,8 +49,9 @@ type
     constructor Create;
   end;
 
-
+  {$M+}
   TResource = class
+  private
       FKEY_STRING : String;
       FORIGINAL_NAME : String;
       FID : Integer;
@@ -58,7 +59,7 @@ type
       FURI : String;
       FUSER_ID : Integer;
       FLAST_MODIFIED : TDateTime;
-  private
+    FACCESS: TResourceAccessType;
     function GetUser: string;
     function GetResourceType: TResourceType;
   public
@@ -68,7 +69,8 @@ type
                          _EXTRA_INFO : String;
                          _URI : String;
                          _USER_ID : Integer;
-                         _LAST_MODIFIED : TDateTime);
+                         _LAST_MODIFIED : TDateTime;
+                         _ACCESS: TResourceAccessType);
       property USER_ID : Integer read FUSER_ID write FUSER_ID;
       property KEY_STRING : String read FKEY_STRING write FKEY_STRING;
   published
@@ -79,6 +81,7 @@ type
       property URI : String read FURI write FURI;
       property User: string read GetUser;
       property LAST_MODIFIED : TDateTime read FLAST_MODIFIED write FLAST_MODIFIED;
+      property Access: TResourceAccessType read FACCESS write FACCESS;
   end;
 
   TRoomerResourceManagement = class
@@ -175,7 +178,6 @@ var
   Stream: TStream;
   i: integer;
   filename, Name: string;
-  lKeystring: string;
 begin
   // Extract and display dropped data.
   if (Sender.Files.Count > 0) AND (Sender.Data.Count = 0) then
@@ -349,13 +351,15 @@ begin
       ResourceSet.First;
       while NOT ResourceSet.Eof do
       begin
-        Resources.Add(TResource.Create(ResourceSet['KEY_STRING'],
-                                       ResourceSet['ORIGINAL_NAME'],
-                                       ResourceSet['ID'],
-                                       ResourceSet['EXTRA_INFO'],
-                                       ResourceSet['URI'],
-                                       ResourceSet['USER_ID'],
-                                       ResourceSet['LAST_MODIFIED']));
+        if ResourceSet['ACCESS'] = FAccess.ToString then
+          Resources.Add(TResource.Create(ResourceSet['KEY_STRING'],
+                                         ResourceSet['ORIGINAL_NAME'],
+                                         ResourceSet['ID'],
+                                         ResourceSet['EXTRA_INFO'],
+                                         ResourceSet['URI'],
+                                         ResourceSet['USER_ID'],
+                                         ResourceSet['LAST_MODIFIED'],
+                                         TResourceAccessType.FromString(ResourceSet['ACCESS'])));
         ResourceSet.Next;
       end;
     finally
@@ -413,17 +417,23 @@ end;
 
 { TResource }
 
-constructor TResource.Create(_KEY_STRING, _ORIGINAL_NAME: String; _ID: Integer; _EXTRA_INFO, _URI: String;
+constructor TResource.Create(_KEY_STRING : String;
+                         _ORIGINAL_NAME : String;
+                         _ID : Integer;
+                         _EXTRA_INFO : String;
+                         _URI : String;
                          _USER_ID : Integer;
-                         _LAST_MODIFIED : TDateTime);
+                         _LAST_MODIFIED : TDateTime;
+                         _ACCESS: TResourceAccessType);
 begin
-  KEY_STRING := _KEY_STRING;
-  ORIGINAL_NAME := _ORIGINAL_NAME;
-  ID := _ID;
-  EXTRA_INFO := _EXTRA_INFO;
-  URI := _URI;
-  USER_ID := _USER_ID;
-  LAST_MODIFIED := _LAST_MODIFIED;
+  FKEY_STRING := _KEY_STRING;
+  FORIGINAL_NAME := _ORIGINAL_NAME;
+  FID := _ID;
+  FEXTRA_INFO := _EXTRA_INFO;
+  FURI := _URI;
+  FUSER_ID := _USER_ID;
+  FLAST_MODIFIED := _LAST_MODIFIED;
+  FACCESS := _ACCESS;
 end;
 
 function TResource.GetResourceType: TResourceType;

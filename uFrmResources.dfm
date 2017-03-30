@@ -13,8 +13,8 @@ inherited FrmResources: TFrmResources
   inherited sbStatusBar: TsStatusBar
     Top = 541
     Width = 991
-    ExplicitTop = 498
-    ExplicitWidth = 871
+    ExplicitTop = 541
+    ExplicitWidth = 991
   end
   object pnlHolder: TsPanel [1]
     Left = 0
@@ -29,8 +29,6 @@ inherited FrmResources: TFrmResources
     BevelOuter = bvNone
     TabOrder = 0
     SkinData.SkinSection = 'PANEL'
-    ExplicitWidth = 871
-    ExplicitHeight = 498
     object sPanel1: TsPanel
       Left = 0
       Top = 0
@@ -97,7 +95,6 @@ inherited FrmResources: TFrmResources
         TabOrder = 2
         OnClick = btnCloseClick
         SkinData.SkinSection = 'BUTTON'
-        ExplicitLeft = 768
       end
       object btnView: TsButton
         AlignWithMargins = True
@@ -188,8 +185,6 @@ inherited FrmResources: TFrmResources
       TabOrder = 1
       Visible = False
       SkinData.SkinSection = 'PANEL'
-      ExplicitTop = 456
-      ExplicitWidth = 871
       object sButton1: TsButton
         AlignWithMargins = True
         Left = 876
@@ -204,7 +199,6 @@ inherited FrmResources: TFrmResources
         ModalResult = 2
         TabOrder = 0
         SkinData.SkinSection = 'BUTTON'
-        ExplicitLeft = 756
       end
       object sButton2: TsButton
         AlignWithMargins = True
@@ -220,7 +214,6 @@ inherited FrmResources: TFrmResources
         ModalResult = 1
         TabOrder = 1
         SkinData.SkinSection = 'BUTTON'
-        ExplicitLeft = 640
       end
     end
     object grData: TcxGrid
@@ -252,6 +245,7 @@ inherited FrmResources: TFrmResources
           Caption = 'Reource Type'
           DataBinding.FieldName = 'ResourceType'
           PropertiesClassName = 'TcxTextEditProperties'
+          Properties.Alignment.Horz = taLeftJustify
           OnGetDisplayText = tvResourcesResourceTypeGetDisplayText
           Width = 163
         end
@@ -272,12 +266,21 @@ inherited FrmResources: TFrmResources
         end
         object tvResourcesUser: TcxGridDBColumn
           DataBinding.FieldName = 'User'
+          PropertiesClassName = 'TcxTextEditProperties'
+          Properties.Alignment.Horz = taCenter
           BestFitMaxWidth = 64
         end
         object tvResourcesLastModified: TcxGridDBColumn
           Caption = 'Last modified'
           DataBinding.FieldName = 'LAST_MODIFIED'
           Width = 133
+        end
+        object tvResourcesColumn1: TcxGridDBColumn
+          Caption = 'Access'
+          DataBinding.FieldName = 'ACCESS'
+          PropertiesClassName = 'TcxTextEditProperties'
+          Properties.Alignment.Horz = taLeftJustify
+          OnGetDisplayText = tvResourcesColumn1GetDisplayText
         end
       end
       object lvlResources: TcxGridLevel

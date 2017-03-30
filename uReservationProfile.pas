@@ -1833,7 +1833,6 @@ var
   PriceCode: string;
   AvrageRate: double;
   AvrageDiscount: double;
-  isPercentage: Boolean;
   rateCount: Integer;
 
   useInNationalReport: Boolean;
@@ -3134,9 +3133,7 @@ end;
 
 procedure TfrmReservationProfile.tvRoomsDocumentsPropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
 begin
-  StaticResources('Room Resources',
-    format(ROOM_BOOKING_STATIC_RESOURCES, [inttostr(mRooms['RoomReservation'])]),
-    ACCESS_RESTRICTED);
+  StaticResources('Room Resources', [TResourceType.rtRoomBooking], TResourceAccessType.ratRestricted, inttostr(mRooms['RoomReservation']));
 end;
 
 procedure TfrmReservationProfile.doRRDateChange(startIn: Integer);
