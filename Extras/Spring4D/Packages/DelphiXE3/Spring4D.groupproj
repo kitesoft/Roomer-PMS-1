@@ -9,10 +9,16 @@
         <Projects Include="Spring.Core.dproj">
             <Dependencies/>
         </Projects>
-        <Projects Include="Spring.Extensions.dproj">
+        <Projects Include="Spring.Data.dproj">
             <Dependencies/>
         </Projects>
-        <Projects Include="Spring.Data.dproj">
+        <Projects Include="Spring.Data.Designtime.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="Spring.Persistence.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="Spring.Extensions.dproj">
             <Dependencies/>
         </Projects>
         <Projects Include="..\..\Tests\Spring.Tests.DelphiXE3.dproj">
@@ -44,15 +50,6 @@
     <Target Name="Spring_Core:Make">
         <MSBuild Projects="Spring.Core.dproj" Targets="Make"/>
     </Target>
-    <Target Name="Spring_Extensions">
-        <MSBuild Projects="Spring.Extensions.dproj"/>
-    </Target>
-    <Target Name="Spring_Extensions:Clean">
-        <MSBuild Projects="Spring.Extensions.dproj" Targets="Clean"/>
-    </Target>
-    <Target Name="Spring_Extensions:Make">
-        <MSBuild Projects="Spring.Extensions.dproj" Targets="Make"/>
-    </Target>
     <Target Name="Spring_Data">
         <MSBuild Projects="Spring.Data.dproj"/>
     </Target>
@@ -61,6 +58,33 @@
     </Target>
     <Target Name="Spring_Data:Make">
         <MSBuild Projects="Spring.Data.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Spring_Data_Designtime">
+        <MSBuild Projects="Spring.Data.Designtime.dproj"/>
+    </Target>
+    <Target Name="Spring_Data_Designtime:Clean">
+        <MSBuild Projects="Spring.Data.Designtime.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Spring_Data_Designtime:Make">
+        <MSBuild Projects="Spring.Data.Designtime.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Spring_Persistence">
+        <MSBuild Projects="Spring.Persistence.dproj"/>
+    </Target>
+    <Target Name="Spring_Persistence:Clean">
+        <MSBuild Projects="Spring.Persistence.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Spring_Persistence:Make">
+        <MSBuild Projects="Spring.Persistence.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Spring_Extensions">
+        <MSBuild Projects="Spring.Extensions.dproj"/>
+    </Target>
+    <Target Name="Spring_Extensions:Clean">
+        <MSBuild Projects="Spring.Extensions.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Spring_Extensions:Make">
+        <MSBuild Projects="Spring.Extensions.dproj" Targets="Make"/>
     </Target>
     <Target Name="Spring_Tests_DelphiXE3">
         <MSBuild Projects="..\..\Tests\Spring.Tests.DelphiXE3.dproj"/>
@@ -72,13 +96,13 @@
         <MSBuild Projects="..\..\Tests\Spring.Tests.DelphiXE3.dproj" Targets="Make"/>
     </Target>
     <Target Name="Build">
-        <CallTarget Targets="Spring_Base;Spring_Core;Spring_Extensions;Spring_Data;Spring_Tests_DelphiXE3"/>
+        <CallTarget Targets="Spring_Base;Spring_Core;Spring_Data;Spring_Data_Designtime;Spring_Persistence;Spring_Extensions;Spring_Tests_DelphiXE3"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="Spring_Base:Clean;Spring_Core:Clean;Spring_Extensions:Clean;Spring_Data:Clean;Spring_Tests_DelphiXE3:Clean"/>
+        <CallTarget Targets="Spring_Base:Clean;Spring_Core:Clean;Spring_Data:Clean;Spring_Data_Designtime:Clean;Spring_Persistence:Clean;Spring_Extensions:Clean;Spring_Tests_DelphiXE3:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="Spring_Base:Make;Spring_Core:Make;Spring_Extensions:Make;Spring_Data:Make;Spring_Tests_DelphiXE3:Make"/>
+        <CallTarget Targets="Spring_Base:Make;Spring_Core:Make;Spring_Data:Make;Spring_Data_Designtime:Make;Spring_Persistence:Make;Spring_Extensions:Make;Spring_Tests_DelphiXE3:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

@@ -4,6 +4,7 @@ del /f /q /s *.bak
 del /f /q /s *.dcu
 del /f /q /s *.ddp
 del /f /q /s *.~*
+del /f /q /s *.ficfg
 del /f /q /s *.local
 del /f /q /s *.identcache
 del /f /q /s *.stat

@@ -2,7 +2,7 @@
 {                                                                           }
 {           Spring Framework for Delphi                                     }
 {                                                                           }
-{           Copyright (c) 2009-2016 Spring4D Team                           }
+{           Copyright (c) 2009-2017 Spring4D Team                           }
 {                                                                           }
 {           http://www.spring4d.org                                         }
 {                                                                           }
@@ -137,7 +137,7 @@ type
     procedure RegisterService(const model: TComponentModel; serviceType: PTypeInfo;
       const serviceName: string); overload;
     procedure RegisterDefault(const model: TComponentModel; serviceType: PTypeInfo);
-{$IFDEF DELPHIXE_UP}
+{$IFNDEF DELPHI2010}
     procedure RegisterFactory(const model: TComponentModel;
       paramResolution: TParamResolution = TParamResolution.ByName); overload;
     procedure RegisterFactory(const model: TComponentModel;
@@ -292,7 +292,8 @@ type
       out instance: TValue): Boolean;
     procedure LeaveResolution(const model: TComponentModel);
 
-    procedure AddArgument(const argument: TValue);
+    function AddArgument(const argument: TValue): Integer;
+    procedure RemoveTypedArgument(index: Integer);
     procedure AddPerResolve(const model: TComponentModel; const instance: TValue);
     function TryHandle(const injection: IInjection;
       out handled: IInjection): Boolean;
@@ -457,7 +458,6 @@ type
 implementation
 
 uses
-  SyncObjs,
   TypInfo,
   Spring.Container.ResourceStrings,
   Spring.Reflection;
@@ -646,12 +646,12 @@ end;
 
 function TValueHolder.TComponentHolder._AddRef: Integer;
 begin
-  Result := TInterlocked.Increment(fRefCount);
+  Result := AtomicIncrement(fRefCount);
 end;
 
 function TValueHolder.TComponentHolder._Release: Integer;
 begin
-  Result := TInterlocked.Decrement(fRefCount);
+  Result := AtomicDecrement(fRefCount);
   if Result = 0 then
     Destroy;
 end;

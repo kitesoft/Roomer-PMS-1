@@ -2,7 +2,7 @@
 {                                                                           }
 {           Spring Framework for Delphi                                     }
 {                                                                           }
-{           Copyright (c) 2009-2016 Spring4D Team                           }
+{           Copyright (c) 2009-2017 Spring4D Team                           }
 {                                                                           }
 {           http://www.spring4d.org                                         }
 {                                                                           }
@@ -92,7 +92,7 @@ type
     function RegisterDecorator<TService; TDecorator: TService>(
       const condition: TPredicate<TComponentModel>): TRegistration<TDecorator>; overload;
 
-{$IFDEF DELPHIXE_UP}
+{$IFNDEF DELPHI2010}
     function RegisterFactory<TFactoryType: IInterface>(
       paramResolution: TParamResolution = TParamResolution.ByName): TRegistration<TFactoryType>; overload;
     function RegisterFactory<TFactoryType: IInterface>(const serviceName: string;
@@ -196,7 +196,7 @@ uses
   Spring.Container.ComponentActivator,
   Spring.Container.Injection,
   Spring.Container.LifetimeManager,
-{$IFDEF DELPHIXE_UP}
+{$IFNDEF DELPHI2010}
   Spring.Container.ProxyFactory,
 {$ENDIF}
   Spring.Container.Resolvers,
@@ -213,7 +213,7 @@ end;
 
 {$REGION 'TProxyFactory'}
 
-{$IFNDEF DELPHIXE_UP}
+{$IFDEF DELPHI2010}
 type
   /// <summary>
   ///   Dummy class for Delphi2010
@@ -418,7 +418,7 @@ begin
   fDecoratorResolver.AddDecorator(TypeInfo(TService), Result.Model, condition);
 end;
 
-{$IFDEF DELPHIXE_UP}
+{$IFNDEF DELPHI2010}
 function TContainer.RegisterFactory<TFactoryType>(
   paramResolution: TParamResolution): TRegistration<TFactoryType>;
 begin

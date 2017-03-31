@@ -2,7 +2,7 @@
 {                                                                           }
 {           Spring Framework for Delphi                                     }
 {                                                                           }
-{           Copyright (c) 2009-2016 Spring4D Team                           }
+{           Copyright (c) 2009-2017 Spring4D Team                           }
 {                                                                           }
 {           http://www.spring4d.org                                         }
 {                                                                           }
@@ -113,6 +113,12 @@ type
     property OrdersIntf: IList<TCustomer_Orders> read GetOrdersIntf write SetOrdersIntf;
     property StreamLazy: Lazy<TMemoryStream> read FStream write FStream;
     property CustStream: TMemoryStream read GetCustStream write SetCustStream;
+  end;
+
+  TCustomerWithStream = class(TCustomer)
+  public
+    [Column('CUSTSTREAM', [], 50, 0, 0, 'Customers stream')]
+    property CustStream;
   end;
 
   [Entity]
