@@ -16,7 +16,6 @@ inherited frmArrivalsReport: TfrmArrivalsReport
     Align = alTop
     TabOrder = 0
     SkinData.SkinSection = 'PANEL'
-    ExplicitLeft = 8
     object btnRefresh: TsButton
       Left = 378
       Top = 14
@@ -186,7 +185,6 @@ inherited frmArrivalsReport: TfrmArrivalsReport
         TabOrder = 3
         OnClick = mnuRoomInvoiceClick
         SkinData.SkinSection = 'BUTTON'
-        ExplicitLeft = 377
       end
       object btnReport: TsButton
         AlignWithMargins = True
@@ -213,7 +211,6 @@ inherited frmArrivalsReport: TfrmArrivalsReport
     PopupMenu = pnmuGridMenu
     TabOrder = 1
     LookAndFeel.NativeStyle = False
-    ExplicitTop = 146
     object grArrivalsListDBTableView1: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       OnCellDblClick = grArrivalsListDBTableView1CellDblClick
@@ -249,6 +246,7 @@ inherited frmArrivalsReport: TfrmArrivalsReport
       OptionsView.GroupFooters = gfAlwaysVisible
       Styles.Group = cxStyle1
       Styles.GroupSummary = cxStyle1
+      Styles.StyleSheet = cxssRoomerGridTableView
       object grArrivalsListDBTableView1Room: TcxGridDBColumn
         DataBinding.FieldName = 'Room'
         Options.Editing = False
@@ -524,6 +522,7 @@ inherited frmArrivalsReport: TfrmArrivalsReport
     object grdPrinterLink1: TdxGridReportLink
       Active = True
       Component = grArrivalsList
+      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -545,13 +544,14 @@ inherited frmArrivalsReport: TfrmArrivalsReport
       PrinterPage.ScaleMode = smFit
       PrinterPage._dxMeasurementUnits_ = 2
       PrinterPage._dxLastMU_ = 2
-      ReportDocument.CreationDate = 42788.451424293980000000
+      ReportDocument.CreationDate = 42825.469694039350000000
       ReportTitle.Font.Charset = DEFAULT_CHARSET
       ReportTitle.Font.Color = clBlack
       ReportTitle.Font.Height = -19
       ReportTitle.Font.Name = 'Arial'
       ReportTitle.Font.Style = [fsBold]
       ShrinkToPageWidth = True
+      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlack
       Font.Height = -11

@@ -224,7 +224,6 @@ inherited FrmResources: TFrmResources
       Align = alClient
       PopupMenu = PopupMenu1
       TabOrder = 2
-      ExplicitTop = 45
       object tvResources: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         OnCellDblClick = tvResourcesCellDblClick

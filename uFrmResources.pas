@@ -572,6 +572,7 @@ begin
           d.roomerMainDataSet.DoCommand(cmd);
           lRes.ORIGINAL_NAME := _FrmEditEmailProperties.edtName.Text;
           lRes.EXTRA_INFO := _FrmEditEmailProperties.edtSubject.Text;
+          dsResources.Refresh;
         end;
       end;
     finally

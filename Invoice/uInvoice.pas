@@ -5894,6 +5894,7 @@ begin
         end;
       end;
 
+      //TODO: Move to finally section as this is not executed when Exit on line 5892 is reached
       FreeAndNil(lExecutionPlan);
 
       if AllOk then
@@ -6880,7 +6881,6 @@ procedure TfrmInvoice.actSaveAndExitExecute(Sender: TObject);
 begin
   SaveAnd(True);
 end;
-
 procedure TfrmInvoice.actPrintInvoiceExecute(Sender: TObject);
 var
   ok: boolean;
