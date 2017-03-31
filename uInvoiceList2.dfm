@@ -84,7 +84,7 @@ inherited frmInvoiceList2: TfrmInvoiceList2
         Enabled = False
         EditMask = '!99/99/9999;1; '
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
+        Font.Color = 4473924
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -107,7 +107,7 @@ inherited frmInvoiceList2: TfrmInvoiceList2
         Enabled = False
         EditMask = '!99/99/9999;1; '
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
+        Font.Color = 4473924
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -123,7 +123,7 @@ inherited frmInvoiceList2: TfrmInvoiceList2
       object rbtDates: TsRadioButton
         Left = 4
         Top = 19
-        Width = 82
+        Width = 79
         Height = 19
         Caption = 'Date range'
         TabOrder = 0
@@ -133,7 +133,7 @@ inherited frmInvoiceList2: TfrmInvoiceList2
       object rbtInvoices: TsRadioButton
         Left = 4
         Top = 42
-        Width = 96
+        Width = 93
         Height = 19
         Caption = 'Number range'
         TabOrder = 1
@@ -157,7 +157,7 @@ inherited frmInvoiceList2: TfrmInvoiceList2
         Color = clWhite
         Enabled = False
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
+        Font.Color = 4473924
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -188,7 +188,7 @@ inherited frmInvoiceList2: TfrmInvoiceList2
         Color = clWhite
         Enabled = False
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
+        Font.Color = 4473924
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -205,7 +205,7 @@ inherited frmInvoiceList2: TfrmInvoiceList2
       object rbtFreeText: TsRadioButton
         Left = 4
         Top = 68
-        Width = 75
+        Width = 72
         Height = 19
         Caption = 'Text filter'
         TabOrder = 2
@@ -215,7 +215,7 @@ inherited frmInvoiceList2: TfrmInvoiceList2
       object rbtLast: TsRadioButton
         Left = 4
         Top = 92
-        Width = 48
+        Width = 45
         Height = 19
         Caption = 'Last'
         Checked = True
@@ -241,7 +241,7 @@ inherited frmInvoiceList2: TfrmInvoiceList2
         Color = clWhite
         Enabled = False
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
+        Font.Color = 4473924
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -264,17 +264,18 @@ inherited frmInvoiceList2: TfrmInvoiceList2
         Height = 21
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
+        Font.Color = 4473924
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
         ParentFont = False
         TabOrder = 11
+        Text = '50'
         OnChange = edLastCountChange
         SkinData.SkinSection = 'EDIT'
-        MaxValue = 99
+        MaxValue = 5000
         MinValue = 1
-        Value = 0
+        Value = 50
       end
       object edtInvoiceFrom: TsSpinEdit
         Left = 146
@@ -283,7 +284,7 @@ inherited frmInvoiceList2: TfrmInvoiceList2
         Height = 21
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
+        Font.Color = 4473924
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -302,7 +303,7 @@ inherited frmInvoiceList2: TfrmInvoiceList2
         Height = 21
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
+        Font.Color = 4473924
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -473,7 +474,7 @@ inherited frmInvoiceList2: TfrmInvoiceList2
       Height = 21
       Color = clWhite
       Font.Charset = DEFAULT_CHARSET
-      Font.Color = clBlack
+      Font.Color = 4473924
       Font.Height = -11
       Font.Name = 'Tahoma'
       Font.Style = []

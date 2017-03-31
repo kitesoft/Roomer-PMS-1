@@ -2324,7 +2324,7 @@ begin
     s := s+', rr.Arrival AS sArrival '#10;
     s := s+', rr.Departure  AS sDeparture '#10;
     s := s+', cust.surName AS CustomerName '#10;
-    s := s+', cust.CustomerType '#10;
+    s := s+', rv.MarketSegment AS CustomerType '#10;
     s := s+', ro.Location '#10;
     s := s+', (SELECT curr.AValue from currencies curr  WHERE curr.Currency = rr.Currency) AS CurrencyRate '#10;
     s := s+', (SELECT curr.AValue from currencies curr  WHERE curr.Currency = rr.Currency)*Roomrate AS NativeRate '#10;

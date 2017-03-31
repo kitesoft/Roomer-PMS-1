@@ -342,7 +342,7 @@ begin
   zText := '';
   zTextType := 0;
   zPeriodIndex := 1;
-  edtLast.Value := 50;
+//  edtLast.Value := 50;
   zLast := edtLast.Value;
 
   cbxPeriod.ItemIndex := zPeriodIndex;
