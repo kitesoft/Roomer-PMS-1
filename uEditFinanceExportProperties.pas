@@ -23,10 +23,7 @@ type
     { Public declarations }
   end;
 
-var
-  frmEditFinanceExportProperties: TfrmEditFinanceExportProperties;
-
-procedure editFinanceExportProperties(invoiceNumber : Integer; var externalId : Integer; var exportable : Boolean);
+function EditFinanceExportProperties(invoiceNumber : Integer; var externalId : Integer; var exportable : Boolean): boolean;
 
 implementation
 
@@ -34,7 +31,7 @@ implementation
 
 uses uUtils, uD;
 
-procedure editFinanceExportProperties(invoiceNumber : Integer; var externalId : Integer; var exportable : Boolean);
+function EditFinanceExportProperties(invoiceNumber : Integer; var externalId : Integer; var exportable : Boolean): boolean;
 var frmEdit: TfrmEditFinanceExportProperties;
     sql : String;
 begin
@@ -43,7 +40,8 @@ begin
     frmEdit.__lblRoomerNumber.Caption := inttostr(externalId);
     frmEdit.edtExternalSystemsInvoiceNumber.Text := inttostr(externalId);
     frmEdit.cbxExportableToFinance.Checked := exportable;
-    if frmEdit.showModal = mrOk then
+    Result := frmEdit.showModal = mrOk;
+    if Result then
     begin
       externalId := StrToInt(frmEdit.edtExternalSystemsInvoiceNumber.Text);
       exportable := frmEdit.cbxExportableToFinance.Checked;

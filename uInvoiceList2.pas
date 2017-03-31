@@ -109,7 +109,7 @@ type
     edtInvoiceFrom: TsSpinEdit;
     edtInvoiceTo: TsSpinEdit;
     FormStore: TcxPropertiesStore;
-    sPanel1: TsPanel;
+    pnlFilter: TsPanel;
     mDS: TDataSource;
     m22_: TkbmMemTable;
     grInvoiceHead: TcxGrid;
@@ -153,8 +153,8 @@ type
     btnReservation: TsButton;
     LMDSpeedButton1: TsButton;
     btnViewInvoice: TsButton;
-    sButton1: TsButton;
-    sButton2: TsButton;
+    btnPrint: TsButton;
+    btnBestFit: TsButton;
     LMDButton1: TsButton;
     tvInvoiceHeadpaytypes: TcxGridDBBandedColumn;
     tvInvoiceHeadpayments: TcxGridDBBandedColumn;
@@ -166,7 +166,7 @@ type
     N1: TMenuItem;
     mnuExportability: TMenuItem;
     tvInvoiceHeadexportAllowed: TcxGridDBBandedColumn;
-    E1: TMenuItem;
+    mnuEditFinExportProp: TMenuItem;
     procedure rbtDatesClick(Sender : TObject);
     procedure FormCreate(Sender : TObject);
     procedure cbxPeriodChange(Sender : TObject);
@@ -185,8 +185,8 @@ type
     procedure edLastCountChange(Sender: TObject);
     procedure edtInvoiceFromChange(Sender: TObject);
     procedure edtInvoiceToChange(Sender: TObject);
-    procedure sButton2Click(Sender: TObject);
-    procedure sButton1Click(Sender: TObject);
+    procedure btnBestFitClick(Sender: TObject);
+    procedure btnPrintClick(Sender: TObject);
     procedure tvInvoiceHeadDblClick(Sender: TObject);
     procedure edFilterChange(Sender: TObject);
     procedure btnClearClick(Sender: TObject);
@@ -204,7 +204,7 @@ type
     procedure mnuExportClick(Sender: TObject);
     procedure mnuExportabilityClick(Sender: TObject);
     procedure tvInvoiceHeadSelectionChanged(Sender: TcxCustomGridTableView);
-    procedure E1Click(Sender: TObject);
+    procedure mnuEditFinExportPropClick(Sender: TObject);
     procedure tvInvoiceHeadCellClick(Sender: TcxCustomGridTableView; ACellViewInfo: TcxGridTableDataCellViewInfo; AButton: TMouseButton; AShift: TShiftState;
       var AHandled: Boolean);
   private
@@ -525,7 +525,7 @@ begin
   zDTTo := dtTo.Date;
 end;
 
-procedure TfrmInvoiceList2.E1Click(Sender: TObject);
+procedure TfrmInvoiceList2.mnuEditFinExportPropClick(Sender: TObject);
 var i: integer;
     lInvNumber: integer;
     lDisableExport: boolean;
@@ -548,26 +548,27 @@ begin
         lInvNumber := lSelected.Values[tvInvoiceHeadInvoiceNumber.Index];
         bValue := Boolean(lSelected.Values[tvInvoiceHeadexportAllowed.Index]);
         iExternalId := lSelected.Values[tvInvoiceHeadexternalInvoiceId.Index];
-        editFinanceExportProperties(lInvNumber, iExternalId, bValue);
-        List.Add(TExportPropertiesHolder.Create(lInvNumber, iExternalId, bValue));
+        if EditFinanceExportProperties(lInvNumber, iExternalId, bValue) then
+          List.Add(TExportPropertiesHolder.Create(lInvNumber, iExternalId, bValue));
       end;
 
-          for i := 0 to PRED(List.Count) do
+      for i := 0 to PRED(List.Count) do
+      begin
+        lInvNumber := List[i].InvoiceNumber;
+        with DataController.DataSet do
+          if Locate('invoiceNumber', lInvNumber, []) then
           begin
-            lInvNumber := List[i].InvoiceNumber;
-            with DataController.DataSet do
-              if Locate('invoiceNumber', lInvNumber, []) then
-              begin
-                Edit;
-                try
-                  FieldByName('exportAllowed').AsBoolean := List[i].ExportAllowed;
-                  FieldByName('externalInvoiceId').AsInteger := List[i].ExternalId;
-                  Post;
-                except
-                  Cancel;
-                end;
-              end;
+            Edit;
+            try
+              FieldByName('exportAllowed').AsBoolean := List[i].ExportAllowed;
+              FieldByName('externalInvoiceId').AsInteger := List[i].ExternalId;
+              Post;
+            except
+              Cancel;
+              raise;
+            end;
           end;
+      end;
     finally
       List.Free;
       DataController.EndLocate;
@@ -735,7 +736,7 @@ begin
   end;
 end;
 
-procedure TfrmInvoiceList2.sButton1Click(Sender: TObject);
+procedure TfrmInvoiceList2.btnPrintClick(Sender: TObject);
 var
   InvoiceNumber : integer;
 begin
@@ -743,7 +744,7 @@ begin
   ViewInvoice2(InvoiceNumber, true, false, false,false, '');
 end;
 
-procedure TfrmInvoiceList2.sButton2Click(Sender: TObject);
+procedure TfrmInvoiceList2.btnBestFitClick(Sender: TObject);
 begin
   tvInvoiceHead.ApplyBestFit();
 end;
@@ -856,29 +857,30 @@ begin
   InvoiceNumber := m22_.fieldbyname('InvoiceNumber').AsInteger;
   exportable := m22_.fieldbyname('exportAllowed').AsBoolean;
   externalId := m22_.fieldbyname('externalInvoiceId').AsInteger;
-  editFinanceExportProperties(InvoiceNumber, externalId, exportable);
-  with tvInvoiceHead do
-  begin
-    DataController.BeginLocate;
-    DataController.DataSet.DisableControls;
-    try
-            with DataController.DataSet do
-              if Locate('invoiceNumber', InvoiceNumber, []) then
-              begin
-                Edit;
-                try
-                  FieldByName('exportAllowed').AsBoolean := exportable;
-                  FieldByName('externalInvoiceId').AsInteger := externalId;
-                  Post;
-                except
-                  Cancel;
-                end;
-              end;
-    finally
-      DataController.EndLocate;
-      DataController.DataSet.EnableControls;
+  if EditFinanceExportProperties(InvoiceNumber, externalId, exportable) then
+    with tvInvoiceHead do
+    begin
+      DataController.BeginLocate;
+      DataController.DataSet.DisableControls;
+      try
+        with DataController.DataSet do
+          if Locate('invoiceNumber', InvoiceNumber, []) then
+          begin
+            Edit;
+            try
+              FieldByName('exportAllowed').AsBoolean := exportable;
+              FieldByName('externalInvoiceId').AsInteger := externalId;
+              Post;
+            except
+              Cancel;
+              raise;
+            end;
+          end;
+      finally
+        DataController.EndLocate;
+        DataController.DataSet.EnableControls;
+      end;
     end;
-  end;
 end;
 
 procedure TfrmInvoiceList2.tvInvoiceHeadDblClick(Sender: TObject);

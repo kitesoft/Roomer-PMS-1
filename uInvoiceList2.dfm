@@ -37,7 +37,7 @@ inherited frmInvoiceList2: TfrmInvoiceList2
       SkinData.SkinSection = 'GROUPBOX'
       object LMDSimpleLabel2: TsLabel
         Left = 251
-        Top = 20
+        Top = 19
         Width = 11
         Height = 16
         Caption = 'to'
@@ -50,7 +50,7 @@ inherited frmInvoiceList2: TfrmInvoiceList2
       end
       object LMDSimpleLabel3: TsLabel
         Left = 251
-        Top = 44
+        Top = 43
         Width = 11
         Height = 16
         Caption = 'to'
@@ -62,9 +62,9 @@ inherited frmInvoiceList2: TfrmInvoiceList2
         Font.Style = []
       end
       object LMDSpeedButton3: TsButton
-        Left = 251
+        Left = 393
         Top = 89
-        Width = 122
+        Width = 131
         Height = 25
         Caption = 'Refresh'
         Default = True
@@ -123,8 +123,8 @@ inherited frmInvoiceList2: TfrmInvoiceList2
       object rbtDates: TsRadioButton
         Left = 4
         Top = 19
-        Width = 82
-        Height = 19
+        Width = 74
+        Height = 20
         Caption = 'Date range'
         TabOrder = 0
         OnClick = rbtDatesClick
@@ -132,9 +132,9 @@ inherited frmInvoiceList2: TfrmInvoiceList2
       end
       object rbtInvoices: TsRadioButton
         Left = 4
-        Top = 42
-        Width = 96
-        Height = 19
+        Top = 44
+        Width = 88
+        Height = 20
         Caption = 'Number range'
         TabOrder = 1
         OnClick = rbtDatesClick
@@ -205,8 +205,8 @@ inherited frmInvoiceList2: TfrmInvoiceList2
       object rbtFreeText: TsRadioButton
         Left = 4
         Top = 68
-        Width = 75
-        Height = 19
+        Width = 67
+        Height = 20
         Caption = 'Text filter'
         TabOrder = 2
         OnClick = rbtDatesClick
@@ -215,8 +215,8 @@ inherited frmInvoiceList2: TfrmInvoiceList2
       object rbtLast: TsRadioButton
         Left = 4
         Top = 92
-        Width = 48
-        Height = 19
+        Width = 40
+        Height = 20
         Caption = 'Last'
         Checked = True
         TabOrder = 3
@@ -226,7 +226,7 @@ inherited frmInvoiceList2: TfrmInvoiceList2
       end
       object cbxTxtType: TsComboBox
         Left = 393
-        Top = 68
+        Top = 67
         Width = 131
         Height = 21
         Alignment = taLeftJustify
@@ -278,7 +278,7 @@ inherited frmInvoiceList2: TfrmInvoiceList2
       end
       object edtInvoiceFrom: TsSpinEdit
         Left = 146
-        Top = 41
+        Top = 43
         Width = 102
         Height = 21
         Color = clWhite
@@ -297,7 +297,7 @@ inherited frmInvoiceList2: TfrmInvoiceList2
       end
       object edtInvoiceTo: TsSpinEdit
         Left = 285
-        Top = 42
+        Top = 43
         Width = 102
         Height = 21
         Color = clWhite
@@ -389,7 +389,7 @@ inherited frmInvoiceList2: TfrmInvoiceList2
         OnClick = btnViewInvoiceClick
         SkinData.SkinSection = 'BUTTON'
       end
-      object sButton1: TsButton
+      object btnPrint: TsButton
         AlignWithMargins = True
         Left = 427
         Top = 3
@@ -400,10 +400,10 @@ inherited frmInvoiceList2: TfrmInvoiceList2
         ImageIndex = 3
         Images = DImages.PngImageList1
         TabOrder = 4
-        OnClick = sButton1Click
+        OnClick = btnPrintClick
         SkinData.SkinSection = 'BUTTON'
       end
-      object sButton2: TsButton
+      object btnBestFit: TsButton
         AlignWithMargins = True
         Left = 533
         Top = 3
@@ -413,7 +413,7 @@ inherited frmInvoiceList2: TfrmInvoiceList2
         Caption = 'Best fit'
         Images = DImages.PngImageList1
         TabOrder = 5
-        OnClick = sButton2Click
+        OnClick = btnBestFitClick
         SkinData.SkinSection = 'BUTTON'
       end
       object LMDButton1: TsButton
@@ -433,7 +433,7 @@ inherited frmInvoiceList2: TfrmInvoiceList2
       end
     end
   end
-  object sPanel1: TsPanel [2]
+  object pnlFilter: TsPanel [2]
     Left = 0
     Top = 183
     Width = 1133
@@ -902,6 +902,7 @@ inherited frmInvoiceList2: TfrmInvoiceList2
           'Width'
           'Position')
       end>
+    Left = 536
   end
   inherited cxsrRoomerStyleRepository: TcxStyleRepository
     PixelsPerInch = 96
@@ -1124,9 +1125,9 @@ inherited frmInvoiceList2: TfrmInvoiceList2
       Caption = 'Toggle exportability of selected invoices'
       OnClick = mnuExportabilityClick
     end
-    object E1: TMenuItem
+    object mnuEditFinExportProp: TMenuItem
       Caption = 'Edit finance export properties'
-      OnClick = E1Click
+      OnClick = mnuEditFinExportPropClick
     end
   end
 end

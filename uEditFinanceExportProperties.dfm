@@ -2,8 +2,8 @@ object frmEditFinanceExportProperties: TfrmEditFinanceExportProperties
   Left = 0
   Top = 0
   Caption = 'Edit Finance Export Properties'
-  ClientHeight = 299
-  ClientWidth = 635
+  ClientHeight = 165
+  ClientWidth = 432
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -15,7 +15,7 @@ object frmEditFinanceExportProperties: TfrmEditFinanceExportProperties
   PixelsPerInch = 96
   TextHeight = 13
   object sLabel1: TsLabel
-    Left = 14
+    Left = 54
     Top = 19
     Width = 199
     Height = 19
@@ -29,8 +29,8 @@ object frmEditFinanceExportProperties: TfrmEditFinanceExportProperties
     Font.Style = [fsBold]
   end
   object lblExternalSystemsInvoiceNumber: TsLabel
-    Left = 44
-    Top = 115
+    Left = 12
+    Top = 56
     Width = 241
     Height = 19
     Alignment = taRightJustify
@@ -43,7 +43,7 @@ object frmEditFinanceExportProperties: TfrmEditFinanceExportProperties
     Font.Style = []
   end
   object __lblRoomerNumber: TsLabel
-    Left = 279
+    Left = 264
     Top = 19
     Width = 10
     Height = 19
@@ -57,8 +57,8 @@ object frmEditFinanceExportProperties: TfrmEditFinanceExportProperties
     Font.Style = [fsBold]
   end
   object lblExportableToFinance: TsLabel
-    Left = 130
-    Top = 152
+    Left = 98
+    Top = 84
     Width = 155
     Height = 19
     Alignment = taRightJustify
@@ -71,8 +71,8 @@ object frmEditFinanceExportProperties: TfrmEditFinanceExportProperties
     Font.Style = []
   end
   object edtExternalSystemsInvoiceNumber: TsEdit
-    Left = 296
-    Top = 112
+    Left = 264
+    Top = 53
     Width = 145
     Height = 27
     Alignment = taRightJustify
@@ -82,14 +82,15 @@ object frmEditFinanceExportProperties: TfrmEditFinanceExportProperties
     Font.Height = -16
     Font.Name = 'Tahoma'
     Font.Style = []
+    NumbersOnly = True
     ParentFont = False
     TabOrder = 0
   end
   object cbxExportableToFinance: TsCheckBox
-    Left = 294
-    Top = 154
+    Left = 264
+    Top = 86
     Width = 20
-    Height = 16
+    Height = 20
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -16
@@ -102,17 +103,17 @@ object frmEditFinanceExportProperties: TfrmEditFinanceExportProperties
   end
   object pnlButtons: TsPanel
     Left = 0
-    Top = 262
-    Width = 635
+    Top = 128
+    Width = 432
     Height = 37
     Align = alBottom
     TabOrder = 2
     SkinData.SkinSection = 'PANEL'
-    ExplicitLeft = -457
-    ExplicitWidth = 1092
+    ExplicitTop = 262
+    ExplicitWidth = 635
     object btnCancel: TsButton
       AlignWithMargins = True
-      Left = 546
+      Left = 343
       Top = 4
       Width = 85
       Height = 29
@@ -125,11 +126,11 @@ object frmEditFinanceExportProperties: TfrmEditFinanceExportProperties
       ModalResult = 2
       TabOrder = 0
       SkinData.SkinSection = 'BUTTON'
-      ExplicitLeft = 1003
+      ExplicitLeft = 546
     end
     object BtnOk: TsButton
       AlignWithMargins = True
-      Left = 455
+      Left = 252
       Top = 4
       Width = 85
       Height = 29
@@ -142,7 +143,7 @@ object frmEditFinanceExportProperties: TfrmEditFinanceExportProperties
       ModalResult = 1
       TabOrder = 1
       SkinData.SkinSection = 'BUTTON'
-      ExplicitTop = 3
+      ExplicitLeft = 455
     end
   end
 end
