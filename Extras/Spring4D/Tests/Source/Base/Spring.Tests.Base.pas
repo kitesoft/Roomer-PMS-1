@@ -2,7 +2,7 @@
 {                                                                           }
 {           Spring Framework for Delphi                                     }
 {                                                                           }
-{           Copyright (c) 2009-2016 Spring4D Team                           }
+{           Copyright (c) 2009-2017 Spring4D Team                           }
 {                                                                           }
 {           http://www.spring4d.org                                         }
 {                                                                           }
@@ -83,7 +83,7 @@ type
     procedure TearDown; override;
   published
     procedure TestFromVariantSQLTimestamp;
-{$IFDEF DELPHIXE_UP}
+{$IFNDEF DELPHI2010}
     procedure TestFromVariantSQLTimestampOffset;
 {$ENDIF}
   end;
@@ -425,6 +425,7 @@ type
     procedure Test_Equals_EnumToEnum_ValuesAreEqual_ReturnsTrue;
 
     procedure Test_Equals_SetToSet_ValuesAreEqual_ReturnsTrue;
+    procedure Test_Equals_SetToSet;
 
     procedure Test_Compare_IntToInt_ValuesAreEqual_ReturnsTrue;
 
@@ -462,6 +463,8 @@ type
     procedure GetNullableValue_ValueIsEmpty_ReturnsEmpty;
 
     procedure ImplicitOperators;
+
+    procedure NullableToString;
   end;
 
   TEnumeration = (teFirst, teSecond, teLast);
@@ -510,7 +513,7 @@ type
     fWideCharValue: WideChar;
     [Default('z')]
     fCharValue: Char;
-  {$IFDEF DELPHIXE_UP}
+  {$IFNDEF DELPHI2010}
     [Managed(TInterfacedObject)]
     fIntfValue: IInterface;
   {$ENDIF}
@@ -847,6 +850,64 @@ end;
 
 procedure TTestMulticastEvent.TestInvoke;
 begin
+  fEvent.Invoke(Self);
+  CheckFalse(fAInvoked);
+  CheckFalse(fBInvoked);
+
+  fEvent.Enabled := False;
+  fEvent.Invoke(Self);
+  CheckFalse(fAInvoked);
+  CheckFalse(fBInvoked);
+
+  fEvent.Enabled := True;
+  fEvent.Invoke(Self);
+  CheckFalse(fAInvoked);
+  CheckFalse(fBInvoked);
+
+  fEvent.Add(HandlerA);
+  fEvent.Enabled := False;
+  fEvent.Invoke(Self);
+  CheckFalse(fAInvoked);
+  CheckFalse(fBInvoked);
+
+  fEvent.Enabled := True;
+  fEvent.Invoke(Self);
+  CheckTrue(fAInvoked);
+  CheckFalse(fBInvoked);
+
+  fAInvoked := False;
+  fEvent.Add(HandlerB);
+  fEvent.Enabled := False;
+  fEvent.Invoke(Self);
+  CheckFalse(fAInvoked);
+  CheckFalse(fBInvoked);
+
+  fEvent.Enabled := True;
+  fEvent.Invoke(Self);
+  CheckTrue(fAInvoked);
+  CheckTrue(fBInvoked);
+
+  fAInvoked := False;
+  fBInvoked := False;
+  fEvent.Enabled := False;
+  fEvent.Remove(HandlerA);
+  fEvent.Invoke(Self);
+  CheckFalse(fAInvoked);
+  CheckFalse(fBInvoked);
+
+  fEvent.Enabled := True;
+  fEvent.Invoke(Self);
+  CheckFalse(fAInvoked);
+  CheckTrue(fBInvoked);
+
+  fBInvoked := False;
+  fEvent.Enabled := False;
+  fEvent.Remove(HandlerB);
+  fEvent.Invoke(Self);
+  CheckFalse(fAInvoked);
+  CheckFalse(fBInvoked);
+
+  fEvent.Enabled := True;
   fEvent.Invoke(Self);
   CheckFalse(fAInvoked);
   CheckFalse(fBInvoked);
@@ -1664,17 +1725,25 @@ end;
 
 procedure TTestSpringEventsMethods.Test_GetTypeSize_LongInt;
 begin
+{$IF Defined(LINUX64)}
+  MatchType(TypeInfo(LongInt), tkInt64, SizeOf(LongInt));
+{$ELSE}
   MatchType(TypeInfo(LongInt), tkInteger, SizeOf(LongInt));
+{$IFEND}
 end;
 
 procedure TTestSpringEventsMethods.Test_GetTypeSize_LongWord;
 begin
+{$IF Defined(LINUX64)}
+  MatchType(TypeInfo(LongWord), tkInt64, SizeOf(LongWord));
+{$ELSE}
   MatchType(TypeInfo(LongWord), tkInteger, SizeOf(LongWord));
+{$IFEND}
 end;
 
 procedure TTestSpringEventsMethods.Test_GetTypeSize_NativeInt;
 begin
-{$IF Defined(WIN64)}
+{$IF Defined(CPU64)}
   MatchType(TypeInfo(NativeInt), tkInt64, SizeOf(NativeInt));
 {$ELSE}
   MatchType(TypeInfo(NativeInt), tkInteger, SizeOf(NativeInt));
@@ -1683,7 +1752,7 @@ end;
 
 procedure TTestSpringEventsMethods.Test_GetTypeSize_NativeUInt;
 begin
-{$IF Defined(WIN64)}
+{$IF Defined(CPU64)}
   MatchType(TypeInfo(NativeUInt), tkInt64, SizeOf(NativeUInt));
 {$ELSE}
   MatchType(TypeInfo(NativeUInt), tkInteger, SizeOf(NativeUInt));
@@ -2563,6 +2632,36 @@ end;
 
 {$REGION 'TTestValueHelper'}
 
+procedure TTestValueHelper.Test_Equals_SetToSet;
+// Big sets and TValue was broken before
+// see https://quality.embarcadero.com/browse/RSP-13556
+{$IFDEF DELPHIXBERLIN_UP}
+var
+  byteSet: TByteSet;
+begin
+  byteSet := [0..255];
+  fSUT := TValue.From(byteSet);
+  fValue := TValue.From<TByteSet>([0..254]);
+  DoCheckEquals(False);
+  fValue := TValue.From<TByteSet>([0..255]);
+  DoCheckEquals(True);
+{$ELSE}
+begin
+{$ENDIF}
+
+  fSUT := TValue.From<TTestSet1>([x, y, z]);
+  fValue := TValue.From<TTestSet1>([x, z]);
+  DoCheckEquals(False);
+  fValue := TValue.From<TTestSet1>([x..z]);
+  DoCheckEquals(True);
+
+  fSUT := TValue.From<TTestSet2>([a, b, c]);
+  fValue := TValue.From<TTestSet2>([a, c]);
+  DoCheckEquals(False);
+  fValue := TValue.From<TTestSet2>([a..c]);
+  DoCheckEquals(True);
+end;
+
 procedure TTestValueHelper.ConvertStringToFloatFailsForInvalidString;
 var
   f: Double;
@@ -2855,6 +2954,14 @@ begin
   Check(fSUT.TypeInfo = TypeInfo(TTime));
 end;
 
+procedure TTestValueHelper.NullableToString;
+begin
+  fSUT := TValue.From(Nullable<Integer>(42));
+  CheckEqualsString('42', fSUT.ToString);
+  fSUT := TValue.From(Nullable<Integer>(Nullable.Null));
+  CheckEqualsString('(null)', fSUT.ToString);
+end;
+
 procedure TTestValueHelper.TearDown;
 begin
   fSUT := TValue.Empty;
@@ -3013,7 +3120,7 @@ begin
   CheckEquals(dt, fDateTime.Value);
 end;
 
-{$IFDEF DELPHIXE_UP}
+{$IFNDEF DELPHI2010}
 procedure TTestNullableDateTime.TestFromVariantSQLTimestampOffset;
 var
   dt: TDateTime;
@@ -3108,7 +3215,7 @@ begin
   {$ENDIF}
     CheckEquals('y', Char(obj.fWideCharValue));
     CheckEquals('z', Char(obj.fCharValue));
-  {$IFDEF DELPHIXE_UP}
+  {$IFNDEF DELPHI2010}
     CheckNotNull(obj.fIntfValue);
     CheckIs(obj.fIntfValue as TObject, TInterfacedObject);
   {$ENDIF}

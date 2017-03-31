@@ -2,7 +2,7 @@
 {                                                                           }
 {           Spring Framework for Delphi                                     }
 {                                                                           }
-{           Copyright (c) 2009-2016 Spring4D Team                           }
+{           Copyright (c) 2009-2017 Spring4D Team                           }
 {                                                                           }
 {           http://www.spring4d.org                                         }
 {                                                                           }
@@ -49,7 +49,7 @@ uses
   Spring.Tests.Container,
   Spring.Tests.Container.LifetimeManager,
   Spring.Tests.Container.Logging,
-{$IFDEF DELPHIXE_UP}
+{$IFNDEF DELPHI2010}
   Spring.Tests.Interception,
   Spring.Tests.Mocking,
 {$ENDIF}
@@ -251,7 +251,7 @@ begin
     TTestLoggingConfigurationBuilder.Suite
   ]);
 
-{$IFDEF DELPHIXE_UP}
+{$IFNDEF DELPHI2010}
   RegisterTests('Spring.Interception', [
     TFreezableTest.Suite,
     TProxyTest.Suite,
