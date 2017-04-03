@@ -5249,7 +5249,7 @@ var
 
   ItemCount: Double; // -96
 
-  remoteResult: String;
+//  remoteResult: String;
 
   theData: recPaymentHolder;
 
@@ -5932,8 +5932,8 @@ begin
       try
         result := True;
         try
-//          SendInvoicesToFinancePacketThreaded(FThreadedDataPutter, zInvoiceNumber);
-          remoteResult := d.roomerMainDataSet.SystemSendInvoiceToBookkeeping(zInvoiceNumber);
+          SendInvoicesToFinancePacketThreaded(zInvoiceNumber);
+//          remoteResult := d.roomerMainDataSet.SystemSendInvoiceToBookkeeping(zInvoiceNumber);
           ViewInvoice2(zInvoiceNumber, True, false, True, chkShowPackage.checked, zEmailAddress);
 
           d.roomerMainDataSet.SystempackagesCreateHeaderIfNotExists

@@ -52,7 +52,7 @@ object frmRptResStats: TfrmRptResStats
         Color = clWhite
         EditMask = '!99/99/9999;1; '
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
+        Font.Color = 4473924
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -74,7 +74,7 @@ object frmRptResStats: TfrmRptResStats
         Color = clWhite
         EditMask = '!99/99/9999;1; '
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
+        Font.Color = 4473924
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -117,7 +117,7 @@ object frmRptResStats: TfrmRptResStats
         VerticalAlignment = taAlignTop
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
+        Font.Color = 4473924
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -156,7 +156,7 @@ object frmRptResStats: TfrmRptResStats
         VerticalAlignment = taAlignTop
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
+        Font.Color = 4473924
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -214,7 +214,7 @@ object frmRptResStats: TfrmRptResStats
         object chkExcluteWaitingList: TsCheckBox
           Left = 14
           Top = 17
-          Width = 77
+          Width = 74
           Height = 17
           Caption = 'Waitinglist'
           Checked = True
@@ -228,7 +228,7 @@ object frmRptResStats: TfrmRptResStats
         object chkExcluteAlotment: TsCheckBox
           Left = 14
           Top = 34
-          Width = 73
+          Width = 70
           Height = 17
           Caption = 'Allotment'
           Checked = True
@@ -242,7 +242,7 @@ object frmRptResStats: TfrmRptResStats
         object chkExcluteOrder: TsCheckBox
           Left = 14
           Top = 51
-          Width = 83
+          Width = 80
           Height = 17
           Caption = 'Not Arrived'
           Checked = True
@@ -256,7 +256,7 @@ object frmRptResStats: TfrmRptResStats
         object chkExcluteNoShow: TsCheckBox
           Left = 227
           Top = 34
-          Width = 69
+          Width = 66
           Height = 17
           Caption = 'No show'
           Checked = True
@@ -270,7 +270,7 @@ object frmRptResStats: TfrmRptResStats
         object chkExcluteDeparted: TsCheckBox
           Left = 129
           Top = 17
-          Width = 73
+          Width = 70
           Height = 17
           Caption = 'Departed'
           Checked = True
@@ -284,7 +284,7 @@ object frmRptResStats: TfrmRptResStats
         object chkExcluteBlocked: TsCheckBox
           Left = 227
           Top = 17
-          Width = 64
+          Width = 61
           Height = 17
           Caption = 'Blocked'
           TabOrder = 5
@@ -296,7 +296,7 @@ object frmRptResStats: TfrmRptResStats
         object chkExcluteGuest: TsCheckBox
           Left = 129
           Top = 34
-          Width = 56
+          Width = 53
           Height = 17
           Caption = 'Guest'
           Checked = True
@@ -310,7 +310,7 @@ object frmRptResStats: TfrmRptResStats
         object chkExcludeWaitingListNonOptional: TsCheckBox
           Left = 129
           Top = 51
-          Width = 77
+          Width = 74
           Height = 17
           Caption = 'Waitinglist'
           Checked = True
@@ -333,7 +333,7 @@ object frmRptResStats: TfrmRptResStats
         object chkExcluteWaitingListNoRooms: TsCheckBox
           Left = 14
           Top = 17
-          Width = 77
+          Width = 74
           Height = 17
           Caption = 'Waitinglist'
           Checked = True
@@ -347,7 +347,7 @@ object frmRptResStats: TfrmRptResStats
         object chkExcluteAlotmentNoRooms: TsCheckBox
           Left = 14
           Top = 34
-          Width = 73
+          Width = 70
           Height = 17
           Caption = 'Allotment'
           Checked = True
@@ -361,7 +361,7 @@ object frmRptResStats: TfrmRptResStats
         object chkExcluteOrderNorooms: TsCheckBox
           Left = 14
           Top = 49
-          Width = 83
+          Width = 80
           Height = 17
           Caption = 'Not Arrived'
           Checked = True
@@ -375,7 +375,7 @@ object frmRptResStats: TfrmRptResStats
         object chkExcluteNoShowNoRooms: TsCheckBox
           Left = 215
           Top = 34
-          Width = 69
+          Width = 66
           Height = 17
           Caption = 'No show'
           Checked = True
@@ -389,7 +389,7 @@ object frmRptResStats: TfrmRptResStats
         object chkExcluteDepartedNoRooms: TsCheckBox
           Left = 129
           Top = 17
-          Width = 73
+          Width = 70
           Height = 17
           Caption = 'Departed'
           Checked = True
@@ -403,7 +403,7 @@ object frmRptResStats: TfrmRptResStats
         object chkExcluteBlockedNoRooms: TsCheckBox
           Left = 217
           Top = 17
-          Width = 64
+          Width = 61
           Height = 17
           Caption = 'Blocked'
           TabOrder = 5
@@ -415,7 +415,7 @@ object frmRptResStats: TfrmRptResStats
         object chkExcluteGuestNoRooms: TsCheckBox
           Left = 129
           Top = 34
-          Width = 56
+          Width = 53
           Height = 17
           Caption = 'Guest'
           Checked = True
@@ -429,7 +429,7 @@ object frmRptResStats: TfrmRptResStats
         object chkExcludeWaitingListNonOptional_NoRooms: TsCheckBox
           Left = 129
           Top = 51
-          Width = 77
+          Width = 74
           Height = 17
           Caption = 'Waitinglist'
           Checked = True
@@ -1370,7 +1370,7 @@ object frmRptResStats: TfrmRptResStats
             Style = csDropDownList
             Color = clWhite
             Font.Charset = DEFAULT_CHARSET
-            Font.Color = clBlack
+            Font.Color = 4473924
             Font.Height = -11
             Font.Name = 'Tahoma'
             Font.Style = []
@@ -2841,6 +2841,7 @@ object frmRptResStats: TfrmRptResStats
     end
     object prLinkGrDrill: TdxGridReportLink
       Component = grDrill
+      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -2853,6 +2854,7 @@ object frmRptResStats: TfrmRptResStats
       PrinterPage.PageSize.Y = 297000
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
+      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
   end
