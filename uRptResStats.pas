@@ -1073,7 +1073,7 @@ var
   iRoomReservation : integer;
 begin
   iReservation := dril001.fieldbyname('Reservation').AsInteger;
-  iRoomReservation := dril001.fieldbyname('RoomReservation').AsInteger;
+  iRoomReservation := dril001.fieldbyname('Room Reservation').AsInteger;
 
   if EditReservation(iReservation, iRoomReservation) then
   begin
@@ -1088,7 +1088,7 @@ var
   theData : recPersonHolder;
 begin
   iReservation := Dril001.fieldbyname('Reservation').AsInteger;
-  iRoomReservation := Dril001.fieldbyname('RoomReservation').AsInteger;
+  iRoomReservation := Dril001.fieldbyname('Room Reservation').AsInteger;
 
   initPersonHolder(theData);
   theData.RoomReservation := iRoomreservation;
