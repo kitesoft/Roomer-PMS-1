@@ -40,7 +40,6 @@ object frmGuestSearch: TfrmGuestSearch
       Caption = 'Query'
       TabOrder = 0
       SkinData.SkinSection = 'GROUPBOX'
-      Checked = False
       object sLabel1: TsLabel
         Left = 109
         Top = 51
@@ -110,7 +109,6 @@ object frmGuestSearch: TfrmGuestSearch
       TabOrder = 1
       Visible = False
       SkinData.SkinSection = 'GROUPBOX'
-      Checked = False
       object sLabel3: TsLabel
         Left = 19
         Top = 23
@@ -158,7 +156,6 @@ object frmGuestSearch: TfrmGuestSearch
         TabOrder = 0
         Text = '  -  -    '
         OnChange = dtDateFromChange
-        CheckOnExit = True
         SkinData.SkinSection = 'EDIT'
         GlyphMode.Blend = 0
         GlyphMode.Grayed = False
@@ -184,7 +181,6 @@ object frmGuestSearch: TfrmGuestSearch
         TabOrder = 1
         Text = '  -  -    '
         OnChange = dtDateFromChange
-        CheckOnExit = True
         SkinData.SkinSection = 'EDIT'
         GlyphMode.Blend = 0
         GlyphMode.Grayed = False
@@ -273,7 +269,6 @@ object frmGuestSearch: TfrmGuestSearch
       Caption = 'Just search in'
       TabOrder = 8
       SkinData.SkinSection = 'GROUPBOX'
-      Checked = False
       object chkbxFields: TsCheckListBox
         Left = 5
         Top = 17
