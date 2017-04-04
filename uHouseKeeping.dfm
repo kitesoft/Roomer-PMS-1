@@ -121,6 +121,10 @@ object frmHouseKeeping: TfrmHouseKeeping
     SkinData.SkinSection = 'PAGECONTROL'
     object sTabSheet1: TsTabSheet
       Caption = 'List'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object grCross: TAdvStringGrid
         Left = 0
         Top = 43
@@ -227,8 +231,9 @@ object frmHouseKeeping: TfrmHouseKeeping
         SearchFooter.HintFindPrev = 'Find previous occurence'
         SearchFooter.HintHighlight = 'Highlight occurences'
         SearchFooter.MatchCaseCaption = 'Match case'
+        SearchFooter.ResultFormat = '(%d of %d)'
         SortSettings.DefaultFormat = ssAutomatic
-        Version = '7.9.1.1'
+        Version = '8.2.4.1'
         RowHeights = (
           22
           22
