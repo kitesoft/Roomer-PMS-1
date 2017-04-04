@@ -867,9 +867,8 @@ uses
   , uStaffMembers2
   , uMandatoryFieldDefinitions
   , UITYpes
+  , uResourceTypeDefinitions
   ;
-
-  , uResourceTypeDefinitions;
 {$R *.DFM}
 
 const
