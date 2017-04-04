@@ -1906,9 +1906,9 @@ var
   RateDate: TDateTime;
   Rate: double;
   Discount: double;
-  isPercentage: boolean;
   ShowDiscount: boolean;
   isPaid: boolean;
+  isPercentage: boolean;
   DiscountAmount: double;
   RentAmount: double;
   NativeAmount: double;
@@ -1923,7 +1923,6 @@ var
   applyType: integer;
 
 begin
-  isPercentage := true;
   applyType := 0;
 
   if mRatesEdit.active then
@@ -2897,8 +2896,9 @@ begin
 
       s := '';
       s := s + 'SELECT rt.RoomType,rt.Description,  ';
-      s := s + '(SELECT COUNT(Room) FROM rooms WHERE rooms.RoomType=rt.RoomType) AS NumRooms ';
+      s := s + '(SELECT COUNT(Room) FROM rooms WHERE rooms.RoomType=rt.RoomType and rooms.active) AS NumRooms ';
       s := s + 'FROM roomtypes rt ';
+      s := s + ' WHERE active ';
       s := s + 'ORDER BY rt.RoomType ';
 
       rSet := createNewDataSet;
@@ -3112,6 +3112,7 @@ begin
       s := s + '  RoomType ';
       s := s + ' ,PriorityRule ';
       s := s + 'FROM roomtypes ';
+      s := s + 'WHERE active ';
 
       rSet := createNewDataSet;
       try
@@ -4082,7 +4083,6 @@ var
   RoomReservation: integer;
   AvragePrice: double;
   AvrageDiscount: double;
-  isPercentage: boolean;
   RateCount: integer;
   childrenCount: integer;
   infantCount: integer;
