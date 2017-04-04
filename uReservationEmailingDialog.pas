@@ -4,7 +4,9 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, sPanel, Vcl.StdCtrls, sComboBox, sLabel, Vcl.OleCtrls, SHDocVw, sButton, sEdit, cxClasses, cxPropertiesStore;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, sPanel, Vcl.StdCtrls, sComboBox, sLabel, Vcl.OleCtrls, SHDocVw, sButton, sEdit, cxClasses, cxPropertiesStore
+  , uResourceTypeDefinitions
+  ;
 
 type
 
@@ -40,7 +42,7 @@ type
     procedure edToChange(Sender: TObject);
   private
     FEmailType: TEmailType;
-    KeyString : String;
+    FResourceType: TResourceType;
     tempFilename,
     filename : String;
     SubjectTemplate : String;
@@ -159,20 +161,22 @@ procedure TFrmReservationEmailingDialog.btnResourcesClick(Sender: TObject);
 var idx : Integer;
     RoomerResourceManagement : TRoomerResourceManagement;
 begin
-  if KeyString = GUEST_EMAIL_TEMPLATE then
-    frmMain.ShowBookingConfirmationTemplates
-  else if KeyString = Cancel_EMAIL_TEMPLATE then
-    frmMain.ShowCancelConfirmationTemplates;
-  idx := edTemplate.ItemIndex;
-  edTemplate.Items.Clear;
+  StaticResources(FResourceType.AsReadableString, [FResourceType], TResourceAccessType.ratRestricted);
 
-  RoomerResourceManagement := TRoomerResourceManagement.Create(KeyString, ACCESS_RESTRICTED);
+  idx := edTemplate.ItemIndex;
+  edTemplate.items.BeginUpdate;
   try
-    RoomerResourceManagement.AddStaticResourcesAsStrings(edTemplate.Items);
+    edTemplate.Items.Clear;
+    RoomerResourceManagement := TRoomerResourceManagement.Create(FResourceType, TResourceAccessType.ratRestricted);
+    try
+      RoomerResourceManagement.AddStaticResourcesAsStrings(edTemplate.Items);
+    finally
+      RoomerResourceManagement.Free;
+    end;
+    edTemplate.ItemIndex := idx;
   finally
-    RoomerResourceManagement.Free;
+    edTemplate.Items.EndUpdate;
   end;
-  edTemplate.ItemIndex := idx;
 end;
 
 procedure TFrmReservationEmailingDialog.EnableDisableOKButton;
@@ -197,7 +201,7 @@ var Strings : TStrings;
     RoomerResourceManagement : TRoomerResourceManagement;
 begin
   try
-    RoomerResourceManagement := TRoomerResourceManagement.Create(KeyString, ACCESS_RESTRICTED);
+    RoomerResourceManagement := TRoomerResourceManagement.Create(FResourceType, TResourceAccessType.ratRestricted);
     try
       RoomerResourceManagement.AddStaticResourcesAsStrings(edTemplate.Items);
       filename := RoomerResourceManagement.DownloadResourceByName(edTemplate.Items[edTemplate.ItemIndex], SubjectTemplate);
@@ -272,7 +276,7 @@ var
  RoomerResourceManagement : TRoomerResourceManagement;
 begin
   edTemplate.Items.Clear;
-  RoomerResourceManagement := TRoomerResourceManagement.Create(KeyString, ACCESS_RESTRICTED);
+  RoomerResourceManagement := TRoomerResourceManagement.Create(FResourceType, TResourceAccessType.ratRestricted);
   try
     RoomerResourceManagement.AddStaticResourcesAsStrings(edTemplate.Items)
   finally
@@ -280,11 +284,6 @@ begin
   end;
   EnableDisableOKButton;
   GetEmailAddresses;
-//  if g.qDefaultSendCCEmailToHotel then
-//  begin
-//    edCC.Items.Insert(0, ctrlGetString('CompanyEmail'));
-//    edCC.ItemIndex := 0;
-//  end;
 end;
 
 
@@ -318,12 +317,12 @@ begin
   if Value = EMAIL_TYPE_NEW_RESERVATION_CONFIRMATION then
   begin
     Caption := GetTranslatedText('shUI_NewReservationConfirmationEmail');
-    KeyString := GUEST_EMAIL_TEMPLATE;
+    FResourceType := rtGuestEmailTemplate;
   end else
   if Value = EMAIL_TYPE_CANCEL_RESERVATION_CONFIRMATION then
   begin
     Caption := GetTranslatedText('shUI_CancelReservationConfirmationEmail');
-    KeyString := CANCEL_EMAIL_TEMPLATE;
+    FResourceType := rtCancelEmailTemplate;
   end;
 end;
 

@@ -2,7 +2,7 @@ object FrmEditEmailProperties: TFrmEditEmailProperties
   Left = 0
   Top = 0
   Caption = 'Edit Email Properties'
-  ClientHeight = 161
+  ClientHeight = 142
   ClientWidth = 597
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -17,7 +17,7 @@ object FrmEditEmailProperties: TFrmEditEmailProperties
   TextHeight = 13
   object sLabel1: TsLabel
     Left = 64
-    Top = 32
+    Top = 41
     Width = 78
     Height = 13
     Alignment = taRightJustify
@@ -25,24 +25,30 @@ object FrmEditEmailProperties: TFrmEditEmailProperties
   end
   object sLabel2: TsLabel
     Left = 102
-    Top = 59
+    Top = 68
     Width = 40
     Height = 13
     Alignment = taRightJustify
     Caption = 'Subject:'
   end
+  object sLabel3: TsLabel
+    Left = 68
+    Top = 14
+    Width = 74
+    Height = 13
+    Alignment = taRightJustify
+    Caption = 'Resource type:'
+  end
   object sPanel2: TsPanel
     Left = 0
-    Top = 119
+    Top = 100
     Width = 597
     Height = 42
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 0
     SkinData.SkinSection = 'PANEL'
-    ExplicitLeft = -322
-    ExplicitTop = 220
-    ExplicitWidth = 803
+    ExplicitTop = 119
     DesignSize = (
       597
       42)
@@ -77,12 +83,12 @@ object FrmEditEmailProperties: TFrmEditEmailProperties
   end
   object edtName: TsEdit
     Left = 148
-    Top = 29
+    Top = 38
     Width = 425
     Height = 21
     Color = clWhite
     Font.Charset = DEFAULT_CHARSET
-    Font.Color = 2302755
+    Font.Color = clBlack
     Font.Height = -11
     Font.Name = 'Tahoma'
     Font.Style = []
@@ -92,17 +98,36 @@ object FrmEditEmailProperties: TFrmEditEmailProperties
   end
   object edtSubject: TsEdit
     Left = 148
-    Top = 56
+    Top = 65
     Width = 425
     Height = 21
     Color = clWhite
     Font.Charset = DEFAULT_CHARSET
-    Font.Color = 2302755
+    Font.Color = clBlack
     Font.Height = -11
     Font.Name = 'Tahoma'
     Font.Style = []
     ParentFont = False
     TabOrder = 2
     SkinData.SkinSection = 'EDIT'
+  end
+  object cbxResourceType: TsComboBox
+    Left = 148
+    Top = 11
+    Width = 425
+    Height = 21
+    Alignment = taLeftJustify
+    VerticalAlignment = taAlignTop
+    Style = csDropDownList
+    Color = clWhite
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clBlack
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ItemIndex = -1
+    ParentFont = False
+    TabOrder = 3
+    OnChange = cbxResourceTypeChange
   end
 end

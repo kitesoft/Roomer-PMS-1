@@ -853,6 +853,8 @@
         <DCCReference Include="uEditFinanceExportProperties.pas">
             <Form>frmEditFinanceExportProperties</Form>
         </DCCReference>
+        <DCCReference Include="Resources\uResourceTypeDefinitions.pas"/>
+        <DCCReference Include="PMSSettings\uHotelServicesSettings.pas"/>
         <None Include="Roomer.todo"/>
         <None Include="notes.txt"/>
         <None Include="Roomer.inc"/>

@@ -632,10 +632,8 @@ type
     btnHotelSpecificSqlQueries: TdxBarLargeButton;
     barinnBar1: TdxBar;
     barinnBar9: TdxBar;
-    btnTextBasedTemplates: TdxBarLargeButton;
     barinnBar10: TdxBar;
     btnBookKeepingQueries: TdxBarLargeButton;
-    mnuEmailTemplates: TdxBarPopupMenu;
     mniBookinglEmailTemplates: TdxBarSubItem;
     mniCancelEmailTemplates: TdxBarSubItem;
     R1: TMenuItem;
@@ -696,6 +694,8 @@ type
     splStatistics: TsSplitter;
     btnDefaultMasterRates: TdxBarLargeButton;
     dxUserActivityLog: TdxBarLargeButton;
+    dbbPreArrivalEmailTemplate: TdxBarButton;
+    dbbPostDepartureEmailTemplate: TdxBarButton;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
@@ -939,11 +939,8 @@ type
     procedure btnGuestProfilesClick(Sender: TObject);
     procedure btnBookKeepingCodesClick(Sender: TObject);
     procedure btnHotelSpecificSqlQueriesClick(Sender: TObject);
-    procedure btnTextBasedTemplatesClick(Sender: TObject);
     procedure btnBookKeepingQueriesClick(Sender: TObject);
     procedure FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
-    procedure mniBookinglEmailTemplatesClick(Sender: TObject);
-    procedure mniCancelEmailTemplatesClick(Sender: TObject);
     procedure R1Click(Sender: TObject);
     procedure C6Click(Sender: TObject);
     procedure btnEmailTemplatesClick(Sender: TObject);
@@ -1506,8 +1503,6 @@ type
     function IsInRoomTypes(const RoomType, RTAvailable: string): boolean;
     procedure SetExtraSkinColors;
     procedure RemoveLanguagesFilesAndRefresh(Refresh: boolean = true);
-    procedure ShowBookingConfirmationTemplates;
-    procedure ShowCancelConfirmationTemplates;
     procedure ShowTimelyMessage(const sMessage: string);
 
     property RBEMode: boolean read FRBEMode write SetRBEMode;
@@ -1582,7 +1577,7 @@ uses
     , uRoomerVersionInfo
     , uSQLUtils
     , uMasterRateDefaults
-    , uRptUserActivity;
+    , uRptUserActivity, uResourceTypeDefinitions;
 
 {$R *.DFM}
 {$R Cursors.res}
@@ -10780,12 +10775,6 @@ begin
   end;
 end;
 
-procedure TfrmMain.btnTextBasedTemplatesClick(Sender: TObject);
-begin
-  LogUserClickedButton(Sender);
-  StaticResources('Text based templates', TEXT_BASED_TEMPLATES, ACCESS_OPEN, TTextResourceParameters.Create);
-end;
-
 procedure TfrmMain.btnToDayClick(Sender: TObject);
 begin
   LogUserClickedButton(Sender);
@@ -11057,12 +11046,6 @@ begin
   itemTypeInfoTax.Itemtype := '';
 end;
 
-procedure TfrmMain.btnEmailTemplatesClick(Sender: TObject);
-begin
-  LogUserClickedButton(Sender);
-  mnuEmailTemplates.PopupFromCursorPos;
-end;
-
 procedure TfrmMain.btnEmployeeListClick(Sender: TObject);
 begin
   LogUserClickedButton(Sender);
@@ -11234,7 +11217,7 @@ end;
 procedure TfrmMain.dxBarLargeButton4Click(Sender: TObject);
 begin
   LogUserClickedButton(Sender);
-  StaticResources('Files', ANY_FILE, ACCESS_RESTRICTED);
+  StaticResources('Files', [TResourceType.rtAnyFile], TResourceAccessType.ratRestricted);
 end;
 
 procedure TfrmMain.btnDefaultMasterRatesClick(Sender: TObject);
@@ -11256,7 +11239,7 @@ end;
 procedure TfrmMain.btnWebAccessibleFilesClick(Sender: TObject);
 begin
   LogUserClickedButton(Sender);
-  StaticResources('Files', ANY_FILE, ACCESS_OPEN);
+  StaticResources('Files', [TResourceType.rtAnyFile], TResourceAccessType.ratOpen);
 end;
 
 procedure TfrmMain.btnCashierReportClick(Sender: TObject);
@@ -11309,35 +11292,14 @@ begin
   ShowUserActivityReport;
 end;
 
-procedure TfrmMain.ShowBookingConfirmationTemplates;
-begin
-  mniBookinglEmailTemplatesClick(nil);
-end;
-
-procedure TfrmMain.ShowCancelConfirmationTemplates;
-begin
-  mniCancelEmailTemplatesClick(nil);
-end;
-
-procedure TfrmMain.mniBookinglEmailTemplatesClick(Sender: TObject);
+procedure TfrmMain.btnEmailTemplatesClick(Sender: TObject);
 var
   lParams: THtmlResourceParameters;
 begin
+  LogUserClickedButton(Sender);
   lParams := THtmlResourceParameters.Create;
   try
-    StaticResources('Booking Confirmation Email Templates', GUEST_EMAIL_TEMPLATE, ACCESS_OPEN, lParams);
-  finally
-    lParams.Free;
-  end;
-end;
-
-procedure TfrmMain.mniCancelEmailTemplatesClick(Sender: TObject);
-var
-  lParams: THtmlResourceParameters;
-begin
-  lParams := THtmlResourceParameters.Create;
-  try
-    StaticResources('Cancellation Confirmation Email Templates', CANCEL_EMAIL_TEMPLATE, ACCESS_OPEN, lParams);
+    StaticResources(TdxBarButton(Sender).Caption, cEmailTemplateResourceTypes, TResourceAccessType.ratOpen, '', lParams);
   finally
     lParams.Free;
   end;
@@ -12198,6 +12160,7 @@ begin
   EditDayClosingTimes;
 end;
 
+
 // #######################  Employee  ########################################
 
 procedure TfrmMain._EmployeeList;
@@ -12440,7 +12403,6 @@ end;
 
 procedure TfrmMain.CreateQuickReservation(isQuick: boolean);
 var
-  iReservation: integer;
   oNewReservation: TNewReservation;
   lAdded: integer;
 begin
@@ -12869,7 +12831,7 @@ begin
             ResLine := mainGuests + ' / ' + ReservationName;
 
             Currency := rSet.FieldByName('Currency').asString;
-            AverageRate := rSet.GetFloatValue(rSet.FieldByName('AverageRate'));
+            AverageRate := rSet.FieldByName('AverageRate').AsFloat;
             numDays := rSet.FieldByName('NumDays').asinteger;
             TotalRate := numDays * AverageRate;
             Adults := rSet.FieldByName('NumGuests').asinteger;

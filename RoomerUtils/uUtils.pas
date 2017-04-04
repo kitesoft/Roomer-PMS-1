@@ -164,7 +164,6 @@ function GetOwnerOfType(aComp: TComponent; aClassType: TClass): TComponent;
 
 function StringIndexInSet(Selector : string; CaseList: array of string): Integer;
 
-
 implementation
 
 uses System.SysUtils, clipbrd{$IFNDEF ROOMER_UTIL}{$IFNDEF RBE_BUILD}, PrjConst{$ENDIF}{$ENDIF}, uFloatUtils;
@@ -1714,10 +1713,6 @@ begin
   while Assigned(Result) and (not result.ClassType.InheritsFrom(aClassType)) do
     Result := Result.Owner;
 end;
-
-{ TIntValue }
-
-
 
 constructor TIntValue.Create(value: integer);
 begin

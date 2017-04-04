@@ -41,7 +41,6 @@ type
     FUpdatingData: boolean;
     FProgressBar: TAdvSmoothProgressBar;
     procedure KeepOnVisibleMonitor;
-    procedure LoadData;
     function GetStateTextPanel: TStatusPanel;
     function GetBusyState: TRoomerFormBusyState;
     procedure SetBusyState(const Value: TRoomerFormBusyState);
@@ -62,6 +61,7 @@ type
     ///   (Re)load data needed to display in the form
     /// </summary>
     procedure DoLoadData; virtual;
+    procedure LoadData;
     property UpdatingData: boolean read FUpdatingData;
     property StateTextPanel: TStatusPanel read GetStateTextPanel;
     property ProgressBar: TAdvSmoothProgressBar read FProgressBar;

@@ -847,7 +847,7 @@ uses
   , uCurrencyHandler
   , uAccountTypeDefinitions, uBreakfastStateDefinitions, uSQLUtils, ufrmRoomPrices
   , uDateTimeHelper
-  ;
+  , uResourceTypeDefinitions;
 
 {$R *.DFM}
 
@@ -1803,9 +1803,7 @@ end;
 
 procedure TfrmReservationProfile.acShowDocumentsExecute(Sender: TObject);
 begin
-  StaticResources('Reservation Resources',
-    format(BOOKING_STATIC_RESOURCES, [inttostr(zReservation)]),
-    ACCESS_RESTRICTED);
+  StaticResources('Reservation Resources', [TResourceType.rtBooking], TResourceAccessType.ratRestricted, inttostr(zReservation));
 end;
 
 procedure TfrmReservationProfile.acShowHiddenMemoExecute(Sender: TObject);
@@ -1835,7 +1833,6 @@ var
   PriceCode: string;
   AvrageRate: double;
   AvrageDiscount: double;
-  isPercentage: Boolean;
   rateCount: Integer;
 
   useInNationalReport: Boolean;
@@ -3136,9 +3133,7 @@ end;
 
 procedure TfrmReservationProfile.tvRoomsDocumentsPropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
 begin
-  StaticResources('Room Resources',
-    format(ROOM_BOOKING_STATIC_RESOURCES, [inttostr(mRooms['RoomReservation'])]),
-    ACCESS_RESTRICTED);
+  StaticResources('Room Resources', [TResourceType.rtRoomBooking], TResourceAccessType.ratRestricted, inttostr(mRooms['RoomReservation']));
 end;
 
 procedure TfrmReservationProfile.doRRDateChange(startIn: Integer);

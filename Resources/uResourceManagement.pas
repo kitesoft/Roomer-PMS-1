@@ -3,8 +3,8 @@ unit uResourceManagement;
 interface
 
 uses Vcl.Forms, Vcl.Controls, Vcl.Graphics, System.Classes, System.Types, SysUtils, System.IOUtils,
-     System.Generics.Collections, DragDropFile, DropComboTarget, cmpRoomerDataSet
-     ;
+     System.Generics.Collections, DragDropFile, DropComboTarget, cmpRoomerDataSet, uResourceTypeDefinitions
+     , Spring.Collections;
 
 const
   ROOM_IMAGES_STATIC_RESOURCE_PATTERN = 'ROOMIMAGE_%s';
@@ -13,11 +13,14 @@ const
   BOOKING_STATIC_RESOURCES = 'BOOKING_RESOURCE_%s';
   ROOM_BOOKING_STATIC_RESOURCES = 'ROOM_BOOKING_RESOURCE_%s';
   GUEST_STATIC_RESOURCES = 'GUEST_RESOURCE_%s';
+
   ANY_FILE = 'ANY_FILE';
   GUEST_EMAIL_TEMPLATE = 'GUEST_EMAIL_TEMPLATE';
   CANCEL_EMAIL_TEMPLATE = 'CANCEL_EMAIL_TEMPLATE';
-  HOTEL_SQL_RESOURCE = 'HOTEL_SQL_RESOURCE';
-  TEXT_BASED_TEMPLATES = 'TEXT_BASED_TEMPLATES';
+//  HOTEL_SQL_RESOURCE = 'HOTEL_SQL_RESOURCE';
+//  TEXT_BASED_TEMPLATES = 'TEXT_BASED_TEMPLATES';
+  PRE_ARRIVAL_EMAIL_TEMPLATE = 'PRE_ARRIVAL_MAIL_TEMPLATE';
+  POST_DEPARTURE_MAIL_TEMPLATE = 'POST_DEPARTURE_MAIL_TEMPLATE';
 
   ACCESS_OPEN = 'OPEN';
   ACCESS_RESTRICTED = 'RESTRICTED';
@@ -25,12 +28,10 @@ const
 type
 
   TResourceParameters = class
-    FPerformTransformation : Boolean;
     FDefaultFileFilter : String;
   private
-    constructor Create(_PerformTransformation : Boolean; _FileFilter : String);
+    constructor Create(const _FileFilter : String);
   public
-    property PerformTransformation : Boolean read FPerformTransformation;
     property DefaultFileFilter : String read FDefaultFileFilter;
   end;
 
@@ -48,19 +49,9 @@ type
     constructor Create;
   end;
 
-  TSqlResourceParameters = class(TResourceParameters)
-  private
-  public
-    constructor Create;
-  end;
-
-  TTextResourceParameters = class(TResourceParameters)
-  private
-  public
-    constructor Create;
-  end;
-
+  {$M+}
   TResource = class
+  private
       FKEY_STRING : String;
       FORIGINAL_NAME : String;
       FID : Integer;
@@ -68,6 +59,9 @@ type
       FURI : String;
       FUSER_ID : Integer;
       FLAST_MODIFIED : TDateTime;
+    FACCESS: TResourceAccessType;
+    function GetUser: string;
+    function GetResourceType: TResourceType;
   public
       Constructor Create(_KEY_STRING : String;
                          _ORIGINAL_NAME : String;
@@ -75,33 +69,41 @@ type
                          _EXTRA_INFO : String;
                          _URI : String;
                          _USER_ID : Integer;
-                         _LAST_MODIFIED : TDateTime);
-
+                         _LAST_MODIFIED : TDateTime;
+                         _ACCESS: TResourceAccessType);
+      property USER_ID : Integer read FUSER_ID write FUSER_ID;
       property KEY_STRING : String read FKEY_STRING write FKEY_STRING;
-      property ORIGINAL_NAME : String read FORIGINAL_NAME write FORIGINAL_NAME;
+  published
       property ID : Integer read FID write FID;
+      property ResourceType: TResourceType read GetResourceType;
+      property ORIGINAL_NAME : String read FORIGINAL_NAME write FORIGINAL_NAME;
       property EXTRA_INFO : String read FEXTRA_INFO write FEXTRA_INFO;
       property URI : String read FURI write FURI;
-      property USER_ID : Integer read FUSER_ID write FUSER_ID;
+      property User: string read GetUser;
       property LAST_MODIFIED : TDateTime read FLAST_MODIFIED write FLAST_MODIFIED;
+      property Access: TResourceAccessType read FACCESS write FACCESS;
   end;
 
   TRoomerResourceManagement = class
-    KeyString,
-    Access : String;
-    ResourceParameters : TResourceParameters;
-
-    Resources : TObjectList<TResource>;
   private
+    FAccess : TResourceAccessType;
+    FResourceTypes: TResourceTypeSet;
+    FKeyStringParam: string;
+    ResourceParameters : TResourceParameters;
     procedure GetResources;
-    function GetTableInfo: TRoomerDataSet;
+    function GetTableInfo(const aKeyString: string): TRoomerDataSet;
     function GetCount: Integer;
     function GetResource(index: Integer): TResource;
   public
-    constructor Create(_KeyString, _Access : String; _ResourceParameters : TResourceParameters = nil);
+    Resources : IList<TResource>;
+
+    constructor Create(aResourceTypes: TResourceTypeSet; const _Access : TResourceAccessType; _ResourceParameters : TResourceParameters = nil; aKeyStringParam: string = ''); overload;
+    constructor Create(aResourceType: TResourceType; const _Access: TResourceAccessType;
+                        _ResourceParameters: TResourceParameters = nil; aKeyStringParam: string = ''); overload;
     destructor Destroy; override;
 
     procedure Refresh;
+    function FileNameInList(const aFileName: string): boolean;
 
     procedure RemoveFileForUpload(filename: String);
     function DownloadResourceByName(name: String; var Subject: String): String;
@@ -119,7 +121,8 @@ function DownloadResource(sourceFilename, destFilename: String): Boolean;
 
 implementation
 
-uses uD, ActiveX, ComObj, uUtils, Winapi.msxml, Dialogs, hData, PrjConst;
+uses uD, ActiveX, ComObj, uUtils, Winapi.msxml, Dialogs, hData, PrjConst
+  , Spring.Collections.Lists, uAppGlobal;
 
 
 // ------------------ Free-Fall implementations ----------------------
@@ -255,19 +258,26 @@ end;
 
 // ------------------ TRoomerResourceManagement ----------------------
 
-constructor TRoomerResourceManagement.Create(_KeyString, _Access : String; _ResourceParameters : TResourceParameters = nil);
+constructor TRoomerResourceManagement.Create(aResourceTypes: TResourceTypeSet; const _Access : TResourceAccessType; _ResourceParameters : TResourceParameters = nil;
+                                              aKeyStringParam: string = ''  );
 begin
-  Resources := TObjectList<TResource>.Create(true);
-  Access := _Access;
-  KeyString := _KeyString;
+  Resources := TObjectList<TResource>.Create;
+  FAccess := _Access;
+  FResourceTypes := aResourceTypes;
+  FKeyStringParam := aKeyStringParam;
   ResourceParameters := _ResourceParameters;
   Refresh;
 end;
 
+constructor TRoomerResourceManagement.Create(aResourceType: TResourceType; const _Access: TResourceAccessType;
+                                                _ResourceParameters: TResourceParameters = nil; aKeyStringParam: string = '');
+begin
+  Create([aResourceType], _Access, _ResourceParameters, aKeyStringParam);
+end;
+
 destructor TRoomerResourceManagement.Destroy;
 begin
- // --
-  Resources.Free;
+  inherited;
 end;
 
 function TRoomerResourceManagement.DownloadResourceByName(name : String;
@@ -290,6 +300,19 @@ begin
   end;
 end;
 
+function TRoomerResourceManagement.FileNameInList(const aFileName: string): boolean;
+var
+  lRes: TResource;
+begin
+  result := False;
+  for lRes in Resources do
+    if Lowercase(lres.ORIGINAL_NAME) = LowerCase(aFilename) then
+    begin
+      result := True;
+      Break;
+    end;
+end;
+
 procedure TRoomerResourceManagement.AddStaticResourcesAsStrings(aList: TStrings);
 var
   o: TResource;
@@ -303,11 +326,10 @@ begin
   result :=  Resources.Count;
 end;
 
-function TRoomerResourceManagement.GetTableInfo: TRoomerDataSet;
-var sql : String;
+function TRoomerResourceManagement.GetTableInfo(const aKeyString: string): TRoomerDataSet;
 begin
   result := CreateNewDataSet;
-  result.OpenDataset(result.SystemGetStaticResourcesFiltered(KeyString));
+  result.OpenDataset(result.SystemGetStaticResourcesFiltered(aKeyString));
 end;
 
 function TRoomerResourceManagement.GetResource(index: Integer): TResource;
@@ -316,25 +338,33 @@ begin
 end;
 
 procedure TRoomerResourceManagement.GetResources;
-var ResourceSet : TRoomerDataSet;
+var
+  ResourceSet : TRoomerDataSet;
+  lType: TResourceType;
 begin
   Resources.Clear;
-  ResourceSet := GetTableInfo;
-  try
-    ResourceSet.First;
-    while NOT ResourceSet.Eof do
-    begin
-      Resources.Add(TResource.Create(ResourceSet['KEY_STRING'],
-                                     ResourceSet['ORIGINAL_NAME'],
-                                     ResourceSet['ID'],
-                                     ResourceSet['EXTRA_INFO'],
-                                     ResourceSet['URI'],
-                                     ResourceSet['USER_ID'],
-                                     ResourceSet['LAST_MODIFIED']));
-      ResourceSet.Next;
+
+  for lType in FResourceTypes do
+  begin
+    ResourceSet := GetTableInfo(lType.ToKeyString(FKeyStringParam));
+    try
+      ResourceSet.First;
+      while NOT ResourceSet.Eof do
+      begin
+        if ResourceSet['ACCESS'] = FAccess.ToString then
+          Resources.Add(TResource.Create(ResourceSet['KEY_STRING'],
+                                         ResourceSet['ORIGINAL_NAME'],
+                                         ResourceSet['ID'],
+                                         ResourceSet['EXTRA_INFO'],
+                                         ResourceSet['URI'],
+                                         ResourceSet['USER_ID'],
+                                         ResourceSet['LAST_MODIFIED'],
+                                         TResourceAccessType.FromString(ResourceSet['ACCESS'])));
+        ResourceSet.Next;
+      end;
+    finally
+      FreeAndNil(ResourceSet);
     end;
-  finally
-    FreeAndNil(ResourceSet);
   end;
 end;
 
@@ -358,14 +388,12 @@ end;
 procedure TRoomerResourceManagement.Refresh;
 begin
   GetResources;
-  inherited;
 end;
 
 { TResourceParameters }
 
-constructor TResourceParameters.Create(_PerformTransformation: Boolean; _FileFilter : String);
+constructor TResourceParameters.Create(const _FileFilter : String);
 begin
-  FPerformTransformation := _PerformTransformation;
   FDefaultFileFilter := _FileFilter;
 end;
 
@@ -373,7 +401,7 @@ end;
 
 constructor TImageResourceParameters.Create(_MaxWidth, _MaxHeight: Integer; _BackColor : TColor);
 begin
-  inherited Create(true, 'Images (*.jpg;*.png;*.bmp;*.gif)|*.jpg;*.png;*.bmp;*.gif|Videos (*.wmv;*.avi;*.mp4)|*.wmv;*.avi;*.mp4|Sound (*.mp3)|*.mp3|Any file (*.*)|*.*');
+  inherited Create('Images (*.jpg;*.png;*.bmp;*.gif)|*.jpg;*.png;*.bmp;*.gif|Videos (*.wmv;*.avi;*.mp4)|*.wmv;*.avi;*.mp4|Sound (*.mp3)|*.mp3|Any file (*.*)|*.*');
   MaxWidth := _MaxWidth;
   MaxHeight := _MaxHeight;
   BackColor := _BackColor;
@@ -383,37 +411,47 @@ end;
 
 constructor THtmlResourceParameters.Create;
 begin
-  inherited Create(true, 'Html files (*.htm;*.html)|*.htm;*.html|Text files (*.txt)|*.txt|Any file (*.*)|*.*');
-end;
-
-{ TSqlResourceParameters }
-
-constructor TSqlResourceParameters.Create;
-begin
-  inherited Create(true, 'Sql files (*.sql)|*.sql|Text files (*.txt)|*.txt|Any file (*.*)|*.*');
-end;
-
-{ TTextResourceParameters }
-
-constructor TTextResourceParameters.Create;
-begin
-  inherited Create(true, 'Text files (*.txt)|*.txt|Any file (*.*)|*.*');
+  inherited Create('Html files (*.htm;*.html)|*.htm;*.html|Text files (*.txt)|*.txt|Any file (*.*)|*.*');
 end;
 
 
 { TResource }
 
-constructor TResource.Create(_KEY_STRING, _ORIGINAL_NAME: String; _ID: Integer; _EXTRA_INFO, _URI: String;
+constructor TResource.Create(_KEY_STRING : String;
+                         _ORIGINAL_NAME : String;
+                         _ID : Integer;
+                         _EXTRA_INFO : String;
+                         _URI : String;
                          _USER_ID : Integer;
-                         _LAST_MODIFIED : TDateTime);
+                         _LAST_MODIFIED : TDateTime;
+                         _ACCESS: TResourceAccessType);
 begin
-  KEY_STRING := _KEY_STRING;
-  ORIGINAL_NAME := _ORIGINAL_NAME;
-  ID := _ID;
-  EXTRA_INFO := _EXTRA_INFO;
-  URI := _URI;
-  USER_ID := _USER_ID;
-  LAST_MODIFIED := _LAST_MODIFIED;
+  FKEY_STRING := _KEY_STRING;
+  FORIGINAL_NAME := _ORIGINAL_NAME;
+  FID := _ID;
+  FEXTRA_INFO := _EXTRA_INFO;
+  FURI := _URI;
+  FUSER_ID := _USER_ID;
+  FLAST_MODIFIED := _LAST_MODIFIED;
+  FACCESS := _ACCESS;
+end;
+
+function TResource.GetResourceType: TResourceType;
+begin
+  try
+    Result := TResourceType.FromString(KEY_STRING);
+  except
+    on E:EResourceTypeDefinitionException do
+      Result := TResourceType.rtAnyFile
+    else
+      raise;
+  end;
+end;
+
+function TResource.GetUser: string;
+begin
+  if not glb.LocateSpecificRecordAndGetValue('staffmembers', 'id', USER_ID, 'Initials', result) then
+    Result := '';
 end;
 
 end.

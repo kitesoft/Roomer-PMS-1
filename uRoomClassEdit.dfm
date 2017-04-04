@@ -752,6 +752,10 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
     end
     object sTabSheet2: TsTabSheet
       Caption = 'Default values'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object sGroupBox1: TsGroupBox
         AlignWithMargins = True
         Left = 0
@@ -1218,6 +1222,8 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
     end
     object sTabSheet3: TsTabSheet
       Caption = 'Master rate'
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object sGroupBox4: TsGroupBox
         AlignWithMargins = True
         Left = 0

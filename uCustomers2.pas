@@ -322,7 +322,7 @@ uses
   , uGuestPortfolioEdit
   , uCustomerDepartments
   , uResourceManagement
-  , uSQLUtils;
+  , uSQLUtils, uResourceTypeDefinitions;
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -997,9 +997,7 @@ end;
 
 procedure TfrmCustomers2.tvDataColumn1PropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
 begin
-  StaticResources('Customer Resources',
-        format(CUSTOMER_DOCUMENTS_STATIC_RESOURCE_PATTERN, [m_['Customer']]),
-        ACCESS_RESTRICTED);
+  StaticResources('Customer Resources', [TResourceType.rtCustomerDocument], TResourceAccessType.ratRestricted, m_['Customer']);
 end;
 
 procedure TfrmCustomers2.tvDataCustomerPropertiesValidate(Sender: TObject; var DisplayValue: Variant; var ErrorText: TCaption; var Error: Boolean);

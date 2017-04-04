@@ -82,8 +82,9 @@ object frmControlData: TfrmControlData
         Width = 154
         Height = 743
         Align = alClient
+        Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
+        Font.Color = clBlack
         Font.Height = -12
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -140,7 +141,7 @@ object frmControlData: TfrmControlData
         Top = 1
         Width = 1101
         Height = 743
-        ActivePage = tsCompany
+        ActivePage = tsInvEmail
         Align = alClient
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
@@ -5669,6 +5670,7 @@ object frmControlData: TfrmControlData
         end
         object tsInvEmail: TsTabSheet
           Caption = 'Reservations'
+          ExplicitTop = 26
           object LMDGroupBox25: TsGroupBox
             AlignWithMargins = True
             Left = 3
@@ -5824,6 +5826,229 @@ object frmControlData: TfrmControlData
               ImgUnchecked = 0
             end
           end
+          object gbxReservationLifeCyclemailerSettings: TsGroupBox
+            AlignWithMargins = True
+            Left = 3
+            Top = 251
+            Width = 1087
+            Height = 198
+            Align = alTop
+            Caption = 'Reservation Lifecycle Mailer settings'
+            TabOrder = 2
+            SkinData.SkinSection = 'GROUPBOX'
+            object lblPreArrival: TsLabel
+              Left = 38
+              Top = 27
+              Width = 82
+              Height = 14
+              Alignment = taRightJustify
+              Caption = 'Pre Arrival mail:'
+            end
+            object lblPostDeparture: TsLabel
+              Left = 9
+              Top = 91
+              Width = 111
+              Height = 14
+              Alignment = taRightJustify
+              Caption = 'Post Departure mail:'
+            end
+            object cbxPreArrivalEnabled: TsCheckBox
+              Left = 141
+              Top = 25
+              Width = 20
+              Height = 16
+              TabOrder = 0
+              OnClick = cbxPreArrivalEnabledClick
+              ImgChecked = 0
+              ImgUnchecked = 0
+            end
+            object cbxPostDepartureEnabled: TsCheckBox
+              Left = 141
+              Top = 89
+              Width = 20
+              Height = 16
+              TabOrder = 2
+              OnClick = cbxPostDepartureEnabledClick
+              ImgChecked = 0
+              ImgUnchecked = 0
+            end
+            object pnlPreArrival: TsPanel
+              AlignWithMargins = True
+              Left = 202
+              Top = 16
+              Width = 880
+              Height = 65
+              Margins.Left = 200
+              Margins.Top = 0
+              Align = alTop
+              BevelOuter = bvNone
+              TabOrder = 1
+              SkinData.SkinSection = 'PANEL'
+              object sLabel37: TsLabel
+                Left = 21
+                Top = 11
+                Width = 75
+                Height = 14
+                Alignment = taRightJustify
+                Caption = 'Hours before:'
+              end
+              object sLabel38: TsLabel
+                Left = 207
+                Top = 11
+                Width = 105
+                Height = 14
+                Alignment = taRightJustify
+                Caption = 'Email address from:'
+              end
+              object sLabel39: TsLabel
+                Left = 294
+                Top = 39
+                Width = 18
+                Height = 14
+                Alignment = taRightJustify
+                Caption = 'CC:'
+              end
+              object edHoursBefore: TsSpinEdit
+                Left = 102
+                Top = 8
+                Width = 92
+                Height = 22
+                Color = clWhite
+                Font.Charset = DEFAULT_CHARSET
+                Font.Color = clBlack
+                Font.Height = -12
+                Font.Name = 'Tahoma'
+                Font.Style = []
+                NumbersOnly = True
+                ParentFont = False
+                TabOrder = 0
+                SkinData.SkinSection = 'EDIT'
+                MaxValue = 9999999
+                MinValue = 1
+                Value = 0
+              end
+              object edPreArrivalMailFromAddress: TsEdit
+                Left = 318
+                Top = 8
+                Width = 209
+                Height = 22
+                Color = clWhite
+                Font.Charset = DEFAULT_CHARSET
+                Font.Color = clBlack
+                Font.Height = -12
+                Font.Name = 'Tahoma'
+                Font.Style = []
+                ParentFont = False
+                TabOrder = 1
+                OnChange = checkEmailRegEx
+                OnExit = checkEmailRegEx
+                SkinData.SkinSection = 'EDIT'
+              end
+              object edPreArrivalCCMailTo: TsEdit
+                Left = 318
+                Top = 36
+                Width = 209
+                Height = 22
+                Color = clWhite
+                Font.Charset = DEFAULT_CHARSET
+                Font.Color = clBlack
+                Font.Height = -12
+                Font.Name = 'Tahoma'
+                Font.Style = []
+                ParentFont = False
+                TabOrder = 2
+                OnChange = checkEmailRegEx
+                OnExit = checkEmailRegEx
+              end
+            end
+            object pnlPostDeparture: TsPanel
+              AlignWithMargins = True
+              Left = 202
+              Top = 84
+              Width = 880
+              Height = 73
+              Margins.Left = 200
+              Margins.Top = 0
+              Align = alTop
+              BevelOuter = bvNone
+              TabOrder = 3
+              SkinData.SkinSection = 'PANEL'
+              object sLabel41: TsLabel
+                Left = 31
+                Top = 7
+                Width = 65
+                Height = 14
+                Alignment = taRightJustify
+                Caption = 'Hours after:'
+              end
+              object sLabel42: TsLabel
+                Left = 207
+                Top = 7
+                Width = 105
+                Height = 14
+                Alignment = taRightJustify
+                Caption = 'Email address from:'
+              end
+              object sLabel43: TsLabel
+                Left = 294
+                Top = 35
+                Width = 18
+                Height = 14
+                Alignment = taRightJustify
+                Caption = 'CC:'
+              end
+              object edHoursAfter: TsSpinEdit
+                Left = 102
+                Top = 4
+                Width = 92
+                Height = 22
+                Color = clWhite
+                Font.Charset = DEFAULT_CHARSET
+                Font.Color = clBlack
+                Font.Height = -12
+                Font.Name = 'Tahoma'
+                Font.Style = []
+                NumbersOnly = True
+                ParentFont = False
+                TabOrder = 0
+                MaxValue = 9999999
+                MinValue = 1
+                Value = 0
+              end
+              object edPostDepartureMailFromAddress: TsEdit
+                Left = 318
+                Top = 4
+                Width = 209
+                Height = 22
+                Color = clWhite
+                Font.Charset = DEFAULT_CHARSET
+                Font.Color = clBlack
+                Font.Height = -12
+                Font.Name = 'Tahoma'
+                Font.Style = []
+                ParentFont = False
+                TabOrder = 1
+                OnChange = checkEmailRegEx
+                OnExit = checkEmailRegEx
+              end
+              object edPostDepartureCCMailTo: TsEdit
+                Left = 318
+                Top = 32
+                Width = 209
+                Height = 22
+                Color = clWhite
+                Font.Charset = DEFAULT_CHARSET
+                Font.Color = clBlack
+                Font.Height = -12
+                Font.Name = 'Tahoma'
+                Font.Style = []
+                ParentFont = False
+                TabOrder = 2
+                OnChange = checkEmailRegEx
+                OnExit = checkEmailRegEx
+              end
+            end
+          end
           object gbxReservationProfileFunctionality: TsGroupBox
             AlignWithMargins = True
             Left = 3
@@ -5832,11 +6057,11 @@ object frmControlData: TfrmControlData
             Height = 91
             Align = alTop
             Caption = 'ReservationProfile functionality'
-            TabOrder = 2
+            TabOrder = 3
             SkinData.SkinSection = 'GROUPBOX'
             object cbxChangeNationality: TsCheckBox
-              Left = 14
-              Top = 21
+              Left = 22
+              Top = 29
               Width = 197
               Height = 18
               Caption = 'Change nationality of all guests'

@@ -52,7 +52,6 @@ object frmMain: TfrmMain
     SunkenBorder = True
     UseOwnColor = True
     UseOwnSunkenBorder = True
-    ExplicitTop = 122
   end
   object panMain: TsPanel
     Left = 0
@@ -1672,7 +1671,7 @@ object frmMain: TfrmMain
         object lblBusyDownloading: TsLabel
           Left = 0
           Top = 158
-          Width = 304
+          Width = 73
           Height = 13
           Margins.Left = 10
           Margins.Top = 0
@@ -1690,12 +1689,11 @@ object frmMain: TfrmMain
           Font.Name = 'Tahoma'
           Font.Style = []
           UseSkinColor = False
-          ExplicitWidth = 73
         end
         object lblCacheNotification: TsLabel
           Left = 0
           Top = 145
-          Width = 304
+          Width = 86
           Height = 13
           Margins.Left = 10
           Margins.Top = 0
@@ -1713,7 +1711,6 @@ object frmMain: TfrmMain
           Font.Name = 'Tahoma'
           Font.Style = []
           UseSkinColor = False
-          ExplicitWidth = 86
         end
         object pnlStatistics: TsScrollBox
           Left = 0
@@ -2011,7 +2008,7 @@ object frmMain: TfrmMain
             Left = 159
             Top = 4
             Width = 94
-            Height = 24
+            Height = 23
             Margins.Left = 10
             Margins.Top = 4
             Align = alLeft
@@ -2024,7 +2021,6 @@ object frmMain: TfrmMain
             Font.Height = -17
             Font.Name = 'Segoe UI'
             Font.Style = [fsBold]
-            ExplicitHeight = 23
           end
           object dtDate: TsDateEdit
             AlignWithMargins = True
@@ -2065,6 +2061,7 @@ object frmMain: TfrmMain
             DirectInput = False
             ShowWeeks = True
             PopupWidth = 250
+            ExplicitTop = 6
           end
           object pnlStaffComm: TsPanel
             AlignWithMargins = True
@@ -2579,8 +2576,8 @@ object frmMain: TfrmMain
       object lblTimeMessage: TsLabel
         Left = 0
         Top = 0
-        Width = 1035
-        Height = 41
+        Width = 265
+        Height = 24
         Align = alClient
         Alignment = taCenter
         Caption = '<Timely messages panel>'
@@ -2592,8 +2589,6 @@ object frmMain: TfrmMain
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         UseSkinColor = False
-        ExplicitWidth = 265
-        ExplicitHeight = 24
       end
     end
     object pnlOffline: TsPanel
@@ -2760,6 +2755,7 @@ object frmMain: TfrmMain
       Index = 4
     end
     object System: TdxRibbonTab
+      Active = True
       Caption = 'System'
       Groups = <
         item
@@ -2789,7 +2785,6 @@ object frmMain: TfrmMain
       Index = 5
     end
     object rbTabChannels: TdxRibbonTab
-      Active = True
       Caption = 'Channels'
       Groups = <
         item
@@ -3072,7 +3067,7 @@ object frmMain: TfrmMain
     object lblHotelName: TsLabel
       Left = 0
       Top = 33
-      Width = 301
+      Width = 140
       Height = 22
       Align = alBottom
       Alignment = taCenter
@@ -3083,7 +3078,6 @@ object frmMain: TfrmMain
       Font.Height = -18
       Font.Name = 'Tahoma'
       Font.Style = []
-      ExplicitWidth = 140
     end
   end
   object pnlRBE: TsPanel
@@ -4882,10 +4876,6 @@ object frmMain: TfrmMain
         item
           Visible = True
           ItemName = 'btnEmailTemplates'
-        end
-        item
-          Visible = True
-          ItemName = 'btnTextBasedTemplates'
         end>
       OneOnRow = False
       Row = 0
@@ -5500,8 +5490,7 @@ object frmMain: TfrmMain
       HelpContext = 6
       Hint = 'Email Templates'
       Visible = ivAlways
-      ButtonStyle = bsDropDown
-      DropDownMenu = mnuEmailTemplates
+      DropDownEnabled = False
       LargeImageIndex = 115
       OnClick = btnEmailTemplatesClick
     end
@@ -5610,14 +5599,6 @@ object frmMain: TfrmMain
       LargeImageIndex = 78
       OnClick = btnHotelSpecificSqlQueriesClick
     end
-    object btnTextBasedTemplates: TdxBarLargeButton
-      Caption = 'Text based templates'
-      Category = 0
-      Hint = 'Text based templates'
-      Visible = ivAlways
-      LargeImageIndex = 94
-      OnClick = btnTextBasedTemplatesClick
-    end
     object btnBookKeepingQueries: TdxBarLargeButton
       Caption = 'Book keeping queries'
       Category = 0
@@ -5630,7 +5611,6 @@ object frmMain: TfrmMain
       Caption = 'Booking confirmations'
       Category = 0
       Visible = ivAlways
-      OnClick = mniBookinglEmailTemplatesClick
       ItemLinks = <>
       ItemOptions.ShowShortCuts = True
     end
@@ -5638,7 +5618,6 @@ object frmMain: TfrmMain
       Caption = 'Cancellation confirmations'
       Category = 0
       Visible = ivAlways
-      OnClick = mniCancelEmailTemplatesClick
       ItemLinks = <>
     end
     object dxBarSeparator6: TdxBarSeparator
@@ -5658,14 +5637,12 @@ object frmMain: TfrmMain
       Category = 0
       Hint = 'Booking confirmations'
       Visible = ivAlways
-      OnClick = mniBookinglEmailTemplatesClick
     end
     object dxBarButton4: TdxBarButton
       Caption = 'Cancellation confirmations'
       Category = 0
       Hint = 'Cancellation confirmations'
       Visible = ivAlways
-      OnClick = mniCancelEmailTemplatesClick
     end
     object dxBarLargeButton5: TdxBarLargeButton
       Caption = 'New Button'
@@ -5868,6 +5845,18 @@ object frmMain: TfrmMain
       Visible = ivAlways
       LargeImageIndex = 97
       OnClick = dxUserActivityLogClick
+    end
+    object dbbPreArrivalEmailTemplate: TdxBarButton
+      Caption = 'Pre-arrival email template'
+      Category = 0
+      Hint = 'Pre-arrival email template'
+      Visible = ivAlways
+    end
+    object dbbPostDepartureEmailTemplate: TdxBarButton
+      Caption = 'Post-departure email template'
+      Category = 0
+      Hint = 'Post-departure email template'
+      Visible = ivAlways
     end
     object mmnuFile: TdxBarSubItem
       Caption = '&File'
@@ -24517,21 +24506,6 @@ object frmMain: TfrmMain
     OnTimer = timBlinkerTimer
     Left = 656
     Top = 600
-  end
-  object mnuEmailTemplates: TdxBarPopupMenu
-    BarManager = barinn
-    ItemLinks = <
-      item
-        Visible = True
-        ItemName = 'dxBarButton3'
-      end
-      item
-        Visible = True
-        ItemName = 'dxBarButton4'
-      end>
-    UseOwnFont = False
-    Left = 360
-    Top = 468
   end
   object ApplicationEvents1: TApplicationEvents
     OnMessage = ApplicationEvents1Message

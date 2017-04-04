@@ -351,7 +351,7 @@ uses
 
   , ufrmPaymentReqRoomtypeGroup
   , uTopClassAvailabilityOrder
-  ;
+  , uResourceTypeDefinitions;
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -1224,9 +1224,11 @@ procedure TfrmRoomTypesGroups2.tvDataColumn1PropertiesButtonClick(Sender: TObjec
 var ResourceParameters : TImageResourceParameters;
 begin
   ResourceParameters := TImageResourceParameters.Create(540, -1, clWhite);
-  StaticResources('Room class Images',
-        format(ROOM_CLASS_IMAGES_STATIC_RESOURCE_PATTERN, [m_['Code']]),
-        ACCESS_OPEN, ResourceParameters);
+  try
+  StaticResources('Room class Images', [TResourceType.rtRoomClassImage], TResourceAccessType.ratOpen, m_['Code'], ResourceParameters);
+  finally
+    ResourceParameters.Free;
+  end;
 end;
 
 procedure TfrmRoomTypesGroups2.tvDataColumn2PropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);

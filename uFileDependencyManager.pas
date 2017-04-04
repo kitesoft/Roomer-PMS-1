@@ -71,7 +71,7 @@ uses
   , uDateUtils
   , uFrmResources
   , uAPIDataHandler
-  , uAppGlobal;
+  , uAppGlobal, uResourceTypeDefinitions;
 
 var
   gFileDependencyMgr: TFileDependencymanager;
@@ -343,12 +343,11 @@ begin
   FrmResources := TFrmResources.Create(nil);
   try
     FrmResources.keyString := ANY_FILE;
-    FrmResources.access := ACCESS_RESTRICTED;
+    FrmResources.access := TResourceAccessType.ratRestricted;
     FrmResources.ResourceParameters := nil;
-    FrmResources.PrepareUserInterface;
 
     FrmResources.RemoveFileForUpload(Filename);
-    UploadFileToResources(ANY_FILE, ACCESS_RESTRICTED, ExtractFileName(Filename), Filename);
+    UploadFileToResources(TResourceType.rtAnyFile.ToKeyString, TResourceAccessType.ratRestricted.ToString, ExtractFileName(Filename), Filename);
 
     ReadFilesFromStaticResources;
     Resource := findFile(ExtractFileName(Filename));
