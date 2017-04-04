@@ -171,13 +171,12 @@ type
   private
     { Private declarations }
 
-    zKeditInvoiceNumber : integer;
+    zCreditInvoiceNumber : integer;
     zdoRestore    : boolean;
     zEmailAddress : string;
 
     procedure refresh;
     function saveInvoice : boolean;
-    procedure HandleExceptionListFromBookKeepingSystem(invoiceNumber: integer; ErrorList: String);
   public
     { Public declarations }
     zInvoiceNumber : integer;
@@ -207,7 +206,7 @@ uses
   , uFrmHandleBookKeepingException
   , uMain
   , RoomerCloudEntities
-  , uSQLUtils;
+  , uSQLUtils, uInvoiceDefinitions;
 
 
 function MakeKreditInvoice(number : integer; var createNew : boolean) : boolean;
@@ -248,10 +247,8 @@ var
 
   procedure createInvoiceHead;
   begin
-    zKeditInvoiceNumber := IVH_SetNewID();
-
     initInvoiceHeadHolderRec(invoiceHeadData);
-    invoiceHeadData.InvoiceNumber   := zKeditInvoiceNumber;
+    invoiceHeadData.InvoiceNumber   := zCreditInvoiceNumber;
     invoiceHeadData.InvoiceDate     := _db(dtInvoicedate.date,false); //
     invoiceHeadData.ihDate          := Now;
     invoiceHeadData.ihInvoiceDate   := dtInvoicedate.date;
@@ -312,7 +309,7 @@ var
   procedure createInvoiceLines;
   begin
     initInvoiceLineHolderRec(invoiceLineData);
-    invoiceLineData.InvoiceNumber   := zKeditInvoiceNumber;
+    invoiceLineData.InvoiceNumber   := zCreditInvoiceNumber;
     invoiceLineData.SplitNumber     := 1; // Var ekki svona � fyrri
     invoiceLineData.confirmDate     := 2;
     invoiceLineData.confirmAmount   := 0.00;
@@ -384,7 +381,7 @@ var
   procedure createPayments;
   begin
     initPaymentHolderRec(paymentData);
-    PaymentData.InvoiceNumber   := zKeditInvoiceNumber;
+    PaymentData.InvoiceNumber   := zCreditInvoiceNumber;
     PaymentData.confirmDate     := 2;
     PaymentData.PayDate         := _db(dtInvoicedate.date,false);
 
@@ -399,7 +396,7 @@ var
           Person             := kbmPayments['Person'];
           AutoGen            := _GetCurrentTick;
           TypeIndex          := kbmPayments['TypeIndex'];
-          InvoiceNumber      := zKeditInvoiceNumber;
+          InvoiceNumber      := zCreditInvoiceNumber;
           PayDate            := _db(dtInvoicedate.date,false);
           Customer           := kbmPayments['Customer'];
           PayType            := kbmPayments['PayType'];
@@ -439,8 +436,12 @@ begin
   result := true;
   ExecutionPlan := d.roomerMainDataSet.CreateExecutionPlan;
   try
+    ExecutionPlan.BeginTransaction;
     try
-      ExecutionPlan.BeginTransaction;
+      zCreditInvoiceNumber := IVH_SetNewID();
+      if (zCreditInvoiceNumber < 0) or (zCreditInvoiceNumber > cMaxFinalInvoiceNr) then
+        raise Exception.CreateFmt(GetTranslatedText('shTx_Invoice_invalidInvoiceNr'), [zCreditInvoiceNumber]);
+
       //**
       createInvoiceHead;
       createInvoiceLines;
@@ -466,10 +467,6 @@ begin
   end;
 end;
 
-procedure TfrmMakeKreditInvoice.HandleExceptionListFromBookKeepingSystem(invoiceNumber: integer; ErrorList: String);
-begin
-  HandleFinanceBookKeepingExceptions(invoiceNumber, ErrorList);
-end;
 
 procedure TfrmMakeKreditInvoice.BtnOkClick(Sender: TObject);
 var
@@ -481,8 +478,6 @@ var
   Showpackage : boolean;
   EmailAddress : string;
 
-  remoteResult : string;
-
 begin
   zdoRestore      := chkCreateNew.Checked;
   OrginalInvoice  := kbmInvoiceheads['invoicenumber'];
@@ -493,8 +488,8 @@ begin
   if saveInvoice then
   begin
 
-    SendInvoicesToFinancePacket(zKeditInvoiceNumber);
-    ViewInvoice2(zKeditInvoiceNumber, true, false, true, ShowPackage, EmailAddress);
+    SendInvoicesToFinancePacket(zCreditInvoiceNumber);
+    ViewInvoice2(zCreditInvoiceNumber, true, false, true, ShowPackage, EmailAddress);
     if zdoRestore then
     begin
       SelectedInvoiceIndex := 0;
