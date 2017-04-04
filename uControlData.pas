@@ -103,9 +103,8 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinValentine,
   dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, AdvDropDown, AdvColorPickerDropDown, AdvGlowButton, AdvOfficeSelectors, AsgCombo, ColorCombo, dxGalleryControl, dxColorGallery, dxColorEdit,
   sListBox, sCheckListBox, uFraCountryPanel
-
-
-
+  , uHotelServicesSettings
+  , RegularExpressions
   ;
 
   //
@@ -693,8 +692,7 @@ type
     pnlManInfoButtons: TsPanel;
     btnMFSelectNone: TsButton;
     btnMFSelectAll: TsButton;
-    gbxReservationProfileFunctionality: TsGroupBox;
-    cbxChangeNationality: TsCheckBox;
+    gbxReservationLifeCyclemailerSettings: TsGroupBox;
     cbxShowRoomAsPaidWhenZero: TsCheckBox;
     lblShowRoomAsPaidWhenZero: TsLabel;
     lbShowIncludedBreakfastOnInvoice: TsLabel;
@@ -723,11 +721,30 @@ type
     tsBetaFunctions: TsTabSheet;
     gbxInvoiceBeta: TsGroupBox;
     cbxObjectsInvoice: TsCheckBox;
+    gbxReservationProfileFunctionality: TsGroupBox;
+    cbxChangeNationality: TsCheckBox;
+    cbxPreArrivalEnabled: TsCheckBox;
+    lblPreArrival: TsLabel;
+    cbxPostDepartureEnabled: TsCheckBox;
+    lblPostDeparture: TsLabel;
+    pnlPreArrival: TsPanel;
+    sLabel37: TsLabel;
+    sLabel38: TsLabel;
+    sLabel39: TsLabel;
+    edHoursBefore: TsSpinEdit;
+    edPreArrivalMailFromAddress: TsEdit;
+    edPreArrivalCCMailTo: TsEdit;
+    pnlPostDeparture: TsPanel;
+    sLabel41: TsLabel;
+    sLabel42: TsLabel;
+    sLabel43: TsLabel;
+    edHoursAfter: TsSpinEdit;
+    edPostDepartureMailFromAddress: TsEdit;
+    edPostDepartureCCMailTo: TsEdit;
     procedure FormCreate(Sender : TObject);
     procedure FormClose(Sender : TObject; var Action : TCloseAction);
     procedure FormShow(Sender : TObject);
     procedure okBtnClick(Sender : TObject);
-    procedure panBtnResize(Sender : TObject);
     procedure tvSelectionChange(Sender : TObject; Node : TTreeNode);
     procedure FormDestroy(Sender : TObject);
     procedure editBreakFastItemCustomButtons0Click(Sender : TObject; index : Integer);
@@ -788,6 +805,9 @@ type
     procedure tvSelectionCustomDrawItem(Sender: TCustomTreeView; Node: TTreeNode; State: TCustomDrawState;
       var DefaultDraw: Boolean);
     procedure tvSelectionChanging(Sender: TObject; Node: TTreeNode; var AllowChange: Boolean);
+    procedure cbxPreArrivalEnabledClick(Sender: TObject);
+    procedure cbxPostDepartureEnabledClick(Sender: TObject);
+    procedure checkEmailRegEx(Sender: TObject);
 
   private
     { private declarations }
@@ -795,14 +815,15 @@ type
     rControlData : TRoomerDataSet;
     rTableInc : TRoomerDataSet;
     rSetHotelConfigurations : TRoomerDataSet;
+    FHotelServicesSettings: THotelServicesSettings;
 
     financeCustomerList : TKeyPairList;
     financeLookupList : TKeyPairList;
     FUpdatingControls: boolean;
+    FEmailregEx: TRegEx;
 
     procedure LoadTable;
     procedure SaveTable;
-    procedure SetBtnPos;
     procedure updatePanColor;
     procedure ShowPanelColor;
     procedure setColorControls;
@@ -817,6 +838,9 @@ type
     { public declarations }
     gridFont : TFont;
     grid5DayFont : TFont;
+
+    constructor Create(aOwner: TComponent); override;
+    destructor Destroy; override;
   end;
 
 var
@@ -843,9 +867,13 @@ uses
   , uStaffMembers2
   , uMandatoryFieldDefinitions
   , UITYpes
+  ;
 
   , uResourceTypeDefinitions;
 {$R *.DFM}
+
+const
+  cEmailRegExPattern = '^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,6}$';
 
 procedure TfrmControlData.calcRequestInterval;
 var
@@ -888,9 +916,12 @@ begin
 end;
 
 
-procedure TfrmControlData.SetBtnPos;
+destructor TfrmControlData.Destroy;
 begin
+  FHotelServicesSettings.Free;
+  inherited;
 end;
+
 
 procedure TfrmControlData.LoadTable;
 var
@@ -1605,6 +1636,22 @@ g.ReadWriteSettingsToRegistry(0);
     cbxChangeNationality.Checked := glb.PMSSettings.ReservationProfileSettings.EditAllGuestsNationality;
     cbxShowRoomAsPaidWhenZero.Checked := glb.PMSSettings.InvoiceSettings.ShowInvoiceAsPaidWhenStatusIsZero;
 
+    cbxPreArrivalEnabled.Checked := FHotelServicesSettings.LifeCycleMailerSettings.PreArrivalMailSetttings.PreArrivalMailerEnabled;
+    edHoursBefore.Value := FHotelServicesSettings.LifeCycleMailerSettings.PreArrivalMailSetttings.HoursBefore;
+    edPreArrivalMailFromAddress.text := FHotelServicesSettings.LifeCycleMailerSettings.PreArrivalMailSetttings.MailFromAddress;
+    if edPreArrivalMailFromAddress.Text = '' then
+      edPreArrivalMailFromAddress.Text := editEmailAddress.Text;
+    edPreArrivalCCMailTo.Text := FHotelServicesSettings.LifeCycleMailerSettings.PreArrivalMailSetttings.CCMailAddress;
+    cbxPreArrivalEnabledClick(nil);
+
+    cbxPostDepartureEnabled.Checked := FHotelServicesSettings.LifeCycleMailerSettings.PostDepartureMailSettings.PostDepartureMailerEnabled;
+    edHoursAfter.Value := FHotelServicesSettings.LifeCycleMailerSettings.PostDepartureMailSettings.HoursAfter;
+    edPostDepartureMailFromAddress.Text := FHotelServicesSettings.LifeCycleMailerSettings.PostDepartureMailSettings.MailFromAddress;
+    if edPostDepartureMailFromAddress.Text = '' then
+      edPostDepartureMailFromAddress.Text := editEmailAddress.Text;
+    edPostDepartureCCMailTo.Text := FHotelServicesSettings.LifeCycleMailerSettings.PostDepartureMailSettings.CCMailAddress;
+    cbxPostDepartureEnabledClick(nil);
+
     for i := 0 to tvSelection.Items.Count-1 do
     begin
       lNode := tvSelection.Items[i];
@@ -2177,12 +2224,11 @@ begin
       rSethotelconfigurations.FieldByName('GroupInvoiceRoomRentIndex').AsInteger := g.qGroupInvoiceRoomRentIndex;
       rSethotelconfigurations.FieldByName('GroupInvoicePosItemIndex').AsInteger := g.qGroupInvoicePosItemIndex;
 
+      //TODO: Move to THotelServicesSettings
       rSethotelconfigurations.DoCommand('DELETE FROM home100.hotelservices WHERE hotelId=SUBSTR(DATABASE(), 9, 10) AND service=''RSS_CURR'' AND active=1');
       if __CurrencySyncSource.ItemIndex > 0 then
         rSethotelconfigurations.DoCommand('INSERT INTO home100.hotelservices (active, hotelId, service, extraInfo, externalId, serviceType, priority) VALUES(1, SUBSTR(DATABASE(), 9, 10), ''RSS_CURR'', '''', 0, ''' +
                                           __CurrencySyncSource.Items[__CurrencySyncSource.ItemIndex] + ''', 999)');
-
-
 
       iTmp := edexpensiveChannelsLevelFrom.value;
       rSethotelconfigurations.FieldByName('expensiveChannelsLevelFrom').asFloat := iTmp;
@@ -2258,6 +2304,21 @@ begin
       glb.PMSSettings.BetaFunctionality.UseInvoiceOnObjectsForm := cbxObjectsInvoice.Checked;
     end;
 
+    FHotelServicesSettings.LifeCycleMailerSettings.PreArrivalMailSetttings.PreArrivalMailerEnabled := cbxPreArrivalEnabled.Checked;
+    if cbxPreArrivalEnabled.Checked then
+    begin
+      FHotelServicesSettings.LifeCycleMailerSettings.PreArrivalMailSetttings.HoursBefore := edHoursBefore.Value;
+      FHotelServicesSettings.LifeCycleMailerSettings.PreArrivalMailSetttings.MailFromAddress := edPreArrivalMailFromAddress.Text;
+      FHotelServicesSettings.LifeCycleMailerSettings.PreArrivalMailSetttings.CCMailAddress := edPreArrivalCCMailTo.Text;
+    end;
+
+    FHotelServicesSettings.LifeCycleMailerSettings.PostDepartureMailSettings.PostDepartureMailerEnabled := cbxPostDepartureEnabled.Checked;
+    if cbxPostDepartureEnabled.Checked then
+    begin
+      FHotelServicesSettings.LifeCycleMailerSettings.PostDepartureMailSettings.HoursAfter := edHoursAfter.Value;
+      FHotelServicesSettings.LifeCycleMailerSettings.PostDepartureMailSettings.MailFromAddress := edPostDepartureMailFromAddress.Text;
+      FHotelServicesSettings.LifeCycleMailerSettings.PostDepartureMailSettings.CCMailAddress := edPostDepartureCCMailTo.Text;
+    end;
 
     g.ReadWriteSettingsToRegistry(1);
   except
@@ -2589,11 +2650,6 @@ begin
   d.save_StatusAttr_tmp2;
   d.save_StatusAttr_WaitinglistNonOptional;
 
-end;
-
-procedure TfrmControlData.panBtnResize(Sender : TObject);
-begin
-  SetBtnPos;
 end;
 
 procedure TfrmControlData.panGuestStayingClick(Sender: TObject);
@@ -3440,6 +3496,14 @@ begin
   getCurrency(edNativeCurrency, labNativeCurrency);
 end;
 
+procedure TfrmControlData.checkEmailRegEx(Sender: TObject);
+begin
+   if FEmailregEx.IsMatch(TEdit(Sender).text) then
+    TEdit(Sender).Font.Color := frmMain.sSkinManager1.GetGlobalFontColor
+   else
+    TEdit(Sender).Font.Color := clRed;
+end;
+
 procedure TfrmControlData.edRackCustomerChange(Sender: TObject);
 begin
   if not FUpdatingControls then
@@ -3591,6 +3655,16 @@ begin
   ShowPanelColor;
 end;
 
+
+procedure TfrmControlData.cbxPostDepartureEnabledClick(Sender: TObject);
+begin
+  pnlPostDeparture.Enabled := cbxPostDepartureEnabled.Checked;
+end;
+
+procedure TfrmControlData.cbxPreArrivalEnabledClick(Sender: TObject);
+begin
+  pnlPreArrival.Enabled := cbxPreArrivalEnabled.Checked;
+end;
 
 procedure TfrmControlData.cbxStatusAttr_CloseUp(Sender: TObject);
 begin
@@ -3786,6 +3860,13 @@ end;
 procedure TfrmControlData.chkUnderlinePropertiesEditValueChanged(Sender : TObject);
 begin
   ShowPanelColor;
+end;
+
+constructor TfrmControlData.Create(aOwner: TComponent);
+begin
+  inherited;
+  FHotelServicesSettings := THotelServicesSettings.Create;
+  FEmailRegEx := TRegEx.Create(cEmailRegExPattern);
 end;
 
 procedure TfrmControlData.updatePanColor;

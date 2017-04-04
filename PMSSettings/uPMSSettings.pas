@@ -129,8 +129,8 @@ type
   /// </summary>
   TPMSSettings = class
   private
-    FInvoiceSettings: TPMSSettingsInvoice;
     FPMSSettingsAccessor: TPMSSettingsAccessor;
+    FInvoiceSettings: TPMSSettingsInvoice;
     FMasterRatesSettings: TPMSSettingsRatesAvailabilities;
     FReservationProfileSettngs: TPMSSettingsReservationProfile;
     FBetaFunctionality: TPMSSettingsBetaFunctionality;
@@ -166,10 +166,12 @@ uses
 constructor TPmsSettings.Create(aPMSDataset: TRoomerDataset);
 begin
   FPMSSettingsAccessor := TPMSSettingsAccessor.Create(aPMSDataset);
+
   FInvoiceSettings := TPMSSettingsInvoice.Create(FPMSSettingsAccessor);
   FMasterRatesSettings := TPMSSettingsRatesAvailabilities.Create(FPMSSettingsAccessor);
   FReservationProfileSettngs := TPMSSettingsReservationProfile.Create(FPMSSettingsAccessor);
   FBetaFunctionality := TPMSSettingsBetaFunctionality.Create(FPMSSettingsAccessor);
+
 end;
 
 destructor TPmsSettings.Destroy;

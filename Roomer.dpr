@@ -275,7 +275,8 @@ uses
   uConfigurationItemsAPICaller in 'OpenAPI\uConfigurationItemsAPICaller.pas',
   uRoomerIDList in 'RoomerVCLs\Source\uRoomerIDList.pas',
   uEditFinanceExportProperties in 'uEditFinanceExportProperties.pas' {frmEditFinanceExportProperties},
-  uResourceTypeDefinitions in 'Resources\uResourceTypeDefinitions.pas';
+  uResourceTypeDefinitions in 'Resources\uResourceTypeDefinitions.pas',
+  uHotelServicesSettings in 'PMSSettings\uHotelServicesSettings.pas';
 
 {$R *.RES}
 
