@@ -342,6 +342,7 @@ begin
   constants.Add('shContinue', 'Continue ?');
   constants.Add('shNewValueExistInAnotherRecor', 'New value exist in another record. Use [ESC] to cancel');
   constants.Add('shOldValueUsedInRelatedDataC', ' Old value used in related data can not change - Use [ESC] to cancel');
+  constants.Add('shCustomer_CannotDeleteRackCustomer', 'Default customer cannot be deleted');
 end;
 
 procedure AddConstants_1;

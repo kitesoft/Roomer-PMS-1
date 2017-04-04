@@ -779,6 +779,14 @@ begin
     exit;
   end;
 
+  if glb.ControlSet.FieldByName('RackCustomer').asString = zData.Customer then
+  begin
+    Showmessage(GetTranslatedtext('shCustomer_CannotDeleteRackCustomer'));
+    Abort;
+    Exit;
+  end;
+
+
   s := '';
   s := s+GetTranslatedText('shDeleteCustomer')+' '+zData.surName+' '+chr(10);
   s := s+GetTranslatedText('shContinue');
