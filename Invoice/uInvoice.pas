@@ -675,7 +675,7 @@ uses
   UITypes
   , uFloatUtils
   , Math
-    , uVatCalculator, uSQLUtils, ufrmRoomPrices;
+    , uVatCalculator, uSQLUtils, ufrmRoomPrices, uInvoiceDefinitions;
 
 {$R *.DFM}
 
@@ -5325,6 +5325,10 @@ begin
       end;
 
       zInvoiceNumber := IVH_SetNewID();
+
+      if (zInvoiceNumber < 0) or (zInvoiceNumber > cMaxFinalInvoiceNr) then
+        raise Exception.CreateFmt(GetTranslatedText('shTx_Invoice_invalidInvoiceNr'), [zInvoiceNumber]);
+
       okSavePayment := false;
       okSaveInvoice := false;
       AllOk := True;
@@ -7937,8 +7941,8 @@ begin
   else
     result := strToInt(GetMinutesSinceMidnightAsString + '000000') +
       FReservation;
-  if result < 1000000000 then
-    result := 1000000000 + result;
+  if result < cMaxFinalInvoiceNr then
+    result := cMaxFinalInvoiceNr + 1 + result;
 end;
 
 procedure TfrmInvoice.RemoveCurrentProformeInvoice(ProformaInvoiceNumber: integer);
@@ -7959,8 +7963,8 @@ var
 begin
   showPackage := chkShowPackage.checked;
 
+  PROFORMA_INVOICE_NUMBER := CreateProformaID;
   try
-    PROFORMA_INVOICE_NUMBER := CreateProformaID;
     SaveProforma(PROFORMA_INVOICE_NUMBER);
     ViewInvoice2(PROFORMA_INVOICE_NUMBER, True, false, false, showPackage, zEmailAddress);
   finally

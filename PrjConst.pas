@@ -794,7 +794,8 @@ begin
                                              'After compressing the lines, you will need to manage the prices' + #13 +
                                              'and all related issues manually without the system interfering.' + #13#13 +
                                              'Please confirm by clicking [Yes] or [Cancel] the process.');
-											 
+  constants.Add('shTx_Invoice_invalidInvoiceNr', 'Invalid invoicenumber [%d]. Printing invoice is cancelled.');
+
  (* constants.Add('shTx_InvoiceList2_BookingNumber', 'Númer bókunnar er tala');
   constants.Add('shTx_InvoiceList2_CashAccount', 'Þetta er staðgreiðslureikningur');
   constants.Add('shTx_InvoiceList2_GroupInvoice', 'Þetta er hópreikningur');
