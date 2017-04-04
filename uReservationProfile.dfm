@@ -566,10 +566,6 @@ object frmReservationProfile: TfrmReservationProfile
     object TabSheet3: TsTabSheet
       Caption = 'Main'
       TabVisible = False
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Panel3: TsPanel
         Left = 0
         Top = 0
@@ -620,10 +616,6 @@ object frmReservationProfile: TfrmReservationProfile
             SkinData.SkinSection = 'PAGECONTROL'
             object tsContact: TsTabSheet
               Caption = 'Contact'
-              ExplicitLeft = 0
-              ExplicitTop = 0
-              ExplicitWidth = 0
-              ExplicitHeight = 0
               object lblContactName: TsLabel
                 Left = 32
                 Top = 5
@@ -736,7 +728,6 @@ object frmReservationProfile: TfrmReservationProfile
                 BoundLabel.Font.Height = -13
                 BoundLabel.Font.Name = 'Tahoma'
                 BoundLabel.Font.Style = []
-                ExplicitWidth = 0
               end
               object edtContactAddress2: TsEdit
                 AlignWithMargins = True
@@ -763,7 +754,6 @@ object frmReservationProfile: TfrmReservationProfile
                 BoundLabel.Font.Height = -13
                 BoundLabel.Font.Name = 'Tahoma'
                 BoundLabel.Font.Style = []
-                ExplicitWidth = 0
               end
               object edtContactAddress3: TsEdit
                 AlignWithMargins = True
@@ -790,7 +780,6 @@ object frmReservationProfile: TfrmReservationProfile
                 BoundLabel.Font.Height = -13
                 BoundLabel.Font.Name = 'Tahoma'
                 BoundLabel.Font.Style = []
-                ExplicitWidth = 0
               end
               object edtContactAddress4: TsEdit
                 AlignWithMargins = True
@@ -817,7 +806,6 @@ object frmReservationProfile: TfrmReservationProfile
                 BoundLabel.Font.Height = -13
                 BoundLabel.Font.Name = 'Tahoma'
                 BoundLabel.Font.Style = []
-                ExplicitWidth = 0
               end
               object edtContactEmail: TsEdit
                 AlignWithMargins = True
@@ -844,7 +832,6 @@ object frmReservationProfile: TfrmReservationProfile
                 BoundLabel.Font.Height = -13
                 BoundLabel.Font.Name = 'Tahoma'
                 BoundLabel.Font.Style = []
-                ExplicitWidth = 0
               end
               object edtContactName: TsEdit
                 AlignWithMargins = True
@@ -871,7 +858,6 @@ object frmReservationProfile: TfrmReservationProfile
                 BoundLabel.Font.Height = -13
                 BoundLabel.Font.Name = 'Tahoma'
                 BoundLabel.Font.Style = []
-                ExplicitWidth = 0
               end
               object pnlTelephone: TsPanel
                 AlignWithMargins = True
@@ -966,7 +952,7 @@ object frmReservationProfile: TfrmReservationProfile
                   ExplicitWidth = 175
                   inherited lblCountryName: TsLabel
                     Width = 3
-                    Height = 11
+                    Height = 14
                     Font.Height = -9
                     ExplicitWidth = 3
                     ExplicitHeight = 11
@@ -976,10 +962,6 @@ object frmReservationProfile: TfrmReservationProfile
             end
             object TabSheet4: TsTabSheet
               Caption = 'Customer'
-              ExplicitLeft = 0
-              ExplicitTop = 0
-              ExplicitWidth = 0
-              ExplicitHeight = 0
               object Label19: TsLabel
                 Left = 12
                 Top = 32
@@ -1272,10 +1254,6 @@ object frmReservationProfile: TfrmReservationProfile
             object TabSheet5: TsTabSheet
               Caption = 'Customer Tel / Email'
               ImageIndex = 1
-              ExplicitLeft = 0
-              ExplicitTop = 0
-              ExplicitWidth = 0
-              ExplicitHeight = 0
               object Label11: TsLabel
                 Left = 45
                 Top = 29
@@ -1757,7 +1735,7 @@ object frmReservationProfile: TfrmReservationProfile
                 ExplicitWidth = 159
                 inherited lblCountryName: TsLabel
                   Width = 3
-                  Height = 11
+                  Height = 14
                   Font.Height = -9
                   ExplicitWidth = 3
                   ExplicitHeight = 11
@@ -1787,7 +1765,7 @@ object frmReservationProfile: TfrmReservationProfile
                 ExplicitWidth = 159
                 inherited lblCountryName: TsLabel
                   Width = 3
-                  Height = 11
+                  Height = 14
                   Font.Height = -9
                   ExplicitWidth = 3
                   ExplicitHeight = 11
@@ -2022,10 +2000,6 @@ object frmReservationProfile: TfrmReservationProfile
     SkinData.SkinSection = 'PAGECONTROL'
     object RoomsTab: TsTabSheet
       Caption = 'Rooms'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object grRooms: TcxGrid
         Left = 0
         Top = 86
@@ -2042,6 +2016,7 @@ object frmReservationProfile: TfrmReservationProfile
         PopupMenu = mnuGrid
         TabOrder = 0
         LookAndFeel.NativeStyle = False
+        ExplicitTop = 84
         object tvRooms: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           Navigator.Buttons.First.Visible = True
@@ -2773,12 +2748,10 @@ object frmReservationProfile: TfrmReservationProfile
           Top = 4
           Width = 100
           Height = 40
+          Action = acPrices
           Align = alLeft
-          Caption = 'Prices'
-          ImageIndex = 88
           Images = DImages.PngImageList1
           TabOrder = 0
-          OnClick = btnShowPricesClick
           SkinData.SkinSection = 'BUTTON'
         end
         object btnShowInvoice: TsButton
@@ -2803,13 +2776,12 @@ object frmReservationProfile: TfrmReservationProfile
           Top = 4
           Width = 100
           Height = 40
+          Action = acAddRoom
           Align = alLeft
-          Caption = 'Add Room'
-          ImageIndex = 23
           Images = DImages.PngImageList1
           TabOrder = 2
-          OnClick = btnAddRoomClick
           SkinData.SkinSection = 'BUTTON'
+          ExplicitTop = 2
         end
         object btnRemoveRoom: TsButton
           AlignWithMargins = True
@@ -2817,12 +2789,10 @@ object frmReservationProfile: TfrmReservationProfile
           Top = 4
           Width = 100
           Height = 40
+          Action = acRemoveRoom
           Align = alLeft
-          Caption = 'Remove Room'
-          ImageIndex = 43
           Images = DImages.PngImageList1
           TabOrder = 3
-          OnClick = btnRemoveRoomClick
           SkinData.SkinSection = 'BUTTON'
         end
         object btnProvideRoom: TsButton
@@ -2831,12 +2801,10 @@ object frmReservationProfile: TfrmReservationProfile
           Top = 4
           Width = 100
           Height = 40
+          Action = acProvideRoom
           Align = alLeft
-          Caption = 'Provide room'
-          ImageIndex = 47
           Images = DImages.PngImageList1
           TabOrder = 4
-          OnClick = btnProvideRoomClick
           SkinData.SkinSection = 'BUTTON'
         end
         object cxButton5: TsButton
@@ -2845,12 +2813,10 @@ object frmReservationProfile: TfrmReservationProfile
           Top = 4
           Width = 100
           Height = 40
+          Action = acRoomDocuments
           Align = alLeft
-          Caption = 'Room'#13#10' Documents'
-          ImageIndex = 21
           Images = DImages.PngImageList1
           TabOrder = 5
-          OnClick = cxButton5Click
           SkinData.SkinSection = 'BUTTON'
         end
         object cxButton6: TsButton
@@ -2859,12 +2825,10 @@ object frmReservationProfile: TfrmReservationProfile
           Top = 4
           Width = 100
           Height = 40
+          Action = acJumpToRoom
           Align = alLeft
-          Caption = 'Jump'
-          ImageIndex = 57
           Images = DImages.PngImageList1
           TabOrder = 6
-          OnClick = cxButton6Click
           SkinData.SkinSection = 'BUTTON'
         end
         object btnRoomsRefresh: TsButton
@@ -2873,13 +2837,12 @@ object frmReservationProfile: TfrmReservationProfile
           Top = 4
           Width = 100
           Height = 40
+          Action = acRefresh
           Align = alLeft
-          Caption = 'Refresh'
-          ImageIndex = 28
           Images = DImages.PngImageList1
           TabOrder = 7
-          OnClick = btnRoomsRefreshClick
           SkinData.SkinSection = 'BUTTON'
+          ExplicitTop = 2
         end
         object sButton5: TsButton
           AlignWithMargins = True
@@ -2887,12 +2850,10 @@ object frmReservationProfile: TfrmReservationProfile
           Top = 4
           Width = 100
           Height = 40
+          Action = acGuestDetails
           Align = alLeft
-          Caption = 'Guest details'
-          ImageIndex = 44
           Images = DImages.PngImageList1
           TabOrder = 8
-          OnClick = sButton5Click
           SkinData.SkinSection = 'BUTTON'
         end
         object btnGroups: TsButton
@@ -2901,10 +2862,10 @@ object frmReservationProfile: TfrmReservationProfile
           Top = 4
           Width = 97
           Height = 40
+          Action = acGroupGuestNames
           Align = alLeft
-          Caption = 'Group guest names'
+          Images = DImages.PngImageList1
           TabOrder = 9
-          OnClick = btnGroupsClick
           SkinData.SkinSection = 'BUTTON'
         end
       end
@@ -2929,10 +2890,6 @@ object frmReservationProfile: TfrmReservationProfile
     object GuestsTab: TsTabSheet
       Caption = 'Guests'
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Panel10: TsPanel
         Left = 0
         Top = 0
@@ -2993,8 +2950,8 @@ object frmReservationProfile: TfrmReservationProfile
         object chkShowAllGuests: TsCheckBox
           Left = 333
           Top = 11
-          Width = 99
-          Height = 17
+          Width = 94
+          Height = 20
           Caption = 'Show all guests'
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 4
@@ -3417,18 +3374,20 @@ object frmReservationProfile: TfrmReservationProfile
           object lblSpecialRequests: TsLabel
             Left = 2
             Top = 15
-            Width = 81
+            Width = 250
             Height = 13
             Align = alTop
             Caption = 'Special Requests'
+            ExplicitWidth = 81
           end
           object lblNotes: TsLabel
             Left = 2
             Top = 101
-            Width = 28
+            Width = 250
             Height = 13
             Align = alTop
             Caption = 'Notes'
+            ExplicitWidth = 28
           end
           object edtSpecialRequests: TMemo
             AlignWithMargins = True
@@ -3533,10 +3492,6 @@ object frmReservationProfile: TfrmReservationProfile
     end
     object sTabSheet2: TsTabSheet
       Caption = 'Alerts'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object pnlAlertHolder: TsPanel
         Left = 0
         Top = 0
@@ -3551,10 +3506,6 @@ object frmReservationProfile: TfrmReservationProfile
     object InvoicesTab: TsTabSheet
       Caption = 'Afgehandelde facturen'
       ImageIndex = 2
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Panel11: TsPanel
         Left = 0
         Top = 0
@@ -4747,35 +4698,28 @@ object frmReservationProfile: TfrmReservationProfile
     end
   end
   object mnuGrid: TPopupMenu
-    Left = 864
+    Left = 848
     Top = 536
     object R1: TMenuItem
-      Caption = 'Remove Room'
-      OnClick = btnRemoveRoomClick
+      Action = acRemoveRoom
     end
     object G1: TMenuItem
-      Caption = 'Guest details'
-      OnClick = sButton5Click
+      Action = acGuestDetails
     end
     object P1: TMenuItem
-      Caption = 'Provide room number'
-      OnClick = btnProvideRoomClick
+      Action = acProvideRoom
     end
     object J1: TMenuItem
-      Caption = 'Jump'
-      OnClick = cxButton6Click
+      Action = acJumpToRoom
     end
     object R2: TMenuItem
-      Caption = 'Room documents'
-      OnClick = cxButton5Click
+      Action = acRoomDocuments
     end
     object I1: TMenuItem
-      Caption = 'Prices'
-      OnClick = btnShowPricesClick
+      Action = acPrices
     end
     object G2: TMenuItem
-      Caption = 'Group - guest names'
-      OnClick = btnGroupsClick
+      Action = acGroupGuestNames
     end
     object R4: TMenuItem
       Caption = 'Re-activate room charges'
@@ -4785,8 +4729,64 @@ object frmReservationProfile: TfrmReservationProfile
       Caption = '-'
     end
     object R3: TMenuItem
+      Action = acRefresh
+    end
+  end
+  object alRoomReservation: TActionList
+    Images = DImages.PngImageList1
+    Left = 920
+    Top = 536
+    object acRemoveRoom: TAction
+      Caption = 'Remove Room'
+      ImageIndex = 43
+      OnExecute = btnRemoveRoomClick
+      OnUpdate = acRemoveRoomUpdate
+    end
+    object acGuestDetails: TAction
+      Caption = 'Guest details'
+      ImageIndex = 44
+      OnExecute = acGuestDetailsClick
+      OnUpdate = acRoomResActionUpdate
+    end
+    object acProvideRoom: TAction
+      Caption = 'Provide Room'
+      ImageIndex = 47
+      OnExecute = btnProvideRoomClick
+      OnUpdate = acRoomResActionUpdate
+    end
+    object acJumpToRoom: TAction
+      Caption = 'Jump'
+      ImageIndex = 57
+      OnExecute = acJumpToRoomClick
+      OnUpdate = acRoomResActionUpdate
+    end
+    object acRoomDocuments: TAction
+      Caption = 'Files'
+      ImageIndex = 21
+      OnExecute = acRoomDocumentsClick
+      OnUpdate = acRoomResActionUpdate
+    end
+    object acPrices: TAction
+      Caption = 'Prices'
+      ImageIndex = 88
+      OnExecute = btnShowPricesClick
+      OnUpdate = acRoomResActionUpdate
+    end
+    object acGroupGuestNames: TAction
+      Caption = 'Group - guest names'
+      ImageIndex = 39
+      OnExecute = btnGroupsClick
+      OnUpdate = acRoomResActionUpdate
+    end
+    object acRefresh: TAction
       Caption = 'Refresh'
-      OnClick = btnRoomsRefreshClick
+      ImageIndex = 28
+      OnExecute = btnRoomsRefreshClick
+    end
+    object acAddRoom: TAction
+      Caption = 'Add Room'
+      ImageIndex = 23
+      OnExecute = btnAddRoomClick
     end
   end
 end

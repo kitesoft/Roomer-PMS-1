@@ -593,6 +593,16 @@ type
     mRoomsInvoiceIndex: TIntegerField;
     sLabel4: TsLabel;
     edtBookingId: TsEdit;
+    alRoomReservation: TActionList;
+    acRemoveRoom: TAction;
+    acGuestDetails: TAction;
+    acProvideRoom: TAction;
+    acJumpToRoom: TAction;
+    acRoomDocuments: TAction;
+    acPrices: TAction;
+    acGroupGuestNames: TAction;
+    acRefresh: TAction;
+    acAddRoom: TAction;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -651,8 +661,8 @@ type
     procedure cxButton3Click(Sender: TObject);
     procedure FormResize(Sender: TObject);
     procedure tvRoomsDocumentsPropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
-    procedure cxButton5Click(Sender: TObject);
-    procedure cxButton6Click(Sender: TObject);
+    procedure acRoomDocumentsClick(Sender: TObject);
+    procedure acJumpToRoomClick(Sender: TObject);
     procedure tvGetNativeCurrentProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
       var AProperties: TcxCustomEditProperties);
     procedure tvInvoiceHeadsAmountNoTaxGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
@@ -671,7 +681,7 @@ type
     procedure tvRoomsPackagePropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
     procedure tvRoomsblockMovePropertiesChange(Sender: TObject);
     procedure tvRoomsPersonsProfilesIdPropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
-    procedure sButton5Click(Sender: TObject);
+    procedure acGuestDetailsClick(Sender: TObject);
     procedure btnGroupsClick(Sender: TObject);
     procedure tvRoomsratePlanCodePropertiesCloseUp(Sender: TObject);
     procedure DropComboTarget1Drop(Sender: TObject; ShiftState: TShiftState; APoint: TPoint; var Effect: Integer);
@@ -721,6 +731,8 @@ type
     procedure acChangeRoomTypeUpdate(Sender: TObject);
     procedure btnChangeNationalitiesAllGuestsClick(Sender: TObject);
     procedure btnChangeCountryAllGuestsClick(Sender: TObject);
+    procedure acRemoveRoomUpdate(Sender: TObject);
+    procedure acRoomResActionUpdate(Sender: TObject);
   private
     { Private declarations }
     vStartName: string;
@@ -1211,7 +1223,7 @@ begin
   end;
 end;
 
-procedure TfrmReservationProfile.sButton5Click(Sender: TObject);
+procedure TfrmReservationProfile.acGuestDetailsClick(Sender: TObject);
 var
   rSet: TRoomerDataSet;
 begin
@@ -1230,6 +1242,11 @@ begin
       FreeAndNil(rSet);
     end;
   end;
+end;
+
+procedure TfrmReservationProfile.acRoomResActionUpdate(Sender: TObject);
+begin
+  TAction(Sender).Enabled := mRooms.Active and (mRooms.RecordCount > 0);
 end;
 
 procedure TfrmReservationProfile.btnGroupsClick(Sender: TObject);
@@ -1701,12 +1718,12 @@ begin
   BringToFront;
 end;
 
-procedure TfrmReservationProfile.cxButton5Click(Sender: TObject);
+procedure TfrmReservationProfile.acRoomDocumentsClick(Sender: TObject);
 begin
   tvRoomsDocumentsPropertiesButtonClick(Sender, 0);
 end;
 
-procedure TfrmReservationProfile.cxButton6Click(Sender: TObject);
+procedure TfrmReservationProfile.acJumpToRoomClick(Sender: TObject);
 begin
   Hide;
   frmMain.GoToDateAndRoom(mRoomsArrival.AsDateTime, mRoomsRoomReservation.asInteger);
@@ -1799,6 +1816,11 @@ begin
     id := d.hiddenInfo_Exists(zReservation, 1);
     d.hiddenInfo_Append(id, selection, zReservation);
   end;
+end;
+
+procedure TfrmReservationProfile.acRemoveRoomUpdate(Sender: TObject);
+begin
+  acRemoveRoom.Enabled := mRooms.Active and (mRooms.RecordCount > 1);
 end;
 
 procedure TfrmReservationProfile.acShowDocumentsExecute(Sender: TObject);
