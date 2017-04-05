@@ -3,7 +3,7 @@ object frmReservationProfile: TfrmReservationProfile
   Top = 201
   Caption = 'Reservation profile'
   ClientHeight = 662
-  ClientWidth = 1136
+  ClientWidth = 1144
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -24,7 +24,7 @@ object frmReservationProfile: TfrmReservationProfile
   object pnlTopButtons: TsPanel
     Left = 0
     Top = 0
-    Width = 1136
+    Width = 1144
     Height = 48
     Align = alTop
     TabOrder = 5
@@ -131,7 +131,7 @@ object frmReservationProfile: TfrmReservationProfile
   object Panel2: TsPanel
     Left = 0
     Top = 48
-    Width = 1136
+    Width = 1144
     Height = 110
     Align = alTop
     BevelOuter = bvSpace
@@ -203,7 +203,7 @@ object frmReservationProfile: TfrmReservationProfile
         Color = clWhite
         EditMask = '!99/99/9999;1; '
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = 4473924
+        Font.Color = clBlack
         Font.Height = -9
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -229,7 +229,7 @@ object frmReservationProfile: TfrmReservationProfile
         Color = clWhite
         EditMask = '!99/99/9999;1; '
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = 4473924
+        Font.Color = clBlack
         Font.Height = -9
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -284,7 +284,7 @@ object frmReservationProfile: TfrmReservationProfile
         Style = csDropDownList
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = 4473924
+        Font.Color = clBlack
         Font.Height = -9
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -343,7 +343,7 @@ object frmReservationProfile: TfrmReservationProfile
           Color = clWhite
           Constraints.MaxWidth = 104
           Font.Charset = ANSI_CHARSET
-          Font.Color = 4473924
+          Font.Color = clBlack
           Font.Height = -9
           Font.Name = 'Arial'
           Font.Style = []
@@ -439,7 +439,7 @@ object frmReservationProfile: TfrmReservationProfile
         Style = csDropDownList
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = 4473924
+        Font.Color = clBlack
         Font.Height = -9
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -468,7 +468,7 @@ object frmReservationProfile: TfrmReservationProfile
         Style = csDropDownList
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = 4473924
+        Font.Color = clBlack
         Font.Height = -9
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -486,7 +486,7 @@ object frmReservationProfile: TfrmReservationProfile
       AlignWithMargins = True
       Left = 842
       Top = 4
-      Width = 290
+      Width = 298
       Height = 102
       Margins.Left = 5
       Align = alClient
@@ -527,7 +527,7 @@ object frmReservationProfile: TfrmReservationProfile
         Height = 19
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = 4473924
+        Font.Color = clBlack
         Font.Height = -9
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -543,7 +543,7 @@ object frmReservationProfile: TfrmReservationProfile
         Height = 19
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = 4473924
+        Font.Color = clBlack
         Font.Height = -9
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -557,7 +557,7 @@ object frmReservationProfile: TfrmReservationProfile
   object PageControl2: TsPageControl
     Left = 0
     Top = 158
-    Width = 1136
+    Width = 1144
     Height = 216
     ActivePage = TabSheet3
     Align = alTop
@@ -569,7 +569,7 @@ object frmReservationProfile: TfrmReservationProfile
       object Panel3: TsPanel
         Left = 0
         Top = 0
-        Width = 1128
+        Width = 1136
         Height = 206
         Align = alClient
         TabOrder = 0
@@ -715,7 +715,7 @@ object frmReservationProfile: TfrmReservationProfile
                 Align = alTop
                 Color = clWhite
                 Font.Charset = ANSI_CHARSET
-                Font.Color = 4473924
+                Font.Color = clBlack
                 Font.Height = -9
                 Font.Name = 'Arial'
                 Font.Style = []
@@ -741,7 +741,7 @@ object frmReservationProfile: TfrmReservationProfile
                 Align = alTop
                 Color = clWhite
                 Font.Charset = ANSI_CHARSET
-                Font.Color = 4473924
+                Font.Color = clBlack
                 Font.Height = -9
                 Font.Name = 'Arial'
                 Font.Style = []
@@ -767,7 +767,7 @@ object frmReservationProfile: TfrmReservationProfile
                 Align = alTop
                 Color = clWhite
                 Font.Charset = ANSI_CHARSET
-                Font.Color = 4473924
+                Font.Color = clBlack
                 Font.Height = -9
                 Font.Name = 'Arial'
                 Font.Style = []
@@ -793,7 +793,7 @@ object frmReservationProfile: TfrmReservationProfile
                 Align = alTop
                 Color = clWhite
                 Font.Charset = ANSI_CHARSET
-                Font.Color = 4473924
+                Font.Color = clBlack
                 Font.Height = -9
                 Font.Name = 'Arial'
                 Font.Style = []
@@ -819,7 +819,7 @@ object frmReservationProfile: TfrmReservationProfile
                 Align = alTop
                 Color = clWhite
                 Font.Charset = DEFAULT_CHARSET
-                Font.Color = 4473924
+                Font.Color = clBlack
                 Font.Height = -9
                 Font.Name = 'Tahoma'
                 Font.Style = []
@@ -845,7 +845,7 @@ object frmReservationProfile: TfrmReservationProfile
                 Align = alTop
                 Color = clWhite
                 Font.Charset = DEFAULT_CHARSET
-                Font.Color = 4473924
+                Font.Color = clBlack
                 Font.Height = -9
                 Font.Name = 'Tahoma'
                 Font.Style = []
@@ -1034,7 +1034,7 @@ object frmReservationProfile: TfrmReservationProfile
                 Align = alTop
                 Color = clWhite
                 Font.Charset = ANSI_CHARSET
-                Font.Color = 4473924
+                Font.Color = clBlack
                 Font.Height = -9
                 Font.Name = 'Arial'
                 Font.Style = []
@@ -1060,7 +1060,7 @@ object frmReservationProfile: TfrmReservationProfile
                 Align = alTop
                 Color = clWhite
                 Font.Charset = ANSI_CHARSET
-                Font.Color = 4473924
+                Font.Color = clBlack
                 Font.Height = -9
                 Font.Name = 'Arial'
                 Font.Style = []
@@ -1086,7 +1086,7 @@ object frmReservationProfile: TfrmReservationProfile
                 Align = alTop
                 Color = clWhite
                 Font.Charset = ANSI_CHARSET
-                Font.Color = 4473924
+                Font.Color = clBlack
                 Font.Height = -9
                 Font.Name = 'Arial'
                 Font.Style = []
@@ -1112,7 +1112,7 @@ object frmReservationProfile: TfrmReservationProfile
                 Align = alTop
                 Color = clWhite
                 Font.Charset = ANSI_CHARSET
-                Font.Color = 4473924
+                Font.Color = clBlack
                 Font.Height = -9
                 Font.Name = 'Arial'
                 Font.Style = []
@@ -1138,7 +1138,7 @@ object frmReservationProfile: TfrmReservationProfile
                 Align = alTop
                 Color = clWhite
                 Font.Charset = ANSI_CHARSET
-                Font.Color = 4473924
+                Font.Color = clBlack
                 Font.Height = -9
                 Font.Name = 'Arial'
                 Font.Style = []
@@ -1164,7 +1164,7 @@ object frmReservationProfile: TfrmReservationProfile
                 Align = alTop
                 Color = clWhite
                 Font.Charset = ANSI_CHARSET
-                Font.Color = 4473924
+                Font.Color = clBlack
                 Font.Height = -9
                 Font.Name = 'Arial'
                 Font.Style = []
@@ -1223,7 +1223,7 @@ object frmReservationProfile: TfrmReservationProfile
                   Align = alTop
                   Color = clWhite
                   Font.Charset = ANSI_CHARSET
-                  Font.Color = 4473924
+                  Font.Color = clBlack
                   Font.Height = -9
                   Font.Name = 'Arial'
                   Font.Style = []
@@ -1538,7 +1538,7 @@ object frmReservationProfile: TfrmReservationProfile
               Align = alTop
               Color = clWhite
               Font.Charset = ANSI_CHARSET
-              Font.Color = 4473924
+              Font.Color = clBlack
               Font.Height = -9
               Font.Name = 'Arial'
               Font.Style = []
@@ -1565,7 +1565,7 @@ object frmReservationProfile: TfrmReservationProfile
               Align = alTop
               Color = clWhite
               Font.Charset = ANSI_CHARSET
-              Font.Color = 4473924
+              Font.Color = clBlack
               Font.Height = -9
               Font.Name = 'Arial'
               Font.Style = []
@@ -1592,7 +1592,7 @@ object frmReservationProfile: TfrmReservationProfile
               Align = alTop
               Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = 4473924
+              Font.Color = clBlack
               Font.Height = -9
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -1673,7 +1673,7 @@ object frmReservationProfile: TfrmReservationProfile
                 Margins.Bottom = 0
                 Color = clWhite
                 Font.Charset = ANSI_CHARSET
-                Font.Color = 4473924
+                Font.Color = clBlack
                 Font.Height = -9
                 Font.Name = 'Arial'
                 Font.Style = []
@@ -1699,7 +1699,7 @@ object frmReservationProfile: TfrmReservationProfile
                 Margins.Bottom = 0
                 Color = clWhite
                 Font.Charset = ANSI_CHARSET
-                Font.Color = 4473924
+                Font.Color = clBlack
                 Font.Height = -9
                 Font.Name = 'Arial'
                 Font.Style = []
@@ -1803,7 +1803,7 @@ object frmReservationProfile: TfrmReservationProfile
         object memPanel: TsPanel
           Left = 507
           Top = 1
-          Width = 620
+          Width = 628
           Height = 204
           Margins.Left = 0
           Margins.Top = 0
@@ -1862,7 +1862,7 @@ object frmReservationProfile: TfrmReservationProfile
               BorderStyle = bsNone
               Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = 4473924
+              Font.Color = clBlack
               Font.Height = -9
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -1892,7 +1892,7 @@ object frmReservationProfile: TfrmReservationProfile
               BorderStyle = bsNone
               Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = 4473924
+              Font.Color = clBlack
               Font.Height = -9
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -1905,7 +1905,7 @@ object frmReservationProfile: TfrmReservationProfile
           object pnlRoomInformation: TsPanel
             Left = 425
             Top = 6
-            Width = 189
+            Width = 197
             Height = 192
             Align = alClient
             BevelOuter = bvNone
@@ -1913,7 +1913,7 @@ object frmReservationProfile: TfrmReservationProfile
             object gbxRoomInformation: TsGroupBox
               Left = 0
               Top = 0
-              Width = 189
+              Width = 197
               Height = 72
               Align = alTop
               Caption = 'Notes for room : '
@@ -1922,7 +1922,7 @@ object frmReservationProfile: TfrmReservationProfile
               object memRoomNotes: TsMemo
                 Left = 2
                 Top = 13
-                Width = 185
+                Width = 193
                 Height = 52
                 Align = alTop
                 BevelInner = bvNone
@@ -1930,7 +1930,7 @@ object frmReservationProfile: TfrmReservationProfile
                 BorderStyle = bsNone
                 Color = clWhite
                 Font.Charset = DEFAULT_CHARSET
-                Font.Color = 4473924
+                Font.Color = clBlack
                 Font.Height = -9
                 Font.Name = 'Tahoma'
                 Font.Style = []
@@ -1944,7 +1944,7 @@ object frmReservationProfile: TfrmReservationProfile
             object gbChannelInformation: TsGroupBox
               Left = 0
               Top = 72
-              Width = 189
+              Width = 197
               Height = 120
               Align = alClient
               Caption = 'Requests from booking channel :'
@@ -1953,7 +1953,7 @@ object frmReservationProfile: TfrmReservationProfile
               object memRequestFromChannel: TsMemo
                 Left = 2
                 Top = 13
-                Width = 185
+                Width = 193
                 Height = 105
                 Align = alClient
                 BevelInner = bvNone
@@ -1961,7 +1961,7 @@ object frmReservationProfile: TfrmReservationProfile
                 BorderStyle = bsNone
                 Color = clWhite
                 Font.Charset = DEFAULT_CHARSET
-                Font.Color = 4473924
+                Font.Color = clBlack
                 Font.Height = -9
                 Font.Name = 'Tahoma'
                 Font.Style = []
@@ -1980,7 +1980,7 @@ object frmReservationProfile: TfrmReservationProfile
   object mainPage: TsPageControl
     Left = 0
     Top = 374
-    Width = 1136
+    Width = 1144
     Height = 255
     ActivePage = RoomsTab
     Align = alClient
@@ -2003,7 +2003,7 @@ object frmReservationProfile: TfrmReservationProfile
       object grRooms: TcxGrid
         Left = 0
         Top = 86
-        Width = 1128
+        Width = 1136
         Height = 132
         Align = alClient
         Font.Charset = DEFAULT_CHARSET
@@ -2016,8 +2016,7 @@ object frmReservationProfile: TfrmReservationProfile
         PopupMenu = mnuGrid
         TabOrder = 0
         LookAndFeel.NativeStyle = False
-        ExplicitTop = 84
-        object tvRooms: TcxGridDBTableView
+        object tvRooms: TcxGridDBBandedTableView
           Navigator.Buttons.CustomButtons = <>
           Navigator.Buttons.First.Visible = True
           Navigator.Buttons.PriorPage.Visible = True
@@ -2041,9 +2040,7 @@ object frmReservationProfile: TfrmReservationProfile
           Navigator.Buttons.SaveBookmark.Visible = True
           Navigator.Buttons.GotoBookmark.Visible = True
           Navigator.Buttons.Filter.Visible = True
-          OnCellDblClick = tvRoomsCellDblClick
           OnInitEdit = tvRoomsInitEdit
-          OnUpdateEdit = tvRoomsUpdateEdit
           DataController.DataSource = mRoomsDS
           DataController.Options = [dcoAssignGroupingValues, dcoAssignMasterDetailKeys, dcoSaveExpanding, dcoImmediatePost]
           DataController.Summary.DefaultGroupSummaryItems = <>
@@ -2100,11 +2097,6 @@ object frmReservationProfile: TfrmReservationProfile
               Kind = skSum
               FieldName = 'unpaidRentNights'
               Column = tvRoomsunpaidRentNights
-            end
-            item
-              OnGetText = tvRoomsTcxGridDBDataControllerTcxDataSummaryFooterSummaryItems9GetText
-              FieldName = 'unpaidRentPrice'
-              Column = tvRoomsunpaidRentPrice
             end>
           DataController.Summary.SummaryGroups = <>
           OptionsBehavior.AlwaysShowEditor = True
@@ -2117,31 +2109,48 @@ object frmReservationProfile: TfrmReservationProfile
           OptionsView.Footer = True
           OptionsView.GroupByBox = False
           OptionsView.Indicator = True
-          object tvRoomsRecId: TcxGridDBColumn
+          Bands = <
+            item
+            end>
+          object tvRoomsRecId: TcxGridDBBandedColumn
             DataBinding.FieldName = 'RecId'
             Visible = False
+            Position.BandIndex = 0
+            Position.ColIndex = 0
+            Position.RowIndex = 0
           end
-          object tvRoomsReservation: TcxGridDBColumn
+          object tvRoomsReservation: TcxGridDBBandedColumn
             DataBinding.FieldName = 'Reservation'
             Visible = False
+            Position.BandIndex = 0
+            Position.ColIndex = 1
+            Position.RowIndex = 0
           end
-          object tvRoomsRoomReservation: TcxGridDBColumn
+          object tvRoomsRoomReservation: TcxGridDBBandedColumn
             DataBinding.FieldName = 'RoomReservation'
             Visible = False
+            Position.BandIndex = 0
+            Position.ColIndex = 2
+            Position.RowIndex = 0
           end
-          object tvRoomsRoom: TcxGridDBColumn
+          object tvRoomsRoom: TcxGridDBBandedColumn
             DataBinding.FieldName = 'Room'
             Options.Editing = False
+            Position.BandIndex = 0
+            Position.ColIndex = 3
+            Position.RowIndex = 0
           end
-          object tvRoomsblockMove: TcxGridDBColumn
+          object tvRoomsblockMove: TcxGridDBBandedColumn
             Caption = 'Blocked'
             DataBinding.FieldName = 'blockMove'
             PropertiesClassName = 'TcxCheckBoxProperties'
-            Properties.OnEditValueChanged = tvRoomsblockMovePropertiesChange
-            OnGetCellHint = tvRoomsblockMoveGetCellHint
+            Properties.OnChange = tvRoomsblockMovePropertiesChange
             Width = 42
+            Position.BandIndex = 0
+            Position.ColIndex = 4
+            Position.RowIndex = 0
           end
-          object tvRoomsDocuments: TcxGridDBColumn
+          object tvRoomsDocuments: TcxGridDBBandedColumn
             Caption = 'Docs'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Alignment.Horz = taCenter
@@ -2156,8 +2165,11 @@ object frmReservationProfile: TfrmReservationProfile
             Options.Editing = False
             Options.ShowEditButtons = isebAlways
             Width = 32
+            Position.BandIndex = 0
+            Position.ColIndex = 5
+            Position.RowIndex = 0
           end
-          object tvRoomsRoomType: TcxGridDBColumn
+          object tvRoomsRoomType: TcxGridDBBandedColumn
             Caption = 'Type'
             DataBinding.FieldName = 'RoomType'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -2170,17 +2182,26 @@ object frmReservationProfile: TfrmReservationProfile
               end>
             Properties.ViewStyle = vsHideCursor
             Width = 79
+            Position.BandIndex = 0
+            Position.ColIndex = 6
+            Position.RowIndex = 0
           end
-          object tvRoomsRoomClass: TcxGridDBColumn
+          object tvRoomsRoomClass: TcxGridDBBandedColumn
             DataBinding.FieldName = 'RoomClass'
             Visible = False
+            Position.BandIndex = 0
+            Position.ColIndex = 7
+            Position.RowIndex = 0
           end
-          object tvRoomsRoomClassDescription: TcxGridDBColumn
+          object tvRoomsRoomClassDescription: TcxGridDBBandedColumn
             Caption = 'Channel Type'
             DataBinding.FieldName = 'RoomClassDescription'
             Width = 141
+            Position.BandIndex = 0
+            Position.ColIndex = 8
+            Position.RowIndex = 0
           end
-          object tvRoomsArrival: TcxGridDBColumn
+          object tvRoomsArrival: TcxGridDBBandedColumn
             DataBinding.FieldName = 'Arrival'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -2228,8 +2249,11 @@ object frmReservationProfile: TfrmReservationProfile
             Options.IncSearch = False
             Options.ShowEditButtons = isebAlways
             Width = 73
+            Position.BandIndex = 0
+            Position.ColIndex = 9
+            Position.RowIndex = 0
           end
-          object tvRoomsExpectedTimeOfArrival: TcxGridDBColumn
+          object tvRoomsExpectedTimeOfArrival: TcxGridDBBandedColumn
             Caption = 'Exp TOA'
             DataBinding.FieldName = 'ExpectedTimeOfArrival'
             PropertiesClassName = 'TcxTimeEditProperties'
@@ -2244,8 +2268,11 @@ object frmReservationProfile: TfrmReservationProfile
             HeaderAlignmentHorz = taCenter
             HeaderHint = 'Expected Time of Arrival'
             Width = 62
+            Position.BandIndex = 0
+            Position.ColIndex = 10
+            Position.RowIndex = 0
           end
-          object tvRoomsDeparture: TcxGridDBColumn
+          object tvRoomsDeparture: TcxGridDBBandedColumn
             DataBinding.FieldName = 'Departure'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -2293,8 +2320,11 @@ object frmReservationProfile: TfrmReservationProfile
             Options.IncSearch = False
             Options.ShowEditButtons = isebAlways
             Width = 78
+            Position.BandIndex = 0
+            Position.ColIndex = 11
+            Position.RowIndex = 0
           end
-          object tvRoomsExpectedCheckoutTime: TcxGridDBColumn
+          object tvRoomsExpectedCheckoutTime: TcxGridDBBandedColumn
             Caption = 'Exp COT'
             DataBinding.FieldName = 'ExpectedCheckoutTime'
             PropertiesClassName = 'TcxTimeEditProperties'
@@ -2308,8 +2338,11 @@ object frmReservationProfile: TfrmReservationProfile
             HeaderAlignmentHorz = taCenter
             HeaderHint = 'Expected CheckoutTime'
             Width = 68
+            Position.BandIndex = 0
+            Position.ColIndex = 12
+            Position.RowIndex = 0
           end
-          object tvRoomsdayCount: TcxGridDBColumn
+          object tvRoomsdayCount: TcxGridDBBandedColumn
             Caption = 'Nights'
             DataBinding.FieldName = 'dayCount'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -2359,8 +2392,11 @@ object frmReservationProfile: TfrmReservationProfile
             HeaderAlignmentHorz = taRightJustify
             Options.ShowEditButtons = isebAlways
             Width = 54
+            Position.BandIndex = 0
+            Position.ColIndex = 13
+            Position.RowIndex = 0
           end
-          object tvRoomsPackage: TcxGridDBColumn
+          object tvRoomsPackage: TcxGridDBBandedColumn
             DataBinding.FieldName = 'Package'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -2378,8 +2414,11 @@ object frmReservationProfile: TfrmReservationProfile
             Properties.OnButtonClick = tvRoomsPackagePropertiesButtonClick
             Options.ShowEditButtons = isebAlways
             Width = 79
+            Position.BandIndex = 0
+            Position.ColIndex = 14
+            Position.RowIndex = 0
           end
-          object tvRoomsStatusText: TcxGridDBColumn
+          object tvRoomsStatusText: TcxGridDBBandedColumn
             DataBinding.FieldName = 'Status'
             PropertiesClassName = 'TcxComboBoxProperties'
             Properties.AutoSelect = False
@@ -2399,8 +2438,11 @@ object frmReservationProfile: TfrmReservationProfile
             Properties.OnCloseUp = tvRoomsStatusTextPropertiesChange
             Properties.OnDrawItem = tvRoomsStatusTextPropertiesDrawItem
             Width = 97
+            Position.BandIndex = 0
+            Position.ColIndex = 15
+            Position.RowIndex = 0
           end
-          object rgrProfiles: TcxGridDBColumn
+          object rgrProfiles: TcxGridDBBandedColumn
             Caption = 'Profiles'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -2421,8 +2463,11 @@ object frmReservationProfile: TfrmReservationProfile
             Options.ShowEditButtons = isebAlways
             Options.Sorting = False
             Width = 41
+            Position.BandIndex = 0
+            Position.ColIndex = 16
+            Position.RowIndex = 0
           end
-          object tvRoomsGuestName: TcxGridDBColumn
+          object tvRoomsGuestName: TcxGridDBBandedColumn
             DataBinding.FieldName = 'GuestName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -2432,8 +2477,11 @@ object frmReservationProfile: TfrmReservationProfile
               end>
             Properties.OnButtonClick = tvRoomsGuestCountPropertiesButtonClick
             Width = 106
+            Position.BandIndex = 0
+            Position.ColIndex = 17
+            Position.RowIndex = 0
           end
-          object tvRoomsGuestCount: TcxGridDBColumn
+          object tvRoomsGuestCount: TcxGridDBBandedColumn
             Caption = 'Guests'
             DataBinding.FieldName = 'GuestCount'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -2483,35 +2531,50 @@ object frmReservationProfile: TfrmReservationProfile
             HeaderAlignmentHorz = taCenter
             Options.ShowEditButtons = isebAlways
             Width = 58
+            Position.BandIndex = 0
+            Position.ColIndex = 18
+            Position.RowIndex = 0
           end
-          object tvRoomschildrencount: TcxGridDBColumn
+          object tvRoomschildrencount: TcxGridDBBandedColumn
             Caption = 'Children'
             DataBinding.FieldName = 'childrencount'
             PropertiesClassName = 'TcxSpinEditProperties'
             Properties.AssignedValues.MinValue = True
             HeaderAlignmentHorz = taCenter
+            Position.BandIndex = 0
+            Position.ColIndex = 19
+            Position.RowIndex = 0
           end
-          object tvRoomsinfantcount: TcxGridDBColumn
+          object tvRoomsinfantcount: TcxGridDBBandedColumn
             Caption = 'Infants'
             DataBinding.FieldName = 'infantcount'
             PropertiesClassName = 'TcxSpinEditProperties'
             Properties.AssignedValues.MinValue = True
             HeaderAlignmentHorz = taCenter
             Width = 55
+            Position.BandIndex = 0
+            Position.ColIndex = 20
+            Position.RowIndex = 0
           end
-          object tvRoomsdefGuestCount: TcxGridDBColumn
+          object tvRoomsdefGuestCount: TcxGridDBBandedColumn
             DataBinding.FieldName = 'defGuestCount'
             Visible = False
+            Position.BandIndex = 0
+            Position.ColIndex = 21
+            Position.RowIndex = 0
           end
-          object tvRoomsratePlanCode: TcxGridDBColumn
+          object tvRoomsratePlanCode: TcxGridDBBandedColumn
             Caption = 'Rate Code'
             DataBinding.FieldName = 'ratePlanCode'
             PropertiesClassName = 'TcxComboBoxProperties'
             Properties.DropDownListStyle = lsFixedList
             Properties.OnCloseUp = tvRoomsratePlanCodePropertiesCloseUp
             Width = 63
+            Position.BandIndex = 0
+            Position.ColIndex = 22
+            Position.RowIndex = 0
           end
-          object tvRoomsunpaidRentPrice: TcxGridDBColumn
+          object tvRoomsunpaidRentPrice: TcxGridDBBandedColumn
             Caption = 'Avg. Room rate'
             DataBinding.FieldName = 'unpaidRentPrice'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -2522,8 +2585,11 @@ object frmReservationProfile: TfrmReservationProfile
             Options.Editing = False
             Options.ShowEditButtons = isebAlways
             Width = 74
+            Position.BandIndex = 0
+            Position.ColIndex = 23
+            Position.RowIndex = 0
           end
-          object __PriceViewer: TcxGridDBColumn
+          object __PriceViewer: TcxGridDBBandedColumn
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
@@ -2570,8 +2636,11 @@ object frmReservationProfile: TfrmReservationProfile
               0000000000000000000000000000000000000000000000000000}
             Options.ShowEditButtons = isebAlways
             Width = 24
+            Position.BandIndex = 0
+            Position.ColIndex = 24
+            Position.RowIndex = 0
           end
-          object tvRoomsRateOrPackagePerDay: TcxGridDBColumn
+          object tvRoomsRateOrPackagePerDay: TcxGridDBBandedColumn
             Caption = 'Avg. Package-rate'
             DataBinding.FieldName = 'RateOrPackagePerDay'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -2580,35 +2649,56 @@ object frmReservationProfile: TfrmReservationProfile
             HeaderHint = 'Average package-rate'
             Options.Editing = False
             Width = 96
+            Position.BandIndex = 0
+            Position.ColIndex = 25
+            Position.RowIndex = 0
           end
-          object tvRoomsCurrency: TcxGridDBColumn
+          object tvRoomsCurrency: TcxGridDBBandedColumn
             DataBinding.FieldName = 'Currency'
             Options.Editing = False
             Width = 55
+            Position.BandIndex = 0
+            Position.ColIndex = 26
+            Position.RowIndex = 0
           end
-          object tvRoomsisGroupAccount: TcxGridDBColumn
+          object tvRoomsisGroupAccount: TcxGridDBBandedColumn
             Caption = 'Group'
             DataBinding.FieldName = 'isGroupAccount'
             Visible = False
             Width = 38
+            Position.BandIndex = 0
+            Position.ColIndex = 27
+            Position.RowIndex = 0
           end
-          object tvRoomsisNoRoom: TcxGridDBColumn
+          object tvRoomsisNoRoom: TcxGridDBBandedColumn
             DataBinding.FieldName = 'isNoRoom'
             Visible = False
+            Position.BandIndex = 0
+            Position.ColIndex = 28
+            Position.RowIndex = 0
           end
-          object tvRoomsuseStayTax: TcxGridDBColumn
+          object tvRoomsuseStayTax: TcxGridDBBandedColumn
             DataBinding.FieldName = 'useStayTax'
             Visible = False
+            Position.BandIndex = 0
+            Position.ColIndex = 29
+            Position.RowIndex = 0
           end
-          object tvRoomsRoomAlias: TcxGridDBColumn
+          object tvRoomsRoomAlias: TcxGridDBBandedColumn
             DataBinding.FieldName = 'RoomAlias'
             Visible = False
+            Position.BandIndex = 0
+            Position.ColIndex = 30
+            Position.RowIndex = 0
           end
-          object tvRoomsRoomTypeAlias: TcxGridDBColumn
+          object tvRoomsRoomTypeAlias: TcxGridDBBandedColumn
             DataBinding.FieldName = 'RoomTypeAlias'
             Visible = False
+            Position.BandIndex = 0
+            Position.ColIndex = 31
+            Position.RowIndex = 0
           end
-          object tvRoomsbreakfastText: TcxGridDBColumn
+          object tvRoomsbreakfastText: TcxGridDBBandedColumn
             Caption = 'Breakfast'
             DataBinding.FieldName = 'breakfast'
             PropertiesClassName = 'TcxComboBoxProperties'
@@ -2616,10 +2706,13 @@ object frmReservationProfile: TfrmReservationProfile
             Properties.Items.Strings = (
               'Included'
               'Not included')
-            Properties.OnChange = tvRoomsbreakfastTextPropertiesChange
+            Properties.OnCloseUp = tvRoomsbreakfastTextPropertiesChange
             Width = 81
+            Position.BandIndex = 0
+            Position.ColIndex = 32
+            Position.RowIndex = 0
           end
-          object tvRoomsStockItemsCount: TcxGridDBColumn
+          object tvRoomsStockItemsCount: TcxGridDBBandedColumn
             Caption = 'Extras'
             DataBinding.FieldName = 'StockItemsCount'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -2632,8 +2725,11 @@ object frmReservationProfile: TfrmReservationProfile
             Properties.ReadOnly = True
             Properties.OnButtonClick = tvRoomsStockItemsCountPropertiesButtonClick
             Options.ShowEditButtons = isebAlways
+            Position.BandIndex = 0
+            Position.ColIndex = 33
+            Position.RowIndex = 0
           end
-          object tvRoomsStockitemsPrice: TcxGridDBColumn
+          object tvRoomsStockitemsPrice: TcxGridDBBandedColumn
             Caption = 'Extras Price'
             DataBinding.FieldName = 'StockitemsPrice'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -2643,8 +2739,11 @@ object frmReservationProfile: TfrmReservationProfile
             HeaderAlignmentHorz = taRightJustify
             Options.Editing = False
             Width = 56
+            Position.BandIndex = 0
+            Position.ColIndex = 34
+            Position.RowIndex = 0
           end
-          object tvRoomsaccountTypeText: TcxGridDBColumn
+          object tvRoomsaccountTypeText: TcxGridDBBandedColumn
             Caption = 'Account'
             DataBinding.FieldName = 'isGroupAccount'
             PropertiesClassName = 'TcxComboBoxProperties'
@@ -2652,10 +2751,13 @@ object frmReservationProfile: TfrmReservationProfile
             Properties.Items.Strings = (
               'Room account'
               'Group account')
-            Properties.OnChange = tvRoomsaccountTypeTextPropertiesChange
+            Properties.OnCloseUp = tvRoomsaccountTypeTextPropertiesChange
             Width = 87
+            Position.BandIndex = 0
+            Position.ColIndex = 35
+            Position.RowIndex = 0
           end
-          object rgrinvoice: TcxGridDBColumn
+          object rgrinvoice: TcxGridDBBandedColumn
             Caption = 'Invoice'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -2673,8 +2775,11 @@ object frmReservationProfile: TfrmReservationProfile
             Properties.OnButtonClick = rgrinvoicePropertiesButtonClick
             Options.ShowEditButtons = isebAlways
             Width = 54
+            Position.BandIndex = 0
+            Position.ColIndex = 36
+            Position.RowIndex = 0
           end
-          object tvRoomsTotalUnpaidRoomRent: TcxGridDBColumn
+          object tvRoomsTotalUnpaidRoomRent: TcxGridDBBandedColumn
             Caption = 'Unpaid Rent'
             DataBinding.FieldName = 'TotalUnpaidRoomRent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -2682,8 +2787,11 @@ object frmReservationProfile: TfrmReservationProfile
             HeaderAlignmentHorz = taRightJustify
             Options.Editing = False
             Width = 84
+            Position.BandIndex = 0
+            Position.ColIndex = 37
+            Position.RowIndex = 0
           end
-          object tvRoomsDiscountUnpaidRoomRent: TcxGridDBColumn
+          object tvRoomsDiscountUnpaidRoomRent: TcxGridDBBandedColumn
             Caption = 'Rent Discount'
             DataBinding.FieldName = 'DiscountUnpaidRoomRent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -2691,42 +2799,66 @@ object frmReservationProfile: TfrmReservationProfile
             HeaderAlignmentHorz = taRightJustify
             Options.Editing = False
             Width = 52
+            Position.BandIndex = 0
+            Position.ColIndex = 38
+            Position.RowIndex = 0
           end
-          object tvRoomsunPaidRoomRent: TcxGridDBColumn
+          object tvRoomsunPaidRoomRent: TcxGridDBBandedColumn
             Caption = 'Room rent'
             DataBinding.FieldName = 'unPaidRoomRent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = '###0.00;###0.00'
             HeaderAlignmentHorz = taRightJustify
             Options.Editing = False
+            Position.BandIndex = 0
+            Position.ColIndex = 39
+            Position.RowIndex = 0
           end
-          object tvRoomsunpaidRentNights: TcxGridDBColumn
+          object tvRoomsunpaidRentNights: TcxGridDBBandedColumn
             Caption = 'Rent Nights'
             DataBinding.FieldName = 'unpaidRentNights'
             HeaderAlignmentHorz = taRightJustify
             Options.Editing = False
+            Position.BandIndex = 0
+            Position.ColIndex = 40
+            Position.RowIndex = 0
           end
-          object tvRoomsPriceCode: TcxGridDBColumn
+          object tvRoomsPriceCode: TcxGridDBBandedColumn
             DataBinding.FieldName = 'PriceCode'
             Options.Editing = False
+            Position.BandIndex = 0
+            Position.ColIndex = 41
+            Position.RowIndex = 0
           end
-          object tvRoomsunPaidItems: TcxGridDBColumn
+          object tvRoomsunPaidItems: TcxGridDBBandedColumn
             DataBinding.FieldName = 'unPaidItems'
             Options.Editing = False
+            Position.BandIndex = 0
+            Position.ColIndex = 42
+            Position.RowIndex = 0
           end
-          object tvRoomsPersonsProfilesId: TcxGridDBColumn
+          object tvRoomsPersonsProfilesId: TcxGridDBBandedColumn
             DataBinding.FieldName = 'PersonsProfilesId'
             HeaderAlignmentHorz = taRightJustify
+            Position.BandIndex = 0
+            Position.ColIndex = 43
+            Position.RowIndex = 0
           end
-          object tvRoomsManualChannelId: TcxGridDBColumn
+          object tvRoomsManualChannelId: TcxGridDBBandedColumn
             DataBinding.FieldName = 'ManualChannelId'
             HeaderAlignmentHorz = taRightJustify
+            Position.BandIndex = 0
+            Position.ColIndex = 44
+            Position.RowIndex = 0
           end
-          object tvRoomsblockMoveReason: TcxGridDBColumn
+          object tvRoomsblockMoveReason: TcxGridDBBandedColumn
             Caption = 'Reason for move blocking'
             DataBinding.FieldName = 'blockMoveReason'
             OnGetDisplayText = tvRoomsblockMoveReasonGetDisplayText
             Options.Editing = False
+            Position.BandIndex = 0
+            Position.ColIndex = 45
+            Position.RowIndex = 0
           end
         end
         object lvRooms: TcxGridLevel
@@ -2737,7 +2869,7 @@ object frmReservationProfile: TfrmReservationProfile
       object Panel9: TsPanel
         Left = 0
         Top = 38
-        Width = 1128
+        Width = 1136
         Height = 48
         Align = alTop
         TabOrder = 1
@@ -2781,7 +2913,6 @@ object frmReservationProfile: TfrmReservationProfile
           Images = DImages.PngImageList1
           TabOrder = 2
           SkinData.SkinSection = 'BUTTON'
-          ExplicitTop = 2
         end
         object btnRemoveRoom: TsButton
           AlignWithMargins = True
@@ -2842,7 +2973,6 @@ object frmReservationProfile: TfrmReservationProfile
           Images = DImages.PngImageList1
           TabOrder = 7
           SkinData.SkinSection = 'BUTTON'
-          ExplicitTop = 2
         end
         object sButton5: TsButton
           AlignWithMargins = True
@@ -2872,7 +3002,7 @@ object frmReservationProfile: TfrmReservationProfile
       object sPanel1: TsPanel
         Left = 0
         Top = 0
-        Width = 1128
+        Width = 1136
         Height = 38
         Align = alTop
         Caption = 'OUT-OF-ORDER'
@@ -2893,13 +3023,13 @@ object frmReservationProfile: TfrmReservationProfile
       object Panel10: TsPanel
         Left = 0
         Top = 0
-        Width = 1128
+        Width = 1136
         Height = 38
         Align = alTop
         TabOrder = 0
         SkinData.SkinSection = 'PANEL'
         DesignSize = (
-          1128
+          1136
           38)
         object btnGuestsRefresh: TsButton
           Left = 212
@@ -2914,7 +3044,7 @@ object frmReservationProfile: TfrmReservationProfile
           SkinData.SkinSection = 'BUTTON'
         end
         object btnExpand: TsButton
-          Left = 921
+          Left = 929
           Top = 2
           Width = 100
           Height = 30
@@ -2925,7 +3055,7 @@ object frmReservationProfile: TfrmReservationProfile
           SkinData.SkinSection = 'BUTTON'
         end
         object btnCollapse: TsButton
-          Left = 1023
+          Left = 1031
           Top = 2
           Width = 100
           Height = 30
@@ -2950,8 +3080,8 @@ object frmReservationProfile: TfrmReservationProfile
         object chkShowAllGuests: TsCheckBox
           Left = 333
           Top = 11
-          Width = 94
-          Height = 20
+          Width = 102
+          Height = 17
           Caption = 'Show all guests'
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 4
@@ -2976,14 +3106,14 @@ object frmReservationProfile: TfrmReservationProfile
       object pnlGuests: TsPanel
         Left = 0
         Top = 38
-        Width = 1128
+        Width = 1136
         Height = 180
         Align = alClient
         TabOrder = 1
         object grGuests: TcxGrid
           Left = 1
           Top = 1
-          Width = 862
+          Width = 870
           Height = 178
           Align = alClient
           TabOrder = 0
@@ -3359,7 +3489,7 @@ object frmReservationProfile: TfrmReservationProfile
         end
         object gbxProfileAlert: TsGroupBox
           AlignWithMargins = True
-          Left = 868
+          Left = 876
           Top = 3
           Width = 254
           Height = 174
@@ -3492,10 +3622,14 @@ object frmReservationProfile: TfrmReservationProfile
     end
     object sTabSheet2: TsTabSheet
       Caption = 'Alerts'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object pnlAlertHolder: TsPanel
         Left = 0
         Top = 0
-        Width = 1128
+        Width = 1136
         Height = 218
         Align = alClient
         BevelOuter = bvNone
@@ -3509,16 +3643,16 @@ object frmReservationProfile: TfrmReservationProfile
       object Panel11: TsPanel
         Left = 0
         Top = 0
-        Width = 1128
+        Width = 1136
         Height = 38
         Align = alTop
         TabOrder = 0
         SkinData.SkinSection = 'PANEL'
         DesignSize = (
-          1128
+          1136
           38)
         object cxButton1: TsButton
-          Left = 1019
+          Left = 1027
           Top = 3
           Width = 100
           Height = 29
@@ -3546,7 +3680,7 @@ object frmReservationProfile: TfrmReservationProfile
       object Grid: TcxGrid
         Left = 0
         Top = 38
-        Width = 1128
+        Width = 1136
         Height = 180
         Align = alClient
         TabOrder = 1
@@ -3890,14 +4024,14 @@ object frmReservationProfile: TfrmReservationProfile
   object Panel1: TsPanel
     Left = 0
     Top = 629
-    Width = 1136
+    Width = 1144
     Height = 33
     Align = alBottom
     TabOrder = 4
     SkinData.SkinSection = 'PANEL'
     object sButton2: TsButton
       AlignWithMargins = True
-      Left = 1049
+      Left = 1057
       Top = 4
       Width = 83
       Height = 25
@@ -4412,8 +4546,8 @@ object frmReservationProfile: TfrmReservationProfile
   object mInvoiceHeads: TdxMemData
     Indexes = <>
     SortOptions = []
-    Left = 616
-    Top = 512
+    Left = 624
+    Top = 544
     object mInvoiceHeadsInvoiceNumber: TIntegerField
       FieldName = 'InvoiceNumber'
     end
@@ -4515,6 +4649,264 @@ object frmReservationProfile: TfrmReservationProfile
           'Left'
           'Position'
           'Top'
+          'Width')
+      end
+      item
+        Component = tvRoomsArrival
+        Properties.Strings = (
+          'Position.ColIndex'
+          'Width')
+      end
+      item
+        Component = tvRoomsblockMove
+        Properties.Strings = (
+          'Position.ColIndex'
+          'Width')
+      end
+      item
+        Component = tvRoomsblockMoveReason
+        Properties.Strings = (
+          'Position.ColIndex'
+          'Width')
+      end
+      item
+        Component = tvRoomsbreakfastText
+        Properties.Strings = (
+          'Position.ColIndex'
+          'Width')
+      end
+      item
+        Component = tvRoomschildrencount
+        Properties.Strings = (
+          'Position.ColIndex'
+          'Width')
+      end
+      item
+        Component = tvRoomsCurrency
+        Properties.Strings = (
+          'Position.ColIndex'
+          'Width')
+      end
+      item
+        Component = tvRoomsdayCount
+        Properties.Strings = (
+          'Position.ColIndex'
+          'Width')
+      end
+      item
+        Component = tvRoomsdefGuestCount
+        Properties.Strings = (
+          'Position.ColIndex'
+          'Width')
+      end
+      item
+        Component = tvRoomsDeparture
+        Properties.Strings = (
+          'Position.ColIndex'
+          'Width')
+      end
+      item
+        Component = tvRoomsDiscountUnpaidRoomRent
+        Properties.Strings = (
+          'Position.ColIndex'
+          'Width')
+      end
+      item
+        Component = tvRoomsDocuments
+        Properties.Strings = (
+          'Position.ColIndex'
+          'Width')
+      end
+      item
+        Component = tvRoomsExpectedCheckoutTime
+        Properties.Strings = (
+          'Position.ColIndex'
+          'Width')
+      end
+      item
+        Component = tvRoomsExpectedTimeOfArrival
+        Properties.Strings = (
+          'Position.ColIndex'
+          'Width')
+      end
+      item
+        Component = tvRoomsGuestCount
+        Properties.Strings = (
+          'Position.ColIndex'
+          'Width')
+      end
+      item
+        Component = tvRoomsGuestName
+        Properties.Strings = (
+          'Position.ColIndex'
+          'Width')
+      end
+      item
+        Component = tvRoomsinfantcount
+        Properties.Strings = (
+          'Position.ColIndex'
+          'Width')
+      end
+      item
+        Component = tvRoomsisGroupAccount
+        Properties.Strings = (
+          'Position.ColIndex'
+          'Width')
+      end
+      item
+        Component = tvRoomsisNoRoom
+        Properties.Strings = (
+          'Position.ColIndex'
+          'Width')
+      end
+      item
+        Component = tvRoomsManualChannelId
+        Properties.Strings = (
+          'Position.ColIndex'
+          'Width')
+      end
+      item
+        Component = tvRoomsPackage
+        Properties.Strings = (
+          'Position.ColIndex'
+          'Width')
+      end
+      item
+        Component = tvRoomsPersonsProfilesId
+        Properties.Strings = (
+          'Position.ColIndex'
+          'Width')
+      end
+      item
+        Component = tvRoomsPriceCode
+        Properties.Strings = (
+          'Position.ColIndex'
+          'Width')
+      end
+      item
+        Component = tvRoomsRateOrPackagePerDay
+        Properties.Strings = (
+          'Position.ColIndex'
+          'Width')
+      end
+      item
+        Component = tvRoomsratePlanCode
+        Properties.Strings = (
+          'Position.ColIndex'
+          'Width')
+      end
+      item
+        Component = tvRoomsRecId
+        Properties.Strings = (
+          'Position.ColIndex'
+          'Width')
+      end
+      item
+        Component = tvRoomsReservation
+        Properties.Strings = (
+          'Position.ColIndex'
+          'Width')
+      end
+      item
+        Component = tvRoomsRoom
+        Properties.Strings = (
+          'Position.ColIndex'
+          'Width')
+      end
+      item
+        Component = tvRoomsRoomAlias
+        Properties.Strings = (
+          'Position.ColIndex'
+          'Width')
+      end
+      item
+        Component = tvRoomsRoomClass
+        Properties.Strings = (
+          'Position.ColIndex'
+          'Width')
+      end
+      item
+        Component = tvRoomsRoomClassDescription
+        Properties.Strings = (
+          'Position.ColIndex'
+          'Width')
+      end
+      item
+        Component = tvRoomsRoomReservation
+        Properties.Strings = (
+          'Position.ColIndex'
+          'Width')
+      end
+      item
+        Component = tvRoomsRoomType
+        Properties.Strings = (
+          'Position.ColIndex'
+          'Width')
+      end
+      item
+        Component = tvRoomsRoomTypeAlias
+        Properties.Strings = (
+          'Position.ColIndex'
+          'Width')
+      end
+      item
+        Component = tvRoomsStatusText
+        Properties.Strings = (
+          'Position.ColIndex'
+          'Width')
+      end
+      item
+        Component = tvRoomsStockItemsCount
+        Properties.Strings = (
+          'Position.ColIndex'
+          'Width')
+      end
+      item
+        Component = tvRoomsStockitemsPrice
+        Properties.Strings = (
+          'Position.ColIndex'
+          'Width')
+      end
+      item
+        Component = tvRoomsTotalUnpaidRoomRent
+        Properties.Strings = (
+          'Position.ColIndex'
+          'Width')
+      end
+      item
+        Component = tvRoomsunPaidItems
+        Properties.Strings = (
+          'Position.ColIndex'
+          'Width')
+      end
+      item
+        Component = tvRoomsunpaidRentNights
+        Properties.Strings = (
+          'Position.ColIndex'
+          'Width')
+      end
+      item
+        Component = tvRoomsunpaidRentPrice
+        Properties.Strings = (
+          'Position.ColIndex'
+          'Width')
+      end
+      item
+        Component = tvRoomsunPaidRoomRent
+        Properties.Strings = (
+          'Position.ColIndex'
+          'Width')
+      end
+      item
+        Component = tvRoomsuseStayTax
+        Properties.Strings = (
+          'Position.ColIndex'
+          'Width')
+      end
+      item
+        Component = __PriceViewer
+        Properties.Strings = (
+          'Position.ColIndex'
           'Width')
       end
       item

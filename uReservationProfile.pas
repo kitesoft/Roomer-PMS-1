@@ -73,7 +73,7 @@ uses
   uDynamicRates
   , cxSpinEdit
   , uReservationStateDefinitions, System.Actions, Vcl.ActnList
-  , uReservationStateChangeHandler, uFraCountryPanel
+  , uReservationStateChangeHandler, uFraCountryPanel, cxGridBandedTableView, cxGridDBBandedTableView
   ;
 
 type
@@ -99,7 +99,6 @@ type
     mainPage: TsPageControl;
     RoomsTab: TsTabSheet;
     GuestsTab: TsTabSheet;
-    tvRooms: TcxGridDBTableView;
     lvRooms: TcxGridLevel;
     grRooms: TcxGrid;
     mRooms: TdxMemData;
@@ -117,19 +116,20 @@ type
     mRoomsuseStayTax: TBooleanField;
     mRoomsRoomAlias: TWideStringField;
     mRoomsRoomTypeAlias: TWideStringField;
-    tvRoomsRecId: TcxGridDBColumn;
-    tvRoomsReservation: TcxGridDBColumn;
-    tvRoomsRoomReservation: TcxGridDBColumn;
-    tvRoomsRoom: TcxGridDBColumn;
-    tvRoomsRoomType: TcxGridDBColumn;
-    tvRoomsArrival: TcxGridDBColumn;
-    tvRoomsDeparture: TcxGridDBColumn;
-    tvRoomsCurrency: TcxGridDBColumn;
-    tvRoomsisGroupAccount: TcxGridDBColumn;
-    tvRoomsisNoRoom: TcxGridDBColumn;
-    tvRoomsuseStayTax: TcxGridDBColumn;
-    tvRoomsRoomAlias: TcxGridDBColumn;
-    tvRoomsRoomTypeAlias: TcxGridDBColumn;
+    tvRooms: TcxGridDBBandedTableView;
+    tvRoomsRecId: TcxGridDBBandedColumn;
+    tvRoomsReservation: TcxGridDBBandedColumn;
+    tvRoomsRoomReservation: TcxGridDBBandedColumn;
+    tvRoomsRoom: TcxGridDBBandedColumn;
+    tvRoomsRoomType: TcxGridDBBandedColumn;
+    tvRoomsArrival: TcxGridDBBandedColumn;
+    tvRoomsDeparture: TcxGridDBBandedColumn;
+    tvRoomsCurrency: TcxGridDBBandedColumn;
+    tvRoomsisGroupAccount: TcxGridDBBandedColumn;
+    tvRoomsisNoRoom: TcxGridDBBandedColumn;
+    tvRoomsuseStayTax: TcxGridDBBandedColumn;
+    tvRoomsRoomAlias: TcxGridDBBandedColumn;
+    tvRoomsRoomTypeAlias: TcxGridDBBandedColumn;
     mnuFinishedInv: TPopupMenu;
     mnuThisRoom: TMenuItem;
     mnuThisreservation: TMenuItem;
@@ -139,27 +139,27 @@ type
     btnShowPrices: TsButton;
     btnShowInvoice: TsButton;
     mRoomsdayCount: TIntegerField;
-    tvRoomsdayCount: TcxGridDBColumn;
-    tvRoomsStatusText: TcxGridDBColumn;
+    tvRoomsdayCount: TcxGridDBBandedColumn;
+    tvRoomsStatusText: TcxGridDBBandedColumn;
     mRoomsBreakFast: TBooleanField;
     mRoomsGuestCount: TIntegerField;
     mRoomsdefGuestCount: TIntegerField;
-    tvRoomsGuestCount: TcxGridDBColumn;
-    tvRoomsdefGuestCount: TcxGridDBColumn;
+    tvRoomsGuestCount: TcxGridDBBandedColumn;
+    tvRoomsdefGuestCount: TcxGridDBBandedColumn;
     mRoomsGuestName: TWideStringField;
-    tvRoomsGuestName: TcxGridDBColumn;
-    tvRoomsbreakfastText: TcxGridDBColumn;
-    tvRoomsaccountTypeText: TcxGridDBColumn;
+    tvRoomsGuestName: TcxGridDBBandedColumn;
+    tvRoomsbreakfastText: TcxGridDBBandedColumn;
+    tvRoomsaccountTypeText: TcxGridDBBandedColumn;
     mRoomsunPaidRoomRent: TFloatField;
     mRoomsDiscountUnpaidRoomRent: TFloatField;
     mRoomsTotalUnpaidRoomRent: TFloatField;
-    tvRoomsunPaidRoomRent: TcxGridDBColumn;
-    tvRoomsDiscountUnpaidRoomRent: TcxGridDBColumn;
-    tvRoomsTotalUnpaidRoomRent: TcxGridDBColumn;
+    tvRoomsunPaidRoomRent: TcxGridDBBandedColumn;
+    tvRoomsDiscountUnpaidRoomRent: TcxGridDBBandedColumn;
+    tvRoomsTotalUnpaidRoomRent: TcxGridDBBandedColumn;
     mRoomsunpaidRentNights: TIntegerField;
     mRoomsunpaidRentPrice: TFloatField;
-    tvRoomsunpaidRentNights: TcxGridDBColumn;
-    tvRoomsunpaidRentPrice: TcxGridDBColumn;
+    tvRoomsunpaidRentNights: TcxGridDBBandedColumn;
+    tvRoomsunpaidRentPrice: TcxGridDBBandedColumn;
     mRoomsunPaidItems: TFloatField;
     btnAddRoom: TsButton;
     btnRemoveRoom: TsButton;
@@ -320,17 +320,17 @@ type
     tvInvoiceHeadsRoom: TcxGridDBColumn;
     StoreMain: TcxPropertiesStore;
     mRoomsPriceCode: TWideStringField;
-    tvRoomsPriceCode: TcxGridDBColumn;
-    tvRoomsunPaidItems: TcxGridDBColumn;
+    tvRoomsPriceCode: TcxGridDBBandedColumn;
+    tvRoomsunPaidItems: TcxGridDBBandedColumn;
     timStart: TTimer;
-    rgrinvoice: TcxGridDBColumn;
+    rgrinvoice: TcxGridDBBandedColumn;
     pnlDataWait: TsPanel;
     sLabel2: TsLabel;
     mRoomsRoomClass: TWideStringField;
-    tvRoomsRoomClass: TcxGridDBColumn;
+    tvRoomsRoomClass: TcxGridDBBandedColumn;
     mRoomsRoomClassDescription: TWideStringField;
-    tvRoomsRoomClassDescription: TcxGridDBColumn;
-    tvRoomsDocuments: TcxGridDBColumn;
+    tvRoomsRoomClassDescription: TcxGridDBBandedColumn;
+    tvRoomsDocuments: TcxGridDBBandedColumn;
     cxButton5: TsButton;
     cxButton6: TsButton;
     mInvoiceLinesQuantity: TFloatField;
@@ -357,7 +357,7 @@ type
     sButton2: TsButton;
     sButton4: TsButton;
     mRoomsPackage: TWideStringField;
-    tvRoomsPackage: TcxGridDBColumn;
+    tvRoomsPackage: TcxGridDBBandedColumn;
     memRequestFromChannel: TsMemo;
     edtFax: TsEdit;
     Label11: TsLabel;
@@ -368,19 +368,19 @@ type
     mRoomsoutOfOrderBlocking: TBooleanField;
     sPanel1: TsPanel;
     mRoomsblockMove: TBooleanField;
-    tvRoomsblockMove: TcxGridDBColumn;
+    tvRoomsblockMove: TcxGridDBBandedColumn;
     mRoomsPersonsProfilesId: TIntegerField;
-    rgrProfiles: TcxGridDBColumn;
+    rgrProfiles: TcxGridDBBandedColumn;
     sButton5: TsButton;
     btnGroups: TsButton;
     mRoomsManualChannelId: TIntegerField;
     mRoomsratePlanCode: TWideStringField;
-    tvRoomsratePlanCode: TcxGridDBColumn;
+    tvRoomsratePlanCode: TcxGridDBBandedColumn;
     sTabSheet2: TsTabSheet;
     pnlAlertHolder: TsPanel;
     timBlink: TTimer;
     DropComboTarget1: TDropComboTarget;
-    __PriceViewer: TcxGridDBColumn;
+    __PriceViewer: TcxGridDBBandedColumn;
     pnlGuests: TsPanel;
     grGuests: TcxGrid;
     tvGuestRooms: TcxGridDBTableView;
@@ -463,15 +463,15 @@ type
     mGuestRoomsPersonsProfilesId: TIntegerField;
     mRoomsExpectedTimeOfArrival: TWideStringField;
     mRoomsExpectedCheckoutTime: TWideStringField;
-    tvRoomsPersonsProfilesId: TcxGridDBColumn;
-    tvRoomsManualChannelId: TcxGridDBColumn;
-    tvRoomsExpectedTimeOfArrival: TcxGridDBColumn;
-    tvRoomsExpectedCheckoutTime: TcxGridDBColumn;
+    tvRoomsPersonsProfilesId: TcxGridDBBandedColumn;
+    tvRoomsManualChannelId: TcxGridDBBandedColumn;
+    tvRoomsExpectedTimeOfArrival: TcxGridDBBandedColumn;
+    tvRoomsExpectedCheckoutTime: TcxGridDBBandedColumn;
     cbxMarket: TsComboBox;
     mRoomsRateOrPackagePerDay: TFloatField;
-    tvRoomsRateOrPackagePerDay: TcxGridDBColumn;
+    tvRoomsRateOrPackagePerDay: TcxGridDBBandedColumn;
     mRoomsblockMoveReason: TWideStringField;
-    tvRoomsblockMoveReason: TcxGridDBColumn;
+    tvRoomsblockMoveReason: TcxGridDBBandedColumn;
     mExtras: TdxMemData;
     mExtrasRoomreservation: TIntegerField;
     mExtrasItemid: TIntegerField;
@@ -482,12 +482,12 @@ type
     mExtrasItem: TStringField;
     mExtrasDescription: TStringField;
     mExtrasTotalPrice: TFloatField;
-    tvRoomsStockitemsPrice: TcxGridDBColumn;
-    tvRoomsStockItemsCount: TcxGridDBColumn;
+    tvRoomsStockitemsPrice: TcxGridDBBandedColumn;
+    tvRoomsStockItemsCount: TcxGridDBBandedColumn;
     mRoomschildrencount: TIntegerField;
     mRoomsinfantcount: TIntegerField;
-    tvRoomschildrencount: TcxGridDBColumn;
-    tvRoomsinfantcount: TcxGridDBColumn;
+    tvRoomschildrencount: TcxGridDBBandedColumn;
+    tvRoomsinfantcount: TcxGridDBBandedColumn;
     pnlCustomer: TsPanel;
     Label9: TsLabel;
     edtCustomer: TsEdit;
@@ -645,8 +645,6 @@ type
       ARecord: TcxCustomGridRecord; var AAllow: Boolean);
     procedure tvGuestsCanFocusRecord(Sender: TcxCustomGridTableView;
       ARecord: TcxCustomGridRecord; var AAllow: Boolean);
-    procedure tvRoomsUpdateEdit(Sender: TcxCustomGridTableView;
-      AItem: TcxCustomGridTableItem; AEdit: TcxCustomEdit);
     procedure tvRoomsInitEdit(Sender: TcxCustomGridTableView;
       AItem: TcxCustomGridTableItem; AEdit: TcxCustomEdit);
     procedure edtTypeDblClick(Sender: TObject);
@@ -3338,11 +3336,6 @@ begin
   end;
 end;
 
-procedure TfrmReservationProfile.tvRoomsUpdateEdit
-  (Sender: TcxCustomGridTableView; AItem: TcxCustomGridTableItem;
-  AEdit: TcxCustomEdit);
-begin
-end;
 
 // ***************************************************************************
 //
