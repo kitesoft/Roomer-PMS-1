@@ -438,23 +438,10 @@ type
     LMDSimpleLabel82: TsLabel;
     AdvTabSheet15: TsTabSheet;
     LMDSimpleLabel85: TsLabel;
-    Label59: TsLabel;
-    editStayTaxItem: TsComboEdit;
-    labStayTaxItemDescription: TsLabel;
     LMDGroupBox26: TsGroupBox;
     Label65: TsLabel;
     labInvPriceGroup: TsLabel;
     edInvPriceGroup: TsComboEdit;
-    cxGroupBox4: TsGroupBox;
-    Label66: TsLabel;
-    chkCallLogInternal: TsCheckBox;
-    cbxCallType: TsComboBox;
-    Label67: TsLabel;
-    Label68: TsLabel;
-    cxGroupBox5: TsGroupBox;
-    Label69: TsLabel;
-    Label70: TsLabel;
-    Label71: TsLabel;
     EditLastRoomRes: TsSpinEdit;
     EditLastInvoice: TsSpinEdit;
     EditLastPerson: TsSpinEdit;
@@ -468,10 +455,6 @@ type
     edswCust_iLanguage: TsSpinEdit;
     edswCust_iPriceType: TsSpinEdit;
     edswCust_CompanyID: TsSpinEdit;
-    edCallMinSec: TsSpinEdit;
-    edCallMinUnits: TsSpinEdit;
-    edCallMinPrice: TsCalcEdit;
-    edCallStartPrice: TsCalcEdit;
     edSnPath: TAdvDirectoryEdit;
     edxmlPath_invoice: TAdvDirectoryEdit;
     Label4: TsLabel;
@@ -507,11 +490,6 @@ type
     Label34: TsLabel;
     edIvhTxtTotalStayTax: TsEdit;
     edIvhTxtTotalStayTaxNights: TsEdit;
-    GroupBox5: TsGroupBox;
-    Label62: TsLabel;
-    Label61: TsLabel;
-    chkStayTaxIncluted: TsCheckBox;
-    chkUseStayTax: TsCheckBox;
     labNativeCurrency: TsLabel;
     edNativeCurrency: TsComboEdit;
     sLabel1: TsLabel;
@@ -571,10 +549,6 @@ type
     labautumnStarts: TsLabel;
     labwinterStarts: TsLabel;
     sPanel1: TsPanel;
-    sGroupBox4: TsGroupBox;
-    sLabel7: TsLabel;
-    sCheckBox1: TsCheckBox;
-    __cbxTaxPerPerson: TsCheckBox;
     gbxBottomLines: TsGroupBox;
     LMDSimpleLabel21: TsLabel;
     LMDSimpleLabel22: TsLabel;
@@ -594,7 +568,6 @@ type
     chkConfirmAuto: TsCheckBox;
     edConfirmMinuteOfTheDay: TsSpinEdit;
     sLabel10: TsLabel;
-    __cbxTaxPercentage: TsCheckBox;
     edinPosMonitorChkSec: TsSpinEdit;
     btnOK: TsButton;
     btnCancel: TsButton;
@@ -675,8 +648,6 @@ type
     sGroupBox18: TsGroupBox;
     sLabel34: TsLabel;
     __CurrencySyncSource: TsComboBox;
-    sLabel35: TsLabel;
-    sLabel36: TsLabel;
     panWaitinglistNonOptional: TsPanel;
     gbxExternalPOS: TsGroupBox;
     lblCustomer: TsLabel;
@@ -741,6 +712,23 @@ type
     edHoursAfter: TsSpinEdit;
     edPostDepartureMailFromAddress: TsEdit;
     edPostDepartureCCMailTo: TsEdit;
+    sLabel7: TsLabel;
+    sCheckBox1: TsCheckBox;
+    sPanel2: TsPanel;
+    cxGroupBox5: TsGroupBox;
+    Label69: TsLabel;
+    Label70: TsLabel;
+    Label71: TsLabel;
+    edCallMinUnits: TsSpinEdit;
+    edCallMinPrice: TsCalcEdit;
+    edCallStartPrice: TsCalcEdit;
+    cxGroupBox4: TsGroupBox;
+    Label66: TsLabel;
+    Label67: TsLabel;
+    Label68: TsLabel;
+    chkCallLogInternal: TsCheckBox;
+    cbxCallType: TsComboBox;
+    edCallMinSec: TsSpinEdit;
     procedure FormCreate(Sender : TObject);
     procedure FormClose(Sender : TObject; var Action : TCloseAction);
     procedure FormShow(Sender : TObject);
@@ -767,7 +755,6 @@ type
     procedure edCallMinPriceChange(Sender : TObject);
     procedure editBreakFastItemDblClick(Sender : TObject);
     procedure editRoomRentItemDblClick(Sender : TObject);
-    procedure editStayTaxItemDblClick(Sender : TObject);
     procedure edRackCustomerDblClick(Sender : TObject);
     procedure editDiscountItemDblClick(Sender : TObject);
     procedure editPhoneUseItemDblClick(Sender : TObject);
@@ -1082,21 +1069,6 @@ g.ReadWriteSettingsToRegistry(0);
     editRoomRentItem.Text := rControlData.fieldbyname('RoomRentItem').AsString;
     labRoomRentItemDescription.Caption := Item_GetDescription(editRoomRentItem.Text);
 
-    try
-      editStayTaxItem.Text := rControlData.fieldbyname('stayTaxItem').AsString;
-      labStayTaxItemDescription.Caption := Item_GetDescription(editStayTaxItem.Text);
-      __cbxTaxPerPerson.Checked := rControlData['stayTaxPerPerson'];
-      g.qStayTaxPerPerson := __cbxTaxPerPerson.Checked;
-    except
-      on E : Exception do
-        showmessage(E.message);
-    end;
-
-    if trim(editStayTaxItem.Text) = '' then
-    begin
-      showmessage(GetTranslatedText('shTx_ControlData_Tax'));
-    end;
-
     editPaymentItem.Text := rControlData.fieldbyname('PaymentItem').AsString;
     labPaymentItemDescription.Caption := Item_GetDescription(editPaymentItem.Text);
 
@@ -1271,17 +1243,7 @@ g.ReadWriteSettingsToRegistry(0);
     end;
 
     try
-      chkUseStayTax.checked := rControlData['UseStayTax'];
-    except
-    end;
-
-    try
       chkNegInvoice.checked := rControlData['AllowNegativeInvoice'];
-    except
-    end;
-
-    try
-      chkStayTaxIncluted.checked := rControlData['StayTaxIncluted'];
     except
     end;
 
@@ -1731,9 +1693,6 @@ begin
       // tsInvoiceSystem
       rControlData.fieldbyname('BreakFastItem').AsString := editBreakFastItem.Text;
       rControlData.fieldbyname('RoomRentItem').AsString := editRoomRentItem.Text;
-      rControlData.fieldbyname('StayTaxItem').AsString := editStayTaxItem.Text;
-      rControlData['stayTaxPerPerson'] := __cbxTaxPerPerson.Checked;
-      g.qStayTaxPerPerson := __cbxTaxPerPerson.Checked;
 
       rControlData.fieldbyname('PaymentItem').AsString := editPaymentItem.Text;
       rControlData.fieldbyname('PhoneUseItem').AsString := editPhoneUseItem.Text;
@@ -1870,21 +1829,12 @@ begin
       except
       end;
 
-      try
-        rControlData.fieldbyname('UseStayTax').AsBoolean := chkUseStayTax.checked;
-      except
-      end;
 
       try
         rControlData.fieldbyname('AllowNegativeInvoice').AsBoolean := chkNegInvoice.checked;
       except
       end;
 
-
-      try
-        rControlData.fieldbyname('StayTaxIncluted').AsBoolean := chkStayTaxIncluted.checked;
-      except
-      end;
 
       try
         rControlData.fieldbyname('XmlDoExport').AsBoolean := chkXmlDoExport.checked;
@@ -3483,11 +3433,6 @@ end;
 procedure TfrmControlData.editRoomRentItemDblClick(Sender : TObject);
 begin
   itemLookup(editRoomRentItem, labRoomRentItemDescription);
-end;
-
-procedure TfrmControlData.editStayTaxItemDblClick(Sender : TObject);
-begin
-  itemLookup(editStayTaxItem, labStayTaxItemDescription);
 end;
 
 procedure TfrmControlData.edNativeCurrencyDblClick(Sender: TObject);

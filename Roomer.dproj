@@ -204,6 +204,7 @@
         <DCC_DcuOutput>_dcu</DCC_DcuOutput>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_3_Win32)'!=''">
+        <DCC_DebugDCUs>false</DCC_DebugDCUs>
         <DCC_BplOutput> </DCC_BplOutput>
         <VerInfo_Debug>true</VerInfo_Debug>
         <VerInfo_PreRelease>true</VerInfo_PreRelease>
