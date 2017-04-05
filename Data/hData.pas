@@ -15120,7 +15120,7 @@ begin
       DiscountItemDescription := glb.Items.fieldbyname('Description').asString;
     end;
 
-    TaxesItem := trim(uppercase(ctrlGetString('StayTaxItem')));
+    TaxesItem := trim(uppercase(g.qStayTaxItem));
     if glb.Items.Locate('Item', TaxesItem, []) then
     begin
       TaxesItemDescription := glb.Items.fieldbyname('Description').asString;
@@ -15233,7 +15233,7 @@ begin
       DiscountItemDescription := glb.Items.fieldbyname('Description').asString;
     end;
 
-    TaxesItem := trim(uppercase(ctrlGetString('StayTaxItem')));
+    TaxesItem := trim(uppercase(g.qStayTaxItem));
     if glb.Items.Locate('Item', TaxesItem, []) then
     begin
       TaxesItemDescription := glb.Items.fieldbyname('Description').asString;

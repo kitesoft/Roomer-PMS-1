@@ -8453,6 +8453,7 @@ end;
 procedure Td.ctrlGetGlobalValues;
 var
   rSet: TRoomerDataSet;
+  sql: string;
 begin
   g.qArrivalDateRulesPrice := False;
   g.qBreakfastInclDefault := False;
@@ -8461,7 +8462,6 @@ begin
   g.qRoomRentItem := '';
   g.qNativeCurrency := '';
   g.qStayTaxItem := '';
-  g.qStayTaxPerPerson := False;
   g.qDiscountItem := '';
   g.qCountry := '';
   g.qBreakFastItem := '';
@@ -8504,8 +8504,6 @@ begin
   g.qRoomRentItem := rSet.FieldByName('RoomRentItem').Asstring;
   g.qCountry := rSet.FieldByName('Country').Asstring;
   g.qBreakFastItem := rSet.FieldByName('BreakFastItem').Asstring;
-  g.qStayTaxItem := rSet.FieldByName('stayTaxItem').Asstring;
-  g.qStayTaxPerPerson := rSet['stayTaxPerPerson'];
   g.qDiscountItem := rSet.FieldByName('DiscountItem').Asstring;
   g.qLocalRoomRent := rSet.FieldByName('LocalRoomRent').Asstring;
   g.qGreenColor := rSet.FieldByName('GreenColor').Asstring;
@@ -8591,10 +8589,20 @@ begin
   except
     g.qExcluteNoshow := False;
   end;
-  // end;
-  // finally
-  // freeandnil(rSet);
-  // end;
+
+
+  rSet := CreateNewDataSet;
+  try
+    sql := Format('select i.item from home100.TAXES t '#10+
+                  ' join items i on t.booking_item_id=i.id '#10+
+                  ' where t.hotel_id=%s and t.valid_from <= now() and t.valid_to >= now() ', [_db(rSet.hotelId)]);
+    if rSet_bySQL(rSet, sql, false) then
+      g.qStayTaxItem := rSet.FieldByName('item').Asstring
+    else
+      g.qStayTaxItem := 'CTAX';
+  finally
+    rSet.Free;
+  end;
 end;
 
 function Td.ChkCompany(Company, CompanyName: string): boolean;

@@ -296,7 +296,6 @@ type
     qRoomRentItem : string;
     qDiscountItem : string;
     qStayTaxItem : string;
-    qStayTaxPerPerson : Boolean;
 
     qLocalRoomRent : string;
     qGreenColor : string;
@@ -820,7 +819,6 @@ begin
     qPaymentItem := '';
     qRoomRentItem := '';
     qStayTaxItem := '';
-    qStayTaxPerPerson := False;
 
     qDiscountItem := '';
 

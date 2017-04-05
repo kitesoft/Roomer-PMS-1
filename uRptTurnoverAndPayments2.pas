@@ -238,8 +238,8 @@ type
     sTabSheet4: TsTabSheet;
     sPanel5: TsPanel;
     btnInvoiceListExcel: TsButton;
-    btnInvoiceListExpandAll: TcxButton;
-    btnInvoiceListContractAll: TcxButton;
+    btnInvoiceListExpandAll: TsButton;
+    btnInvoiceListContractAll: TsButton;
     grInvoicelist: TcxGrid;
     tvInvoiceHeads: TcxGridDBTableView;
     tvInvoiceHeadsRecId: TcxGridDBColumn;
@@ -1521,7 +1521,7 @@ begin
     s := s + '   , il.confirmAmount '#10;
     s := s + '   , ih.Customer '#10;
     s := s + '   , (SELECT stayTaxIncluted FROM customers WHERE customer = ih.customer) AS isTaxIncluted '#10;
-    s := s + '   , IF(il.ItemId=co.StayTaxItem, il.Total + il.revenueCorrection, 0) AS TotalStayTax '#10;
+    s := s + '   , IF(il.ItemId= ' + _db(g.qStayTaxItem) + ', il.Total + il.revenueCorrection, 0) AS TotalStayTax '#10;
     s := s + ' FROM '#10;
     s := s + '   invoicelines il INNER JOIN '#10;
     s := s + '   items it ON il.ItemID = it.Item INNER JOIN '#10;
