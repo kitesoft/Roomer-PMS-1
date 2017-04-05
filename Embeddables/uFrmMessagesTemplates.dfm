@@ -3988,10 +3988,4 @@ object FrmMessagesTemplates: TFrmMessagesTemplates
       8000800000008000800080800000C0C0C000808080000000FF0000FF000000FF
       FF00FF000000FF00FF00FFFF0000FFFFFF0000000000}
   end
-  object timBlink: TTimer
-    Enabled = False
-    OnTimer = timBlinkTimer
-    Left = 176
-    Top = 120
-  end
 end

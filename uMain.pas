@@ -3023,8 +3023,9 @@ begin
 
     result := true;
     lblHotelName.Caption := g.qHotelName;
+
+    FrmMessagesTemplates.Clear;
     timMessagesTimer(timMessages);
-//    timMessages.Enabled := true;
 
     TSplashFormManager.UpdateProgress('Preparing datacache...');
     d.PrepareFixedTables;
@@ -7071,6 +7072,7 @@ begin
 
       if NOT OffLineMode then
       begin
+        //TODO: replace this weird random generator with something more solid
         iMinute := StrToInt(FormatDateTime('n', now));
         if iMinute IN [0] then
           glb.ReloadPreviousGuests;
