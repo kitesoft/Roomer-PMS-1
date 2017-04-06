@@ -856,6 +856,10 @@
         </DCCReference>
         <DCCReference Include="Resources\uResourceTypeDefinitions.pas"/>
         <DCCReference Include="PMSSettings\uHotelServicesSettings.pas"/>
+        <DCCReference Include="RoomerForm\uRoomerGridForm.pas">
+            <Form>frmBaseRoomerGridForm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <None Include="Roomer.todo"/>
         <None Include="notes.txt"/>
         <None Include="Roomer.inc"/>

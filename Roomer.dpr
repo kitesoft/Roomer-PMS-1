@@ -276,7 +276,8 @@ uses
   uRoomerIDList in 'RoomerVCLs\Source\uRoomerIDList.pas',
   uEditFinanceExportProperties in 'uEditFinanceExportProperties.pas' {frmEditFinanceExportProperties},
   uResourceTypeDefinitions in 'Resources\uResourceTypeDefinitions.pas',
-  uHotelServicesSettings in 'PMSSettings\uHotelServicesSettings.pas';
+  uHotelServicesSettings in 'PMSSettings\uHotelServicesSettings.pas',
+  uRoomerGridForm in 'RoomerForm\uRoomerGridForm.pas' {frmBaseRoomerGridForm};
 
 {$R *.RES}
 
@@ -306,13 +307,12 @@ begin
     TSplashFormManager.Show;
 
     Application.CreateForm(TD, D);
-  D.ApplicationId := cOpenAPIApplicationID;
+    D.ApplicationId := cOpenAPIApplicationID;
 
     Application.CreateForm(TDReportData, DReportData);
     TSplashFormManager.UpdateProgress('Loading forms...');
 
     Application.CreateForm(TDImages, DImages);
-
     Application.CreateForm(TfrmMain, frmMain);
 
     if D.roomerMainDataSet.IsConnectedToInternet then

@@ -119,7 +119,6 @@ begin
   glb.PerformAuthenticationAssertion(self);
 
   FCloseOnEsc := True;
-
 end;
 
 
@@ -133,6 +132,7 @@ begin
   inherited; // Calls ShowForm event handler
   KeepOnVisibleMonitor;
   UpdateControls;
+  BusyState := fsIdle;
 end;
 
 procedure TfrmBaseRoomerForm.DoUpdateControls;
@@ -201,7 +201,6 @@ procedure TfrmBaseRoomerForm.Loaded;
 begin
   psRoomerBase.StorageName := 'Software\Roomer\FormStatus\' + classname;
   inherited;
-  BusyState := fsIdle;
 end;
 
 procedure TfrmBaseRoomerForm.RefreshData;

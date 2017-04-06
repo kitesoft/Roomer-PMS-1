@@ -1655,6 +1655,11 @@ begin
   constants.Add(cshTx_HotelArrivalsOfflineReport_Name, 'Hotel Arrivals Report');
 end;
 
+procedure AddBaseFormConstants;
+begin
+  constants.Add('shBaseGridForm_NoDataToDisplay', '<No data to display>');
+end;
+
 procedure prepareConstants;
 begin
   constants := TDictionary<String, String>.Create(TCustomEqualityComparer.Create());
@@ -1672,6 +1677,8 @@ begin
 
   AddConstants_SystemConstants;
   AddConstants_NewUIConstants;
+
+  AddBaseFormConstants;
 end;
 
 function GetTranslatedText(nameOfConstant : String) : String;
