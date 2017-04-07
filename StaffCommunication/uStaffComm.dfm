@@ -66,7 +66,7 @@ inherited frmStaffComm: TfrmStaffComm
     Width = 648
     Height = 506
     TabOrder = 0
-    ExplicitTop = 103
+    ExplicitTop = 105
     ExplicitWidth = 648
     ExplicitHeight = 506
     inherited tvData: TcxGridDBBandedTableView
@@ -76,6 +76,8 @@ inherited frmStaffComm: TfrmStaffComm
       OptionsData.Deleting = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
+      OptionsSelection.CellSelect = False
+      OptionsSelection.MultiSelect = True
       OptionsView.CellAutoHeight = True
       OptionsView.GroupByBox = False
       Styles.Content = nil
@@ -87,56 +89,57 @@ inherited frmStaffComm: TfrmStaffComm
       Styles.GroupSummary = nil
       Styles.Header = nil
       Styles.Preview = nil
+      object tvDatadate: TcxGridDBBandedColumn
+        Caption = 'Action Date'
+        DataBinding.FieldName = 'date'
+        Width = 77
+        Position.BandIndex = 0
+        Position.ColIndex = 0
+        Position.RowIndex = 0
+      end
       object tvDatanotes: TcxGridDBBandedColumn
         Caption = 'Notes'
         DataBinding.FieldName = 'notes'
         PropertiesClassName = 'TcxMemoProperties'
-        Width = 317
+        Width = 280
         Position.BandIndex = 0
-        Position.ColIndex = 0
+        Position.ColIndex = 1
         Position.RowIndex = 0
       end
       object tvDataaction: TcxGridDBBandedColumn
         Caption = 'Action'
         DataBinding.FieldName = 'action'
         OnGetDisplayText = tvData2actionGetDisplayText
-        Width = 123
+        Width = 108
         Position.BandIndex = 0
-        Position.ColIndex = 1
+        Position.ColIndex = 2
         Position.RowIndex = 0
       end
       object tvDatalastChangedBy: TcxGridDBBandedColumn
         Caption = 'Last changed by'
         DataBinding.FieldName = 'lastChangedBy'
-        Width = 117
+        Width = 103
         Position.BandIndex = 0
-        Position.ColIndex = 2
+        Position.ColIndex = 3
         Position.RowIndex = 0
       end
       object tvDatalastUpdate: TcxGridDBBandedColumn
         Caption = 'Last Update'
         DataBinding.FieldName = 'lastUpdate'
-        Width = 89
+        Width = 78
         Position.BandIndex = 0
-        Position.ColIndex = 3
+        Position.ColIndex = 4
         Position.RowIndex = 0
       end
       object tvDataRecId: TcxGridDBBandedColumn
         DataBinding.FieldName = 'RecId'
         Visible = False
         Position.BandIndex = 0
-        Position.ColIndex = 4
+        Position.ColIndex = 5
         Position.RowIndex = 0
       end
       object tvDataID: TcxGridDBBandedColumn
         DataBinding.FieldName = 'ID'
-        Visible = False
-        Position.BandIndex = 0
-        Position.ColIndex = 5
-        Position.RowIndex = 0
-      end
-      object tvDatadate: TcxGridDBBandedColumn
-        DataBinding.FieldName = 'date'
         Visible = False
         Position.BandIndex = 0
         Position.ColIndex = 6
@@ -190,7 +193,7 @@ inherited frmStaffComm: TfrmStaffComm
       Caption = 'Delete'
       ImageIndex = 24
       Images = DImages.PngImageList1
-      TabOrder = 0
+      TabOrder = 2
       OnClick = btnDeleteClick
       SkinData.SkinSection = 'BUTTON'
     end
@@ -204,7 +207,7 @@ inherited frmStaffComm: TfrmStaffComm
       ImageIndex = 76
       Images = DImages.PngImageList1
       Style = bsSplitButton
-      TabOrder = 1
+      TabOrder = 3
       SkinData.SkinSection = 'BUTTON'
     end
     object edFilter: TsEdit
@@ -219,7 +222,7 @@ inherited frmStaffComm: TfrmStaffComm
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
-      TabOrder = 2
+      TabOrder = 4
       OnChange = edFilterChange
       SkinData.SkinSection = 'EDIT'
     end
@@ -234,7 +237,7 @@ inherited frmStaffComm: TfrmStaffComm
       Images = DImages.PngImageList1
       ParentShowHint = False
       ShowHint = True
-      TabOrder = 3
+      TabOrder = 0
       OnClick = btnInsertClick
       SkinData.SkinSection = 'BUTTON'
     end
@@ -249,7 +252,7 @@ inherited frmStaffComm: TfrmStaffComm
       Images = DImages.PngImageList1
       ParentShowHint = False
       ShowHint = True
-      TabOrder = 4
+      TabOrder = 1
       OnClick = btnEditClick
       SkinData.SkinSection = 'BUTTON'
     end
@@ -268,7 +271,7 @@ inherited frmStaffComm: TfrmStaffComm
       Font.Style = []
       MaxLength = 10
       ParentFont = False
-      TabOrder = 5
+      TabOrder = 6
       Text = '  -  -    '
       OnChange = dtDateChange
       SkinData.SkinSection = 'EDIT'
@@ -281,7 +284,7 @@ inherited frmStaffComm: TfrmStaffComm
       Top = 70
       Width = 25
       Height = 21
-      TabOrder = 6
+      TabOrder = 7
       OnClick = btNextDayClick
       ImageIndex = 3
       Images = DImages.ilGuests
@@ -291,10 +294,21 @@ inherited frmStaffComm: TfrmStaffComm
       Top = 70
       Width = 25
       Height = 21
-      TabOrder = 7
+      TabOrder = 5
       OnClick = btnPeviousDayClick
       ImageIndex = 2
       Images = DImages.ilGuests
+    end
+    object chkShowAllNotes: TsCheckBox
+      Left = 273
+      Top = 71
+      Width = 139
+      Height = 20
+      Caption = 'Show all notes from date'
+      TabOrder = 8
+      OnClick = dtDateChange
+      ImgChecked = 0
+      ImgUnchecked = 0
     end
   end
   inherited cxsrRoomerStyleRepository: TcxStyleRepository

@@ -315,6 +315,7 @@ begin
   constants.Add('shDeleteItemtype', 'Delete item type');
   constants.Add('shDeleteItem', 'Delete item');
   constants.Add('shDeleteSelectedLine', 'Delete selected line');
+  constants.Add('shDeleteSelectedLines', 'Deleting ALL selected lines.');
   constants.Add('shDeleteLocation', 'Delete location');
   constants.Add('shDeleteRoom', 'Delete Room');
   constants.Add('shDeleteMarketSegment', 'Delete marketsegment');

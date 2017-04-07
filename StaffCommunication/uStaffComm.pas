@@ -142,6 +142,7 @@ type
     tvDataID: TcxGridDBBandedColumn;
     tvDatadate: TcxGridDBBandedColumn;
     tvDatauser: TcxGridDBBandedColumn;
+    chkShowAllNotes: TsCheckBox;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -188,6 +189,7 @@ type
     procedure applyFilter;
     function GetDate: TDate;
     procedure SetDate(const Value: TDate);
+    procedure DeleteSelectedRows;
   protected
     procedure DoUpdateControls; override;
     procedure DoLoadData; override;
@@ -271,7 +273,11 @@ begin
 
   if m_.active then m_.Close;
 
-  sql := format('SELECT * FROM daynotes WHERE date=%s', [_db(dtDate.Date)]);
+  if chkShowAllNotes.Checked then
+    sql := format('SELECT * FROM daynotes WHERE date>=%s ORDER BY date asc', [_db(dtDate.Date)])
+  else
+    sql := format('SELECT * FROM daynotes WHERE date=%s', [_db(dtDate.Date)]);
+
   rSet := d.roomerMainDataSet.ActivateNewDataset(d.roomerMainDataSet.SystemFreeQuery(sql));
   try
     if zSortStr = '' then zSortStr := 'id';
@@ -296,6 +302,7 @@ procedure TfrmStaffComm.DoUpdateControls;
 begin
   inherited;
   panBtn.Visible := ZAct = actLookup;
+  tvDatadate.Visible := chkShowAllNotes.Checked;
 end;
 
 procedure TfrmStaffComm.fillHolder;
@@ -425,8 +432,6 @@ begin
 end;
 
 procedure TfrmStaffComm.m_BeforePost(DataSet: TDataSet);
-var
- nID : integer;
 begin
   if zFirstTime then exit;
   initDayNotes(zData);
@@ -589,9 +594,43 @@ begin
   edFilter.Text := '';
 end;
 
+procedure TfrmStaffComm.DeleteSelectedRows;
+var
+  i: integer;
+  Lstr: TStrings;
+  s: string;
+  sql: string;
+begin
+  s := '';
+  s := s+GetTranslatedText('shDeleteSelectedLines') + chr(10);
+  s := s+GetTranslatedText('shContinue');
+
+  if MessageDlg(s,mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+  begin
+    lStr := TStringlist.Create;
+    try
+      for i := 0 to PRED(tvData.Controller.SelectedRowCount ) do
+        lStr.Add(IntToStr(tvData.Controller.SelectedRows[i].Values[tvDataID.Index]));
+
+      lStr.Delimiter := ',';
+      lStr.QuoteChar := ' ';
+      sql := 'DELETE FROM daynotes WHERE ID in (' + lStr.DelimitedText + ')';
+
+      d.roomerMainDataSet.DoCommand(sql);
+
+    finally
+      lStr.Free;
+    end;
+  end;
+  RefreshData;
+end;
+
 procedure TfrmStaffComm.btnDeleteClick(Sender: TObject);
 begin
-  m_.Delete;
+  if tvData.Controller.SelectedRowCount > 1 then
+    DeleteSelectedRows
+  else
+    m_.Delete;
 end;
 
 procedure TfrmStaffComm.btnEditClick(Sender: TObject);
