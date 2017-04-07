@@ -1,7 +1,6 @@
 inherited frmBaseRoomerGridForm: TfrmBaseRoomerGridForm
   Caption = 'frmBaseRoomerGridForm'
   ClientHeight = 327
-  ExplicitWidth = 679
   ExplicitHeight = 366
   PixelsPerInch = 96
   TextHeight = 13
@@ -17,7 +16,7 @@ inherited frmBaseRoomerGridForm: TfrmBaseRoomerGridForm
     Height = 242
     Align = alClient
     TabOrder = 1
-    ExplicitTop = 59
+    LookAndFeel.NativeStyle = False
     object tvData: TcxGridDBBandedTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = dsData
@@ -43,8 +42,6 @@ inherited frmBaseRoomerGridForm: TfrmBaseRoomerGridForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 2
-    ExplicitLeft = -8
-    ExplicitTop = 8
   end
   inherited psRoomerBase: TcxPropertiesStore
     Components = <

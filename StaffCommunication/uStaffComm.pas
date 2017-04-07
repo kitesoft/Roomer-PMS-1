@@ -94,15 +94,14 @@ uses
   dxSkinLondonLiquidSky, dxSkinMoneyTwins, dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green, dxSkinOffice2007Pink,
   dxSkinOffice2007Silver, dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinValentine,
-  dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, cxMemo, cxDropDownEdit
+  dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, cxMemo, cxDropDownEdit, sBitBtn, Vcl.Mask, sMaskEdit,
+  sCustomComboEdit, sToolEdit
+  , uROomerGridForm, uRoomerForm, cxGridBandedTableView, cxGridDBBandedTableView
 
   ;
 
 type
-  TfrmStaffComm = class(TForm)
-    sPanel1: TsPanel;
-    btnDelete: TsButton;
-    btnOther: TsButton;
+  TfrmStaffComm = class(TfrmBaseRoomerGridForm)
     mnuOther: TPopupMenu;
     mnuiPrint: TMenuItem;
     mnuiAllowGridEdit: TMenuItem;
@@ -112,56 +111,49 @@ type
     mnuiGridToHtml: TMenuItem;
     mnuiGridToText: TMenuItem;
     mnuiGridToXml: TMenuItem;
-    sbMain: TsStatusBar;
-    edFilter: TsEdit;
-    cLabFilter: TsLabel;
-    btnClear: TsSpeedButton;
     panBtn: TsPanel;
     btnCancel: TsButton;
     BtnOk: TsButton;
-    DS: TDataSource;
     grPrinter: TdxComponentPrinter;
     prLink_grData: TdxGridReportLink;
     m_: TdxMemData;
-    grData: TcxGrid;
-    tvData: TcxGridDBTableView;
-    lvData: TcxGridLevel;
     m_ID: TIntegerField;
-    btnInsert: TsButton;
-    btnEdit: TsButton;
-    FormStore: TcxPropertiesStore;
     m_date: TDateField;
     m_lastUpdate: TDateTimeField;
-    tvDataRecId: TcxGridDBColumn;
-    tvDataID: TcxGridDBColumn;
-    tvDatadate: TcxGridDBColumn;
-    tvDatauser: TcxGridDBColumn;
-    tvDatanotes: TcxGridDBColumn;
-    tvDataaction: TcxGridDBColumn;
-    tvDatalastChangeBy: TcxGridDBColumn;
-    tvDatalastUpdate: TcxGridDBColumn;
     m_notes: TWideMemoField;
     m_action: TWideStringField;
     m_user: TWideStringField;
     m_lastChangedBy: TWideStringField;
-    sLabel1: TsLabel;
-    lblDate: TsLabel;
+    cLabFilter: TsLabel;
+    btnClear: TsSpeedButton;
+    btnDelete: TsButton;
+    btnOther: TsButton;
+    edFilter: TsEdit;
+    btnInsert: TsButton;
+    btnEdit: TsButton;
+    dtDate: TsDateEdit;
+    btNextDay: TsBitBtn;
+    btnPeviousDay: TsBitBtn;
+    tvDatalastUpdate: TcxGridDBBandedColumn;
+    tvDatanotes: TcxGridDBBandedColumn;
+    tvDataaction: TcxGridDBBandedColumn;
+    tvDatalastChangedBy: TcxGridDBBandedColumn;
+    tvDataRecId: TcxGridDBBandedColumn;
+    tvDataID: TcxGridDBBandedColumn;
+    tvDatadate: TcxGridDBBandedColumn;
+    tvDatauser: TcxGridDBBandedColumn;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
-    procedure FormKeyPress(Sender: TObject; var Key: Char);
     procedure m_BeforeDelete(DataSet: TDataSet);
-    procedure m_BeforeInsert(DataSet: TDataSet);
     procedure m_BeforePost(DataSet: TDataSet);
     procedure m_NewRecord(DataSet: TDataSet);
     procedure tvDataDescriptionPropertiesValidate(Sender: TObject;
       var DisplayValue: Variant; var ErrorText: TCaption; var Error: Boolean);
-    procedure tvDataDblClick(Sender: TObject);
     procedure BtnOkClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure tvDataDataControllerFilterChanged(Sender: TObject);
     procedure tvDataDataControllerSortingChanged(Sender: TObject);
-    procedure btnOtherClick(Sender: TObject);
     procedure btnDeleteClick(Sender: TObject);
     procedure mnuiPrintClick(Sender: TObject);
     procedure mnuiAllowGridEditClick(Sender: TObject);
@@ -173,11 +165,16 @@ type
     procedure btnClearClick(Sender: TObject);
     procedure edFilterChange(Sender: TObject);
     procedure btnInsertClick(Sender: TObject);
-    procedure btnTaxLinksClick(Sender: TObject);
     procedure chkActiveClick(Sender: TObject);
+    procedure tvData2actionGetDisplayText(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
+      var AText: string);
+    procedure btnPeviousDayClick(Sender: TObject);
+    procedure btNextDayClick(Sender: TObject);
+    procedure dtDateChange(Sender: TObject);
+    procedure tvDataCellDblClick(Sender: TcxCustomGridTableView; ACellViewInfo: TcxGridTableDataCellViewInfo;
+      AButton: TMouseButton; AShift: TShiftState; var AHandled: Boolean);
   private
     { Private declarations }
-    rSet : TRoomerDataSet;
     zFirstTime       : boolean;
     zAllowGridEdit   : boolean;
     zFilterOn        : boolean;
@@ -185,18 +182,20 @@ type
     Lookup : Boolean;
     zSortStr         : string;
 
-    ADate : TDateTime;
-
-    Procedure fillGridFromDataset(sGoto : integer);
     procedure fillHolder;
     procedure changeAllowgridEdit;
     Procedure chkFilter;
     procedure applyFilter;
-
+    function GetDate: TDate;
+    procedure SetDate(const Value: TDate);
+  protected
+    procedure DoUpdateControls; override;
+    procedure DoLoadData; override;
   public
     { Public declarations }
     zAct   : TActTableAction;
     zData  : recDayNotesHolder;
+    property Date: TDate read GetDate write SetDate;
   end;
 
 function openDayNotes(ADate : TDateTime; act : TActTableAction; Lookup : Boolean; var theData : recDayNotesHolder) : boolean;
@@ -222,23 +221,21 @@ uses
   , uFrmStaffNote
   , uUtils
   , UITypes
-  ;
+  , uStaffCommunicationDefinitions, uSQLUtils;
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 //  unit global functions
 //////////////////////////////////////////////////////////////////////////////////////////////
 
-function openDayNotes(ADate : TDateTime; act : TActTableAction; Lookup : Boolean; var theData : recDayNotesHolder) : boolean;
+function openDayNotes(aDate : TDateTime; act : TActTableAction; Lookup : Boolean; var theData : recDayNotesHolder) : boolean;
 var _frmStaffComm : TfrmStaffComm;
 begin
   result := false;
   _frmStaffComm := TfrmStaffComm.Create(nil);
   try
     _frmStaffComm.zData := theData;
-    _frmStaffComm.ADate := ADate;
-    _frmStaffComm.lblDate.Caption := DateToStr(ADate);
-    _frmStaffComm.Caption := 'Notes for ' + DateToStr(ADate);
+    _frmStaffComm.Date := ADate;
     _frmStaffComm.Lookup := Lookup;
     _frmStaffComm.zAct := act;
     _frmStaffComm.ShowModal;
@@ -263,33 +260,42 @@ end;
 ///////////////////////////////////////////////////////////////////////
 
 
-Procedure TfrmStaffComm.fillGridFromDataset(sGoto : integer);
+procedure TfrmStaffComm.DoLoadData;
+var
+  rSet: TRoomerDataSet;
+  sql: string;
 begin
+  inherited;
+  Caption := 'Notes for ' + DateToStr(dtDate.Date);
   zFirstTime := true;
-  if zSortStr = '' then zSortStr := 'id';
-  rSet := frmMain.StaffComm.records;
-  rSet.Sort := 'Id';
+
+  if m_.active then m_.Close;
+
+  sql := format('SELECT * FROM daynotes WHERE date=%s', [_db(dtDate.Date)]);
+  rSet := d.roomerMainDataSet.ActivateNewDataset(d.roomerMainDataSet.SystemFreeQuery(sql));
   try
-    rSet.First;
-    if NOT rSet.Eof then
-    begin
-      if m_.active then m_.Close;
-      m_.LoadFromDataSet(rSet);
-      if sGoto = 0 then
+    if zSortStr = '' then zSortStr := 'id';
+    rSet.Sort := 'Id';
+    try
+      rSet.First;
+      if NOT rSet.Eof then
       begin
-        m_.First;
-      end else
-      begin
-        try
-          m_.Locate('id',sGoto,[]);
-        except
-        end;
+        m_.LoadFromDataSet(rSet);
       end;
+    finally
+      rSet.Filter := '';
+      rSet.Filtered := False;
     end;
   finally
-    rSet.Filter := '';
-    rSet.Filtered := False;
+    rSet.Free;
+    zFirstTime := false;
   end;
+end;
+
+procedure TfrmStaffComm.DoUpdateControls;
+begin
+  inherited;
+  panBtn.Visible := ZAct = actLookup;
 end;
 
 procedure TfrmStaffComm.fillHolder;
@@ -298,48 +304,25 @@ begin
   zData.User                  := m_['user'];
   zData.ADate                 := m_['date'];
   zData.Notes                 := m_['notes'];
-  zData.AAction               := m_['action'];
+  zData.AAction               := TStaffCommAction.FromString( m_['action']);
   zData.LastChangedBy         := m_['lastChangedBy'];
   zData.LastUpdate            := m_['lastUpdate'];
 end;
 
-
-//    ID              : integer ;
-//    Active          : boolean ;
-//    Description     : string  ;
-//    Item            : string  ;
-//    Price           : double  ;
-//    Itemtype        : string  ;
-//    AccountKey      : string  ;
-//    MinibarItem     : boolean ;
-//    SystemItem      : boolean ;
-//    RoomRentitem    : boolean ;
-//    ReservationItem : boolean ;
-//    Hide            :boolean  ;
-//    Currency        :string   ;
-
-
 procedure TfrmStaffComm.changeAllowgridEdit;
 begin
-  tvDataID.Options.Editing              := false;
-  tvDatadate.Options.Editing            := false;
-  tvDatauser.Options.Editing            := false;
   tvDatanotes.Options.Editing           := zAllowGridEdit;
-  tvDatalastChangeBy.Options.Editing    := false;
-  tvDatalastUpdate.Options.Editing      := zAllowGridEdit;
   tvDataaction.Options.Editing          := zAllowGridEdit;
 end;
 
 
 procedure TfrmStaffComm.chkActiveClick(Sender: TObject);
 begin
-  zFirstTime := false;
   if tvdata.DataController.DataSet.State = dsEdit then
   begin
     tvdata.DataController.Post;
   end;
-  fillGridFromDataset(zData.id);
-  zFirstTime := false;
+  RefreshData;
 end;
 
 procedure TfrmStaffComm.chkFilter;
@@ -351,13 +334,13 @@ begin
   rc1 := tvData.DataController.RecordCount;
   rc2 := tvData.DataController.FilteredRecordCount;
   zFilterON := rc1 <> rc2;
-  if zFilterON then
-  begin
-  end else
-  begin
-  end;
 end;
 
+
+procedure TfrmStaffComm.dtDateChange(Sender: TObject);
+begin
+  RefreshData;
+end;
 
 procedure TfrmStaffComm.edFilterChange(Sender: TObject);
 begin
@@ -378,7 +361,7 @@ begin
   tvData.DataController.Filter.Root.Clear;
   tvData.DataController.Filter.Root.AddItem(tvDatanotes,foLike,'%'+edFilter.Text+'%','%'+edFilter.Text+'%');
   tvData.DataController.Filter.Root.AddItem(tvDatauser,foLike,'%'+edFilter.Text+'%','%'+edFilter.Text+'%');
-  tvData.DataController.Filter.Root.AddItem(tvDatalastChangeBy,foLike,'%'+edFilter.Text+'%','%'+edFilter.Text+'%');
+  tvData.DataController.Filter.Root.AddItem(tvDatalastChangedBy,foLike,'%'+edFilter.Text+'%','%'+edFilter.Text+'%');
   tvData.DataController.Filter.Active := True;
 end;
 
@@ -389,81 +372,33 @@ end;
 
 procedure TfrmStaffComm.FormCreate(Sender: TObject);
 begin
-  RoomerLanguage.TranslateThisForm(self);
-  glb.PerformAuthenticationAssertion(self);
-  PlaceFormOnVisibleMonitor(self);
-  Lookup := False;
-  //**
   zFirstTime  := true;
   zAct        := actNone;
-  //sButton1.Visible := True;
 end;
 
 procedure TfrmStaffComm.FormShow(Sender: TObject);
 begin
 //**
-  panBtn.Visible := False;
-  sbMain.Visible := false;
-
-  fillGridFromDataset(zData.id);
-  zFirstTime := true;
-  sbMain.SimpleText := zSortStr;
-
-  if ZAct = actLookup then
-  begin
-//    mnuiAllowGridEdit.Checked := False;
-    panBtn.Visible := true;
-  end else
-  begin
-//    mnuiAllowGridEdit.Checked := true;
-    sbMain.Visible := true;
-  end;
   //-C
   zAllowGridEdit := mnuiAllowGridEdit.Checked;
   changeAllowGridEdit;
   chkFilter;
   zFirstTime := false;
+  RefreshData;
+end;
 
+function TfrmStaffComm.GetDate: TDate;
+begin
+  Result := dtDate.Date;
 end;
 
 procedure TfrmStaffComm.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
   glb.EnableOrDisableTableRefresh('items', True);
-  if tvdata.DataController.DataSet.State = dsInsert then
-  begin
+  if tvdata.DataController.DataSet.State in [dsInsert, dsEdit] then
     tvdata.DataController.Post;
-  end;
-  if tvdata.DataController.DataSet.State = dsEdit then
-  begin
-    tvdata.DataController.Post;
-  end;
 end;
 
-procedure TfrmStaffComm.FormKeyPress(Sender: TObject; var Key: Char);
-begin
-  if ZAct = actLookup then
-  begin
-    if key = chr(13) then
-    begin
-      if activecontrol = edFilter then
-      begin
-      end else
-      begin
-        btnOk.click;
-      end;
-    end;
-
-    if key = chr(27) then
-    begin
-      if activecontrol = edFilter then
-      begin
-      end else
-      begin
-        btnCancel.click;
-      end;
-    end;
-  end;
-end;
 
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -489,13 +424,6 @@ begin
   end;
 end;
 
-procedure TfrmStaffComm.m_BeforeInsert(DataSet: TDataSet);
-begin
-  if zFirstTime then exit;
-  tvData.GetColumnByFieldName('date').Focused := True;
-end;
-
-
 procedure TfrmStaffComm.m_BeforePost(DataSet: TDataSet);
 var
  nID : integer;
@@ -506,11 +434,11 @@ begin
   zData.User                  := dataset['user'];
   zData.ADate                 := dataset['date'];
   zData.Notes                 := dataset['notes'];
-  zData.AAction               := dataset['action'];
+  zData.AAction               := TStaffCommAction.FromString(dataset['action']);
   zData.LastChangedBy         := dataset['lastChangedBy'];
   zData.LastUpdate            := dataset['lastUpdate'];
 
-  if tvData.DataController.DataSource.State = dsEdit then
+  if Dataset.State = dsEdit then
   begin
     if NOT UPD_DayNotes(zData) then
     begin
@@ -518,39 +446,44 @@ begin
       exit;
     end;
   end;
-  if tvData.DataController.DataSource.State = dsInsert then
+  if Dataset.State = dsInsert then
   begin
-    if INS_DayNotes(zData,nID) then
-    begin
-      m_.FieldByName('ID').AsInteger := nID;
-      glb.ForceTableRefresh;
-    end else
+    if not INS_DayNotes(zData) then
     begin
       abort;
       exit;
     end;
   end;
   glb.ForceTableRefresh;
+  RefreshData;
 end;
 
 
 
 procedure TfrmStaffComm.m_NewRecord(DataSet: TDataSet);
 begin
-  if zFirstTime then exit;
-
-  dataset.FieldByName('ID').AsInteger;
   dataset['user']            := d.roomerMainDataSet.username;
-  dataset['date']            := ADate;
+  dataset['date']            := Date;
   dataset['notes']           := '';
-  dataset['action']          := 'NO_ACTION_NEEDED';
+  dataset['action']          := scaNoActionNeeded.ToDB;
   dataset['lastChangedBy']   := d.roomerMainDataSet.username;
   dataset['lastUpdate']      := now;
+end;
+
+procedure TfrmStaffComm.btNextDayClick(Sender: TObject);
+begin
+  dtdate.Date := dtdate.Date + 1;
 
 end;
 
-procedure TfrmStaffComm.btnTaxLinksClick(Sender: TObject);
+procedure TfrmStaffComm.btnPeviousDayClick(Sender: TObject);
 begin
+  dtdate.Date := dtdate.Date - 1;
+end;
+
+procedure TfrmStaffComm.SetDate(const Value: TDate);
+begin
+  dtDate.Date := Value;
 end;
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -592,18 +525,25 @@ begin
   end;
 end;
 
-procedure TfrmStaffComm.tvDataDblClick(Sender: TObject);
+procedure TfrmStaffComm.tvDataCellDblClick(Sender: TcxCustomGridTableView; ACellViewInfo: TcxGridTableDataCellViewInfo;
+  AButton: TMouseButton; AShift: TShiftState; var AHandled: Boolean);
 begin
+  inherited;
   if ZAct = actLookup then
     btnOK.Click
   else
     btnEdit.Click;
 end;
 
-
 ////////////////////////////////////////////////////////////////////////////
 //  Filter
 /////////////////////////////////////////////////////////////////////////////
+
+procedure TfrmStaffComm.tvData2actionGetDisplayText(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
+  var AText: string);
+begin
+  aText := TStaffCommAction.FromString(aText).AsReadableString;
+end;
 
 procedure TfrmStaffComm.tvDataDataControllerFilterChanged(Sender: TObject);
 begin
@@ -627,7 +567,6 @@ begin
     s := s + ' DESC';
   end;
   zSortStr := s;
-  sbMain.SimpleText := s;
 end;
 
 //////////////////////////////////////////////////////////////////////////
@@ -638,11 +577,6 @@ end;
 procedure TfrmStaffComm.BtnOkClick(Sender: TObject);
 begin
   fillHolder;
-end;
-
-procedure TfrmStaffComm.btnOtherClick(Sender: TObject);
-begin
-  //**
 end;
 
 procedure TfrmStaffComm.btnCancelClick(Sender: TObject);
@@ -661,64 +595,41 @@ begin
 end;
 
 procedure TfrmStaffComm.btnEditClick(Sender: TObject);
+var
+  Dummy: TDate;
 begin
   initDayNotes(zData);
-  zData.ID                    := m_.FieldByName('ID').AsInteger;
-  zData.User                  := m_['user'];
-  zData.ADate                 := m_['date'];
-  zData.Notes                 := m_['notes'];
-  zData.AAction               := m_['action'];
-  zData.LastChangedBy         := m_['lastChangedBy'];
-  zData.LastUpdate            := m_['lastUpdate'];
+  FillHolder;
 
-  if EditDayNote(zData.ADate, zData.User, zData.LastUpdate, zData.AAction, zData.Notes) then
+  if EditDayNote(zData.ADate, false, zData, Dummy) then
   begin
     m_.Edit;
     m_['notes'] := zData.Notes;
-    m_['action'] := zData.AAction;
+    m_['action'] := zData.AAction.ToDB;
     m_.Post;
   end;
 
-//  mnuiAllowGridEdit.Checked := true;
-//  zAllowGridEdit := mnuiAllowGridEdit.Checked;
-//  changeAllowGridEdit;
-//  grData.SetFocus;
-//  tvData.GetColumnByFieldName('Description').Focused := True;
-//  showmessage(GetTranslatedText('shTx_StaffComm_EditInGrid'));
 end;
 
 procedure TfrmStaffComm.btnInsertClick(Sender: TObject);
+var
+  endDate: TDate;
 begin
-//  mnuiAllowGridEdit.Checked := true;
-//  zAllowGridEdit := mnuiAllowGridEdit.Checked;
-//  changeAllowGridEdit;
   if m_.Active = false then m_.Open;
-  grData.SetFocus;
-  m_.Insert;
-//  tvData.GetColumnByFieldName('Item').Focused := True;
-  m_['user'] := d.roomerMainDataSet.username;
-  m_['date'] := ADate;
-  m_['notes'] := '';
-  m_['action'] := 'NO_ACTION_NEEDED';
-  m_['lastChangedBy'] := d.roomerMainDataSet.username;
-  m_['lastUpdate'] := Now;
 
   initDayNotes(zData);
-  zData.ID                    := 0;
-  zData.User                  := m_['user'];
-  zData.ADate                 := m_['date'];
-  zData.Notes                 := m_['notes'];
-  zData.AAction               := m_['action'];
-  zData.LastChangedBy         := m_['lastChangedBy'];
-  zData.LastUpdate            := m_['lastUpdate'];
+  zData.aDate := dtDate.Date;
 
-  if EditDayNote(zData.ADate, zData.User, zData.LastUpdate, zData.AAction, zData.Notes) then
+  if EditDayNote(zData.ADate, true, zData, endDate) then
   begin
-    m_['notes'] := zData.Notes;
-    m_['action'] := zData.AAction;
-    m_.Post;
-  end else
-    m_.Cancel;
+    m_.DisableControls;
+    try
+      INS_DayNotes(zData, endDate);
+    finally
+      m_.EnableControls;
+      RefreshData;
+    end;
+  end;
 end;
 
 //---------------------------------------------------------------------------
@@ -748,9 +659,6 @@ begin
   sFilename := g.qProgramPath + caption;
   ExportGridToExcel(sFilename, grData, true, true, true);
   ShellExecute(Handle, 'OPEN', PChar(sFilename + '.xls'), nil, nil, sw_shownormal);
-  //  To export ot xlsx form then use this
-  //  ExportGridToXLSX(sFilename, grData, true, true, true);
-  //  ShellExecute(Handle, 'OPEN', PChar(sFilename + '.xlsx'), nil, nil, sw_shownormal);
 end;
 
 procedure TfrmStaffComm.mnuiGridToHtmlClick(Sender: TObject);

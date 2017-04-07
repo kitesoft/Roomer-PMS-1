@@ -41,8 +41,6 @@ type
     constructor Create(pnl : TsPanel);
     destructor Destroy; override;
 
-    procedure PlaceCorrectly;
-
     procedure BringToFront;
     procedure DoShine;
     procedure DontShine;
@@ -156,8 +154,6 @@ begin
   FNumDayNotes := Value;
   DontShine;
 
-//  if Assigned(CommInfoPanel) then
-//    CommInfoPanel.Visible := Value > 0;
 end;
 
 procedure TStaffCommunication.SetTop(const Value: Integer);
@@ -181,7 +177,6 @@ begin
   PrepareEvents;
   OriginalHeight := CommInfoPanel.Height;
   OriginalWidth := CommInfoPanel.Width;
-  PlaceCorrectly;
   DayNotes := 0;
   records := nil;
   DontShine;
@@ -302,13 +297,6 @@ begin
         end;
       end;
     end;
-end;
-
-procedure TStaffCommunication.PlaceCorrectly;
-begin
-//  Left := ParentAsWinCntrl.Width - Width;
-//  Top := 1; // frmMain.PanMain.Top;
-//  BringToFront;
 end;
 
 initialization

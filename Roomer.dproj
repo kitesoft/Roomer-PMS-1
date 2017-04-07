@@ -701,15 +701,15 @@
         <DCCReference Include="uFrmMergePortfolios.pas">
             <Form>frmMergePortfolios</Form>
         </DCCReference>
-        <DCCReference Include="uStaffCommunication.pas"/>
-        <DCCReference Include="uStaffComm.pas">
+        <DCCReference Include="StaffCommunication\uStaffCommunication.pas"/>
+        <DCCReference Include="StaffCommunication\uStaffComm.pas">
             <Form>frmStaffComm</Form>
         </DCCReference>
         <DCCReference Include="uDynamicRates.pas"/>
         <DCCReference Include="uFrmCheckOut.pas">
             <Form>FrmCheckOut</Form>
         </DCCReference>
-        <DCCReference Include="uFrmStaffNote.pas">
+        <DCCReference Include="StaffCommunication\uFrmStaffNote.pas">
             <Form>FrmStaffNote</Form>
         </DCCReference>
         <DCCReference Include="uFrmMessageViewer.pas">
@@ -860,6 +860,7 @@
             <Form>frmBaseRoomerGridForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="Definitions\uStaffCommunicationDefinitions.pas"/>
         <None Include="Roomer.todo"/>
         <None Include="notes.txt"/>
         <None Include="Roomer.inc"/>

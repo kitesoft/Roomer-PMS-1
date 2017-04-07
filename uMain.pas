@@ -3678,12 +3678,6 @@ end;
 procedure TfrmMain.FormResize(Sender: TObject);
 begin
   pnlRoomerLogo.Left := ClientWidth - pnlRoomerLogo.Width - 10;
-
-  if assigned(StaffComm) then
-    try
-      StaffComm.PlaceCorrectly;
-    Except
-    end;
 end;
 
 // ** END OF FORM FUNCTIONS ---------------------------------------------------

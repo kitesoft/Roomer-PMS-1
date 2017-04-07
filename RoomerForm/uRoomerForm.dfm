@@ -37,7 +37,6 @@ object frmBaseRoomerForm: TfrmBaseRoomerForm
       end>
     OnDrawPanel = sbStatusBarDrawPanel
     SkinData.SkinSection = 'STATUSBAR'
-    ExplicitWidth = 537
   end
   object psRoomerBase: TcxPropertiesStore
     Components = <
@@ -60,8 +59,7 @@ object frmBaseRoomerForm: TfrmBaseRoomerForm
     Top = 16
     PixelsPerInch = 96
     object cxstBandHeader: TcxStyle
-      AssignedValues = [svColor, svFont]
-      Color = clBtnFace
+      AssignedValues = [svFont]
       Font.Charset = ANSI_CHARSET
       Font.Color = clDefault
       Font.Height = -11
@@ -69,8 +67,7 @@ object frmBaseRoomerForm: TfrmBaseRoomerForm
       Font.Style = [fsBold]
     end
     object cxstCaption: TcxStyle
-      AssignedValues = [svColor, svFont]
-      Color = clBtnFace
+      AssignedValues = [svFont]
       Font.Charset = ANSI_CHARSET
       Font.Color = clDefault
       Font.Height = -11
@@ -78,8 +75,7 @@ object frmBaseRoomerForm: TfrmBaseRoomerForm
       Font.Style = []
     end
     object cxstCardCaptionRow: TcxStyle
-      AssignedValues = [svColor, svFont]
-      Color = clBtnFace
+      AssignedValues = [svFont]
       Font.Charset = ANSI_CHARSET
       Font.Color = clDefault
       Font.Height = -11
@@ -87,8 +83,7 @@ object frmBaseRoomerForm: TfrmBaseRoomerForm
       Font.Style = []
     end
     object cxstCardRowCaption: TcxStyle
-      AssignedValues = [svColor, svFont]
-      Color = clBtnFace
+      AssignedValues = [svFont]
       Font.Charset = ANSI_CHARSET
       Font.Color = clDefault
       Font.Height = -11
@@ -96,8 +91,7 @@ object frmBaseRoomerForm: TfrmBaseRoomerForm
       Font.Style = []
     end
     object cxstContent: TcxStyle
-      AssignedValues = [svColor, svFont]
-      Color = clWhite
+      AssignedValues = [svFont]
       Font.Charset = ANSI_CHARSET
       Font.Color = clDefault
       Font.Height = -11
@@ -105,8 +99,7 @@ object frmBaseRoomerForm: TfrmBaseRoomerForm
       Font.Style = []
     end
     object cxstContentEven: TcxStyle
-      AssignedValues = [svColor, svFont]
-      Color = 16053492
+      AssignedValues = [svFont]
       Font.Charset = ANSI_CHARSET
       Font.Color = clDefault
       Font.Height = -11
@@ -114,8 +107,7 @@ object frmBaseRoomerForm: TfrmBaseRoomerForm
       Font.Style = []
     end
     object cxstContentOdd: TcxStyle
-      AssignedValues = [svColor, svFont]
-      Color = clWhite
+      AssignedValues = [svFont]
       Font.Charset = ANSI_CHARSET
       Font.Color = clDefault
       Font.Height = -11
@@ -123,8 +115,7 @@ object frmBaseRoomerForm: TfrmBaseRoomerForm
       Font.Style = []
     end
     object cxstFilterBar: TcxStyle
-      AssignedValues = [svColor, svFont]
-      Color = clBtnShadow
+      AssignedValues = [svFont]
       Font.Charset = ANSI_CHARSET
       Font.Color = clDefault
       Font.Height = -11
@@ -132,8 +123,7 @@ object frmBaseRoomerForm: TfrmBaseRoomerForm
       Font.Style = []
     end
     object cxstFooter: TcxStyle
-      AssignedValues = [svColor, svFont]
-      Color = clBtnFace
+      AssignedValues = [svFont]
       Font.Charset = ANSI_CHARSET
       Font.Color = clDefault
       Font.Height = -11
@@ -141,8 +131,7 @@ object frmBaseRoomerForm: TfrmBaseRoomerForm
       Font.Style = [fsBold]
     end
     object cxstGroup: TcxStyle
-      AssignedValues = [svColor, svFont]
-      Color = clBtnFace
+      AssignedValues = [svFont]
       Font.Charset = ANSI_CHARSET
       Font.Color = clDefault
       Font.Height = -11
@@ -150,8 +139,7 @@ object frmBaseRoomerForm: TfrmBaseRoomerForm
       Font.Style = [fsBold]
     end
     object cxstHeader: TcxStyle
-      AssignedValues = [svColor, svFont]
-      Color = clBtnFace
+      AssignedValues = [svFont]
       Font.Charset = ANSI_CHARSET
       Font.Color = clDefault
       Font.Height = -11
@@ -159,8 +147,7 @@ object frmBaseRoomerForm: TfrmBaseRoomerForm
       Font.Style = [fsBold]
     end
     object cxstPreview: TcxStyle
-      AssignedValues = [svColor, svFont]
-      Color = clWhite
+      AssignedValues = [svFont]
       Font.Charset = ANSI_CHARSET
       Font.Color = clDefault
       Font.Height = -11

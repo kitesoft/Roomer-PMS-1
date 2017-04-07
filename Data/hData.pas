@@ -23,6 +23,7 @@ uses
   , uReservationStateDefinitions
   , uRoomReservationOBJ
   , uRoomerThreadedRequest
+  , uStaffCommunicationDefinitions
   ;
 
 const
@@ -1293,7 +1294,7 @@ type
     User: String;
     Notes: string;
     ADate: TDate;
-    AAction: String;
+    AAction: TStaffCommAction;
     LastChangedBy: String;
     LastUpdate: TDateTime;
   end;
@@ -1966,7 +1967,8 @@ function MaidActionExistsInOther(sCode: string): boolean;
 
 procedure initDayNotes(var rec: recDayNotesHolder);
 function UPD_DayNotes(var rec: recDayNotesHolder) : Boolean;
-function INS_DayNotes(var rec: recDayNotesHolder; var newId : Integer) : Boolean;
+function INS_DayNotes(const rec: recDayNotesHolder) : Boolean; overload;
+function INS_DayNotes(const rec: recDayNotesHolder; aEndDate: TDate) : Boolean; overload;
 
 
 function INS_CleaningNote(theData: recCleaningNotesHolder; var NewID: integer): boolean;
@@ -11019,7 +11021,7 @@ begin
     User                  := d.roomerMainDataSet.username;
     ADate                 := now;
     Notes                 := '';
-    AAction               := '';
+    AAction               := scaNoActionNeeded;
     LastChangedBy         := d.roomerMainDataSet.username;
     LastUpdate            := now;
   end;
@@ -11029,8 +11031,8 @@ function UPD_DayNotes(var rec: recDayNotesHolder) : Boolean;
 var sql: String;
 begin
   with rec do
-    sql := format('UPDATE daynotes SET date=''%s'', notes=%s, action=''%s'', lastChangedBy=%s WHERE id=%d',
-          [uDateUtils.dateToSqlString(ADate), _db(Notes), AAction, _db(user), id]);
+    sql := format('UPDATE daynotes SET date=%s, notes=%s, action=%s, lastChangedBy=%s WHERE id=%d',
+          [_db(ADate), _db(Notes), _db(AAction.ToDB), _db(user), id]);
   try
     d.roomerMainDataSet.DoCommand(sql);
     result := True;
@@ -11039,14 +11041,37 @@ begin
   end;
 end;
 
-function INS_DayNotes(var rec: recDayNotesHolder; var newId : Integer) : Boolean;
-var sql: String;
+function INS_DayNotes(const rec: recDayNotesHolder) : Boolean;
 begin
-  with rec do
-    sql := format('INSERT INTO daynotes (user, date, notes, action, lastChangedBy) VALUES(%s, ''%s'', %s, ''%s'', %s)',
-          [_db(user), uDateUtils.dateToSqlString(ADate), _db(Notes), AAction, _db(user)]);
+  Result := INS_DayNotes(rec, rec.aDate);
+end;
+
+function INS_DayNotes(const rec: recDayNotesHolder; aEndDate: TDate) : Boolean;
+var
+  sql: String;
+  lDate: Tdate;
+  lStrings: TStrings;
+begin
+  sql := 'INSERT INTO daynotes (user, date, notes, action, lastChangedBy) VALUES ';
+  lDate := rec.ADate;
+
+  lStrings := TStringList.Create;
   try
-    newId := d.roomerMainDataSet.DoCommand(sql);
+    while (lDate <= aEndDate) do
+    begin
+      lStrings.Add(Format( ' (%s, %s, %s, %s, %s)', [_db(rec.user), _db(lDate), _db(rec.Notes), _db(rec.AAction.ToDB), _db(rec.user)]));
+      lDate := lDate + 1;
+    end;
+
+    lStrings.Delimiter := ',';
+    lStrings.QuoteChar := ' ';
+    sql := sql + lStrings.DelimitedText;
+  finally
+    lStrings.Free;
+  end;
+
+  try
+    d.roomerMainDataSet.DoCommand(sql);
     result := True;
   except
     result := False;

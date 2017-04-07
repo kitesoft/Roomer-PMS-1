@@ -1,21 +1,13 @@
-object FrmStaffNote: TFrmStaffNote
-  Left = 0
-  Top = 0
+inherited FrmStaffNote: TFrmStaffNote
   Caption = 'Note for the day'
   ClientHeight = 537
   ClientWidth = 657
-  Color = clBtnFace
-  Font.Charset = DEFAULT_CHARSET
-  Font.Color = clWindowText
   Font.Height = -11
-  Font.Name = 'Tahoma'
-  Font.Style = []
-  OldCreateOrder = False
-  Position = poMainFormCenter
-  OnCreate = FormCreate
+  ExplicitWidth = 673
+  ExplicitHeight = 576
   PixelsPerInch = 96
   TextHeight = 13
-  object sLabel3: TsLabel
+  object sLabel3: TsLabel [0]
     Left = 67
     Top = 139
     Width = 86
@@ -29,7 +21,7 @@ object FrmStaffNote: TFrmStaffNote
     Font.Name = 'Tahoma'
     Font.Style = []
   end
-  object sLabel4: TsLabel
+  object sLabel4: TsLabel [1]
     Left = 114
     Top = 171
     Width = 39
@@ -43,12 +35,19 @@ object FrmStaffNote: TFrmStaffNote
     Font.Name = 'Tahoma'
     Font.Style = []
   end
-  object panBtn: TsPanel
+  inherited sbStatusBar: TsStatusBar
+    Top = 517
+    Width = 657
+    ExplicitTop = 517
+    ExplicitWidth = 657
+  end
+  object panBtn: TsPanel [3]
     Left = 0
-    Top = 505
+    Top = 485
     Width = 657
     Height = 32
     Align = alBottom
+    BevelOuter = bvNone
     TabOrder = 0
     SkinData.SkinSection = 'PANEL'
     DesignSize = (
@@ -84,7 +83,7 @@ object FrmStaffNote: TFrmStaffNote
       SkinData.SkinSection = 'BUTTON'
     end
   end
-  object sPanel1: TsPanel
+  object sPanel1: TsPanel [4]
     Left = 0
     Top = 0
     Width = 657
@@ -114,19 +113,6 @@ object FrmStaffNote: TFrmStaffNote
       Height = 19
       Alignment = taRightJustify
       Caption = 'Created by:'
-      ParentFont = False
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -16
-      Font.Name = 'Tahoma'
-      Font.Style = []
-    end
-    object lblNoteDate: TsLabel
-      Left = 220
-      Top = 16
-      Width = 6
-      Height = 19
-      Caption = '-'
       ParentFont = False
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
@@ -174,38 +160,87 @@ object FrmStaffNote: TFrmStaffNote
       Font.Name = 'Tahoma'
       Font.Style = []
     end
+    object lblUntil: TsLabel
+      Left = 368
+      Top = 16
+      Width = 37
+      Height = 19
+      Alignment = taRightJustify
+      Caption = 'until:'
+      ParentFont = False
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Tahoma'
+      Font.Style = []
+    end
+    object dtDateFrom: TsDateEdit
+      Left = 220
+      Top = 13
+      Width = 125
+      Height = 23
+      AutoSize = False
+      EditMask = '!99/99/9999;1; '
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      MaxLength = 10
+      ParentFont = False
+      TabOrder = 0
+      Text = '  -  -    '
+      OnChange = dtDateFromChange
+      GlyphMode.Blend = 0
+      GlyphMode.Grayed = False
+    end
+    object dtDateUntil: TsDateEdit
+      Left = 412
+      Top = 13
+      Width = 117
+      Height = 23
+      AutoSize = False
+      EditMask = '!99/99/9999;1; '
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      MaxLength = 10
+      ParentFont = False
+      TabOrder = 1
+      Text = '  -  -    '
+      OnChange = dtDateFromChange
+      GlyphMode.Blend = 0
+      GlyphMode.Grayed = False
+    end
   end
-  object __cbxAction: TsComboBox
-    Left = 166
-    Top = 136
+  object __cbxAction: TsComboBox [5]
+    Left = 167
+    Top = 139
     Width = 427
     Height = 27
     Alignment = taLeftJustify
     SkinData.SkinSection = 'COMBOBOX'
     VerticalAlignment = taAlignTop
     Style = csDropDownList
-    Color = clWhite
     Font.Charset = DEFAULT_CHARSET
-    Font.Color = 2302755
+    Font.Color = clWindowText
     Font.Height = -16
     Font.Name = 'Tahoma'
     Font.Style = []
     ItemIndex = -1
     ParentFont = False
     TabOrder = 2
-    Items.Strings = (
-      'NO_ACTION_NEEDED'
-      'ACTION_NEEDED'
-      'ACTION_FINISHED')
   end
-  object mmoText: TsMemo
+  object mmoText: TsMemo [6]
     Left = 166
     Top = 171
     Width = 427
     Height = 286
     Color = clWhite
     Font.Charset = DEFAULT_CHARSET
-    Font.Color = 2302755
+    Font.Color = clBlack
     Font.Height = -13
     Font.Name = 'Tahoma'
     Font.Style = []
@@ -213,20 +248,28 @@ object FrmStaffNote: TFrmStaffNote
     TabOrder = 3
     SkinData.SkinSection = 'EDIT'
   end
-  object FormStore: TcxPropertiesStore
+  inherited psRoomerBase: TcxPropertiesStore
     Components = <
       item
-        Component = Owner
+        Component = frmBaseRoomerForm.Owner
         Properties.Strings = (
           'Height'
           'Left'
-          'Position'
           'Top'
-          'Width')
+          'Width'
+          'Position')
       end>
-    StorageName = 'Software\Roomer\FormStatus\StaffCommEdit'
-    StorageType = stRegistry
-    Left = 371
-    Top = 264
+    Left = 608
+    Top = 64
+  end
+  inherited cxsrRoomerStyleRepository: TcxStyleRepository
+    Left = 608
+    PixelsPerInch = 96
+    inherited dxssRoomerGridReportLink: TdxGridReportLinkStyleSheet
+      BuiltIn = True
+    end
+    inherited cxssRoomerGridTableView: TcxGridTableViewStyleSheet
+      BuiltIn = True
+    end
   end
 end

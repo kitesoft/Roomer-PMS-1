@@ -74,7 +74,7 @@ inherited frmArrivalsReport: TfrmArrivalsReport
       end
       object dtDateFrom: TsDateEdit
         Left = 122
-        Top = 45
+        Top = 47
         Width = 105
         Height = 21
         AutoSize = False
@@ -544,7 +544,7 @@ inherited frmArrivalsReport: TfrmArrivalsReport
       PrinterPage.ScaleMode = smFit
       PrinterPage._dxMeasurementUnits_ = 2
       PrinterPage._dxLastMU_ = 2
-      ReportDocument.CreationDate = 42825.469694039350000000
+      ReportDocument.CreationDate = 42832.438722650460000000
       ReportTitle.Font.Charset = DEFAULT_CHARSET
       ReportTitle.Font.Color = clBlack
       ReportTitle.Font.Height = -19

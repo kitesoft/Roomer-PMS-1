@@ -190,11 +190,11 @@ uses
   uInvoiceContainer in 'uInvoiceContainer.pas',
   XmlUtils in 'RoomerUtils\XmlUtils.pas',
   uFrmMergePortfolios in 'uFrmMergePortfolios.pas' {frmMergePortfolios},
-  uStaffCommunication in 'uStaffCommunication.pas',
-  uStaffComm in 'uStaffComm.pas' {frmStaffComm},
+  uStaffCommunication in 'StaffCommunication\uStaffCommunication.pas',
+  uStaffComm in 'StaffCommunication\uStaffComm.pas' {frmStaffComm},
   uDynamicRates in 'uDynamicRates.pas',
   uFrmCheckOut in 'uFrmCheckOut.pas' {FrmCheckOut},
-  uFrmStaffNote in 'uFrmStaffNote.pas' {FrmStaffNote},
+  uFrmStaffNote in 'StaffCommunication\uFrmStaffNote.pas' {FrmStaffNote},
   uFrmMessageViewer in 'uFrmMessageViewer.pas' {FrmMessageViewer},
   uInvoiceCompare in 'uInvoiceCompare.pas' {frmInvoiceCompare},
   uAlerts in 'Alerts\uAlerts.pas',
@@ -277,7 +277,8 @@ uses
   uEditFinanceExportProperties in 'uEditFinanceExportProperties.pas' {frmEditFinanceExportProperties},
   uResourceTypeDefinitions in 'Resources\uResourceTypeDefinitions.pas',
   uHotelServicesSettings in 'PMSSettings\uHotelServicesSettings.pas',
-  uRoomerGridForm in 'RoomerForm\uRoomerGridForm.pas' {frmBaseRoomerGridForm};
+  uRoomerGridForm in 'RoomerForm\uRoomerGridForm.pas' {frmBaseRoomerGridForm},
+  uStaffCommunicationDefinitions in 'Definitions\uStaffCommunicationDefinitions.pas';
 
 {$R *.RES}
 
@@ -307,7 +308,7 @@ begin
     TSplashFormManager.Show;
 
     Application.CreateForm(TD, D);
-    D.ApplicationId := cOpenAPIApplicationID;
+  D.ApplicationId := cOpenAPIApplicationID;
 
     Application.CreateForm(TDReportData, DReportData);
     TSplashFormManager.UpdateProgress('Loading forms...');

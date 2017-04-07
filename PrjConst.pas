@@ -1643,6 +1643,11 @@ begin
 
   constants.Add('shTx_ResourceManager_Delete_Resource', 'Deleting this resource. Are you sure?');
 
+  constants.Add('shStaffCommAction_NoActionNeeded', 'No action needed');
+  constants.Add('shStaffCommAction_ActionNeeded', 'Action needed');
+  constants.Add('shStaffCommAction_ActionFinished', 'Action finished');
+
+
 end;
 
 procedure AddConstants_OfflineReports;
@@ -1850,7 +1855,7 @@ begin
   frmMergePortfolios := TfrmMergePortfolios.Create(nil); frmMergePortfolios.Free; frmMergePortfolios := nil;
   frmStaffComm := TfrmStaffComm.Create(nil); frmStaffComm.Free; frmStaffComm := nil;
   FrmCheckOut := TFrmCheckOut.Create(nil); FrmCheckOut.Free; FrmCheckOut := nil;
-  FrmStaffNote := TFrmStaffNote.Create(nil); FrmStaffNote.Free; FrmStaffNote := nil;
+  TFrmStaffNote.Create(nil).Free;
   FrmMessageViewer := TFrmMessageViewer.Create(nil); FrmMessageViewer.Free; FrmMessageViewer := nil;
   frmInvoiceCompare := TfrmInvoiceCompare.Create(nil); frmInvoiceCompare.Free; frmInvoiceCompare := nil;
   FrmAlertEdit := TFrmAlertEdit.Create(nil); FrmAlertEdit.Free; FrmAlertEdit := nil;
