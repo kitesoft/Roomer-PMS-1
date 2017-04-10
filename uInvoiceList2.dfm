@@ -389,7 +389,7 @@ inherited frmInvoiceList2: TfrmInvoiceList2
         OnClick = btnViewInvoiceClick
         SkinData.SkinSection = 'BUTTON'
       end
-      object sButton1: TsButton
+      object btnPrint: TsButton
         AlignWithMargins = True
         Left = 427
         Top = 3
@@ -400,10 +400,10 @@ inherited frmInvoiceList2: TfrmInvoiceList2
         ImageIndex = 3
         Images = DImages.PngImageList1
         TabOrder = 4
-        OnClick = sButton1Click
+        OnClick = btnPrintClick
         SkinData.SkinSection = 'BUTTON'
       end
-      object sButton2: TsButton
+      object btnBestFit: TsButton
         AlignWithMargins = True
         Left = 533
         Top = 3
@@ -413,8 +413,9 @@ inherited frmInvoiceList2: TfrmInvoiceList2
         Caption = 'Best fit'
         Images = DImages.PngImageList1
         TabOrder = 5
-        OnClick = sButton2Click
+        OnClick = btnBestFitClick
         SkinData.SkinSection = 'BUTTON'
+        ExplicitTop = 1
       end
       object LMDButton1: TsButton
         AlignWithMargins = True
@@ -433,7 +434,7 @@ inherited frmInvoiceList2: TfrmInvoiceList2
       end
     end
   end
-  object sPanel1: TsPanel [2]
+  object pnlFilter: TsPanel [2]
     Left = 0
     Top = 183
     Width = 1133
@@ -891,6 +892,18 @@ inherited frmInvoiceList2: TfrmInvoiceList2
       GridView = tvInvoiceHead
     end
   end
+  inherited psRoomerBase: TcxPropertiesStore
+    Components = <
+      item
+        Component = frmBaseRoomerForm.Owner
+        Properties.Strings = (
+          'Height'
+          'Left'
+          'Top'
+          'Width'
+          'Position')
+      end>
+  end
   inherited cxsrRoomerStyleRepository: TcxStyleRepository
     PixelsPerInch = 96
     inherited dxssRoomerGridReportLink: TdxGridReportLinkStyleSheet
@@ -1112,9 +1125,9 @@ inherited frmInvoiceList2: TfrmInvoiceList2
       Caption = 'Toggle exportability of selected invoices'
       OnClick = mnuExportabilityClick
     end
-    object E1: TMenuItem
+    object mnuEditFinExportProp: TMenuItem
       Caption = 'Edit finance export properties'
-      OnClick = E1Click
+      OnClick = mnuEditFinExportPropClick
     end
   end
 end
