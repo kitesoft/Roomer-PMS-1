@@ -2850,6 +2850,7 @@ begin
         'SET PersonsProfilesId=pp.Id, ' +
         'pe.title = pp.title, ' +
         'pe.Name = TRIM(CONCAT(pp.FirstName, '' '', pp.LastName)), ' +
+        'pe.Surname = pp.CompanyName, ' +
         'pe.Address1 = pp.Address1, ' +
         'pe.Address2 = pp.Address2, ' +
         'pe.Address3 = pp.Zip, ' +
@@ -2862,7 +2863,6 @@ begin
         'pe.Information = pp.Information, ' +
         'pe.Nationality = pp.Nationality, ' +
         'pe.Customer = pp.CustomerCode, ' +
-        'pe.Surname = pp.CompanyName, ' +
         'pe.CompanyName = pp.CompanyName, ' +
         'pe.CompAddress1 = pp.CompAddress1, ' +
         'pe.CompAddress2 = pp.CompAddress2, ' +
@@ -2872,7 +2872,9 @@ begin
         'pe.CompTel = pp.CompTel, ' +
         'pe.CompEmail = pp.CompEmail, ' +
         'pe.state = pp.state, ' +
-        'pe.DateOfBirth = pp.DateOfBirth ' +
+        'pe.DateOfBirth = pp.DateOfBirth, ' +
+        'pe.PersonalIdentificationId = pp.PassportNumber, ' +
+        'pe.SocialSecurityNumber= pp.SocialSecurityNumber ' +
         'WHERE pp.Id=%d AND ' +
         'pe.MainName=1 AND pe.Reservation=%d AND pe.RoomReservation=%d',
         [

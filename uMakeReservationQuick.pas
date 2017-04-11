@@ -4545,6 +4545,7 @@ begin
   end
   else
   begin
+    labCustomerName.Caption := '';
     labCustomerName.Font.Color := clBlack;
   end;
 end;
