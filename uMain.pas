@@ -8062,7 +8062,6 @@ begin
           Price := rdOBJ.qMT_.FieldByName('Price').AsFloat;
           Discount := rdOBJ.qMT_.FieldByName('Discount').AsFloat;
           ItemsOnInvoice := rdOBJ.qMT_.FieldByName('ItemsOnInvoice').AsBoolean;
-          Percentage := rdOBJ.qMT_.FieldByName('Percent').AsBoolean;
           PriceType := rdOBJ.qMT_.FieldByName('PriceType').asString;
           Currency := rdOBJ.qMT_.FieldByName('Currency').asString;
           numGuests := rdOBJ.qMT_.FieldByName('NumGuests').asinteger;
@@ -8106,7 +8105,7 @@ begin
                   PaymentInvoice, AscIndex, DescIndex,
                   GroupAccount, Room, RoomType, resFlag, CustomerName, isNoRoom, dt, Information, Fax, Tel2, Tel1,
                   GuestName1, PMInfo, PriceType, Currency,
-                  BookingId, Price, Discount, Percentage, ItemsOnInvoice, numGuests, RoomClass, OutOfOrderBlocking,
+                  BookingId, Price, Discount, ItemsOnInvoice, numGuests, RoomClass, OutOfOrderBlocking,
                   BlockMove, BlockMoveReason, OngoingSale, OngoingRent,
                   OngoingTaxes, rdOBJ.qMT_['Invoices'], rdOBJ.qMT_['Guarantee'], rdOBJ.qMT_['TotalPayment'],
                   rdOBJ.qMT_['InvoiceIndex']);
@@ -8160,7 +8159,7 @@ begin
                   PaymentInvoice, AscIndex, DescIndex,
                   GroupAccount, Room, RoomType, resFlag, CustomerName, isNoRoom, dt, Information, Fax, Tel2, Tel1,
                   GuestName1, PMInfo, PriceType, Currency, BookingId,
-                  Price, Discount, Percentage, ItemsOnInvoice, numGuests, RoomClass, OutOfOrderBlocking, BlockMove,
+                  Price, Discount, ItemsOnInvoice, numGuests, RoomClass, OutOfOrderBlocking, BlockMove,
                   BlockMoveReason, OngoingSale, OngoingRent, OngoingTaxes,
                   rdOBJ.qMT_['Invoices'], rdOBJ.qMT_['Guarantee'], rdOBJ.qMT_['TotalPayment'],
                   rdOBJ.qMT_['TotalPayment']);
