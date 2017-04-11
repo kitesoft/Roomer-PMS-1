@@ -108,6 +108,9 @@ type
     function MakeFileNameUnique(const aOrgFilename: string): string;
     procedure SetResourceTypes(const Value: TResourceTypeSet);
     function GetCurrentResource: TResource; inline;
+    function GetRoomerResourceManagement: TRoomerResourceManagement;
+
+    property ResourceManagement: TRoomerResourceManagement read GetRoomerResourceManagement;
   protected
     procedure DoUpdateControls; override;
     procedure DoLoadData; override;
@@ -331,6 +334,14 @@ begin
 end;
 
 
+function TFrmResources.GetRoomerResourceManagement: TRoomerResourceManagement;
+begin
+  if not assigned(FResourceManagement) then
+    LoadData;
+
+  Result := FResourceManagement;
+end;
+
 procedure TFrmResources.btnEditClick(Sender: TObject);
 var filename : String;
     cmd,
@@ -422,7 +433,7 @@ begin
 
   lTryFullPath := lPathAndFilename + lExtension;
   cnt := 0;
-  while FileExists(lTryFullPath) or FResourceManagement.FilenameInList(TPath.GetFileName(lTryFullPath)) do
+  while FileExists(lTryFullPath) or ResourceManagement.FilenameInList(TPath.GetFileName(lTryFullPath)) do
   begin
     inc(cnt);
     lTryFullPath := lPathAndFilename + Format(cCntFmt, [cnt]) + lExtension;
@@ -805,9 +816,7 @@ end;
 
 procedure TFrmResources.RemoveFileForUpload(filename: String);
 begin
-  if not Assigned(FResourceManagement) then
-    LoadData;
-  FResourceManagement.RemoveFileForUpload(filename);
+  ResourceManagement.RemoveFileForUpload(filename);
 end;
 
 procedure TFrmResources.SetKeyString(const Value: string);
@@ -837,14 +846,14 @@ procedure TFrmResources.tvResourcesColumn1GetDisplayText(Sender: TcxCustomGridTa
   var AText: string);
 begin
   inherited;
-  aText := FResourceManagement.Resource[ARecord.Index].Access.AsReadableString;
+  aText := ResourceManagement.Resource[ARecord.Index].Access.AsReadableString;
 end;
 
 procedure TFrmResources.tvResourcesResourceTypeGetDisplayText(Sender: TcxCustomGridTableItem;
   ARecord: TcxCustomGridRecord; var AText: string);
 begin
   inherited;
-  aText := FResourceManagement.Resources[aRecord.Index].ResourceType.AsReadableString();
+  aText := ResourceManagement.Resources[aRecord.Index].ResourceType.AsReadableString();
 end;
 
 end.
