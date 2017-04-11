@@ -222,6 +222,7 @@ type
     procedure applyFilter;
     procedure RemoveRedundantRatesAndAvailabilities;
     procedure GetChannelInventory;
+    procedure CheckAndCorrectDCSetting;
 
   protected
     procedure DoUpdateControls; override;
@@ -636,12 +637,23 @@ begin
   tvDatachannelManagerId.Focused := true;
 end;
 
+procedure TfrmChannels.CheckAndCorrectDCSetting;
+var
+  lCanBeDC: boolean;
+  lChannel: TChannelInventory;
+begin
+  lCanBeDC := FChannelInventory.FindChannelByCode(m_channelManagerId.AsString, lChannel) and lChannel.CanBeDirectConnectChannel;
+  m_directConnection.AsBoolean := m_directConnection.AsBoolean and lCanBeDc;
+end;
+
 procedure TfrmChannels.m_BeforePost(DataSet: TDataSet);
 var
   nID: Integer;
 begin
   if zFirstTime then
     exit;
+
+  CheckAndCorrectDCSetting;
 
   initChannelHolder(zData);
   zData.ID := DataSet.FieldByName('ID').AsInteger;
@@ -797,12 +809,10 @@ var
   lChannel: TChannelInventory;
 begin
   inherited;
-  if (AItem.Index <> tvDatadirectConnection.Index) then
-    AAllow := true
+  if (AItem.Index = tvDatadirectConnection.Index) then
+    AAllow := FChannelInventory.FindChannelByCode(m_channelManagerId.AsString, lChannel) and lChannel.CanBeDirectConnectChannel
   else
-    AAllow := FChannelInventory.FindChannelByCode(m_channelManagerId.AsString, lChannel) and
-      lChannel.CanBeDirectConnectChannel;
-
+    AAllow := true;
 end;
 
 /// /////////////////////////////////////////////////////////////////////////
