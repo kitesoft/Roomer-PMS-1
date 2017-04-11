@@ -805,6 +805,8 @@ end;
 
 procedure TFrmResources.RemoveFileForUpload(filename: String);
 begin
+  if not Assigned(FResourceManagement) then
+    LoadData;
   FResourceManagement.RemoveFileForUpload(filename);
 end;
 
