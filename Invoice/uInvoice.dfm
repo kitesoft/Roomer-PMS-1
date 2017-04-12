@@ -4,6 +4,7 @@ object frmInvoice: TfrmInvoice
   HorzScrollBar.Visible = False
   VertScrollBar.Visible = False
   BorderIcons = [biMinimize, biMaximize]
+  Caption = 'rag'
   ClientHeight = 681
   ClientWidth = 1096
   Color = clBtnFace
@@ -631,8 +632,8 @@ object frmInvoice: TfrmInvoice
       object chkShowPackage: TsCheckBox
         Left = 724
         Top = 143
-        Width = 111
-        Height = 20
+        Width = 119
+        Height = 17
         Caption = 'Package on invoice'
         Checked = True
         State = cbChecked

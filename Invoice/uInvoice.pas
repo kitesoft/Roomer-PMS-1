@@ -2183,20 +2183,20 @@ var
   NativeAmount: Double;
   reservation: integer;
 
-  AvrageRate: Double;
+  AverageRate: Double;
   RateCount: integer;
   UnpaidDays: integer;
 
-  AvrageDiscount: Double;
-  avrageDiscountAmount: Double;
+  AvrageDiscountPerc: Double;
+  AverageDiscountAmount: Double;
 
   DiscountText: string;
-  TotalDiscount: Double;
+  TotalDiscountAmount: Double;
   RoomRentPaidDays: Double;
   iTotalResDays: integer;
 
-  ttRate: Double;
-  ttDiscount: Double;
+  TotalRate: Double;
+//  ttDiscount: Double;
 
   GuestName: String;
   NumChildren: integer;
@@ -2219,6 +2219,7 @@ var
   dNumber: Double;
   lRoomText: string;
   lRoomAdditionalText: string;
+  allIsPercentage: boolean;
 
   function SplitValue(s: String; Index: integer): String;
   var
@@ -2595,7 +2596,7 @@ begin
         s := s + '   (SELECT name FROM persons pe WHERE pe.MainName AND pe.roomreservation = rd.roomreservation LIMIT 1)) AS guestName '#10;
         s := s + 'FROM roomsdate rd '#10;
         s := s + 'WHERE '#10;
-        s := s + '(rd.roomreservation = %d) AND (rd.paid=0) AND rd.ResFlag NOT IN (''X'') '#10;
+        s := s + '(rd.roomreservation = %d) AND (rd.paid=0) AND rd.ResFlag NOT IN (''X'', ''C'') '#10;
         s := s + 'ORDER BY '#10;
         s := s + '  ADate '#10;
         s := format(s, [lRoomReservation]);
@@ -2627,10 +2628,10 @@ begin
           ChildrenCount := zRoomRSet.FieldByName('numChildren').asinteger;
           infantCount := zRoomRSet.FieldByName('numInfants').asinteger;
           PriceCode := zRoomRSet.FieldByName('PriceType').asString;
-          AvrageRate := zRoomRSet.GetFloatValue
+          AverageRate := zRoomRSet.GetFloatValue
             (zRoomRSet.FieldByName('AvrageRate'));
           RateCount := zRoomRSet.FieldByName('rateCount').asinteger;
-          AvrageDiscount := zRoomRSet.GetFloatValue
+          AvrageDiscountPerc := zRoomRSet.GetFloatValue
             (zRoomRSet.FieldByName('discount'));
 
           mRoomRes.append;
@@ -2639,7 +2640,7 @@ begin
           mRoomRes.FieldByName('RoomType').asString := RoomType;
           mRoomRes.FieldByName('Package').asString := package;
           mRoomRes.FieldByName('Guests').asinteger := NumberGuests;
-          mRoomRes.FieldByName('AvragePrice').asfloat := AvrageRate;
+          mRoomRes.FieldByName('AvragePrice').asfloat := AverageRate;
           mRoomRes.FieldByName('RateCount').asfloat := RateCount;
           mRoomRes.FieldByName('RoomDescription').asString := RoomDescription;
           mRoomRes.FieldByName('RoomTypeDescription').asString :=
@@ -2649,7 +2650,7 @@ begin
           mRoomRes.FieldByName('ChildrenCount').asinteger := ChildrenCount;
           mRoomRes.FieldByName('InfantCount').asinteger := infantCount;
           mRoomRes.FieldByName('PriceCode').asString := PriceCode;
-          mRoomRes.FieldByName('AvrageDiscount').asfloat := AvrageDiscount;
+          mRoomRes.FieldByName('AvrageDiscount').asfloat := AvrageDiscountPerc;
           mRoomRes.FieldByName('InvoiceIndex').asinteger := FInvoiceIndex;
           mRoomRes.FieldByName('GroupAccount').asBoolean := zRoomRSet['GroupAccount'];
 
@@ -2660,11 +2661,11 @@ begin
 
           dayCount := trunc(Departure) - trunc(Arrival);
           RateDate := Arrival;
-          TotalDiscount := 0;
+          TotalDiscountAmount := 0;
 
-          ttRate := 0;
-          ttDiscount := 0;
+          TotalRate := 0;
           UnpaidDays := 0;
+          allIsPercentage := true;
 
           rSet := lExecutionPlan.Results[index];
 
@@ -2699,22 +2700,11 @@ begin
                   UnpaidDays := UnpaidDays + 1;
                 end;
 
-                DiscountAmount := 0;
+                if isPercentage then
+                  DiscountAmount := Rate * Discount / 100
+                else
+                  DiscountAmount := Discount;
 
-                if Rate <> 0 then
-                begin
-                  if Discount <> 0 then
-                  begin
-                    if isPercentage then
-                    begin
-                      DiscountAmount := Rate * Discount / 100;
-                    end
-                    else
-                    begin
-                      DiscountAmount := Discount;
-                    end;
-                  end;
-                end;
                 rentAmount := Rate - DiscountAmount;
                 try
                   CurrencyRate := _StrToFloat(edtRate.Text);
@@ -2725,10 +2715,10 @@ begin
                   CurrencyRate := 1;
                 NativeAmount := rentAmount * CurrencyRate;
 
-                TotalDiscount := TotalDiscount + DiscountAmount;
+                TotalDiscountAmount := TotalDiscountAmount + DiscountAmount;
 
-                ttRate := ttRate + Rate;
-                ttDiscount := ttDiscount + Discount;
+                TotalRate := TotalRate + Rate;
+                allIsPercentage := allIsPercentage and IsPercentage;
 
                 mRoomRates.append;
                 mRoomRates.FieldByName('Reservation').asinteger := reservation;
@@ -2749,8 +2739,6 @@ begin
 
               RateDate := RateDate + 1;
             end;
-
-            // rSet.Next;
           end;
 
           iTotalResDays := trunc(Departure) - trunc(Arrival);
@@ -2758,37 +2746,19 @@ begin
           GuestNights := GuestsInRoomRes * UnpaidDays;
           RoomRentPaidDays := iTotalResDays - UnpaidDays;
 
-          if UnpaidDays <> 0 then
-          begin
-            AvrageRate := ttRate / UnpaidDays;
-            AvrageDiscount := ttDiscount / UnpaidDays;
-
-            if AvrageRate <> 0 then
-            begin
-              if AvrageDiscount <> 0 then
-              begin
-                if isPercentage then
-                begin
-                  avrageDiscountAmount := AvrageRate * AvrageDiscount / 100;
-                end
-                else
-                begin
-                  avrageDiscountAmount := AvrageDiscount;
-                end;
-              end;
-            end;
-          end;
-
           if UnpaidDays > 0 then
           begin
+            AverageRate := TotalRate / UnpaidDays;
+            AverageDiscountAmount := TotalDiscountAmount / UnpaidDays;
+            AvrageDiscountPerc := AverageDiscountAmount / (AverageRate / 100);
+
             isPackage := false;
-            if ABS(AvrageRate) > 0 then
+            if ABS(AverageRate) > 0 then
             begin
               if package <> '' then
               begin
                 isPackage := True;
-                _s := Package_getRoomDescription(Package, Room, Arrival,
-                  Departure, GuestName);
+                _s := Package_getRoomDescription(Package, Room, Arrival, Departure, GuestName);
                 if FRoomReservation = 0 then
                   _s := _s + ' Room :' + Room;
 
@@ -2810,23 +2780,15 @@ begin
                 sText := '';
               sText := tmp + sText;
 
-              if isPercentage then
-              begin
-                DiscountText := DiscountText + '(' +
-                  floattostr(RoundDecimals(AvrageDiscount,2)) + '%)';
-              end
-              else
-              begin
-                DiscountText := DiscountText + '(' +
-                  floattostr(AvrageDiscount) + ')';
-              end;
+              if allIsPercentage then
+                DiscountText := DiscountText + '(' + floattostr(RoundDecimals(AvrageDiscountPerc,2)) + '%)';
 
-              AddRoom(Room, AvrageRate, Arrival, Departure, UnpaidDays, sText, (FRoomReservation = 0), lRoomReservation,
-                AvrageDiscount, isPercentage, DiscountText, GuestName, NumberGuests, ChildrenCount, isPackage,
+              AddRoom(Room, AverageRate, Arrival, Departure, UnpaidDays, sText, (FRoomReservation = 0), lRoomReservation,
+                iif(AllIsPercentage, AvrageDiscountPerc, AverageDiscountAmount), AllisPercentage, DiscountText, GuestName, NumberGuests, ChildrenCount, isPackage,
                 lRoomReservation, zRoomRSet.FieldByName('invBreakFast').AsBoolean );
             end;
 
-            if (ABS(AvrageRate) = 0) and (status <> 'B') then
+            if (ABS(AverageRate) = 0) and (status <> 'B') then
             begin
               if package <> '' then
               begin

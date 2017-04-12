@@ -161,9 +161,10 @@ procedure TfrmEmbDateStatistics.DoLoadData;
  begin
   inherited;
 
-   grdRoomClasses.BeginUpdate;
-   grdRoomStates.BeginUpdate;
-   try
+  DisableAlign;
+  grdRoomClasses.BeginUpdate;
+  grdRoomStates.BeginUpdate;
+  try
      FAvailListContainer.Clear;
      grdRoomStates.ColCount := 3;
      grdRoomStates.RowCount := 1;
@@ -222,6 +223,7 @@ procedure TfrmEmbDateStatistics.DoLoadData;
    finally
      grdRoomClasses.EndUpdate;
      grdRoomStates.EndUpdate;
+     EnableAlign;
    end;
  end;
 
