@@ -264,6 +264,7 @@ end;
 
 procedure TfrmRoomerLoginForm.FormShow(Sender: TObject);
 begin
+  PlaceFormOnVisibleMonitor(Self);
   if edtHotelCode.Text <> '' then
      ActiveControl := edtUsername;
   SetFormTopmostOn(self);
@@ -271,7 +272,6 @@ begin
   NoInternet := NOT d.roomerMainDataSet.IsConnectedToInternet;
   ServerUnreachable := NOT d.roomerMainDataSet.RoomerPlatformAvailable;
   btOffline.Visible := NoInternet OR ServerUnreachable;
-
 end;
 
 end.

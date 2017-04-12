@@ -3,7 +3,7 @@ object frmMain: TfrmMain
   Top = 134
   ActiveControl = pageMainGrids
   ClientHeight = 665
-  ClientWidth = 1288
+  ClientWidth = 1335
   Color = clWhite
   DoubleBuffered = True
   Font.Charset = DEFAULT_CHARSET
@@ -25,6 +25,9 @@ object frmMain: TfrmMain
   OnKeyUp = FormKeyUp
   OnResize = FormResize
   OnShow = FormShow
+  DesignSize = (
+    1335
+    665)
   PixelsPerInch = 96
   TextHeight = 13
   object sLabel1: TsLabel
@@ -43,7 +46,7 @@ object frmMain: TfrmMain
   object dxBarDockControl1: TdxBarDockControl
     Left = 0
     Top = 155
-    Width = 1288
+    Width = 1335
     Height = 3
     Align = dalTop
     BarManager = barinn
@@ -56,7 +59,7 @@ object frmMain: TfrmMain
   object panMain: TsPanel
     Left = 0
     Top = 158
-    Width = 1288
+    Width = 1335
     Height = 477
     Margins.Left = 0
     Margins.Top = 0
@@ -68,10 +71,11 @@ object frmMain: TfrmMain
     ParentDoubleBuffered = False
     TabOrder = 1
     SkinData.SkinSection = 'PANEL'
+    ExplicitWidth = 1288
     object lblSearchFilterActive: TsLabel
       Left = 0
       Top = 170
-      Width = 1288
+      Width = 1335
       Height = 3
       Hint = 'Search Filter Active'
       Align = alTop
@@ -92,12 +96,13 @@ object frmMain: TfrmMain
     object pnlBottom: TsPanel
       Left = 0
       Top = 173
-      Width = 1288
+      Width = 1335
       Height = 304
       Align = alClient
       TabOrder = 0
+      ExplicitWidth = 1288
       object splStatistics: TsSplitter
-        Left = 976
+        Left = 1023
         Top = 1
         Width = 7
         Height = 302
@@ -110,24 +115,22 @@ object frmMain: TfrmMain
       object pageMainGrids: TsPageControl
         Left = 1
         Top = 1
-        Width = 975
+        Width = 1022
         Height = 302
-        ActivePage = tabOneDayView
+        ActivePage = tabPeriod
         Align = alClient
         TabOrder = 1
         OnChange = pageMainGridsChange
         SkinData.SkinSection = 'PAGECONTROL'
+        ExplicitWidth = 975
         object tabOneDayView: TsTabSheet
           Caption = 'tabOneDayView'
           ImageIndex = 8
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
+          ExplicitWidth = 967
           object grOneDayRooms: TAdvStringGrid
             Left = 0
             Top = 0
-            Width = 967
+            Width = 1014
             Height = 274
             Cursor = crDefault
             Align = alClient
@@ -161,8 +164,6 @@ object frmMain: TfrmMain
             OnMouseUp = grOneDayRoomsMouseUp
             OnStartDrag = grOneDayRoomsStartDrag
             ActiveRowColor = clWhite
-            GridLineColor = 15527152
-            GridFixedLineColor = 13947601
             HoverRowCells = [hcNormal, hcSelected]
             OnGetCellPrintColor = grOneDayRoomsGetCellPrintColor
             OnGridHint = grOneDayRoomsGridHint
@@ -304,6 +305,7 @@ object frmMain: TfrmMain
             SortSettings.HeaderMirrorColor = 16380385
             SortSettings.HeaderMirrorColorTo = 16182488
             Version = '8.2.4.1'
+            ExplicitWidth = 967
             ColWidths = (
               47
               49
@@ -439,7 +441,7 @@ object frmMain: TfrmMain
               object lblNoRoom: TsLabel
                 Left = 3
                 Top = 59
-                Width = 50
+                Width = 76
                 Height = 13
                 Align = alBottom
                 Alignment = taCenter
@@ -450,6 +452,7 @@ object frmMain: TfrmMain
                 Font.Height = -11
                 Font.Name = 'Tahoma'
                 Font.Style = [fsBold]
+                ExplicitWidth = 50
               end
             end
           end
@@ -457,15 +460,17 @@ object frmMain: TfrmMain
         object tabGuestList: TsTabSheet
           Caption = 'tabGuestList'
           ImageIndex = 9
+          ExplicitWidth = 967
           object Panel3: TsPanel
             Left = 0
             Top = 0
-            Width = 967
+            Width = 1014
             Height = 100
             Align = alTop
             BevelOuter = bvNone
             TabOrder = 0
             SkinData.SkinSection = 'TRANSPARENT'
+            ExplicitWidth = 967
             object rgrGroupreportStayType: TsRadioGroup
               Left = 2
               Top = 4
@@ -586,7 +591,7 @@ object frmMain: TfrmMain
           object gAllReservations: TcxGrid
             Left = 0
             Top = 100
-            Width = 967
+            Width = 1014
             Height = 174
             Align = alClient
             BevelInner = bvNone
@@ -601,6 +606,7 @@ object frmMain: TfrmMain
             PopupMenu = pupGroups
             TabOrder = 1
             LookAndFeel.NativeStyle = False
+            ExplicitWidth = 967
             object tvAllReservations: TcxGridDBTableView
               Navigator.Buttons.CustomButtons = <>
               Navigator.Buttons.First.Visible = True
@@ -856,10 +862,7 @@ object frmMain: TfrmMain
         object tabPeriod: TsTabSheet
           Caption = 'tabPeriod'
           ImageIndex = 2
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
+          ExplicitWidth = 967
           object sLabel2: TsLabel
             Left = 224
             Top = 400
@@ -870,16 +873,17 @@ object frmMain: TfrmMain
           object panPeriodRooms: TsPanel
             Left = 0
             Top = 0
-            Width = 967
+            Width = 1014
             Height = 124
             Align = alClient
             BevelOuter = bvNone
             TabOrder = 0
             SkinData.SkinSection = 'PANEL'
+            ExplicitWidth = 967
             object lblLoading: TsLabel
               Left = 0
               Top = 0
-              Width = 967
+              Width = 1014
               Height = 4
               Hint = 'Search Filter Active'
               Align = alTop
@@ -900,7 +904,7 @@ object frmMain: TfrmMain
             object lblRoomBeingMoved: TsLabel
               Left = 0
               Top = 4
-              Width = 967
+              Width = 1014
               Height = 24
               Align = alTop
               Caption = '---'
@@ -920,7 +924,7 @@ object frmMain: TfrmMain
               Tag = 1
               Left = 0
               Top = 28
-              Width = 967
+              Width = 1014
               Height = 74
               Cursor = crDefault
               Align = alClient
@@ -1104,6 +1108,7 @@ object frmMain: TfrmMain
               SortSettings.HeaderMirrorColor = 16380385
               SortSettings.HeaderMirrorColorTo = 16182488
               Version = '8.2.4.1'
+              ExplicitWidth = 967
               ColWidths = (
                 73
                 20
@@ -1148,14 +1153,15 @@ object frmMain: TfrmMain
             object pnlLegends: TsPanel
               Left = 0
               Top = 102
-              Width = 967
+              Width = 1014
               Height = 22
               Align = alBottom
               BevelOuter = bvNone
               TabOrder = 2
               SkinData.SkinSection = 'TRANSPARENT'
+              ExplicitWidth = 967
               object sPanel2: TsPanel
-                Left = -13
+                Left = 34
                 Top = 0
                 Width = 980
                 Height = 22
@@ -1163,6 +1169,7 @@ object frmMain: TfrmMain
                 BevelOuter = bvNone
                 TabOrder = 0
                 SkinData.SkinSection = 'TRANSPARENT'
+                ExplicitLeft = -13
                 object __ExplainG: TsLabel
                   Left = 194
                   Top = -3
@@ -1307,7 +1314,7 @@ object frmMain: TfrmMain
           object splitPeriod: TcxSplitter
             Left = 0
             Top = 124
-            Width = 967
+            Width = 1014
             Height = 8
             Hint = 'No Rooms'
             Margins.Left = 5
@@ -1323,22 +1330,23 @@ object frmMain: TfrmMain
             OnMoved = splitPeriodMoved
             Color = 6842472
             ParentColor = False
-            ExplicitTop = 157
+            ExplicitWidth = 967
           end
           object pnlPeriodNoRooms: TsPanel
             Left = 0
             Top = 165
-            Width = 967
+            Width = 1014
             Height = 109
             Hint = 'Test Hint'
             Align = alBottom
             TabOrder = 2
             SkinData.SkinSection = 'PANEL'
+            ExplicitWidth = 967
             object grPeriodRooms_NO: TAdvStringGrid
               Tag = 2
               Left = 1
               Top = 1
-              Width = 965
+              Width = 1012
               Height = 107
               Cursor = crDefault
               Align = alClient
@@ -1464,6 +1472,7 @@ object frmMain: TfrmMain
               SearchFooter.ResultFormat = '(%d of %d)'
               SortSettings.DefaultFormat = ssAutomatic
               Version = '8.2.4.1'
+              ExplicitWidth = 965
               ColWidths = (
                 64
                 64
@@ -1475,14 +1484,15 @@ object frmMain: TfrmMain
           object pnlBottomViewSettings: TsPanel
             Left = 0
             Top = 132
-            Width = 967
+            Width = 1014
             Height = 33
             Align = alBottom
             TabOrder = 3
             OnMouseEnter = pnlNoRoomButtonsMouseEnter
             SkinData.SkinSection = 'PANEL'
+            ExplicitWidth = 967
             object pnlOccupancyViewButtons: TPanel
-              Left = 597
+              Left = 644
               Top = 1
               Width = 369
               Height = 31
@@ -1490,6 +1500,7 @@ object frmMain: TfrmMain
               BevelOuter = bvNone
               TabOrder = 0
               OnMouseMove = btnOccupancyViewMouseMove
+              ExplicitLeft = 597
               object btnOccupancyViewHide: TSpeedButton
                 Left = 6
                 Top = 3
@@ -1541,7 +1552,7 @@ object frmMain: TfrmMain
               end
             end
             object pnlNoRoomButtons: TsPanel
-              Left = 359
+              Left = 406
               Top = 1
               Width = 238
               Height = 31
@@ -1552,6 +1563,7 @@ object frmMain: TfrmMain
               OnMouseEnter = pnlNoRoomButtonsMouseEnter
               OnMouseMove = btnOccupancyViewMouseMove
               SkinData.SkinSection = 'TRANSPARENT'
+              ExplicitLeft = 359
               object btnNoRoomsHide: TSpeedButton
                 Left = 6
                 Top = 3
@@ -1589,13 +1601,14 @@ object frmMain: TfrmMain
             object pnlViewSwitch: TsPanel
               Left = 1
               Top = 1
-              Width = 358
+              Width = 405
               Height = 31
               Align = alClient
               BevelOuter = bvLowered
               TabOrder = 2
               OnMouseMove = btnOccupancyViewMouseMove
               SkinData.SkinSection = 'TRANSPARENT'
+              ExplicitWidth = 358
               object btnOccupancyView: TSpeedButton
                 AlignWithMargins = True
                 Left = 4
@@ -1643,29 +1656,20 @@ object frmMain: TfrmMain
         end
         object tabFreeRooms: TsTabSheet
           Caption = 'tabFreeRooms'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
+          ExplicitWidth = 967
         end
         object tabDashboard: TsTabSheet
           Caption = 'tabDashboard'
           SkinData.SkinSection = 'TRANSPARENT'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
+          ExplicitWidth = 967
         end
         object tabRateQuery: TsTabSheet
           Caption = 'tabRateQuery'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
+          ExplicitWidth = 967
         end
       end
       object pnlStatSlider: TsPanel
-        Left = 983
+        Left = 1030
         Top = 1
         Width = 304
         Height = 302
@@ -1674,10 +1678,11 @@ object frmMain: TfrmMain
         TabOrder = 0
         Visible = False
         SkinData.SkinSection = 'TRANSPARENT'
+        ExplicitLeft = 983
         object lblBusyDownloading: TsLabel
           Left = 0
           Top = 158
-          Width = 73
+          Width = 304
           Height = 13
           Margins.Left = 10
           Margins.Top = 0
@@ -1695,11 +1700,12 @@ object frmMain: TfrmMain
           Font.Name = 'Tahoma'
           Font.Style = []
           UseSkinColor = False
+          ExplicitWidth = 73
         end
         object lblCacheNotification: TsLabel
           Left = 0
           Top = 145
-          Width = 86
+          Width = 304
           Height = 13
           Margins.Left = 10
           Margins.Top = 0
@@ -1717,6 +1723,7 @@ object frmMain: TfrmMain
           Font.Name = 'Tahoma'
           Font.Style = []
           UseSkinColor = False
+          ExplicitWidth = 86
         end
         object pnlStatistics: TsScrollBox
           Left = 0
@@ -1753,7 +1760,7 @@ object frmMain: TfrmMain
     object panMainTop: TsPanel
       Left = 0
       Top = 137
-      Width = 1288
+      Width = 1335
       Height = 33
       Margins.Left = 0
       Margins.Top = 0
@@ -1768,6 +1775,7 @@ object frmMain: TfrmMain
       SkinData.CustomColor = True
       SkinData.CustomFont = True
       SkinData.SkinSection = 'PANEL'
+      ExplicitWidth = 1288
       object Panel4: TsPanel
         Left = 0
         Top = 0
@@ -1827,7 +1835,7 @@ object frmMain: TfrmMain
       object __PanGridsHeader: TsPanel
         Left = 610
         Top = 0
-        Width = 678
+        Width = 725
         Height = 33
         Align = alClient
         Alignment = taLeftJustify
@@ -1839,6 +1847,7 @@ object frmMain: TfrmMain
         SkinData.CustomColor = True
         SkinData.CustomFont = True
         SkinData.SkinSection = 'PANEL'
+        ExplicitWidth = 678
         object btnFilter: TsSpeedButton
           Left = 1
           Top = 1
@@ -1883,7 +1892,7 @@ object frmMain: TfrmMain
           ExplicitHeight = 20
         end
         object sPanel3: TsPanel
-          Left = 175
+          Left = 222
           Top = 1
           Width = 502
           Height = 31
@@ -1901,6 +1910,7 @@ object frmMain: TfrmMain
           SkinData.CustomColor = True
           SkinData.CustomFont = True
           SkinData.SkinSection = 'PANEL'
+          ExplicitLeft = 175
           object btnStatusFilter: TsSpeedButton
             AlignWithMargins = True
             Left = 5
@@ -1993,7 +2003,7 @@ object frmMain: TfrmMain
         object sPanel4: TsPanel
           Left = 54
           Top = 1
-          Width = 121
+          Width = 168
           Height = 31
           Margins.Left = 0
           Margins.Top = 0
@@ -2009,12 +2019,13 @@ object frmMain: TfrmMain
           SkinData.CustomColor = True
           SkinData.CustomFont = True
           SkinData.SkinSection = 'PANEL'
+          ExplicitWidth = 121
           object lblMainHeader: TsLabel
             AlignWithMargins = True
             Left = 159
             Top = 4
             Width = 94
-            Height = 23
+            Height = 24
             Margins.Left = 10
             Margins.Top = 4
             Align = alLeft
@@ -2027,6 +2038,7 @@ object frmMain: TfrmMain
             Font.Height = -17
             Font.Name = 'Segoe UI'
             Font.Style = [fsBold]
+            ExplicitHeight = 23
           end
           object dtDate: TsDateEdit
             AlignWithMargins = True
@@ -2491,7 +2503,7 @@ object frmMain: TfrmMain
     object pnlMessages: TsPanel
       Left = 0
       Top = 0
-      Width = 1288
+      Width = 1335
       Height = 106
       Align = alTop
       BevelOuter = bvNone
@@ -2503,10 +2515,11 @@ object frmMain: TfrmMain
       TabOrder = 2
       Visible = False
       SkinData.SkinSection = 'PANEL'
+      ExplicitWidth = 1288
       object mmoMessage: THTMLabel
         Left = 88
         Top = 3
-        Width = 1197
+        Width = 1244
         Height = 100
         Align = alClient
         BorderWidth = 2
@@ -2581,8 +2594,8 @@ object frmMain: TfrmMain
       object lblTimeMessage: TsLabel
         Left = 0
         Top = 0
-        Width = 265
-        Height = 24
+        Width = 1035
+        Height = 41
         Align = alClient
         Alignment = taCenter
         Caption = '<Timely messages panel>'
@@ -2594,12 +2607,14 @@ object frmMain: TfrmMain
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         UseSkinColor = False
+        ExplicitWidth = 265
+        ExplicitHeight = 24
       end
     end
     object pnlOffline: TsPanel
       Left = 0
       Top = 106
-      Width = 1288
+      Width = 1335
       Height = 31
       Align = alTop
       BevelOuter = bvNone
@@ -2618,6 +2633,7 @@ object frmMain: TfrmMain
       SkinData.CustomColor = True
       SkinData.CustomFont = True
       SkinData.SkinSection = 'UNKNOWN'
+      ExplicitWidth = 1288
       object btnGoOnline: TsButton
         Left = 4
         Top = 3
@@ -2634,7 +2650,7 @@ object frmMain: TfrmMain
   object dxRibbon1: TdxRibbon
     Left = 0
     Top = 0
-    Width = 1288
+    Width = 1335
     Height = 155
     Margins.Left = 0
     Margins.Top = 0
@@ -2651,6 +2667,8 @@ object frmMain: TfrmMain
     Contexts = <>
     TabOrder = 2
     TabStop = False
+    ExplicitLeft = 5
+    ExplicitWidth = 1201
     object rbTabHome: TdxRibbonTab
       Caption = 'Roomer'
       Groups = <
@@ -2708,7 +2726,6 @@ object frmMain: TfrmMain
       Index = 2
     end
     object rbTabReports: TdxRibbonTab
-      Active = True
       Caption = 'Reports'
       Groups = <
         item
@@ -2790,15 +2807,13 @@ object frmMain: TfrmMain
       Index = 5
     end
     object rbTabChannels: TdxRibbonTab
+      Active = True
       Caption = 'Channels'
       Groups = <
         item
         end
         item
           ToolbarName = 'barinnBar3'
-        end
-        item
-          ToolbarName = 'barinnBar4'
         end>
       Index = 6
     end
@@ -2822,275 +2837,12 @@ object frmMain: TfrmMain
       Index = 8
     end
   end
-  object pnlRoomerLogoOld: TsPanel
-    Left = 667
-    Top = 11
-    Width = 301
-    Height = 55
-    BevelOuter = bvNone
-    TabOrder = 4
-    Visible = False
-    SkinData.SkinSection = 'BARTITLE'
-    object Image5: TImage
-      Left = 0
-      Top = 0
-      Width = 301
-      Height = 35
-      Align = alTop
-      Picture.Data = {
-        0B546478504E47496D61676589504E470D0A1A0A0000000D4948445200000283
-        0000004B08060000000B4A8D7E0000000467414D410000B18F0BFC6105000000
-        097048597300000EBC00000EBC0195BC72490000000774494D4507DD02160F33
-        30B428ECD30000000774455874417574686F7200A9AECC480000000C74455874
-        4465736372697074696F6E00130921230000000A74455874436F707972696768
-        7400AC0FCC3A0000000974455874536F667477617265005D70FF3A0000000774
-        455874536F7572636500F5FF83EB0000000874455874436F6D6D656E7400F6CC
-        96BF00000006744558745469746C6500A8EED22700001B1749444154785EED9D
-        4B8F54D77A864F26511465902891A22345719428830C32394AE6F90B67C02852
-        06191C2993CC328E14F10392A1CDB531BEE1FBFD86AF8D316D63B0C1E66AC018
-        63EC6E1A1A681A4CDBDE59CF96DFD662F35575D5AE2A4EADDE6F498F80DD55AB
-        D6B7BE4DADA7BFB5F6AE5F5555658C31C618633A4A78D018638C31C67483F0A0
-        31C618638CE906E141638C31C618D30DC283C618638C31A61B84078D31C61863
-        4C37080F1A638C31C6986E101E34C618638C31DD203C688C31C61863BA4178D0
-        18638C31C67483F0A031C618638CE906E1C1B62C2E2EFED7B163C7B67599F9F9
-        F9FF8EC6661AF9FEFBEF7F7BFCF8F16D39274E9CB88793274FD69C3A752AE4F4
-        E9D3BF17A2BEA8AF511C90C74ABE5656567E1B8DCDB491FAF94FC4D52F4FD02F
-        57D118DE4FA23E0D93AF6FBFFDF63FA3B19946D2FFAD7F6F7E36740972B7BCBC
-        FC2FD1D84C23E91CFCDF288EAE70E6CC996DABABAB7F1E8DCDB4913E0BFF268A
-        A14B24CFF89F686C46213CD8962FBEF8E2ED071F7CB0EA32870E1D3A1C8DCD34
-        323737B779CB962D95D8BA756BB56DDBB69AEDDBB7573B76ECA8666666AA5DBB
-        76550F3FFC70B57BF7EE9A471E79A4E6B1C71EAB79FCF1C7D778E28927D6D8B3
-        67CF58C8DBCCDF4BEF4F5FD437FA09F47BE7CE9D750C8A09F278C9D7E5CB9737
-        4763336D2C2C2C6C220FEA7B1E1331126BAF5CDDAF3C89BCEDFC3D7BE58B3ED3
-        77E268E68B735231CFCECEBE148DCD34F2D1471FED687E3674097297E4FD3FA2
-        B19946D2F9371FC5D115F87F7BEBD6AD07A2B19936D22F5AFF1CC5D0253EF9E4
-        93A3D1D88C4278B02D96C172655022880482E442621149051F204F3EF964F5D4
-        534FADF1F4D34FAFF1CC33CF8C85BCCDFCBD786FFA908BC6A38F3E5AF735970C
-        C504B95C3CF4D04345CA2031E4313525B099ABFB952791B79DBF67942F89217D
-        270E4008155B2E8496C172B00C968565B02C2C830550920CA6096B4D062582AA
-        32492E98AC11AC482A98F89F7DF6D9EAB9E79E5BE3F9E79FAF5E78E1859A175F
-        7C712CD016ED42FE5EBC377DC84543D5A85C32542154D52917C2526430F57313
-        B148DA150FB13525B099ABFB9527314CBE2486F49D38002154CE248496C1B2B0
-        0C968565B02C2C8305509A0C2217AA34E572210944AE98B8A9F2E412C1A4FFF2
-        CB2F57AFBCF24AF5EAABAF56AFBFFE7ACD1B6FBC51BDF9E69B357BF7EE1D0BB4
-        45BBA0F7E13D796FFA405F241EAA4C490A898178905B626B569B4A9341FA4E0C
-        C48234718C18112A6296FCE5B9BA5F7912EBE54BB2481F553DA4EFC4402C4D89
-        275EF265192C07CB60595806CBC2325800A5C9201FDAC0A48B5C204D88202225
-        B9A0A2C3E4FDD24B2FD5933913FB6BAFBDB6261408C0DB6FBF5DF3CE3BEF54EF
-        BDF7DE1AEFBFFF7E6BF276DE7DF7DDBA6DBD4F2E1DF405D1A07F120D559F8841
-        5542626B569B4A92416290B4E7955B62E4C39C98112CC680B190000E92278872
-        300C795BFDF2459F388FE8A3A490BE1303B12084C42581275EF2B56FDF3ECB60
-        215806CBC232581696C1022849060F1E3C58CBA02A4D920B44504B8C4CD4AA02
-        52E161427FEBADB7EA095E02313B3B5B7DF0C10735FBF7EFAF0E1C38B0C6DCDC
-        5C6BF2763EFCF0C3BA6DBD0FEF2901916CA802455FE9B79624B514894C21BC92
-        0B585C5C2C4A06E93BB9E2EF4813B111A3AA819240C642F237489E20CAC130E4
-        6DF5CB17E70FE7117D94C4D3F7BC4A485C1278E22557A91DCB60215806CBC232
-        581696C102285506912409862A8208869619912CC905551F26F57DFBF6D5133E
-        13BF84204D82556A778D74D2B6266FE7E38F3FAEDBD6FB4836E8037DA10A45FF
-        5479A2DF1242C9455E6D2A5506E93BB922162D0D4B048939174155FF06C91344
-        391886BCAD7EF9E2FC91C0ABAA4BDFB5A750154262E41714E2B50C968565B02C
-        2C8365913E6F2D83D34E6932A84A93F69EA9D224B9D03223D51C559698D8A9FE
-        30E1A778ABC3870F579F7EFA69F5D9679F55478E1CA98E1E3D5AF3F9E79F57E9
-        9C680DAF07DAA25DE03D782FDE93F7A60FF405D1A07F88067D55859018A838F1
-        61A7EAA0968B4B92C1D4CF4DE447CBC3C4424CE48A18A9AE49D89140C6823151
-        9E90B57E791A355710E58BF753BEE8037DE1FC51B51029A44A48DF75F1094248
-        5CC42821245F291ECB60215806CBC232581696C102284D065569429210413E14
-        A8D068B911B142B098B8554D925430E91F3B76AC3A7EFC7875F2E4C9EAD4A953
-        D5E9D3A7AB2FBFFCB2E6CC9933D5D9B3675BC3EB81B66817780FDE8BF7E4BDE9
-        037D410CE99FA4907E23B1C4A025C8BCDAA4EA604932881CD1776250F5965CA9
-        1A48CC2CC5225A8C0563A23C216BFDF2346AAE20CA17EFA77CD107FA2231A48F
-        AAECD2F766959018116055442D83E560192C0BCB605958060BA034194404A936
-        2118AA34B1A95F8281082217547C98D499E0250E5F7DF555F5F5D75F57172E5C
-        A82E5EBCC8877FCDA54B97D6F8EEBBEF5A93B7A3B681F7E23D796FFA405F1010
-        FA87202240B960482ED807A9EA2071B33C5E920C6A1F1D82442C54D0C8153152
-        1154AE902DC68231519ECE9F3FDF374F10E56018F2B6F25C295FF481BE70FE48
-        1411449691E93B154262D18525C4A8E57DF265192C07CB60595806CB6243C960
-        FAB05F3C7AF4E8EC46234D84DBA3B19946D209B5599526265DAA6754D1585E65
-        6266094F7251D2E3EAD5ABF5522455328410B1650952FBD15461A3DA54920CD2
-        77EDE9241624975C1123F24BAE588645CC4A7A50A9A4EF5AE24708898B182584
-        E4EBC081031B5206D32F5DCBD167C9A0A4CFD28B51BB11E9FFF489A88D413872
-        E4C807FCB218B5DBA434194CBF44BE18C5DC15D22F66B3ABABAB7F198DCDB431
-        8C0CA6F96CA37AC64C3436A3101E6CCB3032383B3BFB42D486B97FE432886050
-        3D4330D8BF25C160292F9D7CE9E9E53C969696EAE56C968C110C2A9CC805A29B
-        CB458932A8BD82C4A27D82AA08922BAAA2F3F3F3E925E53CA814D27796F75521
-        24AE7C797F23CBE0A143873E8BDA18947DFBF6FD5FD46E4412EF7F8DDA18849F
-        7EFAE98FF8BF14B5DBA4341934E5308C0CA639EC95A80D732FE1C1B65806CB02
-        19D4B2A304830A1A1FF8BA0801A96229AFA4C7B56BD7EAFD725C3C41755072C1
-        D223950DE4424BC525C9A044963F89454BF9C44825945C21EE0B0B0BE925E53C
-        CE9D3B57F71DA1553597B88851D55CF265198CB10C9A2E61199C0CE1C1B65806
-        CB224D429BB5448C2451154430988CD9D88F4C51696219AFA4C78D1B37EA2B59
-        93ECD69284D8723189968A9129E266AF64293278E5CA954DE40831A25A266927
-        57C4C8F230B9621F5E8A29BDA49C07FB09E93BD54162A1224D5CC4C82F28C4CD
-        2F2C73737396C100CBA0E91296C1C9101E6C8B65B02C72199460504163AF204B
-        AC4CCE549AB810A1A4C7F2F2725DCD64AF637E7102CBAA2C852317A5CA20228B
-        D0120B824BAE88914A28B9E2C28CF4DCF492721EDF7CF34DDD77AA83C442459A
-        B8742109E7A665B0379641D3252C8393213CD816CB60592083F90509ECABE3C3
-        1E79A22AA82562AE482DE971F3E6CDFA5626DC4F8F8A597E2189F6A11137FBD0
-        9238152383F41B21D4ED647405B1AA82E48AFD77EC992CE991A4A1EE3B424B2C
-        BA988418A956736EB257D232186319345DC2323819C2836DB10C960532A83D68
-        120C2A68C893AA4D4815B70329E9B1B2B2522F97AADAC492374BC5BACD0C7241
-        DCEC432B4906E9374288D0120BD53372458C88AF72C59EC9921E5CFD4CDF115A
-        62A12A4D5CBACD0CE726BFB02451B40C0658064D97B00C4E86F0605B2C8365D1
-        4F0659226699F5C48913F5FDE14A7A4806B93722FB0637B20CB2A44A8CEC9124
-        57A5CA207D4768B5CFD33238389641D3252C8393213CD816CB605924D95B9341
-        0483FD82C8208241854617247073E7921EC8609AF4D6F60D6AD95132885C1037
-        FB064B9341601F1DB120B8882E31EAA6E0887B6932983EDCEBBE23B4C4C21605
-        CE41C920E7A665B0379641D3252C8393213CD816CB605958062D83D3F0B00C5A
-        068D1914CBE064080FB6C5325816F932712E8308C6469241F6A0A50F857B64B0
-        C465E2F564905C5DBF7E3DBDA49C472483C465191C0CCBE0E8A45FA0FE6D6969
-        E9775D257D66FC2EE5F74FA2B199362C8393213CD816CB6059E43228C1D03D06
-        D3C4BB216430C5B82683DC8A457251B20C22B4C442B5935C112317CB6C041924
-        16C92031B28F9573D332D81BCBE0E8A4CF8379BE91A8ABF099B811BF9BD83238
-        38E1C1B65806CB2297C1BC32C8121D324895A6F40B48908B5ECBC41BA13248AE
-        24831BE10212C92071B932381896C1D1999999998FE2E80ADCCCDE32D86DC283
-        6DB10C960532987FD72D5518AA31BA9A9889B9C45BCB709F41E40241CAAF2646
-        762583C48D0C9674D3694490AB89914162D1AD65743531B9E2ABDD960ABBCFE0
-        A54B97D66E2D935F4D4C8C7925D7321863191C1DCBA065B0EB8407DB62192C8B
-        C3870F8732C8922AF71964623E76EC582D18253D74D3690489BD8F549910A78D
-        26832CE9932B62A4AAA65C952883F49D4A34B16859DF32381896C1D1B10C5A06
-        BB4E78B02D96C1B2C82B8308522E832CD53131B3D4CAB75A94F4D0D7D1E91B48
-        721944A490AA92651039CA65504BFAE48AAF0E4CCF4D2F29E771F1E2C5B5257D
-        62C96590AF48D4B27E122CCB60806570742C8396C1AE131E6C8B65B02C90C1E8
-        EBE8988859AA636266A9B5C4EF26462E587664B95B3288EC22520895BE8EAE24
-        19A4DFF9D7D149068911912257257F3731956862618F27711123955CC9BB6530
-        C632383A9641CB60D7090FB6C5325816910CEAC204C9204BAD6902A97EF8E187
-        EACE9D3B35ABABAB6BFCF8E38F039126929AE86722FAF97AAFC9FB42DFE8E7D5
-        AB576BB9A05A865C20161BF1BB89B9D8875C4906C91517CE2C2C2CB4CE931824
-        5F1183E64BE712F9E20225FA2E19D41E4FCBE060580647C7326819EC3AE1C1B6
-        5806CBA22983ECCF62698E2A1AD519F60D6A2F1A92C18524172E5CE043BEDEE7
-        95FE53D6E271F9F2E5BA1A0588187BD69A70852B7FF2F35E345F03CDD7E97D78
-        4FDE9B3ED017961AE91F554CFA9A5F99CA95C47BF7EEAD6577A3C820B1B0A44F
-        AEB4A44FCC5C38437590B1604CC895F2B4B8B8D877AC41E33D48BE207F6DF4BA
-        3C5FF3F3F3755FE813D540FAC82F1AECEFD4923EB170F1087111A365707D2C83
-        A36319B40C769DF0605B2C8365810C32C92283884624832CB5B2FF4E32C87DEC
-        9A9291CB20E4B290C3CF10925EF47BBD8EEB39B90CE67291CB2095A6A60C2252
-        0815719726834811B7015215B72983E42A9741C6845C45796A8EAF688A5C94A7
-        9C5E6DE9B8DE2F9741FAC42F15B90CD2F74806D9E3C9B96919EC8D6570742C83
-        96C1AE131E6C8B65B02C2219D432713F194432FAC9A0C8C500785E3F7A0946DE
-        5EDE562E83928B48065926DE8832A865E25E32C8980C2B83A0E7E4B9E985F295
-        B799FF5B7FE7B99241CE1FCEA35E32C81E4FE2B20C0E866570742C8396C1AE13
-        1E6C8B65B02C9041BE9F972B358791C1F52A834D24793C8FE723054DD44E5330
-        7AA1B62483FD2A83910C1277493298C66413FD1E460687AD0CEA6783E64B6DEA
-        F97A7D04CFE375F465BDCA6024832CEBA7F3D1321860191C9D748E5D4CE7D89D
-        AE923EFBEFDCBE7DFBAFA3B199362C8393213CD816CB6059709FC1416490897B
-        9C0F89410EF7061CD7830B14B89A3897C1FC02928D2083F905244D194CBFE1A7
-        978CE7C1051ECD5C4112835F9E31FA83F32192415D406219EC8F65D07409CBE0
-        64080FB6C5325816516530BA80641232C85790019522E07630E37A20835433FB
-        ED19940C26C92AB632D8EB029271CB20F969E66BDC3248DFFBED19B40CF6C632
-        68BA44FAFCB10C4E80F0605B2C8365810C32C9F6BB80845B7EB0DC38CE07CB8B
-        920B316E19E40AE8145F4F1924EE9264F0CA2F5713F79241C457B79619A70CDE
-        BE7DFB9E5CC13865902566FABEDE052496C118CBA0E91296C1C9101E6C8B65B0
-        2C72194430BA20831BE5A6D3BD64903D781B4906F35BCB5806632C83A64B5806
-        274378B02D96C1B2480271576590AFFE629F16FBEBD204335119E4DE80399392
-        416E9ECDFE33F6D721BBA55606533FEFAA0C120B1333B922469689C9D5A42A83
-        CD7C4D4A0689457B3C89D195C1F5B10C9A2E61199C0CE1C1B65806CB02196492
-        450611A42EC82022855011778932B867CF9EB525FD2EC8A02EF8215F49B02C83
-        019641D3252C8393213CD816CB60592083BA808409972539C960CA4F3D314FE2
-        6AE2F49FB9BEBD48CE8D1B377EF9E9E80FBEE68CAB8911A4FDFBF7D732C8922A
-        B22B1924EE5DBB76152583E44832482C92416244A4C815B769595959492F19CF
-        03194C93FA3DF91AA70CEA6A627EF92016C920314A06A9E4BA32186319345DC2
-        323819C2836DB10C960532B87BF7EEBAEA8220B124C73E2DF6D7B16F8B8999EF
-        F7E5DE82E37C5069A2DA9873FDFAF55F7E3AFA0319E4BB891124F63EB2FF8C49
-        4CB72941A8887B6666A628192447AAE2120BB7012257C498E4A3CE1515D171CA
-        205546E4AF99AF71CA209562FACE7E4162D11E4F6264595FF29E7E6E190CB00C
-        9A2E61199C0CE1C1B65806CB423248D50541A20A4335862A1AD51926E6F49CEA
-        FCF9F3E9E9E37B5069423073F84EDB713D90416E558220B1DC8D58204EC82E22
-        8550952A83547125EE5471C91531EA22122AA2E396412AC3CD7C8D5B06E93B95
-        686241DE898B18A9E44ADE2D83319641D3252C8393213CD816CB60592083EC9B
-        D35231132F13B0AE28A63A88509D3D7B363D7D7C0FE4E2DCB97377C137608CEB
-        810C6ABF2052CB0446C5932A1362A1FD823B77EE2C4A06E9BB2EF82116F6D491
-        2B893BB94282C779036FC4926F0A69E66B9C3248A558E24E2CECEF242E5DECC3
-        B949BE2C83319641D3252C8393213CD816CB60592083EC9BD352314BA85407A9
-        38514D63B98E8A135F6FC6CD8701D1125CA8310C7A1D95C63367CEDC05FBC6DA
-        B4096A577DE462142D11B35F90AAA02E1E41A4102AE2DEB16347513248DF7371
-        D7053FC4C81E4F72C572EBD2D2D25DB98AC66C10782DCBF7FC32D0CC177B09DB
-        B6AFD7295F2C3BD3777EF9D0FE4EE2D2FE4ECE4DF295E4DE321860191C9DF459
-        B7359D777BBACAFEFDFBF7A4FF8B7F118DCDB461199C0CE1C1B65806CB021964
-        A994AA8BF60D4A32F8D04708910C36F66B3F9ABEFB96EF00A64244D508B9A3DA
-        07DA53A6A5457EA66A1212A1EF0EA69D9C3449D5D291B7D9AB5DE067AA58D126
-        AFA77F5C954A5FE93732ABAB88B5448C482183C45D9A0CD2F7FC821F2DEBEB6B
-        E988990A1B176330168C09B9628C182FF2A1716C5E10A27C419E2F5E1FE58B31
-        E7E7E48C3CF43B0F9AF9529BF4515F4347DFA946130B22485C5AD2E7DC245F69
-        C2B20C06580647279D5FF3511C5D8155875BB76E3D108DCDB461199C0CE1C1B6
-        5806CBE2E0C183B50C5275413298789980B51F8D0F7E49061793B0AF0BD142B8
-        D89BC695AB4CEA920E4922F0778E8304229D1FF5EB800B3C7238C6CF259C7AAD
-        DACBDB55DBBC377DE0B52C8FD23F5D914ABFB557501722689955FB05B76FDF5E
-        9C0CE67B3CB5AC4F8C1242AAA154D9180BC684B1CDF3A47154854F42A7B11D26
-        5FA07C35DB1779BE781E7DE1FC4102E9A3F609AA22482C882071112322C8B969
-        19EC8D6570742C8396C1AE131E6C8B65B02C9041F6CD31D12219C8061F0A8893
-        9620B55C8C10225A5471D88FC7648E1448E098E44122C1DF390E1207240041E1
-        B54825F077C1CF72D1CCDBCBDB55DBBC377DE0B5B908D257FACDC4957FEB8896
-        59B55F9009AB2419448CB4C753E24EAE8811892266965A1142C642F29EE749E3
-        88BC895CD486C917285FBC6EBD7CF13CFAC2F9C36D7FE82322C83E41FACE3E41
-        624104898B1825EFE4CB321863191C1DCBA065B0EB8407DB62192C0B6490A552
-        265A4906C221C95085908A0DF77D433498BC112E2A3A2C4922874CEC92851C26
-        7D84849F6BF217BC1EA86201C7F2F6781DD00634DBE6393C97D7D00E02A43D67
-        F4957E6B7958B793915868BF60693248FFE93BB9E2EF7925379777C64052C8D8
-        E463AAF16B4A1DC786CD9772A6E70F9A2FCE1FCE23FA982F0D53C125162A9EC4
-        A57C112FF9B20CC6580647C7326819EC3AE1C1B65806CB224DD09B592A65A2A5
-        3A2821E4830181CA2F52601240B2100D2A39920D89612E0E4CF8FC2971904820
-        0082EA5D0EC7684F6D36A5A309EDF13C4920D54BFA8758D0572D351203F16889
-        1599427E89BB2419BC7CF9F226729357721177622346ED1FA4422879674C7229
-        643CC94D13491AE33A4CBE94339D0383E68BF347D24E5FA908D2777E012116F6
-        AE1297F245BCE42BBDD6321890F260191C11CBA065B0EB8407DB62192C0B6490
-        0F6D265A248389970918716242A63A23C960F98E8900D96212A7A2836C480C25
-        071204FE9438F073099B40069AE867B4D9948E26B4C7F3783E7DD1B2B0961AE9
-        B72A4CC4439509D9452C54152C4D06C94D5EC925266223460921D550C93B6392
-        4B21E3496E9A48D218D761F205FC4CE7C0A0F9CAA55D155C2DE5130B154FE252
-        BE88975CA53E5A0603D2F85A0647C4326819EC3AE1C1B65806CB224D58B50C82
-        2483C917E940345479926C506963290F399474205F54A398247AC1CF81E7EB35
-        BDFE2EF41A2A476A27FF3B3FD36BE98B9618555DA2DF480531104F2E82AA0A6E
-        D9B2855BDA142583792557F24E8CC8133123545AE257AE34B61ACF5EE4630B79
-        5EA2BFEBDF62D07CD1A77C4958CBF8C4402C5440894B2228794FD263190CB00C
-        8E8E65D032D875C2836DB10C960532B875EBD60A24197985904999091AA9D26D
-        67100DAA38908B21D5B85EF0739004E8CFE8EF6A4F200F6A27FF7BDE1E7D9104
-        22AEF435170B2D35129B4490984B93418496BEAB92AB5C11A3AA84B9BC2B571A
-        5B8D672FF2B1CDC7577F36FFAE7FEBF96A5FED34DBD46BF37C694998BE1303B1
-        102771490489977CA5CF0CCB60806570742C8396C1AE131E6C8B65B02C904184
-        082419B9103229374543CBC7128EA620E6705CE8DF7A0DD520ED4BCCDBD17305
-        D5A3FCDF226F4B0248FFB4C448BF55119454A8C224112C5106E93B31281E62E3
-        B8E43DAF122A57F9F86AFC18D7E6D86AFCF5BC7C8CA37C41DE260C9B2FFA2A69
-        270EC82B8292777265198CB10C8E8E65D032D875C2836DB10C96C5DCDCDC9A0C
-        82440324864CCC124309077228410404AC1F7A1E937E93FCB89E0712BB7EE8B9
-        AA2849FE9A42A198208F97F3B014195C5858D8441ED4F73C264961AF5C699CA2
-        318CD0F3F33CE5396AFE7BD0B6F5DC66BEE8337D278E66BE7271B70CC6580647
-        C7326819EC3AE1C1B6ACACACFCFDFCFCFC6F06E1C68D1B7F1BB561EE1FCBCBCB
-        BF4E92F19B5E2451BA8BC5C5C5A1B972E54A787C3DDABEAED967886203CEC3D5
-        D5D55F4763336DA47EFE69AF589AF142343683D076DCDB12F53D8A11D267C6DF
-        4563338DA4FF5B0F343FF37A71F3E6CD7F88DA1894342E7F15B51B9126FC3F8B
-        DA18849F7FFEF90FAE5DBB16B6DB847CDDB973A788AF378374DEFD63144757E0
-        FF7D92FD3F8CC666DA48E7D51F4731445CBF7EBD98CF8CDF37E141638C31C618
-        D30DC283C618638C31A61B84078D31C618634C37080F1A638C31C6986E101E34
-        C618638C31DD203C688C31C61863BA4178D018638C31C67483F0A031C618638C
-        E906E141638C31C618D305AA5FFD3F1113CE5E26B5DD420000000049454E44AE
-        426082}
-      Proportional = True
-      Transparent = True
-      ExplicitLeft = -248
-      ExplicitTop = 8
-    end
-    object lblHotelName: TsLabel
-      Left = 0
-      Top = 33
-      Width = 140
-      Height = 22
-      Align = alBottom
-      Alignment = taCenter
-      Caption = '[Roomer inactive]'
-      ParentFont = False
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -18
-      Font.Name = 'Tahoma'
-      Font.Style = []
-    end
-  end
   object pnlRBE: TsPanel
     Left = 349
     Top = 420
     Width = 297
     Height = 59
-    TabOrder = 5
+    TabOrder = 4
     Visible = False
     SkinData.SkinSection = 'TRANSPARENT'
   end
@@ -3118,21 +2870,22 @@ object frmMain: TfrmMain
     end
   end
   object pnlRoomerLogo: TsPanel
-    Left = 758
-    Top = 8
+    Left = 1009
+    Top = 3
     Width = 321
     Height = 49
+    Anchors = [akTop, akRight]
     BevelEdges = []
     BevelOuter = bvNone
     Ctl3D = True
     ParentColor = True
     ParentCtl3D = False
-    TabOrder = 6
+    TabOrder = 5
     StyleElements = [seFont, seClient]
     SkinData.SkinSection = 'TRANSPARENT'
     object lblLogout: TsLabel
       Left = 256
-      Top = 4
+      Top = 3
       Width = 48
       Height = 17
       Cursor = crHandPoint
@@ -3192,17 +2945,18 @@ object frmMain: TfrmMain
   object pnlDayStatus: TsPanel
     Left = 0
     Top = 635
-    Width = 1288
+    Width = 1335
     Height = 30
     Align = alBottom
     BevelOuter = bvNone
     Color = clWhite
     ParentBackground = False
-    TabOrder = 11
+    TabOrder = 10
     StyleElements = [seFont, seClient]
     SkinData.CustomColor = True
     SkinData.CustomFont = True
     SkinData.SkinSection = 'PANEL'
+    ExplicitWidth = 1288
     object lblOccupancy: TsLabel
       AlignWithMargins = True
       Left = 184
@@ -3353,7 +3107,7 @@ object frmMain: TfrmMain
     end
     object __VER: TsLabel
       AlignWithMargins = True
-      Left = 1111
+      Left = 1158
       Top = 5
       Width = 174
       Height = 22
@@ -3368,11 +3122,12 @@ object frmMain: TfrmMain
       Font.Name = 'Tahoma'
       Font.Style = []
       UseSkinColor = False
+      ExplicitLeft = 1111
       ExplicitHeight = 18
     end
     object __TimingResult: TsLabel
       AlignWithMargins = True
-      Left = 1053
+      Left = 1100
       Top = 5
       Width = 15
       Height = 22
@@ -3389,6 +3144,7 @@ object frmMain: TfrmMain
       Font.Name = 'Segoe UI'
       Font.Style = []
       UseSkinColor = False
+      ExplicitLeft = 1053
       ExplicitHeight = 17
     end
     object cbxStatDay: TsComboBox
@@ -3459,7 +3215,7 @@ object frmMain: TfrmMain
       ShortCut = 8305
       OnClick = QuickReservation1Click
     end
-    object S4: TMenuItem
+    object mnuSendConfirmationEmail: TMenuItem
       Caption = 'Send confirmation email'
       object R1: TMenuItem
         Caption = 'Reservation confirmation'
@@ -3518,7 +3274,7 @@ object frmMain: TfrmMain
     object N18: TMenuItem
       Caption = '-'
     end
-    object P4: TMenuItem
+    object mnuRegistrationForm: TMenuItem
       Caption = 'Registration form'
       object S3: TMenuItem
         Caption = 'For selected room'
@@ -3589,9 +3345,9 @@ object frmMain: TfrmMain
       ImageIndex = 38
       OnClick = btnRoomReservationClick
     end
-    object P5: TMenuItem
+    object mnuGroupGuestNames: TMenuItem
       Caption = 'Provide names of guests in a group'
-      OnClick = P5Click
+      OnClick = mnuGroupGuestNamesClick
     end
     object pmnuRoomGuests: TMenuItem
       Caption = 'Room guests'
@@ -4631,7 +4387,7 @@ object frmMain: TfrmMain
     object barinnReportsInvoices: TdxBar
       Caption = 'Invoices'
       CaptionButtons = <>
-      DockedLeft = 861
+      DockedLeft = 961
       DockedTop = 0
       FloatLeft = 1324
       FloatTop = 8
@@ -4819,23 +4575,6 @@ object frmMain: TfrmMain
       Visible = True
       WholeRow = False
     end
-    object barinnBar4: TdxBar
-      Caption = 'Channel Rates'
-      CaptionButtons = <>
-      DockedDockingStyle = dsTop
-      DockedLeft = 240
-      DockedTop = 0
-      FloatLeft = 1335
-      FloatTop = 8
-      FloatClientWidth = 0
-      FloatClientHeight = 0
-      ItemLinks = <>
-      OneOnRow = False
-      Row = 0
-      UseOwnFont = False
-      Visible = False
-      WholeRow = False
-    end
     object barinnBar5: TdxBar
       Caption = 'System Actions'
       CaptionButtons = <>
@@ -4891,7 +4630,7 @@ object frmMain: TfrmMain
     object barinnBar10: TdxBar
       Caption = 'Ledger'
       CaptionButtons = <>
-      DockedLeft = 1070
+      DockedLeft = 1170
       DockedTop = 0
       FloatLeft = -183
       FloatTop = 8
@@ -24542,8 +24281,8 @@ object frmMain: TfrmMain
     Top = 208
   end
   object alDeveloperTools: TActionList
-    Left = 1184
-    Top = 24
+    Left = 656
+    Top = 16
     object acUpdateTranslations: TAction
       Caption = 'Update Translations'
       OnExecute = acUpdateTranslationsExecute

@@ -462,7 +462,6 @@ type
     rbTabExternal: TdxRibbonTab;
     barinnBar12: TdxBar;
     barinnBar3: TdxBar;
-    barinnBar4: TdxBar;
     dxBarSeparator1: TdxBarSeparator;
     dxBarSeparator2: TdxBarSeparator;
     dxBarSubItem3: TdxBarSubItem;
@@ -550,9 +549,6 @@ type
     edtSearch: TButtonedEdit;
     sPanel4: TsPanel;
     lblMainHeader: TsLabel;
-    pnlRoomerLogoOld: TsPanel;
-    Image5: TImage;
-    lblHotelName: TsLabel;
     pnlRBE: TsPanel;
     pupGroups: TPopupMenu;
     C4: TMenuItem;
@@ -621,11 +617,11 @@ type
     shpO: TShape;
     P2: TMenuItem;
     P3: TMenuItem;
-    P4: TMenuItem;
+    mnuRegistrationForm: TMenuItem;
     S3: TMenuItem;
     F1: TMenuItem;
     F2: TMenuItem;
-    S4: TMenuItem;
+    mnuSendConfirmationEmail: TMenuItem;
     btnClearWindowCache: TdxBarLargeButton;
     btnGuestProfiles: TdxBarLargeButton;
     btnBookKeepingCodes: TdxBarLargeButton;
@@ -654,7 +650,7 @@ type
     pnlStatSlider: TsPanel;
     ApplicationEvents1: TApplicationEvents;
     lblCacheNotification: TsLabel;
-    P5: TMenuItem;
+    mnuGroupGuestNames: TMenuItem;
     btnWebAccessibleFiles: TdxBarLargeButton;
     dxBarSubItem7: TdxBarSubItem;
     dxBarButton5: TdxBarButton;
@@ -953,7 +949,7 @@ type
     procedure lblLogoutClick(Sender: TObject);
     procedure ApplicationEvents1Message(var Msg: tagMSG; var Handled: boolean);
     procedure btnWebAccessibleFilesClick(Sender: TObject);
-    procedure P5Click(Sender: TObject);
+    procedure mnuGroupGuestNamesClick(Sender: TObject);
     procedure btnReDownloadRoomerClick(Sender: TObject);
     procedure btnRateRulesClick(Sender: TObject);
     procedure btnSetNoroomClick(Sender: TObject);
@@ -1045,7 +1041,6 @@ type
     zOneDay_iNumRows: integer;
     zOneDay_iLastCol: integer;
     zOneDay_iLastRow: integer;
-    zOneDay_bRightClick: boolean;
     zOneDay_glbRect: TRect;
 
 
@@ -2669,9 +2664,7 @@ begin
 
   zShowCaptions := true;
   barinn.HideAll;
-  // FIX   StateSaver1.theOwner := TForm(Self);
   StoreMain.StorageName := 'Software\Roomer\FormStatus\StoreMainV2';
-  // g.qProgramPath + 'forms' + '.ini';
   StoreMain.RestoreFrom;
   PlaceFormOnVisibleMonitor(self);
   try
@@ -2734,6 +2727,7 @@ begin
   dtDate.Date := zDateFrom;
   dtDate.OnChange := dtDateChange;
 end;
+
 
 procedure TfrmMain.PlaceRoomerOnCurrentMonitor;
 var
@@ -2805,10 +2799,9 @@ begin
 
     SetExtraSkinColors;
 
-    PlaceRoomerOnCurrentMonitor;
+    PlaceFormOnVisibleMonitor(Self);
 
     FormResize(Sender);
-    barinnBar4.Visible := false;
 
     AssignSkinColorsToComponents;
 
@@ -3022,7 +3015,6 @@ begin
     end;
 
     result := true;
-    lblHotelName.Caption := g.qHotelName;
 
     FrmMessagesTemplates.Clear;
     timMessagesTimer(timMessages);
@@ -4355,7 +4347,7 @@ begin
   PrintRegistrationForm(RoomResArray);
 end;
 
-procedure TfrmMain.P5Click(Sender: TObject);
+procedure TfrmMain.mnuGroupGuestNamesClick(Sender: TObject);
 begin
   if GetSelectedRoomInformation AND
     GroupGuests(_iReservation, _iRoomReservation) then
@@ -4961,10 +4953,6 @@ begin
   else if ViewMode = vmPeriod then
   begin
     Period_GotoRoom(theRoom);
-  end
-  else
-  begin
-    exit; // ===>
   end;
 end;
 
@@ -5845,7 +5833,11 @@ begin
   mnuConfirmBooking.Enabled := Enable AND (NOT OffLineMode);
   btnCancelReservations.Enabled := Enable AND (NOT OffLineMode); // C3
   pmnuProvideAllotment.Enabled := Enable AND (NOT OffLineMode); // C3
-  // mnuRoomNumber.Enabled := Enable;
+  mnuSendConfirmationEmail.Enabled := Enable AND (NOT OffLineMode);
+  mnuGroupGuestNames.Enabled := Enable AND (NOT OffLineMode);
+  mnuCancelRoomFromRoomReservation.Enabled := Enable AND (NOT OffLineMode);
+  mnuRegistrationForm.Enabled := Enable AND (NOT OffLineMode);
+
 
   btnRoomInvoice.Enabled := Enable;
   btnGroupInvoice.Enabled := Enable;
@@ -6188,20 +6180,12 @@ var
   Rect: TRect;
   PpUp: TPoint;
 begin
-  // --
-  PlaceMouseClickToCell(Sender, X, Y);
-  TAdvStringGrid(Sender).MouseToCell(X, Y, ACol, ARow);
-
-  if ARow > 0 then
-  begin
-    TAdvStringGrid(Sender).row := ARow;
-    TAdvStringGrid(Sender).col := ACol;
-  end;
-
-  zOneDay_bRightClick := Button = mbRight;
   zOneDay_bNewGuest := false;
 
+  PlaceMouseClickToCell(Sender, X, Y);
+
   MousePoint := Point(X, Y);
+
   TAdvStringGrid(Sender).MouseToCell(X, Y, ACol, ARow);
   if ARow > 0 then
   begin
@@ -6214,32 +6198,7 @@ begin
     end;
   end;
 
-  if zOneDay_bRightClick then
-  begin
-    if (ACol in [2, 9]) then
-    begin
-      // --
-      PpUp.X := X;
-      PpUp.Y := Y;
-      PpUp := ClientToScreen(PpUp);
-      frmMain.mmnuOneDayGrid.Popup(PpUp.X, PpUp.Y);
-    end
-    else if (ACol in [0, 7]) then
-    begin
-      OneDay_DoAJump('');
-    end
-    else
-    begin
-      PpUp.X := X;
-      PpUp.Y := Y;
-      PpUp := ClientToScreen(PpUp);
-      mmnuOneDayGrid.Popup(PpUp.X, PpUp.Y);
-    end;
-  end
-  else
-  begin
-    FOneDay_bMouseDown := true;
-  end;
+  FOneDay_bMouseDown := (Button = mbLeft);
 end;
 
 procedure TfrmMain.grOneDayRoomsMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
@@ -11474,7 +11433,6 @@ end;
 
 function TfrmMain._Logout(AlreadyInactive: boolean = false; const AutoLogin: String = ''): boolean;
 begin
-  lblHotelName.Caption := '';
   performClearHotel(NOT AlreadyInactive);
   try
     result := StartHotel(false, AlreadyInactive, AutoLogin) or LoginCancelled;
