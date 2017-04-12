@@ -1112,7 +1112,6 @@ type
     function OneDay_isATakenType(ACol, ARow: integer): boolean;
     function OneDay_RoomReservedName(const RoomNumber: string; iRes, iRoom: integer): string;
     procedure OneDay_CheckOut;
-//    procedure OneDay_CheckIn;
     procedure OneDay_RemoveRoom(_grid: TAdvStringGrid; bAll: boolean);
     procedure OneDay_RoomInvoice(invType: integer);
     procedure OneDay_DeleteRoomReservation;
@@ -1179,8 +1178,6 @@ type
 
     /// ////////////////////////////////////////////////////////////////////////
     /// ////////////////////////////////////////////////////////////////////////
-
-    // **Period_ColToDate(ACol : integer) : TdateTime;
 
     function Period_Init: integer;
 
@@ -1325,10 +1322,6 @@ type
     procedure _Settings;
     procedure _Language;
 
-    // procedure _Servers;
-    // procedure _actions;
-    // procedure _triggers;
-
     // * Bar Scripts
     procedure _VariblesList;
     procedure _VariblesGroupList;
@@ -1430,7 +1423,6 @@ type
     procedure EnterRateQueryView(aDate: integer);
     procedure SetOffLineMode(const Value: boolean);
     procedure MyRoundedRect(Canvas: TCanvas; X1, Y1, X2, Y2: integer; DoRoundCorners: boolean = true);
-    procedure PlaceRoomerOnCurrentMonitor;
     function GetActivePeriodGrid: TAdvStringGrid;
     procedure HandleSkinManagerChange;
     procedure RefreshStats(force: boolean = false);
@@ -1442,7 +1434,6 @@ type
     procedure ApplicationCancelHint;
     function OneDay_GetResInfo(ACol, ARow, iReservation, iRoomReservation: integer): RecRDInfo;
     procedure CorrectBottomPeriodInterface;
-    // function GetSelectedRoomInformation(var iReservation, iRoomReservation: Integer; var Arrival, Departure: TDate): Boolean;
     function GetSelectedRoomInformation: boolean;
     procedure PrintRegistrationFormsForSpecifiedRoomReservations(rSet: TRoomerDataSet);
     procedure SetShapeColor(Shape: TShape; const ResStatus: String);
@@ -1513,47 +1504,107 @@ var
 implementation
 
 uses
-  dbTables
-    , uD, uRubbishCollectors, uProvideARoom2,
-  uInvoice,
-  uTaxes,
-  clipbrd,
-  sndkey32, uReservationProfile, uGuestProfile2, uSplashRoomer, uAboutRoomer,
-  uFrmBusyMessage,
-  uControlData, uInvoiceList, uGuestCheckInForm
+     uD
+		, uProvideARoom2
+		, uInvoice
+		, uTaxes
+		, clipbrd
+		, sndkey32
+		, uReservationProfile
+		, uGuestProfile2
+		, uSplashRoomer
+		, uAboutRoomer
+		, uFrmBusyMessage
+		,  uControlData
+		, uInvoiceList
+		, uGuestCheckInForm
     , uFinishedInvoices2
     , uRoomCleanMaintenanceStatus
     , uDayFinical
-    , uInvoiceList2, uDayNotes, uNationalReport3, uLodgingTaxReport2, uBlinker, ufrmSelLang
+    , uInvoiceList2
+		, uDayNotes
+		, uNationalReport3
+		, uLodgingTaxReport2
     , uRptbViewer
-    , uColorSelector, uCountryGroups, uCountries, uCurrencies, uConverts, uConvertGroups, uPayGroups, uPayTypes,
-  uVatCodes, uChannelPlanCodes, uPriceCodes
-    , uResGuestList, uRebuildReservationStats, uMakereseRvationQuick, objHomeCustomer
-    , uSqlDefinitions, uRoomRates, uRates, uGotoRoomAndDate, uStringUtils, uRoomTypes2, uRoomTypesGroups2, uSeasons2,
-  uItemTypes2, uItems2, uLocations2,
-  uRooms3, uCustomerTypes2, uCustomers2, uStaffTypes2, uStaffMembers2, uChannels, uRegistryServices, uChannelManager,
-  uCommunicationTest, uMessageList,
-  uHouseKeeping
-    , uRptResStats, uRptResStatsRooms, uGuestSearch, uDateUtils, urptReservations, urptReservationsCust
-
-    , uTestData, urptTotallist, uFrmChannelTogglingRules, uPersonviptypes, uFrmDaysStatistics, uFrmRateQuery,
-  uPersonContactType,
-  uRptTurnoverAndPayments, uRptTurnoverAndPayments2,
-  ufDownPayments
-    , uFrmResources, uFileDependencyManager, uMaidActions, uTaxCalc, uRptCustInvoices, uRptResInvoices,
-  uFrmRBEContainer, uRptManagment,
-  uChart, uRoomerExceptions, uRoomerMessageDialog, uRptBreakfastGuests, uLostAndFound, uRunWithElevatedOption,
-  urptNotes, uRptGuests, umakeKreditInvoice,
-  uBookKeepingCodes, uRptBookkeeping, uReservationEmailingDialog, uFrmReservationCancellationDialog,
-  uFrmRoomReservationCancellationDialog,
-  uRptCashier, uPhoneRates, uGroupGuests,
-  uActivityLogs,
-  uFrmCheckOut,
-  uInvoiceCompare,
-  GoogleOTP256,
-  uInvoiceController,
-  uCleaningNotes,
-  Math
+    , uColorSelector
+		, uCountryGroups
+		, uCountries
+		, uCurrencies
+		, uConverts
+		, uConvertGroups
+		, uPayGroups
+		, uPayTypes
+		,uVatCodes
+		, uChannelPlanCodes
+		, uPriceCodes
+    , uResGuestList
+		, uMakereseRvationQuick
+		, uSqlDefinitions
+		, uRoomRates
+		, uRates
+		, uGotoRoomAndDate
+		, uStringUtils
+		, uRoomTypes2
+		, uRoomTypesGroups2
+		, uSeasons2
+		, uItemTypes2
+		, uItems2
+		, uLocations2
+		,uRooms3
+		, uCustomerTypes2
+		, uCustomers2
+		, uStaffTypes2
+		, uStaffMembers2
+		, uChannels
+		, uRegistryServices
+		, uChannelManager
+		,uCommunicationTest
+		, uMessageList
+		,uHouseKeeping
+    , uRptResStats
+		, uRptResStatsRooms
+		, uGuestSearch
+		, uDateUtils
+		, urptReservations
+    , uTestData
+		, urptTotallist
+		, uFrmChannelTogglingRules
+		, uPersonviptypes
+		, uFrmDaysStatistics
+		, uFrmRateQuery
+		,uPersonContactType
+		,uRptTurnoverAndPayments
+		, uRptTurnoverAndPayments2
+		,ufDownPayments
+		, uFrmResources
+		, uFileDependencyManager
+		, uMaidActions
+		, uTaxCalc
+		, uRptCustInvoices
+		, uRptResInvoices
+		,uFrmRBEContainer
+		, uRptManagment
+		, uRoomerExceptions
+		, uRoomerMessageDialog
+		, uRptBreakfastGuests
+		, uLostAndFound
+		, uRunWithElevatedOption
+		,urptNotes
+		, uRptGuests
+		, umakeKreditInvoice
+		, uBookKeepingCodes
+		, uRptBookkeeping
+		, uReservationEmailingDialog
+		, uFrmReservationCancellationDialog
+		, uFrmRoomReservationCancellationDialog
+		, uRptCashier
+		, uPhoneRates
+		, uGroupGuests
+		, uActivityLogs
+		, uFrmCheckOut
+		,uInvoiceController
+		,uCleaningNotes
+		,Math
     , uOfflineReportGrid
     , uRptArrivals
     , uRptDepartures
@@ -1572,7 +1623,10 @@ uses
     , uRoomerVersionInfo
     , uSQLUtils
     , uMasterRateDefaults
-    , uRptUserActivity, uResourceTypeDefinitions;
+    , uRptUserActivity
+		, uResourceTypeDefinitions
+		, uOpenInvoicesNew
+		;
 
 {$R *.DFM}
 {$R Cursors.res}
@@ -1788,7 +1842,6 @@ begin
     panelHide.Height := ClientHeight;
     panelHide.Show;
     panelHide.BringToFront;
-//    Self.Enabled := false
   end;
   CloseAppSettings;
 end;
@@ -1856,7 +1909,6 @@ procedure TfrmMain.EnterPeriodDragFilter;
 var
   rri: RecRDInfo;
 begin
-  // splitPeriod.CloseSplitter; splitPeriod.Top := panPeriodRooms.Height;
   rri := Period_GetResInfo(grPeriodRooms.col, grPeriodRooms.row, grPeriodRooms.Tag);
   if rri.Reservation > -1 then
     FillRoomOnTheMove(false, grPeriodRooms.row, grPeriodRooms.col, rri);
@@ -1866,7 +1918,6 @@ procedure TfrmMain.EnterPeriodDragFilterExternal;
 var
   rri: RecRDInfo;
 begin
-  // splitPeriod.OpenSplitter; splitPeriod.Top := panPeriodRooms.Height;
   rri := Period_GetResInfo(grPeriodRooms_NO.col, grPeriodRooms_NO.row, grPeriodRooms_NO.Tag);
   if rri.Reservation > -1 then
     FillRoomOnTheMove(true, grPeriodRooms_NO.row, grPeriodRooms_NO.col, rri);
@@ -1901,15 +1952,12 @@ begin
 
   // --
   pnlDayStatus.Color := sSkinManager1.gd[btnGoOnline.SkinData.SkinIndex].HotGlowColor;
-  // HotColor; // GetPixelColourAsColor(Point(Width div 2 + Left, Top + 3));
   cbxStatDay.Color := pnlDayStatus.Color;
   panMainTop.Color := sSkinManager1.GetGlobalColor; // pnlDayStatus.Color;
   cbxStatDay.Font.Color := sSkinManager1.GetGlobalColor;
-  // sSkinManager1.gd[btnGoOnline.SkinData.SkinIndex].HotFontColor[1]; // sSkinManager1.GetGlobalColor;
 
   // Colors are to be found in cxLookAndFeelPainterscxLookAndFeelPainters
   Color := sSkinManager1.GetGlobalColor;
-  // RootLookAndFeel.Painter.DefaultFilterBoxColor; // DefaultContentColor; // DefaultVGridHeaderColor; // ASkin.Get .GetColorByName('GroupColor').Value;
 
   __VER.Font.Color := cbxStatDay.Font.Color;
 
@@ -2020,7 +2068,6 @@ begin
       grPeriodRooms.cells[cgrRoom_RoomDescriptionColumn, RowIndex] := g.oRooms.RoomItemsList.Items[i].RoomDescription;
     end;
   end;
-  // grPeriodRooms.AddRow;
 end;
 
 procedure TfrmMain.AutoSizePeriodColumns;
@@ -2034,7 +2081,6 @@ begin
     if cbxViewTypes.ItemIndex > 0 then
     begin
       grPeriodRooms.colWidths[2] := 0;
-      // (LongestColText(grPeriodRooms, 2, 2) + 20) * ABS(ORD(cbxViewTypes.ItemIndex = 0));
       grPeriodRooms.colWidths[1] := 170;
     end;
   except
@@ -2084,7 +2130,6 @@ begin
     _Canvas.Pen.Style := psDot;
     _Canvas.Pen.Color := _Canvas.Font.Color;
     _Canvas.Rectangle(chRect);
-    // _Canvas.Ellipse(chRect.Left, chRect.Top, chRect.Right, chRect.Bottom);
   finally
     _Canvas.Brush.Color := brushColor;
   end;
@@ -2204,9 +2249,7 @@ end;
 
 procedure TfrmMain.UpdatePanelText;
 begin
-  // lblMainHeader.caption := ' ' + g.qHotelName + ' - ' + DateToStr(dtDate.Date) + ' ' + FormatDateTime('dddd', dtDate.Date);
-  lblMainHeader.Caption := // DateToStr(dtDate.Date) + ' ' +
-    FormatDateTime('dddd', dtDate.Date);
+  lblMainHeader.Caption := FormatDateTime('dddd', dtDate.Date);
 end;
 
 procedure TfrmMain.WndProc(var message: TMessage);
@@ -2464,9 +2507,6 @@ begin
   grOneDayRooms.Font.name := OneDayFont.name;
   grOneDayRooms.Font.size := OneDayFont.size;
 
-  // grPeriodRooms.font.Color := clBlack;
-  // grPeriodRooms.fixedfont.Color := clBlack;
-
   with TRoomerRegistryIniFile.Create(AppInifile) do
     try
       writeString('GridFonts', grOneDayRooms.name, _FontToStr(grOneDayRooms.Font));
@@ -2584,7 +2624,6 @@ begin
 end;
 
 {$IFDEF DEBUG}
-
 var
   startTimeForMeasure,
     endTimeForMeasure: longint;
@@ -2677,7 +2716,6 @@ begin
   Screen.cursors[1] := loadcursor(hinstance, 'MOVE');
   curNoDrop := Screen.cursors[crNoDrop];
   curNoDropNew := loadcursor(hinstance, 'MOVESC');
-  // LoadOneDayViewGridStatus;
 
   tabsView.Font.Color := clWhite;
 
@@ -2728,37 +2766,6 @@ begin
   dtDate.OnChange := dtDateChange;
 end;
 
-
-procedure TfrmMain.PlaceRoomerOnCurrentMonitor;
-var
-  Monitor: TMonitor;
-const
-  MoveWinThreshold: Byte = 80;
-begin
-  Monitor := Screen.MonitorFromWindow(self.handle);
-
-  if Left > Monitor.Left + Monitor.Width - MoveWinThreshold then
-    Left := Monitor.Left + Monitor.Width - MoveWinThreshold;
-
-  if Top > Monitor.Top + Monitor.Height - MoveWinThreshold then
-    Top := Monitor.Top + Monitor.Height - MoveWinThreshold;
-
-  if Width > Monitor.Width then
-  begin
-    Width := Monitor.Width;
-  end;
-
-  if Height > Monitor.Height then
-  begin
-    Height := Monitor.Height;
-  end;
-
-  if Left + Width > Monitor.Width then
-    Left := 0;
-
-  if Top + Height > Monitor.Height then
-    Top := 0;
-end;
 
 procedure TfrmMain.PlacePeriodViewTypePanel;
 begin
@@ -3112,12 +3119,8 @@ procedure TfrmMain.SetExplanationColors;
 begin
   __ExplainP.Caption := GetTranslatedText('shTx_G_DueToArrive');
   SetShapeColor(shpP, 'P');
-  // __ExplainP.Caption := GetTranslatedText('shTx_G_NotArrived');
   __ExplainG.Caption := GetTranslatedText('shTx_G_CheckedIn');
   SetShapeColor(shpG, 'G');
-  // __ExplainP.Caption := GetTranslatedText('shTx_G_CheckedOut');
-  // __ExplainO.Caption := GetTranslatedText('shTx_G_WaitingList');
-  // __ExplainA.Caption := GetTranslatedText('shTx_G_Alotment');
   __ExplainN.Caption := GetTranslatedText('shTx_G_NoShow');
   SetShapeColor(shpN, 'N');
   __ExplainB.Caption := GetTranslatedText('shTx_G_Blocked');
@@ -3147,8 +3150,6 @@ begin
     RoomerLanguage.TranslateThisForm(frmGoToRoomandDate);
   except
   end;
-  // try RoomerLanguage.TranslateThisForm(frmInvoicePayment2); except end;
-  // try RoomerLanguage.TranslateThisForm(frmSelHotel); except end;
   try
     RoomerLanguage.TranslateThisForm(frmHomedate);
   except
@@ -3203,7 +3204,6 @@ begin
     inttostr(TMenuItem(Sender).Tag),
     Bool2Str(TMenuItem(Sender).Checked));
   btnFilter.ImageIndex := ABS(Ord(LocationFilter(false) OR GroupsFilterActive OR ReservationStateFilter));
-  // OR GroupsFilterActive));
 
   checkFilterStatuses;
   RedisplayGuestWindows;
@@ -3217,7 +3217,6 @@ end;
 function TfrmMain.SearchOrGroupFilterActive: boolean;
 begin
   result := SearchActive OR ReservationStateFilter OR GroupsFilterActive;
-  // OR FilterActive; // OR GroupsFilterActive;
 end;
 
 function TfrmMain.FilterActive: boolean;
@@ -3493,7 +3492,6 @@ begin
 
     ClearobjectsFromGrid(grPeriodRooms);
     ClearobjectsFromGrid(grPeriodRooms_NO);
-    // barinn.SaveToRegistry('Software\Roomer\PMS\Barinn\' + g.qUser);
     Try
       ug.CloseApplication;
     Except
@@ -3504,11 +3502,6 @@ begin
       StoreMain.active := false;
     FAppClosing := true;
     FReservationsModel.Free;
-
-//    try
-//      ClearStringGridFromTo(grOneDayRooms, 1, 1);
-//    except
-//    end;
 
     try
       ClearFreeRooms;
@@ -3579,7 +3572,6 @@ begin
   begin
     options := [eoWait, eoMaximized];
     ExecuteFile(handle, 'CMD.EXE', '/c REG DELETE HKCU\Software\Roomer\FormStatus /f', options);
-//    ExecuteFile(handle, 'CMD.EXE', '/c taskkill /f /im Roomer.exe', options);
     KillTask('Roomer.exe');
     exit;
   end;
@@ -3590,9 +3582,6 @@ begin
       ShowHintWindow;
     exit;
   end;
-
-  // if pageMainGrids.ActivePage = tabMeetings then
-  // exit;
 
   if ActiveControl = dtDate then
     exit;
@@ -3624,8 +3613,6 @@ begin
 
   s := Key;
 
-//   CharInSet(Key, ['a' .. 'z', 'A' .. 'Z', '�', '�', '�', '�', '�', '�', '�', '�', '�', '�', '�', '�', '�', '�', '�',
-//    '�', '�', '�', '�', '�']) then
   if InRange(ord(Key), ord('A'), ord('Z')) or InRange(ord(Key), ord('a'), ord('z')) or InRange(ord(Key), $C0, $FF) then
   begin
     ActiveControl := edtSearch;
@@ -3640,18 +3627,14 @@ begin
   if CharInSet(Key, ['0' .. '9']) then
   begin
     frmHomedate.dtHome.Date := dtDate.Date;
-    // frmHomeDate.Show;
     frmHomedate.Left := Left + 1;
     frmHomedate.Top := Top + 1;
 
-    // frmHomedate.ActiveControl := frmHomedate.dtHome;
     frmHomedate.dtHome.SelLength := 0;
-    // frmHomeDate.dtHome.SetFocus;
     frmHomedate.dtHome.SelStart := 0;
     frmHomedate.dtHome.SelLength := 1;
     frmHomedate.dtHome.SetSelText(s);
     frmHomedate.dtHome.SelLength := 0;
-    // SendKeys(PChar(s), true);
     frmHomedate.dtHome.SelStart := 1;
     frmHomedate.ShowModal;
     Key := #0;
@@ -3700,7 +3683,6 @@ begin
   grOneDayRooms.BeginUpdate;
   try
 
-//    frmDateStatistics.timGetRoomStatuses.Enabled := false;
     BusyOn;
     try
       statNumRooms := g.oRooms.RoomCount;
@@ -3904,8 +3886,6 @@ begin
       freeandNil(rSet);
     end;
 
-    // frmDaysStatistics.ViewDate := now + cbxStatDay.ItemIndex;
-    // frmDaysStatistics.GetDaysNumbers(OCC, ADR, REVPAR, RoomsSold);
     __OCCUPANCY.Caption := formatFloat('#,##0.00 %', OCC);
     __ADR.Caption := formatFloat('#,##0.00', ADR);
     __REVPAR.Caption := formatFloat('#,##0.00', REVPAR);
@@ -3999,7 +3979,6 @@ procedure TfrmMain.dtDateKeyDown(Sender: TObject; var Key: Word; Shift: TShiftSt
 begin
   if Key = VK_Return then
   begin
-    // postMessage(Handle, WM_StartUpLists, 0, 0);
     RefreshGrid;
     Key := 0;
   end;
@@ -4182,7 +4161,6 @@ begin
       begin
         if FReservationsModel.Reservations[i].Rooms[l].RoomNumber = RoomNumber then
         begin
-          // if ReservationsModel.Reservations[ i ].Rooms[ l ].ResStatus = rsReservations then begin
           if FReservationsModel.Reservations[i].Rooms[l].GuestNameCount > 0 then
           begin
             iRoom := l;
@@ -4190,7 +4168,6 @@ begin
             bFound := true;
             break;
           end;
-          // end;
         end;
       end;
     end;
@@ -4420,7 +4397,6 @@ begin
 
     except
       // in theory not reachable but when the rollback causes an exception
-      lSucceeded := False;
       d.roomerMainDataSet.SystemRollbackTransaction;
       raise;
     end;
@@ -4665,9 +4641,6 @@ procedure TfrmMain.CancelAReservation;
 begin
   if GetSelectedRoomInformation then
   begin
-    // d.roomerMainDataSet.SystemCancelReservation(_iReservation, Format('User %s changed state to cancelled on %s',
-    // [d.roomerMainDataSet.userName, DateTimeToStr(now)]));
-
     if CancelBookingDialog(_iReservation) then
       if (ViewMode = vmOneDay) OR (ViewMode = vmPeriod) then
         RefreshGrid;
@@ -4678,9 +4651,6 @@ procedure TfrmMain.CancelARoomReservation;
 begin
   if GetSelectedRoomInformation then
   begin
-    // d.roomerMainDataSet.SystemCancelReservation(_iReservation, Format('User %s changed state to cancelled on %s',
-    // [d.roomerMainDataSet.userName, DateTimeToStr(now)]));
-
     if CancelRoomBookingDialog(_iRoomReservation) then
       if (ViewMode = vmOneDay) OR (ViewMode = vmPeriod) then
         RefreshGrid;
@@ -4698,7 +4668,6 @@ begin
       exit;
     OneDay_GetResAndRoom_IDX(idxReservation, iRoom);
     Reservation := FReservationsModel.Reservations[idxReservation].Reservation;
-    // ShowNameList(Reservation, zOneDay_dtDate);
 
     frmResGuestList := TfrmResGuestList.Create(self);
     try
@@ -5135,7 +5104,6 @@ procedure TfrmMain.OneDay_DisplayGrid;
           dtDate := SQLToDate(sDate);
         iNextOcc := trunc(dtDate) - trunc(zOneDay_dtDate);
 
-        // iNextOcc := d.Next_OccupiedDayCount(zOneDay_dtDate, Room);
         if iNextOcc > 100 then
           sNextOcc := '100+'
         else
@@ -5165,7 +5133,6 @@ procedure TfrmMain.OneDay_DisplayGrid;
 
         iNextOcc := trunc(dtDate) - trunc(zOneDay_dtDate);
 
-        // iNextOcc := d.Next_OccupiedDayCount(zOneDay_dtDate, Room);
         if iNextOcc > 100 then
           sNextOcc := '100+'
         else
@@ -5493,7 +5460,6 @@ var
   resultStatus, resultGroup, resultSearch: boolean;
 begin
   result := NOT(SearchOrGroupFilterActive);
-  // (edtSearch.Text = '') AND (btnFilter.ImageIndex = 0);
   if NOT result then
   begin
 
@@ -5610,7 +5576,6 @@ begin
       Point.Y := Rect.Top;
       Point := grOneDayRooms.ClientToScreen(Point);
       SetRoomCleanAndMaintenanceStatus(grOneDayRooms.cells[ACol, ARow], Point.X, Point.Y);
-      // SetRoomStatus(grOneDayRooms.cells[ACol, ARow], Point.X, Point.Y);
 
       FOneDay_bMouseDown := false;
       if grOneDayRooms.dragging then
@@ -5966,9 +5931,6 @@ begin
 
       0, 7:
         begin
-          // if (iLastHintRow = ARow) and (iLastHintCol = ACol) then
-          // exit;
-          // ApplicationCancelHint;
           sRoom := grOneDayRooms.cells[ACol, ARow];
           APoint.X := X;
           APoint.Y := Y;
@@ -5976,7 +5938,6 @@ begin
           iLastHintRow := ARow;
           iLastHintCol := ACol;
           HintStr := d.getRoomText(sRoom);
-          // ActivateHint(APoint, grOneDayRooms);
           exit;
         end;
 
@@ -6178,7 +6139,6 @@ var
   ARow: integer;
 
   Rect: TRect;
-  PpUp: TPoint;
 begin
   zOneDay_bNewGuest := false;
 
@@ -6264,15 +6224,11 @@ begin
         begin
           ActiveGrid.BeginDrag(true);
           ApplicationCancelHint;
-          // Application.processmessages;
         end;
       end;
     end;
     exit;
   end;
-
-  // if grOneDayRooms.dragging then
-  // exit;
 end;
 
 /// ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -6409,13 +6365,11 @@ begin
       end;
     end;
   end;
-  // Compute_TreeMoves( X, Y );
 end;
 
 procedure TfrmMain.grOneDayRoomsDragScroll(Sender: TObject; TopRow, LeftCol: integer;
   var DragScrollDir: TDragScrollDirection; var CanScroll: boolean);
 begin
-  // DragScrollDir := [dsdUp,dsdDown,dsdLeft,dsdRight];
   CanScroll := true;
 end;
 
@@ -6763,12 +6717,6 @@ begin
                             else if (FReservationsModel.Reservations[iRes].Rooms[iRoom].Departure > zOneDay_dtDate + 1) then
                               FormatToReservationAttrib(Grid.Canvas, g.qStatusAttr_GuestStaying);
 
-//            rsUnKnown,
-//            rsAll,
-//            rsCurrent,
-//            rsReserved,
-//            rsDeleted
-//          else
           end;
 
         if (gdFocused in State) then
@@ -7115,8 +7063,6 @@ begin
           i := 145;
         pnlNotifications.Height := i;
       end;
-//      Panel5.Top := grdRoomClasses.Top;
-//      pnlNotifications.Top := Panel5.Top; // pnlDateStatistics.Top + pnlDateStatistics.Height + 1;
     end;
   finally
     lblCacheNotification.Visible := false;
@@ -7132,7 +7078,7 @@ begin
 {$IFDEF Debug}
     timOfflineReports.Interval := 3 * TIM_MINUTE; // 3 min for debugging
 {$ELSE}
-    timOfflineReports.Interval := TIM_10_MINUTES; // 10 minutes... // OLD: TIM_HALF_HOUR; // 30 min normal
+    timOfflineReports.Interval := TIM_10_MINUTES; // 10 minutes...
 {$ENDIF}
   finally
     timOfflineReports.Enabled := Assigned(Sender);
@@ -7593,9 +7539,6 @@ end;
 
 procedure TfrmMain.EnterPeriodView;
 begin
-  // if grPeriodViewFilterOn then
-  // ShowAllRoomsRows;
-
   if ViewMode = vmPeriod then
     exit;
 
@@ -7740,7 +7683,6 @@ begin
   grPeriodRooms.colWidths[1] := 040;
   grPeriodRooms.colWidths[2] := 040; // * ABS(ORD(cbxViewTypes.ItemIndex = 0));;
 
-  // grPeriodRooms.colWidths[3] := 100;
   grPeriodRooms.colWidths[3] := 5;
   grPeriodRooms.colWidths[4] := 0;
 
@@ -7960,7 +7902,6 @@ begin
   ShowAllPeriodRows;
 
   CleanEnds(Days, grPeriodRooms);
-  // CleanEnds(Days, grPeriodRooms_NO);
 
   if Days = 0 then
   begin
@@ -8188,13 +8129,11 @@ begin
 end;
 
 function TfrmMain.FilterPassededForPeriodData(Room: TresCell): boolean;
-// Reservation : TSingleReservations) : Boolean;
 var
   s: String;
   resultGroup, resultSearch: boolean;
 begin
   result := NOT(SearchOrGroupFilterActive);
-  // (edtSearch.Text = '') AND (btnFilter.ImageIndex = 0);
   if NOT result then
   begin
 
@@ -8214,14 +8153,8 @@ begin
       resultSearch := pos(ANSIlowercase(edtSearch.Text), ANSIlowercase(s)) > 0;
     end;
 
-    // if (lblAndOr.Tag = 1) OR FreeRoomsFiltered then
-    // result := resultFilter OR resultSearch
-    // else
-    // result := resultFilter AND resultSearch;
     result := resultSearch AND resultGroup;
-
   end;
-
 end;
 
 procedure TfrmMain.Period_RestoreRowHeights;
@@ -8273,21 +8206,16 @@ end;
 function TfrmMain.Period_RoomToRow(const Room: string): integer;
 var
   i: integer;
-  found: boolean;
 begin
   result := -1;
-  found := false;
   for i := grPeriodRooms.FixedRows - 1 to grPeriodRooms.RowCount - 1 do
   begin
     if _trimlower(Room) = _trimlower(grPeriodRooms.cells[1, i]) then
     begin
-      found := true;
+      Result := i;
       break;
     end;
   end;
-
-  if found then
-    result := i
 end;
 
 function TfrmMain.Period_DateToCol(aDate: Tdate): integer;
@@ -8327,8 +8255,6 @@ begin
   result.Room := FReservationsModel.Reservations[iReservation].Rooms[iRoomReservation].RoomNumber;
   result.RoomType := FReservationsModel.Reservations[iReservation].Rooms[iRoomReservation].RoomType;
   result.isNoRoom := Copy(FReservationsModel.Reservations[iReservation].Rooms[iRoomReservation].RoomNumber, 1, 1) = '<';
-  // result.AscIndex := resCell.AscIndex;
-  // result.DescIndex := resCell.DescIndex;
   result.CustomerName := FReservationsModel.Reservations[iReservation].name;
   result.Arrival := FReservationsModel.Reservations[iReservation].Rooms[iRoomReservation].Arrival;
   result.Departure := FReservationsModel.Reservations[iReservation].Rooms[iRoomReservation].Departure;
@@ -8387,11 +8313,6 @@ begin
     exit;
 
   resCell := TresCell(Grid.Objects[ACol, ARow]);
-  // if gridTag = 1 then
-  // resCell := TresCell(Grid.Objects[ACol, ARow])
-  // else if gridTag = 2 then
-  // resCell := TresCell(grPeriodRooms_NO.Objects[ACol, ARow]);
-
   result.Reservation := resCell.Reservation;
   result.RoomReservation := resCell.RoomReservation;
   result.Channel := resCell.Channel;
@@ -8530,22 +8451,12 @@ begin
       end;
     end;
   end
-  else
-
-    if Key = vk_Right then
+  else if Key = vk_Right then
   begin
     if grPeriodRooms.col = grPeriodRooms.ColCount - 1 then
-    begin
-      // dtDate.Date := trunc(dtDate.Date + 1);
-      // StartOneDay;
-      // grPeriodRooms.Refresh;
-
       Key := 0;
-    end;
   end
-  else
-
-    if (Key = VK_SHIFT) then
+  else if (Key = VK_SHIFT) then
   begin
     if grPeriodViewFilterOn then
       ShowAllRoomsRows
@@ -8556,39 +8467,19 @@ begin
       EnterPeriodDragFilter;
     end;
   end
-  else
-
-    if Key = vk_Right then
+  else if Key = vk_Right then
   begin
     if grPeriodRooms.col = grPeriodRooms.ColCount - 1 then
-    begin
-      // dtDate.Date := trunc(dtDate.Date + 1);
-      // StartOneDay;
-      // grPeriodRooms.Refresh;
-
       Key := 0;
-    end;
   end
-  else
-
-    if Key = vk_Left then
-  begin
+  else if Key = vk_Left then
     if grPeriodRooms.col = grPeriodRooms.FixedCols then
-    begin
-      // dtDate.Date := trunc(dtDate.Date - 1);
-      // StartOneDay;
-      // grPeriodRooms.Refresh;
-      Key := 0;
-    end;
-  end
-  else
-
-    if Key = VK_UP then
+      Key := 0
+  else if Key = VK_UP then
   begin
     if grPeriodRooms.row < 2 then
       grPeriodRooms.row := 2;
     grPeriodRooms.row := grPeriodRooms.row - 1;
-    // grPeriodRooms.Refresh;
     grPeriodRooms.SelectCells(grPeriodRooms.col, grPeriodRooms.row, grPeriodRooms.col, grPeriodRooms.row);
     Key := 0;
   end
@@ -8597,12 +8488,9 @@ begin
     if Key = VK_DOWN then
   begin
     grPeriodRooms.row := grPeriodRooms.row + 1;
-    // grPeriodRooms.OnClickCell(grPeriodRooms,grPeriodRooms.row,grPeriodRooms.col);
-    // grPeriodRooms.OnMouseEnter(grPeriodRooms);
     if grPeriodRooms.row >= grPeriodRooms.RowCount - 1 then
       grPeriodRooms.row := grPeriodRooms.RowCount - 2;
     grPeriodRooms.SelectCells(grPeriodRooms.col, grPeriodRooms.row, grPeriodRooms.col, grPeriodRooms.row);
-    // grPeriodRooms.Refresh;
     Key := 0;
   end
   else
@@ -8815,7 +8703,6 @@ var
 begin
   if NOT ZPeriodRoomOnTheMoveExternal then
     CurrentRoom := ZPeriodRoomOnTheMoveRoomNumber
-    // grPeriodRooms.Cells[1,currRow]
   else
     CurrentRoom := '';
   list := TStringList.Create;
@@ -8910,7 +8797,6 @@ procedure TfrmMain.ShowAllRoomsRows;
 begin
   grPeriodRooms.UnHideRowsAll;
   grPeriodRooms_NO.UnHideRowsAll;
-  // splitPeriod.OpenSplitter; splitPeriod.Top := panPeriodRooms.Height;
   SetFilterColorsOff;
 end;
 
@@ -8953,8 +8839,6 @@ begin
     pnlRBE.Width := ClientWidth;
     pnlRBE.Height := ClientHeight;
     pnlRBE.Show;
-    // pnlRBE.Visible := True;
-    // pnlRBE.Align := alClient;
     pnlRBE.BringToFront;
     FrmRBEContainer.pnlRBEContainer.Parent := pnlRBE;
     pnlRBE.Refresh;
@@ -9024,19 +8908,14 @@ begin
 
     for r := grPeriodRooms_NO.FixedRows to grPeriodRooms_NO.RowCount - 2 do
     begin
-      // grNoRooms.Cells[c,r] := 'XX';
-      try
-        if Assigned(grPeriodRooms_NO.Objects[c, r]) then
-        begin
-          asc := (grPeriodRooms_NO.Objects[c, r] as TresCell).AscIndex;
-          desc := (grPeriodRooms_NO.Objects[c, r] as TresCell).DescIndex;
-        end else
-        begin
-          asc := 0;
-          desc := 0;
-        end;
-      except
-        raise;
+      if Assigned(grPeriodRooms_NO.Objects[c, r]) then
+      begin
+        asc := (grPeriodRooms_NO.Objects[c, r] as TresCell).AscIndex;
+        desc := (grPeriodRooms_NO.Objects[c, r] as TresCell).DescIndex;
+      end else
+      begin
+        asc := 0;
+        desc := 0;
       end;
 
       mergeCount := desc + 1;
@@ -9125,8 +9004,6 @@ begin
 
     allow := (iRoomReservation > 0) and (AscIndex = 0);
 
-    // result.Departure := (result.DescIndex + result.Date) + 1;
-
     if allow then
     begin
       zzRoomReservation := (grPeriodRooms.Objects[ACol, ARow] as TresCell).RoomReservation;
@@ -9161,9 +9038,6 @@ begin
   // Do not continue to avoid resetting the start idle time
   if FMessagesBeingDownloaded OR timMessages.Enabled then
     exit;
-
-  // store the time when the user become idle
-  // FStartIdle := GetTickCount;
 
   // enable the timer
   timMessages.Interval := 120000;
@@ -9219,30 +9093,13 @@ begin
 
   HoverPointPeriod := Point(X, Y);
 
-  // if g.qShowhint AND (NOT zPeriod_bMouseDown) then
-  // Period_CheckHint(Sender, X, Y)
-  // else
-  // ApplicationCancelGuestHint;
-
   if FPeriod_bMouseDown then
   begin
     if (ABS(PeriodMousePoint.X - X) > 6) or (ABS(PeriodMousePoint.Y - Y) > 6) then
     begin
       FPeriod_bMouseDown := false;
-
-      // ActiveGrid.MouseToCell(PeriodMousePoint.X, PeriodMousePoint.Y, iDragCell.X,
-      // iDragCell.Y);
-      //
-      // if ((iDragCell.X > 6) and (ActiveGrid.cells[11, iDragCell.Y] <> '')) or
-      // ((iDragCell.X < 6) and (ActiveGrid.cells[4, iDragCell.Y] <> '')) then
-      // begin
-      // if ActiveGrid.Focused then
-      // begin
       ApplicationCancelHint;
       Grid.BeginDrag(true);
-      // Application.processmessages;
-      // end;
-      // end;
     end;
   end;
 
@@ -9260,14 +9117,6 @@ var
 
 begin
   grPeriodRooms.MouseToCell(X, Y, ACol, ARow);
-
-  (*
-    Application.processmessages;
-    sHintText := inttostr(aCol)+','+inttostr(aRow);
-    grPeriodRooms.Hint := sHintText;
-    APoint := grPeriodRooms.ClientToScreen(APoint);
-    Application.ActivateHint(APoint);
-  *)
   Accept := false;
 
   if ACol <> zzSourceCol then
@@ -9732,28 +9581,6 @@ begin
     else if (ARow < Grid.FixedRows) then
     begin
       Text := Grid.cells[ACol, ARow];
-      // Brush.Color := sSkinManager1.GetGlobalColor;
-      // Font.Color := sSkinManager1.GetGlobalFontColor;
-      // if ACol >= Grid.FixedCols then
-      // begin
-      // weekDay := dayOfWeek(Period_ColToDate(ACol));
-      // if weekDay IN [1, 7] then
-      // begin
-      // if cbxViewTypes.ItemIndex = 0 then
-      // Brush.Color := HexToTColor('FFC2C2')
-      // else
-      // begin
-      // Brush.Color := HexToTColor('F7F7F7');
-      // Font.Color := clGray;
-      // end;
-      // end;
-      // end;
-      // FillRect(Rect);
-      // if cbxViewTypes.ItemIndex > 0 then
-      // begin
-      // Font.Name := 'Segoe UI';
-      // Font.Style := [fsBold];
-      // end;
       FillRect(Rect);
       dx := (TextWidth(Text) + 2) div 2;
       TextOut(Rect.Right - (Rect.Right - Rect.Left) div 2 - dx, Rect.Top, Text);
@@ -9799,9 +9626,6 @@ begin
         ShowAllRoomsRows;
         btnRefreshOneDay.Click;
       end;
-
-      // grPeriodRooms.GotoCell(ACol, ARow);
-
       RefreshGrid;
       NullGlobals;
       zzRoomReservation := -1;
@@ -9882,7 +9706,6 @@ begin
     grPeriodRooms_NO.BeginDrag(true);
     Perform(CM_CURSORCHANGED, 0, 0); // Attempt to refresh cursor icon faster, after issue from hotel EUPH
   end;
-  /// end;
 end;
 
 procedure TfrmMain.grPeriodRooms_NODragOver(Sender, Source: TObject; X, Y: integer; State: TDragState;
@@ -9950,8 +9773,6 @@ var
   Grid: TAdvStringGrid;
   cellWidth, cellHeight: integer;
 
-  // const
-  // iExtraSpace = PERIOD_GRID_RECTANGLES_WIDTH;
 begin
   result := '';
 
@@ -9990,7 +9811,6 @@ begin
     end;
     if (FrmReservationHintHolder.pnlHint.Visible) AND (iLastShownRoomReservation = rri.RoomReservation) AND
       (iLastShownHintRow = ARow) then
-      // (iLastShownHintCol = ACol) then
       exit;
 
     iLastShownHintRow := ARow;
@@ -10020,28 +9840,6 @@ begin
     iLastHintCol := ACol;
     exit;
   end;
-
-  // Rect := TAdvStringGrid(Sender).CellRect(ACol, ARow);
-  // if ((iLastHintRow = ARow) AND (iLastHintCol = ACol)) AND (X < Rect.Right - 3 - (iExtraSpace * 3)) then
-  // begin
-  // exit;
-  // end;
-  //
-  // GetPeriodRoomsGridHint(Sender, ARow, ACol, HintStr);
-  // if HintStr = '' then
-  // begin
-  // TAdvStringGrid(Sender).Hint := '';
-  // Application.CancelHint;
-  // iLastHintRow := ARow;
-  // iLastHintCol := ACol;
-  // exit;
-  // end;
-  // TAdvStringGrid(Sender).Hint := HintStr;
-  // // wraptext(hintstr,#13,[' ','-'],130);
-  // APoint.X := X + 5;
-  // APoint.Y := Y + 5;
-  // APoint := TAdvStringGrid(Sender).ClientToScreen(APoint);
-  // ActivateHint(APoint, TAdvStringGrid(Sender));
 end;
 
 procedure TfrmMain.grPeriodRooms_NOGetCellColor(Sender: TObject; ARow, ACol: integer; AState: TGridDrawState;
@@ -10189,10 +9987,8 @@ var
 
 begin
   if (ACol > grPeriodRooms_NO.FixedCols - 1) and (ARow > grPeriodRooms_NO.FixedRows - 1) and
-  // (ACol <> gr5day.ColCount-1) and
     (ARow <> grPeriodRooms_NO.RowCount - 1) then
   begin
-    // Borders :=  [cbLeft,cbTop,cbBottom, cbTop];
     Borders := [];
     APen.Color := clltGray;
     APen.Width := 1;
@@ -10213,7 +10009,6 @@ begin
 
         rri := Period_GetResInfo(ACol, ARow, 2);
         APen.Color := getChannelColorByChannel(rri.Channel);
-        // APen.color := clBlack; // BorderColor;
         APen.Width := 1;
       end;
     end;
@@ -10245,7 +10040,6 @@ begin
     begin
       grOneDayRooms.col := 2;
       grOneDayRooms.row := i;
-      // BlinkRoom;
       BlinkRoom;
       break;
     end
@@ -10253,7 +10047,6 @@ begin
     begin
       grOneDayRooms.col := 9;
       grOneDayRooms.row := i;
-      // BlinkRoom;
       BlinkRoom;
       break;
     end;
@@ -10483,7 +10276,6 @@ begin
   edtSearch.Text := '';
   btnFilter.Click;
   timSearch.Enabled := false;
-  // OneDay_DisplayGrid;
   PerformFilterRefresh;
 end;
 
@@ -10712,20 +10504,14 @@ begin
 end;
 
 procedure TfrmMain.btnTestDataClick(Sender: TObject);
+var
+  frm: TfrmTestData;
 begin
-  // Application.CreateForm(TfrmRebuildReservationStats, frmRebuildReservationStats);
-  // try
-  // frmRebuildReservationStats.ShowModal;
-  // finally
-  // frmRebuildReservationStats.free;
-  // end;
-  Application.CreateForm(TfrmTestData, frmTestData);
+  frm := TfrmTestData.Create(nil);
   try
-    if frmTestData.ShowModal = mrOK then
-    begin
-    end;
+    frm.ShowModal;
   finally
-    frmTestData.Free;
+    frm.Free;
   end;
 end;
 
@@ -10785,12 +10571,7 @@ begin
   LogUserClickedButton(Sender);
   act := actNone;
   initChannelManagerHolder(theData);
-  if ChannelManager(act, theData) then
-  begin
-  end
-  else
-  begin
-  end;
+  ChannelManager(act, theData);
 end;
 
 procedure TfrmMain.btnManagmentStatClick(Sender: TObject);
@@ -11100,8 +10881,6 @@ end;
 procedure TfrmMain.btnRemoteSupportClick(Sender: TObject);
 begin
   StartRemoteSupport(self.handle, d.roomerMainDataSet);
-  // FixRoomTypes;
-  // _RemodeHelp
 end;
 
 procedure TfrmMain.SetPMSVisibilities;
@@ -11151,12 +10930,7 @@ end;
 procedure TfrmMain.btnShowHideStatClick(Sender: TObject);
 begin
   LogUserClickedButton(Sender);
-  // if NOT pnlStatSlider.Visible then
-  // OpenWindowFromRight(pnlStatSlider.Handle)
-  // else
-  // CloseWindowToRight(pnlStatSlider.Handle);
   pnlStatSlider.Visible := NOT btnShowHideStat.Down;
-  // btnShowHideStat.Down := NOT PanStat.Visible;
   pnlStatSlider.Left := Width;
   if assigned(Sender) then
     btnRefreshOneDay.Click;
@@ -11504,7 +11278,6 @@ end;
 procedure TfrmMain._RoomInvoice;
 begin
   // Room Invoice
-  // if not IsValidCellSelected then exit;
   OneDay_RoomInvoice(1); // RoomInvoice
 
   if d.qRes > -1 then
@@ -11577,18 +11350,15 @@ begin
 end;
 
 procedure TfrmMain._OpenInvoices;
+var
+  frm: TfrmOpenInvoicesNew;
 begin
-  g.OpenOpenInvoicesNew;
-  (*
-    Application.CreateForm(TfrmOpenInvoices, frmOpenInvoices);
-    try
-    iTraceRes := - 1;
-    iTraceRom := - 1;
-    frmOpenInvoices.ShowModal;
-    finally
-    frmOpenInvoices.free;
-    end;
-  *)
+  frm := TfrmOpenInvoicesNew.Create(nil);
+  try
+    frm.ShowModal;
+  finally
+    frm.Free;
+  end;
 end;
 
 procedure TfrmMain._ClosedInvoicesDetailed;
@@ -11692,19 +11462,16 @@ end;
 procedure TfrmMain._Nextday;
 begin
   dtDate.Date := trunc(dtDate.Date + 1);
-  // RefreshGrid;
 end;
 
 procedure TfrmMain._Today;
 begin
   dtDate.Date := trunc(now);
-  // RefreshGrid;
 end;
 
 procedure TfrmMain._PreviusDay;
 begin
   dtDate.Date := trunc(dtDate.Date - 1);
-  // RefreshGrid;
 end;
 
 // ############################  Channels  #######################################
@@ -11850,14 +11617,6 @@ begin
   finally
     freeandNil(frmrptResStats);
   end;
-
-  // Application.CreateForm(TfrmStatisticsForcast, frmStatisticsForcast);
-  // try
-  // frmStatisticsForcast.ShowModal;
-  // finally
-  // frmStatisticsForcast.free;
-  // end;
-
 end;
 
 // ############################# Room Data  ##################################
@@ -12030,12 +11789,7 @@ var
 begin
   act := actNone;
   initCountryGroupHolder(theData);
-  if CountryGroups(act, theData) then
-  begin
-  end
-  else
-  begin
-  end;
+  CountryGroups(act, theData);
 end;
 
 procedure TfrmMain._CurrencyList;

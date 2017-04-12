@@ -1737,7 +1737,7 @@ begin
 //frmDayNotes := TfrmDayNotes.Create(nil); frmDayNotes.Free; frmDayNotes := nil;
   frmChangeRRdates := TfrmChangeRRdates.Create(nil); frmChangeRRdates.Free; frmChangeRRdates := nil;
   frmChangeRate := TfrmChangeRate.Create(nil); frmChangeRate.Free; frmChangeRate := nil;
-  frmOpenInvoicesNew := TfrmOpenInvoicesNew.Create(nil); frmOpenInvoicesNew.Free; frmOpenInvoicesNew := nil;
+  TfrmOpenInvoicesNew.Create(nil).Free;
   frmResMemos := TfrmResMemos.Create(nil); frmResMemos.Free; frmResMemos := nil;
 //  frmSelHotel := TfrmSelHotel.Create(nil); frmSelHotel.Free; frmSelHotel := nil;
   TfrmHomedate.Create(nil).Free;
