@@ -261,10 +261,12 @@ begin
            '	LEFT OUTER JOIN rooms ON (rooms.room = rr.room AND rooms.wildcard = 0) ' +
            'WHERE ' +
            '    ((pd.date >= %s AND pd.date<=%s)) ' +
-           'AND ((rr.room LIKE ''<%s'') OR (rooms.active = 1)) ' +
-           'GROUP BY pd.date';
+           '    AND ((rr.room LIKE ''<%s'') OR (rooms.active = 1)) ';
 
     s := format(s, [_db(zDateFrom, true), _db(zDateTo, true), _db(zDateFrom, true), _db(zDateTo, true), '%']);
+    if not zLocationInString.IsEmpty then
+       s := s + format(' AND (rooms.location in (%s)) ', [zLocationInString]);
+    s := s + 'GROUP BY pd.date';
 
 {$ENDREGION}
 

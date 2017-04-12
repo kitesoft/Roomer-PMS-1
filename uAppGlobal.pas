@@ -563,26 +563,28 @@ end;
 function TGlobalSettings.LocationSQLInString(locationlist : TSet_Of_Integer) : string;
 var
   locationID : integer;
-  s : string;
-
+  lLocs: TStrings;
 begin
   result := '';
   if (locationList.Count = 0) or (locationList.Count = glb.Locations.recordCount) then exit;
 
-  s := '';
-  glb.Locations.first;
-  while not glb.locations.eof do
-  begin
-    locationID := glb.Locations.FieldByName('ID').asinteger;
-    if LocationList.ValueInList(locationID) then
+  lLocs := TStringlist.Create;
+  try
+    glb.Locations.first;
+    while not glb.locations.eof do
     begin
-      s := s+_db(glb.Locations.FieldByName('location').AsString)+',';
+      locationID := glb.Locations.FieldByName('ID').asinteger;
+      if LocationList.ValueInList(locationID) then
+        lLocs.Add(_db(glb.Locations.FieldByName('location').AsString));
+      glb.Locations.next;
     end;
-    glb.Locations.next;
-  end;
 
-  if length(s) > 0 then delete(s,length(s),1);
-  result := s;
+    lLocs.Delimiter := ',';
+    lLocs.QuoteChar := ' ';
+    Result := lLocs.DelimitedText;
+  finally
+    lLocs.Free;
+  end;
 end;
 
 
