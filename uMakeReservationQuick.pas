@@ -627,6 +627,8 @@ type
     tvRoomRatesNativeAmount: TcxGridDBColumn;
     lvRoomRes: TcxGridLevel;
     lvRoomRates: TcxGridLevel;
+    lblContactMobile: TsLabel;
+    edContactMobile: TsEdit;
     procedure FormShow(Sender: TObject);
     procedure edCustomerDblClick(Sender: TObject);
     procedure edCustomerExit(Sender: TObject);
@@ -1093,6 +1095,7 @@ begin
     edContactAddress3.Text := '';
     edContactAddress4.Text := '';
     edContactPhone.Text := '';
+    edContactMobile.Text := '';
     edContactFax.Text := '';
     edContactEmail.Text := '';
 
@@ -1109,10 +1112,8 @@ begin
       edContactAddress2.Text := glb.PreviousGuestsSet['Address2'];
       edContactAddress3.Text := glb.PreviousGuestsSet['Address3'];
       edContactAddress4.Text := glb.PreviousGuestsSet['Address4'];
-      s := glb.PreviousGuestsSet['Tel1'];
-      if s = '' then
-        s := glb.PreviousGuestsSet['Tel2'];
-      edContactPhone.Text := s;
+      edContactPhone.Text := glb.PreviousGuestsSet['Tel1'];
+      edContactMobile.Text := glb.PreviousGuestsSet['Tel2'];
       edContactFax.Text := ''; // glb.PreviousGuestsSet['TelFax'];
       edContactEmail.Text := glb.PreviousGuestsSet['Email'];
     end
@@ -1123,10 +1124,8 @@ begin
       edContactAddress2.Text := glb.PersonProfiles['Address2'];
       edContactAddress3.Text := glb.PersonProfiles['Zip'];
       edContactAddress4.Text := glb.PersonProfiles['City'];
-      s := glb.PersonProfiles['TelMobile'];
-      if s = '' then
-        s := glb.PersonProfiles['TelLandLine'];
-      edContactPhone.Text := s;
+      edContactPhone.Text := glb.PersonProfiles['TelLandLine'];
+      edContactMobile.Text := glb.PersonProfiles['TelMobile'];
       edContactFax.Text := glb.PersonProfiles['TelFax'];
       edContactEmail.Text := glb.PersonProfiles['Email'];
 
@@ -1866,6 +1865,7 @@ begin
   edEmailAddress.Text := FNewReservation.HomeCustomer.EmailAddress;
   edHomePage.Text := FNewReservation.HomeCustomer.HomePage;
   edContactPhone.Text := FNewReservation.HomeCustomer.ContactPhone;
+  edContactMobile.Text := FNewReservation.HomeCustomer.ContactMobile;
   edContactPerson.Text := ''; // oNewReservation.HomeCustomer.ContactPerson;
   edContactFax.Text := ''; // oNewReservation.HomeCustomer.ContactFax;
   edContactEmail.Text := ''; // oNewReservation.HomeCustomer.ContactEmail;
@@ -2396,6 +2396,7 @@ begin
     edContactAddress4.Text := '';
 
     edContactPhone.Text := '';
+    edContactMobile.Text := '';
     edContactFax.Text := '';
   end;
   edtPortfolio.Tag := 0;
@@ -2592,7 +2593,8 @@ begin
       edContactAddress3.Text := glb.PersonProfiles['Zip'];
       edContactAddress4.Text := glb.PersonProfiles['City'];
 
-      edContactPhone.Text := glb.PersonProfiles['TelMobile'];
+      edContactPhone.Text := glb.PersonProfiles['TelLandLine'];
+      edContactMobile.Text := glb.PersonProfiles['TelMobile'];
       edContactFax.Text := glb.PersonProfiles['TelFax'];
       edContactEmail.Text := glb.PersonProfiles['Email'];
 
@@ -4141,6 +4143,7 @@ begin
   FNewReservation.HomeCustomer.EmailAddress := edEmailAddress.Text;
   FNewReservation.HomeCustomer.HomePage := edHomePage.Text;
   FNewReservation.HomeCustomer.ContactPhone := edContactPhone.Text;
+  FNewReservation.HomeCustomer.ContactMobile := edContactMobile.Text;
   FNewReservation.HomeCustomer.ContactPerson := edContactPerson.Text;
   FNewReservation.HomeCustomer.ContactAddress1 := edContactAddress1.Text;
   FNewReservation.HomeCustomer.ContactAddress2 := edContactAddress2.Text;
