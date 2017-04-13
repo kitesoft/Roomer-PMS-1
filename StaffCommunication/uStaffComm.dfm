@@ -302,9 +302,9 @@ inherited frmStaffComm: TfrmStaffComm
     object chkShowAllNotes: TsCheckBox
       Left = 273
       Top = 71
-      Width = 139
-      Height = 20
-      Caption = 'Show all notes from date'
+      Width = 169
+      Height = 17
+      Caption = 'Show all notes as of this date'
       TabOrder = 8
       OnClick = dtDateChange
       ImgChecked = 0
@@ -373,6 +373,7 @@ inherited frmStaffComm: TfrmStaffComm
     Left = 88
     Top = 200
     object prLink_grData: TdxGridReportLink
+      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 5080
       PrinterPage.GrayShading = True
@@ -386,6 +387,7 @@ inherited frmStaffComm: TfrmStaffComm
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
       ReportDocument.CreationDate = 42831.668015393520000000
+      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
   end
