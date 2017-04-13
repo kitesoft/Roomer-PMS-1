@@ -5787,7 +5787,6 @@ begin
   pmnuCheckOutRoom.Enabled := Enable;
   pmnuCheckInGroup.Enabled := Enable;
   mnuRoomNumber.Enabled := Enable;
-  mnuDeleteRoomFromReservation.Enabled := Enable AND (NOT OffLineMode);
   mnuCancelReservation2.Enabled := Enable AND (NOT OffLineMode);
   pmnuModifyReservation.Enabled := Enable AND (NOT OffLineMode);
   pmnuRoomReservation.Enabled := Enable AND (NOT OffLineMode);
@@ -5800,7 +5799,17 @@ begin
   pmnuProvideAllotment.Enabled := Enable AND (NOT OffLineMode); // C3
   mnuSendConfirmationEmail.Enabled := Enable AND (NOT OffLineMode);
   mnuGroupGuestNames.Enabled := Enable AND (NOT OffLineMode);
-  mnuCancelRoomFromRoomReservation.Enabled := Enable AND (NOT OffLineMode);
+
+  if Enable AND (NOT OffLineMode) and GetSelectedRoomInformation then
+  begin
+    mnuCancelRoomFromRoomReservation.Enabled := d.RR_GetNumberOfRooms(_iReservation) > 1;
+    mnuDeleteRoomFromReservation.Enabled := mnuCancelRoomFromRoomReservation.Enabled;
+  end else
+  begin
+    mnuCancelRoomFromRoomReservation.Enabled := false;
+    mnuDeleteRoomFromReservation.Enabled := false;
+  end;
+
   mnuRegistrationForm.Enabled := Enable AND (NOT OffLineMode);
 
 
