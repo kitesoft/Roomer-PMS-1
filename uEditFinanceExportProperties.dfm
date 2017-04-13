@@ -47,7 +47,6 @@ object frmEditFinanceExportProperties: TfrmEditFinanceExportProperties
     Top = 19
     Width = 10
     Height = 19
-    Alignment = taRightJustify
     Caption = '0'
     ParentFont = False
     Font.Charset = DEFAULT_CHARSET
@@ -90,7 +89,7 @@ object frmEditFinanceExportProperties: TfrmEditFinanceExportProperties
     Left = 264
     Top = 86
     Width = 20
-    Height = 20
+    Height = 16
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -16
@@ -109,8 +108,6 @@ object frmEditFinanceExportProperties: TfrmEditFinanceExportProperties
     Align = alBottom
     TabOrder = 2
     SkinData.SkinSection = 'PANEL'
-    ExplicitTop = 262
-    ExplicitWidth = 635
     object btnCancel: TsButton
       AlignWithMargins = True
       Left = 343
@@ -126,7 +123,6 @@ object frmEditFinanceExportProperties: TfrmEditFinanceExportProperties
       ModalResult = 2
       TabOrder = 0
       SkinData.SkinSection = 'BUTTON'
-      ExplicitLeft = 546
     end
     object BtnOk: TsButton
       AlignWithMargins = True
@@ -143,7 +139,6 @@ object frmEditFinanceExportProperties: TfrmEditFinanceExportProperties
       ModalResult = 1
       TabOrder = 1
       SkinData.SkinSection = 'BUTTON'
-      ExplicitLeft = 455
     end
   end
 end

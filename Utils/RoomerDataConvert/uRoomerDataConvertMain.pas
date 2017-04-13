@@ -114,6 +114,7 @@ type
     procedure sButton2Click(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormResize(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
     procedure getCounters(var ResId, RoomResId, PersId: Integer);
     procedure saveCounters(ResId, RoomResId, PersId: Integer);
@@ -149,6 +150,16 @@ uses uDataUnit,
      uCSVData
     ;
 
+
+procedure TfrmRoomerDataConvertMain.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  try
+    if btnLogout.Enabled then
+      btnLogout.Click;
+  except
+   // Ignore exceptions
+  end;
+end;
 
 procedure TfrmRoomerDataConvertMain.FormCreate(Sender: TObject);
 begin
@@ -490,7 +501,9 @@ end;
 
 procedure TfrmRoomerDataConvertMain.btnLoginClick(Sender: TObject);
 begin
-  btnLogout.Enabled := RoomerDataSet.Login(edtHotel.Text, edtUsername.Text, edtPassword.Text, 'DataConvert', '1.0.0.0');
+  RoomerDataSet.ApplicationId := 'DATA_CONVERT';
+  RoomerDataSet.Login(edtHotel.Text, edtUsername.Text, edtPassword.Text, '1.0.0.0');
+  btnLogout.Enabled := True;
   btnLogin.Enabled := NOT btnLogout.Enabled;
   btnImportCustomers.Enabled := btnLogout.Enabled;
   btnImportReservations.Enabled := btnLogout.Enabled;
