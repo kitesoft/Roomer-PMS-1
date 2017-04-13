@@ -174,7 +174,7 @@ uses
   uRptBookkeeping in 'uRptBookkeeping.pas' {frmRptBookkeeping},
   uReservationEmailingDialog in 'uReservationEmailingDialog.pas' {FrmReservationEmailingDialog},
   uTemplateFiller in 'uTemplateFiller.pas',
-  uFrmEditEmailProperties in 'uFrmEditEmailProperties.pas' {FrmEditEmailProperties},
+  uFrmEditResourceProperties in 'Resources\uFrmEditResourceProperties.pas' {FrmEditResourceProperties},
   uFrmReservationCancellationDialog in 'uFrmReservationCancellationDialog.pas' {FrmReservationCancellationDialog},
   uGridUtils in 'uGridUtils.pas',
   uRptCashier in 'uRptCashier.pas' {frmRptCashier},

@@ -27,7 +27,6 @@ type
     FItemsOnInvoice: boolean;
     FDiscount: Double;
     FPMInfo: String;
-    FIsPercentage: boolean;
     FPriceType: String;
     FCurrency: String;
     FNumGuests: integer;
@@ -47,7 +46,7 @@ type
   public
     constructor Create(RoomReservation, Reservation, Channel, PaymentInvoice, AscIndex, DescIndex: integer; GroupAccount: boolean;
       Room, RoomType, resFlag, CustomerName: string; isNoRoom: boolean; Date: Tdate; Information, Fax, Tel2, Tel1, GuestName, PMInfo, PriceType, Currency,
-      BookingId: String; Price, Discount: Double; Percentage: boolean; ItemsOnInvoice: boolean; numGuests: integer; RoomClass: string;
+      BookingId: String; Price, Discount: Double; ItemsOnInvoice: boolean; numGuests: integer; RoomClass: string;
       _OutOfOrderBlocking, _BlockMove: boolean; _BlockMoveReason: String; _OngoingSale, _OngoingRent, _OngoingTaxes: Double; _Invoices, _Guarantee: String; _TotalPayments: Double
       ; _InvoiceIndex : Integer); overload;
     constructor Create; overload;
@@ -77,7 +76,6 @@ type
     property Discount: Double read FDiscount write FDiscount;
     property Information: String read FInformation write FInformation;
     property PMInfo: String read FPMInfo write FPMInfo;
-    property IsPercentage: boolean read FIsPercentage write FIsPercentage;
     property PriceType: String read FPriceType write FPriceType;
     property Currency: String read FCurrency write FCurrency;
     property numGuests: integer read FNumGuests write FNumGuests;
@@ -107,7 +105,7 @@ implementation
 
 constructor TresCell.Create(RoomReservation, Reservation, Channel, PaymentInvoice, AscIndex, DescIndex: integer; GroupAccount: boolean;
   Room, RoomType, resFlag, CustomerName: string; isNoRoom: boolean; Date: Tdate; Information, Fax, Tel2, Tel1, GuestName, PMInfo, PriceType, Currency,
-  BookingId: String; Price, Discount: Double; Percentage: boolean; ItemsOnInvoice: boolean; numGuests: integer; RoomClass: string;
+  BookingId: String; Price, Discount: Double; ItemsOnInvoice: boolean; numGuests: integer; RoomClass: string;
   _OutOfOrderBlocking, _BlockMove: boolean; _BlockMoveReason: String; _OngoingSale, _OngoingRent, _OngoingTaxes: Double; _Invoices, _Guarantee: String; _TotalPayments: Double; _InvoiceIndex : Integer);
 
 begin
@@ -125,7 +123,6 @@ begin
   FisNoRoom := isNoRoom;
   FDate := Date;
   FCustomerName := CustomerName;
-  FIsPercentage := Percentage;
 
   FInformation := Information;
   FFax := Fax;

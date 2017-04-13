@@ -40,7 +40,6 @@ type
     FUpdatingControls: boolean;
     FUpdatingData: boolean;
     FProgressBar: TAdvSmoothProgressBar;
-    procedure KeepOnVisibleMonitor;
     function GetStateTextPanel: TStatusPanel;
     function GetBusyState: TRoomerFormBusyState;
     procedure SetBusyState(const Value: TRoomerFormBusyState);
@@ -130,7 +129,7 @@ end;
 procedure TfrmBaseRoomerForm.DoShow;
 begin
   inherited; // Calls ShowForm event handler
-  KeepOnVisibleMonitor;
+  PlaceFormOnVisibleMonitor(Self);
   UpdateControls;
   BusyState := fsIdle;
 end;
@@ -156,25 +155,6 @@ begin
   if FCloseOnEsc and (Key = VK_ESCAPE) then
     Close;
 end;
-
-procedure TfrmBaseRoomerForm.KeepOnVisibleMonitor;
-var
-  lMonitor: TMonitor;
-const
-  MoveWinThreshold: Byte = 80;
-begin
-  // 2. Detect the relevant monitor object
-  lMonitor := Screen.MonitorFromWindow(Self.Handle);
-  // 3. Now ensure the just positioned window is visible to the user
-  // 3.a. Set minimal visible width
-  if Left > lMonitor.Left + lMonitor.Width - MoveWinThreshold then
-    Left := lMonitor.Left + lMonitor.Width - MoveWinThreshold;
-  // 3.b. Set minimal visible height
-  if Top > lMonitor.Top + lMonitor.Height - MoveWinThreshold then
-    Top := lMonitor.Top + lMonitor.Height - MoveWinThreshold;
-
-end;
-
 
 procedure TfrmBaseRoomerForm.LoadData;
 var

@@ -270,7 +270,7 @@ Type
 
       procedure EnableOrDisableTableRefresh(tablename : String; enable: Boolean);
 
-      function LocationSQLInString(locationlist : TSet_Of_Integer) : string;
+      function LocationSQLInString(locationlist : TSet_Of_Integer; aReturnAllOnEmpty: boolean=false) : string;
 
       function getPackageNameByPackageCode(packageCode : String) : String;
 
@@ -560,29 +560,31 @@ begin
     result := false;
 end;
 
-function TGlobalSettings.LocationSQLInString(locationlist : TSet_Of_Integer) : string;
+function TGlobalSettings.LocationSQLInString(locationlist : TSet_Of_Integer; aReturnAllOnEmpty: boolean=false) : string;
 var
   locationID : integer;
-  s : string;
-
+  lLocs: TStrings;
 begin
   result := '';
-  if (locationList.Count = 0) or (locationList.Count = glb.Locations.recordCount) then exit;
+  if ((locationList.Count = 0) or (locationList.Count = glb.Locations.recordCount)) and not aReturnAllOnEmpty then exit;
 
-  s := '';
-  glb.Locations.first;
-  while not glb.locations.eof do
-  begin
-    locationID := glb.Locations.FieldByName('ID').asinteger;
-    if LocationList.ValueInList(locationID) then
+  lLocs := TStringlist.Create;
+  try
+    glb.Locations.first;
+    while not glb.locations.eof do
     begin
-      s := s+_db(glb.Locations.FieldByName('location').AsString)+',';
+      locationID := glb.Locations.FieldByName('ID').asinteger;
+      if (locationlist.count = 0) or LocationList.ValueInList(locationID) then
+        lLocs.Add(_db(glb.Locations.FieldByName('location').AsString));
+      glb.Locations.next;
     end;
-    glb.Locations.next;
-  end;
 
-  if length(s) > 0 then delete(s,length(s),1);
-  result := s;
+    lLocs.Delimiter := ',';
+    lLocs.QuoteChar := ' ';
+    Result := lLocs.DelimitedText;
+  finally
+    lLocs.Free;
+  end;
 end;
 
 

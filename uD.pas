@@ -7057,10 +7057,8 @@ begin
       d.mtCaptions_.ClearFields;
 
       sTmp := '';
-      if IvI.InvoiceNumber = PROFORMA_INVOICE_NUMBER then
-      begin
+      if (IvI.InvoiceNumber = PROFORMA_INVOICE_NUMBER) and (not copyText.IsEmpty) then
         sTmp := ' - ' + copyText;
-      end;
 
       d.mtCaptions_.FieldByName('invTxtHead').Asstring := _islErl(IvI.invTxtHeadDebit, isForeign) + sTmp;
       if IvI.KreditType = ktKredit then

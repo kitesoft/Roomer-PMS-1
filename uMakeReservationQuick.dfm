@@ -70,7 +70,7 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
       SkinData.SkinSection = 'BUTTON'
     end
     object btnFinish: TsButton
-      Left = 1008
+      Left = 1010
       Top = 4
       Width = 107
       Height = 25
@@ -322,7 +322,7 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
     Top = 0
     Width = 1128
     Height = 572
-    ActivePage = tabSelectRooms
+    ActivePage = taReservation
     Align = alClient
     TabOrder = 2
     OnChange = pgcMainChange
@@ -1286,6 +1286,7 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                 ParentColor = False
                 TabOrder = 0
                 SkinData.SkinSection = 'GROUPBOX'
+                ExplicitLeft = 4
                 object clabContactPerson: TsLabel
                   Left = 68
                   Top = 42
@@ -1329,8 +1330,8 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                   Font.Style = []
                 end
                 object clabContactFax: TsLabel
-                  Left = 243
-                  Top = 194
+                  Left = 108
+                  Top = 220
                   Width = 35
                   Height = 17
                   Alignment = taRightJustify
@@ -1345,7 +1346,7 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                 end
                 object clabContactEmail: TsLabel
                   Left = 112
-                  Top = 221
+                  Top = 245
                   Width = 31
                   Height = 13
                   Alignment = taRightJustify
@@ -1394,10 +1395,24 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                   Caption = 'F2=New'
                   WordWrap = True
                 end
+                object lblContactMobile: TsLabel
+                  Left = 271
+                  Top = 194
+                  Width = 34
+                  Height = 13
+                  Alignment = taRightJustify
+                  Caption = 'Mobile:'
+                  ParentFont = False
+                  Font.Charset = DEFAULT_CHARSET
+                  Font.Color = clWindowText
+                  Font.Height = -11
+                  Font.Name = 'Tahoma'
+                  Font.Style = []
+                end
                 object edContactAddress1: TsEdit
                   Left = 149
                   Top = 84
-                  Width = 229
+                  Width = 278
                   Height = 21
                   Color = clWhite
                   Font.Charset = DEFAULT_CHARSET
@@ -1414,7 +1429,7 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                 object edContactAddress2: TsEdit
                   Left = 149
                   Top = 111
-                  Width = 229
+                  Width = 278
                   Height = 21
                   Color = clWhite
                   Font.Charset = DEFAULT_CHARSET
@@ -1431,7 +1446,7 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                 object edContactAddress3: TsEdit
                   Left = 149
                   Top = 138
-                  Width = 229
+                  Width = 278
                   Height = 21
                   Color = clWhite
                   Font.Charset = DEFAULT_CHARSET
@@ -1448,7 +1463,7 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                 object edContactAddress4: TsEdit
                   Left = 149
                   Top = 165
-                  Width = 229
+                  Width = 278
                   Height = 21
                   Color = clWhite
                   Font.Charset = DEFAULT_CHARSET
@@ -1478,7 +1493,7 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                 object edContactPhone: TsEdit
                   Left = 149
                   Top = 191
-                  Width = 90
+                  Width = 116
                   Height = 21
                   Color = clWhite
                   Font.Charset = DEFAULT_CHARSET
@@ -1493,9 +1508,9 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                   SkinData.SkinSection = 'EDIT'
                 end
                 object edContactFax: TsEdit
-                  Left = 284
-                  Top = 191
-                  Width = 94
+                  Left = 149
+                  Top = 217
+                  Width = 116
                   Height = 21
                   Color = clWhite
                   Font.Charset = DEFAULT_CHARSET
@@ -1511,8 +1526,8 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                 end
                 object edContactEmail: TsEdit
                   Left = 149
-                  Top = 218
-                  Width = 229
+                  Top = 242
+                  Width = 278
                   Height = 21
                   Color = clWhite
                   Font.Charset = DEFAULT_CHARSET
@@ -1528,8 +1543,8 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                   SkinData.SkinSection = 'EDIT'
                 end
                 object chkSendConfirmation: TsCheckBox
-                  Left = 397
-                  Top = 219
+                  Left = 433
+                  Top = 243
                   Width = 148
                   Height = 20
                   Caption = 'Send confirmation by email'
@@ -1573,6 +1588,23 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                   SkinData.SkinSection = 'CHECKBOX'
                   ImgChecked = 0
                   ImgUnchecked = 0
+                end
+                object edContactMobile: TsEdit
+                  Left = 311
+                  Top = 191
+                  Width = 116
+                  Height = 21
+                  Color = clWhite
+                  Font.Charset = DEFAULT_CHARSET
+                  Font.Color = clBlack
+                  Font.Height = -11
+                  Font.Name = 'Tahoma'
+                  Font.Style = []
+                  ParentFont = False
+                  ParentShowHint = False
+                  ShowHint = False
+                  TabOrder = 11
+                  SkinData.SkinSection = 'EDIT'
                 end
               end
               object gbxProfileAlert: TsGroupBox
@@ -4082,8 +4114,8 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
     Indexes = <>
     SortOptions = []
     OnCalcFields = mExtrasCalcFields
-    Left = 920
-    Top = 288
+    Left = 912
+    Top = 368
     object mExtrasRoomreservation: TIntegerField
       FieldName = 'Roomreservation'
     end

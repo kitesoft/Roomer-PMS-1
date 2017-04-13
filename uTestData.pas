@@ -508,9 +508,6 @@ type
     { Public declarations }
   end;
 
-var
-  frmTestData: TfrmTestData;
-
 implementation
 
 {$R *.dfm}

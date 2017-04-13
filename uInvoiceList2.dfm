@@ -270,11 +270,12 @@ inherited frmInvoiceList2: TfrmInvoiceList2
         Font.Style = []
         ParentFont = False
         TabOrder = 11
+        Text = '100'
         OnChange = edLastCountChange
         SkinData.SkinSection = 'EDIT'
-        MaxValue = 99
+        MaxValue = 0
         MinValue = 1
-        Value = 0
+        Value = 100
       end
       object edtInvoiceFrom: TsSpinEdit
         Left = 146
@@ -415,7 +416,6 @@ inherited frmInvoiceList2: TfrmInvoiceList2
         TabOrder = 5
         OnClick = btnBestFitClick
         SkinData.SkinSection = 'BUTTON'
-        ExplicitTop = 1
       end
       object LMDButton1: TsButton
         AlignWithMargins = True

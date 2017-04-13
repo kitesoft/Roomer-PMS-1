@@ -108,6 +108,9 @@ type
     function MakeFileNameUnique(const aOrgFilename: string): string;
     procedure SetResourceTypes(const Value: TResourceTypeSet);
     function GetCurrentResource: TResource; inline;
+    function GetRoomerResourceManagement: TRoomerResourceManagement;
+
+    property ResourceManagement: TRoomerResourceManagement read GetRoomerResourceManagement;
   protected
     procedure DoUpdateControls; override;
     procedure DoLoadData; override;
@@ -161,7 +164,7 @@ uses  uD
     , uFrmEmbeddedHtmlEditor
     , uDateUtils
     , uFrmNotepad
-    , uFrmEditEmailProperties
+    , uFrmEditResourceProperties
     , System.IOUtils
     , Spring.Collections
     ;
@@ -331,6 +334,14 @@ begin
 end;
 
 
+function TFrmResources.GetRoomerResourceManagement: TRoomerResourceManagement;
+begin
+  if not assigned(FResourceManagement) then
+    LoadData;
+
+  Result := FResourceManagement;
+end;
+
 procedure TFrmResources.btnEditClick(Sender: TObject);
 var filename : String;
     cmd,
@@ -422,7 +433,7 @@ begin
 
   lTryFullPath := lPathAndFilename + lExtension;
   cnt := 0;
-  while FileExists(lTryFullPath) or FResourceManagement.FilenameInList(TPath.GetFileName(lTryFullPath)) do
+  while FileExists(lTryFullPath) or ResourceManagement.FilenameInList(TPath.GetFileName(lTryFullPath)) do
   begin
     inc(cnt);
     lTryFullPath := lPathAndFilename + Format(cCntFmt, [cnt]) + lExtension;
@@ -437,7 +448,7 @@ end;
 procedure TFrmResources.btnInsertClick(Sender: TObject);
 var filename, Subject : String;
     Strings : TStrings;
-    frm : TFrmEditEmailProperties;
+    frm : TFrmEditResourceProperties;
     cmd, uri : String;
     lResType: TResourceType;
 begin
@@ -446,7 +457,7 @@ begin
   begin
     Subject := '';
 
-    frm := TFrmEditEmailProperties.Create(nil);
+    frm := TFrmEditResourceProperties.Create(nil);
     try
       frm.ResourceTypes := ResourceTypes;
       if frm.ShowModal = mrOk then
@@ -538,45 +549,43 @@ end;
 
 procedure TFrmResources.btnRenameClick(Sender: TObject);
 var
-  _FrmEditEmailProperties: TFrmEditEmailProperties;
+  frm: TFrmEditResourceProperties;
   cmd : String;
   lRes: TResource;
 begin
   lRes := GetCurrentResource;
   if lRes <> nil then
   begin
-    _FrmEditEmailProperties := TFrmEditEmailProperties.Create(nil);
+    frm := TFrmEditResourceProperties.Create(nil);
     try
-      if ResourceParameters IS THtmlResourceParameters then
+      frm.edtName.Text := lRes.ORIGINAL_NAME;
+      frm.edtSubject.Text := lres.EXTRA_INFO;
+      frm.ResourceTypes := [lres.ResourceType];
+      if frm.ShowModal = mrOk then
       begin
-        _FrmEditEmailProperties.edtName.Text := lRes.ORIGINAL_NAME;
-        _FrmEditEmailProperties.edtSubject.Text := lres.EXTRA_INFO;
-        _FrmEditEmailProperties.ResourceTypes := [lres.ResourceType];
-        if _FrmEditEmailProperties.ShowModal = mrOk then
+        cmd := format('UPDATE home100.HOTEL_RESOURCES SET ORIGINAL_NAME=''%s'', EXTRA_INFO=''%s'' WHERE HOTEL_ID=''%s'' AND ORIGINAL_NAME=''%s'' AND URI=''%s'' AND KEY_STRING=''%s''',
+                   [ frm.edtName.Text,
+                     frm.edtSubject.Text,
+                     d.roomerMainDataSet.HotelId,
+                     lRes.ORIGINAL_NAME,
+                     lRes.URI,
+                     lRes.KEY_STRING
+                   ]);
+        d.roomerMainDataSet.DoCommand(cmd);
+
+        if (lRes.ResourceType = rtGuestEmailTemplate) then
         begin
-          if _FrmEditEmailProperties.edtName.Text = '' then
-            raise Exception.Create(GetTranslatedText('shUI_NameCannotBeEmpty'));
-
           cmd := format('UPDATE hotelconfigurations SET DefaultChannelConfirmationEmail=''%s'' WHERE DefaultChannelConfirmationEmail=''%s''',
-                     [_FrmEditEmailProperties.edtName.Text, lRes.ORIGINAL_NAME]);
+                     [frm.edtName.Text, lRes.ORIGINAL_NAME]);
           d.roomerMainDataSet.DoCommand(cmd);
-
-          cmd := format('UPDATE home100.HOTEL_RESOURCES SET ORIGINAL_NAME=''%s'', EXTRA_INFO=''%s'' WHERE HOTEL_ID=''%s'' AND ORIGINAL_NAME=''%s'' AND URI=''%s'' AND KEY_STRING=''%s''',
-                     [ _FrmEditEmailProperties.edtName.Text,
-                       _FrmEditEmailProperties.edtSubject.Text,
-                       d.roomerMainDataSet.HotelId,
-                       lRes.ORIGINAL_NAME,
-                       lRes.URI,
-                       lRes.KEY_STRING
-                     ]);
-          d.roomerMainDataSet.DoCommand(cmd);
-          lRes.ORIGINAL_NAME := _FrmEditEmailProperties.edtName.Text;
-          lRes.EXTRA_INFO := _FrmEditEmailProperties.edtSubject.Text;
-          dsResources.Refresh;
         end;
+
+        lRes.ORIGINAL_NAME := frm.edtName.Text;
+        lRes.EXTRA_INFO := frm.edtSubject.Text;
+        dsResources.Refresh;
       end;
     finally
-      FreeAndNil(_FrmEditEmailProperties);
+      FreeAndNil(frm);
     end;
   end;
 end;
@@ -749,34 +758,7 @@ end;
 
 procedure TfrmResources.InitControls;
 begin
-//  if NOT (ResourceParameters IS THtmlResourceParameters) then
-//  begin
-//    lvResources.Columns.Clear;
-//    col := lvResources.Columns.Add;
-//    col.Width := 250;
-//    col.Caption := '';
-//
-//    col := lvResources.Columns.Add;
-//    col.Width := 50;
-//    col.Caption := '';
-//
-//    col := lvResources.Columns.Add;
-//    col.Width := 130;
-//    col.Caption := '';
-//
-//    col := lvResources.Columns.Add;
-//    col.Width := 450;
-//    col.Caption := 'URI';
-//
-//  end else
-
-//  lvResources.Columns[1].Caption := GetTranslatedText('shUI_Filename');
-//  lvResources.Columns[2].Caption := GetTranslatedText('shUI_User');
-//  lvResources.Columns[3].Caption := GetTranslatedText('shUI_DateTime');
-//  lvResources.Columns[4].Caption := GetTranslatedText('shUI_Subject');
-//
   tvResourcesExtraInfo.Visible := (ResourceTypes * cEmailTemplateResourceTypes <> []);
-
 end;
 
 procedure TFrmResources.DoUpdateControls;
@@ -805,7 +787,7 @@ end;
 
 procedure TFrmResources.RemoveFileForUpload(filename: String);
 begin
-  FResourceManagement.RemoveFileForUpload(filename);
+  ResourceManagement.RemoveFileForUpload(filename);
 end;
 
 procedure TFrmResources.SetKeyString(const Value: string);
@@ -835,14 +817,14 @@ procedure TFrmResources.tvResourcesColumn1GetDisplayText(Sender: TcxCustomGridTa
   var AText: string);
 begin
   inherited;
-  aText := FResourceManagement.Resource[ARecord.Index].Access.AsReadableString;
+  aText := ResourceManagement.Resource[ARecord.Index].Access.AsReadableString;
 end;
 
 procedure TFrmResources.tvResourcesResourceTypeGetDisplayText(Sender: TcxCustomGridTableItem;
   ARecord: TcxCustomGridRecord; var AText: string);
 begin
   inherited;
-  aText := FResourceManagement.Resources[aRecord.Index].ResourceType.AsReadableString();
+  aText := ResourceManagement.Resources[aRecord.Index].ResourceType.AsReadableString();
 end;
 
 end.

@@ -451,9 +451,6 @@ object frmRoomerLoginForm: TfrmRoomerLoginForm
       TabOrder = 1
       OnClick = btLoginClick
       SkinData.SkinSection = 'BUTTON'
-      ExplicitLeft = 224
-      ExplicitTop = 4
-      ExplicitHeight = 25
     end
     object btCancel: TsButton
       AlignWithMargins = True
@@ -474,9 +471,6 @@ object frmRoomerLoginForm: TfrmRoomerLoginForm
       TabOrder = 2
       OnClick = btCancelClick
       SkinData.SkinSection = 'BUTTON'
-      ExplicitLeft = 339
-      ExplicitTop = 4
-      ExplicitHeight = 25
     end
     object btOffline: TsButton
       AlignWithMargins = True
@@ -496,7 +490,6 @@ object frmRoomerLoginForm: TfrmRoomerLoginForm
       TabOrder = 0
       OnClick = btOfflineClick
       SkinData.SkinSection = 'BUTTON'
-      ExplicitTop = 4
     end
   end
   object StoreLogin: TcxPropertiesStore
