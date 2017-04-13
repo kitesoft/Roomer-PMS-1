@@ -270,7 +270,7 @@ Type
 
       procedure EnableOrDisableTableRefresh(tablename : String; enable: Boolean);
 
-      function LocationSQLInString(locationlist : TSet_Of_Integer) : string;
+      function LocationSQLInString(locationlist : TSet_Of_Integer; aReturnAllOnEmpty: boolean=false) : string;
 
       function getPackageNameByPackageCode(packageCode : String) : String;
 
@@ -560,13 +560,13 @@ begin
     result := false;
 end;
 
-function TGlobalSettings.LocationSQLInString(locationlist : TSet_Of_Integer) : string;
+function TGlobalSettings.LocationSQLInString(locationlist : TSet_Of_Integer; aReturnAllOnEmpty: boolean=false) : string;
 var
   locationID : integer;
   lLocs: TStrings;
 begin
   result := '';
-  if (locationList.Count = 0) or (locationList.Count = glb.Locations.recordCount) then exit;
+  if ((locationList.Count = 0) or (locationList.Count = glb.Locations.recordCount)) and not aReturnAllOnEmpty then exit;
 
   lLocs := TStringlist.Create;
   try
@@ -574,7 +574,7 @@ begin
     while not glb.locations.eof do
     begin
       locationID := glb.Locations.FieldByName('ID').asinteger;
-      if LocationList.ValueInList(locationID) then
+      if (locationlist.count = 0) or LocationList.ValueInList(locationID) then
         lLocs.Add(_db(glb.Locations.FieldByName('location').AsString));
       glb.Locations.next;
     end;

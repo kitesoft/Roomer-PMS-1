@@ -210,6 +210,8 @@ procedure TfrmRptTotallist.DoLoadData;
 var
   lExecutionPlan: TRoomerExecutionPlan;
   rSet1: TRoomerDataSet;
+  lList: TSet_Of_Integer;
+  lLocationClause: string;
   s: string;
 
 const
@@ -228,45 +230,51 @@ begin
     // See https://promoir.atlassian.net/wiki/x/B4BEB for an explanation of the different states
 
 {$REGION 'SQL statement'}
-      s := '   SELECT ' +
-           '     pd.date AS dtDate, ' +
-           '     SUM(IF(rr.status IN (''P'',''G'',''D'',''W'',''Z'',''Q'') AND rr.arrival = rd.ADate AND rr.arrival = pd.date, 1, 0)) AS roomsArrival, ' +
-           '     SUM(IF(rr.status IN (''P'',''G'',''D'',''W'',''Z'',''Q'') AND rr.arrival = rd.ADate AND rr.arrival = pd.date, p.numGuests, 0)) AS paxArrival, ' +
-           '     dep.numRooms AS roomsDeparture, ' +
-           '     dep.numGuests AS paxDeparture, ' +
-           '     SUM(IF(rr.status IN (''P'',''G'',''D'',''W'',''Z'',''Q'') AND (rr.arrival <= pd.date) AND (rr.departure > pd.date), 1, 0)) AS roomsInHouse, ' +
-           '     SUM(IF(rr.status IN (''P'',''G'',''D'',''W'',''Z'',''Q'') AND (rr.arrival <= pd.date) AND (rr.departure > pd.date), p.numGuests, 0)) AS paxInHouse, ' +
-           '     SUM(IF(rr.status IN (''P'',''G'',''D'',''W'',''Z'',''Q'') AND (rr.arrival < pd.date) AND (rr.departure > pd.date), 1, 0)) AS roomsStay, ' +
-           '     SUM(IF(rr.status IN (''P'',''G'',''D'',''W'',''Z'',''Q'') AND (rr.arrival < pd.date) AND (rr.departure > pd.date), p.numGuests, 0)) AS paxStay, ' +
-           '     SUM(IF(rr.status IN (''O'') AND DATE(rd.Adate) = pd.Date AND rd.resflag IN (''O'') , 1, 0)) AS roomsWaitinglist, ' +
-           '     SUM(IF(rr.status IN (''O'') AND DATE(rd.Adate) = pd.Date AND rd.resflag IN (''O'') , p.numGuests, 0)) AS paxWaitinglist, ' +
-           '     SUM(IF(rr.status IN (''L'') AND DATE(rd.Adate) = pd.Date AND rd.resflag IN (''L'') , 1, 0)) AS roomsWaitinglistNonOptional, ' +
-           '     SUM(IF(rr.status IN (''L'') AND DATE(rd.Adate) = pd.Date AND rd.resflag IN (''L'') , p.numGuests, 0)) AS paxWaitinglistNonOptional, ' +
-           '     SUM(IF(rr.status IN (''A'') AND DATE(rd.Adate) = pd.Date AND rd.resflag IN (''A'') , 1, 0)) AS roomsAllotmennt, ' +
-           '     SUM(IF(rr.status IN (''A'') AND DATE(rd.Adate) = pd.Date AND rd.resflag IN (''A'') , p.numGuests, 0)) AS paxAllotment, ' +
-           '     SUM(IF(rr.status IN (''P'',''G'',''D'',''W'',''Z'',''Q'',''L'',''A'') AND (rr.arrival <= pd.date) AND (rr.departure >= pd.date), 1, 0)) AS roomsTotal, ' +
-           '     SUM(IF(rr.status IN (''P'',''G'',''D'',''W'',''Z'',''Q'',''L'',''A'') AND (rr.arrival <= pd.date) AND (rr.departure >= pd.date) , p.numGuests, 0)) AS paxTotal, ' +
-           '     SUM(IF(rr.status IN (''B'') AND r.outOfOrderBlocking=1 AND DATE(rd.Adate) = pd.Date AND rd.resflag IN (''B'') , 1, 0)) AS roomsOutOfOrder, ' +
-           '     SUM(IF(rr.status IN (''B'') AND r.outOfOrderBlocking=1 AND DATE(rd.Adate) = pd.Date AND rd.resflag IN (''B'') , p.numGuests, 0)) AS paxOutOfOrder ' +
-           'FROM ' +
-           '    predefineddates pd ' +
-           '    JOIN roomsdate rd ON rd.ADate=pd.date AND NOT rd.resFlag IN (''X'',''C'') ' +
-           '    JOIN roomreservations rr ON rr.RoomReservation=rd.RoomReservation ' +
-           '    JOIN reservations r ON r.Reservation=rr.Reservation ' +
-           '    LEFT JOIN (SELECT RoomReservation, COUNT(id) AS numGuests FROM persons GROUP BY RoomReservation) AS p ON p.RoomReservation=rr.RoomReservation ' +
-           '    LEFT JOIN (SELECT rr.departure, SUM(p.numGuests) AS numGuests, COUNT(rr.id) AS numRooms FROM roomreservations rr ' +
-           '                    JOIN (SELECT RoomReservation, COUNT(p.id) numGuests FROM persons p GROUP BY p.RoomReservation) p ON p.RoomReservation=rr.RoomReservation ' +
-           '                    WHERE ((rr.departure >= %s AND rr.departure<=%s)) AND status IN (''P'',''G'',''D'',''W'',''Z'',''Q'') ' +
-           '                    GROUP BY rr.departure) dep ON dep.departure=pd.date ' +
-           '	LEFT OUTER JOIN rooms ON (rooms.room = rr.room AND rooms.wildcard = 0) ' +
-           'WHERE ' +
-           '    ((pd.date >= %s AND pd.date<=%s)) ' +
-           '    AND ((rr.room LIKE ''<%s'') OR (rooms.active = 1)) ';
+    lList := frmMain.FilteredLocations;
+    try
+      lLocationClause := glb.LocationSQLInString(lList, true);
+    finally
+      lList.Free;
+    end;
 
-    s := format(s, [_db(zDateFrom, true), _db(zDateTo, true), _db(zDateFrom, true), _db(zDateTo, true), '%']);
-    if not zLocationInString.IsEmpty then
-       s := s + format(' AND (rooms.location in (%s)) ', [zLocationInString]);
-    s := s + 'GROUP BY pd.date';
+      s := '   SELECT '#10 +
+           '     pd.date AS dtDate, '#10 +
+           '     SUM(IF(rr.status IN (''P'',''G'',''D'',''W'',''Z'',''Q'') AND rr.arrival = rd.ADate AND rr.arrival = pd.date, 1, 0)) AS roomsArrival, '#10 +
+           '     SUM(IF(rr.status IN (''P'',''G'',''D'',''W'',''Z'',''Q'') AND rr.arrival = rd.ADate AND rr.arrival = pd.date, p.numGuests, 0)) AS paxArrival, '#10 +
+           '     dep.numRooms AS roomsDeparture, '#10 +
+           '     dep.numGuests AS paxDeparture, '#10 +
+           '     SUM(IF(rr.status IN (''P'',''G'',''D'',''W'',''Z'',''Q'') AND (rr.arrival <= pd.date) AND (rr.departure > pd.date), 1, 0)) AS roomsInHouse, '#10 +
+           '     SUM(IF(rr.status IN (''P'',''G'',''D'',''W'',''Z'',''Q'') AND (rr.arrival <= pd.date) AND (rr.departure > pd.date), p.numGuests, 0)) AS paxInHouse, '#10 +
+           '     SUM(IF(rr.status IN (''P'',''G'',''D'',''W'',''Z'',''Q'') AND (rr.arrival < pd.date) AND (rr.departure > pd.date), 1, 0)) AS roomsStay, '#10 +
+           '     SUM(IF(rr.status IN (''P'',''G'',''D'',''W'',''Z'',''Q'') AND (rr.arrival < pd.date) AND (rr.departure > pd.date), p.numGuests, 0)) AS paxStay, '#10 +
+           '     SUM(IF(rr.status IN (''O'') AND DATE(rd.Adate) = pd.Date AND rd.resflag IN (''O'') , 1, 0)) AS roomsWaitinglist, '#10 +
+           '     SUM(IF(rr.status IN (''O'') AND DATE(rd.Adate) = pd.Date AND rd.resflag IN (''O'') , p.numGuests, 0)) AS paxWaitinglist, '#10 +
+           '     SUM(IF(rr.status IN (''L'') AND DATE(rd.Adate) = pd.Date AND rd.resflag IN (''L'') , 1, 0)) AS roomsWaitinglistNonOptional, '#10 +
+           '     SUM(IF(rr.status IN (''L'') AND DATE(rd.Adate) = pd.Date AND rd.resflag IN (''L'') , p.numGuests, 0)) AS paxWaitinglistNonOptional, '#10 +
+           '     SUM(IF(rr.status IN (''A'') AND DATE(rd.Adate) = pd.Date AND rd.resflag IN (''A'') , 1, 0)) AS roomsAllotmennt, '#10 +
+           '     SUM(IF(rr.status IN (''A'') AND DATE(rd.Adate) = pd.Date AND rd.resflag IN (''A'') , p.numGuests, 0)) AS paxAllotment, '#10 +
+           '     SUM(IF(rr.status IN (''P'',''G'',''D'',''W'',''Z'',''Q'',''L'',''A'') AND (rr.arrival <= pd.date) AND (rr.departure >= pd.date), 1, 0)) AS roomsTotal, '#10 +
+           '     SUM(IF(rr.status IN (''P'',''G'',''D'',''W'',''Z'',''Q'',''L'',''A'') AND (rr.arrival <= pd.date) AND (rr.departure >= pd.date) , p.numGuests, 0)) AS paxTotal, '#10 +
+           '     SUM(IF(rr.status IN (''B'') AND r.outOfOrderBlocking=1 AND DATE(rd.Adate) = pd.Date AND rd.resflag IN (''B'') , 1, 0)) AS roomsOutOfOrder, '#10 +
+           '     SUM(IF(rr.status IN (''B'') AND r.outOfOrderBlocking=1 AND DATE(rd.Adate) = pd.Date AND rd.resflag IN (''B'') , p.numGuests, 0)) AS paxOutOfOrder '#10 +
+           'FROM '#10 +
+           '    predefineddates pd '#10 +
+           '    JOIN roomsdate rd ON rd.ADate=pd.date AND NOT rd.resFlag IN (''X'',''C'') '#10 +
+           '	  JOIN rooms ON (rooms.room = rd.room AND rooms.wildcard = 0 and rooms.location in (%s)) '#10 +
+           '    JOIN roomreservations rr ON rr.RoomReservation=rd.RoomReservation '#10 +
+           '    JOIN reservations r ON r.Reservation=rr.Reservation '#10 +
+           '    LEFT JOIN (SELECT RoomReservation, COUNT(id) AS numGuests FROM persons GROUP BY RoomReservation) AS p ON p.RoomReservation=rr.RoomReservation '#10 +
+           '    LEFT JOIN (SELECT rr2.departure, SUM(p.numGuests) AS numGuests, COUNT(rr2.id) AS numRooms FROM roomreservations rr2 '#10 +
+           '                    JOIN (SELECT RoomReservation, COUNT(p.id) numGuests FROM persons p GROUP BY p.RoomReservation) p ON p.RoomReservation=rr2.RoomReservation '#10 +
+           '	                  JOIN rooms ON (rooms.room = rr2.room AND rooms.wildcard = 0 and rooms.location in (%s)) '#10 +
+           '                    WHERE ((rr2.departure >= %s AND rr2.departure<=%s)) AND rr2.status IN (''P'',''G'',''D'',''W'',''Z'',''Q'') '#10 +
+           '                    GROUP BY rr2.departure) dep ON dep.departure=pd.date '#10 +
+           'WHERE '#10 +
+           '    ((pd.date >= %s AND pd.date<=%s)) '#10 +
+           '    AND ((substring(rd.room, 1, 1) = ''<'') OR (rooms.active = 1)) '#10 +
+           'GROUP BY pd.date';
+
+    s := format(s, [lLocationClause, lLocationClause, _db(zDateFrom, true), _db(zDateTo, true), _db(zDateFrom, true), _db(zDateTo, true)]);
 
 {$ENDREGION}
 
@@ -348,7 +356,7 @@ var
 begin
   lLocations := frmmain.FilteredLocations;
   try
-  zLocationInString := glb.LocationSQLInString(lLocations);
+    zLocationInString := glb.LocationSQLInString(lLocations);
   finally
     lLocations.Free;
   end;
