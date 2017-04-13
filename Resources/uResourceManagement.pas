@@ -344,27 +344,28 @@ var
 begin
   Resources.Clear;
 
-  for lType in FResourceTypes do
-  begin
-    ResourceSet := GetTableInfo(lType.ToKeyString(FKeyStringParam));
-    try
-      ResourceSet.First;
-      while NOT ResourceSet.Eof do
-      begin
-        if ResourceSet['ACCESS'] = FAccess.ToString then
-          Resources.Add(TResource.Create(ResourceSet['KEY_STRING'],
-                                         ResourceSet['ORIGINAL_NAME'],
-                                         ResourceSet['ID'],
-                                         ResourceSet['EXTRA_INFO'],
-                                         ResourceSet['URI'],
-                                         ResourceSet['USER_ID'],
-                                         ResourceSet['LAST_MODIFIED'],
-                                         TResourceAccessType.FromString(ResourceSet['ACCESS'])));
-        ResourceSet.Next;
+  for lType := low(lType) to High(lType) do
+    if lType in FResourceTypes then
+    begin
+      ResourceSet := GetTableInfo(lType.ToKeyString(FKeyStringParam));
+      try
+        ResourceSet.First;
+        while NOT ResourceSet.Eof do
+        begin
+          if FAccess.ToString = ResourceSet['ACCESS'] then
+            Resources.Add(TResource.Create(ResourceSet['KEY_STRING'],
+                                           ResourceSet['ORIGINAL_NAME'],
+                                           ResourceSet['ID'],
+                                           ResourceSet['EXTRA_INFO'],
+                                           ResourceSet['URI'],
+                                           ResourceSet['USER_ID'],
+                                           ResourceSet['LAST_MODIFIED'],
+                                           FAccess));
+          ResourceSet.Next;
+        end;
+      finally
+        FreeAndNil(ResourceSet);
       end;
-    finally
-      FreeAndNil(ResourceSet);
-    end;
   end;
 end;
 
