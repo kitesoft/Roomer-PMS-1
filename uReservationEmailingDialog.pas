@@ -203,7 +203,6 @@ end;
 
 procedure TFrmReservationEmailingDialog.edTemplateCloseUp(Sender: TObject);
 var Strings : TStrings;
-    RoomerResourceManagement : TRoomerResourceManagement;
 begin
   if edTemplate.ItemIndex = -1 then
     Exit;

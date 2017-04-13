@@ -147,7 +147,7 @@ uses uAppGlobal,
 
   uBookKeepingCodes,
 
-  uFrmEditEmailProperties,
+  uFrmEditResourceProperties,
 
   uRptBookkeeping,
   uReservationEmailingDialog,
@@ -1840,7 +1840,7 @@ begin
 
   frmBookKeepingCodes := TfrmBookKeepingCodes.Create(nil); frmBookKeepingCodes.Free; frmBookKeepingCodes := nil;
 
-  FrmEditEmailProperties := TFrmEditEmailProperties.Create(nil); FrmEditEmailProperties.Free; FrmEditEmailProperties := nil;
+  TFrmEditResourceProperties.Create(nil).Free;
 
   frmRptBookkeeping := TfrmRptBookkeeping.Create(nil); frmRptBookkeeping.Free; frmRptBookkeeping := nil;
   FrmReservationEmailingDialog := TFrmReservationEmailingDialog.Create(nil); FrmReservationEmailingDialog.Free; FrmReservationEmailingDialog := nil;

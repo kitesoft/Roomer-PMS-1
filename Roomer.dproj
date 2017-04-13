@@ -662,8 +662,8 @@
             <Form>FrmReservationEmailingDialog</Form>
         </DCCReference>
         <DCCReference Include="uTemplateFiller.pas"/>
-        <DCCReference Include="uFrmEditEmailProperties.pas">
-            <Form>FrmEditEmailProperties</Form>
+        <DCCReference Include="Resources\uFrmEditResourceProperties.pas">
+            <Form>FrmEditResourceProperties</Form>
         </DCCReference>
         <DCCReference Include="uFrmReservationCancellationDialog.pas">
             <Form>FrmReservationCancellationDialog</Form>
