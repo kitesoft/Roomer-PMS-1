@@ -16,7 +16,7 @@ uses
   Vcl.ComCtrls, sStatusBar, sCheckBox, cxCalendar
   , cmpRoomerDataset, Vcl.Mask, sMaskEdit, sCustomComboEdit, sToolEdit
   , uRoomerForm, dxSkinsdxStatusBarPainter, dxStatusBar, sGroupBox, sRadioButton, uCurrencyHandler, sSplitter,
-  dxPScxPivotGridLnk, AdvSmoothProgressBar
+  dxPScxPivotGridLnk, AdvSmoothProgressBar, cxCalc
   ;
 
 type
@@ -89,6 +89,27 @@ type
     tvBalancebalance: TcxGridDBColumn;
     gridPrinterLinkBalance: TdxGridReportLink;
     btnCloseCurrentDay: TsButton;
+    m_Revenuesroom: TWideStringField;
+    m_Revenuesreservation: TIntegerField;
+    tvRevenuesRecId: TcxGridDBColumn;
+    tvRevenuesroom: TcxGridDBColumn;
+    tvRevenuesreservation: TcxGridDBColumn;
+    chkIncludeDetails: TCheckBox;
+    m_Revenuesroomreservation: TIntegerField;
+    tvRevenuesroomreservation: TcxGridDBColumn;
+    m_Revenuessource: TWideStringField;
+    tvRevenuessource: TcxGridDBColumn;
+    m_PaymentsMutationtime: TDateTimeField;
+    m_PaymentsReservation: TIntegerField;
+    m_PaymentsRoomreservation: TIntegerField;
+    m_PaymentsInvoicenumber: TIntegerField;
+    tvPaymentsRecId: TcxGridDBColumn;
+    tvPaymentsMutationtime: TcxGridDBColumn;
+    tvPaymentsReservation: TcxGridDBColumn;
+    tvPaymentsRoomreservation: TcxGridDBColumn;
+    tvPaymentsInvoicenumber: TcxGridDBColumn;
+    m_Revenuesinvoicenumber: TIntegerField;
+    tvRevenuesinvoicenumber: TcxGridDBColumn;
     procedure btnRefreshClick(Sender: TObject);
     procedure btnPrintGridClick(Sender: TObject);
     procedure rbPresetDateClick(Sender: TObject);
@@ -97,6 +118,10 @@ type
     procedure m_BalanceCalcFields(DataSet: TDataSet);
     procedure btnExcelClick(Sender: TObject);
     procedure btnCloseCurrentDayClick(Sender: TObject);
+    procedure chkIncludeDetailsClick(Sender: TObject);
+    procedure tvPaymentsInvoicenumberGetDataText(Sender: TcxCustomGridTableItem; ARecordIndex: Integer;
+      var AText: string);
+    procedure dtFromDateChange(Sender: TObject);
   private
     FRefreshingData: Boolean;
     FRecordSet: TRoomerDataSet;
@@ -196,6 +221,15 @@ begin
   RefreshData;
 end;
 
+procedure TfrmRptDailyRevenues.chkIncludeDetailsClick(Sender: TObject);
+begin
+  inherited;
+  UpdateControls;
+
+  if chkIncludeDetails.Checked and (MessageDlg(GetTranslatedText('shDailyrevenues_refreshwithdetails'), mtConfirmation, mbYesNo, 0) = mrYes) then
+    btnRefresh.Click;
+end;
+
 procedure TfrmRptDailyRevenues.SetSummaryDisplayFormat(aView: TcxGridDBTableView; const aFormat: string);
 var
   i: integer;
@@ -242,23 +276,25 @@ begin
     try
       lCaller := TFinancialReportsAPICaller.Create;
       try
-        if lCaller.GetPaymentsReportAsDataset(FRecordSet, dtFromDate.Date, dtToDate.Date) then
+        if lCaller.GetPaymentsReportAsDataset(FRecordSet, dtFromDate.Date, dtToDate.Date, chkIncludeDetails.Checked) then
         begin
-          m_Payments.CopyFromDataSet(FRecordSet);
+          m_Payments.Close;
+          m_Payments.LoadFromDataSet(FRecordSet);
           m_Payments.Open;
         end
         else
           ShowError('reading of DailyRevenuesReport payment data', lCaller.LastErrorResponse);
 
-        if lCaller.GetRevenuesReportAsDataset(FRecordSet, dtFromDate.Date, dtToDate.Date) then
+        if lCaller.GetRevenuesReportAsDataset(FRecordSet, dtFromDate.Date, dtToDate.Date, chkIncludeDetails.Checked) then
         begin
-          m_Revenues.CopyFromDataSet(FRecordSet);
+          m_Revenues.Close;
+          m_Revenues.LoadFromDataSet(FRecordSet);
           m_Revenues.Open;
         end
         else
           ShowError('reading of DailyRevenuesReport revenues data', lCaller.LastErrorResponse);
 
-        if lCaller.GetRoomrentReportAsDataset(FRecordSet, dtFromDate.Date, dtToDate.Date) then
+        if lCaller.GetRoomrentReportAsDataset(FRecordSet, dtFromDate.Date, dtToDate.Date, chkIncludeDetails.Checked) then
         begin
           // Append roomrent revenue records
           m_Revenues.LoadFromDataSet(FRecordSet);
@@ -379,6 +415,14 @@ begin
   raise Exception.CreateFmt('Error occured during %s.'+ #10 + 'Operation is cancelled.' + #10#10 + 'Message: %s', [aOperation, aMessage]);
 end;
 
+procedure TfrmRptDailyRevenues.tvPaymentsInvoicenumberGetDataText(Sender: TcxCustomGridTableItem; ARecordIndex: Integer;
+  var AText: string);
+begin
+  inherited;
+  if m_PaymentsInvoicenumber.AsInteger = -1 then
+    aText := '';
+end;
+
 procedure TfrmRptDailyRevenues.tvPaymentsTotalAmountGetProperties(Sender: TcxCustomGridTableItem;
   ARecord: TcxCustomGridRecord; var AProperties: TcxCustomEditProperties);
 begin
@@ -401,6 +445,27 @@ begin
     dtFromDate.Date := TDateTime.Yesterday;
     dtTodate.Date := TDateTime.Yesterday;
   end;
+
+  dtToDate.MinDate := dtFromDate.Date;
+
+  tvRevenuesroom.Visible := chkIncludeDetails.Checked;
+  tvRevenuesreservation.Visible := chkIncludeDetails.Checked;
+  tvRevenuesroomreservation.Visible := chkIncludeDetails.Checked;
+  tvRevenuessource.Visible := chkIncludeDetails.Checked;
+  tvRevenuesinvoicenumber.Visible := chkIncludeDetails.Checked;
+  tvRevenues.OptionsView.ColumnAutoWidth := not chkIncludeDetails.Checked;
+
+  tvPaymentsMutationtime.Visible := chkIncludeDetails.Checked;
+  tvPaymentsReservation.Visible := chkIncludeDetails.Checked;
+  tvPaymentsRoomreservation.Visible := chkIncludeDetails.Checked;
+  tvPaymentsInvoicenumber.Visible := chkIncludeDetails.Checked;
+  tvPayments.OptionsView.ColumnAutoWidth := not chkIncludeDetails.Checked;
+end;
+
+procedure TfrmRptDailyRevenues.dtFromDateChange(Sender: TObject);
+begin
+  inherited;
+  UpdateControls;
 end;
 
 end.
