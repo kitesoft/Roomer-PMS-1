@@ -200,14 +200,18 @@ end;
 function TRoomerHttpClient.PostWithStatus(const aUrl: String; aPostDataStream: TStream): THttpResultCode;
 var
   lResponseContentHeader: TALHTTPResponseHeader;
+  lResponseContentStream: TStringStream;
   lURL: Ansistring;
 begin
   Result := -1;
-  lResponseContentHeader := TALHTTPResponseHeader.Create;
+  lResponseContentStream := nil;
+  lResponseContentHeader := nil;
   try
+    lResponseContentHeader := TALHTTPResponseHeader.Create;
+    lResponseContentStream := TStringStream.Create;
     lUrl := AnsiString(aUrl + FQueryParams.AsUrltext);
     try
-      inherited Post(AnsiString(lURL), aPostDataStream, lResponseContentHeader);
+      inherited Post(AnsiString(lURL), aPostDataStream, lResponseContentStream, lResponseContentHeader);
       Result := lResponseContentHeader.StatusCode;
     except
       on E: EALHTTPClientException do

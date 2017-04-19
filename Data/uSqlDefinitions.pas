@@ -2996,7 +2996,7 @@ select_getRoomTypeFromRR : string =
 
     select_RR_GetNumberOfRooms : string =
     ' SELECT count(RoomReservation) AS Cnt FROM roomreservations '+
-    ' WHERE Reservation = %d ';
+    ' WHERE Reservation = %d and status not in (''X'', ''C'')';
 
 //    ' WHERE Reservation = ' + inttostr(iReservation);
 

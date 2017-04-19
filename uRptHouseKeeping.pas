@@ -250,6 +250,7 @@ begin
       '	         FROM roomreservations rrs '#10+
       '			 where rrs.status in (''P'',''G'',''D'') and rrs.arrival < {probedate} and rrs.departure > {probedate} '#10+
       '			) stayover on stayover.room=r.room '#10+
+      '  where r.active and not r.hidden '#10+
       '	 group by room, roomtype, floor, numberguests '#10+
       '	 having ((not HousekeepingStatus is null ) or (not LiveNote is null)) '#10+
       '	 {locationclause}  '#10+

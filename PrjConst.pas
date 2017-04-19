@@ -1648,6 +1648,8 @@ begin
   constants.Add('shStaffCommAction_ActionNeeded', 'Action needed');
   constants.Add('shStaffCommAction_ActionFinished', 'Action finished');
 
+  constants.Add('shDailyrevenues_refreshwithdetails', 'Data needs to be refreshed to make detailinfo visible.'+#10#13 + 'Refresh now?');
+
 
 end;
 
