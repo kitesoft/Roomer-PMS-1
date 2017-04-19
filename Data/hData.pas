@@ -12935,9 +12935,9 @@ begin
   result := '';
   glb.ChannelsSet.First;
   if glb.ChannelsSet.Locate('defaultchannel', 1, []) then
-  begin
-    result := glb.ChannelsSet.fieldbyname('channelManagerId').asString;
-  end;
+    result := glb.ChannelsSet.fieldbyname('channelManagerId').asString
+  else
+    raise Exception.Create('No default channel defined.');
 end;
 
 function channels_GetDefault: integer;
@@ -12945,9 +12945,9 @@ begin
   result := 0;
   glb.ChannelsSet.First;
   if glb.ChannelsSet.Locate('defaultchannel', 1, []) then
-  begin
-    result := glb.ChannelsSet.fieldbyname('ID').asInteger;
-  end;
+    result := glb.ChannelsSet.fieldbyname('ID').asInteger
+  else
+    raise Exception.Create('No default channel defined.');
 end;
 
 function ChannelExist(channelManagerId: string): boolean;

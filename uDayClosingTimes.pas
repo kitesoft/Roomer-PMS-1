@@ -14,7 +14,7 @@ uses
   dxSkinsdxBarPainter, dxSkinsdxRibbonPainter, dxPSCore, dxPScxCommon, dxmdaset, cxPropertiesStore, Vcl.Menus,
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxClasses, cxGridCustomView, cxGrid,
   Vcl.ComCtrls, sStatusBar, sCheckBox, cxCalendar
-  , cmpRoomerDataset, Vcl.Mask, sMaskEdit, sCustomComboEdit, sToolEdit
+  , cmpRoomerDataset, Vcl.Mask, sMaskEdit, sCustomComboEdit, sToolEdit, dxPScxPivotGridLnk
   ;
 
 type
@@ -49,7 +49,7 @@ type
     m_ClosingTime: TDateTimeField;
     tvDataDay: TcxGridDBColumn;
     tvDataClosingTime: TcxGridDBColumn;
-    edtLastDate: TsDateEdit;
+    edtFirstDate: TsDateEdit;
     lbStartFrom: TsLabel;
     btnRefresh: TsButton;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -68,7 +68,6 @@ type
     procedure mnuiGridToHtmlClick(Sender: TObject);
     procedure mnuiGridToTextClick(Sender: TObject);
     procedure mnuiGridToXmlClick(Sender: TObject);
-    procedure edtLastDateChange(Sender: TObject);
     procedure btnRefreshClick(Sender: TObject);
     procedure BtnOkClick(Sender: TObject);
   private
@@ -166,11 +165,6 @@ begin
   FRecordSet.Free;
 end;
 
-procedure TfrmDayClosingTimes.edtLastDateChange(Sender: TObject);
-begin
-  fillGridFromDataset;
-end;
-
 procedure TfrmDayClosingTimes.fillGridFromDataset;
 var
   lCaller: TDayClosingTimesAPICaller;
@@ -182,11 +176,12 @@ begin
     try
       lCaller := TDayClosingTimesAPICaller.Create;
       try
-        if lCaller.GetDayClosingTimesAsDataset(FRecordSet, edtLastDate.Date.AddYears(-1), edtLastDate.Date+1) then
+        if lCaller.GetDayClosingTimesAsDataset(FRecordSet, edtFirstDate.Date, edtFirstDate.Date.addYears(+1)) then
         begin
           if m_.active then m_.Close;
           m_.LoadFromDataSet(FRecordSet);
           m_.Open;
+          m_.Last;
         end
         else
           ShowError('reading of DayClosing timestamps');
@@ -208,6 +203,7 @@ end;
 
 procedure TfrmDayClosingTimes.FormShow(Sender: TObject);
 begin
+  edtFirstDate.Date := Now().AddYears(-1);
   fillGridFromDataset;
   grData.SetFocus;
 end;
