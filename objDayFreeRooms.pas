@@ -57,7 +57,7 @@ TYPE
 
 
 
-  TFreeRoomItemsList = TObjectList<TFreeRoomItem>;
+  TFreeRoomItemsList = TObjectDictionary<String,TFreeRoomItem>;
 
 
   //////////////////////////////////////////////////////////////////////////////////////
@@ -92,7 +92,9 @@ TYPE
     property sDate          : string    read FsDate          write FsDate;
     property occRooms       : string    read FOccRooms       write FOccRooms ;
 
-    function FindRoomFromRoomNumber(RoomNumber : string; StartAt : integer; caseSensitive : Boolean = false) : integer;
+    function FindRoomFromRoomNumber(RoomNumber : string) : TFreeRoomItem;
+//    function FindRoomFromRoomNumber(RoomNumber : string; StartAt : integer; caseSensitive : Boolean = false) : integer;
+
     function FindRoomStatus(RoomNumber: string): string;
     function FindRoomNextOcc(RoomNumber: string): string;
 
@@ -185,7 +187,7 @@ constructor TFreeRooms.Create(HotelCode : String;sDate : TDateTime;occRooms : st
 begin
   inherited Create;
 
-  FRoomList := TFreeRoomItemsList.Create(True);
+  FRoomList := TFreeRoomItemsList.Create([doOwnsValues]);
 
   FHotelCode := HotelCode;
   FsDate     := uDateUtils.dateToSqlString(sDate);
@@ -233,6 +235,7 @@ var
 
 begin
   ClearRoomList;
+  FRoomCount := 0;
   if frmMain.OfflineMode then
     exit;
   try
@@ -245,10 +248,11 @@ begin
 
       RoomItem := TFreeRoomItem.Create;
       try
-        RoomItem.SetRoom(Room);
+        RoomItem.SetRoom(LowerCase(Room));
         RoomItem.SetStatus(Status);
         RoomItem.SetNextOcc(NextOcc);
-        FRoomList.Add(RoomItem);
+        FRoomList.AddOrSetValue(Room, RoomItem);
+//        FRoomList.Add(RoomItem);
       except
          // logga
       end;
@@ -260,79 +264,127 @@ begin
   end;
 end;
 
-function TFreeRooms.FindRoomFromRoomNumber(RoomNumber: string; StartAt: integer; caseSensitive: Boolean): integer;
+
+function TFreeRooms.FindRoomFromRoomNumber(RoomNumber: string): TFreeRoomItem;
 var
   i : integer;
   Room : string;
+  FreeRoomItem : TFreeRoomItem;
 begin
-  result := -1;
-  if StartAt > FRoomList.Count-1 then exit;
-
-  if not caseSensitive then
-  begin
-    RoomNumber := ansiLowercase(RoomNumber);
-  end;
-
-  for i := startAt to FRoomList.Count -1 do
-  begin
-    Room := FRoomList[i].FRoom;
-
-    if not caseSensitive then
-    begin
-      Room := ansiLowercase(room);
-    end;
-
-    if RoomNumber = room then
-    begin
-      result := i;
-      Break;
-    end;
-  end;
+  result := nil;
+  if FRoomList.TryGetValue(LowerCase(RoomNumber), FreeRoomItem) then
+    result := FreeRoomITem;
+//
+//  result := -1;
+//
+//  if StartAt > FRoomList.Count-1 then exit;
+//
+//  if not caseSensitive then
+//  begin
+//    RoomNumber := ansiLowercase(RoomNumber);
+//  end;
+//
+//
+//  for i := startAt to FRoomList.Count -1 do
+//  begin
+//    Room := FRoomList[i].FRoom;
+//
+//    if not caseSensitive then
+//    begin
+//      Room := ansiLowercase(room);
+//    end;
+//
+//    if RoomNumber = room then
+//    begin
+//      result := i;
+//      Break;
+//    end;
+//  end;
 end;
+
+//function TFreeRooms.FindRoomFromRoomNumber(RoomNumber: string; StartAt: integer; caseSensitive: Boolean): integer;
+//var
+//  i : integer;
+//  Room : string;
+//begin
+//  result := -1;
+//
+//  if StartAt > FRoomList.Count-1 then exit;
+//
+//  if not caseSensitive then
+//  begin
+//    RoomNumber := ansiLowercase(RoomNumber);
+//  end;
+//
+//
+//  for i := startAt to FRoomList.Count -1 do
+//  begin
+//    Room := FRoomList[i].FRoom;
+//
+//    if not caseSensitive then
+//    begin
+//      Room := ansiLowercase(room);
+//    end;
+//
+//    if RoomNumber = room then
+//    begin
+//      result := i;
+//      Break;
+//    end;
+//  end;
+//end;
 
 function TFreeRooms.FindRoomNextOcc(RoomNumber: string): string;
 var
   i : integer;
   Room : string;
   Status : string;
+  FreeRoomItem : TFreeRoomItem;
 begin
   result := '';
 
   RoomNumber := ansiLowercase(RoomNumber);
+  FreeRoomItem := FindRoomFromRoomNumber(RoomNumber);
+  if Assigned(FreeRoomItem) then
+    result := FreeRoomItem.NextOcc;
 
-  for i := 0 to FRoomList.Count -1 do
-  begin
-    Room   := ansiLowercase(FRoomList[i].FRoom);
-    status := ansiLowercase(FRoomList[i].FStatus);
-
-    if (RoomNumber = room) and (status <> 'x') then //zxhj breytti hér
-    begin
-      result := FRoomList[i].NextOcc;
-      Break;
-    end;
-  end;
+//  for i := 0 to FRoomList.Count -1 do
+//  begin
+//    Room   := ansiLowercase(FRoomList[i].FRoom);
+//    status := ansiLowercase(FRoomList[i].FStatus);
+//
+//    if (RoomNumber = room) and (status <> 'x') then //zxhj breytti hér
+//    begin
+//      result := FRoomList[i].NextOcc;
+//      Break;
+//    end;
+//  end;
 end;
 
 function TFreeRooms.FindRoomStatus(RoomNumber: string): string;
 var
   i : integer;
   Room : string;
+  FreeRoomItem : TFreeRoomItem;
 begin
   result := '';
 
   RoomNumber := ansiLowercase(RoomNumber);
+  FreeRoomItem := FindRoomFromRoomNumber(RoomNumber);
+  if Assigned(FreeRoomItem) then
+    result := FreeRoomItem.FStatus;
 
-  for i := 0 to FRoomList.Count -1 do
-  begin
-    Room := FRoomList[i].FRoom;
-    Room := ansiLowercase(room);
-
-    if RoomNumber = room then
-    begin
-      result := FRoomList[i].FStatus;
-      Break;
-    end;
-  end;
+//  for i := 0 to FRoomList.Count -1 do
+//  begin
+//    Room := FRoomList[i].FRoom;
+//    Room := ansiLowercase(room);
+//
+//    if RoomNumber = room then
+//    begin
+//      result := FRoomList[i].FStatus;
+//      Break;
+//    end;
+//  end;
 end;
 
 

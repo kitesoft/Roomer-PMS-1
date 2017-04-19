@@ -443,10 +443,10 @@ object frmRoomCleanMaintenanceStatus: TfrmRoomCleanMaintenanceStatus
     SkinData.SkinSection = 'PANEL'
     object lblCleaningNotes: TsLabelFX
       AlignWithMargins = True
-      Left = 2
-      Top = 2
-      Width = 275
-      Height = 19
+      Left = 3
+      Top = 3
+      Width = 271
+      Height = 15
       Cursor = crHandPoint
       Margins.Left = 2
       Margins.Top = 2
@@ -465,8 +465,8 @@ object frmRoomCleanMaintenanceStatus: TfrmRoomCleanMaintenanceStatus
       Angle = 0
       Shadow.Color = clSilver
       Shadow.Distance = 2
-      Shadow.OffsetKeeper.LeftTop = -2
-      Shadow.OffsetKeeper.RightBottom = 6
+      Shadow.OffsetKeeper.LeftTop = -1
+      Shadow.OffsetKeeper.RightBottom = 3
     end
     object shpCleaningNotes: TShape
       Left = 179
@@ -554,10 +554,10 @@ object frmRoomCleanMaintenanceStatus: TfrmRoomCleanMaintenanceStatus
     SkinData.SkinSection = 'PANEL'
     object lblLostAndFound: TsLabelFX
       AlignWithMargins = True
-      Left = 2
-      Top = 2
-      Width = 275
-      Height = 19
+      Left = 3
+      Top = 3
+      Width = 271
+      Height = 15
       Cursor = crHandPoint
       Margins.Left = 2
       Margins.Top = 2
@@ -576,8 +576,8 @@ object frmRoomCleanMaintenanceStatus: TfrmRoomCleanMaintenanceStatus
       Angle = 0
       Shadow.Color = clSilver
       Shadow.Distance = 2
-      Shadow.OffsetKeeper.LeftTop = -2
-      Shadow.OffsetKeeper.RightBottom = 6
+      Shadow.OffsetKeeper.LeftTop = -1
+      Shadow.OffsetKeeper.RightBottom = 3
     end
     object shpLostAndFound: TShape
       Left = 179
@@ -665,10 +665,10 @@ object frmRoomCleanMaintenanceStatus: TfrmRoomCleanMaintenanceStatus
     SkinData.SkinSection = 'PANEL'
     object lblMaintenanceNotes: TsLabelFX
       AlignWithMargins = True
-      Left = 2
-      Top = 2
-      Width = 275
-      Height = 19
+      Left = 3
+      Top = 3
+      Width = 271
+      Height = 15
       Cursor = crHandPoint
       Margins.Left = 2
       Margins.Top = 2
@@ -687,8 +687,8 @@ object frmRoomCleanMaintenanceStatus: TfrmRoomCleanMaintenanceStatus
       Angle = 0
       Shadow.Color = clSilver
       Shadow.Distance = 2
-      Shadow.OffsetKeeper.LeftTop = -2
-      Shadow.OffsetKeeper.RightBottom = 6
+      Shadow.OffsetKeeper.LeftTop = -1
+      Shadow.OffsetKeeper.RightBottom = 3
     end
     object shpMaintenanceNotes: TShape
       Left = 179

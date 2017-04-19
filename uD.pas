@@ -2268,7 +2268,6 @@ end;
 function Td.getRoomText(sRoom: string): string;
 var
   s: string;
-  iRoomIndex: Integer;
   RoomItem: TRoomItem;
   StatusColor: TColor;
 begin
@@ -2291,10 +2290,9 @@ begin
     s := s + GetTranslatedText('shTx_Floor') + ' : ' + wRooms_.FieldByName('floor').Asstring + #13;
     s := s + GetTranslatedText('shTx_NumGuests') + ' : ' + wRooms_.FieldByName('numberGuests').Asstring + #13;
 
-    iRoomIndex := g.oRooms.FindRoomFromRoomNumber(sRoom);
-    if iRoomIndex >= 0 then
+    RoomItem := g.oRooms.FindRoomFromRoomNumber(sRoom);
+    if Assigned(RoomItem) then
     begin
-      RoomItem := g.oRooms.RoomItemsList[iRoomIndex];
       StatusColor := d.colorCodeOfStatus(RoomItem.status);
       s := s + '<hr><br><b><shad>' + GetTranslatedText('shTx_Status') + ' : <font ' +
         GetHTMLColor(StatusColor, True) + ' ' +

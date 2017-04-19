@@ -2051,21 +2051,24 @@ var
 
   startRow: integer;
   RowIndex: integer;
+  RoomItem : TRoomItem;
+  Key : String;
 begin
   startRow := grPeriodRooms.FixedRows;
   RowIndex := startRow - 1;
-  for i := 0 to g.oRooms.RoomCount - 1 do
+  for Key IN g.oRooms.RoomItemsList.Keys do
   begin
     inc(RowIndex);
-    status := g.oRooms.RoomItemsList.Items[i].status;
-    Room := g.oRooms.RoomItemsList.Items[i].Room;
-    RoomType := g.oRooms.RoomItemsList.Items[i].RoomType;
+    RoomItem := g.oRooms.RoomItemsList.Items[Key];
+    status := RoomItem.status;
+    Room := RoomItem.Room;
+    RoomType := RoomItem.RoomType;
     grPeriodRooms.Objects[cgrRoom_RoomColumn, RowIndex] := TRoomCell.Create(status);
     grPeriodRooms.cells[cgrRoom_RoomColumn, RowIndex] := Room;
     grPeriodRooms.cells[cgrRoom_RoomTypeColumn, RowIndex] := RoomType;
     if zShowRoomDescription then
     begin
-      grPeriodRooms.cells[cgrRoom_RoomDescriptionColumn, RowIndex] := g.oRooms.RoomItemsList.Items[i].RoomDescription;
+      grPeriodRooms.cells[cgrRoom_RoomDescriptionColumn, RowIndex] := RoomItem.RoomDescription;
     end;
   end;
 end;
@@ -7910,7 +7913,7 @@ begin
 
   ShowAllPeriodRows;
 
-  CleanEnds(Days, grPeriodRooms);
+// 2017-04-15 -- CleanEnds(Days, grPeriodRooms);
 
   if Days = 0 then
   begin
