@@ -25,202 +25,42 @@ object frmRptResStats: TfrmRptResStats
     Left = 0
     Top = 0
     Width = 1128
-    Height = 115
+    Height = 133
     Align = alTop
     TabOrder = 0
     SkinData.SkinSection = 'PANEL'
-    object gbxSelectDates: TsGroupBox
-      Left = 9
-      Top = 4
-      Width = 129
-      Height = 75
-      Caption = 'Select dates'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      ParentFont = False
-      TabOrder = 0
-      SkinData.SkinSection = 'GROUPBOX'
-      object dtDateFrom: TsDateEdit
-        Left = 16
-        Top = 18
-        Width = 105
-        Height = 21
-        AutoSize = False
-        Color = clWhite
-        EditMask = '!99/99/9999;1; '
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
-        Font.Height = -11
-        Font.Name = 'Tahoma'
-        Font.Style = []
-        MaxLength = 10
-        ParentFont = False
-        TabOrder = 0
-        Text = '  -  -    '
-        OnChange = dtDateFromChange
-        SkinData.SkinSection = 'EDIT'
-        GlyphMode.Blend = 0
-        GlyphMode.Grayed = False
-      end
-      object dtDateTo: TsDateEdit
-        Left = 16
-        Top = 45
-        Width = 105
-        Height = 21
-        AutoSize = False
-        Color = clWhite
-        EditMask = '!99/99/9999;1; '
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
-        Font.Height = -11
-        Font.Name = 'Tahoma'
-        Font.Style = []
-        MaxLength = 10
-        ParentFont = False
-        TabOrder = 1
-        Text = '  -  -    '
-        OnChange = dtDateToChange
-        SkinData.SkinSection = 'EDIT'
-        GlyphMode.Blend = 0
-        GlyphMode.Grayed = False
-      end
-    end
-    object gbxSelectMonths: TsGroupBox
-      Left = 146
-      Top = 4
-      Width = 139
-      Height = 75
-      Caption = '.. or select month'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      ParentFont = False
-      TabOrder = 1
-      SkinData.SkinSection = 'GROUPBOX'
-      object cbxMonth: TsComboBox
-        Left = 7
-        Top = 18
-        Width = 118
-        Height = 21
-        Alignment = taLeftJustify
-        BoundLabel.Font.Charset = DEFAULT_CHARSET
-        BoundLabel.Font.Color = clWindowText
-        BoundLabel.Font.Height = -13
-        BoundLabel.Font.Name = 'Tahoma'
-        BoundLabel.Font.Style = []
-        SkinData.SkinSection = 'COMBOBOX'
-        VerticalAlignment = taAlignTop
-        Color = clWhite
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
-        Font.Height = -11
-        Font.Name = 'Tahoma'
-        Font.Style = []
-        ItemIndex = -1
-        ParentFont = False
-        TabOrder = 0
-        Text = 'Select month ...'
-        OnCloseUp = cbxMonthCloseUp
-        Items.Strings = (
-          'Select month ...'
-          'January'
-          'February'
-          'March'
-          'April'
-          'May'
-          'June'
-          'July'
-          'August'
-          'September'
-          'October'
-          'November'
-          'December')
-      end
-      object cbxYear: TsComboBox
-        Left = 7
-        Top = 45
-        Width = 118
-        Height = 21
-        Alignment = taLeftJustify
-        BoundLabel.Font.Charset = DEFAULT_CHARSET
-        BoundLabel.Font.Color = clWindowText
-        BoundLabel.Font.Height = -13
-        BoundLabel.Font.Name = 'Tahoma'
-        BoundLabel.Font.Style = []
-        SkinData.SkinSection = 'COMBOBOX'
-        VerticalAlignment = taAlignTop
-        Color = clWhite
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
-        Font.Height = -11
-        Font.Name = 'Tahoma'
-        Font.Style = []
-        ItemIndex = -1
-        ParentFont = False
-        TabOrder = 1
-        Text = 'Select year ...'
-        OnCloseUp = cbxMonthCloseUp
-        Items.Strings = (
-          'Veldu '#225'r ...'
-          '2011'
-          '2012'
-          '2013'
-          '2014'
-          '2015'
-          '2016'
-          '2017'
-          '2018'
-          '2020')
-      end
-    end
-    object btnRefresh: TsButton
-      Left = 13
-      Top = 82
-      Width = 106
-      Height = 27
-      Caption = 'Refresh ALL'
-      ImageIndex = 28
-      Images = DImages.PngImageList1
-      TabOrder = 2
-      OnClick = btnRefreshClick
-      SkinData.SkinSection = 'BUTTON'
-    end
     object sGroupBox1: TsGroupBox
+      AlignWithMargins = True
       Left = 456
-      Top = 1
-      Width = 671
-      Height = 113
+      Top = 4
+      Width = 668
+      Height = 125
       Align = alRight
       Anchors = [akTop, akRight]
-      TabOrder = 3
+      TabOrder = 0
       SkinData.SkinSection = 'TRANSPARENT'
-      DesignSize = (
-        671
-        113)
       object gbxUseStatusOfRooms: TsGroupBox
-        Left = -1
-        Top = 3
-        Width = 312
-        Height = 75
-        Anchors = [akTop, akRight]
+        AlignWithMargins = True
+        Left = 13
+        Top = 18
+        Width = 326
+        Height = 71
+        Align = alRight
         Caption = 'Use Room with status of : '
         TabOrder = 0
         SkinData.SkinSection = 'GROUPBOX'
+        ExplicitLeft = 34
+        ExplicitTop = 15
+        ExplicitHeight = 77
         object chkExcluteWaitingList: TsCheckBox
           Left = 14
           Top = 17
-          Width = 77
-          Height = 17
+          Width = 69
+          Height = 20
           Caption = 'Waitinglist'
           Checked = True
           State = cbChecked
           TabOrder = 0
-          OnClick = chkExcluteWaitingListClick
           SkinData.SkinSection = 'CHECKBOX'
           ImgChecked = 0
           ImgUnchecked = 0
@@ -228,13 +68,12 @@ object frmRptResStats: TfrmRptResStats
         object chkExcluteAlotment: TsCheckBox
           Left = 14
           Top = 34
-          Width = 73
-          Height = 17
+          Width = 65
+          Height = 20
           Caption = 'Allotment'
           Checked = True
           State = cbChecked
           TabOrder = 1
-          OnClick = chkExcluteWaitingListClick
           SkinData.SkinSection = 'CHECKBOX'
           ImgChecked = 0
           ImgUnchecked = 0
@@ -242,13 +81,12 @@ object frmRptResStats: TfrmRptResStats
         object chkExcluteOrder: TsCheckBox
           Left = 14
           Top = 51
-          Width = 83
-          Height = 17
+          Width = 75
+          Height = 20
           Caption = 'Not Arrived'
           Checked = True
           State = cbChecked
           TabOrder = 2
-          OnClick = chkExcluteWaitingListClick
           SkinData.SkinSection = 'CHECKBOX'
           ImgChecked = 0
           ImgUnchecked = 0
@@ -256,13 +94,12 @@ object frmRptResStats: TfrmRptResStats
         object chkExcluteNoShow: TsCheckBox
           Left = 227
           Top = 34
-          Width = 69
-          Height = 17
+          Width = 61
+          Height = 20
           Caption = 'No show'
           Checked = True
           State = cbChecked
           TabOrder = 3
-          OnClick = chkExcluteWaitingListClick
           SkinData.SkinSection = 'CHECKBOX'
           ImgChecked = 0
           ImgUnchecked = 0
@@ -270,13 +107,12 @@ object frmRptResStats: TfrmRptResStats
         object chkExcluteDeparted: TsCheckBox
           Left = 129
           Top = 17
-          Width = 73
-          Height = 17
+          Width = 65
+          Height = 20
           Caption = 'Departed'
           Checked = True
           State = cbChecked
           TabOrder = 4
-          OnClick = chkExcluteWaitingListClick
           SkinData.SkinSection = 'CHECKBOX'
           ImgChecked = 0
           ImgUnchecked = 0
@@ -284,11 +120,10 @@ object frmRptResStats: TfrmRptResStats
         object chkExcluteBlocked: TsCheckBox
           Left = 227
           Top = 17
-          Width = 64
-          Height = 17
+          Width = 56
+          Height = 20
           Caption = 'Blocked'
           TabOrder = 5
-          OnClick = chkExcluteWaitingListClick
           SkinData.SkinSection = 'CHECKBOX'
           ImgChecked = 0
           ImgUnchecked = 0
@@ -296,13 +131,12 @@ object frmRptResStats: TfrmRptResStats
         object chkExcluteGuest: TsCheckBox
           Left = 129
           Top = 34
-          Width = 56
-          Height = 17
+          Width = 48
+          Height = 20
           Caption = 'Guest'
           Checked = True
           State = cbChecked
           TabOrder = 6
-          OnClick = chkExcluteWaitingListClick
           SkinData.SkinSection = 'CHECKBOX'
           ImgChecked = 0
           ImgUnchecked = 0
@@ -310,8 +144,8 @@ object frmRptResStats: TfrmRptResStats
         object chkExcludeWaitingListNonOptional: TsCheckBox
           Left = 129
           Top = 51
-          Width = 77
-          Height = 17
+          Width = 69
+          Height = 20
           Caption = 'Waitinglist'
           Checked = True
           State = cbChecked
@@ -322,24 +156,27 @@ object frmRptResStats: TfrmRptResStats
         end
       end
       object gbxUseStatusNoRooms: TsGroupBox
-        Left = 317
-        Top = 3
+        AlignWithMargins = True
+        Left = 345
+        Top = 18
         Width = 318
-        Height = 75
-        Anchors = [akTop, akRight]
+        Height = 71
+        Align = alRight
         Caption = 'Use NO Rooms with status of : '
         TabOrder = 1
         SkinData.SkinSection = 'GROUPBOX'
+        ExplicitLeft = 311
+        ExplicitTop = -1
+        ExplicitHeight = 75
         object chkExcluteWaitingListNoRooms: TsCheckBox
           Left = 14
           Top = 17
-          Width = 77
-          Height = 17
+          Width = 69
+          Height = 20
           Caption = 'Waitinglist'
           Checked = True
           State = cbChecked
           TabOrder = 0
-          OnClick = chkExcluteWaitingListClick
           SkinData.SkinSection = 'CHECKBOX'
           ImgChecked = 0
           ImgUnchecked = 0
@@ -347,13 +184,12 @@ object frmRptResStats: TfrmRptResStats
         object chkExcluteAlotmentNoRooms: TsCheckBox
           Left = 14
           Top = 34
-          Width = 73
-          Height = 17
+          Width = 65
+          Height = 20
           Caption = 'Allotment'
           Checked = True
           State = cbChecked
           TabOrder = 1
-          OnClick = chkExcluteWaitingListClick
           SkinData.SkinSection = 'CHECKBOX'
           ImgChecked = 0
           ImgUnchecked = 0
@@ -361,13 +197,12 @@ object frmRptResStats: TfrmRptResStats
         object chkExcluteOrderNorooms: TsCheckBox
           Left = 14
           Top = 49
-          Width = 83
-          Height = 17
+          Width = 75
+          Height = 20
           Caption = 'Not Arrived'
           Checked = True
           State = cbChecked
           TabOrder = 2
-          OnClick = chkExcluteWaitingListClick
           SkinData.SkinSection = 'CHECKBOX'
           ImgChecked = 0
           ImgUnchecked = 0
@@ -375,13 +210,12 @@ object frmRptResStats: TfrmRptResStats
         object chkExcluteNoShowNoRooms: TsCheckBox
           Left = 215
           Top = 34
-          Width = 69
-          Height = 17
+          Width = 61
+          Height = 20
           Caption = 'No show'
           Checked = True
           State = cbChecked
           TabOrder = 3
-          OnClick = chkExcluteWaitingListClick
           SkinData.SkinSection = 'CHECKBOX'
           ImgChecked = 0
           ImgUnchecked = 0
@@ -389,13 +223,12 @@ object frmRptResStats: TfrmRptResStats
         object chkExcluteDepartedNoRooms: TsCheckBox
           Left = 129
           Top = 17
-          Width = 73
-          Height = 17
+          Width = 65
+          Height = 20
           Caption = 'Departed'
           Checked = True
           State = cbChecked
           TabOrder = 4
-          OnClick = chkExcluteWaitingListClick
           SkinData.SkinSection = 'CHECKBOX'
           ImgChecked = 0
           ImgUnchecked = 0
@@ -403,11 +236,10 @@ object frmRptResStats: TfrmRptResStats
         object chkExcluteBlockedNoRooms: TsCheckBox
           Left = 217
           Top = 17
-          Width = 64
-          Height = 17
+          Width = 56
+          Height = 20
           Caption = 'Blocked'
           TabOrder = 5
-          OnClick = chkExcluteWaitingListClick
           SkinData.SkinSection = 'CHECKBOX'
           ImgChecked = 0
           ImgUnchecked = 0
@@ -415,13 +247,12 @@ object frmRptResStats: TfrmRptResStats
         object chkExcluteGuestNoRooms: TsCheckBox
           Left = 129
           Top = 34
-          Width = 56
-          Height = 17
+          Width = 48
+          Height = 20
           Caption = 'Guest'
           Checked = True
           State = cbChecked
           TabOrder = 6
-          OnClick = chkExcluteWaitingListClick
           SkinData.SkinSection = 'CHECKBOX'
           ImgChecked = 0
           ImgUnchecked = 0
@@ -429,8 +260,8 @@ object frmRptResStats: TfrmRptResStats
         object chkExcludeWaitingListNonOptional_NoRooms: TsCheckBox
           Left = 129
           Top = 51
-          Width = 77
-          Height = 17
+          Width = 69
+          Height = 20
           Caption = 'Waitinglist'
           Checked = True
           State = cbChecked
@@ -440,49 +271,245 @@ object frmRptResStats: TfrmRptResStats
           ImgUnchecked = 0
         end
       end
-      object btnsetUseStatusAsDefault: TsButton
-        Left = 429
-        Top = 84
-        Width = 100
-        Height = 26
-        Anchors = [akTop, akRight]
-        Caption = 'Set Default'
+      object sPanel5: TsPanel
+        Left = 2
+        Top = 92
+        Width = 664
+        Height = 31
+        Align = alBottom
+        BevelOuter = bvNone
         TabOrder = 2
-        OnClick = btnsetUseStatusAsDefaultClick
-        SkinData.SkinSection = 'BUTTON'
+        ExplicitTop = 80
+        ExplicitWidth = 685
+        object btnsetUseStatusAsDefault: TsButton
+          AlignWithMargins = True
+          Left = 561
+          Top = 3
+          Width = 100
+          Height = 25
+          Align = alRight
+          Caption = 'Set Default'
+          TabOrder = 0
+          OnClick = btnsetUseStatusAsDefaultClick
+          SkinData.SkinSection = 'BUTTON'
+          ExplicitLeft = 269
+          ExplicitTop = 0
+          ExplicitHeight = 26
+        end
+        object btnGetUseStatusAsDefault: TsButton
+          AlignWithMargins = True
+          Left = 455
+          Top = 3
+          Width = 100
+          Height = 25
+          Align = alRight
+          Caption = 'Get Default'
+          TabOrder = 1
+          OnClick = btnGetUseStatusAsDefaultClick
+          SkinData.SkinSection = 'BUTTON'
+          ExplicitLeft = 163
+          ExplicitTop = 0
+          ExplicitHeight = 26
+        end
       end
-      object btnGetUseStatusAsDefault: TsButton
-        Left = 535
-        Top = 84
-        Width = 100
-        Height = 26
-        Anchors = [akTop, akRight]
-        Caption = 'Get Default'
-        TabOrder = 3
-        OnClick = btnGetUseStatusAsDefaultClick
+    end
+    object sPanel8: TsPanel
+      Left = 1
+      Top = 1
+      Width = 305
+      Height = 131
+      Align = alLeft
+      BevelOuter = bvNone
+      TabOrder = 1
+      ExplicitLeft = 63
+      ExplicitTop = 11
+      ExplicitHeight = 116
+      object gbxSelectDates: TsGroupBox
+        Left = 9
+        Top = 4
+        Width = 129
+        Height = 75
+        Caption = 'Select dates'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        ParentFont = False
+        TabOrder = 0
+        SkinData.SkinSection = 'GROUPBOX'
+        object dtDateFrom: TsDateEdit
+          Left = 16
+          Top = 18
+          Width = 105
+          Height = 21
+          AutoSize = False
+          Color = clWhite
+          EditMask = '!99/99/9999;1; '
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          MaxLength = 10
+          ParentFont = False
+          TabOrder = 0
+          Text = '  -  -    '
+          OnChange = dtDateFromChange
+          SkinData.SkinSection = 'EDIT'
+          GlyphMode.Blend = 0
+          GlyphMode.Grayed = False
+        end
+        object dtDateTo: TsDateEdit
+          Left = 16
+          Top = 45
+          Width = 105
+          Height = 21
+          AutoSize = False
+          Color = clWhite
+          EditMask = '!99/99/9999;1; '
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          MaxLength = 10
+          ParentFont = False
+          TabOrder = 1
+          Text = '  -  -    '
+          OnChange = dtDateToChange
+          SkinData.SkinSection = 'EDIT'
+          GlyphMode.Blend = 0
+          GlyphMode.Grayed = False
+        end
+      end
+      object gbxSelectMonths: TsGroupBox
+        Left = 146
+        Top = 4
+        Width = 139
+        Height = 75
+        Caption = '.. or select month'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        ParentFont = False
+        TabOrder = 1
+        SkinData.SkinSection = 'GROUPBOX'
+        object cbxMonth: TsComboBox
+          Left = 7
+          Top = 18
+          Width = 118
+          Height = 21
+          Alignment = taLeftJustify
+          BoundLabel.Font.Charset = DEFAULT_CHARSET
+          BoundLabel.Font.Color = clWindowText
+          BoundLabel.Font.Height = -13
+          BoundLabel.Font.Name = 'Tahoma'
+          BoundLabel.Font.Style = []
+          SkinData.SkinSection = 'COMBOBOX'
+          VerticalAlignment = taAlignTop
+          Color = clWhite
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ItemIndex = -1
+          ParentFont = False
+          TabOrder = 0
+          Text = 'Select month ...'
+          OnCloseUp = cbxMonthCloseUp
+          Items.Strings = (
+            'Select month ...'
+            'January'
+            'February'
+            'March'
+            'April'
+            'May'
+            'June'
+            'July'
+            'August'
+            'September'
+            'October'
+            'November'
+            'December')
+        end
+        object cbxYear: TsComboBox
+          Left = 7
+          Top = 45
+          Width = 118
+          Height = 21
+          Alignment = taLeftJustify
+          BoundLabel.Font.Charset = DEFAULT_CHARSET
+          BoundLabel.Font.Color = clWindowText
+          BoundLabel.Font.Height = -13
+          BoundLabel.Font.Name = 'Tahoma'
+          BoundLabel.Font.Style = []
+          SkinData.SkinSection = 'COMBOBOX'
+          VerticalAlignment = taAlignTop
+          Color = clWhite
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ItemIndex = -1
+          ParentFont = False
+          TabOrder = 1
+          Text = 'Select year ...'
+          OnCloseUp = cbxMonthCloseUp
+          Items.Strings = (
+            'Veldu '#225'r ...'
+            '2011'
+            '2012'
+            '2013'
+            '2014'
+            '2015'
+            '2016'
+            '2017'
+            '2018'
+            '2020')
+        end
+      end
+      object btnRefresh: TsButton
+        Left = 25
+        Top = 99
+        Width = 105
+        Height = 27
+        Caption = 'Refresh ALL'
+        Default = True
+        ImageIndex = 28
+        Images = DImages.PngImageList1
+        TabOrder = 2
+        OnClick = btnRefreshClick
         SkinData.SkinSection = 'BUTTON'
       end
     end
   end
   object pageMain: TsPageControl
     Left = 0
-    Top = 115
+    Top = 133
     Width = 1128
-    Height = 569
-    ActivePage = SheetMainResult
+    Height = 551
+    ActivePage = sheetMainData
     Align = alClient
     TabOrder = 1
     SkinData.SkinSection = 'PAGECONTROL'
+    ExplicitLeft = 1
     object SheetMainResult: TsTabSheet
       Caption = 'Result'
       OnShow = SheetMainResultShow
+      ExplicitHeight = 541
       object Panel1: TPanel
         Left = 320
         Top = 0
         Width = 800
-        Height = 541
+        Height = 523
         Align = alClient
         TabOrder = 0
+        ExplicitHeight = 541
         object Panel5: TPanel
           Left = 1
           Top = 1
@@ -521,6 +548,7 @@ object frmRptResStats: TfrmRptResStats
                 OptionsView.FilterFields = False
                 OptionsView.RowFields = False
                 TabOrder = 0
+                ExplicitTop = 32
                 object pg001incomeTotal: TcxDBPivotGridField
                   Area = faData
                   AreaIndex = 2
@@ -1207,17 +1235,19 @@ object frmRptResStats: TfrmRptResStats
           Left = 1
           Top = 369
           Width = 798
-          Height = 171
+          Height = 153
           Align = alClient
           TabOrder = 2
+          ExplicitHeight = 171
           object grDrill: TcxGrid
             Left = 1
             Top = 46
             Width = 796
-            Height = 124
+            Height = 106
             Align = alClient
             TabOrder = 0
             LookAndFeel.NativeStyle = False
+            ExplicitHeight = 124
             object tvDrill001: TcxGridDBTableView
               Navigator.Buttons.CustomButtons = <>
               DataController.DataSource = Dril001DS
@@ -1324,18 +1354,20 @@ object frmRptResStats: TfrmRptResStats
         Left = 312
         Top = 0
         Width = 8
-        Height = 541
+        Height = 523
         HotZoneClassName = 'TcxMediaPlayer8Style'
         Control = sPanel2
+        ExplicitHeight = 541
       end
       object sPanel2: TsPanel
         Left = 0
         Top = 0
         Width = 312
-        Height = 541
+        Height = 523
         Align = alLeft
         TabOrder = 2
         SkinData.SkinSection = 'TRANSPARENT'
+        ExplicitHeight = 541
         object sPanel4: TsPanel
           Left = 1
           Top = 1
@@ -1437,7 +1469,7 @@ object frmRptResStats: TfrmRptResStats
           Left = 1
           Top = 61
           Width = 310
-          Height = 479
+          Height = 461
           Align = alClient
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -1447,22 +1479,26 @@ object frmRptResStats: TfrmRptResStats
           ParentFont = False
           TabOrder = 1
           SkinData.SkinSection = 'GROUPBOX'
+          ExplicitHeight = 479
         end
       end
     end
     object sheetMainData: TsTabSheet
       Caption = 'Data'
+      ExplicitHeight = 541
       object pageData: TsPageControl
         Left = 0
         Top = 0
         Width = 1120
-        Height = 541
+        Height = 523
         ActivePage = sTabSheet9
         Align = alClient
         TabOrder = 0
         SkinData.SkinSection = 'PAGECONTROL'
+        ExplicitHeight = 541
         object sTabSheet7: TsTabSheet
           Caption = 'Reservations'
+          ExplicitHeight = 513
           object Panel2: TsPanel
             Left = 0
             Top = 0
@@ -1512,10 +1548,11 @@ object frmRptResStats: TfrmRptResStats
             Left = 0
             Top = 45
             Width = 1112
-            Height = 468
+            Height = 450
             Align = alClient
             TabOrder = 1
             LookAndFeel.NativeStyle = False
+            ExplicitHeight = 468
             object tvRoomsDate: TcxGridDBTableView
               Navigator.Buttons.CustomButtons = <>
               DataController.DataSource = RoomsDateDS
@@ -1985,6 +2022,7 @@ object frmRptResStats: TfrmRptResStats
         end
         object sTabSheet8: TsTabSheet
           Caption = 'Roominvoice'
+          ExplicitHeight = 513
           object sPanel1: TsPanel
             Left = 0
             Top = 0
@@ -2005,7 +2043,7 @@ object frmRptResStats: TfrmRptResStats
               OnClick = btnExcelInvoiceLinesClick
               SkinData.SkinSection = 'BUTTON'
             end
-            object btnInvoiceInvoicelines: TsButton
+            object btnRoomInvoiceInvoicelines: TsButton
               Left = 320
               Top = 2
               Width = 100
@@ -2014,10 +2052,10 @@ object frmRptResStats: TfrmRptResStats
               ImageIndex = 63
               Images = DImages.PngImageList1
               TabOrder = 1
-              OnClick = btnInvoiceInvoicelinesClick
+              OnClick = btnRoomInvoiceInvoicelinesClick
               SkinData.SkinSection = 'BUTTON'
             end
-            object btnReservationInvoiceLines: TsButton
+            object btnRoomInvoiceReservation: TsButton
               Left = 108
               Top = 2
               Width = 100
@@ -2026,10 +2064,10 @@ object frmRptResStats: TfrmRptResStats
               ImageIndex = 56
               Images = DImages.PngImageList1
               TabOrder = 2
-              OnClick = btnReservationInvoiceLinesClick
+              OnClick = btnRoomInvoiceReservationClick
               SkinData.SkinSection = 'BUTTON'
             end
-            object btnRoomInvoicelines: TsButton
+            object btnRoomInvoiceGuests: TsButton
               Left = 214
               Top = 2
               Width = 100
@@ -2038,7 +2076,7 @@ object frmRptResStats: TfrmRptResStats
               ImageIndex = 39
               Images = DImages.PngImageList1
               TabOrder = 3
-              OnClick = btnRoomInvoicelinesClick
+              OnClick = btnRoomInvoiceGuestsClick
               SkinData.SkinSection = 'BUTTON'
             end
           end
@@ -2046,10 +2084,11 @@ object frmRptResStats: TfrmRptResStats
             Left = 0
             Top = 45
             Width = 1112
-            Height = 468
+            Height = 450
             Align = alClient
             TabOrder = 1
             LookAndFeel.NativeStyle = False
+            ExplicitHeight = 468
             object tvInvoicelines: TcxGridDBTableView
               Navigator.Buttons.CustomButtons = <>
               DataController.DataSource = InvoiceLinesDS
@@ -2159,6 +2198,7 @@ object frmRptResStats: TfrmRptResStats
         end
         object sTabSheet9: TsTabSheet
           Caption = 'Groupinvoice'
+          ExplicitHeight = 513
           object sPanel3: TsPanel
             Left = 0
             Top = 0
@@ -2220,10 +2260,11 @@ object frmRptResStats: TfrmRptResStats
             Left = 0
             Top = 45
             Width = 1112
-            Height = 468
+            Height = 450
             Align = alClient
             TabOrder = 1
             LookAndFeel.NativeStyle = False
+            ExplicitHeight = 468
             object tvGroupInvoiceSums: TcxGridDBTableView
               Navigator.Buttons.CustomButtons = <>
               DataController.DataSource = GroupInvoiceSumsDS
@@ -2841,6 +2882,7 @@ object frmRptResStats: TfrmRptResStats
     end
     object prLinkGrDrill: TdxGridReportLink
       Component = grDrill
+      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -2849,10 +2891,12 @@ object frmRptResStats: TfrmRptResStats
       PrinterPage.Margins.Left = 12700
       PrinterPage.Margins.Right = 12700
       PrinterPage.Margins.Top = 12700
+      PrinterPage.Orientation = poLandscape
       PrinterPage.PageSize.X = 210000
       PrinterPage.PageSize.Y = 297000
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
+      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
   end

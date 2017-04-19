@@ -69,14 +69,7 @@ uses
 type
   TfrmRptResStats = class(TForm)
     Panel3: TsPanel;
-    gbxSelectDates: TsGroupBox;
-    gbxSelectMonths: TsGroupBox;
-    cbxMonth: TsComboBox;
-    cbxYear: TsComboBox;
-    btnRefresh: TsButton;
     pageMain: TsPageControl;
-    dtDateFrom: TsDateEdit;
-    dtDateTo: TsDateEdit;
     kbmRoomsDate_: TkbmMemTable;
     RoomsDateDS: TDataSource;
     kbmInvoiceLines_: TkbmMemTable;
@@ -205,9 +198,9 @@ type
     lvRoomsDate: TcxGridLevel;
     sPanel1: TsPanel;
     btnExcelInvoiceLines: TsButton;
-    btnInvoiceInvoicelines: TsButton;
-    btnReservationInvoiceLines: TsButton;
-    btnRoomInvoicelines: TsButton;
+    btnRoomInvoiceInvoicelines: TsButton;
+    btnRoomInvoiceReservation: TsButton;
+    btnRoomInvoiceGuests: TsButton;
     grInvoicelines: TcxGrid;
     tvInvoicelines: TcxGridDBTableView;
     tvInvoicelinesInvoiceNumber: TcxGridDBColumn;
@@ -268,8 +261,6 @@ type
     chkExcluteDepartedNoRooms: TsCheckBox;
     chkExcluteBlockedNoRooms: TsCheckBox;
     chkExcluteGuestNoRooms: TsCheckBox;
-    btnsetUseStatusAsDefault: TsButton;
-    btnGetUseStatusAsDefault: TsButton;
     sPanel6: TsPanel;
     btnGrDrillExcel: TsButton;
     btnGrdrillPrint: TsButton;
@@ -337,6 +328,17 @@ type
     storeOld: TcxPropertiesStore;
     chkExcludeWaitingListNonOptional: TsCheckBox;
     chkExcludeWaitingListNonOptional_NoRooms: TsCheckBox;
+    sPanel5: TsPanel;
+    btnsetUseStatusAsDefault: TsButton;
+    btnGetUseStatusAsDefault: TsButton;
+    sPanel8: TsPanel;
+    gbxSelectDates: TsGroupBox;
+    dtDateFrom: TsDateEdit;
+    dtDateTo: TsDateEdit;
+    gbxSelectMonths: TsGroupBox;
+    cbxMonth: TsComboBox;
+    cbxYear: TsComboBox;
+    btnRefresh: TsButton;
 
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -350,13 +352,12 @@ type
     procedure btnExcelGroupInvoiceSumsClick(Sender: TObject);
     procedure btnReservationRoomsDateClick(Sender: TObject);
     procedure btnRoomRoomsDateClick(Sender: TObject);
-    procedure btnReservationInvoiceLinesClick(Sender: TObject);
-    procedure btnRoomInvoicelinesClick(Sender: TObject);
+    procedure btnRoomInvoiceReservationClick(Sender: TObject);
+    procedure btnRoomInvoiceGuestsClick(Sender: TObject);
     procedure btnReservationGroupInvoiceSumsClick(Sender: TObject);
     procedure btnRoomGroupInvoiceSumsClick(Sender: TObject);
     procedure btnInvoiceGroupInvoiceSumsClick(Sender: TObject);
-    procedure btnInvoiceInvoicelinesClick(Sender: TObject);
-    procedure chkExcluteWaitingListClick(Sender: TObject);
+    procedure btnRoomInvoiceInvoicelinesClick(Sender: TObject);
     procedure btnGetUseStatusAsDefaultClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure SheetMainResultShow(Sender: TObject);
@@ -418,7 +419,6 @@ type
     zItemTypeInfoTax  : TItemTypeInfo;
 
 
-    Procedure fillLocationsChkBox;
     procedure InitControles;
 
     function GetRRinList : string;
@@ -426,7 +426,6 @@ type
     procedure GetData;
     procedure AddInvoicelineData;
     procedure AddGroupInvoiceSumsData;
-    procedure ExcluteFilter;
     function StatusSQL : string;
     procedure updateDrilldown;
     procedure SetColumnProperties(ATableView: TcxGridTableView);
@@ -439,7 +438,6 @@ type
     procedure deleteLayout(description : string);
     function updateLayoutName(oldName, newname : string) : boolean;
     procedure LoadLayoutOld(useDefault : boolean);
-//    function calcStayTax(Taxholder : recTaxesHolder; rentAmount : double; currency : string; Customer : string; taxnights,taxguests : integer; Reservation : integer): recCityTaxResultHolder;
 
   public
     { Public declarations }
@@ -467,7 +465,9 @@ uses
   , cxPivotGridAdvancedCustomization
   , uFinanceForcastLayout
   , DateUtils
-  , uSQLUtils;
+  , uSQLUtils
+  , UITypes
+  ;
 
 const WM_LOAD_LAYOUT = WM_User + 401;
       WM_START_LOAD = WM_User + 402;
@@ -515,10 +515,13 @@ procedure TfrmRptResStats.SetColumnProperties(ATableView: TcxGridTableView);
 
   procedure CreateFooterSummaryCell(AGridColumn: TcxGridColumn);
   begin
-    AGridColumn.Summary.FooterKind := skSum;
-    AGridColumn.Summary.FooterFormat := ',.00';
-    AGridColumn.summary.GroupKind := skSum;
-    AGridColumn.Summary.GroupFormat := ',.00';
+    if assigned(AGridColumn) then
+    begin
+      AGridColumn.Summary.FooterKind := skSum;
+      AGridColumn.Summary.FooterFormat := ',.00';
+      AGridColumn.summary.GroupKind := skSum;
+      AGridColumn.Summary.GroupFormat := ',.00';
+    end;
   end;
 
   function ColumnByCaption(ACaption: string): TcxGridColumn;
@@ -536,16 +539,20 @@ procedure TfrmRptResStats.SetColumnProperties(ATableView: TcxGridTableView);
 
 var
   i : integer;
+  col: TcxGridColumn;
 begin
   for I := 0 to pg001.FieldCount - 1 do
   begin
-//    if (pg001.Fields[I].Area = faData) then
-      if not pg001.Fields[I].DataBinding.ValueTypeClass.IsString then
+    if not pg001.Fields[I].DataBinding.ValueTypeClass.IsString then
+    begin
+      col := ColumnByCaption(pg001.Fields[I].Caption);
+      if assigned(col) then
       begin
-        CreateFooterSummaryCell(ColumnByCaption(pg001.Fields[I].Caption));
-        ColumnByCaption(pg001.Fields[I].Caption).PropertiesClass := TcxCurrencyEditProperties;
-        TcxCurrencyEditProperties(ColumnByCaption(pg001.Fields[I].Caption).Properties).DisplayFormat := '#,##0.;-#,##0.';
+        CreateFooterSummaryCell(col);
+        col.PropertiesClass := TcxCurrencyEditProperties;
+        TcxCurrencyEditProperties(col.Properties).DisplayFormat := '#,##0.;-#,##0.';
       end;
+    end;
   end;
 
 end;
@@ -570,14 +577,6 @@ begin
 end;
 
 
-
-Procedure TfrmRptResStats.fillLocationsChkBox;
-begin
-end;
-
-
-
-
 ////////////////////////////////////////////////////////////////////////////////
 ///
 /// Form
@@ -587,7 +586,6 @@ end;
 procedure TfrmRptResStats.InitControles;
 var
   y, m, d : word;
-  idx : integer;
   lastDay : integer;
 begin
   zSetDates := false;
@@ -598,11 +596,6 @@ begin
   cbxMonth.ItemIndex := zMonth;
 
   cbxYear.ItemIndex := cbxYear.Items.IndexOf(inttostr(zYear));
-//  idx := zYear - 2010;
-//  if (idx < cbxYear.Items.Count - 1) and (idx > 0) then
-//  begin
-//    cbxYear.ItemIndex := idx;
-//  end;
 
   zDateFrom := encodeDate(y, m, 1);
   lastDay := DaysInAMonth(y, m);
@@ -659,7 +652,6 @@ procedure TfrmRptResStats.FormShow(Sender: TObject);
 var
   RoomRentType : string;
   RoomRentVATCode : string;
-  dTmp : double;
 begin
   _restoreForm(self);
   InitControles;
@@ -670,17 +662,11 @@ begin
   zRoomRentItem  := trim(uppercase(ctrlGetString('RoomRentItem')));
   zDiscountItem  := trim(uppercase(ctrlGetString('DiscountItem')));
 
-  //**--
-
   zTaxesHolder := GetTaxesHolder;
-
 
   zTaxesItem           := trim(uppercase(zTaxesHolder.Booking_Item));
   zUseStayTax          := true;
   zuseStayTax          := zuseStayTax AND ctrlGetBoolean('useStayTax');
-
-
-
   zStayTaxIncluted     := trim(uppercase(zTaxesHolder.Incl_Excl)) = 'INCLUDED';   //NOT isStayTaxExcluded;
   zStayTaxPercentage   := trim(uppercase(zTaxesHolder.Tax_Type))  = 'PERCENTAGE'; //isStayTaxPercentage;
   zStayTaxPerCustomer  := trim(uppercase(zTaxesHolder.tax_base))  = 'PER_CUSTOMER'; // isStayTaxPerCustomer;
@@ -704,7 +690,7 @@ begin
 
   if glb.VAT.Locate('VATCode',RoomRentVATCode,[]) then
   begin
-    zRoomRentVATPercentage := glb.Items.GetFloatValue(glb.VAT.FieldByName('VATPercentage'));
+    zRoomRentVATPercentage := glb.VAT.FieldByName('VATPercentage').AsFloat;
   end;
 
   gbxCustomization.Visible :=  true;
@@ -742,12 +728,6 @@ begin
   PostMessage(handle, WM_LOAD_LAYOUT, 0, 0);
 end;
 
-procedure TfrmRptResStats.chkExcluteWaitingListClick(Sender: TObject);
-begin
-  ExcluteFilter;
-end;
-
-
 procedure TfrmRptResStats.Dril001DataChanged(Sender: TObject);
 begin
   updateDrilldown;
@@ -778,24 +758,9 @@ begin
 end;
 
 
-procedure TfrmRptResStats.ExcluteFilter;
-var
-  sFilter : string;
-  sNoRooms : string;
-  sRooms   : string;
-  i : integer;
-begin
-end;
-
-
 procedure TfrmRptResStats.SheetMainResultShow(Sender: TObject);
-var
-   c : integer;
 begin
   pg001.Customization.Visible :=  TRUE;
-
-//  showmessage(tvRoomsDate.DataController.Filter.FilterText);
-//
   pg001.DataController.Filter.StoreItemLinkNames := False;
   pg001.DataController.Filter.Assign(tvRoomsDate.DataController.Filter, True);
 
@@ -820,26 +785,23 @@ begin
   sText := propertiesstoreGetText(sDescription);
   oldDescription := sDescription;
   openFinanceForcastLayout(sdescription,sText);
-//  if sdescription <> cbxSel.Items[cbxSel.ItemIndex] then
-//  begin
-    sDescription := trim(sDescription);
-    if sDescription = '' then exit;
+  sDescription := trim(sDescription);
+  if sDescription = '' then exit;
 
-    s := '';
-    s := s + ' UPDATE propertiesstore '+#10;
-    s := s + '   SET '+#10;
-    s := s+ '    Description =' + _db(sDescription)+#10;
-    s := s+ '   ,TextContainer2='+_db(sText)+#10;
-    s := s + ' WHERE '+#10;
-    s := s + '   description = ' + _db(oldDescription);
+  s := '';
+  s := s + ' UPDATE propertiesstore '+#10;
+  s := s + '   SET '+#10;
+  s := s+ '    Description =' + _db(sDescription)+#10;
+  s := s+ '   ,TextContainer2='+_db(sText)+#10;
+  s := s + ' WHERE '+#10;
+  s := s + '   description = ' + _db(oldDescription);
 
-    if cmd_bySQL(s) then
-    begin
-      cbxSel.Items[cbxSel.ItemIndex] := sDescription;
-      itemindex := cbxSel.Items.IndexOf(sDescription);
-      cbxSel.ItemIndex := itemindex;
-    end;
-//  end;
+  if cmd_bySQL(s) then
+  begin
+    cbxSel.Items[cbxSel.ItemIndex] := sDescription;
+    itemindex := cbxSel.Items.IndexOf(sDescription);
+    cbxSel.ItemIndex := itemindex;
+  end;
 end;
 
 
@@ -851,10 +813,8 @@ end;
 
 function TfrmRptResStats.StatusSQL : string;
 var
-  sFilter  : string;
   sNoRooms : string;
   sRooms   : string;
-  i        : integer;
 
 begin
   result := '';
@@ -983,16 +943,14 @@ end;
 
 function TfrmRptResStats.GetAutoName : string;
 var
-  I, J, AAreaIndex: Integer;
   FilterList : array of TcxPivotGridField;
   DataList   : array of TcxPivotGridField;
   RowList    : array of TcxPivotGridField;
   ColumnList : array of TcxPivotGridField;
-  ATemp: TcxPivotGridField;
 
   aName    : string;
   aCaption : string;
-
+  I: integer;
 begin
   result := '';
 
@@ -1073,12 +1031,9 @@ var
   iRoomReservation : integer;
 begin
   iReservation := dril001.fieldbyname('Reservation').AsInteger;
-  iRoomReservation := dril001.fieldbyname('Room Reservation').AsInteger;
+  iRoomReservation := dril001.fieldbyname('RoomReservation').AsInteger;
 
-  if EditReservation(iReservation, iRoomReservation) then
-  begin
-    // **
-  end;
+  EditReservation(iReservation, iRoomReservation);
 end;
 
 procedure TfrmRptResStats.sButton4Click(Sender: TObject);
@@ -1087,43 +1042,29 @@ var
   iRoomReservation : integer;
   theData : recPersonHolder;
 begin
-  iReservation := Dril001.fieldbyname('Reservation').AsInteger;
-  iRoomReservation := Dril001.fieldbyname('Room Reservation').AsInteger;
+  iReservation := Dril001.Fieldbyname('Reservation').AsInteger;
+  iRoomReservation := Dril001.fieldbyname('RoomReservation').AsInteger;
 
   initPersonHolder(theData);
   theData.RoomReservation := iRoomreservation;
   theData.Reservation := iReservation;
   theData.name := '';
 
-  if openGuestProfile(actNone,theData) then
-  begin
-    //**
-  end;
+  openGuestProfile(actNone,theData);
 end;
-
-
-
 
 procedure TfrmRptResStats.AddGroupInvoiceSumsData;
 var
-  startTick : integer;
-  stopTick  : integer;
-  SQLms     : integer;
-
   itemID       : string;
 
   Reservation : integer;
-  RoomReservation : integer;
   invoicenumber : integer;
-  RoomCount : integer;
   Avr : double;
   Total : double;
 
   dayCount : integer;
   avrVAT   : double;
   vat : double;
-  noItems : double;
-
   RRGuestCount : integer;
   stayTaxHolder : recCityTaxResultHolder;
   Customer : string;
@@ -1134,7 +1075,6 @@ begin
   kbmGroupInvoiceSums_.DisableControls;
   kbmRoomsDate_.DisableControls;
   try
-    startTick := GetTickCount;
 
     kbmRoomsDate_.SortFields := 'Reservation';
     kbmRoomsDate_.Sort([]);
@@ -1149,17 +1089,12 @@ begin
       Reservation     := kbmGroupInvoiceSums_.FieldByName('Reservation').AsInteger;
 
       invoiceNumber   := kbmGroupInvoiceSums_.FieldByName('InvoiceNumber').AsInteger;
-      RoomCount       := kbmGroupInvoiceSums_.FieldByName('RoomCount').AsInteger;
-      NoItems         := kbmGroupInvoiceSums_.FieldByName('NoItems').AsFloat; //-96
-
       Total           := kbmGroupInvoiceSums_.FieldByName('total').AsFloat;
       VAT             := kbmGroupInvoiceSums_.FieldByName('TotalVat').AsFloat;
 
       itemID  := trim(uppercase(kbmGroupInvoiceSums_.FieldByName('ItemID').AsString));
 
       dayCount := 0;
-      RRGuestCount  := 0;
-
       if kbmRoomsDate_.Locate('Reservation',Reservation,[]) then
       begin
         while (NOT kbmRoomsDate_.EOF) AND (kbmRoomsDate_.FieldByName('Reservation').AsInteger = Reservation) do
@@ -1261,7 +1196,6 @@ begin
               begin
                 kbmRoomsDate_.fieldbyname('itemId').asstring := ItemId;
                 RRGuestCount  := kbmRoomsDate_.FieldByName('RRGuestCount').asinteger;
-  //              stayTaxHolder := CalculateCityTax(total, 'ISK', '0000000000',true,1,rrGuestCount);
                 stayTaxHolder := CalculateCityTax(total, currency, Customer, true,DayCount,rrGuestCount);
               end else
               begin
@@ -1299,8 +1233,6 @@ begin
       kbmGroupInvoiceSums_.next;
     end;
 
-    stopTick := GetTickCount;
-    SQLms    := stopTick - startTick;
   finally
     kbmRoomsDate_.EnableControls;
     kbmGroupInvoiceSums_.EnableControls
@@ -1311,13 +1243,8 @@ end;
 
 procedure TfrmRptResStats.AddInvoicelineData;
 var
-  startTick : integer;
-  stopTick  : integer;
-  SQLms     : integer;
-
   itemID       : string;
   RoomReservation : integer;
-  Reservation : integer;
   invoicenumber : integer;
   Total : double;
   avr : double;
@@ -1331,12 +1258,6 @@ var
   customer : string;
   currency : string;
 begin
-//  kbmInvoicelines_.DisableControls;
-//  kbmRoomsDate_.DisableControls;
-//  try
-
-    startTick := GetTickCount;
-
     kbmInvoicelines_.SortFields := 'RoomReservation';
     kbmInvoicelines_.Sort([]);
 
@@ -1348,7 +1269,6 @@ begin
       itemID          := trim(uppercase(kbmInvoicelines_.FieldByName('ItemID').AsString));
       total           := kbmInvoiceLines_.FieldByName('Total').asfloat;
       VAT             := kbmInvoiceLines_.FieldByName('VAT').asfloat;
-      Reservation     := kbmInvoiceLines_.FieldByName('Reservation').asinteger;
 
       if kbmRoomsDate_.Locate('roomReservation',roomReservation,[]) then
       begin
@@ -1360,6 +1280,7 @@ begin
           Currency        := kbmRoomsDate_.FieldByName('Currency').asString;
 
           avr := 0;
+          avrVAT := 0;
           if DayCount <> 0 then
           begin
              avr     := Total/DayCount;
@@ -1384,7 +1305,6 @@ begin
           if itemID = zRoomRentItem then
           begin
             kbmRoomsDate_.fieldbyname('itemId').asstring := ItemId;
-//            stayTaxHolder := CalculateCityTax(total, 'ISK', '0000000000', true,1,rrGuestCount);
             stayTaxHolder := CalculateCityTax(total, currency, Customer, true,DayCount,rrGuestCount);
 
             if invoicenumber > 1 then
@@ -1441,8 +1361,7 @@ begin
               if stayTaxHolder.Incluted then
               begin
                 kbmRoomsDate_.fieldbyname('itemId').asstring := ItemId;
-//                stayTaxHolder := CalculateCityTax(total, 'ISK', '0000000000',true,1,rrGuestCount);
-            stayTaxHolder := CalculateCityTax(total, currency, Customer, true,DayCount,rrGuestCount);
+                stayTaxHolder := CalculateCityTax(total, currency, Customer, true,DayCount,rrGuestCount);
               end else
               begin
                 kbmRoomsDate_.FieldByName('CTaxBilled').AsFloat        := kbmRoomsDate_.FieldByName('CTaxBilled').AsFloat+Avr;
@@ -1476,13 +1395,6 @@ begin
       end;
       kbmInvoicelines_.next;
     end;
-
-    stopTick := GetTickCount;
-    SQLms    := stopTick - startTick;
-//  finally
-//    kbmRoomsDate_.EnableControls;
-//    kbmInvoicelines_.EnableControls
-//  end;
 
 end;
 
@@ -1574,56 +1486,25 @@ begin
   taxVat := 0;
   nights := 1;
 
-  discount        := 0;
-  isPercentage    := false;
-  DiscountAmount  := 0;
-  nativeRate      := 0;
-  paid            := false;
   RoomVat         := 0;
 
   DayCount        := 0;
 
-  incomeTotal := 0.00;
-
-  RoomRentBilled      := 0.00;
   RoomRentUnBilled    := 0.00;
-  RoomRentTotal       := 0.00;
 
-  RoomDiscountBilled   := 0.00;
   RoomDiscountUnBilled := 0.00;
-  RoomDiscountTotal    := 0.00;
 
-  TaxesBilled    := 0.00;
   TaxesUnbilled  := 0.00;
-  TaxesTotal     := 0.00;
-
-  ItemsBilled    := 0.00;
-  ItemsUnBilled  := 0.00;
-  ItemsTotal     := 0.00;
 
   VatBilled        := 0.00;
   VatRentUnbilled  := 0.00;
-  VatTotal         := 0.00;
 
-  VatCtaxTotal     := 0.00;
-  VatCtaxBilled    := 0.00;
-  VatCtaxUnBilled  := 0.00;
 
-  CtaxBilled     := 0.00;
   CtaxUnbilled   := 0.00;
-  CtaxTotal      := 0.00;
 
   CtaxVAT        := 0.00;
-  CTaxTotalWoVAT := 0.00;
-
-  VatItemsBilled    := 0.00;
-  VatItemsUnbilled  := 0.00;
-  VatItemsTotal     := 0.00;
-
   VatDiscountBilled    := 0.00;
   VatDiscountUnbilled  := 0.00;
-  VatDiscountTotal     := 0.00;
-
   dataset.FieldByName('dtDate').AsDateTime := SQLToDateTime(dataset.FieldByName('aDate').AsString);
 
   discount     := dataset.FieldByName('discount').AsFloat;
@@ -1646,8 +1527,6 @@ begin
   begin
     dataset.FieldByName('FilterFlag').AsString := dataset.FieldByName('ResFlag').AsString+'R';
   end;
-
-
 
   discountAmount := 0;
 
@@ -1675,7 +1554,6 @@ begin
 
   if not paid then
   begin
-//    stayTaxHolder := CalculateCityTax(NativeRate, '', Customer,true,1,RRGuestCount);
     stayTaxHolder := CalculateCityTax(NativeRate, currency, Customer, true,DayCount,rrGuestCount);
 
     CtaxUnbilled     := stayTaxHolder.CityTax;
@@ -1696,11 +1574,6 @@ begin
     begin
       VatRentUnbilled := _calcVAT(RoomRentUnBilled, zRoomRentVATPercentage);
     end;
-
-//    if (VatRentUnBilled <> 0.00) then
-//    begin
-//      VatRentUnBilled := VatRentunBilled-VatCtaxUnBilled;
-//    end;
 
     TaxesUnBilled        := VatRentUnbilled + vatCTaxUnbilled+CtaxUnbilled-vatCTaxUnbilled;
   end else
@@ -1740,8 +1613,6 @@ begin
 
   VatRentTotal        := VatRentBilled+VatRentUnBilled;
 
-//8959698
-
   //Roomrent er roomrent �n CityTax
   RoomRentTotal       := RoomRentBilled+RoomRentUnbilled;
   RoomRentTotalWoVAT  := RoomRentTotal-vatRentTotal;
@@ -1757,8 +1628,6 @@ begin
   TaxesTotal          := TaxesBilled+TaxesUnBilled;
   ItemsTotalWoVAT     := ItemsTotal-VatItemsTotal;
 
-
-//  IncomeTotal := RoomRentTotal+RoomDiscountTotal+ItemsTotal+CTaxTotal;
   IncomeTotal := RoomRentTotal+ItemsTotal+CTaxTotal;
   IncomeTotalWoVAT := IncomeTotal-VatTotal;
 
@@ -1868,10 +1737,7 @@ begin
   iReservation := KbmRoomsDate_.fieldbyname('Reservation').AsInteger;
   iRoomReservation := KbmRoomsDate_.fieldbyname('RoomReservation').AsInteger;
 
-  if EditReservation(iReservation, iRoomReservation) then
-  begin
-    // **
-  end;
+  EditReservation(iReservation, iRoomReservation);
 end;
 
 
@@ -1889,14 +1755,11 @@ begin
   theData.Reservation := iReservation;
   theData.name := '';
 
-  if openGuestProfile(actNone,theData) then
-  begin
-    //**
-  end;
+  openGuestProfile(actNone,theData);
 end;
 
 
-procedure TfrmRptResStats.btnReservationInvoiceLinesClick(Sender: TObject);
+procedure TfrmRptResStats.btnRoomInvoiceReservationClick(Sender: TObject);
 var
   iReservation : integer;
   iRoomReservation : integer;
@@ -1904,14 +1767,11 @@ begin
   iReservation := kbmInvoiceLines_.fieldbyname('Reservation').AsInteger;
   iRoomReservation := kbmInvoiceLines_.fieldbyname('RoomReservation').AsInteger;
 
-  if EditReservation(iReservation, iRoomReservation) then
-  begin
-    // **
-  end;
+  EditReservation(iReservation, iRoomReservation);
 end;
 
 
-procedure TfrmRptResStats.btnRoomInvoicelinesClick(Sender: TObject);
+procedure TfrmRptResStats.btnRoomInvoiceGuestsClick(Sender: TObject);
 var
   iReservation : integer;
   iRoomReservation : integer;
@@ -1925,10 +1785,7 @@ begin
   theData.Reservation := iReservation;
   theData.name := '';
 
-  if openGuestProfile(actNone,theData) then
-  begin
-    //**
-  end;
+  openGuestProfile(actNone,theData);
 end;
 
 procedure TfrmRptResStats.btnReservationGroupInvoiceSumsClick(Sender: TObject);
@@ -1939,10 +1796,7 @@ begin
   iReservation := kbmGroupInvoiceSums_.fieldbyname('Reservation').AsInteger;
   iRoomReservation := kbmGroupInvoiceSums_.fieldbyname('RoomReservation').AsInteger;
 
-  if EditReservation(iReservation, iRoomReservation) then
-  begin
-    // **
-  end;
+  EditReservation(iReservation, iRoomReservation);
 end;
 
 
@@ -1960,14 +1814,11 @@ begin
   theData.Reservation := iReservation;
   theData.name := '';
 
-  if openGuestProfile(actNone,theData) then
-  begin
-    //**
-  end;
+  openGuestProfile(actNone,theData);
 end;
 
 
-procedure TfrmRptResStats.btnInvoiceInvoicelinesClick(Sender: TObject);
+procedure TfrmRptResStats.btnRoomInvoiceInvoicelinesClick(Sender: TObject);
 var
   InvoiceNumber : integer;
 begin
@@ -2006,20 +1857,16 @@ begin
   if cbxSel.Items.Count = 0 then exit;
   Description := cbxSel.Items[cbxSel.ItemIndex];
 
-  //**Translate
-//  if MessageDlg('Delete '+description, mtConfirmation, [mbYes, mbNo], 0) = mrYes then
-//  begin
-    s := '';
-    s := s + ' DELETE '+#10;
-    s := s + '   FROM '+#10;
-    s := s + '     propertiesstore '+#10;
-    s := s + ' WHERE '+#10;
-    s := s + '   description = '+ _db(description);
-    if cmd_bySQL(s) then
-    begin
-      GetSel;
-    end;
-//  end;
+  s := '';
+  s := s + ' DELETE '+#10;
+  s := s + '   FROM '+#10;
+  s := s + '     propertiesstore '+#10;
+  s := s + ' WHERE '+#10;
+  s := s + '   description = '+ _db(description);
+  if cmd_bySQL(s) then
+  begin
+    GetSel;
+  end;
 end;
 
 
@@ -2039,11 +1886,6 @@ var
   FormName    : string ;
   StoreType   : string ;
   StoreName   : string ;
-
-  TextContainer1   : string;
-  StringContainer1 : string;
-
-  aNewName : string;
 
   boolChain : string;
   rSet : TRoomerDataset;
@@ -2142,15 +1984,6 @@ procedure TfrmRptResStats.GetUseStatusDefault;
 var
   s : string;
 
-  Description : string ;
-  AccessLevel : integer;
-  AccessOwner : string ;
-  FormName    : string ;
-  StoreType   : string ;
-  StoreName   : string ;
-  TextContainer1   : string;
-  StringContainer1 : string;
-
   boolChain : string;
   rSet : TRoomerDataset;
 
@@ -2205,10 +2038,6 @@ begin
     end;
   end;
 end;
-
-
-
-
 
 procedure TfrmRptResStats.pg001AvrRateCalculateCustomSummary(
   Sender: TcxPivotGridField; ASummary: TcxPivotGridCrossCellSummary);
@@ -2280,13 +2109,7 @@ var
   rset3 : TRoomerDataset;
   ExecutionPlan : TRoomerExecutionPlan;
 
-  startTick : integer;
-  stopTick  : integer;
-  SQLms     : integer;
-
   statusIn : string;
-
-  dtTmp : TdateTime;
 
   sDebugSQL : string;
 
@@ -2295,16 +2118,12 @@ begin
   try
     zFirstTime := true;
 
-    startTick := GetTickCount;
     zRRInList := GetRRinList;
-    stopTick  := GetTickCount;
-    SQLms     := stopTick - startTick;
 
     zRVInList := GetRVinList;
 
     sDebugSQL := 'use home100_xxx;'+chr(10)+chr(10);
 
-    startTick := GetTickCount;
     s := '';
     s := s+'SELECT '#10;
     s := s+'  rd.roomReservation '#10;
@@ -2357,10 +2176,6 @@ begin
     end;
 
     sDebugSql := sDebugSql+s+';'+chr(10)+chr(10);
-
-//    uStringUtils.CopyToClipboard(s);
-//    DebugMessage(s);
-
 
     ExecutionPlan.AddQuery(s);
 //
@@ -2421,7 +2236,6 @@ begin
 
 
     copytoclipboard(sDebugSql);
-//    debugMessage(sDebugSQL);
 
 
 
@@ -2475,9 +2289,6 @@ begin
       AddInvoicelineData;
       AddGroupInvoiceSumsData;
 
-// kbmRoomsdate_.SortFields := 'Reservation;room';
-// kbmRoomsdate_.Sort([]);
-
       zFirstTime := false;
 
       kbmRoomsdate_.SortFields := 'dtDate';
@@ -2505,12 +2316,10 @@ begin
       kbmInvoicelines_.EnableControls;
     end;
 
-    stopTick         := GetTickCount;
-    SQLms            := stopTick - startTick;
-
   finally
     ExecutionPlan.Free;
   end;
+
   pg001.ApplyBestFit;
 
 end;
@@ -2541,20 +2350,13 @@ var
   StoreName   : string;
 
   TextContainer1   : string;
-  StringContainer1 : string;
-
-  aNewName : string;
-//  notes : string;
 begin
   Store1.StorageStream := TMemoryStream.Create;
   Store1.StoreTo(false);
   Store1.StorageStream.Position := 0;
-//  memo1.text := Bin2Hex(Store1.StorageStream AS TMemoryStream);
   TextContainer1    := Bin2Hex(Store1.StorageStream AS TMemoryStream);
-  StringContainer1  := '';
 
   Description := GetAutoName;
-//  EdlayoutName.text := Description;
   Description := copy(Description,1,254);
 
   if StoreDescriptionExist(Description) then
@@ -2568,7 +2370,6 @@ begin
   FormName    := name;
   StoreType   := 'TcxPivotGridDataLayout';
   StoreName   := 'store1';
-//  Notes := memLayoutNotes.Text;
 
   s := s+ 'INSERT INTO propertiesstore '+#10;
   s := s+ '   (Description '+#10;
@@ -2579,7 +2380,7 @@ begin
   s := s+ '   ,StoreName '+#10;
   s := s+ '   ,TextContainer1 '+#10;
 //  s := s+ '   ,TextContainer2 '+#10;
-  s := s+ '   ,StringContainer1 '+#10;
+//  s := s+ '   ,StringContainer1 '+#10;
   s := s+ ' ) '+#10;
   s := s+ ' VALUES '+#10;
   s := s+ ' ( '+#10;
@@ -2591,7 +2392,7 @@ begin
   s := s+ ' , ' + _db(storeName)+#10;
   s := s+ ' , ' + _db(TextContainer1)+#10;
 //  s := s+ ' , ' + _db(notes)+#10;
-  s := s+ ' , ' + _db(StringContainer1)+#10;
+//  s := s+ ' , ' + _db(StringContainer1)+#10;
   s := s+ ' )';
 
   if not cmd_bySQL(s) then
@@ -2608,7 +2409,6 @@ end;
 
 procedure TfrmRptResStats.btnSetDefaultLayoutClick(Sender: TObject);
 var
-  TextContainer1   : string;
   Description      : string;
   s                : string;
 
@@ -2634,10 +2434,7 @@ begin
   s := s +' (StoreName = '+_db(StoreName)+') '+#10;  // First set all to default
 
 
-  if cmd_bySQL(s) then
-  begin
-  end;
-
+  cmd_bySQL(s);
 
   s := '';
   s := s +' UPDATE propertiesstore '+#10;
@@ -2649,9 +2446,7 @@ begin
   s := s +' (StoreName = '+_db(StoreName)+') AND '+#10;  // First set all to default
   s := s +' (Description = '+_db(Description)+') '+#10;  // First set all to default
 
-  if cmd_bySQL(s) then
-  begin
-  end;
+  cmd_bySQL(s);
 
 end;
 
@@ -2659,13 +2454,7 @@ procedure TfrmRptResStats.LoadLayoutOld(useDefault : boolean);
 var
   s : string;
   Description : string;
-  AccessLevel : integer;
-  AccessOwner : string;
-  FormName    : string;
-  StoreType   : string;
-  StoreName   : string;
   TextContainer1   : string;
-  StringContainer1 : string;
   rSet : TRoomerDataset;
 
   itemindex : integer;
@@ -2714,7 +2503,6 @@ begin
     if rSet_bySQL(rSet,s) then
     begin
       LayoutName := rSet.FieldByName('Description').asstring;
-//    memLayoutNotes.Text := rSet.FieldByName('TextContainer2').Text;
 
       itemindex := cbxSel.Items.IndexOf(LayoutName);
       cbxSel.ItemIndex := itemindex;
@@ -2740,13 +2528,7 @@ procedure TfrmRptResStats.LoadLayout(useDefault : boolean);
 var
   s : string;
   Description : string;
-  AccessLevel : integer;
-  AccessOwner : string;
-  FormName    : string;
-  StoreType   : string;
-  StoreName   : string;
   TextContainer1   : string;
-  StringContainer1 : string;
   rSet : TRoomerDataset;
 
   itemindex : integer;
@@ -2757,7 +2539,6 @@ var
 
 begin
   dril001.SynchronizeData := false;
-  isOld := false;
 
   if useDefault then
   begin
@@ -2820,7 +2601,6 @@ begin
       end;
 
       LayoutName := rSet.FieldByName('Description').asstring;
-//    memLayoutNotes.Text := rSet.FieldByName('TextContainer2').Text;
 
       itemindex := cbxSel.Items.IndexOf(LayoutName);
       cbxSel.ItemIndex := itemindex;
@@ -2846,14 +2626,6 @@ end;
 procedure TfrmRptResStats.GetSel;
 var
   s : string;
-  Description : string;
-  AccessLevel : integer;
-  AccessOwner : string;
-  FormName    : string;
-  StoreType   : string;
-  StoreName   : string;
-  TextContainer1   : string;
-  StringContainer1 : string;
   rSet : TRoomerDataset;
 begin
   s := '';
@@ -2922,21 +2694,15 @@ var
   StoreType   : string;
   StoreName   : string;
 
-  TextContainer1   : string;
-  StringContainer1 : string;
-
-  aNewName : string;
   oldDescription : string;
   sText : string;
-//  notes : string;
+  TextContainer1: string;
 begin
   result := false;
   Store1.StorageStream := TMemoryStream.Create;
   Store1.StoreTo(false);
   Store1.StorageStream.Position := 0;
-//  memo1.text := Bin2Hex(Store1.StorageStream AS TMemoryStream);
   TextContainer1    := Bin2Hex(Store1.StorageStream AS TMemoryStream);
-  StringContainer1  := '';
 
   Description := cbxSel.Items[cbxSel.ItemIndex];
   sText := propertiesstoreGetText(Description);
@@ -2944,7 +2710,6 @@ begin
 
 
   Description := '** '+Description;
-//  EdlayoutName.text := Description;
   Description := copy(Description,1,254);
 
   if StoreDescriptionExist(Description) then
@@ -2958,7 +2723,6 @@ begin
   FormName    := name;
   StoreType   := 'TcxPivotGridDataLayout';
   StoreName   := 'store1';
-//  Notes := memLayoutNotes.Text;
 
   s := s+ 'INSERT INTO propertiesstore '+#10;
   s := s+ '   (Description '+#10;
@@ -2969,7 +2733,7 @@ begin
   s := s+ '   ,StoreName '+#10;
   s := s+ '   ,TextContainer1 '+#10;
 //  s := s+ '   ,TextContainer2 '+#10;
-  s := s+ '   ,StringContainer1 '+#10;
+//  s := s+ '   ,StringContainer1 '+#10;
   s := s+ ' ) '+#10;
   s := s+ ' VALUES '+#10;
   s := s+ ' ( '+#10;
@@ -2981,7 +2745,7 @@ begin
   s := s+ ' , ' + _db(storeName)+#10;
   s := s+ ' , ' + _db(TextContainer1)+#10;
 //  s := s+ ' , ' + _db(notes)+#10;
-  s := s+ ' , ' + _db(StringContainer1)+#10;
+//  s := s+ ' , ' + _db(StringContainer1)+#10;
   s := s+ ' )';
 
   if not cmd_bySQL(s) then
