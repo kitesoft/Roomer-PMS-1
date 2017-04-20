@@ -3784,7 +3784,7 @@ begin
 
         sDate := _db(dtDate.Date, false);
         ClearFreeRooms;
-        FFreeRooms := TFreeRooms.Create(g.qHotelCode, dtDate.Date, zsOccRackRooms);
+        FFreeRooms := TFreeRooms.Create(dtDate.Date, zsOccRackRooms);
 
         OneDayUpdatePage(dtDate.Date);
 

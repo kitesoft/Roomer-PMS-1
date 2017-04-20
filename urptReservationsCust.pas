@@ -703,12 +703,3 @@ end;
 
 end.
 
-
-USE home100_thal
-
-ALTER TABLE `reservations` ADD COLUMN `dtCreated` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP  AFTER `externalIds` ;
-
-UPDATE reservations
-SET `dtCreated`='SELECT reservationdate FROM reservation '+'00:00:00' WHERE ID>0;
-
-
