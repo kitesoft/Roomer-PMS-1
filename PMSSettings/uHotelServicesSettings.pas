@@ -378,7 +378,7 @@ end;
 
 procedure TPostDepartureLCMailSettings.SetPostDepartureMailerEnabled(const Value: boolean);
 begin
-  FHotelServicesAccessor.SetServiceEnabled(cLifeCycleMailerService, cPostDepartureHoursAfter, Value);
+  FHotelServicesAccessor.SetServiceEnabled(cLifeCycleMailerService, cPostDepartureServiceType, Value);
 end;
 
 { THotelServicesSettings }
