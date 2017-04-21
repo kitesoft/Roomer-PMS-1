@@ -13,10 +13,8 @@ object frmCustomerEdit2: TfrmCustomerEdit2
   Font.Style = []
   OldCreateOrder = False
   Position = poMainFormCenter
-  OnClose = FormClose
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
-  OnDestroy = FormDestroy
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
@@ -76,10 +74,6 @@ object frmCustomerEdit2: TfrmCustomerEdit2
     SkinData.SkinSection = 'PAGECONTROL'
     object SheetMain: TsTabSheet
       Caption = 'Customer'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object gbxAddress: TsGroupBox
         Left = 0
         Top = 291
@@ -276,7 +270,6 @@ object frmCustomerEdit2: TfrmCustomerEdit2
           ParentFont = False
           TabOrder = 0
           OnChange = edCustomerChange
-          OnExit = edCustomerExit
           SkinData.SkinSection = 'EDIT'
         end
         object edSurName: TsEdit
@@ -299,8 +292,8 @@ object frmCustomerEdit2: TfrmCustomerEdit2
         object chkActive: TsCheckBox
           Left = 329
           Top = 16
-          Width = 58
-          Height = 17
+          Width = 50
+          Height = 20
           Caption = 'Active'
           TabOrder = 1
           SkinData.SkinSection = 'CHECKBOX'
@@ -321,14 +314,13 @@ object frmCustomerEdit2: TfrmCustomerEdit2
           ParentFont = False
           TabOrder = 2
           OnDblClick = edPIDDblClick
-          OnExit = edCustomerExit
           SkinData.SkinSection = 'EDIT'
         end
         object chkTravelAgency: TsCheckBox
           Left = 329
           Top = 42
-          Width = 97
-          Height = 17
+          Width = 89
+          Height = 20
           Caption = 'Travel Agency'
           TabOrder = 3
           SkinData.SkinSection = 'CHECKBOX'
@@ -825,8 +817,8 @@ object frmCustomerEdit2: TfrmCustomerEdit2
         object chkStayTaxIncluted: TsCheckBox
           Left = 161
           Top = 180
-          Width = 106
-          Height = 17
+          Width = 98
+          Height = 20
           Caption = 'Staytax incluted'
           TabOrder = 5
           SkinData.SkinSection = 'CHECKBOX'
@@ -887,10 +879,6 @@ object frmCustomerEdit2: TfrmCustomerEdit2
     end
     object SheetExtra: TsTabSheet
       Caption = 'More'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object sGroupBox1: TsGroupBox
         Left = 0
         Top = 0
@@ -923,10 +911,6 @@ object frmCustomerEdit2: TfrmCustomerEdit2
     end
     object tabDepartments: TsTabSheet
       Caption = 'Departments'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object sSplitter1: TsSplitter
         Left = 185
         Top = 0
@@ -985,7 +969,7 @@ object frmCustomerEdit2: TfrmCustomerEdit2
           object sLabel6: TsLabel
             Left = 0
             Top = 35
-            Width = 75
+            Width = 185
             Height = 13
             Align = alBottom
             Caption = 'Departments'
@@ -995,6 +979,7 @@ object frmCustomerEdit2: TfrmCustomerEdit2
             Font.Height = -11
             Font.Name = 'Tahoma'
             Font.Style = [fsBold]
+            ExplicitWidth = 75
           end
           object btnAddDepartment: TsButton
             AlignWithMargins = True
@@ -1102,7 +1087,7 @@ object frmCustomerEdit2: TfrmCustomerEdit2
           object sLabel7: TsLabel
             Left = 0
             Top = 35
-            Width = 50
+            Width = 273
             Height = 13
             Align = alBottom
             Caption = 'Contacts'
@@ -1112,6 +1097,7 @@ object frmCustomerEdit2: TfrmCustomerEdit2
             Font.Height = -11
             Font.Name = 'Tahoma'
             Font.Style = [fsBold]
+            ExplicitWidth = 50
           end
           object btnAddContact: TsButton
             AlignWithMargins = True

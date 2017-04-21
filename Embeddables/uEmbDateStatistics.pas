@@ -160,10 +160,10 @@ procedure TfrmEmbDateStatistics.DoLoadData;
    idx: integer;
  begin
   inherited;
-
-   grdRoomClasses.BeginUpdate;
-   grdRoomStates.BeginUpdate;
-   try
+  DisableAlign;
+  grdRoomClasses.BeginUpdate;
+  grdRoomStates.BeginUpdate;
+  try
      FAvailListContainer.Clear;
      grdRoomStates.ColCount := 3;
      grdRoomStates.RowCount := 1;
@@ -222,8 +222,9 @@ procedure TfrmEmbDateStatistics.DoLoadData;
    finally
      grdRoomClasses.EndUpdate;
      grdRoomStates.EndUpdate;
+     EnableAlign;
    end;
- end;
+end;
 
 
 function TfrmEmbDateStatistics.GetDate: TDate;
@@ -246,6 +247,7 @@ end;
 procedure TfrmEmbDateStatistics.SetShowChart(const Value: boolean);
 begin
   chrtRoomStats.Visible := Value;
+  cpnlChart.Collapsed := not Value;
 end;
 
 function TfrmEmbDateStatistics.CountRoomsOfSpecificType(const RoomType: String): integer;

@@ -206,6 +206,7 @@ begin
 
 
 
+  d.roomerMainDataSet.SetTimeZoneComparedToUTC('');
 
   rSet := CreateNewDataSet;
   try
@@ -335,9 +336,9 @@ begin
       s := s+'  AND (rr.room <> '+_db(labRoom.caption)+') ';
     end;
 
+    __cbxRoomSelect.Clear;
     if rSet_bySQL(rSet,s) then
     begin
-      __cbxRoomSelect.Clear;
       __cbxRoomSelect.items.add('None');
       rSet.First;
       while not rSet.eof do
@@ -346,22 +347,18 @@ begin
         rSet.Next;
       end;
       __cbxRoomSelect.ItemIndex := 0;
-      __cbxRoomSelect.visible := __cbxRoomSelect.Items.Count > 2;
     end;
   finally
     freeandnil(rSet);
   end;
+  sGroupBox1.Visible := __cbxRoomSelect.Items.Count > 1;
 
   sPageControl1.ActivePageIndex := 0;
-  if (__cbxRoomSelect.visible=false) and (btnSetToGroupAccount.visible=false) then
+  if (not sGroupBox1.visible) and (not btnSetToGroupAccount.visible) then
   begin
     sTabSheet1.TabVisible := false;
     sPageControl1.ActivePageIndex := 1;
   end;
-
-
-
-
 end;
 
 

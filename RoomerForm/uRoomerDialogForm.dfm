@@ -3,6 +3,7 @@ inherited frmBaseRoomerDialogForm: TfrmBaseRoomerDialogForm
   Caption = 'Base Roomer dialog form'
   ClientHeight = 360
   ClientWidth = 655
+  ParentFont = True
   ExplicitWidth = 661
   ExplicitHeight = 389
   PixelsPerInch = 96
@@ -20,33 +21,53 @@ inherited frmBaseRoomerDialogForm: TfrmBaseRoomerDialogForm
     Height = 43
     Align = alBottom
     Color = 14540253
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = 4013373
-    Font.Height = -9
-    Font.Name = 'Tahoma'
-    Font.Style = []
     ParentBackground = False
-    ParentFont = False
     TabOrder = 1
     SkinData.SkinSection = 'PANEL'
     object btnOK: TsButton
+      AlignWithMargins = True
+      Left = 445
+      Top = 4
+      Width = 100
+      Height = 35
+      Align = alRight
+      Caption = 'OK'
+      Default = True
+      ImageIndex = 82
+      Images = DImages.PngImageList1
+      ModalResult = 1
+      TabOrder = 0
+      SkinData.SkinSection = 'BUTTON'
+      ExplicitTop = 2
+    end
+    object btnCancel: TsButton
       AlignWithMargins = True
       Left = 551
       Top = 4
       Width = 100
       Height = 35
       Align = alRight
-      Caption = 'OK'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = 4013373
-      Font.Height = -9
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      ModalResult = 1
-      ParentFont = False
-      TabOrder = 0
+      Cancel = True
+      Caption = 'Cancel'
+      ImageIndex = 27
+      Images = DImages.PngImageList1
+      ModalResult = 2
+      TabOrder = 1
       SkinData.SkinSection = 'BUTTON'
+      ExplicitTop = 2
     end
+  end
+  inherited psRoomerBase: TcxPropertiesStore
+    Components = <
+      item
+        Component = frmBaseRoomerForm.Owner
+        Properties.Strings = (
+          'Height'
+          'Left'
+          'Top'
+          'Width'
+          'Position')
+      end>
   end
   inherited cxsrRoomerStyleRepository: TcxStyleRepository
     PixelsPerInch = 96

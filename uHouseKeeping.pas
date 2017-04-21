@@ -713,11 +713,12 @@ begin
       s := s+'   rooms  '#10;
       s := s+'     LEFT OUTER JOIN  '#10;
       s := s+'       roomtypes ON rooms.RoomType = roomtypes.RoomType  '#10;
+      s := s+' WHERE  '#10;
+      s := s+'  rooms.active and not rooms.hidden '#10;
 
       if sellocation <> '' then
       begin
-        s := s+' WHERE  '#10;
-        s := s+'    (roomtypes.location in '+sellocation+') OR (rooms.location in '+sellocation+') '#10;
+        s := s+' AND  (roomtypes.location in '+sellocation+') OR (rooms.location in '+sellocation+') '#10;
       end;
       s := s+' ORDER BY Room desc ' ;
 

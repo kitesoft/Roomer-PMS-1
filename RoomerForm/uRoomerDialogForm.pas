@@ -14,14 +14,12 @@ type
   TfrmBaseRoomerDialogForm = class(TfrmBaseRoomerForm)
     pnlButtons: TsPanel;
     btnOK: TsButton;
+    btnCancel: TsButton;
   private
     { Private declarations }
   public
     { Public declarations }
   end;
-
-var
-  frmBaseRoomerDialogForm: TfrmBaseRoomerDialogForm;
 
 implementation
 

@@ -95,19 +95,20 @@
         <Base>true</Base>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base)'!=''">
+        <VerInfo_PreRelease>true</VerInfo_PreRelease>
+        <VerInfo_Debug>true</VerInfo_Debug>
         <DCC_Define>roomerstore;$(DCC_Define)</DCC_Define>
         <Icon_MainIcon>Roomer_Icon1.ico</Icon_MainIcon>
         <Manifest_File>None</Manifest_File>
         <DCC_UnitSearchPath>RoomerVCLs\Source;RoomerVCLs\http;Extras\NativeXml407\nativexml;Extras\NativeXml407\general;RoomerVCLs\Source ;Extras\DragDrop\Source;FastMM;Extras\Skin\AlphaSkins\Components;Extras\OXML\units;Extras\Spring4d\Source;Extras\Spring4d\Source\Base;Extras\Spring4d\Source\Core;Extras\Spring4d\Source\Data;Extras\Spring4d\Source\Data\ObjectDataset;Extras\Spring4d\Source\Base\Collections;Extras\Spring4d\Source\Base\Logging;Extras\Spring4d\Source\Base\Patches;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <DCC_ImageBase>00400000</DCC_ImageBase>
-        <VerInfo_Keys>CompanyName=Promoir BV;FileDescription=Roomer PMS;FileVersion=1.9.6.2;InternalName=;LegalCopyright=(C) 2013, 2014, 2015, 2016, 2017 Promoir BV;LegalTrademarks=Roomer is a Registered Trademark of Promoir BV;OriginalFilename=Roomer.exe;ProductName=Roomer Open Hospitality Platform;ProductVersion=1.9.6.2;Comments=;ExtraBuild=160704;PrivateBuild=</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=Promoir BV;FileDescription=Roomer PMS;FileVersion=1.9.13.0;InternalName=;LegalCopyright=(C) 2013, 2014, 2015, 2016, 2017 Promoir BV;LegalTrademarks=Roomer is a Registered Trademark of Promoir BV;OriginalFilename=Roomer.exe;ProductName=Roomer Open Hospitality Platform;ProductVersion=1.9.13.0;Comments=;ExtraBuild=170410;PrivateBuild=</VerInfo_Keys>
         <VerInfo_Locale>1039</VerInfo_Locale>
         <VerInfo_MinorVer>9</VerInfo_MinorVer>
         <VerInfo_AutoGenVersion>true</VerInfo_AutoGenVersion>
         <DCC_Namespace>Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;System;Xml;Data;Datasnap;Web;Soap;Winapi;VCLTee;Data.Win;System.Win;Bde;FMX;$(DCC_Namespace)</DCC_Namespace>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
-        <VerInfo_Release>6</VerInfo_Release>
-        <VerInfo_Build>2</VerInfo_Build>
+        <VerInfo_Release>13</VerInfo_Release>
         <DCC_StrictVarStrings>false</DCC_StrictVarStrings>
         <DCC_UsePackage>vclx;vcl;vclimg;dbrtl;bdertl;rtl;vclactnband;vcldb;vcltouch;xmlrtl;dsnap;dsnapcon;TeeUI;TeeDB;Tee;vclib;ibxpress;adortl;IndyCore;IndySystem;IndyProtocols;inet;intrawebdb_100_140;Intraweb_100_140;VclSmp;vclie;websnap;webdsnap;inetdb;inetdbbde;inetdbxpress;soaprtl;vclribbon;dbexpress;DbxCommonDriver;DbxClientDriver;DBXInterBaseDriver;DBXMySQLDriver;dbxcds;DBXFirebirdDriver;DBXSybaseASEDriver;DBXSybaseASADriver;DBXOracleDriver;DBXMSSQLDriver;DBXInformixDriver;DBXDb2Driver;tmsexd2010;tmsd2010;FlexCel2010;Vsfd2010;lmdrtl10rt_140;lmdrtlx10rt_140;lmdinspector10rt_140;lmdthemes10rt_140;lmdprint10rt_140;lmdplugin10rt_140;lmdcore10rt_140;lmdgrid10rt_140;lmdtools10rt_140;lmdtoolsdb10rt_140;lmdtxt10rt_140;lmdtxtdb10rt_140;lmdrtf10rt_140;lmdrtfdb10rt_140;lmdshell10rt_140;lmdsys10rt_140;lmdweb10rt_140;lmdsearchdb10rt_140;lmdsearch10rt_140;lmdbar10rt_140;lmdchart10rt_140;lmdchartdb10rt_140;lmdstorage10rt_140;lmdfx10rt_140;lmddocking10rt_140;lmdscriptimp10rt_140;lmdscript10rt_140;lmdsyntax10rt_140;lmddesign10rt_140;lmdide10rt_140;lmdelcore10rt_140;lmdeldb10rt_140;lmdelpro10rt_140;fs14;frx14;fsDB14;frxDB14;fsBDE14;frxBDE14;fsADO14;frxADO14;fsIBX14;frxIBX14;frxDBX14;frxe14;fsTee14;frxTee14;frcd14;fcd14;ipstudiowindataset;ipstudiowin;CPortLib12;dclOfficeXP;kbmMemRunD2010Std;Jcl;JclVcl;JvCoreD14R;JvSystemD14R;JvStdCtrlsD14R;JvAppFrmD14R;JvBandsD14R;JvDBD14R;JvDlgsD14R;JvBDED14R;JvCmpD14R;JvCryptD14R;JvCtrlsD14R;JvCustomD14R;JvDockingD14R;JvDotNetCtrlsD14R;JvEDID14R;JvGlobusD14R;JvHMID14R;JvInterpreterD14R;JvJansD14R;JvManagedThreadsD14R;JvMMD14R;JvNetD14R;JvPageCompsD14R;JvPluginD14R;JvPrintPreviewD14R;JvRuntimeDesignD14R;JvTimeFrameworkD14R;JvValidatorsD14R;JvWizardD14R;JvXPCtrlsD14R;tmsxlsd2010;tmswizd2010;vacommPkgD2010;vcwd2010;TMSASPGRIDD2010;cetoolspkgd2010;advchartd2010;TMSUnicodeD2010;tb2k_d12;S404_r140;S404br140;TSNumbersEdit;SendMail2010;ipstudiowinwordxp;dxCoreD14;cxLibraryD14;dxsbD14;dxComnD14;cxEditorsD14;cxExtEditorsD14;cxPageControlD14;cxBarEditItemD14;dxBarD14;dxBarDBNavD14;dxBarExtDBItemsD14;dxBarExtItemsD14;dxRibbonD14;cxGridD14;cxSchedulerD14;cxSchedulerGridD14;cxTreeListD14;cxTreeListdxBarPopupMenuD14;dxLayoutControlD14;cxVerticalGridD14;dxmdsD14;dxSpellCheckerD14;cxSpreadSheetD14;dxDockingD14;dxNavBarD14;cxPivotGridD14;cxPivotGridChartD14;cxPivotGridOLAPD14;dxdbtrD14;dxtrmdD14;dxorgcD14;dxdborD14;dxFlowChartD14;dcldxSkinsCoreD14;dxSkinsCoreD14;dxSkinscxPCPainterD14;dxSkinscxScheduler3PainterD14;dxSkinsdxBarPainterD14;dxSkinsdxNavBar2PainterD14;dxSkinBlackD14;dxSkinBlueD14;dxSkinCaramelD14;dxSkinCoffeeD14;dxSkinDarkRoomD14;dxSkinDarkSideD14;dxSkinFoggyD14;dxSkinGlassOceansD14;dxSkiniMaginaryD14;dxSkinLilianD14;dxSkinLiquidSkyD14;dxSkinLondonLiquidSkyD14;dxSkinMcSkinD14;dxSkinMoneyTwinsD14;dxSkinOffice2007BlackD14;dxSkinOffice2007BlueD14;dxSkinOffice2007GreenD14;dxSkinOffice2007PinkD14;dxSkinOffice2007SilverD14;dxSkinPumpkinD14;dxSkinsdxDLPainterD14;dxSkinsdxRibbonPainterD14;dxSkinSevenD14;dxSkinSharpD14;dxSkinSilverD14;dxSkinSpringTimeD14;dxSkinStardustD14;dxSkinSummer2008D14;dxSkinValentineD14;dxSkinXmas2008BlueD14;dxPSCoreD14;dxPScxCommonD14;dxPScxExtCommonD14;dxPScxGrid6LnkD14;dxPScxPivotGrid2LnkD14;dxPScxScheduler3LnkD14;dxPScxSSLnkD14;dxPScxTL5LnkD14;dxPScxVGridLnkD14;dxPSTeeChartD14;dxPSdxDBOCLnkD14;dxPSdxDBTVLnkD14;dxPSdxFCLnkD14;dxPSdxLC2LnkD14;dxPSdxOCLnkD14;dxPSLnksD14;dxPSDBTeeChartD14;dxPScxPCProdD14;dxPsPrVwAdvD14;dxPSPrVwRibbonD14;PKIECtrl14;PKIEDB14;TSSUID2010;TSSCoreD2010;Spring;$(DCC_UsePackage)</DCC_UsePackage>
         <DCC_BplOutput>C:\Temp\dcu</DCC_BplOutput>
@@ -130,7 +131,6 @@
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1)'!=''">
         <DCC_ExeOutput>RoomerPMSRelease</DCC_ExeOutput>
-        <VerInfo_Build>0</VerInfo_Build>
         <VerInfo_Keys>CompanyName=Promoir BV;FileDescription=Roomer PMS;FileVersion=1.9.12.0;InternalName=;LegalCopyright=(C) 2013, 2014, 2015, 2016 Promoir BV;LegalTrademarks=Roomer is a Registered Trademark of Promoir BV;OriginalFilename=Roomer.exe;ProductName=Roomer Open Hospitality Platform;ProductVersion=1.9.12.0;Comments=;ExtraBuild=170312;PrivateBuild=</VerInfo_Keys>
         <VerInfo_AutoGenVersion>false</VerInfo_AutoGenVersion>
         <VerInfo_Release>12</VerInfo_Release>
@@ -154,18 +154,17 @@
         <DCC_Define>RELEASE;$(DCC_Define)</DCC_Define>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_4)'!=''">
-        <VerInfo_Build>1</VerInfo_Build>
-        <VerInfo_Keys>CompanyName=Promoir BV;FileDescription=Roomer PMS;FileVersion=1.9.12.1;InternalName=;LegalCopyright=(C) 2013, 2014, 2015, 2016 Promoir BV;LegalTrademarks=Roomer is a Registered Trademark of Promoir BV;OriginalFilename=Roomer.exe;ProductName=Roomer Open Hospitality Platform;ProductVersion=1.9.12.1;Comments=;ExtraBuild=170313;PrivateBuild=</VerInfo_Keys>
-        <VerInfo_Debug>true</VerInfo_Debug>
+        <VerInfo_Release>13</VerInfo_Release>
+        <VerInfo_Keys>CompanyName=Promoir BV;FileDescription=Roomer PMS;FileVersion=1.9.13.0;InternalName=;LegalCopyright=(C) 2013, 2014, 2015, 2016 Promoir BV;LegalTrademarks=Roomer is a Registered Trademark of Promoir BV;OriginalFilename=Roomer.exe;ProductName=Roomer Open Hospitality Platform;ProductVersion=1.9.13.0;Comments=;ExtraBuild=170410;PrivateBuild=</VerInfo_Keys>
         <DCC_ExeOutput>RoomerPMSRelease</DCC_ExeOutput>
         <DCC_DcpOutput>_dcu</DCC_DcpOutput>
-        <DCC_DcuOutput>_dcu</DCC_DcuOutput>
+        <DCC_DcuOutput>_dcu\release</DCC_DcuOutput>
         <DCC_DebugInformation>false</DCC_DebugInformation>
         <DCC_AssertionsAtRuntime>false</DCC_AssertionsAtRuntime>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_4_Win32)'!=''">
         <VerInfo_Debug>false</VerInfo_Debug>
-        <VerInfo_Keys>CompanyName=Promoir BV;FileDescription=Roomer PMS;FileVersion=1.9.12.1;InternalName=;LegalCopyright=(C) 2013, 2014, 2015, 2016, 2017 Promoir BV;LegalTrademarks=Roomer is a Registered Trademark of Promoir BV;OriginalFilename=Roomer.exe;ProductName=Roomer Open Hospitality Platform;ProductVersion=1.9.12.1;Comments=;ExtraBuild=170314</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=Promoir BV;FileDescription=Roomer PMS;FileVersion=1.9.13.0;InternalName=;LegalCopyright=(C) 2013, 2014, 2015, 2016, 2017 Promoir BV;LegalTrademarks=Roomer is a Registered Trademark of Promoir BV;OriginalFilename=Roomer.exe;ProductName=Roomer Open Hospitality Platform;ProductVersion=1.9.13.0;Comments=;ExtraBuild=170419a</VerInfo_Keys>
         <Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
@@ -201,14 +200,11 @@
         <DCC_Define>Debug;$(DCC_Define)</DCC_Define>
         <DCC_DcpOutput>_dcu</DCC_DcpOutput>
         <DCC_ExeOutput>_bin\$(Platform)</DCC_ExeOutput>
-        <DCC_DcuOutput>_dcu</DCC_DcuOutput>
+        <DCC_DcuOutput>_dcu\debug</DCC_DcuOutput>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_3_Win32)'!=''">
         <DCC_DebugDCUs>true</DCC_DebugDCUs>
         <DCC_BplOutput> </DCC_BplOutput>
-        <VerInfo_Debug>true</VerInfo_Debug>
-        <VerInfo_PreRelease>true</VerInfo_PreRelease>
-        <VerInfo_Build>0</VerInfo_Build>
         <VerInfo_MinorVer>0</VerInfo_MinorVer>
         <VerInfo_MajorVer>2</VerInfo_MajorVer>
         <VerInfo_Release>0</VerInfo_Release>
@@ -223,11 +219,8 @@
         <DCC_GenerateStackFrames>true</DCC_GenerateStackFrames>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_5_Win32)'!=''">
-        <VerInfo_PreRelease>true</VerInfo_PreRelease>
         <VerInfo_MinorVer>0</VerInfo_MinorVer>
-        <VerInfo_Debug>true</VerInfo_Debug>
         <VerInfo_MajorVer>2</VerInfo_MajorVer>
-        <VerInfo_Build>0</VerInfo_Build>
         <VerInfo_Release>0</VerInfo_Release>
         <VerInfo_Keys>CompanyName=Promoir BV;FileDescription=Roomer PMS;FileVersion=2.0.0.0;InternalName=;LegalCopyright=(C) 2013, 2014, 2015, 2016 Promoir BV;LegalTrademarks=Roomer is a Registered Trademark of Promoir BV;OriginalFilename=Roomer.exe;ProductName=Roomer Open Hospitality Platform;ProductVersion=2.0.0.0;Comments=;ExtraBuild=160628;PrivateBuild=</VerInfo_Keys>
         <Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
@@ -667,8 +660,8 @@
             <Form>FrmReservationEmailingDialog</Form>
         </DCCReference>
         <DCCReference Include="uTemplateFiller.pas"/>
-        <DCCReference Include="uFrmEditEmailProperties.pas">
-            <Form>FrmEditEmailProperties</Form>
+        <DCCReference Include="Resources\uFrmEditResourceProperties.pas">
+            <Form>FrmEditResourceProperties</Form>
         </DCCReference>
         <DCCReference Include="uFrmReservationCancellationDialog.pas">
             <Form>FrmReservationCancellationDialog</Form>
@@ -701,15 +694,15 @@
         <DCCReference Include="uFrmMergePortfolios.pas">
             <Form>frmMergePortfolios</Form>
         </DCCReference>
-        <DCCReference Include="uStaffCommunication.pas"/>
-        <DCCReference Include="uStaffComm.pas">
+        <DCCReference Include="StaffCommunication\uStaffCommunication.pas"/>
+        <DCCReference Include="StaffCommunication\uStaffComm.pas">
             <Form>frmStaffComm</Form>
         </DCCReference>
         <DCCReference Include="uDynamicRates.pas"/>
         <DCCReference Include="uFrmCheckOut.pas">
             <Form>FrmCheckOut</Form>
         </DCCReference>
-        <DCCReference Include="uFrmStaffNote.pas">
+        <DCCReference Include="StaffCommunication\uFrmStaffNote.pas">
             <Form>FrmStaffNote</Form>
         </DCCReference>
         <DCCReference Include="uFrmMessageViewer.pas">
@@ -864,6 +857,15 @@
         <DCCReference Include="OpenAPI\uBookingsRunningTabAPICaller.pas"/>
         <DCCReference Include="Invoice\uRunningTabInvoiceViewAdapter.pas"/>
         <DCCReference Include="RoomerUtils\uExceptionUtils.pas"/>
+        <DCCReference Include="Definitions\uStaffCommunicationDefinitions.pas"/>
+        <DCCReference Include="Resources\uResourceTypeDefinitions.pas"/>
+        <DCCReference Include="PMSSettings\uHotelServicesSettings.pas"/>
+        <DCCReference Include="RoomerForm\uRoomerGridForm.pas">
+            <Form>frmBaseRoomerGridForm</Form>
+        </DCCReference>
+        <DCCReference Include="uEditFinanceExportProperties.pas">
+            <Form>frmEditFinanceExportProperties</Form>
+        </DCCReference>
         <None Include="Roomer.todo"/>
         <None Include="notes.txt"/>
         <None Include="Roomer.inc"/>

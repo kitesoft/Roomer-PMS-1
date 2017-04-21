@@ -40,8 +40,6 @@ type
     FUpdatingControls: boolean;
     FUpdatingData: boolean;
     FProgressBar: TAdvSmoothProgressBar;
-    procedure KeepOnVisibleMonitor;
-    procedure LoadData;
     function GetStateTextPanel: TStatusPanel;
     function GetBusyState: TRoomerFormBusyState;
     procedure SetBusyState(const Value: TRoomerFormBusyState);
@@ -62,6 +60,7 @@ type
     ///   (Re)load data needed to display in the form
     /// </summary>
     procedure DoLoadData; virtual;
+    procedure LoadData;
     property UpdatingData: boolean read FUpdatingData;
     property StateTextPanel: TStatusPanel read GetStateTextPanel;
     property ProgressBar: TAdvSmoothProgressBar read FProgressBar;
@@ -119,7 +118,6 @@ begin
   glb.PerformAuthenticationAssertion(self);
 
   FCloseOnEsc := True;
-
 end;
 
 
@@ -131,8 +129,9 @@ end;
 procedure TfrmBaseRoomerForm.DoShow;
 begin
   inherited; // Calls ShowForm event handler
-  KeepOnVisibleMonitor;
+  PlaceFormOnVisibleMonitor(Self);
   UpdateControls;
+  BusyState := fsIdle;
 end;
 
 procedure TfrmBaseRoomerForm.DoUpdateControls;
@@ -156,25 +155,6 @@ begin
   if FCloseOnEsc and (Key = VK_ESCAPE) then
     Close;
 end;
-
-procedure TfrmBaseRoomerForm.KeepOnVisibleMonitor;
-var
-  lMonitor: TMonitor;
-const
-  MoveWinThreshold: Byte = 80;
-begin
-  // 2. Detect the relevant monitor object
-  lMonitor := Screen.MonitorFromWindow(Self.Handle);
-  // 3. Now ensure the just positioned window is visible to the user
-  // 3.a. Set minimal visible width
-  if Left > lMonitor.Left + lMonitor.Width - MoveWinThreshold then
-    Left := lMonitor.Left + lMonitor.Width - MoveWinThreshold;
-  // 3.b. Set minimal visible height
-  if Top > lMonitor.Top + lMonitor.Height - MoveWinThreshold then
-    Top := lMonitor.Top + lMonitor.Height - MoveWinThreshold;
-
-end;
-
 
 procedure TfrmBaseRoomerForm.LoadData;
 var
@@ -201,7 +181,6 @@ procedure TfrmBaseRoomerForm.Loaded;
 begin
   psRoomerBase.StorageName := 'Software\Roomer\FormStatus\' + classname;
   inherited;
-  BusyState := fsIdle;
 end;
 
 procedure TfrmBaseRoomerForm.RefreshData;

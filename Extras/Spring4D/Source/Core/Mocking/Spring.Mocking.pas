@@ -2,7 +2,7 @@
 {                                                                           }
 {           Spring Framework for Delphi                                     }
 {                                                                           }
-{           Copyright (c) 2009-2016 Spring4D Team                           }
+{           Copyright (c) 2009-2017 Spring4D Team                           }
 {                                                                           }
 {           http://www.spring4d.org                                         }
 {                                                                           }
@@ -249,6 +249,8 @@ type
     function GetCompleted: Boolean;
   public
     class operator Implicit(const value: MockSequence): IMockSequence;
+
+    procedure Reset;
     property Completed: Boolean read GetCompleted;
   end;
 
@@ -526,6 +528,11 @@ class operator MockSequence.Implicit(const value: MockSequence): IMockSequence;
 begin
   value.EnsureInitialized;
   Result := value.fSequence;
+end;
+
+procedure MockSequence.Reset;
+begin
+  fSequence := nil;
 end;
 
 {$ENDREGION}

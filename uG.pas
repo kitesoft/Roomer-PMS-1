@@ -296,7 +296,6 @@ type
     qRoomRentItem : string;
     qDiscountItem : string;
     qStayTaxItem : string;
-    qStayTaxPerPerson : Boolean;
 
     qLocalRoomRent : string;
     qGreenColor : string;
@@ -429,9 +428,6 @@ type
     function OpenChangeRate(var Rate : double; Currency : string) : boolean;
 
     function openGoToRoomAndDate(var aRoom : string; var aDate : TDate) : boolean;
-
-    function OpenOpenInvoicesNew : boolean;
-
 
     function openHiddenInfo(Refrence, RefrenceType : integer): boolean;
 
@@ -820,7 +816,6 @@ begin
     qPaymentItem := '';
     qRoomRentItem := '';
     qStayTaxItem := '';
-    qStayTaxPerPerson := False;
 
     qDiscountItem := '';
 
@@ -1253,31 +1248,6 @@ begin
   end;
 end;
 
-
-
-function TGlobalApplication.OpenOpenInvoicesNew : boolean;
-begin
-  result := false;
-
-  Application.CreateForm(TfrmOpenInvoicesNew, frmOpenInvoicesNew);
-//  frmOpenInvoicesNew := TfrmOpenInvoicesNew.Create(Application);
-  try
-    // frmHotelInfo.zCode := Code;
-    frmOpenInvoicesNew.ShowModal;
-    if frmOpenInvoicesNew.modalresult = mrOk then
-    begin
-      result := true;
-      // Code := frmZipCodes.zCode;
-    end
-    else
-    begin
-      // Code := '';
-    end;
-  finally
-    frmOpenInvoicesNew.Free;
-  end;
-
-end;
 
 function TGlobalApplication.ChangeLang(newLangId : integer; doUpdate : boolean=true) : boolean;
 begin

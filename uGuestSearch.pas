@@ -405,7 +405,7 @@ begin
     Fields := s;
 
     s := '';
-    s := s+' SELECT '#10;
+    s := s+' SELECT DISTINCT '#10;
     s := s+'    `persons`.RoomReservation '#10;
     s := s+' ,  `persons`.Reservation '#10;
     s := s+' ,  `persons`.Country '#10;
@@ -423,7 +423,7 @@ begin
     s := s+'   persons '#10;
     s := s+'      INNER JOIN `roomreservations` ON `persons`.RoomReservation = `roomreservations`.RoomReservation '#10;
     s := s+'      INNER JOIN `reservations` ON `roomreservations`.Reservation = `reservations`.Reservation '#10;
-    s := s+'      INNER JOIN `customers` ON `reservations`.Customer = `customers`.Customer '#10;
+    s := s+'      INNER JOIN `customers` ON `reservations`.Customer = `customers`.Customer and customers.active'#10;
     s := s+' WHERE `persons`.RoomReservation > 0 '#10;
 
     if trim(edText.text) <> '' then

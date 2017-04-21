@@ -174,7 +174,7 @@ uses
   uRptBookkeeping in 'uRptBookkeeping.pas' {frmRptBookkeeping},
   uReservationEmailingDialog in 'uReservationEmailingDialog.pas' {FrmReservationEmailingDialog},
   uTemplateFiller in 'uTemplateFiller.pas',
-  uFrmEditEmailProperties in 'uFrmEditEmailProperties.pas' {FrmEditEmailProperties},
+  uFrmEditResourceProperties in 'Resources\uFrmEditResourceProperties.pas' {FrmEditResourceProperties},
   uFrmReservationCancellationDialog in 'uFrmReservationCancellationDialog.pas' {FrmReservationCancellationDialog},
   uGridUtils in 'uGridUtils.pas',
   uRptCashier in 'uRptCashier.pas' {frmRptCashier},
@@ -190,11 +190,11 @@ uses
   uInvoiceContainer in 'uInvoiceContainer.pas',
   XmlUtils in 'RoomerUtils\XmlUtils.pas',
   uFrmMergePortfolios in 'uFrmMergePortfolios.pas' {frmMergePortfolios},
-  uStaffCommunication in 'uStaffCommunication.pas',
-  uStaffComm in 'uStaffComm.pas' {frmStaffComm},
+  uStaffCommunication in 'StaffCommunication\uStaffCommunication.pas',
+  uStaffComm in 'StaffCommunication\uStaffComm.pas' {frmStaffComm},
   uDynamicRates in 'uDynamicRates.pas',
   uFrmCheckOut in 'uFrmCheckOut.pas' {FrmCheckOut},
-  uFrmStaffNote in 'uFrmStaffNote.pas' {FrmStaffNote},
+  uFrmStaffNote in 'StaffCommunication\uFrmStaffNote.pas' {FrmStaffNote},
   uFrmMessageViewer in 'uFrmMessageViewer.pas' {FrmMessageViewer},
   uInvoiceCompare in 'uInvoiceCompare.pas' {frmInvoiceCompare},
   uAlerts in 'Alerts\uAlerts.pas',
@@ -284,7 +284,12 @@ uses
   RoomerBookingCommunicationModel_RequestsResponses in 'OpenAPI\schema\RoomerBookingCommunicationModel_RequestsResponses.pas',
   uBookingsRunningTabAPICaller in 'OpenAPI\uBookingsRunningTabAPICaller.pas',
   uRunningTabInvoiceViewAdapter in 'Invoice\uRunningTabInvoiceViewAdapter.pas',
-  uExceptionUtils in 'RoomerUtils\uExceptionUtils.pas';
+  uExceptionUtils in 'RoomerUtils\uExceptionUtils.pas',
+  uStaffCommunicationDefinitions in 'Definitions\uStaffCommunicationDefinitions.pas',
+  uResourceTypeDefinitions in 'Resources\uResourceTypeDefinitions.pas',
+  uHotelServicesSettings in 'PMSSettings\uHotelServicesSettings.pas',
+  uRoomerGridForm in 'RoomerForm\uRoomerGridForm.pas',
+  uEditFinanceExportProperties in 'uEditFinanceExportProperties.pas' {frmEditFinanceExportProperties};
 
 {$R *.RES}
 
@@ -314,7 +319,7 @@ begin
     TSplashFormManager.Show;
 
     Application.CreateForm(TD, D);
-    D.ApplicationId := cOpenAPIApplicationID;
+  D.ApplicationId := cOpenAPIApplicationID;
 
     Application.CreateForm(TDReportData, DReportData);
     TSplashFormManager.UpdateProgress('Loading forms...');

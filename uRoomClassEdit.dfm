@@ -73,8 +73,6 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
     TabOrder = 1
     TabWidth = 100
     SkinData.SkinSection = 'PAGECONTROL'
-    ExplicitLeft = 2
-    ExplicitTop = 3
     object sTabSheet1: TsTabSheet
       Caption = 'Main'
       TabSkin = 'TRANSPARENT'
@@ -233,16 +231,18 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
           Font.Style = []
         end
         object edtCode: TsEdit
-          Left = 227
+          Left = 226
           Top = 36
           Width = 113
           Height = 21
+          CharCase = ecUpperCase
           Color = clWhite
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
+          MaxLength = 10
           ParentFont = False
           TabOrder = 1
           OnChange = edtTopClassChange
@@ -752,6 +752,10 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
     end
     object sTabSheet2: TsTabSheet
       Caption = 'Default values'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object sGroupBox1: TsGroupBox
         AlignWithMargins = True
         Left = 0
@@ -1218,8 +1222,8 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
     end
     object sTabSheet3: TsTabSheet
       Caption = 'Master rate'
-      ExplicitLeft = 1
-      ExplicitTop = 29
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object sGroupBox4: TsGroupBox
         AlignWithMargins = True
         Left = 0

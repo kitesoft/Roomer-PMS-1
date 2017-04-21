@@ -170,7 +170,7 @@ uses uMultiSelection,
      uRoomerLanguage,
      uFrmResources,
      uResourceManagement
-     ;
+     , uResourceTypeDefinitions;
 
 function openRoomTypeGroupEdit(var theData : recRoomTypeGroupHolder; isInsert : boolean; Rate_Plan_Types : TStrings) : boolean;
 var
@@ -274,9 +274,7 @@ procedure TFrmRoomClassEdit.sButton1Click(Sender: TObject);
 var ResourceParameters : TImageResourceParameters;
 begin
   ResourceParameters := TImageResourceParameters.Create(540, -1, clWhite);
-  StaticResources('Room class Images',
-        format(ROOM_CLASS_IMAGES_STATIC_RESOURCE_PATTERN, [edtCode.Text]),
-        ACCESS_OPEN, ResourceParameters);
+  StaticResources('Room class Images', [TResourceType.rtRoomClassImage], TResourceAccessType.ratOpen, edtCode.Text);
 end;
 
 procedure TFrmRoomClassEdit.sSpeedButton10Click(Sender: TObject);

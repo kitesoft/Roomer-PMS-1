@@ -974,6 +974,7 @@ var
 
     ContactName   := copy(FHomeCustomer.ContactPerson,1,100);
     ContactPhone  := copy(FHomeCustomer.ContactPhone,1,30);
+    ContactPhone2 := copy(FHomeCustomer.ContactMobile,1,30);
     ContactFax    := copy(FHomeCustomer.ContactFax,1,30);
     ContactEmail  := copy(FHomeCustomer.ContactEmail,1,50);
     CustPID       := copy(FHomeCustomer.PID,1,15);
@@ -1459,8 +1460,8 @@ begin
             personData.Country := Country;
           end;
 
-          personData.Tel2 := ContactPhone;
-          personData.Tel1 := ContactPhone2;
+          personData.Tel1 := ContactPhone;
+          personData.Tel2 := ContactPhone2;
           personData.Email := ContactEmail;
 
           personData.Company := GuestCompany;

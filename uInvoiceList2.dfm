@@ -15,6 +15,7 @@ inherited frmInvoiceList2: TfrmInvoiceList2
   inherited sbStatusBar: TsStatusBar
     Top = 596
     Width = 1133
+    OnDrawPanel = nil
     ExplicitTop = 596
     ExplicitWidth = 1133
   end
@@ -269,11 +270,12 @@ inherited frmInvoiceList2: TfrmInvoiceList2
         Font.Style = []
         ParentFont = False
         TabOrder = 11
+        Text = '100'
         OnChange = edLastCountChange
         SkinData.SkinSection = 'EDIT'
-        MaxValue = 99
+        MaxValue = 0
         MinValue = 1
-        Value = 0
+        Value = 100
       end
       object edtInvoiceFrom: TsSpinEdit
         Left = 146
@@ -388,7 +390,7 @@ inherited frmInvoiceList2: TfrmInvoiceList2
         OnClick = btnViewInvoiceClick
         SkinData.SkinSection = 'BUTTON'
       end
-      object sButton1: TsButton
+      object btnPrint: TsButton
         AlignWithMargins = True
         Left = 427
         Top = 3
@@ -399,10 +401,10 @@ inherited frmInvoiceList2: TfrmInvoiceList2
         ImageIndex = 3
         Images = DImages.PngImageList1
         TabOrder = 4
-        OnClick = sButton1Click
+        OnClick = btnPrintClick
         SkinData.SkinSection = 'BUTTON'
       end
-      object sButton2: TsButton
+      object btnBestFit: TsButton
         AlignWithMargins = True
         Left = 533
         Top = 3
@@ -412,7 +414,7 @@ inherited frmInvoiceList2: TfrmInvoiceList2
         Caption = 'Best fit'
         Images = DImages.PngImageList1
         TabOrder = 5
-        OnClick = sButton2Click
+        OnClick = btnBestFitClick
         SkinData.SkinSection = 'BUTTON'
       end
       object LMDButton1: TsButton
@@ -432,7 +434,7 @@ inherited frmInvoiceList2: TfrmInvoiceList2
       end
     end
   end
-  object sPanel1: TsPanel [2]
+  object pnlFilter: TsPanel [2]
     Left = 0
     Top = 183
     Width = 1133
@@ -505,7 +507,7 @@ inherited frmInvoiceList2: TfrmInvoiceList2
       Navigator.InfoPanel.Visible = True
       Navigator.Visible = True
       FilterBox.Visible = fvNever
-      OnEditing = tvInvoiceHeadEditing
+      OnCellClick = tvInvoiceHeadCellClick
       OnSelectionChanged = tvInvoiceHeadSelectionChanged
       DataController.DataSource = mDS
       DataController.Summary.DefaultGroupSummaryItems = <>
@@ -590,8 +592,8 @@ inherited frmInvoiceList2: TfrmInvoiceList2
       object tvInvoiceHeadexternalInvoiceId: TcxGridDBBandedColumn
         Caption = 'External #'
         DataBinding.FieldName = 'externalInvoiceId'
-        OnGetDisplayText = tvInvoiceHeadexternalInvoiceIdGetDisplayText
-        Width = 54
+        Options.Editing = False
+        Width = 63
         Position.BandIndex = 1
         Position.ColIndex = 0
         Position.RowIndex = 0
@@ -654,7 +656,17 @@ inherited frmInvoiceList2: TfrmInvoiceList2
         PropertiesClassName = 'TcxCurrencyEditProperties'
         OnGetProperties = tvInvoiceHeadLocalAmountGetProperties
         Options.Editing = False
-        Width = 104
+        Width = 95
+        Position.BandIndex = 1
+        Position.ColIndex = 2
+        Position.RowIndex = 0
+      end
+      object tvInvoiceHeadexportAllowed: TcxGridDBBandedColumn
+        Caption = 'Exportable'
+        DataBinding.FieldName = 'exportAllowed'
+        PropertiesClassName = 'TcxCheckBoxProperties'
+        Options.Editing = False
+        Width = 63
         Position.BandIndex = 1
         Position.ColIndex = 1
         Position.RowIndex = 0
@@ -665,9 +677,9 @@ inherited frmInvoiceList2: TfrmInvoiceList2
         PropertiesClassName = 'TcxCurrencyEditProperties'
         OnGetProperties = tvInvoiceHeadLocalAmountGetProperties
         Options.Editing = False
-        Width = 109
+        Width = 100
         Position.BandIndex = 1
-        Position.ColIndex = 2
+        Position.ColIndex = 3
         Position.RowIndex = 0
       end
       object tvInvoiceHeadLocalVAT: TcxGridDBBandedColumn
@@ -676,9 +688,9 @@ inherited frmInvoiceList2: TfrmInvoiceList2
         PropertiesClassName = 'TcxCurrencyEditProperties'
         OnGetProperties = tvInvoiceHeadLocalAmountGetProperties
         Options.Editing = False
-        Width = 73
+        Width = 67
         Position.BandIndex = 1
-        Position.ColIndex = 3
+        Position.ColIndex = 4
         Position.RowIndex = 0
       end
       object tvInvoiceHeadAmount: TcxGridDBBandedColumn
@@ -686,9 +698,9 @@ inherited frmInvoiceList2: TfrmInvoiceList2
         PropertiesClassName = 'TcxCurrencyEditProperties'
         OnGetProperties = tvInvoiceHeadAmountGetProperties
         Options.Editing = False
-        Width = 67
+        Width = 61
         Position.BandIndex = 1
-        Position.ColIndex = 4
+        Position.ColIndex = 5
         Position.RowIndex = 0
       end
       object tvInvoiceHeadWithOutVAT: TcxGridDBBandedColumn
@@ -697,9 +709,9 @@ inherited frmInvoiceList2: TfrmInvoiceList2
         PropertiesClassName = 'TcxCurrencyEditProperties'
         OnGetProperties = tvInvoiceHeadWithOutVATGetProperties
         Options.Editing = False
-        Width = 78
+        Width = 71
         Position.BandIndex = 1
-        Position.ColIndex = 5
+        Position.ColIndex = 6
         Position.RowIndex = 0
       end
       object tvInvoiceHeadVAT: TcxGridDBBandedColumn
@@ -707,9 +719,9 @@ inherited frmInvoiceList2: TfrmInvoiceList2
         PropertiesClassName = 'TcxCurrencyEditProperties'
         OnGetProperties = tvInvoiceHeadVATGetProperties
         Options.Editing = False
-        Width = 35
+        Width = 31
         Position.BandIndex = 1
-        Position.ColIndex = 6
+        Position.ColIndex = 7
         Position.RowIndex = 0
       end
       object tvInvoiceHeadTaxes: TcxGridDBBandedColumn
@@ -717,54 +729,54 @@ inherited frmInvoiceList2: TfrmInvoiceList2
         PropertiesClassName = 'TcxCurrencyEditProperties'
         OnGetProperties = tvInvoiceHeadTaxesGetProperties
         Options.Editing = False
-        Width = 40
+        Width = 38
         Position.BandIndex = 1
-        Position.ColIndex = 7
+        Position.ColIndex = 8
         Position.RowIndex = 0
       end
       object tvInvoiceHeadpaytypes: TcxGridDBBandedColumn
         Caption = 'Pay types'
         DataBinding.FieldName = 'paytypes'
         Options.Editing = False
-        Width = 86
+        Width = 79
         Position.BandIndex = 1
-        Position.ColIndex = 12
+        Position.ColIndex = 13
         Position.RowIndex = 0
       end
       object tvInvoiceHeadpayments: TcxGridDBBandedColumn
         Caption = 'Paid amounts'
         DataBinding.FieldName = 'payments'
         Options.Editing = False
-        Width = 77
+        Width = 70
         Position.BandIndex = 1
-        Position.ColIndex = 13
+        Position.ColIndex = 14
         Position.RowIndex = 0
       end
       object tvInvoiceHeadTaxunits: TcxGridDBBandedColumn
         Caption = 'Tax units'
         DataBinding.FieldName = 'Taxunits'
         Options.Editing = False
-        Width = 37
+        Width = 33
         Position.BandIndex = 1
-        Position.ColIndex = 8
+        Position.ColIndex = 9
         Position.RowIndex = 0
       end
       object tvInvoiceHeadCurrency: TcxGridDBBandedColumn
         Caption = 'Curr.'
         DataBinding.FieldName = 'Currency'
         Options.Editing = False
-        Width = 39
+        Width = 36
         Position.BandIndex = 1
-        Position.ColIndex = 9
+        Position.ColIndex = 10
         Position.RowIndex = 0
       end
       object tvInvoiceHeadCurrencyRate: TcxGridDBBandedColumn
         Caption = 'Rate'
         DataBinding.FieldName = 'CurrencyRate'
         Options.Editing = False
-        Width = 40
+        Width = 37
         Position.BandIndex = 1
-        Position.ColIndex = 10
+        Position.ColIndex = 11
         Position.RowIndex = 0
       end
       object tvInvoiceHeadCurrencyAmount: TcxGridDBBandedColumn
@@ -773,9 +785,9 @@ inherited frmInvoiceList2: TfrmInvoiceList2
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00;-,0.00'
         Options.Editing = False
-        Width = 56
+        Width = 51
         Position.BandIndex = 1
-        Position.ColIndex = 11
+        Position.ColIndex = 12
         Position.RowIndex = 0
       end
       object tvInvoiceHeadRoomGuest: TcxGridDBBandedColumn
@@ -1079,6 +1091,10 @@ inherited frmInvoiceList2: TfrmInvoiceList2
         Name = 'payments'
         DataType = ftWideString
         Size = 200
+      end
+      item
+        Name = 'exportAllowed'
+        DataType = ftBoolean
       end>
     IndexDefs = <>
     SortOptions = []
@@ -1109,6 +1125,10 @@ inherited frmInvoiceList2: TfrmInvoiceList2
     object mnuExportability: TMenuItem
       Caption = 'Toggle exportability of selected invoices'
       OnClick = mnuExportabilityClick
+    end
+    object mnuEditFinExportProp: TMenuItem
+      Caption = 'Edit finance export properties'
+      OnClick = mnuEditFinExportPropClick
     end
   end
 end

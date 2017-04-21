@@ -353,6 +353,7 @@ type
     procedure btnRefreshPivStatusClick(Sender: TObject);
     procedure Panel10DblClick(Sender: TObject);
     procedure timRefreshTimer(Sender: TObject);
+    procedure FormActivate(Sender: TObject);
   private
     zDaysToShow : integer;
     zLeftIsExpand : boolean;
@@ -364,7 +365,6 @@ type
 
   public
     { Public declarations }
-    lastDate : Tdate;
     activeTab : integer;
 
     function xDoLog(theAction, theText : string) : string;
@@ -407,9 +407,6 @@ begin
   RoomerLanguage.TranslateThisForm(self);
   pageMain.ActivePageIndex := 0;
 
-  edCurrentDate.text := dateToStr(frmMain.dtdate.Date);
-  lastDate := frmMain.dtDate.date;
-
   edDaysToShow.Value := 2;
   zDaysToShow := 2;
   zLeftIsExpand := false;
@@ -419,6 +416,8 @@ end;
 
 procedure TfrmDayNotes.FormShow(Sender : TObject);
 begin
+  // When form is created (in .dpr) Language has not yet been activated
+  RoomerLanguage.TranslateThisForm(self);
   if activeTab <> -1  then
      pageMain.ActivePageIndex := activeTab;
 
@@ -739,6 +738,16 @@ begin
   memlog.Text := ss;
 end;
 
+procedure TfrmDayNotes.FormActivate(Sender: TObject);
+begin
+  if edCurrentDate.text <> dateToStr(frmMain.dtdate.Date) then
+  begin
+    edCurrentDate.text := dateToStr(frmMain.dtdate.Date);
+  end
+  else
+    edCurrentDateChange(nil);
+end;
+
 procedure TfrmDayNotes.FormatLog;
 var
   s : string;
@@ -905,7 +914,6 @@ end;
 
 procedure TfrmDayNotes.RefreshRoomStatus;
 begin
-
   if (pageMain.ActivePage <> tabStatus) or (NOT Showing)  then
     exit;
 
@@ -934,22 +942,21 @@ begin
   s := s+'        WHERE rooms.Active=1 AND rooms.RoomType=roomtypes.RoomType) - '#10;
   s := s+'       (SELECT COUNT(*) '#10;
   s := s+'        FROM roomsdate '#10;
-  s := s+'           LEFT JOIN roomreservations ON roomreservations.roomreservation=roomsdate.roomreservation '#10;
+  s := s+'        LEFT JOIN roomreservations ON roomreservations.roomreservation=roomsdate.roomreservation '#10;
   s := s+'        WHERE roomsdate.RoomType=roomtypes.RoomType '#10;
-  s := s+'        AND roomsdate.ADate=predefineddates.date '#10;
-  s := s+'        AND ((NOT control.ExcluteWaitingList) OR roomreservations.Status<>'+quotedStr('O')+') '#10;
-  s := s+'        AND ((NOT control.ExcludeWaitingListNonOptional) OR roomreservations.Status<>'+quotedStr('L')+') '#10;
-  s := s+'        AND ((NOT control.ExcluteAllotment) OR roomreservations.Status<>'+quotedStr('A')+') '#10;
-  s := s+'        AND ((NOT control.ExcluteOrder) OR roomreservations.Status<>'+quotedStr('P')+') '#10;
-  s := s+'        AND ((NOT control.ExcluteDeparted) OR roomreservations.Status<>'+quotedStr(STATUS_CHECKED_OUT)+') '#10;
-  s := s+'        AND ((NOT control.ExcluteGuest) OR roomreservations.Status<>'+quotedStr('G')+') '#10;
-  s := s+'        AND ((NOT control.ExcluteBlocked) OR roomreservations.Status<>'+quotedStr('B')+') '#10;
-  s := s+'        AND ((NOT control.ExcluteNoShow) OR roomreservations.Status<>'+quotedStr('N')+') '#10;
-  s := s+'        AND (roomreservations.Status<>'+quotedStr('C')+') '#10;
-  s := s+'        AND (roomsdate.ResFlag<>'+quotedStr('X')+') '#10;
-  s := s+'        ) AS available '#10;
+  s := s+'              AND roomsdate.ADate=predefineddates.date '#10;
+  s := s+'              AND ((NOT control.ExcluteWaitingList) OR roomsdate.ResFlag <>'+quotedStr('O')+') '#10;
+  s := s+'              AND ((NOT control.ExcludeWaitingListNonOptional) OR roomsdate.ResFlag <>'+quotedStr('L')+') '#10;
+  s := s+'              AND ((NOT control.ExcluteAllotment) OR roomsdate.ResFlag <>'+quotedStr('A')+') '#10;
+  s := s+'              AND ((NOT control.ExcluteOrder) OR roomsdate.ResFlag <>'+quotedStr('P')+') '#10;
+  s := s+'              AND ((NOT control.ExcluteDeparted) OR roomsdate.ResFlag <>'+quotedStr(STATUS_CHECKED_OUT)+') '#10;
+  s := s+'              AND ((NOT control.ExcluteGuest) OR roomsdate.ResFlag <>'+quotedStr('G')+') '#10;
+  s := s+'              AND ((NOT control.ExcluteBlocked) OR roomsdate.ResFlag <>'+quotedStr('B')+') '#10;
+  s := s+'              AND ((NOT control.ExcluteNoShow) OR roomsdate.ResFlag <>'+quotedStr('N')+') '#10;
+  s := s+'              AND (roomsdate.ResFlag not in (''X'', ''C'') '#10;
+  s := s+'        )) AS available '#10;
   s := s+'FROM predefineddates, roomtypes, control '#10;
-  s := s+'WHERE roomtypes.Active=1 AND predefineddates.date>=%s AND predefineddates.date<=DATE_ADD(%s,INTERVAL %d DAY) '#10;
+  s := s+'WHERE roomtypes.Active AND predefineddates.date>=%s AND predefineddates.date<=DATE_ADD(%s,INTERVAL %d DAY) '#10;
   s := s+'GROUP BY predefineddates.date, roomtypes.RoomType ';
 
 	s := format(s, [ _db(zCurrentDate,true),_db(zCurrentDate,true), zDaysToShow]);
@@ -1004,6 +1011,7 @@ procedure TfrmDayNotes.edCurrentDateChange(Sender: TObject);
 begin
   try
     zCurrentDate := strTodate(edCurrentDate.Text);
+    edDaysToShowPropertiesChange(nil);
     RefreshRoomStatus;
   Except
   end;

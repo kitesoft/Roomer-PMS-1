@@ -17,9 +17,9 @@ type
     cRoomrentURI = 'roomrent/';
   private
   public
-    function GetPaymentsReportAsDataset(aRSet: TRoomerDataset; aDateFrom: TDateTime = -1; aDateTo: TDatetime= -1): boolean;
-    function GetRevenuesReportAsDataset(aRSet: TRoomerDataset; aDateFrom: TDateTime = -1; aDateTo: TDatetime= -1): boolean;
-    function GetRoomrentReportAsDataset(aRSet: TRoomerDataset; aDateFrom: TDateTime = -1; aDateTo: TDatetime= -1): boolean;
+    function GetPaymentsReportAsDataset(aRSet: TRoomerDataset; aDateFrom: TDateTime = -1; aDateTo: TDatetime= -1; aIncludeDetails: boolean=false): boolean;
+    function GetRevenuesReportAsDataset(aRSet: TRoomerDataset; aDateFrom: TDateTime = -1; aDateTo: TDatetime= -1; aIncludeDetails: boolean=false): boolean;
+    function GetRoomrentReportAsDataset(aRSet: TRoomerDataset; aDateFrom: TDateTime = -1; aDateTo: TDatetime= -1; aIncludeDetails: boolean=false): boolean;
   end;
 
 implementation
@@ -36,12 +36,12 @@ uses
   , uUtils;
 
 
-function TFinancialReportsAPICaller.GetPaymentsReportAsDataset(aRSet: TRoomerDataset; aDateFrom: TDateTime = -1; aDateTo: TDatetime= -1): boolean;
+function TFinancialReportsAPICaller.GetPaymentsReportAsDataset(aRSet: TRoomerDataset; aDateFrom: TDateTime = -1; aDateTo: TDatetime= -1; aIncludeDetails: boolean=false): boolean;
 var
   roomerClient: TRoomerHttpClient;
   lURI: string;
   lResponse: string;
-  lSep: string;
+
 begin
   roomerClient := aRSet.CreateRoomerClient(True);
   try
@@ -49,18 +49,14 @@ begin
 
     lURI := aRset.OpenApiUri + cResourcesURI + cPaymentsURI;
 
-    lSep := '?';
     if aDateFrom = -1 then
       aDateFrom := TDateTime.Today;
 
-    if aDateFrom <> -1 then
-    begin
-      lURI := lURI + lSep + 'dateFrom=' + dateToSqlString(aDateFrom);
-      lSep := '&';
-     end;
-
-     if aDateTo <> -1 then
-      lUri := lURI + lSep + 'dateTo=' + dateToSqlString(aDateTo);
+    roomerClient.QueryParams.Add('dateFrom=' + dateToSqlString(aDateFrom));
+    if aDateTo <> -1 then
+      roomerClient.QueryParams.Add('dateTo=' + dateToSqlString(aDateTo));
+    if aIncludeDetails then
+      roomerClient.QueryParams.Add('includeDetails=true');
 
     Result := roomerClient.GetWithStatus(lURI, lResponse).StatusCode = 200;
     if Result then
@@ -75,12 +71,11 @@ begin
   end;
 end;
 
-function TFinancialReportsAPICaller.GetRevenuesReportAsDataset(aRSet: TRoomerDataset; aDateFrom, aDateTo: TDatetime): boolean;
+function TFinancialReportsAPICaller.GetRevenuesReportAsDataset(aRSet: TRoomerDataset; aDateFrom: TDateTime = -1; aDateTo: TDatetime= -1; aIncludeDetails: boolean=false): boolean;
 var
   roomerClient: TRoomerHttpClient;
   lURI: string;
   lResponse: string;
-  lSep: string;
 begin
   roomerClient := aRSet.CreateRoomerClient(True);
   try
@@ -88,18 +83,14 @@ begin
 
     lURI := aRset.OpenApiUri + cResourcesURI + cRevenuesURI;
 
-    lSep := '?';
     if aDateFrom = -1 then
       aDateFrom := TDateTime.Today;
 
-    if aDateFrom <> -1 then
-    begin
-      lURI := lURI + lSep + 'dateFrom=' + dateToSqlString(aDateFrom);
-      lSep := '&';
-     end;
-
-     if aDateTo <> -1 then
-      lUri := lURI + lSep + 'dateTo=' + dateToSqlString(aDateTo);
+    roomerClient.QueryParams.Add('dateFrom=' + dateToSqlString(aDateFrom));
+    if aDateTo <> -1 then
+      roomerClient.QueryParams.Add('dateTo=' + dateToSqlString(aDateTo));
+    if aIncludeDetails then
+      roomerClient.QueryParams.Add('includeDetails=true');
 
     Result := roomerClient.GetWithStatus(lURI, lResponse).StatusCode = 200;
     if Result then
@@ -114,12 +105,11 @@ begin
   end;
 end;
 
-function TFinancialReportsAPICaller.GetRoomrentReportAsDataset(aRSet: TRoomerDataset; aDateFrom, aDateTo: TDatetime): boolean;
+function TFinancialReportsAPICaller.GetRoomrentReportAsDataset(aRSet: TRoomerDataset; aDateFrom: TDateTime = -1; aDateTo: TDatetime= -1; aIncludeDetails: boolean=false): boolean;
 var
   roomerClient: TRoomerHttpClient;
   lURI: string;
   lResponse: string;
-  lSep: string;
 begin
   roomerClient := aRSet.CreateRoomerClient(True);
   try
@@ -127,18 +117,14 @@ begin
 
     lURI := aRset.OpenApiUri + cResourcesURI + cRoomrentURI;
 
-    lSep := '?';
     if aDateFrom = -1 then
       aDateFrom := TDateTime.Today;
 
-    if aDateFrom <> -1 then
-    begin
-      lURI := lURI + lSep + 'dateFrom=' + dateToSqlString(aDateFrom);
-      lSep := '&';
-     end;
-
-     if aDateTo <> -1 then
-      lUri := lURI + lSep + 'dateTo=' + dateToSqlString(aDateTo);
+    roomerClient.QueryParams.Add('dateFrom=' + dateToSqlString(aDateFrom));
+    if aDateTo <> -1 then
+      roomerClient.QueryParams.Add('dateTo=' + dateToSqlString(aDateTo));
+    if aIncludeDetails then
+      roomerClient.QueryParams.Add('includeDetails=true');
 
     Result := roomerClient.GetWithStatus(lURI, lResponse).StatusCode = 200;
     if Result then

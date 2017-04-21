@@ -126,7 +126,6 @@ object frmControlData: TfrmControlData
           000000FFFFFFFFFFFFFFFF000000000000000000000000010E42006500740061
           002000460075006E006300740069006F006E007300}
         SkinData.SkinSection = 'EDIT'
-        ExplicitTop = -2
       end
     end
     object __LMDBackPanel3: TsPanel
@@ -152,8 +151,6 @@ object frmControlData: TfrmControlData
         ParentFont = False
         TabOrder = 0
         SkinData.SkinSection = 'PAGECONTROL'
-        ExplicitLeft = 5
-        ExplicitTop = -2
         object tsNull: TsTabSheet
           Caption = 'tsNull'
           SkinData.SkinSection = 'FORM'
@@ -1170,7 +1167,7 @@ object frmControlData: TfrmControlData
             Top = 0
             Width = 1093
             Height = 714
-            ActivePage = AdvTabSheet15
+            ActivePage = tsInvTexts_Laser2
             Align = alClient
             Font.Charset = DEFAULT_CHARSET
             Font.Color = clWindowText
@@ -3263,10 +3260,12 @@ object frmControlData: TfrmControlData
         object tsInvoiceSystem: TsTabSheet
           Caption = 'Invoice Settings'
           object LMDGroupBox5: TsGroupBox
+            AlignWithMargins = True
             Left = 3
             Top = 3
-            Width = 627
-            Height = 159
+            Width = 1087
+            Height = 141
+            Align = alTop
             Caption = 'System Sale items'
             TabOrder = 0
             SkinData.SkinSection = 'GROUPBOX'
@@ -3410,34 +3409,6 @@ object frmControlData: TfrmControlData
               Font.Name = 'Tahoma'
               Font.Style = []
             end
-            object Label59: TsLabel
-              Left = 111
-              Top = 133
-              Width = 212
-              Height = 19
-              Alignment = taRightJustify
-              AutoSize = False
-              Caption = 'Lodging/City tax item : '
-              ParentFont = False
-              Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
-              Font.Height = -12
-              Font.Name = 'Tahoma'
-              Font.Style = []
-            end
-            object labStayTaxItemDescription: TsLabel
-              Left = 453
-              Top = 133
-              Width = 4
-              Height = 14
-              Caption = '-'
-              ParentFont = False
-              Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
-              Font.Height = -12
-              Font.Name = 'Tahoma'
-              Font.Style = []
-            end
             object editBreakFastItem: TsComboEdit
               Left = 327
               Top = 15
@@ -3560,36 +3531,14 @@ object frmControlData: TfrmControlData
               GlyphMode.Grayed = False
               DirectInput = False
             end
-            object editStayTaxItem: TsComboEdit
-              Left = 327
-              Top = 130
-              Width = 117
-              Height = 22
-              AutoSize = False
-              Color = clWhite
-              Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
-              Font.Height = -12
-              Font.Name = 'Tahoma'
-              Font.Style = []
-              MaxLength = 20
-              ParentFont = False
-              TabOrder = 5
-              Text = ''
-              OnDblClick = editStayTaxItemDblClick
-              CheckOnExit = True
-              SkinData.SkinSection = 'EDIT'
-              OnButtonClick = editStayTaxItemDblClick
-              GlyphMode.Blend = 0
-              GlyphMode.Grayed = False
-              DirectInput = False
-            end
           end
           object LMDGroupBox1: TsGroupBox
+            AlignWithMargins = True
             Left = 3
-            Top = 310
-            Width = 280
-            Height = 99
+            Top = 298
+            Width = 1087
+            Height = 71
+            Align = alTop
             Caption = 'Room rate '
             TabOrder = 1
             SkinData.SkinSection = 'GROUPBOX'
@@ -3623,6 +3572,20 @@ object frmControlData: TfrmControlData
               Font.Name = 'Tahoma'
               Font.Style = []
             end
+            object sLabel7: TsLabel
+              Left = 294
+              Top = 22
+              Width = 151
+              Height = 14
+              Alignment = taRightJustify
+              Caption = 'VAT Included in roomrent :'
+              ParentFont = False
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clBlack
+              Font.Height = -12
+              Font.Name = 'Tahoma'
+              Font.Style = []
+            end
             object CheckBoxArrivalDateRulesPrice: TsCheckBox
               Left = 249
               Top = 20
@@ -3643,12 +3606,24 @@ object frmControlData: TfrmControlData
               ImgChecked = 0
               ImgUnchecked = 0
             end
+            object sCheckBox1: TsCheckBox
+              Left = 451
+              Top = 20
+              Width = 20
+              Height = 20
+              TabOrder = 2
+              SkinData.SkinSection = 'CHECKBOX'
+              ImgChecked = 0
+              ImgUnchecked = 0
+            end
           end
           object LMDGroupBox2_new: TsGroupBox
-            Left = 0
-            Top = 168
-            Width = 627
+            AlignWithMargins = True
+            Left = 3
+            Top = 150
+            Width = 1087
             Height = 89
+            Align = alTop
             Caption = 'Various'
             TabOrder = 2
             SkinData.SkinSection = 'GROUPBOX'
@@ -3680,12 +3655,13 @@ object frmControlData: TfrmControlData
               Font.Style = []
             end
             object sLabel21: TsLabel
-              Left = 241
-              Top = 39
+              Left = 245
+              Top = 41
               Width = 202
               Height = 14
               Alignment = taRightJustify
               Caption = 'Show room rent per day on invoice :'
+              Enabled = False
               ParentFont = False
               Font.Charset = DEFAULT_CHARSET
               Font.Color = clBlack
@@ -3694,8 +3670,8 @@ object frmControlData: TfrmControlData
               Font.Style = []
             end
             object lbShowIncludedBreakfastOnInvoice: TsLabel
-              Left = 236
-              Top = 58
+              Left = 240
+              Top = 60
               Width = 206
               Height = 14
               Alignment = taRightJustify
@@ -3746,17 +3722,18 @@ object frmControlData: TfrmControlData
               SkinData.SkinSection = 'EDIT'
             end
             object cbxExpandRoomRent: TsCheckBox
-              Left = 447
+              Left = 451
               Top = 39
               Width = 20
               Height = 20
+              Enabled = False
               TabOrder = 2
               SkinData.SkinSection = 'CHECKBOX'
               ImgChecked = 0
               ImgUnchecked = 0
             end
             object cbShowIncludedBreakfastOnInvoice: TsCheckBox
-              Left = 447
+              Left = 451
               Top = 58
               Width = 20
               Height = 20
@@ -3767,10 +3744,12 @@ object frmControlData: TfrmControlData
             end
           end
           object LMDGroupBox26: TsGroupBox
+            AlignWithMargins = True
             Left = 3
-            Top = 260
-            Width = 627
+            Top = 245
+            Width = 1087
             Height = 47
+            Align = alTop
             Caption = 'A/R '
             TabOrder = 3
             SkinData.SkinSection = 'GROUPBOX'
@@ -3824,395 +3803,15 @@ object frmControlData: TfrmControlData
               GlyphMode.Grayed = False
             end
           end
-          object cxGroupBox4: TsGroupBox
-            Left = 289
-            Top = 412
-            Width = 341
-            Height = 95
-            Caption = 'Phone log'
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clWindowText
-            Font.Height = -12
-            Font.Name = 'Tahoma'
-            Font.Style = []
-            ParentFont = False
-            TabOrder = 4
-            SkinData.SkinSection = 'GROUPBOX'
-            object Label66: TsLabel
-              Left = -6
-              Top = 66
-              Width = 139
-              Height = 13
-              Alignment = taRightJustify
-              AutoSize = False
-              Caption = 'Minimum time (sec) :'
-              ParentFont = False
-              Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
-              Font.Height = -12
-              Font.Name = 'Tahoma'
-              Font.Style = []
-            end
-            object Label67: TsLabel
-              Left = 29
-              Top = 18
-              Width = 104
-              Height = 13
-              Alignment = taRightJustify
-              AutoSize = False
-              Caption = 'Level :'
-              ParentFont = False
-              Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
-              Font.Height = -12
-              Font.Name = 'Tahoma'
-              Font.Style = []
-            end
-            object Label68: TsLabel
-              Left = 29
-              Top = 43
-              Width = 104
-              Height = 13
-              Alignment = taRightJustify
-              AutoSize = False
-              Caption = 'Log internal :'
-              ParentFont = False
-              Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
-              Font.Height = -12
-              Font.Name = 'Tahoma'
-              Font.Style = []
-            end
-            object chkCallLogInternal: TsCheckBox
-              Left = 139
-              Top = 41
-              Width = 20
-              Height = 20
-              TabOrder = 0
-              SkinData.SkinSection = 'CHECKBOX'
-              ImgChecked = 0
-              ImgUnchecked = 0
-            end
-            object cbxCallType: TsComboBox
-              Left = 141
-              Top = 15
-              Width = 129
-              Height = 22
-              Alignment = taLeftJustify
-              SkinData.SkinSection = 'COMBOBOX'
-              VerticalAlignment = taAlignTop
-              Style = csDropDownList
-              Color = clWhite
-              Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
-              Font.Height = -12
-              Font.Name = 'Tahoma'
-              Font.Style = []
-              ItemIndex = 3
-              ParentFont = False
-              TabOrder = 1
-              Text = 'Just charged'
-              Items.Strings = (
-                'All calls '
-                'Just Incoming calls'
-                'Just Outgoing calls'
-                'Just charged')
-            end
-            object edCallMinSec: TsSpinEdit
-              Left = 139
-              Top = 63
-              Width = 128
-              Height = 22
-              Color = clWhite
-              Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
-              Font.Height = -12
-              Font.Name = 'Tahoma'
-              Font.Style = []
-              ParentFont = False
-              TabOrder = 2
-              SkinData.SkinSection = 'EDIT'
-              MaxValue = 9999999
-              MinValue = -1
-              Value = 0
-            end
-          end
-          object cxGroupBox5: TsGroupBox
-            Left = 3
-            Top = 412
-            Width = 280
-            Height = 95
-            Caption = 'Start price for phone - Choose one'
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clWindowText
-            Font.Height = -12
-            Font.Name = 'Tahoma'
-            Font.Style = []
-            ParentFont = False
-            TabOrder = 5
-            SkinData.SkinSection = 'GROUPBOX'
-            object Label69: TsLabel
-              Left = -2
-              Top = 70
-              Width = 184
-              Height = 13
-              Alignment = taRightJustify
-              AutoSize = False
-              Caption = 'Minium price :'
-              ParentFont = False
-              Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
-              Font.Height = -12
-              Font.Name = 'Tahoma'
-              Font.Style = []
-            end
-            object Label70: TsLabel
-              Left = 33
-              Top = 20
-              Width = 149
-              Height = 13
-              Alignment = taRightJustify
-              AutoSize = False
-              Caption = 'Start rate :'
-              ParentFont = False
-              Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
-              Font.Height = -12
-              Font.Name = 'Tahoma'
-              Font.Style = []
-            end
-            object Label71: TsLabel
-              Left = 8
-              Top = 45
-              Width = 175
-              Height = 13
-              Alignment = taRightJustify
-              AutoSize = False
-              Caption = 'Minimum steps :'
-              ParentFont = False
-              Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
-              Font.Height = -12
-              Font.Name = 'Tahoma'
-              Font.Style = []
-            end
-            object edCallMinUnits: TsSpinEdit
-              Left = 191
-              Top = 42
-              Width = 76
-              Height = 22
-              Color = clWhite
-              Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
-              Font.Height = -12
-              Font.Name = 'Tahoma'
-              Font.Style = []
-              ParentFont = False
-              TabOrder = 0
-              OnChange = edCallMinUnitsChange
-              SkinData.SkinSection = 'EDIT'
-              MaxValue = 9999999
-              MinValue = -1
-              Value = 0
-            end
-            object edCallMinPrice: TsCalcEdit
-              Left = 191
-              Top = 67
-              Width = 76
-              Height = 22
-              AutoSize = False
-              Color = clWhite
-              Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
-              Font.Height = -12
-              Font.Name = 'Tahoma'
-              Font.Style = []
-              ParentFont = False
-              TabOrder = 1
-              OnChange = edCallMinPriceChange
-              SkinData.SkinSection = 'EDIT'
-              GlyphMode.Blend = 0
-              GlyphMode.Grayed = False
-            end
-            object edCallStartPrice: TsCalcEdit
-              Left = 191
-              Top = 17
-              Width = 76
-              Height = 22
-              AutoSize = False
-              Color = clWhite
-              Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
-              Font.Height = -12
-              Font.Name = 'Tahoma'
-              Font.Style = []
-              ParentFont = False
-              TabOrder = 2
-              OnChange = edCallStartPriceChange
-              SkinData.SkinSection = 'EDIT'
-              GlyphMode.Blend = 0
-              GlyphMode.Grayed = False
-            end
-          end
-          object GroupBox5: TsGroupBox
-            Left = 289
-            Top = 310
-            Width = 341
-            Height = 99
-            Caption = 'Lodging tax'
-            TabOrder = 6
-            SkinData.SkinSection = 'GROUPBOX'
-            object Label62: TsLabel
-              Left = 16
-              Top = 17
-              Width = 234
-              Height = 13
-              Alignment = taRightJustify
-              AutoSize = False
-              Caption = 'Active :'
-              ParentFont = False
-              Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
-              Font.Height = -12
-              Font.Name = 'Tahoma'
-              Font.Style = []
-            end
-            object Label61: TsLabel
-              Left = -16
-              Top = 38
-              Width = 266
-              Height = 13
-              Alignment = taRightJustify
-              AutoSize = False
-              Caption = 'Included in roomrent :'
-              ParentFont = False
-              Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
-              Font.Height = -12
-              Font.Name = 'Tahoma'
-              Font.Style = []
-            end
-            object sLabel35: TsLabel
-              Left = -16
-              Top = 58
-              Width = 266
-              Height = 13
-              Alignment = taRightJustify
-              AutoSize = False
-              Caption = 'Tax per person :'
-              ParentFont = False
-              Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
-              Font.Height = -12
-              Font.Name = 'Tahoma'
-              Font.Style = []
-            end
-            object sLabel36: TsLabel
-              Left = -16
-              Top = 79
-              Width = 266
-              Height = 13
-              Alignment = taRightJustify
-              AutoSize = False
-              Caption = 'Percentage :'
-              ParentFont = False
-              Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
-              Font.Height = -12
-              Font.Name = 'Tahoma'
-              Font.Style = []
-            end
-            object chkStayTaxIncluted: TsCheckBox
-              Left = 256
-              Top = 37
-              Width = 20
-              Height = 20
-              TabOrder = 0
-              SkinData.SkinSection = 'CHECKBOX'
-              ImgChecked = 0
-              ImgUnchecked = 0
-            end
-            object chkUseStayTax: TsCheckBox
-              Left = 256
-              Top = 15
-              Width = 20
-              Height = 20
-              TabOrder = 1
-              SkinData.SkinSection = 'CHECKBOX'
-              ImgChecked = 0
-              ImgUnchecked = 0
-            end
-            object __cbxTaxPerPerson: TsCheckBox
-              Left = 256
-              Top = 58
-              Width = 20
-              Height = 20
-              Margins.Left = 2
-              Margins.Top = 2
-              Margins.Right = 2
-              Margins.Bottom = 2
-              TabOrder = 2
-              SkinData.SkinSection = 'CHECKBOX'
-              ImgChecked = 0
-              ImgUnchecked = 0
-            end
-            object __cbxTaxPercentage: TsCheckBox
-              Left = 256
-              Top = 78
-              Width = 20
-              Height = 20
-              Margins.Left = 2
-              Margins.Top = 2
-              Margins.Right = 2
-              Margins.Bottom = 2
-              TabOrder = 3
-              SkinData.SkinSection = 'CHECKBOX'
-              ImgChecked = 0
-              ImgUnchecked = 0
-            end
-          end
-          object sGroupBox4: TsGroupBox
-            Left = 636
-            Top = 3
-            Width = 258
-            Height = 54
-            Caption = 'VAT'
-            TabOrder = 7
-            Visible = False
-            SkinData.SkinSection = 'GROUPBOX'
-            object sLabel7: TsLabel
-              Left = -81
-              Top = 20
-              Width = 266
-              Height = 13
-              Alignment = taRightJustify
-              AutoSize = False
-              Caption = 'Included in roomrent :'
-              ParentFont = False
-              Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
-              Font.Height = -12
-              Font.Name = 'Tahoma'
-              Font.Style = []
-            end
-            object sCheckBox1: TsCheckBox
-              Left = 192
-              Top = 21
-              Width = 20
-              Height = 20
-              TabOrder = 0
-              SkinData.SkinSection = 'CHECKBOX'
-              ImgChecked = 0
-              ImgUnchecked = 0
-            end
-          end
           object sGroupBox19: TsGroupBox
-            Left = 1
-            Top = 513
-            Width = 627
+            AlignWithMargins = True
+            Left = 3
+            Top = 476
+            Width = 1087
             Height = 145
+            Align = alTop
             Caption = 'Payments'
-            TabOrder = 8
+            TabOrder = 4
             SkinData.SkinSection = 'GROUPBOX'
             object sLabel12: TsLabel
               Left = 198
@@ -4357,6 +3956,247 @@ object frmControlData: TfrmControlData
               SkinData.SkinSection = 'CHECKBOX'
               ImgChecked = 0
               ImgUnchecked = 0
+            end
+          end
+          object sPanel2: TsPanel
+            AlignWithMargins = True
+            Left = 3
+            Top = 375
+            Width = 1087
+            Height = 95
+            Align = alTop
+            AutoSize = True
+            BevelOuter = bvNone
+            TabOrder = 5
+            object cxGroupBox5: TsGroupBox
+              Left = 0
+              Top = 0
+              Width = 280
+              Height = 95
+              Caption = 'Start price for phone - Choose one'
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -12
+              Font.Name = 'Tahoma'
+              Font.Style = []
+              ParentFont = False
+              TabOrder = 0
+              SkinData.SkinSection = 'GROUPBOX'
+              object Label69: TsLabel
+                Left = -2
+                Top = 70
+                Width = 184
+                Height = 13
+                Alignment = taRightJustify
+                AutoSize = False
+                Caption = 'Minium price :'
+                ParentFont = False
+                Font.Charset = DEFAULT_CHARSET
+                Font.Color = clBlack
+                Font.Height = -12
+                Font.Name = 'Tahoma'
+                Font.Style = []
+              end
+              object Label70: TsLabel
+                Left = 33
+                Top = 20
+                Width = 149
+                Height = 13
+                Alignment = taRightJustify
+                AutoSize = False
+                Caption = 'Start rate :'
+                ParentFont = False
+                Font.Charset = DEFAULT_CHARSET
+                Font.Color = clBlack
+                Font.Height = -12
+                Font.Name = 'Tahoma'
+                Font.Style = []
+              end
+              object Label71: TsLabel
+                Left = 8
+                Top = 45
+                Width = 175
+                Height = 13
+                Alignment = taRightJustify
+                AutoSize = False
+                Caption = 'Minimum steps :'
+                ParentFont = False
+                Font.Charset = DEFAULT_CHARSET
+                Font.Color = clBlack
+                Font.Height = -12
+                Font.Name = 'Tahoma'
+                Font.Style = []
+              end
+              object edCallMinUnits: TsSpinEdit
+                Left = 191
+                Top = 42
+                Width = 76
+                Height = 22
+                Color = clWhite
+                Font.Charset = DEFAULT_CHARSET
+                Font.Color = clBlack
+                Font.Height = -12
+                Font.Name = 'Tahoma'
+                Font.Style = []
+                ParentFont = False
+                TabOrder = 0
+                OnChange = edCallMinUnitsChange
+                SkinData.SkinSection = 'EDIT'
+                MaxValue = 9999999
+                MinValue = -1
+                Value = 0
+              end
+              object edCallMinPrice: TsCalcEdit
+                Left = 191
+                Top = 67
+                Width = 76
+                Height = 22
+                AutoSize = False
+                Color = clWhite
+                Font.Charset = DEFAULT_CHARSET
+                Font.Color = clBlack
+                Font.Height = -12
+                Font.Name = 'Tahoma'
+                Font.Style = []
+                ParentFont = False
+                TabOrder = 1
+                OnChange = edCallMinPriceChange
+                SkinData.SkinSection = 'EDIT'
+                GlyphMode.Blend = 0
+                GlyphMode.Grayed = False
+              end
+              object edCallStartPrice: TsCalcEdit
+                Left = 191
+                Top = 17
+                Width = 76
+                Height = 22
+                AutoSize = False
+                Color = clWhite
+                Font.Charset = DEFAULT_CHARSET
+                Font.Color = clBlack
+                Font.Height = -12
+                Font.Name = 'Tahoma'
+                Font.Style = []
+                ParentFont = False
+                TabOrder = 2
+                OnChange = edCallStartPriceChange
+                SkinData.SkinSection = 'EDIT'
+                GlyphMode.Blend = 0
+                GlyphMode.Grayed = False
+              end
+            end
+            object cxGroupBox4: TsGroupBox
+              Left = 311
+              Top = 0
+              Width = 338
+              Height = 95
+              Caption = 'Phone log'
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -12
+              Font.Name = 'Tahoma'
+              Font.Style = []
+              ParentFont = False
+              TabOrder = 1
+              SkinData.SkinSection = 'GROUPBOX'
+              object Label66: TsLabel
+                Left = -6
+                Top = 66
+                Width = 139
+                Height = 13
+                Alignment = taRightJustify
+                AutoSize = False
+                Caption = 'Minimum time (sec) :'
+                ParentFont = False
+                Font.Charset = DEFAULT_CHARSET
+                Font.Color = clBlack
+                Font.Height = -12
+                Font.Name = 'Tahoma'
+                Font.Style = []
+              end
+              object Label67: TsLabel
+                Left = 29
+                Top = 18
+                Width = 104
+                Height = 13
+                Alignment = taRightJustify
+                AutoSize = False
+                Caption = 'Level :'
+                ParentFont = False
+                Font.Charset = DEFAULT_CHARSET
+                Font.Color = clBlack
+                Font.Height = -12
+                Font.Name = 'Tahoma'
+                Font.Style = []
+              end
+              object Label68: TsLabel
+                Left = 29
+                Top = 43
+                Width = 104
+                Height = 13
+                Alignment = taRightJustify
+                AutoSize = False
+                Caption = 'Log internal :'
+                ParentFont = False
+                Font.Charset = DEFAULT_CHARSET
+                Font.Color = clBlack
+                Font.Height = -12
+                Font.Name = 'Tahoma'
+                Font.Style = []
+              end
+              object chkCallLogInternal: TsCheckBox
+                Left = 139
+                Top = 41
+                Width = 20
+                Height = 20
+                TabOrder = 0
+                SkinData.SkinSection = 'CHECKBOX'
+                ImgChecked = 0
+                ImgUnchecked = 0
+              end
+              object cbxCallType: TsComboBox
+                Left = 141
+                Top = 15
+                Width = 129
+                Height = 22
+                Alignment = taLeftJustify
+                SkinData.SkinSection = 'COMBOBOX'
+                VerticalAlignment = taAlignTop
+                Style = csDropDownList
+                Color = clWhite
+                Font.Charset = DEFAULT_CHARSET
+                Font.Color = clBlack
+                Font.Height = -12
+                Font.Name = 'Tahoma'
+                Font.Style = []
+                ItemIndex = 3
+                ParentFont = False
+                TabOrder = 1
+                Text = 'Just charged'
+                Items.Strings = (
+                  'All calls '
+                  'Just Incoming calls'
+                  'Just Outgoing calls'
+                  'Just charged')
+              end
+              object edCallMinSec: TsSpinEdit
+                Left = 139
+                Top = 63
+                Width = 128
+                Height = 22
+                Color = clWhite
+                Font.Charset = DEFAULT_CHARSET
+                Font.Color = clBlack
+                Font.Height = -12
+                Font.Name = 'Tahoma'
+                Font.Style = []
+                ParentFont = False
+                TabOrder = 2
+                SkinData.SkinSection = 'EDIT'
+                MaxValue = 9999999
+                MinValue = -1
+                Value = 0
+              end
             end
           end
         end
@@ -5828,6 +5668,229 @@ object frmControlData: TfrmControlData
               ImgUnchecked = 0
             end
           end
+          object gbxReservationLifeCyclemailerSettings: TsGroupBox
+            AlignWithMargins = True
+            Left = 3
+            Top = 251
+            Width = 1087
+            Height = 198
+            Align = alTop
+            Caption = 'Reservation Lifecycle Mailer settings'
+            TabOrder = 2
+            SkinData.SkinSection = 'GROUPBOX'
+            object lblPreArrival: TsLabel
+              Left = 38
+              Top = 27
+              Width = 82
+              Height = 14
+              Alignment = taRightJustify
+              Caption = 'Pre Arrival mail:'
+            end
+            object lblPostDeparture: TsLabel
+              Left = 9
+              Top = 91
+              Width = 111
+              Height = 14
+              Alignment = taRightJustify
+              Caption = 'Post Departure mail:'
+            end
+            object cbxPreArrivalEnabled: TsCheckBox
+              Left = 141
+              Top = 25
+              Width = 20
+              Height = 20
+              TabOrder = 0
+              OnClick = cbxPreArrivalEnabledClick
+              ImgChecked = 0
+              ImgUnchecked = 0
+            end
+            object cbxPostDepartureEnabled: TsCheckBox
+              Left = 141
+              Top = 89
+              Width = 20
+              Height = 20
+              TabOrder = 2
+              OnClick = cbxPostDepartureEnabledClick
+              ImgChecked = 0
+              ImgUnchecked = 0
+            end
+            object pnlPreArrival: TsPanel
+              AlignWithMargins = True
+              Left = 202
+              Top = 16
+              Width = 880
+              Height = 65
+              Margins.Left = 200
+              Margins.Top = 0
+              Align = alTop
+              BevelOuter = bvNone
+              TabOrder = 1
+              SkinData.SkinSection = 'PANEL'
+              object sLabel37: TsLabel
+                Left = 21
+                Top = 11
+                Width = 75
+                Height = 14
+                Alignment = taRightJustify
+                Caption = 'Hours before:'
+              end
+              object sLabel38: TsLabel
+                Left = 207
+                Top = 11
+                Width = 105
+                Height = 14
+                Alignment = taRightJustify
+                Caption = 'Email address from:'
+              end
+              object sLabel39: TsLabel
+                Left = 294
+                Top = 39
+                Width = 18
+                Height = 14
+                Alignment = taRightJustify
+                Caption = 'CC:'
+              end
+              object edHoursBefore: TsSpinEdit
+                Left = 102
+                Top = 8
+                Width = 92
+                Height = 22
+                Color = clWhite
+                Font.Charset = DEFAULT_CHARSET
+                Font.Color = clBlack
+                Font.Height = -12
+                Font.Name = 'Tahoma'
+                Font.Style = []
+                NumbersOnly = True
+                ParentFont = False
+                TabOrder = 0
+                SkinData.SkinSection = 'EDIT'
+                MaxValue = 9999999
+                MinValue = 1
+                Value = 0
+              end
+              object edPreArrivalMailFromAddress: TsEdit
+                Left = 318
+                Top = 8
+                Width = 209
+                Height = 22
+                Color = clWhite
+                Font.Charset = DEFAULT_CHARSET
+                Font.Color = clBlack
+                Font.Height = -12
+                Font.Name = 'Tahoma'
+                Font.Style = []
+                ParentFont = False
+                TabOrder = 1
+                OnChange = checkEmailRegEx
+                OnExit = checkEmailRegEx
+                SkinData.SkinSection = 'EDIT'
+              end
+              object edPreArrivalCCMailTo: TsEdit
+                Left = 318
+                Top = 36
+                Width = 209
+                Height = 22
+                Color = clWhite
+                Font.Charset = DEFAULT_CHARSET
+                Font.Color = clBlack
+                Font.Height = -12
+                Font.Name = 'Tahoma'
+                Font.Style = []
+                ParentFont = False
+                TabOrder = 2
+                OnChange = checkEmailRegEx
+                OnExit = checkEmailRegEx
+              end
+            end
+            object pnlPostDeparture: TsPanel
+              AlignWithMargins = True
+              Left = 202
+              Top = 84
+              Width = 880
+              Height = 73
+              Margins.Left = 200
+              Margins.Top = 0
+              Align = alTop
+              BevelOuter = bvNone
+              TabOrder = 3
+              SkinData.SkinSection = 'PANEL'
+              object sLabel41: TsLabel
+                Left = 31
+                Top = 7
+                Width = 65
+                Height = 14
+                Alignment = taRightJustify
+                Caption = 'Hours after:'
+              end
+              object sLabel42: TsLabel
+                Left = 207
+                Top = 7
+                Width = 105
+                Height = 14
+                Alignment = taRightJustify
+                Caption = 'Email address from:'
+              end
+              object sLabel43: TsLabel
+                Left = 294
+                Top = 35
+                Width = 18
+                Height = 14
+                Alignment = taRightJustify
+                Caption = 'CC:'
+              end
+              object edHoursAfter: TsSpinEdit
+                Left = 102
+                Top = 4
+                Width = 92
+                Height = 22
+                Color = clWhite
+                Font.Charset = DEFAULT_CHARSET
+                Font.Color = clBlack
+                Font.Height = -12
+                Font.Name = 'Tahoma'
+                Font.Style = []
+                NumbersOnly = True
+                ParentFont = False
+                TabOrder = 0
+                MaxValue = 9999999
+                MinValue = 1
+                Value = 0
+              end
+              object edPostDepartureMailFromAddress: TsEdit
+                Left = 318
+                Top = 4
+                Width = 209
+                Height = 22
+                Color = clWhite
+                Font.Charset = DEFAULT_CHARSET
+                Font.Color = clBlack
+                Font.Height = -12
+                Font.Name = 'Tahoma'
+                Font.Style = []
+                ParentFont = False
+                TabOrder = 1
+                OnChange = checkEmailRegEx
+                OnExit = checkEmailRegEx
+              end
+              object edPostDepartureCCMailTo: TsEdit
+                Left = 318
+                Top = 32
+                Width = 209
+                Height = 22
+                Color = clWhite
+                Font.Charset = DEFAULT_CHARSET
+                Font.Color = clBlack
+                Font.Height = -12
+                Font.Name = 'Tahoma'
+                Font.Style = []
+                ParentFont = False
+                TabOrder = 2
+                OnChange = checkEmailRegEx
+                OnExit = checkEmailRegEx
+              end
+            end
+          end
           object gbxReservationProfileFunctionality: TsGroupBox
             AlignWithMargins = True
             Left = 3
@@ -5836,11 +5899,11 @@ object frmControlData: TfrmControlData
             Height = 91
             Align = alTop
             Caption = 'ReservationProfile functionality'
-            TabOrder = 2
+            TabOrder = 3
             SkinData.SkinSection = 'GROUPBOX'
             object cbxChangeNationality: TsCheckBox
-              Left = 14
-              Top = 21
+              Left = 22
+              Top = 29
               Width = 189
               Height = 20
               Caption = 'Change nationality of all guests'
@@ -6479,7 +6542,7 @@ object frmControlData: TfrmControlData
             Left = 3
             Top = 119
             Width = 1087
-            Height = 102
+            Height = 90
             Align = alTop
             Caption = 'External Invoice System - Template Entities'
             TabOrder = 1
@@ -6571,7 +6634,7 @@ object frmControlData: TfrmControlData
           object sGroupBox12: TsGroupBox
             AlignWithMargins = True
             Left = 3
-            Top = 412
+            Top = 387
             Width = 1087
             Height = 71
             Align = alTop
@@ -6595,7 +6658,7 @@ object frmControlData: TfrmControlData
             end
             object chkAutoInvoiceTransfer: TsCheckBox
               Left = 219
-              Top = 34
+              Top = 31
               Width = 20
               Height = 20
               TabOrder = 0
@@ -6607,7 +6670,7 @@ object frmControlData: TfrmControlData
           object sGroupBox13: TsGroupBox
             AlignWithMargins = True
             Left = 3
-            Top = 227
+            Top = 215
             Width = 1087
             Height = 71
             Align = alTop
@@ -6615,7 +6678,7 @@ object frmControlData: TfrmControlData
             TabOrder = 3
             SkinData.SkinSection = 'GROUPBOX'
             object sLabel19: TsLabel
-              Left = 153
+              Left = 149
               Top = 35
               Width = 60
               Height = 14
@@ -6629,7 +6692,7 @@ object frmControlData: TfrmControlData
               Font.Style = []
             end
             object cbxInvoiceExport: TsComboBox
-              Left = 219
+              Left = 214
               Top = 33
               Width = 469
               Height = 21
@@ -6648,7 +6711,7 @@ object frmControlData: TfrmControlData
               TabOrder = 0
             end
             object btnInvoiceTemplateResources: TsButton
-              Left = 694
+              Left = 689
               Top = 31
               Width = 125
               Height = 25
@@ -6661,9 +6724,9 @@ object frmControlData: TfrmControlData
           object gbxExternalPOS: TsGroupBox
             AlignWithMargins = True
             Left = 3
-            Top = 304
+            Top = 292
             Width = 1087
-            Height = 102
+            Height = 89
             Align = alTop
             Caption = 'External POS System - End-Of-Day constants'
             TabOrder = 4
@@ -9064,10 +9127,6 @@ object frmControlData: TfrmControlData
             ActivePage = tabGuestInformation
             Align = alClient
             TabOrder = 0
-            ExplicitLeft = 20
-            ExplicitTop = 20
-            ExplicitWidth = 1053
-            ExplicitHeight = 674
             object tabGuestInformation: TsTabSheet
               Caption = 'Mandatory Guest information'
               object clbMandatoryFields: TsCheckListBox
@@ -9091,8 +9150,6 @@ object frmControlData: TfrmControlData
                 TabOrder = 0
                 SkinData.SkinSection = 'GROUPBOX'
                 DblClickToggle = True
-                ExplicitLeft = 10
-                ExplicitTop = 37
               end
               object pnlManInfoButtons: TsPanel
                 Left = 0
@@ -9102,8 +9159,6 @@ object frmControlData: TfrmControlData
                 Align = alTop
                 TabOrder = 1
                 SkinData.SkinSection = 'GROUPBOX'
-                ExplicitLeft = -6
-                ExplicitTop = -2
                 object btnMFSelectNone: TsButton
                   AlignWithMargins = True
                   Left = 120
@@ -9134,8 +9189,6 @@ object frmControlData: TfrmControlData
         end
         object tsBetaFunctions: TsTabSheet
           Caption = 'Beta Functions'
-          ExplicitLeft = 5
-          ExplicitTop = 26
           object gbxInvoiceBeta: TsGroupBox
             Left = 0
             Top = 0
@@ -9144,9 +9197,6 @@ object frmControlData: TfrmControlData
             Align = alTop
             Caption = 'Invoice Beta functionaity'
             TabOrder = 0
-            ExplicitLeft = 56
-            ExplicitTop = 56
-            ExplicitWidth = 185
             object cbxObjectsInvoice: TsCheckBox
               Left = 24
               Top = 24

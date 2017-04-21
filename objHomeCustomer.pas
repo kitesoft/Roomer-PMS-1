@@ -78,6 +78,7 @@ TYPE
     FContactCountry: string;
     FPersonProfileId: Integer;
     FCreatePersonProfileId: Boolean;
+    FContactMobile: string;
 
     procedure initVaribles;
     function Customer_Get(customer : string) : boolean;
@@ -122,6 +123,7 @@ TYPE
 
      property ContactEmail              : string  read FContactEmail               write FContactEmail             ;
      property ContactPhone              : string  read FContactPhone               write FContactPhone             ;
+     property ContactMobile             : string  read FContactMobile              write FContactMobile            ;
      property ContactFax                : string  read FContactFax                 write FContactFax               ;
      property isTravelAgency            : boolean read FisTravelAgency             write FisTravelAgency           ;
      property Currency                  : string  read FCurrency                   write FCurrency                 ;

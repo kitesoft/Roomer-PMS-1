@@ -2268,7 +2268,6 @@ end;
 function Td.getRoomText(sRoom: string): string;
 var
   s: string;
-  iRoomIndex: Integer;
   RoomItem: TRoomItem;
   StatusColor: TColor;
 begin
@@ -2291,10 +2290,9 @@ begin
     s := s + GetTranslatedText('shTx_Floor') + ' : ' + wRooms_.FieldByName('floor').Asstring + #13;
     s := s + GetTranslatedText('shTx_NumGuests') + ' : ' + wRooms_.FieldByName('numberGuests').Asstring + #13;
 
-    iRoomIndex := g.oRooms.FindRoomFromRoomNumber(sRoom);
-    if iRoomIndex >= 0 then
+    RoomItem := g.oRooms.FindRoomFromRoomNumber(sRoom);
+    if Assigned(RoomItem) then
     begin
-      RoomItem := g.oRooms.RoomItemsList[iRoomIndex];
       StatusColor := d.colorCodeOfStatus(RoomItem.status);
       s := s + '<hr><br><b><shad>' + GetTranslatedText('shTx_Status') + ' : <font ' +
         GetHTMLColor(StatusColor, True) + ' ' +
@@ -7057,10 +7055,8 @@ begin
       d.mtCaptions_.ClearFields;
 
       sTmp := '';
-      if IvI.InvoiceNumber = PROFORMA_INVOICE_NUMBER then
-      begin
+      if (IvI.InvoiceNumber = PROFORMA_INVOICE_NUMBER) and (not copyText.IsEmpty) then
         sTmp := ' - ' + copyText;
-      end;
 
       d.mtCaptions_.FieldByName('invTxtHead').Asstring := _islErl(IvI.invTxtHeadDebit, isForeign) + sTmp;
       if IvI.KreditType = ktKredit then
@@ -8453,6 +8449,7 @@ end;
 procedure Td.ctrlGetGlobalValues;
 var
   rSet: TRoomerDataSet;
+  sql: string;
 begin
   g.qArrivalDateRulesPrice := False;
   g.qBreakfastInclDefault := False;
@@ -8461,7 +8458,6 @@ begin
   g.qRoomRentItem := '';
   g.qNativeCurrency := '';
   g.qStayTaxItem := '';
-  g.qStayTaxPerPerson := False;
   g.qDiscountItem := '';
   g.qCountry := '';
   g.qBreakFastItem := '';
@@ -8504,8 +8500,6 @@ begin
   g.qRoomRentItem := rSet.FieldByName('RoomRentItem').Asstring;
   g.qCountry := rSet.FieldByName('Country').Asstring;
   g.qBreakFastItem := rSet.FieldByName('BreakFastItem').Asstring;
-  g.qStayTaxItem := rSet.FieldByName('stayTaxItem').Asstring;
-  g.qStayTaxPerPerson := rSet['stayTaxPerPerson'];
   g.qDiscountItem := rSet.FieldByName('DiscountItem').Asstring;
   g.qLocalRoomRent := rSet.FieldByName('LocalRoomRent').Asstring;
   g.qGreenColor := rSet.FieldByName('GreenColor').Asstring;
@@ -8591,10 +8585,20 @@ begin
   except
     g.qExcluteNoshow := False;
   end;
-  // end;
-  // finally
-  // freeandnil(rSet);
-  // end;
+
+
+  rSet := CreateNewDataSet;
+  try
+    sql := Format('select i.item from home100.TAXES t '#10+
+                  ' join items i on t.booking_item_id=i.id '#10+
+                  ' where t.hotel_id=%s and t.valid_from <= now() and t.valid_to >= now() ', [_db(rSet.hotelId)]);
+    if rSet_bySQL(rSet, sql, false) then
+      g.qStayTaxItem := rSet.FieldByName('item').Asstring
+    else
+      g.qStayTaxItem := 'CTAX';
+  finally
+    rSet.Free;
+  end;
 end;
 
 function Td.ChkCompany(Company, CompanyName: string): boolean;

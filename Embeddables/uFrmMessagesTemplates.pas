@@ -94,7 +94,6 @@ type
     sButton1: TsButton;
     sAlphaImageList1: TsAlphaImageList;
     HTMLabel2: THTMLabel;
-    timBlink: TTimer;
     pnlContainer: TsPanel;
     sPanel2: TsPanel;
     sLabel1: TsLabel;
@@ -103,16 +102,10 @@ type
     procedure MessageAreaMouseEnter(Sender: TObject);
     procedure MessageAreaMouseLeave(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
-    procedure timBlinkTimer(Sender: TObject);
     procedure HTMLabel2Click(Sender: TObject);
   private
-    BlinkingList : TMessagePanelList;
     procedure PanelButtonClick(Sender: TObject);
-    procedure Blink;
-    procedure CheckBlinkTimer;
-    procedure StartBlink;
     function MessageIndex(msgType: TRoomerMessageType; msgId: String): Integer;
-    procedure evtMessageListNotification(Sender: TObject; const Item: TMessagePanel; Action: TCollectionNotification);
     { Private declarations }
   public
     { Public declarations }
@@ -122,6 +115,7 @@ type
                          MessageLink,
                          MessageId : String);
     procedure RemoveThoseNotInList(MessageType: TRoomerMessageType; List: TStrings);
+    procedure Clear;
     function HeightNeeded : Integer;
 
   end;
@@ -156,14 +150,9 @@ begin
   BorderStyle := bsNone;
   BevelOuter := bvNone;
   Height := 41;
-//  SkinData.CustomColor := True;
-//  SkinData.CustomFont := True;
-//  SkinData.SkinSection := '';
   ParentColor := True;
   Top := 10000;
   SkinData.SkinManager := frmMain.sSkinManager1;
-
-
 end;
 
 procedure TMessagePanel.Prepare;
@@ -195,13 +184,10 @@ end;
 
 procedure TMessagePanel.CreateButtonPanel;
 begin
-  FButtonPanel := TsPanel.Create(self);
+  FButtonPanel := TsPanel.Create(nil);
   FButtonPanel.Parent := self;
   FButtonPanel.Align := alRight;
   FButtonPanel.BevelOuter := bvNone;
-//  FButtonPanel.SkinData.CustomColor := True;
-//  FButtonPanel.SkinData.CustomFont := True;
-//  FButtonPanel.SkinData.SkinSection := '';
   FButtonPanel.Width := 28;
   FButtonPanel.SkinData.SkinManager := frmMain.sSkinManager1;
   FButtonPanel.SkinData.SkinSection := 'PANEL';
@@ -209,14 +195,11 @@ end;
 
 procedure TMessagePanel.CreateImagePanel;
 begin
-  FImagePanel := TsPanel.Create(self);
+  FImagePanel := TsPanel.Create(nil);
   FImagePanel.Parent := self;
   FImagePanel.ParentColor := True;
   FImagePanel.Align := alLeft;
   FImagePanel.BevelOuter := bvNone;
-//  FImagePanel.SkinData.CustomColor := True;
-//  FImagePanel.SkinData.CustomFont := True;
-//  FImagePanel.SkinData.SkinSection := '';
   FImagePanel.Width := 30;
   FImagePanel.SkinData.SkinManager := frmMain.sSkinManager1;
   FImagePanel.SkinData.SkinSection := 'PANEL';
@@ -224,7 +207,7 @@ end;
 
 procedure TMessagePanel.CreateButtonPanelImage;
 begin
-  FImage := TsLabel.Create(self);
+  FImage := TsLabel.Create(nil);
   FImage.Align := alClient;
   FImage.AlignWithMargins := True;
   FImage.Parent := FImagePanel;
@@ -242,7 +225,7 @@ end;
 
 procedure TMessagePanel.CreateButtonPanelText;
 begin
-  FText := TsLabel.Create(self);
+  FText := TsLabel.Create(nil);
   FText.Align := alClient;
   FText.Parent := self;
   FText.WordWrap := True;
@@ -259,19 +242,15 @@ end;
 
 procedure TMessagePanel.CreateButtonPanelReadButton;
 begin
-  FReadButton := TsButton.Create(self);
+  FReadButton := TsButton.Create(nil);
   FReadButton.Align := alClient;
   FReadButton.Parent := FButtonPanel;
   FReadButton.Images := DImages.cxSmallImagesFlat;
   FReadButton.ImageIndex := 4;
   FReadButton.Left := 0;
   FReadButton.Top := -1;
-//  FReadButton.SkinData.CustomColor := False;
-//  FReadButton.SkinData.CustomFont := False;
   FReadButton.SkinData.SkinManager := frmMain.sSkinManager1;
   FReadButton.SkinData.SkinSection := 'BUTTON';
-////  FReadButton.Height := 42;
-////  FReadButton.Width := 27;
 end;
 
 procedure TMessagePanel.PrepareMessagePanel(_messageType: TRoomerMessageType;
@@ -330,20 +309,6 @@ begin
   end;
 end;
 
-//procedure TMessagePanel.DrawItemToImage(Image : TsImage; ImageIndex : Integer);
-//begin
-//  // Make sure that any prior state is cleared.
-//  // If you do not do that with transparency enabled, you would see
-//  // images on top of each other
-//  Image.Picture.Bitmap := nil;
-//  // Make sure that transparency pixel in the image is taken
-//  // in consideration
-//  Image.Picture.Bitmap.TransparentMode := tmFixed;
-//  Image.Picture.Bitmap.TransparentColor := clWhite;
-//  // Load image from the Image list into TImage
-//  FrmMessagesTemplates.sAlphaImageList1.GetBitmap(ImageIndex, Image.Picture.Bitmap);
-//end;
-
 procedure TMessagePanel.SetMessageText(const Value: String);
 begin
   FMessageText := Value;
@@ -374,7 +339,7 @@ var msg : TMessagePanel;
 begin
   if MessageIndex(MessageType, MessageId) = -1 then
   begin
-    msg := TMessagePanel.Create(nil);
+    msg := TMessagePanel.Create(nil); // Panel will be owned by MessageList and freed when removed there
     msg.Parent := sbMessageContainer;
     msg.Prepare;
     msg.PrepareMessagePanel(MessageType,
@@ -387,8 +352,6 @@ begin
               MessageAreaMouseEnter,
               MessageAreaMouseLeave);
     MessageList.Add(msg);
-    BlinkingList.Add(msg);
-    StartBlink;
   end;
 end;
 
@@ -406,26 +369,17 @@ begin
   end;
 end;
 
-procedure TFrmMessagesTemplates.evtMessageListNotification(Sender: TObject; const Item: TMessagePanel; Action: TCollectionNotification);
-begin
-  if (Action in [cnRemoved, cnExtracted]) and BlinkingList.Contains(Item) then
-    BlinkingList.Remove(Item);
-end;
 
 procedure TFrmMessagesTemplates.FormCreate(Sender: TObject);
 begin
   //sbMessageContainer.
   FreeAndNil(pnlDesignTime);
   MessageList := TMessagePanelList.Create(True);
-  MessageList.OnNotify := evtMessageListNotification; // Notify blinklist when item is removed
-  BlinkingList := TMessagePanelList.Create(False); // MessagePanels are owned by MessageList!
 end;
 
 procedure TFrmMessagesTemplates.FormDestroy(Sender: TObject);
 begin
-  timBlink.Enabled := False;
-  MessageList.Free; //Messagelist first so notifications still have access to Blinkinglist
-  BlinkingList.Free;
+  MessageList.Free;
 end;
 
 function TFrmMessagesTemplates.HeightNeeded: Integer;
@@ -478,45 +432,9 @@ begin
 
 end;
 
-
-procedure TFrmMessagesTemplates.timBlinkTimer(Sender: TObject);
+procedure TFrmMessagesTemplates.Clear;
 begin
-  timBlink.Enabled := True;
-  try
-    Blink;
-    timBlink.Tag := timBlink.Tag - 1;
-  finally
-    CheckBlinkTimer;
-  end;
-end;
-
-procedure TFrmMessagesTemplates.CheckBlinkTimer;
-begin
-  if Assigned(BlinkingList) then
-  begin
-    timBlink.Enabled := (timBlink.Tag > 0) AND (BlinkingList.Count > 0);
-    if NOT timBlink.Enabled then
-      BlinkingList.Clear;
-  end;
-end;
-
-procedure TFrmMessagesTemplates.Blink;
-begin
-//  if Assigned(BlinkingList) then
-//    for i := 0 to BlinkingList.Count - 1 do
-//    begin
-//      if BlinkingList[i].FText.Style.BorderColor = clRed then
-//        BlinkingList[i].FText.Style.BorderColor := clBlack
-//      else
-//        BlinkingList[i].FText.Style.BorderColor := clRed;
-//      BlinkingList[i].FText.Update;
-//    end;
-end;
-
-procedure TFrmMessagesTemplates.StartBlink;
-begin
-  timBlink.Tag := 5;
-  timBlink.Enabled := (timBlink.Tag > 0) AND (BlinkingList.Count > 0)
+  MessageList.Clear;
 end;
 
 end.

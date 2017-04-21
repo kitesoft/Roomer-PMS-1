@@ -88,7 +88,13 @@ procedure TcxCustomPivotGridDrillDownDataSet.DoAssignFieldProperties(AField: TFi
 begin
   inherited;
   if IsDBFieldAssigned(APivotGridField) and (APivotGridField.GroupInterval = giDefault) then
-    AField.Size := GetDBField(APivotGridField).Size;
+  begin
+    // ROOMER PATCH BS [2017-04-19] Use fieldnames in stead of translated captions
+    // START PATCH
+     AField.Size := GetDBField(APivotGridField).Size;
+     aField.DisplayLabel := APivotGridField.Caption;
+    // END OF PATCH
+  end;
 end;
 
 procedure TcxCustomPivotGridDrillDownDataSet.DoCreateData;

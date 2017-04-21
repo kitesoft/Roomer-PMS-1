@@ -135,10 +135,7 @@ type
     btnPasteFile: TsButton;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
-    procedure FormClose(Sender: TObject; var Action: TCloseAction);
-    procedure FormDestroy(Sender: TObject);
     procedure BtnOkClick(Sender: TObject);
-    procedure edCustomerExit(Sender: TObject);
     procedure btnCetCurrencyClick(Sender: TObject);
     procedure btnGetCountryClick(Sender: TObject);
     procedure btnGetPCCodeClick(Sender: TObject);
@@ -212,7 +209,7 @@ uses
   , uFrmResources
   , uResourceManagement
   , uDImages
-  , uUtils;
+  , uUtils, uResourceTypeDefinitions;
 
 
 function openCustomerEdit(var theData : recCustomerHolder; isInsert : boolean; _financeCustomerList : TKeyPairList = nil) : boolean;
@@ -242,7 +239,8 @@ begin
   // Customer
   edCustomer.MaxLength := 15;
 //  edCustomer.CharCase  := ecUpperCase;
-  edCustomer.Enabled := true; // zInsert;
+  edCustomer.Enabled := zInsert;
+  sSpeedButton1.Enabled := zInsert;
 
   edPID.MaxLength      := 15;
 //  edPID.CharCase  := ecUpperCase;
@@ -267,7 +265,7 @@ begin
   edCountry.MaxLength      := 2;
   edCountry.CharCase       := ecUpperCase;
 
-  edCurrency.MaxLength      := 2;
+  edCurrency.MaxLength      := 3;
   edCurrency.CharCase       := ecUpperCase;
 end;
 
@@ -376,9 +374,7 @@ end;
 
 procedure TfrmCustomerEdit2.btnDocumentsClick(Sender: TObject);
 begin
-  StaticResources('Customer Resources',
-        format(CUSTOMER_DOCUMENTS_STATIC_RESOURCE_PATTERN, [edCustomer.Text]),
-        ACCESS_RESTRICTED);
+  StaticResources('Customer Resources',[TResourceType.rtCustomerDocument], TResourceAccessType.ratRestricted, edCustomer.Text);
 end;
 
 (*
@@ -540,11 +536,6 @@ begin
   btnPasteFile.Enabled := btnDocuments.Enabled;
 end;
 
-procedure TfrmCustomerEdit2.edCustomerExit(Sender: TObject);
-begin
-  //
-end;
-
 procedure TfrmCustomerEdit2.edPIDDblClick(Sender: TObject);
 begin
   if not _chkPID(edPID.Text) then
@@ -556,22 +547,10 @@ begin
   end;
 end;
 
-procedure TfrmCustomerEdit2.FormClose(Sender: TObject; var Action: TCloseAction);
-begin
-   //**
-end;
-
-
 procedure TfrmCustomerEdit2.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 begin
   canclose := zCanClose;
 end;
-
-procedure TfrmCustomerEdit2.FormDestroy(Sender: TObject);
-begin
-  //**
-end;
-
 
 procedure TfrmCustomerEdit2.btnAddContactClick(Sender: TObject);
 var id : Integer;
@@ -782,12 +761,7 @@ begin
     Exit;
   end;
 
-
-
-
-
    zCanClose := true;
-
 
   zData.Active           :=  chkActive.checked        ;
   zData.Customer         :=  TRIM(edCustomer.Text)    ;

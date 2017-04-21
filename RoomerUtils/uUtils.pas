@@ -1707,10 +1707,6 @@ begin
     Result := Result.Owner;
 end;
 
-{ TIntValue }
-
-
-
 constructor TIntValue.Create(value: integer);
 begin
   fvalue := value;

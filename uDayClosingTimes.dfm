@@ -102,7 +102,7 @@ object frmDayClosingTimes: TfrmDayClosingTimes
         OnClick = btnEditClick
         SkinData.SkinSection = 'BUTTON'
       end
-      object edtLastDate: TsDateEdit
+      object edtFirstDate: TsDateEdit
         Left = 109
         Top = 48
         Width = 90
@@ -118,7 +118,6 @@ object frmDayClosingTimes: TfrmDayClosingTimes
         MaxLength = 10
         ParentFont = False
         TabOrder = 4
-        CheckOnExit = True
         GlyphMode.Blend = 0
         GlyphMode.Grayed = False
         DefaultToday = True
@@ -130,6 +129,7 @@ object frmDayClosingTimes: TfrmDayClosingTimes
         Height = 26
         Hint = 'Refresh grid'
         Caption = 'Refresh'
+        Default = True
         Images = DImages.PngImageList1
         ParentShowHint = False
         ShowHint = True
@@ -180,7 +180,6 @@ object frmDayClosingTimes: TfrmDayClosingTimes
         Hint = 'Apply and close'
         Anchors = [akTop, akRight]
         Caption = 'OK'
-        Default = True
         ImageIndex = 82
         Images = DImages.PngImageList1
         ModalResult = 1

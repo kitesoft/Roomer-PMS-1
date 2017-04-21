@@ -248,10 +248,6 @@ object frmAssignPayment: TfrmAssignPayment
     SkinData.SkinSection = 'PAGECONTROL'
     object sTabSheet1: TsTabSheet
       Caption = 'Work within reservation group'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object btnSetToGroupAccount: TsButton
         Left = 16
         Top = 26
@@ -279,20 +275,19 @@ object frmAssignPayment: TfrmAssignPayment
           Alignment = taLeftJustify
           SkinData.SkinSection = 'COMBOBOX'
           VerticalAlignment = taAlignTop
+          Style = csDropDownList
           Color = clWhite
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
-          ItemIndex = 0
+          ItemIndex = -1
           ParentFont = False
           TabOrder = 0
-          Text = 'Select one'
           OnCloseUp = __cbxRoomSelectCloseUp
           Items.Strings = (
-            'Select one'
-            '')
+            'Select one')
         end
         object btnExceuteAssingToroom: TsButton
           Left = 253
@@ -309,10 +304,6 @@ object frmAssignPayment: TfrmAssignPayment
     end
     object sTabSheet2: TsTabSheet
       Caption = 'Move to other reservation '
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       DesignSize = (
         442
         216)

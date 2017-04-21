@@ -216,7 +216,15 @@ function TcxPivotGridCustomDataSet.DoCreateField(APivotGridField: TcxPivotGridFi
     end;
 
   begin
-    Result := APivotGridField.Caption;
+  // ROOMER PATCH BS [2017-04-19] Use fieldnames in stead of translated captions
+  // START PATCH
+    if (APivotGridField.DataBinding is TcxDBPivotGridFieldDataBinding) then
+    begin
+      Result := TcxDBPivotGridFieldDataBinding(APivotGridField.DataBinding).FieldName;
+    end
+    else
+  // END OF PATCH
+      Result := APivotGridField.Caption;
     if not CheckFieldName(Result) then
       Result := APivotGridField.Name;
     if not CheckFieldName(Result) then

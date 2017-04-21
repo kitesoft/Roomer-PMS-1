@@ -546,10 +546,16 @@ begin
     frm.Showdate := aShowDate;
     if frm.ShowModal = mrOK then
     begin
-      oNewReservation := frm.oNewReservation;
-      oRestReservation := frm.oRestReservation;
-      restCount := frm.zRestCount;
-      result := true;
+      if frm.oNewReservation.ReservationId = 0 then
+      begin
+        result := False;
+      end else
+      begin
+        oNewReservation := frm.oNewReservation;
+        oRestReservation := frm.oRestReservation;
+        restCount := frm.zRestCount;
+        result := true;
+      end;
     end;
   finally
     frm.Free;

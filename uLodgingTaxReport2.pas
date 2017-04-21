@@ -406,7 +406,7 @@ begin
   ttExCluted := 0.00;
   ttNights := 0;
 
-  LodgingTaxItem := ctrlGetString('stayTaxItem'); // 'LODGTAX';
+  LodgingTaxItem := g.qStayTaxItem;
 
   Sql := '';
 sql := sql +    'SELECT '#10;

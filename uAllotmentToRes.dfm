@@ -500,7 +500,7 @@ object frmAllotmentToRes: TfrmAllotmentToRes
       SortSettings.HeaderColorTo = 16579058
       SortSettings.HeaderMirrorColor = 16380385
       SortSettings.HeaderMirrorColorTo = 16182488
-      Version = '8.2.4.1'
+      Version = '8.2.5.2'
       ColWidths = (
         132)
       RowHeights = (

@@ -147,7 +147,7 @@ uses uAppGlobal,
 
   uBookKeepingCodes,
 
-  uFrmEditEmailProperties,
+  uFrmEditResourceProperties,
 
   uRptBookkeeping,
   uReservationEmailingDialog,
@@ -185,6 +185,8 @@ uses uAppGlobal,
   , uRptDailyRevenues
   , uRptHouseKeeping
   , uDayClosingTimes
+
+  , uEditFinanceExportProperties
   ;
 
 
@@ -313,6 +315,7 @@ begin
   constants.Add('shDeleteItemtype', 'Delete item type');
   constants.Add('shDeleteItem', 'Delete item');
   constants.Add('shDeleteSelectedLine', 'Delete selected line');
+  constants.Add('shDeleteSelectedLines', 'Deleting ALL selected lines.');
   constants.Add('shDeleteLocation', 'Delete location');
   constants.Add('shDeleteRoom', 'Delete Room');
   constants.Add('shDeleteMarketSegment', 'Delete marketsegment');
@@ -340,6 +343,7 @@ begin
   constants.Add('shContinue', 'Continue ?');
   constants.Add('shNewValueExistInAnotherRecor', 'New value exist in another record. Use [ESC] to cancel');
   constants.Add('shOldValueUsedInRelatedDataC', ' Old value used in related data can not change - Use [ESC] to cancel');
+  constants.Add('shCustomer_CannotDeleteRackCustomer', 'Default customer cannot be deleted');
 end;
 
 procedure AddConstants_1;
@@ -792,7 +796,8 @@ begin
                                              'After compressing the lines, you will need to manage the prices' + #13 +
                                              'and all related issues manually without the system interfering.' + #13#13 +
                                              'Please confirm by clicking [Yes] or [Cancel] the process.');
-											 
+  constants.Add('shTx_Invoice_invalidInvoiceNr', 'Invalid invoicenumber [%d]. Printing invoice is cancelled.');
+
  (* constants.Add('shTx_InvoiceList2_BookingNumber', 'Númer bókunnar er tala');
   constants.Add('shTx_InvoiceList2_CashAccount', 'Þetta er staðgreiðslureikningur');
   constants.Add('shTx_InvoiceList2_GroupInvoice', 'Þetta er hópreikningur');
@@ -1621,6 +1626,31 @@ begin
   constants.Add('shTx_Removing_Allotment_Traces', 'Removing allotment traces');
 
   constants.Add('shTx_Processing_Failed_Rolling_Back', 'The process failed. Rolling back to previous state...');
+
+  constants.Add('shTx_ResourceAccesType_OPEN', 'Public');
+  constants.Add('shTx_ResourceAccesType_RESTRICTED', 'Private');
+
+  constants.Add('shTx_ResourceType_ANYFILE', 'Any file');
+  constants.Add('shTx_ResourceType_GUEST_EMAIL', 'Confirmation email template');
+  constants.Add('shTx_ResourceType_CANCEL_EMAIL', 'Cancellation email template');
+  constants.Add('shTx_ResourceType_PRE_ARRIVAL_EMAIL', 'Pre-arrival email template');
+  constants.Add('shTx_ResourceType_POST_DEPARTURE_EMAIL', 'Post-departure email template');
+  constants.Add('shTx_ResourceType_ROOM_IMAGE', 'Room image');
+  constants.Add('shTx_ResourceType_ROOM_CLASS_IMAGE', 'Roomclass image');
+  constants.Add('shTx_ResourceType_CUSTOMER_DOCUMENT', 'Customer document');
+  constants.Add('shTx_ResourceType_BOOKING', 'Reservation document');
+  constants.Add('shTx_ResourceType_ROOM_BOOKING', 'Room reservation document');
+  constants.Add('shTx_ResourceType_GUEST', 'Guest document');
+
+  constants.Add('shTx_ResourceManager_Delete_Resource', 'Deleting this resource. Are you sure?');
+
+  constants.Add('shStaffCommAction_NoActionNeeded', 'No action needed');
+  constants.Add('shStaffCommAction_ActionNeeded', 'Action needed');
+  constants.Add('shStaffCommAction_ActionFinished', 'Action finished');
+
+  constants.Add('shDailyrevenues_refreshwithdetails', 'Data needs to be refreshed to make detailinfo visible.'+#10#13 + 'Refresh now?');
+
+
 end;
 
 procedure AddConstants_OfflineReports;
@@ -1631,6 +1661,11 @@ begin
 
   constants.Add(cshTx_HotelStatusOfflineReport_Name, 'Hotel Status Report');
   constants.Add(cshTx_HotelArrivalsOfflineReport_Name, 'Hotel Arrivals Report');
+end;
+
+procedure AddBaseFormConstants;
+begin
+  constants.Add('shBaseGridForm_NoDataToDisplay', '<No data to display>');
 end;
 
 procedure prepareConstants;
@@ -1650,6 +1685,8 @@ begin
 
   AddConstants_SystemConstants;
   AddConstants_NewUIConstants;
+
+  AddBaseFormConstants;
 end;
 
 function GetTranslatedText(nameOfConstant : String) : String;
@@ -1702,7 +1739,7 @@ begin
 //frmDayNotes := TfrmDayNotes.Create(nil); frmDayNotes.Free; frmDayNotes := nil;
   frmChangeRRdates := TfrmChangeRRdates.Create(nil); frmChangeRRdates.Free; frmChangeRRdates := nil;
   frmChangeRate := TfrmChangeRate.Create(nil); frmChangeRate.Free; frmChangeRate := nil;
-  frmOpenInvoicesNew := TfrmOpenInvoicesNew.Create(nil); frmOpenInvoicesNew.Free; frmOpenInvoicesNew := nil;
+  TfrmOpenInvoicesNew.Create(nil).Free;
   frmResMemos := TfrmResMemos.Create(nil); frmResMemos.Free; frmResMemos := nil;
 //  frmSelHotel := TfrmSelHotel.Create(nil); frmSelHotel.Free; frmSelHotel := nil;
   TfrmHomedate.Create(nil).Free;
@@ -1805,7 +1842,7 @@ begin
 
   frmBookKeepingCodes := TfrmBookKeepingCodes.Create(nil); frmBookKeepingCodes.Free; frmBookKeepingCodes := nil;
 
-  FrmEditEmailProperties := TFrmEditEmailProperties.Create(nil); FrmEditEmailProperties.Free; FrmEditEmailProperties := nil;
+  TFrmEditResourceProperties.Create(nil).Free;
 
   frmRptBookkeeping := TfrmRptBookkeeping.Create(nil); frmRptBookkeeping.Free; frmRptBookkeeping := nil;
   FrmReservationEmailingDialog := TFrmReservationEmailingDialog.Create(nil); FrmReservationEmailingDialog.Free; FrmReservationEmailingDialog := nil;
@@ -1821,7 +1858,7 @@ begin
   frmMergePortfolios := TfrmMergePortfolios.Create(nil); frmMergePortfolios.Free; frmMergePortfolios := nil;
   frmStaffComm := TfrmStaffComm.Create(nil); frmStaffComm.Free; frmStaffComm := nil;
   FrmCheckOut := TFrmCheckOut.Create(nil); FrmCheckOut.Free; FrmCheckOut := nil;
-  FrmStaffNote := TFrmStaffNote.Create(nil); FrmStaffNote.Free; FrmStaffNote := nil;
+  TFrmStaffNote.Create(nil).Free;
   FrmMessageViewer := TFrmMessageViewer.Create(nil); FrmMessageViewer.Free; FrmMessageViewer := nil;
   frmInvoiceCompare := TfrmInvoiceCompare.Create(nil); frmInvoiceCompare.Free; frmInvoiceCompare := nil;
   FrmAlertEdit := TFrmAlertEdit.Create(nil); FrmAlertEdit.Free; FrmAlertEdit := nil;
@@ -1863,6 +1900,7 @@ begin
   TfrmDayClosingTimes.Create(nil).Free;
 
   TfrmBusyMessage.Create(nil).Free;
+  TfrmEditFinanceExportProperties.Create(nil).Free;
 
 
 end;

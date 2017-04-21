@@ -2,7 +2,7 @@
 {                                                                           }
 {           Spring Framework for Delphi                                     }
 {                                                                           }
-{           Copyright (c) 2009-2016 Spring4D Team                           }
+{           Copyright (c) 2009-2017 Spring4D Team                           }
 {                                                                           }
 {           http://www.spring4d.org                                         }
 {                                                                           }
@@ -71,6 +71,7 @@ type
   published
     procedure AssertsWrongOrder;
     procedure SequenceWorksUsingWith;
+    procedure ResetClearsSequence;
   end;
 
 implementation
@@ -272,7 +273,7 @@ var
 begin
   mock.Instance.TestVariant(42);
   mock.Received.TestVariant(42);
-  mock.Received.TestVariant(Arg.IsEqual(42));
+  mock.Received.TestVariant(Arg.IsEqual<Integer>(42));
   Pass;
 end;
 
@@ -438,6 +439,22 @@ end;
 
 {$ENDREGION}
 
+
+procedure MockSequenceTest.ResetClearsSequence;
+var
+  mock: Mock<IMockTest>;
+  seq: MockSequence;
+begin
+  mock.Behavior := TMockBehavior.Strict;
+  mock.Setup(seq).Executes.When.Test1(1, 'a');
+  mock.Instance.Test1(1, 'a');
+
+  seq.Reset;
+  mock.Setup(seq).Executes.When.Test1(2, 'b');
+  mock.Instance.Test1(2, 'b');
+
+  Pass;
+end;
 
 procedure MockSequenceTest.SequenceWorksUsingWith;
 var

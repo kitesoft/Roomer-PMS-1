@@ -84,7 +84,8 @@ uses
   _Glob,
   CompProd
   , uUtils
-  , uSQLUtils;
+  , uSQLUtils
+  , objRoomList2;
 
 {$R *.dfm}
 
@@ -95,6 +96,7 @@ var
   obj : TObject;
   currStatus : STring;
   idx : Integer;
+  RoomItem : TRoomItem;
 begin
   // --
   result := false;
@@ -210,8 +212,8 @@ begin
     if dsRoom.State = dsEdit then
     begin
       dsRoom.Post;
-      idx := g.oRooms.FindRoomFromRoomNumber(sRoom);
-      g.oRooms.RoomItemsList.Items[idx].Status := dsRoom['status'];
+      RoomItem := g.oRooms.FindRoomFromRoomNumber(sRoom);
+      RoomItem.Status := dsRoom['status'];
     end;
 
 

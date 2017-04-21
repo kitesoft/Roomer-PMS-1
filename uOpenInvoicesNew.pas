@@ -166,9 +166,6 @@ type
     zbIncludeRoomRent : boolean;
   end;
 
-var
-  frmOpenInvoicesNew : TfrmOpenInvoicesNew;
-
 implementation
 
 uses

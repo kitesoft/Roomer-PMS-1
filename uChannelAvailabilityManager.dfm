@@ -126,7 +126,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
         object pnlRestrictions: TsPanel
           AlignWithMargins = True
           Left = 3
-          Top = 288
+          Top = 295
           Width = 425
           Height = 169
           Align = alTop
@@ -135,6 +135,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
           Padding.Bottom = 3
           TabOrder = 0
           SkinData.SkinSection = 'PANEL'
+          ExplicitTop = 290
           object lblMinStay: TsLabel
             Left = 134
             Top = 7
@@ -873,7 +874,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
           Left = 3
           Top = 199
           Width = 425
-          Height = 83
+          Height = 90
           Align = alTop
           AutoSize = True
           TabOrder = 3
@@ -1253,7 +1254,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
         Margins.Top = 2
         Margins.Right = 2
         Margins.Bottom = 2
-        ActivePage = tsRates
+        ActivePage = tsAvailabilities
         Align = alClient
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText

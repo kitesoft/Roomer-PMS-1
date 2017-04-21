@@ -1,22 +1,22 @@
 inherited frmEmbDateStatistics: TfrmEmbDateStatistics
   Caption = 'Statistics'
   ClientHeight = 677
-  ClientWidth = 534
+  ClientWidth = 488
   Font.Height = -11
-  ExplicitWidth = 550
+  ExplicitWidth = 504
   ExplicitHeight = 716
   PixelsPerInch = 96
   TextHeight = 13
   inherited sbStatusBar: TsStatusBar
     Top = 657
-    Width = 534
+    Width = 488
     ExplicitTop = 657
     ExplicitWidth = 534
   end
   object pnlStatistics: TsPanel [1]
     Left = 0
     Top = 0
-    Width = 534
+    Width = 488
     Height = 657
     Align = alClient
     BevelOuter = bvNone
@@ -30,10 +30,11 @@ inherited frmEmbDateStatistics: TfrmEmbDateStatistics
     ParentFont = False
     TabOrder = 0
     SkinData.SkinSection = 'PANEL'
+    ExplicitWidth = 534
     object lblPropertyStatus: TsLabel
       Left = 0
       Top = 0
-      Width = 534
+      Width = 488
       Height = 21
       Margins.Left = 10
       Margins.Top = 0
@@ -53,7 +54,7 @@ inherited frmEmbDateStatistics: TfrmEmbDateStatistics
     object lblDateStatistics: TsLabel
       Left = 0
       Top = 21
-      Width = 534
+      Width = 488
       Height = 18
       Margins.Left = 10
       Margins.Top = 0
@@ -73,7 +74,7 @@ inherited frmEmbDateStatistics: TfrmEmbDateStatistics
     object pgrStatisticsPanelGroup: TCategoryPanelGroup
       Left = 0
       Top = 39
-      Width = 534
+      Width = 488
       Height = 618
       VertScrollBar.Tracking = True
       Align = alClient
@@ -83,17 +84,19 @@ inherited frmEmbDateStatistics: TfrmEmbDateStatistics
       HeaderFont.Name = 'Tahoma'
       HeaderFont.Style = []
       TabOrder = 0
+      ExplicitWidth = 534
       object cpnlRoomtypes: TCategoryPanel
-        Top = 417
+        Top = 438
         Height = 221
         Caption = 'Room types'
         ParentBackground = True
         ParentColor = True
         TabOrder = 0
+        ExplicitTop = 473
         object grdRoomStates: TAdvStringGrid
           Left = 0
           Top = 0
-          Width = 513
+          Width = 467
           Height = 195
           Cursor = crDefault
           Margins.Left = 10
@@ -248,15 +251,16 @@ inherited frmEmbDateStatistics: TfrmEmbDateStatistics
         end
       end
       object cpnlChart: TCategoryPanel
-        Top = 177
+        Top = 198
         Height = 240
         Caption = 'Chart'
         ParentColor = True
         TabOrder = 1
+        ExplicitTop = 233
         object chrtRoomStats: TChart
           Left = 0
           Top = 0
-          Width = 513
+          Width = 467
           Height = 214
           Margins.Left = 10
           Margins.Top = 0
@@ -321,15 +325,16 @@ inherited frmEmbDateStatistics: TfrmEmbDateStatistics
       end
       object cpnlRoomClasses: TCategoryPanel
         Top = 0
-        Height = 177
+        Height = 198
         Caption = 'Room Classes'
+        FullRepaint = False
         ParentBackground = True
         ParentColor = True
         TabOrder = 2
         object grdRoomClasses: TAdvStringGrid
           Left = 0
           Top = 0
-          Width = 513
+          Width = 467
           Height = 172
           Cursor = crDefault
           Margins.Left = 10

@@ -2,7 +2,7 @@
 {                                                                           }
 {           Spring Framework for Delphi                                     }
 {                                                                           }
-{           Copyright (c) 2009-2016 Spring4D Team                           }
+{           Copyright (c) 2009-2017 Spring4D Team                           }
 {                                                                           }
 {           http://www.spring4d.org                                         }
 {                                                                           }
@@ -28,7 +28,7 @@ unit Spring.Persistence.Core.Repository.Proxy;
 
 interface
 
-{$IFNDEF DELPHIXE_UP}
+{$IFDEF DELPHI2010}
   {$MESSAGE FATAL 'Proxy repository only supported on XE or higher'}
 {$ENDIF}
 
@@ -36,9 +36,7 @@ uses
   Rtti,
   TypInfo,
   Spring.Collections,
-{$IFDEF DELPHIXE}
   Spring.VirtualInterface,
-{$ENDIF}
   Spring.Persistence.Core.Interfaces,
   Spring.Persistence.Criteria.Interfaces,
   Spring.Persistence.Core.Session,

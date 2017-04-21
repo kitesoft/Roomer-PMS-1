@@ -53,7 +53,7 @@ uses ud
     , uFileSystemUtils
     , uResourceManagement
     , uActivityLogs
-    ;
+    , uResourceTypeDefinitions;
 
 procedure PostInvoicesToBookKeepingSystem(invoiceList : String);
 var
@@ -354,7 +354,7 @@ begin
     begin
       lines := TStringList.Create;
       try
-        RoomerResourceManagement := TRoomerResourceManagement.Create(ANY_FILE, ACCESS_RESTRICTED);
+        RoomerResourceManagement := TRoomerResourceManagement.Create(TResourceType.rtAnyFile, TResourceAccessType.ratRestricted);
         try
           exportFileTemplate := RoomerResourceManagement.DownloadResourceByName(exportFileTemplate, SubjectTemplate);
         finally
