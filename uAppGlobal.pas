@@ -580,7 +580,7 @@ begin
     end;
 
     lLocs.Delimiter := ',';
-    lLocs.QuoteChar := ' ';
+    lLocs.QuoteChar := #9;
     Result := lLocs.DelimitedText;
   finally
     lLocs.Free;

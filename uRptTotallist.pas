@@ -260,7 +260,7 @@ begin
            'FROM '#10 +
            '    predefineddates pd '#10 +
            '    JOIN roomsdate rd ON rd.ADate=pd.date AND NOT rd.resFlag IN (''X'',''C'') '#10 +
-           '	  JOIN rooms ON (rooms.room = rd.room AND rooms.wildcard = 0 and rooms.location in (%s)) '#10 +
+           '	  LEFT JOIN rooms ON (rooms.room = rd.room AND rooms.wildcard = 0 and rooms.location in (%s)) '#10 +
            '    JOIN roomreservations rr ON rr.RoomReservation=rd.RoomReservation '#10 +
            '    JOIN reservations r ON r.Reservation=rr.Reservation '#10 +
            '    LEFT JOIN (SELECT RoomReservation, COUNT(id) AS numGuests FROM persons GROUP BY RoomReservation) AS p ON p.RoomReservation=rr.RoomReservation '#10 +
