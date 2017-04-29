@@ -2,7 +2,7 @@
     <PropertyGroup>
         <ProjectGuid>{436E2CCE-115E-475F-9C3E-19C03F70A4D0}</ProjectGuid>
         <MainSource>Roomer.dpr</MainSource>
-        <Config Condition="'$(Config)'==''">Debug</Config>
+        <Config Condition="'$(Config)'==''">Release</Config>
         <DCC_DCCCompiler>DCC32</DCC_DCCCompiler>
         <ProjectVersion>14.3</ProjectVersion>
         <FrameworkType>VCL</FrameworkType>
@@ -141,8 +141,10 @@
         <DCC_Define>_ROOMERSSL;TRANSLATION_ACTIVE;$(DCC_Define)</DCC_Define>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
+        <VerInfo_PreRelease>false</VerInfo_PreRelease>
+        <VerInfo_Debug>false</VerInfo_Debug>
         <VerInfo_AutoGenVersion>false</VerInfo_AutoGenVersion>
-        <VerInfo_Keys>CompanyName=Promoir BV;FileDescription=Roomer PMS;FileVersion=1.9.13.0;InternalName=;LegalCopyright=(C) 2013, 2014, 2015, 2016, 2017 Promoir BV;LegalTrademarks=Roomer is a Registered Trademark of Promoir BV;OriginalFilename=Roomer.exe;ProductName=Roomer Open Hospitality Platform;ProductVersion=1.9.13.0;Comments=;ExtraBuild=170424b;PrivateBuild=</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=Promoir BV;FileDescription=Roomer PMS;FileVersion=1.9.13.0;InternalName=;LegalCopyright=(C) 2013, 2014, 2015, 2016, 2017 Promoir BV;LegalTrademarks=Roomer is a Registered Trademark of Promoir BV;OriginalFilename=Roomer.exe;ProductName=Roomer Open Hospitality Platform;ProductVersion=1.9.13.0;Comments=;ExtraBuild=170428;PrivateBuild=</VerInfo_Keys>
         <DCC_AssertionsAtRuntime>false</DCC_AssertionsAtRuntime>
         <DCC_DcuOutput>_dcu</DCC_DcuOutput>
         <DCC_ExeOutput>RoomerPMSRelease</DCC_ExeOutput>
@@ -844,6 +846,10 @@
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Definitions\uStaffCommunicationDefinitions.pas"/>
+        <DCCReference Include="Reports\uRptReservationStatusPerDay.pas">
+            <Form>FrmRptReservationStatusPerDay</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <None Include="Roomer.todo"/>
         <None Include="notes.txt"/>
         <None Include="Roomer.inc"/>
