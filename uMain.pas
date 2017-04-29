@@ -692,7 +692,7 @@ type
     dxUserActivityLog: TdxBarLargeButton;
     dbbPreArrivalEmailTemplate: TdxBarButton;
     dbbPostDepartureEmailTemplate: TdxBarButton;
-    dtResStatusPerdDay: TdxBarLargeButton;
+    btnResStatusPerdDay: TdxBarLargeButton;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
@@ -980,7 +980,7 @@ type
     procedure btnDefaultMasterRatesClick(Sender: TObject);
     procedure grOneDayRoomsScrollCell(Sender: TObject; ACol, ARow, ScrollPosition, ScrollMin, ScrollMax: Integer);
     procedure dxUserActivityLogClick(Sender: TObject);
-    procedure dtResStatusPerdDayClick(Sender: TObject);
+    procedure btnResStatusPerdDayClick(Sender: TObject);
 
   private
     FReservationsModel: TReservationsModel;
@@ -2859,6 +2859,7 @@ begin
   dxBarDeveloperTools.Visible := ivAlways;
 {$else}
   dxBarDeveloperTools.Visible := ivNever;
+  btnResStatusPerdDay.Visible := ivNever;
 {$endif}
 end;
 
@@ -3995,7 +3996,7 @@ begin
   dtDateChange(dtDate);
 end;
 
-procedure TfrmMain.dtResStatusPerdDayClick(Sender: TObject);
+procedure TfrmMain.btnResStatusPerdDayClick(Sender: TObject);
 begin
   ShowRptReservationStatusPerDay;
 end;
