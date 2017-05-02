@@ -279,7 +279,7 @@ uses
   uHotelServicesSettings in 'PMSSettings\uHotelServicesSettings.pas',
   uRoomerGridForm in 'RoomerForm\uRoomerGridForm.pas' {frmBaseRoomerGridForm},
   uStaffCommunicationDefinitions in 'Definitions\uStaffCommunicationDefinitions.pas',
-  uRptReservationStatusPerDay in 'Reports\uRptReservationStatusPerDay.pas' {FrmRptReservationStatusPerDay};
+  uRptReservationStatusPerDay in 'Reporting\uRptReservationStatusPerDay.pas' {FrmRptReservationStatusPerDay};
 
 {$R *.RES}
 
