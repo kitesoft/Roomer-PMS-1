@@ -174,7 +174,7 @@ end;
 
 procedure TFrmReservationEmailingDialog.btnResourcesClick(Sender: TObject);
 begin
-  StaticResources(FResourceType.AsReadableString, [FResourceType], TResourceAccessType.ratRestricted);
+  StaticResources(FResourceType.AsReadableString, [FResourceType], TResourceAccessType.ratOpen);
   RefreshTemplateList;
 end;
 
