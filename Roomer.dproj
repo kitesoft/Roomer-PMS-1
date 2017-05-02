@@ -846,9 +846,8 @@
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Definitions\uStaffCommunicationDefinitions.pas"/>
-        <DCCReference Include="Reports\uRptReservationStatusPerDay.pas">
+        <DCCReference Include="Reporting\uRptReservationStatusPerDay.pas">
             <Form>FrmRptReservationStatusPerDay</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <None Include="Roomer.todo"/>
         <None Include="notes.txt"/>
