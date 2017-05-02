@@ -857,6 +857,7 @@
         <DCCReference Include="Definitions\uStaffCommunicationDefinitions.pas"/>
         <DCCReference Include="Reporting\uRptReservationStatusPerDay.pas">
             <Form>FrmRptReservationStatusPerDay</Form>
+        </DCCReference>
         <None Include="Roomer.todo"/>
         <None Include="notes.txt"/>
         <None Include="Roomer.inc"/>
