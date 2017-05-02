@@ -692,6 +692,7 @@ type
     dxUserActivityLog: TdxBarLargeButton;
     dbbPreArrivalEmailTemplate: TdxBarButton;
     dbbPostDepartureEmailTemplate: TdxBarButton;
+    btnResStatusPerdDay: TdxBarLargeButton;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
@@ -979,6 +980,7 @@ type
     procedure btnDefaultMasterRatesClick(Sender: TObject);
     procedure grOneDayRoomsScrollCell(Sender: TObject; ACol, ARow, ScrollPosition, ScrollMin, ScrollMax: Integer);
     procedure dxUserActivityLogClick(Sender: TObject);
+    procedure btnResStatusPerdDayClick(Sender: TObject);
 
   private
     FReservationsModel: TReservationsModel;
@@ -1626,6 +1628,7 @@ uses
     , uRptUserActivity
 		, uResourceTypeDefinitions
 		, uOpenInvoicesNew
+    , uRptReservationStatusPerDay
 		;
 
 {$R *.DFM}
@@ -2053,23 +2056,37 @@ var
   RowIndex: integer;
   RoomItem : TRoomItem;
   Key : String;
+  rSet : TRoomerDataSet;
 begin
   startRow := grPeriodRooms.FixedRows;
   RowIndex := startRow - 1;
-  for Key IN g.oRooms.RoomItemsList.Keys do
-  begin
-    inc(RowIndex);
-    RoomItem := g.oRooms.RoomItemsList.Items[Key];
-    status := RoomItem.status;
-    Room := RoomItem.Room;
-    RoomType := RoomItem.RoomType;
-    grPeriodRooms.Objects[cgrRoom_RoomColumn, RowIndex] := TRoomCell.Create(status);
-    grPeriodRooms.cells[cgrRoom_RoomColumn, RowIndex] := Room;
-    grPeriodRooms.cells[cgrRoom_RoomTypeColumn, RowIndex] := RoomType;
-    if zShowRoomDescription then
+
+  rSet := glb.RoomsSet;
+  rSet.Sort := 'OrderIndex DESC,Room ASC';
+  try
+    Rset.First;
+    While not rSet.Eof do
     begin
-      grPeriodRooms.cells[cgrRoom_RoomDescriptionColumn, RowIndex] := RoomItem.RoomDescription;
+      Key := LowerCase(rSet['Room']);
+      if g.oRooms.RoomItemsList.TryGetValue(LowerCase(key), RoomItem) then
+      begin
+        inc(RowIndex);
+  //      RoomItem := g.oRooms.RoomItemsList.Items[Key];
+        status := RoomItem.status;
+        Room := RoomItem.Room;
+        RoomType := RoomItem.RoomType;
+        grPeriodRooms.Objects[cgrRoom_RoomColumn, RowIndex] := TRoomCell.Create(status);
+        grPeriodRooms.cells[cgrRoom_RoomColumn, RowIndex] := Room;
+        grPeriodRooms.cells[cgrRoom_RoomTypeColumn, RowIndex] := RoomType;
+        if zShowRoomDescription then
+        begin
+          grPeriodRooms.cells[cgrRoom_RoomDescriptionColumn, RowIndex] := RoomItem.RoomDescription;
+        end;
+      end;
+      rSet.Next;
     end;
+  finally
+    rSet.Sort := '';
   end;
 end;
 
@@ -2842,6 +2859,7 @@ begin
   dxBarDeveloperTools.Visible := ivAlways;
 {$else}
   dxBarDeveloperTools.Visible := ivNever;
+  btnResStatusPerdDay.Visible := ivNever;
 {$endif}
 end;
 
@@ -3976,6 +3994,11 @@ end;
 procedure TfrmMain.dtMainHeaderPropertiesChange(Sender: TObject);
 begin
   dtDateChange(dtDate);
+end;
+
+procedure TfrmMain.btnResStatusPerdDayClick(Sender: TObject);
+begin
+  ShowRptReservationStatusPerDay;
 end;
 
 procedure TfrmMain.dtDateKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);

@@ -187,6 +187,7 @@ uses uAppGlobal,
   , uDayClosingTimes
 
   , uEditFinanceExportProperties
+  , uRptReservationStatusPerDay
   ;
 
 
@@ -1902,6 +1903,7 @@ begin
   TfrmBusyMessage.Create(nil).Free;
   TfrmEditFinanceExportProperties.Create(nil).Free;
 
+  TFrmRptReservationStatusPerDay.Create(nil).Free;
 
 end;
 

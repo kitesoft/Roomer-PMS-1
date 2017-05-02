@@ -153,7 +153,6 @@ inherited FrmResources: TFrmResources
         TabOrder = 5
         OnClick = btnRenameClick
         SkinData.SkinSection = 'BUTTON'
-        ExplicitTop = 0
       end
       object btnSource: TsButton
         AlignWithMargins = True
@@ -373,6 +372,7 @@ inherited FrmResources: TFrmResources
   end
   object DropComboTarget1: TDropComboTarget
     DragTypes = [dtCopy, dtLink]
+    OnDragOver = DropComboTarget1DragOver
     OnDrop = DropComboTarget1Drop
     Target = grData
     Left = 372
@@ -391,6 +391,7 @@ inherited FrmResources: TFrmResources
   end
   object DropFileSource1: TDropFileSource
     DragTypes = [dtCopy]
+    OnDrop = DropFileSource1Drop
     Left = 368
     Top = 368
   end

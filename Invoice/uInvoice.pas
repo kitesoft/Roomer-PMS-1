@@ -2773,7 +2773,10 @@ begin
           begin
             AverageRate := TotalRate / UnpaidDays;
             AverageDiscountAmount := TotalDiscountAmount / UnpaidDays;
-            AvrageDiscountPerc := AverageDiscountAmount / (AverageRate / 100);
+            if AverageRate <> 0.00 then
+              AvrageDiscountPerc := AverageDiscountAmount / (AverageRate / 100)
+            else
+              AvrageDiscountPerc := 0.00;
 
             isPackage := false;
             if ABS(AverageRate) > 0 then

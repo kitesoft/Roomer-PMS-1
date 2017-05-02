@@ -90,6 +90,8 @@ type
     procedure dsResourcesBeforeDelete(DataSet: TDataSet);
     procedure tvResourcesColumn1GetDisplayText(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
       var AText: string);
+    procedure DropComboTarget1DragOver(Sender: TObject; ShiftState: TShiftState; APoint: TPoint; var Effect: Integer);
+    procedure DropFileSource1Drop(Sender: TObject; DragType: TDragType; var ContinueDrop: Boolean);
   private
     { Private declarations }
     CollectionOfOpenedFiles : TStringList;
@@ -667,6 +669,7 @@ begin
       end;
     end;
     CollectionOfOpenedFiles.Add(tmpFile);
+    ShellExecute(Handle, 'OPEN', PChar(tmpFile), nil, nil, sw_shownormal);
   end;
 end;
 
@@ -720,9 +723,29 @@ begin
   end;
 end;
 
+procedure TFrmResources.DropComboTarget1DragOver(Sender: TObject; ShiftState: TShiftState; APoint: TPoint; var Effect: Integer);
+begin
+  Effect := DROPEFFECT_COPY;
+end;
+
 procedure TFrmResources.DropComboTarget1Drop(Sender: TObject; ShiftState: TShiftState; APoint: TPoint; var Effect: Integer);
 begin
   DropComboTargetDrop(FSingleResourceType.ToKeyString(FKeyStringParam) , access.ToString, Sender AS TDropComboTarget, ShiftState, APoint, Effect);
+  RefreshData;
+end;
+
+procedure TFrmResources.DropFileSource1Drop(Sender: TObject; DragType: TDragType; var ContinueDrop: Boolean);
+var
+  i: Integer;
+  filename,
+  onlyFilename : String;
+begin
+  for i := 0 to DropFileSource1.Files.Count - 1 do
+  begin
+    filename := DropFileSource1.Files[i];
+    onlyFilename := ExtractFilename(DropFileSource1.Files[i]);
+    UploadFileToResources(FSingleResourceType.ToKeyString(FKeyStringParam), access.ToString, onlyFilename, filename);
+  end;
   RefreshData;
 end;
 

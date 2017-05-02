@@ -47,6 +47,7 @@ type
     function getLocalInvoiceFilePath(throwExceptionOnError: Boolean = true): String;
     procedure sendChangedFile(const Filename: String);
     function getRegistrationFormFilePath(throwExceptionOnError: Boolean = true): String;
+    function getResStatusPerDayFormFilePath(throwExceptionOnError: Boolean = true): String;
     function getGuestListReportFilePath(throwExceptionOnError: Boolean = true): String;
     function getCustomerStayReportFilePath(throwExceptionOnError: Boolean = true): String;
     function getOneCustomerInvoiceFilePath(throwExceptionOnError: Boolean = true): String;
@@ -206,7 +207,31 @@ begin
   FullFilename := getFullFilename(REG_FORM_NAME);
   if error OR (Result = '') OR (GetFileSize(FullFilename) < 10) then
   begin
-    d.roomerMainDataSet.SystemDownloadFileFromURI(d.roomerMainDataSet.RoomerStoreUri + 'Registration_Form.fr3', FullFilename);
+    d.roomerMainDataSet.SystemDownloadFileFromURI(d.roomerMainDataSet.RoomerStoreUri + REG_FORM_NAME, FullFilename);
+    sendChangedFile(FullFilename);
+    Result := FullFilename;
+  end;
+end;
+
+const
+  RES_STATUR_PER_DAY_NAME = 'Res_Status_Per_Day_Form.fr3';
+
+function TFileDependencymanager.getResStatusPerDayFormFilePath(throwExceptionOnError: Boolean = true): String;
+var
+  error: Boolean;
+  FullFilename: String;
+begin
+  AssertResourcesPrepared;
+  error := False;
+  try
+    Result := getFilePath(RES_STATUR_PER_DAY_NAME, False); // throwExceptionOnError);
+  except
+    error := true;
+  end;
+  FullFilename := getFullFilename(RES_STATUR_PER_DAY_NAME);
+  if error OR (Result = '') OR (GetFileSize(FullFilename) < 10) then
+  begin
+    d.roomerMainDataSet.SystemDownloadFileFromURI(d.roomerMainDataSet.RoomerStoreUri + RES_STATUR_PER_DAY_NAME, FullFilename);
     sendChangedFile(FullFilename);
     Result := FullFilename;
   end;
