@@ -72,7 +72,6 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btnCloseClick(Sender: TObject);
     procedure btnEditClick(Sender: TObject);
-    procedure lvResourcesEdited(Sender: TObject; Item: TListItem; var S: string);
     procedure btnRenameClick(Sender: TObject);
     procedure C1Click(Sender: TObject);
     procedure btnSourceClick(Sender: TObject);
@@ -378,6 +377,7 @@ begin
                        lRes.KEY_STRING
                      ]);
           d.roomerMainDataSet.DoCommand(cmd);
+          RefreshData;
         end;
       end;
     end;
@@ -416,6 +416,35 @@ const CANCEL_RESERVATION_SOURCE = '<DIV class=WordSection1> ' +
                                   '<P><FONT face=Verdana>${bookingGuestsRoomsPrices}<o:p></o:p></FONT></P> ' +
                                   '<P><FONT face=Verdana>Price and payment details:<o:p></o:p></FONT></P> ' +
                                   '<P><FONT face=Verdana>Total price: ${bookingTotalPrice}<BR>Booking payment type: ${bookingPaymentType}<BR>Payment status: ${bookingPaymentStatus}<BR>Amount paid: ${bookingPaymentAmount}<BR>Credit card: ${bookingPaymentCreditCard}<o:p></o:p></FONT></P> ' +
+                                  '<P><FONT face=Verdana>At your service,</FONT></P> ' +
+                                  '<P><FONT face=Verdana>Test Hotel Roomer</FONT></P> ' +
+                                  '<P><FONT face=Verdana>T. 085 27 36 150</FONT></P>';
+
+
+const PRE_ARRIVAL_SOURCE =        '<P style="TEXT-ALIGN: right" align=right><FONT face=Verdana><STRONG><FONT color=maroon><FONT size=5>Test Hotel Roomer</FONT><BR></FONT></STRONG> ' +
+                                  '<FONT size=1>Bosscheweg 107&nbsp;12-14<BR>5282 WV Boxtel<BR>Netherlands<BR>Tel: +31 85 27 36 150<BR>date/time: ${currentDatetime}<BR>---<BR></FONT><FONT size=2>Booking date: ${bookingDatetime}<BR>Hotel Booking id: ${bookingRoomerId}</FONT></FONT></P> ' +
+                                  '<P><FONT face=Verdana>Dear ${bookingGuestName},</FONT></P> ' +
+                                  '<P><FONT face=Verdana>We are looking forward to your arrival at Test Hotel&nbsp;Roomer . We hope that your stay will be a pleasant one.</FONT></P> ' +
+                                  '<P><FONT face=Verdana>Below you can find the details of your booking and&nbsp;some&nbsp;information about our hotel.</FONT></P> ' +
+                                  '<P><FONT face=Verdana>You will be arriving on the ${bookingArrival} and departing on ${bookingDeparture}.<BR>Your booking ID: ${bookingRoomerId}</FONT></P> ' +
+                                  '<P><FONT face=Verdana>Booking details:<BR>${bookingGuestsRoomsPrices}</FONT></P> ' +
+                                  '<P><FONT face=Verdana>Price and payment details:</FONT></P><BR> ' +
+                                  '<P><FONT face=Verdana>Total price: ${bookingTotalPrice}<BR>Booking payment type: ${bookingPaymentType}<BR>Payment status: ${bookingPaymentStatus}<BR>Amount paid: ${bookingPaymentAmount}<BR>Credit card: ${bookingPaymentCreditCard}</FONT></P> ' +
+                                  '<P><FONT face=Verdana>We would like to use the opportunity to send you some information about the hotel and help you arrange for you transfers, tours and dinner reservations.</FONT></P> ' +
+                                  '<P><FONT face=Verdana>The Hotels restaurant is open daily from 18.00 - 22.00. Our renowned chef, Tom Dans, was one of the winners of the TopChef TV series. He will make sure that your stay at our hotel is an unforgettable one.  ' +
+                                  'We highly reccommend reserving a table in advance as capacity is limited.</FONT></P> ' +
+                                  '<P><FONT face=Verdana>Included in hotel prices is one way to- or from the airport taxi ride. If you would like to use this service on arrival at the&nbsp;Einhoven airport,  ' +
+                                  'please take the nearest taxi and we will pay for it on your arrival to Test Hotel Roomer. Should you want to arrange your own personal limo please contact us.</FONT></P> ' +
+                                  '<P><FONT face=Verdana>We have a fitness center with a sauna and solarium which guests are free to use during their stay at no extra charge.</FONT></P> ' +
+                                  '<P><FONT face=Verdana>If you would like to arrange a dinner at our restaurant, tours or private pickup please contact us by replying to this e-mail.</FONT></P> ' +
+                                  '<P><FONT face=Verdana>Best regards,</FONT></P> ' +
+                                  '<P><FONT face=Verdana>Your concierge at Test Hotel Roomer</FONT></P> ' +
+                                  '<P><FONT face=Verdana>T. 085 27 36 150</FONT></P></DIV>';
+
+const POST_DEPARTURE_SOURCE =    '<P style="TEXT-ALIGN: right" align=right><FONT face=Verdana><STRONG><FONT color=maroon><FONT size=5>Test Hotel Roomer</FONT><BR></FONT></STRONG> ' +
+                                  '<FONT size=1>Bosscheweg 107&nbsp;12-14<BR>5282 WV Boxtel<BR>Netherlands<BR>Tel: +31 85 27 36 150<BR>date/time: ${currentDatetime}<BR>---<BR></FONT><FONT size=2>Booking date: ${bookingDatetime}<BR>Hotel Booking id: ${bookingRoomerId}</FONT></FONT></P> ' +
+                                  '<P><FONT face=Verdana>Dear ${bookingGuestName},</FONT></P> ' +
+                                  '<P><FONT face=Verdana>Thank you for staying at Test Hotel&nbsp;Roomer. We hope you had a pleasant stay</FONT></P> ' +
                                   '<P><FONT face=Verdana>At your service,</FONT></P> ' +
                                   '<P><FONT face=Verdana>Test Hotel Roomer</FONT></P> ' +
                                   '<P><FONT face=Verdana>T. 085 27 36 150</FONT></P>';
@@ -471,11 +500,13 @@ begin
         lResType := frm.SelectedResourceType;
         Strings := TStringList.Create;
         try
-          if lResType = rtGuestEmailTemplate then
-            Strings.Text := NEW_RESERVATION_SOURCE
-          else
-          if lResType = rtCancelEmailTemplate then
-            Strings.Text := CANCEL_RESERVATION_SOURCE;
+          case lResType of
+            rtGuestEmailTemplate:         Strings.Text := NEW_RESERVATION_SOURCE;
+            rtCancelEmailTemplate:        Strings.Text := CANCEL_RESERVATION_SOURCE;
+            rtPreArrivalEmailTemplate:    Strings.Text := PRE_ARRIVAL_SOURCE;
+            rtPostDepartureEmailTemplate: Strings.Text := POST_DEPARTURE_SOURCE;
+          end;
+
           Strings.SaveToFile(filename);
         finally
           Strings.Free;
@@ -612,6 +643,7 @@ begin
         OrigName := lRes.ORIGINAL_NAME;
         if EditHtmlSource(filename) then
         begin
+          DeleteSelected;
           ReCodeFile(filename);
           path := UploadFileToResources(lRes.KEY_STRING, access.ToString, ExtractFilename(filename), filename, ResourceParameters);
 
@@ -636,19 +668,6 @@ procedure TFrmResources.btnViewClick(Sender: TObject);
 begin
   inherited;
   DownloadAndOpenSelectedResource;
-end;
-
-procedure TFrmResources.lvResourcesEdited(Sender: TObject; Item: TListItem; var S: string);
-//var cmd : String;
-begin
-//  if S = '' then
-//    raise Exception.Create(GetTranslatedText('shUI_NameCannotBeEmpty'));
-//
-//  cmd := format('UPDATE home100.HOTEL_RESOURCES SET ORIGINAL_NAME=''%s'' WHERE HOTEL_ID=''%s'' AND ORIGINAL_NAME=''%s'' AND URI=''%s'' AND KEY_STRING=''%s''',
-//             [S, d.roomerMainDataSet.HotelId, item.Caption, item.SubItems[item.SubItems.Count - 1],
-//              TResource(Item.data).KEY_STRING]);
-//  d.roomerMainDataSet.DoCommand(cmd);
-//
 end;
 
 procedure TFrmResources.DownloadAndOpenSelectedResource;

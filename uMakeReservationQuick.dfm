@@ -674,7 +674,7 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
               ItemIndex = -1
               ParentFont = False
               TabOrder = 0
-              OnCloseUp = cbxRoomStatusCloseUp
+              OnChange = cbxRoomStatusChange
               Items.Strings = (
                 'Not Arrived'
                 'Checked in'
@@ -1286,7 +1286,6 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                 ParentColor = False
                 TabOrder = 0
                 SkinData.SkinSection = 'GROUPBOX'
-                ExplicitLeft = 4
                 object clabContactPerson: TsLabel
                   Left = 68
                   Top = 42
