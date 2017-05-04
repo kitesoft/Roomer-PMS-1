@@ -126,7 +126,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
         object pnlRestrictions: TsPanel
           AlignWithMargins = True
           Left = 3
-          Top = 295
+          Top = 288
           Width = 425
           Height = 169
           Align = alTop
@@ -135,7 +135,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
           Padding.Bottom = 3
           TabOrder = 0
           SkinData.SkinSection = 'PANEL'
-          ExplicitTop = 290
+          ExplicitTop = 295
           object lblMinStay: TsLabel
             Left = 134
             Top = 7
@@ -874,7 +874,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
           Left = 3
           Top = 199
           Width = 425
-          Height = 90
+          Height = 83
           Align = alTop
           AutoSize = True
           TabOrder = 3
@@ -1504,7 +1504,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
               URLColor = clBlack
               ValidChars = '0123456789'
               VAlignment = vtaCenter
-              Version = '8.2.4.1'
+              Version = '8.2.5.2'
               WordWrap = False
               ColWidths = (
                 250
@@ -1553,6 +1553,10 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
           Margins.Right = 2
           Margins.Bottom = 2
           Caption = 'Rates'
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object rateGrid: TAdvStringGrid
             Left = 0
             Top = 54
@@ -1730,7 +1734,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
             URLColor = clBlack
             ValidChars = '0123456789+-!%*/'
             VAlignment = vtaCenter
-            Version = '8.2.4.1'
+            Version = '8.2.5.2'
             WordWrap = False
             ColWidths = (
               400
@@ -2135,9 +2139,8 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
               Width = 199
               Height = 254
               BorderStyle = bsSingle
-              Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
+              Font.Color = clWindowText
               Font.Height = -11
               Font.Name = 'Tahoma'
               Font.Style = []
