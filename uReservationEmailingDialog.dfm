@@ -1,10 +1,9 @@
 object FrmReservationEmailingDialog: TFrmReservationEmailingDialog
   Left = 0
   Top = 0
-  BorderStyle = bsDialog
   Caption = 'Reservation emailing dialog'
-  ClientHeight = 568
-  ClientWidth = 760
+  ClientHeight = 558
+  ClientWidth = 750
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,11 +20,12 @@ object FrmReservationEmailingDialog: TFrmReservationEmailingDialog
   object sPanel1: TsPanel
     Left = 0
     Top = 0
-    Width = 760
+    Width = 750
     Height = 153
     Align = alTop
     TabOrder = 0
     SkinData.SkinSection = 'PANEL'
+    ExplicitWidth = 760
     object sLabel1: TsLabel
       Left = 95
       Top = 15
@@ -201,17 +201,19 @@ object FrmReservationEmailingDialog: TFrmReservationEmailingDialog
   end
   object sPanel2: TsPanel
     Left = 0
-    Top = 522
-    Width = 760
+    Top = 512
+    Width = 750
     Height = 46
     Align = alBottom
     TabOrder = 1
     SkinData.SkinSection = 'PANEL'
+    ExplicitTop = 522
+    ExplicitWidth = 760
     DesignSize = (
-      760
+      750
       46)
     object btnOk: TsButton
-      Left = 620
+      Left = 610
       Top = 10
       Width = 111
       Height = 25
@@ -222,6 +224,7 @@ object FrmReservationEmailingDialog: TFrmReservationEmailingDialog
       ModalResult = 1
       TabOrder = 0
       SkinData.SkinSection = 'BUTTON'
+      ExplicitLeft = 620
     end
     object btnEdit: TsButton
       Left = 25
@@ -236,19 +239,20 @@ object FrmReservationEmailingDialog: TFrmReservationEmailingDialog
     end
   end
   object WebBrowser: TWebBrowser
-    AlignWithMargins = True
-    Left = 3
-    Top = 156
-    Width = 754
-    Height = 363
+    Left = 0
+    Top = 153
+    Width = 750
+    Height = 359
     Align = alClient
     TabOrder = 2
-    ExplicitLeft = -2
-    ExplicitTop = 153
+    ExplicitLeft = 95
+    ExplicitTop = 256
+    ExplicitWidth = 300
+    ExplicitHeight = 150
     ControlData = {
-      4C000000EE4D0000842500000000000000000000000000000000000000000000
+      4C000000844D00001B2500000000000000000000000000000000000000000000
       000000004C000000000000000000000001000000E0D057007335CF11AE690800
-      2B2E12620A000000000000004C0000000114020000000000C000000000000046
+      2B2E126208000000000000004C0000000114020000000000C000000000000046
       8000000000000000000000000000000000000000000000000000000000000000
       00000000000000000100000000000000000000000000000000000000}
   end

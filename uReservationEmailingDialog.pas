@@ -18,7 +18,6 @@ type
     sPanel2: TsPanel;
     sLabel1: TsLabel;
     edTemplate: TsComboBox;
-    WebBrowser: TWebBrowser;
     btnOk: TsButton;
     btnResources: TsButton;
     btnEdit: TsButton;
@@ -32,6 +31,7 @@ type
     shpTemplate: TShape;
     shpTo: TShape;
     shpSubject: TShape;
+    WebBrowser: TWebBrowser;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure edTemplateCloseUp(Sender: TObject);

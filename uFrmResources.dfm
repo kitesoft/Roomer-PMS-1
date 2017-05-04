@@ -173,6 +173,7 @@ inherited FrmResources: TFrmResources
         Visible = False
         OnClick = btnSourceClick
         SkinData.SkinSection = 'BUTTON'
+        ExplicitTop = 0
       end
     end
     object sPanel2: TsPanel
