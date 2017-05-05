@@ -1682,7 +1682,7 @@ begin
        'JOIN hotelconfigurations hc ON hc.masterRatesActive=1 ' +#10+
 
        'SET '+
-       ' cr.Price = CASE WHEN cmr.dirty AND rtg.connectRateToMasterRate '+#10+
+       ' cr.Price = ROUND(CASE WHEN cmr.dirty AND rtg.connectRateToMasterRate '+#10+
        '                                  THEN ' + #10 +
        '                   ( ' + #10 +
        '                   cmr.Price + home100.GetCalculatedAmountAddedWithFixedOrPercentage(cmr.Price, rtg.masterRateRateDeviation, rtg.RateDeviationType) + ' +#10+
@@ -1695,11 +1695,11 @@ begin
        '                          1 ' +#10+
        '                         ) ' +#10+
        '                 ELSE cr.Price ' +#10+
-       '            END, '+#10+
+       '            END, 2), '+#10+
 
        ' cr.dirty = cmr.dirty AND rtg.connectRateToMasterRate, '+#10+
 
-       ' cr.singleUsePrice = CASE WHEN cmr.singleUsePriceDirty AND rtg.connectSingleUseRateToMasterRate ' +#10+
+       ' cr.singleUsePrice = ROUND(CASE WHEN cmr.singleUsePriceDirty AND rtg.connectSingleUseRateToMasterRate ' +#10+
        '                          THEN '+#10+
        '                          ( ' +#10+
        '                   cmr.singleUsePrice + home100.GetCalculatedAmountAddedWithFixedOrPercentage(cmr.SingleUsePrice, rtg.masterRateSingleUseRateDeviation, rtg.SingleUseRateDeviationType) + ' +#10+
@@ -1712,7 +1712,7 @@ begin
        '                                    1 ' +#10+
        '                                ) ' +#10+
        '                          ELSE cr.singleUsePrice '+#10+
-       '                     END, ' +#10+
+       '                     END, 2), ' +#10+
 
        ' cr.singleUsePriceDirty = cmr.singleUsePriceDirty AND rtg.connectSingleUseRateToMasterRate, ' +#10+
 

@@ -2,8 +2,8 @@ object FrmRptReservationStatusPerDay: TFrmRptReservationStatusPerDay
   Left = 0
   Top = 0
   Caption = 'FrmRptReservationStatusPerDay'
-  ClientHeight = 98
-  ClientWidth = 635
+  ClientHeight = 518
+  ClientWidth = 1126
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,9 +19,9 @@ object FrmRptReservationStatusPerDay: TFrmRptReservationStatusPerDay
   object Panel3: TsPanel
     Left = 0
     Top = 0
-    Width = 635
-    Height = 98
-    Align = alClient
+    Width = 1126
+    Height = 105
+    Align = alTop
     TabOrder = 0
     SkinData.SkinSection = 'PANEL'
     object labLocationsList: TsLabel
@@ -203,391 +203,132 @@ object FrmRptReservationStatusPerDay: TFrmRptReservationStatusPerDay
       end
     end
   end
-  object fdRegFormDesigner: TfrxDesigner
-    DefaultScriptLanguage = 'PascalScript'
-    DefaultFont.Charset = DEFAULT_CHARSET
-    DefaultFont.Color = clWindowText
-    DefaultFont.Height = -13
-    DefaultFont.Name = 'Arial'
-    DefaultFont.Style = []
-    DefaultLeftMargin = 10.000000000000000000
-    DefaultRightMargin = 10.000000000000000000
-    DefaultTopMargin = 10.000000000000000000
-    DefaultBottomMargin = 10.000000000000000000
-    DefaultPaperSize = 9
-    DefaultOrientation = poLandscape
-    GradientEnd = 11982554
-    GradientStart = clWindow
-    TemplatesExt = 'fr3'
-    Restrictions = []
-    RTLLanguage = False
-    MemoParentFont = False
-    Left = 352
-    Top = 47
-  end
-  object rptForm: TfrxReport
-    Version = '4.13.2'
-    DataSet = dsForm
-    DataSetName = 'frxDBDataset1'
-    DotMatrixReport = False
-    IniFile = '\Software\Fast Reports'
-    PreviewOptions.Buttons = [pbPrint, pbLoad, pbSave, pbExport, pbZoom, pbFind, pbOutline, pbPageSetup, pbTools, pbEdit, pbNavigator, pbExportQuick]
-    PreviewOptions.Zoom = 1.000000000000000000
-    PrintOptions.Printer = 'Default'
-    PrintOptions.PrintOnSheet = 0
-    ReportOptions.CreateDate = 42857.342411956000000000
-    ReportOptions.LastChange = 42857.365317291700000000
-    ScriptLanguage = 'PascalScript'
-    ScriptText.Strings = (
-      ''
-      'begin'
-      ''
-      'end.')
-    Left = 504
-    Top = 47
-    Datasets = <
-      item
-        DataSet = dsForm
-        DataSetName = 'frxDBDataset1'
-      end>
-    Variables = <>
-    Style = <>
-    object Data: TfrxDataPage
-      Height = 1000.000000000000000000
-      Width = 1000.000000000000000000
-    end
-    object Page1: TfrxReportPage
-      Orientation = poLandscape
-      PaperWidth = 297.000000000000000000
-      PaperHeight = 210.000000000000000000
-      PaperSize = 9
-      LeftMargin = 10.000000000000000000
-      RightMargin = 10.000000000000000000
-      TopMargin = 10.000000000000000000
-      BottomMargin = 10.000000000000000000
-      object ReportTitle1: TfrxReportTitle
-        Height = 22.677180000000000000
-        Top = 18.897650000000000000
-        Width = 1046.929810000000000000
-      end
-      object MasterData1: TfrxMasterData
-        Height = 529.134199999999900000
-        Top = 102.047310000000000000
-        Width = 1046.929810000000000000
-        RowCount = 0
-        object frxDBDataset1dtDate: TfrxMemoView
-          Left = 7.559060000000000000
-          Top = 3.779530000000008000
-          Width = 79.370130000000000000
-          Height = 18.897650000000000000
-          ShowHint = False
-          DataField = 'dtDate'
-          DataSet = dsForm
-          DataSetName = 'frxDBDataset1'
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -13
-          Font.Name = 'Arial'
-          Font.Style = []
-          Memo.UTF8W = (
-            '[frxDBDataset1."dtDate"]')
-          ParentFont = False
-        end
-        object frxDBDataset1WeekNr: TfrxMemoView
-          Left = 102.047310000000000000
-          Top = 3.779530000000008000
-          Width = 79.370130000000000000
-          Height = 18.897650000000000000
-          ShowHint = False
-          DataField = 'WeekNr'
-          DataSet = dsForm
-          DataSetName = 'frxDBDataset1'
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -13
-          Font.Name = 'Arial'
-          Font.Style = []
-          Memo.UTF8W = (
-            '[frxDBDataset1."WeekNr"]')
-          ParentFont = False
-        end
-        object frxDBDataset1Reservation: TfrxMemoView
-          Left = 34.015770000000010000
-          Top = 30.236239999999990000
-          Width = 79.370130000000000000
-          Height = 18.897650000000000000
-          ShowHint = False
-          DataField = 'Reservation'
-          DataSet = dsForm
-          DataSetName = 'frxDBDataset1'
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -13
-          Font.Name = 'Arial'
-          Font.Style = []
-          Memo.UTF8W = (
-            '[frxDBDataset1."Reservation"]')
-          ParentFont = False
-        end
-        object frxDBDataset1CustomerName: TfrxMemoView
-          Left = 128.504020000000000000
-          Top = 30.236239999999990000
-          Width = 185.196970000000000000
-          Height = 18.897650000000000000
-          ShowHint = False
-          DataField = 'CustomerName'
-          DataSet = dsForm
-          DataSetName = 'frxDBDataset1'
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -13
-          Font.Name = 'Arial'
-          Font.Style = []
-          Memo.UTF8W = (
-            '[frxDBDataset1."CustomerName"]')
-          ParentFont = False
-        end
-        object frxDBDataset1Name: TfrxMemoView
-          Left = 325.039580000000000000
-          Top = 30.236239999999990000
-          Width = 154.960730000000000000
-          Height = 18.897650000000000000
-          ShowHint = False
-          DataField = 'Name'
-          DataSet = dsForm
-          DataSetName = 'frxDBDataset1'
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -13
-          Font.Name = 'Arial'
-          Font.Style = []
-          Memo.UTF8W = (
-            '[frxDBDataset1."Name"]')
-          ParentFont = False
-        end
-      end
-      object PageFooter1: TfrxPageFooter
-        Height = 22.677180000000000000
-        Top = 691.653990000000000000
-        Width = 1046.929810000000000000
-        object Memo1: TfrxMemoView
-          Left = 642.520100000000000000
-          Width = 75.590600000000000000
-          Height = 18.897650000000000000
-          ShowHint = False
-          HAlign = haRight
-          Memo.UTF8W = (
-            '[Page#]')
-        end
-      end
-    end
-  end
-  object dsForm: TfrxDBDataset
-    UserName = 'frxDBDataset1'
-    CloseDataSource = False
-    DataSet = tblDaysAndGroups
-    BCDToCurrency = False
-    Left = 432
-    Top = 47
-  end
-  object tblDaysAndGroups: TkbmMemTable
-    Active = True
-    DesignActivation = True
-    AttachedAutoRefresh = True
-    AttachMaxCount = 1
-    FieldDefs = <
-      item
-        Name = 'dtDate'
-        DataType = ftDate
-      end
-      item
-        Name = 'WeekNr'
-        DataType = ftInteger
-      end
-      item
-        Name = 'invRefrence'
-        DataType = ftWideString
-      end
-      item
-        Name = 'Name'
-        DataType = ftWideString
-      end
-      item
-        Name = 'CustomerName'
-        DataType = ftWideString
-      end
-      item
-        Name = 'Reservation'
-        DataType = ftInteger
-      end>
-    IndexDefs = <>
-    SortOptions = []
-    PersistentBackup = False
-    ProgressFlags = [mtpcLoad, mtpcSave, mtpcCopy]
-    LoadedCompletely = False
-    SavedCompletely = False
-    FilterOptions = []
-    Version = '7.22.00 Standard Edition'
-    LanguageID = 0
-    SortID = 0
-    SubLanguageID = 1
-    LocaleID = 1024
-    Left = 8
-    Top = 6
-  end
-  object dsDays: TDataSource
-    DataSet = tblDaysAndGroups
-    Left = 56
-    Top = 6
-  end
-  object dslUnconfirmed: TDataSource
-    DataSet = tblUnconfirmed
-    Left = 168
-    Top = 6
-  end
-  object tblUnconfirmed: TkbmMemTable
-    Active = True
-    DesignActivation = True
-    AttachedAutoRefresh = True
-    AttachMaxCount = 1
-    FieldDefs = <
-      item
-        Name = 'dtDate'
-        DataType = ftDate
-      end
-      item
-        Name = 'Reservation'
-        DataType = ftInteger
-      end
-      item
-        Name = 'WeekNr'
-        DataType = ftInteger
-      end
-      item
-        Name = 'invRefrence'
-        DataType = ftWideString
-      end
-      item
-        Name = 'RoomType'
-        DataType = ftWideString
-      end
-      item
-        Name = 'NumRooms'
-        DataType = ftInteger
-      end>
-    IndexDefs = <>
-    SortOptions = []
-    PersistentBackup = False
-    ProgressFlags = [mtpcLoad, mtpcSave, mtpcCopy]
-    LoadedCompletely = False
-    SavedCompletely = False
-    FilterOptions = []
-    Version = '7.22.00 Standard Edition'
-    LanguageID = 0
-    SortID = 0
-    SubLanguageID = 1
-    LocaleID = 1024
-    Left = 120
-    Top = 6
-  end
-  object tblConfirmed: TkbmMemTable
-    Active = True
-    DesignActivation = True
-    AttachedAutoRefresh = True
-    AttachMaxCount = 1
-    FieldDefs = <
-      item
-        Name = 'dtDate'
-        DataType = ftDate
-      end
-      item
-        Name = 'Reservation'
-        DataType = ftInteger
-      end
-      item
-        Name = 'WeekNr'
-        DataType = ftInteger
-      end
-      item
-        Name = 'invRefrence'
-        DataType = ftWideString
-      end
-      item
-        Name = 'RoomType'
-        DataType = ftWideString
-      end
-      item
-        Name = 'NumRooms'
-        DataType = ftInteger
-      end>
-    IndexDefs = <>
-    SortOptions = []
-    PersistentBackup = False
-    ProgressFlags = [mtpcLoad, mtpcSave, mtpcCopy]
-    LoadedCompletely = False
-    SavedCompletely = False
-    FilterOptions = []
-    Version = '7.22.00 Standard Edition'
-    LanguageID = 0
-    SortID = 0
-    SubLanguageID = 1
-    LocaleID = 1024
-    Left = 24
-    Top = 54
-  end
-  object dsConfirmed: TDataSource
-    DataSet = tblConfirmed
-    Left = 72
-    Top = 54
-  end
-  object tblWaitingList: TkbmMemTable
-    Active = True
-    DesignActivation = True
-    AttachedAutoRefresh = True
-    AttachMaxCount = 1
-    FieldDefs = <
-      item
-        Name = 'dtDate'
-        DataType = ftDate
-      end
-      item
-        Name = 'Reservation'
-        DataType = ftInteger
-      end
-      item
-        Name = 'WeekNr'
-        DataType = ftInteger
-      end
-      item
-        Name = 'invRefrence'
-        DataType = ftWideString
-      end
-      item
-        Name = 'RoomType'
-        DataType = ftWideString
-      end
-      item
-        Name = 'NumRooms'
-        DataType = ftInteger
-      end>
-    IndexDefs = <>
-    SortOptions = []
-    PersistentBackup = False
-    ProgressFlags = [mtpcLoad, mtpcSave, mtpcCopy]
-    LoadedCompletely = False
-    SavedCompletely = False
-    FilterOptions = []
-    Version = '7.22.00 Standard Edition'
-    LanguageID = 0
-    SortID = 0
-    SubLanguageID = 1
-    LocaleID = 1024
-    Left = 168
-    Top = 54
-  end
-  object dsWaitingList: TDataSource
-    DataSet = tblWaitingList
-    Left = 216
-    Top = 54
+  object grdReport: TAdvStringGrid
+    Left = 0
+    Top = 105
+    Width = 1126
+    Height = 413
+    Cursor = crDefault
+    Align = alClient
+    BevelEdges = []
+    BorderStyle = bsNone
+    ColCount = 1
+    Ctl3D = False
+    DoubleBuffered = True
+    DrawingStyle = gdsClassic
+    FixedCols = 0
+    RowCount = 1
+    FixedRows = 0
+    GridLineWidth = 0
+    ParentCtl3D = False
+    ParentDoubleBuffered = False
+    ScrollBars = ssBoth
+    TabOrder = 1
+    OnDrawCell = grdReportDrawCell
+    HoverRowCells = [hcNormal, hcSelected]
+    ActiveCellFont.Charset = DEFAULT_CHARSET
+    ActiveCellFont.Color = clWindowText
+    ActiveCellFont.Height = -11
+    ActiveCellFont.Name = 'Tahoma'
+    ActiveCellFont.Style = [fsBold]
+    ActiveCellColor = 15387318
+    ControlLook.FixedGradientFrom = clWhite
+    ControlLook.FixedGradientTo = clBtnFace
+    ControlLook.FixedGradientHoverFrom = 13619409
+    ControlLook.FixedGradientHoverTo = 12502728
+    ControlLook.FixedGradientHoverMirrorFrom = 12502728
+    ControlLook.FixedGradientHoverMirrorTo = 11254975
+    ControlLook.FixedGradientDownFrom = 8816520
+    ControlLook.FixedGradientDownTo = 7568510
+    ControlLook.FixedGradientDownMirrorFrom = 7568510
+    ControlLook.FixedGradientDownMirrorTo = 6452086
+    ControlLook.FixedGradientDownBorder = 14007466
+    ControlLook.DropDownHeader.Font.Charset = DEFAULT_CHARSET
+    ControlLook.DropDownHeader.Font.Color = clWindowText
+    ControlLook.DropDownHeader.Font.Height = -11
+    ControlLook.DropDownHeader.Font.Name = 'Tahoma'
+    ControlLook.DropDownHeader.Font.Style = []
+    ControlLook.DropDownHeader.Visible = True
+    ControlLook.DropDownHeader.Buttons = <>
+    ControlLook.DropDownFooter.Font.Charset = DEFAULT_CHARSET
+    ControlLook.DropDownFooter.Font.Color = clWindowText
+    ControlLook.DropDownFooter.Font.Height = -11
+    ControlLook.DropDownFooter.Font.Name = 'Tahoma'
+    ControlLook.DropDownFooter.Font.Style = []
+    ControlLook.DropDownFooter.Visible = True
+    ControlLook.DropDownFooter.Buttons = <>
+    Filter = <>
+    FilterDropDown.Font.Charset = DEFAULT_CHARSET
+    FilterDropDown.Font.Color = clWindowText
+    FilterDropDown.Font.Height = -11
+    FilterDropDown.Font.Name = 'Tahoma'
+    FilterDropDown.Font.Style = []
+    FilterDropDown.TextChecked = 'Checked'
+    FilterDropDown.TextUnChecked = 'Unchecked'
+    FilterDropDownClear = '(All)'
+    FilterEdit.TypeNames.Strings = (
+      'Starts with'
+      'Ends with'
+      'Contains'
+      'Not contains'
+      'Equal'
+      'Not equal'
+      'Larger than'
+      'Smaller than'
+      'Clear')
+    FixedRowHeight = 22
+    FixedFont.Charset = DEFAULT_CHARSET
+    FixedFont.Color = clBlack
+    FixedFont.Height = -11
+    FixedFont.Name = 'Tahoma'
+    FixedFont.Style = [fsBold]
+    Flat = True
+    FloatFormat = '%.2f'
+    HoverButtons.Buttons = <>
+    HoverButtons.Position = hbLeftFromColumnLeft
+    HTMLSettings.ImageFolder = 'images'
+    HTMLSettings.ImageBaseName = 'img'
+    PrintSettings.DateFormat = 'dd/mm/yyyy'
+    PrintSettings.Font.Charset = DEFAULT_CHARSET
+    PrintSettings.Font.Color = clWindowText
+    PrintSettings.Font.Height = -11
+    PrintSettings.Font.Name = 'Tahoma'
+    PrintSettings.Font.Style = []
+    PrintSettings.FixedFont.Charset = DEFAULT_CHARSET
+    PrintSettings.FixedFont.Color = clWindowText
+    PrintSettings.FixedFont.Height = -11
+    PrintSettings.FixedFont.Name = 'Tahoma'
+    PrintSettings.FixedFont.Style = []
+    PrintSettings.HeaderFont.Charset = DEFAULT_CHARSET
+    PrintSettings.HeaderFont.Color = clWindowText
+    PrintSettings.HeaderFont.Height = -11
+    PrintSettings.HeaderFont.Name = 'Tahoma'
+    PrintSettings.HeaderFont.Style = []
+    PrintSettings.FooterFont.Charset = DEFAULT_CHARSET
+    PrintSettings.FooterFont.Color = clWindowText
+    PrintSettings.FooterFont.Height = -11
+    PrintSettings.FooterFont.Name = 'Tahoma'
+    PrintSettings.FooterFont.Style = []
+    PrintSettings.PageNumSep = '/'
+    SearchFooter.ColorTo = 15790320
+    SearchFooter.FindNextCaption = 'Find &next'
+    SearchFooter.FindPrevCaption = 'Find &previous'
+    SearchFooter.Font.Charset = DEFAULT_CHARSET
+    SearchFooter.Font.Color = clWindowText
+    SearchFooter.Font.Height = -11
+    SearchFooter.Font.Name = 'Tahoma'
+    SearchFooter.Font.Style = []
+    SearchFooter.HighLightCaption = 'Highlight'
+    SearchFooter.HintClose = 'Close'
+    SearchFooter.HintFindNext = 'Find next occurrence'
+    SearchFooter.HintFindPrev = 'Find previous occurrence'
+    SearchFooter.HintHighlight = 'Highlight occurrences'
+    SearchFooter.MatchCaseCaption = 'Match case'
+    SearchFooter.ResultFormat = '(%d of %d)'
+    SortSettings.DefaultFormat = ssAutomatic
+    SortSettings.HeaderColorTo = 16579058
+    SortSettings.HeaderMirrorColor = 16380385
+    SortSettings.HeaderMirrorColorTo = 16182488
+    Version = '8.2.5.2'
   end
 end

@@ -689,7 +689,7 @@ type
     procedure edPackageDblClick(Sender: TObject);
     procedure edPackageExit(Sender: TObject);
     procedure tvRoomResPackagePropertiesButtonClick(Sender: TObject; AButtonIndex: integer);
-    procedure cbxRoomStatusCloseUp(Sender: TObject);
+    procedure cbxRoomStatusChange(Sender: TObject);
     procedure edContactEmailChange(Sender: TObject);
     procedure btnPortfolioClick(Sender: TObject);
     procedure btnPortfolioLookupClick(Sender: TObject);
@@ -2310,16 +2310,19 @@ end;
 
 procedure TfrmMakeReservationQuick.btnNextClick(Sender: TObject);
 begin
-  if not customerValidate then
-    exit;
-  if not fraCountry.IsValid then
-    exit;
-  if not MarketSegmentValidate then
-    exit;
-  if not CurrencyValidate(edCurrency, clabCurrency, labCurrencyName) then
-    exit;
-  if not PriceCodeValidate(edPcCode, clabPcCode, labPcCodeName) then
-    exit;
+  if not OutOfOrderBlocking then
+  begin
+    if not customerValidate then
+      exit;
+    if not fraCountry.IsValid then
+      exit;
+    if not MarketSegmentValidate then
+      exit;
+    if not CurrencyValidate(edCurrency, clabCurrency, labCurrencyName) then
+      exit;
+    if not PriceCodeValidate(edPcCode, clabPcCode, labPcCodeName) then
+      exit;
+  end;
 
   if pgcMain.ActivePageIndex = 3 then
     exit;
@@ -2560,7 +2563,8 @@ begin
       (Components[i] IS TsEdit) OR
       (Components[i] IS TsComboBox) OR
       (Components[i] IS TsCheckBox) OR
-      (Components[i] IS TsSpeedButton)
+      (Components[i] IS TsSpeedButton) OR
+      (Components[i] IS TfraCountryPanel)
       ) AND
       (
       (TControl(Components[i]).Parent = gbxGetReservation) AND
@@ -4465,16 +4469,19 @@ begin
   sValue := Trim(edMarketSegmentCode.Text);
   Result := CustomerTypeExist(sValue);
 
-  if not Result then
+  if edMarketSegmentCode.Visible and labMarketSegmentName.Visible then
   begin
-    edMarketSegmentCode.SetFocus;
-    labMarketSegmentName.Font.Color := clRed;
-    labMarketSegmentName.Caption := GetTranslatedText('shNotF_star');
-  end
-  else
-  begin
-    labMarketSegmentName.Font.Color := clBlack;
-    labMarketSegmentName.Caption := d.GET_CustomerTypesDescription_byCustomerType(Trim(edMarketSegmentCode.Text));
+    if not Result then
+    begin
+      edMarketSegmentCode.SetFocus;
+      labMarketSegmentName.Font.Color := clRed;
+      labMarketSegmentName.Caption := GetTranslatedText('shNotF_star');
+    end
+    else
+    begin
+      labMarketSegmentName.Font.Color := clBlack;
+      labMarketSegmentName.Caption := d.GET_CustomerTypesDescription_byCustomerType(Trim(edMarketSegmentCode.Text));
+    end;
   end;
 end;
 
@@ -4783,7 +4790,7 @@ begin
   end;
 end;
 
-procedure TfrmMakeReservationQuick.cbxRoomStatusCloseUp(Sender: TObject);
+procedure TfrmMakeReservationQuick.cbxRoomStatusChange(Sender: TObject);
 begin
   OutOfOrderBlocking := cbxRoomStatus.ItemIndex = 7;
 end;
