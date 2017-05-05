@@ -15,8 +15,8 @@ type
   ///  </summary>
   TBookingsRunningTabAPICaller = class(TBaseOpenAPICaller)
   const
-    cResourcesURI = '/bookings';
-    cRunningTabsURI = '/runningTabs';
+    cResourcesURI = 'bookings';
+    cRunningTabsURI = '/runningtabs';
   private
   public
     function GetRunningTabRoomRes(aReservation: integer; aRoomReservationId: integer; aInvoiceIndex: integer; aRunningTabResponse: TxsdInvoiceResponse): boolean;
@@ -37,19 +37,24 @@ uses
 function TBookingsRunningTabAPICaller.GetRunningTabRoomRes(aReservation: integer; aRoomReservationId: integer; aInvoiceIndex: integer;
                                                            aRunningTabResponse: TxsdInvoiceResponse): boolean;
 var
+  roomerClient: TRoomerHttpClient;
   lURI: string;
-  Xml: string;
+  lResponse: string;
+  lSep: string;
 begin
-  lURI := Format(cResourcesURI + '/%d/%d' + cRunningTabsURI + '/%d', [ aReservation, aRoomreservationID, aInvoiceIndex]);
-
+  roomerClient := d.roomerMainDataSet.CreateRoomerClient(True);
   try
-    Xml := d.roomerMainDataSet.downloadRoomerUrlAsString(lURI);
-    aRunningTabResponse.LoadFromXML(Xml);
-    Result := true;
+    lURI := d.roomerMainDataSet.OpenApiUri + Format(cResourcesURI + '/%d/%d' + cRunningTabsURI + '/%d', [ aReservation, aRoomreservationID, aInvoiceIndex]);
+
+    Result := roomerClient.GetWithStatus(lURI, lResponse).StatusCode = 200;
   except
-    on E: Exception do
-      raise EBookingsRunningTabAPICallerException.CreateFmt('Error during retrieval of runningTab for roomreservation [%d]', [ aRoomReservationId]);
+    Result := false;
   end;
 
+  if Result then
+    aRunningTabResponse.LoadFromXML(lResponse)
+  else
+    raise EBookingsRunningTabAPICallerException.CreateFmt('Error during retrieval of runningTab for roomreservation [%d]', [ aRoomReservationId]);
 end;
+
 end.

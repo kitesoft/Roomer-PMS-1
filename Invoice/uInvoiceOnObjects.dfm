@@ -602,8 +602,8 @@ inherited frmInvoiceObjects: TfrmInvoiceObjects
       object chkShowPackage: TsCheckBox
         Left = 724
         Top = 143
-        Width = 111
-        Height = 20
+        Width = 119
+        Height = 17
         Caption = 'Package on invoice'
         Checked = True
         State = cbChecked
@@ -1213,8 +1213,7 @@ inherited frmInvoiceObjects: TfrmInvoiceObjects
                 Caption.Text = 'Band1'
               end>
             DataController.DataSource = dsInvoicelinesObjects
-            DataController.ParentField = 'Parent'
-            DataController.KeyField = 'Index_'
+            DataController.KeyField = 'ID'
             DragCursor = crDrag
             DragMode = dmAutomatic
             Font.Charset = ANSI_CHARSET
@@ -1228,7 +1227,9 @@ inherited frmInvoiceObjects: TfrmInvoiceObjects
             ParentFont = False
             RootValue = 0
             TabOrder = 0
-            OnStartDrag = tlInvoiceLinesStartDrag
+            OnDataChanged = tlInvoiceLinesDataChanged
+            ExplicitLeft = 3
+            ExplicitTop = 5
             object cxDBTreeList1cxDBTreeListColumn7: TcxDBTreeListColumn
               PropertiesClassName = 'TcxCheckBoxProperties'
               Caption.AlignHorz = taCenter
@@ -1252,7 +1253,7 @@ inherited frmInvoiceObjects: TfrmInvoiceObjects
               Summary.GroupFooterSummaryItems = <>
             end
             object cxDBTreeList1cxDBTreeListColumn2: TcxDBTreeListColumn
-              DataBinding.FieldName = 'ItemType'
+              DataBinding.FieldName = 'Itemtype'
               Options.Editing = False
               Width = 100
               Position.ColIndex = 1
@@ -1308,6 +1309,40 @@ inherited frmInvoiceObjects: TfrmInvoiceObjects
                 end>
               Summary.GroupFooterSummaryItems = <>
             end
+          end
+          object DBGrid1: TDBGrid
+            Left = 138
+            Top = 96
+            Width = 320
+            Height = 120
+            DataSource = dsInvoicelinesObjects
+            TabOrder = 1
+            TitleFont.Charset = DEFAULT_CHARSET
+            TitleFont.Color = clWindowText
+            TitleFont.Height = -11
+            TitleFont.Name = 'Tahoma'
+            TitleFont.Style = []
+            Columns = <
+              item
+                Expanded = False
+                FieldName = 'ID'
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'Index_'
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'Description'
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'Itemtype'
+                Visible = True
+              end>
           end
         end
       end
@@ -1764,6 +1799,18 @@ inherited frmInvoiceObjects: TfrmInvoiceObjects
     OnNewRecord = odsInvoicelinesNewRecord
     Left = 784
     Top = 320
+    object odsInvoicelinesID: TIntegerField
+      FieldName = 'ID'
+    end
+    object odsInvoicelinesDescription: TStringField
+      FieldName = 'Description'
+    end
+    object odsInvoicelinesItemtype: TStringField
+      FieldName = 'Itemtype'
+    end
+    object odsInvoicelinesIndex_: TIntegerField
+      FieldName = 'Index_'
+    end
   end
   object dsInvoicelinesObjects: TDataSource
     DataSet = odsInvoicelines

@@ -41,7 +41,7 @@ type
     constructor Create;
     destructor Destroy; override;
 
-    procedure Clear;
+    procedure Clear; override;
     procedure SetPropertiesFromXMLNode(const aNode: PXMLNode); override;
     procedure AddPropertiesToXMLNode(const aNode: PXMLNode); override;
 

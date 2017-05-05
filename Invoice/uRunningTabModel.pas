@@ -29,7 +29,7 @@ type
     property RunningTabsOverview: TRunningTabsOverview read FRunningTabsOverview;
     property InvoicelinesList[aIndex: integer]: IObjectList read GetInvoicelinesList;
     property PaymentsList[aIndex: integer]: IObjectList read GetPaymentsList;
-  end;
+  end deprecated;
 
 implementation
 
@@ -95,8 +95,6 @@ end;
 function TRunningTabViewAdapter.InvoiceIndexNotEmpty(aIndex: integer): boolean;
 var
   Predicate: Spring.TPredicate<TRunningTabProduct>;
-  Product: TRunningTabProduct;
-  Enumerable: IEnumerable<TRunningTabProduct>;
 begin
 
   Predicate := function(const aProduct: TRunningTabProduct): Boolean

@@ -12,7 +12,7 @@ uses
   Vcl.ExtCtrls, cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid,
   Vcl.StdCtrls, sCheckBox, cxButtons, sButton, sGroupBox, sEdit, sLabel, sPanel, dxPScxCommon, dxPScxGridLnk, cxClasses,
   cxPropertiesStore, Vcl.ComCtrls, sStatusBar
-  , uRunningTabInvoiceViewAdapter, sTabControl, RoomerFinancialDataModel_ModelObjects
+  , uRunningTabInvoiceViewAdapter, sTabControl, RoomerFinancialDataModel_ModelObjects, Vcl.Grids, Vcl.DBGrids
   ;
 
 type
@@ -175,6 +175,11 @@ type
     cxDBTreeList1cxDBTreeListColumn6: TcxDBTreeListColumn;
     dsInvoicelinesObjects: TDataSource;
     tsInvocieIndex: TsTabControl;
+    odsInvoicelinesDescription: TStringField;
+    odsInvoicelinesItemtype: TStringField;
+    odsInvoicelinesIndex_: TIntegerField;
+    DBGrid1: TDBGrid;
+    odsInvoicelinesID: TIntegerField;
     procedure FormShow(Sender: TObject);
     procedure tvPaymentsPayGroupGetDisplayText(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
       var AText: string);
@@ -183,12 +188,12 @@ type
     procedure odsInvoicelinesBeforeDelete(DataSet: TDataSet);
     procedure actDelLineUpdate(Sender: TObject);
     procedure actDelLineExecute(Sender: TObject);
-    procedure tlInvoiceLinesStartDrag(Sender: TObject; var DragObject: TDragObject);
     procedure tsInvocieIndexDragDrop(Sender, Source: TObject; X, Y: Integer);
     procedure tsInvocieIndexDockOver(Sender: TObject; Source: TDragDockObject; X, Y: Integer; State: TDragState;
       var Accept: Boolean);
     procedure actAddLineExecute(Sender: TObject);
     procedure odsInvoicelinesNewRecord(DataSet: TDataSet);
+    procedure tlInvoiceLinesDataChanged(Sender: TObject);
   private
     FRunningTabModel: TRunningTabInvoiceViewAdapter;
     FReservation: integer;
@@ -197,6 +202,7 @@ type
     procedure SetActiveInvoiceIndex(const Value: integer);
     procedure DeleteCurrentItem;
     function GetCurrentInvoiceLine: TxsdInvoiceLineType;
+    procedure LinkDataSets;
   protected
     procedure DoUpdateControls; override;
     procedure DoLoadData; override;
@@ -323,9 +329,8 @@ begin
     odsInvoicelines.Close;
     lRunningTabApi := TBookingsRunningTabAPICaller.Create;
     try
-      lRunningTabAPI.GetRunningTabRoomRes(FReservation, FRoomReservation, 0, FRunningTabModel.RunningTabsOverview);
-
-      UpdateControls;
+      if lRunningTabAPI.GetRunningTabRoomRes(FReservation, FRoomReservation, 0, FRunningTabModel.RunningTabsOverview) then
+        LinkDataSets;
     finally
       lRunningTabAPI.Free;
     end;
@@ -338,13 +343,26 @@ begin
   end;
 end;
 
+procedure TfrmInvoiceObjects.LinkDataSets;
+var
+  lPaymentsList: IObjectList;
+  lInvoiceList: IObjectList;
+begin
+  lPaymentsList := FRunningTabModel.PaymentsList[FActiveInvoiceIndex];
+  lInvoiceList := FRunningTabModel.InvoicelinesList[FActiveInvoiceIndex];
+  if lPaymentsList <> nil then
+    odsPayments.DataList := lPaymentsList;
+  if lInvoiceList <> nil then
+    odsInvoicelines.DataList := lInvoiceList;
+
+  tlInvoiceLines.Refresh;
+  UpdateControls;
+end;
+
 procedure TfrmInvoiceObjects.DoUpdateControls;
 begin
   inherited;
 
-  odsPayments.DataList := FRunningTabModel.PaymentsList[FActiveInvoiceIndex];
-  odsInvoicelines.DataList := FRunningTabModel.InvoicelinesList[FActiveInvoiceIndex];
-	
 end;
 
 procedure TfrmInvoiceObjects.FormShow(Sender: TObject);
@@ -356,13 +374,13 @@ end;
 procedure TfrmInvoiceObjects.SetActiveInvoiceIndex(const Value: integer);
 begin
   FActiveInvoiceIndex := Value;
-  UpdateControls;
+  LinkDataSets;
 end;
 
-procedure TfrmInvoiceObjects.tlInvoiceLinesStartDrag(Sender: TObject; var DragObject: TDragObject);
+procedure TfrmInvoiceObjects.tlInvoiceLinesDataChanged(Sender: TObject);
 begin
   inherited;
-   //
+//
 end;
 
 procedure TfrmInvoiceObjects.tsInvocieIndexChange(Sender: TObject);

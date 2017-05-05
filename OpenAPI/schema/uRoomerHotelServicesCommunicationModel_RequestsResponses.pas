@@ -39,12 +39,12 @@ type
         FName: string;
         FActions: TStringlist;
     protected
-      procedure SetPropertiesFromXMLNode(const aNode: PXMLNode); override;
       class function GetNameSpaceURI: string; override;
       class function GetNodeName: string; override;
     public
       constructor Create;
       destructor Destroy; override;
+      procedure SetPropertiesFromXMLNode(const aNode: PXMLNode); override;
 
       property Name: string read FName write FName;
       property Actions: TStringlist read FActions;
