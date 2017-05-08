@@ -102,7 +102,7 @@
         <Manifest_File>None</Manifest_File>
         <DCC_UnitSearchPath>RoomerVCLs\Source;RoomerVCLs\http;Extras\NativeXml407\nativexml;Extras\NativeXml407\general;RoomerVCLs\Source ;Extras\DragDrop\Source;FastMM;Extras\Skin\AlphaSkins\Components;Extras\OXML\units;Extras\Spring4d\Source;Extras\Spring4d\Source\Base;Extras\Spring4d\Source\Core;Extras\Spring4d\Source\Data;Extras\Spring4d\Source\Data\ObjectDataset;Extras\Spring4d\Source\Base\Collections;Extras\Spring4d\Source\Base\Logging;Extras\Spring4d\Source\Base\Patches;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <DCC_ImageBase>00400000</DCC_ImageBase>
-        <VerInfo_Keys>CompanyName=Promoir BV;FileDescription=Roomer PMS;FileVersion=1.9.13.0;InternalName=;LegalCopyright=(C) 2013, 2014, 2015, 2016, 2017 Promoir BV;LegalTrademarks=Roomer is a Registered Trademark of Promoir BV;OriginalFilename=Roomer.exe;ProductName=Roomer Open Hospitality Platform;ProductVersion=1.9.13.0;Comments=;ExtraBuild=170504;PrivateBuild=</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=Promoir BV;FileDescription=Roomer PMS;FileVersion=1.9.13.0;InternalName=;LegalCopyright=(C) 2013, 2014, 2015, 2016, 2017 Promoir BV;LegalTrademarks=Roomer is a Registered Trademark of Promoir BV;OriginalFilename=Roomer.exe;ProductName=Roomer Open Hospitality Platform;ProductVersion=1.9.13.0;Comments=;ExtraBuild=170508;PrivateBuild=</VerInfo_Keys>
         <VerInfo_Locale>1039</VerInfo_Locale>
         <VerInfo_MinorVer>9</VerInfo_MinorVer>
         <VerInfo_AutoGenVersion>true</VerInfo_AutoGenVersion>
@@ -130,6 +130,8 @@
         <Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1)'!=''">
+        <VerInfo_Debug>false</VerInfo_Debug>
+        <VerInfo_PreRelease>false</VerInfo_PreRelease>
         <DCC_ExeOutput>RoomerPMSRelease</DCC_ExeOutput>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <DCC_MaxStackSize>1176576</DCC_MaxStackSize>
@@ -160,8 +162,6 @@
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_4_Win32)'!=''">
         <VerInfo_AutoGenVersion>false</VerInfo_AutoGenVersion>
-        <VerInfo_PreRelease>false</VerInfo_PreRelease>
-        <VerInfo_Debug>false</VerInfo_Debug>
         <Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
@@ -200,10 +200,11 @@
         <DCC_DcuOutput>_dcu\debug</DCC_DcuOutput>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_3_Win32)'!=''">
-        <DCC_DebugDCUs>true</DCC_DebugDCUs>
+        <VerInfo_Keys>CompanyName=Promoir BV;FileDescription=Roomer PMS;FileVersion=2.0.0.0;InternalName=;LegalCopyright=(C) 2013, 2014, 2015, 2016, 2017 Promoir BV;LegalTrademarks=Roomer is a Registered Trademark of Promoir BV;OriginalFilename=Roomer.exe;ProductName=Roomer Open Hospitality Platform;ProductVersion=2.9.13.0;Comments=;ExtraBuild=170421;PrivateBuild=</VerInfo_Keys>
+        <DCC_DcuOutput>_dcu\debug</DCC_DcuOutput>
+        <DCC_DebugDCUs>false</DCC_DebugDCUs>
         <DCC_BplOutput> </DCC_BplOutput>
         <VerInfo_MinorVer>0</VerInfo_MinorVer>
-        <VerInfo_MajorVer>2</VerInfo_MajorVer>
         <VerInfo_Release>0</VerInfo_Release>
         <VerInfo_AutoGenVersion>false</VerInfo_AutoGenVersion>
         <DCC_SYMBOL_PLATFORM>false</DCC_SYMBOL_PLATFORM>
