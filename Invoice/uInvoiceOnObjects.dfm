@@ -1229,8 +1229,11 @@ inherited frmInvoiceObjects: TfrmInvoiceObjects
             RootValue = 0
             TabOrder = 0
             OnDataChanged = tlInvoiceLinesDataChanged
+            ExplicitLeft = 3
+            ExplicitTop = 5
             object tlInvoiceLinescxDBTreeListColumn1: TcxDBTreeListColumn
               DataBinding.FieldName = 'ID'
+              Width = 52
               Position.ColIndex = 0
               Position.RowIndex = 0
               Position.BandIndex = 0
@@ -1242,7 +1245,7 @@ inherited frmInvoiceObjects: TfrmInvoiceObjects
               Caption.AlignHorz = taCenter
               Caption.Text = 'Selected'
               MinWidth = 25
-              Width = 25
+              Width = 40
               Position.ColIndex = 1
               Position.RowIndex = 0
               Position.BandIndex = 0
@@ -1797,6 +1800,12 @@ inherited frmInvoiceObjects: TfrmInvoiceObjects
     end
     object odsInvoicelinesQuantity: TFloatField
       FieldName = 'Quantity'
+    end
+    object odsInvoicelinesNettoPrice: TFloatField
+      FieldName = 'NettoPrice'
+    end
+    object odsInvoicelinesTotalNetAmount: TFloatField
+      FieldName = 'TotalNetAmount'
     end
   end
   object dsInvoicelinesObjects: TDataSource

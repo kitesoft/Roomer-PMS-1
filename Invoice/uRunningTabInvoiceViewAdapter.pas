@@ -181,7 +181,7 @@ end;
 function TRunningTabInvoiceViewItem.GetPurchaseDate: TDate;
 begin
   if FLineType.Item is TxsdBillableEntryType then
-    result := TxsdBillableEntryType(FlineType.item).PurchaseDateTime
+    result := TxsdBillableEntryType(FlineType.item).Purcha`seDateTime
   else
     Result := -1;
 end;

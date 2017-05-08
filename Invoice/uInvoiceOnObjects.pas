@@ -184,6 +184,8 @@ type
     tlInvoiceLinescxDBTreeListColumn1: TcxDBTreeListColumn;
     odsInvoicelinesPurchaseDate: TDateField;
     odsInvoicelinesQuantity: TFloatField;
+    odsInvoicelinesNettoPrice: TFloatField;
+    odsInvoicelinesTotalNetAmount: TFloatField;
     procedure FormShow(Sender: TObject);
     procedure tvPaymentsPayGroupGetDisplayText(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
       var AText: string);
