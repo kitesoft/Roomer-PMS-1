@@ -12,7 +12,8 @@ uses
   Vcl.ExtCtrls, cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid,
   Vcl.StdCtrls, sCheckBox, cxButtons, sButton, sGroupBox, sEdit, sLabel, sPanel, dxPScxCommon, dxPScxGridLnk, cxClasses,
   cxPropertiesStore, Vcl.ComCtrls, sStatusBar
-  , uRunningTabInvoiceViewAdapter, sTabControl, RoomerFinancialDataModel_ModelObjects, Vcl.Grids, Vcl.DBGrids
+  , uRunningTabInvoiceViewAdapter, sTabControl, RoomerFinancialDataModel_ModelObjects, Vcl.Grids, Vcl.DBGrids,
+  cxCalendar
   ;
 
 type
@@ -178,8 +179,11 @@ type
     odsInvoicelinesDescription: TStringField;
     odsInvoicelinesItemtype: TStringField;
     odsInvoicelinesIndex_: TIntegerField;
-    DBGrid1: TDBGrid;
-    odsInvoicelinesID: TIntegerField;
+    odsInvoicelinesID: TStringField;
+    odsInvoicelinesParent: TStringField;
+    tlInvoiceLinescxDBTreeListColumn1: TcxDBTreeListColumn;
+    odsInvoicelinesPurchaseDate: TDateField;
+    odsInvoicelinesQuantity: TFloatField;
     procedure FormShow(Sender: TObject);
     procedure tvPaymentsPayGroupGetDisplayText(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
       var AText: string);
@@ -194,6 +198,8 @@ type
     procedure actAddLineExecute(Sender: TObject);
     procedure odsInvoicelinesNewRecord(DataSet: TDataSet);
     procedure tlInvoiceLinesDataChanged(Sender: TObject);
+    procedure cxDBTreeList1cxDBTreeListColumn4GetDisplayText(Sender: TcxTreeListColumn; ANode: TcxTreeListNode;
+      var Value: string);
   private
     FRunningTabModel: TRunningTabInvoiceViewAdapter;
     FReservation: integer;
@@ -306,6 +312,13 @@ constructor TfrmInvoiceObjects.Create(aOwner: TComponent);
 begin
   inherited;
   FRunningTabModel := TRunningTabInvoiceViewAdapter.Create;
+end;
+
+procedure TfrmInvoiceObjects.cxDBTreeList1cxDBTreeListColumn4GetDisplayText(Sender: TcxTreeListColumn;
+  ANode: TcxTreeListNode; var Value: string);
+begin
+  inherited;
+  if Value = '0.0' then Value := '';
 end;
 
 destructor TfrmInvoiceObjects.Destroy;

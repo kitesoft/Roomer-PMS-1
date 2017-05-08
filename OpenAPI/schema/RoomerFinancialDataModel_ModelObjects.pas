@@ -91,8 +91,14 @@ type
 
 
   TxsdInvoiceLineEntryType = class abstract(TxsdBaseObject)
+  private
+    FID: string;
   public
     class function CreateInvoiceLineEntryType(aNode: PXMLNode): TxsdInvoiceLineEntryType;
+    procedure SetPropertiesFromXMLNode(const aNode: PXMLNode); override;
+    procedure AddPropertiesToXMLNode(const aNode: PXMLNode); override;
+  published
+    property ID: string read FID write FID;
   end;
 
 
@@ -111,7 +117,6 @@ type
   private const
     cNodeName = 'PaymentItem';
   private
-    FID: string;
     FPaymentReference: string;
     FPaymentMethod: string;
     FDate: TDateTime;
@@ -123,7 +128,6 @@ type
     procedure SetPropertiesFromXMLNode(const aNode: PXMLNode); override;
     procedure AddPropertiesToXMLNode(const aNode: PXMLNode); override;
   published
-    property ID: string read FID write FID;
     property PaymentReference: string read FPaymentReference write FPaymentReference;
     property PaymentMethod: string read FPaymentMethod write FPaymentMethod;
     property Date: TDateTime read FDate write FDate;
@@ -141,7 +145,6 @@ type
   private const
     cNodeName = 'TextItem';
   private
-    FID: string;
     FText: string;
     FDate: TDate;
   protected
@@ -151,7 +154,6 @@ type
     procedure SetPropertiesFromXMLNode(const aNode: PXMLNode); override;
     procedure AddPropertiesToXMLNode(const aNode: PXMLNode); override;
   published
-    property ID: string read FID write FID;
     property Text: string read FText write FText;
     property Date: TDate read FDate write FDate;
   end;
@@ -174,7 +176,6 @@ type
 {$ENDREGION}
   TxsdBillableEntryType = class abstract(TxsdInvoiceLineEntryType)
   private
-    FID: string;
     FDescription: string;
     FProductID: string;
     FNumber: double;
@@ -190,7 +191,6 @@ type
     procedure SetPropertiesFromXMLNode(const aNode: PXMLNode); override;
     procedure AddPropertiesToXMLNode(const aNode: PXMLNode); override;
   published
-    property ID: string read FID write FID;
     property Description: string read FDescription write FDescription;
     property ProductID: string read FProductID write FProductID;
     property Number: double read FNumber write FNumber;
@@ -896,6 +896,12 @@ end;
 
 { TxsdInvoiceLineEntryType }
 
+procedure TxsdInvoiceLineEntryType.AddPropertiesToXMLNode(const aNode: PXMLNode);
+begin
+  inherited;
+  RaiseMethodNotImplementedException;
+end;
+
 class function TxsdInvoiceLineEntryType.CreateInvoiceLineEntryType(aNode: PXMLNode): TxsdInvoiceLineEntryType;
 var
   lNodes: IXMLNodeList;
@@ -912,6 +918,12 @@ begin
     raise ERoomerSchemaException.CreateFmt('Unkown TxsdInvoiceLineEntryType: [%s]', [ aNode.NodeName]);
 
   Result.SetPropertiesFromXMLNode(lNodes.GetFirst);
+end;
+
+procedure TxsdInvoiceLineEntryType.SetPropertiesFromXMLNode(const aNode: PXMLNode);
+begin
+  inherited;
+  FID := aNode.Attributes['id'];
 end;
 
 { TxsdExtendedBillableEntryType }
@@ -1055,7 +1067,6 @@ var
   lNodeList: IXMLNodeList;
 begin
   inherited;
-  FId := aNode.Attributes['id'];
   FDescription := aNode.Attributes['description'];
   FProductID := aNode.Attributes['productId'];
   FNumber := XMLToFloat(aNode.Attributes['number']);
@@ -1127,7 +1138,6 @@ end;
 procedure TxsdTextEntryType.SetPropertiesFromXMLNode(const aNode: PXMLNode);
 begin
   inherited;
-  FID := aNode.Attributes['id'];
   FText := aNode.Attributes['text'];
   FDate := XMLToDate(aNode.Attributes['date']);
 end;
@@ -1152,8 +1162,6 @@ end;
 
 procedure TxsdPaymentType.SetPropertiesFromXMLNode(const aNode: PXMLNode);
 begin
-  inherited;
-  FID := aNode.Attributes['íd'];
   FPaymentReference := aNode.Attributes['paymentReference'];
   FPaymentMethod := aNode.Attributes['paymentMethod'];
   FDate := XMLToDateTime(aNode.Attributes['date']);

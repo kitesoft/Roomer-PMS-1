@@ -14,19 +14,28 @@ type
 
   TRunningTabInvoiceViewItem = class(TPersistent)
   private
-    FID: integer;
     FLineType: TxsdInvoiceLineType;
     function GetDescription: string;
     function GetItemType: string;
     function GetIndex: integer;
-    function GetId: integer;
+    function GetId: string;
+    function GetParent: string;
+    function GetPurchaseDate: TDate;
+    function GetQuantity: double;
+    function GetNettoPrice: double;
+    function GetTotalNetAmount: double;
   public
-    constructor Create(aLineType: TxsdInvoiceLineType; aID: integer);
+    constructor Create(aLineType: TxsdInvoiceLineType);
   published
-    property ID: integer read GetId;
+    property ID: string read GetId;
     property Index_: integer read GetIndex;
+    property Parent: string read GetParent;
     property ItemType: string read GetItemType;
     property Description: string read GetDescription;
+    property PurchaseDate: TDate read GetPurchaseDate;
+    property Quantity: double read GetQuantity;
+    property NettoProce: double read GetNettoPrice;
+    property TotalNetAmount: double read GetTotalNetAmount;
   end;
 
   TRunningTabInvoiceViewList = class(TObjectList<TRunningTabinvoiceViewItem>)
@@ -113,36 +122,34 @@ end;
 procedure TRunningTabInvoiceViewList.Additems;
 var
   lItem: TxsdInvoiceLineType;
-  cnt: integer;
 begin
-  cnt := 0;
   for lItem in FLinesList do
   begin
-    Add(TRunningTabInvoiceViewItem.Create(lItem, cnt));
-    inc(cnt);
+    Add(TRunningTabInvoiceViewItem.Create(lItem));
   end;
 end;
 
 
 { TRunningTabInvoiceViewItem }
 
-constructor TRunningTabInvoiceViewItem.Create(aLinetype: TxsdInvoiceLineType; aID: integer);
+constructor TRunningTabInvoiceViewItem.Create(aLinetype: TxsdInvoiceLineType);
 begin
   FLineType := aLineType;
-  FID := aID;
 end;
 
 function TRunningTabInvoiceViewItem.GetDescription: string;
 begin
   if FLineType.Item is TxsdBillableEntryType then
     Result := TxsdBillableEntryType(FLineType.Item).Description
+  else if FLineType.Item is TxsdTextEntryType then
+    Result := TxsdTextEntryType(FLineType.Item).Text
   else
     Result := '';
 end;
 
-function TRunningTabInvoiceViewItem.GetId: integer;
+function TRunningTabInvoiceViewItem.GetId: string;
 begin
-  Result := FId;
+  Result := FLineType.Item.ID;
 end;
 
 function TRunningTabInvoiceViewItem.GetIndex: integer;
@@ -156,6 +163,40 @@ begin
     Result := TxsdBillableEntryType(FLineType.Item).ProductID
   else
     Result := '';
+end;
+
+function TRunningTabInvoiceViewItem.GetNettoPrice: double;
+begin
+
+end;
+
+function TRunningTabInvoiceViewItem.GetParent: string;
+begin
+  if FLineType.Item is TxsdDiscountBillableEntryType then
+    Result := TxsdDiscountBillableEntryType(FLineType.Item).AppliesTo
+  else
+    Result := '-1' ;
+end;
+
+function TRunningTabInvoiceViewItem.GetPurchaseDate: TDate;
+begin
+  if FLineType.Item is TxsdBillableEntryType then
+    result := TxsdBillableEntryType(FlineType.item).PurchaseDateTime
+  else
+    Result := -1;
+end;
+
+function TRunningTabInvoiceViewItem.GetQuantity: double;
+begin
+  if FLineType.Item is TxsdBillableEntryType then
+    result := TxsdBillableEntryType(FlineType.item).Number
+  else
+    Result := 0;
+end;
+
+function TRunningTabInvoiceViewItem.GetTotalNetAmount: double;
+begin
+
 end;
 
 end.

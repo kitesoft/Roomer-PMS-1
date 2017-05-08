@@ -602,8 +602,8 @@ inherited frmInvoiceObjects: TfrmInvoiceObjects
       object chkShowPackage: TsCheckBox
         Left = 724
         Top = 143
-        Width = 119
-        Height = 17
+        Width = 111
+        Height = 20
         Caption = 'Package on invoice'
         Checked = True
         State = cbChecked
@@ -1213,6 +1213,7 @@ inherited frmInvoiceObjects: TfrmInvoiceObjects
                 Caption.Text = 'Band1'
               end>
             DataController.DataSource = dsInvoicelinesObjects
+            DataController.ParentField = 'Parent'
             DataController.KeyField = 'ID'
             DragCursor = crDrag
             DragMode = dmAutomatic
@@ -1228,15 +1229,21 @@ inherited frmInvoiceObjects: TfrmInvoiceObjects
             RootValue = 0
             TabOrder = 0
             OnDataChanged = tlInvoiceLinesDataChanged
-            ExplicitLeft = 3
-            ExplicitTop = 5
+            object tlInvoiceLinescxDBTreeListColumn1: TcxDBTreeListColumn
+              DataBinding.FieldName = 'ID'
+              Position.ColIndex = 0
+              Position.RowIndex = 0
+              Position.BandIndex = 0
+              Summary.FooterSummaryItems = <>
+              Summary.GroupFooterSummaryItems = <>
+            end
             object cxDBTreeList1cxDBTreeListColumn7: TcxDBTreeListColumn
               PropertiesClassName = 'TcxCheckBoxProperties'
               Caption.AlignHorz = taCenter
               Caption.Text = 'Selected'
               MinWidth = 25
               Width = 25
-              Position.ColIndex = 0
+              Position.ColIndex = 1
               Position.RowIndex = 0
               Position.BandIndex = 0
               Summary.FooterSummaryItems = <>
@@ -1246,7 +1253,7 @@ inherited frmInvoiceObjects: TfrmInvoiceObjects
               DataBinding.FieldName = 'Description'
               Options.Editing = False
               Width = 407
-              Position.ColIndex = 2
+              Position.ColIndex = 3
               Position.RowIndex = 0
               Position.BandIndex = 0
               Summary.FooterSummaryItems = <>
@@ -1256,25 +1263,15 @@ inherited frmInvoiceObjects: TfrmInvoiceObjects
               DataBinding.FieldName = 'Itemtype'
               Options.Editing = False
               Width = 100
-              Position.ColIndex = 1
+              Position.ColIndex = 2
               Position.RowIndex = 0
               Position.BandIndex = 0
               Summary.FooterSummaryItems = <>
               Summary.GroupFooterSummaryItems = <>
             end
             object cxDBTreeList1cxDBTreeListColumn3: TcxDBTreeListColumn
+              PropertiesClassName = 'TcxDateEditProperties'
               DataBinding.FieldName = 'PurchaseDate'
-              Options.Editing = False
-              Width = 100
-              Position.ColIndex = 3
-              Position.RowIndex = 0
-              Position.BandIndex = 0
-              Summary.FooterSummaryItems = <>
-              Summary.GroupFooterSummaryItems = <>
-            end
-            object cxDBTreeList1cxDBTreeListColumn4: TcxDBTreeListColumn
-              PropertiesClassName = 'TcxCalcEditProperties'
-              DataBinding.FieldName = 'Quantity'
               Options.Editing = False
               Width = 100
               Position.ColIndex = 4
@@ -1283,12 +1280,25 @@ inherited frmInvoiceObjects: TfrmInvoiceObjects
               Summary.FooterSummaryItems = <>
               Summary.GroupFooterSummaryItems = <>
             end
+            object cxDBTreeList1cxDBTreeListColumn4: TcxDBTreeListColumn
+              PropertiesClassName = 'TcxCalcEditProperties'
+              Properties.Alignment.Horz = taCenter
+              DataBinding.FieldName = 'Quantity'
+              Options.Editing = False
+              Width = 100
+              Position.ColIndex = 5
+              Position.RowIndex = 0
+              Position.BandIndex = 0
+              Summary.FooterSummaryItems = <>
+              Summary.GroupFooterSummaryItems = <>
+              OnGetDisplayText = cxDBTreeList1cxDBTreeListColumn4GetDisplayText
+            end
             object cxDBTreeList1cxDBTreeListColumn5: TcxDBTreeListColumn
               PropertiesClassName = 'TcxCurrencyEditProperties'
               DataBinding.FieldName = 'Nettoprice'
               Options.Editing = False
               Width = 100
-              Position.ColIndex = 5
+              Position.ColIndex = 6
               Position.RowIndex = 0
               Position.BandIndex = 0
               Summary.FooterSummaryItems = <>
@@ -1299,7 +1309,7 @@ inherited frmInvoiceObjects: TfrmInvoiceObjects
               DataBinding.FieldName = 'TotalnetAmount'
               Options.Editing = False
               Width = 100
-              Position.ColIndex = 6
+              Position.ColIndex = 7
               Position.RowIndex = 0
               Position.BandIndex = 0
               Summary.FooterSummaryItems = <
@@ -1309,40 +1319,6 @@ inherited frmInvoiceObjects: TfrmInvoiceObjects
                 end>
               Summary.GroupFooterSummaryItems = <>
             end
-          end
-          object DBGrid1: TDBGrid
-            Left = 138
-            Top = 96
-            Width = 320
-            Height = 120
-            DataSource = dsInvoicelinesObjects
-            TabOrder = 1
-            TitleFont.Charset = DEFAULT_CHARSET
-            TitleFont.Color = clWindowText
-            TitleFont.Height = -11
-            TitleFont.Name = 'Tahoma'
-            TitleFont.Style = []
-            Columns = <
-              item
-                Expanded = False
-                FieldName = 'ID'
-                Visible = True
-              end
-              item
-                Expanded = False
-                FieldName = 'Index_'
-                Visible = True
-              end
-              item
-                Expanded = False
-                FieldName = 'Description'
-                Visible = True
-              end
-              item
-                Expanded = False
-                FieldName = 'Itemtype'
-                Visible = True
-              end>
           end
         end
       end
@@ -1799,9 +1775,6 @@ inherited frmInvoiceObjects: TfrmInvoiceObjects
     OnNewRecord = odsInvoicelinesNewRecord
     Left = 784
     Top = 320
-    object odsInvoicelinesID: TIntegerField
-      FieldName = 'ID'
-    end
     object odsInvoicelinesDescription: TStringField
       FieldName = 'Description'
     end
@@ -1810,6 +1783,20 @@ inherited frmInvoiceObjects: TfrmInvoiceObjects
     end
     object odsInvoicelinesIndex_: TIntegerField
       FieldName = 'Index_'
+    end
+    object odsInvoicelinesID: TStringField
+      FieldName = 'ID'
+      Size = 25
+    end
+    object odsInvoicelinesParent: TStringField
+      FieldName = 'Parent'
+      Size = 25
+    end
+    object odsInvoicelinesPurchaseDate: TDateField
+      FieldName = 'PurchaseDate'
+    end
+    object odsInvoicelinesQuantity: TFloatField
+      FieldName = 'Quantity'
     end
   end
   object dsInvoicelinesObjects: TDataSource

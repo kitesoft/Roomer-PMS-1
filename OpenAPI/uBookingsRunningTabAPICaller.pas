@@ -49,6 +49,7 @@ begin
     Result := roomerClient.GetWithStatus(lURI, lResponse).StatusCode = 200;
   except
     Result := false;
+    roomerclient.Free;
   end;
 
   if Result then
