@@ -849,6 +849,7 @@
         <DCCReference Include="Reporting\uRptReservationStatusPerDay.pas">
             <Form>FrmRptReservationStatusPerDay</Form>
         </DCCReference>
+        <DCCReference Include="VersionManagement\uVersionManagement.pas"/>
         <None Include="Roomer.todo"/>
         <None Include="notes.txt"/>
         <None Include="Roomer.inc"/>

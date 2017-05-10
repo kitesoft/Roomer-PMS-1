@@ -12,7 +12,9 @@ const
 const
   qcCompany        = 'Roomer';
   cRoomerFolder    = 'Roomer';
+  cRoomerUpgradeFolder = 'Upgrades';
   qcApplication    = 'Roomer PMS';
+  cUpgradeDaemon   = 'RoomerUpgradeDaemon.exe';
   cOpenAPIApplicationID = 'ROOMERPMS';
   testCompanyID    = '00';
   testCompanyName  = 'Hotel Trial';

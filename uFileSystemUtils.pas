@@ -4,6 +4,7 @@ interface
 uses Types, System.SysUtils, Registry, Winapi.Windows, System.IOUtils, Controls, ShellAPI;
 
 function RoomerAppDataPath: string;
+function RoomerNewUpgradePath: string;
 function RoomerTempPath: string;
 function LocalAppDataPath : string;
 Function GetTempFileName(const ext: string): string;
@@ -30,6 +31,7 @@ procedure SaveToTextFile(const FileName, data: String);
 procedure AddToTextFile(const FileName, data: String);
 function ReadFromTextFile(const FileName: String): String;
 procedure KillTask(ExeFileName: string);
+function FileMD5(const fileName : string) : string;
 
 
 implementation
@@ -40,7 +42,9 @@ uses
   , StrUtils
   , Classes
   , uRunWithElevatedOption
-  , uRoomerDefinitions;
+  , uRoomerDefinitions
+  , IdHashMessageDigest
+  , idHash;
 
 const
   _K  = 1024; //byte
@@ -147,6 +151,13 @@ end;
 function RoomerAppDataPath: string;
 begin
   result := TPath.Combine(LocalAppDataPath, cRoomerFolder);
+end;
+
+function RoomerNewUpgradePath: string;
+begin
+  result := TPath.Combine(RoomerAppDataPath, cRoomerUpgradeFolder);
+  if NOT DirectoryExists(result) then
+    ForceDirectories(result);
 end;
 
 function RoomerTempPath: string;
@@ -430,6 +441,21 @@ var
 begin
   options := [eoWait, eoHide];
   ExecuteFile(0, 'CMD.EXE', '/c taskkill /f /im ' + ExeFileName, options);
+end;
+
+function FileMD5(const fileName : string) : string;
+var
+  IdMD5: TIdHashMessageDigest5;
+  FS: TFileStream;
+begin
+ IdMD5 := TIdHashMessageDigest5.Create;
+ FS := TFileStream.Create(fileName, fmOpenRead or fmShareDenyWrite);
+ try
+   Result := LowerCase(IdMD5.HashStreamAsHex(FS))
+ finally
+   FS.Free;
+   IdMD5.Free;
+ end;
 end;
 
 

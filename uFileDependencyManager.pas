@@ -54,6 +54,7 @@ type
     function getMaidsListReportFilePath(throwExceptionOnError: Boolean = true): String;
     function getAnyFileFromRoomerStore(const FromFile, toFile: String): String;
     function getRoomerUpgradeAgentFilePath(const toFile: String): String;
+    function getRoomerUpgradeDaemonFilePath(const toFile: String): String;
     function getRoomerVersionXmlFilePath(const toFile: String): String;
 
   end;
@@ -72,7 +73,9 @@ uses
   , uDateUtils
   , uFrmResources
   , uAPIDataHandler
-  , uAppGlobal, uResourceTypeDefinitions;
+  , uAppGlobal
+  , uResourceTypeDefinitions
+  , uRoomerDefinitions;
 
 var
   gFileDependencyMgr: TFileDependencymanager;
@@ -310,6 +313,7 @@ begin
   if FileExists(toFile) then
     FileAge(toFile, DateOfFile);
 
+  try
   RemoteFile := getFileInfoViaHead(sFullFilename);
   try
     if RemoteFile = nil then
@@ -325,6 +329,12 @@ begin
     end;
   finally
     RemoteFile.Free;
+  end;
+  except
+    if FileExists(toFile) then
+      Result := toFile
+    else
+      Result := '';
   end;
 end;
 
@@ -348,6 +358,11 @@ end;
 function TFileDependencymanager.getRoomerUpgradeAgentFilePath(const toFile: String): String;
 begin
   Result := getExeFilePath('RoomerUpgradeAgent.exe', toFile);
+end;
+
+function TFileDependencymanager.getRoomerUpgradeDaemonFilePath(const toFile: String): String;
+begin
+  Result := getExeFilePath(cUpgradeDaemon, toFile);
 end;
 
 function TFileDependencymanager.getRoomerVersionXmlFilePath(const toFile: String): String;

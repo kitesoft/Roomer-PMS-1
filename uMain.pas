@@ -67,7 +67,7 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver, dxSkinSpringTime,
   dxSkinStardust,
   dxSkinSummer2008, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, sScrollBox, acImage, AdvUtil,
-  uReservationStateDefinitions, System.Actions, Vcl.ActnList, uEmbDateStatistics
+  uReservationStateDefinitions, System.Actions, Vcl.ActnList, uEmbDateStatistics, uVersionManagement
 
     ;
 
@@ -1103,6 +1103,7 @@ type
     PeriodViewSelectedRow: integer;
 
     AppIsClosing : Boolean;
+    RoomerVersionManagement : TRoomerVersionManagement;
 
     procedure OnRefreshMessagesRequest(var Msg: TMessage); message WM_REFRESH_MESSAGES;
     procedure Open_RR_EdForm(_grid: TAdvStringGrid);
@@ -1462,6 +1463,8 @@ type
     procedure DeActivateMessageTimerIfActive;
     procedure SetPMSVisibilities;
     function GetDateUnderCursor: TDate;
+    procedure OnAskUpgrade(Text, version: String; forced : Boolean; var upgrade: Boolean);
+    procedure PrepareVersionManagement;
   public
     { Public declarations }
     StaffComm: TStaffCommunication;
@@ -1746,12 +1749,59 @@ begin
   end;
 end;
 
+procedure TfrmMain.OnAskUpgrade(Text : String; version : String; forced : Boolean; var upgrade : Boolean);
+var s : String;
+    Buttons: TMsgDlgButtons;
+    lMSgResult: integer;
+
+    Dialog : TForm;
+
+    procedure SetButtonCaption(CurrentButtonCaption, NewButtonCaption : String);
+    var lButton: TButton;
+    begin
+      With Dialog do
+      begin
+        lButton := TButton(FindComponent(CurrentButtonCaption));
+        if lButton <> nil then
+          lButton.Caption := NewButtonCaption;
+      end;
+    end;
+
+begin
+  if NOT forced then
+    Buttons := [mbOK,mbCancel]
+  else
+    Buttons := [mbOK];
+
+  Dialog := CreateMessageDialog(text, mtConfirmation, Buttons);
+  with Dialog do
+  try
+    SetButtonCaption('OK', GetTranslatedText('shTx_AboutRoomer_NewVersionAvailableUpdateNow'));
+    SetButtonCaption('Cancel', GetTranslatedText('shTx_AboutRoomer_NewVersionAvailableUpdateLater'));
+
+    Position := poScreenCenter;
+    lMsgResult := ShowModal;
+    upgrade := lMsgResult = mrOk;
+  finally
+    Free;
+  end;
+end;
+
+procedure TfrmMain.PrepareVersionManagement;
+begin
+  RoomerVersionManagement.Free;
+  RoomerVersionManagement := TRoomerVersionManagement.Create;
+  RoomerVersionManagement.OnAskUpgrade := OnAskUpgrade;
+  RoomerVersionManagement.Prepare;
+end;
+
 procedure TfrmMain.PostLoginProcess(prepareLanguages: boolean);
 begin
   LoggedIn := true;
   OpenAppSettings;
   g.RefreshRoomList;
   SetPMSVisibilities;
+  PrepareVersionManagement;
   // ******
   glb.PerformAuthenticationAssertion(self);
   PlaceFormOnVisibleMonitor(self);

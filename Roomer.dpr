@@ -279,7 +279,8 @@ uses
   uHotelServicesSettings in 'PMSSettings\uHotelServicesSettings.pas',
   uRoomerGridForm in 'RoomerForm\uRoomerGridForm.pas' {frmBaseRoomerGridForm},
   uStaffCommunicationDefinitions in 'Definitions\uStaffCommunicationDefinitions.pas',
-  uRptReservationStatusPerDay in 'Reporting\uRptReservationStatusPerDay.pas' {FrmRptReservationStatusPerDay};
+  uRptReservationStatusPerDay in 'Reporting\uRptReservationStatusPerDay.pas' {FrmRptReservationStatusPerDay},
+  uVersionManagement in 'VersionManagement\uVersionManagement.pas';
 
 {$R *.RES}
 
@@ -309,7 +310,7 @@ begin
     TSplashFormManager.Show;
 
     Application.CreateForm(TD, D);
-    D.ApplicationId := cOpenAPIApplicationID;
+  D.ApplicationId := cOpenAPIApplicationID;
 
     Application.CreateForm(TDReportData, DReportData);
     TSplashFormManager.UpdateProgress('Loading forms...');

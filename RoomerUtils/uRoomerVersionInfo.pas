@@ -72,8 +72,12 @@ uses
   , Classes
   , SysUtils
   , MSXML2_TLB
-  , uApiDataHandler
+//  , uApiDataHandler
+{$IFNDEF ROOMER_UTIL}
   , uFileDependencyManager
+{$ELSE}
+  , uRoomerUpgradeFileDependencyManager
+{$ENDIF}
   , XMLUtils
   , IOUtils
   ;
