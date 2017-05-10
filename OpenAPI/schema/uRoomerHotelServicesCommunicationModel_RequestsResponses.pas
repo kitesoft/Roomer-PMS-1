@@ -299,7 +299,7 @@ end;
 
 class function TUserActivityLogEventType.GetNodeName: string;
 begin
-  Result := 'UserActivityLogEventType';
+  Result := 'UserActivityLogEvent';
 end;
 
 procedure TUserActivityLogEventType.SetPropertiesFromXMLNode(const aNode: PXMLNode);

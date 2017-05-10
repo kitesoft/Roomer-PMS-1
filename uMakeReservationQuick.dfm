@@ -322,13 +322,17 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
     Top = 0
     Width = 1128
     Height = 572
-    ActivePage = taReservation
+    ActivePage = tabRoomRates
     Align = alClient
     TabOrder = 2
     OnChange = pgcMainChange
     SkinData.SkinSection = 'PAGECONTROL'
     object taReservation: TsTabSheet
       Caption = 'Reservation'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object panTop: TsPanel
         Left = 0
         Top = 0
@@ -674,7 +678,7 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
               ItemIndex = -1
               ParentFont = False
               TabOrder = 0
-              OnCloseUp = cbxRoomStatusCloseUp
+              OnChange = cbxRoomStatusChange
               Items.Strings = (
                 'Not Arrived'
                 'Checked in'
@@ -776,11 +780,11 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                 ExplicitHeight = 21
                 inherited lblCountryName: TsLabel
                   Left = 67
-                  Height = 15
                   ExplicitLeft = 67
                 end
                 inherited edCountryCode: TsEdit
                   Height = 20
+                  ExplicitHeight = 20
                 end
                 inherited btnGetCountry: TsButton
                   Width = 23
@@ -1247,6 +1251,10 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
             Caption = 'Contact Details'
             ImageIndex = 2
             TabVisible = False
+            ExplicitLeft = 0
+            ExplicitTop = 0
+            ExplicitWidth = 0
+            ExplicitHeight = 0
             object sPanel3: TsPanel
               Left = 0
               Top = 0
@@ -1286,7 +1294,6 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                 ParentColor = False
                 TabOrder = 0
                 SkinData.SkinSection = 'GROUPBOX'
-                ExplicitLeft = 4
                 object clabContactPerson: TsLabel
                   Left = 68
                   Top = 42
@@ -1624,20 +1631,18 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                 object lblSpecialRequests: TsLabel
                   Left = 2
                   Top = 15
-                  Width = 332
+                  Width = 81
                   Height = 13
                   Align = alTop
                   Caption = 'Special Requests'
-                  ExplicitWidth = 81
                 end
                 object lblNotes: TsLabel
                   Left = 2
                   Top = 101
-                  Width = 332
+                  Width = 28
                   Height = 13
                   Align = alTop
                   Caption = 'Notes'
-                  ExplicitWidth = 28
                 end
                 object edtSpecialRequests: TMemo
                   AlignWithMargins = True
@@ -1775,6 +1780,10 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
             Caption = 'Customer Details'
             ImageIndex = 1
             TabVisible = False
+            ExplicitLeft = 0
+            ExplicitTop = 0
+            ExplicitWidth = 0
+            ExplicitHeight = 0
             object clabTel2: TsLabel
               Left = 204
               Top = 125
@@ -2063,6 +2072,10 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
     object tabSelectType: TsTabSheet
       Caption = 'Select Types'
       ImageIndex = 1
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object panSelectTypesTop: TsPanel
         Left = 0
         Top = 0
@@ -2334,6 +2347,10 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
     object tabSelectRooms: TsTabSheet
       Caption = 'Select Rooms'
       ImageIndex = 2
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object panSelectRoomsTop: TsPanel
         Left = 0
         Top = 0
@@ -3053,6 +3070,10 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
           end
           object Alerts: TsTabSheet
             Caption = 'Alerts'
+            ExplicitLeft = 0
+            ExplicitTop = 0
+            ExplicitWidth = 0
+            ExplicitHeight = 0
           end
         end
       end
@@ -3464,11 +3485,11 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
     OnCalcFields = mSelectTypesCalcFields
     Left = 632
     Top = 592
-    object StringField2: TStringField
+    object mSelectTypesRoomtype: TStringField
       FieldName = 'roomType'
       Size = 10
     end
-    object StringField4: TStringField
+    object mSelectTypesRoomTypeDescription: TStringField
       FieldName = 'RoomTypeDescription'
     end
     object mSelectTypesSelected: TIntegerField
@@ -3511,7 +3532,7 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
     object mSelectRoomsActive: TBooleanField
       FieldName = 'Active'
     end
-    object StringField1: TStringField
+    object mSelectRoomsRoom: TStringField
       FieldName = 'Room'
       Size = 10
     end
@@ -3666,10 +3687,10 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
     SortOptions = []
     Left = 496
     Top = 280
-    object DateTimeField1: TDateTimeField
+    object mOcc_aDate: TDateTimeField
       FieldName = 'aDate'
     end
-    object StringField7: TStringField
+    object mOcc_Roomtype: TStringField
       FieldName = 'RoomType'
       Size = 10
     end
@@ -3790,21 +3811,21 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
     SortOptions = []
     Left = 560
     Top = 288
-    object m_Currency: TWideStringField
+    object mCurrencyCurrency: TWideStringField
       FieldName = 'Currency'
       Size = 5
     end
-    object WideStringField1: TWideStringField
+    object mCurrencyDescription: TWideStringField
       FieldName = 'Description'
       Size = 30
     end
-    object m_AValue: TFloatField
+    object mCurrencyAValue: TFloatField
       FieldName = 'AValue'
     end
-    object m_ID: TIntegerField
+    object mCurrencyId: TIntegerField
       FieldName = 'ID'
     end
-    object m_active: TBooleanField
+    object mCurrencyActive: TBooleanField
       FieldName = 'active'
     end
   end
@@ -3941,7 +3962,7 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
       FieldName = 'RoomNumber'
       Size = 10
     end
-    object mRoomRatesRateDate: TDateTimeField
+    object mRoomRatesRateDate: TDateField
       FieldName = 'RateDate'
     end
     object mRoomRatesPriceCode: TStringField
@@ -3985,52 +4006,52 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
     SortOptions = []
     Left = 496
     Top = 424
-    object IntegerField1: TIntegerField
+    object mRoomRatesTmpReservation: TIntegerField
       FieldName = 'Reservation'
     end
-    object IntegerField2: TIntegerField
+    object mRoomRatesTmproomreservation: TIntegerField
       FieldName = 'roomreservation'
     end
-    object StringField3: TStringField
+    object mRoomRatesTmpRoomNumber: TStringField
       FieldName = 'RoomNumber'
       Size = 10
     end
-    object DateTimeField2: TDateTimeField
+    object mRoomRatesTmpRateDate: TDateField
       FieldName = 'RateDate'
     end
-    object StringField5: TStringField
+    object mRoomRatesTmpPriceCode: TStringField
       FieldName = 'PriceCode'
       Size = 10
     end
-    object FloatField1: TFloatField
+    object mRoomRatesTmpRate: TFloatField
       FieldName = 'Rate'
     end
-    object FloatField2: TFloatField
+    object mRoomRatesTmpDiscount: TFloatField
       FieldName = 'Discount'
     end
-    object BooleanField1: TBooleanField
+    object mRoomRatesTmpisPercentage: TBooleanField
       FieldName = 'isPercentage'
     end
-    object BooleanField2: TBooleanField
+    object mRoomRatesTmpShowDiscount: TBooleanField
       FieldName = 'ShowDiscount'
     end
-    object BooleanField3: TBooleanField
+    object mRoomRatesTmpisPaid: TBooleanField
       FieldName = 'isPaid'
     end
-    object FloatField3: TFloatField
+    object mRoomRatesTmpDiscountAmount: TFloatField
       FieldName = 'DiscountAmount'
     end
-    object FloatField4: TFloatField
+    object mRoomRatesTmpRentAmount: TFloatField
       FieldName = 'RentAmount'
     end
-    object FloatField5: TFloatField
+    object mRoomRatesTmpNativeAmount: TFloatField
       FieldName = 'NativeAmount'
     end
-    object StringField6: TStringField
+    object mRoomRatesTmpCurrency: TStringField
       FieldName = 'Currency'
       Size = 5
     end
-    object FloatField6: TFloatField
+    object mRoomRatesTmpCurrencyRate: TFloatField
       FieldName = 'CurrencyRate'
     end
   end
@@ -4039,52 +4060,52 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
     SortOptions = []
     Left = 568
     Top = 423
-    object IntegerField3: TIntegerField
+    object mRatesEditReservation: TIntegerField
       FieldName = 'Reservation'
     end
-    object IntegerField4: TIntegerField
+    object mRatesEditroomreservation: TIntegerField
       FieldName = 'roomreservation'
     end
-    object StringField8: TStringField
+    object mRatesEditRoomNumber: TStringField
       FieldName = 'RoomNumber'
       Size = 10
     end
-    object DateTimeField3: TDateTimeField
+    object mRatesEditRateDate: TDateField
       FieldName = 'RateDate'
     end
-    object StringField9: TStringField
+    object mRatesEditPriceCode: TStringField
       FieldName = 'PriceCode'
       Size = 10
     end
-    object FloatField7: TFloatField
+    object mRatesEditRate: TFloatField
       FieldName = 'Rate'
     end
-    object FloatField8: TFloatField
+    object mRatesEditDiscount: TFloatField
       FieldName = 'Discount'
     end
-    object BooleanField4: TBooleanField
+    object mRatesEditisPercentage: TBooleanField
       FieldName = 'isPercentage'
     end
-    object BooleanField5: TBooleanField
+    object mRatesEditShowDiscount: TBooleanField
       FieldName = 'ShowDiscount'
     end
-    object BooleanField6: TBooleanField
+    object mRatesEditisPaid: TBooleanField
       FieldName = 'isPaid'
     end
-    object FloatField9: TFloatField
+    object mRatesEditDiscountAmount: TFloatField
       FieldName = 'DiscountAmount'
     end
-    object FloatField10: TFloatField
+    object mRatesEditRentAmount: TFloatField
       FieldName = 'RentAmount'
     end
-    object FloatField11: TFloatField
+    object mRatesEditNativeAmount: TFloatField
       FieldName = 'NativeAmount'
     end
-    object StringField10: TStringField
+    object mRatesEditCurrency: TStringField
       FieldName = 'Currency'
       Size = 5
     end
-    object FloatField12: TFloatField
+    object mRatesEditCurrencyRate: TFloatField
       FieldName = 'CurrencyRate'
     end
   end
