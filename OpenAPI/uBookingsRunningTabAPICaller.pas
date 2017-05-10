@@ -44,11 +44,13 @@ var
 begin
   roomerClient := d.roomerMainDataSet.CreateRoomerClient(True);
   try
-    lURI := d.roomerMainDataSet.OpenApiUri + Format(cResourcesURI + '/%d/%d' + cRunningTabsURI + '/%d', [ aReservation, aRoomreservationID, aInvoiceIndex]);
-
-    Result := roomerClient.GetWithStatus(lURI, lResponse).StatusCode = 200;
-  except
-    Result := false;
+    try
+      lURI := d.roomerMainDataSet.OpenApiUri + Format(cResourcesURI + '/%d/%d' + cRunningTabsURI + '/%d', [ aReservation, aRoomreservationID, aInvoiceIndex]);
+      Result := roomerClient.GetWithStatus(lURI, lResponse).StatusCode = 200;
+    except
+      Result := false;
+    end;
+  finally
     roomerclient.Free;
   end;
 

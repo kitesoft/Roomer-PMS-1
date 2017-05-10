@@ -13,7 +13,7 @@ uses
   Vcl.StdCtrls, sCheckBox, cxButtons, sButton, sGroupBox, sEdit, sLabel, sPanel, dxPScxCommon, dxPScxGridLnk, cxClasses,
   cxPropertiesStore, Vcl.ComCtrls, sStatusBar
   , uRunningTabInvoiceViewAdapter, sTabControl, RoomerFinancialDataModel_ModelObjects, Vcl.Grids, Vcl.DBGrids,
-  cxCalendar
+  cxCalendar, AdvTreeComboBox
   ;
 
 type
@@ -166,14 +166,6 @@ type
     odsPayments: TObjectDataSet;
     dsPaymentObjects: TDataSource;
     odsInvoicelines: TObjectDataSet;
-    tlInvoiceLines: TcxDBTreeList;
-    cxDBTreeList1cxDBTreeListColumn7: TcxDBTreeListColumn;
-    cxDBTreeList1cxDBTreeListColumn1: TcxDBTreeListColumn;
-    cxDBTreeList1cxDBTreeListColumn2: TcxDBTreeListColumn;
-    cxDBTreeList1cxDBTreeListColumn3: TcxDBTreeListColumn;
-    cxDBTreeList1cxDBTreeListColumn4: TcxDBTreeListColumn;
-    cxDBTreeList1cxDBTreeListColumn5: TcxDBTreeListColumn;
-    cxDBTreeList1cxDBTreeListColumn6: TcxDBTreeListColumn;
     dsInvoicelinesObjects: TDataSource;
     tsInvocieIndex: TsTabControl;
     odsInvoicelinesDescription: TStringField;
@@ -181,18 +173,28 @@ type
     odsInvoicelinesIndex_: TIntegerField;
     odsInvoicelinesID: TStringField;
     odsInvoicelinesParent: TStringField;
-    tlInvoiceLinescxDBTreeListColumn1: TcxDBTreeListColumn;
     odsInvoicelinesPurchaseDate: TDateField;
     odsInvoicelinesQuantity: TFloatField;
-    odsInvoicelinesNettoPrice: TFloatField;
+    odsInvoicelinesPrice: TFloatField;
     odsInvoicelinesTotalNetAmount: TFloatField;
+    tlInvoicelLines: TcxDBTreeList;
+    cxDBTreeList1ID: TcxDBTreeListColumn;
+    cxDBTreeList1Description: TcxDBTreeListColumn;
+    cxDBTreeList1Itemtype: TcxDBTreeListColumn;
+    cxDBTreeList1Index_: TcxDBTreeListColumn;
+    cxDBTreeList1Parent: TcxDBTreeListColumn;
+    cxDBTreeList1PurchaseDate: TcxDBTreeListColumn;
+    cxDBTreeList1Quantity: TcxDBTreeListColumn;
+    cxDBTreeList1NettoPrice: TcxDBTreeListColumn;
+    cxDBTreeList1TotalNetAmount: TcxDBTreeListColumn;
+    odsInvoicelinesTreeID: TIntegerField;
+    odsInvoicelinesTreeParent: TIntegerField;
     procedure FormShow(Sender: TObject);
     procedure tvPaymentsPayGroupGetDisplayText(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
       var AText: string);
     procedure tsInvocieIndexChange(Sender: TObject);
     procedure btnRemoveItemClick(Sender: TObject);
     procedure odsInvoicelinesBeforeDelete(DataSet: TDataSet);
-    procedure actDelLineUpdate(Sender: TObject);
     procedure actDelLineExecute(Sender: TObject);
     procedure tsInvocieIndexDragDrop(Sender, Source: TObject; X, Y: Integer);
     procedure tsInvocieIndexDockOver(Sender: TObject; Source: TDragDockObject; X, Y: Integer; State: TDragState;
@@ -200,7 +202,7 @@ type
     procedure actAddLineExecute(Sender: TObject);
     procedure odsInvoicelinesNewRecord(DataSet: TDataSet);
     procedure tlInvoiceLinesDataChanged(Sender: TObject);
-    procedure cxDBTreeList1cxDBTreeListColumn4GetDisplayText(Sender: TcxTreeListColumn; ANode: TcxTreeListNode;
+    procedure cxDBTreeList1PurchaseDateGetDisplayText(Sender: TcxTreeListColumn; ANode: TcxTreeListNode;
       var Value: string);
   private
     FRunningTabModel: TRunningTabInvoiceViewAdapter;
@@ -209,7 +211,7 @@ type
     FActiveInvoiceIndex: integer;
     procedure SetActiveInvoiceIndex(const Value: integer);
     procedure DeleteCurrentItem;
-    function GetCurrentInvoiceLine: TxsdInvoiceLineType;
+    function GetCurrentInvoiceLine: TRunningTabInvoiceViewItem;
     procedure LinkDataSets;
   protected
     procedure DoUpdateControls; override;
@@ -233,6 +235,7 @@ uses
   , uUtils
   , Dialogs
   , PrjConst
+  , DateUtils
   ;
 
 {$R *.DFM}
@@ -252,15 +255,6 @@ begin
   odsInvoicelines.Delete;
 end;
 
-procedure TfrmInvoiceObjects.actDelLineUpdate(Sender: TObject);
-var
-  lInvLine: TxsdInvoiceLineType;
-begin
-  inherited;
-  lInvLine := GetCurrentInvoiceLine;
-  actDelLine.Enabled := Assigned(lInvLine); // and (lInvLine.Item. = itSale);
-end;
-
 procedure TfrmInvoiceObjects.btnRemoveItemClick(Sender: TObject);
 begin
   inherited;
@@ -268,10 +262,10 @@ begin
   RefreshData;
 end;
 
-function TfrmInvoiceObjects.GetCurrentInvoiceLine: TxsdInvoiceLineType;
+function TfrmInvoiceObjects.GetCurrentInvoiceLine: TRunningTabInvoiceViewItem;
 begin
   if odsInvoicelines.Active and (odsInvoicelines.RecordCount > 0) then
-    Result := odsInvoicelines.GetCurrentModel<TxsdInvoiceLineType>
+    Result := odsInvoicelines.GetCurrentModel<TRunningTabInvoiceViewItem>
   else
     Result := nil;
 end;
@@ -316,11 +310,12 @@ begin
   FRunningTabModel := TRunningTabInvoiceViewAdapter.Create;
 end;
 
-procedure TfrmInvoiceObjects.cxDBTreeList1cxDBTreeListColumn4GetDisplayText(Sender: TcxTreeListColumn;
-  ANode: TcxTreeListNode; var Value: string);
+procedure TfrmInvoiceObjects.cxDBTreeList1PurchaseDateGetDisplayText(Sender: TcxTreeListColumn; ANode: TcxTreeListNode;
+  var Value: string);
 begin
   inherited;
-  if Value = '0.0' then Value := '';
+  if (aNode.Values[Sender.ItemIndex] <= DateOf(0)) then
+    Value := '';
 end;
 
 destructor TfrmInvoiceObjects.Destroy;
@@ -336,7 +331,6 @@ var
   lRunningTabAPI: TBookingsRunningTabAPICaller;
 begin
   inherited;
-
   odsPayments.DisableControls;
   odsInvoicelines.DisableControls;
   try
@@ -369,9 +363,6 @@ begin
     odsPayments.DataList := lPaymentsList;
   if lInvoiceList <> nil then
     odsInvoicelines.DataList := lInvoiceList;
-
-  tlInvoiceLines.Refresh;
-  UpdateControls;
 end;
 
 procedure TfrmInvoiceObjects.DoUpdateControls;
