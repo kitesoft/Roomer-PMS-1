@@ -17,6 +17,7 @@ function CreateXMLDocument( var Owner1: TComponent): TXMLDocument; overload;
 function XPATHSelect( const FocusNode: IXMLNode; const sXPath: string): TArray<IXMLNode>;
 function XPATHSelectFirst( const FocusNode: IXMLNode; const sXPath: string; var SelectedNode: IXMLNode): boolean;
 function GetAttributeValue(Node: IXMLDomNode; AttribName, defaultValue: String): String;
+procedure SetAttributeValue(Node: IXMLDomNode; AttribName, value: String);
 function GetOptionalElementText(aNode: IXMLNode; const aElementName: string): string;
 
 function XMLToFloat(const aStringValue: string; aDefault: extended = 0.00): extended;
@@ -50,6 +51,11 @@ begin
     end;
 end;
 
+procedure SetAttributeValue(Node: IXMLDomNode; AttribName, value: String);
+begin
+  Node.Attributes.getNamedItem(AttribName).text := value;
+end;
+
 function GetOptionalElementText(aNode: IXMLNode; const aElementName: string): string;
 var
   lNode: IXMLNOde;
@@ -59,7 +65,6 @@ begin
   if lNode <> nil then
     Result := lNode.Text;
 end;
-
 
 function CreateXmlDocument : IXMLDOMDocument2;
 begin

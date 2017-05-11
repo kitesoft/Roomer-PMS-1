@@ -35,9 +35,8 @@ type
     function doesUpgradeWindowExist : Boolean;
     function activateDaemon : Boolean;
     function openDaemon : Boolean;
-    function newVersionAvailable : Boolean;
-    function newVersionTTL : Boolean;
-    function updateNow : Boolean;
+    function newVersionAvailable(force : Boolean = false) : Boolean;
+    function updateNow(force : boolean = false) : Boolean;
     procedure BreakDownVersionString(sStr: String);
     procedure PerformUpdateIfAvailable;
     procedure CheckIfUpgradeExists;
@@ -46,6 +45,7 @@ type
     destructor Destroy;
 
     procedure Prepare;
+    procedure ForceUpdate;
     property OnAskUpgrade : TOnAskUpgrade read FOnAskUpgrade write FOnAskUpgrade;
   end;
 
@@ -60,7 +60,10 @@ uses uD,
      uUtils,
      Classes,
      uDateUtils,
-     idURI
+     DateUtils,
+     idURI,
+     PrjConst,
+     uRoomerVersionInfo
     ;
 
 const SECOND = 1000;
@@ -107,14 +110,29 @@ begin
   Result := FindWindow('TfrmUpgradeDaemon', NIL) > 0;
 end;
 
+procedure TRoomerVersionManagement.ForceUpdate;
+begin
+  Stop;
+  try
+    if newVersionAvailable(true) then
+      updateNow(true)
+    else
+      CheckIfUpgradeExists;
+  finally
+    Start;
+  end;
+end;
+
 procedure TRoomerVersionManagement.makeSureUpgradeDaemonIsActive;
 begin
+{$IFNDEF DEBUG}
   if NOT doesUpgradeWindowExist then
   begin
     openDaemon;
     sleep(1000);
   end;
   activateDaemon;
+{$ENDIF}
 end;
 
 procedure TRoomerVersionManagement.BreakDownVersionString(sStr : String);
@@ -144,17 +162,13 @@ begin
   end;
 end;
 
-function TRoomerVersionManagement.newVersionAvailable: Boolean;
-var s : String;
+function TRoomerVersionManagement.newVersionAvailable(force : Boolean = false): Boolean;
+var answer, myVersion : String;
 begin
-  s := httpCLient.Get(format(URI_UPGRADE_DAEMON_UPGRADE_AVAILABLE, ['Roomer.exe']));
-  result := s.StartsWith('UPDATE_AVAILABLE');
-  BreakDownVersionString(s);
-end;
-
-function TRoomerVersionManagement.newVersionTTL: Boolean;
-begin
-
+  answer := httpCLient.Get(format(URI_UPGRADE_DAEMON_UPGRADE_AVAILABLE, ['Roomer.exe']));
+  BreakDownVersionString(answer);
+  result := answer.StartsWith('UPDATE_AVAILABLE');
+  result := result AND (force OR (myVersion <> TRoomerVersionInfo.FileVersion));
 end;
 
 procedure TRoomerVersionManagement.OnTimer(Sender: TObject);
@@ -217,30 +231,53 @@ begin
   s := httpCLient.Get(format(URI_UPGRADE_DAEMON_CHECK_UPGRADE, ['Roomer.exe']));
 end;
 
-function TRoomerVersionManagement.updateNow: Boolean;
-var forced, upgrade : Boolean;
-    exePath, uri, s : String;
+procedure GetHoursAndMinutes(TTL : Integer; var h, m : Integer);
+var totalMinutes : Integer;
 begin
-  forced := VersionRec.EndDateTime <= Now;
-  inc(lastCounter);
-  if forced OR
-     (lastCounter > COUNT_FOR_NOTIFICATION) then
-  begin
-    if Assigned(FOnAskUpgrade) then
+  h := TTL DIV 60;
+  m := TTL MOD 60;
+end;
+
+function TRoomerVersionManagement.updateNow(force : boolean = false): Boolean;
+var forced, upgrade : Boolean;
+    s, msg : String;
+    h, m : Integer;
+
+    procedure Update;
+    var exePath, uri : String;
     begin
-      upgrade := True;
-      FOnAskUpgrade('', VersionRec.Version, forced, upgrade);
-      if upgrade then
+      exePath := d.roomerMainDataSet.URLEncode(Application.ExeName);
+      uri := format(URI_UPGRADE_DAEMON_UPDATE_NOW, ['Roomer.exe', exePath, 'true', 'true']);
+      CopyToClipboard(uri);
+      s := httpCLient.Get(uri);
+      if s = 'UPDATING' then
+        Application.MainForm.Close;
+    end;
+begin
+  if force then
+    update
+  else
+  begin
+    forced := VersionRec.EndDateTime <= Now;
+    inc(lastCounter);
+    if forced OR
+       (lastCounter > COUNT_FOR_NOTIFICATION) then
+    begin
+      if Assigned(FOnAskUpgrade) then
       begin
-        exePath := d.roomerMainDataSet.URLEncode(Application.ExeName);
-        uri := format(URI_UPGRADE_DAEMON_UPDATE_NOW, ['Roomer.exe', exePath, 'true', 'true']);
-        CopyToClipboard(uri);
-        s := httpCLient.Get(uri);
-        if s = 'UPDATING' then
-          Application.MainForm.Close;
-      end
-      else
-        CheckIfUpgradeExists;
+        upgrade := True;
+        if forced then
+          msg := format(GetTranslatedText('shTx_VersionManagement_ForceNewVersion'), [VersionRec.Version])
+        else begin
+          GetHoursAndMinutes(VersionRec.TTL, h, m);
+          msg := format(GetTranslatedText('shTx_VersionManagement_NewVersionAvailable'), [VersionRec.Version, h, m])
+        end;
+        FOnAskUpgrade(msg, VersionRec.Version, forced, upgrade);
+        if forced OR upgrade then
+          update
+        else
+          CheckIfUpgradeExists;
+      end;
     end;
   end;
 end;

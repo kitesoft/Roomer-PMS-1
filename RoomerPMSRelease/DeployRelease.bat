@@ -1,15 +1,17 @@
 @echo off
 setlocal
-VersionXmlGenerator . > Roomer.xml
+VersionXmlGenerator . 2880 .\Roomer.xml false
 
 if not exist "Deployment" mkdir Deployment
 
 copy Roomer.exe Deployment
 copy RoomerUpgradeAgent.exe Deployment
+copy RoomerUpgradeDaemon.exe Deployment
 copy Roomer.xml Deployment
 
 call SignSpecific Deployment\Roomer.exe
 call SignSpecific Deployment\RoomerUpgradeAgent.exe
+call SignSpecific Deployment\RoomerUpgradeDaemon.exe
 
 
 set AWSCMD="aws.exe"

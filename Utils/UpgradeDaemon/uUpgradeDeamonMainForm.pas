@@ -24,18 +24,14 @@ uses
   IdCustomTCPServer,
   IdCustomHTTPServer,
   IdHTTPServer,
-  URIParser, Vcl.Menus;
+  URIParser, Vcl.Menus, sMemo;
 
 type
   TfrmUpgradeDaemon = class(TForm)
     Image2: TImage;
-    lblDownload: TsLabel;
-    lblInstalling: TsLabel;
-    lblReopening: TsLabel;
     tmStart: TTimer;
     sProgressBar1: TsProgressBar;
     lblDownloaded: TsLabel;
-    lblExename: TsLabel;
     lblURL: TsLabel;
     httpServer: TIdHTTPServer;
     timeUpgradeCheck: TTimer;
@@ -45,6 +41,8 @@ type
     N1: TMenuItem;
     E1: TMenuItem;
     TrayIcon1: TTrayIcon;
+    logs: TsMemo;
+    C1: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure tmStartTimer(Sender: TObject);
     procedure httpServerCommandGet(AContext: TIdContext; ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
@@ -52,10 +50,13 @@ type
     procedure FormDestroy(Sender: TObject);
     procedure E1Click(Sender: TObject);
     procedure S1Click(Sender: TObject);
+    procedure timeUpgradeCheckTimer(Sender: TObject);
+    procedure C1Click(Sender: TObject);
   private
     httpCLient: TRoomerHttpClient;
     activeSince : TDateTime;
     URIProcessor : TURIProcessor;
+    FDownloadActive: Boolean;
     procedure StartLabel(Label_: TsLabel);
     procedure EndLabel(Label_: TsLabel);
     function DownloadFile(const Url, filename: String): Boolean;
@@ -66,6 +67,10 @@ type
     procedure PerformDownloadOfUpdate;
     procedure NullifyScreen;
     procedure UpdateNow;
+    procedure SetDownloadActive(const Value: Boolean);
+    procedure AddLog(logText: String);
+
+    property DownloadActive : Boolean read FDownloadActive write SetDownloadActive;
   public
     { Public declarations }
   end;
@@ -117,6 +122,8 @@ end;
 
 procedure TfrmUpgradeDaemon.FormCreate(Sender: TObject);
 begin
+  logs.Lines.Clear;
+  FDownloadActive := False;
   URIProcessor := TURIProcessor.Create;
   httpCLient := TRoomerHttpClient.Create(Self);
 
@@ -138,15 +145,42 @@ begin
   URIProcessor.Free;
 end;
 
+procedure TfrmUpgradeDaemon.AddLog(logText : String);
+var logTime : String;
+begin
+  logTime := DateTimeToStr(now) + ' | ';
+  logs.Lines.Insert(0, logTime + logText);
+end;
+
 procedure TfrmUpgradeDaemon.httpServerCommandGet(AContext: TIdContext; ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
 begin
-  if URIProcessor.Process(ARequestInfo.URI) then
-  begin
-    timPerformRequest.Enabled := False;
-    AResponseInfo.ContentText := URIProcessor.ProcessResult;
-    timPerformRequest.Interval := 200;
-    timPerformRequest.Tag := ORD(URIProcessor.ActionType);
-    timPerformRequest.Enabled := True;
+  try
+    AddLog('Received URI: ' + ARequestInfo.URI);
+    if FDownloadActive then
+      AResponseInfo.ContentText := 'BUSY'
+    else begin
+      DownloadActive := True;
+      try
+        if URIProcessor.Process(ARequestInfo.URI) then
+        begin
+          timPerformRequest.Enabled := False;
+          AResponseInfo.ContentText := URIProcessor.ProcessResult;
+          timPerformRequest.Interval := 200;
+          timPerformRequest.Tag := ORD(URIProcessor.ActionType);
+          timPerformRequest.Enabled := True;
+        end else
+          AddLog('Unable to process provided URI');
+      finally
+        DownloadActive := False;
+      end;
+    end;
+    AddLog('Returning to caller with: ' + AResponseInfo.ContentText);
+  except
+    ON e: Exception do
+    begin
+      AddLog('Error: ' + e.Message);
+      AResponseInfo.ContentText := 'ERROR';
+    end;
   end;
 end;
 
@@ -158,6 +192,11 @@ begin
     Show;
 end;
 
+procedure TfrmUpgradeDaemon.SetDownloadActive(const Value: Boolean);
+begin
+  FDownloadActive := Value;
+end;
+
 procedure TfrmUpgradeDaemon.StartLabel(Label_: TsLabel);
 begin
   Label_.Font.Color := clWhite;
@@ -165,22 +204,49 @@ begin
   Label_.Update;
 end;
 
+procedure TfrmUpgradeDaemon.timeUpgradeCheckTimer(Sender: TObject);
+begin
+  timeUpgradeCheck.Enabled := False;
+  try
+    try
+      if NOT FDownloadActive then
+        if URIProcessor.Process('CheckForUpgrade/Roomer.exe') then
+        begin
+          AddLog('Event fired: Check for upgrade of Roomer.exe');
+          PerformDownloadOfUpdate;
+        end;
+    except
+      ON e: Exception do
+        AddLog('Error: ' + e.Message);
+    end;
+  finally
+    timeUpgradeCheck.Enabled := True;
+  end;
+end;
+
 procedure TfrmUpgradeDaemon.timPerformRequestTimer(Sender: TObject);
 var URIActionType : TURIActionType;
 begin
-  timPerformRequest.Enabled := False;
-  URIActionType := TURIActionType(timPerformRequest.Tag);
-  case URIActionType of
-    atCheckForUpgrade : begin
-                          //
-                           PerformDownloadOfUpdate;
-                        end;
-    atUpdateNow : begin
-                          //
-                           Sleep(5000);
-                           UpdateNow;
-                  end;
+  DownloadActive := True;
+  try
+    timPerformRequest.Enabled := False;
+    URIActionType := TURIActionType(timPerformRequest.Tag);
+    case URIActionType of
+      atCheckForUpgrade : begin
+                            //
+                             PerformDownloadOfUpdate;
+                          end;
+      atUpdateNow : begin
+                            //
+                             Sleep(5000);
+                             UpdateNow;
+                    end;
+    end;
+  except
+    ON e: Exception do
+      AddLog('Error: ' + e.Message);
   end;
+  DownloadActive := False;
 end;
 
 procedure TfrmUpgradeDaemon.tmStartTimer(Sender: TObject);
@@ -225,6 +291,13 @@ begin
   Label_.Font.Color := clGray;
   Label_.Font.Style := [fsStrikeOut];
   Label_.Update;
+end;
+
+procedure TfrmUpgradeDaemon.C1Click(Sender: TObject);
+begin
+  logs.SelectAll;
+  logs.CopyToClipboard;
+  logs.SelLength := 0;
 end;
 
 function TfrmUpgradeDaemon.DownloadFile(const Url, filename: String): Boolean;
@@ -369,27 +442,38 @@ begin
   if (NOT URIProcessor.FUpgradeFileManager.UpgradeFinished) AND
      (URIProcessor.FUpgradeFileManager.UpgradeMD5 <> '') then
   begin
+    AddLog('Starting local update to version ' + URIProcessor.UpgradeFileManager.UpgradeVersion + '...');
     try
-        if URIProcessor.ClearLanguage then
-          RemoveLanguagesFiles;
-        if URIProcessor.ClearCache then
-          RemoveAllRoomerCaches;
+      if URIProcessor.ClearLanguage then
+      begin
+        AddLog('Removing languages');
+        RemoveLanguagesFiles;
+      end;
+      if URIProcessor.ClearCache then
+      begin
+        AddLog('Removing all Roomer cache');
+        RemoveAllRoomerCaches;
+      end;
 
-        exeName := URIProcessor.FileExePath;
-        DeleteFile(exeName);
-        UpgradeFilename := PWideChar(URIProcessor.UpgradeExePathName);
-        if NOT TryCopyFile(UpgradeFilename, PChar(exeName)) then
-          exit;
-        TouchFile(exeName, URIProcessor.UpgradeFileManager.UpgradeTimeStamp);
-        URIProcessor.UpgradeFileManager.Upgraded(URIProcessor.FileExeName,
-              URIProcessor.UpgradeFileManager.UpgradeTimeStamp,
-              URIProcessor.UpgradeFileManager.UpgradeTTL_Minutes,
-              URIProcessor.UpgradeFileManager.UpgradeMD5,
-              URIProcessor.UpgradeFileManager.UpgradeVersion);
-        ShellExecute(Handle, 'open', PChar(exeName), nil, nil, SW_SHOWNORMAL);
+      exeName := URIProcessor.FileExePath;
+      AddLog('Removing old exe file: ' + exeName);
+      DeleteFile(exeName);
+      UpgradeFilename := PWideChar(URIProcessor.UpgradeExePathName);
+      if NOT TryCopyFile(UpgradeFilename, PChar(exeName)) then
+        exit;
+      AddLog('Touching new exe file with ' + DateTimeToStr(URIProcessor.UpgradeFileManager.UpgradeTimeStamp));
+      TouchFile(exeName, URIProcessor.UpgradeFileManager.UpgradeTimeStamp);
+      URIProcessor.UpgradeFileManager.Upgraded(URIProcessor.FileExeName,
+            URIProcessor.UpgradeFileManager.UpgradeTimeStamp,
+            URIProcessor.UpgradeFileManager.UpgradeTTL_Minutes,
+            URIProcessor.UpgradeFileManager.UpgradeMD5,
+            URIProcessor.UpgradeFileManager.UpgradeVersion);
+      ShellExecute(Handle, 'open', PChar(exeName), nil, nil, SW_SHOWNORMAL);
+      AddLog('Local update done.');
     except
       On E: Exception do
       begin
+        AddLog('Error: ' + E.Message);
 {$IFDEF DEBUG}
         ShowMessage('Error: ' + E.Message);
 {$ENDIF}
@@ -402,7 +486,6 @@ end;
 procedure TfrmUpgradeDaemon.NullifyScreen;
 begin
   sProgressBar1.Position := 0;
-  StartLabel(lblDownload);
   lblDownloaded.Show;
   lblDownloaded.Caption := '';
 end;
@@ -422,13 +505,12 @@ var
 begin
   exeName := URIProcessor.FileExeName;
 
-  lblExename.Caption := exeName;
-  StartLabel(lblDownload);
   try
    // 1. Get the XML file with the version info of thge Roomer executables...
     tempFileXML := TPath.GetTempFileName;
     DeleteFile(tempFileXML);
     try
+      AddLog('Downloading ' + ROOMER_XML_URI + ' from ' + URIProcessor.RoomerStore );
       if DownloadFile(URIProcessor.RoomerStore + ROOMER_XML_URI, tempFileXML) then
       begin
         URIProcessor.RoomerUpgradeFileDependencymanager.FileVersionOnServer(tempFileXML,
@@ -438,6 +520,13 @@ begin
               ttl,
               timeStamp);
 
+        AddLog(format('Version found on server: Version=%s, MD5=%s, since=%s, ttl=%d',
+            [
+              aVersion,
+              serverMD5,
+              dateTimeToStr(timeStamp),
+              ttl
+            ]));
        // 2. Check if the currently downloaded version is the same as on server...
         if (aVersion <> URIProcessor.FUpgradeFileManager.UpgradeVersion) OR
            (serverMD5 <> URIProcessor.FUpgradeFileManager.UpgradeMD5) OR
@@ -449,33 +538,26 @@ begin
           tempFileEXE := TPath.GetTempFileName;
           DeleteFile(tempFileEXE);
           try
+            AddLog('Downloading new version of ' + URIProcessor.FileExeName + ' from ' + URIProcessor.RoomerStore );
             if DownloadFile(URIProcessor.RoomerStore + URIProcessor.FileExeName, tempFileEXE) then
             begin
               lblDownloaded.Hide;
               lblDownloaded.Update;
 
-              EndLabel(lblDownload);
-
-              StartLabel(lblInstalling);
-
-
              // 4. And make it available in the local upgrades store
               MD5OfDownloadedFile := FileMD5(tempFileEXE);
               if MD5OfDownloadedFile = serverMD5 then
-              begin
-                URIProcessor.FUpgradeFileManager.NewUpgrade(tempFileEXE, URIProcessor.FileExeName, timeStamp, ttl, serverMD5, aVersion);
-
-                EndLabel(lblInstalling);
-
-                StartLabel(lblReopening);
-                EndLabel(lblReopening);
-              end;
+                URIProcessor.FUpgradeFileManager.NewUpgrade(tempFileEXE, URIProcessor.FileExeName, timeStamp, ttl, serverMD5, aVersion)
+              else
+                AddLog('Error: Downloaded MD5 "' + MD5OfDownloadedFile + '" differs from MD5 provided from server, "' + serverMD5 + '"');
             end;
           finally
             if FileExists(tempFileEXE) then
               DeleteFile(tempFileEXE);
           end;
-        end;
+        end else
+          AddLog('Version already exists locally.');
+
       end;
     finally
       if FileExists(tempFileXML) then
@@ -484,6 +566,7 @@ begin
   except
     On E: Exception do
     begin
+        AddLog('Error: ' + E.Message);
 {$IFDEF DEBUG}
       ShowMessage('Error: ' + E.Message);
 {$ENDIF}
