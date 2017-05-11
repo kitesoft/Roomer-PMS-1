@@ -1521,10 +1521,12 @@ begin
   constants.Add('shTxProvideRoom_Status', 'Status '); // Status
 
   constants.Add('shTxInvoice_Form_Header_Item', 'Item');
+  constants.Add('shTxInvoice_Form_Header_VisibleOnInvoice', 'On Invoice');
   constants.Add('shTxInvoice_Form_Header_Text', 'Text');
   constants.Add('shTxInvoice_Form_Header_Number', 'Number');
   constants.Add('shTxInvoice_Form_Header_UnitPrice', 'Unit Price');
   constants.Add('shTxInvoice_Form_Header_Total', 'Total');
+  constants.Add('shTxInvoice_Form_Header_TotalOnInvoice', 'On Invoice');
   constants.Add('shTxInvoice_Form_Header_Reference', 'Reference');
   constants.Add('shTxInvoice_Form_Header_Source', 'Source');
   constants.Add('shTxInvoice_Form_Header_Package', 'Package');

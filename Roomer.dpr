@@ -280,7 +280,8 @@ uses
   uRoomerGridForm in 'RoomerForm\uRoomerGridForm.pas' {frmBaseRoomerGridForm},
   uStaffCommunicationDefinitions in 'Definitions\uStaffCommunicationDefinitions.pas',
   uRptReservationStatusPerDay in 'Reporting\uRptReservationStatusPerDay.pas' {FrmRptReservationStatusPerDay},
-  uVersionManagement in 'VersionManagement\uVersionManagement.pas';
+  uVersionManagement in 'VersionManagement\uVersionManagement.pas',
+  uInvoiceRentPerDay in 'Invoice\uInvoiceRentPerDay.pas' {frmInvoiceRentPerDay};
 
 {$R *.RES}
 

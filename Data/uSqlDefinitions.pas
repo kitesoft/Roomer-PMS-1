@@ -2377,8 +2377,6 @@ select_telLog_refresh : string =
     ' ,sm.staffPID '+
     ' ,sm.StaffLanguage '+
     ' ,co.CompanyName '+
-    ' , (SELECT ExpandedRoomStayOnInvoice FROM hotelconfigurations LIMIT 1) ExpandedRoomStayOnInvoice '+
-
     ' , (SELECT RoomInvoiceRoomRentIndex FROM hotelconfigurations LIMIT 1) RoomInvoiceRoomRentIndex '+
     ' , (SELECT RoomInvoicePosItemIndex FROM hotelconfigurations LIMIT 1) RoomInvoicePosItemIndex '+
     ' , (SELECT GroupInvoiceRoomRentIndex FROM hotelconfigurations LIMIT 1) GroupInvoiceRoomRentIndex '+

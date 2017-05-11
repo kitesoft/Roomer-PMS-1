@@ -616,7 +616,7 @@ type
     sLabel19: TsLabel;
     btnInvoiceTemplateResources: TsButton;
     sLabel21: TsLabel;
-    cbxExpandRoomRent: TsCheckBox;
+    chkRoomRentPerDay: TsCheckBox;
     sGroupBox14: TsGroupBox;
     sLabel23: TsLabel;
     cbxAutoAddToGuestPortfolio: TsCheckBox;
@@ -1321,7 +1321,7 @@ g.ReadWriteSettingsToRegistry(0);
     cbxBackupMachine.Checked := g.BackupMachine;
     cbxLocationPerRoomType.Checked := g.qLocationPerRoomType;
     cbxWithdrawalWithoutGuarantee.Checked := NOT g.qRestrictWithdrawalWithoutGuarantee;
-    cbxExpandRoomRent.Checked :=  glb.PMSSettings.InvoiceSettings.RoomRentPerDayOninvoice;
+    chkRoomRentPerDay.Checked :=  glb.PMSSettings.InvoiceSettings.RoomRentPerDayOninvoice;
 
     chkConfirmAuto.checked := g.qConfirmAuto;
     edConfirmMinuteOfTheDay.value  := g.qConfirmMinuteOfTheDay;
@@ -1920,7 +1920,7 @@ begin
       g.qLocationPerRoomType := cbxLocationPerRoomType.Checked;
       g.qRestrictWithdrawalWithoutGuarantee := NOT cbxWithdrawalWithoutGuarantee.Checked;
 
-      glb.PMSSettings.InvoiceSettings.RoomRentPerDayOninvoice := cbxExpandRoomRent.Checked;
+      glb.PMSSettings.InvoiceSettings.RoomRentPerDayOninvoice := chkRoomRentPerDay.Checked;
 
       g.qConfirmAuto := chkConfirmAuto.checked;
       g.qConfirmMinuteOfTheDay := edConfirmMinuteOfTheDay.value;
@@ -2033,11 +2033,6 @@ begin
 
       try
         rSethotelconfigurations['RestrictWithdrawalToGuarantee'] := NOT cbxWithdrawalWithoutGuarantee.Checked;
-      except
-      end;
-
-      try
-        rSethotelconfigurations['ExpandedRoomStayOnInvoice'] := cbxExpandRoomRent.Checked;
       except
       end;
 

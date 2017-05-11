@@ -1,4 +1,4 @@
-object frmInvoice: TfrmInvoice
+object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
   Left = 686
   Top = 154
   HorzScrollBar.Visible = False
@@ -263,9 +263,8 @@ object frmInvoice: TfrmInvoice
         Width = 70
         Height = 20
         AutoSize = False
-        Color = clWhite
         Font.Charset = ANSI_CHARSET
-        Font.Color = clBlack
+        Font.Color = clWindowText
         Font.Height = -11
         Font.Name = 'Courier New'
         Font.Style = []
@@ -305,9 +304,8 @@ object frmInvoice: TfrmInvoice
         Width = 70
         Height = 20
         AutoSize = False
-        Color = clWhite
         Font.Charset = ANSI_CHARSET
-        Font.Color = clBlack
+        Font.Color = clWindowText
         Font.Height = -11
         Font.Name = 'Courier New'
         Font.Style = []
@@ -329,9 +327,8 @@ object frmInvoice: TfrmInvoice
         Height = 17
         AutoSize = False
         BorderStyle = bsNone
-        Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
+        Font.Color = clWindowText
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -372,9 +369,8 @@ object frmInvoice: TfrmInvoice
         Height = 17
         AutoSize = False
         BorderStyle = bsNone
-        Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
+        Font.Color = clWindowText
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -395,9 +391,8 @@ object frmInvoice: TfrmInvoice
         Height = 17
         AutoSize = False
         BorderStyle = bsNone
-        Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
+        Font.Color = clWindowText
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -420,9 +415,8 @@ object frmInvoice: TfrmInvoice
         Height = 17
         AutoSize = False
         BorderStyle = bsNone
-        Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
+        Font.Color = clWindowText
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -444,9 +438,8 @@ object frmInvoice: TfrmInvoice
         Height = 17
         AutoSize = False
         BorderStyle = bsNone
-        Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
+        Font.Color = clWindowText
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -466,9 +459,8 @@ object frmInvoice: TfrmInvoice
         Height = 17
         AutoSize = False
         BorderStyle = bsNone
-        Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
+        Font.Color = clWindowText
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -488,9 +480,8 @@ object frmInvoice: TfrmInvoice
         Height = 17
         AutoSize = False
         BorderStyle = bsNone
-        Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
+        Font.Color = clWindowText
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -510,9 +501,8 @@ object frmInvoice: TfrmInvoice
         Height = 17
         AutoSize = False
         BorderStyle = bsNone
-        Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
+        Font.Color = clWindowText
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -532,9 +522,8 @@ object frmInvoice: TfrmInvoice
         Height = 17
         AutoSize = False
         BorderStyle = bsNone
-        Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
+        Font.Color = clWindowText
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -632,8 +621,8 @@ object frmInvoice: TfrmInvoice
       object chkShowPackage: TsCheckBox
         Left = 724
         Top = 143
-        Width = 119
-        Height = 17
+        Width = 111
+        Height = 20
         Caption = 'Package on invoice'
         Checked = True
         State = cbChecked
@@ -783,9 +772,8 @@ object frmInvoice: TfrmInvoice
             Alignment = taRightJustify
             AutoSize = False
             BorderStyle = bsNone
-            Color = clWhite
             Font.Charset = ANSI_CHARSET
-            Font.Color = clBlack
+            Font.Color = clWindowText
             Font.Height = -11
             Font.Name = 'Courier New'
             Font.Style = []
@@ -808,9 +796,8 @@ object frmInvoice: TfrmInvoice
             Alignment = taRightJustify
             AutoSize = False
             BorderStyle = bsNone
-            Color = clWhite
             Font.Charset = ANSI_CHARSET
-            Font.Color = clBlack
+            Font.Color = clWindowText
             Font.Height = -11
             Font.Name = 'Courier New'
             Font.Style = []
@@ -833,9 +820,8 @@ object frmInvoice: TfrmInvoice
             Alignment = taRightJustify
             AutoSize = False
             BorderStyle = bsNone
-            Color = clWhite
             Font.Charset = ANSI_CHARSET
-            Font.Color = clBlack
+            Font.Color = clWindowText
             Font.Height = -11
             Font.Name = 'Courier New'
             Font.Style = []
@@ -858,9 +844,8 @@ object frmInvoice: TfrmInvoice
             Alignment = taRightJustify
             AutoSize = False
             BorderStyle = bsNone
-            Color = clWhite
             Font.Charset = ANSI_CHARSET
-            Font.Color = clBlack
+            Font.Color = clWindowText
             Font.Height = -11
             Font.Name = 'Courier New'
             Font.Style = []
@@ -883,9 +868,8 @@ object frmInvoice: TfrmInvoice
             Alignment = taRightJustify
             AutoSize = False
             BorderStyle = bsNone
-            Color = clWhite
             Font.Charset = ANSI_CHARSET
-            Font.Color = clBlack
+            Font.Color = clWindowText
             Font.Height = -11
             Font.Name = 'Courier New'
             Font.Style = []
@@ -1223,7 +1207,7 @@ object frmInvoice: TfrmInvoice
           BevelInner = bvNone
           BevelOuter = bvNone
           BorderStyle = bsNone
-          ColCount = 7
+          ColCount = 9
           DefaultRowHeight = 19
           DrawingStyle = gdsClassic
           FixedCols = 0
@@ -1343,12 +1327,14 @@ object frmInvoice: TfrmInvoice
           Version = '8.2.4.1'
           ColWidths = (
             24
-            91
-            348
-            88
+            28
+            84
+            486
             83
             91
-            31)
+            31
+            64
+            64)
         end
       end
       object sPanel4: TsPanel
