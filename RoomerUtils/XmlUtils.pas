@@ -66,7 +66,6 @@ begin
     Result := lNode.Text;
 end;
 
-
 function CreateXmlDocument : IXMLDOMDocument2;
 begin
   CoInitialize(nil);
