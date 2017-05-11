@@ -2,57 +2,123 @@ unit uVersionXml;
 
 interface
 
-uses Winapi.Windows, System.Classes, System.Types, System.AnsiStrings, System.SysUtils, System.IOUtils;
+uses Winapi.Windows, System.Classes, System.Types, System.AnsiStrings, System.SysUtils, System.IOUtils,
+    XmlUtils, ActiveX, XMLIntf, XMLDoc;
 
-procedure GenerateXml(const location : String; const ttl : Integer);
+procedure GenerateXml(const location : String; const ttl : Integer; const xmlFile : String; const onlyMd5 : Boolean);
+
+// XML Helpers
+procedure SetFileNodeInfo(Node : IXMLNode; const new : Boolean; const Filename : String; const aVersion, MD5 : String; const ttl : Integer; timeStamp : TDateTime; const onlyMd5 : Boolean);
+procedure SetFileInformation(XmlDoc : IXMLDocument; const Filename : String; const aVersion, MD5 : String; const ttl : Integer; const timeStamp : TDateTime; const onlyMd5 : Boolean);
+function GetXmlFile(xmlPath : String): IXMLDocument;
+
+// File resource Helpers
 function GetVersion(sFileName:string): string;
 function FileMD5(const fileName : string) : string;
+
+// Other Helpers
 function dateTimeToXmlString(date : TDateTime) : String;
 
 implementation
 
 uses IdHashMessageDigest
-    , idHash;
+    , idHash
+    , uDateUtils;
 
 
-const xml = '<?xml version="1.0" encoding="UTF-8" standalone="no"?>' + #13#10 +
+const initialXmlContent =
+            '<?xml version="1.0" encoding="UTF-8" standalone="no"?>' + #13#10 +
             '<files>' + #13#10 +
-            '%s' +
             '</files>';
-const xmlFile = '  <file version="%s" filename="%s" md5="%s" ttl="%d" timeStamp="%s" />' + #13#10;
 
-procedure GenerateXml(const location : String; const ttl : Integer);
+procedure GenerateXml(const location : String; const ttl : Integer; const xmlFile : String; const onlyMd5 : Boolean);
 var list : TStringDynArray;
     i: Integer;
-    fileList : TStrings;
+    xml : IXMLDocument;
 begin
-  fileList := TStringList.Create;
-  try
-    list := TDirectory.GetFiles(location);
+  xml := GetXmlFile(xmlFile);
 
-    for i := LOW(list) to HIGH(list) do
-    begin
-      if Lowercase(ExtractFileExt(list[i])) = '.exe' then
-        if (Copy(Lowercase(ExtractFilename(list[i])), 1, 6) = 'roomer') then
-             if GetVersion(list[i]) <> '' then
-               fileList.Add(format(xmlFile,
-                    [
-                     GetVersion(list[i]),
+  list := TDirectory.GetFiles(location);
+
+  for i := LOW(list) to HIGH(list) do
+  begin
+    if Lowercase(ExtractFileExt(list[i])) = '.exe' then
+      if (Copy(Lowercase(ExtractFilename(list[i])), 1, 6) = 'roomer') then
+           if GetVersion(list[i]) <> '' then
+             SetFileInformation(xml,
                      ExtractFilename(list[i]),
+                     GetVersion(list[i]),
                      FileMD5(list[i]),
                      ttl,
-                     dateTimeToXmlString(FileDateToDateTime(FileAge(list[i])))
-                    ]));
+                     FileDateToDateTime(FileAge(list[i])),
+                     onlyMd5);
 
-    end;
-    writeln(format(xml, [fileList.Text]));
-  finally
-    fileList.Free;
   end;
-
+  xml.SaveToFile(xmlFile);
 end;
 
-// *********************** HELPERS ************************
+// *********************** XML HELPERS ************************
+
+procedure SetFileNodeInfo(Node : IXMLNode; const new : Boolean; const Filename : String; const aVersion, MD5 : String; const ttl : Integer; timeStamp : TDateTime; const onlyMd5 : Boolean);
+begin
+  node.Attributes['filename'] := filename;
+  node.Attributes['md5'] := MD5;
+  if (NOT onlyMd5) OR new then
+  begin
+    node.Attributes['version'] := aVersion;
+    node.Attributes['ttl'] := inttoStr(ttl);
+    node.Attributes['timeStamp'] := dateTimeToXmlString(timeStamp);
+  end;
+end;
+
+procedure SetFileInformation(XmlDoc : IXMLDocument; const Filename : String; const aVersion, MD5 : String; const ttl : Integer; const timeStamp : TDateTime; const onlyMd5 : Boolean);
+var
+  node: IXMLNode;
+  newElement : IXMLNode;
+  found : Boolean;
+  nodeList : IXmlNodeList;
+begin
+  found := false;
+  nodeList := XmlDoc.documentElement.ChildNodes;
+  node := nodeList.First;
+  while node <> nil do
+  begin
+    if node.Attributes['filename'] = Filename then
+    begin
+      SetFileNodeInfo(Node, false, Filename, aVersion, MD5, ttl, timeStamp, onlyMd5);
+      found := true;
+      Break;
+    end;
+    node := node.nextSibling;
+  end;
+  if NOT found then
+  begin
+    node := XmlDoc.documentElement;
+    newElement := node.AddChild('file');
+    SetFileNodeInfo(newElement, true, Filename, aVersion, MD5, ttl, timeStamp, onlyMd5);
+  end;
+end;
+
+function GetXmlFile(xmlPath : String): IXMLDocument;
+var
+  stl : TStrings;
+begin
+  Result := nil;
+  result := NewXMLDocument; // CoDOMDocument40.Create;
+  if NOT FileExists(xmlPath) then
+  begin
+    stl := TStringList.Create;
+    try
+      stl.Add(initialXmlContent);
+      stl.SaveToFile(xmlPath);
+    finally
+      stl.Free;
+    end;
+  end;
+  result.LoadFromFile(xmlPath);
+end;
+
+// *********************** FILE RESOURCE HELPERS ************************
 
 function GetVersion(sFileName:string): string;
 var
@@ -93,6 +159,8 @@ begin
    IdMD5.Free;
  end;
 end;
+
+// *********************** OTHER HELPERS ************************
 
 function dateTimeToXmlString(date : TDateTime) : String;
 begin

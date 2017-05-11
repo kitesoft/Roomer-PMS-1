@@ -15,20 +15,21 @@ object frmUpgradeDaemon: TfrmUpgradeDaemon
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
+  PopupMenu = PopupMenu1
   Position = poScreenCenter
   Scaled = False
   OnCreate = FormCreate
   OnDestroy = FormDestroy
-  DesignSize = (
-    410
-    429)
   PixelsPerInch = 96
   TextHeight = 16
   object Image2: TImage
-    Left = 5
-    Top = 89
-    Width = 398
+    AlignWithMargins = True
+    Left = 3
+    Top = 3
+    Width = 404
     Height = 81
+    Align = alTop
+    Center = True
     Picture.Data = {
       0B546478504E47496D61676589504E470D0A1A0A0000000D4948445200000197
       00000043080600000050BE48800000000467414D410000B18F0BFC6105000000
@@ -279,54 +280,20 @@ object frmUpgradeDaemon: TfrmUpgradeDaemon
       1492898EE3388ED31A92898EE3388ED31A92898EE3388ED31A92898EE3388ED3
       1A92898EE3388ED31A92898EE3388ED31A92898EE3388ED3724AAFFB7F0AB4B3
       D0C056EB050000000049454E44AE426082}
-  end
-  object lblDownload: TsLabel
-    Left = 128
-    Top = 192
-    Width = 152
-    Height = 21
-    Caption = 'Download update'
-    ParentFont = False
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = 15789037
-    Font.Height = -17
-    Font.Name = 'Tahoma'
-    Font.Style = [fsBold]
-    UseSkinColor = False
-  end
-  object lblInstalling: TsLabel
-    Left = 128
-    Top = 261
-    Width = 68
-    Height = 21
-    Caption = 'Installing'
-    ParentFont = False
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = 15789037
-    Font.Height = -17
-    Font.Name = 'Tahoma'
-    Font.Style = []
-    UseSkinColor = False
-  end
-  object lblReopening: TsLabel
-    Left = 128
-    Top = 308
-    Width = 78
-    Height = 21
-    Caption = 'Reopening'
-    ParentFont = False
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = 15789037
-    Font.Height = -17
-    Font.Name = 'Tahoma'
-    Font.Style = []
-    UseSkinColor = False
+    ExplicitLeft = 5
+    ExplicitTop = 14
+    ExplicitWidth = 398
   end
   object lblDownloaded: TsLabel
-    Left = 128
-    Top = 239
-    Width = 129
+    AlignWithMargins = True
+    Left = 50
+    Top = 112
+    Width = 310
     Height = 16
+    Margins.Left = 50
+    Margins.Right = 50
+    Align = alTop
+    Alignment = taCenter
     AutoSize = False
     ParentFont = False
     Font.Charset = DEFAULT_CHARSET
@@ -334,31 +301,18 @@ object frmUpgradeDaemon: TfrmUpgradeDaemon
     Font.Height = -13
     Font.Name = 'Tahoma'
     Font.Style = []
-  end
-  object lblExename: TsLabel
-    Left = 0
-    Top = 413
-    Width = 410
-    Height = 16
-    Align = alBottom
-    Alignment = taCenter
-    AutoSize = False
-    ParentFont = False
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWhite
-    Font.Height = -13
-    Font.Name = 'Tahoma'
-    Font.Style = []
-    UseSkinColor = False
-    ExplicitWidth = 4
+    ExplicitLeft = 128
+    ExplicitTop = 239
+    ExplicitWidth = 129
   end
   object lblURL: TsLabel
-    Left = 8
-    Top = 215
-    Width = 394
+    AlignWithMargins = True
+    Left = 3
+    Top = 90
+    Width = 404
     Height = 16
+    Align = alTop
     Alignment = taCenter
-    Anchors = [akLeft, akTop, akRight]
     AutoSize = False
     Caption = '<URL>'
     ParentFont = False
@@ -368,19 +322,52 @@ object frmUpgradeDaemon: TfrmUpgradeDaemon
     Font.Height = -13
     Font.Name = 'Tahoma'
     Font.Style = []
+    ExplicitLeft = 8
+    ExplicitTop = 217
+    ExplicitWidth = 394
   end
   object sProgressBar1: TsProgressBar
-    Left = 64
-    Top = 368
-    Width = 281
+    AlignWithMargins = True
+    Left = 50
+    Top = 134
+    Width = 310
     Height = 21
+    Margins.Left = 50
+    Margins.Right = 50
+    Align = alTop
     Smooth = True
     MarqueeInterval = 1
     BarColor = clHighlight
+    BackgroundColor = clBlack
     Step = 1
     TabOrder = 0
     ProgressSkin = 'PROGRESSH'
     SkinData.SkinSection = 'GAUGE'
+  end
+  object logs: TsMemo
+    AlignWithMargins = True
+    Left = 10
+    Top = 161
+    Width = 390
+    Height = 265
+    Margins.Left = 10
+    Margins.Right = 10
+    Align = alClient
+    BevelInner = bvNone
+    BorderStyle = bsNone
+    Color = clBlack
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWhite
+    Font.Height = -9
+    Font.Name = 'Courier New'
+    Font.Style = []
+    ParentFont = False
+    PopupMenu = PopupMenu1
+    ReadOnly = True
+    TabOrder = 1
+    WordWrap = False
+    SkinData.CustomColor = True
+    SkinData.CustomFont = True
   end
   object tmStart: TTimer
     Enabled = False
@@ -400,6 +387,7 @@ object frmUpgradeDaemon: TfrmUpgradeDaemon
   end
   object timeUpgradeCheck: TTimer
     Interval = 900000
+    OnTimer = timeUpgradeCheckTimer
     Left = 24
     Top = 264
   end
@@ -416,6 +404,10 @@ object frmUpgradeDaemon: TfrmUpgradeDaemon
       Caption = 'Show/Hide'
       Default = True
       OnClick = S1Click
+    end
+    object C1: TMenuItem
+      Caption = 'Copy logs'
+      OnClick = C1Click
     end
     object N1: TMenuItem
       Caption = '-'

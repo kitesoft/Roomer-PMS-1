@@ -68,6 +68,7 @@
         <DCC_UsePackage>cxPivotGridChartRS17;dxSkinSevenRS17;dxSkinBlueprintRS17;dxSkinHighContrastRS17;dxSkinOffice2007BlackRS17;dxCoreRS17;cxPageControldxBarPopupMenuRS17;dxSkinXmas2008BlueRS17;dxPSDBTeeChartRS17;DAVBBoxCliD17;dxPSTeeChartRS17;dxSkinSummer2008RS17;dxPScxSchedulerLnkRS17;dxSkinBlueRS17;dxSkinDarkRoomRS17;DBXInterBaseDriver;DataSnapServer;DataSnapCommon;dxPScxTLLnkRS17;dxRibbonRS17;DbxCommonDriver;cxDataRS17;vclimg;dxSkinsdxBarPainterRS17;dxPSdxDBTVLnkRS17;dbxcds;XMLBBoxSecD17;dxSkinMoneyTwinsRS17;vcldb;cxExportRS17;dxPSCoreRS17;dxBarExtItemsRS17;dxGDIPlusRS17;dxNavBarRS17;SSHBBoxSrvD17;CustomIPTransport;cxLibraryRS17;cxGridRS17;dxSkinOffice2010BlackRS17;dsnap;IndyIPServer;IndyCore;dxSkinMcSkinRS17;dxPScxCommonRS17;dxSkinsdxDLPainterRS17;dxSkiniMaginaryRS17;PGPSSHBBoxD17;HTTPBBoxCliD17;dxWizardControlRS17;dxPScxVGridLnkRS17;dxSkinSevenClassicRS17;dxPScxExtCommonRS17;dxPScxSSLnkRS17;dxSkinLilianRS17;dxPSdxLCLnkRS17;dxSkinOffice2010BlueRS17;bindcompfmx;dxSkinOffice2010SilverRS17;cxSchedulerGridRS17;dbrtl;bindcomp;inetdb;dxBarRS17;DBXOdbcDriver;dxBarDBNavRS17;dxSkinWhiteprintRS17;xmlrtl;dxSkinsdxRibbonPainterRS17;ibxpress;dxDockingRS17;vclactnband;bindengine;soaprtl;dxADOServerModeRS17;bindcompvcl;dxBarExtDBItemsRS17;dxPSPrVwRibbonRS17;vclie;dxSkinOffice2007PinkRS17;PGPTLSBBoxD17;ZIPBBoxD17;cxPageControlRS17;dxSkinscxPCPainterRS17;MIMEBBoxD17;dxmdsRS17;SSLBBoxCliD17;DBXInformixDriver;dxSkinTheAsphaltWorldRS17;cxSchedulerTreeBrowserRS17;dxPsPrVwAdvRS17;dxSkinSilverRS17;dxdborRS17;dsnapcon;DBXFirebirdDriver;inet;vclx;dxSkinStardustRS17;cxEditorsRS17;DBXSybaseASADriver;dbexpress;SSLBBoxSrvD17;IndyIPClient;cxTreeListdxBarPopupMenuRS17;dxSkinVS2010RS17;PGPMIMEBBoxD17;dxThemeRS17;DBXSqliteDriver;SMIMEBBoxD17;dxPScxGridLnkRS17;fmx;IndySystem;TeeDB;dxSkinValentineRS17;vclib;DataSnapClient;XMLBBoxD17;dxSkinDevExpressStyleRS17;DataSnapProviderClient;DBXSybaseASEDriver;cxBarEditItemRS17;HTTPBBoxSrvD17;dxServerModeRS17;cxPivotGridOLAPRS17;SSHBBoxCliD17;cxSchedulerRS17;MetropolisUILiveTile;dxSkinPumpkinRS17;dxPSLnksRS17;dxPSdxDBOCLnkRS17;cxVerticalGridRS17;dxSkinSpringTimeRS17;vcldsnap;dxSkinDevExpressDarkStyleRS17;DBXDb2Driver;BaseBBoxD17;DBXOracleDriver;dxSkinLiquidSkyRS17;cxSpreadSheetRS17;acntDelphiXE3_R;fmxase;vcl;dxSkinOffice2007SilverRS17;IndyIPCommon;DBXMSSQLDriver;dxPSdxOCLnkRS17;dcldxSkinsCoreRS17;inetdbxpress;webdsnap;dxSkinCoffeeRS17;adortl;dxSkinscxSchedulerPainterRS17;dxtrmdRS17;dxPScxPCProdRS17;PGPBBoxD17;rtl;DbxClientDriver;dxTabbedMDIRS17;dxSkinSharpPlusRS17;dxComnRS17;FTPSBBoxCliD17;dxSkinsCoreRS17;LDAPBBoxD17;dxdbtrRS17;Tee;dxSkinLondonLiquidSkyRS17;dxSkinBlackRS17;dxorgcRS17;IndyProtocols;DBXMySQLDriver;dxLayoutControlRS17;bindcompdbx;TeeUI;dxSkinOffice2007BlueRS17;dxPScxPivotGridLnkRS17;dxSpellCheckerRS17;vcltouch;dxSkinOffice2007GreenRS17;dxSkinSharpRS17;websnap;dxSkinFoggyRS17;dxTileControlRS17;DCBBoxD17;VclSmp;dxSkinDarkSideRS17;cxPivotGridRS17;DataSnapConnectors;fmxobj;cxTreeListRS17;dxSkinGlassOceansRS17;dxPSdxFCLnkRS17;dxFlowChartRS17;fmxdae;SFTPBBoxCliD17;dxSkinsdxNavBarPainterRS17;DataSnapIndy10ServerTransport;dxDBXServerModeRS17;dxSkinCaramelRS17;$(DCC_UsePackage)</DCC_UsePackage>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1)'!=''">
+        <DCC_ExeOutput>..\..\RoomerPMSRelease\</DCC_ExeOutput>
         <VerInfo_Locale>1043</VerInfo_Locale>
         <Manifest_File>None</Manifest_File>
         <DCC_Define>DEBUG;$(DCC_Define)</DCC_Define>
@@ -79,10 +80,9 @@
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
         <DCC_DebugInfoInExe>false</DCC_DebugInfoInExe>
-        <Debugger_RunParams>RoomerBase=http://localhost Port=8080 OpenApiBase=http://appserver1.roomercloud.net</Debugger_RunParams>
+        <Debugger_RunParams>. 1440 .\Roomer.xml</Debugger_RunParams>
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <DCC_ExeOutput>C:\Users\Bjorn\Dropbox\Hotel\RoomerPMSRelease\</DCC_ExeOutput>
-        <Manifest_File>None</Manifest_File>
+        <DCC_ExeOutput>C:\Users\BjornHeidarr\Dropbox (Promoir)\Hotel\MainProgXE3\RoomerPMSRelease\</DCC_ExeOutput>
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
@@ -155,7 +155,10 @@
                     <VersionInfoKeys Name="CFBundleAllowMixedLocalizations"/>
                     <VersionInfoKeys Name="CFBundleExecutable"/>
                 </VersionInfoKeys>
-                <Excluded_Packages/>
+                <Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k170.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp170.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
+                </Excluded_Packages>
                 <Source>
                     <Source Name="MainSource">VersionXmlGenerator.dpr</Source>
                 </Source>

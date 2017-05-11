@@ -60,7 +60,9 @@ uses uD,
      uUtils,
      Classes,
      uDateUtils,
-     idURI
+     DateUtils,
+     idURI,
+     PrjConst
     ;
 
 const SECOND = 1000;
@@ -145,11 +147,11 @@ begin
 end;
 
 function TRoomerVersionManagement.newVersionAvailable: Boolean;
-var s : String;
+var answer : String;
 begin
-  s := httpCLient.Get(format(URI_UPGRADE_DAEMON_UPGRADE_AVAILABLE, ['Roomer.exe']));
-  result := s.StartsWith('UPDATE_AVAILABLE');
-  BreakDownVersionString(s);
+  answer := httpCLient.Get(format(URI_UPGRADE_DAEMON_UPGRADE_AVAILABLE, ['Roomer.exe']));
+  result := answer.StartsWith('UPDATE_AVAILABLE');
+  BreakDownVersionString(answer);
 end;
 
 function TRoomerVersionManagement.newVersionTTL: Boolean;
@@ -217,9 +219,17 @@ begin
   s := httpCLient.Get(format(URI_UPGRADE_DAEMON_CHECK_UPGRADE, ['Roomer.exe']));
 end;
 
+procedure GetHoursAndMinutes(TTL : Integer; var h, m : Integer);
+var totalMinutes : Integer;
+begin
+  h := TTL DIV 60;
+  m := TTL MOD 60;
+end;
+
 function TRoomerVersionManagement.updateNow: Boolean;
 var forced, upgrade : Boolean;
-    exePath, uri, s : String;
+    exePath, uri, s, msg : String;
+    h, m : Integer;
 begin
   forced := VersionRec.EndDateTime <= Now;
   inc(lastCounter);
@@ -229,8 +239,14 @@ begin
     if Assigned(FOnAskUpgrade) then
     begin
       upgrade := True;
-      FOnAskUpgrade('', VersionRec.Version, forced, upgrade);
-      if upgrade then
+      if forced then
+        msg := format(GetTranslatedText('shTx_VersionManagement_ForceNewVersion'), [VersionRec.Version])
+      else begin
+        GetHoursAndMinutes(VersionRec.TTL, h, m);
+        msg := format(GetTranslatedText('shTx_VersionManagement_NewVersionAvailable'), [VersionRec.Version, h, m])
+      end;
+      FOnAskUpgrade(msg, VersionRec.Version, forced, upgrade);
+      if forced OR upgrade then
       begin
         exePath := d.roomerMainDataSet.URLEncode(Application.ExeName);
         uri := format(URI_UPGRADE_DAEMON_UPDATE_NOW, ['Roomer.exe', exePath, 'true', 'true']);
