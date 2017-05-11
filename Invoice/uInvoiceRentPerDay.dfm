@@ -263,8 +263,9 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         Width = 70
         Height = 20
         AutoSize = False
+        Color = clWhite
         Font.Charset = ANSI_CHARSET
-        Font.Color = clWindowText
+        Font.Color = clBlack
         Font.Height = -11
         Font.Name = 'Courier New'
         Font.Style = []
@@ -304,8 +305,9 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         Width = 70
         Height = 20
         AutoSize = False
+        Color = clWhite
         Font.Charset = ANSI_CHARSET
-        Font.Color = clWindowText
+        Font.Color = clBlack
         Font.Height = -11
         Font.Name = 'Courier New'
         Font.Style = []
@@ -327,8 +329,9 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         Height = 17
         AutoSize = False
         BorderStyle = bsNone
+        Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
+        Font.Color = clBlack
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -369,8 +372,9 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         Height = 17
         AutoSize = False
         BorderStyle = bsNone
+        Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
+        Font.Color = clBlack
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -391,8 +395,9 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         Height = 17
         AutoSize = False
         BorderStyle = bsNone
+        Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
+        Font.Color = clBlack
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -415,8 +420,9 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         Height = 17
         AutoSize = False
         BorderStyle = bsNone
+        Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
+        Font.Color = clBlack
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -438,8 +444,9 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         Height = 17
         AutoSize = False
         BorderStyle = bsNone
+        Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
+        Font.Color = clBlack
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -459,8 +466,9 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         Height = 17
         AutoSize = False
         BorderStyle = bsNone
+        Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
+        Font.Color = clBlack
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -480,8 +488,9 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         Height = 17
         AutoSize = False
         BorderStyle = bsNone
+        Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
+        Font.Color = clBlack
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -501,8 +510,9 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         Height = 17
         AutoSize = False
         BorderStyle = bsNone
+        Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
+        Font.Color = clBlack
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -522,8 +532,9 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         Height = 17
         AutoSize = False
         BorderStyle = bsNone
+        Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
+        Font.Color = clBlack
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -621,8 +632,8 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
       object chkShowPackage: TsCheckBox
         Left = 724
         Top = 143
-        Width = 111
-        Height = 20
+        Width = 119
+        Height = 17
         Caption = 'Package on invoice'
         Checked = True
         State = cbChecked
@@ -772,8 +783,9 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
             Alignment = taRightJustify
             AutoSize = False
             BorderStyle = bsNone
+            Color = clWhite
             Font.Charset = ANSI_CHARSET
-            Font.Color = clWindowText
+            Font.Color = clBlack
             Font.Height = -11
             Font.Name = 'Courier New'
             Font.Style = []
@@ -796,8 +808,9 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
             Alignment = taRightJustify
             AutoSize = False
             BorderStyle = bsNone
+            Color = clWhite
             Font.Charset = ANSI_CHARSET
-            Font.Color = clWindowText
+            Font.Color = clBlack
             Font.Height = -11
             Font.Name = 'Courier New'
             Font.Style = []
@@ -820,8 +833,9 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
             Alignment = taRightJustify
             AutoSize = False
             BorderStyle = bsNone
+            Color = clWhite
             Font.Charset = ANSI_CHARSET
-            Font.Color = clWindowText
+            Font.Color = clBlack
             Font.Height = -11
             Font.Name = 'Courier New'
             Font.Style = []
@@ -844,8 +858,9 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
             Alignment = taRightJustify
             AutoSize = False
             BorderStyle = bsNone
+            Color = clWhite
             Font.Charset = ANSI_CHARSET
-            Font.Color = clWindowText
+            Font.Color = clBlack
             Font.Height = -11
             Font.Name = 'Courier New'
             Font.Style = []
@@ -868,8 +883,9 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
             Alignment = taRightJustify
             AutoSize = False
             BorderStyle = bsNone
+            Color = clWhite
             Font.Charset = ANSI_CHARSET
-            Font.Color = clWindowText
+            Font.Color = clBlack
             Font.Height = -11
             Font.Name = 'Courier New'
             Font.Style = []
@@ -1232,7 +1248,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
           OnDblClickCell = agrLinesDblClickCell
           OnCanEditCell = agrLinesCanEditCell
           OnCellValidate = agrLinesCellValidate
-          OnCheckBoxClick = agrLinesCheckBoxClick
+          OnCheckBoxClick = Check
           OnColumnSize = agrLinesColumnSize
           ActiveCellFont.Charset = DEFAULT_CHARSET
           ActiveCellFont.Color = clWindowText

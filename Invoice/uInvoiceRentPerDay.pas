@@ -392,7 +392,7 @@ type
       var AHandled: boolean);
     procedure btnSaveChangesClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
-    procedure agrLinesCheckBoxClick(Sender: TObject; ACol, ARow: integer; State: boolean);
+    procedure Check(Sender: TObject; ACol, ARow: integer; State: boolean);
     procedure agrLinesKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure S1Click(Sender: TObject);
     procedure Exit1Click(Sender: TObject);
@@ -688,9 +688,12 @@ var
   zOriginalInvoice: integer;
 
 const
+  // Objects in grid
   cInvoiceLineAttachColumn = 0;
-  cRoomInfoAttachColumn = 3;
+  cPurchaseDateAsObjectColumn = 3;
+  cRoomInfoAttachColumn = 4;
 
+  // Columns in grid
   col_Select = 0;
   col_VisibleOnInvoice = col_Select + 1;
   col_Item = col_VisibleOnInvoice + 1;
@@ -952,15 +955,16 @@ var
 begin
   while FInvoiceLinesList.Count > 0 do
   begin
-    try
-      TInvoiceLine(FInvoiceLinesList[0]).free;
-    except
-    end;
+    TInvoiceLine(FInvoiceLinesList[0]).free;
     FInvoiceLinesList.delete(0);
   end;
   for i := 0 to agrLines.RowCount - 1 do
+  begin
     if agrLines.HasCheckBox(col_Select, i) then
       agrLines.RemoveCheckBox(col_Select, i);
+    if agrLines.HasCheckBox(col_VisibleOnInvoice, i) then
+      agrLines.RemoveCheckBox(col_VisibleOnInvoice, i);
+  end;
 end;
 
 function TfrmInvoiceRentPerDay.AddLine(lineId: integer;
@@ -1012,7 +1016,10 @@ end;
 
 function TfrmInvoiceRentPerDay.GetInvoiceLine(idx: integer): TInvoiceLine;
 begin
-  result := FInvoiceLinesList[idx];
+  if (idx >= 0) and (idx < FInvoiceLinesList.Count) then
+    result := FInvoiceLinesList[idx]
+  else
+    Result := nil;
 end;
 
 function TfrmInvoiceRentPerDay.GetInvoiceLineCount: integer;
@@ -1049,8 +1056,11 @@ begin
   invoiceLine := CellInvoiceLine(iRow);
   if NOT Assigned(invoiceLine) then
     invoiceLine := Lines[idx];
-  agrLines.SetCheckBoxState(col_VisibleOnInvoice, iRow, invoiceLine.VisibleOnInvoice);
   agrLines.Cells[col_Item, iRow] := invoiceLine.Item;
+
+  CheckCheckboxes;
+  agrLines.SetCheckBoxState(col_VisibleOnInvoice, iRow, invoiceLine.VisibleOnInvoice);
+
   agrLines.Cells[col_Description, iRow] := invoiceLine.Text;
   agrLines.Cells[col_ItemCount, iRow] := trim(_floattostr(invoiceLine.Number, vWidth, vDec));
   agrLines.Cells[col_ItemPrice, iRow] := trim(_floattostr(invoiceLine.Price, vWidth, vDec));
@@ -1059,7 +1069,7 @@ begin
   agrLines.Cells[col_System, iRow] := '';
   agrLines.Cells[col_Refrence, iRow] := invoiceLine.Refrence;
   agrLines.Cells[col_Source, iRow] := invoiceLine.Source;
-  agrLines.Objects[col_Description, iRow] := TObject(trunc(invoiceLine.PurchaseDate));
+  agrLines.Objects[cPurchaseDateAsObjectColumn, iRow] := TObject(trunc(invoiceLine.PurchaseDate));
   agrLines.Objects[col_ItemPrice, iRow] := invoiceLine;
   // -- PurchaseDate !
   if invoiceLine.PurchaseDate > 0 then
@@ -1653,7 +1663,7 @@ begin
   agrLines.Cells[col_autogen, 0] := 'ID';
 
   agrLines.AutoFitColumns(false);
-  agrLines.ColWidths[col_VisibleOnInvoice] := 30;
+  agrLines.ColWidths[col_VisibleOnInvoice] := 50;
   agrLines.ColWidths[col_Item] := 100;
   agrLines.ColWidths[col_ItemCount] := 100;
   agrLines.ColWidths[col_ItemPrice] := 100;
@@ -1932,7 +1942,7 @@ begin
     bSystemLine := isSystemLine(i);
 
     try
-      decodedate(integer(agrLines.Objects[col_Description, i]), AYear, AMon, ADay);
+      decodedate(integer(agrLines.Objects[cPurchaseDateAsObjectColumn, i]), AYear, AMon, ADay);
     except
       decodedate(now, AYear, AMon, ADay);
     end;
@@ -2001,7 +2011,7 @@ begin
     m.FieldByName('RoomReservation').asinteger := FRoomReservation;
     m.FieldByName('SplitNumber').asinteger := FnewSplitNumber;
     m.FieldByName('ItemNumber').asinteger := i;
-    lDate := integer(agrLines.Objects[col_Description, i]);
+    lDate := integer(agrLines.Objects[cPurchaseDateAsObjectColumn, i]);
     m.FieldByName('PurchaseDate').asString := _db(lDate);
     m.FieldByName('InvoiceNumber').asinteger := zInvoiceNumber;
     m.FieldByName('ItemId').asString := lineItem;
@@ -3005,7 +3015,7 @@ begin
 
       SetCurrentVisible;
 
-      agrLines.Objects[col_Description, agrLines.RowCount - 1] := TObject(trunc(now));
+      agrLines.Objects[cPurchaseDateAsObjectColumn, agrLines.RowCount - 1] := TObject(trunc(now));
       // -- PurchaseDate !
       agrLines.Cells[col_date, agrLines.RowCount - 1] :=
         datetostr(trunc(now));
@@ -3158,7 +3168,7 @@ begin
         taxGuests := StrToIntDef(trim(agrLines.Cells[col_NoGuests, i]), 0);
         taxNights := StrToFloatDef(trim(agrLines.Cells[col_ItemCount, i]), 0.00);
 
-        if agrLines.Objects[cRoomInfoAttachColumn, i] IS TInvoiceRoomEntity then
+        if (agrLines.Objects[cRoomInfoAttachColumn, i] <> nil) and (agrLines.Objects[cRoomInfoAttachColumn, i] IS TInvoiceRoomEntity) then
         begin
           RoomInfo := agrLines.Objects[cRoomInfoAttachColumn, i] AS TInvoiceRoomEntity;
           taxChildren := RoomInfo.NumChildren;
@@ -3693,7 +3703,7 @@ begin
     agrLines.Cells[i, agrLines.RowCount - 1] := '';
   end;
 
-  agrLines.Objects[col_Description, agrLines.RowCount - 1] := TObject(trunc(now)); // -- PurchaseDate !
+  agrLines.Objects[cPurchaseDateAsObjectColumn, agrLines.RowCount - 1] := TObject(trunc(now)); // -- PurchaseDate !
   agrLines.Cells[col_date, agrLines.RowCount - 1] := datetostr(trunc(now));
 end;
 
@@ -3837,7 +3847,7 @@ begin
     exit;
 
   ItemId := agrLines.Cells[col_Item, ARow];
-  if (ACol > 0) AND // Skip Checkbox column
+  if not (ACol in [col_Select, col_VisibleOnInvoice]) AND // Skip Checkbox column
     (((ItemId = g.qRoomRentItem) or (ItemId = g.qDiscountItem)) AND
     (isSystemLine(agrLines.row) = True)) then
   begin
@@ -3897,7 +3907,7 @@ begin
   begin
     if NOT agrLines.HasCheckBox(col_Select, i) and (agrLines.Cells[col_Item, i] <> '') then
       agrLines.AddCheckBox(col_Select, i, false, false);
-    if NOT agrLines.HasCheckBox(col_VisibleOnInvoice, i) and (agrLines.Cells[col_Item, i] <> '') then
+    if (i > 0) and NOT agrLines.HasCheckBox(col_VisibleOnInvoice, i) and (agrLines.Cells[col_Item, i] <> '') then
       agrLines.AddCheckBox(col_VisibleOnInvoice, i, false, false);
   end;
 end;
@@ -4339,7 +4349,7 @@ begin
           // Dagsetning er � upphafi 0  31.12.1899
           // en er h�r sett � dagsetningu prentunnar
           agrLines.Cells[col_date, i] := datetostr(trunc(now));
-          agrLines.Objects[col_Description, i] := TObject(trunc(now));
+          agrLines.Objects[cPurchaseDateAsObjectColumn, i] := TObject(trunc(now));
 
           try
             fItemTotal := _CurrencyValueSell * _StrToFloat(agrLines.Cells[col_TotalPrice, i]);
@@ -4399,7 +4409,7 @@ begin
         fTotalWOVat := fTotalWOVat + fItemTotalWOVat;
 
         try
-          decodedate(integer(agrLines.Objects[col_Description, i]), AYear, AMon, ADay);
+          decodedate(integer(agrLines.Objects[cPurchaseDateAsObjectColumn, i]), AYear, AMon, ADay);
         except
           decodedate(now, AYear, AMon, ADay);
         end;
@@ -4479,7 +4489,7 @@ begin
           s := s + ', ' + inttostr(FRoomReservation);
           s := s + ', ' + inttostr(FnewSplitNumber);
           s := s + ', ' + inttostr(i);
-          lDate := integer(agrLines.Objects[col_Description, i]);
+          lDate := integer(agrLines.Objects[cPurchaseDateAsObjectColumn, i]);
           s := s + ', ' + _db(lDate);
           s := s + ', ' + inttostr(iInvoiceNumber);
           s := s + ', ' + _db(sItemID);
@@ -4682,31 +4692,35 @@ procedure TfrmInvoiceRentPerDay.agrLinesGetAlignment(Sender: TObject; ARow, ACol
 begin
   case ACol of
     col_Item:
-      HAlign := taLeftJustify; // -96
+      HAlign := taLeftJustify;
     col_Description:
-      HAlign := taLeftJustify; // -96
+      HAlign := taLeftJustify;
     col_ItemCount:
-      HAlign := taRightJustify; // -96
+      HAlign := taRightJustify;
     col_ItemPrice:
-      HAlign := taRightJustify; // -96
+      HAlign := taRightJustify;
     col_TotalPrice:
-      HAlign := taRightJustify; // -96
+      HAlign := taRightJustify;
     col_System:
-      HAlign := taLeftJustify; // -96
+      HAlign := taLeftJustify;
     col_date:
-      HAlign := taLeftJustify; // -96
+      HAlign := taLeftJustify;
     col_Refrence:
-      HAlign := taLeftJustify; // -96
+      HAlign := taLeftJustify;
     col_Source:
-      HAlign := taLeftJustify; // -96
+      HAlign := taLeftJustify;
     col_isPackage:
-      HAlign := taLeftJustify; // -96
+      HAlign := taLeftJustify;
     col_NoGuests:
-      HAlign := taLeftJustify; // -96
+      HAlign := taLeftJustify;
     col_confirmdate:
-      HAlign := taLeftJustify; // -96
+      HAlign := taLeftJustify;
     col_confirmAmount:
-      HAlign := taRightJustify; // -96
+      HAlign := taRightJustify;
+    col_VisibleOnInvoice:
+      HAlign := taCenter;
+    col_TotalOnInvoice:
+      HAlign := taRightJustify;
   end;
 end;
 
@@ -4793,7 +4807,7 @@ begin
               agrLines.Cells[col_ItemCount, agrLines.row] := _floattostr(1, vWidth, vDec);
               agrLines.Cells[col_ItemPrice, agrLines.row] := _floattostr(theData[i].recHolder.Price, vWidth, vDec);
               agrLines.Cells[col_autogen, agrLines.row] := _GetCurrentTick;
-              agrLines.Objects[col_Description, agrLines.row] := TObject(trunc(now)); // -- PurchaseDate !
+              agrLines.Objects[cPurchaseDateAsObjectColumn, agrLines.row] := TObject(trunc(now)); // -- PurchaseDate !
               agrLines.Cells[col_date, agrLines.row] := datetostr(trunc(now));
 
               CheckroomRentItem(agrLines.row);
@@ -4901,12 +4915,15 @@ begin
     agrLines.Cells[col_ItemPrice, ARow] :=
       _floattostr(GridCellfloatValue(agrLines, col_ItemPrice, ARow),
       vWidth, vDec);
+
     agrLines.Cells[col_ItemCount, ARow] :=
       _floattostr(GridCellfloatValue(agrLines, col_ItemCount, ARow), vWidth,
       vDec); // -96
+
     agrLines.Cells[col_TotalPrice, ARow] :=
       _floattostr(GridCellfloatValue(agrLines, col_ItemPrice, ARow) *
       GridCellfloatValue(agrLines, col_ItemCount, ARow), vWidth, vDec); // -96
+
   finally
     agrLines.EndUpdate;
   end;
@@ -5047,7 +5064,7 @@ begin
   end;
 end;
 
-procedure TfrmInvoiceRentPerDay.agrLinesCheckBoxClick(Sender: TObject; ACol, ARow: integer; State: boolean);
+procedure TfrmInvoiceRentPerDay.Check(Sender: TObject; ACol, ARow: integer; State: boolean);
 var
   check: boolean;
 begin
@@ -5393,7 +5410,7 @@ begin
 
           ItemTypeInfo := d.Item_Get_ItemTypeInfo(sItemID, sSource);
           agrLines.Cells[col_date, i] := datetostr(trunc(now));
-          agrLines.Objects[col_Description, i] := TObject(trunc(now));
+          agrLines.Objects[cPurchaseDateAsObjectColumn, i] := TObject(trunc(now));
 
           // RoomRentItem
           invRoomReservation := -1;
@@ -5499,7 +5516,7 @@ begin
           end;
 
           try
-            decodedate(integer(agrLines.Objects[col_Description, i]), AYear, AMon, ADay);
+            decodedate(integer(agrLines.Objects[cPurchaseDateAsObjectColumn, i]), AYear, AMon, ADay);
           except
             decodedate(now, AYear, AMon, ADay);
           end;
@@ -5558,7 +5575,7 @@ begin
             s := s + ', ' + _db(FnewSplitNumber); // SPlitNumber
             s := s + ', ' + _db(i); // ItemNumber
 
-            lDate := integer(agrLines.Objects[col_Description, i]);
+            lDate := integer(agrLines.Objects[cPurchaseDateAsObjectColumn, i]);
             s := s + ', ' + _db(lDate);
             s := s + ', ' + inttostr(zInvoiceNumber); // InvoiceNumber
             s := s + ', ' + _db(sItemID); // ItemID
@@ -7300,7 +7317,7 @@ begin
     exit;
   end;
 
-  PurchaseDate := integer(agrLines.Objects[col_Description, CurrentRow]);
+  PurchaseDate := integer(agrLines.Objects[cPurchaseDateAsObjectColumn, CurrentRow]);
   invoiceNumber := zInvoiceNumber;
   itemNumber := CurrentRow;
 
@@ -8039,7 +8056,7 @@ begin
         // Dagsetning er � upphafi 0  31.12.1899
         // en er h�r sett � dagsetningu prentunnar
         agrLines.Cells[col_date, i] := datetostr(trunc(now));
-        agrLines.Objects[col_Description, i] := TObject(trunc(now));
+        agrLines.Objects[cPurchaseDateAsObjectColumn, i] := TObject(trunc(now));
 
         try
           fItemTotal := _CurrencyValueSell *
@@ -8113,7 +8130,7 @@ begin
       fTotalWOVat := fTotalWOVat + fItemTotalWOVat;
 
       try
-        decodedate(integer(agrLines.Objects[col_Description, i]), AYear, AMon, ADay);
+        decodedate(integer(agrLines.Objects[cPurchaseDateAsObjectColumn, i]), AYear, AMon, ADay);
       except
         decodedate(now, AYear, AMon, ADay);
       end;
@@ -8180,7 +8197,7 @@ begin
       s := s + ', ' + inttostr(FRoomReservation);
       s := s + ', ' + inttostr(FnewSplitNumber);
       s := s + ', ' + inttostr(i);
-      lDate := integer(agrLines.Objects[col_Description, i]);
+      lDate := integer(agrLines.Objects[cPurchaseDateAsObjectColumn, i]);
       s := s + ', ' + _db(lDate);
       s := s + ', ' + inttostr(iInvoiceNumber);
 
