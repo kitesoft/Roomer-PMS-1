@@ -468,7 +468,7 @@ type
     ///  add object to Lines[] and rows to the grid
     /// </summary>
     procedure calcAndAddAutoItems(reservation: integer; aAutoItems: TInvoiceAutoItemSet = [aiStayTax, aiIncludedBreakFast]);
-    procedure CalcAndAddStayTax(aReservation: integer; aRoominvoiceLinesList: TInvoiceRoomEntityList; aItemInvoiceLinesList: TInvoiceItemEntityList);
+    procedure CalcAndAddStayTax(aReservation: integer; aRoominvoiceLinesList: TInvoiceRoomEntityList );
     procedure CalcAndAddIncludedBreakFast(aReservation: integer; aRoominvoiceLinesList: TInvoiceRoomEntityList);
 
     procedure ClearRoomInfoObjects;
@@ -3195,7 +3195,7 @@ begin
       CalcAndAddIncludedBreakFast(RoomReservation, RoomInvoiceLines);
 
     if aiStayTax in aAutoItems then
-      CalcAndAddStayTax(RoomReservation, RoomInvoiceLines, ItemInvoiceLines);
+      CalcAndAddStayTax(RoomReservation, RoomInvoiceLines);
 
 
   finally
@@ -3265,7 +3265,7 @@ begin
   end;
 end;
 
-procedure TfrmInvoice.CalcAndAddStayTax(aReservation: integer; aRoominvoiceLinesList: TInvoiceRoomEntityList; aItemInvoiceLinesList: TInvoiceItemEntityList);
+procedure TfrmInvoice.CalcAndAddStayTax(aReservation: integer; aRoominvoiceLinesList: TInvoiceRoomEntityList);
 var
   lUseStayTax: boolean;
   lIsIncluded: boolean;
@@ -3296,7 +3296,7 @@ begin
   if lUseStayTax then
   begin
     lItemTypeInfo := d.Item_Get_ItemTypeInfo(trim(g.qRoomRentItem));
-    lTaxResultInvoiceLines := GetTaxesForInvoice(aRoominvoiceLinesList, aItemInvoiceLinesList, lItemTypeInfo, lIsIncluded);
+    lTaxResultInvoiceLines := GetTaxesForInvoice(aRoominvoiceLinesList, lItemTypeInfo, lIsIncluded);
   end
   else
     lTaxResultInvoiceLines := TInvoiceTaxEntityList.create(True);
