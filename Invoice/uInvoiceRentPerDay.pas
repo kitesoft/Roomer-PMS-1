@@ -20,24 +20,22 @@ uses
     , frxExportMail, frxExportImage, frxExportRTF, frxExportHTML
 
   , uInvoiceEntities
-    ;
+  , RoomerBookingCommunicationModel_RequestsResponses
+   ;
 
 type
   TCreditType = (ctManual, ctReference, ctErr);
 
 {$M+}
-
-  TRoomInfo = class(TInvoiceRoomEntity)
-  end deprecated;
-
   TRoomInfoList = TObjectlist<TInvoiceRoomEntity>;
 
 {$M+}
-
   /// <summary>
   ///   Object attached to a gridline of the invoiceform, containing all Invoice related info shown in that gridline
+  ///  Notice that all amounts are in hotel-native currency
   /// </summary>
   TInvoiceLine = class(TObject)
+  //TODO: Merge this class with TInvoiceItemEntity
   private
     FInvoiceLineIndex: integer;
 
@@ -49,7 +47,7 @@ type
     FTotal: Double;
     FDate: TDate;
     FAuto: boolean;
-    FRefrence: string;
+    FReference: string;
     FSource: string;
     FIspackage: boolean;
     FNoGuests: integer;
@@ -60,21 +58,33 @@ type
     FAutoGen: string;
     FId: integer;
     FVisibleOnInvoice: boolean;
+    FVATCode: string;
+    FVATPercentage: double;
     function GetAmountOnInvoice: double;
+    function GetTotal: Double;
+    function GetVatAmount: double;
 
   public
     constructor create(aIndex, _id: integer);
     destructor Destroy; override;
+
+    property Total: Double read GetTotal;
+    property AmountOnInvoice: double read GetAmountOnInvoice;
+    property VATAmount: double read GetVatAmount;
   published
-    property VisibleOnInvoice: boolean read FVisibleOnInvoice write FVisibleOnInvoice;
-    property InvoiceLineIndex: integer read FInvoiceLineIndex write FInvoiceLineIndex;
+    /// <summary>Id in invoicelines table of this invoiceline item</summary>
     property Id: integer read FId write FId;
+    /// <summary>Order index of line in invoice</summary>
+    property InvoiceLineIndex: integer read FInvoiceLineIndex write FInvoiceLineIndex;
     property Item: string read FItem write FItem;
     property Text: string read FText write FText;
+
     property Number: Double read FNumber write FNumber;
     property Price: Double read FPrice write FPrice;
-    property Total: Double read FTotal write FTotal;
-    property Refrence: string read FRefrence write FRefrence;
+    property VATCode: string read FVATCode write FVATCode;
+    property VATPercentage: double read FVATPercentage write FVATPercentage;
+
+    property Reference: string read FReference write FReference;
     property Source: string read FSource write FSource;
     property isPackage: boolean read FIspackage write FIspackage;
     property noGuests: integer read FNoGuests write FNoGuests;
@@ -85,8 +95,7 @@ type
     property PurchaseDate: TDate read FDate write FDate;
     property IsGeneratedLine: boolean read FAuto write FAuto;
     property AutoGen: string read FAutoGen write FAutoGen;
-    property AmountOnInvoice: double read GetAmountOnInvoice;
-
+    property VisibleOnInvoice: boolean read FVisibleOnInvoice write FVisibleOnInvoice;
   end;
 
   /// <summary>
@@ -432,7 +441,7 @@ type
     zCellValue: string;
 
     zbRoomRentinTemp: boolean;
-    FInvoiceLinesList: TList<TInvoiceLine>;
+    FInvoiceLinesList: TObjectList<TInvoiceLine>;
 
     // Global currency and Rate
     zCurrentCurrency: string;
@@ -465,6 +474,10 @@ type
     FRoomReservation: integer;
 
     procedure LoadInvoice;
+    /// <summary>
+    ///   Load invoice via runningTab endpoint of OpenAPI
+    /// </summary>
+    procedure LoadRunningTab;
     procedure loadInvoiceToMemtable(var m: TKbmMemTable);
 
     procedure setControls;
@@ -486,7 +499,7 @@ type
     /// Create a new TInvoiceLine object and add this to zListLines collection
     /// </summary>
     function AddLine(lineId: integer; sItem, sText: string; iNumber: Double;
-      FPrice, FTotal: Double; PurchaseDate: TDate; bAuto: boolean;
+      FPrice: Double; PurchaseDate: TDate; bAuto: boolean;
       Refrence, Source: string; isPackage: boolean; noGuests: integer;
       confirmDate: TDateTime; confirmAmount: Double; rrAlias: integer;
       AutoGen: string; itemIndex: integer = 0): integer;
@@ -626,6 +639,8 @@ type
     procedure AddIncludedBreakfastToLinesAndGrid(aIncludedBreakfastCount: integer; iAddAt: integer = 0);
     procedure RemoveAutoBreakfastItems;
     function ItemKindOnRow(aRow: Integer): TItemKind;
+    procedure ClearGrid;
+    procedure AdaptRunningTabResponse(aInvoiceResponse: TxsdInvoiceResponse);
 
     property InvoiceIndex: integer read FInvoiceIndex write SetInvoiceIndex;
     property AnyRowChecked: boolean read GetAnyRowChecked;
@@ -678,7 +693,10 @@ uses
   UITypes
   , uFloatUtils
   , Math
-    , uVatCalculator, uSQLUtils, ufrmRoomPrices, uInvoiceDefinitions;
+    , uVatCalculator, uSQLUtils, ufrmRoomPrices, uInvoiceDefinitions
+    , uBookingsRunningTabAPICaller
+    , RoomerFinancialDataModel_ModelObjects
+    ;
 
 {$R *.DFM}
 
@@ -767,8 +785,6 @@ begin
   Grid.RowCount := 2;
   Grid.FixedRows := 1;
 end;
-
-{ TRoomInfo }
 
 procedure TfrmInvoiceRentPerDay.ForceRowChange;
 var
@@ -903,8 +919,9 @@ end;
 
 procedure TfrmInvoiceRentPerDay.ClearRoomInfoObjects;
 begin
-  while FRoomInfoList.Count > 0 do
-    FRoomInfoList.delete(0)
+  FRoomInfoList.Clear;
+//  while FRoomInfoList.Count > 0 do
+//    FRoomInfoList.delete(0)
 end;
 
 { TInvoiceLine }
@@ -921,7 +938,7 @@ begin
   FNumber := 0;
   FPrice := 0.00;
   FTotal := 0.00;
-  FRefrence := '';
+  FReference := '';
   FSource := '';
 end;
 
@@ -936,6 +953,16 @@ begin
     Result := Total
   else
     Result := 0;
+end;
+
+function TInvoiceLine.GetTotal: Double;
+begin
+  Result := FNumber * FPrice;
+end;
+
+function TInvoiceLine.GetVatAmount: double;
+begin
+  Result := Total * VATPercentage;
 end;
 
 /// /////////////////////////////////////////////////////////////////////////////
@@ -953,11 +980,12 @@ procedure TfrmInvoiceRentPerDay.ClearInvoiceLines;
 var
   i: integer;
 begin
-  while FInvoiceLinesList.Count > 0 do
-  begin
-    TInvoiceLine(FInvoiceLinesList[0]).free;
-    FInvoiceLinesList.delete(0);
-  end;
+  FInvoiceLinesList.Clear;
+//  while FInvoiceLinesList.Count > 0 do
+//  begin
+//    TInvoiceLine(FInvoiceLinesList[0]).free;
+//    FInvoiceLinesList.delete(0);
+//  end;
   for i := 0 to agrLines.RowCount - 1 do
   begin
     if agrLines.HasCheckBox(col_Select, i) then
@@ -969,7 +997,7 @@ end;
 
 function TfrmInvoiceRentPerDay.AddLine(lineId: integer;
   sItem, sText: string; iNumber: Double; // -96
-  FPrice, FTotal: Double; PurchaseDate: TDate; bAuto: boolean;
+  FPrice: Double; PurchaseDate: TDate; bAuto: boolean;
   Refrence, Source: string; isPackage: boolean; noGuests: integer;
   confirmDate: TDateTime; confirmAmount: Double; rrAlias: integer;
   AutoGen: string; itemIndex: integer = 0): integer;
@@ -998,10 +1026,9 @@ begin
   invoiceLine.Text := sText;
   invoiceLine.Number := iNumber;
   invoiceLine.Price := FPrice;
-  invoiceLine.Total := FTotal;
   invoiceLine.IsGeneratedLine := bAuto;
   invoiceLine.PurchaseDate := PurchaseDate;
-  invoiceLine.Refrence := Refrence;
+  invoiceLine.Reference := Refrence;
   invoiceLine.Source := Source;
   invoiceLine.Ispackage := isPackage;
   invoiceLine.NoGuests := noGuests;
@@ -1067,7 +1094,7 @@ begin
   agrLines.Cells[col_TotalPrice, iRow] := trim(_floattostr(invoiceLine.Total, vWidth, vDec));
   agrLines.Cells[col_TotalOnInvoice, iRow] := trim(_floattostr(invoiceLine.AmountOnInvoice, vWidth, vDec));
   agrLines.Cells[col_System, iRow] := '';
-  agrLines.Cells[col_Refrence, iRow] := invoiceLine.Refrence;
+  agrLines.Cells[col_Refrence, iRow] := invoiceLine.Reference;
   agrLines.Cells[col_Source, iRow] := invoiceLine.Source;
   agrLines.Objects[cPurchaseDateAsObjectColumn, iRow] := TObject(trunc(invoiceLine.PurchaseDate));
   agrLines.Objects[col_ItemPrice, iRow] := invoiceLine;
@@ -1329,7 +1356,7 @@ begin
     unitPrice := totalTax / TaxUnits;
   end;
 
-  idx := AddLine(0, Item, aText, TaxUnits, unitPrice, totalTax, 0, True, '', '',
+  idx := AddLine(0, Item, aText, TaxUnits, unitPrice, 0, True, '', '',
     false, 0, confirmDate, confirmAmount, -1, _GetCurrentTick); // 77ATH
 
   agrLines.InsertRows(iAddAt, 1);
@@ -1757,7 +1784,7 @@ begin
     sText := trim(sGuestName) + ' (' + sText + ') ';
 
   // add a TInvoiceline object for the RoomRent to InvoiceLineList
-  idx := AddLine(0, RmRntItem, sText, dayCount, fRoomPrice, fRoomPrice * dayCount,
+  idx := AddLine(0, RmRntItem, sText, dayCount, fRoomPrice,
     0, True, '', '', isPackage, iNumGuests, confirmDate, confirmAmount, rrAlias,
     _GetCurrentTick); // *77
 
@@ -1805,7 +1832,7 @@ begin
 
     /// Add an InvoiceLine object for the discount
     idx := AddLine(0, DiscountItem, DiscountText, dayCount, fWork,
-      fWork * dayCount, 0, True, '', '', false, NumGuests, confirmDate,
+      0, True, '', '', false, NumGuests, confirmDate,
       confirmAmount, rrAlias, _GetCurrentTick);
 
     lRoomInfo.Discount := fWork * dayCount;
@@ -2321,10 +2348,8 @@ var
 label
   Again;
 begin
-  DeletedLines.Clear;
-  ClearRoomInfoObjects;
-  ClearInvoiceLines;
-  NullifyGrid;
+
+  ClearGrid;
 
   SetInvoiceIndexPanelsToZero;
   FTotalRoomDiscount := 0.00;
@@ -2951,7 +2976,6 @@ begin
 
         idx := AddLine(lineId, ItemId, _s,
           dNumber, Price, // -96
-          Price * dNumber, // -96
           SQLToDate(eSet.FieldByName('PurchaseDate').asString), false,
           trim(eSet.FieldByName('importRefrence').asString),
           trim(eSet.FieldByName('importSource').asString),
@@ -3244,7 +3268,7 @@ begin
     lItem := g.qBreakFastItem;
     lText := Item_GetDescription(lItem) + ' (' + GetTranslatedText('shTx_ReservationProfile_Included')  + ')';
 
-    idx := AddLine(0, lItem, lText, aIncludedBreakfastCount, 0, 0, 0, True, '', '',  false, 0, 0, 0, -1, _GetCurrentTick); // 77ATH
+    idx := AddLine(0, lItem, lText, aIncludedBreakfastCount, 0, 0, True, '', '',  false, 0, 0, 0, -1, _GetCurrentTick); // 77ATH
 
     agrLines.InsertRows(iAddAt, 1);
     EmptyRow(agrLines, iAddAt);
@@ -3457,7 +3481,7 @@ begin
   SelectableExternalRooms := TRoomInfoList.create(True);
   TaxTypes := TStringList.create;
 
-  FInvoiceLinesList := TList<TInvoiceLine>.create;
+  FInvoiceLinesList := TObjectList<TInvoiceLine>.create;
   FRoomInfoList := TRoomInfoList.create(True);
   tempInvoiceItemList := TInvoiceItemEntityList.create(True);
 
@@ -3503,30 +3527,22 @@ end;
 
 procedure TfrmInvoiceRentPerDay.FormDestroy(Sender: TObject);
 begin
-  try
-    OnResize := nil;
-    SelectableRooms.free;
-    SelectableExternalRooms.free;
-    RemoveInvalidKreditInvoice;
+  OnResize := nil;
+  SelectableRooms.free;
+  SelectableExternalRooms.free;
+  RemoveInvalidKreditInvoice;
 
-    // --
-    ClearRoomInfoObjects;
-    ClearInvoiceLines;
-    DeletedLines.Free;
+  ClearGrid;
+  DeletedLines.Free;
+  FInvoiceLinesList.free;
+  FRoomInfoList.free;
 
-    NullifyGrid;
-    FInvoiceLinesList.free;
-    FRoomInfoList.free;
+  if mRoomRes.active then
+    mRoomRes.close;
+  if mRoomRates.active then
+    mRoomRates.close;
 
-    if mRoomRes.active then
-      mRoomRes.close;
-    if mRoomRates.active then
-      mRoomRates.close;
-
-    TaxTypes.free;
-  except
-  end;
-
+  TaxTypes.free;
   tempInvoiceItemList.free;
 
   frmMain.btnRefresh.Click;
@@ -8792,7 +8808,78 @@ begin
   end;
 end;
 
-initialization
+procedure TfrmInvoiceRentPerDay.ClearGrid;
+begin
+  DeletedLines.Clear;
+  ClearRoomInfoObjects;
+  ClearInvoiceLines;
+  NullifyGrid;
+end;
 
+
+procedure TfrmInvoiceRentPerDay.LoadRunningTab;
+var
+  lRunningTabAPI: TBookingsRunningTabAPICaller;
+  lInvoiceResponse: TxsdInvoiceResponse;
+begin
+  ClearGrid;
+  lInvoiceResponse := nil;
+  agrLines.BeginUpdate;
+  Screen.Cursor := crHourGlass;
+  try
+    lInvoiceResponse := TxsdInvoiceResponse.Create;
+    // Get data from endpoint
+    lRunningTabAPI := TBookingsRunningTabAPICaller.Create;
+    try
+      lRunningTabAPI.GetRunningTabRoomRes(FReservation, FRoomReservation, FInvoiceIndex, lInvoiceResponse);
+    finally
+      lRunningTabAPI.Free;
+    end;
+
+    // Adapt data to TInvoiceline and TInvoiceRoomEntity objects
+    AdaptRunningTabResponse(lInvoiceResponse);
+
+    // Update grid based on TInvoiceline and TInvoiceRoomEntity objects
+
+  finally
+    lInvoiceResponse.Free;
+    agrLines.EndUpdate;
+    Screen.Cursor := crDefault;
+  end;
+end;
+
+procedure TfrmInvoiceRentPerDay.AdaptRunningTabResponse(aInvoiceResponse: TxsdInvoiceResponse);
+var
+  lInvoiceLineType: TxsdInvoiceLineType;
+  lTax: TxsdApplicableTax;
+begin
+  for lInvoiceLineType in aInvoiceResponse.First.LineItemList do
+  begin
+    if (lInvoiceLineType.Item is TxsdExtendedBillableEntryType) then
+      with TxsdExtendedBillableEntryType(lInvoiceLineType.Item) do
+      begin
+        AddLine(0, ProductID, Description, Number, TotalConvertedPriceGross.Amount, PurchaseDateTime,
+                true, '', '', false, -1, 0, 0, 0, ''
+                );
+
+        for lTax in ApplicableTaxList do
+          if (lTax.TaxTypeType = TxsdTaxTypeType.CITYTAX) then
+            AddLine(0, lTax.TaxTypeType.AsString, lTax.Description, 1, lTax.Amount.Amount, 0, true, '', '', false, 0, 0, 0, 0, ''
+      end
+    else if (lInvoiceLineType.Item is TxsdDiscountBillableEntryType) then
+      with TxsdDiscountBillableEntryType(lInvoiceLineType.Item) do
+      begin
+        AddLine(0, ProductID, Description, Number, TotalConvertedPriceGross.Amount, PurchaseDateTime,
+                false, '', '', false, -1, 0, 0, 0, ''
+                );
+      end
+    else if (lInvoiceLineType.Item is TxsdTextEntryType) then
+      with TxsdTextEntryType(lInvoiceLineType.Item) do
+      begin
+        AddLine(0, '', Description, 0, 0, 0, false, '', '', false, -1, 0, 0, 0, '' );
+      end;
+  end;
+
+end;
 
 end.

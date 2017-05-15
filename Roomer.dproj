@@ -851,6 +851,13 @@
         <DCCReference Include="Invoice\uInvoiceRentPerDay.pas">
             <Form>frmInvoiceRentPerDay</Form>
         </DCCReference>
+        <DCCReference Include="OpenAPI\schema\RoomerFinancialDataModel_ModelObjects.pas"/>
+        <DCCReference Include="OpenAPI\schema\uRoomerCanonicalDataModel_BaseTypes.pas"/>
+        <DCCReference Include="OpenAPI\schema\uRoomerCanonicalDataModel_SimpleTypes.pas"/>
+        <DCCReference Include="OpenAPI\schema\uRoomerHotelServicesCommunicationModel_RunningTabs.pas"/>
+        <DCCReference Include="OpenAPI\schema\RoomerBookingCommunicationModel_RequestsResponses.pas"/>
+        <DCCReference Include="RoomerUtils\uExceptionUtils.pas"/>
+        <DCCReference Include="OpenAPI\uBookingsRunningTabAPICaller.pas"/>
         <None Include="Roomer.todo"/>
         <None Include="notes.txt"/>
         <None Include="Roomer.inc"/>

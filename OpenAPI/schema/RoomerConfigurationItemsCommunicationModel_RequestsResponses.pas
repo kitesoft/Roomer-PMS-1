@@ -38,12 +38,11 @@ type
     FChannelName: String;
     FCanBeDirectConnectChannel: boolean;
   protected
+  public
+    procedure Clear; override;
     procedure SetPropertiesFromXMLNode(const aNode: PXMLNode); override;
     class function GetNodeName: string; override;
     class function GetNameSpaceURI: string; override;
-  public
-    procedure Clear; override;
-
   published
     property ChannelCode: string read FChannelCode write FChannelCode;
     property ChannelLongCode: string read FChannelLongCode write FChannelLongCode;
@@ -55,7 +54,7 @@ type
   private const
     cNameSpaceURI = 'http://www.promoir.nl/roomer/configuration/2015/12';
     cNodeName = 'ChannelInventory';
-  protected
+  public
     class function GetNodeName: string; override;
     class function GetNameSpaceURI: string; override;
   end;
@@ -84,15 +83,14 @@ type
     FChannelInventoriesList: IList<TChannelInventory>;
     function GetChannelInventoriesList: TChannelInventoryList;
     function GetChannelByCode(const aCode: string): TChannelInventory;
-  protected
-    procedure SetPropertiesFromXMLNode(const aNode: PXMLNode); override;
-    class function GetNodeName: string; override;
-    class function GetNameSpaceURI: string; override;
   public
     constructor Create;
     destructor Destroy; override;
 
     procedure Clear; override;
+    procedure SetPropertiesFromXMLNode(const aNode: PXMLNode); override;
+    class function GetNodeName: string; override;
+    class function GetNameSpaceURI: string; override;
     function FindChannelByCode(const aCode: string; var aChannel: TChannelInventory): boolean;
     property ChannelByCode[const aCode: string]: TChannelInventory read GetChannelByCode;
   published

@@ -281,7 +281,14 @@ uses
   uStaffCommunicationDefinitions in 'Definitions\uStaffCommunicationDefinitions.pas',
   uRptReservationStatusPerDay in 'Reporting\uRptReservationStatusPerDay.pas' {FrmRptReservationStatusPerDay},
   uVersionManagement in 'VersionManagement\uVersionManagement.pas',
-  uInvoiceRentPerDay in 'Invoice\uInvoiceRentPerDay.pas' {frmInvoiceRentPerDay};
+  uInvoiceRentPerDay in 'Invoice\uInvoiceRentPerDay.pas' {frmInvoiceRentPerDay},
+  RoomerFinancialDataModel_ModelObjects in 'OpenAPI\schema\RoomerFinancialDataModel_ModelObjects.pas',
+  uRoomerCanonicalDataModel_BaseTypes in 'OpenAPI\schema\uRoomerCanonicalDataModel_BaseTypes.pas',
+  uRoomerCanonicalDataModel_SimpleTypes in 'OpenAPI\schema\uRoomerCanonicalDataModel_SimpleTypes.pas',
+  uRoomerHotelServicesCommunicationModel_RunningTabs in 'OpenAPI\schema\uRoomerHotelServicesCommunicationModel_RunningTabs.pas',
+  RoomerBookingCommunicationModel_RequestsResponses in 'OpenAPI\schema\RoomerBookingCommunicationModel_RequestsResponses.pas',
+  uExceptionUtils in 'RoomerUtils\uExceptionUtils.pas',
+  uBookingsRunningTabAPICaller in 'OpenAPI\uBookingsRunningTabAPICaller.pas';
 
 {$R *.RES}
 
