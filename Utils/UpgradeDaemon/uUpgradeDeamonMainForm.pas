@@ -3,11 +3,13 @@ unit uUpgradeDeamonMainForm;
 interface
 
 uses
+  Winapi.Windows,
   Vcl.Forms,
   ALHttpClient,
   ALWininetHttpClient,
   AlHttpCommon,
   uRoomerHttpClient,
+  SysUtils,
   Vcl.ExtCtrls,
   Data.DB,
   Data.Win.ADODB,
@@ -19,6 +21,8 @@ uses
   dxGDIPlusClasses,
   System.Classes,
   IdContext,
+  IdSocketHandle,
+  IdThread,
   IdBaseComponent,
   IdComponent,
   IdCustomTCPServer,
@@ -29,7 +33,7 @@ uses
 type
   TfrmUpgradeDaemon = class(TForm)
     Image2: TImage;
-    tmStart: TTimer;
+    timClose: TTimer;
     sProgressBar1: TsProgressBar;
     lblDownloaded: TsLabel;
     lblURL: TsLabel;
@@ -44,7 +48,6 @@ type
     logs: TsMemo;
     C1: TMenuItem;
     procedure FormCreate(Sender: TObject);
-    procedure tmStartTimer(Sender: TObject);
     procedure httpServerCommandGet(AContext: TIdContext; ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
     procedure timPerformRequestTimer(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -52,6 +55,13 @@ type
     procedure S1Click(Sender: TObject);
     procedure timeUpgradeCheckTimer(Sender: TObject);
     procedure C1Click(Sender: TObject);
+    procedure httpServerException(AContext: TIdContext; AException: Exception);
+    procedure timCloseTimer(Sender: TObject);
+    procedure httpServerBeforeBind(AHandle: TIdSocketHandle);
+    procedure httpServerAfterBind(Sender: TObject);
+    procedure httpServerBeforeListenerRun(AThread: TIdThread);
+    procedure httpServerConnect(AContext: TIdContext);
+    procedure httpServerDisconnect(AContext: TIdContext);
   private
     httpCLient: TRoomerHttpClient;
     activeSince : TDateTime;
@@ -83,8 +93,6 @@ implementation
 {$R *.dfm}
 
 uses
-  Winapi.Windows,
-  System.SysUtils,
   Vcl.Graphics,
   IOUtils,
   Vcl.Dialogs,
@@ -138,6 +146,11 @@ begin
   end;
 
   activeSince := Now;
+  try
+    httpServer.Active := True;
+  except
+    timClose.Enabled := True;
+  end;
 end;
 
 procedure TfrmUpgradeDaemon.FormDestroy(Sender: TObject);
@@ -147,9 +160,27 @@ end;
 
 procedure TfrmUpgradeDaemon.AddLog(logText : String);
 var logTime : String;
+  i: Integer;
 begin
   logTime := DateTimeToStr(now) + ' | ';
   logs.Lines.Insert(0, logTime + logText);
+  for i := 5000 to logs.Lines.Count - 1 do
+   logs.Lines.Delete(i);
+end;
+
+procedure TfrmUpgradeDaemon.httpServerAfterBind(Sender: TObject);
+begin
+  AddLog('Port ' + inttostr(HttpServer.DefaultPort) + ' bound to HTTP service.');
+end;
+
+procedure TfrmUpgradeDaemon.httpServerBeforeBind(AHandle: TIdSocketHandle);
+begin
+  AddLog('Binding port ' + inttostr(AHandle.Port) + ' to HTTP service...');
+end;
+
+procedure TfrmUpgradeDaemon.httpServerBeforeListenerRun(AThread: TIdThread);
+begin
+  AddLog('Activating HTTP service listener.');
 end;
 
 procedure TfrmUpgradeDaemon.httpServerCommandGet(AContext: TIdContext; ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
@@ -184,6 +215,22 @@ begin
   end;
 end;
 
+procedure TfrmUpgradeDaemon.httpServerConnect(AContext: TIdContext);
+begin
+  AddLog('HTTP service Connected.');
+end;
+
+procedure TfrmUpgradeDaemon.httpServerDisconnect(AContext: TIdContext);
+begin
+  AddLog('HTTP service Disconnected.');
+end;
+
+procedure TfrmUpgradeDaemon.httpServerException(AContext: TIdContext; AException: Exception);
+begin
+  if NOT httpServer.Active then
+    Close;
+end;
+
 procedure TfrmUpgradeDaemon.S1Click(Sender: TObject);
 begin
   if Visible then
@@ -202,6 +249,12 @@ begin
   Label_.Font.Color := clWhite;
   Label_.Font.Style := [fsBold];
   Label_.Update;
+end;
+
+procedure TfrmUpgradeDaemon.timCloseTimer(Sender: TObject);
+begin
+  timClose.Enabled := False;
+  Close;
 end;
 
 procedure TfrmUpgradeDaemon.timeUpgradeCheckTimer(Sender: TObject);
@@ -241,17 +294,16 @@ begin
                              Sleep(5000);
                              UpdateNow;
                     end;
+      atClose : begin
+                            //
+                             Close;
+                          end;
     end;
   except
     ON e: Exception do
       AddLog('Error: ' + e.Message);
   end;
   DownloadActive := False;
-end;
-
-procedure TfrmUpgradeDaemon.tmStartTimer(Sender: TObject);
-begin
-  tmStart.Enabled := false;
 end;
 
 procedure TfrmUpgradeDaemon.DownloadProgress(Sender: TObject; Read, Total: Integer);
@@ -329,7 +381,7 @@ begin
   try
     files := TDirectory.GetFiles(RoomerAppDataPath + '\', '*.src', TSearchOption.soAllDirectories);
     for i := LOW(files) to HIGH(files) do
-      DeleteFile(files[i]);
+      SysUtils.DeleteFile(files[i]);
   except
     // Ignore - Not a vital problem
   end;
@@ -457,7 +509,7 @@ begin
 
       exeName := URIProcessor.FileExePath;
       AddLog('Removing old exe file: ' + exeName);
-      DeleteFile(exeName);
+      SysUtils.DeleteFile(exeName);
       UpgradeFilename := PWideChar(URIProcessor.UpgradeExePathName);
       if NOT TryCopyFile(UpgradeFilename, PChar(exeName)) then
         exit;
@@ -508,7 +560,7 @@ begin
   try
    // 1. Get the XML file with the version info of thge Roomer executables...
     tempFileXML := TPath.GetTempFileName;
-    DeleteFile(tempFileXML);
+    SysUtils.DeleteFile(tempFileXML);
     try
       AddLog('Downloading ' + ROOMER_XML_URI + ' from ' + URIProcessor.RoomerStore );
       if DownloadFile(URIProcessor.RoomerStore + ROOMER_XML_URI, tempFileXML) then
@@ -528,15 +580,16 @@ begin
               ttl
             ]));
        // 2. Check if the currently downloaded version is the same as on server...
-        if (aVersion <> URIProcessor.FUpgradeFileManager.UpgradeVersion) OR
-           (serverMD5 <> URIProcessor.FUpgradeFileManager.UpgradeMD5) OR
-           (uDateUtils.dateTimeToXmlString(timeStamp) <> uDateUtils.dateTimeToXmlString(URIProcessor.FUpgradeFileManager.UpgradeTimeStamp)) OR
-           (ttl <> URIProcessor.FUpgradeFileManager.UpgradeTTL_Minutes) then
+        if // (aVersion <> URIProcessor.FUpgradeFileManager.UpgradeVersion) OR
+           (serverMD5 <> URIProcessor.FUpgradeFileManager.UpgradeMD5)
+           OR (uDateUtils.dateTimeToXmlString(timeStamp) <> uDateUtils.dateTimeToXmlString(URIProcessor.FUpgradeFileManager.UpgradeTimeStamp))
+           // OR (ttl <> URIProcessor.FUpgradeFileManager.UpgradeTTL_Minutes)
+           then
         begin
          // 3. A new version is available on server.
          //    Download the release...
           tempFileEXE := TPath.GetTempFileName;
-          DeleteFile(tempFileEXE);
+          SysUtils.DeleteFile(tempFileEXE);
           try
             AddLog('Downloading new version of ' + URIProcessor.FileExeName + ' from ' + URIProcessor.RoomerStore );
             if DownloadFile(URIProcessor.RoomerStore + URIProcessor.FileExeName, tempFileEXE) then
@@ -553,7 +606,7 @@ begin
             end;
           finally
             if FileExists(tempFileEXE) then
-              DeleteFile(tempFileEXE);
+              SysUtils.DeleteFile(tempFileEXE);
           end;
         end else
           AddLog('Version already exists locally.');
@@ -561,7 +614,7 @@ begin
       end;
     finally
       if FileExists(tempFileXML) then
-        DeleteFile(tempFileXML);
+        SysUtils.DeleteFile(tempFileXML);
     end;
   except
     On E: Exception do

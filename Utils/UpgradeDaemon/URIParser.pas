@@ -10,8 +10,9 @@ uses System.Classes, SysUtils,
 type
   TURIActionType = (
                       atUnknown,
-                      atActivate,
+                      atClose,
                       atActive,
+                      atActivate,
                       atCheckForUpgrade,
                       atUpgradeAvailable,
                       atUpgradeTTL,
@@ -43,6 +44,8 @@ type
     function UpgradeTTL: String;
     function GetUpgradeExePathName: String;
     function UpdateNow: String;
+    function GetActivateResult: String;
+    function getStringAtIndex(stl: TStringList; index: Integer): String;
   public
     constructor Create;
     destructor Destroy;
@@ -87,6 +90,7 @@ const URI_COMMAND_START_INDEX = 0;
 
 // UpgradeAvailable (UA)
       URI_UA_EXE_NAME_INDEX = URI_COMMAND_START_INDEX + 1;
+      URI_UA_PATH_INDEX = URI_UA_EXE_NAME_INDEX + 1;
 
 // UpgradeTTL (UTTL)
       URI_UTTL_EXE_NAME_INDEX = URI_COMMAND_START_INDEX + 1;
@@ -97,6 +101,12 @@ const URI_COMMAND_START_INDEX = 0;
       URI_UN_CLEAR_LANGUAGE_INDEX = URI_UN_PATH_INDEX + 1;
       URI_UN_CLEAR_CACHE_INDEX = URI_UN_CLEAR_LANGUAGE_INDEX + 1;
 
+function TURIProcessor.getStringAtIndex(stl : TStringList; index : Integer) : String;
+begin
+  result := '';
+  if index < stl.Count then
+    result := stl[index];
+end;
 
 function TURIProcessor.ActionTypeByName: TURIActionType;
 var ActionString : String;
@@ -113,41 +123,46 @@ begin
     if stl[URI_COMMAND_START_INDEX] = 'Activate' then
     begin
       result := atActivate;
-      FRoomerStore := TIdURI.URLDecode(stl[URI_AV_ROOMER_STORE_INDEX]);
+      FRoomerStore := TIdURI.URLDecode(getStringAtIndex(stl, URI_AV_ROOMER_STORE_INDEX));
     end
           // localhost:62999/Active
     else if stl[URI_COMMAND_START_INDEX] = 'Active' then
       result := atActive
 
+          // localhost:62999/Close
+    else if stl[URI_COMMAND_START_INDEX] = 'Close' then
+      result := atClose
+
           // localhost:62999/CheckForUpgrade/Roomer.exe/true/true
     else if stl[URI_COMMAND_START_INDEX] = 'CheckForUpgrade' then
     begin
       result := atCheckForUpgrade;
-      FFileExeName := stl[URI_CFU_EXE_NAME_INDEX];
+      FFileExeName := getStringAtIndex(stl, URI_CFU_EXE_NAME_INDEX);
       UpgradeFileManager.SetFileName(FFileExeName);
     end
           // localhost:62999/UpdateNow/Roomer.exe/C:\Roomer\Roomer.exe
     else if stl[URI_COMMAND_START_INDEX] = 'UpdateNow' then
     begin
       result := atUpdateNow;
-      FFileExeName := stl[URI_UN_EXE_NAME_INDEX];
+      FFileExeName := getStringAtIndex(stl, URI_UN_EXE_NAME_INDEX);
       UpgradeFileManager.SetFileName(FFileExeName);
-      FFileExePath := TIdURI.URLDecode(stl[URI_UN_PATH_INDEX]);
-      FClearLanguage := LowerCase(stl[URI_UN_CLEAR_LANGUAGE_INDEX]) = 'true';
-      FClearCache := LowerCase(stl[URI_UN_CLEAR_CACHE_INDEX]) = 'true';
+      FFileExePath := TIdURI.URLDecode(getStringAtIndex(stl, URI_UN_PATH_INDEX));
+      FClearLanguage := LowerCase(getStringAtIndex(stl, URI_UN_CLEAR_LANGUAGE_INDEX)) = 'true';
+      FClearCache := LowerCase(getStringAtIndex(stl, URI_UN_CLEAR_CACHE_INDEX)) = 'true';
     end
           // localhost:62999/UpgradeAvailable/Roomer.exe
     else if stl[URI_COMMAND_START_INDEX] = 'UpgradeAvailable' then
     begin
       result := atUpgradeAvailable;
-      FFileExeName := stl[URI_UA_EXE_NAME_INDEX];
+      FFileExeName := getStringAtIndex(stl, URI_UA_EXE_NAME_INDEX);
       UpgradeFileManager.SetFileName(FFileExeName);
+      FFileExePath := TIdURI.URLDecode(getStringAtIndex(stl, URI_UA_PATH_INDEX));
     end
           // localhost:62999/UpgradeTTL/Roomer.exe
     else if stl[URI_COMMAND_START_INDEX] = 'UpgradeTTL' then
     begin
       result := atUpgradeTTL;
-      FFileExeName := stl[URI_UTTL_EXE_NAME_INDEX];
+      FFileExeName := getStringAtIndex(stl, URI_UTTL_EXE_NAME_INDEX);
       UpgradeFileManager.SetFileName(FFileExeName);
     end
     else
@@ -162,6 +177,8 @@ const RESULT_UPDATE_AVAILABLE = 'UPDATE_AVAILABLE|VERSION=%s|TTL=%d|END_TIME_STA
 
       RESULT_UNKNOWN = 'UNKNOWN';
       RESULT_ACTIVE = 'ACTIVE';
+      RESULT_CLOSE = 'CLOSING';
+      RESULT_ACTIVATE = 'ACTIVATED %s';
       RESULT_NO_UPGRADE = 'NO_UPGRADE';
 
       RESULT_UPGRADE_AVAILABLE = 'RESULT_UPGRADE_AVAILABLE';
@@ -176,15 +193,21 @@ begin
 end;
 
 function TURIProcessor.UpgradeAvailable : String;
+var md5OfFile : String;
 begin
-  result := IIF(UpgradeFileManager.UpgradeFinished,
-                RESULT_UPDATE_NOT_AVAILABLE,
-                format(RESULT_UPDATE_AVAILABLE,
-                    [
-                      UpgradeFileManager.UpgradeVersion,
-                      UpgradeFileManager.UpgradeTTL_Minutes,
-                      uDateUtils.dateTimeToXmlString(IncMinute(UpgradeFileManager.UpgradeTimeStamp, UpgradeFileManager.UpgradeTTL_Minutes))
-                    ]));
+  MD5OfFile := '';
+  if (FileExePath <> '') AND FileExists(FileExePath) then
+    MD5OfFile := FileMD5(FileExePath);
+  result := IIF(UpgradeFileManager.UpgradeFinished OR
+                (TRIM(UpgradeFileManager.UpgradeVersion)='') OR
+                (MD5OfFile = UpgradeFileManager.UpgradeMD5),
+                  RESULT_UPDATE_NOT_AVAILABLE,
+                  format(RESULT_UPDATE_AVAILABLE,
+                      [
+                        UpgradeFileManager.UpgradeVersion,
+                        UpgradeFileManager.UpgradeTTL_Minutes,
+                        uDateUtils.dateTimeToXmlString(IncMinute(UpgradeFileManager.UpgradeTimeStamp, UpgradeFileManager.UpgradeTTL_Minutes))
+                      ]));
 end;
 
 function TURIProcessor.UpgradeTTL : String;
@@ -222,8 +245,9 @@ begin
   result := true;
   case FActionType of
     atUnknown : ProcessResult := RESULT_UNKNOWN;
-    atActivate : ProcessResult := RESULT_ACTIVE;
+    atActivate : ProcessResult := GetActivateResult;
     atActive : ProcessResult := RESULT_ACTIVE;
+    atClose : ProcessResult := RESULT_CLOSE;
     atCheckForUpgrade : ProcessResult := CheckForUpgrade;
     atUpgradeAvailable : ProcessResult := UpgradeAvailable;
     atUpgradeTTL : ProcessResult := UpgradeTTL;
@@ -240,6 +264,11 @@ end;
 procedure TURIProcessor.SetProcessResult(const Value: String);
 begin
   FProcessResult := Value;
+end;
+
+function TURIProcessor.GetActivateResult : String;
+begin
+  result := format(RESULT_ACTIVATE, [FRoomerStore]);
 end;
 
 end.

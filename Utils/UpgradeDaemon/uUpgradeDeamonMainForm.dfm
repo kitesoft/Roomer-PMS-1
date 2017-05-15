@@ -369,21 +369,29 @@ object frmUpgradeDaemon: TfrmUpgradeDaemon
     SkinData.CustomColor = True
     SkinData.CustomFont = True
   end
-  object tmStart: TTimer
+  object timClose: TTimer
     Enabled = False
     Interval = 100
-    OnTimer = tmStartTimer
+    OnTimer = timCloseTimer
     Left = 168
     Top = 16
   end
   object httpServer: TIdHTTPServer
-    Active = True
-    Bindings = <>
+    Bindings = <
+      item
+        IP = '127.0.0.1'
+        Port = 62999
+      end>
     DefaultPort = 62999
+    OnBeforeBind = httpServerBeforeBind
+    OnAfterBind = httpServerAfterBind
+    OnBeforeListenerRun = httpServerBeforeListenerRun
+    OnConnect = httpServerConnect
+    OnDisconnect = httpServerDisconnect
     ServerSoftware = 'Roomer update agent'
     OnCommandGet = httpServerCommandGet
     Left = 280
-    Top = 256
+    Top = 248
   end
   object timeUpgradeCheck: TTimer
     Interval = 900000

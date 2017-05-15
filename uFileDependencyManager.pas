@@ -36,6 +36,7 @@ type
     function getFilePath(const Filename: String; throwExceptionOnError: Boolean): String;
     function getFullFilename(const Filename: String): String;
     procedure ReadFilesFromStaticResources;
+    function isNewFileExisting(const Filename, toFile: String): Boolean;
 
   public
     constructor Create;
@@ -55,6 +56,7 @@ type
     function getAnyFileFromRoomerStore(const FromFile, toFile: String): String;
     function getRoomerUpgradeAgentFilePath(const toFile: String): String;
     function getRoomerUpgradeDaemonFilePath(const toFile: String): String;
+    function doesNewUpgradeDemonExist(const toFile : String): Boolean;
     function getRoomerVersionXmlFilePath(const toFile: String): String;
 
   end;
@@ -314,22 +316,22 @@ begin
     FileAge(toFile, DateOfFile);
 
   try
-  RemoteFile := getFileInfoViaHead(sFullFilename);
-  try
-    if RemoteFile = nil then
-      Result := ''
-    else
-    begin
-      if DateTimeToComparableString(DateOfFile) <> DateTimeToComparableString(RemoteFile.Timestamp) then
+    RemoteFile := getFileInfoViaHead(sFullFilename);
+    try
+      if RemoteFile = nil then
+        Result := ''
+      else
       begin
-        d.roomerMainDataSet.SystemDownloadFileFromURI(RemoteFile.URI, toFile);
-        TouchFile(toFile, RemoteFile.Timestamp);
+        if DateTimeToComparableString(DateOfFile) <> DateTimeToComparableString(RemoteFile.Timestamp) then
+        begin
+          d.roomerMainDataSet.SystemDownloadFileFromURI(RemoteFile.URI, toFile);
+          TouchFile(toFile, RemoteFile.Timestamp);
+        end;
+        Result := toFile;
       end;
-      Result := toFile;
+    finally
+      RemoteFile.Free;
     end;
-  finally
-    RemoteFile.Free;
-  end;
   except
     if FileExists(toFile) then
       Result := toFile
@@ -337,6 +339,35 @@ begin
       Result := '';
   end;
 end;
+
+function TFileDependencymanager.isNewFileExisting(const Filename, toFile: String): Boolean;
+var
+  sFullFilename: String;
+  DateOfFile: TDateTime;
+  RemoteFile: TResourceInfo;
+begin
+  sFullFilename := ExtractFileName(Filename);
+  DateOfFile := 0;
+  if FileExists(toFile) then
+    FileAge(toFile, DateOfFile);
+
+  try
+    RemoteFile := getFileInfoViaHead(sFullFilename);
+    try
+      if RemoteFile = nil then
+        Result := False
+      else
+      begin
+        Result := DateTimeToComparableString(DateOfFile) <> DateTimeToComparableString(RemoteFile.Timestamp);
+      end;
+    finally
+      RemoteFile.Free;
+    end;
+  except
+    Result := False;
+  end;
+end;
+
 
 function TFileDependencymanager.getHtmlEditorFilePath(throwExceptionOnError: Boolean = true): String;
 var
@@ -363,6 +394,11 @@ end;
 function TFileDependencymanager.getRoomerUpgradeDaemonFilePath(const toFile: String): String;
 begin
   Result := getExeFilePath(cUpgradeDaemon, toFile);
+end;
+
+function TFileDependencymanager.doesNewUpgradeDemonExist(const toFile : String): Boolean;
+begin
+  Result := isNewFileExisting(cUpgradeDaemon, toFile);
 end;
 
 function TFileDependencymanager.getRoomerVersionXmlFilePath(const toFile: String): String;

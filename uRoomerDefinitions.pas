@@ -13,6 +13,7 @@ const
   qcCompany        = 'Roomer';
   cRoomerFolder    = 'Roomer';
   cRoomerUpgradeFolder = 'Upgrades';
+  cRoomerLoggingFolder = 'RoomerLogging';
   qcApplication    = 'Roomer PMS';
   cUpgradeDaemon   = 'RoomerUpgradeDaemon.exe';
   cOpenAPIApplicationID = 'ROOMERPMS';
