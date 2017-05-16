@@ -1,6 +1,6 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
-        <ProjectGuid>{6CE6C553-4583-4359-8725-699731C5C59F}</ProjectGuid>
+        <ProjectGuid>{AF9054F9-D6BC-402C-9979-0D245D43FBE6}</ProjectGuid>
         <ProjectVersion>14.3</ProjectVersion>
         <FrameworkType>VCL</FrameworkType>
         <MainSource>RoomerUpgradeAgent.dpr</MainSource>

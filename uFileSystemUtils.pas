@@ -5,6 +5,7 @@ uses Types, System.SysUtils, Registry, Winapi.Windows, System.IOUtils, Controls,
 
 function RoomerAppDataPath: string;
 function RoomerNewUpgradePath: string;
+function RoomerLogPath: string;
 function RoomerTempPath: string;
 function LocalAppDataPath : string;
 Function GetTempFileName(const ext: string): string;
@@ -156,6 +157,13 @@ end;
 function RoomerNewUpgradePath: string;
 begin
   result := TPath.Combine(RoomerAppDataPath, cRoomerUpgradeFolder);
+  if NOT DirectoryExists(result) then
+    ForceDirectories(result);
+end;
+
+function RoomerLogPath: string;
+begin
+  result := TPath.Combine(RoomerAppDataPath, cRoomerLoggingFolder);
   if NOT DirectoryExists(result) then
     ForceDirectories(result);
 end;

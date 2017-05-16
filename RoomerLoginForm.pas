@@ -64,6 +64,9 @@ const
   // TLoginFormResults when login dialog is confirmed
   cLoginFormSuccesfull: set of TLoginFormResult = [lrLogin, lrOffline];
 
+var
+  lLoginForm: TfrmRoomerLoginForm;
+
 implementation
 
 {$R *.dfm}
@@ -80,8 +83,6 @@ uses uUtils,
      hData;
 
 function AskUserForCredentials(var aUsername: String; var aPassword: String; var aHotelId : String; aLastMessage : String; AuthValueIndex : Integer = -1): TLoginFormResult;
-var
-  lLoginForm: TfrmRoomerLoginForm;
 
   function CheckLoginCorrectness : Boolean;
   var sql : String;
@@ -151,6 +152,7 @@ begin
     end;
   finally
     lLoginForm.Free;
+    lLoginForm := NIL;
   end;
 end;
 

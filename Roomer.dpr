@@ -16,6 +16,8 @@ uses
   {$endif}
   Forms,
   SysUtils,
+  Windows,
+  Messages,
   uMain in 'uMain.pas' {frmMain},
   uReservationObjects in 'uReservationObjects.pas',
   uAppGlobal in 'uAppGlobal.pas',
@@ -288,7 +290,9 @@ uses
   uRoomerHotelServicesCommunicationModel_RunningTabs in 'OpenAPI\schema\uRoomerHotelServicesCommunicationModel_RunningTabs.pas',
   RoomerBookingCommunicationModel_RequestsResponses in 'OpenAPI\schema\RoomerBookingCommunicationModel_RequestsResponses.pas',
   uExceptionUtils in 'RoomerUtils\uExceptionUtils.pas',
-  uBookingsRunningTabAPICaller in 'OpenAPI\uBookingsRunningTabAPICaller.pas';
+  uBookingsRunningTabAPICaller in 'OpenAPI\uBookingsRunningTabAPICaller.pas',
+  uRoomerLogger in 'Logging\uRoomerLogger.pas',
+  uRoomerInstanceManagement in 'RoomerInstanceManagement\uRoomerInstanceManagement.pas';
 
 {$R *.RES}
 
@@ -296,52 +300,56 @@ var
   RoomerExceptionHandler: TRoomerExceptionHandler;
 
 begin
-  {$IFDEF rmMONITOR_LEAKAGE}
-    ReportMemoryLeaksOnShutdown := DebugHook <> 0;
-  {$ENDIF rmMONITOR_LEAKAGE}
-  Application.MainformOnTaskbar := True;
-  Application.Initialize;
-  Application.Title := 'ROOMER - Next Generation Hotel Management System';
+  SWindowClassName := 'TWIN86FC02AB-D85A-4529-B732-C3D890A0C422';
+  if NOT InstanceAlreadyRunning then
+  begin
+    {$IFDEF rmMONITOR_LEAKAGE}
+      ReportMemoryLeaksOnShutdown := DebugHook <> 0;
+    {$ENDIF rmMONITOR_LEAKAGE}
+    Application.MainformOnTaskbar := True;
+    Application.Initialize;
+    Application.Title := 'ROOMER - Next Generation Hotel Management System';
 
-  RoomerExceptionHandler := TRoomerExceptionHandler.Create;
-  try
-    RoomerExceptionHandler.ExceptionsLoggingActive := true;
-    Application.OnException := RoomerExceptionHandler.ExceptionHandler;
+    RoomerExceptionHandler := TRoomerExceptionHandler.Create;
+    try
+      RoomerExceptionHandler.ExceptionsLoggingActive := true;
+      Application.OnException := RoomerExceptionHandler.ExceptionHandler;
 
-    // reduce number of times that TAction.OnUpdate events are called
-    Application.ActionUpdateDelay := 10;
+      // reduce number of times that TAction.OnUpdate events are called
+      Application.ActionUpdateDelay := 10;
 
-    Application.ShowHint := true;
-    Application.HintHidePause := 15000;
-    Application.HintPause := 500;
+      Application.ShowHint := true;
+      Application.HintHidePause := 15000;
+      Application.HintPause := 500;
 
-    TSplashFormManager.Show;
+      TSplashFormManager.Show;
 
-    Application.CreateForm(TD, D);
+      Application.CreateForm(TD, D);
   D.ApplicationId := cOpenAPIApplicationID;
 
-    Application.CreateForm(TDReportData, DReportData);
-    TSplashFormManager.UpdateProgress('Loading forms...');
+      Application.CreateForm(TDReportData, DReportData);
+      TSplashFormManager.UpdateProgress('Loading forms...');
 
-    Application.CreateForm(TDImages, DImages);
-    Application.CreateForm(TfrmMain, frmMain);
+      Application.CreateForm(TDImages, DImages);
+      Application.CreateForm(TfrmMain, frmMain);
 
-    if D.roomerMainDataSet.IsConnectedToInternet then
-    begin
-      Application.CreateForm(TfrmDaysStatistics, frmDaysStatistics);
-      Application.CreateForm(TfrmRateQuery, frmRateQuery);
-      Application.CreateForm(TfrmHomedate, frmHomedate);
-      Application.CreateForm(TfrmDayNotes, frmDayNotes);
-      Application.CreateForm(TfrmGoToRoomandDate, frmGoToRoomandDate);
-      Application.CreateForm(TFrmReservationHintHolder, FrmReservationHintHolder);
-      Application.CreateForm(TembPeriodView, embPeriodView);
-      Application.CreateForm(TembOccupancyView, embOccupancyView);
+      if D.roomerMainDataSet.IsConnectedToInternet then
+      begin
+        Application.CreateForm(TfrmDaysStatistics, frmDaysStatistics);
+        Application.CreateForm(TfrmRateQuery, frmRateQuery);
+        Application.CreateForm(TfrmHomedate, frmHomedate);
+        Application.CreateForm(TfrmDayNotes, frmDayNotes);
+        Application.CreateForm(TfrmGoToRoomandDate, frmGoToRoomandDate);
+        Application.CreateForm(TFrmReservationHintHolder, FrmReservationHintHolder);
+        Application.CreateForm(TembPeriodView, embPeriodView);
+        Application.CreateForm(TembOccupancyView, embOccupancyView);
+      end;
+
+      Application.Run;
+    finally
+      Application.OnException := nil;
+      RoomerExceptionHandler.Free;
     end;
-
-    Application.Run;
-  finally
-    Application.OnException := nil;
-    RoomerExceptionHandler.Free;
   end;
 end.
 

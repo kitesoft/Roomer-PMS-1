@@ -982,6 +982,10 @@ type
     procedure dxUserActivityLogClick(Sender: TObject);
     procedure btnResStatusPerdDayClick(Sender: TObject);
 
+  protected
+    procedure CreateParams(var Params: TCreateParams); override;
+    procedure WMCopyData(var Message: TWMCopyData); message WM_COPYDATA;
+
   private
     FReservationsModel: TReservationsModel;
     FFreeRooms: TFreeRooms;
@@ -1632,6 +1636,7 @@ uses
 		, uResourceTypeDefinitions
 		, uOpenInvoicesNew
     , uRptReservationStatusPerDay
+    , uRoomerInstanceManagement
 		;
 
 {$R *.DFM}
@@ -2321,6 +2326,26 @@ begin
   lblMainHeader.Caption := FormatDateTime('dddd', dtDate.Date);
 end;
 
+procedure TfrmMain.WMCopyData(var Message: TWMCopyData);
+var
+  Arg: string;
+begin
+  SetString(Arg, PChar(Message.CopyDataStruct.lpData), (Message.CopyDataStruct.cbData div SizeOf(Char))-1);
+  if Arg = 'CLOSE_APP' then
+    Application.MainForm.Close
+  else begin
+    Application.Restore;
+    Application.BringToFront;
+    if Assigned(lLoginForm) AND lLoginForm.Showing then
+    begin
+      lLoginForm.BringToFront;
+      SetForegroundWindow(lLoginForm.Handle);
+    end;
+    if Arg = 'CLOSE_APP' then
+      Application.MainForm.Close;
+  end;
+end;
+
 procedure TfrmMain.WndProc(var message: TMessage);
 begin
   if Message.Msg = WM_REFRESH_STAFF_COMM_NOTIFIER then
@@ -2796,6 +2821,10 @@ end;
 
 procedure TfrmMain.FormDestroy(Sender: TObject);
 begin
+  try
+    RoomerVersionManagement.Free;
+  Except
+  end;
   try
     PushActivityLogs(true);
   Except
@@ -4404,6 +4433,14 @@ begin
   if GetSelectedRoomInformation AND
     GroupGuests(_iReservation, _iRoomReservation) then
     btnRefreshOneDay.Click;
+end;
+
+procedure TfrmMain.CreateParams(var Params: TCreateParams);
+var cName : array[0..63] OF Char;
+begin
+  inherited;
+  StrPLCopy(Params.WinClassName, PChar(SWindowClassName), High(Params.WinClassName));
+//  Params.WinClassName := cName;
 end;
 
 procedure TfrmMain.CreateProvideAllotment(aAllotmentResId: integer; aShowDate: TDateTime = 0);

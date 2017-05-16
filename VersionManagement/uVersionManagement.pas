@@ -2,7 +2,7 @@ unit uVersionManagement;
 
 interface
 
-uses Windows, Dialogs, SysUtils, vcl.ExtCtrls, idHttp, uFileDependencyManager;
+uses Windows, Dialogs, SysUtils, vcl.ExtCtrls, idHttp, uFileDependencyManager, uRoomerLogger;
 
 type
 
@@ -26,6 +26,8 @@ type
     VersionRec : TVersionRec;
     lastCounter : Integer;
 
+    RoomerLogger : TRoomerLogger;
+
     procedure OnTimer(Sender: TObject);
     procedure Start(initialStart : Boolean = False);
     procedure Stop;
@@ -40,6 +42,8 @@ type
     procedure BreakDownVersionString(sStr: String);
     procedure PerformUpdateIfAvailable;
     procedure CheckIfUpgradeExists;
+    function GetFromURI(uri: String): String;
+    procedure CloseDaemon;
   public
     constructor Create;
     destructor Destroy;
@@ -70,10 +74,13 @@ const SECOND = 1000;
       MINUTE = 60 * SECOND;
       TEN_MINUTES = 10 * MINUTE;
 
-      COUNT_FOR_NOTIFICATION = 6;
+      MAX_COUNT_FOR_NOTIFICATION = 6;
 
       URI_UPGRADE_DAEMON = 'http://localhost:62999/';
-      URI_UPGRADE_DAEMON_UPGRADE_AVAILABLE = URI_UPGRADE_DAEMON + 'UpgradeAvailable/%s';
+      URI_UPGRADE_DAEMON_CLOSE = URI_UPGRADE_DAEMON + 'Close';
+      URI_UPGRADE_DAEMON_ACTIVE = URI_UPGRADE_DAEMON + 'Active';
+      URI_UPGRADE_DAEMON_ACTIVATE = URI_UPGRADE_DAEMON + 'Activate/%s';
+      URI_UPGRADE_DAEMON_UPGRADE_AVAILABLE = URI_UPGRADE_DAEMON + 'UpgradeAvailable/%s/%s';
       URI_UPGRADE_DAEMON_CHECK_UPGRADE = URI_UPGRADE_DAEMON + 'CheckForUpgrade/%s';
       URI_UPGRADE_DAEMON_UPDATE_NOW = URI_UPGRADE_DAEMON + 'UpdateNow/%s/%s/%s/%s';
 
@@ -82,13 +89,17 @@ const SECOND = 1000;
 function TRoomerVersionManagement.activateDaemon: Boolean;
 begin
   // --
+  GetFromURI(format(URI_UPGRADE_DAEMON_ACTIVATE, [d.roomerMainDataSet.ForcedURLEncode(d.roomerMainDataSet.RoomerStoreUri)]));
   Start(true);
 end;
 
 constructor TRoomerVersionManagement.Create;
 begin
-  lastCounter := COUNT_FOR_NOTIFICATION;
+  RoomerLogger := ActivateRoomerLogger(ClassName);
+  lastCounter := MAX_COUNT_FOR_NOTIFICATION;
   httpCLient := TIdHttp.Create(nil);
+  httpClient.ConnectTimeout := 1000;
+  httpClient.ReadTimeout := 5000;
   timer := TTimer.Create(nil);
   timer.Enabled := False;
   timer.OnTimer := OnTimer;
@@ -103,11 +114,20 @@ begin
   timer.Free;
   httpClient.Free;
   FileDependencyManager.Free;
+  DeactivateRoomerLogger(RoomerLogger);
 end;
 
 function TRoomerVersionManagement.doesUpgradeWindowExist: Boolean;
+var s : String;
 begin
-  Result := FindWindow('TfrmUpgradeDaemon', NIL) > 0;
+  s := GetFromURI(URI_UPGRADE_DAEMON_ACTIVE);
+  result := (s = 'ACTIVE') OR (s = 'BUSY');
+end;
+
+procedure TRoomerVersionManagement.CloseDaemon;
+begin
+  GetFromURI(URI_UPGRADE_DAEMON_CLOSE);
+  Sleep(1000);
 end;
 
 procedure TRoomerVersionManagement.ForceUpdate;
@@ -123,16 +143,34 @@ begin
   end;
 end;
 
-procedure TRoomerVersionManagement.makeSureUpgradeDaemonIsActive;
+function TRoomerVersionManagement.GetFromURI(uri : String) : String;
 begin
-{$IFNDEF DEBUG}
+  try
+    result := httpCLient.Get(uri);
+    RoomerLogger.AddToLog(format('%s returned %s', [uri, result]));
+  except
+    ON E: Exception do
+    begin
+      result := '';
+      RoomerLogger.AddToLog(format('%s failed with %s', [URI_UPGRADE_DAEMON_ACTIVE, e.Message]));
+    end;
+  end;
+end;
+
+procedure TRoomerVersionManagement.makeSureUpgradeDaemonIsActive;
+var UpgradeActive : Boolean;
+begin
+//{$IFNDEF DEBUG}
+  UpgradeActive := doesUpgradeWindowExist;
+  if UpgradeActive AND FileDependencyManager.doesNewUpgradeDemonExist(RoomerUpgradeDaemonPath) then
+    CloseDaemon;
   if NOT doesUpgradeWindowExist then
   begin
     openDaemon;
     sleep(1000);
   end;
   activateDaemon;
-{$ENDIF}
+//{$ENDIF}
 end;
 
 procedure TRoomerVersionManagement.BreakDownVersionString(sStr : String);
@@ -145,6 +183,8 @@ begin
   begin
     stlValues := Split(stlResult[i], '=');
     try
+      if stlValues.Count = 1 then stlValues.Add('');
+
       if stlValues[0] = 'VERSION' then
         VersionRec.Version := stlValues[1]
       else
@@ -163,9 +203,10 @@ begin
 end;
 
 function TRoomerVersionManagement.newVersionAvailable(force : Boolean = false): Boolean;
-var answer, myVersion : String;
+var answer, myVersion, exePath : String;
 begin
-  answer := httpCLient.Get(format(URI_UPGRADE_DAEMON_UPGRADE_AVAILABLE, ['Roomer.exe']));
+  exePath := d.roomerMainDataSet.URLEncode(Application.ExeName);
+  answer := GetFromURI(format(URI_UPGRADE_DAEMON_UPGRADE_AVAILABLE, ['Roomer.exe', exePath]));
   BreakDownVersionString(answer);
   result := answer.StartsWith('UPDATE_AVAILABLE');
   result := result AND (force OR (myVersion <> TRoomerVersionInfo.FileVersion));
@@ -187,11 +228,17 @@ end;
 function TRoomerVersionManagement.openDaemon: Boolean;
 var exePath : String;
 begin
+   RoomerLogger.AddToLog('Opening Daemon...');
    exePath := FileDependencyManager.getRoomerUpgradeDaemonFilePath(RoomerUpgradeDaemonPath);
    if exePath = '' then
-     MessageDlg('Could not find the Roomer Upgrade Daemon!', mtError, [mbOk], 0)
-   else
+   begin
+     MessageDlg('Could not find the Roomer Upgrade Daemon!', mtError, [mbOk], 0);
+     RoomerLogger.AddToLog('Daemon Could not be found!');
+   end else
+   begin
      ExecuteFile(Application.MainForm.Handle, exePath, '', []); // [eoElevate]);
+     RoomerLogger.AddToLog('Daemon opened.');
+   end;
 end;
 
 procedure TRoomerVersionManagement.Start(initialStart : Boolean = False);
@@ -228,7 +275,7 @@ end;
 procedure TRoomerVersionManagement.CheckIfUpgradeExists;
 var s : String;
 begin
-  s := httpCLient.Get(format(URI_UPGRADE_DAEMON_CHECK_UPGRADE, ['Roomer.exe']));
+  s := GetFromURI(format(URI_UPGRADE_DAEMON_CHECK_UPGRADE, ['Roomer.exe']));
 end;
 
 procedure GetHoursAndMinutes(TTL : Integer; var h, m : Integer);
@@ -246,14 +293,21 @@ var forced, upgrade : Boolean;
     procedure Update;
     var exePath, uri : String;
     begin
+      RoomerLogger.AddToLog('Updating Roomer...');
       exePath := d.roomerMainDataSet.URLEncode(Application.ExeName);
       uri := format(URI_UPGRADE_DAEMON_UPDATE_NOW, ['Roomer.exe', exePath, 'true', 'true']);
       CopyToClipboard(uri);
-      s := httpCLient.Get(uri);
+      s := GetFromURI(uri);
       if s = 'UPDATING' then
+      begin
         Application.MainForm.Close;
+        RoomerLogger.AddToLog('Closing Roomer for update...');
+      end else
+        RoomerLogger.AddToLog('Update not continuing!');
+
     end;
 begin
+  RoomerLogger.AddToLog('Starting update check...');
   if force then
     update
   else
@@ -261,25 +315,33 @@ begin
     forced := VersionRec.EndDateTime <= Now;
     inc(lastCounter);
     if forced OR
-       (lastCounter > COUNT_FOR_NOTIFICATION) then
+       (lastCounter > MAX_COUNT_FOR_NOTIFICATION) then
     begin
       if Assigned(FOnAskUpgrade) then
       begin
         upgrade := True;
         if forced then
-          msg := format(GetTranslatedText('shTx_VersionManagement_ForceNewVersion'), [VersionRec.Version])
+          msg := format(GetTranslatedText('shTx_VersionManagement_ForceNewVersion'), [VersionRec.Version,
+                  GetTranslatedText('shTx_AboutRoomer_NewVersionAvailableUpdateNow')])
         else begin
           GetHoursAndMinutes(VersionRec.TTL, h, m);
-          msg := format(GetTranslatedText('shTx_VersionManagement_NewVersionAvailable'), [VersionRec.Version, h, m])
+          msg := format(GetTranslatedText('shTx_VersionManagement_NewVersionAvailable'), [VersionRec.Version,
+                  h,
+                  m,
+                  GetTranslatedText('shTx_AboutRoomer_NewVersionAvailableUpdateNow'),
+                  GetTranslatedText('shTx_AboutRoomer_NewVersionAvailableUpdateLater')])
         end;
+        RoomerLogger.AddToLog('Asking user: ' + msg);
         FOnAskUpgrade(msg, VersionRec.Version, forced, upgrade);
         if forced OR upgrade then
           update
         else
           CheckIfUpgradeExists;
       end;
+      lastCounter := 0;
     end;
   end;
+  RoomerLogger.AddToLog('Finished update check.');
 end;
 
 end.

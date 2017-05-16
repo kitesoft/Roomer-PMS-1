@@ -1224,11 +1224,11 @@ begin
   constants.Add('shTx_AboutRoomer_CopyPMSVersion', 'Roomer PMS Version number has been copied to the clipboard');
   constants.Add('shTx_VersionManagement_NewVersionAvailable', 'There is a new version of ROOMER available (%s).' + #13 +
                                     'You still have up to %d hours and %d minutes to update. After that Roomer will automatically be updated!' + #13#13 +
-                                    'Click [OK] to perform the update now.' + #13 +
-                                    'Click [Later] to do this later');
+                                    'Click [%s] to perform the update now.' + #13 +
+                                    'Click [%s] to do this later');
   constants.Add('shTx_VersionManagement_ForceNewVersion', 'There is a new version of ROOMER available (%s).' + #13 +
                                     'The new version will now be installed.' + #13#13 +
-                                    'Click [OK] continue');
+                                    'Click [%s] continue');
   constants.Add('shTx_AboutRoomer_NewVersionAvailable', 'There is a new version of ROOMER available (%s).' + #13 +
                                     'ROOMER needs to be updated.' + #13#13 +
                                     'Click [OK] to perform the update now.' + #13 +

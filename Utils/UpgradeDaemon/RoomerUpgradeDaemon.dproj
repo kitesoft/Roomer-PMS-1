@@ -97,9 +97,9 @@
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
         <DCC_DcuOutput>C:\Temp\dcu</DCC_DcuOutput>
-        <VerInfo_Release>11</VerInfo_Release>
+        <VerInfo_Release>14</VerInfo_Release>
         <VerInfo_MajorVer>1</VerInfo_MajorVer>
-        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.9.11.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.9.11.0;Comments=</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=Promoir BV - Roomer PMS;FileDescription=Roomer Traybar upgrade daemon;FileVersion=1.9.14.0;InternalName=;LegalCopyright=Copyright (C) Promoir BV, 2017;LegalTrademarks=;OriginalFilename=RoomerUpgradeDaemon;ProductName=Roomer PMS;ProductVersion=1.9.14.0;Comments=</VerInfo_Keys>
         <Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
         <Debugger_RunParams>C:\Development\Roomer\Frontend\win-pms\Roomer.exe</Debugger_RunParams>
         <VerInfo_Locale>1033</VerInfo_Locale>

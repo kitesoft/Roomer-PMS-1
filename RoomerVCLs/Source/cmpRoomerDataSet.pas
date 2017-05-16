@@ -255,6 +255,7 @@ type
     function downloadRoomerUrlAsString(url: String; SetLastAccess: boolean = true): String;
 
     function UrlEncode(source: string): string;
+    function ForcedUrlEncode(source: string): string;
     procedure AssignToDataset(SqlResult: String; DataSet: TRoomerDataSet);
 
     function SecondsLeft: Integer;
@@ -503,6 +504,18 @@ begin
   Result := '';
   for i := 1 to length(source) do
     if CharInSet(source[i], ['+', '^', '&', '%', '?', '\', '`']) then
+      Result := Result + '%' + inttohex(ord(source[i]), 2)
+    else
+      Result := Result + source[i];
+end;
+
+function TRoomerDataSet.ForcedUrlEncode(source: string): string;
+var
+  i: Integer;
+begin
+  Result := '';
+  for i := 1 to length(source) do
+    if CharInSet(source[i], ['+', '^', '&', '%', '?', '\', '`',':','/','.']) then
       Result := Result + '%' + inttohex(ord(source[i]), 2)
     else
       Result := Result + source[i];
