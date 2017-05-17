@@ -21,6 +21,7 @@ uses
 
   , uInvoiceEntities
   , RoomerBookingCommunicationModel_RequestsResponses
+//  , Spring.Collections.Lists
    ;
 
 type
@@ -29,6 +30,7 @@ type
 {$M+}
   TRoomInfoList = TObjectlist<TInvoiceRoomEntity>;
 
+
 {$M+}
   /// <summary>
   ///   Object attached to a gridline of the invoiceform, containing all Invoice related info shown in that gridline
@@ -36,7 +38,7 @@ type
   /// </summary>
   TInvoiceLine = class(TObject)
   //TODO: Merge this class with TInvoiceItemEntity
-  private
+  strict private
     FInvoiceLineIndex: integer;
 
     FItem: string;
@@ -61,23 +63,31 @@ type
     FVATCode: string;
     FVATPercentage: double;
     FParentId: integer;
+
+    FDerivedLines: TList<TInvoiceLine>;
+    FROomEntity: TInvoiceRoomEntity;
+
     function GetAmountOnInvoice: double;
     function GetTotal: Double;
     function GetVatAmount: double;
+    procedure GetPurchaseDate(const Value: TDate);
+
 
   public
     constructor Create(aIndex, _id: integer);
     destructor Destroy; override;
 
+    function CanBeHiddenFromInvoice: boolean;
+
     property Total: Double read GetTotal;
     property AmountOnInvoice: double read GetAmountOnInvoice;
     property VATAmount: double read GetVatAmount;
-
     /// <summary>Order index of line in invoice</summary>
     property InvoiceLineIndex: integer read FInvoiceLineIndex write FInvoiceLineIndex;
     /// <summary>This invoicelines "belongs" to or is derived from invoicelines with this InvoicelineIndex </summary>
     property ParentId: integer read FParentId write FParentId;
-
+    property DerivedInvoiceLines: TList<TInvoiceLine> read FDerivedLines;
+    property RoomEntity: TInvoiceRoomEntity read FROomEntity write FRoomEntity;
   published
     /// <summary>Id in invoicelines table of this invoiceline item</summary>
     property LineId: integer read FLineId write FLineId;
@@ -98,12 +108,18 @@ type
     property ConfirmAmount: Double read FConfirmAmount write FConfirmAmount;
     property itemIndex: integer read FitemIndex write FitemIndex;
     property rrAlias: integer read FrrAlias write FrrAlias;
-    property PurchaseDate: TDate read FDate write FDate;
+    property PurchaseDate: TDate read FDate write GetPurchaseDate;
     property IsGeneratedLine: boolean read FAuto write FAuto;
     property AutoGen: string read FAutoGen write FAutoGen;
     property VisibleOnInvoice: boolean read FVisibleOnInvoice write FVisibleOnInvoice;
   end;
 
+
+  TInvoiceLineList = class(TObjectList<TInvoiceLine>)
+  public
+    destructor Destroy; override;
+    procedure SortOnInvoiceLineIndex;
+  end;
   /// <summary>
   ///   Used to indicate which automatically added items should be (re)generated
   /// </summary>
@@ -407,7 +423,7 @@ type
       var AHandled: boolean);
     procedure btnSaveChangesClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
-    procedure Check(Sender: TObject; ACol, ARow: integer; State: boolean);
+    procedure CheckBoxClick(Sender: TObject; ACol, ARow: integer; State: boolean);
     procedure agrLinesKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure S1Click(Sender: TObject);
     procedure Exit1Click(Sender: TObject);
@@ -447,7 +463,7 @@ type
     zCellValue: string;
 
     zbRoomRentinTemp: boolean;
-    FInvoiceLinesList: TObjectList<TInvoiceLine>;
+    FInvoiceLinesList: TInvoiceLineList;
 
     // Global currency and Rate
     zCurrentCurrency: string;
@@ -490,13 +506,15 @@ type
     ///   Based on the current items in the grid, calculate all automatic items (StayTax and included Breakfast) and
     ///  add object to Lines[] and rows to the grid
     /// </summary>
-    procedure calcAndAddAutoItems(reservation: integer; aAutoItems: TInvoiceAutoItemSet = [aiStayTax, aiIncludedBreakFast]);
-    procedure CalcAndAddStayTax(aReservation: integer; aRoominvoiceLinesList: TInvoiceRoomEntityList);
-    procedure CalcAndAddIncludedBreakFast(aReservation: integer; aRoominvoiceLinesList: TInvoiceRoomEntityList);
+    procedure calcAndAddAutoItems(reservation: integer; aAutoItems: TInvoiceAutoItemSet = [aiStayTax, aiIncludedBreakFast]); deprecated;
+    procedure CalcAndAddStayTax(aReservation: integer; aRoominvoiceLinesList: TInvoiceRoomEntityList); deprecated;
+    procedure CalcAndAddIncludedBreakFast(aReservation: integer; aRoominvoiceLinesList: TInvoiceRoomEntityList); deprecated;
 
     procedure ClearRoomInfoObjects;
     procedure SetCurrentVisible;
     function GetInvoiceLineByLineIdx(idx: integer): TInvoiceLine;
+    function GetInvoiceLineByRow(aRow: integer): TInvoiceLine;
+    function GetRowForInvoiceLine(aInvoiceLine: TInvoiceLine): integer;
     function GetInvoiceLineCount: integer;
 
     /// <summary>
@@ -519,7 +537,7 @@ type
       DiscountIsPercentage: boolean; DiscountText: string; GuestName: String;
       NumGuests: integer; NumChildren: integer; isPackage: boolean; rrAlias: integer; aBeakfastIncluded: boolean): integer;
 
-    Procedure AddRoomTaxToLinesAndGrid(totalTax: Double; TaxUnits: Double; taxItem: String = ''; iAddAt: integer = 0; aParentIndex: integer = 0);
+    Procedure AddRoomTaxToLinesAndGrid(totalTax: Double; TaxUnits: Double; taxItem: string; aPurchaseDate: TDate; iAddAt: integer = 0; aParentIndex: integer = 0);
     procedure RemoveStayTax;
 
     procedure ClearInvoiceLines;
@@ -529,12 +547,11 @@ type
     procedure DisplayGuestName(zrSet: TRoomerDataset);
 
     /// <summary>
-    /// Display the info of TInvoiceLine object attached to row <param>iRow</param> in the girdrow<br/>
-    /// If gridrow <param>iRow</param> does not have a TInvoiceline object attached, the object with index <param>idx</param> will
-    /// be used and attached to the gridrow.<br/>
-    /// The rownumber is returned
+    /// Display the info of TInvoiceLine object in the grid and attach it to the row<br/>
     /// </summary>
-    function DisplayLine(iRow, aLineIndex: integer): integer;
+    function DisplayLine(aInvoiceLine: TInvoiceLine; aRow: integer= -1): integer; overload;
+
+    procedure UpdateGrid;
 
     procedure DisplayTotals(editCol: integer = -1; editRow: integer = -1; Value: Double = 0.00);
     /// <summary>
@@ -618,17 +635,13 @@ type
     function GetCalculatedNumberOfItems(ItemId: String; dDefault: Double): Double;
     procedure CheckCheckboxes;
     procedure CheckOrUncheckAll(check: boolean);
-    function GetAnyRowChecked: boolean;
+    function GetAnyRowSelected: boolean;
     function GetSelectedRows: TList<String>;
     function IndexOfAutoGen(AutoGen: String): integer;
     procedure RemoveAllCheckboxes;
     function IsRoomSelected: boolean;
     procedure RemoveCurrentProformeInvoice(ProformaInvoiceNumber: integer);
     procedure DeleteLinesInList(ExecutionPlan: TRoomerExecutionPlan);
-    /// <summary>
-    /// Return the TInvoiceLine object attached to gridrow <param>aRow</param>
-    /// </summary>
-    function CellInvoiceLine(ARow: integer): TInvoiceLine;
     function CellInvoiceLineId(line: integer): integer;
     function IsLineChanged(line, iMultiplier: integer): boolean;
     procedure LoadRoomListForOtherReservations(reservation: integer);
@@ -639,15 +652,16 @@ type
     procedure TransferRoomToAnyRoomsClick(Sender: TObject);
     procedure TransferRoomToAnotherRoomReservationInvoice(FromRoomReservation, RoomReservation, RealRoomReservation,
       reservation: integer);
-    procedure AddIncludedBreakfastToLinesAndGrid(aIncludedBreakfastCount: integer; iAddAt: integer = 0; aParentIndex: integer = 0);
+    procedure AddIncludedBreakfastToLinesAndGrid(aIncludedBreakfastCount: integer; aPurchaseDate: TDate; iAddAt: integer = 0; aParentIndex: integer = 0);
     procedure RemoveAutoBreakfastItems;
     function ItemKindOnRow(aRow: Integer): TItemKind;
     procedure ClearGrid;
     procedure AdaptRunningTabResponse(aInvoiceResponse: TxsdInvoiceResponse);
     procedure AddTaxinvoiceLinesForRoomItem(aRoomEntity: TInvoiceRoomEntity; aParentIndex: integer);
+    procedure AddBreakfastInvoicelinesForRoomItem(aRoomEntity: TInvoiceRoomEntity; aParentIndex: integer);
 
     property InvoiceIndex: integer read FInvoiceIndex write SetInvoiceIndex;
-    property AnyRowChecked: boolean read GetAnyRowChecked;
+    property AnyRowChecked: boolean read GetAnyRowSelected;
   public
     { Public declarations }
     FnewSplitNumber: integer; // 0 = herbergjareikningur
@@ -656,7 +670,6 @@ type
 
     OriginalInvoiceStatus: Double;
     constructor Create(aOwner: TComponent); override;
-    property LinesByLineIdx[idx: integer]: TInvoiceLine read GetInvoiceLineByLineIdx;
     procedure UpdateCaptions;
     procedure WndProc(var message: TMessage); override;
     property reservation: integer read FReservation write FReservation;
@@ -700,6 +713,7 @@ uses
     , uVatCalculator, uSQLUtils, ufrmRoomPrices, uInvoiceDefinitions
     , uBookingsRunningTabAPICaller
     , RoomerFinancialDataModel_ModelObjects
+    , System.Generics.Defaults
     ;
 
 {$R *.DFM}
@@ -713,7 +727,6 @@ const
   // Objects in grid
   cInvoiceLineAttachColumn = 0;
   cPurchaseDateAsObjectColumn = 3;
-  cRoomInfoAttachColumn = 4;
 
   // Columns in grid
   col_Select = 0;
@@ -929,6 +942,11 @@ begin
 end;
 
 { TInvoiceLine }
+function TInvoiceLine.CanBeHiddenFromInvoice: boolean;
+begin
+  Result := IsGeneratedLine and (Item <> g.qRoomRentItem);
+end;
+
 constructor TInvoiceLine.Create(aIndex, _id: integer);
 begin
   inherited Create;
@@ -944,19 +962,33 @@ begin
   FTotal := 0.00;
   FReference := '';
   FSource := '';
+  FDerivedLines := TList<TInvoiceLine>.Create;
 end;
 
 destructor TInvoiceLine.Destroy;
 begin
+  FDerivedLines.Free;
   inherited Destroy;
 end;
 
 function TInvoiceLine.GetAmountOnInvoice: double;
+var
+  lDerived: TInvoiceLine;
 begin
   if FVisibleOnInvoice then
-    Result := Total
+  begin
+    Result := Total;
+    for lDerived in FDerivedLines do
+      if not lDerived.VisibleOnInvoice then
+        Result := Result + lDerived.Total;
+  end
   else
     Result := 0;
+end;
+
+procedure TInvoiceLine.GetPurchaseDate(const Value: TDate);
+begin
+  FDate := Value
 end;
 
 function TInvoiceLine.GetTotal: Double;
@@ -1026,7 +1058,6 @@ begin
       sItem := trim(g.qPhoneUseItem);
 
   invoiceLine := TInvoiceLine.create(iLastIdx, lineId);
-  invoiceline.ParentId := aParentIndex;
   invoiceLine.Item := sItem;
   invoiceLine.Text := sText;
   invoiceLine.Number := iNumber;
@@ -1042,8 +1073,12 @@ begin
   invoiceLine.rrAlias := rrAlias;
   invoiceLine.ItemIndex := itemIndex;
   invoiceLine.AutoGen := AutoGen;
+  invoiceline.ParentId := aParentIndex;
 
   FInvoiceLinesList.add(invoiceLine);
+  if (aParentIndex <> 0) then
+    GetInvoiceLineByLineIdx(aParentIndex).DerivedInvoiceLines.Add(invoiceLine);
+
   Result := invoiceLine.InvoiceLineIndex
 end;
 
@@ -1055,6 +1090,11 @@ begin
       Break;
 end;
 
+function TfrmInvoiceRentPerDay.GetInvoiceLineByRow(aRow: integer): TInvoiceLine;
+begin
+  Result := agrLines.Objects[cInvoiceLineAttachColumn, aRow] as TInvoiceLine;
+end;
+
 function TfrmInvoiceRentPerDay.GetInvoiceLineCount: integer;
 begin
   result := FInvoiceLinesList.Count;
@@ -1064,68 +1104,103 @@ function TfrmInvoiceRentPerDay.CellInvoiceLineId(line: integer): integer;
 var
   invoiceLine: TInvoiceLine;
 begin
-  invoiceLine := CellInvoiceLine(line);
+  invoiceLine := GetInvoiceLineByRow(line);
   if Assigned(invoiceLine) then
     result := invoiceLine.LineId
   else
     result := 0;
 end;
 
-function TfrmInvoiceRentPerDay.CellInvoiceLine(ARow: integer): TInvoiceLine;
+procedure TfrmInvoiceRentPerDay.UpdateGrid;
+var
+  lInvoiceLine: TInvoiceLine;
+  cnt: integer;
 begin
-  result := nil;
-  if Assigned(agrLines.Objects[cInvoiceLineAttachColumn, ARow]) and
-    (agrLines.Objects[cInvoiceLineAttachColumn, ARow] IS TInvoiceLine) then
-    result := TInvoiceLine(agrLines.Objects[cInvoiceLineAttachColumn, ARow]);
+  agrLines.BeginUpdate;
+  try
+    agrLines.ClearRows(1, agrLines.RowCount);
+    agrLines.RowCount := FInvoiceLinesList.Count+1;
+    CheckCheckboxes;
+
+
+    cnt := 1;
+    FInvoiceLinesList.SortOnInvoiceLineIndex;
+    for lInvoiceLine in FInvoiceLinesList do
+    begin
+      DisplayLine(lInvoiceLine, cnt);
+      inc(cnt);
+    end;
+  finally
+    agrLines.EndUpdate;
+  end;
 end;
 
-function TfrmInvoiceRentPerDay.DisplayLine(iRow, aLineIndex: integer): integer;
+
+function TfrmInvoiceRentPerDay.DisplayLine(aInvoiceLine: TInvoiceLine; aRow: integer = -1): integer;
 var
-  invoiceLine: TInvoiceLine;
+  lAmountOnInvoice: double;
 begin
-  // Update the data in the grid with data from the TInvoiceline object linked to it on agrLines.Objects[cInvoiceLineAttachColumn, iRow]
-  // If no oibject is attached to the gridcell then retrieve the object from Lines[idx]
+  agrLines.Cells[col_Item, aRow] := aInvoiceLine.Item;
 
-  invoiceLine := CellInvoiceLine(iRow);
-  if NOT Assigned(invoiceLine) then
-    invoiceLine := LinesByLineIdx[aLineIndex];
-  agrLines.Cells[col_Item, iRow] := invoiceLine.Item;
-
-  CheckCheckboxes;
-  agrLines.SetCheckBoxState(col_VisibleOnInvoice, iRow, invoiceLine.VisibleOnInvoice);
-
-  agrLines.Cells[col_Description, iRow] := invoiceLine.Text;
-  agrLines.Cells[col_ItemCount, iRow] := trim(_floattostr(invoiceLine.Number, vWidth, vDec));
-  agrLines.Cells[col_ItemPrice, iRow] := trim(_floattostr(invoiceLine.Price, vWidth, vDec));
-  agrLines.Cells[col_TotalPrice, iRow] := trim(_floattostr(invoiceLine.Total, vWidth, vDec));
-  agrLines.Cells[col_TotalOnInvoice, iRow] := trim(_floattostr(invoiceLine.AmountOnInvoice, vWidth, vDec));
-  agrLines.Cells[col_System, iRow] := '';
-  agrLines.Cells[col_Refrence, iRow] := invoiceLine.Reference;
-  agrLines.Cells[col_Source, iRow] := invoiceLine.Source;
-  agrLines.Objects[cPurchaseDateAsObjectColumn, iRow] := TObject(trunc(invoiceLine.PurchaseDate));
-  agrLines.Objects[col_ItemPrice, iRow] := invoiceLine;
-  // -- PurchaseDate !
-  if invoiceLine.PurchaseDate > 0 then
-    agrLines.Cells[col_date, iRow] := datetostr(trunc(invoiceLine.PurchaseDate));
-
-  agrLines.Cells[col_isPackage, iRow] := _bool2str(invoiceLine.Ispackage, 2);
-  agrLines.Cells[col_NoGuests, iRow] := inttostr(invoiceLine.NoGuests);
-
-  agrLines.Cells[col_confirmdate, iRow] :=  _db(invoiceLine.ConfirmDate, false);
-  agrLines.Cells[col_confirmAmount, iRow] := _db(invoiceLine.ConfirmAmount);
-
-  if invoiceLine.IsGeneratedLine then
-    agrLines.Objects[col_Item, iRow] := TObject(-2) // -- Auto !
+  //Add Select checkbox
+  if not aInvoiceLine.CanBeHiddenFromInvoice then
+  begin
+    if NOT agrLines.HasCheckBox(col_Select, aRow) and (agrLines.Cells[col_Item, aRow] <> '') then
+      agrLines.AddCheckBox(col_Select, aRow, false, false);
+  end
   else
-    agrLines.Objects[col_Item, iRow] := TObject(invoiceLine.InvoiceLineIndex);
+    if agrLines.HasCheckBox(col_Select, aRow) then
+      agrLines.RemoveCheckBox(col_Select, aRow);
+
+  // Add hide checkbox
+  if aInvoiceLine.CanBeHiddenFromInvoice then
+  begin
+    if NOT agrLines.HasCheckBox(col_VisibleOnInvoice, aRow) then
+      agrLines.AddCheckBox(col_VisibleOnInvoice, aRow, false, false);
+    agrLines.SetCheckBoxState(col_VisibleOnInvoice, aRow, aInvoiceLine.VisibleOnInvoice);
+  end
+  else
+    if agrLines.HasCheckBox(col_VisibleOnInvoice, aRow) then
+      agrLines.RemoveCheckBox(col_VisibleOnInvoice, aRow);
+
+  agrLines.Cells[col_Description, aRow] := aInvoiceLine.Text;
+  agrLines.Cells[col_ItemCount, aRow] := trim(_floattostr(aInvoiceLine.Number, vWidth, vDec));
+  agrLines.Cells[col_ItemPrice, aRow] := trim(_floattostr(aInvoiceLine.Price, vWidth, vDec));
+  agrLines.Cells[col_TotalPrice, aRow] := trim(_floattostr(aInvoiceLine.Total, vWidth, vDec));
+
+  lAmountOnInvoice := aInvoiceLine.AmountOnInvoice;
+  if SameValue(lAmountOnInvoice, 0.00, 0.01) then
+    agrLines.Cells[col_TotalOnInvoice, aRow] := ''
+  else
+    agrLines.Cells[col_TotalOnInvoice, aRow] := trim(_floattostr(aInvoiceLine.AmountOnInvoice, vWidth, vDec));
+
+  agrLines.Cells[col_System, aRow] := '';
+  agrLines.Cells[col_Refrence, aRow] := aInvoiceLine.Reference;
+  agrLines.Cells[col_Source, aRow] := aInvoiceLine.Source;
+  agrLines.Objects[cPurchaseDateAsObjectColumn, aRow] := TObject(trunc(aInvoiceLine.PurchaseDate));
+  agrLines.Objects[col_ItemPrice, aRow] := aInvoiceLine;
+  // -- PurchaseDate !
+  if aInvoiceLine.PurchaseDate > 0 then
+    agrLines.Cells[col_date, aRow] := datetostr(trunc(aInvoiceLine.PurchaseDate));
+
+  agrLines.Cells[col_isPackage, aRow] := _bool2str(aInvoiceLine.Ispackage, 2);
+  agrLines.Cells[col_NoGuests, aRow] := inttostr(aInvoiceLine.NoGuests);
+
+  agrLines.Cells[col_confirmdate, aRow] :=  _db(aInvoiceLine.ConfirmDate, false);
+  agrLines.Cells[col_confirmAmount, aRow] := _db(aInvoiceLine.ConfirmAmount);
+
+  if aInvoiceLine.IsGeneratedLine then
+    agrLines.Objects[col_Item, aRow] := TObject(-2) // -- Auto !
+  else
+    agrLines.Objects[col_Item, aRow] := TObject(aRow);
   // -- From File
-  agrLines.Cells[col_rrAlias, iRow] := inttostr(invoiceLine.rrAlias);
+  agrLines.Cells[col_rrAlias, aRow] := inttostr(aInvoiceLine.rrAlias);
 
-  agrLines.Cells[col_autogen, iRow] := invoiceLine.AutoGen;
+  agrLines.Cells[col_autogen, aRow] := aInvoiceLine.AutoGen;
 
-  agrLines.Objects[cInvoiceLineAttachColumn, iRow] := invoiceLine; // -- Auto !
+  agrLines.Objects[cInvoiceLineAttachColumn, aRow] := aInvoiceLine; // -- Auto !
 
-  result := iRow;
+  result := aRow;
 end;
 
 procedure TfrmInvoiceRentPerDay.DisplayTotals(editCol: integer = -1;
@@ -1333,7 +1408,7 @@ begin
 end;
 
 procedure TfrmInvoiceRentPerDay.AddRoomTaxToLinesAndGrid(totalTax: Double; TaxUnits: Double;
-  taxItem: String = ''; iAddAt: integer = 0; aParentIndex: integer = 0);
+  taxItem: String; aPurchaseDate: TDate; iAddAt: integer = 0; aParentIndex: integer = 0);
 var
   Item: string;
   aText: string;
@@ -1341,12 +1416,6 @@ var
   confirmDate: TDateTime;
   confirmAmount: Double;
   unitPrice: Double;
-
-  idx: integer;
-  i: integer;
-  linvoice: TInvoiceLine;
-  lInsertAfter: integer;
-
 begin
   if zFromKredit then
     exit;
@@ -1365,26 +1434,8 @@ begin
     unitPrice := totalTax / TaxUnits;
   end;
 
-  idx := AddLine(0, aParentIndex, Item, aText, TaxUnits, unitPrice, 0, True, '', '', false, 0, confirmDate, confirmAmount, -1, _GetCurrentTick); // 77ATH
+  AddLine(0, aParentIndex, Item, aText, TaxUnits, unitPrice, aPurchaseDate, True, '', '', false, 0, confirmDate, confirmAmount, -1, _GetCurrentTick); // 77ATH
 
-  if aParentIndex = 0 then
-    lInsertAfter := iAddAt
-  else
-  begin
-    for i := 0 to agrLines.RowCount-1 do
-    begin
-      lInvoice := CellInvoiceLine(i);
-      if Assigned(lInvoice) and  (lInvoice.InvoiceLineIndex = aParentIndex) then
-      begin
-        lInsertAfter := i+1;
-        Break;
-      end;
-
-    end;
-  end;
-  agrLines.InsertRows(lInsertAfter, 1);
-  EmptyRow(agrLines, lInsertAfter);
-  DisplayLine(lInsertAfter, idx);
 end;
 
 procedure TfrmInvoiceRentPerDay.SetCurrentVisible;
@@ -1735,6 +1786,7 @@ begin
   if iWidth > 0 then
     agrLines.ColWidths[col_Description] := iWidth;
 
+  agrLines.HideColumn(col_date);
   agrLines.HideColumn(col_System);
   agrLines.HideColumn(col_Refrence);
   agrLines.HideColumns(col_isPackage, col_autogen);
@@ -1751,7 +1803,7 @@ function TfrmInvoiceRentPerDay.AddRoom(Room: String; fRoomPrice: Double; FromDat
   DiscountIsPercentage: boolean; DiscountText: string; GuestName: String;
   NumGuests: integer; NumChildren: integer; isPackage: boolean; rrAlias: integer; aBeakfastIncluded: boolean): integer;
 var
-  i, idx, lRowNr: integer;
+   idx: integer;
 
   RmRntItem: string;
   ItemTypeInfo: TItemTypeInfo;
@@ -1806,19 +1858,6 @@ begin
   else
     sText := trim(sGuestName) + ' (' + sText + ') ';
 
-  // add a TInvoiceline object for the RoomRent to InvoiceLineList
-  idx := AddLine(0, 0, RmRntItem, sText, dayCount, fRoomPrice, 0, True, '', '', isPackage, iNumGuests, confirmDate, confirmAmount, rrAlias, _GetCurrentTick); // *77
-
-  // Add a row to the grid and display the new invoiceline
-  lRowNr := agrLines.RowCount;
-  if (agrLines.RowCount = 2) and (agrLines.Cells[col_Item, 1] = '') then
-    dec(lRowNr);
-
-  inc(lRowNr);
-  agrLines.RowCount := lRowNr;
-
-  i := DisplayLine(lRowNr - 1, idx);
-
   lRoomInfo := TInvoiceRoomEntity.create;
   // -- Attach the Room information
   lRoomInfo.RoomReservation := RoomReservation;
@@ -1832,13 +1871,21 @@ begin
   lRoomInfo.NumGuests := iNumGuests;
   lRoomInfo.NumChildren := NumChildren;
   lRoominfo.BreakFastIncluded := aBeakfastIncluded;
-
-  agrLines.Objects[cRoomInfoAttachColumn, i] := lRoomInfo;
   FRoomInfoList.add(lRoomInfo);
+
+  if aBeakfastIncluded then
+    fRoomPrice := fRoomPrice - (iNumGuests * lRoomInfo.NumberOfNights * Item_GetPrice(g.qBreakFastItem));
+
+
+  // add a TInvoiceline object for the RoomRent to InvoiceLineList
+  idx := AddLine(0, 0, RmRntItem, sText, dayCount, fRoomPrice, 0, True, '', '', isPackage, iNumGuests, confirmDate, confirmAmount, rrAlias, _GetCurrentTick); // *77
+  GetInvoiceLineByLineIdx(idx).RoomEntity := lRoomInfo;
 
   //Tax invoicelines
   AddTaxInvoicelinesForRoomItem(lRoomInfo, idx);
 
+  //Included Breakfast invoicelines
+  AddBreakfastInvoicelinesForRoomItem(lRoomInfo, idx);
 
   // -- Discount
   if aDiscountAmount <> 0 then
@@ -1854,27 +1901,27 @@ begin
       lDiscount := (aDiscountAmount) * -1;
 
     /// Add an InvoiceLine object for the discount
-    idx := AddLine(0, idx, DiscountItem, DiscountText, dayCount, lDiscount, 0, True, '', '', false, NumGuests, confirmDate, confirmAmount, rrAlias, _GetCurrentTick);
-
+    AddLine(0, idx, DiscountItem, DiscountText, dayCount, lDiscount, 0, True, '', '', false, NumGuests, confirmDate, confirmAmount, rrAlias, _GetCurrentTick);
     lRoomInfo.Discount := lDiscount * dayCount;
-
-    lRowNr := agrLines.RowCount;
-
-    if (agrLines.RowCount = 2) and (agrLines.Cells[col_Item, 1] = '') then
-    begin
-      dec(lRowNr);
-    end;
-
-    inc(lRowNr);
-    agrLines.RowCount := lRowNr;
-    DisplayLine(lRowNr - 1, idx);
   end;
 
   UpdateItemInvoiceLinesForTaxCalculations;
 
+  UpdateGrid;
+
   // -- Discount end...
   result := 0;
   DisplayTotals;
+end;
+
+procedure TfrmInvoiceRentPerDay.AddBreakfastInvoicelinesForRoomItem(aRoomEntity: TInvoiceRoomEntity; aParentIndex: integer);
+begin
+
+  if not aRoomEntity.BreakFastIncluded then
+    Exit;
+
+  AddIncludedBreakfastToLinesAndGrid(aRoomEntity.NumGuests * aROomEntity.NumberOfNights, aRoomEntity.Arrival, 0, aParentIndex);
+
 end;
 
 procedure TfrmInvoiceRentPerDay.AddTaxinvoiceLinesForRoomItem(aRoomEntity: TInvoiceRoomEntity; aParentIndex: integer);
@@ -2014,6 +2061,7 @@ var
   bSystemLine: boolean;
 
   lInvRoom: TInvoiceRoomEntity;
+  lInvLine: TInvoiceLine;
   lDate: TDate;
 
 begin
@@ -2058,11 +2106,9 @@ begin
     ItemTypeInfo := d.Item_Get_ItemTypeInfo(lineItem);
 
     iNights := 0;
-    if agrLines.Objects[cRoomInfoAttachColumn, i] <> nil then
-    begin
-      iNights := trunc(TInvoiceRoomEntity(agrLines.Objects[cRoomInfoAttachColumn, i]).Departure) -
-        trunc(TInvoiceRoomEntity(agrLines.Objects[cRoomInfoAttachColumn, i]).Arrival);
-    end;
+    lInvLine := GetInvoiceLineByRow(i);
+    if assigned(linvLine.RoomEntity) then
+      iNights := lInvLine.RoomEntity.NumberOfNights;
 
     iPersons := 0;
     if lineNoGuests <> '' then
@@ -2882,7 +2928,7 @@ begin
                 if IsPercentage then
                   DiscountText := DiscountText + '(' + floattostr(DiscountAmount) + '%)';
 
-                AddRoom(Room, Rate, RateDate, RateDate, 1, sText, (FRoomReservation = 0), lRoomReservation,
+                AddRoom(Room, Rate, RateDate, RateDate+1, 1, sText, (FRoomReservation = 0), lRoomReservation,
                   DiscountAmount, isPercentage, DiscountText, GuestName, NumberGuests, ChildrenCount, isPackage,
                   lRoomReservation, zRoomRSet.FieldByName('invBreakFast').AsBoolean );
 
@@ -3080,20 +3126,16 @@ begin
         dNumber := GetCalculatedNumberOfItems(ItemId, eSet.FieldByName('Number').AsFloat);
 
         idx := AddLine(lineId, 0, ItemId, _s,
-          dNumber, Price, // -96
-          SQLToDate(eSet.FieldByName('PurchaseDate').asString), false,
-          trim(eSet.FieldByName('importRefrence').asString),
-          trim(eSet.FieldByName('importSource').asString),
-          eSet.FieldByName('isPackage').asBoolean,
-          eSet.FieldByName('Persons').asinteger,
-          eSet.FieldByName('ConfirmDate').asdateTime,
-          eSet.FieldByName('ConfirmAmount').AsFLoat,
-          lRoomReservation, eSet.FieldByName('AutoGen').asString,
-          eSet.FieldByName('ItemNumber').asinteger);
-        if (agrLines.Cells[col_Item, agrLines.RowCount - 1] <> '') or (agrLines.Cells[col_Description, agrLines.RowCount - 1] <> '') then
-          inc(iCurrentRow);
-        agrLines.RowCount := iCurrentRow;
-        DisplayLine(iCurrentRow - 1, idx);
+                        dNumber, Price, // -96
+                        SQLToDate(eSet.FieldByName('PurchaseDate').asString), false,
+                        trim(eSet.FieldByName('importRefrence').asString),
+                        trim(eSet.FieldByName('importSource').asString),
+                        eSet.FieldByName('isPackage').asBoolean,
+                        eSet.FieldByName('Persons').asinteger,
+                        eSet.FieldByName('ConfirmDate').asdateTime,
+                        eSet.FieldByName('ConfirmAmount').AsFLoat,
+                        lRoomReservation, eSet.FieldByName('AutoGen').asString,
+                        eSet.FieldByName('ItemNumber').asinteger);
         eSet.Next;
       end;
 
@@ -3141,8 +3183,7 @@ begin
 //        calcAndAddAutoItems(FReservation); // 001
 //      end;
 
-      agrLines.row := agrLines.RowCount - 1;
-
+      UpdateGrid;
       SetCurrentVisible;
 
       agrLines.Objects[cPurchaseDateAsObjectColumn, agrLines.RowCount - 1] := TObject(trunc(now));
@@ -3273,9 +3314,9 @@ var
 
   lInvRoom: TInvoiceRoomEntity;
 
-  RoomInfo: TInvoiceRoomEntity;
   lBreakfastIncl: boolean;
   litemKind: TItemKind;
+  lInvLine: TInvoiceLine;
 
 begin
 
@@ -3298,12 +3339,13 @@ begin
         taxGuests := StrToIntDef(trim(agrLines.Cells[col_NoGuests, i]), 0);
         taxNights := StrToFloatDef(trim(agrLines.Cells[col_ItemCount, i]), 0.00);
 
-        if (agrLines.Objects[cRoomInfoAttachColumn, i] <> nil) and (agrLines.Objects[cRoomInfoAttachColumn, i] IS TInvoiceRoomEntity) then
+        lInvLine := GetInvoiceLineByRow(i);
+
+        if assigned(linvLine.RoomEntity) then
         begin
-          RoomInfo := agrLines.Objects[cRoomInfoAttachColumn, i] AS TInvoiceRoomEntity;
-          taxChildren := RoomInfo.NumChildren;
-          Discount := RoomInfo.Discount;
-          lBreakfastIncl := Roominfo.BreakFastIncluded;
+          taxChildren := linvLine.RoomEntity.NumChildren;
+          Discount := linvLine.RoomEntity.Discount;
+          lBreakfastIncl := linvLine.RoomEntity.BreakFastIncluded;
         end
         else
         begin
@@ -3359,27 +3401,20 @@ begin
   end;
 end;
 
-procedure TfrmInvoiceRentPerDay.AddIncludedBreakfastToLinesAndGrid(aIncludedBreakfastCount: integer; iAddAt: integer = 0; aParentIndex: integer = 0);
+procedure TfrmInvoiceRentPerDay.AddIncludedBreakfastToLinesAndGrid(aIncludedBreakfastCount: integer; aPurchaseDate: TDate; iAddAt: integer = 0; aParentIndex: integer = 0);
 var
   lText: string;
   idx: integer;
   lItem: string;
 begin
-  if zFromKredit then
+  if zFromKredit or (aIncludedBreakfastCount = 0)then
     exit;
 
-  RemoveAutoBreakFastItems;
-  if aIncludedBreakFastCount > 0 then
-  begin
-    lItem := g.qBreakFastItem;
-    lText := Item_GetDescription(lItem) + ' (' + GetTranslatedText('shTx_ReservationProfile_Included')  + ')';
+  lItem := g.qBreakFastItem;
+  lText := Item_GetDescription(lItem) + ' (' + GetTranslatedText('shTx_ReservationProfile_Included')  + ')';
 
-    idx := AddLine(0, aParentIndex, lItem, lText, aIncludedBreakfastCount, 0, 0, True, '', '',  false, 0, 0, 0, -1, _GetCurrentTick); // 77ATH
-
-    agrLines.InsertRows(iAddAt, 1);
-    EmptyRow(agrLines, iAddAt);
-    DisplayLine(iAddAt, idx);
-  end;
+  idx := AddLine(0, aParentIndex, lItem, lText, aIncludedBreakfastCount, Item_GetPrice(lItem), aPurchaseDate, True, '', '',  false, 0, 0, 0, -1, _GetCurrentTick, aParentIndex);
+  GetInvoiceLineByLineIdx(idx).VisibleOnInvoice := false;
 end;
 
 procedure TfrmInvoiceRentPerDay.RemoveAutoBreakfastItems;
@@ -3395,8 +3430,8 @@ begin
   begin
     if agrLines.Objects[cInvoiceLineAttachColumn, i] is TInvoiceLine then
     begin
-      lInvLine := agrLines.Objects[cInvoiceLineAttachColumn, i] AS TInvoiceLine;
-      if linvLine.FAuto and (linvLine.Item.Equals(lBritem)) then
+      lInvLine := GetInvoiceLineByRow(i);
+      if linvLine.IsGeneratedLine and (linvLine.Item.Equals(lBritem)) then
       begin
         DeleteRow(agrLines, i);
         anyRemoved := True;
@@ -3423,7 +3458,6 @@ var
   lTotal: double;
   lStayTaxUnitCountIncluded: integer;
   tt, l: integer;
-  lParentIndex: integer;
 begin
   if zFromKredit then
     exit;
@@ -3484,7 +3518,7 @@ begin
               lTotalTaxExcluded := lTotalTaxExcluded + lTotal;
 
           AddRoomTaxToLinesAndGrid(_RoundN(lTotal / zCurrencyRate, 2), trunc(lTaxResultInvoiceLines[l].NumItems), TaxTypes[tt],
-                                              FindLastRoomRentLine + 1, lParentIndex);
+                                              FindLastRoomRentLine + 1);
           end;
         end; //for l + if
     end; //for tt
@@ -3582,7 +3616,7 @@ begin
   SelectableExternalRooms := TRoomInfoList.create(True);
   TaxTypes := TStringList.create;
 
-  FInvoiceLinesList := TObjectList<TInvoiceLine>.create;
+  FInvoiceLinesList := TInvoiceLineList.Create;
   FRoomInfoList := TRoomInfoList.create(True);
   tempInvoiceItemList := TInvoiceItemEntityList.create(True);
 
@@ -3741,7 +3775,7 @@ begin
       if i >= 0 then
       begin
         agrLines.row := i;
-        RealRoomReservation := TInvoiceRoomEntity(agrLines.Objects[cRoomInfoAttachColumn, i]).RoomReservation;
+        RealRoomReservation := GetInvoiceLineByRow(i).RoomEntity.RoomReservation;
         TransferRoomToAnotherRoomReservationInvoice(FRoomReservation,
           SelectableExternalRooms[omnu.Tag].RoomReservation, RealRoomReservation,
           SelectableExternalRooms[omnu.Tag].Reservation);
@@ -3874,6 +3908,7 @@ var
   ttRoomNights: Double; // -96
   ttPrice: Double;
   lRoomInfo: TInvoiceRoomEntity;
+  lInvLine: TInvoiceLine;
 
 begin
   i := iRow;
@@ -3898,10 +3933,10 @@ begin
           _floattostr(dRoomPrice, vWidth, vDec);
         agrLines.Cells[col_NoGuests, i] := inttostr(iPersons);
 
-        if (agrLines.Objects[cRoomInfoAttachColumn, i] <> nil) and
-          (agrLines.Objects[cRoomInfoAttachColumn, i] is TInvoiceRoomEntity) then
+        linvline := GetInvoiceLineByRow(i);
+        if assigned(linvLine.RoomEntity) then
         begin
-          with TInvoiceRoomEntity(agrLines.Objects[col_ItemCount, i]) do
+          with linvLine.RoomEntity do
           begin
             RoomReservation := -1;
             Reservation := -1;
@@ -3922,8 +3957,8 @@ begin
           lRoomInfo.Departure := now + iNights;
           lRoomInfo.Price := _StrToFloat(agrLines.Cells[col_ItemPrice, i]);
           lRoomInfo.NumGuests := iPersons;
-          agrLines.Objects[cRoomInfoAttachColumn, i] := lRoomInfo;
           FRoomInfoList.add(lRoomInfo);
+          lInvLine.RoomEntity := lRoomInfo;
         end;
 
         agrLines.Cells[col_TotalPrice, i] := _floattostr(ttPrice, vWidth, vDec);
@@ -3943,6 +3978,7 @@ var
   ItemId: string;
   lRoomreslist: TStringlist;
   lGotoRoomRes: integer;
+  lInvLine: TInvoiceLine;
 begin
 
   agrLines.MouseToCell(X, Y, ACol, ARow);
@@ -3981,9 +4017,9 @@ begin
             begin
               lRoomResList.add(mRoomResroomreservation.AsString);
               mRoomRes.Next;
-
-              if (agrLines.Objects[cRoomInfoAttachColumn, ARow] <> nil) and (agrLines.Objects[cRoomInfoAttachColumn, ARow] is TInvoiceRoomEntity) then
-                lGotoRoomRes := TInvoiceRoomEntity(agrLines.Objects[cRoomInfoAttachColumn, ARow]).RoomReservation;
+              lInvLine := GetInvoiceLineByRow(aRow);
+              if assigned(linvLine.RoomEntity) then
+                lGotoRoomRes := linvLine.RoomEntity.RoomReservation;
             end;
           finally
             mRoomRes.EnableControls;
@@ -4023,8 +4059,6 @@ begin
   begin
     if NOT agrLines.HasCheckBox(col_Select, i) and (agrLines.Cells[col_Item, i] <> '') then
       agrLines.AddCheckBox(col_Select, i, false, false);
-    if (i > 0) and NOT agrLines.HasCheckBox(col_VisibleOnInvoice, i) and (agrLines.Cells[col_Item, i] <> '') then
-      agrLines.AddCheckBox(col_VisibleOnInvoice, i, false, false);
   end;
 end;
 
@@ -4330,12 +4364,12 @@ var
   invoiceLine: TInvoiceLine;
 begin
   result := false;
-  invoiceLine := CellInvoiceLine(line);
+  invoiceLine := GetInvoiceLineByRow(line);
   if Assigned(invoiceLine) then
     result := (invoiceLine.Number <> _StrToFloat(agrLines.Cells[col_ItemCount, line])) OR
       (invoiceLine.Price <> iMultiplier * _StrToFloat(agrLines.Cells[col_ItemPrice, line])) OR
       (invoiceLine.Total <> iMultiplier * _StrToFloat(agrLines.Cells[col_TotalPrice, line])) OR
-      (invoiceline.FText <> agrLines.Cells[col_Description, line]);
+      (invoiceline.Text <> agrLines.Cells[col_Description, line]);
 end;
 
 function TfrmInvoiceRentPerDay.SaveInvoice(iInvoiceNumber: integer; currencyChange : Boolean = False): boolean;
@@ -4456,6 +4490,7 @@ begin
 
         ItemTypeInfo := d.Item_Get_ItemTypeInfo(agrLines.Cells[col_Item, i], agrLines.Cells[col_Source, i]);
 
+        invoiceLine := GetInvoiceLineByRow(i);
         // --
         // RoomRentItem
 
@@ -4473,10 +4508,9 @@ begin
             fItemTotal := 0;
           end;
 
-          if agrLines.Objects[cRoomInfoAttachColumn, i] <> nil then
+          if invoiceLine.RoomEntity <> nil then
           begin
-            iNights := trunc(TInvoiceRoomEntity(agrLines.Objects[cRoomInfoAttachColumn, i]).Departure) -
-              trunc(TInvoiceRoomEntity(agrLines.Objects[cRoomInfoAttachColumn, i]).Arrival);
+            iNights := invoiceLine.RoomEntity.NumberOfNights;
           end;
 
         end
@@ -4554,8 +4588,7 @@ begin
         sItemID := agrLines.Cells[col_Item, i];
         sAccountKey := d.Item_Get_AccountKey(sItemID);
 
-        invoiceLine := CellInvoiceLine(i);
-        if (NOT Assigned(invoiceLine)) OR (invoiceLine.LineId < 1) then
+        if (invoiceLine.LineId < 1) then
         begin
 
           // SQL 116 INSERxT Invoicelines
@@ -4595,8 +4628,6 @@ begin
           s := s + ', ' + 'RoomReservationAlias ' + #10;
           s := s + ', ' + 'InvoiceIndex ' + #10;
           s := s + ', ' + 'staffCreated ' + #10;
-          s := s + ', ' + 'revenueCorrection ' + #10;
-          s := s + ', ' + 'revenueCorrectionVat ' + #10;
           s := s + ')' + #10;
           s := s + 'Values' + #10;
           s := s + '(' + #10;
@@ -4626,20 +4657,6 @@ begin
           s := s + ', ' + inttostr(iPersons);
           s := s + ', ' + inttostr(iNights);
 
-          lRevenueCorrection := 0.00;
-          lRevenueCorrectionVat := 0.00;
-          if (ItemKindOnRow(i) = ikRoomRent) and TInvoiceRoomEntity(agrLines.Objects[cRoomInfoAttachColumn, i]).BreakfastIncluded then
-          begin
-            lRevenueCorrection := iCreditinvoiceMultiplier * -1 * d.Item_Get_Data(g.qBreakFastItem).Price * iPersons * iNights;
-            lRevenueCorrectionVat := iCreditinvoiceMultiplier * -1 * TVatCalculator.CalcVATforItem(g.qBreakFastItem) * iPersons * iNights;
-          end;
-
-          if isSystemLine(i) and (ItemKindOnRow(i) = ikBreakfast) and TInvoiceRoomEntity(agrLines.Objects[cRoomInfoAttachColumn, i]).BreakfastIncluded then
-          begin
-            lRevenueCorrection := iCreditinvoiceMultiplier * d.Item_Get_Data(g.qBreakFastItem).Price * ItemCount;
-            lRevenueCorrectionVat := iCreditinvoiceMultiplier *  TVatCalculator.CalcVATforItem(g.qBreakFastItem) * ItemCount;
-          end;
-
           s := s + ', ' + _db(0);
           s := s + ', ' + _db(false);
 
@@ -4656,8 +4673,6 @@ begin
           s := s + ', ' + _db(irrAlias);
           s := s + ', ' + _db(FInvoiceIndex);
           s := s + ', ' + _db(d.roomerMainDataSet.username);
-          s := s + ', ' + _db(lRevenueCorrection);
-          s := s + ', ' + _db(lRevenueCorrectionVat);
 
           s := s + ')' + #10;
         end
@@ -4845,14 +4860,8 @@ procedure TfrmInvoiceRentPerDay.agrLinesGetCellColor(Sender: TObject; ARow, ACol
 var
   lInvLine: TInvoiceLine;
 begin
-  lInvLine := GetInvoiceLineByLineIdx(aRow);
   if ARow = 0 then
     AFont.Color := frmMain.sSkinManager1.GetGlobalFontColor
-  else if Assigned(lInvLine) and not lInvLine.VisibleOnInvoice then
-  begin
-    ABrush.Color := frmMain.sSkinManager1.GetHighLightColor(False);
-    AFont.Color := frmMain.sSkinManager1.GetHighLightFontColor(False);
-  end
   else if (gdSelected IN AState) OR (gdRowSelected IN AState) then
   begin
     ABrush.Color := frmMain.sSkinManager1.GetActiveEditFontColor;       // reversed!
@@ -4981,11 +4990,17 @@ end;
 procedure TfrmInvoiceRentPerDay.agrLinesCanEditCell(Sender: TObject; ARow, ACol: integer;
   var CanEdit: boolean);
 begin
+  if (aCol = col_VisibleOnInvoice) then
+  begin
+    CanEdit := true;
+    Exit;
+  end;
+
   CanEdit := (NOT(ACol IN [col_Item, col_TotalPrice, col_System, col_date,
                           col_Refrence, col_Source, col_isPackage, col_NoGuests, col_confirmdate,
                           col_confirmAmount]))
-    AND (TaxTypes.IndexOf(agrLines.Cells[col_Item, ARow]) < 0)
-    AND not (isSystemLine(aRow) and (agrLines.Cells[col_Item, ARow] = g.qBreakFastItem))
+    AND (TaxTypes.IndexOf(agrLines.Cells[col_Item, ARow]) < 0) // not a tax line
+    AND not (isSystemLine(aRow) and (agrLines.Cells[col_Item, ARow] = g.qBreakFastItem)) // generated breakfast lines
     AND ((glb.GetNumberBaseOfItem(agrLines.Cells[col_Item, ARow]) = INB_USER_EDIT) OR
         (ACol IN [col_ItemPrice, col_Description]));
 
@@ -5180,20 +5195,28 @@ begin
   end;
 end;
 
-procedure TfrmInvoiceRentPerDay.Check(Sender: TObject; ACol, ARow: integer; State: boolean);
+procedure TfrmInvoiceRentPerDay.CheckBoxClick(Sender: TObject; ACol, ARow: integer; State: boolean);
 var
   check: boolean;
+  lInvoiceLine: TInvoiceLine;
 begin
-  if ARow = 0 then
+  if (ARow = 0) and (aCol = col_Select) then
   begin
     agrLines.GetCheckBoxState(col_Select, ARow, check);
     CheckOrUncheckAll(check);
-  end;
+    agrLinesRowChanging(agrLines, agrLines.row, agrLines.row, check);
+  end
+  else if (aRow > 0) and (aCol = col_VisibleOnInvoice) then
+  begin
+    agrLines.GetCheckBoxState(col_VisibleOnInvoice, ARow, check);
+    lInvoiceLine := GetInvoiceLineByRow(aRow);
+    lInvoiceLine.VisibleOnInvoice := Check;
 
-  agrLinesRowChanging(agrLines, agrLines.row, agrLines.row, check);
+    UpdateGrid;
+  end;
 end;
 
-function TfrmInvoiceRentPerDay.GetAnyRowChecked: boolean;
+function TfrmInvoiceRentPerDay.GetAnyRowSelected: boolean;
 var
   i: integer;
 begin
@@ -5530,13 +5553,13 @@ begin
 
           // RoomRentItem
           invRoomReservation := -1;
+          invoiceLine := GetInvoiceLineByRow(i);
           if _trimlower(sItemID) = _trimlower(g.qRoomRentItem) then
           begin
-            if agrLines.Objects[cRoomInfoAttachColumn, i] <> nil then
+            if invoiceLine.RoomEntity <> nil then
             begin
-              invRoomReservation := TInvoiceRoomEntity(agrLines.Objects[cRoomInfoAttachColumn, i]).RoomReservation;
-              iNights := trunc(TInvoiceRoomEntity(agrLines.Objects[cRoomInfoAttachColumn, i]).Departure) -
-                trunc(TInvoiceRoomEntity(agrLines.Objects[cRoomInfoAttachColumn, i]).Arrival);
+              invRoomReservation := invoiceLine.RoomEntity.RoomReservation;
+              iNights := invoiceLine.RoomEntity.NumberOfNights;
             end;
           end;
 
@@ -5597,20 +5620,6 @@ begin
             RoomRentPaid := True;
           end;
 
-          if isSystemLine(i) and (ItemKindOnRow(i) = ikRoomRent) then
-            if TInvoiceRoomEntity(agrLines.Objects[cRoomInfoAttachColumn, i]).BreakfastIncluded then
-            begin
-              lRevenueCorrection := -1 * d.Item_Get_Data(g.qBreakFastItem).Price * iPersons * iNights;
-              lRevenueCorrectionVat := -1 * TVatCalculator.CalcVATforItem(g.qBreakFastItem) * iPersons * iNights;
-            end;
-
-          if isSystemLine(i) and (ItemKindOnRow(i) = ikBreakfast) then
-          begin
-            // Is Systemline so must be an included breakfast
-            lRevenueCorrection := d.Item_Get_Data(g.qBreakFastItem).Price * ItemCount;
-            lRevenueCorrectionVat := TVatCalculator.CalcVATforItem(g.qBreakFastItem) * ItemCount;
-          end;
-
           // og aftur � texta
           sLinePrice := _CommaToDot(floattostr(dLinePrice));
           sLineTotal := _CommaToDot(floattostr(dLineTotal));
@@ -5639,7 +5648,6 @@ begin
 
           sAccountKey := d.Item_Get_AccountKey(sItemID);
 
-          invoiceLine := CellInvoiceLine(i);
           if (NOT Assigned(invoiceLine)) OR (invoiceLine.LineId < 1) then
           begin
             // SQL 116 INSERxT Invoicelines
@@ -5680,8 +5688,6 @@ begin
             s := s + ', ' + 'RoomReservationAlias ' + #10;
             s := s + ', ' + 'InvoiceIndex ' + #10;
             s := s + ', ' + 'staffCreated ' + #10;
-            s := s + ', ' + 'revenueCorrection' + #10;
-            s := s + ', ' + 'revenueCorrectionVat' + #10;
             s := s + ')' + #10;
             s := s + 'Values' + #10;
             s := s + '(' + #10;
@@ -5722,8 +5728,6 @@ begin
             s := s + ', ' + _db(irrAlias);
             s := s + ', ' + _db(FInvoiceIndex);
             s := s + ', ' + _db(d.roomerMainDataSet.username);
-            s := s + ', ' + _db(lRevenueCorrection);
-            s := s + ', ' + _db(lRevenueCorrectionVat);
 
             s := s + ')' + #10;
           end
@@ -6488,8 +6492,8 @@ begin
                 [mbYes, mbNo, mbAll, mbCancel], 0);
             if Res IN [mrYes, mrAll] then
             begin
-              invoiceLine := CellInvoiceLine(i);
-              agrLines.Objects[col_Item, i] := TObject(invoiceLine.FInvoiceLineIndex);
+              invoiceLine := GetInvoiceLineByRow(i);
+              agrLines.Objects[col_Item, i] := TObject(invoiceLine.InvoiceLineIndex);
               RV_SetUseStayTax(FReservation);
               MoveItemToNewInvoiceIndex(i, TsPanel(Sender).Tag);
             end
@@ -6791,6 +6795,13 @@ begin
   finally
     FreeAndNil(rSet);
   end;
+end;
+
+function TfrmInvoiceRentPerDay.GetRowForInvoiceLine(aInvoiceLine: TInvoiceLine): integer;
+begin
+  for Result := 0 to agrLines.RowCount-1 do
+    if GetInvoiceLineByRow(Result) = aInvoiceLine then
+      Break;
 end;
 
 function TfrmInvoiceRentPerDay.GetMainGuestHeader(Res, RoomRes: integer): boolean;
@@ -7422,6 +7433,7 @@ var
   isPackage: boolean;
 
   lInvRoom: TInvoiceRoomEntity;
+  lInvLine: TInvoiceLine;
 
 begin
   isPackage := false;
@@ -7489,11 +7501,11 @@ begin
 
   Persons := 0;
   Nights := 0;
-  if agrLines.Objects[cRoomInfoAttachColumn, CurrentRow] <> nil then
+  linvLine := GetInvoiceLineByRow(CurrentRow);
+  if assigned(lInvLine.RoomEntity) then
   begin
-    Persons := TInvoiceRoomEntity(agrLines.Objects[cRoomInfoAttachColumn, CurrentRow]).NumGuests;
-    Nights := trunc(TInvoiceRoomEntity(agrLines.Objects[cRoomInfoAttachColumn, CurrentRow]).Departure) -
-      trunc(TInvoiceRoomEntity(agrLines.Objects[cRoomInfoAttachColumn, CurrentRow]).Arrival);
+    Persons := lInvLine.RoomEntity.NumGuests;
+    Nights := lInvLine.RoomEntity.NumberOfNights;
   end;
 
   d.kbmInvoicelines.insert;
@@ -7800,7 +7812,7 @@ begin
 
   SaveAnd(false);
 
-  invoiceLine := CellInvoiceLine(rowIndex);
+  invoiceLine := GetInvoiceLineByRow(rowIndex);
 
   lRoomAdditionalText := Format('(%s:', [GetTranslatedText('shRoom')]);
   if Description.Contains(lRoomAdditionalText) then
@@ -8126,6 +8138,7 @@ var
 
   lInvRoom: TInvoiceRoomEntity;
   lDate: TDate;
+  lInvLine: TInvoiceLine;
 
 begin
   isOK := True;
@@ -8181,10 +8194,10 @@ begin
           fItemTotal := 0;
         end;
 
-        if agrLines.Objects[cRoomInfoAttachColumn, i] <> nil then
+        linvLine := GetInvoiceLineByRow(i);
+        if Assigned(linvLine.RoomEntity) then
         begin
-          iNights := trunc(TInvoiceRoomEntity(agrLines.Objects[cRoomInfoAttachColumn, i]).Departure) -
-            trunc(TInvoiceRoomEntity(agrLines.Objects[cRoomInfoAttachColumn, i]).Arrival);
+          iNights := linvLine.RoomEntity.NumberOfNights;
         end;
       end
       else
@@ -8981,6 +8994,22 @@ begin
       end;
   end;
 *)
+end;
+
+{ TInvoiceLineList }
+
+destructor TInvoiceLineList.Destroy;
+begin
+
+  inherited;
+end;
+
+procedure TInvoiceLineList.SortOnInvoiceLineIndex;
+begin
+  Sort(TComparer<TInvoiceLine>.Construct(function(const L, R: TInvoiceline): integer
+                                         begin
+                                          result := L.InvoiceLineIndex - R.InvoiceLineIndex;
+                                         end));
 end;
 
 end.

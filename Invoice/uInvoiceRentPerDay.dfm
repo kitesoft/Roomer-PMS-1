@@ -1248,7 +1248,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
           OnDblClickCell = agrLinesDblClickCell
           OnCanEditCell = agrLinesCanEditCell
           OnCellValidate = agrLinesCellValidate
-          OnCheckBoxClick = Check
+          OnCheckBoxClick = CheckBoxClick
           OnColumnSize = agrLinesColumnSize
           ActiveCellFont.Charset = DEFAULT_CHARSET
           ActiveCellFont.Color = clWindowText
@@ -1341,6 +1341,8 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
           SearchFooter.ResultFormat = '(%d of %d)'
           SortSettings.DefaultFormat = ssAutomatic
           Version = '8.2.4.1'
+          ExplicitLeft = 17
+          ExplicitTop = 4
           ColWidths = (
             24
             28

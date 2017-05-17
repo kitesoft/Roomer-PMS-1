@@ -160,7 +160,7 @@ end;
 procedure TRoomerVersionManagement.makeSureUpgradeDaemonIsActive;
 var UpgradeActive : Boolean;
 begin
-//{$IFNDEF DEBUG}
+{$IFNDEF DEBUG}
   UpgradeActive := doesUpgradeWindowExist;
   if UpgradeActive AND FileDependencyManager.doesNewUpgradeDemonExist(RoomerUpgradeDaemonPath) then
     CloseDaemon;
@@ -170,7 +170,7 @@ begin
     sleep(1000);
   end;
   activateDaemon;
-//{$ENDIF}
+{$ENDIF}
 end;
 
 procedure TRoomerVersionManagement.BreakDownVersionString(sStr : String);
