@@ -1286,7 +1286,7 @@ select_ResGuestList_getRes : string =
 
 //NOT TESTED
 select_ResMemos_FormShow : string =
-' SELECT * From reservations '+
+' SELECT Name, customer, Information, PMInfo, arrival, departure From reservations '+
 ' WHERE '+
 ' Reservation = %d ';
 
@@ -3414,8 +3414,7 @@ select_GetReservationRRList : string =
 ' Reservation = %d ';
 
 select_RV_useStayTax : string =
-'SELECT '+
-' useStayTax FROM reservations '+
+'SELECT useStayTax FROM reservations '+
 'WHERE Reservation =%d '  //' + _db(iReservation) + '
    + ' LIMIT 1 '
     ;

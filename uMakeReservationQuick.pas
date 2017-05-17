@@ -141,7 +141,7 @@ uses
   sListView,
   cxTimeEdit, AdvSplitter, uFraCountryPanel
   , uCurrencyHandlersMap
-  , uCurrencyHandler
+  , uCurrencyHandler, cxDBLabel, Datasnap.DBClient
     ;
 
 TYPE
@@ -458,7 +458,6 @@ type
     edContactFax: TsEdit;
     edContactEmail: TsEdit;
     chkSendConfirmation: TsCheckBox;
-    edContactPerson: TRoomerFilterComboBox;
     cbxAddToGuestProfiles: TsCheckBox;
     gbxProfileAlert: TsGroupBox;
     lblSpecialRequests: TsLabel;
@@ -639,6 +638,7 @@ type
     lvRoomRates: TcxGridLevel;
     lblContactMobile: TsLabel;
     edContactMobile: TsEdit;
+    edContactPerson1: TcxComboBox;
     procedure FormShow(Sender: TObject);
     procedure edCustomerDblClick(Sender: TObject);
     procedure edCustomerExit(Sender: TObject);
@@ -703,7 +703,6 @@ type
     procedure edContactEmailChange(Sender: TObject);
     procedure btnPortfolioClick(Sender: TObject);
     procedure btnPortfolioLookupClick(Sender: TObject);
-    procedure edContactPersonCloseUp(Sender: TObject);
     procedure edContactPersonKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure tvRoomResMainGuestPropertiesButtonClick(Sender: TObject; AButtonIndex: integer);
     procedure timNewTimer(Sender: TObject);
@@ -733,6 +732,7 @@ type
       var AProperties: TcxCustomEditProperties);
     procedure tvRoomRatesNativeAmountGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
       var AProperties: TcxCustomEditProperties);
+    procedure edContactPerson1PropertiesCloseUp(Sender: TObject);
   private
     { Private declarations }
     zCustomerChanged: boolean;
@@ -798,6 +798,7 @@ type
     function SetOnePrice(RoomReservation: Integer; rateId: String): boolean;
     procedure SetProfileAlertVisibility;
     procedure SetRoomFilterOnlySelectedTypes(aOnlySelected: boolean);
+    procedure EmptyQuickFind;
     property OutOfOrderBlocking : Boolean read FOutOfOrderBlocking write SetOutOfOrderBlocking;
 
   public
@@ -1115,7 +1116,7 @@ begin
   begin
     if message.WParam = 1 then
     begin
-      edContactPerson.Text := glb.PreviousGuestsSet['Name'];
+      edContactPerson1.Text := glb.PreviousGuestsSet['Name'];
       edContactAddress1.Text := glb.PreviousGuestsSet['Address1'];
       edContactAddress2.Text := glb.PreviousGuestsSet['Address2'];
       edContactAddress3.Text := glb.PreviousGuestsSet['Address3'];
@@ -1127,7 +1128,7 @@ begin
     end
     else
     begin
-      edContactPerson.Text := Trim(glb.PersonProfiles['Firstname'] + ' ' + glb.PersonProfiles['Lastname']);
+      edContactPerson1.Text := Trim(glb.PersonProfiles['Firstname'] + ' ' + glb.PersonProfiles['Lastname']);
       edContactAddress1.Text := glb.PersonProfiles['Address1'];
       edContactAddress2.Text := glb.PersonProfiles['Address2'];
       edContactAddress3.Text := glb.PersonProfiles['Zip'];
@@ -1230,9 +1231,26 @@ begin
   pgcExtraAndAlert.ActivePageIndex := 0;
 end;
 
+procedure TfrmMakeReservationQuick.EmptyQuickFind;
+var
+  i: Integer;
+begin
+  edContactPerson1.Text := '';
+//  edContactPerson1.Update;
+//  Application.ProcessMessages;
+  for i := edContactPerson1.Properties.LookupItems.Count - 1 downto 0 do
+  begin
+    if Assigned(edContactPerson1.Properties.LookupItems.Objects[i]) AND
+       (edContactPerson1.Properties.LookupItems.Objects[i] IS TRoomerFilterItem) then
+         (edContactPerson1.Properties.LookupItems.Objects[i] AS TRoomerFilterItem).Free;
+  end;
+  edContactPerson1.Properties.LookupItems.Clear;
+end;
+
 procedure TfrmMakeReservationQuick.FillQuickFind;
 var
   rSet: TRoomerDataSet;
+  i: Integer;
 
   function getFullname: String;
   begin
@@ -1252,38 +1270,54 @@ var
 
 var
   item: TRoomerFilterItem;
-
+  list : TStringList;
 begin
-  rSet := glb.PersonProfiles;
-  edContactPerson.StoredItems.Clear;
-  rSet.First;
-  while NOT rSet.eof do
-  begin
-    item := TRoomerFilterItem.Create;
-    item.Key := inttostr(rSet['ID']);
-    item.Line := format('%s%s%s%s', [getFullname, getField('City'), getField('Country'), getField('Address1')]);
-    edContactPerson.StoredItems.Add(item);
-    rSet.next;
-  end;
+  edContactPerson1.Visible := False;
+  try
+    EmptyQuickFind;
+    list := TStringList.Create;
+    try
+      list.Sorted := True;
+      list.Duplicates := dupIgnore;
+      rSet := glb.PersonProfiles;
+      rSet.First;
+      while NOT rSet.eof do
+      begin
+        item := TRoomerFilterItem.Create;
+        item.Key := inttostr(rSet['ID']);
+        item.Line := format('%s%s%s%s', [getFullname, getField('City'), getField('Country'), getField('Address1')]);
+        list.AddObject(item.Line, item);
+        rSet.next;
+      end;
 
-  rSet := glb.PreviousGuestsSet;
-  rSet.First;
-  while NOT rSet.eof do
-  begin
-    item := TRoomerFilterItem.Create;
-    item.Key := rSet['ID'];
-    item.Line := format('%s%s%s%s', [rSet['Name'], getField('Address4'), getField('Country'), getField('Address1')]);
-    edContactPerson.StoredItems.Add(item);
-    rSet.next;
-  end;
+      rSet := glb.PreviousGuestsSet;
+      rSet.First;
+      while NOT rSet.eof do
+      begin
+        item := TRoomerFilterItem.Create;
+        item.Key := rSet['ID'];
+        item.Line := format('%s%s%s%s', [rSet['Name'], getField('Address4'), getField('Country'), getField('Address1')]);
+        list.AddObject(item.Line, item);
+        rSet.next;
+      end;
 
-  if edContactPerson.StoredItems.Count > 0 then
-    edContactPerson.Start;
+      for i := 0 to list.Count - 1 do
+        edContactPerson1.Properties.LookupItems.AddObject(list[i], list.Objects[i]);
+
+      edContactPerson1.Properties.LookupItemsSorted := True;
+
+    finally
+      list.Free;
+    end;
+  finally
+    edContactPerson1.Visible := True;
+  end;
 end;
 
 procedure TfrmMakeReservationQuick.FormDestroy(Sender: TObject);
 begin
   FDynamicRates.Free;
+  EmptyQuickFind;
 end;
 
 procedure TfrmMakeReservationQuick.ShowhideExtraInputs;
@@ -1874,7 +1908,7 @@ begin
   edHomePage.Text := FNewReservation.HomeCustomer.HomePage;
   edContactPhone.Text := FNewReservation.HomeCustomer.ContactPhone;
   edContactMobile.Text := FNewReservation.HomeCustomer.ContactMobile;
-  edContactPerson.Text := ''; // oNewReservation.HomeCustomer.ContactPerson;
+  edContactPerson1.Text := ''; // oNewReservation.HomeCustomer.ContactPerson;
   edContactFax.Text := ''; // oNewReservation.HomeCustomer.ContactFax;
   edContactEmail.Text := ''; // oNewReservation.HomeCustomer.ContactEmail;
   zCustomerChanged := false;
@@ -2294,8 +2328,7 @@ var
 begin
   rSet := createNewDataSet;
   try
-    s := '';
-    s := s + ' Select * FROM reservations Order by reservation desc Limit 1';
+    s := 'Select customer, country FROM reservations Order by reservation desc Limit 1';
     if rSet_bySQL(rSet, s) then
     begin
       edCustomer.Text := rSet.FieldByName('customer').AsString;
@@ -2395,7 +2428,7 @@ procedure TfrmMakeReservationQuick.btnPortfolioClick(Sender: TObject);
 begin
   if edtPortfolio.Tag > 0 then
   begin
-    edContactPerson.Text := '';
+    edContactPerson1.Text := '';
     edContactAddress1.Text := '';
     edContactAddress2.Text := '';
     edContactAddress3.Text := '';
@@ -2594,7 +2627,7 @@ begin
       edtPortfolio.Text := Trim(glb.PersonProfiles['FirstName'] + ' ' + glb.PersonProfiles['LastName']);
       edtPortfolio.Tag := iId;
 
-      edContactPerson.Text := edtPortfolio.Text;
+      edContactPerson1.Text := edtPortfolio.Text;
       edContactAddress1.Text := glb.PersonProfiles['Address1'];
       edContactAddress2.Text := glb.PersonProfiles['Address2'];
       edContactAddress3.Text := glb.PersonProfiles['Zip'];
@@ -3303,8 +3336,8 @@ begin
         mRoomResInfantCount.AsInteger := infantCount;
         mRoomResPriceCode.AsString := PriceCode;
         mRoomResPersonsProfilesId.AsInteger := edtPortfolio.Tag;
-        if chkContactIsGuest.Checked AND (Trim(edContactPerson.Text) <> '') then
-          mRoomResMainGuest.AsString := edContactPerson.Text
+        if chkContactIsGuest.Checked AND (Trim(edContactPerson1.Text) <> '') then
+          mRoomResMainGuest.AsString := edContactPerson1.Text
         else if (Trim(edtPortfolio.Text) <> '') then
           mRoomResMainGuest.AsString := edtPortfolio.Text
         else
@@ -3479,8 +3512,8 @@ begin
           mRoomResPriceCode.AsString := PriceCode;
           mRoomResPersonsProfilesId.AsInteger := edtPortfolio.Tag;
 
-          if chkContactIsGuest.Checked AND (Trim(edContactPerson.Text) <> '') then
-            mRoomResMainGuest.AsString := edContactPerson.Text
+          if chkContactIsGuest.Checked AND (Trim(edContactPerson1.Text) <> '') then
+            mRoomResMainGuest.AsString := edContactPerson1.Text
           else if (Trim(edtPortfolio.Text) <> '') then
             mRoomResMainGuest.AsString := edtPortfolio.Text
           else
@@ -4117,13 +4150,13 @@ begin
 
   if chkContactIsGuest.Checked then
   begin
-    if Trim(edContactPerson.Text) = '' then
+    if Trim(edContactPerson1.Text) = '' then
     begin
       FNewReservation.HomeCustomer.GuestName := GetTranslatedText('MainGuestConstant_Version_1');
     end
     else
     begin
-      FNewReservation.HomeCustomer.GuestName := edContactPerson.Text;
+      FNewReservation.HomeCustomer.GuestName := edContactPerson1.Text;
     end;
   end
   else
@@ -4151,7 +4184,7 @@ begin
   FNewReservation.HomeCustomer.HomePage := edHomePage.Text;
   FNewReservation.HomeCustomer.ContactPhone := edContactPhone.Text;
   FNewReservation.HomeCustomer.ContactMobile := edContactMobile.Text;
-  FNewReservation.HomeCustomer.ContactPerson := edContactPerson.Text;
+  FNewReservation.HomeCustomer.ContactPerson := edContactPerson1.Text;
   FNewReservation.HomeCustomer.ContactAddress1 := edContactAddress1.Text;
   FNewReservation.HomeCustomer.ContactAddress2 := edContactAddress2.Text;
   FNewReservation.HomeCustomer.ContactAddress3 := edContactAddress3.Text;
@@ -4210,7 +4243,7 @@ begin
     begin
       if chkContactIsGuest.Checked then
       begin
-        mainGuestName := edContactPerson.Text;
+        mainGuestName := edContactPerson1.Text;
         if Trim(mainGuestName) = '' then
           mainGuestName := GetTranslatedText('MainGuestConstant_Version_1'); // MainGuestConstant_Version_1;;
       end
@@ -4642,13 +4675,13 @@ begin
   chkSendConfirmation.Enabled := length(Trim(edContactEmail.Text)) > 4;
 end;
 
-procedure TfrmMakeReservationQuick.edContactPersonCloseUp(Sender: TObject);
+procedure TfrmMakeReservationQuick.edContactPerson1PropertiesCloseUp(Sender: TObject);
 var
   Key: String;
 begin
-  if edContactPerson.Items.IndexOf(edContactPerson.Text) >= 0 then
+  if edContactPerson1.Properties.LookupItems.IndexOf(edContactPerson1.Text) >= 0 then
   begin
-    Key := TRoomerFilterItem(edContactPerson.Items.Objects[edContactPerson.ItemIndex]).Key;
+    Key := TRoomerFilterItem(edContactPerson1.Properties.LookupItems.Objects[edContactPerson1.ItemIndex]).Key;
     // edContactPerson.FKeys[idx];
     if glb.LocateSpecificRecord(glb.PreviousGuestsSet, 'ID', Key) then
     begin
@@ -4669,7 +4702,7 @@ end;
 
 procedure TfrmMakeReservationQuick.edContactPersonEnter(Sender: TObject);
 begin
-  lblNew.Visible := edContactPerson.active;
+  lblNew.Visible := edContactPerson1.Properties.LookupItems.Count > 0; // .active;
 end;
 
 procedure TfrmMakeReservationQuick.edContactPersonExit(Sender: TObject);
@@ -4683,15 +4716,19 @@ var
 begin
   if (Key IN [vk_f2]) then
   begin
-    edContactPerson.OnCloseUp := NIL;
-    sTemp := edContactPerson.Text;
-    edContactPerson.Stop;
-    cbxAddToGuestProfiles.Visible := true;
-    edContactPerson.DroppedDown := false;
-    edContactPerson.Text := sTemp;
-    edContactPerson.SelLength := 0;
-    edContactPerson.SelStart := length(sTemp);
-    lblNew.Visible := edContactPerson.active;
+    if Assigned (edContactPerson1.Properties.OnCloseUp) then
+    begin
+      edContactPerson1.Properties.OnCloseUp := NIL;
+      EmptyQuickFind;
+      cbxAddToGuestProfiles.Visible := true;
+      lblNew.Visible := False;
+    end else
+    begin
+      FillQuickFind;
+      edContactPerson1.Properties.OnCloseUp := edContactPerson1PropertiesCloseUp;
+      lblNew.Visible := edContactPerson1.Properties.LookupItems.Count > 0;
+      edContactPerson1.SetFocus;
+    end;
   end;
 end;
 

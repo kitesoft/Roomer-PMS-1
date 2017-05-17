@@ -476,7 +476,8 @@ const PREV_GUESTS_SQL = 'SELECT DISTINCT * FROM ' +
                         'AND pe.Country <> '''' ' +
                         'AND (pe.Tel1 <> '''' OR pe.Tel2 <> '''' OR pe.Email <> '''') ' +
                         'UNION ALL ' +
-                        'SELECT CONCAT(''RV'',ID) AS ID, '''' AS title, '''' AS PassPortNumber, Contactname AS Name, Name AS CustomerName, ContactAddress1, ContactAddress2, ContactAddress3, ContactAddress4, ContactCountry, ContactPhone, ContactPhone2, ContactEmail, '''', '''', ContactFax ' +
+                        'SELECT CONCAT(''RV'',Reservation) AS ID, '''' AS title, '''' AS PassPortNumber, ' +
+                        'Contactname AS Name, Name AS CustomerName, ContactAddress1, ContactAddress2, ContactAddress3, ContactAddress4, ContactCountry, ContactPhone, ContactPhone2, ContactEmail, '''', '''', ContactFax ' +
                         'FROM reservations ' +
                         'WHERE Contactname <> '''' ' +
                         'AND ContactAddress1 <> '''' ' +

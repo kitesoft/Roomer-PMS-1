@@ -1794,10 +1794,12 @@ end;
 
 procedure TfrmMain.PrepareVersionManagement;
 begin
+{$IFNDEF DEBUG}
   RoomerVersionManagement.Free;
   RoomerVersionManagement := TRoomerVersionManagement.Create;
   RoomerVersionManagement.OnAskUpgrade := OnAskUpgrade;
   RoomerVersionManagement.Prepare;
+{$ENDIF}
 end;
 
 procedure TfrmMain.PostLoginProcess(prepareLanguages: boolean);

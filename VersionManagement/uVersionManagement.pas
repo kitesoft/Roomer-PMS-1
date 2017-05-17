@@ -183,7 +183,7 @@ begin
   begin
     stlValues := Split(stlResult[i], '=');
     try
-      if stlValues.Count = 1 then stlValues.Add('');
+      while stlValues.Count < 2 do stlValues.Add('');
 
       if stlValues[0] = 'VERSION' then
         VersionRec.Version := stlValues[1]
@@ -304,7 +304,6 @@ var forced, upgrade : Boolean;
         RoomerLogger.AddToLog('Closing Roomer for update...');
       end else
         RoomerLogger.AddToLog('Update not continuing!');
-
     end;
 begin
   RoomerLogger.AddToLog('Starting update check...');
@@ -322,14 +321,15 @@ begin
         upgrade := True;
         if forced then
           msg := format(GetTranslatedText('shTx_VersionManagement_ForceNewVersion'), [VersionRec.Version,
-                  GetTranslatedText('shTx_AboutRoomer_NewVersionAvailableUpdateNow')])
+                 GetTranslatedText('shTx_AboutRoomer_NewVersionAvailableUpdateNow')])
         else begin
-          GetHoursAndMinutes(VersionRec.TTL, h, m);
+//          GetHoursAndMinutes(VersionRec.TTL, h, m);
+          GetHoursAndMinutes(MinutesBetween(VersionRec.EndDateTime,Now), h, m);
           msg := format(GetTranslatedText('shTx_VersionManagement_NewVersionAvailable'), [VersionRec.Version,
-                  h,
-                  m,
-                  GetTranslatedText('shTx_AboutRoomer_NewVersionAvailableUpdateNow'),
-                  GetTranslatedText('shTx_AboutRoomer_NewVersionAvailableUpdateLater')])
+                 h,
+                 m,
+                 GetTranslatedText('shTx_AboutRoomer_NewVersionAvailableUpdateNow'),
+                 GetTranslatedText('shTx_AboutRoomer_NewVersionAvailableUpdateLater')])
         end;
         RoomerLogger.AddToLog('Asking user: ' + msg);
         FOnAskUpgrade(msg, VersionRec.Version, forced, upgrade);
