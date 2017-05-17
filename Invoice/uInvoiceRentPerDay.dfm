@@ -567,7 +567,6 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         Caption = 'Close'
         ImageIndex = 4
         Images = DImages.cxLargeImagesFlat
-        ModalResult = 1
         ParentShowHint = False
         ShowHint = True
         TabOrder = 17
@@ -1341,8 +1340,6 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
           SearchFooter.ResultFormat = '(%d of %d)'
           SortSettings.DefaultFormat = ssAutomatic
           Version = '8.2.4.1'
-          ExplicitLeft = 17
-          ExplicitTop = 4
           ColWidths = (
             24
             28
