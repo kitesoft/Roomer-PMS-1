@@ -197,9 +197,9 @@ var
   FrmGuestCheckInForm: TFrmGuestCheckInForm;
 
 const
-  GET_RESERVATION_CHECKIN_CHECKOUT = 'SELECT * FROM reservations ' + 'WHERE Reservation=(SELECT Reservation FROM roomreservations WHERE RoomReservation=%d)';
+//  GET_RESERVATION_CHECKIN_CHECKOUT = 'SELECT * FROM reservations WHERE Reservation=(SELECT Reservation FROM roomreservations WHERE RoomReservation=%d)';
 
-  GET_GUEST_CHECKIN_CHECKOUT = 'SELECT ID, title, ' + 'Reservation, ' + '(SELECT NativeCurrency FROM control LIMIT 1) AS NativeCurrency, ' +
+  GET_GUEST_CHECKIN_CHECKOUT = 'SELECT ID, title, Reservation, (SELECT NativeCurrency FROM control LIMIT 1) AS NativeCurrency, ' +
     '(SELECT Customer FROM reservations WHERE Reservation=persons.Reservation) AS Customer, ' +
     '(SELECT Currency FROM roomreservations WHERE RoomReservation=persons.RoomReservation LIMIT 1) AS Currency, ' +
     '(SELECT Avalue FROM currencies WHERE Currency=(SELECT Currency FROM roomreservations WHERE RoomReservation=persons.RoomReservation LIMIT 1) LIMIT 1) AS CurrencyRate, '
