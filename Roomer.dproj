@@ -159,6 +159,7 @@
         <DCC_AssertionsAtRuntime>false</DCC_AssertionsAtRuntime>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_4_Win32)'!=''">
+        <VerInfo_Keys>CompanyName=Promoir BV;FileDescription=Roomer PMS;FileVersion=1.9.13.0;InternalName=;LegalCopyright=(C) 2013, 2014, 2015, 2016, 2017 Promoir BV;LegalTrademarks=Roomer is a Registered Trademark of Promoir BV;OriginalFilename=Roomer.exe;ProductName=Roomer Open Hospitality Platform;ProductVersion=1.9.13.0;Comments=;ExtraBuild=170517;PrivateBuild=</VerInfo_Keys>
         <VerInfo_AutoGenVersion>false</VerInfo_AutoGenVersion>
         <VerInfo_PreRelease>false</VerInfo_PreRelease>
         <VerInfo_Debug>false</VerInfo_Debug>
