@@ -598,7 +598,7 @@ type
     cbxLocationPerRoomType: TsCheckBox;
     sGroupBox11: TsGroupBox;
     sLabel20: TsLabel;
-    cbxQuery: TsComboBox;
+    cbxEmailTemplates: TsComboBox;
     btnResources: TsButton;
     sLabel18: TsLabel;
     __editTZ: TsComboBox;
@@ -915,6 +915,7 @@ var
   defFile : string;
 
   printerName : string;
+  lDefaultPrinter: string;
   idx : Integer;
 
   iTmp : Integer;
@@ -983,9 +984,16 @@ g.ReadWriteSettingsToRegistry(0);
 
     idx := 0;
     printerName := trim(g.qInvoicePrinter);
+    try
+      lDefaultPrinter := _GetDefaultPrinterName;
+    except
+      //No default printer set in windows
+      lDefaultPrinter := '';
+    end;
+
     if printerName = '' then
     begin
-      printerName := _GetDefaultPrinterName;
+      printerName := lDefaultPrinter;
     end
     else
     begin
@@ -994,7 +1002,7 @@ g.ReadWriteSettingsToRegistry(0);
       if (idx < 0) then
       begin
         idx := 0;
-        printerName := _GetDefaultPrinterName;
+        printerName := lDefaultPrinter;
       end
       else
         printerName := cbxReportPrinter.Items[idx];
@@ -1006,7 +1014,7 @@ g.ReadWriteSettingsToRegistry(0);
     printerName := trim(g.qReportPrinter);
     if printerName = '' then
     begin
-      printerName := _GetDefaultPrinterName;
+      printerName := lDefaultPrinter;
     end
     else
     begin
@@ -1015,7 +1023,7 @@ g.ReadWriteSettingsToRegistry(0);
       if (idx < 0) then
       begin
         idx := 0;
-        printerName := _GetDefaultPrinterName;
+        printerName := lDefaultPrinter;
       end
       else
         printerName := cbxReportPrinter.Items[idx];
@@ -1498,9 +1506,9 @@ g.ReadWriteSettingsToRegistry(0);
     end;
 
     try
-      cbxQuery.ItemIndex := cbxQuery.IndexOf(rSethotelconfigurations.FieldByName('DefaultChannelConfirmationEmail').AsString);
+      cbxEmailTemplates.ItemIndex := cbxEmailTemplates.IndexOf(rSethotelconfigurations.FieldByName('DefaultChannelConfirmationEmail').AsString);
     except
-      cbxQuery.ItemIndex := -1;
+      cbxEmailTemplates.ItemIndex := -1;
     end;
 
     try
@@ -2144,8 +2152,8 @@ begin
       end;
 
       try
-        if cbxQuery.ItemIndex >= 0 then
-          rSethotelconfigurations.FieldByName('DefaultChannelConfirmationEmail').AsString := cbxQuery.Items[cbxQuery.ItemIndex]
+        if cbxEmailTemplates.ItemIndex >= 0 then
+          rSethotelconfigurations.FieldByName('DefaultChannelConfirmationEmail').AsString := cbxEmailTemplates.Items[cbxEmailTemplates.ItemIndex]
         else
           rSethotelconfigurations.FieldByName('DefaultChannelConfirmationEmail').AsString := '';
       except
@@ -2294,7 +2302,6 @@ procedure TfrmControlData.btnInvoiceTemplateResourcesClick(Sender: TObject);
 var idx : Integer;
     RoomerResourceManagement : TRoomerResourceManagement;
 begin
-  frmMain.dxBarLargeButton4Click(nil);
   idx := cbxInvoiceExport.ItemIndex;
   cbxInvoiceExport.Items.Clear;
   RoomerResourceManagement := TRoomerResourceManagement.Create(TResourceType.rtAnyFile, TResourceAccessType.ratRestricted);
@@ -2316,15 +2323,15 @@ var idx : Integer;
     RoomerResourceManagement : TRoomerResourceManagement;
 begin
   //frmMain.ShowBookingConfirmationTemplates;
-  idx := cbxQuery.ItemIndex;
-  cbxQuery.Items.Clear;
-  RoomerResourceManagement := TRoomerResourceManagement.Create(TResourceType.rtGuestEmailTemplate, TResourceAccessType.ratRestricted);
+  idx := cbxEmailTemplates.ItemIndex;
+  cbxEmailTemplates.Items.Clear;
+  RoomerResourceManagement := TRoomerResourceManagement.Create(TResourceType.rtGuestEmailTemplate, TResourceAccessType.ratOpen);
   try
-    RoomerResourceManagement.AddStaticResourcesAsStrings(cbxQuery.Items);
+    RoomerResourceManagement.AddStaticResourcesAsStrings(cbxEmailTemplates.Items);
   finally
     RoomerResourceManagement.Free;
   end;
-  cbxQuery.ItemIndex := idx;
+  cbxEmailTemplates.ItemIndex := idx;
 end;
 
 procedure TfrmControlData.btnCancelClick(Sender: TObject);
@@ -2501,19 +2508,22 @@ begin
     mainPage.Pages[i].TabVisible := false;
   end;
 
-  cbxQuery.Items.Clear;
-  RoomerResourceManagement := TRoomerResourceManagement.Create(TResourceType.rtGuestEmailTemplate, TResourceAccessType.ratRestricted);
-  try
-    RoomerResourceManagement.AddStaticResourcesAsStrings(cbxQuery.Items);
-  finally
-    RoomerResourceManagement.Free;
-  end;
-  RoomerResourceManagement := TRoomerResourceManagement.Create(TResourceType.rtAnyFile, TResourceAccessType.ratRestricted);
-  try
-    RoomerResourceManagement.AddStaticResourcesAsStrings(cbxInvoiceExport.Items);
-  finally
-    RoomerResourceManagement.Free;
-  end;
+  btnResourcesClick(nil);
+//  cbxEmailTemplates.Items.Clear;
+//  RoomerResourceManagement := TRoomerResourceManagement.Create(TResourceType.rtGuestEmailTemplate, TResourceAccessType.ratRestricted);
+//  try
+//    RoomerResourceManagement.AddStaticResourcesAsStrings(cbxEmailTemplates.Items);
+//  finally
+//    RoomerResourceManagement.Free;
+//  end;
+
+  btnInvoiceTemplateResourcesClick(nil);
+//  RoomerResourceManagement := TRoomerResourceManagement.Create(TResourceType.rtAnyFile, TResourceAccessType.ratRestricted);
+//  try
+//    RoomerResourceManagement.AddStaticResourcesAsStrings(cbxInvoiceExport.Items);
+//  finally
+//    RoomerResourceManagement.Free;
+//  end;
 
   fcCurrentFontName.Font.Name := gridFont.name;
   fcCurrentFontName.ItemIndex := fcCurrentFontName.Items.IndexOf(fcCurrentFontName.Font.Name);
