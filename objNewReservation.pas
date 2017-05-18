@@ -946,7 +946,7 @@ var
   ExpTOA: string;
   ExpCOT: string;
   newRoomReservationItem: TnewRoomReservationItem;
-  lRevenueCorrection: Double;
+  lRevenue: Double;
   lNewRoomRes: TnewRoomReservationItem;
 
   procedure init;
@@ -1520,20 +1520,11 @@ begin
             ItemInfo := d.Item_Get_Data(Item);
 
             numItems     := numGuests * iDayCount;
-//            if lNewRoomRes.FBreakfastIncluded then
-//            begin
-//              Price                 := 0;
-//              lRevenueCorrection    := ItemInfo.Price * numItems;
-//              itemDescription       := ItemInfo.Description +  ' (' + GetTranslatedText('shTx_ReservationProfile_Included') + ')'
-//            end
-//            else
-//            begin
-              Price                 := lNewRoomRes.FBreakfastCost;
-              lRevenueCorrection    := 0;
-              itemDescription       := ItemInfo.Description;
-//            end;
+            Price                 := lNewRoomRes.FBreakfastCost;
+            itemDescription       := ItemInfo.Description;
 
             Total        := price*numItems;
+            lRevenue     := Total;
 
             fTmp           := Total / (1 + (ItemInfo.VATPercentage / 100));
             Vat            := Total - ftmp;
@@ -1573,7 +1564,7 @@ begin
             invoiceLineData.ImportSource       := '';
             invoiceLineData.Ispackage          := false;
             invoiceLineData.InvoiceIndex          := 0;
-            invoiceLineData.RevenueCorrection  := lRevenueCorrection;
+            invoiceLineData.Revenue           := lRevenue;
             ExecutionPlan.AddExec(SQL_INS_InvoiceLine(invoiceLineData));
             //***Add invoice log here
                lstInvoiceActivity.add(CreateInvoiceActivityLog(g.quser
@@ -1602,7 +1593,7 @@ begin
             Price        := lNewRoomRes.FExtraBedCost;
             numItems     := 1.00; // numGuests.;
             Total        := price*numItems;
-
+            lRevenue     := Total;
             fTmp           := Total / (1 + (ItemInfo.VATPercentage / 100));
             Vat            := Total - ftmp;
             TotalWOVat     := Total - VAT;
@@ -1642,6 +1633,7 @@ begin
             invoiceLineData.ImportSource       := '';
             invoiceLineData.Ispackage          := false;
             invoiceLineData.InvoiceIndex       := 0;
+            invoiceLineData.Revenue            := lRevenue;
             ExecutionPlan.AddExec(SQL_INS_InvoiceLine(invoiceLineData));
             //***Add invoice log here
                lstInvoiceActivity.add(CreateInvoiceActivityLog(g.quser

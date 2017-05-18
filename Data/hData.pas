@@ -393,7 +393,7 @@ type
     ItemAdded : TdateTime;
     RoomreservationAlias : Integer;
     InvoiceIndex : Integer;
-    RevenueCorrection: double;
+    Revenue: double;
   end;
 
   recItemPlusHolder = record
@@ -2456,7 +2456,7 @@ begin
     confirmDate := 2;
     confirmAmount := 0.00;
     InvoiceIndex := 0;
-    RevenueCorrection := 0;
+    Revenue := 0;
   end;
 end;
 
@@ -3518,7 +3518,7 @@ begin
   s := s + '   ,confirmDate ' + #10;
   s := s + '   ,confirmAmount ' + #10;
   s := s + '   ,RoomReservationAlias ' + #10;
-  s := s + '   ,RevenueCorrection' + #10;
+  s := s + '   ,Revenue' + #10;
   s := s + ' ) ' + #10;
   s := s + ' VALUES ' + #10;
   s := s + ' ( ' + #10;
@@ -3558,7 +3558,7 @@ begin
   s := s + ' , ' + _db(theData.confirmDate) + #10;
   s := s + ' , ' + _db(theData.confirmAmount) + #10;
   s := s + ' , ' + _db(theData.RoomReservationAlias) + #10;
-  s := s + ' , ' + _db(theData.RevenueCorrection) + #10;
+  s := s + ' , ' + _db(theData.Revenue) + #10;
   s := s + ' )';
   result := s;
 

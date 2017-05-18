@@ -101,12 +101,12 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         Font.Style = [fsBold]
       end
       object clabRefrence: TsLabel
-        Left = 661
-        Top = 101
-        Width = 57
+        Left = 654
+        Top = 100
+        Width = 64
         Height = 13
         Alignment = taRightJustify
-        Caption = 'Refrence :'
+        Caption = 'Reference :'
         Color = 15400938
         ParentColor = False
         ParentFont = False
@@ -244,7 +244,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
       end
       object clabForeignCurrency: TsLabel
         Left = 616
-        Top = 124
+        Top = 147
         Width = 102
         Height = 13
         Alignment = taRightJustify
@@ -256,6 +256,68 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
+      end
+      object lblResNr: TsLabel
+        Left = 673
+        Top = 124
+        Width = 45
+        Height = 13
+        Alignment = taRightJustify
+        Caption = 'Res. nr :'
+        Color = 15400938
+        ParentColor = False
+        ParentFont = False
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = [fsBold]
+      end
+      object edtInvRefrence: TsLabel
+        Left = 725
+        Top = 100
+        Width = 160
+        Height = 17
+        AutoSize = False
+        Caption = '-'
+        Color = clWhite
+        ParentColor = False
+        ParentFont = False
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = []
+      end
+      object edtRoomGuest: TsLabel
+        Left = 725
+        Top = 78
+        Width = 160
+        Height = 17
+        AutoSize = False
+        Caption = '-'
+        Color = clWhite
+        ParentColor = False
+        ParentFont = False
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = []
+      end
+      object edResNr: TsLabel
+        Left = 725
+        Top = 124
+        Width = 160
+        Height = 17
+        AutoSize = False
+        Caption = '-'
+        ParentFont = False
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = []
       end
       object edtCurrency: TsEdit
         Left = 724
@@ -322,29 +384,6 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         BoundLabel.Font.Name = 'Tahoma'
         BoundLabel.Font.Style = []
       end
-      object edtInvRefrence: TsEdit
-        Left = 724
-        Top = 101
-        Width = 160
-        Height = 17
-        AutoSize = False
-        BorderStyle = bsNone
-        Color = clWhite
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
-        Font.Height = -11
-        Font.Name = 'Tahoma'
-        Font.Style = []
-        MaxLength = 30
-        ParentFont = False
-        TabOrder = 15
-        SkinData.SkinSection = 'EDIT'
-        BoundLabel.Font.Charset = DEFAULT_CHARSET
-        BoundLabel.Font.Color = clWindowText
-        BoundLabel.Font.Height = -13
-        BoundLabel.Font.Name = 'Tahoma'
-        BoundLabel.Font.Style = []
-      end
       object btnGetCurrency: TsButton
         Left = 795
         Top = 28
@@ -364,29 +403,6 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         TabOrder = 13
         OnClick = edtRateDblClick
         SkinData.SkinSection = 'BUTTON'
-      end
-      object edtRoomGuest: TsEdit
-        Left = 724
-        Top = 78
-        Width = 160
-        Height = 17
-        AutoSize = False
-        BorderStyle = bsNone
-        Color = clWhite
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
-        Font.Height = -11
-        Font.Name = 'Tahoma'
-        Font.Style = []
-        ParentFont = False
-        ReadOnly = True
-        TabOrder = 14
-        SkinData.SkinSection = 'EDIT'
-        BoundLabel.Font.Charset = DEFAULT_CHARSET
-        BoundLabel.Font.Color = clWindowText
-        BoundLabel.Font.Height = -13
-        BoundLabel.Font.Name = 'Tahoma'
-        BoundLabel.Font.Style = []
       end
       object edtCustomer: TsEdit
         Left = 111
@@ -559,7 +575,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
       end
       object btnExit: TsButton
         Left = 929
-        Top = 5
+        Top = 3
         Width = 161
         Height = 44
         Hint = 'Close form'
@@ -569,7 +585,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         Images = DImages.cxLargeImagesFlat
         ParentShowHint = False
         ShowHint = True
-        TabOrder = 17
+        TabOrder = 15
         OnClick = btnExitClick
         SkinData.SkinSection = 'BUTTON'
       end
@@ -585,7 +601,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         Images = DImages.cxLargeImagesFlat
         ParentShowHint = False
         ShowHint = True
-        TabOrder = 19
+        TabOrder = 18
         SkinData.SkinSection = 'BUTTON'
       end
       object btnProforma: TsButton
@@ -599,12 +615,12 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         Images = DImages.cxLargeImagesFlat
         ParentShowHint = False
         ShowHint = True
-        TabOrder = 18
+        TabOrder = 17
         SkinData.SkinSection = 'BUTTON'
       end
       object edtForeignCurrency: TsEdit
         Left = 724
-        Top = 124
+        Top = 147
         Width = 105
         Height = 17
         Alignment = taRightJustify
@@ -617,10 +633,9 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         Font.Style = []
         ParentFont = False
         ReadOnly = True
-        TabOrder = 16
+        TabOrder = 14
         Text = '0'
         Visible = False
-        OnChange = edtTotalChange
         SkinData.SkinSection = 'EDIT'
         BoundLabel.Font.Charset = DEFAULT_CHARSET
         BoundLabel.Font.Color = clWindowText
@@ -630,13 +645,13 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
       end
       object chkShowPackage: TsCheckBox
         Left = 724
-        Top = 143
+        Top = 167
         Width = 111
         Height = 20
         Caption = 'Package on invoice'
         Checked = True
         State = cbChecked
-        TabOrder = 20
+        TabOrder = 16
         SkinData.SkinSection = 'CHECKBOX'
         ImgChecked = 0
         ImgUnchecked = 0
@@ -774,7 +789,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
             Font.Name = 'Tahoma'
             Font.Style = [fsBold]
           end
-          object edtTotal: TsEdit
+          object edtTotalWOVat: TsEdit
             Left = 139
             Top = 6
             Width = 105
@@ -791,7 +806,6 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
             ParentFont = False
             ReadOnly = True
             TabOrder = 0
-            OnChange = edtTotalChange
             SkinData.SkinSection = 'EDIT'
             BoundLabel.Font.Charset = DEFAULT_CHARSET
             BoundLabel.Font.Color = clWindowText
@@ -816,7 +830,6 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
             ParentFont = False
             ReadOnly = True
             TabOrder = 1
-            OnChange = edtTotalChange
             SkinData.SkinSection = 'EDIT'
             BoundLabel.Font.Charset = DEFAULT_CHARSET
             BoundLabel.Font.Color = clWindowText
@@ -841,7 +854,6 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
             ParentFont = False
             ReadOnly = True
             TabOrder = 2
-            OnChange = edtTotalChange
             SkinData.SkinSection = 'EDIT'
             BoundLabel.Font.Charset = DEFAULT_CHARSET
             BoundLabel.Font.Color = clWindowText
@@ -866,7 +878,6 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
             ParentFont = False
             ReadOnly = True
             TabOrder = 3
-            OnChange = edtTotalChange
             SkinData.SkinSection = 'EDIT'
             BoundLabel.Font.Charset = DEFAULT_CHARSET
             BoundLabel.Font.Color = clWindowText
@@ -891,7 +902,6 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
             ParentFont = False
             ReadOnly = True
             TabOrder = 4
-            OnChange = edtTotalChange
             SkinData.SkinSection = 'EDIT'
             BoundLabel.Font.Charset = DEFAULT_CHARSET
             BoundLabel.Font.Color = clWindowText
@@ -907,7 +917,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
             Caption = 'Included taxes'
             TabOrder = 5
             SkinData.SkinSection = 'GROUPBOX'
-            object labLodgingTaxISK: TsLabel
+            object labLodgingTax: TsLabel
               Left = 12
               Top = 16
               Width = 22
@@ -938,7 +948,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
             end
             object ClabLodgingTaxCurrency: TsLabel
               Left = 77
-              Top = 16
+              Top = 20
               Width = 19
               Height = 13
               Alignment = taRightJustify
@@ -1048,6 +1058,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         BevelOuter = bvNone
         TabOrder = 3
         SkinData.SkinSection = 'PANEL'
+        ExplicitTop = -1
         DesignSize = (
           1096
           91)
@@ -1241,6 +1252,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
           OnKeyDown = agrLinesKeyDown
           OnMouseDown = agrLinesMouseDown
           HoverRowCells = [hcNormal, hcSelected]
+          OnGetDisplText = agrLinesGetDisplText
           OnGetCellColor = agrLinesGetCellColor
           OnGetAlignment = agrLinesGetAlignment
           OnRowChanging = agrLinesRowChanging
@@ -1340,6 +1352,8 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
           SearchFooter.ResultFormat = '(%d of %d)'
           SortSettings.DefaultFormat = ssAutomatic
           Version = '8.2.4.1'
+          ExplicitLeft = 17
+          ExplicitTop = 8
           ColWidths = (
             24
             28

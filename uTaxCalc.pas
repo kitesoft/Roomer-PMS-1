@@ -480,8 +480,7 @@ begin
   then
     result := GetVATForItemEx(Item, Price, NumItems, RoomTaxEntity, ItemTaxEntities, ItemTypeInfo, custIncluded)
   else
-    result := GetVATForItemEx(Item, Price, NumItems, RoomTaxEntity, ItemTaxEntities, ItemTypeInfo,
-      NOT isStayTaxExcluded);
+    result := GetVATForItemEx(Item, Price, NumItems, RoomTaxEntity, ItemTaxEntities, ItemTypeInfo, NOT isStayTaxExcluded);
 end;
 
 function MakeInvoiceTaxEntity(aTax: TTax; aInvoiceRoomEntity: TInvoiceRoomEntity; aItemTypeInfo: TItemTypeInfo; aCustomerIncludedDefault: boolean): TInvoiceTaxEntity;
