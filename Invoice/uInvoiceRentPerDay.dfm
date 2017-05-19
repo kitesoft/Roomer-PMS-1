@@ -1058,7 +1058,6 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         BevelOuter = bvNone
         TabOrder = 3
         SkinData.SkinSection = 'PANEL'
-        ExplicitTop = -1
         DesignSize = (
           1096
           91)
@@ -1352,8 +1351,6 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
           SearchFooter.ResultFormat = '(%d of %d)'
           SortSettings.DefaultFormat = ssAutomatic
           Version = '8.2.4.1'
-          ExplicitLeft = 17
-          ExplicitTop = 8
           ColWidths = (
             24
             28

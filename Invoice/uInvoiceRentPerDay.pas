@@ -6,23 +6,18 @@ uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
   Grids, ExtCtrls, ComCtrls, StdCtrls, ImgList, Menus, Buttons, Data.DB,
   Data.Win.ADODB
-
-    , uDateUtils, ActnList, System.Actions, Generics.Collections, variants,
+  , uDateUtils, ActnList, System.Actions, Generics.Collections, variants,
   cmpRoomerDataSet, cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxStyles, dxSkinsCore, dxSkinCaramel,
   dxSkinCoffee, dxSkinDarkSide, dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinscxPCPainter, cxCustomData,
   cxFilter, cxData, cxDataStorage, cxEdit, cxNavigator, cxDBData, cxMemo, AdvUtil, dxmdaset, frxClass, frxDBSet,
   cxPropertiesStore, sStatusBar, AdvObj, BaseGrid, AdvGrid, cxGridLevel, cxGridCustomTableView, cxGridTableView,
   cxGridDBTableView, cxClasses, cxGridCustomView, cxGrid, sCheckBox, sButton, sGroupBox, sEdit, sLabel, sPanel,
-
     _glob, hData, ug, uUtils, kbmMemTable
-
-    , uTaxCalc
-    , frxExportMail, frxExportImage, frxExportRTF, frxExportHTML
-
+  , uTaxCalc
+  , frxExportMail, frxExportImage, frxExportRTF, frxExportHTML
   , uInvoiceEntities
   , RoomerBookingCommunicationModel_RequestsResponses
-//  , Spring.Collections.Lists
-   ;
+  ;
 
 type
   TCreditType = (ctManual, ctReference, ctErr);
@@ -35,15 +30,13 @@ type
   /// <summary>
   ///   Object attached to a gridline of the invoiceform, containing all Invoice related info shown in that gridline
   ///  Notice that all amounts are in hotel-native currency
+  //  TODO: Merge this class with TInvoiceItemEntity
   /// </summary>
   TInvoiceLine = class(TObject)
-  //TODO: Merge this class with TInvoiceItemEntity
   strict private
     FInvoiceLineIndex: integer;
-
     FItem: string;
     FText: string;
-
     FNumber: Double; // -96
     FPrice: Double;
     FTotal: Double;
@@ -63,7 +56,6 @@ type
     FVATCode: string;
     FVATPercentage: double;
     FParentId: integer;
-
     FChildInvoiceLines: TList<TInvoiceLine>;
     FROomEntity: TInvoiceRoomEntity;
 
@@ -82,9 +74,14 @@ type
   public
     constructor Create(aIndex, _id: integer);
     destructor Destroy; override;
-
+    /// <summary>
+    ///   Indicates whether or not the "VisibleOnInvoice" functionality is available for this line
+    ///  At this moment only line that are generated and linked to a roomrent item can be made invisible
+    /// </summary>
     function CanBeHiddenFromInvoice: boolean;
-
+    /// <summary>
+    ///   Revenue total including VAT for this item, calculated as Price * Number
+    /// </summary>
     property Total: Double read GetTotal;
     ///<summary>Amount which will be visible on the invoice.
     ///  Dependent in the VisibleOnInvoice property and on ChildInvoiceLines which are not visible on the invoice
@@ -99,6 +96,10 @@ type
     property InvoiceLineIndex: integer read FInvoiceLineIndex write FInvoiceLineIndex;
     /// <summary>This invoicelines "belongs" to or a child of invoicelines with this InvoicelineIndex </summary>
     property ParentId: integer read FParentId write FParentId;
+    /// <summary>
+    ///   List of TInvoiceLineItems that are derived from this line. If any of these child lines are not VisibleOnInvoice then
+    ///  their invoice-totals are added to the parent line
+    /// </summary>
     property ChildInvoiceLines: TList<TInvoiceLine> read FChildInvoiceLines;
     property RoomEntity: TInvoiceRoomEntity read FROomEntity write FRoomEntity;
 
@@ -550,7 +551,7 @@ type
     function GetInvoiceLineCount: integer;
 
     /// <summary>
-    /// Create a new TInvoiceLine object and add this to zListLines collection
+    /// Create a new TInvoiceLine object and add this to InvoiceLinesList collection
     /// </summary>
     function AddLine(lineId: integer; aParentIndex: integer; sItem, sText: string; iNumber: Double;
       FPrice: Double; const VATCode: string; PurchaseDate: TDate; bAuto: boolean;
@@ -563,11 +564,11 @@ type
     /// A new TInvoiceLine object is also created for the roomrent and a new TInvoiceLine object is created
     /// for the supplied discount (if any). The Invoiceline objects are not attached to the grid.
     /// </summary>
-    Function AddRoom(Room: String; fRoomPrice: Double; FromDate: TDate;
-      ToDate: TDate; dayCount: integer; sText: string; bGetGuestName: boolean;
-      RoomReservation: integer; aDiscountAmount: Double;
-      DiscountIsPercentage: boolean; DiscountText: string; GuestName: String;
-      NumGuests: integer; NumChildren: integer; isPackage: boolean; rrAlias: integer; aBeakfastIncluded: boolean): integer;
+    Function AddRoom(const aRoom: String; aRoomPrice: Double; aFromDate: TDate;
+                      aToDate: TDate; aDayCount: integer; const aDescription: string; aGetGuestName: boolean;
+                      aRoomReservation: integer; aDiscountAmount: Double;
+                      aDiscountIsPercentage: boolean; const aDiscountText: string; const aGuestName: String;
+                      aNumGuests: integer; aNumChildren: integer; aIsPackage: boolean; aRRAlias: integer; aBeakfastIncluded: boolean): integer;
 
     Procedure AddRoomTaxToLinesAndGrid(totalTax: Double; TaxUnits: Double; taxItem: string; aPurchaseDate: TDate; iAddAt: integer = 0; aParentIndex: integer = 0);
     procedure RemoveStayTax;
@@ -1898,87 +1899,87 @@ begin
 
 end;
 
-function TfrmInvoiceRentPerDay.AddRoom(Room: String; fRoomPrice: Double; FromDate: TDate;
-  ToDate: TDate; dayCount: integer; sText: string; bGetGuestName: boolean;
-  RoomReservation: integer; aDiscountAmount: Double;
-  DiscountIsPercentage: boolean; DiscountText: string; GuestName: String;
-  NumGuests: integer; NumChildren: integer; isPackage: boolean; rrAlias: integer; aBeakfastIncluded: boolean): integer;
+function TfrmInvoiceRentPerDay.AddRoom(const aRoom: String; aRoomPrice: Double; aFromDate: TDate;
+  aToDate: TDate; aDayCount: integer; const aDescription: string; aGetGuestName: boolean;
+  aRoomReservation: integer; aDiscountAmount: Double;
+  aDiscountIsPercentage: boolean; const aDiscountText: string; const aGuestName: String;
+  aNumGuests: integer; aNumChildren: integer; aIsPackage: boolean; aRRAlias: integer; aBeakfastIncluded: boolean): integer;
 var
-  RmRntItem: string;
+  lRmRntItem: string;
   lDiscount: Double;
-  DiscountItem: string;
+  lDiscountItem: string;
 
-  sGuestName: string;
-  iNumGuests: integer;
-  confirmDate: TDateTime;
-  confirmAmount: Double;
+  lGuestName: string;
+  lNumGuests: integer;
+  lConfirmDate: TDateTime;
+  lConfirmAmount: Double;
 
-  rrText: string;
-  aText: string;
+  lRRText: string;
+  lText: string;
   lRoomInfo: TInvoiceRoomEntity;
   lInvoiceLine: TInvoiceLine;
   lItemInFo: TItemTypeInfo;
 begin
 
-  confirmDate := 2;
-  confirmAmount := 0;
+  lConfirmDate := 2;
+  lConfirmAmount := 0;
 
-  RmRntItem := trim(g.qRoomRentItem);
-  lItemInfo := d.Item_Get_ItemTypeInfo(RmRntItem);
+  lRmRntItem := trim(g.qRoomRentItem);
+  lItemInfo := d.Item_Get_ItemTypeInfo(lRmRntItem);
 
-  sText := trim(sText);
-  rrText := Item_GetDescription(RmRntItem);
+  aDescription := trim(aDescription);
+  lRRText := Item_GetDescription(lRmRntItem);
 
-  if copy(sText, 1, 2) = '--' then
+  if copy(aDescription, 1, 2) = '--' then
   begin
-    rrText := '';
-    sText := copy(sText, 3, maxint);
+    lRRText := '';
+    aDescription := copy(aDescription, 3, maxint);
   end;
 
-  if copy(sText, 1, 2) = '&-' then
+  if copy(aDescription, 1, 2) = '&-' then
   begin
-    rrText := '';
-    sText := copy(sText, 3, maxint);
+    lRRText := '';
+    aDescription := copy(aDescription, 3, maxint);
   end;
 
-  if copy(sText, 1, 2) = '&&' then
+  if copy(aDescription, 1, 2) = '&&' then
   begin
-    bGetGuestName := True;
-    sText := copy(sText, 3, maxint);
+    aGetGuestName := True;
+    aDescription := copy(aDescription, 3, maxint);
   end;
 
-  sGuestName := GuestName;
-  iNumGuests := NumGuests;
+  lGuestName := aGuestName;
+  lNumGuests := aNumGuests;
 
-  if not bGetGuestName then
-    if rrText <> '' then
-      aText := rrText + ' (' + sText + ') '
+  if not aGetGuestName then
+    if lRRText <> '' then
+      lText := lRRText + ' (' + aDescription + ') '
     else
-      aText := sText
+      lText := aDescription
   else
-    sText := trim(sGuestName) + ' (' + sText + ') ';
+    aDescription := trim(lGuestName) + ' (' + aDescription + ') ';
 
   lRoomInfo := TInvoiceRoomEntity.create;
   // -- Attach the Room information
-  lRoomInfo.RoomReservation := RoomReservation;
+  lRoomInfo.RoomReservation := aRoomReservation;
   lRoomInfo.Reservation := FReservation;
-  lRoomInfo.Name := sGuestName;
-  lRoomInfo.Arrival:= FromDate;
-  lRoomInfo.Departure := ToDate;
-  lRoomInfo.Price := fRoomPrice;
+  lRoomInfo.Name := lGuestName;
+  lRoomInfo.Arrival:= aFromDate;
+  lRoomInfo.Departure := aToDate;
+  lRoomInfo.Price := aRoomPrice;
   lRoomInfo.Discount := 0.00;
-  lRoomInfo.Room := Room;
-  lRoomInfo.NumGuests := iNumGuests;
-  lRoomInfo.NumChildren := NumChildren;
+  lRoomInfo.Room := aRoom;
+  lRoomInfo.NumGuests := lNumGuests;
+  lRoomInfo.NumChildren := aNumChildren;
   lRoominfo.BreakFastIncluded := aBeakfastIncluded;
   FRoomInfoList.add(lRoomInfo);
 
   if aBeakfastIncluded then
-    fRoomPrice := fRoomPrice - (iNumGuests * lRoomInfo.NumberOfNights * Item_GetPrice(g.qBreakFastItem));
+    aRoomPrice := aRoomPrice - (lNumGuests * lRoomInfo.NumberOfNights * Item_GetPrice(g.qBreakFastItem));
 
 
   // add a TInvoiceline object for the RoomRent to InvoiceLineList
-  lInvoiceLine := AddLine(0, 0, RmRntItem, sText, dayCount, fRoomPrice, litemInfo.VATCode, 0, True, '', '', isPackage, iNumGuests, confirmDate, confirmAmount, rrAlias, _GetCurrentTick); // *77
+  lInvoiceLine := AddLine(0, 0, lRmRntItem, aDescription, aDayCount, aRoomPrice, litemInfo.VATCode, 0, True, '', '', aIsPackage, lNumGuests, lConfirmDate, lConfirmAmount, aRRAlias, _GetCurrentTick); // *77
   lInvoiceLine.RoomEntity := lRoomInfo;
 
   //Tax invoicelines
@@ -1990,19 +1991,19 @@ begin
   // -- Discount
   if aDiscountAmount <> 0 then
   begin
-    DiscountItem := trim(g.qDiscountItem);
-    lItemInFo := d.Item_Get_ItemTypeInfo(DiscountItem);
+    lDiscountItem := trim(g.qDiscountItem);
+    lItemInFo := d.Item_Get_ItemTypeInfo(lDiscountItem);
 
-    DiscountText := Item_GetDescription(DiscountItem) + ' ' + DiscountText;
+    aDiscountText := Item_GetDescription(lDiscountItem) + ' ' + aDiscountText;
 
-    if DiscountIsPercentage then
+    if aDiscountIsPercentage then
       lDiscount := (lRoomInfo.Price * aDiscountAmount / 100) * -1
     else
       lDiscount := (aDiscountAmount) * -1;
 
     /// Add an InvoiceLine object for the discount
-    AddLine(0, lInvoiceLine.InvoiceLineIndex, DiscountItem, DiscountText, dayCount, lDiscount, lItemInfo.VATCode, 0, True, '', '', false, NumGuests, confirmDate, confirmAmount, rrAlias, _GetCurrentTick);
-    lRoomInfo.Discount := lDiscount * dayCount;
+    AddLine(0, lInvoiceLine.InvoiceLineIndex, lDiscountItem, aDiscountText, aDayCount, lDiscount, lItemInfo.VATCode, 0, True, '', '', false, aNumGuests, lConfirmDate, lConfirmAmount, aRRAlias, _GetCurrentTick);
+    lRoomInfo.Discount := lDiscount * aDayCount;
   end;
 
   UpdateItemInvoiceLinesForTaxCalculations;
@@ -4031,12 +4032,6 @@ begin
 
       if (iPersons > 0) and (iNights > 0) then
       begin
-        agrLines.Cells[col_ItemCount, i] := _floattostr(ttRoomNights,
-          vWidth, vDec);
-        agrLines.Cells[col_ItemPrice, i] :=
-          _floattostr(dRoomPrice, vWidth, vDec);
-        agrLines.Cells[col_NoGuests, i] := inttostr(iPersons);
-
         linvline := GetInvoiceLineByRow(i);
         if assigned(linvLine.RoomEntity) then
         begin
@@ -4047,7 +4042,7 @@ begin
             Name := edtName.Text;
             Arrival := now;
             Departure := now + iNights;
-            Price := _StrToFloat(agrLines.Cells[col_ItemPrice, i]);
+            Price := dRoomPrice;
             NumGuests := iPersons;
           end;
         end
@@ -4061,11 +4056,14 @@ begin
           lRoomInfo.Departure := now + iNights;
           lRoomInfo.Price := _StrToFloat(agrLines.Cells[col_ItemPrice, i]);
           lRoomInfo.NumGuests := iPersons;
+          lRoomInfo.BreakfastIncluded := false;
           FRoomInfoList.add(lRoomInfo);
           lInvLine.RoomEntity := lRoomInfo;
         end;
 
-        agrLines.Cells[col_TotalPrice, i] := _floattostr(ttPrice, vWidth, vDec);
+// replace with       CalcAndAddStayTax(RoomReservation, RoomInvoiceLines);
+ -------
+
         calcAndAddAutoItems(FReservation); // 002
         chkChanged;
       end;
@@ -4935,36 +4933,11 @@ begin
              glb.LocateSpecificRecord('vatcodes', 'VATCode', VATCode) then
             with theData[i].recHolder do
             begin
-
-//              if iStartRow = -1 then
-//                iStartRow := agrLines.row;
-//
-//
-//              agrLines.Cells[col_Item, agrLines.row] := theData[i].recHolder.Item;
-//              agrLines.Cells[col_Description, agrLines.row] := trim(theData[i].recHolder.Description);
-//              agrLines.Objects[col_Item, agrLines.row] := nil;
-//              agrLines.Cells[col_ItemCount, agrLines.row] := _floattostr(1, vWidth, vDec);
-//              agrLines.Cells[col_ItemPrice, agrLines.row] := _floattostr(theData[i].recHolder.Price, vWidth, vDec);
-//              agrLines.Cells[col_autogen, agrLines.row] := _GetCurrentTick;
-//              agrLines.Objects[cPurchaseDateAsObjectColumn, agrLines.row] := TObject(trunc(now)); // -- PurchaseDate !
-//              agrLines.Cells[col_date, agrLines.row] := datetostr(trunc(now));
-
-              CheckroomRentItem(agrLines.row);
-
               if NOT CheckExtraWithdrawalAllowed(theData[i].recHolder.Price) then
-              begin
-//                agrLines.RemoveRows(agrLines.row, 1);
-//                AddAndInitNewRow;
-//                DisplayTotals;
                 exit;
-              end;
-              AddLine(0, 0, Item, Description, 1, Price, VATCode, now(), false, '', '', false, 0, 0, 0, 0, '');
 
-//              chkChanged;
-//              AddAndInitNewRow;
-//              postMessage(handle, WM_FORMAT_LINE, 0, agrLines.row);
-//              agrLines.Col := agrLines.Col + 1;
-//              agrLines.row := agrLines.row + 1;
+              AddLine(0, 0, Item, Description, 1, Price, VATCode, now(), false, '', '', false, 0, 0, 0, 0, '');
+              CheckroomRentItem(agrLines.row);
             end //if .. with
             else
             begin
@@ -4982,9 +4955,6 @@ begin
   end;
   if iStartRow <> -1 then
     agrLines.row := iStartRow;
-//  else
-//    if bAdded then
-//    agrLines.row := agrLines.RowCount - 1;
   setControls;
   Application.ProcessMessages;
   agrLines.SetFocus;
