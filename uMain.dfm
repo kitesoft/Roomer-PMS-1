@@ -160,8 +160,6 @@ object frmMain: TfrmMain
             OnMouseUp = grOneDayRoomsMouseUp
             OnStartDrag = grOneDayRoomsStartDrag
             ActiveRowColor = clWhite
-            GridLineColor = 15527152
-            GridFixedLineColor = 13947601
             HoverRowCells = [hcNormal, hcSelected]
             OnGetCellPrintColor = grOneDayRoomsGetCellPrintColor
             OnGridHint = grOneDayRoomsGridHint
@@ -1126,7 +1124,7 @@ object frmMain: TfrmMain
                 Style = csDropDownList
                 Color = clWhite
                 Font.Charset = DEFAULT_CHARSET
-                Font.Color = 4473924
+                Font.Color = clBlack
                 Font.Height = -11
                 Font.Name = 'Tahoma'
                 Font.Style = []
@@ -2898,10 +2896,10 @@ object frmMain: TfrmMain
       SkinData.SkinSection = 'ALPHACOMBOBOX'
       VerticalAlignment = taAlignTop
       Style = csDropDownList
-      Color = 16645629
+      Color = clWhite
       Ctl3D = True
       Font.Charset = DEFAULT_CHARSET
-      Font.Color = 4473924
+      Font.Color = clBlack
       Font.Height = -11
       Font.Name = 'Segoe UI'
       Font.Style = []
@@ -8823,7 +8821,6 @@ object frmMain: TfrmMain
   object sSkinManager1: TsSkinManager
     Effects.AllowAeroBluring = False
     Effects.AllowGlowing = False
-    IsDefault = False
     InternalSkins = <
       item
         Name = 'RoomerUI'

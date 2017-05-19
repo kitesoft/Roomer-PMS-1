@@ -308,7 +308,7 @@ begin
   rSet := RoomerDataSet.CreateNewDataset;
   try
     rSet.CommandType := cmdText;
-    rSet.CommandText := 'SELECT LastReservation, LastRoomRes, LastPerson FROM control LIMIT 1';
+    rSet.CommandText := 'SELECT (SELECT MAX(Reservation) FROM reservations) AS LastReservation, LastRoomRes, LastPerson FROM control LIMIT 1';
     rSet.open(false);
 
     ResId := rSet['LastReservation'];

@@ -1344,12 +1344,14 @@ begin
   try
     try
       reservationData := SP_GET_Reservation(zReservation);
+
+      ExecutionPlan.BeginTransaction;
+
       newReservation := hData.RV_SetNewID();
       reservationData.Reservation := NewReservation;
       reservationData.name     := edNewReservation.text;
 
-      ExecutionPlan.BeginTransaction;
-      ExecutionPlan.AddExec(SQL_INS_Reservation(reservationData));
+      ExecutionPlan.AddExec(SQL_UPDATE_Reservation(reservationData));
 
       s := '';
       s := s + ' UPDATE roomreservations '+#10;
