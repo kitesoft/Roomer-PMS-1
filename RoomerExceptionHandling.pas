@@ -21,24 +21,25 @@ type
     FExceptionsLoggingActive: boolean;
     FExceptionLogPath: string;
     FLogFileName: string;
+    FLogStackTrace: boolean;
     procedure SetExceptionLogPath(const Value: string);
     function GetFullLogFilePath: string;
-
-  public
-
-    constructor Create(const aLogFileName: string = '');
-    destructor Destroy; override;
+    procedure LogStackTrace(ExceptObj: TObject; ExceptAddr: Pointer; IsOS: boolean);
     function AppendToLogfile(const line : string; addDate : boolean = false) : boolean;
 
-    {$IFDEF USE_JCL}
-    procedure LogException(ExceptObj: TObject; ExceptAddr: Pointer; IsOS: boolean);
-    {$ENDIF}
+  public
+    constructor Create(const aLogFileName: string = '');
+
+    /// <summary>
+    ///   Eventhandler for Application.OnException
+    /// </summary>
     procedure ExceptionHandler(Sender: TObject; E: Exception);
 
     property ExceptionsLoggingActive: boolean read FExceptionsLoggingActive write FExceptionsLoggingActive;
     property ExceptionLogPath: string read FExceptionLogPath write SetExceptionLogPath;
     property ExceptionLogFilename: string read FLogFileName write FLogFileName;
     property FullLogfilePath: string read GetFullLogFilePath;
+    property LogStackTraceOnException: boolean read FLogStackTrace write FLogStackTrace;
   end;
 
 
@@ -47,7 +48,7 @@ implementation
 uses
     Classes
     , uRoomerExceptions
-{$IFDEF USE_JCL}
+{$IFDEF DUMP_STACKTRACE}
     , JclDebug, JclHookExcept, TypInfo
 {$ENDIF}
     , uSplashRoomer
@@ -56,60 +57,39 @@ uses
     , uUtils
     ;
 
-{$IFDEF USE_JCL}
+{$IFDEF DUMP_STACKTRACE}
 
-procedure TRoomerExceptionHandler.LogException(ExceptObj: TObject; ExceptAddr: Pointer; IsOS: boolean);
+procedure TRoomerExceptionHandler.LogStackTrace(ExceptObj: TObject; ExceptAddr: Pointer; IsOS: boolean);
 var
   TmpS: string;
   ModInfo: TJclLocationInfo;
-  i: integer;
-  ExceptionHandled: boolean;
-  HandlerLocation: Pointer;
-  ExceptFrame: TJclExceptFrame;
-
+  StackTrace: TStringlist;
 begin
   if ExceptionsLoggingActive then
   begin
-    TmpS := 'Exception ' + ExceptObj.ClassName;
+    AppendToLogFile('--------------------------------------------------------------------------------------------', true);
+    TmpS := ExceptObj.ClassName +  ' occurred';
     if ExceptObj is Exception then
       TmpS := TmpS + ': ' + Exception(ExceptObj).message;
     if IsOS then
       TmpS := TmpS + ' (OS Exception)';
-    _textAppend(ExceptionLogPath, TmpS, true);
+    AppendToLogfile(TmpS, true);
     ModInfo := GetLocationInfo(ExceptAddr);
-    _textAppend(ExceptionLogPath, Format('  Exception occured at $%p (Module "%s", Procedure "%s", Unit "%s", Line %d)',
+    AppendToLogfile(Format('  Exception occured at $%p (Module "%s", Procedure "%s", Unit "%s", Line %d)',
       [ModInfo.Address, ModInfo.UnitName, ModInfo.ProcedureName, ModInfo.SourceName, ModInfo.LineNumber]), true);
-    if stExceptFrame in JclStackTrackingOptions then
-    begin
-      _textAppend(ExceptionLogPath, '  Except frame-dump:', true);
-      i := 0;
-      ExceptionHandled := false;
-      while ( { chkShowAllFrames.Checked or } not ExceptionHandled) and (i < JclLastExceptFrameList.Count) do
-      begin
-        ExceptFrame := JclLastExceptFrameList.Items[i];
-        ExceptionHandled := ExceptFrame.HandlerInfo(ExceptObj, HandlerLocation);
-        if (ExceptFrame.FrameKind = efkFinally) or (ExceptFrame.FrameKind = efkUnknown) or not ExceptionHandled then
-          HandlerLocation := ExceptFrame.CodeLocation;
-        ModInfo := GetLocationInfo(HandlerLocation);
-        TmpS := Format('    Frame at $%p (type: %s', [ExceptFrame.FrameLocation, GetEnumName(TypeInfo(TExceptFrameKind),
-          Ord(ExceptFrame.FrameKind))]);
-        if ExceptionHandled then
-          TmpS := TmpS + ', handles exception)'
-        else
-          TmpS := TmpS + ')';
-        _textAppend(ExceptionLogPath, TmpS, true);
-        if ExceptionHandled then
-          _textAppend(ExceptionLogPath, Format('      Handler at $%p', [HandlerLocation]), true)
-        else
-          _textAppend(ExceptionLogPath, Format('      Code at $%p', [HandlerLocation]), true);
-        _textAppend(ExceptionLogPath, Format('      Module "%s", Procedure "%s", Unit "%s", Line %d',
-          [ModInfo.UnitName, ModInfo.ProcedureName,
-          ModInfo.SourceName, ModInfo.LineNumber]), true);
-        inc(i);
-      end;
+
+    StackTrace := TStringlist.Create;
+    try
+      JclLastExceptStackListToStrings(StackTrace, True, False, True, True);
+      for TmpS in StackTrace do
+        AppendToLogfile(TmpS, true);
+    finally
+      StackTrace.Free;
     end;
-    _textAppend(ExceptionLogPath, '', true);
+    AppendToLogFile('--------------------------------------------------------------------------------------------', true);
+
   end;
+
 end;
 {$ENDIF}
 
@@ -129,23 +109,9 @@ begin
       ExceptionLogPath :=  TPath.GetDirectoryName(Application.ExeName);
     ExceptionLogFilename := TPath.GetFileNameWithoutExtension(Application.ExeName) + '.log';
   end;
-
-{$IFDEF USE_JCL}
-  JclAddExceptNotifier(LogException);
+{$IFDEF DUMP_STACKTRACE}
+  FLogStackTrace := True;
 {$ENDIF}
-
-end;
-
-destructor TRoomerExceptionHandler.Destroy;
-begin
-{$IFDEF USE_JCL}
-  try
-    JclRemoveExceptNotifier(LogException);
-  except
-  end;
-{$ENDIF}
-
-  inherited;
 end;
 
 function TRoomerExceptionHandler.AppendToLogfile(const line : string; addDate : boolean = false) : boolean;
@@ -160,7 +126,7 @@ begin
                                      FormatDateTime('hh:nn:ss', now),
                                      aText]);
 
-    TFile.AppendAllText(FullLogfilePath, aText + #10#13);
+    TFile.AppendAllText(FullLogfilePath, '                    | ' + aText + #13#10);
   except
     result := false;
   end;
@@ -169,6 +135,9 @@ end;
 
 procedure TRoomerExceptionHandler.ExceptionHandler(Sender: TObject; E: Exception);
 begin
+  if FLogStackTrace then
+    LogStackTrace(E, ExceptAddr, E is EOSError);
+
   try
     TSplashFormManager.TryHideForm;
   except
@@ -210,10 +179,8 @@ begin
 end;
 
 initialization
-{$IFDEF USE_JCL}
-  JclStackTrackingOptions := JclStackTrackingOptions + [stExceptFrame];
+  JclStackTrackingOptions := JclStackTrackingOptions + [stRawMode, stExceptFrame];
   JclStartExceptionTracking;
-{$ENDIF}
 
 
 end.
