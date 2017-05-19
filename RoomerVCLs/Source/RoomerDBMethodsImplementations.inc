@@ -330,7 +330,6 @@ begin
   Result := downloadUrlAsStringUsingPost(  RoomerUri + 'roomresapi/room/moveperpost', format('id=%d&room=%s', [roomReservationId, newRoom]));
 end;
 
-
 function TRoomerDataSet.SystemSetRoomStatus(roomReservationId : Integer; newStatus : String): String;
 begin
   Result := downloadUrlAsString(  format(RoomerUri + 'roomresapi/room/status?id=%d&status=%s', [roomReservationId, newStatus]));

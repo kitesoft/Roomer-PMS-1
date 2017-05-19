@@ -1056,9 +1056,9 @@ var
     reservationData.invRefrence      := invRefrence;
     reservationData.OutOfOrderBlocking  := OutOfOrderBlocking;
 
-    reservationData.Market              := Market;
+    reservationData.Market           := Market;
 
-    ExecutionPlan.AddExec(SQL_INS_Reservation(reservationData));
+    ExecutionPlan.AddExec(SQL_UPDATE_Reservation(reservationData));
     //***Log reservation
     lstReservationActivity.add(CreateReservationActivityLog(g.quser
                                                  ,FReservationId
