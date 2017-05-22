@@ -24,9 +24,7 @@ type
     FLogStackTrace: boolean;
     procedure SetExceptionLogPath(const Value: string);
     function GetFullLogFilePath: string;
-{$IFDEF DUMP_STACKTRACE}
     procedure LogStackTrace(ExceptObj: TObject; ExceptAddr: Pointer; IsOS: boolean);
-{$ENDIF}
     function AppendToLogfile(const line : string; addDate : boolean = false) : boolean;
 
   public
@@ -132,10 +130,8 @@ end;
 
 procedure TRoomerExceptionHandler.ExceptionHandler(Sender: TObject; E: Exception);
 begin
-{$IFDEF DUMP_STACKTRACE}
   if FLogStackTrace then
     LogStackTrace(E, ExceptAddr, E is EOSError);
-{$ENDIF}
 
   try
     TSplashFormManager.TryHideForm;
@@ -177,11 +173,9 @@ begin
   Result := false;
 end;
 
-{$IFDEF DUMP_STACKTRACE}
 initialization
   JclStackTrackingOptions := JclStackTrackingOptions + [stRawMode, stExceptFrame];
   JclStartExceptionTracking;
-{$ENDIF}
 
 
 end.
