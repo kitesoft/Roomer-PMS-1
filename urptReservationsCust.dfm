@@ -42,10 +42,6 @@ object frmRptReservationsCust: TfrmRptReservationsCust
       SkinData.SkinSection = 'PAGECONTROL'
       object tabRoom: TsTabSheet
         Caption = 'Rooms'
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object grRooms: TcxGrid
           Left = 0
           Top = 44
@@ -606,7 +602,7 @@ object frmRptReservationsCust: TfrmRptReservationsCust
           VerticalAlignment = taAlignTop
           Color = clWhite
           Font.Charset = DEFAULT_CHARSET
-          Font.Color = 2302755
+          Font.Color = clBlack
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
@@ -645,7 +641,7 @@ object frmRptReservationsCust: TfrmRptReservationsCust
           VerticalAlignment = taAlignTop
           Color = clWhite
           Font.Charset = DEFAULT_CHARSET
-          Font.Color = 2302755
+          Font.Color = clBlack
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
@@ -703,7 +699,7 @@ object frmRptReservationsCust: TfrmRptReservationsCust
           Color = clWhite
           EditMask = '!99/99/9999;1; '
           Font.Charset = DEFAULT_CHARSET
-          Font.Color = 2302755
+          Font.Color = clBlack
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
@@ -725,7 +721,7 @@ object frmRptReservationsCust: TfrmRptReservationsCust
           Color = clWhite
           EditMask = '!99/99/9999;1; '
           Font.Charset = DEFAULT_CHARSET
-          Font.Color = 2302755
+          Font.Color = clBlack
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
@@ -746,7 +742,7 @@ object frmRptReservationsCust: TfrmRptReservationsCust
         Height = 21
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = 2302755
+        Font.Color = clBlack
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -824,7 +820,7 @@ object frmRptReservationsCust: TfrmRptReservationsCust
           Height = 21
           Color = clWhite
           Font.Charset = DEFAULT_CHARSET
-          Font.Color = 2302755
+          Font.Color = clBlack
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []

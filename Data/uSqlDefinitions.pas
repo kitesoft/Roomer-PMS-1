@@ -6069,7 +6069,7 @@ begin
   s := s+' rr.RoomRentPaymentInvoice, '+#10;
   s := s+' rr.Hallres, '+#10;
   s := s+' rr.rrTmp, '+#10;
-  s := s+' rr.ID, '+#10;
+  s := s+' rr.RoomReservation AS ID, '+#10;
   s := s+' rr.rrDescription, '+#10;
   s := s+' rr.rrIsNoRoom, '+#10;
   s := s+' rr.rrDeparture, '+#10;

@@ -797,6 +797,7 @@ const PRE_KEY_NAME = 'PrjConst.Constants.';
 
       SYS_DATE_SEPARATOR = 'shSystem_Date_Separator';
       SYS_TIME_SEPARATOR = 'shSystem_Time_Separator';
+
 procedure TRoomerLanguage.SetSystemConstants;
 var i : Integer;
 begin
@@ -816,8 +817,8 @@ begin
   FormatSettings.ShortDateFormat := GetTranslatedText(SYS_DATE_FORMAT_SHORT);
 
   try
-  FormatSettings.DateSeparator := GetTranslatedText(SYS_DATE_SEPARATOR)[1];
-  FormatSettings.TimeSeparator := GetTranslatedText(SYS_TIME_SEPARATOR)[1];
+    FormatSettings.DateSeparator := GetTranslatedText(SYS_DATE_SEPARATOR)[1];
+    FormatSettings.TimeSeparator := GetTranslatedText(SYS_TIME_SEPARATOR)[1];
   except
 
   end;

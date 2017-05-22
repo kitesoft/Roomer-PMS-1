@@ -502,6 +502,16 @@ begin
             s := ' DELETE FROM roomsdate where ResFlag =' + _db(STATUS_DELETED) + ' AND RoomReservation = ' + _db(RoomReservation) + #10;
             ExePlan.AddExec(s);
 
+            s := format('UPDATE roomreservations SET Arrival=%s, departure=%s, rrArrival=%s, rrDeparture=%s WHERE RoomReservation = %d',
+                [
+                  _db(newArrival, true),
+                  _db(newDeparture, true),
+                  _db(newArrival, true),
+                  _db(newDeparture, true),
+                  RoomReservation
+                ]);
+            ExePlan.AddExec(s);
+
             ExePlan.Execute(ptExec, false, false);
             if TReservationState.FromResStatus(status).InfluencesAvailability then
               d.roomerMainDataSet.SystemChangeAvailabilityForRoom(RoomReservation, true); //decrease availability
@@ -1016,7 +1026,7 @@ begin
           FreeAndNil(Rset);
         end;
 
-        s := SQL_INS_RoomReservation(firstHolder);
+        s := SQL_UPDATE_RoomReservation(firstHolder);
         // copyToClipboard(s);
         // DebugMessage('invoicelines '#10#10+s);
         ExecutionPlan.AddExec(s);

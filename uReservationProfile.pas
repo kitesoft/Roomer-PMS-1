@@ -2005,7 +2005,7 @@ begin
       roomReservationData.numChildren := lCHildrenCOunt;
       roomReservationData.numInfants := lInfantCount;
 
-      ExecutionPlan.AddExec(SQL_INS_RoomReservation(roomReservationData));
+      ExecutionPlan.AddExec(SQL_UPDATE_RoomReservation(roomReservationData));
 
       initInvoiceHeadHolderRec(invoiceHeadData);
       invoiceHeadData.reservation := iReservation;
