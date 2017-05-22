@@ -540,8 +540,8 @@ type
     ///  add object to Lines[] and rows to the grid
     /// </summary>
     procedure calcAndAddAutoItems(reservation: integer; aAutoItems: TInvoiceAutoItemSet = [aiStayTax, aiIncludedBreakFast]); deprecated;
-    procedure CalcAndAddStayTax(aReservation: integer; aRoominvoiceLinesList: TInvoiceRoomEntityList); deprecated;
-    procedure CalcAndAddIncludedBreakFast(aReservation: integer; aRoominvoiceLinesList: TInvoiceRoomEntityList); deprecated;
+    procedure CalcAndAddStayTax(aRoominvoiceLinesList: TInvoiceRoomEntityList); deprecated;
+    procedure CalcAndAddIncludedBreakFast(aRoominvoiceLinesList: TInvoiceRoomEntityList); deprecated;
 
     procedure ClearRoomInfoObjects;
     procedure SetCurrentVisible;
@@ -706,7 +706,7 @@ type
     constructor Create(aOwner: TComponent); override;
     procedure UpdateCaptions;
     procedure WndProc(var message: TMessage); override;
-    property reservation: integer read FReservation write FReservation;
+    property Reservation: integer read FReservation write FReservation;
     property RoomReservation: integer read FRoomReservation write FRoomReservation;
   published
     property lineCount: integer read GetInvoiceLineCount;
@@ -1919,6 +1919,7 @@ var
   lRoomInfo: TInvoiceRoomEntity;
   lInvoiceLine: TInvoiceLine;
   lItemInFo: TItemTypeInfo;
+  lDescription: string;
 begin
 
   lConfirmDate := 2;
@@ -1927,25 +1928,24 @@ begin
   lRmRntItem := trim(g.qRoomRentItem);
   lItemInfo := d.Item_Get_ItemTypeInfo(lRmRntItem);
 
-  aDescription := trim(aDescription);
   lRRText := Item_GetDescription(lRmRntItem);
-
-  if copy(aDescription, 1, 2) = '--' then
+  lDescription := aDescription;
+  if copy(lDescription, 1, 2) = '--' then
   begin
     lRRText := '';
-    aDescription := copy(aDescription, 3, maxint);
+    lDescription := copy(lDescription, 3, maxint);
   end;
 
-  if copy(aDescription, 1, 2) = '&-' then
+  if copy(lDescription, 1, 2) = '&-' then
   begin
     lRRText := '';
-    aDescription := copy(aDescription, 3, maxint);
+    lDescription := copy(lDescription, 3, maxint);
   end;
 
-  if copy(aDescription, 1, 2) = '&&' then
+  if copy(lDescription, 1, 2) = '&&' then
   begin
     aGetGuestName := True;
-    aDescription := copy(aDescription, 3, maxint);
+    lDescription := copy(lDescription, 3, maxint);
   end;
 
   lGuestName := aGuestName;
@@ -1953,11 +1953,11 @@ begin
 
   if not aGetGuestName then
     if lRRText <> '' then
-      lText := lRRText + ' (' + aDescription + ') '
+      lText := lRRText + ' (' + lDescription + ') '
     else
-      lText := aDescription
+      lText := lDescription
   else
-    aDescription := trim(lGuestName) + ' (' + aDescription + ') ';
+    lDescription := trim(lGuestName) + ' (' + lDescription + ') ';
 
   lRoomInfo := TInvoiceRoomEntity.create;
   // -- Attach the Room information
@@ -1979,7 +1979,7 @@ begin
 
 
   // add a TInvoiceline object for the RoomRent to InvoiceLineList
-  lInvoiceLine := AddLine(0, 0, lRmRntItem, aDescription, aDayCount, aRoomPrice, litemInfo.VATCode, 0, True, '', '', aIsPackage, lNumGuests, lConfirmDate, lConfirmAmount, aRRAlias, _GetCurrentTick); // *77
+  lInvoiceLine := AddLine(0, 0, lRmRntItem, lDescription, aDayCount, aRoomPrice, litemInfo.VATCode, 0, True, '', '', aIsPackage, lNumGuests, lConfirmDate, lConfirmAmount, aRRAlias, _GetCurrentTick); // *77
   lInvoiceLine.RoomEntity := lRoomInfo;
 
   //Tax invoicelines
@@ -1994,7 +1994,7 @@ begin
     lDiscountItem := trim(g.qDiscountItem);
     lItemInFo := d.Item_Get_ItemTypeInfo(lDiscountItem);
 
-    aDiscountText := Item_GetDescription(lDiscountItem) + ' ' + aDiscountText;
+    lDescription := Item_GetDescription(lDiscountItem) + ' ' + aDiscountText;
 
     if aDiscountIsPercentage then
       lDiscount := (lRoomInfo.Price * aDiscountAmount / 100) * -1
@@ -2002,7 +2002,7 @@ begin
       lDiscount := (aDiscountAmount) * -1;
 
     /// Add an InvoiceLine object for the discount
-    AddLine(0, lInvoiceLine.InvoiceLineIndex, lDiscountItem, aDiscountText, aDayCount, lDiscount, lItemInfo.VATCode, 0, True, '', '', false, aNumGuests, lConfirmDate, lConfirmAmount, aRRAlias, _GetCurrentTick);
+    AddLine(0, lInvoiceLine.InvoiceLineIndex, lDiscountItem, lDescription, aDayCount, lDiscount, lItemInfo.VATCode, 0, True, '', '', false, aNumGuests, lConfirmDate, lConfirmAmount, aRRAlias, _GetCurrentTick);
     lRoomInfo.Discount := lDiscount * aDayCount;
   end;
 
@@ -3481,10 +3481,10 @@ begin
     end;
 
     if aiIncludedBreakFast in aAutoItems then
-      CalcAndAddIncludedBreakFast(RoomReservation, RoomInvoiceLines);
+      CalcAndAddIncludedBreakFast(RoomInvoiceLines);
 
     if aiStayTax in aAutoItems then
-      CalcAndAddStayTax(RoomReservation, RoomInvoiceLines);
+      CalcAndAddStayTax(RoomInvoiceLines);
 
 
   finally
@@ -3493,7 +3493,7 @@ begin
   end;
 end;
 
-procedure TfrmInvoiceRentPerDay.CalcAndAddIncludedBreakFast(aReservation: integer; aRoominvoiceLinesList: TInvoiceRoomEntityList);
+procedure TfrmInvoiceRentPerDay.CalcAndAddIncludedBreakFast(aRoominvoiceLinesList: TInvoiceRoomEntityList);
 begin
   if glb.PMSSettings.InvoiceSettings.ShowIncludedBreakfastOnInvoice then
   begin
@@ -3548,7 +3548,7 @@ begin
   end;
 end;
 
-procedure TfrmInvoiceRentPerDay.CalcAndAddStayTax(aReservation: integer; aRoominvoiceLinesList: TInvoiceRoomEntityList);
+procedure TfrmInvoiceRentPerDay.CalcAndAddStayTax(aRoominvoiceLinesList: TInvoiceRoomEntityList);
 var
   lUseStayTax: boolean;
   lIsIncluded: boolean;
@@ -3570,7 +3570,7 @@ begin
   labLodgingTax.caption := '0';
   labLodgingTaxNights.caption := '0';
 
-  lUseStayTax := ctrlGetBoolean('useStayTax') AND RV_useStayTax(reservation);
+  lUseStayTax := ctrlGetBoolean('useStayTax') AND RV_useStayTax(Reservation);
 
   glb.LocateSpecificRecordAndGetValue('customers', 'Customer', edtCustomer.Text, 'StayTaxIncluted', lIsIncluded);
 
@@ -4061,11 +4061,7 @@ begin
           lInvLine.RoomEntity := lRoomInfo;
         end;
 
-// replace with       CalcAndAddStayTax(RoomReservation, RoomInvoiceLines);
- -------
-
-        calcAndAddAutoItems(FReservation); // 002
-        chkChanged;
+        CalcAndAddStayTax(RoomInvoiceLines);
       end;
     end;
   end;
