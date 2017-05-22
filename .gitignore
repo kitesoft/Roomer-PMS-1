@@ -62,4 +62,4 @@ RoomerPMSRelease/Roomer.xml
 RoomerPMSRelease/Deployment/
 Utils/*.exe
 
-Unittests/SchemaTests/OpenAPISchemaTests.res
+Extras/jcl/lib/
