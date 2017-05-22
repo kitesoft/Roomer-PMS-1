@@ -50,16 +50,12 @@ implementation
 uses
     Classes
     , uRoomerExceptions
-{$IFDEF DUMP_STACKTRACE}
     , JclDebug, JclHookExcept, TypInfo
-{$ENDIF}
     , uSplashRoomer
     , VCL.Forms
     , IOUtils
     , uUtils
     ;
-
-{$IFDEF DUMP_STACKTRACE}
 
 procedure TRoomerExceptionHandler.LogStackTrace(ExceptObj: TObject; ExceptAddr: Pointer; IsOS: boolean);
 var
@@ -93,7 +89,6 @@ begin
   end;
 
 end;
-{$ENDIF}
 
 
 constructor TRoomerExceptionHandler.Create(const aLogFileName: string = '');

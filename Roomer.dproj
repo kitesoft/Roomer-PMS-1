@@ -2,7 +2,7 @@
     <PropertyGroup>
         <ProjectGuid>{436E2CCE-115E-475F-9C3E-19C03F70A4D0}</ProjectGuid>
         <MainSource>Roomer.dpr</MainSource>
-        <Config Condition="'$(Config)'==''">Debug</Config>
+        <Config Condition="'$(Config)'==''">releaseBas</Config>
         <DCC_DCCCompiler>DCC32</DCC_DCCCompiler>
         <ProjectVersion>14.3</ProjectVersion>
         <FrameworkType>VCL</FrameworkType>
@@ -115,7 +115,7 @@
         <Manifest_File>None</Manifest_File>
         <DCC_UnitSearchPath>RoomerVCLs\Source;RoomerVCLs\http;Extras\NativeXml407\nativexml;Extras\NativeXml407\general;RoomerVCLs\Source ;Extras\DragDrop\Source;FastMM;Extras\Skin\AlphaSkins\Components;Extras\OXML\units;Extras\Spring4d\Source;Extras\Spring4d\Source\Base;Extras\Spring4d\Source\Core;Extras\Spring4d\Source\Data;Extras\Spring4d\Source\Data\ObjectDataset;Extras\Spring4d\Source\Base\Collections;Extras\Spring4d\Source\Base\Logging;Extras\Spring4d\Source\Base\Patches;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <DCC_ImageBase>00400000</DCC_ImageBase>
-        <VerInfo_Keys>CompanyName=Promoir BV;FileDescription=Roomer PMS;FileVersion=1.9.13.0;InternalName=;LegalCopyright=(C) 2013, 2014, 2015, 2016, 2017 Promoir BV;LegalTrademarks=Roomer is a Registered Trademark of Promoir BV;OriginalFilename=Roomer.exe;ProductName=Roomer Open Hospitality Platform;ProductVersion=1.9.13.0;Comments=;ExtraBuild=170508;PrivateBuild=</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=Promoir BV;FileDescription=Roomer PMS;FileVersion=1.9.13.0;InternalName=;LegalCopyright=(C) 2013, 2014, 2015, 2016, 2017 Promoir BV;LegalTrademarks=Roomer is a Registered Trademark of Promoir BV;OriginalFilename=Roomer.exe;ProductName=Roomer Open Hospitality Platform;ProductVersion=1.9.13.0;Comments=;ExtraBuild=170504;PrivateBuild=</VerInfo_Keys>
         <VerInfo_Locale>1039</VerInfo_Locale>
         <VerInfo_MinorVer>9</VerInfo_MinorVer>
         <VerInfo_AutoGenVersion>true</VerInfo_AutoGenVersion>
@@ -143,8 +143,6 @@
         <Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1)'!=''">
-        <VerInfo_Debug>false</VerInfo_Debug>
-        <VerInfo_PreRelease>false</VerInfo_PreRelease>
         <DCC_ExeOutput>RoomerPMSRelease</DCC_ExeOutput>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <DCC_MaxStackSize>1176576</DCC_MaxStackSize>
@@ -156,9 +154,10 @@
         <DCC_Define>_ROOMERSSL;TRANSLATION_ACTIVE;$(DCC_Define)</DCC_Define>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
-        <VerInfo_Release>14</VerInfo_Release>
+        <VerInfo_PreRelease>false</VerInfo_PreRelease>
+        <VerInfo_Debug>false</VerInfo_Debug>
         <VerInfo_AutoGenVersion>false</VerInfo_AutoGenVersion>
-        <VerInfo_Keys>CompanyName=Promoir BV;FileDescription=Roomer PMS;FileVersion=1.9.14.0;InternalName=;LegalCopyright=(C) 2013, 2014, 2015, 2016, 2017 Promoir BV;LegalTrademarks=Roomer is a Registered Trademark of Promoir BV;OriginalFilename=Roomer.exe;ProductName=Roomer Open Hospitality Platform;ProductVersion=1.9.14.0;Comments=;ExtraBuild=170511;PrivateBuild=</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=Promoir BV;FileDescription=Roomer PMS;FileVersion=1.9.13.0;InternalName=;LegalCopyright=(C) 2013, 2014, 2015, 2016, 2017 Promoir BV;LegalTrademarks=Roomer is a Registered Trademark of Promoir BV;OriginalFilename=Roomer.exe;ProductName=Roomer Open Hospitality Platform;ProductVersion=1.9.13.0;Comments=;ExtraBuild=170428;PrivateBuild=</VerInfo_Keys>
         <DCC_AssertionsAtRuntime>false</DCC_AssertionsAtRuntime>
         <DCC_DcuOutput>_dcu</DCC_DcuOutput>
         <DCC_ExeOutput>RoomerPMSRelease</DCC_ExeOutput>
@@ -173,8 +172,10 @@
         <DCC_AssertionsAtRuntime>false</DCC_AssertionsAtRuntime>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_4_Win32)'!=''">
-        <VerInfo_Keys>CompanyName=Promoir BV;FileDescription=Roomer PMS;FileVersion=1.9.13.0;InternalName=;LegalCopyright=(C) 2013, 2014, 2015, 2016, 2017 Promoir BV;LegalTrademarks=Roomer is a Registered Trademark of Promoir BV;OriginalFilename=Roomer.exe;ProductName=Roomer Open Hospitality Platform;ProductVersion=1.9.13.0;Comments=;ExtraBuild=170517;PrivateBuild=</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=Promoir BV;FileDescription=Roomer PMS;FileVersion=1.9.13.0;InternalName=;LegalCopyright=(C) 2013, 2014, 2015, 2016, 2017 Promoir BV;LegalTrademarks=Roomer is a Registered Trademark of Promoir BV;OriginalFilename=Roomer.exe;ProductName=Roomer Open Hospitality Platform;ProductVersion=1.9.13.0;Comments=;ExtraBuild=170522;PrivateBuild=</VerInfo_Keys>
         <VerInfo_AutoGenVersion>false</VerInfo_AutoGenVersion>
+        <VerInfo_PreRelease>false</VerInfo_PreRelease>
+        <VerInfo_Debug>false</VerInfo_Debug>
         <Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
@@ -213,11 +214,11 @@
         <DCC_DcuOutput>_dcu</DCC_DcuOutput>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_3_Win32)'!=''">
-        <VerInfo_Keys>CompanyName=Promoir BV;FileDescription=Roomer PMS;FileVersion=2.0.0.0;InternalName=;LegalCopyright=(C) 2013, 2014, 2015, 2016, 2017 Promoir BV;LegalTrademarks=Roomer is a Registered Trademark of Promoir BV;OriginalFilename=Roomer.exe;ProductName=Roomer Open Hospitality Platform;ProductVersion=2.9.13.0;Comments=;ExtraBuild=170421;PrivateBuild=</VerInfo_Keys>
         <DCC_DcuOutput>_dcu\debug</DCC_DcuOutput>
         <DCC_DebugDCUs>false</DCC_DebugDCUs>
         <DCC_BplOutput> </DCC_BplOutput>
         <VerInfo_MinorVer>0</VerInfo_MinorVer>
+        <VerInfo_MajorVer>2</VerInfo_MajorVer>
         <VerInfo_Release>0</VerInfo_Release>
         <VerInfo_AutoGenVersion>false</VerInfo_AutoGenVersion>
         <DCC_SYMBOL_PLATFORM>false</DCC_SYMBOL_PLATFORM>
@@ -817,12 +818,14 @@
         <DCCReference Include="Definitions\uCleaningNotesDefinitions.pas"/>
         <DCCReference Include="RoomerForm\uRoomerDialogForm.pas">
             <Form>frmBaseRoomerDialogForm</Form>
+            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="RoomerUtils\uSQLUtils.pas"/>
         <DCCReference Include="RoomerVCLs\Source\uStringUtils.pas"/>
         <DCCReference Include="Definitions\uInvoiceDefinitions.pas"/>
         <DCCReference Include="Embeddables\uFraCountryPanel.pas">
             <Form>fraCountryPanel</Form>
+            <FormType>dfm</FormType>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="ufrmRoomPrices.pas">
@@ -837,6 +840,7 @@
         </DCCReference>
         <DCCReference Include="uTopClassAvailabilityOrder.pas">
             <Form>FrmTopClassAvailabilityOrder</Form>
+            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="uCurrencyHandlersMap.pas"/>
         <DCCReference Include="OpenAPI\uHotelServicesAPICaller.pas"/>
@@ -853,6 +857,7 @@
         <DCCReference Include="RoomerUtils\uRoomerVersionInfo.pas"/>
         <DCCReference Include="Dialogs\uFrmBusyMessage.pas">
             <Form>frmBusyMessage</Form>
+            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="OpenAPI\schema\uRoomerSchema.pas"/>
         <DCCReference Include="OpenAPI\schema\RoomerConfigurationItemsCommunicationModel_RequestsResponses.pas"/>
@@ -865,14 +870,12 @@
         <DCCReference Include="PMSSettings\uHotelServicesSettings.pas"/>
         <DCCReference Include="RoomerForm\uRoomerGridForm.pas">
             <Form>frmBaseRoomerGridForm</Form>
+            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Definitions\uStaffCommunicationDefinitions.pas"/>
         <DCCReference Include="Reporting\uRptReservationStatusPerDay.pas">
             <Form>FrmRptReservationStatusPerDay</Form>
         </DCCReference>
-        <DCCReference Include="VersionManagement\uVersionManagement.pas"/>
-        <DCCReference Include="Logging\uRoomerLogger.pas"/>
-        <DCCReference Include="RoomerInstanceManagement\uRoomerInstanceManagement.pas"/>
         <None Include="Roomer.todo"/>
         <None Include="notes.txt"/>
         <None Include="Roomer.inc"/>
@@ -927,10 +930,7 @@
                 <Language>
                     <Language Name="ProjectLang">$0000040F</Language>
                 </Language>
-                <Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k170.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp170.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
-                </Excluded_Packages>
+                <Excluded_Packages/>
                 <VersionInfo>
                     <VersionInfo Name="IncludeVerInfo">False</VersionInfo>
                     <VersionInfo Name="AutoIncBuild">False</VersionInfo>
