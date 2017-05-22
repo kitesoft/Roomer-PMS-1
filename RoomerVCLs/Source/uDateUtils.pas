@@ -141,7 +141,6 @@ function RoomerStringToDateTime(dateStr : String) : TDateTime;
 var
   FormatSettings: TFormatSettings;
 begin
-  FormatSettings := TFormatSettings.Create(GetThreadLocale);// (LOCALE_USER_DEFAULT, FormatSettings);
   FormatSettings.DateSeparator := '-';
   FormatSettings.ShortDateFormat := 'dd-mm-yyyy hh:nn:ss';
   Result := StrToDateTime(dateStr, FormatSettings);
