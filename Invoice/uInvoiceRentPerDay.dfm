@@ -28,7 +28,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
-  object PANmAIN: TsPanel
+  object pnlMain: TsPanel
     Left = 0
     Top = 0
     Width = 1096
@@ -59,7 +59,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
       ExplicitTop = 27
       ExplicitWidth = 1153
     end
-    object Panel1: TsPanel
+    object pnlHead: TsPanel
       Left = 0
       Top = 0
       Width = 1096
@@ -646,8 +646,8 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
       object chkShowPackage: TsCheckBox
         Left = 724
         Top = 167
-        Width = 111
-        Height = 20
+        Width = 119
+        Height = 17
         Caption = 'Package on invoice'
         Checked = True
         State = cbChecked
@@ -667,7 +667,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         SkinData.SkinSection = 'BUTTON'
       end
     end
-    object sPanel5: TsPanel
+    object pnlLnes: TsPanel
       Left = 0
       Top = 169
       Width = 1096
@@ -675,7 +675,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
-      object Panel2: TsPanel
+      object pnlTotalsAndPayments: TsPanel
         Left = 0
         Top = 341
         Width = 1096
@@ -703,6 +703,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
           ParentFont = False
           ScrollBars = ssVertical
           TabOrder = 0
+          ExplicitLeft = 2
         end
         object sPanel2: TsPanel
           Left = 337
@@ -1049,184 +1050,244 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
           end
         end
       end
-      object Panel4: TsPanel
+      object pnlLineButtons: TsPanel
         Left = 0
         Top = 0
         Width = 1096
-        Height = 91
+        Height = 92
         Align = alTop
         BevelOuter = bvNone
         TabOrder = 3
         SkinData.SkinSection = 'PANEL'
-        DesignSize = (
-          1096
-          91)
-        object btnRoomToTemp: TsButton
-          Left = 10
-          Top = 4
-          Width = 130
-          Height = 40
-          Action = actRRtoTemp
+        object pnlRoomButtons: TsPanel
+          Left = 0
+          Top = 0
+          Width = 273
+          Height = 92
+          Align = alLeft
           TabOrder = 0
-          SkinData.SkinSection = 'BUTTON'
-        end
-        object btnAddItem: TsButton
-          Left = 10
-          Top = 47
-          Width = 130
-          Height = 40
-          Action = actAddLine
-          TabOrder = 1
-          SkinData.SkinSection = 'BUTTON'
-        end
-        object btnItemToTmp: TsButton
-          Left = 141
-          Top = 4
-          Width = 130
-          Height = 40
-          Action = actItemToTemp
-          TabOrder = 2
-          SkinData.SkinSection = 'BUTTON'
-        end
-        object btnRemoveItem: TsButton
-          Left = 141
-          Top = 47
-          Width = 130
-          Height = 40
-          Action = actDelLine
-          TabOrder = 3
-          SkinData.SkinSection = 'BUTTON'
-        end
-        object btnMoveItem: TsButton
-          Left = 272
-          Top = 4
-          Width = 130
-          Height = 40
-          Action = actItemToGroupInvoice
-          Caption = 'Move sales item'
-          DropDownMenu = mnuMoveItem
-          Style = bsSplitButton
-          TabOrder = 4
-          SkinData.SkinSection = 'BUTTON'
-        end
-        object btnMoveRoom: TsButton
-          Left = 403
-          Top = 4
-          Width = 130
-          Height = 40
-          Caption = 'Move room item'
-          DropDownMenu = mnuMoveRoom
-          Enabled = False
-          Style = bsSplitButton
-          TabOrder = 6
-          SkinData.SkinSection = 'BUTTON'
-        end
-        object btnRemoveLodgingTax2: TsButton
-          Left = 403
-          Top = 47
-          Width = 130
-          Height = 40
-          Caption = 'Toggle lodging tax'
-          TabOrder = 7
-          OnClick = btnRemoveLodgingTax2Click
-          SkinData.SkinSection = 'BUTTON'
-        end
-        object btnReservationNotes: TsButton
-          Left = 272
-          Top = 47
-          Width = 130
-          Height = 40
-          Caption = 'Reservation notes'
-          TabOrder = 5
-          OnClick = btnReservationNotesClick
-          SkinData.SkinSection = 'BUTTON'
-        end
-        object btnSaveChanges: TsButton
-          Left = 892
-          Top = 4
-          Width = 134
-          Height = 40
-          Anchors = [akTop, akRight]
-          Caption = 'Save changes'
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWhite
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = [fsBold]
-          ImageIndex = 2
-          Images = DImages.cxSmallImagesFlat
-          ParentFont = False
-          TabOrder = 8
-          Visible = False
-          OnClick = btnSaveChangesClick
-          SkinData.CustomFont = True
-          SkinData.ColorTone = clRed
-        end
-        object pnlPaymentButtons: TsPanel
-          Left = 629
-          Top = 47
-          Width = 396
-          Height = 40
-          Alignment = taLeftJustify
-          Anchors = [akTop, akRight]
-          AutoSize = True
-          BevelOuter = bvNone
-          TabOrder = 9
-          OnResize = pnlPaymentButtonsResize
-          SkinData.SkinSection = 'PANEL'
-          object btnAddDownPayment: TsButton
-            Left = 0
-            Top = 0
-            Width = 131
+          ExplicitHeight = 145
+          object btnRoomToTemp: TsButton
+            Left = 3
+            Top = 45
+            Width = 130
             Height = 40
-            Action = actDownPayment
-            Align = alRight
+            Action = actRRtoTemp
             TabOrder = 0
             SkinData.SkinSection = 'BUTTON'
           end
-          object btnEditDownPayment: TsButton
-            Left = 131
-            Top = 0
-            Width = 131
+          object btnMoveRoom: TsButton
+            Left = 137
+            Top = 45
+            Width = 130
             Height = 40
-            Align = alRight
-            Caption = 'Edit Down Payment'
-            TabOrder = 1
-            OnClick = btnEditDownPaymentClick
+            Caption = 'Move room item'
+            DropDownMenu = mnuMoveRoom
+            Enabled = False
+            Style = bsSplitButton
+            TabOrder = 2
             SkinData.SkinSection = 'BUTTON'
           end
-          object btnDeleteDownpayment: TsButton
-            Left = 262
-            Top = 0
+          object btnAddRoom: TsButton
+            Left = 3
+            Top = 2
+            Width = 130
+            Height = 40
+            Action = actAddRoom
+            TabOrder = 1
+            SkinData.SkinSection = 'BUTTON'
+          end
+          object sButton1: TsButton
+            Left = 137
+            Top = 2
+            Width = 130
+            Height = 40
+            Action = actDelLine
+            Caption = 'Remove room'
+            TabOrder = 3
+            SkinData.SkinSection = 'BUTTON'
+          end
+        end
+        object pnlItemButtons: TsPanel
+          Left = 273
+          Top = 0
+          Width = 278
+          Height = 92
+          Align = alLeft
+          TabOrder = 1
+          ExplicitHeight = 145
+          object btnItemToTmp: TsButton
+            Left = 6
+            Top = 45
+            Width = 130
+            Height = 40
+            Action = actItemToTemp
+            TabOrder = 0
+            SkinData.SkinSection = 'BUTTON'
+          end
+          object btnMoveItem: TsButton
+            Left = 142
+            Top = 45
+            Width = 130
+            Height = 40
+            Action = actItemToGroupInvoice
+            DropDownMenu = mnuMoveItem
+            Style = bsSplitButton
+            TabOrder = 1
+            SkinData.SkinSection = 'BUTTON'
+          end
+          object btnRemoveItem: TsButton
+            Left = 142
+            Top = 2
+            Width = 130
+            Height = 40
+            Action = actDelLine
+            TabOrder = 2
+            SkinData.SkinSection = 'BUTTON'
+          end
+          object btnAddItem: TsButton
+            Left = 6
+            Top = 2
+            Width = 130
+            Height = 40
+            Action = actAddLine
+            TabOrder = 3
+            SkinData.SkinSection = 'BUTTON'
+          end
+        end
+        object sPanel1: TsPanel
+          Left = 696
+          Top = 0
+          Width = 400
+          Height = 92
+          Align = alRight
+          TabOrder = 2
+          ExplicitTop = -1
+          ExplicitHeight = 145
+          DesignSize = (
+            400
+            92)
+          object pnlPaymentButtons: TsPanel
+            Left = 4
+            Top = 46
+            Width = 396
+            Height = 40
+            Alignment = taLeftJustify
+            Anchors = [akTop, akRight]
+            AutoSize = True
+            BevelOuter = bvNone
+            TabOrder = 0
+            OnResize = pnlPaymentButtonsResize
+            SkinData.SkinSection = 'PANEL'
+            ExplicitLeft = -23
+            object btnAddDownPayment: TsButton
+              Left = 0
+              Top = 0
+              Width = 131
+              Height = 40
+              Action = actDownPayment
+              Align = alRight
+              TabOrder = 0
+              SkinData.SkinSection = 'BUTTON'
+            end
+            object btnEditDownPayment: TsButton
+              Left = 131
+              Top = 0
+              Width = 131
+              Height = 40
+              Align = alRight
+              Caption = 'Edit Down Payment'
+              TabOrder = 1
+              OnClick = btnEditDownPaymentClick
+              SkinData.SkinSection = 'BUTTON'
+            end
+            object btnDeleteDownpayment: TsButton
+              Left = 262
+              Top = 0
+              Width = 134
+              Height = 40
+              Align = alRight
+              Caption = 'Delete Down Payment'
+              TabOrder = 2
+              OnClick = btnDeleteDownpaymentClick
+              SkinData.SkinSection = 'BUTTON'
+            end
+          end
+          object btnSaveChanges: TsButton
+            Left = 266
+            Top = 3
             Width = 134
             Height = 40
-            Align = alRight
-            Caption = 'Delete Down Payment'
-            TabOrder = 2
-            OnClick = btnDeleteDownpaymentClick
+            Anchors = [akTop, akRight]
+            Caption = 'Save changes'
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWhite
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = [fsBold]
+            ImageIndex = 2
+            Images = DImages.cxSmallImagesFlat
+            ParentFont = False
+            TabOrder = 1
+            Visible = False
+            OnClick = btnSaveChangesClick
+            SkinData.CustomFont = True
+            SkinData.ColorTone = clRed
+            ExplicitLeft = 239
+          end
+        end
+        object sPanel4: TsPanel
+          Left = 551
+          Top = 0
+          Width = 145
+          Height = 92
+          Align = alClient
+          TabOrder = 3
+          ExplicitTop = -1
+          ExplicitHeight = 145
+          object btnReservationNotes: TsButton
+            Left = 5
+            Top = 2
+            Width = 130
+            Height = 40
+            Caption = 'Reservation notes'
+            TabOrder = 0
+            OnClick = btnReservationNotesClick
+            SkinData.SkinSection = 'BUTTON'
+          end
+          object btnRemoveLodgingTax2: TsButton
+            Left = 5
+            Top = 45
+            Width = 130
+            Height = 40
+            Caption = 'Toggle lodging tax'
+            TabOrder = 1
+            OnClick = btnRemoveLodgingTax2Click
             SkinData.SkinSection = 'BUTTON'
           end
         end
       end
-      object sPanel1: TsPanel
+      object pnlLinesGrid: TsPanel
         Left = 0
-        Top = 91
+        Top = 92
         Width = 1040
-        Height = 250
+        Height = 249
         Align = alClient
         BevelOuter = bvNone
-        Caption = 'sPanel1'
+        Caption = 'pnlLinesGrid'
         Padding.Left = 10
         Padding.Top = 5
         Padding.Right = 10
         Padding.Bottom = 5
         TabOrder = 2
         SkinData.SkinSection = 'PANEL'
+        ExplicitTop = 145
+        ExplicitHeight = 196
         object agrLines: TAdvStringGrid
           Left = 10
           Top = 5
           Width = 1020
-          Height = 240
+          Height = 239
           Cursor = crDefault
           Align = alClient
           BevelInner = bvNone
@@ -1351,6 +1412,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
           SearchFooter.ResultFormat = '(%d of %d)'
           SortSettings.DefaultFormat = ssAutomatic
           Version = '8.2.4.1'
+          ExplicitHeight = 186
           ColWidths = (
             24
             28
@@ -1363,14 +1425,16 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
             64)
         end
       end
-      object sPanel4: TsPanel
+      object pnlInvoiceIndices: TsPanel
         AlignWithMargins = True
         Left = 1043
-        Top = 94
+        Top = 95
         Width = 50
-        Height = 244
+        Height = 243
         Align = alRight
         TabOrder = 1
+        ExplicitTop = 148
+        ExplicitHeight = 190
         object pnlInvoiceIndex0: TsPanel
           Left = 3
           Top = 4
@@ -2163,16 +2227,13 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
       ShortCut = 116
       OnExecute = actItemToGroupInvoiceExecute
     end
-    object actCompressLines: TAction
-      Category = 'Lines'
-      Caption = 'Compress items'
-    end
     object actAddPackage: TAction
       Caption = 'Add Package'
     end
-    object Action2: TAction
+    object actAddRoom: TAction
       Category = 'Lines'
-      Caption = 'Action2'
+      Caption = 'Add Room'
+      OnExecute = actAddRoomExecute
     end
   end
   object timCloseInvoice: TTimer
