@@ -1660,7 +1660,10 @@ begin
 
   constants.Add('shDailyrevenues_refreshwithdetails', 'Data needs to be refreshed to make detailinfo visible.'+#10#13 + 'Refresh now?');
 
-
+  constants.Add('shEditInvoice_RoomRentPerDay', 'Specify roomrent per day on this invoice?');
+  constants.Add('shRoomRentPErDaySetting_Never', 'Never');
+  constants.Add('shRoomRentPErDaySetting_Ask', 'Ask per invoice');
+  constants.Add('shRoomRentPErDaySetting_Always', 'Always');
 end;
 
 procedure AddConstants_OfflineReports;

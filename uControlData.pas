@@ -616,7 +616,6 @@ type
     sLabel19: TsLabel;
     btnInvoiceTemplateResources: TsButton;
     sLabel21: TsLabel;
-    chkRoomRentPerDay: TsCheckBox;
     sGroupBox14: TsGroupBox;
     sLabel23: TsLabel;
     cbxAutoAddToGuestPortfolio: TsCheckBox;
@@ -729,6 +728,7 @@ type
     chkCallLogInternal: TsCheckBox;
     cbxCallType: TsComboBox;
     edCallMinSec: TsSpinEdit;
+    cbxRoomRentPerDay: TsComboBox;
     procedure FormCreate(Sender : TObject);
     procedure FormClose(Sender : TObject; var Action : TCloseAction);
     procedure FormShow(Sender : TObject);
@@ -855,7 +855,7 @@ uses
   , uMandatoryFieldDefinitions
   , UITYpes
   , uResourceTypeDefinitions
-  ;
+  , uPMSSettings;
 {$R *.DFM}
 
 const
@@ -1329,7 +1329,8 @@ g.ReadWriteSettingsToRegistry(0);
     cbxBackupMachine.Checked := g.BackupMachine;
     cbxLocationPerRoomType.Checked := g.qLocationPerRoomType;
     cbxWithdrawalWithoutGuarantee.Checked := NOT g.qRestrictWithdrawalWithoutGuarantee;
-    chkRoomRentPerDay.Checked :=  glb.PMSSettings.InvoiceSettings.RoomRentPerDayOninvoice;
+
+    cbxRoomRentPerDay.ItemIndex :=  glb.PMSSettings.InvoiceSettings.RoomRentPerDayOninvoice.ToItemIndex;
 
     chkConfirmAuto.checked := g.qConfirmAuto;
     edConfirmMinuteOfTheDay.value  := g.qConfirmMinuteOfTheDay;
@@ -1928,7 +1929,10 @@ begin
       g.qLocationPerRoomType := cbxLocationPerRoomType.Checked;
       g.qRestrictWithdrawalWithoutGuarantee := NOT cbxWithdrawalWithoutGuarantee.Checked;
 
-      glb.PMSSettings.InvoiceSettings.RoomRentPerDayOninvoice := chkRoomRentPerDay.Checked;
+      if cbxRoomRentPerDay.ItemIndex = -1 then
+        glb.PMSSettings.InvoiceSettings.RoomRentPerDayOninvoice := rpdNever
+      else
+        glb.PMSSettings.InvoiceSettings.RoomRentPerDayOninvoice := TRoomRentPerDaySetting.FromItemIndex(cbxRoomRentPerDay.ItemIndex);
 
       g.qConfirmAuto := chkConfirmAuto.checked;
       g.qConfirmMinuteOfTheDay := edConfirmMinuteOfTheDay.value;
@@ -2509,22 +2513,7 @@ begin
   end;
 
   btnResourcesClick(nil);
-//  cbxEmailTemplates.Items.Clear;
-//  RoomerResourceManagement := TRoomerResourceManagement.Create(TResourceType.rtGuestEmailTemplate, TResourceAccessType.ratRestricted);
-//  try
-//    RoomerResourceManagement.AddStaticResourcesAsStrings(cbxEmailTemplates.Items);
-//  finally
-//    RoomerResourceManagement.Free;
-//  end;
-
   btnInvoiceTemplateResourcesClick(nil);
-//  RoomerResourceManagement := TRoomerResourceManagement.Create(TResourceType.rtAnyFile, TResourceAccessType.ratRestricted);
-//  try
-//    RoomerResourceManagement.AddStaticResourcesAsStrings(cbxInvoiceExport.Items);
-//  finally
-//    RoomerResourceManagement.Free;
-//  end;
-
   fcCurrentFontName.Font.Name := gridFont.name;
   fcCurrentFontName.ItemIndex := fcCurrentFontName.Items.IndexOf(fcCurrentFontName.Font.Name);
   fcCurrentFontName.Font.size := gridFont.size;
@@ -2567,6 +2556,9 @@ begin
   cbxInvoicePrinter.Items.Assign(Printer.Printers);
   cbxInvoicePrinter.Items.Insert(0, 'Default Printer');
   cbxReportPrinter.Items.Assign(cbxInvoicePrinter.Items);
+
+  TRoomRentPerDaySetting.AsStrings(cbxRoomRentPerDay.Items);
+  cbxRoomRentPerDay.ItemIndex := 0;
 
   LoadTable;
   cbxStatusAttr_.ItemIndex := 0;

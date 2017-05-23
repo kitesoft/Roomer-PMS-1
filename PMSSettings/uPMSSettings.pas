@@ -4,6 +4,7 @@ interface
 
 uses
   SysUtils
+  , Classes
   , cmpRoomerDataset
   , uMandatoryFIeldDefinitions
   , uPMSSettingsAccessor
@@ -27,6 +28,42 @@ type
   end;
 
 
+  TRoomRentPerDaySetting = (rpdNever, rpdAsk, rpdAlways);
+  TRoomRentPerDaySettingHelper = record helper for TRoomrentPerDaySetting
+  private
+    /// <summary>
+    ///   Strings used in the database to store TCleaningNoteServicetype
+    /// </summary>
+    const cRoomRentPerDayStrings: array[TRoomRentPerDaySetting] of string =
+      ('NEVER', ' ASK' , 'ALWAYS');
+
+  public
+      // constructor
+      /// <summary>
+      ///   Create a TRoomrentPerDaySetting from a string
+      /// </summary>
+      class function FromString(const aRoomRentPerDay: string) : TRoomrentPerDaySetting; static;
+      class function FromItemIndex(aIndex: integer): TRoomRentPerDaySetting; static;
+      /// <summary>
+      ///   Fill a TStrings with translated descriptions in order of enumeration. Can by used to populate a TCombobox
+      /// </summary>
+      class procedure AsStrings(aItemList: TStrings); static;
+      /// <summary>
+      ///   Return the itemindex of TReservationState as it would have in the itemlist created by AsStrings
+      /// </summary>
+      function ToItemIndex: integer;
+
+      /// <summary>
+      ///   Return as a string for db
+      /// </summary>
+      function AsDB: string;
+      /// <summary>
+      ///   Return the translated displaystring for a TAccountType
+      /// </summary>
+      function AsReadableString : string;
+  end;
+
+
   TPMSSettingsInvoice = class(TPMSSettingsGroup)
   private const
     cInvoiceHandlingGroup = 'INVOICE_HANDLING_FUNCTIONS';
@@ -47,8 +84,8 @@ type
     procedure SetAllowPaymentModification(const Value: boolean);
     procedure SetAllowTogglingOfCityTaxes(const Value: boolean);
     procedure SetShowIncludedBreakfastOnInvoice(const Value: boolean);
-    function GetRoomRentPerDayOninvoice: boolean;
-    procedure SetRoomRentPerDayOninvoice(const Value: boolean);
+    function GetRoomRentPerDayOninvoice: TRoomrentPerDaySetting;
+    procedure SetRoomRentPerDayOninvoice(const Value: TRoomrentPerDaySetting);
   protected
     function GetKeyGroup: string; override;
   public
@@ -57,7 +94,7 @@ type
     property AllowPaymentModification: boolean read GetAllowPaymentModification write SetAllowPaymentModification;
     property AllowDeletingItemsFromInvoice: boolean read GetAllowDeletingItemsFromInvoice write SetAllowDeletingItemsFromInvoice;
     property AllowTogglingOfCityTaxes: boolean read GetAllowTogglingOfCityTaxes write SetAllowTogglingOfCityTaxes;
-    property RoomRentPerDayOninvoice: boolean read GetRoomRentPerDayOninvoice write SetRoomRentPerDayOninvoice;
+    property RoomRentPerDayOninvoice: TRoomrentPerDaySetting read GetRoomRentPerDayOninvoice write SetRoomRentPerDayOninvoice;
   end;
 
   TPMSSettingsRatesAvailabilities = class(TPMSSettingsGroup)
@@ -161,7 +198,7 @@ uses
   Variants
   , uUtils
   , hData
-  ;
+  , PrjConst;
 
 constructor TPmsSettings.Create(aPMSDataset: TRoomerDataset);
 begin
@@ -257,9 +294,9 @@ begin
   Result := cInvoiceHandlingGroup;
 end;
 
-function TPMSSettingsInvoice.GetRoomRentPerDayOninvoice: boolean;
+function TPMSSettingsInvoice.GetRoomRentPerDayOninvoice: TRoomrentPerDaySetting;
 begin
-  result := GetSettingsAsBoolean(cShowRoomRentPerDay, false);
+  result := TRoomRentPerDaySetting.FromString(GetSettingsAsString(cShowRoomRentPerDay, rpdNever.AsDB));
 end;
 
 function TPMSSettingsInvoice.GetAllowDeletingItemsFromInvoice: boolean;
@@ -302,9 +339,9 @@ begin
   SaveSetting(cAllowTogglingOfCityTaxes, Value);
 end;
 
-procedure TPMSSettingsInvoice.SetRoomRentPerDayOninvoice(const Value: boolean);
+procedure TPMSSettingsInvoice.SetRoomRentPerDayOninvoice(const Value: TRoomrentPerDaySetting);
 begin
-  SaveSetting(cShowRoomRentPerDay, Value);
+  SaveSetting(cShowRoomRentPerDay, Value.AsDB);
 end;
 
 procedure TPMSSettingsInvoice.SetShowIncludedBreakfastOnInvoice(const Value: boolean);
@@ -396,6 +433,53 @@ end;
 procedure TPMSSettingsBetaFunctionality.SetUseInvocieOnObjectsForm(const Value: boolean);
 begin
   SaveSetting(cBetaFunctionUseInvoiceOnObjectsForm, Value);
+end;
+
+{ TRoomRentPerDaySettingHelper }
+
+function TRoomRentPerDaySettingHelper.AsDB: string;
+begin
+  Result := cRoomRentPerDayStrings[Self];
+end;
+
+function TRoomRentPerDaySettingHelper.AsReadableString: string;
+begin
+  case Self of
+    rpdNever:   Result := GetTranslatedText('shRoomRentPErDaySetting_Never');
+    rpdAsk:     Result := GetTranslatedText('shRoomRentPErDaySetting_Ask');
+    rpdAlways:  Result := GetTranslatedText('shRoomRentPErDaySetting_Always');
+  end;
+end;
+
+class procedure TRoomRentPerDaySettingHelper.AsStrings(aItemList: TStrings);
+var
+  lSetting: TRoomRentPerDaySetting;
+begin
+  for lSetting := low(lSetting) to high(lSetting) do
+    aItemList.Add(lSetting.AsReadableString);
+end;
+
+class function TRoomRentPerDaySettingHelper.FromItemIndex(aIndex: integer): TRoomRentPerDaySetting;
+begin
+  Result := TRoomRentPerDaySetting(aIndex);
+end;
+
+class function TRoomRentPerDaySettingHelper.FromString(const aRoomRentPerDay: string): TRoomrentPerDaySetting;
+var
+  lSetting: TRoomRentPerDaySetting;
+begin
+  Result := rpdNever;
+  for lSetting := low(TRoomRentPerDaySetting) to high(TRoomRentPerDaySetting) do
+    if lSetting.AsDB.equals(aRoomRentPerDay) then
+    begin
+      Result := lSetting;
+      Break;
+    end;
+end;
+
+function TRoomRentPerDaySettingHelper.ToItemIndex: integer;
+begin
+  Result := ord(Self);
 end;
 
 end.

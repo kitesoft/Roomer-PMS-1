@@ -6046,7 +6046,7 @@ begin
     s := s + '  `RoomReservation`, '#10;
     s := s + '  `Reservation`, '#10;
     s := s + '  `PriceType`, '#10;
-    s := s + '  `(SELECT AVG(RoomRate) FROM roomsdate rd WHERE rd.RoomReservation=roomreservations.RoomReservation AND (rd.ResFlag NOT IN (''X'',''C''))) AS AvrageRate`, '#10;
+    s := s + '  (SELECT AVG(RoomRate) FROM roomsdate rd WHERE rd.RoomReservation=roomreservations.RoomReservation AND (rd.ResFlag NOT IN (''X'',''C''))) AS AvrageRate, '#10;
     s := s + '  `Currency`, '#10;
     s := s + '  `Discount` '#10;
     s := s + 'FROM '#10;

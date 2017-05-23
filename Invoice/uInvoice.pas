@@ -675,7 +675,7 @@ uses
   UITypes
   , uFloatUtils
   , Math
-    , uVatCalculator, uSQLUtils, ufrmRoomPrices, uInvoiceDefinitions, uInvoiceRentPerDay;
+    , uVatCalculator, uSQLUtils, ufrmRoomPrices, uInvoiceDefinitions, uInvoiceRentPerDay, uPMSSettings;
 
 {$R *.DFM}
 
@@ -727,7 +727,8 @@ var
   _frmInvoice: TfrmInvoice;
 begin
 
-  if glb.PMSSettings.InvoiceSettings.RoomRentPerDayOninvoice then
+  if (glb.PMSSettings.InvoiceSettings.RoomRentPerDayOninvoice = rpdAlways)  or
+    (glb.PMSSettings.InvoiceSettings.RoomRentPerDayOninvoice = rpdAsk) and (MessageDlg(GetTranslatedText('shEditInvoice_RoomRentPerDay'), mtConfirmation, mbYesNo, 0) = mrYes) then
     EditInvoiceRentPerDay(Reservation, ROomReservation, SplitNumber, InvoiceIndex, bCredit, FromKredit)
   else
   begin
