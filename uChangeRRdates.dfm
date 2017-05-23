@@ -44,6 +44,7 @@ inherited frmChangeRRdates: TfrmChangeRRdates
     end
     inherited btnCancel: TsButton
       Left = 519
+      ExplicitLeft = 519
     end
   end
   object sPanel1: TsPanel [2]

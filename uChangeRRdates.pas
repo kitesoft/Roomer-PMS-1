@@ -229,7 +229,7 @@ var
   lstPrices: tstringlist;
   roomRate: double;
   discountTotal: double;
-  avrageRate: double;
+  averageRate: double;
   avrageDiscount: double;
   rateCount: integer;
 
@@ -251,7 +251,7 @@ begin
   screen.Cursor := crHourglass;
 
   avrageDiscount := 0;
-  avrageRate := 0;
+  averageRate := 0;
   rateCount := 0;
   paidCount := 0;
 
@@ -301,7 +301,7 @@ begin
         discountTotal := discountTotal + Discount;
         rd_.Next;
       end;
-      avrageRate := roomRateTotal / rdCount;
+      averageRate := roomRateTotal / rdCount;
       avrageDiscount := discountTotal / rdCount;
       rateCount := lstPrices.Count;
     end;
@@ -466,7 +466,7 @@ begin
                 rec.ResFlag := status;
                 rec.Reservation := Reservation;
                 rec.PriceCode := priceType;
-                rec.roomRate := avrageRate;
+                rec.roomRate := averageRate;
                 rec.Discount := avrageDiscount;
                 rec.isPercentage := rd_.FieldByName('isPercentage').asBoolean;
                 rec.showDiscount := rd_.FieldByName('showDiscount').asBoolean;

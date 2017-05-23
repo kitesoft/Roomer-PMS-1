@@ -2783,11 +2783,11 @@ begin
 
           rSet := CreateNewDataSet;
           try
-            hData.rSet_bySQL(rSet, 'SELECT AvrageRate FROM roomreservations WHERE RoomReservation=' +
+            hData.rSet_bySQL(rSet, 'SELECT AVG(RoomRate) AS AverageRate FROM roomsdate rd WHERE (rd.ResFlag NOT IN (''X'',''C'')) AND rd.RoomReservation=' +
               inttostr(zRoomReservation));
             rSet.First;
             if not rSet.Eof then
-              rate := rSet['AvrageRate'];
+              rate := rSet['AverageRate'];
           finally
             rSet.free;
           end;
