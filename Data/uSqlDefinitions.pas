@@ -6067,7 +6067,7 @@ begin
   s := s+' rr.RoomRentPaymentInvoice, '+#10;
   s := s+' rr.Hallres, '+#10;
   s := s+' rr.rrTmp, '+#10;
-  s := s+' rr.ID, '+#10;
+  s := s+' rr.RoomReservation AS ID, '+#10;
   s := s+' rr.rrDescription, '+#10;
   s := s+' rr.rrIsNoRoom, '+#10;
   s := s+' rr.rrDeparture, '+#10;
@@ -6160,7 +6160,8 @@ begin
   s := s+' (SELECT COUNT(id) FROM persons WHERE RoomReservation=rr.RoomReservation) AS numGuests, '+#10; //
   s := s+' rr.numChildren, '+#10; //
   s := s+' rr.numInfants, '+#10; //
-  s := s+' rr.AvrageRate, '+#10; //
+//  s := s+' rr.AvrageRate, '+#10; //
+  s := s+' (SELECT RoomRate FROM roomsdate rd WHERE rd.RoomReservation=rr.RoomReservation AND (rd.ResFlag NOT IN (''X'',''C''))) AS AvrageRate, '+#10; //
   s := s+' rr.RateCount, '+#10; //
   s := s+' rr.Package, '+#10; //
 

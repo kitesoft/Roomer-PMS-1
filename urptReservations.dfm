@@ -1285,6 +1285,18 @@ inherited frmRptReservations: TfrmRptReservations
       end
     end
   end
+  inherited psRoomerBase: TcxPropertiesStore
+    Components = <
+      item
+        Component = frmBaseRoomerForm.Owner
+        Properties.Strings = (
+          'Height'
+          'Left'
+          'Top'
+          'Width'
+          'Position')
+      end>
+  end
   inherited cxsrRoomerStyleRepository: TcxStyleRepository
     PixelsPerInch = 96
     inherited dxssRoomerGridReportLink: TdxGridReportLinkStyleSheet

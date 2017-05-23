@@ -1645,7 +1645,8 @@ function Del_ReservationByreservation(Reservation: integer): boolean;
 function SQL_UPDATE_Reservation(theData: recReservationHolder): String;
 function SP_INS_DelReservation(theData: recReservationHolder): boolean;
 function SP_INS_RoomReservation(theData: recRoomReservationHolder): boolean;
-function SQL_INS_RoomReservation(theData: recRoomReservationHolder): string;
+function SQL_UPDATE_RoomReservation(theData: recRoomReservationHolder): string;
+//function SQL_INS_RoomReservation(theData: recRoomReservationHolder): string;
 function SP_INS_DelRoomReservation(theData: recRoomReservationHolder): boolean;
 
 function SP_UPD_tblRoomStatusByDateRangeAndRoomType(RoomType: string; available: integer; FromDate, ToDate: Tdate): boolean;
@@ -3885,6 +3886,80 @@ begin
   end;
 end;
 
+function SQL_UPDATE_RoomReservation(theData: recRoomReservationHolder): string;
+var
+  b: TStringBuilder;
+
+  function AddFormattedTime(const aTimeStr: string): string;
+  var
+    lDateTime: TDateTime;
+  begin
+    if aTimeSTr.IsEmpty or not TryStrToTime(aTimeStr, lDateTime) then
+      Result := _db('') + #10
+    else
+      Result := _db(TTime(lDateTime)) + #10;
+  end;
+
+
+begin
+  b := TStringBuilder.Create;
+  try
+    b.Append('UPDATE roomreservations SET ' + #10);
+    b.Append('   Room = ' + _db(theData.Room) + #10);
+    b.Append('   ,Reservation = ' + _db(theData.Reservation) + #10);
+    b.Append('   ,Status = ' + _db(theData.Status) + #10);
+    b.Append('   ,GroupAccount = ' + _db(theData.GroupAccount) + #10);
+    b.Append('   ,invBreakfast = ' + _db(theData.invBreakfast) + #10);
+    b.Append('   ,RoomPrice1 = ' + _db(theData.RoomPrice1) + #10);
+    b.Append('   ,Price1From = ' + _db(theData.Price1From) + #10);
+    b.Append('   ,Price1To = ' + _db(theData.Price1To) + #10);
+    b.Append('   ,RoomPrice2 = ' + _db(theData.RoomPrice2) + #10);
+    b.Append('   ,Price2From = ' + _db(theData.Price2From) + #10);
+    b.Append('   ,Price2To = ' + _db(theData.Price2To) + #10);
+    b.Append('   ,RoomPrice3 = ' + _db(theData.RoomPrice3) + #10);
+    b.Append('   ,Price3From = ' + _db(theData.Price3From) + #10);
+    b.Append('   ,Price3To = ' + _db(theData.Price3To) + #10);
+    b.Append('   ,Currency = ' + _db(theData.Currency) + #10);
+    b.Append('   ,Discount = ' + _db(theData.Discount) + #10);
+    b.Append('   ,PriceType = ' + _db(theData.PriceType) + #10);
+    b.Append('   ,Arrival = ' + _db(theData.Arrival) + #10);
+    b.Append('   ,Departure = ' + _db(theData.Departure) + #10);
+    b.Append('   ,RoomType = ' + _db(theData.RoomType) + #10);
+    b.Append('   ,PMInfo = ' + _db(theData.PMInfo) + #10);
+    b.Append('   ,HiddenInfo = ' + _db(theData.HiddenInfo) + #10);
+    b.Append('   ,RoomRentPaid1 = ' + _db(theData.RoomRentPaid1) + #10);
+    b.Append('   ,RoomRentPaid2 = ' + _db(theData.RoomRentPaid2) + #10);
+    b.Append('   ,RoomRentPaid3 = ' + _db(theData.RoomRentPaid3) + #10);
+    b.Append('   ,RoomRentPaymentInvoice = ' + _db(theData.RoomRentPaymentInvoice) + #10);
+    b.Append('   ,Hallres = ' + _db(theData.Hallres) + #10);
+    b.Append('   ,rrTmp = ' + _db(theData.rrTmp) + #10);
+    b.Append('   ,rrDescription = ' + _db(theData.rrDescription) + #10);
+    b.Append('   ,rrArrival = ' + _db(theData.rrArrival) + #10);
+    b.Append('   ,rrDeparture = ' + _db(theData.rrDeparture) + #10);
+    b.Append('   ,rrIsNoRoom = ' + _db(theData.rrIsNoRoom) + #10);
+    b.Append('   ,rrRoomAlias = ' + _db(theData.rrRoomAlias) + #10);
+    b.Append('   ,rrRoomTypeAlias = ' + _db(theData.rrRoomTypeAlias) + #10);
+    b.Append('   ,useStayTax = ' + _db(theData.UseStayTax) + #10);
+    b.Append('   ,useInNationalReport = ' + _db(theData.UseInNationalReport) + #10);
+    b.Append('   ,numGuests = ' + _db(theData.numGuests) + #10);
+    b.Append('   ,numChildren = ' + _db(theData.numChildren) + #10);
+    b.Append('   ,numInfants = ' + _db(theData.numInfants) + #10);
+    b.Append('   ,avrageRate = ' + _db(theData.avrageRate) + #10);
+    b.Append('   ,rateCount = ' + _db(theData.rateCount) + #10);
+    b.Append('   ,Package = ' + _db(theData.package) + #10);
+    b.Append('   ,ManualChannelId = ' + _db(theData.ManualChannelId) + #10);
+    b.Append('   ,ratePlanCode = ' + _db(theData.ratePlanCode) + #10);
+    b.Append('   ,ExpectedTimeOfArrival = ' + AddFormattedTime(theData.ExpectedTimeOfArrival) + #10);
+    b.Append('   ,ExpectedCheckoutTime = ' + AddFormattedTime(theData.ExpectedCheckoutTime) + #10);
+
+    b.Append('    WHERE RoomReservation= ' + _db(theData.RoomReservation) + #10);
+    result := b.ToString;
+  finally
+    b.Free;
+  end;
+end;
+
+
 function SP_INS_RoomReservation(theData: recRoomReservationHolder): boolean;
 var
   s: string;
@@ -5971,7 +6046,7 @@ begin
     s := s + '  `RoomReservation`, '#10;
     s := s + '  `Reservation`, '#10;
     s := s + '  `PriceType`, '#10;
-    s := s + '  `AvrageRate`, '#10;
+    s := s + '  `(SELECT AVG(RoomRate) FROM roomsdate rd WHERE rd.RoomReservation=roomreservations.RoomReservation AND (rd.ResFlag NOT IN (''X'',''C''))) AS AvrageRate`, '#10;
     s := s + '  `Currency`, '#10;
     s := s + '  `Discount` '#10;
     s := s + 'FROM '#10;
@@ -14955,14 +15030,14 @@ begin
     ss := '';
     ss := ss + ' UPDATE roomreservations ';
     ss := ss + ' SET ';
-    ss := ss + '   [RoomType] = ' + _db(newRoomType) + ' ';
+    ss := ss + '   RoomType = ' + _db(newRoomType) + ' ';
     ss := ss + '  WHERE (Roomreservation = ' + _db(RoomReservation) + ') ';
     cmd_bySQL(ss);
 
     ss := '';
-    ss := ss + ' UPDATE [roomsdate] ';
+    ss := ss + ' UPDATE roomsdate ';
     ss := ss + ' SET ';
-    ss := ss + '    [RoomType] = ' + _db(newRoomType) + ' ';
+    ss := ss + '    RoomType = ' + _db(newRoomType) + ' ';
     ss := ss + '  WHERE (Roomreservation = ' + _db(RoomReservation) + ') ';
     cmd_bySQL(ss);
 
@@ -15021,14 +15096,14 @@ begin
     ss := '';
     ss := ss + ' UPDATE roomreservations ';
     ss := ss + ' SET ';
-    ss := ss + '   [RoomType] = ' + _db(newRoomType) + ' ';
+    ss := ss + '   RoomType = ' + _db(newRoomType) + ' ';
     ss := ss + '  WHERE (Roomreservation = ' + _db(RoomReservation) + ') ';
     cmd_bySQL(ss);
 
     ss := '';
-    ss := ss + ' UPDATE [roomsdate] ';
+    ss := ss + ' UPDATE roomsdate ';
     ss := ss + ' SET ';
-    ss := ss + '    [RoomType] = ' + _db(newRoomType) + ' ';
+    ss := ss + '    RoomType = ' + _db(newRoomType) + ' ';
     ss := ss + '  WHERE (Roomreservation = ' + _db(RoomReservation) + ') ';
     cmd_bySQL(ss);
 

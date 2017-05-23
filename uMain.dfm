@@ -55,6 +55,7 @@ object frmMain: TfrmMain
     SunkenBorder = True
     UseOwnColor = True
     UseOwnSunkenBorder = True
+    ExplicitTop = 122
   end
   object panMain: TsPanel
     Left = 0
@@ -160,6 +161,8 @@ object frmMain: TfrmMain
             OnMouseUp = grOneDayRoomsMouseUp
             OnStartDrag = grOneDayRoomsStartDrag
             ActiveRowColor = clWhite
+            GridLineColor = 15527152
+            GridFixedLineColor = 13947601
             HoverRowCells = [hcNormal, hcSelected]
             OnGetCellPrintColor = grOneDayRoomsGetCellPrintColor
             OnGridHint = grOneDayRoomsGridHint
@@ -2026,16 +2029,14 @@ object frmMain: TfrmMain
             BevelOuter = bvNone
             BorderStyle = bsNone
             Color = clWhite
-            EditMask = '!99/99/9999;1; '
             Font.Charset = DEFAULT_CHARSET
             Font.Color = clBlack
             Font.Height = -13
             Font.Name = 'Segoe UI'
             Font.Style = [fsBold]
-            MaxLength = 10
             ParentFont = False
             TabOrder = 0
-            Text = '  -  -    '
+            Text = ''
             OnChange = dtDateChange
             OnMouseEnter = tabsViewMouseEnter
             BoundLabel.Font.Charset = DEFAULT_CHARSET
@@ -2323,25 +2324,25 @@ object frmMain: TfrmMain
             LineColor = clGray
             Line3D = True
             Look = lookFlat
-            NameOfDays.Monday = 'ma'
-            NameOfDays.Tuesday = 'di'
-            NameOfDays.Wednesday = 'wo'
-            NameOfDays.Thursday = 'do'
-            NameOfDays.Friday = 'vr'
-            NameOfDays.Saturday = 'za'
-            NameOfDays.Sunday = 'zo'
-            NameOfMonths.January = 'jan'
-            NameOfMonths.February = 'feb'
-            NameOfMonths.March = 'mrt'
-            NameOfMonths.April = 'apr'
-            NameOfMonths.May = 'mei'
-            NameOfMonths.June = 'jun'
-            NameOfMonths.July = 'jul'
-            NameOfMonths.August = 'aug'
-            NameOfMonths.September = 'sep'
-            NameOfMonths.October = 'okt'
-            NameOfMonths.November = 'nov'
-            NameOfMonths.December = 'dec'
+            NameOfDays.Monday = 'Mon'
+            NameOfDays.Tuesday = 'Tue'
+            NameOfDays.Wednesday = 'Wed'
+            NameOfDays.Thursday = 'Thu'
+            NameOfDays.Friday = 'Fri'
+            NameOfDays.Saturday = 'Sat'
+            NameOfDays.Sunday = 'Sun'
+            NameOfMonths.January = 'Jan'
+            NameOfMonths.February = 'Feb'
+            NameOfMonths.March = 'Mar'
+            NameOfMonths.April = 'Apr'
+            NameOfMonths.May = 'May'
+            NameOfMonths.June = 'Jun'
+            NameOfMonths.July = 'Jul'
+            NameOfMonths.August = 'Aug'
+            NameOfMonths.September = 'Sep'
+            NameOfMonths.October = 'Oct'
+            NameOfMonths.November = 'Nov'
+            NameOfMonths.December = 'Dec'
             NameOfMonths.UseIntlNames = True
             WeekFont.Charset = DEFAULT_CHARSET
             WeekFont.Color = clWindowText
@@ -2638,6 +2639,7 @@ object frmMain: TfrmMain
     TabOrder = 2
     TabStop = False
     object rbTabHome: TdxRibbonTab
+      Active = True
       Caption = 'Roomer'
       Groups = <
         item
@@ -2660,6 +2662,7 @@ object frmMain: TfrmMain
       Index = 0
     end
     object rbTabReservation: TdxRibbonTab
+      Active = True
       Caption = 'Reservation'
       Groups = <
         item
@@ -2694,7 +2697,6 @@ object frmMain: TfrmMain
       Index = 2
     end
     object rbTabReports: TdxRibbonTab
-      Active = True
       Caption = 'Reports'
       Groups = <
         item
@@ -7565,7 +7567,7 @@ object frmMain: TfrmMain
     DataPipeline = dplGroups
     PrinterSetup.BinName = 'Default'
     PrinterSetup.DocumentName = 'Report'
-    PrinterSetup.PaperName = 'A4'
+    PrinterSetup.PaperName = 'A4 210 x 297 mm'
     PrinterSetup.PrinterName = 'Default'
     PrinterSetup.SaveDeviceSettings = False
     PrinterSetup.mmMarginBottom = 6350
@@ -8821,6 +8823,7 @@ object frmMain: TfrmMain
   object sSkinManager1: TsSkinManager
     Effects.AllowAeroBluring = False
     Effects.AllowGlowing = False
+    IsDefault = False
     InternalSkins = <
       item
         Name = 'RoomerUI'

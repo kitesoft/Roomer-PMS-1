@@ -1596,14 +1596,16 @@ begin
         CopyToClipboard(sql);
         lExecutionPlan.AddExec(sql);
 
-        sql := format('UPDATE roomreservations rr, ' +
-                      '       control c ' +
-                      'Set AvrageRate=(SELECT SUM(RoomRate * Paid) FROM roomsdate rd WHERE rd.RoomReservation=rr.RoomReservation AND rd.ResFlag=rr.Status) ' +
-                      IIF(hasRooms, ', RoomRentPaymentInvoice=0 ', '') +
-                      IIF(hasRooms, ', InvoiceIndex=' + inttostr(SelectedInvoiceIndex), '') + ' ' +
-                      'WHERE RoomReservation IN (SELECT DISTINCT RoomReservationAlias FROM invoicelines WHERE InvoiceNumber=%d AND ItemId=c.RoomRentItem) ', [Invoice]);
-        CopyToClipboard(sql);
-        lExecutionPlan.AddExec(sql);
+        if hasRooms then
+        begin
+          sql := format('UPDATE roomreservations rr, ' +
+                        '       control c ' +
+                        'SET RoomRentPaymentInvoice=0, InvoiceIndex=%d ' +
+                        'WHERE RoomReservation IN (SELECT DISTINCT RoomReservationAlias FROM invoicelines WHERE InvoiceNumber=%d AND ItemId=c.RoomRentItem) ',
+                        [SelectedInvoiceIndex, Invoice]);
+          CopyToClipboard(sql);
+          lExecutionPlan.AddExec(sql);
+        end;
 
         if hasRooms then
         begin
@@ -2542,7 +2544,7 @@ begin
 
   s := s + ' UPDATE paytypes ' + chr(10);
   s := s + '    SET ' + chr(10);
-  s := s + '       [doExport] = 1 ' + chr(10);
+  s := s + '       doExport = 1 ' + chr(10);
   s := s + '  WHERE doExport IS NULL ' + chr(10);
   if not cmd_bySQL(s) then
   begin
@@ -2556,7 +2558,7 @@ begin
   s := '';
   s := s + ' UPDATE reservations ' + chr(10);
   s := s + '    SET ' + chr(10);
-  s := s + '       [UseStayTax] = 1 ' + chr(10);
+  s := s + '       UseStayTax = 1 ' + chr(10);
   s := s + '  WHERE useStayTax IS NULL ' + chr(10);
   if not cmd_bySQL(s) then
   begin
@@ -2565,7 +2567,7 @@ begin
   s := '';
   s := s + ' UPDATE roomreservations ' + chr(10);
   s := s + '    SET ' + chr(10);
-  s := s + '       [UseStayTax] = 1 ' + chr(10);
+  s := s + '       UseStayTax = 1 ' + chr(10);
   s := s + '  WHERE useStayTax IS NULL ' + chr(10);
   if not cmd_bySQL(s) then
   begin

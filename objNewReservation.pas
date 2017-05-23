@@ -1354,7 +1354,7 @@ begin
           roomReservationData.ExpectedTimeOfArrival := ExpTOA;
           roomReservationData.ExpectedCheckoutTime := ExpCOT;
 
-          ExecutionPlan.AddExec(SQL_INS_RoomReservation(roomReservationData));
+          ExecutionPlan.AddExec(SQL_UPDATE_RoomReservation(roomReservationData));
 
     //***Log roomreservation
            lstReservationActivity.add(CreateReservationActivityLog(g.quser

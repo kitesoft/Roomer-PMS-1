@@ -229,7 +229,7 @@ var
   lstPrices: tstringlist;
   roomRate: double;
   discountTotal: double;
-  avrageRate: double;
+  averageRate: double;
   avrageDiscount: double;
   rateCount: integer;
 
@@ -251,7 +251,7 @@ begin
   screen.Cursor := crHourglass;
 
   avrageDiscount := 0;
-  avrageRate := 0;
+  averageRate := 0;
   rateCount := 0;
   paidCount := 0;
 
@@ -301,7 +301,7 @@ begin
         discountTotal := discountTotal + Discount;
         rd_.Next;
       end;
-      avrageRate := roomRateTotal / rdCount;
+      averageRate := roomRateTotal / rdCount;
       avrageDiscount := discountTotal / rdCount;
       rateCount := lstPrices.Count;
     end;
@@ -466,7 +466,7 @@ begin
                 rec.ResFlag := status;
                 rec.Reservation := Reservation;
                 rec.PriceCode := priceType;
-                rec.roomRate := avrageRate;
+                rec.roomRate := averageRate;
                 rec.Discount := avrageDiscount;
                 rec.isPercentage := rd_.FieldByName('isPercentage').asBoolean;
                 rec.showDiscount := rd_.FieldByName('showDiscount').asBoolean;
@@ -500,6 +500,16 @@ begin
             end;
 
             s := ' DELETE FROM roomsdate where ResFlag =' + _db(STATUS_DELETED) + ' AND RoomReservation = ' + _db(RoomReservation) + #10;
+            ExePlan.AddExec(s);
+
+            s := format('UPDATE roomreservations SET Arrival=%s, departure=%s, rrArrival=%s, rrDeparture=%s WHERE RoomReservation = %d',
+                [
+                  _db(newArrival, true),
+                  _db(newDeparture, true),
+                  _db(newArrival, true),
+                  _db(newDeparture, true),
+                  RoomReservation
+                ]);
             ExePlan.AddExec(s);
 
             ExePlan.Execute(ptExec, false, false);
@@ -1016,7 +1026,7 @@ begin
           FreeAndNil(Rset);
         end;
 
-        s := SQL_INS_RoomReservation(firstHolder);
+        s := SQL_UPDATE_RoomReservation(firstHolder);
         // copyToClipboard(s);
         // DebugMessage('invoicelines '#10#10+s);
         ExecutionPlan.AddExec(s);

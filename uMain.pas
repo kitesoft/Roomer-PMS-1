@@ -1825,10 +1825,11 @@ begin
   end;
   __lblUsername.Caption := g.qUserName;
 
-  FormatSettings.CurrencyString := ''; // '�';
+  dtDate.UpdateMask;
   try
     FormatSettings.CurrencyString := ctrlGetString('CurrencySymbol');
   Except
+    FormatSettings.CurrencyString := '';
   end;
 
   glb.FillLocationsMenu(mnuFilterLocation, LocationMenuSelect);
@@ -12149,6 +12150,7 @@ begin
       RoomerLanguage.SetLanguageId(g.qUserLanguage, g.qUser + '.' + inttostr(g.qUserLanguage) + '.' +
         DateTimeToStr(now));
       TranslateOpenForms;
+      dtDate.UpdateMask;
     end;
   finally
     cbxNameOrderPeriod.ItemIndex := iSaved1;

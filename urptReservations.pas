@@ -828,7 +828,7 @@ begin
     s := s+' ,rr.PMInfo '#10;
     s := s+' ,rr.HiddenInfo '#10;
     s := s+' ,rr.RoomRentPaymentInvoice '#10;
-    s := s+' ,rr.ID '#10;
+    s := s+' ,rr.RoomReservation AS ID '#10;
     s := s+' ,rr.rrIsNoRoom '#10;
     s := s+' ,rr.useStayTax '#10;
     s := s+' ,rr.useinNationalReport '#10;
@@ -1028,7 +1028,7 @@ begin
     s := s+' ,rr.PMInfo '#10;
     s := s+' ,rr.HiddenInfo '#10;
     s := s+' ,rr.RoomRentPaymentInvoice '#10;
-    s := s+' ,rr.ID '#10;
+    s := s+' ,rr.RoomReservation AS ID '#10;
     s := s+' ,rr.rrIsNoRoom '#10;
     s := s+' ,rr.useStayTax '#10;
     s := s+' ,rr.useinNationalReport '#10;

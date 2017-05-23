@@ -487,7 +487,7 @@ begin
 //        s := s + '          (SELECT Name FROM persons WHERE roomreservation=rd.roomreservation ORDER BY person DESC LIMIT 1) ';
 //        s := s + '          ) AS MainName ';
         s := s + ', rv.PMInfo ';
-        s := s + ', rr.AvrageRate AS Price ';
+        s := s + ', (SELECT AVG(rd1.RoomRate) FROM roomsdate rd1 WHERE rd1.RoomReservation=rd.RoomReservation AND (rd1.ResFlag NOT IN (''X'',''C''))) AS Price ';
         s := s + ', rr.Discount AS Discount ';
         s := s + ', rr.PriceType AS PriceType ';
         s := s + ', rd.Currency AS Currency ';
