@@ -42,6 +42,7 @@ uses
   , AdvObj
   , BaseGrid
   , AdvGrid, sComboBox, AdvUtil
+  , uD
   ;
 
 type
@@ -78,6 +79,7 @@ type
     __LblLocalCurrency: TsLabel;
     LblForeignCurrency: TsLabel;
     LblLocalCurrency: TsLabel;
+    btnViewPayCard: TsButton;
     procedure FormShow(Sender: TObject);
     procedure agrPayTypesSelectCell(Sender: TObject; ACol, ARow: Integer;
       var CanSelect: Boolean);
@@ -90,6 +92,7 @@ type
     procedure BtnOkClick(Sender: TObject);
     procedure agrPayTypesGetAlignment(Sender: TObject; ARow, ACol: Integer; var HAlign: TAlignment; var VAlign: TVAlignment);
     procedure agrPayTypesClickCell(Sender: TObject; ARow, ACol: Integer);
+    procedure btnViewPayCardClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -98,11 +101,15 @@ type
 
      FAmount : Double;
      FCustomer : string;
+    FReservation: Integer;
      procedure Recalc;
      procedure FillPayGrid;
+    procedure ShowOrHideButtonViewPayCard;
   public
     { Public declarations }
      procedure WndProc(var Message: TMessage); override;
+
+     property Reservation : Integer read FReservation write FReservation;
   end;
 
 var
@@ -120,6 +127,7 @@ function SelectPaymentTypes( Amount : Double;
                             PaymentType : hdata.TPaymentTypes;
                             Currency : String;
                             CurrencyRate : Double;
+                            Reservation : Integer;
                             var lst : TstringList;
                             var aInvoiceDate : TDate;
                             var aPayDate : TDate;
@@ -130,11 +138,11 @@ function SelectPaymentTypes( Amount : Double;
 implementation
 
 uses
-    uD
-   , uSqlDefinitions
+   uSqlDefinitions
    , uAppGlobal
    , PrjConst
    , uUtils
+   , uFrmPayCardView
   ;
 
 {$R *.DFM}
@@ -144,6 +152,7 @@ function SelectPaymentTypes( Amount : Double;
                              PaymentType : hdata.TPaymentTypes;
                              Currency : String;
                              CurrencyRate : Double;
+                             Reservation : Integer;
                              var lst : TstringList;
                              var aInvoiceDate : TDate;
                              var aPayDate : TDate;
@@ -210,6 +219,7 @@ begin
       end;
     end;
 
+    frmInvoicePayment.Reservation := Reservation;
     if frmInvoicePayment.ShowModal <> mrOK then
     begin
       result := false;
@@ -334,8 +344,28 @@ begin
   dtpayDate.Date := MaxDays + dtInvDate.Date
 end;
 
+
+procedure TfrmInvoicePayment.ShowOrHideButtonViewPayCard;
+var rSet : TRoomerDataSet;
+    s : String;
+begin
+  btnViewPayCard.Visible := False;
+  if Reservation > 0 then
+  begin
+    rSet := CreateNewDataSet;
+    s := format('SELECT * FROM reservations WHERE Reservation=%d', [FReservation]);
+    hData.rSet_bySQL(rSet, s);
+    rSet.First;
+    if NOT rSet.Eof then
+      btnViewPayCard.Visible := (Reservation > 0) AND
+                                (rSet.FieldDefs.IndexOf('PAYCARD_TOKEN') > -1) AND
+                                (rSet.FieldByName('PAYCARD_TOKEN').AsString <> '');
+  end;
+end;
+
 procedure TfrmInvoicePayment.FormShow(Sender: TObject);
 begin
+  ShowOrHideButtonViewPayCard;
   edtCustomer.text := FCustomer;
   recalc;
   FillPayGrid;
@@ -381,6 +411,11 @@ begin
       2 : MessageDlg('Select Location', mtError, [mbOk], 0);
     end;
   end;
+end;
+
+procedure TfrmInvoicePayment.btnViewPayCardClick(Sender: TObject);
+begin
+  ShowPayCardInformation(FReservation);
 end;
 
 procedure TfrmInvoicePayment.agrPayTypesKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);

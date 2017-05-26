@@ -603,6 +603,8 @@ type
     acGroupGuestNames: TAction;
     acRefresh: TAction;
     acAddRoom: TAction;
+    btnViewPayCard: TsButton;
+    acViewPayCard: TAction;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -731,6 +733,7 @@ type
     procedure btnChangeCountryAllGuestsClick(Sender: TObject);
     procedure acRemoveRoomUpdate(Sender: TObject);
     procedure acRoomResActionUpdate(Sender: TObject);
+    procedure acViewPayCardExecute(Sender: TObject);
   private
     { Private declarations }
     vStartName: string;
@@ -857,7 +860,9 @@ uses
   , uCurrencyHandler
   , uAccountTypeDefinitions, uBreakfastStateDefinitions, uSQLUtils, ufrmRoomPrices
   , uDateTimeHelper
-  , uResourceTypeDefinitions;
+  , uResourceTypeDefinitions
+  , uFrmPayCardView
+  ;
 
 {$R *.DFM}
 
@@ -1105,6 +1110,8 @@ begin
       First;
       if not Eof then
       begin
+        btnViewPayCard.Visible := (rSet.FieldDefs.IndexOf('PAYCARD_TOKEN') > -1) AND
+                                 (rSet.FieldByName('PAYCARD_TOKEN').AsString <> '');
         edtInvRefrence.ReadOnly := glb.GetBooleanValueOfFieldFromId('channels', 'managedByChannelManager',
           fieldbyname('channel').asInteger);
         edtCustomer.text := trim(fieldbyname('Customer').asstring);
@@ -1831,6 +1838,11 @@ begin
   g.openHiddenInfo(zReservation, 1);
 end;
 
+procedure TfrmReservationProfile.acViewPayCardExecute(Sender: TObject);
+begin
+  ShowPayCardInformation(zReservation);
+end;
+
 procedure TfrmReservationProfile.AddNewRoom;
 var
   Currency: string;
@@ -1851,7 +1863,7 @@ var
   numChildren: Integer;
 
   PriceCode: string;
-  AvrageRate: double;
+  AverageRate: double;
   AvrageDiscount: double;
   rateCount: Integer;
 
@@ -1948,7 +1960,7 @@ begin
       RoomReservationRentHolder := RR_GetAvrageRent(oldRoomreservation);
 
       PriceCode := RoomReservationRentHolder.PriceType;
-      AvrageRate := RoomReservationRentHolder.AvrageRate;
+      AverageRate := RoomReservationRentHolder.averageRate;
       AvrageDiscount := RoomReservationRentHolder.Discount;
       rateCount := 1;
 
@@ -1987,7 +1999,7 @@ begin
       roomReservationData.numGuests := numGuests;
       roomReservationData.numInfants := numInfants;
       roomReservationData.numChildren := numChildren;
-      roomReservationData.AvrageRate := AvrageRate;
+      roomReservationData.averageRate := AverageRate;
       roomReservationData.rateCount := rateCount;
       roomReservationData.Discount := AvrageDiscount;
       roomReservationData.RoomPrice1 := 0.00;
