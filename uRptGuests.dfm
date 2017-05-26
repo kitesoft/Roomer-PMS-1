@@ -106,7 +106,6 @@ object frmRptGuests: TfrmRptGuests
       Caption = 'Select Dates'
       TabOrder = 1
       SkinData.SkinSection = 'GROUPBOX'
-      Checked = False
       object LMDSimpleLabel1: TsLabel
         Left = 37
         Top = 15
@@ -152,7 +151,6 @@ object frmRptGuests: TfrmRptGuests
         ParentFont = False
         TabOrder = 0
         Text = '25-12-2012'
-        CheckOnExit = True
         SkinData.SkinSection = 'EDIT'
         GlyphMode.Blend = 0
         GlyphMode.Grayed = False
@@ -175,7 +173,6 @@ object frmRptGuests: TfrmRptGuests
         ParentFont = False
         TabOrder = 1
         Text = '25-12-2012'
-        CheckOnExit = True
         SkinData.SkinSection = 'EDIT'
         GlyphMode.Blend = 0
         GlyphMode.Grayed = False
@@ -201,8 +198,8 @@ object frmRptGuests: TfrmRptGuests
     object chkOneday: TsCheckBox
       Left = 23
       Top = 59
-      Width = 66
-      Height = 17
+      Width = 61
+      Height = 20
       Caption = 'One day'
       Checked = True
       State = cbChecked
@@ -221,12 +218,11 @@ object frmRptGuests: TfrmRptGuests
       Caption = 'Use Room with status of : '
       TabOrder = 4
       SkinData.SkinSection = 'GROUPBOX'
-      Checked = False
       object chkExcluteWaitingList: TsCheckBox
         Left = 14
         Top = 17
-        Width = 74
-        Height = 17
+        Width = 69
+        Height = 20
         Caption = 'Waitinglist'
         Checked = True
         State = cbChecked
@@ -238,8 +234,8 @@ object frmRptGuests: TfrmRptGuests
       object chkExcluteAlotment: TsCheckBox
         Left = 14
         Top = 34
-        Width = 70
-        Height = 17
+        Width = 65
+        Height = 20
         Caption = 'Allotment'
         Checked = True
         State = cbChecked
@@ -251,8 +247,8 @@ object frmRptGuests: TfrmRptGuests
       object chkExcluteOrder: TsCheckBox
         Left = 134
         Top = 52
-        Width = 80
-        Height = 17
+        Width = 75
+        Height = 20
         Caption = 'Not Arrived'
         Checked = True
         State = cbChecked
@@ -264,8 +260,8 @@ object frmRptGuests: TfrmRptGuests
       object chkExcluteNoShow: TsCheckBox
         Left = 14
         Top = 52
-        Width = 66
-        Height = 17
+        Width = 61
+        Height = 20
         Caption = 'No show'
         Checked = True
         State = cbChecked
@@ -277,8 +273,8 @@ object frmRptGuests: TfrmRptGuests
       object chkExcluteDeparted: TsCheckBox
         Left = 134
         Top = 17
-        Width = 70
-        Height = 17
+        Width = 65
+        Height = 20
         Caption = 'Departed'
         Checked = True
         State = cbChecked
@@ -290,8 +286,8 @@ object frmRptGuests: TfrmRptGuests
       object chkExcluteBlocked: TsCheckBox
         Left = 228
         Top = 34
-        Width = 61
-        Height = 17
+        Width = 56
+        Height = 20
         Caption = 'Blocked'
         TabOrder = 5
         SkinData.SkinSection = 'CHECKBOX'
@@ -301,8 +297,8 @@ object frmRptGuests: TfrmRptGuests
       object chkExcluteGuest: TsCheckBox
         Left = 134
         Top = 34
-        Width = 53
-        Height = 17
+        Width = 48
+        Height = 20
         Caption = 'Guest'
         Checked = True
         State = cbChecked
@@ -314,8 +310,8 @@ object frmRptGuests: TfrmRptGuests
       object chkExcluteCANCELED: TsCheckBox
         Left = 228
         Top = 17
-        Width = 69
-        Height = 17
+        Width = 64
+        Height = 20
         Caption = 'Canceled'
         TabOrder = 7
         SkinData.SkinSection = 'CHECKBOX'
@@ -325,8 +321,8 @@ object frmRptGuests: TfrmRptGuests
       object chkExcludeWaitingListNonOptional: TsCheckBox
         Left = 228
         Top = 52
-        Width = 74
-        Height = 17
+        Width = 69
+        Height = 20
         Caption = 'Waitinglist'
         Checked = True
         State = cbChecked
@@ -346,7 +342,6 @@ object frmRptGuests: TfrmRptGuests
       TabOrder = 5
       OnClick = rgrShowClick
       SkinData.SkinSection = 'GROUPBOX'
-      Checked = False
       ItemIndex = 2
       Items.Strings = (
         'All Guests'
@@ -356,8 +351,8 @@ object frmRptGuests: TfrmRptGuests
     object chkGroup: TsCheckBox
       Left = 282
       Top = 66
-      Width = 127
-      Height = 17
+      Width = 122
+      Height = 20
       Caption = 'Group by reservation'
       TabOrder = 6
       OnClick = chkGroupClick

@@ -1007,7 +1007,7 @@ begin
         try
           s := '';
           s := s + ' SELECT '#10;
-          s := s + '  AVG(RoomRate) AS avrageRate '#10;
+          s := s + '  AVG(RoomRate) AS averageRate '#10;
           s := s + '  ,count(distinct RoomRate) AS rateCount '#10;
           s := s + ' FROM  '#10;
           s := s + '   roomsdate '#10;
@@ -1019,7 +1019,7 @@ begin
 
           if hData.rSet_bySQL(Rset, s) then
           begin
-            firstHolder.avrageRate := Rset.GetFloatValue(Rset.FieldByName('avrageRate'));
+            firstHolder.averageRate := Rset.GetFloatValue(Rset.FieldByName('averageRate'));
             firstHolder.rateCount := Rset.FieldByName('rateCount').asInteger;
           end;
         finally
@@ -1040,7 +1040,7 @@ begin
         try
           s := '';
           s := s + ' SELECT '#10;
-          s := s + '  AVG(RoomRate) AS avrageRate '#10;
+          s := s + '  AVG(RoomRate) AS averageRate '#10;
           s := s + '  ,count(distinct RoomRate) AS rateCount '#10;
           s := s + ' FROM  '#10;
           s := s + '   roomsdate '#10;
@@ -1052,7 +1052,7 @@ begin
 
           if hData.rSet_bySQL(Rset, s) then
           begin
-            roomHolder.avrageRate := Rset.GetFloatValue(Rset.FieldByName('avrageRate'));
+            roomHolder.averageRate := Rset.GetFloatValue(Rset.FieldByName('averageRate'));
             roomHolder.rateCount := Rset.FieldByName('rateCount').asInteger;
           end;
         finally
@@ -1066,7 +1066,6 @@ begin
         s := s + ' ,Departure = ' + _db(Departure2) + ' ';
         s := s + ' ,rrArrival = ' + _db(Arrival2) + ' ';
         s := s + ' ,rrDeparture = ' + _db(Departure2) + ' ';
-        s := s + ' ,avrageRate = ' + _db(roomHolder.avrageRate) + ' ';
         s := s + ' ,rateCount = ' + _db(roomHolder.rateCount) + ' ';
 
         s := s + ' WHERE ';

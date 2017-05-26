@@ -1132,7 +1132,7 @@ var
   PriceID       : integer;
   RateIndex     : integer;
 
-  avrageRate : double;
+  averageRate : double;
   avrageDiscount : double;
   rateCount  : integer;
 
@@ -1249,7 +1249,7 @@ begin
           PriceCode     := lNewRoomRes.PriceCode;
           MainGuestName := lNewRoomRes.MainGuestName;
 
-          AvrageRate     := lNewRoomRes.AvragePrice;
+          averageRate     := lNewRoomRes.AvragePrice;
           AvrageDiscount := lNewRoomRes.AvrageDiscount;
           rateCount      := lNewRoomRes.RateCount;
 
@@ -1335,7 +1335,7 @@ begin
           roomReservationData.numInfants  := numInfants;
           roomReservationData.numChildren := numChildren;
 
-          roomReservationData.avrageRate  := avrageRate;
+          roomReservationData.averageRate  := averageRate;
           roomReservationData.rateCount   := rateCount;
 
           roomReservationData.Discount    := avrageDiscount;

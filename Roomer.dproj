@@ -879,6 +879,10 @@
         <DCCReference Include="VersionManagement\uVersionManagement.pas"/>
         <DCCReference Include="Logging\uRoomerLogger.pas"/>
         <DCCReference Include="RoomerInstanceManagement\uRoomerInstanceManagement.pas"/>
+        <DCCReference Include="PCI\uFrmPayCardView.pas">
+            <Form>FrmPayCardView</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <None Include="Roomer.todo"/>
         <None Include="notes.txt"/>
         <None Include="Roomer.inc"/>

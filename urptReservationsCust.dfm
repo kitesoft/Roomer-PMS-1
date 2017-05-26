@@ -142,7 +142,7 @@ object frmRptReservationsCust: TfrmRptReservationsCust
               DataBinding.FieldName = 'useinNationalReport'
             end
             object cxGridDBColumn60: TcxGridDBColumn
-              DataBinding.FieldName = 'AvrageRate'
+              DataBinding.FieldName = 'AverageRate'
             end
             object cxGridDBColumn61: TcxGridDBColumn
               DataBinding.FieldName = 'RateCount'

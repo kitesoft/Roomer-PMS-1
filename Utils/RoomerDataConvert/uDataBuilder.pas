@@ -885,7 +885,6 @@ begin
            'numGuests, ' +
            'numChildren, ' +
            'numInfants, ' +
-           'AvrageRate, ' +
            'RateCount, ' +
            'dtCreated, ' +
            'checkoutEventProcessed) ' +
@@ -919,7 +918,6 @@ begin
            '''{numGuests1}'', ' +
            '''{numChildren}'', ' +
            '''{numInfants}'', ' +
-           '''{AvrageRate}'', ' +
            '''{RateCount}'', ' +
            '''{dtCreated}'', ' +
            '''{checkoutEventProcessed}'');';
@@ -928,7 +926,7 @@ begin
              ReplaceStr(ReplaceStr(ReplaceStr(ReplaceStr(ReplaceStr(ReplaceStr(ReplaceStr(
              ReplaceStr(ReplaceStr(ReplaceStr(ReplaceStr(ReplaceStr(ReplaceStr(ReplaceStr(
              ReplaceStr(ReplaceStr(ReplaceStr(ReplaceStr(ReplaceStr(ReplaceStr(
-             ReplaceStr(ReplaceStr(ReplaceStr(ReplaceStr(ReplaceStr(
+             ReplaceStr(ReplaceStr(ReplaceStr(ReplaceStr(
              ReplaceStr(s, '{RoomReservation}', inttostr(RoomRes.RoomReservation)),
           '{Room}',  RoomRes.Room),
           '{Reservation}', inttostr(Res.Reservation)),
@@ -960,7 +958,6 @@ begin
           '{numChildren}', inttostr(RoomRes.Children)),
           '{numInfants}', inttostr(RoomRes.Infants)),
 
-          '{AvrageRate}', FloatToDBString(RoomRes.Price)),
           '{RateCount}', '1'),
           '{dtCreated}', DateTimeToDBString(Res.dtCreated)),
           '{checkoutEventProcessed}', '0');

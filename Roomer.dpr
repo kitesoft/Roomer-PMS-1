@@ -284,7 +284,8 @@ uses
   uRptReservationStatusPerDay in 'Reporting\uRptReservationStatusPerDay.pas' {FrmRptReservationStatusPerDay},
   uVersionManagement in 'VersionManagement\uVersionManagement.pas',
   uRoomerLogger in 'Logging\uRoomerLogger.pas',
-  uRoomerInstanceManagement in 'RoomerInstanceManagement\uRoomerInstanceManagement.pas';
+  uRoomerInstanceManagement in 'RoomerInstanceManagement\uRoomerInstanceManagement.pas',
+  uFrmPayCardView in 'PCI\uFrmPayCardView.pas' {FrmPayCardView};
 
 {$R *.RES}
 

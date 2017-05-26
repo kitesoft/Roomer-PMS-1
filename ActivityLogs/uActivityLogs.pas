@@ -29,7 +29,8 @@ type
                         CHANGE_DEPARTURE_DATE,
                         CHANGE_NUMBER_OF_GUESTS,
                         NEW_ROOM_NUMBER,
-                        NEW_ROOM_TYPE);
+                        NEW_ROOM_TYPE,
+                        VIEW_PAY_CARD);
 
 
   TAvailabilityAction = (EDIT, BULK);

@@ -243,7 +243,7 @@ const
     '   (SELECT name FROM persons pe WHERE pe.MainName AND pe.roomreservation = rd.roomreservation LIMIT 1)) AS GuestName '#10+
     ' ,rr.numChildren as ChildrenCount '#10 +
     ' ,rr.numInfants as InfantCount '#10 +
-    ' ,rr.AvrageRate as AveragePrice '#10 +
+    ' ,(SELECT AVG(rd1.RoomRate) FROM roomsdate rd1 WHERE rd1.RoomReservation=rr.RoomReservation AND (rd1.ResFlag NOT IN (''X'',''C''))) AS AveragePrice '#10 +
     ' ,rr.RateCount '#10 +
     ' ,rr.Discount as AverageDiscount '#10 +
     ' ,rr.Groupaccount '#10 +
@@ -731,7 +731,6 @@ begin
       s := s + ',`numGuests`   = ' + _db(Guests) + ' '#10;
       s := s + ',`numChildren` = ' + _db(ChildrenCount) + ' '#10;
       s := s + ',`numInfants`  = ' + _db(infantCount) + ' '#10;
-      s := s + ',`AvrageRate`  = ' + _db(AveragePrice) + ' '#10;
       s := s + ',`RateCount`   = ' + _db(RateCount) + ' '#10;
       s := s + ',`Discount`    = ' + _db(AverageDiscount) + ' '#10;
       s := s + 'WHERE `roomreservation` = %d ';

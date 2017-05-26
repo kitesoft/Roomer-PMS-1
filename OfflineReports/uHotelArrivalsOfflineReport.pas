@@ -46,7 +46,7 @@ const
           '  pe.Name AS GuestName, '+
           '  r.Customer AS CompanyCode, '+
           '  r.Name AS CompanyName, '+
-          '  rr.AvrageRate AS AverageRoomRate, '+
+          '  (SELECT AVG(rd1.RoomRate) FROM roomsdate rd1 WHERE rd1.RoomReservation=rr.RoomReservation AND (rd1.ResFlag NOT IN (''X'',''C''))) AS AverageRoomRate, '+
           '  CAST(( SELECT rd1.ADate '+
           '    FROM roomsdate rd1 '+
           '    WHERE rd1.RoomReservation=rd.RoomReservation '+

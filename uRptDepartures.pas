@@ -166,7 +166,7 @@ begin
     s := s + ' IF(GroupAccount, GetGroupInvoiceBalance(Reservation), 0.00) AS GroupInvoiceBalance, '#10;
     s := s + ' RoomType, '#10;
     s := s + ' NumGuests, '#10;
-    s := s + ' AvrageRate as AverageRatePerNight, '#10;
+    s := s + ' AverageRate AS AverageRatePerNight, '#10;
     s := s + ' TotalRent + TotalSale - TotalPayments AS Balance, '#10;
     s := s + ' ExpectedCheckOutTime, '#10;
     s := s + ' RoomReservation AS RoomerRoomReservationId '#10;
@@ -199,7 +199,7 @@ begin
     s := s + '        yyy.NumGuests, '#10;
     s := s + '        yyy.NumNights, '#10;
     s := s + '        rr.ExpectedCheckOutTime, '#10;
-    s := s + '        rr.Avragerate '#10;
+    s := s + '        (SELECT AVG(RoomRate) FROM roomsdate rd WHERE rd.RoomReservation=yyy.RoomReservation AND (rd.ResFlag NOT IN (''X'',''C''))) AS Averagerate '#10;
     s := s + '    FROM '#10;
     s := s + '        (SELECT  -- yyy '#10;
     s := s + '            CurrencyRate, '#10;

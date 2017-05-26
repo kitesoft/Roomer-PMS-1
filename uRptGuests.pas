@@ -531,10 +531,10 @@ begin
       s := s+'  , rr.numGuests AS Adults '#10;
       s := s+'  , rr.numChildren AS Children '#10;
       s := s+'  , rr.numInfants AS Infants '#10;
-      s := s+'  , rr.AvrageRate AS AverageRate '#10;
+      s := s+'  , (SELECT AVG(RoomRate) FROM roomsdate rd WHERE rd.RoomReservation=rr.RoomReservation AND (rd.ResFlag NOT IN (''X'',''C''))) AS AverageRate '#10;
       s := s+'  , to_int(DATEDIFF(rr.rrDeparture,rr.rrArrival)) as NumDays '#10;
-      s := s+'  , DATEDIFF(rr.rrDeparture,rr.rrArrival) * rr.AvrageRate as TotalStayRate '#10;
-      s := s+'  , DATEDIFF(rr.rrDeparture,rr.rrArrival) * rr.AvrageRate * c.AValue as TotalStayRateNative '#10;
+      s := s+'  , DATEDIFF(rr.rrDeparture,rr.rrArrival) * (SELECT AVG(RoomRate) FROM roomsdate rd WHERE rd.RoomReservation=rr.RoomReservation AND (rd.ResFlag NOT IN (''X'',''C''))) as TotalStayRate '#10;
+      s := s+'  , DATEDIFF(rr.rrDeparture,rr.rrArrival) * (SELECT AVG(RoomRate) FROM roomsdate rd WHERE rd.RoomReservation=rr.RoomReservation AND (rd.ResFlag NOT IN (''X'',''C''))) * c.AValue as TotalStayRateNative '#10;
       s := s+'  , rr.Currency as Currency '#10;
       s := s+'  , c.AValue AS CurrencyRate '#10;
       s := s+'  , rr.room '#10;
@@ -597,53 +597,6 @@ begin
           if kbmGuests.active then kbmGuests.Close;
           kbmGuests.open;
           rSet1.First;
-//          while not rSet1.Eof do
-//          begin
-//            kbmGuests.Append;
-//            kbmGuests.FieldByName('RoomReservation').AsInteger := rSet1.FieldByName('RoomReservation').AsInteger;
-//            kbmGuests.FieldByName('Reservation').AsInteger := rSet1.FieldByName('Reservation').AsInteger;
-//            kbmGuests.FieldByName('ReservationName').AsString := rSet1.FieldByName('ReservationName').AsString;
-//            kbmGuests.FieldByName('Arrival').AsDateTime := rSet1.FieldByName('Arrival').AsDateTime;
-//            kbmGuests.FieldByName('Departure').AsDateTime := rSet1.FieldByName('Departure').AsDateTime;
-//            kbmGuests.FieldByName('NumDays').AsInteger := rSet1.FieldByName('NumDays').AsInteger;
-//            kbmGuests.FieldByName('Room').AsString := rSet1.FieldByName('Room').AsString;
-//            kbmGuests.FieldByName('RoomType').AsString := rSet1.FieldByName('RoomType').AsString;
-////            kbmGuests.FieldByName('Status').AsString := rSet1.FieldByName('Status').AsString;
-//            kbmGuests.FieldByName('Breakfast').AsBoolean := rSet1.FieldByName('Breakfast').AsBoolean;
-//            kbmGuests.FieldByName('RoomDescription').AsString := rSet1.FieldByName('RoomDescription').AsString;
-////            kbmGuests.FieldByName('Location').AsString := rSet1.FieldByName('Location').AsString;
-//            kbmGuests.FieldByName('Floor').AsInteger := rSet1.FieldByName('Floor').AsInteger;
-//            kbmGuests.FieldByName('LocationDescription').AsString := rSet1.FieldByName('LocationDescription').AsString;
-////            kbmGuests.FieldByName('GroupAccount').AsBoolean := rSet1.FieldByName('GroupAccount').AsBoolean;
-////            kbmGuests.FieldByName('marketSegment').AsString := rSet1.FieldByName('marketSegment').AsString;
-//            kbmGuests.FieldByName('marketSegmentDescription').AsString := rSet1.FieldByName('marketSegmentDescription').AsString;
-//            kbmGuests.FieldByName('Email').AsString := rSet1.FieldByName('Email').AsString;
-//            kbmGuests.FieldByName('Customer').AsString := rSet1.FieldByName('Customer').AsString;
-//            kbmGuests.FieldByName('CustomerName').AsString := rSet1.FieldByName('CustomerName').AsString;
-//            kbmGuests.FieldByName('PersonalID').AsString := rSet1.FieldByName('PersonalID').AsString;
-//            kbmGuests.FieldByName('Statustext').AsString := rSet1.FieldByName('Statustext').AsString;
-//            kbmGuests.FieldByName('resInfo').AsString := rSet1.FieldByName('resInfo').AsString;
-//            kbmGuests.FieldByName('roomCount').AsInteger := rSet1.FieldByName('roomCount').AsInteger;
-//            kbmGuests.FieldByName('RvGuestCount').AsInteger := rSet1.FieldByName('RvGuestCount').AsInteger;
-//            kbmGuests.FieldByName('RRGuestCount').AsInteger := rSet1.FieldByName('RRGuestCount').AsInteger;
-//            kbmGuests.FieldByName('GuestName').AsString := rSet1.FieldByName('GuestName').AsString;
-//            kbmGuests.FieldByName('isMain').AsBoolean := rSet1.FieldByName('isMain').AsBoolean;
-//            kbmGuests.FieldByName('Channel').AsString := rSet1.FieldByName('Channel').AsString;
-//            kbmGuests.FieldByName('Adults').AsInteger := rSet1.FieldByName('Adults').AsInteger;
-//            kbmGuests.FieldByName('Children').AsInteger := rSet1.FieldByName('Children').AsInteger;
-//            kbmGuests.FieldByName('Infants').AsInteger := rSet1.FieldByName('Infants').AsInteger;
-//            kbmGuests.FieldByName('AverageRate').AsFloat := rSet1.FieldByName('AverageRate').AsFloat;
-//            kbmGuests.FieldByName('TotalStayRate').AsFloat := rSet1.FieldByName('TotalStayRate').AsFloat;
-//            kbmGuests.FieldByName('TotalStayRateNative').AsFloat := rSet1.FieldByName('TotalStayRateNative').AsFloat;
-//            kbmGuests.FieldByName('Currency').AsString := rSet1.FieldByName('Currency').AsString;
-//            kbmGuests.FieldByName('CurrencyRate').AsFloat := rSet1.FieldByName('CurrencyRate').AsFloat;
-//            kbmGuests.FieldByName('BookingId').AsString := rSet1.FieldByName('BookingId').AsString;
-//            kbmGuests.Post;
-//
-//            rSet1.Next;
-//          end;
-
-//          kbmGuests.LoadFromDataSet(rset1, [mtcpoStructure]);
           LoadKbmMemtableFromDataSetQuiet(kbmGuests, rset1, []);
           kbmGuests.First;
         finally
