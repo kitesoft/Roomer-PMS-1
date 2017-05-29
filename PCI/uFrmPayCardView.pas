@@ -79,7 +79,7 @@ end;
 procedure TFrmPayCardView.GoToUri(uri : String);
 var Flags: OleVariant;
 begin
-  Flags := 'navNoHistory, navNoReadFromCache,navNoWriteToCache';
+  Flags := 'navNoHistory,navNoReadFromCache,navNoWriteToCache';
   browser.Navigate2(uri, Flags);
 end;
 
