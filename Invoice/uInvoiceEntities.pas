@@ -87,7 +87,7 @@ uses
   ;
 
 constructor TInvoiceRoomEntity.Create(_RoomItem: String; _Guests: Integer; _Children: Integer; _Nights: double;
-  _Price, _Vat, _Discount: Double; _BreakFastIncluded: boolean);
+  _Price: double; _Vat, _Discount: Double; _BreakFastIncluded: boolean);
 begin
   FRoomItem := _RoomItem;
   FNumPersons:= _Guests;

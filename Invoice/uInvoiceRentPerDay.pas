@@ -16,6 +16,7 @@ uses
   , uTaxCalc
   , frxExportMail, frxExportImage, frxExportRTF, frxExportHTML
   , uInvoiceEntities
+  , uCurrencyHandlersMap
   ;
 
 type
@@ -61,14 +62,16 @@ type
   private
     FInvoiceNumber: integer;
     FChanged: boolean;
+    FCurrency: string;
     function GetRevenueNativeCurrency: double;
     function GetAmountOnInvoice: double;
     function GetTotal: Double;
-    function GetVatOnRevenue: double;
+    function GetVatOnRevenueNativeRevenue: double;
     procedure GetPurchaseDate(const Value: TDate);
     function GetItemKind: TItemKind;
     function GetVatOnInvoice: double;
     procedure SetVATCode(const Value: string);
+    function GetTotalNative: double;
 
 
   public
@@ -79,13 +82,14 @@ type
     ///  At this moment only line that are generated and linked to a roomrent item can be made invisible
     /// </summary>
     function CanBeHiddenFromInvoice: boolean;
+    property TotalNativeCurrency: double read GetTotalNative;
     /// <summary>
-    ///   Revenue total including VAT for this item, calculated as Price * Number, in native currency
+    ///   Revenue total including VAT for this item, calculated as Price * Number, in selected  currency
     /// </summary>
     property Total: Double read GetTotal;
     ///<summary>
-    ///   Amount which will be visible on the invoice in native currency.
-    ///   Dependent in the VisibleOnInvoice property and on ChildInvoiceLines which are not visible on the invoice
+    ///   Amount which will be visible on the invoice in selected currency.
+    ///   Dependent on the VisibleOnInvoice property and on ChildInvoiceLines which are not visible on the invoice
     ///</summary>
     property AmountOnInvoice: double read GetAmountOnInvoice;
     /// <summary>
@@ -108,11 +112,11 @@ type
     /// <summary>
     ///   Calculated VAT based on revenue of this item, in native currency
     /// </summary>
-    property VATOnRevenue: double read GetVatOnRevenue;
+    property VATOnRevenueNativeCurrency: double read GetVatOnRevenueNativeRevenue;
     /// <summary>
-    ///   Calculated VAT on the invoice for this item, in native currency
+    ///   Calculated VAT on the invoice for this item, in selected currency
     /// </summary>
-    property VATOnOnvoice: double read GetVatOnInvoice;
+    property VATOnInvoice: double read GetVatOnInvoice;
 
     property Changed: boolean read FChanged write FChanged;
   published
@@ -125,9 +129,10 @@ type
 
     property Number: Double read FNumber write FNumber;
     /// <summary>
-    ///   Price per item in native currency
+    ///   Price per item in selected currency
     /// </summary>
     property Price: Double read FPrice write FPrice;
+    property Currency: string read FCurrency write FCurrency;
     property VATCode: string read FVATCode write SetVATCode;
     property VATPercentage: double read FVatpercentage;
     property Reference: string read FReference write FReference;
@@ -147,7 +152,7 @@ type
 
   TInvoiceLineList = class(TObjectList<TInvoiceLine>)
   private
-    function GetTotalOnInvoice: double;
+    function GetTotalOnInvoiceNativeCurrency: double;
     function GetTotalVatOnInvoice: double;
     function GetTotalCityTax: double;
     function GetIsChanged: boolean;
@@ -156,11 +161,11 @@ type
     /// <summary>
     ///   Calculate the total native amount including VAT
     /// </summary>
-    property TotalOnInvoice: double read GetTotalOnInvoice;
+    property TotalOnInvoiceNativeCurrency: double read GetTotalOnInvoiceNativeCurrency;
     /// <summary>
     ///   Calculate the total sum of VAT in native currency
     /// </summary>
-    property TotalVatOnInvoice: double read GetTotalVatOnInvoice;
+    property TotalVatOnInvoiceNativeCurrency: double read GetTotalVatOnInvoice;
     property TotalCityTaxOnInvoice: double read GetTotalCityTax;
 
     property IsChanged: boolean read GetIsChanged;
@@ -546,6 +551,7 @@ type
     FReservation: integer;
     FRoomReservation: integer;
     FHeaderChanged: boolean;
+    FCurrencyhandlersMap: TCurrencyhandlersMap;
 
     procedure LoadInvoice;
     procedure loadInvoiceToMemtable(var m: TKbmMemTable);
@@ -571,7 +577,7 @@ type
     /// Create a new TInvoiceLine object and add this to InvoiceLinesList collection
     /// </summary>
     function AddLine(lineId: integer; aParentIndex: integer; sItem, sText: string; iNumber: Double;
-      aPrice: Double; const VATCode: string; PurchaseDate: TDate; bAuto: boolean;
+      aPrice: Double; const aCurrency: string; const VATCode: string; PurchaseDate: TDate; bAuto: boolean;
       Refrence, Source: string; isPackage: boolean; noGuests: integer;
       confirmDate: TDateTime; confirmAmount: Double; rrAlias: integer;
       AutoGen: string; itemIndex: integer = 0): TInvoiceLine;
@@ -698,7 +704,7 @@ type
     procedure RemoveAutoBreakfastItems;
     function ItemKindOnRow(aRow: Integer): TItemKind;
     procedure ClearGrid;
-    procedure AddTaxinvoiceLinesForRoomItem(aRoomEntity: TInvoiceRoomEntity; aParentIndex: integer);
+    procedure AddTaxinvoiceLinesForRoomItem(aInvLine: TInvoiceLine);
     procedure AddBreakfastInvoicelinesForRoomItem(aRoomEntity: TInvoiceRoomEntity; aParentIndex: integer);
     procedure UpdateLine(aRow: integer);
     function CheckExtraWithdrawalAllowed(aExtraAmount: double): boolean;
@@ -724,6 +730,7 @@ type
 
     OriginalInvoiceStatus: Double;
     constructor Create(aOwner: TComponent); override;
+    destructor Destroy; override;
     procedure UpdateCaptions;
     procedure WndProc(var message: TMessage); override;
     property Reservation: integer read FReservation write FReservation;
@@ -766,7 +773,8 @@ uses
   , Math
     , uVatCalculator, uSQLUtils, ufrmRoomPrices, uInvoiceDefinitions
     , System.Generics.Defaults
-    , uDateTimeHelper;
+    , uDateTimeHelper
+    ;
 
 {$R *.DFM}
 
@@ -876,6 +884,12 @@ begin
   RemoveAllCheckboxes;
   agrLines.RemoveRows(iRow, 1);
   ForceRowChange;
+end;
+
+destructor TfrmInvoiceRentPerDay.Destroy;
+begin
+  FCurrencyhandlersMap.Free;
+  inherited;
 end;
 
 // HJ
@@ -1005,6 +1019,7 @@ begin
   FReference := '';
   FSource := '';
   FChildInvoiceLines := TList<TInvoiceLine>.Create;
+  FCurrency := g.qNativeCurrency;
 end;
 
 destructor TInvoiceLine.Destroy;
@@ -1019,13 +1034,15 @@ var
 begin
   if FVisibleOnInvoice then
   begin
-    Result := Total;
+    Result := TotalNativeCurrency;
     for lDerived in FChildInvoiceLines do
       if not lDerived.VisibleOnInvoice then
-        Result := Result + lDerived.Total;
+        Result := Result + lDerived.TotalNativeCurrency;
   end
   else
     Result := 0;
+
+  Result := Result / GetRate(FCurrency);
 end;
 
 function TInvoiceLine.GetItemKind: TItemKind;
@@ -1042,15 +1059,20 @@ function TInvoiceLine.GetRevenueNativeCurrency: double;
 var
   lInvLine: TInvoiceLine;
 begin
-  Result := Total;
+  Result := TotalNativeCurrency;
   for lInvLine in FChildInvoiceLines do
     if not lInvLine.VisibleOnInvoice then
-      Result := Result - lInvLine.Total;
+      Result := Result - lInvLine.TotalNativeCurrency;
 end;
 
 function TInvoiceLine.GetTotal: Double;
 begin
   Result := FNumber * FPrice;
+end;
+
+function TInvoiceLine.GetTotalNative: double;
+begin
+  Result := Total * GetRate(FCurrency);
 end;
 
 function TInvoiceLine.GetVatOnInvoice: double;
@@ -1060,16 +1082,17 @@ begin
   Result := 0;
   if VisibleOnInvoice then
   begin
-    Result := VATOnRevenue;
+    Result := VATOnRevenueNativeCurrency;
     for lInvLine in ChildInvoiceLines do
       if not lInvLine.VisibleOnInvoice then
-        Result := result + lINvLine.VATOnRevenue;
+        Result := result + lINvLine.VATOnRevenueNativeCurrency;
   end;
+  Result := Result / GetRate(FCurrency);
 end;
 
-function TInvoiceLine.GetVatOnRevenue: double;
+function TInvoiceLine.GetVatOnRevenueNativeRevenue: double;
 begin
-  Result := _calcVat(Total, FVATPercentage);
+  Result := _calcVat(TotalNativeCurrency, FVATPercentage);
 end;
 
 procedure TInvoiceLine.SetVATCode(const Value: string);
@@ -1112,7 +1135,7 @@ begin
 end;
 
 function TfrmInvoiceRentPerDay.AddLine(lineId: integer; aParentIndex: integer;
-  sItem, sText: string; iNumber: Double; aPrice: Double; const VATCode: string;
+  sItem, sText: string; iNumber: Double; aPrice: Double; const aCurrency: string; const VATCode: string;
   PurchaseDate: TDate; bAuto: boolean;
   Refrence, Source: string; isPackage: boolean; noGuests: integer;
   confirmDate: TDateTime; confirmAmount: Double; rrAlias: integer;
@@ -1156,6 +1179,7 @@ begin
     invoiceLine.AutoGen := AutoGen;
     invoiceline.ParentId := aParentIndex;
     invoiceline.VATCode := VATCode;
+    invoiceline.Currency := aCurrency;
 
     if (aParentIndex <> 0) then
       GetInvoiceLineByLineIdx(aParentIndex).ChildInvoiceLines.Add(invoiceLine);
@@ -1206,6 +1230,8 @@ begin
     end;
 
     DisplayTotals;
+
+    AddAndInitNewRow;
   finally
     agrLines.EndUpdate;
     Screen.Cursor := crDefault;
@@ -1241,11 +1267,8 @@ end;
 
 function TfrmInvoiceRentPerDay.DisplayLine(aInvoiceLine: TInvoiceLine; aRow: integer): integer;
 var
-  lAmountOnInvoice: double;
-  lDisplayCurrencyRate: double;
+  lValue: double;
 begin
-  lDisplayCurrencyRate := GetRate(edtDisplayCurrency.Text);
-
   agrLines.Cells[col_Item, aRow] := aInvoiceLine.Item;
 
   //Add Select checkbox
@@ -1271,16 +1294,23 @@ begin
 
   agrLines.Cells[col_Description, aRow] := aInvoiceLine.Text;
   agrLines.Cells[col_ItemCount, aRow] := trim(_floattostr(aInvoiceLine.Number, vWidth, vDec));
-  agrLines.Cells[col_ItemPrice, aRow] := trim(_floattostr(aInvoiceLine.Price * lDisplayCurrencyRate, vWidth, vDec));
-  agrLines.Cells[col_TotalPrice, aRow] := trim(_floattostr(aInvoiceLine.Total * lDisplayCurrencyRate, vWidth, vDec));
-  agrLines.Cells[col_Vat, aRow] := trim(_floattostr(aInvoiceLine.VATOnRevenue * lDisplayCurrencyRate, vWidth, vDec));
 
-  lAmountOnInvoice := aInvoiceLine.AmountOnInvoice;
-//  if SameValue(lAmountOnInvoice, 0.00, 0.01) then
-//    agrLines.Cells[col_TotalOnInvoice, aRow] := ''
-//  else
-    agrLines.Cells[col_TotalOnInvoice, aRow] := trim(_floattostr(lAmountOnInvoice * lDisplayCurrencyRate, vWidth, vDec));
-  agrLines.Cells[col_VATOnInvoice, aRow] := trim(_floattostr(aInvoiceLine.VATOnOnvoice * lDisplayCurrencyRate, vWidth, vDec));
+  lValue := FCurrencyhandlersMap.ConvertAmount(aInvoiceLine.Price, aInvoiceLine.Currency, edtDisplayCurrency.Text);
+  agrLines.Cells[col_ItemPrice, aRow] := FCurrencyhandlersMap.CurrencyHandler[aInvoiceLine.Currency].FormattedValueWithCode(aInvoiceLine.Price); //trim(_floattostr(lValue, vWidth, vDec));
+
+  lValue := FCurrencyhandlersMap.ConvertAmount(aInvoiceLine.Total, aInvoiceLine.Currency, edtDisplayCurrency.Text);
+  agrLines.Cells[col_TotalPrice, aRow] := FCurrencyhandlersMap.CurrencyHandler[aInvoiceLine.Currency].FormattedValueWithCode(aInvoiceLine.Total); //trim(_floattostr(lValue, vWidth, vDec));
+
+  agrLines.Cells[col_Vat, aRow] := FCurrencyhandlersMap.CurrencyHandler[g.qNativeCurrency].FormattedValueWithCode(aInvoiceLine.VATOnRevenueNativeCurrency); //trim(_floattostr(aInvoiceLine.VATOnRevenueNativeCurrency * lDisplayCurrencyRate, vWidth, vDec));
+
+  lValue :=  FCurrencyhandlersMap.ConvertAmount(aInvoiceLine.AmountOnInvoice, aInvoiceLine.Currency, edtDisplayCurrency.Text);
+  if SameValue(lValue, 0.00, 0.01) then
+    agrLines.Cells[col_TotalOnInvoice, aRow] := ''
+  else
+    agrLines.Cells[col_TotalOnInvoice, aRow] := FCurrencyhandlersMap.CurrencyHandler[edtDisplayCurrency.Text].FormattedValueWithCode(lValue); //trim(_floattostr(lAmountOnInvoice * lDisplayCurrencyRate, vWidth, vDec));
+
+  lValue := FCurrencyhandlersMap.ConvertAmount(aInvoiceLine.VATOnInvoice, aInvoiceLine.Currency, edtDisplayCurrency.Text);
+  agrLines.Cells[col_VATOnInvoice, aRow] := FCurrencyhandlersMap.CurrencyHandler[edtDisplayCurrency.Text].FormattedValueWithCode(lValue); //trim(_floattostr(aInvoiceLine.VATOnOnvoice * lDisplayCurrencyRate, vWidth, vDec));
 
   agrLines.Cells[col_System, aRow] := '';
   agrLines.Cells[col_Refrence, aRow] := aInvoiceLine.Reference;
@@ -1444,9 +1474,9 @@ begin
       end;
     end;
 
-    nativeTotal := FInvoiceLinesList.TotalOnInvoice;
+    nativeTotal := FInvoiceLinesList.TotalOnInvoiceNativeCurrency;
 
-    ttVAT := FInvoiceLinesList.TotalVatOnInvoice;
+    ttVAT := FInvoiceLinesList.TotalVatOnInvoiceNativeCurrency;
 
     edtTotalWOVat.Text := _floattostr(nativeTotal - ttVAT, vWidth, vDec) + ' ' + g.qNativeCurrency;
     edtVat.Text := _floattostr(ttVat, vWidth, vDec)  + ' ' + g.qNativeCurrency;
@@ -1514,7 +1544,7 @@ begin
 
   unitPrice := totalTax / TaxUnits;
 
-  AddLine(0, aParentIndex, taxItem, Item_GetDescription(taxItem), TaxUnits, unitPrice, lItemInfo.VATCode, aPurchaseDate, True, '', '', false, 0, confirmDate, confirmAmount, -1, _GetCurrentTick);
+  AddLine(0, aParentIndex, taxItem, Item_GetDescription(taxItem), TaxUnits, unitPrice, g.qNativeCurrency, lItemInfo.VATCode, aPurchaseDate, True, '', '', false, 0, confirmDate, confirmAmount, -1, _GetCurrentTick);
 
 end;
 
@@ -1824,6 +1854,7 @@ var
 begin
   EmptyStringGrid(agrLines);
   agrLines.ColCount := col_autogen + 1;
+  agrLines.RowHeights[0] := 20;
   agrLines.RowCount := 2;
   agrLines.Cells[col_Item, 0] := GetTranslatedText('shTxInvoice_Form_Header_Item');
   agrLines.Cells[col_VisibleOnInvoice, 0] := GetTranslatedText('shTxInvoice_Form_Header_VisibleOnInvoice');
@@ -1840,7 +1871,7 @@ begin
   agrLines.Cells[col_confirmdate, 0] := GetTranslatedText('shTxInvoice_Form_Header_Confirmdate');
   agrLines.Cells[col_confirmAmount, 0] := GetTranslatedText('shTxInvoice_Form_Header_ConfirmAmount');
   agrLines.Cells[col_Vat, 0] := GetTranslatedText('shTxInvoice_Form_Header_Vat');
-  agrLines.Cells[col_VATOnInvoice, 0] := GetTranslatedText('shTxInvoice_Form_Header_Vat');
+  agrLines.Cells[col_VATOnInvoice, 0] := GetTranslatedText('shTxInvoice_Form_Header_VatOnInvoice');
   agrLines.Cells[col_rrAlias, 0] := GetTranslatedText('shTxInvoice_Form_Header_Alias');
   agrLines.Cells[col_autogen, 0] := 'ID';
 
@@ -1851,7 +1882,7 @@ begin
   agrLines.ColWidths[col_ItemCount] := 80;
   agrLines.ColWidths[col_ItemPrice] := 80;
   agrLines.ColWidths[col_TotalPrice] := 100;
-  agrLines.ColWidths[col_VAT] := 80;
+//  agrLines.ColWidths[col_VAT] := 80;
   agrLines.ColWidths[col_TotalOnInvoice] := 100;
   agrLines.ColWidths[col_VATOnINvoice] := 80;
   agrLines.ColWidths[col_Source] := 60;
@@ -1870,11 +1901,11 @@ begin
   if iWidth > 0 then
     agrLines.ColWidths[col_Description] := iWidth;
 
+//  agrLines.HideColumn(col_Vat);
   agrLines.HideColumn(col_date);
   agrLines.HideColumn(col_System);
   agrLines.HideColumn(col_Refrence);
   agrLines.HideColumns(col_isPackage, col_autogen);
-  agrLines.HideColumn(col_Vat);
 
   for i := 0 to agrLines.ColCount - 1 do
     if agrLines.IsHiddenColumn(i) then
@@ -1892,7 +1923,6 @@ function TfrmInvoiceRentPerDay.AddRoom(const aRoom: String; aRoomPrice: Double; 
   aNumGuests: integer; aNumChildren: integer; aIsPackage: boolean; aRRAlias: integer; aBeakfastIncluded: boolean): integer;
 var
   lRmRntItem: string;
-  lDiscount: Double;
   lDiscountItem: string;
 
   lGuestName: string;
@@ -1907,7 +1937,6 @@ var
   lItemInFo: TItemTypeInfo;
   lDescription: string;
   lCurrencyRate: double;
-  lNativeRoomPrice: double;
 begin
 
   lConfirmDate := 2;
@@ -1962,18 +1991,16 @@ begin
   lRoominfo.BreakFastIncluded := aBeakfastIncluded;
   FRoomInfoList.add(lRoomInfo);
 
-  lNativeRoomPrice := aROomPrice * GetRate(aCurrency);
-
   if aBeakfastIncluded then
-    lNativeRoomPrice := lNativeRoomPrice - (lNumGuests * lRoomInfo.NumberOfNights * Item_GetPrice(g.qBreakFastItem));
+    aRoomPrice := aRoomPrice - (lNumGuests * lRoomInfo.NumberOfNights * Item_GetPrice(g.qBreakFastItem) * GetRate(aCurrency));
 
 
   // add a TInvoiceline object for the RoomRent to InvoiceLineList
-  lInvoiceLine := AddLine(0, 0, lRmRntItem, lDescription, aDayCount, lNativeRoomPrice, litemInfo.VATCode, 0, True, '', '', aIsPackage, lNumGuests, lConfirmDate, lConfirmAmount, aRRAlias, _GetCurrentTick); // *77
+  lInvoiceLine := AddLine(0, 0, lRmRntItem, lDescription, aDayCount, aRoomPrice, aCurrency, litemInfo.VATCode, 0, True, '', '', aIsPackage, lNumGuests, lConfirmDate, lConfirmAmount, aRRAlias, _GetCurrentTick); // *77
   lInvoiceLine.RoomEntity := lRoomInfo;
 
   //Tax invoicelines
-  AddTaxInvoicelinesForRoomItem(lRoomInfo, lInvoiceLine.InvoiceLineIndex);
+  AddTaxInvoicelinesForRoomItem(lInvoiceLine);
 
   //Included Breakfast invoicelines
   AddBreakfastInvoicelinesForRoomItem(lRoomInfo, lInvoiceLine.InvoiceLineIndex);
@@ -1986,16 +2013,9 @@ begin
 
     lDescription := Item_GetDescription(lDiscountItem) + ' ' + aDiscountText;
 
-    if aDiscountIsPercentage then
-      lDiscount := (lNativeRoomPrice * aDiscountAmount / 100) * -1
-    else
-      lDiscount := (aDiscountAmount) * -1;
-
-    lDiscount := lDiscount * GetRate(aCurrency);
-
     /// Add an InvoiceLine object for the discount
-    AddLine(0, lInvoiceLine.InvoiceLineIndex, lDiscountItem, lDescription, aDayCount, lDiscount, lItemInfo.VATCode, 0, True, '', '', false, aNumGuests, lConfirmDate, lConfirmAmount, aRRAlias, _GetCurrentTick);
-    lRoomInfo.Discount := lDiscount * aDayCount;
+    AddLine(0, lInvoiceLine.InvoiceLineIndex, lDiscountItem, lDescription, aDayCount, -1 * aDiscountAmount, aCurrency, lItemInfo.VATCode, 0, True, '', '', false, aNumGuests, lConfirmDate, lConfirmAmount, aRRAlias, _GetCurrentTick);
+    lRoomInfo.Discount := aDiscountAmount * aDayCount;
   end;
 
   UpdateItemInvoiceLinesForTaxCalculations;
@@ -2016,14 +2036,13 @@ begin
 
 end;
 
-procedure TfrmInvoiceRentPerDay.AddTaxinvoiceLinesForRoomItem(aRoomEntity: TInvoiceRoomEntity; aParentIndex: integer);
+procedure TfrmInvoiceRentPerDay.AddTaxinvoiceLinesForRoomItem(aInvLine: TInvoiceLine);
 var
   lUseStayTax: boolean;
   lIsIncluded: boolean;
   lTaxResultInvoiceLines: TInvoiceTaxEntityList;
-  lTotalTaxIncluded: double;
-  lTotalTaxExcluded: double;
   lTotal: double;
+  lTotalNative: double;
   tt, l: integer;
 begin
   if zFromKredit then
@@ -2035,15 +2054,13 @@ begin
 
   glb.LocateSpecificRecordAndGetValue('customers', 'Customer', edtCustomer.Text, 'StayTaxIncluted', lIsIncluded);
 
-  lTaxResultInvoiceLines := MakeTaxListforRoomEntity(aRoomEntity, d.Item_Get_ItemTypeInfo(trim(g.qRoomRentItem)), lIsIncluded);
+  lTaxResultInvoiceLines := MakeTaxListforRoomEntity(aInvLine.RoomEntity, d.Item_Get_ItemTypeInfo(trim(g.qRoomRentItem)), lIsIncluded);
   try
     lIsIncluded := false;
 
     GetTaxTypes(lTaxResultInvoiceLines);
     for tt := 0 to TaxTypes.Count - 1 do
     begin
-      lTotalTaxExcluded := 0;
-      lTotalTaxIncluded := 0;
 
       for l := 0 to lTaxResultInvoiceLines.Count - 1 do
         if lTaxResultInvoiceLines[l].BookingItem = TaxTypes[tt] then
@@ -2056,15 +2073,8 @@ begin
             TIE_EXCLUDED:     lIsIncluded := false;
           end;
 
-          if lIsIncluded then
-            lTotalTaxIncluded := lTotalTaxIncluded + lTotal
-          else
-            if NOT lTaxResultInvoiceLines[l].Percentage then
-              lTotalTaxExcluded := lTotalTaxExcluded + _RoundN(lTotal / zCurrencyRate, 2)
-            else
-              lTotalTaxExcluded := lTotalTaxExcluded + lTotal;
-
-            AddRoomTaxToLinesAndGrid(_RoundN(lTotal / zCurrencyRate, 2), trunc(lTaxResultInvoiceLines[l].NumItems), TaxTypes[tt], aRoomEntity.Departure, 0, aParentIndex);
+          lTotalNative := FCurrencyhandlersMap.ConvertAmount(lTotal, aInvLine.Currency, g.qNativeCurrency);
+          AddRoomTaxToLinesAndGrid(lTotalNative, trunc(lTaxResultInvoiceLines[l].NumItems), TaxTypes[tt], aInvLine.RoomEntity.Departure, 0, aInvline.InvoiceLineIndex);
         end; //for l + if
     end; //for tt
   finally
@@ -2451,7 +2461,7 @@ var
   RateCount: integer;
   UnpaidDays: integer;
 
-  AvrageDiscountPerc: Double;
+  AverageDiscountPerc: Double;
   AverageDiscountAmount: Double;
 
   DiscountText: string;
@@ -2893,9 +2903,9 @@ begin
           ChildrenCount := zRoomRSet.FieldByName('numChildren').asinteger;
           infantCount := zRoomRSet.FieldByName('numInfants').asinteger;
           PriceCode := zRoomRSet.FieldByName('PriceType').asString;
-          AverageRate := zRoomRSet.FieldByName('AvrageRate').AsFloat;
+          AverageRate := zRoomRSet.FieldByName('AverageRate').AsFloat;
           RateCount := zRoomRSet.FieldByName('rateCount').asinteger;
-          AvrageDiscountPerc := zRoomRSet.FieldByName('discount').AsFLoat;
+          AverageDiscountPerc := zRoomRSet.FieldByName('discount').AsFLoat;
 
           mRoomRes.append;
           mRoomRes.FieldByName('RoomReservation').asinteger := lRoomReservation;
@@ -2912,7 +2922,7 @@ begin
           mRoomRes.FieldByName('ChildrenCount').asinteger := ChildrenCount;
           mRoomRes.FieldByName('InfantCount').asinteger := infantCount;
           mRoomRes.FieldByName('PriceCode').asString := PriceCode;
-          mRoomRes.FieldByName('AvrageDiscount').asfloat := AvrageDiscountPerc;
+          mRoomRes.FieldByName('AvrageDiscount').asfloat := AverageDiscountPerc;
           mRoomRes.FieldByName('InvoiceIndex').asinteger := FInvoiceIndex;
           mRoomRes.FieldByName('GroupAccount').asBoolean := zRoomRSet['GroupAccount'];
 
@@ -2951,7 +2961,7 @@ begin
                 Room := rSet.FieldByName('Room').asString;
                 PriceCode := rSet.FieldByName('PriceCode').asString;
                 RateDate := SQLToDate(rSet.FieldByName('ADate').asString);
-                Rate := rSet.FieldByName('RoomRate').AsFloat;
+                Rate := rSet.FieldByName('RoomRate').AsFloat; // in selected currency
                 lCurrency := rSet.FieldByName('Currency').AsString;
                 Discount := rSet.FieldByName('Discount').AsFloat;
                 isPercentage := rSet.FieldByName('isPercentage').asBoolean;
@@ -3026,7 +3036,7 @@ begin
                 sText := tmp + sText;
 
                 if IsPercentage then
-                  DiscountText := DiscountText + '(' + floattostr(DiscountAmount) + '%)';
+                  DiscountText := DiscountText + '(' + floattostr(Discount) + '%)';
 
                 AddRoom(Room, Rate, lCurrency, RateDate, RateDate+1, 1, sText, (FRoomReservation = 0), lRoomReservation,
                   DiscountAmount, isPercentage, DiscountText, GuestName, NumberGuests, ChildrenCount, isPackage,
@@ -3227,6 +3237,7 @@ begin
 
         AddLine(lineId, 0, ItemId, _s,
                         dNumber, Price,
+                        g.qNativeCurrency,
                         eSet.FieldByName('VATType').AsString,
                         SQLToDate(eSet.FieldByName('PurchaseDate').asString), false,
                         trim(eSet.FieldByName('importRefrence').asString),
@@ -3514,7 +3525,7 @@ begin
   lItem := g.qBreakFastItem;
   lText :=  Item_GetDescription(lItem) + ' (' + GetTranslatedText('shTx_ReservationProfile_Included')  + ')';
   lItemInfo := d.Item_Get_ItemTypeInfo(litem);
-  lInvoiceLine := AddLine(0, aParentIndex, lItem, lText, aIncludedBreakfastCount, Item_GetPrice(litem), litemInfo.VATCode, aPurchaseDate, True, '', '',  false, 0, 0, 0, -1, _GetCurrentTick, aParentIndex);
+  lInvoiceLine := AddLine(0, aParentIndex, lItem, lText, aIncludedBreakfastCount, Item_GetPrice(litem), g.qNativeCurrency, litemInfo.VATCode, aPurchaseDate, True, '', '',  false, 0, 0, 0, -1, _GetCurrentTick, aParentIndex);
   lInvoiceLine.VisibleOnInvoice := false;
 end;
 
@@ -3717,6 +3728,7 @@ begin
   FInvoiceLinesList := TInvoiceLineList.Create;
   FRoomInfoList := TRoomInfoList.create(True);
   tempInvoiceItemList := TInvoiceItemEntityList.create(True);
+  FCurrencyhandlersMap := TCurrencyHandlersMap.Create;
 
   inherited;
 
@@ -3788,7 +3800,7 @@ end;
 
 procedure TfrmInvoiceRentPerDay.FormResize(Sender: TObject);
 begin
-  agrLines.AutoFitColumns(false);
+//  agrLines.AutoFitColumns(false);
 end;
 
 procedure TfrmInvoiceRentPerDay.FormShow(Sender: TObject);
@@ -4168,9 +4180,9 @@ begin
     else
       d.GetRoomReservationLocations(FRoomReservation, lstLocations);
 
-    lOpenBalance := FInvoiceLinesList.TotalOnInvoice - GetDownPayments;
+    lOpenBalance := FInvoiceLinesList.TotalOnInvoiceNativeCurrency - GetDownPayments;
     if not SelectPaymentTypes(lOpenBalance, edtCustomer.Text, ptInvoice, edtDisplayCurrency.Text, _StrToFloat(edtRate.Text),
-      lstLocations, aInvoiceDate, aPayDate, aLocation) then
+      FReservation, lstLocations, aInvoiceDate, aPayDate, aLocation) then
       exit;
 
     Result := SameValue(GatherPayments(stlPaySelections), lOpenBalance);
@@ -4534,7 +4546,7 @@ begin
   end;
 
   fItemTotal := aInvoiceLine.AmountOnInvoice;
-  fItemTotalWOVat := fItemTotal - aInvoiceLine.VATOnOnvoice;
+  fItemTotalWOVat := fItemTotal - aInvoiceLine.VATOnInvoice;
 
 //  lInvRoom := TInvoiceRoomEntity.create(aInvoiceLine.Item, 1, 0, aInvoiceLine.Number, fItemTotal, 0, 0, false);
 //  try
@@ -4618,7 +4630,7 @@ begin
     s := s + ', ' + _db(lItemTypeInfo.VATCode);
     s := s + ', ' + _db(iCreditInvoiceMultiplier * fItemTotal);
     s := s + ', ' + _db(iCreditinvoiceMultiplier * fItemTotalWOVat);
-    s := s + ', ' + _db(iCreditinvoiceMultiplier * aInvoiceLine.VATOnOnvoice);
+    s := s + ', ' + _db(iCreditinvoiceMultiplier * aInvoiceLine.VATOnInvoice);
     s := s + ', ' + _db(zCurrencyRate);
     s := s + ', ' + _db(edtDisplayCurrency.Text);
     s := s + ', ' + inttostr(aInvoiceLine.noGuests);
@@ -4655,7 +4667,7 @@ begin
       ' , Price= ' + _db(iCreditinvoiceMultiplier * aInvoiceLine.Price) +
       ' , Total= ' + _db(iCreditinvoiceMultiplier * fItemTotal) +
       ' , TotalWOVat= ' + _db(iCreditinvoiceMultiplier * fItemTotalWOVat) +
-      ' , VAT= ' + _db(iCreditinvoiceMultiplier * aInvoiceLine.VATOnOnvoice) +
+      ' , VAT= ' + _db(iCreditinvoiceMultiplier * aInvoiceLine.VATOnInvoice) +
       ' , CurrencyRate= ' + _db(zCurrencyRate) +
       ' , Currency= ' + _db(edtDisplayCurrency.Text) +
       ' , Persons= ' + _db(aInvoiceLine.noGuests) +
@@ -4786,8 +4798,11 @@ end;
 
 procedure TfrmInvoiceRentPerDay.agrLinesGetDisplText(Sender: TObject; ACol, ARow: Integer; var Value: string);
 begin
-  if Value = trim(_FloatToStr(0, vWidth, vDec)) then
-    Value := '';
+  if (aRow > 0) and assigned(GetInvoiceLineByRow(aRow)) then
+    if Value = trim(_FloatToStr(0, vWidth, vDec)) then
+      Value := ''
+//    else if (aCol in [col_ItemPrice, col_TotalPrice, col_Vat, col_TotalOnInvoice, col_VATOnInvoice] ) then
+//      Value := FCurrencyhandlersMap.CurrencyHandler[edtDisplayCurrency.Text].FormattedValue(StrToFloatDef(Value, 0))
 end;
 
 procedure TfrmInvoiceRentPerDay.agrLinesGetEditText(Sender: TObject; ACol, ARow: integer;
@@ -4842,10 +4857,10 @@ begin
              glb.LocateSpecificRecord('vatcodes', 'VATCode', VATCode) then
             with theData[i].recHolder do
             begin
-              if NOT CheckExtraWithdrawalAllowed(theData[i].recHolder.Price) then
+              if NOT CheckExtraWithdrawalAllowed(Price) then
                 exit;
 
-              lInvoiceLine := AddLine(0, 0, Item, Description, 1, Price, VATCode, now(), false, '', '', false, 0, 0, 0, 0, '');
+              lInvoiceLine := AddLine(0, 0, Item, Description, 1, Price, g.qNativeCurrency, VATCode, now(), false, '', '', false, 0, 0, 0, 0, '');
               lInvoiceLine.Changed := True;
             end //if .. with
             else
@@ -4946,7 +4961,7 @@ begin
       lInvoiceLine := GetInvoiceLineByRow(aRow);
       if not assigned(lInvoiceLine) then
       begin
-        lInvoiceLine := AddLine(0, 0, '', '', 1, 0, '', now(), false, '', '', false, 0, 0, 0, 0, '');
+        lInvoiceLine := AddLine(0, 0, '', '', 1, 0, g.qNativeCurrency, '', now(), false, '', '', false, 0, 0, 0, 0, '');
         agrLines.Objects[cInvoiceLineAttachColumn, aRow] := lInvoiceLine;
       end;
 
@@ -5100,6 +5115,12 @@ begin
   begin
     if agrLines.ColWidths[col_TotalPrice] < 100 then
       agrLines.ColWidths[col_TotalPrice] := 100; // -96
+  end;
+
+  if ACol = col_TotalOnInvoice then
+  begin
+    if agrLines.ColWidths[col_TotalOnInvoice] < 100 then
+      agrLines.ColWidths[col_TotalOnInvoice] := 100; // -96
   end;
 end;
 
@@ -7277,8 +7298,7 @@ begin
   ItemTypeInfo := d.Item_Get_ItemTypeInfo(ItemId);
   VATType := ItemTypeInfo.VATCode;
 
-  lInvRoom := TInvoiceRoomEntity.create(agrLines.Cells[col_Item, CurrentRow], 1, 0,
-    _StrToFloat(agrLines.Cells[col_ItemCount, CurrentRow]), Total, 0, 0, false);
+  lInvRoom := TInvoiceRoomEntity.create(agrLines.Cells[col_Item, CurrentRow], 1, 0, _StrToFloat(agrLines.Cells[col_ItemCount, CurrentRow]), Total, 0, 0, false);
   try
     Vat := GetVATForItem(agrLines.Cells[col_Item, CurrentRow], Total,
       _StrToFloat(agrLines.Cells[col_ItemCount, CurrentRow]), lInvRoom,
@@ -7458,7 +7478,7 @@ begin
   ItemTypeInfo := d.Item_Get_ItemTypeInfo(ItemId, agrLines.Cells[col_Source, CurrentRow]);
 
   lInvRoom := TInvoiceRoomEntity.create(agrLines.Cells[col_Item, CurrentRow], 1, 0,
-    _StrToFloat(agrLines.Cells[col_ItemCount, CurrentRow]), CurrentRow, 0, 0, false);
+    _StrToFloat(agrLines.Cells[col_ItemCount, CurrentRow]), _StrToFloat(agrLines.Cells[col_ItemPrice, CurrentRow]), 0, 0, false);
   try
     TotalVAT := GetVATForItem(agrLines.Cells[col_Item, CurrentRow], Total,
       _StrToFloat(agrLines.Cells[col_ItemCount, CurrentRow]), lInvRoom, tempInvoiceItemList,
@@ -8639,13 +8659,13 @@ begin
       Result := Result + lInvLine.AmountOnInvoice;
 end;
 
-function TInvoiceLineList.GetTotalOnInvoice: double;
+function TInvoiceLineList.GetTotalOnInvoiceNativeCurrency: double;
 var
   lInvLine: TinvoiceLine;
 begin
   Result := 0.0;
   for lInvLine in Self do
-    Result := Result + lInvLine.AmountOnInvoice;
+    Result := Result + (lInvLine.AmountOnInvoice * GetRate(lInvLine.Currency));
 end;
 
 function TInvoiceLineList.GetTotalVatOnInvoice: double;
@@ -8654,7 +8674,7 @@ var
 begin
   Result := 0.0;
   for lInvLine in Self do
-    Result := Result + lInvLine.VATOnOnvoice;
+    Result := Result + (lInvLine.VATOnInvoice * GetRate(lInvLine.Currency));
 end;
 
 procedure TInvoiceLineList.SortOnInvoiceLineIndex;

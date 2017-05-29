@@ -699,8 +699,6 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitTop = 169
-      ExplicitHeight = 493
       object pnlTotalsAndPayments: TsPanel
         Left = 0
         Top = 322
@@ -711,7 +709,6 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         ParentColor = True
         TabOrder = 0
         SkinData.SkinSection = 'PANEL'
-        ExplicitTop = 341
         object memExtraText: TMemo
           Left = 1
           Top = 1
@@ -1092,7 +1089,6 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
           Height = 89
           Align = alLeft
           TabOrder = 0
-          ExplicitHeight = 92
           object btnRoomToTemp: TsButton
             Left = 3
             Top = 45
@@ -1141,7 +1137,6 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
           Height = 89
           Align = alLeft
           TabOrder = 1
-          ExplicitHeight = 92
           object btnItemToTmp: TsButton
             Left = 6
             Top = 45
@@ -1200,8 +1195,6 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
             BevelOuter = bvNone
             TabOrder = 0
             SkinData.SkinSection = 'PANEL'
-            ExplicitLeft = 1
-            ExplicitTop = 48
             object btnAddDownPayment: TsButton
               Left = 0
               Top = 0
@@ -1211,8 +1204,6 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
               Align = alRight
               TabOrder = 0
               SkinData.SkinSection = 'BUTTON'
-              ExplicitLeft = 2
-              ExplicitTop = -2
             end
             object btnEditDownPayment: TsButton
               Left = 131
@@ -1245,8 +1236,6 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
           Height = 89
           Align = alClient
           TabOrder = 3
-          ExplicitWidth = 145
-          ExplicitHeight = 92
           object btnReservationNotes: TsButton
             Left = 5
             Top = 2
@@ -1283,8 +1272,6 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         Padding.Bottom = 5
         TabOrder = 2
         SkinData.SkinSection = 'PANEL'
-        ExplicitTop = 92
-        ExplicitHeight = 249
         object agrLines: TAdvStringGrid
           Left = 10
           Top = 5
@@ -1295,7 +1282,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
           BevelInner = bvNone
           BevelOuter = bvNone
           BorderStyle = bsNone
-          ColCount = 9
+          ColCount = 16
           DefaultRowHeight = 19
           DrawingStyle = gdsClassic
           FixedCols = 0
@@ -1305,7 +1292,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
           Font.Height = -12
           Font.Name = 'Courier New'
           Font.Style = []
-          Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goColSizing, goEditing, goThumbTracking]
+          Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goColSizing, goThumbTracking]
           ParentFont = False
           ScrollBars = ssBoth
           TabOrder = 0
@@ -1329,7 +1316,6 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
           ActiveCellFont.Height = -13
           ActiveCellFont.Name = 'Tahoma'
           ActiveCellFont.Style = [fsBold]
-          ControlLook.FixedGradientFrom = clBtnFace
           ControlLook.FixedGradientHoverFrom = clGray
           ControlLook.FixedGradientHoverTo = clWhite
           ControlLook.FixedGradientDownFrom = clGray
@@ -1421,7 +1407,6 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
           SortSettings.DefaultFormat = ssAutomatic
           Version = '8.2.4.1'
           ExplicitLeft = 17
-          ExplicitTop = 4
           ColWidths = (
             24
             28
@@ -1430,6 +1415,13 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
             83
             91
             31
+            64
+            64
+            64
+            64
+            64
+            64
+            64
             64
             64)
         end
@@ -1442,8 +1434,6 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         Height = 227
         Align = alRight
         TabOrder = 1
-        ExplicitTop = 95
-        ExplicitHeight = 243
         object pnlInvoiceIndex0: TsPanel
           Left = 3
           Top = 4

@@ -1528,7 +1528,7 @@ begin
   constants.Add('shTxProvideRoom_Status', 'Status '); // Status
 
   constants.Add('shTxInvoice_Form_Header_Item', 'Item');
-  constants.Add('shTxInvoice_Form_Header_VisibleOnInvoice', 'On Invoice');
+  constants.Add('shTxInvoice_Form_Header_VisibleOnInvoice', 'Show On Invoice');
   constants.Add('shTxInvoice_Form_Header_Text', 'Text');
   constants.Add('shTxInvoice_Form_Header_Number', 'Number');
   constants.Add('shTxInvoice_Form_Header_UnitPrice', 'Unit Price');
@@ -1541,6 +1541,7 @@ begin
   constants.Add('shTxInvoice_Form_Header_Confirmdate', 'Confirmdate');
   constants.Add('shTxInvoice_Form_Header_ConfirmAmount', 'ConfirmAmount');
   constants.Add('shTxInvoice_Form_Header_Vat', 'Vat');
+  constants.Add('shTxInvoice_Form_Header_VatOninvoice', 'Vat on invoice');
   constants.Add('shTxInvoice_Form_Header_Alias', 'Alias');
 
   constants.Add('shTxLookAndFeel', 'Look && Feel');
