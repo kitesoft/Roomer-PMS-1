@@ -16,7 +16,6 @@ uses
   , uTaxCalc
   , frxExportMail, frxExportImage, frxExportRTF, frxExportHTML
   , uInvoiceEntities
-  , RoomerBookingCommunicationModel_RequestsResponses
   ;
 
 type
@@ -81,11 +80,12 @@ type
     /// </summary>
     function CanBeHiddenFromInvoice: boolean;
     /// <summary>
-    ///   Revenue total including VAT for this item, calculated as Price * Number
+    ///   Revenue total including VAT for this item, calculated as Price * Number, in native currency
     /// </summary>
     property Total: Double read GetTotal;
-    ///<summary>Amount which will be visible on the invoice.
-    ///  Dependent in the VisibleOnInvoice property and on ChildInvoiceLines which are not visible on the invoice
+    ///<summary>
+    ///   Amount which will be visible on the invoice in native currency.
+    ///   Dependent in the VisibleOnInvoice property and on ChildInvoiceLines which are not visible on the invoice
     ///</summary>
     property AmountOnInvoice: double read GetAmountOnInvoice;
     /// <summary>
@@ -105,12 +105,18 @@ type
     property RoomEntity: TInvoiceRoomEntity read FROomEntity write FRoomEntity;
 
     property ItemKind: TItemKind read GetItemKind;
+    /// <summary>
+    ///   Calculated VAT based on revenue of this item, in native currency
+    /// </summary>
     property VATOnRevenue: double read GetVatOnRevenue;
+    /// <summary>
+    ///   Calculated VAT on the invoice for this item, in native currency
+    /// </summary>
     property VATOnOnvoice: double read GetVatOnInvoice;
 
     property Changed: boolean read FChanged write FChanged;
   published
-    /// <summary>Id in invoicelines table of this invoiceline item, if -1 then this invoiceline instance does not have
+    /// <summary>Id in invoicelines table of this invoiceline item, if <= 0 then this invoiceline instance does not have
     /// a record in the table invoicelines </summary>
     property LineId: integer read FLineId write FLineId;
     property InvoiceNumber: integer read FInvoiceNumber write FInvoiceNumber;
@@ -118,6 +124,9 @@ type
     property Text: string read FText write FText;
 
     property Number: Double read FNumber write FNumber;
+    /// <summary>
+    ///   Price per item in native currency
+    /// </summary>
     property Price: Double read FPrice write FPrice;
     property VATCode: string read FVATCode write SetVATCode;
     property VATPercentage: double read FVatpercentage;
@@ -193,8 +202,7 @@ type
     SendItemToGroupInvoice: TMenuItem;
     pnlHead: TsPanel;
     clabCurrency: TsLabel;
-    edtCurrency: TsEdit;
-    rgrInvoiceType: TsRadioGroup;
+    edtDisplayCurrency: TsEdit;
     act: TActionList;
     actSaveAndExit: TAction;
     actPrintInvoice: TAction;
@@ -215,25 +223,11 @@ type
     GuestName1: TMenuItem;
     Refrence1: TMenuItem;
     btnGetCurrency: TsButton;
-    btnGetRate: TsButton;
     clabInvoice: TsLabel;
     edtRoomGuest: TsLabel;
     clabRoomGuest: TsLabel;
     StoreMain: TcxPropertiesStore;
     lblChangedInvoiceActive: TsLabel;
-    edtCustomer: TsEdit;
-    clabCustomer: TsLabel;
-    clabPId: TsLabel;
-    edtPersonalId: TsEdit;
-    edtName: TsEdit;
-    edtAddress1: TsEdit;
-    edtAddress2: TsEdit;
-    edtAddress3: TsEdit;
-    edtAddress4: TsEdit;
-    clabCountry: TsLabel;
-    clabAddress: TsLabel;
-    cLabName: TsLabel;
-    btnClearAddresses: TsButton;
     pnlTotalsAndPayments: TsPanel;
     memExtraText: TMemo;
     pnlLineButtons: TsPanel;
@@ -294,7 +288,6 @@ type
     mnuMoveItemToSpecifiedRoomAndInvoiceIndex: TMenuItem;
     mnuMoveRoomRentFromRoomInvoiceToGroup: TMenuItem;
     mnuMoveRoomRentFromGroupToNormalRoomInvoice: TMenuItem;
-    btnGetCustomer: TsButton;
     pnlLnes: TsPanel;
     pnlInvoiceIndices: TsPanel;
     pnlInvoiceIndex0: TsPanel;
@@ -392,23 +385,39 @@ type
     btnMoveItem: TsButton;
     btnRemoveItem: TsButton;
     btnAddItem: TsButton;
-    sPanel1: TsPanel;
+    pnlButtonRight: TsPanel;
     pnlPaymentButtons: TsPanel;
     btnAddDownPayment: TsButton;
     btnEditDownPayment: TsButton;
     btnDeleteDownpayment: TsButton;
-    btnSaveChanges: TsButton;
     sPanel4: TsPanel;
     btnReservationNotes: TsButton;
     btnRemoveLodgingTax2: TsButton;
     btnRemoveRoom: TsButton;
+    btnSaveChanges: TsButton;
+    gbxHeader: TsGroupBox;
+    clabCustomer: TsLabel;
+    clabPId: TsLabel;
+    clabCountry: TsLabel;
+    clabAddress: TsLabel;
+    cLabName: TsLabel;
+    rgrInvoiceType: TsRadioGroup;
+    edtCustomer: TsEdit;
+    edtPersonalId: TsEdit;
+    edtName: TsEdit;
+    edtAddress1: TsEdit;
+    edtAddress2: TsEdit;
+    edtAddress3: TsEdit;
+    edtAddress4: TsEdit;
+    btnClearAddresses: TsButton;
+    btnGetCustomer: TsButton;
     procedure FormCreate(Sender: TObject);
     procedure agrLinesMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: integer);
     procedure edtCustomerDblClick(Sender: TObject);
     procedure agrLinesGetEditText(Sender: TObject; ACol, ARow: integer;
       var Value: string);
-    procedure edtCurrencyDblClick(Sender: TObject);
+    procedure edtDisplayCurrencyDblClick(Sender: TObject);
     procedure agrLinesDrawCell(Sender: TObject; ACol, ARow: integer;
       Rect: TRect; State: TGridDrawState);
     procedure rgrInvoiceTypeClick(Sender: TObject);
@@ -424,7 +433,6 @@ type
     procedure actItemToGroupInvoiceExecute(Sender: TObject);
     procedure timCloseInvoiceTimer(Sender: TObject);
     procedure btnRemoveLodgingTax2Click(Sender: TObject);
-    procedure edtRateDblClick(Sender: TObject);
     procedure btnClearAddressesClick(Sender: TObject);
     procedure FormResize(Sender: TObject);
     procedure agrLinesGetCellColor(Sender: TObject; ARow, ACol: integer;
@@ -471,10 +479,10 @@ type
     procedure S1Click(Sender: TObject);
     procedure Exit1Click(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
-    procedure pnlPaymentButtonsResize(Sender: TObject);
     procedure agrLinesGetDisplText(Sender: TObject; ACol, ARow: Integer; var Value: string);
     procedure actAddRoomExecute(Sender: TObject);
     procedure agrLinesMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+    procedure edtPersonalIdChange(Sender: TObject);
   private
     { Private declarations }
 
@@ -499,6 +507,7 @@ type
     SelectableRooms: TRoomInfoList;
     SelectableExternalRooms: TRoomInfoList;
     zInvoiceNumber: integer;
+    zOriginalInvoice: integer;
     zInvoiceDate: TDate;
     zConfirmDate: TDate;
     zPayDate: TDate;
@@ -536,12 +545,9 @@ type
 
     FReservation: integer;
     FRoomReservation: integer;
+    FHeaderChanged: boolean;
 
     procedure LoadInvoice;
-    /// <summary>
-    ///   Load invoice via runningTab endpoint of OpenAPI
-    /// </summary>
-    procedure LoadRunningTab;
     procedure loadInvoiceToMemtable(var m: TKbmMemTable);
 
     procedure UpdateControls;
@@ -565,7 +571,7 @@ type
     /// Create a new TInvoiceLine object and add this to InvoiceLinesList collection
     /// </summary>
     function AddLine(lineId: integer; aParentIndex: integer; sItem, sText: string; iNumber: Double;
-      FPrice: Double; const VATCode: string; PurchaseDate: TDate; bAuto: boolean;
+      aPrice: Double; const VATCode: string; PurchaseDate: TDate; bAuto: boolean;
       Refrence, Source: string; isPackage: boolean; noGuests: integer;
       confirmDate: TDateTime; confirmAmount: Double; rrAlias: integer;
       AutoGen: string; itemIndex: integer = 0): TInvoiceLine;
@@ -575,7 +581,7 @@ type
     /// A new TInvoiceLine object is also created for the roomrent and a new TInvoiceLine object is created
     /// for the supplied discount (if any). The Invoiceline objects are not attached to the grid.
     /// </summary>
-    Function AddRoom(const aRoom: String; aRoomPrice: Double; aFromDate: TDate;
+    Function AddRoom(const aRoom: String; aRoomPrice: Double; aCurrency: string; aFromDate: TDate;
                       aToDate: TDate; aDayCount: integer; const aDescription: string; aGetGuestName: boolean;
                       aRoomReservation: integer; aDiscountAmount: Double;
                       aDiscountIsPercentage: boolean; const aDiscountText: string; const aGuestName: String;
@@ -603,9 +609,9 @@ type
     /// </summary>
     procedure RestoreTMPInvoicelines;
 
-    procedure SaveHeader(FTotal, fVat, fWOVat: Double; aExecutionPlan: TRoomerExecutionPlan);
+    procedure SaveHeader(aInvoiceNumber: integer; FTotal, fVat, fWOVat: Double; aExecutionPlan: TRoomerExecutionPlan);
 
-    function SaveInvoice(iInvoiceNumber: integer; currencyChange : Boolean = False): boolean;
+    function SaveInvoice(aInvoiceNumber: integer; currencyChange : Boolean = False): boolean;
 
     procedure CheckCurrencyChange(oldCurrency: string);
     procedure CheckRateChange;
@@ -615,7 +621,7 @@ type
     function isSystemLine(row: integer): boolean;
     // Function  isRoomRentLine(row : integer) : boolean;
     function PayInvoiceAndPrint: boolean;
-    function GatherPayments(PayLines: TStringList; var days: integer): Double;
+    function GatherPayments(PayLines: TStringList): Double;
     procedure SetCustEdits;
     function GetInvoiceHeader(Res, RoomRes: integer): boolean; overload;
     function GetInvoiceHeader(Res, RoomRes: integer; arSet: TRoomerDataset): boolean; overload;
@@ -692,7 +698,6 @@ type
     procedure RemoveAutoBreakfastItems;
     function ItemKindOnRow(aRow: Integer): TItemKind;
     procedure ClearGrid;
-    procedure AdaptRunningTabResponse(aInvoiceResponse: TxsdInvoiceResponse);
     procedure AddTaxinvoiceLinesForRoomItem(aRoomEntity: TInvoiceRoomEntity; aParentIndex: integer);
     procedure AddBreakfastInvoicelinesForRoomItem(aRoomEntity: TInvoiceRoomEntity; aParentIndex: integer);
     procedure UpdateLine(aRow: integer);
@@ -700,9 +705,17 @@ type
     procedure CheckAndAddLastRow;
     procedure InsertOrUpdateInvoiceLine(aInvoiceLine: TInvoiceLine; aInvoiceNumber: integer; aExecPlan: TRoomerExecutionPlan);
     procedure AddARoom;
+    function GetHeaderChanged: boolean;
+    /// <summary>
+    ///   Use InvoicePayments form to register payments of open balance.
+    ///  Return true is the open balance has been completely paid
+    /// </summary>
+    function CompletePayments(var aInvoiceDate : TDate; var aPayDate : TDate; var aLocation : string) : boolean;
+    function PayAndPrintFinalInvoice: boolean;
 
     property InvoiceIndex: integer read FInvoiceIndex write SetInvoiceIndex;
     property AnyRowChecked: boolean read GetAnyRowSelected;
+    property HeaderChanged: boolean read GetHeaderChanged;
   public
     { Public declarations }
     FnewSplitNumber: integer; // 0 = herbergjareikningur
@@ -752,17 +765,11 @@ uses
   , uFloatUtils
   , Math
     , uVatCalculator, uSQLUtils, ufrmRoomPrices, uInvoiceDefinitions
-    , uBookingsRunningTabAPICaller
-    , RoomerFinancialDataModel_ModelObjects
     , System.Generics.Defaults
-    ;
+    , uDateTimeHelper;
 
 {$R *.DFM}
 
-
-var
-  memUpdateDone: boolean;
-  zOriginalInvoice: integer;
 
 const
   // Objects in grid
@@ -913,7 +920,7 @@ begin
 
   if FnewSplitNumber <> cCreditInvoive then // 1
   begin
-    if FInvoiceLinesList.IsChanged then
+    if chkChanged then
     begin
       if Ask then
         Res := MessageDlg(GetTranslatedText('shTx_Invoice_SaveChanges'), mtConfirmation, [mbYes, mbNo, mbCancel], 0)
@@ -949,6 +956,7 @@ begin
   edtAddress2.Text := '';
   edtAddress3.Text := '';
   edtAddress4.Text := '';
+  FHeaderChanged := true;
 end;
 
 procedure TfrmInvoiceRentPerDay.btnRemoveLodgingTax2Click(Sender: TObject);
@@ -1104,7 +1112,7 @@ begin
 end;
 
 function TfrmInvoiceRentPerDay.AddLine(lineId: integer; aParentIndex: integer;
-  sItem, sText: string; iNumber: Double; FPrice: Double; const VATCode: string;
+  sItem, sText: string; iNumber: Double; aPrice: Double; const VATCode: string;
   PurchaseDate: TDate; bAuto: boolean;
   Refrence, Source: string; isPackage: boolean; noGuests: integer;
   confirmDate: TDateTime; confirmAmount: Double; rrAlias: integer;
@@ -1134,7 +1142,7 @@ begin
     invoiceLine.Item := sItem;
     invoiceLine.Text := sText;
     invoiceLine.Number := iNumber;
-    invoiceLine.Price := FPrice;
+    invoiceLine.Price := aPrice;
     invoiceLine.IsGeneratedLine := bAuto;
     invoiceLine.PurchaseDate := PurchaseDate;
     invoiceLine.Reference := Refrence;
@@ -1234,7 +1242,10 @@ end;
 function TfrmInvoiceRentPerDay.DisplayLine(aInvoiceLine: TInvoiceLine; aRow: integer): integer;
 var
   lAmountOnInvoice: double;
+  lDisplayCurrencyRate: double;
 begin
+  lDisplayCurrencyRate := GetRate(edtDisplayCurrency.Text);
+
   agrLines.Cells[col_Item, aRow] := aInvoiceLine.Item;
 
   //Add Select checkbox
@@ -1260,16 +1271,16 @@ begin
 
   agrLines.Cells[col_Description, aRow] := aInvoiceLine.Text;
   agrLines.Cells[col_ItemCount, aRow] := trim(_floattostr(aInvoiceLine.Number, vWidth, vDec));
-  agrLines.Cells[col_ItemPrice, aRow] := trim(_floattostr(aInvoiceLine.Price, vWidth, vDec));
-  agrLines.Cells[col_TotalPrice, aRow] := trim(_floattostr(aInvoiceLine.Total, vWidth, vDec));
-  agrLines.Cells[col_Vat, aRow] := trim(_floattostr(aInvoiceLine.VATOnRevenue, vWidth, vDec));
+  agrLines.Cells[col_ItemPrice, aRow] := trim(_floattostr(aInvoiceLine.Price * lDisplayCurrencyRate, vWidth, vDec));
+  agrLines.Cells[col_TotalPrice, aRow] := trim(_floattostr(aInvoiceLine.Total * lDisplayCurrencyRate, vWidth, vDec));
+  agrLines.Cells[col_Vat, aRow] := trim(_floattostr(aInvoiceLine.VATOnRevenue * lDisplayCurrencyRate, vWidth, vDec));
 
   lAmountOnInvoice := aInvoiceLine.AmountOnInvoice;
 //  if SameValue(lAmountOnInvoice, 0.00, 0.01) then
 //    agrLines.Cells[col_TotalOnInvoice, aRow] := ''
 //  else
-    agrLines.Cells[col_TotalOnInvoice, aRow] := trim(_floattostr(lAmountOnInvoice, vWidth, vDec));
-  agrLines.Cells[col_VATOnInvoice, aRow] := trim(_floattostr(aInvoiceLine.VATOnOnvoice, vWidth, vDec));
+    agrLines.Cells[col_TotalOnInvoice, aRow] := trim(_floattostr(lAmountOnInvoice * lDisplayCurrencyRate, vWidth, vDec));
+  agrLines.Cells[col_VATOnInvoice, aRow] := trim(_floattostr(aInvoiceLine.VATOnOnvoice * lDisplayCurrencyRate, vWidth, vDec));
 
   agrLines.Cells[col_System, aRow] := '';
   agrLines.Cells[col_Refrence, aRow] := aInvoiceLine.Reference;
@@ -1435,35 +1446,21 @@ begin
 
     nativeTotal := FInvoiceLinesList.TotalOnInvoice;
 
-//    if ABS(nativeRent) > 0.00 then
-//    begin
-//      ItemTypeInfo := d.Item_Get_ItemTypeInfo(trim(g.qRoomRentItem));
-//      lInvRoom := TInvoiceRoomEntity.create(g.qRoomRentItem, 1, 0, 1, nativeRent, 0, 0, false);
-//      try
-//        dVat := GetVATForItem(g.qRoomRentItem, nativeRent, ttRentNumber, // 1,
-//          lInvRoom, tempInvoiceItemList, ItemTypeInfo, edtCustomer.Text);
-//      finally
-//        lInvRoom.free;
-//      end;
-//    end;
-
     ttVAT := FInvoiceLinesList.TotalVatOnInvoice;
 
-    edtTotalWOVat.Text := _floattostr(nativeTotal - ttVAT, vWidth, vDec);
-    edtVat.Text := _floattostr(ttVat, vWidth, vDec);
+    edtTotalWOVat.Text := _floattostr(nativeTotal - ttVAT, vWidth, vDec) + ' ' + g.qNativeCurrency;
+    edtVat.Text := _floattostr(ttVat, vWidth, vDec)  + ' ' + g.qNativeCurrency;
 
-    edtInvoiceTotal.Text := _floattostr(nativeTotal, vWidth, vDec);
+    edtInvoiceTotal.Text := _floattostr(nativeTotal, vWidth, vDec)  + ' ' + g.qNativeCurrency;
 
     TotalDownPayments := getDownPayments;
     TotalBalance := nativeTotal - TotalDownPayments;
 
-    edtDownPayments.Text := trim(_floattostr(TotalDownPayments, vWidth, vDec));
-    edtBalance.Text := trim(_floattostr(TotalBalance, vWidth, vDec));
+    edtDownPayments.Text := trim(_floattostr(TotalDownPayments, vWidth, vDec)) + ' ' + g.qNativeCurrency;
+    edtBalance.Text := trim(_floattostr(TotalBalance, vWidth, vDec))  + ' ' + g.qNativeCurrency;
 
-    if (edtCurrency.Text <> '') and (edtCurrency.Text <> zNativeCurrency) then
-      edtForeignCurrency.Text :=
-        _floattostr((nativeTotal) / GetRate(edtCurrency.Text), vWidth, vDec);
-
+    if (edtDisplayCurrency.Text <> '') and (edtDisplayCurrency.Text <> zNativeCurrency) then
+      edtForeignCurrency.Text :=  _floattostr((nativeTotal) / GetRate(edtDisplayCurrency.Text), vWidth, vDec);
 
     labLodgingTax.Caption := _floatToStr(FInvoiceLinesList.TotalCityTaxOnInvoice, vWidth, vDec);
 
@@ -1612,7 +1609,7 @@ begin
   s := s + ', ' + _db(zInvoiceDate);
   s := s + ', ' + _db(zConfirmDate);
   s := s + ', ' + _db(zPayDate);
-  s := s + ', ' + _db(edtCurrency.Text);
+  s := s + ', ' + _db(edtDisplayCurrency.Text);
   s := s + ', ' + _db(_StrToFloat(edtRate.Text));
   s := s + ', ' + _db(zLocation);
 
@@ -1851,22 +1848,23 @@ begin
   agrLines.ColWidths[col_Select] := 30;
   agrLines.ColWidths[col_VisibleOnInvoice] := 50;
   agrLines.ColWidths[col_Item] := 100;
-  agrLines.ColWidths[col_ItemCount] := 100;
-  agrLines.ColWidths[col_ItemPrice] := 100;
+  agrLines.ColWidths[col_ItemCount] := 80;
+  agrLines.ColWidths[col_ItemPrice] := 80;
   agrLines.ColWidths[col_TotalPrice] := 100;
   agrLines.ColWidths[col_VAT] := 80;
   agrLines.ColWidths[col_TotalOnInvoice] := 100;
   agrLines.ColWidths[col_VATOnINvoice] := 80;
   agrLines.ColWidths[col_Source] := 60;
   iWidth := agrLines.ClientWidth -
+    agrLines.ColWidths[col_Select] -
+    agrLines.ColWidths[col_VIsibleOnInvoice] -
     agrLines.ColWidths[col_Item] -
     agrLines.ColWidths[col_ItemCount] -
     agrLines.ColWidths[col_ItemPrice] -
     agrLines.ColWidths[col_TotalPrice] -
-    agrLines.ColWidths[col_Source] -
-    agrLines.ColWidths[col_Select] -
-    agrLines.ColWidths[col_VIsibleOnInvoice] -
     agrLines.ColWidths[col_TotalOnInvoice] -
+    agrLines.ColWidths[col_VatOnInvoice] -
+    agrLines.ColWidths[col_Source] -
     5;
 
   if iWidth > 0 then
@@ -1876,6 +1874,7 @@ begin
   agrLines.HideColumn(col_System);
   agrLines.HideColumn(col_Refrence);
   agrLines.HideColumns(col_isPackage, col_autogen);
+  agrLines.HideColumn(col_Vat);
 
   for i := 0 to agrLines.ColCount - 1 do
     if agrLines.IsHiddenColumn(i) then
@@ -1886,7 +1885,7 @@ begin
 
 end;
 
-function TfrmInvoiceRentPerDay.AddRoom(const aRoom: String; aRoomPrice: Double; aFromDate: TDate;
+function TfrmInvoiceRentPerDay.AddRoom(const aRoom: String; aRoomPrice: Double; aCurrency: string; aFromDate: TDate;
   aToDate: TDate; aDayCount: integer; const aDescription: string; aGetGuestName: boolean;
   aRoomReservation: integer; aDiscountAmount: Double;
   aDiscountIsPercentage: boolean; const aDiscountText: string; const aGuestName: String;
@@ -1907,6 +1906,8 @@ var
   lInvoiceLine: TInvoiceLine;
   lItemInFo: TItemTypeInfo;
   lDescription: string;
+  lCurrencyRate: double;
+  lNativeRoomPrice: double;
 begin
 
   lConfirmDate := 2;
@@ -1961,12 +1962,14 @@ begin
   lRoominfo.BreakFastIncluded := aBeakfastIncluded;
   FRoomInfoList.add(lRoomInfo);
 
+  lNativeRoomPrice := aROomPrice * GetRate(aCurrency);
+
   if aBeakfastIncluded then
-    aRoomPrice := aRoomPrice - (lNumGuests * lRoomInfo.NumberOfNights * Item_GetPrice(g.qBreakFastItem));
+    lNativeRoomPrice := lNativeRoomPrice - (lNumGuests * lRoomInfo.NumberOfNights * Item_GetPrice(g.qBreakFastItem));
 
 
   // add a TInvoiceline object for the RoomRent to InvoiceLineList
-  lInvoiceLine := AddLine(0, 0, lRmRntItem, lDescription, aDayCount, aRoomPrice, litemInfo.VATCode, 0, True, '', '', aIsPackage, lNumGuests, lConfirmDate, lConfirmAmount, aRRAlias, _GetCurrentTick); // *77
+  lInvoiceLine := AddLine(0, 0, lRmRntItem, lDescription, aDayCount, lNativeRoomPrice, litemInfo.VATCode, 0, True, '', '', aIsPackage, lNumGuests, lConfirmDate, lConfirmAmount, aRRAlias, _GetCurrentTick); // *77
   lInvoiceLine.RoomEntity := lRoomInfo;
 
   //Tax invoicelines
@@ -1984,9 +1987,11 @@ begin
     lDescription := Item_GetDescription(lDiscountItem) + ' ' + aDiscountText;
 
     if aDiscountIsPercentage then
-      lDiscount := (lRoomInfo.Price * aDiscountAmount / 100) * -1
+      lDiscount := (lNativeRoomPrice * aDiscountAmount / 100) * -1
     else
       lDiscount := (aDiscountAmount) * -1;
+
+    lDiscount := lDiscount * GetRate(aCurrency);
 
     /// Add an InvoiceLine object for the discount
     AddLine(0, lInvoiceLine.InvoiceLineIndex, lDiscountItem, lDescription, aDayCount, lDiscount, lItemInfo.VATCode, 0, True, '', '', false, aNumGuests, lConfirmDate, lConfirmAmount, aRRAlias, _GetCurrentTick);
@@ -2259,7 +2264,7 @@ begin
     m.FieldByName('VAT').asfloat := fVat;
     // _CommaToDot(floattostr(iMultiplier * fItemTotalVAT));
     m.FieldByName('CurrencyRate').asfloat := zCurrencyRate;
-    m.FieldByName('Currency').asString := edtCurrency.Text;
+    m.FieldByName('Currency').asString := edtDisplayCurrency.Text;
     m.FieldByName('Persons').asinteger := iPersons;
     m.FieldByName('Nights').asinteger := iNights;
     m.FieldByName('BreakfastPrice').asfloat := 0.00;
@@ -2551,6 +2556,7 @@ var
   list: TStringList;
   zRoomRSet: TRoomerDataset;
   sTemp : String;
+  lCurrency: string;
 
 label
   Again;
@@ -2588,8 +2594,8 @@ begin
     if FnewSplitNumber = cCashInvoice then
     begin
       CreateCashInvoice(g.qRackCustomer);
-      edtCurrency.Text := zNativeCurrency;
-      zCurrentCurrency := edtCurrency.Text;
+      edtDisplayCurrency.Text := zNativeCurrency;
+      zCurrentCurrency := edtDisplayCurrency.Text;
       zCurrencyRate := GetRate(zCurrentCurrency);
       edtRate.Text := floattostr(zCurrencyRate);
       InitInvoiceGrid;
@@ -2703,14 +2709,15 @@ begin
           SetInvoiceTypeIndex(3);
         end;
 
+        FHeaderChanged := false;
         btnGetCustomer.Enabled := rgrInvoiceType.itemIndex <> 1;
         btnClearAddresses.Enabled := rgrInvoiceType.itemIndex <> 1;
 
 {$ENDREGION}
       end;
 
-      edtCurrency.Text := trim(zrSet.FieldByName('ihCurrency').asString);
-      zCurrentCurrency := edtCurrency.Text;
+      edtDisplayCurrency.Text := trim(zrSet.FieldByName('ihCurrency').asString);
+      zCurrentCurrency := edtDisplayCurrency.Text;
       zCurrencyRate := GetRate(zCurrentCurrency);
       edtRate.Text := floattostr(zCurrencyRate);
 
@@ -2845,6 +2852,7 @@ begin
         s := s + 'rd.Reservation, '#10;
         s := s + 'rd.PriceCode, '#10;
         s := s + 'rd.RoomRate, '#10;
+        s := s + 'rd.Currency, '#10;
         s := s + 'rd.Discount, '#10;
         s := s + 'rd.isPercentage, '#10;
         s := s + 'rd.showDiscount, '#10;
@@ -2898,8 +2906,7 @@ begin
           mRoomRes.FieldByName('AvragePrice').asfloat := AverageRate;
           mRoomRes.FieldByName('RateCount').asfloat := RateCount;
           mRoomRes.FieldByName('RoomDescription').asString := RoomDescription;
-          mRoomRes.FieldByName('RoomTypeDescription').asString :=
-            RoomTypeDescription;
+          mRoomRes.FieldByName('RoomTypeDescription').asString := RoomTypeDescription;
           mRoomRes.FieldByName('arrival').asdateTime := Arrival;
           mRoomRes.FieldByName('departure').asdateTime := Departure;
           mRoomRes.FieldByName('ChildrenCount').asinteger := ChildrenCount;
@@ -2945,6 +2952,7 @@ begin
                 PriceCode := rSet.FieldByName('PriceCode').asString;
                 RateDate := SQLToDate(rSet.FieldByName('ADate').asString);
                 Rate := rSet.FieldByName('RoomRate').AsFloat;
+                lCurrency := rSet.FieldByName('Currency').AsString;
                 Discount := rSet.FieldByName('Discount').AsFloat;
                 isPercentage := rSet.FieldByName('isPercentage').asBoolean;
                 ShowDiscount := rSet.FieldByName('ShowDiscount').asBoolean;
@@ -2962,12 +2970,15 @@ begin
 
                 rentAmount := Rate - DiscountAmount;
                 try
-                  CurrencyRate := _StrToFloat(edtRate.Text);
+                  CurrencyRate := GetRate(lCurrency);
+//                  CurrencyRate := _StrToFloat(edtRate.Text);
                 except
                   CurrencyRate := 1
                 end;
+
                 if CurrencyRate = 0 then
                   CurrencyRate := 1;
+
                 NativeAmount := rentAmount * CurrencyRate;
 
                 TotalDiscountAmount := TotalDiscountAmount + DiscountAmount;
@@ -3017,7 +3028,7 @@ begin
                 if IsPercentage then
                   DiscountText := DiscountText + '(' + floattostr(DiscountAmount) + '%)';
 
-                AddRoom(Room, Rate, RateDate, RateDate+1, 1, sText, (FRoomReservation = 0), lRoomReservation,
+                AddRoom(Room, Rate, lCurrency, RateDate, RateDate+1, 1, sText, (FRoomReservation = 0), lRoomReservation,
                   DiscountAmount, isPercentage, DiscountText, GuestName, NumberGuests, ChildrenCount, isPackage,
                   lRoomReservation, zRoomRSet.FieldByName('invBreakFast').AsBoolean );
 
@@ -3353,7 +3364,7 @@ begin
 
   tempInvoiceItemList.Clear;
 
-  zCurrentCurrency := edtCurrency.Text;
+  zCurrentCurrency := edtDisplayCurrency.Text;
   zCurrencyRate := GetRate(zCurrentCurrency);
 
   for i := 1 to agrLines.RowCount - 1 do
@@ -3409,7 +3420,7 @@ var
 
 begin
 
-  zCurrentCurrency := edtCurrency.Text;
+  zCurrentCurrency := edtDisplayCurrency.Text;
   zCurrencyRate := GetRate(zCurrentCurrency);
 
   itemVAT := 0.00;
@@ -4142,7 +4153,34 @@ begin
     d.roomerMainDataSet.DoCommand(REMOVE_REDUNDANT_INVOICES[i]);
 end;
 
-procedure TfrmInvoiceRentPerDay.SaveHeader(FTotal, fVat, fWOVat: Double; aExecutionPlan: TRoomerExecutionPlan);
+function TfrmInvoiceRentPerDay.CompletePayments(var aInvoiceDate : TDate; var aPayDate : TDate; var aLocation : string) : boolean;
+var
+  lstLocations: TStringList;
+  lPayLocation: string;
+  lOpenBalance: double;
+begin
+  Result := false;
+  lstLocations := TStringList.create;
+  try
+
+    if FRoomReservation = 0 then
+      d.GetReservationLocations(FReservation, lstLocations)
+    else
+      d.GetRoomReservationLocations(FRoomReservation, lstLocations);
+
+    lOpenBalance := FInvoiceLinesList.TotalOnInvoice - GetDownPayments;
+    if not SelectPaymentTypes(lOpenBalance, edtCustomer.Text, ptInvoice, edtDisplayCurrency.Text, _StrToFloat(edtRate.Text),
+      lstLocations, aInvoiceDate, aPayDate, aLocation) then
+      exit;
+
+    Result := SameValue(GatherPayments(stlPaySelections), lOpenBalance);
+
+  finally
+    lstLocations.Free;
+  end;
+end;
+
+procedure TfrmInvoiceRentPerDay.SaveHeader(aInvoiceNumber: integer; FTotal, fVat, fWOVat: Double; aExecutionPlan: TRoomerExecutionPlan);
 var
   iMultiplier: integer;
 var
@@ -4195,7 +4233,7 @@ begin
     FReservation,
     FRoomReservation,
     FnewSplitNumber,
-    zInvoiceNumber,
+    aInvoiceNumber,
     _db(edtCustomer.Text),
     _db(edtName.Text),
     _db(edtAddress1.Text),
@@ -4206,7 +4244,7 @@ begin
     _db(memExtraText.Lines.Text),
     _db(edtPersonalId.Text),
     rgrInvoiceType.itemIndex,
-    _db(edtCurrency.Text)
+    _db(edtDisplayCurrency.Text)
     ]) +
 
     format('ON DUPLICATE KEY UPDATE ' +
@@ -4223,7 +4261,7 @@ begin
     'InvoiceType=%d, ' +
     'ihCurrency=%s',
     [
-    zInvoiceNumber,
+    aInvoiceNumber,
     _db(edtCustomer.Text),
     _db(edtName.Text),
     _db(edtAddress1.Text),
@@ -4234,7 +4272,7 @@ begin
     _db(memExtraText.Lines.Text),
     _db(edtPersonalId.Text),
     rgrInvoiceType.itemIndex,
-    _db(edtCurrency.Text)
+    _db(edtDisplayCurrency.Text)
     ]);
 
   aExecutionPlan.AddExec(s);
@@ -4288,7 +4326,7 @@ begin
   s := s + '  ' + _db(FReservation);
   s := s + ', ' + _db(FRoomReservation);
   s := s + ', ' + _db(FnewSplitNumber);
-  s := s + ', ' + _db(zInvoiceNumber);
+  s := s + ', ' + _db(aInvoiceNumber);
   s := s + ', ' + _db(zInvoiceDate, True);
   s := s + ', ' + format('(SELECT IFNULL((SELECT Customer FROM invoiceaddressees ia WHERE ia.invoiceNumber=%d ' +
     '        AND ia.Reservation=%d ' +
@@ -4360,7 +4398,7 @@ begin
   s := s + ', ' + _db(zConfirmDate, True);
   s := s + ', ' + _db(zPayDate, True);
   s := s + ', ' + _db(edtInvRefrence.Caption);
-  s := s + ', ' + _db(edtCurrency.Text);
+  s := s + ', ' + _db(edtDisplayCurrency.Text);
   s := s + ', ' + _db(_StrToFloat(edtRate.Text));
   s := s + ', ' + _db(showPackage);
   s := s + ', ' + _db(zLocation);
@@ -4370,7 +4408,7 @@ begin
   aExecutionPlan.AddExec(s);
 end;
 
-function TfrmInvoiceRentPerDay.SaveInvoice(iInvoiceNumber: integer; currencyChange : Boolean = False): boolean;
+function TfrmInvoiceRentPerDay.SaveInvoice(aInvoiceNumber: integer; currencyChange : Boolean = False): boolean;
 var
   rSet: TRoomerDataset;
 
@@ -4390,14 +4428,7 @@ begin
   lExecutionPlan := d.roomerMainDataSet.CreateExecutionPlan;
   try
     DeleteLinesInList(lExecutionPlan);
-
-    s := '';
-    s := s + 'DELETE FROM invoiceheads ' + #10;
-    s := s + ' where Reservation = ' + inttostr(FReservation);
-    s := s + '   and RoomReservation = ' + inttostr(FRoomReservation);
-    s := s + '   and SplitNumber = ' + inttostr(FnewSplitNumber);
-    s := s + '   and InvoiceNumber = -1' + #10;
-    lExecutionPlan.AddExec(s);
+    AddDeleteFromInvoiceToExecutionPlan(lExecutionPlan);
 
     try
       // --
@@ -4407,15 +4438,16 @@ begin
       fTotalWOVat := 0.00;
 
       for invoiceLine in FInvoiceLinesList do
-      begin
-        InsertOrUpdateInvoiceLine(invoiceLine, iinvoiceNumber, lExecutionPlan);
+        InsertOrUpdateInvoiceLine(invoiceLine, aInvoiceNumber, lExecutionPlan);
 
-      end;
-
-      SaveHeader(FTotal, fTotalVAT, fTotalWOVat, lExecutionPlan);
+      SaveHeader(aInvoiceNumber, FTotal, fTotalVAT, fTotalWOVat, lExecutionPlan);
 
       if NOT lExecutionPlan.Execute(ptExec, True, True) then
         raise Exception.create(lExecutionPlan.ExecException);
+
+      FHeaderChanged := false;
+      for invoiceLine in FInvoiceLinesList do
+        invoiceLine.Changed := False;
 
       DeletedLines.Clear;
 
@@ -4497,13 +4529,12 @@ begin
 //    agrLines.Cells[col_date, i] := datetostr(trunc(now));
 //    agrLines.Objects[cPurchaseDateAsObjectColumn, i] := TObject(trunc(now));
 
-    fItemTotal := zCurrencyRate * aInvoiceLine.AmountOnInvoice; //(agrLines.Cells[col_TotalPrice, i]);
     if aInvoiceLine.RoomEntity <> nil then
       iNights := aInvoiceLine.RoomEntity.NumberOfNights;
+  end;
 
-  end
-  else
-    fItemTotal := aInvoiceLine.AmountOnInvoice;
+  fItemTotal := aInvoiceLine.AmountOnInvoice;
+  fItemTotalWOVat := fItemTotal - aInvoiceLine.VATOnOnvoice;
 
 //  lInvRoom := TInvoiceRoomEntity.create(aInvoiceLine.Item, 1, 0, aInvoiceLine.Number, fItemTotal, 0, 0, false);
 //  try
@@ -4512,7 +4543,6 @@ begin
 //    lInvRoom.free;
 //  end;
 
-  fItemTotalWOVat := fItemTotal - aInvoiceLine.VATOnOnvoice;
 //  FTotal := FTotal + fItemTotal;
 //  fTotalVAT := fTotalVAT + fItemTotalVAT;
 //  fTotalWOVat := fTotalWOVat + fItemTotalWOVat;
@@ -4579,10 +4609,10 @@ begin
     s := s + ', ' + _db(aInvoiceLine.Number); // -96ath
     s := s + ', ' + _db(aInvoiceLine.Text);
 
-    if aInvoiceLine.IsGeneratedLine or (aInvoiceLine.ItemKind in [ikRoomRent, ikRoomRentDiscount]) then
-      // -- Auto-Maintained lines are displayed in foreign currency...
-      s := s + ', ' + _db(iCreditinvoiceMultiplier * zCurrencyRate * aInvoiceLine.Price)
-    else // -- ...The others are not...
+//    if aInvoiceLine.IsGeneratedLine or (aInvoiceLine.ItemKind in [ikRoomRent, ikRoomRentDiscount]) then
+//      // -- Auto-Maintained lines are displayed in foreign currency...
+//      s := s + ', ' + _db(iCreditinvoiceMultiplier * zCurrencyRate * aInvoiceLine.Price)
+//    else // -- ...The others are not...
       s := s + ', ' + _db(iCreditinvoiceMultiplier * aInvoiceLine.Price);
 
     s := s + ', ' + _db(lItemTypeInfo.VATCode);
@@ -4590,7 +4620,7 @@ begin
     s := s + ', ' + _db(iCreditinvoiceMultiplier * fItemTotalWOVat);
     s := s + ', ' + _db(iCreditinvoiceMultiplier * aInvoiceLine.VATOnOnvoice);
     s := s + ', ' + _db(zCurrencyRate);
-    s := s + ', ' + _db(edtCurrency.Text);
+    s := s + ', ' + _db(edtDisplayCurrency.Text);
     s := s + ', ' + inttostr(aInvoiceLine.noGuests);
     s := s + ', ' + inttostr(iNights);
 
@@ -4627,7 +4657,7 @@ begin
       ' , TotalWOVat= ' + _db(iCreditinvoiceMultiplier * fItemTotalWOVat) +
       ' , VAT= ' + _db(iCreditinvoiceMultiplier * aInvoiceLine.VATOnOnvoice) +
       ' , CurrencyRate= ' + _db(zCurrencyRate) +
-      ' , Currency= ' + _db(edtCurrency.Text) +
+      ' , Currency= ' + _db(edtDisplayCurrency.Text) +
       ' , Persons= ' + _db(aInvoiceLine.noGuests) +
       ' , Nights= ' + _db(iNights) +
       ' , ilAccountKey= ' + _db(sAccountKey) +
@@ -4688,6 +4718,11 @@ begin
     if zStayTaxIncluded <> tmp then
       calcAndAddAutoItems(FReservation);
   end;
+end;
+
+procedure TfrmInvoiceRentPerDay.edtPersonalIdChange(Sender: TObject);
+begin
+  FHeaderChanged := true;
 end;
 
 procedure TfrmInvoiceRentPerDay.agrLinesGetAlignment(Sender: TObject; ARow, ACol: integer;
@@ -5078,33 +5113,21 @@ begin
   itemLookup;
 end;
 
-function TfrmInvoiceRentPerDay.GatherPayments(PayLines: TStringList;
-  var days: integer): Double;
+function TfrmInvoiceRentPerDay.GatherPayments(PayLines: TStringList): Double;
 var
   tt: Double;
   i: integer;
   pmCode: string;
   pmAmount: Double;
   sTmp: string;
-  iTmp: integer;
 
 begin
   tt := 0;
-  days := 0;
-  iTmp := 0;
 
   for i := 0 to PayLines.Count - 1 do
   begin
     pmCode := trim(_strTokenAt(PayLines[i], '|', 0));
     sTmp := trim(_strTokenAt(PayLines[i], '|', 1));
-
-    try
-      { TODO -oHordur -cOther : Afhverju er �etta kommenta� �t }
-      // ATHOLD payTypes      iTmp := d.GET_PaytypeDays_byPaytype(pmCode);
-      if iTmp > days then
-        days := iTmp;
-    except
-    end;
 
     try
       pmAmount := _StrToFloat(sTmp);
@@ -5120,112 +5143,10 @@ begin
 end;
 
 function TfrmInvoiceRentPerDay.PayInvoiceAndPrint: boolean;
-var
-  ItemTypeInfo: TItemTypeInfo;
-
-  mResult: TModalResult;
-  TotalPayments: Double;
-  iTmp: integer;
-  okSavePayment: boolean;
-  okSaveInvoice: boolean;
-  pmStr: string;
-  days: integer;
-
-  NumOk: boolean;
-
-  isNewInvoice: boolean;
-
-  AllOk: boolean;
-
-  s: string;
-  i: integer;
-
-  _CurrencyValueSell: Double;
-
-  iMultiplier: integer;
-
-  iPersons: integer;
-  iNights: integer;
-
-  AMon: Word;
-  ADay: Word;
-  AYear: Word;
-
-  fItems: Double;
-  FTotal: Double;
-  fTotalVAT: Double;
-  fTotalWOVat: Double;
-
-  sItemID: string;
-  sAccountKey: string;
-  sDescription: string;
-
-  sRefrence: string;
-  sSource: string;
-
-  ct: string;
-  sTmp, sTmp2: string;
-
-  PaymentDescription: string;
-  PaymentType: TPaymentTypes;
-
-  dTmp: Double;
-
-  sLinePrice: string;
-  dLinePrice: Double;
-
-  sLineTotal: string;
-  dLineTotal: Double;
-
-  sLineVAT: String;
-  dLineVAT: Double;
-
-  sLineTotalWOVat: String;
-  dLineTotalWOVat: Double;
-
-  dTotalStayTax: Double;
-  iTotalStayTaxNights: integer;
-
-  isConnected: boolean;
-  isPackage: boolean;
-
-  RoomRentPaid: boolean;
-  invRoomReservation: integer;
-
-  doRestore: boolean;
-
-  lExecutionPlan: TRoomerExecutionPlan;
-
-  confirmDate: TDateTime;
-  confirmAmount: Double;
-
-  ItemCount: Double; // -96
-
-//  remoteResult: String;
-
-  theData: recPaymentHolder;
-
-  dNumItems: Double;
-  sRRAlias: string;
-  irrAlias: integer;
-
-  lstLocations: TStringList;
-  lstActivity: TStringList;
-
-  paymentValue: Double;
-  paymentCode: string;
-  paymentStr: string;
-
-  lInvRoom: TInvoiceRoomEntity;
-
-  invoiceLine: TInvoiceLine;
-  lRevenueCorrection: double;
-  lRevenueCorrectionVat: double;
-  lDate: TDate;
-
 Label
   TryAgain;
 begin
+(*
   result := false;
   iTmp := zInvoiceNumber;
   isNewInvoice := iTmp = -1;
@@ -5262,7 +5183,7 @@ begin
     if (zInvoiceNumber = -1) or (FnewSplitNumber = 1) then
     begin
       if not SelectPaymentTypes(_StrToFloat(edtBalance.Text), edtCustomer.Text,
-        ptInvoice, edtCurrency.Text, _StrToFloat(edtRate.Text),
+        ptInvoice, edtDisplayCurrency.Text, _StrToFloat(edtRate.Text),
         lstLocations, zInvoiceDate, zPayDate, zLocation) then
       begin
         exit;
@@ -5522,7 +5443,7 @@ begin
             s := s + ', ' + sLineTotalWOVat;
             s := s + ', ' + sLineVAT;
             s := s + ', ' + _CommaToDot(floattostr(zCurrencyRate));
-            s := s + ', ' + _db(edtCurrency.Text);
+            s := s + ', ' + _db(edtDisplayCurrency.Text);
             s := s + ', ' + inttostr(iPersons);
             s := s + ', ' + inttostr(iNights);
             s := s + ', ' + _CommaToDot(floattostr(0.00));
@@ -5555,7 +5476,7 @@ begin
               ' , TotalWOVat= ' + sLineTotalWOVat +
               ' , VAT= ' + sLineVAT +
               ' , CurrencyRate= ' + _CommaToDot(floattostr(zCurrencyRate)) +
-              ' , Currency= ' + _db(edtCurrency.Text) +
+              ' , Currency= ' + _db(edtDisplayCurrency.Text) +
               ' , Persons= ' + inttostr(iPersons) +
               ' , Nights= ' + inttostr(iNights) +
               ' , ilAccountKey= ' + _db(sAccountKey) +
@@ -5690,7 +5611,7 @@ begin
 
         s := s + ', ' + _CommaToDot(floattostr(dTotalStayTax));
         s := s + ', ' + inttostr(iTotalStayTaxNights);
-        s := s + ', ' + _db(edtCurrency.Text);
+        s := s + ', ' + _db(edtDisplayCurrency.Text);
         s := s + ', ' + _db(_StrToFloat(edtRate.Text));
         s := s + ', ' + _db(chkShowPackage.checked);
         s := s + ', ' + _db(zLocation);
@@ -5770,7 +5691,7 @@ begin
           s := s + ', ' + _db(PaymentDescription + ' [' +
             _strTokenAt(stlPaySelections[i], '|', 0) + ']');
           s := s + ', ' + _CommaToDot(floattostr(zCurrencyRate));
-          s := s + ', ' + _db(edtCurrency.Text);
+          s := s + ', ' + _db(edtDisplayCurrency.Text);
           if PaymentType = ptInvoice then
             s := s + ', 0'
           else if PaymentType = ptDownPayment then
@@ -5910,6 +5831,7 @@ begin
     FreeAndNil(lstLocations);
     FreeAndNil(lstActivity);
   end;
+*)
 end;
 
 // -- The original Invoice contains a special field which links it to the
@@ -5996,14 +5918,14 @@ begin
   end;
 end;
 
-procedure TfrmInvoiceRentPerDay.edtCurrencyDblClick(Sender: TObject);
+procedure TfrmInvoiceRentPerDay.edtDisplayCurrencyDblClick(Sender: TObject);
 var
   s: string;
   theData: recCurrencyHolder;
   oldCurrency: string;
 begin
   s := '';
-  oldCurrency := trim(edtCurrency.Text);
+  oldCurrency := trim(edtDisplayCurrency.Text);
   theData.Currency := oldCurrency;
   Currencies(actLookup, theData);
   if theData.Currency <> '' then
@@ -6013,8 +5935,8 @@ begin
 
   if (s <> '') and (s <> oldCurrency) then
   begin
-    edtCurrency.Text := s;
-    if edtCurrency.Text = zNativeCurrency then
+    edtDisplayCurrency.Text := s;
+    if edtDisplayCurrency.Text = zNativeCurrency then
     begin
       edtForeignCurrency.Text := '';
       edtForeignCurrency.Visible := false;
@@ -6347,11 +6269,6 @@ begin
   Accept := (Source = agrLines) OR (Source IS TcxDragControlObject);
 end;
 
-procedure TfrmInvoiceRentPerDay.pnlPaymentButtonsResize(Sender: TObject);
-begin
-  pnlPaymentButtons.Left := btnSaveChanges.Left + btnSaveChanges.Width - pnlPaymentButtons.Width;
-end;
-
 procedure TfrmInvoiceRentPerDay.T1Click(Sender: TObject);
 begin
   actItemToGroupInvoiceExecute(Sender);
@@ -6483,6 +6400,11 @@ begin
   finally
     FreeAndNil(rSet);
   end;
+end;
+
+function TfrmInvoiceRentPerDay.GetHeaderChanged: boolean;
+begin
+  Result := FHeaderChanged;
 end;
 
 function TfrmInvoiceRentPerDay.GetInvoiceHeader(Res, RoomRes: integer; arSet: TRoomerDataset): boolean;
@@ -6758,21 +6680,9 @@ begin
 end;
 
 procedure TfrmInvoiceRentPerDay.rgrInvoiceTypeClick(Sender: TObject);
-var
-  s: string;
-  sCustomer: string;
-
 begin
-  s := edtPersonalId.Text;
-  sCustomer := edtCustomer.Text;
-
   btnGetCustomer.Enabled := rgrInvoiceType.itemIndex <> 1;
   btnClearAddresses.Enabled := rgrInvoiceType.itemIndex <> 1;
-
-  memUpdateDone := false;
-  chkChanged;
-
-  SetCustEdits;
 
   case rgrInvoiceType.itemIndex of
     0:
@@ -6806,9 +6716,10 @@ begin
       end;
 
   end;
-
+  FHeaderCHanged := true;
   edtRoomGuest.Caption := GetMainGuestName(FReservation, FRoomReservation);
-
+  chkChanged;
+  SetCustEdits;
 end;
 
 procedure TfrmInvoiceRentPerDay.S1Click(Sender: TObject);
@@ -6834,6 +6745,7 @@ procedure TfrmInvoiceRentPerDay.actSaveAndExitExecute(Sender: TObject);
 begin
   SaveAnd(True);
 end;
+
 procedure TfrmInvoiceRentPerDay.actPrintInvoiceExecute(Sender: TObject);
 var
   ok: boolean;
@@ -6846,9 +6758,27 @@ begin
     exit
   end;
 
-  if PayInvoiceAndPrint then
+  if PayAndPrintFinalInvoice then
     close;
 end;
+
+function TfrmInvoiceRentPerDay.PayAndPrintFinalInvoice: boolean;
+var
+  lNewInvoiceNumber: integer;
+  lPayDate: TDate;
+  linvoiceDate: TDate;
+  lInvoiceLocation: string;
+begin
+  if not CompletePayments(linvoiceDate, lPayDate, lInvoiceLocation) then
+    Exit;
+
+  lNewInvoiceNumber := IVH_SetNewID();
+
+  SaveInvoice(lNewInvoiceNumber);
+//   ---
+
+end;
+
 
 procedure TfrmInvoiceRentPerDay.actPrintProformaExecute(Sender: TObject);
 begin
@@ -7163,7 +7093,7 @@ begin
       begin
         lDate := lIntDate * 1.0;
         lRoomText := GetTranslatedText('shRoom') + format(' on %s', [FormatDateTime('dd/mm', TDateTime(lDate))]);
-        AddRoom('', dRoomPrice, TDate(lDate), TDate(lDate)+1, 1, lRoomText, false, -1, 0, false, '', edtName.Text, iPersons, 0, false, -1, false);
+        AddRoom('', dRoomPrice, '', TDate(lDate), TDate(lDate)+1, 1, lRoomText, false, -1, 0, false, '', edtName.Text, iPersons, 0, false, -1, false);
       end;
     end;
     UpdateGrid;
@@ -7358,7 +7288,7 @@ begin
   end;
   TotalWOVat := Total - Vat;
 
-  Currency := edtCurrency.Text;
+  Currency := edtDisplayCurrency.Text;
   CurrencyRate := GetRate(Currency);
   edtRate.Text := floattostr(CurrencyRate);
 
@@ -8202,7 +8132,7 @@ begin
       s := s + ', ' + _CommaToDot(floattostr(iMultiplier * fItemTotalWOVat));
       s := s + ', ' + _CommaToDot(floattostr(iMultiplier * fItemTotalVAT));
       s := s + ', ' + _CommaToDot(floattostr(zCurrencyRate));
-      s := s + ', ' + _db(edtCurrency.Text);
+      s := s + ', ' + _db(edtDisplayCurrency.Text);
       s := s + ', ' + inttostr(iPersons);
       s := s + ', ' + inttostr(iNights);
       s := s + ', ' + _CommaToDot(floattostr(0.00));
@@ -8431,40 +8361,20 @@ begin
   end;
 end;
 
-procedure TfrmInvoiceRentPerDay.edtRateDblClick(Sender: TObject);
-var
-  Rate: Double;
-  Currency: string;
-begin
-  Rate := zCurrencyRate;
-  Currency := edtCurrency.Text;
-
-  if g.OpenChangeRate(Rate, Currency) then
-  begin
-    zCurrencyRate := Rate;
-    edtRate.Text := floattostr(Rate);
-    CheckRateChange
-  end;
-  chkChanged;
-end;
-
-
 function TfrmInvoiceRentPerDay.IsCashInvoice: boolean;
 begin
   result := ((FReservation * FRoomReservation) = 0);
 end;
 
 function TfrmInvoiceRentPerDay.chkChanged: boolean;
-var
-  diff: boolean;
 begin
   result := false;
   if IsCashInvoice then
     exit;
 
-  diff := FInvoiceLinesList.IsChanged;
-  lblChangedInvoiceActive.Visible := diff;
-  btnSaveChanges.Visible := diff;
+  Result := FInvoiceLinesList.IsChanged or HeaderChanged;
+  lblChangedInvoiceActive.Visible := result;
+  btnSaveChanges.Visible := result;
 end;
 
 procedure TfrmInvoiceRentPerDay.LoadRoomListForCurrentReservation(reservation: integer);
@@ -8707,72 +8617,6 @@ begin
   NullifyGrid;
 end;
 
-
-procedure TfrmInvoiceRentPerDay.LoadRunningTab;
-//var
-//  lRunningTabAPI: TBookingsRunningTabAPICaller;
-//  lInvoiceResponse: TxsdInvoiceResponse;
-begin
-(*  ClearGrid;
-  lInvoiceResponse := nil;
-  agrLines.BeginUpdate;
-  Screen.Cursor := crHourGlass;
-  try
-    lInvoiceResponse := TxsdInvoiceResponse.Create;
-    // Get data from endpoint
-    lRunningTabAPI := TBookingsRunningTabAPICaller.Create;
-    try
-      lRunningTabAPI.GetRunningTabRoomRes(FReservation, FRoomReservation, FInvoiceIndex, lInvoiceResponse);
-    finally
-      lRunningTabAPI.Free;
-    end;
-
-    // Adapt data to TInvoiceline and TInvoiceRoomEntity objects
-    AdaptRunningTabResponse(lInvoiceResponse);
-
-    // Update grid based on TInvoiceline and TInvoiceRoomEntity objects
-
-  finally
-    lInvoiceResponse.Free;
-    agrLines.EndUpdate;
-    Screen.Cursor := crDefault;
-  end;
-  *)
-  end;
-
-procedure TfrmInvoiceRentPerDay.AdaptRunningTabResponse(aInvoiceResponse: TxsdInvoiceResponse);
-//var
-//  lInvoiceLineType: TxsdInvoiceLineType;
-//  lTax: TxsdApplicableTax;
-begin
-(*  for lInvoiceLineType in aInvoiceResponse.First.LineItemList do
-  begin
-    if (lInvoiceLineType.Item is TxsdExtendedBillableEntryType) then
-      with TxsdExtendedBillableEntryType(lInvoiceLineType.Item) do
-      begin
-        AddLine(0, ProductID, Description, Number, TotalConvertedPriceGross.Amount, PurchaseDateTime,
-                true, '', '', false, -1, 0, 0, 0, ''
-                );
-
-        for lTax in ApplicableTaxList do
-          if (lTax.TaxTypeType = TxsdTaxTypeType.CITYTAX) then
-            AddLine(0, lTax.TaxTypeType.AsString, lTax.Description, 1, lTax.Amount.Amount, 0, true, '', '', false, 0, 0, 0, 0, ''
-      end
-    else if (lInvoiceLineType.Item is TxsdDiscountBillableEntryType) then
-      with TxsdDiscountBillableEntryType(lInvoiceLineType.Item) do
-      begin
-        AddLine(0, ProductID, Description, Number, TotalConvertedPriceGross.Amount, PurchaseDateTime,
-                false, '', '', false, -1, 0, 0, 0, ''
-                );
-      end
-    else if (lInvoiceLineType.Item is TxsdTextEntryType) then
-      with TxsdTextEntryType(lInvoiceLineType.Item) do
-      begin
-        AddLine(0, '', Description, 0, 0, 0, false, '', '', false, -1, 0, 0, 0, '' );
-      end;
-  end;
-*)
-end;
 
 { TInvoiceLineList }
 
