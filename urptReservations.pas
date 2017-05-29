@@ -280,7 +280,7 @@ type
     tvReservationsDiscount: TcxGridDBColumn;
     tvReservationsTotalRoomRent: TcxGridDBColumn;
     tvReservationsAvrageRoomRent: TcxGridDBColumn;
-    tvRoomsAvrageRate: TcxGridDBColumn;
+    tvRoomsAverageRate: TcxGridDBColumn;
     tvRoomReservationsExpectedTimeOfArrival: TcxGridDBColumn;
     tvRoomReservationsExpectedCheckoutTime: TcxGridDBColumn;
     btnJumpToRoom: TsButton;
@@ -835,7 +835,7 @@ begin
     s := s+' ,rr.numGuests '#10;
     s := s+' ,rr.numChildren '#10;
     s := s+' ,rr.numInfants '#10;
-    s := s+' ,rr.AvrageRate '#10;
+    s := s+' ,(SELECT AVG(RoomRate) FROM roomsdate rd WHERE rd.RoomReservation=rr.RoomReservation AND (rd.ResFlag NOT IN (''X'',''C''))) AS AverageRate '#10;
     s := s+' ,rr.RateCount '#10;
     s := s+' ,rr.dtCreated '#10;
     s := s+' , rv.Customer '#10;
@@ -1035,7 +1035,6 @@ begin
     s := s+' ,rr.numGuests '#10;
     s := s+' ,rr.numChildren '#10;
     s := s+' ,rr.numInfants '#10;
-//    s := s+' ,rr.AvrageRate '#10;
     s := s+' ,rr.RateCount '#10;
     s := s+' ,rr.dtCreated '#10;
     s := s+' FROM '#10;

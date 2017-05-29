@@ -121,15 +121,8 @@ begin
       if Counter >= numDays then
         Break;
     end;
-    Total := Total / numDays;
-    s := format('UPDATE roomreservations SET AvrageRate=%s, ratePlanCode=%s WHERE RoomReservation=%d',
-                [
-                  _db(Total),
-                  _db(aRatePlanCode),
-                  RoomReservation
-                ]);
-    SqlList.Add(s);
-    d.roomerMainDataSet.SystemFreeExecuteMultiple(SqlList);
+    if SqlList.Count > 0 then
+      d.roomerMainDataSet.SystemFreeExecuteMultiple(SqlList);
   finally
     SqlList.Free;
   end;

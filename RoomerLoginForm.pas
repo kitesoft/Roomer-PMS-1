@@ -99,12 +99,12 @@ function AskUserForCredentials(var aUsername: String; var aPassword: String; var
            'LEFT JOIN stafftypes st4 ON st4.StaffType=sm.StaffType3 ' +
            'LEFT JOIN stafftypes st5 ON st5.StaffType=sm.StaffType4 ' +
            'WHERE Initials=%s AND Password=%s ' +
-           'AND %d=0 ' +
+           'AND (%d=0 ' +
            'OR (%d>0 AND SUBSTR(IFNULL(st1.AuthValue, ''0''), %d, 1)=''1'') ' +
            'OR (%d>0 AND SUBSTR(IFNULL(st2.AuthValue, ''0''), %d, 1)=''1'') ' +
            'OR (%d>0 AND SUBSTR(IFNULL(st3.AuthValue, ''0''), %d, 1)=''1'') ' +
            'OR (%d>0 AND SUBSTR(IFNULL(st4.AuthValue, ''0''), %d, 1)=''1'') ' +
-           'OR (%d>0 AND SUBSTR(IFNULL(st5.AuthValue, ''0''), %d, 1)=''1'') ',
+           'OR (%d>0 AND SUBSTR(IFNULL(st5.AuthValue, ''0''), %d, 1)=''1'')) ',
            [
             _db(aUsername), _db(aPassword),
 

@@ -3,7 +3,7 @@ object frmInvoicePayment: TfrmInvoicePayment
   Top = 10
   BorderStyle = bsDialog
   Caption = 'Invoice payment'
-  ClientHeight = 461
+  ClientHeight = 471
   ClientWidth = 314
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -21,14 +21,14 @@ object frmInvoicePayment: TfrmInvoicePayment
   TextHeight = 13
   object Panel1: TsPanel
     Left = 0
-    Top = 416
+    Top = 426
     Width = 314
     Height = 45
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 2
     SkinData.SkinSection = 'PANEL'
-    ExplicitWidth = 284
+    ExplicitTop = 416
     DesignSize = (
       314
       45)
@@ -46,7 +46,6 @@ object frmInvoicePayment: TfrmInvoicePayment
       TabOrder = 0
       OnClick = BtnOkClick
       SkinData.SkinSection = 'BUTTON'
-      ExplicitLeft = 86
     end
     object btnCancel: TsButton
       Left = 205
@@ -61,7 +60,6 @@ object frmInvoicePayment: TfrmInvoicePayment
       ModalResult = 2
       TabOrder = 1
       SkinData.SkinSection = 'BUTTON'
-      ExplicitLeft = 175
     end
   end
   object Panel2: TsPanel
@@ -73,7 +71,6 @@ object frmInvoicePayment: TfrmInvoicePayment
     BevelOuter = bvNone
     TabOrder = 0
     SkinData.SkinSection = 'PANEL'
-    ExplicitWidth = 284
     object lblCustomername: TsLabel
       Left = 202
       Top = 8
@@ -137,7 +134,7 @@ object frmInvoicePayment: TfrmInvoicePayment
   end
   object Panel3: TsPanel
     Left = 0
-    Top = 77
+    Top = 108
     Width = 314
     Height = 19
     Align = alTop
@@ -152,15 +149,13 @@ object frmInvoicePayment: TfrmInvoicePayment
     ParentFont = False
     TabOrder = 3
     SkinData.SkinSection = 'PANEL'
-    ExplicitLeft = 8
-    ExplicitTop = 102
-    ExplicitWidth = 284
+    ExplicitTop = 77
   end
   object agrPayTypes: TAdvStringGrid
     Left = 0
-    Top = 96
+    Top = 127
     Width = 314
-    Height = 201
+    Height = 180
     Cursor = crDefault
     Align = alClient
     BorderStyle = bsNone
@@ -255,9 +250,11 @@ object frmInvoicePayment: TfrmInvoicePayment
     SearchFooter.Font.Height = -11
     SearchFooter.Font.Name = 'Tahoma'
     SearchFooter.Font.Style = []
+    SearchFooter.ResultFormat = '(%d of %d)'
     SortSettings.DefaultFormat = ssAutomatic
-    Version = '7.9.1.1'
-    ExplicitTop = 95
+    Version = '8.2.5.2'
+    ExplicitTop = 96
+    ExplicitHeight = 201
     ColWidths = (
       169
       116)
@@ -267,7 +264,7 @@ object frmInvoicePayment: TfrmInvoicePayment
   end
   object Panel5: TsPanel
     Left = 0
-    Top = 297
+    Top = 307
     Width = 314
     Height = 22
     Align = alBottom
@@ -281,7 +278,7 @@ object frmInvoicePayment: TfrmInvoicePayment
     ParentFont = False
     TabOrder = 4
     SkinData.SkinSection = 'PANEL'
-    ExplicitWidth = 284
+    ExplicitTop = 297
     object Label2: TsLabel
       Left = 26
       Top = 5
@@ -340,14 +337,14 @@ object frmInvoicePayment: TfrmInvoicePayment
   end
   object sPanel1: TsPanel
     Left = 0
-    Top = 319
+    Top = 329
     Width = 314
     Height = 97
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 5
     SkinData.SkinSection = 'PANEL'
-    ExplicitWidth = 284
+    ExplicitTop = 319
     object sLabel1: TsLabel
       Left = 10
       Top = 11
@@ -462,12 +459,10 @@ object frmInvoicePayment: TfrmInvoicePayment
     Left = 0
     Top = 29
     Width = 314
-    Height = 48
+    Height = 79
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 6
-    ExplicitLeft = -25
-    ExplicitWidth = 309
     object LblForeignCurrencyAmount: TsLabel
       Left = 31
       Top = 8
@@ -537,6 +532,17 @@ object frmInvoicePayment: TfrmInvoicePayment
       Width = 12
       Height = 13
       Caption = '...'
+    end
+    object btnViewPayCard: TsButton
+      Left = 141
+      Top = 46
+      Width = 112
+      Height = 32
+      Caption = 'Pay-card info'
+      ImageIndex = 92
+      Images = DImages.PngImageList1
+      TabOrder = 0
+      OnClick = btnViewPayCardClick
     end
   end
   object sSkinProvider1: TsSkinProvider

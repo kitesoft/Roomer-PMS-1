@@ -292,7 +292,8 @@ uses
   uExceptionUtils in 'RoomerUtils\uExceptionUtils.pas',
   uBookingsRunningTabAPICaller in 'OpenAPI\uBookingsRunningTabAPICaller.pas',
   uRoomerLogger in 'Logging\uRoomerLogger.pas',
-  uRoomerInstanceManagement in 'RoomerInstanceManagement\uRoomerInstanceManagement.pas';
+  uRoomerInstanceManagement in 'RoomerInstanceManagement\uRoomerInstanceManagement.pas',
+  uFrmPayCardView in 'PCI\uFrmPayCardView.pas' {FrmPayCardView};
 
 {$R *.RES}
 

@@ -12,11 +12,11 @@ type
     FReservation: Integer; 
     FRoomType: String; 
     FCancelDate: TTimeStamp; 
-    FCancelStaff: String; 
-    FCancelReason: String; 
+    FCancelStaff: String;
+    FCancelReason: String;
     FCancelRequest: String; 
     FCancelInformation: String; 
-    FCancelType: Integer; 
+    FCancelType: Integer;
     Fjson: String; 
   public
     procedure setId(id: Integer); 
@@ -3360,7 +3360,7 @@ type
     FPriceType: String; 
     FArrival: String; 
     FDeparture: String; 
-    FRoomType: String; 
+    FRoomType: String;
     FPMInfo: String; 
     FHiddenInfo: String; 
     FRoomRentPaid1: Double; 
@@ -3381,10 +3381,9 @@ type
     FnumGuests: Integer; 
     FnumChildren: Integer; 
     FnumInfants: Integer; 
-    FAvrageRate: String; 
-    FRateCount: Integer; 
+    FRateCount: Integer;
     FdtCreated: TTimeStamp; 
-    FRoomClass: String; 
+    FRoomClass: String;
     FcolorId: Integer; 
     FratePlanCode: String; 
     FpercentageDeposit: Double; 
@@ -3436,8 +3435,7 @@ type
     procedure setNumGuests(numGuests: Integer); 
     procedure setNumChildren(numChildren: Integer); 
     procedure setNumInfants(numInfants: Integer); 
-    procedure setAvrageRate(AvrageRate: String); 
-    procedure setRateCount(RateCount: Integer); 
+    procedure setRateCount(RateCount: Integer);
     procedure setDtCreated(dtCreated: TTimeStamp); 
     procedure setRoomClass(RoomClass: String); 
     procedure setColorId(colorId: Integer); 
@@ -3491,7 +3489,6 @@ type
     property numGuests : Integer read FnumGuests write FnumGuests;
     property numChildren : Integer read FnumChildren write FnumChildren;
     property numInfants : Integer read FnumInfants write FnumInfants;
-    property AvrageRate : String read FAvrageRate write FAvrageRate;
     property RateCount : Integer read FRateCount write FRateCount;
     property dtCreated : TTimeStamp read FdtCreated write FdtCreated;
     property RoomClass : String read FRoomClass write FRoomClass;
@@ -4449,8 +4446,7 @@ type
     FnumGuests: Integer; 
     FnumChildren: Integer; 
     FnumInfants: Integer; 
-    FAvrageRate: String; 
-    FRateCount: Integer; 
+    FRateCount: Integer;
     FdtCreated: TTimeStamp; 
     FRoomClass: String; 
     Fjson: String; 
@@ -4504,8 +4500,7 @@ type
     procedure setNumGuests(numGuests: Integer); 
     procedure setNumChildren(numChildren: Integer); 
     procedure setNumInfants(numInfants: Integer); 
-    procedure setAvrageRate(AvrageRate: String); 
-    procedure setRateCount(RateCount: Integer); 
+    procedure setRateCount(RateCount: Integer);
     procedure setDtCreated(dtCreated: TTimeStamp); 
     procedure setRoomClass(RoomClass: String); 
     procedure setJson(json: String); 
@@ -4559,7 +4554,6 @@ type
     property numGuests : Integer read FnumGuests write FnumGuests;
     property numChildren : Integer read FnumChildren write FnumChildren;
     property numInfants : Integer read FnumInfants write FnumInfants;
-    property AvrageRate : String read FAvrageRate write FAvrageRate;
     property RateCount : Integer read FRateCount write FRateCount;
     property dtCreated : TTimeStamp read FdtCreated write FdtCreated;
     property RoomClass : String read FRoomClass write FRoomClass;
@@ -10195,10 +10189,6 @@ procedure TRoomreservationsEntity.setNumInfants(numInfants: Integer);
 begin
   self.numInfants := numInfants;
 end;
-procedure TRoomreservationsEntity.setAvrageRate(AvrageRate: String);
-begin
-  self.AvrageRate := AvrageRate;
-end;
 procedure TRoomreservationsEntity.setRateCount(RateCount: Integer);
 begin
   self.RateCount := RateCount;
@@ -11529,10 +11519,6 @@ end;
 procedure TTbldelroomreservationsEntity.setNumInfants(numInfants: Integer);
 begin
   self.numInfants := numInfants;
-end;
-procedure TTbldelroomreservationsEntity.setAvrageRate(AvrageRate: String);
-begin
-  self.AvrageRate := AvrageRate;
 end;
 procedure TTbldelroomreservationsEntity.setRateCount(RateCount: Integer);
 begin

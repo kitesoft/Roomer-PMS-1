@@ -576,8 +576,8 @@ inherited frmRptReservations: TfrmRptReservations
         Caption = 'Rooms'
         ExplicitLeft = 0
         ExplicitTop = 0
-        ExplicitWidth = 1086
-        ExplicitHeight = 459
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object grRooms: TcxGrid
           Left = 0
           Top = 44
@@ -587,8 +587,6 @@ inherited frmRptReservations: TfrmRptReservations
           PopupMenu = PopupMenu1
           TabOrder = 0
           LookAndFeel.NativeStyle = False
-          ExplicitWidth = 1086
-          ExplicitHeight = 415
           object cxGridDBTableView2: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = kbmRoomReservationsDS
@@ -681,7 +679,7 @@ inherited frmRptReservations: TfrmRptReservations
               DataBinding.FieldName = 'useinNationalReport'
             end
             object cxGridDBColumn60: TcxGridDBColumn
-              DataBinding.FieldName = 'AvrageRate'
+              DataBinding.FieldName = 'AverageRate'
             end
             object cxGridDBColumn61: TcxGridDBColumn
               DataBinding.FieldName = 'RateCount'
@@ -947,8 +945,8 @@ inherited frmRptReservations: TfrmRptReservations
               DataBinding.FieldName = 'marketSegment'
               Width = 40
             end
-            object tvRoomsAvrageRate: TcxGridDBColumn
-              DataBinding.FieldName = 'AvrageRate'
+            object tvRoomsAverageRate: TcxGridDBColumn
+              DataBinding.FieldName = 'AverageRate'
             end
           end
           object lvRooms: TcxGridLevel
@@ -963,7 +961,6 @@ inherited frmRptReservations: TfrmRptReservations
           Align = alTop
           TabOrder = 1
           SkinData.SkinSection = 'PANEL'
-          ExplicitWidth = 1086
           object sButton2: TsButton
             Left = 3
             Top = 2
@@ -2016,7 +2013,7 @@ inherited frmRptReservations: TfrmRptReservations
         Size = 150
       end
       item
-        Name = 'AvrageRate'
+        Name = 'AverageRate'
         DataType = ftFloat
       end>
     IndexDefs = <>

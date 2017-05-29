@@ -160,7 +160,7 @@ const
           '  pe.Name AS GuestName, '#10 +
           '  r.Customer AS CompanyCode, '#10 +
           '  r.Name AS CompanyName, '#10 +
-          '  rr.AvrageRate AS AverageRoomRate, '#10 +
+          '  (SELECT AVG(rd1.RoomRate) FROM roomsdate rd1 WHERE rd1.RoomReservation=rr.RoomReservation AND (rd1.ResFlag NOT IN (''X'',''C''))) AS AverageRoomRate, '#10 +
           '  CAST(rr.Arrival AS DATE) as Arrival, '#10 +
           '  CAST(rr.Departure AS DATE) as Departure,   '#10 +
           '  ( SELECT COUNT(id) '#10 +

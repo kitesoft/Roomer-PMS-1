@@ -2636,7 +2636,7 @@ begin
           infantCount := zRoomRSet.FieldByName('numInfants').asinteger;
           PriceCode := zRoomRSet.FieldByName('PriceType').asString;
           AverageRate := zRoomRSet.GetFloatValue
-            (zRoomRSet.FieldByName('AvrageRate'));
+            (zRoomRSet.FieldByName('AverageRate'));
           RateCount := zRoomRSet.FieldByName('rateCount').asinteger;
           AvrageDiscountPerc := zRoomRSet.GetFloatValue
             (zRoomRSet.FieldByName('discount'));
@@ -5282,7 +5282,7 @@ begin
     if (zInvoiceNumber = -1) or (FnewSplitNumber = 1) then
     begin
       if not SelectPaymentTypes(_StrToFloat(edtBalance.Text), edtCustomer.Text,
-        ptInvoice, edtCurrency.Text, _StrToFloat(edtRate.Text),
+        ptInvoice, edtCurrency.Text, _StrToFloat(edtRate.Text), FReservation,
         lstLocations, zInvoiceDate, zPayDate, zLocation) then
       begin
         exit;

@@ -501,7 +501,7 @@ type
     numChildren: integer;
     numInfants: integer;
 
-    avrageRate: double;
+    averageRate: double;
     rateCount: integer;
 
     package: string;
@@ -748,7 +748,7 @@ type
     RoomReservation: integer;
     Reservation: integer;
     PriceType: string;
-    avrageRate: double;
+    averageRate: double;
     Currency: string;
     Discount: double;
   end;
@@ -2887,7 +2887,7 @@ begin
     numChildren := 0;
     numInfants := 0;
 
-    avrageRate := 0.00;
+    averageRate := 0.00;
     rateCount := 0;
 
     // OutDated
@@ -3049,7 +3049,7 @@ begin
     RoomReservation := -1;
     Reservation := -1;
     PriceType := '';
-    avrageRate := 0.00;
+    averageRate := 0.00;
     Currency := '';
     Discount := 0.00;
   end;
@@ -3779,8 +3779,7 @@ var
 begin
   b := TStringBuilder.Create;
   try
-    b.Append('INSERT INTO ' + #10);
-    b.Append('roomreservations ' + #10);
+    b.Append('INSERT INTO roomreservations ' + #10);
     b.Append(' ( ' + #10);
     b.Append('    `RoomReservation` ' + #10);
     b.Append('   ,`Room` ' + #10);
@@ -3822,7 +3821,6 @@ begin
     b.Append('   ,`numGuests` ' + #10);
     b.Append('   ,`numChildren` ' + #10);
     b.Append('   ,`numInfants` ' + #10);
-    b.Append('   ,`avrageRate` ' + #10);
     b.Append('   ,`rateCount` ' + #10);
     b.Append('   ,`Package` ' + #10);
     b.Append('   ,`ManualChannelId` ' + #10);
@@ -3872,7 +3870,7 @@ begin
     b.Append('  , ' + _db(theData.numGuests) + #10);
     b.Append('  , ' + _db(theData.numChildren) + #10);
     b.Append('  , ' + _db(theData.numInfants) + #10);
-    b.Append('  , ' + _db(theData.avrageRate) + #10);
+//    b.Append('  , ' + _db(theData.averageRate) + #10);
     b.Append('  , ' + _db(theData.rateCount) + #10);
     b.Append('  , ' + _db(theData.package) + #10);
     b.Append('  , ' + _db(theData.ManualChannelId) + #10);
@@ -3944,7 +3942,6 @@ begin
     b.Append('   ,numGuests = ' + _db(theData.numGuests) + #10);
     b.Append('   ,numChildren = ' + _db(theData.numChildren) + #10);
     b.Append('   ,numInfants = ' + _db(theData.numInfants) + #10);
-    b.Append('   ,avrageRate = ' + _db(theData.avrageRate) + #10);
     b.Append('   ,rateCount = ' + _db(theData.rateCount) + #10);
     b.Append('   ,Package = ' + _db(theData.package) + #10);
     b.Append('   ,ManualChannelId = ' + _db(theData.ManualChannelId) + #10);
@@ -4333,7 +4330,7 @@ begin
       result.numChildren := rSet.fieldbyname('numChildren').asInteger;
       result.numInfants := rSet.fieldbyname('numInfants').asInteger;
 
-      result.avrageRate := rSet.fieldbyname('AvrageRate').AsFloat;
+      result.averageRate := rSet.fieldbyname('AverageRate').AsFloat;
       result.rateCount := rSet.fieldbyname('rateCount').asInteger;
       result.package := rSet.fieldbyname('package').asString;
       result.ExpectedTimeOfArrival := rSet.fieldbyname('ExpectedTimeOfArrival').AsString;
@@ -6032,7 +6029,7 @@ var
   RoomReservation: integer;
   Reservation: integer;
   PriceType: string;
-  avrageRate: double;
+  averageRate: double;
   Currency: string;
   Discount: double;
   Percentage: boolean;
@@ -6046,7 +6043,7 @@ begin
     s := s + '  `RoomReservation`, '#10;
     s := s + '  `Reservation`, '#10;
     s := s + '  `PriceType`, '#10;
-    s := s + '  (SELECT AVG(RoomRate) FROM roomsdate rd WHERE rd.RoomReservation=roomreservations.RoomReservation AND (rd.ResFlag NOT IN (''X'',''C''))) AS AvrageRate, '#10;
+    s := s + '  (SELECT AVG(RoomRate) FROM roomsdate rd WHERE rd.RoomReservation=roomreservations.RoomReservation AND (rd.ResFlag NOT IN (''X'',''C''))) AS AverageRate, '#10;
     s := s + '  `Currency`, '#10;
     s := s + '  `Discount` '#10;
     s := s + 'FROM '#10;
@@ -6061,14 +6058,14 @@ begin
       RoomReservation := rSet.fieldbyname('RoomReservation').asInteger;
       Reservation := rSet.fieldbyname('Reservation').asInteger;
       PriceType := rSet.fieldbyname('PriceType').asString;
-      avrageRate := rSet.GetFloatValue(rSet.fieldbyname('AvrageRate'));
+      averageRate := rSet.GetFloatValue(rSet.fieldbyname('AverageRate'));
       Currency := rSet.fieldbyname('Currency').asString;
       Discount := rSet.GetFloatValue(rSet.fieldbyname('Discount'));
 
       result.RoomReservation := RoomReservation;
       result.Reservation := Reservation;
       result.PriceType := PriceType;
-      result.avrageRate := avrageRate;
+      result.averageRate := averageRate;
       result.Currency := Currency;
       result.Discount := Discount;
     end;

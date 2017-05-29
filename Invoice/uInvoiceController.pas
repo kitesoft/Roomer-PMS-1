@@ -1012,7 +1012,7 @@ begin
            '       NumChildren, ' +
            '       NumInfants, ' +
            '       RatePlanCode, ' +
-           '       AvrageRate, ' +
+           '       AverageRate, ' +
            '       RateCount, ' +
            '       IsPercentage, ' +
            '       RoomDescription, ' +
@@ -1044,7 +1044,7 @@ begin
            '       NumChildren, ' +
            '       NumInfants, ' +
            '       RatePlanCode, ' +
-           '       AvrageRate, ' +
+           '       AverageRate, ' +
            '       RateCount, ' +
            '       IsPercentage, ' +
            '       RoomDescription, ' +
@@ -1082,7 +1082,7 @@ begin
            '       rr.NumChildren, ' +
            '       rr.NumInfants, ' +
            '       rr.RatePlanCode, ' +
-           '       rr.AvrageRate, ' +
+           '       (SELECT AVG(rd1.RoomRate) FROM roomsdate rd1 WHERE rd1.RoomReservation=rr.RoomReservation AND (rd1.ResFlag NOT IN (''X'',''C''))) AS AverageRate, ' +
            '       rr.RateCount, ' +
            '       rd.IsPercentage, ' +
            '       (SELECT Description FROM rooms r WHERE r.Room = rd.Room) AS RoomDescription, ' +
@@ -1346,7 +1346,7 @@ begin
     InvoiceLine.NumChildren := RecSet['NumChildren'];
     InvoiceLine.NumInfants := RecSet['NumInfants'];
     InvoiceLine.RatePlanCode := RecSet['RatePlanCode'];
-    InvoiceLine.AverageRate := RecSet['AvrageRate'];
+    InvoiceLine.AverageRate := RecSet['AverageRate'];
     InvoiceLine.RateCount := RecSet['RateCount'];
     InvoiceLine.IsPercentage := RecSet['IsPercentage'];
     InvoiceLine.RoomDescription := RecSet['RoomDescription'];
@@ -1375,7 +1375,7 @@ begin
       InvoiceLine.NumChildren := RecSet['NumChildren'];
       InvoiceLine.NumInfants := RecSet['NumInfants'];
       InvoiceLine.RatePlanCode := RecSet['RatePlanCode'];
-      InvoiceLine.AverageRate := RecSet['AvrageRate'];
+      InvoiceLine.AverageRate := RecSet['AverageRate'];
       InvoiceLine.RateCount := RecSet['RateCount'];
       InvoiceLine.IsPercentage := RecSet['IsPercentage'];
       InvoiceLine.RoomDescription := RecSet['RoomDescription'];

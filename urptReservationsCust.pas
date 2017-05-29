@@ -621,7 +621,6 @@ begin
     s := s+' ,rr.numGuests '#10;
     s := s+' ,rr.numChildren '#10;
     s := s+' ,rr.numInfants '#10;
-//  s := s+' ,rr.AvrageRate '#10;
     s := s+' ,rr.RateCount '#10;
     s := s+' ,rr.dtCreated '#10;
     s := s+' , rv.Customer '#10;

@@ -365,7 +365,7 @@ type
     numGuests : Integer;
     numChildren : Integer;
     numInfants : Integer;
-    AvrageRate : Double;
+    AverageRate : Double;
     RateCount : Integer;
     dtCreated : TDateTime;
     RoomClass : String;
@@ -420,7 +420,7 @@ type
                       _numGuests : Integer;
                       _numChildren : Integer;
                       _numInfants : Integer;
-                      _AvrageRate : Double;
+                      _AverageRate : Double;
                       _RateCount : Integer;
                       _dtCreated : TDateTime;
                       _RoomClass : String;
@@ -600,7 +600,7 @@ end;
 
 constructor TRoomReservation.Create(_ID, _RoomReservation: Integer; _Room: String; _Reservation: Integer; _Status: String; _GroupAccount, _invBreakfast: Boolean; _Currency: String; _Discount: Double; _Percentage: Boolean; _PriceType, _Arrival, _Departure,
   _RoomType, _PMInfo, _HiddenInfo: String; _RoomRentPaymentInvoice, _Hallres: Integer; _rrDescription: String; _rrIsNoRoom: Boolean; _rrDeparture, _rrArrival: TDateTime; _rrRoomTypeAlias, _rrRoomAlias: String; _useStayTax, _useinNationalReport: Boolean;
-  _numGuests, _numChildren, _numInfants: Integer; _AvrageRate: Double; _RateCount: Integer; _dtCreated: TDateTime; _RoomClass: String; _colorId: Integer; _ratePlanCode: String; _percentageDeposit, _fixedDeposit: Double; _depositsInfo, _penaltiesInfo: String;
+  _numGuests, _numChildren, _numInfants: Integer; _AverageRate: Double; _RateCount: Integer; _dtCreated: TDateTime; _RoomClass: String; _colorId: Integer; _ratePlanCode: String; _percentageDeposit, _fixedDeposit: Double; _depositsInfo, _penaltiesInfo: String;
   _checkoutEventProcessed: Boolean; _COMMISSION: Double; _COMMISSION_CURRENCY, _CHANNEL_ROOM_RES_ID, _Package: String; _blockMove: Boolean; _CodedColor: String);
 begin
   MainGuestIndex := 0;
@@ -638,7 +638,7 @@ begin
   numGuests := _numGuests;
   numChildren := _numChildren;
   numInfants := _numInfants;
-  AvrageRate := _AvrageRate;
+  AverageRate := _AverageRate;
   RateCount := _RateCount;
   dtCreated := _dtCreated;
   RoomClass := _RoomClass;

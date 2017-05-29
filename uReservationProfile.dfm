@@ -566,10 +566,6 @@ object frmReservationProfile: TfrmReservationProfile
     object TabSheet3: TsTabSheet
       Caption = 'Main'
       TabVisible = False
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Panel3: TsPanel
         Left = 0
         Top = 0
@@ -620,10 +616,6 @@ object frmReservationProfile: TfrmReservationProfile
             SkinData.SkinSection = 'PAGECONTROL'
             object tsContact: TsTabSheet
               Caption = 'Contact'
-              ExplicitLeft = 0
-              ExplicitTop = 0
-              ExplicitWidth = 0
-              ExplicitHeight = 0
               object lblContactName: TsLabel
                 Left = 32
                 Top = 5
@@ -736,7 +728,6 @@ object frmReservationProfile: TfrmReservationProfile
                 BoundLabel.Font.Height = -13
                 BoundLabel.Font.Name = 'Tahoma'
                 BoundLabel.Font.Style = []
-                ExplicitWidth = 0
               end
               object edtContactAddress2: TsEdit
                 AlignWithMargins = True
@@ -763,7 +754,6 @@ object frmReservationProfile: TfrmReservationProfile
                 BoundLabel.Font.Height = -13
                 BoundLabel.Font.Name = 'Tahoma'
                 BoundLabel.Font.Style = []
-                ExplicitWidth = 0
               end
               object edtContactAddress3: TsEdit
                 AlignWithMargins = True
@@ -790,7 +780,6 @@ object frmReservationProfile: TfrmReservationProfile
                 BoundLabel.Font.Height = -13
                 BoundLabel.Font.Name = 'Tahoma'
                 BoundLabel.Font.Style = []
-                ExplicitWidth = 0
               end
               object edtContactAddress4: TsEdit
                 AlignWithMargins = True
@@ -817,7 +806,6 @@ object frmReservationProfile: TfrmReservationProfile
                 BoundLabel.Font.Height = -13
                 BoundLabel.Font.Name = 'Tahoma'
                 BoundLabel.Font.Style = []
-                ExplicitWidth = 0
               end
               object edtContactEmail: TsEdit
                 AlignWithMargins = True
@@ -844,7 +832,6 @@ object frmReservationProfile: TfrmReservationProfile
                 BoundLabel.Font.Height = -13
                 BoundLabel.Font.Name = 'Tahoma'
                 BoundLabel.Font.Style = []
-                ExplicitWidth = 0
               end
               object edtContactName: TsEdit
                 AlignWithMargins = True
@@ -871,7 +858,6 @@ object frmReservationProfile: TfrmReservationProfile
                 BoundLabel.Font.Height = -13
                 BoundLabel.Font.Name = 'Tahoma'
                 BoundLabel.Font.Style = []
-                ExplicitWidth = 0
               end
               object pnlTelephone: TsPanel
                 AlignWithMargins = True
@@ -966,7 +952,7 @@ object frmReservationProfile: TfrmReservationProfile
                   ExplicitWidth = 175
                   inherited lblCountryName: TsLabel
                     Width = 3
-                    Height = 11
+                    Height = 14
                     Font.Height = -9
                     ExplicitWidth = 3
                     ExplicitHeight = 11
@@ -976,10 +962,6 @@ object frmReservationProfile: TfrmReservationProfile
             end
             object TabSheet4: TsTabSheet
               Caption = 'Customer'
-              ExplicitLeft = 0
-              ExplicitTop = 0
-              ExplicitWidth = 0
-              ExplicitHeight = 0
               object Label19: TsLabel
                 Left = 12
                 Top = 32
@@ -1272,10 +1254,6 @@ object frmReservationProfile: TfrmReservationProfile
             object TabSheet5: TsTabSheet
               Caption = 'Customer Tel / Email'
               ImageIndex = 1
-              ExplicitLeft = 0
-              ExplicitTop = 0
-              ExplicitWidth = 0
-              ExplicitHeight = 0
               object Label11: TsLabel
                 Left = 45
                 Top = 29
@@ -1757,7 +1735,7 @@ object frmReservationProfile: TfrmReservationProfile
                 ExplicitWidth = 159
                 inherited lblCountryName: TsLabel
                   Width = 3
-                  Height = 11
+                  Height = 14
                   Font.Height = -9
                   ExplicitWidth = 3
                   ExplicitHeight = 11
@@ -1787,7 +1765,7 @@ object frmReservationProfile: TfrmReservationProfile
                 ExplicitWidth = 159
                 inherited lblCountryName: TsLabel
                   Width = 3
-                  Height = 11
+                  Height = 14
                   Font.Height = -9
                   ExplicitWidth = 3
                   ExplicitHeight = 11
@@ -2022,10 +2000,6 @@ object frmReservationProfile: TfrmReservationProfile
     SkinData.SkinSection = 'PAGECONTROL'
     object RoomsTab: TsTabSheet
       Caption = 'Rooms'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object grRooms: TcxGrid
         Left = 0
         Top = 86
@@ -2902,7 +2876,7 @@ object frmReservationProfile: TfrmReservationProfile
         SkinData.SkinSection = 'PANEL'
         object btnShowPrices: TsButton
           AlignWithMargins = True
-          Left = 746
+          Left = 852
           Top = 4
           Width = 100
           Height = 40
@@ -2914,7 +2888,7 @@ object frmReservationProfile: TfrmReservationProfile
         end
         object btnShowInvoice: TsButton
           AlignWithMargins = True
-          Left = 640
+          Left = 746
           Top = 4
           Width = 100
           Height = 40
@@ -2990,7 +2964,7 @@ object frmReservationProfile: TfrmReservationProfile
         end
         object btnRoomsRefresh: TsButton
           AlignWithMargins = True
-          Left = 955
+          Left = 1061
           Top = 4
           Width = 100
           Height = 40
@@ -3014,7 +2988,7 @@ object frmReservationProfile: TfrmReservationProfile
         end
         object btnGroups: TsButton
           AlignWithMargins = True
-          Left = 852
+          Left = 958
           Top = 4
           Width = 97
           Height = 40
@@ -3022,6 +2996,19 @@ object frmReservationProfile: TfrmReservationProfile
           Align = alLeft
           Images = DImages.PngImageList1
           TabOrder = 9
+          SkinData.SkinSection = 'BUTTON'
+        end
+        object btnViewPayCard: TsButton
+          AlignWithMargins = True
+          Left = 640
+          Top = 4
+          Width = 100
+          Height = 40
+          Action = acViewPayCard
+          Align = alLeft
+          ImageIndex = 92
+          Images = DImages.PngImageList1
+          TabOrder = 10
           SkinData.SkinSection = 'BUTTON'
         end
       end
@@ -3046,10 +3033,6 @@ object frmReservationProfile: TfrmReservationProfile
     object GuestsTab: TsTabSheet
       Caption = 'Guests'
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Panel10: TsPanel
         Left = 0
         Top = 0
@@ -3534,18 +3517,20 @@ object frmReservationProfile: TfrmReservationProfile
           object lblSpecialRequests: TsLabel
             Left = 2
             Top = 15
-            Width = 81
+            Width = 250
             Height = 13
             Align = alTop
             Caption = 'Special Requests'
+            ExplicitWidth = 81
           end
           object lblNotes: TsLabel
             Left = 2
             Top = 101
-            Width = 28
+            Width = 250
             Height = 13
             Align = alTop
             Caption = 'Notes'
+            ExplicitWidth = 28
           end
           object edtSpecialRequests: TMemo
             AlignWithMargins = True
@@ -3650,10 +3635,6 @@ object frmReservationProfile: TfrmReservationProfile
     end
     object sTabSheet2: TsTabSheet
       Caption = 'Alerts'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object pnlAlertHolder: TsPanel
         Left = 0
         Top = 0
@@ -3668,10 +3649,6 @@ object frmReservationProfile: TfrmReservationProfile
     object InvoicesTab: TsTabSheet
       Caption = 'Afgehandelde facturen'
       ImageIndex = 2
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Panel11: TsPanel
         Left = 0
         Top = 0
@@ -5097,6 +5074,10 @@ object frmReservationProfile: TfrmReservationProfile
       Caption = 'Change roomtype'
       OnExecute = acChangeRoomTypeExecute
       OnUpdate = acChangeRoomTypeUpdate
+    end
+    object acViewPayCard: TAction
+      Caption = 'Pay-card info'
+      OnExecute = acViewPayCardExecute
     end
   end
   object ppmDocuments: TPopupMenu
