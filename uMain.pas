@@ -72,7 +72,7 @@ uses
     ;
 
 type
-  TViewMode = (vmNone, vmOneDay, vmGuestList, vmPeriod, vmMeetings, vmDashboard, vmRateQuery);
+  TViewMode = (vmNone, vmOneDay, vmGuestList, vmPeriod, vmMeetings, vmDashboard, vmRateQuery, vmFrontDesk);
 
 type
   recColRow = record
@@ -693,6 +693,7 @@ type
     dbbPreArrivalEmailTemplate: TdxBarButton;
     dbbPostDepartureEmailTemplate: TdxBarButton;
     btnResStatusPerdDay: TdxBarLargeButton;
+    tabFrontDesk: TsTabSheet;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
@@ -1344,7 +1345,6 @@ type
 
     procedure RefreshOneDayGrid;
 
-    procedure CreateQuickReservation(isQuick: boolean);
     function AddNewRoomResFromSelectionPeriodGrid(var aNewReservation: TNewReservation): integer;
     function AddNewRoomResFromSelectionDayGrid(var aNewReservation: TNewReservation): integer;
 
@@ -1491,6 +1491,7 @@ type
     procedure WndProc(var message: TMessage); override;
     procedure BlinkRoom;
     procedure TranslateOpenForms;
+    procedure CreateQuickReservation(isQuick: boolean);
     procedure GoToDateAndRoom(aDate: TdateTime; RoomReservation: integer);
     function IsRoomReserved(const RoomNumber: string; iRes, iRoom: integer): boolean;
     procedure RefreshGrid;
@@ -1637,6 +1638,7 @@ uses
 		, uOpenInvoicesNew
     , uRptReservationStatusPerDay
     , uRoomerInstanceManagement
+    , uFrontDeskPageButton
 		;
 
 {$R *.DFM}
@@ -2821,6 +2823,7 @@ begin
 
   frmDateStatistics := TfrmEmbDateStatistics.Create(self);
   frmDateStatistics.pnlStatistics.Parent := pnlStatistics;
+  PrepareFrontDeskPage(tabFrontDesk);
 end;
 
 procedure TfrmMain.FormDestroy(Sender: TObject);
@@ -2855,6 +2858,10 @@ begin
   end;
   try
     FrmMessagesTemplates.Free;
+  Except
+  end;
+  try
+    FreeFrontDeskPage;
   Except
   end;
   zOneDay_stlTakenTypes.Free;
@@ -3493,6 +3500,11 @@ begin
   begin
     DisplayStatusses(true);
     ViewMode := vmRateQuery;
+  end
+  else if pageMainGrids.ActivePage = tabFrontDesk then
+  begin
+    FrmFrontDeskPageButton.ShowFromDate := trunc(aDate);
+    ViewMode := vmFrontDesk;
   end;
 end;
 
@@ -4029,6 +4041,9 @@ begin
                       frmDateStatistics.RefreshData
                     end;
       vmRateQuery:  PostMessage(handle, WM_SET_DATE_FROM_MAIN, 0, trunc(dtDate.Date));
+      vmFrontDesk:  begin
+                      FrmFrontDeskPageButton.ShowFromDate := dtDate.Date;
+                    end;
 
     end;
 
@@ -7630,6 +7645,16 @@ begin
         DisplayStatusses(true);
         FrmRateQuery.BeingViewed := true;
         EnterRateQueryView(aDate);
+      end;
+    6:
+      begin
+        aDate := trunc(dtDate.Date);
+
+//        DisplayStatusses(true);
+//        FrmRateQuery.BeingViewed := true;
+//        EnterRateQueryView(aDate);
+        pageMainGrids.ActivePage := tabFrontDesk;
+        pageMainGridsChange(pageMainGrids);
       end;
   end;
   finally

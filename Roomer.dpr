@@ -285,7 +285,9 @@ uses
   uVersionManagement in 'VersionManagement\uVersionManagement.pas',
   uRoomerLogger in 'Logging\uRoomerLogger.pas',
   uRoomerInstanceManagement in 'RoomerInstanceManagement\uRoomerInstanceManagement.pas',
-  uFrmPayCardView in 'PCI\uFrmPayCardView.pas' {FrmPayCardView};
+  uFrmPayCardView in 'PCI\uFrmPayCardView.pas' {FrmPayCardView},
+  uFrontDeskPageButton in 'uFrontDeskPageButton.pas' {FrmFrontDeskPageButton},
+  uRptInHouse in 'uRptInHouse.pas' {frmInHouseReport};
 
 {$R *.RES}
 

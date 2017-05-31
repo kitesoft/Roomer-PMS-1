@@ -190,7 +190,7 @@ begin
     if FDownloadActive then
       AResponseInfo.ContentText := 'BUSY'
     else begin
-      DownloadActive := True;
+      FDownloadActive := True;
       try
         if URIProcessor.Process(ARequestInfo.URI) then
         begin
@@ -202,7 +202,7 @@ begin
         end else
           AddLog('Unable to process provided URI');
       finally
-        DownloadActive := False;
+        FDownloadActive := False;
       end;
     end;
     AddLog('Returning to caller with: ' + AResponseInfo.ContentText);

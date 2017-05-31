@@ -118,7 +118,7 @@ type
 /// <summary>
 ///   Global access point for showing the arrival report form, If Modalresult is OK then True is returned
 /// </summary>
-function ShowDeparturesReport: boolean;
+function ShowDeparturesReport(AutoClick : Boolean = False; Tomorrow : Boolean = False): boolean;
 
 implementation
 
@@ -292,12 +292,19 @@ begin
 end;
 
 
-function ShowDeparturesReport: boolean;
+function ShowDeparturesReport(AutoClick : Boolean = False; Tomorrow : Boolean = False): boolean;
 var
   frm: TfrmDeparturesReport;
 begin
   frm := TfrmDeparturesReport.Create(nil);
   try
+    if Tomorrow then
+    begin
+      frm.rbTomorrow.Checked := True;
+      frm.UpdateControls;
+    end;
+    if AutoClick then
+      frm.btnRefresh.Click;
     frm.ShowModal;
     Result := (frm.modalresult = mrOk);
   finally
@@ -496,5 +503,6 @@ begin
 end;
 
 end.
+
 
 

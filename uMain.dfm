@@ -116,7 +116,7 @@ object frmMain: TfrmMain
         Top = 1
         Width = 1022
         Height = 302
-        ActivePage = tabOneDayView
+        ActivePage = tabFrontDesk
         Align = alClient
         TabOrder = 1
         OnChange = pageMainGridsChange
@@ -303,7 +303,7 @@ object frmMain: TfrmMain
             SortSettings.HeaderColorTo = 16579058
             SortSettings.HeaderMirrorColor = 16380385
             SortSettings.HeaderMirrorColorTo = 16182488
-            Version = '8.2.4.1'
+            Version = '8.2.5.2'
             ColWidths = (
               47
               49
@@ -1100,7 +1100,7 @@ object frmMain: TfrmMain
               SortSettings.HeaderColorTo = 16579058
               SortSettings.HeaderMirrorColor = 16380385
               SortSettings.HeaderMirrorColorTo = 16182488
-              Version = '8.2.4.1'
+              Version = '8.2.5.2'
               ColWidths = (
                 73
                 20
@@ -1459,7 +1459,7 @@ object frmMain: TfrmMain
               SearchFooter.MatchCaseCaption = 'Match case'
               SearchFooter.ResultFormat = '(%d of %d)'
               SortSettings.DefaultFormat = ssAutomatic
-              Version = '8.2.4.1'
+              Version = '8.2.5.2'
               ColWidths = (
                 64
                 64
@@ -1647,6 +1647,9 @@ object frmMain: TfrmMain
         object tabRateQuery: TsTabSheet
           Caption = 'tabRateQuery'
         end
+        object tabFrontDesk: TsTabSheet
+          Caption = 'tabFrontDesk'
+        end
       end
       object pnlStatSlider: TsPanel
         Left = 1030
@@ -1757,7 +1760,7 @@ object frmMain: TfrmMain
       object Panel4: TsPanel
         Left = 0
         Top = 0
-        Width = 470
+        Width = 503
         Height = 33
         Align = alLeft
         BevelOuter = bvNone
@@ -1784,8 +1787,9 @@ object frmMain: TfrmMain
         object tabsView: TsTabControl
           Left = 0
           Top = 0
-          Width = 470
+          Width = 503
           Height = 33
+          Cursor = crHandPoint
           Align = alClient
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -1801,7 +1805,8 @@ object frmMain: TfrmMain
             'Period'
             'Groups'
             'Dashboard'
-            'Rates')
+            'Rates'
+            'Frontdesk')
           TabIndex = 0
           OnChange = tabsViewChange
           OnChanging = tabsViewChanging
@@ -1811,9 +1816,9 @@ object frmMain: TfrmMain
         end
       end
       object __PanGridsHeader: TsPanel
-        Left = 610
+        Left = 643
         Top = 0
-        Width = 725
+        Width = 692
         Height = 33
         Align = alClient
         Alignment = taLeftJustify
@@ -1869,9 +1874,9 @@ object frmMain: TfrmMain
           ExplicitHeight = 20
         end
         object sPanel3: TsPanel
-          Left = 222
+          Left = 206
           Top = 1
-          Width = 502
+          Width = 485
           Height = 31
           Margins.Left = 0
           Margins.Top = 0
@@ -1979,7 +1984,7 @@ object frmMain: TfrmMain
         object sPanel4: TsPanel
           Left = 54
           Top = 1
-          Width = 168
+          Width = 152
           Height = 31
           Margins.Left = 0
           Margins.Top = 0
@@ -2029,14 +2034,16 @@ object frmMain: TfrmMain
             BevelOuter = bvNone
             BorderStyle = bsNone
             Color = clWhite
+            EditMask = '!99/99/9999;1; '
             Font.Charset = DEFAULT_CHARSET
             Font.Color = clBlack
             Font.Height = -13
             Font.Name = 'Segoe UI'
             Font.Style = [fsBold]
+            MaxLength = 10
             ParentFont = False
             TabOrder = 0
-            Text = ''
+            Text = '  -  -    '
             OnChange = dtDateChange
             OnMouseEnter = tabsViewMouseEnter
             BoundLabel.Font.Charset = DEFAULT_CHARSET
@@ -2214,7 +2221,7 @@ object frmMain: TfrmMain
         end
       end
       object Panel2: TsPanel
-        Left = 470
+        Left = 503
         Top = 0
         Width = 140
         Height = 33
@@ -2324,25 +2331,25 @@ object frmMain: TfrmMain
             LineColor = clGray
             Line3D = True
             Look = lookFlat
-            NameOfDays.Monday = 'Mon'
-            NameOfDays.Tuesday = 'Tue'
-            NameOfDays.Wednesday = 'Wed'
-            NameOfDays.Thursday = 'Thu'
-            NameOfDays.Friday = 'Fri'
-            NameOfDays.Saturday = 'Sat'
-            NameOfDays.Sunday = 'Sun'
-            NameOfMonths.January = 'Jan'
-            NameOfMonths.February = 'Feb'
-            NameOfMonths.March = 'Mar'
-            NameOfMonths.April = 'Apr'
-            NameOfMonths.May = 'May'
-            NameOfMonths.June = 'Jun'
-            NameOfMonths.July = 'Jul'
-            NameOfMonths.August = 'Aug'
-            NameOfMonths.September = 'Sep'
-            NameOfMonths.October = 'Oct'
-            NameOfMonths.November = 'Nov'
-            NameOfMonths.December = 'Dec'
+            NameOfDays.Monday = 'ma'
+            NameOfDays.Tuesday = 'di'
+            NameOfDays.Wednesday = 'wo'
+            NameOfDays.Thursday = 'do'
+            NameOfDays.Friday = 'vr'
+            NameOfDays.Saturday = 'za'
+            NameOfDays.Sunday = 'zo'
+            NameOfMonths.January = 'jan'
+            NameOfMonths.February = 'feb'
+            NameOfMonths.March = 'mrt'
+            NameOfMonths.April = 'apr'
+            NameOfMonths.May = 'mei'
+            NameOfMonths.June = 'jun'
+            NameOfMonths.July = 'jul'
+            NameOfMonths.August = 'aug'
+            NameOfMonths.September = 'sep'
+            NameOfMonths.October = 'okt'
+            NameOfMonths.November = 'nov'
+            NameOfMonths.December = 'dec'
             NameOfMonths.UseIntlNames = True
             WeekFont.Charset = DEFAULT_CHARSET
             WeekFont.Color = clWindowText
@@ -2509,7 +2516,7 @@ object frmMain: TfrmMain
         ParentColor = False
         Transparent = True
         OnAnchorClick = mmoMessageAnchorClick
-        Version = '1.9.2.7'
+        Version = '1.9.2.8'
         ExplicitLeft = 87
         ExplicitWidth = 1019
       end
@@ -2639,7 +2646,6 @@ object frmMain: TfrmMain
     TabOrder = 2
     TabStop = False
     object rbTabHome: TdxRibbonTab
-      Active = True
       Caption = 'Roomer'
       Groups = <
         item
@@ -7567,7 +7573,7 @@ object frmMain: TfrmMain
     DataPipeline = dplGroups
     PrinterSetup.BinName = 'Default'
     PrinterSetup.DocumentName = 'Report'
-    PrinterSetup.PaperName = 'A4 210 x 297 mm'
+    PrinterSetup.PaperName = 'A4'
     PrinterSetup.PrinterName = 'Default'
     PrinterSetup.SaveDeviceSettings = False
     PrinterSetup.mmMarginBottom = 6350
@@ -8823,7 +8829,6 @@ object frmMain: TfrmMain
   object sSkinManager1: TsSkinManager
     Effects.AllowAeroBluring = False
     Effects.AllowGlowing = False
-    IsDefault = False
     InternalSkins = <
       item
         Name = 'RoomerUI'

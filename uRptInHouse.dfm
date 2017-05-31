@@ -1,138 +1,42 @@
-inherited frmDeparturesReport: TfrmDeparturesReport
-  Caption = 'Departures'
-  ClientHeight = 585
-  ClientWidth = 1103
+inherited frmInHouseReport: TfrmInHouseReport
+  Caption = 'In-house'
+  ClientHeight = 586
+  ClientWidth = 1123
   Font.Height = -11
   Position = poOwnerFormCenter
-  ExplicitWidth = 1119
-  ExplicitHeight = 624
+  ExplicitWidth = 1139
+  ExplicitHeight = 625
   PixelsPerInch = 96
   TextHeight = 13
-  inherited sbStatusBar: TsStatusBar
-    Top = 565
-    Width = 1103
-    ExplicitTop = 565
-    ExplicitWidth = 1103
-  end
-  object pnlFilter: TsPanel [1]
+  object pnlFilter: TsPanel [0]
     Left = 0
     Top = 0
-    Width = 1103
-    Height = 144
+    Width = 1123
+    Height = 78
     Align = alTop
     TabOrder = 0
     SkinData.SkinSection = 'PANEL'
     object btnRefresh: TsButton
-      Left = 398
-      Top = 9
+      Left = 4
+      Top = 4
       Width = 118
       Height = 26
       Caption = 'Refresh'
       Default = True
       ImageIndex = 28
       Images = DImages.PngImageList1
-      TabOrder = 1
+      TabOrder = 0
       OnClick = btnRefreshClick
       SkinData.SkinSection = 'BUTTON'
     end
-    object gbxSelectDates: TsGroupBox
-      Left = 21
-      Top = 2
-      Width = 370
-      Height = 78
-      Caption = 'Select dates'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      ParentFont = False
-      TabOrder = 0
-      SkinData.SkinSection = 'GROUPBOX'
-      object rbToday: TsRadioButton
-        Left = 4
-        Top = 21
-        Width = 58
-        Height = 19
-        Caption = 'Today'
-        Checked = True
-        TabOrder = 0
-        TabStop = True
-        OnClick = rbRadioButtonClick
-      end
-      object rbTomorrow: TsRadioButton
-        Left = 4
-        Top = 46
-        Width = 76
-        Height = 19
-        Caption = 'Tomorrow'
-        TabOrder = 1
-        OnClick = rbRadioButtonClick
-      end
-      object rbManualRange: TsRadioButton
-        Left = 119
-        Top = 21
-        Width = 122
-        Height = 19
-        Caption = 'Manual date range:'
-        TabOrder = 2
-        OnClick = rbRadioButtonClick
-      end
-      object dtDateFrom: TsDateEdit
-        Left = 139
-        Top = 46
-        Width = 105
-        Height = 21
-        AutoSize = False
-        Color = clWhite
-        EditMask = '!99/99/9999;1; '
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
-        Font.Height = -11
-        Font.Name = 'Tahoma'
-        Font.Style = []
-        MaxLength = 10
-        ParentFont = False
-        TabOrder = 3
-        Text = '  -  -    '
-        SkinData.SkinSection = 'EDIT'
-        GlyphMode.Blend = 0
-        GlyphMode.Grayed = False
-        OnCloseUp = dtDateFromCloseUp
-        DialogTitle = 'Date from select'
-      end
-      object dtDateTo: TsDateEdit
-        Left = 250
-        Top = 46
-        Width = 105
-        Height = 21
-        AutoSize = False
-        Color = clWhite
-        EditMask = '!99/99/9999;1; '
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
-        Font.Height = -11
-        Font.Name = 'Tahoma'
-        Font.Style = []
-        MaxLength = 10
-        ParentFont = False
-        TabOrder = 4
-        Text = '  -  -    '
-        SkinData.SkinSection = 'EDIT'
-        GlyphMode.Blend = 0
-        GlyphMode.Grayed = False
-        OnCloseUp = dtDateToCloseUp
-        DialogTitle = 'Date to select'
-      end
-    end
     object pnlExportButtons: TsPanel
       Left = 1
-      Top = 100
-      Width = 1101
+      Top = 34
+      Width = 1121
       Height = 43
       Align = alBottom
       BevelOuter = bvNone
-      TabOrder = 2
+      TabOrder = 1
       SkinData.SkinSection = 'PANEL'
       object btnExcel: TsButton
         AlignWithMargins = True
@@ -148,20 +52,6 @@ inherited frmDeparturesReport: TfrmDeparturesReport
         OnClick = btnExcelClick
         SkinData.SkinSection = 'BUTTON'
       end
-      object btnCheckOut: TsButton
-        AlignWithMargins = True
-        Left = 137
-        Top = 3
-        Width = 128
-        Height = 37
-        Align = alLeft
-        Caption = 'Check out'
-        ImageIndex = 46
-        Images = DImages.PngImageList1
-        TabOrder = 1
-        OnClick = btnCheckOutClick
-        SkinData.SkinSection = 'BUTTON'
-      end
       object btnProfile: TsButton
         AlignWithMargins = True
         Left = 271
@@ -172,7 +62,7 @@ inherited frmDeparturesReport: TfrmDeparturesReport
         Caption = 'Profile'
         ImageIndex = 37
         Images = DImages.PngImageList1
-        TabOrder = 2
+        TabOrder = 1
         OnClick = btnProfileClick
         SkinData.SkinSection = 'BUTTON'
       end
@@ -188,13 +78,13 @@ inherited frmDeparturesReport: TfrmDeparturesReport
         ImageIndex = 62
         Images = DImages.PngImageList1
         Style = bsSplitButton
-        TabOrder = 3
+        TabOrder = 2
         OnClick = mnuRoomInvoiceClick
         SkinData.SkinSection = 'BUTTON'
       end
-      object btnPrintGrid: TsButton
+      object btnReport: TsButton
         AlignWithMargins = True
-        Left = 970
+        Left = 990
         Top = 3
         Width = 128
         Height = 37
@@ -202,146 +92,150 @@ inherited frmDeparturesReport: TfrmDeparturesReport
         Caption = 'Report'
         ImageIndex = 69
         Images = DImages.PngImageList1
+        TabOrder = 3
+        OnClick = btnReportClick
+        SkinData.SkinSection = 'BUTTON'
+      end
+      object btnCheckOut: TsButton
+        AlignWithMargins = True
+        Left = 137
+        Top = 3
+        Width = 128
+        Height = 37
+        Align = alLeft
+        Caption = 'Check out'
+        ImageIndex = 46
+        Images = DImages.PngImageList1
         TabOrder = 4
-        OnClick = btnPrintGridClick
+        OnClick = btnCheckOutClick
         SkinData.SkinSection = 'BUTTON'
       end
     end
   end
-  object grDeparturesList: TcxGrid [2]
+  object grInHouseList: TcxGrid [1]
     Left = 0
-    Top = 144
-    Width = 1103
-    Height = 421
+    Top = 78
+    Width = 1123
+    Height = 488
     Align = alClient
     PopupMenu = pnmuGridMenu
     TabOrder = 1
     LookAndFeel.NativeStyle = False
-    object tvDeparturesList: TcxGridDBTableView
+    object grInHouseListDBTableView1: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
-      DataController.DataSource = DeparturesListDS
+      OnCellDblClick = grInHouseListDBTableView1CellDblClick
+      DataController.DataSource = InHouseListDS
+      DataController.Options = [dcoAssignGroupingValues, dcoAssignMasterDetailKeys, dcoSaveExpanding, dcoGroupsAlwaysExpanded]
       DataController.Summary.DefaultGroupSummaryItems = <
         item
-          Format = '0'
           Kind = skCount
           Position = spFooter
-          Column = tvDeparturesListRoom
+          Column = grInHouseListDBTableView1Room
         end
         item
           Format = '0'
           Kind = skSum
           Position = spFooter
-          Column = tvDeparturesListNumGuests
+          Column = grInHouseListDBTableView1NumGuests
         end>
       DataController.Summary.FooterSummaryItems = <
         item
           Format = '0'
           Kind = skCount
-          Column = tvDeparturesListRoom
+          Column = grInHouseListDBTableView1Room
         end
         item
           Format = '0'
           Kind = skSum
-          Column = tvDeparturesListNumGuests
+          Column = grInHouseListDBTableView1NumGuests
         end>
       DataController.Summary.SummaryGroups = <>
       FilterRow.Visible = True
-      OptionsData.CancelOnExit = False
-      OptionsData.Deleting = False
-      OptionsData.DeletingConfirmation = False
-      OptionsData.Editing = False
-      OptionsData.Inserting = False
       OptionsView.ColumnAutoWidth = True
       OptionsView.Footer = True
       OptionsView.GroupFooters = gfAlwaysVisible
-      object tvDeparturesListRoom: TcxGridDBColumn
+      Styles.Group = cxStyle1
+      Styles.GroupSummary = cxStyle1
+      Styles.StyleSheet = cxssRoomerGridTableView
+      object grInHouseListDBTableView1Room: TcxGridDBColumn
         DataBinding.FieldName = 'Room'
-        SortIndex = 0
-        SortOrder = soDescending
-        Width = 55
+        Options.Editing = False
       end
-      object tvDeparturesListGuestName: TcxGridDBColumn
+      object grInHouseListDBTableView1GuestName: TcxGridDBColumn
+        Caption = 'Guest name'
         DataBinding.FieldName = 'GuestName'
-        Width = 168
+        Options.Editing = False
+        Width = 263
       end
-      object tvDeparturesListRoomerReservationId: TcxGridDBColumn
+      object grInHouseListDBTableView1RoomerReservationID: TcxGridDBColumn
         Caption = 'Reservation ID'
-        DataBinding.FieldName = 'RoomerReservationId'
-        PropertiesClassName = 'TcxLabelProperties'
-        Properties.Alignment.Horz = taCenter
-        Width = 65
-      end
-      object tvDeparturesListCompanyName: TcxGridDBColumn
-        Caption = 'Company Name'
-        DataBinding.FieldName = 'CompanyName'
-        Width = 136
-      end
-      object tvDeparturesListArrival: TcxGridDBColumn
-        DataBinding.FieldName = 'Arrival'
-        PropertiesClassName = 'TcxDateEditProperties'
-        Properties.ShowTime = False
-        Width = 73
-      end
-      object tvDeparturesListDeparture: TcxGridDBColumn
-        DataBinding.FieldName = 'Departure'
-        Width = 75
-      end
-      object tvDeparturesListRoomType: TcxGridDBColumn
-        DataBinding.FieldName = 'RoomType'
-        PropertiesClassName = 'TcxLabelProperties'
-        Properties.Alignment.Horz = taCenter
-        Width = 72
-      end
-      object tvDeparturesListNumGuests: TcxGridDBColumn
-        Caption = 'Guests'
-        DataBinding.FieldName = 'NumGuests'
-        HeaderAlignmentHorz = taRightJustify
-        Width = 74
-      end
-      object tvDeparturesListAverageRatePerNight: TcxGridDBColumn
-        Caption = 'Rate Amount'
-        DataBinding.FieldName = 'AverageRatePerNight'
-        OnGetProperties = tvDeparturesList2AverageRatePerNightGetProperties
-        HeaderAlignmentHorz = taRightJustify
-        Width = 94
-      end
-      object tvDeparturesListBalance: TcxGridDBColumn
-        Caption = 'Room balance'
-        DataBinding.FieldName = 'Balance'
-        OnGetProperties = tvDeparturesList2AverageRatePerNightGetProperties
-        HeaderAlignmentHorz = taRightJustify
-        HeaderGlyphAlignmentHorz = taRightJustify
-        Options.Editing = False
-        Width = 75
-      end
-      object tvDeparturesListGroupAccount: TcxGridDBColumn
-        Caption = 'Group'
-        DataBinding.FieldName = 'GroupAccount'
-        PropertiesClassName = 'TcxCheckBoxProperties'
-        HeaderAlignmentHorz = taCenter
-        Options.Editing = False
-        Width = 48
-      end
-      object tvDeparturesListGroupInvoiceBalance: TcxGridDBColumn
-        Caption = 'Group Balance'
-        DataBinding.FieldName = 'GroupInvoiceBalance'
-        OnGetProperties = tvDeparturesListGroupInvoiceBalanceGetProperties
-        HeaderAlignmentHorz = taRightJustify
-        Options.Editing = False
-        Width = 78
-      end
-      object tvDeparturesListExpectedCheckOutTime: TcxGridDBColumn
-        Caption = 'Expected COT'
-        DataBinding.FieldName = 'ExpectedCheckOutTime'
+        DataBinding.FieldName = 'RoomerReservationID'
         PropertiesClassName = 'TcxTextEditProperties'
         Properties.Alignment.Horz = taCenter
-        OnGetDisplayText = tvDeparturesListExpectedCheckOutTimeGetDisplayText
-        Width = 86
+        Options.Editing = False
+        Width = 83
+      end
+      object grInHouseListDBTableView1CompanyCode: TcxGridDBColumn
+        Caption = 'Company code'
+        DataBinding.FieldName = 'CompanyCode'
+        Options.Editing = False
+      end
+      object grInHouseListDBTableView1Arrival: TcxGridDBColumn
+        DataBinding.FieldName = 'Arrival'
+        Options.Editing = False
+      end
+      object grInHouseListDBTableView1Departure: TcxGridDBColumn
+        DataBinding.FieldName = 'Departure'
+        Options.Editing = False
+      end
+      object grInHouseListDBTableView1Roomtype: TcxGridDBColumn
+        Caption = 'Room type'
+        DataBinding.FieldName = 'Roomtype'
+        PropertiesClassName = 'TcxTextEditProperties'
+        Properties.Alignment.Horz = taCenter
+        Options.Editing = False
+        Width = 66
+      end
+      object grInHouseListDBTableView1NumGuests: TcxGridDBColumn
+        Caption = 'Num guests'
+        DataBinding.FieldName = 'NumGuests'
+        Options.Editing = False
+      end
+      object grInHouseListDBTableView1AverageRoomRate: TcxGridDBColumn
+        Caption = 'Average Rate'
+        DataBinding.FieldName = 'AverageRoomRate'
+        OnGetProperties = grInHouseListDBTableView1AverageRoomRateGetProperties
+        Options.Editing = False
+        Width = 82
+      end
+      object grInHouseListDBTableView1ExpectedTimeOfDeparture: TcxGridDBColumn
+        Caption = 'Expected TOD'
+        DataBinding.FieldName = 'ExpectedTimeOfDeparture'
+        PropertiesClassName = 'TcxTextEditProperties'
+        Properties.Alignment.Horz = taCenter
+        OnGetDisplayText = grInHouseListDBTableView1ExpectedTimeOfDepartureGetDisplayText
+        HeaderAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 88
+      end
+      object grInHouseListDBTableView1RoomerRoomReservationID: TcxGridDBColumn
+        Caption = 'Room Res ID'
+        DataBinding.FieldName = 'RoomerRoomReservationID'
+        Visible = False
+        Options.Editing = False
+        SortIndex = 0
+        SortOrder = soAscending
       end
     end
-    object lvDeparturesList: TcxGridLevel
-      GridView = tvDeparturesList
+    object lvInHouseListLevel1: TcxGridLevel
+      GridView = grInHouseListDBTableView1
     end
+  end
+  inherited sbStatusBar: TsStatusBar
+    Top = 566
+    Width = 1123
+    ExplicitTop = 566
+    ExplicitWidth = 1123
   end
   inherited psRoomerBase: TcxPropertiesStore
     Components = <
@@ -350,12 +244,10 @@ inherited frmDeparturesReport: TfrmDeparturesReport
         Properties.Strings = (
           'Height'
           'Left'
+          'Position'
           'Top'
-          'Width'
-          'Position')
+          'Width')
       end>
-    Left = 616
-    Top = 40
   end
   inherited cxsrRoomerStyleRepository: TcxStyleRepository
     PixelsPerInch = 96
@@ -366,38 +258,35 @@ inherited frmDeparturesReport: TfrmDeparturesReport
       BuiltIn = True
     end
   end
-  object kbmDeparturesList: TkbmMemTable
+  object kbmInHouseList: TkbmMemTable
     Active = True
     DesignActivation = True
     AttachedAutoRefresh = True
     AttachMaxCount = 1
     FieldDefs = <
       item
-        Name = 'CheckOutDate'
-        DataType = ftDate
-      end
-      item
-        Name = 'RoomerReservationId'
-        DataType = ftInteger
-      end
-      item
         Name = 'Room'
         DataType = ftString
+        Size = 10
+      end
+      item
+        Name = 'Roomtype'
+        DataType = ftString
         Size = 20
       end
       item
-        Name = 'RoomType'
-        DataType = ftString
-        Size = 20
+        Name = 'RoomerReservationID'
+        DataType = ftInteger
       end
       item
         Name = 'GuestName'
-        DataType = ftWideString
-        Size = 200
+        DataType = ftString
+        Size = 100
       end
       item
-        Name = 'NumGuests'
-        DataType = ftInteger
+        Name = 'CompanyCode'
+        DataType = ftString
+        Size = 15
       end
       item
         Name = 'Arrival'
@@ -408,43 +297,21 @@ inherited frmDeparturesReport: TfrmDeparturesReport
         DataType = ftDate
       end
       item
-        Name = 'ExpectedCheckOutTime'
+        Name = 'NumGuests'
+        DataType = ftInteger
+      end
+      item
+        Name = 'AverageRoomRate'
+        DataType = ftFloat
+      end
+      item
+        Name = 'ExpectedTimeOfDeparture'
         DataType = ftString
         Size = 5
       end
       item
-        Name = 'Customer'
-        DataType = ftWideString
-        Size = 200
-      end
-      item
-        Name = 'CompanyName'
-        DataType = ftWideString
-        Size = 200
-      end
-      item
-        Name = 'NumNights'
-        DataType = ftInteger
-      end
-      item
-        Name = 'AverageRatePerNight'
-        DataType = ftFloat
-      end
-      item
-        Name = 'Balance'
-        DataType = ftFloat
-      end
-      item
         Name = 'RoomerRoomReservationID'
         DataType = ftInteger
-      end
-      item
-        Name = 'GroupAccount'
-        DataType = ftBoolean
-      end
-      item
-        Name = 'GroupInvoiceBalance'
-        DataType = ftFloat
       end>
     IndexDefs = <>
     SortOptions = []
@@ -458,14 +325,52 @@ inherited frmDeparturesReport: TfrmDeparturesReport
     SortID = 0
     SubLanguageID = 1
     LocaleID = 1024
-    AfterScroll = kbmDeparturesListAfterScroll
-    Left = 448
-    Top = 231
+    AfterScroll = kbmInHouseListAfterScroll
+    Left = 416
+    Top = 359
+    object kbmInHouseListfldRoom: TStringField
+      FieldName = 'Room'
+      Size = 10
+    end
+    object kbmInHouseListfldRoomtype: TStringField
+      FieldName = 'Roomtype'
+    end
+    object kbmInHouseListfldRoomerReservationID: TIntegerField
+      FieldName = 'RoomerReservationID'
+    end
+    object kbmInHouseListfldGuestName: TStringField
+      FieldName = 'GuestName'
+      Size = 100
+    end
+    object kbmInHouseListfldCompanyCode: TStringField
+      FieldName = 'CompanyCode'
+      Size = 15
+    end
+    object kbmInHouseListfldArrival: TDateField
+      FieldName = 'Arrival'
+    end
+    object kbmInHouseListfldDeparture: TDateField
+      FieldName = 'Departure'
+    end
+    object kbmInHouseListfldNumGuests: TIntegerField
+      FieldName = 'NumGuests'
+    end
+    object kbmInHouseListAverageRoomRate: TFloatField
+      FieldName = 'AverageRoomRate'
+      currency = True
+    end
+    object kbmInHouseListExpectedTimeOfDeparture: TStringField
+      FieldName = 'ExpectedTimeOfDeparture'
+      Size = 5
+    end
+    object kbmInHouseListRoomerRoomReservationID: TIntegerField
+      FieldName = 'RoomerRoomReservationID'
+    end
   end
-  object DeparturesListDS: TDataSource
-    DataSet = kbmDeparturesList
-    Left = 448
-    Top = 279
+  object InHouseListDS: TDataSource
+    DataSet = kbmInHouseList
+    Left = 488
+    Top = 359
   end
   object cxStyleRepository1: TcxStyleRepository
     Left = 176
@@ -482,8 +387,8 @@ inherited frmDeparturesReport: TfrmDeparturesReport
   end
   object pmnuInvoiceMenu: TPopupMenu
     Images = DImages.cxSmallImagesFlat
-    Left = 48
-    Top = 272
+    Left = 480
+    Top = 224
     object R1: TMenuItem
       Caption = 'Room Invoice'
       Default = True
@@ -497,11 +402,10 @@ inherited frmDeparturesReport: TfrmDeparturesReport
     end
   end
   object pnmuGridMenu: TPopupMenu
-    Left = 48
-    Top = 328
+    Left = 184
+    Top = 368
     object mnuCheckin: TMenuItem
       Caption = 'Check in'
-      OnClick = btnCheckOutClick
     end
     object mnuProfile: TMenuItem
       Caption = 'Profile'
@@ -526,7 +430,7 @@ inherited frmDeparturesReport: TfrmDeparturesReport
     Top = 320
     object grdPrinterLink1: TdxGridReportLink
       Active = True
-      Component = grDeparturesList
+      Component = grInHouseList
       PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
@@ -549,7 +453,7 @@ inherited frmDeparturesReport: TfrmDeparturesReport
       PrinterPage.ScaleMode = smFit
       PrinterPage._dxMeasurementUnits_ = 2
       PrinterPage._dxLastMU_ = 2
-      ReportDocument.CreationDate = 42886.558430520830000000
+      ReportDocument.CreationDate = 42886.632026168990000000
       ReportTitle.Font.Charset = DEFAULT_CHARSET
       ReportTitle.Font.Color = clBlack
       ReportTitle.Font.Height = -19
@@ -562,11 +466,8 @@ inherited frmDeparturesReport: TfrmDeparturesReport
       Font.Height = -11
       Font.Name = 'Arial'
       Font.Style = []
-      OptionsExpanding.ExpandGroupRows = True
       OptionsFormatting.LookAndFeelKind = lfFlat
       OptionsFormatting.UseNativeStyles = True
-      OptionsOnEveryPage.Footers = False
-      OptionsOnEveryPage.FilterBar = False
       OptionsView.FilterBar = False
       StyleRepository = cxStyleRepository2
       Styles.StyleSheet = dxGridReportLinkStyleSheet1
@@ -574,8 +475,8 @@ inherited frmDeparturesReport: TfrmDeparturesReport
     end
   end
   object cxStyleRepository2: TcxStyleRepository
-    Left = 784
-    Top = 272
+    Left = 744
+    Top = 320
     PixelsPerInch = 96
     object cxStyle2: TcxStyle
       AssignedValues = [svColor, svFont]
