@@ -49,7 +49,7 @@ type
     /// <summary>
     ///   Format aAmount according to the formatsettings of the currency
     /// </summary>
-    function FormattedValue(aAmount: double): string;
+    function FormattedValue(aAmount: double; aIncludeCurrencySign: boolean = true): string;
     /// <summary>
     ///   Format aAmount according to the formatsettings of the currency, without currencyuSign and appending the 3 letter currencycode
     /// </summary>
@@ -120,9 +120,12 @@ begin
   Create(glb.CurrenciesSet.FieldByName('id').AsInteger);
 end;
 
-function TCurrencyHandler.FormattedValue(aAmount: double): string;
+function TCurrencyHandler.FormattedValue(aAmount: double; aIncludeCurrencySign: boolean = true): string;
 begin
-  Result := CurrToStrF(aAMount, ffCurrency, FCurrencyRec.Decimals, FFormatSettings);
+  if aIncludeCurrencySign then
+    Result := CurrToStrF(aAMount, ffCurrency, FCurrencyRec.Decimals, FFormatSettings)
+  else
+    Result := CurrToStrF(aAMount, ffFixed, FCurrencyRec.Decimals, FFormatSettings);
 end;
 
 function TCurrencyHandler.FormattedValueWithCode(aAmount: double): string;

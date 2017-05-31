@@ -307,7 +307,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
       end
       object btnInvoice: TsButton
         Left = 929
-        Top = 100
+        Top = 98
         Width = 161
         Height = 41
         Action = actPrintInvoice
@@ -322,7 +322,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
       end
       object btnProforma: TsButton
         Left = 929
-        Top = 53
+        Top = 51
         Width = 161
         Height = 41
         Action = actPrintProforma
@@ -1204,6 +1204,8 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
               Align = alRight
               TabOrder = 0
               SkinData.SkinSection = 'BUTTON'
+              ExplicitLeft = 2
+              ExplicitTop = -2
             end
             object btnEditDownPayment: TsButton
               Left = 131
@@ -1406,7 +1408,6 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
           SelectionTextColor = clHighlightText
           SortSettings.DefaultFormat = ssAutomatic
           Version = '8.2.4.1'
-          ExplicitLeft = 17
           ColWidths = (
             24
             28
