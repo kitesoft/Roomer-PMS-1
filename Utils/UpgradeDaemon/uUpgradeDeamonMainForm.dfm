@@ -376,23 +376,6 @@ object frmUpgradeDaemon: TfrmUpgradeDaemon
     Left = 168
     Top = 16
   end
-  object httpServer: TIdHTTPServer
-    Bindings = <
-      item
-        IP = '127.0.0.1'
-        Port = 62999
-      end>
-    DefaultPort = 62999
-    OnBeforeBind = httpServerBeforeBind
-    OnAfterBind = httpServerAfterBind
-    OnBeforeListenerRun = httpServerBeforeListenerRun
-    OnConnect = httpServerConnect
-    OnDisconnect = httpServerDisconnect
-    ServerSoftware = 'Roomer update agent'
-    OnCommandGet = httpServerCommandGet
-    Left = 280
-    Top = 248
-  end
   object timeUpgradeCheck: TTimer
     Interval = 900000
     OnTimer = timeUpgradeCheckTimer
@@ -8882,5 +8865,36 @@ object frmUpgradeDaemon: TfrmUpgradeDaemon
     OnDblClick = S1Click
     Left = 336
     Top = 320
+  end
+  object HttpServer: THttpServer
+    ListenBacklog = 5
+    MultiListenSockets = <>
+    Port = '62999'
+    Addr = '127.0.0.1'
+    SocketFamily = sfIPv4
+    MaxClients = 0
+    LingerOnOff = wsLingerNoSet
+    LingerTimeout = 1
+    Options = [hoAllowOptions, hoAllowPut, hoAllowTrace, hoAllowPatch, hoSendServerHdr]
+    KeepAliveTimeSec = 10
+    KeepAliveTimeXferSec = 300
+    MaxRequestsKeepAlive = 100
+    SizeCompressMin = 5000
+    SizeCompressMax = 100000000
+    MaxBlkSize = 8192
+    BandwidthLimit = 0
+    BandwidthSampling = 1000
+    ServerHeader = 'Server: Roomer-Upgrade-Daemon'
+    OnServerStarted = HttpServerServerStarted
+    OnServerStopped = HttpServerServerStopped
+    OnClientConnect = HttpServerClientConnect
+    OnClientDisconnect = HttpServerClientDisconnect
+    OnGetDocument = HttpServerGetDocument
+    AuthTypes = []
+    AuthRealm = 'ics'
+    SocketErrs = wsErrFriendly
+    ExclusiveAddr = True
+    Left = 122
+    Top = 227
   end
 end
