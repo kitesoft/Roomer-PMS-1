@@ -43,6 +43,11 @@ type
     function ConvertTo(aAmount: double; const aOtherCurrency: string): double; overload;
     function ConvertTo(aAmount: double; aOtherCurrencyHandler: TCurrencyHandler): double; overload;
     /// <summary>
+    ///   Convert aAmount in the currency of another handler to the amount in this currency
+    /// </summary>
+    function ConvertFrom(aAmount: double; const aOtherCurrency: string): double; overload;
+    function ConvertFrom(aAmount: double; aOtherCurrencyHandler: TCurrencyHandler): double; overload;
+    /// <summary>
     ///   Round aAmount to the number of decimals defined for the currency
     /// </summary>
     function RoundedValue(aAmount: double): double;
@@ -89,6 +94,22 @@ begin
 
   lrecOtherCurrency.ReadFromDataset(glb.CurrenciesSet);
   Result := (aAmount * Rate) / lrecOtherCurrency.Value;
+end;
+
+function TCurrencyHandler.ConvertFrom(aAmount: double; const aOtherCurrency: string): double;
+var
+  lrecOtherCurrency: recCurrencyHolder;
+begin
+  if not glb.LocateCurrency(aOtherCurrency) then
+    raise ECurrencyHandlerException.CreateFmt('Currency code [%s] not found', [aOtherCurrency]);
+
+  lrecOtherCurrency.ReadFromDataset(glb.CurrenciesSet);
+  Result := (aAmount * lrecOtherCurrency.Value) / Rate;
+end;
+
+function TCurrencyHandler.ConvertFrom(aAmount: double; aOtherCurrencyHandler: TCurrencyHandler): double;
+begin
+  Result := aOtherCurrencyHandler.ConvertTo(aAmount, Self);
 end;
 
 function TCurrencyHandler.ConvertTo(aAmount: double; aOtherCurrencyHandler: TCurrencyHandler): double;

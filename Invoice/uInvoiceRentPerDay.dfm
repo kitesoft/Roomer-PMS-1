@@ -38,27 +38,6 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
     Color = clWhite
     TabOrder = 1
     SkinData.SkinSection = 'PANEL'
-    object lblChangedInvoiceActive: TsLabel
-      Left = 0
-      Top = 185
-      Width = 1096
-      Height = 3
-      Hint = 'Search Filter Active'
-      Align = alTop
-      AutoSize = False
-      Color = clRed
-      ParentColor = False
-      ParentFont = False
-      Visible = False
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = 15789037
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      UseSkinColor = False
-      ExplicitTop = 27
-      ExplicitWidth = 1153
-    end
     object pnlHead: TsPanel
       Left = 0
       Top = 0
@@ -397,7 +376,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         Left = 9
         Top = 3
         Width = 567
-        Height = 170
+        Height = 178
         Caption = 'Invoice Header'
         TabOrder = 0
         object clabCustomer: TsLabel
@@ -419,7 +398,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         end
         object clabPId: TsLabel
           Left = 2
-          Top = 37
+          Top = 40
           Width = 103
           Height = 13
           Alignment = taRightJustify
@@ -436,7 +415,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         end
         object clabCountry: TsLabel
           Left = 2
-          Top = 137
+          Top = 155
           Width = 103
           Height = 13
           Alignment = taRightJustify
@@ -453,7 +432,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         end
         object clabAddress: TsLabel
           Left = 2
-          Top = 77
+          Top = 86
           Width = 103
           Height = 13
           Alignment = taRightJustify
@@ -470,7 +449,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         end
         object cLabName: TsLabel
           Left = 2
-          Top = 57
+          Top = 63
           Width = 103
           Height = 13
           Alignment = taRightJustify
@@ -489,7 +468,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
           Left = 368
           Top = 10
           Width = 189
-          Height = 151
+          Height = 165
           Caption = 'Invoice header method'
           ParentBackground = False
           TabOrder = 0
@@ -508,9 +487,8 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
           Left = 111
           Top = 14
           Width = 93
-          Height = 17
+          Height = 21
           AutoSize = False
-          BorderStyle = bsNone
           Color = clWhite
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
@@ -531,11 +509,10 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         end
         object edtPersonalId: TsEdit
           Left = 111
-          Top = 34
+          Top = 37
           Width = 253
-          Height = 17
+          Height = 21
           AutoSize = False
-          BorderStyle = bsNone
           Color = clWhite
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
@@ -544,6 +521,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
           Font.Style = []
           MaxLength = 15
           ParentFont = False
+          ReadOnly = True
           TabOrder = 2
           OnChange = edtPersonalIdChange
           OnDblClick = edtCustomerDblClick
@@ -556,11 +534,10 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         end
         object edtName: TsEdit
           Left = 111
-          Top = 54
+          Top = 60
           Width = 253
-          Height = 17
+          Height = 21
           AutoSize = False
-          BorderStyle = bsNone
           Color = clWhite
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
@@ -579,11 +556,10 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         end
         object edtAddress1: TsEdit
           Left = 111
-          Top = 74
+          Top = 83
           Width = 253
-          Height = 17
+          Height = 21
           AutoSize = False
-          BorderStyle = bsNone
           Color = clWhite
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
@@ -602,11 +578,10 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         end
         object edtAddress2: TsEdit
           Left = 111
-          Top = 94
+          Top = 106
           Width = 253
-          Height = 17
+          Height = 21
           AutoSize = False
-          BorderStyle = bsNone
           Color = clWhite
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
@@ -625,11 +600,10 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         end
         object edtAddress3: TsEdit
           Left = 111
-          Top = 114
+          Top = 129
           Width = 253
-          Height = 17
+          Height = 21
           AutoSize = False
-          BorderStyle = bsNone
           Color = clWhite
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
@@ -648,11 +622,10 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         end
         object edtAddress4: TsEdit
           Left = 111
-          Top = 134
+          Top = 152
           Width = 253
-          Height = 17
+          Height = 21
           AutoSize = False
-          BorderStyle = bsNone
           Color = clWhite
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
@@ -673,7 +646,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
           Left = 237
           Top = 14
           Width = 126
-          Height = 17
+          Height = 21
           Caption = 'Clear addresses'
           TabOrder = 8
           OnClick = btnClearAddressesClick
@@ -683,7 +656,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
           Left = 206
           Top = 14
           Width = 27
-          Height = 17
+          Height = 21
           Caption = '...'
           TabOrder = 9
           OnClick = edtCustomerDblClick
@@ -693,15 +666,17 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
     end
     object pnlLnes: TsPanel
       Left = 0
-      Top = 188
+      Top = 185
       Width = 1096
-      Height = 474
+      Height = 477
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
+      ExplicitTop = 188
+      ExplicitHeight = 474
       object pnlTotalsAndPayments: TsPanel
         Left = 0
-        Top = 322
+        Top = 325
         Width = 1096
         Height = 152
         Align = alBottom
@@ -709,6 +684,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         ParentColor = True
         TabOrder = 0
         SkinData.SkinSection = 'PANEL'
+        ExplicitTop = 322
         object memExtraText: TMemo
           Left = 1
           Top = 1
@@ -970,20 +946,6 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
               Font.Name = 'Tahoma'
               Font.Style = [fsBold]
             end
-            object ClabLodgingTaxCurrency: TsLabel
-              Left = 77
-              Top = 16
-              Width = 19
-              Height = 13
-              Alignment = taRightJustify
-              Caption = 'ISK'
-              ParentFont = False
-              Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
-              Font.Height = -11
-              Font.Name = 'Tahoma'
-              Font.Style = [fsBold]
-            end
           end
         end
         object TsPanel
@@ -1089,12 +1051,14 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
           Height = 89
           Align = alLeft
           TabOrder = 0
+          ExplicitTop = -1
           object btnRoomToTemp: TsButton
-            Left = 3
-            Top = 45
+            Left = 1
+            Top = 43
             Width = 130
             Height = 40
             Action = actRRtoTemp
+            Enabled = False
             TabOrder = 0
             SkinData.SkinSection = 'BUTTON'
           end
@@ -1139,10 +1103,11 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
           TabOrder = 1
           object btnItemToTmp: TsButton
             Left = 6
-            Top = 45
+            Top = 43
             Width = 130
             Height = 40
             Action = actItemToTemp
+            Enabled = False
             TabOrder = 0
             SkinData.SkinSection = 'BUTTON'
           end
@@ -1204,8 +1169,6 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
               Align = alRight
               TabOrder = 0
               SkinData.SkinSection = 'BUTTON'
-              ExplicitLeft = 2
-              ExplicitTop = -2
             end
             object btnEditDownPayment: TsButton
               Left = 131
@@ -1264,7 +1227,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         Left = 0
         Top = 89
         Width = 1040
-        Height = 233
+        Height = 236
         Align = alClient
         BevelOuter = bvNone
         Caption = 'pnlLinesGrid'
@@ -1274,11 +1237,12 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         Padding.Bottom = 5
         TabOrder = 2
         SkinData.SkinSection = 'PANEL'
+        ExplicitHeight = 233
         object agrLines: TAdvStringGrid
           Left = 10
           Top = 5
           Width = 1020
-          Height = 223
+          Height = 226
           Cursor = crDefault
           Align = alClient
           BevelInner = bvNone
@@ -1408,6 +1372,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
           SelectionTextColor = clHighlightText
           SortSettings.DefaultFormat = ssAutomatic
           Version = '8.2.4.1'
+          ExplicitLeft = 17
           ColWidths = (
             24
             28
@@ -1432,9 +1397,10 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         Left = 1043
         Top = 92
         Width = 50
-        Height = 227
+        Height = 230
         Align = alRight
         TabOrder = 1
+        ExplicitHeight = 227
         object pnlInvoiceIndex0: TsPanel
           Left = 3
           Top = 4
