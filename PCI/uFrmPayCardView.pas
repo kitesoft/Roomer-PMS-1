@@ -5,12 +5,13 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.OleCtrls, SHDocVw, acWebBrowser, Vcl.ExtCtrls, sPanel,
-  uRoomerForm;
+  uRoomerForm, cxGridTableView, cxStyles, dxPScxCommon, dxPScxGridLnk, cxClasses, cxPropertiesStore, Vcl.ComCtrls,
+  sStatusBar;
 
 type
   TFrmPayCardView = class(TfrmBaseRoomerForm)
-    sPanel1: TsPanel;
-    sPanel2: TsPanel;
+    pnlHead: TsPanel;
+    pnlClient: TsPanel;
     browser: TsWebBrowser;
     procedure FormShow(Sender: TObject);
   private
@@ -20,9 +21,10 @@ type
     FReservation: Integer;
     procedure SetHotelId(const Value: String);
     procedure SetUserName(const Value: String);
-    procedure GetToken;
     procedure SetReservation(const Value: Integer);
     procedure GoToUri(uri: String);
+  protected
+    procedure DoLoadData; override;
   public
     { Public declarations }
     property UserName : String read FUsername write SetUserName;
@@ -31,9 +33,6 @@ type
   end;
 
 procedure ShowPayCardInformation(Reservation : Integer);
-
-var
-  FrmPayCardView: TFrmPayCardView;
 
 implementation
 
@@ -73,7 +72,7 @@ end;
 procedure TFrmPayCardView.FormShow(Sender: TObject);
 begin
   inherited;
-  GetToken;
+  RefreshData;
 end;
 
 procedure TFrmPayCardView.GoToUri(uri : String);
@@ -84,13 +83,14 @@ begin
 end;
 
 
-procedure TFrmPayCardView.GetToken;
+procedure TFrmPayCardView.DoLoadData;
 var uri : String;
     iFrameUri : String;
 begin
+  inherited;
   uri := d.roomerMainDataSet.RoomerUri + format('resapi/bookings/%d/paycarddisplayuri', [FReservation]);
 
-// Get Token via webservice
+  // Get Token via webservice
   iFrameUri := d.roomerMainDataSet.downloadUrlAsString(uri);
   GoToUri(iFrameUri);
 end;
