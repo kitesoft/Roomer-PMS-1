@@ -693,7 +693,7 @@ type
     gbxInvoiceBeta: TsGroupBox;
     cbxObjectsInvoice: TsCheckBox;
     gbxReservationProfileFunctionality: TsGroupBox;
-    cbxChangeNationality: TsCheckBox;
+    chkChangeNationality: TsCheckBox;
     cbxPreArrivalEnabled: TsCheckBox;
     lblPreArrival: TsLabel;
     cbxPostDepartureEnabled: TsCheckBox;
@@ -729,6 +729,7 @@ type
     chkCallLogInternal: TsCheckBox;
     cbxCallType: TsComboBox;
     edCallMinSec: TsSpinEdit;
+    chkAllowAllotmentStateChange: TsCheckBox;
     procedure FormCreate(Sender : TObject);
     procedure FormClose(Sender : TObject; var Action : TCloseAction);
     procedure FormShow(Sender : TObject);
@@ -1602,7 +1603,9 @@ g.ReadWriteSettingsToRegistry(0);
     edWinterStartsday.MaxValue := iTmp;
     edWinterStartsday.Value := WinterStartsDay;
 
-    cbxChangeNationality.Checked := glb.PMSSettings.ReservationProfileSettings.EditAllGuestsNationality;
+    chkChangeNationality.Checked := glb.PMSSettings.ReservationProfileSettings.EditAllGuestsNationality;
+    chkAllowAllotmentStateChange.Checked := glb.PMSSettings.ReservationProfileSettings.AllowAllotmentStateChange;
+
     cbxShowRoomAsPaidWhenZero.Checked := glb.PMSSettings.InvoiceSettings.ShowInvoiceAsPaidWhenStatusIsZero;
 
     cbxPreArrivalEnabled.Checked := FHotelServicesSettings.LifeCycleMailerSettings.PreArrivalMailSetttings.PreArrivalMailerEnabled;
@@ -2253,7 +2256,9 @@ begin
       g.qReportPrinter := cbxReportPrinter.Items[idx];
     end;
 
-    glb.PMSSettings.ReservationProfileSettings.EditAllGuestsNationality := cbxChangeNationality.Checked;
+    glb.PMSSettings.ReservationProfileSettings.EditAllGuestsNationality := chkChangeNationality.Checked;
+    glb.PMSSettings.ReservationProfileSettings.AllowAllotmentStateChange := chkAllowAllotmentStateChange.Checked;
+
     glb.PMSSettings.InvoiceSettings.ShowInvoiceAsPaidWhenStatusIsZero := cbxShowRoomAsPaidWhenZero.Checked;
 
     if glb.PMSSettings.BetaFunctionality.BetaFunctionsAvailable then

@@ -154,7 +154,7 @@ uses
     PrjConst
   , SysUtils
   , uG
-  , uUtils;
+  , uUtils, uAppGlobal;
 
 
 function TReservationStateHelper.AsStatusAttribute: recStatusAttr;
@@ -204,11 +204,19 @@ begin
   if Result then
     case Self of
       rsUnknown:            Result := aNewState in [rsReservation, rsGuests, rsOptionalBooking, rsAllotment, rsNoShow, rsBlocked, rsCancelled, rsWaitingList];
-      rsReservation:        Result := aNewState in [rsGuests, rsOptionalBooking, rsNoShow, rsBlocked, rsCancelled, rsWaitingList];
+      rsReservation:        begin
+                              Result := aNewState in [rsGuests, rsOptionalBooking, rsNoShow, rsBlocked, rsCancelled, rsWaitingList];
+                              if glb.PMSSettings.ReservationProfileSettings.AllowAllotmentStateChange then
+                                Result := Result or (aNewState = rsAllotment);
+                            end;
       rsGuests:             Result := aNewState in [rsReservation, rsDeparted];
       rsDeparted:           Result := aNewState in [rsGuests];
       rsOptionalBooking:    Result := aNewState in [rsReservation, rsGuests, rsNoShow, rsBlocked, rsCancelled, rsWaitingList];
-      rsAllotment:          Result := aNewState in [rsCancelled];
+      rsAllotment:          begin
+                              Result := aNewState in [rsCancelled];
+                              if glb.PMSSettings.ReservationProfileSettings.AllowAllotmentStateChange then
+                                Result := Result or (aNewState = rsReservation);
+                            end;
       rsNoShow:             Result := aNewState in [rsReservation, rsCancelled];
       rsBlocked:            Result := aNewState in [rsReservation, rsOptionalBooking, rsBlocked, rsWaitingList];
       rsCancelled:          Result := aNewState in [rsReservation, rsAllotment];

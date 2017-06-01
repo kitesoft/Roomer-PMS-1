@@ -90,10 +90,13 @@ type
   private const
     cReservationProfileGroup = 'RESERVATIONPROFILE_FUNCTIONS';
     cAllGuestsNationality = 'EDIT_ALLGUESTS_NATIONALITY';
+    cAllowAllotmentStateChange = 'ALLOW_ALLOTMENT_STATECHANGE';
 
   private
     function GetEditAllGuestsNationality: boolean;
     procedure SetEditAllGuestsNationality(const Value: boolean);
+    function GetAllowAllotmentStateChange: boolean;
+    procedure SetAllowAllotmentStateChange(const Value: boolean);
   protected
     function GetKeyGroup: string; override;
   public
@@ -101,6 +104,10 @@ type
     ///   If true then the reservation profile window contains function to change nationality of all guests
     /// </summary>
     property EditAllGuestsNationality: boolean read GetEditAllGuestsNationality write SetEditAllGuestsNationality;
+    /// <summary>
+    ///   If true then roomreservations with stsate Allotment can be changed into Reservation and back
+    /// </summary>
+    property AllowAllotmentStateChange: boolean read GetAllowAllotmentStateChange write SetAllowAllotmentStateChange;
   end;
 
   TPMSSettingsBetaFunctionality = class(TPMSSettingsGroup)
@@ -356,6 +363,11 @@ end;
 
 { TPMSsettingsReservationProfile }
 
+function TPMSSettingsReservationProfile.GetAllowAllotmentStateChange: boolean;
+begin
+  Result :=  GetSettingsAsBoolean(cAllowAllotmentStateChange, False);
+end;
+
 function TPMSsettingsReservationProfile.GetEditAllGuestsNationality: boolean;
 begin
   Result := GetSettingsAsBoolean(cAllGuestsNationality, False);
@@ -364,6 +376,11 @@ end;
 function TPMSsettingsReservationProfile.GetKeyGroup: string;
 begin
   Result := cReservationProfileGroup;
+end;
+
+procedure TPMSSettingsReservationProfile.SetAllowAllotmentStateChange(const Value: boolean);
+begin
+  SaveSetting(cAllowAllotmentStateChange, Value);
 end;
 
 procedure TPMSsettingsReservationProfile.SetEditAllGuestsNationality(const Value: boolean);
