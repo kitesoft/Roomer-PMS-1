@@ -2892,7 +2892,7 @@ begin
 
   btnShowHideStatClick(nil);
   btnShowHideHintClick(nil);
-  btnHideCancelledBookingsClick(nil);
+//  btnHideCancelledBookingsClick(nil);
 
   dxRibbon1.ActiveTab := rbTabHome;
 
@@ -3182,44 +3182,43 @@ begin
       RestoreCurrentFont
     except
     end;
-    panelHide.Hide;
 
     TSplashFormManager.UpdateProgress('Refreshing main grid...');
     RefreshOneDayGrid;
+    panelHide.Hide;
 
+    ViewMode := vmNone;
     tabsView.TabIndex := glb.PMSSettings.PMSSpecificSettings.UserHomePage - 1;
-    case tabsView.TabIndex of
-      0 : begin
-            pageMainGrids.ActivePage := tabOneDayView;
-            ViewMode := vmOneDay;
-          end;
-      1 : begin
-            pageMainGrids.ActivePage := tabPeriod;
-            ViewMode := vmPeriod;
-          end;
-      2 : begin
-            pageMainGrids.ActivePage := tabGuestList;
-            ViewMode := vmGuestList;
-          end;
-      3 : begin
-            pageMainGrids.ActivePage := tabDashboard;
-            ViewMode := vmDashboard;
-          end;
-      4 : begin
-            pageMainGrids.ActivePage := tabRateQuery;
-            ViewMode := vmRateQuery;
-          end;
-      5 : begin
-            pageMainGrids.ActivePage := tabFrontDesk;
-            ViewMode := vmFrontDesk;
-          end;
-    end;
+//    case tabsView.TabIndex of
+//      0 : begin
+//            pageMainGrids.ActivePage := tabOneDayView;
+//            ViewMode := vmOneDay;
+//          end;
+//      1 : begin
+//            pageMainGrids.ActivePage := tabPeriod;
+//            ViewMode := vmPeriod;
+//          end;
+//      2 : begin
+//            pageMainGrids.ActivePage := tabGuestList;
+//            ViewMode := vmGuestList;
+//          end;
+//      3 : begin
+//            pageMainGrids.ActivePage := tabDashboard;
+//            ViewMode := vmDashboard;
+//          end;
+//      4 : begin
+//            pageMainGrids.ActivePage := tabRateQuery;
+//            ViewMode := vmRateQuery;
+//          end;
+//      5 : begin
+//            pageMainGrids.ActivePage := tabFrontDesk;
+//            ViewMode := vmFrontDesk;
+//          end;
+//    end;
 
-    if tabsView.TabIndex > 0 then
-    begin
-      TSplashFormManager.UpdateProgress('Activating PMS entry page...');
-      tabsViewChange(tabsView);
-    end;
+    FDayViewSizesRead := False;
+    TSplashFormManager.UpdateProgress('Activating PMS entry page...');
+    tabsViewChange(tabsView);
 
     cbxNameOrder.ItemIndex := g.qNameOrder;
     grOneDayRooms.DefaultRowHeight := g.qOneDayRowHeight;

@@ -55,6 +55,7 @@ object frmMain: TfrmMain
     SunkenBorder = True
     UseOwnColor = True
     UseOwnSunkenBorder = True
+    ExplicitTop = 122
   end
   object panMain: TsPanel
     Left = 0
@@ -115,7 +116,7 @@ object frmMain: TfrmMain
         Top = 1
         Width = 1022
         Height = 302
-        ActivePage = tabFrontDesk
+        ActivePage = tabOneDayView
         Align = alClient
         TabOrder = 1
         OnChange = pageMainGridsChange
