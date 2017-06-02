@@ -15,7 +15,7 @@ uses
   cxDrawTextUtils, dxPSPrVwStd, dxPSPrVwAdv, dxPSPrVwRibbon, dxPScxPageControlProducer, dxPScxGridLnk,
   dxPScxGridLayoutViewLnk, dxPScxEditorProducers, dxPScxExtEditorProducers, dxSkinsdxBarPainter, dxSkinsdxRibbonPainter,
   dxPScxCommon, dxPSCore, dxStatusBar
-  , uCurrencyHandler, AdvSmoothProgressBar, Vcl.ComCtrls, sStatusBar, cxTextEdit  ;
+  , uCurrencyHandler, AdvSmoothProgressBar, Vcl.ComCtrls, sStatusBar, cxTextEdit, sEdit, Vcl.Buttons, sSpeedButton  ;
 
 type
   TfrmArrivalsReport = class(TfrmBaseRoomerForm)
@@ -88,6 +88,11 @@ type
     cxStyle13: TcxStyle;
     cxStyle14: TcxStyle;
     dxGridReportLinkStyleSheet1: TdxGridReportLinkStyleSheet;
+    sPanel1: TsPanel;
+    cLabFilter: TsLabel;
+    btnClear: TsSpeedButton;
+    edFilter: TsEdit;
+    timFilter: TTimer;
     procedure rbRadioButtonClick(Sender: TObject);
     procedure btnExcelClick(Sender: TObject);
     procedure btnRefreshClick(Sender: TObject);
@@ -105,6 +110,9 @@ type
     procedure btnReportClick(Sender: TObject);
     procedure grArrivalsListDBTableView1AverageRoomRateGetProperties(Sender: TcxCustomGridTableItem;
       ARecord: TcxCustomGridRecord; var AProperties: TcxCustomEditProperties);
+    procedure timFilterTimer(Sender: TObject);
+    procedure btnClearClick(Sender: TObject);
+    procedure edFilterChange(Sender: TObject);
   private
     FRefreshingdata: boolean;
     FCurrencyhandler: TCurrencyHandler;
@@ -148,7 +156,10 @@ uses
   , uInvoice
   , uReservationProfile
   , uRptbViewer
-  , uReservationStateChangeHandler, uReservationStateDefinitions;
+  , uReservationStateChangeHandler
+  , uReservationStateDefinitions
+  , uDataSetFilterUtils
+  ;
 
 const
   cSQL = 'SELECT '#10 +
@@ -218,6 +229,11 @@ begin
     lStateChangeHandler.Free;
   end;
 
+end;
+
+procedure TfrmArrivalsReport.btnClearClick(Sender: TObject);
+begin
+  edFilter.Text := '';
 end;
 
 procedure TfrmArrivalsReport.btnExcelClick(Sender: TObject);
@@ -295,6 +311,17 @@ procedure TfrmArrivalsReport.dtDateToCloseUp(Sender: TObject);
 begin
  if dtDateFrom.Date > dtDateTo.Date then
    dtDateFrom.Date := dtDateTo.Date;
+end;
+
+procedure TfrmArrivalsReport.edFilterChange(Sender: TObject);
+begin
+  if edFilter.Text = '' then
+  begin
+    StopFilter(kbmArrivalsList, timFilter, grArrivalsListDBTableView1);
+  end else
+  begin
+    applyFilter(kbmArrivalsList, edFilter.Text, timFilter, grArrivalsListDBTableView1);
+  end;
 end;
 
 procedure TfrmArrivalsReport.mnuGroupInvoiceClick(Sender: TObject);
@@ -382,6 +409,13 @@ procedure TfrmArrivalsReport.SetManualDates(aFrom, aTo: TDate);
 begin
   dtDateFrom.Date := aFrom;
   dtDateTo.Date := aTo;
+end;
+
+procedure TfrmArrivalsReport.timFilterTimer(Sender: TObject);
+begin
+  timFilter.Enabled := False;
+  kbmArrivalsList.filtered := True;
+  grArrivalsListDBTableView1.DataController.Filter.Refresh;
 end;
 
 procedure TfrmArrivalsReport.DoUpdateControls;

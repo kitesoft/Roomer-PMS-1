@@ -55,7 +55,6 @@ object frmMain: TfrmMain
     SunkenBorder = True
     UseOwnColor = True
     UseOwnSunkenBorder = True
-    ExplicitTop = 122
   end
   object panMain: TsPanel
     Left = 0
@@ -2668,7 +2667,6 @@ object frmMain: TfrmMain
       Index = 0
     end
     object rbTabReservation: TdxRibbonTab
-      Active = True
       Caption = 'Reservation'
       Groups = <
         item
@@ -2755,6 +2753,7 @@ object frmMain: TfrmMain
       Index = 4
     end
     object System: TdxRibbonTab
+      Active = True
       Caption = 'System'
       Groups = <
         item
@@ -2780,6 +2779,8 @@ object frmMain: TfrmMain
         end
         item
           ToolbarName = 'barinnBar9'
+        end
+        item
         end>
       Index = 5
     end
@@ -5587,6 +5588,22 @@ object frmMain: TfrmMain
       Visible = ivAlways
       LargeImageIndex = 62
       OnClick = btnResStatusPerdDayClick
+    end
+    object dxBarSubItem8: TdxBarSubItem
+      Caption = 'New SubItem'
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <>
+    end
+    object dxBarSubItem9: TdxBarSubItem
+      Caption = 'New SubItem'
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <>
+    end
+    object dxRibbonQuickAccessGroupButton1: TdxRibbonQuickAccessGroupButton
+      Category = 0
+      Visible = ivAlways
     end
     object mmnuFile: TdxBarSubItem
       Caption = '&File'
@@ -8801,6 +8818,11 @@ object frmMain: TfrmMain
         Component = sSkinManager1
         Properties.Strings = (
           'SkinName')
+      end
+      item
+        Component = tabsView
+        Properties.Strings = (
+          'TabIndex')
       end>
     StorageName = 'Software\Roomer\FormStatus\StoreMainV2'
     StorageType = stRegistry

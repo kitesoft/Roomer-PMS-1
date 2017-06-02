@@ -15,7 +15,7 @@ uses
   cxDrawTextUtils, dxPSPrVwStd, dxPSPrVwAdv, dxPSPrVwRibbon, dxPScxPageControlProducer, dxPScxGridLnk,
   dxPScxGridLayoutViewLnk, dxPScxEditorProducers, dxPScxExtEditorProducers, dxSkinsdxBarPainter, dxSkinsdxRibbonPainter,
   dxPScxCommon, dxPSCore, dxStatusBar
-  , uCurrencyHandler, AdvSmoothProgressBar, Vcl.ComCtrls, sStatusBar, cxTextEdit  ;
+  , uCurrencyHandler, AdvSmoothProgressBar, Vcl.ComCtrls, sStatusBar, cxTextEdit, Vcl.Buttons, sSpeedButton, sEdit  ;
 
 type
   TfrmInHouseReport = class(TfrmBaseRoomerForm)
@@ -82,6 +82,11 @@ type
     cxStyle14: TcxStyle;
     dxGridReportLinkStyleSheet1: TdxGridReportLinkStyleSheet;
     btnCheckOut: TsButton;
+    sPanel1: TsPanel;
+    cLabFilter: TsLabel;
+    edFilter: TsEdit;
+    btnClear: TsSpeedButton;
+    timFilter: TTimer;
     procedure rbRadioButtonClick(Sender: TObject);
     procedure btnExcelClick(Sender: TObject);
     procedure btnRefreshClick(Sender: TObject);
@@ -97,6 +102,9 @@ type
     procedure grInHouseListDBTableView1AverageRoomRateGetProperties(Sender: TcxCustomGridTableItem;
       ARecord: TcxCustomGridRecord; var AProperties: TcxCustomEditProperties);
     procedure btnCheckOutClick(Sender: TObject);
+    procedure btnClearClick(Sender: TObject);
+    procedure timFilterTimer(Sender: TObject);
+    procedure edFilterChange(Sender: TObject);
   private
     FRefreshingdata: boolean;
     FCurrencyhandler: TCurrencyHandler;
@@ -139,10 +147,13 @@ uses
   , uInvoice
   , uReservationProfile
   , uRptbViewer
-  , uReservationStateChangeHandler, uReservationStateDefinitions;
+  , uReservationStateChangeHandler
+  , uReservationStateDefinitions
+  , uDataSetFilterUtils
+  ;
 
 const
-  cSQL = 'SELECT '#10 +
+  cSQL = 'SELECT DISTINCT '#10 +
           '  co.CompanyID, '#10 +
           '  rd.Room, '#10 +
           '  rd.RoomType, '#10 +
@@ -194,6 +205,23 @@ begin
        Refreshdata;
   finally
     lStateChangeHandler.Free;
+  end;
+end;
+
+procedure TfrmInHouseReport.btnClearClick(Sender: TObject);
+begin
+  edFilter.Text := '';
+end;
+
+
+procedure TfrmInHouseReport.edFilterChange(Sender: TObject);
+begin
+  if edFilter.Text = '' then
+  begin
+    StopFilter(kbmInHouseList, timFilter, grInHouseListDBTableView1);
+  end else
+  begin
+    applyFilter(kbmInHouseList, edFilter.Text, timFilter, grInHouseListDBTableView1);
   end;
 end;
 
@@ -293,6 +321,13 @@ end;
 procedure TfrmInHouseReport.rbRadioButtonClick(Sender: TObject);
 begin
   UpdateControls;
+end;
+
+procedure TfrmInHouseReport.timFilterTimer(Sender: TObject);
+begin
+  timFilter.Enabled := False;
+  kbmInHouseList.filtered := True;
+  grInHouseListDBTableView1.DataController.Filter.Refresh;
 end;
 
 procedure TfrmInHouseReport.DoLoadData;

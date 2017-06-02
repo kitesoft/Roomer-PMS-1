@@ -20,15 +20,7 @@ uses
   sLabel,
   dxGDIPlusClasses,
   System.Classes,
-  IdContext,
-  IdSocketHandle,
-  IdThread,
-  IdBaseComponent,
-  IdComponent,
-  IdCustomTCPServer,
-  IdCustomHTTPServer,
-  IdHTTPServer,
-  URIParser, Vcl.Menus, sMemo;
+  URIParser, Vcl.Menus, sMemo, OverbyteIcsWndControl, OverbyteIcsHttpSrv;
 
 type
   TfrmUpgradeDaemon = class(TForm)
@@ -37,7 +29,6 @@ type
     sProgressBar1: TsProgressBar;
     lblDownloaded: TsLabel;
     lblURL: TsLabel;
-    httpServer: TIdHTTPServer;
     timeUpgradeCheck: TTimer;
     timPerformRequest: TTimer;
     PopupMenu1: TPopupMenu;
@@ -47,26 +38,26 @@ type
     TrayIcon1: TTrayIcon;
     logs: TsMemo;
     C1: TMenuItem;
+    HttpServer: THttpServer;
     procedure FormCreate(Sender: TObject);
-    procedure httpServerCommandGet(AContext: TIdContext; ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
     procedure timPerformRequestTimer(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure E1Click(Sender: TObject);
     procedure S1Click(Sender: TObject);
     procedure timeUpgradeCheckTimer(Sender: TObject);
     procedure C1Click(Sender: TObject);
-    procedure httpServerException(AContext: TIdContext; AException: Exception);
     procedure timCloseTimer(Sender: TObject);
-    procedure httpServerBeforeBind(AHandle: TIdSocketHandle);
-    procedure httpServerAfterBind(Sender: TObject);
-    procedure httpServerBeforeListenerRun(AThread: TIdThread);
-    procedure httpServerConnect(AContext: TIdContext);
-    procedure httpServerDisconnect(AContext: TIdContext);
+    procedure HttpServerGetDocument(Sender, Client: TObject; var Flags: THttpGetFlag);
+    procedure HttpServerClientConnect(Sender, Client: TObject; Error: Word);
+    procedure HttpServerClientDisconnect(Sender, Client: TObject; Error: Word);
+    procedure HttpServerServerStarted(Sender: TObject);
+    procedure HttpServerServerStopped(Sender: TObject);
   private
     httpCLient: TRoomerHttpClient;
     activeSince : TDateTime;
     URIProcessor : TURIProcessor;
     FDownloadActive: Boolean;
+    FCountRequests : Integer;
     procedure StartLabel(Label_: TsLabel);
     procedure EndLabel(Label_: TsLabel);
     function DownloadFile(const Url, filename: String): Boolean;
@@ -131,6 +122,7 @@ end;
 procedure TfrmUpgradeDaemon.FormCreate(Sender: TObject);
 begin
   logs.Lines.Clear;
+  FCountRequests := 0;
   FDownloadActive := False;
   URIProcessor := TURIProcessor.Create;
   httpCLient := TRoomerHttpClient.Create(Self);
@@ -141,13 +133,13 @@ begin
     SendTimeout := 900;
     ReceiveTimeout := 900;
     OnDownloadProgress := DownloadProgress;
-    InternetOptions := [wHttpIo_Ignore_cert_cn_invalid, wHttpIo_Ignore_cert_date_invalid, wHttpIo_Keep_connection,
+    InternetOptions := [wHttpIo_Async, wHttpIo_Ignore_cert_cn_invalid, wHttpIo_Ignore_cert_date_invalid, wHttpIo_Keep_connection,
       wHttpIo_Need_file, wHttpIo_No_cache_write, wHttpIo_Pragma_nocache, wHttpIo_Reload];
   end;
 
   activeSince := Now;
   try
-    httpServer.Active := True;
+    HttpServer.Start;
   except
     timClose.Enabled := True;
   end;
@@ -158,44 +150,42 @@ begin
   URIProcessor.Free;
 end;
 
-procedure TfrmUpgradeDaemon.AddLog(logText : String);
-var logTime : String;
-  i: Integer;
+procedure TfrmUpgradeDaemon.HttpServerClientConnect(Sender, Client: TObject; Error: Word);
 begin
-  logTime := DateTimeToStr(now) + ' | ';
-  logs.Lines.Insert(0, logTime + logText);
-  for i := 5000 to logs.Lines.Count - 1 do
-   logs.Lines.Delete(i);
+  AddLog('HTTP client connected.');
 end;
 
-procedure TfrmUpgradeDaemon.httpServerAfterBind(Sender: TObject);
+procedure TfrmUpgradeDaemon.HttpServerClientDisconnect(Sender, Client: TObject; Error: Word);
 begin
-  AddLog('Port ' + inttostr(HttpServer.DefaultPort) + ' bound to HTTP service.');
+  AddLog('HTTP client disconnected.');
 end;
 
-procedure TfrmUpgradeDaemon.httpServerBeforeBind(AHandle: TIdSocketHandle);
+procedure TfrmUpgradeDaemon.HttpServerGetDocument(Sender, Client: TObject; var Flags: THttpGetFlag);
+var ClientCnx  : THttpConnection;
+    AnswerString : String;
 begin
-  AddLog('Binding port ' + inttostr(AHandle.Port) + ' to HTTP service...');
-end;
+  if Flags = hg401 then
+      Exit;
+  { It's easyer to do the cast one time. Could use with clause... }
+  ClientCnx := THttpConnection(Client);
+  { Count request and display a message }
+  InterlockedIncrement(FCountRequests);
+  AddLog('[' + FormatDateTime('HH:NN:SS', Now) + ' ' +
+          ClientCnx.GetPeerAddr + '] ' + IntToStr(FCountRequests) +
+          ': ' + ClientCnx.Version + ' GET ' + ClientCnx.Path);
 
-procedure TfrmUpgradeDaemon.httpServerBeforeListenerRun(AThread: TIdThread);
-begin
-  AddLog('Activating HTTP service listener.');
-end;
 
-procedure TfrmUpgradeDaemon.httpServerCommandGet(AContext: TIdContext; ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
-begin
   try
-    AddLog('Received URI: ' + ARequestInfo.URI);
+    AddLog('Received URI: ' + ClientCnx.Path);
     if FDownloadActive then
-      AResponseInfo.ContentText := 'BUSY'
+      AnswerString := 'BUSY'
     else begin
       FDownloadActive := True;
       try
-        if URIProcessor.Process(ARequestInfo.URI) then
+        if URIProcessor.Process(ClientCnx.Path) then
         begin
           timPerformRequest.Enabled := False;
-          AResponseInfo.ContentText := URIProcessor.ProcessResult;
+          AnswerString := URIProcessor.ProcessResult;
           timPerformRequest.Interval := 200;
           timPerformRequest.Tag := ORD(URIProcessor.ActionType);
           timPerformRequest.Enabled := True;
@@ -205,30 +195,35 @@ begin
         FDownloadActive := False;
       end;
     end;
-    AddLog('Returning to caller with: ' + AResponseInfo.ContentText);
   except
     ON e: Exception do
     begin
       AddLog('Error: ' + e.Message);
-      AResponseInfo.ContentText := 'ERROR';
+      AnswerString := 'ERROR';
     end;
   end;
+  AddLog('Returning to caller with: ' + AnswerString);
+  ClientCnx.AnswerString(Flags, '', '', '', AnswerString);
 end;
 
-procedure TfrmUpgradeDaemon.httpServerConnect(AContext: TIdContext);
+procedure TfrmUpgradeDaemon.HttpServerServerStarted(Sender: TObject);
 begin
-  AddLog('HTTP service Connected.');
+  AddLog('HTTP service started.');
 end;
 
-procedure TfrmUpgradeDaemon.httpServerDisconnect(AContext: TIdContext);
+procedure TfrmUpgradeDaemon.HttpServerServerStopped(Sender: TObject);
 begin
-  AddLog('HTTP service Disconnected.');
+  AddLog('HTTP service stopped.');
 end;
 
-procedure TfrmUpgradeDaemon.httpServerException(AContext: TIdContext; AException: Exception);
+procedure TfrmUpgradeDaemon.AddLog(logText : String);
+var logTime : String;
+  i: Integer;
 begin
-  if NOT httpServer.Active then
-    Close;
+  logTime := DateTimeToStr(now) + ' | ';
+  logs.Lines.Insert(0, logTime + logText);
+  for i := 5000 to logs.Lines.Count - 1 do
+   logs.Lines.Delete(i);
 end;
 
 procedure TfrmUpgradeDaemon.S1Click(Sender: TObject);
@@ -603,6 +598,7 @@ begin
                 URIProcessor.FUpgradeFileManager.NewUpgrade(tempFileEXE, URIProcessor.FileExeName, timeStamp, ttl, serverMD5, aVersion)
               else
                 AddLog('Error: Downloaded MD5 "' + MD5OfDownloadedFile + '" differs from MD5 provided from server, "' + serverMD5 + '"');
+                URIProcessor.ClearLocalUpgradeInformation;
             end;
           finally
             if FileExists(tempFileEXE) then

@@ -12,7 +12,7 @@ inherited frmInHouseReport: TfrmInHouseReport
     Left = 0
     Top = 0
     Width = 1123
-    Height = 78
+    Height = 99
     Align = alTop
     TabOrder = 0
     SkinData.SkinSection = 'PANEL'
@@ -31,9 +31,9 @@ inherited frmInHouseReport: TfrmInHouseReport
     end
     object pnlExportButtons: TsPanel
       Left = 1
-      Top = 34
+      Top = 32
       Width = 1121
-      Height = 43
+      Height = 66
       Align = alBottom
       BevelOuter = bvNone
       TabOrder = 1
@@ -43,7 +43,7 @@ inherited frmInHouseReport: TfrmInHouseReport
         Left = 3
         Top = 3
         Width = 128
-        Height = 37
+        Height = 29
         Align = alLeft
         Caption = 'Excel'
         ImageIndex = 115
@@ -51,13 +51,14 @@ inherited frmInHouseReport: TfrmInHouseReport
         TabOrder = 0
         OnClick = btnExcelClick
         SkinData.SkinSection = 'BUTTON'
+        ExplicitHeight = 37
       end
       object btnProfile: TsButton
         AlignWithMargins = True
         Left = 271
         Top = 3
         Width = 128
-        Height = 37
+        Height = 29
         Align = alLeft
         Caption = 'Profile'
         ImageIndex = 37
@@ -65,13 +66,14 @@ inherited frmInHouseReport: TfrmInHouseReport
         TabOrder = 1
         OnClick = btnProfileClick
         SkinData.SkinSection = 'BUTTON'
+        ExplicitHeight = 37
       end
       object btnInvoice: TsButton
         AlignWithMargins = True
         Left = 405
         Top = 3
         Width = 128
-        Height = 37
+        Height = 29
         Align = alLeft
         Caption = 'Invoice'
         DropDownMenu = pmnuInvoiceMenu
@@ -81,13 +83,14 @@ inherited frmInHouseReport: TfrmInHouseReport
         TabOrder = 2
         OnClick = mnuRoomInvoiceClick
         SkinData.SkinSection = 'BUTTON'
+        ExplicitHeight = 37
       end
       object btnReport: TsButton
         AlignWithMargins = True
         Left = 990
         Top = 3
         Width = 128
-        Height = 37
+        Height = 29
         Align = alRight
         Caption = 'Report'
         ImageIndex = 69
@@ -95,13 +98,14 @@ inherited frmInHouseReport: TfrmInHouseReport
         TabOrder = 3
         OnClick = btnReportClick
         SkinData.SkinSection = 'BUTTON'
+        ExplicitHeight = 37
       end
       object btnCheckOut: TsButton
         AlignWithMargins = True
         Left = 137
         Top = 3
         Width = 128
-        Height = 37
+        Height = 29
         Align = alLeft
         Caption = 'Check out'
         ImageIndex = 46
@@ -109,18 +113,72 @@ inherited frmInHouseReport: TfrmInHouseReport
         TabOrder = 4
         OnClick = btnCheckOutClick
         SkinData.SkinSection = 'BUTTON'
+        ExplicitHeight = 37
+      end
+      object sPanel1: TsPanel
+        Left = 0
+        Top = 35
+        Width = 1121
+        Height = 31
+        Align = alBottom
+        BevelOuter = bvNone
+        TabOrder = 5
+        ExplicitTop = 36
+        object cLabFilter: TsLabel
+          Left = 19
+          Top = 6
+          Width = 31
+          Height = 13
+          Alignment = taRightJustify
+          Caption = 'Filter :'
+          ParentFont = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+        end
+        object btnClear: TsSpeedButton
+          Left = 273
+          Top = 3
+          Width = 63
+          Height = 21
+          Caption = 'Clear'
+          OnClick = btnClearClick
+          SkinData.SkinSection = 'SPEEDBUTTON'
+          Images = DImages.PngImageList1
+          ImageIndex = 4
+        end
+        object edFilter: TsEdit
+          Left = 56
+          Top = 3
+          Width = 215
+          Height = 21
+          Color = clWhite
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 0
+          OnChange = edFilterChange
+          SkinData.SkinSection = 'EDIT'
+        end
       end
     end
   end
   object grInHouseList: TcxGrid [1]
     Left = 0
-    Top = 78
+    Top = 99
     Width = 1123
-    Height = 488
+    Height = 467
     Align = alClient
     PopupMenu = pnmuGridMenu
     TabOrder = 1
     LookAndFeel.NativeStyle = False
+    ExplicitTop = 78
+    ExplicitHeight = 488
     object grInHouseListDBTableView1: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       OnCellDblClick = grInHouseListDBTableView1CellDblClick
@@ -431,7 +489,6 @@ inherited frmInHouseReport: TfrmInHouseReport
     object grdPrinterLink1: TdxGridReportLink
       Active = True
       Component = grInHouseList
-      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -453,14 +510,13 @@ inherited frmInHouseReport: TfrmInHouseReport
       PrinterPage.ScaleMode = smFit
       PrinterPage._dxMeasurementUnits_ = 2
       PrinterPage._dxLastMU_ = 2
-      ReportDocument.CreationDate = 42886.632026168990000000
+      ReportDocument.CreationDate = 42887.509364930550000000
       ReportTitle.Font.Charset = DEFAULT_CHARSET
       ReportTitle.Font.Color = clBlack
       ReportTitle.Font.Height = -19
       ReportTitle.Font.Name = 'Arial'
       ReportTitle.Font.Style = [fsBold]
       ShrinkToPageWidth = True
-      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlack
       Font.Height = -11
@@ -612,5 +668,12 @@ inherited frmInHouseReport: TfrmInHouseReport
       Styles.Selection = cxStyle14
       BuiltIn = True
     end
+  end
+  object timFilter: TTimer
+    Enabled = False
+    Interval = 2000
+    OnTimer = timFilterTimer
+    Left = 200
+    Top = 304
   end
 end

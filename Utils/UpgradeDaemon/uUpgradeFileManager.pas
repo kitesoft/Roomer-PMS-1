@@ -37,6 +37,8 @@ type
     function UpgradeFinished : boolean;
     procedure NewUpgrade(Filename, fileExeName : String; FileTimeStamp : TDateTime; TTL_Minutes : Integer; MD5, Version : String);
     procedure Upgraded(fileExeName : String; FileTimeStamp : TDateTime; TTL_Minutes : Integer; MD5, Version : String);
+
+    procedure ClearLocalUpgradeInformation;
   end;
 
 implementation
@@ -54,6 +56,14 @@ const
   IDENT_MD5 = 'MD5';
   IDENT_VERSION = 'VERSION';
   IDENT_UPGRADED = 'UPGRADED';
+
+procedure TUpgradeFileManager.ClearLocalUpgradeInformation;
+var IniFileName : String;
+begin
+  IniFileName := TPath.Combine(RoomerNewUpgradePath, 'ROOMER_UPDATES.DAT');
+  if FileExists(IniFileName) then
+    DeleteFile(IniFileName);
+end;
 
 constructor TUpgradeFileManager.Create(BaseLocation: String);
 begin

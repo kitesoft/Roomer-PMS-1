@@ -2,7 +2,13 @@ unit uVersionManagement;
 
 interface
 
-uses Windows, Dialogs, SysUtils, vcl.ExtCtrls, idHttp, uFileDependencyManager, uRoomerLogger;
+uses Windows,
+     Dialogs,
+     SysUtils,
+     vcl.ExtCtrls,
+     uFileDependencyManager,
+     uRoomerLogger,
+     AlWinInetHttpClient;
 
 type
 
@@ -16,7 +22,7 @@ type
 
   TRoomerVersionManagement = class
   private
-    httpCLient: TIdHttp;
+    httpCLient: TAlWinInetHttpClient;
     timer : TTimer;
     initialTmer : TTimer;
     FileDependencyManager: TFileDependencymanager;
@@ -97,9 +103,9 @@ constructor TRoomerVersionManagement.Create;
 begin
   RoomerLogger := ActivateRoomerLogger(ClassName);
   lastCounter := MAX_COUNT_FOR_NOTIFICATION;
-  httpCLient := TIdHttp.Create(nil);
+  httpCLient := TAlWinInetHttpClient.Create(nil);
   httpClient.ConnectTimeout := 1000;
-  httpClient.ReadTimeout := 5000;
+//  httpClient.ReadTimeout := 5000;
   timer := TTimer.Create(nil);
   timer.Enabled := False;
   timer.OnTimer := OnTimer;
@@ -146,7 +152,12 @@ end;
 function TRoomerVersionManagement.GetFromURI(uri : String) : String;
 begin
   try
-    result := httpCLient.Get(uri);
+    httpCLient.InternetOptions := httpCLient.InternetOptions + [wHttpIo_Async];
+    try
+      Result := string(httpCLient.Get(AnsiString(uri)));
+    finally
+      httpCLient.InternetOptions := httpCLient.InternetOptions - [wHttpIo_Async];
+    end;
     RoomerLogger.AddToLog(format('%s returned %s', [uri, result]));
   except
     ON E: Exception do

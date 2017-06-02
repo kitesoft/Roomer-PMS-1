@@ -1,0 +1,192 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{71871AED-1103-419B-BE5C-76C6F6E1BAFE}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="OverbyteIcsHttpTst.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="OverbyteIcsWebServ.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="OverbyteIcsHttpPost.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="OverbyteIcsHttpMultipartDownload.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="OverbyteIcsConHttp.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="OverbyteIcsHttpAsy.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="OverbyteIcsHttpAsp.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="OverbyteIcsWebAppServer.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="OverbyteIcsHttpChk.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="OverbyteIcsHttpDmo.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="OverbyteIcsHttpGet.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="OverbyteIcsHttpPg.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="OverbyteIcsHttpThrd.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="OverbyteIcsIsapi.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="OverbyteIcsHttpTst">
+        <MSBuild Projects="OverbyteIcsHttpTst.dproj"/>
+    </Target>
+    <Target Name="OverbyteIcsHttpTst:Clean">
+        <MSBuild Projects="OverbyteIcsHttpTst.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="OverbyteIcsHttpTst:Make">
+        <MSBuild Projects="OverbyteIcsHttpTst.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="OverbyteIcsWebServ">
+        <MSBuild Projects="OverbyteIcsWebServ.dproj"/>
+    </Target>
+    <Target Name="OverbyteIcsWebServ:Clean">
+        <MSBuild Projects="OverbyteIcsWebServ.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="OverbyteIcsWebServ:Make">
+        <MSBuild Projects="OverbyteIcsWebServ.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="OverbyteIcsHttpPost">
+        <MSBuild Projects="OverbyteIcsHttpPost.dproj"/>
+    </Target>
+    <Target Name="OverbyteIcsHttpPost:Clean">
+        <MSBuild Projects="OverbyteIcsHttpPost.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="OverbyteIcsHttpPost:Make">
+        <MSBuild Projects="OverbyteIcsHttpPost.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="OverbyteIcsHttpMultipartDownload">
+        <MSBuild Projects="OverbyteIcsHttpMultipartDownload.dproj"/>
+    </Target>
+    <Target Name="OverbyteIcsHttpMultipartDownload:Clean">
+        <MSBuild Projects="OverbyteIcsHttpMultipartDownload.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="OverbyteIcsHttpMultipartDownload:Make">
+        <MSBuild Projects="OverbyteIcsHttpMultipartDownload.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="OverbyteIcsConHttp">
+        <MSBuild Projects="OverbyteIcsConHttp.dproj"/>
+    </Target>
+    <Target Name="OverbyteIcsConHttp:Clean">
+        <MSBuild Projects="OverbyteIcsConHttp.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="OverbyteIcsConHttp:Make">
+        <MSBuild Projects="OverbyteIcsConHttp.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="OverbyteIcsHttpAsy">
+        <MSBuild Projects="OverbyteIcsHttpAsy.dproj"/>
+    </Target>
+    <Target Name="OverbyteIcsHttpAsy:Clean">
+        <MSBuild Projects="OverbyteIcsHttpAsy.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="OverbyteIcsHttpAsy:Make">
+        <MSBuild Projects="OverbyteIcsHttpAsy.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="OverbyteIcsHttpAsp">
+        <MSBuild Projects="OverbyteIcsHttpAsp.dproj"/>
+    </Target>
+    <Target Name="OverbyteIcsHttpAsp:Clean">
+        <MSBuild Projects="OverbyteIcsHttpAsp.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="OverbyteIcsHttpAsp:Make">
+        <MSBuild Projects="OverbyteIcsHttpAsp.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="OverbyteIcsWebAppServer">
+        <MSBuild Projects="OverbyteIcsWebAppServer.dproj"/>
+    </Target>
+    <Target Name="OverbyteIcsWebAppServer:Clean">
+        <MSBuild Projects="OverbyteIcsWebAppServer.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="OverbyteIcsWebAppServer:Make">
+        <MSBuild Projects="OverbyteIcsWebAppServer.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="OverbyteIcsHttpChk">
+        <MSBuild Projects="OverbyteIcsHttpChk.dproj"/>
+    </Target>
+    <Target Name="OverbyteIcsHttpChk:Clean">
+        <MSBuild Projects="OverbyteIcsHttpChk.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="OverbyteIcsHttpChk:Make">
+        <MSBuild Projects="OverbyteIcsHttpChk.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="OverbyteIcsHttpDmo">
+        <MSBuild Projects="OverbyteIcsHttpDmo.dproj"/>
+    </Target>
+    <Target Name="OverbyteIcsHttpDmo:Clean">
+        <MSBuild Projects="OverbyteIcsHttpDmo.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="OverbyteIcsHttpDmo:Make">
+        <MSBuild Projects="OverbyteIcsHttpDmo.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="OverbyteIcsHttpGet">
+        <MSBuild Projects="OverbyteIcsHttpGet.dproj"/>
+    </Target>
+    <Target Name="OverbyteIcsHttpGet:Clean">
+        <MSBuild Projects="OverbyteIcsHttpGet.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="OverbyteIcsHttpGet:Make">
+        <MSBuild Projects="OverbyteIcsHttpGet.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="OverbyteIcsHttpPg">
+        <MSBuild Projects="OverbyteIcsHttpPg.dproj"/>
+    </Target>
+    <Target Name="OverbyteIcsHttpPg:Clean">
+        <MSBuild Projects="OverbyteIcsHttpPg.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="OverbyteIcsHttpPg:Make">
+        <MSBuild Projects="OverbyteIcsHttpPg.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="OverbyteIcsHttpThrd">
+        <MSBuild Projects="OverbyteIcsHttpThrd.dproj"/>
+    </Target>
+    <Target Name="OverbyteIcsHttpThrd:Clean">
+        <MSBuild Projects="OverbyteIcsHttpThrd.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="OverbyteIcsHttpThrd:Make">
+        <MSBuild Projects="OverbyteIcsHttpThrd.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="OverbyteIcsIsapi">
+        <MSBuild Projects="OverbyteIcsIsapi.dproj"/>
+    </Target>
+    <Target Name="OverbyteIcsIsapi:Clean">
+        <MSBuild Projects="OverbyteIcsIsapi.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="OverbyteIcsIsapi:Make">
+        <MSBuild Projects="OverbyteIcsIsapi.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="OverbyteIcsHttpTst;OverbyteIcsWebServ;OverbyteIcsHttpPost;OverbyteIcsHttpMultipartDownload;OverbyteIcsConHttp;OverbyteIcsHttpAsy;OverbyteIcsHttpAsp;OverbyteIcsWebAppServer;OverbyteIcsHttpChk;OverbyteIcsHttpDmo;OverbyteIcsHttpGet;OverbyteIcsHttpPg;OverbyteIcsHttpThrd;OverbyteIcsIsapi"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="OverbyteIcsHttpTst:Clean;OverbyteIcsWebServ:Clean;OverbyteIcsHttpPost:Clean;OverbyteIcsHttpMultipartDownload:Clean;OverbyteIcsConHttp:Clean;OverbyteIcsHttpAsy:Clean;OverbyteIcsHttpAsp:Clean;OverbyteIcsWebAppServer:Clean;OverbyteIcsHttpChk:Clean;OverbyteIcsHttpDmo:Clean;OverbyteIcsHttpGet:Clean;OverbyteIcsHttpPg:Clean;OverbyteIcsHttpThrd:Clean;OverbyteIcsIsapi:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="OverbyteIcsHttpTst:Make;OverbyteIcsWebServ:Make;OverbyteIcsHttpPost:Make;OverbyteIcsHttpMultipartDownload:Make;OverbyteIcsConHttp:Make;OverbyteIcsHttpAsy:Make;OverbyteIcsHttpAsp:Make;OverbyteIcsWebAppServer:Make;OverbyteIcsHttpChk:Make;OverbyteIcsHttpDmo:Make;OverbyteIcsHttpGet:Make;OverbyteIcsHttpPg:Make;OverbyteIcsHttpThrd:Make;OverbyteIcsIsapi:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>

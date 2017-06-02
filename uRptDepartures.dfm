@@ -18,7 +18,7 @@ inherited frmDeparturesReport: TfrmDeparturesReport
     Left = 0
     Top = 0
     Width = 1103
-    Height = 144
+    Height = 156
     Align = alTop
     TabOrder = 0
     SkinData.SkinSection = 'PANEL'
@@ -36,7 +36,7 @@ inherited frmDeparturesReport: TfrmDeparturesReport
       SkinData.SkinSection = 'BUTTON'
     end
     object gbxSelectDates: TsGroupBox
-      Left = 21
+      Left = 4
       Top = 2
       Width = 370
       Height = 78
@@ -127,19 +127,20 @@ inherited frmDeparturesReport: TfrmDeparturesReport
     end
     object pnlExportButtons: TsPanel
       Left = 1
-      Top = 100
+      Top = 86
       Width = 1101
-      Height = 43
+      Height = 69
       Align = alBottom
       BevelOuter = bvNone
       TabOrder = 2
       SkinData.SkinSection = 'PANEL'
+      ExplicitTop = 61
       object btnExcel: TsButton
         AlignWithMargins = True
         Left = 3
         Top = 3
         Width = 128
-        Height = 37
+        Height = 29
         Align = alLeft
         Caption = 'Excel'
         ImageIndex = 115
@@ -147,13 +148,14 @@ inherited frmDeparturesReport: TfrmDeparturesReport
         TabOrder = 0
         OnClick = btnExcelClick
         SkinData.SkinSection = 'BUTTON'
+        ExplicitHeight = 37
       end
       object btnCheckOut: TsButton
         AlignWithMargins = True
         Left = 137
         Top = 3
         Width = 128
-        Height = 37
+        Height = 29
         Align = alLeft
         Caption = 'Check out'
         ImageIndex = 46
@@ -161,13 +163,14 @@ inherited frmDeparturesReport: TfrmDeparturesReport
         TabOrder = 1
         OnClick = btnCheckOutClick
         SkinData.SkinSection = 'BUTTON'
+        ExplicitHeight = 37
       end
       object btnProfile: TsButton
         AlignWithMargins = True
         Left = 271
         Top = 3
         Width = 128
-        Height = 37
+        Height = 29
         Align = alLeft
         Caption = 'Profile'
         ImageIndex = 37
@@ -175,13 +178,14 @@ inherited frmDeparturesReport: TfrmDeparturesReport
         TabOrder = 2
         OnClick = btnProfileClick
         SkinData.SkinSection = 'BUTTON'
+        ExplicitHeight = 37
       end
       object btnInvoice: TsButton
         AlignWithMargins = True
         Left = 405
         Top = 3
         Width = 128
-        Height = 37
+        Height = 29
         Align = alLeft
         Caption = 'Invoice'
         DropDownMenu = pmnuInvoiceMenu
@@ -191,13 +195,14 @@ inherited frmDeparturesReport: TfrmDeparturesReport
         TabOrder = 3
         OnClick = mnuRoomInvoiceClick
         SkinData.SkinSection = 'BUTTON'
+        ExplicitHeight = 37
       end
       object btnPrintGrid: TsButton
         AlignWithMargins = True
         Left = 970
         Top = 3
         Width = 128
-        Height = 37
+        Height = 29
         Align = alRight
         Caption = 'Report'
         ImageIndex = 69
@@ -205,18 +210,72 @@ inherited frmDeparturesReport: TfrmDeparturesReport
         TabOrder = 4
         OnClick = btnPrintGridClick
         SkinData.SkinSection = 'BUTTON'
+        ExplicitHeight = 37
+      end
+      object sPanel1: TsPanel
+        Left = 0
+        Top = 35
+        Width = 1101
+        Height = 34
+        Align = alBottom
+        BevelOuter = bvNone
+        TabOrder = 5
+        ExplicitTop = 10
+        object cLabFilter: TsLabel
+          Left = 19
+          Top = 6
+          Width = 31
+          Height = 13
+          Alignment = taRightJustify
+          Caption = 'Filter :'
+          ParentFont = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+        end
+        object btnClear: TsSpeedButton
+          Left = 273
+          Top = 3
+          Width = 63
+          Height = 21
+          Caption = 'Clear'
+          OnClick = btnClearClick
+          SkinData.SkinSection = 'SPEEDBUTTON'
+          Images = DImages.PngImageList1
+          ImageIndex = 4
+        end
+        object edFilter: TsEdit
+          Left = 56
+          Top = 3
+          Width = 215
+          Height = 21
+          Color = clWhite
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 0
+          OnChange = edFilterChange
+          SkinData.SkinSection = 'EDIT'
+        end
       end
     end
   end
   object grDeparturesList: TcxGrid [2]
     Left = 0
-    Top = 144
+    Top = 156
     Width = 1103
-    Height = 421
+    Height = 409
     Align = alClient
     PopupMenu = pnmuGridMenu
     TabOrder = 1
     LookAndFeel.NativeStyle = False
+    ExplicitTop = 144
+    ExplicitHeight = 421
     object tvDeparturesList: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DeparturesListDS
@@ -527,7 +586,6 @@ inherited frmDeparturesReport: TfrmDeparturesReport
     object grdPrinterLink1: TdxGridReportLink
       Active = True
       Component = grDeparturesList
-      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -549,14 +607,13 @@ inherited frmDeparturesReport: TfrmDeparturesReport
       PrinterPage.ScaleMode = smFit
       PrinterPage._dxMeasurementUnits_ = 2
       PrinterPage._dxLastMU_ = 2
-      ReportDocument.CreationDate = 42886.558430520830000000
+      ReportDocument.CreationDate = 42887.500041921290000000
       ReportTitle.Font.Charset = DEFAULT_CHARSET
       ReportTitle.Font.Color = clBlack
       ReportTitle.Font.Height = -19
       ReportTitle.Font.Name = 'Arial'
       ReportTitle.Font.Style = [fsBold]
       ShrinkToPageWidth = True
-      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlack
       Font.Height = -11
@@ -711,5 +768,12 @@ inherited frmDeparturesReport: TfrmDeparturesReport
       Styles.Selection = cxStyle14
       BuiltIn = True
     end
+  end
+  object timFilter: TTimer
+    Enabled = False
+    Interval = 2000
+    OnTimer = timFilterTimer
+    Left = 200
+    Top = 304
   end
 end

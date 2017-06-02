@@ -73,6 +73,7 @@ type
     procedure Shape6MouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
     procedure Shape3MouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
     procedure Shape4MouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+    procedure sPanel15MouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
   private
     FShowFromDate: TDate;
     procedure SetShowFromDate(const Value: TDate);
@@ -108,16 +109,23 @@ implementation
 uses uD,
      hData,
      _Glob,
+     uAppGlobal,
+     uRoomerLanguage,
      uUtils,
      uG,
      uDateUtils,
      uRptArrivals,
      uRptDepartures,
      uRptInHouse,
-     uMain
+     uMain,
+     PrjConst
     ;
 
 const
+
+   ROW_DAY          = 0;
+   ROW_DATE         = 1;
+   ROW_SPEC_DAY     = 2;
 
    ROW_ARRIVALS     = 3;
    ROW_DEPARTURES   = 4;
@@ -146,11 +154,12 @@ end;
 procedure TFrmFrontDeskPageButton.RefreshButtons;
 var sql: String;
     res : TRoomerDataSet;
-    sDate : String;
+    sDate, sYesterday : String;
 begin
   res := CreateNewDataSet;
   try
     sDate := dateToSqlString(now);
+    sYesterday := dateToSqlString(now-1);
     sql := format('SELECT ' +
                   '(SELECT COUNT(id) AS NumEntries FROM roomsdate rd ' +
                   'WHERE ADate=''%s'' ' +
@@ -172,10 +181,12 @@ begin
                   'AND rd.ResFlag IN (''G'',''P'',''A'') ' +
                   'AND NOT EXISTS(SELECT id FROM roomsdate rd1 WHERE rd1.RoomReservation=rd.RoomReservation AND ADate=DATE_ADD(rd.ADate, INTERVAL 1 DAY))) AS NumDeparturesTomorrow, ' +
 
-                  '(SELECT COUNT(id) AS NumEntries FROM roomsdate rd ' +
-                  'WHERE ADate=''%s'' ' +
-                  'AND rd.ResFlag IN (''G'')) AS NumInHouse',
-                  [sDate, sDate, sDate, sDate, sDate]
+                  '(SELECT COUNT(id) NumEntries FROM ' +
+                  '(SELECT ID FROM roomsdate rd ' +
+                  'WHERE ADate IN (''%s'', ''%s'') ' +
+                  'AND rd.ResFlag IN (''G'') ' +
+                  'GROUP BY RoomReservation) xxx) AS NumInHouse',
+                  [sDate, sDate, sDate, sDate, sDate, sYesterday]
             );
     rSet_bySQL(res, sql, False);
     res.First;
@@ -311,6 +322,11 @@ begin
   RefreshDisplay;
 end;
 
+procedure TFrmFrontDeskPageButton.sPanel15MouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+begin
+  frmMain.btnSimpleHouseKeepingClick(frmMain.btnSimpleHouseKeeping);
+end;
+
 procedure TFrmFrontDeskPageButton.sPanel1MouseEnter(Sender: TObject);
 begin
   GetShapeComponentOfButton(Sender).Brush.Style := bsSolid;
@@ -366,6 +382,9 @@ end;
 
 procedure TFrmFrontDeskPageButton.FormCreate(Sender: TObject);
 begin
+  RoomerLanguage.TranslateThisForm(self);
+  glb.PerformAuthenticationAssertion(self);
+
   ThreadedDataGetter := TGetSQLDataThreaded.Create;
   PrepareGridText;
 end;
@@ -386,10 +405,10 @@ begin
   for i := TRUNC(ShowFromDate) to TRUNC(ShowFromDate + 6) do
   begin
     if i = TRUNC(Now) then
-      StatGrid.Cells[i - TRUNC(ShowFromDate) + 1, 0] := 'TODAY'
+      StatGrid.Cells[i - TRUNC(ShowFromDate) + 1, ROW_DAY] := 'TODAY'
     else
-      StatGrid.Cells[i - TRUNC(ShowFromDate) + 1, 0] := FormatDateTime('ddd', i);
-    StatGrid.Cells[i - TRUNC(ShowFromDate) + 1, 1] := FormatDateTime('dd mmm', i);
+      StatGrid.Cells[i - TRUNC(ShowFromDate) + 1, ROW_DAY] := FormatDateTime('ddd', i);
+    StatGrid.Cells[i - TRUNC(ShowFromDate) + 1, ROW_DATE] := FormatDateTime('dd mmm', i);
   end;
 end;
 
@@ -413,11 +432,11 @@ end;
 
 procedure TFrmFrontDeskPageButton.PrepareGridText;
 begin
-  StatGrid.Cells[0, 3] := 'Arrivals';
-  StatGrid.Cells[0, 4] := 'Departures';
-  StatGrid.Cells[0, 5] := 'Left to sell';
-  StatGrid.Cells[0, 6] := 'Occupancy';
-  StatGrid.Cells[0, 7] := 'BAR';
+  StatGrid.Cells[0, ROW_ARRIVALS]     := GetTranslatedText('FrontDeskPage_Arrivals');
+  StatGrid.Cells[0, ROW_DEPARTURES]   := GetTranslatedText('FrontDeskPage_Departures');
+  StatGrid.Cells[0, ROW_LEFT_TO_SELL] := GetTranslatedText('FrontDeskPage_LeftToSell');
+  StatGrid.Cells[0, ROW_OCCUPANCY]    := GetTranslatedText('FrontDeskPage_Occupancy');
+  StatGrid.Cells[0, ROW_BAR]          := GetTranslatedText('FrontDeskPage_BAR');
 end;
 
 end.

@@ -694,6 +694,9 @@ type
     dbbPostDepartureEmailTemplate: TdxBarButton;
     btnResStatusPerdDay: TdxBarLargeButton;
     tabFrontDesk: TsTabSheet;
+    dxBarSubItem8: TdxBarSubItem;
+    dxBarSubItem9: TdxBarSubItem;
+    dxRibbonQuickAccessGroupButton1: TdxRibbonQuickAccessGroupButton;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
@@ -3057,8 +3060,12 @@ begin
 
   until okLogin OR lLoginFormCancelled OR (tries >= 15);
 
+
   if lLoginFormCancelled then
+  begin
     ExitProcess(0);
+    Exit;
+  end;
 
   if not okLogin then
   begin
@@ -3111,9 +3118,6 @@ begin
     pageMainGrids.TabHeight := 0;
     pageMainGrids.Pages[i].TabVisible := false;
   end;
-
-  pageMainGrids.ActivePage := tabOneDayView;
-  ViewMode := vmOneDay;
 
   try
     try
@@ -3182,6 +3186,40 @@ begin
 
     TSplashFormManager.UpdateProgress('Refreshing main grid...');
     RefreshOneDayGrid;
+
+    tabsView.TabIndex := glb.PMSSettings.PMSSpecificSettings.UserHomePage - 1;
+    case tabsView.TabIndex of
+      0 : begin
+            pageMainGrids.ActivePage := tabOneDayView;
+            ViewMode := vmOneDay;
+          end;
+      1 : begin
+            pageMainGrids.ActivePage := tabPeriod;
+            ViewMode := vmPeriod;
+          end;
+      2 : begin
+            pageMainGrids.ActivePage := tabGuestList;
+            ViewMode := vmGuestList;
+          end;
+      3 : begin
+            pageMainGrids.ActivePage := tabDashboard;
+            ViewMode := vmDashboard;
+          end;
+      4 : begin
+            pageMainGrids.ActivePage := tabRateQuery;
+            ViewMode := vmRateQuery;
+          end;
+      5 : begin
+            pageMainGrids.ActivePage := tabFrontDesk;
+            ViewMode := vmFrontDesk;
+          end;
+    end;
+
+    if tabsView.TabIndex > 0 then
+    begin
+      TSplashFormManager.UpdateProgress('Activating PMS entry page...');
+      tabsViewChange(tabsView);
+    end;
 
     cbxNameOrder.ItemIndex := g.qNameOrder;
     grOneDayRooms.DefaultRowHeight := g.qOneDayRowHeight;

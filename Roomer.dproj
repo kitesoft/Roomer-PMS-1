@@ -143,10 +143,8 @@
         <Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1)'!=''">
-        <VerInfo_Debug>false</VerInfo_Debug>
+        <VerInfo_Keys>CompanyName=Promoir BV;FileDescription=Roomer PMS;FileVersion=1.9.14.0;InternalName=;LegalCopyright=(C) 2013, 2014, 2015, 2016, 2017 Promoir BV;LegalTrademarks=Roomer is a Registered Trademark of Promoir BV;OriginalFilename=Roomer.exe;ProductName=Roomer Open Hospitality Platform;ProductVersion=1.9.14.0;Comments=;ExtraBuild=170601;PrivateBuild=</VerInfo_Keys>
         <VerInfo_Release>14</VerInfo_Release>
-        <VerInfo_PreRelease>false</VerInfo_PreRelease>
-        <VerInfo_Keys>CompanyName=Promoir BV;FileDescription=Roomer PMS;FileVersion=1.9.14.0;InternalName=;LegalCopyright=(C) 2013, 2014, 2015, 2016, 2017 Promoir BV;LegalTrademarks=Roomer is a Registered Trademark of Promoir BV;OriginalFilename=Roomer.exe;ProductName=Roomer Open Hospitality Platform;ProductVersion=1.9.14.0;Comments=;ExtraBuild=170531;PrivateBuild=</VerInfo_Keys>
         <DCC_ExeOutput>RoomerPMSRelease</DCC_ExeOutput>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <DCC_MaxStackSize>1176576</DCC_MaxStackSize>
@@ -158,8 +156,11 @@
         <DCC_Define>_ROOMERSSL;TRANSLATION_ACTIVE;$(DCC_Define)</DCC_Define>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
-        <VerInfo_Keys>CompanyName=Promoir BV;FileDescription=Roomer PMS;FileVersion=1.9.14.0;InternalName=;LegalCopyright=(C) 2013, 2014, 2015, 2016, 2017 Promoir BV;LegalTrademarks=Roomer is a Registered Trademark of Promoir BV;OriginalFilename=Roomer.exe;ProductName=Roomer Open Hospitality Platform;ProductVersion=1.9.14.0;Comments=;ExtraBuild=170531A;PrivateBuild=</VerInfo_Keys>
+        <VerInfo_Release>14</VerInfo_Release>
+        <VerInfo_PreRelease>false</VerInfo_PreRelease>
+        <VerInfo_Debug>false</VerInfo_Debug>
         <VerInfo_AutoGenVersion>false</VerInfo_AutoGenVersion>
+        <VerInfo_Keys>CompanyName=Promoir BV;FileDescription=Roomer PMS;FileVersion=1.9.14.0;InternalName=;LegalCopyright=(C) 2013, 2014, 2015, 2016, 2017 Promoir BV;LegalTrademarks=Roomer is a Registered Trademark of Promoir BV;OriginalFilename=Roomer.exe;ProductName=Roomer Open Hospitality Platform;ProductVersion=1.9.14.0;Comments=;ExtraBuild=170531;PrivateBuild=</VerInfo_Keys>
         <DCC_AssertionsAtRuntime>false</DCC_AssertionsAtRuntime>
         <DCC_DcuOutput>_dcu</DCC_DcuOutput>
         <DCC_ExeOutput>RoomerPMSRelease</DCC_ExeOutput>
@@ -894,6 +895,7 @@
         <DCCReference Include="uRptInHouse.pas">
             <Form>frmInHouseReport</Form>
         </DCCReference>
+        <DCCReference Include="Filters\uDataSetFilterUtils.pas"/>
         <None Include="Roomer.todo"/>
         <None Include="notes.txt"/>
         <None Include="Roomer.inc"/>

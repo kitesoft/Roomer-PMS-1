@@ -45,7 +45,7 @@ object FrmFrontDeskPageButton: TFrmFrontDeskPageButton
         AlignWithMargins = True
         Left = 5
         Top = 92
-        Width = 180
+        Width = 122
         Height = 21
         Cursor = crHandPoint
         Margins.Bottom = 15
@@ -63,7 +63,6 @@ object FrmFrontDeskPageButton: TFrmFrontDeskPageButton
         Font.Style = []
         Font.Quality = fqAntialiased
         UseSkinColor = False
-        ExplicitWidth = 122
       end
       object Shape1: TShape
         AlignWithMargins = True
@@ -150,7 +149,7 @@ object FrmFrontDeskPageButton: TFrmFrontDeskPageButton
         AlignWithMargins = True
         Left = 5
         Top = 92
-        Width = 180
+        Width = 148
         Height = 21
         Cursor = crHandPoint
         Margins.Bottom = 15
@@ -168,7 +167,6 @@ object FrmFrontDeskPageButton: TFrmFrontDeskPageButton
         Font.Style = []
         Font.Quality = fqAntialiased
         UseSkinColor = False
-        ExplicitWidth = 148
       end
       object Shape2: TShape
         AlignWithMargins = True
@@ -255,7 +253,7 @@ object FrmFrontDeskPageButton: TFrmFrontDeskPageButton
         AlignWithMargins = True
         Left = 5
         Top = 92
-        Width = 180
+        Width = 123
         Height = 21
         Cursor = crHandPoint
         Margins.Bottom = 15
@@ -273,7 +271,6 @@ object FrmFrontDeskPageButton: TFrmFrontDeskPageButton
         Font.Style = []
         Font.Quality = fqAntialiased
         UseSkinColor = False
-        ExplicitWidth = 123
       end
       object sLabel17: TsLabel
         Left = 107
@@ -376,7 +373,7 @@ object FrmFrontDeskPageButton: TFrmFrontDeskPageButton
         AlignWithMargins = True
         Left = 5
         Top = 92
-        Width = 180
+        Width = 151
         Height = 21
         Cursor = crHandPoint
         Margins.Bottom = 15
@@ -394,7 +391,6 @@ object FrmFrontDeskPageButton: TFrmFrontDeskPageButton
         Font.Style = []
         Font.Quality = fqAntialiased
         UseSkinColor = False
-        ExplicitWidth = 151
       end
       object sLabel18: TsLabel
         Left = 107
@@ -497,7 +493,7 @@ object FrmFrontDeskPageButton: TFrmFrontDeskPageButton
         AlignWithMargins = True
         Left = 5
         Top = 92
-        Width = 180
+        Width = 108
         Height = 21
         Cursor = crHandPoint
         Margins.Bottom = 15
@@ -515,7 +511,6 @@ object FrmFrontDeskPageButton: TFrmFrontDeskPageButton
         Font.Style = []
         Font.Quality = fqAntialiased
         UseSkinColor = False
-        ExplicitWidth = 108
       end
       object Shape5: TShape
         AlignWithMargins = True
@@ -583,7 +578,7 @@ object FrmFrontDeskPageButton: TFrmFrontDeskPageButton
         AlignWithMargins = True
         Left = 5
         Top = 92
-        Width = 180
+        Width = 60
         Height = 21
         Cursor = crHandPoint
         Margins.Bottom = 15
@@ -601,7 +596,6 @@ object FrmFrontDeskPageButton: TFrmFrontDeskPageButton
         Font.Style = []
         Font.Quality = fqAntialiased
         UseSkinColor = False
-        ExplicitWidth = 60
       end
       object Shape6: TShape
         AlignWithMargins = True
@@ -688,7 +682,7 @@ object FrmFrontDeskPageButton: TFrmFrontDeskPageButton
         AlignWithMargins = True
         Left = 5
         Top = 92
-        Width = 180
+        Width = 60
         Height = 21
         Cursor = crHandPoint
         Margins.Bottom = 15
@@ -706,7 +700,6 @@ object FrmFrontDeskPageButton: TFrmFrontDeskPageButton
         Font.Style = []
         Font.Quality = fqAntialiased
         UseSkinColor = False
-        ExplicitWidth = 60
       end
       object Shape7: TShape
         AlignWithMargins = True
@@ -767,13 +760,14 @@ object FrmFrontDeskPageButton: TFrmFrontDeskPageButton
       TabOrder = 7
       OnMouseEnter = sPanel1MouseEnter
       OnMouseLeave = sPanel1MouseLeave
+      OnMouseUp = sPanel15MouseUp
       SkinData.CustomColor = True
       SkinData.CustomFont = True
       object lblTxtHousekeepingStatus: TsLabel
         AlignWithMargins = True
         Left = 5
         Top = 92
-        Width = 180
+        Width = 139
         Height = 21
         Cursor = crHandPoint
         Margins.Bottom = 15
@@ -783,6 +777,7 @@ object FrmFrontDeskPageButton: TFrmFrontDeskPageButton
         ParentFont = False
         OnMouseEnter = sPanel1MouseEnter
         OnMouseLeave = sPanel1MouseLeave
+        OnMouseUp = sPanel15MouseUp
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
         Font.Height = -16
@@ -790,7 +785,6 @@ object FrmFrontDeskPageButton: TFrmFrontDeskPageButton
         Font.Style = []
         Font.Quality = fqAntialiased
         UseSkinColor = False
-        ExplicitWidth = 139
       end
       object Shape8: TShape
         AlignWithMargins = True
@@ -803,6 +797,7 @@ object FrmFrontDeskPageButton: TFrmFrontDeskPageButton
         Pen.Style = psClear
         OnMouseEnter = sPanel1MouseEnter
         OnMouseLeave = sPanel1MouseLeave
+        OnMouseUp = sPanel15MouseUp
         ExplicitLeft = 10
         ExplicitTop = 13
       end
@@ -819,6 +814,7 @@ object FrmFrontDeskPageButton: TFrmFrontDeskPageButton
         TabOrder = 0
         OnMouseEnter = sPanel1MouseEnter
         OnMouseLeave = sPanel1MouseLeave
+        OnMouseUp = sPanel15MouseUp
         object sImage8: TsImage
           Left = 60
           Top = 8
@@ -829,6 +825,7 @@ object FrmFrontDeskPageButton: TFrmFrontDeskPageButton
           Transparent = True
           OnMouseEnter = sPanel1MouseEnter
           OnMouseLeave = sPanel1MouseLeave
+          OnMouseUp = sPanel15MouseUp
           ImageIndex = 3
           Images = PngImageList1
           SkinData.SkinSection = 'CHECKBOX'

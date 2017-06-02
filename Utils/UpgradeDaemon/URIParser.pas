@@ -50,6 +50,8 @@ type
     constructor Create;
     destructor Destroy;
     function Process(URI : String) : Boolean;
+    procedure ClearLocalUpgradeInformation;
+
     property ProcessResult : String read FProcessResult write SetProcessResult;
     property ActionType : TURIActionType read FActionType write SetActionType;
 
@@ -190,6 +192,11 @@ const RESULT_UPDATE_AVAILABLE = 'UPDATE_AVAILABLE|VERSION=%s|TTL=%d|END_TIME_STA
 function TURIProcessor.CheckForUpgrade : String;
 begin
   result := RESULT_CHECK_FOR_UPGRADE;
+end;
+
+procedure TURIProcessor.ClearLocalUpgradeInformation;
+begin
+
 end;
 
 function TURIProcessor.UpgradeAvailable : String;

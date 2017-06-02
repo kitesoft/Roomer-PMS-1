@@ -12,7 +12,7 @@ inherited frmArrivalsReport: TfrmArrivalsReport
     Left = 0
     Top = 0
     Width = 1123
-    Height = 144
+    Height = 167
     Align = alTop
     TabOrder = 0
     SkinData.SkinSection = 'PANEL'
@@ -33,7 +33,7 @@ inherited frmArrivalsReport: TfrmArrivalsReport
       Left = 4
       Top = 0
       Width = 368
-      Height = 94
+      Height = 80
       Caption = 'Select dates'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
@@ -121,9 +121,9 @@ inherited frmArrivalsReport: TfrmArrivalsReport
     end
     object pnlExportButtons: TsPanel
       Left = 1
-      Top = 100
+      Top = 88
       Width = 1121
-      Height = 43
+      Height = 78
       Align = alBottom
       BevelOuter = bvNone
       TabOrder = 2
@@ -133,7 +133,7 @@ inherited frmArrivalsReport: TfrmArrivalsReport
         Left = 3
         Top = 3
         Width = 128
-        Height = 37
+        Height = 41
         Align = alLeft
         Caption = 'Excel'
         ImageIndex = 115
@@ -141,13 +141,14 @@ inherited frmArrivalsReport: TfrmArrivalsReport
         TabOrder = 0
         OnClick = btnExcelClick
         SkinData.SkinSection = 'BUTTON'
+        ExplicitHeight = 37
       end
       object btnCheckIn: TsButton
         AlignWithMargins = True
         Left = 137
         Top = 3
         Width = 128
-        Height = 37
+        Height = 41
         Align = alLeft
         Caption = 'Check in'
         ImageIndex = 45
@@ -155,13 +156,14 @@ inherited frmArrivalsReport: TfrmArrivalsReport
         TabOrder = 1
         OnClick = btnCheckInClick
         SkinData.SkinSection = 'BUTTON'
+        ExplicitHeight = 37
       end
       object btnProfile: TsButton
         AlignWithMargins = True
         Left = 271
         Top = 3
         Width = 128
-        Height = 37
+        Height = 41
         Align = alLeft
         Caption = 'Profile'
         ImageIndex = 37
@@ -169,13 +171,14 @@ inherited frmArrivalsReport: TfrmArrivalsReport
         TabOrder = 2
         OnClick = btnProfileClick
         SkinData.SkinSection = 'BUTTON'
+        ExplicitHeight = 37
       end
       object btnInvoice: TsButton
         AlignWithMargins = True
         Left = 405
         Top = 3
         Width = 128
-        Height = 37
+        Height = 41
         Align = alLeft
         Caption = 'Invoice'
         DropDownMenu = pmnuInvoiceMenu
@@ -185,13 +188,14 @@ inherited frmArrivalsReport: TfrmArrivalsReport
         TabOrder = 3
         OnClick = mnuRoomInvoiceClick
         SkinData.SkinSection = 'BUTTON'
+        ExplicitHeight = 37
       end
       object btnReport: TsButton
         AlignWithMargins = True
         Left = 990
         Top = 3
         Width = 128
-        Height = 37
+        Height = 41
         Align = alRight
         Caption = 'Report'
         ImageIndex = 69
@@ -199,18 +203,72 @@ inherited frmArrivalsReport: TfrmArrivalsReport
         TabOrder = 4
         OnClick = btnReportClick
         SkinData.SkinSection = 'BUTTON'
+        ExplicitHeight = 37
+      end
+      object sPanel1: TsPanel
+        Left = 0
+        Top = 47
+        Width = 1121
+        Height = 31
+        Align = alBottom
+        BevelOuter = bvNone
+        TabOrder = 5
+        ExplicitTop = 36
+        object cLabFilter: TsLabel
+          Left = 19
+          Top = 6
+          Width = 31
+          Height = 13
+          Alignment = taRightJustify
+          Caption = 'Filter :'
+          ParentFont = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+        end
+        object btnClear: TsSpeedButton
+          Left = 273
+          Top = 3
+          Width = 63
+          Height = 21
+          Caption = 'Clear'
+          OnClick = btnClearClick
+          SkinData.SkinSection = 'SPEEDBUTTON'
+          Images = DImages.PngImageList1
+          ImageIndex = 4
+        end
+        object edFilter: TsEdit
+          Left = 56
+          Top = 3
+          Width = 215
+          Height = 21
+          Color = clWhite
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 0
+          OnChange = edFilterChange
+          SkinData.SkinSection = 'EDIT'
+        end
       end
     end
   end
   object grArrivalsList: TcxGrid [1]
     Left = 0
-    Top = 144
+    Top = 167
     Width = 1123
-    Height = 422
+    Height = 399
     Align = alClient
     PopupMenu = pnmuGridMenu
     TabOrder = 1
     LookAndFeel.NativeStyle = False
+    ExplicitLeft = 1
+    ExplicitTop = 165
     object grArrivalsListDBTableView1: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       OnCellDblClick = grArrivalsListDBTableView1CellDblClick
@@ -522,7 +580,6 @@ inherited frmArrivalsReport: TfrmArrivalsReport
     object grdPrinterLink1: TdxGridReportLink
       Active = True
       Component = grArrivalsList
-      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -544,14 +601,13 @@ inherited frmArrivalsReport: TfrmArrivalsReport
       PrinterPage.ScaleMode = smFit
       PrinterPage._dxMeasurementUnits_ = 2
       PrinterPage._dxLastMU_ = 2
-      ReportDocument.CreationDate = 42886.555511967590000000
+      ReportDocument.CreationDate = 42887.500005162040000000
       ReportTitle.Font.Charset = DEFAULT_CHARSET
       ReportTitle.Font.Color = clBlack
       ReportTitle.Font.Height = -19
       ReportTitle.Font.Name = 'Arial'
       ReportTitle.Font.Style = [fsBold]
       ShrinkToPageWidth = True
-      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlack
       Font.Height = -11
@@ -703,5 +759,12 @@ inherited frmArrivalsReport: TfrmArrivalsReport
       Styles.Selection = cxStyle14
       BuiltIn = True
     end
+  end
+  object timFilter: TTimer
+    Enabled = False
+    Interval = 2000
+    OnTimer = timFilterTimer
+    Left = 200
+    Top = 304
   end
 end
