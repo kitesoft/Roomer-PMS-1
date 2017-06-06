@@ -1528,10 +1528,12 @@ begin
   constants.Add('shTxProvideRoom_Status', 'Status '); // Status
 
   constants.Add('shTxInvoice_Form_Header_Item', 'Item');
+  constants.Add('shTxInvoice_Form_Header_VisibleOnInvoice', 'Show On Invoice');
   constants.Add('shTxInvoice_Form_Header_Text', 'Text');
   constants.Add('shTxInvoice_Form_Header_Number', 'Number');
   constants.Add('shTxInvoice_Form_Header_UnitPrice', 'Unit Price');
   constants.Add('shTxInvoice_Form_Header_Total', 'Total');
+  constants.Add('shTxInvoice_Form_Header_TotalOnInvoice', 'On Invoice');
   constants.Add('shTxInvoice_Form_Header_Reference', 'Reference');
   constants.Add('shTxInvoice_Form_Header_Source', 'Source');
   constants.Add('shTxInvoice_Form_Header_Package', 'Package');
@@ -1539,6 +1541,7 @@ begin
   constants.Add('shTxInvoice_Form_Header_Confirmdate', 'Confirmdate');
   constants.Add('shTxInvoice_Form_Header_ConfirmAmount', 'ConfirmAmount');
   constants.Add('shTxInvoice_Form_Header_Vat', 'Vat');
+  constants.Add('shTxInvoice_Form_Header_VatOninvoice', 'Vat on invoice');
   constants.Add('shTxInvoice_Form_Header_Alias', 'Alias');
 
   constants.Add('shTxLookAndFeel', 'Look && Feel');
@@ -1664,6 +1667,10 @@ begin
   constants.Add('FrontDeskPage_Occupancy', 'Occupancy');
   constants.Add('FrontDeskPage_BAR', 'BAR');
 
+  constants.Add('shEditInvoice_RoomRentPerDay', 'Specify roomrent per day on this invoice?');
+  constants.Add('shRoomRentPErDaySetting_Never', 'Never');
+  constants.Add('shRoomRentPErDaySetting_Ask', 'Ask per invoice');
+  constants.Add('shRoomRentPErDaySetting_Always', 'Always');
 end;
 
 procedure AddConstants_OfflineReports;

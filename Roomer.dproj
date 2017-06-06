@@ -2,7 +2,7 @@
     <PropertyGroup>
         <ProjectGuid>{436E2CCE-115E-475F-9C3E-19C03F70A4D0}</ProjectGuid>
         <MainSource>Roomer.dpr</MainSource>
-        <Config Condition="'$(Config)'==''">Debug</Config>
+        <Config Condition="'$(Config)'==''">DebugBas</Config>
         <DCC_DCCCompiler>DCC32</DCC_DCCCompiler>
         <ProjectVersion>14.3</ProjectVersion>
         <FrameworkType>VCL</FrameworkType>
@@ -881,6 +881,16 @@
             <Form>FrmRptReservationStatusPerDay</Form>
         </DCCReference>
         <DCCReference Include="VersionManagement\uVersionManagement.pas"/>
+        <DCCReference Include="Invoice\uInvoiceRentPerDay.pas">
+            <Form>frmInvoiceRentPerDay</Form>
+        </DCCReference>
+        <DCCReference Include="OpenAPI\schema\RoomerFinancialDataModel_ModelObjects.pas"/>
+        <DCCReference Include="OpenAPI\schema\uRoomerCanonicalDataModel_BaseTypes.pas"/>
+        <DCCReference Include="OpenAPI\schema\uRoomerCanonicalDataModel_SimpleTypes.pas"/>
+        <DCCReference Include="OpenAPI\schema\uRoomerHotelServicesCommunicationModel_RunningTabs.pas"/>
+        <DCCReference Include="OpenAPI\schema\RoomerBookingCommunicationModel_RequestsResponses.pas"/>
+        <DCCReference Include="RoomerUtils\uExceptionUtils.pas"/>
+        <DCCReference Include="OpenAPI\uBookingsRunningTabAPICaller.pas"/>
         <DCCReference Include="Logging\uRoomerLogger.pas"/>
         <DCCReference Include="RoomerInstanceManagement\uRoomerInstanceManagement.pas"/>
         <DCCReference Include="PCI\uFrmPayCardView.pas">

@@ -468,7 +468,7 @@ type
     ///  add object to Lines[] and rows to the grid
     /// </summary>
     procedure calcAndAddAutoItems(reservation: integer; aAutoItems: TInvoiceAutoItemSet = [aiStayTax, aiIncludedBreakFast]);
-    procedure CalcAndAddStayTax(aReservation: integer; aRoominvoiceLinesList: TInvoiceRoomEntityList; aItemInvoiceLinesList: TInvoiceItemEntityList);
+    procedure CalcAndAddStayTax(aReservation: integer; aRoominvoiceLinesList: TInvoiceRoomEntityList );
     procedure CalcAndAddIncludedBreakFast(aReservation: integer; aRoominvoiceLinesList: TInvoiceRoomEntityList);
 
     procedure ClearRoomInfoObjects;
@@ -675,7 +675,7 @@ uses
   UITypes
   , uFloatUtils
   , Math
-    , uVatCalculator, uSQLUtils, ufrmRoomPrices, uInvoiceDefinitions;
+    , uVatCalculator, uSQLUtils, ufrmRoomPrices, uInvoiceDefinitions, uInvoiceRentPerDay, uPMSSettings;
 
 {$R *.DFM}
 
@@ -726,19 +726,26 @@ procedure EditInvoice(reservation, RoomReservation, SplitNumber, InvoiceIndex: i
 var
   _frmInvoice: TfrmInvoice;
 begin
-  _frmInvoice := TfrmInvoice.create(nil);
-  try
-    _frmInvoice.reservation := reservation;
-    _frmInvoice.RoomReservation := RoomReservation;
-    _frmInvoice.FnewSplitNumber := SplitNumber;
-    _frmInvoice.FInvoiceIndex := InvoiceIndex;
-    _frmInvoice.FIsCredit := bCredit;
-    _frmInvoice.zNativeCurrency := ctrlGetString('NativeCurrency');
-    _frmInvoice.zFromKredit := FromKredit;
 
-    _frmInvoice.ShowModal;
-  finally
-    FreeAndNil(_frmInvoice);
+  if (glb.PMSSettings.InvoiceSettings.RoomRentPerDayOninvoice = rpdAlways)  or
+    (glb.PMSSettings.InvoiceSettings.RoomRentPerDayOninvoice = rpdAsk) and (MessageDlg(GetTranslatedText('shEditInvoice_RoomRentPerDay'), mtConfirmation, mbYesNo, 0) = mrYes) then
+    EditInvoiceRentPerDay(Reservation, ROomReservation, SplitNumber, InvoiceIndex, bCredit, FromKredit)
+  else
+  begin
+    _frmInvoice := TfrmInvoice.create(nil);
+    try
+      _frmInvoice.reservation := reservation;
+      _frmInvoice.RoomReservation := RoomReservation;
+      _frmInvoice.FnewSplitNumber := SplitNumber;
+      _frmInvoice.FInvoiceIndex := InvoiceIndex;
+      _frmInvoice.FIsCredit := bCredit;
+      _frmInvoice.zNativeCurrency := ctrlGetString('NativeCurrency');
+      _frmInvoice.zFromKredit := FromKredit;
+
+      _frmInvoice.ShowModal;
+    finally
+      FreeAndNil(_frmInvoice);
+    end;
   end;
 end;
 
@@ -3189,7 +3196,7 @@ begin
       CalcAndAddIncludedBreakFast(RoomReservation, RoomInvoiceLines);
 
     if aiStayTax in aAutoItems then
-      CalcAndAddStayTax(RoomReservation, RoomInvoiceLines, ItemInvoiceLines);
+      CalcAndAddStayTax(RoomReservation, RoomInvoiceLines);
 
 
   finally
@@ -3259,7 +3266,7 @@ begin
   end;
 end;
 
-procedure TfrmInvoice.CalcAndAddStayTax(aReservation: integer; aRoominvoiceLinesList: TInvoiceRoomEntityList; aItemInvoiceLinesList: TInvoiceItemEntityList);
+procedure TfrmInvoice.CalcAndAddStayTax(aReservation: integer; aRoominvoiceLinesList: TInvoiceRoomEntityList);
 var
   lUseStayTax: boolean;
   lIsIncluded: boolean;
@@ -3290,7 +3297,7 @@ begin
   if lUseStayTax then
   begin
     lItemTypeInfo := d.Item_Get_ItemTypeInfo(trim(g.qRoomRentItem));
-    lTaxResultInvoiceLines := GetTaxesForInvoice(aRoominvoiceLinesList, aItemInvoiceLinesList, lItemTypeInfo, lIsIncluded);
+    lTaxResultInvoiceLines := GetTaxesForInvoice(aRoominvoiceLinesList, lItemTypeInfo, lIsIncluded);
   end
   else
     lTaxResultInvoiceLines := TInvoiceTaxEntityList.create(True);
@@ -5898,7 +5905,7 @@ begin
       end;
 
       zDoSave := false;
-      SaveAnd(false);
+      SaveAnd(false);                           //????????????
       try
         result := True;
         try

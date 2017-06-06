@@ -393,7 +393,7 @@ type
     ItemAdded : TdateTime;
     RoomreservationAlias : Integer;
     InvoiceIndex : Integer;
-    RevenueCorrection: double;
+    Revenue: double;
   end;
 
   recItemPlusHolder = record
@@ -2456,7 +2456,7 @@ begin
     confirmDate := 2;
     confirmAmount := 0.00;
     InvoiceIndex := 0;
-    RevenueCorrection := 0;
+    Revenue := 0;
   end;
 end;
 
@@ -3518,7 +3518,7 @@ begin
   s := s + '   ,confirmDate ' + #10;
   s := s + '   ,confirmAmount ' + #10;
   s := s + '   ,RoomReservationAlias ' + #10;
-  s := s + '   ,RevenueCorrection' + #10;
+  s := s + '   ,Revenue' + #10;
   s := s + ' ) ' + #10;
   s := s + ' VALUES ' + #10;
   s := s + ' ( ' + #10;
@@ -3558,7 +3558,7 @@ begin
   s := s + ' , ' + _db(theData.confirmDate) + #10;
   s := s + ' , ' + _db(theData.confirmAmount) + #10;
   s := s + ' , ' + _db(theData.RoomReservationAlias) + #10;
-  s := s + ' , ' + _db(theData.RevenueCorrection) + #10;
+  s := s + ' , ' + _db(theData.Revenue) + #10;
   s := s + ' )';
   result := s;
 
@@ -5298,7 +5298,7 @@ end;
 function GetRate(Currency: string): double;
 begin
   result := 1;
-  if glb.LocateCurrency(Currency) then
+  if (Currency <> '' ) and glb.LocateCurrency(Currency) then
   begin
     result := glb.CurrenciesSet.fieldbyname('AValue').AsFloat;
   end;
@@ -9134,31 +9134,24 @@ begin
 end;
 
 function IVH_SetNewID: integer;
-
-  function getIT: integer;
-  begin
-    result := getNewInvoiceNumber();
-  end;
-
 var
-  id, iCount: integer;
+  iCount: integer;
 begin
 
   iCount := 0;
   repeat
-    id := getIT;
-    if id <> -1 then
+    Result := getNewInvoiceNumber();
+    if Result <> -1 then
     begin
-      if InvoiceExists(id) then
-      begin
-        id := -1;
-      end;
+      if InvoiceExists(Result) then
+        Result := -1;
     end;
-    if id = -1 then
+    if Result = -1 then
       sleep(1000);
-  until (id <> -1) OR (iCount > 5);
+  until (Result <> -1) OR (iCount > 5);
 
-  result := id;
+  if (Result < 0) or (Result > cMaxFinalInvoiceNr) then
+    raise Exception.CreateFmt(GetTranslatedText('shTx_Invoice_invalidInvoiceNr'), [Result]);
 end;
 
 function IVH_GetLastID: integer;

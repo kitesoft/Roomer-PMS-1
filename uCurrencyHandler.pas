@@ -41,7 +41,12 @@ type
     ///   Convert aAmount in the currency of this handler to the amount of the currency provided
     /// </summary>
     function ConvertTo(aAmount: double; const aOtherCurrency: string): double; overload;
-    function ConvertTo(aAmount: double; aOtehrCurrencyHandler: TCurrencyHandler): double; overload;
+    function ConvertTo(aAmount: double; aOtherCurrencyHandler: TCurrencyHandler): double; overload;
+    /// <summary>
+    ///   Convert aAmount in the currency of another handler to the amount in this currency
+    /// </summary>
+    function ConvertFrom(aAmount: double; const aOtherCurrency: string): double; overload;
+    function ConvertFrom(aAmount: double; aOtherCurrencyHandler: TCurrencyHandler): double; overload;
     /// <summary>
     ///   Round aAmount to the number of decimals defined for the currency
     /// </summary>
@@ -49,7 +54,11 @@ type
     /// <summary>
     ///   Format aAmount according to the formatsettings of the currency
     /// </summary>
-    function FormattedValue(aAmount: double): string;
+    function FormattedValue(aAmount: double; aIncludeCurrencySign: boolean = true): string;
+    /// <summary>
+    ///   Format aAmount according to the formatsettings of the currency, without currencyuSign and appending the 3 letter currencycode
+    /// </summary>
+    function FormattedValueWithCode(aAmount: double): string;
     /// <summary>
     ///   Get the CustomEditProperties component defined in uD , based on currencycode
     /// </summary>
@@ -87,9 +96,25 @@ begin
   Result := (aAmount * Rate) / lrecOtherCurrency.Value;
 end;
 
-function TCurrencyHandler.ConvertTo(aAmount: double; aOtehrCurrencyHandler: TCurrencyHandler): double;
+function TCurrencyHandler.ConvertFrom(aAmount: double; const aOtherCurrency: string): double;
+var
+  lrecOtherCurrency: recCurrencyHolder;
 begin
-  Result := (aAmount * Rate) / aOtehrCurrencyHandler.Rate;
+  if not glb.LocateCurrency(aOtherCurrency) then
+    raise ECurrencyHandlerException.CreateFmt('Currency code [%s] not found', [aOtherCurrency]);
+
+  lrecOtherCurrency.ReadFromDataset(glb.CurrenciesSet);
+  Result := (aAmount * lrecOtherCurrency.Value) / Rate;
+end;
+
+function TCurrencyHandler.ConvertFrom(aAmount: double; aOtherCurrencyHandler: TCurrencyHandler): double;
+begin
+  Result := aOtherCurrencyHandler.ConvertTo(aAmount, Self);
+end;
+
+function TCurrencyHandler.ConvertTo(aAmount: double; aOtherCurrencyHandler: TCurrencyHandler): double;
+begin
+  Result := (aAmount * Rate) / aOtherCurrencyHandler.Rate;
 end;
 
 constructor TCurrencyHandler.Create(const aCurrencyId: Integer);
@@ -102,6 +127,10 @@ begin
   FFormatSettings := TFormatSettings.Create; // System defaults
   FFormatSettings.CurrencyString := FCurrencyRec.CurrencySign;
   FFormatSettings.CurrencyDecimals := FCurrencyRec.Decimals;
+
+  FFormatSettings.CurrencyFormat := 2;
+  if FCurrencyRec.CurrencySign = 'kr.' then // quick fix
+    FFormatSettings.CurrencyFormat := 3;
 end;
 
 constructor TCurrencyHandler.Create(const aCurrencyCode: string);
@@ -109,16 +138,20 @@ begin
   if not glb.LocateCurrency(aCurrencyCode) then
     raise ECurrencyHandlerException.CreateFmt('Currency code [%s] not found', [aCurrencyCode]);
 
-  FCurrencyRec.ReadFromDataset(glb.CurrenciesSet);
-
-  FFormatSettings := TFormatSettings.Create; // System defaults
-  FFormatSettings.CurrencyString := FCurrencyRec.CurrencySign;
-  FFormatSettings.CurrencyDecimals := FCurrencyRec.Decimals;
+  Create(glb.CurrenciesSet.FieldByName('id').AsInteger);
 end;
 
-function TCurrencyHandler.FormattedValue(aAmount: double): string;
+function TCurrencyHandler.FormattedValue(aAmount: double; aIncludeCurrencySign: boolean = true): string;
 begin
-  Result := Format('%s %s', [FCurrencyRec.CurrencySign, FormatCurr(FCurrencyRec.Displayformat, RoundedValue(aAmount), FFormatSettings)]);
+  if aIncludeCurrencySign then
+    Result := CurrToStrF(aAMount, ffCurrency, FCurrencyRec.Decimals, FFormatSettings)
+  else
+    Result := CurrToStrF(aAMount, ffFixed, FCurrencyRec.Decimals, FFormatSettings);
+end;
+
+function TCurrencyHandler.FormattedValueWithCode(aAmount: double): string;
+begin
+  Result := Format('%s %s', [FormatCurr(FCurrencyRec.Displayformat, RoundedValue(aAmount), FFormatSettings), FCurrencyRec.Currency]);
 end;
 
 function TCurrencyHandler.GetCurrencyCode: string;
