@@ -72,7 +72,7 @@ uses
     ;
 
 type
-  TViewMode = (vmNone, vmOneDay, vmGuestList, vmPeriod, vmMeetings, vmDashboard, vmRateQuery);
+  TViewMode = (vmNone, vmOneDay, vmGuestList, vmPeriod, vmMeetings, vmDashboard, vmRateQuery, vmFrontDesk);
 
 type
   recColRow = record
@@ -430,19 +430,7 @@ type
     sLabel1: TsLabel;
     lblSearchFilterActive: TsLabel;
     btnFilter: TsSpeedButton;
-    mnuFilter: TPopupMenu;
-    G1: TMenuItem;
     ilFilter: TImageList;
-    C1: TMenuItem;
-    T1: TMenuItem;
-    S2: TMenuItem;
-    N11: TMenuItem;
-    N21: TMenuItem;
-    N31: TMenuItem;
-    N41: TMenuItem;
-    N51: TMenuItem;
-    N61: TMenuItem;
-    N12: TMenuItem;
     dxSkinController1: TdxSkinController;
     tabFreeRooms: TsTabSheet;
     btnGotoToday: TsButton;
@@ -510,15 +498,6 @@ type
     tvAllReservationsCustomerName: TcxGridDBColumn;
     tvAllReservationsGroupReservationName: TcxGridDBColumn;
     tvAllReservationsmem: TcxGridDBColumn;
-    _mnuItemStatus: TMenuItem;
-    G3: TMenuItem;
-    N5: TMenuItem;
-    D1: TMenuItem;
-    W1: TMenuItem;
-    N6: TMenuItem;
-    A1: TMenuItem;
-    B1: TMenuItem;
-    C2: TMenuItem;
     P1: TMenuItem;
     __N7: TMenuItem;
     dlgAdvGridPrintSettings: TAdvGridPrintSettingsDialog;
@@ -693,6 +672,13 @@ type
     dbbPreArrivalEmailTemplate: TdxBarButton;
     dbbPostDepartureEmailTemplate: TdxBarButton;
     btnResStatusPerdDay: TdxBarLargeButton;
+    tabFrontDesk: TsTabSheet;
+    dxBarSubItem8: TdxBarSubItem;
+    dxBarSubItem9: TdxBarSubItem;
+    dxRibbonQuickAccessGroupButton1: TdxRibbonQuickAccessGroupButton;
+    pupSelectHomePage: TPopupMenu;
+    M1: TMenuItem;
+    btnHome: TsSpeedButton;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
@@ -847,7 +833,6 @@ type
     procedure edtSearchChange(Sender: TObject);
     procedure timSearchTimer(Sender: TObject);
     procedure btnClearSearchClick(Sender: TObject);
-    procedure btnFilterClick(Sender: TObject);
     procedure N12Click(Sender: TObject);
     procedure rgrGroupreportStayTypeChanging(Sender: TObject; NewIndex: integer; var AllowChange: boolean);
     procedure btnChannelsClick(Sender: TObject);
@@ -981,6 +966,8 @@ type
     procedure grOneDayRoomsScrollCell(Sender: TObject; ACol, ARow, ScrollPosition, ScrollMin, ScrollMax: Integer);
     procedure dxUserActivityLogClick(Sender: TObject);
     procedure btnResStatusPerdDayClick(Sender: TObject);
+    procedure M1Click(Sender: TObject);
+    procedure btnHomeClick(Sender: TObject);
 
   protected
     procedure CreateParams(var Params: TCreateParams); override;
@@ -1344,7 +1331,6 @@ type
 
     procedure RefreshOneDayGrid;
 
-    procedure CreateQuickReservation(isQuick: boolean);
     function AddNewRoomResFromSelectionPeriodGrid(var aNewReservation: TNewReservation): integer;
     function AddNewRoomResFromSelectionDayGrid(var aNewReservation: TNewReservation): integer;
 
@@ -1359,9 +1345,7 @@ type
     procedure LocationMenuSelect(Sender: TObject);
     function FilterActive: boolean;
     function SearchOrGroupFilterActive: boolean;
-    function FreeRoomsFiltered: boolean;
     function LocationFilter(OnlyLocations: boolean = true): boolean;
-    procedure PrepareFilterOrSearchDisplay(FreeRoomsFilterOn: boolean);
     procedure PrepareSkinSelections;
     procedure SelectSkinEvent(Sender: TObject);
     procedure grAutoSizeGrids;
@@ -1469,6 +1453,7 @@ type
     function GetDateUnderCursor: TDate;
     procedure OnAskUpgrade(Text, version: String; forced : Boolean; var upgrade: Boolean);
     procedure PrepareVersionManagement;
+    procedure ClearFilter;
   public
     { Public declarations }
     StaffComm: TStaffCommunication;
@@ -1491,6 +1476,7 @@ type
     procedure WndProc(var message: TMessage); override;
     procedure BlinkRoom;
     procedure TranslateOpenForms;
+    procedure CreateQuickReservation(isQuick: boolean);
     procedure GoToDateAndRoom(aDate: TdateTime; RoomReservation: integer);
     function IsRoomReserved(const RoomNumber: string; iRes, iRoom: integer): boolean;
     procedure RefreshGrid;
@@ -1637,6 +1623,7 @@ uses
 		, uOpenInvoicesNew
     , uRptReservationStatusPerDay
     , uRoomerInstanceManagement
+    , uFrontDeskPageButton
 		;
 
 {$R *.DFM}
@@ -2414,6 +2401,11 @@ begin
   end;
 end;
 
+procedure TfrmMain.M1Click(Sender: TObject);
+begin
+  glb.PMSSettings.PMSSpecificSettings.UserHomePage := tabsView.TabIndex + 1;
+end;
+
 function TfrmMain.LoadOneDayViewGridStatus: boolean;
 var
   l, iLen: integer;
@@ -2563,11 +2555,6 @@ const
 
 procedure TfrmMain.tabsViewMouseEnter(Sender: TObject);
 begin
-  ApplicationCancelHint;
-  iLastHintRow := 0;
-  iLastHintCol := 0;
-  iLastPeriodHintRow := 0;
-  iLastPeriodHintCol := 0;
 end;
 
 // ------------------------------------------------------------------------------
@@ -2821,6 +2808,7 @@ begin
 
   frmDateStatistics := TfrmEmbDateStatistics.Create(self);
   frmDateStatistics.pnlStatistics.Parent := pnlStatistics;
+  PrepareFrontDeskPage(tabFrontDesk);
 end;
 
 procedure TfrmMain.FormDestroy(Sender: TObject);
@@ -2857,6 +2845,10 @@ begin
     FrmMessagesTemplates.Free;
   Except
   end;
+  try
+    FreeFrontDeskPage;
+  Except
+  end;
   zOneDay_stlTakenTypes.Free;
 end;
 
@@ -2882,7 +2874,7 @@ begin
 
   btnShowHideStatClick(nil);
   btnShowHideHintClick(nil);
-  btnHideCancelledBookingsClick(nil);
+//  btnHideCancelledBookingsClick(nil);
 
   dxRibbon1.ActiveTab := rbTabHome;
 
@@ -3050,8 +3042,12 @@ begin
 
   until okLogin OR lLoginFormCancelled OR (tries >= 15);
 
+
   if lLoginFormCancelled then
+  begin
     ExitProcess(0);
+    Exit;
+  end;
 
   if not okLogin then
   begin
@@ -3104,9 +3100,6 @@ begin
     pageMainGrids.TabHeight := 0;
     pageMainGrids.Pages[i].TabVisible := false;
   end;
-
-  pageMainGrids.ActivePage := tabOneDayView;
-  ViewMode := vmOneDay;
 
   try
     try
@@ -3171,10 +3164,44 @@ begin
       RestoreCurrentFont
     except
     end;
-    panelHide.Hide;
 
     TSplashFormManager.UpdateProgress('Refreshing main grid...');
     RefreshOneDayGrid;
+    panelHide.Hide;
+
+    ViewMode := vmNone;
+    tabsView.TabIndex := glb.PMSSettings.PMSSpecificSettings.UserHomePage - 1;
+//    case tabsView.TabIndex of
+//      0 : begin
+//            pageMainGrids.ActivePage := tabOneDayView;
+//            ViewMode := vmOneDay;
+//          end;
+//      1 : begin
+//            pageMainGrids.ActivePage := tabPeriod;
+//            ViewMode := vmPeriod;
+//          end;
+//      2 : begin
+//            pageMainGrids.ActivePage := tabGuestList;
+//            ViewMode := vmGuestList;
+//          end;
+//      3 : begin
+//            pageMainGrids.ActivePage := tabDashboard;
+//            ViewMode := vmDashboard;
+//          end;
+//      4 : begin
+//            pageMainGrids.ActivePage := tabRateQuery;
+//            ViewMode := vmRateQuery;
+//          end;
+//      5 : begin
+//            pageMainGrids.ActivePage := tabFrontDesk;
+//            ViewMode := vmFrontDesk;
+//          end;
+//    end;
+
+    FDayViewSizesRead := False;
+
+    zNights := g.qPeriodColCount;
+    zDateTo := zDateFrom + zNights;
 
     cbxNameOrder.ItemIndex := g.qNameOrder;
     grOneDayRooms.DefaultRowHeight := g.qOneDayRowHeight;
@@ -3184,14 +3211,14 @@ begin
     if NOT OffLineMode then
       rgrGroupreportStayType.ItemIndex := 2;
 
-    zNights := g.qPeriodColCount;;
-    zDateTo := zDateFrom + zNights;
-
     TSplashFormManager.UpdateProgress('Refreshing periodview...');
     Period_Init;
     Period_GetRooms;
 
     grNoRooms_Init;
+
+    TSplashFormManager.UpdateProgress('Activating PMS entry page...');
+    tabsViewChange(tabsView);
 
     InitializeViews;
     SetWindowTitle;
@@ -3306,7 +3333,6 @@ begin
   WriteStringValueToAppRegistry(d.roomerMainDataSet.userName, 'LocationSelected_' + g.qHotelCode + '_' +
     inttostr(TMenuItem(Sender).Tag),
     Bool2Str(TMenuItem(Sender).Checked));
-  btnFilter.ImageIndex := ABS(Ord(LocationFilter(false) OR GroupsFilterActive OR ReservationStateFilter));
 
   checkFilterStatuses;
   RedisplayGuestWindows;
@@ -3330,20 +3356,6 @@ end;
 function TfrmMain.LocationOrFloorFilterActive: boolean;
 begin
   result := LocationFilter(false); // OR FreeRoomsFiltered;
-end;
-
-function TfrmMain.FreeRoomsFiltered: boolean;
-var
-  i: integer;
-begin
-  result := T1.Checked;
-  if not result then
-    for i := 0 to S2.Count - 1 do
-      if S2.Items[i].Checked then
-      begin
-        result := true;
-        break;
-      end;
 end;
 
 function TfrmMain.GroupsFilterActive: boolean;
@@ -3493,6 +3505,11 @@ begin
   begin
     DisplayStatusses(true);
     ViewMode := vmRateQuery;
+  end
+  else if pageMainGrids.ActivePage = tabFrontDesk then
+  begin
+    FrmFrontDeskPageButton.ShowFromDate := trunc(aDate);
+    ViewMode := vmFrontDesk;
   end;
 end;
 
@@ -4029,6 +4046,9 @@ begin
                       frmDateStatistics.RefreshData
                     end;
       vmRateQuery:  PostMessage(handle, WM_SET_DATE_FROM_MAIN, 0, trunc(dtDate.Date));
+      vmFrontDesk:  begin
+                      FrmFrontDeskPageButton.ShowFromDate := dtDate.Date;
+                    end;
 
     end;
 
@@ -4203,8 +4223,6 @@ begin
     mnuFilterLocation.Items[i].Checked := false;
   edtSearch.Text := '';
   TMenuItem(Sender).Checked := NOT TMenuItem(Sender).Checked;
-  btnFilter.ImageIndex := ABS(Ord(LocationFilter(false)));
-  btnFilter.Tag := TMenuItem(Sender).Tag;
   OneDay_DisplayGrid;
 end;
 
@@ -4656,8 +4674,6 @@ end;
 procedure TfrmMain.C2Click(Sender: TObject);
 begin
   TMenuItem(Sender).Checked := NOT TMenuItem(Sender).Checked;
-  btnFilter.ImageIndex := ABS(Ord(LocationFilter(false)));
-  btnFilter.Tag := TMenuItem(Sender).Tag;
   checkFilterStatuses;
   RefreshGrid;
 end;
@@ -5160,28 +5176,6 @@ begin
     zOneDay_stlTakenTypes.Add(sType + '|1|1');
 end;
 
-procedure TfrmMain.PrepareFilterOrSearchDisplay(FreeRoomsFilterOn: boolean);
-begin
-  if not(SearchOrGroupFilterActive or FreeRoomsFilterOn) then
-  begin
-    lblSearchFilterActive.Hide;
-    btnFilter.Hint := GetTranslatedText('shTx_NoFilterActive');
-  end
-  else
-  begin
-    lblSearchFilterActive.Show;
-    if (edtSearch.Text <> '') AND (FilterActive) then
-      btnFilter.Hint := Format(GetTranslatedText('shTx_SearchAndFilterActive'), [edtSearch.Text])
-    else if (edtSearch.Text <> '') then
-      btnFilter.Hint := Format(GetTranslatedText('shTx_SearchActive'), [edtSearch.Text])
-    else if (FilterActive) then
-      btnFilter.Hint := Format(GetTranslatedText('shTx_FilterActive'), [edtSearch.Text])
-    else if (FreeRoomsFilterOn) then
-      btnFilter.Hint := Format(GetTranslatedText('shTx_FreeRoomsFilterActive'), [btnFilter.Tag])
-  end;
-
-end;
-
 /// /////////////////////////////////////////////
 //
 /// ///////////////////////////////////////////////
@@ -5269,8 +5263,6 @@ var
   sType: string;
   bShouldBeTaken: boolean;
 
-  FreeRoomsFilterOn: boolean;
-
   Floors: TSet_Of_Integer;
   Locations: TSet_Of_Integer;
   lRoom: TRoomObject;
@@ -5278,9 +5270,6 @@ var
 
 begin
   if AppIsClosing or panelHide.Visible then exit;
-
-  FreeRoomsFilterOn := FreeRoomsFiltered;
-  PrepareFilterOrSearchDisplay(FreeRoomsFilterOn);
 
   zOneDay_stlTakenTypes.Clear;
   fillchar(zOneDay_bSelectedNonRooms, sizeof(zOneDay_bSelectedNonRooms), -1);
@@ -5312,8 +5301,7 @@ begin
   try
     if (NOT SearchOrGroupFilterActive) OR (Floors.Count > 0) OR (Locations.Count > 0) then
     begin
-      glb.FillRoomAndTypeGrid(grOneDayRooms, Locations, Floors, FreeRoomsFilterOn, FFreeRooms, zOneDay_dtDate,
-        btnFilter.Tag);
+      glb.FillRoomAndTypeGrid(grOneDayRooms, Locations, Floors, FFreeRooms, zOneDay_dtDate);
       iRowCounter := grOneDayRooms.RowCount - 1;
     end;
 
@@ -5349,11 +5337,11 @@ begin
 
       zOneDay_bIsOverlapped := false;
 
-      if NOT FreeRoomsFilterOn then
-      begin
+//      if NOT FreeRoomsFilterOn then
+//      begin
         // First round: display the normal rooms
         // Second round: display the non-rooms
-        for iRoomRound := 1 to 2 - ABS(Ord(FreeRoomsFilterOn)) do
+        for iRoomRound := 1 to 2 - ABS(Ord(False)) do  //FreeRoomsFilterOn)) do
         begin
 
           // -- During first round, do not include those departing...
@@ -5420,7 +5408,7 @@ begin
             end; { for lRoom .. }
           end; { for iround ... }
         end; { for iroomround ...}
-      end; { if NOT FreeRoomsFilterOn }
+//      end; { if NOT FreeRoomsFilterOn }
 
       // -- clear empty rooms if so configured...
       grOneDayRooms.RowCount := grOneDayRooms.RowCount + 1;
@@ -7630,6 +7618,16 @@ begin
         DisplayStatusses(true);
         FrmRateQuery.BeingViewed := true;
         EnterRateQueryView(aDate);
+      end;
+    6:
+      begin
+        aDate := trunc(dtDate.Date);
+
+//        DisplayStatusses(true);
+//        FrmRateQuery.BeingViewed := true;
+//        EnterRateQueryView(aDate);
+        pageMainGrids.ActivePage := tabFrontDesk;
+        pageMainGridsChange(pageMainGrids);
       end;
   end;
   finally
@@ -10400,7 +10398,7 @@ end;
 procedure TfrmMain.btnClearSearchClick(Sender: TObject);
 begin
   edtSearch.Text := '';
-  btnFilter.Click;
+  ClearFilter;
   timSearch.Enabled := false;
   PerformFilterRefresh;
 end;
@@ -10482,15 +10480,14 @@ begin
   _GroupInvoice;
 end;
 
-procedure TfrmMain.btnFilterClick(Sender: TObject);
-var
-  i: integer;
+procedure TfrmMain.ClearFilter;
+var i: integer;
 begin
   for i := 0 to mnuFilterLocation.Items.Count - 1 do
     mnuFilterLocation.Items[i].Checked := false;
-  T1.Checked := false;
-  for i := 0 to S2.Count - 1 do
-    S2.Items[i].Checked := false;
+//  T1.Checked := false;
+//  for i := 0 to S2.Count - 1 do
+//    S2.Items[i].Checked := false;
   for i := 0 to G2.Items.Count - 1 do
     G2.Items[i].Checked := false;
   for i := 0 to mnuItemStatus.Items.Count - 1 do
@@ -11295,6 +11292,12 @@ end;
 procedure TfrmMain.btnHideCaptonsClick(Sender: TObject);
 begin
   _HideCaptons;
+end;
+
+procedure TfrmMain.btnHomeClick(Sender: TObject);
+begin
+  tabsView.TabIndex := glb.PMSSettings.PMSSpecificSettings.UserHomePage - 1;
+  tabsViewChange(tabsView);
 end;
 
 procedure TfrmMain.btnHotelSpecificSqlQueriesClick(Sender: TObject);

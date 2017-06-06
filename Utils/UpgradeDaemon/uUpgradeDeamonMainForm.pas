@@ -180,7 +180,7 @@ begin
     if FDownloadActive then
       AnswerString := 'BUSY'
     else begin
-      DownloadActive := True;
+      FDownloadActive := True;
       try
         if URIProcessor.Process(ClientCnx.Path) then
         begin
@@ -192,7 +192,7 @@ begin
         end else
           AddLog('Unable to process provided URI');
       finally
-        DownloadActive := False;
+        FDownloadActive := False;
       end;
     end;
   except

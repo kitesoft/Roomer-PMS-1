@@ -16,7 +16,7 @@ uses
   dxPSEdgePatterns, dxPSPDFExportCore, dxPSPDFExport, cxDrawTextUtils, dxPSPrVwStd, dxPSPrVwAdv, dxPSPrVwRibbon,
   dxPScxPageControlProducer, dxPScxGridLnk, dxPScxGridLayoutViewLnk, dxPScxEditorProducers, dxPScxExtEditorProducers,
   dxSkinsdxBarPainter, dxSkinsdxRibbonPainter, dxPScxCommon, dxPSCore, cxLabel, AdvSmoothProgressBar, Vcl.ComCtrls,
-  sStatusBar, cxTextEdit, cxCheckBox, dxPScxPivotGridLnk;
+  sStatusBar, cxTextEdit, cxCheckBox, dxPScxPivotGridLnk, sEdit, Vcl.Buttons, sSpeedButton;
 
 type
   TfrmDeparturesReport = class(TfrmBaseRoomerForm)
@@ -80,6 +80,11 @@ type
     btnPrintGrid: TsButton;
     tvDeparturesListGroupAccount: TcxGridDBColumn;
     tvDeparturesListGroupInvoiceBalance: TcxGridDBColumn;
+    sPanel1: TsPanel;
+    cLabFilter: TsLabel;
+    btnClear: TsSpeedButton;
+    edFilter: TsEdit;
+    timFilter: TTimer;
     procedure rbRadioButtonClick(Sender: TObject);
     procedure btnExcelClick(Sender: TObject);
     procedure btnRefreshClick(Sender: TObject);
@@ -99,6 +104,9 @@ type
       ARecord: TcxCustomGridRecord; var AText: string);
     procedure tvDeparturesListGroupInvoiceBalanceGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
       var AProperties: TcxCustomEditProperties);
+    procedure timFilterTimer(Sender: TObject);
+    procedure btnClearClick(Sender: TObject);
+    procedure edFilterChange(Sender: TObject);
   private
     FRefreshingdata: boolean;
     FCurrencyhandler: TCurrencyHandler;
@@ -118,7 +126,7 @@ type
 /// <summary>
 ///   Global access point for showing the arrival report form, If Modalresult is OK then True is returned
 /// </summary>
-function ShowDeparturesReport: boolean;
+function ShowDeparturesReport(AutoClick : Boolean = False; Tomorrow : Boolean = False): boolean;
 
 implementation
 
@@ -140,7 +148,12 @@ uses
   , uGuestCheckInForm
   , uInvoice
   , uReservationProfile
-  , uReservationStateDefinitions, uReservationStateChangeHandler, uInvoiceContainer, uSQLUtils;
+  , uReservationStateDefinitions
+  , uReservationStateChangeHandler
+  , uInvoiceContainer
+  , uSQLUtils
+  , uDataSetFilterUtils
+  ;
 
 
 const
@@ -292,12 +305,19 @@ begin
 end;
 
 
-function ShowDeparturesReport: boolean;
+function ShowDeparturesReport(AutoClick : Boolean = False; Tomorrow : Boolean = False): boolean;
 var
   frm: TfrmDeparturesReport;
 begin
   frm := TfrmDeparturesReport.Create(nil);
   try
+    if Tomorrow then
+    begin
+      frm.rbTomorrow.Checked := True;
+      frm.UpdateControls;
+    end;
+    if AutoClick then
+      frm.btnRefresh.Click;
     frm.ShowModal;
     Result := (frm.modalresult = mrOk);
   finally
@@ -318,6 +338,11 @@ begin
     lStateChangeHandler.Free;
   end;
 
+end;
+
+procedure TfrmDeparturesReport.btnClearClick(Sender: TObject);
+begin
+  edFilter.Text := '';
 end;
 
 procedure TfrmDeparturesReport.btnExcelClick(Sender: TObject);
@@ -377,6 +402,17 @@ procedure TfrmDeparturesReport.dtDateToCloseUp(Sender: TObject);
 begin
  if dtDateFrom.Date > dtDateTo.Date then
    dtDateFrom.Date := dtDateTo.Date;
+end;
+
+procedure TfrmDeparturesReport.edFilterChange(Sender: TObject);
+begin
+  if edFilter.Text = '' then
+  begin
+    StopFilter(kbmDeparturesList, timFilter, tvDeparturesList);
+  end else
+  begin
+    applyFilter(kbmDeparturesList, edFilter.Text, timFilter, tvDeparturesList);
+  end;
 end;
 
 procedure TfrmDeparturesReport.mnuGroupInvoiceClick(Sender: TObject);
@@ -453,6 +489,13 @@ begin
   dtDateTo.Date := aTo;
 end;
 
+procedure TfrmDeparturesReport.timFilterTimer(Sender: TObject);
+begin
+  timFilter.Enabled := False;
+  kbmDeparturesList.filtered := True;
+  tvDeparturesList.DataController.Filter.Refresh;
+end;
+
 procedure TfrmDeparturesReport.tvDeparturesList2AverageRatePerNightGetProperties(
   Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
   var AProperties: TcxCustomEditProperties);
@@ -496,5 +539,6 @@ begin
 end;
 
 end.
+
 
 

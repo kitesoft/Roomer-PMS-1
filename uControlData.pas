@@ -730,6 +730,8 @@ type
     cbxCallType: TsComboBox;
     edCallMinSec: TsSpinEdit;
     chkAllowAllotmentStateChange: TsCheckBox;
+    lblPMSEntryPage: TsLabel;
+    cbxPmsEntryPage: TsComboBox;
     procedure FormCreate(Sender : TObject);
     procedure FormClose(Sender : TObject; var Action : TCloseAction);
     procedure FormShow(Sender : TObject);
@@ -1469,6 +1471,8 @@ g.ReadWriteSettingsToRegistry(0);
     except
     end;
 
+    cbxPmsEntryPage.ItemIndex := glb.PMSSettings.PMSSpecificSettings.UserHomePage - 1;
+
     try
       cbxMasterRateActive.Checked := rSethotelconfigurations.FieldByName('masterRatesActive').AsBoolean;
     except
@@ -2123,12 +2127,13 @@ begin
       except
       end;
 
-
       try
         rSethotelconfigurations.FieldByName('DefaultSendCCEmailToHotel').AsBoolean := cbxDefaultSendCCEmailToHotel.Checked;
         g.qDefaultSendCCEmailToHotel := cbxDefaultSendCCEmailToHotel.Checked;
       except
       end;
+
+      glb.PMSSettings.PMSSpecificSettings.UserHomePage := cbxPmsEntryPage.ItemIndex + 1;
 
       try
         rSethotelconfigurations.FieldByName('masterRatesActive').AsBoolean := cbxMasterRateActive.Checked;

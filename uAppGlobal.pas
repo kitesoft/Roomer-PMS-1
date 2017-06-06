@@ -197,10 +197,8 @@ Type
       procedure FillRoomAndTypeGrid(agrRooms : TStringGrid;
                                     Location : TSet_Of_Integer;
                                     Floor : TSet_Of_Integer;
-                                    FreeRoomsFiltered : Boolean  = false;
                                     oFreeRooms : TFreeRooms = nil;
-                                    zOneDay_dtDate : TDateTime = 0;
-                                    numDays : integer = 0);
+                                    zOneDay_dtDate : TDateTime = 0);
 
       procedure ReloadPreviousGuests;
       procedure ForceTableRefresh;
@@ -690,10 +688,8 @@ end;
 procedure TGlobalSettings.FillRoomAndTypeGrid(agrRooms : TStringGrid;
                                               Location : TSet_Of_Integer;
                                               Floor : TSet_Of_Integer;
-                                              FreeRoomsFiltered : Boolean  = false;
                                               oFreeRooms : TFreeRooms = nil;
-                                              zOneDay_dtDate : TDateTime = 0;
-                                              numDays : integer = 0);
+                                              zOneDay_dtDate : TDateTime = 0);
 var l : integer;
     sTemp : String;
     dtdate : TDateTime;
@@ -726,18 +722,17 @@ begin
         FilterPassed := FilterPassed AND
                         ((NOT LocationFilterActive) OR (LocationFilterPassed AND LocationFilterActive));
 
-        resultFilter := FilterPassed
-                        AND (NOT FreeRoomsFiltered);
-        if resultFilter then
-        begin
-          sTemp := oFreeRooms.FindRoomNextOcc(FieldByName( 'Room' ).AsString);
-          if sTemp = '' then
-          begin
-            dtdate := zOneDay_dtDate + 1000;
-          end else dtDate := SQLToDateTime(sTemp);
-          iNextOcc := trunc(dtDate)-trunc(zOneDay_dtDate);
-          resultFilter := iNextOcc >= numDays;
-        end;
+        resultFilter := FilterPassed;
+//        if resultFilter then
+//        begin
+//          sTemp := oFreeRooms.FindRoomNextOcc(FieldByName( 'Room' ).AsString);
+//          if sTemp = '' then
+//          begin
+//            dtdate := zOneDay_dtDate + 1000;
+//          end else dtDate := SQLToDateTime(sTemp);
+//          iNextOcc := trunc(dtDate)-trunc(zOneDay_dtDate);
+//          resultFilter := iNextOcc >= numDays;
+//        end;
         if resultFilter then
         begin
           inc(l);

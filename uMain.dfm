@@ -55,6 +55,7 @@ object frmMain: TfrmMain
     SunkenBorder = True
     UseOwnColor = True
     UseOwnSunkenBorder = True
+    ExplicitTop = 122
   end
   object panMain: TsPanel
     Left = 0
@@ -115,7 +116,7 @@ object frmMain: TfrmMain
         Top = 1
         Width = 1022
         Height = 302
-        ActivePage = tabOneDayView
+        ActivePage = tabDashboard
         Align = alClient
         TabOrder = 1
         OnChange = pageMainGridsChange
@@ -123,10 +124,6 @@ object frmMain: TfrmMain
         object tabOneDayView: TsTabSheet
           Caption = 'tabOneDayView'
           ImageIndex = 8
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object grOneDayRooms: TAdvStringGrid
             Left = 0
             Top = 0
@@ -164,6 +161,8 @@ object frmMain: TfrmMain
             OnMouseUp = grOneDayRoomsMouseUp
             OnStartDrag = grOneDayRoomsStartDrag
             ActiveRowColor = clWhite
+            GridLineColor = 15527152
+            GridFixedLineColor = 13947601
             HoverRowCells = [hcNormal, hcSelected]
             OnGetCellPrintColor = grOneDayRoomsGetCellPrintColor
             OnGridHint = grOneDayRoomsGridHint
@@ -440,7 +439,7 @@ object frmMain: TfrmMain
               object lblNoRoom: TsLabel
                 Left = 3
                 Top = 59
-                Width = 50
+                Width = 76
                 Height = 13
                 Align = alBottom
                 Alignment = taCenter
@@ -451,6 +450,7 @@ object frmMain: TfrmMain
                 Font.Height = -11
                 Font.Name = 'Tahoma'
                 Font.Style = [fsBold]
+                ExplicitWidth = 50
               end
             end
           end
@@ -857,10 +857,6 @@ object frmMain: TfrmMain
         object tabPeriod: TsTabSheet
           Caption = 'tabPeriod'
           ImageIndex = 2
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object sLabel2: TsLabel
             Left = 224
             Top = 400
@@ -1324,7 +1320,6 @@ object frmMain: TfrmMain
             OnMoved = splitPeriodMoved
             Color = 6842472
             ParentColor = False
-            ExplicitTop = 157
           end
           object pnlPeriodNoRooms: TsPanel
             Left = 0
@@ -1644,25 +1639,18 @@ object frmMain: TfrmMain
         end
         object tabFreeRooms: TsTabSheet
           Caption = 'tabFreeRooms'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
         end
         object tabDashboard: TsTabSheet
           Caption = 'tabDashboard'
           SkinData.SkinSection = 'TRANSPARENT'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
+          ExplicitLeft = 2
+          ExplicitTop = 23
         end
         object tabRateQuery: TsTabSheet
           Caption = 'tabRateQuery'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
+        end
+        object tabFrontDesk: TsTabSheet
+          Caption = 'tabFrontDesk'
         end
       end
       object pnlStatSlider: TsPanel
@@ -1678,7 +1666,7 @@ object frmMain: TfrmMain
         object lblBusyDownloading: TsLabel
           Left = 0
           Top = 158
-          Width = 73
+          Width = 304
           Height = 13
           Margins.Left = 10
           Margins.Top = 0
@@ -1696,11 +1684,12 @@ object frmMain: TfrmMain
           Font.Name = 'Tahoma'
           Font.Style = []
           UseSkinColor = False
+          ExplicitWidth = 73
         end
         object lblCacheNotification: TsLabel
           Left = 0
           Top = 145
-          Width = 86
+          Width = 304
           Height = 13
           Margins.Left = 10
           Margins.Top = 0
@@ -1718,6 +1707,7 @@ object frmMain: TfrmMain
           Font.Name = 'Tahoma'
           Font.Style = []
           UseSkinColor = False
+          ExplicitWidth = 86
         end
         object pnlStatistics: TsScrollBox
           Left = 0
@@ -1772,7 +1762,7 @@ object frmMain: TfrmMain
       object Panel4: TsPanel
         Left = 0
         Top = 0
-        Width = 470
+        Width = 541
         Height = 33
         Align = alLeft
         BevelOuter = bvNone
@@ -1796,11 +1786,37 @@ object frmMain: TfrmMain
           Font.Name = 'Tahoma'
           Font.Style = []
         end
-        object tabsView: TsTabControl
+        object btnHome: TsSpeedButton
+          AlignWithMargins = True
           Left = 0
           Top = 0
-          Width = 470
+          Width = 37
           Height = 33
+          Hint = 'Homepage'
+          Margins.Left = 0
+          Margins.Top = 0
+          Margins.Right = 5
+          Margins.Bottom = 0
+          Align = alLeft
+          Flat = True
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clCaptionText
+          Font.Height = -13
+          Font.Name = 'Tahoma'
+          Font.Style = [fsBold]
+          ParentFont = False
+          OnClick = btnHomeClick
+          OnMouseEnter = tabsViewMouseEnter
+          Images = DImages.PngImageList25
+          ImageIndex = 0
+          ExplicitLeft = -3
+        end
+        object tabsView: TsTabControl
+          Left = 42
+          Top = 0
+          Width = 499
+          Height = 33
+          Cursor = crHandPoint
           Align = alClient
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -1808,6 +1824,7 @@ object frmMain: TfrmMain
           Font.Name = 'Segoe UI'
           Font.Style = []
           ParentFont = False
+          PopupMenu = pupSelectHomePage
           Style = tsFlatButtons
           TabHeight = 28
           TabOrder = 0
@@ -1816,7 +1833,8 @@ object frmMain: TfrmMain
             'Period'
             'Groups'
             'Dashboard'
-            'Rates')
+            'Rates'
+            'Frontdesk')
           TabIndex = 0
           OnChange = tabsViewChange
           OnChanging = tabsViewChanging
@@ -1826,9 +1844,9 @@ object frmMain: TfrmMain
         end
       end
       object __PanGridsHeader: TsPanel
-        Left = 610
+        Left = 676
         Top = 0
-        Width = 725
+        Width = 659
         Height = 33
         Align = alClient
         Alignment = taLeftJustify
@@ -1847,20 +1865,17 @@ object frmMain: TfrmMain
           Height = 31
           Align = alLeft
           Flat = True
-          PopupMenu = mnuFilter
           Spacing = 0
           Visible = False
-          OnClick = btnFilterClick
           OnMouseEnter = tabsViewMouseEnter
           ButtonStyle = tbsDropDown
           SkinData.SkinSection = 'SPEEDBUTTON_SMALL'
           DisabledKind = []
-          DropdownMenu = mnuFilter
           Images = ilFilter
           ImageIndex = 0
           ShowCaption = False
-          ExplicitLeft = -6
-          ExplicitTop = -1
+          ExplicitLeft = 2
+          ExplicitTop = 0
         end
         object __lblSearch: TsLabel
           AlignWithMargins = True
@@ -1884,9 +1899,9 @@ object frmMain: TfrmMain
           ExplicitHeight = 20
         end
         object sPanel3: TsPanel
-          Left = 222
+          Left = 212
           Top = 1
-          Width = 502
+          Width = 446
           Height = 31
           Margins.Left = 0
           Margins.Top = 0
@@ -1904,12 +1919,13 @@ object frmMain: TfrmMain
           SkinData.SkinSection = 'PANEL'
           object btnStatusFilter: TsSpeedButton
             AlignWithMargins = True
-            Left = 5
-            Top = 3
-            Width = 75
-            Height = 25
+            Left = 6
+            Top = 0
+            Width = 66
+            Height = 28
             Margins.Left = 10
             Margins.Top = 0
+            Align = alRight
             Caption = 'Status'
             Flat = True
             PopupMenu = mnuItemStatus
@@ -1918,14 +1934,18 @@ object frmMain: TfrmMain
             ButtonStyle = tbsDropDown
             SkinData.SkinSection = 'SPEEDBUTTON'
             DropdownMenu = mnuItemStatus
+            ExplicitLeft = 14
+            ExplicitTop = 5
+            ExplicitHeight = 25
           end
           object btnLocationFilter: TsSpeedButton
             AlignWithMargins = True
-            Left = 86
-            Top = 3
-            Width = 89
-            Height = 25
+            Left = 78
+            Top = 0
+            Width = 80
+            Height = 28
             Margins.Top = 0
+            Align = alRight
             Caption = 'Location'
             Flat = True
             OnClick = btnLocationFilterClick
@@ -1933,14 +1953,16 @@ object frmMain: TfrmMain
             ButtonStyle = tbsDropDown
             SkinData.SkinSection = 'SPEEDBUTTON'
             DropdownMenu = mnuFilterLocation
+            ExplicitTop = 1
           end
           object btnGroupsFilter: TsSpeedButton
             AlignWithMargins = True
-            Left = 181
-            Top = 4
-            Width = 89
-            Height = 25
+            Left = 164
+            Top = 0
+            Width = 80
+            Height = 28
             Margins.Top = 0
+            Align = alRight
             Caption = 'Groups'
             Flat = True
             OnClick = btnGroupsFilterClick
@@ -1948,14 +1970,17 @@ object frmMain: TfrmMain
             ButtonStyle = tbsDropDown
             SkinData.SkinSection = 'SPEEDBUTTON'
             DropdownMenu = G2
+            ExplicitLeft = 195
+            ExplicitTop = 4
+            ExplicitHeight = 25
           end
           object edtSearch: TButtonedEdit
             AlignWithMargins = True
-            Left = 277
-            Top = 5
+            Left = 250
+            Top = 3
             Width = 161
-            Height = 21
-            Margins.Top = 0
+            Height = 25
+            Align = alRight
             BevelInner = bvNone
             BevelOuter = bvNone
             Images = DImages.PngImageList1
@@ -1973,28 +1998,32 @@ object frmMain: TfrmMain
             OnChange = edtSearchChange
             OnMouseEnter = tabsViewMouseEnter
             OnRightButtonClick = btnClearSearchClick
+            ExplicitLeft = 277
+            ExplicitTop = 5
+            ExplicitHeight = 21
           end
           object btnSearchForGuests: TsButton
             AlignWithMargins = True
-            Left = 446
+            Left = 414
             Top = 3
             Width = 27
             Height = 25
             Hint = 'Search for guests'
             Margins.Left = 0
-            Margins.Top = 0
             Margins.Right = 5
-            Margins.Bottom = 0
+            Align = alRight
             ImageIndex = 26
             Images = DImages.PngImageList1
             TabOrder = 1
             OnClick = btnSerachGuestsClick
+            ExplicitLeft = 441
+            ExplicitTop = 4
           end
         end
         object sPanel4: TsPanel
           Left = 54
           Top = 1
-          Width = 168
+          Width = 158
           Height = 31
           Margins.Left = 0
           Margins.Top = 0
@@ -2010,12 +2039,13 @@ object frmMain: TfrmMain
           SkinData.CustomColor = True
           SkinData.CustomFont = True
           SkinData.SkinSection = 'PANEL'
+          ExplicitWidth = 119
           object lblMainHeader: TsLabel
             AlignWithMargins = True
-            Left = 159
+            Left = 164
             Top = 4
             Width = 94
-            Height = 23
+            Height = 24
             Margins.Left = 10
             Margins.Top = 4
             Align = alLeft
@@ -2028,12 +2058,14 @@ object frmMain: TfrmMain
             Font.Height = -17
             Font.Name = 'Segoe UI'
             Font.Style = [fsBold]
+            ExplicitLeft = 159
+            ExplicitHeight = 23
           end
           object dtDate: TsDateEdit
             AlignWithMargins = True
             Left = 39
             Top = 5
-            Width = 107
+            Width = 112
             Height = 22
             Margins.Top = 5
             Margins.Bottom = 4
@@ -2221,18 +2253,16 @@ object frmMain: TfrmMain
               Stretch = True
               Transparent = True
               SkinData.SkinSection = 'CHECKBOX'
-              ExplicitLeft = 8
-              ExplicitTop = 8
-              ExplicitWidth = 105
-              ExplicitHeight = 105
+              ExplicitLeft = 2
+              ExplicitTop = 0
             end
           end
         end
       end
       object Panel2: TsPanel
-        Left = 470
+        Left = 541
         Top = 0
-        Width = 140
+        Width = 135
         Height = 33
         Align = alLeft
         Alignment = taLeftJustify
@@ -2423,7 +2453,7 @@ object frmMain: TfrmMain
         end
         object btnGotoToday: TsButton
           AlignWithMargins = True
-          Left = 107
+          Left = 102
           Top = 4
           Width = 27
           Height = 25
@@ -2582,8 +2612,8 @@ object frmMain: TfrmMain
       object lblTimeMessage: TsLabel
         Left = 0
         Top = 0
-        Width = 265
-        Height = 24
+        Width = 1035
+        Height = 41
         Align = alClient
         Alignment = taCenter
         Caption = '<Timely messages panel>'
@@ -2595,6 +2625,8 @@ object frmMain: TfrmMain
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         UseSkinColor = False
+        ExplicitWidth = 265
+        ExplicitHeight = 24
       end
     end
     object pnlOffline: TsPanel
@@ -2675,7 +2707,6 @@ object frmMain: TfrmMain
       Index = 0
     end
     object rbTabReservation: TdxRibbonTab
-      Active = True
       Caption = 'Reservation'
       Groups = <
         item
@@ -2696,6 +2727,7 @@ object frmMain: TfrmMain
       Index = 1
     end
     object rbTabInvoice: TdxRibbonTab
+      Active = True
       Caption = 'Invoice'
       Groups = <
         item
@@ -2787,6 +2819,8 @@ object frmMain: TfrmMain
         end
         item
           ToolbarName = 'barinnBar9'
+        end
+        item
         end>
       Index = 5
     end
@@ -5594,6 +5628,22 @@ object frmMain: TfrmMain
       Visible = ivAlways
       LargeImageIndex = 62
       OnClick = btnResStatusPerdDayClick
+    end
+    object dxBarSubItem8: TdxBarSubItem
+      Caption = 'New SubItem'
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <>
+    end
+    object dxBarSubItem9: TdxBarSubItem
+      Caption = 'New SubItem'
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <>
+    end
+    object dxRibbonQuickAccessGroupButton1: TdxRibbonQuickAccessGroupButton
+      Category = 0
+      Visible = ivAlways
     end
     object mmnuFile: TdxBarSubItem
       Caption = '&File'
@@ -8808,6 +8858,11 @@ object frmMain: TfrmMain
         Component = sSkinManager1
         Properties.Strings = (
           'SkinName')
+      end
+      item
+        Component = tabsView
+        Properties.Strings = (
+          'TabIndex')
       end>
     StorageName = 'Software\Roomer\FormStatus\StoreMainV2'
     StorageType = stRegistry
@@ -23767,110 +23822,6 @@ object frmMain: TfrmMain
     Left = 920
     Top = 358
   end
-  object mnuFilter: TPopupMenu
-    Left = 976
-    Top = 392
-    object C1: TMenuItem
-      Caption = 'Cancel'
-      OnClick = btnFilterClick
-    end
-    object _mnuItemStatus: TMenuItem
-      Caption = 'Status'
-      object G3: TMenuItem
-        Caption = 'Current guest'
-        OnClick = C2Click
-      end
-      object N5: TMenuItem
-        Caption = 'Not arrived'
-        OnClick = C2Click
-      end
-      object D1: TMenuItem
-        Caption = 'Departed'
-        OnClick = C2Click
-      end
-      object W1: TMenuItem
-        Caption = 'Waiting list'
-        OnClick = C2Click
-      end
-      object N6: TMenuItem
-        Caption = 'NO-Show'
-        OnClick = C2Click
-      end
-      object A1: TMenuItem
-        Caption = 'Alotment'
-        OnClick = C2Click
-      end
-      object B1: TMenuItem
-        Caption = 'Blocked room'
-        OnClick = C2Click
-      end
-      object C2: TMenuItem
-        Caption = 'Cancellation'
-        OnClick = C2Click
-      end
-    end
-    object G1: TMenuItem
-      Caption = 'Free Rooms...'
-      object T1: TMenuItem
-        Caption = 'Selected date'
-        RadioItem = True
-        OnClick = N12Click
-      end
-      object S2: TMenuItem
-        Caption = 'Selected day and next...'
-        GroupIndex = 2
-        object N11: TMenuItem
-          Tag = 1
-          Caption = '1 day'
-          GroupIndex = 2
-          RadioItem = True
-          OnClick = N12Click
-        end
-        object N21: TMenuItem
-          Tag = 2
-          Caption = '2 days'
-          GroupIndex = 2
-          RadioItem = True
-          OnClick = N12Click
-        end
-        object N31: TMenuItem
-          Tag = 3
-          Caption = '3 days'
-          GroupIndex = 2
-          RadioItem = True
-          OnClick = N12Click
-        end
-        object N41: TMenuItem
-          Tag = 4
-          Caption = '4 days'
-          GroupIndex = 2
-          RadioItem = True
-          OnClick = N12Click
-        end
-        object N51: TMenuItem
-          Tag = 5
-          Caption = '5 days'
-          GroupIndex = 2
-          RadioItem = True
-          OnClick = N12Click
-        end
-        object N61: TMenuItem
-          Tag = 6
-          Caption = '6 days'
-          GroupIndex = 2
-          RadioItem = True
-          OnClick = N12Click
-        end
-        object N12: TMenuItem
-          Tag = 7
-          Caption = '1 week'
-          GroupIndex = 2
-          RadioItem = True
-          OnClick = N12Click
-        end
-      end
-    end
-  end
   object ilFilter: TImageList
     ColorDepth = cd32Bit
     DrawingStyle = dsTransparent
@@ -24187,8 +24138,8 @@ object frmMain: TfrmMain
     end
   end
   object mnuFilterLocation: TPopupMenu
-    Left = 1000
-    Top = 440
+    Left = 960
+    Top = 424
   end
   object G2: TPopupMenu
     Left = 1048
@@ -24279,6 +24230,14 @@ object frmMain: TfrmMain
     object acUpdateTranslations: TAction
       Caption = 'Update Translations'
       OnExecute = acUpdateTranslationsExecute
+    end
+  end
+  object pupSelectHomePage: TPopupMenu
+    Left = 128
+    Top = 376
+    object M1: TMenuItem
+      Caption = 'Make current page the homepage'
+      OnClick = M1Click
     end
   end
 end

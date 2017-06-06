@@ -131,6 +131,23 @@ type
     property UseInvoiceOnObjectsForm: boolean read GetUseInvocieOnObjectsForm write SetUseInvocieOnObjectsForm;
   end;
 
+  TPMSPMSSpecificSettings = class(TPMSSettingsGroup)
+  private const
+    cUserSpecific = 'PMS_SPECIFIC_SETTINGS';
+    cUserSpecificHomePage = 'HOME_PAGE';
+
+  private
+    function GetUserHomePage: Integer;
+    procedure SetUserHomePage(const Value: Integer);
+  protected
+    function GetKeyGroup: string; override;
+  public
+    /// <summary>
+    ///   If true then functions marked as Beta are available in the PMS
+    /// </summary>
+    property UserHomePage: Integer read GetUserHomePage write SetUserHomePage;
+  end;
+
   /// <summary>
   ///   Provides access to PMS configuration-items stored in PMSSettings table in database
   /// </summary>
@@ -141,6 +158,7 @@ type
     FMasterRatesSettings: TPMSSettingsRatesAvailabilities;
     FReservationProfileSettngs: TPMSSettingsReservationProfile;
     FBetaFunctionality: TPMSSettingsBetaFunctionality;
+    FPMSSpecificSettings: TPMSPMSSpecificSettings;
   protected
 
     function GetMandatoryCheckinFields: TMandatoryCheckInFieldSet;
@@ -154,6 +172,7 @@ type
     property MasterRatesSettings: TPMSSettingsRatesAvailabilities read FMasterRatesSettings;
     property ReservationProfileSettings: TPMSSettingsReservationProfile read FReservationProfileSettngs;
     property BetaFunctionality: TPMSSettingsBetaFunctionality read FBetaFunctionality;
+    property PMSSpecificSettings: TPMSPMSSpecificSettings read FPMSSpecificSettings;
 
     /// <summary>
     ///   Currently enabled TMandatoryCheckinFields in PMS settings
@@ -178,6 +197,7 @@ begin
   FMasterRatesSettings := TPMSSettingsRatesAvailabilities.Create(FPMSSettingsAccessor);
   FReservationProfileSettngs := TPMSSettingsReservationProfile.Create(FPMSSettingsAccessor);
   FBetaFunctionality := TPMSSettingsBetaFunctionality.Create(FPMSSettingsAccessor);
+  FPMSSpecificSettings := TPMSPMSSpecificSettings.Create(FPMSSettingsAccessor);
 
 end;
 
@@ -188,6 +208,7 @@ begin
   FMasterRatesSettings.Free;
   FReservationProfileSettngs.Free;
   FBetaFunctionality.Free;
+  FPMSSpecificSettings.Free;
   inherited;
 end;
 
@@ -365,7 +386,7 @@ end;
 
 function TPMSSettingsReservationProfile.GetAllowAllotmentStateChange: boolean;
 begin
-  Result :=  GetSettingsAsBoolean(cAllowAllotmentStateChange, False);
+  Result :=  GetSettingsAsBoolean(cAllowAllotmentStateChange, True);
 end;
 
 function TPMSsettingsReservationProfile.GetEditAllGuestsNationality: boolean;
@@ -413,6 +434,23 @@ end;
 procedure TPMSSettingsBetaFunctionality.SetUseInvocieOnObjectsForm(const Value: boolean);
 begin
   SaveSetting(cBetaFunctionUseInvoiceOnObjectsForm, Value);
+end;
+
+{ TPMSPMSSpecificSettings }
+
+function TPMSPMSSpecificSettings.GetKeyGroup: string;
+begin
+  Result := cUserSpecific;
+end;
+
+function TPMSPMSSpecificSettings.GetUserHomePage: Integer;
+begin
+  Result := GetSettingsAsInteger(cUserSpecificHomePage, 1);
+end;
+
+procedure TPMSPMSSpecificSettings.SetUserHomePage(const Value: Integer);
+begin
+  SaveSetting(cUserSpecificHomePage, Value);
 end;
 
 end.

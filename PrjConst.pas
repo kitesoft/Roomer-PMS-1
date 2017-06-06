@@ -1658,6 +1658,11 @@ begin
 
   constants.Add('shDailyrevenues_refreshwithdetails', 'Data needs to be refreshed to make detailinfo visible.'+#10#13 + 'Refresh now?');
 
+  constants.Add('FrontDeskPage_Arrivals', 'Arrivals');
+  constants.Add('FrontDeskPage_Departures', 'Departures');
+  constants.Add('FrontDeskPage_LeftToSell', 'Left to sell');
+  constants.Add('FrontDeskPage_Occupancy', 'Occupancy');
+  constants.Add('FrontDeskPage_BAR', 'BAR');
 
 end;
 

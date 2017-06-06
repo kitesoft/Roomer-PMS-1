@@ -1,4 +1,4 @@
-unit uRptArrivals;
+unit uRptInHouse;
 
 interface
 
@@ -15,55 +15,48 @@ uses
   cxDrawTextUtils, dxPSPrVwStd, dxPSPrVwAdv, dxPSPrVwRibbon, dxPScxPageControlProducer, dxPScxGridLnk,
   dxPScxGridLayoutViewLnk, dxPScxEditorProducers, dxPScxExtEditorProducers, dxSkinsdxBarPainter, dxSkinsdxRibbonPainter,
   dxPScxCommon, dxPSCore, dxStatusBar
-  , uCurrencyHandler, AdvSmoothProgressBar, Vcl.ComCtrls, sStatusBar, cxTextEdit, sEdit, Vcl.Buttons, sSpeedButton  ;
+  , uCurrencyHandler, AdvSmoothProgressBar, Vcl.ComCtrls, sStatusBar, cxTextEdit, Vcl.Buttons, sSpeedButton, sEdit  ;
 
 type
-  TfrmArrivalsReport = class(TfrmBaseRoomerForm)
-    kbmArrivalsList: TkbmMemTable;
-    ArrivalsListDS: TDataSource;
+  TfrmInHouseReport = class(TfrmBaseRoomerForm)
+    kbmInHouseList: TkbmMemTable;
+    InHouseListDS: TDataSource;
     pnlFilter: TsPanel;
     btnRefresh: TsButton;
-    gbxSelectDates: TsGroupBox;
-    rbToday: TsRadioButton;
-    rbTomorrow: TsRadioButton;
-    rbManualRange: TsRadioButton;
-    dtDateFrom: TsDateEdit;
-    dtDateTo: TsDateEdit;
     pnlExportButtons: TsPanel;
     btnExcel: TsButton;
-    grArrivalsList: TcxGrid;
-    lvArrivalsListLevel1: TcxGridLevel;
-    grArrivalsListDBTableView1: TcxGridDBTableView;
-    kbmArrivalsListfldRoom: TStringField;
-    kbmArrivalsListfldRoomtype: TStringField;
-    kbmArrivalsListfldRoomerReservationID: TIntegerField;
-    kbmArrivalsListfldGuestName: TStringField;
-    kbmArrivalsListfldCompanyCode: TStringField;
-    kbmArrivalsListfldArrival: TDateField;
-    kbmArrivalsListfldDeparture: TDateField;
-    kbmArrivalsListfldNumGuests: TIntegerField;
+    grInHouseList: TcxGrid;
+    lvInHouseListLevel1: TcxGridLevel;
+    grInHouseListDBTableView1: TcxGridDBTableView;
+    kbmInHouseListfldRoom: TStringField;
+    kbmInHouseListfldRoomtype: TStringField;
+    kbmInHouseListfldRoomerReservationID: TIntegerField;
+    kbmInHouseListfldGuestName: TStringField;
+    kbmInHouseListfldCompanyCode: TStringField;
+    kbmInHouseListfldArrival: TDateField;
+    kbmInHouseListfldDeparture: TDateField;
+    kbmInHouseListfldNumGuests: TIntegerField;
     cxStyleRepository1: TcxStyleRepository;
     cxStyle1: TcxStyle;
-    kbmArrivalsListAverageRoomRate: TFloatField;
-    kbmArrivalsListExpectedTimeOfArrival: TStringField;
-    btnCheckIn: TsButton;
+    kbmInHouseListAverageRoomRate: TFloatField;
+    kbmInHouseListExpectedTimeOfDeparture: TStringField;
     btnProfile: TsButton;
     btnInvoice: TsButton;
     pmnuInvoiceMenu: TPopupMenu;
     R1: TMenuItem;
     G1: TMenuItem;
-    grArrivalsListDBTableView1Room: TcxGridDBColumn;
-    grArrivalsListDBTableView1Roomtype: TcxGridDBColumn;
-    grArrivalsListDBTableView1RoomerReservationID: TcxGridDBColumn;
-    grArrivalsListDBTableView1GuestName: TcxGridDBColumn;
-    grArrivalsListDBTableView1CompanyCode: TcxGridDBColumn;
-    grArrivalsListDBTableView1Arrival: TcxGridDBColumn;
-    grArrivalsListDBTableView1Departure: TcxGridDBColumn;
-    grArrivalsListDBTableView1NumGuests: TcxGridDBColumn;
-    grArrivalsListDBTableView1AverageRoomRate: TcxGridDBColumn;
-    grArrivalsListDBTableView1ExpectedTimeOfArrival: TcxGridDBColumn;
-    kbmArrivalsListRoomerRoomReservationID: TIntegerField;
-    grArrivalsListDBTableView1RoomerRoomReservationID: TcxGridDBColumn;
+    grInHouseListDBTableView1Room: TcxGridDBColumn;
+    grInHouseListDBTableView1Roomtype: TcxGridDBColumn;
+    grInHouseListDBTableView1RoomerReservationID: TcxGridDBColumn;
+    grInHouseListDBTableView1GuestName: TcxGridDBColumn;
+    grInHouseListDBTableView1CompanyCode: TcxGridDBColumn;
+    grInHouseListDBTableView1Arrival: TcxGridDBColumn;
+    grInHouseListDBTableView1Departure: TcxGridDBColumn;
+    grInHouseListDBTableView1NumGuests: TcxGridDBColumn;
+    grInHouseListDBTableView1AverageRoomRate: TcxGridDBColumn;
+    grInHouseListDBTableView1ExpectedTimeOfDeparture: TcxGridDBColumn;
+    kbmInHouseListRoomerRoomReservationID: TIntegerField;
+    grInHouseListDBTableView1RoomerRoomReservationID: TcxGridDBColumn;
     pnmuGridMenu: TPopupMenu;
     mnuCheckin: TMenuItem;
     mnuProfile: TMenuItem;
@@ -88,36 +81,34 @@ type
     cxStyle13: TcxStyle;
     cxStyle14: TcxStyle;
     dxGridReportLinkStyleSheet1: TdxGridReportLinkStyleSheet;
+    btnCheckOut: TsButton;
     sPanel1: TsPanel;
     cLabFilter: TsLabel;
-    btnClear: TsSpeedButton;
     edFilter: TsEdit;
+    btnClear: TsSpeedButton;
     timFilter: TTimer;
     procedure rbRadioButtonClick(Sender: TObject);
     procedure btnExcelClick(Sender: TObject);
     procedure btnRefreshClick(Sender: TObject);
-    procedure kbmArrivalsListAfterScroll(DataSet: TDataSet);
-    procedure btnCheckInClick(Sender: TObject);
+    procedure kbmInHouseListAfterScroll(DataSet: TDataSet);
     procedure mnuRoomInvoiceClick(Sender: TObject);
     procedure btnProfileClick(Sender: TObject);
     procedure mnuGroupInvoiceClick(Sender: TObject);
-    procedure grArrivalsListDBTableView1CellDblClick(Sender: TcxCustomGridTableView; ACellViewInfo: TcxGridTableDataCellViewInfo; AButton: TMouseButton;
+    procedure grInHouseListDBTableView1CellDblClick(Sender: TcxCustomGridTableView; ACellViewInfo: TcxGridTableDataCellViewInfo; AButton: TMouseButton;
       AShift: TShiftState; var AHandled: Boolean);
-    procedure dtDateFromCloseUp(Sender: TObject);
-    procedure dtDateToCloseUp(Sender: TObject);
-    procedure grArrivalsListDBTableView1ExpectedTimeOfArrivalGetDisplayText(Sender: TcxCustomGridTableItem;
+    procedure grInHouseListDBTableView1ExpectedTimeOfDepartureGetDisplayText(Sender: TcxCustomGridTableItem;
       ARecord: TcxCustomGridRecord; var AText: string);
     procedure btnReportClick(Sender: TObject);
-    procedure grArrivalsListDBTableView1AverageRoomRateGetProperties(Sender: TcxCustomGridTableItem;
+    procedure grInHouseListDBTableView1AverageRoomRateGetProperties(Sender: TcxCustomGridTableItem;
       ARecord: TcxCustomGridRecord; var AProperties: TcxCustomEditProperties);
-    procedure timFilterTimer(Sender: TObject);
+    procedure btnCheckOutClick(Sender: TObject);
     procedure btnClearClick(Sender: TObject);
+    procedure timFilterTimer(Sender: TObject);
     procedure edFilterChange(Sender: TObject);
   private
     FRefreshingdata: boolean;
     FCurrencyhandler: TCurrencyHandler;
     { Private declarations }
-    procedure SetManualDates(aFrom, aTo: TDate);
     function ConstructSQL: string;
   protected
     procedure DoLoadData; override;
@@ -133,7 +124,7 @@ type
 /// <summary>
 ///   Global access point for showing the arrival report form, If Modalresult is OK then True is returned
 /// </summary>
-function ShowArrivalsReport(AutoClick : Boolean = False; Tomorrow : Boolean = False): boolean;
+function ShowInHouseReport(AutoClick : Boolean = False): boolean;
 
 implementation
 
@@ -162,7 +153,7 @@ uses
   ;
 
 const
-  cSQL = 'SELECT '#10 +
+  cSQL = 'SELECT DISTINCT '#10 +
           '  co.CompanyID, '#10 +
           '  rd.Room, '#10 +
           '  rd.RoomType, '#10 +
@@ -177,36 +168,23 @@ const
           '  ( SELECT COUNT(id) '#10 +
           '    FROM persons pe1 '#10 +
           '    WHERE pe1.RoomReservation=rd.RoomReservation) AS NumGuests, '#10 +
-          '  rr.ExpectedTimeOfArrival as ExpectedTimeOfArrival '#10 +
+          '  rr.ExpectedCheckOutTime as ExpectedTimeOfDeparture '#10 +
           'FROM roomsdate rd '#10 +
           'JOIN roomreservations rr ON rr.RoomReservation=rd.RoomReservation '#10 +
           'JOIN reservations r ON r.Reservation=rd.Reservation '#10 +
           'JOIN persons pe ON pe.RoomReservation=rd.RoomReservation AND pe.MainName=1 '#10 +
           ', control co '#10 +
-          'WHERE ( SELECT rd1.ADate '#10 +
-          '        FROM roomsdate rd1 '#10 +
-          '        WHERE rd1.RoomReservation=rd.RoomReservation AND (rd1.ResFlag = ''P'') '#10 +
-          '        ORDER BY rd1.ADate LIMIT 1)=rd.ADate '#10 +
-          '      AND (rd.ResFlag = ''P'') '#10 +
-          '      %s '#10 +
+          'WHERE (rd.ResFlag = ''G'') '#10 +
+          'AND rd.ADate IN (''%s'', ''%s'') '#10 +
           'GROUP BY rd.aDate, rd.RoomReservation '#10 +
           'ORDER BY rd.aDate, rd.Room ';
 
-  cSqlForSingleDate = '      AND rd.ADate = ''%s'' ';
-  cSqlForDateRange = '      AND rd.ADate >= ''%s'' AND rd.ADate <= ''%s'' ';
-
-
-function ShowArrivalsReport(AutoClick : Boolean = False; Tomorrow : Boolean = False): boolean;
+function ShowInHouseReport(AutoClick : Boolean = False): boolean;
 var
-  frm: TfrmArrivalsReport;
+  frm: TfrmInHouseReport;
 begin
-  frm := TfrmArrivalsReport.Create(nil);
+  frm := TfrmInHouseReport.Create(nil);
   try
-    if Tomorrow then
-    begin
-      frm.rbTomorrow.Checked := True;
-      frm.UpdateControls;
-    end;
     if AutoClick then
       frm.btnRefresh.Click;
     frm.ShowModal;
@@ -216,132 +194,111 @@ begin
   end;
 end;
 
-procedure TfrmArrivalsReport.btnCheckInClick(Sender: TObject);
+procedure TfrmInHouseReport.btnCheckOutClick(Sender: TObject);
 var
   lStateChangeHandler: TRoomReservationStateChangeHandler;
 begin
 
-  lStateChangeHandler := TRoomReservationStateChangeHandler.Create(kbmArrivalsList['RoomerReservationID'], kbmArrivalsList['RoomerRoomReservationID']);
+  lStateChangeHandler := TRoomReservationStateChangeHandler.Create(kbmInHouseList['RoomerReservationID'], kbmInHouseList['RoomerRoomReservationID']);
   try
-    if lStateChangeHandler.ChangeState(rsGuests) then
-       RefreshData;
+    if lStateChangeHandler.ChangeState(rsDeparted) then
+       Refreshdata;
   finally
     lStateChangeHandler.Free;
   end;
-
 end;
 
-procedure TfrmArrivalsReport.btnClearClick(Sender: TObject);
+procedure TfrmInHouseReport.btnClearClick(Sender: TObject);
 begin
   edFilter.Text := '';
 end;
 
-procedure TfrmArrivalsReport.btnExcelClick(Sender: TObject);
+
+procedure TfrmInHouseReport.edFilterChange(Sender: TObject);
+begin
+  if edFilter.Text = '' then
+  begin
+    StopFilter(kbmInHouseList, timFilter, grInHouseListDBTableView1);
+  end else
+  begin
+    applyFilter(kbmInHouseList, edFilter.Text, timFilter, grInHouseListDBTableView1);
+  end;
+end;
+
+procedure TfrmInHouseReport.btnExcelClick(Sender: TObject);
 var
   sFilename : string;
   s         : string;
 begin
   dateTimeToString(s, 'yyyymmddhhnn', now);
-  sFilename := g.qProgramPath + s + '_ArrivalsList';
-  ExportGridToExcel(sFilename, grArrivalsList, true, true, true);
+  sFilename := g.qProgramPath + s + '_InHouseList';
+  ExportGridToExcel(sFilename, grInHouseList, true, true, true);
   ShellExecute(Handle, 'OPEN', PChar(sFilename + '.xls'), nil, nil, sw_shownormal);
 end;
 
-procedure TfrmArrivalsReport.btnProfileClick(Sender: TObject);
+procedure TfrmInHouseReport.btnProfileClick(Sender: TObject);
 begin
-  if EditReservation(kbmArrivalsList['RoomerReservationID'], kbmArrivalsList['RoomerRoomReservationID']) then
+  if EditReservation(kbmInHouseList['RoomerReservationID'], kbmInHouseList['RoomerRoomReservationID']) then
     RefreshData;
 end;
 
-procedure TfrmArrivalsReport.btnRefreshClick(Sender: TObject);
+procedure TfrmInHouseReport.btnRefreshClick(Sender: TObject);
 begin
   RefreshData;
 end;
 
-procedure TfrmArrivalsReport.btnReportClick(Sender: TObject);
+procedure TfrmInHouseReport.btnReportClick(Sender: TObject);
 var
   lTitle: string;
 begin
-  if dtDateFrom.Date = dtDateTo.Date then
-    lTitle := Format('%s for %s', [Caption, dtDateFrom.Text])
-  else
-    lTitle := Format('%s from %s until %s', [Caption, dtDateFrom.Text, dtDateTo.text]);
+  lTitle := Format('%s for %s', [Caption, DateTimeToStr(Now)]);
   grdPrinter.PrintTitle := lTitle;
   grdPrinterLink1.ReportTitle.Text := lTitle;
   grdPrinter.Print(True, nil, grdPrinterLink1);
 end;
 
-function TfrmArrivalsReport.ConstructSQL: string;
-var s : String;
+function TfrmInHouseReport.ConstructSQL: string;
 begin
-  if rbToday.Checked OR rbTomorrow.Checked then
-    s := Format(cSqlForSingleDate, [FormatDateTime('yyyy-mm-dd', dtDateFrom.Date)])
-  else
-    s := Format(cSqlForDateRange, [FormatDateTime('yyyy-mm-dd', dtDateFrom.Date),
-                                   FormatDateTime('yyyy-mm-dd', dtDateTo.Date)]);
-  Result := Format(cSQL, [s]);
+  Result := Format(cSQL, [FormatDateTime('yyyy-mm-dd', now), FormatDateTime('yyyy-mm-dd', now-1)]);
   CopyToClipboard(Result);
 end;
 
-constructor TfrmArrivalsReport.Create(aOwner: TComponent);
+constructor TfrmInHouseReport.Create(aOwner: TComponent);
 begin
   FCurrencyhandler := TCurrencyHandler.Create(g.qNativeCurrency);
   inherited;
 end;
 
-destructor TfrmArrivalsReport.Destroy;
+destructor TfrmInHouseReport.Destroy;
 begin
   inherited;
   FCurrencyhandler.Free;
 end;
 
-procedure TfrmArrivalsReport.DoShow;
+procedure TfrmInHouseReport.DoShow;
 begin
   inherited;
   RefreshData;
 end;
 
-procedure TfrmArrivalsReport.dtDateFromCloseUp(Sender: TObject);
+procedure TfrmInHouseReport.mnuGroupInvoiceClick(Sender: TObject);
 begin
- if dtDateFrom.Date > dtDateTo.Date then
-   dtDateTo.Date := dtDateFrom.Date;
+  EditInvoice(kbmInHouseList['RoomerReservationID'], 0, 0, 0, false);
 end;
 
-procedure TfrmArrivalsReport.dtDateToCloseUp(Sender: TObject);
-begin
- if dtDateFrom.Date > dtDateTo.Date then
-   dtDateFrom.Date := dtDateTo.Date;
-end;
-
-procedure TfrmArrivalsReport.edFilterChange(Sender: TObject);
-begin
-  if edFilter.Text = '' then
-  begin
-    StopFilter(kbmArrivalsList, timFilter, grArrivalsListDBTableView1);
-  end else
-  begin
-    applyFilter(kbmArrivalsList, edFilter.Text, timFilter, grArrivalsListDBTableView1);
-  end;
-end;
-
-procedure TfrmArrivalsReport.mnuGroupInvoiceClick(Sender: TObject);
-begin
-  EditInvoice(kbmArrivalsList['RoomerReservationID'], 0, 0, 0, false);
-end;
-
-procedure TfrmArrivalsReport.grArrivalsListDBTableView1AverageRoomRateGetProperties(Sender: TcxCustomGridTableItem;
+procedure TfrmInHouseReport.grInHouseListDBTableView1AverageRoomRateGetProperties(Sender: TcxCustomGridTableItem;
   ARecord: TcxCustomGridRecord; var AProperties: TcxCustomEditProperties);
 begin
   AProperties := FCurrencyhandler.GetcxEditProperties;
 end;
 
-procedure TfrmArrivalsReport.grArrivalsListDBTableView1CellDblClick(Sender: TcxCustomGridTableView; ACellViewInfo: TcxGridTableDataCellViewInfo;
+procedure TfrmInHouseReport.grInHouseListDBTableView1CellDblClick(Sender: TcxCustomGridTableView; ACellViewInfo: TcxGridTableDataCellViewInfo;
   AButton: TMouseButton; AShift: TShiftState; var AHandled: Boolean);
 begin
   btnProfile.Click;
 end;
 
-procedure TfrmArrivalsReport.grArrivalsListDBTableView1ExpectedTimeOfArrivalGetDisplayText(
+procedure TfrmInHouseReport.grInHouseListDBTableView1ExpectedTimeOfDepartureGetDisplayText(
   Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord; var AText: string);
 var
   lTime: TDateTime;
@@ -351,22 +308,29 @@ begin
 
 end;
 
-procedure TfrmArrivalsReport.kbmArrivalsListAfterScroll(DataSet: TDataSet);
+procedure TfrmInHouseReport.kbmInHouseListAfterScroll(DataSet: TDataSet);
 begin
   UpdateControls;
 end;
 
-procedure TfrmArrivalsReport.mnuRoomInvoiceClick(Sender: TObject);
+procedure TfrmInHouseReport.mnuRoomInvoiceClick(Sender: TObject);
 begin
-  EditInvoice(kbmArrivalsList['RoomerReservationID'], kbmArrivalsList['RoomerRoomReservationID'], 0, 0, false);
+  EditInvoice(kbmInHouseList['RoomerReservationID'], kbmInHouseList['RoomerRoomReservationID'], 0, 0, false);
 end;
 
-procedure TfrmArrivalsReport.rbRadioButtonClick(Sender: TObject);
+procedure TfrmInHouseReport.rbRadioButtonClick(Sender: TObject);
 begin
   UpdateControls;
 end;
 
-procedure TfrmArrivalsReport.DoLoadData;
+procedure TfrmInHouseReport.timFilterTimer(Sender: TObject);
+begin
+  timFilter.Enabled := False;
+  kbmInHouseList.filtered := True;
+  grInHouseListDBTableView1.DataController.Filter.Refresh;
+end;
+
+procedure TfrmInHouseReport.DoLoadData;
 var
   s    : string;
   rset1: TRoomerDataset;
@@ -377,7 +341,7 @@ begin
   Screen.Cursor := crHourglass;
   try
 
-    kbmArrivalsList.DisableControls;
+    kbmInHouseList.DisableControls;
     try
       FRefreshingdata := True; // UpdateControls still called when updating dataset, despite DisableControls
       rSet1 := CreateNewDataSet;
@@ -386,18 +350,18 @@ begin
 
         hData.rSet_bySQL(rSet1, s);
         rSet1.First;
-        if not kbmArrivalsList.Active then
-          kbmArrivalsList.Open;
-        LoadKbmMemtableFromDataSetQuiet(kbmArrivalsList,rSet1,[]);
+        if not kbmInHouseList.Active then
+          kbmInHouseList.Open;
+        LoadKbmMemtableFromDataSetQuiet(kbmInHouseList,rSet1,[]);
       finally
         FreeAndNil(rSet1);
       end;
 
-      kbmArrivalsList.First;
+      kbmInHouseList.First;
 
     finally
       FRefreshingdata := False;
-      kbmArrivalsList.EnableControls;
+      kbmInHouseList.EnableControls;
     end;
   finally
     btnRefresh.Enabled := True;
@@ -405,20 +369,7 @@ begin
   end;
 end;
 
-procedure TfrmArrivalsReport.SetManualDates(aFrom, aTo: TDate);
-begin
-  dtDateFrom.Date := aFrom;
-  dtDateTo.Date := aTo;
-end;
-
-procedure TfrmArrivalsReport.timFilterTimer(Sender: TObject);
-begin
-  timFilter.Enabled := False;
-  kbmArrivalsList.filtered := True;
-  grArrivalsListDBTableView1.DataController.Filter.Refresh;
-end;
-
-procedure TfrmArrivalsReport.DoUpdateControls;
+procedure TfrmInHouseReport.DoUpdateControls;
 var
   lDataAvailable: boolean;
 begin
@@ -427,16 +378,8 @@ begin
 
   inherited;
 
-  dtDateFrom.Enabled := rbManualRange.Checked;
-  dtDateTo.Enabled := rbManualRange.Checked;
-
-  if rbToday.Checked then
-    SetManualDates(Now, now)
-  else if rbTomorrow.Checked then
-    SetManualDates(Now+1, Now+1);
-
-  lDataAvailable := kbmArrivalsList.Active and NOT kbmArrivalsList.Eof;
-  btnCheckIn.Enabled := lDataAvailable;
+  lDataAvailable := kbmInHouseList.Active and NOT kbmInHouseList.Eof;
+  btnCheckOut.Enabled := lDataAvailable;
   btnProfile.Enabled := lDataAvailable;
   btnInvoice.Enabled := lDataAvailable;
 end;

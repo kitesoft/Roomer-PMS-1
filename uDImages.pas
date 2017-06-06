@@ -14,6 +14,7 @@ type
     ilGuests: TImageList;
     PngImageList1: TPngImageList;
     PngImageList32: TPngImageList;
+    PngImageList25: TPngImageList;
   private
     { Private declarations }
   public
