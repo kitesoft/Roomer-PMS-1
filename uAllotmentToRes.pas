@@ -429,6 +429,7 @@ type
     procedure grProvideDblClickCell(Sender: TObject; ARow, ACol: Integer);
     procedure tvRoomRatesDiscountGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
       var AProperties: TcxCustomEditProperties);
+    procedure grProvideGridHint(Sender: TObject; ARow, ACol: Integer; var hintstr: string);
 
   private
     { Private declarations }
@@ -930,13 +931,13 @@ begin
       if chkNumGuests.Checked then
         s := s + '[' + inttostr(rrDateInfo.numGuests) + ']';
       if chkGuestName.Checked then
-        s := s + ' ' + rrDateInfo.MainGuest;
+        s := s + #13 + rrDateInfo.MainGuest;
       if chkPrice.Checked then
       begin
         ss := '%';
         if rrDateInfo.isPercentage = false then
           ss := ' ' + rrDateInfo.Currency;
-        s := s + ' ' + FloatTostr(rrDateInfo.RoomRate) + rrDateInfo.Currency + '-' + FloatTostr(rrDateInfo.Discount) + ss;
+        s := s + #13 + FloatTostr(rrDateInfo.RoomRate) + rrDateInfo.Currency + '-' + FloatTostr(rrDateInfo.Discount) + ss;
       end;
       grProvide.Cells[rcRec.col, rcRec.row] := s;
     end;
@@ -1246,6 +1247,11 @@ begin
     end;
 
   end;
+end;
+
+procedure TfrmAllotmentToRes.grProvideGridHint(Sender: TObject; ARow, ACol: Integer; var hintstr: string);
+begin
+  hintStr := grProvide.Cells[ACol, ARow];
 end;
 
 procedure TfrmAllotmentToRes.grProvideSelectionChanged(Sender: TObject; ALeft, ATop, ARight, ABottom: Integer);

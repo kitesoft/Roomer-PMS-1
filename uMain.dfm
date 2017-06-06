@@ -55,7 +55,6 @@ object frmMain: TfrmMain
     SunkenBorder = True
     UseOwnColor = True
     UseOwnSunkenBorder = True
-    ExplicitTop = 122
   end
   object panMain: TsPanel
     Left = 0
@@ -116,7 +115,7 @@ object frmMain: TfrmMain
         Top = 1
         Width = 1022
         Height = 302
-        ActivePage = tabDashboard
+        ActivePage = tabFrontDesk
         Align = alClient
         TabOrder = 1
         OnChange = pageMainGridsChange
@@ -1651,6 +1650,17 @@ object frmMain: TfrmMain
         end
         object tabFrontDesk: TsTabSheet
           Caption = 'tabFrontDesk'
+          object sbFrontDesk: TsScrollBox
+            Left = 0
+            Top = 0
+            Width = 1014
+            Height = 274
+            Align = alClient
+            BorderStyle = bsNone
+            TabOrder = 0
+            ExplicitLeft = -2
+            ExplicitTop = -1
+          end
         end
       end
       object pnlStatSlider: TsPanel
@@ -2707,6 +2717,7 @@ object frmMain: TfrmMain
       Index = 0
     end
     object rbTabReservation: TdxRibbonTab
+      Active = True
       Caption = 'Reservation'
       Groups = <
         item
@@ -2727,7 +2738,6 @@ object frmMain: TfrmMain
       Index = 1
     end
     object rbTabInvoice: TdxRibbonTab
-      Active = True
       Caption = 'Invoice'
       Groups = <
         item

@@ -131,9 +131,16 @@ begin
 end;
 
 procedure TRoomerVersionManagement.CloseDaemon;
+var i : Integer;
 begin
   GetFromURI(URI_UPGRADE_DAEMON_CLOSE);
-  Sleep(1000);
+  Application.ProcessMessages;
+  for i := 1 to 20 do
+  begin
+    Sleep(100);
+    Application.ProcessMessages;
+  end;
+  Application.ProcessMessages;
 end;
 
 procedure TRoomerVersionManagement.ForceUpdate;

@@ -371,13 +371,16 @@ object frmAllotmentToRes: TfrmAllotmentToRes
       ParentCtl3D = False
       ParentDoubleBuffered = False
       ParentFont = False
+      ParentShowHint = False
       ScrollBars = ssBoth
+      ShowHint = True
       TabOrder = 1
       StyleElements = [seClient, seBorder]
       GridLineColor = 15527152
       GridFixedLineColor = 13947601
       HoverRowCells = [hcNormal, hcSelected]
       OnGetCellColor = grProvideGetCellColor
+      OnGridHint = grProvideGridHint
       OnDblClickCell = grProvideDblClickCell
       OnSelectionChanged = grProvideSelectionChanged
       DragDropSettings.ShowCells = False
@@ -501,6 +504,8 @@ object frmAllotmentToRes: TfrmAllotmentToRes
       SortSettings.HeaderMirrorColor = 16380385
       SortSettings.HeaderMirrorColorTo = 16182488
       Version = '8.2.5.2'
+      ExplicitLeft = 2
+      ExplicitTop = 250
       ColWidths = (
         132)
       RowHeights = (

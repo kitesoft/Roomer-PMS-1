@@ -20,11 +20,10 @@ object FrmFrontDeskPageButton: TFrmFrontDeskPageButton
   PixelsPerInch = 96
   TextHeight = 13
   object pnlContainer: TsPanel
-    Left = 0
-    Top = 0
-    Width = 926
-    Height = 681
-    Align = alClient
+    Left = 56
+    Top = 32
+    Width = 833
+    Height = 625
     BevelOuter = bvNone
     Color = 16760636
     ParentBackground = False
