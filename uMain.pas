@@ -1454,6 +1454,7 @@ type
     procedure OnAskUpgrade(Text, version: String; forced : Boolean; var upgrade: Boolean);
     procedure PrepareVersionManagement;
     procedure ClearFilter;
+    procedure SetDateStatisticsDate;
   public
     { Public declarations }
     StaffComm: TStaffCommunication;
@@ -3728,7 +3729,7 @@ var
   s: string;
 begin
   if (ActiveControl <> grOneDayRooms) AND (ActiveControl <> grPeriodRooms) AND (NOT frmDaysStatistics.BeingViewed) AND
-    (NOT FrmRateQuery.BeingViewed) then
+    (NOT FrmRateQuery.BeingViewed) AND (tabsView.TabIndex <> 7) then
     exit;
 
   s := Key;
@@ -4041,12 +4042,11 @@ begin
       vmPeriod:     RefreshPeriodView;
       vmMeetings: ;
       vmDashboard:  begin
-                      frmDaysStatistics.ViewDate := dtDate.Date;
-                      frmDateStatistics.Date := trunc(dtDate.Date);
-                      frmDateStatistics.RefreshData
+                      SetDateStatisticsDate;
                     end;
       vmRateQuery:  PostMessage(handle, WM_SET_DATE_FROM_MAIN, 0, trunc(dtDate.Date));
       vmFrontDesk:  begin
+                      SetDateStatisticsDate;
                       FrmFrontDeskPageButton.ShowFromDate := dtDate.Date;
                     end;
 
@@ -4057,6 +4057,13 @@ begin
     BusyRefreshingTodaysGrid := false;
     EndTimeMeasure;
   end;
+end;
+
+procedure TfrmMain.SetDateStatisticsDate;
+begin
+  frmDaysStatistics.ViewDate := dtDate.Date;
+  frmDateStatistics.Date := trunc(dtDate.Date);
+  frmDateStatistics.RefreshData;
 end;
 
 procedure TfrmMain.RefreshPeriodView;

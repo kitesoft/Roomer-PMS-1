@@ -159,6 +159,7 @@ object frmDaysStatistics: TfrmDaysStatistics
               ParentColor = True
               TabOrder = 0
               OnKeyDown = FormKeyDown
+              ExplicitTop = 1
               PrintMargins = (
                 15
                 19
