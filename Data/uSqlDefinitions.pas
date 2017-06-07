@@ -1143,9 +1143,10 @@ select_RoomReservation : string =
 '    ,blockMoveReason '#10+
 '    ,numGuests '#10+
 '    ,numChildren '#10+
-'    ,numInfants, '#10+
-'    ,(SELECT AVG(RoomRate) FROM roomsdate rd WHERE rd.RoomReservation=RoomReservations.RoomReservation AND (rd.ResFlag NOT IN (''X'',''C''))) AS AverageRate, '#10+
-'    ,rateCount,package '#10+
+'    ,numInfants '#10+
+'    ,(SELECT AVG(RoomRate) FROM roomsdate rd WHERE rd.RoomReservation=RoomReservations.RoomReservation AND (rd.ResFlag NOT IN (''X'',''C''))) AS AverageRate '#10+
+'    ,rateCount '#10+
+'    ,package '#10+
 '    ,ExpectedTimeOfArrival '#10+
 '    ,ExpectedCheckoutTime'#10+
 '  FROM '#10+
