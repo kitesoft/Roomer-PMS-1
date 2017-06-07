@@ -215,7 +215,6 @@ type
     tabPeriod: TsTabSheet;
     panMainTop: TsPanel;
     Panel4: TsPanel;
-    labRefreshTime: TsLabel;
     __PanGridsHeader: TsPanel;
     panPeriodRooms: TsPanel;
     grPeriodRooms: TAdvStringGrid;
@@ -3305,6 +3304,10 @@ begin
   end;
   try
     RoomerLanguage.TranslateThisForm(embPeriodView);
+  except
+  end;
+  try
+    RoomerLanguage.TranslateThisForm(FrmFrontDeskPageButton);
   except
   end;
 

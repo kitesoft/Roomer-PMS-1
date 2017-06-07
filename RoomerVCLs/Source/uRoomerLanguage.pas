@@ -874,7 +874,8 @@ begin
   ActivateDBLanguageCollection;
   try
     try
-      formTypeName := GetWindowClassName(FormToTranslate.Handle);
+//      formTypeName := GetWindowClassName(FormToTranslate.Handle);
+      formTypeName := FormToTranslate.ClassName;
       TranslateThis(FormToTranslate,
                     format(KEY_MASK, [formTypeName, 'Form', '']));
       for i := 0 to FormToTranslate.ComponentCount - 1 do
@@ -885,7 +886,7 @@ begin
 
       SubmitDBLanguageCollection;
     except
-      // Hmmm....
+      // Hmmm.... ...
     end;
   finally
     DeactivateDBLanguageCollection;
@@ -897,7 +898,8 @@ var formTypeName : String;
 begin
   if NOT RoomerLanguageActivated then exit;
 
-  formTypeName := GetWindowClassName(FormToTranslate.Handle);
+// formTypeName := GetWindowClassName(FormToTranslate.Handle);
+  formTypeName := FormToTranslate.ClassName;
   TranslateThis(ControlToTranslate,
                 format(KEY_MASK, [formTypeName, ControlToTranslate.Name, '']));
 end;
@@ -1299,6 +1301,7 @@ begin
   for i := 0 to comp.Tabs.Count - 1 do
     comp.Tabs[i] := GetTranslationOfSpecifiedKey(key + 'Items' + inttostr(i), comp.Tabs[i]);
   CheckHintComponentName(comp, GetTranslationOfSpecifiedKey(key + 'Hint', comp.Hint));
+  comp.Invalidate;
 end;
 
 
