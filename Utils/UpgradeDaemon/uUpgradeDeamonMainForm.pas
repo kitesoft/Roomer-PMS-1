@@ -58,8 +58,6 @@ type
     URIProcessor : TURIProcessor;
     FDownloadActive: Boolean;
     FCountRequests : Integer;
-    procedure StartLabel(Label_: TsLabel);
-    procedure EndLabel(Label_: TsLabel);
     function DownloadFile(const Url, filename: String): Boolean;
     procedure RemoveLanguagesFiles;
     procedure RemoveAllRoomerCaches;
@@ -239,13 +237,6 @@ begin
   FDownloadActive := Value;
 end;
 
-procedure TfrmUpgradeDaemon.StartLabel(Label_: TsLabel);
-begin
-  Label_.Font.Color := clWhite;
-  Label_.Font.Style := [fsBold];
-  Label_.Update;
-end;
-
 procedure TfrmUpgradeDaemon.timCloseTimer(Sender: TObject);
 begin
   timClose.Enabled := False;
@@ -333,13 +324,6 @@ begin
   Close;
 end;
 
-procedure TfrmUpgradeDaemon.EndLabel(Label_: TsLabel);
-begin
-  Label_.Font.Color := clGray;
-  Label_.Font.Style := [fsStrikeOut];
-  Label_.Update;
-end;
-
 procedure TfrmUpgradeDaemon.C1Click(Sender: TObject);
 begin
   logs.SelectAll;
@@ -425,66 +409,10 @@ begin
   end;
 end;
 
-//procedure TfrmUpgradeAgent.PerformUpdate;
-//var
-//  exeName: String;
-//  localFilename: PWideChar;
-//  tempFile: String;
-//begin
-//  exeName := TUpgraderCmdlineOptions.exeName;
-//
-//  lblExename.Caption := exeName;
-//  StartLabel(Label1);
-//  try
-//    tempFile := TPath.GetTempFileName;
-//    DeleteFile(tempFile);
-//    if DownloadFile(TUpgraderCmdlineOptions.RoomerStoreURL + ROOMER_EXE_URI, tempFile) then
-//    begin
-//      if not TUpgraderCmdlineOptions.SkipClearLanguages then
-//        RemoveLanguagesFiles;
-//      if not TUpgraderCmdlineOptions.SkipClearCache then
-//        RemoveAllRoomerCaches;
-//
-//      lblDownloaded.Hide;
-//      lblDownloaded.Update;
-//
-//      EndLabel(Label1);
-//
-//      StartLabel(Label2);
-//      sleep(2000);
-//      DeleteFile(exeName);
-//      localFilename := PWideChar(tempFile);
-//      if NOT TryCopyFile(localFilename, PChar(exeName)) then
-//      begin
-//        if FileExists(tempFile) then
-//          DeleteFile(tempFile);
-//        Close;
-//        exit;
-//      end;
-//      DeleteFile(localFilename);
-//      EndLabel(Label2);
-//
-//      StartLabel(Label3);
-//      ShellExecute(Handle, 'open', PChar(exeName), nil, nil, SW_SHOWNORMAL);
-//      EndLabel(Label3);
-//    end;
-//  except
-//    On E: Exception do
-//    begin
-//{$IFDEF DEBUG}
-//      ShowMessage('Error: ' + E.Message);
-//{$ENDIF}
-//    end;
-//  end;
-//
-//  Close;
-//end;
-
 procedure TfrmUpgradeDaemon.UpdateNow;
 var
   exeName: String;
   UpgradeFilename: PWideChar;
-  tempFile: String;
 begin
   if (NOT URIProcessor.FUpgradeFileManager.UpgradeFinished) AND
      (URIProcessor.FUpgradeFileManager.UpgradeMD5 <> '') then
@@ -540,7 +468,6 @@ end;
 procedure TfrmUpgradeDaemon.PerformDownloadOfUpdate;
 var
   exeName: String;
-  localFilename: PWideChar;
   tempFileXML: String;
   tempFileEXE: String;
 

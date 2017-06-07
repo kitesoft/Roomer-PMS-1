@@ -8873,6 +8873,9 @@ object frmUpgradeDaemon: TfrmUpgradeDaemon
     Addr = '127.0.0.1'
     SocketFamily = sfIPv4
     MaxClients = 0
+    DocDir = 'c:\wwwroot'
+    TemplateDir = 'c:\wwwroot\templates'
+    DefaultDoc = 'index.html'
     LingerOnOff = wsLingerNoSet
     LingerTimeout = 1
     Options = [hoAllowOptions, hoAllowPut, hoAllowTrace, hoAllowPatch, hoSendServerHdr]

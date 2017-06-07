@@ -9,7 +9,8 @@ uses
   uRoomerUpgradeFileDependencyManager in 'uRoomerUpgradeFileDependencyManager.pas',
   uUpgradeFileManager in 'uUpgradeFileManager.pas',
   uFileSystemUtils in '..\..\uFileSystemUtils.pas' {/  uRoomerDefinitions in '..\..\uRoomerDefinitions.pas';},
-  uRoomerDefinitions in '..\..\uRoomerDefinitions.pas';
+  uRoomerDefinitions in '..\..\uRoomerDefinitions.pas',
+  uUtils in '..\..\RoomerUtils\uUtils.pas';
 
 {$R *.res}
 
