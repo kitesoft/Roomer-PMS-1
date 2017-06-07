@@ -4711,8 +4711,6 @@ begin
 end;
 
 procedure TfrmMakeReservationQuick.edContactPersonKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
-var
-  sTemp: String;
 begin
   if (Key IN [vk_f2]) then
   begin

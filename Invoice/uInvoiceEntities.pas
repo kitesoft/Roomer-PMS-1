@@ -28,6 +28,8 @@ type
     constructor Create(_RoomItem: String; _Guests: Integer; _Children: Integer; _Nights: double; _Price: Double;
       _Vat: Double; _Discount: Double; _BreakfastIncluded: boolean); overload;
 
+    function NumberOfNights: integer;
+
     property Reservation: integer read FReservation write FReservation;
     property RoomReservation: integer read FRoomReservation write FRoomreservation;
     property Room: string read FRoom write FRoom;
@@ -85,7 +87,7 @@ uses
   ;
 
 constructor TInvoiceRoomEntity.Create(_RoomItem: String; _Guests: Integer; _Children: Integer; _Nights: double;
-  _Price, _Vat, _Discount: Double; _BreakFastIncluded: boolean);
+  _Price: double; _Vat, _Discount: Double; _BreakFastIncluded: boolean);
 begin
   FRoomItem := _RoomItem;
   FNumPersons:= _Guests;
@@ -95,6 +97,11 @@ begin
   FDiscount := _Discount;
   FVat := _Vat;
   FBreakFastIncluded := _BreakFastIncluded;
+end;
+
+function TInvoiceRoomEntity.NumberOfNights: integer;
+begin
+  Result := trunc(Departure - Arrival);
 end;
 
 { TInvoiceItemEntity }

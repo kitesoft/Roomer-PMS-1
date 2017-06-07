@@ -147,7 +147,7 @@ function _GetCurrentTick : string;
 function _GetCurrentTick2 : string;
 
 function _GetExeByExtension(sExt : string) : string;
-function _calcVAT(with_VAT, VATPrecent : double) : double;
+function _calcVAT(with_VAT, VATPercentage : double) : double;
 function _calcNetAmount(with_VAT, Percent : double) : double;
 
 function _TinyIntToColor(aInt : integer) : Tcolor;
@@ -1717,21 +1717,16 @@ begin
   end;
 end;
 
-function _calcVAT(with_VAT, VATPrecent : double) : double;
+function _calcVAT(with_VAT, VATPercentage : double) : double;
 var
   divBy : double;
 begin
   result := 0;
-  if with_VAT = 0 then
-    exit;
-  if VatPrecent = 0 then
+  if VATPercentage = 0 then
     exit;
 
-  divBy := (VatPrecent / 100) + 1;
-  if divBy <> 0.00 then
-    result := with_VAT - (with_VAT / divBy)
-  else
-    result := 0.00;
+  divBy := (VATPercentage / 100) + 1;
+  result := with_VAT - (with_VAT / divBy)
 end;
 
 function _calcNetAmount(with_VAT, Percent : double) : double;

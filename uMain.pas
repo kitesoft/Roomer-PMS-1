@@ -1744,7 +1744,7 @@ begin
 end;
 
 procedure TfrmMain.OnAskUpgrade(Text : String; version : String; forced : Boolean; var upgrade : Boolean);
-var s : String;
+var
     Buttons: TMsgDlgButtons;
     lMSgResult: integer;
 
@@ -2095,7 +2095,6 @@ end;
 procedure TfrmMain.FillPeriodGridWithRooms;
 var
   status: string;
-  i: integer;
   Room: string;
   RoomType: string;
 

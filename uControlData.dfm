@@ -126,6 +126,7 @@ object frmControlData: TfrmControlData
           000000FFFFFFFFFFFFFFFF000000000000000000000000010E42006500740061
           002000460075006E006300740069006F006E007300}
         SkinData.SkinSection = 'EDIT'
+        ExplicitTop = -2
       end
     end
     object __LMDBackPanel3: TsPanel
@@ -141,7 +142,7 @@ object frmControlData: TfrmControlData
         Top = 1
         Width = 1101
         Height = 743
-        ActivePage = tsInvEmail
+        ActivePage = tsSystemItemIDs
         Align = alClient
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
@@ -3646,7 +3647,7 @@ object frmControlData: TfrmControlData
               ImgUnchecked = 0
             end
             object sCheckBox1: TsCheckBox
-              Left = 451
+              Left = 447
               Top = 20
               Width = 20
               Height = 16
@@ -3680,7 +3681,7 @@ object frmControlData: TfrmControlData
               Font.Style = []
             end
             object sLabel3: TsLabel
-              Left = 227
+              Left = 226
               Top = 18
               Width = 97
               Height = 14
@@ -3694,13 +3695,12 @@ object frmControlData: TfrmControlData
               Font.Style = []
             end
             object sLabel21: TsLabel
-              Left = 245
-              Top = 41
-              Width = 202
+              Left = 117
+              Top = 44
+              Width = 206
               Height = 14
               Alignment = taRightJustify
-              Caption = 'Show room rent per day on invoice :'
-              Enabled = False
+              Caption = 'Show room rent per day on invoice : '
               ParentFont = False
               Font.Charset = DEFAULT_CHARSET
               Font.Color = clBlack
@@ -3709,8 +3709,8 @@ object frmControlData: TfrmControlData
               Font.Style = []
             end
             object lbShowIncludedBreakfastOnInvoice: TsLabel
-              Left = 240
-              Top = 60
+              Left = 213
+              Top = 69
               Width = 206
               Height = 14
               Alignment = taRightJustify
@@ -3760,26 +3760,34 @@ object frmControlData: TfrmControlData
               TabOrder = 1
               SkinData.SkinSection = 'EDIT'
             end
-            object cbxExpandRoomRent: TsCheckBox
-              Left = 451
-              Top = 39
-              Width = 20
-              Height = 16
-              Enabled = False
-              TabOrder = 2
-              SkinData.SkinSection = 'CHECKBOX'
-              ImgChecked = 0
-              ImgUnchecked = 0
-            end
             object cbShowIncludedBreakfastOnInvoice: TsCheckBox
-              Left = 451
-              Top = 58
+              Left = 425
+              Top = 67
               Width = 20
               Height = 16
               TabOrder = 3
               SkinData.SkinSection = 'CHECKBOX'
               ImgChecked = 0
               ImgUnchecked = 0
+            end
+            object cbxRoomRentPerDay: TsComboBox
+              Left = 327
+              Top = 41
+              Width = 117
+              Height = 22
+              Alignment = taLeftJustify
+              SkinData.SkinSection = 'COMBOBOX'
+              VerticalAlignment = taAlignTop
+              Style = csDropDownList
+              Color = clWhite
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clBlack
+              Font.Height = -12
+              Font.Name = 'Tahoma'
+              Font.Style = []
+              ItemIndex = -1
+              ParentFont = False
+              TabOrder = 2
             end
           end
           object LMDGroupBox26: TsGroupBox
@@ -3853,7 +3861,7 @@ object frmControlData: TfrmControlData
             TabOrder = 4
             SkinData.SkinSection = 'GROUPBOX'
             object sLabel12: TsLabel
-              Left = 198
+              Left = 202
               Top = 18
               Width = 242
               Height = 14
@@ -3867,7 +3875,7 @@ object frmControlData: TfrmControlData
               Font.Style = []
             end
             object lblRequireExactClosingPayment: TsLabel
-              Left = 107
+              Left = 111
               Top = 58
               Width = 333
               Height = 14
@@ -3881,7 +3889,7 @@ object frmControlData: TfrmControlData
               Font.Style = []
             end
             object sLabel17: TsLabel
-              Left = 181
+              Left = 185
               Top = 38
               Width = 259
               Height = 14
@@ -3895,7 +3903,7 @@ object frmControlData: TfrmControlData
               Font.Style = []
             end
             object lblAllowPaymentModifications: TsLabel
-              Left = 263
+              Left = 266
               Top = 78
               Width = 178
               Height = 14
@@ -3909,7 +3917,7 @@ object frmControlData: TfrmControlData
               Font.Style = []
             end
             object lblAllowDeleteItemsFromInvoice: TsLabel
-              Left = 213
+              Left = 216
               Top = 98
               Width = 228
               Height = 14
@@ -3923,7 +3931,7 @@ object frmControlData: TfrmControlData
               Font.Style = []
             end
             object lbAllowTogglingOfCityTaxesOnInvoice: TsLabel
-              Left = 238
+              Left = 241
               Top = 117
               Width = 203
               Height = 14
@@ -3937,7 +3945,7 @@ object frmControlData: TfrmControlData
               Font.Style = []
             end
             object chkNegInvoice: TsCheckBox
-              Left = 447
+              Left = 450
               Top = 18
               Width = 20
               Height = 16
@@ -3947,7 +3955,7 @@ object frmControlData: TfrmControlData
               ImgUnchecked = 0
             end
             object cbxRequireExactClosingPayment: TsCheckBox
-              Left = 447
+              Left = 450
               Top = 58
               Width = 20
               Height = 16
@@ -3957,7 +3965,7 @@ object frmControlData: TfrmControlData
               ImgUnchecked = 0
             end
             object cbxWithdrawalWithoutGuarantee: TsCheckBox
-              Left = 447
+              Left = 450
               Top = 38
               Width = 20
               Height = 16
@@ -3967,7 +3975,7 @@ object frmControlData: TfrmControlData
               ImgUnchecked = 0
             end
             object cbAllowPaymentModification: TsCheckBox
-              Left = 447
+              Left = 450
               Top = 77
               Width = 20
               Height = 16
@@ -3977,7 +3985,7 @@ object frmControlData: TfrmControlData
               ImgUnchecked = 0
             end
             object cbAllowDeleteItemsFromInvoice: TsCheckBox
-              Left = 447
+              Left = 450
               Top = 97
               Width = 20
               Height = 16
@@ -3987,7 +3995,7 @@ object frmControlData: TfrmControlData
               ImgUnchecked = 0
             end
             object cbAllowTogglingOfCityTaxesOnInvoice: TsCheckBox
-              Left = 447
+              Left = 450
               Top = 116
               Width = 20
               Height = 16

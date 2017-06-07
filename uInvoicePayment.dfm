@@ -4,7 +4,7 @@ object frmInvoicePayment: TfrmInvoicePayment
   BorderStyle = bsDialog
   Caption = 'Invoice payment'
   ClientHeight = 471
-  ClientWidth = 314
+  ClientWidth = 336
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -22,18 +22,18 @@ object frmInvoicePayment: TfrmInvoicePayment
   object Panel1: TsPanel
     Left = 0
     Top = 426
-    Width = 314
+    Width = 336
     Height = 45
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 2
     SkinData.SkinSection = 'PANEL'
-    ExplicitTop = 416
+    ExplicitWidth = 314
     DesignSize = (
-      314
+      336
       45)
     object BtnOk: TsButton
-      Left = 116
+      Left = 138
       Top = 4
       Width = 83
       Height = 37
@@ -46,9 +46,10 @@ object frmInvoicePayment: TfrmInvoicePayment
       TabOrder = 0
       OnClick = BtnOkClick
       SkinData.SkinSection = 'BUTTON'
+      ExplicitLeft = 116
     end
     object btnCancel: TsButton
-      Left = 205
+      Left = 227
       Top = 4
       Width = 102
       Height = 37
@@ -60,17 +61,19 @@ object frmInvoicePayment: TfrmInvoicePayment
       ModalResult = 2
       TabOrder = 1
       SkinData.SkinSection = 'BUTTON'
+      ExplicitLeft = 205
     end
   end
   object Panel2: TsPanel
     Left = 0
     Top = 0
-    Width = 314
+    Width = 336
     Height = 29
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
     SkinData.SkinSection = 'PANEL'
+    ExplicitWidth = 314
     object lblCustomername: TsLabel
       Left = 202
       Top = 8
@@ -135,7 +138,7 @@ object frmInvoicePayment: TfrmInvoicePayment
   object Panel3: TsPanel
     Left = 0
     Top = 108
-    Width = 314
+    Width = 336
     Height = 19
     Align = alTop
     Alignment = taLeftJustify
@@ -149,12 +152,12 @@ object frmInvoicePayment: TfrmInvoicePayment
     ParentFont = False
     TabOrder = 3
     SkinData.SkinSection = 'PANEL'
-    ExplicitTop = 77
+    ExplicitWidth = 314
   end
   object agrPayTypes: TAdvStringGrid
     Left = 0
     Top = 127
-    Width = 314
+    Width = 336
     Height = 180
     Cursor = crDefault
     Align = alClient
@@ -252,9 +255,8 @@ object frmInvoicePayment: TfrmInvoicePayment
     SearchFooter.Font.Style = []
     SearchFooter.ResultFormat = '(%d of %d)'
     SortSettings.DefaultFormat = ssAutomatic
-    Version = '8.2.5.2'
-    ExplicitTop = 96
-    ExplicitHeight = 201
+    Version = '8.2.4.1'
+    ExplicitWidth = 314
     ColWidths = (
       169
       116)
@@ -265,7 +267,7 @@ object frmInvoicePayment: TfrmInvoicePayment
   object Panel5: TsPanel
     Left = 0
     Top = 307
-    Width = 314
+    Width = 336
     Height = 22
     Align = alBottom
     BevelOuter = bvLowered
@@ -278,7 +280,7 @@ object frmInvoicePayment: TfrmInvoicePayment
     ParentFont = False
     TabOrder = 4
     SkinData.SkinSection = 'PANEL'
-    ExplicitTop = 297
+    ExplicitWidth = 314
     object Label2: TsLabel
       Left = 26
       Top = 5
@@ -338,13 +340,13 @@ object frmInvoicePayment: TfrmInvoicePayment
   object sPanel1: TsPanel
     Left = 0
     Top = 329
-    Width = 314
+    Width = 336
     Height = 97
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 5
     SkinData.SkinSection = 'PANEL'
-    ExplicitTop = 319
+    ExplicitWidth = 314
     object sLabel1: TsLabel
       Left = 10
       Top = 11
@@ -406,7 +408,7 @@ object frmInvoicePayment: TfrmInvoicePayment
       MaxLength = 10
       ParentFont = False
       TabOrder = 0
-      Text = '  -  -    '
+      Text = '  /  /    '
       SkinData.SkinSection = 'EDIT'
       GlyphMode.Blend = 0
       GlyphMode.Grayed = False
@@ -427,7 +429,7 @@ object frmInvoicePayment: TfrmInvoicePayment
       MaxLength = 10
       ParentFont = False
       TabOrder = 1
-      Text = '  -  -    '
+      Text = '  /  /    '
       SkinData.SkinSection = 'EDIT'
       GlyphMode.Blend = 0
       GlyphMode.Grayed = False
@@ -458,11 +460,12 @@ object frmInvoicePayment: TfrmInvoicePayment
   object __pnlCurrencies: TsPanel
     Left = 0
     Top = 29
-    Width = 314
+    Width = 336
     Height = 79
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 6
+    ExplicitWidth = 314
     object LblForeignCurrencyAmount: TsLabel
       Left = 31
       Top = 8

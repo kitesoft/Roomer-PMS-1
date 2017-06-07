@@ -1507,6 +1507,7 @@ begin
     '        invoicelines '#10+
     '      WHERE '#10+
     '       (InvoiceNumber = %d) '#10+
+    '       AND (VisibleOnInvoice) '#10+
     '     ORDER BY '#10+
     '       ItemID ';
 
@@ -1552,7 +1553,7 @@ begin
 
         sumTotal := sumTotal+TotalPrice;
 
-        if index = 1 then
+        if index = 1 then // TODO: Should be read from the invoicehead record!!!
         begin
           FCurrency := rSet.fieldbyname('Currency').asString;
           FCurrencyRate := rSet.fieldbyname('CurrencyRate').AsFloat;
