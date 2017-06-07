@@ -679,6 +679,7 @@ type
     pupSelectHomePage: TPopupMenu;
     M1: TMenuItem;
     btnHome: TsSpeedButton;
+    sbFrontDesk: TsScrollBox;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
@@ -2531,6 +2532,7 @@ end;
 // ------------------------------------------------------------------------------
 procedure TfrmMain.tabsViewChange(Sender: TObject);
 begin
+  btnQuicReservation.Enabled := tabsView.TabIndex IN [0,1];
   SetViews(tabsView.TabIndex + 1);
   PostMessage(handle, WM_REFRESH_PERIOD_VIEW_BOTTOM, 0, 0);
 end;
@@ -2808,7 +2810,7 @@ begin
 
   frmDateStatistics := TfrmEmbDateStatistics.Create(self);
   frmDateStatistics.pnlStatistics.Parent := pnlStatistics;
-  PrepareFrontDeskPage(tabFrontDesk);
+  PrepareFrontDeskPage(sbFrontDesk); // tabFrontDesk);
 end;
 
 procedure TfrmMain.FormDestroy(Sender: TObject);
