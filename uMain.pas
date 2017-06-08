@@ -691,7 +691,6 @@ type
     procedure mnuRemoveRoomNumberOfThisRoomClick(Sender: TObject);
     procedure mnuGlobalReservationChangesClick(Sender: TObject);
     procedure btnRefreshClick(Sender: TObject);
-    procedure btnHideCaptonsClick(Sender: TObject);
     procedure barinnBarAdd(Sender: TdxBarManager; ABar: TdxBar);
     procedure grOneDayRoomsEnter(Sender: TObject);
     procedure grOneDayRoomsMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
@@ -1322,9 +1321,6 @@ type
     procedure _MaidJobScripts;
     procedure _RoomRates;
     procedure _Rates;
-
-    // * Bar look
-    procedure _HideCaptons;
 
     // * Bar Channels
     procedure _Channels;
@@ -2531,8 +2527,8 @@ end;
 // ------------------------------------------------------------------------------
 procedure TfrmMain.tabsViewChange(Sender: TObject);
 begin
-  btnQuicReservation.Enabled := tabsView.TabIndex IN [0,1];
   SetViews(tabsView.TabIndex + 1);
+  EnableDisableFunctions(tabsView.TabIndex IN [0,1]);
   PostMessage(handle, WM_REFRESH_PERIOD_VIEW_BOTTOM, 0, 0);
 end;
 
@@ -3223,8 +3219,6 @@ begin
 
     InitializeViews;
     SetWindowTitle;
-
-    btnCheckInRoom.Enabled := true;
 
     FRBEMode := false;
     RBEMode := (g.qUserPriv1 = 50) OR (g.qUserPriv2 = 50) OR (g.qUserPriv3 = 50) OR (g.qUserPriv4 = 50) OR
@@ -4953,8 +4947,10 @@ begin
   if ViewMode = vmOneDay then
   begin
     if zOneDay_ResIndex = -1 then
-      exit; // ===>>
+      exit;
     OneDay_GetResAndRoom_IDX(_idxReservation, _idxRoomReservation);
+    if (_idxReservation = 0) then
+      Exit;
     rri := OneDay_GetResInfo(grOneDayRooms.col, grOneDayRooms.row, _idxReservation, _idxRoomReservation);
   end
   else if ViewMode = vmPeriod then
@@ -5937,6 +5933,8 @@ begin
   btnClosedInvoicesThisreservation.Enabled := Enable AND (NOT OffLineMode);
   btnClosedInvoicesThisCustomer.Enabled := Enable AND (NOT OffLineMode);
 
+  btnQuicReservation.Enabled := Enable AND (NOT OffLineMode);
+  btnConfirmAllottedBooking.Enabled := Enable AND (NOT OffLineMode);
   btnModifyReservation.Enabled := Enable AND (NOT OffLineMode);
   btnRoomReservation.Enabled := Enable AND (NOT OffLineMode);
   btnRoomGuests.Enabled := Enable AND (NOT OffLineMode);
@@ -11300,11 +11298,6 @@ begin
   btnRefreshOneDay.Click;
 end;
 
-procedure TfrmMain.btnHideCaptonsClick(Sender: TObject);
-begin
-  _HideCaptons;
-end;
-
 procedure TfrmMain.btnHomeClick(Sender: TObject);
 begin
   tabsView.TabIndex := glb.PMSSettings.PMSSpecificSettings.UserHomePage - 1;
@@ -12221,10 +12214,6 @@ begin
   end;
 end;
 
-procedure TfrmMain._HideCaptons;
-begin
-end;
-
 /// ///////////////////////////////////////////////////////////////////////////
 procedure TfrmMain.btnJumpToRoomAndDateClick(Sender: TObject);
 var
@@ -12243,9 +12232,6 @@ begin
       RefreshOneDayGrid;
       OneDay_DoAJump(aRoom);
     end;
-  end
-  else
-  begin
   end;
 end;
 
