@@ -48,8 +48,6 @@ type
     lblTxtHousekeepingStatus: TsLabel;
     sPanel16: TsPanel;
     sImage8: TsImage;
-    sLabel17: TsLabel;
-    sLabel18: TsLabel;
     StatGrid: TAdvStringGrid;
     Shape2: TShape;
     Shape3: TShape;
@@ -65,7 +63,6 @@ type
     procedure FormCreate(Sender: TObject);
     procedure StatGridGetAlignment(Sender: TObject; ARow, ACol: Integer; var HAlign: TAlignment; var VAlign: TVAlignment);
     procedure StatGridGetCellColor(Sender: TObject; ARow, ACol: Integer; AState: TGridDrawState; ABrush: TBrush; AFont: TFont);
-    procedure StatGridGetCellBorder(Sender: TObject; ARow, ACol: Integer; APen: TPen; var Borders: TCellBorders);
     procedure sPanel1MouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
     procedure Shape2MouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
     procedure Shape5MouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
@@ -361,11 +358,6 @@ begin
     HAlign := taCenter
   else
     HAlign := taLeftJustify;
-end;
-
-procedure TFrmFrontDeskPageButton.StatGridGetCellBorder(Sender: TObject; ARow, ACol: Integer; APen: TPen; var Borders: TCellBorders);
-begin
-//  APen := cl
 end;
 
 procedure TFrmFrontDeskPageButton.StatGridGetCellColor(Sender: TObject; ARow, ACol: Integer; AState: TGridDrawState; ABrush: TBrush; AFont: TFont);
