@@ -42,7 +42,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
       Left = 0
       Top = 0
       Width = 1096
-      Height = 185
+      Height = 189
       Align = alTop
       BevelOuter = bvNone
       ParentColor = True
@@ -50,7 +50,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
       SkinData.SkinSection = 'PANEL'
       DesignSize = (
         1096
-        185)
+        189)
       object clabCurrency: TsLabel
         Left = 661
         Top = 31
@@ -272,7 +272,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         Left = 929
         Top = 3
         Width = 161
-        Height = 44
+        Height = 41
         Hint = 'Close form'
         Anchors = [akTop, akRight]
         Caption = 'Close'
@@ -286,7 +286,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
       end
       object btnInvoice: TsButton
         Left = 929
-        Top = 98
+        Top = 93
         Width = 161
         Height = 41
         Action = actPrintInvoice
@@ -301,7 +301,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
       end
       object btnProforma: TsButton
         Left = 929
-        Top = 51
+        Top = 48
         Width = 161
         Height = 41
         Action = actPrintProforma
@@ -341,8 +341,8 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
       object chkShowPackage: TsCheckBox
         Left = 724
         Top = 167
-        Width = 111
-        Height = 20
+        Width = 119
+        Height = 17
         Caption = 'Package on invoice'
         Checked = True
         State = cbChecked
@@ -353,9 +353,9 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
       end
       object btnSaveChanges: TsButton
         Left = 929
-        Top = 145
+        Top = 137
         Width = 161
-        Height = 40
+        Height = 41
         Anchors = [akTop, akRight]
         Caption = 'Save changes'
         Font.Charset = DEFAULT_CHARSET
@@ -373,7 +373,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         SkinData.ColorTone = clRed
       end
       object gbxHeader: TsGroupBox
-        Left = 9
+        Left = 3
         Top = 3
         Width = 567
         Height = 178
@@ -666,17 +666,17 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
     end
     object pnlLnes: TsPanel
       Left = 0
-      Top = 185
+      Top = 189
       Width = 1096
-      Height = 477
+      Height = 473
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitTop = 188
-      ExplicitHeight = 474
+      ExplicitTop = 185
+      ExplicitHeight = 477
       object pnlTotalsAndPayments: TsPanel
         Left = 0
-        Top = 325
+        Top = 321
         Width = 1096
         Height = 152
         Align = alBottom
@@ -684,7 +684,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         ParentColor = True
         TabOrder = 0
         SkinData.SkinSection = 'PANEL'
-        ExplicitTop = 322
+        ExplicitTop = 325
         object memExtraText: TMemo
           Left = 1
           Top = 1
@@ -1051,14 +1051,12 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
           Height = 89
           Align = alLeft
           TabOrder = 0
-          ExplicitTop = -1
           object btnRoomToTemp: TsButton
             Left = 1
             Top = 43
             Width = 130
             Height = 40
             Action = actRRtoTemp
-            Enabled = False
             TabOrder = 0
             SkinData.SkinSection = 'BUTTON'
           end
@@ -1107,7 +1105,6 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
             Width = 130
             Height = 40
             Action = actItemToTemp
-            Enabled = False
             TabOrder = 0
             SkinData.SkinSection = 'BUTTON'
           end
@@ -1227,7 +1224,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         Left = 0
         Top = 89
         Width = 1040
-        Height = 236
+        Height = 232
         Align = alClient
         BevelOuter = bvNone
         Caption = 'pnlLinesGrid'
@@ -1237,12 +1234,12 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         Padding.Bottom = 5
         TabOrder = 2
         SkinData.SkinSection = 'PANEL'
-        ExplicitHeight = 233
+        ExplicitHeight = 236
         object agrLines: TAdvStringGrid
           Left = 10
           Top = 5
           Width = 1020
-          Height = 226
+          Height = 222
           Cursor = crDefault
           Align = alClient
           BevelInner = bvNone
@@ -1372,7 +1369,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
           SelectionTextColor = clHighlightText
           SortSettings.DefaultFormat = ssAutomatic
           Version = '8.2.4.1'
-          ExplicitLeft = 17
+          ExplicitHeight = 226
           ColWidths = (
             24
             28
@@ -1397,10 +1394,10 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         Left = 1043
         Top = 92
         Width = 50
-        Height = 230
+        Height = 226
         Align = alRight
         TabOrder = 1
-        ExplicitHeight = 227
+        ExplicitHeight = 230
         object pnlInvoiceIndex0: TsPanel
           Left = 3
           Top = 4

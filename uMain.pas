@@ -4949,8 +4949,6 @@ begin
     if zOneDay_ResIndex = -1 then
       exit;
     OneDay_GetResAndRoom_IDX(_idxReservation, _idxRoomReservation);
-    if (_idxReservation = 0) then
-      Exit;
     rri := OneDay_GetResInfo(grOneDayRooms.col, grOneDayRooms.row, _idxReservation, _idxRoomReservation);
   end
   else if ViewMode = vmPeriod then
