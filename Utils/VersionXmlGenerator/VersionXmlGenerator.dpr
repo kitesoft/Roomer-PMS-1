@@ -6,7 +6,8 @@ program VersionXmlGenerator;
 
 uses
   System.SysUtils,
-  uVersionXml in 'uVersionXml.pas';
+  uVersionXml in 'uVersionXml.pas',
+  XmlUtils in '..\..\RoomerUtils\XmlUtils.pas';
 
 procedure WriteHelp;
 begin

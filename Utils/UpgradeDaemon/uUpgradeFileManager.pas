@@ -22,10 +22,9 @@ type
     procedure WriteString(Ident : String; value : String);
   private
     SectionName : String;
-    function UpgradeFullFilename: String;
   public
     constructor Create(BaseLocation : String);
-    destructor Destroy;
+    destructor Destroy; override;
 
     procedure SetFileName(filename : String);
     function UpgradeAvailable : Boolean;
@@ -73,6 +72,7 @@ end;
 destructor TUpgradeFileManager.Destroy;
 begin
   FIniFile.Free;
+  inherited;
 end;
 
 procedure TUpgradeFileManager.NewUpgrade(Filename, fileExeName : String; FileTimeStamp: TDateTime; TTL_Minutes: Integer; MD5, Version : String);
@@ -142,11 +142,6 @@ end;
 function TUpgradeFileManager.UpgradeFinished: boolean;
 begin
   result := ReadBoolean(IDENT_UPGRADED, false);
-end;
-
-function TUpgradeFileManager.UpgradeFullFilename: String;
-begin
-  result := TPath.Combine(RoomerNewUpgradePath, UpgradeFilename);
 end;
 
 function TUpgradeFileManager.UpgradeTTL_Minutes: Integer;

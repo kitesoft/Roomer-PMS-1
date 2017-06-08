@@ -3,7 +3,7 @@ object FrmFrontDeskPageButton: TFrmFrontDeskPageButton
   Top = 0
   Caption = 'FrmFrontDeskPageButton'
   ClientHeight = 681
-  ClientWidth = 926
+  ClientWidth = 1102
   Color = clWhite
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -116,10 +116,10 @@ object FrmFrontDeskPageButton: TFrmFrontDeskPageButton
         object lblArrivals: TsLabel
           Left = 42
           Top = 6
-          Width = 37
+          Width = 18
           Height = 47
           Cursor = crHandPoint
-          Caption = '24'
+          Caption = '0'
           ParentFont = False
           OnMouseEnter = sPanel1MouseEnter
           OnMouseLeave = sPanel1MouseLeave
@@ -204,7 +204,7 @@ object FrmFrontDeskPageButton: TFrmFrontDeskPageButton
         OnMouseUp = Shape2MouseUp
         object sImage2: TsImage
           Left = 85
-          Top = 10
+          Top = 6
           Width = 57
           Height = 49
           Cursor = crHandPoint
@@ -220,10 +220,10 @@ object FrmFrontDeskPageButton: TFrmFrontDeskPageButton
         object lblDepartures: TsLabel
           Left = 42
           Top = 6
-          Width = 37
+          Width = 18
           Height = 47
           Cursor = crHandPoint
-          Caption = '24'
+          Caption = '0'
           ParentFont = False
           OnMouseEnter = sPanel1MouseEnter
           OnMouseLeave = sPanel1MouseLeave
@@ -278,22 +278,6 @@ object FrmFrontDeskPageButton: TFrmFrontDeskPageButton
         UseSkinColor = False
         ExplicitWidth = 123
       end
-      object sLabel17: TsLabel
-        Left = 107
-        Top = 9
-        Width = 16
-        Height = 21
-        Caption = '+1'
-        ParentFont = False
-        OnMouseEnter = sPanel1MouseEnter
-        OnMouseLeave = sPanel1MouseLeave
-        OnMouseUp = Shape3MouseUp
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -16
-        Font.Name = 'Segoe UI Light'
-        Font.Style = []
-      end
       object Shape3: TShape
         AlignWithMargins = True
         Left = 5
@@ -341,10 +325,10 @@ object FrmFrontDeskPageButton: TFrmFrontDeskPageButton
         object lblTomArrivals: TsLabel
           Left = 42
           Top = 6
-          Width = 37
+          Width = 18
           Height = 47
           Cursor = crHandPoint
-          Caption = '24'
+          Caption = '0'
           ParentFont = False
           OnMouseEnter = sPanel1MouseEnter
           OnMouseLeave = sPanel1MouseLeave
@@ -399,22 +383,6 @@ object FrmFrontDeskPageButton: TFrmFrontDeskPageButton
         UseSkinColor = False
         ExplicitWidth = 151
       end
-      object sLabel18: TsLabel
-        Left = 107
-        Top = 9
-        Width = 16
-        Height = 21
-        Caption = '+1'
-        ParentFont = False
-        OnMouseEnter = sPanel1MouseEnter
-        OnMouseLeave = sPanel1MouseLeave
-        OnMouseUp = Shape4MouseUp
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -16
-        Font.Name = 'Segoe UI Light'
-        Font.Style = []
-      end
       object Shape4: TShape
         AlignWithMargins = True
         Left = 5
@@ -462,10 +430,10 @@ object FrmFrontDeskPageButton: TFrmFrontDeskPageButton
         object lblTomDepartures: TsLabel
           Left = 42
           Top = 6
-          Width = 37
+          Width = 18
           Height = 47
           Cursor = crHandPoint
-          Caption = '24'
+          Caption = '0'
           ParentFont = False
           OnMouseEnter = sPanel1MouseEnter
           OnMouseLeave = sPanel1MouseLeave
@@ -653,10 +621,10 @@ object FrmFrontDeskPageButton: TFrmFrontDeskPageButton
         object lblInHouse: TsLabel
           Left = 42
           Top = 6
-          Width = 37
+          Width = 18
           Height = 47
           Cursor = crHandPoint
-          Caption = '24'
+          Caption = '0'
           ParentFont = False
           OnMouseEnter = sPanel1MouseEnter
           OnMouseLeave = sPanel1MouseLeave
@@ -875,7 +843,6 @@ object FrmFrontDeskPageButton: TFrmFrontDeskPageButton
       GridFixedLineColor = 13947601
       HoverRowCells = [hcNormal, hcSelected]
       OnGetCellColor = StatGridGetCellColor
-      OnGetCellBorder = StatGridGetCellBorder
       OnGetAlignment = StatGridGetAlignment
       ActiveCellFont.Charset = DEFAULT_CHARSET
       ActiveCellFont.Color = clWindowText
@@ -987,7 +954,7 @@ object FrmFrontDeskPageButton: TFrmFrontDeskPageButton
       SortSettings.HeaderColorTo = 16579058
       SortSettings.HeaderMirrorColor = 16380385
       SortSettings.HeaderMirrorColorTo = 16182488
-      Version = '8.2.5.2'
+      Version = '8.2.4.1'
     end
   end
   object PngImageList1: TPngImageList

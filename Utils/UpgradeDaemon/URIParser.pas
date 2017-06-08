@@ -29,7 +29,6 @@ type
     FUpgradeFileManager : TUpgradeFileManager;
 
     function ActionTypeByName : TURIActionType;
-    function ActionStringByEnum : TURIActionType;
   private
     FFileExeName: String;
     FClearLanguage: Boolean;
@@ -48,7 +47,7 @@ type
     function getStringAtIndex(stl: TStringList; index: Integer): String;
   public
     constructor Create;
-    destructor Destroy;
+    destructor Destroy; override;
     function Process(URI : String) : Boolean;
     procedure ClearLocalUpgradeInformation;
 
@@ -76,11 +75,6 @@ uses uUtils,
      DateUtils,
      uDateUtils,
      idURI;
-
-function TURIProcessor.ActionStringByEnum: TURIActionType;
-begin
-
-end;
 
 const URI_COMMAND_START_INDEX = 0;
 
@@ -237,6 +231,7 @@ end;
 destructor TURIProcessor.Destroy;
 begin
   FUpgradeFileManager.Free;
+  inherited;
 end;
 
 function TURIProcessor.GetUpgradeExePathName: String;

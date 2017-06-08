@@ -150,13 +150,15 @@ type
     function GetItemKind: TItemKind;
     function GetVatOnInvoice: Double;
     procedure SetVATCode(const Value: string);
-    function GetTotalNative: Double;
+    function GetTotalNativeCurrency: Double;
     function GetPriceNativeCurrency: Double;
     function GetAmountOnInvoiceNativeCurrency: Double;
     function GetVatOnInvoiceNativeCurrency: Double;
     function GetPrice: Double;
     function GetPriceOnInvoice: Double;
     function GetPriceOnInvoiceNativeCurrency: Double;
+    function GetTotalRevenue: Double;
+    function GetRevenuePrice: Double;
 
   public
     constructor Create(aIndex, _id: integer);
@@ -166,7 +168,7 @@ type
     /// At this moment only line that are generated and linked to a roomrent item can be made invisible
     /// </summary>
     function CanBeHiddenFromInvoice: boolean;
-    property TotalNativeCurrency: Double read GetTotalNative;
+    property TotalNativeCurrency: Double read GetTotalNativeCurrency;
     /// <summary>
     /// Revenue total in selected currency, including VAT for this item, calculated as Price * Number
     /// </summary>
@@ -183,6 +185,14 @@ type
     /// </summary>
     property PriceOnInvoice: Double read GetPriceOnInvoice;
     property PriceOnInvoiceNativeCurrency: Double read GetPriceOnInvoiceNativeCurrency;
+
+    property RevenuePrice: Double read GetRevenuePrice;
+    /// <summary>
+    /// Total administrative revenue for this item, in selected currency
+    /// Consists of the Total minus the total of all not-visible childlines
+    /// See table in class documentation
+    /// </summary>
+    property TotalRevenue: Double read GetTotalRevenue;
     /// <summary>
     /// Total administrative revenue for this item, in native currency
     /// Consists of the Total minus the total of all not-visible childlines
@@ -1186,8 +1196,13 @@ var
 begin
   result := TotalNativeCurrency;
   for lInvLine in FChildInvoiceLines do
-    if not lInvLine.TotalIsIncludedInParent then
+    if lInvLine.TotalIsIncludedInParent then
       result := result - lInvLine.TotalNativeCurrency;
+end;
+
+function TInvoiceLine.GetRevenuePrice: Double;
+begin
+  Result := TotalRevenue / Number;
 end;
 
 function TInvoiceLine.GetTotal: Double;
@@ -1195,9 +1210,19 @@ begin
   result := FNumber * FPrice;
 end;
 
-function TInvoiceLine.GetTotalNative: Double;
+function TInvoiceLine.GetTotalNativeCurrency: Double;
 begin
   result := Total * GetRate(FCurrency);
+end;
+
+function TInvoiceLine.GetTotalRevenue: Double;
+var
+  lInvLine: TInvoiceLine;
+begin
+  result := Total;
+  for lInvLine in FChildInvoiceLines do
+    if lInvLine.TotalIsIncludedInParent then
+      result := result - lInvLine.Total;
 end;
 
 function TInvoiceLine.GetVatOnInvoice: Double;
@@ -1424,10 +1449,10 @@ begin
   agrLines.Cells[col_ItemCount, ARow] := trim(_floattostr(aInvoiceLine.Number, vWidth, vDec));
 
   agrLines.Cells[col_ItemPrice, ARow] := FCurrencyhandlersMap.CurrencyHandler[aInvoiceLine.Currency]
-    .FormattedValueWithCode(aInvoiceLine.Price); // trim(_floattostr(lValue, vWidth, vDec));
+    .FormattedValueWithCode(aInvoiceLine.RevenuePrice);
 
   agrLines.Cells[col_TotalPrice, ARow] := FCurrencyhandlersMap.CurrencyHandler[aInvoiceLine.Currency]
-    .FormattedValueWithCode(aInvoiceLine.Total); // trim(_floattostr(lValue, vWidth, vDec));
+    .FormattedValueWithCode(aInvoiceLine.TotalRevenue);
 
   lValue := FCurrencyhandlersMap.ConvertAmount(aInvoiceLine.AmountOnInvoice, aInvoiceLine.Currency,
     edtDisplayCurrency.Text);
@@ -1975,9 +2000,9 @@ begin
   lRoomInfo.BreakFastIncluded := aBeakfastIncluded;
   FRoomInfoList.Add(lRoomInfo);
 
-  if aBeakfastIncluded then
-    aRoomPrice := aRoomPrice - (lNumGuests * lRoomInfo.NumberOfNights * Item_GetPrice(g.qBreakFastItem) *
-      GetRate(aCurrency));
+//  if aBeakfastIncluded then
+//    aRoomPrice := aRoomPrice - (lNumGuests * lRoomInfo.NumberOfNights * Item_GetPrice(g.qBreakFastItem) *
+//      GetRate(aCurrency));
 
   // add a TInvoiceline object for the RoomRent to InvoiceLineList
   lInvoiceLine := AddLine(0, 0, lRmRntItem, lDescription, aDayCount, aRoomPrice, aCurrency, lItemInfo.VATCode, 0, True,
