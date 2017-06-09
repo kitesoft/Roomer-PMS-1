@@ -13,7 +13,7 @@ procedure SetFileInformation(XmlDoc : IXMLDocument; const Filename : String; con
 function GetXmlFile(xmlPath : String): IXMLDocument;
 
 // File resource Helpers
-function GetVersion(sFileName:string): string;
+function GetVersion(const sFileName:string): string;
 function FileMD5(const fileName : string) : string;
 
 // Other Helpers
@@ -26,15 +26,13 @@ uses IdHashMessageDigest
     , uDateUtils;
 
 
-const initialXmlContent =
-            '<?xml version="1.0" encoding="UTF-8" standalone="no"?>' + #13#10 +
-            '<files>' + #13#10 +
-            '</files>';
-
 procedure GenerateXml(const location : String; const ttl : Integer; const xmlFile : String; const onlyMd5 : Boolean);
 var list : TStringDynArray;
     i: Integer;
     xml : IXMLDocument;
+    lVersionString: string;
+    lFileDate: TDateTime;
+    lFileName: string;
 begin
   xml := GetXmlFile(xmlFile);
 
@@ -42,18 +40,24 @@ begin
 
   for i := LOW(list) to HIGH(list) do
   begin
-    if Lowercase(ExtractFileExt(list[i])) = '.exe' then
-      if (Copy(Lowercase(ExtractFilename(list[i])), 1, 6) = 'roomer') then
-           if GetVersion(list[i]) <> '' then
+    lFileName := ExtractFileName(list[i]);
+    if ExtractFileExt(lFileName.ToLower).Equals('.exe') then
+      if lFileName.ToLower.StartsWith('roomer') then
+      begin
+        lVersionString := GetVersion(list[i]);
+        if not lVersionString.IsEmpty and FileAge(list[i], lFileDate) then
              SetFileInformation(xml,
-                     ExtractFilename(list[i]),
-                     GetVersion(list[i]),
+                     lFileName,
+                     lVersionString,
                      FileMD5(list[i]),
                      ttl,
-                     FileDateToDateTime(FileAge(list[i])),
+                     lFileDate,
                      onlyMd5);
 
+      end;
   end;
+  xml.XML.Text := XMLDoc.FormatXMLData(xml.XML.Text);
+  xml.Active := True;
   xml.SaveToFile(xmlFile);
 end;
 
@@ -100,27 +104,21 @@ begin
 end;
 
 function GetXmlFile(xmlPath : String): IXMLDocument;
-var
-  stl : TStrings;
 begin
-  Result := nil;
   result := NewXMLDocument; // CoDOMDocument40.Create;
   if NOT FileExists(xmlPath) then
   begin
-    stl := TStringList.Create;
-    try
-      stl.Add(initialXmlContent);
-      stl.SaveToFile(xmlPath);
-    finally
-      stl.Free;
-    end;
-  end;
-  result.LoadFromFile(xmlPath);
+    result.AddChild('files');
+    result.StandAlone := 'no';
+    result.encoding := 'UTF-8';
+  end
+  else
+    result.LoadFromFile(xmlPath);
 end;
 
 // *********************** FILE RESOURCE HELPERS ************************
 
-function GetVersion(sFileName:string): string;
+function GetVersion(const sFileName:string): string;
 var
   VerInfoSize: DWORD;
   VerInfo: Pointer;
@@ -130,19 +128,24 @@ var
 begin
   result := '';
   try
-  VerInfoSize := GetFileVersionInfoSize(PChar(sFileName), Dummy);
-  GetMem(VerInfo, VerInfoSize);
-  GetFileVersionInfo(PChar(sFileName), 0, VerInfoSize, VerInfo);
-  VerQueryValue(VerInfo, '\', Pointer(VerValue), VerValueSize);
-  with VerValue^ do
-  begin
-    Result := IntToStr(dwFileVersionMS shr 16);
-    Result := Result + '.' + IntToStr(dwFileVersionMS and $FFFF);
-    Result := Result + '.' + IntToStr(dwFileVersionLS shr 16);
-    Result := Result + '.' + IntToStr(dwFileVersionLS and $FFFF);
+    VerInfoSize := GetFileVersionInfoSize(PChar(sFileName), Dummy);
+    GetMem(VerInfo, VerInfoSize);
+    try
+      GetFileVersionInfo(PChar(sFileName), 0, VerInfoSize, VerInfo);
+      VerQueryValue(VerInfo, '\', Pointer(VerValue), VerValueSize);
+      with VerValue^ do
+      begin
+        Result := IntToStr(dwFileVersionMS shr 16);
+        Result := Result + '.' + IntToStr(dwFileVersionMS and $FFFF);
+        Result := Result + '.' + IntToStr(dwFileVersionLS shr 16);
+        Result := Result + '.' + IntToStr(dwFileVersionLS and $FFFF);
+      end;
+    finally
+      FreeMem(VerInfo, VerInfoSize);
+    end;
+  except
+    Result := '';
   end;
-  FreeMem(VerInfo, VerInfoSize);
-  Except end;
 end;
 
 function FileMD5(const fileName : string) : string;

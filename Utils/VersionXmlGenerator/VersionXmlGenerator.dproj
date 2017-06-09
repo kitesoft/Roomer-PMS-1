@@ -83,10 +83,10 @@
         <DCC_RemoteDebug>true</DCC_RemoteDebug>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
-        <DCC_DebugInfoInExe>false</DCC_DebugInfoInExe>
-        <Debugger_RunParams>. 1440 .\Roomer.xml</Debugger_RunParams>
+        <DCC_DebugDCUs>false</DCC_DebugDCUs>
+        <DCC_ExeOutput>..\..\_bin\Win32</DCC_ExeOutput>
+        <Debugger_RunParams>. 1440 .\TestRoomer.xml false</Debugger_RunParams>
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <DCC_ExeOutput>C:\Users\BjornHeidarr\Dropbox (Promoir)\Hotel\MainProgXE3\RoomerPMSRelease\</DCC_ExeOutput>
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
