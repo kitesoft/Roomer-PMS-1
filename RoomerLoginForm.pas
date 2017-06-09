@@ -42,6 +42,7 @@ type
     procedure SetNoInternet(const Value: boolean);
     procedure SetServerUnreachable(const Value: boolean);
     procedure UpdateControls;
+    procedure CheckConnections;
   protected
     procedure CreateParams(var Params: TCreateParams); override;
     function GetLoginParameters(var aUsername, aPassword, aHotelId: String): Boolean;
@@ -193,6 +194,16 @@ end;
 
 procedure TfrmRoomerLoginForm.tmrCheckConnectionTimer(Sender: TObject);
 begin
+  tmrCheckConnection.Enabled := false;
+  try
+    CheckConnections;
+  finally
+    tmrCheckConnection.Enabled := true;
+  end;
+end;
+
+procedure TfrmRoomerLoginForm.CheckConnections;
+begin
   NoInternet := NOT d.roomerMainDataSet.IsConnectedToInternet;
   ServerUnreachable := NOT d.roomerMainDataSet.RoomerPlatformAvailable;
 end;
@@ -219,6 +230,10 @@ end;
 
 procedure TfrmRoomerLoginForm.btLoginClick(Sender: TObject);
 begin
+  CheckConnections;
+  if NoInternet or ServerUnreachable then
+    Exit;
+
   Tag := ord(lrLogin);
   if IsControlKeyPressed then
      SetIgnoresToZero(d.roomerMainDataSet);

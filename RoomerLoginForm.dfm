@@ -497,7 +497,6 @@ object frmRoomerLoginForm: TfrmRoomerLoginForm
     Top = 136
   end
   object tmrCheckConnection: TTimer
-    Enabled = False
     OnTimer = tmrCheckConnectionTimer
     Left = 40
     Top = 272

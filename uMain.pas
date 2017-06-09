@@ -7108,7 +7108,8 @@ begin
   finally
     lblCacheNotification.Visible := false;
     FMessagesBeingDownloaded := false;
-    timMessages.Enabled := Assigned(Sender);
+    if assigned(Sender) then
+      ActivateMessagesIfApplicable;
   end;
 end;
 
@@ -9168,7 +9169,7 @@ procedure TfrmMain.ActivateMessagesIfApplicable;
 begin
   // if the timer has been enabled means the idle duration is already counting.
   // Do not continue to avoid resetting the start idle time
-  if FMessagesBeingDownloaded OR timMessages.Enabled then
+  if FMessagesBeingDownloaded OR timMessages.Enabled or not LoggedIn then
     exit;
 
   // enable the timer
