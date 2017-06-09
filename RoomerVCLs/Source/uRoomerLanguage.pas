@@ -869,6 +869,7 @@ procedure TRoomerLanguage.TranslateThisForm(FormToTranslate: TForm);
 var i : Integer;
     formTypeName : String;
 begin
+  if (FormToTranslate = nil) then exit;
   if NOT RoomerLanguageActivated then exit;
 
   ActivateDBLanguageCollection;

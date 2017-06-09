@@ -1622,6 +1622,7 @@ end;
 
 procedure OpenAppSettings;
 begin
+  glb.Free;
   glb := TGlobalSettings.create;
 end;
 
