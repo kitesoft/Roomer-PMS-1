@@ -68,6 +68,7 @@ type
     procedure UpdateNow;
     procedure SetDownloadActive(const Value: Boolean);
     procedure AddLog(logText: String);
+    function GetNewFileNameIndex(OldName: String): String;
 
     property DownloadActive : Boolean read FDownloadActive write SetDownloadActive;
   public
@@ -427,9 +428,24 @@ begin
   end;
 end;
 
+function TfrmUpgradeDaemon.GetNewFileNameIndex(OldName : String) : String;
+var i : Integer;
+    fullNameAndPath : String;
+    done : Boolean;
+begin
+  i := 0;
+  done := False;
+  repeat
+    inc(i);
+    fullNameAndPath := format('%s.%d', [OldName, i]);
+    done := NOT FileExists(fullNameAndPath);
+  until done;
+end;
+
 procedure TfrmUpgradeDaemon.UpdateNow;
 var
   exeName: String;
+  SavedFileName : String;
   UpgradeFilename: PWideChar;
 begin
   if (NOT URIProcessor.FUpgradeFileManager.UpgradeFinished) AND
@@ -450,7 +466,9 @@ begin
 
       exeName := URIProcessor.FileExePath;
       AddLog('Removing old exe file: ' + exeName);
-      SysUtils.DeleteFile(exeName);
+      SavedFileName := GetNewFileNameIndex(exeName);
+      if NOT RenameFile(exeName, SavedFileName) then
+        SysUtils.DeleteFile(exeName);
       UpgradeFilename := PWideChar(URIProcessor.UpgradeExePathName);
       if NOT TryCopyFile(UpgradeFilename, PChar(exeName)) then
         exit;
