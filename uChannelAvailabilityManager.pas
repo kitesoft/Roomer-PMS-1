@@ -591,7 +591,7 @@ type
     procedure PublishSheet(OnlyCreateExcel: Boolean; AllowEditAndSendEmail : Boolean);
     procedure BlinkCombo;
     function buildSetStatementMinMax(var oldResultValue: String; minDirty, maxDirty: Boolean; minValue, maxValue: Integer): String;
-    procedure CleanUpRedundantRoomClassesInAvailbilities;
+    procedure CleanUpRedundantRoomClassesInAvailabilities;
     function PerformForcedRatesUpdate: Boolean;
     function PerformForcedAvailabilityUpdate: Boolean;
     procedure ReloadSelectedPeriod;
@@ -2415,7 +2415,7 @@ begin
   Application.ProcessMessages;
 end;
 
-procedure TfrmChannelAvailabilityManager.CleanUpRedundantRoomClassesInAvailbilities;
+procedure TfrmChannelAvailabilityManager.CleanUpRedundantRoomClassesInAvailabilities;
 var sql : String;
 begin
   sql := 'DELETE FROM channelratesavailabilities ' +
@@ -2515,7 +2515,7 @@ begin
     SetAvailability.free;
     sql.free;
     grid.Invalidate;
-    CleanUpRedundantRoomClassesInAvailbilities;
+    CleanUpRedundantRoomClassesInAvailabilities;
     EndProject;
   end;
 end;
@@ -4519,14 +4519,14 @@ procedure TfrmChannelAvailabilityManager.ForceFullAvailability;
 begin
   if PerformForcedAvailabilityUpdate then
   begin
-    CleanUpRedundantRoomClassesInAvailbilities;
-    d.roomerMainDataSet.DoCommand('channelrates cr ' +
-       'JOIN channels ch ON ch.id=cr.channelId ' +
-       'JOIN roomtypegroups rtg ON cr.roomClassId=rtg.id ' +
+    CleanUpRedundantRoomClassesInAvailabilities;
+    d.roomerMainDataSet.DoCommand('UPDATE channelrates cr ' +
+       ' JOIN channels ch ON ch.id=cr.channelId ' +
+       ' JOIN roomtypegroups rtg ON cr.roomClassId=rtg.id ' +
        '                           AND rtg.Code=rtg.TopClass ' +
-       'JOIN channelclassrelations ccr ON ch.id=ccr.channelId AND rtg.id=ccr.roomClassId' +
-       'SET cr.availabilityDirty=1 ' +
-       'WHERE cr.date>=CURRENT_DATE');
+       ' JOIN channelclassrelations ccr ON ch.id=ccr.channelId AND rtg.id=ccr.roomClassId' +
+       ' SET cr.availabilityDirty=1 ' +
+       ' WHERE cr.date>=CURRENT_DATE');
     d.roomerMainDataSet.DoCommand('UPDATE channelratesavailabilities cra ' +
        'JOIN roomtypegroups rtg ON cra.roomClassId=rtg.id ' +
        '                           AND rtg.Code=rtg.TopClass ' +
