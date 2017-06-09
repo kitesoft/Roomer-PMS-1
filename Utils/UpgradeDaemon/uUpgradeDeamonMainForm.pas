@@ -26,26 +26,26 @@ type
   TfrmUpgradeDaemon = class(TForm)
     Image2: TImage;
     timClose: TTimer;
-    sProgressBar1: TsProgressBar;
+    pbDownloadProgress: TsProgressBar;
     lblDownloaded: TsLabel;
     lblURL: TsLabel;
     timeUpgradeCheck: TTimer;
     timPerformRequest: TTimer;
-    PopupMenu1: TPopupMenu;
-    S1: TMenuItem;
+    pmnuLogsMenu: TPopupMenu;
+    mnuShowHide: TMenuItem;
     N1: TMenuItem;
-    E1: TMenuItem;
-    TrayIcon1: TTrayIcon;
-    logs: TsMemo;
-    C1: TMenuItem;
+    mnuExit: TMenuItem;
+    tiTrayIcon: TTrayIcon;
+    memLogs: TsMemo;
+    mnuCopyLogs: TMenuItem;
     HttpServer: THttpServer;
     procedure FormCreate(Sender: TObject);
     procedure timPerformRequestTimer(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
-    procedure E1Click(Sender: TObject);
-    procedure S1Click(Sender: TObject);
+    procedure mnuExitClick(Sender: TObject);
+    procedure mnuShowHideClick(Sender: TObject);
     procedure timeUpgradeCheckTimer(Sender: TObject);
-    procedure C1Click(Sender: TObject);
+    procedure mnuCopyLogsClick(Sender: TObject);
     procedure timCloseTimer(Sender: TObject);
     procedure HttpServerGetDocument(Sender, Client: TObject; var Flags: THttpGetFlag);
     procedure HttpServerClientConnect(Sender, Client: TObject; Error: Word);
@@ -119,7 +119,7 @@ end;
 
 procedure TfrmUpgradeDaemon.FormCreate(Sender: TObject);
 begin
-  logs.Lines.Clear;
+  memLogs.Lines.Clear;
   FCountRequests := 0;
   FDownloadActive := False;
   URIProcessor := TURIProcessor.Create;
@@ -146,6 +146,7 @@ end;
 procedure TfrmUpgradeDaemon.FormDestroy(Sender: TObject);
 begin
   URIProcessor.Free;
+  httpCLient.Free;
 end;
 
 procedure TfrmUpgradeDaemon.HttpServerClientConnect(Sender, Client: TObject; Error: Word);
@@ -219,12 +220,12 @@ var logTime : String;
   i: Integer;
 begin
   logTime := DateTimeToStr(now) + ' | ';
-  logs.Lines.Insert(0, logTime + logText);
-  for i := 5000 to logs.Lines.Count - 1 do
-   logs.Lines.Delete(i);
+  memLogs.Lines.Insert(0, logTime + logText);
+  for i := 5000 to memLogs.Lines.Count - 1 do
+    memLogs.Lines.Delete(i);
 end;
 
-procedure TfrmUpgradeDaemon.S1Click(Sender: TObject);
+procedure TfrmUpgradeDaemon.mnuShowHideClick(Sender: TObject);
 begin
   if Visible then
     Hide
@@ -268,28 +269,31 @@ var URIActionType : TURIActionType;
 begin
   DownloadActive := True;
   try
-    timPerformRequest.Enabled := False;
-    URIActionType := TURIActionType(timPerformRequest.Tag);
-    case URIActionType of
-      atCheckForUpgrade : begin
-                            //
-                             PerformDownloadOfUpdate;
-                          end;
-      atUpdateNow : begin
-                            //
-                             Sleep(5000);
-                             UpdateNow;
-                    end;
-      atClose : begin
-                            //
-                             Close;
-                          end;
+    try
+      timPerformRequest.Enabled := False;
+      URIActionType := TURIActionType(timPerformRequest.Tag);
+      case URIActionType of
+        atCheckForUpgrade : begin
+                              //
+                               PerformDownloadOfUpdate;
+                            end;
+        atUpdateNow : begin
+                              //
+                               Sleep(5000);
+                               UpdateNow;
+                      end;
+        atClose : begin
+                              //
+                               Close;
+                            end;
+      end;
+    except
+      ON e: Exception do
+        AddLog('Error: ' + e.Message);
     end;
-  except
-    ON e: Exception do
-      AddLog('Error: ' + e.Message);
+  finally
+    DownloadActive := False;
   end;
-  DownloadActive := False;
 end;
 
 procedure TfrmUpgradeDaemon.DownloadProgress(Sender: TObject; Read, Total: Integer);
@@ -298,57 +302,57 @@ var
 begin
   // lblDownloaded.Caption := FormatFloat('0',Read) + ' bytes';
   if Total < 1 then
-    Total := 57 * _MB;
-  if sProgressBar1.Max <> Total then
+    Total := 70 * _MB;
+  if pbDownloadProgress.Max <> Total then
   begin
-    sProgressBar1.Max := Total;
-    sProgressBar1.Tag := 0;
+    pbDownloadProgress.Max := Total;
+    pbDownloadProgress.Tag := 0;
   end;
-  sProgressBar1.Position := Read;
+  pbDownloadProgress.Position := Read;
   value := 100 * (Read / Total);
   if value > 100 then
     value := 100;
   lblDownloaded.Caption := FormatFloat('0.00', value) + '% of ~' + FormatByteSize(Total);
   lblDownloaded.Update;
-  sProgressBar1.Update;
-  sProgressBar1.Tag := sProgressBar1.Tag + 1;
-  if sProgressBar1.Tag >= 20 then
+  pbDownloadProgress.Update;
+  pbDownloadProgress.Tag := pbDownloadProgress.Tag + 1;
+  if pbDownloadProgress.Tag >= 20 then
   begin
     Application.ProcessMessages;
-    sProgressBar1.Tag := 0;
+    pbDownloadProgress.Tag := 0;
   end;
 end;
 
-procedure TfrmUpgradeDaemon.E1Click(Sender: TObject);
+procedure TfrmUpgradeDaemon.mnuExitClick(Sender: TObject);
 begin
   Close;
 end;
 
-procedure TfrmUpgradeDaemon.C1Click(Sender: TObject);
+procedure TfrmUpgradeDaemon.mnuCopyLogsClick(Sender: TObject);
 begin
-  logs.SelectAll;
-  logs.CopyToClipboard;
-  logs.SelLength := 0;
+  memLogs.SelectAll;
+  memLogs.CopyToClipboard;
+  memLogs.SelLength := 0;
 end;
 
 function TfrmUpgradeDaemon.DownloadFile(const Url, filename: String): Boolean;
 var
   stream: TFileStream;
-  aResponseContentHeader: TALHTTPResponseHeader;
+  lResponseContentHeader: TALHTTPResponseHeader;
 begin
   lblURL.Caption := Url;
-  aResponseContentHeader := TALHTTPResponseHeader.Create;
+  lResponseContentHeader := TALHTTPResponseHeader.Create;
   stream := TFileStream.Create(filename, fmCreate);
   try
     try
-      httpCLient.Get(AnsiString(Url), stream, aResponseContentHeader);
+      httpCLient.Get(AnsiString(Url), stream, lResponseContentHeader);
       result := true;
     except
       result := false;
     end;
   finally
     stream.Free;
-    aResponseContentHeader.Free;
+    lResponseContentHeader.Free;
   end;
 end;
 
@@ -375,7 +379,8 @@ begin
     forceDirectories(path);
     DeleteAllFiles(TPath.Combine(path, 'RoomerLanguage*.src'));
   except
-    // Ignore - Not a vital problem
+    On E: Exception do
+       AddLog('Error: ' + E.Message);
   end;
 end;
 
@@ -460,7 +465,7 @@ end;
 
 procedure TfrmUpgradeDaemon.NullifyScreen;
 begin
-  sProgressBar1.Position := 0;
+  pbDownloadProgress.Position := 0;
   lblDownloaded.Show;
   lblDownloaded.Caption := '';
 end;
@@ -502,10 +507,8 @@ begin
               ttl
             ]));
        // 2. Check if the currently downloaded version is the same as on server...
-        if // (aVersion <> URIProcessor.FUpgradeFileManager.UpgradeVersion) OR
-           (serverMD5 <> URIProcessor.FUpgradeFileManager.UpgradeMD5)
+        if (serverMD5 <> URIProcessor.FUpgradeFileManager.UpgradeMD5)
            OR (uDateUtils.dateTimeToXmlString(timeStamp) <> uDateUtils.dateTimeToXmlString(URIProcessor.FUpgradeFileManager.UpgradeTimeStamp))
-           // OR (ttl <> URIProcessor.FUpgradeFileManager.UpgradeTTL_Minutes)
            then
         begin
          // 3. A new version is available on server.

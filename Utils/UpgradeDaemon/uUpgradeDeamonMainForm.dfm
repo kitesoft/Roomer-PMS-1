@@ -15,7 +15,7 @@ object frmUpgradeDaemon: TfrmUpgradeDaemon
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
-  PopupMenu = PopupMenu1
+  PopupMenu = pmnuLogsMenu
   Position = poScreenCenter
   Scaled = False
   OnCreate = FormCreate
@@ -301,9 +301,7 @@ object frmUpgradeDaemon: TfrmUpgradeDaemon
     Font.Height = -13
     Font.Name = 'Tahoma'
     Font.Style = []
-    ExplicitLeft = 128
-    ExplicitTop = 239
-    ExplicitWidth = 129
+    ExplicitLeft = 55
   end
   object lblURL: TsLabel
     AlignWithMargins = True
@@ -322,11 +320,9 @@ object frmUpgradeDaemon: TfrmUpgradeDaemon
     Font.Height = -13
     Font.Name = 'Tahoma'
     Font.Style = []
-    ExplicitLeft = 8
-    ExplicitTop = 217
-    ExplicitWidth = 394
+    ExplicitLeft = -2
   end
-  object sProgressBar1: TsProgressBar
+  object pbDownloadProgress: TsProgressBar
     AlignWithMargins = True
     Left = 50
     Top = 134
@@ -344,7 +340,7 @@ object frmUpgradeDaemon: TfrmUpgradeDaemon
     ProgressSkin = 'PROGRESSH'
     SkinData.SkinSection = 'GAUGE'
   end
-  object logs: TsMemo
+  object memLogs: TsMemo
     AlignWithMargins = True
     Left = 10
     Top = 161
@@ -362,7 +358,7 @@ object frmUpgradeDaemon: TfrmUpgradeDaemon
     Font.Name = 'Courier New'
     Font.Style = []
     ParentFont = False
-    PopupMenu = PopupMenu1
+    PopupMenu = pmnuLogsMenu
     ReadOnly = True
     TabOrder = 1
     WordWrap = False
@@ -373,14 +369,14 @@ object frmUpgradeDaemon: TfrmUpgradeDaemon
     Enabled = False
     Interval = 100
     OnTimer = timCloseTimer
-    Left = 168
-    Top = 16
+    Left = 208
+    Top = 320
   end
   object timeUpgradeCheck: TTimer
     Interval = 900000
     OnTimer = timeUpgradeCheckTimer
-    Left = 24
-    Top = 264
+    Left = 152
+    Top = 320
   end
   object timPerformRequest: TTimer
     Enabled = False
@@ -388,27 +384,27 @@ object frmUpgradeDaemon: TfrmUpgradeDaemon
     Left = 280
     Top = 320
   end
-  object PopupMenu1: TPopupMenu
+  object pmnuLogsMenu: TPopupMenu
     Left = 328
     Top = 256
-    object S1: TMenuItem
+    object mnuShowHide: TMenuItem
       Caption = 'Show/Hide'
       Default = True
-      OnClick = S1Click
+      OnClick = mnuShowHideClick
     end
-    object C1: TMenuItem
+    object mnuCopyLogs: TMenuItem
       Caption = 'Copy logs'
-      OnClick = C1Click
+      OnClick = mnuCopyLogsClick
     end
     object N1: TMenuItem
       Caption = '-'
     end
-    object E1: TMenuItem
+    object mnuExit: TMenuItem
       Caption = 'Exit'
-      OnClick = E1Click
+      OnClick = mnuExitClick
     end
   end
-  object TrayIcon1: TTrayIcon
+  object tiTrayIcon: TTrayIcon
     Icon.Data = {
       0000010001000000000001002000282004001600000028000000000100000002
       000001002000000000000020040074120000741200000000000000000000FFFF
@@ -8860,9 +8856,9 @@ object frmUpgradeDaemon: TfrmUpgradeDaemon
       FF00000000000000000000000000000000000000000000000000007FFFFFFFFF
       FFF00000000000000000000000000000000000000000000000000FFFFFFFFFFF
       FFF00000000000000000000000000000000000000000000000000FFFFFFF}
-    PopupMenu = PopupMenu1
+    PopupMenu = pmnuLogsMenu
     Visible = True
-    OnDblClick = S1Click
+    OnDblClick = mnuShowHideClick
     Left = 336
     Top = 320
   end

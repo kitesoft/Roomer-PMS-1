@@ -10,10 +10,8 @@ type
   TRoomerUpgradeFileDependencymanager = class(TObject)
   private
   public
-    function FileVersionOnServer(xmlPath : String; fileToCheck : String; var aVersion, MD5: string; var ttl: Integer; var timeStamp : TDateTime): boolean;
+    function FileVersionOnServer(const xmlPath : String; const fileToCheck : String; var aVersion, MD5: string; var ttl: Integer; var timeStamp : TDateTime): boolean;
   end;
-
-function RoomerUpgradeFileDependencyManager: TRoomerUpgradeFileDependencymanager;
 
 implementation
 
@@ -24,18 +22,7 @@ uses
   , XmlUtils
   ;
 
-var
-  gRoomerUpgradeFileDependencyMgr: TRoomerUpgradeFileDependencymanager;
-
-function RoomerUpgradeFileDependencyManager: TRoomerUpgradeFileDependencymanager;
-begin
-  if not assigned(gRoomerUpgradeFileDependencyMgr) then
-    gRoomerUpgradeFileDependencyMgr := TRoomerUpgradeFileDependencymanager.Create;
-
-  Result := gRoomerUpgradeFileDependencyMgr;
-end;
-
-function TRoomerUpgradeFileDependencymanager.FileVersionOnServer(xmlPath : String; fileToCheck : String; var aVersion, MD5: string; var ttl : Integer; var timeStamp : TDateTime): boolean;
+function TRoomerUpgradeFileDependencymanager.FileVersionOnServer(const xmlPath : String; const fileToCheck : String; var aVersion, MD5: string; var ttl : Integer; var timeStamp : TDateTime): boolean;
 var
   XML: IXMLDOMDocument2;
   node: IXMLDOmNode;
@@ -68,6 +55,5 @@ end;
 initialization
 
 finalization
-  gRoomerUpgradeFileDependencyMgr.Free;
 
 end.

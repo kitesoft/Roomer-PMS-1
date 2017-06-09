@@ -28,7 +28,6 @@ type
     FActionType : TURIActionType;
     FUpgradeFileManager : TUpgradeFileManager;
 
-    function ActionTypeByName : TURIActionType;
   private
     FFileExeName: String;
     FClearLanguage: Boolean;
@@ -45,10 +44,11 @@ type
     function UpdateNow: String;
     function GetActivateResult: String;
     function getStringAtIndex(stl: TStringList; index: Integer): String;
+    function ActionTypeByName : TURIActionType;
   public
     constructor Create;
     destructor Destroy; override;
-    function Process(URI : String) : Boolean;
+    function Process(const URI : String) : Boolean;
     procedure ClearLocalUpgradeInformation;
 
     property ProcessResult : String read FProcessResult write SetProcessResult;
@@ -111,58 +111,64 @@ begin
   ActionString := FURI;
   if copy(ActionString, 1, 1) = '/' then
     ActionString := Trim(Copy(FURI, 2, maxInt));
+
   stl := uUtils.Split(ActionString, '/');
-  if stl.Count = 0 then
-    result := atUnknown
-  else begin
-          // localhost:62999/Activate
-    if stl[URI_COMMAND_START_INDEX] = 'Activate' then
-    begin
-      result := atActivate;
-      FRoomerStore := TIdURI.URLDecode(getStringAtIndex(stl, URI_AV_ROOMER_STORE_INDEX));
-    end
-          // localhost:62999/Active
-    else if stl[URI_COMMAND_START_INDEX] = 'Active' then
-      result := atActive
-
-          // localhost:62999/Close
-    else if stl[URI_COMMAND_START_INDEX] = 'Close' then
-      result := atClose
-
-          // localhost:62999/CheckForUpgrade/Roomer.exe/true/true
-    else if stl[URI_COMMAND_START_INDEX] = 'CheckForUpgrade' then
-    begin
-      result := atCheckForUpgrade;
-      FFileExeName := getStringAtIndex(stl, URI_CFU_EXE_NAME_INDEX);
-      UpgradeFileManager.SetFileName(FFileExeName);
-    end
-          // localhost:62999/UpdateNow/Roomer.exe/C:\Roomer\Roomer.exe
-    else if stl[URI_COMMAND_START_INDEX] = 'UpdateNow' then
-    begin
-      result := atUpdateNow;
-      FFileExeName := getStringAtIndex(stl, URI_UN_EXE_NAME_INDEX);
-      UpgradeFileManager.SetFileName(FFileExeName);
-      FFileExePath := TIdURI.URLDecode(getStringAtIndex(stl, URI_UN_PATH_INDEX));
-      FClearLanguage := LowerCase(getStringAtIndex(stl, URI_UN_CLEAR_LANGUAGE_INDEX)) = 'true';
-      FClearCache := LowerCase(getStringAtIndex(stl, URI_UN_CLEAR_CACHE_INDEX)) = 'true';
-    end
-          // localhost:62999/UpgradeAvailable/Roomer.exe
-    else if stl[URI_COMMAND_START_INDEX] = 'UpgradeAvailable' then
-    begin
-      result := atUpgradeAvailable;
-      FFileExeName := getStringAtIndex(stl, URI_UA_EXE_NAME_INDEX);
-      UpgradeFileManager.SetFileName(FFileExeName);
-      FFileExePath := TIdURI.URLDecode(getStringAtIndex(stl, URI_UA_PATH_INDEX));
-    end
-          // localhost:62999/UpgradeTTL/Roomer.exe
-    else if stl[URI_COMMAND_START_INDEX] = 'UpgradeTTL' then
-    begin
-      result := atUpgradeTTL;
-      FFileExeName := getStringAtIndex(stl, URI_UTTL_EXE_NAME_INDEX);
-      UpgradeFileManager.SetFileName(FFileExeName);
-    end
-    else
+  try
+    if stl.Count = 0 then
       result := atUnknown
+    else
+    begin
+            // localhost:62999/Activate
+      if stl[URI_COMMAND_START_INDEX] = 'Activate' then
+      begin
+        result := atActivate;
+        FRoomerStore := TIdURI.URLDecode(getStringAtIndex(stl, URI_AV_ROOMER_STORE_INDEX));
+      end
+            // localhost:62999/Active
+      else if stl[URI_COMMAND_START_INDEX] = 'Active' then
+        result := atActive
+
+            // localhost:62999/Close
+      else if stl[URI_COMMAND_START_INDEX] = 'Close' then
+        result := atClose
+
+            // localhost:62999/CheckForUpgrade/Roomer.exe/true/true
+      else if stl[URI_COMMAND_START_INDEX] = 'CheckForUpgrade' then
+      begin
+        result := atCheckForUpgrade;
+        FFileExeName := getStringAtIndex(stl, URI_CFU_EXE_NAME_INDEX);
+        UpgradeFileManager.SetFileName(FFileExeName);
+      end
+            // localhost:62999/UpdateNow/Roomer.exe/C:\Roomer\Roomer.exe
+      else if stl[URI_COMMAND_START_INDEX] = 'UpdateNow' then
+      begin
+        result := atUpdateNow;
+        FFileExeName := getStringAtIndex(stl, URI_UN_EXE_NAME_INDEX);
+        UpgradeFileManager.SetFileName(FFileExeName);
+        FFileExePath := TIdURI.URLDecode(getStringAtIndex(stl, URI_UN_PATH_INDEX));
+        FClearLanguage := LowerCase(getStringAtIndex(stl, URI_UN_CLEAR_LANGUAGE_INDEX)) = 'true';
+        FClearCache := LowerCase(getStringAtIndex(stl, URI_UN_CLEAR_CACHE_INDEX)) = 'true';
+      end
+            // localhost:62999/UpgradeAvailable/Roomer.exe
+      else if stl[URI_COMMAND_START_INDEX] = 'UpgradeAvailable' then
+      begin
+        result := atUpgradeAvailable;
+        FFileExeName := getStringAtIndex(stl, URI_UA_EXE_NAME_INDEX);
+        UpgradeFileManager.SetFileName(FFileExeName);
+        FFileExePath := TIdURI.URLDecode(getStringAtIndex(stl, URI_UA_PATH_INDEX));
+      end
+            // localhost:62999/UpgradeTTL/Roomer.exe
+      else if stl[URI_COMMAND_START_INDEX] = 'UpgradeTTL' then
+      begin
+        result := atUpgradeTTL;
+        FFileExeName := getStringAtIndex(stl, URI_UTTL_EXE_NAME_INDEX);
+        UpgradeFileManager.SetFileName(FFileExeName);
+      end
+      else
+        result := atUnknown
+    end;
+  finally
+    stl.Free;
   end;
 end;
 
@@ -199,16 +205,16 @@ begin
   MD5OfFile := '';
   if (FileExePath <> '') AND FileExists(FileExePath) then
     MD5OfFile := FileMD5(FileExePath);
-  result := IIF(UpgradeFileManager.UpgradeFinished OR
-                (TRIM(UpgradeFileManager.UpgradeVersion)='') OR
-                (MD5OfFile = UpgradeFileManager.UpgradeMD5),
-                  RESULT_UPDATE_NOT_AVAILABLE,
-                  format(RESULT_UPDATE_AVAILABLE,
+
+  if UpgradeFileManager.UpgradeFinished OR (TRIM(UpgradeFileManager.UpgradeVersion)='') OR (MD5OfFile = UpgradeFileManager.UpgradeMD5) then
+    result := RESULT_UPDATE_NOT_AVAILABLE
+  else
+    result := format(RESULT_UPDATE_AVAILABLE,
                       [
                         UpgradeFileManager.UpgradeVersion,
                         UpgradeFileManager.UpgradeTTL_Minutes,
                         uDateUtils.dateTimeToXmlString(IncMinute(UpgradeFileManager.UpgradeTimeStamp, UpgradeFileManager.UpgradeTTL_Minutes))
-                      ]));
+                      ]);
 end;
 
 function TURIProcessor.UpgradeTTL : String;
@@ -224,13 +230,14 @@ end;
 constructor TURIProcessor.Create;
 begin
   FRoomerStore := 'http://roomerstore.com/';
-  FUpgradeFileManager := TUpgradeFileManager.Create(RoomerNewUpgradePath);
+  FUpgradeFileManager := TUpgradeFileManager.Create();
   FRoomerUpgradeFileDependencymanager := TRoomerUpgradeFileDependencymanager.Create;
 end;
 
 destructor TURIProcessor.Destroy;
 begin
   FUpgradeFileManager.Free;
+  FRoomerUpgradeFileDependencymanager.Free;
   inherited;
 end;
 
@@ -239,7 +246,7 @@ begin
   result := TPath.Combine(RoomerNewUpgradePath, ExtractFilename(FileExeName));
 end;
 
-function TURIProcessor.Process(URI : String): Boolean;
+function TURIProcessor.Process(const URI : String): Boolean;
 begin
   FURI := URI;
   FActionType := ActionTypeByName;
