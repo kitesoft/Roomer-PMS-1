@@ -126,7 +126,6 @@ object frmControlData: TfrmControlData
           000000FFFFFFFFFFFFFFFF000000000000000000000000010E42006500740061
           002000460075006E006300740069006F006E007300}
         SkinData.SkinSection = 'EDIT'
-        ExplicitTop = -2
       end
     end
     object __LMDBackPanel3: TsPanel
@@ -142,7 +141,7 @@ object frmControlData: TfrmControlData
         Top = 1
         Width = 1101
         Height = 743
-        ActivePage = tsSystemItemIDs
+        ActivePage = tsCompany
         Align = alClient
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
@@ -765,7 +764,7 @@ object frmControlData: TfrmControlData
               SkinData.SkinSection = 'EDIT'
               AllowNegative = False
               Increment = 10
-              MaxValue = 2147483647
+              MaxValue = 20000
               MinValue = 60
               Value = 0
             end
@@ -3630,7 +3629,7 @@ object frmControlData: TfrmControlData
               Left = 249
               Top = 20
               Width = 20
-              Height = 16
+              Height = 20
               TabOrder = 0
               SkinData.SkinSection = 'CHECKBOX'
               ImgChecked = 0
@@ -3640,7 +3639,7 @@ object frmControlData: TfrmControlData
               Left = 249
               Top = 40
               Width = 20
-              Height = 16
+              Height = 20
               TabOrder = 1
               SkinData.SkinSection = 'CHECKBOX'
               ImgChecked = 0
@@ -3650,7 +3649,7 @@ object frmControlData: TfrmControlData
               Left = 447
               Top = 20
               Width = 20
-              Height = 16
+              Height = 20
               TabOrder = 2
               SkinData.SkinSection = 'CHECKBOX'
               ImgChecked = 0
@@ -3764,7 +3763,7 @@ object frmControlData: TfrmControlData
               Left = 425
               Top = 67
               Width = 20
-              Height = 16
+              Height = 20
               TabOrder = 3
               SkinData.SkinSection = 'CHECKBOX'
               ImgChecked = 0
@@ -3948,7 +3947,7 @@ object frmControlData: TfrmControlData
               Left = 450
               Top = 18
               Width = 20
-              Height = 16
+              Height = 20
               TabOrder = 0
               SkinData.SkinSection = 'CHECKBOX'
               ImgChecked = 0
@@ -3958,7 +3957,7 @@ object frmControlData: TfrmControlData
               Left = 450
               Top = 58
               Width = 20
-              Height = 16
+              Height = 20
               TabOrder = 1
               SkinData.SkinSection = 'CHECKBOX'
               ImgChecked = 0
@@ -3968,7 +3967,7 @@ object frmControlData: TfrmControlData
               Left = 450
               Top = 38
               Width = 20
-              Height = 16
+              Height = 20
               TabOrder = 2
               SkinData.SkinSection = 'CHECKBOX'
               ImgChecked = 0
@@ -3978,7 +3977,7 @@ object frmControlData: TfrmControlData
               Left = 450
               Top = 77
               Width = 20
-              Height = 16
+              Height = 20
               TabOrder = 3
               SkinData.SkinSection = 'CHECKBOX'
               ImgChecked = 0
@@ -3988,7 +3987,7 @@ object frmControlData: TfrmControlData
               Left = 450
               Top = 97
               Width = 20
-              Height = 16
+              Height = 20
               TabOrder = 4
               SkinData.SkinSection = 'CHECKBOX'
               ImgChecked = 0
@@ -3998,7 +3997,7 @@ object frmControlData: TfrmControlData
               Left = 450
               Top = 116
               Width = 20
-              Height = 16
+              Height = 20
               TabOrder = 5
               SkinData.SkinSection = 'CHECKBOX'
               ImgChecked = 0
@@ -4195,7 +4194,7 @@ object frmControlData: TfrmControlData
                 Left = 139
                 Top = 41
                 Width = 20
-                Height = 16
+                Height = 20
                 TabOrder = 0
                 SkinData.SkinSection = 'CHECKBOX'
                 ImgChecked = 0

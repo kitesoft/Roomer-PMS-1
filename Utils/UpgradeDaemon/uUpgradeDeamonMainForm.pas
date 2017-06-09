@@ -4,6 +4,7 @@ interface
 
 uses
   Winapi.Windows,
+  Winapi.Messages,
   Vcl.Forms,
   ALHttpClient,
   ALWininetHttpClient,
@@ -25,7 +26,6 @@ uses
 type
   TfrmUpgradeDaemon = class(TForm)
     Image2: TImage;
-    timClose: TTimer;
     pbDownloadProgress: TsProgressBar;
     lblDownloaded: TsLabel;
     lblURL: TsLabel;
@@ -40,13 +40,13 @@ type
     mnuCopyLogs: TMenuItem;
     HttpServer: THttpServer;
     procedure FormCreate(Sender: TObject);
+    procedure WndProc(var message: TMessage); override;
     procedure timPerformRequestTimer(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure mnuExitClick(Sender: TObject);
     procedure mnuShowHideClick(Sender: TObject);
     procedure timeUpgradeCheckTimer(Sender: TObject);
     procedure mnuCopyLogsClick(Sender: TObject);
-    procedure timCloseTimer(Sender: TObject);
     procedure HttpServerGetDocument(Sender, Client: TObject; var Flags: THttpGetFlag);
     procedure HttpServerClientConnect(Sender, Client: TObject; Error: Word);
     procedure HttpServerClientDisconnect(Sender, Client: TObject; Error: Word);
@@ -68,6 +68,7 @@ type
     procedure UpdateNow;
     procedure SetDownloadActive(const Value: Boolean);
     procedure AddLog(logText: String);
+    function GetNewFileNameIndex(OldName: String): String;
 
     property DownloadActive : Boolean read FDownloadActive write SetDownloadActive;
   public
@@ -104,6 +105,10 @@ const
   _MB = _K * _KB; // megabyte
   _GB = _K * _MB; // gigabyte
 
+  WM_START_HTTP_LISTENER = WM_User + 191;
+  HTTP_SERVICE_DEFAULT_PORT = 62999;
+
+
 function FormatByteSize(const bytes: Longword): string;
 begin
 
@@ -135,13 +140,29 @@ begin
       wHttpIo_Need_file, wHttpIo_No_cache_write, wHttpIo_Pragma_nocache, wHttpIo_Reload];
   end;
 
-  activeSince := Now;
-  try
-    HttpServer.Start;
-  except
-    timClose.Enabled := True;
-  end;
+  postMessage(handle, WM_START_HTTP_LISTENER, 0, HTTP_SERVICE_DEFAULT_PORT);
 end;
+
+procedure TfrmUpgradeDaemon.WndProc(var message: TMessage);
+var iPort : Integer;
+begin
+  if Message.Msg = WM_START_HTTP_LISTENER then
+  begin
+    try
+      HttpServer.Port := IntToStr(message.LParam);
+      HttpServer.Start;
+      activeSince := Now;
+    except
+      if message.LParam > 62000 then
+      begin
+        postMessage(handle, WM_START_HTTP_LISTENER, 0, message.LParam - 1);
+      end;
+    end;
+
+  end;
+  inherited WndProc(message);
+end;
+
 
 procedure TfrmUpgradeDaemon.FormDestroy(Sender: TObject);
 begin
@@ -172,7 +193,6 @@ begin
   AddLog('[' + FormatDateTime('HH:NN:SS', Now) + ' ' +
           ClientCnx.GetPeerAddr + '] ' + IntToStr(FCountRequests) +
           ': ' + ClientCnx.Version + ' GET ' + ClientCnx.Path);
-
 
   try
     AddLog('Received URI: ' + ClientCnx.Path);
@@ -207,12 +227,12 @@ end;
 
 procedure TfrmUpgradeDaemon.HttpServerServerStarted(Sender: TObject);
 begin
-  AddLog('HTTP service started.');
+  AddLog('HTTP service started on port ' + HttpServer.Port);
 end;
 
 procedure TfrmUpgradeDaemon.HttpServerServerStopped(Sender: TObject);
 begin
-  AddLog('HTTP service stopped.');
+  AddLog('HTTP service stopped on ' + HttpServer.Port);
 end;
 
 procedure TfrmUpgradeDaemon.AddLog(logText : String);
@@ -236,12 +256,6 @@ end;
 procedure TfrmUpgradeDaemon.SetDownloadActive(const Value: Boolean);
 begin
   FDownloadActive := Value;
-end;
-
-procedure TfrmUpgradeDaemon.timCloseTimer(Sender: TObject);
-begin
-  timClose.Enabled := False;
-  Close;
 end;
 
 procedure TfrmUpgradeDaemon.timeUpgradeCheckTimer(Sender: TObject);
@@ -414,9 +428,24 @@ begin
   end;
 end;
 
+function TfrmUpgradeDaemon.GetNewFileNameIndex(OldName : String) : String;
+var i : Integer;
+    fullNameAndPath : String;
+    done : Boolean;
+begin
+  i := 0;
+  done := False;
+  repeat
+    inc(i);
+    fullNameAndPath := format('%s.%d', [OldName, i]);
+    done := NOT FileExists(fullNameAndPath);
+  until done;
+end;
+
 procedure TfrmUpgradeDaemon.UpdateNow;
 var
   exeName: String;
+  SavedFileName : String;
   UpgradeFilename: PWideChar;
 begin
   if (NOT URIProcessor.FUpgradeFileManager.UpgradeFinished) AND
@@ -437,7 +466,9 @@ begin
 
       exeName := URIProcessor.FileExePath;
       AddLog('Removing old exe file: ' + exeName);
-      SysUtils.DeleteFile(exeName);
+      SavedFileName := GetNewFileNameIndex(exeName);
+      if NOT RenameFile(exeName, SavedFileName) then
+        SysUtils.DeleteFile(exeName);
       UpgradeFilename := PWideChar(URIProcessor.UpgradeExePathName);
       if NOT TryCopyFile(UpgradeFilename, PChar(exeName)) then
         exit;

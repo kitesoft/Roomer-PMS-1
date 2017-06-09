@@ -296,7 +296,8 @@ uses
   uFrmPayCardView in 'PCI\uFrmPayCardView.pas' {FrmPayCardView},
   uFrontDeskPageButton in 'uFrontDeskPageButton.pas' {FrmFrontDeskPageButton},
   uRptInHouse in 'uRptInHouse.pas' {frmInHouseReport},
-  uDataSetFilterUtils in 'Filters\uDataSetFilterUtils.pas';
+  uDataSetFilterUtils in 'Filters\uDataSetFilterUtils.pas',
+  uSocketHelpers in 'TCP\uSocketHelpers.pas';
 
 {$R *.RES}
 

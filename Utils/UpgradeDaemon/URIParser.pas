@@ -16,7 +16,8 @@ type
                       atCheckForUpgrade,
                       atUpgradeAvailable,
                       atUpgradeTTL,
-                      atUpdateNow
+                      atUpdateNow,
+                      atWhoAreYou
 
                    );
 
@@ -78,6 +79,9 @@ uses uUtils,
 
 const URI_COMMAND_START_INDEX = 0;
 
+// WhoAreYou (WAY)
+      URI_WAY_ROOMER_STORE_INDEX = URI_COMMAND_START_INDEX + 1;
+
 // Activate (AV)
       URI_AV_ROOMER_STORE_INDEX = URI_COMMAND_START_INDEX + 1;
 
@@ -118,8 +122,12 @@ begin
       result := atUnknown
     else
     begin
+            // localhost:62999/WhoAreYou
+      if stl[URI_COMMAND_START_INDEX] = 'WhoAreYou' then
+        result := atWhoAreYou
+
             // localhost:62999/Activate
-      if stl[URI_COMMAND_START_INDEX] = 'Activate' then
+      else if stl[URI_COMMAND_START_INDEX] = 'Activate' then
       begin
         result := atActivate;
         FRoomerStore := TIdURI.URLDecode(getStringAtIndex(stl, URI_AV_ROOMER_STORE_INDEX));
@@ -179,6 +187,7 @@ const RESULT_UPDATE_AVAILABLE = 'UPDATE_AVAILABLE|VERSION=%s|TTL=%d|END_TIME_STA
 
       RESULT_UNKNOWN = 'UNKNOWN';
       RESULT_ACTIVE = 'ACTIVE';
+      RESULT_WHO_ARE_YOU = 'ROOMER_DAEMON';
       RESULT_CLOSE = 'CLOSING';
       RESULT_ACTIVATE = 'ACTIVATED %s';
       RESULT_NO_UPGRADE = 'NO_UPGRADE';
@@ -261,6 +270,7 @@ begin
     atUpgradeAvailable : ProcessResult := UpgradeAvailable;
     atUpgradeTTL : ProcessResult := UpgradeTTL;
     atUpdateNow :  ProcessResult := UpdateNow;
+    atWhoAreYou :  ProcessResult := RESULT_WHO_ARE_YOU;
     else result := false;
   end;
 end;
