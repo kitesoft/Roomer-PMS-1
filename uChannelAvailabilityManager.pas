@@ -3833,7 +3833,6 @@ begin
               inc(iCountLine);
               rateGrid.AddCheckBox(iRateCol, iRateRow + iCountLine, RateSet.FieldByName('lengthOfStayArrivalDateBased').AsBoolean, false);
               rateGrid.RowHeights[iRateRow + iCountLine] := 8;
-
             end;
             RateSet.next;
           end;
@@ -4521,8 +4520,17 @@ begin
   if PerformForcedAvailabilityUpdate then
   begin
     CleanUpRedundantRoomClassesInAvailbilities;
-    d.roomerMainDataSet.DoCommand('UPDATE channelrates cr SET cr.availabilityDirty=1 WHERE cr.date>=CURRENT_DATE');
-    d.roomerMainDataSet.DoCommand('UPDATE channelratesavailabilities cra SET cra.dirty=1 WHERE cra.date>=CURRENT_DATE');
+    d.roomerMainDataSet.DoCommand('channelrates cr ' +
+       'JOIN channels ch ON ch.id=cr.channelId ' +
+       'JOIN roomtypegroups rtg ON cr.roomClassId=rtg.id ' +
+       '                           AND rtg.Code=rtg.TopClass ' +
+       'JOIN channelclassrelations ccr ON ch.id=ccr.channelId AND rtg.id=ccr.roomClassId' +
+       'SET cr.availabilityDirty=1 ' +
+       'WHERE cr.date>=CURRENT_DATE');
+    d.roomerMainDataSet.DoCommand('UPDATE channelratesavailabilities cra ' +
+       'JOIN roomtypegroups rtg ON cra.roomClassId=rtg.id ' +
+       '                           AND rtg.Code=rtg.TopClass ' +
+       'SET cra.dirty=1 WHERE cra.date>=CURRENT_DATE');
   end;
 end;
 
