@@ -365,13 +365,6 @@ object frmUpgradeDaemon: TfrmUpgradeDaemon
     SkinData.CustomColor = True
     SkinData.CustomFont = True
   end
-  object timClose: TTimer
-    Enabled = False
-    Interval = 100
-    OnTimer = timCloseTimer
-    Left = 208
-    Top = 320
-  end
   object timeUpgradeCheck: TTimer
     Interval = 900000
     OnTimer = timeUpgradeCheckTimer

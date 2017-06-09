@@ -905,6 +905,7 @@
             <Form>frmInHouseReport</Form>
         </DCCReference>
         <DCCReference Include="Filters\uDataSetFilterUtils.pas"/>
+        <DCCReference Include="TCP\uSocketHelpers.pas"/>
         <None Include="Roomer.todo"/>
         <None Include="notes.txt"/>
         <None Include="Roomer.inc"/>
