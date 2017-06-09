@@ -137,13 +137,12 @@ TYPE
   private
     FXmlFileName : string;
 
-    FRoomCount : integer;
     FRoomList : TRoomItemsList;
 
     FHotelcode       : string    ;
 
     function getRoomCount : integer;
-    procedure FillList(var RoomCount : integer);
+    procedure FillList;
     procedure Clear;
     function GetRoomByNumber(aRoomNumber: string): TRoomItem;
 
@@ -404,15 +403,14 @@ end;
 //////////////////////////////////////////////////////////////////////
 constructor TRooms.Create(aHotelCode : string);
 begin
-  inherited Create;
-
   FRoomList := TRoomItemsList.Create([doOwnsValues]);
-//  FRoomList := TRoomItemsList.Create(True);
 
   FHotelCode := aHotelCode;
-  FRoomCount := 0;
-
-  FillList(FRoomCount);
+  try
+    FillList;
+  except
+    FRoomList.Clear;
+  end;
 
 end;
 
@@ -428,7 +426,7 @@ begin
   FRoomList.Clear;
 end;
 
-procedure TRooms.FillList(var RoomCount: integer);
+procedure TRooms.FillList();
 var
   RoomItem : TRoomItem;
 
@@ -453,7 +451,6 @@ var
 
 begin
   Clear;
-  RoomCount := 0;
   if NOT d.roomerMainDataSet.LoggedIn then exit;
 
   glb.ForceTableRefresh;
@@ -521,7 +518,6 @@ begin
     end;
     rSet.Next;
   end;
-  RoomCount := FRoomList.Count;
 end;
 
 function TRooms.FindRoomFromRoomNumber(RoomNumber: string): TRoomItem;

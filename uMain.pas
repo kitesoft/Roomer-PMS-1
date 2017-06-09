@@ -1867,10 +1867,10 @@ begin
   EmptyStringGrid(grPeriodRooms);
   EmptyStringGrid(grOneDayRooms);
   EmptyStringGrid(grPeriodRooms_NO);
-  try
-    EnterDayView;
-  except
-  end;
+//  try
+//    EnterDayView;
+//  except
+//  end;
   if performLogout then
   begin
     d.roomerMainDataSet.LOGOUT;
@@ -2317,10 +2317,12 @@ procedure TfrmMain.WMCopyData(var Message: TWMCopyData);
 var
   Arg: string;
 begin
+  // When app is started a second time, this app is brought to front
   SetString(Arg, PChar(Message.CopyDataStruct.lpData), (Message.CopyDataStruct.cbData div SizeOf(Char))-1);
   if Arg = 'CLOSE_APP' then
     Application.MainForm.Close
-  else begin
+  else
+  begin
     Application.Restore;
     Application.BringToFront;
     if Assigned(lLoginForm) AND lLoginForm.Showing then
@@ -2328,8 +2330,6 @@ begin
       lLoginForm.BringToFront;
       SetForegroundWindow(lLoginForm.Handle);
     end;
-    if Arg = 'CLOSE_APP' then
-      Application.MainForm.Close;
   end;
 end;
 
@@ -3068,14 +3068,16 @@ begin
   if OffLineMode then
   begin
 
-    with TfrmOfflineReports.Create(nil) do
-      try
-        RoomerOffline := true;
-        ShowModal;
-      finally
-        Free;
-        ExitProcess(0); // end application
-      end;
+//    with TfrmOfflineReports.Create(nil) do
+//      try
+//        RoomerOffline := true;
+//        ShowModal;
+//      finally
+//        Free;
+//        ExitProcess(0); // end application
+//      end;
+    result := false;
+    exit;
 
   end;
 

@@ -339,8 +339,7 @@ object frmRoomerLoginForm: TfrmRoomerLoginForm
     Font.Name = 'Tahoma'
     Font.Style = [fsBold]
     UseSkinColor = False
-    ExplicitTop = 192
-    ExplicitWidth = 446
+    ExplicitTop = 211
   end
   object lblServerProblem: TsLabel
     Left = 0
@@ -448,7 +447,7 @@ object frmRoomerLoginForm: TfrmRoomerLoginForm
       ImageIndex = 26
       Images = DImages.PngImageList1
       ModalResult = 1
-      TabOrder = 1
+      TabOrder = 0
       OnClick = btLoginClick
       SkinData.SkinSection = 'BUTTON'
     end
@@ -468,27 +467,8 @@ object frmRoomerLoginForm: TfrmRoomerLoginForm
       ImageIndex = 10
       Images = DImages.PngImageList1
       ModalResult = 2
-      TabOrder = 2
+      TabOrder = 1
       OnClick = btCancelClick
-      SkinData.SkinSection = 'BUTTON'
-    end
-    object btOffline: TsButton
-      AlignWithMargins = True
-      Left = 97
-      Top = 2
-      Width = 111
-      Height = 29
-      Margins.Left = 2
-      Margins.Top = 2
-      Margins.Right = 2
-      Margins.Bottom = 2
-      Align = alRight
-      Caption = 'Offline Login'
-      ImageIndex = 26
-      Images = DImages.PngImageList1
-      ModalResult = 1
-      TabOrder = 0
-      OnClick = btOfflineClick
       SkinData.SkinSection = 'BUTTON'
     end
   end
@@ -515,5 +495,11 @@ object frmRoomerLoginForm: TfrmRoomerLoginForm
     OnTimer = timTopmostOffTimer
     Left = 40
     Top = 136
+  end
+  object tmrCheckConnection: TTimer
+    Enabled = False
+    OnTimer = tmrCheckConnectionTimer
+    Left = 40
+    Top = 272
   end
 end

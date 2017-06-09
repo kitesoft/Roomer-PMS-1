@@ -25,16 +25,16 @@ type
     StoreLogin: TcxPropertiesStore;
     lblMessage: TsLabel;
     lblServerProblem: TsLabel;
-    btOffline: TsButton;
     timTopmostOff: TTimer;
+    tmrCheckConnection: TTimer;
     procedure btLoginClick(Sender: TObject);
     procedure btCancelClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormCreate(Sender: TObject);
-    procedure btOfflineClick(Sender: TObject);
     procedure timTopmostOffTimer(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormActivate(Sender: TObject);
+    procedure tmrCheckConnectionTimer(Sender: TObject);
   private
     { Private declarations }
     FNoInternet: boolean;
@@ -52,7 +52,7 @@ type
   end;
 
   // Possible outcomes of AskUserForCredentials()
-  TLoginFormResult = (lrCancel = 0, lrLogin, lrOffLine);
+  TLoginFormResult = (lrCancel = 0, lrLogin {, lrOffLine});
 
 
 
@@ -62,7 +62,7 @@ function AskUserForCredentials(var aUsername: String; var aPassword: String; var
 
 const
   // TLoginFormResults when login dialog is confirmed
-  cLoginFormSuccesfull: set of TLoginFormResult = [lrLogin, lrOffline];
+  cLoginFormSuccesfull: set of TLoginFormResult = [lrLogin {, lrOffline}];
 
 var
   lLoginForm: TfrmRoomerLoginForm;
@@ -142,7 +142,7 @@ begin
 
     lLoginForm.ShowModal;
     Result := TLoginFormResult(lLoginForm.Tag);
-    if (Result in [lrLogin, lrOffline]) then
+    if (Result in cLoginFormSuccesfull) then
     begin
       aHotelId := UpperCase(lLoginForm.edtHotelCode.Text);
       aUsername := lLoginForm.edtUsername.Text;
@@ -191,6 +191,12 @@ begin
   SetFormTopmostOff(self);
 end;
 
+procedure TfrmRoomerLoginForm.tmrCheckConnectionTimer(Sender: TObject);
+begin
+  NoInternet := NOT d.roomerMainDataSet.IsConnectedToInternet;
+  ServerUnreachable := NOT d.roomerMainDataSet.RoomerPlatformAvailable;
+end;
+
 procedure TfrmRoomerLoginForm.UpdateControls;
 var
   lOffLine: boolean;
@@ -200,25 +206,15 @@ const
   cOfflineMessage = 'Roomer will not be able to work normally';
 begin
   lOffLine := NoInternet or ServerUnreachable;
-  btLogin.Enabled := true; // not lOffLine;
-
-{$ifdef rmEnableOffLineLogin}
-  btOffline.Visible := True;
-{$else}
-  btOffline.Visible := lOffLine;
-{$endif}
-
+  btLogin.Enabled := not lOffLine;
   btLogin.Default := not lOffLine;
-  btOfflIne.Default := lOffLine;
 
   if NoInternet then
     lblServerProblem.Caption := cNoInternet + cOfflineMessage
-  else
-  if ServerUnreachable then
+  else if ServerUnreachable then
     lblServerProblem.Caption := cPlatformUnreachable + cOfflineMessage
   else
     lblServerProblem.Caption := '';
-
 end;
 
 procedure TfrmRoomerLoginForm.btLoginClick(Sender: TObject);
@@ -227,11 +223,6 @@ begin
   if IsControlKeyPressed then
      SetIgnoresToZero(d.roomerMainDataSet);
   Close;
-end;
-
-procedure TfrmRoomerLoginForm.btOfflineClick(Sender: TObject);
-begin
-  Tag := ord(lrOffLine);
 end;
 
 procedure TfrmRoomerLoginForm.CreateParams(var Params: TCreateParams);
@@ -273,7 +264,6 @@ begin
   timTopmostOff.Enabled := True;
   NoInternet := NOT d.roomerMainDataSet.IsConnectedToInternet;
   ServerUnreachable := NOT d.roomerMainDataSet.RoomerPlatformAvailable;
-  btOffline.Visible := NoInternet OR ServerUnreachable;
 end;
 
 end.
