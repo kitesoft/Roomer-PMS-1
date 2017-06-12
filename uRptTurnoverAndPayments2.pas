@@ -1390,7 +1390,7 @@ begin
     s := s + '   , ih.CreditInvoice ' + #10;
     s := s + '   , ih.OriginalInvoice ' + #10;
     s := s + '   , ih.RoomGuest ' + #10;
-    s := s + '   , ih.InvoiceDate AS InvoiceDate ' + #10;
+    s := s + '   , CAST(ih.InvoiceDate as DATE) AS InvoiceDate ' + #10;
 //    s := s + '   , ih.ihInvoiceDate AS InvoiceDate ' + #10;
     s := s + '   , ih.ihPayDate AS dueDate ' + #10;
     s := s + '   , ih.invRefrence ' + #10;
