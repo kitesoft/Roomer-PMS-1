@@ -17,7 +17,6 @@ type
     procedure CloseStream;
   public
     constructor Create(filename : String);
-    destructor Destroy;
 
     procedure AddToLog(sText : String);
 
@@ -41,13 +40,14 @@ const DEFAULT_LOG_FILENAME_FORMAT = 'ROOMER_LOGS_%s.log';
 
 function ActivateRoomerLogger(sUnit : String) : TRoomerLogger;
 begin
+  // Constructor includes registering the logger wih the Logger ObjectList
   result := TRoomerLogger.Create(TPath.Combine(uFileSystemUtils.RoomerLogPath, format(DEFAULT_LOG_FILENAME_FORMAT, [sUnit])));
 end;
 
 procedure DeactivateRoomerLogger(var Logger : TRoomerLogger);
 begin
   Loggers.Remove(Logger);
-  Logger.Free;
+  // Logger objectlist own objects, so it will free the object when removed from list
   Logger := nil;
 end;
 
@@ -73,10 +73,6 @@ begin
     CloseStream;
   end;
   Loggers.Add(self);
-end;
-
-destructor TRoomerLogger.Destroy;
-begin
 end;
 
 procedure TRoomerLogger.CloseStream;

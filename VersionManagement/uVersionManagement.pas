@@ -57,7 +57,7 @@ type
     procedure startEngine;
   public
     constructor Create;
-    destructor Destroy;
+    destructor Destroy; override;
 
     procedure Prepare;
     procedure ForceUpdate;
@@ -134,6 +134,7 @@ begin
   httpClient.Free;
   FileDependencyManager.Free;
   DeactivateRoomerLogger(RoomerLogger);
+  inherited;
 end;
 
 procedure TRoomerVersionManagement.CloseDaemon;
