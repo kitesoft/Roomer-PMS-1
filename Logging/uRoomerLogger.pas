@@ -9,6 +9,10 @@ uses uDateUtils,
 
 type
 
+  /// <summary>
+  ///   Class to log messages to a file.
+  ///  On creation the logger is registered with a global logger list, who owns the object
+  /// </summary>
   TRoomerLogger = class
   private
     FFilename: String;
@@ -16,14 +20,18 @@ type
     procedure OpenStream;
     procedure CloseStream;
   public
-    constructor Create(filename : String);
-
-    procedure AddToLog(sText : String);
-
-    property filename : String read FFilename;
+    constructor Create(const filename : String);
+    procedure AddToLog(const sText : String);
+    property Filename : String read FFilename;
   end;
 
-function ActivateRoomerLogger(sUnit : String) : TRoomerLogger;
+/// <summary>
+///   Create and register a logger, logging to a file with the supplied postfix
+/// </summary>
+function ActivateRoomerLogger(const sUnit : String) : TRoomerLogger;
+/// <summary>
+///   Remove (and subsequently free) logger from global list. Logger variable will be set to nil
+/// </summary>
 procedure DeactivateRoomerLogger(var Logger : TRoomerLogger);
 
 implementation
@@ -38,7 +46,7 @@ var Loggers : TObjectList<TRoomerLogger>;
 
 const DEFAULT_LOG_FILENAME_FORMAT = 'ROOMER_LOGS_%s.log';
 
-function ActivateRoomerLogger(sUnit : String) : TRoomerLogger;
+function ActivateRoomerLogger(const sUnit : String) : TRoomerLogger;
 begin
   // Constructor includes registering the logger wih the Logger ObjectList
   result := TRoomerLogger.Create(TPath.Combine(uFileSystemUtils.RoomerLogPath, format(DEFAULT_LOG_FILENAME_FORMAT, [sUnit])));
@@ -53,7 +61,7 @@ end;
 
 { TRoomerLogger }
 
-procedure TRoomerLogger.AddToLog(sText: String);
+procedure TRoomerLogger.AddToLog(const sText: String);
 begin
   OpenStream;
   try
@@ -63,7 +71,7 @@ begin
   end;
 end;
 
-constructor TRoomerLogger.Create(filename: String);
+constructor TRoomerLogger.Create(const filename: String);
 begin
   FFilename := filename;
   OpenStream;
