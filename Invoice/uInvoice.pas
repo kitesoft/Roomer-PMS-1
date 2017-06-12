@@ -3279,6 +3279,7 @@ var
   lStayTaxUnitCountIncluded: integer;
   lStayTaxUnitCountExcluded: integer;
   tt, l: integer;
+  lCalcOptions: TInvoiceCityTaxCalculationOptions;
 begin
   if zFromKredit then
     exit;
@@ -3294,10 +3295,14 @@ begin
 
   glb.LocateSpecificRecordAndGetValue('customers', 'Customer', edtCustomer.Text, 'StayTaxIncluted', lIsIncluded);
 
+  lCalcOptions := [];
+  if lIsIncluded then
+    Include(lCalcOptions, tcoCustomerHasTaxIncluded);
+
   if lUseStayTax then
   begin
     lItemTypeInfo := d.Item_Get_ItemTypeInfo(trim(g.qRoomRentItem));
-    lTaxResultInvoiceLines := GetTaxesForInvoice(aRoominvoiceLinesList, lItemTypeInfo, lIsIncluded);
+    lTaxResultInvoiceLines := GetTaxesForInvoice(aRoominvoiceLinesList, lItemTypeInfo, lCalcOptions);
   end
   else
     lTaxResultInvoiceLines := TInvoiceTaxEntityList.create(True);

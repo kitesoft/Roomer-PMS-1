@@ -2008,6 +2008,7 @@ begin
   lInvoiceLine := AddLine(0, 0, lRmRntItem, lDescription, aDayCount, aRoomPrice, aCurrency, lItemInfo.VATCode, 0, True,
     '', '', aIsPackage, lNumGuests, lConfirmDate, lConfirmAmount, aRRAlias, _GetCurrentTick); // *77
   lInvoiceLine.RoomEntity := lRoomInfo;
+  lRoomInfo.Vat := lInvoiceLine.VATOnInvoice;
 
   // Tax invoicelines
   UpdateTaxinvoiceLinesForRoomItem(lInvoiceLine);
@@ -2089,6 +2090,7 @@ var
   lTotal: Double;
   lTotalNative: Double;
   tt, l: integer;
+  lCalcOptions: TInvoiceCityTaxCalculationOptions;
 begin
   if zFromKredit then
     exit;
@@ -2101,8 +2103,11 @@ begin
 
   glb.LocateSpecificRecordAndGetValue('customers', 'Customer', edtCustomer.Text, 'StayTaxIncluted', lIsIncludedCust);
 
-  lTaxResultInvoiceLines := MakeTaxListforRoomEntity(aInvLine.RoomEntity, d.Item_Get_ItemTypeInfo(trim(g.qRoomRentItem)
-    ), lIsIncludedCust);
+  lCalcOptions := [tcoCalcTaxPerNight];
+  if lIsIncludedCust then
+    Include(lCalcOptions, tcoCustomerHasTaxIncluded);
+
+  lTaxResultInvoiceLines := MakeTaxListforRoomEntity(aInvLine.RoomEntity, d.Item_Get_ItemTypeInfo(trim(g.qRoomRentItem)), lCalcOptions);
   try
     lIsIncluded := false;
 
