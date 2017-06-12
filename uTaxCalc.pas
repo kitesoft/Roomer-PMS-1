@@ -26,6 +26,9 @@ type
   TEnumTaxDue = (TD_PREPAID, TD_CHECKOUT);
   TEnumTaxIncl_Excl = (TIE_INCLUDED, TIE_EXCLUDED, TIE_PER_CUSTOMER);
 
+  TInvoiceCityTaxCalculationOption = (tcoCustomerHasTaxIncluded, tcoCalcTaxPerNight);
+  TInvoiceCityTaxCalculationOptions = set of TInvoiceCityTaxCalculationOption;
+
   TInvoiceTaxEntity = class
     BookingItem: String;
     Description: String;
@@ -86,7 +89,7 @@ var
 procedure initializeTaxes;
 function GetVATForItem(Item: String; Price: Double; NumItems: Double; RoomTaxEntity: TInvoiceRoomEntity;
   ItemTaxEntities: TInvoiceItemEntityList; ItemTypeInfo: TItemTypeInfo; Customer: String): Double;
-function GetTaxesForInvoice(aRoomEntitiesList: TInvoiceRoomEntityList; ItemTypeInfo: TItemTypeInfo; customerIncludeDefault: Boolean): TInvoiceTaxEntityList;
+function GetTaxesForInvoice(aRoomEntitiesList: TInvoiceRoomEntityList; ItemTypeInfo: TItemTypeInfo; aOptions: TInvoiceCityTaxCalculationOptions): TInvoiceTaxEntityList;
 function isStayTaxPerCustomer: Boolean;
 function stayTaxAmount: Double;
 function isStayTaxNettoBased: Boolean;
@@ -103,7 +106,7 @@ function stayTaxPerRoom: Boolean;
 function currentlyValidTax: TTax;
 function CalculateCityTax(rentAmount: Double; Currency: string; Customer: String; ReservationUsesStayTax: Boolean; taxNights, taxGuests: Integer): recCityTaxResultHolder;
 
-function MakeTaxListForRoomEntity(aRoomEntity: TInvoiceRoomEntity; ItemTypeInfo: TItemTypeInfo; customerIncludeDefault: Boolean): TInvoiceTaxEntityList;
+function MakeTaxListForRoomEntity(aRoomEntity: TInvoiceRoomEntity; ItemTypeInfo: TItemTypeInfo; aOptions: TInvoiceCityTaxCalculationOptions): TInvoiceTaxEntityList;
 
 implementation
 
@@ -483,7 +486,9 @@ begin
     result := GetVATForItemEx(Item, Price, NumItems, RoomTaxEntity, ItemTaxEntities, ItemTypeInfo, NOT isStayTaxExcluded);
 end;
 
-function MakeInvoiceTaxEntity(aTax: TTax; aInvoiceRoomEntity: TInvoiceRoomEntity; aItemTypeInfo: TItemTypeInfo; aCustomerIncludedDefault: boolean): TInvoiceTaxEntity;
+function MakeInvoiceTaxEntity(aTax: TTax; aInvoiceRoomEntity: TInvoiceRoomEntity; aItemTypeInfo: TItemTypeInfo;
+                              aOptions: TInvoiceCityTaxCalculationOptions): TInvoiceTaxEntity;
+//                              aCustomerIncludedDefault: boolean): TInvoiceTaxEntity;
 var
   NumItems: Double;
   Amount, baseAmount: Double;
@@ -492,8 +497,17 @@ var
   Percentage: Boolean;
   taxGuests: Integer;
   Description: string;
+  lCustomerIncludedDefault: boolean;
+  lNumNights: integer;
 begin
   taxGuests := aInvoiceRoomEntity.NumGuests;
+
+  lCustomerIncludedDefault := (tcoCustomerHasTaxIncluded in aOptions);
+  if (tcoCalcTaxPerNight in aOptions) then
+    lNumNights := 1
+  else
+    lNumNights := trunc(aInvoiceRoomEntity.Nights);
+
   if aTax.TAXCHILDREN then
     taxGuests := taxGuests + aInvoiceRoomEntity.NumChildren;
 
@@ -507,7 +521,7 @@ begin
     Percentage := True;
     if aTax.NETTO_AMOUNT_BASED then
     begin
-      if TaxIsIncluded(aTax, aCustomerIncludedDefault) then
+      if TaxIsIncluded(aTax, lCustomerIncludedDefault) then
       begin
         baseAmount := aInvoiceRoomEntity.Price / (1 + ((aTax.Amount + aItemTypeInfo.VATPercentage) / 100));
         Amount := baseAmount * aTax.Amount / 100;
@@ -520,7 +534,7 @@ begin
     end
     else
     begin
-      if TaxIsIncluded(aTax, aCustomerIncludedDefault) then
+      if TaxIsIncluded(aTax, lCustomerIncludedDefault) then
       begin
         baseAmount := aInvoiceRoomEntity.Price / (1 + (aTax.Amount / 100)); // (Room.Price - Room.Vat)
         Amount := baseAmount * aTax.Amount / 100;
@@ -536,8 +550,8 @@ begin
 
   NumItems := 0;
   case aTax.TAX_BASE of
-    TB_ROOM_NIGHT:  NumItems := 1;
-    TB_GUEST_NIGHT: NumItems := taxGuests;
+    TB_ROOM_NIGHT:  NumItems := 1 * lNumNights;
+    TB_GUEST_NIGHT: NumItems := taxGuests * lNumNights;
     TB_GUEST:       NumItems := taxGuests;
     TB_ROOM,
     TB_BOOKING:     NumItems := 1;          //TODO: fix calculations for these types
@@ -546,18 +560,18 @@ begin
   Result := TInvoiceTaxEntity.Create(aTax.BOOKING_ITEM, Description, NumItems, Amount, aTax.Incl_excl, Percentage);
 end;
 
-function MakeTaxListForRoomEntity(aRoomEntity: TInvoiceRoomEntity; ItemTypeInfo: TItemTypeInfo; customerIncludeDefault: Boolean): TInvoiceTaxEntityList;
+function MakeTaxListForRoomEntity(aRoomEntity: TInvoiceRoomEntity; ItemTypeInfo: TItemTypeInfo; aOptions: TInvoiceCityTaxCalculationOptions): TInvoiceTaxEntityList;
 var
   Tax: TTax;
 begin
-   result := TInvoiceTaxEntityList.Create(True);
+  result := TInvoiceTaxEntityList.Create(True);
 
   for Tax in TaxList do
     if (aRoomEntity.Departure <= 0) OR Tax.IsValidOn(aRoomEntity.Departure) then
-      Result.Add(MakeInvoiceTaxEntity(Tax, aRoomEntity, ItemTypeInfo, customerIncludeDefault));
+      Result.Add(MakeInvoiceTaxEntity(Tax, aRoomEntity, ItemTypeInfo, aOptions));
 end;
 
-function GetTaxesForInvoice(aRoomEntitiesList: TInvoiceRoomEntityList; ItemTypeInfo: TItemTypeInfo; customerIncludeDefault: Boolean): TInvoiceTaxEntityList;
+function GetTaxesForInvoice(aRoomEntitiesList: TInvoiceRoomEntityList; ItemTypeInfo: TItemTypeInfo; aOptions: TInvoiceCityTaxCalculationOptions): TInvoiceTaxEntityList;
 var
   Tax: TTax;
   lInvoiceRoomEntity: TInvoiceRoomEntity;
@@ -567,7 +581,7 @@ begin
   for Tax in TaxList do
     for lInvoiceRoomEntity in aRoomEntitiesList do
       if (lInvoiceRoomEntity.Departure <= 0) OR Tax.IsValidOn(lInvoiceRoomEntity.Departure) then
-        Result.Add(MakeInvoiceTaxEntity(Tax, lInvoiceRoomEntity, ItemTypeInfo, customerIncludeDefault));
+        Result.Add(MakeInvoiceTaxEntity(Tax, lInvoiceRoomEntity, ItemTypeInfo, aOptions));
 end;
 
 
