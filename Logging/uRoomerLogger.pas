@@ -9,6 +9,8 @@ uses uDateUtils,
 
 type
 
+  //TODO Adapt RoomerExceptionHandler to make use of this roomerlogger
+
   /// <summary>
   ///   Class to log messages to a file.
   ///  On creation the logger is registered with a global logger list, who owns the object
