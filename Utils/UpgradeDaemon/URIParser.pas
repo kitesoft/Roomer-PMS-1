@@ -209,21 +209,19 @@ begin
 end;
 
 function TURIProcessor.UpgradeAvailable : String;
-var md5OfFile : String;
 begin
-  MD5OfFile := '';
   if (FileExePath <> '') AND FileExists(FileExePath) then
-    MD5OfFile := FileMD5(FileExePath);
-
-  if UpgradeFileManager.UpgradeFinished OR (TRIM(UpgradeFileManager.UpgradeVersion)='') OR (MD5OfFile = UpgradeFileManager.UpgradeMD5) then
-    result := RESULT_UPDATE_NOT_AVAILABLE
-  else
-    result := format(RESULT_UPDATE_AVAILABLE,
-                      [
-                        UpgradeFileManager.UpgradeVersion,
-                        UpgradeFileManager.UpgradeTTL_Minutes,
-                        uDateUtils.dateTimeToXmlString(IncMinute(UpgradeFileManager.UpgradeTimeStamp, UpgradeFileManager.UpgradeTTL_Minutes))
-                      ]);
+  begin
+    if UpgradeFileManager.UpgradeFinished OR (TRIM(UpgradeFileManager.UpgradeVersion)='') OR (FileMD5(FileExePath) = UpgradeFileManager.UpgradeMD5) then
+      result := RESULT_UPDATE_NOT_AVAILABLE
+    else
+      result := format(RESULT_UPDATE_AVAILABLE,
+                        [
+                          UpgradeFileManager.UpgradeVersion,
+                          UpgradeFileManager.UpgradeTTL_Minutes,
+                          uDateUtils.dateTimeToXmlString(IncMinute(UpgradeFileManager.UpgradeTimeStamp, UpgradeFileManager.UpgradeTTL_Minutes))
+                        ]);
+  end;
 end;
 
 function TURIProcessor.UpgradeTTL : String;

@@ -7,7 +7,6 @@ uses Forms, Inifiles, SysUtils, IOUtils;
 type
 
   TUpgradeFileManager = class
-    FIniFile : TInifile;
     FUpgradeFilename : String;
     FBaseLocation : String;
 
@@ -22,9 +21,12 @@ type
     procedure WriteString(const Ident : String; const value : String);
   private
     SectionName : String;
+    INIFilename : String;
   public
     constructor Create();
     destructor Destroy; override;
+
+    function OpenINI : TIniFile;
 
     procedure SetFileName(const filename : String);
     function UpgradeAvailable : Boolean;
@@ -57,21 +59,19 @@ const
   IDENT_UPGRADED = 'UPGRADED';
 
 procedure TUpgradeFileManager.ClearLocalUpgradeInformation;
-var IniFileName : String;
 begin
-  IniFileName := TPath.Combine(RoomerNewUpgradePath, 'ROOMER_UPDATES.DAT');
-  if FileExists(IniFileName) then
-    DeleteFile(IniFileName);
+  if FileExists(INIFileName) then
+    DeleteFile(INIFileName);
 end;
 
 constructor TUpgradeFileManager.Create();
 begin
-  FIniFile := TInifile.Create(TPath.Combine(RoomerNewUpgradePath, 'ROOMER_UPDATES.DAT'));
+ //
+  INIFilename := TPath.Combine(RoomerNewUpgradePath, 'ROOMER_UPDATES.DAT');
 end;
 
 destructor TUpgradeFileManager.Destroy;
 begin
-  FIniFile.Free;
   inherited;
 end;
 
@@ -90,6 +90,11 @@ begin
   WriteBoolean(IDENT_UPGRADED, false);
 end;
 
+function TUpgradeFileManager.OpenINI : TIniFile;
+begin
+  result := TInifile.Create(INIFilename);
+end;
+
 procedure TUpgradeFileManager.Upgraded(const fileExeName : String; FileTimeStamp: TDateTime; TTL_Minutes: Integer; const MD5, Version : String);
 var newFilename : String;
 begin
@@ -104,23 +109,47 @@ begin
 end;
 
 function TUpgradeFileManager.ReadDateTime(const Ident: String; default: TDateTime): TDateTime;
+var FIniFile : TInifile;
 begin
-  result := SqlStringToDateTime(FIniFile.ReadString(SectionName, Ident, DateTimeToDBString(default)));
+  FIniFile := OpenINI;
+  try
+    result := SqlStringToDateTime(FIniFile.ReadString(SectionName, Ident, DateTimeToDBString(default)));
+  finally
+    FIniFile.Free;
+  end;
 end;
 
 function TUpgradeFileManager.ReadInteger(const Ident: String; default: Integer): Integer;
+var FIniFile : TInifile;
 begin
-  result := FIniFile.ReadInteger(SectionName, Ident, default);
+  FIniFile := OpenINI;
+  try
+    result := FIniFile.ReadInteger(SectionName, Ident, default);
+  finally
+    FIniFile.Free;
+  end;
 end;
 
 function TUpgradeFileManager.ReadString(const Ident, default: String): String;
+var FIniFile : TInifile;
 begin
-  result := FIniFile.ReadString(SectionName, Ident, default);
+  FIniFile := OpenINI;
+  try
+    result := FIniFile.ReadString(SectionName, Ident, default);
+  finally
+    FIniFile.Free;
+  end;
 end;
 
 function TUpgradeFileManager.ReadBoolean(const Ident : String; default: Boolean) : Boolean;
+var FIniFile : TInifile;
 begin
-  result := FIniFile.ReadBool(SectionName, Ident, default);
+  FIniFile := OpenINI;
+  try
+    result := FIniFile.ReadBool(SectionName, Ident, default);
+  finally
+    FIniFile.Free;
+  end;
 end;
 
 procedure TUpgradeFileManager.SetFileName(const filename: String);
@@ -165,23 +194,47 @@ begin
 end;
 
 procedure TUpgradeFileManager.WriteDateTime(const Ident: String; value: TDateTime);
+var FIniFile : TInifile;
 begin
-  FIniFile.WriteString(SectionName, Ident, DateTimeToDBString(value));
+  FIniFile := OpenINI;
+  try
+    FIniFile.WriteString(SectionName, Ident, DateTimeToDBString(value));
+  finally
+    FIniFile.Free;
+  end;
 end;
 
 procedure TUpgradeFileManager.WriteInteger(const Ident: String; value: Integer);
+var FIniFile : TInifile;
 begin
-  FIniFile.WriteInteger(SectionName, Ident, value);
+  FIniFile := OpenINI;
+  try
+    FIniFile.WriteInteger(SectionName, Ident, value);
+  finally
+    FIniFile.Free;
+  end;
 end;
 
 procedure TUpgradeFileManager.WriteString(const Ident, value: String);
+var FIniFile : TInifile;
 begin
-  FIniFile.WriteString(SectionName, Ident, value);
+  FIniFile := OpenINI;
+  try
+    FIniFile.WriteString(SectionName, Ident, value);
+  finally
+    FIniFile.Free;
+  end;
 end;
 
 procedure TUpgradeFileManager.WriteBoolean(const Ident : String; value: Boolean);
+var FIniFile : TInifile;
 begin
-  FIniFile.WriteBool(SectionName, Ident, value);
+  FIniFile := OpenINI;
+  try
+    FIniFile.WriteBool(SectionName, Ident, value);
+  finally
+    FIniFile.Free;
+  end;
 end;
 
 end.

@@ -144,7 +144,6 @@ begin
 end;
 
 procedure TfrmUpgradeDaemon.WndProc(var message: TMessage);
-var iPort : Integer;
 begin
   if Message.Msg = WM_START_HTTP_LISTENER then
   begin
@@ -434,7 +433,6 @@ var i : Integer;
     done : Boolean;
 begin
   i := 0;
-  done := False;
   repeat
     inc(i);
     fullNameAndPath := format('%s.%d', [OldName, i]);

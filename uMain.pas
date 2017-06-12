@@ -4925,7 +4925,6 @@ end;
 function TfrmMain.GetSelectedRoomInformation: boolean;
 var
   rri: RecRDInfo;
-  active: boolean;
 begin
   result := false;
   if ViewMode = vmOneDay then
@@ -4940,16 +4939,15 @@ begin
     rri := Period_GetResInfo(GetActivePeriodGrid.col, GetActivePeriodGrid.row, GetActivePeriodGrid.Tag);
   end;
 
+  if not rri.Active then
+    exit; // ===>>
+
   _iReservation := rri.Reservation;
   _iRoomReservation := rri.RoomReservation;
   _InvoiceIndex := rri.InvoiceIndex;
 
   _Arrival := rri.Arrival;
   _Departure := rri.Departure;
-  active := rri.active;
-  if not active then
-    exit; // ===>>
-
   _Room := rri.Room;
   _ResStatus := TReservationState.FromResStatus(rri.resFlag);
 
@@ -8362,53 +8360,60 @@ end;
 
 function TfrmMain.OneDay_GetResInfo(ACol: integer; ARow: integer; iReservation, iRoomReservation: integer): RecRDInfo;
 begin
-  if (iReservation < FReservationsModel.Reservations.Count) AND
-     (iRoomReservation < FReservationsModel.Reservations[iRoomReservation].Rooms.Count) then
+  with Result do
   begin
-    result.Reservation := FReservationsModel.Reservations[iReservation].Reservation;
-    result.RoomReservation := FReservationsModel.Reservations[iReservation].Rooms[iRoomReservation].RoomRes;
-    result.Channel := FReservationsModel.Reservations[iReservation].Channel;
-    result.resFlag := FReservationsModel.Reservations[iReservation].Rooms[iRoomReservation].ResStatus.AsStatusChar;
-    result.Date := FReservationsModel.Reservations[iReservation].ReservationDate;
-    result.Room := FReservationsModel.Reservations[iReservation].Rooms[iRoomReservation].RoomNumber;
-    result.RoomType := FReservationsModel.Reservations[iReservation].Rooms[iRoomReservation].RoomType;
-    result.isNoRoom := Copy(FReservationsModel.Reservations[iReservation].Rooms[iRoomReservation].RoomNumber, 1, 1) = '<';
-    result.CustomerName := FReservationsModel.Reservations[iReservation].name;
-    result.Arrival := FReservationsModel.Reservations[iReservation].Rooms[iRoomReservation].Arrival;
-    result.Departure := FReservationsModel.Reservations[iReservation].Rooms[iRoomReservation].Departure;
-    result.active := FReservationsModel.Reservations[iReservation].Reservation > 0;
-    result.PaymentInvoice := FReservationsModel.Reservations[iReservation].Rooms[iRoomReservation].PaymentInvoice;
-    result.GroupAccount := FReservationsModel.Reservations[iReservation].Rooms[iRoomReservation].GroupAccount;
+    Reservation := -1;
+    RoomReservation := -1;
+    Active := false;
 
-    result.ItemsOnInvoice := FReservationsModel.Reservations[iReservation].Rooms[iRoomReservation].TotalNoRent > 0;
-    result.GuestName := FReservationsModel.Reservations[iReservation].Rooms[iRoomReservation].Guests[0].GuestName;
-    result.Tel1 := FReservationsModel.Reservations[iReservation].Tel1;
-    result.Tel2 := FReservationsModel.Reservations[iReservation].Tel2;
-    result.Fax := FReservationsModel.Reservations[iReservation].Fax;
+    if (iReservation < FReservationsModel.Reservations.Count) AND
+       (iRoomReservation < FReservationsModel.Reservations[iRoomReservation].Rooms.Count) then
+    begin
+      Reservation := FReservationsModel.Reservations[iReservation].Reservation;
+      RoomReservation := FReservationsModel.Reservations[iReservation].Rooms[iRoomReservation].RoomRes;
+      Channel := FReservationsModel.Reservations[iReservation].Channel;
+      resFlag := FReservationsModel.Reservations[iReservation].Rooms[iRoomReservation].ResStatus.AsStatusChar;
+      Date := FReservationsModel.Reservations[iReservation].ReservationDate;
+      Room := FReservationsModel.Reservations[iReservation].Rooms[iRoomReservation].RoomNumber;
+      RoomType := FReservationsModel.Reservations[iReservation].Rooms[iRoomReservation].RoomType;
+      isNoRoom := Copy(FReservationsModel.Reservations[iReservation].Rooms[iRoomReservation].RoomNumber, 1, 1) = '<';
+      CustomerName := FReservationsModel.Reservations[iReservation].name;
+      Arrival := FReservationsModel.Reservations[iReservation].Rooms[iRoomReservation].Arrival;
+      Departure := FReservationsModel.Reservations[iReservation].Rooms[iRoomReservation].Departure;
+      active := FReservationsModel.Reservations[iReservation].Reservation > 0;
+      PaymentInvoice := FReservationsModel.Reservations[iReservation].Rooms[iRoomReservation].PaymentInvoice;
+      GroupAccount := FReservationsModel.Reservations[iReservation].Rooms[iRoomReservation].GroupAccount;
 
-    result.BookingId := FReservationsModel.Reservations[iReservation].BookingReference;
+      ItemsOnInvoice := FReservationsModel.Reservations[iReservation].Rooms[iRoomReservation].TotalNoRent > 0;
+      GuestName := FReservationsModel.Reservations[iReservation].Rooms[iRoomReservation].Guests[0].GuestName;
+      Tel1 := FReservationsModel.Reservations[iReservation].Tel1;
+      Tel2 := FReservationsModel.Reservations[iReservation].Tel2;
+      Fax := FReservationsModel.Reservations[iReservation].Fax;
 
-    result.Price := FReservationsModel.Reservations[iReservation].Rooms[iRoomReservation].Price;
-    result.Discount := FReservationsModel.Reservations[iReservation].Rooms[iRoomReservation].Discount;
-    result.Information := FReservationsModel.Reservations[iReservation].Information;
-    result.PMInfo := FReservationsModel.Reservations[iReservation].PMInfo;
-    result.PriceType := FReservationsModel.Reservations[iReservation].Rooms[iRoomReservation].PriceType;
-    result.Currency := FReservationsModel.Reservations[iReservation].Rooms[iRoomReservation].Currency;
-    result.numGuests := FReservationsModel.Reservations[iReservation].Rooms[iRoomReservation].GuestCount;
-    result.RoomClass := FReservationsModel.Reservations[iReservation].Rooms[iRoomReservation].RoomClass;
-    result.OutOfOrderBlocking := FReservationsModel.Reservations[iReservation].OutOfOrderBlocking;
-    result.BlockMove := FReservationsModel.Reservations[iReservation].Rooms[iRoomReservation].BlockMove;
-    result.BlockMoveReason := FReservationsModel.Reservations[iReservation].Rooms[iRoomReservation].BlockMoveReason;
+      BookingId := FReservationsModel.Reservations[iReservation].BookingReference;
 
-    result.OngoingSale := FReservationsModel.Reservations[iReservation].Rooms[iRoomReservation].OngoingSale;
-    result.OngoingTaxes := FReservationsModel.Reservations[iReservation].Rooms[iRoomReservation].OngoingTaxes;
-    result.OngoingRent := FReservationsModel.Reservations[iReservation].Rooms[iRoomReservation].OngoingRent;
+      Price := FReservationsModel.Reservations[iReservation].Rooms[iRoomReservation].Price;
+      Discount := FReservationsModel.Reservations[iReservation].Rooms[iRoomReservation].Discount;
+      Information := FReservationsModel.Reservations[iReservation].Information;
+      PMInfo := FReservationsModel.Reservations[iReservation].PMInfo;
+      PriceType := FReservationsModel.Reservations[iReservation].Rooms[iRoomReservation].PriceType;
+      Currency := FReservationsModel.Reservations[iReservation].Rooms[iRoomReservation].Currency;
+      numGuests := FReservationsModel.Reservations[iReservation].Rooms[iRoomReservation].GuestCount;
+      RoomClass := FReservationsModel.Reservations[iReservation].Rooms[iRoomReservation].RoomClass;
+      OutOfOrderBlocking := FReservationsModel.Reservations[iReservation].OutOfOrderBlocking;
+      BlockMove := FReservationsModel.Reservations[iReservation].Rooms[iRoomReservation].BlockMove;
+      BlockMoveReason := FReservationsModel.Reservations[iReservation].Rooms[iRoomReservation].BlockMoveReason;
 
-    result.Invoices := FReservationsModel.Reservations[iReservation].Rooms[iRoomReservation].Invoices;
-    result.Guarantee := FReservationsModel.Reservations[iReservation].Rooms[iRoomReservation].Guarantee;
-    result.Payments := FReservationsModel.Reservations[iReservation].Rooms[iRoomReservation].TotalPayments;
+      OngoingSale := FReservationsModel.Reservations[iReservation].Rooms[iRoomReservation].OngoingSale;
+      OngoingTaxes := FReservationsModel.Reservations[iReservation].Rooms[iRoomReservation].OngoingTaxes;
+      OngoingRent := FReservationsModel.Reservations[iReservation].Rooms[iRoomReservation].OngoingRent;
 
-    result.InvoiceIndex := FReservationsModel.Reservations[iReservation].Rooms[iRoomReservation].InvoiceIndex;
+      Invoices := FReservationsModel.Reservations[iReservation].Rooms[iRoomReservation].Invoices;
+      Guarantee := FReservationsModel.Reservations[iReservation].Rooms[iRoomReservation].Guarantee;
+      Payments := FReservationsModel.Reservations[iReservation].Rooms[iRoomReservation].TotalPayments;
+
+      InvoiceIndex := FReservationsModel.Reservations[iReservation].Rooms[iRoomReservation].InvoiceIndex;
+    end
   end;
 end;
 
@@ -8418,6 +8423,7 @@ var
   Grid: TAdvStringGrid;
 begin
   result.Reservation := -1;
+  Result.Active := false;
   if gridTag = 1 then
     Grid := grPeriodRooms
   else if gridTag = 2 then

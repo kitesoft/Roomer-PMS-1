@@ -456,14 +456,18 @@ var
   IdMD5: TIdHashMessageDigest5;
   FS: TFileStream;
 begin
- IdMD5 := TIdHashMessageDigest5.Create;
- FS := TFileStream.Create(fileName, fmOpenRead or fmShareDenyWrite);
- try
-   Result := LowerCase(IdMD5.HashStreamAsHex(FS))
- finally
-   FS.Free;
-   IdMD5.Free;
- end;
+ if fileExists(fileName) then
+ begin
+   IdMD5 := TIdHashMessageDigest5.Create;
+   FS := TFileStream.Create(fileName, fmOpenRead or fmShareDenyWrite);
+   try
+     Result := LowerCase(IdMD5.HashStreamAsHex(FS))
+   finally
+     FS.Free;
+     IdMD5.Free;
+   end;
+ end else
+   result := '';
 end;
 
 

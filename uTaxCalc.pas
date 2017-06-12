@@ -553,7 +553,7 @@ begin
    result := TInvoiceTaxEntityList.Create(True);
 
   for Tax in TaxList do
-    if Tax.IsValidOn(aRoomEntity.Departure) then
+    if (aRoomEntity.Departure <= 0) OR Tax.IsValidOn(aRoomEntity.Departure) then
       Result.Add(MakeInvoiceTaxEntity(Tax, aRoomEntity, ItemTypeInfo, customerIncludeDefault));
 end;
 
@@ -566,7 +566,7 @@ begin
 
   for Tax in TaxList do
     for lInvoiceRoomEntity in aRoomEntitiesList do
-      if Tax.IsValidOn(lInvoiceRoomEntity.Departure) then
+      if (lInvoiceRoomEntity.Departure <= 0) OR Tax.IsValidOn(lInvoiceRoomEntity.Departure) then
         Result.Add(MakeInvoiceTaxEntity(Tax, lInvoiceRoomEntity, ItemTypeInfo, customerIncludeDefault));
 end;
 

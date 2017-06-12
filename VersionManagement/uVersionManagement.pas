@@ -8,6 +8,7 @@ uses Windows,
      vcl.ExtCtrls,
      uFileDependencyManager,
      uRoomerLogger,
+
      AlWinInetHttpClient;
 
 type
@@ -59,7 +60,7 @@ type
     VersionManagerActive : Boolean;
 
     constructor Create;
-    destructor Destroy;
+    destructor Destroy; override;
 
     procedure Prepare;
     procedure ForceUpdate;
@@ -86,6 +87,7 @@ uses uD,
 
 const SECOND = 1000;
       MINUTE = 60 * SECOND;
+      FIVE_MINUTES = 5 * MINUTE;
       TEN_MINUTES = 10 * MINUTE;
 
       HTTP_LOCAL_IP = '127.0.0.1';
@@ -94,7 +96,7 @@ const SECOND = 1000;
 
       MAX_COUNT_FOR_NOTIFICATION = 6;
       HTTP_CONNECT_TIME_OUT = 10 * SECOND;
-      HTTP_TRANSFER_TIME_OUT = 10 * SECOND;
+      HTTP_TRANSFER_TIME_OUT = FIVE_MINUTES;
 
       URI_UPGRADE_DAEMON = 'http://localhost:{port}/';
       URI_UPGRADE_DAEMON_WHO_ARE_YOU = URI_UPGRADE_DAEMON + 'WhoAreYou';
@@ -122,6 +124,12 @@ begin
   RoomerLogger := ActivateRoomerLogger(ClassName);
   lastCounter := MAX_COUNT_FOR_NOTIFICATION;
   httpCLient := TAlWinInetHttpClient.Create(nil);
+  httpCLient.InternetOptions := [
+                                 wHttpIo_No_cache_write,
+                                 wHttpIo_No_cookies,
+                                 wHttpIo_No_ui,
+                                 wHttpIo_Pragma_nocache
+                                ];
   httpClient.ConnectTimeout := HTTP_CONNECT_TIME_OUT;
   httpClient.ReceiveTimeout := HTTP_TRANSFER_TIME_OUT;
   httpClient.SendTimeout := HTTP_TRANSFER_TIME_OUT;
@@ -142,6 +150,7 @@ begin
   httpClient.Free;
   FileDependencyManager.Free;
   DeactivateRoomerLogger(RoomerLogger);
+  inherited;
 end;
 
 procedure TRoomerVersionManagement.CloseDaemon;
@@ -219,11 +228,11 @@ begin
     if useGetUriPort then
       uri := GetURIPort(uri);
     RoomerLogger.AddToLog(format('Calling to %s', [uri]));
-    httpCLient.InternetOptions := httpCLient.InternetOptions + [wHttpIo_Async];
+//    httpCLient.InternetOptions := httpCLient.InternetOptions; // + [wHttpIo_Async];
     try
       Result := string(httpCLient.Get(AnsiString(uri)));
     finally
-      httpCLient.InternetOptions := httpCLient.InternetOptions - [wHttpIo_Async];
+//      httpCLient.InternetOptions := httpCLient.InternetOptions; //  - [wHttpIo_Async];
     end;
     RoomerLogger.AddToLog(format('Call to %s returned %s', [uri, result]));
   except
@@ -305,7 +314,6 @@ var answer, exePath : String;
 begin
   exePath := d.roomerMainDataSet.URLEncode(Application.ExeName);
   uri := format(URI_UPGRADE_DAEMON_UPGRADE_AVAILABLE, ['Roomer.exe', exePath]);
-  RoomerLogger.AddToLog('Sending Upgrade Daemon: ' + uri);
   answer := GetFromURI(uri);
   BreakDownVersionString(answer);
   RoomerLogger.AddToLog('Upgrade Daemon returned: ' + answer);
