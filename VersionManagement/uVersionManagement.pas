@@ -56,6 +56,8 @@ type
     function GetURIPort(SourceURI : String) : String;
     procedure startEngine;
   public
+    VersionManagerActive : Boolean;
+
     constructor Create;
     destructor Destroy;
 
@@ -86,10 +88,13 @@ const SECOND = 1000;
       MINUTE = 60 * SECOND;
       TEN_MINUTES = 10 * MINUTE;
 
+      HTTP_LOCAL_IP = '127.0.0.1';
       HTTP_DEFAULT_PORT = 62999;
       HTTP_DEFAULT_PORT_MIN = 62989;
 
       MAX_COUNT_FOR_NOTIFICATION = 6;
+      HTTP_CONNECT_TIME_OUT = 10 * SECOND;
+      HTTP_TRANSFER_TIME_OUT = 10 * SECOND;
 
       URI_UPGRADE_DAEMON = 'http://localhost:{port}/';
       URI_UPGRADE_DAEMON_WHO_ARE_YOU = URI_UPGRADE_DAEMON + 'WhoAreYou';
@@ -113,10 +118,13 @@ end;
 constructor TRoomerVersionManagement.Create;
 begin
   PortToUse := 0;
+  VersionManagerActive := NOT FileExists(ChangeFileExt(Application.ExeName, '-SharedResource.True'));
   RoomerLogger := ActivateRoomerLogger(ClassName);
   lastCounter := MAX_COUNT_FOR_NOTIFICATION;
   httpCLient := TAlWinInetHttpClient.Create(nil);
-  httpClient.ConnectTimeout := 1000;
+  httpClient.ConnectTimeout := HTTP_CONNECT_TIME_OUT;
+  httpClient.ReceiveTimeout := HTTP_TRANSFER_TIME_OUT;
+  httpClient.SendTimeout := HTTP_TRANSFER_TIME_OUT;
 //  httpClient.ReadTimeout := 5000;
   FileDependencyManager := TFileDependencymanager.Create;
 
@@ -155,26 +163,26 @@ var uri,
     res : String;
     UnusedPorts : TAvailablePortArray;
 
-    function PortNotUsed(port : word) : Boolean;
+    function PortInUse(port : word) : Boolean;
     var i: Integer;
     begin
-      result := False;
+      result := True;
       for i := LOW(UnusedPorts) to HIGH(UnusedPorts) do
         if UnusedPorts[i] = port then
         begin
-          result := True;
+          result := False;
           Break;
         end;
     end;
 begin
   if PortToUse = 0 then
   begin
-    httpClient.ConnectTimeout := 2000;
-    UnusedPorts := findAvailableTCPPort( '127.0.0.1', 62989, 62999, 11 );
+    httpClient.ConnectTimeout := HTTP_CONNECT_TIME_OUT;
+    UnusedPorts := findAvailableTCPPort( HTTP_LOCAL_IP, HTTP_DEFAULT_PORT_MIN, HTTP_DEFAULT_PORT, 11 );
     try
       result := HTTP_DEFAULT_PORT;
       repeat
-        if NOT PortNotUsed(result) then
+        if PortInUse(result) then
         begin
           uri := replaceString(URI_UPGRADE_DAEMON_WHO_ARE_YOU, '{port}', inttostr(result));
           res := getFromURI(uri, False);
@@ -186,7 +194,7 @@ begin
       if result <= HTTP_DEFAULT_PORT_MIN then
         result := 0;
     finally
-      httpClient.ConnectTimeout := 2000;
+      httpClient.ConnectTimeout := HTTP_CONNECT_TIME_OUT;
     end;
   end else
     result := PortToUse;
@@ -210,18 +218,19 @@ begin
   try
     if useGetUriPort then
       uri := GetURIPort(uri);
+    RoomerLogger.AddToLog(format('Calling to %s', [uri]));
     httpCLient.InternetOptions := httpCLient.InternetOptions + [wHttpIo_Async];
     try
       Result := string(httpCLient.Get(AnsiString(uri)));
     finally
       httpCLient.InternetOptions := httpCLient.InternetOptions - [wHttpIo_Async];
     end;
-    RoomerLogger.AddToLog(format('%s returned %s', [uri, result]));
+    RoomerLogger.AddToLog(format('Call to %s returned %s', [uri, result]));
   except
     ON E: Exception do
     begin
       result := '';
-      RoomerLogger.AddToLog(format('%s failed with %s', [URI_UPGRADE_DAEMON_ACTIVE, e.Message]));
+      RoomerLogger.AddToLog(format('Call to %s failed with %s', [uri, e.Message]));
     end;
   end;
 end;
@@ -246,13 +255,16 @@ procedure TRoomerVersionManagement.makeSureUpgradeDaemonIsActive;
 var UpgradeActive : Boolean;
 begin
 {$IFNDEF DEBUG}
-  UpgradeActive := doesUpgradeWindowExist;
-  if UpgradeActive AND FileDependencyManager.doesNewUpgradeDemonExist(RoomerUpgradeDaemonPath) then
-    CloseDaemon;
-  if NOT doesUpgradeWindowExist then
-  begin
-    openDaemon;
-    PortToUse := FindServicePort;
+  if VersionManagerActive then
+    begin
+    UpgradeActive := doesUpgradeWindowExist;
+    if UpgradeActive AND FileDependencyManager.doesNewUpgradeDemonExist(RoomerUpgradeDaemonPath) then
+      CloseDaemon;
+    if NOT doesUpgradeWindowExist then
+    begin
+      openDaemon;
+      PortToUse := FindServicePort;
+    end;
   end;
 {$ENDIF}
 end;
@@ -287,13 +299,28 @@ begin
 end;
 
 function TRoomerVersionManagement.newVersionAvailable(force : Boolean = false): Boolean;
-var answer, myVersion, exePath : String;
+var answer, exePath : String;
+    List : TStrings;
+    uri : String;
 begin
   exePath := d.roomerMainDataSet.URLEncode(Application.ExeName);
-  answer := GetFromURI(format(URI_UPGRADE_DAEMON_UPGRADE_AVAILABLE, ['Roomer.exe', exePath]));
+  uri := format(URI_UPGRADE_DAEMON_UPGRADE_AVAILABLE, ['Roomer.exe', exePath]);
+  RoomerLogger.AddToLog('Sending Upgrade Daemon: ' + uri);
+  answer := GetFromURI(uri);
   BreakDownVersionString(answer);
-  result := answer.StartsWith('UPDATE_AVAILABLE');
-  result := result AND (force OR (myVersion <> TRoomerVersionInfo.FileVersion));
+  RoomerLogger.AddToLog('Upgrade Daemon returned: ' + answer);
+  result := UpperCase(Trim(answer)).StartsWith('UPDATE_AVAILABLE');
+  if result then
+  begin
+    RoomerLogger.AddToLog('     Update available: ' + VersionRec.Version);
+    RoomerLogger.AddToLog('     Time-to-live: ' + IntToStr(VersionRec.TTL));
+    RoomerLogger.AddToLog('     Ending at: ' + DateTimeToStr(VersionRec.EndDateTime));
+    result := result AND (force OR (VersionRec.Version <> TRoomerVersionInfo.FileVersion));
+    if result then
+      RoomerLogger.AddToLog('Returning: accept-update')
+    else
+      RoomerLogger.AddToLog('Returning: update-not-needed');
+  end;
 end;
 
 procedure TRoomerVersionManagement.OnTimer(Sender: TObject);
@@ -362,7 +389,8 @@ end;
 procedure TRoomerVersionManagement.startEngine;
 begin
 {$IFNDEF DEBUG}
-  activateDaemon;
+  if VersionManagerActive then
+    activateDaemon;
 {$ENDIF}
 end;
 

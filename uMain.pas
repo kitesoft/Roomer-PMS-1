@@ -1335,7 +1335,6 @@ type
     procedure refreshGuestList;
     function getSortField: string;
     procedure GuestListReport;
-    function CheckForUpdatedRelease: boolean;
     function FilteredData(aRoom: TRoomObject): boolean;
     // Reservation: TSingleReservations): Boolean;
     procedure LocationMenuSelect(Sender: TObject);
@@ -1778,12 +1777,12 @@ end;
 
 procedure TfrmMain.PrepareVersionManagement;
 begin
-//{$IFNDEF DEBUG}
+{$IFNDEF DEBUG}
   RoomerVersionManagement.Free;
   RoomerVersionManagement := TRoomerVersionManagement.Create;
   RoomerVersionManagement.OnAskUpgrade := OnAskUpgrade;
   RoomerVersionManagement.Prepare;
-//{$ENDIF}
+{$ENDIF}
 end;
 
 procedure TfrmMain.PostLoginProcess(prepareLanguages: boolean);
@@ -1849,9 +1848,6 @@ end;
 
 procedure TfrmMain.performClearHotel(performLogout: boolean; hideWorkArea: boolean = true);
 begin
-  // Notice that this is also called when internetconnection is lost and may be restored later on, without a call
-  // to StartHotel()!!
-
   timMessages.Enabled := false;
 
   g.ReadWriteSettingsToRegistry(1);
@@ -1867,12 +1863,13 @@ begin
   end;
   LoggedIn := false;
   d.roomerMainDataSet.LoggedIn := False;
-
-  try
-    EnterDayView;
-  except
-  end;
-
+  EmptyStringGrid(grPeriodRooms);
+  EmptyStringGrid(grOneDayRooms);
+  EmptyStringGrid(grPeriodRooms_NO);
+//  try
+//    EnterDayView;
+//  except
+//  end;
   if performLogout then
   begin
     d.roomerMainDataSet.LOGOUT;
@@ -1890,6 +1887,7 @@ begin
     panelHide.Show;
     panelHide.BringToFront;
   end;
+  CloseAppSettings;
 end;
 
 procedure TfrmMain.ReEnableFiltersInPeriodGrid;
@@ -3043,7 +3041,6 @@ begin
 
   if lLoginFormCancelled then
   begin
-    result := false;
     ExitProcess(0);
     Exit;
   end;
@@ -3051,18 +3048,6 @@ begin
   if not okLogin then
   begin
     LoginCancelled := true;
-    result := false;
-    exit;
-  end;
-
-  if CheckForUpdatedRelease then
-  begin
-    LoginCancelled := true;
-    try
-      d.roomerMainDataSet.LOGOUT;
-      __lblUsername.Caption := 'N/A';
-    except
-    end;
     result := false;
     exit;
   end;
@@ -3166,19 +3151,38 @@ begin
     except
     end;
 
-    if not aFirstLogin then
-    begin
-      EmptyStringGrid(grPeriodRooms);
-      EmptyStringGrid(grOneDayRooms);
-      EmptyStringGrid(grPeriodRooms_NO);
-    end;
-
     TSplashFormManager.UpdateProgress('Refreshing main grid...');
     RefreshOneDayGrid;
     panelHide.Hide;
 
     ViewMode := vmNone;
     tabsView.TabIndex := glb.PMSSettings.PMSSpecificSettings.UserHomePage - 1;
+//    case tabsView.TabIndex of
+//      0 : begin
+//            pageMainGrids.ActivePage := tabOneDayView;
+//            ViewMode := vmOneDay;
+//          end;
+//      1 : begin
+//            pageMainGrids.ActivePage := tabPeriod;
+//            ViewMode := vmPeriod;
+//          end;
+//      2 : begin
+//            pageMainGrids.ActivePage := tabGuestList;
+//            ViewMode := vmGuestList;
+//          end;
+//      3 : begin
+//            pageMainGrids.ActivePage := tabDashboard;
+//            ViewMode := vmDashboard;
+//          end;
+//      4 : begin
+//            pageMainGrids.ActivePage := tabRateQuery;
+//            ViewMode := vmRateQuery;
+//          end;
+//      5 : begin
+//            pageMainGrids.ActivePage := tabFrontDesk;
+//            ViewMode := vmFrontDesk;
+//          end;
+//    end;
 
     FDayViewSizesRead := False;
 
@@ -3304,11 +3308,6 @@ procedure TfrmMain.tvAllReservationsTotalStayRateGetProperties(Sender: TcxCustom
   var AProperties: TcxCustomEditProperties);
 begin
   AProperties := d.getCurrencyProperties(ARecord.Values[tvAllReservationsCurrency.index]);
-end;
-
-function TfrmMain.CheckForUpdatedRelease: boolean;
-begin
-  result := checkNewVersion(handle, d.roomerMainDataSet);
 end;
 
 procedure TfrmMain.LocationMenuSelect(Sender: TObject);
@@ -4448,9 +4447,11 @@ begin
 end;
 
 procedure TfrmMain.CreateParams(var Params: TCreateParams);
+var cName : array[0..63] OF Char;
 begin
   inherited;
   StrPLCopy(Params.WinClassName, PChar(SWindowClassName), High(Params.WinClassName));
+//  Params.WinClassName := cName;
 end;
 
 procedure TfrmMain.CreateProvideAllotment(aAllotmentResId: integer; aShowDate: TDateTime = 0);
@@ -7060,7 +7061,7 @@ begin
   FMessagesBeingDownloaded := true;
   timMessages.Enabled := false;
   try
-    if NOT d.roomerMainDataSet.LoggedIn or not d.roomerMainDataset.IsConnectedToInternet then
+    if NOT d.roomerMainDataSet.LoggedIn then
       exit;
 
     try
@@ -7612,7 +7613,8 @@ begin
       end;
     6:
       begin
-//        aDate := trunc(dtDate.Date);
+        aDate := trunc(dtDate.Date);
+
 //        DisplayStatusses(true);
 //        FrmRateQuery.BeingViewed := true;
 //        EnterRateQueryView(aDate);
@@ -10321,12 +10323,15 @@ end;
 procedure TfrmMain.btnReDownloadRoomerClick(Sender: TObject);
 begin
 {$IFNDEF DEBUG}
-  LoginCancelled := true;
-  RoomerVersionManagement.ForceUpdate;
-  try
-    d.roomerMainDataSet.LOGOUT;
-    __lblUsername.Caption := 'N/A';
-  except
+  if RoomerVersionManagement.VersionManagerActive then
+  begin
+    LoginCancelled := true;
+    RoomerVersionManagement.ForceUpdate;
+    try
+      d.roomerMainDataSet.LOGOUT;
+      __lblUsername.Caption := 'N/A';
+    except
+    end;
   end;
 {$ENDIF}
 end;

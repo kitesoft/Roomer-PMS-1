@@ -373,6 +373,7 @@ object frmUpgradeDaemon: TfrmUpgradeDaemon
   end
   object timPerformRequest: TTimer
     Enabled = False
+    Interval = 5000
     OnTimer = timPerformRequestTimer
     Left = 280
     Top = 320
