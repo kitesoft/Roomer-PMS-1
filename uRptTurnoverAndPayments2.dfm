@@ -140,8 +140,8 @@ object frmRptTurnoverAndPayments2: TfrmRptTurnoverAndPayments2
       object chkGetUnconfirmed: TsCheckBox
         Left = 15
         Top = 18
-        Width = 99
-        Height = 20
+        Width = 107
+        Height = 17
         Caption = 'Get unconfirmed'
         TabOrder = 0
         OnClick = chkGetUnconfirmedClick
@@ -244,10 +244,6 @@ object frmRptTurnoverAndPayments2: TfrmRptTurnoverAndPayments2
     SkinData.SkinSection = 'PAGECONTROL'
     object sTabSheet1: TsTabSheet
       Caption = 'Sum Turnover'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object sPanel1: TsPanel
         Left = 0
         Top = 0
@@ -274,7 +270,7 @@ object frmRptTurnoverAndPayments2: TfrmRptTurnoverAndPayments2
           AlignWithMargins = True
           Left = 138
           Top = 4
-          Width = 137
+          Width = 145
           Height = 35
           Caption = 'Report per product type'
           Align = alLeft
