@@ -9,7 +9,7 @@ uses Windows,
      uFileDependencyManager,
      uRoomerLogger,
 
-     AlWinInetHttpClient;
+     uRoomerHttpClient;
 
 type
 
@@ -23,7 +23,7 @@ type
 
   TRoomerVersionManagement = class
   private
-    httpCLient: TAlWinInetHttpClient;
+    httpCLient: TRoomerHttpClient;
     timer : TTimer;
     initialTmer : TTimer;
     FileDependencyManager: TFileDependencymanager;
@@ -123,17 +123,16 @@ begin
   VersionManagerActive := NOT FileExists(ChangeFileExt(Application.ExeName, '-SharedResource.True'));
   RoomerLogger := ActivateRoomerLogger(ClassName);
   lastCounter := MAX_COUNT_FOR_NOTIFICATION;
-  httpCLient := TAlWinInetHttpClient.Create(nil);
-  httpCLient.InternetOptions := [
-                                 wHttpIo_No_cache_write,
-                                 wHttpIo_No_cookies,
-                                 wHttpIo_No_ui,
-                                 wHttpIo_Pragma_nocache
-                                ];
-  httpClient.ConnectTimeout := HTTP_CONNECT_TIME_OUT;
-  httpClient.ReceiveTimeout := HTTP_TRANSFER_TIME_OUT;
-  httpClient.SendTimeout := HTTP_TRANSFER_TIME_OUT;
-//  httpClient.ReadTimeout := 5000;
+  httpCLient := TRoomerHttpClient.Create(nil);
+//  httpCLient.InternetOptions := [
+//                                 wHttpIo_No_cache_write,
+//                                 wHttpIo_No_cookies,
+//                                 wHttpIo_No_ui,
+//                                 wHttpIo_Pragma_nocache
+//                                ];
+//  httpClient.ConnectTimeout := HTTP_CONNECT_TIME_OUT;
+//  httpClient.ReceiveTimeout := HTTP_TRANSFER_TIME_OUT;
+//  httpClient.SendTimeout := HTTP_TRANSFER_TIME_OUT;
   FileDependencyManager := TFileDependencymanager.Create;
 
   RoomerUpgradeDaemonPath := TPath.Combine(RoomerAppDataPath, cUpgradeDaemon);
@@ -186,25 +185,20 @@ var uri,
 begin
   if PortToUse = 0 then
   begin
-    httpClient.ConnectTimeout := HTTP_CONNECT_TIME_OUT;
     UnusedPorts := findAvailableTCPPort( HTTP_LOCAL_IP, HTTP_DEFAULT_PORT_MIN, HTTP_DEFAULT_PORT, 11 );
-    try
-      result := HTTP_DEFAULT_PORT;
-      repeat
-        if PortInUse(result) then
-        begin
-          uri := replaceString(URI_UPGRADE_DAEMON_WHO_ARE_YOU, '{port}', inttostr(result));
-          res := getFromURI(uri, False);
-          if res = 'ROOMER_DAEMON' then
-            Break;
-        end;
-        dec(result);
-      until result <= HTTP_DEFAULT_PORT_MIN;
-      if result <= HTTP_DEFAULT_PORT_MIN then
-        result := 0;
-    finally
-      httpClient.ConnectTimeout := HTTP_CONNECT_TIME_OUT;
-    end;
+    result := HTTP_DEFAULT_PORT;
+    repeat
+      if PortInUse(result) then
+      begin
+        uri := replaceString(URI_UPGRADE_DAEMON_WHO_ARE_YOU, '{port}', inttostr(result));
+        res := getFromURI(uri, False);
+        if res = 'ROOMER_DAEMON' then
+          Break;
+      end;
+      dec(result);
+    until result <= HTTP_DEFAULT_PORT_MIN;
+    if result <= HTTP_DEFAULT_PORT_MIN then
+      result := 0;
   end else
     result := PortToUse;
 end;
@@ -228,12 +222,7 @@ begin
     if useGetUriPort then
       uri := GetURIPort(uri);
     RoomerLogger.AddToLog(format('Calling to %s', [uri]));
-//    httpCLient.InternetOptions := httpCLient.InternetOptions; // + [wHttpIo_Async];
-    try
-      Result := string(httpCLient.Get(AnsiString(uri)));
-    finally
-//      httpCLient.InternetOptions := httpCLient.InternetOptions; //  - [wHttpIo_Async];
-    end;
+    Result := string(httpCLient.Get(AnsiString(uri)));
     RoomerLogger.AddToLog(format('Call to %s returned %s', [uri, result]));
   except
     ON E: Exception do

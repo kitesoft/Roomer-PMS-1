@@ -21,7 +21,12 @@ uses
   sLabel,
   dxGDIPlusClasses,
   System.Classes,
-  URIParser, Vcl.Menus, sMemo, OverbyteIcsWndControl, OverbyteIcsHttpSrv;
+  URIParser,
+  Vcl.Menus,
+  sMemo,
+  OverbyteIcsWndControl,
+  OverbyteIcsHttpSrv,
+  uRoomerLogger;
 
 type
   TfrmUpgradeDaemon = class(TForm)
@@ -54,6 +59,7 @@ type
     procedure HttpServerServerStopped(Sender: TObject);
   private
     httpCLient: TRoomerHttpClient;
+    RoomerLogger : TRoomerLogger;
     activeSince : TDateTime;
     URIProcessor : TURIProcessor;
     FDownloadActive: Boolean;
@@ -107,6 +113,7 @@ const
 
   WM_START_HTTP_LISTENER = WM_User + 191;
   HTTP_SERVICE_DEFAULT_PORT = 62999;
+  HTTP_SERVICE_DEFAULT_PORT_MIN = 62989;
 
 
 function FormatByteSize(const bytes: Longword): string;
@@ -127,18 +134,19 @@ begin
   memLogs.Lines.Clear;
   FCountRequests := 0;
   FDownloadActive := False;
+  RoomerLogger := ActivateRoomerLogger(ClassName);
   URIProcessor := TURIProcessor.Create;
   httpCLient := TRoomerHttpClient.Create(Self);
 
-  with httpCLient do
-  begin
-    ConnectTimeout := 900;
-    SendTimeout := 900;
-    ReceiveTimeout := 900;
-    OnDownloadProgress := DownloadProgress;
-    InternetOptions := [wHttpIo_Async, wHttpIo_Ignore_cert_cn_invalid, wHttpIo_Ignore_cert_date_invalid, wHttpIo_Keep_connection,
-      wHttpIo_Need_file, wHttpIo_No_cache_write, wHttpIo_Pragma_nocache, wHttpIo_Reload];
-  end;
+//  with httpCLient do
+//  begin
+//    ConnectTimeout := 900;
+//    SendTimeout := 900;
+//    ReceiveTimeout := 900;
+//    OnDownloadProgress := DownloadProgress;
+//    InternetOptions := [wHttpIo_Async, wHttpIo_Ignore_cert_cn_invalid, wHttpIo_Ignore_cert_date_invalid, wHttpIo_Keep_connection,
+//      wHttpIo_Need_file, wHttpIo_No_cache_write, wHttpIo_Pragma_nocache, wHttpIo_Reload];
+//  end;
 
   postMessage(handle, WM_START_HTTP_LISTENER, 0, HTTP_SERVICE_DEFAULT_PORT);
 end;
@@ -152,7 +160,7 @@ begin
       HttpServer.Start;
       activeSince := Now;
     except
-      if message.LParam > 62000 then
+      if message.LParam > HTTP_SERVICE_DEFAULT_PORT_MIN then
       begin
         postMessage(handle, WM_START_HTTP_LISTENER, 0, message.LParam - 1);
       end;
@@ -167,6 +175,7 @@ procedure TfrmUpgradeDaemon.FormDestroy(Sender: TObject);
 begin
   URIProcessor.Free;
   httpCLient.Free;
+  RoomerLogger.Free;
 end;
 
 procedure TfrmUpgradeDaemon.HttpServerClientConnect(Sender, Client: TObject; Error: Word);
@@ -242,6 +251,7 @@ begin
   memLogs.Lines.Insert(0, logTime + logText);
   for i := 5000 to memLogs.Lines.Count - 1 do
     memLogs.Lines.Delete(i);
+  RoomerLogger.AddToLog(logText);
 end;
 
 procedure TfrmUpgradeDaemon.mnuShowHideClick(Sender: TObject);
