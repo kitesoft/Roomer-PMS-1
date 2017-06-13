@@ -163,22 +163,22 @@ begin
     sql := format('SELECT ' +
                   '(SELECT COUNT(id) AS NumEntries FROM roomsdate rd ' +
                   'WHERE ADate=''%s'' ' +
-                  'AND rd.ResFlag IN (''P'',''A'') ' +
+                  'AND rd.ResFlag IN (''P'') ' +
                   'AND NOT EXISTS(SELECT id FROM roomsdate rd1 WHERE rd1.RoomReservation=rd.RoomReservation AND ADate=DATE_ADD(rd.ADate, INTERVAL -1 DAY))) AS NumArrivals, ' +
 
                   '(SELECT COUNT(id) AS NumEntries FROM roomsdate rd ' +
                   'WHERE ADate=DATE_ADD(''%s'', INTERVAL -1 DAY) ' +
-                  'AND rd.ResFlag IN (''G'',''P'',''A'') ' +
+                  'AND rd.ResFlag IN (''G'',''P'') ' +
                   'AND NOT EXISTS(SELECT id FROM roomsdate rd1 WHERE rd1.RoomReservation=rd.RoomReservation AND ADate=DATE_ADD(rd.ADate, INTERVAL 1 DAY))) AS NumDepartures, ' +
 
                   '(SELECT COUNT(id) AS NumEntries FROM roomsdate rd ' +
                   'WHERE ADate=DATE_ADD(''%s'', INTERVAL 1 DAY) ' +
-                  'AND rd.ResFlag IN (''P'',''A'') ' +
+                  'AND rd.ResFlag IN (''P'') ' +
                   'AND NOT EXISTS(SELECT id FROM roomsdate rd1 WHERE rd1.RoomReservation=rd.RoomReservation AND ADate=DATE_ADD(rd.ADate, INTERVAL -1 DAY))) AS NumArrivalsTomorrow, ' +
 
                   '(SELECT COUNT(id) AS NumEntries FROM roomsdate rd ' +
                   'WHERE ADate=''%s'' ' +
-                  'AND rd.ResFlag IN (''G'',''P'',''A'') ' +
+                  'AND rd.ResFlag IN (''G'',''P'') ' +
                   'AND NOT EXISTS(SELECT id FROM roomsdate rd1 WHERE rd1.RoomReservation=rd.RoomReservation AND ADate=DATE_ADD(rd.ADate, INTERVAL 1 DAY))) AS NumDeparturesTomorrow, ' +
 
                   '(SELECT COUNT(id) NumEntries FROM ' +
