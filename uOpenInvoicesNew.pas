@@ -484,6 +484,7 @@ begin
         s := s+' WHERE '#10;
         s := s+'   (rd.roomreservation in '+zRRinlist+') '#10;  //**zxhj breytti ekki h�r �v� er teki� � rrList
         s := s+'   AND (rr.RoomRentPaymentInvoice > -999 ) '#10;
+        s := s+'   AND rd.ResFlag not in (''X'', ''C'') '#10;
         s := s+' GROUP BY '#10;
         s := s+'     rd.roomreservation '#10;
         s := s+'   , rd.Room '#10;
