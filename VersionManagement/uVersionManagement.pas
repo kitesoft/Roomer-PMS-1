@@ -49,7 +49,7 @@ type
     function newVersionAvailable(force : Boolean = false) : Boolean;
     function updateNow(force : boolean = false) : Boolean;
     procedure BreakDownVersionString(sStr: String);
-    procedure PerformUpdateIfAvailable;
+    procedure PerformUpdateIfAvailable(initialStart : Boolean = False);
     procedure CheckIfUpgradeExists;
     function GetFromURI(uri: String; useGetUriPort : Boolean = True): String;
     procedure CloseDaemon;
@@ -209,8 +209,8 @@ begin
   try
     if newVersionAvailable(true) then
       updateNow(true)
-    else
-      CheckIfUpgradeExists;
+//    else
+//      CheckIfUpgradeExists;
   finally
     Start;
   end;
@@ -326,8 +326,8 @@ begin
   try
     if newVersionAvailable then
       updateNow
-    else
-      CheckIfUpgradeExists;
+//    else
+//      CheckIfUpgradeExists;
   finally
     Start;
   end;
@@ -356,7 +356,7 @@ begin
   timer.Interval := TEN_MINUTES;
   timer.Enabled := True;
   if initialStart then
-    PerformUpdateIfAvailable;
+    PerformUpdateIfAvailable(InitialStart);
 end;
 
 procedure TRoomerVersionManagement.Stop;
@@ -364,13 +364,14 @@ begin
   timer.Enabled := False;
 end;
 
-procedure TRoomerVersionManagement.PerformUpdateIfAvailable;
+procedure TRoomerVersionManagement.PerformUpdateIfAvailable(initialStart : Boolean = False);
 begin
   Stop;
   try
     if newVersionAvailable then
       updateNow
     else
+    if initialStart then
       CheckIfUpgradeExists;
   finally
     Start;
@@ -454,8 +455,8 @@ begin
         FOnAskUpgrade(msg, VersionRec.Version, forced, upgrade);
         if forced OR upgrade then
           update
-        else
-          CheckIfUpgradeExists;
+//        else
+//          CheckIfUpgradeExists;
       end;
       lastCounter := 0;
     end;

@@ -136,6 +136,7 @@ type
     FAppKey: String;
     FOfflineMode: boolean;
     FLoggedIn: boolean;
+    FPrimaryKeyField: String;
     function GetCommandText: String;
     procedure SetCommandText(const Value: String);
     procedure SetCommandType(const Value: TCommandType);
@@ -316,6 +317,8 @@ type
 
     property AfterScroll;
 
+    property PrimaryKeyField : String read FPrimaryKeyField write FPrimaryKeyField;
+
   end;
 
 procedure Register;
@@ -387,6 +390,7 @@ constructor TRoomerDataSet.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
 
+  FPrimaryKeyField := 'ID';
   FLoggedIn := false;
 
   FApplicationID := '';
@@ -1731,7 +1735,7 @@ procedure TRoomerDataSet.Post;
   begin
     if aSql <> '' then
     begin
-      aSql := format('UPDATE `%s` SET %s WHERE id=%d', [aTableName, aSql, FieldByName('id').AsInteger]);
+      aSql := format('UPDATE `%s` SET %s WHERE %s=%d', [aTableName, aSql, FPrimaryKeyField, FieldByName(FPrimaryKeyField).AsInteger]);
       res := self.activeRoomerDataSet.SystemFreeExecute(aSql);
       if not TryStrToInt(res, lID) then
         raise Exception.CreateFmt('Error updating %s, [%s]', [aTableName, res]);
@@ -1784,7 +1788,7 @@ procedure TRoomerDataSet.Post;
       if not TryStrToInt(res, newID) then
         raise Exception.CreateFmt('Error inserting into %s, [%s]', [aTableName, res]);
 
-      FieldByName('ID').AsInteger := newID;
+      FieldByName(FPrimaryKeyField).AsInteger := newID;
       GlueToRecordSet;
     end;
   end;

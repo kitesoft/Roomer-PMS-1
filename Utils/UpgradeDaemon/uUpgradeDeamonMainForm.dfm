@@ -3,7 +3,7 @@ object frmUpgradeDaemon: TfrmUpgradeDaemon
   Top = 0
   BorderStyle = bsNone
   Caption = 'Roomer Upgrade Agent'
-  ClientHeight = 429
+  ClientHeight = 524
   ClientWidth = 410
   Color = clBlack
   TransparentColor = True
@@ -18,6 +18,7 @@ object frmUpgradeDaemon: TfrmUpgradeDaemon
   PopupMenu = pmnuLogsMenu
   Position = poScreenCenter
   Scaled = False
+  OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   PixelsPerInch = 96
@@ -280,6 +281,7 @@ object frmUpgradeDaemon: TfrmUpgradeDaemon
       1492898EE3388ED31A92898EE3388ED31A92898EE3388ED31A92898EE3388ED3
       1A92898EE3388ED31A92898EE3388ED31A92898EE3388ED3724AAFFB7F0AB4B3
       D0C056EB050000000049454E44AE426082}
+    OnMouseDown = Image2MouseDown
     ExplicitLeft = 5
     ExplicitTop = 14
     ExplicitWidth = 398
@@ -287,7 +289,7 @@ object frmUpgradeDaemon: TfrmUpgradeDaemon
   object lblDownloaded: TsLabel
     AlignWithMargins = True
     Left = 50
-    Top = 112
+    Top = 134
     Width = 310
     Height = 16
     Margins.Left = 50
@@ -296,17 +298,19 @@ object frmUpgradeDaemon: TfrmUpgradeDaemon
     Alignment = taCenter
     AutoSize = False
     ParentFont = False
+    OnMouseDown = Image2MouseDown
     Font.Charset = DEFAULT_CHARSET
     Font.Color = 4473924
     Font.Height = -13
     Font.Name = 'Tahoma'
     Font.Style = []
     ExplicitLeft = 55
+    ExplicitTop = 112
   end
   object lblURL: TsLabel
     AlignWithMargins = True
     Left = 3
-    Top = 90
+    Top = 112
     Width = 404
     Height = 16
     Align = alTop
@@ -315,17 +319,43 @@ object frmUpgradeDaemon: TfrmUpgradeDaemon
     Caption = '<URL>'
     ParentFont = False
     Layout = tlCenter
+    OnMouseDown = Image2MouseDown
     Font.Charset = DEFAULT_CHARSET
     Font.Color = 4473924
     Font.Height = -13
     Font.Name = 'Tahoma'
     Font.Style = []
     ExplicitLeft = -2
+    ExplicitTop = 90
+  end
+  object lblConnected: TsLabel
+    AlignWithMargins = True
+    Left = 50
+    Top = 90
+    Width = 310
+    Height = 16
+    Margins.Left = 50
+    Margins.Right = 50
+    Align = alTop
+    Alignment = taCenter
+    AutoSize = False
+    Caption = 'DAEMON ACTIVE ON PORT 62999'
+    Color = clBlack
+    ParentColor = False
+    ParentFont = False
+    OnMouseDown = Image2MouseDown
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clLime
+    Font.Height = -13
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    UseSkinColor = False
+    ExplicitLeft = 55
   end
   object pbDownloadProgress: TsProgressBar
     AlignWithMargins = True
     Left = 50
-    Top = 134
+    Top = 156
     Width = 310
     Height = 21
     Margins.Left = 50
@@ -337,15 +367,17 @@ object frmUpgradeDaemon: TfrmUpgradeDaemon
     BackgroundColor = clBlack
     Step = 1
     TabOrder = 0
+    OnMouseDown = Image2MouseDown
     ProgressSkin = 'PROGRESSH'
     SkinData.SkinSection = 'GAUGE'
+    ExplicitTop = 134
   end
   object memLogs: TsMemo
     AlignWithMargins = True
     Left = 10
-    Top = 161
+    Top = 183
     Width = 390
-    Height = 265
+    Height = 338
     Margins.Left = 10
     Margins.Right = 10
     Align = alClient
@@ -362,8 +394,11 @@ object frmUpgradeDaemon: TfrmUpgradeDaemon
     ReadOnly = True
     TabOrder = 1
     WordWrap = False
+    OnMouseDown = Image2MouseDown
     SkinData.CustomColor = True
     SkinData.CustomFont = True
+    ExplicitTop = 161
+    ExplicitHeight = 265
   end
   object timeUpgradeCheck: TTimer
     Interval = 900000

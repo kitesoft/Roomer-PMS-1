@@ -32,7 +32,7 @@ const
   ctEndBox      = 140;
 
   ctBeginBar    = 150;
-  ctEndBar    = 160;
+  ctEndBar      = 160;
 
   ctVertLine    = 170;
 

@@ -615,6 +615,7 @@ begin
   constants.Add('shTx_FinishedInvoices2_Amount', 'Amount');
   constants.Add('shTx_FinishedInvoices2_VAT', 'VAT');
   constants.Add('shTx_FinishedInvoices2_Date', 'Date');
+  constants.Add('shTx_FinishedInvoices2_ExtUser', 'User');
   constants.Add('shTx_FinishedInvoices2_FileNotFound', 'File %s not found ');
   constants.Add('shTx_FinishedInvoices2_NoChange', 'This account will be recreated - no change is made to older account');
   constants.Add('shTx_FormCustomInvoicesMD_AllCustomers', 'All Customers');

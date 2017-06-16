@@ -6999,6 +6999,7 @@ begin
         d.mtPayments_.FieldByName('foAmount').asFloat := IvI.PaymentList[i].pmAmount / Rate;
         d.mtPayments_.FieldByName('Description').Asstring := IvI.PaymentList[i].pmDescription;
         d.mtPayments_.FieldByName('TypeIndex').AsInteger := IvI.PaymentList[i].pmTypeIndex;
+        d.mtPayments_.FieldByName('Staff').AsString := IvI.PaymentList[i].pmStaff;
         d.mtPayments_.FieldByName('SourceUserId').AsString := IvI.PaymentList[i].pmExternalUser;
         d.mtPayments_.FieldByName('SourceUserFullname').AsString := IvI.PaymentList[i].pmExternalUserName;
 
@@ -7348,6 +7349,7 @@ begin
       d.mtPayments_.FieldByName('foAmount').asFloat := IvI.PaymentList[i].pmAmount / Rate;
       d.mtPayments_.FieldByName('Description').Asstring := IvI.PaymentList[i].pmDescription;
       d.mtPayments_.FieldByName('TypeIndex').AsInteger := IvI.PaymentList[i].pmTypeIndex;
+      d.mtPayments_.FieldByName('Staff').AsString := IvI.PaymentList[i].pmStaff;
       d.mtPayments_.FieldByName('SourceUserId').AsString := IvI.PaymentList[i].pmExternalUser;
       d.mtPayments_.FieldByName('SourceUserFullname').AsString := IvI.PaymentList[i].pmExternalUserName;
 
@@ -11713,6 +11715,7 @@ begin
   d.mtPayments_.FieldDefs.Add('foAmount', ftFloat);
   d.mtPayments_.FieldDefs.Add('Description', ftWideString, 100);
   d.mtPayments_.FieldDefs.Add('TypeIndex', ftInteger);
+  d.mtPayments_.FieldDefs.Add('Staff', ftWideString, 100);
   d.mtPayments_.FieldDefs.Add('SourceUserId', ftWideString, 100);
   d.mtPayments_.FieldDefs.Add('SourceUserFullname', ftWideString, 100);
 

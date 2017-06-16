@@ -679,6 +679,7 @@ type
     M1: TMenuItem;
     btnHome: TsSpeedButton;
     sbFrontDesk: TsScrollBox;
+    H1: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);

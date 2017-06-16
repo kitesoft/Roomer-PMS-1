@@ -126,8 +126,8 @@ object frmFinishedInvoices2: TfrmFinishedInvoices2
     object chkShowPackage: TsCheckBox
       Left = 5
       Top = 47
-      Width = 140
-      Height = 20
+      Width = 148
+      Height = 17
       Caption = 'Show Package on invoice'
       TabOrder = 4
       SkinData.SkinSection = 'CHECKBOX'
@@ -190,7 +190,7 @@ object frmFinishedInvoices2: TfrmFinishedInvoices2
         SkinData.SkinSection = 'PANEL'
         object labHeadInfoDate: TsLabel
           Left = 741
-          Top = 7
+          Top = 5
           Width = 27
           Height = 13
           Alignment = taRightJustify
@@ -204,7 +204,7 @@ object frmFinishedInvoices2: TfrmFinishedInvoices2
         end
         object Label13: TsLabel
           Left = 717
-          Top = 99
+          Top = 85
           Width = 51
           Height = 13
           Alignment = taRightJustify
@@ -244,7 +244,7 @@ object frmFinishedInvoices2: TfrmFinishedInvoices2
         end
         object Label15: TsLabel
           Left = 741
-          Top = 123
+          Top = 106
           Width = 27
           Height = 13
           Alignment = taRightJustify
@@ -272,7 +272,7 @@ object frmFinishedInvoices2: TfrmFinishedInvoices2
         end
         object Label16: TsLabel
           Left = 717
-          Top = 30
+          Top = 25
           Width = 51
           Height = 13
           Alignment = taRightJustify
@@ -286,7 +286,7 @@ object frmFinishedInvoices2: TfrmFinishedInvoices2
         end
         object Label17: TsLabel
           Left = 699
-          Top = 76
+          Top = 65
           Width = 69
           Height = 13
           Alignment = taRightJustify
@@ -300,7 +300,7 @@ object frmFinishedInvoices2: TfrmFinishedInvoices2
         end
         object Label19: TsLabel
           Left = 686
-          Top = 145
+          Top = 125
           Width = 82
           Height = 13
           Alignment = taRightJustify
@@ -314,7 +314,7 @@ object frmFinishedInvoices2: TfrmFinishedInvoices2
         end
         object Label20: TsLabel
           Left = 677
-          Top = 168
+          Top = 145
           Width = 91
           Height = 13
           Alignment = taRightJustify
@@ -328,7 +328,7 @@ object frmFinishedInvoices2: TfrmFinishedInvoices2
         end
         object Label5: TsLabel
           Left = 713
-          Top = 53
+          Top = 45
           Width = 55
           Height = 13
           Alignment = taRightJustify
@@ -342,7 +342,7 @@ object frmFinishedInvoices2: TfrmFinishedInvoices2
         end
         object Label6: TsLabel
           Left = 710
-          Top = 191
+          Top = 165
           Width = 58
           Height = 13
           Alignment = taRightJustify
@@ -679,7 +679,7 @@ object frmFinishedInvoices2: TfrmFinishedInvoices2
         end
         object edtDate: TsEdit
           Left = 773
-          Top = 7
+          Top = 5
           Width = 100
           Height = 17
           Cursor = crArrow
@@ -703,7 +703,7 @@ object frmFinishedInvoices2: TfrmFinishedInvoices2
         end
         object edtCurrency: TsEdit
           Left = 773
-          Top = 99
+          Top = 85
           Width = 100
           Height = 18
           Cursor = crArrow
@@ -774,7 +774,7 @@ object frmFinishedInvoices2: TfrmFinishedInvoices2
         end
         object edtCurrencyRate: TsEdit
           Left = 773
-          Top = 123
+          Top = 106
           Width = 100
           Height = 16
           Cursor = crArrow
@@ -798,7 +798,7 @@ object frmFinishedInvoices2: TfrmFinishedInvoices2
         end
         object edtPaydate: TsEdit
           Left = 773
-          Top = 30
+          Top = 25
           Width = 100
           Height = 17
           Cursor = crArrow
@@ -822,7 +822,7 @@ object frmFinishedInvoices2: TfrmFinishedInvoices2
         end
         object edtReservation: TsEdit
           Left = 773
-          Top = 76
+          Top = 65
           Width = 100
           Height = 17
           Cursor = crArrow
@@ -846,7 +846,7 @@ object frmFinishedInvoices2: TfrmFinishedInvoices2
         end
         object edtKreditInvoice: TsEdit
           Left = 774
-          Top = 145
+          Top = 125
           Width = 100
           Height = 17
           Cursor = crArrow
@@ -870,7 +870,7 @@ object frmFinishedInvoices2: TfrmFinishedInvoices2
         end
         object edtOrginalInvoice: TsEdit
           Left = 773
-          Top = 168
+          Top = 145
           Width = 100
           Height = 17
           Cursor = crArrow
@@ -917,7 +917,7 @@ object frmFinishedInvoices2: TfrmFinishedInvoices2
         end
         object edtStaff: TsEdit
           Left = 773
-          Top = 53
+          Top = 45
           Width = 100
           Height = 17
           Cursor = crArrow
@@ -943,7 +943,7 @@ object frmFinishedInvoices2: TfrmFinishedInvoices2
         end
         object edtRefrence: TsEdit
           Left = 773
-          Top = 191
+          Top = 165
           Width = 100
           Height = 17
           Cursor = crArrow
@@ -1209,8 +1209,8 @@ object frmFinishedInvoices2: TfrmFinishedInvoices2
             object LMDSimpleLabel1: TsLabel
               Left = 0
               Top = 0
-              Width = 80
-              Height = 13
+              Width = 338
+              Height = 21
               Align = alClient
               Alignment = taCenter
               Caption = 'VAT Summary'
@@ -1222,6 +1222,8 @@ object frmFinishedInvoices2: TfrmFinishedInvoices2
               Font.Height = -11
               Font.Name = 'Tahoma'
               Font.Style = [fsBold]
+              ExplicitWidth = 80
+              ExplicitHeight = 13
             end
           end
           object agrVSK: TAdvStringGrid
@@ -1337,7 +1339,7 @@ object frmFinishedInvoices2: TfrmFinishedInvoices2
             SearchFooter.MatchCaseCaption = 'Match case'
             SearchFooter.ResultFormat = '(%d of %d)'
             SortSettings.DefaultFormat = ssAutomatic
-            Version = '8.2.4.1'
+            Version = '8.2.5.2'
             RowHeights = (
               18
               21
@@ -1366,8 +1368,8 @@ object frmFinishedInvoices2: TfrmFinishedInvoices2
             object LMDSimpleLabel2: TsLabel
               Left = 0
               Top = 0
-              Width = 109
-              Height = 13
+              Width = 343
+              Height = 21
               Align = alClient
               Alignment = taCenter
               Caption = 'Payment Summary'
@@ -1379,6 +1381,8 @@ object frmFinishedInvoices2: TfrmFinishedInvoices2
               Font.Height = -11
               Font.Name = 'Tahoma'
               Font.Style = [fsBold]
+              ExplicitWidth = 109
+              ExplicitHeight = 13
             end
           end
           object agrPayments: TAdvStringGrid
@@ -1494,7 +1498,7 @@ object frmFinishedInvoices2: TfrmFinishedInvoices2
             SearchFooter.MatchCaseCaption = 'Match case'
             SearchFooter.ResultFormat = '(%d of %d)'
             SortSettings.DefaultFormat = ssAutomatic
-            Version = '8.2.4.1'
+            Version = '8.2.5.2'
             RowHeights = (
               19
               21
@@ -1614,7 +1618,7 @@ object frmFinishedInvoices2: TfrmFinishedInvoices2
         SearchFooter.MatchCaseCaption = 'Match case'
         SearchFooter.ResultFormat = '(%d of %d)'
         SortSettings.DefaultFormat = ssAutomatic
-        Version = '8.2.4.1'
+        Version = '8.2.5.2'
         RowHeights = (
           19
           21

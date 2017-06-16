@@ -354,6 +354,7 @@ const
   colPaymentType    : integer = 0;
   colPaymentAmount  : integer = 1;
   colPaymentDate    : integer = 2;
+  colPaymentExtUser : integer = 3;
 
 var
   zCurrency       : string;         // Gjaldmiðill;
@@ -422,14 +423,15 @@ begin
 
   // agrPayments
   EmptyStringGrid(agrPayments );
-  agrPayments.ColCount   := 3;
+  agrPayments.ColCount   := 4;
   agrPayments.RowCount   := 2;
 
-  agrPayments.ColWidths[colvatType      ] := 70;
-  agrPayments.ColWidths[colvatTotalWoWat] := 70;
-  agrPayments.ColWidths[colPaymentDate]   := 70;
+  agrPayments.ColWidths[colPaymentType   ] := 70;
+  agrPayments.ColWidths[colPaymentAmount ] := 70;
+  agrPayments.ColWidths[colPaymentDate   ] := 70;
+  agrPayments.ColWidths[colPaymentExtUser] := 70;
 
-  agrPayments.ColumnSize.StretchColumn := 0;
+  agrPayments.ColumnSize.StretchColumn := colPaymentType;
   agrPayments.ColumnSize.Stretch       := true;
 
   // agrPayments.Cells[colPaymentType    ,0] := 'Category';
@@ -438,6 +440,7 @@ begin
   agrPayments.Cells[colPaymentType    ,0] := GetTranslatedText('shTx_FinishedInvoices2_Category');
   agrPayments.Cells[colPaymentAmount  ,0] := GetTranslatedText('shTx_FinishedInvoices2_Amount');
   agrPayments.Cells[colPaymentDate    ,0] := GetTranslatedText('shTx_FinishedInvoices2_Date');
+  agrPayments.Cells[colPaymentExtUser ,0] := GetTranslatedText('shTx_FinishedInvoices2_ExtUser');
 end;
 
 
@@ -621,6 +624,7 @@ begin
         TotalPayments := TotalPayments + ivi.PaymentList[i].pmAmount;
         dateTimeToString(s,'dd.mm.yyyy',ivi.PaymentList[i].pmDate);
         agrPayments.Cells[colPaymentDate   ,iRowIndex] := S;
+        agrPayments.Cells[colPaymentExtUser,iRowIndex] := IIF(TRIM(ivi.PaymentList[i].pmExternalUser) = '', ivi.PaymentList[i].pmStaff, ivi.PaymentList[i].pmExternalUser);
       end;
 
       edtStaff.Hint := externalUsers;

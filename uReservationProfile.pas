@@ -1331,6 +1331,7 @@ begin
 
   rSet := CreateNewDataSet;
   try
+    rSet.PrimaryKeyField := 'Reservation';
     d.roomerMainDataSet.SystemStartTransaction;
     try
 

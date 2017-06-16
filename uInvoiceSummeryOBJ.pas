@@ -158,6 +158,7 @@ type
     FpmTypeIndex   : integer;
     FpmExternalUser: String;
     FpmExternalUserName: String;
+    FpmStaff: String;
   public
     constructor Create(LineNo : integer);
     destructor Destroy; override;
@@ -169,6 +170,7 @@ type
     property pmDoExport : boolean read FpmDoExport write FpmDoExport;
     property pmDescription : string read FpmDescription write FpmDescription;
     property pmTypeIndex : integer read FpmTypeIndex write FpmTypeIndex;
+    property pmStaff : String read FpmStaff write FpmStaff;
     property pmExternalUser : String read FpmExternalUser write FpmExternalUser;
     property pmExternalUserName : String read FpmExternalUserName write FpmExternalUserName;
   end;
@@ -330,7 +332,7 @@ type
     function GetPaymentCount : integer;
 
     function AddPayment(pmCode : string; pmAmount : double; pmDate : TDateTime; pmDoExport : boolean; pmDescription : string; pmTypeIndex : integer) : integer; overload;
-    function AddPayment(pmCode : string; pmAmount : double; pmDate : TDateTime; pmDoExport : boolean; pmDescription : string; pmTypeIndex : integer; extUser, extUserName : String) : integer; overload;
+    function AddPayment(pmCode : string; pmAmount : double; pmDate : TDateTime; pmDoExport : boolean; pmDescription : string; pmTypeIndex : integer; extUser, extUserName, staff : String) : integer; overload;
     function AddToVATPrice(idx : integer; Price_woVAT : double; Price_wVAT : double; VATAmount : double) : boolean;
 
     function GetVAT(idx : integer) : TInvoiceVATInfo;
@@ -955,10 +957,11 @@ begin
 end;
 
 function TInvoiceInfo.AddPayment(pmCode: string; pmAmount: double; pmDate: TDateTime; pmDoExport: boolean; pmDescription: string; pmTypeIndex: integer; extUser,
-  extUserName: String): integer;
+  extUserName, staff: String): integer;
 var idx : Integer;
 begin
   idx := AddPayment(pmCode, pmAmount, pmDate, pmDoExport, pmDescription, pmTypeIndex);
+  FPaymentList[idx].pmStaff := staff;
   FPaymentList[idx].pmExternalUser := extUser;
   FPaymentList[idx].pmExternalUserName := extUserName;
   result := idx;
@@ -1005,6 +1008,7 @@ var
   pmTypeIndex   : integer;
   pmExtUser     : String;
   pmExtUserName : String;
+  pmStaff       : String;
   rSet          : TRoomerDataSet;
   s             : string;
 
@@ -1034,6 +1038,7 @@ begin
           pmDate := SQLToDateTime(rSet.fieldbyname('PayDate').asString);
           pmDescription := rSet.fieldbyname('Description').asstring;
           pmTypeIndex   := rSet.fieldbyname('TypeIndex').asInteger;
+          pmStaff       := rSet.fieldbyname('staff').asString;
           pmExtUser     := rSet.fieldbyname('SourceUserId').asString;
           pmExtUserName := rSet.fieldbyname('SourceUserFullname').asString;
 
@@ -1042,7 +1047,7 @@ begin
             isExport := d.PayTypes_isExport(pmCode);
             if not isExport then doExport := false;
             tt := tt + pmAmount;
-            AddPayment(pmCode, pmAmount, pmDate,isExport,pmDescription,pmTypeIndex, pmExtUser, pmExtUserName);
+            AddPayment(pmCode, pmAmount, pmDate,isExport,pmDescription,pmTypeIndex, pmExtUser, pmExtUserName, pmStaff);
           end;
           rSet.Next;
         end;

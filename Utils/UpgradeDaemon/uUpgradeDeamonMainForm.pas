@@ -44,6 +44,7 @@ type
     memLogs: TsMemo;
     mnuCopyLogs: TMenuItem;
     HttpServer: THttpServer;
+    lblConnected: TsLabel;
     procedure FormCreate(Sender: TObject);
     procedure WndProc(var message: TMessage); override;
     procedure timPerformRequestTimer(Sender: TObject);
@@ -57,6 +58,8 @@ type
     procedure HttpServerClientDisconnect(Sender, Client: TObject; Error: Word);
     procedure HttpServerServerStarted(Sender: TObject);
     procedure HttpServerServerStopped(Sender: TObject);
+    procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+    procedure Image2MouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
   private
     httpCLient: TRoomerHttpClient;
     RoomerLogger : TRoomerLogger;
@@ -75,6 +78,7 @@ type
     procedure SetDownloadActive(const Value: Boolean);
     procedure AddLog(logText: String);
     function GetNewFileNameIndex(OldName: String): String;
+    procedure ActivateMoveForm;
 
     property DownloadActive : Boolean read FDownloadActive write SetDownloadActive;
   public
@@ -129,6 +133,13 @@ begin
     result := FormatFloat('#.## Bytes', bytes);
 end;
 
+procedure TfrmUpgradeDaemon.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+begin
+  CanClose := (frmUpgradeDaemon.Tag = 1);
+  if NOT CanClose then
+    mnuShowHide.Click;
+end;
+
 procedure TfrmUpgradeDaemon.FormCreate(Sender: TObject);
 begin
   memLogs.Lines.Clear;
@@ -138,21 +149,22 @@ begin
   URIProcessor := TURIProcessor.Create;
   httpCLient := TRoomerHttpClient.Create(Self);
 
-//  with httpCLient do
-//  begin
-//    ConnectTimeout := 900;
-//    SendTimeout := 900;
-//    ReceiveTimeout := 900;
-//    OnDownloadProgress := DownloadProgress;
-//    InternetOptions := [wHttpIo_Async, wHttpIo_Ignore_cert_cn_invalid, wHttpIo_Ignore_cert_date_invalid, wHttpIo_Keep_connection,
-//      wHttpIo_Need_file, wHttpIo_No_cache_write, wHttpIo_Pragma_nocache, wHttpIo_Reload];
-//  end;
+{$IFDEF DEBUG}
+  Height := 529;
+{$ELSE}
+  Height := 113;
+{$ENDIF}
 
   postMessage(handle, WM_START_HTTP_LISTENER, 0, HTTP_SERVICE_DEFAULT_PORT);
 end;
 
 procedure TfrmUpgradeDaemon.WndProc(var message: TMessage);
 begin
+  if (Message.Msg = WM_QUERYENDSESSION) OR
+     (Message.Msg = WM_ENDSESSION) then
+    frmUpgradeDaemon.Tag := 1
+  else
+
   if Message.Msg = WM_START_HTTP_LISTENER then
   begin
     try
@@ -167,6 +179,7 @@ begin
     end;
 
   end;
+
   inherited WndProc(message);
 end;
 
@@ -235,12 +248,22 @@ end;
 
 procedure TfrmUpgradeDaemon.HttpServerServerStarted(Sender: TObject);
 begin
+  lblConnected.Caption := 'DAEMON ACTIVE ON PORT ' + httpServer.Port;
+  lblConnected.Font.Color := clLime;
   AddLog('HTTP service started on port ' + HttpServer.Port);
 end;
 
 procedure TfrmUpgradeDaemon.HttpServerServerStopped(Sender: TObject);
 begin
+  lblConnected.Caption := 'DAEMON INACTIVE';
+  lblConnected.Font.Color := clRed;
   AddLog('HTTP service stopped on ' + HttpServer.Port);
+end;
+
+procedure TfrmUpgradeDaemon.Image2MouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+begin
+  if Button=mbLeft then
+    ActivateMoveForm;
 end;
 
 procedure TfrmUpgradeDaemon.AddLog(logText : String);
@@ -307,6 +330,7 @@ begin
                       end;
         atClose : begin
                               //
+                               frmUpgradeDaemon.Tag := 1;
                                Close;
                             end;
       end;
@@ -348,6 +372,7 @@ end;
 
 procedure TfrmUpgradeDaemon.mnuExitClick(Sender: TObject);
 begin
+  frmUpgradeDaemon.Tag := 1;
   Close;
 end;
 
@@ -448,6 +473,7 @@ begin
     fullNameAndPath := format('%s.%d', [OldName, i]);
     done := NOT FileExists(fullNameAndPath);
   until done;
+  result := fullNameAndPath;
 end;
 
 procedure TfrmUpgradeDaemon.UpdateNow;
@@ -476,7 +502,11 @@ begin
       AddLog('Removing old exe file: ' + exeName);
       SavedFileName := GetNewFileNameIndex(exeName);
       if NOT RenameFile(exeName, SavedFileName) then
+      begin
+        AddLog(format('Unable to rename old exe file ''%s'' to ''%s''', [exeName, SavedFileName]));
+        AddLog('Deleting old exe file: ' + exeName);
         SysUtils.DeleteFile(exeName);
+      end;
       UpgradeFilename := PWideChar(URIProcessor.UpgradeExePathName);
       if NOT TryCopyFile(UpgradeFilename, PChar(exeName)) then
         exit;
@@ -501,6 +531,13 @@ begin
   end;
 end;
 
+procedure TfrmUpgradeDaemon.ActivateMoveForm;
+const
+  SC_DRAGMOVE = $F012;
+begin
+  ReleaseCapture;
+  Perform(WM_SYSCOMMAND, SC_DRAGMOVE, 0);
+end;
 
 procedure TfrmUpgradeDaemon.NullifyScreen;
 begin
