@@ -187,6 +187,7 @@ procedure TfrmGoToRoomandDate.FormShow(Sender : TObject);
 begin
   edRoom.Text := zRoom;
   dtDate.Date := zDate;
+  cbxRefrenceType.ItemIndex := 0;
 end;
 
 end.

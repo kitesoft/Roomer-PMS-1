@@ -89,8 +89,10 @@
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
-        <VerInfo_Build>1</VerInfo_Build>
-        <VerInfo_Keys>CompanyName=Promoir BV;FileDescription=Roomer PMS Upgrade Agent;FileVersion=2.0.0.1;InternalName=Upgrader;LegalCopyright=(C) 2017, Promoir BV;LegalTrademarks=Roomer is a registered trademark of Promoir BV;OriginalFilename=RoomerUpgradeAgent;ProductName=Roomer Open Hospitality Platform;ProductVersion=2.0.0.1;Comments=</VerInfo_Keys>
+        <VerInfo_MinorVer>9</VerInfo_MinorVer>
+        <VerInfo_MajorVer>1</VerInfo_MajorVer>
+        <VerInfo_Release>14</VerInfo_Release>
+        <VerInfo_Keys>CompanyName=Promoir BV;FileDescription=Roomer PMS Upgrade Daemon;FileVersion=1.9.14.0;InternalName=Upgrader;LegalCopyright=(C) 2017, Promoir BV;LegalTrademarks=Roomer is a registered trademark of Promoir BV;OriginalFilename=RoomerUpgradeDaemon;ProductName=Roomer Open Hospitality Platform;ProductVersion=2.0.0.1;Comments=</VerInfo_Keys>
         <DCC_ExeOutput>..\..\RoomerPMSRelease\</DCC_ExeOutput>
         <DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
         <DCC_Define>RELEASE;_ROOMERSSL;ROOMER_UTIL;$(DCC_Define)</DCC_Define>
@@ -181,7 +183,10 @@
                     <VersionInfoKeys Name="CFBundleAllowMixedLocalizations"/>
                     <VersionInfoKeys Name="CFBundleExecutable"/>
                 </VersionInfoKeys>
-                <Excluded_Packages/>
+                <Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k170.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp170.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
+                </Excluded_Packages>
                 <Source>
                     <Source Name="MainSource">RoomerUpgradeDaemon.dpr</Source>
                 </Source>

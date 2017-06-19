@@ -57,6 +57,8 @@ type
     Shape7: TShape;
     Shape8: TShape;
     Shape1: TShape;
+    sLabel1: TsLabel;
+    sLabel2: TsLabel;
     procedure sPanel1MouseEnter(Sender: TObject);
     procedure sPanel1MouseLeave(Sender: TObject);
     procedure FormDestroy(Sender: TObject);

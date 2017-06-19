@@ -75,7 +75,6 @@ object frmGoToRoomandDate: TfrmGoToRoomandDate
     ParentFont = False
     TabOrder = 1
     SkinData.SkinSection = 'GROUPBOX'
-    Checked = False
     object labErr: TsLabel
       Left = 9
       Top = 46
@@ -118,7 +117,7 @@ object frmGoToRoomandDate: TfrmGoToRoomandDate
       Font.Height = -11
       Font.Name = 'Tahoma'
       Font.Style = []
-      ItemIndex = -1
+      ItemIndex = 0
       ParentFont = False
       TabOrder = 1
       Text = 'Internal Room Reservation'
@@ -143,7 +142,6 @@ object frmGoToRoomandDate: TfrmGoToRoomandDate
     ParentFont = False
     TabOrder = 2
     SkinData.SkinSection = 'GROUPBOX'
-    Checked = False
     object cxLabel1: TsLabel
       Left = 150
       Top = 18
@@ -204,7 +202,6 @@ object frmGoToRoomandDate: TfrmGoToRoomandDate
       ParentFont = False
       TabOrder = 1
       Text = '  -  -    '
-      CheckOnExit = True
       SkinData.SkinSection = 'EDIT'
       GlyphMode.Blend = 0
       GlyphMode.Grayed = False

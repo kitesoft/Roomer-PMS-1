@@ -10329,6 +10329,14 @@ end;
 
 procedure TfrmMain.btnReDownloadRoomerClick(Sender: TObject);
 begin
+//  LoginCancelled := true;
+//  downloadCurrentVersion(handle, d.roomerMainDataSet);
+//  try
+//    d.roomerMainDataSet.LOGOUT;
+//    __lblUsername.Caption := 'N/A';
+//  except
+//  end;
+//  Close;
 {$IFNDEF DEBUG}
   if RoomerVersionManagement.VersionManagerActive then
   begin

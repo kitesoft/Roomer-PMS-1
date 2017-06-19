@@ -1717,7 +1717,7 @@ end;
 function TGlobalApplication.openGoToRoomAndDate(var aRoom : string; var aDate : TDate) : boolean;
 begin
   result := false;
-  frmGoToRoomAndDate := TfrmGoToRoomAndDate.Create(frmGoToRoomAndDate);
+  frmGoToRoomAndDate := TfrmGoToRoomAndDate.Create(nil);
   try
     frmGoToRoomAndDate.zDate := aDate;
     frmGoToRoomAndDate.zRoom := aRoom;

@@ -293,6 +293,28 @@ object FrmFrontDeskPageButton: TFrmFrontDeskPageButton
         ExplicitLeft = 10
         ExplicitTop = 13
       end
+      object sLabel1: TsLabel
+        AlignWithMargins = True
+        Left = 131
+        Top = 12
+        Width = 16
+        Height = 21
+        Cursor = crHandPoint
+        Margins.Bottom = 15
+        Alignment = taCenter
+        Caption = '+1'
+        ParentFont = False
+        OnMouseEnter = sPanel1MouseEnter
+        OnMouseLeave = sPanel1MouseLeave
+        OnMouseUp = Shape3MouseUp
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -16
+        Font.Name = 'Segoe UI Light'
+        Font.Style = []
+        Font.Quality = fqAntialiased
+        UseSkinColor = False
+      end
       object sPanel6: TsPanel
         AlignWithMargins = True
         Left = 5
@@ -397,6 +419,28 @@ object FrmFrontDeskPageButton: TFrmFrontDeskPageButton
         OnMouseUp = Shape4MouseUp
         ExplicitLeft = 10
         ExplicitTop = 13
+      end
+      object sLabel2: TsLabel
+        AlignWithMargins = True
+        Left = 140
+        Top = 12
+        Width = 16
+        Height = 21
+        Cursor = crHandPoint
+        Margins.Bottom = 15
+        Alignment = taCenter
+        Caption = '+1'
+        ParentFont = False
+        OnMouseEnter = sPanel1MouseEnter
+        OnMouseLeave = sPanel1MouseLeave
+        OnMouseUp = Shape3MouseUp
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -16
+        Font.Name = 'Segoe UI Light'
+        Font.Style = []
+        Font.Quality = fqAntialiased
+        UseSkinColor = False
       end
       object sPanel8: TsPanel
         AlignWithMargins = True
@@ -954,7 +998,7 @@ object FrmFrontDeskPageButton: TFrmFrontDeskPageButton
       SortSettings.HeaderColorTo = 16579058
       SortSettings.HeaderMirrorColor = 16380385
       SortSettings.HeaderMirrorColorTo = 16182488
-      Version = '8.2.4.1'
+      Version = '8.2.5.2'
     end
   end
   object PngImageList1: TPngImageList
@@ -1169,8 +1213,8 @@ object FrmFrontDeskPageButton: TFrmFrontDeskPageButton
           18B10FC59971267E03B8E515C8EBBFAF533BD0676A99E4B040365EDC39866338
           C6144CBDFC0BA027BB0AB30A1240048FAF64D07F0000000049454E44AE426082}
       end>
-    Left = 848
-    Top = 40
+    Left = 904
+    Top = 48
     Bitmap = {}
   end
 end
