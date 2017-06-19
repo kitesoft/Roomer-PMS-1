@@ -73,7 +73,7 @@ begin
   if GetNodeName.IsEmpty or GetNameSpaceURI.IsEmpty then
     SetPropertiesFromXMLNode(xmldoc.DocumentElement)
   else
-    if xmlDoc.DocumentElement.SelectNodesNS(GetNameSpaceURI, GetNodeName, lNodeList) then
+    if xmlDoc.DocumentElement.SelectNodesNS(GetNameSpaceURI, '//' + GetNodeName, lNodeList) then
       SetPropertiesFromXMLNode(lNodeList.GetFirst);
 end;
 
