@@ -114,7 +114,7 @@ uses
   uAppGlobal,
   _Glob,
   uMain
-  ;
+  , uDateTimeHelper;
 
 procedure initializeTaxes;
 var
@@ -580,7 +580,7 @@ begin
 
   for Tax in TaxList do
     for lInvoiceRoomEntity in aRoomEntitiesList do
-      if (lInvoiceRoomEntity.Departure <= 0) OR Tax.IsValidOn(lInvoiceRoomEntity.Departure) then
+      if ((lInvoiceRoomEntity.Departure <= 0) AND Tax.IsValidOn(now)) OR Tax.IsValidOn(lInvoiceRoomEntity.Departure) then
         Result.Add(MakeInvoiceTaxEntity(Tax, lInvoiceRoomEntity, ItemTypeInfo, aOptions));
 end;
 
