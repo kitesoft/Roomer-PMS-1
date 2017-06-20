@@ -681,6 +681,7 @@ type
     sbFrontDesk: TsScrollBox;
     H1: TMenuItem;
     procedure FormCreate(Sender: TObject);
+    procedure DefaultHandler(var Message); override;
     procedure FormShow(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -1071,6 +1072,7 @@ type
 
     ziFreeRackRoomCount: integer;
 
+    ForceClose,
     LoginCancelled: boolean;
     LoggedIn: boolean;
     grPeriodViewFilterOn: boolean;
@@ -1696,6 +1698,11 @@ const
   //
   // ******************************************************************************
   // ******************************************************************************
+
+var
+
+  WM_FORCE_CLOSE_ROOMER : DWORD;
+
 
 procedure TfrmMain.NullGlobals;
 begin
@@ -2770,6 +2777,7 @@ begin
     end;
 
   LoginCancelled := false;
+  ForceClose := False;
   zJustClicked := false;
 
   zGotoCol := 0;
@@ -3627,7 +3635,7 @@ end;
 
 procedure TfrmMain.FormCloseQuery(Sender: TObject; var CanClose: boolean);
 begin
-  if LoginCancelled OR FRBEMode OR not FAlreadyIn then
+  if ForceClose OR LoginCancelled OR FRBEMode OR not FAlreadyIn then
     CanClose := true
   else
     CanClose := RoomerMessageDialog(GetTranslatedText('sh1004'), mtConfirmation, [mbYes, mbNo], 'CloseRoomerMainForm',
@@ -9181,6 +9189,19 @@ begin
   timOfflineReports.Enabled := false;
 end;
 
+procedure TfrmMain.DefaultHandler(var Message);
+begin
+  with TMessage(Message) do
+  begin
+    if (Msg = WM_FORCE_CLOSE_ROOMER) then begin
+      ForceClose := True;
+      Close;
+    end
+    else
+      inherited DefaultHandler(Message);
+  end;
+end;
+
 procedure TfrmMain.ApplicationEvents1Message(var Msg: tagMSG; var Handled: boolean);
 begin
   Handled := false;
@@ -12985,5 +13006,9 @@ begin
   ClipboardCopy(Format(ROOMER_COPY_RESERVATION_ID, [d.roomerMainDataSet.hotelId, reservationId]));
   ShowTimelyMessage(Format(GetTranslatedText('shTx_FrmMain_CopiedReservationToClipboard'), [reservationId]));
 end;
+
+initialization
+
+  WM_FORCE_CLOSE_ROOMER := RegisterWindowMessage('WM_FORCE_CLOSE_ROOMER');
 
 end.

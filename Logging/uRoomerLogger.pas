@@ -19,7 +19,7 @@ type
   private
     FFilename: String;
     LogWriter : TStreamWriter;
-    procedure OpenStream;
+    function OpenStream : Boolean;
     procedure CloseStream;
   public
     constructor Create(const filename : String);
@@ -65,23 +65,23 @@ end;
 
 procedure TRoomerLogger.AddToLog(const sText: String);
 begin
-  OpenStream;
-  try
-    LogWriter.WriteLine(format('%s | %s', [uDateUtils.DateTimeToDBString(now), sText]));
-  finally
-    CloseStream;
-  end;
+  if OpenStream then
+    try
+      LogWriter.WriteLine(format('%s | %s', [uDateUtils.DateTimeToDBString(now), sText]));
+    finally
+      CloseStream;
+    end;
 end;
 
 constructor TRoomerLogger.Create(const filename: String);
 begin
   FFilename := filename;
-  OpenStream;
-  try
-    LogWriter.WriteLine;
-  finally
-    CloseStream;
-  end;
+  if OpenStream then
+    try
+      LogWriter.WriteLine;
+    finally
+      CloseStream;
+    end;
   Loggers.Add(self);
 end;
 
@@ -90,11 +90,23 @@ begin
   LogWriter.Free;
 end;
 
-procedure TRoomerLogger.OpenStream;
+function TRoomerLogger.OpenStream : Boolean;
+var counter : Integer;
 begin
-  LogWriter := TStreamWriter.Create(FileName, True);
-  LogWriter.AutoFlush := True;         // Flush automatically after write
-  LogWriter.NewLine := sLineBreak;     // Use system line breaks
+  result := True;
+  counter := 0;
+  while isFileInUse(Filename) AND (Counter < 10) do
+  begin
+    Sleep(100);
+    Inc(counter);
+  end;
+  if NOT isFileInUse(Filename) then
+  begin
+    LogWriter := TStreamWriter.Create(FileName, True);
+    LogWriter.AutoFlush := True;         // Flush automatically after write
+    LogWriter.NewLine := sLineBreak;     // Use system line breaks
+  end else
+    result := False;
 end;
 
 initialization

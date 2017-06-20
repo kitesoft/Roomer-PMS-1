@@ -343,6 +343,7 @@ object frmUpgradeDaemon: TfrmUpgradeDaemon
     Color = clBlack
     ParentColor = False
     ParentFont = False
+    OnDblClick = lblConnectedDblClick
     OnMouseDown = Image2MouseDown
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clLime
@@ -370,7 +371,6 @@ object frmUpgradeDaemon: TfrmUpgradeDaemon
     OnMouseDown = Image2MouseDown
     ProgressSkin = 'PROGRESSH'
     SkinData.SkinSection = 'GAUGE'
-    ExplicitTop = 134
   end
   object memLogs: TsMemo
     AlignWithMargins = True
@@ -397,8 +397,6 @@ object frmUpgradeDaemon: TfrmUpgradeDaemon
     OnMouseDown = Image2MouseDown
     SkinData.CustomColor = True
     SkinData.CustomFont = True
-    ExplicitTop = 161
-    ExplicitHeight = 265
   end
   object timeUpgradeCheck: TTimer
     Interval = 900000
