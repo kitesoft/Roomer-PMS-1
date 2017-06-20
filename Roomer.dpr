@@ -306,8 +306,8 @@ var
 
 begin
   SWindowClassName := 'TWIN86FC02AB-D85A-4529-B732-C3D890A0C422';
-  if NOT InstanceAlreadyRunning then
-  begin
+//  if NOT InstanceAlreadyRunning then
+//  begin
     {$IFDEF rmMONITOR_LEAKAGE}
       ReportMemoryLeaksOnShutdown := DebugHook <> 0;
     {$ENDIF rmMONITOR_LEAKAGE}
@@ -355,6 +355,6 @@ begin
       Application.OnException := nil;
       RoomerExceptionHandler.Free;
     end;
-  end;
+//  end;
 end.
 

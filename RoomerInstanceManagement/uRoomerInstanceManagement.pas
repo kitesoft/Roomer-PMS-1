@@ -40,7 +40,7 @@ begin
   begin
     result := True;
     FillChar(CopyDataStruct, Sizeof(CopyDataStruct), 0);
-    Arg := 'Staring second instance!';
+    Arg := 'Starting second instance!';
     CopyDataStruct.cbData := (Length(Arg)+1)*SizeOf(Char);
     CopyDataStruct.lpData := PChar(Arg);
     SendMessage(Window, WM_COPYDATA, 0, NativeInt(@CopyDataStruct));

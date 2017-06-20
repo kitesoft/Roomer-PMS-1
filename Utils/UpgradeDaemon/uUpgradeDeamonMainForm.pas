@@ -60,6 +60,7 @@ type
     procedure HttpServerServerStopped(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure Image2MouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+    procedure lblConnectedDblClick(Sender: TObject);
   private
     httpCLient: TRoomerHttpClient;
     RoomerLogger : TRoomerLogger;
@@ -79,6 +80,7 @@ type
     procedure AddLog(logText: String);
     function GetNewFileNameIndex(OldName: String): String;
     procedure ActivateMoveForm;
+    procedure CloseAllRoomers;
 
     property DownloadActive : Boolean read FDownloadActive write SetDownloadActive;
   public
@@ -119,6 +121,9 @@ const
   HTTP_SERVICE_DEFAULT_PORT = 62999;
   HTTP_SERVICE_DEFAULT_PORT_MIN = 62989;
 
+var
+
+  WM_FORCE_CLOSE_ROOMER : DWORD;
 
 function FormatByteSize(const bytes: Longword): string;
 begin
@@ -188,7 +193,7 @@ procedure TfrmUpgradeDaemon.FormDestroy(Sender: TObject);
 begin
   URIProcessor.Free;
   httpCLient.Free;
-  RoomerLogger.Free;
+//  RoomerLogger.Free;
 end;
 
 procedure TfrmUpgradeDaemon.HttpServerClientConnect(Sender, Client: TObject; Error: Word);
@@ -264,6 +269,11 @@ procedure TfrmUpgradeDaemon.Image2MouseDown(Sender: TObject; Button: TMouseButto
 begin
   if Button=mbLeft then
     ActivateMoveForm;
+end;
+
+procedure TfrmUpgradeDaemon.lblConnectedDblClick(Sender: TObject);
+begin
+  CloseAllRoomers;
 end;
 
 procedure TfrmUpgradeDaemon.AddLog(logText : String);
@@ -487,6 +497,7 @@ begin
   begin
     AddLog('Starting local update to version ' + URIProcessor.UpgradeFileManager.UpgradeVersion + '...');
     try
+      CloseAllRoomers;
       if URIProcessor.ClearLanguage then
       begin
         AddLog('Removing languages');
@@ -529,6 +540,14 @@ begin
       end;
     end;
   end;
+end;
+
+
+procedure TfrmUpgradeDaemon.CloseAllRoomers;
+begin
+  AddLog('Broadcasting message ' + inttostr(WM_FORCE_CLOSE_ROOMER));
+  SendMessage(HWND_BROADCAST, WM_FORCE_CLOSE_ROOMER, Handle, 0);
+  sleep(1000);
 end;
 
 procedure TfrmUpgradeDaemon.ActivateMoveForm;
@@ -630,5 +649,10 @@ begin
 
   NullifyScreen;
 end;
+
+initialization
+
+  WM_FORCE_CLOSE_ROOMER := RegisterWindowMessage('WM_FORCE_CLOSE_ROOMER');
+
 
 end.
