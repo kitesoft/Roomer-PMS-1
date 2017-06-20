@@ -3,7 +3,7 @@ object frmMain: TfrmMain
   Top = 134
   ActiveControl = pageMainGrids
   ClientHeight = 665
-  ClientWidth = 1532
+  ClientWidth = 1378
   Color = clWhite
   DoubleBuffered = True
   Font.Charset = DEFAULT_CHARSET
@@ -26,7 +26,7 @@ object frmMain: TfrmMain
   OnResize = FormResize
   OnShow = FormShow
   DesignSize = (
-    1532
+    1378
     665)
   PixelsPerInch = 96
   TextHeight = 13
@@ -46,7 +46,7 @@ object frmMain: TfrmMain
   object dxBarDockControl1: TdxBarDockControl
     Left = 0
     Top = 155
-    Width = 1532
+    Width = 1378
     Height = 3
     Align = dalTop
     BarManager = barinn
@@ -55,12 +55,11 @@ object frmMain: TfrmMain
     SunkenBorder = True
     UseOwnColor = True
     UseOwnSunkenBorder = True
-    ExplicitTop = 122
   end
   object panMain: TsPanel
     Left = 0
     Top = 158
-    Width = 1532
+    Width = 1378
     Height = 477
     Margins.Left = 0
     Margins.Top = 0
@@ -72,10 +71,11 @@ object frmMain: TfrmMain
     ParentDoubleBuffered = False
     TabOrder = 1
     SkinData.SkinSection = 'PANEL'
+    ExplicitWidth = 1532
     object lblSearchFilterActive: TsLabel
       Left = 0
       Top = 170
-      Width = 1532
+      Width = 1378
       Height = 3
       Hint = 'Search Filter Active'
       Align = alTop
@@ -96,12 +96,13 @@ object frmMain: TfrmMain
     object pnlBottom: TsPanel
       Left = 0
       Top = 173
-      Width = 1532
+      Width = 1378
       Height = 304
       Align = alClient
       TabOrder = 0
+      ExplicitWidth = 1532
       object splStatistics: TsSplitter
-        Left = 1220
+        Left = 1066
         Top = 1
         Width = 7
         Height = 302
@@ -114,20 +115,22 @@ object frmMain: TfrmMain
       object pageMainGrids: TsPageControl
         Left = 1
         Top = 1
-        Width = 1219
+        Width = 1065
         Height = 302
-        ActivePage = tabFrontDesk
+        ActivePage = tabGuestList
         Align = alClient
         TabOrder = 1
         OnChange = pageMainGridsChange
         SkinData.SkinSection = 'PAGECONTROL'
+        ExplicitWidth = 1219
         object tabOneDayView: TsTabSheet
           Caption = 'tabOneDayView'
           ImageIndex = 8
+          ExplicitWidth = 1211
           object grOneDayRooms: TAdvStringGrid
             Left = 0
             Top = 0
-            Width = 1211
+            Width = 1057
             Height = 274
             Cursor = crDefault
             Align = alClient
@@ -304,6 +307,7 @@ object frmMain: TfrmMain
             SortSettings.HeaderMirrorColor = 16380385
             SortSettings.HeaderMirrorColorTo = 16182488
             Version = '8.2.4.1'
+            ExplicitWidth = 1211
             ColWidths = (
               47
               49
@@ -458,15 +462,17 @@ object frmMain: TfrmMain
         object tabGuestList: TsTabSheet
           Caption = 'tabGuestList'
           ImageIndex = 9
+          ExplicitWidth = 1211
           object Panel3: TsPanel
             Left = 0
             Top = 0
-            Width = 1211
+            Width = 1057
             Height = 100
             Align = alTop
             BevelOuter = bvNone
             TabOrder = 0
             SkinData.SkinSection = 'TRANSPARENT'
+            ExplicitWidth = 1211
             object rgrGroupreportStayType: TsRadioGroup
               Left = 2
               Top = 4
@@ -587,7 +593,7 @@ object frmMain: TfrmMain
           object gAllReservations: TcxGrid
             Left = 0
             Top = 100
-            Width = 1211
+            Width = 1057
             Height = 174
             Align = alClient
             BevelInner = bvNone
@@ -602,6 +608,7 @@ object frmMain: TfrmMain
             PopupMenu = pupGroups
             TabOrder = 1
             LookAndFeel.NativeStyle = False
+            ExplicitWidth = 1211
             object tvAllReservations: TcxGridDBTableView
               Navigator.Buttons.CustomButtons = <>
               Navigator.Buttons.First.Visible = True
@@ -857,6 +864,7 @@ object frmMain: TfrmMain
         object tabPeriod: TsTabSheet
           Caption = 'tabPeriod'
           ImageIndex = 2
+          ExplicitWidth = 1211
           object sLabel2: TsLabel
             Left = 224
             Top = 400
@@ -867,16 +875,17 @@ object frmMain: TfrmMain
           object panPeriodRooms: TsPanel
             Left = 0
             Top = 0
-            Width = 1211
+            Width = 1057
             Height = 124
             Align = alClient
             BevelOuter = bvNone
             TabOrder = 0
             SkinData.SkinSection = 'PANEL'
+            ExplicitWidth = 1211
             object lblLoading: TsLabel
               Left = 0
               Top = 0
-              Width = 1211
+              Width = 1057
               Height = 4
               Hint = 'Search Filter Active'
               Align = alTop
@@ -897,7 +906,7 @@ object frmMain: TfrmMain
             object lblRoomBeingMoved: TsLabel
               Left = 0
               Top = 4
-              Width = 1211
+              Width = 1057
               Height = 24
               Align = alTop
               Caption = '---'
@@ -917,7 +926,7 @@ object frmMain: TfrmMain
               Tag = 1
               Left = 0
               Top = 28
-              Width = 1211
+              Width = 1057
               Height = 74
               Cursor = crDefault
               Align = alClient
@@ -1101,6 +1110,7 @@ object frmMain: TfrmMain
               SortSettings.HeaderMirrorColor = 16380385
               SortSettings.HeaderMirrorColorTo = 16182488
               Version = '8.2.4.1'
+              ExplicitWidth = 1211
               ColWidths = (
                 73
                 20
@@ -1145,14 +1155,15 @@ object frmMain: TfrmMain
             object pnlLegends: TsPanel
               Left = 0
               Top = 102
-              Width = 1211
+              Width = 1057
               Height = 22
               Align = alBottom
               BevelOuter = bvNone
               TabOrder = 2
               SkinData.SkinSection = 'TRANSPARENT'
+              ExplicitWidth = 1211
               object sPanel2: TsPanel
-                Left = 231
+                Left = 77
                 Top = 0
                 Width = 980
                 Height = 22
@@ -1160,6 +1171,7 @@ object frmMain: TfrmMain
                 BevelOuter = bvNone
                 TabOrder = 0
                 SkinData.SkinSection = 'TRANSPARENT'
+                ExplicitLeft = 231
                 object __ExplainG: TsLabel
                   Left = 194
                   Top = -3
@@ -1304,7 +1316,7 @@ object frmMain: TfrmMain
           object splitPeriod: TcxSplitter
             Left = 0
             Top = 124
-            Width = 1211
+            Width = 1057
             Height = 8
             Hint = 'No Rooms'
             Margins.Left = 5
@@ -1320,21 +1332,23 @@ object frmMain: TfrmMain
             OnMoved = splitPeriodMoved
             Color = 6842472
             ParentColor = False
+            ExplicitWidth = 1211
           end
           object pnlPeriodNoRooms: TsPanel
             Left = 0
             Top = 165
-            Width = 1211
+            Width = 1057
             Height = 109
             Hint = 'Test Hint'
             Align = alBottom
             TabOrder = 2
             SkinData.SkinSection = 'PANEL'
+            ExplicitWidth = 1211
             object grPeriodRooms_NO: TAdvStringGrid
               Tag = 2
               Left = 1
               Top = 1
-              Width = 1209
+              Width = 1055
               Height = 107
               Cursor = crDefault
               Align = alClient
@@ -1460,6 +1474,7 @@ object frmMain: TfrmMain
               SearchFooter.ResultFormat = '(%d of %d)'
               SortSettings.DefaultFormat = ssAutomatic
               Version = '8.2.4.1'
+              ExplicitWidth = 1209
               ColWidths = (
                 64
                 64
@@ -1471,14 +1486,15 @@ object frmMain: TfrmMain
           object pnlBottomViewSettings: TsPanel
             Left = 0
             Top = 132
-            Width = 1211
+            Width = 1057
             Height = 33
             Align = alBottom
             TabOrder = 3
             OnMouseEnter = pnlNoRoomButtonsMouseEnter
             SkinData.SkinSection = 'PANEL'
+            ExplicitWidth = 1211
             object pnlOccupancyViewButtons: TPanel
-              Left = 841
+              Left = 687
               Top = 1
               Width = 369
               Height = 31
@@ -1486,6 +1502,7 @@ object frmMain: TfrmMain
               BevelOuter = bvNone
               TabOrder = 0
               OnMouseMove = btnOccupancyViewMouseMove
+              ExplicitLeft = 841
               object btnOccupancyViewHide: TSpeedButton
                 Left = 6
                 Top = 3
@@ -1537,7 +1554,7 @@ object frmMain: TfrmMain
               end
             end
             object pnlNoRoomButtons: TsPanel
-              Left = 603
+              Left = 449
               Top = 1
               Width = 238
               Height = 31
@@ -1548,6 +1565,7 @@ object frmMain: TfrmMain
               OnMouseEnter = pnlNoRoomButtonsMouseEnter
               OnMouseMove = btnOccupancyViewMouseMove
               SkinData.SkinSection = 'TRANSPARENT'
+              ExplicitLeft = 603
               object btnNoRoomsHide: TSpeedButton
                 Left = 6
                 Top = 3
@@ -1585,13 +1603,14 @@ object frmMain: TfrmMain
             object pnlViewSwitch: TsPanel
               Left = 1
               Top = 1
-              Width = 602
+              Width = 448
               Height = 31
               Align = alClient
               BevelOuter = bvLowered
               TabOrder = 2
               OnMouseMove = btnOccupancyViewMouseMove
               SkinData.SkinSection = 'TRANSPARENT'
+              ExplicitWidth = 602
               object btnOccupancyView: TSpeedButton
                 AlignWithMargins = True
                 Left = 4
@@ -1639,29 +1658,34 @@ object frmMain: TfrmMain
         end
         object tabFreeRooms: TsTabSheet
           Caption = 'tabFreeRooms'
+          ExplicitWidth = 1211
         end
         object tabDashboard: TsTabSheet
           Caption = 'tabDashboard'
           SkinData.SkinSection = 'TRANSPARENT'
+          ExplicitWidth = 1211
         end
         object tabRateQuery: TsTabSheet
           Caption = 'tabRateQuery'
+          ExplicitWidth = 1211
         end
         object tabFrontDesk: TsTabSheet
           Caption = 'tabFrontDesk'
+          ExplicitWidth = 1211
           object sbFrontDesk: TsScrollBox
             Left = 0
             Top = 0
-            Width = 1211
+            Width = 1057
             Height = 274
             Align = alClient
             BorderStyle = bsNone
             TabOrder = 0
+            ExplicitWidth = 1211
           end
         end
       end
       object pnlStatSlider: TsPanel
-        Left = 1227
+        Left = 1073
         Top = 1
         Width = 304
         Height = 302
@@ -1670,6 +1694,7 @@ object frmMain: TfrmMain
         TabOrder = 0
         Visible = False
         SkinData.SkinSection = 'TRANSPARENT'
+        ExplicitLeft = 1227
         object lblBusyDownloading: TsLabel
           Left = 0
           Top = 158
@@ -1751,7 +1776,7 @@ object frmMain: TfrmMain
     object panMainTop: TsPanel
       Left = 0
       Top = 137
-      Width = 1532
+      Width = 1378
       Height = 33
       Margins.Left = 0
       Margins.Top = 0
@@ -1766,6 +1791,7 @@ object frmMain: TfrmMain
       SkinData.CustomColor = True
       SkinData.CustomFont = True
       SkinData.SkinSection = 'PANEL'
+      ExplicitWidth = 1532
       object Panel4: TsPanel
         Left = 0
         Top = 0
@@ -1854,7 +1880,7 @@ object frmMain: TfrmMain
       object __PanGridsHeader: TsPanel
         Left = 705
         Top = 0
-        Width = 827
+        Width = 673
         Height = 33
         Align = alClient
         Alignment = taLeftJustify
@@ -1866,6 +1892,7 @@ object frmMain: TfrmMain
         SkinData.CustomColor = True
         SkinData.CustomFont = True
         SkinData.SkinSection = 'PANEL'
+        ExplicitWidth = 827
         object btnFilter: TsSpeedButton
           Left = 1
           Top = 1
@@ -1907,7 +1934,7 @@ object frmMain: TfrmMain
           ExplicitHeight = 20
         end
         object sPanel3: TsPanel
-          Left = 380
+          Left = 226
           Top = 1
           Width = 446
           Height = 31
@@ -1925,6 +1952,7 @@ object frmMain: TfrmMain
           SkinData.CustomColor = True
           SkinData.CustomFont = True
           SkinData.SkinSection = 'PANEL'
+          ExplicitLeft = 380
           object btnStatusFilter: TsSpeedButton
             AlignWithMargins = True
             Left = 7
@@ -2020,7 +2048,7 @@ object frmMain: TfrmMain
         object sPanel4: TsPanel
           Left = 54
           Top = 1
-          Width = 326
+          Width = 172
           Height = 31
           Margins.Left = 0
           Margins.Top = 0
@@ -2036,11 +2064,12 @@ object frmMain: TfrmMain
           SkinData.CustomColor = True
           SkinData.CustomFont = True
           SkinData.SkinSection = 'PANEL'
+          ExplicitWidth = 326
           object lblMainHeader: TsLabel
             AlignWithMargins = True
             Left = 164
             Top = 4
-            Width = 159
+            Width = 5
             Height = 24
             Margins.Left = 10
             Margins.Top = 4
@@ -2520,7 +2549,7 @@ object frmMain: TfrmMain
     object pnlMessages: TsPanel
       Left = 0
       Top = 0
-      Width = 1532
+      Width = 1378
       Height = 106
       Align = alTop
       BevelOuter = bvNone
@@ -2532,10 +2561,11 @@ object frmMain: TfrmMain
       TabOrder = 2
       Visible = False
       SkinData.SkinSection = 'PANEL'
+      ExplicitWidth = 1532
       object mmoMessage: THTMLabel
         Left = 88
         Top = 3
-        Width = 1441
+        Width = 1287
         Height = 100
         Align = alClient
         BorderWidth = 2
@@ -2630,7 +2660,7 @@ object frmMain: TfrmMain
     object pnlOffline: TsPanel
       Left = 0
       Top = 106
-      Width = 1532
+      Width = 1378
       Height = 31
       Align = alTop
       BevelOuter = bvNone
@@ -2649,6 +2679,7 @@ object frmMain: TfrmMain
       SkinData.CustomColor = True
       SkinData.CustomFont = True
       SkinData.SkinSection = 'UNKNOWN'
+      ExplicitWidth = 1532
       object btnGoOnline: TsButton
         Left = 4
         Top = 3
@@ -2665,7 +2696,7 @@ object frmMain: TfrmMain
   object dxRibbon1: TdxRibbon
     Left = 0
     Top = 0
-    Width = 1532
+    Width = 1378
     Height = 155
     Margins.Left = 0
     Margins.Top = 0
@@ -2682,8 +2713,8 @@ object frmMain: TfrmMain
     Contexts = <>
     TabOrder = 2
     TabStop = False
+    ExplicitWidth = 1532
     object rbTabHome: TdxRibbonTab
-      Active = True
       Caption = 'Roomer'
       Groups = <
         item
@@ -2740,6 +2771,7 @@ object frmMain: TfrmMain
       Index = 2
     end
     object rbTabReports: TdxRibbonTab
+      Active = True
       Caption = 'Reports'
       Groups = <
         item
@@ -2885,7 +2917,7 @@ object frmMain: TfrmMain
     end
   end
   object pnlRoomerLogo: TsPanel
-    Left = 1206
+    Left = 1052
     Top = 3
     Width = 321
     Height = 49
@@ -2898,6 +2930,7 @@ object frmMain: TfrmMain
     TabOrder = 5
     StyleElements = [seFont, seClient]
     SkinData.SkinSection = 'TRANSPARENT'
+    ExplicitLeft = 1206
     object lblLogout: TsLabel
       Left = 256
       Top = 3
@@ -2960,7 +2993,7 @@ object frmMain: TfrmMain
   object pnlDayStatus: TsPanel
     Left = 0
     Top = 635
-    Width = 1532
+    Width = 1378
     Height = 30
     Align = alBottom
     BevelOuter = bvNone
@@ -2971,6 +3004,7 @@ object frmMain: TfrmMain
     SkinData.CustomColor = True
     SkinData.CustomFont = True
     SkinData.SkinSection = 'PANEL'
+    ExplicitWidth = 1532
     object lblOccupancy: TsLabel
       AlignWithMargins = True
       Left = 184
@@ -3121,7 +3155,7 @@ object frmMain: TfrmMain
     end
     object __VER: TsLabel
       AlignWithMargins = True
-      Left = 1355
+      Left = 1201
       Top = 5
       Width = 174
       Height = 22
@@ -3136,11 +3170,12 @@ object frmMain: TfrmMain
       Font.Name = 'Tahoma'
       Font.Style = []
       UseSkinColor = False
+      ExplicitLeft = 1355
       ExplicitHeight = 18
     end
     object __TimingResult: TsLabel
       AlignWithMargins = True
-      Left = 1297
+      Left = 1143
       Top = 5
       Width = 15
       Height = 22
@@ -3157,6 +3192,7 @@ object frmMain: TfrmMain
       Font.Name = 'Segoe UI'
       Font.Style = []
       UseSkinColor = False
+      ExplicitLeft = 1297
       ExplicitHeight = 17
     end
     object cbxStatDay: TsComboBox
@@ -4404,7 +4440,7 @@ object frmMain: TfrmMain
     object barinnReportsInvoices: TdxBar
       Caption = 'Invoices'
       CaptionButtons = <>
-      DockedLeft = 1185
+      DockedLeft = 970
       DockedTop = 0
       FloatLeft = 1324
       FloatTop = 8
@@ -4647,7 +4683,7 @@ object frmMain: TfrmMain
     object barinnBar10: TdxBar
       Caption = 'Ledger'
       CaptionButtons = <>
-      DockedLeft = 1394
+      DockedLeft = 1179
       DockedTop = 0
       FloatLeft = -183
       FloatTop = 8

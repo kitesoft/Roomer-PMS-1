@@ -1293,6 +1293,8 @@ function TfrmInvoiceRentPerDay.AddLine(LineId: integer; aParentIndex: integer; s
 var
   invoiceLine: TInvoiceLine;
   iLastIdx: integer;
+  lPackageId: integer;
+  lItemId: integer;
 begin
   if AutoGen = '' then
     AutoGen := _GetCurrentTick;
@@ -1321,6 +1323,25 @@ begin
     invoiceLine.Reference := Refrence;
     invoiceLine.Source := Source;
     invoiceLine.isPackage := isPackage;
+
+    if isPackage and not Source.IsEmpty then
+    begin
+      if glb.LocateSpecificRecordAndGetValue('packages', 'package', Source, 'id', lPackageId) and
+         glb.LocateSpecificRecordAndGetValue('items', 'item', sItem, 'id', lItemId) then
+      begin
+        glb.PackageItems.First;
+        while not glb.PackageItems.Eof do
+          if (glb.PackageItems.FieldByName('packageid').asInteger = lPackageId) and
+             (glb.PackageItems.FieldByName('itemid').asInteger = lItemId) then
+          begin
+            invoiceLine.TotalIsIncludedInParent := glb.PackageItems.FieldByName('includedInRate').asBoolean;
+            Break;
+          end
+          else
+            glb.PackageItems.Next;
+      end;
+    end;
+
     invoiceLine.noGuests := noGuests;
     invoiceLine.ConfirmDate := ConfirmDate;
     invoiceLine.ConfirmAmount := ConfirmAmount;

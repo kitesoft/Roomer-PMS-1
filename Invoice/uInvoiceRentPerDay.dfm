@@ -341,8 +341,8 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
       object chkShowPackage: TsCheckBox
         Left = 724
         Top = 167
-        Width = 119
-        Height = 17
+        Width = 111
+        Height = 20
         Caption = 'Package on invoice'
         Checked = True
         State = cbChecked
@@ -672,8 +672,6 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitTop = 185
-      ExplicitHeight = 477
       object pnlTotalsAndPayments: TsPanel
         Left = 0
         Top = 321
@@ -684,7 +682,6 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         ParentColor = True
         TabOrder = 0
         SkinData.SkinSection = 'PANEL'
-        ExplicitTop = 325
         object memExtraText: TMemo
           Left = 1
           Top = 1
@@ -1234,7 +1231,6 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         Padding.Bottom = 5
         TabOrder = 2
         SkinData.SkinSection = 'PANEL'
-        ExplicitHeight = 236
         object agrLines: TAdvStringGrid
           Left = 10
           Top = 5
@@ -1369,7 +1365,6 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
           SelectionTextColor = clHighlightText
           SortSettings.DefaultFormat = ssAutomatic
           Version = '8.2.4.1'
-          ExplicitHeight = 226
           ColWidths = (
             24
             28
@@ -1397,7 +1392,6 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         Height = 226
         Align = alRight
         TabOrder = 1
-        ExplicitHeight = 230
         object pnlInvoiceIndex0: TsPanel
           Left = 3
           Top = 4
