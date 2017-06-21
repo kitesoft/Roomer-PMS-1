@@ -157,7 +157,7 @@ uses
 
 procedure TfrmResMemos.cxButton1Click(Sender : TObject);
 var
-  reservation : integer;
+  lRoomReservation : integer;
   memTXT : string;
 
 begin
@@ -174,8 +174,8 @@ begin
   RR_.First;
   while not RR_.eof do
   begin
-    reservation := RR_.FieldByName('roomreservation').AsInteger;
-    if mRR.locate('roomreservation', reservation, []) then
+    lRoomReservation := RR_.FieldByName('roomreservation').AsInteger;
+    if mRR.locate('roomreservation', lRoomReservation, []) then
     begin
       memTXT := mRR.FieldByName('mem').asstring;
       if memTXT <> RR_.FieldByName('HiddenInfo').asstring then
@@ -279,8 +279,8 @@ begin
   memInformation.DataField := 'Information';
   memPMInfo.DataField := 'PMInfo';
 
-
-
+  res_.PrimaryKeyField := 'reservation';
+  Rr_.PrimaryKeyField := 'roomreservation';
 
   zReservation := 0;
   zTnformationText := '';
@@ -299,7 +299,7 @@ var
   sArrival : string;
   sDeparture : string;
   sCustomer : string;
-  sReservarionName : string;
+  sReservationName : string;
 
   dtArrival : Tdate;
   dtDeparture : Tdate;
@@ -327,30 +327,15 @@ begin
     dateTimeToString(sArrival, 'dd.mm.yyyy - ddd', dtArrival);
     dateTimeToString(sDeparture, 'dd.mm.yyyy - ddd', dtDeparture);
     sCustomer := res_.FieldByName('customer').asstring;
-    sReservarionName := res_.FieldByName('Name').asstring;
+    sReservationName := res_.FieldByName('Name').asstring;
 
     labArrival.Caption := sArrival;
     labDeparture.Caption := sDeparture;
     labCustomer.Caption := sCustomer;
-    labReservation.Caption := sReservarionName;
+    labReservation.Caption := sReservationName;
   end;
 
   res_.Edit;
-
-//  s := '';
-//  s := s + '  SELECT ';
-//  s := s + '      RoomReservation ';
-//  s := s + '    , Room ';
-//  s := s + '    , RoomType ';
-//  s := s + '    , Status ';
-//  s := s + '    , Reservation ';
-//  s := s + '    , rrArrival ';
-//  s := s + '    , rrDeparture ';
-//  s := s + '    , HiddenInfo ';
-//  s := s + ' FROM ';
-//  s := s + '  RoomReservations ';
-//  s := s + ' WHERE (Reservation = ' + inttostr(zReservation) + ') ';
-//  s := s + ' ORDER BY RoomReservation ';
 
   s := format(select_ResMemos_FormShow2 , [zReservation]);
   // CopyToClipboard(s);

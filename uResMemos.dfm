@@ -155,18 +155,12 @@ object frmResMemos: TfrmResMemos
     Top = 81
     Width = 719
     Height = 422
-    ActivePage = tabReservation
+    ActivePage = tabRooms
     Align = alClient
     TabOrder = 1
     SkinData.SkinSection = 'PAGECONTROL'
     object tabReservation: TsTabSheet
       Caption = 'Resevation'
-      SkinData.CustomColor = False
-      SkinData.CustomFont = False
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Panel4: TsPanel
         Left = 345
         Top = 0
@@ -267,8 +261,6 @@ object frmResMemos: TfrmResMemos
           BevelOuter = bvNone
           TabOrder = 0
           SkinData.SkinSection = 'PANEL'
-          ExplicitLeft = 10
-          ExplicitTop = -2
           object cxLabel3: TsLabel
             Left = 0
             Top = 0
@@ -336,12 +328,6 @@ object frmResMemos: TfrmResMemos
     object tabRooms: TsTabSheet
       Caption = 'Rooms'
       ImageIndex = 1
-      SkinData.CustomColor = False
-      SkinData.CustomFont = False
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Panel7: TsPanel
         Left = 0
         Top = 0
@@ -517,7 +503,6 @@ object frmResMemos: TfrmResMemos
     BevelOuter = bvNone
     TabOrder = 2
     SkinData.SkinSection = 'PANEL'
-    ExplicitTop = 501
     object cxButton1: TsButton
       Left = 515
       Top = 4

@@ -1290,19 +1290,19 @@ select_ResGuestList_getRes : string =
 
 //NOT TESTED
 select_ResMemos_FormShow : string =
-' SELECT Name, customer, Information, PMInfo, arrival, departure From reservations '+
+' SELECT reservation, Name, customer, Information, PMInfo, arrival, departure From reservations '+
 ' WHERE '+
 ' Reservation = %d ';
 
 //NOT TESTED
 select_ResMemos_FormShow2 : string =
 '  SELECT '+
-'      RoomReservation '+
+'      Reservation '+
+'    , RoomReservation '+
 '    , Room '+
 '    , ID '+
 '    , RoomType '+
 '    , Status '+
-'    , Reservation '+
 '    , rrArrival '+
 '    , rrDeparture '+
 '    , HiddenInfo '+
