@@ -428,7 +428,6 @@ type
     timSearch: TTimer;
     sLabel1: TsLabel;
     lblSearchFilterActive: TsLabel;
-    btnFilter: TsSpeedButton;
     ilFilter: TImageList;
     dxSkinController1: TdxSkinController;
     tabFreeRooms: TsTabSheet;
@@ -518,15 +517,12 @@ type
     Cancellation1: TMenuItem;
     mnuFilterLocation: TPopupMenu;
     G2: TPopupMenu;
-    __lblSearch: TsLabel;
     btnCustInvoices: TdxBarLargeButton;
     sPanel3: TsPanel;
     btnStatusFilter: TsSpeedButton;
     btnLocationFilter: TsSpeedButton;
     btnGroupsFilter: TsSpeedButton;
     edtSearch: TButtonedEdit;
-    sPanel4: TsPanel;
-    lblMainHeader: TsLabel;
     pnlRBE: TsPanel;
     pupGroups: TPopupMenu;
     C4: TMenuItem;
@@ -534,7 +530,6 @@ type
     N8: TMenuItem;
     I1: TMenuItem;
     G4: TMenuItem;
-    dtDate: TsDateEdit;
     btnManagmentStat: TdxBarLargeButton;
     dxBarLargeButton1: TdxBarLargeButton;
     tabRateQuery: TsTabSheet;
@@ -634,8 +629,6 @@ type
     dxBarButton5: TdxBarButton;
     btnReDownloadRoomer: TdxBarButton;
     dxBarLargeButton6: TdxBarLargeButton;
-    pnlStaffComm: TsPanel;
-    sImage1: TsImage;
     mnuConfirmBooking: TMenuItem;
     btnConfirmAllottedBooking: TdxBarLargeButton;
     HTMLHint1: THTMLHint;
@@ -680,6 +673,11 @@ type
     btnHome: TsSpeedButton;
     sbFrontDesk: TsScrollBox;
     H1: TMenuItem;
+    sPanel4: TsPanel;
+    dtDate: TsDateEdit;
+    pnlStaffComm: TsPanel;
+    sImage1: TsImage;
+    lblMainHeader: TsLabel;
     procedure FormCreate(Sender: TObject);
     procedure DefaultHandler(var Message); override;
     procedure FormShow(Sender: TObject);
@@ -10529,7 +10527,7 @@ begin
     mnuItemStatus.Items[i].Checked := false;
   edtSearch.Text := '';
   PerformFilterRefresh;
-  btnFilter.ImageIndex := ABS(Ord(FilterActive));
+//  btnFilter.ImageIndex := ABS(Ord(FilterActive));
   SetAllMnuFilterLocationsUnchecked;
 end;
 
@@ -12480,8 +12478,12 @@ begin
 end;
 
 procedure TfrmMain.__dxBarCombo1CloseUp(Sender: TObject);
+var
+  skin: string;
 begin
-  PostMessage(handle, WM_REFRESH_SKIN_MANAGER, 0, 0);
+  skin := DelChars(__dxBarCombo1.Items[__dxBarCombo1.CurItemIndex], '&');
+  if not sSkinManager1.skinName.ToLower.Equals(skin.ToLower) then
+    PostMessage(handle, WM_REFRESH_SKIN_MANAGER, 0, 0);
 end;
 
 procedure TfrmMain.HandleSkinManagerChange;

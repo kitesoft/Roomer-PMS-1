@@ -3,7 +3,7 @@ object frmMain: TfrmMain
   Top = 134
   ActiveControl = pageMainGrids
   ClientHeight = 665
-  ClientWidth = 1378
+  ClientWidth = 1593
   Color = clWhite
   DoubleBuffered = True
   Font.Charset = DEFAULT_CHARSET
@@ -26,7 +26,7 @@ object frmMain: TfrmMain
   OnResize = FormResize
   OnShow = FormShow
   DesignSize = (
-    1378
+    1593
     665)
   PixelsPerInch = 96
   TextHeight = 13
@@ -46,7 +46,7 @@ object frmMain: TfrmMain
   object dxBarDockControl1: TdxBarDockControl
     Left = 0
     Top = 155
-    Width = 1378
+    Width = 1593
     Height = 3
     Align = dalTop
     BarManager = barinn
@@ -55,12 +55,11 @@ object frmMain: TfrmMain
     SunkenBorder = True
     UseOwnColor = True
     UseOwnSunkenBorder = True
-    ExplicitTop = 122
   end
   object panMain: TsPanel
     Left = 0
     Top = 158
-    Width = 1378
+    Width = 1593
     Height = 477
     Margins.Left = 0
     Margins.Top = 0
@@ -72,10 +71,11 @@ object frmMain: TfrmMain
     ParentDoubleBuffered = False
     TabOrder = 1
     SkinData.SkinSection = 'PANEL'
+    ExplicitWidth = 1378
     object lblSearchFilterActive: TsLabel
       Left = 0
       Top = 170
-      Width = 1378
+      Width = 1593
       Height = 3
       Hint = 'Search Filter Active'
       Align = alTop
@@ -96,12 +96,13 @@ object frmMain: TfrmMain
     object pnlBottom: TsPanel
       Left = 0
       Top = 173
-      Width = 1378
+      Width = 1593
       Height = 304
       Align = alClient
       TabOrder = 0
+      ExplicitWidth = 1378
       object splStatistics: TsSplitter
-        Left = 1066
+        Left = 1281
         Top = 1
         Width = 7
         Height = 302
@@ -114,24 +115,22 @@ object frmMain: TfrmMain
       object pageMainGrids: TsPageControl
         Left = 1
         Top = 1
-        Width = 1065
+        Width = 1280
         Height = 302
         ActivePage = tabGuestList
         Align = alClient
         TabOrder = 1
         OnChange = pageMainGridsChange
         SkinData.SkinSection = 'PAGECONTROL'
+        ExplicitWidth = 1065
         object tabOneDayView: TsTabSheet
           Caption = 'tabOneDayView'
           ImageIndex = 8
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
+          ExplicitWidth = 1057
           object grOneDayRooms: TAdvStringGrid
             Left = 0
             Top = 0
-            Width = 1057
+            Width = 1272
             Height = 274
             Cursor = crDefault
             Align = alClient
@@ -308,6 +307,7 @@ object frmMain: TfrmMain
             SortSettings.HeaderMirrorColor = 16380385
             SortSettings.HeaderMirrorColorTo = 16182488
             Version = '8.2.4.1'
+            ExplicitWidth = 1057
             ColWidths = (
               47
               49
@@ -443,7 +443,7 @@ object frmMain: TfrmMain
               object lblNoRoom: TsLabel
                 Left = 3
                 Top = 59
-                Width = 50
+                Width = 76
                 Height = 13
                 Align = alBottom
                 Alignment = taCenter
@@ -454,6 +454,7 @@ object frmMain: TfrmMain
                 Font.Height = -11
                 Font.Name = 'Tahoma'
                 Font.Style = [fsBold]
+                ExplicitWidth = 50
               end
             end
           end
@@ -461,15 +462,17 @@ object frmMain: TfrmMain
         object tabGuestList: TsTabSheet
           Caption = 'tabGuestList'
           ImageIndex = 9
+          ExplicitWidth = 1057
           object Panel3: TsPanel
             Left = 0
             Top = 0
-            Width = 1057
+            Width = 1272
             Height = 100
             Align = alTop
             BevelOuter = bvNone
             TabOrder = 0
             SkinData.SkinSection = 'TRANSPARENT'
+            ExplicitWidth = 1057
             object rgrGroupreportStayType: TsRadioGroup
               Left = 2
               Top = 4
@@ -590,7 +593,7 @@ object frmMain: TfrmMain
           object gAllReservations: TcxGrid
             Left = 0
             Top = 100
-            Width = 1057
+            Width = 1272
             Height = 174
             Align = alClient
             BevelInner = bvNone
@@ -605,6 +608,7 @@ object frmMain: TfrmMain
             PopupMenu = pupGroups
             TabOrder = 1
             LookAndFeel.NativeStyle = False
+            ExplicitWidth = 1057
             object tvAllReservations: TcxGridDBTableView
               Navigator.Buttons.CustomButtons = <>
               Navigator.Buttons.First.Visible = True
@@ -860,10 +864,7 @@ object frmMain: TfrmMain
         object tabPeriod: TsTabSheet
           Caption = 'tabPeriod'
           ImageIndex = 2
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
+          ExplicitWidth = 1057
           object sLabel2: TsLabel
             Left = 224
             Top = 400
@@ -874,16 +875,17 @@ object frmMain: TfrmMain
           object panPeriodRooms: TsPanel
             Left = 0
             Top = 0
-            Width = 1057
+            Width = 1272
             Height = 124
             Align = alClient
             BevelOuter = bvNone
             TabOrder = 0
             SkinData.SkinSection = 'PANEL'
+            ExplicitWidth = 1057
             object lblLoading: TsLabel
               Left = 0
               Top = 0
-              Width = 1057
+              Width = 1272
               Height = 4
               Hint = 'Search Filter Active'
               Align = alTop
@@ -904,7 +906,7 @@ object frmMain: TfrmMain
             object lblRoomBeingMoved: TsLabel
               Left = 0
               Top = 4
-              Width = 1057
+              Width = 1272
               Height = 24
               Align = alTop
               Caption = '---'
@@ -924,7 +926,7 @@ object frmMain: TfrmMain
               Tag = 1
               Left = 0
               Top = 28
-              Width = 1057
+              Width = 1272
               Height = 74
               Cursor = crDefault
               Align = alClient
@@ -1108,6 +1110,7 @@ object frmMain: TfrmMain
               SortSettings.HeaderMirrorColor = 16380385
               SortSettings.HeaderMirrorColorTo = 16182488
               Version = '8.2.4.1'
+              ExplicitWidth = 1057
               ColWidths = (
                 73
                 20
@@ -1152,15 +1155,15 @@ object frmMain: TfrmMain
             object pnlLegends: TsPanel
               Left = 0
               Top = 102
-              Width = 1057
+              Width = 1272
               Height = 22
               Align = alBottom
               BevelOuter = bvNone
               TabOrder = 2
               SkinData.SkinSection = 'TRANSPARENT'
-              ExplicitWidth = 1211
+              ExplicitWidth = 1057
               object sPanel2: TsPanel
-                Left = 77
+                Left = 292
                 Top = 0
                 Width = 980
                 Height = 22
@@ -1168,7 +1171,7 @@ object frmMain: TfrmMain
                 BevelOuter = bvNone
                 TabOrder = 0
                 SkinData.SkinSection = 'TRANSPARENT'
-                ExplicitLeft = 231
+                ExplicitLeft = 77
                 object __ExplainG: TsLabel
                   Left = 194
                   Top = -3
@@ -1313,7 +1316,7 @@ object frmMain: TfrmMain
           object splitPeriod: TcxSplitter
             Left = 0
             Top = 124
-            Width = 1057
+            Width = 1272
             Height = 8
             Hint = 'No Rooms'
             Margins.Left = 5
@@ -1329,23 +1332,23 @@ object frmMain: TfrmMain
             OnMoved = splitPeriodMoved
             Color = 6842472
             ParentColor = False
-            ExplicitTop = 157
+            ExplicitWidth = 1057
           end
           object pnlPeriodNoRooms: TsPanel
             Left = 0
             Top = 165
-            Width = 1057
+            Width = 1272
             Height = 109
             Hint = 'Test Hint'
             Align = alBottom
             TabOrder = 2
             SkinData.SkinSection = 'PANEL'
-            ExplicitWidth = 1211
+            ExplicitWidth = 1057
             object grPeriodRooms_NO: TAdvStringGrid
               Tag = 2
               Left = 1
               Top = 1
-              Width = 1055
+              Width = 1270
               Height = 107
               Cursor = crDefault
               Align = alClient
@@ -1471,6 +1474,7 @@ object frmMain: TfrmMain
               SearchFooter.ResultFormat = '(%d of %d)'
               SortSettings.DefaultFormat = ssAutomatic
               Version = '8.2.4.1'
+              ExplicitWidth = 1055
               ColWidths = (
                 64
                 64
@@ -1482,15 +1486,15 @@ object frmMain: TfrmMain
           object pnlBottomViewSettings: TsPanel
             Left = 0
             Top = 132
-            Width = 1057
+            Width = 1272
             Height = 33
             Align = alBottom
             TabOrder = 3
             OnMouseEnter = pnlNoRoomButtonsMouseEnter
             SkinData.SkinSection = 'PANEL'
-            ExplicitWidth = 1211
+            ExplicitWidth = 1057
             object pnlOccupancyViewButtons: TPanel
-              Left = 687
+              Left = 902
               Top = 1
               Width = 369
               Height = 31
@@ -1498,7 +1502,7 @@ object frmMain: TfrmMain
               BevelOuter = bvNone
               TabOrder = 0
               OnMouseMove = btnOccupancyViewMouseMove
-              ExplicitLeft = 841
+              ExplicitLeft = 687
               object btnOccupancyViewHide: TSpeedButton
                 Left = 6
                 Top = 3
@@ -1550,7 +1554,7 @@ object frmMain: TfrmMain
               end
             end
             object pnlNoRoomButtons: TsPanel
-              Left = 449
+              Left = 664
               Top = 1
               Width = 238
               Height = 31
@@ -1561,7 +1565,7 @@ object frmMain: TfrmMain
               OnMouseEnter = pnlNoRoomButtonsMouseEnter
               OnMouseMove = btnOccupancyViewMouseMove
               SkinData.SkinSection = 'TRANSPARENT'
-              ExplicitLeft = 603
+              ExplicitLeft = 449
               object btnNoRoomsHide: TSpeedButton
                 Left = 6
                 Top = 3
@@ -1599,14 +1603,14 @@ object frmMain: TfrmMain
             object pnlViewSwitch: TsPanel
               Left = 1
               Top = 1
-              Width = 448
+              Width = 663
               Height = 31
               Align = alClient
               BevelOuter = bvLowered
               TabOrder = 2
               OnMouseMove = btnOccupancyViewMouseMove
               SkinData.SkinSection = 'TRANSPARENT'
-              ExplicitWidth = 602
+              ExplicitWidth = 448
               object btnOccupancyView: TSpeedButton
                 AlignWithMargins = True
                 Left = 4
@@ -1654,46 +1658,34 @@ object frmMain: TfrmMain
         end
         object tabFreeRooms: TsTabSheet
           Caption = 'tabFreeRooms'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
+          ExplicitWidth = 1057
         end
         object tabDashboard: TsTabSheet
           Caption = 'tabDashboard'
           SkinData.SkinSection = 'TRANSPARENT'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
+          ExplicitWidth = 1057
         end
         object tabRateQuery: TsTabSheet
           Caption = 'tabRateQuery'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
+          ExplicitWidth = 1057
         end
         object tabFrontDesk: TsTabSheet
           Caption = 'tabFrontDesk'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 1211
-          ExplicitHeight = 0
+          ExplicitWidth = 1057
           object sbFrontDesk: TsScrollBox
             Left = 0
             Top = 0
-            Width = 1057
+            Width = 1272
             Height = 274
             Align = alClient
             BorderStyle = bsNone
             TabOrder = 0
-            ExplicitWidth = 1211
+            ExplicitWidth = 1057
           end
         end
       end
       object pnlStatSlider: TsPanel
-        Left = 1073
+        Left = 1288
         Top = 1
         Width = 304
         Height = 302
@@ -1702,6 +1694,7 @@ object frmMain: TfrmMain
         TabOrder = 0
         Visible = False
         SkinData.SkinSection = 'TRANSPARENT'
+        ExplicitLeft = 1073
         object lblBusyDownloading: TsLabel
           Left = 0
           Top = 158
@@ -1783,7 +1776,7 @@ object frmMain: TfrmMain
     object panMainTop: TsPanel
       Left = 0
       Top = 137
-      Width = 1378
+      Width = 1593
       Height = 33
       Margins.Left = 0
       Margins.Top = 0
@@ -1798,10 +1791,11 @@ object frmMain: TfrmMain
       SkinData.CustomColor = True
       SkinData.CustomFont = True
       SkinData.SkinSection = 'PANEL'
+      ExplicitWidth = 1378
       object Panel4: TsPanel
         Left = 0
         Top = 0
-        Width = 570
+        Width = 537
         Height = 33
         Align = alLeft
         BevelOuter = bvNone
@@ -1810,31 +1804,16 @@ object frmMain: TfrmMain
         TabOrder = 0
         OnMouseEnter = tabsViewMouseEnter
         SkinData.SkinSection = 'PANEL'
-        object labRefreshTime: TsLabel
-          Left = 386
-          Top = 16
-          Width = 4
-          Height = 13
-          Caption = '-'
-          Color = clWhite
-          ParentColor = False
-          ParentFont = False
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = []
-        end
         object btnHome: TsSpeedButton
           AlignWithMargins = True
           Left = 0
           Top = 0
-          Width = 53
+          Width = 50
           Height = 33
           Hint = 'Homepage'
           Margins.Left = 0
           Margins.Top = 0
-          Margins.Right = 5
+          Margins.Right = 0
           Margins.Bottom = 0
           Align = alLeft
           Flat = True
@@ -1852,9 +1831,9 @@ object frmMain: TfrmMain
           ImageIndex = 0
         end
         object tabsView: TsTabControl
-          Left = 58
+          Left = 50
           Top = 0
-          Width = 512
+          Width = 487
           Height = 33
           Cursor = crHandPoint
           Align = alClient
@@ -1881,68 +1860,56 @@ object frmMain: TfrmMain
           OnMouseEnter = tabsViewMouseEnter
           SkinData.SkinSection = 'PAGECONTROL'
           SkinData.OuterEffects.Visibility = ovAlways
+          ExplicitLeft = 58
+          ExplicitWidth = 512
         end
       end
       object __PanGridsHeader: TsPanel
-        Left = 705
+        Left = 804
         Top = 0
-        Width = 673
+        Width = 789
         Height = 33
         Align = alClient
         Alignment = taLeftJustify
         BevelOuter = bvNone
-        BorderWidth = 1
         ParentColor = True
         TabOrder = 1
         OnDblClick = __PanGridsHeaderDblClick
         SkinData.CustomColor = True
         SkinData.CustomFont = True
         SkinData.SkinSection = 'PANEL'
-        object btnFilter: TsSpeedButton
-          Left = 1
-          Top = 1
-          Width = 39
-          Height = 31
-          Align = alLeft
-          Flat = True
-          Spacing = 0
-          Visible = False
-          OnMouseEnter = tabsViewMouseEnter
-          ButtonStyle = tbsDropDown
-          SkinData.SkinSection = 'SPEEDBUTTON_SMALL'
-          DisabledKind = []
-          Images = ilFilter
-          ImageIndex = 0
-          ShowCaption = False
-          ExplicitLeft = 2
-          ExplicitTop = 0
-        end
-        object __lblSearch: TsLabel
+        ExplicitLeft = 867
+        ExplicitTop = 1
+        ExplicitWidth = 712
+        object lblMainHeader: TsLabel
           AlignWithMargins = True
-          Left = 43
-          Top = 1
-          Width = 8
-          Height = 28
-          Margins.Top = 0
-          Align = alLeft
-          AutoSize = False
+          Left = 5
+          Top = 3
+          Width = 357
+          Height = 27
+          Margins.Left = 5
+          Align = alClient
+          Caption = '12-12-2012'
+          Color = clYellow
+          ParentColor = False
           ParentFont = False
-          OnDblClick = __lblSearchDblClick
+          OnDblClick = __PanGridsHeaderDblClick
           OnMouseEnter = tabsViewMouseEnter
           Font.Charset = DEFAULT_CHARSET
-          Font.Color = 4473924
-          Font.Height = -15
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          ExplicitLeft = 554
-          ExplicitTop = 4
-          ExplicitHeight = 20
+          Font.Color = clWindowText
+          Font.Height = -17
+          Font.Name = 'Segoe UI'
+          Font.Style = [fsBold]
+          ExplicitLeft = 25
+          ExplicitTop = 5
+          ExplicitWidth = 94
+          ExplicitHeight = 23
         end
         object sPanel3: TsPanel
-          Left = 226
-          Top = 1
-          Width = 446
-          Height = 31
+          Left = 365
+          Top = 0
+          Width = 424
+          Height = 33
           Margins.Left = 0
           Margins.Top = 0
           Margins.Right = 0
@@ -1957,12 +1924,15 @@ object frmMain: TfrmMain
           SkinData.CustomColor = True
           SkinData.CustomFont = True
           SkinData.SkinSection = 'PANEL'
+          ExplicitLeft = 304
+          ExplicitTop = 1
+          ExplicitHeight = 31
           object btnStatusFilter: TsSpeedButton
             AlignWithMargins = True
             Left = 7
             Top = 0
-            Width = 95
-            Height = 31
+            Width = 90
+            Height = 33
             Margins.Left = 4
             Margins.Top = 0
             Margins.Right = 0
@@ -1976,12 +1946,13 @@ object frmMain: TfrmMain
             ButtonStyle = tbsDropDown
             SkinData.SkinSection = 'SPEEDBUTTON'
             DropdownMenu = mnuItemStatus
+            ExplicitHeight = 31
           end
           object btnLocationFilter: TsSpeedButton
-            Left = 197
+            Left = 187
             Top = 0
-            Width = 95
-            Height = 31
+            Width = 90
+            Height = 33
             Margins.Top = 0
             Align = alLeft
             Caption = 'Location'
@@ -1991,12 +1962,13 @@ object frmMain: TfrmMain
             ButtonStyle = tbsDropDown
             SkinData.SkinSection = 'SPEEDBUTTON'
             DropdownMenu = mnuFilterLocation
+            ExplicitHeight = 31
           end
           object btnGroupsFilter: TsSpeedButton
-            Left = 102
+            Left = 97
             Top = 0
-            Width = 95
-            Height = 31
+            Width = 90
+            Height = 33
             Margins.Top = 0
             Align = alLeft
             Caption = 'Groups'
@@ -2006,13 +1978,16 @@ object frmMain: TfrmMain
             ButtonStyle = tbsDropDown
             SkinData.SkinSection = 'SPEEDBUTTON'
             DropdownMenu = G2
+            ExplicitHeight = 31
           end
           object edtSearch: TButtonedEdit
             AlignWithMargins = True
-            Left = 295
-            Top = 3
-            Width = 116
-            Height = 25
+            Left = 280
+            Top = 5
+            Width = 109
+            Height = 23
+            Margins.Top = 5
+            Margins.Bottom = 5
             Align = alClient
             BevelInner = bvNone
             BevelOuter = bvNone
@@ -2031,14 +2006,17 @@ object frmMain: TfrmMain
             OnChange = edtSearchChange
             OnMouseEnter = tabsViewMouseEnter
             OnRightButtonClick = btnClearSearchClick
+            ExplicitLeft = 295
+            ExplicitTop = 3
+            ExplicitWidth = 116
             ExplicitHeight = 21
           end
           object btnSearchForGuests: TsButton
             AlignWithMargins = True
-            Left = 414
+            Left = 392
             Top = 3
             Width = 27
-            Height = 25
+            Height = 27
             Hint = 'Search for guests'
             Margins.Left = 0
             Margins.Right = 5
@@ -2047,264 +2025,24 @@ object frmMain: TfrmMain
             Images = DImages.PngImageList1
             TabOrder = 1
             OnClick = btnSerachGuestsClick
-          end
-        end
-        object sPanel4: TsPanel
-          Left = 54
-          Top = 1
-          Width = 172
-          Height = 31
-          Margins.Left = 0
-          Margins.Top = 0
-          Margins.Right = 0
-          Margins.Bottom = 0
-          Align = alClient
-          BevelEdges = []
-          BevelOuter = bvNone
-          Padding.Left = 3
-          ParentColor = True
-          TabOrder = 1
-          OnMouseEnter = tabsViewMouseEnter
-          SkinData.CustomColor = True
-          SkinData.CustomFont = True
-          SkinData.SkinSection = 'PANEL'
-          object lblMainHeader: TsLabel
-            AlignWithMargins = True
-            Left = 164
-            Top = 4
-            Width = 5
-            Height = 24
-            Margins.Left = 10
-            Margins.Top = 4
-            Align = alClient
-            Caption = '12-12-2012'
-            Color = clYellow
-            ParentColor = False
-            ParentFont = False
-            OnDblClick = __PanGridsHeaderDblClick
-            OnMouseEnter = tabsViewMouseEnter
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clWindowText
-            Font.Height = -17
-            Font.Name = 'Segoe UI'
-            Font.Style = [fsBold]
-            ExplicitWidth = 94
-            ExplicitHeight = 23
-          end
-          object dtDate: TsDateEdit
-            AlignWithMargins = True
-            Left = 39
-            Top = 5
-            Width = 112
-            Height = 22
-            Margins.Top = 5
-            Margins.Bottom = 4
-            Align = alLeft
-            AutoSize = False
-            BevelInner = bvNone
-            BevelOuter = bvNone
-            BorderStyle = bsNone
-            Color = clWhite
-            EditMask = '!99/99/9999;1; '
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clBlack
-            Font.Height = -13
-            Font.Name = 'Segoe UI'
-            Font.Style = [fsBold]
-            MaxLength = 10
-            ParentFont = False
-            TabOrder = 0
-            Text = '  -  -    '
-            OnChange = dtDateChange
-            OnMouseEnter = tabsViewMouseEnter
-            BoundLabel.Font.Charset = DEFAULT_CHARSET
-            BoundLabel.Font.Color = clWindowText
-            BoundLabel.Font.Height = -13
-            BoundLabel.Font.Name = 'Tahoma'
-            BoundLabel.Font.Style = []
-            SkinData.SkinSection = 'EDIT'
-            GlyphMode.Blend = 0
-            GlyphMode.Grayed = False
-            GlyphMode.Images = DImages.cxImagesSmallExtra
-            GlyphMode.ImageIndex = 4
-            DirectInput = False
-            ShowWeeks = True
-            PopupWidth = 250
-          end
-          object pnlStaffComm: TsPanel
-            AlignWithMargins = True
-            Left = 6
-            Top = 3
-            Width = 27
-            Height = 25
-            Align = alLeft
-            Color = clRed
-            ParentBackground = False
-            TabOrder = 1
-            SkinData.SkinSection = 'PANEL'
-            object sImage1: TsImage
-              Left = 1
-              Top = 1
-              Width = 25
-              Height = 23
-              Align = alClient
-              Picture.Data = {
-                0B54504E474772617068696336100000424D3610000000000000360000002800
-                0000200000002000000001002000000000000010000000000000000000000000
-                000000000000FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-                FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-                FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-                FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-                FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-                FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-                FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-                FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-                FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-                FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00B3783E03B378
-                3E1AB3783E25B3783E1BB3783E04FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-                FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-                FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-                FF00FFFFFF00FFFFFF00FFFFFF00B3783E2BB3783E86B3783ECBB3783EF8B378
-                3EFFB3783EFFB3783EFFB3783EFAB3783ED1B3783E8DB3783E34FFFFFF00FFFF
-                FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-                FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-                FF00FFFFFF00B3783E2BB3783EB4B3783EFEB3783EFFB3783EFFB3783EFFB378
-                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EC0B378
-                3E37FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-                FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00B378
-                3E01B3783E79B3783EFAB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB378
-                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB378
-                3EFDB3783E8EB3783E05FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-                FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00B3783E05B378
-                3EA8B3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB378
-                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB378
-                3EFFB3783EFFB3783EBBB3783E0BFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-                FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00B3783EA5B378
-                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB378
-                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB378
-                3EFFB3783EFFB3783EFFB3783EBAB3783E04FFFFFF00FFFFFF00FFFFFF00FFFF
-                FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00B3783E72B3783EFFB378
-                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFFAF6
-                F2FFFFFFFFFFFFFFFFFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB378
-                3EFFB3783EFFB3783EFFB3783EFFB3783E8AFFFFFF00FFFFFF00FFFFFF00FFFF
-                FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00B3783E22B3783EF6B3783EFFB378
-                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFFAF6
-                F2FFFFFFFFFFFFFFFFFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB378
-                3EFFB3783EFFB3783EFFB3783EFFB3783EFCB3783E35FFFFFF00FFFFFF00FFFF
-                FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00B3783EA1B3783EFFB3783EFFB378
-                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFFAF6
-                F2FFFFFFFFFFFFFFFFFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB378
-                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EBCFFFFFF00FFFFFF00FFFF
-                FF00FFFFFF00FFFFFF00FFFFFF00B3783E19B3783EFAB3783EFFB3783EFFB378
-                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFFAF6
-                F2FFFFFFFFFFFFFFFFFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB378
-                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFEB3783E2EFFFFFF00FFFF
-                FF00FFFFFF00FFFFFF00FFFFFF00B3783E6CB3783EFFB3783EFFB3783EFFB378
-                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFFAF6
-                F2FFFFFFFFFFFFFFFFFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB378
-                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783E85FFFFFF00FFFF
-                FF00FFFFFF00FFFFFF00FFFFFF00B3783EAFB3783EFFB3783EFFB3783EFFB378
-                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFFAF6
-                F2FFFFFFFFFFFFFFFFFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB378
-                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EC8FFFFFF00FFFF
-                FF00FFFFFF00FFFFFF00FFFFFF00B3783EDEB3783EFFB3783EFFB3783EFFB378
-                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFFAF6
-                F2FFFFFFFFFFFFFFFFFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB378
-                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EF5B3783E01FFFF
-                FF00FFFFFF00FFFFFF00FFFFFF00B3783EF9B3783EFFB3783EFFB3783EFFB378
-                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFFAF6
-                F2FFFFFFFFFFFFFFFFFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB378
-                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783E13FFFF
-                FF00FFFFFF00FFFFFF00B3783E02B3783EFFB3783EFFB3783EFFB3783EFFB378
-                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFFAF6
-                F2FFFFFFFFFFFFFFFFFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB378
-                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783E1BFFFF
-                FF00FFFFFF00FFFFFF00FFFFFF00B3783EF7B3783EFFB3783EFFB3783EFFB378
-                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFFAF6
-                F2FFFFFFFFFFFFFFFFFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB378
-                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783E11FFFF
-                FF00FFFFFF00FFFFFF00FFFFFF00B3783EDBB3783EFFB3783EFFB3783EFFB378
-                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFFAF6
-                F2FFFFFFFFFFFFFFFFFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB378
-                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EF3FFFFFF00FFFF
-                FF00FFFFFF00FFFFFF00FFFFFF00B3783EAAB3783EFFB3783EFFB3783EFFB378
-                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFFAF6
-                F2FFFFFFFFFFFFFFFFFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB378
-                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EC3FFFFFF00FFFF
-                FF00FFFFFF00FFFFFF00FFFFFF00B3783E65B3783EFFB3783EFFB3783EFFB378
-                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB378
-                3EFFB3783EFFB3783EFFB47B42FFB3783EFFB3783EFFB3783EFFB3783EFFB378
-                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783E7EFFFFFF00FFFF
-                FF00FFFFFF00FFFFFF00FFFFFF00B3783E13B3783EF7B3783EFFB3783EFFB378
-                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB378
-                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB378
-                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFDB3783E25FFFFFF00FFFF
-                FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00B3783E98B3783EFFB3783EFFB378
-                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB67D46FFEADA
-                CBFFF6F0EAFFEDDFD1FFBA844FFFB3783EFFB3783EFFB3783EFFB3783EFFB378
-                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EB1FFFFFF00FFFFFF00FFFF
-                FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00B3783E1AB3783EF1B3783EFFB378
-                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFC5986CFFFFFF
-                FFFFFFFFFFFFFFFFFFFFCEA984FFB3783EFFB3783EFFB3783EFFB3783EFFB378
-                3EFFB3783EFFB3783EFFB3783EFFB3783EF9B3783E2AFFFFFF00FFFFFF00FFFF
-                FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00B3783E5EB3783EFFB378
-                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFBE8C5BFFFEFE
-                FDFFFFFFFFFFFFFFFFFFC89D73FFB3783EFFB3783EFFB3783EFFB3783EFFB378
-                3EFFB3783EFFB3783EFFB3783EFFB3783E77FFFFFF00FFFFFF00FFFFFF00FFFF
-                FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00B3783E8FB378
-                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFC497
-                6AFFD1AD8AFFC89E75FFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB378
-                3EFFB3783EFFB3783EFFB3783EA6B3783E01FFFFFF00FFFFFF00FFFFFF00FFFF
-                FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00B3783E01B378
-                3E93B3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB378
-                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB378
-                3EFFB3783EFFB3783EA8B3783E05FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-                FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-                FF00B3783E65B3783EF3B3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB378
-                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB378
-                3EF8B3783E78B3783E01FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-                FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-                FF00FFFFFF00B3783E1EB3783EA0B3783EFAB3783EFFB3783EFFB3783EFFB378
-                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFCB3783EACB378
-                3E28FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-                FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-                FF00FFFFFF00FFFFFF00FFFFFF00B3783E19B3783E6FB3783EB5B3783EE5B378
-                3EFEB3783EFFB3783EFEB3783EE9B3783EBAB3783E77B3783E20FFFFFF00FFFF
-                FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-                FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-                FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00B378
-                3E05B3783E0CB3783E06FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-                FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-                FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-                FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-                FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-                FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-                FF00FFFFFF00}
-              Stretch = True
-              Transparent = True
-              SkinData.SkinSection = 'CHECKBOX'
-              ExplicitLeft = 2
-              ExplicitTop = 0
-            end
+            ExplicitLeft = 414
+            ExplicitHeight = 25
           end
         end
       end
       object Panel2: TsPanel
-        Left = 570
+        Left = 537
         Top = 0
-        Width = 135
+        Width = 267
         Height = 33
         Align = alLeft
         Alignment = taLeftJustify
         BevelOuter = bvNone
-        BorderWidth = 1
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clCaptionText
         Font.Height = -19
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
-        Padding.Top = 3
-        Padding.Bottom = 3
         ParentColor = True
         ParentFont = False
         TabOrder = 2
@@ -2458,15 +2196,13 @@ object frmMain: TfrmMain
         end
         object btnRefreshOneDay: TsButton
           AlignWithMargins = True
-          Left = 6
-          Top = 4
+          Left = 5
+          Top = 3
           Width = 27
-          Height = 25
+          Height = 27
           Hint = 'Refresh'
           Margins.Left = 5
-          Margins.Top = 0
           Margins.Right = 0
-          Margins.Bottom = 0
           Align = alLeft
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clCaptionText
@@ -2480,19 +2216,18 @@ object frmMain: TfrmMain
           TabOrder = 0
           OnClick = btnRefreshOneDayClick
           OnMouseEnter = tabsViewMouseEnter
+          ExplicitLeft = 6
+          ExplicitTop = 4
+          ExplicitHeight = 25
         end
         object btnGotoToday: TsButton
           AlignWithMargins = True
-          Left = 102
-          Top = 4
+          Left = 93
+          Top = 3
           Width = 27
-          Height = 25
+          Height = 27
           Hint = 'Today'
-          Margins.Left = 0
-          Margins.Top = 0
-          Margins.Right = 5
-          Margins.Bottom = 0
-          Align = alRight
+          Align = alLeft
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clCaptionText
           Font.Height = -13
@@ -2504,17 +2239,17 @@ object frmMain: TfrmMain
           TabOrder = 1
           OnClick = btnToDayClick
           OnMouseEnter = tabsViewMouseEnter
+          ExplicitLeft = 294
+          ExplicitHeight = 25
         end
         object btnForward: TsButton
           AlignWithMargins = True
-          Left = 64
-          Top = 4
+          Left = 63
+          Top = 3
           Width = 27
-          Height = 25
+          Height = 27
           Hint = 'Forward one day. With [Ctrl] pressed jumps 7 days forward.'
-          Margins.Top = 0
           Margins.Right = 0
-          Margins.Bottom = 0
           Align = alLeft
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clCaptionText
@@ -2528,17 +2263,18 @@ object frmMain: TfrmMain
           TabOrder = 2
           OnClick = btnBackForwardClick
           OnMouseEnter = tabsViewMouseEnter
+          ExplicitLeft = 64
+          ExplicitTop = 4
+          ExplicitHeight = 25
         end
         object btnBack: TsButton
           AlignWithMargins = True
-          Left = 36
-          Top = 4
+          Left = 35
+          Top = 3
           Width = 25
-          Height = 25
+          Height = 27
           Hint = 'Back one day. With [Ctrl] pressed jumps 7 days back.'
-          Margins.Top = 0
           Margins.Right = 0
-          Margins.Bottom = 0
           Align = alLeft
           ImageAlignment = iaCenter
           ImageIndex = 2
@@ -2546,13 +2282,240 @@ object frmMain: TfrmMain
           TabOrder = 3
           OnClick = btnBackForwardClick
           OnMouseEnter = tabsViewMouseEnter
+          ExplicitLeft = 36
+          ExplicitTop = 4
+          ExplicitHeight = 25
+        end
+        object sPanel4: TsPanel
+          Left = 123
+          Top = 0
+          Width = 144
+          Height = 33
+          Margins.Left = 0
+          Margins.Top = 0
+          Margins.Right = 0
+          Margins.Bottom = 0
+          Align = alClient
+          BevelEdges = []
+          BevelOuter = bvNone
+          ParentColor = True
+          TabOrder = 5
+          OnMouseEnter = tabsViewMouseEnter
+          SkinData.CustomColor = True
+          SkinData.CustomFont = True
+          SkinData.SkinSection = 'PANEL'
+          ExplicitLeft = 124
+          ExplicitTop = 1
+          ExplicitWidth = 632
+          ExplicitHeight = 31
+          object dtDate: TsDateEdit
+            AlignWithMargins = True
+            Left = 36
+            Top = 7
+            Width = 102
+            Height = 22
+            Margins.Top = 7
+            Margins.Bottom = 4
+            Align = alLeft
+            AutoSize = False
+            BevelInner = bvNone
+            BevelOuter = bvNone
+            BorderStyle = bsNone
+            Color = clWhite
+            EditMask = '!99/99/9999;1; '
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clBlack
+            Font.Height = -13
+            Font.Name = 'Segoe UI'
+            Font.Style = [fsBold]
+            MaxLength = 10
+            ParentFont = False
+            TabOrder = 0
+            Text = '  -  -    '
+            OnChange = dtDateChange
+            OnMouseEnter = tabsViewMouseEnter
+            BoundLabel.Font.Charset = DEFAULT_CHARSET
+            BoundLabel.Font.Color = clWindowText
+            BoundLabel.Font.Height = -13
+            BoundLabel.Font.Name = 'Tahoma'
+            BoundLabel.Font.Style = []
+            SkinData.SkinSection = 'EDIT'
+            GlyphMode.Blend = 0
+            GlyphMode.Grayed = False
+            GlyphMode.Images = DImages.cxImagesSmallExtra
+            GlyphMode.ImageIndex = 4
+            DirectInput = False
+            ShowWeeks = True
+            PopupWidth = 250
+            ExplicitTop = 3
+            ExplicitHeight = 23
+          end
+          object pnlStaffComm: TsPanel
+            AlignWithMargins = True
+            Left = 3
+            Top = 3
+            Width = 27
+            Height = 27
+            Align = alLeft
+            Color = clRed
+            ParentBackground = False
+            TabOrder = 1
+            SkinData.SkinSection = 'PANEL'
+            ExplicitLeft = 6
+            ExplicitHeight = 19
+            object sImage1: TsImage
+              Left = 1
+              Top = 1
+              Width = 25
+              Height = 25
+              Align = alClient
+              Picture.Data = {
+                0B54504E474772617068696336100000424D3610000000000000360000002800
+                0000200000002000000001002000000000000010000000000000000000000000
+                000000000000FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+                FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+                FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+                FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+                FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+                FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+                FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+                FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+                FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+                FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00B3783E03B378
+                3E1AB3783E25B3783E1BB3783E04FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+                FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+                FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+                FF00FFFFFF00FFFFFF00FFFFFF00B3783E2BB3783E86B3783ECBB3783EF8B378
+                3EFFB3783EFFB3783EFFB3783EFAB3783ED1B3783E8DB3783E34FFFFFF00FFFF
+                FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+                FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+                FF00FFFFFF00B3783E2BB3783EB4B3783EFEB3783EFFB3783EFFB3783EFFB378
+                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EC0B378
+                3E37FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+                FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00B378
+                3E01B3783E79B3783EFAB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB378
+                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB378
+                3EFDB3783E8EB3783E05FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+                FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00B3783E05B378
+                3EA8B3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB378
+                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB378
+                3EFFB3783EFFB3783EBBB3783E0BFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+                FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00B3783EA5B378
+                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB378
+                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB378
+                3EFFB3783EFFB3783EFFB3783EBAB3783E04FFFFFF00FFFFFF00FFFFFF00FFFF
+                FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00B3783E72B3783EFFB378
+                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFFAF6
+                F2FFFFFFFFFFFFFFFFFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB378
+                3EFFB3783EFFB3783EFFB3783EFFB3783E8AFFFFFF00FFFFFF00FFFFFF00FFFF
+                FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00B3783E22B3783EF6B3783EFFB378
+                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFFAF6
+                F2FFFFFFFFFFFFFFFFFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB378
+                3EFFB3783EFFB3783EFFB3783EFFB3783EFCB3783E35FFFFFF00FFFFFF00FFFF
+                FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00B3783EA1B3783EFFB3783EFFB378
+                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFFAF6
+                F2FFFFFFFFFFFFFFFFFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB378
+                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EBCFFFFFF00FFFFFF00FFFF
+                FF00FFFFFF00FFFFFF00FFFFFF00B3783E19B3783EFAB3783EFFB3783EFFB378
+                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFFAF6
+                F2FFFFFFFFFFFFFFFFFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB378
+                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFEB3783E2EFFFFFF00FFFF
+                FF00FFFFFF00FFFFFF00FFFFFF00B3783E6CB3783EFFB3783EFFB3783EFFB378
+                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFFAF6
+                F2FFFFFFFFFFFFFFFFFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB378
+                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783E85FFFFFF00FFFF
+                FF00FFFFFF00FFFFFF00FFFFFF00B3783EAFB3783EFFB3783EFFB3783EFFB378
+                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFFAF6
+                F2FFFFFFFFFFFFFFFFFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB378
+                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EC8FFFFFF00FFFF
+                FF00FFFFFF00FFFFFF00FFFFFF00B3783EDEB3783EFFB3783EFFB3783EFFB378
+                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFFAF6
+                F2FFFFFFFFFFFFFFFFFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB378
+                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EF5B3783E01FFFF
+                FF00FFFFFF00FFFFFF00FFFFFF00B3783EF9B3783EFFB3783EFFB3783EFFB378
+                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFFAF6
+                F2FFFFFFFFFFFFFFFFFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB378
+                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783E13FFFF
+                FF00FFFFFF00FFFFFF00B3783E02B3783EFFB3783EFFB3783EFFB3783EFFB378
+                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFFAF6
+                F2FFFFFFFFFFFFFFFFFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB378
+                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783E1BFFFF
+                FF00FFFFFF00FFFFFF00FFFFFF00B3783EF7B3783EFFB3783EFFB3783EFFB378
+                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFFAF6
+                F2FFFFFFFFFFFFFFFFFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB378
+                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783E11FFFF
+                FF00FFFFFF00FFFFFF00FFFFFF00B3783EDBB3783EFFB3783EFFB3783EFFB378
+                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFFAF6
+                F2FFFFFFFFFFFFFFFFFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB378
+                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EF3FFFFFF00FFFF
+                FF00FFFFFF00FFFFFF00FFFFFF00B3783EAAB3783EFFB3783EFFB3783EFFB378
+                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFFAF6
+                F2FFFFFFFFFFFFFFFFFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB378
+                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EC3FFFFFF00FFFF
+                FF00FFFFFF00FFFFFF00FFFFFF00B3783E65B3783EFFB3783EFFB3783EFFB378
+                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB378
+                3EFFB3783EFFB3783EFFB47B42FFB3783EFFB3783EFFB3783EFFB3783EFFB378
+                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783E7EFFFFFF00FFFF
+                FF00FFFFFF00FFFFFF00FFFFFF00B3783E13B3783EF7B3783EFFB3783EFFB378
+                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB378
+                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB378
+                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFDB3783E25FFFFFF00FFFF
+                FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00B3783E98B3783EFFB3783EFFB378
+                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB67D46FFEADA
+                CBFFF6F0EAFFEDDFD1FFBA844FFFB3783EFFB3783EFFB3783EFFB3783EFFB378
+                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EB1FFFFFF00FFFFFF00FFFF
+                FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00B3783E1AB3783EF1B3783EFFB378
+                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFC5986CFFFFFF
+                FFFFFFFFFFFFFFFFFFFFCEA984FFB3783EFFB3783EFFB3783EFFB3783EFFB378
+                3EFFB3783EFFB3783EFFB3783EFFB3783EF9B3783E2AFFFFFF00FFFFFF00FFFF
+                FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00B3783E5EB3783EFFB378
+                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFBE8C5BFFFEFE
+                FDFFFFFFFFFFFFFFFFFFC89D73FFB3783EFFB3783EFFB3783EFFB3783EFFB378
+                3EFFB3783EFFB3783EFFB3783EFFB3783E77FFFFFF00FFFFFF00FFFFFF00FFFF
+                FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00B3783E8FB378
+                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFC497
+                6AFFD1AD8AFFC89E75FFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB378
+                3EFFB3783EFFB3783EFFB3783EA6B3783E01FFFFFF00FFFFFF00FFFFFF00FFFF
+                FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00B3783E01B378
+                3E93B3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB378
+                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB378
+                3EFFB3783EFFB3783EA8B3783E05FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+                FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+                FF00B3783E65B3783EF3B3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB378
+                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB378
+                3EF8B3783E78B3783E01FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+                FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+                FF00FFFFFF00B3783E1EB3783EA0B3783EFAB3783EFFB3783EFFB3783EFFB378
+                3EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFFB3783EFCB3783EACB378
+                3E28FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+                FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+                FF00FFFFFF00FFFFFF00FFFFFF00B3783E19B3783E6FB3783EB5B3783EE5B378
+                3EFEB3783EFFB3783EFEB3783EE9B3783EBAB3783E77B3783E20FFFFFF00FFFF
+                FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+                FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+                FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00B378
+                3E05B3783E0CB3783E06FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+                FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+                FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+                FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+                FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+                FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+                FF00FFFFFF00}
+              Stretch = True
+              Transparent = True
+              SkinData.SkinSection = 'CHECKBOX'
+              ExplicitLeft = 2
+              ExplicitTop = 0
+              ExplicitHeight = 23
+            end
+          end
         end
       end
     end
     object pnlMessages: TsPanel
       Left = 0
       Top = 0
-      Width = 1378
+      Width = 1593
       Height = 106
       Align = alTop
       BevelOuter = bvNone
@@ -2564,10 +2527,11 @@ object frmMain: TfrmMain
       TabOrder = 2
       Visible = False
       SkinData.SkinSection = 'PANEL'
+      ExplicitWidth = 1378
       object mmoMessage: THTMLabel
         Left = 88
         Top = 3
-        Width = 1287
+        Width = 1502
         Height = 100
         Align = alClient
         BorderWidth = 2
@@ -2662,7 +2626,7 @@ object frmMain: TfrmMain
     object pnlOffline: TsPanel
       Left = 0
       Top = 106
-      Width = 1378
+      Width = 1593
       Height = 31
       Align = alTop
       BevelOuter = bvNone
@@ -2681,6 +2645,7 @@ object frmMain: TfrmMain
       SkinData.CustomColor = True
       SkinData.CustomFont = True
       SkinData.SkinSection = 'UNKNOWN'
+      ExplicitWidth = 1378
       object btnGoOnline: TsButton
         Left = 4
         Top = 3
@@ -2697,7 +2662,7 @@ object frmMain: TfrmMain
   object dxRibbon1: TdxRibbon
     Left = 0
     Top = 0
-    Width = 1378
+    Width = 1593
     Height = 155
     Margins.Left = 0
     Margins.Top = 0
@@ -2714,7 +2679,9 @@ object frmMain: TfrmMain
     Contexts = <>
     TabOrder = 2
     TabStop = False
+    ExplicitWidth = 1378
     object rbTabHome: TdxRibbonTab
+      Active = True
       Caption = 'Roomer'
       Groups = <
         item
@@ -2737,7 +2704,6 @@ object frmMain: TfrmMain
       Index = 0
     end
     object rbTabReservation: TdxRibbonTab
-      Active = True
       Caption = 'Reservation'
       Groups = <
         item
@@ -2917,7 +2883,7 @@ object frmMain: TfrmMain
     end
   end
   object pnlRoomerLogo: TsPanel
-    Left = 1052
+    Left = 1267
     Top = 3
     Width = 321
     Height = 49
@@ -2930,6 +2896,7 @@ object frmMain: TfrmMain
     TabOrder = 5
     StyleElements = [seFont, seClient]
     SkinData.SkinSection = 'TRANSPARENT'
+    ExplicitLeft = 1052
     object lblLogout: TsLabel
       Left = 256
       Top = 3
@@ -2992,7 +2959,7 @@ object frmMain: TfrmMain
   object pnlDayStatus: TsPanel
     Left = 0
     Top = 635
-    Width = 1378
+    Width = 1593
     Height = 30
     Align = alBottom
     BevelOuter = bvNone
@@ -3003,6 +2970,7 @@ object frmMain: TfrmMain
     SkinData.CustomColor = True
     SkinData.CustomFont = True
     SkinData.SkinSection = 'PANEL'
+    ExplicitWidth = 1378
     object lblOccupancy: TsLabel
       AlignWithMargins = True
       Left = 184
@@ -3153,7 +3121,7 @@ object frmMain: TfrmMain
     end
     object __VER: TsLabel
       AlignWithMargins = True
-      Left = 1201
+      Left = 1416
       Top = 5
       Width = 174
       Height = 22
@@ -3168,11 +3136,12 @@ object frmMain: TfrmMain
       Font.Name = 'Tahoma'
       Font.Style = []
       UseSkinColor = False
+      ExplicitLeft = 1201
       ExplicitHeight = 18
     end
     object __TimingResult: TsLabel
       AlignWithMargins = True
-      Left = 1143
+      Left = 1358
       Top = 5
       Width = 15
       Height = 22
@@ -3189,6 +3158,7 @@ object frmMain: TfrmMain
       Font.Name = 'Segoe UI'
       Font.Style = []
       UseSkinColor = False
+      ExplicitLeft = 1143
       ExplicitHeight = 17
     end
     object cbxStatDay: TsComboBox
