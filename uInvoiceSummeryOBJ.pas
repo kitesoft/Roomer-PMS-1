@@ -207,7 +207,6 @@ type
     FivhTotal_VAT : double;
     FivhTotal_Currency : double;
     FivhExtraText : string;
-    FivhTotalBreakFast : double;
     FivhCreditInvoice : integer;
     FivhOriginalInvoice : integer;
 
@@ -386,7 +385,6 @@ type
 
     property ivhExtraText : string read FivhExtraText write FivhExtraText;
 
-    property ivhTotalBreakFast : double read FivhTotalBreakFast write FivhTotalBreakFast;
     property ivhCreditInvoice : integer read FivhCreditInvoice write FivhCreditInvoice;
     property ivhOriginalInvoice : integer read FivhOriginalInvoice write FivhOriginalInvoice;
 
@@ -711,7 +709,6 @@ begin
 
   FivhTotal_woVat := 0;
   FivhTotal_VAT := 0;
-  FivhTotalBreakFast := 0;
   FivhCreditInvoice := 0;
   FivhOriginalInvoice := 0;
   FivhSplitNumber := - 1;
@@ -1249,7 +1246,6 @@ begin
     FivhTotal := 0;
     FivhTotal_woVat := 0;
     FivhTotal_VAT := 0;
-    FivhTotalBreakFast := 0;
     FivhCreditInvoice := 0;
     FivhOriginalInvoice := 0;
     FivhSplitNumber := - 1;
@@ -1287,7 +1283,6 @@ begin
       FivhTotal           := invoicedata.Total;
       FivhTotal_woVat     := invoicedata.TotalWOVAT;
       FivhTotal_VAT       := invoicedata.TotalVAT;
-      FivhTotalBreakFast  := invoicedata.TotalBreakFast;
       FivhCreditInvoice   := invoicedata.CreditInvoice;
       FivhOriginalInvoice := invoicedata.OriginalInvoice;
       FivhSplitNumber     := invoicedata.SplitNumber;
@@ -1321,7 +1316,6 @@ begin
         FivhTotal := rSet.fieldbyname('Total').asFloat;
         FivhTotal_woVat := rSet.fieldbyname('TotalWOVAT').AsFloat;
         FivhTotal_VAT := rSet.fieldbyname('TotalVAT').AsFloat;
-        FivhTotalBreakFast := rSet.fieldbyname('TotalBreakFast').AsFloat;
         FivhCreditInvoice := rSet.fieldbyname('CreditInvoice').asInteger;
         FivhOriginalInvoice := rSet.fieldbyname('OriginalInvoice').asInteger;
         FivhSplitNumber := rSet.fieldbyname('SplitNumber').asInteger;

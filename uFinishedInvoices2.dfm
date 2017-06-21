@@ -126,8 +126,8 @@ object frmFinishedInvoices2: TfrmFinishedInvoices2
     object chkShowPackage: TsCheckBox
       Left = 5
       Top = 47
-      Width = 148
-      Height = 17
+      Width = 140
+      Height = 20
       Caption = 'Show Package on invoice'
       TabOrder = 4
       SkinData.SkinSection = 'CHECKBOX'
@@ -226,19 +226,6 @@ object frmFinishedInvoices2: TfrmFinishedInvoices2
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -17
-          Font.Name = 'Tahoma'
-          Font.Style = [fsBold]
-        end
-        object Label12: TsLabel
-          Left = 292
-          Top = 191
-          Width = 105
-          Height = 13
-          Caption = 'Breakfast included'
-          ParentFont = False
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = [fsBold]
         end
@@ -725,30 +712,6 @@ object frmFinishedInvoices2: TfrmFinishedInvoices2
           BoundLabel.Font.Name = 'Tahoma'
           BoundLabel.Font.Style = []
         end
-        object edtBreakfast: TsEdit
-          Left = 505
-          Top = 187
-          Width = 88
-          Height = 17
-          AutoSize = False
-          BorderStyle = bsNone
-          Color = clWhite
-          Font.Charset = ANSI_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Courier New'
-          Font.Style = []
-          ParentFont = False
-          ReadOnly = True
-          TabOrder = 3
-          Text = '0'
-          SkinData.SkinSection = 'EDIT'
-          BoundLabel.Font.Charset = DEFAULT_CHARSET
-          BoundLabel.Font.Color = clWindowText
-          BoundLabel.Font.Height = -13
-          BoundLabel.Font.Name = 'Tahoma'
-          BoundLabel.Font.Style = []
-        end
         object memExtraText: TsMemo
           Left = 296
           Top = 32
@@ -764,7 +727,7 @@ object frmFinishedInvoices2: TfrmFinishedInvoices2
           Font.Name = 'Courier New'
           Font.Style = []
           ParentFont = False
-          TabOrder = 4
+          TabOrder = 3
           BoundLabel.Font.Charset = DEFAULT_CHARSET
           BoundLabel.Font.Color = clWindowText
           BoundLabel.Font.Height = -13
@@ -788,7 +751,7 @@ object frmFinishedInvoices2: TfrmFinishedInvoices2
           Font.Style = []
           ParentFont = False
           ReadOnly = True
-          TabOrder = 5
+          TabOrder = 4
           SkinData.SkinSection = 'EDIT'
           BoundLabel.Font.Charset = DEFAULT_CHARSET
           BoundLabel.Font.Color = clWindowText
@@ -812,7 +775,7 @@ object frmFinishedInvoices2: TfrmFinishedInvoices2
           Font.Style = []
           ParentFont = False
           ReadOnly = True
-          TabOrder = 6
+          TabOrder = 5
           SkinData.SkinSection = 'EDIT'
           BoundLabel.Font.Charset = DEFAULT_CHARSET
           BoundLabel.Font.Color = clWindowText
@@ -836,7 +799,7 @@ object frmFinishedInvoices2: TfrmFinishedInvoices2
           Font.Style = []
           ParentFont = False
           ReadOnly = True
-          TabOrder = 7
+          TabOrder = 6
           SkinData.SkinSection = 'EDIT'
           BoundLabel.Font.Charset = DEFAULT_CHARSET
           BoundLabel.Font.Color = clWindowText
@@ -860,7 +823,7 @@ object frmFinishedInvoices2: TfrmFinishedInvoices2
           Font.Style = []
           ParentFont = False
           ReadOnly = True
-          TabOrder = 8
+          TabOrder = 7
           SkinData.SkinSection = 'EDIT'
           BoundLabel.Font.Charset = DEFAULT_CHARSET
           BoundLabel.Font.Color = clWindowText
@@ -884,7 +847,7 @@ object frmFinishedInvoices2: TfrmFinishedInvoices2
           Font.Style = []
           ParentFont = False
           ReadOnly = True
-          TabOrder = 9
+          TabOrder = 8
           SkinData.SkinSection = 'EDIT'
           BoundLabel.Font.Charset = DEFAULT_CHARSET
           BoundLabel.Font.Color = clWindowText
@@ -907,7 +870,7 @@ object frmFinishedInvoices2: TfrmFinishedInvoices2
           Font.Style = []
           ParentFont = False
           ReadOnly = True
-          TabOrder = 10
+          TabOrder = 9
           SkinData.SkinSection = 'EDIT'
           BoundLabel.Font.Charset = DEFAULT_CHARSET
           BoundLabel.Font.Color = clWindowText
@@ -933,7 +896,7 @@ object frmFinishedInvoices2: TfrmFinishedInvoices2
           ParentShowHint = False
           ReadOnly = True
           ShowHint = True
-          TabOrder = 11
+          TabOrder = 10
           SkinData.SkinSection = 'EDIT'
           BoundLabel.Font.Charset = DEFAULT_CHARSET
           BoundLabel.Font.Color = clWindowText
@@ -957,7 +920,7 @@ object frmFinishedInvoices2: TfrmFinishedInvoices2
           Font.Style = []
           ParentFont = False
           ReadOnly = True
-          TabOrder = 12
+          TabOrder = 11
           SkinData.SkinSection = 'EDIT'
           BoundLabel.Font.Charset = DEFAULT_CHARSET
           BoundLabel.Font.Color = clWindowText
@@ -1339,7 +1302,7 @@ object frmFinishedInvoices2: TfrmFinishedInvoices2
             SearchFooter.MatchCaseCaption = 'Match case'
             SearchFooter.ResultFormat = '(%d of %d)'
             SortSettings.DefaultFormat = ssAutomatic
-            Version = '8.2.5.2'
+            Version = '8.2.4.1'
             RowHeights = (
               18
               21
@@ -1498,7 +1461,7 @@ object frmFinishedInvoices2: TfrmFinishedInvoices2
             SearchFooter.MatchCaseCaption = 'Match case'
             SearchFooter.ResultFormat = '(%d of %d)'
             SortSettings.DefaultFormat = ssAutomatic
-            Version = '8.2.5.2'
+            Version = '8.2.4.1'
             RowHeights = (
               19
               21
@@ -1618,7 +1581,7 @@ object frmFinishedInvoices2: TfrmFinishedInvoices2
         SearchFooter.MatchCaseCaption = 'Match case'
         SearchFooter.ResultFormat = '(%d of %d)'
         SortSettings.DefaultFormat = ssAutomatic
-        Version = '8.2.5.2'
+        Version = '8.2.4.1'
         RowHeights = (
           19
           21

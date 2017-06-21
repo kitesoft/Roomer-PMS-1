@@ -6818,7 +6818,6 @@ begin
 
       d.mtHead_.FieldByName('invRefrence').Asstring := IvI.ivhRefrence;
 
-      d.mtHead_.FieldByName('Breakfast').asFloat := IvI.ivhTotalBreakFast;
       d.mtHead_.FieldByName('ExtraText').Asstring := IvI.ivhExtraText;
       d.mtHead_.FieldByName('CurrencyRate').asFloat := IvI.CurrencyRate;
       d.mtHead_.FieldByName('Currency').Asstring := IvI.Currency;
@@ -6831,7 +6830,6 @@ begin
       d.mtHead_.FieldByName('TotalwoVAT').asFloat := IvI.ivhTotal_woVat;
       d.mtHead_.FieldByName('TotalVAT').asFloat := IvI.ivhTotal_VAT;
 
-      d.mtHead_.FieldByName('TotalBreakfast').asFloat := IvI.ivhTotalBreakFast;
       d.mtHead_.FieldByName('CreditInvoice').AsInteger := IvI.ivhCreditInvoice;
       d.mtHead_.FieldByName('OrginalInvoice').AsInteger := IvI.ivhOriginalInvoice;
       d.mtHead_.FieldByName('TotalPayments').asFloat := IvI.TotalPayments;
@@ -7205,7 +7203,6 @@ begin
       IvI.ivhTotal_woVat := IvI.ivhTotal_woVat * -1;
       IvI.ivhTotal_VAT := IvI.ivhTotal_VAT * -1;
       IvI.ivhTotal_Currency := IvI.ivhTotal_Currency * -1;
-      IvI.ivhTotalBreakFast := IvI.ivhTotalBreakFast * -1;
 
       for i := 0 to IvI.lineCount - 1 do
       begin
@@ -7252,7 +7249,6 @@ begin
 
     d.mtHead_.FieldByName('invRefrence').Asstring := IvI.ivhRefrence;
 
-    d.mtHead_.FieldByName('Breakfast').asFloat := IvI.ivhTotalBreakFast;
     d.mtHead_.FieldByName('ExtraText').Asstring := IvI.ivhExtraText;
     d.mtHead_.FieldByName('CurrencyRate').asFloat := IvI.CurrencyRate;
     d.mtHead_.FieldByName('Currency').Asstring := IvI.Currency;
@@ -7265,7 +7261,6 @@ begin
     d.mtHead_.FieldByName('TotalwoVAT').asFloat := IvI.ivhTotal_woVat;
     d.mtHead_.FieldByName('TotalVAT').asFloat := IvI.ivhTotal_VAT;
 
-    d.mtHead_.FieldByName('TotalBreakfast').asFloat := IvI.ivhTotalBreakFast;
     d.mtHead_.FieldByName('CreditInvoice').AsInteger := IvI.ivhCreditInvoice;
     d.mtHead_.FieldByName('OrginalInvoice').AsInteger := IvI.ivhOriginalInvoice;
     d.mtHead_.FieldByName('TotalPayments').asFloat := IvI.TotalPayments;

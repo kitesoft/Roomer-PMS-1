@@ -94,7 +94,6 @@ TYPE
     labHeadInfoDate: TsLabel;
     Label13: TsLabel;
     labHead: TsLabel;
-    Label12: TsLabel;
     Label15: TsLabel;
     GroupBox1: TsGroupBox;
     Label1: TsLabel;
@@ -109,7 +108,6 @@ TYPE
     edtPersonalId: TsEdit;
     edtDate: TsEdit;
     edtCurrency: TsEdit;
-    edtBreakfast: TsEdit;
     memExtraText: TsMemo;
     edtCurrencyRate: TsEdit;
     LMDSimplePanel1: TsPanel;
@@ -478,7 +476,6 @@ begin
         ivi.ivhTotal_woVat      := ivi.ivhTotal_woVat        *-1;
         ivi.ivhTotal_VAT        := ivi.ivhTotal_VAT          *-1;
         ivi.ivhTotal_Currency   := ivi.ivhTotal_Currency     *-1;
-        ivi.ivhTotalBreakFast   := ivi.ivhTotalBreakFast     *-1;
 
         for i := 0 to ivi.lineCount-1 do
         begin
@@ -534,7 +531,6 @@ begin
 
       edtCountry.text         := ivi.CustomerInfo.IvCountry;
       edtPersonalId.text      := ivi.CustomerInfo.IvPid;
-      edtBreakfast.text       := _FloatToStr(ivi.ivhTotalBreakFast,0,0);
       memExtraText.lines.text := ivi.ivhExtraText;
       edtDate.text            := DateToStr(ivi.ivhDate);
       edtPayDate.text         := DateToStr(ivi.ivhPayDate);
