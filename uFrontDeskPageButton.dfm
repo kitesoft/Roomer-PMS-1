@@ -98,6 +98,7 @@ object FrmFrontDeskPageButton: TFrmFrontDeskPageButton
         OnMouseEnter = sPanel1MouseEnter
         OnMouseLeave = sPanel1MouseLeave
         OnMouseUp = sPanel1MouseUp
+        OnPaint = panelOnPaint
         object sImage1: TsImage
           Left = 90
           Top = 10
@@ -202,6 +203,7 @@ object FrmFrontDeskPageButton: TFrmFrontDeskPageButton
         OnMouseEnter = sPanel1MouseEnter
         OnMouseLeave = sPanel1MouseLeave
         OnMouseUp = Shape2MouseUp
+        OnPaint = panelOnPaint
         object sImage2: TsImage
           Left = 85
           Top = 6
@@ -329,6 +331,7 @@ object FrmFrontDeskPageButton: TFrmFrontDeskPageButton
         OnMouseEnter = sPanel1MouseEnter
         OnMouseLeave = sPanel1MouseLeave
         OnMouseUp = Shape3MouseUp
+        OnPaint = panelOnPaint
         object sImage3: TsImage
           Left = 85
           Top = 10
@@ -456,6 +459,7 @@ object FrmFrontDeskPageButton: TFrmFrontDeskPageButton
         OnMouseEnter = sPanel1MouseEnter
         OnMouseLeave = sPanel1MouseLeave
         OnMouseUp = Shape4MouseUp
+        OnPaint = panelOnPaint
         object sImage4: TsImage
           Left = 90
           Top = 10
@@ -561,6 +565,7 @@ object FrmFrontDeskPageButton: TFrmFrontDeskPageButton
         OnMouseEnter = sPanel1MouseEnter
         OnMouseLeave = sPanel1MouseLeave
         OnMouseUp = Shape5MouseUp
+        OnPaint = panelOnPaint
         object sImage5: TsImage
           Left = 63
           Top = 8
@@ -647,6 +652,7 @@ object FrmFrontDeskPageButton: TFrmFrontDeskPageButton
         OnMouseEnter = sPanel1MouseEnter
         OnMouseLeave = sPanel1MouseLeave
         OnMouseUp = Shape6MouseUp
+        OnPaint = panelOnPaint
         object sImage6: TsImage
           Left = 85
           Top = 8
@@ -752,6 +758,7 @@ object FrmFrontDeskPageButton: TFrmFrontDeskPageButton
         OnMouseEnter = sPanel1MouseEnter
         OnMouseLeave = sPanel1MouseLeave
         OnMouseUp = Shape7MouseUp
+        OnPaint = panelOnPaint
         object sImage7: TsImage
           Left = 63
           Top = 8
@@ -838,6 +845,7 @@ object FrmFrontDeskPageButton: TFrmFrontDeskPageButton
         OnMouseEnter = sPanel1MouseEnter
         OnMouseLeave = sPanel1MouseLeave
         OnMouseUp = sPanel15MouseUp
+        OnPaint = panelOnPaint
         object sImage8: TsImage
           Left = 60
           Top = 8
@@ -998,7 +1006,7 @@ object FrmFrontDeskPageButton: TFrmFrontDeskPageButton
       SortSettings.HeaderColorTo = 16579058
       SortSettings.HeaderMirrorColor = 16380385
       SortSettings.HeaderMirrorColorTo = 16182488
-      Version = '8.2.5.2'
+      Version = '8.2.4.1'
     end
   end
   object PngImageList1: TPngImageList

@@ -1451,6 +1451,8 @@ type
     procedure PrepareVersionManagement;
     procedure ClearFilter;
     procedure SetDateStatisticsDate;
+    procedure WMEnterSizeMove(var Message: TMessage) ; message WM_ENTERSIZEMOVE;
+    procedure WMExitSizeMove(var Message: TMessage) ; message WM_EXITSIZEMOVE;
   public
     { Public declarations }
     StaffComm: TStaffCommunication;
@@ -13009,8 +13011,18 @@ begin
   ShowTimelyMessage(Format(GetTranslatedText('shTx_FrmMain_CopiedReservationToClipboard'), [reservationId]));
 end;
 
-initialization
+procedure TfrmMain.WMEnterSizeMove(var Message: TMessage);
+begin
+  Self.DisableAlign;
+end;
 
+procedure TfrmMain.WMExitSizeMove(var Message: TMessage);
+begin
+  Self.EnableAlign;
+  Invalidate;
+end;
+
+initialization
   WM_FORCE_CLOSE_ROOMER := RegisterWindowMessage('WM_FORCE_CLOSE_ROOMER');
 
 end.

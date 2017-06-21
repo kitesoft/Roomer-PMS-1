@@ -76,6 +76,7 @@ type
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormKeyPress(Sender: TObject; var Key: Char);
     procedure FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure panelOnPaint(Sender: TObject; Canvas: TCanvas);
   private
     FShowFromDate: TDate;
     procedure SetShowFromDate(const Value: TDate);
@@ -352,6 +353,17 @@ procedure TFrmFrontDeskPageButton.sPanel1MouseUp(Sender: TObject; Button: TMouse
 begin
   ShowArrivalsReport(true);
   RefreshDisplay;
+end;
+
+procedure TFrmFrontDeskPageButton.panelOnPaint(Sender: TObject; Canvas: TCanvas);
+var
+  lParent: TWinControl;
+  i: integer;
+begin
+  lParent := Sender as TWinControl;
+  for i := 0 to lParent.ControlCount-1 do
+    if lParent.COntrols[i] is TImage then
+      lParent.Controls[i].Invalidate;
 end;
 
 procedure TFrmFrontDeskPageButton.StatGridGetAlignment(Sender: TObject; ARow, ACol: Integer; var HAlign: TAlignment; var VAlign: TVAlignment);
