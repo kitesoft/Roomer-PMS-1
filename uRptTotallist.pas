@@ -263,11 +263,13 @@ begin
            '	  LEFT JOIN rooms ON (rooms.room = rd.room AND rooms.wildcard = 0 and rooms.location in (%s)) '#10 +
            '    JOIN roomreservations rr ON rr.RoomReservation=rd.RoomReservation '#10 +
            '    JOIN reservations r ON r.Reservation=rr.Reservation '#10 +
-           '    LEFT JOIN (SELECT RoomReservation, COUNT(id) AS numGuests FROM persons GROUP BY RoomReservation) AS p ON p.RoomReservation=rr.RoomReservation '#10 +
-           '    LEFT JOIN (SELECT rr2.departure, SUM(p.numGuests) AS numGuests, COUNT(rr2.id) AS numRooms FROM roomreservations rr2 '#10 +
-           '                    JOIN (SELECT RoomReservation, COUNT(p.id) numGuests FROM persons p GROUP BY p.RoomReservation) p ON p.RoomReservation=rr2.RoomReservation '#10 +
-           '	                  JOIN rooms ON (rooms.room = rr2.room AND rooms.wildcard = 0 and rooms.location in (%s)) '#10 +
-           '                    WHERE ((rr2.departure >= %s AND rr2.departure<=%s)) AND rr2.status IN (''P'',''G'',''D'',''W'',''Z'',''Q'') '#10 +
+           '    LEFT JOIN (SELECT RoomReservation, COUNT(*) AS numGuests FROM persons GROUP BY RoomReservation) AS p ON p.RoomReservation=rr.RoomReservation '#10 +
+           '    LEFT JOIN (SELECT rr2.departure, SUM(p.numGuests) AS numGuests, COUNT(*) AS numRooms FROM roomreservations rr2 '#10 +
+           '                    JOIN (SELECT RoomReservation, COUNT(*) numGuests FROM persons p GROUP BY p.RoomReservation) p ON p.RoomReservation=rr2.RoomReservation '#10 +
+           '	                  LEFT JOIN rooms ON (rooms.room = rr2.room AND rooms.wildcard = 0 and rooms.location in (%s)) '#10 +
+           '                    WHERE ((rr2.departure >= %s AND rr2.departure<=%s)) '#10 +
+           '                      AND rr2.status IN (''P'',''G'',''D'',''W'',''Z'',''Q'') '#10 +
+           '                      AND (rr2.rrIsNoRoom or not IsNUll(rooms.room)) '#10+
            '                    GROUP BY rr2.departure) dep ON dep.departure=pd.date '#10 +
            'WHERE '#10 +
            '    ((pd.date >= %s AND pd.date<=%s)) '#10 +
