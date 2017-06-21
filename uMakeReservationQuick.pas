@@ -1582,7 +1582,7 @@ begin
           mRoomResAvragePrice.AsFloat := RoomPrice;
           mRoomResAvrageDiscount.AsFloat := 0;
           mRoomResRateCount.AsInteger := 1;
-          mRoomResPackagePrice.AsFloat := RoomPrice + itemPrice;
+          mRoomResPackagePrice.AsFloat := itemPrice;
           mRoomResPackage.AsString := package;
           mRoomRes.post;
         except

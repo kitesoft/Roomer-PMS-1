@@ -4195,11 +4195,11 @@ begin
     '        AND ia.SplitNumber=%d ' +
     '        AND ia.InvoiceIndex=%d ' +
     '       ), %s))', [zInvoiceNumber, FReservation, FRoomReservation, FnewSplitNumber, InvoiceIndex, _db(zCountry)]);
-  s := s + ', ' + format('(SELECT %d * sum(total) from invoicelines where invoicenumer=%d and splitnumber=%d and invoiceindex=%d) ',
+  s := s + ', ' + format('(SELECT %d * sum(total) from invoicelines where invoicenumber=%d and splitnumber=%d and invoiceindex=%d) ',
                           [iMultiplier, zInvoiceNumber, FNewSPlitNumber, InvoiceIndex]) ; //_CommaToDot(floattostr(iMultiplier * FTotal));
-  s := s + ', ' + format('(SELECT %d * sum(totalWPVat) from invoicelines where invoicenumer=%d and splitnumber=%d and invoiceindex=%d) ',
+  s := s + ', ' + format('(SELECT %d * sum(totalWOVat) from invoicelines where invoicenumber=%d and splitnumber=%d and invoiceindex=%d) ',
                           [iMultiplier, zInvoiceNumber, FNewSPlitNumber, InvoiceIndex]) ; //_CommaToDot(floattostr(iMultiplier * FWOVat));
-  s := s + ', ' + format('(SELECT %d * sum(vat) from invoicelines where invoicenumer=%d and splitnumber=%d and invoiceindex=%d) ',
+  s := s + ', ' + format('(SELECT %d * sum(vat) from invoicelines where invoicenumber=%d and splitnumber=%d and invoiceindex=%d) ',
                           [iMultiplier, zInvoiceNumber, FNewSPlitNumber, InvoiceIndex]) ; //_CommaToDot(floattostr(iMultiplier * FVAT));
   s := s + ', ' + _CommaToDot(floattostr(0.00));
   s := s + ', ' + _db('');

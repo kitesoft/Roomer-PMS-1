@@ -13505,7 +13505,9 @@ begin
   aItemPrice := 0;
 
   if glb.Packages.Locate('package', Code, []) then
-    packageId := glb.Packages.fieldbyname('ID').asInteger
+  begin
+    packageId := glb.Packages.fieldbyname('ID').asInteger;
+  end
   else
     Exit;
 
@@ -13551,11 +13553,11 @@ begin
         if rSet.fieldbyname('itemId').asInteger = roomRentID then
         begin
           aRoomPrice := aRoomPrice + rSet.GetFloatValue(rSet.fieldbyname('unitprice'));
-//          aRoomPrice := aRoomPrice * Nights;
         end
         else
         begin
-          aItemPrice := aItemPrice + rSet.GetFloatValue(rSet.fieldbyname('unitprice')) * numItems
+          if not rSet.FieldByName('IncludedInRate').AsBoolean then
+            aItemPrice := aItemPrice + rSet.GetFloatValue(rSet.fieldbyname('unitprice')) * numItems
         end;
         rSet.Next;
       end;
