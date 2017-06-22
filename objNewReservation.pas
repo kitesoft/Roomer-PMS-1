@@ -16,10 +16,15 @@ uses
   , PrjConst
   , ustringUtils
   , ug
-  , uAlerts, uRoomerDefinitions
+  , uAlerts
+  , uRoomerDefinitions
+  , RoomerExceptionHandling
   ;
 
 TYPE
+  EReservationCreationException = class(ERoomerException);
+  EReservationIDNotFoundException = class(ERoomerException);
+
   TResMedhod = (rmNormal, rmDateRoom, rmDate, rmRoom, rmBlocked,rmAllotment,rmImport);
 
 TYPE
@@ -321,7 +326,7 @@ TYPE
     property resMedhod: TResMedhod read FresMedhod write FresMedhod;
     property IsQuick: Boolean read FIsQuick write FIsQuick;
 
-    // Values not available until after create
+    // ReservationId of newly created reservation, Values not available until after create
     property ReservationId: integer read FReservationId write FReservationId;
     property PriceFound: Boolean read FPriceFound write FPriceFound;
 
@@ -1139,7 +1144,7 @@ var
   newID : integer;
   isPercentage : boolean;
 
-  isOk : Boolean;
+  isFinished : Boolean;
   CheckCount : integer;
 
   TotalGuests : integer;
@@ -1171,18 +1176,17 @@ var
 
   CurrencyRate : Double;
   ItemInfo: recItemPlusHolder;
-
   stlRoomsDateData : TStrings;
-
   doRemoveRemnants : Boolean;
-
+  retries: integer;
 begin
   Result := False;
   doRemoveRemnants := False;
   FReservationId := -1;
   CheckCount   := 0;
   Discount     := 0;
-  isOk         := True;
+  retries      := 0;
+  isFinished         := True;
 //  iRoomReservation := -1;
 
   lstInvoiceActivity := TStringList.Create;
@@ -1204,18 +1208,7 @@ begin
 
         FReservationId := hData.RV_SetNewID();
 
-        if (DeleteResNr > 0) then
-        begin
-           lstReservationActivity.add(CreateReservationActivityLog(g.quser
-                                                 ,DeleteResNr
-                                                 ,0
-                                                 ,DELETE_RESERVATION
-                                                 ,'' //old value
-                                                 ,''
-                                                 ,Format('Deleting before creating new reservation %d', [FReservationId])
-                                   ));
-         doRemoveRemnants := True;
-        end;
+        doRemoveRemnants := (DeleteResNr > 0);
 
         init;
         InsertNewReservation;
@@ -1651,10 +1644,10 @@ begin
 
 
         if not ExecutionPlan.Execute(ptExec, False, False) then // not Transactional, not Transactional) then
-          raise Exception.Create(ExecutionPlan.ExecException);
+          raise EReservationCreationException.Create(ExecutionPlan.ExecException); // Exception will end trying to create reservation
 
-
-        isOk := RV_Exists(FReservationId) ;
+        if not RV_Exists(FReservationId) then
+          raise EReservationIDNotFoundException.CreateFmt('ReservationId %d not found after creation of reservation', [FReservationId]); // Other cause of failure .. will try again
 
         FAlertList.Reservation := FReservationId;
         FAlertList.postChanges;
@@ -1701,18 +1694,29 @@ begin
         if Transactional then
           ExecutionPlan.CommitTransaction;
 
-        result := true
+        isFinished := true;
+        result := true;
       except
-        on e: exception do
+        on e: Exception do
         begin
           if Transactional then
             ExecutionPlan.RollbackTransaction;
-          showMessage('Error creating reservation for ' + MainGuestName + ' on ' + dateToStr(Arrival) + #10 + e.message);
-          isOk := True;
-          result := false;
+
+          // Notice that we cannot retry if not within a transaction because we cannot rollback the (partially) succeeded statements
+          if (e is EReservationIDNotFoundException) and (retries < 3) and Transactional then
+          begin
+            inc(retries);
+            isFinished := false;
+          end
+          else //  e is EReservationCreationException or too many retries ot not within a transaction
+          begin
+            showMessage('Error creating reservation for ' + MainGuestName + ' on ' + dateToStr(Arrival) + #10 + e.message);
+            isFinished := True;
+            result := false;
+          end
         end;
       end;
-    until isOk;
+    until isFinished;
 
     if result then
     begin
@@ -1728,12 +1732,22 @@ begin
         if LstInvoiceActivity[i] <> '' then
           WriteInvoiceActivityLog(LstInvoiceActivity[i]);
       end;
+
+      SendConfirmationEmailIfNeeded;
     end;
 
-  if doRemoveRemnants then
-    RemoveRemnants(DeleteResNr);
-
-  SendConfirmationEmailIfNeeded;
+    if doRemoveRemnants then
+    begin
+      RemoveRemnants(DeleteResNr);
+      lstReservationActivity.add(CreateReservationActivityLog(g.quser
+                                 ,DeleteResNr
+                                 ,0
+                                 ,DELETE_RESERVATION
+                                 ,'' //old value
+                                 ,''
+                                 ,Format('Deleting remnants of reservation %d after creating new reservation %d', [DeleteResNr,FReservationId])
+                               ));
+    end;
 
   finally
     freeandNil(ExecutionPlan);

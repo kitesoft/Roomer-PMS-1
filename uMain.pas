@@ -1339,7 +1339,6 @@ type
     function FilteredData(aRoom: TRoomObject): boolean;
     // Reservation: TSingleReservations): Boolean;
     procedure LocationMenuSelect(Sender: TObject);
-    function FilterActive: boolean;
     function SearchOrGroupFilterActive: boolean;
     function LocationFilter(OnlyLocations: boolean = true): boolean;
     procedure PrepareSkinSelections;
@@ -1447,7 +1446,9 @@ type
     procedure DeActivateMessageTimerIfActive;
     procedure SetPMSVisibilities;
     function GetDateUnderCursor: TDate;
+    {$IFNDEF DEBUG}
     procedure OnAskUpgrade(Text, version: String; forced : Boolean; var upgrade: Boolean);
+    {$endif}
     procedure PrepareVersionManagement;
     procedure ClearFilter;
     procedure SetDateStatisticsDate;
@@ -1745,6 +1746,7 @@ begin
   end;
 end;
 
+{$IFNDEF DEBUG}
 procedure TfrmMain.OnAskUpgrade(Text : String; version : String; forced : Boolean; var upgrade : Boolean);
 var
     Buttons: TMsgDlgButtons;
@@ -1782,6 +1784,7 @@ begin
     Free;
   end;
 end;
+{$ENDIF}
 
 procedure TfrmMain.PrepareVersionManagement;
 begin
@@ -2528,10 +2531,6 @@ begin
   end;
 end;
 
-// ------------------------------------------------------------------------------
-// 19.02.2008 - er �etta nau�synlegt - a�eins nota� � einun sta� --
-// commenta�i �a� �t �ar �anni a� �etta er ekki nota�
-// ------------------------------------------------------------------------------
 procedure TfrmMain.tabsViewChange(Sender: TObject);
 begin
   SetViews(tabsView.TabIndex + 1);
@@ -3338,11 +3337,6 @@ end;
 function TfrmMain.SearchOrGroupFilterActive: boolean;
 begin
   result := SearchActive OR ReservationStateFilter OR GroupsFilterActive;
-end;
-
-function TfrmMain.FilterActive: boolean;
-begin
-  result := LocationFilter OR ReservationStateFilter; // OR FreeRoomsFiltered;
 end;
 
 function TfrmMain.LocationOrFloorFilterActive: boolean;
@@ -4469,14 +4463,18 @@ var
   oRestReservation: TNewReservation;
   restCount: integer;
   lSucceeded: boolean;
+  lCreatedReservationIds: TList<integer>;
+  resid: integer;
 begin
   restCount := 0;
 
   oNewReservation := nil;
   oRestReservation := nil;
+  lCreatedReservationIds := nil;
   try
     oNewReservation := TNewReservation.Create(g.qHotelCode, g.qUser);
     oRestReservation := TNewReservation.Create(g.qHotelCode, g.qUser);
+    lCreatedReservationIds := TList<integer>.Create;
 
     oNewReservation.resMedhod := rmAllotment;
     oNewReservation.isQuick := false;
@@ -4489,48 +4487,52 @@ begin
       ShowMessage(GetTranslatedText('shTx_Main_ReservationCancelled'));
       exit;
     end;
+
     if not oNewReservation.ShowProfile then
       exit;
 
-    d.roomerMainDataSet.SystemStartTransaction;
+    Screen.Cursor := crHourglass;
     try
-      Screen.Cursor := crHourglass;
-      try
-        // Notice that CreateReservation already catches any exceptions and show message to user and returns false
-        frmBusyMessage.ShowMessage(GetTranslatedText('shTx_Working_On_Allotment'), GetTranslatedText('shTx_Creating_New_Booking'));
-        lSucceeded := oNewReservation.CreateReservation(-1, false);
+      // BS 2017-06-22:
+      //NB Surrounding systemctransaction has been removed because CreateReservation needs to be done within its own transaction
+      //   to allow it rollback and retry
 
-        if lSucceeded and (oNewReservation.ReservationId > 0) then
-          if (restCount > 0) then
-          begin
-            // Create a new allotment with the remaining rooms, remove the old allotment
-            frmBusyMessage.ChangeMessage(GetTranslatedText('shTx_Rearranging_Allotment'));
+      //TODO: Let CreateReservation raise an exception when its not succeeded and catch that here and manually rollback already
+      //     created reservations
 
-            //TODO: CAll CreateReservation in its own thread so the UI stays responsive
-            lSucceeded := oRestReservation.CreateReservation(aAllotmentResId, false)
-          end else // no restcount, allotment is empty, just remove the old allotment
-          begin
-            frmBusyMessage.ChangeMessage(GetTranslatedText('shTx_Removing_Allotment_Traces'));
-            WriteReservationActivityLog(CreateReservationActivityLog(g.quser, aAllotmentResId ,0 ,DELETE_RESERVATION ,'' ,''
-                                                                ,Format('Deleting empty allotment reservationId %d', [aAllotmentResId])));
-            d.roomerMainDataSet.SystemRemoveReservation(aAllotmentResId, False, False);
-          end;
+      // Notice that CreateReservation already catches any exceptions and show message to user and returns false
+      frmBusyMessage.ShowMessage(GetTranslatedText('shTx_Working_On_Allotment'), GetTranslatedText('shTx_Creating_New_Booking'));
+      lSucceeded := oNewReservation.CreateReservation(-1, true);
 
-        if lSucceeded then
-          d.roomerMainDataSet.SystemCommitTransaction
-        else
+      if lSucceeded then
+      begin
+        lCreatedReservationIds.Add(oNewReservation.Reservationid);
+
+        if (oNewReservation.ReservationId > 0) and (restCount > 0) then
         begin
-          frmBusyMessage.ChangeMessage(GetTranslatedText('shTx_Processing_Failed_Rolling_Back'));
-          d.roomerMainDataSet.SystemRollbackTransaction;
-        end;
-      finally
-        Screen.Cursor := crDefault;
-      end;
+          // Create a new allotment with the remaining rooms, remove the old allotment
+          frmBusyMessage.ChangeMessage(GetTranslatedText('shTx_Rearranging_Allotment'));
 
-    except
-      // in theory not reachable but when the rollback causes an exception
-      d.roomerMainDataSet.SystemRollbackTransaction;
-      raise;
+          //TODO: CAll CreateReservation in its own thread so the UI stays responsive
+          lSucceeded := oRestReservation.CreateReservation(aAllotmentResId, true);
+          if lSucceeded then
+            lCreatedReservationIds.Add(oRestReservation.ReservationId);
+        end else // no restcount, allotment is empty, just remove the old allotment
+        begin
+          frmBusyMessage.ChangeMessage(GetTranslatedText('shTx_Removing_Allotment_Traces'));
+          d.roomerMainDataSet.SystemRemoveReservation(aAllotmentResId, true, False, Format('Deleting empty allotment reservationId %d', [aAllotmentResId]));
+          WriteReservationActivityLog(CreateReservationActivityLog(g.quser, aAllotmentResId ,0 ,DELETE_RESERVATION ,'' ,''
+                                                              ,Format('Deleting empty allotment reservationId %d', [aAllotmentResId])));
+        end;
+
+        if not lSucceeded then
+          // Something went wrong, rollback all earlier created reservations
+          for resId in lCreatedReservationIds do
+            d.roomerMainDataSet.SystemRemoveReservation(resId, False, False, Format('Rolling back creation of reservationId %d', [resid]));
+
+      end;
+    finally
+      Screen.Cursor := crDefault;
     end;
 
     frmBusyMessage.HideMessage;
@@ -4541,6 +4543,7 @@ begin
     frmBusyMessage.HideMessage;
     oNewReservation.Free;
     oRestReservation.Free;
+    lCreatedReservationIds.Free;
   end;
 
 end;
@@ -7621,11 +7624,8 @@ begin
     6:
       begin
         aDate := trunc(dtDate.Date);
-
-//        DisplayStatusses(true);
-//        FrmRateQuery.BeingViewed := true;
-//        EnterRateQueryView(aDate);
         pageMainGrids.ActivePage := tabFrontDesk;
+        sbFrontDesk.VertScrollBar.Position := 0;
         pageMainGridsChange(pageMainGrids);
       end;
   end;

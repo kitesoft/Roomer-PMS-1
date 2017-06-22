@@ -864,7 +864,7 @@ begin
     begin
       Screen.Cursor := crHourglass;
       try
-        aNewReservation.CreateReservation;
+        aNewReservation.CreateReservation(-1, True);
       finally
         Screen.Cursor := crDefault;
       end;
