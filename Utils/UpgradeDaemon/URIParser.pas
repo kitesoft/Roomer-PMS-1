@@ -212,7 +212,9 @@ function TURIProcessor.UpgradeAvailable : String;
 begin
   if (FileExePath <> '') AND FileExists(FileExePath) then
   begin
-    if UpgradeFileManager.UpgradeFinished OR (TRIM(UpgradeFileManager.UpgradeVersion)='') OR (FileMD5(FileExePath) = UpgradeFileManager.UpgradeMD5) then
+    if UpgradeFileManager.UpgradeFinished OR
+      (TRIM(UpgradeFileManager.UpgradeVersion)='') OR
+      (FileMD5(FileExePath) = UpgradeFileManager.UpgradeMD5) then
       result := RESULT_UPDATE_NOT_AVAILABLE
     else
       result := format(RESULT_UPDATE_AVAILABLE,

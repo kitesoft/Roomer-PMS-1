@@ -546,7 +546,15 @@ end;
 procedure TfrmUpgradeDaemon.CloseAllRoomers;
 begin
   AddLog('Broadcasting message ' + inttostr(WM_FORCE_CLOSE_ROOMER));
-  SendMessage(HWND_BROADCAST, WM_FORCE_CLOSE_ROOMER, Handle, 0);
+  SendMessageTimeout(HWND_BROADCAST,
+                     WM_FORCE_CLOSE_ROOMER,
+                     Handle,
+                     0,
+
+                     SMTO_ABORTIFHUNG,
+                     3000, // 3 seconds
+                     nil
+                     );
   sleep(1000);
 end;
 
