@@ -11,6 +11,8 @@ inherited FrmPayCardView: TFrmPayCardView
   inherited sbStatusBar: TsStatusBar
     Top = 571
     Width = 976
+    ExplicitTop = 571
+    ExplicitWidth = 976
   end
   object pnlHead: TsPanel [1]
     Left = 0

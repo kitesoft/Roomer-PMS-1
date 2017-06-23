@@ -1346,7 +1346,7 @@ type
     procedure grAutoSizeGrids;
     function ReservationtInGroupList(resId: integer): boolean;
     function GroupsFilterActive: boolean;
-    procedure EnableDisableFunctions(EnableAll: boolean; aReservationIsSelected: boolean);
+    procedure EnableDisableFunctions(Enable: boolean);
     procedure AutoResizeOneDayGrid;
     procedure ClearGroupList;
     procedure ClearFreeRooms;
@@ -2534,7 +2534,7 @@ end;
 procedure TfrmMain.tabsViewChange(Sender: TObject);
 begin
   SetViews(tabsView.TabIndex + 1);
-  EnableDisableFunctions(tabsView.TabIndex IN [0,1], false);
+  EnableDisableFunctions(tabsView.TabIndex IN [0,1]);
   PostMessage(handle, WM_REFRESH_PERIOD_VIEW_BOTTOM, 0, 0);
 end;
 
@@ -3019,7 +3019,7 @@ var
 begin
   tmpUserLang := g.qUserLanguage;
 
-  EnableDisableFunctions(false, false);
+  EnableDisableFunctions(false);
 
   userName := g.qUser;
   password := '';
@@ -5863,7 +5863,7 @@ begin
     noRes := ActiveGrid.cells[11, ARow] = '';
   end;
 
-  EnableDisableFunctions(true, NOT noRes);
+  EnableDisableFunctions(NOT noRes);
   if noRes then
   begin
     aRoom := ActiveGrid.cells[roomCol, ARow];
@@ -5878,32 +5878,32 @@ begin
     zOneDay_ResIndex := -1;
 end;
 
-procedure TfrmMain.EnableDisableFunctions(EnableAll: boolean; aReservationIsSelected: boolean);
+procedure TfrmMain.EnableDisableFunctions(Enable: boolean);
 begin
 
-  pmnuRoomInvoive.Enabled := EnableAll and aReservationIsSelected;
-  pmnuGroupInvoice.Enabled := EnableAll and aReservationIsSelected;
-  pmnuClosedInvoicesThisRoom.Enabled := EnableAll and aReservationIsSelected AND (NOT OffLineMode);
-  pmnuClosedInvoicesThisreservation.Enabled := EnableAll and aReservationIsSelected AND (NOT OffLineMode);
-  pmnuClosedInvoicesThisCustomer.Enabled := EnableAll and aReservationIsSelected AND (NOT OffLineMode);
-  pmnuCheckInRoom.Enabled := EnableAll and aReservationIsSelected;
-  pmnuCheckOutRoom.Enabled := EnableAll and aReservationIsSelected;
-  pmnuCheckInGroup.Enabled := EnableAll and aReservationIsSelected;
-  mnuRoomNumber.Enabled := EnableAll and aReservationIsSelected;
-  mnuCancelReservation2.Enabled := EnableAll and aReservationIsSelected AND (NOT OffLineMode);
-  pmnuModifyReservation.Enabled := EnableAll and aReservationIsSelected AND (NOT OffLineMode);
-  pmnuRoomReservation.Enabled := EnableAll and aReservationIsSelected AND (NOT OffLineMode);
-  pmnuRoomGuests.Enabled := EnableAll and aReservationIsSelected AND (NOT OffLineMode);
-  mnuRoomListForReservation.Enabled := EnableAll and aReservationIsSelected AND (NOT OffLineMode);
-  mmnuFinishedInvoices.Enabled := EnableAll AND (NOT OffLineMode);
-  mnuItmColorCodeRoom.Enabled := EnableAll and aReservationIsSelected AND (NOT OffLineMode);
-  mnuConfirmBooking.Enabled := EnableAll and aReservationIsSelected AND (NOT OffLineMode);
-  btnCancelReservations.Enabled := EnableAll and aReservationIsSelected AND (NOT OffLineMode); // C3
-  pmnuProvideAllotment.Enabled := EnableAll and aReservationIsSelected AND (NOT OffLineMode); // C3
-  mnuSendConfirmationEmail.Enabled := EnableAll and aReservationIsSelected AND (NOT OffLineMode);
-  mnuGroupGuestNames.Enabled := EnableAll and aReservationIsSelected AND (NOT OffLineMode);
+  pmnuRoomInvoive.Enabled := Enable;
+  pmnuGroupInvoice.Enabled := Enable;
+  pmnuClosedInvoicesThisRoom.Enabled := Enable AND (NOT OffLineMode);
+  pmnuClosedInvoicesThisreservation.Enabled := Enable AND (NOT OffLineMode);
+  pmnuClosedInvoicesThisCustomer.Enabled := Enable AND (NOT OffLineMode);
+  pmnuCheckInRoom.Enabled := Enable;
+  pmnuCheckOutRoom.Enabled := Enable;
+  pmnuCheckInGroup.Enabled := Enable;
+  mnuRoomNumber.Enabled := Enable;
+  mnuCancelReservation2.Enabled := Enable AND (NOT OffLineMode);
+  pmnuModifyReservation.Enabled := Enable AND (NOT OffLineMode);
+  pmnuRoomReservation.Enabled := Enable AND (NOT OffLineMode);
+  pmnuRoomGuests.Enabled := Enable AND (NOT OffLineMode);
+  mnuRoomListForReservation.Enabled := Enable AND (NOT OffLineMode);
+  mmnuFinishedInvoices.Enabled := Enable AND (NOT OffLineMode);
+  mnuItmColorCodeRoom.Enabled := Enable AND (NOT OffLineMode);
+  mnuConfirmBooking.Enabled := Enable AND (NOT OffLineMode);
+  btnCancelReservations.Enabled := Enable AND (NOT OffLineMode); // C3
+  pmnuProvideAllotment.Enabled := Enable AND (NOT OffLineMode); // C3
+  mnuSendConfirmationEmail.Enabled := Enable AND (NOT OffLineMode);
+  mnuGroupGuestNames.Enabled := Enable AND (NOT OffLineMode);
 
-  if EnableAll and aReservationIsSelected AND (NOT OffLineMode) and GetSelectedRoomInformation then
+  if Enable AND (NOT OffLineMode) and GetSelectedRoomInformation then
   begin
     mnuCancelRoomFromRoomReservation.Enabled := d.RR_GetNumberOfRooms(_iReservation) > 1;
     mnuDeleteRoomFromReservation.Enabled := mnuCancelRoomFromRoomReservation.Enabled;
@@ -5913,33 +5913,33 @@ begin
     mnuDeleteRoomFromReservation.Enabled := false;
   end;
 
-  mnuRegistrationForm.Enabled := EnableAll and aReservationIsSelected AND (NOT OffLineMode);
+  mnuRegistrationForm.Enabled := Enable AND (NOT OffLineMode);
 
 
-  btnRoomInvoice.Enabled := EnableAll and aReservationIsSelected;
-  btnGroupInvoice.Enabled := EnableAll and aReservationIsSelected;
-  btnClosedInvoicesThisRoom.Enabled := EnableAll and aReservationIsSelected AND (NOT OffLineMode);
-  btnClosedInvoicesThisreservation.Enabled := EnableAll and aReservationIsSelected AND (NOT OffLineMode);
-  btnClosedInvoicesThisCustomer.Enabled := EnableAll and aReservationIsSelected AND (NOT OffLineMode);
-  btnClosedInvoicesThisRoom.Enabled := EnableAll and aReservationIsSelected AND (NOT OffLineMode);
-  btnClosedInvoicesThisreservation.Enabled := EnableAll and aReservationIsSelected AND (NOT OffLineMode);
-  btnClosedInvoicesThisCustomer.Enabled := EnableAll and aReservationIsSelected AND (NOT OffLineMode);
+  btnRoomInvoice.Enabled := Enable;
+  btnGroupInvoice.Enabled := Enable;
+  btnClosedInvoicesThisRoom.Enabled := Enable AND (NOT OffLineMode);
+  btnClosedInvoicesThisreservation.Enabled := Enable AND (NOT OffLineMode);
+  btnClosedInvoicesThisCustomer.Enabled := Enable AND (NOT OffLineMode);
+  btnClosedInvoicesThisRoom.Enabled := Enable AND (NOT OffLineMode);
+  btnClosedInvoicesThisreservation.Enabled := Enable AND (NOT OffLineMode);
+  btnClosedInvoicesThisCustomer.Enabled := Enable AND (NOT OffLineMode);
 
-  btnQuicReservation.Enabled := EnableAll AND (NOT OffLineMode);
-  btnConfirmAllottedBooking.Enabled := EnableAll and aReservationIsSelected AND (NOT OffLineMode);
-  btnModifyReservation.Enabled := EnableAll and aReservationIsSelected AND (NOT OffLineMode);
-  btnRoomReservation.Enabled := EnableAll and aReservationIsSelected AND (NOT OffLineMode);
-  btnRoomGuests.Enabled := EnableAll and aReservationIsSelected AND (NOT OffLineMode);
-  pmnuReservationRoomList.Enabled := EnableAll and aReservationIsSelected AND (NOT OffLineMode);
-  btnReservationNotes.Enabled := EnableAll and aReservationIsSelected AND (NOT OffLineMode);
-  btnCancelThisReservation.Enabled := EnableAll and aReservationIsSelected AND (NOT OffLineMode);
-  btnDeleteReservation.Enabled := EnableAll and aReservationIsSelected AND (NOT OffLineMode);
-  btnRemoveThisRoom.Enabled := EnableAll and aReservationIsSelected AND (NOT OffLineMode);
-  btnCheckInRoom.Enabled := EnableAll and aReservationIsSelected;
-  btnCheckInGroup.Enabled := EnableAll and aReservationIsSelected;
-  btnCheckOutRoom.Enabled := EnableAll and aReservationIsSelected;
-  btnProvideARoom.Enabled := EnableAll and aReservationIsSelected;
-  btnSetNoroom.Enabled := EnableAll and aReservationIsSelected AND (NOT OffLineMode);
+  btnQuicReservation.Enabled := Enable AND (NOT OffLineMode);
+  btnConfirmAllottedBooking.Enabled := Enable AND (NOT OffLineMode);
+  btnModifyReservation.Enabled := Enable AND (NOT OffLineMode);
+  btnRoomReservation.Enabled := Enable AND (NOT OffLineMode);
+  btnRoomGuests.Enabled := Enable AND (NOT OffLineMode);
+  pmnuReservationRoomList.Enabled := Enable AND (NOT OffLineMode);
+  btnReservationNotes.Enabled := Enable AND (NOT OffLineMode);
+  btnCancelThisReservation.Enabled := Enable AND (NOT OffLineMode);
+  btnDeleteReservation.Enabled := Enable AND (NOT OffLineMode);
+  btnRemoveThisRoom.Enabled := Enable AND (NOT OffLineMode);
+  btnCheckInRoom.Enabled := Enable;
+  btnCheckInGroup.Enabled := Enable;
+  btnCheckOutRoom.Enabled := Enable;
+  btnProvideARoom.Enabled := Enable;
+  btnSetNoroom.Enabled := Enable AND (NOT OffLineMode);
 end;
 
 /// ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -7373,12 +7373,12 @@ begin
     if assigned(grPeriodRooms.Objects[ACol, ARow]) then
     begin
       iRoomReservation := (grPeriodRooms.Objects[ACol, ARow] as TresCell).RoomReservation;
-      EnableDisableFunctions(true, iRoomReservation >= 0);
+      EnableDisableFunctions(iRoomReservation >= 0);
     end
     else
-      EnableDisableFunctions(true, false);
+      EnableDisableFunctions(false);
   except
-    EnableDisableFunctions(true, false);
+    EnableDisableFunctions(false);
   end;
 
   try
@@ -9899,12 +9899,12 @@ begin
     if assigned(grPeriodRooms_NO.Objects[ACol, ARow]) then
     begin
       iRoomReservation := (grPeriodRooms_NO.Objects[ACol, ARow] as TresCell).RoomReservation;
-      EnableDisableFunctions(true, iRoomReservation >= 0);
+      EnableDisableFunctions(iRoomReservation >= 0);
     end
     else
-      EnableDisableFunctions(true, false);
+      EnableDisableFunctions(false);
   except
-    EnableDisableFunctions(true, false);
+    EnableDisableFunctions(false);
   end;
 end;
 

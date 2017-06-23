@@ -328,7 +328,7 @@ begin
     TSplashFormManager.Show;
 
     Application.CreateForm(TD, D);
-    D.ApplicationId := cOpenAPIApplicationID;
+  D.ApplicationId := cOpenAPIApplicationID;
 
     Application.CreateForm(TDReportData, DReportData);
     TSplashFormManager.UpdateProgress('Loading forms...');

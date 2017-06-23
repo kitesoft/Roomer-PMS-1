@@ -40,7 +40,8 @@ implementation
 
 uses uG,
      RoomerLoginForm,
-     uD;
+     uD,
+     uUtils;
 
 function openLogin(var userName, password : string) : boolean;
 var hotelId : String;
@@ -78,8 +79,9 @@ end;
 procedure TFrmPayCardView.GoToUri(uri : String);
 var Flags: OleVariant;
 begin
-  Flags := 'navNoHistory,navNoReadFromCache,navNoWriteToCache';
-  browser.Navigate2(uri, Flags);
+//  Flags := 'navNoHistory,navNoReadFromCache,navNoWriteToCache';
+  Flags:=4;
+  browser.Navigate(uri, Flags);
 end;
 
 
@@ -92,6 +94,7 @@ begin
 
   // Get Token via webservice
   iFrameUri := d.roomerMainDataSet.downloadUrlAsString(uri);
+  CopyToClipboard(iFrameUri);
   GoToUri(iFrameUri);
 end;
 
