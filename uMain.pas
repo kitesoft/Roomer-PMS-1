@@ -5865,13 +5865,11 @@ begin
 
   EnableDisableFunctions(NOT noRes);
   if noRes then
-  begin
-    aRoom := ActiveGrid.cells[roomCol, ARow];
-  end
+    aRoom := ActiveGrid.cells[roomCol, ARow]
   else
-  begin
-    aRoom := ''
-  end;
+    aRoom := '';
+  btnQuicReservation.Enabled := noRes AND (aRoom <> '');
+  QuickReservation1.Enabled := btnQuicReservation.Enabled;
   zEmptyRoomNumber := aRoom;
   zOneDay_ResIndex := 0;
   if noRes then
@@ -5925,7 +5923,7 @@ begin
   btnClosedInvoicesThisreservation.Enabled := Enable AND (NOT OffLineMode);
   btnClosedInvoicesThisCustomer.Enabled := Enable AND (NOT OffLineMode);
 
-  btnQuicReservation.Enabled := Enable AND (NOT OffLineMode);
+//  btnQuicReservation.Enabled := Enable AND (NOT OffLineMode);
   btnConfirmAllottedBooking.Enabled := Enable AND (NOT OffLineMode);
   btnModifyReservation.Enabled := Enable AND (NOT OffLineMode);
   btnRoomReservation.Enabled := Enable AND (NOT OffLineMode);
