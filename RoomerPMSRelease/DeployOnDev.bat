@@ -15,6 +15,7 @@ call SignSpecific Deployment\Roomer.exe
 call SignSpecific Deployment\RoomerUpgradeAgent.exe
 call SignSpecific Deployment\RoomerUpgradeDaemon.exe
 
+rem 2880 minutes = 48 hours
 VersionXmlGenerator .\Deployment 2880 .\Deployment\Roomer.xml false
 REM copy Roomer.xml Deployment
 
