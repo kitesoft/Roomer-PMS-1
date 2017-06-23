@@ -5,7 +5,7 @@
         <FrameworkType>VCL</FrameworkType>
         <MainSource>RoomerUpgradeDaemon.dpr</MainSource>
         <Base>True</Base>
-        <Config Condition="'$(Config)'==''">Debug</Config>
+        <Config Condition="'$(Config)'==''">Release</Config>
         <Platform Condition="'$(Platform)'==''">Win32</Platform>
         <TargetedPlatforms>1</TargetedPlatforms>
         <AppType>Application</AppType>
@@ -102,15 +102,12 @@
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
         <DCC_DcuOutput>C:\Temp\dcu</DCC_DcuOutput>
-        <VerInfo_Release>14</VerInfo_Release>
-        <VerInfo_MajorVer>1</VerInfo_MajorVer>
-        <VerInfo_Keys>CompanyName=Promoir BV - Roomer PMS;FileDescription=Roomer Traybar upgrade daemon;FileVersion=1.9.14.0;InternalName=;LegalCopyright=Copyright (C) Promoir BV, 2017;LegalTrademarks=;OriginalFilename=RoomerUpgradeDaemon;ProductName=Roomer PMS;ProductVersion=1.9.14.0;Comments=</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=Promoir BV - Roomer PMS;FileDescription=Roomer Traybar upgrade daemon;FileVersion=1.9.14.1;InternalName=;LegalCopyright=Copyright (C) Promoir BV, 2017;LegalTrademarks=;OriginalFilename=RoomerUpgradeDaemon;ProductName=Roomer PMS;ProductVersion=1.9.14.1;Comments=</VerInfo_Keys>
         <Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
         <Debugger_RunParams>C:\Development\Roomer\Frontend\win-pms\Roomer.exe</Debugger_RunParams>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <Icon_MainIcon>RoomerUpgradeAgent_Icon.ico</Icon_MainIcon>
         <DCC_ExeOutput>..\..\RoomerPMSRelease\</DCC_ExeOutput>
-        <VerInfo_MinorVer>9</VerInfo_MinorVer>
     </PropertyGroup>
     <ItemGroup>
         <DelphiCompile Include="$(MainSource)">
