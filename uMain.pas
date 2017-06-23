@@ -68,6 +68,8 @@ uses
   dxSkinStardust,
   dxSkinSummer2008, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, sScrollBox, acImage, AdvUtil,
   uReservationStateDefinitions, System.Actions, Vcl.ActnList, uEmbDateStatistics, uVersionManagement
+ , uReservationStateChangeHandler
+
 
     ;
 
@@ -1093,6 +1095,7 @@ type
 
     AppIsClosing : Boolean;
     RoomerVersionManagement : TRoomerVersionManagement;
+    FReservationStateHandler: TReservationStateChangeHandler;
 
     procedure OnRefreshMessagesRequest(var Msg: TMessage); message WM_REFRESH_MESSAGES;
     procedure Open_RR_EdForm(_grid: TAdvStringGrid);
@@ -1610,7 +1613,6 @@ uses
     , uDayClosingTimesAPICaller
     , uDateTimeHelper
     , uRptHouseKeeping
-    , uReservationStateChangeHandler
     , uRptDailyRevenues
     , uRoomerVersionInfo
     , uSQLUtils
@@ -4746,7 +4748,7 @@ end;
 
 procedure TfrmMain.RemoveAReservation;
 begin
-  if GetSelectedRoomInformation then
+  if GetSelectedRoomInformation and FReservationStateHandler.ChangeIsAllowed(rsRemoved, true) then
   begin
     g.OpenRemoveReservation(_iRoomReservation);
 
@@ -4769,7 +4771,7 @@ end;
 
 procedure TfrmMain.CancelAReservation;
 begin
-  if GetSelectedRoomInformation then
+  if GetSelectedRoomInformation and FReservationStateHandler.ChangeIsAllowed(rsCancelled) then
   begin
     if CancelBookingDialog(_iReservation) then
       if (ViewMode = vmOneDay) OR (ViewMode = vmPeriod) then
@@ -4779,7 +4781,7 @@ end;
 
 procedure TfrmMain.CancelARoomReservation;
 begin
-  if GetSelectedRoomInformation then
+  if GetSelectedRoomInformation and FReservationStateHandler.RoomStateChangeHandler[_iRoomReservation].ChangeIsAllowed(rsCancelled, true) then
   begin
     if CancelRoomBookingDialog(_iRoomReservation) then
       if (ViewMode = vmOneDay) OR (ViewMode = vmPeriod) then
@@ -4980,6 +4982,9 @@ begin
       _Name := Format('[%s] %s', [_Room, rri.CustomerName]);
     _Guest := rri.CustomerName + ' / ' + d.RR_GetFirstGuestName(_iRoomReservation);
   end;
+
+  FReservationStateHandler.Free;
+  FReservationStateHandler := TReservationStateChangeHandler.Create(_iReservation);
 
   result := true;
 end;

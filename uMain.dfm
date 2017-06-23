@@ -856,10 +856,6 @@ object frmMain: TfrmMain
         object tabPeriod: TsTabSheet
           Caption = 'tabPeriod'
           ImageIndex = 2
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object sLabel2: TsLabel
             Left = 224
             Top = 400
@@ -1323,7 +1319,6 @@ object frmMain: TfrmMain
             OnMoved = splitPeriodMoved
             Color = 6842472
             ParentColor = False
-            ExplicitTop = 157
           end
           object pnlPeriodNoRooms: TsPanel
             Left = 0
@@ -1643,32 +1638,16 @@ object frmMain: TfrmMain
         end
         object tabFreeRooms: TsTabSheet
           Caption = 'tabFreeRooms'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
         end
         object tabDashboard: TsTabSheet
           Caption = 'tabDashboard'
           SkinData.SkinSection = 'TRANSPARENT'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
         end
         object tabRateQuery: TsTabSheet
           Caption = 'tabRateQuery'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
         end
         object tabFrontDesk: TsTabSheet
           Caption = 'tabFrontDesk'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object sbFrontDesk: TsScrollBox
             Left = 0
             Top = 0

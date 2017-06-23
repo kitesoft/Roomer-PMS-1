@@ -1380,7 +1380,7 @@ var
   CancelType : integer;
 begin
   result := false;
-  frmCancelReservation2 := TfrmCancelReservation2.Create(frmCancelReservation2);
+  frmCancelReservation2 := TfrmCancelReservation2.Create(nil);
   try
     frmCancelReservation2.zRoomreservation := Roomreservation            ;
 

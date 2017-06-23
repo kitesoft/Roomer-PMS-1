@@ -765,7 +765,7 @@ begin
       s := s + 'WHERE '#10;
       s := s + ' (aDate = %s) '#10;
       s := s + 'AND (roomreservation = %d) '#10;
-      s := s + '   AND (ResFlag <> ' + _db(rsDeleted.AsStatusChar) + ' ) ';
+      s := s + '   AND (ResFlag <> ' + _db(rsRemoved.AsStatusChar) + ' ) ';
 
       s := format(s, [sDate, RoomReservation]);
       lExecPLan.AddExec(s);

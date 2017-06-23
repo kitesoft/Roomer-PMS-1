@@ -3499,6 +3499,7 @@ select_DraftInv_exists : string =
 '   RoomReservation = %s '#10+  //' + inttostr(RoomReservation) + '
 '   and SplitNumber = 0 '#10+ // roomInvoice
 '   and InvoiceNumber = -1 '#10+
+'   and isPackage = 0 '#10+
 '   and Finished = 0 ';
 
 select_DraftInvGroup_exists : string =
@@ -3514,6 +3515,7 @@ select_DraftInvGroup_exists : string =
 '   and RoomReservation = 0 '#10+ // roomInvoice
 '   and SplitNumber = 0 '#10+ // roomInvoice
 '   and InvoiceNumber = -1 '#10+
+'   and isPackage = 0 '#10+
 '   and Finished = 0 ';
 
 select_GetRate : string =

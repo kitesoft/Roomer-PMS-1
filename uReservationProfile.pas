@@ -2152,12 +2152,12 @@ begin
 end;
 
 procedure TfrmReservationProfile.btnRemoveRoomClick(Sender: TObject);
-var
-  RoomNumber: string;
+//var
+//  RoomNumber: string;
 begin
-  RoomNumber := d.RR_GetRoomNr(zRoomReservation);
+//  RoomNumber := d.RR_GetRoomNr(zRoomReservation);
 
-  if g.OpenRemoveRoom(zRoomReservation) then
+  if FReservationChangeStateHandler.RoomStateChangeHandler[zRoomReservation].ChangeIsAllowed(rsRemoved, true) and g.OpenRemoveRoom(zRoomReservation) then
   begin
     FReservationChangeStateHandler.UpdateRoomResStateChangeHandlers;
     mRooms.delete;

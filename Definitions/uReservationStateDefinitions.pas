@@ -46,7 +46,7 @@ type
 
     rsWaitingList,
 
-    rsDeleted
+    rsRemoved
   );
 
     TReservationStateSet = set of TReservationState;
@@ -203,28 +203,28 @@ begin
   Result := Self <> aNewState;
   if Result then
     case Self of
-      rsUnknown:            Result := aNewState in [rsReservation, rsGuests, rsOptionalBooking, rsAllotment, rsNoShow, rsBlocked, rsCancelled, rsWaitingList];
+      rsUnknown:            Result := aNewState in [rsReservation, rsGuests, rsOptionalBooking, rsAllotment, rsNoShow, rsBlocked, rsCancelled, rsWaitingList, rsRemoved];
       rsReservation:        begin
-                              Result := aNewState in [rsGuests, rsOptionalBooking, rsNoShow, rsBlocked, rsCancelled, rsWaitingList];
+                              Result := aNewState in [rsGuests, rsOptionalBooking, rsNoShow, rsBlocked, rsCancelled, rsWaitingList, rsRemoved];
                               if glb.PMSSettings.ReservationProfileSettings.AllowAllotmentStateChange then
                                 Result := Result or (aNewState = rsAllotment);
                             end;
       rsGuests:             Result := aNewState in [rsReservation, rsDeparted];
       rsDeparted:           Result := aNewState in [rsGuests];
-      rsOptionalBooking:    Result := aNewState in [rsReservation, rsGuests, rsNoShow, rsBlocked, rsCancelled, rsWaitingList];
+      rsOptionalBooking:    Result := aNewState in [rsReservation, rsGuests, rsNoShow, rsBlocked, rsCancelled, rsWaitingList, rsRemoved];
       rsAllotment:          begin
-                              Result := aNewState in [rsCancelled];
+                              Result := aNewState in [rsCancelled, rsRemoved];
                               if glb.PMSSettings.ReservationProfileSettings.AllowAllotmentStateChange then
                                 Result := Result or (aNewState = rsReservation);
                             end;
-      rsNoShow:             Result := aNewState in [rsReservation, rsCancelled];
+      rsNoShow:             Result := aNewState in [rsReservation, rsCancelled, rsRemoved];
       rsBlocked:            Result := aNewState in [rsReservation, rsOptionalBooking, rsBlocked, rsWaitingList];
-      rsCancelled:          Result := aNewState in [rsReservation, rsAllotment];
-      rsTmp1:               Result := aNewState in [rsReservation, rsGuests, rsOptionalBooking, rsNoShow, rsBlocked, rsCancelled, rsWaitingList];
+      rsCancelled:          Result := aNewState in [rsReservation, rsAllotment, rsRemoved];
+      rsTmp1:               Result := aNewState in [rsReservation, rsGuests, rsOptionalBooking, rsNoShow, rsBlocked, rsCancelled, rsWaitingList, rsRemoved];
       rsAwaitingPayment:    result := False;
       rsAwaitingPayConfirm: result := False;
       rsMixed:              result := false;
-      rsWaitingList:        Result := aNewState in [rsReservation, rsGuests, rsOptionalBooking, rsNoShow, rsBlocked, rsCancelled];
+      rsWaitingList:        Result := aNewState in [rsReservation, rsGuests, rsOptionalBooking, rsNoShow, rsBlocked, rsCancelled, rsRemoved];
     else
       Result := false;
     end;
@@ -262,7 +262,7 @@ begin
     rsAwaitingPayConfirm: result := True;
     rsMixed:              result := True;
     rsWaitingList:        result := True;
-    rsDeleted:            result := false;
+    rsRemoved:            result := false;
   else
     Result := True;
   end;
@@ -290,7 +290,7 @@ begin
     rsAwaitingPayConfirm: result := False;
     rsMixed:              result := false;
     rsWaitingList:        result := True;
-    rsDeleted:            result := False;
+    rsRemoved:            result := False;
   else
     Result := false;
   end;
@@ -354,7 +354,7 @@ begin
     'Z': result := rsAwaitingPayment;
     'Q': result := rsAwaitingPayConfirm;
     'L': result := rsWaitingList;
-    'X': result := rsDeleted;
+    'X': result := rsRemoved;
   else
     result := rsUnKnown;
   end;
