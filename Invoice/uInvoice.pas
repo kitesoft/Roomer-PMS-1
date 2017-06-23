@@ -8304,9 +8304,9 @@ begin
     s := '';
     s := s + ' update invoicelines il '#10;
     s := s + ' join    (select '#10;
-    s := s + '            sum(ilp.total) as Total, '#10;
-    s := s + '            sum(ilp.vat) as VAT, '#10;
-    s := s + '            sum(ilp.TotalWOVat) as TotalWOVat '#10;
+    s := s + '            coalesce(sum(ilp.total), 0) as Total, '#10;
+    s := s + '            coalesce(sum(ilp.vat), 0) as VAT, '#10;
+    s := s + '            coalesce(sum(ilp.TotalWOVat), 0) as TotalWOVat '#10;
     s := s + '          from invoicelines ilp '#10;
     s := s + '          join items i on i.item = ilp.itemid '#10;
     s := s + '          join packageitems pi on pi.itemid=i.id and pi.IncludedInRate '#10;

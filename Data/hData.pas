@@ -1642,7 +1642,6 @@ function Del_ReservationByreservation(Reservation: integer): boolean;
 
 // function SP_INS_ItemType(theData : recItemTypeHolder; Connection : TRoomerConnection; loglevel : integer=0; logpath : string='') : boolean;
 
-function SQL_UPDATE_Reservation(theData: recReservationHolder): String;
 function SQL_UPDATE_NEW_Reservation(theData: recReservationHolder): String;
 function SP_INS_DelReservation(theData: recReservationHolder): boolean;
 function SP_INS_RoomReservation(theData: recRoomReservationHolder): boolean;
@@ -3605,63 +3604,6 @@ begin
   s := '     , ' + _db(theData.Currency) + #10;
   s := '   ) ' + #10;
   result := cmd_bySQL(s);
-end;
-
-function SQL_UPDATE_Reservation(theData: recReservationHolder): String;
-var
-  s: string;
-begin
-  s := '';
-  s := s + 'update reservations set '#10;
-  s := s + ' 	 Arrival = ' + quotedstr(theData.Arrival) + #10;
-  s := s + ' 	,Departure = ' + quotedstr(theData.Departure) + #10;
-  s := s + ' 	,Customer = ' + quotedstr(theData.Customer) + #10;
-  s := s + ' 	,Name = ' + quotedstr(theData.name) + #10;
-  s := s + ' 	,Address1 = ' + quotedstr(theData.Address1) + #10;
-  s := s + ' 	,Address2 = ' + quotedstr(theData.Address2) + #10;
-  s := s + ' 	,Address3 = ' + quotedstr(theData.Address3) + #10;
-  s := s + ' 	,Address4 = ' + quotedstr(theData.Address4) + #10;
-  s := s + ' 	,Country = ' + quotedstr(theData.Country) + #10;
-  s := s + ' 	,Tel1 = ' + quotedstr(theData.Tel1) + #10;
-  s := s + ' 	,Tel2 = ' + quotedstr(theData.Tel2) + #10;
-  s := s + ' 	,Fax = ' + quotedstr(theData.Fax) + #10;
-  s := s + ' 	,Status = ' + quotedstr(theData.Status) + #10;
-  s := s + ' 	,ReservationDate = ' + quotedstr(theData.ReservationDate) + #10;
-  s := s + ' 	,Staff = ' + quotedstr(theData.Staff) + #10;
-  s := s + ' 	,Information = ' + quotedstr(theData.Information) + #10;
-  s := s + ' 	,PMInfo = ' + quotedstr(theData.PMInfo) + #10;
-  s := s + ' 	,HiddenInfo = ' + quotedstr(theData.HiddenInfo) + #10;
-  s := s + ' 	,RoomRentPaid1 = ' + _db(theData.RoomRentPaid1) + #10;
-  s := s + ' 	,RoomRentPaid2 = ' + _db(theData.RoomRentPaid2) + #10;
-  s := s + ' 	,RoomRentPaid3 = ' + _db(theData.RoomRentPaid3) + #10;
-  s := s + ' 	,RoomRentPaymentInvoice = ' + inttostr(theData.RoomRentPaymentInvoice) + #10;
-  s := s + ' 	,ContactName = ' + quotedstr(theData.ContactName) + #10;
-  s := s + ' 	,ContactPhone = ' + quotedstr(theData.ContactPhone) + #10;
-  s := s + ' 	,ContactPhone2 = ' + quotedstr(theData.ContactPhone2) + #10;
-  s := s + ' 	,ContactFax = ' + quotedstr(theData.ContactFax) + #10;
-  s := s + ' 	,ContactEmail = ' + quotedstr(theData.ContactEmail) + #10;
-  s := s + ' 	,ContactAddress1 = ' + quotedstr(theData.ContactAddress1) + #10;
-  s := s + ' 	,ContactAddress2 = ' + quotedstr(theData.ContactAddress2) + #10;
-  s := s + ' 	,ContactAddress3 = ' + quotedstr(theData.ContactAddress3) + #10;
-  s := s + ' 	,ContactAddress4 = ' + quotedstr(theData.ContactAddress4) + #10;
-  s := s + ' 	,ContactCountry = ' + quotedstr(theData.ContactCountry) + #10;
-  s := s + ' 	,inputsource = ' + quotedstr(theData.inputsource) + #10;
-  s := s + ' 	,webconfirmed = ' + quotedstr(theData.webconfirmed) + #10;
-  s := s + ' 	,arrivaltime = ' + quotedstr(theData.arrivaltime) + #10;
-  s := s + ' 	,srcrequest = ' + quotedstr(theData.srcrequest) + #10;
-  s := s + ' 	,rvTmp = ' + quotedstr(theData.rvTmp) + #10;
-  s := s + ' 	,CustPID = ' + quotedstr(theData.custPID) + #10;
-  s := s + ' 	,invRefrence = ' + quotedstr(theData.invRefrence) + #10;
-  s := s + ' 	,marketSegment = ' + quotedstr(theData.marketSegment) + #10;
-  s := s + ' 	,CustomerEmail = ' + quotedstr(theData.CustomerEmail) + #10;
-  s := s + ' 	,CustomerWebsite = ' + quotedstr(theData.CustomerWebSite) + #10;
-  s := s + ' 	,UseStayTax = ' + _db(theData.UseStayTax) + #10;
-  s := s + ' 	,Channel = ' + _db(theData.Channel) + #10;
-  s := s + ' 	,OutOfOrderBlocking = ' + _db(theData.OutOfOrderBlocking) + #10;
-  s := s + ' 	,Market = ' + _db(theData.Market.ToDBString) + #10;
-  s := s + '   where Reservation = ' + inttostr(theData.Reservation) + #10;
-  result := s;
-  copytoclipboard(s);
 end;
 
 function SQL_UPDATE_NEW_Reservation(theData: recReservationHolder): String;
