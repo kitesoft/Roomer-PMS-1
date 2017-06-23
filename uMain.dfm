@@ -303,9 +303,7 @@ object frmMain: TfrmMain
             SortSettings.HeaderColorTo = 16579058
             SortSettings.HeaderMirrorColor = 16380385
             SortSettings.HeaderMirrorColorTo = 16182488
-            Version = '8.2.5.2'
-            ExplicitLeft = -2
-            ExplicitTop = -1
+            Version = '8.2.4.1'
             ColWidths = (
               47
               49
@@ -1102,7 +1100,7 @@ object frmMain: TfrmMain
               SortSettings.HeaderColorTo = 16579058
               SortSettings.HeaderMirrorColor = 16380385
               SortSettings.HeaderMirrorColorTo = 16182488
-              Version = '8.2.5.2'
+              Version = '8.2.4.1'
               ColWidths = (
                 73
                 20
@@ -1461,7 +1459,7 @@ object frmMain: TfrmMain
               SearchFooter.MatchCaseCaption = 'Match case'
               SearchFooter.ResultFormat = '(%d of %d)'
               SortSettings.DefaultFormat = ssAutomatic
-              Version = '8.2.5.2'
+              Version = '8.2.4.1'
               ColWidths = (
                 64
                 64
@@ -1839,9 +1837,9 @@ object frmMain: TfrmMain
         end
       end
       object __PanGridsHeader: TsPanel
-        Left = 804
+        Left = 661
         Top = 0
-        Width = 736
+        Width = 879
         Height = 33
         Align = alClient
         Alignment = taLeftJustify
@@ -1852,11 +1850,13 @@ object frmMain: TfrmMain
         SkinData.CustomColor = True
         SkinData.CustomFont = True
         SkinData.SkinSection = 'PANEL'
+        ExplicitLeft = 804
+        ExplicitWidth = 736
         object lblMainHeader: TsLabel
           AlignWithMargins = True
-          Left = 5
+          Left = 158
           Top = 3
-          Width = 304
+          Width = 294
           Height = 27
           Margins.Left = 5
           Align = alClient
@@ -1871,11 +1871,12 @@ object frmMain: TfrmMain
           Font.Height = -17
           Font.Name = 'Segoe UI'
           Font.Style = [fsBold]
+          ExplicitLeft = 5
           ExplicitWidth = 94
           ExplicitHeight = 23
         end
         object sPanel3: TsPanel
-          Left = 312
+          Left = 455
           Top = 0
           Width = 424
           Height = 33
@@ -1893,6 +1894,7 @@ object frmMain: TfrmMain
           SkinData.CustomColor = True
           SkinData.CustomFont = True
           SkinData.SkinSection = 'PANEL'
+          ExplicitLeft = 312
           object btnStatusFilter: TsSpeedButton
             AlignWithMargins = True
             Left = 7
@@ -1993,13 +1995,13 @@ object frmMain: TfrmMain
         object sPanel4: TsPanel
           Left = 0
           Top = 0
-          Width = 312
+          Width = 153
           Height = 33
           Margins.Left = 0
           Margins.Top = 0
           Margins.Right = 0
           Margins.Bottom = 0
-          Align = alClient
+          Align = alLeft
           BevelEdges = []
           BevelOuter = bvNone
           Padding.Left = 3
@@ -2012,11 +2014,11 @@ object frmMain: TfrmMain
           object dtDate: TsDateEdit
             AlignWithMargins = True
             Left = 39
-            Top = 5
-            Width = 112
-            Height = 24
-            Margins.Top = 5
-            Margins.Bottom = 4
+            Top = 7
+            Width = 106
+            Height = 21
+            Margins.Top = 7
+            Margins.Bottom = 5
             Align = alLeft
             AutoSize = False
             BevelInner = bvNone
@@ -2211,7 +2213,7 @@ object frmMain: TfrmMain
       object Panel2: TsPanel
         Left = 537
         Top = 0
-        Width = 267
+        Width = 124
         Height = 33
         Align = alLeft
         Alignment = taLeftJustify
@@ -2491,7 +2493,7 @@ object frmMain: TfrmMain
         ParentColor = False
         Transparent = True
         OnAnchorClick = mmoMessageAnchorClick
-        Version = '1.9.2.8'
+        Version = '1.9.2.7'
         ExplicitLeft = 87
         ExplicitWidth = 1019
       end
