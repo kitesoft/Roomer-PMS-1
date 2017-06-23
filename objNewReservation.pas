@@ -1063,7 +1063,7 @@ var
 
     reservationData.Market           := Market;
 
-    ExecutionPlan.AddExec(SQL_UPDATE_Reservation(reservationData));
+    ExecutionPlan.AddExec(SQL_UPDATE_NEW_Reservation(reservationData));
     //***Log reservation
     lstReservationActivity.add(CreateReservationActivityLog(g.quser
                                                  ,FReservationId

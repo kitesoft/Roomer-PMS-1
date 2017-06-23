@@ -1351,7 +1351,7 @@ begin
       reservationData.Reservation := NewReservation;
       reservationData.name     := edNewReservation.text;
 
-      ExecutionPlan.AddExec(SQL_UPDATE_Reservation(reservationData));
+      ExecutionPlan.AddExec(SQL_UPDATE_NEW_Reservation(reservationData));
 
       s := '';
       s := s + ' UPDATE roomreservations '+#10;
