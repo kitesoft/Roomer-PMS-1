@@ -116,7 +116,6 @@ uses
   uVatCodes in 'uVatCodes.pas' {frmVatCodes},
   uNationalReport3 in 'uNationalReport3.pas' {frmNationalReport3},
   urptReservationsCust in 'urptReservationsCust.pas' {frmRptReservationsCust},
-  uTestData in 'uTestData.pas' {frmTestData},
   uDImages in 'uDImages.pas' {DImages: TDataModule},
   uAllotmentToRes in 'uAllotmentToRes.pas' {frmAllotmentToRes},
   uColorSelector in 'uColorSelector.pas' {frmColorSelector},

@@ -472,7 +472,6 @@ type
     btnChannelPlans: TdxBarLargeButton;
     btnReservationsList: TdxBarLargeButton;
     btnChanceledReservation: TdxBarLargeButton;
-    btnTestData: TdxBarLargeButton;
     pnlStatistics: TsScrollBox;
     pnlTimeMessage: TsPanel;
     lblTimeMessage: TsLabel;
@@ -850,7 +849,6 @@ type
     procedure HTMLHint1ShowHint(var HintStr: string; var CanShow: boolean; var HintInfo: THintInfo);
     procedure btnChannelPlansClick(Sender: TObject);
     procedure btnReservationsListClick(Sender: TObject);
-    procedure btnTestDataClick(Sender: TObject);
     procedure grPeriodRoomsResize(Sender: TObject);
     procedure timHideTimeMessageTimer(Sender: TObject);
     procedure grPeriodRoomsStartDrag(Sender: TObject; var DragObject: TDragObject);
@@ -1561,7 +1559,6 @@ uses
 		, uGuestSearch
 		, uDateUtils
 		, urptReservations
-    , uTestData
 		, urptTotallist
 		, uFrmChannelTogglingRules
 		, uPersonviptypes
@@ -10657,18 +10654,6 @@ begin
   LogUserClickedButton(Sender);
   if Taxes(actNone, theData) then;
   InitializeTaxes;
-end;
-
-procedure TfrmMain.btnTestDataClick(Sender: TObject);
-var
-  frm: TfrmTestData;
-begin
-  frm := TfrmTestData.Create(nil);
-  try
-    frm.ShowModal;
-  finally
-    frm.Free;
-  end;
 end;
 
 procedure TfrmMain.btnToDayClick(Sender: TObject);
