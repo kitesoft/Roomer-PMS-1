@@ -341,8 +341,8 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
       object chkShowPackage: TsCheckBox
         Left = 724
         Top = 167
-        Width = 111
-        Height = 20
+        Width = 119
+        Height = 17
         Caption = 'Package on invoice'
         Checked = True
         State = cbChecked

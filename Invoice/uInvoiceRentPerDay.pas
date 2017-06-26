@@ -282,7 +282,7 @@ type
   private
     function GetTotalOnInvoiceNativeCurrency: Double;
     function GetTotalVatOnInvoice: Double;
-    function GetTotalCityTax: Double;
+    function GetTotalCityTaxRevenues: Double;
     function GetIsChanged: boolean;
     function GetCityTaxUnitCount: Double;
   public
@@ -295,7 +295,7 @@ type
     /// Calculate the total sum of VAT in native currency
     /// </summary>
     property TotalVatOnInvoiceNativeCurrency: Double read GetTotalVatOnInvoice;
-    property TotalCityTaxOnInvoice: Double read GetTotalCityTax;
+    property TotalCityTaxRevenues: Double read GetTotalCityTaxRevenues;
     property CityTaxUnitCount: Double read GetCityTaxUnitCount;
     property IsChanged: boolean read GetIsChanged;
   end;
@@ -730,9 +730,9 @@ type
     /// </summary>
     procedure RestoreTMPInvoicelines;
 
-    procedure SaveHeader(aInvoiceNumber: integer; aExecutionPlan: TRoomerExecutionPlan);
+    procedure SaveHeader(aInvoiceNumber: integer; aExecutionPlan: TRoomerExecutionPlan; const aInvoiceLocation: string = '');
 
-    function SaveInvoice(aInvoiceNumber: integer; aSaveType: TInvoiceSaveType): boolean;
+    function SaveInvoice(aInvoiceNumber: integer; aSaveType: TInvoiceSaveType; const aInvoiceLocation: string = ''): boolean;
 
     procedure ExecuteCurrencyChange(const aOldCurrency: string; const aNewCurrency: string);
     procedure MarkOriginalInvoiceAsCredited(iInvoice: integer);
@@ -1528,7 +1528,7 @@ begin
       edtInvoiceTotal.Text := FormattedValueWithCode(nativeTotal);
       edtDownPayments.Text := FormattedValueWithCode(TotalDownPayments);
       edtBalance.Text := FormattedValueWithCode(TotalBalance);
-      labLodgingTax.Caption := FormattedValueWithCode(FInvoiceLinesList.TotalCityTaxOnInvoice);
+      labLodgingTax.Caption := FormattedValueWithCode(FInvoiceLinesList.TotalCityTaxRevenues);
     end;
 
     if (edtDisplayCurrency.Text <> '') and (edtDisplayCurrency.Text <> zNativeCurrency) then
@@ -3979,7 +3979,7 @@ begin
   end;
 end;
 
-procedure TfrmInvoiceRentPerDay.SaveHeader(aInvoiceNumber: integer; aExecutionPlan: TRoomerExecutionPlan);
+procedure TfrmInvoiceRentPerDay.SaveHeader(aInvoiceNumber: integer; aExecutionPlan: TRoomerExecutionPlan; const aInvoiceLocation: string);
 var
   iMultiplier: integer;
 var
@@ -4052,6 +4052,8 @@ begin
   s := s + ', ihCurrencyrate ' + #10; // **98
   s := s + ', showPackage ' + #10; // *99+
   s := s + ', Location ' + #10; // *99+
+  s := s + ', TotalStayTax ' + #10; // *99+
+  s := s + ', TotalStayTaxNights ' + #10; // *99+
 
   s := s + ')' + #10;
   s := s + 'Values' + #10;
@@ -4112,14 +4114,16 @@ begin
   s := s + ', ' + _db(edtDisplayCurrency.Text);
   s := s + ', ' + _db(GetRate(edtDisplayCurrency.Text));
   s := s + ', ' + _db(showPackage);
-  s := s + ', ' + _db(zLocation);
+  s := s + ', ' + _db(aInvoiceLocation);
+  s := s + ', ' + _db(FInvoiceLinesList.TotalCityTaxRevenues);
+  s := s + ', ' + _db(FInvoiceLinesList.CityTaxUnitCount);
   s := s + ')' + #10;
 
   copytoclipboard(s);
   aExecutionPlan.AddExec(s);
 end;
 
-function TfrmInvoiceRentPerDay.SaveInvoice(aInvoiceNumber: integer; aSaveType: TInvoiceSaveType): boolean;
+function TfrmInvoiceRentPerDay.SaveInvoice(aInvoiceNumber: integer; aSaveType: TInvoiceSaveType; const aInvoiceLocation: string = ''): boolean;
 var
   rSet: TRoomerDataset;
   s: string;
@@ -4149,7 +4153,7 @@ begin
             invoiceLine.Item, invoiceLine.Total, aInvoiceNumber, invoiceLine.Text));
       end;
 
-      SaveHeader(aInvoiceNumber, lExecutionPlan);
+      SaveHeader(aInvoiceNumber, lExecutionPlan, aInvoiceLocation);
 
       if (aSaveType = stDefinitive) then
       begin
@@ -5869,7 +5873,7 @@ begin
 
   lNewInvoiceNumber := IVH_SetNewID();
   try
-    if SaveInvoice(lNewInvoiceNumber, stDefinitive) then
+    if SaveInvoice(lNewInvoiceNumber, stDefinitive, lInvoiceLocation) then
     begin
       ViewInvoice2(lNewInvoiceNumber, True, false, True, chkShowPackage.checked, zEmailAddress);
       d.roomerMainDataSet.SystempackagesCreateHeaderIfNotExists(FRoomReservation, FRoomReservation);
@@ -7272,7 +7276,7 @@ begin
     result := result or lInvLine.Changed;
 end;
 
-function TInvoiceLineList.GetTotalCityTax: Double;
+function TInvoiceLineList.GetTotalCityTaxRevenues: Double;
 var
   lInvLine: TInvoiceLine;
 begin
