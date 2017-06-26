@@ -730,9 +730,9 @@ type
     /// </summary>
     procedure RestoreTMPInvoicelines;
 
-    procedure SaveHeader(aInvoiceNumber: integer; aExecutionPlan: TRoomerExecutionPlan);
+    procedure SaveHeader(aInvoiceNumber: integer; aExecutionPlan: TRoomerExecutionPlan; const aInvoiceLocation: string = '');
 
-    function SaveInvoice(aInvoiceNumber: integer; aSaveType: TInvoiceSaveType): boolean;
+    function SaveInvoice(aInvoiceNumber: integer; aSaveType: TInvoiceSaveType; const aInvoiceLocation: string = ''): boolean;
 
     procedure ExecuteCurrencyChange(const aOldCurrency: string; const aNewCurrency: string);
     procedure MarkOriginalInvoiceAsCredited(iInvoice: integer);
@@ -3979,7 +3979,7 @@ begin
   end;
 end;
 
-procedure TfrmInvoiceRentPerDay.SaveHeader(aInvoiceNumber: integer; aExecutionPlan: TRoomerExecutionPlan);
+procedure TfrmInvoiceRentPerDay.SaveHeader(aInvoiceNumber: integer; aExecutionPlan: TRoomerExecutionPlan; const aInvoiceLocation: string);
 var
   iMultiplier: integer;
 var
@@ -4112,14 +4112,14 @@ begin
   s := s + ', ' + _db(edtDisplayCurrency.Text);
   s := s + ', ' + _db(GetRate(edtDisplayCurrency.Text));
   s := s + ', ' + _db(showPackage);
-  s := s + ', ' + _db(zLocation);
+  s := s + ', ' + _db(aInvoiceLocation);
   s := s + ')' + #10;
 
   copytoclipboard(s);
   aExecutionPlan.AddExec(s);
 end;
 
-function TfrmInvoiceRentPerDay.SaveInvoice(aInvoiceNumber: integer; aSaveType: TInvoiceSaveType): boolean;
+function TfrmInvoiceRentPerDay.SaveInvoice(aInvoiceNumber: integer; aSaveType: TInvoiceSaveType; const aInvoiceLocation: string = ''): boolean;
 var
   rSet: TRoomerDataset;
   s: string;
@@ -4149,7 +4149,7 @@ begin
             invoiceLine.Item, invoiceLine.Total, aInvoiceNumber, invoiceLine.Text));
       end;
 
-      SaveHeader(aInvoiceNumber, lExecutionPlan);
+      SaveHeader(aInvoiceNumber, lExecutionPlan, aInvoiceLocation);
 
       if (aSaveType = stDefinitive) then
       begin
@@ -5869,7 +5869,7 @@ begin
 
   lNewInvoiceNumber := IVH_SetNewID();
   try
-    if SaveInvoice(lNewInvoiceNumber, stDefinitive) then
+    if SaveInvoice(lNewInvoiceNumber, stDefinitive, lInvoiceLocation) then
     begin
       ViewInvoice2(lNewInvoiceNumber, True, false, True, chkShowPackage.checked, zEmailAddress);
       d.roomerMainDataSet.SystempackagesCreateHeaderIfNotExists(FRoomReservation, FRoomReservation);
