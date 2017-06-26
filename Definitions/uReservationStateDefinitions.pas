@@ -323,6 +323,7 @@ begin
     rsAwaitingPayConfirm: result := GetTranslatedText('shTx_G_AwaitingPayConfirm');
     rsMixed:              result := GetTranslatedText('shTx_G_Mixed');
     rsWaitingList:        result := GetTranslatedText('shTx_G_WaitingListNonOptional');
+    rsRemoved:            result := GetTranslatedText('shTx_G_Deleted');
   else
     Result := '';
   end;

@@ -1853,6 +1853,9 @@ function Item_isJustRoomRent(Item: string): boolean;
 function Item_isRoomRent(Item: string): boolean;
 function Item_isRoomRentOrDiscount(Item: string): boolean;
 
+function UnpaidInvoiceLineItems_exist(aRoomReservation: integer): boolean;
+function UnpaidGroupInvoiceLineItems_exist(aReservation: integer): boolean;
+
 function DraftInvGroup_exists(Reservation: integer): boolean;
 function DraftInv_exists(RoomReservation: integer): boolean;
 function DraftInv_Create(Reservation, RoomReservation: integer; user: string): boolean;
@@ -5235,6 +5238,34 @@ begin
     begin
       result := rSet.fieldbyname('Name').asString;
     end;
+  finally
+    freeandnil(rSet);
+  end;
+end;
+
+function UnpaidInvoiceLineItems_exist(aRoomReservation: integer): boolean;
+var
+  s: string;
+  rSet: TRoomerDataSet;
+begin
+  rSet := CreateNewDataSet;
+  try
+    s := format(select_UnpaidInvoiceLinesExist, [aRoomReservation]);
+    result := hData.rSet_bySQL(rSet, s);
+  finally
+    freeandnil(rSet);
+  end;
+end;
+
+function UnpaidGroupInvoiceLineItems_exist(aReservation: integer): boolean;
+var
+  s: string;
+  rSet: TRoomerDataSet;
+begin
+  rSet := CreateNewDataSet;
+  try
+    s := format(select_UnpaidGroupInvoiceLinesExist, [aReservation]);
+    result := hData.rSet_bySQL(rSet, s);
   finally
     freeandnil(rSet);
   end;

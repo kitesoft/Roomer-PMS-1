@@ -3486,7 +3486,30 @@ select_RR_GetFirstGuestNameFast : string =
 '   Name '#10+
 ' FROM '#10+
 '   persons '#10+
-' WHERE RoomReservation = %d ';  //' + inttostr(iRoomReservation)
+' WHERE RoomReservation = %d ';
+
+select_UnpaidInvoiceLinesExist: string =
+' SELECT '#10+
+'   RoomReservation '#10+
+'   FROM invoicelines '#10+
+' WHERE '#10+
+'   RoomReservation = %d '#10+
+'   and SplitNumber = 0 '#10+ // roomInvoice
+'   and InvoiceNumber = -1 '#10+
+'   and isPackage = 0 '#10+
+'   and Price <> 0 ';
+
+select_UnpaidGroupInvoiceLinesExist: string =
+' SELECT '#10+
+'   Reservation '#10+
+'   FROM invoicelines '#10+
+' WHERE '#10+
+'   Reservation = %d '#10+
+'   and RoomReservation = 0 '#10+ // groupInvoice
+'   and SplitNumber = 0 '#10+ // roomInvoice
+'   and InvoiceNumber = -1 '#10+
+'   and isPackage = 0 '#10 +
+'   and Price <> 0 ';
 
 select_DraftInv_exists : string =
 ' SELECT '#10+
@@ -3496,7 +3519,7 @@ select_DraftInv_exists : string =
 ' , Finished '#10+
 '   FROM invoiceheads '#10+
 ' WHERE '#10+
-'   RoomReservation = %s '#10+  //' + inttostr(RoomReservation) + '
+'   RoomReservation = %d '#10+  //' + inttostr(RoomReservation) + '
 '   and SplitNumber = 0 '#10+ // roomInvoice
 '   and InvoiceNumber = -1 '#10+
 '   and isPackage = 0 '#10+

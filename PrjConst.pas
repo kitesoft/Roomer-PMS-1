@@ -641,6 +641,11 @@ begin
   constants.Add('shTx_G_WaitingList', 'Optional Booking');
   constants.Add('shTx_G_WaitingListNonOptional', 'Waiting list');
 
+  constants.Add('shTx_G_ResStateChangeNotAllowed', 'ReservationState cannot be changed from [%s] to [%s]');
+  constants.Add('shTx_G_RoomResStateChangeNotAllowed', 'RoomreservationState cannot be changed from [%s] to [%s]');
+  constants.Add('shTx_G_ResStateChangeNotAllowedOpenInvoice', 'Reservation [%d] cannot be cancelled or deleted due to unpaid invoiceitems');
+  constants.Add('shTx_G_RoomResStateChangeNotAllowedOpenInvoice', 'Roomreservation [%d] cannot be cancelled or deleted due to unpaid invoiceitems');
+
  // constants.Add('shTx_G_Downpayment', 'Downpayment/innágreiðsla');
   constants.Add('shTx_G_Downpayment', 'Downpayment');
   constants.Add('shTx_G_ConnectionFail', 'Connection failure!');

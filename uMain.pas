@@ -2853,6 +2853,7 @@ begin
   Except
   end;
   zOneDay_stlTakenTypes.Free;
+  FReservationStateHandler.Free;
 end;
 
 procedure TfrmMain.SetDateWithoutEvents(aDate: TdateTime);
@@ -3027,6 +3028,7 @@ begin
 
   okLogin := false;
   tries := 0;
+  Result := false;
 
   TSplashFormManager.TryHideForm;
   repeat
@@ -4449,11 +4451,9 @@ begin
 end;
 
 procedure TfrmMain.CreateParams(var Params: TCreateParams);
-var cName : array[0..63] OF Char;
 begin
   inherited;
   StrPLCopy(Params.WinClassName, PChar(SWindowClassName), High(Params.WinClassName));
-//  Params.WinClassName := cName;
 end;
 
 procedure TfrmMain.CreateProvideAllotment(aAllotmentResId: integer; aShowDate: TDateTime = 0);
@@ -4771,7 +4771,7 @@ end;
 
 procedure TfrmMain.CancelAReservation;
 begin
-  if GetSelectedRoomInformation and FReservationStateHandler.ChangeIsAllowed(rsCancelled) then
+  if GetSelectedRoomInformation and FReservationStateHandler.ChangeIsAllowed(rsCancelled, true) then
   begin
     if CancelBookingDialog(_iReservation) then
       if (ViewMode = vmOneDay) OR (ViewMode = vmPeriod) then
@@ -4786,6 +4786,18 @@ begin
     if CancelRoomBookingDialog(_iRoomReservation) then
       if (ViewMode = vmOneDay) OR (ViewMode = vmPeriod) then
         RefreshGrid;
+  end;
+end;
+
+procedure TfrmMain.OneDay_DeleteRoomReservation;
+begin
+  if GetSelectedRoomInformation and FReservationStateHandler.RoomStateChangeHandler[_iRoomReservation].ChangeIsAllowed(rsRemoved, true) then
+  begin
+    if not g.OpenRemoveRoom(_iRoomReservation) then
+      exit;
+
+    if (ViewMode = vmOneDay) OR (ViewMode = vmPeriod) then
+      RefreshGrid;
   end;
 end;
 
@@ -5096,18 +5108,6 @@ begin
         result := true;
       end;
     end;
-  end;
-end;
-
-procedure TfrmMain.OneDay_DeleteRoomReservation;
-begin
-  if GetSelectedRoomInformation then
-  begin
-    if not g.OpenRemoveRoom(_iRoomReservation) then
-      exit;
-
-    if (ViewMode = vmOneDay) OR (ViewMode = vmPeriod) then
-      RefreshGrid;
   end;
 end;
 
@@ -7623,7 +7623,6 @@ begin
       end;
     6:
       begin
-        aDate := trunc(dtDate.Date);
         pageMainGrids.ActivePage := tabFrontDesk;
         sbFrontDesk.VertScrollBar.Position := 0;
         pageMainGridsChange(pageMainGrids);

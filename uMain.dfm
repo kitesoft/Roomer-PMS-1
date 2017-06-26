@@ -55,6 +55,7 @@ object frmMain: TfrmMain
     SunkenBorder = True
     UseOwnColor = True
     UseOwnSunkenBorder = True
+    ExplicitTop = 122
   end
   object panMain: TsPanel
     Left = 0
@@ -115,11 +116,13 @@ object frmMain: TfrmMain
         Top = 1
         Width = 1227
         Height = 302
-        ActivePage = tabOneDayView
+        ActivePage = tabPeriod
         Align = alClient
         TabOrder = 1
         OnChange = pageMainGridsChange
         SkinData.SkinSection = 'PAGECONTROL'
+        ExplicitLeft = 2
+        ExplicitTop = 0
         object tabOneDayView: TsTabSheet
           Caption = 'tabOneDayView'
           ImageIndex = 8
@@ -2558,8 +2561,7 @@ object frmMain: TfrmMain
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         UseSkinColor = False
-        ExplicitWidth = 265
-        ExplicitHeight = 24
+        ExplicitTop = -3
       end
     end
     object pnlOffline: TsPanel

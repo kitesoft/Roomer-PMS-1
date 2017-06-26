@@ -156,24 +156,17 @@ begin
 
   Result := True; // if no roomreservations present then its ok
   for lRoomHandler in FRoomStateChangers.Values do
-    if (aNewState in [rsCancelled, rsRemoved]) then
-    begin
-      Result := lRoomHandler.ChangeIsAllowed(aNewState);
-      if not Result then // One False found, its not allowed
-        Break;
-    end
-    else
-    begin
-      Result := lRoomHandler.ChangeIsAllowed(aNewState);
-      if Result then // One True found, its allowed
-        Break;
-    end;
-
-  if Result and (aNewState in [rsCancelled, rsRemoved]) then
   begin
-     Result := ReservationHasUnPaidInvoiceItems(FReservation);
-     if not Result and aRaiseExceptionOnFail then
-      raise EReservationHasUnPaidInvocieLines(FReservation);
+    Result := lRoomHandler.ChangeIsAllowed(aNewState);
+    if (aNewState in [rsCancelled, rsRemoved]) xor Result then
+      Break;
+  end;
+
+  if (aNewState in [rsCancelled, rsRemoved]) then
+  begin
+    Result := Result and not ReservationHasUnPaidInvoiceItems(FReservation);
+    if not Result and aRaiseExceptionOnFail then
+      raise EReservationHasUnPaidInvocieLines.Create(FReservation);
   end
   else if not Result and aRaiseExceptionOnFail then
     raise EInvalidReservationStateChange.CreateForStates(CurrentState, aNewState);
@@ -315,12 +308,12 @@ end;
 
 function TReservationStateChangeHandler.ReservationHasUnPaidInvoiceItems(aReservation: integer): boolean;
 begin
-  Result := DraftInvGroup_exists(aReservation);
+  Result := UnpaidGroupInvoiceLineItems_exist(aReservation);
 end;
 
 function TRoomReservationStateChangeHandler.RoomReservationHasUnPaidInvoiceItems(aRoomReservation: integer): boolean;
 begin
-  Result := DraftInv_exists(aRoomReservation);
+  Result := UnpaidInvoiceLineItems_exist(aRoomReservation);
 end;
 
 function TRoomReservationStateChangeHandler.ChangeIsAllowed(aNewState: TReservationState; aRaiseExceptionOnFail: boolean): boolean;
@@ -329,7 +322,7 @@ begin
 
   if Result and (aNewState in [rsCancelled, rsRemoved]) then
   begin
-    Result := RoomReservationHasUnPaidInvoiceItems(FRoomReservation);
+    Result := not RoomReservationHasUnPaidInvoiceItems(FRoomReservation);
     if not Result and aRaiseExceptionOnFail then
       raise ERoomReservationHasUnPaidInvocieLines.Create(FRoomReservation);
   end;
@@ -475,28 +468,28 @@ end;
 
 constructor EInvalidReservationStateChange.CreateForStates(aFromState, aToState: TReservationState);
 begin
-  inherited CreateFmt('ReservationState cannot be changed from [%s] to [%s]', [aFromState.AsReadableString, aToState.AsReadableString]);
+  inherited CreateFmt(GetTranslatedtext('shTx_G_ResStateChangeNotAllowed'), [aFromState.AsReadableString, aToState.AsReadableString]);
 end;
 
 { EInvalidRoomReservationStateChange }
 
 constructor EInvalidRoomReservationStateChange.CreateForStates(aFromState, aToState: TReservationState);
 begin
-  inherited CreateFmt('RoomReservationState cannot be changed from [%s] to [%s]', [aFromState.AsReadableString, aToState.AsReadableString]);
+  inherited CreateFmt(GetTranslatedtext('shTx_G_RoomResStateChangeNotAllowed'), [aFromState.AsReadableString, aToState.AsReadableString]);
 end;
 
 { ERoomReservationHasUnPaidInvocieLines }
 
 constructor ERoomReservationHasUnPaidInvocieLines.Create(aRoomReservation: integer);
 begin
-  inherited CreateFmt('Roomreservation [%d] cannot be cancelled or delete due to unpaid invoiceitems', [aRoomReservation]);
+  inherited CreateFmt(GetTranslatedtext('shTx_G_RoomResStateChangeNotAllowedOpenInvoice'), [aRoomReservation]);
 end;
 
 { EReservationHasUnPaidInvocieLines }
 
 constructor EReservationHasUnPaidInvocieLines.Create(aReservation: integer);
 begin
-  inherited CreateFmt('Reservation [%d] cannot be cancelled or delete due to unpaid invoiceitems', [aReservation]);
+  inherited CreateFmt(GetTranslatedtext('shTx_G_ResStateChangeNotAllowedOpenInvoice'), [aReservation]);
 end;
 
 end.
