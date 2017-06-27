@@ -2,9 +2,6 @@
 if "%2"=="" (
   goto ERROR
 )
-if "%1"=="" (
-  goto ERROR
-)
 
   REM Prepare a timestamp for the rename procedure below
   set Day=%Date:~0,2%

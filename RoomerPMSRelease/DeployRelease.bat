@@ -23,6 +23,9 @@ if errorlevel 1 (
   goto :EOF
 )
 
+echo ======================================================================================================
+type .\Deployment\Roomer.xml
+echo ======================================================================================================
 echo .
 set answer=
 set /p answer="Type yes to start copying to s3://roomerstore ..."
