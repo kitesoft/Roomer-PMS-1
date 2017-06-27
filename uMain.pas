@@ -1447,9 +1447,7 @@ type
     procedure DeActivateMessageTimerIfActive;
     procedure SetPMSVisibilities;
     function GetDateUnderCursor: TDate;
-    {$IFNDEF DEBUG}
     procedure OnAskUpgrade(Text, version: String; forced : Boolean; var upgrade: Boolean);
-    {$endif}
     procedure PrepareVersionManagement;
     procedure ClearFilter;
     procedure SetDateStatisticsDate;
@@ -1745,7 +1743,6 @@ begin
   end;
 end;
 
-{$IFNDEF DEBUG}
 procedure TfrmMain.OnAskUpgrade(Text : String; version : String; forced : Boolean; var upgrade : Boolean);
 var
     Buttons: TMsgDlgButtons;
@@ -1783,15 +1780,17 @@ begin
     Free;
   end;
 end;
-{$ENDIF}
 
 procedure TfrmMain.PrepareVersionManagement;
 begin
 {$IFNDEF DEBUG}
-  RoomerVersionManagement.Free;
-  RoomerVersionManagement := TRoomerVersionManagement.Create;
-  RoomerVersionManagement.OnAskUpgrade := OnAskUpgrade;
-  RoomerVersionManagement.Prepare;
+  if not TRoomerVersionInfo.IsDebug then
+  begin
+    RoomerVersionManagement.Free;
+    RoomerVersionManagement := TRoomerVersionManagement.Create;
+    RoomerVersionManagement.OnAskUpgrade := OnAskUpgrade;
+    RoomerVersionManagement.Prepare;
+  end;
 {$ENDIF}
 end;
 

@@ -442,7 +442,7 @@ begin
           try
             parser.Expression := formula;
             if parser.Parse then
-              result := parser.ParserResult * NumItems
+              result := parser.ParserResult // * NumItems
             else
               result := _calcVAT(Price, ItemTypeInfo.VATPercentage)
           finally
@@ -458,6 +458,8 @@ begin
       if (Uppercase(RoomTaxEntity.RoomItem) = Uppercase(g.qRoomRentItem)) AND
         GetCTAXPercentageOrValue(custIncluded, Percentage, Value, ItemTypeInfo.VATPercentage) then
       begin
+        // TODO: Review this code ... when Percentage is returned 0 than value is 0 also?
+        //       If so then the numitems parameter can also be removed
         if Round(Percentage) = 0 then
           Percentage := ((Value * NumItems) / Price) * 100;
         Amount := _calcNetAmount(Price, Percentage + ItemTypeInfo.VATPercentage);
