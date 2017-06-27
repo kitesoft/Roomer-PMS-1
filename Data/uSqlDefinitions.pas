@@ -2551,6 +2551,19 @@ select_telLog_refresh : string =
   ' WHERE '+
   '  (invoicenumber=  %d ) ';
   ///s := s + '  (invoicenumber='+_Db(Invoicenumber)+') '+#10;
+  ///
+
+  select_GetInvoiceLineVisible: string =
+  'SELECT '#10 +
+  ' visible'#10 +
+  ' FROM invoicelines_visibility '#10 +
+  ' WHERE '#10 +
+  '     reservation=%s ' +
+  ' AND roomreservation=%s ' + #10 +
+  ' AND invoiceindex=%s ' + #10 +
+  ' AND aDate=%s ' + #10 +
+  ' AND item=%s ';
+
 
   select_isRoomCheckedIN : string =
   '  SELECT '+
