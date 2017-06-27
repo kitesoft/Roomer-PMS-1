@@ -535,11 +535,11 @@ begin
 
         while not eof do
         begin
-          if iLastPerson1 = FieldByName('Person').asInteger then
-          begin
-            next;
-            continue;
-          end;
+//          if iLastPerson1 = FieldByName('Person').asInteger then
+//          begin
+//            next;
+//            continue;
+//          end;
 
           iLastPerson1 := FieldByName('Person').asInteger;
           iReservation := FieldByName('Reservation').asInteger;
