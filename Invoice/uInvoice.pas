@@ -620,7 +620,6 @@ type
     procedure AddIncludedBreakfastToLinesAndGrid(aIncludedBreakfastCount: integer; iAddAt: integer = 0);
     procedure RemoveAutoBreakfastItems;
     function ItemKindOnRow(aRow: Integer): TItemKind;
-    procedure AddCorrectRoomRateForIncludedPackages(aInvoiceNumber: integer; aExecPlan: TRoomerExecutionPlan);
 
     property InvoiceIndex: integer read FInvoiceIndex write SetInvoiceIndex;
     property AnyRowChecked: boolean read GetAnyRowChecked;
@@ -1185,24 +1184,24 @@ begin
               ttItemAmount := ttItemAmount + itemAmount;
               ttItemVat := ttItemVat + dVat;
 
-              if (LowerCase(agrLines.Cells[col_isPackage, i]) = 'yes') and (trim(agrLines.Cells[col_Source, i]) <> '') then
-              begin
-                if glb.LocateSpecificRecordAndGetValue('packages', 'package', trim(agrLines.Cells[col_Source, i]), 'id', lPackageId) and
-                   glb.LocateSpecificRecordAndGetValue('items', 'item', ItemId, 'id', lItemId) then
-                begin
-                  glb.PackageItems.First;
-                  while not glb.PackageItems.Eof do
-                    if (glb.PackageItems.FieldByName('packageid').asInteger = lPackageId) and
-                       (glb.PackageItems.FieldByName('itemid').asInteger = lItemId) then
-                    begin
-                      if glb.PackageItems.FieldByName('includedInRate').AsBoolean then
-                        ttRentAmount := ttRentAmount - ItemAmount;
-                      Break;
-                    end
-                    else
-                      glb.PackageItems.Next;
-                end;
-              end;
+//              if (LowerCase(agrLines.Cells[col_isPackage, i]) = 'yes') and (trim(agrLines.Cells[col_Source, i]) <> '') then
+//              begin
+//                if glb.LocateSpecificRecordAndGetValue('packages', 'package', trim(agrLines.Cells[col_Source, i]), 'id', lPackageId) and
+//                   glb.LocateSpecificRecordAndGetValue('items', 'item', ItemId, 'id', lItemId) then
+//                begin
+//                  glb.PackageItems.First;
+//                  while not glb.PackageItems.Eof do
+//                    if (glb.PackageItems.FieldByName('packageid').asInteger = lPackageId) and
+//                       (glb.PackageItems.FieldByName('itemid').asInteger = lItemId) then
+//                    begin
+//                      if glb.PackageItems.FieldByName('includedInRate').AsBoolean then
+//                        ttRentAmount := ttRentAmount - ItemAmount;
+//                      Break;
+//                    end
+//                    else
+//                      glb.PackageItems.Next;
+//                end;
+//              end;
 
 
             end
@@ -4590,7 +4589,6 @@ begin
       end;
 
       SaveHeader(lExecutionPlan, currencyChange);
-      AddCorrectRoomRateForIncludedPackages(iInvoiceNumber, lExecutionPlan);
 
       if NOT lExecutionPlan.Execute(ptExec, True) then
         raise Exception.create(lExecutionPlan.ExecException);
@@ -5675,7 +5673,6 @@ begin
             end;
         end;
 
-        AddCorrectRoomRateForIncludedPackages(zInvoiceNumber, lExecutionPlan);
 
         // SaveHeader(fTotal, fTotalVat, fTotalWOVat );
         s := '' + #10;
@@ -8267,8 +8264,6 @@ begin
 
       end; { for each line }
 
-      AddCorrectRoomRateForIncludedPackages(iInvoiceNumber, lExecPlan);
-
       SaveProformaHeader(lExecPlan);
       SaveProformapayments(lExecPlan);
 
@@ -8294,42 +8289,6 @@ begin
 
 end;
 
-procedure TfrmInvoice.AddCorrectRoomRateForIncludedPackages(aInvoiceNumber: integer; aExecPlan: TRoomerExecutionPlan);
-var
-  s: string;
-begin
-  if FRoomReservation > 0 then
-  begin
-    // Corrects the roomrate in the invoiceline of this roomreservation with the total amount of included packageitems
-    s := '';
-    s := s + ' update invoicelines il '#10;
-    s := s + ' join    (select '#10;
-    s := s + '            coalesce(sum(ilp.total), 0) as Total, '#10;
-    s := s + '            coalesce(sum(ilp.vat), 0) as VAT, '#10;
-    s := s + '            coalesce(sum(ilp.TotalWOVat), 0) as TotalWOVat '#10;
-    s := s + '          from invoicelines ilp '#10;
-    s := s + '          join items i on i.item = ilp.itemid '#10;
-    s := s + '          join packageitems pi on pi.itemid=i.id and pi.IncludedInRate '#10;
-    s := s + '          join packages p on pi.packageId=p.id and p.package = ilp.importsource '#10;
-    s := s + '          where ilp.roomreservation = %d '#10;
-    s := s + '                and ilp.invoicenumber = %d '#10;
-    s := s + '                and isPackage '#10;
-    s := s + '          ) packagetotals '#10;
-    s := s + ' set '#10;
-    s := s + '     il.total = il.total - packagetotals.total, '#10;
-    s := s + '     il.vat = il.vat - packagetotals.vat, '#10;
-    s := s + '     il.TotalWOVat = il.TotalWOVat - packagetotals.TotalWOVat, '#10;
-    s := s + '     il.price = (il.total - packagetotals.total) / il.number '#10;
-    s := s + ' where '#10;
-    s := s + '     roomreservation = %d '#10;
-    s := s + '     and invoicenumber = %d '#10;
-    s := s + '     and itemId = (select max(c.roomrentitem) from control c)';
-
-    s := Format(s, [FRoomreservation, aInvoiceNumber, FRoomReservation, aInvoiceNumber]);
-    aExecPlan.AddExec(s);
-
-  end;
-end;
 
 procedure TfrmInvoice.SaveProformaHeader(aExecPlan: TRoomerExecutionPlan);
 var
