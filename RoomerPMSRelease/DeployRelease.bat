@@ -30,6 +30,9 @@ if "%answer%"=="yes" (
   %AWSCMD% s3 rm s3://roomerstore.com/Roomer.xml
   %AWSCMD% s3 sync Deployment s3://roomerstore.com
   %AWSCMD% s3 cp s3://roomerstore.com/Roomer.exe s3://roomerstore.com/roomer.exe
+   
+  call SendToRdp Roomer.exe Deployment
+  
  ) else (
   echo Copying to S3 cancelled
 )
