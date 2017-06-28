@@ -1044,95 +1044,81 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         object pnlRoomButtons: TsPanel
           Left = 0
           Top = 0
-          Width = 273
+          Width = 145
           Height = 89
           Align = alLeft
           TabOrder = 0
-          object btnRoomToTemp: TsButton
-            Left = 1
-            Top = 43
-            Width = 130
-            Height = 40
-            Action = actRRtoTemp
-            TabOrder = 0
-            SkinData.SkinSection = 'BUTTON'
-          end
           object btnMoveRoom: TsButton
-            Left = 137
+            AlignWithMargins = True
+            Left = 4
             Top = 45
-            Width = 130
+            Width = 137
             Height = 40
-            Caption = 'Move room item'
+            Align = alBottom
+            Caption = 'Move Room'
             DropDownMenu = mnuMoveRoom
             Enabled = False
             Style = bsSplitButton
-            TabOrder = 2
+            TabOrder = 1
+            OnClick = btnClickDropDown
             SkinData.SkinSection = 'BUTTON'
+            ExplicitLeft = 3
+            ExplicitTop = 43
+            ExplicitWidth = 130
           end
           object btnAddRoom: TsButton
-            Left = 3
-            Top = 2
-            Width = 130
+            AlignWithMargins = True
+            Left = 4
+            Top = 4
+            Width = 137
             Height = 40
             Action = actAddRoom
-            TabOrder = 1
+            Align = alTop
+            TabOrder = 0
             SkinData.SkinSection = 'BUTTON'
-          end
-          object btnRemoveRoom: TsButton
-            Left = 137
-            Top = 2
-            Width = 130
-            Height = 40
-            Action = actDelLine
-            Caption = 'Remove room'
-            TabOrder = 3
-            SkinData.SkinSection = 'BUTTON'
+            ExplicitLeft = 3
+            ExplicitTop = 2
+            ExplicitWidth = 130
           end
         end
         object pnlItemButtons: TsPanel
-          Left = 273
+          Left = 145
           Top = 0
-          Width = 278
+          Width = 145
           Height = 89
           Align = alLeft
           TabOrder = 1
-          object btnItemToTmp: TsButton
-            Left = 6
-            Top = 43
-            Width = 130
-            Height = 40
-            Action = actItemToTemp
-            TabOrder = 0
-            SkinData.SkinSection = 'BUTTON'
-          end
+          ExplicitLeft = 147
+          ExplicitTop = -1
           object btnMoveItem: TsButton
-            Left = 142
+            AlignWithMargins = True
+            Left = 4
             Top = 45
-            Width = 130
+            Width = 137
             Height = 40
-            Action = actItemToGroupInvoice
+            Align = alBottom
+            Caption = 'Move Item'
             DropDownMenu = mnuMoveItem
             Style = bsSplitButton
-            TabOrder = 1
+            TabOrder = 0
+            OnClick = btnClickDropDown
             SkinData.SkinSection = 'BUTTON'
-          end
-          object btnRemoveItem: TsButton
-            Left = 142
-            Top = 2
-            Width = 130
-            Height = 40
-            Action = actDelLine
-            TabOrder = 2
-            SkinData.SkinSection = 'BUTTON'
+            ExplicitLeft = 2
+            ExplicitTop = 43
           end
           object btnAddItem: TsButton
-            Left = 6
-            Top = 2
-            Width = 130
+            AlignWithMargins = True
+            Left = 4
+            Top = 4
+            Width = 137
             Height = 40
             Action = actAddLine
-            TabOrder = 3
+            Align = alTop
+            TabOrder = 1
             SkinData.SkinSection = 'BUTTON'
+            ExplicitLeft = 6
+            ExplicitTop = 2
+            ExplicitWidth = 130
           end
         end
         object pnlButtonRight: TsPanel
@@ -1145,75 +1131,136 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
           object pnlPaymentButtons: TsPanel
             AlignWithMargins = True
             Left = 4
-            Top = 45
+            Top = 43
             Width = 396
-            Height = 40
+            Height = 42
             Align = alBottom
             Alignment = taLeftJustify
-            AutoSize = True
             BevelOuter = bvNone
             TabOrder = 0
             SkinData.SkinSection = 'PANEL'
             object btnAddDownPayment: TsButton
+              AlignWithMargins = True
               Left = 0
               Top = 0
               Width = 131
               Height = 40
-              Action = actDownPayment
+              Margins.Left = 0
+              Margins.Top = 0
+              Margins.Right = 0
+              Margins.Bottom = 2
+              Action = actAddDownPayment
               Align = alRight
               TabOrder = 0
               SkinData.SkinSection = 'BUTTON'
             end
             object btnEditDownPayment: TsButton
+              AlignWithMargins = True
               Left = 131
               Top = 0
               Width = 131
               Height = 40
+              Margins.Left = 0
+              Margins.Top = 0
+              Margins.Right = 0
+              Margins.Bottom = 2
+              Action = actEditDownpayment
               Align = alRight
-              Caption = 'Edit Down Payment'
               TabOrder = 1
-              OnClick = btnEditDownPaymentClick
               SkinData.SkinSection = 'BUTTON'
+              ExplicitTop = 1
             end
             object btnDeleteDownpayment: TsButton
+              AlignWithMargins = True
               Left = 262
               Top = 0
               Width = 134
               Height = 40
+              Margins.Left = 0
+              Margins.Top = 0
+              Margins.Right = 0
+              Margins.Bottom = 2
+              Action = actDeleteDownPayment
               Align = alRight
-              Caption = 'Delete Down Payment'
               TabOrder = 2
-              OnClick = btnDeleteDownpaymentClick
               SkinData.SkinSection = 'BUTTON'
             end
           end
         end
         object sPanel4: TsPanel
-          Left = 551
+          Left = 290
           Top = 0
-          Width = 141
+          Width = 145
           Height = 89
-          Align = alClient
+          Align = alLeft
           TabOrder = 3
-          object btnReservationNotes: TsButton
-            Left = 5
-            Top = 2
-            Width = 130
+          object btnToggleLodgingTax: TsButton
+            AlignWithMargins = True
+            Left = 4
+            Top = 45
+            Width = 137
             Height = 40
+            Action = actToggleLodgingTax
+            Align = alBottom
+            TabOrder = 0
+            SkinData.SkinSection = 'BUTTON'
+            ExplicitLeft = 6
+            ExplicitTop = 48
+            ExplicitWidth = 130
+          end
+          object btnRemoveSelected: TsButton
+            AlignWithMargins = True
+            Left = 4
+            Top = 4
+            Width = 137
+            Height = 40
+            Action = actRemoveSelected
+            Align = alTop
+            TabOrder = 1
+            SkinData.SkinSection = 'BUTTON'
+            ExplicitLeft = 6
+            ExplicitTop = 6
+            ExplicitWidth = 130
+          end
+        end
+        object sPanel1: TsPanel
+          Left = 435
+          Top = 0
+          Width = 145
+          Height = 89
+          Align = alLeft
+          TabOrder = 4
+          object btnReservationNotes: TsButton
+            AlignWithMargins = True
+            Left = 4
+            Top = 4
+            Width = 137
+            Height = 40
+            Align = alTop
             Caption = 'Reservation notes'
             TabOrder = 0
             OnClick = btnReservationNotesClick
             SkinData.SkinSection = 'BUTTON'
+            ExplicitLeft = 5
+            ExplicitTop = 43
+            ExplicitWidth = 130
           end
-          object btnRemoveLodgingTax2: TsButton
-            Left = 5
+          object btnShowOnInvoice: TsButton
+            AlignWithMargins = True
+            Left = 4
             Top = 45
-            Width = 130
+            Width = 137
             Height = 40
-            Caption = 'Toggle lodging tax'
+            Align = alBottom
+            Caption = 'Show or Hide on Invoice'
+            DropDownMenu = mnuShowOnInvoice
+            Style = bsSplitButton
             TabOrder = 1
-            OnClick = btnRemoveLodgingTax2Click
+            OnClick = btnClickDropDown
             SkinData.SkinSection = 'BUTTON'
+            ExplicitLeft = 2
+            ExplicitTop = 6
+            ExplicitWidth = 249
           end
         end
       end
@@ -1365,6 +1412,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
           SelectionTextColor = clHighlightText
           SortSettings.DefaultFormat = ssAutomatic
           Version = '8.2.4.1'
+          ExplicitLeft = 17
           ColWidths = (
             24
             28
@@ -1951,7 +1999,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         Caption = '-'
       end
       object Downpayment1: TMenuItem
-        Action = actDownPayment
+        Action = actAddDownPayment
       end
     end
     object Items1: TMenuItem
@@ -1960,22 +2008,22 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         Action = actAddLine
       end
       object Delete1: TMenuItem
-        Action = actDelLine
+        Action = actRemoveSelected
       end
       object N2: TMenuItem
         Caption = '-'
       end
       object Removetemporarily1: TMenuItem
-        Action = actItemToTemp
+        Action = actMoveItemToTemp
       end
       object RemoveRoomRenttemporarity1: TMenuItem
-        Action = actRRtoTemp
+        Action = actMoveRoomToTemp
       end
       object N4: TMenuItem
         Caption = '-'
       end
       object SendItemToGroupInvoice: TMenuItem
-        Action = actItemToGroupInvoice
+        Action = actMoveItemToGroupInvoice
       end
     end
   end
@@ -2122,7 +2170,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
       BE7B000000000000FEFF00000000000000000000000000000000000000000000
       000000000000}
   end
-  object act: TActionList
+  object actInvoiceActions: TActionList
     Left = 136
     Top = 300
     object actSaveAndExit: TAction
@@ -2144,10 +2192,10 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
     object actInvoiceProperties: TAction
       Caption = 'Properties'
     end
-    object actDownPayment: TAction
-      Category = 'Invoice'
+    object actAddDownPayment: TAction
+      Category = 'Downpayment'
       Caption = 'Add Down payment'
-      OnExecute = actDownPaymentExecute
+      OnExecute = actAddDownPaymentExecute
     end
     object actInfo: TAction
       Category = 'Invoice'
@@ -2160,29 +2208,29 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
       ShortCut = 113
       OnExecute = actAddLineExecute
     end
-    object actDelLine: TAction
+    object actRemoveSelected: TAction
       Category = 'Lines'
-      Caption = 'Remove item'
+      Caption = 'Remove Selected'
       ShortCut = 16430
-      OnExecute = actDelLineExecute
+      OnExecute = actRemoveSelectedExecute
     end
-    object actRRtoTemp: TAction
-      Category = 'Lines'
+    object actMoveRoomToTemp: TAction
+      Category = 'MoveRoom'
       Caption = 'Room to temp'
       ShortCut = 115
-      OnExecute = actRRtoTempExecute
+      OnExecute = actMoveRoomToTempExecute
     end
-    object actItemToTemp: TAction
-      Category = 'Lines'
+    object actMoveItemToTemp: TAction
+      Category = 'MoveItem'
       Caption = 'Item to temp'
       ShortCut = 114
-      OnExecute = actItemToTempExecute
+      OnExecute = actMoveItemToTempExecute
     end
-    object actItemToGroupInvoice: TAction
-      Category = 'Lines'
+    object actMoveItemToGroupInvoice: TAction
+      Category = 'MoveItem'
       Caption = 'Item to groupinvoice'
       ShortCut = 116
-      OnExecute = actItemToGroupInvoiceExecute
+      OnExecute = actMoveItemToGroupInvoiceExecute
     end
     object actAddPackage: TAction
       Caption = 'Add Package'
@@ -2191,6 +2239,61 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
       Category = 'Lines'
       Caption = 'Add Room'
       OnExecute = actAddRoomExecute
+    end
+    object actToggleLodgingTax: TAction
+      Category = 'Invoice'
+      Caption = 'Toggle Lodging Tax'
+      OnExecute = actToggleLodgingTaxClick
+    end
+    object actEditDownpayment: TAction
+      Category = 'Downpayment'
+      Caption = 'Edit Downpayment'
+      OnExecute = actEditDownPaymentClick
+    end
+    object actDeleteDownPayment: TAction
+      Category = 'Downpayment'
+      Caption = 'Delete Downpayment'
+      OnExecute = actDeleteDownpaymentClick
+    end
+    object actMoveRoomToGroupInvoice: TAction
+      Category = 'MoveRoom'
+      Caption = 'Room to group invoice'
+      OnExecute = actMoveRoomToGroupInvoiceExecute
+    end
+    object actMoveRoomToRoomInvoice: TAction
+      Category = 'MoveRoom'
+      Caption = 'Room to room invoice'
+      OnExecute = actMoveRoomToRoomInvoiceExecute
+    end
+    object acShowAllCTax: TAction
+      Category = 'ShowHide'
+      Caption = 'Show all Citytax'
+      OnExecute = acShowAllCTaxExecute
+    end
+    object acShowAlllBreakfasts: TAction
+      Category = 'ShowHide'
+      Caption = 'Show all included breakfasts'
+      OnExecute = acShowAlllBreakfastsExecute
+    end
+    object acShowAllDiscounts: TAction
+      Category = 'ShowHide'
+      Caption = 'Show all discounts'
+      OnExecute = acShowAllDiscountsExecute
+    end
+    object acHideAllCTax: TAction
+      Category = 'ShowHide'
+      Caption = 'Hide all Citytax'
+      OnExecute = acHideAllCTaxExecute
+    end
+    object acHideAllBreakfasts: TAction
+      Category = 'ShowHide'
+      Caption = 'Hide all included breakfasts'
+      OnExecute = acHideAllBreakfastsExecute
+    end
+    object acHideAllDiscounts: TAction
+      Category = 'ShowHide'
+      Caption = 'Hide all discounts'
+      OnExecute = acHideAllDiscountsExecute
     end
   end
   object timCloseInvoice: TTimer
@@ -2246,13 +2349,6 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
     Left = 320
     Top = 568
   end
-  object rptDsLines: TfrxDBDataset
-    UserName = 'rptDsLines'
-    CloseDataSource = False
-    BCDToCurrency = False
-    Left = 296
-    Top = 304
-  end
   object mPayments: TdxMemData
     Indexes = <>
     SortOptions = []
@@ -2290,14 +2386,16 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
   end
   object mnuMoveItem: TPopupMenu
     OnPopup = mnuMoveItemPopup
-    Left = 544
-    Top = 336
-    object T1: TMenuItem
-      Caption = 'To group invoice'
-      OnClick = T1Click
+    Left = 208
+    Top = 328
+    object mnuItemToGroupInvoice: TMenuItem
+      Action = actMoveItemToGroupInvoice
     end
-    object mnuMoveItemToSpecifiedRoomAndInvoiceIndex: TMenuItem
-      Caption = 'To room invoice'
+    object mnuItemToRoomInvoice: TMenuItem
+      Caption = 'Item to room invoice'
+    end
+    object mnuItemToTemp: TMenuItem
+      Action = actMoveItemToTemp
     end
     object N6: TMenuItem
       Caption = '-'
@@ -2310,15 +2408,16 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
   end
   object mnuMoveRoom: TPopupMenu
     OnPopup = mnuMoveRoomPopup
-    Left = 448
-    Top = 376
+    Left = 40
+    Top = 328
     object mnuMoveRoomRentFromRoomInvoiceToGroup: TMenuItem
-      Caption = 'To group invoice'
-      OnClick = mnuMoveRoomRentFromRoomInvoiceToGroupClick
+      Action = actMoveRoomToGroupInvoice
     end
     object mnuMoveRoomRentFromGroupToNormalRoomInvoice: TMenuItem
-      Caption = 'To room invoice'
-      OnClick = mnuMoveRoomRentFromGroupToNormalRoomInvoiceClick
+      Action = actMoveRoomToRoomInvoice
+    end
+    object mnuRoomToTemp: TMenuItem
+      Action = actMoveRoomToTemp
     end
     object N7: TMenuItem
       Caption = '-'
@@ -2513,6 +2612,37 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
     object mRoomRatesGuestName: TWideStringField
       FieldName = 'GuestName'
       Size = 60
+    end
+  end
+  object mnuShowOnInvoice: TPopupMenu
+    Left = 352
+    Top = 384
+    object C1: TMenuItem
+      Caption = 'Citytax'
+      object mnuShowAllCTax: TMenuItem
+        Action = acShowAllCTax
+      end
+      object mnuHideallCitytax: TMenuItem
+        Action = acHideAllCTax
+      end
+    end
+    object B1: TMenuItem
+      Caption = 'Breakfasts'
+      object mnuShowallincludedbreakfasts: TMenuItem
+        Action = acShowAlllBreakfasts
+      end
+      object mnuHideallincludedbreakfasts: TMenuItem
+        Action = acHideAllBreakfasts
+      end
+    end
+    object D1: TMenuItem
+      Caption = 'Discounts'
+      object mnuShowalldiscounts: TMenuItem
+        Action = acShowAllDiscounts
+      end
+      object mnuHidealldiscounts: TMenuItem
+        Action = acHideAllDiscounts
+      end
     end
   end
 end

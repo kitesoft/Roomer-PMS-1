@@ -65,6 +65,8 @@ type
 
     ikStayTax);
 
+  TItemKindSet = set of TItemKind;
+
   TInvoiceTypes = (itPerCustomer, itPerRoomRes, itPerReservation, itSpecificInvoice);
 
   TPaymentTypes = (ptInvoice, ptDownPayment);
@@ -1811,7 +1813,7 @@ function RR_GetAvrageRent(iRoomReservation: integer): recRoomReservationRentHold
 
 function RV_Exists(iReservation: integer): boolean;
 function RV_useStayTax(iReservation: integer): boolean;
-procedure RV_SetUseStayTax(iReservation: integer);
+function RV_ToggleUseStayTax(iReservation: integer): boolean;
 function RV_GetResInfo(iReservation: integer): recResInfo;
 function RV_GuestCount(iReservation: integer): integer;
 function RV_RoomCount(iReservation: integer): integer;
@@ -5036,13 +5038,15 @@ begin
   end;
 end;
 
-procedure RV_SetUseStayTax(iReservation: integer);
+function RV_ToggleUseStayTax(iReservation: integer): boolean;
 var
   s: string;
 begin
-  s := format(update_RV_useStayTax, [iReservation]);
-  if NOT hData.cmd_bySQL(s) then
-    raise exception.Create('Unable to remove CityTax from reservation');
+  s := format(update_RV_ToggleUseStayTax, [iReservation]);
+  if NOT cmd_bySQL(s) then
+    raise exception.Create('Unable to toggle CityTax from reservation');
+
+  Result := RV_useStayTax(iReservation);
 end;
 
 function RR_Exists(iRoomReservation: integer): boolean;

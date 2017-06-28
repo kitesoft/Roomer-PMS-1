@@ -885,7 +885,7 @@ end;
 procedure TfrmInvoice.btnRemoveLodgingTax2Click(Sender: TObject);
 begin
   RemoveStayTax;
-  RV_SetUseStayTax(FReservation);
+  RV_ToggleUseStayTax(FReservation);
   calcAndAddAutoItems(FReservation, [aiStayTax]); // 003
 end;
 
@@ -6378,7 +6378,7 @@ begin
             begin
               invoiceLine := CellInvoiceLine(i);
               agrLines.Objects[col_Item, i] := TObject(invoiceLine.FInvoiceLineIndex);
-              RV_SetUseStayTax(FReservation);
+              RV_ToggleUseStayTax(FReservation);
               MoveItemToNewInvoiceIndex(i, TsPanel(Sender).Tag);
             end
             else

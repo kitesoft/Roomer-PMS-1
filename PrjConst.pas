@@ -1333,6 +1333,8 @@ begin
 
   constants.Add('shUI_InvoiceCaption', 'INVOICE');
   constants.Add('shUI_CreditInvoiceCaption', 'CREDIT INVOICE');
+  constants.Add('shUI_InvoiceEnableLodgingTax', 'Enable lodging tax');
+  constants.Add('shUI_InvoiceDisableLodgingTax', 'Disable lodging tax');
 
   constants.Add('shUI_ValueCopiedToClipboard', 'Value has been copied to clipboard.');
   constants.Add('shUI_CheckInDialog', 'Show details dialog during check-in.');
@@ -1536,7 +1538,9 @@ begin
   constants.Add('shTxInvoice_Form_Header_Item', 'Item');
   constants.Add('shTxInvoice_Form_Header_VisibleOnInvoice', 'Show On Invoice');
   constants.Add('shTxInvoice_Form_Header_Text', 'Text');
+  constants.Add('shTxInvoice_Form_Header_Date', 'Date');
   constants.Add('shTxInvoice_Form_Header_Number', 'Number');
+
   constants.Add('shTxInvoice_Form_Header_UnitPrice', 'Unit Price');
   constants.Add('shTxInvoice_Form_Header_Total', 'Total');
   constants.Add('shTxInvoice_Form_Header_TotalOnInvoice', 'On Invoice');

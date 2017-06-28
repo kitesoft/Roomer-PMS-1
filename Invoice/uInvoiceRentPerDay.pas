@@ -288,6 +288,7 @@ type
     function GetIsChanged: boolean;
     function GetCityTaxUnitCount: Double;
   public
+    procedure SetAllVisibleOnInvoiceTo(aVisible: boolean; aItemKindSet: TItemKindSet = [ikRoomRentDiscount, ikStayTax, ikBreakfast]);
     procedure SortOnInvoiceLineIndex;
     /// <summary>
     /// Calculate the total native amount including VAT
@@ -339,18 +340,18 @@ type
     pnlHead: TsPanel;
     clabCurrency: TsLabel;
     edtDisplayCurrency: TsEdit;
-    act: TActionList;
+    actInvoiceActions: TActionList;
     actSaveAndExit: TAction;
     actPrintInvoice: TAction;
     actPrintProforma: TAction;
     actInvoiceProperties: TAction;
-    actDownPayment: TAction;
+    actAddDownPayment: TAction;
     actInfo: TAction;
     actAddLine: TAction;
-    actDelLine: TAction;
-    actRRtoTemp: TAction;
-    actItemToTemp: TAction;
-    actItemToGroupInvoice: TAction;
+    actRemoveSelected: TAction;
+    actMoveRoomToTemp: TAction;
+    actMoveItemToTemp: TAction;
+    actMoveItemToGroupInvoice: TAction;
     edtRate: TsEdit;
     clabRate: TsLabel;
     timCloseInvoice: TTimer;
@@ -397,7 +398,6 @@ type
     clabBalance: TsLabel;
     edtBalance: TsEdit;
     tvPaymentsid: TcxGridDBColumn;
-    rptDsLines: TfrxDBDataset;
     clabForeignCurrency: TsLabel;
     edtForeignCurrency: TsEdit;
     grbInclutedTaxes: TsGroupBox;
@@ -418,8 +418,8 @@ type
     mPaymentsid: TIntegerField;
     mnuMoveItem: TPopupMenu;
     mnuMoveRoom: TPopupMenu;
-    T1: TMenuItem;
-    mnuMoveItemToSpecifiedRoomAndInvoiceIndex: TMenuItem;
+    mnuItemToGroupInvoice: TMenuItem;
+    mnuItemToRoomInvoice: TMenuItem;
     mnuMoveRoomRentFromRoomInvoiceToGroup: TMenuItem;
     mnuMoveRoomRentFromGroupToNormalRoomInvoice: TMenuItem;
     pnlLnes: TsPanel;
@@ -511,13 +511,10 @@ type
     lblResNr: TsLabel;
     edResNr: TsLabel;
     pnlRoomButtons: TsPanel;
-    btnRoomToTemp: TsButton;
     btnMoveRoom: TsButton;
     btnAddRoom: TsButton;
     pnlItemButtons: TsPanel;
-    btnItemToTmp: TsButton;
     btnMoveItem: TsButton;
-    btnRemoveItem: TsButton;
     btnAddItem: TsButton;
     pnlButtonRight: TsPanel;
     pnlPaymentButtons: TsPanel;
@@ -525,9 +522,7 @@ type
     btnEditDownPayment: TsButton;
     btnDeleteDownpayment: TsButton;
     sPanel4: TsPanel;
-    btnReservationNotes: TsButton;
-    btnRemoveLodgingTax2: TsButton;
-    btnRemoveRoom: TsButton;
+    btnToggleLodgingTax: TsButton;
     btnSaveChanges: TsButton;
     gbxHeader: TsGroupBox;
     clabCustomer: TsLabel;
@@ -545,6 +540,33 @@ type
     edtAddress4: TsEdit;
     btnClearAddresses: TsButton;
     btnGetCustomer: TsButton;
+    mnuRoomToTemp: TMenuItem;
+    mnuItemToTemp: TMenuItem;
+    actToggleLodgingTax: TAction;
+    actEditDownpayment: TAction;
+    actDeleteDownPayment: TAction;
+    btnRemoveSelected: TsButton;
+    actMoveRoomToGroupInvoice: TAction;
+    actMoveRoomToRoomInvoice: TAction;
+    sPanel1: TsPanel;
+    btnReservationNotes: TsButton;
+    btnShowOnInvoice: TsButton;
+    mnuShowOnInvoice: TPopupMenu;
+    acShowAllCTax: TAction;
+    acShowAlllBreakfasts: TAction;
+    acShowAllDiscounts: TAction;
+    acHideAllCTax: TAction;
+    acHideAllBreakfasts: TAction;
+    acHideAllDiscounts: TAction;
+    C1: TMenuItem;
+    B1: TMenuItem;
+    D1: TMenuItem;
+    mnuShowAllCTax: TMenuItem;
+    mnuHideallCitytax: TMenuItem;
+    mnuShowallincludedbreakfasts: TMenuItem;
+    mnuHideallincludedbreakfasts: TMenuItem;
+    mnuShowalldiscounts: TMenuItem;
+    mnuHidealldiscounts: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure agrLinesMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
     procedure edtCustomerDblClick(Sender: TObject);
@@ -555,23 +577,22 @@ type
     procedure actSaveAndExitExecute(Sender: TObject);
     procedure actPrintInvoiceExecute(Sender: TObject);
     procedure actPrintProformaExecute(Sender: TObject);
-    procedure actDownPaymentExecute(Sender: TObject);
+    procedure actAddDownPaymentExecute(Sender: TObject);
     procedure actInfoExecute(Sender: TObject);
     procedure actAddLineExecute(Sender: TObject);
-    procedure actDelLineExecute(Sender: TObject);
-    procedure actRRtoTempExecute(Sender: TObject);
-    procedure actItemToTempExecute(Sender: TObject);
-    procedure actItemToGroupInvoiceExecute(Sender: TObject);
+    procedure actRemoveSelectedExecute(Sender: TObject);
+    procedure actMoveRoomToTempExecute(Sender: TObject);
+    procedure actMoveItemToTempExecute(Sender: TObject);
+    procedure actMoveItemToGroupInvoiceExecute(Sender: TObject);
     procedure timCloseInvoiceTimer(Sender: TObject);
-    procedure btnRemoveLodgingTax2Click(Sender: TObject);
+    procedure actToggleLodgingTaxClick(Sender: TObject);
     procedure btnClearAddressesClick(Sender: TObject);
     procedure FormResize(Sender: TObject);
     procedure agrLinesGetCellColor(Sender: TObject; ARow, ACol: integer; AState: TGridDrawState; ABrush: TBrush;
       AFont: TFont);
-    procedure sButton2Click(Sender: TObject);
     procedure edtCustomerChange(Sender: TObject);
-    procedure btnEditDownPaymentClick(Sender: TObject);
-    procedure btnDeleteDownpaymentClick(Sender: TObject);
+    procedure actEditDownPaymentClick(Sender: TObject);
+    procedure actDeleteDownpaymentClick(Sender: TObject);
     procedure agrLinesGetAlignment(Sender: TObject; ARow, ACol: integer; var HAlign: TAlignment;
       var VAlign: TVAlignment);
     procedure agrLinesColumnSize(Sender: TObject; ACol: integer; var Allow: boolean);
@@ -581,12 +602,10 @@ type
     procedure FormDestroy(Sender: TObject);
     procedure agrLinesCellValidate(Sender: TObject; ACol, ARow: integer; var Value: string; var Valid: boolean);
     procedure agrLinesDblClickCell(Sender: TObject; ARow, ACol: integer);
-    procedure T1Click(Sender: TObject);
-    procedure mnuMoveRoomRentFromRoomInvoiceToGroupClick(Sender: TObject);
-    procedure mnuMoveRoomRentFromGroupToNormalRoomInvoiceClick(Sender: TObject);
+    procedure actMoveRoomToGroupInvoiceExecute(Sender: TObject);
+    procedure actMoveRoomToRoomInvoiceExecute(Sender: TObject);
     procedure mnuMoveItemPopup(Sender: TObject);
     procedure mnuMoveRoomPopup(Sender: TObject);
-    procedure agrLinesRowChanging(Sender: TObject; OldRow, NewRow: integer; var Allow: boolean);
     procedure pnlInvoiceIndex0DragOver(Sender, Source: TObject; X, Y: integer; State: TDragState; var Accept: boolean);
     procedure pnlInvoiceIndex0DragDrop(Sender, Source: TObject; X, Y: integer);
     procedure pnlInvoiceIndex0Click(Sender: TObject);
@@ -608,6 +627,14 @@ type
     procedure actAddRoomExecute(Sender: TObject);
     procedure agrLinesMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
     procedure edtPersonalIdChange(Sender: TObject);
+    procedure btnClickDropDown(Sender: TObject);
+    procedure agrLinesRowChanging(Sender: TObject; OldRow, NewRow: Integer; var Allow: Boolean);
+    procedure acShowAllCTaxExecute(Sender: TObject);
+    procedure acShowAlllBreakfastsExecute(Sender: TObject);
+    procedure acShowAllDiscountsExecute(Sender: TObject);
+    procedure acHideAllCTaxExecute(Sender: TObject);
+    procedure acHideAllBreakfastsExecute(Sender: TObject);
+    procedure acHideAllDiscountsExecute(Sender: TObject);
   private
     { Private declarations }
 
@@ -658,8 +685,6 @@ type
 
     zCreditType: TCreditType;
 
-    useStayTaxAlreadyFetched: boolean;
-
     tempInvoiceItemList: TInvoiceItemEntityList;
 
     selectedRoomReservation: integer;
@@ -671,11 +696,12 @@ type
     FRoomReservation: integer;
     FHeaderChanged: boolean;
     FCurrencyhandlersMap: TCurrencyhandlersMap;
+    FStayTaxEnabled: boolean;
 
     procedure LoadInvoice;
     procedure loadInvoiceToMemtable(var m: TKbmMemTable);
 
-    procedure UpdateControls;
+    procedure UpdateControls(aRow: integer=0);
 
     /// <summary>
     /// Based on the current items in the grid, calculate all automatic items (StayTax and included Breakfast) and
@@ -776,7 +802,6 @@ type
     function RoomByRoomReservation(RoomReservation: integer): String;
     procedure LoadRoomListForCurrentReservation(reservation: integer);
     procedure DeleteRow(aGrid: TAdvStringGrid; iRow: integer);
-    procedure ForceRowChange;
     procedure SetInvoiceIndex(const Value: integer);
     function IfInvoiceChangedThenOptionallySave(Ask: boolean = True): boolean;
     procedure MoveItemToNewInvoiceIndex(rowIndex, toInvoiceIndex: integer);
@@ -840,6 +865,7 @@ type
     property InvoiceIndex: integer read FInvoiceIndex write SetInvoiceIndex;
     property AnyRowChecked: boolean read GetAnyRowSelected;
     property HeaderChanged: boolean read GetHeaderChanged;
+    property StayTaxEnabled: boolean read FStayTaxEnabled;
   public
     { Public declarations }
     FnewSplitNumber: integer; // 0 = herbergjareikningur
@@ -909,14 +935,14 @@ const
   col_VisibleOnInvoice = col_Select + 1;
   col_Item = col_VisibleOnInvoice + 1;
   col_Description = col_Item + 1;
-  col_ItemCount = col_Description + 1;
+  col_date = col_Description + 1;
+  col_ItemCount = col_date + 1;
   col_ItemPrice = col_ItemCount + 1;
   col_TotalPrice = col_ItemPrice + 1;
   col_TotalOnInvoice = col_TotalPrice + 1;
   col_System = col_TotalOnInvoice + 1;
-  col_date = col_System + 1;
-  col_Refrence = col_date + 1;
-  col_Source = col_Refrence + 1;
+  col_Reference = col_System + 1;
+  col_Source = col_Reference + 1;
   col_isPackage = col_Source + 1;
   col_NoGuests = col_isPackage + 1;
   col_confirmdate = col_NoGuests + 1;
@@ -977,14 +1003,6 @@ begin
   Grid.FixedRows := 1;
 end;
 
-procedure TfrmInvoiceRentPerDay.ForceRowChange;
-var
-  Allow: boolean;
-begin
-  Allow := True;
-  agrLinesRowChanging(agrLines, agrLines.row, agrLines.row, Allow);
-end;
-
 procedure TfrmInvoiceRentPerDay.RemoveAllCheckboxes;
 var
   i: integer;
@@ -998,9 +1016,9 @@ end;
 
 procedure TfrmInvoiceRentPerDay.DeleteRow(aGrid: TAdvStringGrid; iRow: integer);
 begin
-  RemoveAllCheckboxes;
+  if agrLines.HasCheckBox(col_Select, iRow) then
+    agrLines.RemoveCheckBox(col_Select, iRow);
   agrLines.RemoveRows(iRow, 1);
-  ForceRowChange;
 end;
 
 destructor TfrmInvoiceRentPerDay.Destroy;
@@ -1081,6 +1099,20 @@ begin
     close;
 end;
 
+procedure TfrmInvoiceRentPerDay.btnClickDropDown(Sender: TObject);
+var
+  btn: TsButton;
+  pt: TPoint;
+begin
+  btn := (Sender as TsButton);
+  if assigned(btn.DropDownMenu) then
+  begin
+    pt := btn.ClientToScreen(Point(0, btn.ClientHeight));
+    btn.DropDownMenu.Popup(pt.X, pt.Y);
+  end;
+
+end;
+
 procedure TfrmInvoiceRentPerDay.btnClearAddressesClick(Sender: TObject);
 begin
   edtAddress1.Text := '';
@@ -1090,9 +1122,9 @@ begin
   FHeaderChanged := True;
 end;
 
-procedure TfrmInvoiceRentPerDay.btnRemoveLodgingTax2Click(Sender: TObject);
+procedure TfrmInvoiceRentPerDay.actToggleLodgingTaxClick(Sender: TObject);
 begin
-  RV_SetUseStayTax(FReservation);
+  FStaytaxEnabled := RV_ToggleUseStayTax(FReservation) and ctrlGetBoolean('useStayTax');
   LoadInvoice;
 end;
 
@@ -1494,7 +1526,7 @@ begin
       .FormattedValueWithCode(lValue); // trim(_floattostr(lAmountOnInvoice * lDisplayCurrencyRate, vWidth, vDec));
 
   agrLines.Cells[col_System, ARow] := '';
-  agrLines.Cells[col_Refrence, ARow] := aInvoiceLine.Reference;
+  agrLines.Cells[col_Reference, ARow] := aInvoiceLine.Reference;
   agrLines.Cells[col_Source, ARow] := aInvoiceLine.Source;
   agrLines.Objects[cPurchaseDateAsObjectColumn, ARow] := TObject(trunc(aInvoiceLine.PurchaseDate));
   agrLines.Objects[col_ItemPrice, ARow] := aInvoiceLine;
@@ -1914,12 +1946,13 @@ begin
   agrLines.Cells[col_Item, 0] := GetTranslatedText('shTxInvoice_Form_Header_Item');
   agrLines.Cells[col_VisibleOnInvoice, 0] := GetTranslatedText('shTxInvoice_Form_Header_VisibleOnInvoice');
   agrLines.Cells[col_Description, 0] := GetTranslatedText('shTxInvoice_Form_Header_Text');
+  agrLines.Cells[col_Date, 0] := GetTranslatedText('shTxInvoice_Form_Header_Date');
   agrLines.Cells[col_ItemCount, 0] := GetTranslatedText('shTxInvoice_Form_Header_Number');
   agrLines.Cells[col_ItemPrice, 0] := GetTranslatedText('shTxInvoice_Form_Header_UnitPrice');
   agrLines.Cells[col_TotalPrice, 0] := GetTranslatedText('shTxInvoice_Form_Header_Total');
   agrLines.Cells[col_TotalOnInvoice, 0] := GetTranslatedText('shTxInvoice_Form_Header_TotalOnInvoice');
   agrLines.Cells[col_System, 0] := ' !';
-  agrLines.Cells[col_Refrence, 0] := GetTranslatedText('shTxInvoice_Form_Header_Reference');
+  agrLines.Cells[col_Reference, 0] := GetTranslatedText('shTxInvoice_Form_Header_Reference');
   agrLines.Cells[col_Source, 0] := GetTranslatedText('shTxInvoice_Form_Header_Source');
   agrLines.Cells[col_isPackage, 0] := GetTranslatedText('shTxInvoice_Form_Header_Package');
   agrLines.Cells[col_NoGuests, 0] := GetTranslatedText('shTxInvoice_Form_Header_Guests');
@@ -1932,6 +1965,7 @@ begin
   agrLines.ColWidths[col_Select] := 30;
   agrLines.ColWidths[col_VisibleOnInvoice] := 80;
   agrLines.ColWidths[col_Item] := 100;
+  agrLines.ColWidths[col_Date] := 100;
   agrLines.ColWidths[col_ItemCount] := 80;
   agrLines.ColWidths[col_ItemPrice] := 80;
   agrLines.ColWidths[col_TotalPrice] := 100;
@@ -1944,9 +1978,9 @@ begin
   if iWidth > 0 then
     agrLines.ColWidths[col_Description] := iWidth;
 
-  agrLines.HideColumn(col_date);
+//  agrLines.HideColumn(col_date);
   agrLines.HideColumn(col_System);
-  agrLines.HideColumn(col_Refrence);
+  agrLines.HideColumn(col_Reference);
   agrLines.HideColumns(col_isPackage, col_autogen);
 
   for i := 0 to agrLines.ColCount - 1 do
@@ -2103,7 +2137,6 @@ end;
 
 procedure TfrmInvoiceRentPerDay.UpdateTaxinvoiceLinesForRoomItem(aInvLine: TInvoiceLine);
 var
-  lUseStayTax: boolean;
   lIsIncluded: boolean;
   lIsIncludedCust: boolean;
   lTaxResultInvoiceLines: TInvoiceTaxEntityList;
@@ -2117,8 +2150,8 @@ begin
 
   RemoveTaxinvoiceLinesForRoomItem(aInvLine);
 
-  lUseStayTax := ctrlGetBoolean('useStayTax') AND RV_useStayTax(FReservation);
-  if not lUseStayTax then
+  FStayTaxEnabled := ctrlGetBoolean('useStayTax') AND RV_useStayTax(FReservation);
+  if not FStayTaxEnabled then
     exit;
 
   glb.LocateSpecificRecordAndGetValue('customers', 'Customer', edtCustomer.Text, 'StayTaxIncluted', lIsIncludedCust);
@@ -2161,17 +2194,10 @@ begin
   UpdateGrid;
 end;
 
-procedure TfrmInvoiceRentPerDay.sButton2Click(Sender: TObject);
-begin
-  btnExit.Enabled := True;
-  btnInvoice.Enabled := True;
-  btnProforma.Enabled := True;
-end;
-
 procedure TfrmInvoiceRentPerDay.tvPaymentsCellDblClick(Sender: TcxCustomGridTableView;
   ACellViewInfo: TcxGridTableDataCellViewInfo; AButton: TMouseButton; AShift: TShiftState; var AHandled: boolean);
 begin
-  btnEditDownPaymentClick(nil);
+  actEditDownpayment.Execute;
 end;
 
 procedure TfrmInvoiceRentPerDay.tvPaymentsMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState;
@@ -2253,7 +2279,7 @@ begin
     lineTotalPrice := trim(agrLines.Cells[col_TotalPrice, i]);
     lineSystem := trim(agrLines.Cells[col_System, i]);
     lineDate := trim(agrLines.Cells[col_date, i]);
-    lineRefrence := trim(agrLines.Cells[col_Refrence, i]);
+    lineRefrence := trim(agrLines.Cells[col_Reference, i]);
     lineSource := trim(agrLines.Cells[col_Source, i]);
     lineisPackage := trim(agrLines.Cells[col_isPackage, i]);
     lineNoGuests := trim(agrLines.Cells[col_NoGuests, i]);
@@ -3512,13 +3538,46 @@ begin
   end;
 end;
 
-procedure TfrmInvoiceRentPerDay.UpdateControls;
+procedure TfrmInvoiceRentPerDay.UpdateControls(aRow: integer=0);
+var
+  lRow:integer;
+  sCurrentItem, sRoomRentItem, sDiscountItem: String;
 begin
-  btnRemoveLodgingTax2.Enabled := btnRoomToTemp.Enabled;
-  btnReservationNotes.Enabled := btnRoomToTemp.Enabled;
-  Removetemporarily1.Enabled := btnRoomToTemp.Enabled;
-  RemoveRoomRenttemporarity1.Enabled := btnRoomToTemp.Enabled;
-  SendItemToGroupInvoice.Enabled := btnRoomToTemp.Enabled;
+  lRow := aRow;
+  if lRow = 0 then
+    lRow := agrLines.Row;
+
+  if (lRow > 0) then
+  begin
+    sCurrentItem := _trimlower(agrLines.Cells[col_Item, lRow ]);
+    sRoomRentItem := _trimlower(g.qRoomRentItem);
+    sDiscountItem := _trimlower(g.qDiscountItem);
+
+    actMoveRoomToTemp.Enabled := ((sCurrentItem = sRoomRentItem) OR (sCurrentItem = sDiscountItem)) OR
+      (AnyRowChecked AND IsRoomSelected);
+    btnMoveRoom.Enabled := actMoveRoomToTemp.Enabled;
+
+    actMoveItemToTemp.Enabled := AnyRowChecked OR ((NOT isSystemLine(lRow)) AND (sCurrentItem <> ''));
+    actMoveItemToGroupInvoice.Enabled := actMoveItemToTemp.Enabled OR AnyRowChecked;
+    actRemoveSelected.Enabled := actMoveItemToTemp.Enabled OR AnyRowChecked;
+    btnMoveItem.Enabled := actMoveItemToTemp.Enabled;
+  end
+  else
+  begin
+    actMoveItemToTemp.Enabled := AnyRowChecked;
+    actMoveItemToGroupInvoice.Enabled := actMoveItemToTemp.Enabled;
+    btnMoveRoom.Enabled := actMoveItemToTemp.Enabled AND IsRoomSelected;
+    actRemoveSelected.Enabled := actMoveItemToTemp.Enabled;
+    btnMoveItem.Enabled := actMoveItemToTemp.Enabled;
+  end;
+
+  if FStayTaxEnabled then
+    actToggleLodgingTax.Caption := GetTranslatedText('shUI_InvoiceDisableLodgingTax')
+  else
+    actToggleLodgingTax.Caption := GetTranslatedText('shUI_InvoiceEnableLodgingTax');
+
+  actToggleLodgingTax.Enabled := actMoveRoomToTemp.Enabled;
+  btnReservationNotes.Enabled := actMoveRoomToTemp.Enabled;
 end;
 
 function TfrmInvoiceRentPerDay.GenerateInvoiceNumber: integer;
@@ -3574,7 +3633,6 @@ begin
   glb.PerformAuthenticationAssertion(self);
   PlaceFormOnVisibleMonitor(self);
 
-  useStayTaxAlreadyFetched := false;
   tempInvoiceNo := GenerateInvoiceNumber;
   zEmailAddress := '';
 
@@ -3604,6 +3662,7 @@ begin
   ClearGrid;
   FInvoiceLinesList.Free;
   FRoomInfoList.Free;
+  DeletedLines.Free;
 
   if mRoomRes.active then
     mRoomRes.close;
@@ -3631,9 +3690,8 @@ procedure TfrmInvoiceRentPerDay.FormShow(Sender: TObject);
 begin
   btnEditDownPayment.Visible := glb.PMSSettings.InvoiceSettings.AllowPaymentModification;
   btnDeleteDownpayment.Visible := glb.PMSSettings.InvoiceSettings.AllowPaymentModification;
-  btnRemoveItem.Visible := glb.PMSSettings.InvoiceSettings.AllowDeletingItemsFromInvoice;
-  btnRemoveRoom.Visible := glb.PMSSettings.InvoiceSettings.AllowDeletingItemsFromInvoice;
-  btnRemoveLodgingTax2.Visible := glb.PMSSettings.InvoiceSettings.AllowTogglingOfCityTaxes;
+  actRemoveSelected.Visible := glb.PMSSettings.InvoiceSettings.AllowDeletingItemsFromInvoice;
+  actToggleLodgingTax.Visible := glb.PMSSettings.InvoiceSettings.AllowTogglingOfCityTaxes;
 
   LoadInvoice;
   UpdateCaptions;
@@ -3761,7 +3819,6 @@ begin
   SetCurrentVisible;
   if CheckChanged then
     chkChanged;
-  ForceRowChange;
 end;
 
 /// <summary>
@@ -3782,7 +3839,7 @@ begin
   end;
 
   agrLines.Objects[cPurchaseDateAsObjectColumn, agrLines.RowCount - 1] := TObject(trunc(now)); // -- PurchaseDate !
-  agrLines.Cells[col_date, agrLines.RowCount - 1] := datetostr(trunc(now));
+//  agrLines.Cells[col_date, agrLines.RowCount - 1] := datetostr(trunc(now));
 end;
 
 procedure TfrmInvoiceRentPerDay.UpdateCaptions;
@@ -3911,6 +3968,11 @@ begin
   end;
 end;
 
+procedure TfrmInvoiceRentPerDay.agrLinesRowChanging(Sender: TObject; OldRow, NewRow: Integer; var Allow: Boolean);
+begin
+  UpdateControls(NewRow);
+end;
+
 procedure TfrmInvoiceRentPerDay.CheckOrUncheckAll(check: boolean);
 var
   i: integer;
@@ -3918,37 +3980,6 @@ begin
   for i := 0 to agrLines.RowCount - 1 do
     if agrLines.HasCheckBox(col_Select, i) then
       agrLines.SetCheckBoxState(col_Select, i, check);
-end;
-
-procedure TfrmInvoiceRentPerDay.agrLinesRowChanging(Sender: TObject; OldRow, NewRow: integer; var Allow: boolean);
-var
-  sCurrentItem, sRoomRentItem, sDiscountItem: String;
-begin
-  if NewRow > 0 then
-  begin
-    sCurrentItem := _trimlower(agrLines.Cells[col_Item, NewRow]);
-    sRoomRentItem := _trimlower(g.qRoomRentItem);
-    sDiscountItem := _trimlower(g.qDiscountItem);
-
-    btnRoomToTemp.Enabled := ((sCurrentItem = sRoomRentItem) OR (sCurrentItem = sDiscountItem)) OR
-      (AnyRowChecked AND IsRoomSelected);
-    btnRemoveRoom.Enabled := btnRoomToTemp.Enabled;
-    btnMoveRoom.Enabled := btnRoomToTemp.Enabled;
-
-    btnItemToTmp.Enabled := AnyRowChecked OR ((NOT isSystemLine(NewRow)) AND (sCurrentItem <> ''));
-    btnMoveItem.Enabled := btnItemToTmp.Enabled OR AnyRowChecked;
-    btnRemoveItem.Enabled := btnItemToTmp.Enabled OR AnyRowChecked;
-  end
-  else
-  begin
-    btnRoomToTemp.Enabled := AnyRowChecked;
-    btnItemToTmp.Enabled := AnyRowChecked;
-    btnMoveItem.Enabled := btnItemToTmp.Enabled;
-    btnMoveRoom.Enabled := btnRoomToTemp.Enabled AND IsRoomSelected;
-    btnRemoveItem.Enabled := btnItemToTmp.Enabled;
-    btnRemoveRoom.Enabled := btnMoveRoom.Enabled;
-  end;
-  // CheckCheckboxes;
 end;
 
 procedure TfrmInvoiceRentPerDay.Exit1Click(Sender: TObject);
@@ -4274,7 +4305,6 @@ var
   s: string;
   lResnr: integer;
   lRoomResNr: integer;
-  lParentInvoice: TInvoiceLine;
 begin
   // Store set visiblity in invoicelines_visiblity
   // Notice that this only has to be done for generated lines and provisionally invoices as otherwise
@@ -4704,7 +4734,7 @@ begin
       HAlign := taLeftJustify;
     col_date:
       HAlign := taLeftJustify;
-    col_Refrence:
+    col_Reference:
       HAlign := taLeftJustify;
     col_Source:
       HAlign := taLeftJustify;
@@ -4863,7 +4893,7 @@ begin
     exit;
   end;
 
-  CanEdit := (NOT(ACol IN [col_Item, col_TotalPrice, col_System, col_date, col_Refrence, col_Source, col_isPackage,
+  CanEdit := (NOT(ACol IN [col_Item, col_TotalPrice, col_System, col_date, col_Reference, col_Source, col_isPackage,
     col_NoGuests, col_confirmdate, col_confirmAmount, col_TotalOnInvoice])) AND
     (TaxTypes.IndexOf(agrLines.Cells[col_Item, ARow]) < 0) // not a tax line
     AND not(isSystemLine(ARow) and (agrLines.Cells[col_Item, ARow] = g.qBreakFastItem)) // generated breakfast lines
@@ -5019,7 +5049,6 @@ begin
   begin
     agrLines.GetCheckBoxState(col_Select, ARow, check);
     CheckOrUncheckAll(check);
-    agrLinesRowChanging(agrLines, agrLines.row, agrLines.row, check);
   end
   else if (ARow > 0) and (ACol = col_VisibleOnInvoice) then
   begin
@@ -5466,7 +5495,7 @@ begin
           case Res of
             mrYes, mrAll:
               begin
-                RV_SetUseStayTax(FReservation);
+                actToggleLodgingTax.Execute;
                 MoveItemToNewInvoiceIndex(list[i], TsPanel(Sender).Tag);
               end;
             mrCancel:
@@ -5492,17 +5521,12 @@ begin
   Accept := (Source = agrLines) OR (Source IS TcxDragControlObject);
 end;
 
-procedure TfrmInvoiceRentPerDay.T1Click(Sender: TObject);
-begin
-  actItemToGroupInvoiceExecute(Sender);
-end;
-
-procedure TfrmInvoiceRentPerDay.mnuMoveRoomRentFromRoomInvoiceToGroupClick(Sender: TObject);
+procedure TfrmInvoiceRentPerDay.actMoveRoomToGroupInvoiceExecute(Sender: TObject);
 begin
   MoveRoomToGroupInvoice;
 end;
 
-procedure TfrmInvoiceRentPerDay.mnuMoveRoomRentFromGroupToNormalRoomInvoiceClick(Sender: TObject);
+procedure TfrmInvoiceRentPerDay.actMoveRoomToRoomInvoiceExecute(Sender: TObject);
 begin
   MoveRoomToRoomInvoice;
 end;
@@ -5980,7 +6004,7 @@ begin
   PrintProforma;
 end;
 
-procedure TfrmInvoiceRentPerDay.btnEditDownPaymentClick(Sender: TObject);
+procedure TfrmInvoiceRentPerDay.actEditDownPaymentClick(Sender: TObject);
 var
   rSet: TRoomerDataset;
   rec: recDownPayment;
@@ -6106,7 +6130,7 @@ begin
   end;
 end;
 
-procedure TfrmInvoiceRentPerDay.btnDeleteDownpaymentClick(Sender: TObject);
+procedure TfrmInvoiceRentPerDay.actDeleteDownpaymentClick(Sender: TObject);
 var
   rec: recDownPayment;
   Id: integer;
@@ -6160,7 +6184,43 @@ begin
   end;
 end;
 
-procedure TfrmInvoiceRentPerDay.actDownPaymentExecute(Sender: TObject);
+procedure TfrmInvoiceRentPerDay.acHideAllBreakfastsExecute(Sender: TObject);
+begin
+  FInvoiceLinesList.SetAllVisibleOnInvoiceTo(False, [ikBreakfast]);
+  UpdateGrid;
+end;
+
+procedure TfrmInvoiceRentPerDay.acHideAllCTaxExecute(Sender: TObject);
+begin
+  FInvoiceLinesList.SetAllVisibleOnInvoiceTo(FAlse, [ikStayTax]);
+  UpdateGrid;
+end;
+
+procedure TfrmInvoiceRentPerDay.acHideAllDiscountsExecute(Sender: TObject);
+begin
+  FInvoiceLinesList.SetAllVisibleOnInvoiceTo(False, [ikRoomRentDiscount]);
+  UpdateGrid;
+end;
+
+procedure TfrmInvoiceRentPerDay.acShowAllCTaxExecute(Sender: TObject);
+begin
+  FInvoiceLinesList.SetAllVisibleOnInvoiceTo(True, [ikStayTax]);
+  UpdateGrid;
+end;
+
+procedure TfrmInvoiceRentPerDay.acShowAllDiscountsExecute(Sender: TObject);
+begin
+  FInvoiceLinesList.SetAllVisibleOnInvoiceTo(True, [ikRoomRentDiscount]);
+  UpdateGrid;
+end;
+
+procedure TfrmInvoiceRentPerDay.acShowAlllBreakfastsExecute(Sender: TObject);
+begin
+  FInvoiceLinesList.SetAllVisibleOnInvoiceTo(True, [ikBreakfast]);
+  UpdateGrid;
+end;
+
+procedure TfrmInvoiceRentPerDay.actAddDownPaymentExecute(Sender: TObject);
 var
   rec: recDownPayment;
   theData: recPaymentHolder;
@@ -6282,7 +6342,7 @@ begin
   end;
 end;
 
-procedure TfrmInvoiceRentPerDay.actDelLineExecute(Sender: TObject);
+procedure TfrmInvoiceRentPerDay.actRemoveSelectedExecute(Sender: TObject);
 var
   list: TList<integer>;
   s: String;
@@ -6321,7 +6381,7 @@ begin
   end;
 end;
 
-procedure TfrmInvoiceRentPerDay.actRRtoTempExecute(Sender: TObject);
+procedure TfrmInvoiceRentPerDay.actMoveRoomToTempExecute(Sender: TObject);
 var
   CurrentRow: integer;
   sRoomRentItem: string;
@@ -6431,7 +6491,7 @@ begin
   end;
 
   Description := trim(agrLines.Cells[col_Description, CurrentRow]); // (70)
-  importRefrence := trim(agrLines.Cells[col_Refrence, CurrentRow]);
+  importRefrence := trim(agrLines.Cells[col_Reference, CurrentRow]);
   ImportSource := trim(agrLines.Cells[col_Source, CurrentRow]);
 
   // if MessageDlg('Take [' + itemId + '] from invoice ', mtConfirmation, [mbYes, mbNo], 0) <> mrYes then
@@ -6518,7 +6578,7 @@ begin
   chkChanged;
 end;
 
-procedure TfrmInvoiceRentPerDay.actItemToTempExecute(Sender: TObject);
+procedure TfrmInvoiceRentPerDay.actMoveItemToTempExecute(Sender: TObject);
 var
   list: TList<String>;
   i, l: integer;
@@ -6806,7 +6866,7 @@ begin
   end;
 end;
 
-procedure TfrmInvoiceRentPerDay.actItemToGroupInvoiceExecute(Sender: TObject);
+procedure TfrmInvoiceRentPerDay.actMoveItemToGroupInvoiceExecute(Sender: TObject);
 var
   reservation: integer;
   RoomReservation: integer;
@@ -7104,7 +7164,7 @@ begin
   if IsCashInvoice then
     exit;
 
-  result := FInvoiceLinesList.IsChanged or HeaderChanged;
+  result := FInvoiceLinesList.IsChanged or HeaderChanged or (DeletedLines.Count > 0);
   btnSaveChanges.Visible := result;
 end;
 
@@ -7116,7 +7176,7 @@ var
 begin
   SelectableRooms.Clear;
   sql := format
-    ('SELECT DISTINCT Room, RoomReservation, Reservation FROM roomsdate WHERE Reservation=%d AND ResFlag NOT IN (''X'')',
+    ('SELECT DISTINCT Room, RoomReservation, Reservation FROM roomsdate WHERE Reservation=%d AND ResFlag NOT IN (''X'', ''C'')',
     [reservation]);
   rSet := CreateNewDataSet;
   try
@@ -7203,8 +7263,7 @@ var
   Item, subItem: TMenuItem;
   l: integer;
 begin
-  if (mnuItem = mnuMoveItemToSpecifiedRoomAndInvoiceIndex) OR (mnuItem = mnuMoveRoomRentFromGroupToNormalRoomInvoice)
-  then
+  if (mnuItem = mnuItemToRoomInvoice) then
   begin
     LoadRoomListForCurrentReservation(FReservation);
     mnuItem.Clear;
@@ -7214,21 +7273,17 @@ begin
       Item.Caption := SelectableRooms[i].Room;
       Item.Tag := i;
       mnuItem.Add(Item);
-      if (mnuItem = mnuMoveItemToSpecifiedRoomAndInvoiceIndex) then
+
+      Item.Clear;
+      for l := 0 to mnuInvoiceIndex.Items.Count - 1 do
       begin
-        Item.Clear;
-        for l := 0 to mnuInvoiceIndex.Items.Count - 1 do
-        begin
-          subItem := TMenuItem.Create(nil);
-          subItem.Caption := mnuInvoiceIndex.Items[l].Caption;
-          subItem.Tag := mnuInvoiceIndex.Items[l].Tag;
-          subItem.OnClick := N91Click;
-          Item.Add(subItem);
-          subItem.Enabled := subItem.Tag >= 0;
-        end;
-      end
-      else if mnuItem = mnuMoveRoomRentFromGroupToNormalRoomInvoice then
-        Item.OnClick := mnuMoveRoomRentFromGroupToNormalRoomInvoiceClick;
+        subItem := TMenuItem.Create(nil);
+        subItem.Caption := mnuInvoiceIndex.Items[l].Caption;
+        subItem.Tag := mnuInvoiceIndex.Items[l].Tag;
+        subItem.OnClick := N91Click;
+        Item.Add(subItem);
+        subItem.Enabled := subItem.Tag >= 0;
+      end;
     end;
   end;
 end;
@@ -7249,22 +7304,17 @@ begin
       Item.Caption := TInvoiceRoomEntity(SelectableExternalRooms[i]).Room;
       Item.Tag := i;
       mnuItem.Add(Item);
-      if (mnuItem = mnuMoveItemToSpecifiedRoomAndInvoiceIndex) OR (mnuItem = mnuMoveItemToAnyOtherRoomAndInvoiceIndex)
-      then
+
+      Item.Clear;
+      for l := 0 to mnuInvoiceIndex.Items.Count - 1 do
       begin
-        Item.Clear;
-        for l := 0 to mnuInvoiceIndex.Items.Count - 1 do
-        begin
-          subItem := TMenuItem.Create(nil);
-          subItem.Caption := mnuInvoiceIndex.Items[l].Caption;
-          subItem.Tag := mnuInvoiceIndex.Items[l].Tag;
-          subItem.OnClick := ExternalRoomsClick;
-          Item.Add(subItem);
-          subItem.Enabled := subItem.Tag >= 0;
-        end;
-      end
-      else if mnuItem = mnuMoveRoomRentFromGroupToNormalRoomInvoice then
-        Item.OnClick := mnuMoveRoomRentFromGroupToNormalRoomInvoiceClick;
+        subItem := TMenuItem.Create(nil);
+        subItem.Caption := mnuInvoiceIndex.Items[l].Caption;
+        subItem.Tag := mnuInvoiceIndex.Items[l].Tag;
+        subItem.OnClick := ExternalRoomsClick;
+        Item.Add(subItem);
+        subItem.Enabled := subItem.Tag >= 0;
+      end;
     end;
   end;
 end;
@@ -7288,7 +7338,7 @@ end;
 
 procedure TfrmInvoiceRentPerDay.mnuMoveItemPopup(Sender: TObject);
 begin
-  FillRoomsInMenu(mnuMoveItemToSpecifiedRoomAndInvoiceIndex);
+  FillRoomsInMenu(mnuItemToRoomInvoice);
   FillExternalRoomsInMenu(mnuMoveItemToAnyOtherRoomAndInvoiceIndex);
 end;
 
@@ -7391,6 +7441,18 @@ begin
   result := 0.0;
   for lInvLine in self do
     result := result + (lInvLine.VATOnInvoice * GetRate(lInvLine.Currency));
+end;
+
+procedure TInvoiceLineList.SetAllVisibleOnInvoiceTo(aVisible: boolean; aItemKindSet: TItemKindSet);
+var
+  lInvLine: TInvoiceLine;
+begin
+  for lInvLine in self do
+    if linvLine.CanBeHiddenFromInvoice and (lInvLine.ItemKind in aItemKindSet) then
+    begin
+      linvLine.VisibleOnInvoice := aVisible;
+      lInvLine.Changed := true
+    end;
 end;
 
 procedure TInvoiceLineList.SortOnInvoiceLineIndex;

@@ -3436,7 +3436,7 @@ select_RV_useStayTax : string =
    + ' LIMIT 1 '
     ;
 
-update_RV_useStayTax : string =
+update_RV_ToggleUseStayTax : string =
 'UPDATE reservations SET useStayTax=(NOT useStayTax) '+
 'WHERE Reservation =%d ';
 
