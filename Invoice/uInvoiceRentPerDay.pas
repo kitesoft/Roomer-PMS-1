@@ -133,7 +133,7 @@ type
     FVisibleOnInvoice: boolean;
     FVATCode: string;
     FVATPercentage: Double;
-    FParentId: integer;
+    FParentInvoiceLine: TInvoiceLine;
     FChildInvoiceLines: TList<TInvoiceLine>;
     FROomEntity: TInvoiceRoomEntity;
     FInvoiceNumber: integer;
@@ -159,6 +159,8 @@ type
     function GetPriceOnInvoiceNativeCurrency: Double;
     function GetTotalRevenue: Double;
     function GetRevenuePrice: Double;
+    function GetParentReservation: integer;
+    function GetParentRoomReservation: integer;
 
   public
     constructor Create(aIndex, _id: integer);
@@ -202,7 +204,7 @@ type
     /// <summary>Order index of line in invoice</summary>
     property InvoiceLineIndex: integer read FInvoiceLineIndex write FInvoiceLineIndex;
     /// <summary>This invoicelines "belongs" to or a child of invoicelines with this InvoicelineIndex </summary>
-    property ParentId: integer read FParentId write FParentId;
+    property Parent: TinvoiceLine read FParentInvoiceLine write FParentInvoiceLine;
     /// <summary>
     /// List of TInvoiceLineItems that are derived from this line. If any of these child lines are not VisibleOnInvoice then
     /// their invoice-totals are added to the parent line
@@ -226,10 +228,10 @@ type
     /// See table in class documentation
     /// </summary>
     property VATOnInvoiceNativeCurrency: Double read GetVatOnInvoiceNativeCurrency;
-
     property PriceNativeCurrency: Double read GetPriceNativeCurrency;
-
     property Changed: boolean read FChanged write FChanged;
+    property ParentReservation: integer read GetParentReservation;
+    property ParentRoomReservation: integer read GetParentRoomReservation;
   published
     /// <summary>Id in invoicelines table of this invoiceline item, if <= 0 then this invoiceline instance does not have
     /// a record in the table invoicelines </summary>
@@ -685,7 +687,6 @@ type
 
     procedure ClearRoomInfoObjects;
     procedure SetCurrentVisible;
-    function GetInvoiceLineByLineIdx(idx: integer): TInvoiceLine;
     function GetInvoiceLineByRow(ARow: integer): TInvoiceLine;
     function GetRowForInvoiceLine(aInvoiceLine: TInvoiceLine): integer;
     function GetInvoiceLineCount: integer;
@@ -693,7 +694,7 @@ type
     /// <summary>
     /// Create a new TInvoiceLine object and add this to InvoiceLinesList collection
     /// </summary>
-    function AddLine(LineId: integer; aParentIndex: integer; sItem, sText: string; iNumber: Double; aPrice: Double;
+    function AddLine(LineId: integer; aParentInvoice: TInvoiceLine; sItem, sText: string; iNumber: Double; aPrice: Double;
       const aCurrency: string; const VATCode: string; PurchaseDate: TDate; bAuto: boolean; Refrence, Source: string;
       isPackage: boolean; noGuests: integer; ConfirmDate: TDateTime; ConfirmAmount: Double; rrAlias: integer;
       AutoGen: string; itemIndex: integer = 0): TInvoiceLine;
@@ -710,7 +711,7 @@ type
       aBeakfastIncluded: boolean);
 
     Procedure AddRoomTaxToLinesAndGrid(totalTax: Double; TaxUnits: Double; taxItem: string; aPurchaseDate: TDate;
-      iAddAt: integer = 0; aParentIndex: integer = 0; aIsIncludedInParent: boolean = false);
+      iAddAt: integer = 0; aParentInvoice: TInvoiceLine = nil; aIsIncludedInParent: boolean = false);
     procedure ClearInvoiceLines;
     function getDownPayments: Double;
 
@@ -806,10 +807,10 @@ type
     procedure TransferRoomToAnotherRoomReservationInvoice(FromRoomReservation, RoomReservation, RealRoomReservation,
       reservation: integer);
     procedure AddIncludedBreakfastToLinesAndGrid(aIncludedBreakfastCount: integer; aPurchaseDate: TDate;
-      iAddAt: integer = 0; aParentIndex: integer = 0);
+      iAddAt: integer = 0; aParent: TInvoiceLine = nil);
     procedure ClearGrid;
     procedure UpdateTaxinvoiceLinesForRoomItem(aInvLine: TInvoiceLine);
-    procedure AddBreakfastInvoicelinesForRoomItem(aRoomEntity: TInvoiceRoomEntity; aParentIndex: integer);
+    procedure AddBreakfastInvoicelinesForRoomItem(aRoomEntity: TInvoiceRoomEntity; aParent: TInvoiceLine);
     procedure UpdateLine(ARow: integer);
     function CheckExtraWithdrawalAllowed(aExtraAmount: Double): boolean;
     procedure CheckAndAddLastRow;
@@ -831,7 +832,7 @@ type
     procedure RemoveTaxinvoiceLinesForRoomItem(aInvLine: TInvoiceLine);
     procedure UpdateTaxinvoiceLinesForAllRooms;
     procedure SaveInvoicelineVisibility(aInvoiceLine: TInvoiceLine; aInvoiceNumber: integer; aExecPlan: TRoomerExecutionPlan);
-    function GetInvoiceLineVisible(aReservation, aRoomReservation, aInvoiceIndex: integer; aPurchaseDate: TDate;
+    function GetInvoiceLineVisibility(aReservation, aRoomReservation, aInvoiceIndex: integer; aPurchaseDate: TDate;
       const aItem: string; aDefault: boolean): boolean;
     procedure RemoveInvoicelineVisibilityRecord(aInvoiceLine: TInvoiceLine; aInvoiceNumber: integer;
       aExecPlan: TRoomerExecutionPlan);
@@ -1115,7 +1116,7 @@ end;
 { TInvoiceLine }
 function TInvoiceLine.CanBeHiddenFromInvoice: boolean;
 begin
-  result := IsGeneratedLine and (Item <> g.qRoomRentItem);
+  result := IsGeneratedLine and (Item <> g.qRoomRentItem) and assigned(Parent);
 end;
 
 constructor TInvoiceLine.Create(aIndex, _id: integer);
@@ -1168,6 +1169,22 @@ end;
 function TInvoiceLine.GetItemKind: TItemKind;
 begin
   result := Item_GetKind(Item);
+end;
+
+function TInvoiceLine.GetParentReservation: integer;
+begin
+  if assigned(Parent) and assigned(Parent.RoomEntity) then
+    Result := Parent.RoomEntity.Reservation
+  else
+    Result := -1;
+end;
+
+function TInvoiceLine.GetParentRoomReservation: integer;
+begin
+  if assigned(Parent) and assigned(Parent.RoomEntity) then
+    Result := Parent.RoomEntity.RoomReservation
+  else
+    Result := -1;
 end;
 
 function TInvoiceLine.GetPrice: Double;
@@ -1291,7 +1308,7 @@ begin
   FInvoiceLinesList.Clear;
 end;
 
-function TfrmInvoiceRentPerDay.AddLine(LineId: integer; aParentIndex: integer; sItem, sText: string; iNumber: Double;
+function TfrmInvoiceRentPerDay.AddLine(LineId: integer; aParentInvoice: TInvoiceLine; sItem, sText: string; iNumber: Double;
   aPrice: Double; const aCurrency: string; const VATCode: string; PurchaseDate: TDate; bAuto: boolean;
   Refrence, Source: string; isPackage: boolean; noGuests: integer; ConfirmDate: TDateTime; ConfirmAmount: Double;
   rrAlias: integer; AutoGen: string; itemIndex: integer = 0): TInvoiceLine;
@@ -1353,12 +1370,12 @@ begin
     invoiceLine.rrAlias := rrAlias;
     invoiceLine.itemIndex := itemIndex;
     invoiceLine.AutoGen := AutoGen;
-    invoiceLine.ParentId := aParentIndex;
+    invoiceLine.Parent := aParentInvoice;
     invoiceLine.VATCode := VATCode;
     invoiceLine.Currency := aCurrency;
 
-    if (aParentIndex <> 0) then
-      GetInvoiceLineByLineIdx(aParentIndex).ChildInvoiceLines.Add(invoiceLine);
+    if assigned(aParentInvoice) then
+      aParentInvoice.ChildInvoiceLines.Add(invoiceLine);
 
   except
     invoiceLine.Free;
@@ -1366,14 +1383,6 @@ begin
   end;
   FInvoiceLinesList.Add(invoiceLine);
   result := invoiceLine;
-end;
-
-function TfrmInvoiceRentPerDay.GetInvoiceLineByLineIdx(idx: integer): TInvoiceLine;
-begin
-  result := nil;
-  for result in FInvoiceLinesList do
-    if result.InvoiceLineIndex = idx then
-      Break;
 end;
 
 function TfrmInvoiceRentPerDay.GetInvoiceLineByRow(ARow: integer): TInvoiceLine;
@@ -1429,13 +1438,9 @@ begin
   while assigned(lInvoice) do
   begin
     DisplayLine(lInvoice, lRow);
-    if lInvoice.ParentId > 0 then
-    begin
-      lInvoice := GetInvoiceLineByLineIdx(lInvoice.ParentId);
+    lInvoice := lInvoice.Parent;
+    if assigned(lInvoice) then
       lRow := GetRowForInvoiceLine(lInvoice);
-    end
-    else
-      Break;
   end;
   CheckAndAddLastRow;
 end;
@@ -1571,7 +1576,7 @@ begin
 end;
 
 procedure TfrmInvoiceRentPerDay.AddRoomTaxToLinesAndGrid(totalTax: Double; TaxUnits: Double; taxItem: String;
-  aPurchaseDate: TDate; iAddAt: integer = 0; aParentIndex: integer = 0; aIsIncludedInParent: boolean = false);
+  aPurchaseDate: TDate; iAddAt: integer = 0; aParentInvoice: TInvoiceLine = nil; aIsIncludedInParent: boolean = false);
 var
   ConfirmDate: TDateTime;
   ConfirmAmount: Double;
@@ -1591,10 +1596,11 @@ begin
 
   unitPrice := totalTax / TaxUnits;
 
-  lInvLine := AddLine(0, aParentIndex, taxItem, Item_GetDescription(taxItem), TaxUnits, unitPrice, g.qNativeCurrency,
+  lInvLine := AddLine(0, aParentInvoice, taxItem, Item_GetDescription(taxItem), TaxUnits, unitPrice, g.qNativeCurrency,
     lItemInfo.VATCode, aPurchaseDate, True, '', '', false, 0, ConfirmDate, ConfirmAmount, -1, _GetCurrentTick);
+
   lInvLine.TotalIsIncludedInParent := aIsIncludedInParent;
-  lInvLine.VisibleOnInvoice := GetInvoiceLineVisible(FReservation, FROomReservation, FInvoiceIndex, aPurchaseDate, taxItem, not aIsIncludedInParent);
+  lInvLine.VisibleOnInvoice := GetInvoiceLineVisibility(lInvLine.ParentReservation, lInvLine.ParentRoomReservation, FInvoiceIndex, aPurchaseDate, taxItem, not aIsIncludedInParent);
 end;
 
 procedure TfrmInvoiceRentPerDay.SetCurrentVisible;
@@ -2027,7 +2033,7 @@ begin
   FRoomInfoList.Add(lRoomInfo);
 
   // add a TInvoiceline object for the RoomRent to InvoiceLineList
-  lInvoiceLine := AddLine(0, 0, lRmRntItem, lDescription, aDayCount, aRoomPrice, aCurrency, lItemInfo.VATCode, aFromDate, True,
+  lInvoiceLine := AddLine(0, nil, lRmRntItem, lDescription, aDayCount, aRoomPrice, aCurrency, lItemInfo.VATCode, aFromDate, True,
     '', '', aIsPackage, lNumGuests, lConfirmDate, lConfirmAmount, aRRAlias, _GetCurrentTick); // *77
   lInvoiceLine.RoomEntity := lRoomInfo;
   lRoomInfo.Vat := lInvoiceLine.VATOnInvoice;
@@ -2036,7 +2042,7 @@ begin
   UpdateTaxinvoiceLinesForRoomItem(lInvoiceLine);
 
   // Included Breakfast invoicelines
-  AddBreakfastInvoicelinesForRoomItem(lRoomInfo, lInvoiceLine.InvoiceLineIndex);
+  AddBreakfastInvoicelinesForRoomItem(lRoomInfo, lInvoiceLine);
 
   // -- Discount
   if aDiscountAmount <> 0 then
@@ -2047,21 +2053,20 @@ begin
     lDescription := Item_GetDescription(lDiscountItem) + ' ' + aDiscountText;
 
     /// Add an InvoiceLine object for the discount
-    lInvoiceLine := AddLine(0, lInvoiceLine.InvoiceLineIndex, lDiscountItem, lDescription, aDayCount, -1 * aDiscountAmount, aCurrency,
+    lInvoiceLine := AddLine(0, lInvoiceLine, lDiscountItem, lDescription, aDayCount, -1 * aDiscountAmount, aCurrency,
             lItemInfo.VATCode, aFromDate, True, '', '', false, aNumGuests, lConfirmDate, lConfirmAmount, aRRAlias, _GetCurrentTick);
     lRoomInfo.Discount := aDiscountAmount * aDayCount;
-    lInvoiceLine.VisibleOnInvoice := GetInvoiceLineVisible(FReservation, FRoomReservation, FInvoiceIndex, aFromDate, lDiscountItem, True);
+    lInvoiceLine.VisibleOnInvoice := GetInvoiceLineVisibility(lInvoiceline.ParentReservation, lInvoiceLine.ParentRoomReservation, FInvoiceIndex, aFromDate, lDiscountItem, True);
   end;
 
   UpdateItemInvoiceLinesForTaxCalculations;
   UpdateGrid;
 end;
 
-procedure TfrmInvoiceRentPerDay.AddBreakfastInvoicelinesForRoomItem(aRoomEntity: TInvoiceRoomEntity;
-  aParentIndex: integer);
+procedure TfrmInvoiceRentPerDay.AddBreakfastInvoicelinesForRoomItem(aRoomEntity: TInvoiceRoomEntity; aParent: TInvoiceLine);
 begin
   if aRoomEntity.BreakFastIncluded then
-    AddIncludedBreakfastToLinesAndGrid(aRoomEntity.NumGuests * aRoomEntity.NumberOfNights, aRoomEntity.Arrival, 0, aParentIndex);
+    AddIncludedBreakfastToLinesAndGrid(aRoomEntity.NumGuests * aRoomEntity.NumberOfNights, aRoomEntity.Arrival, 0, aParent);
 
 end;
 
@@ -2146,7 +2151,7 @@ begin
 
           lTotalNative := FCurrencyhandlersMap.ConvertAmount(lTotal, aInvLine.Currency, g.qNativeCurrency);
           AddRoomTaxToLinesAndGrid(lTotalNative, trunc(lTaxResultInvoiceLines[l].NumItems), TaxTypes[tt],
-            aInvLine.RoomEntity.Arrival, 0, aInvLine.InvoiceLineIndex, lIsIncluded);
+            aInvLine.RoomEntity.Arrival, 0, aInvLine, lIsIncluded);
         end; // for l + if
     end; // for tt
   finally
@@ -3188,7 +3193,7 @@ begin
 
         dNumber := GetCalculatedNumberOfItems(ItemId, eSet.FieldByName('Number').AsFloat);
 
-        AddLine(LineId, 0, ItemId, _s, dNumber, Price, g.qNativeCurrency, eSet.FieldByName('VATType').asString,
+        AddLine(LineId, nil, ItemId, _s, dNumber, Price, g.qNativeCurrency, eSet.FieldByName('VATType').asString,
           SQLToDate(eSet.FieldByName('PurchaseDate').asString), false,
           trim(eSet.FieldByName('importRefrence').asString), trim(eSet.FieldByName('importSource').asString),
           eSet.FieldByName('isPackage').asBoolean, eSet.FieldByName('Persons').asinteger,
@@ -3455,7 +3460,7 @@ begin
 end;
 
 procedure TfrmInvoiceRentPerDay.AddIncludedBreakfastToLinesAndGrid(aIncludedBreakfastCount: integer;
-  aPurchaseDate: TDate; iAddAt: integer = 0; aParentIndex: integer = 0);
+  aPurchaseDate: TDate; iAddAt: integer = 0; aParent: TInvoiceLine = nil);
 var
   lText: string;
   lInvoiceLine: TInvoiceLine;
@@ -3468,16 +3473,15 @@ begin
   lItem := g.qBreakFastItem;
   lText := Item_GetDescription(lItem) + ' (' + GetTranslatedText('shTx_ReservationProfile_Included') + ')';
   lItemInfo := d.Item_Get_ItemTypeInfo(lItem);
-  lInvoiceLine := AddLine(0, aParentIndex, lItem, lText, aIncludedBreakfastCount, Item_GetPrice(lItem),
-    g.qNativeCurrency, lItemInfo.VATCode, aPurchaseDate, True, '', '', false, 0, 0, 0, -1, _GetCurrentTick,
-    aParentIndex);
+  lInvoiceLine := AddLine(0, aParent, lItem, lText, aIncludedBreakfastCount, Item_GetPrice(lItem),
+    g.qNativeCurrency, lItemInfo.VATCode, aPurchaseDate, True, '', '', false, 0, 0, 0, -1, _GetCurrentTick);
 
   lInvoiceLine.TotalIsIncludedInParent := True;
-  lInvoiceLine.VisibleOnInvoice := GetinvoiceLineVisible(FReservation, FRoomReservation, FInvoiceIndex, aPurchaseDate, lItem, False);
+  lInvoiceLine.VisibleOnInvoice := GetInvoiceLineVisibility(lInvoiceLine.ParentReservation, lInvoiceLine.ParentRoomReservation, FInvoiceIndex, aPurchaseDate, lItem, False);
 
 end;
 
-function TfrmInvoiceRentPerDay.GetInvoiceLineVisible(aReservation: integer; aRoomReservation:integer; aInvoiceIndex: integer;
+function TfrmInvoiceRentPerDay.GetInvoiceLineVisibility(aReservation: integer; aRoomReservation:integer; aInvoiceIndex: integer;
                                                      aPurchaseDate: TDate; const aItem: string; aDefault: boolean): boolean;
 var
   s: string;
@@ -4268,14 +4272,25 @@ end;
 procedure TfrmInvoiceRentPerDay.SaveInvoicelineVisibility(aInvoiceLine: TInvoiceLine; aInvoiceNumber: integer; aExecPlan: TRoomerExecutionPlan);
 var
   s: string;
+  lResnr: integer;
+  lRoomResNr: integer;
+  lParentInvoice: TInvoiceLine;
 begin
   // Store set visiblity in invoicelines_visiblity
   // Notice that this only has to be done for generated lines and provisionally invoices as otherwise
   // the visiblity is stored in the invoicelines.VisibleOnInvoice field
 
-  if not aInvoiceLine.isGeneratedLine or not aInvoiceLine.CanBeHiddenFromInvoice then
+  if not aInvoiceLine.CanBeHiddenFromInvoice then
     Exit;
 
+  lresNr := aInvoiceLine.ParentReservation;
+  lRoomResNr := aInvoiceLine.ParentRoomReservation;
+
+  // fallback
+  if lresNr = -1 then
+    lResNr := FReservation;
+  if lRoomResNr = -1 then
+    lResNr := FRoomReservation;
 
   // construct SQL
   s := '';
@@ -4289,8 +4304,8 @@ begin
   s := s + ' ,visible '#10;
   s := s + ' '#10;
   s := s + ' ) VALUES ('#10;
-  s := s + '  ' +_db(FReservation) + #10;
-  s := s + ' ,' + _db(FRoomreservation) + #10;
+  s := s + '  ' +_db(lResNr) + #10;
+  s := s + ' ,' + _db(lRoomResNr) + #10;
   s := s + ' ,' + _db(FInvoiceIndex)+#10;
   s := s + ' ,' + _db(aInvoiceLine.PurchaseDate)+#10;
   s := s + ' ,' + _db(aInvoiceLine.Item)+#10;
@@ -4307,7 +4322,7 @@ procedure TfrmInvoiceRentPerDay.RemoveInvoicelineVisibilityRecord(aInvoiceLine: 
 var
   s: string;
 begin
-  if not aInvoiceLine.isGeneratedLine or not aInvoiceLine.CanBeHiddenFromInvoice then
+  if not aInvoiceLine.CanBeHiddenFromInvoice then
     Exit;
 
   // TODO: Only store when setting is different then the default
@@ -4316,8 +4331,8 @@ begin
   s := '';
   s := s + 'DELETE from invoicelines_visibility '#10;
   s := s + ' WHERE '#10;
-  s := s + ' reservation = ' +_db(FReservation) + #10;
-  s := s + ' and roomreservation=' + _db(FRoomreservation) + #10;
+  s := s + ' reservation = ' +_db(aInvoiceLine.ParentReservation) + #10;
+  s := s + ' and roomreservation=' + _db(aInvoiceLine.ParentRoomReservation) + #10;
   s := s + ' and invoiceindex=' + _db(FInvoiceIndex)+#10;
   s := s + ' and adate=' + _db(aInvoiceLine.PurchaseDate)+#10;
   s := s + ' and item=' + _db(aInvoiceLine.Item)+#10;
@@ -4793,7 +4808,7 @@ begin
               if NOT CheckExtraWithdrawalAllowed(Price) then
                 exit;
 
-              lInvoiceLine := AddLine(0, 0, Item, Description, 1, Price, g.qNativeCurrency, VATCode, now(), false, '',
+              lInvoiceLine := AddLine(0, nil, Item, Description, 1, Price, g.qNativeCurrency, VATCode, now(), false, '',
                 '', false, 0, 0, 0, 0, '');
               lInvoiceLine.Changed := True;
 
@@ -4896,7 +4911,7 @@ begin
       lInvoiceLine := GetInvoiceLineByRow(ARow);
       if not assigned(lInvoiceLine) then
       begin
-        lInvoiceLine := AddLine(0, 0, '', '', 1, 0, g.qNativeCurrency, '', now(), false, '', '', false, 0, 0, 0, 0, '');
+        lInvoiceLine := AddLine(0, nil, '', '', 1, 0, g.qNativeCurrency, '', now(), false, '', '', false, 0, 0, 0, 0, '');
         agrLines.Objects[cInvoiceLineAttachColumn, ARow] := lInvoiceLine;
       end;
 
