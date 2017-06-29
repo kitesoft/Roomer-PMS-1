@@ -2,8 +2,8 @@ object frmPackages: TfrmPackages
   Left = 0
   Top = 0
   Caption = 'Packages'
-  ClientHeight = 547
-  ClientWidth = 744
+  ClientHeight = 572
+  ClientWidth = 975
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -24,15 +24,16 @@ object frmPackages: TfrmPackages
   object sPanel1: TsPanel
     Left = 0
     Top = 0
-    Width = 744
+    Width = 975
     Height = 81
     Align = alTop
     TabOrder = 0
     SkinData.SkinSection = 'PANEL'
+    ExplicitWidth = 744
     object labFilterWarning: TsLabel
       Left = 1
       Top = 67
-      Width = 4
+      Width = 973
       Height = 13
       Align = alBottom
       Alignment = taCenter
@@ -43,6 +44,7 @@ object frmPackages: TfrmPackages
       Font.Height = -11
       Font.Name = 'Tahoma'
       Font.Style = []
+      ExplicitWidth = 4
     end
     object cLabFilter: TsLabel
       Left = 19
@@ -156,25 +158,29 @@ object frmPackages: TfrmPackages
   end
   object sbMain: TsStatusBar
     Left = 0
-    Top = 528
-    Width = 744
+    Top = 553
+    Width = 975
     Height = 19
     Panels = <>
     SkinData.SkinSection = 'STATUSBAR'
+    ExplicitTop = 528
+    ExplicitWidth = 744
   end
   object panBtn: TsPanel
     Left = 0
-    Top = 498
-    Width = 744
+    Top = 523
+    Width = 975
     Height = 30
     Align = alBottom
     TabOrder = 2
     SkinData.SkinSection = 'PANEL'
+    ExplicitTop = 498
+    ExplicitWidth = 744
     DesignSize = (
-      744
+      975
       30)
     object btnCancel: TsButton
-      Left = 658
+      Left = 889
       Top = 6
       Width = 85
       Height = 25
@@ -189,9 +195,10 @@ object frmPackages: TfrmPackages
       TabOrder = 0
       OnClick = btnCancelClick
       SkinData.SkinSection = 'BUTTON'
+      ExplicitLeft = 658
     end
     object BtnOk: TsButton
-      Left = 567
+      Left = 798
       Top = 4
       Width = 85
       Height = 25
@@ -204,17 +211,20 @@ object frmPackages: TfrmPackages
       TabOrder = 1
       OnClick = BtnOkClick
       SkinData.SkinSection = 'BUTTON'
+      ExplicitLeft = 567
     end
   end
   object grData: TcxGrid
     Left = 0
     Top = 81
-    Width = 744
-    Height = 417
+    Width = 975
+    Height = 442
     Align = alClient
     Constraints.MinWidth = 450
     TabOrder = 3
     LookAndFeel.NativeStyle = False
+    ExplicitWidth = 744
+    ExplicitHeight = 417
     object tvData: TcxGridDBTableView
       OnDblClick = tvDataDblClick
       Navigator.Buttons.CustomButtons = <>
@@ -268,6 +278,7 @@ object frmPackages: TfrmPackages
       OptionsData.Appending = True
       OptionsData.CancelOnExit = False
       OptionsData.DeletingConfirmation = False
+      OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
       OptionsView.Indicator = True
       object tvDataColumn1: TcxGridDBColumn
@@ -308,29 +319,30 @@ object frmPackages: TfrmPackages
         PropertiesClassName = 'TcxTextEditProperties'
         Properties.CharCase = ecUpperCase
         Properties.OnValidate = tvDataPackagePropertiesValidate
+        Width = 138
       end
       object tvDataDescription: TcxGridDBColumn
         DataBinding.FieldName = 'Description'
-        Width = 150
+        Width = 228
       end
       object tvDataInvoiceText: TcxGridDBColumn
         DataBinding.FieldName = 'InvoiceText'
-        Width = 150
+        Width = 228
       end
       object tvDataTotalPrice: TcxGridDBColumn
         DataBinding.FieldName = 'TotalPrice'
         PropertiesClassName = 'TcxTextEditProperties'
         Properties.ReadOnly = True
-        Width = 81
+        Width = 123
       end
       object tvDatashowItemsOnInvoice: TcxGridDBColumn
-        Caption = 'show'
+        Caption = 'Show on Invoice'
         DataBinding.FieldName = 'showItemsOnInvoice'
-        Width = 47
+        Width = 89
       end
       object tvDataActive: TcxGridDBColumn
         DataBinding.FieldName = 'Active'
-        Width = 59
+        Width = 78
       end
       object tvDataCurrency: TcxGridDBColumn
         DataBinding.FieldName = 'Currency'
@@ -342,9 +354,11 @@ object frmPackages: TfrmPackages
           end>
         Properties.ViewStyle = vsHideCursor
         Properties.OnButtonClick = tvDataCurrencyPropertiesButtonClick
+        Width = 46
       end
       object tvDataCurrencyID: TcxGridDBColumn
         DataBinding.FieldName = 'CurrencyID'
+        Visible = False
       end
     end
     object tvItems: TcxGridDBTableView
@@ -469,7 +483,6 @@ object frmPackages: TfrmPackages
     Left = 80
     Top = 160
     object prLink_grData: TdxGridReportLink
-      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -483,7 +496,6 @@ object frmPackages: TfrmPackages
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
       ReportDocument.CreationDate = 41334.495374884260000000
-      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
   end
