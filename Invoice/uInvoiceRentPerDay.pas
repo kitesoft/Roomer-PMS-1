@@ -79,7 +79,8 @@ uses
   frxExportRTF,
   frxExportHTML,
   uInvoiceEntities,
-  uCurrencyHandlersMap;
+  uCurrencyHandlersMap,
+  uInvoiceObjects;
 
 type
   TCreditType = (ctManual, ctReference, ctErr);
@@ -87,222 +88,6 @@ type
 
 {$M+}
   TRoomInfoList = TObjectlist<TInvoiceRoomEntity>;
-
-{$M+}
-
-  /// <summary>
-  /// Object attached to a gridline of the invoiceform, containing all Invoice related info shown in that gridline
-  /// Notice that all amounts are in hotel-native currency
-  // TODO: Merge this class with TInvoiceItemEntity
-  /// </summary>
-  /// <remarks>
-  /// Example of influence of properties VisibleOnInvoice and TotalIsIncludedInParent:
-  ///
-  /// Room 1000,= 5% vat, Breakfast 30,= 10% vat
-  ///
-  /// |  Visible | Included | Room | Brkf | Room | Brkf | Room | Brkf | Room | Brkf |
-  /// |          |          | Inv  | Inv  | Rev  | Rev  | VAT  | VAT  | VAT  | VAT  |
-  /// |          |          |      |      |      |      | inv  | inv  | rev  | rev  |
-  /// =============================================================================
-  /// |    F     |    F     | 1030 |    0 | 1000 |   30 | 53   |   0  | 50   |   3  |
-  /// |    F     |    T     | 1000 |    0 |  970 |   30 | 51,5 |   0  | 48,5 |   3  |
-  /// |    T     |    T     |  970 |   30 |  970 |   30 | 48,5 |   3  | 48,5 |   3  |
-  /// |    T     |    F     | 1000 |   30 | 1000 |   30 | 50   |   3  | 50   |   3  |
-  ///
-  /// </remarks>
-  TInvoiceLine = class(TObject)
-  strict private
-    FInvoiceLineIndex: integer;
-    FItem: string;
-    FText: string;
-    FNumber: Double; // -96
-    FPrice: Double;
-    FTotal: Double;
-    FDate: TDate;
-    FAuto: boolean;
-    FReference: string;
-    FSource: string;
-    FIspackage: boolean;
-    FNoGuests: integer;
-    FConfirmDate: TDateTime;
-    FConfirmAmount: Double;
-    FitemIndex: integer;
-    FrrAlias: integer;
-    FAutoGen: string;
-    FLineId: integer;
-    FVisibleOnInvoice: boolean;
-    FVATCode: string;
-    FVATPercentage: Double;
-    FParentInvoiceLine: TInvoiceLine;
-    FChildInvoiceLines: TList<TInvoiceLine>;
-    FROomEntity: TInvoiceRoomEntity;
-    FInvoiceNumber: integer;
-    FChanged: boolean;
-    FCurrency: string;
-    FTotalIsIncludedInParent: boolean;
-
-  private
-    function GetRevenueNativeCurrency: Double;
-    function GetAmountOnInvoice: Double;
-    function GetTotal: Double;
-    function GetVatOnRevenueNativeCurrency: Double;
-    procedure GetPurchaseDate(const Value: TDate);
-    function GetItemKind: TItemKind;
-    function GetVatOnInvoice: Double;
-    procedure SetVATCode(const Value: string);
-    function GetTotalNativeCurrency: Double;
-    function GetPriceNativeCurrency: Double;
-    function GetAmountOnInvoiceNativeCurrency: Double;
-    function GetVatOnInvoiceNativeCurrency: Double;
-    function GetPrice: Double;
-    function GetPriceOnInvoice: Double;
-    function GetPriceOnInvoiceNativeCurrency: Double;
-    function GetTotalRevenue: Double;
-    function GetRevenuePrice: Double;
-    function GetParentReservation: integer;
-    function GetParentRoomReservation: integer;
-    procedure SetParentInvoiceLine(const Value: TinvoiceLine);
-
-  public
-    constructor Create(aIndex, _id: integer);
-    destructor Destroy; override;
-    /// <summary>
-    /// Indicates whether or not the "VisibleOnInvoice" functionality is available for this line
-    /// At this moment only line that are generated and linked to a roomrent item can be made invisible
-    /// </summary>
-    function CanBeHiddenFromInvoice: boolean;
-    property TotalNativeCurrency: Double read GetTotalNativeCurrency;
-    /// <summary>
-    /// Revenue total in selected currency, including VAT for this item, calculated as Price * Number
-    /// </summary>
-    property Total: Double read GetTotal;
-    /// <summary>
-    /// Amount which will be visible on the invoice in selected currency.
-    /// Dependent on the VisibleOnInvoice property and on ChildInvoiceLines which are not visible on the invoice
-    /// See table in class documentation
-    /// </summary>
-    property AmountOnInvoice: Double read GetAmountOnInvoice;
-    property AmountOnInvoiceNativeCurrency: Double read GetAmountOnInvoiceNativeCurrency;
-    /// <summary>
-    /// Price which will be visible on the invoice in selected currency. Calculated as AmountOnInvoice / Number
-    /// </summary>
-    property PriceOnInvoice: Double read GetPriceOnInvoice;
-    property PriceOnInvoiceNativeCurrency: Double read GetPriceOnInvoiceNativeCurrency;
-
-    property RevenuePrice: Double read GetRevenuePrice;
-    /// <summary>
-    /// Total administrative revenue for this item, in selected currency
-    /// Consists of the Total minus the total of all not-visible childlines
-    /// See table in class documentation
-    /// </summary>
-    property TotalRevenue: Double read GetTotalRevenue;
-    /// <summary>
-    /// Total administrative revenue for this item, in native currency
-    /// Consists of the Total minus the total of all not-visible childlines
-    /// See table in class documentation
-    /// </summary>
-    property RevenueNativeCurrency: Double read GetRevenueNativeCurrency;
-    /// <summary>Order index of line in invoice</summary>
-    property InvoiceLineIndex: integer read FInvoiceLineIndex write FInvoiceLineIndex;
-    /// <summary>This invoicelines "belongs" to or a child of invoicelines with this InvoicelineIndex </summary>
-    property Parent: TinvoiceLine read FParentInvoiceLine write SetParentInvoiceLine;
-    /// <summary>
-    /// List of TInvoiceLineItems that are derived from this line. If any of these child lines are not VisibleOnInvoice then
-    /// their invoice-totals are added to the parent line
-    /// </summary>
-    property ChildInvoiceLines: TList<TInvoiceLine> read FChildInvoiceLines;
-    property RoomEntity: TInvoiceRoomEntity read FROomEntity write FROomEntity;
-
-    property ItemKind: TItemKind read GetItemKind;
-    /// <summary>
-    /// Calculated VAT based on revenue of this item, in native currency
-    /// See table in class documentation
-    /// </summary>
-    property VATOnRevenueNativeCurrency: Double read GetVatOnRevenueNativeCurrency;
-    /// <summary>
-    /// Calculated VAT on the invoice for this item, in selected currency
-    /// See table in class documentation
-    /// </summary>
-    property VATOnInvoice: Double read GetVatOnInvoice;
-    /// <summary>
-    /// Calculated VAT on the invoice for this item, in native currency
-    /// See table in class documentation
-    /// </summary>
-    property VATOnInvoiceNativeCurrency: Double read GetVatOnInvoiceNativeCurrency;
-    property PriceNativeCurrency: Double read GetPriceNativeCurrency;
-    property Changed: boolean read FChanged write FChanged;
-    property ParentReservation: integer read GetParentReservation;
-    property ParentRoomReservation: integer read GetParentRoomReservation;
-  published
-    /// <summary>Id in invoicelines table of this invoiceline item, if <= 0 then this invoiceline instance does not have
-    /// a record in the table invoicelines </summary>
-    property LineId: integer read FLineId write FLineId;
-    property InvoiceNumber: integer read FInvoiceNumber write FInvoiceNumber;
-    property Item: string read FItem write FItem;
-    property Text: string read FText write FText;
-
-    /// <summary>
-    /// Number of (or quantity) items for this invoiceline
-    /// </summary>
-    property Number: Double read FNumber write FNumber;
-    /// <summary>
-    /// Price per item in selected currency
-    /// </summary>
-    property Price: Double read GetPrice write FPrice;
-    /// <summary>
-    /// Selected currency for this invoiceline
-    /// </summary>
-    property Currency: string read FCurrency write FCurrency;
-    property VATCode: string read FVATCode write SetVATCode;
-    property VATPercentage: Double read FVATPercentage;
-    property Reference: string read FReference write FReference;
-    property Source: string read FSource write FSource;
-    property isPackage: boolean read FIspackage write FIspackage;
-    property noGuests: integer read FNoGuests write FNoGuests;
-    property ConfirmDate: TDateTime read FConfirmDate write FConfirmDate;
-    property ConfirmAmount: Double read FConfirmAmount write FConfirmAmount;
-    property itemIndex: integer read FitemIndex write FitemIndex;
-    property rrAlias: integer read FrrAlias write FrrAlias;
-    property PurchaseDate: TDate read FDate write GetPurchaseDate;
-    /// <summary>
-    /// True if this line has not been retrieved from the invoicelines table but is generated based on i.e. roomsdate
-    /// </summary>
-    property IsGeneratedLine: boolean read FAuto write FAuto;
-    property AutoGen: string read FAutoGen write FAutoGen;
-    /// <summary>
-    /// True if this line should be printed on the actual invoice. This setting influences the amounts on invoice, revenues and calculated VAT
-    /// for this line and its parentline (if present)
-    /// </summary>
-    property VisibleOnInvoice: boolean read FVisibleOnInvoice write FVisibleOnInvoice;
-    /// <summary>
-    /// If true then the total amount of this invoicelineitem is originally included in its parent
-    /// When this line is set VisibleOnInvoice then the amount of the parent will be decreased with the amount of this line
-    /// </summary>
-    property TotalIsIncludedInParent: boolean read FTotalIsIncludedInParent write FTotalIsIncludedInParent;
-  end;
-
-  TInvoiceLineList = class(TObjectlist<TInvoiceLine>)
-  private
-    function GetTotalOnInvoiceNativeCurrency: Double;
-    function GetTotalVatOnInvoice: Double;
-    function GetTotalCityTaxRevenues: Double;
-    function GetIsChanged: boolean;
-    function GetCityTaxUnitCount: Double;
-  public
-    procedure SetAllVisibleOnInvoiceTo(aVisible: boolean; aItemKindSet: TItemKindSet = [ikRoomRentDiscount, ikStayTax, ikBreakfast]);
-    procedure SortOnInvoiceLineIndex;
-    /// <summary>
-    /// Calculate the total native amount including VAT
-    /// </summary>
-    property TotalOnInvoiceNativeCurrency: Double read GetTotalOnInvoiceNativeCurrency;
-    /// <summary>
-    /// Calculate the total sum of VAT in native currency
-    /// </summary>
-    property TotalVatOnInvoiceNativeCurrency: Double read GetTotalVatOnInvoice;
-    property TotalCityTaxRevenues: Double read GetTotalCityTaxRevenues;
-    property CityTaxUnitCount: Double read GetCityTaxUnitCount;
-    property IsChanged: boolean read GetIsChanged;
-  end;
 
   /// <summary>
   /// Used to indicate which automatically added items should be (re)generated
@@ -866,7 +651,6 @@ type
     property InvoiceIndex: integer read FInvoiceIndex write SetInvoiceIndex;
     property AnyRowChecked: boolean read GetAnyRowSelected;
     property HeaderChanged: boolean read GetHeaderChanged;
-    property StayTaxEnabled: boolean read FStayTaxEnabled;
   public
     { Public declarations }
     FnewSplitNumber: integer; // 0 = herbergjareikningur
@@ -1146,186 +930,6 @@ begin
   FRoomInfoList.Clear;
 end;
 
-{ TInvoiceLine }
-function TInvoiceLine.CanBeHiddenFromInvoice: boolean;
-begin
-  result := (Item <> g.qRoomRentItem) and
-              ((IsGeneratedLine and assigned(Parent))
-              or
-              (isPackage));
-end;
-
-constructor TInvoiceLine.Create(aIndex, _id: integer);
-begin
-  inherited Create;
-
-  FInvoiceLineIndex := aIndex;
-  FVisibleOnInvoice := True;
-  FInvoiceNumber := -1;
-  FLineId := _id;
-  FItem := '';
-  FText := '';
-  FNumber := 0;
-  FPrice := 0.00;
-  FTotal := 0.00;
-  FReference := '';
-  FSource := '';
-  FChildInvoiceLines := TList<TInvoiceLine>.Create;
-  FCurrency := g.qNativeCurrency;
-end;
-
-destructor TInvoiceLine.Destroy;
-begin
-  FChildInvoiceLines.Free;
-  inherited Destroy;
-end;
-
-function TInvoiceLine.GetAmountOnInvoice: Double;
-begin
-  result := GetAmountOnInvoiceNativeCurrency / GetRate(FCurrency);
-end;
-
-function TInvoiceLine.GetAmountOnInvoiceNativeCurrency: Double;
-var
-  lDerived: TInvoiceLine;
-begin
-  if FVisibleOnInvoice then
-  begin
-    result := TotalNativeCurrency;
-    for lDerived in FChildInvoiceLines do
-      if lDerived.VisibleOnInvoice and lDerived.TotalIsIncludedInParent then
-        result := result - lDerived.TotalNativeCurrency
-      else if not lDerived.VisibleOnInvoice and not lDerived.TotalIsIncludedInParent then
-        result := result + lDerived.TotalNativeCurrency;
-  end
-  else
-    result := 0;
-end;
-
-function TInvoiceLine.GetItemKind: TItemKind;
-begin
-  result := Item_GetKind(Item);
-end;
-
-function TInvoiceLine.GetParentReservation: integer;
-begin
-  if assigned(Parent) and assigned(Parent.RoomEntity) then
-    Result := Parent.RoomEntity.Reservation
-  else
-    Result := -1;
-end;
-
-function TInvoiceLine.GetParentRoomReservation: integer;
-begin
-  if assigned(Parent) and assigned(Parent.RoomEntity) then
-    Result := Parent.RoomEntity.RoomReservation
-  else
-    Result := -1;
-end;
-
-function TInvoiceLine.GetPrice: Double;
-begin
-  result := FPrice;
-end;
-
-function TInvoiceLine.GetPriceNativeCurrency: Double;
-begin
-  result := Price * GetRate(FCurrency);
-end;
-
-function TInvoiceLine.GetPriceOnInvoice: Double;
-begin
-  result := AmountOnInvoice / Number;
-end;
-
-function TInvoiceLine.GetPriceOnInvoiceNativeCurrency: Double;
-begin
-  result := AmountOnInvoiceNativeCurrency / Number;
-end;
-
-procedure TInvoiceLine.GetPurchaseDate(const Value: TDate);
-begin
-  FDate := Value
-end;
-
-function TInvoiceLine.GetRevenueNativeCurrency: Double;
-var
-  lInvLine: TInvoiceLine;
-begin
-  result := TotalNativeCurrency;
-  for lInvLine in FChildInvoiceLines do
-    if lInvLine.TotalIsIncludedInParent then
-      result := result - lInvLine.TotalNativeCurrency;
-end;
-
-function TInvoiceLine.GetRevenuePrice: Double;
-begin
-  Result := TotalRevenue / Number;
-end;
-
-function TInvoiceLine.GetTotal: Double;
-begin
-  result := FNumber * FPrice;
-end;
-
-function TInvoiceLine.GetTotalNativeCurrency: Double;
-begin
-  result := Total * GetRate(FCurrency);
-end;
-
-function TInvoiceLine.GetTotalRevenue: Double;
-var
-  lInvLine: TInvoiceLine;
-begin
-  result := Total;
-  for lInvLine in FChildInvoiceLines do
-    if lInvLine.TotalIsIncludedInParent then
-      result := result - lInvLine.Total;
-end;
-
-function TInvoiceLine.GetVatOnInvoice: Double;
-begin
-  result := GetVatOnInvoiceNativeCurrency / GetRate(FCurrency);
-end;
-
-function TInvoiceLine.GetVatOnInvoiceNativeCurrency: Double;
-var
-  lInvLine: TInvoiceLine;
-begin
-  result := 0;
-  if VisibleOnInvoice then
-  begin
-    result := VATOnRevenueNativeCurrency;
-    for lInvLine in ChildInvoiceLines do
-      if not lInvLine.VisibleOnInvoice then
-        result := result + lInvLine.VATOnRevenueNativeCurrency;
-  end;
-end;
-
-function TInvoiceLine.GetVatOnRevenueNativeCurrency: Double;
-begin
-  result := _calcVat(TotalNativeCurrency, FVATPercentage);
-end;
-
-procedure TInvoiceLine.SetParentInvoiceLine(const Value: TinvoiceLine);
-begin
-  if FParentInvoiceLine <> nil then
-    FParentInvoiceLine.ChildInvoiceLines.Remove(Self);
-
-  if assigned(Value) then
-      Value.ChildInvoiceLines.Add(self);
-
-  FParentInvoiceLine := Value;
-end;
-
-procedure TInvoiceLine.SetVATCode(const Value: string);
-begin
-  FVATCode := Value;
-  if FVATCode = '' then
-    FVATPercentage := 0
-  else
-    FVATPercentage := d.VATPercentage(FVATCode);
-end;
 
 /// /////////////////////////////////////////////////////////////////////////////
 /// /////////////////////////////////////////////////////////////////////////////
@@ -1361,7 +965,6 @@ function TfrmInvoiceRentPerDay.AddLine(LineId: integer; aParentInvoice: TInvoice
   rrAlias: integer; AutoGen: string; itemIndex: integer = 0; aVisibleOnInvoice: boolean = true): TInvoiceLine;
 var
   invoiceLine: TInvoiceLine;
-  iLastIdx: integer;
   lPackageId: integer;
   lItemId: integer;
   lParent: TInvoiceLine;
@@ -1369,22 +972,18 @@ begin
   if AutoGen = '' then
     AutoGen := _GetCurrentTick;
 
-  iLastIdx := 0;
-
-  if GetInvoiceLineCount > 0 then
-  begin
-    iLastIdx := FInvoiceLinesList[GetInvoiceLineCount - 1].InvoiceLineIndex;
-  end;
-
-  inc(iLastIdx);
-
   if trim(sItem) = '' then
     if copy(sText, 1, 5) = 'Tel: ' then
       sItem := trim(g.qPhoneUseItem);
 
   lParent := aParentInvoice;
-  invoiceLine := TInvoiceLine.Create(iLastIdx, LineId);
+  invoiceLine := nil;
   try
+    if isPackage then
+      invoiceLine := FInvoiceLinesList.AddPackageInvoiceLine(lineId, lParent, rrAlias)
+    else
+      invoiceLine := FInvoiceLinesList.AddInvoiceLine(lineId, lParent);
+
     invoiceLine.Item := sItem;
     invoiceLine.Text := sText;
     invoiceLine.Number := iNumber;
@@ -1394,50 +993,27 @@ begin
     invoiceLine.Reference := Refrence;
     invoiceLine.Source := Source;
     invoiceLine.isPackage := isPackage;
-    invoiceLine.TotalIsIncludedInParent := false; // Even when included in rate, then the rate has ben corrected for this already
+    invoiceLine.TotalIsIncludedInParent := false;
     invoiceLine.VisibleOnInvoice := aVisibleOnInvoice;
-
-    if isPackage and not Source.IsEmpty then
-    begin
-      if glb.LocateSpecificRecordAndGetValue('packages', 'package', Source, 'id', lPackageId) and
-         glb.LocateSpecificRecordAndGetValue('items', 'item', sItem, 'id', lItemId) then
-      begin
-        glb.PackageItems.First;
-        while not glb.PackageItems.Eof do
-          if (glb.PackageItems.FieldByName('packageid').asInteger = lPackageId) and
-             (glb.PackageItems.FieldByName('itemid').asInteger = lItemId) then
-          begin
-            invoiceLine.VisibleOnInvoice := not glb.PackageItems.FieldByName('includedInRate').asBoolean;
-            Break;
-          end
-          else
-            glb.PackageItems.Next;
-      end;
-      // locate roomrent item that should be the parent, roomrent item of the same purchase date
-      for lParent in FInvoiceLinesList do
-        if (lParent.ItemKind = ikRoomRent) and lParent.isPackage and (lParent.PurchaseDate = invoiceLine.PurchaseDate) then
-          Break;
-    end;
 
     invoiceLine.noGuests := noGuests;
     invoiceLine.ConfirmDate := ConfirmDate;
     invoiceLine.ConfirmAmount := ConfirmAmount;
-    invoiceLine.rrAlias := rrAlias;
+    invoiceLine.Roomreservation := rrAlias;
     invoiceLine.itemIndex := itemIndex;
     invoiceLine.AutoGen := AutoGen;
-    invoiceLine.Parent := lParent;
     invoiceLine.VATCode := VATCode;
     invoiceLine.Currency := aCurrency;
 
     // Check if visiblity overridden in invoicelines_visiblity table
-    invoiceline.VisibleOnInvoice := GetInvoiceLineVisibility(invoiceline.ParentReservation, invoiceline.ParentRoomReservation,
-                                                             FInvoiceIndex, invoiceline.PurchaseDate, invoiceline.Item,
-                                                             invoiceline.VisibleOnInvoice);
-
-    FInvoiceLinesList.Add(invoiceLine);
+    if invoiceLine.CanBeHiddenFromInvoice then
+      invoiceline.VisibleOnInvoice := GetInvoiceLineVisibility(invoiceline.ParentReservation, invoiceline.ParentRoomReservation,
+                                                               FInvoiceIndex, invoiceline.PurchaseDate, invoiceline.Item,
+                                                               invoiceline.VisibleOnInvoice);
 
   except
-    invoiceLine.Free;
+    if assigned(invoiceline) then
+      FInvoiceLinesList.Remove(InvoiceLine);
     raise;
   end;
   result := invoiceLine;
@@ -1566,7 +1142,7 @@ begin
   agrLines.Cells[col_confirmdate, ARow] := _db(aInvoiceLine.ConfirmDate, false);
   agrLines.Cells[col_confirmAmount, ARow] := _db(aInvoiceLine.ConfirmAmount);
 
-  agrLines.Cells[col_rrAlias, ARow] := inttostr(aInvoiceLine.rrAlias);
+  agrLines.Cells[col_rrAlias, ARow] := inttostr(aInvoiceLine.Roomreservation);
 
   agrLines.Cells[col_autogen, ARow] := aInvoiceLine.AutoGen;
 
@@ -2112,7 +1688,7 @@ begin
     lDescription := Item_GetDescription(lDiscountItem) + ' ' + aDiscountText;
 
     /// Add an InvoiceLine object for the discount
-    lInvoiceLine := AddLine(0, lInvoiceLine, lDiscountItem, lDescription, aDayCount, -1 * aDiscountAmount, aCurrency,
+    AddLine(0, lInvoiceLine, lDiscountItem, lDescription, aDayCount, -1 * aDiscountAmount, aCurrency,
             lItemInfo.VATCode, aFromDate, True, '', '', false, aNumGuests, lConfirmDate, lConfirmAmount, aRRAlias, _GetCurrentTick);
     lRoomInfo.Discount := aDiscountAmount * aDayCount;
   end;
@@ -2763,7 +2339,8 @@ begin
       'ih.ihPayDate, ' + 'ih.ihConfirmDate, ' + 'ih.ihInvoiceDate, ' +
       'IFNULL(ia.ihCurrency, ih.ihCurrency) AS ihCurrency, ' + 'ih.ihCurrencyRate, ' + 'ih.invRefrence, ' +
       'ih.TotalStayTax, ' + 'ih.TotalStayTaxNights, ' + 'ih.showPackage, ' + 'ih.staff, ' + 'ih.location, ' +
-      'ih.externalInvoiceId ' + 'FROM invoiceheads ih ' + #10 +
+      'ih.externalInvoiceId ' +
+      'FROM invoiceheads ih ' + #10 +
       '     LEFT JOIN invoiceaddressees ia ON ia.invoiceNumber=ih.InvoiceNumber ' +
       '        AND ia.Reservation=ih.Reservation ' + '        AND ia.RoomReservation=ih.RoomReservation ' +
       '        AND ia.SplitNumber=ih.SplitNumber ' + '        AND ia.InvoiceIndex=%d ' + 'where ih.Reservation = %d '#10
@@ -3248,7 +2825,7 @@ begin
           trim(eSet.FieldByName('importRefrence').asString), trim(eSet.FieldByName('importSource').asString),
           eSet.FieldByName('isPackage').asBoolean, eSet.FieldByName('Persons').asinteger,
           eSet.FieldByName('ConfirmDate').asdateTime, eSet.FieldByName('ConfirmAmount').AsFloat, lRoomReservation,
-          eSet.FieldByName('AutoGen').asString, eSet.FieldByName('ItemNumber').asinteger);
+          eSet.FieldByName('AutoGen').asString, eSet.FieldByName('ItemNumber').asinteger, eSet.FieldByName('visibleoninvoice').asBoolean );
 
         eSet.Next;
       end;
@@ -4529,7 +4106,7 @@ begin
     s := s + ', ' + _db(aInvoiceLine.isPackage);
     s := s + ', ' + _db(aInvoiceLine.ConfirmDate);
     s := s + ', ' + _db(aInvoiceLine.ConfirmAmount);
-    s := s + ', ' + _db(aInvoiceLine.rrAlias);
+    s := s + ', ' + _db(aInvoiceLine.Roomreservation);
     s := s + ', ' + _db(FInvoiceIndex);
     s := s + ', ' + _db(d.roomerMainDataSet.username);
     s := s + ', ' + _db(aInvoiceLine.VisibleOnInvoice);
@@ -7416,76 +6993,6 @@ begin
   ClearRoomInfoObjects;
   ClearInvoiceLines;
   NullifyGrid;
-end;
-
-{ TInvoiceLineList }
-
-function TInvoiceLineList.GetCityTaxUnitCount: Double;
-var
-  lInvLine: TInvoiceLine;
-begin
-  result := 0;
-  for lInvLine in self do
-    if lInvLine.ItemKind = ikStayTax then
-      result := result + lInvLine.Number;
-end;
-
-function TInvoiceLineList.GetIsChanged: boolean;
-var
-  lInvLine: TInvoiceLine;
-begin
-  result := false;
-  for lInvLine in self do
-    result := result or lInvLine.Changed;
-end;
-
-function TInvoiceLineList.GetTotalCityTaxRevenues: Double;
-var
-  lInvLine: TInvoiceLine;
-begin
-  result := 0.0;
-  for lInvLine in self do
-    if (lInvLine.ItemKind = ikStayTax) then
-      result := result + lInvLine.TotalNativeCurrency;
-end;
-
-function TInvoiceLineList.GetTotalOnInvoiceNativeCurrency: Double;
-var
-  lInvLine: TInvoiceLine;
-begin
-  result := 0.0;
-  for lInvLine in self do
-    result := result + (lInvLine.AmountOnInvoice * GetRate(lInvLine.Currency));
-end;
-
-function TInvoiceLineList.GetTotalVatOnInvoice: Double;
-var
-  lInvLine: TInvoiceLine;
-begin
-  result := 0.0;
-  for lInvLine in self do
-    result := result + (lInvLine.VATOnInvoice * GetRate(lInvLine.Currency));
-end;
-
-procedure TInvoiceLineList.SetAllVisibleOnInvoiceTo(aVisible: boolean; aItemKindSet: TItemKindSet);
-var
-  lInvLine: TInvoiceLine;
-begin
-  for lInvLine in self do
-    if linvLine.CanBeHiddenFromInvoice and (lInvLine.ItemKind in aItemKindSet) then
-    begin
-      linvLine.VisibleOnInvoice := aVisible;
-      lInvLine.Changed := true
-    end;
-end;
-
-procedure TInvoiceLineList.SortOnInvoiceLineIndex;
-begin
-  Sort(TComparer<TInvoiceLine>.Construct(
-    function(const l, R: TInvoiceLine): integer
-    begin
-      result := l.InvoiceLineIndex - R.InvoiceLineIndex;
-    end));
 end;
 
 end.

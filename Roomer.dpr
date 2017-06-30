@@ -296,7 +296,8 @@ uses
   uFrontDeskPageButton in 'uFrontDeskPageButton.pas' {FrmFrontDeskPageButton},
   uRptInHouse in 'uRptInHouse.pas' {frmInHouseReport},
   uDataSetFilterUtils in 'Filters\uDataSetFilterUtils.pas',
-  uSocketHelpers in 'TCP\uSocketHelpers.pas';
+  uSocketHelpers in 'TCP\uSocketHelpers.pas',
+  uInvoiceObjects in 'Invoice\uInvoiceObjects.pas';
 
 {$R *.RES}
 

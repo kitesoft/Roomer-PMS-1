@@ -194,8 +194,6 @@ type
     procedure tvDataEditDblClick(Sender: TcxCustomGridTableView; AItem: TcxCustomGridTableItem; AEdit: TcxCustomEdit);
     procedure sButton1Click(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
-    procedure tvDatanumItemsMethodStrPropertiesValidate(Sender: TObject; var DisplayValue: Variant; var ErrorText: TCaption;
-      var Error: Boolean);
   private
     { Private declarations }
     zFirstTime       : boolean;
@@ -458,14 +456,10 @@ end;
 
 procedure TfrmPackageItems.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
-  if tvdata.DataController.DataSet.State = dsInsert then
-  begin
+  if (ModalResult = mrCancel) then
+    tvdata.DataController.Cancel
+  else if (tvdata.DataController.DataSet.State in [dsInsert, dsEdit]) then
     tvdata.DataController.Post;
-  end;
-  if tvdata.DataController.DataSet.State = dsEdit then
-  begin
-    tvdata.DataController.Post;
-  end;
 end;
 
 procedure TfrmPackageItems.FormKeyPress(Sender: TObject; var Key: Char);
@@ -537,9 +531,13 @@ end;
 procedure TfrmPackageItems.m_BeforePost(DataSet: TDataSet);
 var
   nID : integer;
+  idx: integer;
 begin
   if zFirstTime then exit;
   nID := 0;
+
+  idx := numItemsMethodlst.IndexOf(m_.fieldbyname('numItemsMethodStr').AsString);
+  m_.fieldbyname('numItemsMethod').AsInteger := idx;
 
   initPackageItemHolder(zData);
   zData.ID                    := dataset.FieldByName('ID').AsInteger;
@@ -735,18 +733,6 @@ begin
     exit;
   end;
 end;
-
-procedure TfrmPackageItems.tvDatanumItemsMethodStrPropertiesValidate(Sender: TObject; var DisplayValue: Variant; var ErrorText: TCaption;
-  var Error: Boolean);
-var
-  idx : integer;
-begin
-  idx := numItemsMethodlst.IndexOf(DisplayValue);
-  m_.edit;
-  m_.fieldbyname('numItemsMethod').AsInteger := idx;
-  m_.post;
-end;
-
 
 procedure TfrmPackageItems.tvDataDblClick(Sender: TObject);
 begin

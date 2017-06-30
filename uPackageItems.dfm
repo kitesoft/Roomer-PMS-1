@@ -186,6 +186,7 @@ object frmPackageItems: TfrmPackageItems
       Height = 25
       Hint = 'Cancel and close'
       Anchors = [akTop, akRight]
+      Cancel = True
       Caption = 'Cancel'
       ImageIndex = 4
       Images = DImages.PngImageList1
@@ -273,6 +274,7 @@ object frmPackageItems: TfrmPackageItems
       DataController.Summary.SummaryGroups = <>
       DataController.OnSortingChanged = tvDataDataControllerSortingChanged
       OptionsBehavior.AlwaysShowEditor = True
+      OptionsBehavior.FocusCellOnTab = True
       OptionsBehavior.IncSearch = True
       OptionsData.Appending = True
       OptionsData.CancelOnExit = False
@@ -320,7 +322,6 @@ object frmPackageItems: TfrmPackageItems
         DataBinding.FieldName = 'numItemsMethodStr'
         PropertiesClassName = 'TcxComboBoxProperties'
         Properties.DropDownListStyle = lsFixedList
-        Properties.OnValidate = tvDatanumItemsMethodStrPropertiesValidate
         Width = 77
       end
       object tvDataIncludedInRate: TcxGridDBColumn
@@ -469,6 +470,7 @@ object frmPackageItems: TfrmPackageItems
     Left = 368
     Top = 224
     object prLink_grData: TdxGridReportLink
+      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -482,6 +484,7 @@ object frmPackageItems: TfrmPackageItems
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
       ReportDocument.CreationDate = 41334.495374884260000000
+      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
   end
