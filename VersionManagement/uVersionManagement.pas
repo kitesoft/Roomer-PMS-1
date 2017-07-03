@@ -42,12 +42,19 @@ type
 
     procedure makeSureUpgradeDaemonIsActive;
 
+    {$HINTS OFF}
+    function doesUpgradeWindowExist : Boolean;
+    procedure activateDaemon;
+    procedure openDaemon;
+    procedure CloseDaemon;
+    {$HINTS ON}
     function newVersionAvailable(force : Boolean = false) : Boolean;
     procedure updateNow(force : boolean = false);
     procedure BreakDownVersionString(sStr: String);
     procedure PerformUpdateIfAvailable(initialStart : Boolean = False);
     procedure CheckIfUpgradeExists;
     function GetFromURI(uri: String; useGetUriPort : Boolean = True): String;
+    function FindServicePort : integer;
     function GetURIPort(SourceURI : String) : String;
     procedure startEngine;
   public
@@ -372,5 +379,92 @@ begin
   end;
   RoomerLogger.AddToLog('Finished update check.');
 end;
+
+function TRoomerVersionManagement.doesUpgradeWindowExist: Boolean;
+var s : String;
+begin
+  s := '';
+  PortToUse := FindServicePort;
+  if PortToUse > 0 then
+    s := GetFromURI(URI_UPGRADE_DAEMON_ACTIVE);
+  result := (s = 'ACTIVE') OR (s = 'BUSY');
+end;
+
+procedure TRoomerVersionManagement.activateDaemon;
+begin
+  // --
+  GetFromURI(format(URI_UPGRADE_DAEMON_ACTIVATE, [d.roomerMainDataSet.ForcedURLEncode(d.roomerMainDataSet.RoomerStoreUri)]));
+  Start(true);
+end;
+
+procedure TRoomerVersionManagement.CloseDaemon;
+var i : Integer;
+begin
+  GetFromURI(URI_UPGRADE_DAEMON_CLOSE);
+  Application.ProcessMessages;
+  for i := 1 to 20 do
+  begin
+    Sleep(100);
+    Application.ProcessMessages;
+  end;
+  Application.ProcessMessages;
+  PortToUse := 0;
+end;
+
+procedure TRoomerVersionManagement.openDaemon;
+var exePath : String;
+begin
+   RoomerLogger.AddToLog('Opening Daemon...');
+   exePath := FileDependencyManager.getRoomerUpgradeDaemonFilePath(RoomerUpgradeDaemonPath);
+   if exePath = '' then
+   begin
+     MessageDlg('Could not find the Roomer Upgrade Daemon!', mtError, [mbOk], 0);
+     RoomerLogger.AddToLog('Daemon Could not be found!');
+   end else
+   begin
+     PortToUse := 0;
+     ExecuteFile(Application.MainForm.Handle, exePath, '', []); // [eoElevate]);
+     RoomerLogger.AddToLog('Daemon opened.');
+     sleep(2000);
+   end;
+end;
+
+function TRoomerVersionManagement.FindServicePort: integer;
+var uri,
+    res : String;
+    UnusedPorts : TAvailablePortArray;
+
+    function PortInUse(port : word) : Boolean;
+    var i: Integer;
+    begin
+      result := True;
+      for i := LOW(UnusedPorts) to HIGH(UnusedPorts) do
+        if UnusedPorts[i] = port then
+        begin
+          result := False;
+          Break;
+        end;
+    end;
+begin
+  if PortToUse = 0 then
+  begin
+    UnusedPorts := findAvailableTCPPort( HTTP_LOCAL_IP, HTTP_DEFAULT_PORT_MIN, HTTP_DEFAULT_PORT, 11 );
+    result := HTTP_DEFAULT_PORT;
+    repeat
+      if PortInUse(result) then
+      begin
+        uri := replaceString(URI_UPGRADE_DAEMON_WHO_ARE_YOU, '{port}', inttostr(result));
+        res := getFromURI(uri, False);
+        if res = 'ROOMER_DAEMON' then
+          Break;
+      end;
+      dec(result);
+    until result <= HTTP_DEFAULT_PORT_MIN;
+    if result <= HTTP_DEFAULT_PORT_MIN then
+      result := 0;
+  end else
+    result := PortToUse;
+end;
+
 
 end.
