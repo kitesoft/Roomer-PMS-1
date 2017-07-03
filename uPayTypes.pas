@@ -246,6 +246,7 @@ uses
   , uFrmKeyPairSelector
   , uBookKeepingCodes
   , uUtils
+  , UITypes
   ;
 
 {$R *.dfm}

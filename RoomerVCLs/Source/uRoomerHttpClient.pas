@@ -224,6 +224,7 @@ begin
     end;
   finally
     lResponseContentHeader.Free;
+    lResponseContentStream.Free;
   end;
 end;
 

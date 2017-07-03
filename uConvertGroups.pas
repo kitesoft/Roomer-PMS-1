@@ -207,6 +207,7 @@ uses
   , uMessageList
   , uSqlDefinitions
   , uDimages
+  , UITypes
   ;
 
 {$R *.dfm}
@@ -496,6 +497,7 @@ procedure TfrmConvertGroups.m_BeforePost(DataSet: TDataSet);
 var
   nID : integer;
 begin
+  nId := 0;
   if zFirstTime then exit;
   initConvertGroupHolder(zData);
   zData.ID                  := dataset.FieldByName('ID').AsInteger;

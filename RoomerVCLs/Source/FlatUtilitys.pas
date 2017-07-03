@@ -62,6 +62,10 @@ function RectInRect (R1, R2: TRect): Boolean;
 
 implementation
 
+uses
+  Types
+  ;
+
 procedure Frame3DBorder (Canvas: TCanvas; Rect: TRect; TopColor, BottomColor: TColor; Width: Integer);
 
   procedure DoRect;

@@ -216,7 +216,9 @@ var
 implementation
 
 uses
-   uD, uDImages, uUtils;
+   uD, uDImages, uUtils
+   , UITypes
+   ;
 
 {$R *.dfm}
 

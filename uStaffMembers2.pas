@@ -241,6 +241,7 @@ uses
   , uStaffTypes2
   , ucountries
   , uDImages
+  , UITypes
   ;
 
 

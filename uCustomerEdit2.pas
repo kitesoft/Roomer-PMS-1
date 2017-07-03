@@ -209,7 +209,9 @@ uses
   , uFrmResources
   , uResourceManagement
   , uDImages
-  , uUtils, uResourceTypeDefinitions;
+  , uUtils
+  , uResourceTypeDefinitions
+  , UITypes;
 
 
 function openCustomerEdit(var theData : recCustomerHolder; isInsert : boolean; _financeCustomerList : TKeyPairList = nil) : boolean;

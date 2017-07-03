@@ -214,6 +214,7 @@ uses
    ,uSqlDefinitions
    , uDImages
    , uUtils
+   , UITypes
   ;
 
 {$R *.dfm}

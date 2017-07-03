@@ -95,6 +95,7 @@ uses
   , cxGridExportLink
   , uG
   , SHellApi
+  , UITypes
   ;
 
 {$R *.dfm}

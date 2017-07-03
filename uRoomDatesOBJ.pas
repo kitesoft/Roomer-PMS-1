@@ -263,16 +263,16 @@ begin
           qMT_.FieldByName('Guestname1').AsString := rSet.fieldbyname('MainName').asString;
           qMT_.FieldByName('NumGuests').AsInteger := rSet.fieldbyname('NumGuests').asInteger;
           qMT_.FieldByName('PMInfo').AsWideString := rSet.fieldbyname('PMInfo').asWideString;
-          qMT_.FieldByName('Price').AsFloat := rSet.GetFloatValue(rSet.fieldbyname('Price'));
-          qMT_.FieldByName('Discount').AsFloat := rSet.GetFloatValue(rSet.fieldbyname('Discount'));
+          qMT_.FieldByName('Price').AsFloat := rSet.fieldbyname('Price').AsFloat;
+          qMT_.FieldByName('Discount').AsFloat := rSet.fieldbyname('Discount').AsFloat;
           qMT_.FieldByName('ItemsOnInvoice').AsBoolean := rSet.fieldbyname('ItemsOnInvoice').asInteger <> 0;
           qMT_.FieldByName('PriceType').AsString := rSet.fieldbyname('PriceType').asString;
           qMT_.FieldByName('Currency').AsString := rSet.fieldbyname('Currency').asString;
           qMT_.FieldByName('RoomClass').AsString := rSet.fieldbyname('RoomClass').asString;
           qMT_.FieldByName('OutOfOrderBlocking').AsBoolean := rSet.fieldbyname('OutOfOrderBlocking').AsBoolean;
-          qMT_.FieldByName('TotalNoRent').AsFloat := rSet.GetFloatValue(rSet.fieldbyname('TotalNoRent'));
-          qMT_.FieldByName('TotalTaxes').AsFloat := rSet.GetFloatValue(rSet.fieldbyname('TotalTaxes'));
-          qMT_.FieldByName('TotalRent').AsFloat := rSet.GetFloatValue(rSet.fieldbyname('TotalRent'));
+          qMT_.FieldByName('TotalNoRent').AsFloat := rSet.fieldbyname('TotalNoRent').AsFloat;
+          qMT_.FieldByName('TotalTaxes').AsFloat := rSet.fieldbyname('TotalTaxes').AsFloat;
+          qMT_.FieldByName('TotalRent').AsFloat := rSet.fieldbyname('TotalRent').AsFloat;
           if Assigned(rSet.FindField('blockMove')) then
             qMT_.FieldByName('BlockMove').AsBoolean := rSet.fieldbyname('BlockMove').AsBoolean;
           if Assigned(rSet.FindField('blockMoveReason')) then

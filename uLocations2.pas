@@ -185,7 +185,6 @@ type
     Procedure fillGridFromDataset(iGoto : integer);
     procedure fillHolder;
     procedure changeAllowgridEdit;
-    function getPrevCode : string;
     Procedure chkFilter;
     procedure applyFilter;
 
@@ -211,6 +210,7 @@ uses
   , uSqlDefinitions
   , uChannelManager
   , uUtils
+  , UITypes
   ;
 
 
@@ -249,7 +249,6 @@ Procedure TfrmLocations.fillGridFromDataset(iGoto : integer);
 var
   s    : string;
   rSet : TRoomerDataSet;
-  i : integer;
 begin
   zFirstTime := true;
   if zSortStr = '' then zSortStr := 'ID';
@@ -456,10 +455,6 @@ end;
 
 ////////////////////////////////////////////////////////////////////////////////////////
 // memory table
-////////////////////////////////////////////////////////////////////////////////////////
-function TfrmLocations.getPrevCode: string;
-begin
-end;
 
 procedure TfrmLocations.m_BeforeDelete(DataSet: TDataSet);
 var

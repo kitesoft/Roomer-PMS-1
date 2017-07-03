@@ -556,7 +556,7 @@ begin
   aStack.Clear;
   aExpression := AnsiLowerCase(aExpression);
   lengthExpr := length(aExpression);
-  GetLocaleFormatSettings(LOCALE_SYSTEM_DEFAULT, fs);
+  fs := TFormatSettings.Create;
   i := 1;
 
   while i <= lengthExpr do

@@ -62,6 +62,10 @@ type
 
 implementation
 
+uses
+  Types
+  ;
+
 // Cliboard formats that need to be registered
 var
   CF_FILECONTENTS: Integer;

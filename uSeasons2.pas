@@ -179,7 +179,6 @@ type
     Procedure fillGridFromDataset(sGoto : string);
     procedure fillHolder;
     procedure changeAllowgridEdit;
-    function getPrevCode : string;
     Procedure chkFilter;
     procedure applyFilter;
 
@@ -209,6 +208,7 @@ uses
   , uCurrencies
   , uDImages
   , uUtils
+  , UITypes
   ;
 
 
@@ -428,10 +428,6 @@ end;
 
 ////////////////////////////////////////////////////////////////////////////////////////
 // memory table
-////////////////////////////////////////////////////////////////////////////////////////
-function TfrmSeasons2.getPrevCode: string;
-begin
-end;
 
 procedure TfrmSeasons2.m_BeforeDelete(DataSet: TDataSet);
 var

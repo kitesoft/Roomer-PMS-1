@@ -142,6 +142,10 @@ procedure Register;
 
 implementation
 
+uses
+  Types
+  ;
+
 var
   MouseTimer: TTimer = nil;
   ControlCounter: Integer = 0;

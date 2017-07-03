@@ -26,11 +26,11 @@ inherited frmUserActivityReport: TfrmUserActivityReport
       Left = 455
       Top = 11
       Width = 118
-      Height = 37
+      Height = 103
       Margins.Top = 10
       Align = alLeft
       Caption = 'Refresh'
-      Constraints.MaxHeight = 37
+      Constraints.MaxHeight = 103
       Default = True
       ImageIndex = 28
       Images = DImages.PngImageList1
@@ -198,7 +198,6 @@ inherited frmUserActivityReport: TfrmUserActivityReport
       ParentFont = False
       TabOrder = 3
       SkinData.SkinSection = 'GROUPBOX'
-      ExplicitLeft = 287
       object lblCategory: TsLabel
         Left = 56
         Top = 19
@@ -311,6 +310,16 @@ inherited frmUserActivityReport: TfrmUserActivityReport
     end
   end
   inherited psRoomerBase: TcxPropertiesStore
+    Components = <
+      item
+        Component = frmBaseRoomerForm.Owner
+        Properties.Strings = (
+          'Height'
+          'Left'
+          'Top'
+          'Width'
+          'Position')
+      end>
     Left = 744
     Top = 80
   end
@@ -333,6 +342,7 @@ inherited frmUserActivityReport: TfrmUserActivityReport
     object grdPrinterLink1: TdxGridReportLink
       Active = True
       Component = grActivityLog
+      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -354,13 +364,14 @@ inherited frmUserActivityReport: TfrmUserActivityReport
       PrinterPage.ScaleMode = smFit
       PrinterPage._dxMeasurementUnits_ = 2
       PrinterPage._dxLastMU_ = 2
-      ReportDocument.CreationDate = 42780.691533668980000000
+      ReportDocument.CreationDate = 42919.451511620370000000
       ReportTitle.Font.Charset = DEFAULT_CHARSET
       ReportTitle.Font.Color = clBlack
       ReportTitle.Font.Height = -19
       ReportTitle.Font.Name = 'Arial'
       ReportTitle.Font.Style = [fsBold]
       ShrinkToPageWidth = True
+      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlack
       Font.Height = -11

@@ -203,14 +203,12 @@ type
     zIsAddRow        : boolean;
     zCurrencyID      : integer;
     zCurrency        : string;
-    zLocalCurrency   : string;
     zDescription : string;
 
     Procedure fillGridFromDataset(currency,sGoto : string);
     procedure fillHolder;
     procedure FillCurrenciesBOX(box : TcolumnComboBox;All:boolean; defID : integer);
     procedure changeAllowgridEdit;
-    function getPrevCode : string;
     Procedure chkFilter;
     procedure applyFilter;
 
@@ -238,7 +236,8 @@ uses
   , uSqlDefinitions
   , uCurrencies
   , uUtils
-  , uSQLUtils;
+  , uSQLUtils
+  , UITypes;
 
 
 
@@ -522,8 +521,6 @@ begin
 end;
 
 procedure TfrmRates.FormShow(Sender: TObject);
-var
-  tmp : integer;
 begin
 //**
   panBtn.Visible   := False;
@@ -612,11 +609,6 @@ end;
 ////////////////////////////////////////////////////////////////////////////////////////
 // memory table
 ////////////////////////////////////////////////////////////////////////////////////////
-
-
-function TfrmRates.getPrevCode: string;
-begin
-end;
 
 
 procedure TfrmRates.m_BeforeDelete(DataSet: TDataSet);
@@ -776,10 +768,7 @@ end;
 procedure TfrmRates.tvDataisDefaultPropertiesValidate(Sender: TObject; var DisplayValue: Variant; var ErrorText: TCaption;
   var Error: Boolean);
 var
-  isDefault   : boolean;
-  oldValue    : boolean;
   Currency    : string ;
-  s           : string ;
 begin
   currency := m_['currency'];
   if TcxCheckBox (Sender).Checked then
@@ -799,10 +788,8 @@ procedure TfrmRates.tvDataCurrencyPropertiesValidate(Sender: TObject; var Displa
   var Error: Boolean);
 var
   CurrValue : string;
-  isDefault : boolean;
 begin
   currValue := m_['currency'];
-  isDefault := m_['isDefault'];
 
   error := false;
   if trim(displayValue) = '' then

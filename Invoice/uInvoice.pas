@@ -1535,8 +1535,7 @@ begin
           ImportSource := rSet.FieldByName('ImportSource').asString;
 
           confirmDate := rSet.FieldByName('ConfirmDate').asdateTime;
-          confirmAmount := rSet.GetFloatValue
-            (rSet.FieldByName('ConfirmAmount'));
+          confirmAmount := rSet.FieldByName('ConfirmAmount').AsFloat;
 
           tmpData := rSet.FieldByName('tmpData').asString;
 
@@ -2437,8 +2436,7 @@ begin
     if not zrSet.eof then
     begin
       SetInvoiceIndexColors(zrSet.FieldByName('InvoiceIndexes').asString, zrSet.FieldByName('ihCurrency').asString);
-      AddRRColor(zrSet.FieldByName('rrInvoiceIndex').asinteger, zrSet.GetFloatValue(zrSet.FieldByName('rrInvoiceTotal')
-        ), zrSet.FieldByName('ihCurrency').asString);
+      AddRRColor(zrSet.FieldByName('rrInvoiceIndex').asinteger, zrSet.FieldByName('rrInvoiceTotal').AsFloat, zrSet.FieldByName('ihCurrency').asString);
       // S�kja Invoice sem er til
       zInvoiceNumber := zrSet.FieldByName('InvoiceNumber').asinteger;
 
@@ -2652,11 +2650,9 @@ begin
           ChildrenCount := zRoomRSet.FieldByName('numChildren').asinteger;
           infantCount := zRoomRSet.FieldByName('numInfants').asinteger;
           PriceCode := zRoomRSet.FieldByName('PriceType').asString;
-          AverageRate := zRoomRSet.GetFloatValue
-            (zRoomRSet.FieldByName('AverageRate'));
+          AverageRate := zRoomRSet.FieldByName('AverageRate').AsFloat;
           RateCount := zRoomRSet.FieldByName('rateCount').asinteger;
-          AvrageDiscountPerc := zRoomRSet.GetFloatValue
-            (zRoomRSet.FieldByName('discount'));
+          AvrageDiscountPerc := zRoomRSet.FieldByName('discount').AsFloat;
 
           mRoomRes.append;
           mRoomRes.FieldByName('RoomReservation').asinteger := lRoomReservation;
@@ -2713,8 +2709,8 @@ begin
                 Room := rSet.FieldByName('Room').asString;
                 PriceCode := rSet.FieldByName('PriceCode').asString;
                 RateDate := SQLToDate(rSet.FieldByName('ADate').asString);
-                Rate := rSet.GetFloatValue(rSet.FieldByName('RoomRate'));
-                Discount := rSet.GetFloatValue(rSet.FieldByName('Discount'));
+                Rate := rSet.FieldByName('RoomRate').AsFloat;
+                Discount := rSet.FieldByName('Discount').AsFloat;
                 isPercentage := rSet.FieldByName('isPercentage').asBoolean;
                 ShowDiscount := rSet.FieldByName('ShowDiscount').asBoolean;
                 isPaid := rSet.FieldByName('Paid').asBoolean;
@@ -2949,7 +2945,7 @@ begin
         if (eSet.FieldByName('isPackage').asBoolean) and not _s.Contains(lRoomAdditionalText) then
           _s := _s + Format(' %s %s', [lRoomAdditionalText, Room ]);
 
-        dNumber := GetCalculatedNumberOfItems(ItemId, eSet.GetFloatValue(eSet.FieldByName('Number')));
+        dNumber := GetCalculatedNumberOfItems(ItemId, eSet.FieldByName('Number').AsFloat);
 
         idx := AddLine(lineId, ItemId, _s,
           dNumber, Price, // -96
@@ -2960,7 +2956,7 @@ begin
           eSet.FieldByName('isPackage').asBoolean,
           eSet.FieldByName('Persons').asinteger,
           eSet.FieldByName('ConfirmDate').asdateTime,
-          eSet.GetFloatValue(eSet.FieldByName('ConfirmAmount')),
+          eSet.FieldByName('ConfirmAmount').AsFloat,
           lRoomReservation, eSet.FieldByName('AutoGen').asString,
           eSet.FieldByName('ItemNumber').asinteger);
         if (agrLines.Cells[col_Item, agrLines.RowCount - 1] <> '') or (agrLines.Cells[col_Description, agrLines.RowCount - 1] <> '') then
@@ -8438,9 +8434,9 @@ begin
       s := s + ', ' + _db(PROFORMA_INVOICE_NUMBER);
       s := s + ', ' + _db(rSet.FieldByName('paydate').asString);
       s := s + ', ' + _db(rSet.FieldByName('PayType').asString);
-      s := s + ', ' + _db(rSet.GetFloatValue(rSet.FieldByName('Amount')));
+      s := s + ', ' + _db(rSet.FieldByName('Amount').AsFloat);
       s := s + ', ' + _db(rSet.FieldByName('Description').asString);
-      s := s + ', ' + _db(rSet.GetFloatValue(rSet.FieldByName('Currencyrate')));
+      s := s + ', ' + _db(rSet.FieldByName('Currencyrate').AsFloat);
       s := s + ', ' + _db(rSet.FieldByName('Currency').asString);
       s := s + ', ' + _db(rSet.FieldByName('TypeIndex').asinteger);
       s := s + ', ' + _db(rSet.FieldByName('AYear').asinteger);

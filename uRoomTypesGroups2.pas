@@ -432,7 +432,7 @@ begin
           m_.FieldByName('FullBoard').AsString:= rSet.FieldByName('FullBoard').AsString ;
           m_.FieldByName('defAvailability').AsInteger := rSet.FieldByName('defAvailability').AsInteger  ;
           m_.FieldByName('defStopSale').asBoolean     := rSet.FieldByName('defStopSale').AsBoolean      ;
-          m_.FieldByName('defRate').asfloat           := rSet.GetFloatValue(rSet.FieldByName('defRate'))           ;
+          m_.FieldByName('defRate').asfloat           := rSet.FieldByName('defRate').AsFloat;
           m_.FieldByName('defMaxAvailability').AsInteger := rSet.FieldByName('defMaxAvailability').AsInteger  ;
           m_.FieldByName('defMinStay').AsInteger         := rSet.FieldByName('defMinStay').AsInteger  ;
           m_.FieldByName('defMaxStay').AsInteger         := rSet.FieldByName('defMaxStay').AsInteger  ;
@@ -440,7 +440,7 @@ begin
           m_.FieldByName('defClosedToDeparture').asBoolean     := rSet.FieldByName('defClosedToDeparture').AsBoolean      ;
           m_.FieldByName('NonRefundable').asBoolean     := rSet.FieldByName('NonRefundable').AsBoolean      ;
           m_.FieldByName('AutoChargeCreditcards').asBoolean     := rSet.FieldByName('AutoChargeCreditcards').AsBoolean      ;
-          m_.FieldByName('RateExtraBed').asfloat           := rSet.GetFloatValue(rSet.FieldByName('RateExtraBed'))          ;
+          m_.FieldByName('RateExtraBed').asfloat           := rSet.FieldByName('RateExtraBed').AsFloat          ;
           m_.FieldByName('PhotoUri').AsString     := rSet.FieldByName('PhotoUri').AsString      ;
           m_.FieldByName('sendAvailability').asBoolean     := rSet.FieldByName('sendAvailability').AsBoolean      ;
           m_.FieldByName('sendRate').asBoolean     := rSet.FieldByName('sendRate').AsBoolean      ;

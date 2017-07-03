@@ -278,6 +278,7 @@ uses
   , uActivityLogs
   , uDImages
   , u2dMatrix
+  , UITypes
   ;
 
 {$R *.dfm}

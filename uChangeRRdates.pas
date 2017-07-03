@@ -294,8 +294,8 @@ begin
         if rd_.FieldByName('paid').asBoolean = true then
           inc(paidCount);
 
-        roomRate := rd_.GetFloatValue(rd_.FieldByName('RoomRate'));
-        Discount := rd_.GetFloatValue(rd_.FieldByName('Discount'));
+        roomRate := rd_.FieldByName('RoomRate').AsFloat;
+        Discount := rd_.FieldByName('Discount').AsFloat;
         lstPrices.Add(floatTostr(roomRate) + floatTostr(Discount));
         roomRateTotal := roomRateTotal + roomRate;
         discountTotal := discountTotal + Discount;
@@ -414,8 +414,8 @@ begin
                 rec.ResFlag := status;
                 rec.Reservation := Reservation;
                 rec.PriceCode := priceType;
-                rec.roomRate := rd_.GetFloatValue(rd_.FieldByName('RoomRate'));
-                rec.Discount := rd_.GetFloatValue(rd_.FieldByName('Discount'));
+                rec.roomRate := rd_.FieldByName('RoomRate').AsFloat;
+                rec.Discount := rd_.FieldByName('Discount').AsFloat;
                 rec.isPercentage := rd_.FieldByName('isPercentage').asBoolean;
                 rec.showDiscount := rd_.FieldByName('showDiscount').asBoolean;
                 if paidCount > 0 then
@@ -1019,7 +1019,7 @@ begin
 
           if hData.rSet_bySQL(Rset, s) then
           begin
-            firstHolder.averageRate := Rset.GetFloatValue(Rset.FieldByName('averageRate'));
+            firstHolder.averageRate := Rset.FieldByName('averageRate').AsFloat;
             firstHolder.rateCount := Rset.FieldByName('rateCount').asInteger;
           end;
         finally
@@ -1052,7 +1052,7 @@ begin
 
           if hData.rSet_bySQL(Rset, s) then
           begin
-            roomHolder.averageRate := Rset.GetFloatValue(Rset.FieldByName('averageRate'));
+            roomHolder.averageRate := Rset.FieldByName('averageRate').AsFloat;
             roomHolder.rateCount := Rset.FieldByName('rateCount').asInteger;
           end;
         finally

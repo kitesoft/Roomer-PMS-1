@@ -528,7 +528,6 @@ end;
 procedure TfrmInvoiceList2.mnuEditFinExportPropClick(Sender: TObject);
 var i: integer;
     lInvNumber: integer;
-    lDisableExport: boolean;
     lSelected: TcxCustomGridRow;
     bValue : Boolean;
     iExternalId : Integer;
@@ -852,7 +851,6 @@ var
   InvoiceNumber : integer;
   exportable : Boolean;
   externalId : Integer;
-  lSelected: TcxCustomGridRow;
 begin
   InvoiceNumber := m22_.fieldbyname('InvoiceNumber').AsInteger;
   exportable := m22_.fieldbyname('exportAllowed').AsBoolean;
@@ -884,8 +882,6 @@ begin
 end;
 
 procedure TfrmInvoiceList2.tvInvoiceHeadDblClick(Sender: TObject);
-var
-  InvoiceNumber : integer;
 begin
   if IsAltKeyPressed then
     EditCurrentProperties
@@ -1018,7 +1014,6 @@ end;
 procedure TfrmInvoiceList2.mnuExportabilityClick(Sender: TObject);
 var i: integer;
     lInvNumber: integer;
-    lDisableExport: boolean;
     lUpdatePlan: TROomerExecutionPlan;
     lSelected: TcxCustomGridRow;
     bValue : Boolean;

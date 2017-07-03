@@ -77,6 +77,5 @@ object frmFinanceForcast: TfrmFinanceForcast
     ScrollBars = ssVertical
     TabOrder = 1
     OnChange = memTextChange
-    ExplicitTop = -3
   end
 end

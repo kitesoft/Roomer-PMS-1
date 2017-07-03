@@ -151,7 +151,6 @@ object frmMultiSelection: TfrmMultiSelection
       BoundLabel.Font.Style = []
       SkinData.SkinSection = 'EDIT'
       OnClickCheck = lstItemsClickCheck
-      ExplicitLeft = 44
     end
     object pnlUpDown: TsPanel
       Left = 0

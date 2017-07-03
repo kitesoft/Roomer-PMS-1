@@ -476,16 +476,16 @@ begin
 //      iDateCount := Rset.fieldbyname('DateCount').asInteger;
       description := rSet.fieldbyname('description').AsString;
 
-      RateExtraChildren := rSet.GetFloatValue(Rset.fieldbyname('RateExtraChildren'));
-      RateExtraInfant   := rSet.GetFloatValue(Rset.fieldbyname('RateExtraInfant'));
+      RateExtraChildren := Rset.fieldbyname('RateExtraChildren').AsFloat;
+      RateExtraInfant   := Rset.fieldbyname('RateExtraInfant').AsFloat;
 
-      ExtraPrice := rSet.GetFloatValue(Rset.fieldbyname('RateExtraPerson'));
-      p1 := rSet.GetFloatValue(Rset.fieldbyname('Rate1Person'));
-      p2 := rSet.GetFloatValue(Rset.fieldbyname('Rate2Persons'));
-      p3 := rSet.GetFloatValue(Rset.fieldbyname('Rate3Persons'));
-      p4 := rSet.GetFloatValue(Rset.fieldbyname('Rate4Persons'));
-      p5 := rSet.GetFloatValue(Rset.fieldbyname('Rate5Persons'));
-      p6 := rSet.GetFloatValue(Rset.fieldbyname('Rate6Persons'));
+      ExtraPrice := Rset.fieldbyname('RateExtraPerson').AsFloat;
+      p1 := Rset.fieldbyname('Rate1Person').AsFloat;
+      p2 := Rset.fieldbyname('Rate2Persons').AsFloat;
+      p3 := Rset.fieldbyname('Rate3Persons').AsFloat;
+      p4 := Rset.fieldbyname('Rate4Persons').AsFloat;
+      p5 := Rset.fieldbyname('Rate5Persons').AsFloat;
+      p6 := Rset.fieldbyname('Rate6Persons').AsFloat;
 
       if p1 = 0 then p1 := ExtraPrice;
       if p2 = 0 then p2 := p1 + ExtraPrice;

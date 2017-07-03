@@ -4463,17 +4463,17 @@ begin
       result.rdTmp := rSet.fieldbyname('rdTmp').asString;
       result.updated := rSet.fieldbyname('updated').Asboolean;
       result.isNoRoom := rSet.fieldbyname('isNoRoom').Asboolean;
-      result.RoomRentBilled := rSet.GetFloatValue(rSet.fieldbyname('RoomRentBilled'));
-      result.RoomRentUnBilled := rSet.GetFloatValue(rSet.fieldbyname('RoomRentUnBilled'));
-      result.RoomDiscountBilled := rSet.GetFloatValue(rSet.fieldbyname('RoomDiscountBilled'));
-      result.RoomDiscountUnBilled := rSet.GetFloatValue(rSet.fieldbyname('RoomDiscountUnBilled'));
-      result.ItemsBilled := rSet.GetFloatValue(rSet.fieldbyname('ItemsBilled'));
-      result.ItemsUnbilled := rSet.GetFloatValue(rSet.fieldbyname('ItemsUnbilled'));
-      result.TaxesBilled := rSet.GetFloatValue(rSet.fieldbyname('TaxesBilled'));
-      result.TaxesUnbilled := rSet.GetFloatValue(rSet.fieldbyname('TaxesUnbilled'));
+      result.RoomRentBilled := rSet.fieldbyname('RoomRentBilled').AsFloat;
+      result.RoomRentUnBilled := rSet.fieldbyname('RoomRentUnBilled').AsFloat;
+      result.RoomDiscountBilled := rSet.fieldbyname('RoomDiscountBilled').AsFloat;
+      result.RoomDiscountUnBilled := rSet.fieldbyname('RoomDiscountUnBilled').AsFloat;
+      result.ItemsBilled := rSet.fieldbyname('ItemsBilled').AsFloat;
+      result.ItemsUnbilled := rSet.fieldbyname('ItemsUnbilled').AsFloat;
+      result.TaxesBilled := rSet.fieldbyname('TaxesBilled').AsFloat;
+      result.TaxesUnbilled := rSet.fieldbyname('TaxesUnbilled').AsFloat;
       result.PriceCode := rSet.fieldbyname('PriceCode').asString;
-      result.RoomRate := rSet.GetFloatValue(rSet.fieldbyname('RoomRate'));
-      result.Discount := rSet.GetFloatValue(rSet.fieldbyname('Discount'));
+      result.RoomRate := rSet.fieldbyname('RoomRate').AsFloat;
+      result.Discount := rSet.fieldbyname('Discount').AsFloat;
       result.isPercentage := rSet.fieldbyname('isPercentage').Asboolean;
       result.showDiscount := rSet.fieldbyname('showDiscount').Asboolean;
       result.Paid := rSet.fieldbyname('Paid').Asboolean;
@@ -4515,7 +4515,7 @@ end;
 
 function ctrlGetFloat(aField: string): double;
 begin
-  result := glb.ControlSet.GetFloatValue(glb.ControlSet.fieldbyname(aField));
+  result := glb.ControlSet.fieldbyname(aField).AsFloat;
 end;
 
 function ctrlGetInteger(aField: string): integer;
@@ -6008,15 +6008,15 @@ begin
       showDiscount := rSet.fieldbyname('showDiscount').Asboolean;
 
       isGroupAccount := rSet.fieldbyname('isGroupAccount').Asboolean;
-      Rate := rSet.GetFloatValue(rSet.fieldbyname('Rate'));
+      Rate := rSet.fieldbyname('Rate').AsFloat;
 
-      TotalRoomRent := rSet.GetFloatValue(rSet.fieldbyname('TotalRoomRate'));
+      TotalRoomRent := rSet.fieldbyname('TotalRoomRate').AsFloat;
       // 0;
-      TotalDiscount := rSet.GetFloatValue(rSet.fieldbyname('TotalDiscount'));
+      TotalDiscount := rSet.fieldbyname('TotalDiscount').AsFloat;
       // 0;
       RentDays := rSet.recordCount;
 
-      Discount := rSet.GetFloatValue(rSet.fieldbyname('Discount'));
+      Discount := rSet.fieldbyname('Discount').AsFloat;
       // while not rSet.eof do
       // begin
       // roomRate := rSet.GetFloatValue(rSet.FieldByName('RoomRate'));
@@ -6093,9 +6093,9 @@ begin
       RoomReservation := rSet.fieldbyname('RoomReservation').asInteger;
       Reservation := rSet.fieldbyname('Reservation').asInteger;
       PriceType := rSet.fieldbyname('PriceType').asString;
-      averageRate := rSet.GetFloatValue(rSet.fieldbyname('AverageRate'));
+      averageRate := rSet.fieldbyname('AverageRate').AsFloat;
       Currency := rSet.fieldbyname('Currency').asString;
-      Discount := rSet.GetFloatValue(rSet.fieldbyname('Discount'));
+      Discount := rSet.fieldbyname('Discount').AsFloat;
 
       result.RoomReservation := RoomReservation;
       result.Reservation := Reservation;
@@ -7914,8 +7914,8 @@ begin
       theData.id := rSet.fieldbyname('id').asInteger;
       theData.Identification := rSet.fieldbyname('Identification').asString;
       theData.Description := rSet.fieldbyname('description').asString;
-      theData.minuteRate := rSet.GetFloatValue(rSet.fieldbyname('minuteRate'));
-      theData.minimumCost := rSet.GetFloatValue(rSet.fieldbyname('minimumCost'));
+      theData.minuteRate := rSet.fieldbyname('minuteRate').AsFloat;
+      theData.minimumCost := rSet.fieldbyname('minimumCost').AsFloat;
     end;
   finally
     freeandnil(rSet);
@@ -11384,7 +11384,7 @@ begin
       theData.active := rSet.fieldbyname('Active').Asboolean;
       theData.Description := rSet.fieldbyname('Description').asString;
       theData.Item := rSet.fieldbyname('Item').asString;
-      theData.Price := rSet.GetFloatValue(rSet.fieldbyname('Price'));
+      theData.Price := rSet.fieldbyname('Price').AsFloat;
       theData.ItemType := rSet.fieldbyname('Itemtype').asString;
       theData.AccountKey := rSet.fieldbyname('AccountKey').asString;
       theData.MinibarItem := rSet.fieldbyname('MinibarItem').Asboolean;
@@ -12301,7 +12301,7 @@ begin
       theData.Tel1 := rSet.fieldbyname('Tel1').asString;
       theData.Tel2 := rSet.fieldbyname('Tel2').asString;
       theData.Fax := rSet.fieldbyname('Fax').asString;
-      theData.DiscountPercent := rSet.GetFloatValue(rSet.fieldbyname('DiscountPercent'));
+      theData.DiscountPercent := rSet.fieldbyname('DiscountPercent').AsFloat;
       theData.EmailAddress := rSet.fieldbyname('EmailAddress').asString;
       theData.ContactPerson := rSet.fieldbyname('ContactPerson').asString;
       theData.TravelAgency := rSet.fieldbyname('TravelAgency').Asboolean;
@@ -13572,7 +13572,7 @@ begin
       while not rSet.Eof do
       begin
         numItemsMethod := rSet.fieldbyname('numItemsMethod').asInteger;
-        numItems := rSet.GetFloatValue(rSet.fieldbyname('numItems'));
+        numItems := rSet.fieldbyname('numItems').AsFloat;
         case numItemsMethod of
           0:
             numItems := numItems;
@@ -13586,12 +13586,12 @@ begin
 
         if rSet.fieldbyname('itemId').asInteger = roomRentID then
         begin
-          aRoomPrice := aRoomPrice + rSet.GetFloatValue(rSet.fieldbyname('unitprice'));
+          aRoomPrice := aRoomPrice + rSet.fieldbyname('unitprice').AsFloat;
         end
         else
         begin
           if not rSet.FieldByName('IncludedInRate').AsBoolean then
-            aItemPrice := aItemPrice + rSet.GetFloatValue(rSet.fieldbyname('unitprice')) * numItems
+            aItemPrice := aItemPrice + rSet.fieldbyname('unitprice').AsFloat * numItems
         end;
         rSet.Next;
       end;
@@ -13770,7 +13770,7 @@ begin
 
     if rSet_bySQL(rSet, s) then
     begin
-      result := rSet.GetFloatValue(rSet.fieldbyname('TotalPrice'));
+      result := rSet.fieldbyname('TotalPrice').AsFloat;
     end;
   finally
     freeandnil(rSet);
@@ -14880,16 +14880,16 @@ begin
     begin
       Description := rSet.fieldbyname('description').asString;
 
-      RateExtraChildren := rSet.GetFloatValue(rSet.fieldbyname('RateExtraChildren'));
-      RateExtraInfant := rSet.GetFloatValue(rSet.fieldbyname('RateExtraInfant'));
+      RateExtraChildren := rSet.fieldbyname('RateExtraChildren').AsFloat;
+      RateExtraInfant := rSet.fieldbyname('RateExtraInfant').AsFloat;
 
-      ExtraPrice := rSet.GetFloatValue(rSet.fieldbyname('RateExtraPerson'));
-      p1 := rSet.GetFloatValue(rSet.fieldbyname('Rate1Person'));
-      p2 := rSet.GetFloatValue(rSet.fieldbyname('Rate2Persons'));
-      p3 := rSet.GetFloatValue(rSet.fieldbyname('Rate3Persons'));
-      p4 := rSet.GetFloatValue(rSet.fieldbyname('Rate4Persons'));
-      p5 := rSet.GetFloatValue(rSet.fieldbyname('Rate5Persons'));
-      p6 := rSet.GetFloatValue(rSet.fieldbyname('Rate6Persons'));
+      ExtraPrice := rSet.fieldbyname('RateExtraPerson').AsFloat;
+      p1 := rSet.fieldbyname('Rate1Person').AsFloat;
+      p2 := rSet.fieldbyname('Rate2Persons').AsFloat;
+      p3 := rSet.fieldbyname('Rate3Persons').AsFloat;
+      p4 := rSet.fieldbyname('Rate4Persons').AsFloat;
+      p5 := rSet.fieldbyname('Rate5Persons').AsFloat;
+      p6 := rSet.fieldbyname('Rate6Persons').AsFloat;
 
       if p1 = 0 then
         p1 := ExtraPrice;
@@ -15221,7 +15221,7 @@ begin
 
     if glb.VAT.Locate('VATCode', RoomRentVATCode, []) then
     begin
-      RoomRentVATPercentage := glb.VAT.GetFloatValue(glb.VAT.fieldbyname('VATPercentage'));
+      RoomRentVATPercentage := glb.VAT.fieldbyname('VATPercentage').AsFloat;
     end;
 
     DiscountType := '';
@@ -15257,7 +15257,7 @@ begin
 
     if glb.VAT.Locate('VATCode', cTaxVATCode, []) then
     begin
-      cTaxVATPercentage := glb.VAT.GetFloatValue(glb.VAT.fieldbyname('VATPercentage'));
+      cTaxVATPercentage := glb.VAT.fieldbyname('VATPercentage').AsFloat;
     end;
   end;
 end;
@@ -15323,7 +15323,7 @@ begin
 
       if glb.Items.Locate('Item', TaxesItem, []) then
       begin
-        StayTaxPerNight := glb.Items.GetFloatValue(glb.Items.fieldbyname('Price'));
+        StayTaxPerNight := glb.Items.fieldbyname('Price').AsFloat;
       end;
 
     end;
@@ -15349,7 +15349,7 @@ begin
 
     if glb.VAT.Locate('VATCode', RoomRentVATCode, []) then
     begin
-      RoomRentVATPercentage := glb.VAT.GetFloatValue(glb.VAT.fieldbyname('VATPercentage'));
+      RoomRentVATPercentage := glb.VAT.fieldbyname('VATPercentage').AsFloat;
     end;
 
     DiscountType := '';
@@ -15385,7 +15385,7 @@ begin
 
     if glb.VAT.Locate('VATCode', cTaxVATCode, []) then
     begin
-      cTaxVATPercentage := glb.VAT.GetFloatValue(glb.VAT.fieldbyname('VATPercentage'));
+      cTaxVATPercentage := glb.VAT.fieldbyname('VATPercentage').AsFloat;
     end;
   end;
 end;

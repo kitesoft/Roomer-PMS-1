@@ -29,6 +29,7 @@ type
   /// |    T     |    F     | 1000 |   30 | 1000 |   30 | 50   |   3  | 50   |   3  |
   ///
   /// </remarks>
+  {$M+}
   TInvoiceLine = class(TObject)
   strict private
     FInvoiceLineIndex: integer;
@@ -222,7 +223,7 @@ type
     constructor Create(aIndex, _id: integer); override;
     destructor Destroy; override;
 
-    function CanBeHiddenFromInvoice: boolean; virtual;
+    function CanBeHiddenFromInvoice: boolean; override;
 
     procedure AddParent(aParent: TInvoiceLine);
     procedure RemoveParent(aParent: TInvoiceLine);

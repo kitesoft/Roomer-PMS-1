@@ -95,7 +95,6 @@ var
   dsRoom, dsCodes, dsNotes : TRoomerDataSet;
   obj : TObject;
   currStatus : STring;
-  idx : Integer;
   RoomItem : TRoomItem;
 begin
   // --

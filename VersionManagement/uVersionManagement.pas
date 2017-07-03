@@ -48,7 +48,6 @@ type
     procedure PerformUpdateIfAvailable(initialStart : Boolean = False);
     procedure CheckIfUpgradeExists;
     function GetFromURI(uri: String; useGetUriPort : Boolean = True): String;
-    function FindServicePort : integer;
     function GetURIPort(SourceURI : String) : String;
     procedure startEngine;
   public
@@ -141,42 +140,6 @@ begin
   inherited;
 end;
 
-function TRoomerVersionManagement.FindServicePort: integer;
-var uri,
-    res : String;
-    UnusedPorts : TAvailablePortArray;
-
-    function PortInUse(port : word) : Boolean;
-    var i: Integer;
-    begin
-      result := True;
-      for i := LOW(UnusedPorts) to HIGH(UnusedPorts) do
-        if UnusedPorts[i] = port then
-        begin
-          result := False;
-          Break;
-        end;
-    end;
-begin
-  if PortToUse = 0 then
-  begin
-    UnusedPorts := findAvailableTCPPort( HTTP_LOCAL_IP, HTTP_DEFAULT_PORT_MIN, HTTP_DEFAULT_PORT, 11 );
-    result := HTTP_DEFAULT_PORT;
-    repeat
-      if PortInUse(result) then
-      begin
-        uri := replaceString(URI_UPGRADE_DAEMON_WHO_ARE_YOU, '{port}', inttostr(result));
-        res := getFromURI(uri, False);
-        if res = 'ROOMER_DAEMON' then
-          Break;
-      end;
-      dec(result);
-    until result <= HTTP_DEFAULT_PORT_MIN;
-    if result <= HTTP_DEFAULT_PORT_MIN then
-      result := 0;
-  end else
-    result := PortToUse;
-end;
 
 procedure TRoomerVersionManagement.ForceUpdate;
 begin

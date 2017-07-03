@@ -408,7 +408,7 @@ object frmInvoicePayment: TfrmInvoicePayment
       MaxLength = 10
       ParentFont = False
       TabOrder = 0
-      Text = '  /  /    '
+      Text = '  -  -    '
       SkinData.SkinSection = 'EDIT'
       GlyphMode.Blend = 0
       GlyphMode.Grayed = False
@@ -429,7 +429,7 @@ object frmInvoicePayment: TfrmInvoicePayment
       MaxLength = 10
       ParentFont = False
       TabOrder = 1
-      Text = '  /  /    '
+      Text = '  -  -    '
       SkinData.SkinSection = 'EDIT'
       GlyphMode.Blend = 0
       GlyphMode.Grayed = False

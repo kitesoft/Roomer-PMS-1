@@ -205,6 +205,7 @@ uses
   , uSqlDefinitions
   , uVatCodes
   , uUtils
+  , UITypes
   ;
 
 

@@ -232,6 +232,7 @@ implementation
 
 uses
    uSqlDefinitions
+   , UITypes
    ;
 
 {$R *.dfm}

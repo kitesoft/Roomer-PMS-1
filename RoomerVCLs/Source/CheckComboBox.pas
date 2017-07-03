@@ -109,7 +109,9 @@ procedure Register;
 implementation
 
 uses
-  Math;
+  Math
+  ,UITypes
+  ;
 
 procedure Register;
 begin

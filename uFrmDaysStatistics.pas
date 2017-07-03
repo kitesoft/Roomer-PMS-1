@@ -221,7 +221,8 @@ uses uD,
      uUtils,
      uMain,
      uRoomerLanguage,
-     Math
+     Math,
+     UITypes
      ;
 
 procedure TfrmDaysStatistics.PerformRequest;

@@ -210,7 +210,9 @@ uses
   , uSqlDefinitions
   , uMessageList
   , uConvertGroups
-  , uDImages;
+  , uDImages
+  , UITypes
+  ;
 
 
 {$R *.dfm}
@@ -490,6 +492,7 @@ procedure TfrmConverts.m_BeforePost(DataSet: TDataSet);
 var
   nID : integer;
 begin
+  nId := 0;
   if zFirstTime then exit;
   initConvertHolder(zData);
   zData.cvID                := dataset.FieldByName('ID').AsInteger;
@@ -675,9 +678,6 @@ end;
 procedure TfrmConverts.btnDeleteClick(Sender: TObject);
 var
   s : string;
-
-  prevCode : integer;
-  currCode : integer;
 
 begin
   fillHolder;

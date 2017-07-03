@@ -39,7 +39,6 @@ implementation
 
 function openFinanceForcastLayout(var description,aText : string) : boolean;
 begin
-  result := true;
   result := false;
   frmFinanceForcast := TfrmFinanceForcast.Create(frmFinanceForcast);
   try

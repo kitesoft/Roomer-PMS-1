@@ -239,14 +239,9 @@ begin
 end;
 
 function TfrmMultiSelection.MoveListItem(ListView: TsCheckListBox; ItemFrom, ItemTo: Word): Boolean;
-var
-  Source, Target: String;
 begin
   listview.Items.BeginUpdate;
   try
-//    Source := ListView.Items[ItemFrom];
-//    Target := ListView.Items.Insert(ItemTo);
-//    Target := Source;
     ListView.Items.Move(ItemFrom, ItemTo);
     ListCodes.Move(ItemFrom, ItemTo);
     ListView.ItemIndex := ItemTo;

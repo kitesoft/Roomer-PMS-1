@@ -121,7 +121,6 @@ end;
 procedure TfrmCommunicationTest.timTestTimer(Sender: TObject);
 var tickCountStart : longint;
     tickCountEnd : longint;
-    rSet : TRoomerDataSet;
 begin
   timTest.Enabled := False;
   try
@@ -135,7 +134,7 @@ begin
 
     tickCountStart := GetTickCount;
 
-    rSet := d.roomerMainDataSet.ActivateNewDataset(
+    d.roomerMainDataSet.ActivateNewDataset(
               d.roomerMainDataSet.SystemFreeQuery('SELECT * FROM predefineddates LIMIT 4000')); // SystemGetDayGrid(now, now + 1, 'rsAll'));
 
     tickCountEnd := GetTickCount;
@@ -146,7 +145,7 @@ begin
 
       tickCountStart := GetTickCount;
 
-      rSet := d.roomerMainDataSet.ActivateNewDataset(
+      d.roomerMainDataSet.ActivateNewDataset(
                 d.roomerMainDataSet.SystemFreeQuery('SELECT d.*, CONCAT(d.extraIdentity, ''-'', d.text) AS conText1, CONCAT(d.formType, ''-'', d.compname, ''-'', d.extraIdentity, ''-'', d.text) AS conText2  FROM home100.dictionary d LIMIT 4000'));
 
       tickCountEnd := GetTickCount;
@@ -163,7 +162,7 @@ begin
 end;
 
 function TfrmCommunicationTest.ShouldAddToTop(value : integer; list : TStringList) : Boolean;
-var s : String;
+var
     I: Integer;
     sValues : TStrings;
 begin

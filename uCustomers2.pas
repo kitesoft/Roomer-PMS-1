@@ -322,7 +322,9 @@ uses
   , uGuestPortfolioEdit
   , uCustomerDepartments
   , uResourceManagement
-  , uSQLUtils, uResourceTypeDefinitions;
+  , uSQLUtils
+  , uResourceTypeDefinitions
+  , UITypes;
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////

@@ -314,7 +314,8 @@ uses
   CommCtrl,
   ComObj,
   Graphics,
-  SysUtils;
+  SysUtils,
+  Types;
 
 resourcestring
   sDropSourceBusy = 'A drag and drop operation is already in progress';

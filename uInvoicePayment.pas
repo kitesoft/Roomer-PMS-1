@@ -143,6 +143,7 @@ uses
    , PrjConst
    , uUtils
    , uFrmPayCardView
+   , UITypes
   ;
 
 {$R *.DFM}

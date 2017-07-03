@@ -22,7 +22,6 @@ var
   wsdata    : WSAData;
   dwPort    : Word;
   iFound    : Byte;
-  bResult   : Boolean;
   arrFound  : TAvailablePortArray;
 begin
   SetLength( Result, 0 );

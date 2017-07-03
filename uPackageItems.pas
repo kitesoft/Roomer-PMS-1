@@ -232,7 +232,9 @@ uses
   , uSqlDefinitions
   , uVatCodes
   , uItems2
-  , uDImages;
+  , uDImages
+  , UITypes
+  ;
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -290,12 +292,12 @@ begin
         m_.FieldByName('ID').AsInteger := rSet.FieldByName('ID').AsInteger;
         m_.FieldByName('description').AsString  := rSet.FieldByName('description').AsString ;
         m_.FieldByName('numItems').AsInteger := rSet.FieldByName('numItems').AsInteger;
-        m_.FieldByName('unitPrice').AsFloat   := rSet.GetFloatValue(rSet.FieldByName('unitPrice'))  ;
+        m_.FieldByName('unitPrice').AsFloat   := rSet.FieldByName('unitPrice').AsFloat  ;
         m_.FieldByName('packageId').AsInteger := rSet.FieldByName('packageId').AsInteger;
         m_.FieldByName('itemId').AsInteger := rSet.FieldByName('itemId').AsInteger;
         m_.FieldByName('Item').AsString  := rSet.FieldByName('Item').AsString ;
         m_.FieldByName('itemDescription').AsString  := rSet.FieldByName('itemDescription').AsString ;
-        m_.FieldByName('itemPrice').AsFloat         := rSet.GetFloatValue(rSet.FieldByName('itemPrice'))  ;
+        m_.FieldByName('itemPrice').AsFloat         := rSet.FieldByName('itemPrice').AsFloat  ;
         m_.FieldByName('numItemsMethod').AsInteger  := rSet.FieldByName('numItemsMethod').asinteger  ;
         m_.FieldByName('numItemsMethodStr').AsString  := numItemsMethodLst[m_.FieldByName('numItemsMethod').AsInteger];
         m_.FieldByName('IncludedInRate').AsBoolean  := rSet.FieldByName('IncludedInRate').asBoolean ;

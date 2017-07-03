@@ -2953,7 +2953,7 @@ begin
     s := format(select_getPrice_1, [rtID]);
     if hData.rSet_bySQL(rSet, s) then
     begin
-      ExtraPrice := rSet.GetFloatValue(rSet.FieldByName('PriceExtraPerson'));
+      ExtraPrice := rSet.FieldByName('PriceExtraPerson').AsFloat;
       p1 := rSet.FieldByName('Price1Person').AsFloat;
       p2 := rSet.FieldByName('Price2Persons').AsFloat;
       p3 := rSet.FieldByName('Price3Persons').AsFloat;
@@ -9145,8 +9145,8 @@ begin
     s := format(sql, [iRoomReservation, _db(aDate)]);
     if hData.rSet_bySQL(rSet, s) then
     begin
-      roomRate := rSet.GetFloatValue(rSet.FieldByName('roomRate'));
-      Discount := rSet.GetFloatValue(rSet.FieldByName('Discount'));
+      roomRate := rSet.FieldByName('roomRate').AsFloat;
+      Discount := rSet.FieldByName('Discount').AsFloat;
       isPercentage := rSet.FieldByName('isPercentage').asBoolean;
       paid := rSet.FieldByName('paid').asBoolean;
       if not paid then
@@ -11324,7 +11324,7 @@ begin
         priceType := trim(rSet.FieldByName('PriceType').Asstring);
         PriceID := hData.PriceCode_ID(priceType);
         Currency := trim(rSet.FieldByName('Currency').Asstring);
-        Discount := rSet.GetFloatValue(rSet.FieldByName('discount'));
+        Discount := rSet.FieldByName('discount').AsFloat;
         isPercentage := rSet.FieldByName('Percentage').asBoolean;
 
         lst.clear;
@@ -12531,27 +12531,23 @@ begin
         d.kbmRoomsDateChange_.FieldByName('RentAmount').asFloat := 0.00;
         d.kbmRoomsDateChange_.FieldByName('currency').Asstring := rSet11.FieldByName('currency').Asstring;
         d.kbmRoomsDateChange_.FieldByName('currencyRate').asFloat :=
-          rSet11.GetFloatValue(rSet11.FieldByName('currencyRate'));
+          rSet11.FieldByName('currencyRate').AsFloat;
         d.kbmRoomsDateChange_.FieldByName('DiscountAmount').asFloat := 0.00;
         d.kbmRoomsDateChange_.FieldByName('TotalStayTax').asFloat := 0.00;
         d.kbmRoomsDateChange_.FieldByName('roomsdateID').AsInteger := rSet11.FieldByName('roomsdateID').AsInteger;
         d.kbmRoomsDateChange_.FieldByName('invoicenumber').AsInteger := rSet11.FieldByName('invoicenumber').AsInteger;
-        d.kbmRoomsDateChange_.FieldByName('discountChange').asFloat :=
-          rSet11.GetFloatValue(rSet11.FieldByName('DiscountAmount')) * -1;
+        d.kbmRoomsDateChange_.FieldByName('discountChange').asFloat := rSet11.FieldByName('DiscountAmount').AsFloat * -1;
         if rSet11.FieldByName('customer').Asstring = '' then
         begin
           d.kbmRoomsDateChange_.FieldByName('isTaxIncluted').asBoolean := zGlob.StayTaxIncluted;
-          d.kbmRoomsDateChange_.FieldByName('taxChange').asFloat :=
-            rSet11.GetFloatValue(rSet11.FieldByName('taxchange'));
+          d.kbmRoomsDateChange_.FieldByName('taxChange').asFloat := rSet11.FieldByName('taxchange').AsFloat;
         end
         else
         begin
-          d.kbmRoomsDateChange_.FieldByName('taxChange').asFloat :=
-            rSet11.GetFloatValue(rSet11.FieldByName('TotalStayTax')) * -1;
+          d.kbmRoomsDateChange_.FieldByName('taxChange').asFloat := rSet11.FieldByName('TotalStayTax').AsFloat * -1;
           d.kbmRoomsDateChange_.FieldByName('isTaxIncluted').asBoolean := rSet11.FieldByName('isTaxIncluted').asBoolean;
         end;
-        d.kbmRoomsDateChange_.FieldByName('rentChange').asFloat :=
-          rSet11.GetFloatValue(rSet11.FieldByName('RentAmount')) * -1;
+        d.kbmRoomsDateChange_.FieldByName('rentChange').asFloat := rSet11.FieldByName('RentAmount').AsFloat * -1;
         d.kbmRoomsDateChange_.post;
         rSet11.next;
       end;
@@ -14549,21 +14545,17 @@ begin
         d.kbmRoomsDateChange_.FieldByName('reservation').AsInteger := rSet11.FieldByName('reservation').AsInteger;
         d.kbmRoomsDateChange_.FieldByName('RentAmount').asFloat := 0.00;
         d.kbmRoomsDateChange_.FieldByName('currency').Asstring := rSet11.FieldByName('currency').Asstring;
-        d.kbmRoomsDateChange_.FieldByName('currencyRate').asFloat :=
-          rSet11.GetFloatValue(rSet11.FieldByName('currencyRate'));
+        d.kbmRoomsDateChange_.FieldByName('currencyRate').asFloat := rSet11.FieldByName('currencyRate').AsFloat;
         d.kbmRoomsDateChange_.FieldByName('DiscountAmount').asFloat := 0.00;
         d.kbmRoomsDateChange_.FieldByName('TotalStayTax').asFloat := 0.00;
         d.kbmRoomsDateChange_.FieldByName('roomsdateID').AsInteger := rSet11.FieldByName('roomsdateID').AsInteger;
         d.kbmRoomsDateChange_.FieldByName('invoicenumber').AsInteger := rSet11.FieldByName('invoicenumber').AsInteger;
-        d.kbmRoomsDateChange_.FieldByName('discountChange').asFloat :=
-          rSet11.GetFloatValue(rSet11.FieldByName('DiscountAmount')) * -1;
+        d.kbmRoomsDateChange_.FieldByName('discountChange').asFloat := rSet11.FieldByName('DiscountAmount').AsFloat * -1;
 
-        d.kbmRoomsDateChange_.FieldByName('taxChange').asFloat :=
-          rSet11.GetFloatValue(rSet11.FieldByName('TotalStayTax')) * -1;
+        d.kbmRoomsDateChange_.FieldByName('taxChange').asFloat := rSet11.FieldByName('TotalStayTax').AsFloat * -1;
         d.kbmRoomsDateChange_.FieldByName('isTaxIncluted').asBoolean := False;
 
-        d.kbmRoomsDateChange_.FieldByName('rentChange').asFloat :=
-          rSet11.GetFloatValue(rSet11.FieldByName('RentAmount')) * -1;
+        d.kbmRoomsDateChange_.FieldByName('rentChange').asFloat := rSet11.FieldByName('RentAmount').AsFloat * -1;
         d.kbmRoomsDateChange_.post;
         rSet11.next;
       end;

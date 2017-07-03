@@ -132,7 +132,11 @@ procedure ShowCheannelTogglingRules;
 
 implementation
 
-uses uUtils, PrjConst, _Glob;
+uses
+  uUtils
+  , PrjConst
+  , _Glob
+  , UITypes;
 
 resourcestring
   UNKNOWN_INFO = '???';

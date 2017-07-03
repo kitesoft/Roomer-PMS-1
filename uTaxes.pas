@@ -249,6 +249,7 @@ uses
   , uDImages
   , prjConst
   , uSqlDefinitions
+  , UITypes
   , uItems2
   ;
 

@@ -1542,7 +1542,7 @@ begin
         Code := rSet.fieldbyname('ItemID').asString;
 
 
-        Count      := rSet.GetFloatValue(rSet.fieldbyname('Number')); //-96
+        Count      := rSet.fieldbyname('Number').AsFloat;
         Price      := rSet.fieldbyname('Price').AsFloat;
         TotalPrice := rSet.fieldbyname('Total').AsFLoat;
         TotalWOVat := rSet.fieldbyname('TotalWOVat').AsFloat;
@@ -1604,10 +1604,10 @@ begin
       begin
         Case rSet.FieldByName('typeIndex').asInteger of
           0 : begin
-                balance := balance+rSet.GetFloatValue(rSet.FieldByName('Amount'));
+                balance := balance + rSet.FieldByName('Amount').AsFloat;
               end;
           1 : begin
-                prePaid := prePaid+rSet.GetFloatValue(rSet.FieldByName('Amount'));
+                prePaid := prePaid + rSet.FieldByName('Amount').AsFloat;
               end;
         end;
         rSet.Next;

@@ -305,7 +305,10 @@ uses
   ShlObj,
   ClipBrd,
   Dialogs,
-  ComCtrls;
+  ComCtrls,
+  Types,
+  UITypes
+  ;
 
 resourcestring
   sTargetAsyncBusy = 'Can''t clear data while async data transfer is in progress';

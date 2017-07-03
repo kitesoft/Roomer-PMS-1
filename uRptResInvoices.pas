@@ -1340,7 +1340,7 @@ begin
 //        Quantity          :=  rSet.GetFloatValue(rSet.FieldByName('Quantity')) ; //-96
         Quantity          :=  rSet.FieldByName('Quantity').AsFloat;
         Description       :=  rSet.FieldByName('Description').asstring  ;
-        Price             :=  rSet.GetFloatValue(rSet.FieldByName('Price'))  ;
+        Price             :=  rSet.FieldByName('Price').AsFloat ;
         VATType           :=  rSet.FieldByName('VATType').asString  ;
         ilAmountWithTax   :=  rSet.FieldByName('ilAmountWithTax').AsFloat;
         ilAmountNoTax     :=  rSet.FieldByName('ilAmountNoTax').AsFloat;

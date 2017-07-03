@@ -99,7 +99,8 @@ implementation
 {$R *.dfm}
 
 uses hData,
-     uD
+     uD,
+     UITypes
     ;
 
 procedure ShowRptReservationStatusPerDay;

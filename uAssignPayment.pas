@@ -128,7 +128,8 @@ uses
   uActivityLogs,
   uRoomerLanguage
   , uUtils
-  , uSQLUtils;
+  , uSQLUtils
+  , UITypes;
 
 
 
@@ -258,9 +259,9 @@ begin
         rec.PayDate       := rSet.FieldByName('PayDate').AsString;
         rec.Customer      := rSet.FieldByName('Customer').AsString;
         rec.PayType       := rSet.FieldByName('PayType').AsString;
-        rec.Amount        := rSet.GetFloatValue(rSet.FieldByName('Amount'));
+        rec.Amount        := rSet.FieldByName('Amount').AsFloat;
         rec.Description   := rSet.FieldByName('Description').AsString;
-        rec.CurrencyRate  := rSet.GetFloatValue(rSet.FieldByName('CurrencyRate'));
+        rec.CurrencyRate  := rSet.FieldByName('CurrencyRate').AsFloat;
         rec.Currency      := rSet.FieldByName('Currency').AsString;
         rec.confirmDate   := rSet.FieldByName('confirmDate').AsDateTime;  //  '1900-01-01 00:00:00'
         rec.Notes         := rSet.FieldByName('Notes').AsString;
@@ -272,7 +273,7 @@ begin
         labArrivalDeparture.Caption := dateToStr(rSet.FieldByName('Arrival').asdatetime)+' - '+dateToStr(rSet.FieldByName('Departure').asdatetime);
         labRoom.Caption := rSet.FieldByName('Room').asString;
         labDate.Caption := datetimeTostr(rSet.FieldByName('dtCreated').asDateTime);
-        edAmount.Value := rSet.GetFloatValue(rSet.FieldByName('Amount'));
+        edAmount.Value := rSet.FieldByName('Amount').AsFloat;
 
         itemIndex := -1;
         for i  := 0 to __cbxPaymentType.items.count-1 do

@@ -231,6 +231,7 @@ uses
     uD
   , prjConst
   , uSqlDefinitions
+  , UITypes
   ;
 
 

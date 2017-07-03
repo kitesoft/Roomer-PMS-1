@@ -289,7 +289,9 @@ uses
   , uSeasons2
   , uRates
   , uUtils
-  , uSQLUtils;
+  , uSQLUtils
+  , UITypes
+  ;
 
 
 
@@ -554,7 +556,6 @@ Procedure TfrmRoomRates.fillGridFromDataset(iGoto : integer);
 var
   s      : string;
   rSet   : TRoomerDataSet;
-  active : boolean;
 begin
   m_.Close;
 
