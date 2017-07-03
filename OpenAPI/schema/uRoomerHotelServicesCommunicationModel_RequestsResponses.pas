@@ -67,6 +67,7 @@ type
 
     procedure Clear; override;
     procedure SetPropertiesFromXMLNode(const aNode: PXMLNode); override;
+    class function GetNameSpaceURI: string; override;
     class function GetNodeName: string; override;
 
     procedure AddCategoryNamesAsString(aString: TStrings);
@@ -217,9 +218,14 @@ begin
   Result := FCategories as TCategoryList;
 end;
 
+class function TUserActivityCategoriesOverview.GetNameSpaceURI: string;
+begin
+  Result := cNameSpaceURI;
+end;
+
 class function TUserActivityCategoriesOverview.GetNodeName: string;
 begin
-  result := 'categories';
+  result := 'UserActivityCategoriesOverview';
 end;
 
 procedure TUserActivityCategoriesOverview.SetPropertiesFromXMLNode(const aNode: PXMLNode);
@@ -248,7 +254,7 @@ end;
 
 class function TUserActivityCategoriesOverview.TCategory.GetNodeName: string;
 begin
-  Result := 'category';
+  Result := 'Category';
 end;
 
 procedure TUserActivityCategoriesOverview.TCategory.SetPropertiesFromXMLNode(const aNode: PXMLNode);
@@ -378,7 +384,7 @@ end;
 
 class function TUserActivityCategoriesOverview.TCategoryList.GetNodeName: string;
 begin
-  Result := 'category';
+  Result := 'Category';
 end;
 
 
