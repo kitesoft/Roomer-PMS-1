@@ -271,9 +271,7 @@ begin
 end;
 
 procedure TFrmRoomClassEdit.sButton1Click(Sender: TObject);
-var ResourceParameters : TImageResourceParameters;
 begin
-  ResourceParameters := TImageResourceParameters.Create(540, -1, clWhite);
   StaticResources('Room class Images', [TResourceType.rtRoomClassImage], TResourceAccessType.ratOpen, edtCode.Text);
 end;
 

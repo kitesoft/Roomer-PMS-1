@@ -775,7 +775,6 @@ object frmRptReservationsCust: TfrmRptReservationsCust
         Images = DImages.PngImageList1
         ModalResult = 1
         TabOrder = 5
-        OnClick = btnJumpToRoomClick
         SkinData.SkinSection = 'BUTTON'
       end
       object sGroupBox1: TsGroupBox

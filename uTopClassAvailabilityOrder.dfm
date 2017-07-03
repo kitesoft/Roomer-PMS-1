@@ -152,6 +152,18 @@ inherited FrmTopClassAvailabilityOrder: TFrmTopClassAvailabilityOrder
       ExplicitHeight = 433
     end
   end
+  inherited psRoomerBase: TcxPropertiesStore
+    Components = <
+      item
+        Component = frmBaseRoomerForm.Owner
+        Properties.Strings = (
+          'Height'
+          'Left'
+          'Top'
+          'Width'
+          'Position')
+      end>
+  end
   inherited cxsrRoomerStyleRepository: TcxStyleRepository
     Left = 464
     PixelsPerInch = 96

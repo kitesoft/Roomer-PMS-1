@@ -366,10 +366,6 @@ var
   rset1 : TRoomerDataset;
   ExecutionPlan : TRoomerExecutionPlan;
 
-  startTick : integer;
-  stopTick  : integer;
-  SQLms     : integer;
-
 begin
     mInvoiceHeads.Close;
     mInvoiceHeads.open;
@@ -379,14 +375,11 @@ begin
 
     ExecutionPlan := d.roomerMainDataSet.CreateExecutionPlan;
     try
-    startTick := GetTickCount;
-//
     s := s+'SELECT '#10;
     s := s+'   sum(ih.total) AS TotalAmount '#10;
     s := s+'  ,count(ih.id) AS InvoiceCount '#10;
     s := s+'  ,ih.customer '#10;
     s := s+'  , cust.surName AS CustomerName '#10;
-//    s := s+'  ,group_concat(ih.invoicenumber) AS invoicelist '#10;
     s := s+'FROM '#10;
     s := s+'  invoiceheads ih '#10;
     s := s+'   LEFT JOIN customers cust ON ih.customer = cust.customer '#10;
@@ -425,7 +418,6 @@ begin
       kbmTotal.EnableControls;
     end;
 
-    stopTick         := GetTickCount;
   finally
     ExecutionPlan.Free;
   end;
@@ -469,10 +461,6 @@ var
   rset1 : TRoomerDataset;
   ExecutionPlan : TRoomerExecutionPlan;
 
-  startTick : integer;
-  stopTick  : integer;
-  SQLms     : integer;
-
   invoicelist : string;
 
   lst : Tstringlist;
@@ -483,7 +471,6 @@ begin
     invoicelist := '';
     ExecutionPlan := d.roomerMainDataSet.CreateExecutionPlan;
     try
-      startTick := GetTickCount;
 
       s := s+'SELECT '#10;
       s := s+'  ih.invoicenumber '#10;
@@ -523,7 +510,6 @@ begin
         screen.cursor := crDefault;
         kbmTotal.EnableControls;
       end;
-      stopTick         := GetTickCount;
     finally
       ExecutionPlan.Free;
     end;
@@ -749,7 +735,6 @@ var
   rset2 : TRoomerDataSet;
   ExecutionPlan : TRoomerExecutionPlan;
   s     : string;
-  count : integer;
 
   InvoiceNumber     : integer ;
   SplitNumber       : integer ;

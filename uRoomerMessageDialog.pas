@@ -23,7 +23,7 @@ function RoomerMessageDialog(Const Msg: String; DlgType: TMsgDlgType; Buttons: T
 var
   AMsgDialog: TForm;
   ACheckBox: TCheckBox;
-  iWidth, CaptionIndex: Integer;
+  iWidth: Integer;
 begin
   if GetMessageDlgBooleanRegistryValue(DialogId) then
   begin

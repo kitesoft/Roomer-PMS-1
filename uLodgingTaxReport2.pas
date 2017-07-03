@@ -373,13 +373,7 @@ procedure TfrmLodgingTaxReport2.RefreshAll;
 var
   s : string;
   rSet : TRoomerDataSet;
-  rCount : integer;
   sql : string;
-
-  startSQL, stopSQL, elapsedSQL : cardinal;
-
-  startLoop, stopLoop, elapsedLoop : cardinal;
-
   Reservation : integer;
   RoomReservation : integer;
   InvoiceNumber : integer;
@@ -442,7 +436,6 @@ sql := sql +    '   ih.InvoiceNumber ';
 
   rSet := CreateNewDataSet;
   try
-    startSQL := GetTickCount;
     screen.Cursor := crHourGlass;
     mInvoiceHeads.DisableControls;
     try
@@ -452,8 +445,6 @@ sql := sql +    '   ih.InvoiceNumber ';
 
       hData.rSet_bySQL(rSet,s);
 
-      stopSQL := GetTickCount;
-      startLoop := GetTickCount;
       if mInvoiceHeads.Active then
         mInvoiceHeads.Close;
 
@@ -506,7 +497,6 @@ sql := sql +    '   ih.InvoiceNumber ';
         rSet.Next;
       end;
 
-      stopLoop := GetTickCount;
       mInvoiceHeads.First;
     finally
       mInvoiceHeads.EnableControls;
@@ -940,7 +930,6 @@ end;
 procedure TfrmLodgingTaxReport2.mnuThisreservationClick(Sender : TObject);
 var
   iReservation : integer;
-  iRoomReservation : integer;
 begin
   if mInvoiceHeads.RecordCount = 0 then
     exit;
@@ -952,7 +941,6 @@ end;
 
 procedure TfrmLodgingTaxReport2.mnuThisRoomClick(Sender : TObject);
 var
-  iReservation : integer;
   iRoomReservation : integer;
 begin
   if mInvoiceHeads.RecordCount = 0 then
@@ -966,7 +954,6 @@ end;
 procedure TfrmLodgingTaxReport2.OpenGroupInvoice1Click(Sender : TObject);
 var
   iReservation : integer;
-  iRoomReservation : integer;
 begin
   if mInvoiceHeads.RecordCount = 0 then
     exit;

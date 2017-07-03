@@ -1124,8 +1124,6 @@ var
   ItemKind: TItemKind;
 
   lInvRoom: TInvoiceRoomEntity;
-  lPackageId: integer;
-  lItemId: integer;
 begin
   Screen.Cursor := crHourglass;
   try
@@ -4770,7 +4768,6 @@ procedure TfrmInvoice.itemLookup;
 var
   Currency: string;
 
-  ItemKind: TItemKind;
   theData: TrecItemHolderList;
   rec: TrecItemHolder;
 

@@ -17,7 +17,6 @@ type
     channelCode, chManCode : String;
     FCurrHandlers: TCurrencyHandlersMap;
     procedure Clear;
-    procedure Deactivate;
   public
     constructor Create;
     destructor Destroy; override;
@@ -142,11 +141,6 @@ begin
   channelCode := '';
   chManCode := '';
   FCurrHandlers := TCurrencyHandlersMap.create;
-end;
-
-procedure TDynamicRates.Deactivate;
-begin
-  Clear;
 end;
 
 destructor TDynamicRates.Destroy;

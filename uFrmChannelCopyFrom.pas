@@ -292,8 +292,7 @@ begin
 end;
 
 procedure TFrmChannelCopyFrom.AddRoomClassToList(chClassRel : TRoomerDataSet);
-var i : Integer;
-    box : TsCheckBox;
+var box : TsCheckBox;
 begin
   if glb.LocateSpecificRecord('roomtypegroups', 'id', chClassRel.fieldByName('roomClassId').AsInteger) then
     if glb.RoomTypeGroups['Active'] then

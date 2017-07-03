@@ -25,7 +25,6 @@ type
   private
     httpCLient: TRoomerHttpClient;
     timer : TTimer;
-    initialTmer : TTimer;
     FileDependencyManager: TFileDependencymanager;
     RoomerUpgradeDaemonPath : String;
     FOnAskUpgrade: TOnAskUpgrade;
@@ -43,16 +42,12 @@ type
 
     procedure makeSureUpgradeDaemonIsActive;
 
-    function doesUpgradeWindowExist : Boolean;
-    function activateDaemon : Boolean;
-    function openDaemon : Boolean;
     function newVersionAvailable(force : Boolean = false) : Boolean;
-    function updateNow(force : boolean = false) : Boolean;
+    procedure updateNow(force : boolean = false);
     procedure BreakDownVersionString(sStr: String);
     procedure PerformUpdateIfAvailable(initialStart : Boolean = False);
     procedure CheckIfUpgradeExists;
     function GetFromURI(uri: String; useGetUriPort : Boolean = True): String;
-    procedure CloseDaemon;
     function FindServicePort : integer;
     function GetURIPort(SourceURI : String) : String;
     procedure startEngine;
@@ -82,7 +77,8 @@ uses uD,
      idURI,
      PrjConst,
      uRoomerVersionInfo,
-     uSocketHelpers
+     uSocketHelpers,
+     UITypes
     ;
 
 const SECOND = 1000;
@@ -109,13 +105,6 @@ const SECOND = 1000;
 
 { TRoomerVersionManagement }
 
-
-function TRoomerVersionManagement.activateDaemon: Boolean;
-begin
-  // --
-  GetFromURI(format(URI_UPGRADE_DAEMON_ACTIVATE, [d.roomerMainDataSet.ForcedURLEncode(d.roomerMainDataSet.RoomerStoreUri)]));
-  Start(true);
-end;
 
 constructor TRoomerVersionManagement.Create;
 begin
@@ -150,20 +139,6 @@ begin
   FileDependencyManager.Free;
   DeactivateRoomerLogger(RoomerLogger);
   inherited;
-end;
-
-procedure TRoomerVersionManagement.CloseDaemon;
-var i : Integer;
-begin
-  GetFromURI(URI_UPGRADE_DAEMON_CLOSE);
-  Application.ProcessMessages;
-  for i := 1 to 20 do
-  begin
-    Sleep(100);
-    Application.ProcessMessages;
-  end;
-  Application.ProcessMessages;
-  PortToUse := 0;
 end;
 
 function TRoomerVersionManagement.FindServicePort: integer;
@@ -238,19 +213,10 @@ begin
   result := replaceString(SourceURI, '{port}', inttostr(PortToUse));
 end;
 
-function TRoomerVersionManagement.doesUpgradeWindowExist: Boolean;
-var s : String;
-begin
-  s := '';
-  PortToUse := FindServicePort;
-  if PortToUse > 0 then
-    s := GetFromURI(URI_UPGRADE_DAEMON_ACTIVE);
-  result := (s = 'ACTIVE') OR (s = 'BUSY');
-end;
-
-
 procedure TRoomerVersionManagement.makeSureUpgradeDaemonIsActive;
+{$IFNDEF DEBUG}
 var UpgradeActive : Boolean;
+{$ENDIF}
 begin
 {$IFNDEF DEBUG}
   if VersionManagerActive then
@@ -298,7 +264,6 @@ end;
 
 function TRoomerVersionManagement.newVersionAvailable(force : Boolean = false): Boolean;
 var answer, exePath : String;
-    List : TStrings;
     uri : String;
 begin
   exePath := d.roomerMainDataSet.URLEncode(Application.ExeName);
@@ -331,24 +296,6 @@ begin
   finally
     Start;
   end;
-end;
-
-function TRoomerVersionManagement.openDaemon: Boolean;
-var exePath : String;
-begin
-   RoomerLogger.AddToLog('Opening Daemon...');
-   exePath := FileDependencyManager.getRoomerUpgradeDaemonFilePath(RoomerUpgradeDaemonPath);
-   if exePath = '' then
-   begin
-     MessageDlg('Could not find the Roomer Upgrade Daemon!', mtError, [mbOk], 0);
-     RoomerLogger.AddToLog('Daemon Could not be found!');
-   end else
-   begin
-     PortToUse := 0;
-     ExecuteFile(Application.MainForm.Handle, exePath, '', []); // [eoElevate]);
-     RoomerLogger.AddToLog('Daemon opened.');
-     sleep(2000);
-   end;
 end;
 
 procedure TRoomerVersionManagement.Start(initialStart : Boolean = False);
@@ -399,13 +346,12 @@ begin
 end;
 
 procedure GetHoursAndMinutes(TTL : Integer; var h, m : Integer);
-var totalMinutes : Integer;
 begin
   h := TTL DIV 60;
   m := TTL MOD 60;
 end;
 
-function TRoomerVersionManagement.updateNow(force : boolean = false): Boolean;
+procedure TRoomerVersionManagement.updateNow(force : boolean = false);
 var forced, upgrade : Boolean;
     s, msg : String;
     h, m : Integer;

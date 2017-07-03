@@ -706,7 +706,8 @@ uses
   ufrmRoomPrices,
   uInvoiceDefinitions,
   System.Generics.Defaults,
-  uDateTimeHelper;
+  uDateTimeHelper,
+  Types;
 
 {$R *.DFM}
 
@@ -965,8 +966,6 @@ function TfrmInvoiceRentPerDay.AddLine(LineId: integer; aParentInvoice: TInvoice
   rrAlias: integer; AutoGen: string; itemIndex: integer = 0; aVisibleOnInvoice: boolean = true): TInvoiceLine;
 var
   invoiceLine: TInvoiceLine;
-  lPackageId: integer;
-  lItemId: integer;
   lParent: TInvoiceLine;
 begin
   if AutoGen = '' then

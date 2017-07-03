@@ -27,7 +27,6 @@ end;
 
 function InstanceAlreadyRunning : Boolean;
 var
-  i: Integer;
   Arg: string;
   Window: HWND;
   CopyDataStruct: TCopyDataStruct;

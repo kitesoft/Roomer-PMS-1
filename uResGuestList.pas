@@ -448,6 +448,9 @@ begin
     // DebugMessage(''#10#10+s);
     hData.rSet_bySQL(r_,s);
 
+    inStatistics := true;
+    Floor := 0;
+
     m_.Open;
     R_.First;
     while not R_.Eof do

@@ -41,8 +41,8 @@ begin
 
     dwPort := portStart;
     SetLength( arrFound, findCount );
+    iFound := 0;
     try
-      iFound := 0;
 
       repeat
         sock := socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);    //creates a socket

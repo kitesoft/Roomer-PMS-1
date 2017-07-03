@@ -501,7 +501,7 @@ var
   GuestObject : TGuestObject;
   iReservation : integer;
 
-  iLastPerson, iLastPerson1, iLastReservation, iLastRoomReservation : integer;
+  iLastPerson, iLastReservation, iLastRoomReservation : integer;
 
   sLastDate : string;
 
@@ -510,7 +510,7 @@ var
 begin
   RoomObject := nil;
   SingleReservations := nil;
-  iLastPerson1 := 0;
+  iReservation := 0;
   Screen.Cursor := crHourglass;
   Application.processmessages;
   try
@@ -521,186 +521,176 @@ begin
     iLastPerson := -1;
 
     //-- Query all rooms reserved this period:
-    try
-    try
     rSet := nil;
-//    if NOT d.roomerMainDataSet.OfflineMode then
-      rSet := d.roomerMainDataSet.ActivateNewDataset(d.roomerMainDataSet.SystemGetDayGrid(_FromDate, _ToDate, '', SkipCancelled));
-//    else
-//      rSet := d.roomerMainDataSet.ActivateNewDataset(d.GetBackupTodaysGuests);
+    try
+      try
+        rSet := d.roomerMainDataSet.ActivateNewDataset(d.roomerMainDataSet.SystemGetDayGrid(_FromDate, _ToDate, '', SkipCancelled));
 
-      with rSet do
-      begin
-        first;
-
-        while not eof do
+        with rSet do
         begin
-//          if iLastPerson1 = FieldByName('Person').asInteger then
-//          begin
-//            next;
-//            continue;
-//          end;
+          first;
 
-          iLastPerson1 := FieldByName('Person').asInteger;
-          iReservation := FieldByName('Reservation').asInteger;
-
-          if iLastReservation <> iReservation then
+          while not eof do
           begin
-            iLastReservation := iReservation;
+            iReservation := FieldByName('Reservation').asInteger;
 
-            SingleReservations := TSingleReservations.Create;
-
-            SingleReservations.FInputSource := Trim(FieldByName('InputSource').asString);
-            SingleReservations.FWebConfirmed := Trim(FieldByName('WebConfirmed').asString) = 'Y';
-            SingleReservations.FReservation := iReservation;
-            try
-              SingleReservations.FChannel := FieldByName('Channel').asInteger
-            except
-              SingleReservations.FChannel := glb.ControlSet.FieldByName('DefaultChannelId').AsInteger;
-            end;
-            SingleReservations.FCustomer := Trim(FieldByName('Customer').asString);
-            SingleReservations.FName := Trim(FieldByName('Name').asString);
-            SingleReservations.FArrival := SQLtOdate(Trim(FieldByName('Arrival').asString));
-            SingleReservations.FReservationDate := SQLToDate(Trim(FieldByName('ReservationDate').asString));
-            SingleReservations.FStaff := Trim(FieldByName('Staff').asString);
-            SingleReservations.FDeparture := SQLToDate(Trim(FieldByName('Departure').asString));
-            SingleReservations.FTel1 := Trim(FieldByName('Tel1').asString);
-            SingleReservations.FTel2 := Trim(FieldByName('Tel2').asString);
-            SingleReservations.FFax := Trim(FieldByName('Fax').asString);
-            SingleReservations.FInformation := Trim(FieldByName('rvInformation').Text);
-            SingleReservations.FPMInfo := Trim(FieldByName('rvPMInfo').Text);
-            SingleReservations.FHiddenInfo := Trim(FieldByName('rvHiddenInfo').Text);
-            SingleReservations.BookingReference := Trim(FieldByName('rvInvRefrence').Text);
-            SingleReservations.OutOfOrderBlocking := FieldByName('rvOutOfOrderBlocking').AsBoolean;
-
-            // --
-            // if SingleReservations.FDeparture = _ToDate - 1 then
-            // SingleReservations.FResStatus := rsDeparting
-            // else
-            SingleReservations.FResStatus := TReservationState.FromResStatus(FieldByName('Status').asString);
-            FReservationList.add(SingleReservations);
-          end;
-
-          if iLastRoomReservation <> FieldByName('RoomReservation').asInteger then
-          begin
-            iLastRoomReservation := FieldByName('RoomReservation').asInteger;
-            sLastDate := '';
-
-            RoomObject := TRoomObject.Create(SingleReservations);
-            RoomObject.FRoomRes := FieldByName('RoomReservation').asInteger;
-            RoomObject.FReservation := FieldByName('Reservation').asInteger;
-            RoomObject.FGuestCount := FieldByName('NumGuests').asInteger;
-            RoomObject.FArrival := SQLToDate(Trim(FieldByName('RoomArrival').asString));
-            RoomObject.FDeparture := SQLToDate(Trim(FieldByName('RoomDeparture').asString));
-            RoomObject.FRoomNumber := Trim(FieldByName('Room').asString);
-            RoomObject.FRRNumber := Trim(FieldByName('rrRoom').asString);
-            try
-              RoomObject.FGroupAccount := rset['GroupAccount'];
-            except
-              RoomObject.FGroupAccount := false;
-            end;
-            RoomObject.FRoomType := Trim(FieldByName('RoomType').asString);
-            RoomObject.FRoomClass := Trim(FieldByName('RoomClass').asString);
-            RoomObject.FPriceType := Trim(FieldByName('PriceType').asString);
-            RoomObject.FRoomStatusChar := Trim(FieldByName('Status').asString);
-            RoomObject.Currency := Trim(FieldByName('Currency').asString);
-            RoomObject.FPrice := FieldByName('RoomPrice1').AsFloat;
-            RoomObject.FDiscount := FieldByName('Discount').AsFloat;
-            RoomObject.FPMInfo := Trim(FieldByName('rrPMInfo').Text);
-            RoomObject.FHiddenInfo := Trim(FieldByName('rrHiddenInfo').Text);
-            RoomObject.FMeeting := FieldByName('rrHallRes').asInteger;
-            RoomObject.FTotalNoRent := FieldByName('totalNoRent').AsFloat;
-            RoomObject.FTotalTaxes := FieldByName('totalTaxes').AsFloat;
-            RoomObject.FTotalPayments := FieldByName('TotalPayment').AsFloat;
-            RoomObject.FPaymentInvoice := FieldByName('RoomRentPaymentInvoice').asInteger;
-            if Assigned(rSet.FindField('blockMove')) then
-              RoomObject.FBlockMove := rset['blockMove']; //.asBoolean;
-            if Assigned(rSet.FindField('blockMoveReason')) then
-              RoomObject.FBlockMoveReason := rset['blockMoveReason'];;
-
-            RoomObject.FOngoingSale := 0.00;
-            if Assigned(rSet.FindField('TotalNoRent')) AND Assigned(rSet.FindField('TotalRent')) then
+            if iLastReservation <> iReservation then
             begin
-              RoomObject.FOngoingSale := rSet.FieldByName('TotalNoRent').AsFloat;
-              RoomObject.FOngoingRent := rSet.FieldByName('TotalRent').AsFloat;
-            end;
+              iLastReservation := iReservation;
 
-            RoomObject.FOngoingTaxes := rSet.FieldByName('totalTaxes').AsFloat;
+              SingleReservations := TSingleReservations.Create;
 
-            if Assigned(rSet.FindField('Invoices')) AND Assigned(rSet.FindField('Guarantee')) then
-            begin
-              RoomObject.FInvoices := FieldByName('Invoices').asString;
-              RoomObject.FGuarantee := FieldByName('Guarantee').asString;
-            end;
-
-            if Assigned(rSet.FindField('InvoiceIndex')) then
-            begin
-              RoomObject.FInvoiceIndex := FieldByName('InvoiceIndex').asInteger;
-            end else
-              RoomObject.FInvoiceIndex := 0;
-
-            RoomObject.ColorId := -1;
-            RoomObject.CodedColor := -1;
-            if FieldDefs.IndexOf('colorId') > -1 then
-              try RoomObject.ColorId := FieldByName('colorId').AsInteger; except end;
-            if FieldDefs.IndexOf('CodedColor') > -1 then
+              SingleReservations.FInputSource := Trim(FieldByName('InputSource').asString);
+              SingleReservations.FWebConfirmed := Trim(FieldByName('WebConfirmed').asString) = 'Y';
+              SingleReservations.FReservation := iReservation;
               try
-                if FieldByName('CodedColor').AsString <> '' then
-                  RoomObject.CodedColor := StringToColor(FieldByName('CodedColor').AsString);
+                SingleReservations.FChannel := FieldByName('Channel').asInteger
               except
+                SingleReservations.FChannel := glb.ControlSet.FieldByName('DefaultChannelId').AsInteger;
+              end;
+              SingleReservations.FCustomer := Trim(FieldByName('Customer').asString);
+              SingleReservations.FName := Trim(FieldByName('Name').asString);
+              SingleReservations.FArrival := SQLtOdate(Trim(FieldByName('Arrival').asString));
+              SingleReservations.FReservationDate := SQLToDate(Trim(FieldByName('ReservationDate').asString));
+              SingleReservations.FStaff := Trim(FieldByName('Staff').asString);
+              SingleReservations.FDeparture := SQLToDate(Trim(FieldByName('Departure').asString));
+              SingleReservations.FTel1 := Trim(FieldByName('Tel1').asString);
+              SingleReservations.FTel2 := Trim(FieldByName('Tel2').asString);
+              SingleReservations.FFax := Trim(FieldByName('Fax').asString);
+              SingleReservations.FInformation := Trim(FieldByName('rvInformation').Text);
+              SingleReservations.FPMInfo := Trim(FieldByName('rvPMInfo').Text);
+              SingleReservations.FHiddenInfo := Trim(FieldByName('rvHiddenInfo').Text);
+              SingleReservations.BookingReference := Trim(FieldByName('rvInvRefrence').Text);
+              SingleReservations.OutOfOrderBlocking := FieldByName('rvOutOfOrderBlocking').AsBoolean;
+
+              // --
+              // if SingleReservations.FDeparture = _ToDate - 1 then
+              // SingleReservations.FResStatus := rsDeparting
+              // else
+              SingleReservations.FResStatus := TReservationState.FromResStatus(FieldByName('Status').asString);
+              FReservationList.add(SingleReservations);
+            end;
+
+            if iLastRoomReservation <> FieldByName('RoomReservation').asInteger then
+            begin
+              iLastRoomReservation := FieldByName('RoomReservation').asInteger;
+              sLastDate := '';
+
+              RoomObject := TRoomObject.Create(SingleReservations);
+              RoomObject.FRoomRes := FieldByName('RoomReservation').asInteger;
+              RoomObject.FReservation := FieldByName('Reservation').asInteger;
+              RoomObject.FGuestCount := FieldByName('NumGuests').asInteger;
+              RoomObject.FArrival := SQLToDate(Trim(FieldByName('RoomArrival').asString));
+              RoomObject.FDeparture := SQLToDate(Trim(FieldByName('RoomDeparture').asString));
+              RoomObject.FRoomNumber := Trim(FieldByName('Room').asString);
+              RoomObject.FRRNumber := Trim(FieldByName('rrRoom').asString);
+              try
+                RoomObject.FGroupAccount := rset['GroupAccount'];
+              except
+                RoomObject.FGroupAccount := false;
+              end;
+              RoomObject.FRoomType := Trim(FieldByName('RoomType').asString);
+              RoomObject.FRoomClass := Trim(FieldByName('RoomClass').asString);
+              RoomObject.FPriceType := Trim(FieldByName('PriceType').asString);
+              RoomObject.FRoomStatusChar := Trim(FieldByName('Status').asString);
+              RoomObject.Currency := Trim(FieldByName('Currency').asString);
+              RoomObject.FPrice := FieldByName('RoomPrice1').AsFloat;
+              RoomObject.FDiscount := FieldByName('Discount').AsFloat;
+              RoomObject.FPMInfo := Trim(FieldByName('rrPMInfo').Text);
+              RoomObject.FHiddenInfo := Trim(FieldByName('rrHiddenInfo').Text);
+              RoomObject.FMeeting := FieldByName('rrHallRes').asInteger;
+              RoomObject.FTotalNoRent := FieldByName('totalNoRent').AsFloat;
+              RoomObject.FTotalTaxes := FieldByName('totalTaxes').AsFloat;
+              RoomObject.FTotalPayments := FieldByName('TotalPayment').AsFloat;
+              RoomObject.FPaymentInvoice := FieldByName('RoomRentPaymentInvoice').asInteger;
+              if Assigned(rSet.FindField('blockMove')) then
+                RoomObject.FBlockMove := rset['blockMove']; //.asBoolean;
+              if Assigned(rSet.FindField('blockMoveReason')) then
+                RoomObject.FBlockMoveReason := rset['blockMoveReason'];;
+
+              RoomObject.FOngoingSale := 0.00;
+              if Assigned(rSet.FindField('TotalNoRent')) AND Assigned(rSet.FindField('TotalRent')) then
+              begin
+                RoomObject.FOngoingSale := rSet.FieldByName('TotalNoRent').AsFloat;
+                RoomObject.FOngoingRent := rSet.FieldByName('TotalRent').AsFloat;
               end;
 
-            // --
-            RoomObject.FResStatus := TReservationState.FromResStatus(FieldByName('Status').asString);
-            SingleReservations.FRooms.add(RoomObject);
-          end;
+              RoomObject.FOngoingTaxes := rSet.FieldByName('totalTaxes').AsFloat;
 
-          // --
-          if iLastPerson <> FieldByName('Person').asInteger then
-          begin
-            iLastPerson := FieldByName('Person').asInteger;
-            // --
-            GuestObject := TGuestObject.Create;
-            GuestObject.FPerson := FieldByName('Person').asInteger;
-            GuestObject.FRoomRes := FieldByName('RoomReservation').asInteger;
-            GuestObject.FReservation := FieldByName('Reservation').asInteger;
-            // *SSS
+              if Assigned(rSet.FindField('Invoices')) AND Assigned(rSet.FindField('Guarantee')) then
+              begin
+                RoomObject.FInvoices := FieldByName('Invoices').asString;
+                RoomObject.FGuarantee := FieldByName('Guarantee').asString;
+              end;
 
-            case g.qNameOrder of
-              0 :
-                GuestObject.FGuestName := CombineNames
-                  (Trim(FieldByName('peName').asString), Trim(FieldByName('surName').asString));
-              1 :
-                GuestObject.FGuestName := CombineNames
-                  (Trim(FieldByName('SurName').asString), Trim(FieldByName('peName').asString));
-              2 :
-                GuestObject.FGuestName := FieldByName('peName').asString;
-              3 :
-                GuestObject.FGuestName := FieldByName('surName').asString;
+              if Assigned(rSet.FindField('InvoiceIndex')) then
+              begin
+                RoomObject.FInvoiceIndex := FieldByName('InvoiceIndex').asInteger;
+              end else
+                RoomObject.FInvoiceIndex := 0;
+
+              RoomObject.ColorId := -1;
+              RoomObject.CodedColor := -1;
+              if FieldDefs.IndexOf('colorId') > -1 then
+                try RoomObject.ColorId := FieldByName('colorId').AsInteger; except end;
+              if FieldDefs.IndexOf('CodedColor') > -1 then
+                try
+                  if FieldByName('CodedColor').AsString <> '' then
+                    RoomObject.CodedColor := StringToColor(FieldByName('CodedColor').AsString);
+                except
+                end;
+
+              // --
+              RoomObject.FResStatus := TReservationState.FromResStatus(FieldByName('Status').asString);
+              SingleReservations.FRooms.add(RoomObject);
             end;
 
-            GuestObject.FSurname := Trim(FieldByName('Surname').asString);
-            GuestObject.FFirstName := Trim(FieldByName('peName').asString);
-            GuestObject.FAddress1 := Trim(FieldByName('Address1').asString);
-            GuestObject.FAddress2 := Trim(FieldByName('Address2').asString);
-            GuestObject.FAddress3 := Trim(FieldByName('Address3').asString);
-            GuestObject.FAddress4 := Trim(FieldByName('Address4').asString);
-            GuestObject.Country := Trim(FieldByName('Country').asString);
-            GuestObject.GuestType := Trim(FieldByName('GuestType').asString);
-            GuestObject.FInformation := Trim(FieldByName('Information').Text);
+            // --
+            if iLastPerson <> FieldByName('Person').asInteger then
+            begin
+              iLastPerson := FieldByName('Person').asInteger;
+              // --
+              GuestObject := TGuestObject.Create;
+              GuestObject.FPerson := FieldByName('Person').asInteger;
+              GuestObject.FRoomRes := FieldByName('RoomReservation').asInteger;
+              GuestObject.FReservation := FieldByName('Reservation').asInteger;
+              // *SSS
 
-            RoomObject.FGuests.add(GuestObject);
+              case g.qNameOrder of
+                0 :
+                  GuestObject.FGuestName := CombineNames
+                    (Trim(FieldByName('peName').asString), Trim(FieldByName('surName').asString));
+                1 :
+                  GuestObject.FGuestName := CombineNames
+                    (Trim(FieldByName('SurName').asString), Trim(FieldByName('peName').asString));
+                2 :
+                  GuestObject.FGuestName := FieldByName('peName').asString;
+                3 :
+                  GuestObject.FGuestName := FieldByName('surName').asString;
+              end;
+
+              GuestObject.FSurname := Trim(FieldByName('Surname').asString);
+              GuestObject.FFirstName := Trim(FieldByName('peName').asString);
+              GuestObject.FAddress1 := Trim(FieldByName('Address1').asString);
+              GuestObject.FAddress2 := Trim(FieldByName('Address2').asString);
+              GuestObject.FAddress3 := Trim(FieldByName('Address3').asString);
+              GuestObject.FAddress4 := Trim(FieldByName('Address4').asString);
+              GuestObject.Country := Trim(FieldByName('Country').asString);
+              GuestObject.GuestType := Trim(FieldByName('GuestType').asString);
+              GuestObject.FInformation := Trim(FieldByName('Information').Text);
+
+              RoomObject.FGuests.add(GuestObject);
+            end;
+
+            next;
           end;
 
-          next;
         end;
+      except
+        on E: Exception do
+          ShowMessage(Format('There was an error while reading reservation [%d]: '#10#13 + E.Message, [iReservation] ));
 
       end;
-    except
-      on E: Exception do
-        ShowMessage(Format('There was an error while reading reservation [%d]: '#10#13 + E.Message, [iReservation] ));
-
-    end;
     finally
       freeandnil(rSet);
     end;

@@ -508,11 +508,6 @@ begin
   cbxMonth.ItemIndex := zMonth;
 
   cbxYear.ItemIndex := cbxYear.Items.IndexOf(inttostr(zYear));
-//  idx := zYear - 2010;
-  if (idx < cbxYear.Items.Count - 1) and (idx > 0) then
-  begin
-    cbxYear.ItemIndex := idx;
-  end;
 
   zDateFrom := encodeDate(y, m, 1);
   lastDay := DaysInAMonth(y, m);
@@ -521,12 +516,6 @@ begin
   dtDateTo.Date := zDateTo;
   zSetDates := true;
 
-//  btnHagstofaReport.Enabled := true;
-
-  //**
-//  zLocation := '';
-//  fillLocationsChkBox;
-//  cbxLocations.ItemIndex := 0;
   zRoomReservationsList := '';
   isFirstTime := false;
 end;
@@ -544,17 +533,12 @@ var
   rset1 : TRoomerDataset;
   ExecutionPlan : TRoomerExecutionPlan;
 
-  startTick : integer;
-  stopTick  : integer;
-  SQLms     : integer;
-
 begin
   kbmPayments_.DisableControls;
   try
     ExecutionPlan := d.roomerMainDataSet.CreateExecutionPlan;
     try
 
-      startTick := GetTickCount;
       s := '';
       s := s+' SELECT '#10;
       s := s+'    pm.Reservation '#10;
@@ -640,7 +624,6 @@ begin
         kbmPAyments_.EnableControls;
       end;
 
-      stopTick         := GetTickCount;
     finally
       ExecutionPlan.Free;
     end;
@@ -699,7 +682,6 @@ var
 begin
 
   iReservation  := kbmPayments_.fieldbyname('Reservation').AsInteger;
-  iRoomReservation := 0;
   if not kbmPayments_.Locate('Reservation',ireservation,[]) then
   begin
     showmessage('No room found');

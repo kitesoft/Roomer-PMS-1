@@ -522,7 +522,6 @@ end;
 
 function TRooms.FindRoomFromRoomNumber(RoomNumber: string): TRoomItem;
 var
-  i : integer;
   RoomItem : TRoomItem;
 begin
   result := nil;
@@ -530,40 +529,8 @@ begin
     result := RoomITem;
 end;
 
-//function TRooms.FindRoomFromRoomNumber(RoomNumber: string; StartAt: integer = 0; caseSensitive: Boolean = false): integer;
-//var
-//  i : integer;
-//  Room : string;
-//begin
-//  result := -1;
-//  if StartAt > FRoomList.Count-1 then exit;
-//
-//  if not caseSensitive then
-//  begin
-//    RoomNumber := ansiLowercase(RoomNumber);
-//  end;
-//
-//  for i := startAt to FRoomList.Count -1 do
-//  begin
-//    Room := FRoomList[i].FRoom;
-//
-//    if not caseSensitive then
-//    begin
-//      Room := ansiLowercase(room);
-//    end;
-//
-//    if RoomNumber = room then
-//    begin
-//      result := i;
-//      Break;
-//    end;
-//  end;
-//end;
-
 function TRooms.FindRoomStatus(RoomNumber: string): string;
 var
-  i : integer;
-  Room : string;
   RoomItem : TRoomItem;
 begin
   if Application.Terminated then exit;
@@ -575,33 +542,6 @@ begin
     result := RoomItem.FStatus;
 end;
 
-//function TRooms.FindRoomStatus(RoomNumber: string): string;
-//var
-//  i : integer;
-//  Room : string;
-//  RoomItem : TRoomItem;
-//begin
-//  if Application.Terminated then exit;
-//  result := '';
-//
-//  RoomItem := FindRoomFromRoomNumber(RoomNumber);
-//
-//  RoomNumber := ansiLowercase(RoomNumber);
-//
-//  if Assigned(FRoomList) then
-//    for i := 0 to FRoomList.Count -1 do
-//    begin
-//      Room := FRoomList[i].FRoom;
-//      Room := ansiLowercase(room);
-//
-//      if RoomNumber = room then
-//      begin
-//        result := FRoomList[i].FStatus;
-//        Break;
-//      end;
-//    end;
-//end;
-
 
 function TRooms.GetRoomByNumber(aRoomNumber: string): TRoomItem;
 var
@@ -610,12 +550,6 @@ begin
   result := nil;
   if FRoomList.TryGetValue(LowerCase(aRoomNumber), lRoom) then
     result := lRoom;
-//  for lRoom in FRoomList do
-//    if lRoom.Room.ToUpper.Equals(aRoomNumber.ToUpper) then
-//    begin
-//      result := lRoom;
-//      Break;
-//    end;
 
   if result = nil then
     raise ERoomlistException.CreateFmt('Roomnumber [%s] not found in roomlist', [aRoomNumber]);

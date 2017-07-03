@@ -4845,7 +4845,7 @@ end;
 
 procedure SendInvoicesToFinancePacketThreaded(zInvoiceNumber: integer);
 var
-  s, s1 : String;
+  s: String;
   lPutThreadedData: TPutOrPostDataThreaded;
 begin
   if g.qSendInvoicesToFinancePacket then
@@ -6068,7 +6068,6 @@ var
   averageRate: double;
   Currency: string;
   Discount: double;
-  Percentage: boolean;
 begin
   initRoomReservationRentHolder(result);
 
@@ -12991,7 +12990,6 @@ end;
 
 function channels_GetDefault: integer;
 begin
-  result := 0;
   glb.ChannelsSet.First;
   if glb.ChannelsSet.Locate('defaultchannel', 1, []) then
     result := glb.ChannelsSet.fieldbyname('ID').asInteger

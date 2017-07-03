@@ -304,6 +304,7 @@ end;
 
 function TInvoiceLine.GetAmountIncludedInParent: double;
 begin
+  Result := 0;
   if VisibleOnInvoice and TotalIsIncludedInParent then
     result := - TotalNativeCurrency
   else if not VisibleOnInvoice and not TotalIsIncludedInParent then

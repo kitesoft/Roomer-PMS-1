@@ -335,16 +335,13 @@ var
   NativeAmount     : double   ;
   PriceCode        : string   ;
   aDate            : Tdate    ;
-  oldRate          : double   ;
   priceID          : integer  ;
 begin
   priceCode := edPcCode.Text;
   priceID   := PriceCode_ID(priceCode);
-  Rate := 0;
   mRoomRates.First;
   while not mRoomRates.eof do
   begin
-    oldRate       := mRoomRates.FieldByName('Rate').AsFloat;
     adate         := mRoomRates.FieldByName('RateDate').AsDateTime;
     rate          := hdata.GetDayRate(zData.RoomType,
                                        zData.Room,

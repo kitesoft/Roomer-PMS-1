@@ -276,8 +276,6 @@ object frmChannelTogglingRules: TfrmChannelTogglingRules
         Margins.Right = 2
         Margins.Bottom = 2
         Caption = 'Viewing'
-        SkinData.CustomColor = False
-        SkinData.CustomFont = False
         ExplicitLeft = 0
         ExplicitTop = 0
         ExplicitWidth = 792

@@ -494,7 +494,6 @@ function MakeInvoiceTaxEntity(aTax: TTax; aInvoiceRoomEntity: TInvoiceRoomEntity
 var
   NumItems: Double;
   Amount, baseAmount: Double;
-  IncludedInPrice: TEnumTaxIncl_Excl;
 
   Percentage: Boolean;
   taxGuests: Integer;

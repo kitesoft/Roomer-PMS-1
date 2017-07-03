@@ -34,7 +34,6 @@ object frmrptConfirms: TfrmrptConfirms
       Caption = 'Select Dates'
       TabOrder = 0
       SkinData.SkinSection = 'GROUPBOX'
-      Checked = False
       object labDateFrom: TsLabel
         Left = 8
         Top = 18
@@ -94,7 +93,6 @@ object frmrptConfirms: TfrmrptConfirms
         ParentFont = False
         TabOrder = 1
         Text = '  -  -    '
-        CheckOnExit = True
         SkinData.SkinSection = 'EDIT'
         GlyphMode.Blend = 0
         GlyphMode.Grayed = False
@@ -117,7 +115,6 @@ object frmrptConfirms: TfrmrptConfirms
         ParentFont = False
         TabOrder = 2
         Text = '  -  -    '
-        CheckOnExit = True
         SkinData.SkinSection = 'EDIT'
         GlyphMode.Blend = 0
         GlyphMode.Grayed = False
@@ -162,8 +159,6 @@ object frmrptConfirms: TfrmrptConfirms
       Caption = 'Confirms'
       Constraints.MinWidth = 450
       TabVisible = False
-      SkinData.CustomColor = False
-      SkinData.CustomFont = False
       ExplicitLeft = 0
       ExplicitTop = 0
       ExplicitWidth = 0

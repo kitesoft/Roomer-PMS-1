@@ -1247,7 +1247,8 @@ begin
   qRes := -1;
   qRres := -1;
   hasPackage := False;
-
+  hasRooms := false;
+  SplitNumber := 0;
   rSet := CreateNewDataSet;
   try
 //    s := 'Select SplitNumber, reservation, roomreservation, to_bool(EXISTS (SELECT * FROM invoicelines WHERE invoiceNumber=invoiceheads.InvoiceNumber AND ImportSource<>'''')) AS hasPackage from invoiceheads where invoicenumber = %d ';
@@ -1304,7 +1305,6 @@ begin
     freeandnil(rSet);
   end;
 
-//  if ((NOT fromKredit) OR (NOT hasPackage)) AND (SplitNumber = 0) then
   if ((NOT fromKredit) OR (NOT hasRooms)) AND (SplitNumber <> 0) then
   begin
     hasPackage := False;

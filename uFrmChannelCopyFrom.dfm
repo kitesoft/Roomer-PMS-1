@@ -184,7 +184,6 @@ object FrmChannelCopyFrom: TFrmChannelCopyFrom
       ParentFont = False
       TabOrder = 0
       Text = '  -  -    '
-      CheckOnExit = True
       BoundLabel.Font.Charset = DEFAULT_CHARSET
       BoundLabel.Font.Color = clWindowText
       BoundLabel.Font.Height = -13
@@ -216,7 +215,6 @@ object FrmChannelCopyFrom: TFrmChannelCopyFrom
       ParentFont = False
       TabOrder = 1
       Text = '  -  -    '
-      CheckOnExit = True
       BoundLabel.Font.Charset = DEFAULT_CHARSET
       BoundLabel.Font.Color = clWindowText
       BoundLabel.Font.Height = -13
@@ -242,7 +240,6 @@ object FrmChannelCopyFrom: TFrmChannelCopyFrom
       ParentFont = False
       TabOrder = 2
       SkinData.SkinSection = 'GROUPBOX'
-      Checked = False
       object cbxRestrictions: TsCheckBox
         Left = 14
         Top = 80
@@ -324,7 +321,6 @@ object FrmChannelCopyFrom: TFrmChannelCopyFrom
       ParentFont = False
       TabOrder = 3
       SkinData.SkinSection = 'GROUPBOX'
-      Checked = False
       object sbRoomClasses: TsScrollBox
         Left = 2
         Top = 15

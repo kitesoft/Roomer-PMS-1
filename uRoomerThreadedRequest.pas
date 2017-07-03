@@ -101,7 +101,8 @@ uses
   uD,
   SysUtils,
   TypInfo,
-  Dialogs;
+  Dialogs,
+  UITypes;
 
 
 procedure TGetSQLDataThreaded.Cancel;

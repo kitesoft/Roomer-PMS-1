@@ -2515,7 +2515,6 @@ var
   TN : TTreeNode;
   i : Integer;
   idx : Integer;
-  RoomerResourceManagement : TRoomerResourceManagement;
 begin
   for i := 0 to mainPage.PageCount - 1 do
   begin

@@ -300,6 +300,10 @@ object frmHouseKeeping: TfrmHouseKeeping
     end
     object tabActions: TsTabSheet
       Caption = 'Detailed'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object grVar: TcxGrid
         Left = 0
         Top = 33

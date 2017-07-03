@@ -166,8 +166,6 @@ end;
 
 procedure TFrmTopClassAvailabilityOrder.SaveRates;
 var s : String;
-    rSet : TRoomerDataSet;
-    lv : TListItem;
     ExecutionPlan : TRoomerExecutionPlan;
     i, id: Integer;
 begin

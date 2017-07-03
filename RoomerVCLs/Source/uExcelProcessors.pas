@@ -97,21 +97,16 @@ type
     function GetCellColour(const aCol, aRow: integer): integer;
     procedure SetCellColor(ACol, ARow: integer; Color: Word);
     procedure SetCellFontColor(ACol, ARow: integer; Color: Word);
-    function GetTotalRooms: Integer;
-    function IndexOfChannel(ChannelCode, ChannelName: String): Integer;
     function GetCellFontColor(ACol, ARow: integer) : Word;
     procedure SetAlignment(ACol, ARow: integer; align: TcxHorzTextAlign);
-    procedure SetBorders(ACol1, ARow1, ACol2, ARow2: integer);
     procedure SetCellBorders(ALeftCol, ATopRow, ARightCol, ABottomRow: Integer; AEdge: TAlign; AStyle: TcxSSEdgeLineStyle);
-    procedure SetGroupBorders(ACol1, ARow1, ACol2, ARow2: integer);
-    function GetRoomsOfClass(TheClass: String): Integer;
     function ChannelIndex(_ChannelCode, _ChannelName: String): Integer;
     function GetCellFormat(ACol, ARow: integer): TxlsDataFormat;
     procedure GetCellFontAttributes(ACol, ARow: Integer; var AStyle: TFontStyles; var ASize: Integer);
     procedure SetCellFontAttributes(ALeftCol, ATopRow, ARightCol, ABottomRow: Integer; AStyle: TFontStyles; ASize: Integer);
   public
     constructor Create;
-    destructor destroy; override;
+    destructor Destroy; override;
 
     procedure PrepareRateChanges(_TemplateFile : String);
     procedure PrepareAvailabilityChanges;
@@ -133,21 +128,7 @@ uses uDateUtils, ug, hData;
 
 { TExcelProcessors }
 
-function TExcelProcessors.IndexOfChannel(ChannelCode, ChannelName : String) : Integer;
-var
-  i: Integer;
-begin
-  result := -1;
-  for i := 0 to FChannels.Count - 1 do
-    if (FChannels[i].ChannelCode = ChannelCode) AND (FChannels[i].ChannelName = ChannelName) then
-    begin
-      result := i;
-      Break;
-    end;
-end;
-
 procedure TExcelProcessors.AddTopClass(TopClass: String; NumRooms: Integer);
-var TempItem : TTopClassEntity;
 begin
   FTopClasses.AddOrSetValue(TopClass, TTopClassEntity.Create(TopClass, NumRooms));
 end;
@@ -258,13 +239,9 @@ begin
 end;
 
 procedure TExcelProcessors.CreateRateExcelSheet(filename : String);
-var iStartCol, iStartRow,
-    iCol, iRow : Integer;
+var iStartCol,
     i: Integer;
     i1: Integer;
-    Rooms : Integer;
-    Occ : Integer;
-    OccPercentage : Double;
 
     StartRatesCol : Integer;
     LastRowIndex : Integer;
@@ -273,9 +250,6 @@ var iStartCol, iStartRow,
 
     FloatFormat : TxlsDataFormat;
     ATextColor : Word;
-
-    FloatDigits : byte;
-     
 
     function DateRow(ADate : TDate) : Integer;
     begin
@@ -297,14 +271,11 @@ var iStartCol, iStartRow,
         Keys : TArray<String>;
         Key : String;
         TempItem : TTopClassEntity;
-        OccPerc : Double;
 
       procedure DisplayTopClassOcc(TopClass : String; col, Rooms : Integer);
       var i : Integer;
-          OccPerc : Double;
           lastDate : TDate;
           row : Integer;
-          s : String;
       begin
         lastDate := 0;
         if FTopClassStatuses.Count > 0 then
@@ -330,7 +301,7 @@ var iStartCol, iStartRow,
           end;
       end;
 
-    var iCol, iRow : Integer;
+    var iCol: Integer;
     begin
       Keys := FTopClasses.Keys.ToArray;
       SetCellValue(iStartCol, TOP_CLASS_AVAIL_STARTS_AT_ROW - 2, 'AVALABILITY', HeaderFontColor, HeaderCellColor, true);
@@ -351,7 +322,6 @@ var iStartCol, iStartRow,
         Key := Keys[i];
         FTopClasses.TryGetValue(key, TempItem);
         iCol := iStartCol + i;
-        iRow := TOP_CLASS_AVAIL_STARTS_AT_ROW;
         SetCellValue(iCol, TOP_CLASS_AVAIL_STARTS_AT_ROW - 1, TempItem.TopClass, HeaderFontColor, HeaderCellColor, true);
         SetAlignment(iCol, TOP_CLASS_AVAIL_STARTS_AT_ROW - 1, haCENTER);
 
@@ -529,8 +499,6 @@ var iStartCol, iStartRow,
 
 
 var iRowCounter : Integer;
-    s : String;
-    lastDate : TDate;
 begin
   LastRowIndex := 0;
   DateRows := TDictionary<TDate, Integer>.Create;
@@ -556,9 +524,7 @@ begin
 
   iRowCounter := -1;
   FloatFormat := GetCellFormat(7, 5);
-  FloatDigits := 8;
   ATextColor := 0;
-  Rooms := GetTotalRooms;
 
   SetCellValue(0, 0, format('%s - %s - %s - %s', [ctrlGetString('CompanyName'), ctrlGetString('Address4'), ctrlGetString('Country'), ctrlGetString('NativeCurrency')]),
       HeaderFontColor, HeaderCellColor, true);
@@ -571,10 +537,6 @@ begin
   SetAlignment(2, TOP_CLASS_AVAIL_STARTS_AT_ROW - 1, haCENTER);
 
 
-//  SetCellValue(iStartCol, TOP_CLASS_AVAIL_STARTS_AT_ROW + 3, Rooms, HeaderFontColor, HeaderCellColor);
-  lastDate := 0;
-  if FDateRanges.Count > 0 then
-     lastDate := FDateRanges[0].StartDate - 1;
   for i := 0 to FDateRanges.Count - 1 do
   begin
     if i > 0 then
@@ -617,56 +579,6 @@ begin
   Excel.SaveToFile(filename);
 end;
 
-function TExcelProcessors.GetTotalRooms : Integer;
-var i : Integer;
-    Keys : TArray<String>;
-    Key : String;
-    TempItem : TTopClassEntity;
-begin
-  result := 0;
-  Keys := FTopClasses.Keys.ToArray;
-  for i := LOW(Keys) to HIGH(Keys) do
-  begin
-    Key := Keys[i];
-    FTopClasses.TryGetValue(key, TempItem);
-    result := result + TempItem.ARooms;
-  end;
-end;
-
-function TExcelProcessors.GetRoomsOfClass(TheClass : String) : Integer;
-var i : Integer;
-    Keys : TArray<String>;
-    Key : String;
-    TempItem : TTopClassEntity;
-begin
-  result := 0;
-  Keys := FTopClasses.Keys.ToArray;
-  for i := LOW(Keys) to HIGH(Keys) do
-  begin
-    Key := Keys[i];
-    FTopClasses.TryGetValue(key, TempItem);
-    if TempItem.TopClass = TheClass then
-    begin
-      result := TempItem.ARooms;
-      Break;
-    end;
-  end;
-end;
-
-procedure TExcelProcessors.SetBorders(ACol1, ARow1, ACol2, ARow2: integer);
-begin
-  SetCellBorders(ACol1, ARow1, ACol2, ARow2, alClient, lsThin);
-end;
-
-procedure TExcelProcessors.SetGroupBorders(ACol1, ARow1, ACol2, ARow2: integer);
-var
-  i: Integer;
-begin
-  SetCellBorders(ACol1, ARow1, ACol2, ARow1, alTop, lsMedium);
-  SetCellBorders(ACol1, ARow2, ACol2, ARow2, alBottom, lsMedium);
-  SetCellBorders(ACol1, ARow1, ACol1, ARow2, alLeft, lsMedium);
-  SetCellBorders(ACol2, ARow1, ACol2, ARow2, alRight, lsMedium);
-end;
 
 procedure TExcelProcessors.SetCellBorders(ALeftCol, ATopRow, ARightCol, ABottomRow: Integer;
   AEdge: TAlign; AStyle: TcxSSEdgeLineStyle);
@@ -719,8 +631,6 @@ begin
 end;
 
 procedure TExcelProcessors.GetCellFontAttributes(ACol, ARow: Integer; var AStyle: TFontStyles; var ASize: Integer);
-var
-  i, j: Integer;
 begin
   with Excel.ActiveSheet do // using our active page
     with GetCellObject(ACol, ARow) do // get the cell
@@ -788,7 +698,6 @@ begin
 end;
 
 function TExcelProcessors.GetCellFormat(ACol, ARow: integer) : TxlsDataFormat;
-var CellObj : TcxSSCellObject;
 begin
   with Excel.ActiveSheet.GetCellObject(ACol, ARow) do
   try
@@ -826,7 +735,7 @@ end;
 procedure TExcelProcessors.CollectDateRanges;
 var i : Integer;
     dates : TStringList;
-    lastDate, currDate : String;
+    currDate : String;
     dLastDate, dCurrDate : TDate;
 begin
   dates := TStringList.Create;

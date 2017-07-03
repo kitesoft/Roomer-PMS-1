@@ -166,7 +166,6 @@ end;
 
 procedure TFrmMessagesTemplates.RemoveThoseNotInList(MessageType: TRoomerMessageType; List : TStrings);
 var i, idx : Integer;
-    MessagePanel : TMessagePanel;
 begin
   for i := MessageList.Count - 1 downto 0 do
   begin

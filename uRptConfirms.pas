@@ -321,15 +321,8 @@ end;
 procedure TfrmrptConfirms.getAll(ClearData : boolean);
 var
   s    : string;
-  rset1,
-  rset2 : TRoomerDataset;
-
+  rset1: TRoomerDataSet;
   ExecutionPlan : TRoomerExecutionPlan;
-
-  startTick : integer;
-  stopTick  : integer;
-  SQLms     : integer;
-
 
   dateFrom : Tdate;
   dateTo   : TDate;
@@ -339,7 +332,6 @@ begin
   ExecutionPlan := d.roomerMainDataSet.CreateExecutionPlan;
   try
     zFirstTime := true;
-    startTick := GetTickCount;
 
 
     if zIsOneDay then
@@ -352,25 +344,7 @@ begin
       dateTo   := dtdateTo.date+1;
     end;
 
-
-//    s := '';
-//    s := s+ ' SELECT '#10;
-//    s := s+ '     tp.confirmdate '#10;
-//    s := s+ '   , IF(tp.datatype=1,SUM(tp.Amount),0) AS Turnover '#10;
-//    s := s+ '   , IF(tp.datatype=2,SUM(tp.Amount),0) AS payments '#10;
-//    s := s+ ' FROM '#10;
-//    s := s+ '   turnoverandpayments tp '#10;
-//    s := s+ ' WHERE '#10;
-//    s := s+ '   (tp.confirmDate >='+_db(dateFrom)+') AND (tp.confirmDate <'+_db(dateTo)+') '#10;
-//    s := s+ ' GROUP BY '#10;
-//    s := s+ '   tp.confirmdate '#10;
-//    s := s+ '  ,tp.DataType '#10;
-
-
-//469
-
-
-    s := s+ ' SELECT confirmdate '#10;
+   s := s+ ' SELECT confirmdate '#10;
     s := s+ '    , SUM(Turnover) AS Turnover '#10;
     s := s+ '    , SUM(payments) AS payments '#10;
     s := s+ '    , (SUM(Turnover) - SUM(payments)) AS diff '#10;
@@ -409,8 +383,6 @@ begin
     finally
       kbmConfirms_.EnableControls;
     end;
-    stopTick         := GetTickCount;
-    SQLms            := stopTick - startTick;
   finally
     ExecutionPlan.Free;
     screen.Cursor := crDefault;

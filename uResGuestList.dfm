@@ -314,9 +314,10 @@ object frmResGuestList: TfrmResGuestList
         TabOrder = 1
         Properties.CustomButtons.Buttons = <>
         LookAndFeel.NativeStyle = False
-        ClientRectBottom = 382
-        ClientRectRight = 1066
-        ClientRectTop = 0
+        ClientRectBottom = 380
+        ClientRectLeft = 2
+        ClientRectRight = 1064
+        ClientRectTop = 2
       end
       object cxGrid1: TcxGrid
         Left = 0

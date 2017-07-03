@@ -525,7 +525,7 @@ begin
       if LocateSpecificRecord('items', 'Item', Item) then
         if LocateSpecificRecord('itemtypes', 'ItemType', GetItems.FieldByName('ItemType').AsString) then
           if LocateSpecificRecord('vatcodes', 'VATCode', GetItemTypes.FieldByName('VATCode').AsString) then
-            result := Rate * (1 + (GetVAT.GetFloatValue(getVat.FieldByName('VATPercentage'))/100));
+            result := Rate * (1 + (getVat.FieldByName('VATPercentage').AsFloat)/100);
 end;
 
 function TGlobalSettings.GetRateExclusive(Item : String; Rate : Double) : Double;
@@ -534,7 +534,7 @@ begin
   if LocateSpecificRecord('items', 'Item', Item) then
     if LocateSpecificRecord('itemtypes', 'ItemType', GetItems.FieldByName('ItemType').AsString) then
       if LocateSpecificRecord('vatcodes', 'VATCode', GetItemTypes.FieldByName('VATCode').AsString) then
-        result := Rate / (1 + (GetVAT.GetFloatValue(getVat.FieldByName('VATPercentage'))/100));
+        result := Rate / (1 + (getVat.FieldByName('VATPercentage').AsFLoat)/100);
 end;
 
 function TGlobalSettings.GetIntegerValueOfFieldFromId(tableName : String; fieldName : String; id : Integer) : Integer;
@@ -691,9 +691,6 @@ procedure TGlobalSettings.FillRoomAndTypeGrid(agrRooms : TStringGrid;
                                               oFreeRooms : TFreeRooms = nil;
                                               zOneDay_dtDate : TDateTime = 0);
 var l : integer;
-    sTemp : String;
-    dtdate : TDateTime;
-    iNextOcc : integer;
     resultFilter : Boolean;
 
     FloorFilterActive,
@@ -1089,14 +1086,14 @@ function TGlobalSettings.LocateSpecificRecordAndGetValue(table, field, value, fi
 begin
   result := LocateSpecificRecord(table, field, value);
   if result then
-     resultingValue := tableslist.Dataset[table].GetFloatValue(tableslist.Dataset[table].FieldByName(fieldToGet))
+     resultingValue := tableslist.Dataset[table].FieldByName(fieldToGet).AsFloat;
 end;
 
 function TGlobalSettings.LocateSpecificRecordAndGetValue(table, field : String; value : Integer; fieldToGet: String; var resultingValue: Double): Boolean;
 begin
   result := LocateSpecificRecord(table, field, value);
   if result then
-     resultingValue := tableslist.Dataset[table].GetFloatValue(tableslist.Dataset[table].FieldByName(fieldToGet))
+     resultingValue := tableslist.Dataset[table].FieldByName(fieldToGet).AsFloat;
 end;
 
 procedure TGlobalSettings.PerformAuthenticationAssertion(Form: TForm);

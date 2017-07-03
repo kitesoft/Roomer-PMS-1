@@ -59,13 +59,11 @@ type
   private
     zSetDates : Boolean;
     zDateFrom : TDate;
-    lastDay   : Integer;
     zDateTo   : TDate;
     FCol: Integer;
     FRow: Integer;
     NumRoomTypes : Integer;
 
-    procedure FormDesignMode;
     procedure GetResData;
     procedure PrepareDates;
     procedure AddToTable(GroupsAndRoomTypeSet : TRoomerDataSet; invRefrence : String);
@@ -121,9 +119,6 @@ begin
   GetResData;
 end;
 
-procedure TFrmRptReservationStatusPerDay.FormDesignMode;
-begin
-end;
 
 procedure TFrmRptReservationStatusPerDay.FormShow(Sender: TObject);
 begin
@@ -210,7 +205,6 @@ begin
 
       DatesAndGroupsSet.First;
 
-      iLastRes := 0;
       dLastDate := 0;
       while NOT DatesAndGroupsSet.Eof do
       begin
@@ -276,7 +270,6 @@ procedure TFrmRptReservationStatusPerDay.grdReportDrawCell(Sender: TObject; ACol
 var grd : TAdvStringGrid;
     Borders : TCellBorders;
     PenColor : TColor;
-    NewRect : TRect;
 begin
   grd := TAdvStringGrid(Sender);
   with grd do
@@ -365,6 +358,7 @@ end;
 
 Function TFrmRptReservationStatusPerDay.GetCellType(C, R : Integer) : TCellType;
 begin
+  Result := 0;
   if Assigned(grdReport.Objects[C, R]) then
     result := TCellType(grdReport.Objects[C, R]);
 end;
@@ -475,12 +469,9 @@ end;
 
 procedure TFrmRptReservationStatusPerDay.AddTotalsToTable(dLastDate : TDate; StartAtRow, EndAtRow, WriteInRow : Integer);
 var ACol, ARow : Integer;
-    TotalCol : Integer;
-    CellType : TCellType;
 begin
   for ARow := StartAtRow to EndAtRow do
   begin
-    TotalCol := 0;
     for ACol := ROOMTYPES_START to grdReport.ColCount - 1 do
     begin
       SetCellValue(ACol, WriteInRow, IIF(StrToIntDef(grdReport.Cells[ACol, WriteInRow], 0) +

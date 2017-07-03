@@ -89,7 +89,6 @@ function MoveToRoomEnh2(RoomReservation : Integer; newRoom : string) : boolean;
 implementation
 
 uses
-//  uReservationWork,
   ud,
   uSqlDefinitions,
   uMain
@@ -97,7 +96,10 @@ uses
   , PrjConst
   , uRoomerDefinitions
   , uAvailabilityPerDay
-  , uReservationStateDefinitions, uSQLUtils;
+  , uReservationStateDefinitions
+  , uSQLUtils
+  , UITypes;
+
 {$R *.DFM}
 
 function ProvideARoom2(RoomReservation : Integer; aShowUncleanRooms: boolean = True) : String;
@@ -107,8 +109,7 @@ var
   status : TReservationState;
 
   rSet : TRoomerDataSet;
-
-  iReservation : Integer;
+  iReservation: integer;
   sRoom : string;
   sRoomType : string;
   sStatus : string;
@@ -124,7 +125,6 @@ var
 begin
   result := '';
   rSet := CreateNewDataSet;
-  iReservation := 0;
   try
     s := format(select_ProvideARoom2_MoveToRoomEnh2 , [RoomReservation]);
     hData.rSet_bySQL(rSet,s);
@@ -431,7 +431,6 @@ var
   CurrentRoomType,
   NewRoomType : String;
 
-  AvailabilityPerDay : TAvailabilityPerDay;
 begin
   if NOT d.roomerMainDataSet.OfflineMode then
   begin
@@ -448,7 +447,9 @@ begin
         ToDate := trunc(rSet.fieldbyname('rrDeparture').AsDateTime);
         CurrentRoomType := trim(rSet.fieldbyname('RoomType').AsString);
         CurrentRoom := trim(rSet.fieldbyname('Room').AsString);
-      end;
+      end
+      else
+        Exit;
     finally
       freeandnil(rSet);
     end;

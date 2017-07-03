@@ -242,7 +242,6 @@ end;
 procedure TRoomTypeRoomCount.FillList;
 var
   RoomTypeItem : TRoomTypeItem;
-  s : string;
   rSet : TRoomerDataSet;
 
   TypeCount : Integer;
@@ -256,57 +255,31 @@ begin
   if frmMain.OfflineMode then
     exit;
 
-  rSet := CreateNewDataSet;
-  try
-    s := '';
-//    s := s+ ' SELECT '+#10;
-//    s := s+ '     COUNT(Rooms.Room) AS TypeCount '+#10;
-//    s := s+ '   , Rooms.RoomType '+#10;
-//    s := s+ '   , RoomTypes.Description '+#10;
-//    s := s+ '   , RoomTypes.NumberGuests '+#10;
-//    s := s+ '   , RoomTypes.RoomTypeGroup '+#10;
-//    s := s+ ' FROM '+#10;
-//    s := s+ '   Rooms '+#10;
-//    s := s+ '     INNER JOIN RoomTypes ON Rooms.RoomType = RoomTypes.RoomType '+#10;
-//    s := s+ ' GROUP BY '+#10;
-//    s := s+ '      Rooms.RoomType '+#10;
-//    s := s+ '    , RoomTypes.Description '+#10;
-//    s := s+ '    , RoomTypes.NumberGuests '+#10;
-//    s := s+ '    , RoomTypes.RoomTypeGroup '+#10;
-//    s := s+ ' ORDER BY Rooms.roomType '+#10;
-
-
-//    s := format(select_objRoomTypeRoomCount_FillList,[]);
-//    hData.rSet_bySQL(rSet,s);
-
-    Rset := glb.RoomTypesSet;
-    Rset.First;
-    While not rSet.Eof do
+  Rset := glb.RoomTypesSet;
+  Rset.First;
+  While not rSet.Eof do
+  begin
+    if Rset['Active'] then
     begin
-      if Rset['Active'] then
-      begin
-        TypeCount            := GetNumberOfRoomsPerType(Rset.fieldbyname('RoomType').asString); // Rset.fieldbyname('TypeCount').asInteger;
-        RoomType             := Rset.fieldbyname('RoomType').asString;
-        Description          := Rset.fieldbyname('Description').asString;
-        NumberGuests         := Rset.fieldbyname('NumberGuests').asInteger;
-        RoomTypeGroup        := Rset.fieldbyname('RoomTypeGroup').asString;
+      TypeCount            := GetNumberOfRoomsPerType(Rset.fieldbyname('RoomType').asString); // Rset.fieldbyname('TypeCount').asInteger;
+      RoomType             := Rset.fieldbyname('RoomType').asString;
+      Description          := Rset.fieldbyname('Description').asString;
+      NumberGuests         := Rset.fieldbyname('NumberGuests').asInteger;
+      RoomTypeGroup        := Rset.fieldbyname('RoomTypeGroup').asString;
 
-        RoomTypeItem := TRoomTypeItem.Create;
-        try
-          RoomTypeItem.SetRoomTypeCount(TypeCount);
-          RoomTypeItem.SetRoomType(RoomType);
-          RoomTypeItem.SetDescription(Description);
-          RoomTypeItem.SetGuestCount(NumberGuests);
-          RoomTypeItem.SetRoomTypeGroup(RoomTypeGroup);
-          FRoomTypeList.Add(RoomTypeItem);
-        except
-           // logga
-        end;
+      RoomTypeItem := TRoomTypeItem.Create;
+      try
+        RoomTypeItem.SetRoomTypeCount(TypeCount);
+        RoomTypeItem.SetRoomType(RoomType);
+        RoomTypeItem.SetDescription(Description);
+        RoomTypeItem.SetGuestCount(NumberGuests);
+        RoomTypeItem.SetRoomTypeGroup(RoomTypeGroup);
+        FRoomTypeList.Add(RoomTypeItem);
+      except
+         // logga
       end;
-      rSet.Next;
     end;
-  finally
-//    freeandNil(rSet);
+    rSet.Next;
   end;
 end;
 

@@ -889,7 +889,6 @@ object frmGuestProfile2: TfrmGuestProfile2
     object prLink_grData: TdxGridReportLink
       Active = True
       Component = grData
-      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -902,8 +901,7 @@ object frmGuestProfile2: TfrmGuestProfile2
       PrinterPage.PageSize.Y = 297000
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
-      ReportDocument.CreationDate = 42909.399565995370000000
-      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
+      ReportDocument.CreationDate = 42919.407424108790000000
       BuiltInReportLink = True
     end
   end

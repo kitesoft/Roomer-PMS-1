@@ -84,6 +84,7 @@ function TFormulaVatCalculator.CalcVatForParameters(aParams: TVATFormulaParamete
 var
   lParser: TRoomerMathParser;
 begin
+  Result := 0;
   lParser := TRoomerMathParser.Create(nil);
   try
     lParser.Expression := Substitutedformula(aParams);

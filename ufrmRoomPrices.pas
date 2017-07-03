@@ -679,7 +679,6 @@ end;
 procedure TfrmRoomPrices.ApplyChanges;
 var
   RoomReservation: Integer;
-  AveragePrice: double;
   RateCount: Integer;
   Guests: Integer;
   ChildrenCount: Integer;
@@ -715,7 +714,6 @@ begin
       // update values
       // reservation   := mRoomRes.FieldByName('Reservation').Asinteger;
       RoomReservation := mRoomRes.FieldByName('roomreservation').asinteger;
-      AveragePrice := mRoomRes.FieldByName('AveragePrice').asfloat;
       RateCount := mRoomRes.FieldByName('rateCount').asinteger;
       Guests := mRoomRes.FieldByName('guests').asinteger;
       ChildrenCount := mRoomRes.FieldByName('childrenCount').asinteger;

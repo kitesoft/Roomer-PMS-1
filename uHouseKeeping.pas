@@ -230,11 +230,12 @@ type
     zLocationList : string;
 
 
-    procedure WndProc(var Message: TMessage); override;
     procedure UpdateAll;
     procedure GetData(insert : boolean);
     procedure CreateCross;
     procedure DrawAsNotApplicable(var ADone: Boolean; ACanvas: TcxCanvas; AViewInfo: TcxGridTableDataCellViewInfo);
+  protected
+    procedure WndProc(var Message: TMessage); override;
   public
     { Public declarations }
     zDate : Tdate;
@@ -326,7 +327,6 @@ end;
 
 procedure TfrmHouseKeeping.tvVarDepartureCustomDrawCell(Sender: TcxCustomGridTableView; ACanvas: TcxCanvas; AViewInfo: TcxGridTableDataCellViewInfo;
   var ADone: Boolean);
-var ARect: Trect;
 begin
   if TRUNC(mvar_.FieldByName('Departure').AsDateTime) <= 1 then
   begin
@@ -681,10 +681,6 @@ begin
   begin
     selLocation := '('+zLocationList+')';
   end;
-
-  Arrival     := 1;
-  Departure   := 1;
-  Reservation := 0;
 
   if mVar_.active then mVar_.close;
   mVar_.Open;

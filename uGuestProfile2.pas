@@ -329,7 +329,8 @@ uses
   , uCountries
   , uAlerts
   , uUtils
-  , uSQLUtils;
+  , uSQLUtils
+  , UITypes;
 
 {$R *.dfm}
 

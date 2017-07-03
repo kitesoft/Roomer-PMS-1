@@ -234,10 +234,10 @@ begin
 
       else // Stockitems have changed, update or insert new records
       begin
-        for lStockItem in lStockItemList do
-        begin
-          // todo
-        end;
+//        for lStockItem in lStockItemList do
+//        begin
+//          // todo
+//        end;
       end;
 
       // move focus to count column

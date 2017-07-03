@@ -108,6 +108,7 @@
         <Base>true</Base>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base)'!=''">
+        <DCC_NO_RETVAL>error</DCC_NO_RETVAL>
         <VerInfo_PreRelease>true</VerInfo_PreRelease>
         <VerInfo_Debug>true</VerInfo_Debug>
         <DCC_Define>roomerstore;$(DCC_Define)</DCC_Define>
@@ -223,9 +224,6 @@
         <DCC_DcuOutput>_dcu\debug</DCC_DcuOutput>
         <DCC_DebugDCUs>false</DCC_DebugDCUs>
         <DCC_BplOutput> </DCC_BplOutput>
-        <VerInfo_MinorVer>0</VerInfo_MinorVer>
-        <VerInfo_MajorVer>2</VerInfo_MajorVer>
-        <VerInfo_Release>0</VerInfo_Release>
         <VerInfo_AutoGenVersion>false</VerInfo_AutoGenVersion>
         <DCC_SYMBOL_PLATFORM>false</DCC_SYMBOL_PLATFORM>
         <VerInfo_Locale>1033</VerInfo_Locale>

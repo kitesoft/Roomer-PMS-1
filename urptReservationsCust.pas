@@ -187,7 +187,6 @@ type
     procedure dtDateFromChange(Sender : TObject);
     procedure FormCreate(Sender : TObject);
     procedure FormClose(Sender : TObject; var Action : TCloseAction);
-    procedure btnJumpToRoomClick(Sender: TObject);
     procedure edFilterChange(Sender: TObject);
     procedure btnClearClick(Sender: TObject);
     procedure sButton8Click(Sender: TObject);
@@ -263,8 +262,6 @@ uses
 
 procedure OpenReportReservationsCust(embedPanel : TsPanel = nil; WindowCloseEvent : TNotifyEvent = nil);
 var
-  sRoom: string;
-  aDate: Tdate;
   _frmRptReservations : TfrmRptReservationsCust;
 begin
   // **
@@ -430,7 +427,6 @@ end;
 procedure TfrmRptReservationsCust.ShowData;
 var
   y, m, d : word;
-  idx : integer;
   lastDay : integer;
 begin
   zSetDates := false;
@@ -441,21 +437,12 @@ begin
   cbxMonth.ItemIndex := zMonth;
 
   cbxYear.ItemIndex := cbxYear.Items.IndexOf(inttostr(zYear));
-//  idx := zYear - 2010;
-//  if (idx < cbxYear.Items.Count - 1) and (idx > 0) then
-//  begin
-//    cbxYear.ItemIndex := idx;
-//  end;
-
   zDateFrom := encodeDate(y, m, 1);
   lastDay := DaysInAMonth(y, m);
   zDateTo := encodeDate(y, m, lastDay);
   dtDateFrom.Date := zDateFrom;
   dtDateTo.Date := zDateTo;
   zSetDates := true;
-
-//  btnHagstofaReport.Enabled := true;
-
   //**
   zRoomReservationsList := '';
   isFirstTime := false;
@@ -518,18 +505,6 @@ begin
   rrgetData;
 end;
 
-procedure TfrmRptReservationsCust.btnJumpToRoomClick(Sender: TObject);
-var
-  iRoomReservation : integer;
-  iReservation : integer;
-begin
-    iReservation     := kbmRooms.fieldbyname('Reservation').AsInteger;
-    iRoomReservation := kbmRooms.fieldbyname('RoomReservation').AsInteger;
-    zRoom := kbmRooms.fieldbyname('room').Asstring;
-    zArrival := kbmRooms.fieldbyname('rrArrival').AsDateTime;
-end;
-
-
 procedure TfrmRptReservationsCust.sButton2Click(Sender: TObject);
 var
   sFilename : string;
@@ -577,12 +552,9 @@ end;
 procedure TfrmRptReservationsCust.rrGetData;
 var
   s    : string;
-  rset1,
-  rset2,
-  rset3 : TRoomerDataset;
+  rset1 : TRoomerDataset;
   ExecutionPlan : TRoomerExecutionPlan;
 
-  dtTmp : TdateTime;
 
   rvList : string;
 

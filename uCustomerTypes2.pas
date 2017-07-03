@@ -172,7 +172,6 @@ type
     zSortStr         : string;
     zIsAddRow        : boolean;
 
-    Procedure fillGridFromDataset(iGoto : integer);
     procedure fillHolder;
     procedure changeAllowgridEdit;
     Procedure chkFilter;
@@ -204,7 +203,9 @@ uses
     uD
   , prjConst
   , uSqlDefinitions
+  , UITypes
   ;
+
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -238,36 +239,6 @@ end;
                     { Private declarations }
 ///////////////////////////////////////////////////////////////////////
 
-
-Procedure TfrmCustomerTypes2.fillGridFromDataset(iGoto : integer);
-var
-  s    : string;
-  rSet : TRoomerDataSet;
-begin
-  zFirstTime := true;
-  if zSortStr = '' then zSortStr := 'ID';
-  rSet := CreateNewDataSet;
-  try
-    s := format(select_CustomerTypes, [zSortStr]);
-    if rSet_bySQL(rSet,s) then
-    begin
-      if m_.active then m_.Close;
-      m_.LoadFromDataSet(rSet);
-      if iGoto = 0 then
-      begin
-        m_.First;
-      end else
-      begin
-        try
-          m_.Locate('ID',iGoto,[]);
-        except
-        end;
-      end;
-    end;
-  finally
-    freeandnil(rSet);
-  end;
-end;
 
 procedure TfrmCustomerTypes2.fillHolder;
 begin

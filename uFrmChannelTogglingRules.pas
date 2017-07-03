@@ -91,7 +91,6 @@ type
 
     descriptionFormat: String;
 
-    procedure WriteDescription;
     procedure SetEdit(_on: Boolean);
     procedure LoadList;
     procedure PrepareWidgets;
@@ -197,7 +196,7 @@ end;
 procedure TfrmChannelTogglingRules.btnDownClick(Sender: TObject);
 var
   currentItem, otherItem: TChanneltogglingrulesEntity;
-  i, iCurrPriority, iOtherPriority, iCurrIndex: Integer;
+  iCurrPriority, iOtherPriority, iCurrIndex: Integer;
 begin
   currentItem := SelectedTogglingRule;
   iCurrIndex := lbRules.ItemIndex;
@@ -264,7 +263,6 @@ var
   conflictedRules: String;
   savedEntity: TChanneltogglingrulesEntity;
   rule: TChanneltogglingrulesEntity;
-  iCurrIndex: Integer;
 begin
   if editingId = -2 then
   begin
@@ -281,7 +279,6 @@ begin
     savedEntity := d.roomerMainDataSet.
       Channeltogglingrules_Entities_SaveEntity(rule);
     SetLength(rulesList, Length(rulesList) + 1);
-    iCurrIndex := High(rulesList);
     rulesList[High(rulesList)] := savedEntity;
     ShowListOfRules;
   end
@@ -308,7 +305,6 @@ begin
       getSelectedChannelCodes);
     lbRules.Items.Objects[editingId] := savedEntity;
     lbRules.Items[editingId] := savedEntity.description;
-    iCurrIndex := editingId;
     d.roomerMainDataSet.Channeltogglingrules_Entities_UpdateEntity(savedEntity);
   end;
 
@@ -347,7 +343,7 @@ end;
 procedure TfrmChannelTogglingRules.btnUpClick(Sender: TObject);
 var
   currentItem, otherItem: TChanneltogglingrulesEntity;
-  i, iCurrPriority, iOtherPriority, iCurrIndex: Integer;
+  iCurrPriority, iOtherPriority, iCurrIndex: Integer;
 begin
   currentItem := SelectedTogglingRule;
   iCurrIndex := lbRules.ItemIndex;
@@ -786,10 +782,6 @@ procedure TfrmChannelTogglingRules.PrepareWidgets;
 begin
 end;
 
-procedure TfrmChannelTogglingRules.WriteDescription;
-begin
-  //
-end;
 
 procedure TfrmChannelTogglingRules.SetEdit(_on: Boolean);
 begin
@@ -862,8 +854,6 @@ begin
 end;
 
 procedure TfrmChannelTogglingRules.LoadList;
-var
-  i: Integer;
 begin
   ClearList;
   rulesList := d.roomerMainDataSet.SystemListTogglingRules(False);

@@ -1944,9 +1944,14 @@ end;
 
 function TRoomerDataSet.SwapHotel(hotelId: String; var username, password: String): boolean;
 begin
-  Login(hotelId, FUsername, FPassword, FAppVersion);
-  username := FUsername;
-  password := FPassword;
+  Result := true;
+  try
+    Login(hotelId, FUsername, FPassword, FAppVersion);
+    username := FUsername;
+    password := FPassword;
+  except
+    Result := False;
+  end;
 end;
 
 function TRoomerDataSet.HashedPassword(password: String): String;

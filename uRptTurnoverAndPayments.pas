@@ -472,11 +472,7 @@ type
     globals: recTurnoverAndPaymentsGlobals;
 
     procedure getAll(clearData: boolean);
-    function StatusInStr(inField: string): string;
-    procedure UpdateTurnover;
     function CreateSQLInText(list: TstringList): string;
-    procedure UpdateTurnoverItemPriceChange;
-    procedure clearAllData;
     procedure getPrevius(confirmDate: TdateTime; clearData: boolean);
     procedure getReport;
 
@@ -495,7 +491,8 @@ implementation
 
 uses
   uAppGlobal, uD, uDReportData, uRoomerLanguage, uReservationProfile, uFinishedInvoices2,
-  uInvoice, uRptConfirms, uDImages, uSQLUtils;
+  uInvoice, uRptConfirms, uDImages, uSQLUtils,
+  UItypes;
 
 function OpenRptTurnoverAndPayments: boolean;
 begin
@@ -537,10 +534,6 @@ begin
     delete(s, length(s), 1);
     result := '(' + s + ')';
   end;
-end;
-
-function TfrmRptTurnoverAndPayments.StatusInStr(inField: string): string;
-begin
 end;
 
 procedure TfrmRptTurnoverAndPayments.tvInvoiceHeadsihAmountNoTaxGetProperties
@@ -770,12 +763,6 @@ end;
 procedure TfrmRptTurnoverAndPayments.getReport;
 var
   aReport: TppReport;
-  sFilter: string;
-  s: string;
-  sortField: string;
-  isDescending: boolean;
-  mReport: TkbmMemTable;
-  iCount: integer;
 begin
 
   if d.mrptTurnover.active then
@@ -811,27 +798,6 @@ begin
     d.kbmTurnover_.enableControls;
     d.kbmPayments_.enableControls;
   end;
-end;
-
-procedure TfrmRptTurnoverAndPayments.clearAllData;
-begin
-  d.kbmTurnover_.Close;
-  d.kbmPayments_.Close;
-  d.kbmRoomsDate_.Close;
-  d.kbmRoomRentOnInvoice_.Close;
-  d.mInvoiceHeads.Close;
-  d.mInvoiceLines.Close;
-  DReportData.kbmUnconfirmedInvoicelines_.Close;
-  d.kbmInvoiceLinePriceChange_.Close;
-
-  d.kbmTurnover_.open;
-  d.kbmPayments_.open;
-  d.kbmRoomsDate_.open;
-  d.kbmRoomRentOnInvoice_.open;
-  d.mInvoiceHeads.open;
-  d.mInvoiceLines.open;
-  DReportData.kbmUnconfirmedInvoicelines_.open;
-  d.kbmInvoiceLinePriceChange_.open;
 end;
 
 procedure TfrmRptTurnoverAndPayments.chkGetUnconfirmedClick(Sender: TObject);
@@ -879,9 +845,6 @@ begin
 end;
 
 procedure TfrmRptTurnoverAndPayments.getAll(clearData: boolean);
-var
-  rSet: TRoomerDataset;
-  s: string;
 begin
   screen.Cursor := crDefault;
   try
@@ -948,19 +911,10 @@ begin
   rlabUser.caption := s;
 end;
 
-procedure TfrmRptTurnoverAndPayments.UpdateTurnover;
-begin
-end;
-
-procedure TfrmRptTurnoverAndPayments.UpdateTurnoverItemPriceChange;
-begin
-end;
-
 procedure TfrmRptTurnoverAndPayments.btnConfirmClick(Sender: TObject);
 var
   s: string;
   iCount: integer;
-  ok: boolean;
 begin
   iCount := d.kbmTurnover_.recordcount + d.kbmPayments_.recordcount +
     d.mInvoiceHeads.recordcount + d.kbmRoomRentOnInvoice_.recordcount;
@@ -1072,9 +1026,6 @@ var
   iRoomReservation: integer;
   iReservation: integer;
 
-  Arrival: Tdate;
-  Departure: Tdate;
-
 begin
   invoicenumber := d.kbmpaymentList_.FieldByName('InvoiceNumber').asinteger;
   if invoicenumber > 0 then
@@ -1083,10 +1034,6 @@ begin
   end
   else
   begin
-    iRoomReservation := 0;
-    iReservation := 0;
-    Arrival := Date;
-    Departure := Date;
     iReservation := d.kbmpaymentList_.FieldByName('Reservation').asinteger;
     iRoomReservation := d.kbmpaymentList_.FieldByName('RoomReservation')
       .asinteger;
@@ -1115,8 +1062,6 @@ var
   iRoomReservation: integer;
   iReservation: integer;
 
-  Arrival: Tdate;
-  Departure: Tdate;
 begin
   invoicenumber := d.kbmRoomsDate_.FieldByName('InvoiceNumber').asinteger;
   if invoicenumber > 0 then
@@ -1125,10 +1070,6 @@ begin
   end
   else
   begin
-    iRoomReservation := 0;
-    iReservation := 0;
-    Arrival := Date;
-    Departure := Date;
     iReservation := d.kbmRoomsDate_.FieldByName('Reservation').asinteger;
     iRoomReservation := d.kbmRoomsDate_.FieldByName('RoomReservation').asinteger;
     EditInvoice(iReservation, iRoomReservation, 0, 0, false);
@@ -1154,8 +1095,6 @@ var
   iRoomReservation: integer;
   iReservation: integer;
 
-  Arrival: Tdate;
-  Departure: Tdate;
 begin
   invoicenumber := DReportData.kbmUnconfirmedInvoicelines_.FieldByName('InvoiceNumber').asinteger;
   if invoicenumber > 0 then
@@ -1164,10 +1103,6 @@ begin
   end
   else
   begin
-    iRoomReservation := 0;
-    iReservation := 0;
-    Arrival := Date;
-    Departure := Date;
     iReservation := DReportData.kbmUnconfirmedInvoicelines_.FieldByName('Reservation').asinteger;
     iRoomReservation := DReportData.kbmUnconfirmedInvoicelines_.FieldByName('RoomReservation').asinteger;
     EditInvoice(iReservation, iRoomReservation, 0, 0, false);
@@ -1217,9 +1152,6 @@ var
   iRoomReservation: integer;
   iReservation: integer;
 
-  Arrival: Tdate;
-  Departure: Tdate;
-
 begin
   invoicenumber := d.mInvoiceHeads.FieldByName('InvoiceNumber').asinteger;
   if invoicenumber > 0 then
@@ -1228,10 +1160,6 @@ begin
   end
   else
   begin
-    iRoomReservation := 0;
-    iReservation := 0;
-    Arrival := Date;
-    Departure := Date;
     iReservation := d.mInvoiceHeads.FieldByName('Reservation').asinteger;
     iRoomReservation := d.mInvoiceHeads.FieldByName('RoomReservation')
       .asinteger;
@@ -1277,22 +1205,11 @@ procedure TfrmRptTurnoverAndPayments.getPrevius(confirmDate: TdateTime;
   clearData: boolean);
 var
   s: string;
-  rset1, rset2, rset3, rset4, rset5, rset6, rset7, rset8, rset9,
-    rset10: TRoomerDataset;
+  rset1, rset2, rset3, rset4, rset5, rset6, rset7: TRoomerDataset;
 
   ExecutionPlan: TRoomerExecutionPlan;
 
-  startTick: integer;
-  stopTick: integer;
-  SQLms: integer;
-
-  statusIn: string;
-
-  dtTmp: TdateTime;
   lst: TstringList;
-
-  dateFrom: Tdate;
-  dateTo: Tdate;
 
   invoicelist: string;
 
@@ -1305,14 +1222,11 @@ begin
     freeandnil(lst);
   end;
 
-  // showmessage(zInvoicelist);
-
   if clearData then
     d.TurnoverAndPayemnetsClearAllData(true);
 
   ExecutionPlan := d.roomerMainDataSet.CreateExecutionPlan;
   try
-    startTick := GetTickCount;
 
     s := '';
     s := s + ' SELECT '#10;
@@ -1643,9 +1557,6 @@ begin
       d.mInvoiceLines.enableControls;
     end;
 
-    stopTick := GetTickCount;
-    SQLms := stopTick - startTick;
-    //labExecuteTime.caption := inttostr(SQLms);
 
   finally
     ExecutionPlan.Free;
@@ -1711,9 +1622,6 @@ var
   invoicenumber: integer;
   iRoomReservation: integer;
   iReservation: integer;
-
-  Arrival: Tdate;
-  Departure: Tdate;
 begin
   invoicenumber := d.kbmRoomRentOnInvoice_.FieldByName('InvoiceNumber').asinteger;
   if invoicenumber > 0 then
@@ -1722,10 +1630,6 @@ begin
   end
   else
   begin
-    iRoomReservation := 0;
-    iReservation := 0;
-    Arrival := Date;
-    Departure := Date;
     iReservation := d.kbmRoomRentOnInvoice_.FieldByName('Reservation').asinteger;
     iRoomReservation := d.kbmRoomRentOnInvoice_.FieldByName('RoomReservation')
       .asinteger;
