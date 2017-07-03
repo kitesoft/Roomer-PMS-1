@@ -341,8 +341,8 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
       object chkShowPackage: TsCheckBox
         Left = 724
         Top = 167
-        Width = 111
-        Height = 20
+        Width = 119
+        Height = 17
         Caption = 'Package on invoice'
         Checked = True
         State = cbChecked
@@ -1062,9 +1062,6 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
             TabOrder = 1
             OnClick = btnClickDropDown
             SkinData.SkinSection = 'BUTTON'
-            ExplicitLeft = 3
-            ExplicitTop = 43
-            ExplicitWidth = 130
           end
           object btnAddRoom: TsButton
             AlignWithMargins = True
@@ -1076,9 +1073,6 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
             Align = alTop
             TabOrder = 0
             SkinData.SkinSection = 'BUTTON'
-            ExplicitLeft = 3
-            ExplicitTop = 2
-            ExplicitWidth = 130
           end
         end
         object pnlItemButtons: TsPanel
@@ -1088,8 +1082,6 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
           Height = 89
           Align = alLeft
           TabOrder = 1
-          ExplicitLeft = 147
-          ExplicitTop = -1
           object btnMoveItem: TsButton
             AlignWithMargins = True
             Left = 4
@@ -1103,8 +1095,6 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
             TabOrder = 0
             OnClick = btnClickDropDown
             SkinData.SkinSection = 'BUTTON'
-            ExplicitLeft = 2
-            ExplicitTop = 43
           end
           object btnAddItem: TsButton
             AlignWithMargins = True
@@ -1116,9 +1106,6 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
             Align = alTop
             TabOrder = 1
             SkinData.SkinSection = 'BUTTON'
-            ExplicitLeft = 6
-            ExplicitTop = 2
-            ExplicitWidth = 130
           end
         end
         object pnlButtonRight: TsPanel
@@ -1168,7 +1155,6 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
               Align = alRight
               TabOrder = 1
               SkinData.SkinSection = 'BUTTON'
-              ExplicitTop = 1
             end
             object btnDeleteDownpayment: TsButton
               AlignWithMargins = True
@@ -1204,9 +1190,6 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
             Align = alBottom
             TabOrder = 0
             SkinData.SkinSection = 'BUTTON'
-            ExplicitLeft = 6
-            ExplicitTop = 48
-            ExplicitWidth = 130
           end
           object btnRemoveSelected: TsButton
             AlignWithMargins = True
@@ -1218,9 +1201,6 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
             Align = alTop
             TabOrder = 1
             SkinData.SkinSection = 'BUTTON'
-            ExplicitLeft = 6
-            ExplicitTop = 6
-            ExplicitWidth = 130
           end
         end
         object sPanel1: TsPanel
@@ -1241,9 +1221,6 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
             TabOrder = 0
             OnClick = btnReservationNotesClick
             SkinData.SkinSection = 'BUTTON'
-            ExplicitLeft = 5
-            ExplicitTop = 43
-            ExplicitWidth = 130
           end
           object btnShowOnInvoice: TsButton
             AlignWithMargins = True
@@ -1258,9 +1235,6 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
             TabOrder = 1
             OnClick = btnClickDropDown
             SkinData.SkinSection = 'BUTTON'
-            ExplicitLeft = 2
-            ExplicitTop = 6
-            ExplicitWidth = 249
           end
         end
       end
@@ -1412,7 +1386,6 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
           SelectionTextColor = clHighlightText
           SortSettings.DefaultFormat = ssAutomatic
           Version = '8.2.4.1'
-          ExplicitLeft = 17
           ColWidths = (
             24
             28

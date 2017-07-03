@@ -3153,22 +3153,21 @@ begin
     sRoomRentItem := _trimlower(g.qRoomRentItem);
     sDiscountItem := _trimlower(g.qDiscountItem);
 
-    actMoveRoomToTemp.Enabled := ((sCurrentItem = sRoomRentItem) OR (sCurrentItem = sDiscountItem)) OR
-      (AnyRowChecked AND IsRoomSelected);
-    btnMoveRoom.Enabled := actMoveRoomToTemp.Enabled;
+    actMoveRoomToTemp.Enabled := false; // ((sCurrentItem = sRoomRentItem) OR (sCurrentItem = sDiscountItem)) OR (AnyRowChecked AND IsRoomSelected);
+    btnMoveRoom.Enabled := ((sCurrentItem = sRoomRentItem) OR (sCurrentItem = sDiscountItem)) OR (AnyRowChecked AND IsRoomSelected);
 
-    actMoveItemToTemp.Enabled := AnyRowChecked OR ((NOT isSystemLine(lRow)) AND (sCurrentItem <> ''));
-    actMoveItemToGroupInvoice.Enabled := actMoveItemToTemp.Enabled OR AnyRowChecked;
-    actRemoveSelected.Enabled := actMoveItemToTemp.Enabled OR AnyRowChecked;
-    btnMoveItem.Enabled := actMoveItemToTemp.Enabled;
+    actMoveItemToTemp.Enabled := false; //AnyRowChecked OR ((NOT isSystemLine(lRow)) AND (sCurrentItem <> ''));
+    actMoveItemToGroupInvoice.Enabled := AnyRowChecked OR ((NOT isSystemLine(lRow)) AND (sCurrentItem <> ''));
+    actRemoveSelected.Enabled := AnyRowChecked OR ((NOT isSystemLine(lRow)) AND (sCurrentItem <> ''));
+    btnMoveItem.Enabled := AnyRowChecked OR ((NOT isSystemLine(lRow)) AND (sCurrentItem <> ''));
   end
   else
   begin
-    actMoveItemToTemp.Enabled := AnyRowChecked;
-    actMoveItemToGroupInvoice.Enabled := actMoveItemToTemp.Enabled;
-    btnMoveRoom.Enabled := actMoveItemToTemp.Enabled AND IsRoomSelected;
-    actRemoveSelected.Enabled := actMoveItemToTemp.Enabled;
-    btnMoveItem.Enabled := actMoveItemToTemp.Enabled;
+    actMoveItemToTemp.Enabled := false; //AnyRowChecked;
+    actMoveItemToGroupInvoice.Enabled := AnyRowChecked;
+    btnMoveRoom.Enabled := AnyRowChecked AND IsRoomSelected;
+    actRemoveSelected.Enabled := AnyRowChecked;
+    btnMoveItem.Enabled := AnyRowChecked;
   end;
 
   if FStayTaxEnabled then
