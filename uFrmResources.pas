@@ -168,6 +168,7 @@ uses  uD
     , uFrmEditResourceProperties
     , System.IOUtils
     , Spring.Collections
+    , UITypes
     ;
 
 procedure StaticResources(const sCaption, keyString, access : String;

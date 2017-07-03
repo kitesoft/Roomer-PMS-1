@@ -560,7 +560,7 @@ implementation
 
 uses
   uAppGlobal, uD, uDReportData, uRoomerLanguage, uReservationProfile, uFinishedInvoices2,
-  uInvoice, uRptConfirms, uDImages, uSQLUtils;
+  uInvoice, uRptConfirms, uDImages, uSQLUtils, UITypes;
 
 function OpenRptTurnoverAndPayments2: boolean;
 var _frmRptTurnoverAndPayments2 : TfrmRptTurnoverAndPayments2;
@@ -938,10 +938,6 @@ var
   invoicenumber: integer;
   iRoomReservation: integer;
   iReservation: integer;
-
-  Arrival: Tdate;
-  Departure: Tdate;
-
 begin
   invoicenumber := d.kbmpaymentList_.FieldByName('InvoiceNumber').asinteger;
   if invoicenumber > 0 then
@@ -976,9 +972,6 @@ var
   invoicenumber: integer;
   iRoomReservation: integer;
   iReservation: integer;
-
-  Arrival: Tdate;
-  Departure: Tdate;
 begin
   invoicenumber := d.kbmRoomsDate_.FieldByName('InvoiceNumber').asinteger;
   if invoicenumber > 0 then
@@ -1012,9 +1005,6 @@ var
   invoicenumber: integer;
   iRoomReservation: integer;
   iReservation: integer;
-
-  Arrival: Tdate;
-  Departure: Tdate;
 begin
   invoicenumber := DReportData.kbmUnconfirmedInvoicelines_.FieldByName('InvoiceNumber').asinteger;
   if invoicenumber > 0 then
@@ -1066,9 +1056,6 @@ var
   invoicenumber: integer;
   iRoomReservation: integer;
   iReservation: integer;
-
-  Arrival: Tdate;
-  Departure: Tdate;
 
 begin
   invoicenumber := d.mInvoiceHeads.FieldByName('InvoiceNumber').asinteger;
@@ -1701,9 +1688,6 @@ var
   invoicenumber: integer;
   iRoomReservation: integer;
   iReservation: integer;
-
-  Arrival: Tdate;
-  Departure: Tdate;
 begin
   invoicenumber := d.kbmRoomRentOnInvoice_.FieldByName('InvoiceNumber').asinteger;
   if invoicenumber > 0 then

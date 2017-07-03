@@ -497,7 +497,6 @@ end;
 procedure TfrmRptDownPayments.ShowData;
 var
   y, m, d : word;
-  idx : integer;
   lastDay : integer;
 begin
   zSetDates := false;
@@ -677,7 +676,6 @@ end;
 
 procedure TfrmRptDownPayments.sButton1Click(Sender: TObject);
 var
-  iRoomReservation : integer;
   iReservation : integer;
 begin
 

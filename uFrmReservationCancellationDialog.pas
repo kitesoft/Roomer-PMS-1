@@ -55,7 +55,8 @@ uses uReservationEmailingDialog,
      hData,
      uUtils,
      uRoomerConfirmationDialogs,
-     PrjConst
+     PrjConst,
+     UITypes
      ;
 
 
