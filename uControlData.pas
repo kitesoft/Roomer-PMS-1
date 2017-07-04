@@ -502,7 +502,7 @@ type
     LMDGroupBox25: TsGroupBox;
     Label64: TsLabel;
     labRackCustomerName: TsLabel;
-    sGroupBox2: TsGroupBox;
+    gbxExcludeRoomStatusFromStats: TsGroupBox;
     chkExcluteWaitingList: TsCheckBox;
     chkExcluteAllotment: TsCheckBox;
     chkExcluteOrder: TsCheckBox;

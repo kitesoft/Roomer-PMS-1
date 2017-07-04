@@ -8554,6 +8554,7 @@ begin
   except
     g.qExcluteWaitingList := False;
   end;
+
   try
     g.qExcluteAllotment := rSet.FieldByName('ExcluteAllotment').asBoolean;
   except

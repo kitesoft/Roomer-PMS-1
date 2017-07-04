@@ -389,7 +389,6 @@ inherited frmInvoiceList2: TfrmInvoiceList2
         TabOrder = 3
         OnClick = btnViewInvoiceClick
         SkinData.SkinSection = 'BUTTON'
-        ExplicitTop = 7
       end
       object btnPrint: TsButton
         AlignWithMargins = True

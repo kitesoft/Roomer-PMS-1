@@ -322,7 +322,7 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
     Top = 0
     Width = 1128
     Height = 572
-    ActivePage = taReservation
+    ActivePage = tabSelectType
     Align = alClient
     TabOrder = 2
     OnChange = pgcMainChange
@@ -781,8 +781,6 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                 end
                 inherited edCountryCode: TsEdit
                   Height = 20
-                  ExplicitTop = -1
-                  ExplicitHeight = 20
                 end
                 inherited btnGetCountry: TsButton
                   Width = 23

@@ -3,7 +3,7 @@ object frmDayNotes: TfrmDayNotes
   Top = 230
   Caption = 'Live Data'
   ClientHeight = 629
-  ClientWidth = 821
+  ClientWidth = 936
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -25,9 +25,9 @@ object frmDayNotes: TfrmDayNotes
   object DateLabel1: TDateLabel
     Left = 480
     Top = 328
-    Width = 50
+    Width = 44
     Height = 13
-    Caption = '30-3-2017'
+    Caption = '4-7-2017'
     DateTimeFormat = 'd/m/yyyy'
     Version = '1.1.0.0'
     RefreshInterval = 0
@@ -36,14 +36,14 @@ object frmDayNotes: TfrmDayNotes
   object LMDStatusBar1: TStatusBar
     Left = 0
     Top = 610
-    Width = 821
+    Width = 936
     Height = 19
     Panels = <>
   end
   object pageMain: TsPageControl
     Left = 0
     Top = 0
-    Width = 821
+    Width = 936
     Height = 610
     ActivePage = tabStatus
     Align = alClient
@@ -60,7 +60,7 @@ object frmDayNotes: TfrmDayNotes
       object sGroupBox1: TsGroupBox
         Left = 0
         Top = 0
-        Width = 813
+        Width = 928
         Height = 113
         Margins.Left = 10
         Margins.Top = 10
@@ -74,7 +74,7 @@ object frmDayNotes: TfrmDayNotes
           AlignWithMargins = True
           Left = 5
           Top = 18
-          Width = 803
+          Width = 918
           Height = 90
           Align = alClient
           Alignment = taCenter
@@ -113,8 +113,8 @@ object frmDayNotes: TfrmDayNotes
       ImageIndex = 3
       object Panel3: TsPanel
         Left = 0
-        Top = 33
-        Width = 813
+        Top = 81
+        Width = 928
         Height = 31
         Align = alTop
         BevelOuter = bvNone
@@ -220,15 +220,6 @@ object frmDayNotes: TfrmDayNotes
           Font.Style = []
           ExplicitHeight = 16
         end
-        object edRefresh: TEdit
-          Left = 944
-          Top = 2
-          Width = 321
-          Height = 21
-          TabOrder = 0
-          Visible = False
-          OnChange = edRefreshChange
-        end
         object edDaysToShow: TsSpinEdit
           AlignWithMargins = True
           Left = 99
@@ -245,7 +236,7 @@ object frmDayNotes: TfrmDayNotes
           Font.Style = []
           NumbersOnly = True
           ParentFont = False
-          TabOrder = 1
+          TabOrder = 0
           Text = '1'
           OnChange = edDaysToShowPropertiesChange
           SkinData.SkinSection = 'EDIT'
@@ -263,29 +254,29 @@ object frmDayNotes: TfrmDayNotes
       end
       object cxPageControl1: TcxPageControl
         Left = 0
-        Top = 64
-        Width = 813
-        Height = 511
+        Top = 112
+        Width = 928
+        Height = 463
         Align = alClient
         TabOrder = 1
         Properties.CustomButtons.Buttons = <>
         LookAndFeel.NativeStyle = False
-        ClientRectBottom = 509
+        ClientRectBottom = 461
         ClientRectLeft = 2
-        ClientRectRight = 811
+        ClientRectRight = 926
         ClientRectTop = 2
       end
       object Panel4: TsPanel
         Left = 0
         Top = 0
-        Width = 813
-        Height = 33
+        Width = 928
+        Height = 81
         Align = alTop
         TabOrder = 2
         SkinData.SkinSection = 'PANEL'
         object cxButton7: TsButton
-          Left = 12
-          Top = 3
+          Left = 18
+          Top = 5
           Width = 100
           Height = 24
           Caption = 'Excel'
@@ -307,12 +298,174 @@ object frmDayNotes: TfrmDayNotes
           OnClick = btnRefreshPivStatusClick
           SkinData.SkinSection = 'BUTTON'
         end
+        object gbxExcludeRoomStates: TsGroupBox
+          AlignWithMargins = True
+          Left = 533
+          Top = 4
+          Width = 391
+          Height = 73
+          Hint = 
+            'See Settings / Reservations to set the default values of these c' +
+            'heckboxes'
+          Align = alRight
+          Caption = 'Exclude rooms with status: '
+          ParentShowHint = False
+          ShowHint = True
+          TabOrder = 2
+          SkinData.SkinSection = 'GROUPBOX'
+          ExplicitTop = 2
+          object fpExcludeOptions: TFlowPanel
+            Left = 2
+            Top = 15
+            Width = 387
+            Height = 56
+            Align = alClient
+            Padding.Left = 3
+            Padding.Top = 3
+            Padding.Right = 3
+            Padding.Bottom = 3
+            ShowCaption = False
+            TabOrder = 0
+            object chkExcludeWaitingList: TsCheckBox
+              Left = 4
+              Top = 4
+              Width = 100
+              Height = 17
+              Caption = 'Waitinglist'
+              AutoSize = False
+              Color = clBtnFace
+              ParentColor = False
+              TabOrder = 0
+              OnClick = chkExcludeStateClick
+              SkinData.SkinSection = 'CHECKBOX'
+              ImgChecked = 0
+              ImgUnchecked = 0
+            end
+            object chkExcludeAllotment: TsCheckBox
+              Left = 104
+              Top = 4
+              Width = 100
+              Height = 17
+              Caption = 'Allotment'
+              AutoSize = False
+              Checked = True
+              Color = clBtnFace
+              ParentColor = False
+              State = cbChecked
+              TabOrder = 1
+              OnClick = chkExcludeStateClick
+              SkinData.SkinSection = 'CHECKBOX'
+              ImgChecked = 0
+              ImgUnchecked = 0
+            end
+            object chkExcludeNotArrived: TsCheckBox
+              Left = 204
+              Top = 4
+              Width = 100
+              Height = 17
+              Caption = 'Not Arrived'
+              AutoSize = False
+              Checked = True
+              Color = clBtnFace
+              ParentColor = False
+              State = cbChecked
+              TabOrder = 2
+              OnClick = chkExcludeStateClick
+              SkinData.SkinSection = 'CHECKBOX'
+              ImgChecked = 0
+              ImgUnchecked = 0
+            end
+            object chkExcludeDeparted: TsCheckBox
+              Left = 4
+              Top = 21
+              Width = 100
+              Height = 17
+              Caption = 'Departed'
+              AutoSize = False
+              Checked = True
+              Color = clBtnFace
+              ParentColor = False
+              State = cbChecked
+              TabOrder = 3
+              OnClick = chkExcludeStateClick
+              SkinData.SkinSection = 'CHECKBOX'
+              ImgChecked = 0
+              ImgUnchecked = 0
+            end
+            object chkExcludeCheckedIn: TsCheckBox
+              Left = 104
+              Top = 21
+              Width = 100
+              Height = 17
+              Caption = 'Guest'
+              AutoSize = False
+              Checked = True
+              Color = clBtnFace
+              ParentColor = False
+              State = cbChecked
+              TabOrder = 4
+              OnClick = chkExcludeStateClick
+              SkinData.SkinSection = 'CHECKBOX'
+              ImgChecked = 0
+              ImgUnchecked = 0
+            end
+            object chkExcludeWaitingListNonOptional: TsCheckBox
+              Left = 204
+              Top = 21
+              Width = 160
+              Height = 17
+              Caption = 'Waitinglist (Not optional)'
+              AutoSize = False
+              Checked = True
+              Color = clBtnFace
+              ParentColor = False
+              State = cbChecked
+              TabOrder = 5
+              OnClick = chkExcludeStateClick
+              SkinData.SkinSection = 'CHECKBOX'
+              ImgChecked = 0
+              ImgUnchecked = 0
+            end
+            object chkExcludeBlocked: TsCheckBox
+              Left = 4
+              Top = 38
+              Width = 100
+              Height = 17
+              Caption = 'Blocked'
+              AutoSize = False
+              Color = clBtnFace
+              ParentColor = False
+              TabOrder = 6
+              OnClick = chkExcludeStateClick
+              SkinData.SkinSection = 'CHECKBOX'
+              ImgChecked = 0
+              ImgUnchecked = 0
+            end
+            object chkExcludeNoShow: TsCheckBox
+              Left = 104
+              Top = 38
+              Width = 100
+              Height = 17
+              Caption = 'No show'
+              AutoSize = False
+              Checked = True
+              Color = clBtnFace
+              ParentColor = False
+              State = cbChecked
+              TabOrder = 7
+              OnClick = chkExcludeStateClick
+              SkinData.SkinSection = 'CHECKBOX'
+              ImgChecked = 0
+              ImgUnchecked = 0
+            end
+          end
+        end
       end
       object pivStatus: TcxDBPivotGrid
         Left = 0
-        Top = 64
-        Width = 813
-        Height = 511
+        Top = 112
+        Width = 928
+        Height = 463
         Align = alClient
         DataSource = RoomStatusDS
         Groups = <>
@@ -369,7 +522,7 @@ object frmDayNotes: TfrmDayNotes
       object Panel1: TsPanel
         Left = 0
         Top = 0
-        Width = 813
+        Width = 928
         Height = 9
         Align = alTop
         Color = clHighlight
@@ -380,7 +533,7 @@ object frmDayNotes: TfrmDayNotes
       object pageLog: TcxPageControl
         Left = 0
         Top = 9
-        Width = 813
+        Width = 928
         Height = 566
         Align = alClient
         TabOrder = 1
@@ -390,7 +543,7 @@ object frmDayNotes: TfrmDayNotes
         OnPageChanging = pageLogPageChanging
         ClientRectBottom = 564
         ClientRectLeft = 2
-        ClientRectRight = 811
+        ClientRectRight = 926
         ClientRectTop = 22
         object tabActionLog: TcxTabSheet
           Caption = 'Actions'
@@ -398,7 +551,7 @@ object frmDayNotes: TfrmDayNotes
           object memLog: TsMemo
             Left = 0
             Top = 41
-            Width = 809
+            Width = 924
             Height = 501
             Align = alClient
             Font.Charset = DEFAULT_CHARSET
@@ -420,7 +573,7 @@ object frmDayNotes: TfrmDayNotes
           object Panel5: TsPanel
             Left = 0
             Top = 0
-            Width = 809
+            Width = 924
             Height = 41
             Align = alTop
             TabOrder = 1
@@ -493,7 +646,7 @@ object frmDayNotes: TfrmDayNotes
           object Panel6: TsPanel
             Left = 0
             Top = 0
-            Width = 809
+            Width = 924
             Height = 65
             Align = alTop
             TabOrder = 0
@@ -501,7 +654,7 @@ object frmDayNotes: TfrmDayNotes
             object pnlTopRow: TsPanel
               Left = 1
               Top = 1
-              Width = 807
+              Width = 922
               Height = 32
               Align = alTop
               BevelOuter = bvNone
@@ -647,7 +800,7 @@ object frmDayNotes: TfrmDayNotes
               end
               object cxButton5: TsButton
                 AlignWithMargins = True
-                Left = 717
+                Left = 832
                 Top = 3
                 Width = 87
                 Height = 26
@@ -661,7 +814,7 @@ object frmDayNotes: TfrmDayNotes
             object sPanel1: TsPanel
               Left = 1
               Top = 33
-              Width = 807
+              Width = 922
               Height = 31
               Align = alClient
               BevelOuter = bvNone
@@ -743,7 +896,7 @@ object frmDayNotes: TfrmDayNotes
           object Panel7: TsPanel
             Left = 0
             Top = 65
-            Width = 809
+            Width = 924
             Height = 326
             Align = alTop
             TabOrder = 1
@@ -751,7 +904,7 @@ object frmDayNotes: TfrmDayNotes
             object gridImportLogs: TcxGrid
               Left = 1
               Top = 1
-              Width = 807
+              Width = 922
               Height = 324
               Align = alClient
               TabOrder = 0
@@ -903,7 +1056,7 @@ object frmDayNotes: TfrmDayNotes
           object cxSplitter1: TcxSplitter
             Left = 0
             Top = 391
-            Width = 809
+            Width = 924
             Height = 8
             HotZoneClassName = 'TcxMediaPlayer9Style'
             AlignSplitter = salTop
@@ -912,7 +1065,7 @@ object frmDayNotes: TfrmDayNotes
           object Panel8: TsPanel
             Left = 0
             Top = 399
-            Width = 809
+            Width = 924
             Height = 143
             Align = alClient
             TabOrder = 3
@@ -920,7 +1073,7 @@ object frmDayNotes: TfrmDayNotes
             object Panel9: TsPanel
               Left = 425
               Top = 1
-              Width = 383
+              Width = 498
               Height = 141
               Align = alClient
               TabOrder = 0
@@ -928,7 +1081,7 @@ object frmDayNotes: TfrmDayNotes
               object Panel10: TsPanel
                 Left = 1
                 Top = 1
-                Width = 381
+                Width = 496
                 Height = 33
                 Align = alTop
                 BevelOuter = bvNone
@@ -949,7 +1102,7 @@ object frmDayNotes: TfrmDayNotes
               object memImportData: TsMemo
                 Left = 1
                 Top = 34
-                Width = 381
+                Width = 496
                 Height = 106
                 Align = alClient
                 Font.Charset = ANSI_CHARSET
@@ -1029,7 +1182,7 @@ object frmDayNotes: TfrmDayNotes
       object Panel2: TsPanel
         Left = 0
         Top = 0
-        Width = 813
+        Width = 928
         Height = 33
         Align = alTop
         BevelOuter = bvNone
@@ -1110,7 +1263,7 @@ object frmDayNotes: TfrmDayNotes
       object gridCurrentGuests: TcxGrid
         Left = 0
         Top = 33
-        Width = 813
+        Width = 928
         Height = 542
         Align = alClient
         TabOrder = 1

@@ -2661,6 +2661,7 @@ object frmMain: TfrmMain
       Index = 1
     end
     object rbTabInvoice: TdxRibbonTab
+      Active = True
       Caption = 'Invoice'
       Groups = <
         item
@@ -2727,7 +2728,6 @@ object frmMain: TfrmMain
       Index = 4
     end
     object System: TdxRibbonTab
-      Active = True
       Caption = 'System'
       Groups = <
         item
@@ -23713,7 +23713,9 @@ object frmMain: TfrmMain
     ThirdParty.ThirdCheckBoxes = 'TCheckBox'#13#10'TRadioButton'#13#10'TGroupButton'#13#10'TDBCheckBox'#13#10
     ThirdParty.ThirdGroupBoxes = 'TGroupBox'#13#10'TRadioGroup'#13#10'TDBRadioGroup'#13#10
     ThirdParty.ThirdListViews = 'TListView'#13#10'TAdvListView'#13#10
-    ThirdParty.ThirdPanels = 'TPanel'#13#10'TfrxTBPanel'#13#10'TDBNavigator'#13#10'TDBCtrlPanel'#13#10'TsPanel'#13#10
+    ThirdParty.ThirdPanels = 
+      'TPanel'#13#10'TfrxTBPanel'#13#10'TDBNavigator'#13#10'TDBCtrlPanel'#13#10'TsPanel'#13#10'TFlowp' +
+      'anel'#13#10
     ThirdParty.ThirdGrids = 
       'TtringGrid'#13#10'TDrawGrid'#13#10'TAdvStringGrid'#13#10'TDBAdvGrid'#13#10'TDBGrid'#13#10'TcxG' +
       'rid'#13#10

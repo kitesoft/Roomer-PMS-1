@@ -74,7 +74,7 @@ uses
   dxSkinLondonLiquidSky, dxSkinMoneyTwins, dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green, dxSkinOffice2007Pink,
   dxSkinOffice2007Silver, dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinValentine,
-  dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue
+  dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, sCheckBox
 
 
   ;
@@ -89,7 +89,6 @@ type
     Panel1: TsPanel;
     tabStatus: TsTabSheet;
     Panel3: TsPanel;
-    edRefresh : TEdit;
     edDaysToShow: TsSpinEdit;
     cxLabel1: TsLabel;
     labCol: TsLabel;
@@ -309,18 +308,25 @@ type
     cxButton14: TsButton;
     cxButton15: TsButton;
     timRefresh: TTimer;
+    gbxExcludeRoomStates: TsGroupBox;
+    fpExcludeOptions: TFlowPanel;
+    chkExcludeWaitingList: TsCheckBox;
+    chkExcludeAllotment: TsCheckBox;
+    chkExcludeNotArrived: TsCheckBox;
+    chkExcludeDeparted: TsCheckBox;
+    chkExcludeCheckedIn: TsCheckBox;
+    chkExcludeWaitingListNonOptional: TsCheckBox;
+    chkExcludeBlocked: TsCheckBox;
+    chkExcludeNoShow: TsCheckBox;
     procedure FormCreate(Sender : TObject);
     procedure FormShow(Sender : TObject);
     procedure FormKeyDown(Sender : TObject; var Key : Word; Shift : TShiftState);
     procedure FormKeyPress(Sender : TObject; var Key : Char);
     procedure FormDestroy(Sender : TObject);
     procedure FormCloseQuery(Sender : TObject; var CanClose : Boolean);
-    procedure edRefreshChange(Sender : TObject);
     procedure edDaysToShowPropertiesChange(Sender : TObject);
-    procedure edOkLevelPropertiesChange(Sender : TObject);
     procedure pageMainChange(Sender: TObject);
     procedure btnStatusLeftExcelClick(Sender: TObject);
-    procedure btnStatusRightExcelClick(Sender: TObject);
     procedure btnGetCurrentGuestsRefreshClick(Sender: TObject);
     procedure btnRrToExcelClick(Sender: TObject);
     procedure btnRrShowReservationClick(Sender: TObject);
@@ -354,6 +360,7 @@ type
     procedure Panel10DblClick(Sender: TObject);
     procedure timRefreshTimer(Sender: TObject);
     procedure FormActivate(Sender: TObject);
+    procedure chkExcludeStateClick(Sender: TObject);
   private
     zDaysToShow : integer;
     zLeftIsExpand : boolean;
@@ -424,6 +431,14 @@ begin
   pageLog.ActivePage := tabImportLog;
   tabActionlog.TabVisible := false;
 
+  chkExcludeWaitingList.Checked := g.qExcluteWaitingList;
+  chkExcludeAllotment.Checked := g.qExcluteAllotment;
+  chkExcludeNotArrived.Checked := g.qExcluteOrder;
+  chkExcludeDeparted.Checked := g.qExcluteDeparted;
+  chkExcludeCheckedIn.Checked := g.qExcluteGuest;
+  chkExcludeWaitingListNonOptional.Checked := g.qExcluteWaitingList;
+  chkExcludeBlocked.Checked := g.qExcluteBlocked;
+  chkExcludeNoShow.Checked := g.qExcluteNoshow;
 end;
 
 procedure TfrmDayNotes.FormKeyDown(Sender : TObject; var Key : Word; Shift : TShiftState);
@@ -902,16 +917,6 @@ end;
 ///  Status tab
 ///\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-procedure TfrmDayNotes.edOkLevelPropertiesChange(Sender : TObject);
-begin
-  RefreshRoomStatus;
-end;
-
-procedure TfrmDayNotes.edRefreshChange(Sender : TObject);
-begin
-  RefreshRoomStatus;
-end;
-
 procedure TfrmDayNotes.RefreshRoomStatus;
 begin
   if (pageMain.ActivePage <> tabStatus) or (NOT Showing)  then
@@ -945,21 +950,29 @@ begin
   s := s+'        LEFT JOIN roomreservations ON roomreservations.roomreservation=roomsdate.roomreservation '#10;
   s := s+'        WHERE roomsdate.RoomType=roomtypes.RoomType '#10;
   s := s+'              AND roomsdate.ADate=predefineddates.date '#10;
-  s := s+'              AND ((NOT control.ExcluteWaitingList) OR roomsdate.ResFlag <>'+quotedStr('O')+') '#10;
-  s := s+'              AND ((NOT control.ExcludeWaitingListNonOptional) OR roomsdate.ResFlag <>'+quotedStr('L')+') '#10;
-  s := s+'              AND ((NOT control.ExcluteAllotment) OR roomsdate.ResFlag <>'+quotedStr('A')+') '#10;
-  s := s+'              AND ((NOT control.ExcluteOrder) OR roomsdate.ResFlag <>'+quotedStr('P')+') '#10;
-  s := s+'              AND ((NOT control.ExcluteDeparted) OR roomsdate.ResFlag <>'+quotedStr(STATUS_CHECKED_OUT)+') '#10;
-  s := s+'              AND ((NOT control.ExcluteGuest) OR roomsdate.ResFlag <>'+quotedStr('G')+') '#10;
-  s := s+'              AND ((NOT control.ExcluteBlocked) OR roomsdate.ResFlag <>'+quotedStr('B')+') '#10;
-  s := s+'              AND ((NOT control.ExcluteNoShow) OR roomsdate.ResFlag <>'+quotedStr('N')+') '#10;
+  if chkExcludeWaitingList.Checked then
+    s := s+'              AND (roomsdate.ResFlag <>'+quotedStr('O')+') '#10;
+  if chkExcludeWaitingListNonOptional.Checked then
+    s := s+'              AND (roomsdate.ResFlag <>'+quotedStr('L')+') '#10;
+  if chkExcludeAllotment.Checked then
+    s := s+'              AND (roomsdate.ResFlag <>'+quotedStr('A')+') '#10;
+  if chkExcludeNotArrived.Checked then
+    s := s+'              AND (roomsdate.ResFlag <>'+quotedStr('P')+') '#10;
+  if chkExcludeDeparted.Checked then
+    s := s+'              AND (roomsdate.ResFlag <>'+quotedStr(STATUS_CHECKED_OUT)+') '#10;
+  if chkExcludeCheckedIn.Checked then
+    s := s+'              AND (roomsdate.ResFlag <>'+quotedStr('G')+') '#10;
+  if chkExcludeBlocked.Checked then
+    s := s+'              AND (roomsdate.ResFlag <>'+quotedStr('B')+') '#10;
+  if chkExcludeNoShow.Checked then
+    s := s+'              AND (roomsdate.ResFlag <>'+quotedStr('N')+') '#10;
   s := s+'              AND (roomsdate.ResFlag not in (''X'', ''C'') '#10;
   s := s+'        )) AS available '#10;
   s := s+'FROM predefineddates, roomtypes, control '#10;
   s := s+'WHERE roomtypes.Active AND predefineddates.date>=%s AND predefineddates.date<=DATE_ADD(%s,INTERVAL %d DAY) '#10;
   s := s+'GROUP BY predefineddates.date, roomtypes.RoomType ';
 
-	s := format(s, [ _db(zCurrentDate,true),_db(zCurrentDate,true), zDaysToShow]);
+	s := format(s, [ _db(zCurrentDate,true),_db(zCurrentDate,true), zDaysToShow-1]);
 
   copytoclipboard(s);
 //  debugmessage(s);
@@ -1208,8 +1221,9 @@ begin
   end;
 end;
 
-procedure TfrmDayNotes.btnStatusRightExcelClick(Sender: TObject);
+procedure TfrmDayNotes.chkExcludeStateClick(Sender: TObject);
 begin
+  RefreshRoomStatus;
 end;
 
 ///////////////////////////////////////////////////////////////////////////////////////
