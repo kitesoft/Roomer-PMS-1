@@ -1408,7 +1408,7 @@ begin
               if Sender = btnChangeNationality then
                 Exit; // No need to change mainguest when btn is used
               lMethod := 0;
-              mAllGuests.Locate('Room;MainName', VarArrayOf([mROomsRoom.AsString, True]), []);
+              mAllGuests.Locate('RoomReservation;MainName', VarArrayOf([mRoomsReservation.AsInteger, True]), []);
               lPerson := mAllGuestsPerson.Asinteger
             end;
     mrAll:  begin
@@ -1446,7 +1446,7 @@ begin
               if Sender = btnChangeCountry then
                 Exit; // No need to change mainguest when btn is used
               lMethod := 0;
-              mAllGuests.Locate('Room;MainName', VarArrayOf([mROomsRoom.AsString, True]), []);
+              mAllGuests.Locate('RoomReservation;MainName', VarArrayOf([mRoomsRoomReservation.AsInteger, True]), []);
               lPerson := mAllGuestsPerson.Asinteger
             end;
     mrAll:  begin
@@ -2142,6 +2142,7 @@ procedure TfrmReservationProfile.MoveGuestToNewRoom2;
 begin
   if ProvideARoom2(mRoomsRoomReservation.AsInteger) <> '' then
   begin
+    getGuestData(mRoomsRoomReservation.AsInteger);
     Display_rGrid(mRoomsRoomReservation.AsInteger);
   end;
 end;
@@ -2152,11 +2153,7 @@ begin
 end;
 
 procedure TfrmReservationProfile.btnRemoveRoomClick(Sender: TObject);
-//var
-//  RoomNumber: string;
 begin
-//  RoomNumber := d.RR_GetRoomNr(zRoomReservation);
-
   if FReservationChangeStateHandler.RoomStateChangeHandler[zRoomReservation].ChangeIsAllowed(rsRemoved, true) and g.OpenRemoveRoom(zRoomReservation) then
   begin
     FReservationChangeStateHandler.UpdateRoomResStateChangeHandlers;
@@ -2650,7 +2647,7 @@ procedure TfrmReservationProfile.UpdateGuestDetails(gotoRoomReservation: integer
 begin
   gbxGuest.Caption := FgbxGuestOrigCaption + ' ' + mRoomsRoom.AsString;
 
-  if mAllGuests.Locate('Room;MainName', VarArrayOf([mROomsRoom.AsString, True]), []) then
+  if mAllGuests.Locate('RoomReservation;MainName', VarArrayOf([mRoomsRoomReservation.AsInteger, True]), []) then
   begin
     edtGuestName.Text := mAllGuestsGuestName.AsString;
     edtGuestAddress1.Text := mAllGuestsAddress1.AsString;

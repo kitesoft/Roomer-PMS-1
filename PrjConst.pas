@@ -1740,7 +1740,7 @@ end;
 
 procedure GenerateTranslateTextTableForAllForms;
 begin
-  frmProvideARoom2 := TfrmProvideARoom2.Create(nil); frmProvideARoom2.Free; frmProvideARoom2 := nil;
+  TfrmProvideARoom2.Create(nil).Free;
   frmMultiSelection := TfrmMultiSelection.Create(nil); frmMultiSelection.Free; frmMultiSelection := nil;
 //  frmInvoiceInfo := TfrmInvoiceInfo.Create(nil); frmInvoiceInfo.Free; frmInvoiceInfo := nil;
   frmInvoice := TfrmInvoice.Create(nil); frmInvoice.Free; frmInvoice := nil;

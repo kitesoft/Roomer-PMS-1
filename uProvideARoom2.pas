@@ -80,8 +80,6 @@ type
     procedure Display;
   end;
 
-var
-  frmProvideARoom2 : TfrmProvideARoom2;
 
 function ProvideARoom2(RoomReservation : Integer; aShowUncleanRooms: boolean = true): String;
 function MoveToRoomEnh2(RoomReservation : Integer; newRoom : string) : boolean;
@@ -104,6 +102,7 @@ uses
 
 function ProvideARoom2(RoomReservation : Integer; aShowUncleanRooms: boolean = True) : String;
 var
+  frm: TfrmProvideARoom2;
   btn : Word;
 
   status : TReservationState;
@@ -164,33 +163,33 @@ begin
   if (status = rsDeparted) and (MessageDlg(GetTranslatedText('shTx_ProvideARoom_RoomCheckedout'), mtConfirmation, [mbYes, mbNo], 0) <> mrYes) then
       exit;
 
-  Application.CreateForm(TfrmProvideARoom2, frmProvideARoom2);
+  frm := TfrmProvideARoom2.Create(nil);
   try
-    frmProvideARoom2.zReservation := iReservation;
-    frmProvideARoom2.zRoomReservation := RoomReservation;
+    frm.zReservation := iReservation;
+    frm.zRoomReservation := RoomReservation;
 
-    frmProvideARoom2.zDateFrom := dtArrival;
-    frmProvideARoom2.zDateTo := dtDeparture;
+    frm.zDateFrom := dtArrival;
+    frm.zDateTo := dtDeparture;
 
-    frmProvideARoom2.zRoom := sRoom;
-    frmProvideARoom2.zRoomType := sRoomType;
-    frmProvideARoom2.zStatus := sStatus;
+    frm.zRoom := sRoom;
+    frm.zRoomType := sRoomType;
+    frm.zStatus := sStatus;
 
-    frmProvideARoom2.btnRemoveRoomNumber.enabled := not isNoRoom;
-    frmProvideaRoom2.cbIncludeNonCleanRooms.Checked := aShowUncleanRooms;
+    frm.btnRemoveRoomNumber.enabled := not isNoRoom;
+    frm.cbIncludeNonCleanRooms.Checked := aShowUncleanRooms;
 
-    btn := frmProvideARoom2.ShowModal;
+    btn := frm.ShowModal;
     if (btn in [mrOK, mrYes]) then
     begin
       if btn = mrYes then
         newRoom := ''
       else
-        newRoom := frmProvideARoom2.agrRooms.Cells[1, frmProvideARoom2.agrRooms.Row];
+        newRoom := frm.agrRooms.Cells[1, frm.agrRooms.Row];
       if MoveToRoomEnh2(RoomReservation, newRoom) then
         result := newRoom;
     end;
   finally
-    frmProvideARoom2.free;
+    frm.free;
   end;
 end;
 
