@@ -7,7 +7,8 @@ uses
   Messages, System.Generics.Collections;
 
 type
-  TRoomerFilterItem = class
+  TRoomerFilterItem = class(TObject)
+  public
     Key : String;
     Line : String;
   end;
@@ -141,12 +142,6 @@ procedure TRoomerFilterComboBox.Stop;
 begin
   FActive := False;
 end;
-
-//procedure TRoomerFilterComboBox.StoredItemsChange(Sender: TObject);
-//begin
-//  if FActive AND Assigned(FStoredItems) then
-//    FilterItems;
-//end;
 
 
 end.
