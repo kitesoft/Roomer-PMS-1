@@ -6328,10 +6328,10 @@ begin
   s := s+'                         FROM roomsdate rd2 JOIN roomreservations rr ON rr.RoomReservation=rd2.RoomReservation '#10;
   s := s+'                         WHERE (rr.GroupAccount = 0 AND (rd2.PaidBy={roomreservation} OR (rd2.RoomReservation={roomreservation} AND rd2.PaidBy=0)))))) ';
 
-  s := ReplaceString(s, '{reservation}', _db(iReservation));
-  s := ReplaceString(s, '{roomreservation}', _db(iRoomreservation));
-  s := ReplaceString(s, '{customer}', _db(customer));
-  s := ReplaceString(s, '{invoiceindex}', _db(InvoiceIndex));
+  s := StringReplace(s, '{reservation}', _db(iReservation), [rfReplaceAll, rfIgnoreCase]);
+  s := StringReplace(s, '{roomreservation}', _db(iRoomreservation), [rfReplaceAll, rfIgnoreCase]);
+  s := StringReplace(s, '{customer}', _db(customer), [rfReplaceAll, rfIgnoreCase]);
+  s := StringReplace(s, '{invoiceindex}', _db(InvoiceIndex), [rfReplaceAll, rfIgnoreCase]);
   result := s;
 end;
 
