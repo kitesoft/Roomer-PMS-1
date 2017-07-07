@@ -79,9 +79,8 @@ uses
   frxExportRTF,
   frxExportHTML,
   uInvoiceEntities,
-  uCurrencyHandlersMap;
+  uCurrencyHandlersMap,
   uInvoiceObjects;
-, sTabControl;
 
 type
   TCreditType = (ctManual, ctReference, ctErr);
@@ -210,6 +209,17 @@ type
     mnuMoveRoomRentFromRoomInvoiceToGroup: TMenuItem;
     mnuMoveRoomRentFromGroupToNormalRoomInvoice: TMenuItem;
     pnlLnes: TsPanel;
+    pnlInvoiceIndices: TsPanel;
+    pnlInvoiceIndex0: TsPanel;
+    pnlInvoiceIndex1: TsPanel;
+    pnlInvoiceIndex2: TsPanel;
+    pnlInvoiceIndex3: TsPanel;
+    pnlInvoiceIndex4: TsPanel;
+    pnlInvoiceIndex5: TsPanel;
+    pnlInvoiceIndex6: TsPanel;
+    pnlInvoiceIndex7: TsPanel;
+    pnlInvoiceIndex8: TsPanel;
+    pnlInvoiceIndex9: TsPanel;
     mnuInvoiceIndex: TPopupMenu;
     N01: TMenuItem;
     N11: TMenuItem;
@@ -223,6 +233,26 @@ type
     I1: TMenuItem;
     N5: TMenuItem;
     N12: TMenuItem;
+    shpInvoiceIndex0: TShape;
+    shpInvoiceIndexRR0: TShape;
+    shpInvoiceIndex9: TShape;
+    shpInvoiceIndexRR9: TShape;
+    shpInvoiceIndex1: TShape;
+    shpInvoiceIndexRR1: TShape;
+    shpInvoiceIndex2: TShape;
+    shpInvoiceIndexRR2: TShape;
+    shpInvoiceIndex3: TShape;
+    shpInvoiceIndexRR3: TShape;
+    shpInvoiceIndex4: TShape;
+    shpInvoiceIndexRR4: TShape;
+    shpInvoiceIndex5: TShape;
+    shpInvoiceIndexRR5: TShape;
+    shpInvoiceIndex6: TShape;
+    shpInvoiceIndexRR6: TShape;
+    shpInvoiceIndex7: TShape;
+    shpInvoiceIndexRR7: TShape;
+    shpInvoiceIndex8: TShape;
+    shpInvoiceIndexRR8: TShape;
     S1: TMenuItem;
     N6: TMenuItem;
     mnuMoveItemToAnyOtherRoomAndInvoiceIndex: TMenuItem;
@@ -323,7 +353,6 @@ type
     mnuHideallincludedbreakfasts: TMenuItem;
     mnuShowalldiscounts: TMenuItem;
     mnuHidealldiscounts: TMenuItem;
-    __tcInvoiceIndices: TsTabControl;
     procedure FormCreate(Sender: TObject);
     procedure agrLinesMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
     procedure edtCustomerDblClick(Sender: TObject);
@@ -392,9 +421,6 @@ type
     procedure acHideAllCTaxExecute(Sender: TObject);
     procedure acHideAllBreakfastsExecute(Sender: TObject);
     procedure acHideAllDiscountsExecute(Sender: TObject);
-    procedure __tcInvoiceIndicesDrawTab(Control: TCustomTabControl; TabIndex: Integer; const Rect: TRect; Active: Boolean);
-    procedure __tcInvoiceIndicesChange(Sender: TObject);
-    procedure __tcInvoiceIndicesResize(Sender: TObject);
   private
     { Private declarations }
 
@@ -457,8 +483,7 @@ type
     FHeaderChanged: boolean;
     FCurrencyhandlersMap: TCurrencyhandlersMap;
     FStayTaxEnabled: boolean;
-    FInvoiceIndexTotalList: TInvoiceIndexTotalList;
-
+    FInvoiceIndexTotals: TInvoiceIndexTotalList;
 
     procedure LoadInvoice;
     procedure loadInvoiceToMemtable(var m: TKbmMemTable);
@@ -569,10 +594,9 @@ type
     procedure MoveItemToNewInvoiceIndex(rowIndex, toInvoiceIndex: integer);
     procedure MoveRoomToNewInvoiceIndex(toInvoiceIndex: integer);
     procedure UpdateInvoiceIndexTabs;
-//    function GetInvoiceIndexPanel(Index: integer): TsPanel;
-//    procedure SetInvoiceIndexPanelsToZero;
-//    function GetInvoiceIndexItems(Index: integer): TShape;
-//    function GetInvoiceIndexItemsRR(Index: integer): TShape;
+    function GetInvoiceIndexPanel(Index: integer): TsPanel;
+    function GetInvoiceIndexItems(Index: integer): TShape;
+    function GetInvoiceIndexItemsRR(Index: integer): TShape;
     procedure MoveDownpaymentToInvoiceIndex(toInvoiceIndex: integer);
     function IsCashInvoice: boolean;
     function GetCalculatedNumberOfItems(ItemId: String; dDefault: Double): Double;
@@ -786,7 +810,7 @@ end;
 destructor TfrmInvoiceRentPerDay.Destroy;
 begin
   FCurrencyhandlersMap.Free;
-  FInvoiceIndexTotalList.Free;
+  FInvoiceIndexTotals.Free;
   inherited;
 end;
 
@@ -1973,45 +1997,20 @@ begin
   end;
 end;
 
-//function TfrmInvoiceRentPerDay.GetInvoiceIndexPanel(Index: integer): TsPanel;
-//begin
-//  result := TsPanel(FindComponent('pnlInvoiceIndex' + inttostr(Index)));
-//end;
-//
-//function TfrmInvoiceRentPerDay.GetInvoiceIndexItems(Index: integer): TShape;
-//begin
-//  result := TShape(FindComponent('shpInvoiceIndex' + inttostr(Index)));
-//end;
-//
-//function TfrmInvoiceRentPerDay.GetInvoiceIndexItemsRR(Index: integer): TShape;
-//begin
-//  result := TShape(FindComponent('shpInvoiceIndexRR' + inttostr(Index)));
-//end;
-//
-//procedure TfrmInvoiceRentPerDay.SetInvoiceIndexPanelsToZero;
-//var
-//  i: integer;
-//  pnl: TsPanel;
-//  shp1, shp2: TShape;
-//begin
-//  for i := 0 to 9 do
-//  begin
-//    pnl := GetInvoiceIndexPanel(i);
-//    shp1 := GetInvoiceIndexItems(i);
-//    shp2 := GetInvoiceIndexItemsRR(i);
-//
-//    pnl.HelpContext := 0;
-//    pnl.Hint := '';
-//
-//    shp1.HelpContext := 0;
-//    shp1.Hint := '';
-//    shp1.Visible := false;
-//
-//    shp2.HelpContext := 0;
-//    shp2.Hint := '';
-//    shp2.Visible := false;
-//  end;
-//end;
+function TfrmInvoiceRentPerDay.GetInvoiceIndexPanel(Index: integer): TsPanel;
+begin
+  result := TsPanel(FindComponent('pnlInvoiceIndex' + inttostr(Index)));
+end;
+
+function TfrmInvoiceRentPerDay.GetInvoiceIndexItems(Index: integer): TShape;
+begin
+  result := TShape(FindComponent('shpInvoiceIndex' + inttostr(Index)));
+end;
+
+function TfrmInvoiceRentPerDay.GetInvoiceIndexItemsRR(Index: integer): TShape;
+begin
+  result := TShape(FindComponent('shpInvoiceIndexRR' + inttostr(Index)));
+end;
 
 procedure TfrmInvoiceRentPerDay.shpInvoiceIndex0DragDrop(Sender, Source: TObject; X, Y: integer);
 begin
@@ -2047,6 +2046,50 @@ begin
       result := 1.0;
   else
     result := dDefault;
+  end;
+end;
+
+procedure TfrmInvoiceRentPerDay.UpdateInvoiceIndexTabs;
+var
+  i: integer;
+  pnl: TPanel;
+  lInvLinesIndicator, lRoomRentIndicator: TShape;
+begin
+
+  FInvoiceIndexTotals.UpdateIndexTotals(FReservation, FRoomReservation);
+
+  for i := 0 to 9 do
+  begin
+    pnl := GetInvoiceIndexPanel(i);
+    lInvLinesIndicator := GetInvoiceIndexItems(i);
+    lRoomRentIndicator := GetInvoiceIndexItemsRR(i);
+
+    lInvLinesIndicator.Hint := '';
+    lInvLinesIndicator.Brush.Color := clWhite;
+
+    if FInvoiceIndexTotals.HasInvoiceLines[i] then
+    begin
+      lInvLinesIndicator.Hint := FCurrencyhandlersMap.CurrencyHandler[edtDisplayCurrency.Text].FormattedValueWithCode(FInvoiceIndexTotals.TotalInvoiceLinesOnIndex[i]);
+      lInvLinesIndicator.Brush.Color := clRed; // $00C1FFFF;
+    end;
+    lInvLinesIndicator.Visible := FInvoiceIndexTotals.HasInvoiceLines[i];
+
+    lRoomRentIndicator.Hint := '';
+    lRoomRentIndicator.Brush.Color := clWhite;
+    if FInvoiceIndexTotals.HasRoomRentItems[i] then
+    begin
+      lRoomRentIndicator.Hint := FCurrencyhandlersMap.CurrencyHandler[edtDisplayCurrency.Text].FormattedValueWithCode(FInvoiceIndexTotals.TotalRoomRentOnIndex[i]);
+      lRoomRentIndicator.Brush.Color := clBlue; // $00FFCFA8;
+    end;
+    lRoomRentIndicator.Visible := FInvoiceIndexTotals.HasRoomRentItems[i];
+
+    if pnl.Tag = InvoiceIndex then
+      pnl.Color := $00FFCFA8
+    else
+      pnl.Color := clWhite;
+
+    pnl.Font.Color := clBlack;
+
   end;
 end;
 
@@ -2203,34 +2246,6 @@ var
 
   end;
 
-//  procedure SetInvoiceIndexColors(IndexList, Currency: String);
-//  var
-//    i: integer;
-//    s: String;
-//    Value: Double;
-//  begin
-//    IndexList := IndexList;
-//    for i := 0 to 9 do
-//    begin
-//      s := SplitValue(IndexList, i);
-//      if s <> '' then
-//      begin
-//        GetInvoiceIndexPanel(i).HelpContext := i + 1;
-//        Value := SQLToFloat(s);
-//        GetInvoiceIndexItems(i).Hint := Currency + ' ' + trim(_floattostr(Value, 12, 2));
-//      end;
-//    end;
-//  end;
-//
-//  procedure AddRRColor(InvoiceIndex: integer; Total: Double; Currency: String);
-//  begin
-//    if round(Total) > 0 then
-//    begin
-//      GetInvoiceIndexItemsRR(InvoiceIndex).HelpContext := InvoiceIndex + 1;
-//      GetInvoiceIndexItemsRR(InvoiceIndex).Hint := Currency + ' ' + trim(_floattostr(Total, 12, 2))
-//    end;
-//  end;
-
   procedure SetInvoiceTypeIndex(Index: integer);
   begin
     rgrInvoiceType.OnClick := nil;
@@ -2250,8 +2265,6 @@ var
 label
   Again;
 begin
-
-//  SetInvoiceIndexPanelsToZero;
 
   zrSet := CreateNewDataSet;
   zRoomRSet := CreateNewDataSet;
@@ -2292,9 +2305,6 @@ begin
       InitInvoiceGrid;
       exit;
     end;
-
-    FInvoiceIndexTotalList.UpdateIndexTotals(FReservation, FRoomreservation);
-    __tcInvoiceIndices.Repaint;
 
   Again:
     // Retrieve invoice header information
@@ -2339,12 +2349,7 @@ begin
     // If invoice header is found...
     if not zrSet.eof then
     begin
-//      SetInvoiceIndexColors(zrSet.FieldByName('InvoiceIndexes').asString, zrSet.FieldByName('ihCurrency').asString);
-//      AddRRColor(zrSet.FieldByName('rrInvoiceIndex').asinteger, zrSet.FieldByName('rrInvoiceTotal').AsFloat,
-//        zrSet.FieldByName('ihCurrency').asString);
 
-
-      // S�kja Invoice sem er til
       zInvoiceNumber := zrSet.FieldByName('InvoiceNumber').asinteger;
 
       if FnewSplitNumber <> cCashInvoice then // ef ekki sta�grei�slureikningur
@@ -2449,6 +2454,8 @@ begin
 
     DisplayMem(zrSet);
     DisplayGuestName(zrSet);
+
+    UpdateInvoiceIndexTabs;
 
     sql := Select_Invoice_LoadInvoice3_WithInvoiceIndex(FRoomReservation, FReservation, FInvoiceIndex, edtCustomer.Text,
       false { zFakeGroup } );
@@ -3194,8 +3201,7 @@ begin
   FRoomInfoList := TRoomInfoList.Create(True);
   tempInvoiceItemList := TInvoiceItemEntityList.Create(True);
   FCurrencyhandlersMap := TCurrencyhandlersMap.Create;
-  FInvoiceIndexTotalList := TInvoiceIndexTotalList.Create;;
-
+  FInvoiceIndexTotals := TInvoiceIndexTotalList.Create;
   inherited;
 
 end;
@@ -4986,7 +4992,6 @@ procedure TfrmInvoiceRentPerDay.SetInvoiceIndex(const Value: integer);
 begin
   IfInvoiceChangedThenOptionallySave;
   FInvoiceIndex := Value;
-  UpdateInvoiceIndexTabs;
   RemoveAllCheckboxes;
   LoadInvoice;
 end;
@@ -5104,91 +5109,6 @@ begin
 end;
 
 procedure TfrmInvoiceRentPerDay.actMoveRoomToGroupInvoiceExecute(Sender: TObject);
-begin
-  actItemToGroupInvoiceExecute(Sender);
-end;
-
-procedure TfrmInvoiceRentPerDay.mnuMoveRoomRentFromRoomInvoiceToGroupClick(Sender: TObject);
-begin
-  actItemToGroupInvoiceExecute(Sender);
-end;
-
-procedure TfrmInvoiceRentPerDay.__tcInvoiceIndicesChange(Sender: TObject);
-begin
-  InvoiceIndex := TTabControl(Sender).TabIndex;
-end;
-
-procedure TfrmInvoiceRentPerDay.__tcInvoiceIndicesDrawTab(Control: TCustomTabControl; TabIndex: Integer; const Rect: TRect;
-  Active: Boolean);
-var
-  lText: string;
-  lTextSize: TSize;
-  lCanvas: TCanvas;
-  r: TRect;
-  lOrgColor: TColor;
-begin
-  lText := intToStr(TabIndex+1);
-  r := Rect;
-  lCanvas := Control.Canvas;
-  lOrgColor := lCanvas.Brush.color;
-
-//  if Active then
-//  begin
-//    lCanvas.Brush.Color := $00FFCFA8; // light blue
-//    lCanvas.FillRect(r);
-//  end else
-//  begin
-//    lCanvas.Brush.Color := clWindow; // frmMain.sSkinManager1.GetGlobalColor;
-//    lCanvas.FillRect(r);
-//  end;
-
-  lTextSize := lCanvas.TextExtent(lText);
-//  lCanvas.Brush.Color := clWindowText; //frmMain.sSkinManager1.GetGlobalFontColor;
-  lCanvas.Font.size := 12;
-  r.Left := r.left + 14;
-  lCanvas.TextRect(r, r.left + (r.Width - lTextSize.cx), r.Top + (r.Height - lTextSize.cy) div 2, lText);
-
-  r := TRect.Create(TPoint.Create(Rect.Left + 1, Rect.Top + 2), 5, Rect.Height - 4);
-  if FInvoiceIndexTotalList.HasInvoiceLines[TabIndex]then
-  begin
-    lCanvas.Brush.Color := clRed;
-    lCanvas.FillRect(r);
-    r.Offset(r.Width, 0);
-  end;
-
-  if FInvoiceIndexTotalList.HasRoomRentItems[TabIndex] then
-  begin
-    lCanvas.Brush.Color := clBlue;
-    lCanvas.FillRect(r);
-  end;
-  lCanvas.Brush.Color := lOrgColor;
-end;
-
-procedure TfrmInvoiceRentPerDay.__tcInvoiceIndicesResize(Sender: TObject);
-var
-  nrOfTabs: integer;
-  i: integer;
-begin
-  if ComponentRunning(Self) then
-  begin
-    __tcInvoiceIndices.Tabs.BeginUpdate;
-    try
-      nrOfTabs := trunc(__tcInvoiceIndices.Height / __tcInvoiceIndices.TabWidth);
-      if (NrOfTabs <> __tcInvoiceIndices.Tabs.Count) then
-      begin
-        for i := __tcInvoiceIndices.Tabs.Count-1 downto nrOfTabs do
-          __tcInvoiceIndices.Tabs.Delete(i);
-        for i := __tcInvoiceIndices.Tabs.Count to nrOfTabs-1 do
-          __tcInvoiceIndices.Tabs.Add(intToStr(i));
-      end;
-
-    finally
-      __tcInvoiceIndices.Tabs.EndUpdate;
-    end;
-  end;
-end;
-
-procedure TfrmInvoiceRentPerDay.mnuMoveRoomRentFromRoomInvoiceToGroupClick(Sender: TObject);
 begin
   MoveRoomToGroupInvoice;
 end;
@@ -7018,39 +6938,6 @@ procedure TfrmInvoiceRentPerDay.timCloseInvoiceTimer(Sender: TObject);
 begin
   timCloseInvoice.Enabled := false;
   close;
-end;
-
-procedure TfrmInvoiceRentPerDay.UpdateInvoiceIndexTabs;
-var
-  i: integer;
-  pnl: TsPanel;
-  shp1, shp2: TShape;
-begin
-//  for i := 0 to 9 do
-//  begin
-//    pnl := GetInvoiceIndexPanel(i);
-//    shp1 := GetInvoiceIndexItems(i);
-//    shp2 := GetInvoiceIndexItemsRR(i);
-//    if pnl.Tag = InvoiceIndex then
-//      pnl.Color := $00FFCFA8
-//    else
-//      pnl.Color := clWhite;
-//
-//    pnl.Font.Color := clBlack;
-//
-//    if pnl.HelpContext = 0 then
-//      shp1.Brush.Color := clWhite
-//    else
-//      shp1.Brush.Color := clRed; // $00C1FFFF;
-//
-//    if shp2.HelpContext = 0 then
-//      shp2.Brush.Color := clWhite
-//    else
-//      shp2.Brush.Color := clBlue; // $00FFCFA8;
-//
-//    shp2.Visible := shp2.Brush.Color <> clWhite;
-//    shp1.Visible := shp1.Brush.Color <> clWhite;
-//  end;
 end;
 
 procedure TfrmInvoiceRentPerDay.ClearGrid;

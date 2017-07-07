@@ -341,8 +341,8 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
       object chkShowPackage: TsCheckBox
         Left = 724
         Top = 167
-        Width = 119
-        Height = 17
+        Width = 111
+        Height = 20
         Caption = 'Package on invoice'
         Checked = True
         State = cbChecked
@@ -1039,7 +1039,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         Height = 89
         Align = alTop
         BevelOuter = bvNone
-        TabOrder = 2
+        TabOrder = 3
         SkinData.SkinSection = 'PANEL'
         object pnlRoomButtons: TsPanel
           Left = 0
@@ -1241,7 +1241,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
       object pnlLinesGrid: TsPanel
         Left = 0
         Top = 89
-        Width = 1096
+        Width = 1040
         Height = 232
         Align = alClient
         BevelOuter = bvNone
@@ -1250,194 +1250,672 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         Padding.Top = 5
         Padding.Right = 10
         Padding.Bottom = 5
-        TabOrder = 1
+        TabOrder = 2
         SkinData.SkinSection = 'PANEL'
-        ExplicitWidth = 1040
-        object __tcInvoiceIndices: TsTabControl
+        object agrLines: TAdvStringGrid
           Left = 10
           Top = 5
-          Width = 1076
+          Width = 1020
           Height = 222
+          Cursor = crDefault
           Align = alClient
+          BevelInner = bvNone
+          BevelOuter = bvNone
+          BorderStyle = bsNone
+          ColCount = 16
+          DefaultRowHeight = 19
+          DrawingStyle = gdsClassic
+          FixedCols = 0
+          RowCount = 2
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clBlack
+          Font.Height = -12
+          Font.Name = 'Courier New'
+          Font.Style = []
+          Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goColSizing, goThumbTracking]
+          ParentFont = False
+          ScrollBars = ssBoth
+          TabOrder = 0
+          OnDrawCell = agrLinesDrawCell
+          OnGetEditText = agrLinesGetEditText
+          OnKeyDown = agrLinesKeyDown
+          OnMouseDown = agrLinesMouseDown
+          OnMouseUp = agrLinesMouseUp
+          HoverRowCells = [hcNormal, hcSelected]
+          OnGetDisplText = agrLinesGetDisplText
+          OnGetCellColor = agrLinesGetCellColor
+          OnGetAlignment = agrLinesGetAlignment
+          OnRowChanging = agrLinesRowChanging
+          OnDblClickCell = agrLinesDblClickCell
+          OnCanEditCell = agrLinesCanEditCell
+          OnCellValidate = agrLinesCellValidate
+          OnCheckBoxClick = CheckBoxClick
+          OnColumnSize = agrLinesColumnSize
+          ActiveCellFont.Charset = DEFAULT_CHARSET
+          ActiveCellFont.Color = clWindowText
+          ActiveCellFont.Height = -13
+          ActiveCellFont.Name = 'Tahoma'
+          ActiveCellFont.Style = [fsBold]
+          ControlLook.FixedGradientHoverFrom = clGray
+          ControlLook.FixedGradientHoverTo = clWhite
+          ControlLook.FixedGradientDownFrom = clGray
+          ControlLook.FixedGradientDownTo = clSilver
+          ControlLook.DropDownHeader.Font.Charset = DEFAULT_CHARSET
+          ControlLook.DropDownHeader.Font.Color = clWindowText
+          ControlLook.DropDownHeader.Font.Height = -13
+          ControlLook.DropDownHeader.Font.Name = 'Tahoma'
+          ControlLook.DropDownHeader.Font.Style = []
+          ControlLook.DropDownHeader.Visible = True
+          ControlLook.DropDownHeader.Buttons = <>
+          ControlLook.DropDownFooter.Font.Charset = DEFAULT_CHARSET
+          ControlLook.DropDownFooter.Font.Color = clWindowText
+          ControlLook.DropDownFooter.Font.Height = -13
+          ControlLook.DropDownFooter.Font.Name = 'Tahoma'
+          ControlLook.DropDownFooter.Font.Style = []
+          ControlLook.DropDownFooter.Visible = True
+          ControlLook.DropDownFooter.Buttons = <>
+          Filter = <>
+          FilterDropDown.Font.Charset = DEFAULT_CHARSET
+          FilterDropDown.Font.Color = clWindowText
+          FilterDropDown.Font.Height = -13
+          FilterDropDown.Font.Name = 'Tahoma'
+          FilterDropDown.Font.Style = []
+          FilterDropDownClear = '(All)'
+          FilterEdit.TypeNames.Strings = (
+            'Starts with'
+            'Ends with'
+            'Contains'
+            'Not contains'
+            'Equal'
+            'Not equal'
+            'Larger than'
+            'Smaller than'
+            'Clear')
+          FixedColWidth = 24
+          FixedRowHeight = 19
+          FixedFont.Charset = DEFAULT_CHARSET
+          FixedFont.Color = clWindowText
+          FixedFont.Height = -13
+          FixedFont.Name = 'Tahoma'
+          FixedFont.Style = [fsBold]
+          FloatFormat = '%.2f'
+          HoverButtons.Buttons = <>
+          HoverButtons.Position = hbLeftFromColumnLeft
+          HTMLSettings.ImageFolder = 'images'
+          HTMLSettings.ImageBaseName = 'img'
+          Look = glStandard
+          PrintSettings.DateFormat = 'dd/mm/yyyy'
+          PrintSettings.Font.Charset = DEFAULT_CHARSET
+          PrintSettings.Font.Color = clWindowText
+          PrintSettings.Font.Height = -13
+          PrintSettings.Font.Name = 'Tahoma'
+          PrintSettings.Font.Style = []
+          PrintSettings.FixedFont.Charset = DEFAULT_CHARSET
+          PrintSettings.FixedFont.Color = clWindowText
+          PrintSettings.FixedFont.Height = -13
+          PrintSettings.FixedFont.Name = 'Tahoma'
+          PrintSettings.FixedFont.Style = []
+          PrintSettings.HeaderFont.Charset = DEFAULT_CHARSET
+          PrintSettings.HeaderFont.Color = clWindowText
+          PrintSettings.HeaderFont.Height = -13
+          PrintSettings.HeaderFont.Name = 'Tahoma'
+          PrintSettings.HeaderFont.Style = []
+          PrintSettings.FooterFont.Charset = DEFAULT_CHARSET
+          PrintSettings.FooterFont.Color = clWindowText
+          PrintSettings.FooterFont.Height = -13
+          PrintSettings.FooterFont.Name = 'Tahoma'
+          PrintSettings.FooterFont.Style = []
+          PrintSettings.PageNumSep = '/'
+          ScrollWidth = 21
+          SearchFooter.Color = clBtnFace
+          SearchFooter.FindNextCaption = 'Find &next'
+          SearchFooter.FindPrevCaption = 'Find &previous'
+          SearchFooter.Font.Charset = DEFAULT_CHARSET
+          SearchFooter.Font.Color = clWindowText
+          SearchFooter.Font.Height = -13
+          SearchFooter.Font.Name = 'Tahoma'
+          SearchFooter.Font.Style = []
+          SearchFooter.HighLightCaption = 'Highlight'
+          SearchFooter.HintClose = 'Close'
+          SearchFooter.HintFindNext = 'Find next occurrence'
+          SearchFooter.HintFindPrev = 'Find previous occurrence'
+          SearchFooter.HintHighlight = 'Highlight occurrences'
+          SearchFooter.MatchCaseCaption = 'Match case'
+          SearchFooter.ResultFormat = '(%d of %d)'
+          SelectionColor = clHighlight
+          SelectionTextColor = clHighlightText
+          SortSettings.DefaultFormat = ssAutomatic
+          Version = '8.2.4.1'
+          ColWidths = (
+            24
+            28
+            84
+            486
+            83
+            91
+            31
+            64
+            64
+            64
+            64
+            64
+            64
+            64
+            64
+            64)
+        end
+      end
+      object pnlInvoiceIndices: TsPanel
+        AlignWithMargins = True
+        Left = 1043
+        Top = 92
+        Width = 50
+        Height = 226
+        Align = alRight
+        TabOrder = 1
+        object pnlInvoiceIndex0: TsPanel
+          Left = 3
+          Top = 4
+          Width = 42
+          Height = 31
+          Alignment = taRightJustify
+          BevelInner = bvLowered
+          Caption = '1 '
+          Color = 16764840
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -16
           Font.Name = 'Tahoma'
           Font.Style = []
-          MultiLine = True
-          OwnerDraw = True
+          ParentBackground = False
           ParentFont = False
-          TabHeight = 42
           TabOrder = 0
-          TabPosition = tpRight
-          Tabs.Strings = (
-            '1'
-            '2'
-            '3'
-            '4'
-            '5'
-            '6'
-            '7'
-            '8'
-            '9'
-            '10')
-          TabIndex = 0
-          TabWidth = 35
-          OnChange = __tcInvoiceIndicesChange
-          OnDrawTab = __tcInvoiceIndicesDrawTab
-          OnResize = __tcInvoiceIndicesResize
-          object agrLines: TAdvStringGrid
-            Left = 4
-            Top = 4
-            Width = 984
-            Height = 214
-            Cursor = crDefault
-            Align = alClient
-            BevelInner = bvNone
-            BevelOuter = bvNone
-            BorderStyle = bsNone
-            ColCount = 16
-            DefaultRowHeight = 19
-            DrawingStyle = gdsClassic
-            FixedCols = 0
-            RowCount = 2
-            Font.Charset = ANSI_CHARSET
-            Font.Color = clBlack
-            Font.Height = -12
-            Font.Name = 'Courier New'
-            Font.Style = []
-            Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goColSizing, goThumbTracking]
-            ParentFont = False
-            ScrollBars = ssBoth
-            TabOrder = 0
-            OnDrawCell = agrLinesDrawCell
-            OnGetEditText = agrLinesGetEditText
-            OnKeyDown = agrLinesKeyDown
-            OnMouseDown = agrLinesMouseDown
-            OnMouseUp = agrLinesMouseUp
-            HoverRowCells = [hcNormal, hcSelected]
-            OnGetDisplText = agrLinesGetDisplText
-            OnGetCellColor = agrLinesGetCellColor
-            OnGetAlignment = agrLinesGetAlignment
-            OnRowChanging = agrLinesRowChanging
-            OnDblClickCell = agrLinesDblClickCell
-            OnCanEditCell = agrLinesCanEditCell
-            OnCellValidate = agrLinesCellValidate
-            OnCheckBoxClick = CheckBoxClick
-            OnColumnSize = agrLinesColumnSize
-            ActiveCellFont.Charset = DEFAULT_CHARSET
-            ActiveCellFont.Color = clWindowText
-            ActiveCellFont.Height = -13
-            ActiveCellFont.Name = 'Tahoma'
-            ActiveCellFont.Style = [fsBold]
-            ControlLook.FixedGradientHoverFrom = clGray
-            ControlLook.FixedGradientHoverTo = clWhite
-            ControlLook.FixedGradientDownFrom = clGray
-            ControlLook.FixedGradientDownTo = clSilver
-            ControlLook.DropDownHeader.Font.Charset = DEFAULT_CHARSET
-            ControlLook.DropDownHeader.Font.Color = clWindowText
-            ControlLook.DropDownHeader.Font.Height = -13
-            ControlLook.DropDownHeader.Font.Name = 'Tahoma'
-            ControlLook.DropDownHeader.Font.Style = []
-            ControlLook.DropDownHeader.Visible = True
-            ControlLook.DropDownHeader.Buttons = <>
-            ControlLook.DropDownFooter.Font.Charset = DEFAULT_CHARSET
-            ControlLook.DropDownFooter.Font.Color = clWindowText
-            ControlLook.DropDownFooter.Font.Height = -13
-            ControlLook.DropDownFooter.Font.Name = 'Tahoma'
-            ControlLook.DropDownFooter.Font.Style = []
-            ControlLook.DropDownFooter.Visible = True
-            ControlLook.DropDownFooter.Buttons = <>
-            Filter = <>
-            FilterDropDown.Font.Charset = DEFAULT_CHARSET
-            FilterDropDown.Font.Color = clWindowText
-            FilterDropDown.Font.Height = -13
-            FilterDropDown.Font.Name = 'Tahoma'
-            FilterDropDown.Font.Style = []
-            FilterDropDownClear = '(All)'
-            FilterEdit.TypeNames.Strings = (
-              'Starts with'
-              'Ends with'
-              'Contains'
-              'Not contains'
-              'Equal'
-              'Not equal'
-              'Larger than'
-              'Smaller than'
-              'Clear')
-            FixedColWidth = 24
-            FixedRowHeight = 19
-            FixedFont.Charset = DEFAULT_CHARSET
-            FixedFont.Color = clWindowText
-            FixedFont.Height = -13
-            FixedFont.Name = 'Tahoma'
-            FixedFont.Style = [fsBold]
-            FloatFormat = '%.2f'
-            HoverButtons.Buttons = <>
-            HoverButtons.Position = hbLeftFromColumnLeft
-            HTMLSettings.ImageFolder = 'images'
-            HTMLSettings.ImageBaseName = 'img'
-            Look = glStandard
-            PrintSettings.DateFormat = 'dd/mm/yyyy'
-            PrintSettings.Font.Charset = DEFAULT_CHARSET
-            PrintSettings.Font.Color = clWindowText
-            PrintSettings.Font.Height = -13
-            PrintSettings.Font.Name = 'Tahoma'
-            PrintSettings.Font.Style = []
-            PrintSettings.FixedFont.Charset = DEFAULT_CHARSET
-            PrintSettings.FixedFont.Color = clWindowText
-            PrintSettings.FixedFont.Height = -13
-            PrintSettings.FixedFont.Name = 'Tahoma'
-            PrintSettings.FixedFont.Style = []
-            PrintSettings.HeaderFont.Charset = DEFAULT_CHARSET
-            PrintSettings.HeaderFont.Color = clWindowText
-            PrintSettings.HeaderFont.Height = -13
-            PrintSettings.HeaderFont.Name = 'Tahoma'
-            PrintSettings.HeaderFont.Style = []
-            PrintSettings.FooterFont.Charset = DEFAULT_CHARSET
-            PrintSettings.FooterFont.Color = clWindowText
-            PrintSettings.FooterFont.Height = -13
-            PrintSettings.FooterFont.Name = 'Tahoma'
-            PrintSettings.FooterFont.Style = []
-            PrintSettings.PageNumSep = '/'
-            ScrollWidth = 21
-            SearchFooter.Color = clBtnFace
-            SearchFooter.FindNextCaption = 'Find &next'
-            SearchFooter.FindPrevCaption = 'Find &previous'
-            SearchFooter.Font.Charset = DEFAULT_CHARSET
-            SearchFooter.Font.Color = clWindowText
-            SearchFooter.Font.Height = -13
-            SearchFooter.Font.Name = 'Tahoma'
-            SearchFooter.Font.Style = []
-            SearchFooter.HighLightCaption = 'Highlight'
-            SearchFooter.HintClose = 'Close'
-            SearchFooter.HintFindNext = 'Find next occurrence'
-            SearchFooter.HintFindPrev = 'Find previous occurrence'
-            SearchFooter.HintHighlight = 'Highlight occurrences'
-            SearchFooter.MatchCaseCaption = 'Match case'
-            SearchFooter.ResultFormat = '(%d of %d)'
-            SelectionColor = clHighlight
-            SelectionTextColor = clHighlightText
-            SortSettings.DefaultFormat = ssAutomatic
-            Version = '8.2.4.1'
-            ExplicitWidth = 950
-            ColWidths = (
-              24
-              28
-              84
-              486
-              83
-              91
-              31
-              64
-              64
-              64
-              64
-              64
-              64
-              64
-              64
-              64)
+          OnClick = pnlInvoiceIndex0Click
+          OnDragDrop = pnlInvoiceIndex0DragDrop
+          OnDragOver = pnlInvoiceIndex0DragOver
+          SkinData.CustomColor = True
+          SkinData.CustomFont = True
+          object shpInvoiceIndex0: TShape
+            Left = 2
+            Top = 2
+            Width = 8
+            Height = 27
+            Align = alLeft
+            Brush.Color = clRed
+            Pen.Style = psClear
+            OnDragDrop = shpInvoiceIndex0DragDrop
+            OnDragOver = shpInvoiceIndex0DragOver
+            OnMouseUp = shpInvoiceIndex0MouseUp
+            ExplicitLeft = 1
+            ExplicitTop = 1
+            ExplicitHeight = 29
+          end
+          object shpInvoiceIndexRR0: TShape
+            Left = 10
+            Top = 2
+            Width = 8
+            Height = 27
+            Align = alLeft
+            Brush.Color = clBlue
+            Pen.Style = psClear
+            OnDragDrop = shpInvoiceIndex0DragDrop
+            OnDragOver = shpInvoiceIndex0DragOver
+            OnMouseUp = shpInvoiceIndex0MouseUp
+            ExplicitLeft = 24
+            ExplicitTop = 1
+            ExplicitHeight = 29
+          end
+        end
+        object pnlInvoiceIndex1: TsPanel
+          Tag = 1
+          Left = 3
+          Top = 41
+          Width = 42
+          Height = 31
+          Alignment = taRightJustify
+          BevelInner = bvLowered
+          Caption = '2 '
+          Color = clWhite
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -16
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentBackground = False
+          ParentFont = False
+          TabOrder = 1
+          OnClick = pnlInvoiceIndex0Click
+          OnDragDrop = pnlInvoiceIndex0DragDrop
+          OnDragOver = pnlInvoiceIndex0DragOver
+          SkinData.CustomColor = True
+          SkinData.CustomFont = True
+          object shpInvoiceIndex1: TShape
+            Left = 2
+            Top = 2
+            Width = 8
+            Height = 27
+            Align = alLeft
+            Pen.Style = psClear
+            OnDragDrop = shpInvoiceIndex0DragDrop
+            OnDragOver = shpInvoiceIndex0DragOver
+            OnMouseUp = shpInvoiceIndex0MouseUp
+            ExplicitLeft = 17
+            ExplicitHeight = 29
+          end
+          object shpInvoiceIndexRR1: TShape
+            Left = 10
+            Top = 2
+            Width = 8
+            Height = 27
+            Align = alLeft
+            Pen.Style = psClear
+            OnDragDrop = shpInvoiceIndex0DragDrop
+            OnDragOver = shpInvoiceIndex0DragOver
+            OnMouseUp = shpInvoiceIndex0MouseUp
+            ExplicitLeft = 27
+            ExplicitHeight = 29
+          end
+        end
+        object pnlInvoiceIndex2: TsPanel
+          Tag = 2
+          Left = 3
+          Top = 78
+          Width = 42
+          Height = 31
+          Alignment = taRightJustify
+          BevelInner = bvLowered
+          Caption = '3 '
+          Color = clWhite
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -16
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentBackground = False
+          ParentFont = False
+          TabOrder = 2
+          OnClick = pnlInvoiceIndex0Click
+          OnDragDrop = pnlInvoiceIndex0DragDrop
+          OnDragOver = pnlInvoiceIndex0DragOver
+          SkinData.CustomColor = True
+          SkinData.CustomFont = True
+          object shpInvoiceIndex2: TShape
+            Left = 2
+            Top = 2
+            Width = 8
+            Height = 27
+            Align = alLeft
+            Pen.Style = psClear
+            OnDragDrop = shpInvoiceIndex0DragDrop
+            OnDragOver = shpInvoiceIndex0DragOver
+            OnMouseUp = shpInvoiceIndex0MouseUp
+            ExplicitLeft = 17
+            ExplicitHeight = 29
+          end
+          object shpInvoiceIndexRR2: TShape
+            Left = 10
+            Top = 2
+            Width = 8
+            Height = 27
+            Align = alLeft
+            Pen.Style = psClear
+            OnDragDrop = shpInvoiceIndex0DragDrop
+            OnDragOver = shpInvoiceIndex0DragOver
+            OnMouseUp = shpInvoiceIndex0MouseUp
+            ExplicitLeft = 27
+            ExplicitHeight = 29
+          end
+        end
+        object pnlInvoiceIndex3: TsPanel
+          Tag = 3
+          Left = 3
+          Top = 115
+          Width = 42
+          Height = 31
+          Alignment = taRightJustify
+          BevelInner = bvLowered
+          Caption = '4 '
+          Color = clWhite
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -16
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentBackground = False
+          ParentFont = False
+          TabOrder = 3
+          OnClick = pnlInvoiceIndex0Click
+          OnDragDrop = pnlInvoiceIndex0DragDrop
+          OnDragOver = pnlInvoiceIndex0DragOver
+          SkinData.CustomColor = True
+          SkinData.CustomFont = True
+          object shpInvoiceIndex3: TShape
+            Left = 2
+            Top = 2
+            Width = 8
+            Height = 27
+            Align = alLeft
+            Pen.Style = psClear
+            OnDragDrop = shpInvoiceIndex0DragDrop
+            OnDragOver = shpInvoiceIndex0DragOver
+            OnMouseUp = shpInvoiceIndex0MouseUp
+            ExplicitLeft = 17
+            ExplicitHeight = 29
+          end
+          object shpInvoiceIndexRR3: TShape
+            Left = 10
+            Top = 2
+            Width = 8
+            Height = 27
+            Align = alLeft
+            Pen.Style = psClear
+            OnDragDrop = shpInvoiceIndex0DragDrop
+            OnDragOver = shpInvoiceIndex0DragOver
+            OnMouseUp = shpInvoiceIndex0MouseUp
+            ExplicitLeft = 27
+            ExplicitHeight = 29
+          end
+        end
+        object pnlInvoiceIndex4: TsPanel
+          Tag = 4
+          Left = 3
+          Top = 151
+          Width = 42
+          Height = 31
+          Alignment = taRightJustify
+          BevelInner = bvLowered
+          Caption = '5 '
+          Color = clWhite
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -16
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentBackground = False
+          ParentFont = False
+          TabOrder = 4
+          OnClick = pnlInvoiceIndex0Click
+          OnDragDrop = pnlInvoiceIndex0DragDrop
+          OnDragOver = pnlInvoiceIndex0DragOver
+          SkinData.CustomColor = True
+          SkinData.CustomFont = True
+          object shpInvoiceIndex4: TShape
+            Left = 2
+            Top = 2
+            Width = 8
+            Height = 27
+            Align = alLeft
+            Pen.Style = psClear
+            OnDragDrop = shpInvoiceIndex0DragDrop
+            OnDragOver = shpInvoiceIndex0DragOver
+            OnMouseUp = shpInvoiceIndex0MouseUp
+            ExplicitLeft = 17
+            ExplicitHeight = 29
+          end
+          object shpInvoiceIndexRR4: TShape
+            Left = 10
+            Top = 2
+            Width = 8
+            Height = 27
+            Align = alLeft
+            Pen.Style = psClear
+            OnDragDrop = shpInvoiceIndex0DragDrop
+            OnDragOver = shpInvoiceIndex0DragOver
+            OnMouseUp = shpInvoiceIndex0MouseUp
+            ExplicitLeft = 27
+            ExplicitHeight = 29
+          end
+        end
+        object pnlInvoiceIndex5: TsPanel
+          Tag = 5
+          Left = 3
+          Top = 189
+          Width = 42
+          Height = 31
+          Alignment = taRightJustify
+          BevelInner = bvLowered
+          Caption = '6 '
+          Color = clWhite
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -16
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentBackground = False
+          ParentFont = False
+          TabOrder = 5
+          OnClick = pnlInvoiceIndex0Click
+          OnDragDrop = pnlInvoiceIndex0DragDrop
+          OnDragOver = pnlInvoiceIndex0DragOver
+          SkinData.CustomColor = True
+          SkinData.CustomFont = True
+          object shpInvoiceIndex5: TShape
+            Left = 2
+            Top = 2
+            Width = 8
+            Height = 27
+            Align = alLeft
+            Pen.Style = psClear
+            OnDragDrop = shpInvoiceIndex0DragDrop
+            OnDragOver = shpInvoiceIndex0DragOver
+            OnMouseUp = shpInvoiceIndex0MouseUp
+            ExplicitLeft = 17
+            ExplicitHeight = 29
+          end
+          object shpInvoiceIndexRR5: TShape
+            Left = 10
+            Top = 2
+            Width = 8
+            Height = 27
+            Align = alLeft
+            Pen.Style = psClear
+            OnDragDrop = shpInvoiceIndex0DragDrop
+            OnDragOver = shpInvoiceIndex0DragOver
+            OnMouseUp = shpInvoiceIndex0MouseUp
+            ExplicitLeft = 27
+            ExplicitHeight = 29
+          end
+        end
+        object pnlInvoiceIndex6: TsPanel
+          Tag = 6
+          Left = 3
+          Top = 226
+          Width = 42
+          Height = 31
+          Alignment = taRightJustify
+          BevelInner = bvLowered
+          Caption = '7 '
+          Color = clWhite
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -16
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentBackground = False
+          ParentFont = False
+          TabOrder = 6
+          OnClick = pnlInvoiceIndex0Click
+          OnDragDrop = pnlInvoiceIndex0DragDrop
+          OnDragOver = pnlInvoiceIndex0DragOver
+          SkinData.CustomColor = True
+          SkinData.CustomFont = True
+          object shpInvoiceIndex6: TShape
+            Left = 2
+            Top = 2
+            Width = 8
+            Height = 27
+            Align = alLeft
+            Pen.Style = psClear
+            OnDragDrop = shpInvoiceIndex0DragDrop
+            OnDragOver = shpInvoiceIndex0DragOver
+            OnMouseUp = shpInvoiceIndex0MouseUp
+            ExplicitLeft = 17
+            ExplicitHeight = 29
+          end
+          object shpInvoiceIndexRR6: TShape
+            Left = 10
+            Top = 2
+            Width = 8
+            Height = 27
+            Align = alLeft
+            Pen.Style = psClear
+            OnDragDrop = shpInvoiceIndex0DragDrop
+            OnDragOver = shpInvoiceIndex0DragOver
+            OnMouseUp = shpInvoiceIndex0MouseUp
+            ExplicitLeft = 27
+            ExplicitHeight = 29
+          end
+        end
+        object pnlInvoiceIndex7: TsPanel
+          Tag = 7
+          Left = 3
+          Top = 263
+          Width = 42
+          Height = 31
+          Alignment = taRightJustify
+          BevelInner = bvLowered
+          Caption = '8 '
+          Color = clWhite
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -16
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentBackground = False
+          ParentFont = False
+          TabOrder = 7
+          OnClick = pnlInvoiceIndex0Click
+          OnDragDrop = pnlInvoiceIndex0DragDrop
+          OnDragOver = pnlInvoiceIndex0DragOver
+          SkinData.CustomColor = True
+          SkinData.CustomFont = True
+          object shpInvoiceIndex7: TShape
+            Left = 2
+            Top = 2
+            Width = 8
+            Height = 27
+            Align = alLeft
+            Pen.Style = psClear
+            OnDragDrop = shpInvoiceIndex0DragDrop
+            OnDragOver = shpInvoiceIndex0DragOver
+            OnMouseUp = shpInvoiceIndex0MouseUp
+            ExplicitLeft = 17
+            ExplicitHeight = 29
+          end
+          object shpInvoiceIndexRR7: TShape
+            Left = 10
+            Top = 2
+            Width = 8
+            Height = 27
+            Align = alLeft
+            Pen.Style = psClear
+            OnDragDrop = shpInvoiceIndex0DragDrop
+            OnDragOver = shpInvoiceIndex0DragOver
+            OnMouseUp = shpInvoiceIndex0MouseUp
+            ExplicitLeft = 27
+            ExplicitHeight = 29
+          end
+        end
+        object pnlInvoiceIndex8: TsPanel
+          Tag = 8
+          Left = 3
+          Top = 300
+          Width = 42
+          Height = 31
+          Alignment = taRightJustify
+          BevelInner = bvLowered
+          Caption = '9 '
+          Color = clWhite
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -16
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentBackground = False
+          ParentFont = False
+          TabOrder = 8
+          OnClick = pnlInvoiceIndex0Click
+          OnDragDrop = pnlInvoiceIndex0DragDrop
+          OnDragOver = pnlInvoiceIndex0DragOver
+          SkinData.CustomColor = True
+          SkinData.CustomFont = True
+          object shpInvoiceIndex8: TShape
+            Left = 2
+            Top = 2
+            Width = 8
+            Height = 27
+            Align = alLeft
+            Pen.Style = psClear
+            OnDragDrop = shpInvoiceIndex0DragDrop
+            OnDragOver = shpInvoiceIndex0DragOver
+            OnMouseUp = shpInvoiceIndex0MouseUp
+            ExplicitLeft = 0
+            ExplicitHeight = 29
+          end
+          object shpInvoiceIndexRR8: TShape
+            Left = 10
+            Top = 2
+            Width = 8
+            Height = 27
+            Align = alLeft
+            Pen.Style = psClear
+            OnDragDrop = shpInvoiceIndex0DragDrop
+            OnDragOver = shpInvoiceIndex0DragOver
+            OnMouseUp = shpInvoiceIndex0MouseUp
+            ExplicitLeft = 27
+            ExplicitHeight = 29
+          end
+        end
+        object pnlInvoiceIndex9: TsPanel
+          Tag = 9
+          Left = 3
+          Top = 337
+          Width = 42
+          Height = 31
+          Alignment = taRightJustify
+          BevelInner = bvLowered
+          Caption = '10 '
+          Color = clWhite
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -16
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentBackground = False
+          ParentFont = False
+          TabOrder = 9
+          OnClick = pnlInvoiceIndex0Click
+          OnDragDrop = pnlInvoiceIndex0DragDrop
+          OnDragOver = pnlInvoiceIndex0DragOver
+          SkinData.CustomColor = True
+          SkinData.CustomFont = True
+          object shpInvoiceIndex9: TShape
+            Left = 2
+            Top = 2
+            Width = 8
+            Height = 27
+            Align = alLeft
+            Pen.Style = psClear
+            OnDragDrop = shpInvoiceIndex0DragDrop
+            OnDragOver = shpInvoiceIndex0DragOver
+            OnMouseUp = shpInvoiceIndex0MouseUp
+            ExplicitLeft = 1
+            ExplicitTop = 1
+            ExplicitHeight = 29
+          end
+          object shpInvoiceIndexRR9: TShape
+            Left = 10
+            Top = 2
+            Width = 8
+            Height = 27
+            Align = alLeft
+            Pen.Style = psClear
+            OnDragDrop = shpInvoiceIndex0DragDrop
+            OnDragOver = shpInvoiceIndex0DragOver
+            OnMouseUp = shpInvoiceIndex0MouseUp
+            ExplicitLeft = 25
+            ExplicitTop = 1
+            ExplicitHeight = 29
           end
         end
       end
