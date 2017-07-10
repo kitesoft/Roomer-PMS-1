@@ -436,6 +436,7 @@ type
     procedure UpdateGroupAccountAll(reservation, RoomReservation, RoomReservationAlias: Integer; GroupAccount: boolean);
     procedure UpdateGroupAccountOne(reservation, RoomReservation, RoomReservationAlias: Integer; GroupAccount: boolean;
       InvoiceIndex: Integer = -1);
+    procedure MoveRoomDateToInvoiceIndex(aReservation, aRoomReservation: integer; aDate:TDate; aInvoiceIndex: Integer);
     function UpdateReservationMarket(aReservation: Integer; aMarket: TReservationMarketType): boolean;
 
     function UpdateExpectedCheckoutTime(aReservation, aRoomReservation: Integer; const aCheckoutTime: string): boolean;
@@ -3787,6 +3788,46 @@ begin
     end;
   end;
 
+end;
+
+procedure Td.MoveRoomDateToInvoiceIndex(aReservation, aRoomReservation: integer; aDate:TDate; aInvoiceIndex: Integer);
+var
+  s: string;
+  ExecutionPlan: TRoomerExecutionPlan;
+begin
+  if not isAllRRSameCurrency(aReservation) then
+  begin
+    showmessage(GetTranslatedText('shTx_D_CurrencyCancel'));
+    exit;
+  end;
+
+  ExecutionPlan := d.roomerMainDataSet.CreateExecutionPlan;
+  try
+    ExecutionPlan.BeginTransaction;
+    try
+      s := s + ' update roomsdate rd '#10;
+      s := s + ' join roomreservations rr on rd.roomreservation=rr.roomreservation '#10;
+      s := s + ' set '#10;
+      s := s + '   rd.invoiceindex = case when rr.invoiceindex= ' + _db(aInvoiceIndex) + ' then NULL else  ' + _db(aInvoiceIndex) + ' end '#10;
+      s := s + ' WHERE '#10;
+      s := s + '     rd.roomreservation = ' + _db(aRoomReservation) + chr(10);
+      s := s + ' AND rd.aDate = ' + _db(aDate) + chr(10);
+
+
+      ExecutionPlan.AddExec(s);
+
+      if ExecutionPlan.Execute(ptExec, false, false) then
+        ExecutionPlan.CommitTransaction
+      else
+        raise Exception.Create(ExecutionPlan.ExecException);
+
+    except
+      ExecutionPlan.RollbackTransaction;
+      raise;
+    end;
+  finally
+    Executionplan.Free;
+  end;
 end;
 
 procedure Td.UpdateGroupAccountOne(reservation, RoomReservation, RoomReservationAlias: Integer; GroupAccount: boolean;

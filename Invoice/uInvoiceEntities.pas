@@ -256,8 +256,8 @@ begin
 
     sql := sql + ' select '#10;
     sql := sql + '     invoiceindex, '#10;
-    sql := sql + '     sum(invoicelinesTotal) as invoicelinestotal, '#10;
-    sql := sql + '     sum(RoomrentTotal) as RoomrentTotal '#10;
+    sql := sql + '     sum(coalesce(invoicelinesTotal,0)) as invoicelinestotal, '#10;
+    sql := sql + '     sum(coalesce(RoomrentTotal,0)) as RoomrentTotal  '#10;
     sql := sql + ' from '#10;
     sql := sql + '  (select '#10;
     sql := sql + '       il.InvoiceIndex, '#10;
@@ -272,20 +272,22 @@ begin
     sql := sql + '    select '#10;
     sql := sql + '         rr.invoiceindex, '#10;
     sql := sql + '         0, '#10;
-    sql := sql + '         sum(rd.roomrate) '#10;
+    sql := sql + '         sum(coalesce(rd.roomrate,0)) '#10;
     sql := sql + '    from roomreservations rr '#10;
     sql := sql + '    join roomsdate rd on rd.roomreservation=rr.roomreservation and (rd.invoiceindex is null or rd.invoiceindex=rr.invoiceindex) '#10;
     sql := sql + '    where rr.reservation=%d'#10;
     sql := sql + '    and rr.roomreservation = %d '#10;
+    sql := sql + '    group by invoiceindex '#10;
     sql := sql + '    union '#10;
     sql := sql + '    select '#10;
     sql := sql + '         rd.invoiceindex, '#10;
     sql := sql + '         0, '#10;
-    sql := sql + '         sum(rd.roomrate) '#10;
+    sql := sql + '         sum(coalesce(rd.roomrate,0)) '#10;
     sql := sql + '    from roomsdate rd '#10;
     sql := sql + '    join roomreservations rr on rd.roomreservation=rr.roomreservation and (rd.invoiceindex is not null and rd.invoiceindex <> rr.invoiceindex) '#10;
     sql := sql + '    where rr.reservation=%d'#10;
     sql := sql + '    and rr.roomreservation = %d '#10;
+    sql := sql + '    group by invoiceindex '#10;
     sql := sql + '     ) u '#10;
     sql := sql + ' where invoicelinestotal <> 0 or roomrenttotal <> 0 '#10;
     sql := sql + ' group by invoiceindex '#10;

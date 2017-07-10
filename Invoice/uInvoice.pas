@@ -19,7 +19,7 @@ uses
     , uTaxCalc
     , frxExportMail, frxExportImage, frxExportRTF, frxExportHTML
 
-  , uInvoiceEntities
+  , uInvoiceEntities, sScrollBox
     ;
 
 type
@@ -231,7 +231,7 @@ type
     mnuMoveRoomRentFromGroupToNormalRoomInvoice: TMenuItem;
     btnGetCustomer: TsButton;
     sPanel5: TsPanel;
-    sPanel4: TsPanel;
+    sPanel4: TsScrollBox;
     pnlInvoiceIndex0: TsPanel;
     pnlInvoiceIndex1: TsPanel;
     pnlInvoiceIndex2: TsPanel;
@@ -392,6 +392,7 @@ type
     procedure Exit1Click(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure pnlPaymentButtonsResize(Sender: TObject);
+    procedure sPanel4DragOver(Sender, Source: TObject; X, Y: Integer; State: TDragState; var Accept: Boolean);
   private
     { Private declarations }
 
@@ -2097,6 +2098,15 @@ end;
 procedure TfrmInvoice.shpInvoiceIndex0MouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
 begin
   pnlInvoiceIndex0Click(TShape(Sender).Parent);
+end;
+
+procedure TfrmInvoice.sPanel4DragOver(Sender, Source: TObject; X, Y: Integer; State: TDragState; var Accept: Boolean);
+begin
+  Accept := False;
+  if Y < 15 then
+    sPanel4.VertScrollBar.Position := sPanel4.VertScrollBar.Position - 8
+  else if Y > sPanel4.Height  - 15 then
+    sPanel4.VertScrollBar.Position := sPanel4.VertScrollBar.Position + 8;
 end;
 
 function TfrmInvoice.GetCalculatedNumberOfItems(ItemId: String; dDefault: Double): Double;

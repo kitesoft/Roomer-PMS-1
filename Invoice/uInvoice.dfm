@@ -1202,7 +1202,7 @@ object frmInvoice: TfrmInvoice
       object sPanel1: TsPanel
         Left = 0
         Top = 91
-        Width = 1040
+        Width = 1026
         Height = 250
         Align = alClient
         BevelOuter = bvNone
@@ -1213,10 +1213,11 @@ object frmInvoice: TfrmInvoice
         Padding.Bottom = 5
         TabOrder = 2
         SkinData.SkinSection = 'PANEL'
+        ExplicitWidth = 1040
         object agrLines: TAdvStringGrid
           Left = 10
           Top = 5
-          Width = 1020
+          Width = 1006
           Height = 240
           Cursor = crDefault
           Align = alClient
@@ -1341,6 +1342,7 @@ object frmInvoice: TfrmInvoice
           SearchFooter.ResultFormat = '(%d of %d)'
           SortSettings.DefaultFormat = ssAutomatic
           Version = '8.2.4.1'
+          ExplicitWidth = 1020
           ColWidths = (
             24
             91
@@ -1351,17 +1353,21 @@ object frmInvoice: TfrmInvoice
             31)
         end
       end
-      object sPanel4: TsPanel
-        AlignWithMargins = True
-        Left = 1043
-        Top = 94
-        Width = 50
-        Height = 244
+      object sPanel4: TsScrollBox
+        Left = 1026
+        Top = 91
+        Width = 70
+        Height = 250
+        HorzScrollBar.Visible = False
         Align = alRight
         TabOrder = 1
+        OnDragOver = sPanel4DragOver
+        ExplicitLeft = 1018
+        ExplicitTop = 94
+        ExplicitHeight = 244
         object pnlInvoiceIndex0: TsPanel
           Left = 3
-          Top = 4
+          Top = 3
           Width = 42
           Height = 31
           Alignment = taRightJustify

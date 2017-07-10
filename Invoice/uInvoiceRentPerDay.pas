@@ -80,7 +80,7 @@ uses
   frxExportHTML,
   uInvoiceEntities,
   uCurrencyHandlersMap,
-  uInvoiceObjects;
+  uInvoiceObjects, sScrollBox;
 
 type
   TCreditType = (ctManual, ctReference, ctErr);
@@ -209,7 +209,7 @@ type
     mnuMoveRoomRentFromRoomInvoiceToGroup: TMenuItem;
     mnuMoveRoomRentFromGroupToNormalRoomInvoice: TMenuItem;
     pnlLnes: TsPanel;
-    pnlInvoiceIndices: TsPanel;
+    pnlInvoiceIndices: TsScrollBox;
     pnlInvoiceIndex0: TsPanel;
     pnlInvoiceIndex1: TsPanel;
     pnlInvoiceIndex2: TsPanel;
@@ -429,6 +429,7 @@ type
     procedure acHidePackageItemsExecute(Sender: TObject);
     procedure acShowpackageItemsExecute(Sender: TObject);
     procedure chkShowPackageItemsClick(Sender: TObject);
+    procedure pnlInvoiceIndicesDragOver(Sender, Source: TObject; X, Y: Integer; State: TDragState; var Accept: Boolean);
   private
     { Private declarations }
 
@@ -1059,6 +1060,7 @@ begin
 
       DisplayTotals;
       AddAndInitNewRow;
+      UpdateInvoiceIndexTabs;
 
       chkChanged;
     finally
@@ -4269,6 +4271,12 @@ begin
       exit;
     end;
 
+    if (lInvoiceLine.ItemKind = ikRoomRent) and (aCol in [col_Select]) then
+    begin
+      CanEdit := True;
+      exit;
+    end;
+
     if lInvoiceLine.IsGeneratedLine and not(ACol in [col_Description]) then
     begin
       CanEdit := false;
@@ -4567,8 +4575,8 @@ end;
 
 procedure TfrmInvoiceRentPerDay.MoveRoomToNewInvoiceIndex(toInvoiceIndex: integer);
 begin
-  d.UpdateGroupAccountone(reservation, RoomReservation, RoomReservation, RoomReservation = 0, toInvoiceIndex);
-  InvoiceIndex := FInvoiceIndex;
+//  d.MoveRoomDateToInvoiceIndex(Reservation, RoomReservation, toInvoiceIndex);
+//  InvoiceIndex := FInvoiceIndex;
 end;
 
 function TfrmInvoiceRentPerDay.IsRoomSelected: boolean;
@@ -4863,8 +4871,16 @@ var
   list: TList<integer>;
   i, Res: integer;
   invoiceLine: TInvoiceLine;
+  lMoveToIndex: integer;
 begin
+  lMoveToIndex := TPanel(Sender).Tag;
+  if lMoveToIndex = FInvoiceIndex then
+    Exit;
+
   Res := -1;
+
+  SaveAnd(False);
+
   if (Source = agrLines) then
   begin
     list := GetSelectedRowNrs;
@@ -4874,7 +4890,11 @@ begin
         invoiceLine := GetInvoiceLineByRow(list[i]);
         agrLines.row := list[i];
         if invoiceLine.IsGeneratedLine AND (invoiceLine.ItemKind = ikRoomRent) then
-          MoveRoomToNewInvoiceIndex(TsPanel(Sender).Tag)
+        begin
+          invoiceline.MoveToInvoiceIndex(lMoveToIndex);
+          // Moved generated childlines to new invoiceindex too
+          FInvoiceLinesList.Remove(invoiceLine);
+        end
         else if invoiceLine.IsGeneratedLine AND (invoiceLine.ItemKind = ikStayTax) then
         begin
           if Res <> mrAll then
@@ -4884,22 +4904,25 @@ begin
             mrYes, mrAll:
               begin
                 actToggleLodgingTax.Execute;
-                MoveItemToNewInvoiceIndex(list[i], TsPanel(Sender).Tag);
+                MoveItemToNewInvoiceIndex(List[i], lMoveToIndex);
               end;
             mrCancel:
               exit;
           end;
         end
         else
-          MoveItemToNewInvoiceIndex(list[i], TsPanel(Sender).Tag);
+          MoveItemToNewInvoiceIndex(List[i], lMoveToIndex);
+          //invoiceline.MoveToInvoiceIndex(TsPanel(Sender).Tag);
       end;
     finally
       list.Free;
     end;
+
+    UpdateGrid;
   end
   else
   begin
-    MoveDownpaymentToInvoiceIndex(TsPanel(Sender).Tag);
+    MoveDownpaymentToInvoiceIndex(lMoveToIndex);
   end;
 end;
 
@@ -4907,6 +4930,16 @@ procedure TfrmInvoiceRentPerDay.pnlInvoiceIndex0DragOver(Sender, Source: TObject
   var Accept: boolean);
 begin
   Accept := (Source = agrLines) OR (Source IS TcxDragControlObject);
+end;
+
+procedure TfrmInvoiceRentPerDay.pnlInvoiceIndicesDragOver(Sender, Source: TObject; X, Y: Integer; State: TDragState;
+  var Accept: Boolean);
+begin
+  Accept := False;
+  if Y < 15 then
+    pnlInvoiceIndices.VertScrollBar.Position := pnlInvoiceIndices.VertScrollBar.Position - 8
+  else if Y > pnlInvoiceIndices.Height  - 15 then
+    pnlInvoiceIndices.VertScrollBar.Position := pnlInvoiceIndices.VertScrollBar.Position + 8;
 end;
 
 procedure TfrmInvoiceRentPerDay.actMoveRoomToGroupInvoiceExecute(Sender: TObject);
