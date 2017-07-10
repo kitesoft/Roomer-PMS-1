@@ -192,7 +192,7 @@ type
     labTaxNights: TsLabel;
     actAddPackage: TAction;
     actAddRoom: TAction;
-    chkShowPackage: TsCheckBox;
+    chkShowPackageItems: TsCheckBox;
     mPayments: TdxMemData;
     mPaymentsPayDate: TDateField;
     mPaymentsPayType: TWideStringField;
@@ -344,15 +344,20 @@ type
     acHideAllCTax: TAction;
     acHideAllBreakfasts: TAction;
     acHideAllDiscounts: TAction;
-    C1: TMenuItem;
-    B1: TMenuItem;
-    D1: TMenuItem;
+    mnuCityTax: TMenuItem;
+    mnuBreakfast: TMenuItem;
+    mnuDiscounts: TMenuItem;
     mnuShowAllCTax: TMenuItem;
     mnuHideallCitytax: TMenuItem;
     mnuShowallincludedbreakfasts: TMenuItem;
     mnuHideallincludedbreakfasts: TMenuItem;
     mnuShowalldiscounts: TMenuItem;
     mnuHidealldiscounts: TMenuItem;
+    acShowpackageItems: TAction;
+    acHidePackageItems: TAction;
+    mnuPackages: TMenuItem;
+    mnuShowPackageItems: TMenuItem;
+    mnuHidePackageItems: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure agrLinesMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
     procedure edtCustomerDblClick(Sender: TObject);
@@ -421,6 +426,9 @@ type
     procedure acHideAllCTaxExecute(Sender: TObject);
     procedure acHideAllBreakfastsExecute(Sender: TObject);
     procedure acHideAllDiscountsExecute(Sender: TObject);
+    procedure acHidePackageItemsExecute(Sender: TObject);
+    procedure acShowpackageItemsExecute(Sender: TObject);
+    procedure chkShowPackageItemsClick(Sender: TObject);
   private
     { Private declarations }
 
@@ -991,7 +999,6 @@ begin
     invoiceLine.PurchaseDate := PurchaseDate;
     invoiceLine.Reference := Refrence;
     invoiceLine.Source := Source;
-    invoiceLine.isPackage := isPackage;
     invoiceLine.TotalIsIncludedInParent := false;
     invoiceLine.VisibleOnInvoice := aVisibleOnInvoice;
 
@@ -2186,7 +2193,7 @@ var
   sql: string;
   package: string;
 
-  showPackage: boolean;
+  showPackageItems: boolean;
   aRoom: string;
   tmpint: integer;
   isPackage: boolean;
@@ -2598,9 +2605,9 @@ begin
           mRoomRes.FieldByName('GroupAccount').asBoolean := zRoomRSet['GroupAccount'];
 
           if package <> '' then
-            if glb.LocateSpecificRecordAndGetValue('packages', 'Package', package, 'showItemsOnInvoice', showPackage)
+            if glb.LocateSpecificRecordAndGetValue('packages', 'Package', package, 'showItemsOnInvoice', showPackageItems)
             then
-              chkShowPackage.checked := showPackage;
+              chkShowPackageItems.checked := showPackageItems;
 
           dayCount := trunc(Departure) - trunc(Arrival);
           RateDate := Arrival;
@@ -3625,9 +3632,9 @@ var
   iMultiplier: integer;
 var
   s: string;
-  showPackage: boolean;
+  showPackageItems: boolean;
 begin
-  showPackage := chkShowPackage.checked;
+  showPackageItems := chkShowPackageItems.checked;
 
   iMultiplier := 1;
 
@@ -3754,7 +3761,7 @@ begin
   s := s + ', ' + _db(edtInvRefrence.Caption);
   s := s + ', ' + _db(edtDisplayCurrency.Text);
   s := s + ', ' + _db(GetRate(edtDisplayCurrency.Text));
-  s := s + ', ' + _db(showPackage);
+  s := s + ', ' + _db(showPackageItems);
   s := s + ', ' + _db(aInvoiceLocation);
   s := s + ', ' + _db(FInvoiceLinesList.TotalCityTaxRevenues);
   s := s + ', ' + _db(FInvoiceLinesList.CityTaxUnitCount);
@@ -5587,7 +5594,7 @@ begin
   try
     if SaveInvoice(lNewInvoiceNumber, stDefinitive, lInvoiceLocation) then
     begin
-      ViewInvoice2(lNewInvoiceNumber, True, false, True, chkShowPackage.checked, zEmailAddress);
+      ViewInvoice2(lNewInvoiceNumber, True, false, True, chkShowPackageItems.checked, zEmailAddress);
       d.roomerMainDataSet.SystempackagesCreateHeaderIfNotExists(FRoomReservation, FRoomReservation);
       result := True;
     end
@@ -5801,6 +5808,12 @@ begin
   UpdateGrid;
 end;
 
+procedure TfrmInvoiceRentPerDay.acHidePackageItemsExecute(Sender: TObject);
+begin
+  FInvoiceLinesList.ShowPackageItemsOnInvoice := False;
+  UpdateGrid;
+end;
+
 procedure TfrmInvoiceRentPerDay.acShowAllCTaxExecute(Sender: TObject);
 begin
   FInvoiceLinesList.SetAllVisibleOnInvoiceTo(True, [ikStayTax]);
@@ -5816,6 +5829,12 @@ end;
 procedure TfrmInvoiceRentPerDay.acShowAlllBreakfastsExecute(Sender: TObject);
 begin
   FInvoiceLinesList.SetAllVisibleOnInvoiceTo(True, [ikBreakfast]);
+  UpdateGrid;
+end;
+
+procedure TfrmInvoiceRentPerDay.acShowpackageItemsExecute(Sender: TObject);
+begin
+  FInvoiceLinesList.ShowPackageItemsOnInvoice := True;
   UpdateGrid;
 end;
 
@@ -6672,15 +6691,11 @@ begin
 end;
 
 procedure TfrmInvoiceRentPerDay.PrintProforma;
-var
-  showPackage: boolean;
 begin
-  showPackage := chkShowPackage.checked;
-
   PROFORMA_INVOICE_NUMBER := CreateProformaID;
   try
     SaveInvoice(PROFORMA_INVOICE_NUMBER, stProforma);
-    ViewInvoice2(PROFORMA_INVOICE_NUMBER, True, false, false, showPackage, zEmailAddress);
+    ViewInvoice2(PROFORMA_INVOICE_NUMBER, True, false, false, chkShowPackageItems.checked, zEmailAddress);
   finally
     RemoveCurrentProformeInvoice(PROFORMA_INVOICE_NUMBER);
   end;
@@ -6765,6 +6780,14 @@ begin
 
   result := FInvoiceLinesList.IsChanged or HeaderChanged or (DeletedLines.Count > 0);
   btnSaveChanges.Visible := result;
+end;
+
+procedure TfrmInvoiceRentPerDay.chkShowPackageItemsClick(Sender: TObject);
+begin
+  if chkShowPackageItems.Checked then
+    acShowpackageItemsExecute(Sender)
+  else
+    acHidePackageItemsExecute(Sender);
 end;
 
 procedure TfrmInvoiceRentPerDay.LoadRoomListForCurrentReservation(reservation: integer);
