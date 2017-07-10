@@ -1,4 +1,4 @@
-object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
+﻿object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
   Left = 686
   Top = 154
   HorzScrollBar.Visible = False
@@ -338,15 +338,16 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         BoundLabel.Font.Name = 'Tahoma'
         BoundLabel.Font.Style = []
       end
-      object chkShowPackage: TsCheckBox
+      object chkShowPackageItems: TsCheckBox
         Left = 724
         Top = 167
-        Width = 111
-        Height = 20
-        Caption = 'Package on invoice'
+        Width = 144
+        Height = 17
+        Caption = 'Packageitems on invoice'
         Checked = True
         State = cbChecked
         TabOrder = 5
+        OnClick = chkShowPackageItemsClick
         SkinData.SkinSection = 'CHECKBOX'
         ImgChecked = 0
         ImgUnchecked = 0
@@ -2268,6 +2269,16 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
       Caption = 'Hide all discounts'
       OnExecute = acHideAllDiscountsExecute
     end
+    object acShowpackageItems: TAction
+      Category = 'ShowHide'
+      Caption = 'Show packageitems'
+      OnExecute = acShowpackageItemsExecute
+    end
+    object acHidePackageItems: TAction
+      Category = 'ShowHide'
+      Caption = 'Hide packageitems'
+      OnExecute = acHidePackageItemsExecute
+    end
   end
   object timCloseInvoice: TTimer
     Enabled = False
@@ -2299,7 +2310,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
           'Visible')
       end
       item
-        Component = chkShowPackage
+        Component = chkShowPackageItems
         Properties.Strings = (
           'Checked')
       end
@@ -2590,7 +2601,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
   object mnuShowOnInvoice: TPopupMenu
     Left = 352
     Top = 384
-    object C1: TMenuItem
+    object mnuCityTax: TMenuItem
       Caption = 'Citytax'
       object mnuShowAllCTax: TMenuItem
         Action = acShowAllCTax
@@ -2599,7 +2610,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         Action = acHideAllCTax
       end
     end
-    object B1: TMenuItem
+    object mnuBreakfast: TMenuItem
       Caption = 'Breakfasts'
       object mnuShowallincludedbreakfasts: TMenuItem
         Action = acShowAlllBreakfasts
@@ -2608,13 +2619,22 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         Action = acHideAllBreakfasts
       end
     end
-    object D1: TMenuItem
+    object mnuDiscounts: TMenuItem
       Caption = 'Discounts'
       object mnuShowalldiscounts: TMenuItem
         Action = acShowAllDiscounts
       end
       object mnuHidealldiscounts: TMenuItem
         Action = acHideAllDiscounts
+      end
+    end
+    object mnuPackages: TMenuItem
+      Caption = 'Packages'
+      object mnuShowPackageItems: TMenuItem
+        Action = acShowpackageItems
+      end
+      object mnuHidePackageItems: TMenuItem
+        Action = acHidePackageItems
       end
     end
   end
