@@ -223,24 +223,28 @@ type
     constructor Create(aIndex, _id: integer); override;
     destructor Destroy; override;
 
+    /// <summary>
+    ///   Hiding of package items is done by the "Pacakge on invoice" checkbox.
+    /// </summary>
     function CanBeHiddenFromInvoice: boolean; override;
 
     procedure AddParent(aParent: TInvoiceLine);
     procedure RemoveParent(aParent: TInvoiceLine);
     procedure ClearParentsList;
     procedure AddParentsForRoomreservation(aRoomRes: integer);
-
   end;
 
   // TODO Refactor into TCollection, so CollectionItems can call functions from this collection
   TInvoiceLineList = class(TObjectlist<TInvoiceLine>)
   private
+    FShowPackageItem: boolean;
     function GetTotalOnInvoiceNativeCurrency: Double;
     function GetTotalVatOnInvoice: Double;
     function GetTotalCityTaxRevenues: Double;
     function GetIsChanged: boolean;
     function GetCityTaxUnitCount: Double;
     function GetLastLineIndex: integer;
+    procedure SetShowPackageItems(const Value: boolean);
   public
     function AddInvoiceLine(aLineId: integer; aParent: TInvoiceLine): TInvoiceLine;
     function AddPackageInvoiceLine(aLineId: integer; aParent: TInvoiceLine; aRoomreservation:integer): TPackageInvoiceLine;
@@ -258,6 +262,8 @@ type
     property TotalCityTaxRevenues: Double read GetTotalCityTaxRevenues;
     property CityTaxUnitCount: Double read GetCityTaxUnitCount;
     property IsChanged: boolean read GetIsChanged;
+
+    property ShowPackageItemsOnInvoice: boolean read FShowPackageItem write SetShowPackageItems;
   end;
 
 
@@ -465,7 +471,7 @@ end;
 
 function TInvoiceLineList.AddInvoiceLine(aLineId: integer; aParent: TInvoiceLine): TInvoiceLine;
 begin
-  Result := TInvoiceLine.Create(aLineId, GetLastLineIndex+1);
+  Result := TInvoiceLine.Create(GetLastLineIndex+1, aLineId);
   Result.Parent := aParent;
   Add(Result);
 end;
@@ -483,10 +489,11 @@ function TInvoiceLineList.AddPackageInvoiceLine(aLineId: integer; aParent: TInvo
 var
   lInvLine: TInvoiceLine;
 begin
-  Result := TPackageInvoiceLine.Create(aLineId, GetLastLineIndex+1);
+  Result := TPackageInvoiceLine.Create(GetLastLineIndex+1, aLineId);
   Result.Parent := aParent;
   Add(Result);
 
+  // If parent is not supplied, then look for roomrent item and set this as parent
   if not assigned(aParent) and (aRoomReservation > 0) then
     for lInvLine in Self do
       if (lInvLine.ItemKind = ikRoomRent) and (linvLine.RoomEntity.RoomReservation = aRoomreservation) then
@@ -552,6 +559,16 @@ begin
     end;
 end;
 
+procedure TInvoiceLineList.SetShowPackageItems(const Value: boolean);
+var
+  lItem: TInvoiceLine;
+begin
+  FShowPackageItem := Value;
+  for lItem in Self do
+    if lItem.isPackage and (lItem.ItemKind <> ikRoomRent) then
+      lItem.VisibleOnInvoice := Value;
+end;
+
 procedure TInvoiceLineList.SortOnInvoiceLineIndex;
 begin
   Sort(TComparer<TInvoiceLine>.Construct(
@@ -579,7 +596,7 @@ end;
 
 function TPackageInvoiceLine.CanBeHiddenFromInvoice: boolean;
 begin
-  Result := false;
+  Result := ItemKind <> ikRoomRent;
 end;
 
 procedure TPackageInvoiceLine.ClearParentsList;
@@ -594,6 +611,7 @@ constructor TPackageInvoiceLine.Create(aIndex, _id: integer);
 begin
   inherited;
   FParentList := TList<TInvoiceLine>.Create;
+  isPackage := True;
 end;
 
 destructor TPackageInvoiceLine.Destroy;
