@@ -1052,10 +1052,10 @@ var
 
   procedure CollectPaymentTypes(Code, Description: String; Amount: Double);
   var
-    item: TPaymentTotal;
+    lPayTot: TPaymentTotal;
   begin
-    if payment.TryGetValue(Code, item) then
-      item.Add(Amount)
+    if payment.TryGetValue(Code, lPayTot) then
+      lPayTot.Add(Amount)
     else
       payment.Add(Code, TPaymentTotal.Create(Code, Description, Amount));
   end;

@@ -2758,9 +2758,9 @@ var
 
   rr, rrAlias: Integer;
 
-  procedure RemovePackage(oldPackage: String; rr, rrAlias: Integer; restorePrice: Boolean);
+  procedure RemovePackage(pack: String; rr, rrAlias: Integer; restorePrice: Boolean);
   begin
-    d.roomerMainDataSet.SystempackagesRemove(oldPackage, rr, rrAlias, restorePrice);
+    d.roomerMainDataSet.SystempackagesRemove(pack, rr, rrAlias, restorePrice);
     mRooms.Edit;
     mRoomsPackage.asstring := '';
     mRooms.Post;
