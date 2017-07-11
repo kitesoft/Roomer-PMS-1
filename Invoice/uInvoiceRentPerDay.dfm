@@ -1,4 +1,4 @@
-object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
+﻿object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
   Left = 686
   Top = 154
   HorzScrollBar.Visible = False
@@ -280,7 +280,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         Images = DImages.cxLargeImagesFlat
         ParentShowHint = False
         ShowHint = True
-        TabOrder = 6
+        TabOrder = 5
         OnClick = btnExitClick
         SkinData.SkinSection = 'BUTTON'
       end
@@ -296,7 +296,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         Images = DImages.cxLargeImagesFlat
         ParentShowHint = False
         ShowHint = True
-        TabOrder = 8
+        TabOrder = 7
         SkinData.SkinSection = 'BUTTON'
       end
       object btnProforma: TsButton
@@ -310,7 +310,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         Images = DImages.cxLargeImagesFlat
         ParentShowHint = False
         ShowHint = True
-        TabOrder = 7
+        TabOrder = 6
         SkinData.SkinSection = 'BUTTON'
       end
       object edtForeignCurrency: TsEdit
@@ -338,20 +338,6 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         BoundLabel.Font.Name = 'Tahoma'
         BoundLabel.Font.Style = []
       end
-      object chkShowPackageItems: TsCheckBox
-        Left = 724
-        Top = 167
-        Width = 136
-        Height = 20
-        Caption = 'Packageitems on invoice'
-        Checked = True
-        State = cbChecked
-        TabOrder = 5
-        OnClick = chkShowPackageItemsClick
-        SkinData.SkinSection = 'CHECKBOX'
-        ImgChecked = 0
-        ImgUnchecked = 0
-      end
       object btnSaveChanges: TsButton
         Left = 929
         Top = 137
@@ -367,7 +353,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         ImageIndex = 2
         Images = DImages.cxSmallImagesFlat
         ParentFont = False
-        TabOrder = 9
+        TabOrder = 8
         Visible = False
         OnClick = btnSaveChangesClick
         SkinData.CustomFont = True
@@ -2311,11 +2297,6 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
           'ShortCut'
           'Tag'
           'Visible')
-      end
-      item
-        Component = chkShowPackageItems
-        Properties.Strings = (
-          'Checked')
       end
       item
         Component = Owner

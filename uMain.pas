@@ -417,7 +417,6 @@ type
     dxBarLargeButton3: TdxBarLargeButton;
     grOneDayRooms: TAdvStringGrid;
     pnlNoRoomDrop: TsPanel;
-    arrowImage: TImage;
     lblNoRoom: TsLabel;
     btnRefreshOneDay: TsButton;
     tabsView: TsTabControl;
@@ -793,7 +792,6 @@ type
     procedure btnLPreviusDayClick(Sender: TObject);
     procedure btnLTodayClick(Sender: TObject);
     procedure btnLNextDayClick(Sender: TObject);
-    procedure CheckInGroup1Click(Sender: TObject);
     procedure btnRoomTypeGroupsClick(Sender: TObject);
     procedure btnResStatClick(Sender: TObject);
     procedure btnQuicReservationClick(Sender: TObject);
@@ -1157,7 +1155,7 @@ type
     ///   if not empty then this will contain a hotelcode to which the system will attempt to login with the
     ///   crededentials already saved from the last login. This is used when switching hotel locations
     ///  </param>
-    function StartHotel(aFirstLogin: boolean; ForcefulRestart: boolean = false; const AutoLogin: String = ''): boolean;
+    function StartHotel(ForcefulRestart: boolean = false; const AutoLogin: String = ''): boolean;
 
     procedure SaveGridFont(OneDayFont, PeriodFont: TFont);
 
@@ -1414,12 +1412,11 @@ type
     procedure HandleSkinManagerChange;
     procedure RefreshStats(force: boolean = false);
     function LongestColText(Grid: TAdvStringGrid; col: integer; startAtRow: integer = 1): integer;
-    procedure GetPriceInfo(rri: RecRDInfo; var CurrencySign: String; var PricePerDay, DiscountPerDay, PriceTotal,
-      DiscountTotal: Double);
+    procedure GetPriceInfo(rri: RecRDInfo; var PricePerDay, DiscountPerDay, PriceTotal, DiscountTotal: Double);
     function GetCaptText(Canvas: TCanvas; const OriginalText: String; MaxWidth: integer): String;
     procedure PlacePeriodViewTypePanel;
     procedure ApplicationCancelHint;
-    function OneDay_GetResInfo(ACol, ARow, iReservationIdx, iRoomReservationIdx: integer): RecRDInfo;
+    function OneDay_GetResInfo(iReservationIdx, iRoomReservationIdx: integer): RecRDInfo;
     procedure CorrectBottomPeriodInterface;
     function GetSelectedRoomInformation: boolean;
     procedure PrintRegistrationFormsForSpecifiedRoomReservations(rSet: TRoomerDataSet);
@@ -1448,7 +1445,7 @@ type
     procedure SetPMSVisibilities;
     function GetDateUnderCursor: TDate;
     {$HINTS OFF}
-    procedure OnAskUpgrade(Text, version: String; forced : Boolean; var upgrade: Boolean);
+    procedure OnAskUpgrade(const Text, version: String; forced : Boolean; var upgrade: Boolean);
     {$HINTS ON}
     procedure PrepareVersionManagement;
     procedure ClearFilter;
@@ -1666,11 +1663,8 @@ const
   c_room = [Left_room, Right_room];
   c_roomtype = [Left_roomType, Right_roomType];
   c_custs = [Left_cust, Right_cust];
-  c_Arrival = [Left_Arrival, Right_Arrival];
   c_departure = [Left_Departure, Right_Departure];
   c_GuestCount = [Left_GuestCount, Right_GuestCount];
-
-  c_RoomInfo = [Left_room, Right_room, Left_roomType, Right_roomType];
 
   c_GuestInfo = [Left_cust, Right_cust, Left_Arrival, Right_Arrival, Left_Departure, Right_Departure, Left_GuestCount,
     Right_GuestCount];
@@ -1745,14 +1739,14 @@ begin
   end;
 end;
 
-procedure TfrmMain.OnAskUpgrade(Text : String; version : String; forced : Boolean; var upgrade : Boolean);
+procedure TfrmMain.OnAskUpgrade(const Text : String; const version : String; forced : Boolean; var upgrade : Boolean);
 var
     Buttons: TMsgDlgButtons;
     lMSgResult: integer;
 
     Dialog : TForm;
 
-    procedure SetButtonCaption(CurrentButtonCaption, NewButtonCaption : String);
+    procedure SetButtonCaption(const CurrentButtonCaption, NewButtonCaption : String);
     var lButton: TButton;
     begin
       With Dialog do
@@ -2893,7 +2887,7 @@ begin
   FrmMessagesTemplates := TFrmMessagesTemplates.Create(nil);
   FrmMessagesTemplates.pnlContainer.Parent := pnlNotifications;
 
-  if StartHotel(true) and NOT LoginCancelled then
+  if StartHotel() and NOT LoginCancelled then
   begin
     try
       frmDayNotes.edCurrentDate.Text := DateToStr(dtDate.Date);
@@ -3006,7 +3000,7 @@ begin
 
 end;
 
-function TfrmMain.StartHotel(aFirstLogin: boolean; ForcefulRestart: boolean = false; const AutoLogin: String = ''): boolean;
+function TfrmMain.StartHotel(ForcefulRestart: boolean = false; const AutoLogin: String = ''): boolean;
 var
   userName, password, WrongLoginMessage, ExpiredMessage: string;
   okLogin: boolean;
@@ -4230,10 +4224,6 @@ begin
   RefreshGrid;
 end;
 
-const
-  bAlreadyReading: boolean = false;
-
-
   // ******************************************************************************
   //
   //
@@ -4956,7 +4946,7 @@ begin
     if zOneDay_ResIndex = -1 then
       exit;
     OneDay_GetResAndRoom_IDX(_idxReservation, _idxRoomReservation);
-    rri := OneDay_GetResInfo(grOneDayRooms.col, grOneDayRooms.row, _idxReservation, _idxRoomReservation);
+    rri := OneDay_GetResInfo(_idxReservation, _idxRoomReservation);
   end
   else if ViewMode = vmPeriod then
   begin
@@ -6542,7 +6532,6 @@ var
   tmpBackColor: TColor;
   tmpFontColor: TColor;
 
-  BackgroundColor: TColor;
   fontColor: TColor;
   isBold: boolean;
   isItalic: boolean;
@@ -7932,68 +7921,6 @@ var
   OutOfOrderBlocking, BlockMove: boolean;
   BlockMoveReason: String;
 
-  procedure CleanEnds(Days: integer; Grid: TAdvStringGrid);
-  var
-    iCol, iRow, iDay: integer;
-  begin
-
-    for iCol := Grid.FixedCols to Grid.ColCount - 1 do
-      for iRow := Grid.FixedRows to Grid.RowCount - 1 do
-      begin
-        Grid.cells[iCol, iRow] := '';
-        Grid.Objects[iCol, iRow].Free;
-        Grid.Objects[iCol, iRow] := nil;
-      end;
-    exit;
-
-    if Days = 0 then
-      exit;
-
-    if Days < 0 then
-    begin
-      for iDay := 1 to ABS(Days) do
-      begin
-        for iCol := Grid.ColCount - 2 downto Grid.FixedCols do
-          for iRow := 0 to Grid.RowCount - 1 do
-          begin
-            Grid.cells[iCol + 1, iRow] := Grid.cells[iCol, iRow];
-            Grid.Objects[iCol + 1, iRow].Free;
-            Grid.Objects[iCol + 1, iRow] := Grid.Objects[iCol, iRow];
-            Grid.cells[iCol, iRow] := '';
-            Grid.Objects[iCol, iRow] := nil;
-          end;
-        for iRow := 0 to Grid.RowCount - 1 do
-        begin
-          Grid.cells[Grid.FixedCols, iRow] := '';
-          Grid.Objects[Grid.FixedCols, iRow].Free;
-          Grid.Objects[Grid.FixedCols, iRow] := nil;
-        end;
-      end;
-    end
-    else if Days > 0 then
-    begin
-      for iDay := 1 to ABS(Days) do
-      begin
-        for iCol := Grid.FixedCols to Grid.ColCount - 2 do
-          for iRow := 0 to Grid.RowCount - 1 do
-          begin
-            Grid.cells[iCol, iRow] := Grid.cells[iCol + 1, iRow];
-            Grid.Objects[iCol, iRow].Free;
-            Grid.Objects[iCol, iRow] := Grid.Objects[iCol + 1, iRow];
-            Grid.cells[iCol + 1, iRow] := '';
-            Grid.Objects[iCol + 1, iRow] := nil;
-          end;
-        for iRow := 0 to Grid.RowCount - 1 do
-        begin
-          Grid.cells[Grid.ColCount - 1, iRow] := '';
-          Grid.Objects[Grid.ColCount - 1, iRow].Free;
-          Grid.Objects[Grid.ColCount - 1, iRow] := nil;
-        end;
-      end;
-    end;
-
-  end;
-
 var
   fromDate, toDate: TdateTime;
   Channel: integer;
@@ -8007,7 +7934,6 @@ var
   Currency: String;
   numGuests: integer;
   RoomClass: string;
-  hidden: boolean;
   BookingId: String;
 
   OngoingTaxes, OngoingSale, OngoingRent: Double;
@@ -8022,8 +7948,6 @@ var
 begin
 
   ShowAllPeriodRows;
-
-// 2017-04-15 -- CleanEnds(Days, grPeriodRooms);
 
   if Days = 0 then
   begin
@@ -8367,7 +8291,7 @@ begin
   result := dtFrom > now - 100;
 end;
 
-function TfrmMain.OneDay_GetResInfo(ACol: integer; ARow: integer; iReservationIdx, iRoomReservationIdx: integer): RecRDInfo;
+function TfrmMain.OneDay_GetResInfo(iReservationIdx, iRoomReservationIdx: integer): RecRDInfo;
 begin
   with Result do
   begin
@@ -9279,7 +9203,7 @@ begin
   end;
 end;
 
-procedure TfrmMain.GetPriceInfo(rri: RecRDInfo; var CurrencySign: String; var PricePerDay, DiscountPerDay, PriceTotal,
+procedure TfrmMain.GetPriceInfo(rri: RecRDInfo; var PricePerDay, DiscountPerDay, PriceTotal,
   DiscountTotal: Double);
 var
   discountAmount: Double;
@@ -9625,7 +9549,7 @@ begin
                 ExtTextOut(handle, Rect.Left + 2, TempTop, ETO_CLIPPED, @Rect, tempString, length(tempString), nil);
 
                 Font.Style := [];
-                GetPriceInfo(rri, CurrencySign, PricePerDay, DiscountPerDay, PriceTotal, DiscountTotal);
+                GetPriceInfo(rri, PricePerDay, DiscountPerDay, PriceTotal, DiscountTotal);
                 tempString := GetCaptText(Grid.Canvas, Format('%s %s (av. %s %s)',
                   [CurrencySign, trim(_floatToStr(PriceTotal - DiscountTotal, 12, 2)),
                   CurrencySign, trim(_floatToStr(PricePerDay - DiscountPerDay, 12, 2))]), Rect.Right - Rect.Left - 4) +
@@ -9645,7 +9569,7 @@ begin
                 ExtTextOut(handle, Rect.Left + 2, TempTop, ETO_CLIPPED, @Rect, tempString, length(tempString), nil);
 
                 Font.Style := [];
-                GetPriceInfo(rri, CurrencySign, PricePerDay, DiscountPerDay, PriceTotal, DiscountTotal);
+                GetPriceInfo(rri, PricePerDay, DiscountPerDay, PriceTotal, DiscountTotal);
                 tempString := GetCaptText(Grid.Canvas, Format('%s %s (av. %s %s)',
                   [CurrencySign, trim(_floatToStr(PriceTotal - DiscountTotal, 12, 2)),
                   CurrencySign, trim(_floatToStr(PricePerDay - DiscountPerDay, 12, 2))]), Rect.Right - Rect.Left - 4) +
@@ -9654,7 +9578,7 @@ begin
                 ExtTextOut(handle, Rect.Left + 2, TempTop, ETO_CLIPPED, @Rect, tempString, length(tempString), nil);
 
                 Font.Style := [];
-                GetPriceInfo(rri, CurrencySign, PricePerDay, DiscountPerDay, PriceTotal, DiscountTotal);
+                GetPriceInfo(rri, PricePerDay, DiscountPerDay, PriceTotal, DiscountTotal);
                 TempTop := (TempHeight * 2) + Rect.Top + (TempHeight div 2) - (iTemp div 2);
 
                 s := inttostr(trunc(rri.Departure) - trunc(rri.Arrival));
@@ -9948,7 +9872,7 @@ begin
     cellHeight := ABS(Rect.Bottom - Rect.Top);
 
     if (Grid = grOneDayRooms) then
-      rri := OneDay_GetResInfo(ACol, ARow, iReservation, iRoomReservation)
+      rri := OneDay_GetResInfo(iReservation, iRoomReservation)
     else
       rri := Period_GetResInfo(ACol, ARow, Grid.Tag);
     if rri.Reservation = -1 then
@@ -10209,15 +10133,6 @@ begin
   ABar.DockedDockingStyle := dsTop;
 end;
 
-/// /////////////////////////////////////////////////////////////////////////////
-///
-/// Right click menu on OnDayGrid
-///
-/// /////////////////////////////////////////////////////////////////////////////
-
-procedure TfrmMain.CheckInGroup1Click(Sender: TObject);
-begin
-end;
 
 /// /////////////////////////////////////////////////////////////////////////////
 //
@@ -11356,7 +11271,7 @@ function TfrmMain._Logout(AlreadyInactive: boolean = false; const AutoLogin: Str
 begin
   performClearHotel(NOT AlreadyInactive);
   try
-    result := StartHotel(false, AlreadyInactive, AutoLogin) or LoginCancelled;
+    result := StartHotel(AlreadyInactive, AutoLogin) or LoginCancelled;
   finally
     panelHide.Hide;
   end;

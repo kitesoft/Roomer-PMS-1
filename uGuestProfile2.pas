@@ -1403,6 +1403,7 @@ begin
     Except
       on e : Exception do
       begin
+        ExecutionPlan.RollbackTransaction;
 	 (* frmDayNotes.xDoLog('split room to new reservation', e.message);
         MessageDlg('Problem: Unable to split room to new reservation '+#13#13 + 'The following Error came up:' + #13#13 +
             e.message + #13#13 + 'Please write this message down or' + #13 + 'call support with this dialog open!', mtError, [mbOK], 0); *)

@@ -495,10 +495,6 @@ object frmRptCashier: TfrmRptCashier
     end
     object sTabSheet1: TsTabSheet
       Caption = 'Cashier functions'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object grGet: TcxGrid
         Left = 0
         Top = 43
