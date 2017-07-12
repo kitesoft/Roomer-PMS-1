@@ -1,4 +1,4 @@
-﻿object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
+object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
   Left = 686
   Top = 154
   HorzScrollBar.Visible = False

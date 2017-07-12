@@ -427,7 +427,7 @@ type
     procedure acHideAllDiscountsExecute(Sender: TObject);
     procedure acHidePackageItemsExecute(Sender: TObject);
     procedure acShowpackageItemsExecute(Sender: TObject);
-    procedure chkHidePackageItemsClick(Sender: TObject);
+    procedure pnlInvoiceIndicesDragOver(Sender, Source: TObject; X, Y: Integer; State: TDragState; var Accept: Boolean);
   private
     { Private declarations }
 
@@ -2027,6 +2027,16 @@ procedure TfrmInvoiceRentPerDay.shpInvoiceIndex0DragOver(Sender, Source: TObject
   var Accept: boolean);
 begin
   pnlInvoiceIndex0DragOver(TShape(Sender), Source, X, Y, State, Accept);
+end;
+
+procedure TfrmInvoiceRentPerDay.pnlInvoiceIndicesDragOver(Sender, Source: TObject; X, Y: Integer; State: TDragState;
+  var Accept: Boolean);
+begin
+  Accept := False;
+  if Y < 15 then
+    pnlInvoiceIndices.VertScrollBar.Position := pnlInvoiceIndices.VertScrollBar.Position - 8
+  else if Y > pnlInvoiceIndices.Height  - 15 then
+    pnlInvoiceIndices.VertScrollBar.Position := pnlInvoiceIndices.VertScrollBar.Position + 8;
 end;
 
 procedure TfrmInvoiceRentPerDay.shpInvoiceIndex0MouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState;
@@ -4930,16 +4940,6 @@ begin
   Accept := (Source = agrLines) OR (Source IS TcxDragControlObject);
 end;
 
-procedure TfrmInvoiceRentPerDay.pnlInvoiceIndicesDragOver(Sender, Source: TObject; X, Y: Integer; State: TDragState;
-  var Accept: Boolean);
-begin
-  Accept := False;
-  if Y < 15 then
-    pnlInvoiceIndices.VertScrollBar.Position := pnlInvoiceIndices.VertScrollBar.Position - 8
-  else if Y > pnlInvoiceIndices.Height  - 15 then
-    pnlInvoiceIndices.VertScrollBar.Position := pnlInvoiceIndices.VertScrollBar.Position + 8;
-end;
-
 procedure TfrmInvoiceRentPerDay.actMoveRoomToGroupInvoiceExecute(Sender: TObject);
 begin
   MoveRoomToGroupInvoice;
@@ -6593,14 +6593,6 @@ begin
 
   result := FInvoiceLinesList.IsChanged or HeaderChanged or (DeletedLines.Count > 0);
   btnSaveChanges.Visible := result;
-end;
-
-procedure TfrmInvoiceRentPerDay.chkHidePackageItemsClick(Sender: TObject);
-begin
-//  if chkShowPackageItems.Checked then
-//    acHidePackageItemsExecute(Sender);
-//  else
-//    acShowpackageItemsExecute(Sender)
 end;
 
 procedure TfrmInvoiceRentPerDay.LoadRoomListForCurrentReservation(reservation: integer);
