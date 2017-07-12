@@ -116,7 +116,7 @@ object frmMain: TfrmMain
         Top = 1
         Width = 1227
         Height = 302
-        ActivePage = tabPeriod
+        ActivePage = tabOneDayView
         Align = alClient
         TabOrder = 1
         OnChange = pageMainGridsChange
@@ -319,7 +319,7 @@ object frmMain: TfrmMain
               52
               21)
             object imgBlinker: TImage
-              Left = 290
+              Left = 292
               Top = 37
               Width = 64
               Height = 64
@@ -413,8 +413,8 @@ object frmMain: TfrmMain
               Visible = False
             end
             object pnlNoRoomDrop: TsPanel
-              Left = 513
-              Top = 160
+              Left = 249
+              Top = 136
               Width = 84
               Height = 77
               BevelOuter = bvLowered
@@ -426,16 +426,6 @@ object frmMain: TfrmMain
               OnDragDrop = pnlNoRoomDropDragDrop
               OnDragOver = pnlNoRoomDropDragOver
               SkinData.SkinSection = 'PANEL'
-              object arrowImage: TImage
-                Left = 14
-                Top = 8
-                Width = 52
-                Height = 52
-                AutoSize = True
-                Transparent = True
-                OnDragDrop = pnlNoRoomDropDragDrop
-                OnDragOver = pnlNoRoomDropDragOver
-              end
               object lblNoRoom: TsLabel
                 Left = 3
                 Top = 59

@@ -192,7 +192,6 @@ type
     labTaxNights: TsLabel;
     actAddPackage: TAction;
     actAddRoom: TAction;
-    chkShowPackageItems: TsCheckBox;
     mPayments: TdxMemData;
     mPaymentsPayDate: TDateField;
     mPaymentsPayType: TWideStringField;
@@ -428,7 +427,7 @@ type
     procedure acHideAllDiscountsExecute(Sender: TObject);
     procedure acHidePackageItemsExecute(Sender: TObject);
     procedure acShowpackageItemsExecute(Sender: TObject);
-    procedure chkShowPackageItemsClick(Sender: TObject);
+    procedure chkHidePackageItemsClick(Sender: TObject);
   private
     { Private declarations }
 
@@ -2604,11 +2603,6 @@ begin
           mRoomRes.FieldByName('InvoiceIndex').asinteger := FInvoiceIndex;
           mRoomRes.FieldByName('GroupAccount').asBoolean := zRoomRSet['GroupAccount'];
 
-          if package <> '' then
-            if glb.LocateSpecificRecordAndGetValue('packages', 'Package', package, 'showItemsOnInvoice', showPackageItems)
-            then
-              chkShowPackageItems.checked := showPackageItems;
-
           dayCount := trunc(Departure) - trunc(Arrival);
           RateDate := Arrival;
           TotalDiscountAmount := 0;
@@ -2825,10 +2819,14 @@ begin
           _s := _s + format(' %s %s', [lRoomAdditionalText, Room]);
 
         dNumber := GetCalculatedNumberOfItems(ItemId, eSet.FieldByName('Number').AsFloat);
+        package := trim(eSet.FieldByName('importSource').asString);
+
+//        if (package <> '') and not glb.LocateSpecificRecordAndGetValue('packages', 'Package', package, 'showItemsOnInvoice', showPackageItems) then
+//           showPackageItems := false;
 
         AddLine(LineId, nil, ItemId, _s, dNumber, Price, g.qNativeCurrency, eSet.FieldByName('VATType').asString,
           SQLToDate(eSet.FieldByName('PurchaseDate').asString), false,
-          trim(eSet.FieldByName('importRefrence').asString), trim(eSet.FieldByName('importSource').asString),
+          trim(eSet.FieldByName('importRefrence').asString), package,
           eSet.FieldByName('isPackage').asBoolean, eSet.FieldByName('Persons').asinteger,
           eSet.FieldByName('ConfirmDate').asdateTime, eSet.FieldByName('ConfirmAmount').AsFloat, lRoomReservation,
           eSet.FieldByName('AutoGen').asString, eSet.FieldByName('ItemNumber').asinteger, eSet.FieldByName('visibleoninvoice').asBoolean );
@@ -3634,7 +3632,7 @@ var
   s: string;
   showPackageItems: boolean;
 begin
-  showPackageItems := chkShowPackageItems.checked;
+  showPackageItems := False; //chkShowPackageItems.checked;
 
   iMultiplier := 1;
 
@@ -3926,7 +3924,7 @@ begin
   if lresNr = -1 then
     lResNr := FReservation;
   if lRoomResNr = -1 then
-    lResNr := FRoomReservation;
+    lRoomResNr := FRoomReservation;
 
   // construct SQL
   s := '';
@@ -3992,7 +3990,8 @@ begin
   if (aInvoiceLine.Item = '') and (aInvoiceLine.Text = '') then
     exit;
 
-  if aSaveType = stProvisionally then
+  // Already actual invoiceline record, visibility is stored there
+  if (aSaveType = stProvisionally) and (aInvoiceLine.LineId <= 0) then
     SaveInvoicelineVisibility(aInvoiceLine, aInvoiceNumber, aExecPlan);
 
   // Dont add automatically generated lines when invoice is not definitive
@@ -5594,7 +5593,7 @@ begin
   try
     if SaveInvoice(lNewInvoiceNumber, stDefinitive, lInvoiceLocation) then
     begin
-      ViewInvoice2(lNewInvoiceNumber, True, false, True, chkShowPackageItems.checked, zEmailAddress);
+      ViewInvoice2(lNewInvoiceNumber, True, false, True, false, {chkShowPackageItems.checked,} zEmailAddress);
       d.roomerMainDataSet.SystempackagesCreateHeaderIfNotExists(FRoomReservation, FRoomReservation);
       result := True;
     end
@@ -6695,7 +6694,7 @@ begin
   PROFORMA_INVOICE_NUMBER := CreateProformaID;
   try
     SaveInvoice(PROFORMA_INVOICE_NUMBER, stProforma);
-    ViewInvoice2(PROFORMA_INVOICE_NUMBER, True, false, false, chkShowPackageItems.checked, zEmailAddress);
+    ViewInvoice2(PROFORMA_INVOICE_NUMBER, True, false, false, false {chkShowPackageItems.checked}, zEmailAddress);
   finally
     RemoveCurrentProformeInvoice(PROFORMA_INVOICE_NUMBER);
   end;
@@ -6782,12 +6781,12 @@ begin
   btnSaveChanges.Visible := result;
 end;
 
-procedure TfrmInvoiceRentPerDay.chkShowPackageItemsClick(Sender: TObject);
+procedure TfrmInvoiceRentPerDay.chkHidePackageItemsClick(Sender: TObject);
 begin
-  if chkShowPackageItems.Checked then
-    acShowpackageItemsExecute(Sender)
-  else
-    acHidePackageItemsExecute(Sender);
+//  if chkShowPackageItems.Checked then
+//    acHidePackageItemsExecute(Sender);
+//  else
+//    acShowpackageItemsExecute(Sender)
 end;
 
 procedure TfrmInvoiceRentPerDay.LoadRoomListForCurrentReservation(reservation: integer);

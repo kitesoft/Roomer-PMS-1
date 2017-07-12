@@ -19,7 +19,7 @@ type
     EndDateTime : TDateTime;
   end;
 
-  TOnAskUpgrade = procedure(Text : String; version : String; forced : Boolean; var upgrade : Boolean) of Object;
+  TOnAskUpgrade = procedure(const Text : String; const version : String; forced : Boolean; var upgrade : Boolean) of Object;
 
   TRoomerVersionManagement = class
   private
