@@ -68,7 +68,7 @@ begin
     if Result then
       aCategoriesAndActions.LoadFromXML(lResponse)
     else
-      EUserActivityLogAPICallerException.CreateFmt('Error %d retrieving Categories and Actions', [lStatus]);
+      raise EUserActivityLogAPICallerException.CreateFmt('Error %d retrieving Categories and Actions', [lStatus]);
   finally
     roomerClient.Free;
   end;
@@ -112,7 +112,7 @@ begin
     if Result then
       aLogFragment.LoadFromXML(lResponse)
     else
-      EUserActivityLogAPICallerException.CreateFmt('Error %d retrieving UserActivityLogFragment', [lStatus]);
+      raise EUserActivityLogAPICallerException.CreateFmt('Error %d retrieving UserActivityLogFragment', [lStatus]);
   finally
     roomerClient.Free;
   end;

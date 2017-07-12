@@ -263,13 +263,24 @@ begin
 end;
 
 procedure TfrmUserActivityReport.FormShow(Sender: TObject);
+var
+  lOldCursor: TCursor;
 begin
   inherited;
+
   dtDateFrom.Date := now;
   dtDateTo.Date := now;
   dtDateTo.MaxDate := now;
   PopulateComboboxes;
   btnRefresh.Constraints.MaxHeight := 37;
+
+  lOldCursor := Screen.Cursor;
+  Screen.Cursor := crHourGlass;
+  try
+    PushActivityLogs(true);
+  finally
+    Screen.Cursor := lOldCursor;
+  end;
 end;
 
 function TfrmUserActivityReport.GetCurrentEvent: TUserActivityLogEventType;
