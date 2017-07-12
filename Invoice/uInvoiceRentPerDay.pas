@@ -613,7 +613,7 @@ type
     function IndexOfAutoGen(AutoGen: String): integer;
     procedure RemoveAllCheckboxes;
     function IsRoomSelected: boolean;
-    procedure RemoveCurrentProformeInvoice(ProformaInvoiceNumber: integer);
+    procedure RemoveProformaInvoice(ProformaInvoiceNumber: integer);
     procedure DeleteLinesInList(ExecutionPlan: TRoomerExecutionPlan);
     procedure LoadRoomListForOtherReservations(reservation: integer);
     procedure ExternalRoomsClick(Sender: TObject);
@@ -3640,10 +3640,6 @@ begin
             end;
           end;
         finally
-          lstActivity.Add(CreateInvoiceActivityLog(g.qUser, FReservation, FRoomReservation, FnewSplitNumber,
-            PAY_AND_PRINT, inttostr(aInvoiceNumber), FInvoiceLinesList.TotalOnInvoiceNativeCurrency, 0,
-            'Invoice added '));
-
           for s in lstActivity do
             if s <> '' then
               WriteInvoiceActivityLog(s);
@@ -5407,6 +5403,9 @@ begin
   try
     if SaveInvoice(lNewInvoiceNumber, stDefinitive, lInvoiceLocation) then
     begin
+      AddInvoiceActivityLog(g.qUser, FReservation, FRoomReservation, FnewSplitNumber, PAY_AND_PRINT, inttostr(lNewInvoiceNumber),
+                            FInvoiceLinesList.TotalOnInvoiceNativeCurrency, 0,
+                            Format('Final invoice [%d] created for roomreservation [%d/%d]', [lNewInvoiceNumber, FReservation, FRoomReservation]));
       ViewInvoice2(lNewInvoiceNumber, True, false, True, false, {chkShowPackageItems.checked,} zEmailAddress);
       d.roomerMainDataSet.SystempackagesCreateHeaderIfNotExists(FRoomReservation, FRoomReservation);
       result := True;
@@ -6491,7 +6490,7 @@ begin
     result := cMaxFinalInvoiceNr + 1 + result;
 end;
 
-procedure TfrmInvoiceRentPerDay.RemoveCurrentProformeInvoice(ProformaInvoiceNumber: integer);
+procedure TfrmInvoiceRentPerDay.RemoveProformaInvoice(ProformaInvoiceNumber: integer);
 var
   sql: String;
   i: integer;
@@ -6507,10 +6506,15 @@ procedure TfrmInvoiceRentPerDay.PrintProforma;
 begin
   PROFORMA_INVOICE_NUMBER := CreateProformaID;
   try
-    SaveInvoice(PROFORMA_INVOICE_NUMBER, stProforma);
-    ViewInvoice2(PROFORMA_INVOICE_NUMBER, True, false, false, false {chkShowPackageItems.checked}, zEmailAddress);
+    if SaveInvoice(PROFORMA_INVOICE_NUMBER, stProforma) then
+    begin
+      AddInvoiceActivityLog(g.qUser, FReservation, FRoomReservation, FnewSplitNumber, PRINT_PROFORMA, '',
+                            FInvoiceLinesList.TotalOnInvoiceNativeCurrency, PROFORMA_INVOICE_NUMBER,
+                            Format('Printing Proforma invoice [%d] for roomreservation [%d/%d]', [PROFORMA_INVOICE_NUMBER, FReservation, FRoomReservation]));
+      ViewInvoice2(PROFORMA_INVOICE_NUMBER, True, false, false, false, zEmailAddress);
+    end;
   finally
-    RemoveCurrentProformeInvoice(PROFORMA_INVOICE_NUMBER);
+    RemoveProformaInvoice(PROFORMA_INVOICE_NUMBER);
   end;
 end;
 
