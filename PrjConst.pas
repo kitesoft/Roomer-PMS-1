@@ -960,6 +960,9 @@ begin
   constants.Add('shTx_RoomPricesEdit_Prices', 'Prices are ready');
   constants.Add('shTx_RoomPricesEdit_Error', 'Error');
   constants.Add('shTx_RoomPricesEdit_PriceGroup', 'Price Group must be specified');
+  constants.Add('shRoomPrices_NotAllRoomsUpdated', 'There are differences in staydates between the rooms.'#10 +
+                                                  'Therefore not all roomprices can be adjusted because of differences in stay dates.'#10+
+                                                  'Continue with adjusting roomrates for rooms with the same staydates?');
 
   constants.Add('shTx_RoomRates_DescriptionIsRequired', 'Description - is required - Use ESC to cancel');
   constants.Add('shTx_RoomRates_EditInGrid', 'edit in grid');
