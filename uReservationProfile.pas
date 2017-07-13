@@ -562,7 +562,6 @@ type
     I1: TMenuItem;
     G2: TMenuItem;
     R3: TMenuItem;
-    R4: TMenuItem;
     N2: TMenuItem;
     gbxStatus: TsGroupBox;
     label25: TsLabel;
@@ -726,7 +725,6 @@ type
     procedure mRoomsisGroupAccountGetText(Sender: TField; var Text: string; DisplayText: Boolean);
     procedure tvRoomsStatusTextPropertiesDrawItem(AControl: TcxCustomComboBox; ACanvas: TcxCanvas; AIndex: Integer;
       const ARect: TRect; AState: TOwnerDrawState);
-    procedure R4Click(Sender: TObject);
     procedure acChangeRoomTypeExecute(Sender: TObject);
     procedure acChangeRoomTypeUpdate(Sender: TObject);
     procedure btnChangeNationalitiesAllGuestsClick(Sender: TObject);
@@ -1073,11 +1071,6 @@ begin
   edtTel1.Width := (pnlCustomerTelephone.Width - edtTel1.Left - 3) div 2;
   edtTel2.Left := edtTel1.Left + edtTel1.Width + 3;
   edtTel2.Width := edtTel1.Width;
-end;
-
-procedure TfrmReservationProfile.R4Click(Sender: TObject);
-begin
-  d.roomerMainDataSet.DoCommand('UPDATE roomsdate SET Paid=0 WHERE RoomReservation=' + inttostr(zRoomReservation));
 end;
 
 // **********************************************************************************
