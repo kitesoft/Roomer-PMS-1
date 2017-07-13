@@ -2757,10 +2757,15 @@ var
 
   procedure RemovePackage(pack: String; rr, rrAlias: Integer; restorePrice: Boolean);
   begin
-    d.roomerMainDataSet.SystempackagesRemove(pack, rr, rrAlias, restorePrice);
-    mRooms.Edit;
-    mRoomsPackage.asstring := '';
-    mRooms.Post;
+    mRooms.DisableControls;
+    try
+      mRooms.Edit;
+      mRoomsPackage.asstring := '';
+      mRooms.Post;
+      d.roomerMainDataSet.SystempackagesRemove(pack, rr, rrAlias, restorePrice);
+    finally
+      mRooms.EnableControls;
+    end;
   end;
 
 begin
