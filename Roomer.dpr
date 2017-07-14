@@ -298,7 +298,8 @@ uses
   uDataSetFilterUtils in 'Filters\uDataSetFilterUtils.pas',
   uSocketHelpers in 'TCP\uSocketHelpers.pas',
   uInvoiceObjects in 'Invoice\uInvoiceObjects.pas',
-  uFieldValuePropagator in 'RoomerVCLs\Source\uFieldValuePropagator.pas';
+  uGridColumnFieldValuePropagator in 'RoomerUtils\uGridColumnFieldValuePropagator.pas',
+  ucxGridPopupMenuActivator in 'RoomerUtils\ucxGridPopupMenuActivator.pas';
 
 {$R *.RES}
 

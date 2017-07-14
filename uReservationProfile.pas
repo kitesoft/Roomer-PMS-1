@@ -74,6 +74,8 @@ uses
   , cxSpinEdit
   , uReservationStateDefinitions, System.Actions, Vcl.ActnList
   , uReservationStateChangeHandler, uFraCountryPanel, cxGridBandedTableView, cxGridDBBandedTableView
+  , ucxGridPopupMenuActivator
+  , uGridColumnFieldValuePropagator
   ;
 
 type
@@ -739,9 +741,7 @@ type
     procedure acRemoveRoomUpdate(Sender: TObject);
     procedure acRoomResActionUpdate(Sender: TObject);
     procedure acViewPayCardExecute(Sender: TObject);
-    procedure tvRoomsColumnHeaderClick(Sender: TcxGridTableView; AColumn: TcxGridColumn);
     procedure acCopyValueDownExecute(Sender: TObject);
-    procedure tvRoomsExpectedTimeOfArrivalHeaderClick(Sender: TObject);
     procedure acCopyValueUpExecute(Sender: TObject);
     procedure acCopyValueAllExecute(Sender: TObject);
   private
@@ -766,6 +766,7 @@ type
     FInitializingData: boolean;
     FCreatedBy: string;
     FCreatedOn: string;
+    FColumnHeaderPopupActivator: TcxGridColumnHeaderPopupMenuActivator;
     procedure Display;
     procedure Display_rGrid(gotoRoomReservation: longInt);
     procedure AddNewRoom;
@@ -798,6 +799,7 @@ type
     procedure SelectMainGuestProfile;
     procedure ShowMainGuestProfile;
     procedure mnuOtherResStateChangeClick(Sender: TObject);
+    procedure PropagateValue(aDirection: TPropagateDirection);
 
     property OutOfOrderBlocking: Boolean read FOutOfOrderBlocking write SetOutOfOrderBlocking;
   public
@@ -814,7 +816,8 @@ type
     zShowAllGuests: Boolean;
 
     zInt: Integer;
-
+    constructor Create(aOwner: TCOmponent); override;
+    destructor Destroy; override;
     procedure UpdateProfile;
   end;
 
@@ -872,7 +875,7 @@ uses
   , uDateTimeHelper
   , uResourceTypeDefinitions
   , uFrmPayCardView
-  , uFieldValuePropagator;
+  ;
 
 {$R *.DFM}
 
@@ -1019,7 +1022,6 @@ begin
 
   vStartName := frmReservationProfile.edtName.text;
 
-
   fraGuestNationality.AllowEdit := True;
   fraGuestNationality.OnCountryChange := btnChangeNationalitiesAllGuestsClick;
   fraGuestCountry.AllowEdit := True;
@@ -1027,6 +1029,9 @@ begin
   fraContactCountry.AllowEdit := False;
 
   pnlAllGuestsNationality.Visible := glb.PMSSettings.ReservationProfileSettings.EditAllGuestsNationality;
+
+  tvRoomsExpectedTimeOfArrival.OnHeaderClick := FColumnHeaderPopupActivator.OnCxColumnHeaderClick;
+  tvRoomsExpectedCheckoutTime.OnHeaderClick := FColumnHeaderPopupActivator.OnCxColumnHeaderClick;
 end;
 
 procedure TfrmReservationProfile.FormCreate(Sender: TObject);
@@ -1089,6 +1094,12 @@ end;
 //
 //
 // ***********************************************************************************
+
+destructor TfrmReservationProfile.Destroy;
+begin
+  FColumnHeaderPopupActivator.Free;
+  inherited;
+end;
 
 procedure TfrmReservationProfile.Display;
 var
@@ -1806,11 +1817,11 @@ end;
 
 procedure TfrmReservationProfile.PropagateValue(aDirection: TPropagateDirection);
 var
-  fp: TFieldValuePropagator;
+  fp: TGridColumnFieldValuePropagator;
 begin
   if mnuRoomColumn.tag >= 0 then
   begin
-    fp := TFieldValuePropagator.Create;
+    fp := TGridColumnFieldValuePropagator.Create;
     try
       fp.Propagate(tvRooms.Columns[mnuRoomColumn.Tag], aDirection);
     finally
@@ -3201,38 +3212,9 @@ begin
   end;
 end;
 
-procedure TfrmReservationProfile.tvRoomsColumnHeaderClick(Sender: TcxGridTableView; AColumn: TcxGridColumn);
-var
-  I: Integer;
-  AInfo: TcxGridColumnHeaderGlyphViewInfo;
-  ABitmap: TBitmap;
-  lMousept: TPoint;
-  pt: TPoint;
-begin
-  GetCursorPos(lMousePt);
-  pt := Sender.Site.ScreenToClient(lMousePt);
-  mnuRoomColumn.Tag := -1;
-  for I := 0 to Sender.ViewInfo.HeaderViewInfo[AColumn.VisibleIndex].AreaViewInfoCount - 1 do
-    if Sender.ViewInfo.HeaderViewInfo[AColumn.VisibleIndex].AreaViewInfos[i] is TcxGridColumnHeaderGlyphViewInfo then
-    begin
-      AInfo := TcxGridColumnHeaderGlyphViewInfo(Sender.ViewInfo.HeaderViewInfo[AColumn.VisibleIndex].AreaViewInfos[i]);
-      if PtInRect(AInfo.Bounds, Pt) then
-      begin
-        mnuRoomColumn.Tag := aColumn.Index;
-        mnuRoomColumn.Popup(lMousePt.X, lMousePt.y);
-        Break;
-      end;
-    end;
-end;
-
 procedure TfrmReservationProfile.tvRoomsDocumentsPropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
 begin
   StaticResources('Room Resources', [TResourceType.rtRoomBooking], TResourceAccessType.ratRestricted, inttostr(mRooms['RoomReservation']));
-end;
-
-procedure TfrmReservationProfile.tvRoomsExpectedTimeOfArrivalHeaderClick(Sender: TObject);
-begin
-//
 end;
 
 procedure TfrmReservationProfile.doRRDateChange(startIn: Integer);
@@ -4071,6 +4053,12 @@ procedure TfrmReservationProfile.ConstructOtherResStateMenu;
 begin
   lclAddMenuitemsto(mnuChangeRoomStateTo, mnuOtherRoomStateChangeClick);
   lclAddMenuitemsTo(mnuChangeResStateTo, mnuOtherResStateChangeClick);
+end;
+
+constructor TfrmReservationProfile.Create(aOwner: TCOmponent);
+begin
+  inherited;
+  FColumnHeaderPopupActivator := TcxGridColumnHeaderPopupMenuActivator.Create(mnuRoomColumn);
 end;
 
 end.

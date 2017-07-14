@@ -1,4 +1,4 @@
-unit uFieldValuePropagator;
+unit uGridColumnFieldValuePropagator;
 
 interface
 
@@ -10,7 +10,8 @@ uses
 type
   TPropagateDirection = (pdDown, pdUp, pdAll);
 
-  TFieldValuePropagator = class(TObject)
+  TGridColumnFieldValuePropagator = class(TObject)
+  private
   public
     /// <summary>
     ///   Copies the value of aField in the current record to other records until end of table (BOF or EOF depending on aDirection)
@@ -34,7 +35,7 @@ uses
 
 { TFieldValuePropagator }
 
-procedure TFieldValuePropagator.Propagate(aField: TField; aDirection: TPropagateDirection);
+procedure TGridColumnFieldValuePropagator.Propagate(aField: TField; aDirection: TPropagateDirection);
 var
   ds: TDataset;
   bm: TBookmark;
@@ -81,7 +82,7 @@ begin
 
 end;
 
-procedure TFieldValuePropagator.Propagate(aColumn: TcxGridDBBandedColumn; aDirection: TPropagateDirection);
+procedure TGridColumnFieldValuePropagator.Propagate(aColumn: TcxGridDBBandedColumn; aDirection: TPropagateDirection);
 var
   dc: TcxGridDBDataController;
   ds: TDataset;

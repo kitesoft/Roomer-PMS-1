@@ -2111,7 +2111,6 @@ object frmReservationProfile: TfrmReservationProfile
           OptionsView.Indicator = True
           OptionsView.RowSeparatorWidth = 3
           OptionsView.BandHeaders = False
-          OnColumnHeaderClick = tvRoomsColumnHeaderClick
           Bands = <
             item
             end>
@@ -2273,7 +2272,6 @@ object frmReservationProfile: TfrmReservationProfile
             HeaderImageIndex = 133
             Options.Sorting = False
             Width = 129
-            OnHeaderClick = tvRoomsExpectedTimeOfArrivalHeaderClick
             Position.BandIndex = 0
             Position.ColIndex = 10
             Position.RowIndex = 0
