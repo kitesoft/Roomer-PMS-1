@@ -902,6 +902,7 @@
         <DCCReference Include="Filters\uDataSetFilterUtils.pas"/>
         <DCCReference Include="TCP\uSocketHelpers.pas"/>
         <DCCReference Include="Invoice\uInvoiceObjects.pas"/>
+        <DCCReference Include="RoomerVCLs\Source\uFieldValuePropagator.pas"/>
         <None Include="Roomer.todo"/>
         <None Include="notes.txt"/>
         <None Include="Roomer.inc"/>

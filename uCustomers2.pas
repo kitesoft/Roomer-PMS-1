@@ -620,6 +620,11 @@ begin
   btnEdit.Visible := AllowEdits;
   sButton1.Visible := AllowEdits;
   btnOther.Visible := AllowEdits;
+  tvData.OptionsData.Appending := AllowEdits;
+  tvData.OptionsData.Editing := AllowEdits;
+  tvData.OptionsData.Deleting := AllowEdits;
+  tvData.OptionsData.Inserting := AllowEdits;
+
   if NOT AllowEdits then
     grData.PopupMenu := nil;
 

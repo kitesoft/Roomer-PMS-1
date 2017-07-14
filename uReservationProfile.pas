@@ -604,6 +604,13 @@ type
     acAddRoom: TAction;
     btnViewPayCard: TsButton;
     acViewPayCard: TAction;
+    mnuRoomColumn: TPopupMenu;
+    mnuCopyValueDown: TMenuItem;
+    mnuCopyValueUp: TMenuItem;
+    mnuCopyToAll: TMenuItem;
+    acCopyValueDown: TAction;
+    acCopyValueUp: TAction;
+    acCopyValueAll: TAction;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -732,6 +739,11 @@ type
     procedure acRemoveRoomUpdate(Sender: TObject);
     procedure acRoomResActionUpdate(Sender: TObject);
     procedure acViewPayCardExecute(Sender: TObject);
+    procedure tvRoomsColumnHeaderClick(Sender: TcxGridTableView; AColumn: TcxGridColumn);
+    procedure acCopyValueDownExecute(Sender: TObject);
+    procedure tvRoomsExpectedTimeOfArrivalHeaderClick(Sender: TObject);
+    procedure acCopyValueUpExecute(Sender: TObject);
+    procedure acCopyValueAllExecute(Sender: TObject);
   private
     { Private declarations }
     vStartName: string;
@@ -860,7 +872,7 @@ uses
   , uDateTimeHelper
   , uResourceTypeDefinitions
   , uFrmPayCardView
-  ;
+  , uFieldValuePropagator;
 
 {$R *.DFM}
 
@@ -1787,11 +1799,39 @@ procedure TfrmReservationProfile.acCheckoutRoomExecute(Sender: TObject);
 var
   lResChanger: TRoomReservationStateChangeHandler;
 begin
-
   lResChanger := FReservationChangeStateHandler.RoomStateChangeHandler[mRoomsRoomReservation.AsInteger];
   if lResChanger.ChangeState(rsDeparted) then
      Display_rGrid(mRoomsRoomReservation.AsInteger);
+end;
 
+procedure TfrmReservationProfile.PropagateValue(aDirection: TPropagateDirection);
+var
+  fp: TFieldValuePropagator;
+begin
+  if mnuRoomColumn.tag >= 0 then
+  begin
+    fp := TFieldValuePropagator.Create;
+    try
+      fp.Propagate(tvRooms.Columns[mnuRoomColumn.Tag], aDirection);
+    finally
+      fp.Free;
+    end;
+  end;
+end;
+
+procedure TfrmReservationProfile.acCopyValueAllExecute(Sender: TObject);
+begin
+  PropagateValue(pdAll);
+end;
+
+procedure TfrmReservationProfile.acCopyValueDownExecute(Sender: TObject);
+begin
+  PropagateValue(pdDown);
+end;
+
+procedure TfrmReservationProfile.acCopyValueUpExecute(Sender: TObject);
+begin
+  PropagateValue(pdUp);
 end;
 
 procedure TfrmReservationProfile.acPasteIntoDocumentsExecute(Sender: TObject);
@@ -3161,9 +3201,38 @@ begin
   end;
 end;
 
+procedure TfrmReservationProfile.tvRoomsColumnHeaderClick(Sender: TcxGridTableView; AColumn: TcxGridColumn);
+var
+  I: Integer;
+  AInfo: TcxGridColumnHeaderGlyphViewInfo;
+  ABitmap: TBitmap;
+  lMousept: TPoint;
+  pt: TPoint;
+begin
+  GetCursorPos(lMousePt);
+  pt := Sender.Site.ScreenToClient(lMousePt);
+  mnuRoomColumn.Tag := -1;
+  for I := 0 to Sender.ViewInfo.HeaderViewInfo[AColumn.VisibleIndex].AreaViewInfoCount - 1 do
+    if Sender.ViewInfo.HeaderViewInfo[AColumn.VisibleIndex].AreaViewInfos[i] is TcxGridColumnHeaderGlyphViewInfo then
+    begin
+      AInfo := TcxGridColumnHeaderGlyphViewInfo(Sender.ViewInfo.HeaderViewInfo[AColumn.VisibleIndex].AreaViewInfos[i]);
+      if PtInRect(AInfo.Bounds, Pt) then
+      begin
+        mnuRoomColumn.Tag := aColumn.Index;
+        mnuRoomColumn.Popup(lMousePt.X, lMousePt.y);
+        Break;
+      end;
+    end;
+end;
+
 procedure TfrmReservationProfile.tvRoomsDocumentsPropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
 begin
   StaticResources('Room Resources', [TResourceType.rtRoomBooking], TResourceAccessType.ratRestricted, inttostr(mRooms['RoomReservation']));
+end;
+
+procedure TfrmReservationProfile.tvRoomsExpectedTimeOfArrivalHeaderClick(Sender: TObject);
+begin
+//
 end;
 
 procedure TfrmReservationProfile.doRRDateChange(startIn: Integer);
