@@ -616,6 +616,10 @@ object frmReservationProfile: TfrmReservationProfile
             SkinData.SkinSection = 'PAGECONTROL'
             object tsContact: TsTabSheet
               Caption = 'Contact'
+              ExplicitLeft = 0
+              ExplicitTop = 0
+              ExplicitWidth = 0
+              ExplicitHeight = 0
               object lblContactName: TsLabel
                 Left = 32
                 Top = 5
@@ -952,7 +956,7 @@ object frmReservationProfile: TfrmReservationProfile
                   ExplicitWidth = 175
                   inherited lblCountryName: TsLabel
                     Width = 3
-                    Height = 14
+                    Height = 11
                     Font.Height = -9
                     ExplicitWidth = 3
                     ExplicitHeight = 11
@@ -1254,6 +1258,10 @@ object frmReservationProfile: TfrmReservationProfile
             object TabSheet5: TsTabSheet
               Caption = 'Customer Tel / Email'
               ImageIndex = 1
+              ExplicitLeft = 0
+              ExplicitTop = 0
+              ExplicitWidth = 0
+              ExplicitHeight = 0
               object Label11: TsLabel
                 Left = 45
                 Top = 29
@@ -2271,7 +2279,7 @@ object frmReservationProfile: TfrmReservationProfile
             HeaderAlignmentHorz = taCenter
             HeaderImageIndex = 133
             Options.Sorting = False
-            Width = 129
+            Width = 110
             Position.BandIndex = 0
             Position.ColIndex = 10
             Position.RowIndex = 0
@@ -2341,7 +2349,8 @@ object frmReservationProfile: TfrmReservationProfile
             OnGetProperties = GetLocaltimeEditProperties
             HeaderAlignmentHorz = taCenter
             HeaderImageIndex = 133
-            Width = 105
+            Options.Sorting = False
+            Width = 110
             Position.BandIndex = 0
             Position.ColIndex = 12
             Position.RowIndex = 0
@@ -2802,7 +2811,7 @@ object frmReservationProfile: TfrmReservationProfile
             Properties.DisplayFormat = '###0.00;###0.00'
             HeaderAlignmentHorz = taRightJustify
             Options.Editing = False
-            Width = 52
+            Width = 71
             Position.BandIndex = 0
             Position.ColIndex = 38
             Position.RowIndex = 0
@@ -2837,6 +2846,7 @@ object frmReservationProfile: TfrmReservationProfile
           object tvRoomsunPaidItems: TcxGridDBBandedColumn
             DataBinding.FieldName = 'unPaidItems'
             Options.Editing = False
+            Width = 73
             Position.BandIndex = 0
             Position.ColIndex = 42
             Position.RowIndex = 0
@@ -2844,6 +2854,7 @@ object frmReservationProfile: TfrmReservationProfile
           object tvRoomsPersonsProfilesId: TcxGridDBBandedColumn
             DataBinding.FieldName = 'PersonsProfilesId'
             HeaderAlignmentHorz = taRightJustify
+            Width = 84
             Position.BandIndex = 0
             Position.ColIndex = 43
             Position.RowIndex = 0
@@ -2851,6 +2862,7 @@ object frmReservationProfile: TfrmReservationProfile
           object tvRoomsManualChannelId: TcxGridDBBandedColumn
             DataBinding.FieldName = 'ManualChannelId'
             HeaderAlignmentHorz = taRightJustify
+            Width = 78
             Position.BandIndex = 0
             Position.ColIndex = 44
             Position.RowIndex = 0
@@ -3521,20 +3533,18 @@ object frmReservationProfile: TfrmReservationProfile
           object lblSpecialRequests: TsLabel
             Left = 2
             Top = 15
-            Width = 250
+            Width = 81
             Height = 13
             Align = alTop
             Caption = 'Special Requests'
-            ExplicitWidth = 81
           end
           object lblNotes: TsLabel
             Left = 2
             Top = 101
-            Width = 250
+            Width = 28
             Height = 13
             Align = alTop
             Caption = 'Notes'
-            ExplicitWidth = 28
           end
           object edtSpecialRequests: TMemo
             AlignWithMargins = True
@@ -3639,6 +3649,10 @@ object frmReservationProfile: TfrmReservationProfile
     end
     object sTabSheet2: TsTabSheet
       Caption = 'Alerts'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object pnlAlertHolder: TsPanel
         Left = 0
         Top = 0

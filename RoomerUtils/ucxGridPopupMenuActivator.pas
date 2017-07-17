@@ -8,11 +8,11 @@ uses
 
 type
   /// <summary>
-  ///   Class to add Popupmenu functionality to a TcxGridColumn.
+  ///  Class to add Popupmenu functionality to the header of a TcxGridColumn.
   ///  The class must be instantiated with the PopupMenu to activate when a column header is clicked.
-  ///  The OnHeaderClick event must be set to the onCxHeaderClick method if this class
+  ///  The OnHeaderClick event of the column must be set to the onCxHeaderClick method if this class
   ///
-  ///  The popup menu is shown if the header click is done in the GLyph area of the header
+  ///  The popup menu is shown if the header of the column contains an image in the glyph area and the click is done in that GLyph area.
   /// </summary>
   TcxGridColumnHeaderPopupMenuActivator = class(TObject)
   private
@@ -22,7 +22,7 @@ type
 
     /// <summary>
     ///   Event handler for OnHeaderClick event of a column of a TcxGrid
-    ///  If a click is detected in the Glyph area of a columnheader, then the column.Index is placed in the ag property of the popupmenu
+    ///  If a click is detected in the Glyph area of a columnheader, then the column.Index is placed in the Tag property of the popupmenu
     ///  and the popup menu is activated
     /// </summary>
     procedure OnCxColumnHeaderClick(Sender: TObject);
@@ -50,6 +50,8 @@ var
   lMousept: TPoint;
   pt: TPoint;
 begin
+  Assert(Sender is TcxGridColumn, 'OnCxColumnHeaderClick: Wrong sender type class');
+
   lColumn := TcxGridColumn(Sender);
   lView := lColumn.GridView;
 

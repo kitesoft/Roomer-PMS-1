@@ -96,7 +96,7 @@ begin
   ds := dc.DataSet;
 
   Assert(dc.DataModeController.SyncMode, 'Datacontroler not synced with dataset');
-  Assert(dc.KeyFieldNames<>'', 'Syncmode not enabled because here is no keyfield specified');
+  Assert(dc.KeyFieldNames<>'', 'Syncmode not enabled because there is no keyfield specified');
 
   bm := ds.Bookmark;
   dc.BeginFullUpdate;
