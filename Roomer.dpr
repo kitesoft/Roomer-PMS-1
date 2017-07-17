@@ -297,7 +297,9 @@ uses
   uRptInHouse in 'uRptInHouse.pas' {frmInHouseReport},
   uDataSetFilterUtils in 'Filters\uDataSetFilterUtils.pas',
   uSocketHelpers in 'TCP\uSocketHelpers.pas',
-  uInvoiceObjects in 'Invoice\uInvoiceObjects.pas';
+  uInvoiceObjects in 'Invoice\uInvoiceObjects.pas',
+  uGridColumnFieldValuePropagator in 'RoomerUtils\uGridColumnFieldValuePropagator.pas',
+  ucxGridPopupMenuActivator in 'RoomerUtils\ucxGridPopupMenuActivator.pas';
 
 {$R *.RES}
 

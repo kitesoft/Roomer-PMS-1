@@ -203,6 +203,7 @@
         <VerInfo_AutoGenVersion>false</VerInfo_AutoGenVersion>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_3)'!=''">
+        <VerInfo_Release>13</VerInfo_Release>
         <VerInfo_MajorVer>2</VerInfo_MajorVer>
         <VerInfo_Keys>CompanyName=Promoir BV;FileDescription=Roomer PMS;FileVersion=2.9.13.0;InternalName=;LegalCopyright=(C) 2013, 2014, 2015, 2016, 2017 Promoir BV;LegalTrademarks=Roomer is a Registered Trademark of Promoir BV;OriginalFilename=Roomer.exe;ProductName=Roomer Open Hospitality Platform;ProductVersion=2.9.13.0;Comments=;ExtraBuild=170421;PrivateBuild=</VerInfo_Keys>
         <DCC_DebugDCUs>true</DCC_DebugDCUs>
@@ -902,6 +903,8 @@
         <DCCReference Include="Filters\uDataSetFilterUtils.pas"/>
         <DCCReference Include="TCP\uSocketHelpers.pas"/>
         <DCCReference Include="Invoice\uInvoiceObjects.pas"/>
+        <DCCReference Include="RoomerUtils\uGridColumnFieldValuePropagator.pas"/>
+        <DCCReference Include="RoomerUtils\ucxGridPopupMenuActivator.pas"/>
         <None Include="Roomer.todo"/>
         <None Include="notes.txt"/>
         <None Include="Roomer.inc"/>
