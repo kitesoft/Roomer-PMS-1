@@ -1686,6 +1686,9 @@ begin
   constants.Add('shRoomRentPErDaySetting_Never', 'Never');
   constants.Add('shRoomRentPErDaySetting_Ask', 'Ask per invoice');
   constants.Add('shRoomRentPErDaySetting_Always', 'Always');
+
+  constants.Add('FinanceConnect_TabName', 'Finance Connect');
+
 end;
 
 procedure AddConstants_OfflineReports;

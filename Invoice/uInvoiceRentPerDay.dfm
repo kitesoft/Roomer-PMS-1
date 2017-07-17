@@ -1372,7 +1372,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
           SelectionColor = clHighlight
           SelectionTextColor = clHighlightText
           SortSettings.DefaultFormat = ssAutomatic
-          Version = '8.2.4.1'
+          Version = '8.2.5.2'
           ColWidths = (
             24
             28

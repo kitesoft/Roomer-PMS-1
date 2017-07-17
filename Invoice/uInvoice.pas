@@ -676,7 +676,8 @@ uses
   UITypes
   , uFloatUtils
   , Math
-    , uVatCalculator, uSQLUtils, ufrmRoomPrices, uInvoiceDefinitions, uInvoiceRentPerDay, uPMSSettings;
+  , uVatCalculator, uSQLUtils, ufrmRoomPrices, uInvoiceDefinitions, uInvoiceRentPerDay, uPMSSettings,
+  uFinanceConnectService;
 
 {$R *.DFM}
 
@@ -5943,6 +5944,7 @@ begin
         result := True;
         try
           SendInvoicesToFinancePacketThreaded(zInvoiceNumber);
+          SendInvoiceToActiveFinanceConnector(zInvoiceNumber);
 //          remoteResult := d.roomerMainDataSet.SystemSendInvoiceToBookkeeping(zInvoiceNumber);
           ViewInvoice2(zInvoiceNumber, True, false, True, chkShowPackage.checked, zEmailAddress);
 

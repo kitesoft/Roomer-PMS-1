@@ -97,10 +97,25 @@ var
 const MAPPING_ENTITIES : Array[TKeyPairType] Of String = ('CUSTOMER','ITEM', 'PAYTYPE', 'VAT');
 
 procedure ClearFinanceConnectServices;
+function FinanceConnectActive : Boolean;
+procedure SendInvoiceToActiveFinanceConnector(invoiceNumber : Integer);
 
 implementation
 
 uses MSXML2_TLB, XmlUtils, msxmldom, XMLDoc, Xml.Xmldom, Xml.XMLIntf, uUtils;
+
+function FinanceConnectActive : Boolean;
+begin
+  result := (trim(ActiveFinanceConnectSystemCode) <> '');
+end;
+
+procedure SendInvoiceToActiveFinanceConnector(invoiceNumber : Integer);
+begin
+  if FinanceConnectActive then
+  begin
+    d.roomerMainDataSet.downloadUrlAsStringUsingPut(d.roomerMainDataSet.RoomerUri + 'financeconnect/invoices/' + inttostr(invoiceNumber), '');
+  end;
+end;
 
 const MAP_ENTITY_PATH = 'financeconnect/mappings/%s/%s/%s';
 

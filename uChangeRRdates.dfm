@@ -38,12 +38,14 @@ inherited frmChangeRRdates: TfrmChangeRRdates
       Margins.Top = 4
       Margins.Right = 4
       Margins.Bottom = 4
+      Visible = False
       ExplicitLeft = 412
-      ExplicitTop = 5
+      ExplicitTop = 3
       ExplicitHeight = 33
     end
     inherited btnCancel: TsButton
       Left = 519
+      Caption = 'Close'
       ExplicitLeft = 519
     end
   end

@@ -1456,6 +1456,7 @@ type
     procedure SetDateStatisticsDate;
     procedure WMEnterSizeMove(var Message: TMessage) ; message WM_ENTERSIZEMOVE;
     procedure WMExitSizeMove(var Message: TMessage) ; message WM_EXITSIZEMOVE;
+    procedure CheckFinanceConnect;
   public
     { Public declarations }
     StaffComm: TStaffCommunication;
@@ -3006,6 +3007,23 @@ begin
 
 end;
 
+procedure TfrmMain.CheckFinanceConnect;
+var FinanceConnectService : TFinanceConnectService;
+begin
+  ClearFinanceConnectServices;
+  FinanceConnectService := TFinanceConnectService.Create;
+  try
+    if ActiveFinanceConnectSystemCode <> '' then
+    begin
+      rbTabFinanceConnect.Caption := FinanceConnectService.SystemName;
+    end else
+      rbTabFinanceConnect.Caption := GetTranslatedText('FinanceConnect_TabName');
+
+  finally
+    FinanceConnectService.Free;
+  end;
+end;
+
 function TfrmMain.StartHotel(ForcefulRestart: boolean = false; const AutoLogin: String = ''): boolean;
 var
   userName, password, WrongLoginMessage, ExpiredMessage: string;
@@ -3016,8 +3034,6 @@ var
   tmpUserLang: integer;
   lLoginFormCancelled: boolean;
   lSavedEventHandler: TNotifyEvent;
-
-  FinanceConnectService : TFinanceConnectService;
 
 begin
   tmpUserLang := g.qUserLanguage;
@@ -3099,18 +3115,7 @@ begin
     pageMainGrids.Pages[i].TabVisible := false;
   end;
 
-  ClearFinanceConnectServices;
-  FinanceConnectService := TFinanceConnectService.Create;
-  try
-    if ActiveFinanceConnectSystemCode <> '' then
-    begin
-      rbTabFinanceConnect.Caption := FinanceConnectService.SystemName;
-    end else
-      rbTabFinanceConnect.Caption := 'Finance Connect';
-
-  finally
-    FinanceConnectService.Free;
-  end;
+  CheckFinanceConnect;
 
   try
     try
@@ -10648,6 +10653,7 @@ end;
 procedure TfrmMain.btnManageFinanceConnectClick(Sender: TObject);
 begin
   ManageFinanceConnect;
+  CheckFinanceConnect;
 end;
 
 procedure TfrmMain.btnManagerChannelManagerListClick(Sender: TObject);

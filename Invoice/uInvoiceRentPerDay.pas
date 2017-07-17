@@ -713,7 +713,8 @@ uses
   uInvoiceDefinitions,
   System.Generics.Defaults,
   uDateTimeHelper,
-  Types;
+  Types,
+  uFinanceConnectService;
 
 {$R *.DFM}
 
@@ -3629,11 +3630,12 @@ begin
           result := True;
           try
             SendInvoicesToFinancePacketThreaded(aInvoiceNumber);
+            SendInvoiceToActiveFinanceConnector(aInvoiceNumber);
           except
             on e: Exception do
             begin
-              ShowMessage('Ekki t�kst ad senda reikning No. ' + inttostr(zInvoiceNumber) +
-                ' til b�khaldskerfisins. Vinsamlega sendi� reikninginn handvirkt s��ar ');
+              ShowMessage('Ekki tókst ad senda reikning No. ' + inttostr(zInvoiceNumber) +
+                ' til bókhaldskerfisins. Vinsamlega sendið reikninginn handvirkt síðar ');
               AddRoomerActivityLog(d.roomerMainDataSet.username, ERROR, e.message,
                 format('Exception while sending invoice to booking keeping. Invoice %d, RoomReservation %d, Reservation %d -> %s',
                 [aInvoiceNumber, FRoomReservation, FReservation, e.message]));

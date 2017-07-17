@@ -299,7 +299,9 @@ uses
   uSocketHelpers in 'TCP\uSocketHelpers.pas',
   uInvoiceObjects in 'Invoice\uInvoiceObjects.pas',
   uFrmFinanceConnect in 'FinanceConnect\uFrmFinanceConnect.pas' {FrmFinanceConnect},
-  uFinanceConnectService in 'FinanceConnect\uFinanceConnectService.pas';
+  uFinanceConnectService in 'FinanceConnect\uFinanceConnectService.pas',
+  uGridColumnFieldValuePropagator in 'RoomerUtils\uGridColumnFieldValuePropagator.pas',
+  ucxGridPopupMenuActivator in 'RoomerUtils\ucxGridPopupMenuActivator.pas';
 
 {$R *.RES}
 

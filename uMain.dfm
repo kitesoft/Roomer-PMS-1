@@ -2682,6 +2682,7 @@ object frmMain: TfrmMain
       Index = 2
     end
     object rbTabReports: TdxRibbonTab
+      Active = True
       Caption = 'Reports'
       Groups = <
         item
@@ -2783,7 +2784,6 @@ object frmMain: TfrmMain
       Index = 7
     end
     object rbTabFinanceConnect: TdxRibbonTab
-      Active = True
       Caption = 'Finance Connect'
       Groups = <
         item
