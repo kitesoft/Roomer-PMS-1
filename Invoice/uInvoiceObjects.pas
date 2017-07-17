@@ -249,6 +249,10 @@ type
     function AddInvoiceLine(aLineId: integer; aParent: TInvoiceLine): TInvoiceLine;
     function AddPackageInvoiceLine(aLineId: integer; aParent: TInvoiceLine; aRoomreservation:integer): TPackageInvoiceLine;
 
+    /// <summary>
+    ///   Sets or unsets the VisibleOnInvoice property of Invoiceline object of certain type.
+    ///  Notice that this not alter the property of PackageItems!
+    /// </summary>
     procedure SetAllVisibleOnInvoiceTo(aVisible: boolean; aItemKindSet: TItemKindSet = [ikRoomRentDiscount, ikStayTax, ikBreakfast]);
     procedure SortOnInvoiceLineIndex;
     /// <summary>
@@ -552,7 +556,7 @@ var
   lInvLine: TInvoiceLine;
 begin
   for lInvLine in self do
-    if linvLine.CanBeHiddenFromInvoice and (lInvLine.ItemKind in aItemKindSet) then
+    if linvLine.CanBeHiddenFromInvoice and (lInvLine.ItemKind in aItemKindSet) and (not linvLine.isPackage) then
     begin
       linvLine.VisibleOnInvoice := aVisible;
       lInvLine.Changed := true
