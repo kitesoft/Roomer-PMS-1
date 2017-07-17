@@ -678,6 +678,9 @@ type
     pnlStaffComm: TsPanel;
     sImage1: TsImage;
     lblMainHeader: TsLabel;
+    rbTabFinanceConnect: TdxRibbonTab;
+    barinnBar4: TdxBar;
+    btnManageFinanceConnect: TdxBarLargeButton;
     procedure FormCreate(Sender: TObject);
     procedure DefaultHandler(var Message); override;
     procedure FormShow(Sender: TObject);
@@ -965,6 +968,7 @@ type
     procedure btnResStatusPerdDayClick(Sender: TObject);
     procedure M1Click(Sender: TObject);
     procedure btnHomeClick(Sender: TObject);
+    procedure btnManageFinanceConnectClick(Sender: TObject);
 
   protected
     procedure CreateParams(var Params: TCreateParams); override;
@@ -1620,6 +1624,8 @@ uses
     , uRptReservationStatusPerDay
     , uRoomerInstanceManagement
     , uFrontDeskPageButton
+    , uFrmFinanceConnect
+    , uFinanceConnectService
 		;
 
 {$R *.DFM}
@@ -3011,6 +3017,8 @@ var
   lLoginFormCancelled: boolean;
   lSavedEventHandler: TNotifyEvent;
 
+  FinanceConnectService : TFinanceConnectService;
+
 begin
   tmpUserLang := g.qUserLanguage;
 
@@ -3089,6 +3097,19 @@ begin
   begin
     pageMainGrids.TabHeight := 0;
     pageMainGrids.Pages[i].TabVisible := false;
+  end;
+
+  ClearFinanceConnectServices;
+  FinanceConnectService := TFinanceConnectService.Create;
+  try
+    if ActiveFinanceConnectSystemCode <> '' then
+    begin
+      rbTabFinanceConnect.Caption := FinanceConnectService.SystemName;
+    end else
+      rbTabFinanceConnect.Caption := 'Finance Connect';
+
+  finally
+    FinanceConnectService.Free;
   end;
 
   try
@@ -10622,6 +10643,11 @@ procedure TfrmMain.btnMaidsClick(Sender: TObject);
 begin
   LogUserClickedButton(Sender);
   _RptMaidsList;
+end;
+
+procedure TfrmMain.btnManageFinanceConnectClick(Sender: TObject);
+begin
+  ManageFinanceConnect;
 end;
 
 procedure TfrmMain.btnManagerChannelManagerListClick(Sender: TObject);

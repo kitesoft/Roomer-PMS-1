@@ -15,6 +15,7 @@ object d: Td
     RoomerEntitiesUri = 'http://localhost:8080/services/entities/'
     RoomerDatasetsUri = 'http://localhost:8080/services/datasets/'
     SessionLengthSeconds = 0
+    PrimaryKeyField = 'ID'
     Left = 184
     Top = 111
   end
@@ -33,6 +34,7 @@ object d: Td
     RoomerEntitiesUri = 'http://localhost:8080/services/entities/'
     RoomerDatasetsUri = 'http://localhost:8080/services/datasets/'
     SessionLengthSeconds = 0
+    PrimaryKeyField = 'ID'
     Left = 40
     Top = 180
   end
@@ -47,6 +49,7 @@ object d: Td
     RoomerEntitiesUri = 'http://localhost:8080/services/entities/'
     RoomerDatasetsUri = 'http://localhost:8080/services/datasets/'
     SessionLengthSeconds = 0
+    PrimaryKeyField = 'ID'
     Left = 160
     Top = 284
   end
@@ -211,6 +214,7 @@ object d: Td
     RoomerEntitiesUri = 'http://localhost:8080/services/entities/'
     RoomerDatasetsUri = 'http://localhost:8080/services/datasets/'
     SessionLengthSeconds = 0
+    PrimaryKeyField = 'ID'
     Left = 248
     Top = 456
   end
@@ -225,6 +229,7 @@ object d: Td
     RoomerEntitiesUri = 'http://localhost:8080/services/entities/'
     RoomerDatasetsUri = 'http://localhost:8080/services/datasets/'
     SessionLengthSeconds = 0
+    PrimaryKeyField = 'ID'
     Left = 140
     Top = 456
   end
@@ -239,6 +244,7 @@ object d: Td
     RoomerEntitiesUri = 'http://localhost:8080/services/entities/'
     RoomerDatasetsUri = 'http://localhost:8080/services/datasets/'
     SessionLengthSeconds = 0
+    PrimaryKeyField = 'ID'
     Left = 292
     Top = 392
   end
@@ -253,6 +259,7 @@ object d: Td
     RoomerEntitiesUri = 'http://localhost:8080/services/entities/'
     RoomerDatasetsUri = 'http://localhost:8080/services/datasets/'
     SessionLengthSeconds = 0
+    PrimaryKeyField = 'ID'
     Left = 248
     Top = 111
   end
@@ -482,6 +489,7 @@ object d: Td
     RoomerEntitiesUri = 'http://localhost:8080/services/entities/'
     RoomerDatasetsUri = 'http://localhost:8080/services/datasets/'
     SessionLengthSeconds = 0
+    PrimaryKeyField = 'ID'
     Left = 96
     Top = 104
   end
@@ -502,6 +510,7 @@ object d: Td
     RoomerEntitiesUri = 'http://localhost:8080/services/entities/'
     RoomerDatasetsUri = 'http://localhost:8080/services/datasets/'
     SessionLengthSeconds = 0
+    PrimaryKeyField = 'ID'
     Left = 152
     Top = 339
   end
@@ -569,6 +578,7 @@ object d: Td
     RoomerEntitiesUri = 'http://localhost:8080/services/entities/'
     RoomerDatasetsUri = 'http://localhost:8080/services/datasets/'
     SessionLengthSeconds = 0
+    PrimaryKeyField = 'ID'
     Left = 136
     Top = 24
   end
@@ -583,6 +593,7 @@ object d: Td
     RoomerEntitiesUri = 'http://localhost:8080/services/entities/'
     RoomerDatasetsUri = 'http://localhost:8080/services/datasets/'
     SessionLengthSeconds = 0
+    PrimaryKeyField = 'ID'
     Left = 152
     Top = 395
   end

@@ -75,7 +75,7 @@ type
     property Value: String read FValue write FValue;
   end;
 
-  TKeyPairType = (FKP_CUSTOMERS, FKP_PRODUCTS, FKP_PAYTYPES);
+  TKeyPairType = (FKP_CUSTOMERS, FKP_PRODUCTS, FKP_PAYTYPES, FKP_VAT);
   TKeyPairList = TObjectList<TKeyAndValue>;
 
   TRoomPackageLineEntry = class
@@ -11552,6 +11552,8 @@ begin
     Application.ProcessMessages;
   end;
 end;
+
+
 
 function Td.KeyExists(keyList: TKeyPairList; Key: String): boolean;
 var

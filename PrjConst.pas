@@ -188,6 +188,8 @@ uses uAppGlobal,
 
   , uEditFinanceExportProperties
   , uRptReservationStatusPerDay
+
+  , uFrmFinanceConnect
   ;
 
 
@@ -1936,6 +1938,8 @@ begin
   TfrmEditFinanceExportProperties.Create(nil).Free;
 
   TFrmRptReservationStatusPerDay.Create(nil).Free;
+
+  TFrmFinanceConnect.Create(nil).Free;
 
 end;
 

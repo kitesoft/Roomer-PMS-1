@@ -160,9 +160,6 @@ type
     function DeleteAsString(const url: String): String;
     function GetOpenApiUri: String;
     procedure SetOpenApiUri(const Value: String);
-    function downloadUrlAsStringUsingPut(const url: String; const Data: String; SetLastAccess: boolean = true;
-      loggingInOut: Integer = 0 { 0/1/2 = neither/login/logout }
-      ; const contentType: String = ''; retryOnError: boolean = true): String;
     function PutAsString(const url, Data: String; const contentType: String = ''; retryOnError: boolean = true): String;
     function PostStreamAsString(const url: String; Data: TStream; const contentType: String = ''): String;
     procedure SetOpenApiAuthHeaders(hdrs:
@@ -247,6 +244,9 @@ type
     function queryRoomer(aSql: String; SetLastAccess: boolean = true; Threaded: boolean = false): String;
     function downloadUrlAsString(url: String; loggingInOut: Integer = 0; SetLastAccess: boolean = true;
       contentType: String = ''; RaiseException: boolean = false): String;
+    function downloadUrlAsStringUsingPut(const url: String; const Data: String; SetLastAccess: boolean = true;
+      loggingInOut: Integer = 0 { 0/1/2 = neither/login/logout }
+      ; const contentType: String = ''; retryOnError: boolean = true): String;
     function downloadUrlAsStringUsingPost(url: String; Data: String; SetLastAccess: boolean = true;
       loggingInOut: Integer = 0 { 0/1/2 = neither/login/logout }
       ; contentType: String = ''): String;
