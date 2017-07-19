@@ -2941,6 +2941,10 @@ begin
   dxBarDeveloperTools.Visible := ivNever;
   btnResStatusPerdDay.Visible := ivNever;
 {$endif}
+
+{$ifdef rmDisableFinanceConnect }
+  btnManageFinanceConnect.Enabled := false;
+{$endif}
 end;
 
 
@@ -3008,8 +3012,12 @@ begin
 end;
 
 procedure TfrmMain.CheckFinanceConnect;
-var FinanceConnectService : TFinanceConnectService;
+{$ifndef rmDisableFinanceConnect }
+var
+  FinanceConnectService : TFinanceConnectService;
+{$endif}
 begin
+{$ifndef rmDisableFinanceConnect }
   ClearFinanceConnectServices;
   FinanceConnectService := TFinanceConnectService.Create;
   try
@@ -3022,6 +3030,7 @@ begin
   finally
     FinanceConnectService.Free;
   end;
+{$endif}
 end;
 
 function TfrmMain.StartHotel(ForcefulRestart: boolean = false; const AutoLogin: String = ''): boolean;
@@ -10652,8 +10661,10 @@ end;
 
 procedure TfrmMain.btnManageFinanceConnectClick(Sender: TObject);
 begin
+{$ifndef rmDisableFinanceConnect }
   ManageFinanceConnect;
   CheckFinanceConnect;
+{$endif}
 end;
 
 procedure TfrmMain.btnManagerChannelManagerListClick(Sender: TObject);
