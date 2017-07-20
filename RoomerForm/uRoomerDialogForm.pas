@@ -17,6 +17,8 @@ type
     btnCancel: TsButton;
   private
     { Private declarations }
+  protected
+    procedure DoShow; override;
   public
     { Public declarations }
   end;
@@ -24,5 +26,13 @@ type
 implementation
 
 {$R *.dfm}
+
+{ TfrmBaseRoomerDialogForm }
+
+procedure TfrmBaseRoomerDialogForm.DoShow;
+begin
+  inherited;
+  RefreshData;
+end;
 
 end.
