@@ -3180,7 +3180,6 @@ begin
   else
     actToggleLodgingTax.Caption := GetTranslatedText('shUI_InvoiceEnableLodgingTax');
 
-  actToggleLodgingTax.Enabled := actMoveRoomToTemp.Enabled;
   btnReservationNotes.Enabled := actMoveRoomToTemp.Enabled;
 end;
 
