@@ -1149,7 +1149,10 @@ end;
 procedure TfrmItems2.m_ItemsFilterRecord(DataSet: TDataSet; var Accept: Boolean);
 begin
   if tvData.DataController.Filter.AutoDataSetFilter AND (edFilter.Text <> '') then
-    Accept := pos(Lowercase(edFilter.Text), LowerCase(dataset['Description'])) > 0;
+    Accept := (pos(Lowercase(edFilter.Text), LowerCase(dataset['Description'])) > 0)
+              or
+              (pos(Lowercase(edFilter.Text), LowerCase(dataset['Item'])) > 0)
+              ;
 end;
 
 procedure TfrmItems2.m_ItemsNewRecord(DataSet: TDataSet);
