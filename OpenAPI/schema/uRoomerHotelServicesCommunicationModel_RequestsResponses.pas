@@ -325,7 +325,7 @@ begin
   FCategory := aNode.Attributes['category'];
   FAction := aNode.Attributes['action'];
   FActionDateTime := XMLTodateTime(aNode.Attributes['actionDateTime']);
-  FActionAffectsDate := XMLToDate(aNode.Attributes['actionAffectsDate']);
+  FActionAffectsDate := XMLToDateTime(aNode.Attributes['actionAffectsDate']);
   FUserLocation := aNode.Attributes['userLocation'];
   FReservation := StrToIntDef(aNode.Attributes['reservation'], 0);
   FRoomreservation := StrToIntDef(aNode.Attributes['roomReservation'], 0);
