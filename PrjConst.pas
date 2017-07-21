@@ -1884,7 +1884,7 @@ begin
 
   frmRptBookkeeping := TfrmRptBookkeeping.Create(nil); frmRptBookkeeping.Free; frmRptBookkeeping := nil;
   FrmReservationEmailingDialog := TFrmReservationEmailingDialog.Create(nil); FrmReservationEmailingDialog.Free; FrmReservationEmailingDialog := nil;
-  FrmReservationCancellationDialog := TFrmReservationCancellationDialog.Create(nil); FrmReservationCancellationDialog.Free; FrmReservationCancellationDialog := nil;
+  TFrmReservationCancellationDialog.Create(nil).Free;
   frmRptCashier := TfrmRptCashier.Create(nil); frmRptCashier.Free; frmRptCashier := nil;
 
   frmPhoneRates := TfrmPhoneRates.Create(nil); frmPhoneRates.Free; frmPhoneRates := nil;

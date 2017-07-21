@@ -4027,7 +4027,11 @@ var
 begin
   lMenu := TMenuItem(Sender);
   if FReservationChangeStateHandler.ChangeState(TReservationState(lMenu.Tag)) then
+  begin
     Display_rGrid(mRoomsRoomReservation.ASInteger);
+    if FReservationChangeStateHandler.CurrentState = rsCancelled then
+      Close;
+  end;
 end;
 
 
