@@ -80,7 +80,7 @@ type
       function MappingCaptionByIndex(keyPairType : TKeyPairType) : String;
       function FinanceConnectConfiguration: TFinanceConnectSettings;
       function CreateSettingsXml(settings: TFinanceConnectSettings): String;
-      procedure SaveFinanceConnectSettings(settings :  TFinanceConnectSettings);
+      procedure SaveFinanceConnectSettings(FinanceConnectSettings : TFinanceConnectSettings);
     end;
 
 var
@@ -93,6 +93,7 @@ var
     MappingsLookupMap : TObjectDictionary<String,String>;
 
     ActiveFinanceConnectSystemCode : String;
+    ActiveFinanceConnectSystemName : String;
 
 const MAPPING_ENTITIES : Array[TKeyPairType] Of String = ('CUSTOMER','ITEM', 'PAYTYPE', 'VAT');
 
@@ -158,6 +159,7 @@ begin
         if KeyAndValue.Key = ActiveFinanceConnectSystemCode then
         begin
           result := KeyAndValue.Value;
+          ActiveFinanceConnectSystemName := result;
           Break;
         end;
     end;
@@ -344,10 +346,10 @@ begin
   xmlDoc.SaveToXML(result);
 end;
 
-procedure TFinanceConnectService.SaveFinanceConnectSettings(settings :  TFinanceConnectSettings);
+procedure TFinanceConnectService.SaveFinanceConnectSettings(FinanceConnectSettings : TFinanceConnectSettings);
 var s : String;
 begin
-  s := Utf8ToString(d.roomerMainDataSet.downloadUrlAsStringUsingPut(d.roomerMainDataSet.RoomerUri + 'financeconnect', CreateSettingsXml(settings)));
+  s := Utf8ToString(d.roomerMainDataSet.downloadUrlAsStringUsingPut(d.roomerMainDataSet.RoomerUri + 'financeconnect', CreateSettingsXml(FinanceConnectSettings)));
 end;
 
 function TFinanceConnectService.RetrieveFinanceConnectKeypair(keyPairType: TKeyPairType): TKeyPairList;
@@ -530,14 +532,15 @@ end;
 procedure ClearFinanceConnectServices;
 begin
   ActiveFinanceConnectSystemCode := '';
+  ActiveFinanceConnectSystemName := '';
 
-  CustomersLookupList.Free;
-  ItemsLookupList.Free;
-  VatsLookupList.Free;
+  FreeAndNil(CustomersLookupList);
+  FreeAndNil(ItemsLookupList);
+  FreeAndNil(VatsLookupList);
 
-  SystemsLookupList.Free;
+  FreeAndNil(SystemsLookupList);
 
-  MappingsLookupMap.Free;
+  FreeAndNil(MappingsLookupMap);
 end;
 
 { TFinanceConnectSettings }

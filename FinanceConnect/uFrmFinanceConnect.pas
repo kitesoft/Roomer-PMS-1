@@ -13,6 +13,8 @@ uses
 
 type
 
+  TFinanceConnectPageIndex = Integer;
+
   TFrmFinanceConnect = class(TfrmBaseRoomerForm)
     pgMain: TsPageControl;
     sTabSheet1: TsTabSheet;
@@ -82,28 +84,45 @@ type
     edPreInvoiceNumber: TsEdit;
     sLabel14: TsLabel;
     edSuccInvoiceNumber: TsEdit;
-    sButton1: TsButton;
-    sMemo1: TsMemo;
+    btnSave: TsButton;
+    sPanel1: TsPanel;
+    edtSearch: TButtonedEdit;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure tabsMappingsChange(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure tvListExternalCodePropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
-    procedure sButton1Click(Sender: TObject);
+    procedure btnSaveClick(Sender: TObject);
+    procedure edServiceUrlChange(Sender: TObject);
+    procedure cbxActiveClick(Sender: TObject);
+    procedure cbxSystemSelectionCloseUp(Sender: TObject);
+    procedure edtSearchChange(Sender: TObject);
+    procedure edtSearchRightButtonClick(Sender: TObject);
   private
     FinanceConnectService : TFinanceConnectService;
     procedure LoadInfo;
     procedure PrepareTabs;
     procedure LoadSet(rSet: TRoomerDataSet; KeyPairType : TKeyPairType; mem: TdxMemData; CodeField, NameField, MappedField : String);
+    function CurrentTableView: TcxGridDBTableView;
+    procedure ClearAllTableViewFilters;
     { Private declarations }
   public
     { Public declarations }
+    InitialPage : TFinanceConnectPageIndex;
+    InitialWorkingTab : TFinanceConnectPageIndex;
   end;
 
 var
   FrmFinanceConnect: TFrmFinanceConnect;
 
-procedure ManageFinanceConnect;
+const PAGE_CONFIG = 0;
+      PAGE_MAPPING = 1;
+
+      TAB_CUSTOMERS = 0;
+      TAB_ITEMS = 1;
+      TAB_VATS = 2;
+
+procedure ManageFinanceConnect(page : TFinanceConnectPageIndex = PAGE_CONFIG; workingTab : TFinanceConnectPageIndex = TAB_CUSTOMERS);
 
 implementation
 
@@ -113,19 +132,81 @@ uses uAppGlobal,
      uFrmKeyPairSelector
     ;
 
-const TAB_CUSTOMERS = 0;
-      TAB_ITEMS = 1;
-      TAB_VATS = 2;
-
-procedure ManageFinanceConnect;
+procedure ManageFinanceConnect(page : TFinanceConnectPageIndex = PAGE_CONFIG; workingTab : TFinanceConnectPageIndex = TAB_CUSTOMERS);
 var _FrmFinanceConnect : TFrmFinanceConnect;
 begin
   _FrmFinanceConnect := TFrmFinanceConnect.Create(nil);
   try
+    _FrmFinanceConnect.InitialPage := page;
+    _FrmFinanceConnect.InitialWorkingTab := workingTab;
     _FrmFinanceConnect.ShowModal;
   finally
     FreeAndNil(_FrmFinanceConnect);
   end;
+end;
+
+procedure TFrmFinanceConnect.cbxActiveClick(Sender: TObject);
+begin
+  btnSave.Enabled := True;
+end;
+
+procedure TFrmFinanceConnect.cbxSystemSelectionCloseUp(Sender: TObject);
+begin
+  btnSave.Enabled := True;
+end;
+
+procedure TFrmFinanceConnect.edServiceUrlChange(Sender: TObject);
+begin
+  btnSave.Enabled := True;
+end;
+
+procedure TFrmFinanceConnect.edtSearchChange(Sender: TObject);
+var currentView : TcxGridDBTableView;
+    i : Integer;
+    filter : String;
+begin
+  edtSearch.RightButton.Visible := edtSearch.Text <> '';
+  currentView := CurrentTableView;
+
+  currentView.DataController.Filter.Active := False;
+  currentView.DataController.Filter.Root.Clear;
+  currentView.DataController.Filter.Options := [fcoCaseInsensitive];
+  currentView.DataController.Filter.Root.BoolOperatorKind := fboOr;
+  for i := 0 to currentView.ColumnCount - 1 do
+    if (currentView.Columns[i].DataBinding.ValueType = 'String') OR
+       (currentView.Columns[i].DataBinding.ValueType = 'Integer') then
+      currentView.DataController.Filter.Root.AddItem(currentView.Columns[i], foLike, '%'+edtSearch.Text+'%', '%'+edtSearch.Text+'%');
+  currentView.DataController.Filter.Active := True;
+end;
+
+procedure TFrmFinanceConnect.edtSearchRightButtonClick(Sender: TObject);
+begin
+  edtSearch.Text := '';
+  CurrentTableView.DataController.Filter.Root.Clear;
+  CurrentTableView.DataController.Filter.Active := false;
+end;
+
+function TFrmFinanceConnect.CurrentTableView : TcxGridDBTableView;
+begin
+  result := tvCustomers;
+  case tabsMappings.TabIndex of
+    TAB_CUSTOMERS : result := tvCustomers;
+    TAB_ITEMS     : result := tvItems;
+    TAB_VATS      : result := tvVats;
+  end;
+end;
+
+procedure TFrmFinanceConnect.ClearAllTableViewFilters;
+begin
+  edtSearch.Text := '';
+
+  tvCustomers.DataController.Filter.Root.Clear;
+  tvItems.DataController.Filter.Root.Clear;
+  tvVats.DataController.Filter.Root.Clear;
+
+  tvCustomers.DataController.Filter.Active := false;
+  tvItems.DataController.Filter.Active := false;
+  tvVats.DataController.Filter.Active := false;
 end;
 
 procedure TFrmFinanceConnect.FormCreate(Sender: TObject);
@@ -147,6 +228,7 @@ begin
   inherited;
   LoadInfo;
   PrepareTabs;
+  btnSave.Enabled := False;
 end;
 
 procedure TFrmFinanceConnect.tabsMappingsChange(Sender: TObject);
@@ -154,6 +236,7 @@ begin
   pnl0.Visible := tabsMappings.TabIndex = TAB_CUSTOMERS;
   pnl1.Visible := tabsMappings.TabIndex = TAB_ITEMS;
   pnl2.Visible := tabsMappings.TabIndex = TAB_VATS;
+  ClearAllTableViewFilters;
 end;
 
 procedure TFrmFinanceConnect.tvListExternalCodePropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
@@ -263,7 +346,6 @@ begin
 end;
 
 procedure TFrmFinanceConnect.PrepareTabs;
-var FinanceConnectSettings : TFinanceConnectSettings;
 begin
  //
   pnl0.Align := alClient;
@@ -274,44 +356,50 @@ begin
   pnl1.Visible := False;
   pnl2.Visible := False;
 
-  tabsMappings.TabIndex := TAB_CUSTOMERS;
+  with FinanceConnectService.FinanceConnectConfiguration do
+  begin
+    cbxActive.Checked := systemActive;
+    edServiceUrl.Text := serviceUri;
+    edUsername.Text := username;
+    edPassword.Text := password;
+    edOrg.Text := organizationId;
+    edOffice.Text := officeCode;
+    edCompany.Text := companyGuid;
+    edSalesCode.Text := invoiceCode;
+    edCashCode.Text := cashCode;
+    edCashAccount.Text := cashBalanceAccount;
+    edReceivableAccount.Text := receivableBalanceAccount;
+    edPreInvoiceNumber.Text := preceedingInvoiceNumber;
+    edSuccInvoiceNumber.Text := succeedingInvoiceNumber;
+  end;
+
+  pgMain.ActivePageIndex := InitialPage;
+  tabsMappings.TabIndex := InitialWorkingTab;
   tabsMappingsChange(tabsMappings);
 
-  FinanceConnectSettings := FinanceConnectService.FinanceConnectConfiguration;
-  cbxActive.Checked := FinanceConnectSettings.systemActive;
-  edServiceUrl.Text := FinanceConnectSettings.serviceUri;
-  edUsername.Text := FinanceConnectSettings.username;
-  edPassword.Text := FinanceConnectSettings.password;
-  edOrg.Text := FinanceConnectSettings.organizationId;
-  edOffice.Text := FinanceConnectSettings.officeCode;
-  edCompany.Text := FinanceConnectSettings.companyGuid;
-  edSalesCode.Text := FinanceConnectSettings.invoiceCode;
-  edCashCode.Text := FinanceConnectSettings.cashCode;
-  edCashAccount.Text := FinanceConnectSettings.cashBalanceAccount;
-  edReceivableAccount.Text := FinanceConnectSettings.receivableBalanceAccount;
-  edPreInvoiceNumber.Text := FinanceConnectSettings.preceedingInvoiceNumber;
-  edSuccInvoiceNumber.Text := FinanceConnectSettings.succeedingInvoiceNumber;
 end;
 
-procedure TFrmFinanceConnect.sButton1Click(Sender: TObject);
+procedure TFrmFinanceConnect.btnSaveClick(Sender: TObject);
 var FinanceConnectSettings : TFinanceConnectSettings;
 begin
   FinanceConnectSettings := FinanceConnectService.FinanceConnectConfiguration;
-  FinanceConnectSettings.systemActive := cbxActive.Checked;
-  FinanceConnectSettings.serviceUri := edServiceUrl.Text;
-  FinanceConnectSettings.username := edUsername.Text;
-  FinanceConnectSettings.password := edPassword.Text;
-  FinanceConnectSettings.organizationId := edOrg.Text;
-  FinanceConnectSettings.officeCode := edOffice.Text;
-  FinanceConnectSettings.companyGuid := edCompany.Text;
-  FinanceConnectSettings.invoiceCode := edSalesCode.Text;
-  FinanceConnectSettings.cashCode := edCashCode.Text;
-  FinanceConnectSettings.cashBalanceAccount := edCashAccount.Text;
-  FinanceConnectSettings.receivableBalanceAccount := edReceivableAccount.Text;
-  FinanceConnectSettings.preceedingInvoiceNumber := edPreInvoiceNumber.Text;
-  FinanceConnectSettings.succeedingInvoiceNumber := edSuccInvoiceNumber.Text;
+  with FinanceConnectSettings do
+  begin
+    systemActive := cbxActive.Checked;
+    serviceUri := edServiceUrl.Text;
+    username := edUsername.Text;
+    password := edPassword.Text;
+    organizationId := edOrg.Text;
+    officeCode := edOffice.Text;
+    companyGuid := edCompany.Text;
+    invoiceCode := edSalesCode.Text;
+    cashCode := edCashCode.Text;
+    cashBalanceAccount := edCashAccount.Text;
+    receivableBalanceAccount := edReceivableAccount.Text;
+    preceedingInvoiceNumber := edPreInvoiceNumber.Text;
+    succeedingInvoiceNumber := edSuccInvoiceNumber.Text;
+  end;
 
-  sMemo1.Lines.Text := FinanceConnectService.CreateSettingsXml(FinanceConnectSettings);
   FinanceConnectService.SaveFinanceConnectSettings(FinanceConnectSettings);
 end;
 

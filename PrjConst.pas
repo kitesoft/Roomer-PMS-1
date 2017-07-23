@@ -1688,6 +1688,9 @@ begin
   constants.Add('shRoomRentPErDaySetting_Always', 'Always');
 
   constants.Add('FinanceConnect_TabName', 'Finance Connect');
+  constants.Add('Customers_FinanceConnect_AddedCustomer', 'You have added a new customer.' + #10#13 + 'Do want to open customer mappings for %s?');
+  constants.Add('Items_FinanceConnect_AddedItem', 'You have added a new item.' + #10#13 + 'Do want to open items mappings for %s?');
+  constants.Add('Vat_FinanceConnect_AddedCode', 'You have added a new vat code.' + #10#13 + 'Do want to open vat mappings for %s?');
 
 end;
 
