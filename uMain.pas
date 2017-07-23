@@ -4788,9 +4788,8 @@ end;
 
 procedure TfrmMain.CancelAReservation;
 begin
-  if GetSelectedRoomInformation and FReservationStateHandler.ChangeIsAllowed(rsCancelled, true) then
+  if GetSelectedRoomInformation and FReservationStateHandler.ChangeState(rsCancelled) then
   begin
-    if CancelBookingDialog(_iReservation) then
       if (ViewMode = vmOneDay) OR (ViewMode = vmPeriod) then
         RefreshGrid;
   end;
@@ -4798,9 +4797,9 @@ end;
 
 procedure TfrmMain.CancelARoomReservation;
 begin
-  if GetSelectedRoomInformation and FReservationStateHandler.RoomStateChangeHandler[_iRoomReservation].ChangeIsAllowed(rsCancelled, true) then
+  if GetSelectedRoomInformation and
+    FReservationStateHandler.RoomStateChangeHandler[_iRoomReservation].ChangeState(rsCancelled) then
   begin
-    if CancelRoomBookingDialog(_iRoomReservation) then
       if (ViewMode = vmOneDay) OR (ViewMode = vmPeriod) then
         RefreshGrid;
   end;

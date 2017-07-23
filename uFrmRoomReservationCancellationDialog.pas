@@ -20,10 +20,15 @@ uses
   Vcl.ExtCtrls,
   sPanel,
   cxClasses,
-  cxPropertiesStore;
+  cxPropertiesStore
+  , uRoomerDialogForm, sGroupBox, cxGridTableView, cxStyles, dxPScxCommon, dxPScxGridLnk, Vcl.ComCtrls, sStatusBar
+  ;
 
 type
-  TFrmRoomReservationCancellationDialog = class(TForm)
+  TFrmRoomReservationCancellationDialog = class(TfrmBaseRoomerDialogForm)
+    sLabel2: TsLabel;
+    sGroupBox1: TsGroupBox;
+    sPanel1: TsPanel;
     sLabel1: TsLabel;
     lblResName: TsLabel;
     sLabel3: TsLabel;
@@ -36,27 +41,23 @@ type
     lblRooms: TsLabel;
     sLabel11: TsLabel;
     lblGuests: TsLabel;
-    sPanel1: TsPanel;
-    sButton1: TsButton;
-    sButton2: TsButton;
-    sLabel2: TsLabel;
-    mmoReason: TsMemo;
-    FormStore: TcxPropertiesStore;
     sLabel4: TsLabel;
     lblGuest: TsLabel;
     sLabel8: TsLabel;
     lblRoom: TsLabel;
-    procedure FormShow(Sender: TObject);
-    procedure FormCreate(Sender: TObject);
-  private
-    procedure ShowReservation;
+    mmoReason: TsMemo;
+    lbReservationNr: TsLabel;
+    lblReservationNr: TsLabel;
+  protected
+    procedure DoLoadData; override;
     { Private declarations }
   public
     { Public declarations }
     RoomReservation: Integer;
+    class function CancelRoomBookingDialog(aRoomReservation: Integer): Boolean; // function must be of type TStateChangeHandlerFunc
   end;
 
-function CancelRoomBookingDialog(RoomReservation: Integer): Boolean;
+
 
 implementation
 
@@ -72,17 +73,17 @@ uses
   uUtils
     ;
 
-function CancelRoomBookingDialog(RoomReservation: Integer): Boolean;
+class function TFrmRoomReservationCancellationDialog.CancelRoomBookingDialog(aRoomReservation: Integer): Boolean;
 var
   _FrmRoomReservationCancellationDialog: TFrmRoomReservationCancellationDialog;
 begin
   result := False;
   _FrmRoomReservationCancellationDialog := TFrmRoomReservationCancellationDialog.Create(nil);
   try
-    _FrmRoomReservationCancellationDialog.RoomReservation := RoomReservation;
+    _FrmRoomReservationCancellationDialog.RoomReservation := aRoomReservation;
     if _FrmRoomReservationCancellationDialog.ShowModal = mrOK then
     begin
-      d.roomerMainDataSet.SystemCancelRoomReservation(RoomReservation,
+      d.roomerMainDataSet.SystemCancelRoomReservation(aRoomReservation,
         Format('User %s changed state of room to cancelled on %s',
         [d.roomerMainDataSet.userName, DateTimeToStr(now)]) + #13 +
         ReplaceString(_FrmRoomReservationCancellationDialog.mmoReason.Text, '''', '\'''));
@@ -93,14 +94,15 @@ begin
   end;
 end;
 
-procedure TFrmRoomReservationCancellationDialog.ShowReservation;
+procedure TFrmRoomReservationCancellationDialog.DoLoadData;
 var
   rSet: TRoomerDataset;
   sql: String;
 begin
+  inherited;
   rSet := CreateNewDataset;
   sql := Format(
-    'SELECT r.Name, r.ContactName, p.Name AS GuestName, ' +
+    'SELECT r.Reservation, r.Name, r.ContactName, p.Name AS GuestName, ' +
     'DATE(rr.Arrival) AS Arrival, ' +
     'DATE(rr.Departure) AS Departure, ' +
     '(SELECT COUNT(id) FROM roomreservations r1 WHERE r1.Reservation=r.Reservation) AS NumRooms, ' +
@@ -129,19 +131,8 @@ begin
     lblDeparture.Caption := DateToStr(rSet['Departure']);
     lblRooms.Caption := inttostr(rSet['NumRooms']);
     lblGuests.Caption := inttostr(rSet['NumGuests']);
+    lblReservationNr.Caption := Format('%d - %d', [rSet.fieldByName('Reservation').AsInteger, RoomReservation]);
   end;
-end;
-
-procedure TFrmRoomReservationCancellationDialog.FormCreate(Sender: TObject);
-begin
-  RoomerLanguage.TranslateThisForm(self);
-  glb.PerformAuthenticationAssertion(self);
-  PlaceFormOnVisibleMonitor(self);
-end;
-
-procedure TFrmRoomReservationCancellationDialog.FormShow(Sender: TObject);
-begin
-  ShowReservation;
 end;
 
 end.

@@ -32,27 +32,38 @@ type
     constructor Create(aRoomReservation: integer); reintroduce;
   end;
 
-
-  THandlerFunc = function: boolean of object;
+  /// <summary>
+  ///   Function type to execute a specific state change on the item identified by aId.
+  ///  Returns true if the statechange has been successfull
+  /// </summary>
+  TStateChangeHandlerFunc = reference to function(aReservationId: integer; aRoomReservationId: integer): boolean;
 
   TBaseReservationStateChangeHandler = class abstract(TObject)
-  private
+  strict private
+    FCurrentStateDirty: boolean;
   protected
     FReservation: integer;
+    FRoomReservation: integer;
     FNewState : TReservationState;
     FCurrentState: TReservationState;
-    FCurrentStateDirty: boolean;
-    function Checkin: boolean; virtual; abstract;
-    function CheckOut: boolean; virtual; abstract;
-    function DispatchChangeHandler(aOldState, aNewState: TReservationState): THandlerFunc; virtual;
-    function CatchAll: boolean; virtual; abstract;
+    function Checkin(aReservationId: integer; aRoomReservationId: integer): boolean; virtual; abstract;
+    function CheckOut(aReservationId: integer; aRoomReservationId: integer): boolean; virtual; abstract;
+    function Cancel(aReservationId: integer; aRoomReservationId: integer): boolean; virtual; abstract;
+    function DispatchChangeHandler(aOldState, aNewState: TReservationState): TStateChangeHandlerFunc; virtual;
+    function CatchAll(aReservationId: integer; aRoomReservationId: integer): boolean; virtual; abstract;
     function GetReservationState: TReservationState; virtual;
     procedure UpdateCurrentState; virtual; abstract;
     procedure AddChangeToUserActivityLog(aOldvalue, aNewValue: TReservationState); virtual; abstract;
+    procedure SetCurrentStateDirty(const Value: boolean); virtual;
+    property CurrentStateDirty: boolean read FCurrentStateDirty write SetCurrentStateDirty;
   public
     constructor Create;
     function ChangeIsAllowed(aNewState: TReservationState; aRaiseExceptionOnFail: boolean=false): boolean; virtual; abstract;
-    function ChangeState(aNewState: TReservationState): boolean; virtual;
+    function ChangeState(aNewState: TReservationState): boolean; overload; virtual;
+    /// <summary>
+    ///   Try to change the state to aNewState, using the provided aFunc handler functions. This bypasses the default DispatchChangeHandler;
+    /// </summary>
+    function ChangeState(aNewState: TReservationState; aHandler: TStateChangeHandlerFunc): boolean; overload; virtual;
     property CurrentState: TReservationState read GetReservationState;
   end;
 
@@ -60,11 +71,11 @@ type
   private
     function RoomReservationHasUnPaidInvoiceItems(aRoomReservation: integer): boolean;
   protected
-    FRoomReservation: integer;
     FRoom: string;
-    function Checkin: boolean; override;
-    function CheckOut: boolean; override;
-    function CatchAll: boolean; override;
+    function Checkin(aReservationId: integer; aRoomReservationId: integer ): boolean; override;
+    function CheckOut(aReservationId: integer; aRoomReservationId: integer ): boolean; override;
+    function Cancel(aReservationId: integer; aRoomReservationId: integer ): boolean; override;
+    function CatchAll(aReservationId: integer; aRoomReservationId: integer ): boolean; override;
     procedure UpdateCurrentState; override;
     procedure AddChangeToUserActivityLog(aOldvalue, aNewValue: TReservationState); override;
   public
@@ -83,11 +94,13 @@ type
     procedure AddRoomResChangeSetHandlers;
     function ReservationHasUnPaidInvoiceItems(aReservation: integer): boolean;
   protected
-    function Checkin: boolean; override;
-    function CheckOut: boolean; override;
-    function CatchAll: boolean; override;
+    function Checkin(aReservationId: integer; aRoomReservationId: integer ): boolean; override;
+    function CheckOut(aReservationId: integer; aRoomReservationId: integer ): boolean; override;
+    function Cancel(aReservationId: integer; aRoomReservationId: integer ): boolean; override;
+    function CatchAll(aReservationId: integer; aRoomReservationId: integer ): boolean; override;
     procedure UpdateCurrentState; override;
     procedure AddChangeToUserActivityLog(aOldValue, aNewValue: TReservationState); override;
+    procedure SetCurrentStateDirty(const Value: boolean); override;
   public
     constructor Create(aReservation: integer); reintroduce;
     destructor Destroy; override;
@@ -120,13 +133,15 @@ uses
   , uG
   , Windows
   , uActivityLogs
-  , uUtils;
+  , uUtils
+  ,uFrmRoomReservationCancellationDialog
+  ,uFrmReservationCancellationDialog
+  ;
 
 { TReservationStateChangeHandler }
 
-function TBaseReservationStateChangeHandler.ChangeState(aNewState: TReservationState): boolean;
+function TBaseReservationStateChangeHandler.ChangeState(aNewState: TReservationState; aHandler: TStateChangeHandlerFunc): boolean;
 var
-  lExecuteChangeFunc: THandlerFunc;
   lOldState: TReservationState;
 begin
   result := false;
@@ -134,13 +149,19 @@ begin
   lOldState := CurrentState;
   if ChangeIsAllowed(aNewState, true) then
   begin
-    AddChangeToUserActivityLog(lOldState, aNewState);
-    lExecuteChangeFunc := DispatchChangeHandler(lOldState, aNewState);
-    if Assigned(lExecuteChangeFunc) then
-      Result := lExecuteChangeFunc();
+    if Assigned(aHandler) and aHandler(FReservation, FRoomReservation) then
+    begin
+      AddChangeToUserActivityLog(lOldState, aNewState);
+      Result := True;
+    end;
 
-    FCurrentStateDirty := Result;
+    CurrentStateDirty := Result;
   end;
+end;
+
+function TBaseReservationStateChangeHandler.ChangeState(aNewState: TReservationState): boolean;
+begin
+  Result := ChangeState(aNewState, DispatchChangeHandler(CurrentState, aNewState));
 end;
 
 constructor TBaseReservationStateChangeHandler.Create;
@@ -173,7 +194,7 @@ begin
 
 end;
 
-function TReservationStateChangeHandler.Checkin: boolean;
+function TReservationStateChangeHandler.Checkin(aReservationId: integer; aRoomReservationId: integer ): boolean;
 var
   lRoom: string;
   lRoomHandler: TRoomReservationStateChangeHandler;
@@ -184,7 +205,7 @@ begin
   else
   begin
 
-    ShowAlertsForReservation(FReservation, 0, atCHECK_IN);
+    ShowAlertsForReservation(aReservationId, 0, atCHECK_IN);
 
     lRoom := FRoomStateChangers.Values.ToArray[0].Room;
     if FConfirmed OR (MessageDlg(Format(GetTranslatedText('shCheckInGroupOfRoom'), [lRoom]), mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
@@ -195,10 +216,10 @@ begin
         if lRoomHandler.ChangeIsAllowed(rsGuests) then
         begin
           ShowAlertsForReservation(0, lRoomhandler.FRoomReservation, atCHECK_IN);
-          lRoomHandler.FCurrentStateDirty := True;
+          lRoomHandler.CurrentStateDirty := True;
         end;
       end;
-      d.CheckInReservation(FReservation);
+      d.CheckInReservation(aReservationId);
 
       g.updateCurrentGuestlist;
       Result := True;
@@ -206,7 +227,7 @@ begin
   end;
 end;
 
-function TReservationStateChangeHandler.CheckOut: boolean;
+function TReservationStateChangeHandler.CheckOut(aReservationId: integer; aRoomReservationId: integer ): boolean;
 var
   lRoom: string;
   lRoomHandler: TRoomReservationStateChangeHandler;
@@ -217,7 +238,7 @@ begin
   else
   begin
 
-    ShowAlertsForReservation(FReservation, 0, atCHECK_OUT);
+    ShowAlertsForReservation(aReservationId, 0, atCHECK_OUT);
 
     lRoom := FRoomStateChangers.Values.ToArray[0].Room;
     if FConfirmed OR (MessageDlg(Format(GetTranslatedText('shCheckOutGroupOfRoom'), [lRoom]), mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
@@ -228,10 +249,10 @@ begin
         if lRoomHandler.ChangeIsAllowed(rsDeparted) then
         begin
           ShowAlertsForReservation(0, lRoomhandler.FRoomReservation, atCHECK_OUT);
-          lRoomHandler.FCurrentStateDirty := True;
+          lRoomHandler.CurrentStateDirty := True;
         end;
       end;
-      d.CheckOutReservation(FReservation);
+      d.CheckOutReservation(aReservationId);
       g.updateCurrentGuestlist;
       Result := True;
     end;
@@ -311,6 +332,15 @@ begin
   Result := UnpaidGroupInvoiceLineItems_exist(aReservation);
 end;
 
+procedure TReservationStateChangeHandler.SetCurrentStateDirty(const Value: boolean);
+var
+  lRoomHandler: TRoomReservationStateChangeHandler;
+begin
+  inherited;
+  for lRoomHandler in FRoomStateChangers.Values do
+    lRoomHandler.CurrentStateDirty := Value;
+end;
+
 function TRoomReservationStateChangeHandler.RoomReservationHasUnPaidInvoiceItems(aRoomReservation: integer): boolean;
 begin
   Result := UnpaidInvoiceLineItems_exist(aRoomReservation);
@@ -331,12 +361,12 @@ begin
     raise EInvalidRoomReservationStateChange.CreateForStates(CurrentState, aNewState);
 end;
 
-function TRoomReservationStateChangeHandler.Checkin: boolean;
+function TRoomReservationStateChangeHandler.Checkin(aReservationId: integer; aRoomReservationId: integer ): boolean;
 begin
   Result := false;
   // Allocate room if needed
   if FRoom.StartsWith('<') then
-    FRoom := ProvideARoom2(FRoomReservation, False); // clean rooms only
+    FRoom := ProvideARoom2(aRoomReservationId, False); // clean rooms only
 
   if FRoom = '' then
     Exit;
@@ -349,10 +379,10 @@ begin
   if ctrlGetBoolean('CheckinWithDetailsDialog') OR
     (MessageDlg(Format(GetTranslatedText('shCheckRoom'), [FRoom]), mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
   begin
-    ShowAlertsForReservation(FReservation, FRoomReservation, atCHECK_IN);
-    if (NOT ctrlGetBoolean('CheckinWithDetailsDialog')) OR OpenGuestCheckInForm(FRoomReservation) then
+    ShowAlertsForReservation(aReservationId, aRoomReservationId, atCHECK_IN);
+    if (NOT ctrlGetBoolean('CheckinWithDetailsDialog')) OR OpenGuestCheckInForm(aRoomReservationId) then
     begin
-      d.CheckInGuest(FRoomReservation);
+      d.CheckInGuest(aRoomReservationId);
       g.updateCurrentGuestlist;
       Result := true;
     end;
@@ -360,18 +390,18 @@ begin
 
 end;
 
-function TRoomReservationStateChangeHandler.CheckOut: boolean;
+function TRoomReservationStateChangeHandler.CheckOut(aReservationId: integer; aRoomReservationId: integer ): boolean;
 begin
   Result := false;
   if ctrlGetBoolean('CheckOutWithPaymentsDialog') OR
     (MessageDlg(Format(GetTranslatedText('shCheckOutSelectedRoom'), [FRoom]), mtConfirmation, [mbYes, mbNo], 0) = mrYes)
   then
   begin
-    ShowAlertsForReservation(FReservation, FRoomReservation, atCHECK_OUT);
+    ShowAlertsForReservation(aReservationId, aRoomReservationId, atCHECK_OUT);
     if ctrlGetBoolean('CheckOutWithPaymentsDialog') then
-      CheckoutGuestWithDialog(FReservation, FRoomReservation, FRoom)
+      CheckoutGuestWithDialog(aReservationId, aRoomReservationId, FRoom)
     else
-      d.CheckOutGuest(FRoomReservation, FRoom);
+      d.CheckOutGuest(aRoomReservationId, FRoom);
     Result := True;
   end;
 end;
@@ -392,7 +422,7 @@ begin
   FRoomReservation := aRoomResObj.RoomReservation;
   FRoom := aRoomResObj.Room;
   FCurrentState := aRoomResObj.State;
-  FCurrentStateDirty := False;
+  CurrentStateDirty := False;
 end;
 
 
@@ -400,16 +430,17 @@ procedure TRoomReservationStateChangeHandler.UpdateCurrentState;
 begin
   inherited;
   FCurrentState := TReservationState.FromResStatus( d.RR_GetStatus(FRoomReservation));
-  FCurrentStateDirty := False;
+  CurrentStateDirty := False;
 end;
 
 function TBaseReservationStateChangeHandler.DispatchChangeHandler(aOldState,
-  aNewState: TReservationState): THandlerFunc;
+  aNewState: TReservationState): TStateChangeHandlerFunc;
 begin
   Result := nil;
   case aNewState of
-    rsGuests:   Result := Checkin;
-    rsDeparted: Result := Checkout;
+    rsGuests:     Result := Checkin;
+    rsDeparted:   Result := Checkout;
+    rsCancelled:  Result := Cancel;
   else
     Result := Catchall;
   end;
@@ -417,10 +448,15 @@ end;
 
 function TBaseReservationStateChangeHandler.GetReservationState: TReservationState;
 begin
-  if FCurrentStateDirty then
+  if CurrentStateDirty then
     UpdateCurrentState;
 
   Result := FCurrentState;
+end;
+
+procedure TBaseReservationStateChangeHandler.SetCurrentStateDirty(const Value: boolean);
+begin
+  FCurrentStateDirty := Value;
 end;
 
 procedure TReservationStateChangeHandler.AddRoomStateChangeHandler(aHandler: TRoomReservationStateChangeHandler);
@@ -428,33 +464,22 @@ begin
   FRoomStateChangers.AddOrSetValue(aHandler.FRoomReservation, aHandler);
 end;
 
-function TReservationStateChangeHandler.Catchall: boolean;
+function TReservationStateChangeHandler.Cancel(aReservationId, aRoomReservationId: integer): boolean;
+begin
+  result := TfrmReservationCancellationDialog.CancelBookingDialog(aReservationId);
+end;
+
+function TReservationStateChangeHandler.Catchall(aReservationId: integer; aRoomReservationId: integer ): boolean;
 var
   lRoomHandler: TRoomReservationStateChangeHandler;
 begin
   Result := False;
-  if MessageDlg(Format(GetTranslatedtext('shChangeStateOfFullReservation'), [FReservation, FNewState.AsReadableString]), mtConfirmation, mbOKCancel, 0) = mrOK then
+  if MessageDlg(Format(GetTranslatedtext('shChangeStateOfFullReservation'), [aReservationId, FNewState.AsReadableString]), mtConfirmation, mbOKCancel, 0) = mrOK then
   begin
-     d.roomerMaindataset.SystemSetRoomStatusOfReservation(FReservation, FNewstate.AsStatusChar);
+     d.roomerMaindataset.SystemSetRoomStatusOfReservation(aReservationId, FNewstate.AsStatusChar);
      for lRoomHandler in FRoomStateChangers.Values do
-        lRoomHandler.FCurrentStateDirty := True;
+        lRoomHandler.CurrentStateDirty := True;
      Result := True;
-  end;
-end;
-
-procedure TRoomReservationStateChangeHandler.AddChangeToUserActivityLog(aOldvalue, aNewValue: TReservationState);
-begin
-  AddReservationActivityLog(g.qUser, FReservation, FRoomReservation, CHANGE_ROOMRESERVATION_STATUS, aOldValue.AsReadableString, aNewValue.AsReadableString);
-end;
-
-function TRoomreservationStateChangeHandler.Catchall: boolean;
-begin
-  Result := False;
-  if ChangeIsAllowed(FNewState) then
-  begin
-    d.UpdateStatusSimple(FReservation, FRoomReservation, FNewState.AsStatusChar);
-    FCurrentStateDirty := True;
-    Result := True;
   end;
 end;
 
@@ -462,6 +487,27 @@ function TReservationStateChangeHandler.ChangeState(aNewState: TReservationState
 begin
   FConfirmed := False;
   Result := inherited;
+end;
+
+
+procedure TRoomReservationStateChangeHandler.AddChangeToUserActivityLog(aOldvalue, aNewValue: TReservationState);
+begin
+  AddReservationActivityLog(g.qUser, FReservation, FRoomReservation, CHANGE_ROOMRESERVATION_STATUS, aOldValue.AsReadableString, aNewValue.AsReadableString);
+end;
+
+function TRoomReservationStateChangeHandler.Cancel(aReservationId, aRoomReservationId: integer): boolean;
+begin
+  result := TFrmRoomReservationCancellationDialog.CancelRoomBookingDialog(aRoomReservationId);
+end;
+
+function TRoomreservationStateChangeHandler.Catchall(aReservationId: integer; aRoomReservationId: integer ): boolean;
+begin
+  Result := False;
+  if ChangeIsAllowed(FNewState) then
+  begin
+    d.UpdateStatusSimple(aReservationId, aRoomReservationId, FNewState.AsStatusChar);
+    Result := True;
+  end;
 end;
 
 { EInvalidReservationStateChange }
