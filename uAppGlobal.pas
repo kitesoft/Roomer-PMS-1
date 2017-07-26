@@ -286,6 +286,8 @@ Type
 
       property PMSSettings: TPmsSettings read FPmsSettings;
 
+      function PCIContractOpenForChannel(channelId : Integer) : Boolean;
+
    published
       property PreviousGuestsSet : TRoomerDataSet read FPreviousGuestsSet;
       property RoomsSet        : TRoomerDataSet read GetRoomsSet;
@@ -359,7 +361,9 @@ uses   dbTables
      , PrjConst
      , uFileSystemUtils
      , uSQLUtils
-     , UITypes;
+     , UITypes
+     , RegularExpressions
+     ;
 
 procedure FilterRoom( RoomNumber : string );
 begin
@@ -1096,6 +1100,26 @@ begin
   result := LocateSpecificRecord(table, field, value);
   if result then
      resultingValue := tableslist.Dataset[table].FieldByName(fieldToGet).AsFloat;
+end;
+
+function TGlobalSettings.PCIContractOpenForChannel(channelId: Integer): Boolean;
+var channelCode : String;
+  i: Integer;
+  function CreateRegExCode(s : String) : String;
+  begin
+    result := ReplaceString(ReplaceString(s, '?', '.'), '*', '.?') + '$';
+  end;
+begin
+  result := false;
+  if LocateSpecificRecordAndGetValue('channels', 'id', channelId, 'channelManagerId', channelCode) then
+  begin
+    for i := 0 to g.PCIContractWildcards.Count - 1 do
+      if TRegEx.IsMatch(channelCode, CreateRegExCode(g.PCIContractWildcards[i])) then
+      begin
+        result := true;
+        Break;
+      end;
+  end;
 end;
 
 procedure TGlobalSettings.PerformAuthenticationAssertion(Form: TForm);

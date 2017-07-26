@@ -1127,7 +1127,8 @@ begin
       if not Eof then
       begin
         btnViewPayCard.Visible := (rSet.FieldDefs.IndexOf('PAYCARD_TOKEN') > -1) AND
-                                 (rSet.FieldByName('PAYCARD_TOKEN').AsString <> '');
+                                 (rSet.FieldByName('PAYCARD_TOKEN').AsString <> '') AND
+                                 glb.PCIContractOpenForChannel(fieldbyname('channel').asInteger);
         edtInvRefrence.ReadOnly := glb.GetBooleanValueOfFieldFromId('channels', 'managedByChannelManager',
           fieldbyname('channel').asInteger);
         edtCustomer.text := trim(fieldbyname('Customer').asstring);
