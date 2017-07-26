@@ -360,7 +360,9 @@ begin
     if NOT rSet.Eof then
       btnViewPayCard.Visible := (Reservation > 0) AND
                                 (rSet.FieldDefs.IndexOf('PAYCARD_TOKEN') > -1) AND
-                                (rSet.FieldByName('PAYCARD_TOKEN').AsString <> '');
+                                (rSet.FieldByName('PAYCARD_TOKEN').AsString <> '') AND
+                                glb.PCIContractOpenForChannel(rSet.fieldbyname('channel').asInteger);
+;
   end;
 end;
 

@@ -681,6 +681,7 @@ type
     rbTabFinanceConnect: TdxRibbonTab;
     barinnBar4: TdxBar;
     btnManageFinanceConnect: TdxBarLargeButton;
+    btnCreditcardTokenUsage: TdxBarLargeButton;
     procedure FormCreate(Sender: TObject);
     procedure DefaultHandler(var Message); override;
     procedure FormShow(Sender: TObject);
@@ -969,6 +970,7 @@ type
     procedure M1Click(Sender: TObject);
     procedure btnHomeClick(Sender: TObject);
     procedure btnManageFinanceConnectClick(Sender: TObject);
+    procedure btnCreditcardTokenUsageClick(Sender: TObject);
 
   protected
     procedure CreateParams(var Params: TCreateParams); override;
@@ -1457,6 +1459,7 @@ type
     procedure WMEnterSizeMove(var Message: TMessage) ; message WM_ENTERSIZEMOVE;
     procedure WMExitSizeMove(var Message: TMessage) ; message WM_EXITSIZEMOVE;
     procedure CheckFinanceConnect;
+    procedure CheckPCIContract;
   public
     { Public declarations }
     StaffComm: TStaffCommunication;
@@ -1627,6 +1630,7 @@ uses
     , uFrontDeskPageButton
     , uFrmFinanceConnect
     , uFinanceConnectService
+    , uPCITokenReport
 		;
 
 {$R *.DFM}
@@ -3007,6 +3011,20 @@ begin
 
 end;
 
+procedure TfrmMain.CheckPCIContract;
+var xml : String;
+    rSet : TRoomerDataSet;
+begin
+  xml := d.roomerMainDataSet.downloadUrlAsString(  d.roomerMainDataSet.RoomerUri + 'resapi/token');
+  rSet := d.roomerMainDataSet.ActivateNewDataset(xml);
+  try
+    if NOT rSet.Eof then
+      g.qPCIContract := rSet['VALUE'];
+  finally
+    rSet.Free;
+  end;
+end;
+
 procedure TfrmMain.CheckFinanceConnect;
 var FinanceConnectService : TFinanceConnectService;
 begin
@@ -3116,6 +3134,7 @@ begin
   end;
 
   CheckFinanceConnect;
+  CheckPCIContract;
 
   try
     try
@@ -10430,6 +10449,11 @@ begin
   _CashInvoice;
 end;
 
+procedure TfrmMain.btnCreditcardTokenUsageClick(Sender: TObject);
+begin
+  ShowPCITokenReport;
+end;
+
 procedure TfrmMain.btnCreditInvoiceClick(Sender: TObject);
 begin
   LogUserClickedButton(Sender);
@@ -10653,6 +10677,7 @@ procedure TfrmMain.btnManageFinanceConnectClick(Sender: TObject);
 begin
   ManageFinanceConnect;
   CheckFinanceConnect;
+  CheckPCIContract;
 end;
 
 procedure TfrmMain.btnManagerChannelManagerListClick(Sender: TObject);

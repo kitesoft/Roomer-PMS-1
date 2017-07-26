@@ -72,7 +72,6 @@ object frmMain: TfrmMain
     ParentDoubleBuffered = False
     TabOrder = 1
     SkinData.SkinSection = 'PANEL'
-    ExplicitWidth = 1540
     object lblSearchFilterActive: TsLabel
       Left = 0
       Top = 170
@@ -101,7 +100,6 @@ object frmMain: TfrmMain
       Height = 304
       Align = alClient
       TabOrder = 0
-      ExplicitWidth = 1540
       object splStatistics: TsSplitter
         Left = 1220
         Top = 1
@@ -123,11 +121,13 @@ object frmMain: TfrmMain
         TabOrder = 1
         OnChange = pageMainGridsChange
         SkinData.SkinSection = 'PAGECONTROL'
-        ExplicitWidth = 1227
         object tabOneDayView: TsTabSheet
           Caption = 'tabOneDayView'
           ImageIndex = 8
-          ExplicitWidth = 1219
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object grOneDayRooms: TAdvStringGrid
             Left = 0
             Top = 0
@@ -308,7 +308,6 @@ object frmMain: TfrmMain
             SortSettings.HeaderMirrorColor = 16380385
             SortSettings.HeaderMirrorColorTo = 16182488
             Version = '8.2.5.2'
-            ExplicitWidth = 1219
             ColWidths = (
               47
               49
@@ -434,7 +433,7 @@ object frmMain: TfrmMain
               object lblNoRoom: TsLabel
                 Left = 3
                 Top = 59
-                Width = 76
+                Width = 50
                 Height = 13
                 Align = alBottom
                 Alignment = taCenter
@@ -445,7 +444,6 @@ object frmMain: TfrmMain
                 Font.Height = -11
                 Font.Name = 'Tahoma'
                 Font.Style = [fsBold]
-                ExplicitWidth = 50
               end
             end
           end
@@ -527,7 +525,7 @@ object frmMain: TfrmMain
               object chkNewPage: TsCheckBox
                 Left = 3
                 Top = 15
-                Width = 151
+                Width = 148
                 Height = 17
                 Caption = 'Reservation on new page'
                 Font.Charset = DEFAULT_CHARSET
@@ -544,7 +542,7 @@ object frmMain: TfrmMain
               object chkPrintMemo: TsCheckBox
                 Left = 3
                 Top = 36
-                Width = 81
+                Width = 78
                 Height = 17
                 Caption = 'Print memo'
                 Font.Charset = DEFAULT_CHARSET
@@ -852,7 +850,6 @@ object frmMain: TfrmMain
         object tabPeriod: TsTabSheet
           Caption = 'tabPeriod'
           ImageIndex = 2
-          ExplicitWidth = 1219
           object sLabel2: TsLabel
             Left = 224
             Top = 400
@@ -869,7 +866,6 @@ object frmMain: TfrmMain
             BevelOuter = bvNone
             TabOrder = 0
             SkinData.SkinSection = 'PANEL'
-            ExplicitWidth = 1219
             object lblLoading: TsLabel
               Left = 0
               Top = 0
@@ -1317,6 +1313,7 @@ object frmMain: TfrmMain
             OnMoved = splitPeriodMoved
             Color = 6842472
             ParentColor = False
+            ExplicitTop = 157
           end
           object pnlPeriodNoRooms: TsPanel
             Left = 0
@@ -1636,16 +1633,32 @@ object frmMain: TfrmMain
         end
         object tabFreeRooms: TsTabSheet
           Caption = 'tabFreeRooms'
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
         end
         object tabDashboard: TsTabSheet
           Caption = 'tabDashboard'
           SkinData.SkinSection = 'TRANSPARENT'
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
         end
         object tabRateQuery: TsTabSheet
           Caption = 'tabRateQuery'
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
         end
         object tabFrontDesk: TsTabSheet
           Caption = 'tabFrontDesk'
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object sbFrontDesk: TsScrollBox
             Left = 0
             Top = 0
@@ -1667,11 +1680,10 @@ object frmMain: TfrmMain
         TabOrder = 0
         Visible = False
         SkinData.SkinSection = 'TRANSPARENT'
-        ExplicitLeft = 1235
         object lblBusyDownloading: TsLabel
           Left = 0
           Top = 158
-          Width = 304
+          Width = 73
           Height = 13
           Margins.Left = 10
           Margins.Top = 0
@@ -1689,12 +1701,11 @@ object frmMain: TfrmMain
           Font.Name = 'Tahoma'
           Font.Style = []
           UseSkinColor = False
-          ExplicitWidth = 73
         end
         object lblCacheNotification: TsLabel
           Left = 0
           Top = 145
-          Width = 304
+          Width = 86
           Height = 13
           Margins.Left = 10
           Margins.Top = 0
@@ -1712,7 +1723,6 @@ object frmMain: TfrmMain
           Font.Name = 'Tahoma'
           Font.Style = []
           UseSkinColor = False
-          ExplicitWidth = 86
         end
         object pnlStatistics: TsScrollBox
           Left = 0
@@ -1764,7 +1774,6 @@ object frmMain: TfrmMain
       SkinData.CustomColor = True
       SkinData.CustomFont = True
       SkinData.SkinSection = 'PANEL'
-      ExplicitWidth = 1540
       object Panel4: TsPanel
         Left = 0
         Top = 0
@@ -1849,13 +1858,12 @@ object frmMain: TfrmMain
         SkinData.CustomColor = True
         SkinData.CustomFont = True
         SkinData.SkinSection = 'PANEL'
-        ExplicitWidth = 879
         object lblMainHeader: TsLabel
           AlignWithMargins = True
           Left = 158
           Top = 3
-          Width = 286
-          Height = 27
+          Width = 94
+          Height = 23
           Margins.Left = 5
           Align = alClient
           Caption = '12-12-2012'
@@ -1869,8 +1877,6 @@ object frmMain: TfrmMain
           Font.Height = -17
           Font.Name = 'Segoe UI'
           Font.Style = [fsBold]
-          ExplicitWidth = 94
-          ExplicitHeight = 23
         end
         object sPanel3: TsPanel
           Left = 447
@@ -1891,7 +1897,6 @@ object frmMain: TfrmMain
           SkinData.CustomColor = True
           SkinData.CustomFont = True
           SkinData.SkinSection = 'PANEL'
-          ExplicitLeft = 455
           object btnStatusFilter: TsSpeedButton
             AlignWithMargins = True
             Left = 7
@@ -2469,7 +2474,6 @@ object frmMain: TfrmMain
       TabOrder = 2
       Visible = False
       SkinData.SkinSection = 'PANEL'
-      ExplicitWidth = 1540
       object mmoMessage: THTMLabel
         Left = 88
         Top = 3
@@ -2548,8 +2552,8 @@ object frmMain: TfrmMain
       object lblTimeMessage: TsLabel
         Left = 0
         Top = 0
-        Width = 1035
-        Height = 41
+        Width = 265
+        Height = 24
         Align = alClient
         Alignment = taCenter
         Caption = '<Timely messages panel>'
@@ -2561,8 +2565,6 @@ object frmMain: TfrmMain
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         UseSkinColor = False
-        ExplicitWidth = 265
-        ExplicitHeight = 24
       end
     end
     object pnlOffline: TsPanel
@@ -2587,7 +2589,6 @@ object frmMain: TfrmMain
       SkinData.CustomColor = True
       SkinData.CustomFont = True
       SkinData.SkinSection = 'UNKNOWN'
-      ExplicitWidth = 1540
       object btnGoOnline: TsButton
         Left = 4
         Top = 3
@@ -2621,7 +2622,6 @@ object frmMain: TfrmMain
     Contexts = <>
     TabOrder = 2
     TabStop = False
-    ExplicitWidth = 1540
     object rbTabHome: TdxRibbonTab
       Caption = 'Roomer'
       Groups = <
@@ -2679,6 +2679,7 @@ object frmMain: TfrmMain
       Index = 2
     end
     object rbTabReports: TdxRibbonTab
+      Active = True
       Caption = 'Reports'
       Groups = <
         item
@@ -2762,7 +2763,6 @@ object frmMain: TfrmMain
       Index = 5
     end
     object rbTabChannels: TdxRibbonTab
-      Active = True
       Caption = 'Channels'
       Groups = <
         item
@@ -2846,7 +2846,6 @@ object frmMain: TfrmMain
     TabOrder = 5
     StyleElements = [seFont, seClient]
     SkinData.SkinSection = 'TRANSPARENT'
-    ExplicitLeft = 1267
     object lblLogout: TsLabel
       Left = 256
       Top = 3
@@ -2920,7 +2919,6 @@ object frmMain: TfrmMain
     SkinData.CustomColor = True
     SkinData.CustomFont = True
     SkinData.SkinSection = 'PANEL'
-    ExplicitWidth = 1540
     object lblOccupancy: TsLabel
       AlignWithMargins = True
       Left = 184
@@ -3086,7 +3084,6 @@ object frmMain: TfrmMain
       Font.Name = 'Tahoma'
       Font.Style = []
       UseSkinColor = False
-      ExplicitLeft = 1363
       ExplicitHeight = 18
     end
     object __TimingResult: TsLabel
@@ -3108,7 +3105,6 @@ object frmMain: TfrmMain
       Font.Name = 'Segoe UI'
       Font.Style = []
       UseSkinColor = False
-      ExplicitLeft = 1305
       ExplicitHeight = 17
     end
     object cbxStatDay: TsComboBox
@@ -4293,11 +4289,15 @@ object frmMain: TfrmMain
         end
         item
           Visible = True
+          ItemName = 'btnResStatusPerdDay'
+        end
+        item
+          Visible = True
           ItemName = 'dxUserActivityLog'
         end
         item
           Visible = True
-          ItemName = 'btnResStatusPerdDay'
+          ItemName = 'btnCreditcardTokenUsage'
         end>
       OneOnRow = False
       Row = 0
@@ -4356,7 +4356,7 @@ object frmMain: TfrmMain
     object barinnReportsInvoices: TdxBar
       Caption = 'Invoices'
       CaptionButtons = <>
-      DockedLeft = 1185
+      DockedLeft = 1149
       DockedTop = 0
       FloatLeft = 1324
       FloatTop = 8
@@ -4595,7 +4595,7 @@ object frmMain: TfrmMain
     object barinnBar10: TdxBar
       Caption = 'Ledger'
       CaptionButtons = <>
-      DockedLeft = 1394
+      DockedLeft = 1358
       DockedTop = 0
       FloatLeft = -183
       FloatTop = 8
@@ -5618,6 +5618,14 @@ object frmMain: TfrmMain
       Visible = ivAlways
       LargeImageIndex = 70
       OnClick = btnManageFinanceConnectClick
+    end
+    object btnCreditcardTokenUsage: TdxBarLargeButton
+      Caption = 'Creditcard token usage'
+      Category = 0
+      Hint = 'Creditcard token usage'
+      Visible = ivAlways
+      LargeImageIndex = 126
+      OnClick = btnCreditcardTokenUsageClick
     end
     object mmnuFile: TdxBarSubItem
       Caption = '&File'
