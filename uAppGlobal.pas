@@ -492,7 +492,7 @@ const PREV_GUESTS_SQL = 'SELECT DISTINCT * FROM ' +
                         'ANd active=1 ' +
                         ') xxx ';
 begin
-  FPreviousGuestsReload.execute(PREV_GUESTS_SQL, PreviousGuestsReloadFetchHandler);
+//  FPreviousGuestsReload.execute(PREV_GUESTS_SQL, PreviousGuestsReloadFetchHandler);
 end;
 
 procedure TGlobalSettings.PreviousGuestsReloadFetchHandler(Sender : TObject);

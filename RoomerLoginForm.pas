@@ -205,7 +205,10 @@ end;
 procedure TfrmRoomerLoginForm.CheckConnections;
 begin
   NoInternet := NOT d.roomerMainDataSet.IsConnectedToInternet;
-  ServerUnreachable := NOT d.roomerMainDataSet.RoomerPlatformAvailable;
+  if NOT NoInternet then
+    ServerUnreachable := NOT d.roomerMainDataSet.RoomerPlatformAvailable
+  else
+    ServerUnreachable := True;
 end;
 
 procedure TfrmRoomerLoginForm.UpdateControls;
