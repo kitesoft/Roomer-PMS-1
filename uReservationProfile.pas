@@ -1127,8 +1127,9 @@ begin
       if not Eof then
       begin
         btnViewPayCard.Visible := (rSet.FieldDefs.IndexOf('PAYCARD_TOKEN') > -1) AND
-                                 (rSet.FieldByName('PAYCARD_TOKEN').AsString <> '') AND
-                                 glb.PCIContractOpenForChannel(fieldbyname('channel').asInteger);
+                                 (rSet.FieldByName('PAYCARD_TOKEN').AsString <> '');
+        btnViewPayCard.Tag := ORD(glb.PCIContractOpenForChannel(fieldbyname('channel').asInteger));
+
         edtInvRefrence.ReadOnly := glb.GetBooleanValueOfFieldFromId('channels', 'managedByChannelManager',
           fieldbyname('channel').asInteger);
         edtCustomer.text := trim(fieldbyname('Customer').asstring);
@@ -1886,7 +1887,7 @@ end;
 
 procedure TfrmReservationProfile.acViewPayCardExecute(Sender: TObject);
 begin
-  ShowPayCardInformation(zReservation);
+  ShowPayCardInformation(zReservation, btnViewPayCard.Tag);
 end;
 
 procedure TfrmReservationProfile.AddNewRoom;

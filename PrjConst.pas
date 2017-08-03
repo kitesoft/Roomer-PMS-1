@@ -1692,6 +1692,17 @@ begin
   constants.Add('Items_FinanceConnect_AddedItem', 'You have added a new item.' + #10#13 + 'Do want to open items mappings for %s?');
   constants.Add('Vat_FinanceConnect_AddedCode', 'You have added a new vat code.' + #10#13 + 'Do want to open vat mappings for %s?');
 
+  constants.Add('PCI_VIEW_Warning_PleaseNote', 'Please note:');
+  constants.Add('PCI_VIEW_Warning_ChargePerView', 'Viewing the credit card is charged per-view.');
+  constants.Add('PCI_VIEW_Warning_SecurityCodeOnceVisible', 'The credit-card security code (CVC) is only shown <B><U>once</U></B>. After that it will not be shown again.');
+  constants.Add('PCI_VIEW_Warning_NumberOfViews', 'The credit-card of this reservation has been viewed {VIEWS} times.');
+
+  constants.Add('OPT_IN_PLEASE_NOTE', 'Please note:');
+  constants.Add('OPT_IN_MESSAGE_1', 'To be able to view the creditcard information from the various channels you will need an extended agreement with Roomer.');
+  constants.Add('OPT_IN_MESSAGE_2', 'Please feel free to contact Roomer by clicking on the email address below.');
+  constants.Add('OPT_IN_FROM_ROOMER', 'With kind regards,<BR><I>Your Roomer Team</I>');
+  constants.Add('OPT_IN_EMAIL_SUBJECT', 'Opt-In Email Message - %s');
+  constants.Add('OPT_IN_EMAIL_BODY', '');
 end;
 
 procedure AddConstants_OfflineReports;

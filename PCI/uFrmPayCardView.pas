@@ -37,7 +37,7 @@ type
     property Reservation : Integer read FReservation write SetReservation;
   end;
 
-procedure ShowPayCardInformation(Reservation : Integer);
+procedure ShowPayCardInformation(Reservation, btnTag : Integer);
 
 implementation
 
@@ -49,7 +49,8 @@ uses uG,
      uUtils,
      cmpRoomerDataSet,
      PrjConst,
-     uActivityLogs;
+     uActivityLogs,
+     uFrmOptInMessage;
 
 function openLogin(var userName, password : string) : boolean;
 var hotelId : String;
@@ -58,17 +59,21 @@ begin
   result := (AskUserForCredentials(userName, password, hotelId, '', 7) in cLoginFormSuccesfull);
 end;
 
-procedure ShowPayCardInformation(Reservation : Integer);
+procedure ShowPayCardInformation(Reservation, btnTag : Integer);
 var _FrmPayCardView : TFrmPayCardView;
     gUserName, gPassword : String;
 begin
-  _FrmPayCardView := TFrmPayCardView.Create(nil);
-  try
-    _FrmPayCardView.Reservation := Reservation;
-    _FrmPayCardView.ShowModal;
-  finally
-    _FrmPayCardView.free;
-  end;
+  if btnTag = 1 then
+  begin
+    _FrmPayCardView := TFrmPayCardView.Create(nil);
+    try
+      _FrmPayCardView.Reservation := Reservation;
+      _FrmPayCardView.ShowModal;
+    finally
+      _FrmPayCardView.free;
+    end;
+  end else
+    OpenOptInDialog(OITPCI);
 end;
 
 { TFrmPayCardView }
@@ -120,7 +125,7 @@ var rSet : TRoomerDataSet;
     iViews : Integer;
     sTemp : String;
 begin
-  xml := d.roomerMainDataSet.downloadUrlAsString(  d.roomerMainDataSet.RoomerUri + 'resapi/tokencosts/' + inttostr(Reservation));
+  xml := d.roomerMainDataSet.downloadUrlAsString(  d.roomerMainDataSet.RoomerUri + 'resapi/token/costs/' + inttostr(Reservation));
   rSet := d.roomerMainDataSet.ActivateNewDataset(xml);
   iViews := 0;
   rSet.First;

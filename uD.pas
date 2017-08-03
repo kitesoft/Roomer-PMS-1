@@ -75,7 +75,7 @@ type
     property Value: String read FValue write FValue;
   end;
 
-  TKeyPairType = (FKP_CUSTOMERS, FKP_PRODUCTS, FKP_PAYTYPES, FKP_VAT);
+  TKeyPairType = (FKP_CUSTOMERS, FKP_PRODUCTS, FKP_PAYTYPES, FKP_VAT, FKP_PAYGROUPS, FKP_CASHBOOKS);
   TKeyPairList = TObjectList<TKeyAndValue>;
 
   TRoomPackageLineEntry = class

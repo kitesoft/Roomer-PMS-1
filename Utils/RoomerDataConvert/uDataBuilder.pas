@@ -97,6 +97,7 @@ type
 
 
   TResInfo = Class
+      NewReservation : Boolean;
       Reservation : Integer;
       Arrival : TDateTime;
       Departure : TDateTime;
@@ -204,13 +205,17 @@ var header : TStringlist;
     dsRoomerDataSet : TRoomerDataSet;
 
 
+
 //procedure CreateE92ReservationsLine(line : String; _staff : String;
 //          var ResId, RoomResId, PersId : Integer);
 
 
+procedure PrepareCollect;
+
 function CheckReservationOfLine(line : String) : String;
-procedure CreateStandardReservationsLine(line : String; _staff : String;
-          var ResId, RoomResId, PersId : Integer;
+function NumRoomsOfLine(line : String) : Integer;
+procedure CreateStandardReservationsLine(RoomerDataSet : TRoomerDataSet; line : String; _staff : String;
+          var PersId : Integer; RoomResList : TList<Integer>;
           defaultCustomer, defaultCustomerPID : String;
           defaultChannel : String;
           SkipIfRoomNumberIsEmpty : Boolean);
@@ -222,7 +227,7 @@ function getCustomersSqlList : TStrings;
 
 implementation
 
-uses uUtils, uFloatUtils, uRoomerDataConvertMain;
+uses uUtils, uFloatUtils, uRoomerDataConvertMain, System.Generics.Collections;
 
 const CREATION_DATE='CreationDate';
       ROOM_NUMBER='RoomNumber';
@@ -334,6 +339,18 @@ const CREATION_DATE='CreationDate';
       CUST_DATE_OF_BIRTH = 'DateOfBirth';
       CUST_NATIONALITY = 'CustomerNationality';
 
+var ReservationIds : TObjectDictionary<String,Integer>;
+    rSetLastCustomer : TRoomerDataSet;
+    lastCustomerId : String;
+
+procedure PrepareCollect;
+begin
+  ReservationIds.Free;
+  rSetLastCustomer.Free;
+  ReservationIds := TObjectDictionary<String,Integer>.Create;
+  rSetLastCustomer := nil;
+  lastCustomerId := '';
+end;
 
 function FindPerson(Firstname, Lastname, Street, City : String) : TPersonInfo; forward;
 
@@ -640,213 +657,215 @@ begin
   for i := 0 to ResList.Count - 1 do
   begin
     Res := ResList[i];
-    s := 'INSERT INTO reservations ' +
-        '(Reservation, ' +
-        'Arrival, ' +
-        'Departure, ' +
-        'Customer, ' +
-        'Name, ' +
-        'Address1, ' +
-        'Address2, ' +
-        'Address3, ' +
-        'Address4, ' +
-        'Country, ' +
-        'Tel1, ' +
-        'Tel2, ' +
-        'Fax, ' +
-        'Status, ' +
-        'ReservationDate, ' +
-        'Staff, ' +
-        'Information, ' +
-        'PMInfo, ' +
-        'HiddenInfo, ' +
-        'RoomRentPaid1, ' +
-        'RoomRentPaid2, ' +
-        'RoomRentPaid3, ' +
-        'RoomRentPaymentInvoice, ' +
-        'ContactName, ' +
-        'ContactPhone, ' +
-        'ContactPhone2, ' +
-        'ContactFax, ' +
-        'ContactAddress1, ' +
-        'ContactAddress2, ' +
-        'ContactAddress3, ' +
-        'ContactAddress4, ' +
-        'ContactCountry, ' +
-        'ContactEmail, ' +
-        'inputsource, ' +
-        'webconfirmed, ' +
-        'arrivaltime, ' +
-        'srcrequest, ' +
-        'rvTmp, ' +
-        'CustPID, ' +
-        'invRefrence, ' +
-        'marketSegment, ' +
-        'CustomerEmail, ' +
-        'CustomerWebsite, ' +
-        'useStayTax, ' +
-        'channel, ' +
-        'eventsProcessed, ' +
-        'alteredReservation, ' +
-        'externalIds, ' +
-        'dtCreated, ' +
-        'notificationRead) ' +
+    if Res.NewReservation then
+    begin
+      s := 'INSERT INTO reservations ' +
+          '(Reservation, ' +
+          'Arrival, ' +
+          'Departure, ' +
+          'Customer, ' +
+          'Name, ' +
+          'Address1, ' +
+          'Address2, ' +
+          'Address3, ' +
+          'Address4, ' +
+          'Country, ' +
+          'Tel1, ' +
+          'Tel2, ' +
+          'Fax, ' +
+          'Status, ' +
+          'ReservationDate, ' +
+          'Staff, ' +
+          'Information, ' +
+          'PMInfo, ' +
+          'HiddenInfo, ' +
+          'RoomRentPaid1, ' +
+          'RoomRentPaid2, ' +
+          'RoomRentPaid3, ' +
+          'RoomRentPaymentInvoice, ' +
+          'ContactName, ' +
+          'ContactPhone, ' +
+          'ContactPhone2, ' +
+          'ContactFax, ' +
+          'ContactAddress1, ' +
+          'ContactAddress2, ' +
+          'ContactAddress3, ' +
+          'ContactAddress4, ' +
+          'ContactCountry, ' +
+          'ContactEmail, ' +
+          'inputsource, ' +
+          'webconfirmed, ' +
+          'arrivaltime, ' +
+          'srcrequest, ' +
+          'rvTmp, ' +
+          'CustPID, ' +
+          'invRefrence, ' +
+          'marketSegment, ' +
+          'CustomerEmail, ' +
+          'CustomerWebsite, ' +
+          'useStayTax, ' +
+          'channel, ' +
+          'eventsProcessed, ' +
+          'alteredReservation, ' +
+          'externalIds, ' +
+          'dtCreated, ' +
+          'notificationRead) ' +
 
-        'VALUES ' +
-        '( ' +
-        '''{Reservation}'', ' +
-        '''{Arrival}'', ' +
-        '''{Departure}'', ' +
-        '''{Customer}'', ' +
-        '''{Name}'', ' +
-        '''{Address1}'', ' +
-        '''{Address2}'', ' +
-        '''{Address3}'', ' +
-        '''{Address4}'', ' +
-        '''{Country}'', ' +
-        '''{Tel1}'', ' +
-        '''{Tel2}'', ' +
-        '''{Fax}'', ' +
-        '''{Status}'', ' +
-        '''{ReservationDate}'', ' +
-        '''{Staff}'', ' +
-        '''{Information}'', ' +
-        '''{PMInfo}'', ' +
-        '''{HiddenInfo}'', ' +
-        '''{RoomRentPaid1}'', ' +
-        '''{RoomRentPaid2}'', ' +
-        '''{RoomRentPaid3}'', ' +
-        '''{RoomRentPaymentInvoice}'', ' +
-        '''{ContactName}'', ' +
-        '''{ContactPhone}'', ' +
-        '''{ContactPhone2}'', ' +
-        '''{ContactFax}'', ' +
-        '''{ContactAddress1}'', ' +
-        '''{ContactAddress2}'', ' +
-        '''{ContactAddress3}'', ' +
-        '''{ContactAddress4}'', ' +
-        '''{ContactCountry}'', ' +
-        '''{ContactEmail}'', ' +
-        '''{inputsource}'', ' +
-        '''{webconfirmed}'', ' +
-        '''{arrivaltime}'', ' +
-        '''{srcrequest}'', ' +
-        '''{rvTmp}'', ' +
-        '''{CustPID}'', ' +
-        '''{invRefrence}'', ' +
-        '''{marketSegment}'', ' +
-        '''{CustomerEmail}'', ' +
-        '''{CustomerWebsite}'', ' +
-        '''{useStayTax}'', ' +
-        '{channel}, ' +
-        '''{eventsProcessed}'', ' +
-        '''{alteredReservation}'', ' +
-        '''{externalIds}'', ' +
-        '''{dtCreated}'', ' +
-        '''{notificationRead}''' +
-        ');';
-      s := ReplaceStr(
-           ReplaceStr(
-           ReplaceStr(
-           ReplaceStr(
-           ReplaceStr(
-           ReplaceStr(
-           ReplaceStr(
-           ReplaceStr(
-           ReplaceStr(
-           ReplaceStr(
-           ReplaceStr(
-           ReplaceStr(
-           ReplaceStr(
-           ReplaceStr(
-           ReplaceStr(
-           ReplaceStr(
-           ReplaceStr(
-           ReplaceStr(
-           ReplaceStr(
-           ReplaceStr(
-           ReplaceStr(
-           ReplaceStr(
-           ReplaceStr(
-           ReplaceStr(
-           ReplaceStr(
-           ReplaceStr(
-           ReplaceStr(
-           ReplaceStr(
-           ReplaceStr(
-           ReplaceStr(
-           ReplaceStr(
-           ReplaceStr(
-           ReplaceStr(
-           ReplaceStr(
-           ReplaceStr(
-           ReplaceStr(
-           ReplaceStr(
-           ReplaceStr(
-           ReplaceStr(
-           ReplaceStr(
-           ReplaceStr(
-           ReplaceStr(
-           ReplaceStr(
-           ReplaceStr(
-           ReplaceStr(
-           ReplaceStr(
-           ReplaceStr(
-           ReplaceStr(
-           ReplaceStr(
-           ReplaceStr(s, '{Reservation}', inttostr(Res.Reservation)),
-        '{Arrival}',  dateToSqlString(Res.Arrival)),
-        '{Departure}', dateToSqlString(Res.Departure)),
-        '{Customer}', Res.Customer),
-        '{Name}', _db(Res.Name)),
-        '{Address1}', _db(Res.Address1)),
-        '{Address2}', _db(Res.Address2)),
-        '{Address3}', _db(Res.Address3)),
-        '{Address4}', _db(Res.Address4)),
-        '{Country}', _db(Res.Country)),
-        '{Tel1}', _db(Res.Tel1)),
-        '{Tel2}', _db(Res.Tel2)),
-        '{Fax}', _db(Res.Fax)),
-        '{Status}', Res.Status),
-        '{ReservationDate}', Res.ReservationDate),
-        '{Staff}', Res.Staff),
-        '{Information}', _db(Res.Information + #13 + 'Roomer Imported: ' + uDateUtils.DateTimeToDBString(now))),
-        '{PMInfo}', _db(Res.PMInfo)),
-        '{HiddenInfo}', _db(Res.HiddenInfo)),
-        '{RoomRentPaid1}', '0'),
-        '{RoomRentPaid2}', '0'),
-        '{RoomRentPaid3}', '0'),
-        '{RoomRentPaymentInvoice}', '-1'),
-        '{ContactName}', _db(Res.ContactName)),
-        '{ContactPhone}', Res.ContactPhone),
-        '{ContactPhone2}', Res.ContactPhone2),
-        '{ContactFax}', Res.ContactFax),
-        '{ContactAddress1}', _db(Res.ContactAddress1)),
-        '{ContactAddress2}', _db(Res.ContactAddress2)),
-        '{ContactAddress3}', _db(Res.ContactAddress3)),
-        '{ContactAddress4}', _db(Res.ContactAddress4)),
-        '{ContactCountry}', _db(Res.ContactCountry)),
-        '{ContactEmail}', _db(Res.ContactEmail)),
-        '{inputsource}', 'I'),
-        '{webconfirmed}', Res.webconfirmed),
-        '{arrivaltime}', Res.arrivaltime),
-        '{srcrequest}', Res.srcrequest),
-        '{rvTmp}', Res.rvTmp),
-        '{CustPID}', Res.CustPID),
-        '{invRefrence}', Res.invRefrence),
-        '{marketSegment}', Res.marketSegment),
-        '{CustomerEmail}', Res.CustomerEmail),
-        '{CustomerWebsite}', Res.CustomerWebsite),
-        '{useStayTax}', BoolToString_0_1(Res.useStayTax)),
-        '{channel}', '(SELECT ID FROM channels WHERE channelManagerId=''' + _db(Res.channel) + ''' LIMIT 1)' ),
-        '{eventsProcessed}', BoolToString_0_1(Res.eventsProcessed)),
-        '{alteredReservation}', BoolToString_0_1(Res.alteredReservation)),
-        '{externalIds}', Res.externalIds),
-        '{dtCreated}', DateTimeToDBString(Res.dtCreated)),
-        '{notificationRead}', BoolToString_0_1(Res.notificationRead));
+          'VALUES ' +
+          '( ' +
+          '''{Reservation}'', ' +
+          '''{Arrival}'', ' +
+          '''{Departure}'', ' +
+          '''{Customer}'', ' +
+          '''{Name}'', ' +
+          '''{Address1}'', ' +
+          '''{Address2}'', ' +
+          '''{Address3}'', ' +
+          '''{Address4}'', ' +
+          '''{Country}'', ' +
+          '''{Tel1}'', ' +
+          '''{Tel2}'', ' +
+          '''{Fax}'', ' +
+          '''{Status}'', ' +
+          '''{ReservationDate}'', ' +
+          '''{Staff}'', ' +
+          '''{Information}'', ' +
+          '''{PMInfo}'', ' +
+          '''{HiddenInfo}'', ' +
+          '''{RoomRentPaid1}'', ' +
+          '''{RoomRentPaid2}'', ' +
+          '''{RoomRentPaid3}'', ' +
+          '''{RoomRentPaymentInvoice}'', ' +
+          '''{ContactName}'', ' +
+          '''{ContactPhone}'', ' +
+          '''{ContactPhone2}'', ' +
+          '''{ContactFax}'', ' +
+          '''{ContactAddress1}'', ' +
+          '''{ContactAddress2}'', ' +
+          '''{ContactAddress3}'', ' +
+          '''{ContactAddress4}'', ' +
+          '''{ContactCountry}'', ' +
+          '''{ContactEmail}'', ' +
+          '''{inputsource}'', ' +
+          '''{webconfirmed}'', ' +
+          '''{arrivaltime}'', ' +
+          '''{srcrequest}'', ' +
+          '''{rvTmp}'', ' +
+          '''{CustPID}'', ' +
+          '''{invRefrence}'', ' +
+          '''{marketSegment}'', ' +
+          '''{CustomerEmail}'', ' +
+          '''{CustomerWebsite}'', ' +
+          '''{useStayTax}'', ' +
+          '{channel}, ' +
+          '''{eventsProcessed}'', ' +
+          '''{alteredReservation}'', ' +
+          '''{externalIds}'', ' +
+          '''{dtCreated}'', ' +
+          '''{notificationRead}''' +
+          ');';
+        s := ReplaceStr(
+             ReplaceStr(
+             ReplaceStr(
+             ReplaceStr(
+             ReplaceStr(
+             ReplaceStr(
+             ReplaceStr(
+             ReplaceStr(
+             ReplaceStr(
+             ReplaceStr(
+             ReplaceStr(
+             ReplaceStr(
+             ReplaceStr(
+             ReplaceStr(
+             ReplaceStr(
+             ReplaceStr(
+             ReplaceStr(
+             ReplaceStr(
+             ReplaceStr(
+             ReplaceStr(
+             ReplaceStr(
+             ReplaceStr(
+             ReplaceStr(
+             ReplaceStr(
+             ReplaceStr(
+             ReplaceStr(
+             ReplaceStr(
+             ReplaceStr(
+             ReplaceStr(
+             ReplaceStr(
+             ReplaceStr(
+             ReplaceStr(
+             ReplaceStr(
+             ReplaceStr(
+             ReplaceStr(
+             ReplaceStr(
+             ReplaceStr(
+             ReplaceStr(
+             ReplaceStr(
+             ReplaceStr(
+             ReplaceStr(
+             ReplaceStr(
+             ReplaceStr(
+             ReplaceStr(
+             ReplaceStr(
+             ReplaceStr(
+             ReplaceStr(
+             ReplaceStr(
+             ReplaceStr(
+             ReplaceStr(s, '{Reservation}', inttostr(Res.Reservation)),
+          '{Arrival}',  dateToSqlString(Res.Arrival)),
+          '{Departure}', dateToSqlString(Res.Departure)),
+          '{Customer}', Res.Customer),
+          '{Name}', _db(Res.Name)),
+          '{Address1}', _db(Res.Address1)),
+          '{Address2}', _db(Res.Address2)),
+          '{Address3}', _db(Res.Address3)),
+          '{Address4}', _db(Res.Address4)),
+          '{Country}', _db(Res.Country)),
+          '{Tel1}', _db(Res.Tel1)),
+          '{Tel2}', _db(Res.Tel2)),
+          '{Fax}', _db(Res.Fax)),
+          '{Status}', Res.Status),
+          '{ReservationDate}', Res.ReservationDate),
+          '{Staff}', Res.Staff),
+          '{Information}', _db(Res.Information + #13 + 'Roomer Imported: ' + uDateUtils.DateTimeToDBString(now))),
+          '{PMInfo}', _db(Res.PMInfo)),
+          '{HiddenInfo}', _db(Res.HiddenInfo)),
+          '{RoomRentPaid1}', '0'),
+          '{RoomRentPaid2}', '0'),
+          '{RoomRentPaid3}', '0'),
+          '{RoomRentPaymentInvoice}', '-1'),
+          '{ContactName}', _db(Res.ContactName)),
+          '{ContactPhone}', Res.ContactPhone),
+          '{ContactPhone2}', Res.ContactPhone2),
+          '{ContactFax}', Res.ContactFax),
+          '{ContactAddress1}', _db(Res.ContactAddress1)),
+          '{ContactAddress2}', _db(Res.ContactAddress2)),
+          '{ContactAddress3}', _db(Res.ContactAddress3)),
+          '{ContactAddress4}', _db(Res.ContactAddress4)),
+          '{ContactCountry}', _db(Res.ContactCountry)),
+          '{ContactEmail}', _db(Res.ContactEmail)),
+          '{inputsource}', 'I'),
+          '{webconfirmed}', Res.webconfirmed),
+          '{arrivaltime}', Res.arrivaltime),
+          '{srcrequest}', Res.srcrequest),
+          '{rvTmp}', Res.rvTmp),
+          '{CustPID}', Res.CustPID),
+          '{invRefrence}', Res.invRefrence),
+          '{marketSegment}', Res.marketSegment),
+          '{CustomerEmail}', Res.CustomerEmail),
+          '{CustomerWebsite}', Res.CustomerWebsite),
+          '{useStayTax}', BoolToString_0_1(Res.useStayTax)),
+          '{channel}', '(SELECT ID FROM channels WHERE channelManagerId=''' + _db(Res.channel) + ''' LIMIT 1)' ),
+          '{eventsProcessed}', BoolToString_0_1(Res.eventsProcessed)),
+          '{alteredReservation}', BoolToString_0_1(Res.alteredReservation)),
+          '{externalIds}', Res.externalIds),
+          '{dtCreated}', DateTimeToDBString(Res.dtCreated)),
+          '{notificationRead}', BoolToString_0_1(Res.notificationRead));
 
-    result.Add(s);
-
+      result.Add(s);
+    end;
     // RoomReservations
 
 
@@ -1377,16 +1396,17 @@ var i: Integer;
     nameLowercase : String;
 begin
   try
-  nameLowercase := Lowercase(valueName);
-  i := isInHeader(header, nameLowercase);
-  if i >= 0  then
-  begin
-    if i > container.Count - 1 then
-      ShowMessage('Container index is wrong: ' + ' (' + inttostr(i) + ')' + #13#13 + GetContainerValues(container));
-
-    result := container[i];
-  end else
     result := defaultValue;
+    nameLowercase := Lowercase(valueName);
+    i := isInHeader(header, nameLowercase);
+    if i >= 0  then
+    begin
+      if i > container.Count - 1 then
+        ShowMessage('Container index is wrong: ' + ' (' + inttostr(i) + ')' + #13#13 + GetContainerValues(container))
+      else
+        result := container[i];
+    end else
+      result := defaultValue;
   except
     on e: Exception do
       ShowMessage('Error in valueofName: ' + valueName + ' (' + inttostr(i) + ')' + #13#13 + #13#13 + e.Message);
@@ -1427,13 +1447,16 @@ begin
   for i := 0 to header.Count - 1 do
   begin
     fieldName := header[i];
-    index := IsInHeader(Reservations_AllRoomerFields,fieldName);
-    if index < 0 then
+    if trim(fieldName) <> '' then
     begin
-      fieldValue := valueOfName(fieldName, '', container);
-      if fieldValue <> '' then
+      index := IsInHeader(Reservations_AllRoomerFields,fieldName);
+      if index < 0 then
       begin
-        try result := result + fieldName + ': ' + fieldValue + #13#10; except end;
+        fieldValue := valueOfName(fieldName, '', container);
+        if fieldValue <> '' then
+        begin
+          try result := result + fieldName + ': ' + fieldValue + #13#10; except end;
+        end;
       end;
     end;
   end;
@@ -1603,9 +1626,15 @@ begin
   end;
 end;
 
+function NumRoomsOfLine(line : String) : Integer;
+var container : TStrings;
+begin
+  container := SplitStringToTStrings(';', line);
+  result := StrToIntDef(valueOfName(NUMBER_OF_ROOMS, '1', container),1);
+end;
 
-procedure CreateStandardReservationsLine(line : String; _staff : String;
-          var ResId, RoomResId, PersId : Integer;
+procedure CreateStandardReservationsLine(RoomerDataSet : TRoomerDataSet; line : String; _staff : String;
+          var PersId : Integer; RoomResList : TList<Integer>;
           defaultCustomer, defaultCustomerPID : String;
           defaultChannel : String;
           SkipIfRoomNumberIsEmpty : Boolean);
@@ -1628,50 +1657,74 @@ var container : TStrings;
     custFax,
     custEmail : String;
 
-    rSet : TRoomerDataSet;
     iRoomCounter, numRooms, l: Integer;
 
+    ResId, RoomResId : Integer;
+
+    BookingId : String;
+    oldId : Integer;
+
+    _NewReservation : Boolean;
 begin
     container := SplitStringToTStrings(';', line);
-
-    if SkipIfRoomNumberIsEmpty then
-    begin
-      temp := valueOfName(ROOM_NUMBER, '', container);
-      if (temp = '') then
-        exit;
-    end;
-
-
-    ResId := ResId + 1;
-    Res := TResInfo.Create;
-    With Res do
-    begin
-      Reservation := ResId;
-      Arrival := SqlStringToDate(valueOfName(XARRIVAL_DATE, dateToSqlString(trunc(now)), container));
-      Departure := SqlStringToDate(valueOfName(XDEPARTURE_DATE, dateToSqlString(trunc(now)), container));
-
-      temp := valueOfName(XCUSTOMER_ID, '', container);
-      if temp = '' then
+    try
+      if SkipIfRoomNumberIsEmpty then
       begin
-        temp := defaultCustomer;
+        temp := valueOfName(ROOM_NUMBER, '', container);
+        if (temp = '') then
+          exit;
       end;
-      CustomerId := temp;
-      rSet := getViaSql(format('SELECT * FROM customers WHERE customer=''%s''', [CustomerId]));
-      try
-        rSet.First;
-        if NOT rSet.Eof then
+
+      BookingId := valueOfName(RESERVATION_ID, '', container);
+      if (BookingId <> '') AND ReservationIds.TryGetValue(BookingId, oldId) then
+      begin
+        ResId := oldId;
+        _NewReservation := False;
+      end else
+      begin
+        ResId := RoomerDataSet.SystemNewReservationId;
+        _NewReservation := True;
+      end;
+
+      if (BookingId <> '') AND (NOT ReservationIds.TryGetValue(BookingId, oldId)) then
+          ReservationIds.AddOrSetValue(BookingId, ResId);
+      Res := TResInfo.Create;
+      With Res do
+      begin
+        NewReservation := _NewReservation;
+        Reservation := ResId;
+        externalIds := BookingId;
+        invRefrence := BookingId;
+        Arrival := SqlStringToDate(valueOfName(XARRIVAL_DATE, dateToSqlString(trunc(now)), container));
+        Departure := SqlStringToDate(valueOfName(XDEPARTURE_DATE, dateToSqlString(trunc(now)), container));
+
+        temp := valueOfName(XCUSTOMER_ID, '', container);
+        if temp = '' then
+        begin
+          temp := defaultCustomer;
+        end;
+        CustomerId := temp;
+
+        if (NOT Assigned(rSetLastCustomer)) OR (CustomerId <> lastCustomerId) then
+        begin
+          rSetLastCustomer := getViaSql(format('SELECT * FROM customers WHERE customer=''%s''', [CustomerId]));
+          lastCustomerId := CustomerId;
+        end;
+
+        rSetLastCustomer.First;
+        if NOT rSetLastCustomer.Eof then
         begin
           Customer := CustomerId;
-          CustomerPID := rSet['PID'];
-          Name := rSet['Surname'];
-          Address1 := rSet['Address1'];
-          Address2 := rSet['Address2'];
-          Address3 := rSet['Address3'];
-          Address4 := rSet['Address4'];
-          Country := rSet['Country'];
-          Tel1 := rSet['Tel1'];
-          Tel2 := rSet['Tel2'];
-          Fax := rSet['Tel2'];
+          CustomerPID := rSetLastCustomer['PID'];
+          Name := rSetLastCustomer['Surname'];
+          Address1 := rSetLastCustomer['Address1'];
+          Address2 := rSetLastCustomer['Address2'];
+          Address3 := rSetLastCustomer['Address3'];
+          Address4 := rSetLastCustomer['Address4'];
+          Country := rSetLastCustomer['Country'];
+          Tel1 := rSetLastCustomer['Tel1'];
+          Tel2 := rSetLastCustomer['Tel2'];
+          Fax := rSetLastCustomer['Tel2'];
         end else
         begin
           Customer := CustomerId;
@@ -1690,176 +1743,175 @@ begin
           Tel2 := FilterZeroAsEmpty(valueOfName(CUSTOMER_MOBILE_NUMBER, '', container));
           Fax := FilterZeroAsEmpty(valueOfName(CUSTOMER_MOBILE_NUMBER, '', container));
         end;
-      finally
-        FreeAndNil(rSet);
-      end;
-      Status := valueOfName(RESERVATION_STATUS, 'P', container);
-      Status := IIF(Trim(Status)='', 'P', Status);
-      ReservationDate := valueOfName(CREATION_DATE, dateToSqlString(trunc(now)), container);
-      Staff := _staff;
-      Information := GetUnknownFields(container); // container[5];
-      PMInfo := '';
-      HiddenInfo := '';
-      RoomRentPaid1 := 0;
-      RoomRentPaid2 := 0;
-      RoomRentPaid3 := 0;
-      RoomRentPaymentInvoice := -1;;
+        Status := valueOfName(RESERVATION_STATUS, 'P', container);
+        Status := IIF(Trim(Status)='', 'P', Status);
+        ReservationDate := valueOfName(CREATION_DATE, dateToSqlString(trunc(now)), container);
+        Staff := _staff;
+        Information := GetUnknownFields(container); // container[5];
+        PMInfo := '';
+        HiddenInfo := '';
+        RoomRentPaid1 := 0;
+        RoomRentPaid2 := 0;
+        RoomRentPaid3 := 0;
+        RoomRentPaymentInvoice := -1;;
 
-      temp := valueOfName(XCONTACT_NAME, '', container);
-      if temp = '' then
-        ContactName := getName(container)
-      else
-        ContactName := temp;
-
-      ContactPhone := FilterZeroAsEmpty(valueOfName(CONTACT_TEL_NUMBER, '', container));
-      ContactPhone2 := FilterZeroAsEmpty(valueOfName(CONTACT_MOBILE_NUMBER, '', container));
-      ContactFax := FilterZeroAsEmpty(valueOfName(CONTACT_FAX_NUMBER, '', container));
-      ContactAddress1 := FilterZeroAsEmpty(valueOfName(CONTACT_ADDRESS_LINE_1, '', container));
-      ContactAddress2 := FilterZeroAsEmpty(valueOfName(CONTACT_ADDRESS_LINE_2, '', container));
-      ContactAddress3 := FilterZeroAsEmpty(valueOfName(CONTACT_ADDRESS_LINE_3, '', container));
-      ContactAddress4 := FilterZeroAsEmpty(valueOfName(CONTACT_ADDRESS_LINE_4, '', container));
-      ContactCountry := FilterZeroAsEmpty(valueOfName(CONTACT_COUNTRY, '', container));
-      ContactEmail := FilterZeroAsEmpty(valueOfName(CONTACT_EMAIL, '', container));
-      inputsource := 'I';
-      webconfirmed := '';
-      arrivaltime := '12:00';
-      srcrequest := '';
-      rvTmp := '';
-
-      temp := valueOfName(XCUSTOMER_ID, '', container);
-      if temp = '' then
-         temp := defaultCustomerPID;
-      CustPID := temp;
-
-      invRefrence := valueOfName(RESERVATION_ID, '', container);
-
-      marketSegment := 'NULL';
-      CustomerEmail := valueOfName(CUSTOMER_EMAIL, '', container);
-      CustomerWebsite := valueOfName(CUSTOMER_WEBSITE, '', container);
-      temp := LowerCase(valueOfName(USE_STAY_TAX, 'true', container));
-      useStayTax := (temp = 'true') OR (temp = '');
-
-      temp := valueOfName(CHANNEL_ID, defaultChannel, container);
-      channel := temp;
-
-      eventsProcessed := true;
-      alteredReservation := false;
-      externalIds := valueOfName(RESERVATION_ID, '', container);
-      dtCreated := SqlStringToDate(valueOfName(CREATION_DATE, dateToSqlString(now), container));
-      notificationRead := true;
-
-      persons := StrToIntDef(valueOfName(XNUMBER_OF_GUESTS, '1', container),1);
-
-
-      numRooms := StrToIntDef(valueOfName(NUMBER_OF_ROOMS, '1', container),1);
-
-      for iRoomCounter := 1 to numRooms do
-      begin
-        RoomResId := RoomResId + 1;
-
-       // RoomReservations
-        RoomRes := TRoomInfo.Create;
-        RoomInfo.Add(RoomRes);
-        RoomInfo[iRoomCounter - 1].RoomReservation := RoomResId;
-        RoomInfo[iRoomCounter - 1].Price := LocalizedFloatValue(valueOfName(XROOM_RATE, '0', container));
-
-        RoomRes.Children := StrToIntDef(valueOfName(NUMBER_OF_CHILDREN, '0', container),0);
-        RoomRes.Infants := StrToIntDef(valueOfName(NUMBER_OF_INFANTS, '0', container),0);
-
-        Package := valueOfName(RESERVATION_PACKAGE, '', container);
-        if (Package <> '') AND (invRefrence <> '') then
-        begin
-          PackageDeals.Add(TPackageDeal.Create(invRefrence, Package, RoomInfo[iRoomCounter - 1].Price));
-        end;
-
-        temp := valueOfName(ROOM_NUMBER, '', container);
-
-        RoomInfo[iRoomCounter - 1].RoomType := valueOfName(XROOM_TYPE, '', container);
-        RoomInfo[iRoomCounter - 1].Status := valueOfName(RESERVATION_STATUS, 'P', container);;
-        RoomInfo[iRoomCounter - 1].Status := IIF(Trim(RoomInfo[iRoomCounter - 1].Status)='', 'P', Status);
-
-        if (temp = '') OR (RoomInfo[iRoomCounter - 1].Status='C') then
-          RoomInfo[iRoomCounter - 1].Room := format('<%d>', [RoomResId])
+        temp := valueOfName(XCONTACT_NAME, '', container);
+        if temp = '' then
+          ContactName := getName(container)
         else
-          RoomInfo[iRoomCounter - 1].Room := temp;
+          ContactName := temp;
 
-        RoomInfo[iRoomCounter - 1].Breakfast := Lowercase(valueOfName(BREAKFAST_INCLUDED, 'true', container))='true';
-        RoomInfo[iRoomCounter - 1].GroupAccount := false;
+        ContactPhone := FilterZeroAsEmpty(valueOfName(CONTACT_TEL_NUMBER, '', container));
+        ContactPhone2 := FilterZeroAsEmpty(valueOfName(CONTACT_MOBILE_NUMBER, '', container));
+        ContactFax := FilterZeroAsEmpty(valueOfName(CONTACT_FAX_NUMBER, '', container));
+        ContactAddress1 := FilterZeroAsEmpty(valueOfName(CONTACT_ADDRESS_LINE_1, '', container));
+        ContactAddress2 := FilterZeroAsEmpty(valueOfName(CONTACT_ADDRESS_LINE_2, '', container));
+        ContactAddress3 := FilterZeroAsEmpty(valueOfName(CONTACT_ADDRESS_LINE_3, '', container));
+        ContactAddress4 := FilterZeroAsEmpty(valueOfName(CONTACT_ADDRESS_LINE_4, '', container));
+        ContactCountry := FilterZeroAsEmpty(valueOfName(CONTACT_COUNTRY, '', container));
+        ContactEmail := FilterZeroAsEmpty(valueOfName(CONTACT_EMAIL, '', container));
+        inputsource := 'I';
+        webconfirmed := '';
+        arrivaltime := '12:00';
+        srcrequest := '';
+        rvTmp := '';
 
-        RoomInfo[iRoomCounter - 1].Currency := valueOfName(XCURRENCY, 'EUR', container);
-        RoomInfo[iRoomCounter - 1].Discount := 0.00;
-        RoomInfo[iRoomCounter - 1].Percentage := true;
+        temp := valueOfName(XCUSTOMER_ID, '', container);
+        if temp = '' then
+           temp := defaultCustomerPID;
+        CustPID := temp;
 
-        RoomInfo[iRoomCounter - 1].PriceType := '';
 
-       // Persons
-        for i := 1 to persons do
+        marketSegment := 'NULL';
+        CustomerEmail := valueOfName(CUSTOMER_EMAIL, '', container);
+        CustomerWebsite := valueOfName(CUSTOMER_WEBSITE, '', container);
+        temp := LowerCase(valueOfName(USE_STAY_TAX, 'true', container));
+        useStayTax := (temp = 'true') OR (temp = '');
+
+        temp := valueOfName(CHANNEL_ID, defaultChannel, container);
+        channel := temp;
+
+        eventsProcessed := true;
+        alteredReservation := false;
+        dtCreated := SqlStringToDate(valueOfName(CREATION_DATE, dateToSqlString(now), container));
+        notificationRead := true;
+
+        persons := StrToIntDef(valueOfName(XNUMBER_OF_GUESTS, '1', container),1);
+
+
+        numRooms := StrToIntDef(valueOfName(NUMBER_OF_ROOMS, '1', container),1);
+
+        for iRoomCounter := 1 to numRooms do
         begin
-          PersId := PersId + 1;
+          RoomResId := RoomResList[iRoomCounter - 1];// RoomerDataSet.SystemNewRoomReservationId;
 
-          Person := nil; // FindPerson(GetName(container), '',
-                         // FilterZeroAsEmpty(valueOfName(GUEST_ADDRESS_LINE_1, '', container)),
-                         // FilterZeroAsEmpty(valueOfName(GUEST_ADDRESS_LINE_4, '', container)));
+         // RoomReservations
+          RoomRes := TRoomInfo.Create;
+          RoomInfo.Add(RoomRes);
+          RoomInfo[iRoomCounter - 1].RoomReservation := RoomResId;
+          RoomInfo[iRoomCounter - 1].Price := LocalizedFloatValue(valueOfName(XROOM_RATE, '0', container));
 
-          if NOT Assigned(Person) then
+          RoomRes.Children := StrToIntDef(valueOfName(NUMBER_OF_CHILDREN, '0', container),0);
+          RoomRes.Infants := StrToIntDef(valueOfName(NUMBER_OF_INFANTS, '0', container),0);
+
+          Package := valueOfName(RESERVATION_PACKAGE, '', container);
+          if (Package <> '') AND (invRefrence <> '') then
           begin
-            Person := TPersonInfo.Create;
-            Person.PersonId := PersId;
-            Person.Title := '';
-            Person.Name := GetName(container);
-            Person.Surname := '';
-            Person.Address1 := FilterZeroAsEmpty(valueOfName(GUEST_ADDRESS_LINE_1, '', container));
-            Person.Address2 := FilterZeroAsEmpty(valueOfName(GUEST_ADDRESS_LINE_2, '', container));
-            Person.Address3 := FilterZeroAsEmpty(valueOfName(GUEST_ADDRESS_LINE_3, '', container));
-            Person.Address4 := FilterZeroAsEmpty(valueOfName(GUEST_ADDRESS_LINE_4, '', container));
-            Person.Country := FilterZeroAsEmpty(valueOfName(GUEST_COUNTRY, '', container));
-            Person.Tel1 := FilterZeroAsEmpty(valueOfName(GUEST_TEL_NUMBER, '', container));
-            Person.Tel2 := FilterZeroAsEmpty(valueOfName(GUEST_MOBILE_NUMBER, '', container));
-            Person.Fax := FilterZeroAsEmpty(valueOfName(GUEST_FAX_NUMBER, '', container));
-            Person.Email := FilterZeroAsEmpty(valueOfName(GUEST_EMAIL, '', container));
-            Person.Information := '';
-
-            Person.GuestGender := FilterZeroAsEmpty(valueOfName(GuestGender, '', container));
-            Person.GuestTitle := FilterZeroAsEmpty(valueOfName(GuestTitle, '', container));
-            Person.GuestSocialSecurityNumber := FilterZeroAsEmpty(valueOfName(GuestSocialSecurityNumber, '', container));
-            Person.GuestPassportNumber := FilterZeroAsEmpty(valueOfName(GuestPassportNumber, '', container));
-            Person.GuestNationality := FilterZeroAsEmpty(valueOfName(GuestNationality, '00', container));
-            Person.GuestProfession := FilterZeroAsEmpty(valueOfName(GuestProfession, '', container));
-            Person.GuestCarLicense := FilterZeroAsEmpty(valueOfName(GuestCarLicense, '', container));
-            Person.GuestFax := FilterZeroAsEmpty(valueOfName(GuestFax, '', container));
-            Person.GuestWebsite := FilterZeroAsEmpty(valueOfName(GuestWebsite, '', container));
-            Person.GuestSkype := FilterZeroAsEmpty(valueOfName(GuestSkype, '', container));
-            Person.GuestLinkedIn := FilterZeroAsEmpty(valueOfName(GuestLinkedIn, '', container));
-            Person.GuestTwitter := FilterZeroAsEmpty(valueOfName(GuestTwitter, '', container));
-            Person.GuestFacebook := FilterZeroAsEmpty(valueOfName(GuestFacebook, '', container));
-            Person.GuestTripAdvisor := FilterZeroAsEmpty(valueOfName(GuestTripAdvisor, '', container));
-            Person.GuestPrefRoom := FilterZeroAsEmpty(valueOfName(GuestPrefRoom, '', container));
-            Person.GuestPrefRoomType := FilterZeroAsEmpty(valueOfName(GuestPrefRoomType, '', container));
-            Person.GuestSpecialRequests := FilterZeroAsEmpty(valueOfName(GuestSpecialRequests, '', container));
-            Person.GuestState := FilterZeroAsEmpty(valueOfName(GUEST_STATE, '', container));
-
-            Person.GuestSpecialOffers := FilterZeroAsEmpty(LowerCase(valueOfName(GuestSpecialOffers, '', container))) = 'true';
-            Person.GuestNewsletter := FilterZeroAsEmpty(LowerCase(valueOfName(GuestNewsletter, '', container))) = 'true';
-            Person.CreateGuestProfile := FilterZeroAsEmpty(LowerCase(valueOfName(CreateGuestProfile, '', container))) = 'true';
-
-            Person.GuestDateOfBirth := SqlStringToDate(valueOfName(GuestDateOfBirth, '1900-01-01', container));
-
+            PackageDeals.Add(TPackageDeal.Create(invRefrence, Package, RoomInfo[iRoomCounter - 1].Price));
           end;
 
-          RoomInfo[iRoomCounter - 1].Persons.Add(Person);
+          temp := valueOfName(ROOM_NUMBER, '', container);
+
+          RoomInfo[iRoomCounter - 1].RoomType := valueOfName(XROOM_TYPE, '', container);
+          RoomInfo[iRoomCounter - 1].Status := valueOfName(RESERVATION_STATUS, 'P', container);;
+          RoomInfo[iRoomCounter - 1].Status := IIF(Trim(RoomInfo[iRoomCounter - 1].Status)='', 'P', Status);
+
+          if (temp = '') OR (RoomInfo[iRoomCounter - 1].Status='C') then
+            RoomInfo[iRoomCounter - 1].Room := format('<%d>', [RoomResId])
+          else
+            RoomInfo[iRoomCounter - 1].Room := temp;
+
+          RoomInfo[iRoomCounter - 1].Breakfast := Lowercase(valueOfName(BREAKFAST_INCLUDED, 'true', container))='true';
+          RoomInfo[iRoomCounter - 1].GroupAccount := false;
+
+          RoomInfo[iRoomCounter - 1].Currency := valueOfName(XCURRENCY, 'EUR', container);
+          RoomInfo[iRoomCounter - 1].Discount := 0.00;
+          RoomInfo[iRoomCounter - 1].Percentage := true;
+
+          RoomInfo[iRoomCounter - 1].PriceType := '';
+
+         // Persons
+          for i := 1 to persons do
+          begin
+            PersId := PersId + 1;
+
+            Person := nil; // FindPerson(GetName(container), '',
+                           // FilterZeroAsEmpty(valueOfName(GUEST_ADDRESS_LINE_1, '', container)),
+                           // FilterZeroAsEmpty(valueOfName(GUEST_ADDRESS_LINE_4, '', container)));
+
+            if NOT Assigned(Person) then
+            begin
+              Person := TPersonInfo.Create;
+              Person.PersonId := PersId;
+              Person.Title := '';
+              Person.Name := GetName(container);
+              Person.Surname := '';
+              Person.Address1 := FilterZeroAsEmpty(valueOfName(GUEST_ADDRESS_LINE_1, '', container));
+              Person.Address2 := FilterZeroAsEmpty(valueOfName(GUEST_ADDRESS_LINE_2, '', container));
+              Person.Address3 := FilterZeroAsEmpty(valueOfName(GUEST_ADDRESS_LINE_3, '', container));
+              Person.Address4 := FilterZeroAsEmpty(valueOfName(GUEST_ADDRESS_LINE_4, '', container));
+              Person.Country := FilterZeroAsEmpty(valueOfName(GUEST_COUNTRY, '', container));
+              Person.Tel1 := FilterZeroAsEmpty(valueOfName(GUEST_TEL_NUMBER, '', container));
+              Person.Tel2 := FilterZeroAsEmpty(valueOfName(GUEST_MOBILE_NUMBER, '', container));
+              Person.Fax := FilterZeroAsEmpty(valueOfName(GUEST_FAX_NUMBER, '', container));
+              Person.Email := FilterZeroAsEmpty(valueOfName(GUEST_EMAIL, '', container));
+              Person.Information := '';
+
+              Person.GuestGender := FilterZeroAsEmpty(valueOfName(GuestGender, '', container));
+              Person.GuestTitle := FilterZeroAsEmpty(valueOfName(GuestTitle, '', container));
+              Person.GuestSocialSecurityNumber := FilterZeroAsEmpty(valueOfName(GuestSocialSecurityNumber, '', container));
+              Person.GuestPassportNumber := FilterZeroAsEmpty(valueOfName(GuestPassportNumber, '', container));
+              Person.GuestNationality := FilterZeroAsEmpty(valueOfName(GuestNationality, '00', container));
+              Person.GuestProfession := FilterZeroAsEmpty(valueOfName(GuestProfession, '', container));
+              Person.GuestCarLicense := FilterZeroAsEmpty(valueOfName(GuestCarLicense, '', container));
+              Person.GuestFax := FilterZeroAsEmpty(valueOfName(GuestFax, '', container));
+              Person.GuestWebsite := FilterZeroAsEmpty(valueOfName(GuestWebsite, '', container));
+              Person.GuestSkype := FilterZeroAsEmpty(valueOfName(GuestSkype, '', container));
+              Person.GuestLinkedIn := FilterZeroAsEmpty(valueOfName(GuestLinkedIn, '', container));
+              Person.GuestTwitter := FilterZeroAsEmpty(valueOfName(GuestTwitter, '', container));
+              Person.GuestFacebook := FilterZeroAsEmpty(valueOfName(GuestFacebook, '', container));
+              Person.GuestTripAdvisor := FilterZeroAsEmpty(valueOfName(GuestTripAdvisor, '', container));
+              Person.GuestPrefRoom := FilterZeroAsEmpty(valueOfName(GuestPrefRoom, '', container));
+              Person.GuestPrefRoomType := FilterZeroAsEmpty(valueOfName(GuestPrefRoomType, '', container));
+              Person.GuestSpecialRequests := FilterZeroAsEmpty(valueOfName(GuestSpecialRequests, '', container));
+              Person.GuestState := FilterZeroAsEmpty(valueOfName(GUEST_STATE, '', container));
+
+              Person.GuestSpecialOffers := FilterZeroAsEmpty(LowerCase(valueOfName(GuestSpecialOffers, '', container))) = 'true';
+              Person.GuestNewsletter := FilterZeroAsEmpty(LowerCase(valueOfName(GuestNewsletter, '', container))) = 'true';
+              Person.CreateGuestProfile := FilterZeroAsEmpty(LowerCase(valueOfName(CreateGuestProfile, '', container))) = 'true';
+
+              Person.GuestDateOfBirth := SqlStringToDate(valueOfName(GuestDateOfBirth, '1900-01-01', container));
+
+            end;
+
+            RoomInfo[iRoomCounter - 1].Persons.Add(Person);
+          end;
+
         end;
 
       end;
 
+      if Lowercase(valueOfName(CREATE_CUSTOMER, 'false', container)) = 'true' then
+      begin
+        CreateReservationCustomerLine(line);
+      end;
+
+
+      ResList.Add(Res)
+
+    finally
+      container.Free;
     end;
-
-    if Lowercase(valueOfName(CREATE_CUSTOMER, 'false', container)) = 'true' then
-    begin
-      CreateReservationCustomerLine(line);
-    end;
-
-
-    ResList.Add(Res)
 
 end;
 
@@ -1901,6 +1953,7 @@ end;
 
 constructor TResInfo.Create;
 begin
+  NewReservation := True;
   RoomInfo := TList<TRoomInfo>.Create;
 end;
 
@@ -1920,5 +1973,12 @@ constructor TPersonInfo.Create;
 begin
   ALREADY_INSERTED := False;
 end;
+
+
+initialization
+  ReservationIds := TObjectDictionary<String,Integer>.Create;
+finalization
+  ReservationIds.Free;
+
 
 end.

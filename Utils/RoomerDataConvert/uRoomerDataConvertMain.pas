@@ -103,6 +103,7 @@ type
     sTabSheet4: TsTabSheet;
     sTabSheet5: TsTabSheet;
     lbStatus: TsLabel;
+    sButton1: TsButton;
     procedure FormCreate(Sender: TObject);
     procedure btnLoginClick(Sender: TObject);
     procedure btnLogoutClick(Sender: TObject);
@@ -115,13 +116,14 @@ type
     procedure FormShow(Sender: TObject);
     procedure FormResize(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure sButton1Click(Sender: TObject);
   private
-    procedure getCounters(var ResId, RoomResId, PersId: Integer);
-    procedure saveCounters(ResId, RoomResId, PersId: Integer);
+    procedure getCounters(var ResId, PersId: Integer; RoomResIds : TStrings; NumRoomResIds : Integer);
+    procedure saveCounters;
     procedure getCustomerInfo(var custNum, custPId: String; var defaultChannel : String);
-    procedure ExecStandardReservationImport(lines: TStrings; SkipEmtypRooms : boolean = False);
     procedure ExecStandardCustomersImport(lines: TStrings);
     procedure PositionProgressBar;
+    function sh1(Filename : String; SheetIndex:integer; var cols, rows : Integer) : Variant;
 
     { Private declarations }
   public
@@ -147,7 +149,9 @@ uses uDataUnit,
      DateUtils,
      uStringUtils,
      uDataBuilder,
-     uCSVData
+     uCSVData,
+     OleAuto,
+     uUtils
     ;
 
 
@@ -177,13 +181,13 @@ begin
   PositionProgressBar;
 end;
 
-procedure TfrmRoomerDataConvertMain.saveCounters(ResId, RoomResId, PersId : Integer);
+procedure TfrmRoomerDataConvertMain.saveCounters;
 var rSet : TRoomerDataSet;
 begin
   rSet := RoomerDataSet.CreateNewDataset;
   try
     rSet.CommandType := cmdText;
-    RoomerDataSet.DoCommand(format('UPDATE control SET LastReservation=%d, LastRoomRes=%d, LastPerson=%d', [ResId, RoomResId, PersId]));
+    RoomerDataSet.DoCommand('UPDATE control SET LastReservation=(SELECT MAX(Reservation) FROM reservations), LastRoomRes=(SELECT MAX(RoomReservation) FROM roomreservations), LastPerson=(SELECT MAX(Person) FROM persons)');
   finally
     FreeAndNil(rSet);
   end;
@@ -192,6 +196,44 @@ end;
 procedure TfrmRoomerDataConvertMain.Breathe(iNum : Integer);
 begin
   if iNum mod 10 = 0 then Application.ProcessMessages;
+end;
+
+function TfrmRoomerDataConvertMain.sh1(Filename : String; SheetIndex:integer; var cols, rows : Integer) : Variant;
+Var
+  Xlapp1, Sheet:Variant ;
+  X, Y:integer ;
+  str:string;
+  arrData:Variant;
+begin
+  Str:=trim(Filename);
+
+  XLApp1 := createoleobject('excel.application');
+  XLApp1.Workbooks.open(Str) ;
+
+  Sheet := XLApp1.WorkSheets[SheetIndex] ;
+
+  rows := Sheet.Usedrange.EntireRow.count ;
+  cols := sheet.Usedrange.EntireColumn.count;
+
+  //read the used range to a variant array
+  arrData:= Sheet.UsedRange.Value;
+
+//  memoResult.Lines.Add(inttostr(MaxRow));
+//  memoResult.Lines.Add(inttostr(maxCol));
+
+  for y:=1 to rows do
+    for x:=1 to cols do
+      //copy data to grid
+      memoResult.Lines.Add(arrData[y, 4]); // do note that the indices are reversed (y, x)
+
+  XLApp1.Workbooks.close;
+  result := arrData;
+end;
+
+procedure TfrmRoomerDataConvertMain.sButton1Click(Sender: TObject);
+var rows, cols : Integer;
+begin
+  sh1(edFilename.FileName, 2, cols, rows);
 end;
 
 procedure TfrmRoomerDataConvertMain.sButton2Click(Sender: TObject);
@@ -302,18 +344,22 @@ begin
   prgWorking.Width := btnProcessIntoRoomer.Left - (btnExcel.Left + btnExcel.Width) - 20;
 end;
 
-procedure TfrmRoomerDataConvertMain.getCounters(var ResId, RoomResId, PersId : Integer);
+procedure TfrmRoomerDataConvertMain.getCounters(var ResId, PersId : Integer; RoomResIds : TStrings; NumRoomResIds : Integer);
 var rSet : TRoomerDataSet;
+    sList : String;
+    list : TStrings;
 begin
   rSet := RoomerDataSet.CreateNewDataset;
   try
     rSet.CommandType := cmdText;
-    rSet.CommandText := 'SELECT (SELECT MAX(Reservation) FROM reservations) AS LastReservation, LastRoomRes, LastPerson FROM control LIMIT 1';
+    rSet.CommandText := 'SELECT (SELECT MAX(Reservation) FROM reservations) AS LastReservation, LastPerson FROM control LIMIT 1';
     rSet.open(false);
 
     ResId := rSet['LastReservation'];
-    RoomResId := rSet['LastRoomRes'];
     PersId := rSet['LastPerson'];
+
+    sList := RoomerDataSet.SystemMultipleNewRoomReservationIds(NumRoomResIds);
+    SplitStringToTStrings(',', sList, RoomResIds);
   finally
     FreeAndNil(rSet);
   end;
@@ -354,26 +400,6 @@ begin
   memoResult.Lines.AddStrings(getCustomersSqlList);
 end;
 
-procedure TfrmRoomerDataConvertMain.ExecStandardReservationImport(lines : TStrings; SkipEmtypRooms : boolean = False);
-var i : Integer;
-    ResId, RoomResId, PersId : Integer;
-    defaultChannel, custNum, custPId : String;
-begin
-  getCounters(ResId, RoomResId, PersId);
-  getCustomerInfo(custNum, custPId, defaultChannel);
-
-  start(lines[0], RoomerDataSet);
-  for i := 1 to lines.Count - 1 do
-     CreateStandardReservationsLine(Lines[i], edtUsername.Text, ResId, RoomResId, PersId, custNum, custPID, defaultChannel, SkipEmtypRooms);
-
-  memoResult.lines.Clear;
-  memoResult.lines.AddStrings(getReservationsSqlList);
-  if MessageDlg('Update Control table?', mtConfirmation, [mbYes, mbNo], 0) = mrYes then
-  begin
-    saveCounters(ResId, RoomResId, PersId);
-  end;
-end;
-
 procedure TfrmRoomerDataConvertMain.btnEuropa92Click(Sender: TObject);
 //var i : Integer;
 //    ResId, RoomResId, PersId : Integer;
@@ -407,8 +433,9 @@ begin
 end;
 
 procedure TfrmRoomerDataConvertMain.btnStandardReservationImportClick(Sender: TObject);
-var i : Integer;
-    ResId, RoomResId, PersId : Integer;
+var l : Integer;
+    ResId, PersId : Integer;
+    RoomResIds : TStrings;
     defaultChannel, custNum, custPId : String;
     MissingField : String;
 
@@ -417,41 +444,101 @@ var i : Integer;
     custList : TStrings;
     resList : TStrings;
 
+    numRooms : Integer;
+    RoomResList : TList<Integer>;
+
+
+    sCurrent : String;
+
+//    myFile : TextFile;
+
+    Xlapp1, Sheet:Variant ;
+    X, Y:integer ;
+    str:string;
+    arrData:Variant;
+    rows, cols : Integer;
+
+    function getLine(line : Integer);
+    var i : Integer;
+        sTmp : String;
+    begin
+      result := '';
+      for i := 1 to cols do
+      begin
+         sTmp := arrData[line, i];
+         result := result + IIF(result = '', arrData[line, i], ';' + arrData[line, i]);
+      end;
+    end;
+
+var line : Integer;
 begin
+  RoomResIds := TStringList.Create;
   Cursor := crHourglass;
   Application.ProcessMessages;
   try
-    CSVFileContent.LoadFromFile(edFilename.FileName);
-    getCounters(ResId, RoomResId, PersId);
+//    CSVFileContent.LoadFromFile(edFilename.FileName);
+    AssignFile(myFile, edFilename.FileName);
+
+    start(CSVFileContent[0], RoomerDataSet);
+    numRooms := 0;
+    Reset(myFile);
+    ReadLn(myFile, sCurrent);
+    while not Eof(myFile) do
+    begin
+      ReadToPipe(sCurrent);
+      numRooms := numRooms + NumRoomsOfLine(sCurrent);
+    end;
+    CloseFile(myFile);
+    getCounters(ResId, PersId, RoomResIds, numRooms);
     getCustomerInfo(custNum, custPId, defaultChannel);
 
     memoResult.Lines.Clear;
-    start(CSVFileContent[0], RoomerDataSet);
-    for i := 1 to CSVFileContent.Count - 1 do
+    Reset(myFile);
+    ReadLn(myFile, sCurrent);
+    while not Eof(myFile) do
     begin
-      MissingField := CheckReservationOfLine(CSVFileContent[i]);
+      ReadToPipe(sCurrent);
+      MissingField := CheckReservationOfLine(sCurrent);
       if MissingField <> '' then
       begin
-        ShowMessage('Cannot continue because field(s) is/are missing: ' + #13#13 +
-                    MissingField+#13#13+'Line :'+inttostr(i));
+        ShowMessage('Cannot continue because field(s) is/are missing: ' + #13#13);
         exit;
       end;
     end;
+    CloseFile(myFile);
 
     lbStatus.Caption := 'Reading reservations...'; lbStatus.Font.Color := clGreen; lbStatus.Update;
     prgWorking.Max := CSVFileContent.Count;
     prgWorking.Position := 0;
 
+    PrepareCollect;
     memoResult.Lines.BeginUpdate;
     try
-      for i := 1 to CSVFileContent.Count - 1 do
+
+      Reset(myFile);
+      ReadLn(myFile, sCurrent);
+      while not Eof(myFile) do
       begin
-         memoResult.Text := inttostr(i);
-         memoResult.Text := memoResult.Text + '  ' + CSVFileContent[i];
-         CreateStandardReservationsLine(CSVFileContent[i], edtUsername.Text, ResId, RoomResId, PersId, custNum, custPID, defaultChannel, false);
+        ReadToPipe(sCurrent);
+         numRooms := numRooms + NumRoomsOfLine(sCurrent);
+         memoResult.Text := ''; // inttostr(i);
+         memoResult.Text := memoResult.Text + '  ' + sCurrent;
+         numRooms := NumRoomsOfLine(sCurrent);
+         RoomResList := TList<Integer>.Create;
+         try
+           for l := 0 to numRooms - 1 do
+           begin
+             RoomResList.Add(StrToInt(RoomResIds[0]));
+             RoomResIds.Delete(0);
+           end;
+           CreateStandardReservationsLine(RoomerDataSet, sCurrent, edtUsername.Text, PersId, RoomResList, custNum, custPID, defaultChannel, false);
+         finally
+           RoomResList.Free;
+         end;
          prgWorking.StepIt; prgWorking.Update;
-         Breathe(i);
+//         Breathe(0);
       end;
+      CloseFile(myFile);
     finally
       memoResult.Lines.EndUpdate;
     end;
@@ -482,7 +569,7 @@ begin
   //  if MessageDlg('Update Control table?', mtConfirmation, [mbYes, mbNo], 0) = mrYes then
   //  begin
     lbStatus.Caption := 'Reading SQL statements done. Saving new reservation counter...'; lbStatus.Font.Color := clGreen; lbStatus.Update;
-    saveCounters(ResId, RoomResId, PersId);
+    saveCounters;
     btnProcessIntoRoomer.Enabled := True;
 
     lbStatus.Caption := 'Preparation done - ready for [Process into Roomer]!';
@@ -491,12 +578,14 @@ begin
   finally
     Cursor := crDefault;
     Application.ProcessMessages;
+    RoomResIds.Free;
   end;
 end;
 
 procedure TfrmRoomerDataConvertMain.edFilenameAfterDialog(Sender: TObject; var Name: string; var Action: Boolean);
 begin
-  memoResult.Lines.LoadFromFile(Name);
+  if LowerCase(ExtractFileExt(Name)) = '.csv' then
+    memoResult.Lines.LoadFromFile(Name);
 end;
 
 procedure TfrmRoomerDataConvertMain.btnLoginClick(Sender: TObject);

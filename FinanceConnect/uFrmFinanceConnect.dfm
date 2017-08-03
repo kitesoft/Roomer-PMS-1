@@ -38,6 +38,10 @@ object FrmFinanceConnect: TFrmFinanceConnect
       Font.Name = 'Tahoma'
       Font.Style = [fsBold]
       ParentFont = False
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object sLabel1: TsLabel
         Left = 45
         Top = 33
@@ -248,7 +252,7 @@ object FrmFinanceConnect: TFrmFinanceConnect
       object cbxActive: TsCheckBox
         Left = 199
         Top = 56
-        Width = 64
+        Width = 61
         Height = 17
         Caption = 'Active'
         Font.Charset = DEFAULT_CHARSET
@@ -483,7 +487,8 @@ object FrmFinanceConnect: TFrmFinanceConnect
         Tabs.Strings = (
           'Customers'
           'Items'
-          'Vat codes')
+          'Vat codes'
+          'Pay groups')
         TabIndex = 0
         OnChange = tabsMappingsChange
       end
@@ -608,7 +613,6 @@ object FrmFinanceConnect: TFrmFinanceConnect
           Font.Style = []
           ParentFont = False
           TabOrder = 0
-          ExplicitTop = 2
           object tvVats: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = dsVats
@@ -648,7 +652,6 @@ object FrmFinanceConnect: TFrmFinanceConnect
         Height = 36
         Align = alTop
         TabOrder = 4
-        ExplicitTop = 51
         object edtSearch: TButtonedEdit
           AlignWithMargins = True
           Left = 4
@@ -674,10 +677,72 @@ object FrmFinanceConnect: TFrmFinanceConnect
           TabOrder = 0
           OnChange = edtSearchChange
           OnRightButtonClick = edtSearchRightButtonClick
-          ExplicitLeft = 280
-          ExplicitTop = 5
-          ExplicitWidth = 109
           ExplicitHeight = 21
+        end
+      end
+      object pnl3: TsPanel
+        Left = 167
+        Top = 47
+        Width = 665
+        Height = 327
+        TabOrder = 5
+        object cxGrid1: TcxGrid
+          Left = 1
+          Top = 1
+          Width = 663
+          Height = 325
+          Align = alClient
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 0
+          object tvPayGroups: TcxGridDBTableView
+            Navigator.Buttons.CustomButtons = <>
+            DataController.DataSource = dsPayGroups
+            DataController.Summary.DefaultGroupSummaryItems = <>
+            DataController.Summary.FooterSummaryItems = <>
+            DataController.Summary.SummaryGroups = <>
+            object tvPayGroupsRecId: TcxGridDBColumn
+              DataBinding.FieldName = 'RecId'
+              Visible = False
+            end
+            object tvPayGroupsCode: TcxGridDBColumn
+              DataBinding.FieldName = 'Code'
+              Options.Editing = False
+              Width = 114
+            end
+            object tvPayGroupsName: TcxGridDBColumn
+              DataBinding.FieldName = 'Name'
+              Options.Editing = False
+              Width = 269
+            end
+            object tvPayGroupsBalanceAccount: TcxGridDBColumn
+              DataBinding.FieldName = 'BalanceAccount'
+              PropertiesClassName = 'TcxButtonEditProperties'
+              Properties.Buttons = <
+                item
+                  Default = True
+                  Kind = bkEllipsis
+                end>
+              Properties.OnButtonClick = tvPayGroupsBalanceAccountPropertiesButtonClick
+            end
+            object tvPayGroupsCashBook: TcxGridDBColumn
+              DataBinding.FieldName = 'CashBook'
+              PropertiesClassName = 'TcxButtonEditProperties'
+              Properties.Buttons = <
+                item
+                  Default = True
+                  Kind = bkEllipsis
+                end>
+              Properties.OnButtonClick = tvPayGroupsCashBookPropertiesButtonClick
+            end
+          end
+          object glPayGroups: TcxGridLevel
+            GridView = tvPayGroups
+          end
         end
       end
     end
@@ -686,6 +751,7 @@ object FrmFinanceConnect: TFrmFinanceConnect
     Active = True
     Indexes = <>
     SortOptions = []
+    BeforePost = memCustomersBeforePost
     Left = 16
     Top = 360
     object memCustomersCode: TWideStringField
@@ -710,6 +776,7 @@ object FrmFinanceConnect: TFrmFinanceConnect
     Active = True
     Indexes = <>
     SortOptions = []
+    BeforePost = memItemsBeforePost
     Left = 80
     Top = 360
     object memItemsCode: TWideStringField
@@ -734,6 +801,7 @@ object FrmFinanceConnect: TFrmFinanceConnect
     Active = True
     Indexes = <>
     SortOptions = []
+    BeforePost = memVatsBeforePost
     Left = 144
     Top = 360
     object memVatsCode: TWideStringField
@@ -752,6 +820,33 @@ object FrmFinanceConnect: TFrmFinanceConnect
   object dsVats: TDataSource
     DataSet = memVats
     Left = 144
+    Top = 408
+  end
+  object memPayGroups: TdxMemData
+    Indexes = <>
+    SortOptions = []
+    Left = 208
+    Top = 360
+    object memPayGroupsCode: TWideStringField
+      FieldName = 'Code'
+      Size = 40
+    end
+    object memPayGroupsName: TWideStringField
+      FieldName = 'Name'
+      Size = 80
+    end
+    object memPayGroupsBalanceAccount: TStringField
+      FieldName = 'BalanceAccount'
+      Size = 15
+    end
+    object memPayGroupsCashBook: TStringField
+      FieldName = 'CashBook'
+      Size = 15
+    end
+  end
+  object dsPayGroups: TDataSource
+    DataSet = memPayGroups
+    Left = 208
     Top = 408
   end
 end

@@ -358,11 +358,12 @@ begin
     hData.rSet_bySQL(rSet, s);
     rSet.First;
     if NOT rSet.Eof then
+    begin
       btnViewPayCard.Visible := (Reservation > 0) AND
                                 (rSet.FieldDefs.IndexOf('PAYCARD_TOKEN') > -1) AND
-                                (rSet.FieldByName('PAYCARD_TOKEN').AsString <> '') AND
-                                glb.PCIContractOpenForChannel(rSet.fieldbyname('channel').asInteger);
-;
+                                (rSet.FieldByName('PAYCARD_TOKEN').AsString <> '');
+      btnViewPayCard.Tag := ORD(glb.PCIContractOpenForChannel(rSet.fieldbyname('channel').asInteger));
+    end;
   end;
 end;
 
@@ -418,7 +419,7 @@ end;
 
 procedure TfrmInvoicePayment.btnViewPayCardClick(Sender: TObject);
 begin
-  ShowPayCardInformation(FReservation);
+  ShowPayCardInformation(FReservation, btnViewPayCard.Tag);
 end;
 
 procedure TfrmInvoicePayment.agrPayTypesKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);

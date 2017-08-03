@@ -87,6 +87,21 @@ type
     btnSave: TsButton;
     sPanel1: TsPanel;
     edtSearch: TButtonedEdit;
+    memPayGroups: TdxMemData;
+    memPayGroupsCode: TWideStringField;
+    memPayGroupsName: TWideStringField;
+    dsPayGroups: TDataSource;
+    pnl3: TsPanel;
+    cxGrid1: TcxGrid;
+    tvPayGroups: TcxGridDBTableView;
+    glPayGroups: TcxGridLevel;
+    memPayGroupsCashBook: TStringField;
+    memPayGroupsBalanceAccount: TStringField;
+    tvPayGroupsRecId: TcxGridDBColumn;
+    tvPayGroupsCode: TcxGridDBColumn;
+    tvPayGroupsName: TcxGridDBColumn;
+    tvPayGroupsBalanceAccount: TcxGridDBColumn;
+    tvPayGroupsCashBook: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure tabsMappingsChange(Sender: TObject);
@@ -98,6 +113,12 @@ type
     procedure cbxSystemSelectionCloseUp(Sender: TObject);
     procedure edtSearchChange(Sender: TObject);
     procedure edtSearchRightButtonClick(Sender: TObject);
+    procedure tvPayGroupsBalanceAccountPropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
+    procedure tvPayGroupsCashBookPropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
+    procedure memPayGroupsBeforePost(DataSet: TDataSet);
+    procedure memVatsBeforePost(DataSet: TDataSet);
+    procedure memItemsBeforePost(DataSet: TDataSet);
+    procedure memCustomersBeforePost(DataSet: TDataSet);
   private
     FinanceConnectService : TFinanceConnectService;
     procedure LoadInfo;
@@ -121,6 +142,7 @@ const PAGE_CONFIG = 0;
       TAB_CUSTOMERS = 0;
       TAB_ITEMS = 1;
       TAB_VATS = 2;
+      TAB_PAYGROUPS = 3;
 
 procedure ManageFinanceConnect(page : TFinanceConnectPageIndex = PAGE_CONFIG; workingTab : TFinanceConnectPageIndex = TAB_CUSTOMERS);
 
@@ -193,6 +215,7 @@ begin
     TAB_CUSTOMERS : result := tvCustomers;
     TAB_ITEMS     : result := tvItems;
     TAB_VATS      : result := tvVats;
+    TAB_PAYGROUPS : result := tvPayGroups;
   end;
 end;
 
@@ -236,6 +259,7 @@ begin
   pnl0.Visible := tabsMappings.TabIndex = TAB_CUSTOMERS;
   pnl1.Visible := tabsMappings.TabIndex = TAB_ITEMS;
   pnl2.Visible := tabsMappings.TabIndex = TAB_VATS;
+  pnl3.Visible := tabsMappings.TabIndex = TAB_PAYGROUPS;
   ClearAllTableViewFilters;
 end;
 
@@ -277,11 +301,77 @@ begin
   keyValue := selectFromKeyValuePairs(Caption, ExternalCode.AsString, financeLookupList);
   if Assigned(keyValue) then
   begin
-    FinanceConnectService.MapForFinanceConnect(keyPairType, RoomerCode.AsString, KeyValue.Key);
-    MappingsLookupMap.AddOrSetValue(format('%s_%s', [MAPPING_ENTITIES[keyPairType], RoomerCode.AsString]), KeyValue.Key);
     memTable.Edit;
     try
       ExternalCode.AsString := keyValue.Key;
+      memTable.Post;
+    except
+      memTable.Cancel;
+      raise;
+    end;
+  end;
+end;
+
+procedure TFrmFinanceConnect.tvPayGroupsBalanceAccountPropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
+var
+  keyValue : TKeyAndValue;
+  financeLookupList : TKeyPairList;
+  memTable : TdxMemData;
+  RoomerCode: String;
+  ExternalCode: String;
+  Caption : String;
+  keyPairType: TKeyPairType;
+begin
+  //
+  keyPairType := FinanceConnectService.keyPairTypeByIndex(tabsMappings.TabIndex);
+  Caption := FinanceConnectService.MappingCaptionByIndex(KeyPairType);
+
+  memTable := memPayGroups;
+
+  financeLookupList := PayGroupsBalanceAccountLookupList;
+  ExternalCode := memPayGroupsBalanceAccount.AsString;
+  RoomerCode := 'BAL_' + memPayGroupsCode.AsString;
+
+  keyValue := selectFromKeyValuePairs(Caption, ExternalCode, financeLookupList);
+  if Assigned(keyValue) then
+  begin
+    memTable.Edit;
+    try
+      memPayGroupsBalanceAccount.AsString := keyValue.Key;
+      memTable.Post;
+    except
+      memTable.Cancel;
+      raise;
+    end;
+  end;
+end;
+
+procedure TFrmFinanceConnect.tvPayGroupsCashBookPropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
+var
+  keyValue : TKeyAndValue;
+  financeLookupList : TKeyPairList;
+  memTable : TdxMemData;
+  RoomerCode: String;
+  ExternalCode: String;
+  Caption : String;
+  keyPairType: TKeyPairType;
+begin
+  //
+  keyPairType := FinanceConnectService.keyPairTypeByIndex(tabsMappings.TabIndex);
+  Caption := FinanceConnectService.MappingCaptionByIndex(KeyPairType);
+
+  memTable := memPayGroups;
+
+  financeLookupList := PayGroupsCashBookLookupList;
+  ExternalCode := memPayGroupsCashBook.AsString;
+  RoomerCode := 'BOOK_' + memPayGroupsCode.AsString;
+
+  keyValue := selectFromKeyValuePairs(Caption, ExternalCode, financeLookupList);
+  if Assigned(keyValue) then
+  begin
+    memTable.Edit;
+    try
+      memPayGroupsCashBook.AsString := keyValue.Key;
       memTable.Post;
     except
       memTable.Cancel;
@@ -298,9 +388,21 @@ var rSet : TRoomerDataSet;
     i, index : Integer;
 begin
  //
+  memCustomers.BeforePost := nil;
   LoadSet(glb.CustomersSet, FKP_CUSTOMERS, memCustomers, 'Customer', 'Surname', 'PID');
+  memCustomers.BeforePost := memCustomersBeforePost;
+
+  memItems.BeforePost := nil;
   LoadSet(glb.Items, FKP_PRODUCTS, memItems, 'Item', 'Description', 'BookKeepCode');
+  memItems.BeforePost := memItemsBeforePost;
+
+  memVats.BeforePost := nil;
   LoadSet(glb.VAT, FKP_VAT, memVats, 'VATCode', 'Description', 'BookKeepCode');
+  memVats.BeforePost := memVatsBeforePost;
+
+  memPayGroups.BeforePost := nil;
+  LoadSet(glb.PaygroupsSet, FKP_PAYGROUPS, memPayGroups, 'PayGroup', 'Description', 'BalanceAccount');
+  memPayGroups.BeforePost := memPayGroupsBeforePost;
 
   index := 0;
   cbxSystemSelection.Items.Clear;
@@ -319,6 +421,8 @@ var Code : String;
     ExternalCode : String;
 begin
  //
+  if ActiveFinanceConnectSystemCode = '' then exit;
+
   mem.Close;
   mem.Open;
   rSet.First;
@@ -332,10 +436,20 @@ begin
         mem['Code'] := rSet[CodeField];
         mem['Name'] := rSet[NameField];
 
-        if NOT MappingsLookupMap.TryGetValue(format('%s_%s', [MAPPING_ENTITIES[KeyPairType], rSet.FieldByName(CodeField).AsString]), ExternalCode) then
-          ExternalCode := '';
-
-        mem['ExternalCode'] := ExternalCode;
+        if KeyPairType = FKP_PAYGROUPS then
+        begin
+          if NOT MappingsLookupMap.TryGetValue(format('%s_%s', [MAPPING_ENTITIES[KeyPairType], 'BAL_' + rSet.FieldByName(CodeField).AsString]), ExternalCode) then
+            ExternalCode := '';
+          mem['BalanceAccount'] := ExternalCode;
+          if NOT MappingsLookupMap.TryGetValue(format('%s_%s', [MAPPING_ENTITIES[KeyPairType], 'BOOK_' + rSet.FieldByName(CodeField).AsString]), ExternalCode) then
+            ExternalCode := '';
+          mem['CashBook'] := ExternalCode;
+        end else
+        begin
+          if NOT MappingsLookupMap.TryGetValue(format('%s_%s', [MAPPING_ENTITIES[KeyPairType], rSet.FieldByName(CodeField).AsString]), ExternalCode) then
+            ExternalCode := '';
+          mem['ExternalCode'] := ExternalCode;
+        end;
         mem.Post;
       end;
       rSet.Next;
@@ -345,16 +459,73 @@ begin
   end;
 end;
 
+procedure TFrmFinanceConnect.memCustomersBeforePost(DataSet: TDataSet);
+var RoomerCode : String;
+    keyPairType: TKeyPairType;
+    NewValue : String;
+begin
+  keyPairType := FinanceConnectService.keyPairTypeByIndex(tabsMappings.TabIndex);
+  RoomerCode := memCustomersCode.AsString;
+  NewValue := memCustomersExternalCode.AsString;
+  FinanceConnectService.MapForFinanceConnect(keyPairType, RoomerCode, NewValue);
+  MappingsLookupMap.AddOrSetValue(format('%s_%s', [MAPPING_ENTITIES[keyPairType], RoomerCode]), NewValue);
+end;
+
+procedure TFrmFinanceConnect.memItemsBeforePost(DataSet: TDataSet);
+var RoomerCode : String;
+    keyPairType: TKeyPairType;
+    NewValue : String;
+begin
+  keyPairType := FinanceConnectService.keyPairTypeByIndex(tabsMappings.TabIndex);
+  RoomerCode := memItemsCode.AsString;
+  NewValue := memItemsExternalCode.AsString;
+  FinanceConnectService.MapForFinanceConnect(keyPairType, RoomerCode, NewValue);
+  MappingsLookupMap.AddOrSetValue(format('%s_%s', [MAPPING_ENTITIES[keyPairType], RoomerCode]), NewValue);
+end;
+
+procedure TFrmFinanceConnect.memPayGroupsBeforePost(DataSet: TDataSet);
+var RoomerCode : String;
+    keyPairType: TKeyPairType;
+    NewValue : String;
+begin
+  keyPairType := FinanceConnectService.keyPairTypeByIndex(tabsMappings.TabIndex);
+  if memPayGroupsBalanceAccount.OldValue <> memPayGroupsBalanceAccount.AsString then
+  begin
+    RoomerCode := 'BAL_' + memPayGroupsCode.AsString;
+    NewValue := memPayGroupsBalanceAccount.AsString;
+  end else
+  begin
+    RoomerCode := 'BOOK_' + memPayGroupsCode.AsString;
+    NewValue := memPayGroupsCashBook.AsString;
+  end;
+  FinanceConnectService.MapForFinanceConnect(keyPairType, RoomerCode, NewValue);
+  MappingsLookupMap.AddOrSetValue(format('%s_%s', [MAPPING_ENTITIES[keyPairType], RoomerCode]), NewValue);
+end;
+
+procedure TFrmFinanceConnect.memVatsBeforePost(DataSet: TDataSet);
+var RoomerCode : String;
+    keyPairType: TKeyPairType;
+    NewValue : String;
+begin
+  keyPairType := FinanceConnectService.keyPairTypeByIndex(tabsMappings.TabIndex);
+  RoomerCode := memVatsCode.AsString;
+  NewValue := memVatsExternalCode.AsString;
+  FinanceConnectService.MapForFinanceConnect(keyPairType, RoomerCode, NewValue);
+  MappingsLookupMap.AddOrSetValue(format('%s_%s', [MAPPING_ENTITIES[keyPairType], RoomerCode]), NewValue);
+end;
+
 procedure TFrmFinanceConnect.PrepareTabs;
 begin
  //
   pnl0.Align := alClient;
   pnl1.Align := alClient;
   pnl2.Align := alClient;
+  pnl3.Align := alClient;
 
   pnl0.Visible := False;
   pnl1.Visible := False;
   pnl2.Visible := False;
+  pnl3.Visible := False;
 
   with FinanceConnectService.FinanceConnectConfiguration do
   begin

@@ -55,6 +55,8 @@ type
       CustomerXmlElements : TFinanceXmlListElements;
       ItemXmlElements : TFinanceXmlListElements;
       VatXmlElements : TFinanceXmlListElements;
+      PayGroupsXmlElements : TFinanceXmlListElements;
+      CashBooksXmlElements : TFinanceXmlListElements;
 
       SystemsXmlElements : TFinanceXmlListElements;
 
@@ -87,6 +89,8 @@ var
     CustomersLookupList : TKeyPairList;
     ItemsLookupList : TKeyPairList;
     VatsLookupList : TKeyPairList;
+    PayGroupsBalanceAccountLookupList : TKeyPairList;
+    PayGroupsCashBookLookupList : TKeyPairList;
 
     SystemsLookupList : TKeyPairList;
 
@@ -95,7 +99,7 @@ var
     ActiveFinanceConnectSystemCode : String;
     ActiveFinanceConnectSystemName : String;
 
-const MAPPING_ENTITIES : Array[TKeyPairType] Of String = ('CUSTOMER','ITEM', 'PAYTYPE', 'VAT');
+const MAPPING_ENTITIES : Array[TKeyPairType] Of String = ('CUSTOMER','ITEM', 'PAYTYPE', 'VAT', 'PAYGROUP', 'PAYGROUP');
 
 procedure ClearFinanceConnectServices;
 function FinanceConnectActive : Boolean;
@@ -144,25 +148,27 @@ constructor TFinanceConnectService.Create;
 begin
   if ActiveFinanceConnectSystemCode = '' then
     ActiveFinanceConnectSystemCode := Utf8ToString(d.roomerMainDataSet.downloadUrlAsString(d.roomerMainDataSet.RoomerUri + 'financeconnect'));
+
+  if NOT assigned(SystemsLookupList) then
+  begin
+    InitializeXmlElements;
+    SystemsLookupList := RetrieveFinanceConnectAvailableSystems;
+  end;
 end;
 
 function TFinanceConnectService.SystemName : String;
 var KeyAndValue : TKeyAndValue;
 begin
   result := '';
+
   if ActiveFinanceConnectSystemCode <> '' then
-    if NOT assigned(SystemsLookupList) then
-    begin
-      InitializeXmlElements;
-      SystemsLookupList := RetrieveFinanceConnectAvailableSystems;
-      for KeyAndValue IN SystemsLookUpList do
-        if KeyAndValue.Key = ActiveFinanceConnectSystemCode then
-        begin
-          result := KeyAndValue.Value;
-          ActiveFinanceConnectSystemName := result;
-          Break;
-        end;
-    end;
+    for KeyAndValue IN SystemsLookUpList do
+      if KeyAndValue.Key = ActiveFinanceConnectSystemCode then
+      begin
+        result := KeyAndValue.Value;
+        ActiveFinanceConnectSystemName := result;
+        Break;
+      end;
 end;
 
 procedure TFinanceConnectService.PrepareForMapping;
@@ -179,6 +185,12 @@ begin
 
     if NOT assigned(VatsLookupList) then
       VatsLookupList := RetrieveFinanceConnectKeypair(FKP_VAT);
+
+    if NOT assigned(PayGroupsBalanceAccountLookupList) then
+      PayGroupsBalanceAccountLookupList := RetrieveFinanceConnectKeypair(FKP_PAYGROUPS);
+
+    if NOT assigned(PayGroupsCashBookLookupList) then
+      PayGroupsCashBookLookupList := RetrieveFinanceConnectKeypair(FKP_CASHBOOKS);
 
     if NOT assigned(SystemsLookupList) then
       SystemsLookupList := RetrieveFinanceConnectAvailableSystems;
@@ -376,6 +388,14 @@ begin
                        s := Utf8ToString(d.roomerMainDataSet.downloadUrlAsString(d.roomerMainDataSet.RoomerUri + 'financeconnect/vatcodes'));
                        XmlElements := VatXmlElements;
                      end;
+      FKP_PAYGROUPS: begin
+                       s := Utf8ToString(d.roomerMainDataSet.downloadUrlAsString(d.roomerMainDataSet.RoomerUri + 'financeconnect/items'));
+                       XmlElements := PayGroupsXmlElements;
+                     end;
+      FKP_CASHBOOKS: begin
+                       s := Utf8ToString(d.roomerMainDataSet.downloadUrlAsString(d.roomerMainDataSet.RoomerUri + 'financeconnect/cashbooks'));
+                       XmlElements := CashBooksXmlElements;
+                     end;
     end;
 
 
@@ -489,6 +509,8 @@ begin
   CustomerXmlElements := TFinanceXmlListElements.Create('customers', 'customer', 'customerCode', 'customerName');
   ItemXmlElements := TFinanceXmlListElements.Create('items', 'item', 'itemCode', 'itemName');
   VatXmlElements := TFinanceXmlListElements.Create('vatCodes', 'vatCode', 'vatCode', 'vatName');
+  PayGroupsXmlElements := TFinanceXmlListElements.Create('items', 'item', 'itemCode', 'itemName');
+  CashBooksXmlElements := TFinanceXmlListElements.Create('cashBooks', 'book', 'bookCode', 'bookName');
 
   SystemsXmlElements := TFinanceXmlListElements.Create('availableSystems', 'systemCode', 'code', 'name');
 
@@ -503,6 +525,7 @@ begin
     0 : result := FKP_CUSTOMERS;
     1 : result := FKP_PRODUCTS;
     2 : result := FKP_VAT;
+    3 : result := FKP_PAYGROUPS;
   end;
 end;
 
@@ -513,6 +536,7 @@ begin
     FKP_CUSTOMERS : result := 'CSTOMERS';
     FKP_PRODUCTS : result := 'PRODUCTS';
     FKP_VAT : result := 'VAT CODES';
+    FKP_PAYGROUPS : result := 'PAY GROUPS';
   end;
 end;
 
@@ -537,6 +561,8 @@ begin
   FreeAndNil(CustomersLookupList);
   FreeAndNil(ItemsLookupList);
   FreeAndNil(VatsLookupList);
+  FreeAndNil(PayGroupsBalanceAccountLookupList);
+  FreeAndNil(PayGroupsCashBookLookupList);
 
   FreeAndNil(SystemsLookupList);
 

@@ -301,7 +301,9 @@ uses
   uFrmFinanceConnect in 'FinanceConnect\uFrmFinanceConnect.pas' {FrmFinanceConnect},
   uFinanceConnectService in 'FinanceConnect\uFinanceConnectService.pas',
   uGridColumnFieldValuePropagator in 'RoomerUtils\uGridColumnFieldValuePropagator.pas',
-  ucxGridPopupMenuActivator in 'RoomerUtils\ucxGridPopupMenuActivator.pas';
+  ucxGridPopupMenuActivator in 'RoomerUtils\ucxGridPopupMenuActivator.pas',
+  uPCITokenReport in 'PCI\uPCITokenReport.pas' {frmPCITokenReport},
+  uFrmOptInMessage in 'OptIns\uFrmOptInMessage.pas' {FrmOptInMessage};
 
 {$R *.RES}
 
@@ -332,7 +334,7 @@ begin
     TSplashFormManager.Show;
 
     Application.CreateForm(TD, D);
-  D.ApplicationId := cOpenAPIApplicationID;
+    D.ApplicationId := cOpenAPIApplicationID;
 
     Application.CreateForm(TDReportData, DReportData);
     TSplashFormManager.UpdateProgress('Loading forms...');

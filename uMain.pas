@@ -3016,12 +3016,19 @@ var xml : String;
     rSet : TRoomerDataSet;
 begin
   xml := d.roomerMainDataSet.downloadUrlAsString(  d.roomerMainDataSet.RoomerUri + 'resapi/token');
-  rSet := d.roomerMainDataSet.ActivateNewDataset(xml);
   try
-    if NOT rSet.Eof then
-      g.qPCIContract := rSet['VALUE'];
-  finally
-    rSet.Free;
+    rSet := d.roomerMainDataSet.ActivateNewDataset(xml);
+    try
+      if NOT rSet.Eof then
+        g.qPCIContract := rSet['VALUE']
+      else
+        g.qPCIContract := 'RBB';
+    finally
+      rSet.Free;
+    end;
+  except
+   // Unable to reach Roomer - OR - old release of backend?
+    g.qPCIContract := 'RBB';
   end;
 end;
 
