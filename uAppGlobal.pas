@@ -374,7 +374,6 @@ begin
   end;
 end;
 
-{
 { TGlobalSettings }
 
 constructor TGlobalSettings.Create;
@@ -391,10 +390,10 @@ begin
 
   FPreviousGuestsReload := TGetSQLDataThreaded.Create;
   FPreviousGuestsSet := nil;
-  ReloadPreviousGuests;
 
   LoadStaticTables(true);
 
+  ReloadPreviousGuests;
 end;
 
 destructor TGlobalSettings.Destroy;
@@ -498,7 +497,8 @@ const PREV_GUESTS_SQL = 'SELECT DISTINCT * FROM ' +
                         'ANd active=1 ' +
                         ') xxx ';
 begin
-  FPreviousGuestsReload.execute(PREV_GUESTS_SQL, PreviousGuestsReloadFetchHandler);
+  if PMSSettings.VariousOptions.PreloadListOfPreviousGuests then
+    FPreviousGuestsReload.execute(PREV_GUESTS_SQL, PreviousGuestsReloadFetchHandler);
 end;
 
 procedure TGlobalSettings.PreviousGuestsReloadFetchHandler(Sender : TObject);

@@ -7109,6 +7109,8 @@ var
 
 begin
   // exit;
+  if Assigned(lLoginForm) then exit;
+
   FMessagesBeingDownloaded := true;
   timMessages.Enabled := false;
   try
@@ -7785,6 +7787,8 @@ procedure TfrmMain.timCheckSessionExpiredTimer(Sender: TObject);
 var
   res: String;
 begin
+  if Assigned(lLoginForm) then exit;
+
   if NOT d.roomerMainDataSet.LoggedIn then
     exit;
   timCheckSessionExpired.Enabled := false;

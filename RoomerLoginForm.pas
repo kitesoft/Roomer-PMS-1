@@ -198,6 +198,7 @@ begin
   try
     CheckConnections;
   finally
+    tmrCheckConnection.Interval := 20000;
     tmrCheckConnection.Enabled := true;
   end;
 end;
@@ -205,7 +206,10 @@ end;
 procedure TfrmRoomerLoginForm.CheckConnections;
 begin
   NoInternet := NOT d.roomerMainDataSet.IsConnectedToInternet;
-  ServerUnreachable := NOT d.roomerMainDataSet.RoomerPlatformAvailable;
+  if NoInternet then
+    ServerUnreachable := True
+  else
+    ServerUnreachable := NOT d.roomerMainDataSet.RoomerPlatformAvailable;
 end;
 
 procedure TfrmRoomerLoginForm.UpdateControls;

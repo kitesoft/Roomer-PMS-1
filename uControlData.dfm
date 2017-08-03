@@ -141,7 +141,7 @@ object frmControlData: TfrmControlData
         Top = 1
         Width = 1101
         Height = 743
-        ActivePage = tsInvEmail
+        ActivePage = tsCompany
         Align = alClient
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
@@ -784,7 +784,7 @@ object frmControlData: TfrmControlData
             Left = 447
             Top = 199
             Width = 471
-            Height = 104
+            Height = 130
             Caption = 'Options'
             TabOrder = 5
             SkinData.SkinSection = 'GROUPBOX'
@@ -849,10 +849,21 @@ object frmControlData: TfrmControlData
                 'Rates'
                 'Frontdesk')
             end
+            object cbxPreloadPreviousGuests: TsCheckBox
+              Left = 68
+              Top = 105
+              Width = 240
+              Height = 18
+              Caption = 'Preload ALL previous guests for lookup'
+              TabOrder = 3
+              SkinData.SkinSection = 'CHECKBOX'
+              ImgChecked = 0
+              ImgUnchecked = 0
+            end
           end
           object sGroupBox18: TsGroupBox
             Left = 449
-            Top = 309
+            Top = 335
             Width = 471
             Height = 105
             Caption = 'Various Services'
@@ -9199,9 +9210,10 @@ object frmControlData: TfrmControlData
                 Margins.Bottom = 10
                 Align = alLeft
                 BorderStyle = bsSingle
+                Color = clWhite
                 Columns = 1
                 Font.Charset = DEFAULT_CHARSET
-                Font.Color = clWindowText
+                Font.Color = 4013373
                 Font.Height = -12
                 Font.Name = 'Tahoma'
                 Font.Style = []

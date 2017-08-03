@@ -123,6 +123,19 @@ type
     property MasterRateCurrencyConvert: boolean read GetMasterRateCurrencyConvert write SetMasterRateCurrencyConvert;
   end;
 
+  TPMSSettingsVariousOptions = class(TPMSSettingsGroup)
+  private const
+    cVariousOptionsGroup = 'VARIOUS_OPTIONAL_SETTINGS';
+    cPreloadListOfPreviousGuests = 'PRELOAD_LIST_OF_PREVIOUS_GUESTS';
+  private
+    function GetPreloadListOfPreviousGuests: boolean;
+    procedure SetPreloadListOfPreviousGuests(const Value: boolean);
+  protected
+    function GetKeyGroup: string; override;
+  public
+    property PreloadListOfPreviousGuests: boolean read GetPreloadListOfPreviousGuests write SetPreloadListOfPreviousGuests;
+  end;
+
   TPMSSettingsReservationProfile = class(TPMSSettingsGroup)
   private const
     cReservationProfileGroup = 'RESERVATIONPROFILE_FUNCTIONS';
@@ -196,6 +209,7 @@ type
     FReservationProfileSettngs: TPMSSettingsReservationProfile;
     FBetaFunctionality: TPMSSettingsBetaFunctionality;
     FPMSSpecificSettings: TPMSPMSSpecificSettings;
+    FVariousOptions: TPMSSettingsVariousOptions;
   protected
 
     function GetMandatoryCheckinFields: TMandatoryCheckInFieldSet;
@@ -210,6 +224,7 @@ type
     property ReservationProfileSettings: TPMSSettingsReservationProfile read FReservationProfileSettngs;
     property BetaFunctionality: TPMSSettingsBetaFunctionality read FBetaFunctionality;
     property PMSSpecificSettings: TPMSPMSSpecificSettings read FPMSSpecificSettings;
+    property VariousOptions : TPMSSettingsVariousOptions read FVariousOptions;
 
     /// <summary>
     ///   Currently enabled TMandatoryCheckinFields in PMS settings
@@ -235,6 +250,7 @@ begin
   FReservationProfileSettngs := TPMSSettingsReservationProfile.Create(FPMSSettingsAccessor);
   FBetaFunctionality := TPMSSettingsBetaFunctionality.Create(FPMSSettingsAccessor);
   FPMSSpecificSettings := TPMSPMSSpecificSettings.Create(FPMSSettingsAccessor);
+  FVariousOptions := TPMSSettingsVariousOptions.Create(FPMSSettingsAccessor);
 
 end;
 
@@ -246,6 +262,7 @@ begin
   FReservationProfileSettngs.Free;
   FBetaFunctionality.Free;
   FPMSSpecificSettings.Free;
+  FVariousOptions.Free;
   inherited;
 end;
 
@@ -535,6 +552,23 @@ end;
 function TRoomRentPerDaySettingHelper.ToItemIndex: integer;
 begin
   Result := ord(Self);
+end;
+
+{ TPMSSettingsVariousOptions }
+
+function TPMSSettingsVariousOptions.GetKeyGroup: string;
+begin
+  result := cVariousOptionsGroup;
+end;
+
+function TPMSSettingsVariousOptions.GetPreloadListOfPreviousGuests: boolean;
+begin
+  Result := GetSettingsAsBoolean(cPreloadListOfPreviousGuests, False);
+end;
+
+procedure TPMSSettingsVariousOptions.SetPreloadListOfPreviousGuests(const Value: boolean);
+begin
+  SaveSetting(cPreloadListOfPreviousGuests, Value);
 end;
 
 end.

@@ -732,6 +732,7 @@ type
     lblPMSEntryPage: TsLabel;
     cbxPmsEntryPage: TsComboBox;
     cbxRoomRentPerDay: TsComboBox;
+    cbxPreloadPreviousGuests: TsCheckBox;
     procedure FormCreate(Sender : TObject);
     procedure FormClose(Sender : TObject; var Action : TCloseAction);
     procedure FormShow(Sender : TObject);
@@ -1561,6 +1562,9 @@ g.ReadWriteSettingsToRegistry(0);
     cbxCurrencyCalculation.Checked := glb.PMSSettings.MasterRatesSettings.MasterRateCurrencyConvert;
     cbAllowTogglingOfCityTaxesOnInvoice.Checked := glb.PMSSettings.InvoiceSettings.AllowTogglingOfCityTaxes;
 
+    cbxPreloadPreviousGuests.Checked := glb.PMSSettings.VariousOptions.PreloadListOfPreviousGuests;
+
+
     edtRIIndexRoomRent.Value := rSethotelconfigurations.FieldByName('RoomInvoiceRoomRentIndex').AsInteger + 1;
     edtRIIndexPosItems.Value := rSethotelconfigurations.FieldByName('RoomInvoicePosItemIndex').AsInteger + 1;
     edtGIIndexRoomRent.Value := rSethotelconfigurations.FieldByName('GroupInvoiceRoomRentIndex').AsInteger + 1;
@@ -2072,6 +2076,8 @@ begin
       glb.PMSSettings.MasterRatesSettings.MasterRateCurrency := ceMasterRateCurrency.Text;
       glb.PMSSettings.MasterRatesSettings.MasterRateCurrencyConvert := cbxCurrencyCalculation.Checked;
       glb.PMSSettings.InvoiceSettings.AllowTogglingOfCityTaxes := cbAllowTogglingOfCityTaxesOnInvoice.Checked;
+
+      glb.PMSSettings.VariousOptions.PreloadListOfPreviousGuests := cbxPreloadPreviousGuests.Checked;
 
 
       try
