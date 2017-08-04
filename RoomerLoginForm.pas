@@ -198,7 +198,7 @@ begin
   try
     CheckConnections;
   finally
-    tmrCheckConnection.Interval := 20000;
+    tmrCheckConnection.Interval := 5000;
     tmrCheckConnection.Enabled := true;
   end;
 end;
@@ -220,7 +220,7 @@ const
   cPlatformUnreachable = 'Roomer platform unreachable. ';
   cOfflineMessage = 'Roomer will not be able to work normally';
 begin
-  lOffLine := NoInternet or ServerUnreachable;
+  lOffLine := NoInternet; // or ServerUnreachable;
   btLogin.Enabled := not lOffLine;
   btLogin.Default := not lOffLine;
 

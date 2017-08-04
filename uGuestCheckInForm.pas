@@ -466,15 +466,18 @@ begin
     rSet.Next;
   end;
 
-  rSet := glb.PreviousGuestsSet;
-  rSet.First;
-  while NOT rSet.Eof do
+  if Assigned(glb.PreviousGuestsSet) then
   begin
-    item := TRoomerFilterItem.Create;
-    item.Key := rSet['ID'];
-    item.Line := format('%s%s%s%s', [rSet['Name'], getField('Address4'), getField('Country'), getField('Address1')]);
-    edFirstname.StoredItems.Add(item);
-    rSet.Next;
+    rSet := glb.PreviousGuestsSet;
+    rSet.First;
+    while NOT rSet.Eof do
+    begin
+      item := TRoomerFilterItem.Create;
+      item.Key := rSet['ID'];
+      item.Line := format('%s%s%s%s', [rSet['Name'], getField('Address4'), getField('Country'), getField('Address1')]);
+      edFirstname.StoredItems.Add(item);
+      rSet.Next;
+    end;
   end;
 
   cbActiveLiveSearch.Checked := false;
@@ -492,25 +495,28 @@ begin
   begin
     if message.WParam = 1 then
     begin
-      parseFirstAndLastNameFromFullname(glb.PreviousGuestsSet['Name'], s, s1);
-      edFirstname.Text := Trim(s);
-      edLastName.Text := Trim(s1);
-      edTitle.Text := glb.PreviousGuestsSet['title'];
-      edSSN.Text := glb.PreviousGuestsSet['SocialSecurityNumber'];
-      edVAT.Text := glb.PreviousGuestsSet['CompVATNumber'];
-      edFax.Text := glb.PreviousGuestsSet['CompFax'];
-      edAddress1.Text := glb.PreviousGuestsSet['Address1'];
-      edAddress2.Text := glb.PreviousGuestsSet['Address2'];
-      edZipcode.Text := glb.PreviousGuestsSet['Address3'];
-      edCity.Text := glb.PreviousGuestsSet['Address4'];
-      fraCountry.CountryCode := glb.PreviousGuestsSet['Country'];
-      edTel1.Text := glb.PreviousGuestsSet['Tel1'];
-      edMobile.Text := glb.PreviousGuestsSet['Tel2'];
-      edEmail.Text := glb.PreviousGuestsSet['Email'];
-      edCardId.Text := ResSetGuest['PassPortNumber'];
+      if Assigned(glb.PreviousGuestsSet) then
+      begin
+        parseFirstAndLastNameFromFullname(glb.PreviousGuestsSet['Name'], s, s1);
+        edFirstname.Text := Trim(s);
+        edLastName.Text := Trim(s1);
+        edTitle.Text := glb.PreviousGuestsSet['title'];
+        edSSN.Text := glb.PreviousGuestsSet['SocialSecurityNumber'];
+        edVAT.Text := glb.PreviousGuestsSet['CompVATNumber'];
+        edFax.Text := glb.PreviousGuestsSet['CompFax'];
+        edAddress1.Text := glb.PreviousGuestsSet['Address1'];
+        edAddress2.Text := glb.PreviousGuestsSet['Address2'];
+        edZipcode.Text := glb.PreviousGuestsSet['Address3'];
+        edCity.Text := glb.PreviousGuestsSet['Address4'];
+        fraCountry.CountryCode := glb.PreviousGuestsSet['Country'];
+        edTel1.Text := glb.PreviousGuestsSet['Tel1'];
+        edMobile.Text := glb.PreviousGuestsSet['Tel2'];
+        edEmail.Text := glb.PreviousGuestsSet['Email'];
+        edCardId.Text := ResSetGuest['PassPortNumber'];
 
-      if edCity.Text = '' then
-        edCity.Text := glb.PersonProfiles['City'];
+        if edCity.Text = '' then
+          try edCity.Text := glb.PersonProfiles['City']; except end;
+      end;
     end
     else
     begin
@@ -535,7 +541,7 @@ begin
       edEmail.Text := glb.PersonProfiles['Email'];
 
       if edCity.Text = '' then
-        edCity.Text := glb.PreviousGuestsSet['Address4'];
+        try edCity.Text := glb.PreviousGuestsSet['Address4']; except end;
     end;
 
     if fraCountry.CountryCode = '' then
@@ -551,7 +557,7 @@ begin
   if edFirstname.Items.IndexOf(edFirstname.Text) >= 0 then
   begin
     Key := TRoomerFilterItem(edFirstname.Items.Objects[edFirstname.ItemIndex]).Key; // edContactPerson.FKeys[idx];
-    if glb.LocateSpecificRecord(glb.PreviousGuestsSet, 'ID', Key) then
+    if Assigned(glb.PreviousGuestsSet) AND glb.LocateSpecificRecord(glb.PreviousGuestsSet, 'ID', Key) then
     begin
       postMessage(handle, WM_SET_COMBO_TEXT, 1, 0);
     end

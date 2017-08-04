@@ -491,7 +491,7 @@ function TRoomerDataSet.RoomerPlatformAvailable: boolean;
 begin
   Result := true;
   try
-    if GetAsString(RoomerUri + 'sessions/livecheck', '', true, 2000, false) = '' then;
+    if GetAsString(RoomerUri + 'sessions/livecheck', '', true, 1000, false) = '' then;
   except
     on E: Exception do
     begin

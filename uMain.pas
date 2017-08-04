@@ -3124,6 +3124,8 @@ begin
   if ForcefulRestart then
   begin
     result := true;
+    OpenAppSettings;
+    btnRefresh.Click;
     exit;
   end;
 
