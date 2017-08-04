@@ -361,7 +361,8 @@ end;
 procedure TFinanceConnectService.SaveFinanceConnectSettings(FinanceConnectSettings : TFinanceConnectSettings);
 var s : String;
 begin
-  s := Utf8ToString(d.roomerMainDataSet.downloadUrlAsStringUsingPut(d.roomerMainDataSet.RoomerUri + 'financeconnect', CreateSettingsXml(FinanceConnectSettings)));
+  s := CreateSettingsXml(FinanceConnectSettings);
+  s := Utf8ToString(d.roomerMainDataSet.downloadUrlAsStringUsingPut(d.roomerMainDataSet.RoomerUri + 'financeconnect', s));
 end;
 
 function TFinanceConnectService.RetrieveFinanceConnectKeypair(keyPairType: TKeyPairType): TKeyPairList;

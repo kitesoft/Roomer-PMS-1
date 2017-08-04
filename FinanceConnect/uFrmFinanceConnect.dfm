@@ -21,7 +21,7 @@ object FrmFinanceConnect: TFrmFinanceConnect
     Top = 0
     Width = 836
     Height = 584
-    ActivePage = sTabSheet2
+    ActivePage = sTabSheet1
     Align = alClient
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
@@ -38,10 +38,6 @@ object FrmFinanceConnect: TFrmFinanceConnect
       Font.Name = 'Tahoma'
       Font.Style = [fsBold]
       ParentFont = False
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object sLabel1: TsLabel
         Left = 45
         Top = 33
@@ -231,6 +227,20 @@ object FrmFinanceConnect: TFrmFinanceConnect
         Font.Name = 'Tahoma'
         Font.Style = []
       end
+      object sLabel15: TsLabel
+        Left = 314
+        Top = 499
+        Width = 48
+        Height = 13
+        Alignment = taRightJustify
+        Caption = 'Currency:'
+        ParentFont = False
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = []
+      end
       object cbxSystemSelection: TsComboBox
         Left = 200
         Top = 30
@@ -252,7 +262,7 @@ object FrmFinanceConnect: TFrmFinanceConnect
       object cbxActive: TsCheckBox
         Left = 199
         Top = 56
-        Width = 61
+        Width = 64
         Height = 17
         Caption = 'Active'
         Font.Charset = DEFAULT_CHARSET
@@ -458,6 +468,21 @@ object FrmFinanceConnect: TFrmFinanceConnect
         Enabled = False
         TabOrder = 14
         OnClick = btnSaveClick
+      end
+      object edCurrency: TsEdit
+        Left = 368
+        Top = 496
+        Width = 169
+        Height = 21
+        Color = clWhite
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        ParentFont = False
+        TabOrder = 15
+        OnChange = edServiceUrlChange
       end
     end
     object sTabSheet2: TsTabSheet

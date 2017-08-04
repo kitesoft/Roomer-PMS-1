@@ -496,9 +496,47 @@ const PREV_GUESTS_SQL = 'SELECT DISTINCT * FROM ' +
                         'AND (CONCAT(Tel1,Tel2,EmailAddress) <> '''') ' +
                         'ANd active=1 ' +
                         ') xxx ';
+  GUESTS_PROFILES_SQL = 'SELECT DISTINCT * FROM ' +
+                        '    (SELECT CONCAT(''PP'',pe.ID) AS ID, pe.title, pe.PassPortNumber, ' +
+                        '       CONCAT(IF(ISNULL(pe.FirstName) OR pe.Firstname='''', '''', pe.firstName), '' '', pe.Lastname)  AS Name, ' +
+                        '       '''' AS CustomerName, pe.Address1, pe.Address2, pe.Zip AS Address3, pe.City AS Address4, pe.Country, pe.TelLandLine AS Tel1, pe.TelMobile AS Tel2, pe.Email, pe.SocialSecurityNumber, pe.CompVATNumber, pe.CompFax ' +
+                        '	FROM personprofiles pe ' +
+                        '	WHERE (pe.Firstname <> '''' OR pe.Lastname <> '''') ' +
+                        '	AND pe.Address1 <> '''' ' +
+                        '	AND pe.Country <> '''' ' +
+                        '	AND (pe.TelLandLine <> '''' OR pe.TelMobile <> '''' OR pe.Email <> '''') ' +
+//                        '	UNION ALL ' +
+//                        '	SELECT ' +
+//                        '        CONCAT(''CU'', ID) AS ID, ' +
+//                        '            title, ' +
+//                        '            '''' AS PassPortNumber, ' +
+//                        '            Surname AS Name, ' +
+//                        '            Surname AS CustomerName, ' +
+//                        '            Address1, ' +
+//                        '            Address2, ' +
+//                        '            Address3, ' +
+//                        '            Address4, ' +
+//                        '            Country, ' +
+//                        '            Tel1, ' +
+//                        '            Tel2, ' +
+//                        '            EmailAddress, ' +
+//                        '            '''' AS a, ' +
+//                        '            '''' AS b, ' +
+//                        '            Fax ' +
+//                        '    FROM ' +
+//                        '        customers ' +
+//                        '    WHERE ' +
+//                        '        Surname <> '''' AND Address1 <> '''' ' +
+//                        '            AND Country <> '''' ' +
+//                        '            AND (CONCAT(Tel1, Tel2, EmailAddress) <> '''') ' +
+//                        '            AND active = 1 ' +
+                        ')xxx';
 begin
+  FreeAndNil(FPreviousGuestsSet);
   if PMSSettings.VariousOptions.PreloadListOfPreviousGuests then
-    FPreviousGuestsReload.execute(PREV_GUESTS_SQL, PreviousGuestsReloadFetchHandler);
+    FPreviousGuestsReload.execute(PREV_GUESTS_SQL, PreviousGuestsReloadFetchHandler)
+//  else
+//    FPreviousGuestsReload.execute(GUESTS_PROFILES_SQL, PreviousGuestsReloadFetchHandler);
 end;
 
 procedure TGlobalSettings.PreviousGuestsReloadFetchHandler(Sender : TObject);

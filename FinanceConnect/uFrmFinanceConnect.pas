@@ -102,6 +102,8 @@ type
     tvPayGroupsName: TcxGridDBColumn;
     tvPayGroupsBalanceAccount: TcxGridDBColumn;
     tvPayGroupsCashBook: TcxGridDBColumn;
+    sLabel15: TsLabel;
+    edCurrency: TsEdit;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure tabsMappingsChange(Sender: TObject);
@@ -126,6 +128,7 @@ type
     procedure LoadSet(rSet: TRoomerDataSet; KeyPairType : TKeyPairType; mem: TdxMemData; CodeField, NameField, MappedField : String);
     function CurrentTableView: TcxGridDBTableView;
     procedure ClearAllTableViewFilters;
+    procedure ReStartDataPreparation;
     { Private declarations }
   public
     { Public declarations }
@@ -151,7 +154,9 @@ implementation
 {$R *.dfm}
 
 uses uAppGlobal,
-     uFrmKeyPairSelector
+     uFrmKeyPairSelector,
+     uMain,
+     PrjConst
     ;
 
 procedure ManageFinanceConnect(page : TFinanceConnectPageIndex = PAGE_CONFIG; workingTab : TFinanceConnectPageIndex = TAB_CUSTOMERS);
@@ -236,8 +241,6 @@ procedure TFrmFinanceConnect.FormCreate(Sender: TObject);
 begin
   inherited;
   pgMain.ActivePageIndex := 0;
-  FinanceConnectService := TFinanceConnectService.Create;
-  FinanceConnectService.PrepareForMapping;
 end;
 
 procedure TFrmFinanceConnect.FormDestroy(Sender: TObject);
@@ -249,6 +252,15 @@ end;
 procedure TFrmFinanceConnect.FormShow(Sender: TObject);
 begin
   inherited;
+  ReStartDataPreparation;
+end;
+
+procedure TFrmFinanceConnect.ReStartDataPreparation;
+begin
+  inherited;
+  FinanceConnectService := TFinanceConnectService.Create;
+  FinanceConnectService.PrepareForMapping;
+
   LoadInfo;
   PrepareTabs;
   btnSave.Enabled := False;
@@ -542,6 +554,7 @@ begin
     edReceivableAccount.Text := receivableBalanceAccount;
     edPreInvoiceNumber.Text := preceedingInvoiceNumber;
     edSuccInvoiceNumber.Text := succeedingInvoiceNumber;
+    edCurrency.Text := usedCurrency;
   end;
 
   pgMain.ActivePageIndex := InitialPage;
@@ -552,11 +565,17 @@ end;
 
 procedure TFrmFinanceConnect.btnSaveClick(Sender: TObject);
 var FinanceConnectSettings : TFinanceConnectSettings;
+    KeyAndValue : TKeyAndValue;
 begin
   FinanceConnectSettings := FinanceConnectService.FinanceConnectConfiguration;
   with FinanceConnectSettings do
   begin
     systemActive := cbxActive.Checked;
+
+    KeyAndValue := SystemsLookupList[cbxSystemSelection.ItemIndex - 1];
+    systemCode := KeyAndValue.Key;
+
+    hotelId := d.roomerMainDataSet.hotelId;
     serviceUri := edServiceUrl.Text;
     username := edUsername.Text;
     password := edPassword.Text;
@@ -565,6 +584,7 @@ begin
     companyGuid := edCompany.Text;
     invoiceCode := edSalesCode.Text;
     cashCode := edCashCode.Text;
+    usedCurrency := edCurrency.Text;
     cashBalanceAccount := edCashAccount.Text;
     receivableBalanceAccount := edReceivableAccount.Text;
     preceedingInvoiceNumber := edPreInvoiceNumber.Text;
@@ -572,6 +592,17 @@ begin
   end;
 
   FinanceConnectService.SaveFinanceConnectSettings(FinanceConnectSettings);
+  glb.PMSSettings.FinanceConnect.FinanceConnectSystemCode := FinanceConnectSettings.systemCode;
+
+  ClearFinanceConnectServices;
+  ReStartDataPreparation;
+
+  if ActiveFinanceConnectSystemCode <> '' then
+  begin
+    frmMain.rbTabFinanceConnect.Caption := FinanceConnectService.SystemName;
+  end else
+    frmMain.rbTabFinanceConnect.Caption := GetTranslatedText('FinanceConnect_TabName');
+
 end;
 
 end.

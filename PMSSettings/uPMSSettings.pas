@@ -136,6 +136,19 @@ type
     property PreloadListOfPreviousGuests: boolean read GetPreloadListOfPreviousGuests write SetPreloadListOfPreviousGuests;
   end;
 
+  TPMSFinanceConnectOptions = class(TPMSSettingsGroup)
+  private const
+    cFinanceConnectOptionsGroup = 'FINANCE_CONNECT';
+    cFinanceConnectSystemCode = 'SYSTEM_CODE';
+  private
+    function GetFinanceConnectSystemCode: String;
+    procedure SetFinanceConnectSystemCode(const Value: String);
+  protected
+    function GetKeyGroup: string; override;
+  public
+    property FinanceConnectSystemCode: String read GetFinanceConnectSystemCode write SetFinanceConnectSystemCode;
+  end;
+
   TPMSSettingsReservationProfile = class(TPMSSettingsGroup)
   private const
     cReservationProfileGroup = 'RESERVATIONPROFILE_FUNCTIONS';
@@ -210,6 +223,7 @@ type
     FBetaFunctionality: TPMSSettingsBetaFunctionality;
     FPMSSpecificSettings: TPMSPMSSpecificSettings;
     FVariousOptions: TPMSSettingsVariousOptions;
+    FFinanceConnectOptions: TPMSFinanceConnectOptions;
   protected
 
     function GetMandatoryCheckinFields: TMandatoryCheckInFieldSet;
@@ -225,6 +239,7 @@ type
     property BetaFunctionality: TPMSSettingsBetaFunctionality read FBetaFunctionality;
     property PMSSpecificSettings: TPMSPMSSpecificSettings read FPMSSpecificSettings;
     property VariousOptions : TPMSSettingsVariousOptions read FVariousOptions;
+    property FinanceConnect : TPMSFinanceConnectOptions read FFinanceConnectOptions;
 
     /// <summary>
     ///   Currently enabled TMandatoryCheckinFields in PMS settings
@@ -251,6 +266,7 @@ begin
   FBetaFunctionality := TPMSSettingsBetaFunctionality.Create(FPMSSettingsAccessor);
   FPMSSpecificSettings := TPMSPMSSpecificSettings.Create(FPMSSettingsAccessor);
   FVariousOptions := TPMSSettingsVariousOptions.Create(FPMSSettingsAccessor);
+  FFinanceConnectOptions := TPMSFinanceConnectOptions.Create(FPMSSettingsAccessor);
 
 end;
 
@@ -263,6 +279,7 @@ begin
   FBetaFunctionality.Free;
   FPMSSpecificSettings.Free;
   FVariousOptions.Free;
+  FFinanceConnectOptions.Free;
   inherited;
 end;
 
@@ -569,6 +586,23 @@ end;
 procedure TPMSSettingsVariousOptions.SetPreloadListOfPreviousGuests(const Value: boolean);
 begin
   SaveSetting(cPreloadListOfPreviousGuests, Value);
+end;
+
+{ TPMSFinanceConnectOptions }
+
+function TPMSFinanceConnectOptions.GetKeyGroup: string;
+begin
+  result := cFinanceConnectOptionsGroup;
+end;
+
+function TPMSFinanceConnectOptions.GetFinanceConnectSystemCode: String;
+begin
+  Result := GetSettingsAsString(cFinanceConnectSystemCode, '');
+end;
+
+procedure TPMSFinanceConnectOptions.SetFinanceConnectSystemCode(const Value: String);
+begin
+  SaveSetting(cFinanceConnectSystemCode, Value);
 end;
 
 end.

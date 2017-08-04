@@ -1122,15 +1122,18 @@ begin
   begin
     if message.WParam = 1 then
     begin
-      edContactPerson1.Text := glb.PreviousGuestsSet['Name'];
-      edContactAddress1.Text := glb.PreviousGuestsSet['Address1'];
-      edContactAddress2.Text := glb.PreviousGuestsSet['Address2'];
-      edContactAddress3.Text := glb.PreviousGuestsSet['Address3'];
-      edContactAddress4.Text := glb.PreviousGuestsSet['Address4'];
-      edContactPhone.Text := glb.PreviousGuestsSet['Tel1'];
-      edContactMobile.Text := glb.PreviousGuestsSet['Tel2'];
-      edContactFax.Text := ''; // glb.PreviousGuestsSet['TelFax'];
-      edContactEmail.Text := glb.PreviousGuestsSet['Email'];
+      if Assigned(glb.PreviousGuestsSet) then
+      begin
+        edContactPerson1.Text := glb.PreviousGuestsSet['Name'];
+        edContactAddress1.Text := glb.PreviousGuestsSet['Address1'];
+        edContactAddress2.Text := glb.PreviousGuestsSet['Address2'];
+        edContactAddress3.Text := glb.PreviousGuestsSet['Address3'];
+        edContactAddress4.Text := glb.PreviousGuestsSet['Address4'];
+        edContactPhone.Text := glb.PreviousGuestsSet['Tel1'];
+        edContactMobile.Text := glb.PreviousGuestsSet['Tel2'];
+        edContactFax.Text := ''; // glb.PreviousGuestsSet['TelFax'];
+        edContactEmail.Text := glb.PreviousGuestsSet['Email'];
+      end;
     end
     else
     begin
@@ -1303,21 +1306,24 @@ begin
     rSet.next;
   end;
 
-  rSet := glb.PreviousGuestsSet;
-  fldID := rSet.fieldByName('ID');
-  fldName := rSet.FieldByName('Name');
-  fldAddress1 := rSet.FieldByName('Address1');
-  fldAddress4 := rSet.FieldByName('Address4');
-  fldCountry := rSet.FieldByName('Country');
-
-  rSet.First;
-  while NOT rSet.eof do
+  if Assigned(glb.PreviousGuestsSet) then
   begin
-    item := TRoomerFilterItem.Create;
-    item.Key := fldID.AsString;
-    item.Line := fldName.AsString + getField(fldAddress4) + getField(fldCountry) + getField(fldAddress1);
-    FPreviousGuestsList.AddObject(item.Line, item);
-    rSet.next;
+    rSet := glb.PreviousGuestsSet;
+    fldID := rSet.fieldByName('ID');
+    fldName := rSet.FieldByName('Name');
+    fldAddress1 := rSet.FieldByName('Address1');
+    fldAddress4 := rSet.FieldByName('Address4');
+    fldCountry := rSet.FieldByName('Country');
+
+    rSet.First;
+    while NOT rSet.eof do
+    begin
+      item := TRoomerFilterItem.Create;
+      item.Key := fldID.AsString;
+      item.Line := fldName.AsString + getField(fldAddress4) + getField(fldCountry) + getField(fldAddress1);
+      FPreviousGuestsList.AddObject(item.Line, item);
+      rSet.next;
+    end;
   end;
 
   edContactPerson1.Properties.LookupItems.BeginUpdate;
@@ -1327,7 +1333,6 @@ begin
   finally
     edContactPerson1.Properties.LookupItems.EndUpdate;
   end;
-
 end;
 
 procedure TfrmMakeReservationQuick.FormDestroy(Sender: TObject);
@@ -4706,7 +4711,7 @@ begin
   begin
     Key := TRoomerFilterItem(edContactPerson1.Properties.LookupItems.Objects[edContactPerson1.ItemIndex]).Key;
     // edContactPerson.FKeys[idx];
-    if glb.LocateSpecificRecord(glb.PreviousGuestsSet, 'ID', Key) then
+    if Assigned(glb.PreviousGuestsSet) AND glb.LocateSpecificRecord(glb.PreviousGuestsSet, 'ID', Key) then
     begin
       postMessage(handle, WM_SET_COMBO_TEXT, 1, 0);
     end
