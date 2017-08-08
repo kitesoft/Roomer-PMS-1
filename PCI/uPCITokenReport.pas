@@ -266,7 +266,8 @@ uses
   , uAppGlobal
   , uDImages
   , uMain
-  , uSQLUtils;
+  , uSQLUtils
+  , uFrmOptInMessage;
 
 
 {$R *.dfm}
@@ -274,11 +275,15 @@ uses
 procedure ShowPCITokenReport;
 var _frmPCITokenReport : TfrmPCITokenReport;
 begin
-  _frmPCITokenReport := TfrmPCITokenReport.Create(nil);
-  try
-    _frmPCITokenReport.ShowModal;
-  finally
-    _frmPCITokenReport.Free;
+  if glb.PCIContractNotOpen then
+     OpenOptInDialog(OITPCI)
+  else begin
+    _frmPCITokenReport := TfrmPCITokenReport.Create(nil);
+    try
+      _frmPCITokenReport.ShowModal;
+    finally
+      _frmPCITokenReport.Free;
+    end;
   end;
 end;
 
@@ -353,6 +358,7 @@ begin
   screen.Cursor := crHourGlass;
   mTokenUsage.DisableControls;
   try
+    d.roomerMainDataSet.SetTimeZoneComparedToUTC('');
     xml := d.roomerMainDataSet.downloadUrlAsString(  d.roomerMainDataSet.RoomerUri + format('resapi/token/usage/%s/%d', [cbxYear.Items[cbxYear.ItemIndex], cbxMonth.ItemIndex]));
     rSet := d.roomerMainDataSet.ActivateNewDataset(xml);
     try
@@ -364,26 +370,26 @@ begin
       begin
         mTokenUsage.Append;
 
-        mTokenUsage.FieldByName('Reservation').Asinteger := rSet['Reservation'];
-        mTokenUsage.FieldByName('Customer').AsString := rSet['Customer'];
-        mTokenUsage.FieldByName('Name').AsString := rSet['Name'];
-        mTokenUsage.FieldByName('GuestName').AsString := rSet['GuestName'];
-        mTokenUsage.FieldByName('VIEWS').AsInteger := rSet['VIEWS'];
-        mTokenUsage.FieldByName('CREATIONS').AsInteger := rSet['CREATIONS'];
-        mTokenUsage.FieldByName('USER_ID').AsString := rSet['USER_ID'];
-        mTokenUsage.FieldByName('IP_NUMBER').AsString := rSet['IP_NUMBER'];
-        mTokenUsage.FieldByName('MACHINE_NAME').AsString := rSet['MACHINE_NAME'];
-        mTokenUsage.FieldByName('EVENT').AsString := rSet['EVENT'];
-        mTokenUsage.FieldByName('COST_IN_EUR').AsFloat := rSet['COST_IN_EUR'];
-        mTokenUsage.FieldByName('TSTAMP').AsDateTime := rSet.fieldByName('TSTAMP').AsDateTime;
-        mTokenUsage.FieldByName('ContactName').AsString := rSet['ContactName'];
-        mTokenUsage.FieldByName('Arrival').AsDateTime := trunc(rSet.fieldByName('Arrival').AsDateTime);
-        mTokenUsage.FieldByName('Departure').AsDateTime := trunc(rSet.fieldByName('Departure').AsDateTime);
-        mTokenUsage.FieldByName('BookingId').AsString := rSet['BookingId'];
-        mTokenUsage.FieldByName('Room').AsString := rSet['Room'];
-        mTokenUsage.FieldByName('RoomType').AsString := rSet['RoomType'];
-        mTokenUsage.FieldByName('RoomClass').AsString := rSet['RoomClass'];
-        mTokenUsage.FieldByName('NumGuests').AsInteger := rSet['NumGuests'];
+        mTokenUsage.FieldByName('Reservation').Asinteger  := rSet['Reservation'];
+        mTokenUsage.FieldByName('Customer').AsString      := rSet['Customer'];
+        mTokenUsage.FieldByName('Name').AsString          := rSet['Name'];
+        mTokenUsage.FieldByName('GuestName').AsString     := rSet['GuestName'];
+        mTokenUsage.FieldByName('VIEWS').AsInteger        := rSet['VIEWS'];
+        mTokenUsage.FieldByName('CREATIONS').AsInteger    := rSet['CREATIONS'];
+        mTokenUsage.FieldByName('USER_ID').AsString       := rSet['USER_ID'];
+        mTokenUsage.FieldByName('IP_NUMBER').AsString     := rSet['IP_NUMBER'];
+        mTokenUsage.FieldByName('MACHINE_NAME').AsString  := rSet['MACHINE_NAME'];
+        mTokenUsage.FieldByName('EVENT').AsString         := rSet['EVENT'];
+        mTokenUsage.FieldByName('COST_IN_EUR').AsFloat    := rSet['COST_IN_EUR'];
+        mTokenUsage.FieldByName('TSTAMP').AsDateTime      := rSet.fieldByName('TSTAMP').AsDateTime;
+        mTokenUsage.FieldByName('ContactName').AsString   := rSet['ContactName'];
+        mTokenUsage.FieldByName('Arrival').AsDateTime     := trunc(rSet.fieldByName('Arrival').AsDateTime);
+        mTokenUsage.FieldByName('Departure').AsDateTime   := trunc(rSet.fieldByName('Departure').AsDateTime);
+        mTokenUsage.FieldByName('BookingId').AsString     := rSet['BookingId'];
+        mTokenUsage.FieldByName('Room').AsString          := rSet['Room'];
+        mTokenUsage.FieldByName('RoomType').AsString      := rSet['RoomType'];
+        mTokenUsage.FieldByName('RoomClass').AsString     := rSet['RoomClass'];
+        mTokenUsage.FieldByName('NumGuests').AsInteger    := rSet['NumGuests'];
 
         mTokenUsage.Post;
 
@@ -394,6 +400,7 @@ begin
     end;
   finally
     mTokenUsage.EnableControls;
+    d.roomerMainDataSet.SetTimeZoneComparedToUTC('UTC');
     screen.Cursor := crDefault;
   end;
 end;

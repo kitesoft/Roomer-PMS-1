@@ -50,7 +50,6 @@ object FrmOptInMessage: TFrmOptInMessage
     Default = True
     ModalResult = 1
     TabOrder = 0
-    ExplicitTop = 276
   end
   object lblLink: TLinkLabel
     Left = 8

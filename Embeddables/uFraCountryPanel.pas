@@ -9,9 +9,9 @@ uses
 type
   TfraCountryPanel = class(TFrame)
     pnlCountry: TsPanel;
-    lblCountryName: TsLabel;
     edCountryCode: TsEdit;
     btnGetCountry: TsButton;
+    lblCountryName: TLabel;
     procedure edCountryCodeChange(Sender: TObject);
     procedure btnGetCountryClick(Sender: TObject);
   private
@@ -88,6 +88,10 @@ var
   idx: integer;
 begin
   FValidCountry := not FInvalidCountryCodes.Find(edCountryCode.Text, idx) and CountryValidate(edCountryCode, lblCountryName);
+  if NOT FValidCountry then
+    lblCountryName.Font.Color := clRed
+  else
+    lblCountryName.Font.Color := clWindowText;
 //  if FValidCountry then
     if (FDisableEventCount = 0) and  Assigned(FOnCountryChange) then
       FOnCountryChange(Self);

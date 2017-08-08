@@ -190,6 +190,8 @@ uses uAppGlobal,
   , uRptReservationStatusPerDay
 
   , uFrmFinanceConnect
+  , uPCITokenReport
+  , uFrmOptInMessage
   ;
 
 
@@ -1957,6 +1959,9 @@ begin
   TFrmRptReservationStatusPerDay.Create(nil).Free;
 
   TFrmFinanceConnect.Create(nil).Free;
+
+  TFrmPCITokenReport.Create(nil).Free;
+  TFrmOptInMessage.Create(nil).Free;
 
 end;
 

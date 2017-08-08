@@ -364,6 +364,7 @@ inherited FrmPayCardView: TFrmPayCardView
       Cancel = True
       Caption = 'Cancel'
       TabOrder = 1
+      OnClick = sButton1Click
     end
   end
   object pnlClient: TsPanel [2]

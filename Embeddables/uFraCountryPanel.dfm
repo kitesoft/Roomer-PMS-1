@@ -18,21 +18,26 @@ object fraCountryPanel: TfraCountryPanel
     TabOrder = 0
     StyleElements = [seFont, seClient]
     SkinData.SkinSection = 'PANEL'
-    object lblCountryName: TsLabel
+    object lblCountryName: TLabel
       AlignWithMargins = True
       Left = 63
       Top = 3
-      Width = 4
-      Height = 13
-      Align = alLeft
-      Caption = '-'
-      ParentFont = False
-      Layout = tlCenter
+      Width = 140
+      Height = 14
+      Align = alClient
+      Alignment = taCenter
+      Caption = 'test'
+      Color = clBtnFace
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
       Font.Name = 'Tahoma'
       Font.Style = []
+      ParentColor = False
+      ParentFont = False
+      Transparent = True
+      ExplicitWidth = 19
+      ExplicitHeight = 13
     end
     object edCountryCode: TsEdit
       AlignWithMargins = True

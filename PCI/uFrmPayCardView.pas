@@ -19,6 +19,7 @@ type
     sButton1: TsButton;
     procedure btnContinueClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
+    procedure sButton1Click(Sender: TObject);
   private
     { Private declarations }
     FHotelId: String;
@@ -86,6 +87,11 @@ begin
   browser.Navigate(uri, Flags);
 end;
 
+
+procedure TFrmPayCardView.sButton1Click(Sender: TObject);
+begin
+  Close;
+end;
 
 procedure TFrmPayCardView.btnContinueClick(Sender: TObject);
 var gUserName, gPassword : String;

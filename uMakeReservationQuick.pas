@@ -733,6 +733,7 @@ type
     procedure tvRoomRatesNativeAmountGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
       var AProperties: TcxCustomEditProperties);
     procedure edContactPerson1PropertiesCloseUp(Sender: TObject);
+    procedure fraCountryedCountryCodeChange(Sender: TObject);
   private
     { Private declarations }
     zCustomerChanged: boolean;
@@ -800,6 +801,8 @@ type
     procedure SetProfileAlertVisibility;
     procedure SetRoomFilterOnlySelectedTypes(aOnlySelected: boolean);
     procedure EmptyQuickFind;
+    procedure ActivateNextButton;
+    function OkToActivateNextButton: Boolean;
 
   protected
     const
@@ -1438,6 +1441,12 @@ begin
 
 end;
 
+
+procedure TfrmMakeReservationQuick.fraCountryedCountryCodeChange(Sender: TObject);
+begin
+  fraCountry.edCountryCodeChange(Sender);
+  ActivateNextButton;
+end;
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 //  RoomRes grid and table
@@ -2367,8 +2376,9 @@ begin
   end;
 end;
 
-procedure TfrmMakeReservationQuick.btnNextClick(Sender: TObject);
+function TfrmMakeReservationQuick.OkToActivateNextButton : Boolean;
 begin
+  result := False;
   if not OutOfOrderBlocking then
   begin
     if not customerValidate then
@@ -2382,9 +2392,20 @@ begin
     if not PriceCodeValidate(edPcCode, clabPcCode, labPcCodeName) then
       exit;
   end;
-
   if pgcMain.ActivePageIndex = 3 then
     exit;
+
+  result := True;
+end;
+
+procedure TfrmMakeReservationQuick.ActivateNextButton;
+begin
+  btnNext.Enabled := OkToActivateNextButton;
+end;
+
+procedure TfrmMakeReservationQuick.btnNextClick(Sender: TObject);
+begin
+  if NOT OkToActivateNextButton then exit;
 
   if pgcMain.ActivePageIndex = 0 then
   begin
@@ -4391,6 +4412,7 @@ end;
 procedure TfrmMakeReservationQuick.edPackageChange(Sender: TObject);
 begin
   PackageValidate(edPackage, clabPcCode, labPackageDescription);
+  ActivateNextButton;
 end;
 
 procedure TfrmMakeReservationQuick.edPackageDblClick(Sender: TObject);
@@ -4637,6 +4659,7 @@ begin
     zCustomerChanged := true;
     initCustomer;
   end;
+  ActivateNextButton;
 end;
 
 procedure TfrmMakeReservationQuick.edCustomerDblClick(Sender: TObject);
@@ -4676,6 +4699,7 @@ end;
 procedure TfrmMakeReservationQuick.edMarketSegmentCodeChange(Sender: TObject);
 begin
   MarketSegmentValidate;
+  ActivateNextButton;
 end;
 
 procedure TfrmMakeReservationQuick.edMarketSegmentCodeDblClick(Sender: TObject);
@@ -4782,6 +4806,7 @@ begin
 
     labCurrencyRate.Caption := floatTostr(FCurrentCurrencyhandler.Rate);
   end;
+  ActivateNextButton;
 end;
 
 procedure TfrmMakeReservationQuick.edCurrencyDblClick(Sender: TObject);
@@ -4810,6 +4835,7 @@ end;
 procedure TfrmMakeReservationQuick.edPcCodeChange(Sender: TObject);
 begin
   PriceCodeValidate(edPcCode, clabPcCode, labPcCodeName);
+  ActivateNextButton;
 end;
 
 procedure TfrmMakeReservationQuick.edPcCodeDblClick(Sender: TObject);

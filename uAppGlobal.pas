@@ -287,6 +287,7 @@ Type
       property PMSSettings: TPmsSettings read FPmsSettings;
 
       function PCIContractOpenForChannel(channelId : Integer) : Boolean;
+      function PCIContractNotOpen: Boolean;
 
    published
       property PreviousGuestsSet : TRoomerDataSet read FPreviousGuestsSet;
@@ -1159,6 +1160,15 @@ begin
           Break;
         end;
   end;
+end;
+
+function TGlobalSettings.PCIContractNotOpen: Boolean;
+begin
+  result := (g.PCIContractWildcards.Count = 0) OR
+            (
+              (g.PCIContractWildcards.Count = 1) AND
+              (g.PCIContractWildcards[0] = 'RBB')
+            );
 end;
 
 procedure TGlobalSettings.PerformAuthenticationAssertion(Form: TForm);

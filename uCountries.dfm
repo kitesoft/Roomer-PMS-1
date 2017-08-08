@@ -51,7 +51,6 @@ object frmCountries: TfrmCountries
       BevelOuter = bvNone
       TabOrder = 1
       SkinData.SkinSection = 'PANEL'
-      ExplicitTop = -6
       DesignSize = (
         620
         88)
@@ -169,7 +168,7 @@ object frmCountries: TfrmCountries
         Left = 55
         Top = 63
         Width = 242
-        Height = 19
+        Height = 17
         Caption = 'Active (if checked then just active are visible'
         Checked = True
         State = cbChecked
@@ -526,7 +525,6 @@ object frmCountries: TfrmCountries
     Top = 184
     object prLink_grData: TdxGridReportLink
       Component = grData
-      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -539,7 +537,6 @@ object frmCountries: TfrmCountries
       PrinterPage.PageSize.Y = 297000
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
-      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
   end

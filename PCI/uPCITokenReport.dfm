@@ -31,6 +31,10 @@ object frmPCITokenReport: TfrmPCITokenReport
     object sheetMain: TsTabSheet
       Caption = 'Main'
       TabVisible = False
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Panel1: TsPanel
         Left = 0
         Top = 0
@@ -115,7 +119,6 @@ object frmPCITokenReport: TfrmPCITokenReport
         BorderStyle = cxcbsNone
         TabOrder = 1
         LookAndFeel.NativeStyle = False
-        ExplicitTop = 41
         object tvTokenUsage: TcxGridDBTableView
           OnDblClick = tvTokenUsageDblClick
           Navigator.Buttons.CustomButtons = <>
