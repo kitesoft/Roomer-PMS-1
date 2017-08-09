@@ -31,10 +31,6 @@ object frmPCITokenReport: TfrmPCITokenReport
     object sheetMain: TsTabSheet
       Caption = 'Main'
       TabVisible = False
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Panel1: TsPanel
         Left = 0
         Top = 0
@@ -78,7 +74,7 @@ object frmPCITokenReport: TfrmPCITokenReport
           AlignWithMargins = True
           Left = 405
           Top = 3
-          Width = 211
+          Width = 208
           Height = 37
           Caption = 'Page break before summary on report'
           Align = alLeft
@@ -119,6 +115,7 @@ object frmPCITokenReport: TfrmPCITokenReport
         BorderStyle = cxcbsNone
         TabOrder = 1
         LookAndFeel.NativeStyle = False
+        ExplicitTop = 41
         object tvTokenUsage: TcxGridDBTableView
           OnDblClick = tvTokenUsageDblClick
           Navigator.Buttons.CustomButtons = <>
@@ -273,17 +270,20 @@ object frmPCITokenReport: TfrmPCITokenReport
             Options.Editing = False
             Width = 166
           end
+          object tvTokenUsageCREATIONS: TcxGridDBColumn
+            Caption = 'Creations'
+            DataBinding.FieldName = 'CREATIONS'
+            Options.Editing = False
+            Width = 66
+          end
           object tvTokenUsageVIEWS: TcxGridDBColumn
             Caption = 'Views'
             DataBinding.FieldName = 'VIEWS'
             Options.Editing = False
             Width = 58
           end
-          object tvTokenUsageCREATIONS: TcxGridDBColumn
-            Caption = 'Creations'
-            DataBinding.FieldName = 'CREATIONS'
-            Options.Editing = False
-            Width = 66
+          object tvTokenUsageCharges: TcxGridDBColumn
+            DataBinding.FieldName = 'Charges'
           end
           object tvTokenUsageUSER_ID: TcxGridDBColumn
             Caption = 'User'
@@ -378,7 +378,7 @@ object frmPCITokenReport: TfrmPCITokenReport
         VerticalAlignment = taAlignTop
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
+        Font.Color = 4473924
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -412,7 +412,7 @@ object frmPCITokenReport: TfrmPCITokenReport
         VerticalAlignment = taAlignTop
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
+        Font.Color = 4473924
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -449,6 +449,7 @@ object frmPCITokenReport: TfrmPCITokenReport
     end
   end
   object mTokenUsage: TdxMemData
+    Active = True
     Indexes = <>
     SortOptions = []
     AfterScroll = mTokenUsageAfterScroll
@@ -478,6 +479,9 @@ object frmPCITokenReport: TfrmPCITokenReport
     object mTokenUsageUSER_ID: TWideStringField
       FieldName = 'USER_ID'
       Size = 25
+    end
+    object mTokenUsageCharges: TIntegerField
+      FieldName = 'Charges'
     end
     object mTokenUsageIP_NUMBER: TStringField
       FieldName = 'IP_NUMBER'

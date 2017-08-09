@@ -225,6 +225,8 @@ type
     ppLabel6: TppLabel;
     ppLabel11: TppLabel;
     ppDBText7: TppDBText;
+    mTokenUsageCharges: TIntegerField;
+    tvTokenUsageCharges: TcxGridDBColumn;
     procedure FormShow(Sender : TObject);
     procedure btnRefreshClick(Sender : TObject);
     procedure btnShowReservationClick(Sender : TObject);
@@ -376,6 +378,7 @@ begin
         mTokenUsage.FieldByName('GuestName').AsString     := rSet['GuestName'];
         mTokenUsage.FieldByName('VIEWS').AsInteger        := rSet['VIEWS'];
         mTokenUsage.FieldByName('CREATIONS').AsInteger    := rSet['CREATIONS'];
+        mTokenUsage.FieldByName('Charges').AsInteger      := rSet['CHARGES'];
         mTokenUsage.FieldByName('USER_ID').AsString       := rSet['USER_ID'];
         mTokenUsage.FieldByName('IP_NUMBER').AsString     := rSet['IP_NUMBER'];
         mTokenUsage.FieldByName('MACHINE_NAME').AsString  := rSet['MACHINE_NAME'];
