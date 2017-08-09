@@ -3,7 +3,7 @@ object frmPCITokenReport: TfrmPCITokenReport
   Top = 264
   Caption = 'Creditcard token usage reports'
   ClientHeight = 641
-  ClientWidth = 997
+  ClientWidth = 1116
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -22,24 +22,27 @@ object frmPCITokenReport: TfrmPCITokenReport
   object pageMain: TsPageControl
     Left = 0
     Top = 97
-    Width = 997
+    Width = 1116
     Height = 524
     ActivePage = sheetMain
     Align = alClient
     TabOrder = 0
     SkinData.SkinSection = 'PAGECONTROL'
+    ExplicitWidth = 997
     object sheetMain: TsTabSheet
       Caption = 'Main'
       TabVisible = False
+      ExplicitWidth = 989
       object Panel1: TsPanel
         Left = 0
         Top = 0
-        Width = 989
+        Width = 1108
         Height = 43
         Align = alTop
         BevelOuter = bvNone
         TabOrder = 0
         SkinData.SkinSection = 'PANEL'
+        ExplicitWidth = 989
         object btnExcelS1: TsButton
           AlignWithMargins = True
           Left = 3
@@ -108,7 +111,7 @@ object frmPCITokenReport: TfrmPCITokenReport
       object gTokenUsage: TcxGrid
         Left = 0
         Top = 43
-        Width = 989
+        Width = 1108
         Height = 471
         Align = alClient
         BevelOuter = bvNone
@@ -116,6 +119,7 @@ object frmPCITokenReport: TfrmPCITokenReport
         TabOrder = 1
         LookAndFeel.NativeStyle = False
         ExplicitTop = 41
+        ExplicitWidth = 989
         object tvTokenUsage: TcxGridDBTableView
           OnDblClick = tvTokenUsageDblClick
           Navigator.Buttons.CustomButtons = <>
@@ -153,6 +157,11 @@ object frmPCITokenReport: TfrmPCITokenReport
               Format = ',0;-,0'
               Kind = skSum
               Column = tvTokenUsageVIEWS
+            end
+            item
+              Format = ',0;-,0'
+              Kind = skSum
+              Column = tvTokenUsageCharges
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -208,6 +217,11 @@ object frmPCITokenReport: TfrmPCITokenReport
               Format = ',0;-,0'
               Kind = skSum
               Column = tvTokenUsageCREATIONS
+            end
+            item
+              Format = ',0;-,0'
+              Kind = skSum
+              Column = tvTokenUsageCharges
             end>
           DataController.Summary.SummaryGroups = <>
           OptionsBehavior.IncSearch = True
@@ -340,20 +354,22 @@ object frmPCITokenReport: TfrmPCITokenReport
   object dxStatusBar1: TsStatusBar
     Left = 0
     Top = 621
-    Width = 997
+    Width = 1116
     Height = 20
     Panels = <>
     SkinData.SkinSection = 'STATUSBAR'
+    ExplicitWidth = 997
   end
   object Panel3: TsPanel
     Left = 0
     Top = 0
-    Width = 997
+    Width = 1116
     Height = 97
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 2
     SkinData.SkinSection = 'PANEL'
+    ExplicitWidth = 997
     object cxGroupBox2: TsGroupBox
       Left = 7
       Top = 12
