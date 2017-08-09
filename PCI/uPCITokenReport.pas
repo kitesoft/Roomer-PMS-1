@@ -242,8 +242,6 @@ type
   private
     { Private declarations }
     procedure RefreshAll;
-//    procedure sumBilled;
-//    function getSortField : string;
     procedure ActivateButtons(default: Boolean);
 
   public
@@ -306,39 +304,6 @@ begin
     end;
   end;
 end;
-
-//function TfrmPCITokenReport.getSortField : string;
-//var
-//  i: Integer;
-//  AColumn  : TcxGridDBColumn;
-//  aName : string;
-//  s : string;
-//begin
-//  //
-//  s := '';
-//  for i := 0 to tvTokenUsage.ColumnCount -1 do
-//  begin
-//    aColumn := tvTokenUsage.Columns[i];
-//    aName   := aColumn.DataBinding.FieldName;
-//    s := aName;
-//    if aColumn.SortOrder = soNone then
-//    begin
-//    end else
-//    if aColumn.SortOrder = soAscending then
-//    begin
-//      s := s+';a';
-//      result := s;
-//      exit;
-//    end else
-//    if aColumn.SortOrder = soDescending then
-//    begin
-//      s := s+';d';
-//      result := s;
-//      exit;
-//    end;
-//  end;
-//end;
-//
 
 
 procedure TfrmPCITokenReport.mTokenUsageAfterScroll(DataSet: TDataSet);
@@ -499,8 +464,6 @@ begin
   mTokenUsage.DisableControls;
   try
     sFilter := tvTokenUsage.DataController.Filter.FilterText;
-//  if m.Active then m.Close;
-//  m.LoadFromDataSet(tvTokenUsage.DataController.DataSource.DataSet,[mtcpoStructure]);
 
     m := mTokenUsage;
     m.Filtered := false;
@@ -512,28 +475,8 @@ begin
       m.First;
     end;
 
-//  s := getSortField;
-//  sortfield := 'TSTAMP';
-//  isDescending := false;
-//
-//  if s <> '' then
-//  begin
-//    sortfield := _strTokenAt(S,';',0);
-//    isDescending := (_strTokenAt(S,';',1) = 'd');
-//  end;
-//
-//  m.SortedField := sortfield;
-//  if not isDescending then
-//  begin
-//    m.sort([]);
-//  end else
-//  begin
-//    m.sort([mtcoDescending]);
-//  end;
-
     ppSummaryBand1.NewPage := chkPageBreak.Checked;
 
-//  dplMTokenUsage.DataSource := mDS;
     if frmRptbViewer <> nil then
       freeandNil(frmRptbViewer);
     frmRptbViewer := TfrmRptbViewer.Create(nil);
