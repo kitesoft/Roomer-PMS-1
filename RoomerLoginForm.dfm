@@ -10,7 +10,7 @@ object frmRoomerLoginForm: TfrmRoomerLoginForm
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -10
-  Font.Name = 'Calibri'
+  Font.Name = 'Tahoma'
   Font.Style = []
   FormStyle = fsStayOnTop
   KeyPreview = True
@@ -21,11 +21,11 @@ object frmRoomerLoginForm: TfrmRoomerLoginForm
   OnKeyDown = FormKeyDown
   OnShow = FormShow
   PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 12
   object lbHotel: TLabel
-    Left = 97
+    Left = 94
     Top = 124
-    Width = 73
+    Width = 76
     Height = 18
     Margins.Left = 2
     Margins.Top = 2
@@ -36,14 +36,14 @@ object frmRoomerLoginForm: TfrmRoomerLoginForm
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -15
-    Font.Name = 'Calibri'
+    Font.Name = 'Tahoma'
     Font.Style = []
     ParentFont = False
   end
   object lbUsername: TLabel
-    Left = 103
+    Left = 98
     Top = 154
-    Width = 67
+    Width = 72
     Height = 18
     Margins.Left = 2
     Margins.Top = 2
@@ -54,14 +54,14 @@ object frmRoomerLoginForm: TfrmRoomerLoginForm
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -15
-    Font.Name = 'Calibri'
+    Font.Name = 'Tahoma'
     Font.Style = []
     ParentFont = False
   end
   object lbPassword: TLabel
-    Left = 107
+    Left = 104
     Top = 184
-    Width = 63
+    Width = 66
     Height = 18
     Margins.Left = 2
     Margins.Top = 2
@@ -72,7 +72,7 @@ object frmRoomerLoginForm: TfrmRoomerLoginForm
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -15
-    Font.Name = 'Calibri'
+    Font.Name = 'Tahoma'
     Font.Style = []
     ParentFont = False
   end
@@ -376,7 +376,7 @@ object frmRoomerLoginForm: TfrmRoomerLoginForm
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -15
-    Font.Name = 'Calibri'
+    Font.Name = 'Tahoma'
     Font.Style = []
     MaxLength = 5
     ParentFont = False
@@ -394,7 +394,7 @@ object frmRoomerLoginForm: TfrmRoomerLoginForm
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -15
-    Font.Name = 'Calibri'
+    Font.Name = 'Tahoma'
     Font.Style = []
     MaxLength = 10
     ParentFont = False
@@ -412,7 +412,7 @@ object frmRoomerLoginForm: TfrmRoomerLoginForm
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -15
-    Font.Name = 'Calibri'
+    Font.Name = 'Tahoma'
     Font.Style = []
     MaxLength = 64
     ParentFont = False
@@ -444,15 +444,9 @@ object frmRoomerLoginForm: TfrmRoomerLoginForm
       Align = alRight
       Caption = 'Login'
       Default = True
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -13
-      Font.Name = 'Calibri'
-      Font.Style = []
       ImageIndex = 26
       Images = DImages.PngImageList1
       ModalResult = 1
-      ParentFont = False
       TabOrder = 0
       OnClick = btLoginClick
       SkinData.SkinSection = 'BUTTON'
@@ -470,15 +464,9 @@ object frmRoomerLoginForm: TfrmRoomerLoginForm
       Align = alRight
       Cancel = True
       Caption = 'Cancel'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -13
-      Font.Name = 'Calibri'
-      Font.Style = []
       ImageIndex = 10
       Images = DImages.PngImageList1
       ModalResult = 2
-      ParentFont = False
       TabOrder = 1
       OnClick = btCancelClick
       SkinData.SkinSection = 'BUTTON'
