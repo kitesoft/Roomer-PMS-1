@@ -2709,8 +2709,6 @@ begin
 
   UpdateGrid;
   SetCurrentVisible;
-
-  UpdateInvoiceIndexTabs;
   UpdateControls;
 end;
 

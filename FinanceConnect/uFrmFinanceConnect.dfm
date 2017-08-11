@@ -2,8 +2,8 @@ object FrmFinanceConnect: TFrmFinanceConnect
   Left = 0
   Top = 0
   Caption = 'Finance Connect'
-  ClientHeight = 584
-  ClientWidth = 836
+  ClientHeight = 589
+  ClientWidth = 876
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,17 +19,18 @@ object FrmFinanceConnect: TFrmFinanceConnect
   object pgMain: TsPageControl
     Left = 0
     Top = 0
-    Width = 836
-    Height = 584
+    Width = 876
+    Height = 589
     ActivePage = sTabSheet1
     Align = alClient
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -13
     Font.Name = 'Tahoma'
-    Font.Style = [fsBold]
+    Font.Style = []
     ParentFont = False
     TabOrder = 0
+    ExplicitWidth = 733
     object sTabSheet1: TsTabSheet
       Caption = 'Settings'
       Font.Charset = DEFAULT_CHARSET
@@ -38,6 +39,7 @@ object FrmFinanceConnect: TFrmFinanceConnect
       Font.Name = 'Tahoma'
       Font.Style = [fsBold]
       ParentFont = False
+      ExplicitWidth = 725
       object sLabel1: TsLabel
         Left = 45
         Top = 33
@@ -138,7 +140,7 @@ object FrmFinanceConnect: TFrmFinanceConnect
       end
       object sLabel8: TsLabel
         Left = 268
-        Top = 330
+        Top = 346
         Width = 94
         Height = 13
         Alignment = taRightJustify
@@ -151,8 +153,8 @@ object FrmFinanceConnect: TFrmFinanceConnect
         Font.Style = []
       end
       object sLabel9: TsLabel
-        Left = 200
-        Top = 296
+        Left = 199
+        Top = 305
         Width = 212
         Height = 16
         Caption = 'Book keeping codes and settings'
@@ -189,7 +191,7 @@ object FrmFinanceConnect: TFrmFinanceConnect
       end
       object sLabel12: TsLabel
         Left = 225
-        Top = 357
+        Top = 373
         Width = 137
         Height = 13
         Alignment = taRightJustify
@@ -202,12 +204,12 @@ object FrmFinanceConnect: TFrmFinanceConnect
         Font.Style = []
       end
       object sLabel13: TsLabel
-        Left = 207
-        Top = 385
-        Width = 155
+        Left = 205
+        Top = 401
+        Width = 157
         Height = 13
         Alignment = taRightJustify
-        Caption = 'Text preceeding nvoice number:'
+        Caption = 'Text preceeding invoice number:'
         ParentFont = False
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
@@ -216,12 +218,12 @@ object FrmFinanceConnect: TFrmFinanceConnect
         Font.Style = []
       end
       object sLabel14: TsLabel
-        Left = 207
-        Top = 413
-        Width = 155
+        Left = 205
+        Top = 429
+        Width = 157
         Height = 13
         Alignment = taRightJustify
-        Caption = 'Text succeeding nvoice number:'
+        Caption = 'Text succeeding invoice number:'
         ParentFont = False
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
@@ -231,7 +233,7 @@ object FrmFinanceConnect: TFrmFinanceConnect
       end
       object sLabel15: TsLabel
         Left = 314
-        Top = 441
+        Top = 457
         Width = 48
         Height = 13
         Alignment = taRightJustify
@@ -264,14 +266,14 @@ object FrmFinanceConnect: TFrmFinanceConnect
       object cbxActive: TsCheckBox
         Left = 199
         Top = 56
-        Width = 61
+        Width = 55
         Height = 17
         Caption = 'Active'
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
         Font.Height = -11
         Font.Name = 'Tahoma'
-        Font.Style = [fsBold]
+        Font.Style = []
         ParentFont = False
         TabOrder = 1
         OnClick = cbxActiveClick
@@ -373,7 +375,7 @@ object FrmFinanceConnect: TFrmFinanceConnect
       end
       object edSalesCode: TsEdit
         Left = 368
-        Top = 327
+        Top = 343
         Width = 169
         Height = 21
         Color = clWhite
@@ -421,7 +423,7 @@ object FrmFinanceConnect: TFrmFinanceConnect
       end
       object edReceivableAccount: TsEdit
         Left = 368
-        Top = 354
+        Top = 370
         Width = 169
         Height = 21
         Color = clWhite
@@ -437,7 +439,7 @@ object FrmFinanceConnect: TFrmFinanceConnect
       end
       object edPreInvoiceNumber: TsEdit
         Left = 368
-        Top = 382
+        Top = 398
         Width = 169
         Height = 21
         Color = clWhite
@@ -452,7 +454,7 @@ object FrmFinanceConnect: TFrmFinanceConnect
       end
       object edSuccInvoiceNumber: TsEdit
         Left = 368
-        Top = 410
+        Top = 426
         Width = 169
         Height = 21
         Color = clWhite
@@ -467,7 +469,7 @@ object FrmFinanceConnect: TFrmFinanceConnect
       end
       object btnSave: TsButton
         Left = 630
-        Top = 497
+        Top = 521
         Width = 75
         Height = 25
         Caption = 'Save'
@@ -477,7 +479,7 @@ object FrmFinanceConnect: TFrmFinanceConnect
       end
       object edCurrency: TsEdit
         Left = 368
-        Top = 438
+        Top = 454
         Width = 169
         Height = 21
         Color = clWhite
@@ -499,11 +501,12 @@ object FrmFinanceConnect: TFrmFinanceConnect
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
+      ExplicitWidth = 725
       object tabsMappings: TsTabControl
         AlignWithMargins = True
         Left = 3
         Top = 20
-        Width = 822
+        Width = 862
         Height = 25
         Margins.Top = 20
         Align = alTop
@@ -511,7 +514,7 @@ object FrmFinanceConnect: TFrmFinanceConnect
         Font.Color = clWindowText
         Font.Height = -13
         Font.Name = 'Tahoma'
-        Font.Style = [fsBold]
+        Font.Style = []
         ParentFont = False
         Style = tsButtons
         TabOrder = 0
@@ -522,6 +525,7 @@ object FrmFinanceConnect: TFrmFinanceConnect
           'Pay groups')
         TabIndex = 0
         OnChange = tabsMappingsChange
+        ExplicitWidth = 719
       end
       object pnl0: TsPanel
         Left = 2
@@ -679,15 +683,16 @@ object FrmFinanceConnect: TFrmFinanceConnect
       object sPanel1: TsPanel
         Left = 0
         Top = 48
-        Width = 828
+        Width = 868
         Height = 36
         Align = alTop
         TabOrder = 4
+        ExplicitWidth = 725
         object edtSearch: TButtonedEdit
           AlignWithMargins = True
           Left = 4
           Top = 6
-          Width = 820
+          Width = 860
           Height = 24
           Margins.Top = 5
           Margins.Bottom = 5
@@ -708,6 +713,7 @@ object FrmFinanceConnect: TFrmFinanceConnect
           TabOrder = 0
           OnChange = edtSearchChange
           OnRightButtonClick = edtSearchRightButtonClick
+          ExplicitWidth = 717
           ExplicitHeight = 21
         end
       end
@@ -783,8 +789,8 @@ object FrmFinanceConnect: TFrmFinanceConnect
     Indexes = <>
     SortOptions = []
     BeforePost = memCustomersBeforePost
-    Left = 16
-    Top = 360
+    Left = 504
+    Top = 40
     object memCustomersCode: TWideStringField
       FieldName = 'Code'
       Size = 40
@@ -800,16 +806,16 @@ object FrmFinanceConnect: TFrmFinanceConnect
   end
   object dsCustomers: TDataSource
     DataSet = memCustomers
-    Left = 16
-    Top = 408
+    Left = 504
+    Top = 88
   end
   object memItems: TdxMemData
     Active = True
     Indexes = <>
     SortOptions = []
     BeforePost = memItemsBeforePost
-    Left = 80
-    Top = 360
+    Left = 568
+    Top = 40
     object memItemsCode: TWideStringField
       FieldName = 'Code'
       Size = 40
@@ -825,16 +831,16 @@ object FrmFinanceConnect: TFrmFinanceConnect
   end
   object dsItems: TDataSource
     DataSet = memItems
-    Left = 80
-    Top = 408
+    Left = 568
+    Top = 88
   end
   object memVats: TdxMemData
     Active = True
     Indexes = <>
     SortOptions = []
     BeforePost = memVatsBeforePost
-    Left = 144
-    Top = 360
+    Left = 632
+    Top = 40
     object memVatsCode: TWideStringField
       FieldName = 'Code'
       Size = 40
@@ -850,8 +856,8 @@ object FrmFinanceConnect: TFrmFinanceConnect
   end
   object dsVats: TDataSource
     DataSet = memVats
-    Left = 144
-    Top = 408
+    Left = 632
+    Top = 88
   end
   object memPayGroups: TdxMemData
     Indexes = <>

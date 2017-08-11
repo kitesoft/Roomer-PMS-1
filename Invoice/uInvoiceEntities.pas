@@ -260,7 +260,7 @@ begin
     sql := sql + '     sum(coalesce(RoomrentTotal,0)) as RoomrentTotal  '#10;
     sql := sql + ' from '#10;
     sql := sql + '  (select '#10;
-    sql := sql + '       il.InvoiceIndex, '#10;
+    sql := sql + '       il.InvoiceIndex as invoiceindex, '#10;
     sql := sql + '       sum(coalesce(il.total, 0)) as invoiceLinesTotal, '#10;
     sql := sql + '       0 as Roomrenttotal '#10;
     sql := sql + '   from invoicelines il '#10;
@@ -270,29 +270,19 @@ begin
     sql := sql + '   group by invoiceindex '#10;
     sql := sql + '   union '#10;
     sql := sql + '    select '#10;
-    sql := sql + '         rr.invoiceindex, '#10;
+    sql := sql + '         coalesce(rd.invoiceindex, rr.invoiceindex) as rateInvIndex, '#10;
     sql := sql + '         0, '#10;
     sql := sql + '         sum(coalesce(rd.roomrate,0)) '#10;
     sql := sql + '    from roomreservations rr '#10;
-    sql := sql + '    join roomsdate rd on rd.roomreservation=rr.roomreservation and (rd.invoiceindex is null or rd.invoiceindex=rr.invoiceindex) '#10;
-    sql := sql + '    where rr.reservation=%d'#10;
-    sql := sql + '    and rr.roomreservation = %d '#10;
-    sql := sql + '    group by invoiceindex '#10;
-    sql := sql + '    union '#10;
-    sql := sql + '    select '#10;
-    sql := sql + '         rd.invoiceindex, '#10;
-    sql := sql + '         0, '#10;
-    sql := sql + '         sum(coalesce(rd.roomrate,0)) '#10;
-    sql := sql + '    from roomsdate rd '#10;
-    sql := sql + '    join roomreservations rr on rd.roomreservation=rr.roomreservation and (rd.invoiceindex is not null and rd.invoiceindex <> rr.invoiceindex) '#10;
-    sql := sql + '    where rr.reservation=%d'#10;
-    sql := sql + '    and rr.roomreservation = %d '#10;
-    sql := sql + '    group by invoiceindex '#10;
+    sql := sql + '    join roomsdate rd on rd.roomreservation=rr.roomreservation '#10;
+    sql := sql + '    where rr.reservation=%d '#10;
+    sql := sql + '    and (rr.roomreservation = %d or (%d=0 and rr.groupaccount)) '#10;
+    sql := sql + '    group by rateInvIndex '#10;
     sql := sql + '     ) u '#10;
     sql := sql + ' where invoicelinestotal <> 0 or roomrenttotal <> 0 '#10;
     sql := sql + ' group by invoiceindex '#10;
 
-    sql := format(sql, [aReservation, aRoomReservation, aReservation, aRoomReservation, aReservation, aRoomReservation]);
+    sql := format(sql, [aReservation, aRoomReservation, aReservation, aRoomReservation, aRoomReservation]);
 
     hData.rSet_bySQL(rSet, sql);
     rSet.First;
