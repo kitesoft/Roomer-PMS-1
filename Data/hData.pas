@@ -2917,7 +2917,7 @@ begin
 
     ManualChannelId := 0;
     ratePlanCode := '';
-
+    RoomRentPaymentInvoice := -1;
   end;
 end;
 
