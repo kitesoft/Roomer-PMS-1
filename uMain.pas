@@ -1878,6 +1878,7 @@ begin
       'User ' + d.roomerMainDataSet.userName + ' Successfully with FORCE logged out.');
   end;
   LoggedIn := false;
+  __lblUsername.Caption := 'N/A';
   d.roomerMainDataSet.LoggedIn := False;
   EmptyStringGrid(grPeriodRooms);
   EmptyStringGrid(grOneDayRooms);
@@ -3215,32 +3216,6 @@ begin
 
     ViewMode := vmNone;
     tabsView.TabIndex := glb.PMSSettings.PMSSpecificSettings.UserHomePage - 1;
-//    case tabsView.TabIndex of
-//      0 : begin
-//            pageMainGrids.ActivePage := tabOneDayView;
-//            ViewMode := vmOneDay;
-//          end;
-//      1 : begin
-//            pageMainGrids.ActivePage := tabPeriod;
-//            ViewMode := vmPeriod;
-//          end;
-//      2 : begin
-//            pageMainGrids.ActivePage := tabGuestList;
-//            ViewMode := vmGuestList;
-//          end;
-//      3 : begin
-//            pageMainGrids.ActivePage := tabDashboard;
-//            ViewMode := vmDashboard;
-//          end;
-//      4 : begin
-//            pageMainGrids.ActivePage := tabRateQuery;
-//            ViewMode := vmRateQuery;
-//          end;
-//      5 : begin
-//            pageMainGrids.ActivePage := tabFrontDesk;
-//            ViewMode := vmFrontDesk;
-//          end;
-//    end;
 
     FDayViewSizesRead := False;
 
@@ -10317,14 +10292,6 @@ end;
 
 procedure TfrmMain.btnReDownloadRoomerClick(Sender: TObject);
 begin
-//  LoginCancelled := true;
-//  downloadCurrentVersion(handle, d.roomerMainDataSet);
-//  try
-//    d.roomerMainDataSet.LOGOUT;
-//    __lblUsername.Caption := 'N/A';
-//  except
-//  end;
-//  Close;
 {$IFNDEF DEBUG}
   if RoomerVersionManagement.VersionManagerActive then
   begin
@@ -11334,7 +11301,6 @@ function TfrmMain._Logout(AlreadyInactive: boolean = false; const AutoLogin: Str
 begin
   performClearHotel(NOT AlreadyInactive);
   try
-    __lblUsername.Caption := 'N/A';
     result := StartHotel(AlreadyInactive, AutoLogin) or LoginCancelled;
   finally
     panelHide.Hide;
