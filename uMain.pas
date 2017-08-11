@@ -971,6 +971,7 @@ type
     procedure btnHomeClick(Sender: TObject);
     procedure btnManageFinanceConnectClick(Sender: TObject);
     procedure btnCreditcardTokenUsageClick(Sender: TObject);
+    procedure gridSectionChanged(Sender: TObject; ALeft, ATop, ARight, ABottom: Integer);
 
   protected
     procedure CreateParams(var Params: TCreateParams); override;
@@ -1352,6 +1353,7 @@ type
     function ReservationtInGroupList(resId: integer): boolean;
     function GroupsFilterActive: boolean;
     procedure EnableDisableFunctions(Enable: boolean);
+    procedure EnableDisableQuickReservation;
     procedure AutoResizeOneDayGrid;
     procedure ClearGroupList;
     procedure ClearFreeRooms;
@@ -2541,6 +2543,8 @@ procedure TfrmMain.tabsViewChange(Sender: TObject);
 begin
   SetViews(tabsView.TabIndex + 1);
   EnableDisableFunctions(tabsView.TabIndex IN [0,1]);
+
+  // TODO why do this for all tabs?
   PostMessage(handle, WM_REFRESH_PERIOD_VIEW_BOTTOM, 0, 0);
 end;
 
@@ -5884,8 +5888,8 @@ begin
     aRoom := ActiveGrid.cells[roomCol, ARow]
   else
     aRoom := '';
-  btnQuicReservation.Enabled := noRes AND (aRoom <> '');
-  QuickReservation1.Enabled := btnQuicReservation.Enabled;
+//  btnQuicReservation.Enabled := noRes AND (aRoom <> '');
+//  QuickReservation1.Enabled := btnQuicReservation.Enabled;
   zEmptyRoomNumber := aRoom;
   zOneDay_ResIndex := 0;
   if noRes then
@@ -5939,7 +5943,6 @@ begin
   btnClosedInvoicesThisreservation.Enabled := Enable AND (NOT OffLineMode);
   btnClosedInvoicesThisCustomer.Enabled := Enable AND (NOT OffLineMode);
 
-//  btnQuicReservation.Enabled := Enable AND (NOT OffLineMode);
   btnConfirmAllottedBooking.Enabled := Enable AND (NOT OffLineMode);
   btnModifyReservation.Enabled := Enable AND (NOT OffLineMode);
   btnRoomReservation.Enabled := Enable AND (NOT OffLineMode);
@@ -5954,6 +5957,67 @@ begin
   btnCheckOutRoom.Enabled := Enable;
   btnProvideARoom.Enabled := Enable;
   btnSetNoroom.Enabled := Enable AND (NOT OffLineMode);
+  EnableDisableQuickReservation;
+end;
+
+procedure TfrmMain.EnableDisableQuickReservation;
+var
+  lEnabled: boolean;
+  i: integer;
+  lCoord: TGridCoord;
+  lRoomCol: integer;
+  lDepartureCol: integer;
+begin
+  //TODO Create TAction for quick reservation and use UpdateState to enable / disable
+
+  // Enabled the quick reservation button if Day or period view is active and a valid selection is made in the active grid
+
+  lEnabled := False;
+  if not OfflineMode then
+  begin
+    case ViewMode of
+      vmOneDay: begin
+                  lEnabled := grOneDayRooms.SelectedCellsCount > 0;
+                  for i := 0 to grOneDayRooms.SelectedCellsCount-1 do
+                  begin
+                    lCoord := grOneDayRooms.SelectedCell[i];
+                    if (lCoord.X < Splitter) then
+                    begin
+                      lRoomCol := Left_Room;
+                      lDepartureCol := Left_Departure;
+                    end
+                    else
+                    begin
+                      lRoomCol := Right_room;
+                      lDepartureCol := Right_Departure;
+                    end;
+
+                    if (grOneDayRooms.Cells[lRoomCol, lCoord.Y] = '') or
+                       ((grOneDayRooms.Cells[lDepartureCol, lCoord.Y] <> '') and
+                        (strToDate(grOneDayRooms.Cells[lDepartureCol, lCoord.Y]) <> zOneDay_dtDate)) then
+                    begin
+                      lEnabled := false;
+                      Break;
+                    end;
+                  end;
+                end;
+      vmPeriod: begin
+                  lEnabled := grPeriodRooms.SelectedCellsCount > 0;
+                  for i := 0 to grPeriodRooms.SelectedCellsCount-1 do
+                  begin
+                    lCoord := grPeriodRooms.SelectedCell[i];
+                    if (grPeriodRooms.cells[lCoord.X, lCoord.Y] <> '') then
+                    begin
+                      lEnabled := false;
+                      Break;
+                    end;
+                  end;
+                end;
+    end;
+  end;
+
+  btnQuicReservation.Enabled := lEnabled;
+  QuickReservation1.Enabled := lEnabled;
 end;
 
 /// ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -8649,6 +8713,11 @@ procedure TfrmMain.grPeriodRoomsResize(Sender: TObject);
 begin
   grAutoSizeGrids;
   AutoSizePeriodColumns;
+end;
+
+procedure TfrmMain.gridSectionChanged(Sender: TObject; ALeft, ATop, ARight, ABottom: Integer);
+begin
+  EnableDisableQuickReservation;
 end;
 
 procedure TfrmMain.grPeriodRoomsStartDrag(Sender: TObject; var DragObject: TDragObject);
@@ -12272,18 +12341,22 @@ begin
   begin
     // Get selected rooms from left col
     isSelected := false;
-    for iCol := 0 to 5 do
-    begin
-      if grOneDayRooms.SelectedCells[iCol, iRow] then
-        isSelected := true;
-    end;
+    aRoom := grOneDayRooms.cells[0, iRow];
+    if not aRoom.IsEmpty then
+      for iCol := 0 to 5 do
+      begin
+        if grOneDayRooms.SelectedCells[iCol, iRow] then
+        begin
+          isSelected := true;
+          Break;
+        end;
+      end;
 
     if isSelected then
     begin
       sDepartureCell := trim(grOneDayRooms.cells[4, iRow]);
       if (sDepartureCell = '') or (strToDate(sDepartureCell) = zOneDay_dtDate) then
       begin
-        aRoom := grOneDayRooms.cells[0, iRow];
         oSelectedRoomItem := TnewRoomReservationItem.Create(aRoom, Arrival, Departure);
         aNewReservation.newRoomReservations.RoomItemsList.Add(oSelectedRoomItem);
         inc(Result);
@@ -12292,18 +12365,22 @@ begin
 
     // Get selected rooms from right col
     isSelected := false;
-    for iCol := 7 to 12 do
-    begin
-      if grOneDayRooms.SelectedCells[iCol, iRow] then
-        isSelected := true;
-    end;
+    aRoom := grOneDayRooms.cells[7, iRow];
+    if not aRoom.IsEmpty then
+      for iCol := 7 to 12 do
+      begin
+        if grOneDayRooms.SelectedCells[iCol, iRow] then
+        begin
+          isSelected := true;
+          Break;
+        end;
+      end;
 
     if isSelected then
     begin
       sDepartureCell := trim(grOneDayRooms.cells[11, iRow]);
       if (sDepartureCell = '') or (strToDate(sDepartureCell) = zOneDay_dtDate) then
       begin
-        aRoom := grOneDayRooms.cells[7, iRow];
         oSelectedRoomItem := TnewRoomReservationItem.Create(aRoom, Arrival, Departure);
         aNewReservation.newRoomReservations.RoomItemsList.Add(oSelectedRoomItem);
         inc(Result);
