@@ -5056,12 +5056,7 @@ begin
     if invType = 2 then
        _iRoomReservation := 0;
 
-{$IFDEF UseEditInvoce2015}
-    if IsControlKeyPressed then
-      EditInvoice2015(_iReservation, _iRoomReservation, 0, false, false, '', g.qExpandRoomRentOnInvoice)
-    else
-{$ENDIF}
-      EditInvoice(_iReservation, _iRoomReservation, 0, _InvoiceIndex, false);
+    EditInvoice(_iReservation, _iRoomReservation, 0, _InvoiceIndex, false);
   end;
 end;
 
@@ -10690,7 +10685,6 @@ procedure TfrmMain.btnManageFinanceConnectClick(Sender: TObject);
 begin
   ManageFinanceConnect;
   CheckFinanceConnect;
-  CheckPCIContract;
 end;
 
 procedure TfrmMain.btnManagerChannelManagerListClick(Sender: TObject);
