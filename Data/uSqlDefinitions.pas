@@ -6326,7 +6326,8 @@ begin
   s := s+'   AND ({roomreservation} = 0 or '#10;
   s := s+'    (rd.RoomReservation IN (SELECT rd2.RoomReservation '#10;
   s := s+'                         FROM roomsdate rd2 JOIN roomreservations rr ON rr.RoomReservation=rd2.RoomReservation '#10;
-  s := s+'                         WHERE (rr.GroupAccount = 0 AND (rd2.PaidBy={roomreservation} OR (rd2.RoomReservation={roomreservation} AND rd2.PaidBy=0)))))) ';
+  s := s+'                         WHERE (rr.GroupAccount = 0 AND (rd2.PaidBy={roomreservation} OR (rd2.RoomReservation={roomreservation} AND rd2.PaidBy=0)))))) '#10;
+  s := s+'  order by room, adate '#10;
 
   s := StringReplace(s, '{reservation}', _db(iReservation), [rfReplaceAll, rfIgnoreCase]);
   s := StringReplace(s, '{roomreservation}', _db(iRoomreservation), [rfReplaceAll, rfIgnoreCase]);

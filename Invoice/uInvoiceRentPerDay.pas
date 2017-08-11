@@ -2550,10 +2550,16 @@ begin
     try
       RestoreTMPInvoicelines;
 
-      // -- Then the invoice lines...
+      // -- Then the invoice lines..., excluding left over package lines from cancelled rooms
 
-      sql := 'SELECT il.* ' + ' FROM invoicelines il where Reservation = %d ' + '   and RoomReservation = %d ' +
-        '   and SplitNumber = %d ' + '   and InvoiceNumber = -1 AND InvoiceIndex = %d';
+      sql := 'SELECT il.*, '#10 +
+        ' (select resflag from roomsdate rd where rd.roomreservation=il.roomreservationalias limit 1) as resflag '#10 +
+        ' FROM invoicelines il '#10 +
+        ' where Reservation = %d '#10 +
+        '   and RoomReservation = %d '#10 +
+        '   and SplitNumber = %d '#10 +
+        '   and InvoiceNumber = -1 AND InvoiceIndex = %d'#10 +
+        ' having not il.isPackage or coalesce(resflag, '''') not in (''X'', ''C'') ';
       sql := format(sql, [FReservation, FRoomReservation, FnewSplitNumber, FInvoiceIndex]);
       lExecutionPlan.AddQuery(sql);
 
@@ -2562,18 +2568,18 @@ begin
       sql := format(sql, [FReservation, FRoomReservation, FInvoiceIndex]);
       lExecutionPlan.AddQuery(sql);
 
-      sql := 'SELECT SUM(IF(xxx.RoomReservation>0 AND xxx.Reservation>0, xxx.NumberOfGuests * xxx.NumberOfDays, ' +
-        ' (SELECT SUM((SELECT COUNT(id) FROM roomsdate WHERE RoomReservation = pe.RoomReservation AND NOT (ResFlag IN (''X'',''C'',''N'')))) AS GuestNights '
-        + '   FROM persons pe ' + '   WHERE pe.Reservation=xxx.Reservation) ' + ')) AS NumberGuestNights, ' +
+      sql := 'SELECT ' +
+        ' SUM(IF(xxx.RoomReservation>0 AND xxx.Reservation>0, xxx.NumberOfGuests * xxx.NumberOfDays, ' +
+        ' (SELECT SUM((SELECT COUNT(id) FROM roomsdate WHERE RoomReservation = pe.RoomReservation AND NOT (ResFlag IN (''X'',''C'',''N'')))) AS GuestNights ' +
+         '   FROM persons pe ' + '   WHERE pe.Reservation=xxx.Reservation) ' + ')) AS NumberGuestNights, ' +
         'SUM(NumberOfDays) AS NumberOfDays, ' + 'SUM(NumberOfGuests) AS NumberOfGuests ' + 'FROM ( ' +
-        'SELECT RoomReservation, Reservation, IF(il.RoomReservation>0 AND il.Reservation>0, (SELECT COUNT(ID) FROM roomsdate WHERE RoomReservation=il.RoomReservation AND NOT (ResFlag IN (''X'',''C'',''N'')) LIMIT 1), '
-        + '          IF(il.Reservation>0, (SELECT COUNT(ID) FROM roomsdate WHERE Reservation=il.Reservation AND NOT (ResFlag IN (''X'',''C'',''N'')) LIMIT 1), '
-        + '          0)) AS NumberOfDays, ' + ' ' +
-        '       IF(il.RoomReservation>0 AND il.Reservation>0, (SELECT COUNT(ID) FROM persons WHERE RoomReservation=il.RoomReservation LIMIT 1), '
-        + '          IF(il.Reservation>0, (SELECT COUNT(ID) FROM persons WHERE Reservation=il.Reservation LIMIT 1), 0)) AS NumberOfGuests '
-        +
-
-        'FROM roomreservations il ' + 'where (%d <= 0 AND Reservation=%d) OR (RoomReservation = %d) ' + ')xxx';
+        'SELECT RoomReservation, Reservation, IF(il.RoomReservation>0 AND il.Reservation>0, (SELECT COUNT(ID) FROM roomsdate WHERE RoomReservation=il.RoomReservation AND NOT (ResFlag IN (''X'',''C'',''N'')) LIMIT 1), ' +
+         '          IF(il.Reservation>0, (SELECT COUNT(ID) FROM roomsdate WHERE Reservation=il.Reservation AND NOT (ResFlag IN (''X'',''C'',''N'')) LIMIT 1), ' +
+         '          0)) AS NumberOfDays, ' + ' ' +
+        '       IF(il.RoomReservation>0 AND il.Reservation>0, (SELECT COUNT(ID) FROM persons WHERE RoomReservation=il.RoomReservation LIMIT 1), ' +
+         '          IF(il.Reservation>0, (SELECT COUNT(ID) FROM persons WHERE Reservation=il.Reservation LIMIT 1), 0)) AS NumberOfGuests ' +
+         ' FROM roomreservations il ' +
+        ' where (%d <= 0 AND Reservation=%d) OR (RoomReservation = %d) ' + ') xxx';
       sql := format(sql, [FRoomReservation, FReservation, FRoomReservation]);
       lExecutionPlan.AddQuery(sql);
 
