@@ -137,12 +137,12 @@ object FrmFinanceConnect: TFrmFinanceConnect
         Font.Style = []
       end
       object sLabel8: TsLabel
-        Left = 250
-        Top = 331
-        Width = 112
+        Left = 268
+        Top = 330
+        Width = 94
         Height = 13
         Alignment = taRightJustify
-        Caption = 'Sales transaction code:'
+        Caption = 'Receivables ledger:'
         ParentFont = False
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
@@ -158,13 +158,14 @@ object FrmFinanceConnect: TFrmFinanceConnect
         Caption = 'Book keeping codes and settings'
       end
       object sLabel10: TsLabel
-        Left = 251
-        Top = 359
+        Left = 579
+        Top = 306
         Width = 111
         Height = 13
         Alignment = taRightJustify
         Caption = 'Cash transaction code:'
         ParentFont = False
+        Visible = False
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
         Font.Height = -11
@@ -172,13 +173,14 @@ object FrmFinanceConnect: TFrmFinanceConnect
         Font.Style = []
       end
       object sLabel11: TsLabel
-        Left = 253
-        Top = 387
+        Left = 581
+        Top = 330
         Width = 109
         Height = 13
         Alignment = taRightJustify
         Caption = 'Cash balance account:'
         ParentFont = False
+        Visible = False
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
         Font.Height = -11
@@ -187,7 +189,7 @@ object FrmFinanceConnect: TFrmFinanceConnect
       end
       object sLabel12: TsLabel
         Left = 225
-        Top = 415
+        Top = 357
         Width = 137
         Height = 13
         Alignment = taRightJustify
@@ -201,7 +203,7 @@ object FrmFinanceConnect: TFrmFinanceConnect
       end
       object sLabel13: TsLabel
         Left = 207
-        Top = 443
+        Top = 385
         Width = 155
         Height = 13
         Alignment = taRightJustify
@@ -215,7 +217,7 @@ object FrmFinanceConnect: TFrmFinanceConnect
       end
       object sLabel14: TsLabel
         Left = 207
-        Top = 471
+        Top = 413
         Width = 155
         Height = 13
         Alignment = taRightJustify
@@ -229,7 +231,7 @@ object FrmFinanceConnect: TFrmFinanceConnect
       end
       object sLabel15: TsLabel
         Left = 314
-        Top = 499
+        Top = 441
         Width = 48
         Height = 13
         Alignment = taRightJustify
@@ -250,7 +252,7 @@ object FrmFinanceConnect: TFrmFinanceConnect
         VerticalAlignment = taAlignTop
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
+        Font.Color = 4473924
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -262,7 +264,7 @@ object FrmFinanceConnect: TFrmFinanceConnect
       object cbxActive: TsCheckBox
         Left = 199
         Top = 56
-        Width = 64
+        Width = 61
         Height = 17
         Caption = 'Active'
         Font.Charset = DEFAULT_CHARSET
@@ -283,7 +285,7 @@ object FrmFinanceConnect: TFrmFinanceConnect
         Height = 21
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
+        Font.Color = 4473924
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -299,7 +301,7 @@ object FrmFinanceConnect: TFrmFinanceConnect
         Height = 21
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
+        Font.Color = 4473924
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -314,14 +316,14 @@ object FrmFinanceConnect: TFrmFinanceConnect
         Height = 21
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
+        Font.Color = 4473924
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
         ParentFont = False
         PasswordChar = '*'
         TabOrder = 4
-        Text = 'This is not valid password'
+        Text = '***This is not valid password***'
         OnChange = edServiceUrlChange
       end
       object edOrg: TsEdit
@@ -331,7 +333,7 @@ object FrmFinanceConnect: TFrmFinanceConnect
         Height = 21
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
+        Font.Color = 4473924
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -346,7 +348,7 @@ object FrmFinanceConnect: TFrmFinanceConnect
         Height = 21
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
+        Font.Color = 4473924
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -361,7 +363,7 @@ object FrmFinanceConnect: TFrmFinanceConnect
         Height = 21
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
+        Font.Color = 4473924
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -371,72 +373,76 @@ object FrmFinanceConnect: TFrmFinanceConnect
       end
       object edSalesCode: TsEdit
         Left = 368
-        Top = 328
+        Top = 327
         Width = 169
         Height = 21
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
+        Font.Color = 4473924
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
         ParentFont = False
         TabOrder = 8
+        Text = 'VRK'
         OnChange = edServiceUrlChange
       end
       object edCashCode: TsEdit
-        Left = 368
-        Top = 356
+        Left = 696
+        Top = 303
         Width = 169
         Height = 21
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
+        Font.Color = 4473924
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
         ParentFont = False
         TabOrder = 9
+        Visible = False
         OnChange = edServiceUrlChange
       end
       object edCashAccount: TsEdit
-        Left = 368
-        Top = 384
+        Left = 696
+        Top = 327
         Width = 169
         Height = 21
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
+        Font.Color = 4473924
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
         ParentFont = False
         TabOrder = 10
+        Visible = False
         OnChange = edServiceUrlChange
       end
       object edReceivableAccount: TsEdit
         Left = 368
-        Top = 412
+        Top = 354
         Width = 169
         Height = 21
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
+        Font.Color = 4473924
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
         ParentFont = False
         TabOrder = 11
+        Text = '1300'
         OnChange = edServiceUrlChange
       end
       object edPreInvoiceNumber: TsEdit
         Left = 368
-        Top = 440
+        Top = 382
         Width = 169
         Height = 21
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
+        Font.Color = 4473924
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -446,12 +452,12 @@ object FrmFinanceConnect: TFrmFinanceConnect
       end
       object edSuccInvoiceNumber: TsEdit
         Left = 368
-        Top = 468
+        Top = 410
         Width = 169
         Height = 21
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
+        Font.Color = 4473924
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -471,12 +477,12 @@ object FrmFinanceConnect: TFrmFinanceConnect
       end
       object edCurrency: TsEdit
         Left = 368
-        Top = 496
+        Top = 438
         Width = 169
         Height = 21
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
+        Font.Color = 4473924
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -850,8 +856,8 @@ object FrmFinanceConnect: TFrmFinanceConnect
   object memPayGroups: TdxMemData
     Indexes = <>
     SortOptions = []
-    Left = 208
-    Top = 360
+    Left = 16
+    Top = 472
     object memPayGroupsCode: TWideStringField
       FieldName = 'Code'
       Size = 40
@@ -871,7 +877,7 @@ object FrmFinanceConnect: TFrmFinanceConnect
   end
   object dsPayGroups: TDataSource
     DataSet = memPayGroups
-    Left = 208
-    Top = 408
+    Left = 16
+    Top = 520
   end
 end

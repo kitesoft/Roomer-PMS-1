@@ -129,6 +129,7 @@ type
     function CurrentTableView: TcxGridDBTableView;
     procedure ClearAllTableViewFilters;
     procedure ReStartDataPreparation;
+    function CheckEnableSaveButton: Boolean;
     { Private declarations }
   public
     { Public declarations }
@@ -159,6 +160,8 @@ uses uAppGlobal,
      PrjConst
     ;
 
+const INVALID_PASSWORD = '***This is not valid password***';
+
 procedure ManageFinanceConnect(page : TFinanceConnectPageIndex = PAGE_CONFIG; workingTab : TFinanceConnectPageIndex = TAB_CUSTOMERS);
 var _FrmFinanceConnect : TFrmFinanceConnect;
 begin
@@ -174,17 +177,35 @@ end;
 
 procedure TFrmFinanceConnect.cbxActiveClick(Sender: TObject);
 begin
-  btnSave.Enabled := True;
+  btnSave.Enabled := CheckEnableSaveButton;
 end;
 
 procedure TFrmFinanceConnect.cbxSystemSelectionCloseUp(Sender: TObject);
 begin
-  btnSave.Enabled := True;
+  btnSave.Enabled := CheckEnableSaveButton;
+end;
+
+function TFrmFinanceConnect.CheckEnableSaveButton : Boolean;
+begin
+  result := (cbxSystemSelection.ItemIndex > 0) AND
+    (Length(edServiceUrl.Text) > 5) AND
+    (Length(edUsername.Text) > 0) AND
+    ((Length(edPassword.Text) > 0) AND (edPassword.Text <> INVALID_PASSWORD)) AND
+    (Length(edOrg.Text) > 0) AND
+    (Length(edOffice.Text) > 0) AND
+//    (Length(edCompany.Text) > 0) AND
+    (Length(edSalesCode.Text) > 0) AND
+//    (Length(edCashCode.Text) > 0) AND
+    (Length(edCurrency.Text) > 0) AND
+//    (Length(edCashAccount.Text) > 0) AND
+    (Length(edReceivableAccount.Text) > 0);
+//    (Length(edPreInvoiceNumber.Text) > 0) AND
+//    (Length(edSuccInvoiceNumber.Text) > 0);
 end;
 
 procedure TFrmFinanceConnect.edServiceUrlChange(Sender: TObject);
 begin
-  btnSave.Enabled := True;
+  btnSave.Enabled := CheckEnableSaveButton;
 end;
 
 procedure TFrmFinanceConnect.edtSearchChange(Sender: TObject);
@@ -240,6 +261,7 @@ end;
 procedure TFrmFinanceConnect.FormCreate(Sender: TObject);
 begin
   inherited;
+  edPassword.Text := INVALID_PASSWORD;
   pgMain.ActivePageIndex := 0;
 end;
 
