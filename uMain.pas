@@ -11334,11 +11334,11 @@ function TfrmMain._Logout(AlreadyInactive: boolean = false; const AutoLogin: Str
 begin
   performClearHotel(NOT AlreadyInactive);
   try
+    __lblUsername.Caption := 'N/A';
     result := StartHotel(AlreadyInactive, AutoLogin) or LoginCancelled;
   finally
     panelHide.Hide;
   end;
-  __lblUsername.Caption := 'N/A';
 end;
 
 procedure TfrmMain._Close;
