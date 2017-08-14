@@ -1228,7 +1228,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
       object pnlLinesGrid: TsPanel
         Left = 0
         Top = 89
-        Width = 1040
+        Width = 1021
         Height = 232
         Align = alClient
         BevelOuter = bvNone
@@ -1242,7 +1242,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         object agrLines: TAdvStringGrid
           Left = 10
           Top = 5
-          Width = 1020
+          Width = 1001
           Height = 222
           Cursor = crDefault
           Align = alClient
@@ -1392,16 +1392,19 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
             64)
         end
       end
-      object pnlInvoiceIndices: TsPanel
+      object pnlInvoiceIndices: TsScrollBox
         AlignWithMargins = True
-        Left = 1043
+        Left = 1024
         Top = 92
-        Width = 50
+        Width = 69
         Height = 226
+        HorzScrollBar.Visible = False
+        VertScrollBar.Tracking = True
         Align = alRight
         TabOrder = 1
+        OnDragOver = pnlInvoiceIndicesDragOver
         object pnlInvoiceIndex0: TsPanel
-          Left = 3
+          Left = 0
           Top = 4
           Width = 42
           Height = 31
@@ -1455,7 +1458,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         end
         object pnlInvoiceIndex1: TsPanel
           Tag = 1
-          Left = 3
+          Left = 0
           Top = 41
           Width = 42
           Height = 31
@@ -1477,7 +1480,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
           SkinData.CustomColor = True
           SkinData.CustomFont = True
           object shpInvoiceIndex1: TShape
-            Left = 2
+            Left = 10
             Top = 2
             Width = 8
             Height = 27
@@ -1490,7 +1493,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
             ExplicitHeight = 29
           end
           object shpInvoiceIndexRR1: TShape
-            Left = 10
+            Left = 2
             Top = 2
             Width = 8
             Height = 27
@@ -1499,13 +1502,13 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
             OnDragDrop = shpInvoiceIndex0DragDrop
             OnDragOver = shpInvoiceIndex0DragOver
             OnMouseUp = shpInvoiceIndex0MouseUp
-            ExplicitLeft = 27
-            ExplicitHeight = 29
+            ExplicitLeft = 0
+            ExplicitTop = 6
           end
         end
         object pnlInvoiceIndex2: TsPanel
           Tag = 2
-          Left = 3
+          Left = 0
           Top = 78
           Width = 42
           Height = 31
@@ -1555,7 +1558,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         end
         object pnlInvoiceIndex3: TsPanel
           Tag = 3
-          Left = 3
+          Left = 0
           Top = 115
           Width = 42
           Height = 31
@@ -1605,7 +1608,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         end
         object pnlInvoiceIndex4: TsPanel
           Tag = 4
-          Left = 3
+          Left = 0
           Top = 151
           Width = 42
           Height = 31
@@ -1655,7 +1658,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         end
         object pnlInvoiceIndex5: TsPanel
           Tag = 5
-          Left = 3
+          Left = 0
           Top = 189
           Width = 42
           Height = 31
@@ -1705,7 +1708,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         end
         object pnlInvoiceIndex6: TsPanel
           Tag = 6
-          Left = 3
+          Left = 0
           Top = 226
           Width = 42
           Height = 31
@@ -1755,7 +1758,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         end
         object pnlInvoiceIndex7: TsPanel
           Tag = 7
-          Left = 3
+          Left = 0
           Top = 263
           Width = 42
           Height = 31
@@ -1805,7 +1808,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         end
         object pnlInvoiceIndex8: TsPanel
           Tag = 8
-          Left = 3
+          Left = 0
           Top = 300
           Width = 42
           Height = 31
@@ -1855,7 +1858,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         end
         object pnlInvoiceIndex9: TsPanel
           Tag = 9
-          Left = 3
+          Left = 0
           Top = 337
           Width = 42
           Height = 31

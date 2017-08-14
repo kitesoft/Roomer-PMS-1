@@ -88,6 +88,9 @@ type
   public
     constructor Create(aIndex, _id: integer); virtual;
     destructor Destroy; override;
+
+    procedure MoveToInvoiceIndex(aInvoiceIndex: integer);
+
     /// <summary>
     /// Indicates whether or not the "VisibleOnInvoice" functionality is available for this line
     /// At this moment only line that are generated and linked to a roomrent item can be made invisible
@@ -245,6 +248,8 @@ type
     function GetCityTaxUnitCount: Double;
     function GetLastLineIndex: integer;
     procedure SetShowPackageItems(const Value: boolean);
+  protected
+    procedure Notify(const Item: TInvoiceLine; Action: TCollectionNotification); override;
   public
     function AddInvoiceLine(aLineId: integer; aParent: TInvoiceLine): TInvoiceLine;
     function AddPackageInvoiceLine(aLineId: integer; aParent: TInvoiceLine; aRoomreservation:integer): TPackageInvoiceLine;
@@ -451,6 +456,16 @@ begin
   result := _calcVat(TotalNativeCurrency, FVATPercentage);
 end;
 
+procedure TInvoiceLine.MoveToInvoiceIndex(aInvoiceIndex: integer);
+begin
+  if ItemKind = ikRoomRent then
+    d.MoveRoomDateToInvoiceIndex(RoomEntity.Reservation, RoomEntity.RoomReservation, PurchaseDate, aInvoiceIndex)
+  else
+  begin
+    //todo
+  end;
+end;
+
 procedure TInvoiceLine.SetParentInvoiceLine(const Value: TinvoiceLine);
 begin
   if FParentInvoiceLine <> nil then
@@ -549,6 +564,25 @@ begin
   result := 0.0;
   for lInvLine in self do
     result := result + (lInvLine.VATOnInvoice * GetRate(lInvLine.Currency));
+end;
+
+procedure TInvoiceLineList.Notify(const Item: TInvoiceline; Action: TCollectionNotification);
+var
+  lInvLine: TInvoiceLine;
+begin
+  if Action in [cnRemoved, cnExtracted] then
+  begin
+    // if removing a line then all child lines are also removed
+    for linvLine in Item.ChildInvoiceLines do
+      if (linvLine <> Item) then // avoid recursion
+        if lInvLine.IsGeneratedLine then
+          Remove(lInvLine)
+        else
+          lInvLine.Parent := nil;
+  end;
+
+  inherited;
+
 end;
 
 procedure TInvoiceLineList.SetAllVisibleOnInvoiceTo(aVisible: boolean; aItemKindSet: TItemKindSet);

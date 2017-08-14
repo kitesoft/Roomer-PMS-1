@@ -632,8 +632,8 @@ object frmInvoice: TfrmInvoice
       object chkShowPackage: TsCheckBox
         Left = 724
         Top = 143
-        Width = 111
-        Height = 20
+        Width = 119
+        Height = 17
         Caption = 'Package on invoice'
         Checked = True
         State = cbChecked
@@ -1202,7 +1202,7 @@ object frmInvoice: TfrmInvoice
       object sPanel1: TsPanel
         Left = 0
         Top = 91
-        Width = 1040
+        Width = 1026
         Height = 250
         Align = alClient
         BevelOuter = bvNone
@@ -1216,7 +1216,7 @@ object frmInvoice: TfrmInvoice
         object agrLines: TAdvStringGrid
           Left = 10
           Top = 5
-          Width = 1020
+          Width = 1006
           Height = 240
           Cursor = crDefault
           Align = alClient
@@ -1340,7 +1340,7 @@ object frmInvoice: TfrmInvoice
           SearchFooter.MatchCaseCaption = 'Match case'
           SearchFooter.ResultFormat = '(%d of %d)'
           SortSettings.DefaultFormat = ssAutomatic
-          Version = '8.2.4.1'
+          Version = '8.2.5.2'
           ColWidths = (
             24
             91
@@ -1351,17 +1351,18 @@ object frmInvoice: TfrmInvoice
             31)
         end
       end
-      object sPanel4: TsPanel
-        AlignWithMargins = True
-        Left = 1043
-        Top = 94
-        Width = 50
-        Height = 244
+      object sPanel4: TsScrollBox
+        Left = 1026
+        Top = 91
+        Width = 70
+        Height = 250
+        HorzScrollBar.Visible = False
         Align = alRight
         TabOrder = 1
+        OnDragOver = sPanel4DragOver
         object pnlInvoiceIndex0: TsPanel
           Left = 3
-          Top = 4
+          Top = 3
           Width = 42
           Height = 31
           Alignment = taRightJustify

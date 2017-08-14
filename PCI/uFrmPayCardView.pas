@@ -6,14 +6,20 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.OleCtrls, SHDocVw, acWebBrowser, Vcl.ExtCtrls, sPanel,
   uRoomerForm, cxGridTableView, cxStyles, dxPScxCommon, dxPScxGridLnk, cxClasses, cxPropertiesStore, Vcl.ComCtrls,
-  sStatusBar;
+  sStatusBar, uDImages, Vcl.StdCtrls, sButton, acPNG, acImage, HTMLabel;
 
 type
   TFrmPayCardView = class(TfrmBaseRoomerForm)
     pnlHead: TsPanel;
     pnlClient: TsPanel;
     browser: TsWebBrowser;
+    lblPleaseRead: THTMLabel;
+    imgWarning: TsImage;
+    btnContinue: TsButton;
+    sButton1: TsButton;
+    procedure btnContinueClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
+    procedure sButton1Click(Sender: TObject);
   private
     { Private declarations }
     FHotelId: String;
@@ -32,7 +38,7 @@ type
     property Reservation : Integer read FReservation write SetReservation;
   end;
 
-procedure ShowPayCardInformation(Reservation : Integer);
+procedure ShowPayCardInformation(Reservation, btnTag : Integer);
 
 implementation
 
@@ -41,40 +47,37 @@ implementation
 uses uG,
      RoomerLoginForm,
      uD,
-     uUtils;
+     uUtils,
+     cmpRoomerDataSet,
+     PrjConst,
+     uActivityLogs,
+     uFrmOptInMessage;
 
 function openLogin(var userName, password : string) : boolean;
 var hotelId : String;
 begin
   hotelId     := g.qHotelCode;
-  result := (AskUserForCredentials(userName, password, hotelId, '', 7)  in cLoginFormSuccesfull);
+  result := (AskUserForCredentials(userName, password, hotelId, '', 7) in cLoginFormSuccesfull);
 end;
 
-procedure ShowPayCardInformation(Reservation : Integer);
+procedure ShowPayCardInformation(Reservation, btnTag : Integer);
 var _FrmPayCardView : TFrmPayCardView;
     gUserName, gPassword : String;
 begin
-  if openLogin(gUserName, gPassword) then
+  if btnTag = 1 then
   begin
     _FrmPayCardView := TFrmPayCardView.Create(nil);
     try
-      _FrmPayCardView.UserName := gUserName;
-      _FrmPayCardView.HotelId := g.qHotelCode;
       _FrmPayCardView.Reservation := Reservation;
       _FrmPayCardView.ShowModal;
     finally
       _FrmPayCardView.free;
     end;
-  end;
+  end else
+    OpenOptInDialog(OITPCI);
 end;
 
 { TFrmPayCardView }
-
-procedure TFrmPayCardView.FormShow(Sender: TObject);
-begin
-  inherited;
-  RefreshData;
-end;
 
 procedure TFrmPayCardView.GoToUri(uri : String);
 var Flags: OleVariant;
@@ -84,6 +87,30 @@ begin
   browser.Navigate(uri, Flags);
 end;
 
+
+procedure TFrmPayCardView.sButton1Click(Sender: TObject);
+begin
+  Close;
+end;
+
+procedure TFrmPayCardView.btnContinueClick(Sender: TObject);
+var gUserName, gPassword : String;
+begin
+  if openLogin(gUserName, gPassword) then
+  begin
+    AddReservationActivityLog(gUsername,
+                              Reservation,
+                              0,
+                              VIEW_PAY_CARD,
+                              '',
+                              '',
+                              '');
+    UserName := gUserName;
+    HotelId := g.qHotelCode;
+    pnlHead.Visible := False;
+    RefreshData;
+  end;
+end;
 
 procedure TFrmPayCardView.DoLoadData;
 var uri : String;
@@ -96,6 +123,26 @@ begin
   iFrameUri := d.roomerMainDataSet.downloadUrlAsString(uri);
   CopyToClipboard(iFrameUri);
   GoToUri(iFrameUri);
+end;
+
+procedure TFrmPayCardView.FormShow(Sender: TObject);
+var rSet : TRoomerDataSet;
+    xml : String;
+    iViews : Integer;
+    sTemp : String;
+begin
+  xml := d.roomerMainDataSet.downloadUrlAsString(  d.roomerMainDataSet.RoomerUri + 'resapi/token/costs/' + inttostr(Reservation));
+  rSet := d.roomerMainDataSet.ActivateNewDataset(xml);
+  iViews := 0;
+  rSet.First;
+  if NOT rSet.Eof then
+    iViews := rSet['VIEWS'];
+  lblPleaseRead.HTMLText.Text := ReplaceString(lblPleaseRead.HTMLText.Text, '{PLEASE_NOTE}', GetTranslatedText('PCI_VIEW_Warning_PleaseNote'));
+  lblPleaseRead.HTMLText.Text := ReplaceString(lblPleaseRead.HTMLText.Text, '{CHARGE_PER_VIEW}', GetTranslatedText('PCI_VIEW_Warning_ChargePerView'));
+  lblPleaseRead.HTMLText.Text := ReplaceString(lblPleaseRead.HTMLText.Text, '{SECURITY_CODE_ONCE_VISIBLE}', GetTranslatedText('PCI_VIEW_Warning_SecurityCodeOnceVisible'));
+  sTemp := ReplaceString(GetTranslatedText('PCI_VIEW_Warning_NumberOfViews'), '{VIEWS}', inttostr(iViews));
+  lblPleaseRead.HTMLText.Text := ReplaceString(lblPleaseRead.HTMLText.Text, '{NUMBER_OF_VIEWS}', sTemp);
+
 end;
 
 procedure TFrmPayCardView.SetHotelId(const Value: String);

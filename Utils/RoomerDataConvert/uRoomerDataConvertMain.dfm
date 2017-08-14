@@ -275,10 +275,6 @@ object frmRoomerDataConvertMain: TfrmRoomerDataConvertMain
     TabOrder = 2
     object sTabSheet1: TsTabSheet
       Caption = 'CSV'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object sPanel1: TsPanel
         Left = 0
         Top = 0
@@ -316,10 +312,6 @@ object frmRoomerDataConvertMain: TfrmRoomerDataConvertMain
             Margins.Right = 2
             Margins.Bottom = 2
             Caption = 'Comma delimited data'
-            ExplicitLeft = 0
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
             object sLabel4: TsLabel
               Left = 16
               Top = 17
@@ -374,6 +366,15 @@ object frmRoomerDataConvertMain: TfrmRoomerDataConvertMain
                 TabOrder = 1
                 OnClick = btnImportCustomersClick
                 SkinData.SkinSection = 'BUTTON'
+              end
+              object sButton1: TsButton
+                Left = 360
+                Top = 4
+                Width = 75
+                Height = 25
+                Caption = 'sButton1'
+                TabOrder = 2
+                OnClick = sButton1Click
               end
             end
             object edFilename: TsFilenameEdit
@@ -467,10 +468,6 @@ object frmRoomerDataConvertMain: TfrmRoomerDataConvertMain
     end
     object sTabSheet3: TsTabSheet
       Caption = 'DK'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object sPageControl3: TsPageControl
         Left = 0
         Top = 0
@@ -481,17 +478,9 @@ object frmRoomerDataConvertMain: TfrmRoomerDataConvertMain
         TabOrder = 0
         object sTabSheet4: TsTabSheet
           Caption = 'sTabSheet4'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
         end
         object sTabSheet5: TsTabSheet
           Caption = 'sTabSheet5'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
         end
       end
     end
@@ -502,7 +491,6 @@ object frmRoomerDataConvertMain: TfrmRoomerDataConvertMain
   end
   object sSkinManager1: TsSkinManager
     Effects.AllowGlowing = False
-    IsDefault = False
     InternalSkins = <
       item
         Name = 'MetroUI (internal)'

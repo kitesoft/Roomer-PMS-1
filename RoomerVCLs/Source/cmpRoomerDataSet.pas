@@ -148,7 +148,7 @@ type
     procedure GetFieldText(Sender: TField; var Text: string; DisplayText: boolean);
     function loginViaPost(const url, Data: String; SetLastAccess: boolean = true): String;
     function getHotelsList: THotelsEntityList;
-    function GetAsString(const url: String; const contentType: String = ''; force: boolean = false): String;
+    function GetAsString(const url: String; const contentType: String = ''; force: boolean = false; connectTimeOut : Integer = 10000; retry : Boolean = True): String;
 
     function PostAsString(const url, Data: String; const contentType: String = ''): String;
     function PostAsStringAsync(const url, Data: String; const contentType: String = ''): String;
@@ -160,9 +160,6 @@ type
     function DeleteAsString(const url: String): String;
     function GetOpenApiUri: String;
     procedure SetOpenApiUri(const Value: String);
-    function downloadUrlAsStringUsingPut(const url: String; const Data: String; SetLastAccess: boolean = true;
-      loggingInOut: Integer = 0 { 0/1/2 = neither/login/logout }
-      ; const contentType: String = ''; retryOnError: boolean = true): String;
     function PutAsString(const url, Data: String; const contentType: String = ''; retryOnError: boolean = true): String;
     function PostStreamAsString(const url: String; Data: TStream; const contentType: String = ''): String;
     procedure SetOpenApiAuthHeaders(hdrs:
@@ -247,6 +244,9 @@ type
     function queryRoomer(aSql: String; SetLastAccess: boolean = true; Threaded: boolean = false): String;
     function downloadUrlAsString(url: String; loggingInOut: Integer = 0; SetLastAccess: boolean = true;
       contentType: String = ''; RaiseException: boolean = false): String;
+    function downloadUrlAsStringUsingPut(const url: String; const Data: String; SetLastAccess: boolean = true;
+      loggingInOut: Integer = 0 { 0/1/2 = neither/login/logout }
+      ; const contentType: String = ''; retryOnError: boolean = true): String;
     function downloadUrlAsStringUsingPost(url: String; Data: String; SetLastAccess: boolean = true;
       loggingInOut: Integer = 0 { 0/1/2 = neither/login/logout }
       ; contentType: String = ''): String;
@@ -491,7 +491,7 @@ function TRoomerDataSet.RoomerPlatformAvailable: boolean;
 begin
   Result := true;
   try
-    if GetAsString(RoomerUri + 'sessions/livecheck', '', true) = '' then;
+    if GetAsString(RoomerUri + 'sessions/livecheck', '', true, 1000, false) = '' then;
   except
     on E: Exception do
     begin
@@ -834,10 +834,10 @@ begin
   end;
 end;
 
-function TRoomerDataSet.GetAsString(const url: String; const contentType: String = ''; force: boolean = false): String;
+function TRoomerDataSet.GetAsString(const url: String; const contentType: String = ''; force: boolean = false; connectTimeOut : Integer = 10000; retry : Boolean = True): String;
 var
   _roomerClient: TRoomerHttpClient;
-
+  SavedTimeout : Integer;
 var
   retries: Integer;
 begin
@@ -853,10 +853,16 @@ begin
     for retries := 1 to 3 do
     begin
       try
-        Result := String(_roomerClient.Get(AnsiString(url)));
-        Break;
+        SavedTimeout := _roomerClient.ConnectTimeout;
+        _roomerClient.ConnectTimeout := ConnectTimeout;
+        try
+          Result := String(_roomerClient.Get(AnsiString(url)));
+          Break;
+        finally
+          _roomerClient.ConnectTimeout := SavedTimeout;
+        end;
       except
-        if retries = 3 then
+        if (retries = 3) OR (NOT retry) then
           raise;
       end;
     end;

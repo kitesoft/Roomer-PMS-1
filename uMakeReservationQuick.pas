@@ -733,6 +733,7 @@ type
     procedure tvRoomRatesNativeAmountGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
       var AProperties: TcxCustomEditProperties);
     procedure edContactPerson1PropertiesCloseUp(Sender: TObject);
+    procedure fraCountryedCountryCodeChange(Sender: TObject);
   private
     { Private declarations }
     zCustomerChanged: boolean;
@@ -760,6 +761,7 @@ type
     FNewReservation: TNewReservation;
     FCurrencyhandlers: TCurrencyhandlersMap;
     FCurrentCurrencyhandler: TCurrencyhandler;
+    FPreviousGuestsList: TStringlist;
 
     procedure initCustomer;
     function RoomStatusFromInfo(statusText: string): integer;
@@ -799,11 +801,19 @@ type
     procedure SetProfileAlertVisibility;
     procedure SetRoomFilterOnlySelectedTypes(aOnlySelected: boolean);
     procedure EmptyQuickFind;
+    procedure ActivateNextButton;
+    function OkToActivateNextButton: Boolean;
+
+  protected
+    const
+      WM_LOADPREVIOUS_GUESTS = WM_User + 53;
+    procedure WndProc(var message: TMessage); override;
+
     property OutOfOrderBlocking : Boolean read FOutOfOrderBlocking write SetOutOfOrderBlocking;
+
 
   public
     { Public declarations }
-    procedure WndProc(var message: TMessage); override;
     property NewReservation: TNewReservation read FNewReservation write FNewReservation;
     constructor Create(aOwner: TComponent); override;
     destructor Destroy; override;
@@ -1111,20 +1121,22 @@ begin
     cbxAddToGuestProfiles.Visible := true;
     edtPortfolio.Tag := 0;
   end
-  else
-    if message.Msg = WM_SET_COMBO_TEXT then
+  else if message.Msg = WM_SET_COMBO_TEXT then
   begin
     if message.WParam = 1 then
     begin
-      edContactPerson1.Text := glb.PreviousGuestsSet['Name'];
-      edContactAddress1.Text := glb.PreviousGuestsSet['Address1'];
-      edContactAddress2.Text := glb.PreviousGuestsSet['Address2'];
-      edContactAddress3.Text := glb.PreviousGuestsSet['Address3'];
-      edContactAddress4.Text := glb.PreviousGuestsSet['Address4'];
-      edContactPhone.Text := glb.PreviousGuestsSet['Tel1'];
-      edContactMobile.Text := glb.PreviousGuestsSet['Tel2'];
-      edContactFax.Text := ''; // glb.PreviousGuestsSet['TelFax'];
-      edContactEmail.Text := glb.PreviousGuestsSet['Email'];
+      if Assigned(glb.PreviousGuestsSet) then
+      begin
+        edContactPerson1.Text := glb.PreviousGuestsSet['Name'];
+        edContactAddress1.Text := glb.PreviousGuestsSet['Address1'];
+        edContactAddress2.Text := glb.PreviousGuestsSet['Address2'];
+        edContactAddress3.Text := glb.PreviousGuestsSet['Address3'];
+        edContactAddress4.Text := glb.PreviousGuestsSet['Address4'];
+        edContactPhone.Text := glb.PreviousGuestsSet['Tel1'];
+        edContactMobile.Text := glb.PreviousGuestsSet['Tel2'];
+        edContactFax.Text := ''; // glb.PreviousGuestsSet['TelFax'];
+        edContactEmail.Text := glb.PreviousGuestsSet['Email'];
+      end;
     end
     else
     begin
@@ -1145,6 +1157,10 @@ begin
 
       SetProfileAlertVisibility;
     end;
+  end
+  else if message.Msg = WM_LOADPREVIOUS_GUESTS then
+  begin
+    FillQuickFind;
   end;
 end;
 
@@ -1229,6 +1245,7 @@ begin
   end;
 
   pgcExtraAndAlert.ActivePageIndex := 0;
+
 end;
 
 procedure TfrmMakeReservationQuick.EmptyQuickFind;
@@ -1236,32 +1253,32 @@ var
   i: Integer;
 begin
   edContactPerson1.Text := '';
-//  edContactPerson1.Update;
-//  Application.ProcessMessages;
-  for i := edContactPerson1.Properties.LookupItems.Count - 1 downto 0 do
-  begin
-    if Assigned(edContactPerson1.Properties.LookupItems.Objects[i]) AND
-       (edContactPerson1.Properties.LookupItems.Objects[i] IS TRoomerFilterItem) then
-         (edContactPerson1.Properties.LookupItems.Objects[i] AS TRoomerFilterItem).Free;
+  edContactPerson1.Properties.LookupItems.BeginUpdate;
+  try
+//    for i := edContactPerson1.Properties.LookupItems.Count - 1 downto 0 do
+//      edContactPerson1.Properties.LookupItems.Objects[i].Free;
+    edContactPerson1.Properties.LookupItems.Clear;
+  finally
+    edContactPerson1.Properties.LookupItems.EndUpdate;
   end;
-  edContactPerson1.Properties.LookupItems.Clear;
 end;
 
 procedure TfrmMakeReservationQuick.FillQuickFind;
 var
   rSet: TRoomerDataSet;
-  i: Integer;
+  fldID: TField;
+  fldName: TField;
+  fldLastName: TField;
+  fldCity: TFIeld;
+  fldAddress1: TField;
+  fldAddress4: TField;
+  fldCountry: TFIeld;
 
-  function getFullname: String;
-  begin
-    Result := Trim(rSet['FirstName'] + ' ' + rSet['Lastname']);
-  end;
-
-  function getField(fName: String): String;
+  function getField(fld: TField): String;
   var
     s: String;
   begin
-    s := rSet[fName];
+    s := fld.AsString;
     if s = '' then
       Result := ''
     else
@@ -1270,47 +1287,54 @@ var
 
 var
   item: TRoomerFilterItem;
-  list : TStringList;
 begin
-  edContactPerson1.Visible := False;
-  try
-    EmptyQuickFind;
-    list := TStringList.Create;
-    try
-      list.Sorted := True;
-      list.Duplicates := dupIgnore;
-      rSet := glb.PersonProfiles;
-      rSet.First;
-      while NOT rSet.eof do
-      begin
-        item := TRoomerFilterItem.Create;
-        item.Key := inttostr(rSet['ID']);
-        item.Line := format('%s%s%s%s', [getFullname, getField('City'), getField('Country'), getField('Address1')]);
-        list.AddObject(item.Line, item);
-        rSet.next;
-      end;
+  FPreviousGuestsList.Clear;
 
-      rSet := glb.PreviousGuestsSet;
-      rSet.First;
-      while NOT rSet.eof do
-      begin
-        item := TRoomerFilterItem.Create;
-        item.Key := rSet['ID'];
-        item.Line := format('%s%s%s%s', [rSet['Name'], getField('Address4'), getField('Country'), getField('Address1')]);
-        list.AddObject(item.Line, item);
-        rSet.next;
-      end;
+  rSet := glb.PersonProfiles;
 
-      for i := 0 to list.Count - 1 do
-        edContactPerson1.Properties.LookupItems.AddObject(list[i], list.Objects[i]);
+  fldID := rSet.fieldByName('ID');
+  fldName := rSet.FieldByName('FirstName');
+  fldLastName := rSet.FieldByName('LastName');
+  fldAddress1 := rSet.FieldByName('Address1');
+  fldCountry := rSet.FieldByName('Country');
+  fldCity := rSet.FieldByName('City');
 
-      edContactPerson1.Properties.LookupItemsSorted := True;
+  rSet.First;
+  while NOT rSet.eof do
+  begin
+    item := TRoomerFilterItem.Create;
+    item.Key := fldId.AsString;
+    item.Line := Trim(fldName.AsString + ' ' + fldLastName.AsString) + getField(fldCity) + getField(fldCountry) + getField(fldAddress1);
+    FPreviousGuestsList.AddObject(item.line, item);
+    rSet.next;
+  end;
 
-    finally
-      list.Free;
+  if Assigned(glb.PreviousGuestsSet) then
+  begin
+    rSet := glb.PreviousGuestsSet;
+    fldID := rSet.fieldByName('ID');
+    fldName := rSet.FieldByName('Name');
+    fldAddress1 := rSet.FieldByName('Address1');
+    fldAddress4 := rSet.FieldByName('Address4');
+    fldCountry := rSet.FieldByName('Country');
+
+    rSet.First;
+    while NOT rSet.eof do
+    begin
+      item := TRoomerFilterItem.Create;
+      item.Key := fldID.AsString;
+      item.Line := fldName.AsString + getField(fldAddress4) + getField(fldCountry) + getField(fldAddress1);
+      FPreviousGuestsList.AddObject(item.Line, item);
+      rSet.next;
     end;
+  end;
+
+  edContactPerson1.Properties.LookupItems.BeginUpdate;
+  try
+    edContactPerson1.Properties.LookupItems.assign(FPreviousGuestsList);
+    edContactPerson1.Properties.LookupItemsSorted := True;
   finally
-    edContactPerson1.Visible := True;
+    edContactPerson1.Properties.LookupItems.EndUpdate;
   end;
 end;
 
@@ -1355,7 +1379,6 @@ end;
 procedure TfrmMakeReservationQuick.FormShow(Sender: TObject);
 begin
 
-  FillQuickFind;
   screen.Cursor := crHourGlass;
   try
     cbxIsRoomResDiscountPrec.ItemIndex := 0;
@@ -1413,8 +1436,17 @@ begin
   FrmAlertPanel := TFrmAlertPanel.Create(self);
   FrmAlertPanel.PlaceEditPanel(Alerts, FNewReservation.AlertList);
   gbxProfileAlert.Visible := False;
+
+  PostMessage(Handle, WM_LOADPREVIOUS_GUESTS, 0, 0);
+
 end;
 
+
+procedure TfrmMakeReservationQuick.fraCountryedCountryCodeChange(Sender: TObject);
+begin
+  fraCountry.edCountryCodeChange(Sender);
+  ActivateNextButton;
+end;
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 //  RoomRes grid and table
@@ -2344,8 +2376,9 @@ begin
   end;
 end;
 
-procedure TfrmMakeReservationQuick.btnNextClick(Sender: TObject);
+function TfrmMakeReservationQuick.OkToActivateNextButton : Boolean;
 begin
+  result := False;
   if not OutOfOrderBlocking then
   begin
     if not customerValidate then
@@ -2359,9 +2392,20 @@ begin
     if not PriceCodeValidate(edPcCode, clabPcCode, labPcCodeName) then
       exit;
   end;
-
   if pgcMain.ActivePageIndex = 3 then
     exit;
+
+  result := True;
+end;
+
+procedure TfrmMakeReservationQuick.ActivateNextButton;
+begin
+  btnNext.Enabled := OkToActivateNextButton;
+end;
+
+procedure TfrmMakeReservationQuick.btnNextClick(Sender: TObject);
+begin
+  if NOT OkToActivateNextButton then exit;
 
   if pgcMain.ActivePageIndex = 0 then
   begin
@@ -3186,6 +3230,10 @@ end;
 
 constructor TfrmMakeReservationQuick.Create(aOwner: TComponent);
 begin
+  FPreviousGuestsList := TStringlist.Create;
+  FPreviousGuestsList.OwnsObjects := true;
+  FPreviousGuestsList.Duplicates := dupIgnore;
+  FPreviousGuestsList.Sorted := true;
   FCurrencyhandlers := TCurrencyHandlersMap.Create;
   inherited;
 end;
@@ -4364,6 +4412,7 @@ end;
 procedure TfrmMakeReservationQuick.edPackageChange(Sender: TObject);
 begin
   PackageValidate(edPackage, clabPcCode, labPackageDescription);
+  ActivateNextButton;
 end;
 
 procedure TfrmMakeReservationQuick.edPackageDblClick(Sender: TObject);
@@ -4598,6 +4647,7 @@ end;
 
 destructor TfrmMakeReservationQuick.Destroy;
 begin
+  FPreviousGuestsList.Free;
   FCurrencyhandlers.Free;
   inherited;
 end;
@@ -4609,6 +4659,7 @@ begin
     zCustomerChanged := true;
     initCustomer;
   end;
+  ActivateNextButton;
 end;
 
 procedure TfrmMakeReservationQuick.edCustomerDblClick(Sender: TObject);
@@ -4648,6 +4699,7 @@ end;
 procedure TfrmMakeReservationQuick.edMarketSegmentCodeChange(Sender: TObject);
 begin
   MarketSegmentValidate;
+  ActivateNextButton;
 end;
 
 procedure TfrmMakeReservationQuick.edMarketSegmentCodeDblClick(Sender: TObject);
@@ -4683,7 +4735,7 @@ begin
   begin
     Key := TRoomerFilterItem(edContactPerson1.Properties.LookupItems.Objects[edContactPerson1.ItemIndex]).Key;
     // edContactPerson.FKeys[idx];
-    if glb.LocateSpecificRecord(glb.PreviousGuestsSet, 'ID', Key) then
+    if Assigned(glb.PreviousGuestsSet) AND glb.LocateSpecificRecord(glb.PreviousGuestsSet, 'ID', Key) then
     begin
       postMessage(handle, WM_SET_COMBO_TEXT, 1, 0);
     end
@@ -4754,6 +4806,7 @@ begin
 
     labCurrencyRate.Caption := floatTostr(FCurrentCurrencyhandler.Rate);
   end;
+  ActivateNextButton;
 end;
 
 procedure TfrmMakeReservationQuick.edCurrencyDblClick(Sender: TObject);
@@ -4782,6 +4835,7 @@ end;
 procedure TfrmMakeReservationQuick.edPcCodeChange(Sender: TObject);
 begin
   PriceCodeValidate(edPcCode, clabPcCode, labPcCodeName);
+  ActivateNextButton;
 end;
 
 procedure TfrmMakeReservationQuick.edPcCodeDblClick(Sender: TObject);

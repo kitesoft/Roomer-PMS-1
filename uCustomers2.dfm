@@ -157,8 +157,8 @@ object frmCustomers2: TfrmCustomers2
     object chkActive: TsCheckBox
       Left = 52
       Top = 64
-      Width = 234
-      Height = 20
+      Width = 242
+      Height = 17
       Caption = 'Active (if checked then just active are visible'
       Checked = True
       State = cbChecked
@@ -800,6 +800,7 @@ object frmCustomers2: TfrmCustomers2
     RoomerEntitiesUri = 'http://mobile.roomerpms.com:8080/services/entities/'
     RoomerDatasetsUri = 'http://mobile.roomerpms.com:8080/services/datasets/'
     SessionLengthSeconds = 0
+    PrimaryKeyField = 'ID'
     Left = 544
     Top = 368
   end

@@ -80,11 +80,43 @@ type
     property TotalVat[aItem: string]: double read GetTotalVat;
   end;
 
+  TInvoiceIndexTotal = class(TObject)
+  private
+    FIndex: integer;
+    FInvoiceIndexTotal: double;
+    FRoomRentIndexTotal: double;
+    function GetHasInvoiceLines: boolean;
+    function GetHasRoomRentItems: boolean;
+  public
+    constructor Create(aIndex: integer; aRoomRentTotal: double; aInvoiceLinesTotal: double);
+    property HasInvoiceLines: boolean read GetHasInvoiceLines;
+    property HasRoomRentItems: boolean read GetHasRoomRentItems;
+    property InvoiceIndexTotal: double read FInvoiceIndexTotal write FInvoiceIndexTotal;
+    property RoomRentIndexTotal: double read FRoomRentIndexTotal write FRoomRentIndexTotal;
+  end;
+
+  TInvoiceIndexTotalList = class(TObjectDictionary<integer, TInvoiceIndexTotal>)
+  private
+    function GetHasInvoiceLines(aIndex: integer): boolean;
+    function GetHasRoomRentItems(aIndex: integer): boolean;
+    function GetTotalInvoiceLinesOnIndex(aIndex: integer): double;
+    function GetTotalRoomRentOnIndex(aIndex: integer): double;
+  public
+    constructor Create; reintroduce;
+    procedure UpdateIndexTotals(aReservation: integer; aRoomReservation: Integer);
+    property HasInvoiceLines[aIndex: integer]: boolean read GetHasInvoiceLines;
+    property HasRoomRentItems[aIndex: integer]: boolean read GetHasRoomRentItems;
+    property TotalInvoiceLinesOnIndex[aIndex: integer]: double read GetTotalInvoiceLinesOnIndex;
+    property TotalRoomRentOnIndex[aIndex: integer]: double read GetTotalRoomRentOnIndex;
+  end;
+
 implementation
 
 uses
   SysUtils
-  ;
+  , cmpRoomerDataset
+  , hData
+  , Math, uD;
 
 constructor TInvoiceRoomEntity.Create(_RoomItem: String; _Guests: Integer; _Children: Integer; _Nights: double;
   _Price: double; _Vat, _Discount: Double; _BreakFastIncluded: boolean);
@@ -156,6 +188,115 @@ begin
   for lRoomEnt in Self do
     if lRoomEnt.BreakfastIncluded then
       inc(Result, lRoomEnt.NumGuests * trunc(lRoomEnt.Nights));
+end;
+
+{ TInvoiceIndexTotal }
+
+constructor TInvoiceIndexTotal.Create(aIndex: integer; aRoomRentTotal: double; aInvoiceLinesTotal: double);
+begin
+  FIndex := aIndex;
+  FInvoiceIndexTotal := aInvoiceLinesTotal;
+  FRoomRentIndexTotal := aRoomRentTotal;
+end;
+
+function TInvoiceIndexTotal.GetHasInvoiceLines: boolean;
+begin
+  Result := not SameValue(FInvoiceIndexTotal, 0.00); // TODO
+end;
+
+function TInvoiceIndexTotal.GetHasRoomRentItems: boolean;
+begin
+  Result := not SameValue(FRoomRentIndexTotal, 0.00);
+end;
+
+{ TInvoiceIndexTotalList }
+
+constructor TInvoiceIndexTotalList.Create;
+begin
+  inherited Create([doOwnsValues]);
+end;
+
+function TInvoiceIndexTotalList.GetHasInvoiceLines(aIndex: integer): boolean;
+begin
+  Result := ContainsKey(aIndex) and Items[aIndex].HasInvoiceLines;
+end;
+
+function TInvoiceIndexTotalList.GetHasRoomRentItems(aIndex: integer): boolean;
+begin
+  Result := ContainsKey(aIndex) and Items[aIndex].HasRoomRentItems;
+end;
+
+function TInvoiceIndexTotalList.GetTotalInvoiceLinesOnIndex(aIndex: integer): double;
+begin
+  if ContainsKey(aIndex) then
+    Result := Items[aIndex].InvoiceIndexTotal
+  else
+    Result := 0;
+end;
+
+function TInvoiceIndexTotalList.GetTotalRoomRentOnIndex(aIndex: integer): double;
+begin
+  if ContainsKey(aIndex) then
+    Result := Items[aIndex].RoomRentIndexTotal
+  else
+    Result := 0;
+end;
+
+procedure TInvoiceIndexTotalList.UpdateIndexTotals(aReservation: integer; aRoomReservation: Integer);
+var
+  sql: string;
+  rSet: TRoomerDataset;
+begin
+
+  Clear;
+
+  rSet := CreateNewDataset;
+  try
+    sql := '';
+
+    sql := sql + ' select '#10;
+    sql := sql + '     invoiceindex, '#10;
+    sql := sql + '     sum(coalesce(invoicelinesTotal,0)) as invoicelinestotal, '#10;
+    sql := sql + '     sum(coalesce(RoomrentTotal,0)) as RoomrentTotal  '#10;
+    sql := sql + ' from '#10;
+    sql := sql + '  (select '#10;
+    sql := sql + '       il.InvoiceIndex as invoiceindex, '#10;
+    sql := sql + '       sum(coalesce(il.total, 0)) as invoiceLinesTotal, '#10;
+    sql := sql + '       0 as Roomrenttotal '#10;
+    sql := sql + '   from invoicelines il '#10;
+    sql := sql + '   where il.invoicenumber = -1 '#10;
+    sql := sql + '   and il.reservation = %d '#10;
+    sql := sql + '   and il.roomreservation = %d '#10;
+    sql := sql + '   group by invoiceindex '#10;
+    sql := sql + '   union '#10;
+    sql := sql + '    select '#10;
+    sql := sql + '         coalesce(rd.invoiceindex, rr.invoiceindex) as rateInvIndex, '#10;
+    sql := sql + '         0, '#10;
+    sql := sql + '         sum(coalesce(rd.roomrate,0)) '#10;
+    sql := sql + '    from roomreservations rr '#10;
+    sql := sql + '    join roomsdate rd on rd.roomreservation=rr.roomreservation '#10;
+    sql := sql + '    where rr.reservation=%d '#10;
+    sql := sql + '    and (rr.roomreservation = %d or (%d=0 and rr.groupaccount)) '#10;
+    sql := sql + '    group by rateInvIndex '#10;
+    sql := sql + '     ) u '#10;
+    sql := sql + ' where invoicelinestotal <> 0 or roomrenttotal <> 0 '#10;
+    sql := sql + ' group by invoiceindex '#10;
+
+    sql := format(sql, [aReservation, aRoomReservation, aReservation, aRoomReservation, aRoomReservation]);
+
+    hData.rSet_bySQL(rSet, sql);
+    rSet.First;
+    while not rSet.Eof do
+    begin
+      Add(rSet.FieldByName('invoiceindex').AsInteger,
+            TInvoiceIndexTotal.Create(rSet.FieldByName('invoiceindex').AsInteger,
+                                      rSet.FieldByName('RoomRentTotal').AsFloat,
+                                      rSet.FieldByName('invoicelinestotal').AsFloat));
+      rSet.next;
+    end;
+  finally
+     rSet.Free;
+  end;
 end;
 
 end.

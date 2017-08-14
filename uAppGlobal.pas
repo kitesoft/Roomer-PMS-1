@@ -286,6 +286,9 @@ Type
 
       property PMSSettings: TPmsSettings read FPmsSettings;
 
+      function PCIContractOpenForChannel(channelId : Integer) : Boolean;
+      function PCIContractNotOpen: Boolean;
+
    published
       property PreviousGuestsSet : TRoomerDataSet read FPreviousGuestsSet;
       property RoomsSet        : TRoomerDataSet read GetRoomsSet;
@@ -359,7 +362,9 @@ uses   dbTables
      , PrjConst
      , uFileSystemUtils
      , uSQLUtils
-     , UITypes;
+     , UITypes
+     , RegularExpressions
+     ;
 
 procedure FilterRoom( RoomNumber : string );
 begin
@@ -370,7 +375,6 @@ begin
   end;
 end;
 
-{
 { TGlobalSettings }
 
 constructor TGlobalSettings.Create;
@@ -387,10 +391,10 @@ begin
 
   FPreviousGuestsReload := TGetSQLDataThreaded.Create;
   FPreviousGuestsSet := nil;
-  ReloadPreviousGuests;
 
   LoadStaticTables(true);
 
+  ReloadPreviousGuests;
 end;
 
 destructor TGlobalSettings.Destroy;
@@ -493,8 +497,47 @@ const PREV_GUESTS_SQL = 'SELECT DISTINCT * FROM ' +
                         'AND (CONCAT(Tel1,Tel2,EmailAddress) <> '''') ' +
                         'ANd active=1 ' +
                         ') xxx ';
+  GUESTS_PROFILES_SQL = 'SELECT DISTINCT * FROM ' +
+                        '    (SELECT CONCAT(''PP'',pe.ID) AS ID, pe.title, pe.PassPortNumber, ' +
+                        '       CONCAT(IF(ISNULL(pe.FirstName) OR pe.Firstname='''', '''', pe.firstName), '' '', pe.Lastname)  AS Name, ' +
+                        '       '''' AS CustomerName, pe.Address1, pe.Address2, pe.Zip AS Address3, pe.City AS Address4, pe.Country, pe.TelLandLine AS Tel1, pe.TelMobile AS Tel2, pe.Email, pe.SocialSecurityNumber, pe.CompVATNumber, pe.CompFax ' +
+                        '	FROM personprofiles pe ' +
+                        '	WHERE (pe.Firstname <> '''' OR pe.Lastname <> '''') ' +
+                        '	AND pe.Address1 <> '''' ' +
+                        '	AND pe.Country <> '''' ' +
+                        '	AND (pe.TelLandLine <> '''' OR pe.TelMobile <> '''' OR pe.Email <> '''') ' +
+//                        '	UNION ALL ' +
+//                        '	SELECT ' +
+//                        '        CONCAT(''CU'', ID) AS ID, ' +
+//                        '            title, ' +
+//                        '            '''' AS PassPortNumber, ' +
+//                        '            Surname AS Name, ' +
+//                        '            Surname AS CustomerName, ' +
+//                        '            Address1, ' +
+//                        '            Address2, ' +
+//                        '            Address3, ' +
+//                        '            Address4, ' +
+//                        '            Country, ' +
+//                        '            Tel1, ' +
+//                        '            Tel2, ' +
+//                        '            EmailAddress, ' +
+//                        '            '''' AS a, ' +
+//                        '            '''' AS b, ' +
+//                        '            Fax ' +
+//                        '    FROM ' +
+//                        '        customers ' +
+//                        '    WHERE ' +
+//                        '        Surname <> '''' AND Address1 <> '''' ' +
+//                        '            AND Country <> '''' ' +
+//                        '            AND (CONCAT(Tel1, Tel2, EmailAddress) <> '''') ' +
+//                        '            AND active = 1 ' +
+                        ')xxx';
 begin
-  FPreviousGuestsReload.execute(PREV_GUESTS_SQL, PreviousGuestsReloadFetchHandler);
+  FreeAndNil(FPreviousGuestsSet);
+  if PMSSettings.VariousOptions.PreloadListOfPreviousGuests then
+    FPreviousGuestsReload.execute(PREV_GUESTS_SQL, PreviousGuestsReloadFetchHandler)
+//  else
+//    FPreviousGuestsReload.execute(GUESTS_PROFILES_SQL, PreviousGuestsReloadFetchHandler);
 end;
 
 procedure TGlobalSettings.PreviousGuestsReloadFetchHandler(Sender : TObject);
@@ -1096,6 +1139,36 @@ begin
   result := LocateSpecificRecord(table, field, value);
   if result then
      resultingValue := tableslist.Dataset[table].FieldByName(fieldToGet).AsFloat;
+end;
+
+function TGlobalSettings.PCIContractOpenForChannel(channelId: Integer): Boolean;
+var channelCode : String;
+  i: Integer;
+  function CreateRegExCode(s : String) : String;
+  begin
+    result := ReplaceString(ReplaceString(s, '?', '.'), '*', '.?') + '$';
+  end;
+begin
+  result := false;
+  if LocateSpecificRecordAndGetValue('channels', 'id', channelId, 'channelManagerId', channelCode) then
+  begin
+    if Assigned(g.PCIContractWildcards) then
+      for i := 0 to g.PCIContractWildcards.Count - 1 do
+        if TRegEx.IsMatch(channelCode, CreateRegExCode(g.PCIContractWildcards[i])) then
+        begin
+          result := true;
+          Break;
+        end;
+  end;
+end;
+
+function TGlobalSettings.PCIContractNotOpen: Boolean;
+begin
+  result := (g.PCIContractWildcards.Count = 0) OR
+            (
+              (g.PCIContractWildcards.Count = 1) AND
+              (g.PCIContractWildcards[0] = 'RBB')
+            );
 end;
 
 procedure TGlobalSettings.PerformAuthenticationAssertion(Form: TForm);

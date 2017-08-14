@@ -160,7 +160,7 @@ begin
       '	 arriving.NumGuestsA as ArrivingGuests, '#10+
       '	 departing.ExpectedCheckOutTime as expectedCOT, '#10+
       '	 arriving.ExpectedTimeOfArrival as expectedTOA, '#10+
-      '	 arriving.hiddeninfo as Roomnotes, '#10+
+      '	 coalesce(arriving.hiddeninfo, stayover.hiddenInfo) as Roomnotes, '#10+
       '	 LiveNotes.Note AS LiveNote, '#10+
       '	 rm.CleaningNotes, '#10+
       '	 rm.MaintenanceNotes, '#10+
@@ -183,21 +183,6 @@ begin
       '                     GROUP_CONCAT(DISTINCT cn.Message SEPARATOR ''\n'') AS Note '#10+
       '             FROM cleaningnotes cn '#10 +
       '	  JOIN (  '#10 +
-//      '     SELECT -- get all roomreservations with rooms occupied today or yesterday  or still dirty '#10 +
-//      '       rr.Room, '#10+
-//      '       r.Status as CleanStatus, '#10+
-//      '       rr.Arrival AS Arrival, '#10+
-//      '       rr.Departure AS Departure, '#10+
-//      '       DATEDIFF(rr.Departure, rr.Arrival) as numberOfDays, '#10+
-//      '       DATEDIFF({probedate}, rr.Arrival) AS daysInHouse, '#10+
-//      '       ({probedate} = rr.Departure) as IsDeparting, '#10+
-//      '       (rr.Status=''D'') AS isDeparted '#10 +
-//      '     FROM roomreservations rr '#10 +
-//      '     JOIN rooms r on r.room=rr.room '#10 +
-//      '     WHERE rr.roomreservation IN '#10 +
-//      '         (SELECT roomreservation FROM roomsdate WHERE ((Adate={probedate} OR DATE_ADD(ADate, INTERVAL 1 DAY)={probedate})  OR (aDate < {probedate} and r.status = ''U'')) '#10 +
-//			'		          AND resflag in (''P'',''G'',''D'') ) '#10 +
-
         '     SELECT DISTINCT-- get all rooms occupied today or yesterday or still dirty '#10 +
         '     r.Room, '#10 +
         '     r.Status as CleanStatus, '#10 +
@@ -231,7 +216,7 @@ begin
       '                OR '#10 +
       '                  (NOT xxx.isDeparted AND cn.serviceType=' + _db(ctOnce.ToDB) + ' AND cn.onceType=' + _db(coDay_Before_Check_Out.ToDB) + ' AND xxx.Departure=DATE_ADD({probedate}, INTERVAL 1 DAY) AND xxx.numberOfDays>=cn.minimumDays) '#10 +
       '           ) '#10 +
-      'GROUP BY xxx.Room) LiveNotes ON LiveNotes.Room=r.Room '#10 +
+      '         GROUP BY xxx.Room) LiveNotes ON LiveNotes.Room=r.Room '#10 +
       ' '#10+
       '	  LEFT OUTER JOIN ( SELECT * '#10+
       '			 , (select count(*) from persons p where p.roomreservation = rrd.RoomReservation)  + rrd.numChildren + rrd.numInfants as NumGuestsD '#10+

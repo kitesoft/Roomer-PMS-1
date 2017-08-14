@@ -3,7 +3,7 @@ object frmMain: TfrmMain
   Top = 134
   ActiveControl = pageMainGrids
   ClientHeight = 665
-  ClientWidth = 1540
+  ClientWidth = 1532
   Color = clWhite
   DoubleBuffered = True
   Font.Charset = DEFAULT_CHARSET
@@ -26,7 +26,7 @@ object frmMain: TfrmMain
   OnResize = FormResize
   OnShow = FormShow
   DesignSize = (
-    1540
+    1532
     665)
   PixelsPerInch = 96
   TextHeight = 13
@@ -46,7 +46,7 @@ object frmMain: TfrmMain
   object dxBarDockControl1: TdxBarDockControl
     Left = 0
     Top = 155
-    Width = 1540
+    Width = 1532
     Height = 3
     Align = dalTop
     BarManager = barinn
@@ -60,7 +60,7 @@ object frmMain: TfrmMain
   object panMain: TsPanel
     Left = 0
     Top = 158
-    Width = 1540
+    Width = 1532
     Height = 477
     Margins.Left = 0
     Margins.Top = 0
@@ -75,7 +75,7 @@ object frmMain: TfrmMain
     object lblSearchFilterActive: TsLabel
       Left = 0
       Top = 170
-      Width = 1540
+      Width = 1532
       Height = 3
       Hint = 'Search Filter Active'
       Align = alTop
@@ -96,12 +96,12 @@ object frmMain: TfrmMain
     object pnlBottom: TsPanel
       Left = 0
       Top = 173
-      Width = 1540
+      Width = 1532
       Height = 304
       Align = alClient
       TabOrder = 0
       object splStatistics: TsSplitter
-        Left = 1228
+        Left = 1220
         Top = 1
         Width = 7
         Height = 302
@@ -114,7 +114,7 @@ object frmMain: TfrmMain
       object pageMainGrids: TsPageControl
         Left = 1
         Top = 1
-        Width = 1227
+        Width = 1219
         Height = 302
         ActivePage = tabOneDayView
         Align = alClient
@@ -127,7 +127,7 @@ object frmMain: TfrmMain
           object grOneDayRooms: TAdvStringGrid
             Left = 0
             Top = 0
-            Width = 1219
+            Width = 1211
             Height = 274
             Cursor = crDefault
             Align = alClient
@@ -171,6 +171,7 @@ object frmMain: TfrmMain
             OnDblClickCell = grOneDayRoomsDblClickCell
             OnDragScroll = grOneDayRoomsDragScroll
             OnResize = grOneDayRoomsResize
+            OnSelectionChanged = gridSectionChanged
             HintShowSizing = True
             OnEndColumnSize = grOneDayRoomsEndColumnSize
             OnScrollCell = grOneDayRoomsScrollCell
@@ -451,7 +452,7 @@ object frmMain: TfrmMain
           object Panel3: TsPanel
             Left = 0
             Top = 0
-            Width = 1219
+            Width = 1211
             Height = 100
             Align = alTop
             BevelOuter = bvNone
@@ -577,7 +578,7 @@ object frmMain: TfrmMain
           object gAllReservations: TcxGrid
             Left = 0
             Top = 100
-            Width = 1219
+            Width = 1211
             Height = 174
             Align = alClient
             BevelInner = bvNone
@@ -847,6 +848,10 @@ object frmMain: TfrmMain
         object tabPeriod: TsTabSheet
           Caption = 'tabPeriod'
           ImageIndex = 2
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object sLabel2: TsLabel
             Left = 224
             Top = 400
@@ -857,7 +862,7 @@ object frmMain: TfrmMain
           object panPeriodRooms: TsPanel
             Left = 0
             Top = 0
-            Width = 1219
+            Width = 1211
             Height = 124
             Align = alClient
             BevelOuter = bvNone
@@ -866,7 +871,7 @@ object frmMain: TfrmMain
             object lblLoading: TsLabel
               Left = 0
               Top = 0
-              Width = 1219
+              Width = 1211
               Height = 4
               Hint = 'Search Filter Active'
               Align = alTop
@@ -887,7 +892,7 @@ object frmMain: TfrmMain
             object lblRoomBeingMoved: TsLabel
               Left = 0
               Top = 4
-              Width = 1219
+              Width = 1211
               Height = 24
               Align = alTop
               Caption = '---'
@@ -907,7 +912,7 @@ object frmMain: TfrmMain
               Tag = 1
               Left = 0
               Top = 28
-              Width = 1219
+              Width = 1211
               Height = 74
               Cursor = crDefault
               Align = alClient
@@ -950,6 +955,7 @@ object frmMain: TfrmMain
               OnDblClickCell = grPeriodRoomsDblClickCell
               OnDragScroll = grOneDayRoomsDragScroll
               OnResize = grPeriodRoomsResize
+              OnSelectionChanged = gridSectionChanged
               DragDropSettings.OleDropTarget = True
               DragDropSettings.OleDropSource = True
               ActiveCellShow = True
@@ -1135,14 +1141,14 @@ object frmMain: TfrmMain
             object pnlLegends: TsPanel
               Left = 0
               Top = 102
-              Width = 1219
+              Width = 1211
               Height = 22
               Align = alBottom
               BevelOuter = bvNone
               TabOrder = 2
               SkinData.SkinSection = 'TRANSPARENT'
               object sPanel2: TsPanel
-                Left = 239
+                Left = 231
                 Top = 0
                 Width = 980
                 Height = 22
@@ -1294,7 +1300,7 @@ object frmMain: TfrmMain
           object splitPeriod: TcxSplitter
             Left = 0
             Top = 124
-            Width = 1219
+            Width = 1211
             Height = 8
             Hint = 'No Rooms'
             Margins.Left = 5
@@ -1310,11 +1316,12 @@ object frmMain: TfrmMain
             OnMoved = splitPeriodMoved
             Color = 6842472
             ParentColor = False
+            ExplicitTop = 157
           end
           object pnlPeriodNoRooms: TsPanel
             Left = 0
             Top = 165
-            Width = 1219
+            Width = 1211
             Height = 109
             Hint = 'Test Hint'
             Align = alBottom
@@ -1324,7 +1331,7 @@ object frmMain: TfrmMain
               Tag = 2
               Left = 1
               Top = 1
-              Width = 1217
+              Width = 1209
               Height = 107
               Cursor = crDefault
               Align = alClient
@@ -1461,14 +1468,14 @@ object frmMain: TfrmMain
           object pnlBottomViewSettings: TsPanel
             Left = 0
             Top = 132
-            Width = 1219
+            Width = 1211
             Height = 33
             Align = alBottom
             TabOrder = 3
             OnMouseEnter = pnlNoRoomButtonsMouseEnter
             SkinData.SkinSection = 'PANEL'
             object pnlOccupancyViewButtons: TPanel
-              Left = 849
+              Left = 841
               Top = 1
               Width = 369
               Height = 31
@@ -1527,7 +1534,7 @@ object frmMain: TfrmMain
               end
             end
             object pnlNoRoomButtons: TsPanel
-              Left = 611
+              Left = 603
               Top = 1
               Width = 238
               Height = 31
@@ -1575,7 +1582,7 @@ object frmMain: TfrmMain
             object pnlViewSwitch: TsPanel
               Left = 1
               Top = 1
-              Width = 610
+              Width = 602
               Height = 31
               Align = alClient
               BevelOuter = bvLowered
@@ -1629,20 +1636,36 @@ object frmMain: TfrmMain
         end
         object tabFreeRooms: TsTabSheet
           Caption = 'tabFreeRooms'
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
         end
         object tabDashboard: TsTabSheet
           Caption = 'tabDashboard'
           SkinData.SkinSection = 'TRANSPARENT'
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
         end
         object tabRateQuery: TsTabSheet
           Caption = 'tabRateQuery'
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
         end
         object tabFrontDesk: TsTabSheet
           Caption = 'tabFrontDesk'
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object sbFrontDesk: TsScrollBox
             Left = 0
             Top = 0
-            Width = 1219
+            Width = 1211
             Height = 274
             Align = alClient
             BorderStyle = bsNone
@@ -1651,7 +1674,7 @@ object frmMain: TfrmMain
         end
       end
       object pnlStatSlider: TsPanel
-        Left = 1235
+        Left = 1227
         Top = 1
         Width = 304
         Height = 302
@@ -1741,7 +1764,7 @@ object frmMain: TfrmMain
     object panMainTop: TsPanel
       Left = 0
       Top = 137
-      Width = 1540
+      Width = 1532
       Height = 33
       Margins.Left = 0
       Margins.Top = 0
@@ -1829,7 +1852,7 @@ object frmMain: TfrmMain
       object __PanGridsHeader: TsPanel
         Left = 661
         Top = 0
-        Width = 879
+        Width = 871
         Height = 33
         Align = alClient
         Alignment = taLeftJustify
@@ -1844,7 +1867,7 @@ object frmMain: TfrmMain
           AlignWithMargins = True
           Left = 158
           Top = 3
-          Width = 294
+          Width = 286
           Height = 27
           Margins.Left = 5
           Align = alClient
@@ -1863,7 +1886,7 @@ object frmMain: TfrmMain
           ExplicitHeight = 23
         end
         object sPanel3: TsPanel
-          Left = 455
+          Left = 447
           Top = 0
           Width = 424
           Height = 33
@@ -2446,7 +2469,7 @@ object frmMain: TfrmMain
     object pnlMessages: TsPanel
       Left = 0
       Top = 0
-      Width = 1540
+      Width = 1532
       Height = 106
       Align = alTop
       BevelOuter = bvNone
@@ -2461,7 +2484,7 @@ object frmMain: TfrmMain
       object mmoMessage: THTMLabel
         Left = 88
         Top = 3
-        Width = 1449
+        Width = 1441
         Height = 100
         Align = alClient
         BorderWidth = 2
@@ -2556,7 +2579,7 @@ object frmMain: TfrmMain
     object pnlOffline: TsPanel
       Left = 0
       Top = 106
-      Width = 1540
+      Width = 1532
       Height = 31
       Align = alTop
       BevelOuter = bvNone
@@ -2591,7 +2614,7 @@ object frmMain: TfrmMain
   object dxRibbon1: TdxRibbon
     Left = 0
     Top = 0
-    Width = 1540
+    Width = 1532
     Height = 155
     Margins.Left = 0
     Margins.Top = 0
@@ -2609,6 +2632,7 @@ object frmMain: TfrmMain
     TabOrder = 2
     TabStop = False
     object rbTabHome: TdxRibbonTab
+      Active = True
       Caption = 'Roomer'
       Groups = <
         item
@@ -2717,7 +2741,6 @@ object frmMain: TfrmMain
       Index = 4
     end
     object System: TdxRibbonTab
-      Active = True
       Caption = 'System'
       Groups = <
         item
@@ -2766,6 +2789,14 @@ object frmMain: TfrmMain
         end>
       Index = 7
     end
+    object rbTabFinanceConnect: TdxRibbonTab
+      Caption = 'Finance Connect'
+      Groups = <
+        item
+          ToolbarName = 'barinnBar4'
+        end>
+      Index = 8
+    end
     object rbTabHelp: TdxRibbonTab
       Caption = 'Help'
       Groups = <
@@ -2775,7 +2806,7 @@ object frmMain: TfrmMain
         item
           ToolbarName = 'barinnBar16'
         end>
-      Index = 8
+      Index = 9
     end
   end
   object pnlRBE: TsPanel
@@ -2811,7 +2842,7 @@ object frmMain: TfrmMain
     end
   end
   object pnlRoomerLogo: TsPanel
-    Left = 1267
+    Left = 1259
     Top = 3
     Width = 321
     Height = 49
@@ -2886,7 +2917,7 @@ object frmMain: TfrmMain
   object pnlDayStatus: TsPanel
     Left = 0
     Top = 635
-    Width = 1540
+    Width = 1532
     Height = 30
     Align = alBottom
     BevelOuter = bvNone
@@ -3047,7 +3078,7 @@ object frmMain: TfrmMain
     end
     object __VER: TsLabel
       AlignWithMargins = True
-      Left = 1363
+      Left = 1355
       Top = 5
       Width = 174
       Height = 22
@@ -3066,7 +3097,7 @@ object frmMain: TfrmMain
     end
     object __TimingResult: TsLabel
       AlignWithMargins = True
-      Left = 1305
+      Left = 1297
       Top = 5
       Width = 15
       Height = 22
@@ -4267,11 +4298,15 @@ object frmMain: TfrmMain
         end
         item
           Visible = True
+          ItemName = 'btnResStatusPerdDay'
+        end
+        item
+          Visible = True
           ItemName = 'dxUserActivityLog'
         end
         item
           Visible = True
-          ItemName = 'btnResStatusPerdDay'
+          ItemName = 'btnCreditcardTokenUsage'
         end>
       OneOnRow = False
       Row = 0
@@ -4330,7 +4365,7 @@ object frmMain: TfrmMain
     object barinnReportsInvoices: TdxBar
       Caption = 'Invoices'
       CaptionButtons = <>
-      DockedLeft = 1185
+      DockedLeft = 1149
       DockedTop = 0
       FloatLeft = 1324
       FloatTop = 8
@@ -4569,7 +4604,7 @@ object frmMain: TfrmMain
     object barinnBar10: TdxBar
       Caption = 'Ledger'
       CaptionButtons = <>
-      DockedLeft = 1394
+      DockedLeft = 1358
       DockedTop = 0
       FloatLeft = -183
       FloatTop = 8
@@ -4625,6 +4660,26 @@ object frmMain: TfrmMain
           ItemName = 'btnMaids'
         end>
       OneOnRow = False
+      Row = 0
+      UseOwnFont = False
+      Visible = True
+      WholeRow = False
+    end
+    object barinnBar4: TdxBar
+      Caption = 'Custom 2'
+      CaptionButtons = <>
+      DockedLeft = 0
+      DockedTop = 0
+      FloatLeft = 1574
+      FloatTop = 8
+      FloatClientWidth = 0
+      FloatClientHeight = 0
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'btnManageFinanceConnect'
+        end>
+      OneOnRow = True
       Row = 0
       UseOwnFont = False
       Visible = True
@@ -5564,6 +5619,22 @@ object frmMain: TfrmMain
     object dxRibbonQuickAccessGroupButton1: TdxRibbonQuickAccessGroupButton
       Category = 0
       Visible = ivAlways
+    end
+    object btnManageFinanceConnect: TdxBarLargeButton
+      Caption = 'Manage'
+      Category = 0
+      Hint = 'Manage'
+      Visible = ivAlways
+      LargeImageIndex = 70
+      OnClick = btnManageFinanceConnectClick
+    end
+    object btnCreditcardTokenUsage: TdxBarLargeButton
+      Caption = 'Creditcard token usage'
+      Category = 0
+      Hint = 'Creditcard token usage'
+      Visible = ivAlways
+      LargeImageIndex = 126
+      OnClick = btnCreditcardTokenUsageClick
     end
     object mmnuFile: TdxBarSubItem
       Caption = '&File'
@@ -23703,7 +23774,9 @@ object frmMain: TfrmMain
     ThirdParty.ThirdCheckBoxes = 'TCheckBox'#13#10'TRadioButton'#13#10'TGroupButton'#13#10'TDBCheckBox'#13#10
     ThirdParty.ThirdGroupBoxes = 'TGroupBox'#13#10'TRadioGroup'#13#10'TDBRadioGroup'#13#10
     ThirdParty.ThirdListViews = 'TListView'#13#10'TAdvListView'#13#10
-    ThirdParty.ThirdPanels = 'TPanel'#13#10'TfrxTBPanel'#13#10'TDBNavigator'#13#10'TDBCtrlPanel'#13#10'TsPanel'#13#10
+    ThirdParty.ThirdPanels = 
+      'TPanel'#13#10'TfrxTBPanel'#13#10'TDBNavigator'#13#10'TDBCtrlPanel'#13#10'TsPanel'#13#10'TFlowp' +
+      'anel'#13#10
     ThirdParty.ThirdGrids = 
       'TtringGrid'#13#10'TDrawGrid'#13#10'TAdvStringGrid'#13#10'TDBAdvGrid'#13#10'TDBGrid'#13#10'TcxG' +
       'rid'#13#10
@@ -24146,7 +24219,7 @@ object frmMain: TfrmMain
     Top = 208
   end
   object alDeveloperTools: TActionList
-    Left = 656
+    Left = 784
     Top = 16
     object acUpdateTranslations: TAction
       Caption = 'Update Translations'

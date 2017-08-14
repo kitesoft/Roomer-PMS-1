@@ -12,7 +12,7 @@
   {.$define rmForceOffline}       // Force detecting no internet connection
   {.$define rmROOMERSSL}
   {$define rmMONITOR_LEAKAGE}     // Report memory leaks on shutdown
-  {.$define UseEditInvoice2015}   //
+  {$define rmDisableFinanceConnect } // Do not use finance connect
 {$endif DEBUG}
 
 {$define DISABLEOFFLINEREPORTS} // turn off offline reports because of application hangs

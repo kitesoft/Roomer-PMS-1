@@ -272,6 +272,7 @@ uses
   , uSQLUtils
   , uFrmHandleBookKeepingException
   , uEditFinanceExportProperties
+  , uFinanceConnectService
   ;
 
 {$R *.dfm}
@@ -797,7 +798,7 @@ end;
 procedure TfrmInvoiceList2.FormShow(Sender : TObject);
 begin
 
-  bIsFinanceSystemConnected := IsFinanceSystemConnected;
+  bIsFinanceSystemConnected := FinanceConnectActive OR IsFinanceSystemConnected;
   cbxPeriod.ItemIndex := 0;
   cbxTxtType.ItemIndex := 0;
   zLastInvoiceID := hdata.IVH_GetLastID();
@@ -1065,7 +1066,7 @@ end;
 
 procedure TfrmInvoiceList2.mnuExportClick(Sender: TObject);
 var i,
-    linvNumber : Integer;
+    lInvNumber : Integer;
     lSelected : TcxCustomGridRow;
     remoteResult : String;
     lUpdateNeeded: boolean;
@@ -1082,9 +1083,10 @@ begin
         if integer(lSelected.Values[tvInvoiceHeadexternalInvoiceId.Index]) in [0, 1] then
         begin
           lInvNumber := lSelected.Values[tvInvoiceHeadInvoiceNumber.Index];
-          remoteResult := d.roomerMainDataSet.SystemSendInvoiceToBookkeeping(linvNumber);
+          SendInvoiceToActiveFinanceConnector(lInvNumber);
+          remoteResult := d.roomerMainDataSet.SystemSendInvoiceToBookkeeping(lInvNumber);
           if remoteResult <> '' then
-            HandleFinanceBookKeepingExceptions(linvNumber, remoteResult)
+            HandleFinanceBookKeepingExceptions(lInvNumber, remoteResult)
           else
             lUpdateNeeded := true;
         end;

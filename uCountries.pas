@@ -246,9 +246,13 @@ type
 
 function Countries(act : TActTableAction; var theData : recCountryHolder; embedPanel : TsPanel = nil; WindowCloseEvent : TNotifyEvent = nil) : boolean;
 function getCountry(ed : TsEdit; lab : TsLabel) : boolean; overload;
+function getCountry(ed : TsEdit; lab : TLabel) : boolean; overload;
 function getCountry(ed : TsComboEdit; lab : TsLabel) : boolean; overload;
+function getCountry(ed : TsComboEdit; lab : TLabel) : boolean; overload;
 function countryValidate(ed : TsEdit; lab : TsLabel) : boolean; overload;
 function countryValidate(ed : TsComboEdit; lab : TsLabel) : boolean; overload;
+function countryValidate(ed : TsComboEdit; lab : TLabel) : boolean; overload;
+function countryValidate(ed : TsEdit; lab : TLabel) : boolean; overload;
 
 var
   frmCountries: TfrmCountries;
@@ -332,6 +336,28 @@ begin
     end;
 end;
 
+function getCountry(ed : TsEdit; lab : TLabel) : boolean;
+var
+  theData : recCountryHolder;
+begin
+  //*TESTED*//
+    initCountryHolder(theData);
+    theData.country := trim(ed.text);
+    result := countries(actLookup,theData);
+
+    if trim(theData.country) = trim(ed.text) then
+    begin
+      result := false;
+      exit;
+    end;
+
+    if result and (theData.country <> ed.text) then
+    begin
+      ed.text := theData.country;
+      lab.Caption := theData.CountryName;
+    end;
+end;
+
 function getCountry(ed : TsComboEdit; lab : TsLabel) : boolean;
 var
   theData : recCountryHolder;
@@ -354,8 +380,29 @@ begin
   end;
 end;
 
+function getCountry(ed : TsComboEdit; lab : TLabel) : boolean;
+var
+  theData : recCountryHolder;
+begin
+  //*TESTED*//
+  initCountryHolder(theData);
+  theData.country := trim(ed.text);
+  result := countries(actLookup,theData);
 
-function countryValidateCode(country : String; lab : TsLabel) : boolean;
+  if trim(theData.country) = trim(ed.text) then
+  begin
+    result := false;
+    exit;
+  end;
+
+  if result and (theData.country <> ed.text) then
+  begin
+    ed.text := theData.country;
+    lab.Caption := theData.CountryName;
+  end;
+end;
+
+function countryValidateCode(country : String; lab : TsLabel) : boolean; overload;
 var
   sValue : string;
 begin
@@ -363,7 +410,20 @@ begin
   result := glb.LocateSpecificRecordAndGetValue('countries', 'Country', country, 'CountryName', sValue);
   if result then
   begin
-    lab.Color := clBtnFace;
+    lab.Font.Color := clWindowText;
+    lab.caption := sValue;
+  end;
+end;
+
+function countryValidateCode(country : String; lab : TLabel) : boolean; overload;
+var
+  sValue : string;
+begin
+  //*NOT TESTED*//
+  result := glb.LocateSpecificRecordAndGetValue('countries', 'Country', country, 'CountryName', sValue);
+  if result then
+  begin
+    lab.Font.Color := clWindowText;
     lab.caption := sValue;
   end;
 end;
@@ -372,14 +432,14 @@ function countryValidate(ed : TsEdit; lab : TsLabel) : boolean;
 begin
   //*NOT TESTED*//
   Result := countryValidateCode(ed.Text, lab);
+  lab.UseSkinColor := False;
   if NOT Result then
   begin
     if ed.Showing then
       ed.SetFocus;
-    lab.Color := clRed;
+    lab.Font.Color := clRed;
     lab.caption := GetTranslatedText('shNotF_star');
   end;
-
 end;
 //END unit global functions
 
@@ -387,11 +447,38 @@ function countryValidate(ed : TsComboEdit; lab : TsLabel) : boolean;
 begin
   //*NOT TESTED*//
   Result := countryValidateCode(ed.Text, lab);
+  lab.UseSkinColor := False;
   if NOT Result then
   begin
     if ed.Showing then
       ed.SetFocus;
-    lab.Color := clRed;
+    lab.Font.Color := clRed;
+    lab.caption := GetTranslatedText('shNotF_star');
+  end;
+end;
+
+function countryValidate(ed : TsComboEdit; lab : TLabel) : boolean;
+begin
+  //*NOT TESTED*//
+  Result := countryValidateCode(ed.Text, lab);
+  if NOT Result then
+  begin
+    if ed.Showing then
+      ed.SetFocus;
+    lab.Font.Color := clRed;
+    lab.caption := GetTranslatedText('shNotF_star');
+  end;
+end;
+
+function countryValidate(ed : TsEdit; lab : TLabel) : boolean;
+begin
+  //*NOT TESTED*//
+  Result := countryValidateCode(ed.Text, lab);
+  if NOT Result then
+  begin
+    if ed.Showing then
+      ed.SetFocus;
+    lab.Font.Color := clRed;
     lab.caption := GetTranslatedText('shNotF_star');
   end;
 end;

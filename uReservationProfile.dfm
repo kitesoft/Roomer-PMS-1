@@ -616,10 +616,6 @@ object frmReservationProfile: TfrmReservationProfile
             SkinData.SkinSection = 'PAGECONTROL'
             object tsContact: TsTabSheet
               Caption = 'Contact'
-              ExplicitLeft = 0
-              ExplicitTop = 0
-              ExplicitWidth = 0
-              ExplicitHeight = 0
               object lblContactName: TsLabel
                 Left = 32
                 Top = 5
@@ -956,7 +952,7 @@ object frmReservationProfile: TfrmReservationProfile
                   ExplicitWidth = 175
                   inherited lblCountryName: TsLabel
                     Width = 3
-                    Height = 11
+                    Height = 14
                     Font.Height = -9
                     ExplicitWidth = 3
                     ExplicitHeight = 11
@@ -1258,10 +1254,6 @@ object frmReservationProfile: TfrmReservationProfile
             object TabSheet5: TsTabSheet
               Caption = 'Customer Tel / Email'
               ImageIndex = 1
-              ExplicitLeft = 0
-              ExplicitTop = 0
-              ExplicitWidth = 0
-              ExplicitHeight = 0
               object Label11: TsLabel
                 Left = 45
                 Top = 29
@@ -2050,7 +2042,7 @@ object frmReservationProfile: TfrmReservationProfile
           Navigator.Buttons.Filter.Visible = True
           OnInitEdit = tvRoomsInitEdit
           DataController.DataSource = mRoomsDS
-          DataController.Options = [dcoAssignGroupingValues, dcoAssignMasterDetailKeys, dcoSaveExpanding, dcoImmediatePost]
+          DataController.KeyFieldNames = 'RoomReservation'
           DataController.Summary.DefaultGroupSummaryItems = <>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -2107,7 +2099,6 @@ object frmReservationProfile: TfrmReservationProfile
               Column = tvRoomsunpaidRentNights
             end>
           DataController.Summary.SummaryGroups = <>
-          OptionsBehavior.AlwaysShowEditor = True
           OptionsBehavior.CellHints = True
           OptionsBehavior.FocusCellOnTab = True
           OptionsData.CancelOnExit = False
@@ -2116,7 +2107,10 @@ object frmReservationProfile: TfrmReservationProfile
           OptionsData.Inserting = False
           OptionsView.Footer = True
           OptionsView.GroupByBox = False
+          OptionsView.HeaderHeight = 23
           OptionsView.Indicator = True
+          OptionsView.RowSeparatorWidth = 3
+          OptionsView.BandHeaders = False
           Bands = <
             item
             end>
@@ -2266,6 +2260,7 @@ object frmReservationProfile: TfrmReservationProfile
             DataBinding.FieldName = 'ExpectedTimeOfArrival'
             PropertiesClassName = 'TcxTimeEditProperties'
             Properties.Alignment.Horz = taCenter
+            Properties.AutoSelect = False
             Properties.ClearKey = 46
             Properties.SpinButtons.Visible = False
             Properties.TimeFormat = tfHourMin
@@ -2274,8 +2269,9 @@ object frmReservationProfile: TfrmReservationProfile
             OnGetDisplayText = FormatTextToShortFormat
             OnGetProperties = GetLocaltimeEditProperties
             HeaderAlignmentHorz = taCenter
-            HeaderHint = 'Expected Time of Arrival'
-            Width = 62
+            HeaderImageIndex = 133
+            Options.Sorting = False
+            Width = 110
             Position.BandIndex = 0
             Position.ColIndex = 10
             Position.RowIndex = 0
@@ -2344,8 +2340,9 @@ object frmReservationProfile: TfrmReservationProfile
             OnGetDisplayText = FormatTextToShortFormat
             OnGetProperties = GetLocaltimeEditProperties
             HeaderAlignmentHorz = taCenter
-            HeaderHint = 'Expected CheckoutTime'
-            Width = 68
+            HeaderImageIndex = 133
+            Options.Sorting = False
+            Width = 110
             Position.BandIndex = 0
             Position.ColIndex = 12
             Position.RowIndex = 0
@@ -2806,7 +2803,7 @@ object frmReservationProfile: TfrmReservationProfile
             Properties.DisplayFormat = '###0.00;###0.00'
             HeaderAlignmentHorz = taRightJustify
             Options.Editing = False
-            Width = 52
+            Width = 71
             Position.BandIndex = 0
             Position.ColIndex = 38
             Position.RowIndex = 0
@@ -2841,6 +2838,7 @@ object frmReservationProfile: TfrmReservationProfile
           object tvRoomsunPaidItems: TcxGridDBBandedColumn
             DataBinding.FieldName = 'unPaidItems'
             Options.Editing = False
+            Width = 73
             Position.BandIndex = 0
             Position.ColIndex = 42
             Position.RowIndex = 0
@@ -2848,6 +2846,7 @@ object frmReservationProfile: TfrmReservationProfile
           object tvRoomsPersonsProfilesId: TcxGridDBBandedColumn
             DataBinding.FieldName = 'PersonsProfilesId'
             HeaderAlignmentHorz = taRightJustify
+            Width = 84
             Position.BandIndex = 0
             Position.ColIndex = 43
             Position.RowIndex = 0
@@ -2855,6 +2854,7 @@ object frmReservationProfile: TfrmReservationProfile
           object tvRoomsManualChannelId: TcxGridDBBandedColumn
             DataBinding.FieldName = 'ManualChannelId'
             HeaderAlignmentHorz = taRightJustify
+            Width = 78
             Position.BandIndex = 0
             Position.ColIndex = 44
             Position.RowIndex = 0
@@ -3525,18 +3525,20 @@ object frmReservationProfile: TfrmReservationProfile
           object lblSpecialRequests: TsLabel
             Left = 2
             Top = 15
-            Width = 81
+            Width = 250
             Height = 13
             Align = alTop
             Caption = 'Special Requests'
+            ExplicitWidth = 81
           end
           object lblNotes: TsLabel
             Left = 2
             Top = 101
-            Width = 28
+            Width = 250
             Height = 13
             Align = alTop
             Caption = 'Notes'
+            ExplicitWidth = 28
           end
           object edtSpecialRequests: TMemo
             AlignWithMargins = True
@@ -3641,10 +3643,6 @@ object frmReservationProfile: TfrmReservationProfile
     end
     object sTabSheet2: TsTabSheet
       Caption = 'Alerts'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object pnlAlertHolder: TsPanel
         Left = 0
         Top = 0
@@ -4233,8 +4231,8 @@ object frmReservationProfile: TfrmReservationProfile
     Top = 544
   end
   object mnuFinishedInv: TPopupMenu
-    Left = 680
-    Top = 568
+    Left = 912
+    Top = 392
     object mnuThisRoom: TMenuItem
       Caption = 'Closed this Room'
       OnClick = mnuThisRoomClick
@@ -5113,8 +5111,8 @@ object frmReservationProfile: TfrmReservationProfile
     end
   end
   object mnuGrid: TPopupMenu
-    Left = 848
-    Top = 536
+    Left = 760
+    Top = 392
     object R1: TMenuItem
       Action = acRemoveRoom
     end
@@ -5136,10 +5134,6 @@ object frmReservationProfile: TfrmReservationProfile
     object G2: TMenuItem
       Action = acGroupGuestNames
     end
-    object R4: TMenuItem
-      Caption = 'Re-activate room charges'
-      OnClick = R4Click
-    end
     object N2: TMenuItem
       Caption = '-'
     end
@@ -5149,8 +5143,8 @@ object frmReservationProfile: TfrmReservationProfile
   end
   object alRoomReservation: TActionList
     Images = DImages.PngImageList1
-    Left = 920
-    Top = 536
+    Left = 832
+    Top = 392
     object acRemoveRoom: TAction
       Caption = 'Remove Room'
       ImageIndex = 43
@@ -5202,6 +5196,34 @@ object frmReservationProfile: TfrmReservationProfile
       Caption = 'Add Room'
       ImageIndex = 23
       OnExecute = btnAddRoomClick
+    end
+    object acCopyValueDown: TAction
+      Category = 'ColumnPopup'
+      Caption = 'Copy value down'
+      OnExecute = acCopyValueDownExecute
+    end
+    object acCopyValueUp: TAction
+      Category = 'ColumnPopup'
+      Caption = 'Copy value up'
+      OnExecute = acCopyValueUpExecute
+    end
+    object acCopyValueAll: TAction
+      Category = 'ColumnPopup'
+      Caption = 'Copy value to all'
+      OnExecute = acCopyValueAllExecute
+    end
+  end
+  object mnuRoomColumn: TPopupMenu
+    Left = 680
+    Top = 392
+    object mnuCopyValueDown: TMenuItem
+      Action = acCopyValueDown
+    end
+    object mnuCopyValueUp: TMenuItem
+      Action = acCopyValueUp
+    end
+    object mnuCopyToAll: TMenuItem
+      Action = acCopyValueAll
     end
   end
 end

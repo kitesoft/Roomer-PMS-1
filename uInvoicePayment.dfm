@@ -28,7 +28,6 @@ object frmInvoicePayment: TfrmInvoicePayment
     BevelOuter = bvNone
     TabOrder = 2
     SkinData.SkinSection = 'PANEL'
-    ExplicitWidth = 314
     DesignSize = (
       336
       45)
@@ -46,7 +45,6 @@ object frmInvoicePayment: TfrmInvoicePayment
       TabOrder = 0
       OnClick = BtnOkClick
       SkinData.SkinSection = 'BUTTON'
-      ExplicitLeft = 116
     end
     object btnCancel: TsButton
       Left = 227
@@ -61,7 +59,6 @@ object frmInvoicePayment: TfrmInvoicePayment
       ModalResult = 2
       TabOrder = 1
       SkinData.SkinSection = 'BUTTON'
-      ExplicitLeft = 205
     end
   end
   object Panel2: TsPanel
@@ -73,7 +70,6 @@ object frmInvoicePayment: TfrmInvoicePayment
     BevelOuter = bvNone
     TabOrder = 0
     SkinData.SkinSection = 'PANEL'
-    ExplicitWidth = 314
     object lblCustomername: TsLabel
       Left = 202
       Top = 8
@@ -152,7 +148,6 @@ object frmInvoicePayment: TfrmInvoicePayment
     ParentFont = False
     TabOrder = 3
     SkinData.SkinSection = 'PANEL'
-    ExplicitWidth = 314
   end
   object agrPayTypes: TAdvStringGrid
     Left = 0
@@ -255,8 +250,7 @@ object frmInvoicePayment: TfrmInvoicePayment
     SearchFooter.Font.Style = []
     SearchFooter.ResultFormat = '(%d of %d)'
     SortSettings.DefaultFormat = ssAutomatic
-    Version = '8.2.4.1'
-    ExplicitWidth = 314
+    Version = '8.2.5.2'
     ColWidths = (
       169
       116)
@@ -280,7 +274,6 @@ object frmInvoicePayment: TfrmInvoicePayment
     ParentFont = False
     TabOrder = 4
     SkinData.SkinSection = 'PANEL'
-    ExplicitWidth = 314
     object Label2: TsLabel
       Left = 26
       Top = 5
@@ -346,7 +339,6 @@ object frmInvoicePayment: TfrmInvoicePayment
     BevelOuter = bvNone
     TabOrder = 5
     SkinData.SkinSection = 'PANEL'
-    ExplicitWidth = 314
     object sLabel1: TsLabel
       Left = 10
       Top = 11
@@ -465,7 +457,6 @@ object frmInvoicePayment: TfrmInvoicePayment
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 6
-    ExplicitWidth = 314
     object LblForeignCurrencyAmount: TsLabel
       Left = 31
       Top = 8

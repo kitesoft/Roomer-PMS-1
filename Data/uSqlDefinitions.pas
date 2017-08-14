@@ -5893,6 +5893,7 @@ function GetListOfRoomReservationsFromToDate : string;
 function select_GuestsSearch_RunQuery2(getAll : boolean; DateSelMedhod : integer) : string;
 function Select_Invoice_LoadInvoice3(iRoomReservation : integer) : string;
 function Select_Invoice_LoadInvoice3_WithInvoiceIndex(iRoomReservation, iReservation, InvoiceIndex : integer; Customer : String; FakeGroup : Boolean) : string;
+function Select_Invoice_GenerateInvoiceLinesRoomRentPerDay(iRoomReservation, iReservation, InvoiceIndex : integer; Customer : String) : string;
 function select_InvoiceList_BitBtn2Click(Medhod : integer) : string;
 function select_Main_refreshGuestList : string;
 function select_NationalReport3_getRoomInfo(location : string) : string;
@@ -6252,6 +6253,86 @@ begin
          ' WHERE (ResFlag NOT IN (''X'',''C'')) AND (rr.GroupAccount = 0 AND (PaidBy=%d OR (rd.RoomReservation=%d AND PaidBy=0))) ' +
          IIF(InvoiceIndex <> -1, ' AND rr.InvoiceIndex = ' + inttostr(InvoiceIndex), '') + ') ' + #13;
   end;
+  result := s;
+end;
+
+
+function Select_Invoice_GenerateInvoiceLinesRoomRentPerDay(iRoomReservation, iReservation, InvoiceIndex : integer; Customer : String) : string;
+var
+  s : string;
+begin
+  s := '';
+  s := s+' SELECT '+#10;
+  s := s+' rd.aDate, '#10;
+  s := s+' rd.roomrate, '#10;
+
+  s := s+ 'rd.Room, '#10;
+  s := s+ 'rd.PriceCode, '#10;
+  s := s+ 'rd.Currency, '#10;
+  s := s+ 'rd.Discount, '#10;
+  s := s+ 'rd.isPercentage, '#10;
+  s := s+ 'rd.showDiscount, '#10;
+  s := s+ 'rd.Paid, '#10;
+  s := s+ 'IF(ISNULL((SELECT name FROM persons pe WHERE pe.MainName AND pe.roomreservation = rd.roomreservation LIMIT 1)), '#10;
+  s := s+ '   (SELECT name FROM persons pe WHERE pe.roomreservation = rd.roomreservation LIMIT 1), '#10;
+  s := s+ '   (SELECT name FROM persons pe WHERE pe.MainName AND pe.roomreservation = rd.roomreservation LIMIT 1)) AS guestName, '#10;
+
+  s := s+' rr.Reservation, '+#10;
+  s := s+' rr.RoomReservation, '+#10;
+  s := s+' rr.Status, '+#10;
+  s := s+' rr.GroupAccount, '+#10;
+  s := s+' rr.invBreakfast, '+#10;
+  s := s+' rr.PriceType, '+#10;
+  s := s+' rr.RoomType, '+#10;
+  s := s+' rr.rrDescription, '+#10;
+  s := s+' rr.rrDeparture, '+#10;
+  s := s+' rr.rrArrival, '+#10;
+  s := s+' (SELECT COUNT(id) FROM persons WHERE RoomReservation=rr.RoomReservation) AS numGuests, '+#10;
+  s := s+' rr.numChildren, '+#10;
+  s := s+' rr.numInfants, '+#10;
+  s := s+' (SELECT AVG(RoomRate) FROM roomsdate rd WHERE rd.RoomReservation=rr.RoomReservation AND (rd.ResFlag NOT IN (''X'',''C''))) AS AverageRate, '+#10;
+  s := s+' rr.RateCount, '+#10;
+  s := s+' rr.Package, '+#10;
+
+  s := s+'(SELECT GROUP_CONCAT(DISTINCT Email SEPARATOR '';'') ' +
+         ' FROM (SELECT Email FROM persons WHERE EMail <>'''' AND Reservation={reservation} and ({roomreservation}=0 or Roomreservation={roomreservation}) ' +
+         '        UNION ALL ' +
+         '       SELECT EmailAddress FROM customers WHERE EmailAddress<>'''' AND Customer={customer} ' +
+         '        UNION ALL ' +
+         '       SELECT ContactEmail FROM reservations WHERE ContactEmail <>'''' AND Reservation={reservation} ' +
+         '        UNION ALL ' +
+         '       SELECT CustomerEmail FROM reservations WHERE CustomerEmail <>'''' AND Reservation={reservation} ' +
+         '       ) xxx) '#10 +
+         ' AS ContactEmail,';
+
+  s := s+' (SELECT Email FROM persons p WHERE p.RoomReservation=rr.RoomReservation AND p.MainName=1 LIMIT 1) AS GuestEmail, '+#10;
+  s := s+' r.Description AS RoomDescription, '+#10;
+  s := s+' rt.Description AS RoomTypeDescription, '+#10;
+
+  s := s+' (SELECT COUNT(id) FROM persons WHERE Reservation = rr.Reservation and ({roomreservation}=0 or rr.roomreservation={roomreservation})) AS numTaxGuests '+#10;
+  s := s+'  FROM '+#10;
+  s := s+'     roomsdate rd '#10;
+  s := s+'  JOIN '#10;
+  s := s+'     roomreservations rr on rr.roomreservation=rd.roomreservation'+#10;
+  s := s+'  LEFT OUTER JOIN ' +#10;
+  s := s+'    roomtypes rt ON rt.RoomType = rr.RoomType ' +#10;
+  s := s+'  LEFT OUTER JOIN ' +#10;
+  s := s+'    rooms r ON r.Room = rr.room ' +#10;
+  s := s+'  WHERE ' +#10;
+  s := s+'   rr.Reservation={reservation} and ({invoiceindex}=-1 or coalesce(rd.invoiceindex, rr.invoiceindex)={invoiceindex}) '+#10;
+  s := s+'   AND rd.ResFlag NOT IN (''X'', ''C'') '#10;
+  s := s+'   AND not rd.Paid '#10;
+  s := s+'   AND ({roomreservation} <> 0 or rr.GroupAccount=1) '+#10;
+  s := s+'   AND ({roomreservation} = 0 or '#10;
+  s := s+'    (rd.RoomReservation IN (SELECT rd2.RoomReservation '#10;
+  s := s+'                         FROM roomsdate rd2 JOIN roomreservations rr ON rr.RoomReservation=rd2.RoomReservation '#10;
+  s := s+'                         WHERE (rr.GroupAccount = 0 AND (rd2.PaidBy={roomreservation} OR (rd2.RoomReservation={roomreservation} AND rd2.PaidBy=0)))))) '#10;
+  s := s+'  order by room, adate '#10;
+
+  s := StringReplace(s, '{reservation}', _db(iReservation), [rfReplaceAll, rfIgnoreCase]);
+  s := StringReplace(s, '{roomreservation}', _db(iRoomreservation), [rfReplaceAll, rfIgnoreCase]);
+  s := StringReplace(s, '{customer}', _db(customer), [rfReplaceAll, rfIgnoreCase]);
+  s := StringReplace(s, '{invoiceindex}', _db(InvoiceIndex), [rfReplaceAll, rfIgnoreCase]);
   result := s;
 end;
 

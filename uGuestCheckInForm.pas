@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, sEdit,
   sLabel, Vcl.ComCtrls, sPageControl, sButton, Vcl.ExtCtrls, sPanel, sComboBox, Vcl.Mask, sMaskEdit, sCustomComboEdit, sTooledit, sCheckBox, cmpRoomerDataSet,
   hData, uG, frxDesgn, frxClass, frxDBSet, System.Generics.Collections, uRoomerFilterComboBox
-  , uCurrencyHandler
+  , uCurrencyHandler, uFraCountryPanel
     ;
 
 type
@@ -26,9 +26,7 @@ type
     edAddress2: TsEdit;
     edZipcode: TsEdit;
     sLabel4: TsLabel;
-    edCountry: TsEdit;
     sLabel5: TsLabel;
-    sButton1: TsButton;
     sLabel7: TsLabel;
     sPanel2: TsPanel;
     sLabel8: TsLabel;
@@ -51,7 +49,6 @@ type
     edCity: TsEdit;
     sLabel11: TsLabel;
     sLabel12: TsLabel;
-    lbCountryName: TsLabel;
     sLabel13: TsLabel;
     edTel1: TsEdit;
     sLabel14: TsLabel;
@@ -59,8 +56,6 @@ type
     sLabel17: TsLabel;
     edMobile: TsEdit;
     sLabel18: TsLabel;
-    edNationality: TsEdit;
-    sButton3: TsButton;
     sLabel19: TsLabel;
     sLabel20: TsLabel;
     sLabel21: TsLabel;
@@ -76,16 +71,12 @@ type
     sLabel26: TsLabel;
     sLabel27: TsLabel;
     edCompCity: TsEdit;
-    edCompCountry: TsEdit;
     sLabel28: TsLabel;
-    sButton4: TsButton;
     sLabel29: TsLabel;
     edCompEmail: TsEdit;
     sLabel30: TsLabel;
     sLabel31: TsLabel;
     edCompTelNumber: TsEdit;
-    lbNationality: TsLabel;
-    lbCompCountry: TsLabel;
     sButton5: TsButton;
     lbPayment: TsLabel;
     rptForm: TfrxReport;
@@ -134,14 +125,14 @@ type
     dsForm: TfrxDBDataset;
     chkCountryForAllGuests: TsCheckBox;
     shpNationality: TShape;
+    fraNationality: TfraCountryPanel;
+    fraCountry: TfraCountryPanel;
+    fraCompCountry: TfraCountryPanel;
     procedure FormCreate(Sender: TObject);
     procedure cbxGuaranteeTypesCloseUp(Sender: TObject);
     procedure FormShow(Sender: TObject);
-    procedure sButton1Click(Sender: TObject);
     procedure edLastNameChange(Sender: TObject);
     procedure cbCreditCardClick(Sender: TObject);
-    procedure sButton3Click(Sender: TObject);
-    procedure sButton4Click(Sender: TObject);
     procedure sButton5Click(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure sButton2Click(Sender: TObject);
@@ -152,7 +143,6 @@ type
     procedure edFirstnameKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure cbActiveLiveSearchClick(Sender: TObject);
     procedure cbxMarketChange(Sender: TObject);
-    procedure edCountryChange(Sender: TObject);
     procedure cbxMarketKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     function fdRegFormDesignerSaveReport(Report: TfrxReport; SaveAs: Boolean): Boolean;
   private
@@ -164,7 +154,7 @@ type
     theDownPaymentData: recPaymentHolder;
 
     procedure Prepare;
-    procedure EnableOrDisableOKButton;
+    procedure UpdateControls;
     procedure FormDesignMode;
     procedure SetIsCheckIn(const Value: Boolean);
     procedure FillQuickFind;
@@ -173,6 +163,7 @@ type
     procedure SetShapeStatus(Tag : Integer; VisibleStatus: Boolean);
     function AnyTShapeVisible: Boolean;
     procedure UpdateGuaranteeTags;
+    procedure Changed(Sender: TObject);
     { Private declarations }
   public
     { Public declarations }
@@ -391,7 +382,7 @@ end;
 
 procedure TFrmGuestCheckInForm.cbCreditCardClick(Sender: TObject);
 begin
-  EnableOrDisableOKButton;
+  UpdateControls;
 end;
 
 
@@ -422,12 +413,12 @@ begin
   pgGuaranteeTypes.ActivePageIndex := cbxGuaranteeTypes.ItemIndex;
 
   UpdateGuaranteeTags;
-  EnableOrDisableOKButton;
+  UpdateControls;
 end;
 
 procedure TFrmGuestCheckInForm.cbxMarketChange(Sender: TObject);
 begin
-  EnableOrDisableOKButton;
+  UpdateControls;
 end;
 
 procedure TFrmGuestCheckInForm.cbxMarketKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -435,7 +426,7 @@ begin
   if Key = VK_DELETE then
   begin
     cbxMarket.ItemIndex := -1;
-    EnableOrDisableOKButton;
+    UpdateControls;
   end;
 end;
 
@@ -475,15 +466,18 @@ begin
     rSet.Next;
   end;
 
-  rSet := glb.PreviousGuestsSet;
-  rSet.First;
-  while NOT rSet.Eof do
+  if Assigned(glb.PreviousGuestsSet) then
   begin
-    item := TRoomerFilterItem.Create;
-    item.Key := rSet['ID'];
-    item.Line := format('%s%s%s%s', [rSet['Name'], getField('Address4'), getField('Country'), getField('Address1')]);
-    edFirstname.StoredItems.Add(item);
-    rSet.Next;
+    rSet := glb.PreviousGuestsSet;
+    rSet.First;
+    while NOT rSet.Eof do
+    begin
+      item := TRoomerFilterItem.Create;
+      item.Key := rSet['ID'];
+      item.Line := format('%s%s%s%s', [rSet['Name'], getField('Address4'), getField('Country'), getField('Address1')]);
+      edFirstname.StoredItems.Add(item);
+      rSet.Next;
+    end;
   end;
 
   cbActiveLiveSearch.Checked := false;
@@ -501,27 +495,28 @@ begin
   begin
     if message.WParam = 1 then
     begin
-      parseFirstAndLastNameFromFullname(glb.PreviousGuestsSet['Name'], s, s1);
-      edFirstname.Text := Trim(s);
-      edLastName.Text := Trim(s1);
-      edTitle.Text := glb.PreviousGuestsSet['title'];
-      edSSN.Text := glb.PreviousGuestsSet['SocialSecurityNumber'];
-      edVAT.Text := glb.PreviousGuestsSet['CompVATNumber'];
-      edFax.Text := glb.PreviousGuestsSet['CompFax'];
-      edAddress1.Text := glb.PreviousGuestsSet['Address1'];
-      edAddress2.Text := glb.PreviousGuestsSet['Address2'];
-      edZipcode.Text := glb.PreviousGuestsSet['Address3'];
-      edCity.Text := glb.PreviousGuestsSet['Address4'];
-      edCountry.Text := glb.PreviousGuestsSet['Country'];
-      edTel1.Text := glb.PreviousGuestsSet['Tel1'];
-      edMobile.Text := glb.PreviousGuestsSet['Tel2'];
-      edEmail.Text := glb.PreviousGuestsSet['Email'];
-      edCardId.Text := ResSetGuest['PassPortNumber'];
+      if Assigned(glb.PreviousGuestsSet) then
+      begin
+        parseFirstAndLastNameFromFullname(glb.PreviousGuestsSet['Name'], s, s1);
+        edFirstname.Text := Trim(s);
+        edLastName.Text := Trim(s1);
+        edTitle.Text := glb.PreviousGuestsSet['title'];
+        edSSN.Text := glb.PreviousGuestsSet['SocialSecurityNumber'];
+        edVAT.Text := glb.PreviousGuestsSet['CompVATNumber'];
+        edFax.Text := glb.PreviousGuestsSet['CompFax'];
+        edAddress1.Text := glb.PreviousGuestsSet['Address1'];
+        edAddress2.Text := glb.PreviousGuestsSet['Address2'];
+        edZipcode.Text := glb.PreviousGuestsSet['Address3'];
+        edCity.Text := glb.PreviousGuestsSet['Address4'];
+        fraCountry.CountryCode := glb.PreviousGuestsSet['Country'];
+        edTel1.Text := glb.PreviousGuestsSet['Tel1'];
+        edMobile.Text := glb.PreviousGuestsSet['Tel2'];
+        edEmail.Text := glb.PreviousGuestsSet['Email'];
+        edCardId.Text := ResSetGuest['PassPortNumber'];
 
-      if edCountry.Text = '' then
-        edCountry.Text := glb.PersonProfiles['Country'];
-      if edCity.Text = '' then
-        edCity.Text := glb.PersonProfiles['City'];
+        if edCity.Text = '' then
+          try edCity.Text := glb.PersonProfiles['City']; except end;
+      end;
     end
     else
     begin
@@ -540,26 +535,19 @@ begin
       edAddress2.Text := glb.PersonProfiles['Address2'];
       edZipcode.Text := glb.PersonProfiles['Zip'];
       edCity.Text := glb.PersonProfiles['City'];
-      edCountry.Text := glb.PersonProfiles['Country'];
+      fraCountry.CountryCode := glb.PersonProfiles['Country'];
       edTel1.Text := glb.PersonProfiles['TelLandLine'];
       edMobile.Text := glb.PersonProfiles['TelMobile'];
       edEmail.Text := glb.PersonProfiles['Email'];
 
-      if edCountry.Text = '' then
-        edCountry.Text := glb.PreviousGuestsSet['Country'];
       if edCity.Text = '' then
-        edCity.Text := glb.PreviousGuestsSet['Address4'];
+        try edCity.Text := glb.PreviousGuestsSet['Address4']; except end;
     end;
-  end;
-end;
 
-procedure TFrmGuestCheckInForm.edCountryChange(Sender: TObject);
-begin
-  if glb.LocateCountry(edCountry.Text) then
-    lbCountryName.Caption := glb.Countries['CountryName'] // GET_CountryName(sValue);
-  else
-    lbCountryName.Caption := GetTranslatedText('shNotF_star');
-  EnableOrDisableOKButton;
+    if fraCountry.CountryCode = '' then
+      fraCountry.CountryCode := glb.PersonProfiles['Country'];
+
+  end;
 end;
 
 procedure TFrmGuestCheckInForm.edFirstnameCloseUp(Sender: TObject);
@@ -569,7 +557,7 @@ begin
   if edFirstname.Items.IndexOf(edFirstname.Text) >= 0 then
   begin
     Key := TRoomerFilterItem(edFirstname.Items.Objects[edFirstname.ItemIndex]).Key; // edContactPerson.FKeys[idx];
-    if glb.LocateSpecificRecord(glb.PreviousGuestsSet, 'ID', Key) then
+    if Assigned(glb.PreviousGuestsSet) AND glb.LocateSpecificRecord(glb.PreviousGuestsSet, 'ID', Key) then
     begin
       postMessage(handle, WM_SET_COMBO_TEXT, 1, 0);
     end
@@ -590,10 +578,10 @@ end;
 
 procedure TFrmGuestCheckInForm.edLastNameChange(Sender: TObject);
 begin
-  EnableOrDisableOKButton;
+  UpdateControls;
 end;
 
-procedure TFrmGuestCheckInForm.EnableOrDisableOKButton;
+procedure TFrmGuestCheckInForm.UpdateControls;
 begin
   CheckMandatoryFields;
 
@@ -601,7 +589,6 @@ begin
   if g.qStayd3pActive then
   begin
     shpMarket.Visible := (cbxMarket.ItemIndex < 0);
-    shpCountry.Visible := (Trim(edCountry.Text) = '') OR (Trim(edCountry.Text) = '00') OR (SameText(lbCountryName.Caption, GetTranslatedText('shNotF_star')));
   end;
   BtnOk.Enabled := Not isCheckIn or NOT AnyTShapeVisible;
 end;
@@ -612,8 +599,20 @@ begin
   glb.PerformAuthenticationAssertion(self);
   PlaceFormOnVisibleMonitor(self);
 
-  FCurrencyhandler := nil;
+  FCurrencyhandler := nil; // Created when and if needed
+
+  fraNationality.OnCountryChange := Changed;
+  fraNationality.RejectCountryCodes := '00';
+
+  fraCountry.OnCountryChange := Changed;
+  fraCountry.RejectCountryCodes := '00';
+
   Prepare;
+end;
+
+procedure TFrmGuestCheckInForm.Changed(Sender: TObject);
+begin
+  UpdateControls;
 end;
 
 procedure TFrmGuestCheckInForm.FormDestroy(Sender: TObject);
@@ -689,32 +688,24 @@ begin
       edAddress2.Text := ResSetGuest['Address2'];
       edZipcode.Text := ResSetGuest['ZIPCode'];
       edCity.Text := ResSetGuest['City'];
-      if ResSetGuest['Country'] <> '00' then
-        edCountry.Text := ResSetGuest['Country']
-      else
-        edCountry.Text := '';
+      fraCountry.CountryCode := ResSetGuest['Country'];
 
       edTel1.Text := ResSetGuest['Telephone'];
       edMobile.Text := ResSetGuest['MobileNumber'];
       edEmail.Text := ResSetGuest['GuestEmail'];
 
-      edNationality.Text := ResSetGuest['Nationality'];
+      fraNationality.CountryCode := ResSetGuest['Nationality'];
 
       edCompany.Text := ResSetGuest['CompanyName'];
       edCompAddress1.Text := ResSetGuest['CompAddress1'];
       edCompAddress2.Text := ResSetGuest['CompAddress2'];
       edCompZipcode.Text := ResSetGuest['CompZip'];
       edCompCity.Text := ResSetGuest['CompCity'];
-      if ResSetGuest['CompCountry'] <> '00' then
-        edCompCountry.Text := ResSetGuest['CompCountry'];
+      fraCompCountry.CountryCode := ResSetGuest['CompCountry'];
       edCompTelNumber.Text := ResSetGuest['CompTel'];
       edCompEmail.Text := ResSetGuest['CompEmail'];
 
       edDateOfBirth.Date := ResSetGuest['DateOfBirth'];
-
-      lbNationality.Caption := ResSetGuest['NationalityName'];
-      lbCountryName.Caption := ResSetGuest['CountryName'];
-      lbCompCountry.Caption := ResSetGuest['CompCountryName'];
 
       cbxGuaranteeTypes.ItemIndex := IndexOfArray(PAYMENT_GUARANTEE_TYPE, ResSetGuest['PaymentGuaranteeType'], 3);
       cbxGuaranteeTypesCloseUp(cbxGuaranteeTypes);
@@ -736,7 +727,7 @@ begin
     end;
   end;
 
-  EnableOrDisableOKButton;
+  UpdateControls;
 end;
 
 procedure TFrmGuestCheckInForm.SaveGuestInfo;
@@ -745,13 +736,13 @@ var
   NewId: Integer;
 begin
   s := format(PUT_GUEST_CHECKIN_CHECKOUT, [_DB(edTitle.Text), _DB(Trim(edFirstname.Text + ' ' + edLastName.Text)), _DB(edAddress1.Text), _DB(edAddress2.Text),
-    _DB(edZipcode.Text), _DB(edCity.Text), _DB(edCountry.Text),
+    _DB(edZipcode.Text), _DB(edCity.Text), _DB(fraCountry.CountryCode),
 
     _DB(edTel1.Text), _DB(edMobile.Text), _DB(edEmail.Text),
 
-    _DB(edNationality.Text),
+    _DB(fraNationality.CountryCode),
 
-    _DB(edCompany.Text), _DB(edCompAddress1.Text), _DB(edCompAddress2.Text), _DB(edCompZipcode.Text), _DB(edCompCity.Text), _DB(edCompCountry.Text),
+    _DB(edCompany.Text), _DB(edCompAddress1.Text), _DB(edCompAddress2.Text), _DB(edCompZipcode.Text), _DB(edCompCity.Text), _DB(fraCompCountry.CountryCode),
     _DB(edCompTelNumber.Text), _DB(edCompEmail.Text), _DB(inttostr(btnPortfolio.Tag)),
 
     _DB(edFax.Text), _DB(edVAT.Text), _DB(edSSN.Text),
@@ -774,7 +765,7 @@ begin
 
   if chkCountryForAllGuests.Checked then
   begin
-    s := format(PUT_GUESTsCOUNTRY_CHECKIN_CHECKOUT, [_db(edCountry.text), RoomReservation]);
+    s := format(PUT_GUESTsCOUNTRY_CHECKIN_CHECKOUT, [_db(fraCountry.CountryCode), RoomReservation]);
     CopyToClipboard(s);
     if NOT cmd_bySQL(s, false) then
       raise Exception.Create('Unable to update country for other guests.');
@@ -790,16 +781,6 @@ end;
 
 var
   theData: recCountryHolder;
-
-procedure TFrmGuestCheckInForm.sButton1Click(Sender: TObject);
-begin
-  theData.Country := edCountry.Text;
-  if Countries(actLookup, theData) then
-  begin
-    edCountry.Text := theData.Country;
-    lbCountryName.Caption := theData.CountryName;
-  end;
-end;
 
 procedure TFrmGuestCheckInForm.sButton2Click(Sender: TObject);
 begin
@@ -825,26 +806,6 @@ begin
     rptForm.Print;
   finally
     rptForm.DataSets.Clear;
-  end;
-end;
-
-procedure TFrmGuestCheckInForm.sButton3Click(Sender: TObject);
-begin
-  theData.Country := edNationality.Text;
-  if Countries(actLookup, theData) then
-  begin
-    edNationality.Text := theData.Country;
-    lbNationality.Caption := theData.CountryName;
-  end;
-end;
-
-procedure TFrmGuestCheckInForm.sButton4Click(Sender: TObject);
-begin
-  theData.Country := edCompCountry.Text;
-  if Countries(actLookup, theData) then
-  begin
-    edCompCountry.Text := theData.Country;
-    lbCompCountry.Caption := theData.CountryName;
   end;
 end;
 
@@ -927,8 +888,9 @@ begin
   edFirstname.Text := '';
   edLastName.Text := '';
 
-  edNationality.Text := '';
-  lbNationality.Caption := '';
+  fraNationality.CountryCode := '';
+//  edNationality.Text := '';
+//  lbNationality.Caption := '';
 
   edDateOfBirth.Date := 0;
   edTel1.Text := '';
@@ -939,8 +901,7 @@ begin
   edAddress2.Text := '';
   edZipcode.Text := '';
   edCity.Text := '';
-  edCountry.Text := '';
-  lbCountryName.Caption := '';
+  fraCountry.CountryCode := '';
 
   edCompany.Text := '';
   edCompTelNumber.Text := '';
@@ -950,8 +911,7 @@ begin
   edCompAddress2.Text := '';
   edCompZipcode.Text := '';
   edCompCity.Text := '';
-  edCompCountry.Text := '';
-  lbCompCountry.Caption := '';
+  fraCompCountry.CountryCode := '';
 
   LoadGuestInfo;
 
@@ -976,9 +936,7 @@ begin
       edFirstname.Text := glb.PersonProfiles['Firstname'];
       edLastName.Text := glb.PersonProfiles['LastName'];
 
-      edNationality.Text := glb.PersonProfiles['Nationality'];
-      if glb.LocateSpecificRecordAndGetValue('countries', 'Country', edNationality.Text, 'CountryName', sName) then
-        lbNationality.Caption := sName;
+      fraNationality.CountryCode := glb.PersonProfiles['Nationality'];
 
       edDateOfBirth.Date := glb.PersonProfiles['DateOfBirth'];
       edTel1.Text := glb.PersonProfiles['TelLandLine'];
@@ -989,9 +947,7 @@ begin
       edAddress2.Text := glb.PersonProfiles['Address2'];
       edZipcode.Text := glb.PersonProfiles['Zip'];
       edCity.Text := glb.PersonProfiles['City'];
-      edCountry.Text := glb.PersonProfiles['Country'];
-      if glb.LocateSpecificRecordAndGetValue('countries', 'Country', edCountry.Text, 'CountryName', sName) then
-        lbCountryName.Caption := sName;
+      fraCountry.CountryCode := glb.PersonProfiles['Country'];
 
       edCompany.Text := glb.PersonProfiles['CompanyName'];
       edVAT.Text := glb.PersonProfiles['CompVATNumber'];
@@ -1003,10 +959,7 @@ begin
       edCompAddress2.Text := glb.PersonProfiles['CompAddress2'];
       edCompZipcode.Text := glb.PersonProfiles['CompZip'];
       edCompCity.Text := glb.PersonProfiles['CompCity'];
-      edCompCountry.Text := glb.PersonProfiles['CompCountry'];
-
-      if glb.LocateSpecificRecordAndGetValue('countries', 'Country', edCompCountry.Text, 'CountryName', sName) then
-        lbCompCountry.Caption := sName;
+      fraCompCountry.CountryCode  := glb.PersonProfiles['CompCountry'];
 
     end;
   end;
@@ -1074,7 +1027,7 @@ begin
   edLastName.Tag := mfSurName.AsTagId;
   shpLastname.Tag := mfSurName.AsTagId;
 
-  edNationality.Tag := mfNationality.AsTagId;
+  fraNationality.Tag := mfNationality.AsTagId;
   shpNationality.Tag := mfNationality.AsTagId;
 
   cbxMarket.Tag := mfMarket.AsTagid;
@@ -1083,7 +1036,7 @@ begin
   edCity.Tag := mfCity.AsTagId;
   shpCity.Tag := mfCity.AsTagId;
 
-  edCountry.Tag := mfCountry.AsTagid;
+  fraCountry.Tag := mfCountry.AsTagid;
   shpCountry.Tag := mfCountry.AsTagid;
 
   cbxGuaranteeTypes.Tag := mfGuarantee.AsTagId;
@@ -1103,7 +1056,9 @@ begin
         if ((Components[i] IS TCustomEdit) AND ((Components[i] AS TCustomEdit).Text = '')) OR
            ((Components[i] IS TRoomerFilterComboBox) AND ((Components[i] AS TRoomerFilterComboBox).Text = '')) OR
            ((Components[i] IS TsCheckBox) AND (NOT (Components[i] AS TsCheckBox).Checked)) OR
-           ((Components[i] IS TsComboBox) AND ((Components[i] AS TsComboBox).Showing AND ((Components[i] AS TsComboBox).Text = '') AND ((Components[i] AS TsComboBox).ItemIndex < 1))) then
+           ((Components[i] IS TsComboBox) AND ((Components[i] AS TsComboBox).Showing AND ((Components[i] AS TsComboBox).Text = '') AND ((Components[i] AS TsComboBox).ItemIndex < 1))) OR
+           ((Components[i] IS TfraCountryPanel) AND not (Components[i] as TfraCountryPanel).IsValid)
+            then
              SetShapeStatus(Components[i].Tag, TMandatoryCheckinField.FromTagId(Components[i].Tag).IsCurrentlyOn)
         else
           SetShapeStatus(Components[i].Tag, False);

@@ -300,6 +300,7 @@ type
     zAct   : TActTableAction;
     zData  : recCustomerHolder;
     AllowEdits : Boolean;
+    CustomerAdded : Boolean;
     destructor Destroy; override;
   end;
 
@@ -324,7 +325,9 @@ uses
   , uResourceManagement
   , uSQLUtils
   , uResourceTypeDefinitions
-  , UITypes;
+  , UITypes
+  , uFrmFinanceConnect
+  , uFinanceConnectService;
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -341,6 +344,13 @@ begin
     frmCustomers2.zAct := act;
     frmCustomers2.AllowEdits := AllowEdits;
     frmCustomers2.ShowModal;
+    if ((act <> actLookup) AND frmCustomers2.CustomerAdded AND (ActiveFinanceConnectSystemCode <> '')) AND
+       (MessageDlg(format(GetTranslatedText('Customers_FinanceConnect_AddedCustomer'), [ActiveFinanceConnectSystemName]),
+                    mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
+      begin
+        ManageFinanceConnect(PAGE_MAPPING, TAB_CUSTOMERS);
+      end;
+
     if frmCustomers2.modalresult = mrOk then
     begin
       theData := frmCustomers2.zData;
@@ -600,6 +610,7 @@ begin
   PlaceFormOnVisibleMonitor(self);
   //**
   Lookup := False;
+  CustomerAdded := False;
   d.roomerMainDataSet.AssignPropertiesToDataSet(Memo_);
   zFirstTime  := true;
   zAct        := actNone;
@@ -620,6 +631,11 @@ begin
   btnEdit.Visible := AllowEdits;
   sButton1.Visible := AllowEdits;
   btnOther.Visible := AllowEdits;
+  tvData.OptionsData.Appending := AllowEdits;
+  tvData.OptionsData.Editing := AllowEdits;
+  tvData.OptionsData.Deleting := AllowEdits;
+  tvData.OptionsData.Inserting := AllowEdits;
+
   if NOT AllowEdits then
     grData.PopupMenu := nil;
 
@@ -1219,6 +1235,7 @@ begin
       m_['stayTaxIncluted']          :=  zData.stayTaxIncluted;
       m_['RatePlanId']          :=  zData.RatePlanId;
       m_.Post;
+      CustomerAdded := True;
   end;
   if m_.RecordCount > 0 then fillHolder else initCustomerHolder(zData);
 

@@ -224,6 +224,7 @@ type
      FqConfirmMinuteOfTheDay : integer;
      FqConfirmAuto           : boolean;
     FBackupMachine: boolean;
+    FPCIContract: String;
 
 
     // END ///////////  INI FILE GLOBALS ////////////////
@@ -233,7 +234,9 @@ type
     procedure Unlock;
 
     function GetHotelCode: string;
+    procedure SetPCIContract(const Value: String);
   public
+    PCIContractWildcards : TStrings;
     qConnected : boolean;
     mHelpFile : string;
 
@@ -493,6 +496,8 @@ type
 
     property qConfirmMinuteOfTheDay : integer read FqConfirmMinuteOfTheDay     write  FqConfirmMinuteOfTheDay    ;
     property qConfirmAuto           : boolean read FqConfirmAuto             write FqConfirmAuto;
+
+    property qPCIContract           : String read FPCIContract write SetPCIContract;
 
   end;
 
@@ -889,6 +894,7 @@ begin
   FqHotelList.free;
   oRooms.Free;
   DeleteCriticalSection(Flock);
+  PCIContractWildcards.Free;
   inherited;
 end;
 
@@ -1222,6 +1228,13 @@ begin
     finally
       free;
     end;
+end;
+
+procedure TGlobalApplication.SetPCIContract(const Value: String);
+begin
+  FPCIContract := Value;
+  PCIContractWildcards.Free;
+  PCIContractWildcards := SplitStringToTStrings(';', Value);
 end;
 
 procedure TGlobalApplication.openResDates(reservation, roomReservation

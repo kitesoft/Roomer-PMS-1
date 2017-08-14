@@ -196,6 +196,7 @@ type
     { Public declarations }
     zAct               : TActTableAction;
     zData              : recVatCodeHolder;
+    VatCodeAdded : Boolean;
   end;
 
 function vatCodes(act : TActTableAction; var theData : recVatCodeHolder) : boolean;
@@ -208,12 +209,13 @@ var
 implementation
 
 uses
-   uD,
-   uDImages,
-   uBookKeepingCodes
-   , uUtils
-   , UITypes
-    ;
+   uD
+  , uDImages
+  , uBookKeepingCodes
+  , uUtils
+  , UITypes
+  , uFrmFinanceConnect
+  , uFinanceConnectService;
 
 {$R *.dfm}
 
@@ -229,6 +231,12 @@ begin
     frmVatCodes.zData := theData;
     frmVatCodes.zAct := act;
     frmVatCodes.ShowModal;
+    if ((act <> actLookup) AND frmVatCodes.VatCodeAdded AND (ActiveFinanceConnectSystemCode <> '')) AND
+       (MessageDlg(format(GetTranslatedText('Vat_FinanceConnect_AddedCode'), [ActiveFinanceConnectSystemName]),
+                    mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
+      begin
+        ManageFinanceConnect(PAGE_MAPPING, TAB_VATS);
+      end;
     if frmVatCodes.modalresult = mrOk then
     begin
       theData := frmVatCodes.zData;
@@ -403,6 +411,7 @@ begin
   zFirstTime  := true;
   zAct        := actNone;
   zisAddrow   := false;
+  VatCodeAdded := False;
 end;
 
 procedure TfrmVatCodes.FormShow(Sender: TObject);
@@ -547,6 +556,7 @@ begin
 
     if ins_vatCode(zData) then
     begin
+      VatCodeAdded := True;
       glb.ForceTableRefresh;
     end else
     begin

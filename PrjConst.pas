@@ -188,6 +188,10 @@ uses uAppGlobal,
 
   , uEditFinanceExportProperties
   , uRptReservationStatusPerDay
+
+  , uFrmFinanceConnect
+  , uPCITokenReport
+  , uFrmOptInMessage
   ;
 
 
@@ -960,6 +964,9 @@ begin
   constants.Add('shTx_RoomPricesEdit_Prices', 'Prices are ready');
   constants.Add('shTx_RoomPricesEdit_Error', 'Error');
   constants.Add('shTx_RoomPricesEdit_PriceGroup', 'Price Group must be specified');
+  constants.Add('shRoomPrices_NotAllRoomsUpdated', 'There are differences in staydates between the rooms.'#10 +
+                                                  'Therefore not all roomprices can be adjusted because of differences in stay dates.'#10+
+                                                  'Continue with adjusting roomrates for rooms with the same staydates?');
 
   constants.Add('shTx_RoomRates_DescriptionIsRequired', 'Description - is required - Use ESC to cancel');
   constants.Add('shTx_RoomRates_EditInGrid', 'edit in grid');
@@ -1681,6 +1688,23 @@ begin
   constants.Add('shRoomRentPErDaySetting_Never', 'Never');
   constants.Add('shRoomRentPErDaySetting_Ask', 'Ask per invoice');
   constants.Add('shRoomRentPErDaySetting_Always', 'Always');
+
+  constants.Add('FinanceConnect_TabName', 'Finance Connect');
+  constants.Add('Customers_FinanceConnect_AddedCustomer', 'You have added a new customer.' + #10#13 + 'Do want to open customer mappings for %s?');
+  constants.Add('Items_FinanceConnect_AddedItem', 'You have added a new item.' + #10#13 + 'Do want to open items mappings for %s?');
+  constants.Add('Vat_FinanceConnect_AddedCode', 'You have added a new vat code.' + #10#13 + 'Do want to open vat mappings for %s?');
+
+  constants.Add('PCI_VIEW_Warning_PleaseNote', 'Please note:');
+  constants.Add('PCI_VIEW_Warning_ChargePerView', 'Viewing the credit card is charged per-view.');
+  constants.Add('PCI_VIEW_Warning_SecurityCodeOnceVisible', 'The credit-card security code (CVC) is only shown <B><U>once</U></B>. After that it will not be shown again.');
+  constants.Add('PCI_VIEW_Warning_NumberOfViews', 'The credit-card of this reservation has been viewed {VIEWS} times.');
+
+  constants.Add('OPT_IN_PLEASE_NOTE', 'Please note:');
+  constants.Add('OPT_IN_MESSAGE_1', 'To be able to view the creditcard information from the various channels you will need an extended agreement with Roomer.');
+  constants.Add('OPT_IN_MESSAGE_2', 'Please feel free to contact Roomer by clicking on the email address below.');
+  constants.Add('OPT_IN_FROM_ROOMER', 'With kind regards,<BR><I>Your Roomer Team</I>');
+  constants.Add('OPT_IN_EMAIL_SUBJECT', 'Opt-In Email Message - %s');
+  constants.Add('OPT_IN_EMAIL_BODY', '');
 end;
 
 procedure AddConstants_OfflineReports;
@@ -1740,7 +1764,7 @@ end;
 
 procedure GenerateTranslateTextTableForAllForms;
 begin
-  frmProvideARoom2 := TfrmProvideARoom2.Create(nil); frmProvideARoom2.Free; frmProvideARoom2 := nil;
+  TfrmProvideARoom2.Create(nil).Free;
   frmMultiSelection := TfrmMultiSelection.Create(nil); frmMultiSelection.Free; frmMultiSelection := nil;
 //  frmInvoiceInfo := TfrmInvoiceInfo.Create(nil); frmInvoiceInfo.Free; frmInvoiceInfo := nil;
   frmInvoice := TfrmInvoice.Create(nil); frmInvoice.Free; frmInvoice := nil;
@@ -1876,7 +1900,7 @@ begin
 
   frmRptBookkeeping := TfrmRptBookkeeping.Create(nil); frmRptBookkeeping.Free; frmRptBookkeeping := nil;
   FrmReservationEmailingDialog := TFrmReservationEmailingDialog.Create(nil); FrmReservationEmailingDialog.Free; FrmReservationEmailingDialog := nil;
-  FrmReservationCancellationDialog := TFrmReservationCancellationDialog.Create(nil); FrmReservationCancellationDialog.Free; FrmReservationCancellationDialog := nil;
+  TFrmReservationCancellationDialog.Create(nil).Free;
   frmRptCashier := TfrmRptCashier.Create(nil); frmRptCashier.Free; frmRptCashier := nil;
 
   frmPhoneRates := TfrmPhoneRates.Create(nil); frmPhoneRates.Free; frmPhoneRates := nil;
@@ -1933,6 +1957,11 @@ begin
   TfrmEditFinanceExportProperties.Create(nil).Free;
 
   TFrmRptReservationStatusPerDay.Create(nil).Free;
+
+  TFrmFinanceConnect.Create(nil).Free;
+
+  TFrmPCITokenReport.Create(nil).Free;
+  TFrmOptInMessage.Create(nil).Free;
 
 end;
 

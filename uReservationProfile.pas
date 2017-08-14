@@ -74,6 +74,8 @@ uses
   , cxSpinEdit
   , uReservationStateDefinitions, System.Actions, Vcl.ActnList
   , uReservationStateChangeHandler, uFraCountryPanel, cxGridBandedTableView, cxGridDBBandedTableView
+  , ucxGridPopupMenuActivator
+  , uGridColumnFieldValuePropagator
   ;
 
 type
@@ -562,7 +564,6 @@ type
     I1: TMenuItem;
     G2: TMenuItem;
     R3: TMenuItem;
-    R4: TMenuItem;
     N2: TMenuItem;
     gbxStatus: TsGroupBox;
     label25: TsLabel;
@@ -605,6 +606,13 @@ type
     acAddRoom: TAction;
     btnViewPayCard: TsButton;
     acViewPayCard: TAction;
+    mnuRoomColumn: TPopupMenu;
+    mnuCopyValueDown: TMenuItem;
+    mnuCopyValueUp: TMenuItem;
+    mnuCopyToAll: TMenuItem;
+    acCopyValueDown: TAction;
+    acCopyValueUp: TAction;
+    acCopyValueAll: TAction;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -726,7 +734,6 @@ type
     procedure mRoomsisGroupAccountGetText(Sender: TField; var Text: string; DisplayText: Boolean);
     procedure tvRoomsStatusTextPropertiesDrawItem(AControl: TcxCustomComboBox; ACanvas: TcxCanvas; AIndex: Integer;
       const ARect: TRect; AState: TOwnerDrawState);
-    procedure R4Click(Sender: TObject);
     procedure acChangeRoomTypeExecute(Sender: TObject);
     procedure acChangeRoomTypeUpdate(Sender: TObject);
     procedure btnChangeNationalitiesAllGuestsClick(Sender: TObject);
@@ -734,6 +741,9 @@ type
     procedure acRemoveRoomUpdate(Sender: TObject);
     procedure acRoomResActionUpdate(Sender: TObject);
     procedure acViewPayCardExecute(Sender: TObject);
+    procedure acCopyValueDownExecute(Sender: TObject);
+    procedure acCopyValueUpExecute(Sender: TObject);
+    procedure acCopyValueAllExecute(Sender: TObject);
   private
     { Private declarations }
     vStartName: string;
@@ -756,6 +766,7 @@ type
     FInitializingData: boolean;
     FCreatedBy: string;
     FCreatedOn: string;
+    FColumnHeaderPopupActivator: TcxGridColumnHeaderPopupMenuActivator;
     procedure Display;
     procedure Display_rGrid(gotoRoomReservation: longInt);
     procedure AddNewRoom;
@@ -788,6 +799,7 @@ type
     procedure SelectMainGuestProfile;
     procedure ShowMainGuestProfile;
     procedure mnuOtherResStateChangeClick(Sender: TObject);
+    procedure PropagateValue(aDirection: TPropagateDirection);
 
     property OutOfOrderBlocking: Boolean read FOutOfOrderBlocking write SetOutOfOrderBlocking;
   public
@@ -804,7 +816,8 @@ type
     zShowAllGuests: Boolean;
 
     zInt: Integer;
-
+    constructor Create(aOwner: TCOmponent); override;
+    destructor Destroy; override;
     procedure UpdateProfile;
   end;
 
@@ -1009,7 +1022,6 @@ begin
 
   vStartName := frmReservationProfile.edtName.text;
 
-
   fraGuestNationality.AllowEdit := True;
   fraGuestNationality.OnCountryChange := btnChangeNationalitiesAllGuestsClick;
   fraGuestCountry.AllowEdit := True;
@@ -1017,6 +1029,9 @@ begin
   fraContactCountry.AllowEdit := False;
 
   pnlAllGuestsNationality.Visible := glb.PMSSettings.ReservationProfileSettings.EditAllGuestsNationality;
+
+  tvRoomsExpectedTimeOfArrival.OnHeaderClick := FColumnHeaderPopupActivator.OnCxColumnHeaderClick;
+  tvRoomsExpectedCheckoutTime.OnHeaderClick := FColumnHeaderPopupActivator.OnCxColumnHeaderClick;
 end;
 
 procedure TfrmReservationProfile.FormCreate(Sender: TObject);
@@ -1075,15 +1090,16 @@ begin
   edtTel2.Width := edtTel1.Width;
 end;
 
-procedure TfrmReservationProfile.R4Click(Sender: TObject);
-begin
-  d.roomerMainDataSet.DoCommand('UPDATE roomsdate SET Paid=0 WHERE RoomReservation=' + inttostr(zRoomReservation));
-end;
-
 // **********************************************************************************
 //
 //
 // ***********************************************************************************
+
+destructor TfrmReservationProfile.Destroy;
+begin
+  FColumnHeaderPopupActivator.Free;
+  inherited;
+end;
 
 procedure TfrmReservationProfile.Display;
 var
@@ -1112,6 +1128,8 @@ begin
       begin
         btnViewPayCard.Visible := (rSet.FieldDefs.IndexOf('PAYCARD_TOKEN') > -1) AND
                                  (rSet.FieldByName('PAYCARD_TOKEN').AsString <> '');
+        btnViewPayCard.Tag := ORD(glb.PCIContractOpenForChannel(fieldbyname('channel').asInteger));
+
         edtInvRefrence.ReadOnly := glb.GetBooleanValueOfFieldFromId('channels', 'managedByChannelManager',
           fieldbyname('channel').asInteger);
         edtCustomer.text := trim(fieldbyname('Customer').asstring);
@@ -1408,7 +1426,7 @@ begin
               if Sender = btnChangeNationality then
                 Exit; // No need to change mainguest when btn is used
               lMethod := 0;
-              mAllGuests.Locate('Room;MainName', VarArrayOf([mROomsRoom.AsString, True]), []);
+              mAllGuests.Locate('RoomReservation;MainName', VarArrayOf([mRoomsReservation.AsInteger, True]), []);
               lPerson := mAllGuestsPerson.Asinteger
             end;
     mrAll:  begin
@@ -1446,7 +1464,7 @@ begin
               if Sender = btnChangeCountry then
                 Exit; // No need to change mainguest when btn is used
               lMethod := 0;
-              mAllGuests.Locate('Room;MainName', VarArrayOf([mROomsRoom.AsString, True]), []);
+              mAllGuests.Locate('RoomReservation;MainName', VarArrayOf([mRoomsRoomReservation.AsInteger, True]), []);
               lPerson := mAllGuestsPerson.Asinteger
             end;
     mrAll:  begin
@@ -1794,11 +1812,39 @@ procedure TfrmReservationProfile.acCheckoutRoomExecute(Sender: TObject);
 var
   lResChanger: TRoomReservationStateChangeHandler;
 begin
-
   lResChanger := FReservationChangeStateHandler.RoomStateChangeHandler[mRoomsRoomReservation.AsInteger];
   if lResChanger.ChangeState(rsDeparted) then
      Display_rGrid(mRoomsRoomReservation.AsInteger);
+end;
 
+procedure TfrmReservationProfile.PropagateValue(aDirection: TPropagateDirection);
+var
+  fp: TGridColumnFieldValuePropagator;
+begin
+  if mnuRoomColumn.tag >= 0 then
+  begin
+    fp := TGridColumnFieldValuePropagator.Create;
+    try
+      fp.Propagate(tvRooms.Columns[mnuRoomColumn.Tag], aDirection);
+    finally
+      fp.Free;
+    end;
+  end;
+end;
+
+procedure TfrmReservationProfile.acCopyValueAllExecute(Sender: TObject);
+begin
+  PropagateValue(pdAll);
+end;
+
+procedure TfrmReservationProfile.acCopyValueDownExecute(Sender: TObject);
+begin
+  PropagateValue(pdDown);
+end;
+
+procedure TfrmReservationProfile.acCopyValueUpExecute(Sender: TObject);
+begin
+  PropagateValue(pdUp);
 end;
 
 procedure TfrmReservationProfile.acPasteIntoDocumentsExecute(Sender: TObject);
@@ -1841,7 +1887,7 @@ end;
 
 procedure TfrmReservationProfile.acViewPayCardExecute(Sender: TObject);
 begin
-  ShowPayCardInformation(zReservation);
+  ShowPayCardInformation(zReservation, btnViewPayCard.Tag);
 end;
 
 procedure TfrmReservationProfile.AddNewRoom;
@@ -2142,6 +2188,7 @@ procedure TfrmReservationProfile.MoveGuestToNewRoom2;
 begin
   if ProvideARoom2(mRoomsRoomReservation.AsInteger) <> '' then
   begin
+    getGuestData(mRoomsRoomReservation.AsInteger);
     Display_rGrid(mRoomsRoomReservation.AsInteger);
   end;
 end;
@@ -2152,11 +2199,7 @@ begin
 end;
 
 procedure TfrmReservationProfile.btnRemoveRoomClick(Sender: TObject);
-//var
-//  RoomNumber: string;
 begin
-//  RoomNumber := d.RR_GetRoomNr(zRoomReservation);
-
   if FReservationChangeStateHandler.RoomStateChangeHandler[zRoomReservation].ChangeIsAllowed(rsRemoved, true) and g.OpenRemoveRoom(zRoomReservation) then
   begin
     FReservationChangeStateHandler.UpdateRoomResStateChangeHandlers;
@@ -2650,7 +2693,7 @@ procedure TfrmReservationProfile.UpdateGuestDetails(gotoRoomReservation: integer
 begin
   gbxGuest.Caption := FgbxGuestOrigCaption + ' ' + mRoomsRoom.AsString;
 
-  if mAllGuests.Locate('Room;MainName', VarArrayOf([mROomsRoom.AsString, True]), []) then
+  if mAllGuests.Locate('RoomReservation;MainName', VarArrayOf([mRoomsRoomReservation.AsInteger, True]), []) then
   begin
     edtGuestName.Text := mAllGuestsGuestName.AsString;
     edtGuestAddress1.Text := mAllGuestsAddress1.AsString;
@@ -2760,10 +2803,15 @@ var
 
   procedure RemovePackage(pack: String; rr, rrAlias: Integer; restorePrice: Boolean);
   begin
-    d.roomerMainDataSet.SystempackagesRemove(pack, rr, rrAlias, restorePrice);
-    mRooms.Edit;
-    mRoomsPackage.asstring := '';
-    mRooms.Post;
+    mRooms.DisableControls;
+    try
+      mRooms.Edit;
+      mRoomsPackage.asstring := '';
+      mRooms.Post;
+      d.roomerMainDataSet.SystempackagesRemove(pack, rr, rrAlias, restorePrice);
+    finally
+      mRooms.EnableControls;
+    end;
   end;
 
 begin
@@ -3981,7 +4029,11 @@ var
 begin
   lMenu := TMenuItem(Sender);
   if FReservationChangeStateHandler.ChangeState(TReservationState(lMenu.Tag)) then
+  begin
     Display_rGrid(mRoomsRoomReservation.ASInteger);
+    if FReservationChangeStateHandler.CurrentState = rsCancelled then
+      Close;
+  end;
 end;
 
 
@@ -4007,6 +4059,12 @@ procedure TfrmReservationProfile.ConstructOtherResStateMenu;
 begin
   lclAddMenuitemsto(mnuChangeRoomStateTo, mnuOtherRoomStateChangeClick);
   lclAddMenuitemsTo(mnuChangeResStateTo, mnuOtherResStateChangeClick);
+end;
+
+constructor TfrmReservationProfile.Create(aOwner: TCOmponent);
+begin
+  inherited;
+  FColumnHeaderPopupActivator := TcxGridColumnHeaderPopupMenuActivator.Create(mnuRoomColumn);
 end;
 
 end.

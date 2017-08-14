@@ -290,6 +290,10 @@ begin
     if glb.Countries.Locate('country',FCountry,[]) then
     begin
        FCountryName       :=   glb.Countries.FieldByName('CountryName').AsString;
+    end else
+    begin
+      glb.LocateSpecificRecordAndGetValue('countries', 'Country', '00', 'Country', FCountry);
+      FCountryName := glb.Countries.FieldByName('CountryName').AsString;
     end;
   end;
 end;

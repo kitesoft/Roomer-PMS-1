@@ -48,6 +48,19 @@
         <Cfg_1>true</Cfg_1>
         <Base>true</Base>
     </PropertyGroup>
+    <PropertyGroup Condition="'$(Config)'=='preReleaseAcceptance' or '$(Cfg_8)'!=''">
+        <Cfg_8>true</Cfg_8>
+        <CfgParent>Cfg_1</CfgParent>
+        <Cfg_1>true</Cfg_1>
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="('$(Platform)'=='Win32' and '$(Cfg_8)'=='true') or '$(Cfg_8_Win32)'!=''">
+        <Cfg_8_Win32>true</Cfg_8_Win32>
+        <CfgParent>Cfg_8</CfgParent>
+        <Cfg_8>true</Cfg_8>
+        <Cfg_1>true</Cfg_1>
+        <Base>true</Base>
+    </PropertyGroup>
     <PropertyGroup Condition="'$(Config)'=='Debug' or '$(Cfg_2)'!=''">
         <Cfg_2>true</Cfg_2>
         <CfgParent>Base</CfgParent>
@@ -165,7 +178,8 @@
         <DCC_Define>RELEASE;$(DCC_Define)</DCC_Define>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_4)'!=''">
-        <VerInfo_PreRelease>false</VerInfo_PreRelease>
+        <VerInfo_Build>1</VerInfo_Build>
+        <VerInfo_Keys>CompanyName=Promoir BV;FileDescription=Roomer PMS;FileVersion=1.9.15.1;InternalName=;LegalCopyright=(C) 2013, 2014, 2015, 2016, 2017 Promoir BV;LegalTrademarks=Roomer is a Registered Trademark of Promoir BV;OriginalFilename=Roomer.exe;ProductName=Roomer Open Hospitality Platform;ProductVersion=1.9.15.1;Comments=;ExtraBuild=170811;PrivateBuild=</VerInfo_Keys>
         <VerInfo_Debug>false</VerInfo_Debug>
         <DCC_ExeOutput>RoomerPMSRelease</DCC_ExeOutput>
         <DCC_DcpOutput>_dcu</DCC_DcpOutput>
@@ -174,9 +188,17 @@
         <DCC_AssertionsAtRuntime>false</DCC_AssertionsAtRuntime>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_4_Win32)'!=''">
-        <VerInfo_PreRelease>true</VerInfo_PreRelease>
-        <VerInfo_Keys>CompanyName=Promoir BV;FileDescription=Roomer PMS;FileVersion=1.9.15.0;InternalName=;LegalCopyright=(C) 2013, 2014, 2015, 2016, 2017 Promoir BV;LegalTrademarks=Roomer is a Registered Trademark of Promoir BV;OriginalFilename=Roomer.exe;ProductName=Roomer Open Hospitality Platform;ProductVersion=1.9.15.0;Comments=;ExtraBuild=170721;PrivateBuild=</VerInfo_Keys>
+        <VerInfo_Build>0</VerInfo_Build>
+        <VerInfo_PreRelease>false</VerInfo_PreRelease>
+        <VerInfo_Keys>CompanyName=Promoir BV;FileDescription=Roomer PMS;FileVersion=1.9.15.0;InternalName=;LegalCopyright=(C) 2013, 2014, 2015, 2016, 2017 Promoir BV;LegalTrademarks=Roomer is a Registered Trademark of Promoir BV;OriginalFilename=Roomer.exe;ProductName=Roomer Open Hospitality Platform;ProductVersion=1.9.15.0;Comments=;ExtraBuild=170814;PrivateBuild=</VerInfo_Keys>
         <Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Cfg_8_Win32)'!=''">
+        <VerInfo_Build>1</VerInfo_Build>
+        <VerInfo_Keys>CompanyName=Promoir BV;FileDescription=Roomer PMS;FileVersion=1.9.15.1;InternalName=;LegalCopyright=(C) 2013, 2014, 2015, 2016, 2017 Promoir BV;LegalTrademarks=Roomer is a Registered Trademark of Promoir BV;OriginalFilename=Roomer.exe;ProductName=Roomer Open Hospitality Platform;ProductVersion=1.9.15.1;Comments=;ExtraBuild=170808;PrivateBuild=</VerInfo_Keys>
+        <Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
+        <VerInfo_PreRelease>false</VerInfo_PreRelease>
+        <VerInfo_Debug>false</VerInfo_Debug>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <VerInfo_Release>14</VerInfo_Release>
@@ -204,6 +226,7 @@
         <VerInfo_AutoGenVersion>false</VerInfo_AutoGenVersion>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_3)'!=''">
+        <VerInfo_Release>13</VerInfo_Release>
         <VerInfo_MajorVer>2</VerInfo_MajorVer>
         <VerInfo_Keys>CompanyName=Promoir BV;FileDescription=Roomer PMS;FileVersion=2.9.13.0;InternalName=;LegalCopyright=(C) 2013, 2014, 2015, 2016, 2017 Promoir BV;LegalTrademarks=Roomer is a Registered Trademark of Promoir BV;OriginalFilename=Roomer.exe;ProductName=Roomer Open Hospitality Platform;ProductVersion=2.9.13.0;Comments=;ExtraBuild=170421;PrivateBuild=</VerInfo_Keys>
         <DCC_DebugDCUs>true</DCC_DebugDCUs>
@@ -216,6 +239,10 @@
         <DCC_DcuOutput>_dcu</DCC_DcuOutput>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_3_Win32)'!=''">
+        <VerInfo_MajorVer>9</VerInfo_MajorVer>
+        <VerInfo_Release>9</VerInfo_Release>
+        <VerInfo_Build>9</VerInfo_Build>
+        <VerInfo_Keys>CompanyName=Promoir BV;FileDescription=Roomer PMS;FileVersion=9.9.9.9;InternalName=;LegalCopyright=(C) 2013, 2014, 2015, 2016, 2017 Promoir BV;LegalTrademarks=Roomer is a Registered Trademark of Promoir BV;OriginalFilename=Roomer.exe;ProductName=Roomer Open Hospitality Platform;ProductVersion=9.9.9.9;Comments=;ExtraBuild=170421;PrivateBuild=</VerInfo_Keys>
         <DCC_DcuOutput>_dcu\debug</DCC_DcuOutput>
         <DCC_DebugDCUs>false</DCC_DebugDCUs>
         <DCC_BplOutput> </DCC_BplOutput>
@@ -899,6 +926,20 @@
         <DCCReference Include="Filters\uDataSetFilterUtils.pas"/>
         <DCCReference Include="TCP\uSocketHelpers.pas"/>
         <DCCReference Include="Invoice\uInvoiceObjects.pas"/>
+        <DCCReference Include="FinanceConnect\uFrmFinanceConnect.pas">
+            <Form>FrmFinanceConnect</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="FinanceConnect\uFinanceConnectService.pas"/>
+        <DCCReference Include="RoomerUtils\uGridColumnFieldValuePropagator.pas"/>
+        <DCCReference Include="RoomerUtils\ucxGridPopupMenuActivator.pas"/>
+        <DCCReference Include="PCI\uPCITokenReport.pas">
+            <Form>frmPCITokenReport</Form>
+        </DCCReference>
+        <DCCReference Include="OptIns\uFrmOptInMessage.pas">
+            <Form>FrmOptInMessage</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <None Include="Roomer.todo"/>
         <None Include="notes.txt"/>
         <None Include="Roomer.inc"/>
@@ -926,6 +967,10 @@
         <BuildConfiguration Include="Debug">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
+        </BuildConfiguration>
+        <BuildConfiguration Include="preReleaseAcceptance">
+            <Key>Cfg_8</Key>
+            <CfgParent>Cfg_1</CfgParent>
         </BuildConfiguration>
         <BuildConfiguration Include="DebugBas">
             <Key>Cfg_3</Key>

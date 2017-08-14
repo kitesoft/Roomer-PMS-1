@@ -326,6 +326,7 @@ type
     property ShowItemsOfType: TShowItemOptionSet read FShowItemsOfType write FShowItemsOfType;
     property AllowGridEdit: boolean read FAllowGridEdit write SetAllowGridEdit;
   public
+    ItemAdded : Boolean;
     destructor Destroy; override;
   end;
 
@@ -357,7 +358,8 @@ uses
   , DateUtils
   , Math
   , uSQLUtils
-  ;
+  , uFrmFinanceConnect
+  , uFinanceConnectService;
 
 
 
@@ -376,6 +378,12 @@ begin
     _frmItems2.zAct := act;
     _frmItems2.ShowItemsOfType := aShowTypes;
     _frmItems2.ShowModal;
+    if ((act <> actLookup) AND _frmItems2.ItemAdded AND (ActiveFinanceConnectSystemCode <> '')) AND
+       (MessageDlg(format(GetTranslatedText('Items_FinanceConnect_AddedItem'), [ActiveFinanceConnectSystemName]),
+                    mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
+      begin
+        ManageFinanceConnect(PAGE_MAPPING, TAB_ITEMS);
+      end;
     if _frmItems2.modalresult = mrOk then
     begin
       theData := _frmItems2.zData;
@@ -426,6 +434,12 @@ begin
     _frmItems2.zAct := act;
     _frmItems2.ShowItemsOfType := aShowTypes;
     _frmItems2.ShowModal;
+    if ((act <> actLookup) AND _frmItems2.ItemAdded AND (ActiveFinanceConnectSystemCode <> '')) AND
+       (MessageDlg(format(GetTranslatedText('Items_FinanceConnect_AddedItem'), [ActiveFinanceConnectSystemName]),
+                    mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
+      begin
+        ManageFinanceConnect(PAGE_MAPPING, TAB_ITEMS);
+      end;
     if _frmItems2.modalresult = mrOk then
     begin
       _frmItems2.GetSelectedItems(theData);
@@ -842,7 +856,6 @@ begin
   end;
 end;
 
-
 /////////////////////////////////////////////////////////////
 // Form actions
 /////////////////////////////////////////////////////////////
@@ -853,6 +866,7 @@ begin
   glb.PerformAuthenticationAssertion(self);
   PlaceFormOnVisibleMonitor(self);
   Lookup := False;
+  ItemAdded := False;
   financeLookupList := nil;
   //**
   zFirstTime  := true;
@@ -1109,8 +1123,10 @@ begin
       exit;
     end;
     if ins_Item(zData,nID) then
-      m_ItemsID.AsInteger := nID
-    else
+    begin
+      m_ItemsID.AsInteger := nID;
+      ItemAdded := True;
+    end else
       abort;
   end;
 end;

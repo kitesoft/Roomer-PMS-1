@@ -198,6 +198,7 @@ begin
   try
     CheckConnections;
   finally
+    tmrCheckConnection.Interval := 5000;
     tmrCheckConnection.Enabled := true;
   end;
 end;
@@ -205,7 +206,10 @@ end;
 procedure TfrmRoomerLoginForm.CheckConnections;
 begin
   NoInternet := NOT d.roomerMainDataSet.IsConnectedToInternet;
-  ServerUnreachable := NOT d.roomerMainDataSet.RoomerPlatformAvailable;
+  if NoInternet then
+    ServerUnreachable := True
+  else
+    ServerUnreachable := NOT d.roomerMainDataSet.RoomerPlatformAvailable;
 end;
 
 procedure TfrmRoomerLoginForm.UpdateControls;
@@ -216,7 +220,7 @@ const
   cPlatformUnreachable = 'Roomer platform unreachable. ';
   cOfflineMessage = 'Roomer will not be able to work normally';
 begin
-  lOffLine := NoInternet or ServerUnreachable;
+  lOffLine := NoInternet; // or ServerUnreachable;
   btLogin.Enabled := not lOffLine;
   btLogin.Default := not lOffLine;
 

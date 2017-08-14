@@ -2917,7 +2917,7 @@ begin
 
     ManualChannelId := 0;
     ratePlanCode := '';
-
+    RoomRentPaymentInvoice := -1;
   end;
 end;
 
@@ -13623,7 +13623,10 @@ begin
   result := IIF(InvoiceText='', PacketDescription, InvoiceText);
   result := StringReplace(result, '{room}', Room, [rfReplaceAll, rfIgnoreCase]);
   result := StringReplace(result, '{arrival}', FormatDateTime('dd.mm', Arrival), [rfReplaceAll, rfIgnoreCase]);
-  result := StringReplace(result, '{departure}', FormatDateTime('dd.mm', Departure), [rfReplaceAll, rfIgnoreCase]);
+  if Arrival <> Departure then
+    result := StringReplace(result, '{departure}', FormatDateTime('dd.mm', Departure), [rfReplaceAll, rfIgnoreCase])
+  else
+    result := StringReplace(result, '{departure}', '', [rfReplaceAll, rfIgnoreCase]);
   result := StringReplace(result, '{guestname}', guestname, [rfReplaceAll, rfIgnoreCase]);
 
 end;
