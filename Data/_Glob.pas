@@ -2200,63 +2200,9 @@ function _WeekNum(const TDT:TDateTime) : Word;
  end;
 
 function _StatusToText(status : string) : string;
-//var
-//  ch : Char;
 begin
   Result := TReservationState.FromResStatus(status).asReadableString;
-
-//  result := 'unknown';
-//  if trim(status) = '' then
-//    exit;
-//  status := UpperCase(status);
-//  ch := status[1];
-//  case ch of
-//    STATUS_NOT_ARRIVED :
-//      result := GetTranslatedText('shTx_G_NotArrived'); // 'Not arrived';
-//    STATUS_ARRIVED :
-//      result := GetTranslatedText('shTx_G_CheckedIn'); // 'Checked in';
-//    STATUS_CHECKED_OUT :
-//      result := GetTranslatedText('shTx_G_CheckedOut'); // 'Departed';
-//    STATUS_WAITING_LIST :
-//      result := GetTranslatedText('shTx_G_WaitingList'); // 'Optional booking';
-//    STATUS_ALLOTMENT :
-//      result := GetTranslatedText('shTx_G_Alotment'); // 'Alotment';
-//    STATUS_NO_SHOW :
-//      result := GetTranslatedText('shTx_G_NoShow'); // 'No-show';
-//    STATUS_BLOCKED :
-//      result := GetTranslatedText('shTx_G_Blocked'); // 'Blocked';
-//    STATUS_Canceled :
-//      result := GetTranslatedText('shTx_G_Cancelled'); // 'Cancelled';
-//    STATUS_Tmp1 :
-//      result := '[N/A]';
-//    STATUS_AWAITING_PAYMENT :
-//      result := 'Awaiting payment';
-//
-//  end;
 end;
-
-//  constants.Add('shTx_G_DueToArrive', 'Due to arrive');
-//  constants.Add('shTx_G_NotArrived', 'Not Arrived');
-//  constants.Add('shTx_G_CheckedIn', 'Checked In');
-//  constants.Add('shTx_G_CheckedOut', 'Checked Out');
-//  constants.Add('shTx_G_WaitingList', 'Waiting List');
-//  constants.Add('shTx_G_Alotment', 'Allotment');
-//  constants.Add('shTx_G_NoShow', 'No show');
-//  constants.Add('shTx_G_Blocked', 'Blocked');
-//  constants.Add('shTx_G_DepartingToday', 'Due to check out');
-//  constants.Add('shTx_G_Cancelled', 'Cancelled');
-
-//  constants.Add('shTx_G_DueToArrive', 'Due to arrive');
-//  constants.Add('shTx_G_NotArrived', 'Not Arrived');
-//  constants.Add('shTx_G_CheckedIn', 'Checked In');
-//  constants.Add('shTx_G_CheckedOut', 'Checked Out');
-//  constants.Add('shTx_G_WaitingList', 'Waiting List');
-//  constants.Add('shTx_G_Alotment', 'Allotment');
-//  constants.Add('shTx_G_NoShow', 'No show');
-//  constants.Add('shTx_G_Blocked', 'Blocked');
-//  constants.Add('shTx_G_DepartingToday', 'Due to check out');
-//  constants.Add('shTx_G_Cancelled', 'Cancelled');
-
 
 function _BreakfastToText(included : Boolean) : string;
 begin

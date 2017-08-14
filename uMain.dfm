@@ -1316,6 +1316,7 @@ object frmMain: TfrmMain
             OnMoved = splitPeriodMoved
             Color = 6842472
             ParentColor = False
+            ExplicitTop = 157
           end
           object pnlPeriodNoRooms: TsPanel
             Left = 0
@@ -1635,16 +1636,32 @@ object frmMain: TfrmMain
         end
         object tabFreeRooms: TsTabSheet
           Caption = 'tabFreeRooms'
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
         end
         object tabDashboard: TsTabSheet
           Caption = 'tabDashboard'
           SkinData.SkinSection = 'TRANSPARENT'
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
         end
         object tabRateQuery: TsTabSheet
           Caption = 'tabRateQuery'
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
         end
         object tabFrontDesk: TsTabSheet
           Caption = 'tabFrontDesk'
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object sbFrontDesk: TsScrollBox
             Left = 0
             Top = 0
@@ -2019,7 +2036,7 @@ object frmMain: TfrmMain
             Color = clWhite
             EditMask = '!99/99/9999;1; '
             Font.Charset = DEFAULT_CHARSET
-            Font.Color = 4473924
+            Font.Color = clBlack
             Font.Height = -13
             Font.Name = 'Segoe UI'
             Font.Style = [fsBold]
@@ -2615,6 +2632,7 @@ object frmMain: TfrmMain
     TabOrder = 2
     TabStop = False
     object rbTabHome: TdxRibbonTab
+      Active = True
       Caption = 'Roomer'
       Groups = <
         item
@@ -2637,7 +2655,6 @@ object frmMain: TfrmMain
       Index = 0
     end
     object rbTabReservation: TdxRibbonTab
-      Active = True
       Caption = 'Reservation'
       Groups = <
         item
@@ -2773,7 +2790,6 @@ object frmMain: TfrmMain
       Index = 7
     end
     object rbTabFinanceConnect: TdxRibbonTab
-      Active = True
       Caption = 'Finance Connect'
       Groups = <
         item
@@ -2884,10 +2900,10 @@ object frmMain: TfrmMain
       SkinData.SkinSection = 'ALPHACOMBOBOX'
       VerticalAlignment = taAlignTop
       Style = csDropDownList
-      Color = 16645629
+      Color = clWhite
       Ctl3D = True
       Font.Charset = DEFAULT_CHARSET
-      Font.Color = 4473924
+      Font.Color = clBlack
       Font.Height = -11
       Font.Name = 'Segoe UI'
       Font.Style = []
@@ -8866,7 +8882,6 @@ object frmMain: TfrmMain
   object sSkinManager1: TsSkinManager
     Effects.AllowAeroBluring = False
     Effects.AllowGlowing = False
-    IsDefault = False
     InternalSkins = <
       item
         Name = 'RoomerUI'

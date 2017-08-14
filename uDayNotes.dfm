@@ -25,9 +25,9 @@ object frmDayNotes: TfrmDayNotes
   object DateLabel1: TDateLabel
     Left = 480
     Top = 328
-    Width = 44
+    Width = 50
     Height = 13
-    Caption = '4-7-2017'
+    Caption = '14-8-2017'
     DateTimeFormat = 'd/m/yyyy'
     Version = '1.1.0.0'
     RefreshInterval = 0
@@ -313,7 +313,6 @@ object frmDayNotes: TfrmDayNotes
           ShowHint = True
           TabOrder = 2
           SkinData.SkinSection = 'GROUPBOX'
-          ExplicitTop = 2
           object fpExcludeOptions: TFlowPanel
             Left = 2
             Top = 15
@@ -331,7 +330,7 @@ object frmDayNotes: TfrmDayNotes
               Top = 4
               Width = 100
               Height = 17
-              Caption = 'Waitinglist'
+              Caption = 'Optional booking'
               AutoSize = False
               Color = clBtnFace
               ParentColor = False
