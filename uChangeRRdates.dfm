@@ -31,7 +31,7 @@ inherited frmChangeRRdates: TfrmChangeRRdates
     ExplicitTop = 319
     ExplicitWidth = 623
     inherited btnOK: TsButton
-      Left = 412
+      Left = 306
       Top = 5
       Height = 33
       Margins.Left = 4
@@ -39,14 +39,17 @@ inherited frmChangeRRdates: TfrmChangeRRdates
       Margins.Right = 4
       Margins.Bottom = 4
       Visible = False
-      ExplicitLeft = 412
-      ExplicitTop = 3
+      ExplicitLeft = 306
+      ExplicitTop = 5
       ExplicitHeight = 33
     end
     inherited btnCancel: TsButton
-      Left = 519
+      Left = 413
       Caption = 'Close'
-      ExplicitLeft = 519
+      ExplicitLeft = 413
+    end
+    inherited btnClose: TsButton
+      Left = 519
     end
   end
   object sPanel1: TsPanel [2]

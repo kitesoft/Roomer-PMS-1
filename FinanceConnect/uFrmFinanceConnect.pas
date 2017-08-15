@@ -8,17 +8,18 @@ uses
   cxLookAndFeelPainters, cxStyles, dxSkinsCore, dxSkinCaramel, dxSkinCoffee, dxSkinDarkSide, dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinscxPCPainter,
   cxCustomData, cxFilter, cxData, cxDataStorage, cxEdit, cxNavigator, Data.DB, cxDBData, cxGridLevel, cxClasses, cxGridCustomView, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGrid,
-  cmpRoomerDataSet, uRoomerForm, uD, uFinanceConnectService,
-  uDImages, cxButtonEdit, dxmdaset, Vcl.StdCtrls, sComboBox, sLabel, sEdit, sCheckBox, sMemo, sButton;
+  cmpRoomerDataSet, uRoomerDialogForm, uD, uFinanceConnectService,
+  uDImages, cxButtonEdit, dxmdaset, Vcl.StdCtrls, sComboBox, sLabel, sEdit, sCheckBox, sMemo, sButton, sGroupBox,
+   dxPScxCommon, dxPScxGridLnk, cxPropertiesStore, sStatusBar;
 
 type
 
   TFinanceConnectPageIndex = Integer;
 
-  TFrmFinanceConnect = class(TfrmBaseRoomerForm)
+  TFrmFinanceConnect = class(TfrmBaseRoomerDialogForm)
     pgMain: TsPageControl;
-    sTabSheet1: TsTabSheet;
-    sTabSheet2: TsTabSheet;
+    tsSettings: TsTabSheet;
+    tsMappings: TsTabSheet;
     tabsMappings: TsTabControl;
     pnl0: TsPanel;
     tvCustomers: TcxGridDBTableView;
@@ -56,35 +57,6 @@ type
     memVatsCode: TWideStringField;
     memVatsName: TWideStringField;
     memVatsExternalCode: TWideStringField;
-    sLabel1: TsLabel;
-    cbxSystemSelection: TsComboBox;
-    cbxActive: TsCheckBox;
-    sLabel2: TsLabel;
-    edServiceUrl: TsEdit;
-    sLabel3: TsLabel;
-    edUsername: TsEdit;
-    sLabel4: TsLabel;
-    edPassword: TsEdit;
-    sLabel5: TsLabel;
-    edOrg: TsEdit;
-    sLabel6: TsLabel;
-    edOffice: TsEdit;
-    sLabel7: TsLabel;
-    edCompany: TsEdit;
-    sLabel8: TsLabel;
-    edSalesCode: TsEdit;
-    sLabel9: TsLabel;
-    sLabel10: TsLabel;
-    edCashCode: TsEdit;
-    sLabel11: TsLabel;
-    edCashAccount: TsEdit;
-    sLabel12: TsLabel;
-    edReceivableAccount: TsEdit;
-    sLabel13: TsLabel;
-    edPreInvoiceNumber: TsEdit;
-    sLabel14: TsLabel;
-    edSuccInvoiceNumber: TsEdit;
-    btnSave: TsButton;
     sPanel1: TsPanel;
     edtSearch: TButtonedEdit;
     memPayGroups: TdxMemData;
@@ -92,7 +64,7 @@ type
     memPayGroupsName: TWideStringField;
     dsPayGroups: TDataSource;
     pnl3: TsPanel;
-    cxGrid1: TcxGrid;
+    grdPaygroups: TcxGrid;
     tvPayGroups: TcxGridDBTableView;
     glPayGroups: TcxGridLevel;
     memPayGroupsCashBook: TStringField;
@@ -102,15 +74,39 @@ type
     tvPayGroupsName: TcxGridDBColumn;
     tvPayGroupsBalanceAccount: TcxGridDBColumn;
     tvPayGroupsCashBook: TcxGridDBColumn;
+    gbxConnectionSettings: TsGroupBox;
+    gbxBookkeeping: TsGroupBox;
+    sLabel8: TsLabel;
+    sLabel12: TsLabel;
+    sLabel13: TsLabel;
+    sLabel14: TsLabel;
     sLabel15: TsLabel;
+    edSalesCode: TsEdit;
+    edReceivableAccount: TsEdit;
+    edPreInvoiceNumber: TsEdit;
+    edSuccInvoiceNumber: TsEdit;
     edCurrency: TsEdit;
+    sLabel1: TsLabel;
+    sLabel2: TsLabel;
+    sLabel3: TsLabel;
+    sLabel4: TsLabel;
+    sLabel5: TsLabel;
+    sLabel6: TsLabel;
+    sLabel7: TsLabel;
+    cbxSystemSelection: TsComboBox;
+    cbxActive: TsCheckBox;
+    edServiceUrl: TsEdit;
+    edUsername: TsEdit;
+    edPassword: TsEdit;
+    edOrg: TsEdit;
+    edOffice: TsEdit;
+    edCompany: TsEdit;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure tabsMappingsChange(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure tvListExternalCodePropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
-    procedure btnSaveClick(Sender: TObject);
-    procedure edServiceUrlChange(Sender: TObject);
+    procedure HandleChange(Sender: TObject);
     procedure cbxActiveClick(Sender: TObject);
     procedure cbxSystemSelectionCloseUp(Sender: TObject);
     procedure edtSearchChange(Sender: TObject);
@@ -121,9 +117,10 @@ type
     procedure memVatsBeforePost(DataSet: TDataSet);
     procedure memItemsBeforePost(DataSet: TDataSet);
     procedure memCustomersBeforePost(DataSet: TDataSet);
+    procedure btnOKClick(Sender: TObject);
+    procedure pgMainChange(Sender: TObject);
   private
     FinanceConnectService : TFinanceConnectService;
-    procedure LoadInfo;
     procedure PrepareTabs;
     procedure LoadSet(rSet: TRoomerDataSet; KeyPairType : TKeyPairType; mem: TdxMemData; CodeField, NameField, MappedField : String);
     function CurrentTableView: TcxGridDBTableView;
@@ -131,14 +128,14 @@ type
     procedure ReStartDataPreparation;
     function CheckEnableSaveButton: Boolean;
     { Private declarations }
+  protected
+    procedure DoUpdateControls; override;
+    procedure DoLoadData; override;
   public
     { Public declarations }
     InitialPage : TFinanceConnectPageIndex;
     InitialWorkingTab : TFinanceConnectPageIndex;
   end;
-
-var
-  FrmFinanceConnect: TFrmFinanceConnect;
 
 const PAGE_CONFIG = 0;
       PAGE_MAPPING = 1;
@@ -160,8 +157,6 @@ uses uAppGlobal,
      PrjConst
     ;
 
-const INVALID_PASSWORD = '***This is not valid password***';
-
 procedure ManageFinanceConnect(page : TFinanceConnectPageIndex = PAGE_CONFIG; workingTab : TFinanceConnectPageIndex = TAB_CUSTOMERS);
 var _FrmFinanceConnect : TFrmFinanceConnect;
 begin
@@ -177,12 +172,12 @@ end;
 
 procedure TFrmFinanceConnect.cbxActiveClick(Sender: TObject);
 begin
-  btnSave.Enabled := CheckEnableSaveButton;
+  UpdateControls;
 end;
 
 procedure TFrmFinanceConnect.cbxSystemSelectionCloseUp(Sender: TObject);
 begin
-  btnSave.Enabled := CheckEnableSaveButton;
+  UpdateControls;
 end;
 
 function TFrmFinanceConnect.CheckEnableSaveButton : Boolean;
@@ -190,7 +185,7 @@ begin
   result := (cbxSystemSelection.ItemIndex > 0) AND
     (Length(edServiceUrl.Text) > 5) AND
     (Length(edUsername.Text) > 0) AND
-    ((Length(edPassword.Text) > 0) AND (edPassword.Text <> INVALID_PASSWORD)) AND
+    (Length(edPassword.Text) > 0) AND
     (Length(edOrg.Text) > 0) AND
     (Length(edOffice.Text) > 0) AND
 //    (Length(edCompany.Text) > 0) AND
@@ -203,15 +198,14 @@ begin
 //    (Length(edSuccInvoiceNumber.Text) > 0);
 end;
 
-procedure TFrmFinanceConnect.edServiceUrlChange(Sender: TObject);
+procedure TFrmFinanceConnect.HandleChange(Sender: TObject);
 begin
-  btnSave.Enabled := CheckEnableSaveButton;
+  UpdateControls;
 end;
 
 procedure TFrmFinanceConnect.edtSearchChange(Sender: TObject);
 var currentView : TcxGridDBTableView;
     i : Integer;
-    filter : String;
 begin
   edtSearch.RightButton.Visible := edtSearch.Text <> '';
   currentView := CurrentTableView;
@@ -245,6 +239,12 @@ begin
   end;
 end;
 
+procedure TFrmFinanceConnect.DoUpdateControls;
+begin
+  inherited;
+  btnOK.Enabled := CheckEnableSaveButton;
+end;
+
 procedure TFrmFinanceConnect.ClearAllTableViewFilters;
 begin
   edtSearch.Text := '';
@@ -261,7 +261,6 @@ end;
 procedure TFrmFinanceConnect.FormCreate(Sender: TObject);
 begin
   inherited;
-  edPassword.Text := INVALID_PASSWORD;
   pgMain.ActivePageIndex := 0;
 end;
 
@@ -283,9 +282,7 @@ begin
   FinanceConnectService := TFinanceConnectService.Create;
   FinanceConnectService.PrepareForMapping;
 
-  LoadInfo;
   PrepareTabs;
-  btnSave.Enabled := False;
 end;
 
 procedure TFrmFinanceConnect.tabsMappingsChange(Sender: TObject);
@@ -302,7 +299,7 @@ var
   keyValue : TKeyAndValue;
   financeLookupList : TKeyPairList;
   memTable : TdxMemData;
-  RoomerCode, ExternalCode: TWideStringField;
+  ExternalCode: TWideStringField;
   Caption : String;
   keyPairType: TKeyPairType;
 begin
@@ -316,20 +313,19 @@ begin
                       financeLookupList := CustomersLookupList;
                       memTable := memCustomers;
                       ExternalCode := memCustomersExternalCode;
-                      RoomerCode := memCustomersCode;
                     end;
     TAB_ITEMS     : begin
                       financeLookupList := ItemsLookupList;
                       memTable := memItems;
-                      RoomerCode := memItemsCode;
                       ExternalCode := memItemsExternalCode;
                     end;
     TAB_VATS      : begin
                       financeLookupList := VatsLookupList;
                       memTable := memVats;
-                      RoomerCode := memVatsCode;
                       ExternalCode := memVatsExternalCode;
                     end;
+  else
+    Exit;
   end;
 
   keyValue := selectFromKeyValuePairs(Caption, ExternalCode.AsString, financeLookupList);
@@ -414,12 +410,11 @@ begin
   end;
 end;
 
-//////////////////////////////////////////// Methods ///////////////////////////////////////////////
 
-procedure TFrmFinanceConnect.LoadInfo;
-var rSet : TRoomerDataSet;
-    KeyAndValue : TKeyAndValue;
-    i, index : Integer;
+procedure TFrmFinanceConnect.DoLoadData;
+var
+  KeyAndValue : TKeyAndValue;
+  i, index : Integer;
 begin
  //
   memCustomers.BeforePost := nil;
@@ -450,18 +445,17 @@ begin
 end;
 
 procedure TFrmFinanceConnect.LoadSet(rSet : TRoomerDataSet; KeyPairType : TKeyPairType; mem : TdxMemData; CodeField, NameField, MappedField : String);
-var Code : String;
-    Name : String;
-    ExternalCode : String;
+var
+  ExternalCode : String;
 begin
  //
   if ActiveFinanceConnectSystemCode = '' then exit;
 
-  mem.Close;
-  mem.Open;
-  rSet.First;
   mem.DisableControls;
   try
+    mem.Close;
+    mem.Open;
+    rSet.First;
     while Not rSet.Eof do
     begin
       if rSet['Active'] then
@@ -548,6 +542,15 @@ begin
   MappingsLookupMap.AddOrSetValue(format('%s_%s', [MAPPING_ENTITIES[keyPairType], RoomerCode]), NewValue);
 end;
 
+procedure TFrmFinanceConnect.pgMainChange(Sender: TObject);
+begin
+  inherited;
+  case pgMain.ActivePageIndex of
+    0:  DialogButtons := mbOkCancel;
+    1:  DialogButtons := [mbClose];
+  end;
+end;
+
 procedure TFrmFinanceConnect.PrepareTabs;
 begin
  //
@@ -571,8 +574,6 @@ begin
     edOffice.Text := officeCode;
     edCompany.Text := companyGuid;
     edSalesCode.Text := invoiceCode;
-    edCashCode.Text := cashCode;
-    edCashAccount.Text := cashBalanceAccount;
     edReceivableAccount.Text := receivableBalanceAccount;
     edPreInvoiceNumber.Text := preceedingInvoiceNumber;
     edSuccInvoiceNumber.Text := succeedingInvoiceNumber;
@@ -585,10 +586,11 @@ begin
 
 end;
 
-procedure TFrmFinanceConnect.btnSaveClick(Sender: TObject);
+procedure TFrmFinanceConnect.btnOKClick(Sender: TObject);
 var FinanceConnectSettings : TFinanceConnectSettings;
     KeyAndValue : TKeyAndValue;
 begin
+  inherited;
   FinanceConnectSettings := FinanceConnectService.FinanceConnectConfiguration;
   with FinanceConnectSettings do
   begin
@@ -605,9 +607,7 @@ begin
     officeCode := edOffice.Text;
     companyGuid := edCompany.Text;
     invoiceCode := edSalesCode.Text;
-    cashCode := edCashCode.Text;
     usedCurrency := edCurrency.Text;
-    cashBalanceAccount := edCashAccount.Text;
     receivableBalanceAccount := edReceivableAccount.Text;
     preceedingInvoiceNumber := edPreInvoiceNumber.Text;
     succeedingInvoiceNumber := edSuccInvoiceNumber.Text;

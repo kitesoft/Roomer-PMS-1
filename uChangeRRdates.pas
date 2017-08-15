@@ -651,6 +651,8 @@ procedure TfrmChangeRRdates.FormShow(Sender: TObject);
 var
   resInfo: recResDateHolder;
 begin
+  DialogButtons := [mbClose];
+
   oldArrival := zArrival;
   oldDeparture := zDeparture;
 

@@ -12,8 +12,8 @@ inherited FrmStaffNote: TFrmStaffNote
   inherited sbStatusBar: TsStatusBar
     Top = 314
     Width = 426
-    ExplicitTop = 517
-    ExplicitWidth = 657
+    ExplicitTop = 314
+    ExplicitWidth = 426
   end
   object sPanel1: TsPanel [1]
     Left = 0
@@ -24,7 +24,6 @@ inherited FrmStaffNote: TFrmStaffNote
     BevelOuter = bvNone
     TabOrder = 2
     SkinData.SkinSection = 'PANEL'
-    ExplicitWidth = 443
     object sLabel1: TsLabel
       Left = 23
       Top = 16
@@ -118,17 +117,18 @@ inherited FrmStaffNote: TFrmStaffNote
     Top = 271
     Width = 426
     TabOrder = 0
-    ExplicitTop = 474
-    ExplicitWidth = 657
+    ExplicitTop = 271
+    ExplicitWidth = 426
     inherited btnOK: TsButton
-      Left = 216
-      ExplicitLeft = 447
-      ExplicitTop = 4
+      Left = 110
+      ExplicitLeft = 110
     end
     inherited btnCancel: TsButton
+      Left = 216
+      ExplicitLeft = 216
+    end
+    inherited btnClose: TsButton
       Left = 322
-      ExplicitLeft = 553
-      ExplicitTop = 4
     end
   end
   object sPanel2: TsPanel [3]
@@ -139,9 +139,6 @@ inherited FrmStaffNote: TFrmStaffNote
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 3
-    ExplicitTop = 111
-    ExplicitWidth = 561
-    ExplicitHeight = 216
     object sLabel3: TsLabel
       Left = 33
       Top = 6
@@ -179,9 +176,6 @@ inherited FrmStaffNote: TFrmStaffNote
       ItemIndex = -1
       ParentFont = False
       TabOrder = 0
-      ExplicitLeft = 110
-      ExplicitTop = 28
-      ExplicitWidth = 427
     end
     object mmoText: TsMemo
       AlignWithMargins = True
@@ -201,10 +195,6 @@ inherited FrmStaffNote: TFrmStaffNote
       ParentFont = False
       TabOrder = 1
       SkinData.SkinSection = 'EDIT'
-      ExplicitLeft = 117
-      ExplicitTop = 30
-      ExplicitWidth = 428
-      ExplicitHeight = 166
     end
   end
   inherited psRoomerBase: TcxPropertiesStore
