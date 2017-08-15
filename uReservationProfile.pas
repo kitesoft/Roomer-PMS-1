@@ -1249,18 +1249,21 @@ end;
 procedure TfrmReservationProfile.acGuestDetailsClick(Sender: TObject);
 var
   rSet: TRoomerDataSet;
+  lRoomres: integer;
 begin
-  if (NOT mRooms.Eof) AND OpenGuestCheckInForm(mRooms['RoomReservation'], false) then
+  lRoomRes := mRooms['RoomReservation'];
+  if (NOT mRooms.Eof) AND OpenGuestCheckInForm(lRoomres, false) then
   begin
     rSet := CreateNewDataSet;
     try
-      if hData.rSet_bySQL(rSet, 'SELECT Name FROM persons WHERE MainName=1 AND RoomReservation=' +
-        inttostr(mRooms['RoomReservation'])) then
+      if hData.rSet_bySQL(rSet, 'SELECT Name FROM persons WHERE MainName=1 AND RoomReservation=' + inttostr(lRoomres)) then
       begin
         mRooms.Edit;
         mRooms['GuestName'] := rSet['Name'];
         mRooms.Post;
       end;
+      getGuestData(lRoomres);
+      UpdateGuestDetails(lRoomres);
     finally
       FreeAndNil(rSet);
     end;
@@ -1273,15 +1276,12 @@ begin
 end;
 
 procedure TfrmReservationProfile.btnGroupsClick(Sender: TObject);
-var
-  iReservation: Integer;
-  iRoomreservation: Integer;
 begin
-  iReservation := zReservation;
-  iRoomreservation := zRoomReservation;
-  if GroupGuests(iReservation, iRoomreservation) then
+  if GroupGuests(zReservation, zRoomreservation) then
   begin
     Display_rGrid(zRoomReservation);
+    getGuestData(zRoomreservation);
+    UpdateGuestDetails(zRoomreservation);
   end;
 end;
 
