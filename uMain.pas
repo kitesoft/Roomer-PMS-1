@@ -679,7 +679,7 @@ type
     sImage1: TsImage;
     lblMainHeader: TsLabel;
     rbTabFinanceConnect: TdxRibbonTab;
-    barinnBar4: TdxBar;
+    barinnBar11: TdxBar;
     btnManageFinanceConnect: TdxBarLargeButton;
     btnCreditcardTokenUsage: TdxBarLargeButton;
     procedure FormCreate(Sender: TObject);

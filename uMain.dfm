@@ -848,10 +848,6 @@ object frmMain: TfrmMain
         object tabPeriod: TsTabSheet
           Caption = 'tabPeriod'
           ImageIndex = 2
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object sLabel2: TsLabel
             Left = 224
             Top = 400
@@ -2632,7 +2628,6 @@ object frmMain: TfrmMain
     TabOrder = 2
     TabStop = False
     object rbTabHome: TdxRibbonTab
-      Active = True
       Caption = 'Roomer'
       Groups = <
         item
@@ -2790,10 +2785,11 @@ object frmMain: TfrmMain
       Index = 7
     end
     object rbTabFinanceConnect: TdxRibbonTab
+      Active = True
       Caption = 'Finance Connect'
       Groups = <
         item
-          ToolbarName = 'barinnBar4'
+          ToolbarName = 'barinnBar11'
         end>
       Index = 8
     end
@@ -4665,8 +4661,8 @@ object frmMain: TfrmMain
       Visible = True
       WholeRow = False
     end
-    object barinnBar4: TdxBar
-      Caption = 'Custom 2'
+    object barinnBar11: TdxBar
+      Caption = 'Finance Connect'
       CaptionButtons = <>
       DockedLeft = 0
       DockedTop = 0
