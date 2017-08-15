@@ -950,11 +950,11 @@ object frmReservationProfile: TfrmReservationProfile
                 inherited pnlCountry: TsPanel
                   Width = 175
                   ExplicitWidth = 175
-                  inherited lblCountryName: TsLabel
-                    Width = 3
+                  inherited lblCountryName: TLabel
+                    Width = 109
                     Height = 14
                     Font.Height = -9
-                    ExplicitWidth = 3
+                    ExplicitWidth = 15
                     ExplicitHeight = 11
                   end
                 end
@@ -1733,11 +1733,11 @@ object frmReservationProfile: TfrmReservationProfile
               inherited pnlCountry: TsPanel
                 Width = 159
                 ExplicitWidth = 159
-                inherited lblCountryName: TsLabel
-                  Width = 3
+                inherited lblCountryName: TLabel
+                  Width = 93
                   Height = 14
                   Font.Height = -9
-                  ExplicitWidth = 3
+                  ExplicitWidth = 15
                   ExplicitHeight = 11
                 end
                 inherited btnGetCountry: TsButton
@@ -1763,11 +1763,11 @@ object frmReservationProfile: TfrmReservationProfile
               inherited pnlCountry: TsPanel
                 Width = 159
                 ExplicitWidth = 159
-                inherited lblCountryName: TsLabel
-                  Width = 3
+                inherited lblCountryName: TLabel
+                  Width = 93
                   Height = 14
                   Font.Height = -9
-                  ExplicitWidth = 3
+                  ExplicitWidth = 15
                   ExplicitHeight = 11
                 end
               end
@@ -2993,6 +2993,7 @@ object frmReservationProfile: TfrmReservationProfile
           Images = DImages.PngImageList1
           TabOrder = 8
           SkinData.SkinSection = 'BUTTON'
+          ExplicitTop = 2
         end
         object btnGroups: TsButton
           AlignWithMargins = True
@@ -3101,8 +3102,8 @@ object frmReservationProfile: TfrmReservationProfile
         object chkShowAllGuests: TsCheckBox
           Left = 333
           Top = 11
-          Width = 102
-          Height = 17
+          Width = 94
+          Height = 20
           Caption = 'Show all guests'
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 4
