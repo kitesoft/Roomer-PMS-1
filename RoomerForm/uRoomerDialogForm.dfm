@@ -25,8 +25,9 @@ inherited frmBaseRoomerDialogForm: TfrmBaseRoomerDialogForm
     TabOrder = 1
     SkinData.SkinSection = 'PANEL'
     object btnOK: TsButton
+      Tag = 2
       AlignWithMargins = True
-      Left = 445
+      Left = 339
       Top = 4
       Width = 100
       Height = 35
@@ -38,11 +39,12 @@ inherited frmBaseRoomerDialogForm: TfrmBaseRoomerDialogForm
       ModalResult = 1
       TabOrder = 0
       SkinData.SkinSection = 'BUTTON'
-      ExplicitTop = 2
+      ExplicitLeft = 0
     end
     object btnCancel: TsButton
+      Tag = 3
       AlignWithMargins = True
-      Left = 551
+      Left = 445
       Top = 4
       Width = 100
       Height = 35
@@ -54,7 +56,23 @@ inherited frmBaseRoomerDialogForm: TfrmBaseRoomerDialogForm
       ModalResult = 2
       TabOrder = 1
       SkinData.SkinSection = 'BUTTON'
-      ExplicitTop = 2
+      ExplicitLeft = 0
+    end
+    object btnClose: TsButton
+      Tag = 11
+      AlignWithMargins = True
+      Left = 551
+      Top = 4
+      Width = 100
+      Height = 35
+      Align = alRight
+      Caption = 'Close'
+      ImageIndex = 4
+      Images = DImages.PngImageList1
+      ModalResult = 8
+      TabOrder = 2
+      SkinData.SkinSection = 'BUTTON'
+      ExplicitLeft = 0
     end
   end
   inherited psRoomerBase: TcxPropertiesStore
