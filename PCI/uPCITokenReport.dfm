@@ -1,38 +1,38 @@
-object frmPCITokenReport: TfrmPCITokenReport
+inherited frmPCITokenReport: TfrmPCITokenReport
   Left = 961
   Top = 264
   Caption = 'Creditcard token usage reports'
   ClientHeight = 641
   ClientWidth = 1116
-  Color = clBtnFace
-  Font.Charset = DEFAULT_CHARSET
-  Font.Color = clWindowText
   Font.Height = -11
-  Font.Name = 'Tahoma'
-  Font.Style = []
-  KeyPreview = True
-  OldCreateOrder = False
   Position = poOwnerFormCenter
   OnClose = FormClose
   OnCreate = FormCreate
-  OnKeyDown = FormKeyDown
-  OnShow = FormShow
+  ExplicitWidth = 1132
+  ExplicitHeight = 680
   PixelsPerInch = 96
   TextHeight = 13
-  object pageMain: TsPageControl
-    Left = 0
-    Top = 97
+  inherited sbStatusBar: TsStatusBar
+    Top = 621
     Width = 1116
-    Height = 524
+    ExplicitTop = 621
+    ExplicitWidth = 1116
+  end
+  object pageMain: TsPageControl [1]
+    Left = 0
+    Top = 81
+    Width = 1116
+    Height = 540
     ActivePage = sheetMain
     Align = alClient
     TabOrder = 0
     SkinData.SkinSection = 'PAGECONTROL'
-    ExplicitWidth = 997
+    ExplicitTop = 97
+    ExplicitHeight = 524
     object sheetMain: TsTabSheet
       Caption = 'Main'
       TabVisible = False
-      ExplicitWidth = 989
+      ExplicitHeight = 514
       object Panel1: TsPanel
         Left = 0
         Top = 0
@@ -42,7 +42,6 @@ object frmPCITokenReport: TfrmPCITokenReport
         BevelOuter = bvNone
         TabOrder = 0
         SkinData.SkinSection = 'PANEL'
-        ExplicitWidth = 989
         object btnExcelS1: TsButton
           AlignWithMargins = True
           Left = 3
@@ -77,7 +76,7 @@ object frmPCITokenReport: TfrmPCITokenReport
           AlignWithMargins = True
           Left = 405
           Top = 3
-          Width = 208
+          Width = 203
           Height = 37
           Caption = 'Page break before summary on report'
           Align = alLeft
@@ -112,14 +111,13 @@ object frmPCITokenReport: TfrmPCITokenReport
         Left = 0
         Top = 43
         Width = 1108
-        Height = 471
+        Height = 487
         Align = alClient
         BevelOuter = bvNone
         BorderStyle = cxcbsNone
         TabOrder = 1
         LookAndFeel.NativeStyle = False
-        ExplicitTop = 41
-        ExplicitWidth = 989
+        ExplicitHeight = 471
         object tvTokenUsage: TcxGridDBTableView
           OnDblClick = tvTokenUsageDblClick
           Navigator.Buttons.CustomButtons = <>
@@ -233,6 +231,7 @@ object frmPCITokenReport: TfrmPCITokenReport
           OptionsView.Footer = True
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
+          Styles.StyleSheet = cxssRoomerGridTableView
           object tvTokenUsageRecId: TcxGridDBColumn
             DataBinding.FieldName = 'RecId'
             Visible = False
@@ -256,7 +255,7 @@ object frmPCITokenReport: TfrmPCITokenReport
           object tvTokenUsageReservation: TcxGridDBColumn
             DataBinding.FieldName = 'Reservation'
             Options.Editing = False
-            Width = 66
+            Width = 92
           end
           object tvTokenUsageRoom: TcxGridDBColumn
             DataBinding.FieldName = 'Room'
@@ -343,6 +342,7 @@ object frmPCITokenReport: TfrmPCITokenReport
           object tvTokenUsageNumGuests: TcxGridDBColumn
             DataBinding.FieldName = 'NumGuests'
             Options.Editing = False
+            Width = 73
           end
         end
         object lvTokenUsage: TcxGridLevel
@@ -351,30 +351,22 @@ object frmPCITokenReport: TfrmPCITokenReport
       end
     end
   end
-  object dxStatusBar1: TsStatusBar
-    Left = 0
-    Top = 621
-    Width = 1116
-    Height = 20
-    Panels = <>
-    SkinData.SkinSection = 'STATUSBAR'
-    ExplicitWidth = 997
-  end
-  object Panel3: TsPanel
+  object Panel3: TsPanel [2]
     Left = 0
     Top = 0
     Width = 1116
-    Height = 97
+    Height = 81
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 2
     SkinData.SkinSection = 'PANEL'
-    ExplicitWidth = 997
-    object cxGroupBox2: TsGroupBox
-      Left = 7
-      Top = 12
+    object gbxPeriodSelection: TsGroupBox
+      AlignWithMargins = True
+      Left = 3
+      Top = 3
       Width = 189
-      Height = 79
+      Height = 75
+      Align = alLeft
       Caption = 'Select month and year'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
@@ -384,6 +376,9 @@ object frmPCITokenReport: TfrmPCITokenReport
       ParentFont = False
       TabOrder = 0
       SkinData.SkinSection = 'GROUPBOX'
+      ExplicitLeft = 7
+      ExplicitTop = 12
+      ExplicitHeight = 79
       object cbxMonth: TsComboBox
         Left = 32
         Top = 22
@@ -451,8 +446,8 @@ object frmPCITokenReport: TfrmPCITokenReport
       end
     end
     object btnRefresh: TsButton
-      Left = 275
-      Top = 51
+      Left = 198
+      Top = 17
       Width = 100
       Height = 37
       Caption = 'Refresh ALL'
@@ -462,6 +457,27 @@ object frmPCITokenReport: TfrmPCITokenReport
       TabOrder = 1
       OnClick = btnRefreshClick
       SkinData.SkinSection = 'BUTTON'
+    end
+  end
+  inherited psRoomerBase: TcxPropertiesStore
+    Components = <
+      item
+        Component = frmBaseRoomerForm.Owner
+        Properties.Strings = (
+          'Height'
+          'Left'
+          'Top'
+          'Width'
+          'Position')
+      end>
+  end
+  inherited cxsrRoomerStyleRepository: TcxStyleRepository
+    PixelsPerInch = 96
+    inherited dxssRoomerGridReportLink: TdxGridReportLinkStyleSheet
+      BuiltIn = True
+    end
+    inherited cxssRoomerGridTableView: TcxGridTableViewStyleSheet
+      BuiltIn = True
     end
   end
   object mTokenUsage: TdxMemData

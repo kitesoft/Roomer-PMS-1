@@ -779,9 +779,6 @@ begin
   end;
 end;
 
-var
-  theData: recCountryHolder;
-
 procedure TFrmGuestCheckInForm.sButton2Click(Sender: TObject);
 begin
   SaveGuestInfo;
@@ -919,7 +916,6 @@ end;
 
 procedure TFrmGuestCheckInForm.btnPortfolioClick(Sender: TObject);
 var
-  sName: String;
   iId: Integer;
 begin
   iId := GuestProfiles(actLookup, btnPortfolio.Tag);

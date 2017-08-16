@@ -23,16 +23,17 @@ type
     btnOK: TsButton;
     btnCancel: TsButton;
     btnClose: TsButton;
+    procedure btnCloseClick(Sender: TObject);
   private
     FDialogButtons: TMsgDlgButtons;
     FOrderedButtonList: TList<TButton>;
     procedure SetDialogButtons(const Value: TMsgDlgButtons);
     procedure CorrectButtonDisplayOrder;
     procedure FillButtonList;
+    procedure UpdateDialogButtons;
     { Private declarations }
   protected
     procedure DoShow; override;
-    procedure DoUpdateControls; override;
   public
     constructor Create(aOwner: TComponent); override;
     destructor Destroy; override;
@@ -52,6 +53,12 @@ type
   TButtonTabOrderComparer = TComparer<TButton>;
 
 { TfrmBaseRoomerDialogForm }
+
+procedure TfrmBaseRoomerDialogForm.btnCloseClick(Sender: TObject);
+begin
+  inherited;
+  Close;
+end;
 
 procedure TfrmBaseRoomerDialogForm.CorrectButtonDisplayOrder;
 var
@@ -100,12 +107,10 @@ begin
 end;
 
 
-procedure TfrmBaseRoomerDialogForm.DoUpdateControls;
+procedure TfrmBaseRoomerDialogForm.UpdateDialogButtons;
 var
   b: TButton;
 begin
-  inherited;
-
   for b in FOrderedButtonList do
     b.Visible := TMsgDlgBtn(b.Tag) in FDialogButtons;
 
@@ -115,7 +120,7 @@ end;
 procedure TfrmBaseRoomerDialogForm.SetDialogButtons(const Value: TMsgDlgButtons);
 begin
   FDialogButtons := Value;
-  UpdateControls;
+  UpdateDialogButtons;
 end;
 
 end.

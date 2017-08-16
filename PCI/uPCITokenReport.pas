@@ -96,20 +96,20 @@ uses
   dxSkiniMaginary, dxSkinLilian, dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMoneyTwins, dxSkinOffice2007Black, dxSkinOffice2007Blue,
   dxSkinOffice2007Green, dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver,
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver, dxSkinSpringTime, dxSkinStardust,
-  dxSkinSummer2008, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue
+  dxSkinSummer2008, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
+  uRoomerForm, dxPScxCommon, dxPScxGridLnk
 
   ;
 
 type
-  TfrmPCITokenReport = class(TForm)
+  TfrmPCITokenReport = class(TfrmBaseRoomerForm)
     pageMain: TsPageControl;
     sheetMain: TsTabSheet;
-    dxStatusBar1: TsStatusBar;
     Panel1: TsPanel;
     btnExcelS1: TsButton;
     btnReportS1: TsButton;
     Panel3: TsPanel;
-    cxGroupBox2: TsGroupBox;
+    gbxPeriodSelection: TsGroupBox;
     cbxMonth: TsComboBox;
     cbxYear: TsComboBox;
     btnRefresh: TsButton;
@@ -227,7 +227,6 @@ type
     ppDBText7: TppDBText;
     mTokenUsageCharges: TIntegerField;
     tvTokenUsageCharges: TcxGridDBColumn;
-    procedure FormShow(Sender : TObject);
     procedure btnRefreshClick(Sender : TObject);
     procedure btnShowReservationClick(Sender : TObject);
     procedure btnReportS1Click(Sender : TObject);
@@ -237,19 +236,16 @@ type
     procedure btnExcelS1Click(Sender : TObject);
     procedure FormCreate(Sender: TObject);
     procedure cbxYearCloseUp(Sender: TObject);
-    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure mTokenUsageAfterScroll(DataSet: TDataSet);
   private
     { Private declarations }
-    procedure RefreshAll;
-    procedure ActivateButtons(default: Boolean);
-
+  protected
+    procedure DoShow; override;
+    procedure DoLoadData; override;
+    procedure DoUpdateControls; override;
   public
     { Public declarations }
   end;
-
-var
-  frmPCITokenReport : TfrmPCITokenReport;
 
 procedure ShowPCITokenReport;
 
@@ -308,16 +304,15 @@ end;
 
 procedure TfrmPCITokenReport.mTokenUsageAfterScroll(DataSet: TDataSet);
 begin
-  ActivateButtons(True);
+  UpdateControls;
 end;
 
 procedure TfrmPCITokenReport.btnRefreshClick(Sender : TObject);
 begin
-  RefreshAll;
-  ActivateButtons(True);
+  RefreshData;
 end;
 
-procedure TfrmPCITokenReport.RefreshAll;
+procedure TfrmPCITokenReport.DoLoadData;
 var
   xml : string;
   rSet : TRoomerDataSet;
@@ -337,27 +332,27 @@ begin
       begin
         mTokenUsage.Append;
 
-        mTokenUsage.FieldByName('Reservation').Asinteger  := rSet['Reservation'];
-        mTokenUsage.FieldByName('Customer').AsString      := rSet['Customer'];
-        mTokenUsage.FieldByName('Name').AsString          := rSet['Name'];
-        mTokenUsage.FieldByName('GuestName').AsString     := rSet['GuestName'];
-        mTokenUsage.FieldByName('VIEWS').AsInteger        := rSet['VIEWS'];
-        mTokenUsage.FieldByName('CREATIONS').AsInteger    := rSet['CREATIONS'];
-        mTokenUsage.FieldByName('Charges').AsInteger      := rSet['CHARGES'];
-        mTokenUsage.FieldByName('USER_ID').AsString       := rSet['USER_ID'];
-        mTokenUsage.FieldByName('IP_NUMBER').AsString     := rSet['IP_NUMBER'];
-        mTokenUsage.FieldByName('MACHINE_NAME').AsString  := rSet['MACHINE_NAME'];
-        mTokenUsage.FieldByName('EVENT').AsString         := rSet['EVENT'];
-        mTokenUsage.FieldByName('COST_IN_EUR').AsFloat    := rSet['COST_IN_EUR'];
-        mTokenUsage.FieldByName('TSTAMP').AsDateTime      := rSet.fieldByName('TSTAMP').AsDateTime;
-        mTokenUsage.FieldByName('ContactName').AsString   := rSet['ContactName'];
-        mTokenUsage.FieldByName('Arrival').AsDateTime     := trunc(rSet.fieldByName('Arrival').AsDateTime);
-        mTokenUsage.FieldByName('Departure').AsDateTime   := trunc(rSet.fieldByName('Departure').AsDateTime);
-        mTokenUsage.FieldByName('BookingId').AsString     := rSet['BookingId'];
-        mTokenUsage.FieldByName('Room').AsString          := rSet['Room'];
-        mTokenUsage.FieldByName('RoomType').AsString      := rSet['RoomType'];
-        mTokenUsage.FieldByName('RoomClass').AsString     := rSet['RoomClass'];
-        mTokenUsage.FieldByName('NumGuests').AsInteger    := rSet['NumGuests'];
+        mTokenUsageReservation.Asinteger  := rSet['Reservation'];
+        mTokenUsageCustomer.AsString      := rSet['Customer'];
+        mTokenUsageName.AsString          := rSet['Name'];
+        mTokenUsageGuestName.AsString     := rSet['GuestName'];
+        mTokenUsageVIEWS.AsInteger        := rSet['VIEWS'];
+        mTokenUsageCREATIONS.AsInteger    := rSet['CREATIONS'];
+        mTokenUsageCharges.AsInteger      := rSet['CHARGES'];
+        mTokenUsageUSER_ID.AsString       := rSet['USER_ID'];
+        mTokenUsageIP_NUMBER.AsString     := rSet['IP_NUMBER'];
+        mTokenUsageMACHINE_NAME.AsString  := rSet['MACHINE_NAME'];
+        mTokenUsageEVENT.AsString         := rSet['EVENT'];
+        mTokenUsageCOST_IN_EUR.AsFloat    := rSet['COST_IN_EUR'];
+        mTokenUsageTSTAMP.AsDateTime      := rSet.fieldByName('TSTAMP').AsDateTime;
+        mTokenUsageContactName.AsString   := rSet['ContactName'];
+        mTokenUsageArrival.AsDateTime     := trunc(rSet.fieldByName('Arrival').AsDateTime);
+        mTokenUsageDeparture.AsDateTime   := trunc(rSet.fieldByName('Departure').AsDateTime);
+        mTokenUsageBookingId.AsString     := rSet['BookingId'];
+        mTokenUsageRoom.AsString          := rSet['Room'];
+        mTokenUsageRoomType.AsString      := rSet['RoomType'];
+        mTokenUsageRoomClass.AsString     := rSet['RoomClass'];
+        mTokenUsageNumGuests.AsInteger    := rSet['NumGuests'];
 
         mTokenUsage.Post;
 
@@ -381,7 +376,7 @@ end;
 
 procedure TfrmPCITokenReport.cbxYearCloseUp(Sender: TObject);
 begin
-  btnRefresh.Enabled := (cbxYear.ItemIndex >= 0) AND (cbxMonth.ItemIndex >= 0);
+  UpdateControls;
 end;
 
 procedure TfrmPCITokenReport.FormClose(Sender : TObject; var Action : TCloseAction);
@@ -392,31 +387,24 @@ end;
 
 procedure TfrmPCITokenReport.FormCreate(Sender: TObject);
 begin
-  RoomerLanguage.TranslateThisForm(self);
-  glb.PerformAuthenticationAssertion(self); PlaceFormOnVisibleMonitor(self);
   glb.fillListWithMonthsLong(cbxMonth.Items, 1);
   glb.fillListWithYears(cbxYear.Items, 1, False);
 end;
 
-procedure TfrmPCITokenReport.FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
-begin
-  if Key = VK_ESCAPE then
-    Close;
-end;
-
-procedure TfrmPCITokenReport.FormShow(Sender : TObject);
+procedure TfrmPCITokenReport.DoShow;
 begin
   cbxMonth.ItemIndex := Month(Now);
   cbxYear.ItemIndex := cbxYear.Items.IndexOf(inttostr(Year(Now)));
   cbxYearCloseUp(cbxYear);
-  ActivateButtons(False);
+  inherited;
 end;
 
-procedure TfrmPCITokenReport.ActivateButtons(default : Boolean);
+procedure TfrmPCITokenReport.DoUpdateControls;
 begin
-  btnExcelS1.Enabled := default;
-  btnReportS1.Enabled := default;
+  btnExcelS1.Enabled := NOT (mTokenUsage.Eof OR mTokenUsage.Bof);
+  btnReportS1.Enabled := NOT (mTokenUsage.Eof OR mTokenUsage.Bof);
   btnShowReservation.Enabled := NOT (mTokenUsage.Eof OR mTokenUsage.Bof);
+  btnRefresh.Enabled := (cbxYear.ItemIndex >= 0) AND (cbxMonth.ItemIndex >= 0);
 end;
 
 procedure TfrmPCITokenReport.ppHeaderBand1BeforePrint(Sender : TObject);
@@ -442,9 +430,6 @@ procedure TfrmPCITokenReport.btnReportS1Click(Sender : TObject);
 var
   aReport      : TppReport;
   sFilter      : string;
-  s            : string;
-  sortfield    : string;
-  isDescending : boolean;
 
   totNumCreations,
   totNumViews,
@@ -540,28 +525,13 @@ end;
 // --------------------------------------------------------------------------------
 
 procedure TfrmPCITokenReport.btnShowReservationClick(Sender : TObject);
-var
-  iReservation : integer;
-  iRoomReservation : integer;
 begin
   if mTokenUsage.RecordCount = 0 then
     exit;
   if (mTokenUsage.Eof OR mTokenUsage.Bof) then
     exit;
 
-  iReservation := mTokenUsage.FieldByName('Reservation').Asinteger;
-
-  if EditReservation(iReservation, -1) then
-  begin
-    // **--
-  end;
+  EditReservation(mTokenUsageReservation.AsInteger, -1);
 end;
-
-// -------------------------------------------------------------------------------
-//
-// Buttons
-//
-//
-// --------------------------------------------------------------------------------
 
 end.

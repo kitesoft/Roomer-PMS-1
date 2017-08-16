@@ -247,8 +247,7 @@ function TFinanceConnectService.ParseSettings(XmlString : String) : TFinanceConn
 var
   XML: IXMLDOMDocument2;
   listNode, rootNode: IXMLDOmNode;
-  i, l : Integer;
-  code, name : String;
+  i : Integer;
 begin
   xml := CreateXmlDocument;
   xml.loadXML(XmlString);
@@ -368,7 +367,6 @@ end;
 function TFinanceConnectService.RetrieveFinanceConnectKeypair(keyPairType: TKeyPairType): TKeyPairList;
 var
   cursorWas : SmallInt;
-  i, l: Integer;
   s: String;
   XmlElements : TFinanceXmlListElements;
 begin
@@ -411,7 +409,6 @@ end;
 function TFinanceConnectService.RetrieveFinanceConnectAvailableSystems: TKeyPairList;
 var
   cursorWas : SmallInt;
-  i, l: Integer;
   s: String;
 begin
   cursorWas := Screen.Cursor;
@@ -451,15 +448,17 @@ begin
     for entity IN MAPPING_ENTITIES do
     begin
       if entity <> 'PAYTYPE' then
+      begin
+        LookupList := TKeyPairList.Create(True);
         try
           s := Utf8ToString(d.roomerMainDataSet.downloadUrlAsString(d.roomerMainDataSet.RoomerUri + 'financeconnect/mappings/' + entity));
-          LookupList := TKeyPairList.Create(True);
           MappingsXmlElements.listName := format('%sMap', [LowerCase(entity)]);
           ParseList(s, LookupList, MappingsXmlElements);
           saveInMap(entity, LookupList);
         finally
           LookupList.Free;
         end;
+      end;
     end;
   finally
     Screen.Cursor := cursorWas;
@@ -470,7 +469,6 @@ end;
 function TFinanceConnectService.FinanceConnectConfiguration : TFinanceConnectSettings;
 var
   cursorWas : SmallInt;
-  i, l: Integer;
   s: String;
 begin
   cursorWas := Screen.Cursor;
@@ -489,7 +487,6 @@ end;
 procedure TFinanceConnectService.MapForFinanceConnect(keyPairType: TKeyPairType; RoomerCode, ExternalCode : String);
 var
   cursorWas : SmallInt;
-  i, l: Integer;
   s, MapType: String;
 begin
   cursorWas := Screen.Cursor;

@@ -5,32 +5,32 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.OleCtrls, SHDocVw, acWebBrowser, Vcl.ExtCtrls, sPanel,
-  uRoomerForm, cxGridTableView, cxStyles, dxPScxCommon, dxPScxGridLnk, cxClasses, cxPropertiesStore, Vcl.ComCtrls,
-  sStatusBar, uDImages, Vcl.StdCtrls, sButton, acPNG, acImage, HTMLabel;
+  uRoomerDialogForm, cxGridTableView, cxStyles, dxPScxCommon, dxPScxGridLnk, cxClasses, cxPropertiesStore, Vcl.ComCtrls,
+  sStatusBar, uDImages, Vcl.StdCtrls, sButton, acPNG, acImage, HTMLabel, uRoomerForm;
 
 type
-  TFrmPayCardView = class(TfrmBaseRoomerForm)
+  TFrmPayCardView = class(TfrmBaseRoomerDialogForm)
     pnlHead: TsPanel;
     pnlClient: TsPanel;
     browser: TsWebBrowser;
     lblPleaseRead: THTMLabel;
     imgWarning: TsImage;
-    btnContinue: TsButton;
-    sButton1: TsButton;
-    procedure btnContinueClick(Sender: TObject);
-    procedure FormShow(Sender: TObject);
-    procedure sButton1Click(Sender: TObject);
+    procedure btnOKClick(Sender: TObject);
   private
     { Private declarations }
     FHotelId: String;
     FUsername: String;
     FReservation: Integer;
+    FConfirmed: boolean;
     procedure SetHotelId(const Value: String);
     procedure SetUserName(const Value: String);
     procedure SetReservation(const Value: Integer);
     procedure GoToUri(uri: String);
+    function openLogin(var userName, password: string): boolean;
   protected
+    procedure DoShow; override;
     procedure DoLoadData; override;
+    procedure DoUpdateControls; override;
   public
     { Public declarations }
     property UserName : String read FUsername write SetUserName;
@@ -38,7 +38,7 @@ type
     property Reservation : Integer read FReservation write SetReservation;
   end;
 
-procedure ShowPayCardInformation(Reservation, btnTag : Integer);
+procedure ShowPayCardInformation(Reservation: Integer; openContract: integer);
 
 implementation
 
@@ -53,18 +53,10 @@ uses uG,
      uActivityLogs,
      uFrmOptInMessage;
 
-function openLogin(var userName, password : string) : boolean;
-var hotelId : String;
-begin
-  hotelId     := g.qHotelCode;
-  result := (AskUserForCredentials(userName, password, hotelId, '', 7) in cLoginFormSuccesfull);
-end;
-
-procedure ShowPayCardInformation(Reservation, btnTag : Integer);
+procedure ShowPayCardInformation(Reservation: Integer; openContract: integer);
 var _FrmPayCardView : TFrmPayCardView;
-    gUserName, gPassword : String;
 begin
-  if btnTag = 1 then
+  if (openContract = 1) then
   begin
     _FrmPayCardView := TFrmPayCardView.Create(nil);
     try
@@ -79,6 +71,14 @@ end;
 
 { TFrmPayCardView }
 
+function TFrmPayCardView.openLogin(var userName, password : string) : boolean;
+var
+  hotelcode: string;
+begin
+  hotelcode := g.qhotelCode;
+  result := (AskUserForCredentials(userName, password, hotelCode, '', 7) in cLoginFormSuccesfull);
+end;
+
 procedure TFrmPayCardView.GoToUri(uri : String);
 var Flags: OleVariant;
 begin
@@ -88,13 +88,9 @@ begin
 end;
 
 
-procedure TFrmPayCardView.sButton1Click(Sender: TObject);
-begin
-  Close;
-end;
-
-procedure TFrmPayCardView.btnContinueClick(Sender: TObject);
-var gUserName, gPassword : String;
+procedure TFrmPayCardView.btnOKClick(Sender: TObject);
+var
+  gUserName, gPassword : String;
 begin
   if openLogin(gUserName, gPassword) then
   begin
@@ -107,42 +103,63 @@ begin
                               '');
     UserName := gUserName;
     HotelId := g.qHotelCode;
-    pnlHead.Visible := False;
+    FConfirmed := true;
     RefreshData;
   end;
+
 end;
 
 procedure TFrmPayCardView.DoLoadData;
 var uri : String;
     iFrameUri : String;
-begin
-  inherited;
-  uri := d.roomerMainDataSet.RoomerUri + format('resapi/bookings/%d/paycarddisplayuri', [FReservation]);
-
-  // Get Token via webservice
-  iFrameUri := d.roomerMainDataSet.downloadUrlAsString(uri);
-  CopyToClipboard(iFrameUri);
-  GoToUri(iFrameUri);
-end;
-
-procedure TFrmPayCardView.FormShow(Sender: TObject);
-var rSet : TRoomerDataSet;
+    rSet : TRoomerDataSet;
     xml : String;
     iViews : Integer;
     sTemp : String;
 begin
-  xml := d.roomerMainDataSet.downloadUrlAsString(  d.roomerMainDataSet.RoomerUri + 'resapi/token/costs/' + inttostr(Reservation));
-  rSet := d.roomerMainDataSet.ActivateNewDataset(xml);
-  iViews := 0;
-  rSet.First;
-  if NOT rSet.Eof then
-    iViews := rSet['VIEWS'];
-  lblPleaseRead.HTMLText.Text := ReplaceString(lblPleaseRead.HTMLText.Text, '{PLEASE_NOTE}', GetTranslatedText('PCI_VIEW_Warning_PleaseNote'));
-  lblPleaseRead.HTMLText.Text := ReplaceString(lblPleaseRead.HTMLText.Text, '{CHARGE_PER_VIEW}', GetTranslatedText('PCI_VIEW_Warning_ChargePerView'));
-  lblPleaseRead.HTMLText.Text := ReplaceString(lblPleaseRead.HTMLText.Text, '{SECURITY_CODE_ONCE_VISIBLE}', GetTranslatedText('PCI_VIEW_Warning_SecurityCodeOnceVisible'));
-  sTemp := ReplaceString(GetTranslatedText('PCI_VIEW_Warning_NumberOfViews'), '{VIEWS}', inttostr(iViews));
-  lblPleaseRead.HTMLText.Text := ReplaceString(lblPleaseRead.HTMLText.Text, '{NUMBER_OF_VIEWS}', sTemp);
+  inherited;
+  if not FConfirmed then
+  begin
+    xml := d.roomerMainDataSet.downloadUrlAsString(  d.roomerMainDataSet.RoomerUri + 'resapi/token/costs/' + inttostr(Reservation));
+    rSet := d.roomerMainDataSet.ActivateNewDataset(xml);
+    iViews := 0;
+    rSet.First;
+    if NOT rSet.Eof then
+      iViews := rSet['VIEWS'];
+    lblPleaseRead.HTMLText.Text := ReplaceString(lblPleaseRead.HTMLText.Text, '{PLEASE_NOTE}', GetTranslatedText('PCI_VIEW_Warning_PleaseNote'));
+    lblPleaseRead.HTMLText.Text := ReplaceString(lblPleaseRead.HTMLText.Text, '{CHARGE_PER_VIEW}', GetTranslatedText('PCI_VIEW_Warning_ChargePerView'));
+    lblPleaseRead.HTMLText.Text := ReplaceString(lblPleaseRead.HTMLText.Text, '{SECURITY_CODE_ONCE_VISIBLE}', GetTranslatedText('PCI_VIEW_Warning_SecurityCodeOnceVisible'));
+    sTemp := ReplaceString(GetTranslatedText('PCI_VIEW_Warning_NumberOfViews'), '{VIEWS}', inttostr(iViews));
+    lblPleaseRead.HTMLText.Text := ReplaceString(lblPleaseRead.HTMLText.Text, '{NUMBER_OF_VIEWS}', sTemp);
+  end
+  else
+  begin
+    uri := d.roomerMainDataSet.RoomerUri + format('resapi/bookings/%d/paycarddisplayuri', [FReservation]);
 
+    // Get Token via webservice
+    iFrameUri := d.roomerMainDataSet.downloadUrlAsString(uri);
+    GoToUri(iFrameUri);
+  end;
+end;
+
+procedure TFrmPayCardView.DoShow;
+begin
+  inherited;
+  btnOK.ModalResult := 0;
+end;
+
+procedure TFrmPayCardView.DoUpdateControls;
+begin
+  inherited;
+
+  if FConfirmed then
+    DialogButtons := [mbClose]
+  else
+    DialogButtons := mbOKCancel;
+
+  AutoSize := not FConfirmed;
+  pnlHead.Visible := not FConfirmed;
+  browser.visible := FConfirmed;
 end;
 
 procedure TFrmPayCardView.SetHotelId(const Value: String);

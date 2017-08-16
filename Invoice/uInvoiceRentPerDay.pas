@@ -598,7 +598,6 @@ type
     procedure SetInvoiceIndex(const Value: integer);
     function IfInvoiceChangedThenOptionallySave(Ask: boolean = True): boolean;
     procedure MoveItemToNewInvoiceIndex(rowIndex, toInvoiceIndex: integer);
-    procedure MoveRoomToNewInvoiceIndex(toInvoiceIndex: integer);
     procedure UpdateInvoiceIndexTabs;
     function GetInvoiceIndexPanel(Index: integer): TsPanel;
     function GetInvoiceIndexItems(Index: integer): TShape;
@@ -4580,12 +4579,6 @@ begin
     SaveInvoice(zInvoiceNumber, stProvisionally);
     LoadInvoice;
   end;
-end;
-
-procedure TfrmInvoiceRentPerDay.MoveRoomToNewInvoiceIndex(toInvoiceIndex: integer);
-begin
-//  d.MoveRoomDateToInvoiceIndex(Reservation, RoomReservation, toInvoiceIndex);
-//  InvoiceIndex := FInvoiceIndex;
 end;
 
 function TfrmInvoiceRentPerDay.IsRoomSelected: boolean;

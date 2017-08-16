@@ -1,28 +1,30 @@
 inherited FrmPayCardView: TFrmPayCardView
+  BorderStyle = bsSizeable
   Caption = 'View pay-card information'
-  ClientHeight = 574
-  ClientWidth = 869
+  ClientHeight = 442
+  ClientWidth = 832
+  ParentFont = False
   Font.Height = -13
   Font.Name = 'Calibri'
-  OnShow = FormShow
-  ExplicitWidth = 885
-  ExplicitHeight = 613
+  ExplicitWidth = 848
+  ExplicitHeight = 481
   PixelsPerInch = 96
   TextHeight = 15
   inherited sbStatusBar: TsStatusBar
-    Top = 554
-    Width = 869
-    ExplicitTop = 554
-    ExplicitWidth = 869
+    Top = 422
+    Width = 832
+    ExplicitTop = 422
+    ExplicitWidth = 832
   end
   object pnlHead: TsPanel [1]
     Left = 0
     Top = 0
-    Width = 869
+    Width = 832
     Height = 169
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitWidth = 869
     object lblPleaseRead: THTMLabel
       AlignWithMargins = True
       Left = 97
@@ -41,7 +43,7 @@ inherited FrmPayCardView: TFrmPayCardView
           'VISIBLE}</UL><BR><BR>{NUMBER_OF_VIEWS}.</FONT>')
       Images = DImages.cxLargeImagesFlat
       Transparent = True
-      Version = '1.9.2.8'
+      Version = '1.9.2.7'
       ExplicitHeight = 121
     end
     object imgWarning: TsImage
@@ -347,63 +349,56 @@ inherited FrmPayCardView: TFrmPayCardView
       ImageIndex = 0
       SkinData.SkinSection = 'CHECKBOX'
     end
-    object btnContinue: TsButton
-      Left = 97
-      Top = 138
-      Width = 107
-      Height = 25
-      Caption = 'Continue'
-      TabOrder = 0
-      OnClick = btnContinueClick
-    end
-    object sButton1: TsButton
-      Left = 225
-      Top = 138
-      Width = 107
-      Height = 25
-      Cancel = True
-      Caption = 'Cancel'
-      TabOrder = 1
-      OnClick = sButton1Click
-    end
   end
   object pnlClient: TsPanel [2]
     Left = 0
     Top = 169
-    Width = 869
-    Height = 385
+    Width = 832
+    Height = 210
     Align = alClient
     BevelOuter = bvNone
-    TabOrder = 1
+    TabOrder = 3
+    ExplicitWidth = 869
+    ExplicitHeight = 342
     object browser: TsWebBrowser
       Left = 0
       Top = 0
-      Width = 869
-      Height = 385
+      Width = 832
+      Height = 210
       Align = alClient
       TabOrder = 0
-      ExplicitTop = 3
-      ExplicitWidth = 976
-      ExplicitHeight = 402
+      ExplicitTop = -2
+      ExplicitWidth = 869
+      ExplicitHeight = 342
       ControlData = {
-        4C000000D0590000CA2700000000000000000000000000000000000000000000
+        4C000000FD550000B41500000000000000000000000000000000000000000000
         000000004C000000000000000000000001000000E0D057007335CF11AE690800
         2B2E126208000000000000004C0000000114020000000000C000000000000046
         8000000000000000000000000000000000000000000000000000000000000000
         00000000000000000100000000000000000000000000000000000000}
     end
   end
+  inherited pnlButtons: TsPanel
+    Top = 379
+    Width = 832
+    ParentColor = True
+    ExplicitTop = 373
+    ExplicitWidth = 832
+    inherited btnOK: TsButton
+      Left = 516
+      OnClick = btnOKClick
+      ExplicitLeft = 553
+    end
+    inherited btnCancel: TsButton
+      Left = 622
+      ExplicitLeft = 659
+    end
+    inherited btnClose: TsButton
+      Left = 728
+      ExplicitLeft = 765
+    end
+  end
   inherited psRoomerBase: TcxPropertiesStore
-    Components = <
-      item
-        Component = frmBaseRoomerForm.Owner
-        Properties.Strings = (
-          'Height'
-          'Left'
-          'Top'
-          'Width'
-          'Position')
-      end>
     Left = 768
   end
   inherited cxsrRoomerStyleRepository: TcxStyleRepository
