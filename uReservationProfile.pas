@@ -2337,7 +2337,10 @@ begin
   try
     FValidating := True;
     if mRoomsGuestName.OldValue <> mRoomsGuestName.AsString then
+    begin
       d.RR_Upd_FirstGuestName(zRoomreservation, mRoomsGuestName.AsString);
+      getGuestData(zRoomReservation);
+    end;
 
     if mRoomsExpectedTimeOfArrival.OldValue <> mRoomsExpectedTimeOfArrival.AsString then
       if not d.UpdateExpectedTimeOfArrival(zReservation, zRoomReservation, mRoomsExpectedTimeOfArrival.AsString.Trim) then

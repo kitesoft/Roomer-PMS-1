@@ -2016,6 +2016,7 @@ object frmReservationProfile: TfrmReservationProfile
         PopupMenu = mnuGrid
         TabOrder = 0
         LookAndFeel.NativeStyle = False
+        ExplicitTop = 84
         object tvRooms: TcxGridDBBandedTableView
           Navigator.Buttons.CustomButtons = <>
           Navigator.Buttons.First.Visible = True
@@ -2043,6 +2044,7 @@ object frmReservationProfile: TfrmReservationProfile
           OnInitEdit = tvRoomsInitEdit
           DataController.DataSource = mRoomsDS
           DataController.KeyFieldNames = 'RoomReservation'
+          DataController.Options = [dcoAssignGroupingValues, dcoAssignMasterDetailKeys, dcoSaveExpanding, dcoImmediatePost]
           DataController.Summary.DefaultGroupSummaryItems = <>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -2993,7 +2995,6 @@ object frmReservationProfile: TfrmReservationProfile
           Images = DImages.PngImageList1
           TabOrder = 8
           SkinData.SkinSection = 'BUTTON'
-          ExplicitTop = 2
         end
         object btnGroups: TsButton
           AlignWithMargins = True
@@ -4063,6 +4064,7 @@ object frmReservationProfile: TfrmReservationProfile
       ShowHint = False
       TabOrder = 0
       SkinData.SkinSection = 'BUTTON'
+      ExplicitTop = 6
     end
   end
   object mRooms: TdxMemData
