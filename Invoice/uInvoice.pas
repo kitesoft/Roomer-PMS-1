@@ -6052,6 +6052,8 @@ begin
 end;
 
 procedure TfrmInvoice.MoveRoomToRoomInvoice;
+var
+  lSelectedRoomreservation: integer;
 begin
   if FRoomReservation > 0 then
   begin

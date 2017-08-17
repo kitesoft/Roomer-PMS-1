@@ -61,13 +61,7 @@ uses
   cxGridDBTableView,
   cxClasses,
   cxGridCustomView,
-  cxGrid,
-  sCheckBox,
-  sButton,
-  sGroupBox,
-  sEdit,
-  sLabel,
-  sPanel,
+  cxGrid, sScrollBox, sGroupBox, sButton, sEdit, sLabel, sPanel,
   _glob,
   hData,
   ug,
@@ -80,7 +74,9 @@ uses
   frxExportHTML,
   uInvoiceEntities,
   uCurrencyHandlersMap,
-  uInvoiceObjects, sScrollBox;
+  uInvoiceObjects
+  , uInvoiceDefinitions
+  ;
 
 type
   TCreditType = (ctManual, ctReference, ctErr);
@@ -357,6 +353,7 @@ type
     mnuPackages: TMenuItem;
     mnuShowPackageItems: TMenuItem;
     mnuHidePackageItems: TMenuItem;
+    mnuMoveRoomToInvoiceIndex: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure agrLinesMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
     procedure edtCustomerDblClick(Sender: TObject);
@@ -399,7 +396,7 @@ type
     procedure pnlInvoiceIndex0DragOver(Sender, Source: TObject; X, Y: integer; State: TDragState; var Accept: boolean);
     procedure pnlInvoiceIndex0DragDrop(Sender, Source: TObject; X, Y: integer);
     procedure pnlInvoiceIndex0Click(Sender: TObject);
-    procedure N91Click(Sender: TObject);
+    procedure MoveSelectedLinesToRoomInvoiceIndex(Sender: TObject);
     procedure shpInvoiceIndex0MouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
     procedure shpInvoiceIndex0DragDrop(Sender, Source: TObject; X, Y: integer);
     procedure shpInvoiceIndex0DragOver(Sender, Source: TObject; X, Y: integer; State: TDragState; var Accept: boolean);
@@ -428,6 +425,7 @@ type
     procedure acHidePackageItemsExecute(Sender: TObject);
     procedure acShowpackageItemsExecute(Sender: TObject);
     procedure pnlInvoiceIndicesDragOver(Sender, Source: TObject; X, Y: Integer; State: TDragState; var Accept: Boolean);
+    procedure mnuMoveRoomToInvoiceIndexClick(Sender: TObject);
   private
     { Private declarations }
 
@@ -480,10 +478,8 @@ type
 
     tempInvoiceItemList: TInvoiceItemEntityList;
 
-    selectedRoomReservation: integer;
-
     zLocation: string;
-    FInvoiceIndex: integer;
+    FInvoiceIndex: TInvoiceIndex;
 
     FReservation: integer;
     FRoomReservation: integer;
@@ -595,7 +591,7 @@ type
     function RoomByRoomReservation(RoomReservation: integer): String;
     procedure LoadRoomListForCurrentReservation(reservation: integer);
     procedure DeleteRow(aGrid: TAdvStringGrid; iRow: integer);
-    procedure SetInvoiceIndex(const Value: integer);
+    procedure SetInvoiceIndex(const Value: TInvoiceIndex);
     function IfInvoiceChangedThenOptionallySave(Ask: boolean = True): boolean;
     procedure MoveItemToNewInvoiceIndex(rowIndex, toInvoiceIndex: integer);
     procedure UpdateInvoiceIndexTabs;
@@ -652,8 +648,9 @@ type
       const aItem: string; aDefault: boolean): boolean;
     procedure RemoveInvoicelineVisibilityRecord(aInvoiceLine: TInvoiceLine; aInvoiceNumber: integer;
       aExecPlan: TRoomerExecutionPlan);
+    procedure MoveSelectedLinesToInvoiceIndex(aNewIndex: integer);
 
-    property InvoiceIndex: integer read FInvoiceIndex write SetInvoiceIndex;
+    property InvoiceIndex: TInvoiceIndex read FInvoiceIndex write SetInvoiceIndex;
     property AnyRowChecked: boolean read GetAnyRowSelected;
     property HeaderChanged: boolean read GetHeaderChanged;
   public
@@ -709,7 +706,6 @@ uses
   uVatCalculator,
   uSQLUtils,
   ufrmRoomPrices,
-  uInvoiceDefinitions,
   System.Generics.Defaults,
   uDateTimeHelper,
   Types,
@@ -3101,7 +3097,7 @@ begin
   Exit1.Enabled := True;
 end;
 
-procedure TfrmInvoiceRentPerDay.N91Click(Sender: TObject);
+procedure TfrmInvoiceRentPerDay.MoveSelectedLinesToRoomInvoiceIndex(Sender: TObject);
 var
   omnu: TMenuItem;
   list: TList<String>;
@@ -4601,6 +4597,10 @@ begin
 end;
 
 procedure TfrmInvoiceRentPerDay.MoveRoomToRoomInvoice;
+var
+  i: integer;
+  list: TList<integer>;
+  invoiceline: TinvoiceLine;
 begin
   if FRoomReservation > 0 then
   begin
@@ -4608,16 +4608,27 @@ begin
     exit;
   end;
   chkChanged;
-  if selectedRoomReservation < 0 then
-    exit;
 
   // if (MessageDlg('Move roomrent to Groupinvoice ' + chr(10) + 'and save other changes ?', mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
   if (MessageDlg(GetTranslatedText('shTx_Invoice_RoomrentToRoomAndSaveChanges'), mtConfirmation, [mbYes, mbNo], 0)
     = mrYes) then
   begin
-    d.UpdateGroupAccountone(FReservation, selectedRoomReservation, selectedRoomReservation, false);
-    SaveInvoice(zInvoiceNumber, stProvisionally);
-    LoadInvoice;
+    list := GetSelectedRowNrs;
+    try
+      for i := list.Count - 1 downto 0 do
+      begin
+        invoiceLine := GetInvoiceLineByRow(list[i]);
+        agrLines.row := list[i];
+        if invoiceLine.IsGeneratedLine AND (invoiceLine.ItemKind = ikRoomRent) then
+        begin
+          d.UpdateGroupAccountone(invoiceline.RoomEntity.Reservation, invoiceline.RoomEntity.RoomReservation, invoiceline.RoomEntity.RoomReservation, false);
+        end
+      end;
+      SaveInvoice(zInvoiceNumber, stProvisionally);
+      LoadInvoice;
+    finally
+      list.Free;
+    end;
   end;
 end;
 
@@ -4799,7 +4810,7 @@ begin
   edtAddress4.ReadOnly := rgrInvoiceType.itemIndex IN [0, 1, 2, 3];
 end;
 
-procedure TfrmInvoiceRentPerDay.SetInvoiceIndex(const Value: integer);
+procedure TfrmInvoiceRentPerDay.SetInvoiceIndex(const Value: TInvoiceIndex);
 begin
   IfInvoiceChangedThenOptionallySave;
   FInvoiceIndex := Value;
@@ -4868,64 +4879,68 @@ begin
     end;
 end;
 
-procedure TfrmInvoiceRentPerDay.pnlInvoiceIndex0DragDrop(Sender, Source: TObject; X, Y: integer);
+procedure TfrmInvoiceRentPerDay.MoveSelectedLinesToInvoiceIndex(aNewIndex: integer);
 var
   list: TList<integer>;
   i, Res: integer;
   invoiceLine: TInvoiceLine;
+begin
+
+  if (aNewIndex < 0) or (aNewIndex > 9) then
+    Exit;
+
+  list := GetSelectedRowNrs;
+  try
+    Res := -1;
+    for i := list.Count - 1 downto 0 do
+    begin
+      invoiceLine := GetInvoiceLineByRow(list[i]);
+      agrLines.row := list[i];
+      if invoiceLine.IsGeneratedLine AND (invoiceLine.ItemKind = ikRoomRent) then
+      begin
+        invoiceline.MoveToInvoiceIndex(aNewIndex);
+        // Moved generated childlines to new invoiceindex too
+        FInvoiceLinesList.Remove(invoiceLine);
+      end
+      else if invoiceLine.IsGeneratedLine AND (invoiceLine.ItemKind = ikStayTax) then
+      begin
+        if Res <> mrAll then
+          Res := MessageDlg(GetTranslatedText('shTx_Invoice_WarningWhenMovingCityTax'), mtWarning,
+            [mbYes, mbNo, mbAll, mbCancel], 0);
+        case Res of
+          mrYes, mrAll:
+            begin
+              actToggleLodgingTax.Execute;
+              MoveItemToNewInvoiceIndex(List[i], aNewIndex);
+            end;
+          mrCancel:
+            exit;
+        end;
+      end
+      else
+        MoveItemToNewInvoiceIndex(List[i], aNewIndex);
+        //invoiceline.MoveToInvoiceIndex(TsPanel(Sender).Tag);
+    end;
+  finally
+    list.Free;
+  end;
+
+end;
+
+procedure TfrmInvoiceRentPerDay.pnlInvoiceIndex0DragDrop(Sender, Source: TObject; X, Y: integer);
+var
   lMoveToIndex: integer;
 begin
   lMoveToIndex := TPanel(Sender).Tag;
   if lMoveToIndex = FInvoiceIndex then
     Exit;
 
-  Res := -1;
-
   SaveAnd(False);
 
   if (Source = agrLines) then
-  begin
-    list := GetSelectedRowNrs;
-    try
-      for i := list.Count - 1 downto 0 do
-      begin
-        invoiceLine := GetInvoiceLineByRow(list[i]);
-        agrLines.row := list[i];
-        if invoiceLine.IsGeneratedLine AND (invoiceLine.ItemKind = ikRoomRent) then
-        begin
-          invoiceline.MoveToInvoiceIndex(lMoveToIndex);
-          // Moved generated childlines to new invoiceindex too
-          FInvoiceLinesList.Remove(invoiceLine);
-        end
-        else if invoiceLine.IsGeneratedLine AND (invoiceLine.ItemKind = ikStayTax) then
-        begin
-          if Res <> mrAll then
-            Res := MessageDlg(GetTranslatedText('shTx_Invoice_WarningWhenMovingCityTax'), mtWarning,
-              [mbYes, mbNo, mbAll, mbCancel], 0);
-          case Res of
-            mrYes, mrAll:
-              begin
-                actToggleLodgingTax.Execute;
-                MoveItemToNewInvoiceIndex(List[i], lMoveToIndex);
-              end;
-            mrCancel:
-              exit;
-          end;
-        end
-        else
-          MoveItemToNewInvoiceIndex(List[i], lMoveToIndex);
-          //invoiceline.MoveToInvoiceIndex(TsPanel(Sender).Tag);
-      end;
-    finally
-      list.Free;
-    end;
-
-    UpdateGrid;
-  end
+    MoveSelectedLinesToInvoiceIndex(lMoveToIndex)
   else
-  begin
     MoveDownpaymentToInvoiceIndex(lMoveToIndex);
-  end;
 end;
 
 procedure TfrmInvoiceRentPerDay.pnlInvoiceIndex0DragOver(Sender, Source: TObject; X, Y: integer; State: TDragState;
@@ -4938,6 +4953,7 @@ procedure TfrmInvoiceRentPerDay.actMoveRoomToGroupInvoiceExecute(Sender: TObject
 begin
   MoveRoomToGroupInvoice;
 end;
+
 
 procedure TfrmInvoiceRentPerDay.actMoveRoomToRoomInvoiceExecute(Sender: TObject);
 begin
@@ -6709,7 +6725,7 @@ begin
         subItem := TMenuItem.Create(nil);
         subItem.Caption := mnuInvoiceIndex.Items[l].Caption;
         subItem.Tag := mnuInvoiceIndex.Items[l].Tag;
-        subItem.OnClick := N91Click;
+        subItem.OnClick := MoveSelectedLinesToRoomInvoiceIndex;
         Item.Add(subItem);
         subItem.Enabled := subItem.Tag >= 0;
       end;
@@ -6730,7 +6746,7 @@ begin
     for i := 0 to SelectableExternalRooms.Count - 1 do
     begin
       Item := TMenuItem.Create(nil);
-      Item.Caption := TInvoiceRoomEntity(SelectableExternalRooms[i]).Room;
+      Item.Caption := SelectableExternalRooms[i].Room;
       Item.Tag := i;
       mnuItem.Add(Item);
 
@@ -6758,7 +6774,7 @@ begin
   for i := 0 to SelectableExternalRooms.Count - 1 do
   begin
     Item := TMenuItem.Create(nil);
-    Item.Caption := TInvoiceRoomEntity(SelectableExternalRooms[i]).Room;
+    Item.Caption := SelectableExternalRooms[i].Room;
     Item.Tag := i;
     mnuItem.Add(Item);
     Item.OnClick := TransferRoomToAnyRoomsClick;
@@ -6769,11 +6785,41 @@ procedure TfrmInvoiceRentPerDay.mnuMoveItemPopup(Sender: TObject);
 begin
   FillRoomsInMenu(mnuItemToRoomInvoice);
   FillExternalRoomsInMenu(mnuMoveItemToAnyOtherRoomAndInvoiceIndex);
+
+  actMoveItemToGroupInvoice.Enabled := (FRoomReservation > 0);
 end;
 
 procedure TfrmInvoiceRentPerDay.mnuMoveRoomPopup(Sender: TObject);
+var
+  l: integer;
+  subItem: TMenuItem;
 begin
   FillAllRoomsInMenu(mnuTransferRoomRentToDifferentRoom);
+  actMoveRoomToGroupInvoice.Visible := (FRoomReservation > 0);
+  actMoveRoomToRoomInvoice.Visible :=  (FRoomReservation = 0);
+
+  mnuMoveRoomToInvoiceIndex.Clear;
+  for l := 0 to mnuInvoiceIndex.Items.Count - 1 do
+  begin
+    subItem := TMenuItem.Create(nil);
+    subItem.Caption := mnuInvoiceIndex.Items[l].Caption;
+    subItem.Tag := mnuInvoiceIndex.Items[l].Tag;
+    subItem.OnClick := mnuMoveRoomToInvoiceIndexClick;
+    mnuMoveRoomToInvoiceIndex.Add(subItem);
+    subItem.Enabled := subItem.Tag >= 0;
+  end;
+end;
+
+procedure TfrmInvoiceRentPerDay.mnuMoveRoomToInvoiceIndexClick(Sender: TObject);
+var
+  mnu: TMenuItem;
+begin
+  mnu := TMenuItem(Sender);
+  if (mnu.Tag <> FInvoiceIndex) then
+  begin
+    MoveSelectedLinesToInvoiceIndex(mnu.Tag);
+    UpdateGrid;
+  end;
 end;
 
 procedure TfrmInvoiceRentPerDay.timCloseInvoiceTimer(Sender: TObject);
