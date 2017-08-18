@@ -512,27 +512,6 @@ begin
   result := LocalizedFloatValue(value);
 end;
 
-// function LocalizedFloatValue(value : String; save : boolean = true): Double;
-// var s : String;
-// begin
-// s := Trim(
-// StringReplace(
-// StringReplace(value, '.', SystemDecimalSeparator, [rfReplaceAll])
-// , ',', SystemDecimalSeparator, [rfReplaceAll])
-// );
-// if save then
-// result := StrToFloatDef(StringReplace(s,
-// '.',
-// SystemDecimalSeparator,
-// [rfReplaceAll]),
-// 0)
-// else
-// result := StrToFloat(StringReplace(s,
-// '.',
-// SystemDecimalSeparator,
-// [rfReplaceAll])
-// );
-// end;
 
 function GetWindowClassName(Window: HWND): string;
 const

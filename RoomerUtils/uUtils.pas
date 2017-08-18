@@ -91,9 +91,6 @@ function LoadImageToBitmap(Filename : String) : TBitmap;
 function ResizeImageToNewTempFile(filename : String; maxWidth, maxHeight : Integer; backColor : TColor) : String;
 function DetectImage(const InputFileName: string; BM: TBitmap) : TImageFileType;
 procedure ResizeBitmap(Bitmap: TBitmap; Width, Height: Integer; Background: TColor);
-//function SystemThousandsSeparator : string;
-//function GetValidDecimalChar : Char;
-//function LocalizedFloatValue(value : String; save : boolean = true; def : Double = 0.00): Double;
 {$IFNDEF ROOMER_UTIL}{$IFNDEF RBE_BUILD}function AuthenticateAgainstWindows(login, password, domain: string;
   var token: THandle; var msg: string): Boolean;{$ENDIF}{$ENDIF}
 function ParameterByName(name: String): String;
@@ -395,27 +392,6 @@ function ReplaceString(original, toReplace, replaceWith : String) : String;
 begin
   result := StringReplace(original, toReplace, replaceWith, [rfReplaceAll, rfIgnoreCase]);
 end;
-
-//function FloatToXml(Value : Double; decimals : Integer) : String;
-//var
-//  s, s1 : string;
-//  i : integer;
-//  dRound : Double;
-//  ch : Char;
-//begin
-//  // --
-//  if decimals > 0 then
-//    s1 := '0.' + StringOfChar('0', decimals - 1) + '1'
-//  else
-//    s1 := '0.01';
-//  dRound := LocalizedFloatValue(s1);
-//  str(roundTo(Value, dRound) : 10 : decimals, s);
-//  ch := GetValidDecimalChar;
-//  for i := 1 to length(s) do
-//    if not CharInSet(s[i], [ch, ' ', '0' .. '9', '-', '+', ',']) then
-//      s[i] := '.';
-//  result := trim(s);
-//end;
 
 function IndexOfArray(Items: array of String; const Value: String; defaultResult : Integer = -1): Integer;
 var
@@ -726,132 +702,6 @@ begin
   decodeDate(ADate, y, m, d);
   result := d;
 end;
-
-(*
-function GetValidDecimalChar : Char;
-var value : String;
-begin
-  result := '.';
-  value := '0.01';
-  try
-    StrToFloat(value);
-  except
-    // Try dot to any other...
-    try
-      result := ',';
-      StrToFloat(StringReplace(value, '.', ',', [rfReplaceAll]));
-    except
-      try
-        result := '·';
-        StrToFloat(StringReplace(value, '.', '·', [rfReplaceAll]));
-      except
-        try
-          result := '''';
-          StrToFloat(StringReplace(value, '.', '''', [rfReplaceAll]));
-        except
-          // Try comma to any other...
-          try
-            result := '.';
-            StrToFloat(StringReplace(value, ',', '.', [rfReplaceAll]));
-          except
-            try
-              result := '·';
-              StrToFloat(StringReplace(value, ',', '·', [rfReplaceAll]));
-            except
-              try
-                result := '''';
-                StrToFloat(StringReplace(value, ',', '''', [rfReplaceAll]));
-              except
-                // Try upper-comma to any other...
-                try
-                  result := '.';
-                  StrToFloat(StringReplace(value, '''', '.', [rfReplaceAll]));
-                except
-                  try
-                    result := '·';
-                    StrToFloat(StringReplace(value, '''', '·', [rfReplaceAll]));
-                  except
-                    try
-                      result := ',';
-                      StrToFloat(StringReplace(value, '''', ',', [rfReplaceAll]));
-                    except
-                      // Try upper-dot to any other...
-                      try
-                        result := '.';
-                        StrToFloat(StringReplace(value, '·', '.', [rfReplaceAll]));
-                      except
-                        try
-                          result := ',';
-                          StrToFloat(StringReplace(value, '·', ',', [rfReplaceAll]));
-                        except
-                          try
-                            result := '''';
-                            StrToFloat(StringReplace(value, '·', '''', [rfReplaceAll]));
-                          except
-                            // Try older measure...
-                            result := SystemDecimalSeparator;
-                          end;
-                        end;
-                      end;
-
-                    end;
-                  end;
-                end;
-
-              end;
-            end;
-          end;
-
-        end;
-      end;
-    end;
-  end;
-end;
-
-function LocalizedFloatValue(value : String; save : boolean = true; def : Double = 0.00): Double;
-var s : String;
-    ch : Char;
-begin
-  ch := GetValidDecimalChar;
-  try
-    result := StrToFloat(value);
-  except
-    // Try dot to any other...
-    try
-      result := StrToFloat(StringReplace(value, '.', ch, [rfReplaceAll]));
-    except
-      try
-        result := StrToFloat(StringReplace(value, '·', ch, [rfReplaceAll]));
-      except
-        try
-          result := StrToFloat(StringReplace(value, '''', ch, [rfReplaceAll]));
-        except
-          // Try older measure...
-          s := Trim(
-                 StringReplace(
-                   StringReplace(value, '.', SystemDecimalSeparator, [rfReplaceAll])
-                 , ',', SystemDecimalSeparator, [rfReplaceAll])
-             );
-          if save then
-            result := StrToFloatDef(StringReplace(s,
-                                                  '.',
-                                                  SystemDecimalSeparator,
-                                                  [rfReplaceAll]),
-                                    def)
-          else
-            result := StrToFloat(StringReplace(s,
-                                                  '.',
-                                                  SystemDecimalSeparator,
-                                                  [rfReplaceAll])
-                                 );
-
-
-        end;
-      end;
-    end;
-  end;
-end;
-*)
 
 function GetHTMLColor(cl: TColor; IsBackColor: Boolean = false): string;
 var
