@@ -123,19 +123,6 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
       end
-      object labTmpStatus: TsLabel
-        Left = 719
-        Top = 11
-        Width = 4
-        Height = 13
-        Caption = '-'
-        ParentFont = False
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
-        Font.Height = -11
-        Font.Name = 'Tahoma'
-        Font.Style = []
-      end
       object clabForeignCurrency: TsLabel
         Left = 616
         Top = 147

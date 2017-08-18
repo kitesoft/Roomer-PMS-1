@@ -621,6 +621,7 @@ type
     procedure AddIncludedBreakfastToLinesAndGrid(aIncludedBreakfastCount: integer; iAddAt: integer = 0);
     procedure RemoveAutoBreakfastItems;
     function ItemKindOnRow(aRow: Integer): TItemKind;
+    procedure DeleteSelectedLines;
 
     property InvoiceIndex: integer read FInvoiceIndex write SetInvoiceIndex;
     property AnyRowChecked: boolean read GetAnyRowChecked;
@@ -6053,8 +6054,6 @@ begin
 end;
 
 procedure TfrmInvoice.MoveRoomToRoomInvoice;
-var
-  lSelectedRoomreservation: integer;
 begin
   if FRoomReservation > 0 then
   begin
@@ -7194,8 +7193,6 @@ end;
 
 procedure TfrmInvoice.actDelLineExecute(Sender: TObject);
 var
-  list: TList<String>;
-  i, l, Id: integer;
   s: String;
 begin
   // if MessageDlg('Delete item ', mtConfirmation, [mbYes, mbNo], 0) = mrYes then
@@ -7203,30 +7200,37 @@ begin
     s := GetTranslatedText('shTx_Invoice_DeleteSelectedItems')
   else
     s := GetTranslatedText('shTx_Invoice_DeleteItem');
-  if MessageDlg(s, mtConfirmation,
-    [mbYes, mbNo], 0) = mrYes then
+  if MessageDlg(s, mtConfirmation, [mbYes, mbNo], 0) = mrYes then
   begin
-    list := GetSelectedRows;
-    try
-      for l := list.Count - 1 downto 0 do
-      begin
-        i := IndexOfAutoGen(list[l]);
-        if i >= 0 then
-        begin
-          agrLines.row := i;
-          Id := CellInvoiceLineId(i);
-          if Id > 0 then
-            DeletedLines.add(Id);
-          DeleteRow(agrLines, agrLines.row);
-          AddEmptyLine;
-          chkChanged;
-        end;
-      end;
-    finally
-      list.free;
-    end;
+    DeleteSelectedLines;
     calcAndAddAutoItems(FReservation);
     setControls;
+  end;
+end;
+
+procedure TfrmInvoice.DeleteSelectedLines;
+var
+  list: TList<String>;
+  i, l, Id: integer;
+begin
+  list := GetSelectedRows;
+  try
+    for l := list.Count - 1 downto 0 do
+    begin
+      i := IndexOfAutoGen(list[l]);
+      if i >= 0 then
+      begin
+        agrLines.row := i;
+        Id := CellInvoiceLineId(i);
+        if Id > 0 then
+          DeletedLines.add(Id);
+        DeleteRow(agrLines, agrLines.row);
+        AddEmptyLine;
+        chkChanged;
+      end;
+    end;
+  finally
+    list.free;
   end;
 end;
 
@@ -7318,6 +7322,7 @@ var
   isPackage: boolean;
 
   lInvRoom: TInvoiceRoomEntity;
+  Id : integer;
 
 begin
   isPackage := false;
@@ -7420,13 +7425,11 @@ begin
 
   labTmpStatus.caption := inttostr(d.kbmInvoicelines.RecordCount);
 
-  if isSystemLine(agrLines.row) then
-    // raise Exception.create('System item can not delete ');
-    raise Exception.create(GetTranslatedText('shTx_Invoice_CanNotDelete'));
-
+  Id := CellInvoiceLineId(agrLines.row);
+  if Id > 0 then
+    DeletedLines.add(Id);
   DeleteRow(agrLines, agrLines.row);
   AddEmptyLine;
-  calcAndAddAutoItems(FReservation);
   chkChanged;
 end;
 

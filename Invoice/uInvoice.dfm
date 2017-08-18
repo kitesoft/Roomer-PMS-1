@@ -632,8 +632,8 @@ object frmInvoice: TfrmInvoice
       object chkShowPackage: TsCheckBox
         Left = 724
         Top = 143
-        Width = 111
-        Height = 20
+        Width = 119
+        Height = 17
         Caption = 'Package on invoice'
         Checked = True
         State = cbChecked
@@ -1133,8 +1133,8 @@ object frmInvoice: TfrmInvoice
           SkinData.SkinSection = 'BUTTON'
         end
         object btnSaveChanges: TsButton
-          Left = 892
-          Top = 4
+          Left = 897
+          Top = 3
           Width = 134
           Height = 40
           Anchors = [akTop, akRight]

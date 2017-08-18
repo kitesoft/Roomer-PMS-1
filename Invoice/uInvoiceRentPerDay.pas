@@ -154,7 +154,6 @@ type
     btnExit: TsButton;
     btnInvoice: TsButton;
     btnProforma: TsButton;
-    labTmpStatus: TsLabel;
     sPanel2: TsPanel;
     clabTotalwoVAT: TsLabel;
     clavVAT: TsLabel;
@@ -3245,8 +3244,6 @@ var
 begin
   Caption := GetTranslatedText('shUI_InvoiceCaption');
 
-  labTmpStatus.Caption := inttostr(d.kbmInvoicelines.RecordCount);
-
   agrLines.Col := 0;
   agrLines.row := 1;
 
@@ -6009,8 +6006,6 @@ begin
   d.kbmInvoicelines.FieldByName('importRefrence').asString := importRefrence;
   d.kbmInvoicelines.FieldByName('isPackage').asBoolean := isPackage;
   d.kbmInvoicelines.post;
-
-  labTmpStatus.Caption := inttostr(d.kbmInvoicelines.RecordCount);
 
   if isSystemLine(agrLines.row) then
     // raise Exception.create('System item can not delete ');
