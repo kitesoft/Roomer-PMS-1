@@ -2,7 +2,13 @@ unit uFinanceConnectService;
 
 interface
 
-uses UITypes, SysUtils, Classes, uD, Forms, Generics.Collections;
+uses
+  UITypes
+  , SysUtils
+  , Classes
+  , uD
+  , Forms
+  , Generics.Collections;
 
 type
     TFinanceXmlListElements = record
@@ -107,7 +113,15 @@ procedure SendInvoiceToActiveFinanceConnector(invoiceNumber : Integer);
 
 implementation
 
-uses MSXML2_TLB, XmlUtils, msxmldom, XMLDoc, Xml.Xmldom, Xml.XMLIntf, uUtils;
+uses
+  MSXML2_TLB
+  , XmlUtils
+  , msxmldom
+  , XMLDoc
+  , Xml.Xmldom
+  , Xml.XMLIntf
+  , uUtils
+  , Dialogs;
 
 function FinanceConnectActive : Boolean;
 begin
@@ -415,9 +429,13 @@ begin
   Screen.Cursor := crHourglass;
   Application.ProcessMessages;
   try
-    s := Utf8ToString(d.roomerMainDataSet.downloadUrlAsString(d.roomerMainDataSet.RoomerUri + 'financeconnect/availablesystems'));
     result := TKeyPairList.Create(True);
-    ParseList(s, result, SystemsXmlElements);
+    try
+      s := Utf8ToString(d.roomerMainDataSet.downloadUrlAsString(d.roomerMainDataSet.RoomerUri + 'financeconnect/availablesystems'));
+      ParseList(s, result, SystemsXmlElements);
+    except
+      MessageDlg('Error occured trying to reach FinanceConnect service.'#10 + 'Roomer will continue without connection to accounting system.', mtWarning, [mbOk], 0);
+    end;
   finally
     Screen.Cursor := cursorWas;
     Application.ProcessMessages;
