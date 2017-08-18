@@ -321,6 +321,7 @@ type
     mRoomRatesNativeAmount: TFloatField;
     mRoomRatesGuestName: TWideStringField;
     mPaymentsInvoiceIndex: TIntegerField;
+    mnuMoveRoomToInvoiceIndex: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure agrLinesMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: integer);
@@ -393,7 +394,8 @@ type
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure pnlPaymentButtonsResize(Sender: TObject);
     procedure sPanel4DragOver(Sender, Source: TObject; X, Y: Integer; State: TDragState; var Accept: Boolean);
-  private
+    procedure mnuMoveRoomToInvoiceIndexClick(Sender: TObject);
+ private
     { Private declarations }
 
     DeletedLines: TList<integer>;
@@ -622,7 +624,7 @@ type
     procedure RemoveAutoBreakfastItems;
     function ItemKindOnRow(aRow: Integer): TItemKind;
     procedure DeleteSelectedLines;
-
+    procedure MoveSelectedLinesToInvoiceIndex(aNewIndex: integer);
     property InvoiceIndex: integer read FInvoiceIndex write SetInvoiceIndex;
     property AnyRowChecked: boolean read GetAnyRowChecked;
   public
@@ -6356,56 +6358,62 @@ end;
 
 procedure TfrmInvoice.pnlInvoiceIndex0DragDrop(Sender, Source: TObject; X, Y: integer);
 var
+  lMoveToIndex: integer;
+begin
+  lMoveToIndex := TPanel(Sender).Tag;
+  if lMoveToIndex = FInvoiceIndex then
+    Exit;
+
+  SaveAnd(False);
+  if (Source = agrLines) then
+    MoveSelectedLinesToInvoiceIndex(lMoveToIndex)
+  else
+    MoveDownpaymentToInvoiceIndex(lMoveToIndex);
+end;
+
+procedure Tfrminvoice.MoveSelectedLinesToInvoiceIndex(aNewIndex: integer);
+var
   list: TList<String>;
   i, l, Res: integer;
   invoiceLine: TInvoiceLine;
 begin
-  Res := -1;
-  if (Source = agrLines) then
-  begin
-    list := GetSelectedRows;
-    try
-      for l := list.Count - 1 downto 0 do
+  list := GetSelectedRows;
+  try
+    for l := list.Count - 1 downto 0 do
+    begin
+      i := IndexOfAutoGen(list[l]);
+      if i >= 0 then
       begin
-        i := IndexOfAutoGen(list[l]);
-        if i >= 0 then
+        agrLines.row := i;
+        if isSystemLine(i) AND (trim(agrLines.Cells[col_Item, i]) = g.qRoomRentItem) then
         begin
-          agrLines.row := i;
-          if isSystemLine(i) AND (trim(agrLines.Cells[col_Item, i]) = g.qRoomRentItem) then
+          MoveRoomToNewInvoiceIndex(i, aNewIndex);
+        end
+        else
+          if isSystemLine(i) AND (trim(agrLines.Cells[col_Item, i]) = g.qStayTaxItem) then
+        begin
+          if Res <> mrAll then
+            Res := MessageDlg(GetTranslatedText('shTx_Invoice_WarningWhenMovingCityTax'), mtWarning,
+              [mbYes, mbNo, mbAll, mbCancel], 0);
+          if Res IN [mrYes, mrAll] then
           begin
-            MoveRoomToNewInvoiceIndex(i, TsPanel(Sender).Tag);
+            invoiceLine := CellInvoiceLine(i);
+            agrLines.Objects[col_Item, i] := TObject(invoiceLine.FInvoiceLineIndex);
+            RV_ToggleUseStayTax(FReservation);
+            MoveItemToNewInvoiceIndex(i, aNewIndex);
           end
-          else
-            if isSystemLine(i) AND (trim(agrLines.Cells[col_Item, i]) = g.qStayTaxItem) then
-          begin
-            if Res <> mrAll then
-              Res := MessageDlg(GetTranslatedText('shTx_Invoice_WarningWhenMovingCityTax'), mtWarning,
-                [mbYes, mbNo, mbAll, mbCancel], 0);
-            if Res IN [mrYes, mrAll] then
-            begin
-              invoiceLine := CellInvoiceLine(i);
-              agrLines.Objects[col_Item, i] := TObject(invoiceLine.FInvoiceLineIndex);
-              RV_ToggleUseStayTax(FReservation);
-              MoveItemToNewInvoiceIndex(i, TsPanel(Sender).Tag);
-            end
-            else
-              if Res = mrCancel then
-              exit;
-          end
-          else
-            MoveItemToNewInvoiceIndex(i, TsPanel(Sender).Tag);
-        end;
+          else if Res = mrCancel then
+            exit;
+        end
+        else
+          MoveItemToNewInvoiceIndex(i, aNewIndex);
       end;
-    finally
-      list.free;
     end;
-    RemoveAllCheckboxes;
-    CheckCheckboxes;
-  end
-  else
-  begin
-    MoveDownpaymentToInvoiceIndex(TsPanel(Sender).Tag);
+  finally
+    list.free;
   end;
+  RemoveAllCheckboxes;
+  CheckCheckboxes;
 end;
 
 procedure TfrmInvoice.pnlInvoiceIndex0DragOver(Sender, Source: TObject;
@@ -8757,8 +8765,32 @@ begin
 end;
 
 procedure TfrmInvoice.mnuMoveRoomPopup(Sender: TObject);
+var
+  l: integer;
+  subItem: TMenuItem;
 begin
   FillAllRoomsInMenu(mnuTransferRoomRentToDifferentRoom);
+
+  mnuMoveRoomToInvoiceIndex.Clear;
+  for l := 0 to mnuInvoiceIndex.Items.Count - 1 do
+  begin
+    subItem := TMenuItem.Create(nil);
+    subItem.Caption := mnuInvoiceIndex.Items[l].Caption;
+    subItem.Tag := mnuInvoiceIndex.Items[l].Tag;
+    subItem.OnClick := mnuMoveRoomToInvoiceIndexClick;
+    mnuMoveRoomToInvoiceIndex.Add(subItem);
+    subItem.Enabled := subItem.Tag >= 0;
+  end;
+
+end;
+
+procedure TfrmInvoice.mnuMoveRoomToInvoiceIndexClick(Sender: TObject);
+var
+  mnu: TMenuItem;
+begin
+  mnu := TMenuItem(Sender);
+  if (mnu.Tag <> FInvoiceIndex) then
+    MoveSelectedLinesToInvoiceIndex(mnu.Tag);
 end;
 
 procedure TfrmInvoice.timCloseInvoiceTimer(Sender: TObject);

@@ -2291,6 +2291,11 @@ object frmInvoice: TfrmInvoice
       Caption = 'To room invoice'
       OnClick = mnuMoveRoomRentFromGroupToNormalRoomInvoiceClick
     end
+    object mnuMoveRoomToInvoiceIndex: TMenuItem
+      Caption = 'To invoiceindex'
+      object TMenuItem
+      end
+    end
     object N7: TMenuItem
       Caption = '-'
     end
