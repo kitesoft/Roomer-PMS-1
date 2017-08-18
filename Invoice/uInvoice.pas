@@ -5632,6 +5632,7 @@ begin
               ' , ilAccountKey= ' + _db(sAccountKey) +
               ' , InvoiceIndex= ' + _db(FInvoiceIndex) +
               ' , staffLastEdit= ' + _db(d.roomerMainDataSet.username) +
+              ' , visibleoninvoice=1' + // backward compatibility for handling package-items with "old style" invoice-printing
               ' WHERE id=' + _db(invoiceLine.FId);
           end;
 
