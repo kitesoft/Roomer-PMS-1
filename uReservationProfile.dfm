@@ -935,8 +935,7 @@ object frmReservationProfile: TfrmReservationProfile
                   Width = 175
                   ExplicitWidth = 175
                   inherited lblCountryName: TLabel
-                    Width = 15
-                    Height = 11
+                    Width = 109
                     Font.Height = -9
                     ExplicitWidth = 15
                     ExplicitHeight = 11
@@ -1702,7 +1701,6 @@ object frmReservationProfile: TfrmReservationProfile
                 ExplicitWidth = 159
                 inherited lblCountryName: TLabel
                   Width = 93
-                  Height = 14
                   Font.Height = -9
                   ExplicitWidth = 15
                   ExplicitHeight = 11
@@ -1732,7 +1730,6 @@ object frmReservationProfile: TfrmReservationProfile
                 ExplicitWidth = 159
                 inherited lblCountryName: TLabel
                   Width = 93
-                  Height = 14
                   Font.Height = -9
                   ExplicitWidth = 15
                   ExplicitHeight = 11

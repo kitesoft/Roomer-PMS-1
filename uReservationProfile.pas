@@ -1023,9 +1023,9 @@ begin
   vStartName := frmReservationProfile.edtName.text;
 
   fraGuestNationality.AllowEdit := True;
-  fraGuestNationality.OnCountryChange := btnChangeNationalitiesAllGuestsClick;
+  fraGuestNationality.OnCountryChangeAndValid := btnChangeNationalitiesAllGuestsClick;
   fraGuestCountry.AllowEdit := True;
-  fraGuestCountry.OnCountryChange := btnChangeCountryAllGuestsClick;
+  fraGuestCountry.OnCountryChangeAndValid := btnChangeCountryAllGuestsClick;
   fraContactCountry.AllowEdit := False;
 
   pnlAllGuestsNationality.Visible := glb.PMSSettings.ReservationProfileSettings.EditAllGuestsNationality;

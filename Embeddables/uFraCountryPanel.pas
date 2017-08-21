@@ -17,6 +17,7 @@ type
   private
     FAllowEdit: boolean;
     FOnCountryChange: TNotifyEvent;
+    FOnCountryChangeAndValid: TNotifyEvent;
     FDisableEventCount: integer;
     FValidCountry: boolean;
     FInvalidCountryCodes: TStringlist;
@@ -33,12 +34,14 @@ type
     destructor Destroy; override;
     procedure DisableEvents;
     procedure EnableEvents;
+    function EventsEnabled: boolean;
     property CountryName: string read GetCountryName;
     property IsValid: boolean read GetIsValid;
   published
     { Public declarations }
     property AllowEdit: boolean read FAllowEdit write SetAllowEdit;
     property OnCountryChange: TNotifyEvent read FOnCountryChange write FOnCountryChange;
+    property OnCountryChangeAndValid: TNotifyEvent read FOnCountryChangeAndValid write FOnCountryChangeAndValid;
     property CountryCode: string read GetCountryCode write SetCountryCode;
     /// <summary>
     ///   A comma separated list of country codes that are not accepted
@@ -92,15 +95,23 @@ begin
     lblCountryName.Font.Color := clRed
   else
     lblCountryName.Font.Color := clWindowText;
-//  if FValidCountry then
-    if (FDisableEventCount = 0) and  Assigned(FOnCountryChange) then
-      FOnCountryChange(Self);
+
+  if EventsEnabled and  Assigned(FOnCountryChange) then
+    FOnCountryChange(Self);
+
+  if EventsEnabled and IsValid and Assigned(FOnCountryChangeAndValid) then
+    FOnCountryChangeAndValid(Self);
 end;
 
 procedure TfraCountryPanel.EnableEvents;
 begin
   Dec(FDisableEventCount);
   FDisableEventCount := max(0, FDisableEventCount);
+end;
+
+function TfraCountryPanel.EventsEnabled: boolean;
+begin
+  Result := (FDisableEventCount <= 0);
 end;
 
 function TfraCountryPanel.GetCountryCode: string;
