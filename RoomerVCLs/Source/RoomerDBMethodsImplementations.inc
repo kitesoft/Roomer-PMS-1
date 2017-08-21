@@ -1996,83 +1996,118 @@ end;
 // ******************************* Channeltogglingrules **********************************
 
 function TRoomerDataSet.Channeltogglingrules_Entities_FindAll(): Array_Of_TChanneltogglingrulesEntity;
-var entities : Array_Of_TChanneltogglingrulesEntity;
+var
     List : TList<TPersistent>;
     i : Integer;
     res : String;
 begin
   res := downloadUrlAsString(  FRoomerEntitiesUri + 'channeltogglingrules/findAll');
-  list := processJson(res, 'TChanneltogglingrulesEntity');
-  SetLength(entities, list.Count);
-  for i := 0 to list.Count - 1 do
-    entities[i] := TChanneltogglingrulesEntity(list[i]);
-  result := entities;
+  list := processJson(res, TChanneltogglingrulesEntity.Classname);
+  try
+    SetLength(result, list.Count);
+    for i := 0 to list.Count - 1 do
+      result[i] := TChanneltogglingrulesEntity(list[i]);
+  finally
+    list.Free;
+  end;
 end;
 
 function TRoomerDataSet.Channeltogglingrules_Entities_GetById(id: Integer): TChanneltogglingrulesEntity;
 var List : TList<TPersistent>;
     res : String;
 begin
+  result := nil;
   res := downloadUrlAsString(  FRoomerEntitiesUri + 'channeltogglingrules/' + inttostr(id));
-  list := processJson(res, 'TChanneltogglingrulesEntity');
-  result := TChanneltogglingrulesEntity(list[0]);
-  
+  list := processJson(res, TChanneltogglingrulesEntity.classname);
+  try
+    result := TChanneltogglingrulesEntity(list[0]);
+  finally
+    list.Free;
+  end;
 end;
 
 function TRoomerDataSet.Channeltogglingrules_Entities_GetBySql(sql: String): Array_Of_TChanneltogglingrulesEntity;
-var entities : Array_Of_TChanneltogglingrulesEntity;
+var
     List : TList<TPersistent>;
     i : Integer;
     res : String;
 begin
   res := downloadUrlAsString(  FRoomerEntitiesUri + 'channeltogglingrules/getSql?sql=' + sql);
-  list := processJson(res, 'TChanneltogglingrulesEntity');
-  SetLength(entities, list.Count);
-  for i := 0 to list.Count - 1 do
-    entities[i] := TChanneltogglingrulesEntity(list[i]);
-  result := entities;
+  list := processJson(res, TChanneltogglingrulesEntity.Classname);
+  try
+    SetLength(result, list.Count);
+    for i := 0 to list.Count - 1 do
+      result[i] := TChanneltogglingrulesEntity(list[i]);
+  finally
+    list.Free;
+  end;
 end;
 
 function TRoomerDataSet.Channeltogglingrules_Entities_GetListByWhere(where: String): Array_Of_TChanneltogglingrulesEntity;
-var entities : Array_Of_TChanneltogglingrulesEntity;
+var
     List : TList<TPersistent>;
     i : Integer;
     res : String;
 begin
   res := downloadUrlAsString(  FRoomerEntitiesUri + 'channeltogglingrules/getListByWhere?where=' + where);
-  list := processJson(res, 'TChanneltogglingrulesEntity');
-  SetLength(entities, list.Count);
-  for i := 0 to list.Count - 1 do
-    entities[i] := TChanneltogglingrulesEntity(list[i]);
-  result := entities;
+  list := processJson(res, TChanneltogglingrulesEntity.Classname);
+  try
+    SetLength(result, list.Count);
+    for i := 0 to list.Count - 1 do
+      result[i] := TChanneltogglingrulesEntity(list[i]);
+  finally
+    list.free;
+  end;
 end;
 
 function TRoomerDataSet.Channeltogglingrules_Entities_GetEntityByWhere(where: String): TChanneltogglingrulesEntity;
-var List : TList<TPersistent>;
-    res : String;
+var
+  List : TList<TPersistent>;
+  res : String;
 begin
+  result := nil;
   res := downloadUrlAsString(  FRoomerEntitiesUri + 'channeltogglingrules/createGetEntityByWhere?where=' + where);
-  list := processJson(res, 'TChanneltogglingrulesEntity');
-  result := TChanneltogglingrulesEntity(list[0]);
-  
+  list := nil;
+  try
+    list := processJson(res, TChanneltogglingrulesEntity.classname);
+    result := TChanneltogglingrulesEntity(list[0]);
+  finally
+    list.Free;
+  end;
 end;
 
 function TRoomerDataSet.Channeltogglingrules_Entities_SaveEntity(entity: TChanneltogglingrulesEntity): TChanneltogglingrulesEntity;
-var src : String;
+var
+  src : String;
+  List : TList<TPersistent>;
 begin
+  result := nil;
   UnMarshal(entity);
   src := PostAsJSON(AnsiString(FRoomerEntitiesUri + 'channeltogglingrules'), entity.json);
-  result := TChanneltogglingrulesEntity(processJson(src, 'TChanneltogglingrulesEntity')[0]);
-  
+  list := nil;
+  try
+    list := processJson(src, TChanneltogglingrulesEntity.classname);
+    result := TChanneltogglingrulesEntity(list[0]);
+  finally
+    list.Free;
+  end;
 end;
 
 function TRoomerDataSet.Channeltogglingrules_Entities_UpdateEntity(entity: TChanneltogglingrulesEntity): TChanneltogglingrulesEntity;
-var src : String;
+var
+  List : TList<TPersistent>;
+  src : String;
 begin
+  result := nil;
   UnMarshal(entity);
   src := PutAsJSON(AnsiString(FRoomerEntitiesUri + 'channeltogglingrules/' + inttostr(entity.Id)), entity.json);
-  result := TChanneltogglingrulesEntity(processJson(src, 'TChanneltogglingrulesEntity')[0]);
-  
+  list := nil;
+  try
+    list := processJson(src, TChanneltogglingrulesEntity.classname);
+    result := TChanneltogglingrulesEntity(list[0]);
+  finally
+    list.Free;
+  end;
 end;
 
 procedure TRoomerDataSet.Channeltogglingrules_Entities_Delete(id: Integer);

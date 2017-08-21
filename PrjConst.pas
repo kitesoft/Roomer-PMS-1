@@ -1851,7 +1851,7 @@ begin
   frmRptResStats := TfrmRptResStats.Create(nil); frmRptResStats.Free; frmRptResStats := nil;
   frmGuestSearch := TfrmGuestSearch.Create(nil); frmGuestSearch.Free; frmGuestSearch := nil;
 //  frmRptResDates := TfrmRptResDates.Create(nil); frmRptResDates.Free; frmRptResDates := nil;
-  frmChannelTogglingRules := TfrmChannelTogglingRules.Create(nil); frmChannelTogglingRules.Free; frmChannelTogglingRules := nil;
+  TfrmChannelTogglingRules.Create(nil).Free;
   TfrmAllotmentToRes.Create(nil).Free;
   frmPersonviptypes := TfrmPersonviptypes.Create(nil); frmPersonviptypes.Free; frmPersonviptypes := nil;
   frmPersonContactType := TfrmPersonContactType.Create(nil); frmPersonContactType.Free; frmPersonContactType := nil;
