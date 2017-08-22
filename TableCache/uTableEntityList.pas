@@ -17,14 +17,13 @@ type
     FTableName: String;
     FSql: String;
     FRSet: TRoomerDataSet;
-    FForceRefreshed : Boolean;
     FRefreshEnabled : Boolean;
     function GetFilename: String;
     function ReadFromFile: String;
     procedure SaveToFile(data: String);
     function FileTimeStamp: TDateTime;
   public
-    constructor Create(tableName : String; baseTableAlwaysRefresh : Boolean = false; sqlExtension : String = '');
+    constructor Create(tableName : String; sqlExtension : String = '');
     destructor Destroy; override;
     procedure RefreshFromServer;
     procedure RefreshLocally(ForceRefresh : Boolean = true);
@@ -85,11 +84,11 @@ end;
 procedure TTableDictionary.InitializeTables;
 begin
 
-  Add('rooms', TTableEntity.Create('rooms', true, 'ORDER BY OrderIndex Desc, Room ASC'));
+  Add('rooms', TTableEntity.Create('rooms', 'ORDER BY OrderIndex Desc, Room ASC'));
 
   Add('maintenancecodes', TTableEntity.Create('maintenancecodes'));
   Add('maintenanceroomnotes', TTableEntity.Create('maintenanceroomnotes'));
-  Add('staffmembers', TTableEntity.Create('staffmembers', true));
+  Add('staffmembers', TTableEntity.Create('staffmembers'));
 
   Add('locations', TTableEntity.Create('locations'));
   Add('packages', TTableEntity.Create('packages'));
@@ -98,12 +97,12 @@ begin
   Add('vatcodes', TTableEntity.Create('vatcodes'));
   Add('items', TTableEntity.Create('items'));
   Add('itemtypes', TTableEntity.Create('itemtypes'));
-  Add('roomtypegroups', TTableEntity.Create('roomtypegroups', true));
-  Add('roomtypes', TTableEntity.Create('roomtypes', true));
+  Add('roomtypegroups', TTableEntity.Create('roomtypegroups'));
+  Add('roomtypes', TTableEntity.Create('roomtypes'));
   Add('channels', TTableEntity.Create('channels'));
   Add('channelmanagers', TTableEntity.Create('channelmanagers'));
   Add('currencies', TTableEntity.Create('currencies'));
-  Add('control', TTableEntity.Create('control', true, ' LIMIT 1'));
+  Add('control', TTableEntity.Create('control', ' LIMIT 1'));
   Add('countries', TTableEntity.Create('countries'));
   Add('countrygroups', TTableEntity.Create('countrygroups'));
   Add('customers', TTableEntity.Create('customers'));
@@ -118,7 +117,7 @@ begin
   Add('tblpricecodes', TTableEntity.Create('tblpricecodes'));
   Add('customertypes', TTableEntity.Create('customertypes'));
 
-  Add('channelplancodes', TTableEntity.Create('channelplancodes', true));
+  Add('channelplancodes', TTableEntity.Create('channelplancodes'));
   Add('pms_settings', TTableEntity.Create('pms_settings'));
   Add('tblMaidActions', TTableEntity.Create('tblMaidActions'));
 end;
@@ -141,13 +140,12 @@ end;
 
 { TTableEntity }
 
-constructor TTableEntity.Create(tableName : String; baseTableAlwaysRefresh : Boolean = false; sqlExtension: String = '');
+constructor TTableEntity.Create(tableName : String; sqlExtension: String = '');
 begin
   FSql := format('SELECT * FROM %s %s', [tableName, sqlExtension]);
   FTableName := tableName;
   FRSet := CreateNewDataSet;
   FRSet.CommandType := cmdText;
-  FForceRefreshed := baseTableAlwaysRefresh;
   FRefreshEnabled := True;
 end;
 

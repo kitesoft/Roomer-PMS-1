@@ -1984,6 +1984,7 @@ var
     setWrongToZero : Boolean;
     dlgAnswer : Integer;
     iValue : Integer;
+    msg: string;
 
 begin
   ExcelP := NIL;
@@ -2033,17 +2034,10 @@ begin
                 begin
                   if NOT setAllWrongsToZero then
                   begin
-                    dlgAnswer := MessageDLG('Minimum stay cannot be higher than maximum stay. ' + #13#13 +
-                                            'Date: ' + dateToStr(PriceData.date) + #13 +
-                                            'Rate: ' + PriceData.roomtypeGroupCode + #13#13 +
+                    msg := Format(GetTranslatedText('shUI_ChannelManager_MinStayMaxStayError'),
+                                    [dateToStr(PriceData.date), PriceData.roomtypeGroupCode, PriceData.minStay, PriceData.MaxStay ]);
 
-                                            'Min stay: ' + IntToStr(PriceData.minStay) + #13 +
-                                            'Max stay: ' + IntToStr(PriceData.MaxStay) + #13#13 +
-
-                                            '[Yes] = Change the Min. and Max stay of this date and rate to be zero.' + #13 +
-                                            '[All] = Change all wrong Min. and Max stays to be zero.' + #13 +
-                                            '[Cancel] = Stop publishing changes.',
-                                            mtError, [mbYes, mbAll, mbCancel], 0);
+                    dlgAnswer := MessageDLG(msg, mtError, [mbYes, mbAll, mbCancel], 0);
                     case dlgAnswer of
                       mrYes : setWrongToZero := True;
                       mrAll : setAllWrongsToZero := True;

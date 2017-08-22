@@ -261,12 +261,8 @@ type
     lstVaribles: tstringList;
     lstValues: tstringList;
 
-    lstMaintenanceCodes: TKeyPairList;
-
     procedure SetMainRoomerDataSet(ds: TRoomerDataSet; ConnectAllDatasets: boolean = True);
-    procedure LoadMaintenanceCodes;
     function LocateWRoom(Room: String): boolean;
-    procedure ClearMaintenanceCodes;
     procedure SelectCloudConfig;
     procedure SetDefaultCloudConfig;
     procedure SetCloudConfigByFile(filename: String);
@@ -1005,12 +1001,9 @@ begin
   SelectCloudConfig;
 
   roomerMainDataSet.OnSessionExpired := roomerMainDataSetSessionExpired;
-  lstMaintenanceCodes := TKeyPairList.Create(True);
   SetMainRoomerDataSet(roomerMainDataSet);
 
   kbmInvoiceLines.Open;
-
-  // **
 end;
 
 procedure Td.chkConfirmMonitor;
@@ -1034,7 +1027,6 @@ procedure Td.SaveTcxGridColumnOrder(form: TForm; grid: TcxGrid);
 var
   i: Integer;
 begin
-  // ini := TRoomerRegistryIniFile.Create();
   for i := 0 to grid.ViewCount - 1 do
     grid.Views[i].StoreToRegistry(form.Name + '_' + grid.Name, True, [], '');
 end;
@@ -1073,8 +1065,6 @@ begin
   lstVaribles.Free;
   lstValues.Free;
   lstCollect.Free;
-  ClearMaintenanceCodes;
-  lstMaintenanceCodes.Free;
   freeandnil(RoomsDateSetWork);
   memImportResults.Close;
   memImportTypes.Close;
@@ -1624,17 +1614,6 @@ begin
         begin
           MessageDlg(format(GetTranslatedText('shTx_D_SaveToSpecifiedInvoiceIndex'), [SelectedInvoiceIndex + 1]), mtInformation, [mbOK], 0);
         end;
-
-//        if RoomReservation = 0 then
-//        begin
-//          EditInvoice(reservation, 0, 0, 0, 0, 0, False, True, False);
-//        end
-//        else
-//        begin
-//          // This is not groupinvoice
-//          EditInvoice(reservation, RoomReservation, 0, 0, 0, 0, False, True, False);
-//        end;
-
       finally
         lExecutionPlan.Free;
       end;
@@ -1643,16 +1622,12 @@ end;
 
 function Td.colorCodeOfStatus(status: String): TColor;
 var
-  i, iColor: Integer;
+  strColor: string;
 begin
   result := clWhite;
-  for i := 0 to lstMaintenanceCodes.Count - 1 do
-    if lstMaintenanceCodes[i].Key = status then
-    begin
-      iColor := strtoint(lstMaintenanceCodes[i].Value);
-      result := TColor(iColor);
-      exit;
-    end;
+
+  if glb.LocateSpecificRecordAndGetValue('maintenancecodes', 'code', status, 'color', strColor ) then
+    Result := HtmlToColor(strColor, clBlack);
 end;
 
 /// ******************************************
@@ -11155,32 +11130,8 @@ begin
   end;
 end;
 
-procedure Td.ClearMaintenanceCodes;
-begin
-  while lstMaintenanceCodes.Count > 0 do
-    lstMaintenanceCodes.delete(0);
-end;
-
-procedure Td.LoadMaintenanceCodes;
-var
-  tempSet: TRoomerDataSet;
-  iTemp: Integer;
-begin
-  tempSet := glb.Maintenancecodes;
-  // tempSet.CommandText := 'SELECT * FROM maintenancecodes';
-  // tempSet.Open;
-  tempSet.First;
-  while not tempSet.eof do
-  begin
-    iTemp := HtmlToColor(tempSet['color'], clBlack);
-    lstMaintenanceCodes.Add(TKeyAndValue.Create(tempSet['code'], inttostr(iTemp)));
-    tempSet.next;
-  end;
-end;
-
 procedure Td.PrepareFixedTables;
 begin
-  LoadMaintenanceCodes;
 
   if frmMain.OfflineMode then
     exit;

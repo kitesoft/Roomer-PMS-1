@@ -1428,6 +1428,15 @@ begin
 
   constants.Add('shUI_ChannelManager_AvailPublishWarning', 'Roomer will instantly publish these availability changes and send them to the channels in question.');
   constants.Add('shUI_ChannelManager_RatesPublishWarning', 'Roomer will instantly publish these rate and/or restriction changes and send them to the channels in question.');
+  constants.Add('shUI_ChannelManager_MinStayMaxStayError', 'Minimum stay cannot be higher than maximum stay. ' + #13#13 +
+                                            'Date: %s' + #13 +
+                                            'Rate: %s' + #13#13 +
+                                            'Min stay: %d ' + #13 +
+                                            'Max stay: %d' + #13#13 +
+                                            '[Yes] = Change the Min. and Max stay of this date and rate to be zero.' + #13 +
+                                            '[All] = Change all wrong Min. and Max stays to be zero.' + #13 +
+                                            '[Cancel] = Stop publishing changes.');
+
   constants.Add('shUI_ChannelManager_OkOrCancel', 'Click [Ok] to continue, otherwise [Cancel]');
 
   constants.Add('shUI_General_SELECT', 'Select');

@@ -4,6 +4,7 @@ interface
 
 uses uD,
      Generics.Collections,
+     Generics.Defaults,
      cmpRoomerDataset,
      System.SysUtils,
      uDateUtils
@@ -48,9 +49,16 @@ Type
     public
       oldDate : TDateTime;
       newDate : TDateTime;
+      function IsChanged: boolean;
     end;
 
     TRoomerMessageList = TObjectList<TRoomermessage>;
+
+    TCaseInsensitiveComparer = class(TEqualityComparer<String>)
+    public
+      function Equals(const Left, Right: String): Boolean; override;
+      function GetHashCode(const Value: String): Integer; override;
+    end;
 
     TMessageList = class
     private
@@ -138,7 +146,7 @@ begin
   inherited;
   MessageList := TRoomerMessageList.Create(True);
   LastTableCheckStamp := now;
-  TableStatusses := TObjectDictionary<String, TDatePair>.Create([doOwnsValues]);
+  TableStatusses := TObjectDictionary<String, TDatePair>.Create([doOwnsValues], TCaseInsensitiveComparer.Create);
 end;
 
 procedure TMessageList.Delete(idx: Integer);
@@ -289,17 +297,18 @@ begin
         for i := 0 to TableRefreshSet.Fields.Count - 1 do
         begin
           key := TableRefreshSet.Fields[i].FieldName;
-          if TableStatusses.ContainsKey(key) then
-          begin
-            TableStatusses.TryGetValue(key, datePair);
-            datePair.newDate := TableRefreshSet.fieldByName(key).AsDateTime;
-          end
+          if TableStatusses.TryGetValue(key, datePair) then
+            datePair.newDate := TableRefreshSet.fieldByName(key).AsDateTime
           else
           begin
             datePair := TDatePair.Create;
-            datePair.oldDate := TableRefreshSet.fieldByName(key).AsDateTime;
-            datePair.newDate := TableRefreshSet.fieldByName(key).AsDateTime;
-            TableStatusses.Add(key, datePair);
+            try
+              datePair.oldDate := TableRefreshSet.fieldByName(key).AsDateTime;
+              datePair.newDate := TableRefreshSet.fieldByName(key).AsDateTime;
+              TableStatusses.Add(key, datePair);
+            except
+              datePair.Free;
+            end;
           end;
         end;
       end;
@@ -316,13 +325,8 @@ begin
   result := true;
 
   key := format('%s_lastUpdate', [TableName]);
-  if TableStatusses.ContainsKey(key) then
-  begin
-    if TableStatusses.TryGetValue(key, datePair) then
-    begin
-      result := uDateUtils.DateTimeToComparableString(datePair.oldDate, true) <> uDateUtils.DateTimeToComparableString(datePair.newDate, true);
-    end;
-  end;
+  if TableStatusses.TryGetValue(key, datePair) then
+    result := datePair.IsChanged;
 end;
 
 function TMessageList.CurrentTableDate(TableName: String): TDateTime;
@@ -330,12 +334,9 @@ var datePair : TDatePair;
     key : String;
 begin
   result := 0;
-  key := format('%s_lastUpdate', [TableName]);
-  if TableStatusses.ContainsKey(key) then
-  begin
-    if TableStatusses.TryGetValue(key, datePair) then
-      result := datePair.newDate;
-  end;
+  key := format('%s_lastUpdate', [TableName]).tolower;
+  if TableStatusses.TryGetValue(key, datePair) then
+    result := datePair.newDate;
 end;
 
 procedure TMessageList.MarkTableAsRefreshed(TableName: String);
@@ -343,11 +344,8 @@ var datePair : TDatePair;
     key : String;
 begin
   key := format('%s_lastUpdate', [TableName]);
-  if TableStatusses.ContainsKey(key) then
-  begin
-    if TableStatusses.TryGetValue(key, datePair) then
-      datePair.oldDate := datePair.newDate;
-  end;
+  if TableStatusses.TryGetValue(key, datePair) then
+    datePair.oldDate := datePair.newDate;
 end;
 
 procedure TMessageList.MarkTableAsRefreshed(TableName: String; dt : TDateTime);
@@ -355,16 +353,34 @@ var datePair : TDatePair;
     key : String;
 begin
   key := format('%s_lastUpdate', [TableName]);
-  if TableStatusses.ContainsKey(key) then
+  if TableStatusses.TryGetValue(key, datePair) then
   begin
-    if TableStatusses.TryGetValue(key, datePair) then
-    begin
-      datePair.oldDate := dt;
-      datePair.newDate := dt;
-    end;
+    datePair.oldDate := dt;
+    datePair.newDate := dt;
   end;
 end;
 
+
+{ TCaseInsensitiveComparer }
+
+function TCaseInsensitiveComparer.Equals(const Left, Right: String): Boolean;
+begin
+  { Make a case-insensitive comparison }
+  Result := CompareText(Left, Right) = 0;
+end;
+
+
+function TCaseInsensitiveComparer.GetHashCode(const Value: String): Integer;
+begin
+  result := BobJenkinsHash(Value[1], Length(Value) * SizeOf(Value[1]), 0);
+end;
+
+{ TDatePair }
+
+function TDatePair.IsChanged: boolean;
+begin
+  result := oldDate <> newDate;
+end;
 
 initialization
   RoomerMessages := TMessageList.Create;

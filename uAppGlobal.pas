@@ -860,7 +860,7 @@ begin
     rSet := CreateNewDataSet;
     try
       rSet.CommandType := cmdText;
-      s := format(select_GlobalSettings_LoadStaticTables, []);
+      s := format(select_Bookable_Roomtypes, []);
       hData.rSet_bySQL(rSet,s);
 
       rSet.First;
