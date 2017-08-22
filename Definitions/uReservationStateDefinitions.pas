@@ -218,7 +218,7 @@ begin
                                 Result := Result or (aNewState = rsReservation);
                             end;
       rsNoShow:             Result := aNewState in [rsReservation, rsCancelled, rsRemoved];
-      rsBlocked:            Result := aNewState in [rsReservation, rsOptionalBooking, rsBlocked, rsWaitingList];
+      rsBlocked:            Result := aNewState in [rsReservation, rsCancelled, rsOptionalBooking, rsBlocked, rsWaitingList];
       rsCancelled:          Result := aNewState in [rsReservation, rsAllotment, rsRemoved];
       rsTmp1:               Result := aNewState in [rsReservation, rsGuests, rsOptionalBooking, rsNoShow, rsBlocked, rsCancelled, rsWaitingList, rsRemoved];
       rsAwaitingPayment:    result := False;

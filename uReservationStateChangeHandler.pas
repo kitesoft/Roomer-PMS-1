@@ -183,9 +183,9 @@ begin
       Break;
   end;
 
-  if (aNewState in [rsCancelled, rsRemoved]) then
+  if Result and (aNewState in [rsCancelled, rsRemoved]) then
   begin
-    Result := Result and not ReservationHasUnPaidInvoiceItems(FReservation);
+    Result := not ReservationHasUnPaidInvoiceItems(FReservation);
     if not Result and aRaiseExceptionOnFail then
       raise EReservationHasUnPaidInvocieLines.Create(FReservation);
   end
