@@ -1980,6 +1980,11 @@ var
 
     CalcSql : String;
 
+    setAllWrongsToZero : Boolean;
+    setWrongToZero : Boolean;
+    dlgAnswer : Integer;
+    iValue : Integer;
+
 begin
   ExcelP := NIL;
   ChEntity := NIL;
@@ -1994,6 +1999,8 @@ begin
   topClasses.Sorted := True;
   topClasses.Duplicates := dupIgnore;
   CalcSql := '';
+  setAllWrongsToZero := False;
+  setWrongToZero := False;
   list := TList<String>.Create;
   try
     for iMaster := ABS(ORD(OnlyMasterSelected)) to 1 do
@@ -2020,6 +2027,35 @@ begin
                       DateToSqlString(PriceData.Date),
                       PriceData.RoomTypeGroupId
                     ]);
+                end;
+
+                if (PriceData.minStay > PriceData.MaxStay) AND (PriceData.MaxStay > 0) then
+                begin
+                  if NOT setAllWrongsToZero then
+                  begin
+                    dlgAnswer := MessageDLG('Minimum stay cannot be higher than maximum stay. ' + #13#13 +
+                                            'Date: ' + dateToStr(PriceData.date) + #13 +
+                                            'Rate: ' + PriceData.roomtypeGroupCode + #13#13 +
+
+                                            'Min stay: ' + IntToStr(PriceData.minStay) + #13 +
+                                            'Max stay: ' + IntToStr(PriceData.MaxStay) + #13#13 +
+
+                                            '[Yes] = Change the Min. and Max stay of this date and rate to be zero.' + #13 +
+                                            '[All] = Change all wrong Min. and Max stays to be zero.' + #13 +
+                                            '[Cancel] = Stop publishing changes.',
+                                            mtError, [mbYes, mbAll, mbCancel], 0);
+                    case dlgAnswer of
+                      mrYes : setWrongToZero := True;
+                      mrAll : setAllWrongsToZero := True;
+                      mrCancel : exit;
+                    end;
+                  end;
+                  if setAllWrongsToZero OR setWrongToZero then
+                  begin
+                    PriceData.MinStay := 0;
+                    PriceData.MaxStay := 0;
+                  end;
+                  setWrongToZero := False;
                 end;
 
                 buildSetStatement(PriceData.ForcingUpdate OR PriceData.PriceDirty, sql, 'dirty', 'price', _db(PriceData.Price));
@@ -2100,7 +2136,20 @@ begin
                 ForwardProject;
               end;
             end;
+          end
+          else begin
+            if isMinStayRow(iRow) OR isMaxStayRow(iRow) then
+            begin
+              PriceData := getPriceDataOfRow(iCol, iRow);
+              iValue := strToInt(rateGrid.Cells[iCol, iRow]);
+              if isMinStayRow(iRow) AND (PriceData.minStay <> iValue) then
+                  rateGrid.Cells[iCol, iRow] := IntToStr(PriceData.minStay)
+              else
+                if isMaxStayRow(iRow) AND (PriceData.maxStay <> iValue) then
+                  rateGrid.Cells[iCol, iRow] := IntToStr(PriceData.maxStay);
+            end;
           end;
+
         end;
 
         // Clear edits as they have been posted

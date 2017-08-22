@@ -144,30 +144,6 @@ begin
 end;
 
 
-function TRoomerDataSet.SystemStartGlobalTransaction(txId : String): String;
-var res : String;
-begin
-  res := downloadUrlAsString(  RoomerUri + 'pms/business/startglobaltransaction?txid=' + txId);
-  Result := res;
-end;
-
-
-function TRoomerDataSet.SystemCommitGlobalTransaction(txId : String): String;
-var res : String;
-begin
-  res := downloadUrlAsString(  RoomerUri + 'pms/business/commitglobaltransaction?txid=' + txId);
-  Result := res;
-end;
-
-
-function TRoomerDataSet.SystemRollBackGlobalTransaction(txId : String): String;
-var res : String;
-begin
-  res := downloadUrlAsString(  RoomerUri + 'pms/business/rollbackglobaltransaction?txid=' + txId);
-  Result := res;
-end;
-
-
 function TRoomerDataSet.SystemGetChannelRates(channelId, channelManagerId, planCodeId : integer): String;
 var res : String;
 begin

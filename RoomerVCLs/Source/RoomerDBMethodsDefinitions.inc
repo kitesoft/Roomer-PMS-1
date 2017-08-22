@@ -24,12 +24,6 @@
 
     function SystemRollbackTransaction(): String;
 
-    function SystemStartGlobalTransaction(txId : String): String;
-
-    function SystemCommitGlobalTransaction(txId : String): String;
-
-    function SystemRollBackGlobalTransaction(txId : String): String;
-
     function SystemGetChannelRates(channelId, channelManagerId, planCodeId : integer): String;
 
     function SystemGetChannelRatesMultiple(fromDate : TDateTime; numDays : Integer; channels : String; channelManagerId, planCodeId : integer): String;
