@@ -96,7 +96,7 @@ object frmControlData: TfrmControlData
         OnChanging = tvSelectionChanging
         OnCustomDrawItem = tvSelectionCustomDrawItem
         Items.NodeData = {
-          030C000000280000000000000001000000FFFFFFFFFFFFFFFF00000000000000
+          030D000000280000000000000001000000FFFFFFFFFFFFFFFF00000000000000
           0000000000010548006F00740065006C00260000000000000002000000FFFFFF
           FFFFFFFFFF000000000000000000000000010449004400270073002C00000000
           00000009000000FFFFFFFFFFFFFFFF000000000000000003000000010749006E
@@ -124,8 +124,11 @@ object frmControlData: TfrmControlData
           000000000000000000000001154D0061006E006400610074006F007200790020
           0069006E0066006F0072006D006100740069006F006E003A0000000000000014
           000000FFFFFFFFFFFFFFFF000000000000000000000000010E42006500740061
-          002000460075006E006300740069006F006E007300}
+          002000460075006E006300740069006F006E0073003800000000000000150000
+          00FFFFFFFFFFFFFFFF000000000000000000000000010D45006D00610069006C
+          0020007300650072007600690063006500}
         SkinData.SkinSection = 'EDIT'
+        ExplicitTop = -2
       end
     end
     object __LMDBackPanel3: TsPanel
@@ -141,7 +144,7 @@ object frmControlData: TfrmControlData
         Top = 1
         Width = 1101
         Height = 743
-        ActivePage = tsInvEmail
+        ActivePage = tabEmailService
         Align = alClient
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
@@ -9279,6 +9282,184 @@ object frmControlData: TfrmControlData
               ImgChecked = 0
               ImgUnchecked = 0
             end
+          end
+        end
+        object tabEmailService: TsTabSheet
+          Caption = 'EmailService'
+          ExplicitLeft = 5
+          ExplicitTop = 26
+          object sGroupBox2: TsGroupBox
+            Left = 48
+            Top = 48
+            Width = 489
+            Height = 289
+            Caption = '[ SMTP Service Settings ]'
+            TabOrder = 0
+            object lbSmtpServer: TsLabel
+              Left = 54
+              Top = 41
+              Width = 74
+              Height = 14
+              Alignment = taRightJustify
+              Caption = 'SMTP Server:'
+              Enabled = False
+            end
+            object lbSmtpFromEmail: TsLabel
+              Left = 21
+              Top = 69
+              Width = 107
+              Height = 14
+              Alignment = taRightJustify
+              Caption = 'From email address:'
+              Enabled = False
+            end
+            object lbSmtpPort: TsLabel
+              Left = 62
+              Top = 97
+              Width = 66
+              Height = 14
+              Alignment = taRightJustify
+              Caption = 'Server port:'
+              Enabled = False
+            end
+            object lbSmtpUsername: TsLabel
+              Left = 150
+              Top = 186
+              Width = 58
+              Height = 14
+              Alignment = taRightJustify
+              Caption = 'Username:'
+              Enabled = False
+            end
+            object lbSmtpPassword: TsLabel
+              Left = 153
+              Top = 216
+              Width = 55
+              Height = 14
+              Alignment = taRightJustify
+              Caption = 'Password:'
+              Enabled = False
+            end
+            object edSmtpServer: TsEdit
+              Left = 134
+              Top = 38
+              Width = 209
+              Height = 22
+              Color = clWhite
+              Enabled = False
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clBlack
+              Font.Height = -12
+              Font.Name = 'Tahoma'
+              Font.Style = []
+              ParentFont = False
+              TabOrder = 0
+              OnChange = checkEmailRegEx
+              OnExit = checkEmailRegEx
+              SkinData.SkinSection = 'EDIT'
+            end
+            object edSmtpFromEmail: TsEdit
+              Left = 134
+              Top = 66
+              Width = 209
+              Height = 22
+              Color = clWhite
+              Enabled = False
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clBlack
+              Font.Height = -12
+              Font.Name = 'Tahoma'
+              Font.Style = []
+              ParentFont = False
+              TabOrder = 1
+              OnChange = checkEmailRegEx
+              OnExit = checkEmailRegEx
+            end
+            object edSmtpPort: TsEdit
+              Left = 134
+              Top = 94
+              Width = 209
+              Height = 22
+              Color = clWhite
+              Enabled = False
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clBlack
+              Font.Height = -12
+              Font.Name = 'Tahoma'
+              Font.Style = []
+              ParentFont = False
+              TabOrder = 2
+              OnChange = checkEmailRegEx
+              OnExit = checkEmailRegEx
+            end
+            object cbSmtpTLS: TsCheckBox
+              Left = 134
+              Top = 122
+              Width = 74
+              Height = 18
+              Caption = 'SSL/TLS'
+              Enabled = False
+              TabOrder = 3
+              ImgChecked = 0
+              ImgUnchecked = 0
+            end
+            object cbSmtpAuthenticate: TsCheckBox
+              Left = 134
+              Top = 146
+              Width = 100
+              Height = 18
+              Caption = 'Authenticate'
+              Enabled = False
+              TabOrder = 4
+              OnClick = cbSmtpAuthenticateClick
+              ImgChecked = 0
+              ImgUnchecked = 0
+            end
+            object edSmtpUsername: TsEdit
+              Left = 214
+              Top = 183
+              Width = 209
+              Height = 22
+              Color = clWhite
+              Enabled = False
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clBlack
+              Font.Height = -12
+              Font.Name = 'Tahoma'
+              Font.Style = []
+              ParentFont = False
+              TabOrder = 5
+              OnChange = checkEmailRegEx
+              OnExit = checkEmailRegEx
+            end
+            object edSmtpPassword: TsEdit
+              Left = 214
+              Top = 213
+              Width = 209
+              Height = 22
+              Color = clWhite
+              Enabled = False
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clBlack
+              Font.Height = -12
+              Font.Name = 'Tahoma'
+              Font.Style = []
+              ParentFont = False
+              TabOrder = 6
+              OnChange = checkEmailRegEx
+              OnExit = checkEmailRegEx
+            end
+          end
+          object cbSmtpServiceActive: TsCheckBox
+            Left = 48
+            Top = 17
+            Width = 302
+            Height = 18
+            Caption = 'Use the below SMTP server for all outgoing emails'
+            TabOrder = 1
+            OnClick = cbSmtpServiceActiveClick
+            ImgChecked = 0
+            ImgUnchecked = 0
           end
         end
       end

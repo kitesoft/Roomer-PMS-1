@@ -733,6 +733,21 @@ type
     cbxPmsEntryPage: TsComboBox;
     cbxRoomRentPerDay: TsComboBox;
     cbxPreloadPreviousGuests: TsCheckBox;
+    tabEmailService: TsTabSheet;
+    sGroupBox2: TsGroupBox;
+    lbSmtpServer: TsLabel;
+    edSmtpServer: TsEdit;
+    edSmtpFromEmail: TsEdit;
+    lbSmtpFromEmail: TsLabel;
+    lbSmtpPort: TsLabel;
+    edSmtpPort: TsEdit;
+    cbSmtpTLS: TsCheckBox;
+    cbSmtpAuthenticate: TsCheckBox;
+    lbSmtpUsername: TsLabel;
+    edSmtpUsername: TsEdit;
+    edSmtpPassword: TsEdit;
+    lbSmtpPassword: TsLabel;
+    cbSmtpServiceActive: TsCheckBox;
     procedure FormCreate(Sender : TObject);
     procedure FormClose(Sender : TObject; var Action : TCloseAction);
     procedure FormShow(Sender : TObject);
@@ -799,6 +814,8 @@ type
     procedure cbxPreArrivalEnabledClick(Sender: TObject);
     procedure cbxPostDepartureEnabledClick(Sender: TObject);
     procedure checkEmailRegEx(Sender: TObject);
+    procedure cbSmtpAuthenticateClick(Sender: TObject);
+    procedure cbSmtpServiceActiveClick(Sender: TObject);
 
   private
     { private declarations }
@@ -1339,6 +1356,16 @@ g.ReadWriteSettingsToRegistry(0);
     chkConfirmAuto.checked := g.qConfirmAuto;
     edConfirmMinuteOfTheDay.value  := g.qConfirmMinuteOfTheDay;
 
+    cbSmtpServiceActive.Checked := glb.PMSSettings.SmtpServiceSettings.Active;
+    edSmtpServer.Text := glb.PMSSettings.SmtpServiceSettings.Server;
+    edSmtpFromEmail.Text := glb.PMSSettings.SmtpServiceSettings.EmailAddress;
+    edSmtpPort.Text := inttostr(glb.PMSSettings.SmtpServiceSettings.Port);
+    edSmtpUsername.Text := glb.PMSSettings.SmtpServiceSettings.Username;
+    cbSmtpAuthenticate.Checked := glb.PMSSettings.SmtpServiceSettings.Authenticate;
+    edSmtpPassword.Text := glb.PMSSettings.SmtpServiceSettings.Password;
+    cbSmtpTLS.Checked := glb.PMSSettings.SmtpServiceSettings.SslTls;
+
+    cbSmtpServiceActiveClick(nil);
 
     try
       cbxCallType.ItemIndex := rControlData.fieldbyname('callType').AsInteger except cbxCallType.ItemIndex := 3;
@@ -1947,6 +1974,16 @@ begin
 
       g.qConfirmAuto := chkConfirmAuto.checked;
       g.qConfirmMinuteOfTheDay := edConfirmMinuteOfTheDay.value;
+
+
+      glb.PMSSettings.SmtpServiceSettings.Active := cbSmtpServiceActive.Checked;
+      glb.PMSSettings.SmtpServiceSettings.Server := edSmtpServer.Text;
+      glb.PMSSettings.SmtpServiceSettings.EmailAddress := edSmtpFromEmail.Text;
+      glb.PMSSettings.SmtpServiceSettings.Port := StrToIntDef(edSmtpPort.Text, 25);
+      glb.PMSSettings.SmtpServiceSettings.Username := edSmtpUsername.Text;
+      glb.PMSSettings.SmtpServiceSettings.Authenticate := cbSmtpAuthenticate.Checked;
+      glb.PMSSettings.SmtpServiceSettings.Password := edSmtpPassword.Text;
+      glb.PMSSettings.SmtpServiceSettings.SslTls := cbSmtpTLS.Checked;
 
       try
         rControlData.fieldbyname('callType').AsInteger := cbxCallType.ItemIndex;
@@ -3543,6 +3580,34 @@ begin
 
   end;
 
+end;
+
+procedure TfrmControlData.cbSmtpAuthenticateClick(Sender: TObject);
+begin
+  edSmtpUsername.Enabled := cbSmtpAuthenticate.Checked AND cbSmtpServiceActive.Checked;
+  edSmtpPassword.Enabled := cbSmtpAuthenticate.Checked AND cbSmtpServiceActive.Checked;
+
+  lbSmtpUsername.Enabled := cbSmtpAuthenticate.Checked AND cbSmtpServiceActive.Checked;
+  lbSmtpPassword.Enabled := cbSmtpAuthenticate.Checked AND cbSmtpServiceActive.Checked;
+end;
+
+procedure TfrmControlData.cbSmtpServiceActiveClick(Sender: TObject);
+begin
+  edSmtpServer.Enabled := cbSmtpServiceActive.Checked;
+  edSmtpFromEmail.Enabled := cbSmtpServiceActive.Checked;
+  edSmtpPort.Enabled := cbSmtpServiceActive.Checked;
+  edSmtpUsername.Enabled := cbSmtpServiceActive.Checked;
+  cbSmtpAuthenticate.Enabled := cbSmtpServiceActive.Checked;
+  edSmtpPassword.Enabled := cbSmtpServiceActive.Checked;
+  cbSmtpTLS.Enabled := cbSmtpServiceActive.Checked;
+
+  lbSmtpServer.Enabled := cbSmtpServiceActive.Checked;
+  lbSmtpFromEmail.Enabled := cbSmtpServiceActive.Checked;
+  lbSmtpPort.Enabled := cbSmtpServiceActive.Checked;
+  lbSmtpUsername.Enabled := cbSmtpServiceActive.Checked;
+  lbSmtpPassword.Enabled := cbSmtpServiceActive.Checked;
+
+  cbSmtpAuthenticateClick(nil);
 end;
 
 procedure TfrmControlData.cbxAccountTypeChange(Sender : TObject);
