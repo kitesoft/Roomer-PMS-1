@@ -410,6 +410,7 @@ begin
     FillList;
   except
     FRoomList.Clear;
+    raise;
   end;
 
 end;
@@ -464,23 +465,23 @@ begin
   Rset.First;
   While not rSet.Eof do
   begin
-    Room                 := Rset.fieldbyname('Room').asString;
-    RoomDescription      := Rset.fieldbyname('Description').asString;
-    RoomType             := Rset.fieldbyname('RoomType').asString;
-    RoomEquipments       := Rset.fieldbyname('Equipments').asString;
-    Location             := Rset.fieldbyname('Location').asString;
-    Floor                := Rset.fieldbyname('Floor').asInteger;
-    Bookable             := Rset['Bookable'];
-    useinResStatistics   := Rset['Statistics'];
     hidden               := Rset['hidden'];
-    useInNationalReport  := Rset['useInNationalReport'];
-    Status               := Rset.fieldbyname('Status').asString;
-    OrderIndex           := Rset.fieldbyname('OrderIndex').asInteger;
-
     if not hidden then
     begin
       RoomItem := TRoomItem.Create;
       try
+        Room                 := Rset.fieldbyname('Room').asString;
+        RoomDescription      := Rset.fieldbyname('Description').asString;
+        RoomType             := Rset.fieldbyname('RoomType').asString;
+        RoomEquipments       := Rset.fieldbyname('Equipments').asString;
+        Location             := Rset.fieldbyname('Location').asString;
+        Floor                := Rset.fieldbyname('Floor').asInteger;
+        Bookable             := Rset['Bookable'];
+        useinResStatistics   := Rset['Statistics'];
+        useInNationalReport  := Rset['useInNationalReport'];
+        Status               := Rset.fieldbyname('Status').asString;
+        OrderIndex           := Rset.fieldbyname('OrderIndex').asInteger;
+
         RoomItem.SetRoom(Room);
         RoomItem.SetRoomDescription(RoomDescription);
         RoomItem.SetRoomType(RoomType);
@@ -512,8 +513,8 @@ begin
 
         FRoomList.Add(Lowercase(Room), RoomItem);
       except
-//          on E: Exception do
-//            MessageDlg('Exception:' + e.message, mtError, mbOKCancel, 0);
+          on E: Exception do
+            MessageDlg('Exception during update of roomslist: ' + e.message, mtError, mbOKCancel, 0);
       end;
     end;
     rSet.Next;

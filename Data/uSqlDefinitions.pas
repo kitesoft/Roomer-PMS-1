@@ -226,7 +226,7 @@ var
 
 
   //TESTED OK
-  select_GlobalSettings_LoadStaticTables : string =
+  select_Bookable_Roomtypes : string =
   ' SELECT rt.RoomType, rt.NumberGuests FROM roomtypes rt, rooms r '+
   ' WHERE r.bookable<>0 '+
   '  AND r.RoomType = rt.RoomType' ;
