@@ -43,8 +43,6 @@ object frmGuestPortfolio: TfrmGuestPortfolio
       SkinData.SkinSection = 'PAGECONTROL'
       object sTabSheet1: TsTabSheet
         Caption = 'Person'
-        SkinData.CustomColor = False
-        SkinData.CustomFont = False
         object sGroupBox1: TsGroupBox
           AlignWithMargins = True
           Left = 10
@@ -59,7 +57,6 @@ object frmGuestPortfolio: TfrmGuestPortfolio
           Caption = 'Persona'
           TabOrder = 0
           SkinData.SkinSection = 'GROUPBOX'
-          Checked = False
           object clabInitials: TsLabel
             Left = 124
             Top = 38
@@ -305,7 +302,6 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             TabOrder = 7
             Text = '  -  -    '
             OnChange = edtBirthdayChange
-            CheckOnExit = True
             SkinData.SkinSection = 'EDIT'
             GlyphMode.Blend = 0
             GlyphMode.Grayed = False
@@ -344,7 +340,6 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             TabOrder = 9
             Text = '  -  -    '
             OnChange = edtBirthdayChange
-            CheckOnExit = True
             SkinData.SkinSection = 'EDIT'
             GlyphMode.Blend = 0
             GlyphMode.Grayed = False
@@ -377,14 +372,8 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             inherited pnlCountry: TsPanel
               Width = 325
               ExplicitWidth = 325
-              inherited lblCountryName: TsLabel
-                ExplicitLeft = 63
-              end
-              inherited edCountryCode: TsEdit
-                ExplicitLeft = 0
-              end
-              inherited btnGetCountry: TsButton
-                ExplicitLeft = 38
+              inherited lblCountryName: TLabel
+                Width = 259
               end
             end
           end
@@ -402,7 +391,6 @@ object frmGuestPortfolio: TfrmGuestPortfolio
           Caption = 'Spouse'
           TabOrder = 1
           SkinData.SkinSection = 'GROUPBOX'
-          Checked = False
           object sLabel8: TsLabel
             Left = 82
             Top = 32
@@ -465,7 +453,6 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             TabOrder = 1
             Text = '  -  -    '
             OnChange = edtBirthdayChange
-            CheckOnExit = True
             SkinData.SkinSection = 'EDIT'
             GlyphMode.Blend = 0
             GlyphMode.Grayed = False
@@ -484,7 +471,6 @@ object frmGuestPortfolio: TfrmGuestPortfolio
           Caption = 'Extra'
           TabOrder = 2
           SkinData.SkinSection = 'GROUPBOX'
-          Checked = False
           object sLabel12: TsLabel
             Left = 80
             Top = 59
@@ -558,7 +544,7 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Left = 4
             Top = 27
             Width = 20
-            Height = 18
+            Height = 20
             TabOrder = 0
             OnClick = xcmbGenderClick
             SkinData.SkinSection = 'CHECKBOX'
@@ -569,7 +555,7 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Left = 4
             Top = 54
             Width = 20
-            Height = 18
+            Height = 20
             TabOrder = 1
             OnClick = xcmbGenderClick
             SkinData.SkinSection = 'CHECKBOX'
@@ -580,7 +566,7 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Left = 4
             Top = 108
             Width = 20
-            Height = 18
+            Height = 20
             TabOrder = 2
             OnClick = xcmbGenderClick
             SkinData.SkinSection = 'CHECKBOX'
@@ -591,7 +577,7 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Left = 4
             Top = 81
             Width = 20
-            Height = 18
+            Height = 20
             TabOrder = 3
             OnClick = xcmbGenderClick
             SkinData.SkinSection = 'CHECKBOX'
@@ -602,7 +588,7 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Left = 4
             Top = 216
             Width = 20
-            Height = 18
+            Height = 20
             TabOrder = 4
             OnClick = xcmbGenderClick
             SkinData.SkinSection = 'CHECKBOX'
@@ -613,7 +599,7 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Left = 4
             Top = 189
             Width = 20
-            Height = 18
+            Height = 20
             TabOrder = 5
             OnClick = xcmbGenderClick
             SkinData.SkinSection = 'CHECKBOX'
@@ -624,7 +610,7 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Left = 4
             Top = 162
             Width = 20
-            Height = 18
+            Height = 20
             TabOrder = 6
             OnClick = xcmbGenderClick
             SkinData.SkinSection = 'CHECKBOX'
@@ -635,7 +621,7 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Left = 4
             Top = 135
             Width = 20
-            Height = 18
+            Height = 20
             TabOrder = 7
             OnClick = xcmbGenderClick
             SkinData.SkinSection = 'CHECKBOX'
@@ -646,7 +632,7 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Left = 4
             Top = 270
             Width = 20
-            Height = 18
+            Height = 20
             TabOrder = 8
             OnClick = xcmbGenderClick
             SkinData.SkinSection = 'CHECKBOX'
@@ -657,7 +643,7 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Left = 4
             Top = 243
             Width = 20
-            Height = 18
+            Height = 20
             TabOrder = 9
             OnClick = xcmbGenderClick
             SkinData.SkinSection = 'CHECKBOX'
@@ -668,7 +654,7 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Left = 4
             Top = 353
             Width = 20
-            Height = 18
+            Height = 20
             TabOrder = 10
             OnClick = xcmbGenderClick
             SkinData.SkinSection = 'CHECKBOX'
@@ -679,7 +665,7 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Left = 4
             Top = 380
             Width = 20
-            Height = 18
+            Height = 20
             TabOrder = 11
             OnClick = xcmbGenderClick
             SkinData.SkinSection = 'CHECKBOX'
@@ -690,7 +676,7 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Left = 4
             Top = 467
             Width = 20
-            Height = 18
+            Height = 20
             TabOrder = 12
             OnClick = xcmbGenderClick
             SkinData.SkinSection = 'CHECKBOX'
@@ -701,7 +687,7 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Left = 4
             Top = 494
             Width = 20
-            Height = 18
+            Height = 20
             TabOrder = 13
             OnClick = xcmbGenderClick
             SkinData.SkinSection = 'CHECKBOX'
@@ -712,8 +698,10 @@ object frmGuestPortfolio: TfrmGuestPortfolio
       end
       object sTabSheet7: TsTabSheet
         Caption = 'Contact'
-        SkinData.CustomColor = False
-        SkinData.CustomFont = False
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object sGroupBox4: TsGroupBox
           AlignWithMargins = True
           Left = 10
@@ -727,7 +715,6 @@ object frmGuestPortfolio: TfrmGuestPortfolio
           Caption = 'Internet'
           TabOrder = 0
           SkinData.SkinSection = 'GROUPBOX'
-          Checked = False
           object sLabel19: TsLabel
             Left = 139
             Top = 38
@@ -1025,7 +1012,6 @@ object frmGuestPortfolio: TfrmGuestPortfolio
           Caption = 'Home address:'
           TabOrder = 1
           SkinData.SkinSection = 'GROUPBOX'
-          Checked = False
           object sLabel18: TsLabel
             Left = 124
             Top = 38
@@ -1188,14 +1174,9 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             inherited pnlCountry: TsPanel
               Width = 323
               ExplicitWidth = 323
-              inherited lblCountryName: TsLabel
-                ExplicitLeft = 63
-              end
-              inherited edCountryCode: TsEdit
-                ExplicitLeft = 0
-              end
-              inherited btnGetCountry: TsButton
-                ExplicitLeft = 38
+              inherited lblCountryName: TLabel
+                Width = 19
+                Height = 13
               end
             end
           end
@@ -1213,7 +1194,6 @@ object frmGuestPortfolio: TfrmGuestPortfolio
           Caption = 'Telephone'
           TabOrder = 2
           SkinData.SkinSection = 'GROUPBOX'
-          Checked = False
           object sLabel23: TsLabel
             Left = 124
             Top = 38
@@ -1493,8 +1473,10 @@ object frmGuestPortfolio: TfrmGuestPortfolio
       end
       object sTabSheet2: TsTabSheet
         Caption = 'Company'
-        SkinData.CustomColor = False
-        SkinData.CustomFont = False
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object sGroupBox7: TsGroupBox
           AlignWithMargins = True
           Left = 10
@@ -1509,7 +1491,6 @@ object frmGuestPortfolio: TfrmGuestPortfolio
           Caption = 'Company info'
           TabOrder = 0
           SkinData.SkinSection = 'GROUPBOX'
-          Checked = False
           object sLabel14: TsLabel
             Left = 91
             Top = 41
@@ -1795,14 +1776,9 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             inherited pnlCountry: TsPanel
               Width = 323
               ExplicitWidth = 323
-              inherited lblCountryName: TsLabel
-                ExplicitLeft = 63
-              end
-              inherited edCountryCode: TsEdit
-                ExplicitLeft = 0
-              end
-              inherited btnGetCountry: TsButton
-                ExplicitLeft = 38
+              inherited lblCountryName: TLabel
+                Width = 19
+                Height = 13
               end
             end
           end
@@ -1820,7 +1796,6 @@ object frmGuestPortfolio: TfrmGuestPortfolio
           Caption = 'Contact'
           TabOrder = 1
           SkinData.SkinSection = 'GROUPBOX'
-          Checked = False
           object sLabel33: TsLabel
             Left = 113
             Top = 38
@@ -2067,8 +2042,10 @@ object frmGuestPortfolio: TfrmGuestPortfolio
       end
       object sTabSheet4: TsTabSheet
         Caption = 'Preferences'
-        SkinData.CustomColor = False
-        SkinData.CustomFont = False
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object sGroupBox11: TsGroupBox
           AlignWithMargins = True
           Left = 10
@@ -2083,7 +2060,6 @@ object frmGuestPortfolio: TfrmGuestPortfolio
           Caption = 'Guest preferences'
           TabOrder = 0
           SkinData.SkinSection = 'GROUPBOX'
-          Checked = False
           object sLabel35: TsLabel
             Left = 100
             Top = 41
@@ -2419,8 +2395,10 @@ object frmGuestPortfolio: TfrmGuestPortfolio
       end
       object tabHistory: TsTabSheet
         Caption = 'History'
-        SkinData.CustomColor = False
-        SkinData.CustomFont = False
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object grData: TcxGrid
           Left = 0
           Top = 41
@@ -2603,8 +2581,10 @@ object frmGuestPortfolio: TfrmGuestPortfolio
       end
       object tabInvoices: TsTabSheet
         Caption = 'Invoices'
-        SkinData.CustomColor = False
-        SkinData.CustomFont = False
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object grInvoices: TcxGrid
           Left = 0
           Top = 41
@@ -2882,6 +2862,7 @@ object frmGuestPortfolio: TfrmGuestPortfolio
     Top = 168
     object prLink_grData: TdxGridReportLink
       Component = grData
+      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 5080
       PrinterPage.GrayShading = True
@@ -2895,6 +2876,7 @@ object frmGuestPortfolio: TfrmGuestPortfolio
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
       ReportDocument.CreationDate = 41334.495374884260000000
+      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
   end

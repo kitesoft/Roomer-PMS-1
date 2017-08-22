@@ -848,6 +848,10 @@ object frmMain: TfrmMain
         object tabPeriod: TsTabSheet
           Caption = 'tabPeriod'
           ImageIndex = 2
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object sLabel2: TsLabel
             Left = 224
             Top = 400
@@ -2684,6 +2688,7 @@ object frmMain: TfrmMain
       Index = 2
     end
     object rbTabReports: TdxRibbonTab
+      Active = True
       Caption = 'Reports'
       Groups = <
         item
@@ -2785,7 +2790,6 @@ object frmMain: TfrmMain
       Index = 7
     end
     object rbTabFinanceConnect: TdxRibbonTab
-      Active = True
       Caption = 'Finance Connect'
       Groups = <
         item

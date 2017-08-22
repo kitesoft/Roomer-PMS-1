@@ -158,14 +158,6 @@ function _GetComputerNetName: string;
 function _justOneSpace(aText : string) : string;
 function _justOneChar(aText : string; ch: char) : string;
 
-function _DaysPerMonth(AYear, AMonth: Integer): Integer; deprecated 'Use DateUtils.DaysInAMonth';
-function _WeekNum(const TDT:TDateTime) : Word; deprecated 'Use DateUtils.WeekOfTheYear()';
-
-
-function _StatusToText(status : string) : string; deprecated 'Use TReservationState.AsReadableString';
-function _BreakfastToText(included : Boolean) : string; deprecated 'Use TBreakfastState.AsReadableString';
-function _AccountTypeToText(isGroupAccount : Boolean) : string; deprecated 'Use TAccountType.AsReadableString';
-
 function _TimeStrToSec(TimeStr : string) : integer;
 
 function _appendLine(path : string; line : string) : boolean;
@@ -2174,44 +2166,6 @@ begin
     delete(aText, pos(s, aText) + 1, 1);
   end;
   result := aText;
-end;
-
-
-
-function _DaysPerMonth(AYear, AMonth: Integer): Integer;
-const
-  DaysInMonth: array[1..12] of Integer =
-    (31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
-begin
-  Result := DaysInMonth[AMonth];
-  if (AMonth = 2) and IsLeapYear(AYear) then Inc(Result); { leap-year Feb is special }
-end;
-
-function _WeekNum(const TDT:TDateTime) : Word;
- var
-   Y,M,D:Word;
-   dtTmp:TDateTime;
- begin
-   DecodeDate(TDT,Y,M,D) ;
-   dtTmp := EnCodeDate(Y,1,1) ;
-   Result :=
-     (Trunc(TDT-dtTmp)+(DayOfWeek(dtTmp)-1)) DIV 7;
-   if Result <> 0 then Result := Result - 1;
- end;
-
-function _StatusToText(status : string) : string;
-begin
-  Result := TReservationState.FromResStatus(status).asReadableString;
-end;
-
-function _BreakfastToText(included : Boolean) : string;
-begin
-  Result := TBreakfastState.FromBool(included).AsReadableString;
-end;
-
-function _AccountTypeToText(isGroupAccount : Boolean) : string;
-begin
-  Result := TAccountType.FromBool(IsGroupAccount).AsReadableString;
 end;
 
 function _TimeStrToSec(TimeStr : string) : integer;

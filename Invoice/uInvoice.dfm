@@ -1133,8 +1133,8 @@ object frmInvoice: TfrmInvoice
           SkinData.SkinSection = 'BUTTON'
         end
         object btnSaveChanges: TsButton
-          Left = 892
-          Top = 4
+          Left = 897
+          Top = 3
           Width = 134
           Height = 40
           Anchors = [akTop, akRight]
@@ -1340,7 +1340,7 @@ object frmInvoice: TfrmInvoice
           SearchFooter.MatchCaseCaption = 'Match case'
           SearchFooter.ResultFormat = '(%d of %d)'
           SortSettings.DefaultFormat = ssAutomatic
-          Version = '8.2.5.2'
+          Version = '8.2.4.1'
           ColWidths = (
             24
             91
@@ -2290,6 +2290,11 @@ object frmInvoice: TfrmInvoice
     object mnuMoveRoomRentFromGroupToNormalRoomInvoice: TMenuItem
       Caption = 'To room invoice'
       OnClick = mnuMoveRoomRentFromGroupToNormalRoomInvoiceClick
+    end
+    object mnuMoveRoomToInvoiceIndex: TMenuItem
+      Caption = 'To invoiceindex'
+      object TMenuItem
+      end
     end
     object N7: TMenuItem
       Caption = '-'

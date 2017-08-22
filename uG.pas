@@ -425,9 +425,6 @@ type
     function OpenResProblem(var lst : TstringList) : integer;
     function OpenRoomDateProblem(var lst : TStringlist) : integer;
 
-    function StatusStrToResStatus(statusSTR : string) : TReservationState; deprecated 'Use TReservationsStatus.FromResStatus';
-    function ResStatusToStatusStr(ResStatus : TReservationState) : string; deprecated 'Use TReservationState.AsReadableString';
-
     function OpenChangeRate(var Rate : double; Currency : string) : boolean;
 
     function openGoToRoomAndDate(var aRoom : string; var aDate : TDate) : boolean;
@@ -1752,64 +1749,6 @@ begin
     frmGoToRoomAndDate := nil;
   end;
 end;
-
-function TGlobalApplication.StatusStrToResStatus(statusSTR : string) : TReservationState;
-begin
-//  result := rsUnKnown;
-//  statusSTR := trim(statusSTR);
-  result := TReservationState.FromResStatus(statusStr);
-//  if statusSTR = 'P' then
-//    result := rsReservation
-//  else if statusSTR = 'G' then
-//    result := rsGuests
-//  else if statusSTR = STATUS_CHECKED_OUT then
-//    result := rsDeparted
-//  else if statusSTR = 'R' then
-//    result := rsReserved
-//  else if statusSTR = 'O' then
-//    result := rsOptionalBooking
-//  else if statusSTR = 'A' then
-//    result := rsAlotment
-//  else if statusSTR = 'N' then
-//    result := rsNoShow
-//  else if statusSTR = 'B' then
-//    result := rsBlocked
-//  else if statusSTR = 'C' then
-//    result := rsCancelled
-//  else if statusSTR = 'W' then  //*HJ 140206
-//    result := rsTmp1
-//  else if statusSTR = 'Z' then   //*HJ 140206
-//    result := rsAwaitingPayment
-end;
-
-function TGlobalApplication.ResStatusToStatusStr(ResStatus : TReservationState) : string;
-begin
-  Result := ResStatus.AsReadableString;
-//  result := '';
-//  (* if ResStatus = rsReservations then result := 'Reservation';
-//  if ResStatus = rsGuests then result := 'Guest';
-//  if ResStatus = rsDeparted then result := 'Departed';
-//  if ResStatus = rsReserved then result := 'Reserved';
-//  if ResStatus = rsOverbooked then result := 'Overbooked';
-//  if ResStatus = rsAlotment then result := 'Allotment';
-//  if ResStatus = rsNoShow then result := 'NoShow';
-//  if ResStatus = rsBlocked then result := 'Blocked';
-//  if ResStatus = rsDeparting then result := 'Departing';
-//  if ResStatus = rsCurrent then result := 'Current'; *)
-//  if ResStatus = rsReservation then result := GetTranslatedText('shTx_G_Reservation');
-//  if ResStatus = rsGuests then result := GetTranslatedText('shTx_G_Guest');
-//  if ResStatus = rsDeparted then result := GetTranslatedText('shTx_G_Departed');
-//  if ResStatus = rsReserved then result := GetTranslatedText('shTx_G_Reserved');
-//  if ResStatus = rsWaitingList then result := GetTranslatedText('shTx_G_Overbooked');
-//  if ResStatus = rsAllotment then result := GetTranslatedText('shTx_G_Alotment');
-//  if ResStatus = rsNoShow then result := GetTranslatedText('shTx_G_NoShow');
-//  if ResStatus = rsBlocked then result := GetTranslatedText('shTx_G_Blocked');
-//  if ResStatus = rsCancelled then result := GetTranslatedText('shTx_G_Canceled'); //*HJ 140206
-//  if ResStatus = rsTmp1 then result := GetTranslatedText('shTx_G_Tmp1');  //*HJ 140206
-//  if ResStatus = rsAwaitingPayment then result := GetTranslatedText('shTx_G_aWaitingPayment'); //*HJ 140206
-end;
-
-
 
 function ResObjToBorder(Status : string; ascIndex, descIndex : integer; var BorderColor : TColor; var Left, Top, Right,
   Bottom : integer) : boolean;

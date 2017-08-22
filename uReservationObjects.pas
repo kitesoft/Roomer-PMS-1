@@ -374,7 +374,7 @@ end;
 
 function TRoomObject.FirstGuestName: string;
 begin
-  if GuestCount > 0 then
+  if Guests.Count > 0 then
     Result := Guests.First.GuestName
   else
     Result := '';

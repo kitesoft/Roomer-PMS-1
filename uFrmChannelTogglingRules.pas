@@ -3,22 +3,43 @@ unit uFrmChannelTogglingRules;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
-  System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, sRadioButton, sListBox,
-  sCheckListBox, Vcl.Mask, sMaskEdit, sCustomComboEdit, sTooledit, sEdit,
-  sLabel,uAppglobal,
-  Vcl.ComCtrls, sPageControl, Vcl.ExtCtrls, sPanel, udImages, sButton, uD,
-  cmpRoomerDataSet, RoomerCloudEntities, sComboBox, Vcl.CheckLst, uStringUtils,
-  uRoomerLanguage, sCheckBox, TFlatButtonUnit;
+  Winapi.Windows,
+  Winapi.Messages,
+  System.SysUtils,
+  System.Variants,
+  System.Classes,
+  Vcl.Graphics,
+  Vcl.Controls,
+  Vcl.Forms,
+  Vcl.Dialogs,
+  Vcl.StdCtrls,
+  sRadioButton,
+  sListBox,
+  sCheckListBox,
+  Vcl.Mask,
+  sMaskEdit,
+  sCustomComboEdit,
+  sTooledit,
+  sEdit,
+  sLabel,
+  uAppglobal,
+  Vcl.ComCtrls,
+  sPageControl,
+  Vcl.ExtCtrls,
+  sPanel,
+  udImages,
+  sButton,
+  uD,
+  cmpRoomerDataSet,
+  RoomerCloudEntities,
+  sComboBox,
+  Vcl.CheckLst,
+  uStringUtils,
+  uRoomerLanguage,
+  sCheckBox,
+  TFlatButtonUnit;
 
 type
-
-  TDateValue = class
-    value: TDate;
-  public
-    constructor Create(_value: TDate);
-  end;
 
   TfrmChannelTogglingRules = class(TForm)
     pnlList: TsPanel;
@@ -65,7 +86,6 @@ type
     pnlWindowHolder: TsPanel;
     edtWindow: TsEdit;
     cbxAnyNumberOfDays: TsCheckBox;
-    sPanel12: TsPanel;
     procedure FormShow(Sender: TObject);
     procedure btnInsertClick(Sender: TObject);
     procedure btnEditClick(Sender: TObject);
@@ -92,8 +112,7 @@ type
     descriptionFormat: String;
 
     procedure SetEdit(_on: Boolean);
-    procedure LoadList;
-    procedure PrepareWidgets;
+    procedure LoadRulesList;
     procedure ChannelsAndRoomClasses;
     procedure ClearAllCheckBoxes(cl: TsCheckListBox);
     procedure processDescriptionLabel;
@@ -110,33 +129,31 @@ type
     function getSelectedYearCodes: String;
     function getSelectedChannelCodes: String;
     procedure ShowListOfRules;
-    function getRule(id: Integer; entity: TChanneltogglingrulesEntity)
-      : TChanneltogglingrulesEntity;
+    function getRule(id: Integer; entity: TChanneltogglingrulesEntity): TChanneltogglingrulesEntity;
     function gatherEntity: TChanneltogglingrulesEntity;
     procedure EmptyEdits;
     procedure SetButtonActiveStatus;
     function SelectedTogglingRule: TChanneltogglingrulesEntity;
-    procedure SetItemPriority(Item: TChanneltogglingrulesEntity;
-      priority: Integer);
-    procedure DeleteX(var A: Array_Of_TChanneltogglingrulesEntity;
-      const Index: Cardinal);
-    procedure ClearList;
+    procedure SetItemPriority(Item: TChanneltogglingrulesEntity; priority: Integer);
+    procedure DeleteX(var A: Array_Of_TChanneltogglingrulesEntity; const Index: Cardinal);
+    procedure ClearRulesList;
+    procedure ClearChannelList;
+    procedure ClearRoomClassList;
   public
     { Public declarations }
   end;
 
-var
-  frmChannelTogglingRules: TfrmChannelTogglingRules;
-
-procedure ShowCheannelTogglingRules;
+procedure ShowChannelTogglingRules;
 
 implementation
 
 uses
-  uUtils
-  , PrjConst
-  , _Glob
-  , UITypes;
+  uUtils,
+  PrjConst,
+  _Glob,
+  UITypes
+  ,Math
+  ;
 
 resourcestring
   UNKNOWN_INFO = '???';
@@ -146,6 +163,18 @@ const
 
 {$R *.dfm}
   { TfrmChannelTogglingRules }
+
+procedure ShowChannelTogglingRules;
+var
+  frm: TfrmChannelTogglingRules;
+begin
+  frm := TfrmChannelTogglingRules.Create(nil);
+  try
+    frm.ShowModal;
+  finally
+    frm.Free;
+  end;
+end;
 
 procedure TfrmChannelTogglingRules.btnCancelClick(Sender: TObject);
 begin
@@ -160,12 +189,10 @@ var
   currentItem: TChanneltogglingrulesEntity;
 begin
   currentItem := SelectedTogglingRule;
-  if MessageDLG(GetTranslatedText('shTx_FrmChannelTogglingRules_ConfirmRemove')
-    + currentItem.description, mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+  if MessageDLG(GetTranslatedText('shTx_FrmChannelTogglingRules_ConfirmRemove') + currentItem.description,
+    mtConfirmation, [mbYes, mbNo], 0) = mrYes then
   begin
-    d.roomerMainDataSet.DoCommand
-      ('DELETE FROM channeltogglingrulessplit WHERE ruleId=' +
-      inttostr(currentItem.id));
+    d.roomerMainDataSet.DoCommand('DELETE FROM channeltogglingrulessplit WHERE ruleId=' + inttostr(currentItem.id));
     d.roomerMainDataSet.Channeltogglingrules_DataSets_Delete(currentItem.id);
     // d.roomerMainDataSet.SystemDeleteToggleRule(currentItem.id);
     DeleteX(rulesList, lbRules.ItemIndex);
@@ -173,8 +200,7 @@ begin
   end;
 end;
 
-procedure TfrmChannelTogglingRules.DeleteX
-  (var A: Array_Of_TChanneltogglingrulesEntity; const Index: Cardinal);
+procedure TfrmChannelTogglingRules.DeleteX(var A: Array_Of_TChanneltogglingrulesEntity; const Index: Cardinal);
 var
   ALength: Cardinal;
   i: Cardinal;
@@ -204,8 +230,7 @@ var
 begin
   currentItem := SelectedTogglingRule;
   iCurrIndex := lbRules.ItemIndex;
-  otherItem := TChanneltogglingrulesEntity
-    (lbRules.Items.Objects[iCurrIndex + 1]);
+  otherItem := TChanneltogglingrulesEntity(lbRules.Items.Objects[iCurrIndex + 1]);
   iCurrPriority := currentItem.priority;
   iOtherPriority := otherItem.priority;
   SetItemPriority(otherItem, iCurrPriority);
@@ -214,13 +239,11 @@ begin
   lbRules.ItemIndex := iCurrIndex + 1;
 end;
 
-function TfrmChannelTogglingRules.SelectedTogglingRule
-  : TChanneltogglingrulesEntity;
+function TfrmChannelTogglingRules.SelectedTogglingRule: TChanneltogglingrulesEntity;
 begin
   result := nil;
   if lbRules.ItemIndex >= 0 then
-    result := TChanneltogglingrulesEntity
-      (lbRules.Items.Objects[lbRules.ItemIndex]);
+    result := TChanneltogglingrulesEntity(lbRules.Items.Objects[lbRules.ItemIndex]);
 end;
 
 procedure TfrmChannelTogglingRules.btnEditClick(Sender: TObject);
@@ -270,46 +293,48 @@ var
 begin
   if editingId = -2 then
   begin
-    splitResult := d.roomerMainDataSet.SystemcheckRuleConflict(-1, 1,
-      edtDescription.Text, getSelectedRoomTypeCodes,
-      _StrToFloat(edtOccupancy.Text), getSelectedWhichDaysIndex,
-      getSelectedDaysCodes, getSelectedTimeOfYearCodes, getSelectedYearCodes,
-      getSelectedChannelCodes);
+    splitResult := d.roomerMainDataSet.SystemcheckRuleConflict(-1, 1, edtDescription.Text, getSelectedRoomTypeCodes,
+      _StrToFloat(edtOccupancy.Text), getSelectedWhichDaysIndex, getSelectedDaysCodes, getSelectedTimeOfYearCodes,
+      getSelectedYearCodes, getSelectedChannelCodes);
     rule := gatherEntity;
-    if Length(rulesList) > 0 then
-      rule.setPriority(rulesList[High(rulesList)].priority + 1)
-    else
-      rule.setPriority(1);
-    savedEntity := d.roomerMainDataSet.
-      Channeltogglingrules_Entities_SaveEntity(rule);
-    SetLength(rulesList, Length(rulesList) + 1);
-    rulesList[High(rulesList)] := savedEntity;
-    ShowListOfRules;
+    try
+      if Length(rulesList) > 0 then
+        rule.setPriority(rulesList[High(rulesList)].priority + 1)
+      else
+        rule.setPriority(1);
+      savedEntity := d.roomerMainDataSet.Channeltogglingrules_Entities_SaveEntity(rule);
+      SetLength(rulesList, Length(rulesList) + 1);
+      rulesList[High(rulesList)] := savedEntity;
+      editingId := High(rulesList);
+      ShowListOfRules;
+    finally
+      rule.Free;
+    end;
   end
   else
   begin
     rule := TChanneltogglingrulesEntity(lbRules.Items.Objects[editingId]);
-    savedEntity := TChanneltogglingrulesEntity.Create;
-    savedEntity.setId(rule.id);
-    savedEntity.setActive(rule.Active);
-    savedEntity.setPriority(rule.priority);
-    savedEntity.setDescription(edtDescription.Text);
-    savedEntity.setSelectedRoomTypeIDs(getSelectedRoomTypeCodes);
-    savedEntity.setOccupancyLimit(_StrToFloat(edtOccupancy.Text));
-    savedEntity.setWhichDaysIndex(getSelectedWhichDaysIndex);
-    savedEntity.setSelectedDays(getSelectedDaysCodes);
-    savedEntity.setSelectedMonths(getSelectedTimeOfYearCodes);
-    savedEntity.setSelectedYears(getSelectedYearCodes);
-    savedEntity.setSelectedChannelsIDs(getSelectedChannelCodes);
-    savedEntity.setWindow(StrToIntDef(edtWindow.Text, 0));
-    splitResult := d.roomerMainDataSet.SystemcheckRuleConflict(savedEntity.id,
-      1, edtDescription.Text, getSelectedRoomTypeCodes,
-      _StrToFloat(edtOccupancy.Text), getSelectedWhichDaysIndex,
-      getSelectedDaysCodes, getSelectedTimeOfYearCodes, getSelectedYearCodes,
-      getSelectedChannelCodes);
-    lbRules.Items.Objects[editingId] := savedEntity;
-    lbRules.Items[editingId] := savedEntity.description;
-    d.roomerMainDataSet.Channeltogglingrules_Entities_UpdateEntity(savedEntity);
+    try
+      rule.setDescription(edtDescription.Text);
+      rule.setSelectedRoomTypeIDs(getSelectedRoomTypeCodes);
+      rule.setOccupancyLimit(_StrToFloat(edtOccupancy.Text));
+      rule.setWhichDaysIndex(getSelectedWhichDaysIndex);
+      rule.setSelectedDays(getSelectedDaysCodes);
+      rule.setSelectedMonths(getSelectedTimeOfYearCodes);
+      rule.setSelectedYears(getSelectedYearCodes);
+      rule.setSelectedChannelsIDs(getSelectedChannelCodes);
+      rule.setWindow(StrToIntDef(edtWindow.Text, 0));
+      splitResult := d.roomerMainDataSet.SystemcheckRuleConflict(rule.id, 1, edtDescription.Text,
+        getSelectedRoomTypeCodes, _StrToFloat(edtOccupancy.Text), getSelectedWhichDaysIndex, getSelectedDaysCodes,
+        getSelectedTimeOfYearCodes, getSelectedYearCodes, getSelectedChannelCodes);
+      lbRules.Items[editingId] := rule.description;
+      // Notice that UpdateEntity creates and returns a new object
+      savedEntity := d.roomerMainDataSet.Channeltogglingrules_Entities_UpdateEntity(rule);
+      rulesList[editingId] := savedEntity;
+      ShowListOfRules;
+    finally
+      rule.Free;
+    end;
   end;
 
   if splitResult <> '' then
@@ -323,11 +348,9 @@ begin
         if Assigned(rule) AND (rule.id <> savedEntity.id) then
         begin
           if conflictedRules = '' then
-            conflictedRules := '   - ' + getRule(StrToInt(splits[i]), savedEntity)
-              .description
+            conflictedRules := '   - ' + getRule(StrToInt(splits[i]), savedEntity).description
           else
-            conflictedRules := conflictedRules + #13 + '   - ' +
-              getRule(StrToInt(splits[i]), savedEntity).description;
+            conflictedRules := conflictedRules + #13 + '   - ' + getRule(StrToInt(splits[i]), savedEntity).description;
         end;
       end;
     finally
@@ -335,9 +358,8 @@ begin
     end;
     if conflictedRules <> '' then
       MessageDLG('This rule conflicts with the rules below.' + #13 +
-        'If you want this rule to override one or all of these rules,' + #13 +
-        'please move this rule up in the list.' + #13#13 + conflictedRules +
-        #13, mtWarning, [mbOk], 0);
+        'If you want this rule to override one or all of these rules,' + #13 + 'please move this rule up in the list.' +
+        #13#13 + conflictedRules + #13, mtWarning, [mbOk], 0);
   end;
   d.roomerMainDataSet.SystemSaveSplittedToggleRule(savedEntity.id);
   editingId := 0;
@@ -351,8 +373,7 @@ var
 begin
   currentItem := SelectedTogglingRule;
   iCurrIndex := lbRules.ItemIndex;
-  otherItem := TChanneltogglingrulesEntity
-    (lbRules.Items.Objects[iCurrIndex - 1]);
+  otherItem := TChanneltogglingrulesEntity(lbRules.Items.Objects[iCurrIndex - 1]);
   iCurrPriority := currentItem.priority;
   iOtherPriority := otherItem.priority;
   SetItemPriority(otherItem, iCurrPriority);
@@ -363,13 +384,12 @@ end;
 
 procedure TfrmChannelTogglingRules.cbxAnyNumberOfDaysClick(Sender: TObject);
 begin
-  edtWindow.enabled := NOT cbxAnyNumberOfDays.Checked;
-  if NOT edtWindow.enabled then
+  edtWindow.Enabled := NOT cbxAnyNumberOfDays.Checked;
+  if NOT edtWindow.Enabled then
     edtWindow.Text := '0';
 end;
 
-procedure TfrmChannelTogglingRules.SetItemPriority
-  (Item: TChanneltogglingrulesEntity; priority: Integer);
+procedure TfrmChannelTogglingRules.SetItemPriority(Item: TChanneltogglingrulesEntity; priority: Integer);
 begin
   Item.priority := priority;
   d.roomerMainDataSet.Channeltogglingrules_Entities_UpdateEntity(Item);
@@ -391,8 +411,8 @@ begin
   result.setId(-1);
 end;
 
-function TfrmChannelTogglingRules.getRule(id: Integer;
-  entity: TChanneltogglingrulesEntity): TChanneltogglingrulesEntity;
+function TfrmChannelTogglingRules.getRule(id: Integer; entity: TChanneltogglingrulesEntity)
+  : TChanneltogglingrulesEntity;
 var
   i: Integer;
 begin
@@ -419,11 +439,9 @@ begin
       if i > 4 then
       begin
         if result = '' then
-          result := inttostr
-            (TChannelsEntity(clWhichChannels.Items.Objects[i]).id)
+          result := inttostr(TChannelsEntity(clWhichChannels.Items.Objects[i]).id)
         else
-          result := result + ',' +
-            inttostr(TChannelsEntity(clWhichChannels.Items.Objects[i]).id);
+          result := result + ',' + inttostr(TChannelsEntity(clWhichChannels.Items.Objects[i]).id);
       end
       else
       begin
@@ -494,11 +512,9 @@ begin
   for i := 0 to clRoomTypes.Items.Count - 1 do
     if clRoomTypes.Checked[i] then
       if result = '' then
-        result := inttostr
-          (TRoomtypegroupsEntity(clRoomTypes.Items.Objects[i]).id)
+        result := inttostr(TRoomtypegroupsEntity(clRoomTypes.Items.Objects[i]).id)
       else
-        result := result + ',' +
-          inttostr(TRoomtypegroupsEntity(clRoomTypes.Items.Objects[i]).id);
+        result := result + ',' + inttostr(TRoomtypegroupsEntity(clRoomTypes.Items.Objects[i]).id);
 end;
 
 procedure TfrmChannelTogglingRules.ClearAllCheckBoxes(cl: TsCheckListBox);
@@ -513,8 +529,7 @@ procedure TfrmChannelTogglingRules.clRoomTypesClickCheck(Sender: TObject);
 begin
   TsCheckListBox(Sender).OnClickCheck := nil;
   try
-    if (TsCheckListBox(Sender).Items[TsCheckListBox(Sender).ItemIndex] = '---')
-    then
+    if (TsCheckListBox(Sender).Items[TsCheckListBox(Sender).ItemIndex] = '---') then
     begin
       TsCheckListBox(Sender).Checked[TsCheckListBox(Sender).ItemIndex] := False;
       exit;
@@ -532,8 +547,7 @@ begin
 
   TsCheckListBox(Sender).OnClickCheck := nil;
   try
-    if (TsCheckListBox(Sender).Items[TsCheckListBox(Sender).ItemIndex] = '---')
-    then
+    if (TsCheckListBox(Sender).Items[TsCheckListBox(Sender).ItemIndex] = '---') then
     begin
       TsCheckListBox(Sender).Checked[TsCheckListBox(Sender).ItemIndex] := False;
       exit;
@@ -552,10 +566,8 @@ end;
 procedure TfrmChannelTogglingRules.processDescriptionLabel;
 begin
   try
-    lblRuleDescription.Caption := format(descriptionFormat,
-      [edtWindow.Text, getSelectedRoomTypes, edtOccupancy.Text, '%', getSelectedWhichDays,
-      getSelectedDays, getSelectedTimeOfYear, getSelectedYears,
-      getSelectedChannels]);
+    lblRuleDescription.Caption := format(descriptionFormat, [edtWindow.Text, getSelectedRoomTypes, edtOccupancy.Text,
+      '%', getSelectedWhichDays, getSelectedDays, getSelectedTimeOfYear, getSelectedYears, getSelectedChannels]);
     lblRuleDescription.Visible := True;
   except
     lblRuleDescription.Visible := False;
@@ -572,14 +584,10 @@ begin
     pnlWindowHolder.Color := COLOR_WRONG_INPUT
   else
     pnlWindowHolder.Color := clBtnFace; // sPanel1.Color;
-  BtnOk.Enabled := (Trim(edtDescription.Text) <> '') AND
-    (getSelectedRoomTypes <> UNKNOWN_INFO) AND
-    (getSelectedWhichDays <> UNKNOWN_INFO) AND
-    (getSelectedTimeOfYear <> UNKNOWN_INFO) AND
-    (getSelectedDays <> UNKNOWN_INFO) AND (getSelectedYears <> UNKNOWN_INFO) AND
-    (getSelectedChannels <> UNKNOWN_INFO) AND
-    (NOT(pnlWindowHolder.Color = COLOR_WRONG_INPUT)) AND
-    (NOT(pnlDescriptHolder.Color = COLOR_WRONG_INPUT)) AND
+  BtnOk.Enabled := (Trim(edtDescription.Text) <> '') AND (getSelectedRoomTypes <> UNKNOWN_INFO) AND
+    (getSelectedWhichDays <> UNKNOWN_INFO) AND (getSelectedTimeOfYear <> UNKNOWN_INFO) AND
+    (getSelectedDays <> UNKNOWN_INFO) AND (getSelectedYears <> UNKNOWN_INFO) AND (getSelectedChannels <> UNKNOWN_INFO)
+    AND (NOT(pnlWindowHolder.Color = COLOR_WRONG_INPUT)) AND (NOT(pnlDescriptHolder.Color = COLOR_WRONG_INPUT)) AND
     (NOT(pnlOccupancyHolder.Color = COLOR_WRONG_INPUT));
 end;
 
@@ -591,11 +599,9 @@ begin
   for i := 0 to clRoomTypes.Count - 1 do
     if clRoomTypes.Checked[i] then
       if result = UNKNOWN_INFO then
-        result := TRoomtypegroupsEntity(clRoomTypes.Items.Objects[i])
-          .description
+        result := TRoomtypegroupsEntity(clRoomTypes.Items.Objects[i]).description
       else
-        result := result + ', ' + TRoomtypegroupsEntity
-          (clRoomTypes.Items.Objects[i]).description;
+        result := result + ', ' + TRoomtypegroupsEntity(clRoomTypes.Items.Objects[i]).description;
 end;
 
 function TfrmChannelTogglingRules.getSelectedChannels: String;
@@ -610,8 +616,7 @@ begin
         if result = UNKNOWN_INFO then
           result := TChannelsEntity(clWhichChannels.Items.Objects[i]).name
         else
-          result := result + ', ' + TChannelsEntity
-            (clWhichChannels.Items.Objects[i]).name;
+          result := result + ', ' + TChannelsEntity(clWhichChannels.Items.Objects[i]).name;
       end
       else
       begin
@@ -693,13 +698,10 @@ begin
   cbxAnyNumberOfDays.Checked := rule.window = 0;
   cbxAnyNumberOfDaysClick(nil);
 
-
   list := SplitStringToTStrings(',', rule.selectedRoomTypeIds);
   try
     for i := 0 to clRoomTypes.Items.Count - 1 do
-      clRoomTypes.Checked[i] :=
-        list.IndexOf(inttostr(TRoomtypegroupsEntity(clRoomTypes.Items.Objects[i])
-        .id)) > -1;
+      clRoomTypes.Checked[i] := list.IndexOf(inttostr(TRoomtypegroupsEntity(clRoomTypes.Items.Objects[i]).id)) > -1;
   finally
     list.Free;
   end;
@@ -710,9 +712,7 @@ begin
       if i < 5 then
         clWhichChannels.Checked[i] := list.IndexOf(inttostr((i + 1) * -1)) > -1
       else
-        clWhichChannels.Checked[i] :=
-          list.IndexOf(inttostr(TChannelsEntity(clWhichChannels.Items.Objects[i])
-          .id)) > -1;
+        clWhichChannels.Checked[i] := list.IndexOf(inttostr(TChannelsEntity(clWhichChannels.Items.Objects[i]).id)) > -1;
 
   finally
     list.Free;
@@ -759,17 +759,18 @@ begin
     end;
 end;
 
-procedure TfrmChannelTogglingRules.FormClose(Sender: TObject;
-  var Action: TCloseAction);
+procedure TfrmChannelTogglingRules.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
-  ClearList;
+  ClearRulesList;
+  ClearChannelList;
+  ClearRoomClassList;
 end;
 
 procedure TfrmChannelTogglingRules.FormCreate(Sender: TObject);
 begin
   RoomerLanguage.TranslateThisForm(self);
-     glb.PerformAuthenticationAssertion(self); PlaceFormOnVisibleMonitor(self);
-  PrepareWidgets;
+  glb.PerformAuthenticationAssertion(self);
+  PlaceFormOnVisibleMonitor(self);
 end;
 
 procedure TfrmChannelTogglingRules.FormShow(Sender: TObject);
@@ -779,13 +780,8 @@ begin
   SetEdit(False);
   descriptionFormat := lblRuleDescription.Caption;
   ChannelsAndRoomClasses;
-  LoadList;
+  LoadRulesList;
 end;
-
-procedure TfrmChannelTogglingRules.PrepareWidgets;
-begin
-end;
-
 
 procedure TfrmChannelTogglingRules.SetEdit(_on: Boolean);
 begin
@@ -796,8 +792,7 @@ begin
   if _on then
     tabType.Caption := GetTranslatedText('shTx_FrmChannelTogglingRules_Editing')
   else
-    tabType.Caption := GetTranslatedText
-      ('shTx_FrmChannelTogglingRules_Viewing');
+    tabType.Caption := GetTranslatedText('shTx_FrmChannelTogglingRules_Viewing');
 
   clRoomTypes.Enabled := _on;
   clDays.Enabled := _on;
@@ -810,7 +805,6 @@ begin
   edtOccupancy.Enabled := _on;
   edtWindow.Enabled := _on;
 
-
   btnCancel.Enabled := _on;
   BtnOk.Enabled := _on;
   if _on AND (editingId <> -2) then
@@ -821,8 +815,7 @@ procedure TfrmChannelTogglingRules.ChannelsAndRoomClasses;
 var
   i: Integer;
 begin
-  channelList := d.roomerMainDataSet.Channels_Entities_GetListByWhere
-    ('active=1');
+  channelList := d.roomerMainDataSet.Channels_Entities_GetListByWhere('active=1');
   roomClassList := d.roomerMainDataSet.Roomtypegroups_Entities_FindAll;
 
   clYears.Items.Clear;
@@ -846,7 +839,7 @@ begin
 
 end;
 
-procedure TfrmChannelTogglingRules.ClearList;
+procedure TfrmChannelTogglingRules.ClearRulesList;
 var
   i: Integer;
 begin
@@ -855,41 +848,45 @@ begin
     for i := LOW(rulesList) to HIGH(rulesList) do
       rulesList[i].Free;
   end;
+  SetLength(rulesList, 0);
 end;
 
-procedure TfrmChannelTogglingRules.LoadList;
+procedure TfrmChannelTogglingRules.ClearChannelList;
+var
+  i: Integer;
 begin
-  ClearList;
+  for i := LOW(channelList) to HIGH(channelList) do
+    channelList[i].Free;
+  SetLength(channelList, 0);
+end;
+
+procedure TfrmChannelTogglingRules.ClearRoomClassList;
+var
+  i: Integer;
+begin
+  for i := LOW(roomClassList) to HIGH(roomClassList) do
+    roomClassList[i].Free;
+  SetLength(roomClassList, 0);
+end;
+
+procedure TfrmChannelTogglingRules.LoadRulesList;
+begin
+  ClearRulesList;
   rulesList := d.roomerMainDataSet.SystemListTogglingRules(False);
-  // .Channeltogglingrules_Entities_FindAll;
   ShowListOfRules;
 end;
 
 procedure TfrmChannelTogglingRules.ShowListOfRules;
 var
   i: Integer;
+  idx: integer;
 begin
+  idx := lbRules.ItemIndex;
   lbRules.Items.Clear;
   for i := LOW(rulesList) to HIGH(rulesList) do
     lbRules.Items.AddObject(rulesList[i].description, rulesList[i]);
+  lbRules.ItemIndex := min(lbRules.Count-1, idx);
   lbRulesClick(lbRules);
-end;
-
-procedure ShowCheannelTogglingRules;
-begin
-  frmChannelTogglingRules := TfrmChannelTogglingRules.Create(nil);
-  try
-    frmChannelTogglingRules.ShowModal;
-  finally
-    freeAndNil(frmChannelTogglingRules);
-  end;
-end;
-
-{ TDateValue }
-
-constructor TDateValue.Create(_value: TDate);
-begin
-  value := _value;
 end;
 
 end.

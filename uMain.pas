@@ -10404,7 +10404,7 @@ end;
 procedure TfrmMain.btnChannelToggleRulesClick(Sender: TObject);
 begin
   LogUserClickedButton(Sender);
-  ShowCheannelTogglingRules;
+  ShowChannelTogglingRules;
 end;
 
 procedure TfrmMain.btnCheckInGroupClick(Sender: TObject);

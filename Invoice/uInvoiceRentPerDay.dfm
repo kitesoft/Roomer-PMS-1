@@ -123,19 +123,6 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
       end
-      object labTmpStatus: TsLabel
-        Left = 719
-        Top = 11
-        Width = 4
-        Height = 13
-        Caption = '-'
-        ParentFont = False
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
-        Font.Height = -11
-        Font.Name = 'Tahoma'
-        Font.Style = []
-      end
       object clabForeignCurrency: TsLabel
         Left = 616
         Top = 147
@@ -2364,6 +2351,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
     end
     object mnuItemToTemp: TMenuItem
       Action = actMoveItemToTemp
+      Visible = False
     end
     object N6: TMenuItem
       Caption = '-'
@@ -2384,8 +2372,14 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
     object mnuMoveRoomRentFromGroupToNormalRoomInvoice: TMenuItem
       Action = actMoveRoomToRoomInvoice
     end
+    object mnuMoveRoomToInvoiceIndex: TMenuItem
+      Caption = 'Room to invoiceindex'
+      object TMenuItem
+      end
+    end
     object mnuRoomToTemp: TMenuItem
       Action = actMoveRoomToTemp
+      Visible = False
     end
     object N7: TMenuItem
       Caption = '-'
@@ -2411,47 +2405,47 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
     end
     object N01: TMenuItem
       Caption = '1'
-      OnClick = N91Click
+      OnClick = MoveSelectedLinesToRoomInvoiceIndex
     end
     object N11: TMenuItem
       Tag = 1
       Caption = '2'
-      OnClick = N91Click
+      OnClick = MoveSelectedLinesToRoomInvoiceIndex
     end
     object N31: TMenuItem
       Tag = 2
       Caption = '3'
-      OnClick = N91Click
+      OnClick = MoveSelectedLinesToRoomInvoiceIndex
     end
     object N41: TMenuItem
       Tag = 3
       Caption = '4'
-      OnClick = N91Click
+      OnClick = MoveSelectedLinesToRoomInvoiceIndex
     end
     object N51: TMenuItem
       Tag = 4
       Caption = '5'
-      OnClick = N91Click
+      OnClick = MoveSelectedLinesToRoomInvoiceIndex
     end
     object N61: TMenuItem
       Tag = 5
       Caption = '6'
-      OnClick = N91Click
+      OnClick = MoveSelectedLinesToRoomInvoiceIndex
     end
     object N71: TMenuItem
       Tag = 6
       Caption = '7'
-      OnClick = N91Click
+      OnClick = MoveSelectedLinesToRoomInvoiceIndex
     end
     object N81: TMenuItem
       Tag = 7
       Caption = '8'
-      OnClick = N91Click
+      OnClick = MoveSelectedLinesToRoomInvoiceIndex
     end
     object N91: TMenuItem
       Tag = 8
       Caption = '9'
-      OnClick = N91Click
+      OnClick = MoveSelectedLinesToRoomInvoiceIndex
     end
     object N12: TMenuItem
       Tag = 9
