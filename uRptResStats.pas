@@ -403,21 +403,12 @@ type
     zRoomRentItem : string;
     zDiscountItem : String;
 
-    zTaxesItem          : string;
-    zStayTaxAmount    : double;
-    zUseStayTax         : boolean;
-    zStayTaxIncluted    : boolean;
-    zStayTaxPerCustomer : boolean;
-    zStayTaxPercentage   : boolean;
-
     zRoomRentVATPercentage : double;
 
     zFirstTime : boolean;
 
     zTaxesHolder : recTaxesHolder;
     zItemTypeInfoRent : TItemTypeInfo;
-    zItemTypeInfoTax  : TItemTypeInfo;
-
 
     procedure InitControles;
 
@@ -663,18 +654,7 @@ begin
   zDiscountItem  := trim(uppercase(ctrlGetString('DiscountItem')));
 
   zTaxesHolder := GetTaxesHolder;
-
-  zTaxesItem           := trim(uppercase(zTaxesHolder.Booking_Item));
-  zUseStayTax          := true;
-  zuseStayTax          := zuseStayTax AND ctrlGetBoolean('useStayTax');
-  zStayTaxIncluted     := trim(uppercase(zTaxesHolder.Incl_Excl)) = 'INCLUDED';   //NOT isStayTaxExcluded;
-  zStayTaxPercentage   := trim(uppercase(zTaxesHolder.Tax_Type))  = 'PERCENTAGE'; //isStayTaxPercentage;
-  zStayTaxPerCustomer  := trim(uppercase(zTaxesHolder.tax_base))  = 'PER_CUSTOMER'; // isStayTaxPerCustomer;
-  zStayTaxAmount       := 0;
-
-
   zItemTypeInfoRent := d.Item_Get_ItemTypeInfo(trim(g.qRoomRentItem));
-  zItemTypeInfoTax  := d.Item_Get_ItemTypeInfo(trim(zTaxesItem));
 
   zRoomRentVATPercentage := 0;
   RoomRentType := '';

@@ -38,7 +38,6 @@ type
     constructor Create(Filter, SortOn : string);
     destructor Destroy; override;
 
-    function getFromDB(RoomReservation: integer): integer;
     function getListFromDB(var list :  TStringlist) : integer;
     function getListFromDBViaDates(fromDate, toDate : TDateTime; var rExtraSet : TRoomerDataSet; skipCancelledBookings : Boolean) : integer;
     function Refresh(filter, sortOn : string) : integer;
@@ -174,67 +173,6 @@ begin
   inc(Fidx);
 end;
 
-function TRoomReservation.getFromDB(RoomReservation: integer) : integer;
-var
-  s    : string;
-  rSet : TRoomerDataSet;
-  iRoomReservation : integer;
-begin
-  result := 0;
-  s := '';
-
-//  s := s+ '   xSELECT ';
-//  s := s+ '       RoomReservations.RoomReservation ';
-//  s := s+ '     , RoomReservations.Room  ';
-//  s := s+ '     , RoomReservations.Reservation ';
-//  s := s+ '     , RoomReservations.Status ';
-//  s := s+ '     , RoomReservations.rrArrival ';
-//  s := s+ '     , RoomReservations.rrDeparture ';
-//  s := s+ '     , Reservations.Customer ';
-//  s := s+ '     , Reservations.Name As CustomerName ';
-//  s := s+ ' FROM ';
-//  s := s+ '   RoomReservations ';
-//  s := s+ '   RIGHT OUTER JOIN ';
-//  s := s+ '         Reservations ON RoomReservations.Reservation = Reservations.Reservation ';
-
-
-  rSet := CreateNewDataSet;
-  try
-    s := format(select_RoomReservationOBJ_RoomReservation_getFromDB, []);
-    // CopyToClipboard(s);
-    // DebugMessage(''#10#10+s);
-    hData.rSet_bySQL(rSet,s );
-    if not rSet.Eof then
-    begin
-      result := 0;
-      while not rSet.Eof do
-      begin
-        inc(result);
-        qMt_.append;
-        qMt_.ClearFields;
-        iRoomReservation := rSet.FieldByName('RoomReservation').asInteger;
-        qMt_.FieldByName( 'RoomReservation' ).asInteger  :=  iRoomReservation ;
-        qMt_.FieldByName( 'Room'            ).asString   := rSet.FieldByName('Room').asString  ;
-        qMt_.FieldByName( 'Reservation'     ).asInteger  := rSet.FieldByName('Reservation').asInteger  ;
-        qMt_.FieldByName( 'PaymentInvoice'  ).asInteger  := rSet.FieldByName('PaymentInvoice').asInteger  ;
-        qMt_.FieldByName( 'GroupAccount'    ).asBoolean  := rSet.FieldByName('GroupAccount').asBoolean  ;
-        qMt_.FieldByName( 'resFlag'         ).asString   := rSet.FieldByName('Status').asString  ;
-        qMt_.FieldByName( 'Arrival'         ).asDateTime := rSet.FieldByName('rrArrival').asDateTime;
-        qMt_.FieldByName( 'Departure'       ).asDateTime := rSet.FieldByName('rrDeparture').asDateTime;
-        qMt_.FieldByName( 'Customer'        ).asString   := rSet.FieldByName('Customer').asString;
-        qMt_.FieldByName( 'Channel'         ).asInteger  := rSet.FieldByName('Channel').asInteger;
-        qMt_.FieldByName( 'CustomerName'    ).asString   := rSet.FieldByName('CustomerName').asString;
-        qMt_.FieldByName( 'GuestName'       ).asString   := D.RR_GetFirstGuestName(iRoomReservation);;
-        qMt_.FieldByName( 'NumGuests'       ).asInteger  := rSet.FieldByName('NumGuests').asInteger;
-        qMt_.Post;
-        rSet.Next;
-      end;
-    end;
-  finally
-    freeandnil(rSet);
-  end;
-  refresh(FFilter,FSortOn);
-end;
 
 
 function TRoomReservation.getListFromDB(var list :  TStringlist) : integer;
