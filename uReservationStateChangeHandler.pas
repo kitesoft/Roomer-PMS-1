@@ -178,7 +178,8 @@ begin
   Result := True; // if no roomreservations present then its ok
   for lRoomHandler in FRoomStateChangers.Values do
   begin
-    Result := lRoomHandler.ChangeIsAllowed(aNewState);
+    // WHen cancelling or deleting show exception if there are invoicelines unpaid
+    Result := lRoomHandler.ChangeIsAllowed(aNewState, (aNewState in [rsCancelled, rsRemoved]));
     if (aNewState in [rsCancelled, rsRemoved]) xor Result then
       Break;
   end;
