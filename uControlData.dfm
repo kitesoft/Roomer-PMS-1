@@ -128,7 +128,6 @@ object frmControlData: TfrmControlData
           00FFFFFFFFFFFFFFFF000000000000000000000000010D45006D00610069006C
           0020007300650072007600690063006500}
         SkinData.SkinSection = 'EDIT'
-        ExplicitTop = -2
       end
     end
     object __LMDBackPanel3: TsPanel
@@ -9286,8 +9285,6 @@ object frmControlData: TfrmControlData
         end
         object tabEmailService: TsTabSheet
           Caption = 'EmailService'
-          ExplicitLeft = 5
-          ExplicitTop = 26
           object sGroupBox2: TsGroupBox
             Left = 48
             Top = 48
@@ -9387,6 +9384,7 @@ object frmControlData: TfrmControlData
               Font.Height = -12
               Font.Name = 'Tahoma'
               Font.Style = []
+              NumbersOnly = True
               ParentFont = False
               TabOrder = 2
               OnChange = checkEmailRegEx

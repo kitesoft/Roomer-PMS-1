@@ -105,6 +105,7 @@ uses
   sListBox, sCheckListBox, uFraCountryPanel
   , uHotelServicesSettings
   , RegularExpressions
+  , uSmtpService
   ;
 
   //
@@ -830,6 +831,8 @@ type
     FUpdatingControls: boolean;
     FEmailregEx: TRegEx;
 
+    SmtpService : TSmtpService;
+
     procedure LoadTable;
     procedure SaveTable;
     procedure updatePanColor;
@@ -926,6 +929,7 @@ end;
 destructor TfrmControlData.Destroy;
 begin
   FHotelServicesSettings.Free;
+  SmtpService.Free;
   inherited;
 end;
 
@@ -1356,14 +1360,14 @@ g.ReadWriteSettingsToRegistry(0);
     chkConfirmAuto.checked := g.qConfirmAuto;
     edConfirmMinuteOfTheDay.value  := g.qConfirmMinuteOfTheDay;
 
-    cbSmtpServiceActive.Checked := glb.PMSSettings.SmtpServiceSettings.Active;
-    edSmtpServer.Text := glb.PMSSettings.SmtpServiceSettings.Server;
-    edSmtpFromEmail.Text := glb.PMSSettings.SmtpServiceSettings.EmailAddress;
-    edSmtpPort.Text := inttostr(glb.PMSSettings.SmtpServiceSettings.Port);
-    edSmtpUsername.Text := glb.PMSSettings.SmtpServiceSettings.Username;
-    cbSmtpAuthenticate.Checked := glb.PMSSettings.SmtpServiceSettings.Authenticate;
-    edSmtpPassword.Text := glb.PMSSettings.SmtpServiceSettings.Password;
-    cbSmtpTLS.Checked := glb.PMSSettings.SmtpServiceSettings.SslTls;
+    cbSmtpServiceActive.Checked := SmtpService.SmtpServiceActive;
+    edSmtpServer.Text := SmtpService.SmtpServer;
+    edSmtpFromEmail.Text := SmtpService.SmtpFromEmail;
+    edSmtpPort.Text := inttostr(SmtpService.SmtpPort);
+    edSmtpUsername.Text := SmtpService.SmtpUsername;
+    cbSmtpAuthenticate.Checked := SmtpService.SmtpAuthenticate;
+    edSmtpPassword.Text := SmtpService.SmtpPassword;
+    cbSmtpTLS.Checked := SmtpService.SmtpTLS;
 
     cbSmtpServiceActiveClick(nil);
 
@@ -1976,14 +1980,15 @@ begin
       g.qConfirmMinuteOfTheDay := edConfirmMinuteOfTheDay.value;
 
 
-      glb.PMSSettings.SmtpServiceSettings.Active := cbSmtpServiceActive.Checked;
-      glb.PMSSettings.SmtpServiceSettings.Server := edSmtpServer.Text;
-      glb.PMSSettings.SmtpServiceSettings.EmailAddress := edSmtpFromEmail.Text;
-      glb.PMSSettings.SmtpServiceSettings.Port := StrToIntDef(edSmtpPort.Text, 25);
-      glb.PMSSettings.SmtpServiceSettings.Username := edSmtpUsername.Text;
-      glb.PMSSettings.SmtpServiceSettings.Authenticate := cbSmtpAuthenticate.Checked;
-      glb.PMSSettings.SmtpServiceSettings.Password := edSmtpPassword.Text;
-      glb.PMSSettings.SmtpServiceSettings.SslTls := cbSmtpTLS.Checked;
+      SmtpService.SmtpServiceActive := cbSmtpServiceActive.Checked;
+      SmtpService.SmtpServer := edSmtpServer.Text;
+      SmtpService.SmtpFromEmail := edSmtpFromEmail.Text;
+      SmtpService.SmtpPort := StrToInt(edSmtpPort.Text);
+      SmtpService.SmtpUsername := edSmtpUsername.Text;
+      SmtpService.SmtpAuthenticate := cbSmtpAuthenticate.Checked;
+      SmtpService.SmtpPassword := edSmtpPassword.Text;
+      SmtpService.SmtpTLS := cbSmtpTLS.Checked;
+      SmtpService.Save;
 
       try
         rControlData.fieldbyname('callType').AsInteger := cbxCallType.ItemIndex;
@@ -3888,6 +3893,7 @@ begin
   inherited;
   FHotelServicesSettings := THotelServicesSettings.Create;
   FEmailRegEx := TRegEx.Create(cEmailRegExPattern);
+  SmtpService := TSmtpService.Create;
 end;
 
 procedure TfrmControlData.updatePanColor;

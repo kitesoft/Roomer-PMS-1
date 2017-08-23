@@ -211,54 +211,6 @@ type
     property UserHomePage: Integer read GetUserHomePage write SetUserHomePage;
   end;
 
-  TPMSSettingsSmtpService = class(TPMSSettingsGroup)
-  private const
-    cSmtpServiceActive = 'SMTP_SERVIVE_ACTIVE';
-    cSmtpServer = 'SMTP_SERVER';
-    cSmtpPort = 'SMTP_PORT';
-    cSmtpEmailAddress = 'SMTP_EMAIL_ADDRESS';
-    cSmtpSslTls = 'SMTP_SSL_TLS';
-    cSmtpAuthenticate = 'SMTP_AUTHENTICATE';
-    cSmtpUsername = 'HOME_USERNAME';
-    cSmtpPassword = 'HOME_PASSWORD';
-
-    cSmtpServiceSettings = 'SMTP_SERVICE_SETTINGS';
-
-  private
-    function GetAuthenticate: Boolean;
-    function GetEmailAddress: String;
-    function GetPassword: String;
-    function GetPort: Integer;
-    function GetServer: String;
-    function GetSslTls: Boolean;
-    function GetUsername: String;
-    procedure SetAuthenticate(const Value: Boolean);
-    procedure SetEmailAddress(const Value: String);
-    procedure SetPassword(const Value: String);
-    procedure SetPort(const Value: Integer);
-    procedure SetServer(const Value: String);
-    procedure SetSslTls(const Value: Boolean);
-    procedure SetUsername(const Value: String);
-    function GetActive: Boolean;
-    procedure SetActive(const Value: Boolean);
-  protected
-    function GetKeyGroup: string; override;
-  public
-    /// <summary>
-    ///   If true then functions marked as Beta are available in the PMS
-    /// </summary>
-    property Active: Boolean read GetActive write SetActive;
-
-    property Server: String read GetServer write SetServer;
-    property Port: Integer read GetPort write SetPort;
-    property EmailAddress: String read GetEmailAddress write SetEmailAddress;
-
-    property SslTls: Boolean read GetSslTls write SetSslTls;
-
-    property Authenticate: Boolean read GetAuthenticate write SetAuthenticate;
-    property Username: String read GetUsername write SetUsername;
-    property Password: String read GetPassword write SetPassword;
-  end;
 
   /// <summary>
   ///   Provides access to PMS configuration-items stored in PMSSettings table in database
@@ -273,7 +225,6 @@ type
     FPMSSpecificSettings: TPMSPMSSpecificSettings;
     FVariousOptions: TPMSSettingsVariousOptions;
     FFinanceConnectOptions: TPMSFinanceConnectOptions;
-    FSmtpServiceSettings: TPMSSettingsSmtpService;
   protected
 
     function GetMandatoryCheckinFields: TMandatoryCheckInFieldSet;
@@ -290,7 +241,6 @@ type
     property PMSSpecificSettings: TPMSPMSSpecificSettings read FPMSSpecificSettings;
     property VariousOptions : TPMSSettingsVariousOptions read FVariousOptions;
     property FinanceConnect : TPMSFinanceConnectOptions read FFinanceConnectOptions;
-    property SmtpServiceSettings : TPMSSettingsSmtpService read FSmtpServiceSettings;
 
     /// <summary>
     ///   Currently enabled TMandatoryCheckinFields in PMS settings
@@ -318,9 +268,6 @@ begin
   FPMSSpecificSettings := TPMSPMSSpecificSettings.Create(FPMSSettingsAccessor);
   FVariousOptions := TPMSSettingsVariousOptions.Create(FPMSSettingsAccessor);
   FFinanceConnectOptions := TPMSFinanceConnectOptions.Create(FPMSSettingsAccessor);
-
-  FSmtpServiceSettings := TPMSSettingsSmtpService.Create(FPMSSettingsAccessor);
-
 end;
 
 destructor TPmsSettings.Destroy;
@@ -333,8 +280,6 @@ begin
   FPMSSpecificSettings.Free;
   FVariousOptions.Free;
   FFinanceConnectOptions.Free;
-
-  FSmtpServiceSettings.Free;
   inherited;
 end;
 
@@ -658,93 +603,6 @@ end;
 procedure TPMSFinanceConnectOptions.SetFinanceConnectSystemCode(const Value: String);
 begin
   SaveSetting(cFinanceConnectSystemCode, Value);
-end;
-
-{ TPMSSettingsSmtpService }
-
-function TPMSSettingsSmtpService.GetActive: Boolean;
-begin
-  Result := GetSettingsAsBoolean(cSmtpServiceActive, false);
-end;
-
-function TPMSSettingsSmtpService.GetAuthenticate: Boolean;
-begin
-  Result := GetSettingsAsBoolean(cSmtpAuthenticate, false);
-end;
-
-function TPMSSettingsSmtpService.GetEmailAddress: String;
-begin
-  Result := GetSettingsAsString(cSmtpEmailAddress, '');
-end;
-
-function TPMSSettingsSmtpService.GetKeyGroup: string;
-begin
-  result := cSmtpServiceSettings;
-end;
-
-function TPMSSettingsSmtpService.GetPassword: String;
-begin
-  Result := GetSettingsAsString(cSmtpPassword, '');
-end;
-
-function TPMSSettingsSmtpService.GetPort: Integer;
-begin
-  Result := GetSettingsAsInteger(cSmtpPort, 25);
-end;
-
-function TPMSSettingsSmtpService.GetServer: String;
-begin
-  Result := GetSettingsAsString(cSmtpServer, '');
-end;
-
-function TPMSSettingsSmtpService.GetSslTls: Boolean;
-begin
-  Result := GetSettingsAsBoolean(cSmtpSslTls, false);
-end;
-
-function TPMSSettingsSmtpService.GetUsername: String;
-begin
-  Result := GetSettingsAsString(cSmtpUsername, '');
-end;
-
-procedure TPMSSettingsSmtpService.SetActive(const Value: Boolean);
-begin
-  SaveSetting(cSmtpServiceActive, Value);
-end;
-
-procedure TPMSSettingsSmtpService.SetAuthenticate(const Value: Boolean);
-begin
-  SaveSetting(cSmtpAuthenticate, Value);
-end;
-
-procedure TPMSSettingsSmtpService.SetEmailAddress(const Value: String);
-begin
-  SaveSetting(cSmtpEmailAddress, Value);
-end;
-
-procedure TPMSSettingsSmtpService.SetPassword(const Value: String);
-begin
-  SaveSetting(cSmtpPassword, Value);
-end;
-
-procedure TPMSSettingsSmtpService.SetPort(const Value: Integer);
-begin
-  SaveSetting(cSmtpPort, Value);
-end;
-
-procedure TPMSSettingsSmtpService.SetServer(const Value: String);
-begin
-  SaveSetting(cSmtpServer, Value);
-end;
-
-procedure TPMSSettingsSmtpService.SetSslTls(const Value: Boolean);
-begin
-  SaveSetting(cSmtpSslTls, Value);
-end;
-
-procedure TPMSSettingsSmtpService.SetUsername(const Value: String);
-begin
-  SaveSetting(cSmtpUsername, Value);
 end;
 
 end.
