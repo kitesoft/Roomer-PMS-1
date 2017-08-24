@@ -178,14 +178,15 @@ begin
   Result := True; // if no roomreservations present then its ok
   for lRoomHandler in FRoomStateChangers.Values do
   begin
-    Result := lRoomHandler.ChangeIsAllowed(aNewState);
+    // WHen cancelling or deleting show exception if there are invoicelines unpaid
+    Result := lRoomHandler.ChangeIsAllowed(aNewState, aRaiseExceptionOnFail and (aNewState in [rsCancelled, rsRemoved]));
     if (aNewState in [rsCancelled, rsRemoved]) xor Result then
       Break;
   end;
 
-  if (aNewState in [rsCancelled, rsRemoved]) then
+  if Result and (aNewState in [rsCancelled, rsRemoved]) then
   begin
-    Result := Result and not ReservationHasUnPaidInvoiceItems(FReservation);
+    Result := not ReservationHasUnPaidInvoiceItems(FReservation);
     if not Result and aRaiseExceptionOnFail then
       raise EReservationHasUnPaidInvocieLines.Create(FReservation);
   end
