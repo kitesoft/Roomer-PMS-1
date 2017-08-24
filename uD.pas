@@ -9991,10 +9991,9 @@ end;
 procedure Td.INV_UpdateBreakfastGuests(aReservation, aRoomReservation, aNewNumberOfBreakFast: integer);
 var
   s: string;
-  rSet: TRoomerDataSet;
-  lRRparam: integer;
+  lExecPlan: TRoomerExecutionPlan;
 begin
-  rSet := CreateNewDataSet;
+  lExecPlan := d.roomerMainDataSet.CreateExecutionPlan;
   try
 
     s := s + '  UPDATE invoicelines SET' + #10;
@@ -10002,32 +10001,41 @@ begin
     s := s + '  , Total = Price * Number ' + #10;
     s := s + '  , VAT = %s * Number ' + #10;
     s := s + '  , TotalWOVat = Total - VAT ' + #10;
-    s := s + '   WHERE Reservation = %s AND Roomreservation = %s AND ItemID = %s ' + #10;
-
-    lRRParam := aRoomReservation;
-    if RR_GetIsGroopAccount(aRoomReservation) then
-    begin
-      lRRParam := 0;
-      s := s + '   AND Description LIKE "%%' + RR_GetRoomNr(aRoomReservation) + ')%%"' + #10 ;
-    end;
+    s := s + '   WHERE Reservation = %s ' + #10;
+    s := s + '   AND (Roomreservation = %s OR RoomReservationAlias = %s) '#10;
+    s := s + '   AND Invoicenumber = -1 ' + #10;
+    s := s + '   AND ItemID = %s ' + #10;
 
     s := format(s, [  _db(aNewNumberOfBreakfast),
                       _db(TVatCalculator.CalcVATforItem(g.qBreakFastItem)),
                       _db(aReservation),
-                      _db(lRRparam),
+                      _db(aRoomReservation),
+                      _db(aRoomReservation),
                       _db(g.qBreakFastItem)]);
 
-    // debugmessage(s);
     copytoclipboard(s);
+    lExecPlan.AddExec(s);
+
+    s :=     ' UPDATE invoiceheads ih '#10;
+    s := s + ' SET ' + #10;
+    s := s + '   total = (select sum(il.total) from invoicelines il where il.reservation=ih.reservation and il.roomreservation=ih.roomreservation and il.invoicenumber=ih.invoicenumber) '#10;
+    s := s + '  ,totalWOVat = (select sum(il.totalWOVat) from invoicelines il where il.reservation=ih.reservation and il.roomreservation=ih.roomreservation and il.invoicenumber=ih.invoicenumber) '#10;
+    s := s + '  ,totalVAT = (select sum(il.VAT) from invoicelines il where il.reservation=ih.reservation and il.roomreservation=ih.roomreservation and il.invoicenumber=ih.invoicenumber) '#10;
+    s := s + '   WHERE Reservation = %s ' + #10;
+    s := s + '   AND Roomreservation = %s '#10;
+    s := s + '   AND Invoicenumber = -1 ' + #10;
+
+    s := format(s, [_db(aReservation), _db(aRoomReservation)]);
+    lExecPlan.AddExec(s);
 
     try
-      cmd_bySQL(s);
+      lExecPlan.Execute(ptExec, true, true);
     except
       raise Exception.create(getTranslatedText('shFailedUpdateBreakfastCount'));
     end;
 
   finally
-    freeandnil(rSet);
+    freeandnil(lExecPlan);
   end;
 end;
 

@@ -179,7 +179,7 @@ begin
   for lRoomHandler in FRoomStateChangers.Values do
   begin
     // WHen cancelling or deleting show exception if there are invoicelines unpaid
-    Result := lRoomHandler.ChangeIsAllowed(aNewState, (aNewState in [rsCancelled, rsRemoved]));
+    Result := lRoomHandler.ChangeIsAllowed(aNewState, aRaiseExceptionOnFail and (aNewState in [rsCancelled, rsRemoved]));
     if (aNewState in [rsCancelled, rsRemoved]) xor Result then
       Break;
   end;
