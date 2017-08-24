@@ -75,7 +75,7 @@ end;
 
 class function TVatCalculator.CalcVATfromInclPrice(aPriceInclVat, aVATPercentage: double): double;
 begin
-  Result := (aPriceInclVAT - (aPriceInclVAT / (100 + aVatPercentage)));
+  Result := (aPriceInclVAT - (aPriceInclVAT / (100 + aVatPercentage))*100);
 end;
 
 { TFormulaVatCalculator }
