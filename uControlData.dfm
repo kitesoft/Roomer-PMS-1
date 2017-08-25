@@ -143,7 +143,7 @@ object frmControlData: TfrmControlData
         Top = 1
         Width = 1101
         Height = 743
-        ActivePage = tabEmailService
+        ActivePage = tsCompany
         Align = alClient
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
@@ -767,7 +767,7 @@ object frmControlData: TfrmControlData
               SkinData.SkinSection = 'EDIT'
               AllowNegative = False
               Increment = 10
-              MaxValue = 20000
+              MaxValue = 1800
               MinValue = 60
               Value = 0
             end
@@ -9351,8 +9351,6 @@ object frmControlData: TfrmControlData
               Font.Style = []
               ParentFont = False
               TabOrder = 0
-              OnChange = checkEmailRegEx
-              OnExit = checkEmailRegEx
               SkinData.SkinSection = 'EDIT'
             end
             object edSmtpFromEmail: TsEdit
@@ -9369,8 +9367,6 @@ object frmControlData: TfrmControlData
               Font.Style = []
               ParentFont = False
               TabOrder = 1
-              OnChange = checkEmailRegEx
-              OnExit = checkEmailRegEx
             end
             object edSmtpPort: TsEdit
               Left = 134
@@ -9387,8 +9383,6 @@ object frmControlData: TfrmControlData
               NumbersOnly = True
               ParentFont = False
               TabOrder = 2
-              OnChange = checkEmailRegEx
-              OnExit = checkEmailRegEx
             end
             object cbSmtpTLS: TsCheckBox
               Left = 134
@@ -9427,8 +9421,6 @@ object frmControlData: TfrmControlData
               Font.Style = []
               ParentFont = False
               TabOrder = 5
-              OnChange = checkEmailRegEx
-              OnExit = checkEmailRegEx
             end
             object edSmtpPassword: TsEdit
               Left = 214
@@ -9444,8 +9436,6 @@ object frmControlData: TfrmControlData
               Font.Style = []
               ParentFont = False
               TabOrder = 6
-              OnChange = checkEmailRegEx
-              OnExit = checkEmailRegEx
             end
           end
           object cbSmtpServiceActive: TsCheckBox
