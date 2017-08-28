@@ -1661,6 +1661,8 @@ begin
   lRoomInfo.Arrival := aFromDate;
   lRoomInfo.Departure := aToDate;
   lRoomInfo.Price := aRoomPrice;
+  lROomInfo.Currency := aCurrency;
+  lRoomInfo.CurrencyRate := FCurrencyhandlersMap.CurrencyHandler[aCurrency].Rate;
   lRoomInfo.Discount := 0.00;
   lRoomInfo.Room := aRoom;
   lRoomInfo.NumGuests := lNumGuests;
@@ -1939,7 +1941,7 @@ begin
     ItemPrice := iMultiplier * zCurrencyRate * ItemPrice;
     TotalPrice := ItemCount * ItemPrice * iMultiplier;
 
-    lInvRoom := TInvoiceRoomEntity.Create(lineItem, 1, 0, ItemCount, TotalPrice, 0, 0, false);
+    lInvRoom := TInvoiceRoomEntity.Create(lineItem, 1, 0, ItemCount, TotalPrice, g.qNativeCurrency, 1.0, 0, 0, false);
     try
       fVat := GetVATForItem(lineItem, TotalPrice, ItemCount, lInvRoom, tempInvoiceItemList, ItemTypeInfo,
         edtCustomer.Text);
@@ -2760,7 +2762,7 @@ begin
       itemVAT := 0.00;
       if ItemPrice <> 0 then
       begin
-        lInvRoom := TInvoiceRoomEntity.Create(Item, taxGuests, 0, taxNights, ItemPrice, 0, 0, false);
+        lInvRoom := TInvoiceRoomEntity.Create(Item, taxGuests, 0, taxNights, ItemPrice, zCurrentCurrency, zCurrencyRate, 0, 0, false);
         try
           itemVAT := GetVATForItem(Item, ItemPrice, 1, lInvRoom, tempInvoiceItemList, ItemTypeInfo, edtCustomer.Text);
           // BHG
@@ -2843,7 +2845,7 @@ begin
         lInvRoom := nil;
         if not SameValue(ItemPrice, 0) then
         begin
-          lInvRoom := TInvoiceRoomEntity.Create(Item, taxGuests, taxChildren, taxNights, ItemPrice, 0, Discount,
+          lInvRoom := TInvoiceRoomEntity.Create(Item, taxGuests, taxChildren, taxNights, ItemPrice, zCurrentCurrency, zCurrencyRate, 0, Discount,
             lBreakfastIncl);
           lInvRoom.Vat := GetVATForItem(Item, ItemPrice, 1, lInvRoom, tempInvoiceItemList, ItemTypeInfo,
             edtCustomer.Text);
@@ -2856,7 +2858,7 @@ begin
           if assigned(lInvRoom) then
             RoomInvoiceLines.Add(lInvRoom)
           else
-            RoomInvoiceLines.Add(TInvoiceRoomEntity.Create(Item, taxGuests, taxChildren, taxNights, ItemPrice, itemVAT,
+            RoomInvoiceLines.Add(TInvoiceRoomEntity.Create(Item, taxGuests, taxChildren, taxNights, ItemPrice, zCurrentCurrency, zCurrencyRate, itemVAT,
               Discount, lBreakfastIncl));
 
         ItemInvoiceLines.Add(TInvoiceItemEntity.Create(Item, taxNights, ItemPrice, itemVAT));
@@ -5877,6 +5879,7 @@ begin
 end;
 
 procedure TfrmInvoiceRentPerDay.ItemToTemp(confirm: boolean);
+(*
 var
   PurchaseDate: TDateTime;
   InvoiceNumber: integer;
@@ -5908,9 +5911,9 @@ var
 
   lInvRoom: TInvoiceRoomEntity;
   lInvLine: TInvoiceLine;
-
+*)
 begin
-  isPackage := false;
+(*  isPackage := false;
 
   CurrentRow := agrLines.row;
   if isSystemLine(CurrentRow) then
@@ -6015,6 +6018,7 @@ begin
   AddEmptyLine;
   calcAndAddAutoItems(FReservation);
   chkChanged;
+*)
 end;
 
 procedure TfrmInvoiceRentPerDay.actMoveItemToTempExecute(Sender: TObject);
@@ -6134,7 +6138,7 @@ begin
   ItemTypeInfo := d.Item_Get_ItemTypeInfo(ItemId, agrLines.Cells[col_Source, CurrentRow]);
 
   lInvRoom := TInvoiceRoomEntity.Create(agrLines.Cells[col_Item, CurrentRow], 1, 0,
-    _StrToFloat(agrLines.Cells[col_ItemCount, CurrentRow]), _StrToFloat(agrLines.Cells[col_ItemPrice, CurrentRow]), 0,
+    _StrToFloat(agrLines.Cells[col_ItemCount, CurrentRow]), _StrToFloat(agrLines.Cells[col_ItemPrice, CurrentRow]), zCurrentCurrency, zCurrencyRate, 0,
     0, false);
   try
     TotalVAT := GetVATForItem(agrLines.Cells[col_Item, CurrentRow], Total,
@@ -6394,7 +6398,7 @@ begin
         ItemTypeInfo := d.Item_Get_ItemTypeInfo(ItemId, agrLines.Cells[col_Source, CurrentRow]);
 
         lInvRoom := TInvoiceRoomEntity.Create(agrLines.Cells[col_Item, CurrentRow], 1, 0,
-          _StrToFloat(agrLines.Cells[col_ItemCount, CurrentRow]), CurrentRow, 0, 0, false);
+          _StrToFloat(agrLines.Cells[col_ItemCount, CurrentRow]), CurrentRow, zCurrentCurrency, zCurrencyRate, 0, 0, false);
         try
           TotalVAT := GetVATForItem(agrLines.Cells[col_Item, CurrentRow], Total,
             _StrToFloat(agrLines.Cells[col_ItemCount, CurrentRow]), lInvRoom, tempInvoiceItemList, ItemTypeInfo,
