@@ -1173,7 +1173,7 @@ begin
 
               ItemTypeInfo := d.Item_Get_ItemTypeInfo(ItemId,  agrLines.Cells[col_Source, i]);
               lInvRoom := TInvoiceRoomEntity.create(ItemId, 1, 0, _StrToFloat(agrLines.Cells[col_ItemCount, i]),
-                taxAmount, 0, 0, false);
+                taxAmount, zCurrentCurrency, zCurrencyRate, 0, 0, false);
               try
                 dVat := GetVATForItem(ItemId, itemAmount, _StrToFloat(agrLines.Cells[col_ItemCount, i]),
                   lInvRoom, tempInvoiceItemList, ItemTypeInfo, edtCustomer.Text);
@@ -1216,7 +1216,7 @@ begin
               ttTaxAmount := ttTaxAmount + taxAmount;
               nativeTaxAmount := (ttTaxAmount * zCurrencyRate);
               lInvRoom := TInvoiceRoomEntity.create(ItemId, 1, 0, _StrToFloat(agrLines.Cells[col_ItemCount, i]),
-                taxAmount, 0, 0, false);
+                taxAmount, zCurrentCurrency, zCurrencyRate, 0, 0, false);
               try
                 dVat := zCurrencyRate * GetVATForItem(ItemId, taxAmount, _StrToFloat(agrLines.Cells[col_ItemCount, i]),
                   lInvRoom, tempInvoiceItemList, ItemTypeInfo, edtCustomer.Text);
@@ -1247,7 +1247,7 @@ begin
     if ABS(nativeRent) > 0.00 then
     begin
       ItemTypeInfo := d.Item_Get_ItemTypeInfo(trim(g.qRoomRentItem));
-      lInvRoom := TInvoiceRoomEntity.create(g.qRoomRentItem, 1, 0, 1, nativeRent, 0, 0, false);
+      lInvRoom := TInvoiceRoomEntity.create(g.qRoomRentItem, 1, 0, 1, nativeRent, g.qNativeCurrency, 1.0, 0, 0, false);
       try
         dVat := GetVATForItem(g.qRoomRentItem, nativeRent, ttRentNumber, // 1,
           lInvRoom, tempInvoiceItemList, ItemTypeInfo, edtCustomer.Text);
@@ -1986,7 +1986,7 @@ begin
     ItemPrice := iMultiplier * zCurrencyRate * ItemPrice;
     TotalPrice := ItemCount * ItemPrice * iMultiplier;
 
-    lInvRoom := TInvoiceRoomEntity.create(lineItem, 1, 0, ItemCount, TotalPrice, 0, 0, false);
+    lInvRoom := TInvoiceRoomEntity.create(lineItem, 1, 0, ItemCount, TotalPrice, g.qNativeCurrency, 1.0, 0, 0, false);
     try
       fVat := GetVATForItem(lineItem, TotalPrice, ItemCount, lInvRoom,
         tempInvoiceItemList, ItemTypeInfo, edtCustomer.Text);
@@ -3119,7 +3119,7 @@ begin
       itemVAT := 0.00;
       if ItemPrice <> 0 then
       begin
-        lInvRoom := TInvoiceRoomEntity.create(Item, taxGuests, 0, taxNights, ItemPrice, 0, 0, false);
+        lInvRoom := TInvoiceRoomEntity.create(Item, taxGuests, 0, taxNights, ItemPrice, g.qNativeCurrency, 1.0, 0, 0, false);
         try
           itemVAT := GetVATForItem(Item, ItemPrice, 1, lInvRoom, tempInvoiceItemList, ItemTypeInfo, edtCustomer.Text);  // BHG
         finally
@@ -3199,7 +3199,7 @@ begin
         lInvRoom := nil;
         if not SameValue(ItemPrice, 0) then
         begin
-          lInvRoom := TInvoiceRoomEntity.create(Item, taxGuests, taxChildren, taxNights, ItemPrice, 0, Discount, lBreakfastIncl);
+          lInvRoom := TInvoiceRoomEntity.create(Item, taxGuests, taxChildren, taxNights, ItemPrice, zCurrentCurrency, zCurrencyRate, 0, Discount, lBreakfastIncl);
           lInvRoom.Vat := GetVATForItem(Item, ItemPrice, 1, lInvRoom, tempInvoiceItemList, ItemTypeInfo, edtCustomer.Text);
 
           if NOT(lItemKind IN [ikRoomRent, ikRoomRentDiscount]) then
@@ -3210,7 +3210,7 @@ begin
           if assigned(lInvRoom) then
             RoomInvoiceLines.add(lInvRoom)
           else
-            RoomInvoiceLines.add(TInvoiceRoomEntity.create(Item, taxGuests, taxChildren, taxNights, ItemPrice, itemVAT, Discount, lBreakfastIncl));
+            RoomInvoiceLines.add(TInvoiceRoomEntity.create(Item, taxGuests, taxChildren, taxNights, ItemPrice, zCurrentCurrency, zCurrencyRate, itemVAT, Discount, lBreakfastIncl));
 
         ItemInvoiceLines.add(TInvoiceItemEntity.create(Item, taxNights, ItemPrice, itemVAT));
       end;
@@ -4407,7 +4407,7 @@ begin
         isPackage := (sTmp = 'Yes');
 
         // --
-        lInvRoom := TInvoiceRoomEntity.create(agrLines.Cells[col_Item, i], 1, 0, _StrToFloat(agrLines.Cells[col_ItemCount, i]), fItemTotal, 0, 0, false);
+        lInvRoom := TInvoiceRoomEntity.create(agrLines.Cells[col_Item, i], 1, 0, _StrToFloat(agrLines.Cells[col_ItemCount, i]), fItemTotal, zCurrentCurrency, zCurrencyRate, 0, 0, false);
         try
           fVat := GetVATForItem(agrLines.Cells[col_Item, i], fItemTotal,
                   _StrToFloat(agrLines.Cells[col_ItemCount, i]), lInvRoom, tempInvoiceItemList, ItemTypeInfo, edtCustomer.Text);
@@ -5445,7 +5445,7 @@ begin
             dNumItems := 1.00;
 
           lInvRoom := TInvoiceRoomEntity.create(agrLines.Cells[col_Item, i], 1, 0,
-            _StrToFloat(agrLines.Cells[col_ItemCount, i]), dLineTotal, 0, 0, false);
+            _StrToFloat(agrLines.Cells[col_ItemCount, i]), dLineTotal, zCurrentCurrency, zCurrencyRate, 0, 0, false);
           try
             dLineVAT := GetVATForItem(agrLines.Cells[col_Item, i], dLineTotal, dNumItems, lInvRoom, tempInvoiceItemList, ItemTypeInfo,
               edtCustomer.Text); // BHG
@@ -7367,7 +7367,7 @@ begin
   VATType := ItemTypeInfo.VATCode;
 
   lInvRoom := TInvoiceRoomEntity.create(agrLines.Cells[col_Item, CurrentRow], 1, 0,
-    _StrToFloat(agrLines.Cells[col_ItemCount, CurrentRow]), Total, 0, 0, false);
+    _StrToFloat(agrLines.Cells[col_ItemCount, CurrentRow]), Total, zCurrentCurrency, zCurrencyRate, 0, 0, false);
   try
     Vat := GetVATForItem(agrLines.Cells[col_Item, CurrentRow], Total,
       _StrToFloat(agrLines.Cells[col_ItemCount, CurrentRow]), lInvRoom,
@@ -7547,7 +7547,7 @@ begin
   ItemTypeInfo := d.Item_Get_ItemTypeInfo(ItemId, agrLines.Cells[col_Source, CurrentRow]);
 
   lInvRoom := TInvoiceRoomEntity.create(agrLines.Cells[col_Item, CurrentRow], 1, 0,
-    _StrToFloat(agrLines.Cells[col_ItemCount, CurrentRow]), CurrentRow, 0, 0, false);
+    _StrToFloat(agrLines.Cells[col_ItemCount, CurrentRow]), CurrentRow, zCurrentCurrency, zCurrencyRate, 0, 0, false);
   try
     TotalVAT := GetVATForItem(agrLines.Cells[col_Item, CurrentRow], Total,
       _StrToFloat(agrLines.Cells[col_ItemCount, CurrentRow]), lInvRoom, tempInvoiceItemList,
@@ -7840,7 +7840,7 @@ begin
         ItemTypeInfo := d.Item_Get_ItemTypeInfo(ItemId, agrLines.Cells[col_Source, CurrentRow]);
 
         lInvRoom := TInvoiceRoomEntity.create(agrLines.Cells[col_Item, CurrentRow], 1, 0,
-          _StrToFloat(agrLines.Cells[col_ItemCount, CurrentRow]), CurrentRow, 0, 0, false);
+          _StrToFloat(agrLines.Cells[col_ItemCount, CurrentRow]), CurrentRow, zCurrentCurrency, zCurrencyRate, 0, 0, false);
         try
           TotalVAT := GetVATForItem(agrLines.Cells[col_Item, CurrentRow], Total,
             _StrToFloat(agrLines.Cells[col_ItemCount, CurrentRow]), lInvRoom, tempInvoiceItemList,
@@ -8122,7 +8122,7 @@ begin
           dNumItems := 1.00;
 
         lInvRoom := TInvoiceRoomEntity.create(agrLines.Cells[col_Item, i], 1, 0,
-          _StrToFloat(agrLines.Cells[col_ItemCount, i]), fItemTotal, 0, 0, false);
+          _StrToFloat(agrLines.Cells[col_ItemCount, i]), fItemTotal, zCurrentCurrency, zCurrencyRate, 0, 0, false);
         try
           fVat := GetVATForItem(agrLines.Cells[col_Item, i], fItemTotal,
             dNumItems, lInvRoom, tempInvoiceItemList, ItemTypeInfo, edtCustomer.Text);

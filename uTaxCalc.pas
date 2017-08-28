@@ -488,9 +488,12 @@ begin
     result := GetVATForItemEx(Item, Price, NumItems, RoomTaxEntity, ItemTaxEntities, ItemTypeInfo, NOT isStayTaxExcluded);
 end;
 
+/// <summary>
+///   Create a taxentity with calculated tax for the roomEntity.
+/// Notice the calculated tax is in de currency of the roomentity!
+/// </summary>
 function MakeInvoiceTaxEntity(aTax: TTax; aInvoiceRoomEntity: TInvoiceRoomEntity; aItemTypeInfo: TItemTypeInfo;
                               aOptions: TInvoiceCityTaxCalculationOptions): TInvoiceTaxEntity;
-//                              aCustomerIncludedDefault: boolean): TInvoiceTaxEntity;
 var
   NumItems: Double;
   Amount, baseAmount: Double;
@@ -514,7 +517,7 @@ begin
 
   if aTax.TAX_TYPE = TT_FIXED_AMOUNT then
   begin
-    Amount := aTax.Amount;
+    Amount := aTax.Amount / aInvoiceRoomEntity.CurrencyRate;
     Percentage := False;
   end
   else
