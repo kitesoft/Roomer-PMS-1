@@ -23,7 +23,7 @@ uses
   , uReservationStateDefinitions
   , uRoomReservationOBJ
   , uRoomerThreadedRequest
-  , uStaffCommunicationDefinitions
+  , uStaffCommunicationDefinitions, uDateTimeHelper
   ;
 
 const
@@ -1906,6 +1906,7 @@ procedure initTaxesHolder(var rec: recTaxesHolder);
 function INS_Taxes(theData: recTaxesHolder; var NewID: integer): boolean;
 function UPD_Taxes(theData: recTaxesHolder): boolean;
 function Del_Taxes(theData: recTaxesHolder): boolean;
+function CheckNoTaxesOverlap(const HotelId: string): boolean;
 
 procedure initRateRuleHolder(var rec: recRateRuleHolder);
 function Del_RateRule(theData: recRateRuleHolder): boolean;
@@ -9601,8 +9602,8 @@ begin
     NETTO_AMOUNT_BASED := 'TRUE';
     Amount := 0;
     VALUE_FORMULA := '';
-    VALID_FROM := 0;
-    VALID_TO := now + (10 * 365);
+    VALID_FROM := now;
+    VALID_TO := Now.AddYears(10);
   end;
 end;
 
@@ -9758,7 +9759,26 @@ begin
 end;
 
 
+function CheckNoTaxesOverlap(const HotelId: string): boolean;
+var
+  s: string;
+  rSet: TRoomerDataSet;
+begin
+  s := '';
 
+  s := s + ' select count(*) as cnt ' + #10;
+  s := s + ' from home100.TAXES t1 ' + #10;
+  s := s + ' join (Select * from home100.TAXES t2  ' + #10;
+  s := s + '   where t2.hotel_id = ' + _db(HotelId) + ') tt on  t1.ID <> tt.ID and (t1.VALID_FROM <= tt.VALID_TO) and (t1.VALID_TO >= tt.VALID_FROM) ' + #10;
+  s := s + ' where t1.hotel_id = ' + _db(HotelId);
+
+  rSet := CreateNewDataSet;
+  try
+    Result := rSet_bySQL(rSet, s, false) and (rSet.FieldByName('cnt').AsInteger = 0);
+  finally
+    rSet.Free;
+  end;
+end;
 
 /// ///////////////////////////////////////////////////////////////////////////////////
 //

@@ -286,6 +286,10 @@ object FrmRBEContainer: TFrmRBEContainer
         end
         object sTabSheet4: TsTabSheet
           Caption = 'Templates'
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object sLabelFX6: TsLabelFX
             Left = 3
             Top = 114
@@ -304,7 +308,7 @@ object FrmRBEContainer: TFrmRBEContainer
           object sLabelFX7: TsLabelFX
             Left = 0
             Top = 0
-            Width = 148
+            Width = 82
             Height = 25
             Align = alTop
             Alignment = taCenter
@@ -318,7 +322,6 @@ object FrmRBEContainer: TFrmRBEContainer
             Angle = 0
             Shadow.OffsetKeeper.LeftTop = -1
             Shadow.OffsetKeeper.RightBottom = 3
-            ExplicitWidth = 82
           end
           object btnEmailTemplates: TsButton
             Left = 48
@@ -472,7 +475,7 @@ object FrmRBEContainer: TFrmRBEContainer
         object lblHeader: TsLabelFX
           Left = 0
           Top = 25
-          Width = 999
+          Width = 10
           Height = 28
           Align = alTop
           Alignment = taCenter
@@ -485,7 +488,6 @@ object FrmRBEContainer: TFrmRBEContainer
           Angle = 0
           Shadow.OffsetKeeper.LeftTop = -1
           Shadow.OffsetKeeper.RightBottom = 3
-          ExplicitWidth = 10
         end
         object tabWindows: TsPageControl
           Left = 0

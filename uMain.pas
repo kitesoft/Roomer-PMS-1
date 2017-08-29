@@ -10665,7 +10665,7 @@ var
   theData: recTaxesHolder;
 begin
   LogUserClickedButton(Sender);
-  if Taxes(actNone, theData) then;
+  EditTaxes();
   InitializeTaxes;
 end;
 

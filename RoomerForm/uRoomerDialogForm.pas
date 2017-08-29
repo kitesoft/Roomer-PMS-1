@@ -111,10 +111,16 @@ procedure TfrmBaseRoomerDialogForm.UpdateDialogButtons;
 var
   b: TButton;
 begin
-  for b in FOrderedButtonList do
-    b.Visible := TMsgDlgBtn(b.Tag) in FDialogButtons;
+  if (FDialogButtons <> []) then
+  begin
+    pnlButtons.Visible := true;
+    for b in FOrderedButtonList do
+      b.Visible := TMsgDlgBtn(b.Tag) in FDialogButtons;
 
-  CorrectButtonDisplayOrder;
+    CorrectButtonDisplayOrder;
+  end
+  else
+    pnlButtons.Visible := false;
 end;
 
 procedure TfrmBaseRoomerDialogForm.SetDialogButtons(const Value: TMsgDlgButtons);

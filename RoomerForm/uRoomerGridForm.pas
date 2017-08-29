@@ -4,12 +4,15 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uRoomerForm, cxGridTableView, cxStyles, dxPScxCommon, dxPScxGridLnk, cxClasses,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, cxGridTableView, cxStyles, dxPScxCommon, dxPScxGridLnk, cxClasses,
   cxPropertiesStore, Vcl.ComCtrls, sStatusBar, cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters,
   dxSkinsCore, dxSkinCaramel, dxSkinCoffee, dxSkinDarkSide, dxSkinTheAsphaltWorld, dxSkinsDefaultPainters,
   dxSkinscxPCPainter, cxCustomData, cxFilter, cxData, cxDataStorage, cxEdit, cxNavigator, Data.DB, cxDBData,
   Vcl.ExtCtrls, sPanel, cxGridLevel, cxGridCustomView, cxGridCustomTableView, cxGridDBTableView, cxGrid,
-  cxGridBandedTableView, cxGridDBBandedTableView;
+  cxGridBandedTableView, cxGridDBBandedTableView
+  ,uRoomerForm
+  , uRoomerDialogForm, Vcl.StdCtrls, sButton
+  ;
 
 type
   /// <summary>
@@ -19,13 +22,14 @@ type
   ///  Notice that it is only possible for TcxGridDBBandedTableViews to persist the columnorder, columns in a normal TcxGridDBTableView
   ///  do not support this.
   /// </summary>
-  TfrmBaseRoomerGridForm = class(TfrmBaseRoomerForm)
+  TfrmBaseRoomerGridForm = class(TfrmBaseRoomerDialogForm)
     grData: TcxGrid;
     pnlTop: TsPanel;
     dsData: TDataSource;
     tvData: TcxGridDBBandedTableView;
     lvData: TcxGridLevel;
     cxssRoomerGridBandedTableView: TcxGridBandedTableViewStyleSheet;
+    procedure btnCloseClick(Sender: TObject);
   private
   protected
     procedure Loaded; override;
@@ -38,6 +42,7 @@ type
     ///   Called from the Loaded procedure, sets the default settings of the Grid
     /// </summary>
     procedure InitializeGridProperties; virtual;
+    procedure DoShow; override;
   public
     { Public declarations }
   end;
@@ -60,10 +65,22 @@ begin
   InitializeGridProperties;
 end;
 
+procedure TfrmBaseRoomerGridForm.btnCloseClick(Sender: TObject);
+begin
+  inherited;
+  if assigned(dsData.DataSet) then
+    dsData.DataSet.CheckBrowseMode;
+end;
+
+procedure TfrmBaseRoomerGridForm.DoShow;
+begin
+  inherited;
+  DialogButtons := [mbClose];
+end;
+
 procedure TfrmBaseRoomerGridForm.InitializeGridProperties;
 begin
   tvData.OptionsView.NoDataToDisplayInfoText := GetTranslatedText('shBaseGridForm_NoDataToDisplay');
-
 end;
 
 procedure TfrmBaseRoomerGridForm.AddViewColumnPropsToStore(aGrid: TcxGrid);

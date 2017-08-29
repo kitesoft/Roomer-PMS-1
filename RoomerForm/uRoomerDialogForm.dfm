@@ -71,7 +71,6 @@ inherited frmBaseRoomerDialogForm: TfrmBaseRoomerDialogForm
       TabOrder = 2
       OnClick = btnCloseClick
       SkinData.SkinSection = 'BUTTON'
-      ExplicitTop = 2
     end
   end
   inherited psRoomerBase: TcxPropertiesStore

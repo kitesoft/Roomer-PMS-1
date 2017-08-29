@@ -986,6 +986,8 @@ begin
   constants.Add('shTx_SystemActions_EditInGrid', 'edit in grid');
   constants.Add('shTx_Rates_DescriptionRequired', 'Description is required - set value or use [ESC] to cancel ');
   constants.Add('shTx_Taxes_BookingItemRequired', 'Booking Item is required - set value or use [ESC] to cancel ');
+  constants.Add('shTx_Taxes_InvalidDates', 'Valid_From and Valid_To are not valid - set value or use [ESC] to cancel ');
+  constants.Add('shTx_Taxes_OverlappingDates', 'Taxes exists with overlapping dates. This could cause unexpected behaviour in invoicing');
   constants.Add('shTx_Rates_DescriptionIsRequired', 'Description - is required - Use ESC to cancel');
   constants.Add('shTx_Rates_DefaultForCurrenyAlreadyExists', 'Default for %s already exists - Use [ESC] to abandon changes');
   constants.Add('shTx_Rates_CurrencyIsRequired', 'Currency - is required');
@@ -1871,7 +1873,7 @@ begin
   frmResources := TfrmResources.Create(nil); frmResources.Free; frmResources := nil;
   frmAssignPayment := TfrmAssignPayment.Create(nil); frmAssignPayment.Free; frmAssignPayment := nil;
   frmRptDownPayments := TfrmRptDownPayments.Create(nil); frmRptDownPayments.Free; frmRptDownPayments := nil;
-  frmTaxes := TfrmTaxes.Create(nil); frmTaxes.Free; frmTaxes := nil;
+  TfrmTaxes.Create(nil).Free;
 
   TFrmMessagesTemplates.Create(nil).Free;
 
