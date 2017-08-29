@@ -16,6 +16,11 @@ type
     function ShowToUSer: boolean; virtual;
   end;
 
+  ERoomerUserException = class(ERoomerException)
+  public
+    function ShowToUSer: boolean; override;
+  end;
+
   TRoomerExceptionHandler = class(TObject)
   private
     FExceptionsLoggingActive: boolean;
@@ -171,6 +176,13 @@ end;
 function ERoomerException.ShowToUSer: boolean;
 begin
   Result := false;
+end;
+
+{ ERoomerUserException }
+
+function ERoomerUserException.ShowToUSer: boolean;
+begin
+  Result := true;
 end;
 
 initialization

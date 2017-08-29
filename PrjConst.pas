@@ -1094,7 +1094,7 @@ begin
   constants.Add('shTx_ProvideARoom_RoomWithout', 'Room without');
   constants.Add('shTx_ProvideARoom_RoomWith', 'Room with');
   constants.Add('shProvideaRoomCleanToo', 'No clean rooms available, show unclean rooms?');
-  
+  constants.Add('shTx_ProvideARoomErrorMoving', 'Setting reservation [%d] as NoRoom failed. Moving action has been cancelled');
   constants.Add('shTx_StaffTypes2_UpdateNotOK', 'UPDATE NOT OK');
   constants.Add('shTx_StaffTypes2_InsertNotOK', 'INSERT NOT OK');
   constants.Add('shTx_StaffTypes2_StaffTypeRequired', 'StaffType is requierd - set value or use [ESC] to cancel ');
@@ -1181,11 +1181,14 @@ begin
   constants.Add('shTx_StaffEdit2_RightsRequired', 'Set access rights of this staffmember');
   constants.Add('shTx_StaffEdit2_LanguageRequired', 'Language is required');
 
- (* constants.Add('shTx_ResProblem_NotArrived', 'Ekki kominn');
-  constants.Add('shTx_ResProblem_Guest', 'Gestur');
-  constants.Add('shTx_ResProblem_Gone', 'Farinn');
-  constants.Add('shTx_ResProblem_OverBooked', 'Yfirbókunn'); *)
-  
+
+  constants.Add('shTx_frmResProblemRoom', 'Room');
+  constants.Add('shTx_frmResProblemType', 'Type');
+  constants.Add('shTx_frmResProblemReservation', 'Reservation');
+  constants.Add('shTx_frmResProblemStatus', 'State');
+  constants.Add('shTx_frmResProblemArrival', 'Arrival');
+  constants.Add('shTx_frmResProblemDeparture', 'Departure');
+
   constants.Add('shTx_ResProblem_NotArrived', 'Not Arrived');
   constants.Add('shTx_ResProblem_Guest', 'Guest');
   constants.Add('shTx_ResProblem_Gone', 'Gone');
@@ -1793,7 +1796,7 @@ begin
   TfrmMaidActionsEdit.Create(nil).Free;
 // Empty?  frmMakeReservation := TfrmMakeReservation.Create(nil); frmMakeReservation.Free; frmMakeReservation := nil;
   frmRoomDateProblem := TfrmRoomDateProblem.Create(nil); frmRoomDateProblem.Free; frmRoomDateProblem := nil;
-  frmResProblem := TfrmResProblem.Create(nil); frmResProblem.Free; frmResProblem := nil;
+  TfrmResProblem.Create(nil).Free;
 //  frmStatisticsForcast := TfrmStatisticsForcast.Create(nil); frmStatisticsForcast.Free; frmStatisticsForcast := nil;
   frmDayFinical := TfrmDayFinical.Create(nil); frmDayFinical.Free; frmDayFinical := nil;
   frmConvertGroups := TfrmConvertGroups.Create(nil); frmConvertGroups.Free; frmConvertGroups := nil;
