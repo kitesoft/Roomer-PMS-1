@@ -304,7 +304,7 @@ uses
   ucxGridPopupMenuActivator in 'RoomerUtils\ucxGridPopupMenuActivator.pas',
   uPCITokenReport in 'PCI\uPCITokenReport.pas' {frmPCITokenReport},
   uFrmOptInMessage in 'OptIns\uFrmOptInMessage.pas' {FrmOptInMessage},
-  uSmtpService in 'Email\uSmtpService.pas';
+  uHotelServicesAccessor in 'PMSSettings\uHotelServicesAccessor.pas';
 
 {$R *.RES}
 

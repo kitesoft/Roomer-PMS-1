@@ -122,12 +122,13 @@ object frmControlData: TfrmControlData
           FFFFFFFFFF000000000000000000000000010C52006500730065007200760061
           00740069006F006E007300480000000000000013000000FFFFFFFFFFFFFFFF00
           000000000000000000000001154D0061006E006400610074006F007200790020
-          0069006E0066006F0072006D006100740069006F006E003A0000000000000014
-          000000FFFFFFFFFFFFFFFF000000000000000000000000010E42006500740061
-          002000460075006E006300740069006F006E0073003800000000000000150000
-          00FFFFFFFFFFFFFFFF000000000000000000000000010D45006D00610069006C
-          0020007300650072007600690063006500}
+          0069006E0066006F0072006D006100740069006F006E00380000000000000015
+          000000FFFFFFFFFFFFFFFF000000000000000000000000010D45006D00610069
+          006C00200073006500720076006900630065003A0000000000000014000000FF
+          FFFFFFFFFFFFFF000000000000000000000000010E4200650074006100200046
+          0075006E006300740069006F006E007300}
         SkinData.SkinSection = 'EDIT'
+        ExplicitTop = -2
       end
     end
     object __LMDBackPanel3: TsPanel
@@ -143,7 +144,7 @@ object frmControlData: TfrmControlData
         Top = 1
         Width = 1101
         Height = 743
-        ActivePage = tsCompany
+        ActivePage = tabEmailService
         Align = alClient
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
@@ -159,6 +160,8 @@ object frmControlData: TfrmControlData
         end
         object tsCompany: TsTabSheet
           Caption = 'Company'
+          ExplicitLeft = 5
+          ExplicitTop = 29
           object gbxCompany: TsGroupBox
             Left = 3
             Top = 4
@@ -9368,22 +9371,6 @@ object frmControlData: TfrmControlData
               ParentFont = False
               TabOrder = 1
             end
-            object edSmtpPort: TsEdit
-              Left = 134
-              Top = 94
-              Width = 209
-              Height = 22
-              Color = clWhite
-              Enabled = False
-              Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
-              Font.Height = -12
-              Font.Name = 'Tahoma'
-              Font.Style = []
-              NumbersOnly = True
-              ParentFont = False
-              TabOrder = 2
-            end
             object cbSmtpTLS: TsCheckBox
               Left = 134
               Top = 122
@@ -9436,6 +9423,26 @@ object frmControlData: TfrmControlData
               Font.Style = []
               ParentFont = False
               TabOrder = 6
+            end
+            object edSmtpPort: TsSpinEdit
+              Left = 134
+              Top = 94
+              Width = 211
+              Height = 22
+              Color = clWhite
+              Enabled = False
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clBlack
+              Font.Height = -12
+              Font.Name = 'Tahoma'
+              Font.Style = []
+              ParentFont = False
+              TabOrder = 2
+              FlatSpinButtons = False
+              ShowSpinButtons = False
+              MaxValue = 65535
+              MinValue = 1
+              Value = 0
             end
           end
           object cbSmtpServiceActive: TsCheckBox
