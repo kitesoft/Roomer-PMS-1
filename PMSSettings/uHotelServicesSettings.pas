@@ -5,50 +5,19 @@ interface
 uses
   cmpRoomerDataset
   , SysUtils
+  , uHotelServicesAccessor
   ;
 
 type
 
   EHotelServicesSettingIncompleteKey = class(Exception);
-  EHotelServicesSettingCreateServiceException = class(Exception);
-
-  THotelServicesSettingsGetSetOption = (psoExceptionOnNotFound);
-  THotelServicesSettingsGetSetOptions = set of THotelServicesSettingsGetSetOption;
-
 
   /// <summary>
-  ///   Settings accessor for settings stored in home100.HOTELSERVICES.
+  ///   Base object to access a sepcific type of settings in HotelServices
+  ///  Future improvements:
+  ///   Optimize db access by storing last retrieved values and only updating when needed
+  ///   pref. by a RTTI based retrieve()
   /// </summary>
-  THotelServicesAccessor = class
-  private type
-    THotelServicesKeys = record
-      hotelId: string;
-      Service: string;
-      ServiceType: string;
-      function ToString: string;
-    end;
-  private
-    FDataset: TRoomerDataset;
-    function GetHotelServicesData(const aKey: THotelServicesKeys): boolean;
-    function GetExtraInfo(const aKey: THotelServicesKeys): string;
-    procedure CreateHotelServicesKey(const aKey: THotelServicesKeys);
-  protected
-    procedure InternalSaveSetting(const aService, aServiceType, aExtraInfoName, aValue: String; aOptions: THotelServicesSettingsGetSetOptions); virtual;
-    function InternalGetSetting(const aService, aServiceType, aExtraInfoName: String; aOptions: THotelServicesSettingsGetSetOptions; var aSetting: string): boolean; virtual;
-  public
-    constructor Create;
-    destructor Destroy; override;
-
-    function GetServiceEnabled(const aService, aServiceType: string): boolean;
-    function GetServiceSettingAsString(const aService, aServiceType, aExtraInfoName: String; Default: string=''): string;
-    function GetServiceSettingAsInteger(const aService, aServiceType, aExtraInfoName: String; Default: integer=0): integer;
-
-    procedure SetServiceEnabled(const aService, aServiceType: string; aEnabled: boolean);
-    procedure SetServiceSettingAsInteger(const aService, aServiceType, aExtraInfoName: String; aNewValue: integer);
-    procedure SetServiceSettingAsString(const aService, aServiceType, aExtraInfoName: String; const aNewValue: String);
-  end;
-
-
   TBaseHotelServicesSettings = class abstract(TObject)
   protected
     FHotelServicesAccessor: THotelServicesAccessor;
@@ -119,13 +88,56 @@ type
   end;
 
 
+  TSmtpServiceSettings = class (TBaseHotelServicesSettings)
+  private const
+    cSmtpService = 'EMAIL';
+    cSmtpServiceType = 'SMTP_SETTINGS';
+    cSmtpServer = 'SMTP_SERVER';
+    cSmtpPort = 'SMTP_PORT';
+    cSmtpPortDefault = 25;
+    cSmtpEmailAddress = 'SMTP_EMAIL_ADDRESS';
+    cSmtpSSLTLS = 'SMTP_SSL_TLS';
+    cSmtpAuthenticate = 'SMTP_AUTHENTICATE';
+    cSmtpUsername = 'SMTP_USERNAME';
+    cSmtpPassword = 'SMTP_PASSWORD';
+  private
+    function GetSmtpAuthenticate: Boolean;
+    function GetSmtpFromEmail: String;
+    function GetSmtpPassword: String;
+    function GetSmtpPort: Integer;
+    function GetSmtpServer: String;
+    function GetSmtpServiceActive: Boolean;
+    function GetSmtpTLS: Boolean;
+    function GetSmtpUsername: String;
+    procedure SetSmtpAuthenticate(const Value: Boolean);
+    procedure SetSmtpFromEmail(const Value: String);
+    procedure SetSmtpPassword(const Value: String);
+    procedure SetSmtpPort(const Value: Integer);
+    procedure SetSmtpServer(const Value: String);
+    procedure SetSmtpServiceActive(const Value: Boolean);
+    procedure SetSmtpTLS(const Value: Boolean);
+    procedure SetSmtpUsername(const Value: String);
+  public
+    property SmtpServiceActive : Boolean read GetSmtpServiceActive write SetSmtpServiceActive;
+    property SmtpServer : String read GetSmtpServer write SetSmtpServer;
+    property SmtpFromEmail : String read GetSmtpFromEmail write SetSmtpFromEmail;
+    property SmtpPort : Integer read GetSmtpPort write SetSmtpPort;
+    property SmtpUsername : String read GetSmtpUsername write SetSmtpUsername;
+    property SmtpAuthenticate : Boolean read GetSmtpAuthenticate write SetSmtpAuthenticate;
+    property SmtpPassword : String read GetSmtpPassword write SetSmtpPassword;
+    property SmtpTLS : Boolean read GetSmtpTLS write SetSmtpTLS;
+ end;
+
+
   THotelServicesSettings = class
   private
     FLifeCycleMailerSettings: TLifeCycleMailerSettings;
+    FSmtpServiceSetting: TSmtpServiceSettings;
   public
     constructor Create;
     destructor Destroy; override;
     property LifeCycleMailerSettings: TLifeCycleMailerSettings read FLifeCycleMailerSettings;
+    property SmtpServiceSettings: TSmtpServiceSettings read FSmtpServiceSetting;
   end;
 
 
@@ -139,160 +151,6 @@ uses
   , uD
   , uUtils;
 
-
-{ THotelServicesAccessor }
-
-function THotelServicesAccessor.InternalGetSetting(const aService, aServiceType, aExtraInfoName: String; aOptions: THotelServicesSettingsGetSetOptions; var aSetting: string): boolean;
-var
-  lKey: THotelServicesKeys;
-  lList: TStringList;
-begin
-  lKey.hotelId := FDataset.hotelId;
-  lKey.Service := aService;
-  lKey.ServiceType := aServiceType;
-
-  lList := TStringList.Create;
-  try
-   lList.Delimiter := ';';
-   lList.StrictDelimiter := true;
-   lList.DelimitedText := GetExtraInfo(lKey);
-   if (lList.IndexOfName(aExtraInfoName) >= 0) then
-   begin
-     Result := true;
-     aSetting := lList.Values[aExtraInfoName];
-   end
-   else
-    Result := false;
-
-  finally
-    lList.Free;
-  end;
-
-end;
-
-procedure THotelServicesAccessor.InternalSaveSetting(const aService, aServiceType, aExtraInfoName, aValue: String; aOptions: THotelServicesSettingsGetSetOptions);
-var
-  sql: string;
-  lList: TStringlist;
-  lKey: THotelServicesKeys;
-begin
-//  inherited;
-  lKey.hotelId := FDataset.hotelId;
-  lKey.Service := aService;
-  lKey.ServiceType := aServiceType;
-
-  lList := TStringlist.Create;
-  try
-    lList.Delimiter := ';';
-    lList.StrictDelimiter := true;
-    lList.DelimitedText := GetExtraInfo(lKey);
-    lList.Values[aExtraInfoName] := aValue;
-
-    sql := Format('UPDATE home100.hotelservices SET extraInfo=%s where hotelId=%s and Service=%s and ServiceType=%s',
-                  [ _db(lList.DelimitedText), _db(lKey.hotelId), _db(lKey.Service), _db(lKey.ServiceType)]);
-    FDataset.DoCommand(sql)
-  finally
-    lList.Free;
-  end;
-end;
-
-
-procedure THotelServicesAccessor.SetServiceEnabled(const aService, aServiceType: string; aEnabled: boolean);
-var
-  lKey: THotelServicesKeys;
-  sql: string;
-begin
-  lKey.hotelId := FDataset.hotelId;
-  lKey.Service := aService;
-  lKey.ServiceType := aServiceType;
-
-  sql := Format('UPDATE home100.hotelservices SET active=%d where hotelId=%s and Service=%s and ServiceType=%s',
-                  [ iif(aEnabled, 1, 0), _db(lKey.hotelId), _db(lKey.Service), _db(lKey.ServiceType)]);
-  FDataset.DoCommand(sql)
-end;
-
-procedure THotelServicesAccessor.SetServiceSettingAsInteger(const aService, aServiceType, aExtraInfoName: String;
-  aNewValue: integer);
-begin
-  InternalSaveSetting(aService, aServiceType, aExtraInfoName, IntToStr(aNewValue), []);
-end;
-
-procedure THotelServicesAccessor.SetServiceSettingAsString(const aService, aServiceType, aExtraInfoName, aNewValue: String);
-begin
-  InternalSaveSetting(aService, aServiceType, aExtraInfoName, aNewValue, []);
-end;
-
-constructor THotelServicesAccessor.Create;
-begin
-  FDataset := d.roomerMainDataSet.CreateNewDataset;
-end;
-
-destructor THotelServicesAccessor.Destroy;
-begin
-  FDataset.Free;
-  inherited;
-end;
-
-procedure THotelServicesAccessor.CreateHotelServicesKey(const aKey: THotelServicesKeys);
-var
-  sql: string;
-begin
-  sql := Format('INSERT INTO home100.hotelservices (hotelId, service, serviceType, active) VALUES (%s, %s, %s, 0)',
-                [ _db(aKey.hotelId), _db(aKey.Service), _db(aKey.ServiceType)]);
-  if not hData.cmd_bySQL(sql) then
-    raise EHotelServicesSettingCreateServiceException.CreateFmt('Failed to create hotelservice [%s]', [aKey.ToString]);
-
-end;
-
-function THotelServicesAccessor.GetExtraInfo(const aKey: THotelServicesKeys): string;
-begin
-  Result := '';
-  if GetHotelServicesData(aKey) then
-    Result := FDataset.FieldByName('extraInfo').asString
-  else
-    CreateHotelServicesKey(aKey);
-end;
-
-function THotelServicesAccessor.GetHotelServicesData(const aKey: THotelServicesKeys): boolean;
-var
-  sql: string;
-begin
-  sql := Format('SELECT * FROM home100.hotelservices where hotelId=%s and service=%s and serviceType=%s',
-                [ _db(aKey.hotelId), _db(aKey.Service), _db(aKey.ServiceType)]);
-  Result := hData.rSet_bySQL(FDataset, sql);
-end;
-
-
-function THotelServicesAccessor.GetServiceEnabled(const aService, aServiceType: string): boolean;
-var
-  lKey: THotelServicesKeys;
-begin
-  lKey.hotelId := FDataset.hotelId;
-  lKey.Service := aService;
-  lKey.ServiceType := aServiceType;
-  if GetHotelServicesData(lKey) then
-    Result := FDataset.FieldByName('active').AsBoolean
-  else
-    Result := false;
-end;
-
-function THotelServicesAccessor.GetServiceSettingAsInteger(const aService, aServiceType,  aExtraInfoName: String; Default: integer): integer;
-var
-  lSetting: string;
-begin
-
-  if InternalGetSetting(aService, aServiceType, aExtraInfoName, [], lSetting) then
-    Result := StrToIntDef(lSetting, Default)
-  else
-    Result := Default;
-end;
-
-function THotelServicesAccessor.GetServiceSettingAsString(const aService, aServiceType, aExtraInfoName: String;
-  Default: string): string;
-begin
-  if not InternalGetSetting(aService, aServiceType, aExtraInfoName, [], Result) then
-    Result := Default;
-end;
 
 { TLifeCycleMailerSettings }
 
@@ -399,11 +257,13 @@ end;
 constructor THotelServicesSettings.Create;
 begin
   FLifeCycleMailerSettings := TLifeCycleMailerSettings.Create;
+  FSmtpServiceSetting := TSmtpServiceSettings.Create;
 end;
 
 destructor THotelServicesSettings.Destroy;
 begin
   FLifeCycleMailerSettings.Free;
+  FSmtpServiceSetting.Free;
   inherited;
 end;
 
@@ -422,11 +282,87 @@ begin
   inherited;
 end;
 
-{ THotelServicesAccessor.THotelServicesKeys }
 
-function THotelServicesAccessor.THotelServicesKeys.ToString: string;
+{ TSmtpServiceSettings }
+
+function TSmtpServiceSettings.GetSmtpAuthenticate: Boolean;
 begin
-  Result := Format('HotelId: %s, Service: %s, ServiceType: %s', [hotelId, Service, ServiceType]);
+  Result := FHotelServicesAccessor.GetServiceSettingAsBoolean(cSmtpService, cSmtpServiceType, cSmtpAuthenticate, False);
+end;
+
+function TSmtpServiceSettings.GetSmtpFromEmail: String;
+begin
+  Result := FHotelServicesAccessor.GetServiceSettingAsString(cSmtpService, cSmtpServiceType, cSmtpEmailAddress);
+end;
+
+function TSmtpServiceSettings.GetSmtpPassword: String;
+begin
+  Result := FHotelServicesAccessor.GetServiceSettingAsString(cSmtpService, cSmtpServiceType, cSmtpPassword);
+end;
+
+function TSmtpServiceSettings.GetSmtpPort: Integer;
+begin
+  Result := FHotelServicesAccessor.GetServiceSettingAsInteger(cSmtpService, cSmtpServiceType, cSmtpPort, cSmtpPortDefault);
+end;
+
+function TSmtpServiceSettings.GetSmtpServer: String;
+begin
+  Result := FHotelServicesAccessor.GetServiceSettingAsString(cSmtpService, cSmtpServiceType, cSmtpServer);
+end;
+
+function TSmtpServiceSettings.GetSmtpServiceActive: Boolean;
+begin
+  Result := FHotelServicesAccessor.GetServiceEnabled(cSmtpService, cSmtpServiceType);
+end;
+
+function TSmtpServiceSettings.GetSmtpTLS: Boolean;
+begin
+  Result := FHotelServicesAccessor.GetServiceSettingAsBoolean(cSmtpService, cSmtpServiceType, cSmtpSSLTLS);
+end;
+
+function TSmtpServiceSettings.GetSmtpUsername: String;
+begin
+  Result := FHotelServicesAccessor.GetServiceSettingAsString(cSmtpService, cSmtpServiceType, cSmtpUsername);
+end;
+
+procedure TSmtpServiceSettings.SetSmtpAuthenticate(const Value: Boolean);
+begin
+  FHotelServicesAccessor.SetServiceSettingAsBoolean(cSmtpService, cSmtpServiceType, cSmtpAuthenticate, value);
+end;
+
+procedure TSmtpServiceSettings.SetSmtpFromEmail(const Value: String);
+begin
+  FHotelServicesAccessor.SetServiceSettingAsString(cSmtpService, cSmtpServiceType, cSmtpEmailAddress, Value);
+end;
+
+procedure TSmtpServiceSettings.SetSmtpPassword(const Value: String);
+begin
+  FHotelServicesAccessor.SetServiceSettingAsString(cSmtpService, cSmtpServiceType, cSmtpPassword, Value);
+end;
+
+procedure TSmtpServiceSettings.SetSmtpPort(const Value: Integer);
+begin
+  FHotelServicesAccessor.SetServiceSettingAsInteger(cSmtpService, cSmtpServiceType, cSmtpPort, Value);
+end;
+
+procedure TSmtpServiceSettings.SetSmtpServer(const Value: String);
+begin
+  FHotelServicesAccessor.SetServiceSettingAsString(cSmtpService, cSmtpServiceType, cSmtpServer, Value);
+end;
+
+procedure TSmtpServiceSettings.SetSmtpServiceActive(const Value: Boolean);
+begin
+  FHotelServicesAccessor.SetServiceEnabled(cSmtpService, cSmtpServiceType, Value);
+end;
+
+procedure TSmtpServiceSettings.SetSmtpTLS(const Value: Boolean);
+begin
+  FHotelServicesAccessor.SetServiceSettingAsBoolean(cSmtpService, cSmtpServiceType, cSmtpSSLTLS, Value);
+end;
+
+procedure TSmtpServiceSettings.SetSmtpUsername(const Value: String);
+begin
+  FHotelServicesAccessor.SetServiceSettingAsString(cSmtpService, cSmtpServiceType, cSmtpUsername, Value);
 end;
 
 end.
