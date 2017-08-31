@@ -182,6 +182,8 @@ type
     procedure tvDataAmountGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
       var AProperties: TcxCustomEditProperties);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+    procedure tvDataIncl_ExclPropertiesValidate(Sender: TObject; var DisplayValue: Variant; var ErrorText: TCaption;
+      var Error: Boolean);
   private
     { Private declarations }
     zFirstTime       : boolean;
@@ -518,6 +520,15 @@ begin
     m_.Edit;
     m_.FieldByName('Booking_Item').asString := theData.Item;
   end;
+end;
+
+procedure TfrmTaxes.tvDataIncl_ExclPropertiesValidate(Sender: TObject; var DisplayValue: Variant;
+  var ErrorText: TCaption; var Error: Boolean);
+begin
+  inherited;
+  Error := ((m_Tax_Base.AsString = 'BOOKING') or (m_Tax_Base.AsString = 'GUEST_NIGHT')) and (DisplayValue <> 'EXCLUDED');
+  if Error then
+    ErrorText := 'only "EXCLUDED" allowed for Taxbase "BOOKING" or "GUEST_NIGHT"';
 end;
 
 //////////////////////////////////////////////////////////////////////////
