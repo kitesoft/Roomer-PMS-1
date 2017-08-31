@@ -21,7 +21,7 @@ inherited frmTaxes: TfrmTaxes
     Width = 1112
     Height = 369
     TabOrder = 2
-    ExplicitTop = 88
+    ExplicitTop = 89
     ExplicitWidth = 1112
     ExplicitHeight = 369
     inherited tvData: TcxGridDBBandedTableView
@@ -112,10 +112,9 @@ inherited frmTaxes: TfrmTaxes
         Properties.Items.Strings = (
           'ROOM_NIGHT'
           'GUEST_NIGHT'
-          'ROOM'
-          'GUEST'
           'BOOKING')
         Properties.MaxLength = 30
+        Properties.OnValidate = tvDataIncl_ExclPropertiesValidate
         MinWidth = 75
         Width = 97
         Position.BandIndex = 0
@@ -208,6 +207,7 @@ inherited frmTaxes: TfrmTaxes
           'EXCLUDED'
           'INCLUDED'
           'PER_CUSTOMER')
+        Properties.OnValidate = tvDataIncl_ExclPropertiesValidate
         MinWidth = 75
         Width = 75
         Position.BandIndex = 0
@@ -241,7 +241,7 @@ inherited frmTaxes: TfrmTaxes
     Width = 1112
     Height = 89
     TabOrder = 1
-    ExplicitWidth = 994
+    ExplicitWidth = 1112
     ExplicitHeight = 89
     object cLabFilter: TsLabel
       Left = 19
@@ -369,26 +369,25 @@ inherited frmTaxes: TfrmTaxes
       TabOrder = 6
       OnClick = btnRefreshClick
       SkinData.SkinSection = 'BUTTON'
-      ExplicitLeft = 331
     end
   end
   inherited pnlButtons: TsPanel
     Top = 458
     Width = 1112
     TabOrder = 0
-    ExplicitTop = 468
-    ExplicitWidth = 994
+    ExplicitTop = 458
+    ExplicitWidth = 1112
     inherited btnOK: TsButton
       Left = 796
-      ExplicitLeft = 678
+      ExplicitLeft = 796
     end
     inherited btnCancel: TsButton
       Left = 902
-      ExplicitLeft = 784
+      ExplicitLeft = 902
     end
     inherited btnClose: TsButton
       Left = 1008
-      ExplicitLeft = 890
+      ExplicitLeft = 1008
     end
   end
   inherited psRoomerBase: TcxPropertiesStore
@@ -463,7 +462,6 @@ inherited frmTaxes: TfrmTaxes
     Left = 368
     Top = 224
     object prLink_grData: TdxGridReportLink
-      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -477,7 +475,6 @@ inherited frmTaxes: TfrmTaxes
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
       ReportDocument.CreationDate = 41334.495374884260000000
-      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
   end
