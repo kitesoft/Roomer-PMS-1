@@ -502,7 +502,7 @@ begin
   if NOT hdata.itemExist(displayValue) then // ,g.qLogLevel,g.qProgramPath) then
   begin
     error := true;
-    //errortext := displayvalue+'Nýtt gildi er til í annari færslu. Notið ESC-hnappin til að hætta við';
+    //errortext := displayvalue+'Nï¿½tt gildi er til ï¿½ annari fï¿½rslu. Notiï¿½ ESC-hnappin til aï¿½ hï¿½tta viï¿½';
     errortext := displayvalue+'  Does not exist.'; //  +GetTranslatedText('shNewValueExistInAnotherRecor');
     exit;
   end;
