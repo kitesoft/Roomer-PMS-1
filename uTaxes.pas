@@ -1,4 +1,4 @@
-unit uTaxes;
+﻿unit uTaxes;
 
 interface
 
@@ -528,7 +528,7 @@ begin
   inherited;
   Error := ((m_Tax_Base.AsString = 'BOOKING') or (m_Tax_Base.AsString = 'GUEST_NIGHT')) and (DisplayValue <> 'EXCLUDED');
   if Error then
-    ErrorText := 'only "EXCLUDED" allowed for Taxbase "BOOKING" or "GUEST_NIGHT"';
+    ErrorText := 'only "EXCLUDED" allowed for Taxbase "GUEST_NIGHT"';
 end;
 
 //////////////////////////////////////////////////////////////////////////

@@ -111,8 +111,7 @@ inherited frmTaxes: TfrmTaxes
         Properties.DropDownListStyle = lsFixedList
         Properties.Items.Strings = (
           'ROOM_NIGHT'
-          'GUEST_NIGHT'
-          'BOOKING')
+          'GUEST_NIGHT')
         Properties.MaxLength = 30
         Properties.OnValidate = tvDataIncl_ExclPropertiesValidate
         MinWidth = 75
@@ -312,8 +311,8 @@ inherited frmTaxes: TfrmTaxes
     object chkActive: TsCheckBox
       Left = 56
       Top = 65
-      Width = 246
-      Height = 17
+      Width = 238
+      Height = 20
       Caption = 'Active (if checked then just active are visible)'
       Checked = True
       State = cbChecked
@@ -462,6 +461,7 @@ inherited frmTaxes: TfrmTaxes
     Left = 368
     Top = 224
     object prLink_grData: TdxGridReportLink
+      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -475,6 +475,7 @@ inherited frmTaxes: TfrmTaxes
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
       ReportDocument.CreationDate = 41334.495374884260000000
+      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
   end
