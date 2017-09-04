@@ -58,6 +58,8 @@ inherited frmTaxes: TfrmTaxes
       object tvDataValid_From: TcxGridDBBandedColumn
         DataBinding.FieldName = 'Valid_From'
         PropertiesClassName = 'TcxDateEditProperties'
+        Properties.MinDate = 2.000000000000000000
+        Properties.OnValidate = tvDataValid_FromPropertiesValidate
         MinWidth = 100
         Width = 102
         Position.BandIndex = 0
@@ -67,6 +69,8 @@ inherited frmTaxes: TfrmTaxes
       object tvDataValid_To: TcxGridDBBandedColumn
         DataBinding.FieldName = 'Valid_To'
         PropertiesClassName = 'TcxDateEditProperties'
+        Properties.MinDate = 2.000000000000000000
+        Properties.OnValidate = tvDataValid_ToPropertiesValidate
         MinWidth = 100
         Width = 100
         Position.BandIndex = 0

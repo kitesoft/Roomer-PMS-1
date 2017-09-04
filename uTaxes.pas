@@ -184,17 +184,16 @@ type
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure tvDataIncl_ExclPropertiesValidate(Sender: TObject; var DisplayValue: Variant; var ErrorText: TCaption;
       var Error: Boolean);
+    procedure tvDataValid_FromPropertiesValidate(Sender: TObject; var DisplayValue: Variant; var ErrorText: TCaption;
+      var Error: Boolean);
+    procedure tvDataValid_ToPropertiesValidate(Sender: TObject; var DisplayValue: Variant; var ErrorText: TCaption;
+      var Error: Boolean);
   private
     { Private declarations }
     zFirstTime       : boolean;
-    zAllowGridEdit   : boolean;
-    zFilterOn        : boolean;
-    zIsAddRow        : boolean;
-    zDescription : string;
     zData: recTaxesHolder;
     FCurrencyhandler: TCurrencyHandler;
     procedure fillHolder;
-    Procedure chkFilter;
     procedure applyFilter;
     function CheckMultipleValidTaxes: boolean;
 
@@ -219,6 +218,7 @@ uses
   , uSqlDefinitions
   , UITypes
   , uItems2
+  , DateUtils
   ;
 
 
@@ -230,7 +230,6 @@ uses
 function EditTaxes() : boolean;
 var _frmTaxes: TfrmTaxes;
 begin
-  result := false;
   _frmTaxes := TfrmTaxes.Create(nil);
   try
     Result := (_frmTaxes.ShowModal = mrOk);
@@ -298,19 +297,6 @@ procedure TfrmTaxes.chkActiveClick(Sender: TObject);
 begin
   btnRefresh.Click;
 end;
-
-procedure TfrmTaxes.chkFilter;
-var
-  sFilter : string;
-  rC1,rc2   : integer;
-begin
-  sFilter := edFilter.text;
-  rc1 := tvData.DataController.RecordCount;
-  rc2 := tvData.DataController.FilteredRecordCount;
-
-  zFilterON := rc1 <> rc2;
-end;
-
 
 constructor TfrmTaxes.Create(aOwner: TComponent);
 begin
@@ -529,6 +515,24 @@ begin
   Error := ((m_Tax_Base.AsString = 'BOOKING') or (m_Tax_Base.AsString = 'GUEST_NIGHT')) and (DisplayValue <> 'EXCLUDED');
   if Error then
     ErrorText := 'only "EXCLUDED" allowed for Taxbase "GUEST_NIGHT"';
+end;
+
+procedure TfrmTaxes.tvDataValid_FromPropertiesValidate(Sender: TObject; var DisplayValue: Variant;
+  var ErrorText: TCaption; var Error: Boolean);
+begin
+  inherited;
+  Error :=  (m_Valid_To.AsDateTime < VarToDateTime(DisplayValue));
+  if Error then
+    ErrorText := 'Valid To must be before Valid From ';
+end;
+
+procedure TfrmTaxes.tvDataValid_ToPropertiesValidate(Sender: TObject; var DisplayValue: Variant;
+  var ErrorText: TCaption; var Error: Boolean);
+begin
+  inherited;
+  Error := (m_Valid_From.AsDateTime > VarToDateTime(DisplayValue));
+  if Error then
+    ErrorText := 'Valid From must be after Valid To';
 end;
 
 //////////////////////////////////////////////////////////////////////////
