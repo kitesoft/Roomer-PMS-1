@@ -3588,14 +3588,14 @@ object frmControlData: TfrmControlData
           object LMDGroupBox1: TsGroupBox
             AlignWithMargins = True
             Left = 3
-            Top = 318
+            Top = 338
             Width = 1087
             Height = 71
             Align = alTop
             Caption = 'Room rate '
             TabOrder = 1
             SkinData.SkinSection = 'GROUPBOX'
-            ExplicitTop = 298
+            ExplicitTop = 318
             object Label1: TsLabel
               Left = 6
               Top = 22
@@ -3676,7 +3676,7 @@ object frmControlData: TfrmControlData
             Left = 3
             Top = 150
             Width = 1087
-            Height = 109
+            Height = 129
             Align = alTop
             Caption = 'Various'
             TabOrder = 2
@@ -3737,12 +3737,26 @@ object frmControlData: TfrmControlData
               Font.Style = []
             end
             object lbUseStayTax: TsLabel
-              Left = 310
+              Left = 332
               Top = 89
-              Width = 109
+              Width = 87
               Height = 14
               Alignment = taRightJustify
-              Caption = 'Use stay or citytax :'
+              Caption = 'Enable staytax :'
+              ParentFont = False
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clBlack
+              Font.Height = -12
+              Font.Name = 'Tahoma'
+              Font.Style = []
+            end
+            object lbStaytaxAfyerDiscount: TsLabel
+              Left = 290
+              Top = 108
+              Width = 129
+              Height = 14
+              Alignment = taRightJustify
+              Caption = 'Staytax after discount: '
               ParentFont = False
               Font.Charset = DEFAULT_CHARSET
               Font.Color = clBlack
@@ -3827,18 +3841,28 @@ object frmControlData: TfrmControlData
               ImgChecked = 0
               ImgUnchecked = 0
             end
+            object cbStaytaxAfterDiscount: TsCheckBox
+              Left = 425
+              Top = 106
+              Width = 20
+              Height = 20
+              TabOrder = 5
+              SkinData.SkinSection = 'CHECKBOX'
+              ImgChecked = 0
+              ImgUnchecked = 0
+            end
           end
           object LMDGroupBox26: TsGroupBox
             AlignWithMargins = True
             Left = 3
-            Top = 265
+            Top = 285
             Width = 1087
             Height = 47
             Align = alTop
             Caption = 'A/R '
             TabOrder = 3
             SkinData.SkinSection = 'GROUPBOX'
-            ExplicitTop = 245
+            ExplicitTop = 265
             object Label65: TsLabel
               Left = 109
               Top = 20
@@ -3892,14 +3916,14 @@ object frmControlData: TfrmControlData
           object sGroupBox19: TsGroupBox
             AlignWithMargins = True
             Left = 3
-            Top = 496
+            Top = 516
             Width = 1087
             Height = 145
             Align = alTop
             Caption = 'Payments'
             TabOrder = 4
             SkinData.SkinSection = 'GROUPBOX'
-            ExplicitTop = 476
+            ExplicitTop = 496
             object sLabel12: TsLabel
               Left = 202
               Top = 18
@@ -4048,14 +4072,14 @@ object frmControlData: TfrmControlData
           object sPanel2: TsPanel
             AlignWithMargins = True
             Left = 3
-            Top = 395
+            Top = 415
             Width = 1087
             Height = 95
             Align = alTop
             AutoSize = True
             BevelOuter = bvNone
             TabOrder = 5
-            ExplicitTop = 375
+            ExplicitTop = 395
             object cxGroupBox5: TsGroupBox
               Left = 0
               Top = 0
