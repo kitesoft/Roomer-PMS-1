@@ -748,6 +748,8 @@ type
     lbSmtpPassword: TsLabel;
     cbSmtpServiceActive: TsCheckBox;
     edSmtpPort: TsSpinEdit;
+    cbUseStaytax: TsCheckBox;
+    lbUseStayTax: TsLabel;
     procedure FormCreate(Sender : TObject);
     procedure FormClose(Sender : TObject; var Action : TCloseAction);
     procedure FormShow(Sender : TObject);
@@ -1582,6 +1584,7 @@ g.ReadWriteSettingsToRegistry(0);
     end;
 
     cbShowIncludedBreakfastOnInvoice.Checked := glb.PMSSettings.InvoiceSettings.ShowIncludedBreakfastOnInvoice;
+    cbUseStaytax.Checked := rControlData.FieldByName('useStayTax').AsBoolean;
     cbAllowPaymentModification.Checked := glb.PMSSettings.InvoiceSettings.AllowPaymentModification;
     cbAllowDeleteItemsFromInvoice.Checked := glb.PMSSettings.InvoiceSettings.AllowDeletingItemsFromInvoice;
     cbTopClassAvaiabilityOrderActive.Checked := glb.PMSSettings.MasterRatesSettings.TopClassAvaiabilityOrderActive;
@@ -2066,6 +2069,8 @@ begin
       Except
       end;
 
+      rControlData.FieldByName('useStayTax').AsBoolean := cbUseStaytax.Checked;
+
 
       rControlData.Post;  //ID OK
     except
@@ -2107,6 +2112,7 @@ begin
       end;
 
       glb.PMSSettings.InvoiceSettings.ShowIncludedBreakfastOnInvoice := cbShowIncludedBreakfastOnInvoice.Checked;
+
       glb.PMSSettings.InvoiceSettings.AllowPaymentModification := cbAllowPaymentModification.Checked;
       glb.PMSSettings.InvoiceSettings.AllowDeletingItemsFromInvoice := cbAllowDeleteItemsFromInvoice.Checked;
       glb.PMSSettings.MasterRatesSettings.TopClassAvaiabilityOrderActive := cbTopClassAvaiabilityOrderActive.Checked;
