@@ -1,4 +1,4 @@
-unit RoomerBookingCommunicationModel_RequestsResponses;
+unit uRoomerBookingCommunicationModel_RequestsResponses;
 
 interface
 
@@ -10,7 +10,7 @@ uses
    , uRoomerSchema
    , XMLIntf
    , OXmlPDOM
-   , RoomerFinancialDataModel_ModelObjects
+   , uRoomerFinancialDataModel_ModelObjects
    ;
 
 const
