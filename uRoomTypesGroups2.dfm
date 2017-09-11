@@ -3,7 +3,7 @@ object frmRoomTypesGroups2: TfrmRoomTypesGroups2
   Top = 0
   Caption = 'Room Classes'
   ClientHeight = 620
-  ClientWidth = 853
+  ClientWidth = 974
   Color = clBtnFace
   Constraints.MinWidth = 460
   Font.Charset = DEFAULT_CHARSET
@@ -23,7 +23,7 @@ object frmRoomTypesGroups2: TfrmRoomTypesGroups2
   object pnlHolder: TsPanel
     Left = 0
     Top = 0
-    Width = 853
+    Width = 974
     Height = 620
     Margins.Left = 2
     Margins.Top = 2
@@ -33,16 +33,18 @@ object frmRoomTypesGroups2: TfrmRoomTypesGroups2
     BevelOuter = bvNone
     TabOrder = 0
     SkinData.SkinSection = 'PANEL'
+    ExplicitWidth = 853
     object sPanel1: TsPanel
       Left = 0
       Top = 0
-      Width = 853
+      Width = 974
       Height = 105
       Align = alTop
       TabOrder = 0
       SkinData.SkinSection = 'PANEL'
+      ExplicitWidth = 853
       DesignSize = (
-        853
+        974
         105)
       object cLabFilter: TsLabel
         Left = 19
@@ -96,7 +98,7 @@ object frmRoomTypesGroups2: TfrmRoomTypesGroups2
         SkinData.SkinSection = 'BUTTON'
       end
       object btnClose: TsButton
-        Left = 763
+        Left = 884
         Top = 7
         Width = 80
         Height = 26
@@ -108,6 +110,7 @@ object frmRoomTypesGroups2: TfrmRoomTypesGroups2
         TabOrder = 2
         OnClick = btnCloseClick
         SkinData.SkinSection = 'BUTTON'
+        ExplicitLeft = 763
       end
       object edFilter: TsEdit
         Left = 56
@@ -194,24 +197,26 @@ object frmRoomTypesGroups2: TfrmRoomTypesGroups2
     object sbMain: TsStatusBar
       Left = 0
       Top = 601
-      Width = 853
+      Width = 974
       Height = 19
       Panels = <>
       SkinData.SkinSection = 'STATUSBAR'
+      ExplicitWidth = 853
     end
     object panBtn: TsPanel
       Left = 0
       Top = 568
-      Width = 853
+      Width = 974
       Height = 33
       Align = alBottom
       TabOrder = 2
       SkinData.SkinSection = 'PANEL'
+      ExplicitTop = 562
       DesignSize = (
-        853
+        974
         33)
       object btnCancel: TsButton
-        Left = 764
+        Left = 885
         Top = 4
         Width = 86
         Height = 25
@@ -225,9 +230,10 @@ object frmRoomTypesGroups2: TfrmRoomTypesGroups2
         TabOrder = 0
         OnClick = btnCancelClick
         SkinData.SkinSection = 'BUTTON'
+        ExplicitLeft = 764
       end
       object BtnOk: TsButton
-        Left = 676
+        Left = 797
         Top = 4
         Width = 86
         Height = 25
@@ -240,17 +246,18 @@ object frmRoomTypesGroups2: TfrmRoomTypesGroups2
         TabOrder = 1
         OnClick = BtnOkClick
         SkinData.SkinSection = 'BUTTON'
+        ExplicitLeft = 676
       end
     end
     object grData: TcxGrid
       Left = 0
       Top = 105
-      Width = 853
+      Width = 974
       Height = 463
       Align = alClient
       TabOrder = 3
       LookAndFeel.NativeStyle = False
-      ExplicitTop = 104
+      ExplicitWidth = 853
       object tvData: TcxGridDBTableView
         OnDblClick = tvDataDblClick
         Navigator.Buttons.CustomButtons = <>
@@ -299,6 +306,8 @@ object frmRoomTypesGroups2: TfrmRoomTypesGroups2
         DataController.Summary.SummaryGroups = <>
         DataController.OnSortingChanged = tvDataDataControllerSortingChanged
         OptionsBehavior.AlwaysShowEditor = True
+        OptionsBehavior.CellHints = True
+        OptionsBehavior.FocusCellOnTab = True
         OptionsBehavior.IncSearch = True
         OptionsData.Appending = True
         OptionsData.CancelOnExit = False
@@ -588,10 +597,7 @@ object frmRoomTypesGroups2: TfrmRoomTypesGroups2
         object tvDataRateDeviationType: TcxGridDBColumn
           Caption = 'Rate Deviation Type'
           DataBinding.FieldName = 'RateDeviationType'
-          PropertiesClassName = 'TcxComboBoxProperties'
-          Properties.Items.Strings = (
-            'PERCENTAGE'
-            'FIXED_AMOUNT')
+          OnGetDisplayText = tvDataCalculationTypeGetDisplayText
           Width = 111
         end
         object tvDataconnectSingleUseRateToMasterRate: TcxGridDBColumn
@@ -609,10 +615,7 @@ object frmRoomTypesGroups2: TfrmRoomTypesGroups2
         object tvDatasingleUseRateDeviationType: TcxGridDBColumn
           Caption = 'Single Use Rate Deviation Type'
           DataBinding.FieldName = 'singleUseRateDeviationType'
-          PropertiesClassName = 'TcxComboBoxProperties'
-          Properties.Items.Strings = (
-            'PERCENTAGE'
-            'FIXED_AMOUNT')
+          OnGetDisplayText = tvDataCalculationTypeGetDisplayText
           Width = 155
         end
         object tvDataconnectAvailabilityToMasterRate: TcxGridDBColumn
@@ -655,22 +658,15 @@ object frmRoomTypesGroups2: TfrmRoomTypesGroups2
         end
         object tvDataextraRateDeviationType: TcxGridDBColumn
           DataBinding.FieldName = 'extraRateDeviationType'
-          PropertiesClassName = 'TcxComboBoxProperties'
-          Properties.Items.Strings = (
-            'PERCENTAGE'
-            'FIXED_AMOUNT'
-            'DEVIATED_PERCENTAGE')
+          OnGetDisplayText = tvDataCalculationTypeExtraGetDisplayText
+          Width = 77
         end
         object tvDatamasterRateExtraSingleUseRateDeviation: TcxGridDBColumn
           DataBinding.FieldName = 'masterRateExtraSingleUseRateDeviation'
         end
         object tvDataextraSingleUseRateDeviationType: TcxGridDBColumn
           DataBinding.FieldName = 'extraSingleUseRateDeviationType'
-          PropertiesClassName = 'TcxComboBoxProperties'
-          Properties.Items.Strings = (
-            'PERCENTAGE'
-            'FIXED_AMOUNT'
-            'DEVIATED_PERCENTAGE')
+          OnGetDisplayText = tvDataCalculationTypeExtraGetDisplayText
         end
       end
       object lvData: TcxGridLevel
@@ -689,6 +685,7 @@ object frmRoomTypesGroups2: TfrmRoomTypesGroups2
     end
     object mnuiAllowGridEdit: TMenuItem
       Caption = 'Allow grid edit'
+      Enabled = False
       OnClick = mnuiAllowGridEditClick
     end
     object N2: TMenuItem
@@ -888,9 +885,8 @@ object frmRoomTypesGroups2: TfrmRoomTypesGroups2
     object m_masterRateRateDeviation: TFloatField
       FieldName = 'masterRateRateDeviation'
     end
-    object m_RateDeviationType: TWideStringField
+    object m_RateDeviationType: TIntegerField
       FieldName = 'RateDeviationType'
-      Size = 15
     end
     object m_connectSingleUseRateToMasterRate: TBooleanField
       FieldName = 'connectSingleUseRateToMasterRate'
@@ -898,9 +894,8 @@ object frmRoomTypesGroups2: TfrmRoomTypesGroups2
     object m_masterRateSingleUseRateDeviation: TFloatField
       FieldName = 'masterRateSingleUseRateDeviation'
     end
-    object m_singleUseRateDeviationType: TWideStringField
+    object m_singleUseRateDeviationType: TIntegerField
       FieldName = 'singleUseRateDeviationType'
-      Size = 15
     end
     object m_connectAvailabilityToMasterRate: TBooleanField
       FieldName = 'connectAvailabilityToMasterRate'
@@ -930,16 +925,14 @@ object frmRoomTypesGroups2: TfrmRoomTypesGroups2
     object m_masterRateExtraRateDeviation: TFloatField
       FieldName = 'masterRateExtraRateDeviation'
     end
-    object m_extraRateDeviationType: TWideStringField
+    object m_extraRateDeviationType: TIntegerField
       FieldName = 'extraRateDeviationType'
-      Size = 25
     end
     object m_masterRateExtraSingleUseRateDeviation: TFloatField
       FieldName = 'masterRateExtraSingleUseRateDeviation'
     end
-    object m_extraSingleUseRateDeviationType: TWideStringField
+    object m_extraSingleUseRateDeviationType: TIntegerField
       FieldName = 'extraSingleUseRateDeviationType'
-      Size = 25
     end
   end
   object FormStore: TcxPropertiesStore
