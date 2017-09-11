@@ -423,13 +423,8 @@ begin
 end;
 
 function TInvoiceLine.GetTotalRevenue: Double;
-var
-  lInvLine: TInvoiceLine;
 begin
-  result := Total;
-  for lInvLine in FChildInvoiceLines do
-    if lInvLine.TotalIsIncludedInParent then
-      result := result - lInvLine.Total;
+  result := RevenueNativeCurrency / GetRate(FCurrency);
 end;
 
 function TInvoiceLine.GetVatOnInvoice: Double;
