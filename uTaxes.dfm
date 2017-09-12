@@ -230,12 +230,25 @@ inherited frmTaxes: TfrmTaxes
         Position.ColIndex = 14
         Position.RowIndex = 0
       end
+      object tvDataAfter_discount: TcxGridDBBandedColumn
+        DataBinding.FieldName = 'After_discount'
+        PropertiesClassName = 'TcxComboBoxProperties'
+        Properties.DropDownListStyle = lsFixedList
+        Properties.Items.Strings = (
+          'FALSE'
+          'TRUE')
+        MinWidth = 100
+        Width = 130
+        Position.BandIndex = 0
+        Position.ColIndex = 16
+        Position.RowIndex = 0
+      end
       object tvDataValue_Formula: TcxGridDBBandedColumn
         DataBinding.FieldName = 'Value_Formula'
         MinWidth = 75
         Width = 75
         Position.BandIndex = 0
-        Position.ColIndex = 16
+        Position.ColIndex = 17
         Position.RowIndex = 0
       end
     end
@@ -551,6 +564,10 @@ inherited frmTaxes: TfrmTaxes
       DisplayWidth = 10
       FieldName = 'TaxChildren'
       Size = 10
+    end
+    object m_After_discount: TWideStringField
+      FieldName = 'After_discount'
+      Size = 5
     end
   end
   object PopupMenu1: TPopupMenu

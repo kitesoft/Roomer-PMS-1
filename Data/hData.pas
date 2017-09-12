@@ -1095,6 +1095,7 @@ type
     Amount: double;
     Incl_Excl: String;
     NETTO_AMOUNT_BASED: String;
+    AFTER_DISCOUNT: string;
     VALUE_FORMULA: String;
     VALID_FROM : TDateTime;
     VALID_TO : TDateTime;
@@ -9600,6 +9601,7 @@ begin
     Booking_Item := '';
     Incl_Excl := 'EXCLUDED';
     NETTO_AMOUNT_BASED := 'TRUE';
+    After_discount := 'FALSE';
     Amount := 0;
     VALUE_FORMULA := '';
     VALID_FROM := now;
@@ -9629,6 +9631,7 @@ begin
   '  ,(SELECT Item FROM items WHERE id=Booking_Item_Id) AS Booking_Item '#10+
   '  ,INCL_EXCL '#10+
   '  ,NETTO_AMOUNT_BASED '#10+
+  '  ,AFTER_DISCOUNT '#10+
   '  ,VALUE_FORMULA '#10 +
   '  ,VALID_FROM '#10 +
   '  ,VALID_TO '#10 +
@@ -9656,6 +9659,7 @@ begin
       result.Booking_Item       := Rset['Booking_Item']; //'';
       result.Incl_Excl          := Rset['Incl_Excl'];   //'EXCLUDED';
       result.NETTO_AMOUNT_BASED := Rset['NETTO_AMOUNT_BASED']; //'TRUE';
+      result.AFTER_DISCOUNT     := RSet.FieldByName('AFTER_DISCOUNT').AsString;
       result.VALUE_FORMULA      := Rset['VALUE_FORMULA']; //'';
       result.VALID_FROM         := Rset['VALID_FROM'];
       result.VALID_TO           := Rset['VALID_TO'];
@@ -9698,6 +9702,7 @@ begin
     ' LIMIT 1) ' + #10;
   s := s + '   , INCL_EXCL =' + _db(theData.Incl_Excl) + ' ' + #10;
   s := s + '   , NETTO_AMOUNT_BASED =' + _db(theData.NETTO_AMOUNT_BASED);
+  s := s + '   , AFTER_DISCOUNT =' + _db(theData.AFTER_DISCOUNT);
   s := s + '   , VALUE_FORMULA =' + _db(theData.VALUE_FORMULA) + ' ' + #10;
   s := s + '   , VALID_FROM =' + _db(theData.VALID_FROM) + ' ' + #10;
   s := s + '   , VALID_TO =' + _db(theData.VALID_TO) + ' ' + #10;
@@ -9726,6 +9731,7 @@ begin
   s := s + '  , BOOKING_ITEM_ID ' + #10;
   s := s + '  , INCL_EXCL ' + #10;
   s := s + '  , NETTO_AMOUNT_BASED ' + #10;
+  s := s + '  , AFTER_DISCOUNT' + #10;
   s := s + '  , VALUE_FORMULA ' + #10;
   s := s + '  , VALID_FROM ' + #10;
   s := s + '  , VALID_TO ' + #10;
@@ -9745,6 +9751,7 @@ begin
   s := s + '   ,(SELECT id FROM home100_' + LowerCase(theData.Hotel_Id) + '.items WHERE Item=' + _db(theData.Booking_Item) + ' LIMIT 1) ' + #10;
   s := s + '   ,' + _db(theData.Incl_Excl) + ' ' + #10;
   s := s + '   ,' + _db(theData.NETTO_AMOUNT_BASED) + ' ' + #10;
+  s := s + '   ,' + _db(theData.AFTER_DISCOUNT) + ' ' + #10;
   s := s + '   ,' + _db(theData.VALUE_FORMULA) + ' ' + #10;
   s := s + '   ,' + _db(theData.VALID_FROM) + ' ' + #10;
   s := s + '   ,' + _db(theData.VALID_TO) + ' ' + #10;

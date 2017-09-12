@@ -5028,15 +5028,6 @@ select_Person_By_roomreservation : string =
 '  FROM Persons '#10+
 '    WHERE roomreservation = %d ';
 
-//	@roomreservation int
-
-
-
-//@aDate nvarchar(10)
-
-
-
-
 select_RateRules_fillGridFromDataset : string =
 ' SELECT '#10+
 '     ID '#10+
@@ -5110,65 +5101,13 @@ select_Taxes_fillGridFromDataset : string =
 '  ,(SELECT Item FROM items WHERE id=Booking_Item_Id) AS Booking_Item '#10+
 '  ,INCL_EXCL '#10+
 '  ,NETTO_AMOUNT_BASED '#10+
+'  ,AFTER_DISCOUNT '#10+
 '  ,VALUE_FORMULA '#10 +
 '  ,VALID_FROM '#10 +
 '  ,VALID_TO '#10 +
 '  ,ROUND_VALUE '#10 +
 ' FROM '#10+
 '   home100.TAXES WHERE HOTEL_ID=(SELECT CompanyID FROM control LIMIT 1) COLLATE utf8_general_ci '#10;
-
-select_Taxes_fillGridFromDataset2 : string =
-' SELECT '#10+
-'   ID '#10+
-'  ,Hotel_Id '#10+
-'  ,Description '#10+
-'  ,Tax_Type '#10+
-'  ,Tax_Base '#10+
-'  ,Time_Due '#10+
-'  ,Retaxable '#10+
-'  ,TaxChildren  '#10+
-'  ,Amount '#10+
-'  ,Booking_Item_Id '#10+
-'  ,(SELECT Item FROM items WHERE id=Booking_Item_Id) AS Booking_Item '#10+
-'  ,INCL_EXCL '#10+
-'  ,NETTO_AMOUNT_BASED '#10+
-'  ,VALUE_FORMULA '#10 +
-'  ,VALID_FROM '#10 +
-'  ,VALID_TO '#10 +
-'  ,ROUND_VALUE '#10 +
-' FROM '#10+
-'   home100.taxes WHERE HOTEL_ID=(SELECT CompanyID FROM control LIMIT 1) COLLATE utf8_general_ci '#10+
-' ORDER BY '#10+
-'   %s ';
-
-
-select_Taxes_fillGridFromDataset_current : string =
-' SELECT '#10+
-'   ID '#10+
-'  ,Hotel_Id '#10+
-'  ,Description '#10+
-'  ,Tax_Type '#10+
-'  ,Tax_Base '#10+
-'  ,Time_Due '#10+
-'  ,Retaxable '#10+
-'  ,TaxChildren  '#10+
-'  ,Amount '#10+
-'  ,Booking_Item_Id '#10+
-'  ,(SELECT Item FROM items WHERE id=Booking_Item_Id) AS Booking_Item '#10+
-'  ,INCL_EXCL '#10+
-'  ,NETTO_AMOUNT_BASED '#10+
-'  ,VALUE_FORMULA '#10 +
-'  ,VALID_FROM '#10 +
-'  ,VALID_TO '#10 +
-'  ,ROUND_VALUE '#10 +
-' FROM '#10+
-'   home100.taxes '#10+
-' WHERE '#10+
-'    HOTEL_ID=(SELECT CompanyID FROM control LIMIT 1) and (Valid_from <= CURDATE() and Valid_to >= CURDATE()) '#10+
-' COLLATE utf8_general_ci '#10+
-' ORDER BY '#10+
-'   %s ';
-
 
 select_Rates_fillGridFromDataset_byCurrency : string =
 ' SELECT '#10+

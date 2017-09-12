@@ -96,7 +96,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinValentine,
   dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue
   , uRoomerGridForm, uRoomerDialogForm, cxGridBandedTableView, cxGridDBBandedTableView, cxCalendar, cxCurrencyEdit
-  , uCurrencyHandler, cxCalc
+  , uCurrencyHandler, cxCalc, cxCheckBox
   ;
 
 type
@@ -158,6 +158,8 @@ type
     tvDataValid_From: TcxGridDBBandedColumn;
     tvDataValid_To: TcxGridDBBandedColumn;
     tvDataTaxChildren: TcxGridDBBandedColumn;
+    m_After_discount: TWideStringField;
+    tvDataAfter_discount: TcxGridDBBandedColumn;
     procedure m_BeforeInsert(DataSet: TDataSet);
     procedure m_BeforePost(DataSet: TDataSet);
     procedure m_NewRecord(DataSet: TDataSet);
@@ -280,6 +282,7 @@ begin
   zData.Booking_Item    := m_Booking_Item.AsString;
   zData.Incl_Excl    := m_Incl_Excl.AsString;
   zData.NETTO_AMOUNT_BASED    := m_Netto_Amount_Based.AsString;
+  zData.AFTER_DISCOUNT    := m_After_discount.AsString;
   zData.VALUE_FORMULA    := m_Value_Formula.AsString;
   zData.VALID_FROM    := m_Valid_From.AsDateTime;
   zData.VALID_TO    := m_Valid_To.AsDateTime;
@@ -364,6 +367,7 @@ begin
     zData.Booking_Item      := m_Booking_Item.AsString;
     zData.Incl_Excl         := m_Incl_Excl.AsString;
     zData.NETTO_AMOUNT_BASED := m_Netto_Amount_Based.AsString;
+    zData.AFTER_DISCOUNT     := m_After_discount.AsString;
     zData.VALUE_FORMULA     := m_Value_Formula.AsString;
     zData.VALID_FROM        := m_Valid_From.AsDateTime;
     zData.VALID_TO          := m_Valid_To.AsDateTime;
@@ -445,6 +449,7 @@ begin
   dataset['Booking_Item_Id']  := rec.Booking_Item_Id;
   dataset['Booking_Item']:= rec.Booking_Item;
   dataset['NETTO_AMOUNT_BASED']:= rec.NETTO_AMOUNT_BASED;
+  dataset.FieldByName('After_discount').AsString:= rec.AFTER_DISCOUNT;
   dataset['VALUE_FORMULA'] := rec.VALUE_FORMULA;
   dataset['VALID_FROM'] := rec.VALID_FROM;
   dataset['VALID_TO'] := rec.VALID_TO;
