@@ -940,6 +940,8 @@
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="PMSSettings\uHotelServicesAccessor.pas"/>
+        <DCCReference Include="Definitions\uCalculationTypeDefinitions.pas"/>
+        <DCCReference Include="Definitions\uCalculationTypeExtraDefinitions.pas"/>
         <None Include="Roomer.todo"/>
         <None Include="notes.txt"/>
         <None Include="Roomer.inc"/>
