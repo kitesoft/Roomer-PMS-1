@@ -129,8 +129,6 @@ type
     m_Value_Formula: TWideStringField;
     m_Valid_From: TDateField;
     m_Valid_To: TDateField;
-    PopupMenu1: TPopupMenu;
-    C1: TMenuItem;
     m_TaxChildren: TWideStringField;
     cLabFilter: TsLabel;
     btnClear: TsSpeedButton;
@@ -160,6 +158,8 @@ type
     tvDataTaxChildren: TcxGridDBBandedColumn;
     m_After_discount: TWideStringField;
     tvDataAfter_discount: TcxGridDBBandedColumn;
+    m_Probe_Date: TWideStringField;
+    tvDataProbe_Date: TcxGridDBBandedColumn;
     procedure m_BeforeInsert(DataSet: TDataSet);
     procedure m_BeforePost(DataSet: TDataSet);
     procedure m_NewRecord(DataSet: TDataSet);
@@ -283,6 +283,7 @@ begin
   zData.Incl_Excl    := m_Incl_Excl.AsString;
   zData.NETTO_AMOUNT_BASED    := m_Netto_Amount_Based.AsString;
   zData.AFTER_DISCOUNT    := m_After_discount.AsString;
+  zData.PROBE_DATE        := m_Probe_Date.AsString;
   zData.VALUE_FORMULA    := m_Value_Formula.AsString;
   zData.VALID_FROM    := m_Valid_From.AsDateTime;
   zData.VALID_TO    := m_Valid_To.AsDateTime;
@@ -368,6 +369,7 @@ begin
     zData.Incl_Excl         := m_Incl_Excl.AsString;
     zData.NETTO_AMOUNT_BASED := m_Netto_Amount_Based.AsString;
     zData.AFTER_DISCOUNT     := m_After_discount.AsString;
+    zData.PROBE_DATE         := m_Probe_Date.AsString;
     zData.VALUE_FORMULA     := m_Value_Formula.AsString;
     zData.VALID_FROM        := m_Valid_From.AsDateTime;
     zData.VALID_TO          := m_Valid_To.AsDateTime;
@@ -450,6 +452,7 @@ begin
   dataset['Booking_Item']:= rec.Booking_Item;
   dataset['NETTO_AMOUNT_BASED']:= rec.NETTO_AMOUNT_BASED;
   dataset.FieldByName('After_discount').AsString:= rec.AFTER_DISCOUNT;
+  dataset.FieldByName('Probe_date').AsString:= rec.PROBE_DATE;
   dataset['VALUE_FORMULA'] := rec.VALUE_FORMULA;
   dataset['VALID_FROM'] := rec.VALID_FROM;
   dataset['VALID_TO'] := rec.VALID_TO;

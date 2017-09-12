@@ -74,6 +74,19 @@ inherited frmTaxes: TfrmTaxes
         MinWidth = 100
         Width = 100
         Position.BandIndex = 0
+        Position.ColIndex = 4
+        Position.RowIndex = 0
+      end
+      object tvDataProbe_Date: TcxGridDBBandedColumn
+        Caption = 'Probe Date'
+        DataBinding.FieldName = 'Probe_Date'
+        PropertiesClassName = 'TcxComboBoxProperties'
+        Properties.DropDownListStyle = lsFixedList
+        Properties.Items.Strings = (
+          'STAYDATE'
+          'INVOICEDATE')
+        MinWidth = 80
+        Position.BandIndex = 0
         Position.ColIndex = 3
         Position.RowIndex = 0
       end
@@ -82,7 +95,7 @@ inherited frmTaxes: TfrmTaxes
         MinWidth = 200
         Width = 224
         Position.BandIndex = 0
-        Position.ColIndex = 4
+        Position.ColIndex = 5
         Position.RowIndex = 0
       end
       object tvDataAmount: TcxGridDBBandedColumn
@@ -92,7 +105,7 @@ inherited frmTaxes: TfrmTaxes
         MinWidth = 75
         Width = 75
         Position.BandIndex = 0
-        Position.ColIndex = 6
+        Position.ColIndex = 7
         Position.RowIndex = 0
       end
       object tvDataTax_Type: TcxGridDBBandedColumn
@@ -106,7 +119,7 @@ inherited frmTaxes: TfrmTaxes
         MinWidth = 75
         Width = 103
         Position.BandIndex = 0
-        Position.ColIndex = 5
+        Position.ColIndex = 6
         Position.RowIndex = 0
       end
       object tvDataTax_Base: TcxGridDBBandedColumn
@@ -121,7 +134,7 @@ inherited frmTaxes: TfrmTaxes
         MinWidth = 75
         Width = 97
         Position.BandIndex = 0
-        Position.ColIndex = 8
+        Position.ColIndex = 9
         Position.RowIndex = 0
       end
       object tvDataTime_Due: TcxGridDBBandedColumn
@@ -134,7 +147,7 @@ inherited frmTaxes: TfrmTaxes
         MinWidth = 75
         Width = 122
         Position.BandIndex = 0
-        Position.ColIndex = 9
+        Position.ColIndex = 10
         Position.RowIndex = 0
       end
       object tvDataReTaxable: TcxGridDBBandedColumn
@@ -147,7 +160,7 @@ inherited frmTaxes: TfrmTaxes
         MinWidth = 75
         Width = 122
         Position.BandIndex = 0
-        Position.ColIndex = 10
+        Position.ColIndex = 11
         Position.RowIndex = 0
       end
       object tvDataTaxChildren: TcxGridDBBandedColumn
@@ -160,7 +173,7 @@ inherited frmTaxes: TfrmTaxes
         MinWidth = 75
         Width = 75
         Position.BandIndex = 0
-        Position.ColIndex = 15
+        Position.ColIndex = 16
         Position.RowIndex = 0
       end
       object tvDataBooking_Item_Id: TcxGridDBBandedColumn
@@ -175,7 +188,7 @@ inherited frmTaxes: TfrmTaxes
         Visible = False
         Width = 122
         Position.BandIndex = 0
-        Position.ColIndex = 11
+        Position.ColIndex = 12
         Position.RowIndex = 0
       end
       object tvDataHotel_Id: TcxGridDBBandedColumn
@@ -183,7 +196,7 @@ inherited frmTaxes: TfrmTaxes
         Visible = False
         Width = 20
         Position.BandIndex = 0
-        Position.ColIndex = 12
+        Position.ColIndex = 13
         Position.RowIndex = 0
       end
       object tvDataBooking_Item: TcxGridDBBandedColumn
@@ -199,7 +212,7 @@ inherited frmTaxes: TfrmTaxes
         MinWidth = 100
         Width = 100
         Position.BandIndex = 0
-        Position.ColIndex = 7
+        Position.ColIndex = 8
         Position.RowIndex = 0
       end
       object tvDataIncl_Excl: TcxGridDBBandedColumn
@@ -214,7 +227,7 @@ inherited frmTaxes: TfrmTaxes
         MinWidth = 75
         Width = 75
         Position.BandIndex = 0
-        Position.ColIndex = 13
+        Position.ColIndex = 14
         Position.RowIndex = 0
       end
       object tvDataNetto_Amount_Based: TcxGridDBBandedColumn
@@ -227,7 +240,7 @@ inherited frmTaxes: TfrmTaxes
         MinWidth = 130
         Width = 130
         Position.BandIndex = 0
-        Position.ColIndex = 14
+        Position.ColIndex = 15
         Position.RowIndex = 0
       end
       object tvDataAfter_discount: TcxGridDBBandedColumn
@@ -240,7 +253,7 @@ inherited frmTaxes: TfrmTaxes
         MinWidth = 100
         Width = 130
         Position.BandIndex = 0
-        Position.ColIndex = 16
+        Position.ColIndex = 17
         Position.RowIndex = 0
       end
       object tvDataValue_Formula: TcxGridDBBandedColumn
@@ -248,7 +261,7 @@ inherited frmTaxes: TfrmTaxes
         MinWidth = 75
         Width = 75
         Position.BandIndex = 0
-        Position.ColIndex = 17
+        Position.ColIndex = 18
         Position.RowIndex = 0
       end
     end
@@ -478,7 +491,6 @@ inherited frmTaxes: TfrmTaxes
     Left = 368
     Top = 224
     object prLink_grData: TdxGridReportLink
-      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -492,7 +504,6 @@ inherited frmTaxes: TfrmTaxes
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
       ReportDocument.CreationDate = 41334.495374884260000000
-      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
   end
@@ -569,13 +580,8 @@ inherited frmTaxes: TfrmTaxes
       FieldName = 'After_discount'
       Size = 5
     end
-  end
-  object PopupMenu1: TPopupMenu
-    Left = 192
-    Top = 216
-    object C1: TMenuItem
-      Caption = 'Duplicate current'
-      OnClick = C1Click
+    object m_Probe_Date: TWideStringField
+      FieldName = 'Probe_Date'
     end
   end
 end

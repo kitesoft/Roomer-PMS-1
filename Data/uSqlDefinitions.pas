@@ -5103,6 +5103,7 @@ select_Taxes_fillGridFromDataset : string =
 '  ,NETTO_AMOUNT_BASED '#10+
 '  ,AFTER_DISCOUNT '#10+
 '  ,VALUE_FORMULA '#10 +
+'  ,PROBE_DATE'#10 +
 '  ,VALID_FROM '#10 +
 '  ,VALID_TO '#10 +
 '  ,ROUND_VALUE '#10 +
