@@ -33,7 +33,6 @@ object frmRoomTypesGroups2: TfrmRoomTypesGroups2
     BevelOuter = bvNone
     TabOrder = 0
     SkinData.SkinSection = 'PANEL'
-    ExplicitWidth = 853
     object sPanel1: TsPanel
       Left = 0
       Top = 0
@@ -42,7 +41,6 @@ object frmRoomTypesGroups2: TfrmRoomTypesGroups2
       Align = alTop
       TabOrder = 0
       SkinData.SkinSection = 'PANEL'
-      ExplicitWidth = 853
       DesignSize = (
         974
         105)
@@ -110,7 +108,6 @@ object frmRoomTypesGroups2: TfrmRoomTypesGroups2
         TabOrder = 2
         OnClick = btnCloseClick
         SkinData.SkinSection = 'BUTTON'
-        ExplicitLeft = 763
       end
       object edFilter: TsEdit
         Left = 56
@@ -201,7 +198,6 @@ object frmRoomTypesGroups2: TfrmRoomTypesGroups2
       Height = 19
       Panels = <>
       SkinData.SkinSection = 'STATUSBAR'
-      ExplicitWidth = 853
     end
     object panBtn: TsPanel
       Left = 0
@@ -211,7 +207,6 @@ object frmRoomTypesGroups2: TfrmRoomTypesGroups2
       Align = alBottom
       TabOrder = 2
       SkinData.SkinSection = 'PANEL'
-      ExplicitTop = 562
       DesignSize = (
         974
         33)
@@ -230,7 +225,6 @@ object frmRoomTypesGroups2: TfrmRoomTypesGroups2
         TabOrder = 0
         OnClick = btnCancelClick
         SkinData.SkinSection = 'BUTTON'
-        ExplicitLeft = 764
       end
       object BtnOk: TsButton
         Left = 797
@@ -246,7 +240,6 @@ object frmRoomTypesGroups2: TfrmRoomTypesGroups2
         TabOrder = 1
         OnClick = BtnOkClick
         SkinData.SkinSection = 'BUTTON'
-        ExplicitLeft = 676
       end
     end
     object grData: TcxGrid
@@ -257,7 +250,6 @@ object frmRoomTypesGroups2: TfrmRoomTypesGroups2
       Align = alClient
       TabOrder = 3
       LookAndFeel.NativeStyle = False
-      ExplicitWidth = 853
       object tvData: TcxGridDBTableView
         OnDblClick = tvDataDblClick
         Navigator.Buttons.CustomButtons = <>
@@ -587,22 +579,26 @@ object frmRoomTypesGroups2: TfrmRoomTypesGroups2
         object tvDataconnectRateToMasterRate: TcxGridDBColumn
           Caption = 'Connect Rate To Master Rate'
           DataBinding.FieldName = 'connectRateToMasterRate'
+          Visible = False
           Width = 121
         end
         object tvDatamasterRateRateDeviation: TcxGridDBColumn
           Caption = 'Master Rate Deviation'
           DataBinding.FieldName = 'masterRateRateDeviation'
+          Visible = False
           Width = 111
         end
         object tvDataRateDeviationType: TcxGridDBColumn
           Caption = 'Rate Deviation Type'
           DataBinding.FieldName = 'RateDeviationType'
+          Visible = False
           OnGetDisplayText = tvDataCalculationTypeGetDisplayText
           Width = 111
         end
         object tvDataconnectSingleUseRateToMasterRate: TcxGridDBColumn
           Caption = 'Connect Single Use Rate To MasterRate'
           DataBinding.FieldName = 'connectSingleUseRateToMasterRate'
+          Visible = False
           SortIndex = 0
           SortOrder = soAscending
           Width = 197
@@ -610,62 +606,75 @@ object frmRoomTypesGroups2: TfrmRoomTypesGroups2
         object tvDatamasterRateSingleUseRateDeviation: TcxGridDBColumn
           Caption = 'Single Use Rate Deviation'
           DataBinding.FieldName = 'masterRateSingleUseRateDeviation'
+          Visible = False
           Width = 128
-        end
-        object tvDatasingleUseRateDeviationType: TcxGridDBColumn
-          Caption = 'Single Use Rate Deviation Type'
-          DataBinding.FieldName = 'singleUseRateDeviationType'
-          OnGetDisplayText = tvDataCalculationTypeGetDisplayText
-          Width = 155
         end
         object tvDataconnectAvailabilityToMasterRate: TcxGridDBColumn
           Caption = 'Connect Availability To MasterRate'
           DataBinding.FieldName = 'connectAvailabilityToMasterRate'
+          Visible = False
           Width = 185
+        end
+        object tvDatasingleUseRateDeviationType: TcxGridDBColumn
+          Caption = 'Single Use Rate Deviation Type'
+          DataBinding.FieldName = 'singleUseRateDeviationType'
+          Visible = False
+          OnGetDisplayText = tvDataCalculationTypeGetDisplayText
+          Width = 155
         end
         object tvDataconnectStopSellToMasterRate: TcxGridDBColumn
           Caption = 'Connect Stop Sell To MasterRate'
           DataBinding.FieldName = 'connectStopSellToMasterRate'
+          Visible = False
           Width = 163
         end
         object tvDataconnectMinStayToMasterRate: TcxGridDBColumn
           Caption = 'Connect Min Stay To MasterRate'
           DataBinding.FieldName = 'connectMinStayToMasterRate'
+          Visible = False
           Width = 175
         end
         object tvDataconnectMaxStayToMasterRate: TcxGridDBColumn
           Caption = 'Connect Max Stay To MasterRate'
           DataBinding.FieldName = 'connectMaxStayToMasterRate'
+          Visible = False
           Width = 167
         end
         object tvDataconnectCOAToMasterRate: TcxGridDBColumn
           Caption = 'Connect COA To MasterRate'
           DataBinding.FieldName = 'connectCOAToMasterRate'
+          Visible = False
           Width = 144
         end
         object tvDataconnectCODToMasterRate: TcxGridDBColumn
           Caption = 'Connect COD To MasterRate'
           DataBinding.FieldName = 'connectCODToMasterRate'
+          Visible = False
           Width = 144
         end
         object tvDataconnectLOSToMasterRate: TcxGridDBColumn
           Caption = 'Connect LOS To MasterRate'
           DataBinding.FieldName = 'connectLOSToMasterRate'
+          Visible = False
           Width = 153
         end
         object tvDatamasterRateExtraRateDeviation: TcxGridDBColumn
           DataBinding.FieldName = 'masterRateExtraRateDeviation'
+          Visible = False
         end
         object tvDataextraRateDeviationType: TcxGridDBColumn
           DataBinding.FieldName = 'extraRateDeviationType'
+          Visible = False
           OnGetDisplayText = tvDataCalculationTypeExtraGetDisplayText
           Width = 77
         end
         object tvDatamasterRateExtraSingleUseRateDeviation: TcxGridDBColumn
           DataBinding.FieldName = 'masterRateExtraSingleUseRateDeviation'
+          Visible = False
         end
         object tvDataextraSingleUseRateDeviationType: TcxGridDBColumn
           DataBinding.FieldName = 'extraSingleUseRateDeviationType'
+          Visible = False
           OnGetDisplayText = tvDataCalculationTypeExtraGetDisplayText
         end
       end

@@ -861,16 +861,6 @@ begin
 
   if Dataset.State = dsEdit then
   begin
-//    d.roomerMainDataSet.SystemStartTransaction;
-//    try
-//      if OldCode <> zData.Code then
-//        if glb.KeyAlreadyExistsInAnotherRecord('roomtypegroups', 'Code', zData.Code, zData.id) then
-//        begin
-//          showmessage(GetTranslatedText('shTx_RoomtypeGroups_RoomTypeGroupAlreadyExists'));
-//          tvData.GetColumnByFieldName('Code').Focused := True;
-//          abort;
-//          exit;
-//        end;
       glb.LogChanges(DataSet, 'roomtypegroups', CHANGE_FIELD, '');
       oldTop := dataSet.FieldByName('TopClass').OldValue;
       oldCode := dataSet.FieldByName('Code').OldValue;
@@ -879,9 +869,6 @@ begin
       try
       if UPD_roomTypeGroup(zData) then
       begin
-//        if OldCode <> zData.Code then
-//          CorrectRoomTypeGroups(OldCode, zData.Code);
-//        d.roomerMainDataSet.SystemCommitTransaction;
         glb.LogChanges(DataSet, 'roomtypegroups', CHANGE_FIELD, '');
         if oldCode <> zData.Code then
           UpdateRoomTypeGroupCode(oldCode, zData.Code);
@@ -897,9 +884,6 @@ begin
         if oldCode <> zData.Code then
           SetForeignKeyCheckValue(1);
       end;
-//    except
-//      d.roomerMainDataSet.SystemRollbackTransaction;
-//    end;
   end;
   if Dataset.State = dsInsert then
   begin
@@ -1046,7 +1030,10 @@ end;
 procedure TfrmRoomTypesGroups2.tvDataCalculationTypeGetDisplayText(Sender: TcxCustomGridTableItem;
   ARecord: TcxCustomGridRecord; var AText: string);
 begin
-  aText := TCalculationType.FromItemIndex(aRecord.values[Sender.Index]).AsReadableString;
+  if (Sender.Index >= 0) and (Sender.Index < aRecord.ValueCount) then
+    aText := TCalculationType.FromItemIndex(aRecord.values[Sender.Index]).AsReadableString
+  else
+    aText := '';
 end;
 
 procedure TfrmRoomTypesGroups2.tvDataRATE_PLAN_TYPEPropertiesCloseUp(Sender: TObject);
@@ -1113,7 +1100,7 @@ end;
 procedure TfrmRoomTypesGroups2.tvDataCalculationTypeExtraGetDisplayText(Sender: TcxCustomGridTableItem;
   ARecord: TcxCustomGridRecord; var AText: string);
 begin
-  aText := TCalculationTypeExtra.FromItemIndex(aRecord.Values[sender.Index]).AsReadableString;
+//  aText := TCalculationTypeExtra.FromItemIndex(aRecord.Values[sender.Index]).AsReadableString;
 end;
 
 ////////////////////////////////////////////////////////////////////////////

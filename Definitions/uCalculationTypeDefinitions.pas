@@ -90,7 +90,10 @@ end;
 
 class function TCalculationTypeHelper.FromItemIndex(aIndex: integer): TCalculationType;
 begin
-  Result := TCalculationType(aIndex);
+  if (aIndex >= ord(low(TCalculationType))) and (aIndex <= ord(high(TCalculationType))) then
+    Result := TCalculationType(aIndex)
+  else
+    raise ECalculationTypeException.CreateFmt('Invalid itemindex [%d] for TCalculationTYpe', [aIndex]);
 end;
 
 function TCalculationTypeHelper.AsReadableString : string;
