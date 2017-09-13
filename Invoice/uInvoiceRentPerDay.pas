@@ -2267,7 +2267,7 @@ begin
       'IFNULL(ia.InvoiceType, ih.InvoiceType) AS InvoiceType, ' + 'ih.ihTmp, ' + 'ih.ID, ' +
       'IFNULL(ia.CustPID, ih.CustPID) AS custPID, ' + 'ih.RoomGuest, ' + 'ih.ihDate, ' + 'ih.ihStaff, ' +
       'ih.ihPayDate, ' + 'ih.ihConfirmDate, ' + 'ih.ihInvoiceDate, ' +
-      'IFNULL(ia.ihCurrency, ih.ihCurrency) AS ihCurrency, ' + 'ih.ihCurrencyRate, ' + 'ih.invRefrence, ' +
+      'ih.ihCurrency, ' + 'ih.ihCurrencyRate, ' + 'ih.invRefrence, ' +
       'ih.TotalStayTax, ' + 'ih.TotalStayTaxNights, ' + 'ih.showPackage, ' + 'ih.staff, ' + 'ih.location, ' +
       'ih.externalInvoiceId ' +
       'FROM invoiceheads ih ' + #10 +
@@ -2329,10 +2329,14 @@ begin
       if zrSet.active then
         zrSet.close;
 
-      sql := 'SELECT r.*, rr.Currency ' + 'FROM reservations r ' +
-        'JOIN roomreservations rr ON r.Reservation=rr.Reservation ' + 'WHERE r.Reservation = %d ';
+      sql := 'SELECT r.*, rr.Currency '#10 +
+             ' FROM reservations r '#10 +
+             ' JOIN roomreservations rr ON r.Reservation=rr.Reservation and r.roomreservation=rr.roomreservation '#10 +
+             ' JOIN roomsdate rd on rr.roomreservation=rd.roomreservation and rd.resflag not in (''X'', ''C'') '#10 +
+             ' WHERE r.Reservation = %d '#10 +
+             ' AND ((%d=0) OR (r.roomreservation = %d))';
 
-      sql := format(sql, [FReservation]);
+      sql := format(sql, [FReservation, FRoomreservation, FRoomreservation]);
 
       hData.rSet_bySQL(zrSet, sql);
 
@@ -3441,18 +3445,17 @@ begin
 
   s := format('INSERT INTO invoiceaddressees ' + '(InvoiceIndex, ' + 'Reservation, ' + 'RoomReservation, ' +
     'SplitNumber, ' + 'InvoiceNumber, ' + 'Customer, ' + 'Name, ' + 'Address1, ' + 'Address2, ' + 'Zip, ' + 'City, ' +
-    'Country, ' + 'ExtraText, ' + 'custPID, ' + 'InvoiceType, ' + 'ihCurrency) ' + 'VALUES ' + '(%d, ' + '%d, ' + '%d, '
-    + '%d, ' + '%d, ' + '%s, ' + '%s, ' + '%s, ' + '%s, ' + '%s, ' + '%s, ' + '%s, ' + '%s, ' + '%s, ' + '%d, ' +
+    'Country, ' + 'ExtraText, ' + 'custPID, ' + 'InvoiceType ) ' + 'VALUES ' + '(%d, ' + '%d, ' + '%d, '
+    + '%d, ' + '%d, ' + '%s, ' + '%s, ' + '%s, ' + '%s, ' + '%s, ' + '%s, ' + '%s, ' + '%s, ' + '%d, ' +
     '%s) ', [InvoiceIndex, FReservation, FRoomReservation, FnewSplitNumber, aInvoiceNumber, _db(edtCustomer.Text),
     _db(edtName.Text), _db(edtAddress1.Text), _db(edtAddress2.Text), _db(edtAddress3.Text), _db(edtAddress4.Text),
-    _db(zCountry), _db(memExtraText.Lines.Text), _db(edtPersonalId.Text), rgrInvoiceType.itemIndex,
-    _db(edtDisplayCurrency.Text)]) +
+    _db(zCountry), _db(memExtraText.Lines.Text), _db(edtPersonalId.Text), rgrInvoiceType.itemIndex]) +
 
     format('ON DUPLICATE KEY UPDATE ' + 'InvoiceNumber=%d, ' + 'Customer=%s, ' + 'Name=%s, ' + 'Address1=%s, ' +
-    'Address2=%s, ' + 'Zip=%s, ' + 'City=%s, ' + 'Country=%s, ' + 'ExtraText=%s, ' + 'custPID=%s, ' + 'InvoiceType=%d, '
-    + 'ihCurrency=%s', [aInvoiceNumber, _db(edtCustomer.Text), _db(edtName.Text), _db(edtAddress1.Text),
+    'Address2=%s, ' + 'Zip=%s, ' + 'City=%s, ' + 'Country=%s, ' + 'ExtraText=%s, ' + 'custPID=%s, ' + 'InvoiceType=%d '
+    , [aInvoiceNumber, _db(edtCustomer.Text), _db(edtName.Text), _db(edtAddress1.Text),
     _db(edtAddress2.Text), _db(edtAddress3.Text), _db(edtAddress4.Text), _db(zCountry), _db(memExtraText.Lines.Text),
-    _db(edtPersonalId.Text), rgrInvoiceType.itemIndex, _db(edtDisplayCurrency.Text)]);
+    _db(edtPersonalId.Text), rgrInvoiceType.itemIndex]);
 
   aExecutionPlan.AddExec(s);
   copytoclipboard(s);

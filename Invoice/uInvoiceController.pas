@@ -948,12 +948,13 @@ begin
         'ih.ihPayDate, ' +
         'ih.ihConfirmDate, ' +
         'ih.ihInvoiceDate, ' +
-        'IFNULL((SELECT ihCurrency FROM invoiceaddressees ia WHERE ia.invoiceNumber=ih.InvoiceNumber ' +
-        '        AND ia.Reservation=ih.Reservation ' +
-        '        AND ia.RoomReservation=ih.RoomReservation ' +
-        '        AND ia.SplitNumber=ih.SplitNumber ' +
-        '        AND ia.InvoiceIndex={InvoiceIndex} ' +
-        '       ), ih.ihCurrency) AS ihCurrency, ' +
+//        'IFNULL((SELECT ihCurrency FROM invoiceaddressees ia WHERE ia.invoiceNumber=ih.InvoiceNumber ' +
+//        '        AND ia.Reservation=ih.Reservation ' +
+//        '        AND ia.RoomReservation=ih.RoomReservation ' +
+//        '        AND ia.SplitNumber=ih.SplitNumber ' +
+//        '        AND ia.InvoiceIndex={InvoiceIndex} ' +
+//        '       ), ' +
+        ' ih.ihCurrency AS ihCurrency, ' +
         'ih.ihCurrencyRate, ' +
         'ih.invRefrence, ' +
         'ih.TotalStayTax, ' +
@@ -1427,8 +1428,9 @@ begin
          'Country, ' +
          'ExtraText, ' +
          'custPID, ' +
-         'InvoiceType, ' +
-         'ihCurrency) ' +
+         'InvoiceType ' +
+//         'ihCurrency ' +
+         ' ) ' +
          'VALUES ' +
          '(%d, ' +
          '%d, ' +
@@ -1444,8 +1446,9 @@ begin
          '%s, ' +
          '%s, ' +
          '%s, ' +
-         '%d, ' +
-         '%s) ',
+         '%d ' +
+//         '%s ' +
+         ') ',
          [
           InvoiceIndex,
           Reservation,
@@ -1463,7 +1466,9 @@ begin
           _db(CustPID),
           InvoiceType,
           _db(ihCurrency)
-          ]) +
+          ])
+
+          +
 
          format('ON DUPLICATE KEY UPDATE ' +
          'InvoiceNumber=%d, ' +
@@ -1476,8 +1481,8 @@ begin
          'Country=%s, ' +
          'ExtraText=%s, ' +
          'custPID=%s, ' +
-         'InvoiceType=%d, ' +
-         'ihCurrency=%s',
+         'InvoiceType=%d ',
+//         'ihCurrency=%s',
          [
           InvoiceNumber,
           _db(Customer),
@@ -1489,8 +1494,8 @@ begin
           _db(Country),
           _db(ExtraText),
           _db(CustPID),
-          InvoiceType,
-          _db(ihCurrency)
+          InvoiceType
+//          _db(ihCurrency)
          ]);
 end;
 
