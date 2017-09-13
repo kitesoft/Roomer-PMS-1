@@ -561,7 +561,7 @@ begin
     TB_BOOKING:     NumItems := 1;          //TODO: fix calculations for these types
   end;
 
-  Result := TInvoiceTaxEntity.Create(aTax.BOOKING_ITEM, Description, NumItems, Amount, aTax.Incl_excl, Percentage);
+  Result := TInvoiceTaxEntity.Create(aTax.BOOKING_ITEM, Description, NumItems, _RoundN(Amount, 2), aTax.Incl_excl, Percentage);
 end;
 
 function MakeTaxListForRoomEntity(aRoomEntity: TInvoiceRoomEntity; ItemTypeInfo: TItemTypeInfo; aOptions: TInvoiceCityTaxCalculationOptions): TInvoiceTaxEntityList;

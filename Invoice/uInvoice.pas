@@ -3378,9 +3378,9 @@ begin
           end
           else
           begin
-            if NOT lTaxResultInvoiceLines[l].Percentage then
-              lTotalTaxExcluded := lTotalTaxExcluded + _RoundN(lTotal / zCurrencyRate, 2)
-            else
+//            if NOT lTaxResultInvoiceLines[l].Percentage then
+//              lTotalTaxExcluded := lTotalTaxExcluded + _RoundN(lTotal / zCurrencyRate, 2)
+//            else
               lTotalTaxExcluded := lTotalTaxExcluded + lTotal;
             lStayTaxUnitCountExcluded := lStayTaxUnitCountExcluded + trunc(lTaxResultInvoiceLines[l].NumItems);
           end;
