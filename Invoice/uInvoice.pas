@@ -2257,6 +2257,7 @@ var
   lRoomText: string;
   lRoomAdditionalText: string;
   allIsPercentage: boolean;
+  lRoomRateCurrency: string;
 
   function SplitValue(s: String; Index: integer): String;
   var
@@ -2417,7 +2418,7 @@ begin
       'ih.ihPayDate, ' +
       'ih.ihConfirmDate, ' +
       'ih.ihInvoiceDate, ' +
-      'IFNULL(ia.ihCurrency, ih.ihCurrency) AS ihCurrency, ' +
+      'ih.ihCurrency, ' +
       'ih.ihCurrencyRate, ' +
       'ih.invRefrence, ' +
       'ih.TotalStayTax, ' +
@@ -2504,12 +2505,14 @@ begin
       if zrSet.active then
         zrSet.close;
 
-      sql := 'SELECT r.*, rr.Currency ' +
-             'FROM reservations r ' +
-             'JOIN roomreservations rr ON r.Reservation=rr.Reservation ' +
-             'WHERE r.Reservation = %d ';
+      sql := 'SELECT r.*, rr.Currency '#10 +
+             ' FROM reservations r '#10 +
+             ' JOIN roomreservations rr ON r.Reservation=rr.Reservation '#10 +
+             ' JOIN roomsdate rd on rr.roomreservation=rd.roomreservation and rd.resflag not in (''X'', ''C'') '#10 +
+             ' WHERE r.Reservation = %d '#10 +
+             ' AND ((%d=0) OR (rr.roomreservation = %d))';
 
-      sql := format(sql, [FReservation]);
+      sql := format(sql, [FReservation, FRoomreservation, FRoomreservation]);
 
       hData.rSet_bySQL(zrSet, sql);
 
@@ -2623,6 +2626,7 @@ begin
         s := s + 'rd.Reservation, '#10;
         s := s + 'rd.PriceCode, '#10;
         s := s + 'rd.RoomRate, '#10;
+        s := s + 'rd.Currency, '#10;
         s := s + 'rd.Discount, '#10;
         s := s + 'rd.isPercentage, '#10;
         s := s + 'rd.showDiscount, '#10;
@@ -2677,8 +2681,7 @@ begin
           mRoomRes.FieldByName('AvragePrice').asfloat := AverageRate;
           mRoomRes.FieldByName('RateCount').asfloat := RateCount;
           mRoomRes.FieldByName('RoomDescription').asString := RoomDescription;
-          mRoomRes.FieldByName('RoomTypeDescription').asString :=
-            RoomTypeDescription;
+          mRoomRes.FieldByName('RoomTypeDescription').asString := RoomTypeDescription;
           mRoomRes.FieldByName('arrival').asdateTime := Arrival;
           mRoomRes.FieldByName('departure').asdateTime := Departure;
           mRoomRes.FieldByName('ChildrenCount').asinteger := ChildrenCount;
@@ -2700,6 +2703,13 @@ begin
           TotalRate := 0;
           UnpaidDays := 0;
           allIsPercentage := true;
+          try
+            CurrencyRate := _StrToFloat(edtRate.Text);
+            if CurrencyRate = 0 then
+              CurrencyRate := 1;
+          except
+            CurrencyRate := 1
+          end;
 
           rSet := lExecutionPlan.Results[index];
 
@@ -2726,6 +2736,16 @@ begin
                 Rate := rSet.FieldByName('RoomRate').AsFloat;
                 Discount := rSet.FieldByName('Discount').AsFloat;
                 isPercentage := rSet.FieldByName('isPercentage').asBoolean;
+
+                // This is normally not needed, but in exceptional cases (i.e. with a new header with a different currency)
+                // it will correct the shown rates
+                lRoomRateCurrency := rSet.FieldByName('Currency').AsString;
+                if (lRoomRateCurrency <> zCurrentCurrency) then
+                begin
+                  Rate := Rate * GetRate(lRoomRateCurrency) / CurrencyRate;
+                  if not IsPercentage then
+                    Discount := Discount * GetRate(lRoomRateCurrency) / CurrencyRate;
+                end;
                 ShowDiscount := rSet.FieldByName('ShowDiscount').asBoolean;
                 isPaid := rSet.FieldByName('Paid').asBoolean;
 
@@ -2740,13 +2760,6 @@ begin
                   DiscountAmount := Discount;
 
                 rentAmount := Rate - DiscountAmount;
-                try
-                  CurrencyRate := _StrToFloat(edtRate.Text);
-                except
-                  CurrencyRate := 1
-                end;
-                if CurrencyRate = 0 then
-                  CurrencyRate := 1;
                 NativeAmount := rentAmount * CurrencyRate;
 
                 TotalDiscountAmount := TotalDiscountAmount + DiscountAmount;
@@ -4027,8 +4040,8 @@ begin
     'Country, ' +
     'ExtraText, ' +
     'custPID, ' +
-    'InvoiceType, ' +
-    'ihCurrency) ' +
+    'InvoiceType) ' +
+//    'ihCurrency) ' +
     'VALUES ' +
     '(%d, ' +
     '%d, ' +
@@ -4044,8 +4057,7 @@ begin
     '%s, ' +
     '%s, ' +
     '%s, ' +
-    '%d, ' +
-    '%s) ',
+    '%d) ',
     [
     InvoiceIndex,
     FReservation,
@@ -4061,8 +4073,8 @@ begin
     _db(zCountry),
     _db(memExtraText.Lines.Text),
     _db(edtPersonalId.Text),
-    rgrInvoiceType.itemIndex,
-    _db(edtCurrency.Text)
+    rgrInvoiceType.itemIndex
+//    _db(edtCurrency.Text)
     ]) +
 
     format('ON DUPLICATE KEY UPDATE ' +
@@ -4076,8 +4088,8 @@ begin
     'Country=%s, ' +
     'ExtraText=%s, ' +
     'custPID=%s, ' +
-    'InvoiceType=%d, ' +
-    'ihCurrency=%s',
+    'InvoiceType=%d ',
+//    'ihCurrency=%s',
     [
     zInvoiceNumber,
     _db(edtCustomer.Text),
@@ -4089,8 +4101,8 @@ begin
     _db(zCountry),
     _db(memExtraText.Lines.Text),
     _db(edtPersonalId.Text),
-    rgrInvoiceType.itemIndex,
-    _db(edtCurrency.Text)
+    rgrInvoiceType.itemIndex
+//    _db(edtCurrency.Text)
     ]);
 
   aExecutionPlan.AddExec(s);
