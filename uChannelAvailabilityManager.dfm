@@ -126,7 +126,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
         object pnlRestrictions: TsPanel
           AlignWithMargins = True
           Left = 3
-          Top = 288
+          Top = 295
           Width = 425
           Height = 169
           Align = alTop
@@ -135,7 +135,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
           Padding.Bottom = 3
           TabOrder = 0
           SkinData.SkinSection = 'PANEL'
-          ExplicitTop = 295
+          ExplicitTop = 288
           object lblMinStay: TsLabel
             Left = 134
             Top = 7
@@ -874,7 +874,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
           Left = 3
           Top = 199
           Width = 425
-          Height = 83
+          Height = 90
           Align = alTop
           AutoSize = True
           TabOrder = 3
@@ -1273,6 +1273,10 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
           Margins.Right = 2
           Margins.Bottom = 2
           Caption = 'Availabilities'
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object Panel2: TsPanel
             Left = 0
             Top = 522
@@ -1504,7 +1508,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
               URLColor = clBlack
               ValidChars = '0123456789'
               VAlignment = vtaCenter
-              Version = '8.2.5.2'
+              Version = '8.2.4.1'
               WordWrap = False
               ColWidths = (
                 250
@@ -1730,7 +1734,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
             URLColor = clBlack
             ValidChars = '0123456789+-!%*/'
             VAlignment = vtaCenter
-            Version = '8.2.5.2'
+            Version = '8.2.4.1'
             WordWrap = False
             ColWidths = (
               400
@@ -2080,7 +2084,6 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
             Height = 468
             Align = alClient
             TabOrder = 3
-            ExplicitLeft = 1
             object sLabel2: TsLabel
               Left = 29
               Top = 17

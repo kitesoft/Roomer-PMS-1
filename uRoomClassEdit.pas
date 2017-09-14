@@ -78,10 +78,10 @@ type
     sLabel20: TsLabel;
     sLabel21: TsLabel;
     sPanel1: TsPanel;
-    cmbRateDeviationType: TsComboBox;
+    __cmbRateDeviationType: TsComboBox;
     cbxconnectSingleUseRateToMasterRate: TsCheckBox;
     edtmasterRateSingleUseRateDeviation: TsEdit;
-    cmbsingleUseRateDeviationType: TsComboBox;
+    __cmbsingleUseRateDeviationType: TsComboBox;
     sLabel6: TsLabel;
     cbxconnectAvailabilityToMasterRate: TsCheckBox;
     sLabel22: TsLabel;
@@ -119,8 +119,8 @@ type
     lbExtraDevValue: TsLabel;
     edtMasterRateExtraRateDeviation: TsEdit;
     edtMasterRateExtraSingleUseRateDeviation: TsEdit;
-    cmbExtraSingleUseRateDeviationType: TsComboBox;
-    cmbExtraRateDeviationType: TsComboBox;
+    __cmbExtraSingleUseRateDeviationType: TsComboBox;
+    __cmbExtraRateDeviationType: TsComboBox;
     procedure cbxconnectRateToMasterRateValueChanged(Sender: TObject);
     procedure cbxconnectSingleUseRateToMasterRateValueChanged(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -150,9 +150,6 @@ type
     { Public declarations }
   end;
 
-var
-  FrmRoomClassEdit: TFrmRoomClassEdit;
-
 function openRoomTypeGroupEdit(var theData : recRoomTypeGroupHolder; isInsert : boolean; Rate_Plan_Types : TStrings) : boolean;
 
 implementation
@@ -170,7 +167,7 @@ uses uMultiSelection,
      uRoomerLanguage,
      uFrmResources,
      uResourceManagement
-     , uResourceTypeDefinitions;
+     , uResourceTypeDefinitions, uCalculationTypeDefinitions, uCalculationTypeExtraDefinitions;
 
 function openRoomTypeGroupEdit(var theData : recRoomTypeGroupHolder; isInsert : boolean; Rate_Plan_Types : TStrings) : boolean;
 var
@@ -203,13 +200,13 @@ end;
 procedure TFrmRoomClassEdit.cbxconnectRateToMasterRateValueChanged(Sender: TObject);
 begin
   edtmasterRateRateDeviation.enabled := cbxconnectRateToMasterRate.Checked;
-  cmbRateDeviationType.enabled := cbxconnectRateToMasterRate.Checked;
+  __cmbRateDeviationType.enabled := cbxconnectRateToMasterRate.Checked;
 end;
 
 procedure TFrmRoomClassEdit.cbxconnectSingleUseRateToMasterRateValueChanged(Sender: TObject);
 begin
   edtmasterRateSingleUseRateDeviation.enabled := cbxconnectSingleUseRateToMasterRate.Checked;
-  cmbsingleUseRateDeviationType.enabled := cbxconnectSingleUseRateToMasterRate.Checked;
+  __cmbsingleUseRateDeviationType.enabled := cbxconnectSingleUseRateToMasterRate.Checked;
 end;
 
 procedure TFrmRoomClassEdit.RecordHolderToEdits;
@@ -251,10 +248,10 @@ begin
   edtorderIndex.Text := inttostr(zData.orderIndex);
   cbxconnectRateToMasterRate.Checked := zData.connectRateToMasterRate;
   edtmasterRateRateDeviation.Text := FloatToStr(zData.masterRateRateDeviation);
-  cmbRateDeviationType.Text := zData.RateDeviationType;
+  __cmbRateDeviationType.ItemIndex := zData.RateDeviationType.ToItemIndex;
   cbxconnectSingleUseRateToMasterRate.Checked := zData.connectSingleUseRateToMasterRate;
   edtmasterRateSingleUseRateDeviation.Text := FloatToStr(zData.masterRateSingleUseRateDeviation);
-  cmbsingleUseRateDeviationType.Text := zData.singleUseRateDeviationType;
+  __cmbsingleUseRateDeviationType.ItemIndex := zData.singleUseRateDeviationType.ToItemIndex;
   cbxconnectStopSellToMasterRate.Checked := zData.connectStopSellToMasterRate;
   cbxconnectAvailabilityToMasterRate.Checked := zData.connectAvailabilityToMasterRate;
   cbxconnectMinStayToMasterRate.Checked := zData.connectMinStayToMasterRate;
@@ -264,9 +261,9 @@ begin
   cbxconnectLOSToMasterRate.Checked := zData.connectLOSToMasterRate;
 
   edtmasterRateExtraRateDeviation.Text := FloatToStr(zData.masterRateExtraRateDeviation);
-  cmbextraRateDeviationType.Text := zData.extraRateDeviationType;
+  __cmbextraRateDeviationType.ItemIndex := zData.extraRateDeviationType.ToItemIndex;
   edtmasterRateExtraSingleUseRateDeviation.Text := FloatToStr(zData.masterRateExtraSingleUseRateDeviation);
-  cmbextraSingleUseRateDeviationType.Text := zData.extraSingleUseRateDeviationType;
+  __cmbextraSingleUseRateDeviationType.ItemIndex := zData.extraSingleUseRateDeviationType.ToItemIndex;
 
 end;
 
@@ -387,10 +384,10 @@ begin
   zData.orderIndex := strToInt(edtorderIndex.Text);
   zData.connectRateToMasterRate := cbxconnectRateToMasterRate.Checked;
   zData.masterRateRateDeviation := _StrToFloat(edtmasterRateRateDeviation.Text);
-  zData.RateDeviationType := cmbRateDeviationType.Text;
+  zData.RateDeviationType := TCalculationType.FromItemIndex(__cmbRateDeviationType.ItemIndex);
   zData.connectSingleUseRateToMasterRate := cbxconnectSingleUseRateToMasterRate.Checked;
   zData.masterRateSingleUseRateDeviation := _StrToFloat(edtmasterRateSingleUseRateDeviation.Text);
-  zData.singleUseRateDeviationType := cmbsingleUseRateDeviationType.Text;
+  zData.singleUseRateDeviationType := TCalculationType.FromItemIndex(__cmbsingleUseRateDeviationType.ItemIndex);
   zData.connectStopSellToMasterRate := cbxconnectStopSellToMasterRate.Checked;
   zData.connectAvailabilityToMasterRate := cbxconnectAvailabilityToMasterRate.Checked;
   zData.connectMinStayToMasterRate := cbxconnectMinStayToMasterRate.Checked;
@@ -401,10 +398,9 @@ begin
   zData.RATE_PLAN_TYPE := cbxRatePlanType.Text;
 
   zData.masterRateExtraRateDeviation := _StrToFloat(edtmasterRateExtraRateDeviation.Text);
-  zData.extraRateDeviationType := cmbextraRateDeviationType.Text;
+  zData.extraRateDeviationType := TCalculationTypeExtra.FromItemIndex(__cmbextraRateDeviationType.ItemIndex);
   zData.masterRateExtraSingleUseRateDeviation := _StrToFloat(edtmasterRateExtraSingleUseRateDeviation.Text);
-  zData.extraSingleUseRateDeviationType := cmbextraSingleUseRateDeviationType.Text;
-
+  zData.extraSingleUseRateDeviationType := TCalculationTypeExtra.FromItemIndex(__cmbextraSingleUseRateDeviationType.ItemIndex);
 end;
 
 
@@ -438,6 +434,11 @@ end;
 
 procedure TFrmRoomClassEdit.FormShow(Sender: TObject);
 begin
+  TCalculationType.AsStrings(__cmbRateDeviationType.Items);
+  TCalculationType.AsStrings(__cmbsingleUseRateDeviationType.Items);
+  TCalculationTypeExtra.AsStrings(__cmbExtraSingleUseRateDeviationType.Items);
+  TCalculationTypeExtra.AsStrings(__cmbExtraRateDeviationType.Items);
+
   RecordHolderToEdits;
   edtTopClassChange(nil);
 end;

@@ -957,6 +957,11 @@ begin
   constants.Add('shTx_AccountType_GroupAccount', 'Group Account');
   constants.Add('shTx_AccountType_RoomAccount', 'Room Account');
 
+
+  constants.Add('shTx_CalculationType_FixedAmount', 'Fixed amount');
+  constants.Add('shTx_CalculationType_Percentage', 'Percentage');
+  constants.Add('shTx_CalculationType_DeviatedPercentage', 'Deviated percentage');
+
   constants.Add('shTx_RoomPricesEdit_RoomType', 'Room Type must be specified');
   constants.Add('shTx_RoomPricesEdit_PriceTime', 'Price range must be specified');
   constants.Add('shTx_RoomPricesEdit_Invoice', 'Invoice must be specified');
@@ -1886,7 +1891,7 @@ begin
   frmRptManagment := TfrmRptManagment.Create(nil); frmRptManagment.Free; frmRptManagment := nil;
 
   FrmHandleBookKeepingException := TFrmHandleBookKeepingException.Create(nil); FrmHandleBookKeepingException.Free; FrmHandleBookKeepingException := nil;
-  FrmRoomClassEdit := TFrmRoomClassEdit.Create(nil); FrmRoomClassEdit.Free; FrmRoomClassEdit := nil;
+  TFrmRoomClassEdit.Create(nil).Free;
 
   TfrmRptReservations.Create(nil).Free;
   FrmPostInvoices := TFrmPostInvoices.Create(nil); FrmPostInvoices.Free; FrmPostInvoices := nil;

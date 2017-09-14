@@ -17,7 +17,7 @@ uses
   cxClasses, acImage, clisted, uRoomerThreadedRequest, cxGraphics, cxLookAndFeels, cxLookAndFeelPainters, dxSkinsCore, dxSkinCaramel, dxSkinCoffee,
   dxSkinDarkSide, dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, cxButtons, AdvEdit, AdvEdBtn, PlannerDatePicker,
   dxSkinBlack, dxSkinBlue, dxSkinDevExpressDarkStyle, dxSkinFoggy, dxSkinLiquidSky, dxSkinMcSkin, dxSkinOffice2013White, dxSkinWhiteprint, CheckComboBox,
-  AdvUtil, sListBox, sCheckListBox;
+  AdvUtil, sListBox, sCheckListBox, uCalculationTypeDefinitions, uCalculationTypeExtraDefinitions;
 
 type
 
@@ -108,15 +108,15 @@ type
       FSingleUsePriceDirty: Boolean;
     FconnectSingleUseRateToMasterRate: Boolean;
     FconnectRateToMasterRate: Boolean;
-    FsingleUseRateDeviationType: String;
+    FsingleUseRateDeviationType: TCalculationType;
     FmasterRateSingleUseRateDeviation: Double;
-    FRateDeviationType: String;
+    FRateDeviationType: TCalculationType;
     FmasterRateRateDeviation: Double;
 
     FExtramasterRateRateDeviation: Double;
-    FExtraRateDeviationType: String;
+    FExtraRateDeviationType: TCalculationTypeExtra;
     FExtramasterRateSingleUseRateDeviation: Double;
-    FExtrasingleUseRateDeviationType: String;
+    FExtrasingleUseRateDeviationType: TCalculationTypeExtra;
 
     FconnectMaxStayToMasterRate: Boolean;
     FconnectCOAToMasterRate: Boolean;
@@ -195,16 +195,16 @@ type
 
     property connectRateToMasterRate : Boolean read FconnectRateToMasterRate write FconnectRateToMasterRate;
     property masterRateRateDeviation : Double read FmasterRateRateDeviation write FmasterRateRateDeviation;
-    property RateDeviationType : String read FRateDeviationType write FRateDeviationType;
+    property RateDeviationType : TCalculationType read FRateDeviationType write FRateDeviationType;
 
     property connectSingleUseRateToMasterRate : Boolean read FconnectSingleUseRateToMasterRate write FconnectSingleUseRateToMasterRate;
     property masterRateSingleUseRateDeviation : Double read FmasterRateSingleUseRateDeviation write FmasterRateSingleUseRateDeviation;
-    property singleUseRateDeviationType : String read FsingleUseRateDeviationType write FsingleUseRateDeviationType;
+    property singleUseRateDeviationType : TCalculationType read FsingleUseRateDeviationType write FsingleUseRateDeviationType;
 
     property masterRateExtraRateDeviation : Double read FExtramasterRateRateDeviation write FExtramasterRateRateDeviation;
-    property extraRateDeviationType : String read FExtraRateDeviationType write FExtraRateDeviationType;
+    property extraRateDeviationType : TCalculationTypeExtra read FExtraRateDeviationType write FExtraRateDeviationType;
     property masterRateExtraSingleUseRateDeviation : Double read FExtramasterRateSingleUseRateDeviation write FExtramasterRateSingleUseRateDeviation;
-    property extraSingleUseRateDeviationType : String read FExtrasingleUseRateDeviationType write FExtrasingleUseRateDeviationType;
+    property extraSingleUseRateDeviationType : TCalculationTypeExtra read FExtrasingleUseRateDeviationType write FExtrasingleUseRateDeviationType;
 
     property connectStopSellToMasterRate : Boolean read FconnectStopSellToMasterRate write FconnectStopSellToMasterRate;
     property connectAvailabilityToMasterRate : Boolean read FconnectAvailabilityToMasterRate write FconnectAvailabilityToMasterRate;
@@ -4924,22 +4924,17 @@ var
   function Calc(BaseAmount,
                 DeviatedAmount,
                 ExtraDeviation : Double;
-                ExtraDeviationType : String) : Double;
+                ExtraDeviationType : TCalculationTypeExtra) : Double;
   begin
-    if ExtraDeviationType='DEVIATED_PERCENTAGE' then
-    begin
-      result := DeviatedAmount * (1 + ExtraDeviation / 100);
-    end else
-    if ExtraDeviationType='PERCENTAGE' then
-    begin
-      result := DeviatedAmount + (BaseAmount * ExtraDeviation / 100);
-    end else
-    if ExtraDeviationType='FIXED_AMOUNT' then
-    begin
-      result := DeviatedAmount + ExtraDeviation;
-    end else
+    case ExtraDeviationType of
+      TCalculationTypeExtra.cteFixedAmount:         result := DeviatedAmount + ExtraDeviation;
+      TCalculationTypeExtra.ctePercentage:          result := DeviatedAmount + (BaseAmount * ExtraDeviation / 100);
+      TCalculationTypeExtra.cteDeviatedPercentage:  result := DeviatedAmount * (1 + ExtraDeviation / 100);
+    else
       result := DeviatedAmount;
+    end;
   end;
+
 begin
   if PriceData.channelId = -1 then
   begin
@@ -4952,7 +4947,7 @@ begin
         begin
           if (DestPriceData.connectRateToMasterRate AND isPriceRow(ARow)) then
           begin
-             if DestPriceData.RateDeviationType = 'FIXED_AMOUNT' then
+             if DestPriceData.RateDeviationType = TCalculationType.ctFixedAmount then
                tmpValue := CorrectAmountByCurrency(
                    Calc(PriceData.price,
                         PriceData.price + DestPriceData.masterRateRateDeviation,
@@ -4973,7 +4968,7 @@ begin
 
           if (DestPriceData.connectSingleUseRateToMasterRate AND isSingleUsePriceRow(ARow)) then
           begin
-             if DestPriceData.SingleUseRateDeviationType = 'FIXED_AMOUNT' then
+             if DestPriceData.SingleUseRateDeviationType = TCalculationType.ctFixedAmount then
                tmpValue := CorrectAmountByCurrency(
                   Calc(PriceData.SingleUsePrice,
                        PriceData.SingleUsePrice + DestPriceData.masterRateSingleUseRateDeviation,
@@ -5825,16 +5820,16 @@ begin
 
   connectRateToMasterRate := _connectRateToMasterRate;
   masterRateRateDeviation := _masterRateRateDeviation;
-  RateDeviationType := _RateDeviationType;
+  RateDeviationType := TCalculationType.FromDBString(_RateDeviationType);
 
   connectSingleUseRateToMasterRate := _connectSingleUseRateToMasterRate;
   masterRateSingleUseRateDeviation := _masterRateSingleUseRateDeviation;
-  singleUseRateDeviationType := _singleUseRateDeviationType;
+  singleUseRateDeviationType := TCalculationType.FromDBString(_singleUseRateDeviationType);
 
   FExtramasterRateRateDeviation := _ExtramasterRateRateDeviation;
-  FExtraRateDeviationType := _ExtraRateDeviationType;
+  FExtraRateDeviationType := TCalculationTypeExtra.FromDBString(_ExtraRateDeviationType);
   FExtramasterRateSingleUseRateDeviation := _ExtramasterRateSingleUseRateDeviation;
-  FExtrasingleUseRateDeviationType := _ExtrasingleUseRateDeviationType;
+  FExtrasingleUseRateDeviationType := TCalculationTypeExtra.FromDBString(_ExtrasingleUseRateDeviationType);
 
   connectStopSellToMasterRate := _connectStopSellToMasterRate;
   connectAvailabilityToMasterRate := _connectAvailabilityToMasterRate;

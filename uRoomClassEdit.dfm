@@ -66,7 +66,7 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
     Top = 5
     Width = 938
     Height = 585
-    ActivePage = sTabSheet1
+    ActivePage = sTabSheet3
     Align = alClient
     Style = tsFlatButtons
     TabHeight = 25
@@ -752,10 +752,6 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
     end
     object sTabSheet2: TsTabSheet
       Caption = 'Default values'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object sGroupBox1: TsGroupBox
         AlignWithMargins = True
         Left = 0
@@ -1222,10 +1218,6 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
     end
     object sTabSheet3: TsTabSheet
       Caption = 'Master rate'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object sGroupBox4: TsGroupBox
         AlignWithMargins = True
         Left = 0
@@ -1509,27 +1501,24 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
           TabOrder = 17
           SkinData.SkinSection = 'PANEL'
         end
-        object cmbRateDeviationType: TsComboBox
+        object __cmbRateDeviationType: TsComboBox
           Left = 477
-          Top = 57
+          Top = 56
           Width = 142
           Height = 21
           Alignment = taLeftJustify
           SkinData.SkinSection = 'COMBOBOX'
           VerticalAlignment = taAlignTop
+          Style = csDropDownList
           Color = clWhite
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
-          ItemIndex = 0
+          ItemIndex = -1
           ParentFont = False
           TabOrder = 2
-          Text = 'FIXED_AMOUNT'
-          Items.Strings = (
-            'FIXED_AMOUNT'
-            'PERCENTAGE')
         end
         object cbxconnectSingleUseRateToMasterRate: TsCheckBox
           Left = 257
@@ -1565,7 +1554,7 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
           OnKeyPress = edtdefRateKeyPress
           SkinData.SkinSection = 'EDIT'
         end
-        object cmbsingleUseRateDeviationType: TsComboBox
+        object __cmbsingleUseRateDeviationType: TsComboBox
           Left = 477
           Top = 83
           Width = 142
@@ -1573,19 +1562,16 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
           Alignment = taLeftJustify
           SkinData.SkinSection = 'COMBOBOX'
           VerticalAlignment = taAlignTop
+          Style = csDropDownList
           Color = clWhite
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
-          ItemIndex = 0
+          ItemIndex = -1
           ParentFont = False
           TabOrder = 7
-          Text = 'FIXED_AMOUNT'
-          Items.Strings = (
-            'FIXED_AMOUNT'
-            'PERCENTAGE')
         end
         object cbxconnectAvailabilityToMasterRate: TsCheckBox
           Left = 257
@@ -1734,7 +1720,7 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
           OnKeyPress = edtdefRateKeyPress
           SkinData.SkinSection = 'EDIT'
         end
-        object cmbExtraSingleUseRateDeviationType: TsComboBox
+        object __cmbExtraSingleUseRateDeviationType: TsComboBox
           Left = 766
           Top = 83
           Width = 142
@@ -1742,6 +1728,7 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
           Alignment = taLeftJustify
           SkinData.SkinSection = 'COMBOBOX'
           VerticalAlignment = taAlignTop
+          Style = csDropDownList
           Color = clWhite
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
@@ -1751,13 +1738,8 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
           ItemIndex = -1
           ParentFont = False
           TabOrder = 9
-          Text = 'FIXED_AMOUNT'
-          Items.Strings = (
-            'FIXED_AMOUNT'
-            'PERCENTAGE'
-            'DEVIATED_PERCENTAGE')
         end
-        object cmbExtraRateDeviationType: TsComboBox
+        object __cmbExtraRateDeviationType: TsComboBox
           Left = 766
           Top = 57
           Width = 142
@@ -1765,6 +1747,7 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
           Alignment = taLeftJustify
           SkinData.SkinSection = 'COMBOBOX'
           VerticalAlignment = taAlignTop
+          Style = csDropDownList
           Color = clWhite
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
@@ -1774,11 +1757,6 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
           ItemIndex = -1
           ParentFont = False
           TabOrder = 4
-          Text = 'FIXED_AMOUNT'
-          Items.Strings = (
-            'FIXED_AMOUNT'
-            'PERCENTAGE'
-            'DEVIATED_PERCENTAGE')
         end
       end
     end

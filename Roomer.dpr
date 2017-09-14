@@ -1,4 +1,4 @@
-program Roomer;
+﻿program Roomer;
 
 {$I Roomer.inc}
 
@@ -307,7 +307,9 @@ uses
   uHotelServicesAccessor in 'PMSSettings\uHotelServicesAccessor.pas',
   uRoomerCanonicalDataModel_DataStructures in 'OpenAPI\schema\uRoomerCanonicalDataModel_DataStructures.pas',
   uRoomerBookingDataModel_ModelObjects in 'OpenAPI\schema\uRoomerBookingDataModel_ModelObjects.pas',
-  uBookingsTaxesAPICaller in 'OpenAPI\uBookingsTaxesAPICaller.pas';
+  uBookingsTaxesAPICaller in 'OpenAPI\uBookingsTaxesAPICaller.pas',
+  uCalculationTypeDefinitions in 'Definitions\uCalculationTypeDefinitions.pas',
+  uCalculationTypeExtraDefinitions in 'Definitions\uCalculationTypeExtraDefinitions.pas';
 
 {$R *.RES}
 
