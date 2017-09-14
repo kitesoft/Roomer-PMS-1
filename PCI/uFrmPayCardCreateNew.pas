@@ -1,4 +1,4 @@
-unit uFrmPayCardView;
+unit uFrmPayCardCreateNew;
 
 interface
 
@@ -9,10 +9,10 @@ uses
   sStatusBar, uDImages, Vcl.StdCtrls, sButton, acPNG, acImage, HTMLabel, uRoomerForm;
 
 type
-  TFrmPayCardView = class(TfrmBaseRoomerDialogForm)
+  TFrmPayCardCreateNew = class(TfrmBaseRoomerDialogForm)
     pnlHead: TsPanel;
     pnlClient: TsPanel;
-    browser: TsWebBrowser;
+    browser: TWebBrowser;
     lblPleaseRead: THTMLabel;
     imgWarning: TsImage;
     procedure btnOKClick(Sender: TObject);
@@ -22,13 +22,13 @@ type
     FUsername: String;
     FReservation: Integer;
     FConfirmed: boolean;
-    FTokenId: Integer;
+    FRoomReservation: Integer;
     procedure SetHotelId(const Value: String);
     procedure SetUserName(const Value: String);
     procedure SetReservation(const Value: Integer);
     procedure GoToUri(uri: String);
     function openLogin(var userName, password: string): boolean;
-    procedure SetTokenId(const Value: Integer);
+    procedure SetRoomReservation(const Value: Integer);
   protected
     procedure DoShow; override;
     procedure DoLoadData; override;
@@ -38,10 +38,10 @@ type
     property UserName : String read FUsername write SetUserName;
     property HotelId : String read FHotelId write SetHotelId;
     property Reservation : Integer read FReservation write SetReservation;
-    property TokenId : Integer read FTokenId write SetTokenId;
+    property RoomReservation : Integer read FRoomReservation write SetRoomReservation;
   end;
 
-procedure ShowPayCardInformation(Reservation: Integer; TokenId : Integer; openContract: integer);
+procedure CreatePayCardInformation(Reservation: Integer; RoomReservation : Integer; openContract: integer);
 
 implementation
 
@@ -54,28 +54,29 @@ uses uG,
      cmpRoomerDataSet,
      PrjConst,
      uActivityLogs,
-     uFrmOptInMessage;
+     uFrmOptInMessage,
+     ShellApi;
 
-procedure ShowPayCardInformation(Reservation: Integer; TokenId : Integer; openContract: integer);
-var _FrmPayCardView : TFrmPayCardView;
+procedure CreatePayCardInformation(Reservation: Integer; RoomReservation : Integer; openContract: integer);
+var _FrmPayCardCreateNew : TFrmPayCardCreateNew;
 begin
   if (openContract = 1) then
   begin
-    _FrmPayCardView := TFrmPayCardView.Create(nil);
+    _FrmPayCardCreateNew := TFrmPayCardCreateNew.Create(nil);
     try
-      _FrmPayCardView.Reservation := Reservation;
-      _FrmPayCardView.TokenId := TokenId;
-      _FrmPayCardView.ShowModal;
+      _FrmPayCardCreateNew.Reservation := Reservation;
+      _FrmPayCardCreateNew.RoomReservation := RoomReservation;
+      _FrmPayCardCreateNew.ShowModal;
     finally
-      _FrmPayCardView.free;
+      _FrmPayCardCreateNew.free;
     end;
   end else
     OpenOptInDialog(OITPCI);
 end;
 
-{ TFrmPayCardView }
+{ TFrmPayCardCreateNew }
 
-function TFrmPayCardView.openLogin(var userName, password : string) : boolean;
+function TFrmPayCardCreateNew.openLogin(var userName, password : string) : boolean;
 var
   hotelcode: string;
 begin
@@ -83,7 +84,7 @@ begin
   result := (AskUserForCredentials(userName, password, hotelCode, '', 7) in cLoginFormSuccesfull);
 end;
 
-procedure TFrmPayCardView.GoToUri(uri : String);
+procedure TFrmPayCardCreateNew.GoToUri(uri : String);
 var Flags: OleVariant;
 begin
 //  Flags := 'navNoHistory,navNoReadFromCache,navNoWriteToCache';
@@ -92,7 +93,7 @@ begin
 end;
 
 
-procedure TFrmPayCardView.btnOKClick(Sender: TObject);
+procedure TFrmPayCardCreateNew.btnOKClick(Sender: TObject);
 var
   gUserName, gPassword : String;
 begin
@@ -113,7 +114,7 @@ begin
 
 end;
 
-procedure TFrmPayCardView.DoLoadData;
+procedure TFrmPayCardCreateNew.DoLoadData;
 var uri : String;
     iFrameUri : String;
     rSet : TRoomerDataSet;
@@ -131,29 +132,29 @@ begin
     if NOT rSet.Eof then
       iViews := rSet['VIEWS'];
     lblPleaseRead.HTMLText.Text := ReplaceString(lblPleaseRead.HTMLText.Text, '{PLEASE_NOTE}', GetTranslatedText('PCI_VIEW_Warning_PleaseNote'));
-    lblPleaseRead.HTMLText.Text := ReplaceString(lblPleaseRead.HTMLText.Text, '{CHARGE_PER_VIEW}', GetTranslatedText('PCI_VIEW_Warning_ChargePerView'));
-    lblPleaseRead.HTMLText.Text := ReplaceString(lblPleaseRead.HTMLText.Text, '{SECURITY_CODE_ONCE_VISIBLE}', GetTranslatedText('PCI_VIEW_Warning_SecurityCodeOnceVisible'));
+    lblPleaseRead.HTMLText.Text := ReplaceString(lblPleaseRead.HTMLText.Text, '{CHARGE_PER_CREATE}', GetTranslatedText('PCI_CREATE_Warning_ChargePerCreate'));
     sTemp := ReplaceString(GetTranslatedText('PCI_VIEW_Warning_NumberOfViews'), '{VIEWS}', inttostr(iViews));
     lblPleaseRead.HTMLText.Text := ReplaceString(lblPleaseRead.HTMLText.Text, '{NUMBER_OF_VIEWS}', sTemp);
   end
   else
   begin
-    uri := d.roomerMainDataSet.RoomerUri + format('paycard/bookings/%d/paycarddisplayuri', [FReservation]) +
-          IIF(tokenId > 0, format('?tokenId=%d', [tokenId]), '');
+    uri := d.roomerMainDataSet.RoomerUri + format('paycard/bookings/%d/%d/cardentryuri', [FReservation, FRoomReservation]);
 
     // Get Token via webservice
     iFrameUri := d.roomerMainDataSet.downloadUrlAsString(uri);
+    ShellExecute(Self.WindowHandle, 'open', PChar(iFrameUri), nil, nil, SW_SHOWNORMAL);
     GoToUri(iFrameUri);
+
   end;
 end;
 
-procedure TFrmPayCardView.DoShow;
+procedure TFrmPayCardCreateNew.DoShow;
 begin
   inherited;
   btnOK.ModalResult := 0;
 end;
 
-procedure TFrmPayCardView.DoUpdateControls;
+procedure TFrmPayCardCreateNew.DoUpdateControls;
 begin
   inherited;
 
@@ -167,22 +168,22 @@ begin
   browser.visible := FConfirmed;
 end;
 
-procedure TFrmPayCardView.SetHotelId(const Value: String);
+procedure TFrmPayCardCreateNew.SetHotelId(const Value: String);
 begin
   FHotelId := Value;
 end;
 
-procedure TFrmPayCardView.SetReservation(const Value: Integer);
+procedure TFrmPayCardCreateNew.SetReservation(const Value: Integer);
 begin
   FReservation := Value;
 end;
 
-procedure TFrmPayCardView.SetTokenId(const Value: Integer);
+procedure TFrmPayCardCreateNew.SetRoomReservation(const Value: Integer);
 begin
-  FTokenId := Value;
+  FRoomReservation := Value;
 end;
 
-procedure TFrmPayCardView.SetUserName(const Value: String);
+procedure TFrmPayCardCreateNew.SetUserName(const Value: String);
 begin
   FUsername := Value;
 end;

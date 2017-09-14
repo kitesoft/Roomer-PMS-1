@@ -61,7 +61,7 @@ uses
   , sSkinManager
   , sCheckBox
   , sGroupBox, cxPropertiesStore, Vcl.Grids, Vcl.DBGrids, Vcl.Mask, sMaskEdit, sCustomComboEdit, sTooledit, Vcl.ComCtrls, sPageControl, sMemo, sSplitter,
-  acProgressBar
+  acProgressBar, sSpinEdit, HTMLabel
   ;
 
 type
@@ -103,7 +103,10 @@ type
     sTabSheet4: TsTabSheet;
     sTabSheet5: TsTabSheet;
     lbStatus: TsLabel;
+    edtSheetIndex: TsSpinEdit;
+    sLabel5: TsLabel;
     sButton1: TsButton;
+    HTMLabel1: THTMLabel;
     procedure FormCreate(Sender: TObject);
     procedure btnLoginClick(Sender: TObject);
     procedure btnLogoutClick(Sender: TObject);
@@ -118,12 +121,15 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure sButton1Click(Sender: TObject);
   private
+    iHeaders : TList<Integer>;
     procedure getCounters(var ResId, PersId: Integer; RoomResIds : TStrings; NumRoomResIds : Integer);
     procedure saveCounters;
     procedure getCustomerInfo(var custNum, custPId: String; var defaultChannel : String);
     procedure ExecStandardCustomersImport(lines: TStrings);
     procedure PositionProgressBar;
-    function sh1(Filename : String; SheetIndex:integer; var cols, rows : Integer) : Variant;
+    function sh1(Filename : String; SheetIndex:integer; var cols, rows : Integer; Preview : Boolean = False) : Variant;
+    function getLine(line: Integer; arrData:Variant; checkName : String): String;
+    function indexOfName(arrData: variant; name: String): Integer;
 
     { Private declarations }
   public
@@ -135,12 +141,6 @@ type
 var
   frmRoomerDataConvertMain: TfrmRoomerDataConvertMain;
 
-function LoadGridFromCSVFile(AFilename: String;
-  ADelimiter:Char=';'; WithHeader:boolean=true;AddRows:boolean=true; startAt : integer = 0; endAt : Integer = 0) : TStrings;
-// Loads (quasi)CSV document in AFilename into Grid, using ADelimiter as
-// delimiter. If WithHeader is true, it won't import the first row.
-// If AddRows is true, it will add rows if the existing grid is too short.
-
 implementation
 
 {$R *.dfm}
@@ -151,7 +151,8 @@ uses uDataUnit,
      uDataBuilder,
      uCSVData,
      OleAuto,
-     uUtils
+     uUtils,
+     uSqlUtils
     ;
 
 
@@ -163,12 +164,14 @@ begin
   except
    // Ignore exceptions
   end;
+  iHeaders.Free;
 end;
 
 procedure TfrmRoomerDataConvertMain.FormCreate(Sender: TObject);
 begin
   PrepareRoomerConnection;
   CSVFileContent := TStringList.Create;
+  iHeaders := TList<Integer>.Create;
 end;
 
 procedure TfrmRoomerDataConvertMain.FormResize(Sender: TObject);
@@ -198,42 +201,174 @@ begin
   if iNum mod 10 = 0 then Application.ProcessMessages;
 end;
 
-function TfrmRoomerDataConvertMain.sh1(Filename : String; SheetIndex:integer; var cols, rows : Integer) : Variant;
+function getVariantAsString(v : Variant; checkExistence : boolean) : String;
+var s : String;
+    bArrivalExisting : Boolean;
+begin
+  bArrivalExisting := False;
+  s := '';
+  if checkExistence then
+    if String(v) = '' then
+     raise Exception.Create('Arrival date missing');
+  case vartype(v) of
+    varEmpty      : s := '';
+    varNull       : s := '';
+    varAny        : s := '';
+    varSmallint   : s := inttostr(v);
+    varInteger    : s := inttostr(v);
+    varSingle     : s := inttostr(v);
+    varDouble     : s := floattostr(v);
+    varCurrency   : s := floattostr(v);
+    varDate       : s := _db(TDate(v), false);
+    varOleStr     : s := v;
+    varDispatch   : s := '';
+    varError      : s := '';
+    varBoolean    : s := IIF(v=true, 'true', 'false');
+    varVariant    : s := '';
+    varUnknown    : s := '';
+    varShortInt   : s := inttostr(v);
+    varByte       : s := inttostr(v);
+    varWord       : s := inttostr(v);
+    varLongWord   : s := inttostr(v);
+    varInt64      : s := inttostr(v);
+    varStrArg     : s := '';
+    varString     : s := v;
+    varArray      : s := '';
+    varByRef      : s := '';
+    varTypeMask   : s := '';
+   end;
+   result := s;;
+end;
+
+function TfrmRoomerDataConvertMain.sh1(Filename : String; SheetIndex:integer; var cols, rows : Integer; Preview : Boolean = False) : Variant;
 Var
   Xlapp1, Sheet:Variant ;
-  X, Y:integer ;
+  X, Y, i:integer ;
   str:string;
   arrData:Variant;
+  s, sData : String;
 begin
-  Str:=trim(Filename);
+  Cursor := crHourglass;
+  lbStatus.Caption := 'Opening Excel sheet...';
+  Application.ProcessMessages;
+  try
+    Str:=trim(Filename);
 
-  XLApp1 := createoleobject('excel.application');
-  XLApp1.Workbooks.open(Str) ;
+    XLApp1 := createoleobject('excel.application');
+    XLApp1.Workbooks.open(Str) ;
 
-  Sheet := XLApp1.WorkSheets[SheetIndex] ;
+    Sheet := XLApp1.WorkSheets[SheetIndex] ;
+    try
+    rows := Sheet.Usedrange.EntireRow.count ;
+    cols := sheet.Usedrange.EntireColumn.count;
 
-  rows := Sheet.Usedrange.EntireRow.count ;
-  cols := sheet.Usedrange.EntireColumn.count;
+    //read the used range to a variant array
+    arrData:= Sheet.UsedRange.Value;
 
-  //read the used range to a variant array
-  arrData:= Sheet.UsedRange.Value;
+    if Preview then
+    begin
+      lbStatus.Caption := 'Reading excel data...';
+      Application.ProcessMessages;
+      prgWorking.Max := rows;
+      prgWorking.Position := 0;
+      memoResult.Lines.BeginUpdate;
+    end;
+    try
+      memoResult.Clear;
 
-//  memoResult.Lines.Add(inttostr(MaxRow));
-//  memoResult.Lines.Add(inttostr(maxCol));
+      iHeaders.Clear;
+      for x:=1 to cols do
+      begin
+        //copy data to header
+         s := arrData[1, x];
+         if s <> '' then
+         begin
+          iHeaders.Add(x);
+          sData := sData + IIF(sData = '', '', ROOMER_FIELD_DELIMITER) + s;
+         end;
+      end;
+      if Preview then
+        memoResult.Lines.Add(Sdata); // do note that the indices are reversed (y, x)
 
-  for y:=1 to rows do
-    for x:=1 to cols do
-      //copy data to grid
-      memoResult.Lines.Add(arrData[y, 4]); // do note that the indices are reversed (y, x)
+      if Preview then
+        for y:=2 to rows do
+        begin
+          sData := '';
+          for i:=0 to iHeaders.Count - 1 do
+          begin
+            //copy data to grid
+            x := iHeaders[i];
+            s := getVariantAsString(arrData[y, x], false);
+            sData := sData + IIF(sData = '', '', ROOMER_FIELD_DELIMITER) + s;
+          end;
+          memoResult.Lines.Add(Sdata); // do note that the indices are reversed (y, x)
+          Breathe(y);
+          prgWorking.StepIt;
+          prgWorking.Update;
+        end;
 
-  XLApp1.Workbooks.close;
-  result := arrData;
+
+      if Preview then
+        arrData := null;
+
+      result := arrData;
+    finally
+      if Preview then
+        memoResult.Lines.EndUpdate;
+    end;
+    finally
+      XLApp1.Workbooks.close;
+      XLApp1 := null;
+    end;
+  finally
+    lbStatus.Caption := 'Finished opening Excel sheet...';
+    Cursor := crDefault;
+    prgWorking.Position := 0;
+    Application.ProcessMessages;
+  end;
+end;
+
+function TfrmRoomerDataConvertMain.indexOfName(arrData : variant; name : String) : Integer;
+var i, x : integer;
+begin
+  result := -1;
+  for i := 0 to iHeaders.Count - 1 do
+  begin
+    x := iHeaders[i];
+    if LowerCase(arrData[1, x]) = LowerCase(name) then
+    begin
+      result := x;
+      Break;
+    end;
+  end;
+end;
+
+function TfrmRoomerDataConvertMain.getLine(line : Integer; arrData:Variant; checkName : String) : String;
+var i, x : Integer;
+    sTmp : String;
+    indexOfCheckName : Integer;
+begin
+  result := '';
+  indexOfCheckName := indexOfName(arrData, checkName);
+  if indexOfCheckName = -1 then
+    raise Exception.Create('Correction check cannot be perfomed on "' + checkName + '"');
+  for i := 0 to iHeaders.Count - 1 do
+  begin
+     x := iHeaders[i];
+     try
+       sTmp := getVariantAsString(arrData[line, x], indexOfCheckName = x);
+     except
+       result := '';
+       exit;
+     end;
+     result := result + IIF(result = '', '', ROOMER_FIELD_DELIMITER) + sTmp;
+  end;
 end;
 
 procedure TfrmRoomerDataConvertMain.sButton1Click(Sender: TObject);
 var rows, cols : Integer;
 begin
-  sh1(edFilename.FileName, 2, cols, rows);
+  sh1(edFilename.FileName, edtSheetIndex.Value, cols, rows, true);
 end;
 
 procedure TfrmRoomerDataConvertMain.sButton2Click(Sender: TObject);
@@ -242,6 +377,7 @@ var
 begin
   aFilename := ChangeFileExt(edFilename.FileName, '.sql');
   memoresult.Lines.SaveToFile(afilename);
+  MessageDlg('The SQL was saved to "' + aFilename + '"', mtInformation, [mbOk], 0);
 end;
 
 procedure TfrmRoomerDataConvertMain.btnProcessIntoRoomerClick(Sender: TObject);
@@ -359,7 +495,7 @@ begin
     PersId := rSet['LastPerson'];
 
     sList := RoomerDataSet.SystemMultipleNewRoomReservationIds(NumRoomResIds);
-    SplitStringToTStrings(',', sList, RoomResIds);
+    SplitString(sList, RoomResIds, ',');
   finally
     FreeAndNil(rSet);
   end;
@@ -419,11 +555,22 @@ begin
 end;
 
 procedure TfrmRoomerDataConvertMain.btnImportCustomersClick(Sender: TObject);
+var arrData:Variant;
+    rows, cols : Integer;
+    line : Integer;
+    str : String;
 begin
   Cursor := crHourglass;
   Application.ProcessMessages;
   try
-    CSVFileContent.LoadFromFile(edFilename.FileName);
+    CSVFileContent.Clear;
+    arrData := sh1(edFilename.FileName, edtSheetIndex.Value, cols, rows);
+    for line := 1 to rows do
+    begin
+      str := getLine(line, arrData, 'Customer');
+      if str <> '' then
+        CSVFileContent.Add(str);
+    end;
     ExecStandardCustomersImport(CSVFileContent);
     btnProcessIntoRoomer.Enabled := True;
   finally
@@ -458,54 +605,64 @@ var l : Integer;
     arrData:Variant;
     rows, cols : Integer;
 
-    function getLine(line : Integer);
-    var i : Integer;
-        sTmp : String;
-    begin
-      result := '';
-      for i := 1 to cols do
-      begin
-         sTmp := arrData[line, i];
-         result := result + IIF(result = '', arrData[line, i], ';' + arrData[line, i]);
-      end;
-    end;
-
 var line : Integer;
 begin
   RoomResIds := TStringList.Create;
-  Cursor := crHourglass;
-  Application.ProcessMessages;
   try
-//    CSVFileContent.LoadFromFile(edFilename.FileName);
-    AssignFile(myFile, edFilename.FileName);
+    CSVFileContent.Clear;
+    arrData := sh1(edFilename.FileName, edtSheetIndex.Value, cols, rows);
+    Cursor := crHourglass;
 
+    // Read all lines into CSV
+    lbStatus.Caption := 'Preparing list...'; lbStatus.Font.Color := clBlue; lbStatus.Update;
+    prgWorking.Max := rows;
+    prgWorking.Position := 0;
+    Application.ProcessMessages;
+    for line := 1 to rows do
+    begin
+      str := getLine(line, arrData, 'Arrival');
+      if str <> '' then
+        CSVFileContent.Add(str);
+      prgWorking.StepIt;
+      Application.ProcessMessages;
+    end;
     start(CSVFileContent[0], RoomerDataSet);
     numRooms := 0;
-    Reset(myFile);
-    ReadLn(myFile, sCurrent);
-    while not Eof(myFile) do
+
+    // Read total number of rooms
+    lbStatus.Caption := 'Calculating total number or rooms...'; lbStatus.Font.Color := clBlack; lbStatus.Update;
+    prgWorking.Max := CSVFileContent.Count - 1;
+    prgWorking.Position := 0;
+    Application.ProcessMessages;
+    for line := 1 to CSVFileContent.Count - 1 do
     begin
-      ReadToPipe(sCurrent);
+      sCurrent := CSVFileContent[line];
       numRooms := numRooms + NumRoomsOfLine(sCurrent);
+      prgWorking.Position := line;
+      Application.ProcessMessages;
     end;
-    CloseFile(myFile);
+    lbStatus.Caption := 'Retrieving Reservation id''s from Roomer backend...'; lbStatus.Font.Color := clBlue; lbStatus.Update;
     getCounters(ResId, PersId, RoomResIds, numRooms);
     getCustomerInfo(custNum, custPId, defaultChannel);
 
+    // Check correctness...
     memoResult.Lines.Clear;
-    Reset(myFile);
-    ReadLn(myFile, sCurrent);
-    while not Eof(myFile) do
+    lbStatus.Caption := 'Checking correctness of data...'; lbStatus.Font.Color := clBlack; lbStatus.Update;
+    prgWorking.Max := CSVFileContent.Count - 1;
+    prgWorking.Position := 0;
+    Application.ProcessMessages;
+    for line := 1 to CSVFileContent.Count - 1 do
     begin
-      ReadToPipe(sCurrent);
+      sCurrent := CSVFileContent[line];
       MissingField := CheckReservationOfLine(sCurrent);
       if MissingField <> '' then
       begin
         ShowMessage('Cannot continue because field(s) is/are missing: ' + #13#13);
         exit;
       end;
+      prgWorking.Position := line;
+      Application.ProcessMessages;
     end;
-    CloseFile(myFile);
 
     lbStatus.Caption := 'Reading reservations...'; lbStatus.Font.Color := clGreen; lbStatus.Update;
     prgWorking.Max := CSVFileContent.Count;
@@ -515,30 +672,27 @@ begin
     memoResult.Lines.BeginUpdate;
     try
 
-      Reset(myFile);
-      ReadLn(myFile, sCurrent);
-      while not Eof(myFile) do
+      for line := 1 to CSVFileContent.Count - 1 do
       begin
-        ReadToPipe(sCurrent);
-         numRooms := numRooms + NumRoomsOfLine(sCurrent);
-         memoResult.Text := ''; // inttostr(i);
-         memoResult.Text := memoResult.Text + '  ' + sCurrent;
-         numRooms := NumRoomsOfLine(sCurrent);
-         RoomResList := TList<Integer>.Create;
-         try
-           for l := 0 to numRooms - 1 do
-           begin
-             RoomResList.Add(StrToInt(RoomResIds[0]));
-             RoomResIds.Delete(0);
-           end;
-           CreateStandardReservationsLine(RoomerDataSet, sCurrent, edtUsername.Text, PersId, RoomResList, custNum, custPID, defaultChannel, false);
-         finally
-           RoomResList.Free;
-         end;
-         prgWorking.StepIt; prgWorking.Update;
-//         Breathe(0);
+        sCurrent := CSVFileContent[line];
+        numRooms := numRooms + NumRoomsOfLine(sCurrent);
+        memoResult.Text := ''; // inttostr(i);
+        memoResult.Text := memoResult.Text + '  ' + sCurrent;
+        numRooms := NumRoomsOfLine(sCurrent);
+        RoomResList := TList<Integer>.Create;
+        try
+          for l := 0 to numRooms - 1 do
+          begin
+            RoomResList.Add(StrToInt(RoomResIds[0]));
+            RoomResIds.Delete(0);
+          end;
+          CreateStandardReservationsLine(RoomerDataSet, sCurrent, edtUsername.Text, PersId, RoomResList, custNum, custPID, defaultChannel, false);
+        finally
+          RoomResList.Free;
+        end;
+        prgWorking.StepIt; prgWorking.Update;
+//        Breathe(0);
       end;
-      CloseFile(myFile);
     finally
       memoResult.Lines.EndUpdate;
     end;
@@ -576,6 +730,7 @@ begin
     lbStatus.Font.Color := clBlue; lbStatus.Update;
   //  end;
   finally
+    lbStatus.Caption := 'Idle...'; lbStatus.Font.Color := clBlack; lbStatus.Update;
     Cursor := crDefault;
     Application.ProcessMessages;
     RoomResIds.Free;
@@ -607,67 +762,5 @@ begin
   btnImportReservations.Enabled := btnLogout.Enabled;
 end;
 
-function LoadGridFromCSVFile(AFilename: String;
-  ADelimiter:Char=';'; WithHeader:boolean=true;AddRows:boolean=true; startAt : integer = 0; endAt : Integer = 0) : TStrings;
-const
-  DefaultRowCount=10; //Number of rows to show by default
-var
-  Parser: TCSVData;
-  line : String;
-  iCol, iRow : Integer;
-  TTempStringList : TStringList;
-  iStart, iEnd : Integer;
-  i: Integer;
-begin
-  if NOT FileExists(AFilename) then exit;
-
-  result := TStringList.Create;
-  TTempStringList := TStringList.Create;
-  TTempStringList.LoadFromFile(AFilename);
-
-  line := '';
-  iStart := 1;
-
-  iEnd := TTempStringList.Count - 1;
-  if startAt > iStart then
-     iStart := startAt;
-  if (endAt <> 0) AND (endAt < iEnd) then
-     iEnd := endAt;
-
-  for i := iStart - 1 downto 1 do
-    TTempStringList.Delete(i);
-  for i := TTempStringList.Count - 1 downto iEnd + 1 do
-    TTempStringList.Delete(i);
-
-  Parser:=TCSVData.Create;
-  try
-    Parser.Delim:=ADelimiter;
-    Parser.Quote := '"';
-    Parser.LoadFromStrings(TTempStringList);
-    ShowMessage(inttostr(Parser.Rows));
-    ShowMessage(inttostr(Parser.Cols));
-//    ShowMessage(Parser.Cell[0,0]);
-    for iRow := 0 to Parser.Rows - 1 do
-    begin
-
-      // Actual data import into grid cell, minding fixed rows and header
-      line := '';
-
-      for iCol := 0 to Parser.Cols do
-      begin
-        if line = '' then
-          line := line + Parser.Cell[iRow,iCol].Replace(ADelimiter, '|')
-        else
-          line := line + ';' + Parser.Cell[iRow,iCol].Replace(ADelimiter, '|');
-      end;
-
-      result.Add(line);
-    end;
-
-  finally
-    TTempStringList.Free;
-    Parser.Free;
-  end;
-end;
 
 end.

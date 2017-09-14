@@ -1,26 +1,26 @@
-inherited FrmPayCardView: TFrmPayCardView
+inherited FrmPayCardCreateNew: TFrmPayCardCreateNew
   BorderStyle = bsSizeable
   Caption = 'View pay-card information'
-  ClientHeight = 442
-  ClientWidth = 832
+  ClientHeight = 177
+  ClientWidth = 842
   ParentFont = False
   Font.Height = -13
   Font.Name = 'Calibri'
-  ExplicitWidth = 848
-  ExplicitHeight = 481
+  ExplicitWidth = 858
+  ExplicitHeight = 216
   PixelsPerInch = 96
   TextHeight = 15
   inherited sbStatusBar: TsStatusBar
-    Top = 422
-    Width = 832
-    ExplicitTop = 422
-    ExplicitWidth = 832
+    Top = 157
+    Width = 842
+    ExplicitTop = 562
+    ExplicitWidth = 842
   end
   object pnlHead: TsPanel [1]
     Left = 0
     Top = 0
-    Width = 832
-    Height = 169
+    Width = 842
+    Height = 121
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
@@ -28,8 +28,8 @@ inherited FrmPayCardView: TFrmPayCardView
       AlignWithMargins = True
       Left = 97
       Top = 15
-      Width = 760
-      Height = 124
+      Width = 712
+      Height = 76
       Margins.Left = 15
       Margins.Top = 15
       Margins.Bottom = 30
@@ -37,19 +37,18 @@ inherited FrmPayCardView: TFrmPayCardView
       HTMLText.Strings = (
         
           '<B><FONT size="12">{PLEASE_NOTE}</FONT></B><FONT size="11"><BR><' +
-          'BR><UL>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<LI>{CHARGE_PER_VIEW}' +
-          '<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<LI>{SECURITY_CODE_ONCE_' +
-          'VISIBLE}</UL><BR><BR>{NUMBER_OF_VIEWS}.</FONT>')
+          'BR><UL>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<LI>{CHARGE_PER_CREAT' +
+          'E}</FONT>')
       Images = DImages.cxLargeImagesFlat
       Transparent = True
       Version = '1.9.2.8'
-      ExplicitHeight = 121
+      ExplicitHeight = 58
     end
     object imgWarning: TsImage
       Left = 0
       Top = 0
       Width = 82
-      Height = 169
+      Height = 121
       Align = alLeft
       Center = True
       Picture.Data = {
@@ -347,28 +346,30 @@ inherited FrmPayCardView: TFrmPayCardView
       Transparent = True
       ImageIndex = 0
       SkinData.SkinSection = 'CHECKBOX'
+      ExplicitHeight = 169
     end
   end
   object pnlClient: TsPanel [2]
     Left = 0
-    Top = 169
-    Width = 832
-    Height = 210
+    Top = 121
+    Width = 842
+    Height = 0
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 3
-    object browser: TsWebBrowser
+    ExplicitHeight = 398
+    object browser: TWebBrowser
       Left = 0
       Top = 0
-      Width = 832
-      Height = 210
+      Width = 842
+      Height = 0
       Align = alClient
       TabOrder = 0
       ExplicitTop = -2
       ExplicitWidth = 869
       ExplicitHeight = 342
       ControlData = {
-        4C000000FD550000B41500000000000000000000000000000000000000000000
+        4C00000006570000000000000000000000000000000000000000000000000000
         000000004C000000000000000000000001000000E0D057007335CF11AE690800
         2B2E126208000000000000004C0000000114020000000000C000000000000046
         8000000000000000000000000000000000000000000000000000000000000000
@@ -376,23 +377,24 @@ inherited FrmPayCardView: TFrmPayCardView
     end
   end
   inherited pnlButtons: TsPanel
-    Top = 379
-    Width = 832
+    Top = 114
+    Width = 842
     ParentColor = True
-    ExplicitTop = 379
-    ExplicitWidth = 832
+    ExplicitTop = 519
+    ExplicitWidth = 842
     inherited btnOK: TsButton
-      Left = 516
+      Left = 526
       OnClick = btnOKClick
-      ExplicitLeft = 516
+      ExplicitLeft = 526
     end
     inherited btnCancel: TsButton
-      Left = 622
-      ExplicitLeft = 622
+      Left = 632
+      ExplicitLeft = 632
     end
     inherited btnClose: TsButton
-      Left = 728
-      ExplicitLeft = 728
+      Left = 738
+      ExplicitLeft = 738
+      ExplicitTop = 4
     end
   end
   inherited psRoomerBase: TcxPropertiesStore

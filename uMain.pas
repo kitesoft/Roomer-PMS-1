@@ -678,10 +678,12 @@ type
     pnlStaffComm: TsPanel;
     sImage1: TsImage;
     lblMainHeader: TsLabel;
-    rbTabFinanceConnect: TdxRibbonTab;
+    rbTabConnections: TdxRibbonTab;
     barinnBar11: TdxBar;
-    btnManageFinanceConnect: TdxBarLargeButton;
+    btnFinanceConnectManager: TdxBarLargeButton;
     btnCreditcardTokenUsage: TdxBarLargeButton;
+    btnPayCards: TdxBarLargeButton;
+    btnManagePaycards: TdxBarLargeButton;
     procedure FormCreate(Sender: TObject);
     procedure DefaultHandler(var Message); override;
     procedure FormShow(Sender: TObject);
@@ -969,9 +971,11 @@ type
     procedure btnResStatusPerdDayClick(Sender: TObject);
     procedure M1Click(Sender: TObject);
     procedure btnHomeClick(Sender: TObject);
-    procedure btnManageFinanceConnectClick(Sender: TObject);
+    procedure btnFinanceConnectManagerClick(Sender: TObject);
     procedure btnCreditcardTokenUsageClick(Sender: TObject);
     procedure gridSectionChanged(Sender: TObject; ALeft, ATop, ARight, ABottom: Integer);
+    procedure btnPayCardsClick(Sender: TObject);
+    procedure btnManagePaycardsClick(Sender: TObject);
 
   protected
     procedure CreateParams(var Params: TCreateParams); override;
@@ -1633,6 +1637,8 @@ uses
     , uFrmFinanceConnect
     , uFinanceConnectService
     , uPCITokenReport
+    , TokenChargeHistory
+    , uFrmManagePCIConnection
 		;
 
 {$R *.DFM}
@@ -3020,7 +3026,7 @@ procedure TfrmMain.CheckPCIContract;
 var xml : String;
     rSet : TRoomerDataSet;
 begin
-  xml := d.roomerMainDataSet.downloadUrlAsString(  d.roomerMainDataSet.RoomerUri + 'resapi/token');
+  xml := d.roomerMainDataSet.downloadUrlAsString(  d.roomerMainDataSet.RoomerUri + 'paycard/token');
   try
     rSet := d.roomerMainDataSet.ActivateNewDataset(xml);
     try
@@ -3045,9 +3051,9 @@ begin
   try
     if ActiveFinanceConnectSystemCode <> '' then
     begin
-      rbTabFinanceConnect.Caption := FinanceConnectService.SystemName;
+      btnFinanceConnectManager.Caption := FinanceConnectService.SystemName;
     end else
-      rbTabFinanceConnect.Caption := GetTranslatedText('FinanceConnect_TabName');
+      btnFinanceConnectManager.Caption := GetTranslatedText('FinanceConnect_TabName');
 
   finally
     FinanceConnectService.Free;
@@ -5936,6 +5942,7 @@ begin
 
   btnRoomInvoice.Enabled := Enable;
   btnGroupInvoice.Enabled := Enable;
+  btnPayCards.Enabled := Enable;
   btnClosedInvoicesThisRoom.Enabled := Enable AND (NOT OffLineMode);
   btnClosedInvoicesThisreservation.Enabled := Enable AND (NOT OffLineMode);
   btnClosedInvoicesThisCustomer.Enabled := Enable AND (NOT OffLineMode);
@@ -10717,10 +10724,15 @@ begin
   _RptMaidsList;
 end;
 
-procedure TfrmMain.btnManageFinanceConnectClick(Sender: TObject);
+procedure TfrmMain.btnFinanceConnectManagerClick(Sender: TObject);
 begin
   ManageFinanceConnect;
   CheckFinanceConnect;
+end;
+
+procedure TfrmMain.btnManagePaycardsClick(Sender: TObject);
+begin
+  ManagePCIConnection;
 end;
 
 procedure TfrmMain.btnManagerChannelManagerListClick(Sender: TObject);
@@ -11106,6 +11118,14 @@ procedure TfrmMain.dxBarLargeButton4Click(Sender: TObject);
 begin
   LogUserClickedButton(Sender);
   StaticResources('Files', [TResourceType.rtAnyFile], TResourceAccessType.ratRestricted);
+end;
+
+procedure TfrmMain.btnPayCardsClick(Sender: TObject);
+begin
+  if GetSelectedRoomInformation then
+  begin
+    ManagePaymentCards(_iReservation, _iRoomReservation);
+  end;
 end;
 
 procedure TfrmMain.btnDefaultMasterRatesClick(Sender: TObject);

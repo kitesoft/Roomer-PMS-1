@@ -1150,15 +1150,27 @@ var channelCode : String;
   end;
 begin
   result := false;
-  if LocateSpecificRecordAndGetValue('channels', 'id', channelId, 'channelManagerId', channelCode) then
+  if channelId <> -1 then
   begin
-    if Assigned(g.PCIContractWildcards) then
-      for i := 0 to g.PCIContractWildcards.Count - 1 do
-        if TRegEx.IsMatch(channelCode, CreateRegExCode(g.PCIContractWildcards[i])) then
-        begin
-          result := true;
-          Break;
-        end;
+    if LocateSpecificRecordAndGetValue('channels', 'id', channelId, 'channelManagerId', channelCode) then
+    begin
+      if Assigned(g.PCIContractWildcards) then
+        for i := 0 to g.PCIContractWildcards.Count - 1 do
+          if TRegEx.IsMatch(channelCode, CreateRegExCode(g.PCIContractWildcards[i])) then
+          begin
+            result := true;
+            Break;
+          end;
+    end;
+  end else
+  begin
+    channelCode := '*'; // Any...
+    for i := 0 to g.PCIContractWildcards.Count - 1 do
+      if TRegEx.IsMatch(channelCode, CreateRegExCode(g.PCIContractWildcards[i])) then
+      begin
+        result := true;
+        Break;
+      end;
   end;
 end;
 

@@ -304,7 +304,15 @@ uses
   ucxGridPopupMenuActivator in 'RoomerUtils\ucxGridPopupMenuActivator.pas',
   uPCITokenReport in 'PCI\uPCITokenReport.pas' {frmPCITokenReport},
   uFrmOptInMessage in 'OptIns\uFrmOptInMessage.pas' {FrmOptInMessage},
-  uSmtpService in 'Email\uSmtpService.pas';
+  uSmtpService in 'Email\uSmtpService.pas',
+  TokenChargeHistory in 'PCI\TokenChargeHistory.pas' {FrmTokenChargeHistory},
+  uTokenHelpers in 'PCI\uTokenHelpers.pas',
+  uPayCard in 'PCI\uPayCard.pas',
+  uFrmViewChargeInfo in 'PCI\uFrmViewChargeInfo.pas' {FrmViewChargeInfo},
+  uFrmPayCardCreateNew in 'PCI\uFrmPayCardCreateNew.pas' {FrmPayCardCreateNew},
+  uFrmViewPayCardDetails in 'PCI\uFrmViewPayCardDetails.pas' {FrmViewPayCardDetails},
+  uFmrChargePayCard in 'PCI\uFmrChargePayCard.pas' {FrmChargePayCard},
+  uFrmManagePCIConnection in 'PCI\uFrmManagePCIConnection.pas' {FrmManagePCIConnection};
 
 {$R *.RES}
 

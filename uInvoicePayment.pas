@@ -80,6 +80,7 @@ type
     LblForeignCurrency: TsLabel;
     LblLocalCurrency: TsLabel;
     btnViewPayCard: TsButton;
+    btnChargePAyCard: TsButton;
     procedure FormShow(Sender: TObject);
     procedure agrPayTypesSelectCell(Sender: TObject; ACol, ARow: Integer;
       var CanSelect: Boolean);
@@ -93,6 +94,7 @@ type
     procedure agrPayTypesGetAlignment(Sender: TObject; ARow, ACol: Integer; var HAlign: TAlignment; var VAlign: TVAlignment);
     procedure agrPayTypesClickCell(Sender: TObject; ARow, ACol: Integer);
     procedure btnViewPayCardClick(Sender: TObject);
+    procedure btnChargePAyCardClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -105,6 +107,7 @@ type
      procedure Recalc;
      procedure FillPayGrid;
     procedure ShowOrHideButtonViewPayCard;
+    function AlreadyProvidedPayments: Double;
   public
     { Public declarations }
      procedure WndProc(var Message: TMessage); override;
@@ -144,6 +147,9 @@ uses
    , uUtils
    , uFrmPayCardView
    , UITypes
+   , uFmrChargePayCard
+   , uTokenHelpers
+   , uFrmManagePCIConnection
   ;
 
 {$R *.DFM}
@@ -210,14 +216,17 @@ begin
     //  frmInvoicePayment.Caption := 'Invocie Payment';
 	    frmInvoicePayment.Caption := GetTranslatedText('shTx_InvoicePayment_InvoicePayment');
       frmInvoicePayment.panel2.visible := false;
-      frmInvoicePayment.__pnlCurrencies.Visible := UpperCase(Currency) <> UpperCase(ctrlGetString('NativeCurrency'));
-      if frmInvoicePayment.__pnlCurrencies.Visible then
-      begin
+      frmInvoicePayment.LblForeignCurrency.Visible := UpperCase(Currency) <> UpperCase(ctrlGetString('NativeCurrency'));
+      frmInvoicePayment.LblForeignCurrencyAmount.Visible := frmInvoicePayment.LblForeignCurrency.Visible;
+      frmInvoicePayment.__LblForeignCurrency.Visible := frmInvoicePayment.LblForeignCurrency.Visible;
+      frmInvoicePayment.__pnlCurrencies.Visible := true;
+//      if frmInvoicePayment.__pnlCurrencies.Visible then
+//      begin
         frmInvoicePayment.__LblLocalCurrency.Caption := trim(_floattostr(Amount, 10, 2));
         frmInvoicePayment.__LblForeignCurrency.Caption := trim(_floattostr(Amount / CurrencyRate, 10, 2));
         frmInvoicePayment.LblLocalCurrency.Caption := ctrlGetString('NativeCurrency');
         frmInvoicePayment.LblForeignCurrency.Caption := Currency;
-      end;
+//      end;
     end;
 
     frmInvoicePayment.Reservation := Reservation;
@@ -345,6 +354,16 @@ begin
   dtpayDate.Date := MaxDays + dtInvDate.Date
 end;
 
+function TfrmInvoicePayment.AlreadyProvidedPayments : Double;
+var
+  i : integer;
+begin
+  result := 0.00;
+  // --
+  for i := 0 to agrPayTypes.RowCount - 1 do
+    result := result + GridCellFloatValue( agrPayTypes, 1, i );
+end;
+
 
 procedure TfrmInvoicePayment.ShowOrHideButtonViewPayCard;
 var rSet : TRoomerDataSet;
@@ -354,8 +373,11 @@ begin
   if Reservation > 0 then
   begin
     rSet := CreateNewDataSet;
-    s := format('SELECT * FROM reservations WHERE Reservation=%d', [FReservation]);
-    hData.rSet_bySQL(rSet, s);
+    s := format('SELECT `channel`, PAYCARD_TOKEN FROM reservations r WHERE r.Reservation=%d AND NOT ISNULL(r.PAYCARD_TOKEN) ' +
+                'UNION ALL ' +
+                'SELECT -1 AS `channel`, PAYCARD_TOKEN FROM home100.PAYMENT_CARD_EXTRA_TOKENS PCET WHERE PCET.HOTEL_ID = ''%s'' AND PCET.RESERVATION=%d',
+                [FReservation, d.roomerMainDataSet.hotelId, FReservation]);
+    hData.rSet_bySQL(rSet, s, false);
     rSet.First;
     if NOT rSet.Eof then
     begin
@@ -400,6 +422,33 @@ begin
    end;
 end;
 
+procedure TfrmInvoicePayment.btnChargePAyCardClick(Sender: TObject);
+var charge : TTokenCharge;
+    PayType : String;
+    i : Integer;
+begin
+ charge := ChargePayCardForPayment(Reservation,
+            0,
+            FAmount - AlreadyProvidedPayments,
+            LblForeignCurrency.Caption,
+            PCO_CHARGE);
+ if Assigned(charge) then
+ begin
+   PayType := getMapForCardType(charge.token.CardType);
+   if PayType = '' then
+   begin
+
+   end;
+   for i := 1 to agrPayTypes.RowCount - 1 do
+     if LowerCase(agrPayTypes.Cells[0, i]) = LowerCase(PayType) then
+     begin
+       agrPayTypes.Cells[1, i] := FloatToStr(charge.amount);
+       ReCalc;
+       BtnOk.Click;
+     end;
+ end;
+end;
+
 procedure TfrmInvoicePayment.BtnOkClick(Sender: TObject);
 begin
   if frmInvoicePayment.cbxLocation.itemindex = 0 then
@@ -419,7 +468,7 @@ end;
 
 procedure TfrmInvoicePayment.btnViewPayCardClick(Sender: TObject);
 begin
-  ShowPayCardInformation(FReservation, btnViewPayCard.Tag);
+  ShowPayCardInformation(FReservation, 0, btnViewPayCard.Tag);
 end;
 
 procedure TfrmInvoicePayment.agrPayTypesKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);

@@ -192,6 +192,13 @@ uses uAppGlobal,
   , uFrmFinanceConnect
   , uPCITokenReport
   , uFrmOptInMessage
+
+  , TokenChargeHistory
+  , uFrmViewChargeInfo
+  , uFrmPayCardCreateNew
+  , uFmrChargePayCard
+  , uFrmManagePCIConnection
+
   ;
 
 
@@ -1705,8 +1712,11 @@ begin
 
   constants.Add('PCI_VIEW_Warning_PleaseNote', 'Please note:');
   constants.Add('PCI_VIEW_Warning_ChargePerView', 'Viewing the credit card is charged per-view.');
+  constants.Add('PCI_CREATE_Warning_ChargePerCreate', 'Creating a payment card is charged per-card.');
   constants.Add('PCI_VIEW_Warning_SecurityCodeOnceVisible', 'The credit-card security code (CVC) is only shown <B><U>once</U></B>. After that it will not be shown again.');
   constants.Add('PCI_VIEW_Warning_NumberOfViews', 'The credit-card of this reservation has been viewed {VIEWS} times.');
+
+  constants.Add('PCI_REFUND_TOO_HIGH_AMOUNT', 'Refund cannot be hight thant the originally charged amount.');
 
   constants.Add('OPT_IN_PLEASE_NOTE', 'Please note:');
   constants.Add('OPT_IN_MESSAGE_1', 'To be able to view the creditcard information from the various channels you will need an extended agreement with Roomer.');
@@ -1714,6 +1724,7 @@ begin
   constants.Add('OPT_IN_FROM_ROOMER', 'With kind regards,<BR><I>Your Roomer Team</I>');
   constants.Add('OPT_IN_EMAIL_SUBJECT', 'Opt-In Email Message - %s');
   constants.Add('OPT_IN_EMAIL_BODY', '');
+
 end;
 
 procedure AddConstants_OfflineReports;
@@ -1971,6 +1982,11 @@ begin
 
   TFrmPCITokenReport.Create(nil).Free;
   TFrmOptInMessage.Create(nil).Free;
+  TFrmTokenChargeHistory.Create(nil).Free;
+  TFrmViewChargeInfo.Create(nil).Free;
+  TFrmPayCardCreateNew.Create(nil).Free;
+  TFrmChargePayCard.Create(nil).Free;
+  TFrmManagePCIConnection.Create(nil).Free;
 
 end;
 

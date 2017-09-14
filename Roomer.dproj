@@ -2,7 +2,7 @@
     <PropertyGroup>
         <ProjectGuid>{436E2CCE-115E-475F-9C3E-19C03F70A4D0}</ProjectGuid>
         <MainSource>Roomer.dpr</MainSource>
-        <Config Condition="'$(Config)'==''">DebugBas</Config>
+        <Config Condition="'$(Config)'==''">Debug</Config>
         <DCC_DCCCompiler>DCC32</DCC_DCCCompiler>
         <ProjectVersion>14.3</ProjectVersion>
         <FrameworkType>VCL</FrameworkType>
@@ -940,6 +940,30 @@
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Email\uSmtpService.pas"/>
+        <DCCReference Include="PCI\TokenChargeHistory.pas">
+            <Form>FrmTokenChargeHistory</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="PCI\uTokenHelpers.pas"/>
+        <DCCReference Include="PCI\uPayCard.pas"/>
+        <DCCReference Include="PCI\uFrmViewChargeInfo.pas">
+            <Form>FrmViewChargeInfo</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="PCI\uFrmPayCardCreateNew.pas">
+            <Form>FrmPayCardCreateNew</Form>
+        </DCCReference>
+        <DCCReference Include="PCI\uFrmViewPayCardDetails.pas">
+            <Form>FrmViewPayCardDetails</Form>
+        </DCCReference>
+        <DCCReference Include="PCI\uFmrChargePayCard.pas">
+            <Form>FrmChargePayCard</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="PCI\uFrmManagePCIConnection.pas">
+            <Form>FrmManagePCIConnection</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <None Include="Roomer.todo"/>
         <None Include="notes.txt"/>
         <None Include="Roomer.inc"/>

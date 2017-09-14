@@ -613,6 +613,10 @@ type
     acCopyValueDown: TAction;
     acCopyValueUp: TAction;
     acCopyValueAll: TAction;
+    mnuPayCards: TPopupMenu;
+    M1: TMenuItem;
+    V1: TMenuItem;
+    acManagePaycards: TAction;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -744,6 +748,7 @@ type
     procedure acCopyValueDownExecute(Sender: TObject);
     procedure acCopyValueUpExecute(Sender: TObject);
     procedure acCopyValueAllExecute(Sender: TObject);
+    procedure acManagePaycardsExecute(Sender: TObject);
   private
     { Private declarations }
     vStartName: string;
@@ -875,6 +880,7 @@ uses
   , uDateTimeHelper
   , uResourceTypeDefinitions
   , uFrmPayCardView
+  , TokenChargeHistory
   ;
 
 {$R *.DFM}
@@ -1126,8 +1132,8 @@ begin
       First;
       if not Eof then
       begin
-        btnViewPayCard.Visible := (rSet.FieldDefs.IndexOf('PAYCARD_TOKEN') > -1) AND
-                                 (rSet.FieldByName('PAYCARD_TOKEN').AsString <> '');
+        btnViewPayCard.Visible := true; // (rSet.FieldDefs.IndexOf('PAYCARD_TOKEN') > -1) AND
+                                        // (rSet.FieldByName('PAYCARD_TOKEN').AsString <> '');
         btnViewPayCard.Tag := ORD(glb.PCIContractOpenForChannel(fieldbyname('channel').asInteger));
 
         edtInvRefrence.ReadOnly := glb.GetBooleanValueOfFieldFromId('channels', 'managedByChannelManager',
@@ -1755,6 +1761,11 @@ begin
 end;
 
 
+procedure TfrmReservationProfile.acManagePaycardsExecute(Sender: TObject);
+begin
+  ManagePaymentCards(zReservation, zRoomReservation);
+end;
+
 // ******************************************************************************
 // Room Functions
 // ******************************************************************************
@@ -1887,7 +1898,7 @@ end;
 
 procedure TfrmReservationProfile.acViewPayCardExecute(Sender: TObject);
 begin
-  ShowPayCardInformation(zReservation, btnViewPayCard.Tag);
+  ShowPayCardInformation(zReservation, 0, btnViewPayCard.Tag);
 end;
 
 procedure TfrmReservationProfile.AddNewRoom;

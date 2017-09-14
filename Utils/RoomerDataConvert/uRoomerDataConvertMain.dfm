@@ -98,7 +98,7 @@ object frmRoomerDataConvertMain: TfrmRoomerDataConvertMain
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
-      TabOrder = 0
+      TabOrder = 1
       Text = 'hj'
       SkinData.SkinSection = 'EDIT'
       BoundLabel.Font.Charset = DEFAULT_CHARSET
@@ -124,7 +124,7 @@ object frmRoomerDataConvertMain: TfrmRoomerDataConvertMain
       Font.Style = []
       ParentFont = False
       PasswordChar = '*'
-      TabOrder = 1
+      TabOrder = 2
       Text = 'hordur'
       SkinData.SkinSection = 'EDIT'
       BoundLabel.Font.Charset = DEFAULT_CHARSET
@@ -143,7 +143,7 @@ object frmRoomerDataConvertMain: TfrmRoomerDataConvertMain
       Margins.Right = 2
       Margins.Bottom = 2
       Caption = 'Login'
-      TabOrder = 2
+      TabOrder = 3
       OnClick = btnLoginClick
       SkinData.SkinSection = 'BUTTON'
     end
@@ -158,7 +158,7 @@ object frmRoomerDataConvertMain: TfrmRoomerDataConvertMain
       Margins.Bottom = 2
       Caption = 'Logout'
       Enabled = False
-      TabOrder = 3
+      TabOrder = 4
       OnClick = btnLogoutClick
       SkinData.SkinSection = 'BUTTON'
     end
@@ -178,7 +178,7 @@ object frmRoomerDataConvertMain: TfrmRoomerDataConvertMain
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
-      TabOrder = 4
+      TabOrder = 0
       Text = 'CHNL'
       SkinData.SkinSection = 'EDIT'
       BoundLabel.Font.Charset = DEFAULT_CHARSET
@@ -312,18 +312,55 @@ object frmRoomerDataConvertMain: TfrmRoomerDataConvertMain
             Margins.Right = 2
             Margins.Bottom = 2
             Caption = 'Comma delimited data'
+            ExplicitLeft = 3
+            ExplicitTop = 28
             object sLabel4: TsLabel
               Left = 16
               Top = 17
-              Width = 162
+              Width = 91
               Height = 16
-              Caption = 'Comma delimited file name:'
+              Caption = 'Excel file name:'
               ParentFont = False
               Font.Charset = DEFAULT_CHARSET
               Font.Color = clWindowText
               Font.Height = -13
               Font.Name = 'Tahoma'
               Font.Style = []
+            end
+            object sLabel5: TsLabel
+              Left = 16
+              Top = 71
+              Width = 73
+              Height = 16
+              Caption = 'Sheet Index:'
+              ParentFont = False
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -13
+              Font.Name = 'Tahoma'
+              Font.Style = []
+            end
+            object HTMLabel1: THTMLabel
+              Left = 95
+              Top = 112
+              Width = 466
+              Height = 225
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -13
+              Font.Name = 'Tahoma'
+              Font.Style = []
+              HTMLText.Strings = (
+                
+                  '<B><FONT color="#FF0000">NOTE:</FONT></B> <BR>Sheet Index is the' +
+                  ' tab wihin the Excel file contsaining the data to be imported.<B' +
+                  'R>Most of the time <B>index 2</B> contains the list of reservati' +
+                  'ons to be imported and <B>Index 1</B> the list of customers to b' +
+                  'e iported. This ca however, vary. depending on the creation of t' +
+                  'he Excel sheet.')
+              ParentFont = False
+              Transparent = True
+              Version = '1.9.2.8'
             end
             object sPanel5: TsPanel
               Left = 0
@@ -335,7 +372,7 @@ object frmRoomerDataConvertMain: TfrmRoomerDataConvertMain
               Margins.Right = 2
               Margins.Bottom = 2
               Align = alBottom
-              TabOrder = 0
+              TabOrder = 3
               SkinData.SkinSection = 'PANEL'
               object btnImportReservations: TsButton
                 Left = 487
@@ -367,15 +404,6 @@ object frmRoomerDataConvertMain: TfrmRoomerDataConvertMain
                 OnClick = btnImportCustomersClick
                 SkinData.SkinSection = 'BUTTON'
               end
-              object sButton1: TsButton
-                Left = 360
-                Top = 4
-                Width = 75
-                Height = 25
-                Caption = 'sButton1'
-                TabOrder = 2
-                OnClick = sButton1Click
-              end
             end
             object edFilename: TsFilenameEdit
               Left = 16
@@ -391,16 +419,45 @@ object frmRoomerDataConvertMain: TfrmRoomerDataConvertMain
               Font.Style = []
               MaxLength = 255
               ParentFont = False
-              TabOrder = 1
+              TabOrder = 0
               Text = ''
               CheckOnExit = True
               SkinData.SkinSection = 'EDIT'
               GlyphMode.Blend = 0
               GlyphMode.Grayed = False
               OnAfterDialog = edFilenameAfterDialog
-              DefaultExt = '.csv'
-              Filter = 'CSV files (*.csv)|*.csv|All files (*.*)|*.*'
+              DefaultExt = '.xlsx'
+              Filter = 'Excel sheets (*.xlsx)|*.xlsx|All files (*.*)|*.*'
               DialogOptions = [ofHideReadOnly, ofNoValidate, ofEnableSizing]
+            end
+            object edtSheetIndex: TsSpinEdit
+              Left = 95
+              Top = 67
+              Width = 57
+              Height = 25
+              Alignment = taCenter
+              AutoSize = False
+              Color = clWhite
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clBlack
+              Font.Height = -15
+              Font.Name = 'Tahoma'
+              Font.Style = []
+              ParentFont = False
+              TabOrder = 1
+              Text = '2'
+              MaxValue = 100
+              MinValue = 1
+              Value = 2
+            end
+            object sButton1: TsButton
+              Left = 158
+              Top = 67
+              Width = 75
+              Height = 25
+              Caption = 'Preview'
+              TabOrder = 2
+              OnClick = sButton1Click
             end
           end
         end

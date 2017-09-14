@@ -621,9 +621,9 @@ begin
 
   if ActiveFinanceConnectSystemCode <> '' then
   begin
-    frmMain.rbTabFinanceConnect.Caption := FinanceConnectService.SystemName;
+    frmMain.btnFinanceConnectManager.Caption := FinanceConnectService.SystemName;
   end else
-    frmMain.rbTabFinanceConnect.Caption := GetTranslatedText('FinanceConnect_TabName');
+    frmMain.btnFinanceConnectManager.Caption := GetTranslatedText('FinanceConnect_TabName');
 
 end;
 

@@ -321,7 +321,7 @@ begin
   mTokenUsage.DisableControls;
   try
     d.roomerMainDataSet.SetTimeZoneComparedToUTC('');
-    xml := d.roomerMainDataSet.downloadUrlAsString(  d.roomerMainDataSet.RoomerUri + format('resapi/token/usage/%s/%d', [cbxYear.Items[cbxYear.ItemIndex], cbxMonth.ItemIndex]));
+    xml := d.roomerMainDataSet.downloadUrlAsString(  d.roomerMainDataSet.RoomerUri + format('paycard/token/usage/%s/%d', [cbxYear.Items[cbxYear.ItemIndex], cbxMonth.ItemIndex]));
     rSet := d.roomerMainDataSet.ActivateNewDataset(xml);
     try
       if mTokenUsage.Active then

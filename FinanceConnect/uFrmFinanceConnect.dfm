@@ -27,6 +27,10 @@ inherited FrmFinanceConnect: TFrmFinanceConnect
     OnChange = pgMainChange
     object tsSettings: TsTabSheet
       Caption = 'Settings'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object gbxConnectionSettings: TsGroupBox
         AlignWithMargins = True
         Left = 3
@@ -421,6 +425,10 @@ inherited FrmFinanceConnect: TFrmFinanceConnect
     end
     object tsMappings: TsTabSheet
       Caption = 'Mappings'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object tabsMappings: TsTabControl
         AlignWithMargins = True
         Left = 3
@@ -721,12 +729,15 @@ inherited FrmFinanceConnect: TFrmFinanceConnect
       Left = 550
       Default = False
       OnClick = btnOKClick
+      ExplicitLeft = 550
     end
     inherited btnCancel: TsButton
       Left = 656
+      ExplicitLeft = 656
     end
     inherited btnClose: TsButton
       Left = 762
+      ExplicitLeft = 762
     end
   end
   inherited cxsrRoomerStyleRepository: TcxStyleRepository

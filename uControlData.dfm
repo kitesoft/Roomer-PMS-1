@@ -143,7 +143,7 @@ object frmControlData: TfrmControlData
         Top = 1
         Width = 1101
         Height = 743
-        ActivePage = tsCompany
+        ActivePage = tsInvoiceSystem
         Align = alClient
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
@@ -9213,10 +9213,9 @@ object frmControlData: TfrmControlData
                 Margins.Bottom = 10
                 Align = alLeft
                 BorderStyle = bsSingle
-                Color = clWhite
                 Columns = 1
                 Font.Charset = DEFAULT_CHARSET
-                Font.Color = 4013373
+                Font.Color = clWindowText
                 Font.Height = -12
                 Font.Name = 'Tahoma'
                 Font.Style = []

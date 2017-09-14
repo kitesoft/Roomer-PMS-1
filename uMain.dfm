@@ -123,10 +123,6 @@ object frmMain: TfrmMain
         object tabOneDayView: TsTabSheet
           Caption = 'tabOneDayView'
           ImageIndex = 8
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object grOneDayRooms: TAdvStringGrid
             Left = 0
             Top = 0
@@ -308,8 +304,6 @@ object frmMain: TfrmMain
             SortSettings.HeaderMirrorColor = 16380385
             SortSettings.HeaderMirrorColorTo = 16182488
             Version = '8.2.5.2'
-            ExplicitLeft = -2
-            ExplicitTop = -1
             ColWidths = (
               47
               49
@@ -435,7 +429,7 @@ object frmMain: TfrmMain
               object lblNoRoom: TsLabel
                 Left = 3
                 Top = 59
-                Width = 50
+                Width = 76
                 Height = 13
                 Align = alBottom
                 Alignment = taCenter
@@ -446,6 +440,7 @@ object frmMain: TfrmMain
                 Font.Height = -11
                 Font.Name = 'Tahoma'
                 Font.Style = [fsBold]
+                ExplicitWidth = 50
               end
             end
           end
@@ -852,10 +847,6 @@ object frmMain: TfrmMain
         object tabPeriod: TsTabSheet
           Caption = 'tabPeriod'
           ImageIndex = 2
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object sLabel2: TsLabel
             Left = 224
             Top = 400
@@ -1320,7 +1311,6 @@ object frmMain: TfrmMain
             OnMoved = splitPeriodMoved
             Color = 6842472
             ParentColor = False
-            ExplicitTop = 157
           end
           object pnlPeriodNoRooms: TsPanel
             Left = 0
@@ -1640,32 +1630,16 @@ object frmMain: TfrmMain
         end
         object tabFreeRooms: TsTabSheet
           Caption = 'tabFreeRooms'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
         end
         object tabDashboard: TsTabSheet
           Caption = 'tabDashboard'
           SkinData.SkinSection = 'TRANSPARENT'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
         end
         object tabRateQuery: TsTabSheet
           Caption = 'tabRateQuery'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
         end
         object tabFrontDesk: TsTabSheet
           Caption = 'tabFrontDesk'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object sbFrontDesk: TsScrollBox
             Left = 0
             Top = 0
@@ -1690,7 +1664,7 @@ object frmMain: TfrmMain
         object lblBusyDownloading: TsLabel
           Left = 0
           Top = 158
-          Width = 73
+          Width = 304
           Height = 13
           Margins.Left = 10
           Margins.Top = 0
@@ -1708,11 +1682,12 @@ object frmMain: TfrmMain
           Font.Name = 'Tahoma'
           Font.Style = []
           UseSkinColor = False
+          ExplicitWidth = 73
         end
         object lblCacheNotification: TsLabel
           Left = 0
           Top = 145
-          Width = 86
+          Width = 304
           Height = 13
           Margins.Left = 10
           Margins.Top = 0
@@ -1730,6 +1705,7 @@ object frmMain: TfrmMain
           Font.Name = 'Tahoma'
           Font.Style = []
           UseSkinColor = False
+          ExplicitWidth = 86
         end
         object pnlStatistics: TsScrollBox
           Left = 0
@@ -1869,8 +1845,8 @@ object frmMain: TfrmMain
           AlignWithMargins = True
           Left = 158
           Top = 3
-          Width = 94
-          Height = 23
+          Width = 286
+          Height = 27
           Margins.Left = 5
           Align = alClient
           Caption = '12-12-2012'
@@ -1884,6 +1860,8 @@ object frmMain: TfrmMain
           Font.Height = -17
           Font.Name = 'Segoe UI'
           Font.Style = [fsBold]
+          ExplicitWidth = 94
+          ExplicitHeight = 23
         end
         object sPanel3: TsPanel
           Left = 447
@@ -2559,8 +2537,8 @@ object frmMain: TfrmMain
       object lblTimeMessage: TsLabel
         Left = 0
         Top = 0
-        Width = 265
-        Height = 24
+        Width = 1035
+        Height = 41
         Align = alClient
         Alignment = taCenter
         Caption = '<Timely messages panel>'
@@ -2572,6 +2550,8 @@ object frmMain: TfrmMain
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         UseSkinColor = False
+        ExplicitWidth = 265
+        ExplicitHeight = 24
       end
     end
     object pnlOffline: TsPanel
@@ -2686,7 +2666,6 @@ object frmMain: TfrmMain
       Index = 2
     end
     object rbTabReports: TdxRibbonTab
-      Active = True
       Caption = 'Reports'
       Groups = <
         item
@@ -2787,8 +2766,9 @@ object frmMain: TfrmMain
         end>
       Index = 7
     end
-    object rbTabFinanceConnect: TdxRibbonTab
-      Caption = 'Finance Connect'
+    object rbTabConnections: TdxRibbonTab
+      Active = True
+      Caption = 'Connections'
       Groups = <
         item
           ToolbarName = 'barinnBar11'
@@ -3682,6 +3662,10 @@ object frmMain: TfrmMain
         item
           Visible = True
           ItemName = 'btnDownPayments'
+        end
+        item
+          Visible = True
+          ItemName = 'btnPayCards'
         end>
       OneOnRow = False
       Row = 0
@@ -3692,7 +3676,7 @@ object frmMain: TfrmMain
     object barinnClosedInvoices: TdxBar
       Caption = 'Closed invoices'
       CaptionButtons = <>
-      DockedLeft = 418
+      DockedLeft = 486
       DockedTop = 0
       FloatLeft = 1341
       FloatTop = 8
@@ -3720,7 +3704,7 @@ object frmMain: TfrmMain
     object barinnInvoiceLists: TdxBar
       Caption = 'Invoice reports'
       CaptionButtons = <>
-      DockedLeft = 661
+      DockedLeft = 729
       DockedTop = 0
       FloatLeft = 1341
       FloatTop = 8
@@ -4675,7 +4659,11 @@ object frmMain: TfrmMain
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'btnManageFinanceConnect'
+          ItemName = 'btnFinanceConnectManager'
+        end
+        item
+          Visible = True
+          ItemName = 'btnManagePaycards'
         end>
       OneOnRow = True
       Row = 0
@@ -5618,13 +5606,13 @@ object frmMain: TfrmMain
       Category = 0
       Visible = ivAlways
     end
-    object btnManageFinanceConnect: TdxBarLargeButton
-      Caption = 'Manage'
+    object btnFinanceConnectManager: TdxBarLargeButton
+      Caption = 'Finance connect'
       Category = 0
-      Hint = 'Manage'
+      Hint = 'Finance connect'
       Visible = ivAlways
       LargeImageIndex = 70
-      OnClick = btnManageFinanceConnectClick
+      OnClick = btnFinanceConnectManagerClick
     end
     object btnCreditcardTokenUsage: TdxBarLargeButton
       Caption = 'Creditcard token usage'
@@ -5633,6 +5621,22 @@ object frmMain: TfrmMain
       Visible = ivAlways
       LargeImageIndex = 126
       OnClick = btnCreditcardTokenUsageClick
+    end
+    object btnPayCards: TdxBarLargeButton
+      Caption = 'Pay-cards'
+      Category = 0
+      Hint = 'Pay-cards'
+      Visible = ivAlways
+      LargeImageIndex = 126
+      OnClick = btnPayCardsClick
+    end
+    object btnManagePaycards: TdxBarLargeButton
+      Caption = 'Pay cards'
+      Category = 0
+      Hint = 'Pay cards'
+      Visible = ivAlways
+      LargeImageIndex = 92
+      OnClick = btnManagePaycardsClick
     end
     object mmnuFile: TdxBarSubItem
       Caption = '&File'

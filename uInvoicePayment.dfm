@@ -133,7 +133,7 @@ object frmInvoicePayment: TfrmInvoicePayment
   end
   object Panel3: TsPanel
     Left = 0
-    Top = 108
+    Top = 115
     Width = 336
     Height = 19
     Align = alTop
@@ -151,9 +151,9 @@ object frmInvoicePayment: TfrmInvoicePayment
   end
   object agrPayTypes: TAdvStringGrid
     Left = 0
-    Top = 127
+    Top = 134
     Width = 336
-    Height = 180
+    Height = 173
     Cursor = crDefault
     Align = alClient
     BorderStyle = bsNone
@@ -453,7 +453,7 @@ object frmInvoicePayment: TfrmInvoicePayment
     Left = 0
     Top = 29
     Width = 336
-    Height = 79
+    Height = 86
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 6
@@ -528,15 +528,26 @@ object frmInvoicePayment: TfrmInvoicePayment
       Caption = '...'
     end
     object btnViewPayCard: TsButton
-      Left = 141
-      Top = 46
-      Width = 112
-      Height = 32
+      Left = 31
+      Top = 44
+      Width = 129
+      Height = 38
       Caption = 'Pay-card info'
       ImageIndex = 92
       Images = DImages.PngImageList1
       TabOrder = 0
       OnClick = btnViewPayCardClick
+    end
+    object btnChargePAyCard: TsButton
+      Left = 166
+      Top = 44
+      Width = 129
+      Height = 38
+      Caption = 'Charge Pay-card'
+      ImageIndex = 92
+      Images = DImages.PngImageList1
+      TabOrder = 1
+      OnClick = btnChargePAyCardClick
     end
   end
   object sSkinProvider1: TsSkinProvider

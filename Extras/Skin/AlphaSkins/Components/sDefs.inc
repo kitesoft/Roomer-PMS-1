@@ -7,18 +7,18 @@
 //{$DEFINE TNTUNICODE} // Enable Unicode support by TntControls
 // >> 3rdparty support finish >>
 
-//{$DEFINE USEHINTMANAGER}
-//{$DEFINE ADDWEBBROWSER}       // Support of the TWebBrowser (full AC sources needed)
-//{$DEFINE DISABLEPREVIEWMODE}  // If key is enabled then preview code is excluded
-//{$DEFINE NOWNDANIMATION}      // Disable animation effects for dialogs and forms
-//{$DEFINE CHANGEFORMSINDESIGN} // Changing the forms colors in design-time
-//{$DEFINE SKININDESIGN}        // Skin control in frames in design-time
-//{$DEFINE ALITE}               // Free Lite Edition
-//{$DEFINE NOACPNG}             // Do not use AlphaControls Png loader automatically
-//{$DEFINE NOJPG}               // Jpegs will not be used
-//{$DEFINE NOFONTSCALEPATCH}    // Disables the patch for systems with big fonts
-//{$DEFINE FIXGRAPHERROR}       // Solves graphic problem in design-time (if exists)
-//{$DEFINE ALITE} // Free Lite Edition
+//{ $DEFINE USEHINTMANAGER}
+//{ $DEFINE ADDWEBBROWSER}       // Support of the TWebBrowser (full AC sources needed)
+//{ $DEFINE DISABLEPREVIEWMODE}  // If key is enabled then preview code is excluded
+//{ $DEFINE NOWNDANIMATION}      // Disable animation effects for dialogs and forms
+//{ $DEFINE CHANGEFORMSINDESIGN} // Changing the forms colors in design-time
+//{ $DEFINE SKININDESIGN}        // Skin control in frames in design-time
+//{ $DEFINE ALITE}               // Free Lite Edition
+//{ $DEFINE NOACPNG}             // Do not use AlphaControls Png loader automatically
+//{ $DEFINE NOJPG}               // Jpegs will not be used
+//{ $DEFINE NOFONTSCALEPATCH}    // Disables the patch for systems with big fonts
+//{ $DEFINE FIXGRAPHERROR}       // Solves graphic problem in design-time (if exists)
+//{ $DEFINE ALITE} // Free Lite Edition
 
 {$IFNDEF NOJPG}
 //  {$DEFINE TINYJPG}

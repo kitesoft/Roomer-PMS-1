@@ -174,17 +174,17 @@ type
     property Id: integer read FId;
     property stopSell: Boolean read FStopSell Write setStopSell;
     property minStay: integer read FMinStay Write setMinStay;
-    property oldMinStay: integer read FOldMinStay;
+    property oldMinStay: integer read FOldMinStay write FOldMinStay;
     property channelId: integer read FChannelId;
     property rateRoundingType: integer read FRateRoundingType;
     property roomTypeGroupId: integer read FRoomTypeGroupId;
     property roomtypeGroupCode: String read FRoomTypeGroupCode;
     property RoomTypeTopClass: String read FRoomTypeTopClass;
-    property OldPrice: double read FOldPrice;
+    property OldPrice: double read FOldPrice write FOldPrice;
     property Price: Double read FPrice write SetPrice;
     property Availability: integer read FAvailability write SetAvailability;
     property MaxStay: integer read FMaxStay write SetMaxStay;
-    property oldMaxStay: integer read FOldMaxStay;
+    property oldMaxStay: integer read FOldMaxStay write FOldMaxStay;
     property COA: Boolean read FCOA write SetCOA;
     property COD: Boolean read FCOD write SetCOD;
     property LOSArrivalDateBased: Boolean read FLOSArrivalDateBased write SetLOSArrivalDateBased;
@@ -1938,6 +1938,7 @@ var
           RATE_EDIT:  begin
                         lOldValue := PriceData.OldPrice ;
                         lNewValue := PriceData.Price;
+                        PriceData.OldPrice := PriceData.Price;
                       end;
           STOP_EDIT:  begin
                         lOldValue := ord(not PriceData.stopSell);
@@ -1946,10 +1947,12 @@ var
           MIN_EDIT:  begin
                         lOldValue := PriceData.OldMinStay;
                         lNewValue := PriceData.MinStay;
+                        PriceData.OldMinStay := PriceData.MinStay;
                       end;
           MAX_EDIT:  begin
                         lOldValue := PriceData.OldMaxStay;
                         lNewValue := PriceData.MaxStay;
+                        PriceData.OldMaxStay := PriceData.MaxStay;
                       end;
           COA_EDIT:  begin
                         lOldValue := ord(not PriceData.COA);

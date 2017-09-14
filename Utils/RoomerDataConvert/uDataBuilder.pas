@@ -204,12 +204,6 @@ var header : TStringlist;
 
     dsRoomerDataSet : TRoomerDataSet;
 
-
-
-//procedure CreateE92ReservationsLine(line : String; _staff : String;
-//          var ResId, RoomResId, PersId : Integer);
-
-
 procedure PrepareCollect;
 
 function CheckReservationOfLine(line : String) : String;
@@ -225,6 +219,7 @@ procedure start(line : String = ''; _RoomerDataSet : TRoomerDataSet = nil);
 function getReservationsSqlList : TStrings;
 function getCustomersSqlList : TStrings;
 
+const ROOMER_FIELD_DELIMITER = '|~|';
 implementation
 
 uses uUtils, uFloatUtils, uRoomerDataConvertMain, System.Generics.Collections;
@@ -491,7 +486,7 @@ begin
 
   if line <> '' then
   begin
-    container := SplitStringToTStrings(';', line);
+    container := SplitStringToTStrings(ROOMER_FIELD_DELIMITER, line);
     header.Clear;
     for i := 0 to container.Count - 1 do
       header.Add(LowerCase(container[i]));
@@ -1402,7 +1397,7 @@ begin
     if i >= 0  then
     begin
       if i > container.Count - 1 then
-        ShowMessage('Container index is wrong: ' + ' (' + inttostr(i) + ')' + #13#13 + GetContainerValues(container))
+        ShowMessage('Container index of "' + valueName + '" is wrong: ' + ' (' + inttostr(i) + ')' + #13#13 + GetContainerValues(container))
       else
         result := container[i];
     end else
@@ -1490,7 +1485,7 @@ var container : TStrings;
     i: Integer;
     Cust : TCustInfo;
 begin
-    container := SplitStringToTStrings(';', line);
+    container := SplitStringToTStrings(ROOMER_FIELD_DELIMITER, line);
     Cust := TCustInfo.Create;
     with Cust do
     begin
@@ -1548,7 +1543,7 @@ var container : TStrings;
     temp : String;
     rSet : TRoomerDataSet;
 begin
-    container := SplitStringToTStrings(';', line);
+    container := SplitStringToTStrings(ROOMER_FIELD_DELIMITER, line);
     temp := valueOfName(XCUSTOMER_ID, '', container);
     if CustInList(temp) then
       exit;
@@ -1602,7 +1597,7 @@ var container : TStrings;
     fieldValue : String;
 begin
   result := '';
-  container := SplitStringToTStrings(';', line);
+  container := SplitStringToTStrings(ROOMER_FIELD_DELIMITER, line);
   for i := 0 to Reservations_Mandatory.Count - 1 do
   begin
     idx := IsInHeader(header, Reservations_Mandatory[i]);
@@ -1629,7 +1624,7 @@ end;
 function NumRoomsOfLine(line : String) : Integer;
 var container : TStrings;
 begin
-  container := SplitStringToTStrings(';', line);
+  container := SplitStringToTStrings(ROOMER_FIELD_DELIMITER, line);
   result := StrToIntDef(valueOfName(NUMBER_OF_ROOMS, '1', container),1);
 end;
 
@@ -1666,7 +1661,7 @@ var container : TStrings;
 
     _NewReservation : Boolean;
 begin
-    container := SplitStringToTStrings(';', line);
+    container := SplitStringToTStrings(ROOMER_FIELD_DELIMITER, line);
     try
       if SkipIfRoomNumberIsEmpty then
       begin
