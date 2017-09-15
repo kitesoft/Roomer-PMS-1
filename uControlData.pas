@@ -690,7 +690,7 @@ type
     cbAllowTogglingOfCityTaxesOnInvoice: TsCheckBox;
     tsBetaFunctions: TsTabSheet;
     gbxInvoiceBeta: TsGroupBox;
-    cbxObjectsInvoice: TsCheckBox;
+    cbxNewTaxCalcMethod: TsCheckBox;
     gbxReservationProfileFunctionality: TsGroupBox;
     chkChangeNationality: TsCheckBox;
     cbxPreArrivalEnabled: TsCheckBox;
@@ -1675,7 +1675,7 @@ g.ReadWriteSettingsToRegistry(0);
 
     if glb.PMSSettings.BetaFunctionality.BetaFunctionsAvailable then
     begin
-      cbxObjectsInvoice.Checked := glb.PMSSettings.BetaFunctionality.UseInvoiceOnObjectsForm;
+      cbxNewTaxCalcMethod.Checked := glb.PMSSettings.BetaFunctionality.UseNewTaxcalcMethod;
     end;
 
   finally
@@ -2314,7 +2314,7 @@ begin
 
     if glb.PMSSettings.BetaFunctionality.BetaFunctionsAvailable then
     begin
-      glb.PMSSettings.BetaFunctionality.UseInvoiceOnObjectsForm := cbxObjectsInvoice.Checked;
+      glb.PMSSettings.BetaFunctionality.UseNewTaxcalcMethod := cbxNewTaxCalcMethod.Checked;
     end;
 
     FHotelServicesSettings.LifeCycleMailerSettings.PreArrivalMailSetttings.PreArrivalMailerEnabled := cbxPreArrivalEnabled.Checked;

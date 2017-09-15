@@ -65,7 +65,7 @@ type
   published
     property TotalCityTax: TxsdAmountGroup read FTotalCityTax write FTotalCityTax;
     property TotalCityTaxvat: TxsdAmountGroup read FTotalCityTaxvat write FTotalCityTaxvat;
-    property Receipts: TxsdRoomRentTaxReceiptTypeList read GetReceipts;
+    property Receipts: IList<TxsdRoomRentTaxReceiptType> read FReceipts;
   end;
 
 
@@ -117,7 +117,7 @@ begin
   if aNode.SelectNodesNS(GetNameSpaceURI, 'TotalCityTaxVat', lNodeList, 1) then
     FTotalCityTaxvat.SetPropertiesFromXMLNode(lNodeList.GetFirst);
 
-  Receipts.SetPropertiesFromXMLNode(aNode);
+  GetReceipts.SetPropertiesFromXMLNode(aNode);
 
 end;
 

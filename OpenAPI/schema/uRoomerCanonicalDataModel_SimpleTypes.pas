@@ -457,6 +457,7 @@ type
 			ZWL
   );
   TxsdISO4217CurrencyCodeHelper = record helper for TxsdISO4217CurrencyCode
+  public
     class function FromString(const aString: string): TxsdISO4217CurrencyCode; static;
     function AsString: String;
   end;

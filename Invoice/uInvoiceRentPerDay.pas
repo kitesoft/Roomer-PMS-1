@@ -75,7 +75,10 @@ uses
   uInvoiceEntities,
   uCurrencyHandlersMap,
   uInvoiceObjects
-  , uInvoiceDefinitions
+  , uInvoiceDefinitions, uRoomerBookingDataModel_ModelObjects
+  , Spring.Collections.Lists
+  , Spring.Collections
+  , Spring.Data.ObjectDataSet
   ;
 
 type
@@ -487,6 +490,8 @@ type
     FStayTaxEnabled: boolean;
     FInvoiceIndexTotals: TInvoiceIndexTotalList;
 
+    FTaxAPIResponse : TxsdRoomRentTaxReceiptList;
+
     procedure LoadInvoice;
     procedure loadInvoiceToMemtable(var m: TKbmMemTable);
 
@@ -648,6 +653,8 @@ type
     procedure RemoveInvoicelineVisibilityRecord(aInvoiceLine: TInvoiceLine; aInvoiceNumber: integer;
       aExecPlan: TRoomerExecutionPlan);
     procedure MoveSelectedLinesToInvoiceIndex(aNewIndex: integer);
+    procedure UpdateTaxinvoiceLinesForRoomItemUsingBackend(aInvLine: TInvoiceLine);
+    procedure RetrieveTaxesforRoomReservation(aReservation, aRoomreservation: integer);
 
     property InvoiceIndex: TInvoiceIndex read FInvoiceIndex write SetInvoiceIndex;
     property AnyRowChecked: boolean read GetAnyRowSelected;
@@ -708,7 +715,9 @@ uses
   System.Generics.Defaults,
   uDateTimeHelper,
   Types,
-  uFinanceConnectService;
+  uFinanceConnectService
+  , uBookingsTaxesAPICaller
+  , uRoomerCanonicalDataModel_DataStructures, uRoomerCanonicalDataModel_SimpleTypes;
 
 {$R *.DFM}
 
@@ -812,6 +821,7 @@ destructor TfrmInvoiceRentPerDay.Destroy;
 begin
   FCurrencyhandlersMap.Free;
   FInvoiceIndexTotals.Free;
+  FTaxAPIResponse.Free;
   inherited;
 end;
 
@@ -1676,8 +1686,10 @@ begin
   lInvoiceLine.RoomEntity := lRoomInfo;
   lRoomInfo.Vat := lInvoiceLine.VATOnInvoice;
 
-  // Tax invoicelines
-  UpdateTaxinvoiceLinesForRoomItem(lInvoiceLine);
+  if glb.PMSSettings.BetaFunctionality.UseNewTaxcalcMethod then
+    UpdateTaxinvoiceLinesForRoomItemUsingBackend(lInvoiceLine)
+  else
+    UpdateTaxinvoiceLinesForRoomItem(lInvoiceLine);
 
   // Included Breakfast invoicelines
   AddBreakfastInvoicelinesForRoomItem(lRoomInfo, lInvoiceLine);
@@ -1795,6 +1807,44 @@ begin
   end;
 
   UpdateGrid;
+end;
+
+procedure TfrmInvoiceRentPerDay.UpdateTaxinvoiceLinesForRoomItemUsingBackend(aInvLine: TInvoiceLine);
+var
+  iList: IList<TxsdRoomRentTaxReceiptType>;
+  lObject: TxsdRoomRentTaxReceiptType;
+begin
+  if zFromKredit then
+    exit;
+
+  RemoveTaxinvoiceLinesForRoomItem(aInvLine);
+
+  FStayTaxEnabled := ctrlGetBoolean('useStayTax') AND RV_useStayTax(FReservation);
+  if not FStayTaxEnabled then
+    exit;
+
+  if not Supports(FTaxAPIResponse.Receipts, IObjectList, iList) then
+    exit;
+
+  for lObject in iList.Where(
+        function(const aObject: TxsdRoomRentTaxReceiptType): boolean
+                                  begin
+                                    Result := (aObject.RoomReservationId = aInvLine.Roomreservation)
+                                              and (aObject.StayDate = aInvLine.PurchaseDate);
+                                  end
+  ) do
+    AddRoomTaxToLinesAndGrid(
+          FCurrencyhandlersMap.ConvertAmount(lObject.CityTax.Amount, lObject.CityTax.Currency.AsString, g.qNativeCurrency),
+          lObject.Quantity, //trunc(lTaxResultInvoiceLines[l].NumItems),
+          lObject.Item, // TaxTypes[tt],
+          aInvLine.RoomEntity.Arrival,
+          0,
+          aInvLine,
+          lObject.CityTaxIncludedInRoomPrice //  lIsIncluded
+    );
+
+    UpdateGrid;
+
 end;
 
 procedure TfrmInvoiceRentPerDay.tvPaymentsCellDblClick(Sender: TcxCustomGridTableView;
@@ -2106,6 +2156,21 @@ begin
   end;
 end;
 
+procedure TfrmInvoiceRentPerDay.RetrieveTaxesforRoomReservation(aReservation, aRoomreservation: integer);
+var
+  lCaller: TBookingsTaxesTabAPICaller;
+begin
+
+  lCaller := TBookingsTaxesTabAPICaller.Create;
+  try
+    if not lCaller.GetRoomReservationTaxes(aReservation, aRoomreservation, FTaxApiResponse) then
+      FTaxAPIResponse.Clear;
+  finally
+    lCaller.Free;
+  end;
+
+end;
+
 procedure TfrmInvoiceRentPerDay.LoadInvoice;
 var
   iLastRoomRes: integer;
@@ -2378,6 +2443,8 @@ begin
 
     DisplayMem(zrSet);
     DisplayGuestName(zrSet);
+
+    RetrieveTaxesforRoomReservation(FReservation, FRoomreservation);
 
     sql := Select_Invoice_GenerateInvoiceLinesRoomRentPerDay(FRoomReservation, FReservation, FInvoiceIndex, edtCustomer.Text );
 
@@ -3016,8 +3083,8 @@ begin
   tempInvoiceItemList := TInvoiceItemEntityList.Create(True);
   FCurrencyhandlersMap := TCurrencyhandlersMap.Create;
   FInvoiceIndexTotals := TInvoiceIndexTotalList.Create;
+  FTaxAPIResponse := TxsdRoomRentTaxReceiptList.Create;
   inherited;
-
 end;
 
 procedure TfrmInvoiceRentPerDay.FormCreate(Sender: TObject);

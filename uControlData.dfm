@@ -143,7 +143,7 @@ object frmControlData: TfrmControlData
         Top = 1
         Width = 1101
         Height = 743
-        ActivePage = tsInvoiceSystem
+        ActivePage = tsBetaFunctions
         Align = alClient
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
@@ -3595,7 +3595,6 @@ object frmControlData: TfrmControlData
             Caption = 'Room rate '
             TabOrder = 1
             SkinData.SkinSection = 'GROUPBOX'
-            ExplicitTop = 338
             object Label1: TsLabel
               Left = 6
               Top = 22
@@ -3838,7 +3837,6 @@ object frmControlData: TfrmControlData
             Caption = 'A/R '
             TabOrder = 3
             SkinData.SkinSection = 'GROUPBOX'
-            ExplicitTop = 285
             object Label65: TsLabel
               Left = 109
               Top = 20
@@ -3899,7 +3897,6 @@ object frmControlData: TfrmControlData
             Caption = 'Payments'
             TabOrder = 4
             SkinData.SkinSection = 'GROUPBOX'
-            ExplicitTop = 516
             object sLabel12: TsLabel
               Left = 202
               Top = 18
@@ -4055,7 +4052,6 @@ object frmControlData: TfrmControlData
             AutoSize = True
             BevelOuter = bvNone
             TabOrder = 5
-            ExplicitTop = 415
             object cxGroupBox5: TsGroupBox
               Left = 0
               Top = 0
@@ -9299,12 +9295,12 @@ object frmControlData: TfrmControlData
             Align = alTop
             Caption = 'Invoice Beta functionaity'
             TabOrder = 0
-            object cbxObjectsInvoice: TsCheckBox
+            object cbxNewTaxCalcMethod: TsCheckBox
               Left = 24
               Top = 24
-              Width = 214
+              Width = 159
               Height = 20
-              Caption = 'Use new Invoiceform using Objects'
+              Caption = 'Use new Taxcalc method'
               TabOrder = 0
               ImgChecked = 0
               ImgUnchecked = 0

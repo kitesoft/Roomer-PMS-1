@@ -128,6 +128,7 @@ type
     fraNationality: TfraCountryPanel;
     fraCountry: TfraCountryPanel;
     fraCompCountry: TfraCountryPanel;
+    lbExtraTaxes: TsLabel;
     procedure FormCreate(Sender: TObject);
     procedure cbxGuaranteeTypesCloseUp(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -164,6 +165,7 @@ type
     function AnyTShapeVisible: Boolean;
     procedure UpdateGuaranteeTags;
     procedure Changed(Sender: TObject);
+    function GetTotalTaxesForRoomreservation(aReservation, aRoomReservation: integer): double;
     { Private declarations }
   public
     { Public declarations }
@@ -183,9 +185,6 @@ type
 
 function OpenGuestCheckInForm(_RoomReservation: Integer; GuestCheckin: Boolean = True): Boolean;
 function PrintRegistrationForm(_RoomReservations: IntegerArray): Boolean;
-
-var
-  FrmGuestCheckInForm: TFrmGuestCheckInForm;
 
 const
 //  GET_RESERVATION_CHECKIN_CHECKOUT = 'SELECT * FROM reservations WHERE Reservation=(SELECT Reservation FROM roomreservations WHERE RoomReservation=%d)';
@@ -326,7 +325,12 @@ uses uRoomerLanguage,
   DateUtils,
   uRoomerDefinitions,
   uInvoiceContainer,
-  uMandatoryFieldDefinitions, uSQLUtils;
+  uMandatoryFieldDefinitions
+  , uSQLUtils
+  , uBookingsTaxesAPICaller
+  , uRoomerBookingDataModel_ModelObjects
+  , uRoomerCanonicalDataModel_SimpleTypes
+  ;
 
 const
   WM_SET_COMBO_TEXT = WM_User + 101;
@@ -348,10 +352,6 @@ begin
       begin
         SaveGuestInfo;
         result := True;
-      end
-      else
-      begin
-
       end;
     finally
       freeandnil(_FrmGuestCheckInForm);
@@ -642,6 +642,25 @@ begin
   Result := rSet_bySQL(aRSet, sql);
 end;
 
+function TFrmGuestCheckInForm.GetTotalTaxesForRoomreservation(aReservation: integer; aRoomReservation: integer): double;
+var
+  lResponse: TxsdRoomRentTaxReceiptList;
+  lCaller: TBookingsTaxesTabAPICaller;
+begin
+  Result := 0.00;
+  lResponse := nil;
+  lCaller := TBookingsTaxesTabAPICaller.Create;
+  try
+    lResponse := TxsdRoomRentTaxReceiptList.Create;
+    if lCaller.GetRoomReservationTaxes(aReservation, aRoomReservation, lResponse) then
+      Result := FCurrencyhandler.ConvertFrom(lResponse.TotalCityTax.Amount, lResponse.TotalCityTax.Currency.asString);
+  finally
+    lResponse.Free;
+    lCaller.Free;
+  end;
+
+end;
+
 procedure TFrmGuestCheckInForm.LoadGuestInfo;
 var
   lRoomInvoice: TInvoice;
@@ -672,6 +691,12 @@ begin
                                                              + lRoomInvoice.TotalTaxes); // Trim(_floatToStr(ResSetGuest['TotalPrice'] + ResSetGuest['CurrentSales'], 12, 2));
       lbPAyments.Caption := FCurrencyHandler.FormattedValue(lRoomInvoice.TotalPayments); //Trim(_floatToStr(ResSetGuest['CurrentPayments'], 12, 2));
       lbTaxes.Caption := FCurrencyHandler.FormattedValue(lRoomInvoice.TotalTaxes); //Trim(_floatToStr(ExtraTaxes, 12, 2));
+
+      if glb.PMSSettings.BetaFunctionality.UseNewTaxcalcMethod then
+        lbExtraTaxes.Caption := FCurrencyHandler.FormattedValue(GetTotalTaxesForRoomreservation(Reservation, RoomReservation))
+      else
+        lbExtraTaxes.Caption := '';
+
       lbBalance.Caption := FCurrencyHandler.FormattedValue(lRoomInvoice.Balance);// Trim(_floatToStr(CurrentRealBalance, 12, 2));
       FCurrentRealBalance := lRoomInvoice.balance;
 

@@ -177,7 +177,7 @@ type
   private const
     cBetaFunctionsGroup = 'BETA_FUNCTIONS';
     cBetaFunctionsAvailableName = 'BETA_FUNCTIONS_AVAILABLE';
-    cBetaFunctionUseInvoiceOnObjectsForm = 'INVOICE_ON_OBJECTS_FORM';
+    cBetaFunctionUseNewTaxcalcMethod = 'USE_NEW_TAXCALC_METHOD';
 
   private
     function GetBetaFunctionsAvailable: boolean;
@@ -189,9 +189,10 @@ type
   public
     /// <summary>
     ///   If true then functions marked as Beta are available in the PMS
+    ///  This setting can only be enabled directly in the database and not via the controldata form
     /// </summary>
     property BetaFunctionsAvailable: boolean read GetBetaFunctionsAvailable write SetBetaFunctionsAvailable;
-    property UseInvoiceOnObjectsForm: boolean read GetUseInvocieOnObjectsForm write SetUseInvocieOnObjectsForm;
+    property UseNewTaxcalcMethod: boolean read GetUseInvocieOnObjectsForm write SetUseInvocieOnObjectsForm;
   end;
 
   TPMSPMSSpecificSettings = class(TPMSSettingsGroup)
@@ -493,7 +494,7 @@ end;
 
 function TPMSSettingsBetaFunctionality.GetUseInvocieOnObjectsForm: boolean;
 begin
-  Result := GetSettingsAsBoolean(cBetaFunctionUseInvoiceOnObjectsForm, false);
+  Result := GetSettingsAsBoolean(cBetaFunctionUseNewTaxcalcMethod, false);
 end;
 
 procedure TPMSSettingsBetaFunctionality.SetBetaFunctionsAvailable(const Value: boolean);
@@ -503,7 +504,7 @@ end;
 
 procedure TPMSSettingsBetaFunctionality.SetUseInvocieOnObjectsForm(const Value: boolean);
 begin
-  SaveSetting(cBetaFunctionUseInvoiceOnObjectsForm, Value);
+  SaveSetting(cBetaFunctionUseNewTaxcalcMethod, Value);
 end;
 
 { TPMSPMSSpecificSettings }

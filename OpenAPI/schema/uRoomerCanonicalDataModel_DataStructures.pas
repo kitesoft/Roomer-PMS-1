@@ -65,6 +65,7 @@ type
     FRoomReservationId: integer;
     FStayDate: TDate;
     FCityTaxIncludedInRoomPrice: boolean;
+    FQuantity: integer;
   public
     constructor Create;
     destructor Destroy; override;
@@ -82,6 +83,7 @@ type
     property RoomRentVat: TxsdAmountGroup read FRoomRentVat write FRoomRentVat;
     property CityTax: TxsdAmountGroup read FCityTax write FCityTax;
     property CityTaxVat: TxsdAmountGroup read FCityTaxVat write FCityTaxVat;
+    property Quantity: integer read FQuantity write FQuantity;
   end;
 
 implementation
@@ -136,6 +138,7 @@ begin
   FItem := aNode.Attributes['item'];
   FRoomReservationId := StrToIntDef(aNode.Attributes['roomReservationId'], 0);
   FCityTaxIncludedInRoomPrice := XMLToBool(aNode.Attributes['cityTaxIncludedInRoomPrice']);
+  FQuantity := StrToIntDef(aNode.Attributes['quantity'], 1);
 
   with TXSDate.Create do
   try
