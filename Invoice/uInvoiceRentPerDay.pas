@@ -23,7 +23,6 @@ uses
   uDateUtils,
   ActnList,
   System.Actions,
-  Generics.Collections,
   variants,
   cmpRoomerDataSet,
   cxGraphics,
@@ -78,7 +77,6 @@ uses
   , uInvoiceDefinitions, uRoomerBookingDataModel_ModelObjects
   , Spring.Collections.Lists
   , Spring.Collections
-  , Spring.Data.ObjectDataSet
   ;
 
 type
@@ -431,7 +429,7 @@ type
   private
     { Private declarations }
 
-    DeletedLines: TList<integer>;
+    DeletedLines: IList<integer>;
     linesNumDays, linesNumGuests: integer;
     NumberGuestNights: integer;
 
@@ -3131,7 +3129,7 @@ begin
   ClearGrid;
   FInvoiceLinesList.Free;
   FRoomInfoList.Free;
-  DeletedLines.Free;
+//  DeletedLines.Free;
 
   if mRoomRes.active then
     mRoomRes.close;

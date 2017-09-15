@@ -65,7 +65,7 @@ type
     FRoomReservationId: integer;
     FStayDate: TDate;
     FCityTaxIncludedInRoomPrice: boolean;
-    FQuantity: integer;
+    FQuantity: double;
   public
     constructor Create;
     destructor Destroy; override;
@@ -83,7 +83,7 @@ type
     property RoomRentVat: TxsdAmountGroup read FRoomRentVat write FRoomRentVat;
     property CityTax: TxsdAmountGroup read FCityTax write FCityTax;
     property CityTaxVat: TxsdAmountGroup read FCityTaxVat write FCityTaxVat;
-    property Quantity: integer read FQuantity write FQuantity;
+    property Quantity: double read FQuantity write FQuantity;
   end;
 
 implementation
@@ -92,6 +92,7 @@ implementation
 
 uses
   XmlUtils
+  , uFloatUtils
   , XSBuiltins
   ;
 
@@ -138,15 +139,9 @@ begin
   FItem := aNode.Attributes['item'];
   FRoomReservationId := StrToIntDef(aNode.Attributes['roomReservationId'], 0);
   FCityTaxIncludedInRoomPrice := XMLToBool(aNode.Attributes['cityTaxIncludedInRoomPrice']);
-  FQuantity := StrToIntDef(aNode.Attributes['quantity'], 1);
+  FQuantity := XMLToFloat(aNode.Attributes['quantity'], 1);
+  FStayDate := XMLToDate(aNode.Attributes['stayDate']);
 
-  with TXSDate.Create do
-  try
-    XSToNative(aNode.Attributes['stayDate']);
-    FStayDate := AsDate;
-  finally
-    Free;
-  end;
   if aNode.SelectNodesNS(GetNameSpaceURI, 'basePrice', lNodeList, 1) then
     FBasePrice.SetPropertiesFromXMLNode(lNodeList.GetFirst);
   if aNode.SelectNodesNS(GetNameSpaceURI, 'roomRentVat', lNodeList, 1) then
