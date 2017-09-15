@@ -2325,10 +2325,10 @@ begin
 
       sql := 'SELECT r.*, rr.Currency '#10 +
              ' FROM reservations r '#10 +
-             ' JOIN roomreservations rr ON r.Reservation=rr.Reservation and r.roomreservation=rr.roomreservation '#10 +
+             ' JOIN roomreservations rr ON r.Reservation=rr.Reservation '#10 +
              ' JOIN roomsdate rd on rr.roomreservation=rd.roomreservation and rd.resflag not in (''X'', ''C'') '#10 +
              ' WHERE r.Reservation = %d '#10 +
-             ' AND ((%d=0) OR (r.roomreservation = %d))';
+             ' AND ((%d=0) OR (rr.roomreservation = %d))';
 
       sql := format(sql, [FReservation, FRoomreservation, FRoomreservation]);
 
@@ -3435,22 +3435,83 @@ begin
   if FIsCredit then
     iMultiplier := -1;
 
-  s := format('INSERT INTO invoiceaddressees ' + '(InvoiceIndex, ' + 'Reservation, ' + 'RoomReservation, ' +
-    'SplitNumber, ' + 'InvoiceNumber, ' + 'Customer, ' + 'Name, ' + 'Address1, ' + 'Address2, ' + 'Zip, ' + 'City, ' +
-    'Country, ' + 'ExtraText, ' + 'custPID, ' + 'InvoiceType ) ' + 'VALUES ' + '(%d, ' + '%d, ' + '%d, '
-    + '%d, ' + '%d, ' + '%s, ' + '%s, ' + '%s, ' + '%s, ' + '%s, ' + '%s, ' + '%s, ' + '%s, ' + '%d, ' +
-    '%s) ', [InvoiceIndex, FReservation, FRoomReservation, FnewSplitNumber, aInvoiceNumber, _db(edtCustomer.Text),
-    _db(edtName.Text), _db(edtAddress1.Text), _db(edtAddress2.Text), _db(edtAddress3.Text), _db(edtAddress4.Text),
-    _db(zCountry), _db(memExtraText.Lines.Text), _db(edtPersonalId.Text), rgrInvoiceType.itemIndex]) +
+  s := format('INSERT INTO invoiceaddressees '#10 +
+    '( '#10 +
+      'InvoiceIndex, '#10 +
+      'Reservation, '#10 +
+      'RoomReservation, ' +
+      'SplitNumber, '#10 +
+      'InvoiceNumber, '#10 +
+      'Customer, '#10 +
+      'Name, '#10 +
+      'Address1, '#10 +
+      'Address2, '#10 +
+      'Zip, '#10 +
+      'City, ' +
+      'Country, '#10 +
+      'ExtraText, '#10 +
+      'custPID, '#10 +
+      'InvoiceType '#10 +
+  ' )'#10 +
+  'VALUES ( '#10+
+      '%d, '#10 +
+      '%d, '#10 +
+      '%d, '#10 +
+      '%d, '#10 +
+      '%d, '#10 +
+      '%s, '#10 +
+      '%s, '#10 +
+      '%s, '#10 +
+      '%s, '#10 +
+      '%s, '#10 +
+      '%s, '#10 +
+      '%s, '#10 +
+      '%s, '#10 +
+      '%s, '#10 +
+      '%d) ',
+  [ InvoiceIndex,
+    FReservation,
+    FRoomReservation,
+    FnewSplitNumber,
+    aInvoiceNumber,
+    _db(edtCustomer.Text),
+    _db(edtName.Text),
+    _db(edtAddress1.Text),
+    _db(edtAddress2.Text),
+    _db(edtAddress3.Text),
+    _db(edtAddress4.Text),
+    _db(zCountry),
+    _db(memExtraText.Lines.Text),
+    _db(edtPersonalId.Text),
+    rgrInvoiceType.itemIndex])
 
-    format('ON DUPLICATE KEY UPDATE ' + 'InvoiceNumber=%d, ' + 'Customer=%s, ' + 'Name=%s, ' + 'Address1=%s, ' +
-    'Address2=%s, ' + 'Zip=%s, ' + 'City=%s, ' + 'Country=%s, ' + 'ExtraText=%s, ' + 'custPID=%s, ' + 'InvoiceType=%d '
-    , [aInvoiceNumber, _db(edtCustomer.Text), _db(edtName.Text), _db(edtAddress1.Text),
-    _db(edtAddress2.Text), _db(edtAddress3.Text), _db(edtAddress4.Text), _db(zCountry), _db(memExtraText.Lines.Text),
-    _db(edtPersonalId.Text), rgrInvoiceType.itemIndex]);
+  + format(
+    'ON DUPLICATE KEY UPDATE '#10 +
+    'InvoiceNumber=%d, '#10 +
+    'Customer=%s, '#10 +
+    'Name=%s, '#10 +
+    'Address1=%s, ' +
+    'Address2=%s, '#10 +
+    'Zip=%s, '#10 +
+    'City=%s, '#10 +
+    'Country=%s, '#10 +
+    'ExtraText=%s, '#10 +
+    'custPID=%s, '#10 +
+    'InvoiceType=%d '
+    , [aInvoiceNumber,
+      _db(edtCustomer.Text),
+      _db(edtName.Text),
+      _db(edtAddress1.Text),
+      _db(edtAddress2.Text),
+      _db(edtAddress3.Text),
+      _db(edtAddress4.Text),
+      _db(zCountry),
+      _db(memExtraText.Lines.Text),
+      _db(edtPersonalId.Text),
+      rgrInvoiceType.itemIndex]);
 
-  aExecutionPlan.AddExec(s);
   copytoclipboard(s);
+  aExecutionPlan.AddExec(s);
 
   // --
   // SQL 115 INSERxT InvoiceHeads
