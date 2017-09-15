@@ -690,7 +690,7 @@ type
     cbAllowTogglingOfCityTaxesOnInvoice: TsCheckBox;
     tsBetaFunctions: TsTabSheet;
     gbxInvoiceBeta: TsGroupBox;
-    cbxObjectsInvoice: TsCheckBox;
+    cbxNewTaxCalcMethod: TsCheckBox;
     gbxReservationProfileFunctionality: TsGroupBox;
     chkChangeNationality: TsCheckBox;
     cbxPreArrivalEnabled: TsCheckBox;
@@ -750,8 +750,6 @@ type
     edSmtpPort: TsSpinEdit;
     cbUseStaytax: TsCheckBox;
     lbUseStayTax: TsLabel;
-    lbStaytaxAfyerDiscount: TsLabel;
-    cbStaytaxAfterDiscount: TsCheckBox;
     procedure FormCreate(Sender : TObject);
     procedure FormClose(Sender : TObject; var Action : TCloseAction);
     procedure FormShow(Sender : TObject);
@@ -1587,7 +1585,6 @@ g.ReadWriteSettingsToRegistry(0);
 
     cbShowIncludedBreakfastOnInvoice.Checked := glb.PMSSettings.InvoiceSettings.ShowIncludedBreakfastOnInvoice;
     cbUseStaytax.Checked := rControlData.FieldByName('useStayTax').AsBoolean;
-    cbStaytaxAfterDiscount.Checked := glb.PMSSettings.StaytaxSettings.StaytaxAfterDiscount;
     cbAllowPaymentModification.Checked := glb.PMSSettings.InvoiceSettings.AllowPaymentModification;
     cbAllowDeleteItemsFromInvoice.Checked := glb.PMSSettings.InvoiceSettings.AllowDeletingItemsFromInvoice;
     cbTopClassAvaiabilityOrderActive.Checked := glb.PMSSettings.MasterRatesSettings.TopClassAvaiabilityOrderActive;
@@ -1678,7 +1675,7 @@ g.ReadWriteSettingsToRegistry(0);
 
     if glb.PMSSettings.BetaFunctionality.BetaFunctionsAvailable then
     begin
-      cbxObjectsInvoice.Checked := glb.PMSSettings.BetaFunctionality.UseInvoiceOnObjectsForm;
+      cbxNewTaxCalcMethod.Checked := glb.PMSSettings.BetaFunctionality.UseNewTaxcalcMethod;
     end;
 
   finally
@@ -2123,7 +2120,6 @@ begin
       glb.PMSSettings.MasterRatesSettings.MasterRateCurrencyConvert := cbxCurrencyCalculation.Checked;
       glb.PMSSettings.InvoiceSettings.AllowTogglingOfCityTaxes := cbAllowTogglingOfCityTaxesOnInvoice.Checked;
       glb.PMSSettings.VariousOptions.PreloadListOfPreviousGuests := cbxPreloadPreviousGuests.Checked;
-      glb.PMSSettings.StaytaxSettings.StaytaxAfterDiscount := cbStaytaxAfterDiscount.Checked;
 
       try
         rSethotelconfigurations.FieldByName('forceExternalCustomerIdCorrectness').AsBoolean := chkforceExternalCustomerIdCorrectness.Checked;
@@ -2318,7 +2314,7 @@ begin
 
     if glb.PMSSettings.BetaFunctionality.BetaFunctionsAvailable then
     begin
-      glb.PMSSettings.BetaFunctionality.UseInvoiceOnObjectsForm := cbxObjectsInvoice.Checked;
+      glb.PMSSettings.BetaFunctionality.UseNewTaxcalcMethod := cbxNewTaxCalcMethod.Checked;
     end;
 
     FHotelServicesSettings.LifeCycleMailerSettings.PreArrivalMailSetttings.PreArrivalMailerEnabled := cbxPreArrivalEnabled.Checked;

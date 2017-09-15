@@ -4,7 +4,7 @@ interface
 
 uses
   uOpenApiCaller
-  , RoomerConfigurationItemsCommunicationModel_RequestsResponses
+  , uRoomerConfigurationItemsCommunicationModel_RequestsResponses
   , SysUtils
   ;
 

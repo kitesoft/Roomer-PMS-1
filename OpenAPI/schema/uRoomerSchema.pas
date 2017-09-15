@@ -42,6 +42,8 @@ type
   public
     class function GetNodeName: string; virtual;
     class function GetNameSpaceURI: string; virtual;
+    class function GetChildNodeName: string; virtual;
+    class function GetChildNameSpaceURI: string; virtual;
     procedure SetPropertiesFromXMLNode(const aNode: PXMLNode); virtual;
     procedure AddPropertiesToXMLNode(const aNode: PXMLNode); virtual;
     procedure LoadFromXML(const aXML: string);
@@ -170,6 +172,16 @@ begin
 
 end;
 
+class function TxsdBaseObjectList<T>.GetChildNameSpaceURI: string;
+begin
+  Result := T.GetNameSpaceURI;
+end;
+
+class function TxsdBaseObjectList<T>.GetChildNodeName: string;
+begin
+  Result := T.GetNodeName;
+end;
+
 class function TxsdBaseObjectList<T>.GetNameSpaceURI: string;
 begin
   Result := '';
@@ -203,7 +215,7 @@ begin
   onChanged.Enabled := false;
   try
     Clear;
-    if aNode.SelectNodesNS(T.GetNameSpaceURI, T.GetNodeName, lNodeList) then
+    if aNode.SelectNodesNS(GetChildNameSpaceURI, GetChildNodeName, lNodeList) then
       for lNode in lNodeList do
       begin
         lItem := T.Create;

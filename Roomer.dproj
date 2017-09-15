@@ -882,7 +882,7 @@
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="OpenAPI\schema\uRoomerSchema.pas"/>
-        <DCCReference Include="OpenAPI\schema\RoomerConfigurationItemsCommunicationModel_RequestsResponses.pas"/>
+        <DCCReference Include="OpenAPI\schema\uRoomerConfigurationItemsCommunicationModel_RequestsResponses.pas"/>
         <DCCReference Include="OpenAPI\uConfigurationItemsAPICaller.pas"/>
         <DCCReference Include="RoomerVCLs\Source\uRoomerIDList.pas"/>
         <DCCReference Include="uEditFinanceExportProperties.pas">
@@ -902,11 +902,11 @@
         <DCCReference Include="Invoice\uInvoiceRentPerDay.pas">
             <Form>frmInvoiceRentPerDay</Form>
         </DCCReference>
-        <DCCReference Include="OpenAPI\schema\RoomerFinancialDataModel_ModelObjects.pas"/>
+        <DCCReference Include="OpenAPI\schema\uRoomerFinancialDataModel_ModelObjects.pas"/>
         <DCCReference Include="OpenAPI\schema\uRoomerCanonicalDataModel_BaseTypes.pas"/>
         <DCCReference Include="OpenAPI\schema\uRoomerCanonicalDataModel_SimpleTypes.pas"/>
         <DCCReference Include="OpenAPI\schema\uRoomerHotelServicesCommunicationModel_RunningTabs.pas"/>
-        <DCCReference Include="OpenAPI\schema\RoomerBookingCommunicationModel_RequestsResponses.pas"/>
+        <DCCReference Include="OpenAPI\schema\uRoomerBookingCommunicationModel_RequestsResponses.pas"/>
         <DCCReference Include="RoomerUtils\uExceptionUtils.pas"/>
         <DCCReference Include="OpenAPI\uBookingsRunningTabAPICaller.pas"/>
         <DCCReference Include="Logging\uRoomerLogger.pas"/>
@@ -940,6 +940,9 @@
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="PMSSettings\uHotelServicesAccessor.pas"/>
+        <DCCReference Include="OpenAPI\schema\uRoomerCanonicalDataModel_DataStructures.pas"/>
+        <DCCReference Include="OpenAPI\schema\uRoomerBookingDataModel_ModelObjects.pas"/>
+        <DCCReference Include="OpenAPI\uBookingsTaxesAPICaller.pas"/>
         <DCCReference Include="Definitions\uCalculationTypeDefinitions.pas"/>
         <DCCReference Include="Definitions\uCalculationTypeExtraDefinitions.pas"/>
         <None Include="Roomer.todo"/>

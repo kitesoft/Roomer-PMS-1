@@ -28,10 +28,6 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
     SkinData.SkinSection = 'PAGECONTROL'
     object sTabSheet1: TsTabSheet
       Caption = 'Room 101'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object sPanel1: TsPanel
         Left = 0
         Top = 0
@@ -71,10 +67,6 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
           object sTabSheet2: TsTabSheet
             Caption = 'Guest Info'
             SkinData.SkinSection = 'TRANSPARENT'
-            ExplicitLeft = 0
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
             object sLabel6: TsLabel
               Left = 97
               Top = 126
@@ -633,8 +625,11 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
               ExplicitWidth = 241
               inherited pnlCountry: TsPanel
                 Width = 241
-                ExplicitTop = 1
                 ExplicitWidth = 241
+                inherited lblCountryName: TLabel
+                  Width = 175
+                  Height = 14
+                end
               end
             end
             inline fraCountry: TfraCountryPanel
@@ -649,15 +644,15 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
               inherited pnlCountry: TsPanel
                 Width = 241
                 ExplicitWidth = 241
+                inherited lblCountryName: TLabel
+                  Width = 175
+                  Height = 14
+                end
               end
             end
           end
           object sTabSheet6: TsTabSheet
             Caption = 'Company'
-            ExplicitLeft = 8
-            ExplicitTop = 19
-            ExplicitWidth = 0
-            ExplicitHeight = 0
             object sLabel22: TsLabel
               Left = 11
               Top = 24
@@ -922,6 +917,10 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
               inherited pnlCountry: TsPanel
                 Width = 241
                 ExplicitWidth = 241
+                inherited lblCountryName: TLabel
+                  Width = 175
+                  Height = 14
+                end
               end
             end
           end
@@ -1147,6 +1146,15 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
           AutoSize = False
           Caption = '0.00'
         end
+        object lbExtraTaxes: TsLabel
+          Left = 279
+          Top = 136
+          Width = 80
+          Height = 13
+          Alignment = taRightJustify
+          AutoSize = False
+          Caption = '0.00'
+        end
         object cbxGuaranteeTypes: TsComboBox
           Tag = 16
           Left = 187
@@ -1184,10 +1192,6 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
           SkinData.SkinSection = 'PAGECONTROL'
           object sTabSheet3: TsTabSheet
             Caption = 'Credit card'
-            ExplicitLeft = 0
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
             object sLabel12: TsLabel
               Left = 66
               Top = 69
@@ -1226,10 +1230,6 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
           end
           object sTabSheet4: TsTabSheet
             Caption = 'Cash'
-            ExplicitLeft = 0
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
             object sLabel16: TsLabel
               Left = 38
               Top = 21
@@ -1310,17 +1310,9 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
           end
           object sTabSheet5: TsTabSheet
             Caption = 'None'
-            ExplicitLeft = 0
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
           end
           object sTabSheet7: TsTabSheet
             Caption = 'Select'
-            ExplicitLeft = 0
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
           end
         end
       end

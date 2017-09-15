@@ -36,7 +36,9 @@ implementation
 
 uses
   uFloatUtils
-  , uStringUtils;
+  , uStringUtils
+  , XSBuiltins
+  ;
 
 function GetAttributeValue(Node: IXMLDomNode; AttribName, defaultValue: String): String;
 var
@@ -149,12 +151,25 @@ end;
 
 function XMLToDateTime(const aStringValue: string): TDateTime;
 begin
-  Result := StrToDateTimeDef(aStringValue, 0, XMLFormatSettings);
+  with TXSDateTime.Create do
+  try
+    XSToNative(aStringValue);
+    Result := AsDateTime;
+  finally
+    Free;
+  end;
+//  Result := StrToDateTimeDef(aStringValue, 0, XMLFormatSettings);
 end;
 
 function XMLToDate(const aStringValue: string): TDate;
 begin
-  Result := StrToDateDef(aStringValue, 0, XMLFormatSettings);
+  with TXSDate.Create do
+  try
+    XSToNative(aStringValue);
+    Result := AsDate;
+  finally
+    Free;
+  end;
 end;
 
 function DateToXML(aDate: TDate): string;

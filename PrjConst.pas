@@ -1896,7 +1896,7 @@ begin
   TfrmRptReservations.Create(nil).Free;
   FrmPostInvoices := TFrmPostInvoices.Create(nil); FrmPostInvoices.Free; FrmPostInvoices := nil;
   frmRptBreakfastGuests := TfrmRptBreakfastGuests.Create(nil); frmRptBreakfastGuests.Free; frmRptBreakfastGuests := nil;
-  frmGuestCheckInForm := TfrmGuestCheckInForm.Create(nil); frmGuestCheckInForm.Free; frmGuestCheckInForm := nil;
+  TfrmGuestCheckInForm.Create(nil).Free;
 
   frmRptNotes := TfrmRptNotes.Create(nil); frmRptNotes.Free; frmRptNotes := nil;
 //  frmRptGuests := TfrmRptGuests.Create(nil); frmRptGuests.Free; frmRptGuests := nil;

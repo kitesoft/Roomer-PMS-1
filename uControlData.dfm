@@ -143,7 +143,7 @@ object frmControlData: TfrmControlData
         Top = 1
         Width = 1101
         Height = 743
-        ActivePage = tsInvoiceSystem
+        ActivePage = tsBetaFunctions
         Align = alClient
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
@@ -3588,14 +3588,13 @@ object frmControlData: TfrmControlData
           object LMDGroupBox1: TsGroupBox
             AlignWithMargins = True
             Left = 3
-            Top = 338
+            Top = 324
             Width = 1087
             Height = 71
             Align = alTop
             Caption = 'Room rate '
             TabOrder = 1
             SkinData.SkinSection = 'GROUPBOX'
-            ExplicitTop = 318
             object Label1: TsLabel
               Left = 6
               Top = 22
@@ -3676,7 +3675,7 @@ object frmControlData: TfrmControlData
             Left = 3
             Top = 150
             Width = 1087
-            Height = 129
+            Height = 115
             Align = alTop
             Caption = 'Various'
             TabOrder = 2
@@ -3743,20 +3742,6 @@ object frmControlData: TfrmControlData
               Height = 14
               Alignment = taRightJustify
               Caption = 'Enable staytax :'
-              ParentFont = False
-              Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
-              Font.Height = -12
-              Font.Name = 'Tahoma'
-              Font.Style = []
-            end
-            object lbStaytaxAfyerDiscount: TsLabel
-              Left = 290
-              Top = 108
-              Width = 129
-              Height = 14
-              Alignment = taRightJustify
-              Caption = 'Staytax after discount: '
               ParentFont = False
               Font.Charset = DEFAULT_CHARSET
               Font.Color = clBlack
@@ -3841,28 +3826,17 @@ object frmControlData: TfrmControlData
               ImgChecked = 0
               ImgUnchecked = 0
             end
-            object cbStaytaxAfterDiscount: TsCheckBox
-              Left = 425
-              Top = 106
-              Width = 20
-              Height = 20
-              TabOrder = 5
-              SkinData.SkinSection = 'CHECKBOX'
-              ImgChecked = 0
-              ImgUnchecked = 0
-            end
           end
           object LMDGroupBox26: TsGroupBox
             AlignWithMargins = True
             Left = 3
-            Top = 285
+            Top = 271
             Width = 1087
             Height = 47
             Align = alTop
             Caption = 'A/R '
             TabOrder = 3
             SkinData.SkinSection = 'GROUPBOX'
-            ExplicitTop = 265
             object Label65: TsLabel
               Left = 109
               Top = 20
@@ -3916,14 +3890,13 @@ object frmControlData: TfrmControlData
           object sGroupBox19: TsGroupBox
             AlignWithMargins = True
             Left = 3
-            Top = 516
+            Top = 502
             Width = 1087
             Height = 145
             Align = alTop
             Caption = 'Payments'
             TabOrder = 4
             SkinData.SkinSection = 'GROUPBOX'
-            ExplicitTop = 496
             object sLabel12: TsLabel
               Left = 202
               Top = 18
@@ -4072,14 +4045,13 @@ object frmControlData: TfrmControlData
           object sPanel2: TsPanel
             AlignWithMargins = True
             Left = 3
-            Top = 415
+            Top = 401
             Width = 1087
             Height = 95
             Align = alTop
             AutoSize = True
             BevelOuter = bvNone
             TabOrder = 5
-            ExplicitTop = 395
             object cxGroupBox5: TsGroupBox
               Left = 0
               Top = 0
@@ -9323,12 +9295,12 @@ object frmControlData: TfrmControlData
             Align = alTop
             Caption = 'Invoice Beta functionaity'
             TabOrder = 0
-            object cbxObjectsInvoice: TsCheckBox
+            object cbxNewTaxCalcMethod: TsCheckBox
               Left = 24
               Top = 24
-              Width = 214
+              Width = 159
               Height = 20
-              Caption = 'Use new Invoiceform using Objects'
+              Caption = 'Use new Taxcalc method'
               TabOrder = 0
               ImgChecked = 0
               ImgUnchecked = 0
