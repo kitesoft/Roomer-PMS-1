@@ -304,7 +304,7 @@ uses
   ucxGridPopupMenuActivator in 'RoomerUtils\ucxGridPopupMenuActivator.pas',
   uPCITokenReport in 'PCI\uPCITokenReport.pas' {frmPCITokenReport},
   uFrmOptInMessage in 'OptIns\uFrmOptInMessage.pas' {FrmOptInMessage},
-  TokenChargeHistory in 'PCI\TokenChargeHistory.pas' {FrmTokenChargeHistory},
+  uFrmTokenChargeHistory in 'PCI\uFrmTokenChargeHistory.pas' {FrmTokenChargeHistory},
   uTokenHelpers in 'PCI\uTokenHelpers.pas',
   uPayCard in 'PCI\uPayCard.pas',
   uFrmViewChargeInfo in 'PCI\uFrmViewChargeInfo.pas' {FrmViewChargeInfo},

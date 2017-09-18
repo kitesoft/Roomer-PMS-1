@@ -2,10 +2,9 @@ inherited FrmViewChargeInfo: TFrmViewChargeInfo
   Caption = 'View Charge Details'
   ClientHeight = 544
   ClientWidth = 594
-  Font.Height = -11
   OnShow = FormShow
-  ExplicitWidth = 610
-  ExplicitHeight = 583
+  ExplicitWidth = 600
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   object sLabel1: TsLabel [0]
@@ -154,49 +153,7 @@ inherited FrmViewChargeInfo: TFrmViewChargeInfo
     ExplicitTop = 524
     ExplicitWidth = 594
   end
-  object sPanel1: TsPanel [11]
-    Left = 0
-    Top = 483
-    Width = 594
-    Height = 41
-    Align = alBottom
-    BevelOuter = bvNone
-    TabOrder = 0
-    object sButton1: TsButton
-      AlignWithMargins = True
-      Left = 514
-      Top = 5
-      Width = 75
-      Height = 31
-      Margins.Top = 5
-      Margins.Right = 5
-      Margins.Bottom = 5
-      Align = alRight
-      Caption = 'OK'
-      Default = True
-      ModalResult = 1
-      TabOrder = 0
-    end
-    object btnRefundOrCapture: TsButton
-      AlignWithMargins = True
-      Left = 3
-      Top = 5
-      Width = 150
-      Height = 31
-      Margins.Top = 5
-      Margins.Right = 10
-      Margins.Bottom = 5
-      Align = alLeft
-      Caption = 'Charge action'
-      DropDownMenu = pupCharge
-      ImageIndex = 130
-      Images = DImages.PngImageList1
-      Style = bsSplitButton
-      TabOrder = 1
-      Visible = False
-    end
-  end
-  object edOperation: TsEdit [12]
+  object edOperation: TsEdit [11]
     Left = 254
     Top = 72
     Width = 122
@@ -209,9 +166,9 @@ inherited FrmViewChargeInfo: TFrmViewChargeInfo
     Font.Style = [fsBold]
     ParentFont = False
     ReadOnly = True
-    TabOrder = 2
+    TabOrder = 1
   end
-  object edAutCode: TsEdit [13]
+  object edAutCode: TsEdit [12]
     Left = 254
     Top = 99
     Width = 293
@@ -224,9 +181,9 @@ inherited FrmViewChargeInfo: TFrmViewChargeInfo
     Font.Style = [fsBold]
     ParentFont = False
     ReadOnly = True
-    TabOrder = 3
+    TabOrder = 2
   end
-  object edAmount: TsEdit [14]
+  object edAmount: TsEdit [13]
     Left = 254
     Top = 126
     Width = 122
@@ -240,10 +197,10 @@ inherited FrmViewChargeInfo: TFrmViewChargeInfo
     Font.Style = [fsBold]
     ParentFont = False
     ReadOnly = True
-    TabOrder = 4
+    TabOrder = 3
     Text = '0.00'
   end
-  object edCurrency: TsEdit [15]
+  object edCurrency: TsEdit [14]
     Left = 382
     Top = 126
     Width = 81
@@ -256,10 +213,10 @@ inherited FrmViewChargeInfo: TFrmViewChargeInfo
     Font.Style = [fsBold]
     ParentFont = False
     ReadOnly = True
-    TabOrder = 5
+    TabOrder = 4
     Text = 'EUR'
   end
-  object edOperationResult: TsEdit [16]
+  object edOperationResult: TsEdit [15]
     Left = 254
     Top = 176
     Width = 122
@@ -272,9 +229,9 @@ inherited FrmViewChargeInfo: TFrmViewChargeInfo
     Font.Style = [fsBold]
     ParentFont = False
     ReadOnly = True
-    TabOrder = 6
+    TabOrder = 5
   end
-  object edOperationResultDescription: TsMemo [17]
+  object edOperationResultDescription: TsMemo [16]
     Left = 254
     Top = 203
     Width = 293
@@ -287,9 +244,9 @@ inherited FrmViewChargeInfo: TFrmViewChargeInfo
     Font.Style = [fsBold]
     ParentFont = False
     ReadOnly = True
-    TabOrder = 7
+    TabOrder = 6
   end
-  object edGatewayName: TsEdit [18]
+  object edGatewayName: TsEdit [17]
     Left = 254
     Top = 300
     Width = 293
@@ -302,9 +259,9 @@ inherited FrmViewChargeInfo: TFrmViewChargeInfo
     Font.Style = [fsBold]
     ParentFont = False
     ReadOnly = True
-    TabOrder = 8
+    TabOrder = 7
   end
-  object edGatewayReference: TsEdit [19]
+  object edGatewayReference: TsEdit [18]
     Left = 254
     Top = 327
     Width = 293
@@ -317,9 +274,9 @@ inherited FrmViewChargeInfo: TFrmViewChargeInfo
     Font.Style = [fsBold]
     ParentFont = False
     ReadOnly = True
-    TabOrder = 9
+    TabOrder = 8
   end
-  object edGatewayResultCode: TsEdit [20]
+  object edGatewayResultCode: TsEdit [19]
     Left = 254
     Top = 354
     Width = 293
@@ -332,9 +289,9 @@ inherited FrmViewChargeInfo: TFrmViewChargeInfo
     Font.Style = [fsBold]
     ParentFont = False
     ReadOnly = True
-    TabOrder = 10
+    TabOrder = 9
   end
-  object edGatewayResultDescription: TsMemo [21]
+  object edGatewayResultDescription: TsMemo [20]
     Left = 254
     Top = 381
     Width = 293
@@ -347,9 +304,9 @@ inherited FrmViewChargeInfo: TFrmViewChargeInfo
     Font.Style = [fsBold]
     ParentFont = False
     ReadOnly = True
-    TabOrder = 11
+    TabOrder = 10
   end
-  object edWhen: TsEdit [22]
+  object edWhen: TsEdit [21]
     Left = 254
     Top = 23
     Width = 122
@@ -362,19 +319,46 @@ inherited FrmViewChargeInfo: TFrmViewChargeInfo
     Font.Style = [fsBold]
     ParentFont = False
     ReadOnly = True
-    TabOrder = 1
+    TabOrder = 12
   end
-  inherited psRoomerBase: TcxPropertiesStore
-    Components = <
-      item
-        Component = frmBaseRoomerForm.Owner
-        Properties.Strings = (
-          'Height'
-          'Left'
-          'Top'
-          'Width'
-          'Position')
-      end>
+  inherited pnlButtons: TsPanel
+    Top = 481
+    Width = 594
+    TabOrder = 0
+    ExplicitTop = 440
+    ExplicitWidth = 594
+    inherited btnOK: TsButton
+      Left = 278
+      ExplicitLeft = 278
+    end
+    inherited btnCancel: TsButton
+      Left = 384
+      ExplicitLeft = 384
+    end
+    inherited btnClose: TsButton
+      Left = 490
+      ExplicitLeft = 490
+    end
+    object btnRefundOrCapture: TsButton
+      AlignWithMargins = True
+      Left = 4
+      Top = 6
+      Width = 150
+      Height = 31
+      Margins.Top = 5
+      Margins.Right = 10
+      Margins.Bottom = 5
+      Align = alLeft
+      Caption = 'Charge action'
+      DropDownMenu = pupCharge
+      ImageIndex = 130
+      Images = DImages.PngImageList1
+      Style = bsSplitButton
+      TabOrder = 3
+      Visible = False
+      ExplicitLeft = 3
+      ExplicitTop = 5
+    end
   end
   inherited cxsrRoomerStyleRepository: TcxStyleRepository
     PixelsPerInch = 96

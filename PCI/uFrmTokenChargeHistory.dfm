@@ -1,29 +1,31 @@
 inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
   Caption = 'Paycards of reservation'
   ClientHeight = 600
-  ClientWidth = 978
+  ClientWidth = 926
   Font.Height = -11
   OnCreate = FormCreate
   OnDestroy = FormDestroy
-  OnShow = FormShow
-  ExplicitWidth = 994
+  ExplicitWidth = 942
   ExplicitHeight = 639
   PixelsPerInch = 96
   TextHeight = 13
   inherited sbStatusBar: TsStatusBar
     Top = 580
-    Width = 978
+    Width = 926
     ExplicitTop = 580
-    ExplicitWidth = 978
+    ExplicitWidth = 926
   end
   object sPanel1: TsPanel [1]
     Left = 0
     Top = 0
-    Width = 978
+    Width = 926
     Height = 113
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
+    DesignSize = (
+      926
+      113)
     object sLabel3: TsLabel
       Left = 128
       Top = 21
@@ -125,10 +127,11 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
       Font.Style = [fsBold]
     end
     object btnRefresh: TsButton
-      Left = 872
+      Left = 818
       Top = 78
       Width = 96
       Height = 31
+      Anchors = [akTop, akRight]
       Caption = 'Refresh'
       ImageIndex = 28
       Images = DImages.PngImageList1
@@ -139,7 +142,7 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
   object sPanel2: TsPanel [2]
     Left = 0
     Top = 113
-    Width = 978
+    Width = 926
     Height = 467
     Align = alClient
     BevelOuter = bvNone
@@ -276,7 +279,7 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
     object sPanel4: TsPanel
       Left = 449
       Top = 0
-      Width = 529
+      Width = 477
       Height = 467
       Align = alClient
       BevelOuter = bvNone
@@ -285,7 +288,7 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
         AlignWithMargins = True
         Left = 3
         Top = 3
-        Width = 523
+        Width = 471
         Height = 13
         Align = alTop
         Caption = 'Paycard charge history'
@@ -301,7 +304,7 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
         AlignWithMargins = True
         Left = 3
         Top = 22
-        Width = 516
+        Width = 464
         Height = 334
         Margins.Right = 10
         Align = alClient
@@ -348,7 +351,7 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
       object sPanel5: TsPanel
         Left = 0
         Top = 426
-        Width = 529
+        Width = 477
         Height = 41
         Align = alBottom
         BevelOuter = bvNone
@@ -392,7 +395,7 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
       object sPanel7: TsPanel
         Left = 0
         Top = 359
-        Width = 529
+        Width = 477
         Height = 67
         Align = alBottom
         BevelOuter = bvNone

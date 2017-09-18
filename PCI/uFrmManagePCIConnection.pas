@@ -6,68 +6,69 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, sCheckBox, uRoomerForm, sButton, Vcl.ExtCtrls, sPanel, cxGridTableView, cxStyles, dxPScxCommon,
   dxPScxGridLnk, cxClasses, cxPropertiesStore, Vcl.ComCtrls, sStatusBar, sComboBox, sLabel,
-  Generics.Collections;
+  Generics.Collections, uRoomerDialogForm
+  ;
 
 type
-  TFrmManagePCIConnection = class(TfrmBaseRoomerForm)
+  TFrmManagePCIConnection = class(TfrmBaseRoomerDialogForm)
+    pnlTop: TsPanel;
     cbxIsActive: TsCheckBox;
-    sPanel1: TsPanel;
-    sButton1: TsButton;
+    pnlLeft: TsPanel;
     __lblVISA: TsLabel;
-    cbVISA: TsComboBox;
     __lbAMEX: TsLabel;
-    cbAMEX: TsComboBox;
     __lbBC: TsLabel;
-    cbBC: TsComboBox;
     __lbMastercard: TsLabel;
-    cbMastercard: TsComboBox;
     __lbMC_Alaska: TsLabel;
-    cbMC_Alaska: TsComboBox;
     __lbMC_Canada: TsLabel;
-    cbMC_Canada: TsComboBox;
     __lbUnionPay: TsLabel;
-    cbUnionPay: TsComboBox;
     __lbDiscover: TsLabel;
-    cbDiscover: TsComboBox;
     __lbDinersclub: TsLabel;
+    cbVISA: TsComboBox;
+    cbAMEX: TsComboBox;
+    cbBC: TsComboBox;
+    cbMastercard: TsComboBox;
+    cbMC_Alaska: TsComboBox;
+    cbMC_Canada: TsComboBox;
+    cbUnionPay: TsComboBox;
+    cbDiscover: TsComboBox;
     cbDincersclub: TsComboBox;
+    pnlRight: TsPanel;
     __lbCartaSi: TsLabel;
-    cbCartaSi: TsComboBox;
     __lbCarteBleue: TsLabel;
-    cbCarteBleue: TsComboBox;
     __lbDankort: TsLabel;
-    cbDankort: TsComboBox;
     __lbDelta: TsLabel;
-    cbDelta: TsComboBox;
     __lbElectron: TsLabel;
-    cbElectron: TsComboBox;
     __lbJCB: TsLabel;
-    cbJCB: TsComboBox;
     __lbMaestro: TsLabel;
-    cbMaestro: TsComboBox;
     __lbSwitch: TsLabel;
-    cbSwitch: TsComboBox;
     __lbSolo: TsLabel;
+    cbCartaSi: TsComboBox;
+    cbCarteBleue: TsComboBox;
+    cbDankort: TsComboBox;
+    cbDelta: TsComboBox;
+    cbElectron: TsComboBox;
+    cbJCB: TsComboBox;
+    cbMaestro: TsComboBox;
+    cbSwitch: TsComboBox;
     cbSolo: TsComboBox;
-    procedure sButton1Click(Sender: TObject);
-    procedure FormShow(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure btnOKClick(Sender: TObject);
   private
     labels : TObjectlist<TsLabel>;
     combos : TObjectlist<TsComboBox>;
-    procedure Load;
     procedure Save;
     function getComboBoxes: TObjectlist<TsComboBox>;
     function getLabels: TObjectlist<TsLabel>;
-    procedure PrepareInterface;
+    procedure sButton1Click(Sender: TObject);
     { Private declarations }
+  protected
+    procedure DoShow; override;
+    procedure DoLoadData; override;
+    procedure DoUpdateControls; override;
   public
     { Public declarations }
   end;
-
-var
-  FrmManagePCIConnection: TFrmManagePCIConnection;
 
 procedure ManagePCIConnection;
 function getMapForCardType(foreignCardType : String) : String;
@@ -155,6 +156,13 @@ begin
   end;
 end;
 
+procedure TFrmManagePCIConnection.DoShow;
+begin
+  inherited;
+  DialogButtons := mbOKCancel;
+  RefreshData;
+end;
+
 procedure TFrmManagePCIConnection.FormCreate(Sender: TObject);
 begin
   inherited;
@@ -167,12 +175,6 @@ begin
   inherited;
   labels.Free;
   combos.Free;
-end;
-
-procedure TFrmManagePCIConnection.FormShow(Sender: TObject);
-begin
-  inherited;
-  Load;
 end;
 
 function TFrmManagePCIConnection.getComboBoxes : TObjectlist<TsComboBox>;
@@ -195,17 +197,24 @@ begin
       result.Add(Components[i] AS TsLabel);
 end;
 
-procedure TFrmManagePCIConnection.PrepareInterface;
+procedure TFrmManagePCIConnection.DoUpdateControls;
 var ALabel : TsLabel;
     ACombo : TsComboBox;
 begin
+  inherited;
   for ALabel IN labels do
     ALabel.Enabled := cbxIsActive.Checked;
   for ACombo IN combos do
     ACombo.Enabled := cbxIsActive.Checked;
 end;
 
-procedure TFrmManagePCIConnection.Load;
+procedure TFrmManagePCIConnection.btnOKClick(Sender: TObject);
+begin
+  inherited;
+  Save;
+end;
+
+procedure TFrmManagePCIConnection.DoLoadData;
 var rSet : TRoomerDataset;
     sql, s : String;
     ptList : TStrings;
@@ -225,6 +234,7 @@ var rSet : TRoomerDataset;
         end;
     end;
 begin
+  inherited;
   rSet := CreateNewDataSet;
   try
     sql := 'SELECT * FROM home100.hotelservices WHERE hotelId=''%s'' AND service=''PAYMENT'' AND serviceType=''PCIBOOKING_UPG'' AND active=1';
@@ -277,8 +287,6 @@ begin
   finally
     rSet.Free;
   end;
-
-  PrepareInterface;
 end;
 
 end.

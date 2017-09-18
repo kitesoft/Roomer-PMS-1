@@ -82,8 +82,6 @@ inherited FrmChargePayCard: TFrmChargePayCard
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 739
-    ExplicitHeight = 409
     object sLabel1: TsLabel
       Left = 143
       Top = 29

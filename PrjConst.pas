@@ -193,7 +193,7 @@ uses uAppGlobal,
   , uPCITokenReport
   , uFrmOptInMessage
 
-  , TokenChargeHistory
+  , uFrmTokenChargeHistory
   , uFrmViewChargeInfo
   , uFrmPayCardCreateNew
   , uFmrChargePayCard

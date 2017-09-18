@@ -81,9 +81,6 @@ type
 
 const PAY_CARD_OPERATION_TYPE : Array[TPayCardOperationType] of String = ('CHARGE', 'PRE_AUTH', 'CAPTURE', 'REFUND', 'VOID');
 
-var
-  FrmChargePayCard: TFrmChargePayCard;
-
 function ChargePayCardForPayment(ReservationId : Integer;
                 RoomReservationId : Integer;
                 Amount : Double;
@@ -120,6 +117,7 @@ uses uD,
      Xml.XMLIntf,
      _Glob,
      uUtils
+     , UITypes
      ;
 
 const
@@ -226,12 +224,10 @@ end;
 
 procedure TFrmChargePayCard.btnProceedClick(Sender: TObject);
 var s : String;
-    token : TToken;
     tokenId : Integer;
 begin
   inherited;
 
-  token := TToken(cbxPayCards.Items.Objects[cbxPayCards.ItemIndex]);
   if (PayCardOperationType = PCO_REFUND) AND (_StrToFloat(edAmount.Text) > tokenCharge.amount) then
   begin
       MessageDlg(GetTranslatedText('PCI_REFUND_TOO_HIGH_AMOUNT'), mtError, [mbOk], 0);
@@ -318,6 +314,7 @@ begin
   xml.loadXML(XmlString);
   listNode := xml.documentElement;
   result := nil;
+  _XML_AMOUNT := 0;
   if listNode <> nil then
   begin
     if listNode.nodeName = 'paymentResponse' then
@@ -389,10 +386,10 @@ begin
 end;
 
 procedure TFrmChargePayCard.DisplayTokens;
-var i : Integer;
-    idx : Integer;
-    cbxIndex : Integer;
-    token : TToken;
+var
+  idx : Integer;
+  cbxIndex : Integer;
+  token : TToken;
 begin
   edCurrency.Text := Currency;
   DisplayRate;
@@ -426,7 +423,6 @@ var
   rSet: TRoomerDataSet;
   xml : String;
   token : TToken;
-  s : String;
 begin
   if Assigned(tokenList) then
     tokenList.Free;

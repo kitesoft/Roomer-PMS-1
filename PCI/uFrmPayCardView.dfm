@@ -42,7 +42,7 @@ inherited FrmPayCardView: TFrmPayCardView
           'VISIBLE}</UL><BR><BR>{NUMBER_OF_VIEWS}.</FONT>')
       Images = DImages.cxLargeImagesFlat
       Transparent = True
-      Version = '1.9.2.8'
+      Version = '1.9.2.7'
       ExplicitHeight = 121
     end
     object imgWarning: TsImage

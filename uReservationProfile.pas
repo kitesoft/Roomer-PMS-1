@@ -882,7 +882,7 @@ uses
   , uDateTimeHelper
   , uResourceTypeDefinitions
   , uFrmPayCardView
-  , TokenChargeHistory
+  , uFrmTokenChargeHistory
   ;
 
 {$R *.DFM}
