@@ -23,10 +23,12 @@ type
     FPrice: Double;
     FDiscount: Double;
     FBreakfastIncluded: boolean;
+    FCurrency: string;
+    FCurrencyRate: double;
   public
     constructor Create; overload;
-    constructor Create(_RoomItem: String; _Guests: Integer; _Children: Integer; _Nights: double; _Price: Double;
-      _Vat: Double; _Discount: Double; _BreakfastIncluded: boolean); overload;
+    constructor Create(_RoomItem: String; _Guests: Integer; _Children: Integer; _Nights: double; _Price: Double; _Currency: string;
+      _CurrencyRate: double; _Vat: Double; _Discount: Double; _BreakfastIncluded: boolean); overload;
 
     function NumberOfNights: integer;
 
@@ -39,6 +41,8 @@ type
     property Departure: TDateTime read FTo write FTo;
 
     property Price: double read FPrice write FPrice;
+    property Currency: string read FCurrency write FCurrency;
+    property CurrencyRate: double read FCurrencyRate write FCurrencyRate;
     property Discount: double read FDiscount write FDiscount;
     property Vat: double read FVat write FVat;
     property BreakfastIncluded: boolean read FBreakfastIncluded write FBreakfastIncluded;
@@ -119,13 +123,15 @@ uses
   , Math, uD;
 
 constructor TInvoiceRoomEntity.Create(_RoomItem: String; _Guests: Integer; _Children: Integer; _Nights: double;
-  _Price: double; _Vat, _Discount: Double; _BreakFastIncluded: boolean);
+  _Price: double; _Currency: string; _CurrencyRate: double; _Vat, _Discount: Double; _BreakFastIncluded: boolean);
 begin
   FRoomItem := _RoomItem;
   FNumPersons:= _Guests;
   FNumChildren := _Children;
   FNights := _Nights;
   FPrice := _Price;
+  FCurrency := _Currency;
+  FCUrrencyRate := _CurrencyRate;
   FDiscount := _Discount;
   FVat := _Vat;
   FBreakFastIncluded := _BreakFastIncluded;

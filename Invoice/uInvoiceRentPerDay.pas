@@ -1661,6 +1661,8 @@ begin
   lRoomInfo.Arrival := aFromDate;
   lRoomInfo.Departure := aToDate;
   lRoomInfo.Price := aRoomPrice;
+  lROomInfo.Currency := aCurrency;
+  lRoomInfo.CurrencyRate := FCurrencyhandlersMap.CurrencyHandler[aCurrency].Rate;
   lRoomInfo.Discount := 0.00;
   lRoomInfo.Room := aRoom;
   lRoomInfo.NumGuests := lNumGuests;
@@ -1939,7 +1941,7 @@ begin
     ItemPrice := iMultiplier * zCurrencyRate * ItemPrice;
     TotalPrice := ItemCount * ItemPrice * iMultiplier;
 
-    lInvRoom := TInvoiceRoomEntity.Create(lineItem, 1, 0, ItemCount, TotalPrice, 0, 0, false);
+    lInvRoom := TInvoiceRoomEntity.Create(lineItem, 1, 0, ItemCount, TotalPrice, g.qNativeCurrency, 1.0, 0, 0, false);
     try
       fVat := GetVATForItem(lineItem, TotalPrice, ItemCount, lInvRoom, tempInvoiceItemList, ItemTypeInfo,
         edtCustomer.Text);
@@ -2259,7 +2261,7 @@ begin
       'IFNULL(ia.InvoiceType, ih.InvoiceType) AS InvoiceType, ' + 'ih.ihTmp, ' + 'ih.ID, ' +
       'IFNULL(ia.CustPID, ih.CustPID) AS custPID, ' + 'ih.RoomGuest, ' + 'ih.ihDate, ' + 'ih.ihStaff, ' +
       'ih.ihPayDate, ' + 'ih.ihConfirmDate, ' + 'ih.ihInvoiceDate, ' +
-      'IFNULL(ia.ihCurrency, ih.ihCurrency) AS ihCurrency, ' + 'ih.ihCurrencyRate, ' + 'ih.invRefrence, ' +
+      'ih.ihCurrency, ' + 'ih.ihCurrencyRate, ' + 'ih.invRefrence, ' +
       'ih.TotalStayTax, ' + 'ih.TotalStayTaxNights, ' + 'ih.showPackage, ' + 'ih.staff, ' + 'ih.location, ' +
       'ih.externalInvoiceId ' +
       'FROM invoiceheads ih ' + #10 +
@@ -2321,10 +2323,14 @@ begin
       if zrSet.active then
         zrSet.close;
 
-      sql := 'SELECT r.*, rr.Currency ' + 'FROM reservations r ' +
-        'JOIN roomreservations rr ON r.Reservation=rr.Reservation ' + 'WHERE r.Reservation = %d ';
+      sql := 'SELECT r.*, rr.Currency '#10 +
+             ' FROM reservations r '#10 +
+             ' JOIN roomreservations rr ON r.Reservation=rr.Reservation and r.roomreservation=rr.roomreservation '#10 +
+             ' JOIN roomsdate rd on rr.roomreservation=rd.roomreservation and rd.resflag not in (''X'', ''C'') '#10 +
+             ' WHERE r.Reservation = %d '#10 +
+             ' AND ((%d=0) OR (r.roomreservation = %d))';
 
-      sql := format(sql, [FReservation]);
+      sql := format(sql, [FReservation, FRoomreservation, FRoomreservation]);
 
       hData.rSet_bySQL(zrSet, sql);
 
@@ -2760,7 +2766,7 @@ begin
       itemVAT := 0.00;
       if ItemPrice <> 0 then
       begin
-        lInvRoom := TInvoiceRoomEntity.Create(Item, taxGuests, 0, taxNights, ItemPrice, 0, 0, false);
+        lInvRoom := TInvoiceRoomEntity.Create(Item, taxGuests, 0, taxNights, ItemPrice, zCurrentCurrency, zCurrencyRate, 0, 0, false);
         try
           itemVAT := GetVATForItem(Item, ItemPrice, 1, lInvRoom, tempInvoiceItemList, ItemTypeInfo, edtCustomer.Text);
           // BHG
@@ -2843,7 +2849,7 @@ begin
         lInvRoom := nil;
         if not SameValue(ItemPrice, 0) then
         begin
-          lInvRoom := TInvoiceRoomEntity.Create(Item, taxGuests, taxChildren, taxNights, ItemPrice, 0, Discount,
+          lInvRoom := TInvoiceRoomEntity.Create(Item, taxGuests, taxChildren, taxNights, ItemPrice, zCurrentCurrency, zCurrencyRate, 0, Discount,
             lBreakfastIncl);
           lInvRoom.Vat := GetVATForItem(Item, ItemPrice, 1, lInvRoom, tempInvoiceItemList, ItemTypeInfo,
             edtCustomer.Text);
@@ -2856,7 +2862,7 @@ begin
           if assigned(lInvRoom) then
             RoomInvoiceLines.Add(lInvRoom)
           else
-            RoomInvoiceLines.Add(TInvoiceRoomEntity.Create(Item, taxGuests, taxChildren, taxNights, ItemPrice, itemVAT,
+            RoomInvoiceLines.Add(TInvoiceRoomEntity.Create(Item, taxGuests, taxChildren, taxNights, ItemPrice, zCurrentCurrency, zCurrencyRate, itemVAT,
               Discount, lBreakfastIncl));
 
         ItemInvoiceLines.Add(TInvoiceItemEntity.Create(Item, taxNights, ItemPrice, itemVAT));
@@ -3431,18 +3437,17 @@ begin
 
   s := format('INSERT INTO invoiceaddressees ' + '(InvoiceIndex, ' + 'Reservation, ' + 'RoomReservation, ' +
     'SplitNumber, ' + 'InvoiceNumber, ' + 'Customer, ' + 'Name, ' + 'Address1, ' + 'Address2, ' + 'Zip, ' + 'City, ' +
-    'Country, ' + 'ExtraText, ' + 'custPID, ' + 'InvoiceType, ' + 'ihCurrency) ' + 'VALUES ' + '(%d, ' + '%d, ' + '%d, '
-    + '%d, ' + '%d, ' + '%s, ' + '%s, ' + '%s, ' + '%s, ' + '%s, ' + '%s, ' + '%s, ' + '%s, ' + '%s, ' + '%d, ' +
+    'Country, ' + 'ExtraText, ' + 'custPID, ' + 'InvoiceType ) ' + 'VALUES ' + '(%d, ' + '%d, ' + '%d, '
+    + '%d, ' + '%d, ' + '%s, ' + '%s, ' + '%s, ' + '%s, ' + '%s, ' + '%s, ' + '%s, ' + '%s, ' + '%d, ' +
     '%s) ', [InvoiceIndex, FReservation, FRoomReservation, FnewSplitNumber, aInvoiceNumber, _db(edtCustomer.Text),
     _db(edtName.Text), _db(edtAddress1.Text), _db(edtAddress2.Text), _db(edtAddress3.Text), _db(edtAddress4.Text),
-    _db(zCountry), _db(memExtraText.Lines.Text), _db(edtPersonalId.Text), rgrInvoiceType.itemIndex,
-    _db(edtDisplayCurrency.Text)]) +
+    _db(zCountry), _db(memExtraText.Lines.Text), _db(edtPersonalId.Text), rgrInvoiceType.itemIndex]) +
 
     format('ON DUPLICATE KEY UPDATE ' + 'InvoiceNumber=%d, ' + 'Customer=%s, ' + 'Name=%s, ' + 'Address1=%s, ' +
-    'Address2=%s, ' + 'Zip=%s, ' + 'City=%s, ' + 'Country=%s, ' + 'ExtraText=%s, ' + 'custPID=%s, ' + 'InvoiceType=%d, '
-    + 'ihCurrency=%s', [aInvoiceNumber, _db(edtCustomer.Text), _db(edtName.Text), _db(edtAddress1.Text),
+    'Address2=%s, ' + 'Zip=%s, ' + 'City=%s, ' + 'Country=%s, ' + 'ExtraText=%s, ' + 'custPID=%s, ' + 'InvoiceType=%d '
+    , [aInvoiceNumber, _db(edtCustomer.Text), _db(edtName.Text), _db(edtAddress1.Text),
     _db(edtAddress2.Text), _db(edtAddress3.Text), _db(edtAddress4.Text), _db(zCountry), _db(memExtraText.Lines.Text),
-    _db(edtPersonalId.Text), rgrInvoiceType.itemIndex, _db(edtDisplayCurrency.Text)]);
+    _db(edtPersonalId.Text), rgrInvoiceType.itemIndex]);
 
   aExecutionPlan.AddExec(s);
   copytoclipboard(s);
@@ -5877,6 +5882,7 @@ begin
 end;
 
 procedure TfrmInvoiceRentPerDay.ItemToTemp(confirm: boolean);
+(*
 var
   PurchaseDate: TDateTime;
   InvoiceNumber: integer;
@@ -5908,9 +5914,9 @@ var
 
   lInvRoom: TInvoiceRoomEntity;
   lInvLine: TInvoiceLine;
-
+*)
 begin
-  isPackage := false;
+(*  isPackage := false;
 
   CurrentRow := agrLines.row;
   if isSystemLine(CurrentRow) then
@@ -6015,6 +6021,7 @@ begin
   AddEmptyLine;
   calcAndAddAutoItems(FReservation);
   chkChanged;
+*)
 end;
 
 procedure TfrmInvoiceRentPerDay.actMoveItemToTempExecute(Sender: TObject);
@@ -6134,7 +6141,7 @@ begin
   ItemTypeInfo := d.Item_Get_ItemTypeInfo(ItemId, agrLines.Cells[col_Source, CurrentRow]);
 
   lInvRoom := TInvoiceRoomEntity.Create(agrLines.Cells[col_Item, CurrentRow], 1, 0,
-    _StrToFloat(agrLines.Cells[col_ItemCount, CurrentRow]), _StrToFloat(agrLines.Cells[col_ItemPrice, CurrentRow]), 0,
+    _StrToFloat(agrLines.Cells[col_ItemCount, CurrentRow]), _StrToFloat(agrLines.Cells[col_ItemPrice, CurrentRow]), zCurrentCurrency, zCurrencyRate, 0,
     0, false);
   try
     TotalVAT := GetVATForItem(agrLines.Cells[col_Item, CurrentRow], Total,
@@ -6394,7 +6401,7 @@ begin
         ItemTypeInfo := d.Item_Get_ItemTypeInfo(ItemId, agrLines.Cells[col_Source, CurrentRow]);
 
         lInvRoom := TInvoiceRoomEntity.Create(agrLines.Cells[col_Item, CurrentRow], 1, 0,
-          _StrToFloat(agrLines.Cells[col_ItemCount, CurrentRow]), CurrentRow, 0, 0, false);
+          _StrToFloat(agrLines.Cells[col_ItemCount, CurrentRow]), CurrentRow, zCurrentCurrency, zCurrencyRate, 0, 0, false);
         try
           TotalVAT := GetVATForItem(agrLines.Cells[col_Item, CurrentRow], Total,
             _StrToFloat(agrLines.Cells[col_ItemCount, CurrentRow]), lInvRoom, tempInvoiceItemList, ItemTypeInfo,

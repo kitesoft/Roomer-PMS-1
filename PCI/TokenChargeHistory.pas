@@ -58,7 +58,6 @@ type
     procedure lvChargesSelectItem(Sender: TObject; Item: TListItem; Selected: Boolean);
     procedure btnChargeViewClick(Sender: TObject);
     procedure lvChargesChange(Sender: TObject; Item: TListItem; Change: TItemChange);
-    procedure lvTokensChange(Sender: TObject; Item: TListItem; Change: TItemChange);
     procedure lvChargesDblClick(Sender: TObject);
     procedure mnuNewForResClick(Sender: TObject);
     procedure mnuNewForRoomClick(Sender: TObject);
@@ -180,7 +179,7 @@ begin
   if NOT ASSIGNED(lvTokens.Selected) then exit;
   token := TToken(lvTokens.Selected.Data);
   ShowPayCardInformation(Reservation, token.id, ORD(glb.PCIContractOpenForChannel(-1)));
-  DisplayTokenDetails(token);
+//  DisplayTokenDetails(token);
 end;
 
 procedure TFrmTokenChargeHistory.DisplayCharges;
@@ -262,34 +261,7 @@ begin
     lvTokens.Items.BeginUpdate;
     try
       lvTokens.Items.Clear;
-      tokenList.Clear;
-      rSet.First;
-      while NOT rSet.Eof do
-      begin
-        if (rSet['ID'] = -1) OR (rSet['ROOM_RESERVATION'] = RoomReservationId) OR (rSet['ROOM_RESERVATION'] <= 0) then
-        begin
-          token := TToken.Create(rSet['ID'],
-                        rSet['RESERVATION'],
-                        rSet['ROOM_RESERVATION'],
-                        rSet['PAYCARD_TOKEN'],
-                        rSet['ENABLED'],
-                        rSet['NAME_ON_CARD'],
-                        rSet['CARD_TYPE'],
-                        rSet['USER_ID'],
-                        rSet['DESCRIPTION'],
-                        rSet['NOTES'],
-                        rSet['CREATE_TSTAMP'],
-
-                        rSet['ROOM'],
-                        rSet['SOURCE'],
-
-                        rSet['CARD_NUMBER'],
-                        rSet['EXP_DATE']);
-
-          tokenList.Add(token);
-        end;
-        rSet.Next;
-      end;
+      tokenList := LoadAllTokens(ReservationID, RoomReservationId);
     finally
       lvTokens.Items.EndUpdate;
     end;
@@ -316,13 +288,8 @@ end;
 procedure TFrmTokenChargeHistory.lvChargesSelectItem(Sender: TObject; Item: TListItem; Selected: Boolean);
 begin
   inherited;
-  btnChargeView.Enabled := ASSIGNED(item);
-end;
-
-procedure TFrmTokenChargeHistory.lvTokensChange(Sender: TObject; Item: TListItem; Change: TItemChange);
-begin
-  inherited;
-  btnTokenView.Enabled := ASSIGNED(item);
+  btnChargeView.Enabled := selected;
+  btnRefundOrCapture.Enabled := selected;
 end;
 
 procedure TFrmTokenChargeHistory.lvTokensDblClick(Sender: TObject);
@@ -339,6 +306,9 @@ var
   charge : TTokenCharge;
   token : TToken;
 begin
+  btnTokenView.Enabled := selected;
+  btnCharge.Enabled := selected;
+
   lvCharges.Items.BeginUpdate;
   try
     lvCharges.Items.Clear;

@@ -1510,7 +1510,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
               URLColor = clBlack
               ValidChars = '0123456789'
               VAlignment = vtaCenter
-              Version = '8.2.5.2'
+              Version = '8.2.4.1'
               WordWrap = False
               ColWidths = (
                 250
@@ -1740,7 +1740,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
             URLColor = clBlack
             ValidChars = '0123456789+-!%*/'
             VAlignment = vtaCenter
-            Version = '8.2.5.2'
+            Version = '8.2.4.1'
             WordWrap = False
             ColWidths = (
               400

@@ -192,10 +192,10 @@ type
     m_OrderIndex: TIntegerField;
     m_connectRateToMasterRate: TBooleanField;
     m_masterRateRateDeviation: TFloatField;
-    m_RateDeviationType: TWideStringField;
+    m_RateDeviationType: TIntegerField;
     m_connectSingleUseRateToMasterRate: TBooleanField;
     m_masterRateSingleUseRateDeviation: TFloatField;
-    m_singleUseRateDeviationType: TWideStringField;
+    m_singleUseRateDeviationType: TIntegerField;
     m_connectAvailabilityToMasterRate: TBooleanField;
     m_connectStopSellToMasterRate: TBooleanField;
     m_connectMinStayToMasterRate: TBooleanField;
@@ -237,9 +237,9 @@ type
     cbTopClasses: TCheckBox;
     chkActive: TCheckBox;
     m_masterRateExtraRateDeviation: TFloatField;
-    m_extraRateDeviationType: TWideStringField;
+    m_extraRateDeviationType: TIntegerField;
     m_masterRateExtraSingleUseRateDeviation: TFloatField;
-    m_extraSingleUseRateDeviationType: TWideStringField;
+    m_extraSingleUseRateDeviationType: TIntegerField;
     tvDatamasterRateExtraRateDeviation: TcxGridDBColumn;
     tvDataextraRateDeviationType: TcxGridDBColumn;
     tvDatamasterRateExtraSingleUseRateDeviation: TcxGridDBColumn;
@@ -289,6 +289,10 @@ type
     procedure btnAvailabilityOrderClick(Sender: TObject);
     procedure cbTopClassesClick(Sender: TObject);
     procedure chkActiveClick(Sender: TObject);
+    procedure tvDataCalculationTypeGetDisplayText(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
+      var AText: string);
+    procedure tvDataCalculationTypeExtraGetDisplayText(Sender: TcxCustomGridTableItem;
+      ARecord: TcxCustomGridRecord; var AText: string);
   private
     { Private declarations }
     zFirstTime       : boolean;
@@ -298,7 +302,6 @@ type
     zIsAddRow        : boolean;
 
     Procedure fillGridFromDataset(iGoto : String);
-    procedure fillHolder;
     procedure changeAllowgridEdit;
     Procedure chkFilter;
     procedure applyFilter;
@@ -351,7 +354,7 @@ uses
 
   , ufrmPaymentReqRoomtypeGroup
   , uTopClassAvailabilityOrder
-  , uResourceTypeDefinitions;
+  , uResourceTypeDefinitions, uCalculationTypeDefinitions, uCalculationTypeExtraDefinitions;
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -455,10 +458,10 @@ begin
 
           m_['connectRateToMasterRate'] := rSet['connectRateToMasterRate'];
           m_['masterRateRateDeviation'] := rSet['masterRateRateDeviation'];
-          m_['RateDeviationType'] := rSet['RateDeviationType'];
+          m_RateDeviationType.AsInteger := TCalculationType.FromDBString(rSet['RateDeviationType']).ToItemIndex;
           m_['connectSingleUseRateToMasterRate'] := rSet['connectSingleUseRateToMasterRate'];
           m_['masterRateSingleUseRateDeviation'] := rSet['masterRateSingleUseRateDeviation'];
-          m_['singleUseRateDeviationType'] := rSet['singleUseRateDeviationType'];
+          m_singleUseRateDeviationType.AsInteger := TCalculationType.FromDBString(rSet['singleUseRateDeviationType']).ToItemIndex;
           m_['connectStopSellToMasterRate'] := rSet['connectStopSellToMasterRate'];
           m_['connectAvailabilityToMasterRate'] := rSet['connectAvailabilityToMasterRate'];
           m_['connectMinStayToMasterRate'] := rSet['connectMinStayToMasterRate'];
@@ -468,9 +471,9 @@ begin
           m_['connectLOSToMasterRate'] := rSet['connectLOSToMasterRate'];
           m_['RATE_PLAN_TYPE'] := rSet['RATE_PLAN_TYPE'];
           m_['masterRateExtraRateDeviation'] := rSet['masterRateExtraRateDeviation'];
-          m_['extraRateDeviationType'] := rSet['extraRateDeviationType'];
+          m_extraRateDeviationType.AsInteger := TCalculationTypeExtra.FromDBString(rSet['extraRateDeviationType']).ToItemIndex;
           m_['masterRateExtraSingleUseRateDeviation'] := rSet['masterRateExtraSingleUseRateDeviation'];
-          m_['extraSingleUseRateDeviationType'] := rSet['extraSingleUseRateDeviationType'];
+          m_extraSingleUseRateDeviationType.AsInteger := TCalculationTypeExtra.FromDBString(rSet['extraSingleUseRateDeviationType']).ToItemIndex;
 
           m_.Post;
         end;
@@ -491,70 +494,6 @@ begin
     freeandnil(rSet);
   end;
 end;
-
-
-procedure TfrmRoomTypesGroups2.fillHolder;
-begin
-  initRoomTypeGroupHolder(zData);
-  zData.ID            := m_.FieldByName('ID').AsInteger;
-  zData.Active        := m_['Active'];
-  zData.Description   := m_['Description'];
-  zData.color         := m_['color'];
-  zData.Code          := m_['Code'];
-  zData.TopClass      := m_['TopClass'];
-  zData.numGuests     := m_['numGuests'];
-  zData.PriorityRule  := m_['PriorityRule'];
-  zData.MaxCount      := m_['MaxCount'];
-  zData.minGuests     := m_['minGuests'];
-  zData.maxGuests     := m_['maxGuests'];
-  zData.maxChildren   := m_['maxChildren'];
-  zData.AvailabilityTypes := m_['AvailabilityTypes'];
-  zData.BreakfastIncluded := m_['BreakfastIncluded'];
-  zData.HalfBoard := m_['HalfBoard'];
-  zData.FullBoard := m_['FullBoard'];
-  zData.defAvailability := m_['defAvailability'];
-  zData.defStopSale := m_['defStopSale'];
-  zData.defRate := m_.FieldByName('defRate').asFloat;
-  zData.defMaxAvailability := m_['defMaxAvailability'];
-  zData.defMinStay := m_['defMinStay'];
-  zData.defMaxStay := m_['defMaxStay'];
-  zData.defClosedToArrival := m_['defClosedToArrival'];
-  zData.defClosedToDeparture := m_['defClosedToDeparture'];
-  zData.NonRefundable := m_['NonRefundable'];
-  zData.AutoChargeCreditcards := m_['AutoChargeCreditcards'];
-  zData.RateExtraBed := m_['RateExtraBed'];
-  zData.PhotoUri := m_['PhotoUri'];
-  zData.sendAvailability := m_['sendAvailability'];
-  zData.sendRate := m_['sendRate'];
-  zData.sendStopSell := m_['sendStopSell'];
-  zData.sendMinStay := m_['sendMinStay'];
-  zData.DetailedDescriptionHtml := m_['DetailedDescriptionHtml'];
-  zData.DetailedDescription := m_['DetailedDescription'];
-  zData.Package := m_['Package'];
-  zData.OrderIndex := m_['OrderIndex'];
-  zData.connectRateToMasterRate := m_['connectRateToMasterRate'];
-  zData.masterRateRateDeviation := m_['masterRateRateDeviation'];
-  zData.RateDeviationType := m_['RateDeviationType'];
-  zData.connectSingleUseRateToMasterRate := m_['connectSingleUseRateToMasterRate'];
-  zData.masterRateSingleUseRateDeviation := m_['masterRateSingleUseRateDeviation'];
-  zData.singleUseRateDeviationType := m_['singleUseRateDeviationType'];
-  zData.connectStopSellToMasterRate := m_['connectStopSellToMasterRate'];
-  zData.connectAvailabilityToMasterRate := m_['connectAvailabilityToMasterRate'];
-  zData.connectMinStayToMasterRate := m_['connectMinStayToMasterRate'];
-  zData.connectMaxStayToMasterRate := m_['connectMaxStayToMasterRate'];
-  zData.connectCOAToMasterRate := m_['connectCOAToMasterRate'];
-  zData.connectCODToMasterRate := m_['connectCODToMasterRate'];
-  zData.connectLOSToMasterRate := m_['connectLOSToMasterRate'];
-  zData.RATE_PLAN_TYPE := m_['RATE_PLAN_TYPE'];
-
-  zData.masterRateExtraRateDeviation := m_['masterRateExtraRateDeviation'];
-  zData.extraRateDeviationType := m_['extraRateDeviationType'];
-  zData.masterRateExtraSingleUseRateDeviation := m_['masterRateExtraSingleUseRateDeviation'];
-  zData.extraSingleUseRateDeviationType := m_['extraSingleUseRateDeviationType'];
-
-end;
-
-
 
 procedure TfrmRoomTypesGroups2.cbTopClassesClick(Sender: TObject);
 begin
@@ -606,10 +545,10 @@ begin
     tvDataOrderIndex.Options.Editing         := zAllowGridEdit;
     tvDataconnectRateToMasterRate.Options.Editing         := zAllowGridEdit;
     tvDatamasterRateRateDeviation.Options.Editing         := zAllowGridEdit;
-    tvDataRateDeviationType.Options.Editing         := zAllowGridEdit;
+    tvDataRateDeviationType.Options.Editing         := False;//zAllowGridEdit;
     tvDataconnectSingleUseRateToMasterRate.Options.Editing         := zAllowGridEdit;
     tvDatamasterRateSingleUseRateDeviation.Options.Editing         := zAllowGridEdit;
-    tvDatasingleUseRateDeviationType.Options.Editing         := zAllowGridEdit;
+    tvDatasingleUseRateDeviationType.Options.Editing         := False;//zAllowGridEdit;
     tvDataconnectStopSellToMasterRate.Options.Editing         := zAllowGridEdit;
     tvDataconnectAvailabilityToMasterRate.Options.Editing         := zAllowGridEdit;
     tvDataconnectMinStayToMasterRate.Options.Editing         := zAllowGridEdit;
@@ -619,9 +558,9 @@ begin
     tvDataconnectLOSToMasterRate.Options.Editing         := zAllowGridEdit;
 
     tvDatamasterRateExtraRateDeviation.Options.Editing         := zAllowGridEdit;
-    tvDataextraRateDeviationType.Options.Editing         := zAllowGridEdit;
+    tvDataextraRateDeviationType.Options.Editing         := False;//zAllowGridEdit;
     tvDatamasterRateExtraSingleUseRateDeviation.Options.Editing         := zAllowGridEdit;
-    tvDataextraSingleUseRateDeviationType.Options.Editing         := zAllowGridEdit;
+    tvDataextraSingleUseRateDeviationType.Options.Editing         := False;//zAllowGridEdit;
 
 end;
 
@@ -809,6 +748,7 @@ procedure TfrmRoomTypesGroups2.FillDataHolderFromDataSet(dataset : TDataSet);
 begin
   if (NOT dataset.Eof) then
   begin
+    initRoomTypeGroupHolder(zData);
     zData.ID                := dataset.FieldByName('ID').AsInteger;
     zData.Active            := dataset['Active'];
     zData.Description       := dataset['Description'];
@@ -848,10 +788,10 @@ begin
 
     zData.connectRateToMasterRate := m_['connectRateToMasterRate'];
     zData.masterRateRateDeviation := m_['masterRateRateDeviation'];
-    zData.RateDeviationType := m_['RateDeviationType'];
+    zData.RateDeviationType := TCalculationType.FromItemIndex(m_RateDeviationType.AsInteger);
     zData.connectSingleUseRateToMasterRate := m_['connectSingleUseRateToMasterRate'];
     zData.masterRateSingleUseRateDeviation := m_['masterRateSingleUseRateDeviation'];
-    zData.singleUseRateDeviationType := m_['singleUseRateDeviationType'];
+    zData.singleUseRateDeviationType := TCalculationType.FromItemIndex(m_singleUseRateDeviationType.AsInteger);
     zData.connectStopSellToMasterRate := m_['connectStopSellToMasterRate'];
     zData.connectAvailabilityToMasterRate := m_['connectAvailabilityToMasterRate'];
     zData.connectMinStayToMasterRate := m_['connectMinStayToMasterRate'];
@@ -862,9 +802,9 @@ begin
     zData.RATE_PLAN_TYPE := m_['RATE_PLAN_TYPE'];
 
     zData.masterRateExtraRateDeviation := m_['masterRateExtraRateDeviation'];
-    zData.extraRateDeviationType := m_['extraRateDeviationType'];
+    zData.extraRateDeviationType := TCalculationTypeExtra.FromItemIndex( m_extraRateDeviationType.AsInteger);
     zData.masterRateExtraSingleUseRateDeviation := m_['masterRateExtraSingleUseRateDeviation'];
-    zData.extraSingleUseRateDeviationType := m_['extraSingleUseRateDeviationType'];
+    zData.extraSingleUseRateDeviationType := TCalculationTypeExtra.FromItemIndex(m_extraSingleUseRateDeviationType.AsInteger);
 
     //    zData.prepaidPercentage := m_['prepaidPercentage'];
   end;
@@ -882,15 +822,7 @@ procedure TfrmRoomTypesGroups2.m_BeforeDelete(DataSet: TDataSet);
 var
   s : string;
 begin
-  fillHolder;
-(*
-  if hdata.payTypeExistsInOther(zData.PayType) then
-  begin
-    Showmessage('payType'+' ' + zData.Description + ' '+GetTranslatedText('shExistsInRelatedData')+' ' + chr(10) + GetTranslatedText('shCanNotDelete')+' ');
-    Abort;
-    exit;
-  end;
-*)
+  FillDataHolderFromDataSet(Dataset);
 
   s := '';
   s := s+GetTranslatedText('shDeleteRoomClass')+' '+zData.Description+' '+chr(10);
@@ -915,6 +847,7 @@ begin
   if zFirstTime then exit;
   tvData.GetColumnByFieldName('code').Focused := True;
 end;
+
 procedure TfrmRoomTypesGroups2.m_BeforePost(DataSet: TDataSet);
 var
   nID : integer;
@@ -926,18 +859,8 @@ begin
   initRoomTypeGroupHolder(zData);
   FillDataHolderFromDataSet(DataSet);
 
-  if tvData.DataController.DataSource.State = dsEdit then
+  if Dataset.State = dsEdit then
   begin
-//    d.roomerMainDataSet.SystemStartTransaction;
-//    try
-//      if OldCode <> zData.Code then
-//        if glb.KeyAlreadyExistsInAnotherRecord('roomtypegroups', 'Code', zData.Code, zData.id) then
-//        begin
-//          showmessage(GetTranslatedText('shTx_RoomtypeGroups_RoomTypeGroupAlreadyExists'));
-//          tvData.GetColumnByFieldName('Code').Focused := True;
-//          abort;
-//          exit;
-//        end;
       glb.LogChanges(DataSet, 'roomtypegroups', CHANGE_FIELD, '');
       oldTop := dataSet.FieldByName('TopClass').OldValue;
       oldCode := dataSet.FieldByName('Code').OldValue;
@@ -946,9 +869,6 @@ begin
       try
       if UPD_roomTypeGroup(zData) then
       begin
-//        if OldCode <> zData.Code then
-//          CorrectRoomTypeGroups(OldCode, zData.Code);
-//        d.roomerMainDataSet.SystemCommitTransaction;
         glb.LogChanges(DataSet, 'roomtypegroups', CHANGE_FIELD, '');
         if oldCode <> zData.Code then
           UpdateRoomTypeGroupCode(oldCode, zData.Code);
@@ -964,11 +884,8 @@ begin
         if oldCode <> zData.Code then
           SetForeignKeyCheckValue(1);
       end;
-//    except
-//      d.roomerMainDataSet.SystemRollbackTransaction;
-//    end;
   end;
-  if tvData.DataController.DataSource.State = dsInsert then
+  if Dataset.State = dsInsert then
   begin
     if dataset.FieldByName('Code').AsString = ''  then
     begin
@@ -1037,10 +954,10 @@ begin
   dataset['OrderIndex'] := 0;
   dataset['connectRateToMasterRate'] := false;
   dataset['masterRateRateDeviation'] := 0.00;
-  dataset['RateDeviationType'] := 'PERCENTAGE';
+  dataset.FieldByName('RateDeviationType').AsInteger := ord(TCalculationType.ctPercentage);
   dataset['connectSingleUseRateToMasterRate'] := false;
   dataset['masterRateSingleUseRateDeviation'] := 0.00;
-  dataset['singleUseRateDeviationType'] := 'PERCENTAGE';
+  dataset.FieldByName('singleUseRateDeviationType').AsInteger := ord(TCalculationType.ctPercentage);
   dataset['connectStopSellToMasterRate'] := false;
   dataset['connectAvailabilityToMasterRate'] := false;
   dataset['connectMinStayToMasterRate'] := false;
@@ -1051,9 +968,9 @@ begin
   dataset['RATE_PLAN_TYPE'] := 'STANDARD';
 
   dataset['masterRateExtraRateDeviation'] := 0.00;
-  dataset['extraRateDeviationType'] := 'PERCENTAGE';;
+  dataset.FieldByName('extraRateDeviationType').AsInteger := ord(TCalculationTypeExtra.ctePercentage);
   dataset['masterRateExtraSingleUseRateDeviation'] := 0.00;
-  dataset['extraSingleUseRateDeviationType'] := 'PERCENTAGE';;
+  dataset.FieldByName('extraSingleUseRateDeviationType').AsInteger := ord(TCalculationTypeExtra.ctePercentage);
 
 end;
 
@@ -1108,6 +1025,15 @@ begin
                     'active',
                     m_,
                     'PriorityRule');
+end;
+
+procedure TfrmRoomTypesGroups2.tvDataCalculationTypeGetDisplayText(Sender: TcxCustomGridTableItem;
+  ARecord: TcxCustomGridRecord; var AText: string);
+begin
+  if (Sender.Index >= 0) and (Sender.Index < aRecord.ValueCount) then
+    aText := TCalculationType.FromItemIndex(aRecord.values[Sender.Index]).AsReadableString
+  else
+    aText := '';
 end;
 
 procedure TfrmRoomTypesGroups2.tvDataRATE_PLAN_TYPEPropertiesCloseUp(Sender: TObject);
@@ -1169,6 +1095,12 @@ begin
   m_.Edit;
   m_['DetailedDescription'] := s;
   m_.Post;
+end;
+
+procedure TfrmRoomTypesGroups2.tvDataCalculationTypeExtraGetDisplayText(Sender: TcxCustomGridTableItem;
+  ARecord: TcxCustomGridRecord; var AText: string);
+begin
+//  aText := TCalculationTypeExtra.FromItemIndex(aRecord.Values[sender.Index]).AsReadableString;
 end;
 
 ////////////////////////////////////////////////////////////////////////////
@@ -1269,7 +1201,7 @@ end;
 
 procedure TfrmRoomTypesGroups2.BtnOkClick(Sender: TObject);
 begin
-  fillHolder;
+  FillDataHolderFromDataSet(m_);
 end;
 
 procedure TfrmRoomTypesGroups2.btnOtherClick(Sender: TObject);
@@ -1347,10 +1279,10 @@ begin
   m_['OrderIndex'] := zData.OrderIndex;
   m_['connectRateToMasterRate'] := zData.connectRateToMasterRate;
   m_['masterRateRateDeviation'] := zData.masterRateRateDeviation;
-  m_['RateDeviationType'] := zData.RateDeviationType;
+  m_RateDeviationType.AsInteger := zData.RateDeviationType.ToItemIndex;
   m_['connectSingleUseRateToMasterRate'] := zData.connectSingleUseRateToMasterRate;
   m_['masterRateSingleUseRateDeviation'] := zData.masterRateSingleUseRateDeviation;
-  m_['singleUseRateDeviationType'] := zData.singleUseRateDeviationType;
+  m_singleUseRateDeviationType.AsInteger := zData.singleUseRateDeviationType.ToItemIndex;
   m_['connectStopSellToMasterRate'] := zData.connectStopSellToMasterRate;
   m_['connectAvailabilityToMasterRate'] := zData.connectAvailabilityToMasterRate;
   m_['connectMinStayToMasterRate'] := zData.connectMinStayToMasterRate;
@@ -1361,9 +1293,9 @@ begin
   m_['RATE_PLAN_TYPE'] := zData.RATE_PLAN_TYPE;
 
   m_['masterRateExtraRateDeviation'] := zData.masterRateExtraRateDeviation;
-  m_['extraRateDeviationType'] := zData.extraRateDeviationType;
+  m_extraRateDeviationType.AsInteger := zData.extraRateDeviationType.ToItemIndex;
   m_['masterRateExtraSingleUseRateDeviation'] := zData.masterRateExtraSingleUseRateDeviation;
-  m_['extraSingleUseRateDeviationType'] := zData.extraSingleUseRateDeviationType;
+  m_extraSingleUseRateDeviationType.AsInteger := zData.extraSingleUseRateDeviationType.ToItemIndex;
   //  m_['prepaidPercentage'] := zData.prepaidPercentage;
 end;
 
@@ -1375,14 +1307,19 @@ begin
 //  grData.SetFocus;
 //  tvData.GetColumnByFieldName('Description').Focused := True;
 //  showmessage(GetTranslatedText('shTx_RoomTypeGroups2_EditInGrid'));
-  fillHolder;
+  FillDataHolderFromDataSet(m_);
   if openRoomTypeGroupEdit(zData, true, (tvDataRATE_PLAN_TYPE.Properties AS TcxComboBoxProperties).Items) then
   begin
+    m_.DisableControls;
+    try
       zFirstTime := False;
       m_.edit;
       SetEditedValuesIn_M_Dataset;
       m_.Post;
-      fillGridFromDataset(m_Code.AsString);
+    finally
+      m_.EnableControls;
+    end;
+    fillGridFromDataset(m_Code.AsString);
   end;
 
 end;
@@ -1403,7 +1340,7 @@ begin
       SetEditedValuesIn_M_Dataset;
       m_.Post;
   end;
-  fillHolder;
+  FillDataHolderFromDataSet(m_);
 
 end;
 

@@ -10785,25 +10785,23 @@ begin
   s := s + '   ,rrRoomTypeAlias = ' + _db(sRoomType) + ' ' + chr(10);
   s := s + ' WHERE ' + chr(10);
   s := s + '   RoomReservation = ' + inttostr(RoomReservation) + ' ' + chr(10);
-  if not cmd_bySQL(s) then
-  begin
-    result := False;
-  end;
 
-  // <roomsdate>xUPDATE **SetAsNoRoom**
-  // **xzhj
-  s := '';
-  s := s + ' UPDATE ' + chr(10);
-  s := s + '   roomsdate ' + chr(10);
-  s := s + ' SET ' + chr(10);
-  s := s + '   Room = ' + _db(NewRoom) + ' ' + chr(10);
-  s := s + ' , updated = 1 ' + chr(10);
-  s := s + ' , isNoRoom = 0 ' + chr(10);
-  s := s + ' WHERE ' + chr(10);
-  s := s + '   RoomReservation = ' + inttostr(RoomReservation) + ' ' + chr(10);
-  if not cmd_bySQL(s) then
+  Result := cmd_bySQL(s);
+
+  if result then
   begin
-    result := False;
+    // <roomsdate>xUPDATE **SetAsNoRoom**
+    // **xzhj
+    s := '';
+    s := s + ' UPDATE ' + chr(10);
+    s := s + '   roomsdate ' + chr(10);
+    s := s + ' SET ' + chr(10);
+    s := s + '   Room = ' + _db(NewRoom) + ' ' + chr(10);
+    s := s + ' , updated = 1 ' + chr(10);
+    s := s + ' , isNoRoom = 0 ' + chr(10);
+    s := s + ' WHERE ' + chr(10);
+    s := s + '   RoomReservation = ' + inttostr(RoomReservation) + ' ' + chr(10);
+    result := cmd_bySQL(s);
   end;
 end;
 

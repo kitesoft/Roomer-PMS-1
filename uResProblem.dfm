@@ -13,7 +13,6 @@ object frmResProblem: TfrmResProblem
   Font.Style = []
   OldCreateOrder = False
   Position = poOwnerFormCenter
-  OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnShow = FormShow
@@ -28,7 +27,6 @@ object frmResProblem: TfrmResProblem
     BevelOuter = bvNone
     TabOrder = 0
     SkinData.SkinSection = 'PANEL'
-    ExplicitTop = 441
     object btnOK: TButton
       Left = 372
       Top = 2
@@ -39,7 +37,6 @@ object frmResProblem: TfrmResProblem
       Images = DImages.PngImageList1
       ModalResult = 1
       TabOrder = 0
-      OnClick = btnOKClick
     end
     object btnCancel: TsButton
       Left = 447
@@ -64,7 +61,6 @@ object frmResProblem: TfrmResProblem
     BevelOuter = bvNone
     TabOrder = 1
     SkinData.SkinSection = 'PANEL'
-    ExplicitWidth = 524
     object rgrOption2: TsRadioGroup
       Left = 17
       Top = 92
@@ -73,7 +69,6 @@ object frmResProblem: TfrmResProblem
       Caption = 'Pick Solution'
       TabOrder = 0
       SkinData.SkinSection = 'GROUPBOX'
-      Checked = False
       Items.Strings = (
         'Place current booking outside of rooms (As no-room )'
         'Move the other booking/s outside of room/s (As no-room)'
@@ -214,10 +209,9 @@ object frmResProblem: TfrmResProblem
     SearchFooter.HintFindPrev = 'Find previous occurence'
     SearchFooter.HintHighlight = 'Highlight occurences'
     SearchFooter.MatchCaseCaption = 'Match case'
+    SearchFooter.ResultFormat = '(%d of %d)'
     SortSettings.DefaultFormat = ssAutomatic
-    Version = '7.9.1.1'
-    ExplicitWidth = 524
-    ExplicitHeight = 248
+    Version = '8.2.4.1'
     ColWidths = (
       64
       64

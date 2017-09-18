@@ -23,7 +23,7 @@ uses
   , uReservationStateDefinitions
   , uRoomReservationOBJ
   , uRoomerThreadedRequest
-  , uStaffCommunicationDefinitions
+  , uStaffCommunicationDefinitions, uDateTimeHelper, uCalculationTypeDefinitions, uCalculationTypeExtraDefinitions
   ;
 
 const
@@ -1191,10 +1191,10 @@ type
 
     connectRateToMasterRate: boolean;
     masterRateRateDeviation: double;
-    RateDeviationType: String;
+    RateDeviationType: TCalculationType;
     connectSingleUseRateToMasterRate: boolean;
     masterRateSingleUseRateDeviation: double;
-    singleUseRateDeviationType: String;
+    singleUseRateDeviationType: TCalculationType;
     connectStopSellToMasterRate: boolean;
     connectAvailabilityToMasterRate: boolean;
     connectMinStayToMasterRate: boolean;
@@ -1206,9 +1206,9 @@ type
     RATE_PLAN_TYPE: String;
 
     masterRateExtraRateDeviation: Double;
-    extraRateDeviationType: String;
+    extraRateDeviationType: TCalculationTypeExtra;
     masterRateExtraSingleUseRateDeviation: Double;
-    extraSingleUseRateDeviationType: String;
+    extraSingleUseRateDeviationType: TCalculationTypeExtra;
 
     prepaidPercentage : Double;
   end;
@@ -1906,6 +1906,7 @@ procedure initTaxesHolder(var rec: recTaxesHolder);
 function INS_Taxes(theData: recTaxesHolder; var NewID: integer): boolean;
 function UPD_Taxes(theData: recTaxesHolder): boolean;
 function Del_Taxes(theData: recTaxesHolder): boolean;
+function CheckNoTaxesOverlap(const HotelId: string): boolean;
 
 procedure initRateRuleHolder(var rec: recRateRuleHolder);
 function Del_RateRule(theData: recRateRuleHolder): boolean;
@@ -9601,8 +9602,8 @@ begin
     NETTO_AMOUNT_BASED := 'TRUE';
     Amount := 0;
     VALUE_FORMULA := '';
-    VALID_FROM := 0;
-    VALID_TO := now + (10 * 365);
+    VALID_FROM := now;
+    VALID_TO := Now.AddYears(10);
   end;
 end;
 
@@ -9758,7 +9759,26 @@ begin
 end;
 
 
+function CheckNoTaxesOverlap(const HotelId: string): boolean;
+var
+  s: string;
+  rSet: TRoomerDataSet;
+begin
+  s := '';
 
+  s := s + ' select count(*) as cnt ' + #10;
+  s := s + ' from home100.TAXES t1 ' + #10;
+  s := s + ' join (Select * from home100.TAXES t2  ' + #10;
+  s := s + '   where t2.hotel_id = ' + _db(HotelId) + ') tt on  t1.ID <> tt.ID and (t1.VALID_FROM <= tt.VALID_TO) and (t1.VALID_TO >= tt.VALID_FROM) ' + #10;
+  s := s + ' where t1.hotel_id = ' + _db(HotelId);
+
+  rSet := CreateNewDataSet;
+  try
+    Result := rSet_bySQL(rSet, s, false) and (rSet.FieldByName('cnt').AsInteger = 0);
+  finally
+    rSet.Free;
+  end;
+end;
 
 /// ///////////////////////////////////////////////////////////////////////////////////
 //
@@ -10414,10 +10434,10 @@ begin
 
     connectRateToMasterRate := false;
     masterRateRateDeviation := 0.00;;
-    RateDeviationType := 'FIXED_AMOUNT';
+    RateDeviationType := TCalculationType.ctFixedAmount;
     connectSingleUseRateToMasterRate := false;
     masterRateSingleUseRateDeviation := 0.00;
-    singleUseRateDeviationType := 'FIXED_AMOUNT';
+    singleUseRateDeviationType := TCalculationType.ctFixedAmount;
     connectStopSellToMasterRate := false;
     connectAvailabilityToMasterRate := false;
     connectMinStayToMasterRate := false;
@@ -10429,9 +10449,9 @@ begin
     prepaidPercentage := 100;
 
     masterRateExtraRateDeviation := 0.00;
-    extraRateDeviationType := 'FIXED_AMOUNT';
+    extraRateDeviationType := TCalculationTypeExtra.cteFixedAmount;
     masterRateExtraSingleUseRateDeviation := 0.00;
-    extraSingleUseRateDeviationType := 'FIXED_AMOUNT';
+    extraSingleUseRateDeviationType := TCalculationTypeExtra.cteFixedAmount;
 
   end;
 end;
@@ -10492,10 +10512,10 @@ begin
   s := s + '   ,OrderIndex =' + _db(theData.OrderIndex) + ' ' + #10;
   s := s + '   ,connectRateToMasterRate = ' + _db(theData.connectRateToMasterRate) + ' ' + #10;
   s := s + '   ,masterRateRateDeviation = ' + _db(theData.masterRateRateDeviation) + ' ' + #10;
-  s := s + '   ,RateDeviationType = ' + _db(theData.RateDeviationType) + ' ' + #10;
+  s := s + '   ,RateDeviationType = ' + _db(theData.RateDeviationType.ToDBString) + ' ' + #10;
   s := s + '   ,connectSingleUseRateToMasterRate = ' + _db(theData.connectSingleUseRateToMasterRate) + ' ' + #10;
   s := s + '   ,masterRateSingleUseRateDeviation = ' + _db(theData.masterRateSingleUseRateDeviation) + ' ' + #10;
-  s := s + '   ,singleUseRateDeviationType = ' + _db(theData.singleUseRateDeviationType) + ' ' + #10;
+  s := s + '   ,singleUseRateDeviationType = ' + _db(theData.singleUseRateDeviationType.ToDBSTring) + ' ' + #10;
   s := s + '   ,connectStopSellToMasterRate = ' + _db(theData.connectStopSellToMasterRate) + ' ' + #10;
   s := s + '   ,connectAvailabilityToMasterRate = ' + _db(theData.connectAvailabilityToMasterRate) + ' ' + #10;
   s := s + '   ,connectMinStayToMasterRate = ' + _db(theData.connectMinStayToMasterRate) + ' ' + #10;
@@ -10505,9 +10525,9 @@ begin
   s := s + '   ,connectLOSToMasterRate = ' + _db(theData.connectLOSToMasterRate) + ' ' + #10;
   s := s + '   ,RATE_PLAN_TYPE = ' + _db(theData.RATE_PLAN_TYPE) + ' ' + #10;
   s := s + '   ,masterRateExtraRateDeviation = ' + _db(theData.masterRateExtraRateDeviation) + ' ' + #10;
-  s := s + '   ,extraRateDeviationType = ' + _db(theData.extraRateDeviationType) + ' ' + #10;
+  s := s + '   ,extraRateDeviationType = ' + _db(theData.extraRateDeviationType.ToDBString) + ' ' + #10;
   s := s + '   ,masterRateExtraSingleUseRateDeviation = ' + _db(theData.masterRateExtraSingleUseRateDeviation) + ' ' + #10;
-  s := s + '   ,extraSingleUseRateDeviationType = ' + _db(theData.extraSingleUseRateDeviationType) + '  ' + #10;
+  s := s + '   ,extraSingleUseRateDeviationType = ' + _db(theData.extraSingleUseRateDeviationType.ToDBString) + '  ' + #10;
   s := s + '   ,prepaidPercentage = ' + _db(theData.prepaidPercentage) + ' ' + #10;
   s := s + ' WHERE ' + #10;
   s := s + '   (ID = ' + _db(theData.id) + ') ';
@@ -10615,10 +10635,10 @@ begin
   s := s + '  ,' + _db(theData.OrderIndex) + ' ' + #10;
   s := s + '  ,' + _db(theData.connectRateToMasterRate) + ' ' + #10;
   s := s + '  ,' + _db(theData.masterRateRateDeviation) + ' ' + #10;
-  s := s + '  ,' + _db(theData.RateDeviationType) + ' ' + #10;
+  s := s + '  ,' + _db(theData.RateDeviationType.ToDBString) + ' ' + #10;
   s := s + '  ,' + _db(theData.connectSingleUseRateToMasterRate) + ' ' + #10;
   s := s + '  ,' + _db(theData.masterRateSingleUseRateDeviation) + ' ' + #10;
-  s := s + '  ,' + _db(theData.singleUseRateDeviationType) + ' ' + #10;
+  s := s + '  ,' + _db(theData.singleUseRateDeviationType.ToDBString) + ' ' + #10;
   s := s + '  ,' + _db(theData.connectStopSellToMasterRate) + ' ' + #10;
   s := s + '  ,' + _db(theData.connectAvailabilityToMasterRate) + ' ' + #10;
   s := s + '  ,' + _db(theData.connectMinStayToMasterRate) + ' ' + #10;
@@ -10628,9 +10648,9 @@ begin
   s := s + '  ,' + _db(theData.connectLOSToMasterRate) + ' ' + #10;
   s := s + '  ,' + _db(theData.RATE_PLAN_TYPE) + ' ' + #10;
   s := s + '  ,' + _db(theData.masterRateExtraRateDeviation) + ' ' + #10;
-  s := s + '  ,' + _db(theData.extraRateDeviationType) + ' ' + #10;
+  s := s + '  ,' + _db(theData.extraRateDeviationType.ToDBString) + ' ' + #10;
   s := s + '  ,' + _db(theData.masterRateExtraSingleUseRateDeviation) + ' ' + #10;
-  s := s + '  ,' + _db(theData.extraSingleUseRateDeviationType) + '  ' + #10;
+  s := s + '  ,' + _db(theData.extraSingleUseRateDeviationType.ToDBString) + '  ' + #10;
   s := s + '  ,' + _db(theData.prepaidPercentage) + ' ' + #10;
   s := s + '   )';
   result := cmd_bySQL(s);

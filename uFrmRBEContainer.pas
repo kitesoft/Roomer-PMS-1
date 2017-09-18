@@ -176,7 +176,6 @@ begin
     rwRoomTypes: frmRoomTypes2X := nil;
     rwCountries: frmCountriesX := nil;
     rwCurrencies: frmCurrenciesX := nil;
-    rwTaxes: frmTaxesX := nil;
     rwEmailResource: FrmResourcesX := nil;
     rwPreferences: frmRbePreferencesX := nil;
     rwAvailabilityAndRate: frmChannelAvailabilityManagerX := nil;
@@ -213,8 +212,6 @@ begin
     FrmResourcesX.pnlHolder.Parent := nil;
   if RBEWindowTypes[rwRoomTypes] then
     frmRoomTypes2X.pnlHolder.Parent := nil;
-  if RBEWindowTypes[rwTaxes] then
-    frmTaxesX.pnlHolder.Parent := nil;
   if RBEWindowTypes[rwCurrencies] then
     frmCurrenciesX.pnlHolder.Parent := nil;
   if RBEWindowTypes[rwCountries] then
@@ -240,10 +237,7 @@ begin
                         frmCurrenciesX.pnlHolder.Parent := pnlForm
                       else
                         Currencies(actNone, theCurrencyHolder, pnlForm, WindowCloseEvent);
-    rwTaxes:          if RBEWindowTypes[rwTaxes] then
-                        frmTaxesX.pnlHolder.Parent := pnlForm
-                      else
-                        Taxes(actNone, theTaxesHolder, pnlForm, WindowCloseEvent);
+    rwTaxes:          EditTaxes();
     rwEmailResource:  if RBEWindowTypes[rwEmailResource] then
                         FrmResourcesX.pnlHolder.Parent := pnlForm
                       else
@@ -419,10 +413,6 @@ begin
   begin
     RoomerLanguage.TranslateThisForm(frmRoomTypes2X);
   end;
-  if RBEWindowTypes[rwTaxes] then
-  begin
-    RoomerLanguage.TranslateThisForm(frmTaxesX);
-  end;
   if RBEWindowTypes[rwCurrencies] then
   begin
     RoomerLanguage.TranslateThisForm(frmCurrenciesX);
@@ -463,11 +453,6 @@ begin
   begin
     frmRoomTypes2X.btnClose.Click;
     FreeAndNil(frmRoomTypes2X);
-  end;
-  if RBEWindowTypes[rwTaxes] then
-  begin
-    frmTaxesX.btnClose.Click;
-    FreeAndNil(frmTaxesX);
   end;
   if RBEWindowTypes[rwCurrencies] then
   begin

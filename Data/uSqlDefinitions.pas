@@ -5115,9 +5115,7 @@ select_Taxes_fillGridFromDataset : string =
 '  ,VALID_TO '#10 +
 '  ,ROUND_VALUE '#10 +
 ' FROM '#10+
-'   home100.TAXES WHERE HOTEL_ID=(SELECT CompanyID FROM control LIMIT 1) COLLATE utf8_general_ci '#10+
-' ORDER BY '#10+
-'   %s ';
+'   home100.TAXES WHERE HOTEL_ID=(SELECT CompanyID FROM control LIMIT 1) COLLATE utf8_general_ci '#10;
 
 select_Taxes_fillGridFromDataset2 : string =
 ' SELECT '#10+

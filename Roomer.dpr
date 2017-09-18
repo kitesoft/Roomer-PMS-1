@@ -304,7 +304,6 @@ uses
   ucxGridPopupMenuActivator in 'RoomerUtils\ucxGridPopupMenuActivator.pas',
   uPCITokenReport in 'PCI\uPCITokenReport.pas' {frmPCITokenReport},
   uFrmOptInMessage in 'OptIns\uFrmOptInMessage.pas' {FrmOptInMessage},
-  uSmtpService in 'Email\uSmtpService.pas',
   TokenChargeHistory in 'PCI\TokenChargeHistory.pas' {FrmTokenChargeHistory},
   uTokenHelpers in 'PCI\uTokenHelpers.pas',
   uPayCard in 'PCI\uPayCard.pas',
@@ -312,7 +311,10 @@ uses
   uFrmPayCardCreateNew in 'PCI\uFrmPayCardCreateNew.pas' {FrmPayCardCreateNew},
   uFrmViewPayCardDetails in 'PCI\uFrmViewPayCardDetails.pas' {FrmViewPayCardDetails},
   uFmrChargePayCard in 'PCI\uFmrChargePayCard.pas' {FrmChargePayCard},
-  uFrmManagePCIConnection in 'PCI\uFrmManagePCIConnection.pas' {FrmManagePCIConnection};
+  uFrmManagePCIConnection in 'PCI\uFrmManagePCIConnection.pas' {FrmManagePCIConnection},
+  uHotelServicesAccessor in 'PMSSettings\uHotelServicesAccessor.pas',
+  uCalculationTypeDefinitions in 'Definitions\uCalculationTypeDefinitions.pas',
+  uCalculationTypeExtraDefinitions in 'Definitions\uCalculationTypeExtraDefinitions.pas';
 
 {$R *.RES}
 

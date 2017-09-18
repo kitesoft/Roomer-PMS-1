@@ -144,8 +144,6 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitTop = 163
-    ExplicitHeight = 417
     object sPanel3: TsPanel
       Left = 0
       Top = 0
@@ -210,7 +208,6 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
         ParentFont = False
         TabOrder = 0
         ViewStyle = vsReport
-        OnChange = lvTokensChange
         OnDblClick = lvTokensDblClick
         OnSelectItem = lvTokensSelectItem
       end
@@ -222,8 +219,6 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
         Align = alBottom
         BevelOuter = bvNone
         TabOrder = 1
-        ExplicitTop = 376
-        ExplicitWidth = 433
         object btnTokenView: TsButton
           AlignWithMargins = True
           Left = 154
@@ -240,7 +235,6 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
           Images = DImages.PngImageList1
           TabOrder = 0
           OnClick = btnTokenViewClick
-          ExplicitLeft = 292
         end
         object btnTokenNew: TsButton
           AlignWithMargins = True
@@ -276,7 +270,6 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
           Images = DImages.PngImageList1
           Style = bsSplitButton
           TabOrder = 2
-          ExplicitLeft = 442
         end
       end
     end
@@ -288,9 +281,6 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitLeft = 433
-      ExplicitWidth = 545
-      ExplicitHeight = 417
       object sLabel1: TsLabel
         AlignWithMargins = True
         Left = 3
@@ -363,8 +353,6 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
         Align = alBottom
         BevelOuter = bvNone
         TabOrder = 1
-        ExplicitTop = 376
-        ExplicitWidth = 545
         object btnChargeView: TsButton
           AlignWithMargins = True
           Left = 3
@@ -399,7 +387,6 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
           Images = DImages.PngImageList1
           Style = bsSplitButton
           TabOrder = 1
-          ExplicitLeft = 267
         end
       end
       object sPanel7: TsPanel
@@ -410,8 +397,6 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
         Align = alBottom
         BevelOuter = bvNone
         TabOrder = 2
-        ExplicitTop = 358
-        ExplicitWidth = 457
         object sLabel7: TsLabel
           Left = 79
           Top = 26
@@ -535,8 +520,8 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
   end
   object pupCharge: TPopupMenu
     OnPopup = pupChargePopup
-    Left = 704
-    Top = 544
+    Left = 688
+    Top = 520
     object mnuCapture: TMenuItem
       Caption = 'Capture'
       OnClick = mnuCaptureClick

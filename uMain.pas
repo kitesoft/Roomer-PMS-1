@@ -4365,7 +4365,7 @@ begin
           // if ReservationsModel.Reservations[ i ].Rooms[ l ].ResStatus = rsReservations then begin
           if FReservationsModel.Reservations[i].Rooms[l].GuestNameCount > 0 then
           begin
-            result := FReservationsModel.Reservations[i].Rooms[l].Guests[0].GuestName;
+            result := FReservationsModel.Reservations[i].Rooms[l].FirstGuestName;
             break;
           end;
           // end;
@@ -5011,7 +5011,7 @@ begin
     if Not _NoRoom then
       _Name := Format('[%s] %s', [_Room, FReservationsModel.Reservations[_idxReservation].name]);
     if FReservationsModel.Reservations[_idxReservation].Rooms[_idxRoomReservation].GuestNameCount > 0 then
-      _Guest := FReservationsModel.Reservations[_idxReservation].Rooms[_idxRoomReservation].Guests[0].GuestName;
+      _Guest := FReservationsModel.Reservations[_idxReservation].Rooms[_idxRoomReservation].FirstGuestName;
     _ColorId := FReservationsModel.Reservations[_idxReservation].Rooms[_idxRoomReservation].colorId;
     _ColorValue := FReservationsModel.Reservations[_idxReservation].Rooms[_idxRoomReservation].CodedColor;
 
@@ -6211,24 +6211,27 @@ begin
           HintStr := HintStr + { +1023 } GetTranslatedText('shRoom') + ' : ' + grOneDayRooms.cells[ACol, ARow] + #13;
 
           // --
-          if ro.Guests[0].Address1 <> '' then
-            HintStr := HintStr + #13 + ' : ' + ro.Guests[0].Address1;
+          if ro.GuestCount > 0 then
+          begin
+            if ro.Guests[0].Address1 <> '' then
+              HintStr := HintStr + #13 + ' : ' + ro.Guests[0].Address1;
 
-          // --
-          if ro.Guests[0].Address2 <> '' then
-            HintStr := HintStr + #13 + ' : ' + ro.Guests[0].Address2;
+            // --
+            if ro.Guests[0].Address2 <> '' then
+              HintStr := HintStr + #13 + ' : ' + ro.Guests[0].Address2;
 
-          // --
-          if ro.Guests[0].Address3 <> '' then
-            HintStr := HintStr + #13 + ' : ' + ro.Guests[0].Address3;
+            // --
+            if ro.Guests[0].Address3 <> '' then
+              HintStr := HintStr + #13 + ' : ' + ro.Guests[0].Address3;
 
-          // --
-          if ro.Guests[0].Address4 <> '' then
-            HintStr := HintStr + #13 + ' : ' + ro.Guests[0].Address4;
+            // --
+            if ro.Guests[0].Address4 <> '' then
+              HintStr := HintStr + #13 + ' : ' + ro.Guests[0].Address4;
 
-          // --
-          if ro.Guests[0].Country <> '' then
-            HintStr := HintStr + #13 + ' : ' + ro.Guests[0].Country;
+            // --
+            if ro.Guests[0].Country <> '' then
+              HintStr := HintStr + #13 + ' : ' + ro.Guests[0].Country;
+          end;
 
           // --
           if FReservationsModel.Reservations[iReservation].Tel1 > '' then
@@ -6245,8 +6248,9 @@ begin
               [iReservation].Fax;
 
           // --
-          if ro.Guests[0].id <> '' then
-            HintStr := HintStr + #13#13 + { 1042 } 'ID' + ' : ' + ro.Guests[0].id;
+          if ro.GuestCount > 0 then
+            if ro.Guests[0].id <> '' then
+              HintStr := HintStr + #13#13 + { 1042 } 'ID' + ' : ' + ro.Guests[0].id;
 
           // --
           // if ReservationsModel.Reservations[ iReservation ].Rooms[ iRoom ].Price <> 0 then
@@ -6293,7 +6297,7 @@ begin
           end;
 
           // --
-          if ro.Guests[0].Information <> '' then
+          if (ro.GuestCount > 0) and (ro.Guests[0].Information <> '') then
           begin
             sTmp := trim(string(ro.Guests[0].Information));
             HintStr := HintStr + #13#13 + { 1048 } '-' + GetTranslatedText('shRoomMemo') + ' : ' + #13 + sTmp;
@@ -8416,7 +8420,7 @@ begin
       GroupAccount := FReservationsModel.Reservations[iReservationIdx].Rooms[iRoomReservationIdx].GroupAccount;
 
       ItemsOnInvoice := FReservationsModel.Reservations[iReservationIdx].Rooms[iRoomReservationIdx].TotalNoRent > 0;
-      GuestName := FReservationsModel.Reservations[iReservationIdx].Rooms[iRoomReservationIdx].Guests[0].GuestName;
+      GuestName := FReservationsModel.Reservations[iReservationIdx].Rooms[iRoomReservationIdx].FirstGuestName;
       Tel1 := FReservationsModel.Reservations[iReservationIdx].Tel1;
       Tel2 := FReservationsModel.Reservations[iReservationIdx].Tel2;
       Fax := FReservationsModel.Reservations[iReservationIdx].Fax;
@@ -10668,11 +10672,9 @@ begin
 end;
 
 procedure TfrmMain.btnTaxesClick(Sender: TObject);
-var
-  theData: recTaxesHolder;
 begin
   LogUserClickedButton(Sender);
-  if Taxes(actNone, theData) then;
+  EditTaxes();
   InitializeTaxes;
 end;
 

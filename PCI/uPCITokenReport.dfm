@@ -30,10 +30,6 @@ inherited frmPCITokenReport: TfrmPCITokenReport
     object sheetMain: TsTabSheet
       Caption = 'Main'
       TabVisible = False
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 514
       object Panel1: TsPanel
         Left = 0
         Top = 0
@@ -77,7 +73,7 @@ inherited frmPCITokenReport: TfrmPCITokenReport
           AlignWithMargins = True
           Left = 405
           Top = 3
-          Width = 203
+          Width = 211
           Height = 37
           Caption = 'Page break before summary on report'
           Align = alLeft
@@ -118,7 +114,6 @@ inherited frmPCITokenReport: TfrmPCITokenReport
         BorderStyle = cxcbsNone
         TabOrder = 1
         LookAndFeel.NativeStyle = False
-        ExplicitHeight = 471
         object tvTokenUsage: TcxGridDBTableView
           OnDblClick = tvTokenUsageDblClick
           Navigator.Buttons.CustomButtons = <>
@@ -329,6 +324,7 @@ inherited frmPCITokenReport: TfrmPCITokenReport
           object tvTokenUsageDeparture: TcxGridDBColumn
             DataBinding.FieldName = 'Departure'
             Options.Editing = False
+            Width = 76
           end
           object tvTokenUsageBookingId: TcxGridDBColumn
             DataBinding.FieldName = 'BookingId'
@@ -377,9 +373,6 @@ inherited frmPCITokenReport: TfrmPCITokenReport
       ParentFont = False
       TabOrder = 0
       SkinData.SkinSection = 'GROUPBOX'
-      ExplicitLeft = 7
-      ExplicitTop = 12
-      ExplicitHeight = 79
       object cbxMonth: TsComboBox
         Left = 32
         Top = 22
@@ -390,7 +383,7 @@ inherited frmPCITokenReport: TfrmPCITokenReport
         VerticalAlignment = taAlignTop
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = 4473924
+        Font.Color = clBlack
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -424,7 +417,7 @@ inherited frmPCITokenReport: TfrmPCITokenReport
         VerticalAlignment = taAlignTop
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = 4473924
+        Font.Color = clBlack
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []

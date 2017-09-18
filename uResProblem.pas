@@ -41,9 +41,7 @@ type
     Memo1: TsMemo;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
-    procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormDestroy(Sender: TObject);
-    procedure btnOKClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure grGetCellColor(Sender: TObject; ARow, ACol: Integer;
       AState: TGridDrawState; ABrush: TBrush; AFont: TFont);
@@ -55,11 +53,7 @@ type
   public
     { Public declarations }
     lst : TStringList;
-
   end;
-
-var
-  frmResProblem: TfrmResProblem;
 
 implementation
 
@@ -173,81 +167,18 @@ begin
 end;
 
 
-function ResStatusToString(status : string) :String;
-var
-  ch : char;
-begin
-  status := trim(status);
-  result := 'N/A';
-  if length(status) < 1 then exit;
-  ch := status[1];
-
-  case ch of
-   (* 'P' : begin
-            result := 'Ekki kominn';
-          end;
-    'G' : begin
-            result := 'Gestur';
-          end;
-    'D' : begin
-            result := 'Farinn';
-          end;
-    'O' : begin
-            result := 'Yfirbókunn';
-          end;
-    'N' : begin
-            result := 'No Show';
-          end;
-    'A' : begin
-            result := 'Allotment';
-          end;
-    'B' : begin
-            result := 'Blocked';
-          end; *)
-    'P' : begin
-            result := GetTranslatedText('shTx_ResProblem_NotArrived');
-          end;
-    'G' : begin
-            result := GetTranslatedText('shTx_ResProblem_Guest');
-          end;
-    STATUS_CHECKED_OUT : begin
-            result := GetTranslatedText('shTx_ResProblem_Gone');
-          end;
-    'O' : begin
-            result := GetTranslatedText('shTx_ResProblem_OverBooked');
-          end;
-    'L' : begin
-            result := GetTranslatedText('shTx_ResProblem_WaitingListNonOptional');
-          end;
-    'N' : begin
-            result := GetTranslatedText('shTx_ResProblem_NoShow');
-          end;
-    'A' : begin
-            result := GetTranslatedText('shTx_ResProblem_Allotment');
-          end;
-    'B' : begin
-            result := GetTranslatedText('shTx_ResProblem_Blocked');
-          end;
-     else
-        begin
-          result := Status+'???'
-        end;
-   end;
-end;
-
-
 procedure TfrmResProblem.GridInit;
 begin
   gr.ColCount  := 8;
   gr.RowCount  := 2;
   gr.FixedCols := 0;
 
-  gr.Cells[0,0] := 'Herb.';
-  gr.Cells[1,0] := 'Teg.';
-  gr.Cells[2,0] := 'Pöntunn';
-  gr.Cells[3,0] := 'Staða';
-  gr.Cells[4,0] := 'Koma';
-  gr.Cells[5,0] := 'Brottför';
+  gr.Cells[0,0] := GetTranslatedText('shTx_frmResProblemRoom');
+  gr.Cells[1,0] := GetTranslatedText('shTx_frmResProblemType');
+  gr.Cells[2,0] := GetTranslatedText('shTx_frmResProblemReservation');
+  gr.Cells[3,0] := GetTranslatedText('shTx_frmResProblemStatus');
+  gr.Cells[4,0] := GetTranslatedText('shTx_frmResProblemArrival');
+  gr.Cells[5,0] := GetTranslatedText('shTx_frmResProblemDeparture');
   gr.Cells[6,0] := 'S';
   gr.Cells[7,0] := '7';
 
@@ -300,25 +231,7 @@ begin
     if length(rrList) = 0 then exit;
     delete(rrList,length(rrList),1);
 
-//    s := '';
-//    s := s+ ' SELECT ';
-//    s := s+ '       RoomReservations.RoomReservation ';
-//    s := s+ '     , RoomReservations.Room  ';
-//    s := s+ '     , RoomReservations.Reservation ';
-//    s := s+ '     , RoomReservations.Status ';
-//    s := s+ '     , RoomReservations.rrArrival ';
-//    s := s+ '     , RoomReservations.rrDeparture ';
-//    s := s+ '     , Reservations.Customer ';
-//    s := s+ '     , Reservations.Name As CustomerName ';
-//    s := s+ ' FROM ';
-//    s := s+ '   RoomReservations ';
-//    s := s+ '   RIGHT OUTER JOIN ';
-//    s := s+ '         Reservations ON RoomReservations.Reservation = Reservations.Reservation ';
-//    s := s+ ' WHERE (RoomReservation in ('+rrList+') ) ';
-
     s := format(select_ResProblem_GridFill, [rrList]);
-    // CopyToClipboard(s);
-    // DebugMessage(''#10#10+s);
     hData.rSet_bySQL(rSet,s);
 
     while not rSet.Eof do
@@ -336,7 +249,7 @@ begin
       sGuest           := d.RR_GetFirstGuestName(iRoomReservation);
       sCustomerName    := rSet.fieldbyname('CustomerName').AsString;
       sStatus          := rSet.fieldbyname('status').AsString;
-      sStatusText      := ResStatusToString(sStatus);
+      sStatusText      := TReservationState.FromResStatus(sStatus).AsReadableString;
       roomStatus       := d.GET_roomstatus(sRoom);
 
 
@@ -360,10 +273,6 @@ begin
   gr.AutoSizeColumns(false,1);
   gr.HideColumn(6);
   gr.HideColumn(7);
-
-//  gr.ColumnSize.Stretch := true;
-//  gr.ColumnSize.StretchColumn := 2;
-
 end;
 
 
@@ -385,15 +294,8 @@ begin
   GridFill;
 end;
 
-procedure TfrmResProblem.FormClose(Sender: TObject;
-  var Action: TCloseAction);
-begin
-  //**
-end;
-
 procedure TfrmResProblem.FormDestroy(Sender: TObject);
 begin
-  //**
   lst.Free;
 end;
 
@@ -402,11 +304,6 @@ end;
 //******************************************************************************
 
 
-
-procedure TfrmResProblem.btnOKClick(Sender: TObject);
-begin
-  //**
-end;
 
 procedure TfrmResProblem.btnCancelClick(Sender: TObject);
 begin

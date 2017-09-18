@@ -76,6 +76,7 @@ uses
   , uReservationStateChangeHandler, uFraCountryPanel, cxGridBandedTableView, cxGridDBBandedTableView
   , ucxGridPopupMenuActivator
   , uGridColumnFieldValuePropagator
+  , uTokenHelpers
   ;
 
 type
@@ -809,6 +810,7 @@ type
     property OutOfOrderBlocking: Boolean read FOutOfOrderBlocking write SetOutOfOrderBlocking;
   public
     { Public declarations }
+    tokens : TObjectList<TToken>;
     zGuestName: string;
     zGuestCount: Integer;
 
@@ -1060,6 +1062,7 @@ end;
 procedure TfrmReservationProfile.FormDestroy(Sender: TObject);
 begin
   DynamicRates.free;
+  tokens.Free;
   if assigned(AlertList) then
   begin
     AlertList.postChanges;
@@ -1132,8 +1135,9 @@ begin
       First;
       if not Eof then
       begin
-        btnViewPayCard.Visible := true; // (rSet.FieldDefs.IndexOf('PAYCARD_TOKEN') > -1) AND
-                                        // (rSet.FieldByName('PAYCARD_TOKEN').AsString <> '');
+//        if (rSet.FieldDefs.IndexOf('PAYCARD_TOKEN') > -1) AND
+//           (rSet.FieldByName('PAYCARD_TOKEN').AsString <> '') then
+//        btnViewPayCard.Visible := tokens.Count > 0;
         btnViewPayCard.Tag := ORD(glb.PCIContractOpenForChannel(fieldbyname('channel').asInteger));
 
         edtInvRefrence.ReadOnly := glb.GetBooleanValueOfFieldFromId('channels', 'managedByChannelManager',
@@ -1898,7 +1902,10 @@ end;
 
 procedure TfrmReservationProfile.acViewPayCardExecute(Sender: TObject);
 begin
-  ShowPayCardInformation(zReservation, 0, btnViewPayCard.Tag);
+  if tokens.Count > 0 then
+    ShowPayCardInformation(zReservation, tokens[0].id, btnViewPayCard.Tag)
+  else
+    acManagePaycardsExecute(acManagePaycards);
 end;
 
 procedure TfrmReservationProfile.AddNewRoom;
@@ -3849,6 +3856,7 @@ var
   lSavedBeforePost: TDatasetNotifyEvent;
 begin
   timStart.enabled := false;
+  tokens := LoadAllTokens(zReservation, zRoomReservation);
   lSavedAfterScroll := mRooms.AfterScroll;
   lSavedBeforePost := mRooms.BeforePost;
   try

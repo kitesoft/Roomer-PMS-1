@@ -124,7 +124,10 @@ begin
   inherited;
   if not FConfirmed then
   begin
-    xml := d.roomerMainDataSet.downloadUrlAsString(  d.roomerMainDataSet.RoomerUri + 'paycard/token/costs/' + inttostr(Reservation));
+    uri := d.roomerMainDataSet.RoomerUri + 'paycard/token/costs/' + inttostr(Reservation);
+    if TokenId > 0 then
+      uri := uri + format('?tokenId=%d', [TokenId]);
+    xml := d.roomerMainDataSet.downloadUrlAsString(uri);
     rSet := d.roomerMainDataSet.ActivateNewDataset(xml);
     iViews := 0;
     rSet.First;

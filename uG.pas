@@ -1640,22 +1640,23 @@ end;
 
 // **
 function TGlobalApplication.OpenResProblem(var lst : TstringList) : integer;
+var
+  frm: TfrmResProblem;
 begin
-  frmResProblem := TfrmResProblem.Create(frmResProblem);
+  frm := TfrmResProblem.Create(nil);
   try
-    frmResProblem.lst.Assign(lst);
-    frmResProblem.ShowModal;
-    if frmResProblem.modalresult = mrOk then
+    frm.lst.Assign(lst);
+    frm.ShowModal;
+    if frm.modalresult = mrOk then
     begin
-      result := frmResProblem.rgrOption2.ItemIndex;
+      result := frm.rgrOption2.ItemIndex;
     end
     else
     begin
-      result := frmResProblem.rgrOption2.ItemIndex;
+      result := frm.rgrOption2.ItemIndex;
     end;
   finally
-    frmResProblem.free;
-    frmResProblem := nil;
+    frm.free;
   end;
 end;
 

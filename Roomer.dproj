@@ -189,7 +189,7 @@
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_4_Win32)'!=''">
         <VerInfo_PreRelease>false</VerInfo_PreRelease>
-        <VerInfo_Keys>CompanyName=Promoir BV;FileDescription=Roomer PMS;FileVersion=1.9.15.1;InternalName=;LegalCopyright=(C) 2013, 2014, 2015, 2016, 2017 Promoir BV;LegalTrademarks=Roomer is a Registered Trademark of Promoir BV;OriginalFilename=Roomer.exe;ProductName=Roomer Open Hospitality Platform;ProductVersion=1.9.15.1;Comments=;ExtraBuild=170823;PrivateBuild=</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=Promoir BV;FileDescription=Roomer PMS;FileVersion=1.9.15.1;InternalName=;LegalCopyright=(C) 2013, 2014, 2015, 2016, 2017 Promoir BV;LegalTrademarks=Roomer is a Registered Trademark of Promoir BV;OriginalFilename=Roomer.exe;ProductName=Roomer Open Hospitality Platform;ProductVersion=1.9.15.1;Comments=;ExtraBuild=170914;PrivateBuild=</VerInfo_Keys>
         <Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_8_Win32)'!=''">
@@ -939,7 +939,6 @@
             <Form>FrmOptInMessage</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="Email\uSmtpService.pas"/>
         <DCCReference Include="PCI\TokenChargeHistory.pas">
             <Form>FrmTokenChargeHistory</Form>
             <FormType>dfm</FormType>
@@ -964,6 +963,9 @@
             <Form>FrmManagePCIConnection</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="PMSSettings\uHotelServicesAccessor.pas"/>
+        <DCCReference Include="Definitions\uCalculationTypeDefinitions.pas"/>
+        <DCCReference Include="Definitions\uCalculationTypeExtraDefinitions.pas"/>
         <None Include="Roomer.todo"/>
         <None Include="notes.txt"/>
         <None Include="Roomer.inc"/>

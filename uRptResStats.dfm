@@ -49,9 +49,6 @@ object frmRptResStats: TfrmRptResStats
         Caption = 'Use Room with status of : '
         TabOrder = 0
         SkinData.SkinSection = 'GROUPBOX'
-        ExplicitLeft = 34
-        ExplicitTop = 15
-        ExplicitHeight = 77
         object chkExcluteWaitingList: TsCheckBox
           Left = 14
           Top = 17
@@ -165,9 +162,6 @@ object frmRptResStats: TfrmRptResStats
         Caption = 'Use NO Rooms with status of : '
         TabOrder = 1
         SkinData.SkinSection = 'GROUPBOX'
-        ExplicitLeft = 311
-        ExplicitTop = -1
-        ExplicitHeight = 75
         object chkExcluteWaitingListNoRooms: TsCheckBox
           Left = 14
           Top = 17
@@ -279,8 +273,6 @@ object frmRptResStats: TfrmRptResStats
         Align = alBottom
         BevelOuter = bvNone
         TabOrder = 2
-        ExplicitTop = 80
-        ExplicitWidth = 685
         object btnsetUseStatusAsDefault: TsButton
           AlignWithMargins = True
           Left = 561
@@ -292,9 +284,6 @@ object frmRptResStats: TfrmRptResStats
           TabOrder = 0
           OnClick = btnsetUseStatusAsDefaultClick
           SkinData.SkinSection = 'BUTTON'
-          ExplicitLeft = 269
-          ExplicitTop = 0
-          ExplicitHeight = 26
         end
         object btnGetUseStatusAsDefault: TsButton
           AlignWithMargins = True
@@ -307,9 +296,6 @@ object frmRptResStats: TfrmRptResStats
           TabOrder = 1
           OnClick = btnGetUseStatusAsDefaultClick
           SkinData.SkinSection = 'BUTTON'
-          ExplicitLeft = 163
-          ExplicitTop = 0
-          ExplicitHeight = 26
         end
       end
     end
@@ -321,9 +307,6 @@ object frmRptResStats: TfrmRptResStats
       Align = alLeft
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitLeft = 63
-      ExplicitTop = 11
-      ExplicitHeight = 116
       object gbxSelectDates: TsGroupBox
         Left = 9
         Top = 4
@@ -497,7 +480,6 @@ object frmRptResStats: TfrmRptResStats
     Align = alClient
     TabOrder = 1
     SkinData.SkinSection = 'PAGECONTROL'
-    ExplicitLeft = 1
     object SheetMainResult: TsTabSheet
       Caption = 'Result'
       OnShow = SheetMainResultShow
@@ -1500,7 +1482,7 @@ object frmRptResStats: TfrmRptResStats
       ExplicitLeft = 0
       ExplicitTop = 0
       ExplicitWidth = 0
-      ExplicitHeight = 541
+      ExplicitHeight = 0
       object pageData: TsPageControl
         Left = 0
         Top = 0
@@ -1510,7 +1492,6 @@ object frmRptResStats: TfrmRptResStats
         Align = alClient
         TabOrder = 0
         SkinData.SkinSection = 'PAGECONTROL'
-        ExplicitHeight = 541
         object sTabSheet7: TsTabSheet
           Caption = 'Reservations'
           ExplicitLeft = 0
@@ -2222,7 +2203,7 @@ object frmRptResStats: TfrmRptResStats
           ExplicitLeft = 0
           ExplicitTop = 0
           ExplicitWidth = 0
-          ExplicitHeight = 513
+          ExplicitHeight = 0
           object sPanel3: TsPanel
             Left = 0
             Top = 0
@@ -2288,7 +2269,6 @@ object frmRptResStats: TfrmRptResStats
             Align = alClient
             TabOrder = 1
             LookAndFeel.NativeStyle = False
-            ExplicitHeight = 468
             object tvGroupInvoiceSums: TcxGridDBTableView
               Navigator.Buttons.CustomButtons = <>
               DataController.DataSource = GroupInvoiceSumsDS

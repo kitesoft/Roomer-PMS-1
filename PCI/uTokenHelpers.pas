@@ -2,6 +2,8 @@ unit uTokenHelpers;
 
 interface
 
+uses Generics.Collections;
+
 type TOperationType = (PRE_AUTH, CAPTURE, CHARGE, REFUND, VOID);
 
   TToken = class
@@ -95,10 +97,11 @@ type TOperationType = (PRE_AUTH, CAPTURE, CHARGE, REFUND, VOID);
 
 function StringToOperationType(s : String) : TOperationType;
 function OperationTypeToString(OperationType : TOperationType) : String;
+function LoadAllTokens(ReservationId, RoomReservationId : Integer) : TObjectList<TToken>;
 
 implementation
 
-uses TypInfo;
+uses TypInfo, uD, cmpRoomerDataset, SysUtils;
 
 function StringToOperationType(s : String) : TOperationType;
 begin
@@ -153,6 +156,54 @@ begin
   Fcurrency := currency;
   FoperationType := operationType;
   FauthCode := authCode;
+end;
+
+////////////////////////////////////////////////////////////////////////////////////////
+///
+///
+
+function LoadAllTokens(ReservationId, RoomReservationId : Integer) : TObjectList<TToken>;
+var
+  rSet: TRoomerDataSet;
+  xml : String;
+  token : TToken;
+  s : String;
+begin
+  result := TObjectList<TToken>.Create;
+  xml := d.roomerMainDataSet.downloadUrlAsString(d.roomerMainDataSet.RoomerUri + format('paycard/bookings/%d/tokens', [ReservationId]));
+  rSet := d.roomerMainDataSet.ActivateNewDataset(xml);
+  try
+    result.Clear;
+    rSet.First;
+    while NOT rSet.Eof do
+    begin
+      if (rSet['ID'] = -1) OR (rSet['ROOM_RESERVATION'] = RoomReservationId) OR (rSet['ROOM_RESERVATION'] <= 0) then
+      begin
+        token := TToken.Create(rSet['ID'],
+                      rSet['RESERVATION'],
+                      rSet['ROOM_RESERVATION'],
+                      rSet['PAYCARD_TOKEN'],
+                      rSet['ENABLED'],
+                      rSet['NAME_ON_CARD'],
+                      rSet['CARD_TYPE'],
+                      rSet['USER_ID'],
+                      rSet['DESCRIPTION'],
+                      rSet['NOTES'],
+                      rSet['CREATE_TSTAMP'],
+
+                      rSet['ROOM'],
+                      rSet['SOURCE'],
+
+                      rSet['CARD_NUMBER'],
+                      rSet['EXP_DATE']);
+
+        result.Add(token);
+      end;
+      rSet.Next;
+    end;
+  finally
+    freeandNil(rSet);
+  end;
 end;
 
 end.

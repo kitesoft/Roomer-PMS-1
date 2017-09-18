@@ -35,10 +35,12 @@ uses
   , sGroupBox
   , sBitBtn
   , sPanel
-  , sLabel, sButton, AdvUtil, sCheckBox
+  , sLabel, sButton, AdvUtil, sCheckBox, RoomerExceptionHandling
   ;
 
 type
+  ERoomerMoveRoomException = class(ERoomerUserException);
+
   TfrmProvideARoom2 = class(TForm)
     agrRooms : TAdvStringGrid;
     Panel2: TsPanel;
@@ -496,10 +498,10 @@ begin
               for i := 0 to lstProblems.Count - 1 do
               begin
                 iRR := strToInt(lstProblems[i]);
-                d.SetAsNoRoom(iRR);
+                if not d.SetAsNoRoom(iRR) then
+                  raise ERoomerMoveRoomException.CreateFmt(GetTranslatedText('shTx_ProvideARoomErrorMoving'), [iRR]);
               end;
-              doMove := true; // b�i� a� setja hinar bokaninr utan herbergja
-              // svo setja n�ja � herbergi�
+              doMove := true;
             end;
 
           2 : // H�tta vi�
@@ -519,7 +521,7 @@ begin
     end;
   end else
   begin
-    result := d.MoveRoom(RoomReservation, newRoom)
+    result := d.MoveRoom(RoomReservation, newRoom) //?? When executed when offline???
   end;
 
 end;
