@@ -1249,8 +1249,6 @@ begin
 end;
 
 procedure TfrmMakeReservationQuick.EmptyQuickFind;
-var
-  i: Integer;
 begin
   edContactPerson1.Text := '';
   edContactPerson1.Properties.LookupItems.BeginUpdate;

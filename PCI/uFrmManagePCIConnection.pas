@@ -60,7 +60,6 @@ type
     procedure Save;
     function getComboBoxes: TObjectlist<TsComboBox>;
     function getLabels: TObjectlist<TsLabel>;
-    procedure sButton1Click(Sender: TObject);
     { Private declarations }
   protected
     procedure DoShow; override;
@@ -119,12 +118,6 @@ begin
   finally
     rSet.Free;
   end;
-end;
-
-procedure TFrmManagePCIConnection.sButton1Click(Sender: TObject);
-begin
-  inherited;
-  Save;
 end;
 
 procedure TFrmManagePCIConnection.Save;

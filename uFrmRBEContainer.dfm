@@ -58,10 +58,10 @@ object FrmRBEContainer: TFrmRBEContainer
           ExplicitWidth = 0
           ExplicitHeight = 0
           object sLabelFX10: TsLabelFX
-            Left = -1
-            Top = -1
-            Width = 150
-            Height = 51
+            Left = -3
+            Top = -3
+            Width = 154
+            Height = 55
             Align = alTop
             Alignment = taCenter
             AutoSize = False
@@ -74,14 +74,14 @@ object FrmRBEContainer: TFrmRBEContainer
             Font.Name = 'Tahoma'
             Font.Style = []
             Angle = 0
-            Shadow.OffsetKeeper.LeftTop = -1
-            Shadow.OffsetKeeper.RightBottom = 3
+            Shadow.OffsetKeeper.LeftTop = -3
+            Shadow.OffsetKeeper.RightBottom = 5
           end
           object sLabelFX11: TsLabelFX
-            Left = 3
-            Top = 114
-            Width = 142
-            Height = 50
+            Left = 1
+            Top = 112
+            Width = 146
+            Height = 54
             Cursor = crHandPoint
             Alignment = taCenter
             AutoSize = False
@@ -89,8 +89,8 @@ object FrmRBEContainer: TFrmRBEContainer
             WordWrap = True
             OnClick = btnAvailabilityAndRatesClick
             Angle = 0
-            Shadow.OffsetKeeper.LeftTop = -1
-            Shadow.OffsetKeeper.RightBottom = 3
+            Shadow.OffsetKeeper.LeftTop = -3
+            Shadow.OffsetKeeper.RightBottom = 5
           end
           object btnAvailabilityAndRates: TsButton
             Left = 48
@@ -111,10 +111,10 @@ object FrmRBEContainer: TFrmRBEContainer
           ExplicitWidth = 0
           ExplicitHeight = 0
           object sLabelFX1: TsLabelFX
-            Left = -1
-            Top = -1
-            Width = 87
-            Height = 25
+            Left = -3
+            Top = -3
+            Width = 91
+            Height = 29
             Align = alTop
             Alignment = taCenter
             Caption = 'Rate codes'
@@ -125,14 +125,14 @@ object FrmRBEContainer: TFrmRBEContainer
             Font.Name = 'Tahoma'
             Font.Style = []
             Angle = 0
-            Shadow.OffsetKeeper.LeftTop = -1
-            Shadow.OffsetKeeper.RightBottom = 3
+            Shadow.OffsetKeeper.LeftTop = -3
+            Shadow.OffsetKeeper.RightBottom = 5
           end
           object sLabelFX8: TsLabelFX
-            Left = 2
-            Top = 114
-            Width = 143
-            Height = 48
+            Left = 0
+            Top = 112
+            Width = 147
+            Height = 52
             Cursor = crHandPoint
             Alignment = taCenter
             AutoSize = False
@@ -140,8 +140,8 @@ object FrmRBEContainer: TFrmRBEContainer
             WordWrap = True
             OnClick = btnRoomTypeGroupsClick
             Angle = 0
-            Shadow.OffsetKeeper.LeftTop = -1
-            Shadow.OffsetKeeper.RightBottom = 3
+            Shadow.OffsetKeeper.LeftTop = -3
+            Shadow.OffsetKeeper.RightBottom = 5
           end
           object sButton5: TsButton
             Left = 48
@@ -162,10 +162,10 @@ object FrmRBEContainer: TFrmRBEContainer
           ExplicitWidth = 0
           ExplicitHeight = 0
           object sLabelFX3: TsLabelFX
-            Left = 1
-            Top = 114
-            Width = 147
-            Height = 50
+            Left = -1
+            Top = 112
+            Width = 151
+            Height = 54
             Cursor = crHandPoint
             Alignment = taCenter
             AutoSize = False
@@ -173,14 +173,14 @@ object FrmRBEContainer: TFrmRBEContainer
             WordWrap = True
             OnClick = btnRoomTypesClick
             Angle = 0
-            Shadow.OffsetKeeper.LeftTop = -1
-            Shadow.OffsetKeeper.RightBottom = 3
+            Shadow.OffsetKeeper.LeftTop = -3
+            Shadow.OffsetKeeper.RightBottom = 5
           end
           object sLabelFX2: TsLabelFX
-            Left = 0
-            Top = 0
-            Width = 53
-            Height = 25
+            Left = -2
+            Top = -2
+            Width = 57
+            Height = 29
             Align = alTop
             Alignment = taCenter
             Caption = 'Tables'
@@ -191,14 +191,14 @@ object FrmRBEContainer: TFrmRBEContainer
             Font.Name = 'Tahoma'
             Font.Style = []
             Angle = 0
-            Shadow.OffsetKeeper.LeftTop = -1
-            Shadow.OffsetKeeper.RightBottom = 3
+            Shadow.OffsetKeeper.LeftTop = -3
+            Shadow.OffsetKeeper.RightBottom = 5
           end
           object sLabelFX4: TsLabelFX
-            Left = 1
-            Top = 216
-            Width = 147
-            Height = 50
+            Left = -1
+            Top = 214
+            Width = 151
+            Height = 54
             Cursor = crHandPoint
             Alignment = taCenter
             AutoSize = False
@@ -206,14 +206,14 @@ object FrmRBEContainer: TFrmRBEContainer
             WordWrap = True
             OnClick = btnCountriesClick
             Angle = 0
-            Shadow.OffsetKeeper.LeftTop = -1
-            Shadow.OffsetKeeper.RightBottom = 3
+            Shadow.OffsetKeeper.LeftTop = -3
+            Shadow.OffsetKeeper.RightBottom = 5
           end
           object sLabelFX5: TsLabelFX
-            Left = 1
-            Top = 319
-            Width = 147
-            Height = 50
+            Left = -1
+            Top = 317
+            Width = 151
+            Height = 54
             Cursor = crHandPoint
             Alignment = taCenter
             AutoSize = False
@@ -221,14 +221,14 @@ object FrmRBEContainer: TFrmRBEContainer
             WordWrap = True
             OnClick = btnRoomTypeGroupsClick
             Angle = 0
-            Shadow.OffsetKeeper.LeftTop = -1
-            Shadow.OffsetKeeper.RightBottom = 3
+            Shadow.OffsetKeeper.LeftTop = -3
+            Shadow.OffsetKeeper.RightBottom = 5
           end
           object sLabelFX9: TsLabelFX
-            Left = 1
-            Top = 418
-            Width = 147
-            Height = 50
+            Left = -1
+            Top = 416
+            Width = 151
+            Height = 54
             Cursor = crHandPoint
             Alignment = taCenter
             AutoSize = False
@@ -236,8 +236,8 @@ object FrmRBEContainer: TFrmRBEContainer
             WordWrap = True
             OnClick = btnRoomTypesClick
             Angle = 0
-            Shadow.OffsetKeeper.LeftTop = -1
-            Shadow.OffsetKeeper.RightBottom = 3
+            Shadow.OffsetKeeper.LeftTop = -3
+            Shadow.OffsetKeeper.RightBottom = 5
           end
           object sButton2: TsButton
             Left = 48
@@ -291,10 +291,10 @@ object FrmRBEContainer: TFrmRBEContainer
           ExplicitWidth = 0
           ExplicitHeight = 0
           object sLabelFX6: TsLabelFX
-            Left = 3
-            Top = 114
-            Width = 142
-            Height = 54
+            Left = 1
+            Top = 112
+            Width = 146
+            Height = 58
             Cursor = crHandPoint
             Alignment = taCenter
             AutoSize = False
@@ -302,14 +302,14 @@ object FrmRBEContainer: TFrmRBEContainer
             WordWrap = True
             OnClick = btnRoomTypeGroupsClick
             Angle = 0
-            Shadow.OffsetKeeper.LeftTop = -1
-            Shadow.OffsetKeeper.RightBottom = 3
+            Shadow.OffsetKeeper.LeftTop = -3
+            Shadow.OffsetKeeper.RightBottom = 5
           end
           object sLabelFX7: TsLabelFX
-            Left = 0
-            Top = 0
-            Width = 82
-            Height = 25
+            Left = -2
+            Top = -2
+            Width = 86
+            Height = 29
             Align = alTop
             Alignment = taCenter
             Caption = 'Templates'
@@ -320,8 +320,8 @@ object FrmRBEContainer: TFrmRBEContainer
             Font.Name = 'Tahoma'
             Font.Style = []
             Angle = 0
-            Shadow.OffsetKeeper.LeftTop = -1
-            Shadow.OffsetKeeper.RightBottom = 3
+            Shadow.OffsetKeeper.LeftTop = -3
+            Shadow.OffsetKeeper.RightBottom = 5
           end
           object btnEmailTemplates: TsButton
             Left = 48
@@ -342,10 +342,10 @@ object FrmRBEContainer: TFrmRBEContainer
           ExplicitWidth = 0
           ExplicitHeight = 0
           object sLabelFX12: TsLabelFX
-            Left = 0
-            Top = 0
-            Width = 64
-            Height = 25
+            Left = -2
+            Top = -2
+            Width = 68
+            Height = 29
             Align = alTop
             Alignment = taCenter
             Caption = 'Settings'
@@ -356,14 +356,14 @@ object FrmRBEContainer: TFrmRBEContainer
             Font.Name = 'Tahoma'
             Font.Style = []
             Angle = 0
-            Shadow.OffsetKeeper.LeftTop = -1
-            Shadow.OffsetKeeper.RightBottom = 3
+            Shadow.OffsetKeeper.LeftTop = -3
+            Shadow.OffsetKeeper.RightBottom = 5
           end
           object sLabelFX13: TsLabelFX
-            Left = 3
-            Top = 114
-            Width = 142
-            Height = 54
+            Left = 1
+            Top = 112
+            Width = 146
+            Height = 58
             Cursor = crHandPoint
             Alignment = taCenter
             AutoSize = False
@@ -371,8 +371,8 @@ object FrmRBEContainer: TFrmRBEContainer
             WordWrap = True
             OnClick = btnRoomTypeGroupsClick
             Angle = 0
-            Shadow.OffsetKeeper.LeftTop = -1
-            Shadow.OffsetKeeper.RightBottom = 3
+            Shadow.OffsetKeeper.LeftTop = -3
+            Shadow.OffsetKeeper.RightBottom = 5
           end
           object btnUserSettings: TsButton
             Left = 48
@@ -393,10 +393,10 @@ object FrmRBEContainer: TFrmRBEContainer
           ExplicitWidth = 0
           ExplicitHeight = 0
           object sLabelFX14: TsLabelFX
-            Left = 2
-            Top = 114
-            Width = 143
-            Height = 54
+            Left = 0
+            Top = 112
+            Width = 147
+            Height = 58
             Cursor = crHandPoint
             Alignment = taCenter
             AutoSize = False
@@ -404,14 +404,14 @@ object FrmRBEContainer: TFrmRBEContainer
             WordWrap = True
             OnClick = btnRoomTypeGroupsClick
             Angle = 0
-            Shadow.OffsetKeeper.LeftTop = -1
-            Shadow.OffsetKeeper.RightBottom = 3
+            Shadow.OffsetKeeper.LeftTop = -3
+            Shadow.OffsetKeeper.RightBottom = 5
           end
           object sLabelFX15: TsLabelFX
-            Left = -1
-            Top = -1
-            Width = 62
-            Height = 25
+            Left = -3
+            Top = -3
+            Width = 66
+            Height = 29
             Align = alTop
             Alignment = taCenter
             Caption = 'Reports'
@@ -422,8 +422,8 @@ object FrmRBEContainer: TFrmRBEContainer
             Font.Name = 'Tahoma'
             Font.Style = []
             Angle = 0
-            Shadow.OffsetKeeper.LeftTop = -1
-            Shadow.OffsetKeeper.RightBottom = 3
+            Shadow.OffsetKeeper.LeftTop = -3
+            Shadow.OffsetKeeper.RightBottom = 5
           end
           object btnReservations: TsButton
             Left = 48
@@ -473,10 +473,10 @@ object FrmRBEContainer: TFrmRBEContainer
         TabOrder = 2
         SkinData.SkinSection = 'PANEL'
         object lblHeader: TsLabelFX
-          Left = 0
-          Top = 25
-          Width = 10
-          Height = 28
+          Left = -2
+          Top = 23
+          Width = 14
+          Height = 32
           Align = alTop
           Alignment = taCenter
           ParentFont = False
@@ -486,8 +486,8 @@ object FrmRBEContainer: TFrmRBEContainer
           Font.Name = 'Tahoma'
           Font.Style = []
           Angle = 0
-          Shadow.OffsetKeeper.LeftTop = -1
-          Shadow.OffsetKeeper.RightBottom = 3
+          Shadow.OffsetKeeper.LeftTop = -3
+          Shadow.OffsetKeeper.RightBottom = 5
         end
         object tabWindows: TsPageControl
           Left = 0

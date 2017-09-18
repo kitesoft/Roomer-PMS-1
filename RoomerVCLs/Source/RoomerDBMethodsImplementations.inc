@@ -1992,7 +1992,6 @@ function TRoomerDataSet.Channeltogglingrules_Entities_GetById(id: Integer): TCha
 var List : TList<TPersistent>;
     res : String;
 begin
-  result := nil;
   res := downloadUrlAsString(  FRoomerEntitiesUri + 'channeltogglingrules/' + inttostr(id));
   list := processJson(res, TChanneltogglingrulesEntity.classname);
   try
@@ -2041,7 +2040,6 @@ var
   List : TList<TPersistent>;
   res : String;
 begin
-  result := nil;
   res := downloadUrlAsString(  FRoomerEntitiesUri + 'channeltogglingrules/createGetEntityByWhere?where=' + where);
   list := nil;
   try
@@ -2057,7 +2055,6 @@ var
   src : String;
   List : TList<TPersistent>;
 begin
-  result := nil;
   UnMarshal(entity);
   src := PostAsJSON(AnsiString(FRoomerEntitiesUri + 'channeltogglingrules'), entity.json);
   list := nil;
@@ -2074,7 +2071,6 @@ var
   List : TList<TPersistent>;
   src : String;
 begin
-  result := nil;
   UnMarshal(entity);
   src := PutAsJSON(AnsiString(FRoomerEntitiesUri + 'channeltogglingrules/' + inttostr(entity.Id)), entity.json);
   list := nil;

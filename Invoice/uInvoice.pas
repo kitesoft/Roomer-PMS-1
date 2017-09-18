@@ -6390,6 +6390,7 @@ var
   invoiceLine: TInvoiceLine;
 begin
   list := GetSelectedRows;
+  res := mrNo;
   try
     for l := list.Count - 1 downto 0 do
     begin
