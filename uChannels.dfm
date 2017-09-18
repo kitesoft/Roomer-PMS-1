@@ -31,7 +31,7 @@ inherited frmChannels: TfrmChannels
     object labFilterWarning: TsLabel
       Left = 1
       Top = 40
-      Width = 1090
+      Width = 3
       Height = 13
       Align = alBottom
       Alignment = taCenter
@@ -41,7 +41,6 @@ inherited frmChannels: TfrmChannels
       Font.Height = -11
       Font.Name = 'Tahoma'
       Font.Style = []
-      ExplicitWidth = 3
     end
     object cLabFilter: TsLabel
       Left = 19
@@ -576,7 +575,6 @@ inherited frmChannels: TfrmChannels
     Left = 368
     Top = 224
     object prLink_grData: TdxGridReportLink
-      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -590,7 +588,6 @@ inherited frmChannels: TfrmChannels
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
       ReportDocument.CreationDate = 41334.495374884260000000
-      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
   end

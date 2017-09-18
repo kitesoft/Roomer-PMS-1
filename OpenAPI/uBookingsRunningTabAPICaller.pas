@@ -4,7 +4,7 @@ interface
 
 uses
   uOpenApiCaller
-  , RoomerBookingCommunicationModel_RequestsResponses
+  , uRoomerBookingCommunicationModel_RequestsResponses
   ;
 
 type

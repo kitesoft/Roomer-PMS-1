@@ -96,9 +96,14 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinValentine,
   dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, cxDropDownEdit, cxCheckBox, cxCalendar, cxCurrencyEdit,
   uCurrencyHandler
+  , RoomerExceptionHandling
   ;
 
 type
+
+  EEditItemsException = class(ERoomerException)
+  end;
+
   {$SCOPEDENUMS ON}
   ///	<summary>
   ///	  Determines which type of itemsales or information is shown or hidden in the
@@ -359,7 +364,8 @@ uses
   , Math
   , uSQLUtils
   , uFrmFinanceConnect
-  , uFinanceConnectService;
+  , uFinanceConnectService
+  ;
 
 
 
@@ -1455,45 +1461,53 @@ begin
   result := true;
   if Lookup then
     exit;
-
-  config := d.roomerMainDataSet.Hotelconfigurations_Entities_FindAll;
   try
-    if config[0].forceExternalProductIdCorrectness = 1 then
-    begin
-      m_Items.DisableControls;
-      try
-        screen.Cursor := crHourglass;
-        m_Items.First;
-        if NOT m_Items.Eof then
-          if NOT assigned(financeLookupList) then
-            financeLookupList := d.RetrieveFinancesKeypair(FKP_PRODUCTS);
-        while NOT m_Items.Eof do
-        begin
-          if ((m_ItemsAccountKey.AsString = '') OR NOT d.KeyExists(financeLookupList, m_ItemsAccountKey.AsString)) and (m_ItemsActive.AsBoolean) then
+    config := d.roomerMainDataSet.Hotelconfigurations_Entities_FindAll;
+    try
+      if config[0].forceExternalProductIdCorrectness = 1 then
+      begin
+        m_Items.DisableControls;
+        try
+          screen.Cursor := crHourglass;
+          m_Items.First;
+          if NOT m_Items.Eof then
+            if NOT assigned(financeLookupList) then
+              financeLookupList := d.RetrieveFinancesKeypair(FKP_PRODUCTS);
+          while NOT m_Items.Eof do
           begin
-            answer := MessageDlg(format('Product %s (%s) needs to have an account key for bookkeeping.', [m_ItemsItem.AsString, m_ItemsDescription.AsString]), mtWarning, [mbOk, mbIgnore, mbCancel], 0, mbOk);
-            if answer = mrCancel then
+            if ((m_ItemsAccountKey.AsString = '') OR NOT d.KeyExists(financeLookupList, m_ItemsAccountKey.AsString)) and (m_ItemsActive.AsBoolean) then
             begin
-              result := True;
-              exit;
-            end else
-            if answer = mrOk then
-            begin
-              result := False;
-              exit;
+              answer := MessageDlg(format('Product %s (%s) needs to have an account key for bookkeeping.', [m_ItemsItem.AsString, m_ItemsDescription.AsString]), mtWarning, [mbOk, mbIgnore, mbCancel], 0, mbOk);
+              if answer = mrCancel then
+              begin
+                result := True;
+                exit;
+              end else
+              if answer = mrOk then
+              begin
+                result := False;
+                exit;
+              end;
             end;
+            m_Items.Next;
           end;
-          m_Items.Next;
+        finally
+          screen.Cursor := crDefault;
+          m_Items.EnableControls;
         end;
-      finally
-        screen.Cursor := crDefault;
-        m_Items.EnableControls;
       end;
+    finally
+      for i := 0 to length(config)-1 do
+        config[i].Free;
     end;
-  finally
-    for i := 0 to length(config)-1 do
-      config[i].Free;
+  except
+    on E: Exception do
+    begin
+      Result := MessageDlg('Error during hotelconfiguration check: '+ #10 + e.Message, mtError, mbOKCancel, 0) = mrOk;
+      Exit;
+    end;
   end;
+
 end;
 
 

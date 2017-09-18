@@ -23,7 +23,6 @@ uses
   uDateUtils,
   ActnList,
   System.Actions,
-  Generics.Collections,
   variants,
   cmpRoomerDataSet,
   cxGraphics,
@@ -75,7 +74,9 @@ uses
   uInvoiceEntities,
   uCurrencyHandlersMap,
   uInvoiceObjects
-  , uInvoiceDefinitions
+  , uInvoiceDefinitions, uRoomerBookingDataModel_ModelObjects
+  , Spring.Collections.Lists
+  , Spring.Collections
   ;
 
 type
@@ -428,7 +429,7 @@ type
   private
     { Private declarations }
 
-    DeletedLines: TList<integer>;
+    DeletedLines: IList<integer>;
     linesNumDays, linesNumGuests: integer;
     NumberGuestNights: integer;
 
@@ -486,6 +487,8 @@ type
     FCurrencyhandlersMap: TCurrencyhandlersMap;
     FStayTaxEnabled: boolean;
     FInvoiceIndexTotals: TInvoiceIndexTotalList;
+
+    FTaxAPIResponse : TxsdRoomRentTaxReceiptList;
 
     procedure LoadInvoice;
     procedure loadInvoiceToMemtable(var m: TKbmMemTable);
@@ -648,6 +651,8 @@ type
     procedure RemoveInvoicelineVisibilityRecord(aInvoiceLine: TInvoiceLine; aInvoiceNumber: integer;
       aExecPlan: TRoomerExecutionPlan);
     procedure MoveSelectedLinesToInvoiceIndex(aNewIndex: integer);
+    procedure UpdateTaxinvoiceLinesForRoomItemUsingBackend(aInvLine: TInvoiceLine);
+    procedure RetrieveTaxesforRoomReservation(aReservation, aRoomreservation: integer);
 
     property InvoiceIndex: TInvoiceIndex read FInvoiceIndex write SetInvoiceIndex;
     property AnyRowChecked: boolean read GetAnyRowSelected;
@@ -708,7 +713,9 @@ uses
   System.Generics.Defaults,
   uDateTimeHelper,
   Types,
-  uFinanceConnectService;
+  uFinanceConnectService
+  , uBookingsTaxesAPICaller
+  , uRoomerCanonicalDataModel_DataStructures, uRoomerCanonicalDataModel_SimpleTypes;
 
 {$R *.DFM}
 
@@ -812,6 +819,7 @@ destructor TfrmInvoiceRentPerDay.Destroy;
 begin
   FCurrencyhandlersMap.Free;
   FInvoiceIndexTotals.Free;
+  FTaxAPIResponse.Free;
   inherited;
 end;
 
@@ -1676,8 +1684,10 @@ begin
   lInvoiceLine.RoomEntity := lRoomInfo;
   lRoomInfo.Vat := lInvoiceLine.VATOnInvoice;
 
-  // Tax invoicelines
-  UpdateTaxinvoiceLinesForRoomItem(lInvoiceLine);
+  if glb.PMSSettings.BetaFunctionality.UseNewTaxcalcMethod then
+    UpdateTaxinvoiceLinesForRoomItemUsingBackend(lInvoiceLine)
+  else
+    UpdateTaxinvoiceLinesForRoomItem(lInvoiceLine);
 
   // Included Breakfast invoicelines
   AddBreakfastInvoicelinesForRoomItem(lRoomInfo, lInvoiceLine);
@@ -1795,6 +1805,44 @@ begin
   end;
 
   UpdateGrid;
+end;
+
+procedure TfrmInvoiceRentPerDay.UpdateTaxinvoiceLinesForRoomItemUsingBackend(aInvLine: TInvoiceLine);
+var
+  iList: IList<TxsdRoomRentTaxReceiptType>;
+  lObject: TxsdRoomRentTaxReceiptType;
+begin
+  if zFromKredit then
+    exit;
+
+  RemoveTaxinvoiceLinesForRoomItem(aInvLine);
+
+  FStayTaxEnabled := ctrlGetBoolean('useStayTax') AND RV_useStayTax(FReservation);
+  if not FStayTaxEnabled then
+    exit;
+
+  if not Supports(FTaxAPIResponse.Receipts, IObjectList, iList) then
+    exit;
+
+  for lObject in iList.Where(
+        function(const aObject: TxsdRoomRentTaxReceiptType): boolean
+                                  begin
+                                    Result := (aObject.RoomReservationId = aInvLine.Roomreservation)
+                                              and (aObject.StayDate = aInvLine.PurchaseDate);
+                                  end
+  ) do
+    AddRoomTaxToLinesAndGrid(
+          FCurrencyhandlersMap.ConvertAmount(lObject.CityTax.Amount, lObject.CityTax.Currency.AsString, g.qNativeCurrency),
+          lObject.Quantity, //trunc(lTaxResultInvoiceLines[l].NumItems),
+          lObject.Item, // TaxTypes[tt],
+          aInvLine.RoomEntity.Arrival,
+          0,
+          aInvLine,
+          lObject.CityTaxIncludedInRoomPrice //  lIsIncluded
+    );
+
+    UpdateGrid;
+
 end;
 
 procedure TfrmInvoiceRentPerDay.tvPaymentsCellDblClick(Sender: TcxCustomGridTableView;
@@ -2106,6 +2154,21 @@ begin
   end;
 end;
 
+procedure TfrmInvoiceRentPerDay.RetrieveTaxesforRoomReservation(aReservation, aRoomreservation: integer);
+var
+  lCaller: TBookingsTaxesTabAPICaller;
+begin
+
+  lCaller := TBookingsTaxesTabAPICaller.Create;
+  try
+    if not lCaller.GetRoomReservationTaxes(aReservation, aRoomreservation, FTaxApiResponse) then
+      FTaxAPIResponse.Clear;
+  finally
+    lCaller.Free;
+  end;
+
+end;
+
 procedure TfrmInvoiceRentPerDay.LoadInvoice;
 var
   iLastRoomRes: integer;
@@ -2325,10 +2388,10 @@ begin
 
       sql := 'SELECT r.*, rr.Currency '#10 +
              ' FROM reservations r '#10 +
-             ' JOIN roomreservations rr ON r.Reservation=rr.Reservation and r.roomreservation=rr.roomreservation '#10 +
+             ' JOIN roomreservations rr ON r.Reservation=rr.Reservation '#10 +
              ' JOIN roomsdate rd on rr.roomreservation=rd.roomreservation and rd.resflag not in (''X'', ''C'') '#10 +
              ' WHERE r.Reservation = %d '#10 +
-             ' AND ((%d=0) OR (r.roomreservation = %d))';
+             ' AND ((%d=0) OR (rr.roomreservation = %d))';
 
       sql := format(sql, [FReservation, FRoomreservation, FRoomreservation]);
 
@@ -2378,6 +2441,8 @@ begin
 
     DisplayMem(zrSet);
     DisplayGuestName(zrSet);
+
+    RetrieveTaxesforRoomReservation(FReservation, FRoomreservation);
 
     sql := Select_Invoice_GenerateInvoiceLinesRoomRentPerDay(FRoomReservation, FReservation, FInvoiceIndex, edtCustomer.Text );
 
@@ -3016,8 +3081,8 @@ begin
   tempInvoiceItemList := TInvoiceItemEntityList.Create(True);
   FCurrencyhandlersMap := TCurrencyhandlersMap.Create;
   FInvoiceIndexTotals := TInvoiceIndexTotalList.Create;
+  FTaxAPIResponse := TxsdRoomRentTaxReceiptList.Create;
   inherited;
-
 end;
 
 procedure TfrmInvoiceRentPerDay.FormCreate(Sender: TObject);
@@ -3064,7 +3129,7 @@ begin
   ClearGrid;
   FInvoiceLinesList.Free;
   FRoomInfoList.Free;
-  DeletedLines.Free;
+//  DeletedLines.Free;
 
   if mRoomRes.active then
     mRoomRes.close;
@@ -3435,22 +3500,83 @@ begin
   if FIsCredit then
     iMultiplier := -1;
 
-  s := format('INSERT INTO invoiceaddressees ' + '(InvoiceIndex, ' + 'Reservation, ' + 'RoomReservation, ' +
-    'SplitNumber, ' + 'InvoiceNumber, ' + 'Customer, ' + 'Name, ' + 'Address1, ' + 'Address2, ' + 'Zip, ' + 'City, ' +
-    'Country, ' + 'ExtraText, ' + 'custPID, ' + 'InvoiceType ) ' + 'VALUES ' + '(%d, ' + '%d, ' + '%d, '
-    + '%d, ' + '%d, ' + '%s, ' + '%s, ' + '%s, ' + '%s, ' + '%s, ' + '%s, ' + '%s, ' + '%s, ' + '%d, ' +
-    '%s) ', [InvoiceIndex, FReservation, FRoomReservation, FnewSplitNumber, aInvoiceNumber, _db(edtCustomer.Text),
-    _db(edtName.Text), _db(edtAddress1.Text), _db(edtAddress2.Text), _db(edtAddress3.Text), _db(edtAddress4.Text),
-    _db(zCountry), _db(memExtraText.Lines.Text), _db(edtPersonalId.Text), rgrInvoiceType.itemIndex]) +
+  s := format('INSERT INTO invoiceaddressees '#10 +
+    '( '#10 +
+      'InvoiceIndex, '#10 +
+      'Reservation, '#10 +
+      'RoomReservation, ' +
+      'SplitNumber, '#10 +
+      'InvoiceNumber, '#10 +
+      'Customer, '#10 +
+      'Name, '#10 +
+      'Address1, '#10 +
+      'Address2, '#10 +
+      'Zip, '#10 +
+      'City, ' +
+      'Country, '#10 +
+      'ExtraText, '#10 +
+      'custPID, '#10 +
+      'InvoiceType '#10 +
+  ' )'#10 +
+  'VALUES ( '#10+
+      '%d, '#10 +
+      '%d, '#10 +
+      '%d, '#10 +
+      '%d, '#10 +
+      '%d, '#10 +
+      '%s, '#10 +
+      '%s, '#10 +
+      '%s, '#10 +
+      '%s, '#10 +
+      '%s, '#10 +
+      '%s, '#10 +
+      '%s, '#10 +
+      '%s, '#10 +
+      '%s, '#10 +
+      '%d) ',
+  [ InvoiceIndex,
+    FReservation,
+    FRoomReservation,
+    FnewSplitNumber,
+    aInvoiceNumber,
+    _db(edtCustomer.Text),
+    _db(edtName.Text),
+    _db(edtAddress1.Text),
+    _db(edtAddress2.Text),
+    _db(edtAddress3.Text),
+    _db(edtAddress4.Text),
+    _db(zCountry),
+    _db(memExtraText.Lines.Text),
+    _db(edtPersonalId.Text),
+    rgrInvoiceType.itemIndex])
 
-    format('ON DUPLICATE KEY UPDATE ' + 'InvoiceNumber=%d, ' + 'Customer=%s, ' + 'Name=%s, ' + 'Address1=%s, ' +
-    'Address2=%s, ' + 'Zip=%s, ' + 'City=%s, ' + 'Country=%s, ' + 'ExtraText=%s, ' + 'custPID=%s, ' + 'InvoiceType=%d '
-    , [aInvoiceNumber, _db(edtCustomer.Text), _db(edtName.Text), _db(edtAddress1.Text),
-    _db(edtAddress2.Text), _db(edtAddress3.Text), _db(edtAddress4.Text), _db(zCountry), _db(memExtraText.Lines.Text),
-    _db(edtPersonalId.Text), rgrInvoiceType.itemIndex]);
+  + format(
+    'ON DUPLICATE KEY UPDATE '#10 +
+    'InvoiceNumber=%d, '#10 +
+    'Customer=%s, '#10 +
+    'Name=%s, '#10 +
+    'Address1=%s, ' +
+    'Address2=%s, '#10 +
+    'Zip=%s, '#10 +
+    'City=%s, '#10 +
+    'Country=%s, '#10 +
+    'ExtraText=%s, '#10 +
+    'custPID=%s, '#10 +
+    'InvoiceType=%d '
+    , [aInvoiceNumber,
+      _db(edtCustomer.Text),
+      _db(edtName.Text),
+      _db(edtAddress1.Text),
+      _db(edtAddress2.Text),
+      _db(edtAddress3.Text),
+      _db(edtAddress4.Text),
+      _db(zCountry),
+      _db(memExtraText.Lines.Text),
+      _db(edtPersonalId.Text),
+      rgrInvoiceType.itemIndex]);
 
-  aExecutionPlan.AddExec(s);
   copytoclipboard(s);
+  aExecutionPlan.AddExec(s);
 
   // --
   // SQL 115 INSERxT InvoiceHeads

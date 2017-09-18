@@ -177,7 +177,7 @@ type
   private const
     cBetaFunctionsGroup = 'BETA_FUNCTIONS';
     cBetaFunctionsAvailableName = 'BETA_FUNCTIONS_AVAILABLE';
-    cBetaFunctionUseInvoiceOnObjectsForm = 'INVOICE_ON_OBJECTS_FORM';
+    cBetaFunctionUseNewTaxcalcMethod = 'USE_NEW_TAXCALC_METHOD';
 
   private
     function GetBetaFunctionsAvailable: boolean;
@@ -189,9 +189,10 @@ type
   public
     /// <summary>
     ///   If true then functions marked as Beta are available in the PMS
+    ///  This setting can only be enabled directly in the database and not via the controldata form
     /// </summary>
     property BetaFunctionsAvailable: boolean read GetBetaFunctionsAvailable write SetBetaFunctionsAvailable;
-    property UseInvoiceOnObjectsForm: boolean read GetUseInvocieOnObjectsForm write SetUseInvocieOnObjectsForm;
+    property UseNewTaxcalcMethod: boolean read GetUseInvocieOnObjectsForm write SetUseInvocieOnObjectsForm;
   end;
 
   TPMSPMSSpecificSettings = class(TPMSSettingsGroup)
@@ -211,22 +212,6 @@ type
     property UserHomePage: Integer read GetUserHomePage write SetUserHomePage;
   end;
 
-
-  TPMSStayTaxSettings = class(TPMSSettingsGroup)
-  private const
-    cStayTaxSettings = 'STAYTAX_SETTINGS';
-    cStayTaxAfterDiscount = 'AFTERDISCOUNT';
-    function GetStayTaxAfterDiscount: boolean;
-    procedure SetStaytaxAfterDiscount(const Value: boolean);
-  protected
-    function GetKeyGroup: string; override;
-  public
-    /// <summary>
-    ///   If true then staytaxes are calculated on the roomrate after the discount has been subtracted
-    /// </summary>
-    property StaytaxAfterDiscount: boolean read GetStayTaxAfterDiscount write SetStaytaxAfterDiscount;
-  end;
-
   /// <summary>
   ///   Provides access to PMS configuration-items stored in PMSSettings table in database
   /// </summary>
@@ -240,7 +225,6 @@ type
     FPMSSpecificSettings: TPMSPMSSpecificSettings;
     FVariousOptions: TPMSSettingsVariousOptions;
     FFinanceConnectOptions: TPMSFinanceConnectOptions;
-    FStayTaxSettings: TPMSStayTaxSettings;
   protected
 
     function GetMandatoryCheckinFields: TMandatoryCheckInFieldSet;
@@ -257,7 +241,6 @@ type
     property PMSSpecificSettings: TPMSPMSSpecificSettings read FPMSSpecificSettings;
     property VariousOptions : TPMSSettingsVariousOptions read FVariousOptions;
     property FinanceConnect : TPMSFinanceConnectOptions read FFinanceConnectOptions;
-    property StaytaxSettings: TPMSStayTaxSettings read FStayTaxSettings;
 
     /// <summary>
     ///   Currently enabled TMandatoryCheckinFields in PMS settings
@@ -285,7 +268,6 @@ begin
   FPMSSpecificSettings := TPMSPMSSpecificSettings.Create(FPMSSettingsAccessor);
   FVariousOptions := TPMSSettingsVariousOptions.Create(FPMSSettingsAccessor);
   FFinanceConnectOptions := TPMSFinanceConnectOptions.Create(FPMSSettingsAccessor);
-  FStayTaxSettings := TPMSStayTaxSettings.Create(FPMSSettingsAccessor);
 end;
 
 destructor TPmsSettings.Destroy;
@@ -298,7 +280,6 @@ begin
   FPMSSpecificSettings.Free;
   FVariousOptions.Free;
   FFinanceConnectOptions.Free;
-  FStayTaxSettings.Free;
   inherited;
 end;
 
@@ -513,7 +494,7 @@ end;
 
 function TPMSSettingsBetaFunctionality.GetUseInvocieOnObjectsForm: boolean;
 begin
-  Result := GetSettingsAsBoolean(cBetaFunctionUseInvoiceOnObjectsForm, false);
+  Result := GetSettingsAsBoolean(cBetaFunctionUseNewTaxcalcMethod, false);
 end;
 
 procedure TPMSSettingsBetaFunctionality.SetBetaFunctionsAvailable(const Value: boolean);
@@ -523,7 +504,7 @@ end;
 
 procedure TPMSSettingsBetaFunctionality.SetUseInvocieOnObjectsForm(const Value: boolean);
 begin
-  SaveSetting(cBetaFunctionUseInvoiceOnObjectsForm, Value);
+  SaveSetting(cBetaFunctionUseNewTaxcalcMethod, Value);
 end;
 
 { TPMSPMSSpecificSettings }
@@ -622,23 +603,6 @@ end;
 procedure TPMSFinanceConnectOptions.SetFinanceConnectSystemCode(const Value: String);
 begin
   SaveSetting(cFinanceConnectSystemCode, Value);
-end;
-
-{ TPMSStayTaxSettings }
-
-function TPMSStayTaxSettings.GetKeyGroup: string;
-begin
-  result := cStayTaxSettings;
-end;
-
-function TPMSStayTaxSettings.GetStayTaxAfterDiscount: boolean;
-begin
-  Result := GetSettingsAsBoolean(cStayTaxAfterDiscount, false);
-end;
-
-procedure TPMSStayTaxSettings.SetStaytaxAfterDiscount(const Value: boolean);
-begin
-  SaveSetting(cStayTaxAfterDiscount, Value);
 end;
 
 end.

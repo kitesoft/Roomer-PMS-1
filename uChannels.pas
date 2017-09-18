@@ -82,7 +82,7 @@ uses
   uG,
   hData,
   uRoomerForm,
-  RoomerConfigurationItemsCommunicationModel_RequestsResponses,
+  uRoomerConfigurationItemsCommunicationModel_RequestsResponses,
   cxCheckBox;
 
 type

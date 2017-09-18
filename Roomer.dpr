@@ -1,4 +1,4 @@
-program Roomer;
+﻿program Roomer;
 
 {$I Roomer.inc}
 
@@ -272,7 +272,7 @@ uses
   uRoomerVersionInfo in 'RoomerUtils\uRoomerVersionInfo.pas',
   uFrmBusyMessage in 'Dialogs\uFrmBusyMessage.pas' {frmBusyMessage},
   uRoomerSchema in 'OpenAPI\schema\uRoomerSchema.pas',
-  RoomerConfigurationItemsCommunicationModel_RequestsResponses in 'OpenAPI\schema\RoomerConfigurationItemsCommunicationModel_RequestsResponses.pas',
+  uRoomerConfigurationItemsCommunicationModel_RequestsResponses in 'OpenAPI\schema\uRoomerConfigurationItemsCommunicationModel_RequestsResponses.pas',
   uConfigurationItemsAPICaller in 'OpenAPI\uConfigurationItemsAPICaller.pas',
   uRoomerIDList in 'RoomerVCLs\Source\uRoomerIDList.pas',
   uEditFinanceExportProperties in 'uEditFinanceExportProperties.pas' {frmEditFinanceExportProperties},
@@ -283,11 +283,11 @@ uses
   uRptReservationStatusPerDay in 'Reporting\uRptReservationStatusPerDay.pas' {FrmRptReservationStatusPerDay},
   uVersionManagement in 'VersionManagement\uVersionManagement.pas',
   uInvoiceRentPerDay in 'Invoice\uInvoiceRentPerDay.pas' {frmInvoiceRentPerDay},
-  RoomerFinancialDataModel_ModelObjects in 'OpenAPI\schema\RoomerFinancialDataModel_ModelObjects.pas',
+  uRoomerFinancialDataModel_ModelObjects in 'OpenAPI\schema\uRoomerFinancialDataModel_ModelObjects.pas',
   uRoomerCanonicalDataModel_BaseTypes in 'OpenAPI\schema\uRoomerCanonicalDataModel_BaseTypes.pas',
   uRoomerCanonicalDataModel_SimpleTypes in 'OpenAPI\schema\uRoomerCanonicalDataModel_SimpleTypes.pas',
   uRoomerHotelServicesCommunicationModel_RunningTabs in 'OpenAPI\schema\uRoomerHotelServicesCommunicationModel_RunningTabs.pas',
-  RoomerBookingCommunicationModel_RequestsResponses in 'OpenAPI\schema\RoomerBookingCommunicationModel_RequestsResponses.pas',
+  uRoomerBookingCommunicationModel_RequestsResponses in 'OpenAPI\schema\uRoomerBookingCommunicationModel_RequestsResponses.pas',
   uExceptionUtils in 'RoomerUtils\uExceptionUtils.pas',
   uBookingsRunningTabAPICaller in 'OpenAPI\uBookingsRunningTabAPICaller.pas',
   uRoomerLogger in 'Logging\uRoomerLogger.pas',
@@ -313,6 +313,9 @@ uses
   uFmrChargePayCard in 'PCI\uFmrChargePayCard.pas' {FrmChargePayCard},
   uFrmManagePCIConnection in 'PCI\uFrmManagePCIConnection.pas' {FrmManagePCIConnection},
   uHotelServicesAccessor in 'PMSSettings\uHotelServicesAccessor.pas',
+  uRoomerCanonicalDataModel_DataStructures in 'OpenAPI\schema\uRoomerCanonicalDataModel_DataStructures.pas',
+  uRoomerBookingDataModel_ModelObjects in 'OpenAPI\schema\uRoomerBookingDataModel_ModelObjects.pas',
+  uBookingsTaxesAPICaller in 'OpenAPI\uBookingsTaxesAPICaller.pas',
   uCalculationTypeDefinitions in 'Definitions\uCalculationTypeDefinitions.pas',
   uCalculationTypeExtraDefinitions in 'Definitions\uCalculationTypeExtraDefinitions.pas';
 
