@@ -246,7 +246,7 @@ begin
   if cbxPayCards.ItemIndex < 0 then exit;
   token := TToken(cbxPayCards.Items.Objects[cbxPayCards.ItemIndex]);
   tokenId := token.id;
-  s := d.roomerMainDataSet.downloadUrlAsStringUsingPost(d.roomerMainDataSet.RoomerUri + format('paycard/bookings/%d/paycardcharges', [ReservationId]),
+  s := d.roomerMainDataSet.downloadUrlAsStringUsingPost(d.roomerMainDataSet.RoomerUri + format('paycard/bookings/%d/%d/paycardcharges', [ReservationId, RoomReservationId]),
       format('amount=%s&' +
              'currency=%s&' +
              'description=%s&' +

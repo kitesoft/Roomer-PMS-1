@@ -678,6 +678,7 @@ type
       Convert: Double): boolean;
 
     function RR_Upd_MemoTexts(iRoomReservation: Integer; HiddenInfo: string): boolean;
+    function RR_Upd_Paycard_Token_Id(iRoomReservation: Integer; tokenId : Integer): boolean;
 
     procedure RR_Upd_FirstGuestName(iRoomReservation: Integer; newName: string);
     function RR_Upd_GuestCount(iRoomReservation, NewCount: Integer): boolean;
@@ -9207,6 +9208,24 @@ begin
   s := s + ' UPDATE roomreservations ' + chr(10);
   s := s + ' SET ' + chr(10);
   s := s + ' HiddenInfo=' + _db(HiddenInfo) + ' ' + chr(10);
+  s := s + ' WHERE (roomreservation = ' + inttostr(iRoomReservation) + ') ' + chr(10);
+  if not cmd_bySQL(s) then
+  begin
+  end;
+end;
+
+function Td.RR_Upd_Paycard_Token_Id(iRoomReservation: Integer; tokenId : Integer): boolean;
+var
+  s: string;
+begin
+  result := False;
+  if iRoomReservation < 1 then
+    exit;
+  result := True;
+  s := '';
+  s := s + ' UPDATE roomreservations ' + chr(10);
+  s := s + ' SET ' + chr(10);
+  s := s + ' PAYCARD_TOKEN_ID=' + _db(tokenId) + ' ' + chr(10);
   s := s + ' WHERE (roomreservation = ' + inttostr(iRoomReservation) + ') ' + chr(10);
   if not cmd_bySQL(s) then
   begin

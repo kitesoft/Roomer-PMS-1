@@ -306,7 +306,7 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
               Height = 21
               Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
+              Font.Color = 4473924
               Font.Height = -11
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -323,7 +323,7 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
               Height = 21
               Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
+              Font.Color = 4473924
               Font.Height = -11
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -340,7 +340,7 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
               Height = 21
               Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
+              Font.Color = 4473924
               Font.Height = -11
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -356,7 +356,7 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
               Height = 21
               Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
+              Font.Color = 4473924
               Font.Height = -11
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -372,7 +372,7 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
               Height = 21
               Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
+              Font.Color = 4473924
               Font.Height = -11
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -420,7 +420,7 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
               Height = 21
               Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
+              Font.Color = 4473924
               Font.Height = -11
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -437,7 +437,7 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
               Height = 21
               Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
+              Font.Color = 4473924
               Font.Height = -11
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -454,7 +454,7 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
               Height = 21
               Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
+              Font.Color = 4473924
               Font.Height = -11
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -471,7 +471,7 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
               Height = 21
               Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
+              Font.Color = 4473924
               Font.Height = -11
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -488,7 +488,7 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
               Height = 21
               Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
+              Font.Color = 4473924
               Font.Height = -11
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -526,7 +526,7 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
               Height = 21
               Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
+              Font.Color = 4473924
               Font.Height = -11
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -539,8 +539,8 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
             object cbActiveLiveSearch: TsCheckBox
               Left = 190
               Top = 47
-              Width = 74
-              Height = 20
+              Width = 79
+              Height = 17
               Caption = 'Live search'
               TabOrder = 19
               OnClick = cbActiveLiveSearchClick
@@ -561,7 +561,7 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
               AutoComplete = False
               Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
+              Font.Color = 4473924
               Font.Height = -11
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -586,7 +586,7 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
               Style = csDropDownList
               Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
+              Font.Color = 4473924
               Font.Height = -9
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -602,8 +602,8 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
             object chkCountryForAllGuests: TsCheckBox
               Left = 190
               Top = 532
-              Width = 244
-              Height = 20
+              Width = 249
+              Height = 17
               Hint = 
                 'When checked the selected country will be set for all guests of ' +
                 'this room that don'#39't already have a country set'
@@ -1168,7 +1168,7 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
           Style = csDropDownList
           Color = clWhite
           Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
+          Font.Color = 4473924
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
@@ -1194,13 +1194,14 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
             Caption = 'Credit card'
             object sLabel12: TsLabel
               Left = 66
-              Top = 69
+              Top = 117
               Width = 227
-              Height = 68
+              Height = 41
               AutoSize = False
               Caption = 
                 'Please make sure to make an imprint of credit card or block a su' +
                 'fficient amount.'
+              Visible = False
               WordWrap = True
             end
             object shpCC: TShape
@@ -1214,18 +1215,48 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
               Visible = False
             end
             object cbCreditCard: TsCheckBox
-              Left = 47
-              Top = 20
+              Left = 32
+              Top = 79
               Width = 247
               Height = 38
-              Caption = '* Credit card provided as guarantee'
+              Caption = '* Credit card print provided as guarantee'
               AutoSize = False
               TabOrder = 0
+              Visible = False
               OnClick = cbCreditCardClick
               SkinData.SkinSection = 'CHECKBOX'
               ImgChecked = 0
               ImgUnchecked = 0
               WordWrap = True
+            end
+            object cbPaycards: TsComboBox
+              Left = 32
+              Top = 28
+              Width = 257
+              Height = 21
+              Alignment = taLeftJustify
+              VerticalAlignment = taAlignTop
+              Color = clWhite
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = 4473924
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = []
+              ItemIndex = -1
+              ParentFont = False
+              TabOrder = 1
+              OnCloseUp = cbPaycardsCloseUp
+            end
+            object btnManagePayCards: TsButton
+              Left = 32
+              Top = 54
+              Width = 153
+              Height = 25
+              Caption = 'Manage Paycards'
+              ImageIndex = 92
+              Images = DImages.cxSmallImagesFlat
+              TabOrder = 2
+              OnClick = btnManagePayCardsClick
             end
           end
           object sTabSheet4: TsTabSheet
@@ -1275,7 +1306,7 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
               Color = clWhite
               Enabled = False
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
+              Font.Color = 4473924
               Font.Height = -11
               Font.Name = 'Tahoma'
               Font.Style = []

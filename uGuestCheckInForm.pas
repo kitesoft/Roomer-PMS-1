@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, sEdit,
   sLabel, Vcl.ComCtrls, sPageControl, sButton, Vcl.ExtCtrls, sPanel, sComboBox, Vcl.Mask, sMaskEdit, sCustomComboEdit, sTooledit, sCheckBox, cmpRoomerDataSet,
   hData, uG, frxDesgn, frxClass, frxDBSet, System.Generics.Collections, uRoomerFilterComboBox
-  , uCurrencyHandler, uFraCountryPanel
+  , uCurrencyHandler, uFraCountryPanel, uTokenHelpers, udImages
     ;
 
 type
@@ -129,6 +129,8 @@ type
     fraCountry: TfraCountryPanel;
     fraCompCountry: TfraCountryPanel;
     lbExtraTaxes: TsLabel;
+    cbPaycards: TsComboBox;
+    btnManagePayCards: TsButton;
     procedure FormCreate(Sender: TObject);
     procedure cbxGuaranteeTypesCloseUp(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -146,6 +148,8 @@ type
     procedure cbxMarketChange(Sender: TObject);
     procedure cbxMarketKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     function fdRegFormDesignerSaveReport(Report: TfrxReport; SaveAs: Boolean): Boolean;
+    procedure btnManagePayCardsClick(Sender: TObject);
+    procedure cbPaycardsCloseUp(Sender: TObject);
   private
     FisCheckIn: Boolean;
     FCurrencyhandler: TCurrencyHandler;
@@ -172,6 +176,7 @@ type
     Reservation, RoomReservation: Integer;
     PersonId: Integer;
     NativeCurrency, Customer: String;
+    tokens : TObjectList<TToken>;
     procedure WndProc(var message: TMessage); override;
     procedure SaveGuestInfo;
 
@@ -191,6 +196,7 @@ const
 
   GET_GUEST_CHECKIN_CHECKOUT = 'SELECT ID, title, Reservation, (SELECT NativeCurrency FROM control LIMIT 1) AS NativeCurrency, ' +
     '(SELECT Customer FROM reservations WHERE Reservation=persons.Reservation) AS Customer, ' +
+    '(SELECT PAYCARD_TOKEN_ID FROM roomreservations WHERE RoomReservation=persons.RoomReservation) AS PAYCARD_TOKEN_ID, ' +
     '(SELECT Currency FROM roomreservations WHERE RoomReservation=persons.RoomReservation LIMIT 1) AS Currency, ' +
     '(SELECT Avalue FROM currencies WHERE Currency=(SELECT Currency FROM roomreservations WHERE RoomReservation=persons.RoomReservation LIMIT 1) LIMIT 1) AS CurrencyRate, '
     +
@@ -330,6 +336,7 @@ uses uRoomerLanguage,
   , uBookingsTaxesAPICaller
   , uRoomerBookingDataModel_ModelObjects
   , uRoomerCanonicalDataModel_SimpleTypes
+  , TokenChargeHistory
   ;
 
 const
@@ -386,6 +393,11 @@ begin
 end;
 
 
+procedure TFrmGuestCheckInForm.cbPaycardsCloseUp(Sender: TObject);
+begin
+  UpdateControls;
+end;
+
 procedure TFrmGuestCheckInForm.UpdateGuaranteeTags;
 begin
   if cbxGuaranteeTypes.ItemIndex = 1 then
@@ -400,7 +412,8 @@ begin
   if cbxGuaranteeTypes.ItemIndex = 0 then
   begin
     shpCC.Tag := mfGuarantee.AsTagid;
-    cbCreditCard.Tag := mfGuarantee.AsTagid;
+//    cbCreditCard.Tag := mfGuarantee.AsTagid;
+    cbPaycards.Tag := mfGuarantee.AsTagid;
   end else
   begin
     shpCC.Tag := 0;
@@ -618,6 +631,7 @@ end;
 procedure TFrmGuestCheckInForm.FormDestroy(Sender: TObject);
 begin
   FCurrencyhandler.Free;
+  tokens.Free;
   Release;
 end;
 
@@ -664,6 +678,7 @@ end;
 procedure TFrmGuestCheckInForm.LoadGuestInfo;
 var
   lRoomInvoice: TInvoice;
+
 begin
   if GetGuestInfoRSet(ResSetGuest, RoomReservation) then
   begin
@@ -672,6 +687,8 @@ begin
     lRoomInvoice := TInvoice.Create(ritRoom, -1, Reservation, RoomReservation, 0, -1, ResSetGuest['RoomNumber'], false);
     try
 
+      tokens := LoadAllTokens(Reservation, RoomReservation);
+      FillTokenComboBox(cbPaycards, tokens, ResSetGuest['PAYCARD_TOKEN_ID']);
       PersonId := ResSetGuest['ID'];
       Customer := ResSetGuest['Customer'];
       NativeCurrency := ResSetGuest['NativeCurrency'];
@@ -802,6 +819,16 @@ begin
     if NOT INS_Payment(theDownPaymentData, NewId) then
       raise Exception.Create('Unable to save down-payment.');
   end;
+end;
+
+procedure TFrmGuestCheckInForm.btnManagePayCardsClick(Sender: TObject);
+var currIdx : Integer;
+begin
+  currIdx := cbPayCards.ItemIndex;
+  ManagePaymentCards(Reservation, RoomReservation);
+  tokens := LoadAllTokens(Reservation, RoomReservation);
+  FillTokenComboBox(cbPaycards, tokens, -1);
+  cbPayCards.ItemIndex := currIdx;
 end;
 
 procedure TFrmGuestCheckInForm.sButton2Click(Sender: TObject);

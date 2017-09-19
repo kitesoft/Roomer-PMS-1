@@ -2,7 +2,7 @@ unit uTokenHelpers;
 
 interface
 
-uses Generics.Collections;
+uses Generics.Collections, sComboBox;
 
 type TOperationType = (PRE_AUTH, CAPTURE, CHARGE, REFUND, VOID);
 
@@ -23,6 +23,7 @@ type TOperationType = (PRE_AUTH, CAPTURE, CHARGE, REFUND, VOID);
     FNameOnCard: String;
     FExpireDate: String;
     FCardNumber: String;
+    function GetCardNumber: String;
      public
        constructor Create(id : Integer;
                   Reservation : Integer;
@@ -53,7 +54,7 @@ type TOperationType = (PRE_AUTH, CAPTURE, CHARGE, REFUND, VOID);
        property Created : TDateTime read FCreated write FCreated;
        property Room : String read FRoom write FRoom;
        property Source : String read FSource write FSource;
-       property CardNumber : String read FCardNumber write FCardNumber;
+       property CardNumber : String read GetCardNumber write FCardNumber;
        property ExpireDate : String read FExpireDate write FExpireDate;
      end;
 
@@ -98,6 +99,7 @@ type TOperationType = (PRE_AUTH, CAPTURE, CHARGE, REFUND, VOID);
 function StringToOperationType(s : String) : TOperationType;
 function OperationTypeToString(OperationType : TOperationType) : String;
 function LoadAllTokens(ReservationId, RoomReservationId : Integer) : TObjectList<TToken>;
+procedure FillTokenComboBox(cb : TsComboBox; tokens :TObjectList<TToken>; selectedToken : Integer);
 
 implementation
 
@@ -135,6 +137,13 @@ begin
   FNameOnCard := NameOnCard;
   FCardNumber := CardNumber;
   FExpireDate := ExpireDate;
+end;
+
+function TToken.GetCardNumber: String;
+begin
+  Result := FCardNumber;
+  if FCardNumber = '' then
+    Result := 'Card example not available';
 end;
 
 { TTokenCharge }
@@ -204,6 +213,23 @@ begin
   finally
     freeandNil(rSet);
   end;
+end;
+
+procedure FillTokenComboBox(cb : TsComboBox; tokens :TObjectList<TToken>; selectedToken : Integer);
+var i, idx: Integer;
+    token : TToken;
+begin
+  cb.Clear;
+  idx := -1;
+  cb.Items.AddObject('', nil);
+  for i := 0 to tokens.Count - 1 do
+  begin
+    token := tokens[i];
+    cb.Items.AddObject(token.CardNumber, token);
+    if token.id = selectedToken then
+      idx := i + 1;
+  end;
+  cb.ItemIndex := idx;
 end;
 
 end.

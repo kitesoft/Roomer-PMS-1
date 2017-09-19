@@ -203,7 +203,7 @@ object frmReservationProfile: TfrmReservationProfile
         Color = clWhite
         EditMask = '!99/99/9999;1; '
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
+        Font.Color = 4473924
         Font.Height = -9
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -229,7 +229,7 @@ object frmReservationProfile: TfrmReservationProfile
         Color = clWhite
         EditMask = '!99/99/9999;1; '
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
+        Font.Color = 4473924
         Font.Height = -9
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -284,7 +284,7 @@ object frmReservationProfile: TfrmReservationProfile
         Style = csDropDownList
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
+        Font.Color = 4473924
         Font.Height = -9
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -343,7 +343,7 @@ object frmReservationProfile: TfrmReservationProfile
           Color = clWhite
           Constraints.MaxWidth = 104
           Font.Charset = ANSI_CHARSET
-          Font.Color = clBlack
+          Font.Color = 4473924
           Font.Height = -9
           Font.Name = 'Arial'
           Font.Style = []
@@ -439,7 +439,7 @@ object frmReservationProfile: TfrmReservationProfile
         Style = csDropDownList
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
+        Font.Color = 4473924
         Font.Height = -9
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -468,7 +468,7 @@ object frmReservationProfile: TfrmReservationProfile
         Style = csDropDownList
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
+        Font.Color = 4473924
         Font.Height = -9
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -527,7 +527,7 @@ object frmReservationProfile: TfrmReservationProfile
         Height = 19
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
+        Font.Color = 4473924
         Font.Height = -9
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -543,7 +543,7 @@ object frmReservationProfile: TfrmReservationProfile
         Height = 19
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
+        Font.Color = 4473924
         Font.Height = -9
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -1032,7 +1032,7 @@ object frmReservationProfile: TfrmReservationProfile
                 Align = alTop
                 Color = clWhite
                 Font.Charset = ANSI_CHARSET
-                Font.Color = clBlack
+                Font.Color = 4473924
                 Font.Height = -9
                 Font.Name = 'Arial'
                 Font.Style = []
@@ -1058,7 +1058,7 @@ object frmReservationProfile: TfrmReservationProfile
                 Align = alTop
                 Color = clWhite
                 Font.Charset = ANSI_CHARSET
-                Font.Color = clBlack
+                Font.Color = 4473924
                 Font.Height = -9
                 Font.Name = 'Arial'
                 Font.Style = []
@@ -1084,7 +1084,7 @@ object frmReservationProfile: TfrmReservationProfile
                 Align = alTop
                 Color = clWhite
                 Font.Charset = ANSI_CHARSET
-                Font.Color = clBlack
+                Font.Color = 4473924
                 Font.Height = -9
                 Font.Name = 'Arial'
                 Font.Style = []
@@ -1110,7 +1110,7 @@ object frmReservationProfile: TfrmReservationProfile
                 Align = alTop
                 Color = clWhite
                 Font.Charset = ANSI_CHARSET
-                Font.Color = clBlack
+                Font.Color = 4473924
                 Font.Height = -9
                 Font.Name = 'Arial'
                 Font.Style = []
@@ -1136,7 +1136,7 @@ object frmReservationProfile: TfrmReservationProfile
                 Align = alTop
                 Color = clWhite
                 Font.Charset = ANSI_CHARSET
-                Font.Color = clBlack
+                Font.Color = 4473924
                 Font.Height = -9
                 Font.Name = 'Arial'
                 Font.Style = []
@@ -1162,7 +1162,7 @@ object frmReservationProfile: TfrmReservationProfile
                 Align = alTop
                 Color = clWhite
                 Font.Charset = ANSI_CHARSET
-                Font.Color = clBlack
+                Font.Color = 4473924
                 Font.Height = -9
                 Font.Name = 'Arial'
                 Font.Style = []
@@ -1221,7 +1221,7 @@ object frmReservationProfile: TfrmReservationProfile
                   Align = alTop
                   Color = clWhite
                   Font.Charset = ANSI_CHARSET
-                  Font.Color = clBlack
+                  Font.Color = 4473924
                   Font.Height = -9
                   Font.Name = 'Arial'
                   Font.Style = []
@@ -1531,7 +1531,7 @@ object frmReservationProfile: TfrmReservationProfile
               Align = alTop
               Color = clWhite
               Font.Charset = ANSI_CHARSET
-              Font.Color = clBlack
+              Font.Color = 4473924
               Font.Height = -9
               Font.Name = 'Arial'
               Font.Style = []
@@ -1558,7 +1558,7 @@ object frmReservationProfile: TfrmReservationProfile
               Align = alTop
               Color = clWhite
               Font.Charset = ANSI_CHARSET
-              Font.Color = clBlack
+              Font.Color = 4473924
               Font.Height = -9
               Font.Name = 'Arial'
               Font.Style = []
@@ -1585,7 +1585,7 @@ object frmReservationProfile: TfrmReservationProfile
               Align = alTop
               Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
+              Font.Color = 4473924
               Font.Height = -9
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -1666,7 +1666,7 @@ object frmReservationProfile: TfrmReservationProfile
                 Margins.Bottom = 0
                 Color = clWhite
                 Font.Charset = ANSI_CHARSET
-                Font.Color = clBlack
+                Font.Color = 4473924
                 Font.Height = -9
                 Font.Name = 'Arial'
                 Font.Style = []
@@ -1692,7 +1692,7 @@ object frmReservationProfile: TfrmReservationProfile
                 Margins.Bottom = 0
                 Color = clWhite
                 Font.Charset = ANSI_CHARSET
-                Font.Color = clBlack
+                Font.Color = 4473924
                 Font.Height = -9
                 Font.Name = 'Arial'
                 Font.Style = []
@@ -1855,7 +1855,7 @@ object frmReservationProfile: TfrmReservationProfile
               BorderStyle = bsNone
               Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
+              Font.Color = 4473924
               Font.Height = -9
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -1885,7 +1885,7 @@ object frmReservationProfile: TfrmReservationProfile
               BorderStyle = bsNone
               Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
+              Font.Color = 4473924
               Font.Height = -9
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -1923,7 +1923,7 @@ object frmReservationProfile: TfrmReservationProfile
                 BorderStyle = bsNone
                 Color = clWhite
                 Font.Charset = DEFAULT_CHARSET
-                Font.Color = clBlack
+                Font.Color = 4473924
                 Font.Height = -9
                 Font.Name = 'Tahoma'
                 Font.Style = []
@@ -1954,7 +1954,7 @@ object frmReservationProfile: TfrmReservationProfile
                 BorderStyle = bsNone
                 Color = clWhite
                 Font.Charset = DEFAULT_CHARSET
-                Font.Color = clBlack
+                Font.Color = 4473924
                 Font.Height = -9
                 Font.Name = 'Tahoma'
                 Font.Style = []
@@ -3006,14 +3006,15 @@ object frmReservationProfile: TfrmReservationProfile
           Top = 4
           Width = 129
           Height = 40
-          Action = acViewPayCard
           Align = alLeft
+          Caption = 'Pay-card info'
           DropDownMenu = mnuPayCards
           ImageIndex = 126
           Images = DImages.PngImageList1
           PopupMenu = mnuPayCards
           Style = bsSplitButton
           TabOrder = 10
+          OnClick = btnViewPayCardClick
           SkinData.SkinSection = 'BUTTON'
         end
       end
@@ -3098,7 +3099,7 @@ object frmReservationProfile: TfrmReservationProfile
         object chkShowAllGuests: TsCheckBox
           Left = 333
           Top = 11
-          Width = 102
+          Width = 99
           Height = 17
           Caption = 'Show all guests'
           Anchors = [akLeft, akTop, akRight]
@@ -4013,8 +4014,8 @@ object frmReservationProfile: TfrmReservationProfile
     end
   end
   object pnlDataWait: TsPanel
-    Left = 833
-    Top = 209
+    Left = 953
+    Top = 278
     Width = 263
     Height = 90
     TabOrder = 3
@@ -4057,6 +4058,176 @@ object frmReservationProfile: TfrmReservationProfile
       ShowHint = False
       TabOrder = 0
       SkinData.SkinSection = 'BUTTON'
+    end
+  end
+  object pnlPaycard: TAdvToolPanel
+    Left = 624
+    Top = 123
+    Width = 323
+    Height = 263
+    BackgroundTransparent = False
+    BackGroundPosition = bpTopLeft
+    BevelOuter = bvLowered
+    BorderStyle = bsSingle
+    Button3D = False
+    HoverButtonColor = 16576740
+    HoverButtonColorTo = 16576740
+    DownButtonColor = 16573128
+    DownButtonColorTo = 16573128
+    CaptionButton = False
+    Color = 16448250
+    ColorTo = 16448250
+    GradientDirection = gdVertical
+    DockDots = True
+    Caption = 'Paycard info'
+    CaptionGradientDirection = gdVertical
+    FocusCaptionFontColor = clBlack
+    FocusCaptionColor = 16573128
+    FocusCaptionColorTo = 16573128
+    NoFocusCaptionFontColor = clBlack
+    NoFocusCaptionColor = 16185078
+    NoFocusCaptionColorTo = 16185078
+    CloseHint = 'Close panel'
+    LockHint = 'Lock panel'
+    UnlockHint = 'Unlock panel'
+    Sections = <>
+    SectionLayout.CaptionColor = clSilver
+    SectionLayout.CaptionColorTo = clSilver
+    SectionLayout.CaptionFontColor = clBlack
+    SectionLayout.CaptionRounded = False
+    SectionLayout.Corners = scRectangle
+    SectionLayout.BackGroundColor = clWhite
+    SectionLayout.BackGroundColorTo = clWhite
+    SectionLayout.BorderColor = 13027014
+    SectionLayout.BorderWidth = 1
+    SectionLayout.CaptionGradientDir = gdVertical
+    SectionLayout.BackGroundGradientDir = gdVertical
+    SectionLayout.Indent = 4
+    SectionLayout.Spacing = 4
+    SectionLayout.ItemFontColor = clBlack
+    SectionLayout.ItemHoverTextColor = clBlack
+    SectionLayout.ItemHoverUnderline = True
+    SectionLayout.UnderLineCaption = False
+    ShowCaptionBorder = False
+    ShowClose = False
+    ShowLock = False
+    Style = esOffice2013Lightgray
+    Version = '1.6.0.1'
+    OnMouseDown = pnlPaycardMouseDown
+    object sLabel5: TsLabel
+      Left = 30
+      Top = 48
+      Width = 72
+      Height = 11
+      Caption = 'Payment card:'
+      ParentFont = False
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -9
+      Font.Name = 'Tahoma'
+      Font.Style = [fsBold]
+    end
+    object lbCardCharged_: TsLabel
+      Left = 85
+      Top = 152
+      Width = 58
+      Height = 11
+      Alignment = taRightJustify
+      BiDiMode = bdLeftToRight
+      Caption = 'Card charged:'
+      ParentBiDiMode = False
+    end
+    object lbCardCharged: TsLabel
+      Left = 196
+      Top = 152
+      Width = 24
+      Height = 11
+      Alignment = taRightJustify
+      Caption = '0.00'
+      ParentFont = False
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -9
+      Font.Name = 'Tahoma'
+      Font.Style = [fsBold]
+    end
+    object sLabel8: TsLabel
+      Left = 59
+      Top = 169
+      Width = 84
+      Height = 11
+      Alignment = taRightJustify
+      BiDiMode = bdLeftToRight
+      Caption = 'Card pre-authorized:'
+      ParentBiDiMode = False
+    end
+    object sLabel10: TsLabel
+      Left = 196
+      Top = 169
+      Width = 24
+      Height = 11
+      Alignment = taRightJustify
+      Caption = '0.00'
+      ParentFont = False
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -9
+      Font.Name = 'Tahoma'
+      Font.Style = [fsBold]
+    end
+    object sLabel12: TsLabel
+      Left = 75
+      Top = 186
+      Width = 68
+      Height = 11
+      Alignment = taRightJustify
+      BiDiMode = bdLeftToRight
+      Caption = 'Current balance:'
+      ParentBiDiMode = False
+    end
+    object sLabel13: TsLabel
+      Left = 196
+      Top = 186
+      Width = 24
+      Height = 11
+      Alignment = taRightJustify
+      Caption = '0.00'
+      ParentFont = False
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -9
+      Font.Name = 'Tahoma'
+      Font.Style = [fsBold]
+    end
+    object cbPaycards: TsComboBox
+      Left = 30
+      Top = 65
+      Width = 211
+      Height = 21
+      Alignment = taLeftJustify
+      VerticalAlignment = taAlignTop
+      Color = clWhite
+      Enabled = False
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = 4473924
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ItemIndex = -1
+      ParentFont = False
+      TabOrder = 0
+      OnCloseUp = cbPaycardsCloseUp
+    end
+    object btnManagePayCards: TsButton
+      Left = 30
+      Top = 90
+      Width = 153
+      Height = 25
+      Caption = 'Manage Paycards'
+      ImageIndex = 92
+      Images = DImages.cxSmallImagesFlat
+      TabOrder = 1
+      OnClick = btnManagePayCardsClick
     end
   end
   object mRooms: TdxMemData
@@ -4218,6 +4389,9 @@ object frmReservationProfile: TfrmReservationProfile
     end
     object mRoomsInvoiceIndex: TIntegerField
       FieldName = 'InvoiceIndex'
+    end
+    object mRoomsPAYCARD_TOKEN_ID: TIntegerField
+      FieldName = 'PAYCARD_TOKEN_ID'
     end
   end
   object mGuestRoomsDS: TDataSource
@@ -4664,6 +4838,34 @@ object frmReservationProfile: TfrmReservationProfile
           'Width')
       end
       item
+        Component = gbxGuest
+        Properties.Strings = (
+          'Width')
+      end
+      item
+        Component = GroupBox1
+        Properties.Strings = (
+          'Width')
+      end
+      item
+        Component = GroupBox2
+        Properties.Strings = (
+          'Width')
+      end
+      item
+        Component = pnlContact
+        Properties.Strings = (
+          'Width')
+      end
+      item
+        Component = pnlPaycard
+        Properties.Strings = (
+          'Height'
+          'Left'
+          'Top'
+          'Width')
+      end
+      item
         Component = tvRoomsArrival
         Properties.Strings = (
           'Position.ColIndex'
@@ -4919,26 +5121,6 @@ object frmReservationProfile: TfrmReservationProfile
         Component = __PriceViewer
         Properties.Strings = (
           'Position.ColIndex'
-          'Width')
-      end
-      item
-        Component = gbxGuest
-        Properties.Strings = (
-          'Width')
-      end
-      item
-        Component = GroupBox1
-        Properties.Strings = (
-          'Width')
-      end
-      item
-        Component = GroupBox2
-        Properties.Strings = (
-          'Width')
-      end
-      item
-        Component = pnlContact
-        Properties.Strings = (
           'Width')
       end>
     StorageName = 'Software\Roomer\FormStatus\ReservationProfile2'
@@ -5215,8 +5397,8 @@ object frmReservationProfile: TfrmReservationProfile
     end
   end
   object mnuRoomColumn: TPopupMenu
-    Left = 680
-    Top = 392
+    Left = 704
+    Top = 416
     object mnuCopyValueDown: TMenuItem
       Action = acCopyValueDown
     end
@@ -5229,7 +5411,7 @@ object frmReservationProfile: TfrmReservationProfile
   end
   object mnuPayCards: TPopupMenu
     Left = 696
-    Top = 472
+    Top = 488
     object M1: TMenuItem
       Action = acManagePaycards
     end
