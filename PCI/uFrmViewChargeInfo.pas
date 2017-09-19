@@ -5,12 +5,11 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uTokenHelpers, Vcl.StdCtrls, sEdit, sLabel, sButton, Vcl.ExtCtrls, sPanel,
-  uRoomerForm, cxGridTableView, cxStyles, dxPScxCommon, dxPScxGridLnk, cxClasses, cxPropertiesStore, Vcl.ComCtrls, sStatusBar, sMemo, Vcl.Menus;
+  uRoomerDialogForm, cxGridTableView, cxStyles, dxPScxCommon, dxPScxGridLnk, cxClasses, cxPropertiesStore, Vcl.ComCtrls, sStatusBar, sMemo, Vcl.Menus,
+  uRoomerForm;
 
 type
-  TFrmViewChargeInfo = class(TfrmBaseRoomerForm)
-    sPanel1: TsPanel;
-    sButton1: TsButton;
+  TFrmViewChargeInfo = class(TfrmBaseRoomerDialogForm)
     sLabel1: TsLabel;
     sLabel2: TsLabel;
     edOperation: TsEdit;
@@ -32,11 +31,11 @@ type
     edGatewayResultDescription: TsMemo;
     sLabel10: TsLabel;
     edWhen: TsEdit;
-    btnRefundOrCapture: TsButton;
     pupCharge: TPopupMenu;
     mnuCapture: TMenuItem;
     mnuVoid: TMenuItem;
     mnyRefund: TMenuItem;
+    btnRefundOrCapture: TsButton;
     procedure FormShow(Sender: TObject);
     procedure pupChargePopup(Sender: TObject);
     procedure mnuCaptureClick(Sender: TObject);
@@ -48,9 +47,6 @@ type
   public
     { Public declarations }
   end;
-
-var
-  FrmViewChargeInfo: TFrmViewChargeInfo;
 
 procedure DisplayCharge(charge : TTokenCharge);
 
@@ -77,6 +73,8 @@ end;
 
 procedure TFrmViewChargeInfo.FormShow(Sender: TObject);
 begin
+  DialogButtons := [mbClose];
+
   edWhen.Text := uDateUtils.RoomerDateTimeToString(charge.created);
   edOperation.Text := charge.operationType;
   edAutCode.Text := charge.authCode;

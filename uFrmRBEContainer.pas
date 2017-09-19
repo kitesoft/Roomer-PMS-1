@@ -196,7 +196,6 @@ procedure TFrmRBEContainer.BringInToView(newWt : TRBEWindowType);
 var
   theRoomTypeGroupHolder: recRoomTypeGroupHolder;
   theRoomTypesHolder: recRoomTypeHolder;
-  theTaxesHolder: recTaxesHolder;
   theCountriesHolder: recCountryHolder;
   theCurrencyHolder: recCurrencyHolder;
 

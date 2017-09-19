@@ -1,4 +1,4 @@
-unit TokenChargeHistory;
+unit uFrmTokenChargeHistory;
 
 interface
 
@@ -50,7 +50,6 @@ type
     sLabel9: TsLabel;
     sLabel10: TsLabel;
     lbPreAuth: TsLabel;
-    procedure FormShow(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure lvTokensSelectItem(Sender: TObject; Item: TListItem; Selected: Boolean);
@@ -71,21 +70,23 @@ type
     procedure mnuChargeClick(Sender: TObject);
     procedure mnuPreAuthClick(Sender: TObject);
   private
-    tokenList : TObjectList<TToken>;
-    chargeList : TObjectList<TTokenCharge>;
-    Reservation, RoomReservation : Integer;
-    procedure LoadData(ReservationID, RoomReservationId: Integer);
+    FTokenList : TObjectList<TToken>;
+    FTokenChargeList : TObjectList<TTokenCharge>;
+    FReservation: integer;
+    FRoomReservation: integer;
     procedure DisplayTokens;
     procedure DisplayCharges;
     function GetCardStatusByReference(tokenId: Integer; GatewayReference: String): Double;
     function IsThereAnActiveContract: Boolean;
     { Private declarations }
+  protected
+    procedure DoLoadData; override;
+    procedure DoShow; override;
   public
     { Public declarations }
+    property Reservation: integer read FReservation write FReservation;
+    property RoomReservation: integer read FRoomReservation write FRoomReservation;
   end;
-
-var
-  FrmTokenChargeHistory: TFrmTokenChargeHistory;
 
 procedure ManagePaymentCards(Reservation, RoomReservation : Integer);
 
@@ -126,21 +127,15 @@ end;
 procedure TFrmTokenChargeHistory.FormCreate(Sender: TObject);
 begin
   inherited;
-  tokenList := TObjectList<TToken>.Create;
-  chargeList := TObjectList<TTokenCharge>.Create;
+  FTokenList := TObjectList<TToken>.Create;
+  FTokenChargeList := TObjectList<TTokenCharge>.Create;
 end;
 
 procedure TFrmTokenChargeHistory.FormDestroy(Sender: TObject);
 begin
   inherited;
-  tokenList.Free;
-  chargeList.Free;
-end;
-
-procedure TFrmTokenChargeHistory.FormShow(Sender: TObject);
-begin
-  inherited;
-  LoadData(Reservation, RoomReservation);
+  FTokenList.Free;
+  FTokenChargeList.Free;
 end;
 
 procedure TFrmTokenChargeHistory.DisplayTokens;
@@ -148,7 +143,7 @@ var token : TToken;
     lvi : TListItem;
 begin
   lvTokens.Items.Clear;
-  for token IN tokenList do
+  for token IN FTokenList do
   begin
     lvi := lvTokens.Items.Add;
     lvi.Checked := token.Enabled;
@@ -160,6 +155,20 @@ begin
   end;
 end;
 
+procedure TFrmTokenChargeHistory.DoShow;
+begin
+  inherited;
+
+  lbReservation.Caption := inttostr(Reservation);
+  lbRoomReservation.Caption := inttostr(RoomReservation);
+
+  mnuNewForRoom.Enabled := (RoomReservation > 0);
+  if mnuNewForRoom.Enabled then
+    mnuNewForRoom.Caption := mnuNewForRoom.Caption + format('[%s]', [lbRoom.Caption]);
+
+  RefreshData;
+end;
+
 procedure TFrmTokenChargeHistory.btnChargeViewClick(Sender: TObject);
 begin
   inherited;
@@ -169,7 +178,7 @@ end;
 procedure TFrmTokenChargeHistory.btnRefreshClick(Sender: TObject);
 begin
   inherited;
-  LoadData(Reservation, RoomReservation);
+  RefreshData;
 end;
 
 procedure TFrmTokenChargeHistory.btnTokenViewClick(Sender: TObject);
@@ -192,7 +201,7 @@ begin
   charged := 0.00;
   preAuthed := 0.00;
   lvCharges.Items.Clear;
-  for charge IN chargeList do
+  for charge IN FTokenChargeList do
   begin
     lvi := lvCharges.Items.Add;
     lvi.Caption := RoomerDateTimeToString(charge.created);
@@ -223,22 +232,19 @@ begin
   lbPreAuth.Caption := trim(_floattostr(preAuthed, 20, 2));
 end;
 
-procedure TFrmTokenChargeHistory.LoadData(ReservationId, RoomReservationId : Integer);
+procedure TFrmTokenChargeHistory.DoLoadData;
 var
   rSet: TRoomerDataSet;
   xml : String;
-  token : TToken;
   s : String;
 begin
-  lbReservation.Caption := inttostr(ReservationId);
-  lbRoomReservation.Caption := inttostr(RoomReservationId);
-
+  inherited;
   rSet := CreateNewDataSet;
   try
-    if RoomReservationId > 0 then
-      s := 'SELECT rr.Room, p.Name FROM roomreservations rr JOIN persons p ON p.RoomReservation=rr.RoomReservation AND p.MainName=1 WHERE rr.RoomReservation=' + inttostr(RoomReservationId)
+    if RoomReservation > 0 then
+      s := 'SELECT rr.Room, p.Name FROM roomreservations rr JOIN persons p ON p.RoomReservation=rr.RoomReservation AND p.MainName=1 WHERE rr.RoomReservation=' + inttostr(RoomReservation)
     else
-      s := 'SELECT ''[N/A]'' AS Room, Name FROM reservations WHERE Reservation=' + inttostr(ReservationId);
+      s := 'SELECT ''[N/A]'' AS Room, Name FROM reservations WHERE Reservation=' + inttostr(Reservation);
 
     rSet_bySQL(rSet, s);
     rSet.First;
@@ -251,17 +257,13 @@ begin
     rSet.Free;
   end;
 
-  mnuNewForRoom.Enabled := (RoomReservationId > 0);
-  if mnuNewForRoom.Enabled then
-    mnuNewForRoom.Caption := mnuNewForRoom.Caption + format('[%s]', [lbRoom.Caption]);
-
-  xml := d.roomerMainDataSet.downloadUrlAsString(d.roomerMainDataSet.RoomerUri + format('paycard/bookings/%d/tokens', [ReservationId]));
+  xml := d.roomerMainDataSet.downloadUrlAsString(d.roomerMainDataSet.RoomerUri + format('paycard/bookings/%d/tokens', [Reservation]));
   rSet := d.roomerMainDataSet.ActivateNewDataset(xml);
   try
     lvTokens.Items.BeginUpdate;
     try
       lvTokens.Items.Clear;
-      tokenList := LoadAllTokens(ReservationID, RoomReservationId);
+      FTokenList := LoadAllTokens(Reservation, RoomReservation);
     finally
       lvTokens.Items.EndUpdate;
     end;
@@ -312,7 +314,7 @@ begin
   lvCharges.Items.BeginUpdate;
   try
     lvCharges.Items.Clear;
-    chargeList.Clear;
+    FTokenChargeList.Clear;
     if NOT ASSIGNED(lvTokens.Selected) then exit;
 
     token := TToken(lvTokens.Selected.Data);
@@ -342,7 +344,7 @@ begin
                       rSet['GATEWAY_RESULT_DESCRIPTION'],
                       rSet['TSTAMP']);
 
-        chargeList.Add(charge);
+        FTokenChargeList.Add(charge);
         rSet.Next;
       end;
     finally
@@ -369,7 +371,7 @@ begin
                 charge.token.id,
                 charge.amount,
                 charge.currency,
-                tokenList,
+                FTokenList,
                 charge.gatewayReference,
                 PCO_CAPTURE);
   lvTokensSelectItem(lvTokens, lvTokens.Selected, true);
@@ -390,7 +392,7 @@ begin
                 token.id,
                 0.00,
                 g.qNativeCurrency,
-                tokenList,
+                FTokenList,
                 '',
                 PCO_CHARGE);
   lvTokensSelectItem(lvTokens, lvTokens.Selected, true);
@@ -436,7 +438,7 @@ begin
                 token.id,
                 0.00,
                 g.qNativeCurrency,
-                tokenList,
+                FTokenList,
                 '',
                 PCO_PRE_AUTH);
   lvTokensSelectItem(lvTokens, lvTokens.Selected, true);
@@ -457,7 +459,7 @@ begin
                 charge.token.id,
                 charge.amount,
                 charge.currency,
-                tokenList,
+                FTokenList,
                 charge.gatewayReference,
                 PCO_VOID);
   lvTokensSelectItem(lvTokens, lvTokens.Selected, true);
@@ -478,7 +480,7 @@ begin
                 charge.token.id,
                 charge.amount,
                 charge.currency,
-                tokenList,
+                FTokenList,
                 charge.gatewayReference,
                 PCO_REFUND);
   lvTokensSelectItem(lvTokens, lvTokens.Selected, true);
@@ -505,7 +507,7 @@ function TFrmTokenChargeHistory.GetCardStatusByReference(tokenId : Integer; Gate
 var charge : TTokenCharge;
 begin
   result := 0.0;
-  for charge IN chargeList do
+  for charge IN FTokenChargeList do
   begin
     if (charge.token.id = tokenId) AND
        (LowerCase(charge.operationResultCode) = 'success') AND
@@ -528,11 +530,9 @@ procedure TFrmTokenChargeHistory.rgWhichTokensChange(Sender: TObject);
 begin
   inherited;
   lvCharges.Items.Clear;
-  chargeList.Clear;
+  FTokenChargeList.Clear;
   DisplayTokens;
 end;
-
-end.
 
 {
 ===================================================================
@@ -584,3 +584,7 @@ Typical authorization message
   <CVC2>123</CVC2>
 </getAuthorization>
 }
+
+end.
+
+

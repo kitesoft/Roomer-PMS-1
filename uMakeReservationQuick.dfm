@@ -114,8 +114,8 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
         object clabPaymentNotes: TsLabel
           Left = 1
           Top = 1
-          Width = 280
-          Height = 15
+          Width = 86
+          Height = 13
           Align = alClient
           Alignment = taCenter
           Caption = 'Payment Notes'
@@ -125,8 +125,6 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = [fsBold]
-          ExplicitWidth = 86
-          ExplicitHeight = 13
         end
       end
       object memReservationPaymentInfo: TsMemo
@@ -172,8 +170,8 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
         object clabGeneralNotes: TsLabel
           Left = 1
           Top = 1
-          Width = 402
-          Height = 15
+          Width = 79
+          Height = 13
           Align = alClient
           Alignment = taCenter
           Caption = 'General Notes'
@@ -186,8 +184,6 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = [fsBold]
-          ExplicitWidth = 79
-          ExplicitHeight = 13
         end
       end
       object memReservationGeneralInfo: TsMemo
@@ -233,8 +229,8 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
         object clabRoomNotes: TsLabel
           Left = 1
           Top = 1
-          Width = 432
-          Height = 15
+          Width = 68
+          Height = 13
           Align = alClient
           Alignment = taCenter
           Caption = 'Room Notes'
@@ -247,8 +243,6 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = [fsBold]
-          ExplicitWidth = 68
-          ExplicitHeight = 13
         end
       end
       object btnClearLog: TsButton
@@ -330,6 +324,10 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
     SkinData.SkinSection = 'PAGECONTROL'
     object taReservation: TsTabSheet
       Caption = 'Reservation'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object panTop: TsPanel
         Left = 0
         Top = 0
@@ -777,12 +775,14 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                 ExplicitHeight = 21
                 inherited lblCountryName: TLabel
                   Left = 67
-                  Width = 104
-                  Height = 15
+                  Width = 19
+                  Height = 13
+                  ExplicitLeft = 67
                 end
                 inherited edCountryCode: TsEdit
                   Height = 20
                   OnChange = fraCountryedCountryCodeChange
+                  ExplicitHeight = 20
                 end
                 inherited btnGetCountry: TsButton
                   Width = 23
@@ -1249,6 +1249,10 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
             Caption = 'Contact Details'
             ImageIndex = 2
             TabVisible = False
+            ExplicitLeft = 0
+            ExplicitTop = 0
+            ExplicitWidth = 0
+            ExplicitHeight = 0
             object sPanel3: TsPanel
               Left = 0
               Top = 0
@@ -1619,20 +1623,18 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                 object lblSpecialRequests: TsLabel
                   Left = 2
                   Top = 15
-                  Width = 332
+                  Width = 81
                   Height = 13
                   Align = alTop
                   Caption = 'Special Requests'
-                  ExplicitWidth = 81
                 end
                 object lblNotes: TsLabel
                   Left = 2
                   Top = 101
-                  Width = 332
+                  Width = 28
                   Height = 13
                   Align = alTop
                   Caption = 'Notes'
-                  ExplicitWidth = 28
                 end
                 object edtSpecialRequests: TMemo
                   AlignWithMargins = True
@@ -1770,6 +1772,10 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
             Caption = 'Customer Details'
             ImageIndex = 1
             TabVisible = False
+            ExplicitLeft = 0
+            ExplicitTop = 0
+            ExplicitWidth = 0
+            ExplicitHeight = 0
             object clabTel2: TsLabel
               Left = 204
               Top = 125
@@ -2058,6 +2064,10 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
     object tabSelectType: TsTabSheet
       Caption = 'Select Types'
       ImageIndex = 1
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object panSelectTypesTop: TsPanel
         Left = 0
         Top = 0
@@ -2329,6 +2339,10 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
     object tabSelectRooms: TsTabSheet
       Caption = 'Select Rooms'
       ImageIndex = 2
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object panSelectRoomsTop: TsPanel
         Left = 0
         Top = 0
@@ -2732,6 +2746,10 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
     object tabRoomRates: TsTabSheet
       Caption = 'Room Rates'
       ImageIndex = 3
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object panTopRoomRates: TsPanel
         Left = 0
         Top = 0
@@ -2879,6 +2897,10 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
           SkinData.SkinSection = 'PAGECONTROL'
           object sTabSheet1: TsTabSheet
             Caption = 'Extra'
+            ExplicitLeft = 0
+            ExplicitTop = 0
+            ExplicitWidth = 0
+            ExplicitHeight = 0
             object sPanel2: TsPanel
               Left = -2
               Top = 0
@@ -3048,6 +3070,10 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
           end
           object Alerts: TsTabSheet
             Caption = 'Alerts'
+            ExplicitLeft = 0
+            ExplicitTop = 0
+            ExplicitWidth = 0
+            ExplicitHeight = 0
           end
         end
       end

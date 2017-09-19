@@ -5,12 +5,11 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uTokenHelpers, Vcl.StdCtrls, sEdit, sLabel, sButton, Vcl.ExtCtrls, sPanel,
-  uRoomerForm, cxGridTableView, cxStyles, dxPScxCommon, dxPScxGridLnk, cxClasses, cxPropertiesStore, Vcl.ComCtrls, sStatusBar, sMemo;
+  uRoomerDialogForm, cxGridTableView, cxStyles, dxPScxCommon, dxPScxGridLnk, cxClasses, cxPropertiesStore, Vcl.ComCtrls, sStatusBar, sMemo,
+  uRoomerForm;
 
 type
-  TFrmViewPayCardDetails = class(TfrmBaseRoomerForm)
-    sPanel1: TsPanel;
-    sButton1: TsButton;
+  TFrmViewPayCardDetails = class(TfrmBaseRoomerDialogForm)
     sLabel1: TsLabel;
     sLabel2: TsLabel;
     edCardNumber: TsEdit;
@@ -66,6 +65,8 @@ end;
 
 procedure TFrmViewPayCardDetails.FormShow(Sender: TObject);
 begin
+  DialogButtons := [mbClose];
+
   edWhen.Text := uDateUtils.RoomerDateTimeToString(token.created);
   edCardNumber.Text := token.CardNumber;
   edNameOnCard.Text := token.NameOnCard;

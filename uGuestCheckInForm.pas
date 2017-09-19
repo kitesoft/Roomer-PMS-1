@@ -707,12 +707,11 @@ begin
                                                              + lRoomInvoice.TotalSales
                                                              + lRoomInvoice.TotalTaxes); // Trim(_floatToStr(ResSetGuest['TotalPrice'] + ResSetGuest['CurrentSales'], 12, 2));
       lbPAyments.Caption := FCurrencyHandler.FormattedValue(lRoomInvoice.TotalPayments); //Trim(_floatToStr(ResSetGuest['CurrentPayments'], 12, 2));
-      lbTaxes.Caption := FCurrencyHandler.FormattedValue(lRoomInvoice.TotalTaxes); //Trim(_floatToStr(ExtraTaxes, 12, 2));
 
       if glb.PMSSettings.BetaFunctionality.UseNewTaxcalcMethod then
-        lbExtraTaxes.Caption := FCurrencyHandler.FormattedValue(GetTotalTaxesForRoomreservation(Reservation, RoomReservation))
+        lbTaxes.Caption := FCurrencyHandler.FormattedValue(GetTotalTaxesForRoomreservation(Reservation, RoomReservation))
       else
-        lbExtraTaxes.Caption := '';
+        lbTaxes.Caption := FCurrencyHandler.FormattedValue(lRoomInvoice.TotalTaxes); //Trim(_floatToStr(ExtraTaxes, 12, 2));
 
       lbBalance.Caption := FCurrencyHandler.FormattedValue(lRoomInvoice.Balance);// Trim(_floatToStr(CurrentRealBalance, 12, 2));
       FCurrentRealBalance := lRoomInvoice.balance;

@@ -10771,7 +10771,6 @@ var
   NewRoom: string;
   rSet: TRoomerDataSet;
 begin
-  result := True;
   // s := s + ' SELECT '+chr(10);
   // s := s + '    RoomReservation '+chr(10);
   // s := s + '  , Room '+chr(10);

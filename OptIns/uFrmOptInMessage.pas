@@ -4,14 +4,15 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, HTMLabel, sButton;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, HTMLabel, sButton, uRoomerDialogForm,
+  cxGridTableView, cxStyles, dxPScxCommon, dxPScxGridLnk, cxClasses, cxPropertiesStore, sPanel, Vcl.ComCtrls, sStatusBar
+  ;
 
 type
 
   TOptInType = (OITPCI, OITOtaToggler);
 
-  TFrmOptInMessage = class(TForm)
-    btnOk: TsButton;
+  TFrmOptInMessage = class(TfrmBaseRoomerDialogForm)
     lblPleaseRead: THTMLabel;
     lblLink: TLinkLabel;
     lblDownload: TLinkLabel;
@@ -24,9 +25,6 @@ type
     { Public declarations }
     OptInType : TOptInType;
   end;
-
-var
-  FrmOptInMessage: TFrmOptInMessage;
 
 procedure OpenOptInDialog(OptInType : TOptInType);
 
@@ -53,6 +51,7 @@ end;
 
 procedure TFrmOptInMessage.FormShow(Sender: TObject);
 begin
+  DialogButtons := [mbClose];
   ShowOptInMessage;
 end;
 

@@ -2,7 +2,7 @@
     <PropertyGroup>
         <ProjectGuid>{436E2CCE-115E-475F-9C3E-19C03F70A4D0}</ProjectGuid>
         <MainSource>Roomer.dpr</MainSource>
-        <Config Condition="'$(Config)'==''">Debug</Config>
+        <Config Condition="'$(Config)'==''">DebugBas</Config>
         <DCC_DCCCompiler>DCC32</DCC_DCCCompiler>
         <ProjectVersion>14.3</ProjectVersion>
         <FrameworkType>VCL</FrameworkType>
@@ -193,10 +193,9 @@
         <Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_8_Win32)'!=''">
-        <VerInfo_Build>1</VerInfo_Build>
-        <VerInfo_Keys>CompanyName=Promoir BV;FileDescription=Roomer PMS;FileVersion=1.9.15.1;InternalName=;LegalCopyright=(C) 2013, 2014, 2015, 2016, 2017 Promoir BV;LegalTrademarks=Roomer is a Registered Trademark of Promoir BV;OriginalFilename=Roomer.exe;ProductName=Roomer Open Hospitality Platform;ProductVersion=1.9.15.1;Comments=;ExtraBuild=170808;PrivateBuild=</VerInfo_Keys>
+        <VerInfo_Build>2</VerInfo_Build>
+        <VerInfo_Keys>CompanyName=Promoir BV;FileDescription=Roomer PMS;FileVersion=1.9.15.2;InternalName=;LegalCopyright=(C) 2013, 2014, 2015, 2016, 2017 Promoir BV;LegalTrademarks=Roomer is a Registered Trademark of Promoir BV;OriginalFilename=Roomer.exe;ProductName=Roomer Open Hospitality Platform;ProductVersion=1.9.15.2;Comments=;ExtraBuild=170918;PrivateBuild=</VerInfo_Keys>
         <Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
-        <VerInfo_PreRelease>false</VerInfo_PreRelease>
         <VerInfo_Debug>false</VerInfo_Debug>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
@@ -939,15 +938,13 @@
             <Form>FrmOptInMessage</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="PCI\TokenChargeHistory.pas">
+        <DCCReference Include="PCI\uFrmTokenChargeHistory.pas">
             <Form>FrmTokenChargeHistory</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="PCI\uTokenHelpers.pas"/>
         <DCCReference Include="PCI\uPayCard.pas"/>
         <DCCReference Include="PCI\uFrmViewChargeInfo.pas">
             <Form>FrmViewChargeInfo</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="PCI\uFrmPayCardCreateNew.pas">
             <Form>FrmPayCardCreateNew</Form>
@@ -957,11 +954,9 @@
         </DCCReference>
         <DCCReference Include="PCI\uFmrChargePayCard.pas">
             <Form>FrmChargePayCard</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="PCI\uFrmManagePCIConnection.pas">
             <Form>FrmManagePCIConnection</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="PMSSettings\uHotelServicesAccessor.pas"/>
         <DCCReference Include="OpenAPI\schema\uRoomerCanonicalDataModel_DataStructures.pas"/>

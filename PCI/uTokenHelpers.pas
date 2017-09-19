@@ -4,7 +4,13 @@ interface
 
 uses Generics.Collections, sComboBox;
 
-type TOperationType = (PRE_AUTH, CAPTURE, CHARGE, REFUND, VOID);
+type
+
+  TPCITokenOperationType = (PRE_AUTH, CAPTURE, CHARGE, REFUND, VOID);
+  TPCITokenOperationTypeHelper = record helper for TPCITokenOperationType
+    class function FromString(const value: String): TPCITokenOperationType; static;
+    function ToString: string;
+  end;
 
   TToken = class
   private
@@ -96,24 +102,12 @@ type TOperationType = (PRE_AUTH, CAPTURE, CHARGE, REFUND, VOID);
     property created: TDateTime read Fcreated write Fcreated;
   end;
 
-function StringToOperationType(s : String) : TOperationType;
-function OperationTypeToString(OperationType : TOperationType) : String;
 function LoadAllTokens(ReservationId, RoomReservationId : Integer) : TObjectList<TToken>;
 procedure FillTokenComboBox(cb : TsComboBox; tokens :TObjectList<TToken>; selectedToken : Integer);
 
 implementation
 
 uses TypInfo, uD, cmpRoomerDataset, SysUtils;
-
-function StringToOperationType(s : String) : TOperationType;
-begin
-  result := TOperationType(GetEnumValue(TypeInfo(TOperationType),s));
-end;
-
-function OperationTypeToString(OperationType : TOperationType) : String;
-begin
-  result := GetEnumName(TypeInfo(TOperationType), Ord(OperationType));
-end;
 
 { TToken }
 
@@ -176,7 +170,6 @@ var
   rSet: TRoomerDataSet;
   xml : String;
   token : TToken;
-  s : String;
 begin
   result := TObjectList<TToken>.Create;
   xml := d.roomerMainDataSet.downloadUrlAsString(d.roomerMainDataSet.RoomerUri + format('paycard/bookings/%d/tokens', [ReservationId]));
@@ -230,6 +223,16 @@ begin
       idx := i + 1;
   end;
   cb.ItemIndex := idx;
+{ TOperationTypeHelper }
+
+class function TPCITokenOperationTypeHelper.FromString(const value: String): TPCITokenOperationType;
+begin
+  result := TPCITokenOperationType(GetEnumValue(TypeInfo(TPCITokenOperationType),value));
+end;
+
+function TPCITokenOperationTypeHelper.ToString: string;
+begin
+  result := GetEnumName(TypeInfo(TPCITokenOperationType), Ord(Self));
 end;
 
 end.

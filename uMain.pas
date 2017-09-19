@@ -1637,7 +1637,7 @@ uses
     , uFrmFinanceConnect
     , uFinanceConnectService
     , uPCITokenReport
-    , TokenChargeHistory
+    , uFrmTokenChargeHistory
     , uFrmManagePCIConnection
 		;
 

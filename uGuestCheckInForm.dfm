@@ -1146,15 +1146,6 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
           AutoSize = False
           Caption = '0.00'
         end
-        object lbExtraTaxes: TsLabel
-          Left = 279
-          Top = 136
-          Width = 80
-          Height = 13
-          Alignment = taRightJustify
-          AutoSize = False
-          Caption = '0.00'
-        end
         object cbxGuaranteeTypes: TsComboBox
           Tag = 16
           Left = 187

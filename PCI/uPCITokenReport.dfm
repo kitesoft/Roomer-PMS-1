@@ -73,7 +73,7 @@ inherited frmPCITokenReport: TfrmPCITokenReport
           AlignWithMargins = True
           Left = 405
           Top = 3
-          Width = 211
+          Width = 203
           Height = 37
           Caption = 'Page break before summary on report'
           Align = alLeft

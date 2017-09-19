@@ -2,10 +2,9 @@ inherited FrmViewPayCardDetails: TFrmViewPayCardDetails
   Caption = 'View card Details'
   ClientHeight = 357
   ClientWidth = 594
-  Font.Height = -11
   OnShow = FormShow
-  ExplicitWidth = 610
-  ExplicitHeight = 396
+  ExplicitWidth = 600
+  ExplicitHeight = 386
   PixelsPerInch = 96
   TextHeight = 13
   object sLabel1: TsLabel [0]
@@ -95,35 +94,10 @@ inherited FrmViewPayCardDetails: TFrmViewPayCardDetails
   inherited sbStatusBar: TsStatusBar
     Top = 337
     Width = 594
-    ExplicitTop = 524
+    ExplicitTop = 337
     ExplicitWidth = 594
   end
-  object sPanel1: TsPanel [7]
-    Left = 0
-    Top = 296
-    Width = 594
-    Height = 41
-    Align = alBottom
-    BevelOuter = bvNone
-    TabOrder = 0
-    ExplicitTop = 483
-    object sButton1: TsButton
-      AlignWithMargins = True
-      Left = 514
-      Top = 5
-      Width = 75
-      Height = 31
-      Margins.Top = 5
-      Margins.Right = 5
-      Margins.Bottom = 5
-      Align = alRight
-      Caption = 'OK'
-      Default = True
-      ModalResult = 1
-      TabOrder = 0
-    end
-  end
-  object edCardNumber: TsEdit [8]
+  object edCardNumber: TsEdit [7]
     Left = 254
     Top = 72
     Width = 293
@@ -136,9 +110,9 @@ inherited FrmViewPayCardDetails: TFrmViewPayCardDetails
     Font.Style = [fsBold]
     ParentFont = False
     ReadOnly = True
-    TabOrder = 2
+    TabOrder = 7
   end
-  object edNameOnCard: TsEdit [9]
+  object edNameOnCard: TsEdit [8]
     Left = 254
     Top = 99
     Width = 293
@@ -151,9 +125,9 @@ inherited FrmViewPayCardDetails: TFrmViewPayCardDetails
     Font.Style = [fsBold]
     ParentFont = False
     ReadOnly = True
-    TabOrder = 3
+    TabOrder = 2
   end
-  object edExpirationDate: TsEdit [10]
+  object edExpirationDate: TsEdit [9]
     Left = 254
     Top = 126
     Width = 122
@@ -166,9 +140,9 @@ inherited FrmViewPayCardDetails: TFrmViewPayCardDetails
     Font.Style = [fsBold]
     ParentFont = False
     ReadOnly = True
-    TabOrder = 4
+    TabOrder = 3
   end
-  object edUser: TsEdit [11]
+  object edUser: TsEdit [10]
     Left = 254
     Top = 176
     Width = 122
@@ -181,9 +155,9 @@ inherited FrmViewPayCardDetails: TFrmViewPayCardDetails
     Font.Style = [fsBold]
     ParentFont = False
     ReadOnly = True
-    TabOrder = 5
+    TabOrder = 4
   end
-  object edDescription: TsMemo [12]
+  object edDescription: TsMemo [11]
     Left = 254
     Top = 203
     Width = 293
@@ -196,9 +170,9 @@ inherited FrmViewPayCardDetails: TFrmViewPayCardDetails
     Font.Style = [fsBold]
     ParentFont = False
     ReadOnly = True
-    TabOrder = 6
+    TabOrder = 5
   end
-  object edWhen: TsEdit [13]
+  object edWhen: TsEdit [12]
     Left = 254
     Top = 23
     Width = 122
@@ -211,19 +185,20 @@ inherited FrmViewPayCardDetails: TFrmViewPayCardDetails
     Font.Style = [fsBold]
     ParentFont = False
     ReadOnly = True
-    TabOrder = 1
+    TabOrder = 0
   end
-  inherited psRoomerBase: TcxPropertiesStore
-    Components = <
-      item
-        Component = frmBaseRoomerForm.Owner
-        Properties.Strings = (
-          'Height'
-          'Left'
-          'Top'
-          'Width'
-          'Position')
-      end>
+  inherited pnlButtons: TsPanel
+    Top = 294
+    Width = 594
+    inherited btnOK: TsButton
+      Left = 278
+    end
+    inherited btnCancel: TsButton
+      Left = 384
+    end
+    inherited btnClose: TsButton
+      Left = 490
+    end
   end
   inherited cxsrRoomerStyleRepository: TcxStyleRepository
     PixelsPerInch = 96
