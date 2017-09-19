@@ -336,7 +336,7 @@ uses uRoomerLanguage,
   , uBookingsTaxesAPICaller
   , uRoomerBookingDataModel_ModelObjects
   , uRoomerCanonicalDataModel_SimpleTypes
-  , TokenChargeHistory
+  , uFrmTokenChargeHistory
   ;
 
 const

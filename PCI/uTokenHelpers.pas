@@ -223,8 +223,9 @@ begin
       idx := i + 1;
   end;
   cb.ItemIndex := idx;
-{ TOperationTypeHelper }
+end;
 
+{ TOperationTypeHelper }
 class function TPCITokenOperationTypeHelper.FromString(const value: String): TPCITokenOperationType;
 begin
   result := TPCITokenOperationType(GetEnumValue(TypeInfo(TPCITokenOperationType),value));
