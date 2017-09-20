@@ -1,35 +1,36 @@
 inherited FrmPayCardCreateNew: TFrmPayCardCreateNew
   BorderStyle = bsSizeable
   Caption = 'View pay-card information'
-  ClientHeight = 177
+  ClientHeight = 230
   ClientWidth = 842
   ParentFont = False
   Font.Height = -13
   Font.Name = 'Calibri'
   ExplicitWidth = 858
-  ExplicitHeight = 216
+  ExplicitHeight = 269
   PixelsPerInch = 96
   TextHeight = 15
   inherited sbStatusBar: TsStatusBar
-    Top = 157
+    Top = 210
     Width = 842
-    ExplicitTop = 562
+    ExplicitTop = 157
     ExplicitWidth = 842
   end
   object pnlHead: TsPanel [1]
     Left = 0
     Top = 0
     Width = 842
-    Height = 121
-    Align = alTop
+    Height = 167
+    Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitHeight = 121
     object lblPleaseRead: THTMLabel
       AlignWithMargins = True
       Left = 97
       Top = 15
       Width = 712
-      Height = 76
+      Height = 122
       Margins.Left = 15
       Margins.Top = 15
       Margins.Bottom = 30
@@ -48,7 +49,7 @@ inherited FrmPayCardCreateNew: TFrmPayCardCreateNew
       Left = 0
       Top = 0
       Width = 82
-      Height = 121
+      Height = 167
       Align = alLeft
       Center = True
       Picture.Data = {
@@ -349,38 +350,11 @@ inherited FrmPayCardCreateNew: TFrmPayCardCreateNew
       ExplicitHeight = 169
     end
   end
-  object pnlClient: TsPanel [2]
-    Left = 0
-    Top = 121
-    Width = 842
-    Height = 0
-    Align = alClient
-    BevelOuter = bvNone
-    TabOrder = 3
-    ExplicitHeight = 398
-    object browser: TWebBrowser
-      Left = 0
-      Top = 0
-      Width = 842
-      Height = 0
-      Align = alClient
-      TabOrder = 0
-      ExplicitTop = -2
-      ExplicitWidth = 869
-      ExplicitHeight = 342
-      ControlData = {
-        4C00000006570000000000000000000000000000000000000000000000000000
-        000000004C000000000000000000000001000000E0D057007335CF11AE690800
-        2B2E126208000000000000004C0000000114020000000000C000000000000046
-        8000000000000000000000000000000000000000000000000000000000000000
-        00000000000000000100000000000000000000000000000000000000}
-    end
-  end
   inherited pnlButtons: TsPanel
-    Top = 114
+    Top = 167
     Width = 842
     ParentColor = True
-    ExplicitTop = 519
+    ExplicitTop = 114
     ExplicitWidth = 842
     inherited btnOK: TsButton
       Left = 526
@@ -394,7 +368,6 @@ inherited FrmPayCardCreateNew: TFrmPayCardCreateNew
     inherited btnClose: TsButton
       Left = 738
       ExplicitLeft = 738
-      ExplicitTop = 4
     end
   end
   inherited psRoomerBase: TcxPropertiesStore

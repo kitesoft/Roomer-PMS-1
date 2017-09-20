@@ -11,8 +11,6 @@ uses
 type
   TFrmPayCardCreateNew = class(TfrmBaseRoomerDialogForm)
     pnlHead: TsPanel;
-    pnlClient: TsPanel;
-    browser: TWebBrowser;
     lblPleaseRead: THTMLabel;
     imgWarning: TsImage;
     procedure btnOKClick(Sender: TObject);
@@ -88,8 +86,8 @@ procedure TFrmPayCardCreateNew.GoToUri(uri : String);
 var Flags: OleVariant;
 begin
 //  Flags := 'navNoHistory,navNoReadFromCache,navNoWriteToCache';
-  Flags:=4;
-  browser.Navigate(uri, Flags);
+//  Flags:=4;
+//  browser.Navigate(uri, Flags);
 end;
 
 
@@ -165,7 +163,7 @@ begin
 
   AutoSize := not FConfirmed;
   pnlHead.Visible := not FConfirmed;
-  browser.visible := FConfirmed;
+//  browser.visible := FConfirmed;
 end;
 
 procedure TFrmPayCardCreateNew.SetHotelId(const Value: String);
