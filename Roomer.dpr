@@ -303,7 +303,8 @@ uses
   uGridColumnFieldValuePropagator in 'RoomerUtils\uGridColumnFieldValuePropagator.pas',
   ucxGridPopupMenuActivator in 'RoomerUtils\ucxGridPopupMenuActivator.pas',
   uPCITokenReport in 'PCI\uPCITokenReport.pas' {frmPCITokenReport},
-  uFrmOptInMessage in 'OptIns\uFrmOptInMessage.pas' {FrmOptInMessage};
+  uFrmOptInMessage in 'OptIns\uFrmOptInMessage.pas' {FrmOptInMessage},
+  uItemTransactionsReport in 'uItemTransactionsReport.pas' {frmItemTransactionsReport};
 
 {$R *.RES}
 
@@ -334,7 +335,7 @@ begin
     TSplashFormManager.Show;
 
     Application.CreateForm(TD, D);
-    D.ApplicationId := cOpenAPIApplicationID;
+  D.ApplicationId := cOpenAPIApplicationID;
 
     Application.CreateForm(TDReportData, DReportData);
     TSplashFormManager.UpdateProgress('Loading forms...');

@@ -682,6 +682,7 @@ type
     barinnBar4: TdxBar;
     btnManageFinanceConnect: TdxBarLargeButton;
     btnCreditcardTokenUsage: TdxBarLargeButton;
+    btnItemTransactions: TdxBarLargeButton;
     procedure FormCreate(Sender: TObject);
     procedure DefaultHandler(var Message); override;
     procedure FormShow(Sender: TObject);
@@ -972,6 +973,7 @@ type
     procedure btnManageFinanceConnectClick(Sender: TObject);
     procedure btnCreditcardTokenUsageClick(Sender: TObject);
     procedure gridSectionChanged(Sender: TObject; ALeft, ATop, ARight, ABottom: Integer);
+    procedure btnItemTransactionsClick(Sender: TObject);
 
   protected
     procedure CreateParams(var Params: TCreateParams); override;
@@ -1633,6 +1635,7 @@ uses
     , uFrmFinanceConnect
     , uFinanceConnectService
     , uPCITokenReport
+    , uItemTransactionsReport
 		;
 
 {$R *.DFM}
@@ -10931,6 +10934,11 @@ procedure TfrmMain.btnItemsListClick(Sender: TObject);
 begin
   LogUserClickedButton(Sender);
   _ItemsList
+end;
+
+procedure TfrmMain.btnItemTransactionsClick(Sender: TObject);
+begin
+  ShowItemTransactionsReport;
 end;
 
 procedure TfrmMain.btnItemTypeListClick(Sender: TObject);
