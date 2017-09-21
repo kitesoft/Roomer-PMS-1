@@ -114,6 +114,8 @@ inherited frmPCITokenReport: TfrmPCITokenReport
         BorderStyle = cxcbsNone
         TabOrder = 1
         LookAndFeel.NativeStyle = False
+        ExplicitLeft = -1
+        ExplicitTop = 41
         object tvTokenUsage: TcxGridDBTableView
           OnDblClick = tvTokenUsageDblClick
           Navigator.Buttons.CustomButtons = <>

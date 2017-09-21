@@ -199,6 +199,8 @@ uses uAppGlobal,
   , uFmrChargePayCard
   , uFrmManagePCIConnection
 
+  , uItemTransactionsReport
+
   ;
 
 
@@ -1997,6 +1999,8 @@ begin
   TFrmPayCardCreateNew.Create(nil).Free;
   TFrmChargePayCard.Create(nil).Free;
   TFrmManagePCIConnection.Create(nil).Free;
+
+  TfrmItemTransactionsReport.Create(nil).Free;
 
 end;
 

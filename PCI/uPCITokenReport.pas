@@ -289,7 +289,7 @@ var
   s : string;
 begin
   dateTimeToString(s, 'yyyymmddhhnn', now);
-  sFilename := g.qProgramPath + s + '_LodgingTax';
+  sFilename := g.qProgramPath + s + '_PaycardTokenUsage';
   try
     ExportGridToExcel(sFilename, gTokenUsage, true, true, true,'xls');
     ShellExecute(Handle, 'OPEN', PChar(sFilename + '.xls'), nil, nil, sw_shownormal);
