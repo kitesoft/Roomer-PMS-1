@@ -317,7 +317,8 @@ uses
   uRoomerBookingDataModel_ModelObjects in 'OpenAPI\schema\uRoomerBookingDataModel_ModelObjects.pas',
   uBookingsTaxesAPICaller in 'OpenAPI\uBookingsTaxesAPICaller.pas',
   uCalculationTypeDefinitions in 'Definitions\uCalculationTypeDefinitions.pas',
-  uCalculationTypeExtraDefinitions in 'Definitions\uCalculationTypeExtraDefinitions.pas';
+  uCalculationTypeExtraDefinitions in 'Definitions\uCalculationTypeExtraDefinitions.pas',
+  uFraCurrencyPanel in 'Embeddables\uFraCurrencyPanel.pas' {fraCurrencyPanel: TFrame};
 
 {$R *.RES}
 

@@ -76,7 +76,7 @@ uses
   uInvoiceObjects
   , uInvoiceDefinitions, uRoomerBookingDataModel_ModelObjects
   , Spring.Collections.Lists
-  , Spring.Collections
+  , Spring.Collections, cxCheckBox, cxCurrencyEdit
   ;
 
 type
@@ -291,19 +291,6 @@ type
     mPaymentsInvoiceIndex: TIntegerField;
     lblResNr: TsLabel;
     edResNr: TsLabel;
-    pnlRoomButtons: TsPanel;
-    btnMoveRoom: TsButton;
-    btnAddRoom: TsButton;
-    pnlItemButtons: TsPanel;
-    btnMoveItem: TsButton;
-    btnAddItem: TsButton;
-    pnlButtonRight: TsPanel;
-    pnlPaymentButtons: TsPanel;
-    btnAddDownPayment: TsButton;
-    btnEditDownPayment: TsButton;
-    btnDeleteDownpayment: TsButton;
-    sPanel4: TsPanel;
-    btnToggleLodgingTax: TsButton;
     btnSaveChanges: TsButton;
     gbxHeader: TsGroupBox;
     clabCustomer: TsLabel;
@@ -324,14 +311,8 @@ type
     mnuRoomToTemp: TMenuItem;
     mnuItemToTemp: TMenuItem;
     actToggleLodgingTax: TAction;
-    actEditDownpayment: TAction;
-    actDeleteDownPayment: TAction;
-    btnRemoveSelected: TsButton;
     actMoveRoomToGroupInvoice: TAction;
     actMoveRoomToRoomInvoice: TAction;
-    sPanel1: TsPanel;
-    btnReservationNotes: TsButton;
-    btnShowOnInvoice: TsButton;
     mnuShowOnInvoice: TPopupMenu;
     acShowAllCTax: TAction;
     acShowAlllBreakfasts: TAction;
@@ -354,6 +335,31 @@ type
     mnuShowPackageItems: TMenuItem;
     mnuHidePackageItems: TMenuItem;
     mnuMoveRoomToInvoiceIndex: TMenuItem;
+    actRevertDownpayment: TAction;
+    btnAddRoom: TsButton;
+    btnMoveRoom: TsButton;
+    btnAddItem: TsButton;
+    btnMoveItem: TsButton;
+    btnRemoveSelected: TsButton;
+    btnToggleLodgingTax: TsButton;
+    btnReservationNotes: TsButton;
+    btnShowOnInvoice: TsButton;
+    pnlPayments: TsPanel;
+    pnlPaymentButtons: TsPanel;
+    btnAddDownPayment: TsButton;
+    btnRevertDownpayment: TsButton;
+    mPaymentsPaycardTraceIndex: TIntegerField;
+    tvPaymentsRecId: TcxGridDBColumn;
+    tvPaymentsInvoiceIndex: TcxGridDBColumn;
+    tvPaymentsPaycardTraceIndex: TcxGridDBColumn;
+    tvPaymentsCCCharged: TcxGridDBColumn;
+    mPaymentsChargedOnCC: TBooleanField;
+    mPaymentsCurrency: TWideStringField;
+    tvPaymentsCurrency: TcxGridDBColumn;
+    btnEditDownpayment: TsButton;
+    actEditDownPayment: TAction;
+    actDeleteDownPayment: TAction;
+    btnDeleteDownpayment: TsButton;
     procedure FormCreate(Sender: TObject);
     procedure agrLinesMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
     procedure edtCustomerDblClick(Sender: TObject);
@@ -379,7 +385,6 @@ type
       AFont: TFont);
     procedure edtCustomerChange(Sender: TObject);
     procedure actEditDownPaymentClick(Sender: TObject);
-    procedure actDeleteDownpaymentClick(Sender: TObject);
     procedure agrLinesGetAlignment(Sender: TObject; ARow, ACol: integer; var HAlign: TAlignment;
       var VAlign: TVAlignment);
     procedure agrLinesColumnSize(Sender: TObject; ACol: integer; var Allow: boolean);
@@ -401,8 +406,6 @@ type
     procedure shpInvoiceIndex0DragDrop(Sender, Source: TObject; X, Y: integer);
     procedure shpInvoiceIndex0DragOver(Sender, Source: TObject; X, Y: integer; State: TDragState; var Accept: boolean);
     procedure tvPaymentsMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
-    procedure tvPaymentsCellDblClick(Sender: TcxCustomGridTableView; ACellViewInfo: TcxGridTableDataCellViewInfo;
-      AButton: TMouseButton; AShift: TShiftState; var AHandled: boolean);
     procedure btnSaveChangesClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure CheckBoxClick(Sender: TObject; ACol, ARow: integer; State: boolean);
@@ -426,6 +429,15 @@ type
     procedure acShowpackageItemsExecute(Sender: TObject);
     procedure pnlInvoiceIndicesDragOver(Sender, Source: TObject; X, Y: Integer; State: TDragState; var Accept: Boolean);
     procedure mnuMoveRoomToInvoiceIndexClick(Sender: TObject);
+    procedure actRevertDownpaymentExecute(Sender: TObject);
+    procedure actRevertDownpaymentUpdate(Sender: TObject);
+    procedure mPaymentsCalcFields(DataSet: TDataSet);
+    procedure actEditDownPaymentUpdate(Sender: TObject);
+    procedure actDeleteDownPaymentExecute(Sender: TObject);
+    procedure actEditDownPaymentExecute(Sender: TObject);
+    procedure actDeleteDownPaymentUpdate(Sender: TObject);
+    procedure tvPaymentsAmountGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
+      var AProperties: TcxCustomEditProperties);
   private
     { Private declarations }
 
@@ -653,6 +665,7 @@ type
     procedure MoveSelectedLinesToInvoiceIndex(aNewIndex: integer);
     procedure UpdateTaxinvoiceLinesForRoomItemUsingBackend(aInvLine: TInvoiceLine);
     procedure RetrieveTaxesforRoomReservation(aReservation, aRoomreservation: integer);
+    procedure LoadPayments;
 
     property InvoiceIndex: TInvoiceIndex read FInvoiceIndex write SetInvoiceIndex;
     property AnyRowChecked: boolean read GetAnyRowSelected;
@@ -1845,10 +1858,10 @@ begin
 
 end;
 
-procedure TfrmInvoiceRentPerDay.tvPaymentsCellDblClick(Sender: TcxCustomGridTableView;
-  ACellViewInfo: TcxGridTableDataCellViewInfo; AButton: TMouseButton; AShift: TShiftState; var AHandled: boolean);
+procedure TfrmInvoiceRentPerDay.tvPaymentsAmountGetProperties(Sender: TcxCustomGridTableItem;
+  ARecord: TcxCustomGridRecord; var AProperties: TcxCustomEditProperties);
 begin
-  actEditDownpayment.Execute;
+  aProperties := FCurrencyhandlersMap.CurrencyHandler[mPaymentsCurrency.AsString].GetcxEditProperties();
 end;
 
 procedure TfrmInvoiceRentPerDay.tvPaymentsMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState;
@@ -2628,11 +2641,6 @@ begin
       sql := format(sql, [FReservation, FRoomReservation, FnewSplitNumber, FInvoiceIndex]);
       lExecutionPlan.AddQuery(sql);
 
-      sql := 'SELECT * FROM payments ' + ' where Reservation = %d ' + '   and RoomReservation = %d ' +
-        '   and InvoiceNumber = -1 AND InvoiceIndex = %d';
-      sql := format(sql, [FReservation, FRoomReservation, FInvoiceIndex]);
-      lExecutionPlan.AddQuery(sql);
-
       sql := 'SELECT ' +
         ' SUM(IF(xxx.RoomReservation>0 AND xxx.Reservation>0, xxx.NumberOfGuests * xxx.NumberOfDays, ' +
         ' (SELECT SUM((SELECT COUNT(id) FROM roomsdate WHERE RoomReservation = pe.RoomReservation AND NOT (ResFlag IN (''X'',''C'',''N'')))) AS GuestNights ' +
@@ -2651,7 +2659,7 @@ begin
       lExecutionPlan.Execute(ptQuery);
 
       eSet := lExecutionPlan.Results[0];
-      reservationSet := lExecutionPlan.Results[2];
+      reservationSet := lExecutionPlan.Results[1];
 
       if zFirsttime then // **15-10-16
       begin
@@ -2704,9 +2712,6 @@ begin
         dNumber := GetCalculatedNumberOfItems(ItemId, eSet.FieldByName('Number').AsFloat);
         package := trim(eSet.FieldByName('importSource').asString);
 
-//        if (package <> '') and not glb.LocateSpecificRecordAndGetValue('packages', 'Package', package, 'showItemsOnInvoice', showPackageItems) then
-//           showPackageItems := false;
-
         AddLine(LineId, nil, ItemId, _s, dNumber, Price, g.qNativeCurrency, eSet.FieldByName('VATType').asString,
           SQLToDate(eSet.FieldByName('PurchaseDate').asString), false,
           trim(eSet.FieldByName('importRefrence').asString), package,
@@ -2717,39 +2722,12 @@ begin
         eSet.Next;
       end;
 
-      eSet := lExecutionPlan.Results[1];
-
       if (FReservation = 0) and (FRoomReservation = 0) then
       begin
         // what
       end
       else
-      begin
-        eSet.first;
-
-        mPayments.close;
-        mPayments.Open;
-
-        while not eSet.eof do
-        begin
-          // **HJ
-          mPayments.insert;
-          mPaymentsPayType.asString := eSet.FieldByName('PayType').asString;
-          mPaymentsPayDate.asdateTime := SQLToDateTime(eSet.FieldByName('PayDate').asString);
-          mPaymentsAmount.AsFloat := eSet.FieldByName('Amount').AsFloat;
-          mPaymentsDescription.asString := eSet.FieldByName('Description').asString;
-          mPaymentsPayGroup.asString := '';
-          mPaymentsMemo.asString := eSet.FieldByName('Notes').asString;
-          mPaymentsconfirmDate.asdateTime := eSet.FieldByName('Confirmdate').asdateTime;
-          mPaymentsId.asinteger := eSet.FieldByName('ID').asinteger;
-
-          if glb.Paytypesset.Locate('payType', eSet.FieldByName('PayType').asString, []) then
-            mPaymentsPayGroup.asString := glb.Paytypesset.FieldByName('payGroup').asString;
-
-          mPayments.post;
-          eSet.Next;
-        end;
-      end;
+        LoadPayments;
 
       agrLines.Objects[cPurchaseDateAsObjectColumn, agrLines.RowCount - 1] := TObject(trunc(now));
       // -- PurchaseDate !
@@ -2781,6 +2759,54 @@ begin
   UpdateGrid;
   SetCurrentVisible;
   UpdateControls;
+end;
+
+procedure TfrmInvoiceRentPerDay.LoadPayments;
+var
+  sql: string;
+  eSet: TRoomerDataSet;
+  id: integer;
+begin
+  eSet := CreateNewDataSet;
+  mPayments.DisableControls;
+  try
+    id := mPaymentsid.AsInteger;
+    mPayments.close;
+    mPayments.Open;
+
+    sql := 'SELECT * FROM payments ' + ' where Reservation = %d ' + '   and RoomReservation = %d ' +
+      '   and InvoiceNumber = -1 AND InvoiceIndex = %d';
+    sql := format(sql, [FReservation, FRoomReservation, FInvoiceIndex]);
+
+    hData.rSet_bySQL(eSet, sql);
+
+    eSet.first;
+    while not eSet.eof do
+    begin
+      mPayments.insert;
+      mPaymentsPayType.asString := eSet.FieldByName('PayType').asString;
+      mPaymentsPayDate.asdateTime := SQLToDateTime(eSet.FieldByName('PayDate').asString);
+      mPaymentsCurrency.AsString := eSet.FieldByName('Currency').AsString;
+      mPaymentsAmount.AsFloat := eSet.FieldByName('Amount').AsFloat;
+      mPaymentsDescription.asString := eSet.FieldByName('Description').asString;
+      mPaymentsPayGroup.asString := '';
+      mPaymentsMemo.asString := eSet.FieldByName('Notes').asString;
+      mPaymentsconfirmDate.asdateTime := eSet.FieldByName('Confirmdate').asdateTime;
+      mPaymentsId.asinteger := eSet.FieldByName('ID').asinteger;
+      mPaymentsPaycardTraceIndex.AsInteger := eSet.FieldByName('Paycard_Trace_index').AsInteger;
+
+      if glb.Paytypesset.Locate('payType', eSet.FieldByName('PayType').asString, []) then
+        mPaymentsPayGroup.asString := glb.Paytypesset.FieldByName('payGroup').asString;
+
+      mPayments.post;
+      eSet.Next;
+    end;
+
+    mPayments.Locate('id', id, []);
+  finally
+    mPayments.EnableControls;
+    eSet.Free;
+  end;
 end;
 
 function TfrmInvoiceRentPerDay.FindLastRoomRentLine: integer;
@@ -3155,15 +3181,12 @@ end;
 
 procedure TfrmInvoiceRentPerDay.FormShow(Sender: TObject);
 begin
-  btnEditDownPayment.Visible := glb.PMSSettings.InvoiceSettings.AllowPaymentModification;
-  btnDeleteDownpayment.Visible := glb.PMSSettings.InvoiceSettings.AllowPaymentModification;
   actRemoveSelected.Visible := glb.PMSSettings.InvoiceSettings.AllowDeletingItemsFromInvoice;
   actToggleLodgingTax.Visible := glb.PMSSettings.InvoiceSettings.AllowTogglingOfCityTaxes;
 
   LoadInvoice;
   UpdateCaptions;
 
-  sPanel4.Visible := NOT(IsCashInvoice OR FIsCredit { or zFakeGroup } );
   Exit1.Enabled := True;
 end;
 
@@ -3191,6 +3214,11 @@ begin
   finally
     list.Free;
   end;
+end;
+
+procedure TfrmInvoiceRentPerDay.mPaymentsCalcFields(DataSet: TDataSet);
+begin
+  mPaymentsChargedOnCC.AsBoolean := mPaymentsPaycardTraceIndex.AsInteger > 0;
 end;
 
 procedure TfrmInvoiceRentPerDay.ExternalRoomsClick(Sender: TObject);
@@ -3477,7 +3505,7 @@ begin
 
     lOpenBalance := FInvoiceLinesList.TotalOnInvoiceNativeCurrency - getDownPayments;
     if SelectPaymentTypes(lOpenBalance, edtCustomer.Text, ptInvoice, edtDisplayCurrency.Text,
-      GetRate(edtDisplayCurrency.Text), FReservation, lstLocations, aInvoiceDate, aPayDate, aLocation) then
+      GetRate(edtDisplayCurrency.Text), FReservation, FRoomreservation, lstLocations, aInvoiceDate, aPayDate, aLocation) then
       with FCurrencyhandlersMap.CurrencyHandler[g.qNativeCurrency] do
         result := (RoundedValue(GatherPayments(stlPaySelections)) = RoundedValue(lOpenBalance));
 
@@ -5067,7 +5095,7 @@ begin
 
   if (Source = agrLines) then
     MoveSelectedLinesToInvoiceIndex(lMoveToIndex)
-  else
+  else if (Source is TcxDragControlObject) and (TcxDragControlObject(Source).control = grPayments) then
     MoveDownpaymentToInvoiceIndex(lMoveToIndex);
 end;
 
@@ -5643,6 +5671,66 @@ begin
   end;
 end;
 
+procedure TfrmInvoiceRentPerDay.actEditDownPaymentExecute(Sender: TObject);
+var
+  rec: recDownPayment;
+  Id: integer;
+begin
+  // **
+  if mPayments.RecordCount = 0 then
+  begin
+    exit;
+  end;
+
+  if mPaymentsPaycardTraceIndex.AsInteger > 0 then
+  begin
+    ShowMessage(GetTranslatedText('shTx_Invoice_CannotEditDeletePCITokenPayment'));
+    exit;
+  end;
+
+  g.initRecDownPayment(rec);
+
+  if edtBalance.Text <> '' then
+    rec.InvoiceBalance := _StrToFloat(edtBalance.Text) +
+      _StrToFloat(edtDownPayments.Text);
+
+  rec.reservation := FReservation;
+  rec.RoomReservation := FRoomReservation;
+  rec.Invoice := zInvoiceNumber;
+  rec.Amount := mPayments.FieldByName('Amount').asfloat;
+  rec.Quantity := 1;
+  rec.Description := mPayments.FieldByName('Description').asString;
+  rec.Notes := mPayments.FieldByName('Memo').asString;
+  rec.PaymentType := mPayments.FieldByName('PayType').asString;
+  rec.PayDate := mPayments.FieldByName('PayDate').asdateTime;
+  rec.payGroup := mPayments.FieldByName('PayGroup').asString;
+  rec.confirmDate := mPayments.FieldByName('Confirmdate').asdateTime;
+
+  Id := mPayments.FieldByName('ID').asinteger;
+
+  if rec.confirmDate < 3 then
+  begin
+    if OpenAssignPayment(Id) then
+    begin
+      AddInvoiceActivityLog(g.qUser, rec.reservation, rec.RoomReservation, 1
+        , CHANGE_PAYMENT, rec.PaymentType, rec.Amount, zInvoiceNumber, rec.Description);
+
+      LoadPayments;
+      DisplayTotals;
+    end;
+  end
+  else
+  begin
+    ShowMessage('It is not allowed to change confirmed payments');
+  end;
+end;
+
+procedure TfrmInvoiceRentPerDay.actEditDownPaymentUpdate(Sender: TObject);
+begin
+  actEditDownPayment.Visible := glb.PMSSettings.InvoiceSettings.AllowPaymentModification;
+  actEditDownPayment.Enabled := (mPayments.RecordCount > 0) and (mPaymentsPaycardTraceIndex.AsInteger = 0);
+end;
+
 procedure TfrmInvoiceRentPerDay.MoveDownpaymentToInvoiceIndex(toInvoiceIndex: integer);
 var
   rec: recDownPayment;
@@ -5676,65 +5764,14 @@ begin
 
     if cmd_bySQL(s) then
     begin
-      mPayments.delete;
-      AddInvoiceActivityLog(g.qUser, rec.reservation, rec.RoomReservation, 1
+      AddInvoiceActivityLog(g.qUser, rec.reservation, rec.RoomReservation, FInvoiceIndex
         // field typeindex 0 = invoice payment 1 = downpayment
         , DELETE_PAYMENT, rec.PaymentType, rec.Amount, zInvoiceNumber, rec.Description);
-    end;
+      AddInvoiceActivityLog(g.qUser, rec.reservation, rec.RoomReservation, toInvoiceIndex
+        // field typeindex 0 = invoice payment 1 = downpayment
+        , ADD_PAYMENT, rec.PaymentType, rec.Amount, zInvoiceNumber, rec.Description);
 
-    DisplayTotals;
-  end
-  else
-  begin
-    ShowMessage('It is not allowed to Delete confirmed payments');
-  end;
-end;
-
-procedure TfrmInvoiceRentPerDay.actDeleteDownpaymentClick(Sender: TObject);
-var
-  rec: recDownPayment;
-  Id: integer;
-  s: string;
-begin
-  // **
-  if mPayments.RecordCount = 0 then
-  begin
-    exit;
-  end;
-
-  g.initRecDownPayment(rec);
-
-  rec.reservation := FReservation;
-  rec.RoomReservation := FRoomReservation;
-  rec.Invoice := zInvoiceNumber;
-  rec.Amount := mPayments.FieldByName('Amount').AsFloat;
-  rec.Quantity := 1;
-  rec.Description := mPayments.FieldByName('Description').asString;
-  rec.Notes := mPayments.FieldByName('Memo').asString;
-  rec.PaymentType := mPayments.FieldByName('PayType').asString;
-  rec.PayDate := mPayments.FieldByName('PayDate').asdateTime;
-  rec.payGroup := mPayments.FieldByName('PayGroup').asString;
-  rec.ConfirmDate := mPayments.FieldByName('Confirmdate').asdateTime;
-
-  Id := mPayments.FieldByName('ID').asinteger;
-
-  if (rec.ConfirmDate < 3) and (Id > 0) then
-  begin
-    if MessageDlg('Delete payment ?'#10 + rec.Description + ' / Amount ' + _floattostr(rec.Amount, vWidth, vDec),
-      mtConfirmation, [mbYes, mbNo, mbCancel], 0) = mrYes then
-    begin
-      mPayments.delete;
-      s := '';
-      s := s + ' DELETE FROM payments '#10;
-      s := s + ' WHERE  Id = (' + _db(Id) + ') ' + #10;
-
-      if cmd_bySQL(s) then
-      begin
-        AddInvoiceActivityLog(g.qUser, rec.reservation, rec.RoomReservation, 1
-          // field typeindex 0 = invoice payment 1 = downpayment
-          , DELETE_PAYMENT, rec.PaymentType, rec.Amount, zInvoiceNumber, rec.Description);
-      end;
-
+      LoadPayments;
       DisplayTotals;
     end;
   end
@@ -5840,21 +5877,7 @@ begin
     NewId := 0;
     if INS_Payment(theData, NewId) then
     begin
-      mPayments.insert;
-      mPayments.FieldByName('PayType').asString := rec.PaymentType;
-      mPayments.FieldByName('PayDate').asdateTime := Date;
-      mPayments.FieldByName('Amount').AsFloat := rec.Amount;
-      mPayments.FieldByName('Description').asString := rec.Description;
-      if glb.Paytypesset.Locate('payType', rec.PaymentType, []) then
-      begin
-        mPayments.FieldByName('PayGroup').asString := glb.Paytypesset.FieldByName('payGroup').asString;
-      end;
-      mPayments.FieldByName('Memo').asString := rec.Notes;
-      mPayments.FieldByName('confirmDate').asdateTime := theData.ConfirmDate;
-      mPayments.FieldByName('ID').asinteger := NewId;
-      mPayments.FieldByName('InvoiceIndex').asinteger := InvoiceIndex;
-
-      mPayments.post;
+      LoadPayments;
       DisplayTotals;
     end;
   end;
@@ -5863,9 +5886,7 @@ end;
 
 procedure TfrmInvoiceRentPerDay.actInfoExecute(Sender: TObject);
 begin
-  if g.openresMemo(FReservation) then
-  begin
-  end;
+  g.openresMemo(FReservation);
 end;
 
 procedure TfrmInvoiceRentPerDay.actAddLineExecute(Sender: TObject);
@@ -5878,6 +5899,72 @@ procedure TfrmInvoiceRentPerDay.actAddRoomExecute(Sender: TObject);
 begin
   agrLines.row := agrLines.RowCount - 1;
   AddARoom;;
+end;
+
+procedure TfrmInvoiceRentPerDay.actDeleteDownPaymentExecute(Sender: TObject);
+var
+  rec: recDownPayment;
+  Id: integer;
+  s: string;
+begin
+  // **
+  if mPayments.RecordCount = 0 then
+    exit;
+
+  g.initRecDownPayment(rec);
+
+  rec.reservation := FReservation;
+  rec.RoomReservation := FRoomReservation;
+  rec.Invoice := zInvoiceNumber;
+  rec.Amount := mPayments.FieldByName('Amount').asfloat;
+  rec.Quantity := 1;
+  rec.Description := mPayments.FieldByName('Description').asString;
+  rec.Notes := mPayments.FieldByName('Memo').asString;
+  rec.PaymentType := mPayments.FieldByName('PayType').asString;
+  rec.PayDate := mPayments.FieldByName('PayDate').asdateTime;
+  rec.payGroup := mPayments.FieldByName('PayGroup').asString;
+  rec.confirmDate := mPayments.FieldByName('Confirmdate').asdateTime;
+
+  Id := mPayments.FieldByName('ID').asinteger;
+
+  if mPaymentsPaycardTraceIndex.AsInteger > 0 then
+  begin
+    ShowMessage(GetTranslatedText('shTx_Invoice_CannotEditDeletePCITokenPayment'));
+    exit;
+  end;
+
+  if (rec.confirmDate < 3) and (Id > 0) then
+  begin
+    if MessageDlg('Delete payment ?'#10 + rec.Description + ' / Amount ' +
+      _floattostr(rec.Amount, vWidth, vDec), mtConfirmation,
+      [mbYes, mbNo, mbCancel], 0) = mrYes then
+    begin
+      mPayments.delete;
+      s := '';
+      s := s + ' DELETE FROM payments '#10;
+      s := s + ' WHERE  Id = (' + _db(Id) + ') ' + #10;
+
+      if cmd_bySQL(s) then
+      begin
+        AddInvoiceActivityLog(g.qUser, rec.reservation, rec.RoomReservation, 1
+            // field typeindex 0 = invoice payment 1 = downpayment
+            , DELETE_PAYMENT, rec.PaymentType, rec.Amount, zInvoiceNumber,
+            rec.Description);
+      end;
+
+      DisplayTotals;
+    end;
+  end
+  else
+  begin
+    ShowMessage('It is not allowed to Delete confirmed payments');
+  end;
+end;
+
+procedure TfrmInvoiceRentPerDay.actDeleteDownPaymentUpdate(Sender: TObject);
+begin
+  actDeleteDownPayment.Visible := glb.PMSSettings.InvoiceSettings.AllowPaymentModification;
+  actDeleteDownPayment.Enabled := (mPayments.RecordCount > 0) and (mPaymentsPaycardTraceIndex.AsInteger = 0);
 end;
 
 procedure TfrmInvoiceRentPerDay.AddARoom;
@@ -5951,6 +6038,94 @@ begin
       list.Free;
     end;
   end;
+end;
+
+procedure TfrmInvoiceRentPerDay.actRevertDownpaymentExecute(Sender: TObject);
+var
+  s: string;
+  msg: string;
+begin
+
+  if mPayments.RecordCount = 0 then
+    Exit;
+
+  if (mPaymentsid.AsInteger > 0) then
+  begin
+    if mPaymentsChargedOnCC.AsBoolean then
+      // Start creditcard refund
+    else
+    begin
+      msg := Format(GetTranslatedtext('shTxInvoicePayments_RevertPayment'), [mPaymentsDescription.AsString, _floattostr(mPaymentsAmount.AsFloat, vWidth, vDec), mPaymentsCurrency.AsString]);
+      if MessageDlg(msg, mtConfirmation, [mbOK, mbCancel], 0) = mrOK then
+      begin
+        s := s + ' insert into payments ( '#10;
+        s := s + '     Reservation, '#10;
+        s := s + '     RoomReservation, '#10;
+        s := s + '     Person, '#10;
+        s := s + '     AutoGen, '#10;
+        s := s + '     TypeIndex, '#10;
+        s := s + '     InvoiceNumber, '#10;
+        s := s + '     PayDate, '#10;
+        s := s + '     Customer, '#10;
+        s := s + '     PayType, '#10;
+        s := s + '     Amount, '#10;
+        s := s + '     Description, '#10;
+        s := s + '     CurrencyRate, '#10;
+        s := s + '     Currency, '#10;
+        s := s + '     Ayear, '#10;
+        s := s + '     Amon, '#10;
+        s := s + '     Aday, '#10;
+        s := s + '     Notes, '#10;
+        s := s + '     staff, '#10;
+        s := s + '     InvoiceIndex, '#10;
+        s := s + '     Source, '#10;
+        s := s + '     SourceUserId, '#10;
+        s := s + '     SourceUserFullname, '#10;
+        s := s + '     PAYCARD_TRACE_INDEX) '#10;
+        s := s + ' select '#10;
+        s := s + '     Reservation, '#10;
+        s := s + '     RoomReservation, '#10;
+        s := s + '     Person, '#10;
+        s := s + '     ' + _db(_GetCurrentTick) + ', '#10;
+        s := s + '     TypeIndex, '#10;
+        s := s + '     InvoiceNumber, '#10;
+        s := s + '     CURRENT_DATE as PayDate, '#10;
+        s := s + '     Customer, '#10;
+        s := s + '     PayType, '#10;
+        s := s + '     Amount * -1, '#10;
+        s := s + '     CONCAT(Description, ' + _db(GetTranslatedtext('shTxInvoicePayments_Reverted')) +'), '#10;
+        s := s + '     CurrencyRate, '#10;
+        s := s + '     Currency, '#10;
+        s := s + '     Ayear, '#10;
+        s := s + '     Amon, '#10;
+        s := s + '     Aday, '#10;
+        s := s + '     Notes, '#10;
+        s := s + '     ' + _db(d.roomerMainDataSet.username) + ','#10;
+        s := s + '     InvoiceIndex, '#10;
+        s := s + '     Source, '#10;
+        s := s + '     SourceUserId, '#10;
+        s := s + '     SourceUserFullname, '#10;
+        s := s + '     PAYCARD_TRACE_INDEX '#10;
+        s := s + ' FROM payments '#10;
+        s := s + ' WHERE  Id = (' + _db(mPaymentsId.AsInteger) + ') ' + #10;
+
+        if cmd_bySQL(s) then
+        begin
+          AddInvoiceActivityLog(g.qUser, FReservation, FRoomReservation, FInvoiceIndex
+            , ADD_PAYMENT, mPaymentsPayType.AsString, mPaymentsAmount.AsFloat * -1, -1, mPaymentsDescription.ASString);
+        end;
+
+        LoadPayments;
+        DisplayTotals;
+      end;
+    end;
+
+  end;
+end;
+
+procedure TfrmInvoiceRentPerDay.actRevertDownpaymentUpdate(Sender: TObject);
+begin
+  actRevertDownpayment.Enabled := not mPayments.IsEmpty;
 end;
 
 procedure TfrmInvoiceRentPerDay.actMoveRoomToTempExecute(Sender: TObject);

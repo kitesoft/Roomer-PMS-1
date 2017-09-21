@@ -98,31 +98,24 @@ type
 
   private
     { Private declarations }
-     CloseOK : boolean;
-     err : integer;
+    CloseOK : boolean;
+    err : integer;
 
-     FAmount : Double;
-     FCustomer : string;
+    FAmount : Double;
+    FCustomer : string;
     FReservation: Integer;
-     procedure Recalc;
-     procedure FillPayGrid;
+    FRoomReservation: Integer;
+    procedure Recalc;
+    procedure FillPayGrid;
     procedure ShowOrHideButtonViewPayCard;
     function AlreadyProvidedPayments: Double;
   public
     { Public declarations }
      procedure WndProc(var Message: TMessage); override;
-
      property Reservation : Integer read FReservation write FReservation;
+     property RoomReservation : Integer read FRoomReservation write FRoomReservation;
   end;
 
-var
-  frmInvoicePayment: TfrmInvoicePayment;
-
-var
-  sSelectedCustomer  : string;
-  fSelectedAmount    : Double;
-  stlPaySelections   : TStringlist;
-  FConfirmation      : string;
 
 // --
 function SelectPaymentTypes( Amount : Double;
@@ -131,11 +124,16 @@ function SelectPaymentTypes( Amount : Double;
                             Currency : String;
                             CurrencyRate : Double;
                             Reservation : Integer;
+                            RoomReservation : Integer;
                             var lst : TstringList;
                             var aInvoiceDate : TDate;
                             var aPayDate : TDate;
                             var aLocation : string) : boolean;
 
+var
+    sSelectedCustomer  : string;
+    fSelectedAmount    : Double;
+    stlPaySelections   : TStringlist;
 
 
 implementation
@@ -160,6 +158,7 @@ function SelectPaymentTypes( Amount : Double;
                              Currency : String;
                              CurrencyRate : Double;
                              Reservation : Integer;
+                             RoomReservation : Integer;
                              var lst : TstringList;
                              var aInvoiceDate : TDate;
                              var aPayDate : TDate;
@@ -167,26 +166,26 @@ function SelectPaymentTypes( Amount : Double;
 var
   i : integer;
   selected : string;
-  sTemp : String;
+  frm: TfrmInvoicePayment;
 begin
   // --
-  Application.CreateForm(TfrmInvoicePayment, frmInvoicePayment);
+  frm := TfrmInvoicePayment.Create(nil);
   try
-    frmInvoicePayment.FAmount := Amount;
-    FConfirmation := '';
-    frmInvoicePayment.edtAmount.text := trim( _FloatToStr( Amount, 9, 2 ) );
-    frmInvoicePayment.FCustomer := Customer;
-    frmInvoicePayment.lblSelected.caption := '0';
-    frmInvoicePayment.lblLeft.caption := trim( _FloatToStr( Amount, 9, 2 ) );
-    frmInvoicePayment.dtInvDate.Date := Date;
-    frmInvoicePayment.dtPayDate.Date := Date;
+//    Confirmation := '';
+    frm.FAmount := Amount;
+    frm.edtAmount.text := trim( _FloatToStr( Amount, 9, 2 ) );
+    frm.FCustomer := Customer;
+    frm.lblSelected.caption := '0';
+    frm.lblLeft.caption := trim( _FloatToStr( Amount, 9, 2 ) );
+    frm.dtInvDate.Date := Date;
+    frm.dtPayDate.Date := Date;
     sSelectedCustomer := Customer;
     stlPaySelections.clear;
 
     // get all locations from data
     glb.Locations.First;
     while not glb.Locations.Eof do begin
-      frmInvoicePayment.cbxLocation.items.Add(glb.Locations.FieldByName('Location').asstring);
+      frm.cbxLocation.items.Add(glb.Locations.FieldByName('Location').asstring);
       glb.Locations.Next;
     end;
 
@@ -194,76 +193,71 @@ begin
     if lst.Count = 1 then
     begin
       selected := lst[0];
-      for i := 0 to frmInvoicePayment.cbxLocation.Items.Count-1 do
+      for i := 0 to frm.cbxLocation.Items.Count-1 do
       begin
-        if frmInvoicePayment.cbxLocation.Items[i].ToLower.Equals(selected.ToLower) then break;
+        if frm.cbxLocation.Items[i].ToLower.Equals(selected.ToLower) then break;
       end;
-      frmInvoicePayment.cbxLocation.ItemIndex := i;
+      frm.cbxLocation.ItemIndex := i;
     end else
     begin
-      frmInvoicePayment.cbxLocation.ItemIndex := frmInvoicePayment.cbxLocation.Items.Count-1;
+      frm.cbxLocation.ItemIndex := frm.cbxLocation.Items.Count-1;
     end;
 
 
     if PaymentType = ptDownPayment then
     begin
-      // frmInvoicePayment.Caption := 'Down payment';
-      frmInvoicePayment.Caption := GetTranslatedText('shTx_InvoicePayment_DownPayment');
-      frmInvoicePayment.panel2.visible := true;
-      frmInvoicePayment.__pnlCurrencies.Visible := False;
+      frm.Caption := GetTranslatedText('shTx_InvoicePayment_DownPayment');
+      frm.panel2.visible := true;
+      frm.__pnlCurrencies.Visible := False;
     end else
     begin
-    //  frmInvoicePayment.Caption := 'Invocie Payment';
-	    frmInvoicePayment.Caption := GetTranslatedText('shTx_InvoicePayment_InvoicePayment');
-      frmInvoicePayment.panel2.visible := false;
-      frmInvoicePayment.LblForeignCurrency.Visible := UpperCase(Currency) <> UpperCase(ctrlGetString('NativeCurrency'));
-      frmInvoicePayment.LblForeignCurrencyAmount.Visible := frmInvoicePayment.LblForeignCurrency.Visible;
-      frmInvoicePayment.__LblForeignCurrency.Visible := frmInvoicePayment.LblForeignCurrency.Visible;
-      frmInvoicePayment.__pnlCurrencies.Visible := true;
-//      if frmInvoicePayment.__pnlCurrencies.Visible then
-//      begin
-        frmInvoicePayment.__LblLocalCurrency.Caption := trim(_floattostr(Amount, 10, 2));
-        frmInvoicePayment.__LblForeignCurrency.Caption := trim(_floattostr(Amount / CurrencyRate, 10, 2));
-        frmInvoicePayment.LblLocalCurrency.Caption := ctrlGetString('NativeCurrency');
-        frmInvoicePayment.LblForeignCurrency.Caption := Currency;
-//      end;
+	    frm.Caption := GetTranslatedText('shTx_InvoicePayment_InvoicePayment');
+      frm.panel2.visible := false;
+      frm.LblForeignCurrency.Visible := UpperCase(Currency) <> UpperCase(ctrlGetString('NativeCurrency'));
+      frm.LblForeignCurrencyAmount.Visible := frm.LblForeignCurrency.Visible;
+      frm.__LblForeignCurrency.Visible := frm.LblForeignCurrency.Visible;
+      frm.__pnlCurrencies.Visible := true;
+      frm.__LblLocalCurrency.Caption := trim(_floattostr(Amount, 10, 2));
+      frm.__LblForeignCurrency.Caption := trim(_floattostr(Amount / CurrencyRate, 10, 2));
+      frm.LblLocalCurrency.Caption := ctrlGetString('NativeCurrency');
+      frm.LblForeignCurrency.Caption := Currency;
     end;
 
-    frmInvoicePayment.Reservation := Reservation;
-    if frmInvoicePayment.ShowModal <> mrOK then
+    frm.Reservation := Reservation;
+    if frm.ShowModal <> mrOK then
     begin
       result := false;
     end else
     begin
       result := true;
-      sSelectedCustomer := frmInvoicePayment.edtCustomer.text;
-      fSelectedAmount   := _StrToFloat( frmInvoicePayment.edtAmount.text );
-      aInvoiceDate      := frmInvoicePayment.dtInvDate.date;
-      aPayDate          := frmInvoicePayment.dtPayDate.date;
+      sSelectedCustomer := frm.edtCustomer.text;
+      fSelectedAmount   := _StrToFloat( frm.edtAmount.text );
+      aInvoiceDate      := frm.dtInvDate.date;
+      aPayDate          := frm.dtPayDate.date;
 
 
       aLocation := '';
 
-      if frmInvoicePayment.cbxLocation.itemindex > 0 then
+      if frm.cbxLocation.itemindex > 0 then
       begin
-        aLocation := frmInvoicePayment.cbxLocation.items[frmInvoicePayment.cbxLocation.itemindex];
+        aLocation := frm.cbxLocation.items[frm.cbxLocation.itemindex];
       end;
 
-      for i := 0 to frmInvoicePayment.agrPayTypes.RowCount - 1  do
-      begin
-        if GridCellFloatValue( frmInvoicePayment.agrPayTypes, 1, i ) <> 0 then
-        begin
-          sTemp := frmInvoicePayment.agrPayTypes.Cells[ 0, i ];
-          glb.LocateSpecificRecordAndGetValue('paytypes', 'PayType', sTemp, 'Description', sTemp);
-          stlPaySelections.add( frmInvoicePayment.agrPayTypes.Cells[ 0, i ] + '|' + frmInvoicePayment.agrPayTypes.Cells[ 1, i ] + '|' + sTemp );
-          if d.AskApproval( frmInvoicePayment.agrPayTypes.Cells[ 0, i ] ) then
-            // FConfirmation := InputBox( 'Confirm code', 'Code :', '' );
-    			 FConfirmation := InputBox( GetTranslatedText('shTx_InvoicePayment_ConfirmCode'), GetTranslatedText('shTx_InvoicePayment_Code'), '' );
-        end;
-      end;
+//      for i := 0 to frm.agrPayTypes.RowCount - 1  do
+//      begin
+//        if GridCellFloatValue( frm.agrPayTypes, 1, i ) <> 0 then
+//        begin
+//          sTemp := frm.agrPayTypes.Cells[ 0, i ];
+//          glb.LocateSpecificRecordAndGetValue('paytypes', 'PayType', sTemp, 'Description', sTemp);
+//          stlPaySelections.add( frm.agrPayTypes.Cells[ 0, i ] + '|' + frm.agrPayTypes.Cells[ 1, i ] + '|' + sTemp );
+//          if d.AskApproval( frm.agrPayTypes.Cells[ 0, i ] ) then
+//            // FConfirmation := InputBox( 'Confirm code', 'Code :', '' );
+//    			 Confirmation := InputBox( GetTranslatedText('shTx_InvoicePayment_ConfirmCode'), GetTranslatedText('shTx_InvoicePayment_Code'), '' );
+//        end;
+//      end;
     end;
   finally
-    frmInvoicePayment.free;
+    frm.free;
   end;
 end;
 
@@ -284,16 +278,7 @@ end;
 procedure TfrmInvoicePayment.FillPayGrid;
 var
   l : integer;
-
-//  rSet : TRoomerDataSet;
-//  s    : string;
 begin
-//  rSet := CreateNewDataSet;
-//  try
-//    
-//    rSet.CommandType := cmdText;
-//    s := format(select_InvoicePayment_FillPayGrid, []);
-//    hData.rSet_bySQL(rSet,s);
     l := 0;
     glb.PaytypesSet.First;
     while not glb.PaytypesSet.eof do
@@ -306,9 +291,6 @@ begin
       end;
       glb.PaytypesSet.next;
     end;
-//  finally
-//    freeandNil(rSet);
-//  end;
 end;
 
 procedure TfrmInvoicePayment.Recalc;
@@ -337,13 +319,6 @@ begin
       if days > maxDays then Maxdays := days;
     end;
 
-
-//    if GridCellFloatValue( agrPayTypes, 1, i ) < 0 then
-//    begin
-//      agrPayTypes.Cells[1,i] := '';
-//      closeok := false;
-//      err := 1;
-//    end;
   end;
 
   fLeft               := FAmount - fSelected;
@@ -375,8 +350,9 @@ begin
     rSet := CreateNewDataSet;
     s := format('SELECT `channel`, PAYCARD_TOKEN FROM reservations r WHERE r.Reservation=%d AND NOT ISNULL(r.PAYCARD_TOKEN) ' +
                 'UNION ALL ' +
-                'SELECT -1 AS `channel`, PAYCARD_TOKEN FROM home100.PAYMENT_CARD_EXTRA_TOKENS PCET WHERE PCET.HOTEL_ID = ''%s'' AND PCET.RESERVATION=%d',
-                [FReservation, d.roomerMainDataSet.hotelId, FReservation]);
+                'SELECT -1 AS `channel`, PAYCARD_TOKEN FROM home100.PAYMENT_CARD_EXTRA_TOKENS PCET WHERE PCET.HOTEL_ID = ''%s'' AND PCET.RESERVATION=%d ' +
+                ' AND (PCET.ROOM_RESERVATION=0 OR PCET.ROOM_RESERVATION=%d)',
+                [FReservation, d.roomerMainDataSet.hotelId, FReservation, FRoomReservation]);
     hData.rSet_bySQL(rSet, s, false);
     rSet.First;
     if NOT rSet.Eof then
@@ -428,7 +404,7 @@ var charge : TTokenCharge;
     i : Integer;
 begin
  charge := ChargePayCardForPayment(Reservation,
-            0,
+            Roomreservation,
             FAmount - AlreadyProvidedPayments,
             LblForeignCurrency.Caption,
             PCO_CHARGE);
@@ -451,7 +427,7 @@ end;
 
 procedure TfrmInvoicePayment.BtnOkClick(Sender: TObject);
 begin
-  if frmInvoicePayment.cbxLocation.itemindex = 0 then
+  if cbxLocation.itemindex = 0 then
   begin
     closeok := false;
     err := 2;

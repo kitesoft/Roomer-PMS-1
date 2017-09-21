@@ -80,13 +80,17 @@ type
     Fcurrency: String;
     FoperationType: String;
     FauthCode: String;
+    FReservation: integer;
+    FRoomReservation: integer;
   public
-    constructor Create(id : Integer; token : TToken; amount : Double; currency : String; currencyRate : Double;
+    constructor Create(id : Integer; token : TToken; Reservation: integer; Roomreservation: integer; amount : Double; currency : String; currencyRate : Double;
         authCode : String; operationType : String; operationResultCode : String; operationResultDescription : String;
         gatewayName : String; gatewayReference : String; gatewayResultCode : String; gatewayResultDescription : String;
         created : TDateTime);
 
     property id: Integer read Fid write Fid;
+    property Reservation: integer read FReservation write FReservation;
+    property RoomReservation: integer read FRoomReservation write FRoomReservation;
     property token : TToken read Ftoken write Ftoken;
     property amount: Double read Famount write Famount;
     property currency: String read Fcurrency write Fcurrency;
@@ -142,9 +146,11 @@ end;
 
 { TTokenCharge }
 
-constructor TTokenCharge.Create(id: Integer; token : TToken; amount: Double; currency: String; currencyRate: Double; authCode, operationType,
+constructor TTokenCharge.Create(id: Integer; token : TToken; Reservation: integer; Roomreservation: integer;  amount: Double; currency: String; currencyRate: Double; authCode, operationType,
   operationResultCode, operationResultDescription, gatewayName, gatewayReference, gatewayResultCode, gatewayResultDescription: String; created: TDateTime);
 begin
+  FReservation := Reservation;
+  FRoomReservation := Roomreservation;
   Ftoken := token;
   FoperationResultDescription := operationResultDescription;
   FgatewayResultDescription := gatewayResultDescription;

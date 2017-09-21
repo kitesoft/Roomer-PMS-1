@@ -28,16 +28,14 @@ object frmInvoicePayment: TfrmInvoicePayment
     BevelOuter = bvNone
     TabOrder = 2
     SkinData.SkinSection = 'PANEL'
-    DesignSize = (
-      336
-      45)
     object BtnOk: TsButton
-      Left = 138
-      Top = 4
-      Width = 83
-      Height = 37
+      AlignWithMargins = True
+      Left = 123
+      Top = 3
+      Width = 102
+      Height = 39
       Hint = 'Apply and close'
-      Anchors = [akTop, akRight]
+      Align = alRight
       Caption = 'OK'
       ImageIndex = 82
       Images = DImages.PngImageList1
@@ -45,20 +43,25 @@ object frmInvoicePayment: TfrmInvoicePayment
       TabOrder = 0
       OnClick = BtnOkClick
       SkinData.SkinSection = 'BUTTON'
+      ExplicitLeft = 142
     end
     object btnCancel: TsButton
-      Left = 227
-      Top = 4
+      AlignWithMargins = True
+      Left = 231
+      Top = 3
       Width = 102
-      Height = 37
+      Height = 39
       Hint = 'Cancel and close'
-      Anchors = [akTop, akRight]
+      Align = alRight
       Caption = 'Cancel'
       ImageIndex = 4
       Images = DImages.PngImageList1
       ModalResult = 2
       TabOrder = 1
       SkinData.SkinSection = 'BUTTON'
+      ExplicitLeft = 227
+      ExplicitTop = 4
+      ExplicitHeight = 37
     end
   end
   object Panel2: TsPanel
@@ -250,7 +253,7 @@ object frmInvoicePayment: TfrmInvoicePayment
     SearchFooter.Font.Style = []
     SearchFooter.ResultFormat = '(%d of %d)'
     SortSettings.DefaultFormat = ssAutomatic
-    Version = '8.2.5.2'
+    Version = '8.2.4.1'
     ColWidths = (
       169
       116)

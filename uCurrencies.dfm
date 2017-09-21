@@ -436,7 +436,7 @@ object frmCurrencies: TfrmCurrencies
       PrinterPage.PageSize.Y = 297000
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
-      ReportDocument.CreationDate = 42677.617037013890000000
+      ReportDocument.CreationDate = 42998.441826284720000000
       AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end

@@ -5327,7 +5327,7 @@ begin
     if (zInvoiceNumber = -1) or (FnewSplitNumber = 1) then
     begin
       if not SelectPaymentTypes(_StrToFloat(edtBalance.Text), edtCustomer.Text,
-        ptInvoice, edtCurrency.Text, _StrToFloat(edtRate.Text), FReservation,
+        ptInvoice, edtCurrency.Text, _StrToFloat(edtRate.Text), FReservation, FRoomReservation,
         lstLocations, zInvoiceDate, zPayDate, zLocation) then
       begin
         exit;

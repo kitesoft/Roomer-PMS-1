@@ -6,23 +6,21 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uTokenHelpers, uRoomerForm, Vcl.StdCtrls, sLabel, Vcl.ComCtrls, sListView, sGroupBox, Vcl.ExtCtrls, sPanel,
   cxGridTableView, cxStyles, dxPScxCommon, dxPScxGridLnk, cxClasses, cxPropertiesStore, sStatusBar,
-  Generics.Collections, sButton, Vcl.Menus, udImages;
+  Generics.Collections, sButton, Vcl.Menus, udImages
+     , uRoomerDialogForm, sSplitter;
 
 type
-  TFrmTokenChargeHistory = class(TfrmBaseRoomerForm)
-    sPanel1: TsPanel;
-    sPanel2: TsPanel;
-    sPanel3: TsPanel;
+  TFrmTokenChargeHistory = class(TfrmBaseRoomerDialogForm)
+    pnlTop: TsPanel;
+    pnlBottom: TsPanel;
+    pnlLeftGrid: TsPanel;
     lvTokens: TsListView;
-    sPanel4: TsPanel;
+    pnlRightGrid: TsPanel;
     sLabel1: TsLabel;
     sLabel2: TsLabel;
     lvCharges: TsListView;
     sPanel5: TsPanel;
     sPanel6: TsPanel;
-    btnTokenView: TsButton;
-    btnChargeView: TsButton;
-    btnTokenNew: TsButton;
     sLabel3: TsLabel;
     sLabel4: TsLabel;
     sLabel5: TsLabel;
@@ -32,14 +30,12 @@ type
     lbRoom: TsLabel;
     lbGuest: TsLabel;
     mnuTokenNew: TPopupMenu;
-    mnuNewForRes: TMenuItem;
-    mnuNewForRoom: TMenuItem;
+    mnuNewCardForRes: TMenuItem;
+    mnuNewCardForRoom: TMenuItem;
     btnRefresh: TsButton;
-    btnCharge: TsButton;
-    btnRefundOrCapture: TsButton;
     pupCard: TPopupMenu;
-    mnuCharge: TMenuItem;
-    mnuPreAuth: TMenuItem;
+    mnuChargeForRoom: TMenuItem;
+    mnuPreAuthForReservation: TMenuItem;
     pupCharge: TPopupMenu;
     mnuCapture: TMenuItem;
     mnuVoid: TMenuItem;
@@ -50,16 +46,24 @@ type
     sLabel9: TsLabel;
     sLabel10: TsLabel;
     lbPreAuth: TsLabel;
+    btnTokenNew: TsButton;
+    splGrids: TsSplitter;
+    btnTokenView: TsButton;
+    btnChargeView: TsButton;
+    btnRefundOrCapture: TsButton;
+    btnCharge: TsButton;
+    mnuChargeForReservation: TMenuItem;
+    N1: TMenuItem;
+    mnuPreAuthforRoom: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure lvTokensSelectItem(Sender: TObject; Item: TListItem; Selected: Boolean);
     procedure rgWhichTokensChange(Sender: TObject);
     procedure lvChargesSelectItem(Sender: TObject; Item: TListItem; Selected: Boolean);
     procedure btnChargeViewClick(Sender: TObject);
-    procedure lvChargesChange(Sender: TObject; Item: TListItem; Change: TItemChange);
     procedure lvChargesDblClick(Sender: TObject);
-    procedure mnuNewForResClick(Sender: TObject);
-    procedure mnuNewForRoomClick(Sender: TObject);
+    procedure mnuNewCardForResClick(Sender: TObject);
+    procedure mnuNewCardForRoomClick(Sender: TObject);
     procedure btnTokenViewClick(Sender: TObject);
     procedure btnRefreshClick(Sender: TObject);
     procedure lvTokensDblClick(Sender: TObject);
@@ -67,13 +71,17 @@ type
     procedure mnyRefundClick(Sender: TObject);
     procedure mnuCaptureClick(Sender: TObject);
     procedure mnuVoidClick(Sender: TObject);
-    procedure mnuChargeClick(Sender: TObject);
-    procedure mnuPreAuthClick(Sender: TObject);
+    procedure mnuChargeForRoomClick(Sender: TObject);
+    procedure mnuPreAuthForReservationClick(Sender: TObject);
+    procedure btnClickDropDown(Sender: TObject);
+    procedure mnuChargeForReservationClick(Sender: TObject);
+    procedure mnuPreAuthforRoomClick(Sender: TObject);
   private
     FTokenList : TObjectList<TToken>;
     FTokenChargeList : TObjectList<TTokenCharge>;
     FReservation: integer;
     FRoomReservation: integer;
+    FOrigMnuRoomCaption: string;
     procedure DisplayTokens;
     procedure DisplayCharges;
     function GetCardStatusByReference(tokenId: Integer; GatewayReference: String): Double;
@@ -81,6 +89,7 @@ type
     { Private declarations }
   protected
     procedure DoLoadData; override;
+    procedure DoUpdateControls; override;
     procedure DoShow; override;
   public
     { Public declarations }
@@ -107,8 +116,7 @@ uses ud,
      uFmrChargePayCard,
      uFrmOptInMessage,
      _Glob,
-     uFrmPayCardView
-     ;
+     uFrmPayCardView;
 
 procedure ManagePaymentCards(Reservation, RoomReservation : Integer);
 var
@@ -157,16 +165,41 @@ end;
 
 procedure TFrmTokenChargeHistory.DoShow;
 begin
-  inherited;
-
+  DialogButtons := [mbClose];
   lbReservation.Caption := inttostr(Reservation);
-  lbRoomReservation.Caption := inttostr(RoomReservation);
+  FOrigMnuRoomCaption := mnuNewCardForRoom.Caption;
+  if (RoomReservation > 0) then
+    lbRoomReservation.Caption := inttostr(RoomReservation)
+  else
+    lbRoomReservation.Caption := '(Group)';
+  inherited;
+end;
 
-  mnuNewForRoom.Enabled := (RoomReservation > 0);
-  if mnuNewForRoom.Enabled then
-    mnuNewForRoom.Caption := mnuNewForRoom.Caption + format('[%s]', [lbRoom.Caption]);
+procedure TFrmTokenChargeHistory.DoUpdateControls;
+begin
+  inherited;
+  mnuNewCardForRoom.Enabled := (RoomReservation > 0);
+  if mnuNewCardForRoom.Enabled then
+    mnuNewCardForRoom.Caption := FOrigMnuRoomCaption + format(' [%s]', [lbRoom.Caption]);
 
-  RefreshData;
+  btnTokenView.enabled :=  Assigned(lvTokens.Selected);
+  btnCharge.Enabled := Assigned(lvTokens.Selected);
+  btnRefundOrCapture.Enabled := Assigned(lvCharges.Selected);
+  btnChargeView.Enabled := Assigned(lvCharges.Selected);
+end;
+
+procedure TFrmTokenChargeHistory.btnClickDropDown(Sender: TObject);
+var
+  btn: TsButton;
+  pt: TPoint;
+begin
+  btn := (Sender as TsButton);
+  if assigned(btn.DropDownMenu) then
+  begin
+    pt := btn.ClientToScreen(Point(0, btn.ClientHeight));
+    btn.DropDownMenu.Popup(pt.X, pt.Y);
+  end;
+
 end;
 
 procedure TFrmTokenChargeHistory.btnChargeViewClick(Sender: TObject);
@@ -205,6 +238,14 @@ begin
   begin
     lvi := lvCharges.Items.Add;
     lvi.Caption := RoomerDateTimeToString(charge.created);
+
+
+    if (charge.RoomReservation) > 0 then
+    begin
+      lvi.SubItems.Add('Room ' + hData.RR_GetRoomNumber(charge.RoomReservation))
+    end
+    else
+      lvi.SubItems.Add('Group');
     lvi.SubItems.Add(charge.operationType);
     lvi.SubItems.Add(charge.operationResultCode);
     lvi.SubItems.Add(FloatToStr(charge.amount));
@@ -274,12 +315,6 @@ begin
 end;
 
 
-procedure TFrmTokenChargeHistory.lvChargesChange(Sender: TObject; Item: TListItem; Change: TItemChange);
-begin
-  inherited;
-  btnChargeView.Enabled := ASSIGNED(item);
-end;
-
 procedure TFrmTokenChargeHistory.lvChargesDblClick(Sender: TObject);
 begin
   inherited;
@@ -330,6 +365,8 @@ begin
       begin
         charge := TTokenCharge.Create(rSet['ID'],
                       token,
+                      Reservation,
+                      rset.FieldByName('RoomReservation').AsInteger,
                       rSet['AMOUNT'],
                       rSet['CURRENCY'],
                       rSet['CURRENCY_RATE'],
@@ -339,7 +376,6 @@ begin
                       rSet['OPERATION_RESULT_DESCRIPTION'],
                       rSet['GATEWAY_NAME'],
                       rSet['GATEWAY_REFERENCE'],
-
                       rSet['GATEWAY_RESULT_CODE'],
                       rSet['GATEWAY_RESULT_DESCRIPTION'],
                       rSet['TSTAMP']);
@@ -354,6 +390,7 @@ begin
   finally
     lvCharges.Items.EndUpdate;
   end;
+  UpdateControls;
 end;
 
 procedure TFrmTokenChargeHistory.mnuCaptureClick(Sender: TObject);
@@ -377,7 +414,7 @@ begin
   lvTokensSelectItem(lvTokens, lvTokens.Selected, true);
 end;
 
-procedure TFrmTokenChargeHistory.mnuChargeClick(Sender: TObject);
+procedure TFrmTokenChargeHistory.mnuChargeForReservationClick(Sender: TObject);
 var token : TToken;
 begin
   inherited;
@@ -388,7 +425,29 @@ begin
   ChargePayCard(nil,
                 token,
                 token.Reservation,
-                token.RoomReservation,
+                0,
+                token.id,
+                0.00,
+                g.qNativeCurrency,
+                FTokenList,
+                '',
+                PCO_CHARGE);
+  lvTokensSelectItem(lvTokens, lvTokens.Selected, true);
+
+end;
+
+procedure TFrmTokenChargeHistory.mnuChargeForRoomClick(Sender: TObject);
+var token : TToken;
+begin
+  inherited;
+  if NOT IsThereAnActiveContract then exit;
+
+  if NOT ASSIGNED(lvTokens.Selected) then exit;
+  token := TToken(lvTokens.Selected.Data);
+  ChargePayCard(nil,
+                token,
+                token.Reservation,
+                RoomReservation,
                 token.id,
                 0.00,
                 g.qNativeCurrency,
@@ -405,7 +464,7 @@ begin
     OpenOptInDialog(OITPCI)
 end;
 
-procedure TFrmTokenChargeHistory.mnuNewForResClick(Sender: TObject);
+procedure TFrmTokenChargeHistory.mnuNewCardForResClick(Sender: TObject);
 begin
   inherited;
   if NOT IsThereAnActiveContract then exit;
@@ -414,7 +473,7 @@ begin
   btnRefresh.Click;
 end;
 
-procedure TFrmTokenChargeHistory.mnuNewForRoomClick(Sender: TObject);
+procedure TFrmTokenChargeHistory.mnuNewCardForRoomClick(Sender: TObject);
 begin
   inherited;
   if NOT IsThereAnActiveContract then exit;
@@ -423,7 +482,7 @@ begin
   btnRefresh.Click;
 end;
 
-procedure TFrmTokenChargeHistory.mnuPreAuthClick(Sender: TObject);
+procedure TFrmTokenChargeHistory.mnuPreAuthForReservationClick(Sender: TObject);
 var token : TToken;
 begin
   inherited;
@@ -434,7 +493,28 @@ begin
   ChargePayCard(nil,
                 token,
                 token.Reservation,
-                token.RoomReservation,
+                0,
+                token.id,
+                0.00,
+                g.qNativeCurrency,
+                FTokenList,
+                '',
+                PCO_PRE_AUTH);
+  lvTokensSelectItem(lvTokens, lvTokens.Selected, true);
+end;
+
+procedure TFrmTokenChargeHistory.mnuPreAuthforRoomClick(Sender: TObject);
+var token : TToken;
+begin
+  inherited;
+  if NOT IsThereAnActiveContract then exit;
+
+  if NOT ASSIGNED(lvTokens.Selected) then exit;
+  token := TToken(lvTokens.Selected.Data);
+  ChargePayCard(nil,
+                token,
+                token.Reservation,
+                RoomReservation,
                 token.id,
                 0.00,
                 g.qNativeCurrency,
