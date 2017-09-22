@@ -259,8 +259,8 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         BoundLabel.Font.Style = []
       end
       object btnGetCurrency: TsButton
-        Left = 795
-        Top = 28
+        Left = 799
+        Top = 29
         Width = 90
         Height = 20
         Caption = 'Get..'
