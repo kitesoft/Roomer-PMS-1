@@ -2324,7 +2324,8 @@ begin
       'IFNULL(ia.InvoiceType, ih.InvoiceType) AS InvoiceType, ' + 'ih.ihTmp, ' + 'ih.ID, ' +
       'IFNULL(ia.CustPID, ih.CustPID) AS custPID, ' + 'ih.RoomGuest, ' + 'ih.ihDate, ' + 'ih.ihStaff, ' +
       'ih.ihPayDate, ' + 'ih.ihConfirmDate, ' + 'ih.ihInvoiceDate, ' +
-      'ih.ihCurrency, ' + 'ih.ihCurrencyRate, ' + 'ih.invRefrence, ' +
+      'COALESCE(ia.ihcurrency, ih.ihcurrency) as ihCurrency, ' +           // See Note on end of unit!
+      'ih.invRefrence, ' +
       'ih.TotalStayTax, ' + 'ih.TotalStayTaxNights, ' + 'ih.showPackage, ' + 'ih.staff, ' + 'ih.location, ' +
       'ih.externalInvoiceId ' +
       'FROM invoiceheads ih ' + #10 +
@@ -3504,7 +3505,7 @@ begin
     '( '#10 +
       'InvoiceIndex, '#10 +
       'Reservation, '#10 +
-      'RoomReservation, ' +
+      'RoomReservation, '#10 +
       'SplitNumber, '#10 +
       'InvoiceNumber, '#10 +
       'Customer, '#10 +
@@ -3512,13 +3513,14 @@ begin
       'Address1, '#10 +
       'Address2, '#10 +
       'Zip, '#10 +
-      'City, ' +
+      'City, '#10 +
       'Country, '#10 +
       'ExtraText, '#10 +
       'custPID, '#10 +
-      'InvoiceType '#10 +
+      'InvoiceType, '#10 +
+      'ihCurrency '#10 +         // See Note on end of unit!
   ' )'#10 +
-  'VALUES ( '#10+
+  ' VALUES ( '#10+
       '%d, '#10 +
       '%d, '#10 +
       '%d, '#10 +
@@ -3533,7 +3535,9 @@ begin
       '%s, '#10 +
       '%s, '#10 +
       '%s, '#10 +
-      '%d) ',
+      '%d, '#10 +
+      '%s  '#10 +
+      ') '#10,
   [ InvoiceIndex,
     FReservation,
     FRoomReservation,
@@ -3548,21 +3552,24 @@ begin
     _db(zCountry),
     _db(memExtraText.Lines.Text),
     _db(edtPersonalId.Text),
-    rgrInvoiceType.itemIndex])
+    rgrInvoiceType.itemIndex,
+    _db(zCurrentCurrency)
+  ]);
 
-  + format(
+  s := s + format(
     'ON DUPLICATE KEY UPDATE '#10 +
     'InvoiceNumber=%d, '#10 +
     'Customer=%s, '#10 +
     'Name=%s, '#10 +
-    'Address1=%s, ' +
+    'Address1=%s, '#10 +
     'Address2=%s, '#10 +
     'Zip=%s, '#10 +
     'City=%s, '#10 +
     'Country=%s, '#10 +
     'ExtraText=%s, '#10 +
     'custPID=%s, '#10 +
-    'InvoiceType=%d '
+    'InvoiceType=%d, '#10 +
+    'ihCurrency=%s '
     , [aInvoiceNumber,
       _db(edtCustomer.Text),
       _db(edtName.Text),
@@ -3573,7 +3580,9 @@ begin
       _db(zCountry),
       _db(memExtraText.Lines.Text),
       _db(edtPersonalId.Text),
-      rgrInvoiceType.itemIndex]);
+      rgrInvoiceType.itemIndex,
+      _db(zCurrentCurrency)
+    ]);
 
   copytoclipboard(s);
   aExecutionPlan.AddExec(s);
@@ -4820,6 +4829,7 @@ begin
   if aFromCurrency.ToLower.Equals(aToCurrency.ToLower) then
     exit;
 
+  zCurrentCurrency := aToCurrency;
   lOldRate := GetRate(aFromCurrency);
   lNewRate := GetRate(aToCurrency);
 
@@ -4834,6 +4844,8 @@ begin
     try
       lExecPlan := TRoomerExecutionPlan.Create(rSet);
       try
+
+        SaveHeader(-1, lExecplan);
 
         if (FRoomReservation = 0) and (FReservation > 0) then
         begin
@@ -4863,17 +4875,10 @@ begin
             rSet.Next;
           end;
 
-          s := '';
-          s := s + ' UPDATE invoiceheads '#10;
-          s := s + ' SET '#10;
-          s := s + '  ihCurrency = ' + _db(aToCurrency) + #10;
-          s := s + ' ,ihCurrencyRate = ' + _db(lNewRate) + #10;
-          s := s + ' WHERE (Reservation = ' + _db(FReservation) + ') ' + chr(10);
-          lExecPlan.AddExec(s);
-
         end
         else if (FRoomReservation > 0) then
         begin
+          //TODO: Rewrite so SQL statements are added to ExecPlan
           mRoomRates.first;
           while not mRoomRates.eof do
           begin
@@ -4888,20 +4893,10 @@ begin
           s := s + ' WHERE (RoomReservation = ' + inttostr(FRoomReservation) + ') ' + chr(10);
           lExecPlan.AddExec(s);
 
-          s := '';
-          s := s + ' UPDATE invoiceheads '#10;
-          s := s + ' SET '#10;
-          s := s + '  ihCurrency = ' + _db(aToCurrency) + #10;
-          s := s + ' ,ihCurrencyRate = ' + _db(lNewRate) + #10;
-          s := s + ' WHERE (RoomReservation = ' + _db(FRoomReservation) + ') ' + chr(10);
-          lExecPlan.AddExec(s);
-
         end;
 
         lExecPlan.Execute(ptExec, false, false);
-
         d.roomerMainDataSet.SystemCommitTransaction;
-
       finally
         lExecPlan.Free;
       end;
@@ -6963,5 +6958,17 @@ begin
   ClearInvoiceLines;
   NullifyGrid;
 end;
+
+
+//**********************************************************************************************************
+// NOTE on use of Currency in invoiceaddressees table
+//
+// Currency of the invoice per invoiceindex is historically stored in the invoiceaddressees table
+// because invoicehead does not have a invoiceindex field
+//
+// TODO: Redesign invoicehead to contain header information PER INVOICEINDEX and include currency and rate and ....
+//
+//**********************************************************************************************************
+
 
 end.
