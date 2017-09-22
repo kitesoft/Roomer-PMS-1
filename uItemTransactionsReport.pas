@@ -213,15 +213,11 @@ uses
 procedure ShowItemTransactionsReport;
 var _frmItemTransactionsReport : TfrmItemTransactionsReport;
 begin
-  if glb.PCIContractNotOpen then
-     OpenOptInDialog(OITPCI)
-  else begin
-    _frmItemTransactionsReport := TfrmItemTransactionsReport.Create(nil);
-    try
-      _frmItemTransactionsReport.ShowModal;
-    finally
-      _frmItemTransactionsReport.Free;
-    end;
+  _frmItemTransactionsReport := TfrmItemTransactionsReport.Create(nil);
+  try
+    _frmItemTransactionsReport.ShowModal;
+  finally
+    _frmItemTransactionsReport.Free;
   end;
 end;
 
