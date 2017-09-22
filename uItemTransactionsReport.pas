@@ -120,7 +120,6 @@ type
     tvTrxList : TcxGridDBTableView;
     lvTrxList : TcxGridLevel;
     gTrxList : TcxGrid;
-    chkPageBreak: TsCheckBox;
     StoreMain: TcxPropertiesStore;
     btnShowReservation: TsButton;
     mTrxListGuestName: TWideStringField;
@@ -165,6 +164,8 @@ type
     tvTrxListtime: TcxGridDBColumn;
     mTrxListdate: TDateField;
     mTrxListtime: TTimeField;
+    btnShowInvoice: TsButton;
+    mTrxListGroupInvoice: TBooleanField;
     procedure btnRefreshClick(Sender : TObject);
     procedure btnShowReservationClick(Sender : TObject);
     procedure FormClose(Sender : TObject; var Action : TCloseAction);
@@ -175,6 +176,7 @@ type
     procedure mTrxListAfterScroll(DataSet: TDataSet);
     procedure tvTrxListInvoiceNumberGetDisplayText(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord; var AText: string);
     procedure tvTrxListPriceGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord; var AProperties: TcxCustomEditProperties);
+    procedure btnShowInvoiceClick(Sender: TObject);
   private
     { Private declarations }
   protected
@@ -273,7 +275,7 @@ begin
     sTo := format('%s-%s-%s', [cbxYear.Items[cbxYear.ItemIndex], sm, sdT]);
 
     sql := format('SELECT il.logTime, il.ItemSource, il.action, il.Reservation, il.RoomReservation, il.SplitNumber, il.InvoiceNumber, il.ItemId, il.Price, il.Number, ' +
-           'il.Currency, il.CurrencyRate, it.Description AS ItemName, ' +
+           'il.Currency, il.CurrencyRate, rr.GroupAccount, it.Description AS ItemName, ' +
            'rr.Room, rr.rrArrival, rr.rrDeparture, r.Customer, r.Name, r.ContactName, r.InvRefrence AS BookingId, ' +
            'p.Name AS GuestName, p.Country, p.Nationality, to_bool(il.ItemId=co.RoomRentItem) AS isRoomRentItem, to_bool(il.ItemId=co.StayTaxItem) AS isStayTaxItem ' +
            'FROM invoicelines_history il ' +
@@ -282,7 +284,8 @@ begin
            'LEFT JOIN reservations r ON r.Reservation=rr.Reservation ' +
            'LEFT JOIN persons p ON p.RoomReservation=rr.RoomReservation AND MainName=1 ' +
            'JOIN control co ' +
-           'WHERE il.logtime BETWEEN ''%s'' AND ''%s'' ' +
+           'WHERE DATE(il.logtime) BETWEEN ''%s'' AND ''%s'' ' +
+           'GROUP BY il.ItemSource, il.ItemId, il.action, il.logTime, ItemId, Price, Number, InvoiceNumber ' +
            'ORDER BY il.ItemSource, il.ItemId, il.action, il.logTime',
            [
              sFrom, sTo
@@ -311,6 +314,7 @@ begin
           mTrxListName.AsString          := rSet['Name'];
           mTrxListGuestName.AsString     := rSet['GuestName'];
           mTrxListNumber.AsFloat         := rSet['Number'];
+          mTrxListGroupInvoice.AsBoolean := rSet['GroupAccount'];
           mTrxListItemId.AsString        := rSet['ItemId'];
           mTrxListItemName.AsString      := rSet['ItemName'];
           mTrxListInvoiceNumber.AsString := rSet['InvoiceNumber'];
@@ -344,6 +348,8 @@ begin
     finally
       freeandNil(rSet);
     end;
+
+    mTrxList.First;
   finally
     mTrxList.EnableControls;
     d.roomerMainDataSet.SetTimeZoneComparedToUTC('UTC');
@@ -401,6 +407,8 @@ procedure TfrmItemTransactionsReport.DoUpdateControls;
 begin
   btnExcelS1.Enabled := NOT (mTrxList.Eof OR mTrxList.Bof);
   btnShowReservation.Enabled := NOT (mTrxList.Eof OR mTrxList.Bof);
+  btnShowInvoice.Enabled := (NOT (mTrxList.Eof OR mTrxList.Bof) ) AND (mTrxListInvoiceNumber.AsInteger > 0);
+  btnShowInvoice.Visible := btnShowInvoice.Enabled;
   btnRefresh.Enabled := (cbxYear.ItemIndex >= 0) AND (cbxMonth.ItemIndex >= 0);
 end;
 
@@ -410,6 +418,30 @@ end;
 //
 //
 // --------------------------------------------------------------------------------
+
+procedure TfrmItemTransactionsReport.btnShowInvoiceClick(Sender: TObject);
+begin
+  if mTrxList.RecordCount = 0 then
+    exit;
+  if (mTrxList.Eof OR mTrxList.Bof) then
+    exit;
+
+  if (mTrxListInvoiceNumber.AsInteger <= 0) AND
+     (mTrxListGroupInvoice.AsBoolean) then
+    EditInvoice(mTrxListReservation.AsInteger, 0, 0, 0, false)
+  else
+  if (mTrxListInvoiceNumber.AsInteger <= 0) AND
+     (NOT mTrxListGroupInvoice.AsBoolean) then
+    EditInvoice(mTrxListReservation.AsInteger, mTrxListRoomReservation.AsInteger, 0, 0, false)
+  else
+  if (mTrxListInvoiceNumber.AsInteger > 0) AND
+     (NOT mTrxListGroupInvoice.AsBoolean) then
+    ShowFinishedInvoices2(itPerRoomRes, '', mTrxListRoomReservation.AsInteger)
+  else
+  if (mTrxListInvoiceNumber.AsInteger > 0) AND
+     (mTrxListGroupInvoice.AsBoolean) then
+    ShowFinishedInvoices2(itPerReservation, '', mTrxListReservation.AsInteger);
+end;
 
 procedure TfrmItemTransactionsReport.btnShowReservationClick(Sender : TObject);
 begin

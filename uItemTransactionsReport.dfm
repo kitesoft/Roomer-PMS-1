@@ -54,27 +54,6 @@ inherited frmItemTransactionsReport: TfrmItemTransactionsReport
           OnClick = btnExcelS1Click
           SkinData.SkinSection = 'BUTTON'
         end
-        object chkPageBreak: TsCheckBox
-          AlignWithMargins = True
-          Left = 271
-          Top = 3
-          Width = 211
-          Height = 37
-          Caption = 'Page break before summary on report'
-          Align = alLeft
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          ParentFont = False
-          TabOrder = 1
-          SkinData.SkinSection = 'CHECKBOX'
-          ImgChecked = 0
-          ImgUnchecked = 0
-          ExplicitLeft = 405
-          ExplicitWidth = 203
-        end
         object btnShowReservation: TsButton
           AlignWithMargins = True
           Left = 137
@@ -86,10 +65,27 @@ inherited frmItemTransactionsReport: TfrmItemTransactionsReport
           Enabled = False
           ImageIndex = 56
           Images = DImages.PngImageList1
-          TabOrder = 2
+          TabOrder = 1
           OnClick = btnShowReservationClick
           SkinData.SkinSection = 'BUTTON'
-          ExplicitLeft = 271
+          ExplicitTop = 0
+        end
+        object btnShowInvoice: TsButton
+          AlignWithMargins = True
+          Left = 271
+          Top = 3
+          Width = 128
+          Height = 37
+          Align = alLeft
+          Caption = 'Invoice'
+          Enabled = False
+          ImageIndex = 63
+          Images = DImages.PngImageList1
+          TabOrder = 2
+          Visible = False
+          OnClick = btnShowInvoiceClick
+          SkinData.SkinSection = 'BUTTON'
+          ExplicitTop = 0
         end
       end
       object gTrxList: TcxGrid
@@ -102,8 +98,6 @@ inherited frmItemTransactionsReport: TfrmItemTransactionsReport
         BorderStyle = cxcbsNone
         TabOrder = 1
         LookAndFeel.NativeStyle = False
-        ExplicitLeft = -1
-        ExplicitTop = 41
         object tvTrxList: TcxGridDBTableView
           OnDblClick = tvTrxListDblClick
           Navigator.Buttons.CustomButtons = <>
@@ -143,6 +137,10 @@ inherited frmItemTransactionsReport: TfrmItemTransactionsReport
             item
               Format = ',0;-,0'
               Kind = skSum
+            end
+            item
+              Format = ',0.00;-,0.00'
+              Column = tvTrxListTotal
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -199,6 +197,11 @@ inherited frmItemTransactionsReport: TfrmItemTransactionsReport
             item
               Format = ',0;-,0'
               Kind = skSum
+            end
+            item
+              Format = ',0.00;-,0.00'
+              Kind = skSum
+              Column = tvTrxListTotal
             end>
           DataController.Summary.SummaryGroups = <>
           OptionsBehavior.IncSearch = True
@@ -541,6 +544,9 @@ inherited frmItemTransactionsReport: TfrmItemTransactionsReport
     end
     object mTrxListtime: TTimeField
       FieldName = 'time'
+    end
+    object mTrxListGroupInvoice: TBooleanField
+      FieldName = 'GroupInvoice'
     end
   end
   object mTrxListDS: TDataSource
