@@ -1,4 +1,4 @@
-unit uFmrChargePayCard;
+unit uFrmChargePayCard;
 
 interface
 
@@ -6,9 +6,11 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Generics.Collections, uTokenHelpers, Vcl.StdCtrls, sLabel, Vcl.ExtCtrls, sPanel, sComboBox, sEdit, sButton,
   uRoomerDialogForm, cxGridTableView, cxStyles, dxPScxCommon, dxPScxGridLnk, cxClasses, cxPropertiesStore, Vcl.ComCtrls, sStatusBar, sMemo,
-  uRoomerForm, ufraCurrencyPanel, Vcl.Mask, sMaskEdit, sCustomComboEdit, sCurrEdit, sCurrencyEdit;
+  uRoomerForm, ufraCurrencyPanel, Vcl.Mask, sMaskEdit, sCustomComboEdit, sCurrEdit, sCurrencyEdit
+  , RoomerExceptionHandling;
 
 type
+  EChargePaycardException = class(ERoomerException);
 
   TPayCardOperationType = (PCO_CHARGE, PCO_PRE_AUTH, PCO_CAPTURE, PCO_REFUND, PCO_VOID);
 
@@ -102,6 +104,8 @@ function ChargePayCard(tokenCharge : TTokenCharge;
                 refNumber : String;
                 PayCardOperationType : TPayCardOperationType) : TTokenCharge;
 
+function RefundChargeFromChargeId(ReservationId: integer; RoomReservationId: integer; ChargeId: integer): TTokenCharge;
+
 implementation
 
 {$R *.dfm}
@@ -121,8 +125,7 @@ uses uD,
      Xml.XMLIntf,
      _Glob,
      uUtils
-     , UITypes
-     ;
+     , UITypes;
 
 const
 
@@ -139,6 +142,64 @@ const
   XML_CURRENCY = 'Currency';
   XML_RESERVATION = 'Reservation';
   XML_ROOMRESERVATION = 'RoomReservation';
+
+
+function RefundChargeFromChargeId(ReservationId: integer; RoomReservationId: integer; ChargeId: integer): TTokenCharge;
+var
+  xml: string;
+  lCharge: TTokenCharge;
+  rSet: TRoomerDataSet;
+begin
+  Result := nil;
+  try
+    xml := d.roomerMainDataSet.downloadUrlAsString(d.roomerMainDataSet.RoomerUri+ format('paycard/bookings/charges/%d', [chargeId]));
+    rSet := d.roomerMainDataSet.ActivateNewDataset(xml);
+    try
+      rSet.First;
+      if rSet.Locate('ID, Reservation, Room_reservation', VarArrayOf([chargeid, ReservationId, RoomReservationid]), []) then
+      begin
+        lCharge := TTokenCharge.Create(
+                      chargeId,
+                      nil,
+                      ReservationId,
+                      RoomreservationId,
+                      rSet['AMOUNT'],
+                      rSet['CURRENCY'],
+                      rSet['CURRENCY_RATE'],
+                      rSet['AUTHORIZATION_CODE'],
+                      rSet['OPERATION_TYPE'],
+                      rSet['OPERATION_RESULT_CODE'],
+                      rSet['OPERATION_RESULT_DESCRIPTION'],
+                      rSet['GATEWAY_NAME'],
+                      rSet['GATEWAY_REFERENCE'],
+                      rSet['GATEWAY_RESULT_CODE'],
+                      rSet['GATEWAY_RESULT_DESCRIPTION'],
+                      rSet['TSTAMP']);
+
+        result := ChargePayCard(lcharge,
+                      lcharge.token,
+                      lcharge.token.Reservation,
+                      lcharge.token.RoomReservation,
+                      lcharge.token.id,
+                      lcharge.amount,
+                      lcharge.currency,
+                      nil,
+                      lcharge.gatewayReference,
+                      PCO_REFUND);
+
+      end
+      else
+        raise EChargePaycardException.CreateFmt('Paycard charge [%d] not found for reservation [%d/%d]', [chargeId, ReservationId, RoomReservationid]);
+    finally
+      rSet.Free;
+    end;
+
+  except
+    on E: Exception do
+      raise EChargePaycardException.CreateFmt('Error occured while refunding for Reservation [%d/%d]' +#13 + e.Message, [ ReservationId, RoomReservationid]);
+  end;
+end;
+
 
 function ChargePayCardForPayment(ReservationId : Integer;
                 RoomReservationId : Integer;
@@ -191,6 +252,8 @@ begin
     _FrmChargePayCard.Free;
   end;
 end;
+
+
 
 procedure TFrmChargePayCard.DoUpdateControls;
 begin
@@ -324,6 +387,7 @@ begin
   listNode := xml.documentElement;
   result := nil;
   _XML_AMOUNT := 0;
+  _XML_ROOMRESERVATION := 0;
   if listNode <> nil then
   begin
     if listNode.nodeName = 'paymentResponse' then
@@ -365,8 +429,8 @@ begin
             if rootNode.nodeName = XML_AMOUNT then
                _XML_AMOUNT := _StrToFloat(rootNode.text)
             else
-            if rootNode.nodeName = XML_AMOUNT then
-               _XML_AMOUNT := StrToIntDef(rootNode.text, 0)
+            if rootNode.nodeName = XML_ROOMRESERVATION then
+               _XML_ROOMRESERVATION := StrToIntDef(rootNode.text, 0)
             else
             if rootNode.nodeName = XML_CURRENCY then
                _XML_CURRENCY := rootNode.text;

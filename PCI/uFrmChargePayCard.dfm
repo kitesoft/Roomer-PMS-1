@@ -143,9 +143,6 @@ inherited FrmChargePayCard: TFrmChargePayCard
       inherited pnlCurrency: TsPanel
         Width = 208
         ExplicitWidth = 208
-        inherited lblCurrencyName: TsLabel
-          Width = 142
-        end
       end
     end
     object edAmount: TsCurrencyEdit
@@ -154,6 +151,13 @@ inherited FrmChargePayCard: TFrmChargePayCard
       Width = 88
       Height = 21
       AutoSize = False
+      Color = clWhite
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
       TabOrder = 1
       OnChange = edAmountChange
       GlyphMode.Blend = 0
@@ -332,7 +336,7 @@ inherited FrmChargePayCard: TFrmChargePayCard
         Alignment = taRightJustify
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = 4473924
+        Font.Color = clBlack
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
@@ -348,7 +352,7 @@ inherited FrmChargePayCard: TFrmChargePayCard
         Height = 21
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = 4473924
+        Font.Color = clBlack
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
@@ -363,7 +367,7 @@ inherited FrmChargePayCard: TFrmChargePayCard
         Height = 21
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = 4473924
+        Font.Color = clBlack
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
@@ -378,7 +382,7 @@ inherited FrmChargePayCard: TFrmChargePayCard
         Height = 21
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = 4473924
+        Font.Color = clBlack
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
@@ -393,7 +397,7 @@ inherited FrmChargePayCard: TFrmChargePayCard
         Height = 21
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = 4473924
+        Font.Color = clBlack
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
@@ -408,7 +412,7 @@ inherited FrmChargePayCard: TFrmChargePayCard
         Height = 21
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = 4473924
+        Font.Color = clBlack
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
@@ -438,7 +442,7 @@ inherited FrmChargePayCard: TFrmChargePayCard
         Height = 21
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = 4473924
+        Font.Color = clBlack
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
@@ -453,7 +457,7 @@ inherited FrmChargePayCard: TFrmChargePayCard
         Height = 21
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = 4473924
+        Font.Color = clBlack
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]

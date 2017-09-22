@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uTokenHelpers, Vcl.StdCtrls, sEdit, sLabel, sButton, Vcl.ExtCtrls, sPanel,
   uRoomerDialogForm, cxGridTableView, cxStyles, dxPScxCommon, dxPScxGridLnk, cxClasses, cxPropertiesStore, Vcl.ComCtrls, sStatusBar, sMemo, Vcl.Menus,
-  uRoomerForm;
+  uRoomerForm, Vcl.Mask, sMaskEdit, sCustomComboEdit, sCurrEdit, sCurrencyEdit;
 
 type
   TFrmViewChargeInfo = class(TfrmBaseRoomerDialogForm)
@@ -15,7 +15,7 @@ type
     edOperation: TsEdit;
     edAutCode: TsEdit;
     sLabel3: TsLabel;
-    edAmount: TsEdit;
+    edAmount: TsCurrencyEdit;
     edCurrency: TsEdit;
     sLabel4: TsLabel;
     edOperationResult: TsEdit;
@@ -36,6 +36,9 @@ type
     mnuVoid: TMenuItem;
     mnyRefund: TMenuItem;
     btnRefundOrCapture: TsButton;
+    sLabel11: TsLabel;
+    sLabel12: TsLabel;
+    edReservation: TsEdit;
     procedure FormShow(Sender: TObject);
     procedure pupChargePopup(Sender: TObject);
     procedure mnuCaptureClick(Sender: TObject);
@@ -55,8 +58,8 @@ implementation
 {$R *.dfm}
 
 uses uDateUtils,
-     uFmrChargePayCard
-     ;
+     uFrmChargePayCard
+     , hData;
 
 procedure DisplayCharge(charge : TTokenCharge);
 var
@@ -72,13 +75,21 @@ begin
 end;
 
 procedure TFrmViewChargeInfo.FormShow(Sender: TObject);
+var
+  lRoom: string;
 begin
   DialogButtons := [mbClose];
 
+    if (charge.RoomReservation) > 0 then
+      lRoom := 'Room ' + hData.RR_GetRoomNumber(charge.RoomReservation)
+    else
+      lRoom := 'Group';
+
+  edReservation.Text := Format('%d / %s', [charge.Reservation, lRoom]);
   edWhen.Text := uDateUtils.RoomerDateTimeToString(charge.created);
   edOperation.Text := charge.operationType;
   edAutCode.Text := charge.authCode;
-  edAmount.Text := FloatToStr(charge.amount);
+  edAmount.Value:= charge.amount;
   edCurrency.Text := charge.currency;
   edOperationResult.Text := charge.operationResultCode;
   edOperationResultDescription.Text := charge.operationResultDescription;

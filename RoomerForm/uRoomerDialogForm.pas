@@ -72,6 +72,7 @@ constructor TfrmBaseRoomerDialogForm.Create(aOwner: TComponent);
 begin
   inherited;
   FOrderedButtonList := TList<TButton>.Create;
+  FillButtonList;
   DialogButtons := mbOkCancel;
 end;
 
@@ -83,7 +84,6 @@ end;
 
 procedure TfrmBaseRoomerDialogForm.DoShow;
 begin
-  FillButtonList;
   inherited;
   RefreshData;
 end;

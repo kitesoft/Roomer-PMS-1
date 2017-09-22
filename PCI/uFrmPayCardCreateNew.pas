@@ -83,7 +83,7 @@ begin
 end;
 
 procedure TFrmPayCardCreateNew.GoToUri(uri : String);
-var Flags: OleVariant;
+//var Flags: OleVariant;
 begin
 //  Flags := 'navNoHistory,navNoReadFromCache,navNoWriteToCache';
 //  Flags:=4;

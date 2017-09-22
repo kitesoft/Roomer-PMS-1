@@ -952,7 +952,7 @@
         <DCCReference Include="PCI\uFrmViewPayCardDetails.pas">
             <Form>FrmViewPayCardDetails</Form>
         </DCCReference>
-        <DCCReference Include="PCI\uFmrChargePayCard.pas">
+        <DCCReference Include="PCI\uFrmChargePayCard.pas">
             <Form>FrmChargePayCard</Form>
         </DCCReference>
         <DCCReference Include="PCI\uFrmManagePCIConnection.pas">

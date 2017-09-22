@@ -55,9 +55,6 @@ type
     cxGroupBox1: TsGroupBox;
     btnOk: TsButton;
     btnCancel: TsButton;
-    labReservation: TsLabel;
-    labRoomReservation: TsLabel;
-    labInvoice: TsLabel;
     sGroupBox1: TsGroupBox;
     memNotes: TsMemo;
     sScrollBox1: TsScrollBox;
@@ -75,36 +72,54 @@ type
     edAmount: TsCalcEdit;
     sSpeedButton1: TsButton;
     FormStore: TcxPropertiesStore;
+    pnlCCButtons: TsPanel;
+    btnViewPayCard: TsButton;
+    btnChargePAyCard: TsButton;
     procedure btnOkClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
-    procedure FormClose(Sender: TObject; var Action: TCloseAction);
-    procedure FormDestroy(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure btnCancelClick(Sender: TObject);
-    procedure sSpeedButton1Click(Sender: TObject);
+    procedure btnGetInvoiceBalanceClick(Sender: TObject);
     procedure tvPayTypeDblClick(Sender: TObject);
+    procedure btnViewPayCardClick(Sender: TObject);
+    procedure btnChargePAyCardClick(Sender: TObject);
   private
     { Private declarations }
     zCanClose : boolean;
+    procedure ShowOrHideButtonViewPayCard;
   public
     { Public declarations }
     rec : recDownPayment;
   end;
 
-var
-  frmDownPayment : TfrmDownPayment;
-
 implementation
 
 {$R *.dfm}
 
-uses uAppGlobal, uD, uDImages, uSQLUtils;
+uses uAppGlobal, uD, uDImages, uSQLUtils, uFrmPayCardView, uTokenHelpers, uFrmChargePayCard;
 
 procedure TfrmDownPayment.btnCancelClick(Sender: TObject);
 begin
   //
   zCanClose := true;
+end;
+
+procedure TfrmDownPayment.btnChargePayCardClick(Sender: TObject);
+var charge : TTokenCharge;
+    PayType : String;
+    i : Integer;
+begin
+  charge := ChargePayCardForPayment(rec.Reservation,
+                  rec.Roomreservation,
+                  rec.InvoiceBalance,
+                  rec.Currency,
+                  PCO_CHARGE);
+  if Assigned(charge) then
+  begin
+    edAmount.Value := charge.amount;
+    BtnOk.Click;
+  end;
 end;
 
 procedure TfrmDownPayment.btnOkClick(Sender: TObject);
@@ -116,7 +131,6 @@ begin
 
   balance := rec.InvoiceBalance-edAmount.value;
 
-
   if edAmount.value = 0 then
   begin
     showmessage('Payment can not be 0');
@@ -124,8 +138,6 @@ begin
     zCanClose := false;
     exit;
   end;
-
-
 
   if NOT rec.NotInvoice then
     if (balance < 0) AND (NOT ctrlGetBoolean('AllowNegativeInvoice')) then
@@ -136,20 +148,17 @@ begin
       exit;
     end;
 
-  frmDownPayment.rec.Reservation     := rec.Reservation      ;
-  frmDownPayment.rec.RoomReservation := rec.RoomReservation  ;
-  frmDownPayment.rec.Invoice         := rec.Invoice          ;
-  frmDownPayment.rec.Amount          := edAmount.value;
-  frmDownPayment.rec.Description     := edDescription.text;
-  frmDownPayment.rec.Notes           := memNotes.Text;
-  frmDownPayment.rec.PaymentType     := kbmPayType.FieldByName('payType').asstring;
-  frmDownPayment.rec.InvoiceBalance  := balance;
+  rec.Amount          := edAmount.value;
+  rec.Description     := edDescription.text;
+  rec.Notes           := memNotes.Text;
+  rec.PaymentType     := kbmPayType.FieldByName('payType').asstring;
+  rec.InvoiceBalance  := balance;
 end;
 
 
-procedure TfrmDownPayment.FormClose(Sender: TObject; var Action: TCloseAction);
+procedure TfrmDownPayment.btnViewPayCardClick(Sender: TObject);
 begin
-  //
+  ShowPayCardInformation(rec.Reservation, rec.RoomReservation, btnViewPayCard.Tag);
 end;
 
 procedure TfrmDownPayment.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -165,9 +174,14 @@ begin
   zCanClose := true;
 end;
 
-procedure TfrmDownPayment.FormDestroy(Sender: TObject);
+procedure TfrmDownPayment.ShowOrHideButtonViewPayCard;
+var rSet : TRoomerDataSet;
+    s : String;
+    channelId: integer;
 begin
-  //
+  btnViewPayCard.Visible := ReservationHasPaycard(rec.Reservation, rec.RoomReservation, channelId);
+  if btnViewPayCard.Visible then
+    btnViewPayCard.Tag := ORD(glb.PCIContractOpenForChannel(channelId));
 end;
 
 procedure TfrmDownPayment.FormShow(Sender: TObject);
@@ -178,14 +192,11 @@ var
    defaultType : string;
 
 begin
-  labReservation.Caption         := inttostr(frmDownPayment.rec.Reservation);
-  labRoomReservation.caption     := inttostr(frmDownPayment.rec.RoomReservation);
-  labInvoice.caption             := inttostr(frmDownPayment.rec.Invoice);
-  edAmount.Value                 := frmDownPayment.rec.Amount;
-  edDescription.text             := frmDownPayment.rec.Description;
-  memNotes.Text                  := frmDownPayment.rec.Notes;
+  edAmount.Value                 := rec.Amount;
+  edDescription.text             := rec.Description;
+  memNotes.Text                  := rec.Notes;
 
-  defaultType := frmDownPayment.rec.PaymentType;
+  defaultType := rec.PaymentType;
   //InvPriceGroup
 
   rSet := CreateNewDataSet;
@@ -206,9 +217,11 @@ begin
   finally
     freeandnil(rSet);
   end;
+
+  ShowOrHideButtonViewPayCard;
 end;
 
-procedure TfrmDownPayment.sSpeedButton1Click(Sender: TObject);
+procedure TfrmDownPayment.btnGetInvoiceBalanceClick(Sender: TObject);
 begin
   edAmount.value := rec.InvoiceBalance;
 end;

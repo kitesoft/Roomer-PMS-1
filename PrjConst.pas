@@ -196,7 +196,7 @@ uses uAppGlobal,
   , uFrmTokenChargeHistory
   , uFrmViewChargeInfo
   , uFrmPayCardCreateNew
-  , uFmrChargePayCard
+  , uFrmChargePayCard
   , uFrmManagePCIConnection
 
   ;
@@ -1832,7 +1832,7 @@ begin
   TfrmHomedate.Create(nil).Free;
 //  frmGoToRoomandDate := TfrmGoToRoomandDate.Create(nil); frmGoToRoomandDate.Free; frmGoToRoomandDate := nil;
   frmHiddenInfo := TfrmHiddenInfo.Create(nil); frmHiddenInfo.Free; frmHiddenInfo := nil;
-  frmDownPayment := TfrmDownPayment.Create(nil); frmDownPayment.Free; frmDownPayment := nil;
+  TfrmDownPayment.Create(nil).Free;
   frmLodgingTaxReport2 := TfrmLodgingTaxReport2.Create(nil); frmLodgingTaxReport2.Free; frmLodgingTaxReport2 := nil;
   frmCancelReservation3 := TfrmCancelReservation3.Create(nil); frmCancelReservation3.Free; frmCancelReservation3 := nil;
   frmCancelReservation2 := TfrmCancelReservation2.Create(nil); frmCancelReservation2.Free; frmCancelReservation2 := nil;

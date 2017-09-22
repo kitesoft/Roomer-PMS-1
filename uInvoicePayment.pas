@@ -145,7 +145,7 @@ uses
    , uUtils
    , uFrmPayCardView
    , UITypes
-   , uFmrChargePayCard
+   , uFrmChargePayCard
    , uTokenHelpers
    , uFrmManagePCIConnection
   ;
@@ -341,28 +341,12 @@ end;
 
 
 procedure TfrmInvoicePayment.ShowOrHideButtonViewPayCard;
-var rSet : TRoomerDataSet;
-    s : String;
+var
+  channelId: integer;
 begin
-  btnViewPayCard.Visible := False;
-  if Reservation > 0 then
-  begin
-    rSet := CreateNewDataSet;
-    s := format('SELECT `channel`, PAYCARD_TOKEN FROM reservations r WHERE r.Reservation=%d AND NOT ISNULL(r.PAYCARD_TOKEN) ' +
-                'UNION ALL ' +
-                'SELECT -1 AS `channel`, PAYCARD_TOKEN FROM home100.PAYMENT_CARD_EXTRA_TOKENS PCET WHERE PCET.HOTEL_ID = ''%s'' AND PCET.RESERVATION=%d ' +
-                ' AND (PCET.ROOM_RESERVATION=0 OR PCET.ROOM_RESERVATION=%d)',
-                [FReservation, d.roomerMainDataSet.hotelId, FReservation, FRoomReservation]);
-    hData.rSet_bySQL(rSet, s, false);
-    rSet.First;
-    if NOT rSet.Eof then
-    begin
-      btnViewPayCard.Visible := (Reservation > 0) AND
-                                (rSet.FieldDefs.IndexOf('PAYCARD_TOKEN') > -1) AND
-                                (rSet.FieldByName('PAYCARD_TOKEN').AsString <> '');
-      btnViewPayCard.Tag := ORD(glb.PCIContractOpenForChannel(rSet.fieldbyname('channel').asInteger));
-    end;
-  end;
+  btnViewPayCard.Visible := ReservationHasPaycard(Reservation, RoomReservation, channelId);
+  if btnViewPayCard.Visible then
+    btnViewPayCard.Tag := ORD(glb.PCIContractOpenForChannel(channelId));
 end;
 
 procedure TfrmInvoicePayment.FormShow(Sender: TObject);
@@ -403,26 +387,23 @@ var charge : TTokenCharge;
     PayType : String;
     i : Integer;
 begin
- charge := ChargePayCardForPayment(Reservation,
+  charge := ChargePayCardForPayment(Reservation,
             Roomreservation,
             FAmount - AlreadyProvidedPayments,
             LblForeignCurrency.Caption,
             PCO_CHARGE);
- if Assigned(charge) then
- begin
-   PayType := getMapForCardType(charge.token.CardType);
-   if PayType = '' then
-   begin
-
-   end;
-   for i := 1 to agrPayTypes.RowCount - 1 do
-     if LowerCase(agrPayTypes.Cells[0, i]) = LowerCase(PayType) then
-     begin
-       agrPayTypes.Cells[1, i] := FloatToStr(charge.amount);
-       ReCalc;
-       BtnOk.Click;
-     end;
- end;
+  if Assigned(charge) then
+  begin
+    PayType := getMapForCardType(charge.token.CardType);
+    if PayType <> '' then
+      for i := 1 to agrPayTypes.RowCount - 1 do
+        if LowerCase(agrPayTypes.Cells[0, i]) = LowerCase(PayType) then
+        begin
+          agrPayTypes.Cells[1, i] := FloatToStr(charge.amount);
+          ReCalc;
+          BtnOk.Click;
+        end;
+  end;
 end;
 
 procedure TfrmInvoicePayment.BtnOkClick(Sender: TObject);

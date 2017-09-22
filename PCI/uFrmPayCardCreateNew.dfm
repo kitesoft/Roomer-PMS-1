@@ -42,7 +42,7 @@ inherited FrmPayCardCreateNew: TFrmPayCardCreateNew
           'E}</FONT>')
       Images = DImages.cxLargeImagesFlat
       Transparent = True
-      Version = '1.9.2.8'
+      Version = '1.9.2.7'
       ExplicitHeight = 58
     end
     object imgWarning: TsImage

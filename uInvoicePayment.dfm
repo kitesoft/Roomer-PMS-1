@@ -43,7 +43,6 @@ object frmInvoicePayment: TfrmInvoicePayment
       TabOrder = 0
       OnClick = BtnOkClick
       SkinData.SkinSection = 'BUTTON'
-      ExplicitLeft = 142
     end
     object btnCancel: TsButton
       AlignWithMargins = True
@@ -59,9 +58,6 @@ object frmInvoicePayment: TfrmInvoicePayment
       ModalResult = 2
       TabOrder = 1
       SkinData.SkinSection = 'BUTTON'
-      ExplicitLeft = 227
-      ExplicitTop = 4
-      ExplicitHeight = 37
     end
   end
   object Panel2: TsPanel
@@ -543,7 +539,7 @@ object frmInvoicePayment: TfrmInvoicePayment
     end
     object btnChargePAyCard: TsButton
       Left = 166
-      Top = 44
+      Top = 42
       Width = 129
       Height = 38
       Caption = 'Charge Pay-card'

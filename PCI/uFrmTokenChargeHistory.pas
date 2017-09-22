@@ -113,10 +113,11 @@ uses ud,
      uAppGlobal,
      uG,
      uUtils,
-     uFmrChargePayCard,
+     uFrmChargePayCard,
      uFrmOptInMessage,
      _Glob,
-     uFrmPayCardView;
+     uFrmPayCardView,
+     Types;
 
 procedure ManagePaymentCards(Reservation, RoomReservation : Integer);
 var
@@ -173,6 +174,9 @@ begin
   else
     lbRoomReservation.Caption := '(Group)';
   inherited;
+
+  if lvTokens.Items.Count > 0 then
+    lvTokens.Selected := lvTokens.Items[0];
 end;
 
 procedure TFrmTokenChargeHistory.DoUpdateControls;
@@ -248,7 +252,7 @@ begin
       lvi.SubItems.Add('Group');
     lvi.SubItems.Add(charge.operationType);
     lvi.SubItems.Add(charge.operationResultCode);
-    lvi.SubItems.Add(FloatToStr(charge.amount));
+    lvi.SubItems.Add(_FloatToStr(charge.amount, 20, 2));
     lvi.SubItems.Add(charge.currency);
     lvi.Data := charge;
 
@@ -366,7 +370,7 @@ begin
         charge := TTokenCharge.Create(rSet['ID'],
                       token,
                       Reservation,
-                      rset.FieldByName('RoomReservation').AsInteger,
+                      rset.FieldByName('Room_Reservation').AsInteger,
                       rSet['AMOUNT'],
                       rSet['CURRENCY'],
                       rSet['CURRENCY_RATE'],
@@ -403,8 +407,8 @@ begin
   charge := TTokenCharge(lvCharges.Selected.Data);
   ChargePayCard(charge,
                 charge.token,
-                charge.token.Reservation,
-                charge.token.RoomReservation,
+                charge.Reservation,
+                charge.RoomReservation,
                 charge.token.id,
                 charge.amount,
                 charge.currency,

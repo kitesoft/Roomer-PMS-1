@@ -108,10 +108,12 @@ type
 
 function LoadAllTokens(ReservationId, RoomReservationId : Integer) : TObjectList<TToken>;
 procedure FillTokenComboBox(cb : TsComboBox; tokens :TObjectList<TToken>; selectedToken : Integer);
+function ReservationHasPayCard(aReservation: integer; aRoomReservation: integer; var aChannelIdPaycard: integer): boolean;
+
 
 implementation
 
-uses TypInfo, uD, cmpRoomerDataset, SysUtils;
+uses TypInfo, uD, cmpRoomerDataset, SysUtils, hData, uAppGlobal;
 
 { TToken }
 
@@ -170,6 +172,35 @@ end;
 ////////////////////////////////////////////////////////////////////////////////////////
 ///
 ///
+
+function ReservationHasPayCard(aReservation: integer; aRoomReservation: integer; var aChannelIdPaycard: integer): boolean;
+var rSet : TRoomerDataSet;
+    s : String;
+begin
+  result := False;
+  if aReservation > 0 then
+  begin
+    rSet := CreateNewDataSet;
+    try
+      s := format('SELECT `channel`, PAYCARD_TOKEN FROM reservations r WHERE r.Reservation=%d AND NOT ISNULL(r.PAYCARD_TOKEN) ' +
+                  'UNION ALL ' +
+                  'SELECT -1 AS `channel`, PAYCARD_TOKEN FROM home100.PAYMENT_CARD_EXTRA_TOKENS PCET WHERE PCET.HOTEL_ID = ''%s'' AND PCET.RESERVATION=%d ' +
+                  ' AND (PCET.ROOM_RESERVATION <= 0 OR PCET.ROOM_RESERVATION=%d)',
+                  [aReservation, d.roomerMainDataSet.hotelId, aReservation, aRoomReservation]);
+      if hData.rSet_bySQL(rSet, s, false)  and (rSet.RecordCount > 0) then
+      begin
+        rSet.First;
+        Result := (aReservation > 0) AND
+                  (rSet.FindField('PAYCARD_TOKEN') <> nil) AND
+                  (rSet.FieldByName('PAYCARD_TOKEN').AsString <> '');
+        aChannelIdPayCard := ORD(glb.PCIContractOpenForChannel(rSet.fieldbyname('channel').asInteger));
+      end;
+    finally
+      rSet.Free;
+    end;
+  end;
+end;
+
 
 function LoadAllTokens(ReservationId, RoomReservationId : Integer) : TObjectList<TToken>;
 var

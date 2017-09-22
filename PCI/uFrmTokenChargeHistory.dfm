@@ -1,7 +1,8 @@
 inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
+  BorderStyle = bsSizeable
   Caption = 'Paycards of reservation'
-  ClientHeight = 495
-  ClientWidth = 1010
+  ClientHeight = 485
+  ClientWidth = 1000
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   ExplicitWidth = 1016
@@ -9,22 +10,22 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
   PixelsPerInch = 96
   TextHeight = 13
   inherited sbStatusBar: TsStatusBar
-    Top = 475
-    Width = 1010
-    ExplicitTop = 580
-    ExplicitWidth = 926
+    Top = 465
+    Width = 1000
+    ExplicitTop = 475
+    ExplicitWidth = 1010
   end
   object pnlTop: TsPanel [1]
     Left = 0
     Top = 0
-    Width = 1010
+    Width = 1000
     Height = 113
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 926
+    ExplicitWidth = 1010
     DesignSize = (
-      1010
+      1000
       113)
     object sLabel3: TsLabel
       Left = 128
@@ -127,7 +128,7 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
       Font.Style = [fsBold]
     end
     object btnRefresh: TsButton
-      Left = 902
+      Left = 892
       Top = 78
       Width = 96
       Height = 31
@@ -137,24 +138,24 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
       Images = DImages.PngImageList1
       TabOrder = 0
       OnClick = btnRefreshClick
-      ExplicitLeft = 818
+      ExplicitLeft = 902
     end
   end
   object pnlBottom: TsPanel [2]
     Left = 0
     Top = 113
-    Width = 1010
-    Height = 319
+    Width = 1000
+    Height = 309
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 3
-    ExplicitWidth = 926
-    ExplicitHeight = 424
+    ExplicitWidth = 1010
+    ExplicitHeight = 319
     object splGrids: TsSplitter
       AlignWithMargins = True
       Left = 452
       Top = 3
-      Height = 306
+      Height = 296
       Margins.Bottom = 10
       Color = clSkyBlue
       ParentColor = False
@@ -166,16 +167,16 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
       Left = 0
       Top = 0
       Width = 449
-      Height = 319
+      Height = 309
       Align = alLeft
       BevelOuter = bvNone
       TabOrder = 0
-      ExplicitHeight = 424
+      ExplicitHeight = 319
       object sLabel2: TsLabel
         AlignWithMargins = True
         Left = 3
         Top = 3
-        Width = 443
+        Width = 107
         Height = 13
         Align = alTop
         Caption = 'Available paycards'
@@ -185,14 +186,13 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
-        ExplicitWidth = 107
       end
       object lvTokens: TsListView
         AlignWithMargins = True
         Left = 3
         Top = 22
         Width = 443
-        Height = 253
+        Height = 243
         Align = alClient
         Checkboxes = True
         Color = clWhite
@@ -232,37 +232,34 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
         ViewStyle = vsReport
         OnDblClick = lvTokensDblClick
         OnSelectItem = lvTokensSelectItem
-        ExplicitWidth = 436
-        ExplicitHeight = 358
+        ExplicitHeight = 253
       end
       object sPanel6: TsPanel
         Left = 0
-        Top = 278
+        Top = 268
         Width = 449
         Height = 41
         Align = alBottom
         BevelOuter = bvNone
         TabOrder = 1
-        ExplicitLeft = -3
-        ExplicitTop = 276
+        ExplicitTop = 278
       end
     end
     object pnlRightGrid: TsPanel
       Left = 461
       Top = 0
-      Width = 549
-      Height = 319
+      Width = 539
+      Height = 309
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitLeft = 449
-      ExplicitWidth = 477
-      ExplicitHeight = 424
+      ExplicitWidth = 549
+      ExplicitHeight = 319
       object sLabel1: TsLabel
         AlignWithMargins = True
         Left = 3
         Top = 3
-        Width = 543
+        Width = 131
         Height = 13
         Align = alTop
         Caption = 'Paycard charge history'
@@ -272,14 +269,13 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
-        ExplicitWidth = 131
       end
       object lvCharges: TsListView
         AlignWithMargins = True
         Left = 3
         Top = 22
-        Width = 536
-        Height = 186
+        Width = 526
+        Height = 176
         Margins.Right = 10
         Align = alClient
         Color = clWhite
@@ -287,7 +283,7 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
           item
             AutoSize = True
             Caption = 'When'
-            MinWidth = 50
+            MinWidth = 120
           end
           item
             AutoSize = True
@@ -330,32 +326,30 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
         ViewStyle = vsReport
         OnDblClick = lvChargesDblClick
         OnSelectItem = lvChargesSelectItem
-        ExplicitWidth = 542
       end
       object sPanel5: TsPanel
         Left = 0
-        Top = 278
-        Width = 549
+        Top = 268
+        Width = 539
         Height = 41
         Align = alBottom
         BevelOuter = bvNone
         TabOrder = 1
-        ExplicitTop = 383
-        ExplicitWidth = 477
+        ExplicitTop = 278
+        ExplicitWidth = 549
       end
       object sPanel7: TsPanel
         Left = 0
-        Top = 211
-        Width = 549
+        Top = 201
+        Width = 539
         Height = 67
         Align = alBottom
         BevelOuter = bvNone
         TabOrder = 2
-        ExplicitLeft = 3
-        ExplicitTop = 214
-        ExplicitWidth = 548
+        ExplicitTop = 211
+        ExplicitWidth = 549
         DesignSize = (
-          549
+          539
           67)
         object sLabel7: TsLabel
           Left = 79
@@ -428,7 +422,7 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
         end
         object btnChargeView: TsButton
           AlignWithMargins = True
-          Left = 313
+          Left = 303
           Top = 5
           Width = 105
           Height = 31
@@ -442,10 +436,11 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
           Images = DImages.PngImageList1
           TabOrder = 0
           OnClick = btnChargeViewClick
+          ExplicitLeft = 313
         end
         object btnRefundOrCapture: TsButton
           AlignWithMargins = True
-          Left = 431
+          Left = 421
           Top = 5
           Width = 105
           Height = 31
@@ -460,27 +455,27 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
           Style = bsSplitButton
           TabOrder = 1
           OnClick = btnClickDropDown
+          ExplicitLeft = 431
         end
       end
     end
   end
   inherited pnlButtons: TsPanel
-    Top = 432
-    Width = 1010
-    ExplicitTop = 438
-    ExplicitWidth = 1009
+    Top = 422
+    Width = 1000
+    ExplicitTop = 432
+    ExplicitWidth = 1010
     inherited btnOK: TsButton
-      Left = 694
-      ExplicitLeft = 693
-      ExplicitTop = 2
+      Left = 684
+      ExplicitLeft = 694
     end
     inherited btnCancel: TsButton
-      Left = 800
-      ExplicitLeft = 799
-      ExplicitTop = 2
+      Left = 790
+      ExplicitLeft = 800
     end
     inherited btnClose: TsButton
-      Left = 906
+      Left = 896
+      ExplicitLeft = 906
     end
     object btnTokenNew: TsButton
       AlignWithMargins = True
@@ -499,7 +494,6 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
       Style = bsSplitButton
       TabOrder = 3
       OnClick = btnClickDropDown
-      ExplicitLeft = 0
     end
     object btnTokenView: TsButton
       AlignWithMargins = True
@@ -517,7 +511,6 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
       Images = DImages.PngImageList1
       TabOrder = 4
       OnClick = btnTokenViewClick
-      ExplicitTop = 4
     end
     object btnCharge: TsButton
       AlignWithMargins = True
@@ -537,7 +530,6 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
       Style = bsSplitButton
       TabOrder = 5
       OnClick = btnClickDropDown
-      ExplicitTop = 4
     end
   end
   inherited psRoomerBase: TcxPropertiesStore
@@ -582,7 +574,7 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
       Caption = '-'
     end
     object mnuPreAuthForReservation: TMenuItem
-      Caption = 'Pre-authorize fro reservation'
+      Caption = 'Pre-authorize for reservation'
       OnClick = mnuPreAuthForReservationClick
     end
     object mnuPreAuthforRoom: TMenuItem

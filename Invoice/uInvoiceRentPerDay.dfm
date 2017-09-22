@@ -6,7 +6,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
   BorderIcons = [biMinimize, biMaximize]
   Caption = 'Invoice'
   ClientHeight = 681
-  ClientWidth = 1096
+  ClientWidth = 1158
   Color = clBtnFace
   Constraints.MinWidth = 1112
   DoubleBuffered = True
@@ -31,18 +31,17 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
   object pnlMain: TsPanel
     Left = 0
     Top = 0
-    Width = 1096
+    Width = 1158
     Height = 662
     Align = alClient
     BevelOuter = bvNone
     Color = clWhite
     TabOrder = 1
     SkinData.SkinSection = 'PANEL'
-    ExplicitWidth = 1177
     object pnlHead: TsPanel
       Left = 0
       Top = 0
-      Width = 1096
+      Width = 1158
       Height = 189
       Align = alTop
       BevelOuter = bvNone
@@ -50,7 +49,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
       TabOrder = 0
       SkinData.SkinSection = 'PANEL'
       DesignSize = (
-        1096
+        1158
         189)
       object clabCurrency: TsLabel
         Left = 661
@@ -257,7 +256,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         SkinData.SkinSection = 'BUTTON'
       end
       object btnExit: TsButton
-        Left = 929
+        Left = 991
         Top = 3
         Width = 161
         Height = 41
@@ -273,7 +272,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         SkinData.SkinSection = 'BUTTON'
       end
       object btnInvoice: TsButton
-        Left = 929
+        Left = 991
         Top = 93
         Width = 161
         Height = 41
@@ -288,7 +287,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         SkinData.SkinSection = 'BUTTON'
       end
       object btnProforma: TsButton
-        Left = 929
+        Left = 991
         Top = 48
         Width = 161
         Height = 41
@@ -327,7 +326,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         BoundLabel.Font.Style = []
       end
       object btnSaveChanges: TsButton
-        Left = 929
+        Left = 991
         Top = 137
         Width = 161
         Height = 41
@@ -642,276 +641,76 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
     object pnlLnes: TsPanel
       Left = 0
       Top = 189
-      Width = 1096
+      Width = 1158
       Height = 473
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitWidth = 1177
       object pnlTotalsAndPayments: TsPanel
         Left = 0
         Top = 278
-        Width = 1096
+        Width = 1158
         Height = 195
         Align = alBottom
         BevelOuter = bvLowered
         ParentColor = True
         TabOrder = 0
         SkinData.SkinSection = 'PANEL'
-        object memExtraText: TMemo
+        object splExtraInfo: TsSplitter
+          Left = 526
+          Top = 1
+          Height = 193
+          Color = clHighlightText
+          ParentColor = False
+          SkinData.SkinSection = 'SPLITTER'
+          SkinData.OuterEffects.Visibility = ovAlways
+          ExplicitLeft = 400
+        end
+        object pnlExtraInfo: TsPanel
           Left = 1
           Top = 1
-          Width = 336
+          Width = 525
           Height = 193
           Align = alLeft
-          BevelInner = bvNone
-          BevelOuter = bvNone
-          BorderStyle = bsNone
-          Color = clWhite
-          Font.Charset = ANSI_CHARSET
-          Font.Color = 16384
-          Font.Height = -12
-          Font.Name = 'Courier New'
-          Font.Style = []
-          ParentFont = False
-          ScrollBars = ssVertical
           TabOrder = 0
-        end
-        object sPanel2: TsPanel
-          Left = 337
-          Top = 1
-          Width = 256
-          Height = 193
-          Align = alLeft
-          ParentBackground = False
-          ParentColor = True
-          TabOrder = 1
-          SkinData.SkinSection = 'PANEL'
-          object clabTotalwoVAT: TsLabel
-            Left = 7
-            Top = 9
-            Width = 124
-            Height = 13
-            Alignment = taRightJustify
-            AutoSize = False
-            Caption = 'Total w/o VAT :'
-            ParentFont = False
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clBlack
-            Font.Height = -11
-            Font.Name = 'Tahoma'
-            Font.Style = [fsBold]
-          end
-          object clavVAT: TsLabel
-            Left = 7
-            Top = 29
-            Width = 124
-            Height = 13
-            Alignment = taRightJustify
-            AutoSize = False
-            Caption = 'VAT :'
-            ParentFont = False
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clBlack
-            Font.Height = -11
-            Font.Name = 'Tahoma'
-            Font.Style = [fsBold]
-          end
-          object clabInvoiceTotal: TsLabel
-            Left = 7
-            Top = 49
-            Width = 124
-            Height = 13
-            Alignment = taRightJustify
-            AutoSize = False
-            Caption = 'Invoice total :'
-            ParentFont = False
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clBlack
-            Font.Height = -11
-            Font.Name = 'Tahoma'
-            Font.Style = [fsBold]
-          end
-          object clabDownpayments: TsLabel
-            Left = 7
-            Top = 69
-            Width = 124
-            Height = 13
-            Alignment = taRightJustify
-            AutoSize = False
-            Caption = 'Down payments :'
-            ParentFont = False
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clBlack
-            Font.Height = -11
-            Font.Name = 'Tahoma'
-            Font.Style = [fsBold]
-          end
-          object clabBalance: TsLabel
-            Left = 7
-            Top = 89
-            Width = 124
-            Height = 13
-            Alignment = taRightJustify
-            AutoSize = False
-            Caption = 'Balance :'
-            ParentFont = False
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clBlack
-            Font.Height = -11
-            Font.Name = 'Tahoma'
-            Font.Style = [fsBold]
-          end
-          object edtTotalWOVat: TsEdit
-            Left = 139
-            Top = 6
-            Width = 105
-            Height = 17
-            Alignment = taRightJustify
-            AutoSize = False
+          object memExtraText: TMemo
+            Left = 1
+            Top = 1
+            Width = 267
+            Height = 191
+            Align = alClient
+            BevelInner = bvNone
+            BevelOuter = bvNone
             BorderStyle = bsNone
             Color = clWhite
             Font.Charset = ANSI_CHARSET
-            Font.Color = clBlack
-            Font.Height = -11
+            Font.Color = 16384
+            Font.Height = -12
             Font.Name = 'Courier New'
             Font.Style = []
             ParentFont = False
-            ReadOnly = True
+            ScrollBars = ssVertical
             TabOrder = 0
-            SkinData.SkinSection = 'EDIT'
-            BoundLabel.Font.Charset = DEFAULT_CHARSET
-            BoundLabel.Font.Color = clWindowText
-            BoundLabel.Font.Height = -13
-            BoundLabel.Font.Name = 'Tahoma'
-            BoundLabel.Font.Style = []
+            OnChange = memExtraTextChange
           end
-          object edtVat: TsEdit
-            Left = 139
-            Top = 26
-            Width = 105
-            Height = 17
-            Alignment = taRightJustify
-            AutoSize = False
-            BorderStyle = bsNone
-            Color = clWhite
-            Font.Charset = ANSI_CHARSET
-            Font.Color = clBlack
-            Font.Height = -11
-            Font.Name = 'Courier New'
-            Font.Style = []
-            ParentFont = False
-            ReadOnly = True
+          object sPanel2: TsPanel
+            Left = 268
+            Top = 1
+            Width = 256
+            Height = 191
+            Align = alRight
+            ParentBackground = False
+            ParentColor = True
             TabOrder = 1
-            SkinData.SkinSection = 'EDIT'
-            BoundLabel.Font.Charset = DEFAULT_CHARSET
-            BoundLabel.Font.Color = clWindowText
-            BoundLabel.Font.Height = -13
-            BoundLabel.Font.Name = 'Tahoma'
-            BoundLabel.Font.Style = []
-          end
-          object edtInvoiceTotal: TsEdit
-            Left = 139
-            Top = 46
-            Width = 105
-            Height = 17
-            Alignment = taRightJustify
-            AutoSize = False
-            BorderStyle = bsNone
-            Color = clWhite
-            Font.Charset = ANSI_CHARSET
-            Font.Color = clBlack
-            Font.Height = -11
-            Font.Name = 'Courier New'
-            Font.Style = []
-            ParentFont = False
-            ReadOnly = True
-            TabOrder = 2
-            SkinData.SkinSection = 'EDIT'
-            BoundLabel.Font.Charset = DEFAULT_CHARSET
-            BoundLabel.Font.Color = clWindowText
-            BoundLabel.Font.Height = -13
-            BoundLabel.Font.Name = 'Tahoma'
-            BoundLabel.Font.Style = []
-          end
-          object edtDownPayments: TsEdit
-            Left = 139
-            Top = 66
-            Width = 105
-            Height = 17
-            Alignment = taRightJustify
-            AutoSize = False
-            BorderStyle = bsNone
-            Color = clWhite
-            Font.Charset = ANSI_CHARSET
-            Font.Color = clBlack
-            Font.Height = -11
-            Font.Name = 'Courier New'
-            Font.Style = []
-            ParentFont = False
-            ReadOnly = True
-            TabOrder = 3
-            SkinData.SkinSection = 'EDIT'
-            BoundLabel.Font.Charset = DEFAULT_CHARSET
-            BoundLabel.Font.Color = clWindowText
-            BoundLabel.Font.Height = -13
-            BoundLabel.Font.Name = 'Tahoma'
-            BoundLabel.Font.Style = []
-          end
-          object edtBalance: TsEdit
-            Left = 139
-            Top = 86
-            Width = 105
-            Height = 17
-            Alignment = taRightJustify
-            AutoSize = False
-            BorderStyle = bsNone
-            Color = clWhite
-            Font.Charset = ANSI_CHARSET
-            Font.Color = clBlack
-            Font.Height = -11
-            Font.Name = 'Courier New'
-            Font.Style = []
-            ParentFont = False
-            ReadOnly = True
-            TabOrder = 4
-            SkinData.SkinSection = 'EDIT'
-            BoundLabel.Font.Charset = DEFAULT_CHARSET
-            BoundLabel.Font.Color = clWindowText
-            BoundLabel.Font.Height = -13
-            BoundLabel.Font.Name = 'Tahoma'
-            BoundLabel.Font.Style = []
-          end
-          object grbInclutedTaxes: TsGroupBox
-            Left = 16
-            Top = 110
-            Width = 228
-            Height = 36
-            Caption = 'Included taxes'
-            TabOrder = 5
-            SkinData.SkinSection = 'GROUPBOX'
-            object labLodgingTax: TsLabel
-              Left = 12
-              Top = 16
-              Width = 22
-              Height = 13
-              Caption = '0,00'
-            end
-            object labLodgingTaxNights: TsLabel
-              Left = 192
-              Top = 16
-              Width = 22
-              Height = 13
-              Caption = '0,00'
-            end
-            object labTaxNights: TsLabel
-              Left = 95
-              Top = 16
-              Width = 53
+            SkinData.SkinSection = 'PANEL'
+            object clabTotalwoVAT: TsLabel
+              Left = 7
+              Top = 9
+              Width = 124
               Height = 13
               Alignment = taRightJustify
               AutoSize = False
-              Caption = 'units :'
+              Caption = 'Total w/o VAT :'
               ParentFont = False
               Font.Charset = DEFAULT_CHARSET
               Font.Color = clBlack
@@ -919,26 +718,243 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
               Font.Name = 'Tahoma'
               Font.Style = [fsBold]
             end
+            object clavVAT: TsLabel
+              Left = 7
+              Top = 29
+              Width = 124
+              Height = 13
+              Alignment = taRightJustify
+              AutoSize = False
+              Caption = 'VAT :'
+              ParentFont = False
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clBlack
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = [fsBold]
+            end
+            object clabInvoiceTotal: TsLabel
+              Left = 7
+              Top = 49
+              Width = 124
+              Height = 13
+              Alignment = taRightJustify
+              AutoSize = False
+              Caption = 'Invoice total :'
+              ParentFont = False
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clBlack
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = [fsBold]
+            end
+            object clabDownpayments: TsLabel
+              Left = 7
+              Top = 69
+              Width = 124
+              Height = 13
+              Alignment = taRightJustify
+              AutoSize = False
+              Caption = 'Down payments :'
+              ParentFont = False
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clBlack
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = [fsBold]
+            end
+            object clabBalance: TsLabel
+              Left = 7
+              Top = 89
+              Width = 124
+              Height = 13
+              Alignment = taRightJustify
+              AutoSize = False
+              Caption = 'Balance :'
+              ParentFont = False
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clBlack
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = [fsBold]
+            end
+            object edtTotalWOVat: TsEdit
+              Left = 139
+              Top = 6
+              Width = 105
+              Height = 17
+              Alignment = taRightJustify
+              AutoSize = False
+              BorderStyle = bsNone
+              Color = clWhite
+              Font.Charset = ANSI_CHARSET
+              Font.Color = clBlack
+              Font.Height = -11
+              Font.Name = 'Courier New'
+              Font.Style = []
+              ParentFont = False
+              ReadOnly = True
+              TabOrder = 0
+              SkinData.SkinSection = 'EDIT'
+              BoundLabel.Font.Charset = DEFAULT_CHARSET
+              BoundLabel.Font.Color = clWindowText
+              BoundLabel.Font.Height = -13
+              BoundLabel.Font.Name = 'Tahoma'
+              BoundLabel.Font.Style = []
+            end
+            object edtVat: TsEdit
+              Left = 139
+              Top = 26
+              Width = 105
+              Height = 17
+              Alignment = taRightJustify
+              AutoSize = False
+              BorderStyle = bsNone
+              Color = clWhite
+              Font.Charset = ANSI_CHARSET
+              Font.Color = clBlack
+              Font.Height = -11
+              Font.Name = 'Courier New'
+              Font.Style = []
+              ParentFont = False
+              ReadOnly = True
+              TabOrder = 1
+              SkinData.SkinSection = 'EDIT'
+              BoundLabel.Font.Charset = DEFAULT_CHARSET
+              BoundLabel.Font.Color = clWindowText
+              BoundLabel.Font.Height = -13
+              BoundLabel.Font.Name = 'Tahoma'
+              BoundLabel.Font.Style = []
+            end
+            object edtInvoiceTotal: TsEdit
+              Left = 139
+              Top = 46
+              Width = 105
+              Height = 17
+              Alignment = taRightJustify
+              AutoSize = False
+              BorderStyle = bsNone
+              Color = clWhite
+              Font.Charset = ANSI_CHARSET
+              Font.Color = clBlack
+              Font.Height = -11
+              Font.Name = 'Courier New'
+              Font.Style = []
+              ParentFont = False
+              ReadOnly = True
+              TabOrder = 2
+              SkinData.SkinSection = 'EDIT'
+              BoundLabel.Font.Charset = DEFAULT_CHARSET
+              BoundLabel.Font.Color = clWindowText
+              BoundLabel.Font.Height = -13
+              BoundLabel.Font.Name = 'Tahoma'
+              BoundLabel.Font.Style = []
+            end
+            object edtDownPayments: TsEdit
+              Left = 139
+              Top = 66
+              Width = 105
+              Height = 17
+              Alignment = taRightJustify
+              AutoSize = False
+              BorderStyle = bsNone
+              Color = clWhite
+              Font.Charset = ANSI_CHARSET
+              Font.Color = clBlack
+              Font.Height = -11
+              Font.Name = 'Courier New'
+              Font.Style = []
+              ParentFont = False
+              ReadOnly = True
+              TabOrder = 3
+              SkinData.SkinSection = 'EDIT'
+              BoundLabel.Font.Charset = DEFAULT_CHARSET
+              BoundLabel.Font.Color = clWindowText
+              BoundLabel.Font.Height = -13
+              BoundLabel.Font.Name = 'Tahoma'
+              BoundLabel.Font.Style = []
+            end
+            object edtBalance: TsEdit
+              Left = 139
+              Top = 86
+              Width = 105
+              Height = 17
+              Alignment = taRightJustify
+              AutoSize = False
+              BorderStyle = bsNone
+              Color = clWhite
+              Font.Charset = ANSI_CHARSET
+              Font.Color = clBlack
+              Font.Height = -11
+              Font.Name = 'Courier New'
+              Font.Style = []
+              ParentFont = False
+              ReadOnly = True
+              TabOrder = 4
+              SkinData.SkinSection = 'EDIT'
+              BoundLabel.Font.Charset = DEFAULT_CHARSET
+              BoundLabel.Font.Color = clWindowText
+              BoundLabel.Font.Height = -13
+              BoundLabel.Font.Name = 'Tahoma'
+              BoundLabel.Font.Style = []
+            end
+            object grbInclutedTaxes: TsGroupBox
+              Left = 16
+              Top = 110
+              Width = 228
+              Height = 36
+              Caption = 'Included taxes'
+              TabOrder = 5
+              SkinData.SkinSection = 'GROUPBOX'
+              object labLodgingTax: TsLabel
+                Left = 12
+                Top = 16
+                Width = 22
+                Height = 13
+                Caption = '0,00'
+              end
+              object labLodgingTaxNights: TsLabel
+                Left = 192
+                Top = 16
+                Width = 22
+                Height = 13
+                Caption = '0,00'
+              end
+              object labTaxNights: TsLabel
+                Left = 95
+                Top = 16
+                Width = 53
+                Height = 13
+                Alignment = taRightJustify
+                AutoSize = False
+                Caption = 'units :'
+                ParentFont = False
+                Font.Charset = DEFAULT_CHARSET
+                Font.Color = clBlack
+                Font.Height = -11
+                Font.Name = 'Tahoma'
+                Font.Style = [fsBold]
+              end
+            end
           end
         end
         object pnlPayments: TsPanel
-          Left = 593
+          Left = 532
           Top = 1
-          Width = 502
+          Width = 625
           Height = 193
           Align = alClient
           Caption = 'pnlPayments'
-          TabOrder = 2
+          TabOrder = 1
           SkinData.SkinSection = 'PANEL'
           object sPanel3: TsPanel
             Left = 1
             Top = 1
-            Width = 500
+            Width = 623
             Height = 20
             Align = alTop
             TabOrder = 0
             SkinData.SkinSection = 'PANEL'
-            ExplicitLeft = 6
             object labPayments: TsLabel
               Left = 9
               Top = 2
@@ -956,14 +972,14 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
           object grPayments: TcxGrid
             Left = 1
             Top = 21
-            Width = 500
+            Width = 623
             Height = 132
             Align = alClient
             DragMode = dmAutomatic
             TabOrder = 1
             LookAndFeel.NativeStyle = False
-            ExplicitLeft = 6
-            ExplicitTop = 19
+            ExplicitLeft = 0
+            ExplicitTop = 22
             object tvPayments: TcxGridDBTableView
               OnMouseDown = tvPaymentsMouseDown
               Navigator.Buttons.CustomButtons = <>
@@ -999,10 +1015,15 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
                 DataBinding.FieldName = 'Currency'
                 Width = 50
               end
-              object tvPaymentsAmount: TcxGridDBColumn
-                DataBinding.FieldName = 'Amount'
+              object tvPaymentsCurrencyAmount: TcxGridDBColumn
+                DataBinding.FieldName = 'CurrencyAmount'
                 PropertiesClassName = 'TcxCurrencyEditProperties'
-                OnGetProperties = tvPaymentsAmountGetProperties
+                OnGetProperties = tvPaymentsCurrencyAmountGetProperties
+              end
+              object tvPaymentNativeAmount: TcxGridDBColumn
+                DataBinding.FieldName = 'NativeAmount'
+                PropertiesClassName = 'TcxCurrencyEditProperties'
+                OnGetProperties = tvPaymentNativeAmountGetProperties
                 Width = 84
               end
               object tvPaymentsDescription: TcxGridDBColumn
@@ -1046,15 +1067,13 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
           object pnlPaymentButtons: TsPanel
             Left = 1
             Top = 153
-            Width = 500
+            Width = 623
             Height = 39
             Align = alBottom
             TabOrder = 2
-            ExplicitLeft = 6
-            ExplicitTop = 149
             object btnAddDownPayment: TsButton
               AlignWithMargins = True
-              Left = 2
+              Left = 125
               Top = 3
               Width = 119
               Height = 33
@@ -1064,11 +1083,10 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
               Align = alRight
               TabOrder = 0
               SkinData.SkinSection = 'BUTTON'
-              ExplicitLeft = -2
             end
             object btnRevertDownpayment: TsButton
               AlignWithMargins = True
-              Left = 377
+              Left = 500
               Top = 3
               Width = 119
               Height = 33
@@ -1078,11 +1096,10 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
               Align = alRight
               TabOrder = 3
               SkinData.SkinSection = 'BUTTON'
-              ExplicitLeft = 376
             end
             object btnEditDownpayment: TsButton
               AlignWithMargins = True
-              Left = 127
+              Left = 250
               Top = 3
               Width = 119
               Height = 33
@@ -1093,11 +1110,10 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
               TabOrder = 1
               Visible = False
               SkinData.SkinSection = 'BUTTON'
-              ExplicitLeft = 124
             end
             object btnDeleteDownpayment: TsButton
               AlignWithMargins = True
-              Left = 252
+              Left = 375
               Top = 3
               Width = 119
               Height = 33
@@ -1108,7 +1124,6 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
               TabOrder = 2
               Visible = False
               SkinData.SkinSection = 'BUTTON'
-              ExplicitLeft = 250
             end
           end
         end
@@ -1116,7 +1131,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
       object pnlLineButtons: TsPanel
         Left = 0
         Top = 0
-        Width = 1096
+        Width = 1158
         Height = 49
         Align = alTop
         BevelOuter = bvNone
@@ -1225,7 +1240,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
       object pnlLinesGrid: TsPanel
         Left = 0
         Top = 49
-        Width = 1021
+        Width = 1083
         Height = 229
         Align = alClient
         BevelOuter = bvNone
@@ -1239,7 +1254,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         object agrLines: TAdvStringGrid
           Left = 10
           Top = 5
-          Width = 1001
+          Width = 1063
           Height = 219
           Cursor = crDefault
           Align = alClient
@@ -1391,7 +1406,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
       end
       object pnlInvoiceIndices: TsScrollBox
         AlignWithMargins = True
-        Left = 1024
+        Left = 1086
         Top = 52
         Width = 69
         Height = 223
@@ -1911,7 +1926,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
   object FriendlyStatusBar1: TsStatusBar
     Left = 0
     Top = 662
-    Width = 1096
+    Width = 1158
     Height = 19
     Panels = <>
     SkinData.SkinSection = 'STATUSBAR'
@@ -2338,8 +2353,13 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
       FieldName = 'Currency'
       Size = 5
     end
-    object mPaymentsAmount: TFloatField
-      FieldName = 'Amount'
+    object mPaymentsCurrencyAmount: TFloatField
+      FieldKind = fkCalculated
+      FieldName = 'CurrencyAmount'
+      Calculated = True
+    end
+    object mPaymentsNativeAmount: TFloatField
+      FieldName = 'NativeAmount'
     end
     object mPaymentsDescription: TWideStringField
       FieldName = 'Description'

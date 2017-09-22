@@ -1144,24 +1144,27 @@ end;
 function TGlobalSettings.PCIContractOpenForChannel(channelId: Integer): Boolean;
 var channelCode : String;
   i: Integer;
+
   function CreateRegExCode(s : String) : String;
   begin
     result := ReplaceString(ReplaceString(s, '?', '.'), '*', '.?') + '$';
   end;
-begin
+
+  begin
   result := false;
   if channelId <> -1 then
   begin
-    if LocateSpecificRecordAndGetValue('channels', 'id', channelId, 'channelManagerId', channelCode) then
+
+    if Assigned(g.PCIContractWildcards) and LocateSpecificRecordAndGetValue('channels', 'id', channelId, 'channelManagerId', channelCode) then
     begin
-      if Assigned(g.PCIContractWildcards) then
-        for i := 0 to g.PCIContractWildcards.Count - 1 do
-          if TRegEx.IsMatch(channelCode, CreateRegExCode(g.PCIContractWildcards[i])) then
-          begin
-            result := true;
-            Break;
-          end;
+      for i := 0 to g.PCIContractWildcards.Count - 1 do
+        if TRegEx.IsMatch(channelCode, CreateRegExCode(g.PCIContractWildcards[i])) then
+        begin
+          result := true;
+          Break;
+        end;
     end;
+
   end else
   begin
     channelCode := '*'; // Any...

@@ -76,7 +76,7 @@ uses
   uInvoiceObjects
   , uInvoiceDefinitions, uRoomerBookingDataModel_ModelObjects
   , Spring.Collections.Lists
-  , Spring.Collections, cxCheckBox, cxCurrencyEdit
+  , Spring.Collections, cxCheckBox, cxCurrencyEdit, sSplitter
   ;
 
 type
@@ -170,7 +170,7 @@ type
     grPayments: TcxGrid;
     tvPaymentsPayDate: TcxGridDBColumn;
     tvPaymentsPayType: TcxGridDBColumn;
-    tvPaymentsAmount: TcxGridDBColumn;
+    tvPaymentNativeAmount: TcxGridDBColumn;
     tvPaymentsDescription: TcxGridDBColumn;
     tvPaymentsPayGroup: TcxGridDBColumn;
     tvPaymentsMemo: TcxGridDBColumn;
@@ -191,7 +191,7 @@ type
     mPayments: TdxMemData;
     mPaymentsPayDate: TDateField;
     mPaymentsPayType: TWideStringField;
-    mPaymentsAmount: TFloatField;
+    mPaymentsNativeAmount: TFloatField;
     mPaymentsDescription: TWideStringField;
     mPaymentsPayGroup: TWideStringField;
     mPaymentsMemo: TMemoField;
@@ -360,6 +360,9 @@ type
     actEditDownPayment: TAction;
     actDeleteDownPayment: TAction;
     btnDeleteDownpayment: TsButton;
+    splExtraInfo: TsSplitter;
+    mPaymentsCurrencyAmount: TFloatField;
+    tvPaymentsCurrencyAmount: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure agrLinesMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
     procedure edtCustomerDblClick(Sender: TObject);
@@ -436,8 +439,11 @@ type
     procedure actDeleteDownPaymentExecute(Sender: TObject);
     procedure actEditDownPaymentExecute(Sender: TObject);
     procedure actDeleteDownPaymentUpdate(Sender: TObject);
-    procedure tvPaymentsAmountGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
+    procedure tvPaymentNativeAmountGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
       var AProperties: TcxCustomEditProperties);
+    procedure tvPaymentsCurrencyAmountGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
+      var AProperties: TcxCustomEditProperties);
+    procedure memExtraTextChange(Sender: TObject);
   private
     { Private declarations }
 
@@ -545,7 +551,6 @@ type
     procedure ClearInvoiceLines;
     function getDownPayments: Double;
 
-    procedure DisplayMem(zrSet: TRoomerDataset);
     procedure DisplayGuestName(zrSet: TRoomerDataset);
 
     /// <summary>
@@ -666,10 +671,11 @@ type
     procedure UpdateTaxinvoiceLinesForRoomItemUsingBackend(aInvLine: TInvoiceLine);
     procedure RetrieveTaxesforRoomReservation(aReservation, aRoomreservation: integer);
     procedure LoadPayments;
+    procedure SetHeaderChanged(const Value: boolean);
 
     property InvoiceIndex: TInvoiceIndex read FInvoiceIndex write SetInvoiceIndex;
     property AnyRowChecked: boolean read GetAnyRowSelected;
-    property HeaderChanged: boolean read GetHeaderChanged;
+    property HeaderChanged: boolean read GetHeaderChanged write SetHeaderChanged;
   public
     { Public declarations }
     FnewSplitNumber: integer; // 0 = herbergjareikningur
@@ -728,7 +734,8 @@ uses
   Types,
   uFinanceConnectService
   , uBookingsTaxesAPICaller
-  , uRoomerCanonicalDataModel_DataStructures, uRoomerCanonicalDataModel_SimpleTypes;
+  , uRoomerCanonicalDataModel_DataStructures, uRoomerCanonicalDataModel_SimpleTypes
+  , uFrmChargePayCard;
 
 {$R *.DFM}
 
@@ -928,7 +935,7 @@ begin
   edtAddress2.Text := '';
   edtAddress3.Text := '';
   edtAddress4.Text := '';
-  FHeaderChanged := True;
+  HeaderChanged := True;
 end;
 
 procedure TfrmInvoiceRentPerDay.actToggleLodgingTaxClick(Sender: TObject);
@@ -1204,18 +1211,6 @@ begin
     labLodgingTaxNights.Caption := inttostr(trunc(FInvoiceLinesList.CityTaxUnitCount));
   finally
     Screen.Cursor := crDefault;
-  end;
-end;
-
-procedure TfrmInvoiceRentPerDay.DisplayMem(zrSet: TRoomerDataset);
-begin
-  with zrSet do
-  begin
-    first;
-    if not eof then
-    begin
-      memExtraText.Lines.Text := trim(FieldByName('ExtraText').asString);
-    end;
   end;
 end;
 
@@ -1858,7 +1853,13 @@ begin
 
 end;
 
-procedure TfrmInvoiceRentPerDay.tvPaymentsAmountGetProperties(Sender: TcxCustomGridTableItem;
+procedure TfrmInvoiceRentPerDay.tvPaymentNativeAmountGetProperties(Sender: TcxCustomGridTableItem;
+  ARecord: TcxCustomGridRecord; var AProperties: TcxCustomEditProperties);
+begin
+  aProperties := FCurrencyhandlersMap.CurrencyHandler[g.qNativeCurrency].GetcxEditProperties();
+end;
+
+procedure TfrmInvoiceRentPerDay.tvPaymentsCurrencyAmountGetProperties(Sender: TcxCustomGridTableItem;
   ARecord: TcxCustomGridRecord; var AProperties: TcxCustomEditProperties);
 begin
   aProperties := FCurrencyhandlersMap.CurrencyHandler[mPaymentsCurrency.AsString].GetcxEditProperties();
@@ -1886,7 +1887,7 @@ begin
       mPayments.first;
       while not mPayments.eof do
       begin
-        Total := Total + mPayments.FieldByName('Amount').AsFloat;
+        Total := Total + mPaymentsNativeAmount.AsFloat; // in native currency
         mPayments.Next;
       end;
     finally
@@ -2377,7 +2378,7 @@ begin
           SetInvoiceTypeIndex(3);
         end;
 
-        FHeaderChanged := false;
+        HeaderChanged := false;
         btnGetCustomer.Enabled := rgrInvoiceType.itemIndex <> 1;
         btnClearAddresses.Enabled := rgrInvoiceType.itemIndex <> 1;
       end;
@@ -2386,6 +2387,7 @@ begin
       zCurrentCurrency := edtDisplayCurrency.Text;
       zCurrencyRate := GetRate(zCurrentCurrency);
       edtRate.Text := floattostr(zCurrencyRate);
+      memExtraText.Lines.Text := trim(zrSet.FieldByName('ExtraText').asString);
 
     end
     else
@@ -2452,7 +2454,6 @@ begin
       end
     end;
 
-    DisplayMem(zrSet);
     DisplayGuestName(zrSet);
 
     RetrieveTaxesforRoomReservation(FReservation, FRoomreservation);
@@ -2787,7 +2788,7 @@ begin
       mPaymentsPayType.asString := eSet.FieldByName('PayType').asString;
       mPaymentsPayDate.asdateTime := SQLToDateTime(eSet.FieldByName('PayDate').asString);
       mPaymentsCurrency.AsString := eSet.FieldByName('Currency').AsString;
-      mPaymentsAmount.AsFloat := eSet.FieldByName('Amount').AsFloat;
+      mPaymentsNativeAmount.AsFloat := eSet.FieldByName('Amount').AsFloat;
       mPaymentsDescription.asString := eSet.FieldByName('Description').asString;
       mPaymentsPayGroup.asString := '';
       mPaymentsMemo.asString := eSet.FieldByName('Notes').asString;
@@ -3219,6 +3220,7 @@ end;
 procedure TfrmInvoiceRentPerDay.mPaymentsCalcFields(DataSet: TDataSet);
 begin
   mPaymentsChargedOnCC.AsBoolean := mPaymentsPaycardTraceIndex.AsInteger > 0;
+  mPaymentsCurrencyAmount.AsFloat := FCurrencyhandlersMap.ConvertAmount(mPaymentsNativeAmount.AsFloat, G.qNativeCurrency, mPaymentsCurrency.AsString);
 end;
 
 procedure TfrmInvoiceRentPerDay.ExternalRoomsClick(Sender: TObject);
@@ -3761,7 +3763,7 @@ begin
       if not lExecutionPlan.Execute(ptExec, True, True) then
         raise Exception.Create(lExecutionPlan.ExecException);
 
-      FHeaderChanged := false;
+      HeaderChanged := false;
       for invoiceLine in FInvoiceLinesList do
         invoiceLine.Changed := false;
 
@@ -4257,14 +4259,14 @@ begin
     edtAddress3.Text := CustomerHolderEX.Address3;
     edtAddress4.Text := CustomerHolderEX.Address4;
     zCountry := CustomerHolderEX.Country;
-    FHeaderChanged := True;
+    HeaderChanged := True;
     UpdateTaxinvoiceLinesForAllRooms;
   end;
 end;
 
 procedure TfrmInvoiceRentPerDay.edtPersonalIdChange(Sender: TObject);
 begin
-  FHeaderChanged := True;
+  HeaderChanged := True;
 end;
 
 procedure TfrmInvoiceRentPerDay.agrLinesGetAlignment(Sender: TObject; ARow, ACol: integer; var HAlign: TAlignment;
@@ -4966,6 +4968,15 @@ begin
   edtAddress4.ReadOnly := rgrInvoiceType.itemIndex IN [0, 1, 2, 3];
 end;
 
+procedure TfrmInvoiceRentPerDay.SetHeaderChanged(const Value: boolean);
+begin
+  if (FHeaderChanged <> Value) then
+  begin
+    FHeaderChanged := value;
+    chkChanged;
+  end;
+end;
+
 procedure TfrmInvoiceRentPerDay.SetInvoiceIndex(const Value: TInvoiceIndex);
 begin
   IfInvoiceChangedThenOptionallySave;
@@ -5517,9 +5528,8 @@ begin
       end;
 
   end;
-  FHeaderChanged := True;
   edtRoomGuest.Caption := GetMainGuestName(FReservation, FRoomReservation);
-  chkChanged;
+  HeaderChanged := True;
   SetCustEdits;
 end;
 
@@ -5614,7 +5624,7 @@ begin
   rec.reservation := FReservation;
   rec.RoomReservation := FRoomReservation;
   rec.Invoice := zInvoiceNumber;
-  rec.Amount := mPayments.FieldByName('Amount').AsFloat;
+  rec.Amount := mPaymentsNativeAmount.AsFloat;
   rec.Quantity := 1;
   rec.Description := mPayments.FieldByName('Description').asString;
   rec.Notes := mPayments.FieldByName('Memo').asString;
@@ -5644,7 +5654,8 @@ begin
             mPayments.insert;
             mPayments.FieldByName('PayType').asString := rSet.FieldByName('PayType').asString;
             mPayments.FieldByName('PayDate').asdateTime := SQLToDateTime(rSet.FieldByName('PayDate').asString);
-            mPayments.FieldByName('Amount').AsFloat := rSet.FieldByName('Amount').AsFloat;
+            mPayments.FieldByName('NativeAmount').AsFloat := rSet.FieldByName('Amount').AsFloat;
+            mPayments.FieldByName('Currency').AsFloat := rSet.FieldByName('currency').AsFloat;
             mPayments.FieldByName('Description').asString := rSet.FieldByName('Description').asString;
             mPayments.FieldByName('PayGroup').asString := '';
             mPayments.FieldByName('Memo').asString := rSet.FieldByName('Notes').asString;
@@ -5697,7 +5708,7 @@ begin
   rec.reservation := FReservation;
   rec.RoomReservation := FRoomReservation;
   rec.Invoice := zInvoiceNumber;
-  rec.Amount := mPayments.FieldByName('Amount').asfloat;
+  rec.Amount := mPaymentsNativeAmount.asfloat;
   rec.Quantity := 1;
   rec.Description := mPayments.FieldByName('Description').asString;
   rec.Notes := mPayments.FieldByName('Memo').asString;
@@ -5746,7 +5757,7 @@ begin
   rec.reservation := FReservation;
   rec.RoomReservation := FRoomReservation;
   rec.Invoice := zInvoiceNumber;
-  rec.Amount := mPayments.FieldByName('Amount').AsFloat;
+  rec.Amount := mPaymentsNativeAmount.AsFloat;
   rec.Quantity := 1;
   rec.Description := mPayments.FieldByName('Description').asString;
   rec.Notes := mPayments.FieldByName('Memo').asString;
@@ -5916,7 +5927,7 @@ begin
   rec.reservation := FReservation;
   rec.RoomReservation := FRoomReservation;
   rec.Invoice := zInvoiceNumber;
-  rec.Amount := mPayments.FieldByName('Amount').asfloat;
+  rec.Amount := mPaymentsNativeAmount.asfloat;
   rec.Quantity := 1;
   rec.Description := mPayments.FieldByName('Description').asString;
   rec.Notes := mPayments.FieldByName('Memo').asString;
@@ -6052,10 +6063,13 @@ begin
   if (mPaymentsid.AsInteger > 0) then
   begin
     if mPaymentsChargedOnCC.AsBoolean then
+    begin
       // Start creditcard refund
+      RefundChargeFromChargeId(FReservation, FRoomReservation, mPaymentsPaycardTraceIndex.AsInteger);
+    end
     else
     begin
-      msg := Format(GetTranslatedtext('shTxInvoicePayments_RevertPayment'), [mPaymentsDescription.AsString, _floattostr(mPaymentsAmount.AsFloat, vWidth, vDec), mPaymentsCurrency.AsString]);
+      msg := Format(GetTranslatedtext('shTxInvoicePayments_RevertPayment'), [mPaymentsDescription.AsString, _floattostr(mPaymentsnativeAmount.AsFloat, vWidth, vDec), mPaymentsCurrency.AsString]);
       if MessageDlg(msg, mtConfirmation, [mbOK, mbCancel], 0) = mrOK then
       begin
         s := s + ' insert into payments ( '#10;
@@ -6110,15 +6124,13 @@ begin
         s := s + ' WHERE  Id = (' + _db(mPaymentsId.AsInteger) + ') ' + #10;
 
         if cmd_bySQL(s) then
-        begin
           AddInvoiceActivityLog(g.qUser, FReservation, FRoomReservation, FInvoiceIndex
-            , ADD_PAYMENT, mPaymentsPayType.AsString, mPaymentsAmount.AsFloat * -1, -1, mPaymentsDescription.ASString);
-        end;
-
-        LoadPayments;
-        DisplayTotals;
+            , ADD_PAYMENT, mPaymentsPayType.AsString, mPaymentsNativeAmount.AsFloat * -1, -1, mPaymentsDescription.ASString);
       end;
     end;
+
+    LoadPayments;
+    DisplayTotals;
 
   end;
 end;
@@ -7082,6 +7094,11 @@ begin
     mnuItem.Add(Item);
     Item.OnClick := TransferRoomToAnyRoomsClick;
   end;
+end;
+
+procedure TfrmInvoiceRentPerDay.memExtraTextChange(Sender: TObject);
+begin
+  HeaderChanged := True;
 end;
 
 procedure TfrmInvoiceRentPerDay.mnuMoveItemPopup(Sender: TObject);
