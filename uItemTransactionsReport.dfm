@@ -72,8 +72,6 @@ inherited frmItemTransactionsReport: TfrmItemTransactionsReport
           SkinData.SkinSection = 'CHECKBOX'
           ImgChecked = 0
           ImgUnchecked = 0
-          ExplicitLeft = 405
-          ExplicitWidth = 203
         end
         object btnShowReservation: TsButton
           AlignWithMargins = True
@@ -89,7 +87,6 @@ inherited frmItemTransactionsReport: TfrmItemTransactionsReport
           TabOrder = 2
           OnClick = btnShowReservationClick
           SkinData.SkinSection = 'BUTTON'
-          ExplicitLeft = 271
         end
       end
       object gTrxList: TcxGrid
@@ -102,8 +99,6 @@ inherited frmItemTransactionsReport: TfrmItemTransactionsReport
         BorderStyle = cxcbsNone
         TabOrder = 1
         LookAndFeel.NativeStyle = False
-        ExplicitLeft = -1
-        ExplicitTop = 41
         object tvTrxList: TcxGridDBTableView
           OnDblClick = tvTrxListDblClick
           Navigator.Buttons.CustomButtons = <>
@@ -143,6 +138,10 @@ inherited frmItemTransactionsReport: TfrmItemTransactionsReport
             item
               Format = ',0;-,0'
               Kind = skSum
+            end
+            item
+              Format = ',0.00;-,0.00'
+              Column = tvTrxListTotal
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -199,6 +198,11 @@ inherited frmItemTransactionsReport: TfrmItemTransactionsReport
             item
               Format = ',0;-,0'
               Kind = skSum
+            end
+            item
+              Format = ',0.00;-,0.00'
+              Kind = skSum
+              Column = tvTrxListTotal
             end>
           DataController.Summary.SummaryGroups = <>
           OptionsBehavior.IncSearch = True

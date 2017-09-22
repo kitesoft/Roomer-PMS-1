@@ -282,7 +282,8 @@ begin
            'LEFT JOIN reservations r ON r.Reservation=rr.Reservation ' +
            'LEFT JOIN persons p ON p.RoomReservation=rr.RoomReservation AND MainName=1 ' +
            'JOIN control co ' +
-           'WHERE il.logtime BETWEEN ''%s'' AND ''%s'' ' +
+           'WHERE DATE(il.logtime) BETWEEN ''%s'' AND ''%s'' ' +
+           'GROUP BY il.ItemSource, il.ItemId, il.action, il.logTime, ItemId, Price, Number, InvoiceNumber' +
            'ORDER BY il.ItemSource, il.ItemId, il.action, il.logTime',
            [
              sFrom, sTo
