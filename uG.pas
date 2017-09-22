@@ -1342,7 +1342,7 @@ var
   frm: TfrmDownPayment;
 begin
   result := false;
-  frm := TfrmDownPayment.Create(frm);
+  frm := TfrmDownPayment.Create(nil);
   try
     frm.rec := rec;
 

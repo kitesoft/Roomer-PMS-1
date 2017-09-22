@@ -318,6 +318,7 @@ uses
   uBookingsTaxesAPICaller in 'OpenAPI\uBookingsTaxesAPICaller.pas',
   uCalculationTypeDefinitions in 'Definitions\uCalculationTypeDefinitions.pas',
   uCalculationTypeExtraDefinitions in 'Definitions\uCalculationTypeExtraDefinitions.pas',
+  uItemTransactionsReport in 'uItemTransactionsReport.pas' {frmItemTransactionsReport},
   uFraCurrencyPanel in 'Embeddables\uFraCurrencyPanel.pas' {fraCurrencyPanel: TFrame};
 
 {$R *.RES}

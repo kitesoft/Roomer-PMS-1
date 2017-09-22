@@ -684,6 +684,7 @@ type
     btnCreditcardTokenUsage: TdxBarLargeButton;
     btnPayCards: TdxBarLargeButton;
     btnManagePaycards: TdxBarLargeButton;
+    btnItemTransations: TdxBarLargeButton;
     procedure FormCreate(Sender: TObject);
     procedure DefaultHandler(var Message); override;
     procedure FormShow(Sender: TObject);
@@ -976,6 +977,7 @@ type
     procedure gridSectionChanged(Sender: TObject; ALeft, ATop, ARight, ABottom: Integer);
     procedure btnPayCardsClick(Sender: TObject);
     procedure btnManagePaycardsClick(Sender: TObject);
+    procedure btnItemTransationsClick(Sender: TObject);
 
   protected
     procedure CreateParams(var Params: TCreateParams); override;
@@ -1639,6 +1641,7 @@ uses
     , uPCITokenReport
     , uFrmTokenChargeHistory
     , uFrmManagePCIConnection
+    , uItemTransactionsReport
 		;
 
 {$R *.DFM}
@@ -10945,6 +10948,11 @@ procedure TfrmMain.btnItemsListClick(Sender: TObject);
 begin
   LogUserClickedButton(Sender);
   _ItemsList
+end;
+
+procedure TfrmMain.btnItemTransationsClick(Sender: TObject);
+begin
+  ShowItemTransactionsReport;
 end;
 
 procedure TfrmMain.btnItemTypeListClick(Sender: TObject);

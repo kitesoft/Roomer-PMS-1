@@ -2418,7 +2418,7 @@ begin
       'ih.ihPayDate, ' +
       'ih.ihConfirmDate, ' +
       'ih.ihInvoiceDate, ' +
-      'ih.ihCurrency, ' +
+      'COALESCE(ia.ihCurrency, ih.ihCurrency) as ihCurrency, ' +         // See Note on end of unit!
       'ih.ihCurrencyRate, ' +
       'ih.invRefrence, ' +
       'ih.TotalStayTax, ' +
@@ -4040,8 +4040,8 @@ begin
     'Country, ' +
     'ExtraText, ' +
     'custPID, ' +
-    'InvoiceType) ' +
-//    'ihCurrency) ' +
+    'InvoiceType, ' +
+    'ihCurrency) ' +                // See Note on end of unit!
     'VALUES ' +
     '(%d, ' +
     '%d, ' +
@@ -4057,7 +4057,8 @@ begin
     '%s, ' +
     '%s, ' +
     '%s, ' +
-    '%d) ',
+    '%d,  ' +
+    '%s) ',
     [
     InvoiceIndex,
     FReservation,
@@ -4073,8 +4074,8 @@ begin
     _db(zCountry),
     _db(memExtraText.Lines.Text),
     _db(edtPersonalId.Text),
-    rgrInvoiceType.itemIndex
-//    _db(edtCurrency.Text)
+    rgrInvoiceType.itemIndex,
+    _db(edtCurrency.Text)
     ]) +
 
     format('ON DUPLICATE KEY UPDATE ' +
@@ -4088,8 +4089,8 @@ begin
     'Country=%s, ' +
     'ExtraText=%s, ' +
     'custPID=%s, ' +
-    'InvoiceType=%d ',
-//    'ihCurrency=%s',
+    'InvoiceType=%d, ' +
+    'ihCurrency=%s',
     [
     zInvoiceNumber,
     _db(edtCustomer.Text),
@@ -4101,8 +4102,8 @@ begin
     _db(zCountry),
     _db(memExtraText.Lines.Text),
     _db(edtPersonalId.Text),
-    rgrInvoiceType.itemIndex
-//    _db(edtCurrency.Text)
+    rgrInvoiceType.itemIndex,
+    _db(edtCurrency.Text)
     ]);
 
   aExecutionPlan.AddExec(s);
@@ -8846,6 +8847,16 @@ begin
 end;
 
 initialization
+
+//**********************************************************************************************************
+// NOTE on use of Currency in invoiceaddressees table
+//
+// Currency of the invoice per invoiceindex is historically stored in the invoiceaddressees table
+// because invoicehead does not have a invoiceindex field
+//
+// TODO: Redesign invoicehead to contain header information PER INVOICEINDEX and include currency and rate and ....
+//
+//**********************************************************************************************************
 
 
 end.

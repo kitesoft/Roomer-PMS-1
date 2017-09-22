@@ -157,6 +157,8 @@
         <Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1)'!=''">
+        <VerInfo_Keys>CompanyName=Promoir BV;FileDescription=Roomer PMS;FileVersion=1.9.15.1;InternalName=;LegalCopyright=(C) 2013, 2014, 2015, 2016, 2017 Promoir BV;LegalTrademarks=Roomer is a Registered Trademark of Promoir BV;OriginalFilename=Roomer.exe;ProductName=Roomer Open Hospitality Platform;ProductVersion=1.9.15.1;Comments=;ExtraBuild=170922;PrivateBuild=</VerInfo_Keys>
+        <VerInfo_Build>1</VerInfo_Build>
         <VerInfo_AutoGenVersion>false</VerInfo_AutoGenVersion>
         <DCC_ExeOutput>RoomerPMSRelease</DCC_ExeOutput>
         <VerInfo_Locale>1033</VerInfo_Locale>
@@ -188,8 +190,9 @@
         <DCC_AssertionsAtRuntime>false</DCC_AssertionsAtRuntime>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_4_Win32)'!=''">
+        <VerInfo_Build>2</VerInfo_Build>
         <VerInfo_PreRelease>false</VerInfo_PreRelease>
-        <VerInfo_Keys>CompanyName=Promoir BV;FileDescription=Roomer PMS;FileVersion=1.9.15.1;InternalName=;LegalCopyright=(C) 2013, 2014, 2015, 2016, 2017 Promoir BV;LegalTrademarks=Roomer is a Registered Trademark of Promoir BV;OriginalFilename=Roomer.exe;ProductName=Roomer Open Hospitality Platform;ProductVersion=1.9.15.1;Comments=;ExtraBuild=170914;PrivateBuild=</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=Promoir BV;FileDescription=Roomer PMS;FileVersion=1.9.15.2;InternalName=;LegalCopyright=(C) 2013, 2014, 2015, 2016, 2017 Promoir BV;LegalTrademarks=Roomer is a Registered Trademark of Promoir BV;OriginalFilename=Roomer.exe;ProductName=Roomer Open Hospitality Platform;ProductVersion=1.9.15.2;Comments=;ExtraBuild=170922;PrivateBuild=</VerInfo_Keys>
         <Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_8_Win32)'!=''">
@@ -964,6 +967,9 @@
         <DCCReference Include="OpenAPI\uBookingsTaxesAPICaller.pas"/>
         <DCCReference Include="Definitions\uCalculationTypeDefinitions.pas"/>
         <DCCReference Include="Definitions\uCalculationTypeExtraDefinitions.pas"/>
+        <DCCReference Include="uItemTransactionsReport.pas">
+            <Form>frmItemTransactionsReport</Form>
+        </DCCReference>
         <DCCReference Include="Embeddables\uFraCurrencyPanel.pas">
             <Form>fraCurrencyPanel</Form>
             <DesignClass>TFrame</DesignClass>

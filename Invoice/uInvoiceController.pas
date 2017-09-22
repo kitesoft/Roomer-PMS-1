@@ -948,13 +948,13 @@ begin
         'ih.ihPayDate, ' +
         'ih.ihConfirmDate, ' +
         'ih.ihInvoiceDate, ' +
-//        'IFNULL((SELECT ihCurrency FROM invoiceaddressees ia WHERE ia.invoiceNumber=ih.InvoiceNumber ' +
-//        '        AND ia.Reservation=ih.Reservation ' +
-//        '        AND ia.RoomReservation=ih.RoomReservation ' +
-//        '        AND ia.SplitNumber=ih.SplitNumber ' +
-//        '        AND ia.InvoiceIndex={InvoiceIndex} ' +
-//        '       ), ' +
-        ' ih.ihCurrency AS ihCurrency, ' +
+// See note on the bottom of unit
+        'IFNULL((SELECT ihCurrency FROM invoiceaddressees ia WHERE ia.invoiceNumber=ih.InvoiceNumber ' +
+        '        AND ia.Reservation=ih.Reservation ' +
+        '        AND ia.RoomReservation=ih.RoomReservation ' +
+        '        AND ia.SplitNumber=ih.SplitNumber ' +
+        '        AND ia.InvoiceIndex={InvoiceIndex} ' +
+        '       ), ' +
         'ih.ihCurrencyRate, ' +
         'ih.invRefrence, ' +
         'ih.TotalStayTax, ' +
@@ -1428,8 +1428,8 @@ begin
          'Country, ' +
          'ExtraText, ' +
          'custPID, ' +
-         'InvoiceType ' +
-//         'ihCurrency ' +
+         'InvoiceType, ' +
+         'ihCurrency ' +
          ' ) ' +
          'VALUES ' +
          '(%d, ' +
@@ -1446,8 +1446,8 @@ begin
          '%s, ' +
          '%s, ' +
          '%s, ' +
-         '%d ' +
-//         '%s ' +
+         '%d, ' +
+         '%s ' +
          ') ',
          [
           InvoiceIndex,
@@ -1481,8 +1481,8 @@ begin
          'Country=%s, ' +
          'ExtraText=%s, ' +
          'custPID=%s, ' +
-         'InvoiceType=%d ',
-//         'ihCurrency=%s',
+         'InvoiceType=%d, ' +
+         'ihCurrency=%s',
          [
           InvoiceNumber,
           _db(Customer),
@@ -1494,8 +1494,8 @@ begin
           _db(Country),
           _db(ExtraText),
           _db(CustPID),
-          InvoiceType
-//          _db(ihCurrency)
+          InvoiceType,
+          _db(ihCurrency)
          ]);
 end;
 
@@ -2020,5 +2020,19 @@ begin
   FShowDiscount := RecSet['ShowDiscount'];
   FPaid := RecSet['Paid'];
 end;
+
+
+
+//**********************************************************************************************************
+// NOTE on use of Currency in invoiceaddressees table
+//
+// Currency of the invoice per invoiceindex is historically stored in the invoiceaddressees table
+// because invoicehead does not have a invoiceindex field
+//
+// TODO: Redesign invoicehead to contain header information PER INVOICEINDEX and include currency and rate and ....
+//
+//**********************************************************************************************************
+
+
 
 end.
