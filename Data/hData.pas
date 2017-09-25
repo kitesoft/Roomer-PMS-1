@@ -1794,7 +1794,6 @@ function ItemType_Exists(sItemType: string): boolean;
 function Convert(sType, sValue: string; Direction: integer): string;
 function ItemPlus_Get_Data(aItem: string): recItemPlusHolder;
 
-function GetFirstCurrency(iReservation: integer): string;
 
 function RR_Exists(iRoomReservation: integer): boolean;
 
@@ -4810,28 +4809,6 @@ begin
   end;
 end;
 
-function GetFirstCurrency(iReservation: integer): string;
-var
-  rSet: TRoomerDataSet;
-  s: string;
-begin
-  result := ctrlGetString('NativeCurrency');
-  rSet := CreateNewDataSet;
-  try
-    // s := s + 'SELECT Currency '+#10;
-    // s := s + 'FROM RoomReservations '+#10;
-    // s := s + 'WHERE Reservation = ' + inttostr(iReservation)+#10;
-    // s := s + 'ORDER By RoomReservation '+#10;
-    s := format(select_GetFirstCurrency, [iReservation]);
-    if hData.rSet_bySQL(rSet, s) then
-    begin
-      result := rSet.fieldbyname('Currency').asString;
-    end;
-  finally
-    freeandnil(rSet);
-  end;
-end;
-
 procedure SendInvoicesToFinancePacket(zInvoiceNumber: integer);
 var remoteResult : String;
 begin
@@ -6122,16 +6099,16 @@ begin
 
   rSet := CreateNewDataSet;
   try
-    s := '';
-    s := s + 'SELECT '#10;
-    s := s + '  rrArrival '#10;
-    s := s + '  ,rrDeparture '#10;
-    s := s + 'FROM '#10;
-    s := s + '  `roomreservations` '#10;
-    s := s + 'WHERE '#10;
-    s := s + ' `RoomReservation` = %d ';
+//    s := '';
+//    s := s + 'SELECT '#10;
+//    s := s + '  rrArrival '#10;
+//    s := s + '  ,rrDeparture '#10;
+//    s := s + 'FROM '#10;
+//    s := s + '  `roomreservations` '#10;
+//    s := s + 'WHERE '#10;
+//    s := s + ' `RoomReservation` = %d ';
 
-    s := format(s, [iRoomReservation]);
+    s := format(select_RR_getDates, [iRoomReservation]);
     if hData.rSet_bySQL(rSet, s) then
     begin
       rSet.First;

@@ -2639,8 +2639,8 @@ begin
     s := s + '    , rr.Room '#10;
     s := s + '    , rr.RoomType '#10;
     s := s + '    , rr.package '#10;
-    s := s + '    , rrArrival as Arrival'#10;
-    s := s + '    , rrDeparture as Departure'#10;
+    s := s + '    , (select min(aDate) from roomsdate rd where rd.roomreservation=rr.roomreservation) as Arrival'#10;
+    s := s + '    , (select max(aDate) from roomsdate rd where rd.roomreservation=rr.roomreservation) as Departure'#10;
     s := s + '    , ExpectedTimeOfArrival'#10;
     s := s + '    , ExpectedCheckoutTime'#10;
     s := s + '    , rr.Status '#10;
