@@ -243,10 +243,13 @@ var
   '   , RoomType '+
   '   , Reservation '+
   '   , Status '+
-  '   , rrArrival '+
-  '   , rrDeparture, (SELECT channel FROM reservations WHERE Reservation=%d LIMIT 1) AS channel '+
+  '    , (select min(aDate) from roomsdate rd where rd.roomreservation=rr.roomreservation AND (rd.ResFlag NOT IN (''X'',''C''))) as rrArrival'#10 +
+  '    , (select DATE_ADD(CAST(max(aDate) AS DATE), INTERVAL 1 DAY) from roomsdate rd where rd.roomreservation=rr.roomreservation AND (rd.ResFlag NOT IN (''X'',''C''))) as rrDeparture'#10 +
+//  '   , rrArrival '+
+//  '   , rrDeparture
+  '   , (SELECT channel FROM reservations WHERE Reservation=%d LIMIT 1) AS channel '+
   ' FROM '+
-  '   roomreservations '+
+  '   roomreservations rr '+
   ' WHERE '+
   '   (Reservation = %d) '+
   ' ORDER BY room ';
@@ -854,13 +857,15 @@ select_LodgingTaxReport2_RefreshAll : string =
   //TESTED NOT
   select_MaidList_UpdateAll3 : string =
   ' SELECT  '+
-  '   rrArrival '+
-  ' , rrDeparture '+
+  ' (select min(aDate) from roomsdate rd where rd.roomreservation=rr.roomreservation AND (rd.ResFlag NOT IN (''X'',''C''))) as rrArrival'#10 +
+  ' (select DATE_ADD(CAST(max(aDate) AS DATE), INTERVAL 1 DAY) from roomsdate rd where rd.roomreservation=rr.roomreservation AND (rd.ResFlag NOT IN (''X'',''C''))) as rrDeparture'#10 +
+//  '   rrArrival '+
+//  ' , rrDeparture '+
   ' , Reservation '+
   ' , Status '+
 
   ' FROM '+
-  '   roomreservations '+
+  '   roomreservations rr '+
   ' WHERE '+
   '   RoomReservation = %d ' ;
 //  '   RoomReservation = '+inttostr(RoomReservation)+' '+#10 ;
@@ -1073,12 +1078,14 @@ select_ProvideARoom2_MoveToRoomEnh2 : string =
 '  , Room '+
 '  , RoomType '+
 '  , Status '+
-'  , rrArrival '+
-'  , rrDeparture '+
+'  , (select min(aDate) from roomsdate rd where rd.roomreservation=rr.roomreservation AND (rd.ResFlag NOT IN (''X'',''C''))) as rrArrival'#10 +
+'  , (select DATE_ADD(CAST(max(aDate) AS DATE), INTERVAL 1 DAY) from roomsdate rd where rd.roomreservation=rr.roomreservation AND (rd.ResFlag NOT IN (''X'',''C''))) as rrDeparture'#10 +
+//'  , rrArrival '+
+//'  , rrDeparture '+
 '  , blockMove '+
 '  , blockMoveReason '+
 ' FROM '+
-'   roomreservations '+
+'   roomreservations rr'+
 ' WHERE '+
 '   RoomReservation = %d ' ;
 
@@ -1089,10 +1096,12 @@ select_ProvideARoom2_MoveToRoomEnhs : string =
 ' SELECT '+
 '    Room '+
 '  , RoomType '+
-'  , rrArrival '+
-'  , rrDeparture '+
+'  , (select min(aDate) from roomsdate rd where rd.roomreservation=rr.roomreservation AND (rd.ResFlag NOT IN (''X'',''C''))) as rrArrival'#10 +
+'  , (select DATE_ADD(CAST(max(aDate) AS DATE), INTERVAL 1 DAY) from roomsdate rd where rd.roomreservation=rr.roomreservation AND (rd.ResFlag NOT IN (''X'',''C''))) as rrDeparture'#10 +
+//'  , rrArrival '+
+//'  , rrDeparture '+
 ' FROM '+
-'   roomreservations '+
+'   roomreservations rr'+
 ' WHERE '+
 '   RoomReservation = %d ';
 
@@ -1133,8 +1142,10 @@ select_RoomReservation : string =
 '    ,Hallres '#10+
 '    ,rrTmp '#10+
 '    ,rrDescription '#10+
-'    ,rrArrival '#10+
-'    ,rrDeparture '#10+
+'    , (select min(aDate) from roomsdate rd where rd.roomreservation=rr.roomreservation AND (rd.ResFlag NOT IN (''X'',''C''))) as rrArrival'#10 +
+'    , (select DATE_ADD(CAST(max(aDate) AS DATE), INTERVAL 1 DAY) from roomsdate rd where rd.roomreservation=rr.roomreservation AND (rd.ResFlag NOT IN (''X'',''C''))) as rrDeparture'#10 +
+//'    ,rrArrival '#10+
+//'    ,rrDeparture '#10+
 '    ,rrIsNoRoom '#10+
 '    ,rrRoomAlias '#10+
 '    ,rrRoomTypeAlias '#10+
@@ -1145,13 +1156,13 @@ select_RoomReservation : string =
 '    ,numGuests '#10+
 '    ,numChildren '#10+
 '    ,numInfants '#10+
-'    ,(SELECT AVG(RoomRate) FROM roomsdate rd WHERE rd.RoomReservation=RoomReservations.RoomReservation AND (rd.ResFlag NOT IN (''X'',''C''))) AS AverageRate '#10+
+'    ,(SELECT AVG(RoomRate) FROM roomsdate rd WHERE rd.RoomReservation=rr.RoomReservation AND (rd.ResFlag NOT IN (''X'',''C''))) AS AverageRate '#10+
 '    ,rateCount '#10+
 '    ,package '#10+
 '    ,ExpectedTimeOfArrival '#10+
 '    ,ExpectedCheckoutTime'#10+
 '  FROM '#10+
-'    RoomReservations '#10+
+'    RoomReservations rr'#10+
 '  WHERE '#10+
 '    RoomReservation = %d ';
 
@@ -1169,18 +1180,20 @@ select_ReservationProfile_UpdateProfile : string =
 //TESTED NOT
 select_ReservationProfile_guestRoomsSQL : string =
 'SELECT '+
-'     roomreservations.Reservation '+
-'   , roomreservations.RoomReservation '+
-'   , roomreservations.GroupAccount AS isGroup '+
-'   , roomreservations.invBreakfast AS Breakfast '+
-'   , roomreservations.rrArrival '+
-'   , roomreservations.rrDeparture '+
-'   , roomreservations.Room '+
-'   , roomreservations.InvoiceIndex '+
-'   , roomreservations.status '+
+'     rr.Reservation '+
+'   , rr.RoomReservation '+
+'   , rr.GroupAccount AS isGroup '+
+'   , rr.invBreakfast AS Breakfast '+
+'    , (select min(aDate) from roomsdate rd where rd.roomreservation=rr.roomreservation AND (rd.ResFlag NOT IN (''X'',''C''))) as rrArrival'#10 +
+'    , (select DATE_ADD(CAST(max(aDate) AS DATE), INTERVAL 1 DAY) from roomsdate rd where rd.roomreservation=rr.roomreservation AND (rd.ResFlag NOT IN (''X'',''C''))) as rrDeparture'#10 +
+//'   , rr.rrArrival '+
+//'   , rr.rrDeparture '+
+'   , rr.Room '+
+'   , rr.InvoiceIndex '+
+'   , rr.status '+
 '   , rooms.Description AS RoomDescription '+
 '   , rooms.Equipments '+
-'   , roomreservations.rrIsNoRoom AS NoRoomm '+
+'   , rr.rrIsNoRoom AS NoRoomm '+
 '   , rooms.RoomType '+
 '   , roomtypes.Description AS RoomTypeDescription '+
 '   , roomtypes.NumberGuests AS DefNumberGuests '+
@@ -1189,7 +1202,7 @@ select_ReservationProfile_guestRoomsSQL : string =
 '   , locations.Description AS LocationDescription '+
 '   , persons.PersonsProfilesId '+
 '   , persons.Name as Mainguest '+
-'   , (SELECT count(Person) FROM persons p2 WHERE  p2.RoomReservation = roomreservations.Roomreservation) as GuestCount '+
+'   , (SELECT count(Person) FROM persons p2 WHERE  p2.RoomReservation = rr.Roomreservation) as GuestCount '+
 ' FROM '+
 '   locations '+
 '   RIGHT OUTER JOIN '+
@@ -1197,11 +1210,11 @@ select_ReservationProfile_guestRoomsSQL : string =
 '   LEFT OUTER JOIN '+
 '     roomtypes ON rooms.RoomType = roomtypes.RoomType '+
 '   RIGHT OUTER JOIN '+
-'     roomreservations ON rooms.Room = roomreservations.Room '+
+'     roomreservations rr ON rooms.Room = rr.Room '+
 '   JOIN '+
-'     persons ON persons.RoomReservation = roomreservations.RoomReservation AND MainName=1 '+
-'   WHERE roomreservations.Reservation =%d '+
-'   ORDER BY roomreservations.Room ';
+'     persons ON persons.RoomReservation = rr.RoomReservation AND MainName=1 '+
+'   WHERE rr.Reservation =%d '+
+'   ORDER BY rr.Room ';
 
 
 
@@ -1228,15 +1241,17 @@ select_ReservationProfile_guestsSQL : string =
 //TESTED NOT
 select_ReservationProfile_allGuestsSQL : string =
 ' SELECT '+
-'     roomreservations.GroupAccount AS isGroup '+
-'   , roomreservations.invBreakfast AS Breakfast '+
-'   , roomreservations.rrArrival '+
-'   , roomreservations.rrDeparture '+
-'   , roomreservations.status '+
-'   , roomreservations.Room '+
+'     rr.GroupAccount AS isGroup '+
+'   , rr.invBreakfast AS Breakfast '+
+'    , (select min(aDate) from roomsdate rd where rd.roomreservation=rr.roomreservation) as rrArrival'#10 +
+'    , (select DATE_ADD(CAST(max(aDate) AS DATE), INTERVAL 1 DAY) from roomsdate rd where rd.roomreservation=rr.roomreservation) as rrDeparture'#10 +
+//'   , rr.rrArrival '+
+//'   , rr.rrDeparture '+
+'   , rr.status '+
+'   , rr.Room '+
 '   , rooms.Description AS RoomDescription '+
 '   , rooms.Equipments '+
-'   , roomreservations.rrIsNoRoom AS NoRoomm '+
+'   , rr.rrIsNoRoom AS NoRoomm '+
 '   , rooms.RoomType '+
 '   , roomtypes.Description AS RoomTypeDescription '+
 '   , roomtypes.NumberGuests AS DefNumberGuests '+
@@ -1266,8 +1281,8 @@ select_ReservationProfile_allGuestsSQL : string =
 '     LEFT OUTER JOIN '+
 '       locations ON rooms.Location = locations.Location '+
 '     LEFT OUTER JOIN '+
-'       roomtypes ON rooms.RoomType = roomtypes.RoomType ON roomreservations.Room = rooms.Room ON '+
-'       persons.RoomReservation = roomreservations.RoomReservation '+
+'       roomtypes ON rooms.RoomType = roomtypes.RoomType ON rr.Room = rooms.Room ON '+
+'       persons.RoomReservation = rr.RoomReservation '+
 ' WHERE '+
 '  persons.Reservation =%d '+  //zReservation
 ' ORDER BY '+
@@ -1303,11 +1318,13 @@ select_ResMemos_FormShow2 : string =
 '    , ID '+
 '    , RoomType '+
 '    , Status '+
-'    , rrArrival '+
-'    , rrDeparture '+
+'    , (select min(aDate) from roomsdate rd where rd.roomreservation=rr.roomreservation AND (rd.ResFlag NOT IN (''X'',''C''))) as rrArrival'#10 +
+'    , (select DATE_ADD(CAST(max(aDate) AS DATE), INTERVAL 1 DAY) from roomsdate rd where rd.roomreservation=rr.roomreservation AND (rd.ResFlag NOT IN (''X'',''C''))) as rrDeparture'#10 +
+//'    , rrArrival '+
+//'    , rrDeparture '+
 '    , HiddenInfo '+
 ' FROM '+
-'  roomreservations '+
+'  roomreservations rr'+
 ' WHERE (Reservation =%d ) '+
 ' ORDER BY RoomReservation ';
 
@@ -1326,35 +1343,39 @@ select_ResPriceChange_FillRoomTypesBOX : string =
 //NOT TESTED
 select_ResProblem_GridFill : string =
 ' SELECT '+
-'       roomreservations.RoomReservation '+
-'     , roomreservations.Room  '+
-'     , roomreservations.Reservation '+
-'     , roomreservations.Status '+
-'     , roomreservations.rrArrival '+
-'     , roomreservations.rrDeparture '+
+'       rr.RoomReservation '+
+'     , rr.Room  '+
+'     , rr.Reservation '+
+'     , rr.Status '+
+'    , (select min(aDate) from roomsdate rd where rd.roomreservation=rr.roomreservation AND (rd.ResFlag NOT IN (''X'',''C''))) as rrArrival'#10 +
+'    , (select DATE_ADD(CAST(max(aDate) AS DATE), INTERVAL 1 DAY) from roomsdate rd where rd.roomreservation=rr.roomreservation AND (rd.ResFlag NOT IN (''X'',''C''))) as rrDeparture'#10 +
+//'     , rr.rrArrival '+
+//'     , rr.rrDeparture '+
 '     , reservations.Customer '+
 '     , reservations.Name As CustomerName '+
 ' FROM '+
-'   roomreservations '+
+'   roomreservations rr '+
 '   RIGHT OUTER JOIN '+
-'         reservations ON roomreservations.Reservation = reservations.Reservation '+
+'         reservations ON rr.Reservation = reservations.Reservation '+
 ' WHERE (RoomReservation in ( %s ) ) ';  //rrList
 
 //TESTED NOT
 select_RoomDateProblem_GridFill : string =
 ' SELECT '+
-'       roomreservations.RoomReservation '+
-'     , roomreservations.Room  '+
-'     , roomreservations.Reservation '+
-'     , roomreservations.Status '+
-'     , roomreservations.rrArrival '+
-'     , roomreservations.rrDeparture '+
+'       rr.RoomReservation '+
+'     , rr.Room  '+
+'     , rr.Reservation '+
+'     , rr.Status '+
+'    , (select min(aDate) from roomsdate rd where rd.roomreservation=rr.roomreservation AND (rd.ResFlag NOT IN (''X'',''C''))) as rrArrival'#10 +
+'    , (select DATE_ADD(CAST(max(aDate) AS DATE), INTERVAL 1 DAY) from roomsdate rd where rd.roomreservation=rr.roomreservation AND (rd.ResFlag NOT IN (''X'',''C''))) as rrDeparture'#10 +
+//'     , rr.rrArrival '+
+//'     , rr.rrDeparture '+
 '     , reservations.Customer '+
 '     , reservations.Name As CustomerName '+
 ' FROM '+
-'   roomreservations '+
+'   roomreservations rr'+
 '   RIGHT OUTER JOIN '+
-'         reservations ON roomreservations.Reservation = reservations.Reservation '+
+'         reservations ON rr.Reservation = reservations.Reservation '+
 ' WHERE (RoomReservation in ( %s ) ) '; //('+rrList+')
 
 
@@ -1497,68 +1518,74 @@ select_RoomProfile_GetInvoiceInfo : string =
 
 select_RoomReservationOBJ_RoomReservation_getFromDB : string =
 '   SELECT '+
-'       roomreservations.RoomReservation '+
-'     , roomreservations.Room  '+
-'     , roomreservations.Reservation '+
-'     , roomreservations.Status '+
-'     , roomreservations.rrArrival '+
-'     , roomreservations.rrDeparture '+
+'       rr.RoomReservation '+
+'     , rr.Room  '+
+'     , rr.Reservation '+
+'     , rr.Status '+
+'    , (select min(aDate) from roomsdate rd where rd.roomreservation=rr.roomreservation AND (rd.ResFlag NOT IN (''X'',''C''))) as rrArrival'#10 +
+'    , (select DATE_ADD(CAST(max(aDate) AS DATE), INTERVAL 1 DAY) from roomsdate rd where rd.roomreservation=rr.roomreservation AND (rd.ResFlag NOT IN (''X'',''C''))) as rrDeparture'#10 +
+//'     , rr.rrArrival '+
+//'     , rr.rrDeparture '+
 '     , reservations.Customer '+
 '     , reservations.Channel '+
 '     , reservations.Name As CustomerName '+
-'     , (SELECT COUNT(id) FROM persons p WHERE p.RoomReservation=roomreservations.RoomReservation) AS NumGuests '+
+'     , (SELECT COUNT(id) FROM persons p WHERE p.RoomReservation=rr.RoomReservation) AS NumGuests '+
 ' FROM '+
-'   roomreservations '+
+'   roomreservations rr '+
 '   RIGHT OUTER JOIN '+
-'         reservations ON roomreservations.Reservation = reservations.Reservation ';
+'         reservations ON rr.Reservation = reservations.Reservation ';
 
 select_RoomReservationOBJ_RoomReservation_getListFromDB : string =
 ' SELECT '+
-'       roomreservations.RoomReservation '+
-'     , roomreservations.Room  '+
-'     , roomreservations.Reservation '+
-'     , roomreservations.Status '+
-'     , roomreservations.rrArrival '+
-'     , roomreservations.rrDeparture '+
+'       rr.RoomReservation '+
+'     , rr.Room  '+
+'     , rr.Reservation '+
+'     , rr.Status '+
+'    , (select min(aDate) from roomsdate rd where rd.roomreservation=rr.roomreservation AND (rd.ResFlag NOT IN (''X'',''C''))) as rrArrival'#10 +
+'    , (select DATE_ADD(CAST(max(aDate) AS DATE), INTERVAL 1 DAY) from roomsdate rd where rd.roomreservation=rr.roomreservation AND (rd.ResFlag NOT IN (''X'',''C''))) as rrDeparture'#10 +
+//'     , rr.rrArrival '+
+//'     , rr.rrDeparture '+
 '     , reservations.Customer '+
 '     , reservations.Channel '+
 '     , reservations.Name As CustomerName '+
 '     , persons.name As GuestName '+
 ' FROM '+
-'   roomreservations '+
+'   roomreservations rr'+
 '   RIGHT OUTER JOIN '+
-'         reservations ON roomreservations.Reservation = reservations.Reservation '+
-'   LEFT OUTER JOIN persons ON roomreservations.roomreservation = persons.roomreservation '+
-' WHERE (roomreservations.RoomReservation in ( %s ) ) '+
-'GROUP BY roomreservations.RoomReservation'; // rrList
+'         reservations ON rr.Reservation = reservations.Reservation '+
+'   LEFT OUTER JOIN persons ON rr.roomreservation = persons.roomreservation '+
+' WHERE (rr.RoomReservation in ( %s ) ) '+
+'GROUP BY rr.RoomReservation'; // rrList
 
 select_RoomReservationOBJ_RoomReservation_getListFromDBViaDates : string =
 ' SELECT '+
-'       roomreservations.RoomReservation '+
-'     , roomreservations.Room  '+
-'     , roomreservations.Reservation '+
-'     , roomreservations.Status '+
-'     , roomreservations.rrArrival '+
-'     , roomreservations.rrDeparture '+
-'     , roomreservations.RoomRentPaymentInvoice AS PaymentInvoice '+
-'     , roomreservations.GroupAccount '+
+'       rr.RoomReservation '+
+'     , rr.Room  '+
+'     , rr.Reservation '+
+'     , rr.Status '+
+'    , (select min(aDate) from roomsdate rd where rd.roomreservation=rr.roomreservation AND (rd.ResFlag NOT IN (''X'',''C''))) as rrArrival'#10 +
+'    , (select DATE_ADD(CAST(max(aDate) AS DATE), INTERVAL 1 DAY) from roomsdate rd where rd.roomreservation=rr.roomreservation AND (rd.ResFlag NOT IN (''X'',''C''))) as rrDeparture'#10 +
+//'     , rr.rrArrival '+
+//'     , rr.rrDeparture '+
+'     , rr.RoomRentPaymentInvoice AS PaymentInvoice '+
+'     , rr.GroupAccount '+
 '     , reservations.Customer '+
 '     , reservations.Channel '+
 '     , reservations.Name As CustomerName '+
 '     , persons.name As GuestName '+
 ' FROM '+
-'   roomreservations '+
+'   roomreservations rr'+
 '   RIGHT OUTER JOIN '+
-'         reservations ON roomreservations.Reservation = reservations.Reservation '+
-'   LEFT OUTER JOIN persons ON roomreservations.roomreservation = persons.roomreservation '+
-' WHERE (roomreservations.RoomReservation in ( SELECT DISTINCT '+
+'         reservations ON rr.Reservation = reservations.Reservation '+
+'   LEFT OUTER JOIN persons ON rr.roomreservation = persons.roomreservation '+
+' WHERE (rr.RoomReservation in ( SELECT DISTINCT '+
 '    RoomReservation '+
 '  FROM  roomsdate '+
 '  WHERE ( ADate >= ''%s'' ) '+
 '   AND (ADate < ''%s'' ) '+
 '  ORDER BY RoomReservation '+
 ' ) ) '+
-'GROUP BY roomreservations.RoomReservation'; // rrList
+'GROUP BY rr.RoomReservation'; // rrList
 
 
 
@@ -2071,7 +2098,7 @@ select_telLog_refresh : string =
 
 ///  s := s + '   ((roomsdate.ADate = ' + _db(adate,true) + ') AND (roomsdate.ResFlag = ' + quotedstr('G')
 ///  s := s + '   ((roomsdate.ADate = ' + _db(adate - 1,true) + ') AND (roomsdate.ResFlag = ' + quotedstr('G')
-///  s := s + '   AND (roomreservations.Departure = ' + _db(adate,true) + ')) '+#10;
+///  s := s + '   AND (rr.Departure = ' + _db(adate,true) + ')) '+#10;
 
 
 
@@ -2081,7 +2108,7 @@ select_telLog_refresh : string =
 ///  s := s + '   (roomsdate.RoomReservation = '+inttostr(RoomReservation)+') '+#10;
 ///  s := s + '     AND (roomsdate.ADate = ' + _db(adate-1,true) + ') '+#10;
 ///  s := s + '     AND (roomsdate.ResFlag = ' + quotedstr('G')+ ') '+#10;
-///  s := s + '     AND (roomreservations.Departure =  ' + _db(adate,true) + ') '+#10;
+///  s := s + '     AND (rr.Departure =  ' + _db(adate,true) + ') '+#10;
 
 
   select_isResCurrentlyCheckedIn : string =
@@ -2417,8 +2444,8 @@ select_telLog_refresh : string =
 
 
   select_GetRoomReservatiaonArrival : string =
-  ' SELECT rrArrival '+
-  ' FROM roomreservations  '+
+  ' SELECT min(aDate) as rrArrival '+
+  ' FROM roomsdate  '+
   ' WHERE Roomreservation = %d ';
 
   select_LastRoomReservatiaon : string =
@@ -3026,12 +3053,11 @@ select_getRoomTypeFromRR : string =
 //      ' WHERE RoomReservation = ' + inttostr(iRoomReservation);
 
     select_RR_GetArrivalDate : string =
-    'SELECT rrArrival FROM roomreservations'+
+    'SELECT min(aDate) as rrArrival FROM roomsdate'+
     ' WHERE RoomReservation = %d ';
-//    ' WHERE RoomReservation = ' + inttostr(iRoomReservation);
 
     select_RR_GetDepartureDate : string =
-    'SELECT rrDeparture FROM roomreservations'+
+    'SELECT DATE_ADD(cast(max(aDate) as date), interval 1 day) as rrDeparture FROM roomsdate '+
     ' WHERE RoomReservation = %d ';
 //    ' WHERE RoomReservation = ' + inttostr(iRoomReservation);
 
@@ -3039,18 +3065,22 @@ select_getRoomTypeFromRR : string =
     ' SELECT '+
     '   Reservation '+
     ' , Status '+
-    ' , rrArrival '+
-    ' , rrDeparture '+
-    ' FROM roomreservations '+
+'    , (select min(aDate) from roomsdate rd where rd.roomreservation=rr.roomreservation AND (rd.ResFlag NOT IN (''X'',''C''))) as rrArrival'#10 +
+'    , (select DATE_ADD(CAST(max(aDate) AS DATE), INTERVAL 1 DAY) from roomsdate rd where rd.roomreservation=rr.roomreservation AND (rd.ResFlag NOT IN (''X'',''C''))) as rrDeparture'#10 +
+//    ' , rrArrival '+
+//    ' , rrDeparture '+
+    ' FROM roomreservations rr '+
     ' WHERE RoomReservation = %d ';
     ///s := s + ' WHERE RoomReservation = ' + inttostr(iRoomReservation) + ' '+#10;
 
     select_RV_getDates : string =
     ' SELECT '+
     '   Reservation '+
-    ' ,  Arrival '+
-    ' ,  Departure '+
-    ' FROM reservations '+
+'    , (select min(aDate) from roomsdate rd where rd.reservation=r.reservation AND (rd.ResFlag NOT IN (''X'',''C''))) as rrArrival'#10 +
+'    , (select DATE_ADD(CAST(max(aDate) AS DATE), INTERVAL 1 DAY) from roomsdate rd where rd.reservation=r.roomreservation AND (rd.ResFlag NOT IN (''X'',''C''))) as rrDeparture'#10 +
+//    ' ,  Arrival '+
+//    ' ,  Departure '+
+    ' FROM reservations r'+
     ' WHERE Reservation = %d ';
     ///s := s + ' WHERE Reservation = ' + _db(iReservation) + ' '+#10;
 
@@ -3059,10 +3089,10 @@ select_getRoomTypeFromRR : string =
     '   reservations.Name '+
     ' FROM  reservations '+
     '           INNER JOIN '+
-    '              roomreservations ON reservations.Reservation = roomreservations.Reservation '+
+    '              roomreservations ON reservations.Reservation = rr.Reservation '+
     ' WHERE '+
-    '   (roomreservations.RoomReservation = %d ) ';
-    ///s := s + '   (roomreservations.RoomReservation = ' + inttostr(iRoomReservation) + ' ) '+#10;
+    '   (rr.RoomReservation = %d ) ';
+    ///s := s + '   (rr.RoomReservation = ' + inttostr(iRoomReservation) + ' ) '+#10;
 
     select_RR_GetMemoText : string =
     'SELECT '+
@@ -3247,16 +3277,6 @@ select_getRoomTypeFromRR : string =
     ///s := s+'   (Reservation = '+_db(Reservation)+') AND (GroupAccount = 1) '+#10;
 
 
-  select_UpdateStatusSimple1 : string =
-  ' SELECT Room,roomtype,arrival,departure,status,roomreservation FROM roomreservations '+
-  ' WHERE Reservation = %d ';
-  ///s := s + ' WHERE Reservation = ' + inttostr(reservation) + ' '+#10;
-
-  select_UpdateStatusSimple2 : string =
-  ' SELECT Room,roomtype,arrival,departure,status FROM roomreservations '+
-  ' WHERE RoomReservation = %d ';
-  ///s := s + ' WHERE RoomReservation = ' + inttostr(RoomReservation) + ' '+#10;
-
     select_SetAsNoRoom : string =
     ' SELECT '+
     '    RoomReservation '+
@@ -3299,56 +3319,16 @@ select_getRoomTypeFromRR : string =
         select_CheckInGuest : string =
         ' SELECT '+
         '     Room '+
-        '   , Arrival '+
-        '   , Departure '+
+        ', (select min(aDate) from roomsdate rd where rd.roomreservation=rr.roomreservation AND (rd.ResFlag NOT IN (''X'',''C''))) as Arrival'#10 +
+        ', (select DATE_ADD(CAST(max(aDate) AS DATE), INTERVAL 1 DAY) from roomsdate rd where rd.roomreservation=rr.roomreservation AND (rd.ResFlag NOT IN (''X'',''C''))) as Departure'#10 +
+//        '   , Arrival '+
+//        '   , Departure '+
         '   , RoomType '+
         '   , Status '+
         ' FROM '+
-        '   roomreservations '+
+        '   roomreservations rr '+
         ' WHERE '+
         '   RoomReservation = %d  ';
-
-
-
-
-////////////////////////////////////////////////////////////////////
-/// SW Stolpi connection
-////////////////////////////////////////////////////////////////////
-/// SW Stolpi connection
-////////////////////////////////////////////////////////////////////
-/// SW Stolpi connection
-////////////////////////////////////////////////////////////////////
-/// SW Stolpi connection
-////////////////////////////////////////////////////////////////////
-/// SW Stolpi connection
-////////////////////////////////////////////////////////////////////
-
-
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///
-///
-///
-///
-///
-///
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-select_ctrlGetString: string =
-'SELECT %s '#10+  //' + aField + '
-'FROM control  ';
-
-select_ctrlGetFloat: string =
-'SELECT %s '#10+  //' + aField + '
-'FROM control  ';
-
-select_ctrlGetInteger : string =
-'SELECT %s '#10+  //' + aField + '
-'FROM control  ';
-
-select_ctrlGetBoolean : string =
-'SELECT %s '#10+  //' + aField + '
-'FROM control  ';
 
 select_Item_Exists : string =
 ' SELECT Item FROM items '#10+
@@ -3378,12 +3358,6 @@ select_ItemPlus_Get_Data : string =
 '      INNER JOIN VATCodes ON Itemtypes.VATCode = VATCodes.VATCode '#10+
 '  WHERE '#10+
 '  items.item = %s ';  //' + _db(aItem) + '
-
-select_GetFirstCurrency : string =
-'SELECT Currency '#10+
-'FROM roomreservations '#10+
-'WHERE Reservation = %d '#10+  //' + inttostr(iReservation)
-'ORDER By RoomReservation ';
 
 select_NumberOfInvoiceLines : string =
 ' SELECT count(ItemId) AS Cnt FROM Invoicelines '#10+
@@ -3451,11 +3425,11 @@ select_RR_GetCustomer : string =
 ' SELECT '#10+
 '     Reservations.Reservation '#10+
 '   , Reservations.Customer '#10+
-'   , roomreservations.RoomReservation '#10+
+'   , rr.RoomReservation '#10+
 ' FROM '#10+
 '   Reservations '#10+
 '      RIGHT OUTER JOIN '#10+
-'   roomreservations ON Reservations.Reservation = roomreservations.Reservation '#10+
+'   roomreservations ON Reservations.Reservation = rr.Reservation '#10+
 ' WHERE '#10+
 '   (RoomReservation = %d ) ';  //' + inttostr(iRoomReservation) + '
 
@@ -3479,16 +3453,16 @@ select_RR_GetDeparting : string =
 '  , roomsdate.RoomReservation '#10+
 '  , roomsdate.ADate '#10+
 '  , roomsdate.ResFlag '#10+
-'  , roomreservations.Departure '#10+
+'  , rr.Departure '#10+
 ' FROM '#10+
 '  roomsdate '#10+
 '     INNER JOIN '#10+
-'       roomreservations ON roomsdate.RoomReservation = roomreservations.RoomReservation '#10+
+'       roomreservations ON roomsdate.RoomReservation = rr.RoomReservation '#10+
 ' WHERE '#10+
 '    (roomsdate.Room = %s) '#10+  //' + _db(Room) + '
 ' AND (roomsdate.ADate = %s) '#10+  //' + _db(ADate - 1, true) + '
 ' AND (roomsdate.ResFlag = ''G'') '#10+
-' AND (RoomReservations.Departure = %s) '  //' + _db(ADate, true) + '
+' AND (rr.Departure = %s) '  //' + _db(ADate, true) + '
    + ' LIMIT 1 '
     ;
 
@@ -4813,42 +4787,42 @@ select_GuestsInfoByRoomReservation : string =
 '      Persons.Person '#10+
 '    , Persons.RoomReservation '#10+
 '    , Persons.Name AS GuestName '#10+
-'    , roomreservations.Room '#10+
-'    , roomreservations.Reservation '#10+
-'    , roomreservations.Status '#10+
-'    , roomreservations.GroupAccount '#10+
-'    , roomreservations.invBreakfast '#10+
+'    , rr.Room '#10+
+'    , rr.Reservation '#10+
+'    , rr.Status '#10+
+'    , rr.GroupAccount '#10+
+'    , rr.invBreakfast '#10+
 '    , Reservations.Customer '#10+
 '    , Reservations.Name AS ReservationName '#10+
-'    , roomreservations.RoomType '#10+
+'    , rr.RoomType '#10+
 '    , roomtypes.Description AS RoomTypeDescription '#10+
 '    ,  rooms.Description AS RoomDescription '#10+
 '    ,  rooms.Location '#10+
 '    ,  rooms.Floor '#10+
 '    , Persons.Country '#10+
-'    , roomreservations.rrArrival '#10+
-'    , roomreservations.rrDeparture '#10+
+'    , rr.rrArrival '#10+
+'    , rr.rrDeparture '#10+
 '    , countries.CountryName '#10+
 '    , customers.Surname AS CustomerName '#10+
 '    , customers.PID AS CustomerPID '#10+
 '  FROM '#10+
 '    Persons '#10+
 '    INNER JOIN '#10+
-'      roomreservations ON Persons.RoomReservation = roomreservations.RoomReservation '#10+
+'      roomreservations ON Persons.RoomReservation = rr.RoomReservation '#10+
 '    LEFT OUTER JOIN '#10+
 '      countries ON Persons.Country = countries.Country '#10+
 '    LEFT OUTER JOIN '#10+
-'       rooms ON roomreservations.Room =  rooms.Room '#10+
+'       rooms ON rr.Room =  rooms.Room '#10+
 '    LEFT OUTER JOIN '#10+
-'      roomtypes ON roomreservations.RoomType = roomtypes.RoomType '#10+
+'      roomtypes ON rr.RoomType = roomtypes.RoomType '#10+
 '    LEFT OUTER JOIN '#10+
-'      Reservations ON roomreservations.Reservation = Reservations.Reservation '#10+
+'      Reservations ON rr.Reservation = Reservations.Reservation '#10+
 '    LEFT OUTER JOIN '#10+
 '     customers ON Reservations.Customer = customers.Customer '#10+
 '  WHERE '#10+
 '     (Persons.RoomReservation = %d) '#10+
 '  ORDER BY '#10+
-'     roomreservations.Room, Persons.Person ';
+'     rr.Room, Persons.Person ';
 // @RoomReservation int
 
 
@@ -5965,10 +5939,10 @@ begin
   s := ''+#10;
   s := s+' SELECT DISTINCT '+#10;
   s := s+'     persons.Name AS GuestName  '+#10;
-  s := s+'   , roomreservations.rrArrival  '+#10;
-  s := s+'   , roomreservations.rrDeparture  '+#10;
-  s := s+'   , roomreservations.Status  '+#10;
-  s := s+'   , roomreservations.Room '+#10;
+  s := s+'   , rr.rrArrival  '+#10;
+  s := s+'   , rr.rrDeparture  '+#10;
+  s := s+'   , rr.Status  '+#10;
+  s := s+'   , rr.Room '+#10;
   s := s+'   , persons.Address1  '+#10;
   s := s+'   , persons.Address2  '+#10;
   s := s+'   , persons.Address3  '+#10;
@@ -5979,24 +5953,24 @@ begin
   s := s+'   , reservations.Name AS resName  '+#10;
   s := s+' FROM  '+#10;
   s := s+'   reservations  '+#10;
-  s := s+'      LEFT OUTER JOIN roomreservations ON reservations.Reservation = roomreservations.Reservation  '+#10;
-  s := s+'       RIGHT OUTER JOIN persons ON roomreservations.RoomReservation = persons.RoomReservation  '+#10;
+  s := s+'      LEFT OUTER JOIN roomreservations ON reservations.Reservation = rr.Reservation  '+#10;
+  s := s+'       RIGHT OUTER JOIN persons ON rr.RoomReservation = persons.RoomReservation  '+#10;
   s := s+' WHERE '+#10;
   if   DateSelMedhod = 0 then
   begin
-    s := s+'    (RoomReservations.rrArrival <= %s ) '+#10;  //'+_db(zdtFrom,true)++#10;
-    s := s+'    AND  (RoomReservations.rrDeparture >= %s ) '+#10; //'+_db(zdtFrom,true)++#10;
+    s := s+'    (rr.rrArrival <= %s ) '+#10;  //'+_db(zdtFrom,true)++#10;
+    s := s+'    AND  (rr.rrDeparture >= %s ) '+#10; //'+_db(zdtFrom,true)++#10;
   end else
   if DateSelMedhod = 1 then
   begin
-    s := s+'    (RoomReservations.rrDeparture >= %s ) '+#10; //'+_db(zdtFrom,true)+'
+    s := s+'    (rr.rrDeparture >= %s ) '+#10; //'+_db(zdtFrom,true)+'
   end else
   if DateSelMedhod = 2 then
   begin
-     s := s+'    (RoomReservations.rrDeparture <= %s ) '+#10;//'+_db(zdtFrom,true)+'
+     s := s+'    (rr.rrDeparture <= %s ) '+#10;//'+_db(zdtFrom,true)+'
   end else
   begin
-    s := s+'    (RoomReservations.arrival > ''2000-01-01'' ) '+#10;
+    s := s+'    (rr.arrival > ''2000-01-01'' ) '+#10;
   end;
   if not GetAll then
   begin
@@ -6094,7 +6068,7 @@ begin
   s := s+' rt.Description AS RoomTypeDescription, '+#10;
 
 
-//  s := s+' (SELECT COUNT(id) FROM persons WHERE %s=roomreservations.%s) AS numTaxGuests '+#10;
+//  s := s+' (SELECT COUNT(id) FROM persons WHERE %s=rr.%s) AS numTaxGuests '+#10;
   if iRoomReservation = 0 then   //FRoomReservation = 0  // GroupInvoice
   begin
     s := s+' (SELECT COUNT(id) FROM persons WHERE %s=rr.%s) AS numTaxGuests '+#10;
@@ -6310,20 +6284,20 @@ end;
   begin
 
     s := s+' SELECT '#10;
-    s := s+'     roomreservations.RoomReservation '#10;
-    s := s+'   , roomreservations.rrArrival as ArrivalDate '#10;
-    s := s+'   , roomreservations.rrDeparture as DepartureDate '#10;
-    s := s+'   , to_int(DATEDIFF(roomreservations.rrDeparture,roomreservations.rrArrival)) as NumDays '#10;
-    s := s+'   , roomreservations.Room '#10;
-    s := s+'   , roomreservations.Status '#10;
-    s := s+'   , roomreservations.invBreakfast AS Breakfast '#10;
-    s := s+'   , roomreservations.rrIsNoRoom As NoRoom '#10;
-    s := s+'   , roomreservations.GroupAccount '#10;
-    s := s+'   , (SELECT AVG(RoomRate) FROM roomsdate rd WHERE rd.RoomReservation=roomreservations.RoomReservation AND (rd.ResFlag NOT IN (''X'',''C''))) AS AverageRate '#10;
-    s := s+'   , roomreservations.Currency AS Currency '#10;
-    s := s+'   , roomreservations.numGuests AS NumGuests '#10;
-    s := s+'   , roomreservations.numChildren AS NumChildren '#10;
-    s := s+'   , roomreservations.numInfants AS NumInfants '#10;
+    s := s+'     rr.RoomReservation '#10;
+    s := s+'   , rr.rrArrival as ArrivalDate '#10;
+    s := s+'   , rr.rrDeparture as DepartureDate '#10;
+    s := s+'   , to_int(DATEDIFF(rr.rrDeparture,rr.rrArrival)) as NumDays '#10;
+    s := s+'   , rr.Room '#10;
+    s := s+'   , rr.Status '#10;
+    s := s+'   , rr.invBreakfast AS Breakfast '#10;
+    s := s+'   , rr.rrIsNoRoom As NoRoom '#10;
+    s := s+'   , rr.GroupAccount '#10;
+    s := s+'   , (SELECT AVG(RoomRate) FROM roomsdate rd WHERE rd.RoomReservation=rr.RoomReservation AND (rd.ResFlag NOT IN (''X'',''C''))) AS AverageRate '#10;
+    s := s+'   , rr.Currency AS Currency '#10;
+    s := s+'   , rr.numGuests AS NumGuests '#10;
+    s := s+'   , rr.numChildren AS NumChildren '#10;
+    s := s+'   , rr.numInfants AS NumInfants '#10;
     s := s+'   , reservations.Name AS ReservationName '#10;
     s := s+'   , reservations.Reservation '#10;
     s := s+'   , reservations.marketSegment '#10;
@@ -6344,9 +6318,9 @@ end;
     s := s+'   , customertypes.Description AS marketSegmentDescription '#10;
     s := s+'   , (SELECT count(id) FROM roomreservations rr WHERE rr.reservation = reservations.reservation) As RoomCount '#10;
     s := s+'   , (SELECT count(id) FROM persons pe WHERE pe.reservation = reservations.reservation) As RvGuestCount '#10;
-    s := s+'   , (SELECT count(id) FROM persons pe WHERE pe.roomreservation = roomreservations.roomreservation) AS RRGuestCount '#10;
-    s := s+'   , (SELECT pe.`Name` FROM persons pe WHERE pe.roomreservation = roomreservations.roomreservation ORDER BY pe.MainName DESC, pe.Person LIMIT 1) As MainGuests  '#10;
-    s := s+'   , (SELECT di.`result` FROM dictionary di WHERE di.`Code` = roomreservations.`status`) AS StatusText  '#10;
+    s := s+'   , (SELECT count(id) FROM persons pe WHERE pe.roomreservation = rr.roomreservation) AS RRGuestCount '#10;
+    s := s+'   , (SELECT pe.`Name` FROM persons pe WHERE pe.roomreservation = rr.roomreservation ORDER BY pe.MainName DESC, pe.Person LIMIT 1) As MainGuests  '#10;
+    s := s+'   , (SELECT di.`result` FROM dictionary di WHERE di.`Code` = rr.`status`) AS StatusText  '#10;
     s := s+' FROM '#10;
     s := s+'   customertypes '#10;
     s := s+'   RIGHT OUTER JOIN '#10;
@@ -6358,13 +6332,13 @@ end;
     s := s+'   LEFT OUTER JOIN '#10;
     s := s+'     locations ON  rooms.Location = locations.Location '#10;
     s := s+'   RIGHT OUTER JOIN '#10;
-    s := s+'     roomreservations ON  rooms.Room = roomreservations.Room ON reservations.Reservation = roomreservations.Reservation '#10;
+    s := s+'     roomreservations ON  rooms.Room = rr.Room ON reservations.Reservation = rr.Reservation '#10;
     s := s+' WHERE '#10;
-    s := s+ '   (roomreservations.RoomReservation in %s ) '#10; //zRoomReservationList
+    s := s+ '   (rr.RoomReservation in %s ) '#10; //zRoomReservationList
 
     s := s+' ORDER BY '#10;
     //@hj breytti h�r
-    s := s+'   reservations.Reservation, roomreservations.Room '#10;
+    s := s+'   reservations.Reservation, rr.Room '#10;
     result := s;
   end;
 
@@ -6494,16 +6468,16 @@ end;
       s := s+'  , persons.PID  '#10;
       s := s+'  , persons.MainName As isMainName '#10;
       s := s+'  , persons.RoomReservation  '#10;
-      s := s+'  , roomreservations.Room  '#10;
-      s := s+'  , roomreservations.RoomType  '#10;
-      s := s+'  , roomreservations.Status As  roomstatus '#10;
-      s := s+'  , roomreservations.rrArrival  '#10;
-      s := s+'  , roomreservations.rrDeparture  '#10;
-      s := s+'  , roomreservations.rrIsNoRoom  '#10;
+      s := s+'  , rr.Room  '#10;
+      s := s+'  , rr.RoomType  '#10;
+      s := s+'  , rr.Status As  roomstatus '#10;
+      s := s+'  , rr.rrArrival  '#10;
+      s := s+'  , rr.rrDeparture  '#10;
+      s := s+'  , rr.rrIsNoRoom  '#10;
       s := s+' FROM  '#10;
       s := s+'   persons  '#10;
       s := s+'     LEFT OUTER JOIN  '#10;
-      s := s+'        roomreservations ON persons.RoomReservation = roomreservations.RoomReservation  '#10;
+      s := s+'        roomreservations ON persons.RoomReservation = rr.RoomReservation  '#10;
       s := s+' WHERE  '#10;
       s := s+'   (persons.Reservation = %d)  '#10;// inttostr(zReservation#10;
       if not ShowAllGuests then
@@ -6511,7 +6485,7 @@ end;
         s := s + '  AND (name <> ''RoomGuest'') '#10;
       end;
       s := s + ' ORDER BY  '#10;
-      s := s + '   roomreservations.Room, persons.Person  '#10;
+      s := s + '   rr.Room, persons.Person  '#10;
 
       result := s;
     end;
@@ -6608,40 +6582,40 @@ var
   s : string;
 begin
   s:= s+' SELECT '#10;
-  s:= s+'     roomreservations.Room '#10;
-  s:= s+'   , roomreservations.RoomType '#10;
-  s:= s+'   , roomreservations.RoomReservation '#10;
-  s:= s+'   , roomreservations.Reservation '#10;
-  s:= s+'   , roomreservations.Status '#10;
-  s:= s+'   , roomreservations.rrArrival AS Arrival '#10;
-  s:= s+'   , roomreservations.rrDeparture AS Departure '#10;
+  s:= s+'     rr.Room '#10;
+  s:= s+'   , rr.RoomType '#10;
+  s:= s+'   , rr.RoomReservation '#10;
+  s:= s+'   , rr.Reservation '#10;
+  s:= s+'   , rr.Status '#10;
+  s:= s+'   , rr.rrArrival AS Arrival '#10;
+  s:= s+'   , rr.rrDeparture AS Departure '#10;
   s:= s+'   , reservations.Customer '#10;
   s:= s+'   , reservations.invRefrence AS ResRefrence '#10;
   s:= s+'   , reservations.Name AS ReservationName '#10;
   s:= s+'   , customers.Surname AS CustomerName '#10;
   s:= s+'   , persons.name AS personName '#10;
-  s:= s+'   , (SELECT count(person) FROM persons WHERE roomreservation = roomreservations.roomreservation) AS numPersons '#10;
+  s:= s+'   , (SELECT count(person) FROM persons WHERE roomreservation = rr.roomreservation) AS numPersons '#10;
   s:= s+' FROM '#10;
   s:= s+'   customers '#10;
   s:= s+'     RIGHT OUTER JOIN '#10;
   s:= s+'       reservations ON customers.Customer = reservations.Customer '#10;
   s:= s+'         RIGHT OUTER JOIN '#10;
-  s:= s+'            roomreservations ON reservations.Reservation = roomreservations.Reservation '#10;
-  s:= s+'     LEFT OUTER JOIN persons ON persons.roomreservation = roomreservations.roomreservation '#10;
+  s:= s+'            roomreservations ON reservations.Reservation = rr.Reservation '#10;
+  s:= s+'     LEFT OUTER JOIN persons ON persons.roomreservation = rr.roomreservation '#10;
   s:= s+' WHERE '#10;
   s:= s+'      (reservations.Customer =  %s ) '#10;
   if iDateMark = 0 then
   begin
-    s := s + '     AND (roomreservations.rrArrival >= %s ) ';  //_db(zDateFrom, true)
-    s := s + '     AND (roomreservations.rrArrival <= %s ) ';  //_db(zDateTo, true)
+    s := s + '     AND (rr.rrArrival >= %s ) ';  //_db(zDateFrom, true)
+    s := s + '     AND (rr.rrArrival <= %s ) ';  //_db(zDateTo, true)
   end else
   if iDateMark = 1 then
   begin
-    s := s + '     AND (roomreservations.rrDeparture >= %s ) ';  //_db(zDateFrom, true)
-    s := s + '     AND (roomreservations.rrDeparture <= %s ) ';  //_db(zDateTo, true)
+    s := s + '     AND (rr.rrDeparture >= %s ) ';  //_db(zDateFrom, true)
+    s := s + '     AND (rr.rrDeparture <= %s ) ';  //_db(zDateTo, true)
   end;
-  s := s + ' GROUP BY roomreservations.reservation, roomreservations.roomreservation ';
-  s := s + ' ORDER BY roomreservations.Reservation, room, rrArrival ';
+  s := s + ' GROUP BY rr.reservation, rr.roomreservation ';
+  s := s + ' ORDER BY rr.Reservation, room, rrArrival ';
   result := s;
 end;
 
@@ -6749,14 +6723,14 @@ end;
     if Location <> '' then
     begin
       s := s + ' INNER JOIN '+#10;
-      s := s + '    rooms ON roomreservations.Room =  rooms.Room '+#10;
+      s := s + '    rooms ON rr.Room =  rooms.Room '+#10;
       s := s + ' INNER JOIN '+#10;
       s := s + '   locations ON  rooms.Location = locations.Location '+#10;
     end;
     s := s + '  WHERE'+#10;
     s := s + '        (Departure >= %s )'+#10;  //'+_db(DateFrom,true)+'
     s := s + '    AND (Departure <= %s )'+#10;  //'+_db(DateTo,true)+'
-    s := s + '    AND (roomreservations.useInNationalReport = 1 )'+#10;  //'+_db(true)+'
+    s := s + '    AND (rr.useInNationalReport = 1 )'+#10;  //'+_db(true)+'
     if Location <> '' then
     begin
       s := s + ' AND (locations.Location = %s ) '+#10;  //'+quotedstr(Location)+'

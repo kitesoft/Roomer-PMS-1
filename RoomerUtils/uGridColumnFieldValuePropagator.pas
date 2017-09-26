@@ -31,6 +31,7 @@ implementation
 
 uses
   cxGridDBDataDefinitions
+  , cxCustomData
   ;
 
 { TFieldValuePropagator }

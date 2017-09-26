@@ -310,7 +310,7 @@ uses
   uFrmViewChargeInfo in 'PCI\uFrmViewChargeInfo.pas' {FrmViewChargeInfo},
   uFrmPayCardCreateNew in 'PCI\uFrmPayCardCreateNew.pas' {FrmPayCardCreateNew},
   uFrmViewPayCardDetails in 'PCI\uFrmViewPayCardDetails.pas' {FrmViewPayCardDetails},
-  uFmrChargePayCard in 'PCI\uFmrChargePayCard.pas' {FrmChargePayCard},
+  uFrmChargePayCard in 'PCI\uFrmChargePayCard.pas' {FrmChargePayCard},
   uFrmManagePCIConnection in 'PCI\uFrmManagePCIConnection.pas' {FrmManagePCIConnection},
   uHotelServicesAccessor in 'PMSSettings\uHotelServicesAccessor.pas',
   uRoomerCanonicalDataModel_DataStructures in 'OpenAPI\schema\uRoomerCanonicalDataModel_DataStructures.pas',
@@ -318,7 +318,8 @@ uses
   uBookingsTaxesAPICaller in 'OpenAPI\uBookingsTaxesAPICaller.pas',
   uCalculationTypeDefinitions in 'Definitions\uCalculationTypeDefinitions.pas',
   uCalculationTypeExtraDefinitions in 'Definitions\uCalculationTypeExtraDefinitions.pas',
-  uItemTransactionsReport in 'uItemTransactionsReport.pas' {frmItemTransactionsReport};
+  uItemTransactionsReport in 'uItemTransactionsReport.pas' {frmItemTransactionsReport},
+  uFraCurrencyPanel in 'Embeddables\uFraCurrencyPanel.pas' {fraCurrencyPanel: TFrame};
 
 {$R *.RES}
 

@@ -14,10 +14,8 @@ object frmDownPayment: TfrmDownPayment
   Font.Style = []
   OldCreateOrder = False
   Position = poMainFormCenter
-  OnClose = FormClose
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
-  OnDestroy = FormDestroy
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
@@ -65,7 +63,7 @@ object frmDownPayment: TfrmDownPayment
     Left = 0
     Top = 0
     Width = 489
-    Height = 112
+    Height = 97
     Align = alTop
     Caption = 'Amount'
     Font.Charset = DEFAULT_CHARSET
@@ -76,49 +74,6 @@ object frmDownPayment: TfrmDownPayment
     ParentFont = False
     TabOrder = 0
     SkinData.SkinSection = 'GROUPBOX'
-    Checked = False
-    object labReservation: TsLabel
-      Left = 96
-      Top = 89
-      Width = 6
-      Height = 13
-      Caption = '0'
-      ParentFont = False
-      Visible = False
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clBlack
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = []
-    end
-    object labRoomReservation: TsLabel
-      Left = 174
-      Top = 89
-      Width = 6
-      Height = 13
-      Caption = '0'
-      ParentFont = False
-      Visible = False
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clBlack
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = []
-    end
-    object labInvoice: TsLabel
-      Left = 249
-      Top = 89
-      Width = 6
-      Height = 13
-      Caption = '0'
-      ParentFont = False
-      Visible = False
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clBlack
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = []
-    end
     object labPayment: TsLabel
       Left = 102
       Top = 37
@@ -142,7 +97,7 @@ object frmDownPayment: TfrmDownPayment
       Height = 21
       Caption = 'Get invoice balance'
       TabOrder = 2
-      OnClick = sSpeedButton1Click
+      OnClick = btnGetInvoiceBalanceClick
       SkinData.SkinSection = 'BUTTON'
     end
     object edDescription: TsEdit
@@ -182,7 +137,7 @@ object frmDownPayment: TfrmDownPayment
   end
   object sGroupBox1: TsGroupBox
     Left = 0
-    Top = 112
+    Top = 138
     Width = 489
     Height = 81
     Align = alTop
@@ -195,7 +150,6 @@ object frmDownPayment: TfrmDownPayment
     ParentFont = False
     TabOrder = 1
     SkinData.SkinSection = 'GROUPBOX'
-    Checked = False
     object memNotes: TsMemo
       AlignWithMargins = True
       Left = 8
@@ -225,9 +179,9 @@ object frmDownPayment: TfrmDownPayment
   end
   object sScrollBox1: TsScrollBox
     Left = 0
-    Top = 193
+    Top = 219
     Width = 489
-    Height = 211
+    Height = 185
     Align = alClient
     TabOrder = 2
     SkinData.SkinSection = 'PANEL_LOW'
@@ -236,7 +190,7 @@ object frmDownPayment: TfrmDownPayment
       Left = 6
       Top = 6
       Width = 473
-      Height = 195
+      Height = 169
       Margins.Left = 6
       Margins.Top = 6
       Margins.Right = 6
@@ -244,6 +198,7 @@ object frmDownPayment: TfrmDownPayment
       Align = alClient
       TabOrder = 0
       LookAndFeel.NativeStyle = False
+      ExplicitTop = 5
       object tvPayType: TcxGridDBTableView
         OnDblClick = tvPayTypeDblClick
         Navigator.Buttons.CustomButtons = <>
@@ -276,6 +231,44 @@ object frmDownPayment: TfrmDownPayment
       object lvPayType: TcxGridLevel
         GridView = tvPayType
       end
+    end
+  end
+  object pnlCCButtons: TsPanel
+    Left = 0
+    Top = 97
+    Width = 489
+    Height = 41
+    Align = alTop
+    TabOrder = 4
+    object btnViewPayCard: TsButton
+      AlignWithMargins = True
+      Left = 139
+      Top = 4
+      Width = 129
+      Height = 33
+      Align = alLeft
+      Caption = 'Paycard info'
+      ImageIndex = 92
+      Images = DImages.PngImageList1
+      TabOrder = 0
+      OnClick = btnViewPayCardClick
+      ExplicitLeft = 119
+      ExplicitTop = 1
+      ExplicitHeight = 38
+    end
+    object btnChargePAyCard: TsButton
+      AlignWithMargins = True
+      Left = 4
+      Top = 4
+      Width = 129
+      Height = 33
+      Align = alLeft
+      Caption = 'Charge Paycard'
+      ImageIndex = 92
+      Images = DImages.PngImageList1
+      TabOrder = 1
+      OnClick = btnChargePAyCardClick
+      ExplicitLeft = 0
     end
   end
   object kbmPayType: TkbmMemTable

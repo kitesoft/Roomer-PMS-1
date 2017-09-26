@@ -196,7 +196,7 @@ uses uAppGlobal,
   , uFrmTokenChargeHistory
   , uFrmViewChargeInfo
   , uFrmPayCardCreateNew
-  , uFmrChargePayCard
+  , uFrmChargePayCard
   , uFrmManagePCIConnection
 
   , uItemTransactionsReport
@@ -817,6 +817,9 @@ begin
                                              'and all related issues manually without the system interfering.' + #13#13 +
                                              'Please confirm by clicking [Yes] or [Cancel] the process.');
   constants.Add('shTx_Invoice_invalidInvoiceNr', 'Invalid invoicenumber [%d]. Printing invoice is cancelled.');
+  constants.add('shTxInvoicePayments_RevertPayment', 'Reverting payment [%s] Amount [%s %s].' + #10 + 'Are you Sure?');
+  constants.add('shTxInvoicePayments_Reverted', ' (reverted)');
+  constants.add('shTx_Invoice_CannotEditDeletePCITokenPayment', 'Modifying or deleting a CreditCard charge is not allowed');
 
  (* constants.Add('shTx_InvoiceList2_BookingNumber', 'Númer bókunnar er tala');
   constants.Add('shTx_InvoiceList2_CashAccount', 'Þetta er staðgreiðslureikningur');
@@ -1802,7 +1805,7 @@ begin
   frmInvoice := TfrmInvoice.Create(nil); frmInvoice.Free; frmInvoice := nil;
   frmReservationProfile := TfrmReservationProfile.Create(nil); frmReservationProfile.Free; frmReservationProfile := nil;
 //frmSplash := TfrmSplash.Create(nil); frmSplash.Free; frmSplash := nil;
-  frmInvoicePayment := TfrmInvoicePayment.Create(nil); frmInvoicePayment.Free; frmInvoicePayment := nil;
+  TfrmInvoicePayment.Create(nil).Free;
   frmControlData := TfrmControlData.Create(nil); frmControlData.Free; frmControlData := nil;
   frmFinishedInvoices2 := TfrmFinishedInvoices2.Create(nil); frmFinishedInvoices2.Free; frmFinishedInvoices2 := nil;
   frmCreditPrompt := TfrmCreditPrompt.Create(nil); frmCreditPrompt.Free; frmCreditPrompt := nil;
@@ -1831,7 +1834,7 @@ begin
   TfrmHomedate.Create(nil).Free;
 //  frmGoToRoomandDate := TfrmGoToRoomandDate.Create(nil); frmGoToRoomandDate.Free; frmGoToRoomandDate := nil;
   frmHiddenInfo := TfrmHiddenInfo.Create(nil); frmHiddenInfo.Free; frmHiddenInfo := nil;
-  frmDownPayment := TfrmDownPayment.Create(nil); frmDownPayment.Free; frmDownPayment := nil;
+  TfrmDownPayment.Create(nil).Free;
   frmLodgingTaxReport2 := TfrmLodgingTaxReport2.Create(nil); frmLodgingTaxReport2.Free; frmLodgingTaxReport2 := nil;
   frmCancelReservation3 := TfrmCancelReservation3.Create(nil); frmCancelReservation3.Free; frmCancelReservation3 := nil;
   frmCancelReservation2 := TfrmCancelReservation2.Create(nil); frmCancelReservation2.Free; frmCancelReservation2 := nil;

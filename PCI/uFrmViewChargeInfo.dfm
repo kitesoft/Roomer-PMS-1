@@ -9,7 +9,7 @@ inherited FrmViewChargeInfo: TFrmViewChargeInfo
   TextHeight = 13
   object sLabel1: TsLabel [0]
     Left = 184
-    Top = 75
+    Top = 95
     Width = 52
     Height = 13
     Alignment = taRightJustify
@@ -23,7 +23,7 @@ inherited FrmViewChargeInfo: TFrmViewChargeInfo
   end
   object sLabel2: TsLabel [1]
     Left = 142
-    Top = 102
+    Top = 122
     Width = 94
     Height = 13
     Alignment = taRightJustify
@@ -37,7 +37,7 @@ inherited FrmViewChargeInfo: TFrmViewChargeInfo
   end
   object sLabel3: TsLabel [2]
     Left = 195
-    Top = 129
+    Top = 149
     Width = 41
     Height = 13
     Alignment = taRightJustify
@@ -51,7 +51,7 @@ inherited FrmViewChargeInfo: TFrmViewChargeInfo
   end
   object sLabel4: TsLabel [3]
     Left = 128
-    Top = 179
+    Top = 199
     Width = 108
     Height = 13
     Alignment = taRightJustify
@@ -65,7 +65,7 @@ inherited FrmViewChargeInfo: TFrmViewChargeInfo
   end
   object sLabel5: TsLabel [4]
     Left = 99
-    Top = 206
+    Top = 226
     Width = 137
     Height = 13
     Alignment = taRightJustify
@@ -79,7 +79,7 @@ inherited FrmViewChargeInfo: TFrmViewChargeInfo
   end
   object sLabel6: TsLabel [5]
     Left = 160
-    Top = 303
+    Top = 323
     Width = 76
     Height = 13
     Alignment = taRightJustify
@@ -93,7 +93,7 @@ inherited FrmViewChargeInfo: TFrmViewChargeInfo
   end
   object sLabel7: TsLabel [6]
     Left = 139
-    Top = 330
+    Top = 350
     Width = 97
     Height = 13
     Alignment = taRightJustify
@@ -107,7 +107,7 @@ inherited FrmViewChargeInfo: TFrmViewChargeInfo
   end
   object sLabel8: TsLabel [7]
     Left = 133
-    Top = 357
+    Top = 377
     Width = 103
     Height = 13
     Alignment = taRightJustify
@@ -121,7 +121,7 @@ inherited FrmViewChargeInfo: TFrmViewChargeInfo
   end
   object sLabel9: TsLabel [8]
     Left = 104
-    Top = 384
+    Top = 404
     Width = 132
     Height = 13
     Alignment = taRightJustify
@@ -135,11 +135,39 @@ inherited FrmViewChargeInfo: TFrmViewChargeInfo
   end
   object sLabel10: TsLabel [9]
     Left = 204
-    Top = 26
+    Top = 46
     Width = 32
     Height = 13
     Alignment = taRightJustify
     Caption = 'When:'
+    ParentFont = False
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = []
+  end
+  object sLabel11: TsLabel [10]
+    Left = 388
+    Top = 46
+    Width = 28
+    Height = 13
+    Alignment = taRightJustify
+    Caption = '(UTC)'
+    ParentFont = False
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = []
+  end
+  object sLabel12: TsLabel [11]
+    Left = 137
+    Top = 19
+    Width = 99
+    Height = 13
+    Alignment = taRightJustify
+    Caption = 'Reservation / Room:'
     ParentFont = False
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
@@ -153,9 +181,9 @@ inherited FrmViewChargeInfo: TFrmViewChargeInfo
     ExplicitTop = 524
     ExplicitWidth = 594
   end
-  object edOperation: TsEdit [11]
+  object edOperation: TsEdit [13]
     Left = 254
-    Top = 72
+    Top = 92
     Width = 122
     Height = 21
     Color = clWhite
@@ -168,9 +196,9 @@ inherited FrmViewChargeInfo: TFrmViewChargeInfo
     ReadOnly = True
     TabOrder = 1
   end
-  object edAutCode: TsEdit [12]
+  object edAutCode: TsEdit [14]
     Left = 254
-    Top = 99
+    Top = 119
     Width = 293
     Height = 21
     Color = clWhite
@@ -183,12 +211,12 @@ inherited FrmViewChargeInfo: TFrmViewChargeInfo
     ReadOnly = True
     TabOrder = 2
   end
-  object edAmount: TsEdit [13]
+  object edAmount: TsCurrencyEdit [15]
     Left = 254
-    Top = 126
+    Top = 146
     Width = 122
     Height = 21
-    Alignment = taRightJustify
+    AutoSize = False
     Color = clWhite
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clBlack
@@ -198,11 +226,12 @@ inherited FrmViewChargeInfo: TFrmViewChargeInfo
     ParentFont = False
     ReadOnly = True
     TabOrder = 3
-    Text = '0.00'
+    GlyphMode.Blend = 0
+    GlyphMode.Grayed = False
   end
-  object edCurrency: TsEdit [14]
+  object edCurrency: TsEdit [16]
     Left = 382
-    Top = 126
+    Top = 146
     Width = 81
     Height = 21
     Color = clWhite
@@ -216,9 +245,9 @@ inherited FrmViewChargeInfo: TFrmViewChargeInfo
     TabOrder = 4
     Text = 'EUR'
   end
-  object edOperationResult: TsEdit [15]
+  object edOperationResult: TsEdit [17]
     Left = 254
-    Top = 176
+    Top = 196
     Width = 122
     Height = 21
     Color = clWhite
@@ -231,9 +260,9 @@ inherited FrmViewChargeInfo: TFrmViewChargeInfo
     ReadOnly = True
     TabOrder = 5
   end
-  object edOperationResultDescription: TsMemo [16]
+  object edOperationResultDescription: TsMemo [18]
     Left = 254
-    Top = 203
+    Top = 223
     Width = 293
     Height = 63
     Color = clWhite
@@ -246,9 +275,9 @@ inherited FrmViewChargeInfo: TFrmViewChargeInfo
     ReadOnly = True
     TabOrder = 6
   end
-  object edGatewayName: TsEdit [17]
+  object edGatewayName: TsEdit [19]
     Left = 254
-    Top = 300
+    Top = 320
     Width = 293
     Height = 21
     Color = clWhite
@@ -261,9 +290,9 @@ inherited FrmViewChargeInfo: TFrmViewChargeInfo
     ReadOnly = True
     TabOrder = 7
   end
-  object edGatewayReference: TsEdit [18]
+  object edGatewayReference: TsEdit [20]
     Left = 254
-    Top = 327
+    Top = 347
     Width = 293
     Height = 21
     Color = clWhite
@@ -276,9 +305,9 @@ inherited FrmViewChargeInfo: TFrmViewChargeInfo
     ReadOnly = True
     TabOrder = 8
   end
-  object edGatewayResultCode: TsEdit [19]
+  object edGatewayResultCode: TsEdit [21]
     Left = 254
-    Top = 354
+    Top = 374
     Width = 293
     Height = 21
     Color = clWhite
@@ -291,9 +320,9 @@ inherited FrmViewChargeInfo: TFrmViewChargeInfo
     ReadOnly = True
     TabOrder = 9
   end
-  object edGatewayResultDescription: TsMemo [20]
+  object edGatewayResultDescription: TsMemo [22]
     Left = 254
-    Top = 381
+    Top = 401
     Width = 293
     Height = 63
     Color = clWhite
@@ -306,9 +335,9 @@ inherited FrmViewChargeInfo: TFrmViewChargeInfo
     ReadOnly = True
     TabOrder = 10
   end
-  object edWhen: TsEdit [21]
+  object edWhen: TsEdit [23]
     Left = 254
-    Top = 23
+    Top = 43
     Width = 122
     Height = 21
     Color = clWhite
@@ -325,7 +354,7 @@ inherited FrmViewChargeInfo: TFrmViewChargeInfo
     Top = 481
     Width = 594
     TabOrder = 0
-    ExplicitTop = 440
+    ExplicitTop = 481
     ExplicitWidth = 594
     inherited btnOK: TsButton
       Left = 278
@@ -356,11 +385,28 @@ inherited FrmViewChargeInfo: TFrmViewChargeInfo
       Style = bsSplitButton
       TabOrder = 3
       Visible = False
-      ExplicitLeft = 3
-      ExplicitTop = 5
     end
   end
+  object edReservation: TsEdit [25]
+    Left = 254
+    Top = 16
+    Width = 293
+    Height = 21
+    Color = clWhite
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clBlack
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
+    ReadOnly = True
+    TabOrder = 13
+  end
+  inherited psRoomerBase: TcxPropertiesStore
+    Top = 36
+  end
   inherited cxsrRoomerStyleRepository: TcxStyleRepository
+    Top = 36
     PixelsPerInch = 96
     inherited dxssRoomerGridReportLink: TdxGridReportLinkStyleSheet
       BuiltIn = True
@@ -372,7 +418,7 @@ inherited FrmViewChargeInfo: TFrmViewChargeInfo
   object pupCharge: TPopupMenu
     OnPopup = pupChargePopup
     Left = 70
-    Top = 448
+    Top = 468
     object mnuCapture: TMenuItem
       Caption = 'Capture'
       OnClick = mnuCaptureClick

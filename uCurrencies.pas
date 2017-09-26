@@ -231,6 +231,8 @@ type
 function Currencies(act : TActTableAction; var theData : recCurrencyHolder; embedPanel : TsPanel = nil; WindowCloseEvent : TNotifyEvent = nil) : boolean;
 
 function getCurrency(ed : TsComboEdit; lab : TsLabel) : boolean; overload;
+function getCurrency(var curr: string; lab : TsLabel) : boolean; overload;
+function CurrencyValidate(const curr: string; lab: TsLabel) : boolean; overload;
 function CurrencyValidate(ed : TsComboEdit; lab: TsLabel) : boolean; overload;
 
 
@@ -293,37 +295,49 @@ end;
 
 function getCurrency(ed : TsComboEdit; lab : TsLabel) : boolean;
 var
-  theData : recCurrencyHolder;
+  curr: string;
 begin
-  theData.init;
-  theData.Currency := trim(ed.text);
-  result := Currencies(actLookup,theData);
-
-  if trim(theData.Currency) = trim(ed.text) then
-  begin
-    result := false;
-    exit;
-  end;
-
-  if result and (theData.Currency <> ed.text) then
-  begin
-    ed.text := theData.Currency;
-    lab.Caption := theData.Description+' - Rate '+ floatTostr(theData.Value);
-  end;
+  curr := ed.Text;
+  result := getCurrency(curr, lab);
+  if result then
+    ed.Text := curr;
 end;
 
-
-function CurrencyValidate(ed : TsComboEdit; lab: TsLabel) : boolean;
+function getCurrency(var curr: string; lab : TsLabel) : boolean;
 var
   theData : recCurrencyHolder;
 begin
   theData.init;
-  theData.Currency := trim(ed.Text);
+  theData.Currency := curr;
+  result := Currencies(actLookup,theData);
+
+  if (trim(theData.Currency) = trim(curr)) then
+  begin
+    result := false;
+    exit;
+  end;
+  curr := theData.Currency;
+  lab.Caption := theData.Description+' - Rate '+ floatTostr(theData.Value);
+end;
+
+
+function CurrencyValidate(ed : TsComboEdit; lab: TsLabel) : boolean;
+begin
+  Result := CurrencyValidate(ed.Text, lab);
+  if not result then
+    ed.SetFocus;
+end;
+
+function CurrencyValidate(const curr: string; lab: TsLabel) : boolean;
+var
+  theData : recCurrencyHolder;
+begin
+  theData.init;
+  theData.Currency := trim(curr);
   result := hdata.GET_currencyHolderByCurrency(theData);
 
   if not result then
   begin
-    ed.SetFocus;
     lab.Color := clRed;
     lab.caption := GetTranslatedText('shNotF_star');
   end else

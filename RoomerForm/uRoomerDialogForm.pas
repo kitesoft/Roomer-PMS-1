@@ -72,6 +72,8 @@ constructor TfrmBaseRoomerDialogForm.Create(aOwner: TComponent);
 begin
   inherited;
   FOrderedButtonList := TList<TButton>.Create;
+  FillButtonList;
+  DialogButtons := mbOkCancel;
 end;
 
 destructor TfrmBaseRoomerDialogForm.Destroy;
@@ -83,8 +85,6 @@ end;
 procedure TfrmBaseRoomerDialogForm.DoShow;
 begin
   inherited;
-  FillButtonList;
-  DialogButtons := mbOkCancel;
   RefreshData;
 end;
 
@@ -115,7 +115,7 @@ begin
   begin
     pnlButtons.Visible := true;
     for b in FOrderedButtonList do
-      b.Visible := TMsgDlgBtn(b.Tag) in FDialogButtons;
+      b.Visible := (b.Tag = 0) or (TMsgDlgBtn(b.Tag) in FDialogButtons);
 
     CorrectButtonDisplayOrder;
   end

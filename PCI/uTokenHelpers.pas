@@ -80,13 +80,17 @@ type
     Fcurrency: String;
     FoperationType: String;
     FauthCode: String;
+    FReservation: integer;
+    FRoomReservation: integer;
   public
-    constructor Create(id : Integer; token : TToken; amount : Double; currency : String; currencyRate : Double;
+    constructor Create(id : Integer; token : TToken; Reservation: integer; Roomreservation: integer; amount : Double; currency : String; currencyRate : Double;
         authCode : String; operationType : String; operationResultCode : String; operationResultDescription : String;
         gatewayName : String; gatewayReference : String; gatewayResultCode : String; gatewayResultDescription : String;
         created : TDateTime);
 
     property id: Integer read Fid write Fid;
+    property Reservation: integer read FReservation write FReservation;
+    property RoomReservation: integer read FRoomReservation write FRoomReservation;
     property token : TToken read Ftoken write Ftoken;
     property amount: Double read Famount write Famount;
     property currency: String read Fcurrency write Fcurrency;
@@ -104,10 +108,12 @@ type
 
 function LoadAllTokens(ReservationId, RoomReservationId : Integer) : TObjectList<TToken>;
 procedure FillTokenComboBox(cb : TsComboBox; tokens :TObjectList<TToken>; selectedToken : Integer);
+function ReservationHasPayCard(aReservation: integer; aRoomReservation: integer; var aChannelIdPaycard: integer): boolean;
+
 
 implementation
 
-uses TypInfo, uD, cmpRoomerDataset, SysUtils;
+uses TypInfo, uD, cmpRoomerDataset, SysUtils, hData, uAppGlobal;
 
 { TToken }
 
@@ -142,9 +148,11 @@ end;
 
 { TTokenCharge }
 
-constructor TTokenCharge.Create(id: Integer; token : TToken; amount: Double; currency: String; currencyRate: Double; authCode, operationType,
+constructor TTokenCharge.Create(id: Integer; token : TToken; Reservation: integer; Roomreservation: integer;  amount: Double; currency: String; currencyRate: Double; authCode, operationType,
   operationResultCode, operationResultDescription, gatewayName, gatewayReference, gatewayResultCode, gatewayResultDescription: String; created: TDateTime);
 begin
+  FReservation := Reservation;
+  FRoomReservation := Roomreservation;
   Ftoken := token;
   FoperationResultDescription := operationResultDescription;
   FgatewayResultDescription := gatewayResultDescription;
@@ -164,6 +172,35 @@ end;
 ////////////////////////////////////////////////////////////////////////////////////////
 ///
 ///
+
+function ReservationHasPayCard(aReservation: integer; aRoomReservation: integer; var aChannelIdPaycard: integer): boolean;
+var rSet : TRoomerDataSet;
+    s : String;
+begin
+  result := False;
+  if aReservation > 0 then
+  begin
+    rSet := CreateNewDataSet;
+    try
+      s := format('SELECT `channel`, PAYCARD_TOKEN FROM reservations r WHERE r.Reservation=%d AND NOT ISNULL(r.PAYCARD_TOKEN) ' +
+                  'UNION ALL ' +
+                  'SELECT -1 AS `channel`, PAYCARD_TOKEN FROM home100.PAYMENT_CARD_EXTRA_TOKENS PCET WHERE PCET.HOTEL_ID = ''%s'' AND PCET.RESERVATION=%d ' +
+                  ' AND (PCET.ROOM_RESERVATION <= 0 OR PCET.ROOM_RESERVATION=%d)',
+                  [aReservation, d.roomerMainDataSet.hotelId, aReservation, aRoomReservation]);
+      if hData.rSet_bySQL(rSet, s, false)  and (rSet.RecordCount > 0) then
+      begin
+        rSet.First;
+        Result := (aReservation > 0) AND
+                  (rSet.FindField('PAYCARD_TOKEN') <> nil) AND
+                  (rSet.FieldByName('PAYCARD_TOKEN').AsString <> '');
+        aChannelIdPayCard := ORD(glb.PCIContractOpenForChannel(rSet.fieldbyname('channel').asInteger));
+      end;
+    finally
+      rSet.Free;
+    end;
+  end;
+end;
+
 
 function LoadAllTokens(ReservationId, RoomReservationId : Integer) : TObjectList<TToken>;
 var

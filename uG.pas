@@ -70,6 +70,7 @@ type
 
     Quantity    : integer; //-
     Amount      : double ; //Amount
+    Currency    : string;
     Description : string ; //Description
     Notes       : string ; //Memo
     PaymentType : string;  //PayType
@@ -732,6 +733,7 @@ begin
 
     Quantity    := 1;
     Amount      := 0.00;
+    Currency    := g.qNativeCurrency;
     //Description := 'Downpayment/inn�grei�sla';
     Description := GetTranslatedText('shTx_G_Downpayment');
     Notes       := '';
@@ -1336,41 +1338,18 @@ end;
 
 
 function TGlobalApplication.OpenDownPayment(act : TActTableAction; var rec : recDownPayment) : boolean;
+var
+  frm: TfrmDownPayment;
 begin
   result := false;
-  frmDownPayment := TfrmDownPayment.Create(frmDownPayment);
+  frm := TfrmDownPayment.Create(nil);
   try
-    frmDownPayment.rec.Reservation     :=  rec.Reservation     ;
-    frmDownPayment.rec.RoomReservation :=  rec.RoomReservation ;
-    frmDownPayment.rec.Invoice         :=  rec.Invoice         ;
-    frmDownPayment.rec.Quantity        :=  rec.Quantity        ;
-    frmDownPayment.rec.Amount          :=  rec.Amount          ;
-    frmDownPayment.rec.Description     :=  rec.Description     ;
-    frmDownPayment.rec.Notes           :=  rec.Notes           ;
-    frmDownPayment.rec.PaymentType     :=  rec.PaymentType     ;
-    frmDownPayment.rec.confirmdate     :=  rec.confirmdate     ;
-    frmDownPayment.rec.payGroup        :=  rec.payGroup        ;
-    frmDownPayment.rec.payDate         :=  rec.payDate         ;
-    frmDownPayment.rec.InvoiceBalance  :=  rec.InvoiceBalance  ;
-    frmDownPayment.rec.NotInvoice      :=  rec.NotInvoice      ;
+    frm.rec := rec;
 
-
-    frmDownPayment.ShowModal;
-    if frmDownPayment.modalresult = mrOk then
+    frm.ShowModal;
+    if frm.modalresult = mrOk then
     begin
-      rec.Reservation     :=  frmDownPayment.rec.Reservation       ;
-      rec.RoomReservation :=  frmDownPayment.rec.RoomReservation   ;
-      rec.Invoice         :=  frmDownPayment.rec.Invoice           ;
-      rec.Quantity        :=  frmDownPayment.rec.Quantity          ;
-      rec.Amount          :=  frmDownPayment.rec.Amount            ;
-      rec.Description     :=  frmDownPayment.rec.Description       ;
-      rec.Notes           :=  frmDownPayment.rec.Notes             ;
-      rec.PaymentType     :=  frmDownPayment.rec.PaymentType       ;
-      rec.payGroup        :=  frmDownPayment.rec.payGroup          ;
-      rec.confirmdate     :=  frmDownPayment.rec.confirmdate       ;
-      rec.PayDate         :=  frmDownPayment.rec.paydate           ;
-      rec.InvoiceBalance         := frmDownPayment.rec.InvoiceBalance  ;
-
+      rec := frm.rec;
       result := true;
     end
     else
@@ -1378,7 +1357,7 @@ begin
       initRecDownPayment(rec);
     end;
   finally
-    freeandNil(frmDownPayment);
+    frm.Free;
   end;
 end;
 

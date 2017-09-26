@@ -1,78 +1,84 @@
-unit uFmrChargePayCard;
+unit uFrmChargePayCard;
 
 interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Generics.Collections, uTokenHelpers, Vcl.StdCtrls, sLabel, Vcl.ExtCtrls, sPanel, sComboBox, sEdit, sButton,
-  uRoomerForm, cxGridTableView, cxStyles, dxPScxCommon, dxPScxGridLnk, cxClasses, cxPropertiesStore, Vcl.ComCtrls, sStatusBar, sMemo;
+  uRoomerDialogForm, cxGridTableView, cxStyles, dxPScxCommon, dxPScxGridLnk, cxClasses, cxPropertiesStore, Vcl.ComCtrls, sStatusBar, sMemo,
+  uRoomerForm, ufraCurrencyPanel, Vcl.Mask, sMaskEdit, sCustomComboEdit, sCurrEdit, sCurrencyEdit
+  , RoomerExceptionHandling;
 
 type
+  EChargePaycardException = class(ERoomerException);
 
   TPayCardOperationType = (PCO_CHARGE, PCO_PRE_AUTH, PCO_CAPTURE, PCO_REFUND, PCO_VOID);
 
-  TFrmChargePayCard = class(TfrmBaseRoomerForm)
-    sPanel1: TsPanel;
-    sPanel2: TsPanel;
+  TFrmChargePayCard = class(TfrmBaseRoomerDialogForm)
+    pnlTop: TsPanel;
     sLabel3: TsLabel;
     sLabel4: TsLabel;
     lbRoomReservation: TsLabel;
     lbReservation: TsLabel;
     sLabel1: TsLabel;
-    cbxPaycards: TsComboBox;
     sLabel2: TsLabel;
-    edAmount: TsEdit;
     sLabel5: TsLabel;
-    edCurrency: TsEdit;
+    cbxPaycards: TsComboBox;
     btnProceed: TsButton;
-    btnGetCurrency: TsButton;
-    lblRate: TsLabel;
+    pnlBottom: TsPanel;
     pnlResult: TsPanel;
     sLabel6: TsLabel;
     sLabel7: TsLabel;
-    edResAmount: TsEdit;
-    edResCurrency: TsEdit;
     lblResRate: TsLabel;
-    edResOperationType: TsEdit;
-    edResOperationResult: TsEdit;
     sLabel9: TsLabel;
-    edResOperationResultDescription: TsEdit;
     sLabel10: TsLabel;
-    edResPaymentReference: TsEdit;
     sLabel11: TsLabel;
     sLabel12: TsLabel;
-    edResGatewayDescription: TsMemo;
     sLabel13: TsLabel;
-    edResGatewayResult: TsEdit;
     sLabel14: TsLabel;
     sLabel8: TsLabel;
     sLabel15: TsLabel;
     sLabel16: TsLabel;
+    edResAmount: TsEdit;
+    edResCurrency: TsEdit;
+    edResOperationType: TsEdit;
+    edResOperationResult: TsEdit;
+    edResOperationResultDescription: TsEdit;
+    edResPaymentReference: TsEdit;
+    edResGatewayDescription: TsMemo;
+    edResGatewayResult: TsEdit;
     edResGatewayName: TsEdit;
+    fraCurrency: TfraCurrencyPanel;
+    edAmount: TsCurrencyEdit;
     procedure FormShow(Sender: TObject);
-    procedure btnGetCurrencyClick(Sender: TObject);
     procedure btnProceedClick(Sender: TObject);
     procedure cbxPaycardsCloseUp(Sender: TObject);
+    procedure edAmountChange(Sender: TObject);
+    procedure cbxPaycardsChange(Sender: TObject);
   private
     { Private declarations }
     CurrencyRate : Double;
     FOperationResultingCharge: TTokenCharge;
-    procedure DisplayRate;
+    FPaycardOperationType: TPayCardOperationType;
     procedure ProcessChargeSuccess(token : TToken; msg: String);
-    procedure CorrectInterface;
     function ParseSettings(token : TToken; XmlString: String): TTokenCharge;
+    procedure evtCurrencyChangedAndValid(Sender: TObject);
+    procedure evtCurrencyChanged(Sender: TObject);
+    procedure SetPaycardOperationType(const Value: TPayCardOperationType);
+  protected
+    procedure DoUpdateControls; override;
   public
     { Public declarations }
     ReservationId : Integer;
     RoomReservationId : Integer;
     CardTokenId : Integer;
-    Amount : Double;
+    Amount : Currency;
     Currency : String;
     refNumber : String;
     tokenCharge : TTokenCharge;
     token : TToken;
     tokenList : TObjectList<TToken>;
-    PayCardOperationType : TPayCardOperationType;
+    property PayCardOperationType : TPayCardOperationType read FPaycardOperationType write SetPaycardOperationType;
     procedure LoadCards;
     procedure DisplayTokens;
 
@@ -98,6 +104,8 @@ function ChargePayCard(tokenCharge : TTokenCharge;
                 refNumber : String;
                 PayCardOperationType : TPayCardOperationType) : TTokenCharge;
 
+function RefundChargeFromChargeId(ReservationId: integer; RoomReservationId: integer; ChargeId: integer): TTokenCharge;
+
 implementation
 
 {$R *.dfm}
@@ -117,22 +125,81 @@ uses uD,
      Xml.XMLIntf,
      _Glob,
      uUtils
-     , UITypes
-     ;
+     , UITypes;
 
 const
 
   XML_PAYMENT_RESPONSE = 'paymentResponse';
-  XML_GATEWAY_NAME = 'GatewayName';
-  XML_OPERATION_RESULT_CODE = 'OperationResultCode';
-  XML_OPERATION_RESULT_DESCRIPTION = 'OperationResultDescription';
-  XML_AUTHORIZATION_CODE = 'AuthorizationCode';
-  XML_GATEWAY_REFERENCE = 'GatewayReference';
-  XML_GATEWAY_RESULT_CODE = 'GatewayResultCode';
-  XML_GATEWAY_RESULT_DESCRIPTION = 'GatewayResultDescription';
-  XML_OPERATON_TYPE = 'OperationType';
-  XML_AMOUNT = 'Amount';
-  XML_CURRENCY = 'Currency';
+  XML_GATEWAY_NAME = 'gatewayName';
+  XML_OPERATION_RESULT_CODE = 'operationresultcode';
+  XML_OPERATION_RESULT_DESCRIPTION = 'operationresultdescription';
+  XML_AUTHORIZATION_CODE = 'authorizationcode';
+  XML_GATEWAY_REFERENCE = 'gatewayreference';
+  XML_GATEWAY_RESULT_CODE = 'gatewayresultcode';
+  XML_GATEWAY_RESULT_DESCRIPTION = 'gatewayresultdescription';
+  XML_OPERATON_TYPE = 'operationtype';
+  XML_AMOUNT = 'amount';
+  XML_CURRENCY = 'currency';
+  XML_RESERVATION = 'reservation';
+  XML_ROOMRESERVATION = 'roomreservation';
+
+
+function RefundChargeFromChargeId(ReservationId: integer; RoomReservationId: integer; ChargeId: integer): TTokenCharge;
+var
+  xml: string;
+  lCharge: TTokenCharge;
+  rSet: TRoomerDataSet;
+begin
+  Result := nil;
+  try
+    xml := d.roomerMainDataSet.downloadUrlAsString(d.roomerMainDataSet.RoomerUri+ format('paycard/bookings/charges/%d', [chargeId]));
+    rSet := d.roomerMainDataSet.ActivateNewDataset(xml);
+    try
+      rSet.First;
+      if rSet.Locate('ID, Reservation, Room_reservation', VarArrayOf([chargeid, ReservationId, RoomReservationid]), []) then
+      begin
+        lCharge := TTokenCharge.Create(
+                      chargeId,
+                      nil,
+                      ReservationId,
+                      RoomreservationId,
+                      rSet['AMOUNT'],
+                      rSet['CURRENCY'],
+                      rSet['CURRENCY_RATE'],
+                      rSet['AUTHORIZATION_CODE'],
+                      rSet['OPERATION_TYPE'],
+                      rSet['OPERATION_RESULT_CODE'],
+                      rSet['OPERATION_RESULT_DESCRIPTION'],
+                      rSet['GATEWAY_NAME'],
+                      rSet['GATEWAY_REFERENCE'],
+                      rSet['GATEWAY_RESULT_CODE'],
+                      rSet['GATEWAY_RESULT_DESCRIPTION'],
+                      rSet['TSTAMP']);
+
+        result := ChargePayCard(lcharge,
+                      lcharge.token,
+                      lcharge.token.Reservation,
+                      lcharge.token.RoomReservation,
+                      lcharge.token.id,
+                      lcharge.amount,
+                      lcharge.currency,
+                      nil,
+                      lcharge.gatewayReference,
+                      PCO_REFUND);
+
+      end
+      else
+        raise EChargePaycardException.CreateFmt('Paycard charge [%d] not found for reservation [%d/%d]', [chargeId, ReservationId, RoomReservationid]);
+    finally
+      rSet.Free;
+    end;
+
+  except
+    on E: Exception do
+      raise EChargePaycardException.CreateFmt('Error occured while refunding for Reservation [%d/%d]' +#13 + e.Message, [ ReservationId, RoomReservationid]);
+  end;
+end;
+
 
 function ChargePayCardForPayment(ReservationId : Integer;
                 RoomReservationId : Integer;
@@ -186,40 +253,23 @@ begin
   end;
 end;
 
-procedure TFrmChargePayCard.btnGetCurrencyClick(Sender: TObject);
-var
-  theData: recCurrencyHolder;
-  oldCurrency: string;
-  lFactor,
-  lOldRate,
-  lNewRate : Double;
+
+
+procedure TFrmChargePayCard.DoUpdateControls;
 begin
-  oldCurrency := trim(edCurrency.Text);
-  theData.Currency := oldCurrency;
-  if Currencies(actLookup, theData) and (theData.Currency <> '') then
-  begin
-    lOldRate := GetRate(oldCurrency);
-    lNewRate := GetRate(theData.Currency);
-
-    if lNewRate = 0 then
-      lNewRate := 1;
-    lFactor := lOldRate / lNewRate;
-    CurrencyRate := lNewRate;
-
-    Amount := _StrToFloat(edAmount.Text);
-
-    Amount := RoundTo(Amount * lFactor, 2);
-
-    DisplayRate;
-  end;
-end;
-
-procedure TFrmChargePayCard.CorrectInterface;
-begin
-  edAmount.Enabled := (NOT cbxPaycards.Enabled) AND (PayCardOperationType IN [PCO_CHARGE, PCO_PRE_AUTH, PCO_REFUND]);
-  edCurrency.Enabled := (NOT cbxPaycards.Enabled) AND (PayCardOperationType IN [PCO_CHARGE, PCO_PRE_AUTH, PCO_REFUND]);
+  inherited;
   lbReservation.Caption := inttostr(ReservationId);
-  lbRoomReservation.Caption := inttostr(RoomReservationId);
+
+  if RoomReservationId > 0 then
+    lbRoomReservation.Caption := inttostr(RoomReservationId)
+  else
+    lbRoomReservation.Caption := '(Group)';
+
+
+  edAmount.Enabled := (NOT cbxPaycards.Enabled) AND (PayCardOperationType IN [PCO_CHARGE, PCO_PRE_AUTH, PCO_REFUND]);
+  fraCurrency.Enabled :=  (NOT cbxPaycards.Enabled) AND (PayCardOperationType IN [PCO_CHARGE, PCO_PRE_AUTH, PCO_REFUND]);
+
+  btnProceed.Enabled := (edAmount.value > 0) and fraCurrency.IsValid and (cbxPaycards.ItemIndex >= 0);
 end;
 
 procedure TFrmChargePayCard.btnProceedClick(Sender: TObject);
@@ -228,45 +278,63 @@ var s : String;
 begin
   inherited;
 
-  if (PayCardOperationType = PCO_REFUND) AND (_StrToFloat(edAmount.Text) > tokenCharge.amount) then
+  if (PayCardOperationType = PCO_REFUND) AND (edAmount.Value > tokenCharge.amount) then
   begin
       MessageDlg(GetTranslatedText('PCI_REFUND_TOO_HIGH_AMOUNT'), mtError, [mbOk], 0);
       exit;
   end;
 
+  if cbxPayCards.ItemIndex < 0 then exit;
+
   btnProceed.Enabled := False;
   cbxPaycards.Enabled := False;
   edAmount.Enabled := False;
-  edCurrency.Enabled := False;
+  fraCurrency.Enabled := False;
   edAmount.Enabled := False;
-  if cbxPayCards.ItemIndex < 0 then exit;
-  token := TToken(cbxPayCards.Items.Objects[cbxPayCards.ItemIndex]);
-  tokenId := token.id;
-  s := d.roomerMainDataSet.downloadUrlAsStringUsingPost(d.roomerMainDataSet.RoomerUri + format('paycard/bookings/%d/%d/paycardcharges', [ReservationId, RoomReservationId]),
-      format('amount=%s&' +
-             'currency=%s&' +
-             'description=%s&' +
-             'tokenId=%d&' +
-             'chargeType=%s&' +
-             'gateWayReference=%s',
-             [
-               edAmount.Text,
-               edCurrency.Text,
-               '', // description
-               tokenId,
-               PAY_CARD_OPERATION_TYPE[PayCardOperationType],
-               refNumber
-             ]
-      )
-      );
-  ProcessChargeSuccess(token, s);
-  pnlResult.Visible := True;
+  try
+    token := TToken(cbxPayCards.Items.Objects[cbxPayCards.ItemIndex]);
+    tokenId := token.id;
+    s := d.roomerMainDataSet.downloadUrlAsStringUsingPost(d.roomerMainDataSet.RoomerUri + format('paycard/bookings/%d/%d/paycardcharges', [ReservationId, RoomReservationId]),
+        format('amount=%s&' +
+               'currency=%s&' +
+               'description=%s&' +
+               'tokenId=%d&' +
+               'chargeType=%s&' +
+               'gateWayReference=%s',
+               [
+                 edAmount.Text,
+                 fraCurrency.CurrencyCode,
+                 '', // description
+                 tokenId,
+                 PAY_CARD_OPERATION_TYPE[PayCardOperationType],
+                 refNumber
+               ]
+        )
+        );
+    ProcessChargeSuccess(token, s);
+    pnlBottom.Visible := True;
+  finally
+    btnProceed.Enabled := False;
+    cbxPaycards.Enabled := False;
+    edAmount.Enabled := False;
+    fraCurrency.Enabled := False;
+    edAmount.Enabled := False;
+  end;
+end;
+
+procedure TFrmChargePayCard.cbxPaycardsChange(Sender: TObject);
+begin
+  inherited;
+  UpdateControls;
 end;
 
 procedure TFrmChargePayCard.cbxPaycardsCloseUp(Sender: TObject);
 begin
   inherited;
-  token := TToken(cbxPaycards.Items.Objects[cbxPaycards.ItemIndex]);
+  if (cbxPaycards.ItemIndex >= 0) and assigned(cbxPaycards.Items.Objects[cbxPaycards.ItemIndex]) then
+    token := TToken(cbxPaycards.Items.Objects[cbxPaycards.ItemIndex])
+  else
+    token := nil;
 end;
 
 procedure TFrmChargePayCard.ProcessChargeSuccess(token : TToken; msg : String);
@@ -275,8 +343,8 @@ begin
   charge := ParseSettings(token, msg);
 
   edResAmount.Text := trim(_floattostr(charge.amount, 20, 2));
-  edCurrency.Text := charge.currency;
-  lblRate.Caption := format('(Rate: %s)', [FloatToStr(charge.currencyRate)]);
+  edResCurrency.Text := charge.currency;
+  lblResRate.Caption := format('(Rate: %s)', [FloatToStr(charge.currencyRate)]);
   edResOperationType.Text := charge.operationType;
 
   edResOperationResult.Text := charge.operationResultCode;
@@ -291,6 +359,12 @@ begin
     FOperationResultingCharge := charge
   else
     FOperationResultingCharge := nil;
+end;
+
+procedure TFrmChargePayCard.SetPaycardOperationType(const Value: TPayCardOperationType);
+begin
+  FPaycardOperationType := Value;
+  btnProceed.Caption := PAY_CARD_OPERATION_TYPE[Value];
 end;
 
 function TFrmChargePayCard.ParseSettings(token : TToken; XmlString : String) : TTokenCharge;
@@ -309,15 +383,17 @@ var
   _XML_OPERATON_TYPE,
   _XML_CURRENCY : String;
   _XML_AMOUNT : Double;
+  _XML_ROOMRESERVATION : integer;
 begin
   xml := CreateXmlDocument;
   xml.loadXML(XmlString);
   listNode := xml.documentElement;
   result := nil;
   _XML_AMOUNT := 0;
+  _XML_ROOMRESERVATION := 0;
   if listNode <> nil then
   begin
-    if listNode.nodeName = 'paymentResponse' then
+    if Sametext(listNode.nodeName, 'paymentresponse') then
     begin
       with result do
       begin
@@ -326,42 +402,48 @@ begin
           rootNode := listNode.childNodes.item[i];
           with rootNode do
           begin
-            if rootNode.nodeName = XML_PAYMENT_RESPONSE then
+            if SameText(rootNode.nodeName, XML_PAYMENT_RESPONSE) then
                _XML_PAYMENT_RESPONSE := rootNode.text
             else
-            if rootNode.nodeName = XML_GATEWAY_NAME then
+            if SameText(rootNode.nodeName, XML_GATEWAY_NAME) then
                _XML_GATEWAY_NAME := rootNode.text
             else
-            if rootNode.nodeName = XML_OPERATION_RESULT_CODE then
+            if SameText(rootNode.nodeName, XML_OPERATION_RESULT_CODE) then
                _XML_OPERATION_RESULT_CODE := rootNode.text
             else
-            if rootNode.nodeName = XML_OPERATION_RESULT_DESCRIPTION then
+            if SameText(rootNode.nodeName, XML_OPERATION_RESULT_DESCRIPTION) then
                _XML_OPERATION_RESULT_DESCRIPTION := rootNode.text
             else
-            if rootNode.nodeName = XML_AUTHORIZATION_CODE then
+            if SameText(rootNode.nodeName, XML_AUTHORIZATION_CODE) then
                _XML_AUTHORIZATION_CODE := rootNode.text
             else
-            if rootNode.nodeName = XML_GATEWAY_REFERENCE then
+            if SameText(rootNode.nodeName,  XML_GATEWAY_REFERENCE) then
                _XML_GATEWAY_REFERENCE := rootNode.text
             else
-            if rootNode.nodeName = XML_GATEWAY_RESULT_CODE then
+            if SameText(rootNode.nodeName, XML_GATEWAY_RESULT_CODE) then
                _XML_GATEWAY_RESULT_CODE := rootNode.text
             else
-            if rootNode.nodeName = XML_GATEWAY_RESULT_DESCRIPTION then
+            if SameText(rootNode.nodeName, XML_GATEWAY_RESULT_DESCRIPTION) then
                _XML_GATEWAY_RESULT_DESCRIPTION := rootNode.text
             else
-            if rootNode.nodeName = XML_OPERATON_TYPE then
+            if SameText(rootNode.nodeName,  XML_OPERATON_TYPE) then
                _XML_OPERATON_TYPE := rootNode.text
             else
-            if rootNode.nodeName = XML_AMOUNT then
+            if SameText(rootNode.nodeName, XML_AMOUNT) then
                _XML_AMOUNT := _StrToFloat(rootNode.text)
             else
-            if rootNode.nodeName = XML_CURRENCY then
+            if SameText(rootNode.nodeName,  XML_ROOMRESERVATION) then
+               _XML_ROOMRESERVATION := StrToIntDef(rootNode.text, 0)
+            else
+            if SameText(rootNode.nodeName, XML_CURRENCY) then
                _XML_CURRENCY := rootNode.text;
           end;
         end;
       end;
-      result := TTokenCharge.Create(-1, token, _XML_AMOUNT,
+      result := TTokenCharge.Create(-1, token,
+                          ReservationId,
+                          _XML_ROOMRESERVATION,
+                          _XML_AMOUNT,
                           _XML_CURRENCY, 1.00,
                           _XML_AUTHORIZATION_CODE,
                           _XML_OPERATON_TYPE,
@@ -378,22 +460,12 @@ begin
 end;
 
 
-procedure TFrmChargePayCard.DisplayRate;
-begin
-  edAmount.Text := FloatToStr(Amount);
-  CurrencyRate := GetRate(edCurrency.Text);
-  lblRate.Caption := format('(Rate: %s)', [FloatToStr(CurrencyRate)]);
-end;
-
 procedure TFrmChargePayCard.DisplayTokens;
 var
   idx : Integer;
   cbxIndex : Integer;
   token : TToken;
 begin
-  edCurrency.Text := Currency;
-  DisplayRate;
-
   idx := -1;
   for token IN tokenList do
   begin
@@ -408,14 +480,45 @@ procedure TFrmChargePayCard.FormShow(Sender: TObject);
 begin
   inherited;
   FOperationResultingCharge := nil;
-  pnlResult.Visible := False;
+  pnlBottom.Visible := False;
   cbxPaycards.Enabled := False;
   if Assigned(tokenList) then
     DisplayTokens
   else
     LoadCards;
 
-  CorrectInterface;
+  fraCurrency.DisableEvents;
+  try
+    fraCurrency.CurrencyCode := Currency;
+    CurrencyRate := fraCurrency.CurrencyRate;
+  finally
+    fraCurrency.EnableEvents;
+  end;
+
+  edAmount.Value := Amount;
+  DialogButtons := [mbClose];
+  fraCurrency.OnCurrencyChangeAndValid := evtCurrencyChangedAndValid;
+  fraCurrency.OnCurrencyChange := evtCurrencyChanged;
+end;
+
+procedure TFrmChargePayCard.edAmountChange(Sender: TObject);
+begin
+  inherited;
+  UpdateControls;
+end;
+
+procedure TFrmChargePayCard.evtCurrencyChanged(Sender: TObject);
+begin
+  UpdateControls;
+end;
+
+procedure TFrmChargePayCard.evtCurrencyChangedAndValid(Sender: TObject);
+begin
+  if not SameValue(fraCurrency.CurrencyRate, CurrencyRate) then
+  begin
+    edAmount.value := edAmount.Value * CurrencyRate / fraCurrency.CurrencyRate;
+    CurrencyRate := fraCurrency.CurrencyRate;
+  end;
 end;
 
 procedure TFrmChargePayCard.LoadCards;

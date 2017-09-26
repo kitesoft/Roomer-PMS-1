@@ -606,7 +606,6 @@ type
     acRefresh: TAction;
     acAddRoom: TAction;
     btnViewPayCard: TsButton;
-    acViewPayCard: TAction;
     mnuRoomColumn: TPopupMenu;
     mnuCopyValueDown: TMenuItem;
     mnuCopyValueUp: TMenuItem;
@@ -614,21 +613,8 @@ type
     acCopyValueDown: TAction;
     acCopyValueUp: TAction;
     acCopyValueAll: TAction;
-    mnuPayCards: TPopupMenu;
-    M1: TMenuItem;
-    V1: TMenuItem;
     acManagePaycards: TAction;
     mRoomsPAYCARD_TOKEN_ID: TIntegerField;
-    pnlPaycard: TAdvToolPanel;
-    sLabel5: TsLabel;
-    cbPaycards: TsComboBox;
-    btnManagePayCards: TsButton;
-    lbCardCharged_: TsLabel;
-    lbCardCharged: TsLabel;
-    sLabel8: TsLabel;
-    sLabel10: TsLabel;
-    sLabel12: TsLabel;
-    sLabel13: TsLabel;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -756,15 +742,11 @@ type
     procedure btnChangeCountryAllGuestsClick(Sender: TObject);
     procedure acRemoveRoomUpdate(Sender: TObject);
     procedure acRoomResActionUpdate(Sender: TObject);
-    procedure acViewPayCardExecute(Sender: TObject);
     procedure acCopyValueDownExecute(Sender: TObject);
     procedure acCopyValueUpExecute(Sender: TObject);
     procedure acCopyValueAllExecute(Sender: TObject);
     procedure acManagePaycardsExecute(Sender: TObject);
     procedure btnManagePayCardsClick(Sender: TObject);
-    procedure cbPaycardsCloseUp(Sender: TObject);
-    procedure btnViewPayCardClick(Sender: TObject);
-    procedure pnlPaycardMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
   private
     { Private declarations }
     vStartName: string;
@@ -1064,7 +1046,6 @@ begin
   PlaceFormOnVisibleMonitor(self);
 
   FrmAlertPanel := TFrmAlertPanel.Create(self);
-  pnlPayCard.Visible := False;
 
   FOutOfOrderBlocking := false;
   mainPage.ActivePage := RoomsTab;
@@ -1102,12 +1083,6 @@ procedure TfrmReservationProfile.PlacePnlDataWait;
 begin
   pnlDataWait.Left := (Width div 2) - (pnlDataWait.Width div 2);
   pnlDataWait.Top := (Height div 2) - (pnlDataWait.Height div 2);
-end;
-
-procedure TfrmReservationProfile.pnlPaycardMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
-begin
-  ReleaseCapture;
-  pnlPaycard.Perform(WM_SYSCOMMAND, $F012,0);
 end;
 
 procedure TfrmReservationProfile.pnlTelephoneResize(Sender: TObject);
@@ -1157,15 +1132,8 @@ begin
       First;
       if not Eof then
       begin
-//        if (rSet.FieldDefs.IndexOf('PAYCARD_TOKEN') > -1) AND
-//           (rSet.FieldByName('PAYCARD_TOKEN').AsString <> '') then
-//        btnViewPayCard.Visible := tokens.Count > 0;
-        btnViewPayCard.Tag := ORD(glb.PCIContractOpenForChannel(fieldbyname('channel').asInteger));
-
         edtInvRefrence.ReadOnly := glb.GetBooleanValueOfFieldFromId('channels', 'managedByChannelManager',
           fieldbyname('channel').asInteger);
-
-        FillTokenComboBox(cbPaycards, tokens, -1);
 
         edtCustomer.text := trim(fieldbyname('Customer').asstring);
         // OPT?
@@ -1698,22 +1666,6 @@ begin
   cbxPaymentdetails.Invalidate;
 end;
 
-procedure TfrmReservationProfile.cbPaycardsCloseUp(Sender: TObject);
-var id : Integer;
-begin
-  id := -1;
-  if cbPaycards.ItemIndex > 0 then
-    id := TToken(cbPaycards.Items.Objects[cbPaycards.ItemIndex]).id;
-  mRooms.Edit;
-  try
-    d.RR_Upd_Paycard_Token_Id(zRoomReservation, id);
-    mRooms['PAYCARD_TOKEN_ID'] := id;
-    mRooms.Post;
-  except
-    mRooms.Cancel;
-  end;
-end;
-
 procedure TfrmReservationProfile.cbxBreakfastCloseUp(Sender: TObject);
 begin
   UpdateBreakfast;
@@ -1939,14 +1891,6 @@ end;
 procedure TfrmReservationProfile.acShowHiddenMemoExecute(Sender: TObject);
 begin
   g.openHiddenInfo(zReservation, 1);
-end;
-
-procedure TfrmReservationProfile.acViewPayCardExecute(Sender: TObject);
-begin
-  if tokens.Count > 0 then
-    ShowPayCardInformation(zReservation, tokens[0].id, btnViewPayCard.Tag)
-  else
-    acManagePaycardsExecute(acManagePaycards);
 end;
 
 procedure TfrmReservationProfile.AddNewRoom;
@@ -2302,11 +2246,6 @@ begin
   end;
 end;
 
-procedure TfrmReservationProfile.btnViewPayCardClick(Sender: TObject);
-begin
-  pnlPaycard.Visible := NOT pnlPaycard.Visible;
-end;
-
 procedure TfrmReservationProfile.btnRoomsRefreshClick(Sender: TObject);
 begin
   Display_rGrid(zRoomReservation);
@@ -2382,10 +2321,6 @@ begin
       gbxRoomInformation.caption := 'Notes for Room : ' + mRoomsRoom.asstring;
       memRoomNotes.Lines.text := HiddenInfo;
       memRequestFromChannel.Lines.text := ChannelRequest;
-
-      FillTokenComboBox(cbPaycards, tokens, mRoomsPAYCARD_TOKEN_ID.Value);
-      cbPaycards.Enabled := tokens.Count > 0;
-
     end;
   end;
   if not Dataset.ControlsDisabled then
@@ -2639,8 +2574,8 @@ begin
     s := s + '    , rr.Room '#10;
     s := s + '    , rr.RoomType '#10;
     s := s + '    , rr.package '#10;
-    s := s + '    , rrArrival as Arrival'#10;
-    s := s + '    , rrDeparture as Departure'#10;
+    s := s + '    , (select min(aDate) from roomsdate rd where rd.roomreservation=rr.roomreservation) as Arrival'#10;
+    s := s + '    , (select max(aDate) from roomsdate rd where rd.roomreservation=rr.roomreservation) as Departure'#10;
     s := s + '    , ExpectedTimeOfArrival'#10;
     s := s + '    , ExpectedCheckoutTime'#10;
     s := s + '    , rr.Status '#10;
@@ -3864,8 +3799,6 @@ procedure TfrmReservationProfile.btnManagePayCardsClick(Sender: TObject);
 begin
   ManagePaymentCards(zReservation, -1);
   tokens := LoadAllTokens(zReservation, -1);
-  FillTokenComboBox(cbPaycards, tokens, -1);
-  cbPaycards.Enabled := tokens.Count > 0;
   mRoomsAfterScroll(mRooms);
 end;
 

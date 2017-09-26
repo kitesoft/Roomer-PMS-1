@@ -128,7 +128,6 @@ type
     fraNationality: TfraCountryPanel;
     fraCountry: TfraCountryPanel;
     fraCompCountry: TfraCountryPanel;
-    lbExtraTaxes: TsLabel;
     cbPaycards: TsComboBox;
     btnManagePayCards: TsButton;
     procedure FormCreate(Sender: TObject);

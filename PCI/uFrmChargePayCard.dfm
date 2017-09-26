@@ -1,29 +1,28 @@
 inherited FrmChargePayCard: TFrmChargePayCard
   Caption = 'Charge pay-card'
-  ClientHeight = 620
-  ClientWidth = 746
-  Font.Height = -11
+  ClientHeight = 615
+  ClientWidth = 768
   OnShow = FormShow
-  ExplicitWidth = 762
-  ExplicitHeight = 659
+  ExplicitWidth = 774
+  ExplicitHeight = 644
   PixelsPerInch = 96
   TextHeight = 13
   inherited sbStatusBar: TsStatusBar
-    Top = 600
-    Width = 746
-    ExplicitTop = 600
-    ExplicitWidth = 746
+    Top = 595
+    Width = 768
+    ExplicitTop = 595
+    ExplicitWidth = 768
   end
-  object sPanel1: TsPanel [1]
+  object pnlTop: TsPanel [1]
     Left = 0
     Top = 0
-    Width = 746
-    Height = 91
+    Width = 768
+    Height = 179
     Align = alTop
     BevelOuter = bvNone
-    TabOrder = 1
+    TabOrder = 2
     object sLabel3: TsLabel
-      Left = 128
+      Left = 119
       Top = 21
       Width = 62
       Height = 13
@@ -33,7 +32,7 @@ inherited FrmChargePayCard: TFrmChargePayCard
       ParentBiDiMode = False
     end
     object sLabel4: TsLabel
-      Left = 98
+      Left = 89
       Top = 40
       Width = 92
       Height = 13
@@ -43,7 +42,7 @@ inherited FrmChargePayCard: TFrmChargePayCard
       ParentBiDiMode = False
     end
     object lbRoomReservation: TsLabel
-      Left = 201
+      Left = 192
       Top = 40
       Width = 31
       Height = 13
@@ -58,7 +57,7 @@ inherited FrmChargePayCard: TFrmChargePayCard
       Font.Style = [fsBold]
     end
     object lbReservation: TsLabel
-      Left = 201
+      Left = 192
       Top = 21
       Width = 31
       Height = 13
@@ -72,18 +71,9 @@ inherited FrmChargePayCard: TFrmChargePayCard
       Font.Name = 'Tahoma'
       Font.Style = [fsBold]
     end
-  end
-  object sPanel2: TsPanel [2]
-    Left = 0
-    Top = 91
-    Width = 746
-    Height = 509
-    Align = alClient
-    BevelOuter = bvNone
-    TabOrder = 0
     object sLabel1: TsLabel
-      Left = 143
-      Top = 29
+      Left = 134
+      Top = 69
       Width = 47
       Height = 13
       Alignment = taRightJustify
@@ -92,8 +82,8 @@ inherited FrmChargePayCard: TFrmChargePayCard
       ParentBiDiMode = False
     end
     object sLabel2: TsLabel
-      Left = 149
-      Top = 56
+      Left = 140
+      Top = 96
       Width = 41
       Height = 13
       Alignment = taRightJustify
@@ -102,8 +92,8 @@ inherited FrmChargePayCard: TFrmChargePayCard
       ParentBiDiMode = False
     end
     object sLabel5: TsLabel
-      Left = 142
-      Top = 83
+      Left = 133
+      Top = 123
       Width = 48
       Height = 13
       Alignment = taRightJustify
@@ -111,20 +101,14 @@ inherited FrmChargePayCard: TFrmChargePayCard
       Caption = 'Currency:'
       ParentBiDiMode = False
     end
-    object lblRate: TsLabel
-      Left = 336
-      Top = 83
-      Width = 72
-      Height = 13
-      Caption = '(Rate: 1.0000)'
-    end
     object cbxPaycards: TsComboBox
-      Left = 201
-      Top = 26
+      Left = 192
+      Top = 66
       Width = 472
       Height = 21
       Alignment = taLeftJustify
       VerticalAlignment = taAlignTop
+      Style = csDropDownList
       Color = clWhite
       Enabled = False
       Font.Charset = DEFAULT_CHARSET
@@ -136,65 +120,92 @@ inherited FrmChargePayCard: TFrmChargePayCard
       ParentFont = False
       TabOrder = 0
       OnCloseUp = cbxPaycardsCloseUp
+      OnChange = cbxPaycardsChange
     end
-    object edAmount: TsEdit
-      Left = 201
-      Top = 53
-      Width = 121
+    object btnProceed: TsButton
+      Left = 191
+      Top = 148
+      Width = 91
+      Height = 25
+      Caption = 'Charge'
+      TabOrder = 3
+      OnClick = btnProceedClick
+    end
+    inline fraCurrency: TfraCurrencyPanel
+      Left = 192
+      Top = 120
+      Width = 208
+      Height = 20
+      TabOrder = 2
+      ExplicitLeft = 192
+      ExplicitTop = 120
+      ExplicitWidth = 208
+      inherited pnlCurrency: TsPanel
+        Width = 208
+        ExplicitWidth = 208
+        inherited lblCurrencyName: TsLabel
+          Width = 142
+          Height = 14
+        end
+      end
+    end
+    object edAmount: TsCurrencyEdit
+      Left = 192
+      Top = 93
+      Width = 88
       Height = 21
-      Alignment = taRightJustify
+      AutoSize = False
       Color = clWhite
       Font.Charset = DEFAULT_CHARSET
-      Font.Color = 4473924
+      Font.Color = clBlack
       Font.Height = -11
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
       TabOrder = 1
-      Text = '0.00'
+      OnChange = edAmountChange
+      GlyphMode.Blend = 0
+      GlyphMode.Grayed = False
     end
-    object edCurrency: TsEdit
-      Left = 201
-      Top = 80
-      Width = 91
-      Height = 21
-      Alignment = taRightJustify
-      Color = clWhite
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = 4473924
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      ParentFont = False
-      ReadOnly = True
-      TabOrder = 2
+  end
+  inherited pnlButtons: TsPanel
+    Top = 552
+    Width = 768
+    TabOrder = 0
+    ExplicitTop = 552
+    ExplicitWidth = 768
+    inherited btnOK: TsButton
+      Left = 452
+      ExplicitLeft = 452
     end
-    object btnProceed: TsButton
-      Left = 201
-      Top = 108
-      Width = 90
-      Height = 25
-      Caption = 'Proceed'
-      TabOrder = 3
-      OnClick = btnProceedClick
+    inherited btnCancel: TsButton
+      Left = 558
+      ExplicitLeft = 558
     end
-    object btnGetCurrency: TsButton
-      Left = 293
-      Top = 80
-      Width = 29
-      Height = 20
-      Caption = '...'
-      TabOrder = 4
-      OnClick = btnGetCurrencyClick
-      SkinData.SkinSection = 'BUTTON'
+    inherited btnClose: TsButton
+      Left = 664
+      ExplicitLeft = 664
     end
+  end
+  object pnlBottom: TsPanel [3]
+    Left = 0
+    Top = 179
+    Width = 768
+    Height = 373
+    Align = alClient
+    TabOrder = 3
     object pnlResult: TsPanel
-      Left = 24
-      Top = 160
-      Width = 697
-      Height = 344
-      TabOrder = 5
-      Visible = False
+      AlignWithMargins = True
+      Left = 6
+      Top = 6
+      Width = 756
+      Height = 361
+      Margins.Left = 5
+      Margins.Top = 5
+      Margins.Right = 5
+      Margins.Bottom = 5
+      Align = alClient
+      TabOrder = 0
       object sLabel6: TsLabel
         Left = 97
         Top = 59
@@ -329,7 +340,7 @@ inherited FrmChargePayCard: TFrmChargePayCard
         Alignment = taRightJustify
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = 4473924
+        Font.Color = clBlack
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
@@ -345,7 +356,7 @@ inherited FrmChargePayCard: TFrmChargePayCard
         Height = 21
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = 4473924
+        Font.Color = clBlack
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
@@ -360,7 +371,7 @@ inherited FrmChargePayCard: TFrmChargePayCard
         Height = 21
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = 4473924
+        Font.Color = clBlack
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
@@ -375,7 +386,7 @@ inherited FrmChargePayCard: TFrmChargePayCard
         Height = 21
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = 4473924
+        Font.Color = clBlack
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
@@ -390,7 +401,7 @@ inherited FrmChargePayCard: TFrmChargePayCard
         Height = 21
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = 4473924
+        Font.Color = clBlack
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
@@ -405,7 +416,7 @@ inherited FrmChargePayCard: TFrmChargePayCard
         Height = 21
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = 4473924
+        Font.Color = clBlack
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
@@ -420,7 +431,7 @@ inherited FrmChargePayCard: TFrmChargePayCard
         Height = 57
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = 4473924
+        Font.Color = clBlack
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
@@ -435,7 +446,7 @@ inherited FrmChargePayCard: TFrmChargePayCard
         Height = 21
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = 4473924
+        Font.Color = clBlack
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
@@ -450,7 +461,7 @@ inherited FrmChargePayCard: TFrmChargePayCard
         Height = 21
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = 4473924
+        Font.Color = clBlack
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
@@ -459,18 +470,6 @@ inherited FrmChargePayCard: TFrmChargePayCard
         TabOrder = 6
       end
     end
-  end
-  inherited psRoomerBase: TcxPropertiesStore
-    Components = <
-      item
-        Component = frmBaseRoomerForm.Owner
-        Properties.Strings = (
-          'Height'
-          'Left'
-          'Top'
-          'Width'
-          'Position')
-      end>
   end
   inherited cxsrRoomerStyleRepository: TcxStyleRepository
     PixelsPerInch = 96

@@ -19,7 +19,7 @@ uses
     , uTaxCalc
     , frxExportMail, frxExportImage, frxExportRTF, frxExportHTML
 
-  , uInvoiceEntities, sScrollBox
+  , uInvoiceEntities, sScrollBox, cxCheckBox, cxCurrencyEdit
     ;
 
 type
@@ -193,16 +193,22 @@ type
     grPayments: TcxGrid;
     tvPaymentsPayDate: TcxGridDBColumn;
     tvPaymentsPayType: TcxGridDBColumn;
-    tvPaymentsAmount: TcxGridDBColumn;
+    tvPaymentNativeAmount: TcxGridDBColumn;
     tvPaymentsDescription: TcxGridDBColumn;
     tvPaymentsPayGroup: TcxGridDBColumn;
     tvPaymentsMemo: TcxGridDBColumn;
     tvPaymentsconfirmDate: TcxGridDBColumn;
+    tvPaymentsid: TcxGridDBColumn;
+    tvPaymentsRecId: TcxGridDBColumn;
+    tvPaymentsInvoiceIndex: TcxGridDBColumn;
+    tvPaymentsPaycardTraceIndex: TcxGridDBColumn;
+    tvPaymentsCCCharged: TcxGridDBColumn;
+    tvPaymentsCurrency: TcxGridDBColumn;
+    tvPaymentsCurrencyAmount: TcxGridDBColumn;
     clabDownpayments: TsLabel;
     edtDownPayments: TsEdit;
     clabBalance: TsLabel;
     edtBalance: TsEdit;
-    tvPaymentsid: TcxGridDBColumn;
     rptDsLines: TfrxDBDataset;
     clabForeignCurrency: TsLabel;
     edtForeignCurrency: TsEdit;
@@ -217,12 +223,17 @@ type
     mPayments: TdxMemData;
     mPaymentsPayDate: TDateField;
     mPaymentsPayType: TWideStringField;
-    mPaymentsAmount: TFloatField;
+    mPaymentsNativeAmount: TFloatField;
     mPaymentsDescription: TWideStringField;
     mPaymentsPayGroup: TWideStringField;
     mPaymentsMemo: TMemoField;
     mPaymentsconfirmDate: TDateTimeField;
     mPaymentsid: TIntegerField;
+    mPaymentsInvoiceIndex: TIntegerField;
+    mPaymentsPaycardTraceIndex: TIntegerField;
+    mPaymentsChargedOnCC: TBooleanField;
+    mPaymentsCurrency: TWideStringField;
+    mPaymentsCurrencyAmount: TFloatField;
     mnuMoveItem: TPopupMenu;
     mnuMoveRoom: TPopupMenu;
     T1: TMenuItem;
@@ -320,8 +331,10 @@ type
     mRoomRatesRentAmount: TFloatField;
     mRoomRatesNativeAmount: TFloatField;
     mRoomRatesGuestName: TWideStringField;
-    mPaymentsInvoiceIndex: TIntegerField;
     mnuMoveRoomToInvoiceIndex: TMenuItem;
+    btnRevertDownPayment: TsButton;
+    actRevertDownPayment: TAction;
+    actDeleteDownPayment: TAction;
     procedure FormCreate(Sender: TObject);
     procedure agrLinesMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: integer);
@@ -353,7 +366,7 @@ type
     procedure sButton2Click(Sender: TObject);
     procedure edtCustomerChange(Sender: TObject);
     procedure btnEditDownPaymentClick(Sender: TObject);
-    procedure btnDeleteDownpaymentClick(Sender: TObject);
+    procedure actDeleteDownpaymentExecute(Sender: TObject);
     procedure agrLinesGetAlignment(Sender: TObject; ARow, ACol: integer;
       var HAlign: TAlignment; var VAlign: TVAlignment);
     procedure agrLinesColumnSize(Sender: TObject; ACol: integer;
@@ -395,6 +408,13 @@ type
     procedure pnlPaymentButtonsResize(Sender: TObject);
     procedure sPanel4DragOver(Sender, Source: TObject; X, Y: Integer; State: TDragState; var Accept: Boolean);
     procedure mnuMoveRoomToInvoiceIndexClick(Sender: TObject);
+    procedure mPaymentsCalcFields(DataSet: TDataSet);
+    procedure tvPaymentsCurrencyAmountGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
+      var AProperties: TcxCustomEditProperties);
+    procedure tvPaymentNativeAmountGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
+      var AProperties: TcxCustomEditProperties);
+    procedure actRevertDownPaymentExecute(Sender: TObject);
+    procedure actUpdate(Action: TBasicAction; var Handled: Boolean);
  private
     { Private declarations }
 
@@ -625,6 +645,7 @@ type
     function ItemKindOnRow(aRow: Integer): TItemKind;
     procedure DeleteSelectedLines;
     procedure MoveSelectedLinesToInvoiceIndex(aNewIndex: integer);
+    procedure LoadPayments;
     property InvoiceIndex: integer read FInvoiceIndex write SetInvoiceIndex;
     property AnyRowChecked: boolean read GetAnyRowChecked;
   public
@@ -680,7 +701,7 @@ uses
   , uFloatUtils
   , Math
   , uVatCalculator, uSQLUtils, ufrmRoomPrices, uInvoiceDefinitions, uInvoiceRentPerDay, uPMSSettings,
-  uFinanceConnectService;
+  uFinanceConnectService, uFrmChargePayCard;
 
 {$R *.DFM}
 
@@ -1843,11 +1864,25 @@ begin
   btnProforma.Enabled := True;
 end;
 
+procedure TfrmInvoice.tvPaymentNativeAmountGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
+  var AProperties: TcxCustomEditProperties);
+begin
+  aProperties := d.getCurrencyProperties(g.qNativeCurrency)
+//  aProperties := FCurrencyhandlersMap.CurrencyHandler[g.qNativeCurrency].GetcxEditProperties();
+end;
+
 procedure TfrmInvoice.tvPaymentsCellDblClick(Sender: TcxCustomGridTableView;
   ACellViewInfo: TcxGridTableDataCellViewInfo; AButton: TMouseButton;
   AShift: TShiftState; var AHandled: boolean);
 begin
   btnEditDownPaymentClick(nil);
+end;
+
+procedure TfrmInvoice.tvPaymentsCurrencyAmountGetProperties(Sender: TcxCustomGridTableItem;
+  ARecord: TcxCustomGridRecord; var AProperties: TcxCustomEditProperties);
+begin
+//  aProperties := FCurrencyhandlersMap.CurrencyHandler[mPaymentsCurrency.AsString].GetcxEditProperties();
+  aProperties := d.getCurrencyProperties(mPaymentsCurrency.AsString);
 end;
 
 procedure TfrmInvoice.tvPaymentsMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
@@ -1871,7 +1906,7 @@ begin
       mPayments.first;
       while not mPayments.eof do
       begin
-        Total := Total + mPayments.FieldByName('Amount').asfloat;
+        Total := Total + mPaymentsNativeAmount.asfloat;
         mPayments.Next;
       end;
     finally
@@ -2886,13 +2921,6 @@ begin
         FnewSplitNumber, FInvoiceIndex]);
       lExecutionPlan.AddQuery(sql);
 
-      sql := 'SELECT * FROM payments ' + ' where Reservation = %d ' +
-        '   and RoomReservation = %d ' +
-        '   and InvoiceNumber = -1 AND InvoiceIndex = %d';
-      sql := format(sql, [FReservation, FRoomReservation,
-        FInvoiceIndex]);
-      lExecutionPlan.AddQuery(sql);
-
       sql := 'SELECT SUM(IF(xxx.RoomReservation>0 AND xxx.Reservation>0, xxx.NumberOfGuests * xxx.NumberOfDays, ' +
         ' (SELECT SUM((SELECT COUNT(id) FROM roomsdate WHERE RoomReservation = pe.RoomReservation AND NOT (ResFlag IN (''X'',''C'',''N'')))) AS GuestNights '
         +
@@ -2922,7 +2950,7 @@ begin
       lExecutionPlan.Execute(ptQuery);
 
       eSet := lExecutionPlan.Results[0];
-      reservationSet := lExecutionPlan.Results[2];
+      reservationSet := lExecutionPlan.Results[1];
 
       if zFirsttime then // **15-10-16
       begin
@@ -2993,39 +3021,13 @@ begin
         eSet.Next;
       end;
 
-      eSet := lExecutionPlan.Results[1];
-
       if (FReservation = 0) and (FRoomReservation = 0) then
       begin
         // what
       end
       else
       begin
-        eSet.first;
-
-        mPayments.close;
-        mPayments.Open;
-
-        while not eSet.eof do
-        begin
-          // **HJ
-          mPayments.insert;
-          mPayments.FieldByName('PayType').asString := eSet.FieldByName('PayType').asString;
-          mPayments.FieldByName('PayDate').asdateTime := SQLToDateTime(eSet.FieldByName('PayDate').asString);
-          mPayments.FieldByName('Amount').asfloat := eSet.FieldByName('Amount').asfloat;
-          mPayments.FieldByName('Description').asString := eSet.FieldByName('Description').asString;
-          mPayments.FieldByName('PayGroup').asString := '';
-          mPayments.FieldByName('Memo').asString := eSet.FieldByName('Notes').asString;
-          mPayments.FieldByName('confirmDate').asdateTime := eSet.FieldByName('Confirmdate').asdateTime;
-          mPayments.FieldByName('Id').asinteger := eSet.FieldByName('ID').asinteger;
-
-          if glb.Paytypesset.Locate('payType', eSet.FieldByName('PayType').asString, []) then
-          begin
-            mPayments.FieldByName('PayGroup').asString := glb.Paytypesset.FieldByName('payGroup').asString;
-          end;
-          mPayments.post;
-          eSet.Next;
-        end;
+        LoadPayments;
       end;
 
       inc(iCurrentRow);
@@ -3575,10 +3577,10 @@ end;
 
 procedure TfrmInvoice.FormShow(Sender: TObject);
 begin
-  btnEditDownPayment.Visible := glb.PMSSettings.InvoiceSettings.AllowPaymentModification;
-  btnDeleteDownpayment.Visible := glb.PMSSettings.InvoiceSettings.AllowPaymentModification;
   btnRemoveItem.Visible := glb.PMSSettings.InvoiceSettings.AllowDeletingItemsFromInvoice;
   btnRemoveLodgingTax2.Visible := glb.PMSSettings.InvoiceSettings.AllowTogglingOfCityTaxes;
+  btnEditDownPayment.Visible := glb.PMSSettings.InvoiceSettings.AllowPaymentModification;
+  actDeleteDownPayment.Visible := glb.PMSSettings.InvoiceSettings.AllowPaymentModification;
 
   LoadInvoice;
   UpdateCaptions;
@@ -5328,7 +5330,7 @@ begin
     if (zInvoiceNumber = -1) or (FnewSplitNumber = 1) then
     begin
       if not SelectPaymentTypes(_StrToFloat(edtBalance.Text), edtCustomer.Text,
-        ptInvoice, edtCurrency.Text, _StrToFloat(edtRate.Text), FReservation,
+        ptInvoice, edtCurrency.Text, _StrToFloat(edtRate.Text), FReservation, FRoomReservation,
         lstLocations, zInvoiceDate, zPayDate, zLocation) then
       begin
         exit;
@@ -6430,6 +6432,12 @@ begin
   CheckCheckboxes;
 end;
 
+procedure TfrmInvoice.mPaymentsCalcFields(DataSet: TDataSet);
+begin
+  mPaymentsChargedOnCC.AsBoolean := mPaymentsPaycardTraceIndex.AsInteger > 0;
+  mPaymentsCurrencyAmount.AsFloat := mPaymentsNativeAmount.AsFloat * GetRate(mPaymentsCurrency.AsString);
+end;
+
 procedure TfrmInvoice.pnlInvoiceIndex0DragOver(Sender, Source: TObject;
   X, Y: integer; State: TDragState; var Accept: boolean);
 begin
@@ -6916,6 +6924,16 @@ procedure TfrmInvoice.actSaveAndExitExecute(Sender: TObject);
 begin
   SaveAnd(True);
 end;
+
+procedure TfrmInvoice.actUpdate(Action: TBasicAction; var Handled: Boolean);
+begin
+  Handled := true;
+
+  actRevertDownpayment.Enabled := not mPayments.IsEmpty;
+  actDeleteDownPayment.Enabled := (mPayments.RecordCount > 0) and (mPaymentsPaycardTraceIndex.AsInteger <= 0);
+  btnEditDownPayment.Enabled := (mPayments.RecordCount > 0) and (mPaymentsPaycardTraceIndex.AsInteger <= 0);
+end;
+
 procedure TfrmInvoice.actPrintInvoiceExecute(Sender: TObject);
 var
   ok: boolean;
@@ -6931,6 +6949,55 @@ begin
   if PayInvoiceAndPrint then
     close;
 end;
+
+procedure TfrmInvoice.LoadPayments;
+var
+  sql: string;
+  eSet: TRoomerDataSet;
+  id: integer;
+begin
+  eSet := CreateNewDataSet;
+  mPayments.DisableControls;
+  try
+    id := mPaymentsid.AsInteger;
+    mPayments.close;
+    mPayments.Open;
+
+    sql := 'SELECT * FROM payments ' + ' where Reservation = %d ' + '   and RoomReservation = %d ' +
+      '   and InvoiceNumber = -1 AND InvoiceIndex = %d';
+    sql := format(sql, [FReservation, FRoomReservation, FInvoiceIndex]);
+
+    hData.rSet_bySQL(eSet, sql);
+
+    eSet.first;
+    while not eSet.eof do
+    begin
+      mPayments.insert;
+      mPaymentsPayType.asString := eSet.FieldByName('PayType').asString;
+      mPaymentsPayDate.asdateTime := SQLToDateTime(eSet.FieldByName('PayDate').asString);
+      mPaymentsCurrency.AsString := eSet.FieldByName('Currency').AsString;
+      mPaymentsNativeAmount.AsFloat := eSet.FieldByName('Amount').AsFloat;
+      mPaymentsDescription.asString := eSet.FieldByName('Description').asString;
+      mPaymentsPayGroup.asString := '';
+      mPaymentsMemo.asString := eSet.FieldByName('Notes').asString;
+      mPaymentsconfirmDate.asdateTime := eSet.FieldByName('Confirmdate').asdateTime;
+      mPaymentsId.asinteger := eSet.FieldByName('ID').asinteger;
+      mPaymentsPaycardTraceIndex.AsInteger := eSet.FieldByName('Paycard_Trace_index').AsInteger;
+
+      if glb.Paytypesset.Locate('payType', eSet.FieldByName('PayType').asString, []) then
+        mPaymentsPayGroup.asString := glb.Paytypesset.FieldByName('payGroup').asString;
+
+      mPayments.post;
+      eSet.Next;
+    end;
+
+    mPayments.Locate('id', id, []);
+  finally
+    mPayments.EnableControls;
+    eSet.Free;
+  end;
+end;
+
 
 procedure TfrmInvoice.actPrintProformaExecute(Sender: TObject);
 begin
@@ -6951,6 +7018,12 @@ begin
     exit;
   end;
 
+  if mPaymentsPaycardTraceIndex.AsInteger > 0 then
+  begin
+    ShowMessage(GetTranslatedText('shTx_Invoice_CannotEditDeletePCITokenPayment'));
+    exit;
+  end;
+
   g.initRecDownPayment(rec);
 
   if edtBalance.Text <> '' then
@@ -6960,7 +7033,7 @@ begin
   rec.reservation := FReservation;
   rec.RoomReservation := FRoomReservation;
   rec.Invoice := zInvoiceNumber;
-  rec.Amount := mPayments.FieldByName('Amount').asfloat;
+  rec.Amount := mPaymentsNativeAmount.asfloat;
   rec.Quantity := 1;
   rec.Description := mPayments.FieldByName('Description').asString;
   rec.Notes := mPayments.FieldByName('Memo').asString;
@@ -6975,48 +7048,7 @@ begin
   begin
     if OpenAssignPayment(Id) then
     begin
-      rSet := CreateNewDataSet;
-      try
-        mPayments.close;
-        mPayments.Open;
-
-        sql := 'SELECT * FROM payments ' + ' where Reservation = %d ' +
-          '   and RoomReservation = %d ' +
-          '   and InvoiceNumber = -1 AND InvoiceIndex=%d';
-        s := format(sql, [FReservation, FRoomReservation, FInvoiceIndex]);
-        if rSet_bySQL(rSet, s) then
-        begin
-          while not rSet.eof do
-          begin
-            mPayments.insert;
-            mPayments.FieldByName('PayType').asString :=
-              rSet.FieldByName('PayType').asString;
-            mPayments.FieldByName('PayDate').asdateTime := SQLToDateTime(rSet.FieldByName('PayDate').asString);
-            mPayments.FieldByName('Amount').asfloat :=
-              rSet.FieldByName('Amount').asfloat;
-            mPayments.FieldByName('Description').asString :=
-              rSet.FieldByName('Description').asString;
-            mPayments.FieldByName('PayGroup').asString := '';
-            mPayments.FieldByName('Memo').asString :=
-              rSet.FieldByName('Notes').asString;
-            mPayments.FieldByName('confirmDate').asdateTime :=
-              rSet.FieldByName('Confirmdate').asdateTime;
-            mPayments.FieldByName('Id').asinteger := rSet.FieldByName('ID')
-              .asinteger;
-            if glb.Paytypesset.Locate('payType', rSet.FieldByName('PayType')
-              .asString, []) then
-            begin
-              mPayments.FieldByName('PayGroup').asString :=
-                glb.Paytypesset.FieldByName('payGroup').asString;
-            end;
-            mPayments.post;
-            rSet.Next;
-          end;
-        end;
-      finally
-        FreeAndNil(rSet);
-      end;
-      mPayments.Locate('id', Id, []);
+      LoadPayments;
       DisplayTotals;
     end;
   end
@@ -7041,7 +7073,7 @@ begin
   rec.reservation := FReservation;
   rec.RoomReservation := FRoomReservation;
   rec.Invoice := zInvoiceNumber;
-  rec.Amount := mPayments.FieldByName('Amount').asfloat;
+  rec.Amount := mPaymentsNativeAmount.asfloat;
   rec.Quantity := 1;
   rec.Description := mPayments.FieldByName('Description').asString;
   rec.Notes := mPayments.FieldByName('Memo').asString;
@@ -7059,11 +7091,14 @@ begin
 
     if cmd_bySQL(s) then
     begin
-      mPayments.delete;
-      AddInvoiceActivityLog(g.qUser, rec.reservation, rec.RoomReservation, 1
+      AddInvoiceActivityLog(g.qUser, rec.reservation, rec.RoomReservation, FInvoiceIndex
         // field typeindex 0 = invoice payment 1 = downpayment
-        , DELETE_PAYMENT, rec.PaymentType, rec.Amount, zInvoiceNumber,
-        rec.Description);
+        , DELETE_PAYMENT, rec.PaymentType, rec.Amount, zInvoiceNumber, rec.Description);
+      AddInvoiceActivityLog(g.qUser, rec.reservation, rec.RoomReservation, toInvoiceIndex
+        // field typeindex 0 = invoice payment 1 = downpayment
+        , ADD_PAYMENT, rec.PaymentType, rec.Amount, zInvoiceNumber, rec.Description);
+
+      LoadPayments;
     end;
 
     DisplayTotals;
@@ -7074,7 +7109,7 @@ begin
   end;
 end;
 
-procedure TfrmInvoice.btnDeleteDownpaymentClick(Sender: TObject);
+procedure TfrmInvoice.actDeleteDownpaymentExecute(Sender: TObject);
 var
   rec: recDownPayment;
   Id: integer;
@@ -7091,7 +7126,7 @@ begin
   rec.reservation := FReservation;
   rec.RoomReservation := FRoomReservation;
   rec.Invoice := zInvoiceNumber;
-  rec.Amount := mPayments.FieldByName('Amount').asfloat;
+  rec.Amount := mPaymentsNativeAmount.asfloat;
   rec.Quantity := 1;
   rec.Description := mPayments.FieldByName('Description').asString;
   rec.Notes := mPayments.FieldByName('Memo').asString;
@@ -7101,6 +7136,13 @@ begin
   rec.confirmDate := mPayments.FieldByName('Confirmdate').asdateTime;
 
   Id := mPayments.FieldByName('ID').asinteger;
+
+  if mPaymentsPaycardTraceIndex.AsInteger > 0 then
+  begin
+    ShowMessage(GetTranslatedText('shTx_Invoice_CannotEditDeletePCITokenPayment'));
+    exit;
+  end;
+
 
   if (rec.confirmDate < 3) and (Id > 0) then
   begin
@@ -7181,7 +7223,7 @@ begin
       mPayments.insert;
       mPayments.FieldByName('PayType').asString := rec.PaymentType;
       mPayments.FieldByName('PayDate').asdateTime := Date;
-      mPayments.FieldByName('Amount').asfloat := rec.Amount;
+      mPaymentsNativeAmount.asfloat := rec.Amount;
       mPayments.FieldByName('Description').asString := rec.Description;
       if glb.Paytypesset.Locate('payType', rec.PaymentType, []) then
       begin
@@ -7253,6 +7295,90 @@ begin
     end;
   finally
     list.free;
+  end;
+end;
+
+procedure TfrmInvoice.actRevertDownPaymentExecute(Sender: TObject);
+var
+  s: string;
+  msg: string;
+begin
+
+  if mPayments.RecordCount = 0 then
+    Exit;
+
+  if (mPaymentsid.AsInteger > 0) then
+  begin
+    if mPaymentsChargedOnCC.AsBoolean then
+    begin
+      // Start creditcard refund
+      RefundChargeFromChargeId(FReservation, FRoomReservation, mPaymentsPaycardTraceIndex.AsInteger);
+    end
+    else
+    begin
+      msg := Format(GetTranslatedtext('shTxInvoicePayments_RevertPayment'), [mPaymentsDescription.AsString, _floattostr(mPaymentsnativeAmount.AsFloat, vWidth, vDec), mPaymentsCurrency.AsString]);
+      if MessageDlg(msg, mtConfirmation, [mbOK, mbCancel], 0) = mrOK then
+      begin
+        s := s + ' insert into payments ( '#10;
+        s := s + '     Reservation, '#10;
+        s := s + '     RoomReservation, '#10;
+        s := s + '     Person, '#10;
+        s := s + '     AutoGen, '#10;
+        s := s + '     TypeIndex, '#10;
+        s := s + '     InvoiceNumber, '#10;
+        s := s + '     PayDate, '#10;
+        s := s + '     Customer, '#10;
+        s := s + '     PayType, '#10;
+        s := s + '     Amount, '#10;
+        s := s + '     Description, '#10;
+        s := s + '     CurrencyRate, '#10;
+        s := s + '     Currency, '#10;
+        s := s + '     Ayear, '#10;
+        s := s + '     Amon, '#10;
+        s := s + '     Aday, '#10;
+        s := s + '     Notes, '#10;
+        s := s + '     staff, '#10;
+        s := s + '     InvoiceIndex, '#10;
+        s := s + '     Source, '#10;
+        s := s + '     SourceUserId, '#10;
+        s := s + '     SourceUserFullname, '#10;
+        s := s + '     PAYCARD_TRACE_INDEX) '#10;
+        s := s + ' select '#10;
+        s := s + '     Reservation, '#10;
+        s := s + '     RoomReservation, '#10;
+        s := s + '     Person, '#10;
+        s := s + '     ' + _db(_GetCurrentTick) + ', '#10;
+        s := s + '     TypeIndex, '#10;
+        s := s + '     InvoiceNumber, '#10;
+        s := s + '     CURRENT_DATE as PayDate, '#10;
+        s := s + '     Customer, '#10;
+        s := s + '     PayType, '#10;
+        s := s + '     Amount * -1, '#10;
+        s := s + '     CONCAT(Description, ' + _db(GetTranslatedtext('shTxInvoicePayments_Reverted')) +'), '#10;
+        s := s + '     CurrencyRate, '#10;
+        s := s + '     Currency, '#10;
+        s := s + '     Ayear, '#10;
+        s := s + '     Amon, '#10;
+        s := s + '     Aday, '#10;
+        s := s + '     Notes, '#10;
+        s := s + '     ' + _db(d.roomerMainDataSet.username) + ','#10;
+        s := s + '     InvoiceIndex, '#10;
+        s := s + '     Source, '#10;
+        s := s + '     SourceUserId, '#10;
+        s := s + '     SourceUserFullname, '#10;
+        s := s + '     PAYCARD_TRACE_INDEX '#10;
+        s := s + ' FROM payments '#10;
+        s := s + ' WHERE  Id = (' + _db(mPaymentsId.AsInteger) + ') ' + #10;
+
+        if cmd_bySQL(s) then
+          AddInvoiceActivityLog(g.qUser, FReservation, FRoomReservation, FInvoiceIndex
+            , ADD_PAYMENT, mPaymentsPayType.AsString, mPaymentsNativeAmount.AsFloat * -1, -1, mPaymentsDescription.ASString);
+      end;
+    end;
+
+    LoadPayments;
+    DisplayTotals;
+
   end;
 end;
 
