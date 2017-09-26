@@ -10,7 +10,7 @@ uses
   , RoomerExceptionHandling;
 
 type
-  EChargePaycardException = class(ERoomerException);
+  EChargePaycardException = class(ERoomerUserException);
 
   TPayCardOperationType = (PCO_CHARGE, PCO_PRE_AUTH, PCO_CAPTURE, PCO_REFUND, PCO_VOID);
 
@@ -60,6 +60,7 @@ type
     CurrencyRate : Double;
     FOperationResultingCharge: TTokenCharge;
     FPaycardOperationType: TPayCardOperationType;
+    FAmountIsFixed: boolean;
     procedure ProcessChargeSuccess(token : TToken; msg: String);
     function ParseSettings(token : TToken; XmlString: String): TTokenCharge;
     procedure evtCurrencyChangedAndValid(Sender: TObject);
@@ -79,6 +80,7 @@ type
     token : TToken;
     tokenList : TObjectList<TToken>;
     property PayCardOperationType : TPayCardOperationType read FPaycardOperationType write SetPaycardOperationType;
+    property AmountIsFixed: boolean read FAmountIsFixed write FAMountIsFixed;
     procedure LoadCards;
     procedure DisplayTokens;
 
@@ -91,7 +93,8 @@ function ChargePayCardForPayment(ReservationId : Integer;
                 RoomReservationId : Integer;
                 Amount : Double;
                 Currency : String;
-                PayCardOperationType : TPayCardOperationType) : TTokenCharge;
+                PayCardOperationType : TPayCardOperationType;
+                AmountIsFixed: boolean = false) : TTokenCharge;
 
 function ChargePayCard(tokenCharge : TTokenCharge;
                 token : TToken;
@@ -102,7 +105,8 @@ function ChargePayCard(tokenCharge : TTokenCharge;
                 Currency : String;
                 tokenList : TObjectList<TToken>;
                 refNumber : String;
-                PayCardOperationType : TPayCardOperationType) : TTokenCharge;
+                PayCardOperationType : TPayCardOperationType;
+                AmountIsFixed: boolean = false) : TTokenCharge;
 
 function RefundChargeFromChargeId(ReservationId: integer; RoomReservationId: integer; ChargeId: integer): TTokenCharge;
 
@@ -143,6 +147,7 @@ const
   XML_RESERVATION = 'reservation';
   XML_ROOMRESERVATION = 'roomreservation';
 
+  NO_TOKEN_ID = -9999999;
 
 function RefundChargeFromChargeId(ReservationId: integer; RoomReservationId: integer; ChargeId: integer): TTokenCharge;
 var
@@ -155,9 +160,9 @@ begin
     xml := d.roomerMainDataSet.downloadUrlAsString(d.roomerMainDataSet.RoomerUri+ format('paycard/bookings/charges/%d', [chargeId]));
     rSet := d.roomerMainDataSet.ActivateNewDataset(xml);
     try
-      rSet.First;
-      if rSet.Locate('ID, Reservation, Room_reservation', VarArrayOf([chargeid, ReservationId, RoomReservationid]), []) then
+      if not rSet.IsEmpty then
       begin
+        rSet.First;
         lCharge := TTokenCharge.Create(
                       chargeId,
                       nil,
@@ -178,14 +183,15 @@ begin
 
         result := ChargePayCard(lcharge,
                       lcharge.token,
-                      lcharge.token.Reservation,
-                      lcharge.token.RoomReservation,
-                      lcharge.token.id,
+                      ReservationId,
+                      RoomReservationId,
+                      NO_TOKEN_ID,
                       lcharge.amount,
                       lcharge.currency,
                       nil,
                       lcharge.gatewayReference,
-                      PCO_REFUND);
+                      PCO_REFUND,
+                      False);
 
       end
       else
@@ -205,18 +211,20 @@ function ChargePayCardForPayment(ReservationId : Integer;
                 RoomReservationId : Integer;
                 Amount : Double;
                 Currency : String;
-                PayCardOperationType : TPayCardOperationType) : TTokenCharge;
+                PayCardOperationType : TPayCardOperationType;
+                AmountIsFixed: boolean) : TTokenCharge;
 begin
   result := ChargePayCard(nil,
                 nil,
                 ReservationId,
                 RoomReservationId,
-                -9999999,
+                NO_TOKEN_ID,
                 Amount,
                 Currency,
                 nil,
                 '',
-                PayCardOperationType);
+                PayCardOperationType,
+                AmountIsFixed);
 end;
 
 function ChargePayCard(tokenCharge : TTokenCharge;
@@ -228,7 +236,8 @@ function ChargePayCard(tokenCharge : TTokenCharge;
                 Currency : String;
                 tokenList : TObjectList<TToken>;
                 refNumber : String;
-                PayCardOperationType : TPayCardOperationType) : TTokenCharge;
+                PayCardOperationType : TPayCardOperationType;
+                AmountIsFixed: boolean) : TTokenCharge;
 
 var _FrmChargePayCard: TFrmChargePayCard;
 begin
@@ -243,6 +252,7 @@ begin
     _FrmChargePayCard.Currency := Currency;
     _FrmChargePayCard.tokenList := tokenList;
     _FrmChargePayCard.refNumber := refNumber;
+    _FrmChargePayCard.AmountIsFixed := AmountIsFixed;
 
     _FrmChargePayCard.PayCardOperationType := PayCardOperationType;
 
@@ -265,9 +275,8 @@ begin
   else
     lbRoomReservation.Caption := '(Group)';
 
-
-  edAmount.Enabled := (NOT cbxPaycards.Enabled) AND (PayCardOperationType IN [PCO_CHARGE, PCO_PRE_AUTH, PCO_REFUND]);
-  fraCurrency.Enabled :=  (NOT cbxPaycards.Enabled) AND (PayCardOperationType IN [PCO_CHARGE, PCO_PRE_AUTH, PCO_REFUND]);
+  edAmount.Enabled := (NOT AmountIsFixed) AND (PayCardOperationType IN [PCO_CHARGE, PCO_PRE_AUTH, PCO_REFUND]);
+  fraCurrency.Enabled := edAmount.Enabled;
 
   btnProceed.Enabled := (edAmount.value > 0) and fraCurrency.IsValid and (cbxPaycards.ItemIndex >= 0);
 end;
@@ -302,7 +311,7 @@ begin
                'chargeType=%s&' +
                'gateWayReference=%s',
                [
-                 edAmount.Text,
+                 FloatToXML(edAmount.Value, 2),
                  fraCurrency.CurrencyCode,
                  '', // description
                  tokenId,

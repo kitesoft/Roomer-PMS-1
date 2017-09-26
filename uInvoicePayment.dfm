@@ -539,7 +539,7 @@ object frmInvoicePayment: TfrmInvoicePayment
     end
     object btnChargePAyCard: TsButton
       Left = 166
-      Top = 42
+      Top = 44
       Width = 129
       Height = 38
       Caption = 'Charge Pay-card'

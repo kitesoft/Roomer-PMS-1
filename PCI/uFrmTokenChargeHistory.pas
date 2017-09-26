@@ -308,7 +308,7 @@ begin
     lvTokens.Items.BeginUpdate;
     try
       lvTokens.Items.Clear;
-      FTokenList := LoadAllTokens(Reservation, RoomReservation);
+      LoadAllTokens(Reservation, RoomReservation, FTokenList);
     finally
       lvTokens.Items.EndUpdate;
     end;
@@ -414,7 +414,8 @@ begin
                 charge.currency,
                 FTokenList,
                 charge.gatewayReference,
-                PCO_CAPTURE);
+                PCO_CAPTURE,
+                False);
   lvTokensSelectItem(lvTokens, lvTokens.Selected, true);
 end;
 
@@ -435,7 +436,8 @@ begin
                 g.qNativeCurrency,
                 FTokenList,
                 '',
-                PCO_CHARGE);
+                PCO_CHARGE,
+                False);
   lvTokensSelectItem(lvTokens, lvTokens.Selected, true);
 
 end;
@@ -457,7 +459,8 @@ begin
                 g.qNativeCurrency,
                 FTokenList,
                 '',
-                PCO_CHARGE);
+                PCO_CHARGE,
+                False);
   lvTokensSelectItem(lvTokens, lvTokens.Selected, true);
 end;
 

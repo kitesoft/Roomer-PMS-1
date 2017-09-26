@@ -118,7 +118,8 @@ begin
                 charge.currency,
                 nil,
                 charge.gatewayReference,
-                PCO_CAPTURE);
+                PCO_CAPTURE,
+                False);
 end;
 
 procedure TFrmViewChargeInfo.mnuVoidClick(Sender: TObject);
@@ -133,7 +134,8 @@ begin
                 charge.currency,
                 nil,
                 charge.gatewayReference,
-                PCO_VOID);
+                PCO_VOID,
+                False);
 end;
 
 procedure TFrmViewChargeInfo.mnyRefundClick(Sender: TObject);
@@ -148,7 +150,8 @@ begin
                 charge.currency,
                 nil,
                 charge.gatewayReference,
-                PCO_REFUND);
+                PCO_REFUND,
+                False);
 end;
 
 procedure TFrmViewChargeInfo.pupChargePopup(Sender: TObject);

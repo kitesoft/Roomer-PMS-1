@@ -1190,7 +1190,7 @@ begin
 {$IFDEF DEBUG}
             ShowMessage('Error when communicating with Roomer backend: ' + inttostr(E.StatusCode) + ' - ' + E.Message);
 {$ENDIF}
-          raise Exception.Create(format('Error during communication with server (POST): [%d] %s',
+          raise Exception.Create(format('Error during communication with server (GET): [%d] %s',
             [E.StatusCode, E.Message]));
         end;
 {$ENDIF}

@@ -106,7 +106,7 @@ type
     property created: TDateTime read Fcreated write Fcreated;
   end;
 
-function LoadAllTokens(ReservationId, RoomReservationId : Integer) : TObjectList<TToken>;
+procedure LoadAllTokens(ReservationId, RoomReservationId : Integer; tokens: TObjectList<TToken>);
 procedure FillTokenComboBox(cb : TsComboBox; tokens :TObjectList<TToken>; selectedToken : Integer);
 function ReservationHasPayCard(aReservation: integer; aRoomReservation: integer; var aChannelIdPaycard: integer): boolean;
 
@@ -202,17 +202,16 @@ begin
 end;
 
 
-function LoadAllTokens(ReservationId, RoomReservationId : Integer) : TObjectList<TToken>;
+procedure LoadAllTokens(ReservationId, RoomReservationId : Integer; tokens: TObjectList<TToken>);
 var
   rSet: TRoomerDataSet;
   xml : String;
   token : TToken;
 begin
-  result := TObjectList<TToken>.Create;
+  tokens.clear;
   xml := d.roomerMainDataSet.downloadUrlAsString(d.roomerMainDataSet.RoomerUri + format('paycard/bookings/%d/tokens', [ReservationId]));
   rSet := d.roomerMainDataSet.ActivateNewDataset(xml);
   try
-    result.Clear;
     rSet.First;
     while NOT rSet.Eof do
     begin
@@ -236,7 +235,7 @@ begin
                       rSet['CARD_NUMBER'],
                       rSet['EXP_DATE']);
 
-        result.Add(token);
+        tokens.Add(token);
       end;
       rSet.Next;
     end;

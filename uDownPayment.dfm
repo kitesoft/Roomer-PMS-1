@@ -198,7 +198,6 @@ object frmDownPayment: TfrmDownPayment
       Align = alClient
       TabOrder = 0
       LookAndFeel.NativeStyle = False
-      ExplicitTop = 5
       object tvPayType: TcxGridDBTableView
         OnDblClick = tvPayTypeDblClick
         Navigator.Buttons.CustomButtons = <>
@@ -252,9 +251,6 @@ object frmDownPayment: TfrmDownPayment
       Images = DImages.PngImageList1
       TabOrder = 0
       OnClick = btnViewPayCardClick
-      ExplicitLeft = 119
-      ExplicitTop = 1
-      ExplicitHeight = 38
     end
     object btnChargePAyCard: TsButton
       AlignWithMargins = True
@@ -268,7 +264,6 @@ object frmDownPayment: TfrmDownPayment
       Images = DImages.PngImageList1
       TabOrder = 1
       OnClick = btnChargePAyCardClick
-      ExplicitLeft = 0
     end
   end
   object kbmPayType: TkbmMemTable

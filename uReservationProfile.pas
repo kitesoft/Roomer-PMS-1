@@ -1054,6 +1054,8 @@ begin
 
   DynamicRates := TDynamicRates.Create;
   FReservationChangeStateHandler := nil;
+
+  tokens := TObjectList<TToken>.Create;
 end;
 
 procedure TfrmReservationProfile.FormDestroy(Sender: TObject);
@@ -2574,8 +2576,8 @@ begin
     s := s + '    , rr.Room '#10;
     s := s + '    , rr.RoomType '#10;
     s := s + '    , rr.package '#10;
-    s := s + '    , (select min(aDate) from roomsdate rd where rd.roomreservation=rr.roomreservation) as Arrival'#10;
-    s := s + '    , (select max(aDate) from roomsdate rd where rd.roomreservation=rr.roomreservation) as Departure'#10;
+    s := s + '    , rrArrival as Arrival'#10;
+    s := s + '    , rrDeparture as Departure'#10;
     s := s + '    , ExpectedTimeOfArrival'#10;
     s := s + '    , ExpectedCheckoutTime'#10;
     s := s + '    , rr.Status '#10;
@@ -3798,7 +3800,7 @@ end;
 procedure TfrmReservationProfile.btnManagePayCardsClick(Sender: TObject);
 begin
   ManagePaymentCards(zReservation, -1);
-  tokens := LoadAllTokens(zReservation, -1);
+  LoadAllTokens(zReservation, -1, tokens);
   mRoomsAfterScroll(mRooms);
 end;
 
@@ -3844,7 +3846,7 @@ var
   lSavedBeforePost: TDatasetNotifyEvent;
 begin
   timStart.enabled := false;
-  tokens := LoadAllTokens(zReservation, zRoomReservation);
+  LoadAllTokens(zReservation, zRoomReservation, tokens);
   lSavedAfterScroll := mRooms.AfterScroll;
   lSavedBeforePost := mRooms.BeforePost;
   try

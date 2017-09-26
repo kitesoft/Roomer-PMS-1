@@ -99,7 +99,7 @@ implementation
 
 uses uAppGlobal, uD, uDImages, uSQLUtils, uFrmPayCardView, uTokenHelpers, uFrmChargePayCard
     , Math
-    ;
+    , uFloatUtils;
 
 procedure TfrmDownPayment.btnCancelClick(Sender: TObject);
 begin
@@ -112,9 +112,10 @@ var charge : TTokenCharge;
 begin
   charge := ChargePayCardForPayment(rec.Reservation,
                   rec.Roomreservation,
-                  rec.InvoiceBalance,
+                  iif(edAmount.Value = 0, rec.InvoiceBalance, edAmount.Value),
                   rec.Currency,
-                  PCO_CHARGE);
+                  PCO_CHARGE,
+                  False);
   if Assigned(charge) then
   begin
     edAmount.Value := charge.amount;
@@ -129,7 +130,7 @@ var
 begin
   zCanClose := true;
 
-  balance := rec.InvoiceBalance-edAmount.value;
+  balance := RoundDecimals(rec.InvoiceBalance-edAmount.value, 2);
 
   if edAmount.value = 0 then
   begin
@@ -142,7 +143,7 @@ begin
   if NOT rec.NotInvoice then
     if (balance < 0) AND (NOT ctrlGetBoolean('AllowNegativeInvoice')) then
     begin
-      showmessage('Payments can not be higer than the invoice amount');
+      showmessage('Payments can not be higher than the invoice amount');
       edAmount.SetFocus;
       zCanClose := false;
       exit;

@@ -391,7 +391,8 @@ begin
             Roomreservation,
             FAmount - AlreadyProvidedPayments,
             LblForeignCurrency.Caption,
-            PCO_CHARGE);
+            PCO_CHARGE,
+            True);
   if Assigned(charge) then
   begin
     PayType := getMapForCardType(charge.token.CardType);

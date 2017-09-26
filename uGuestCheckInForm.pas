@@ -619,7 +619,9 @@ begin
   fraCountry.OnCountryChange := Changed;
   fraCountry.RejectCountryCodes := '00';
 
+  tokens := TObjectList<TToken>.Create;
   Prepare;
+
 end;
 
 procedure TFrmGuestCheckInForm.Changed(Sender: TObject);
@@ -686,7 +688,7 @@ begin
     lRoomInvoice := TInvoice.Create(ritRoom, -1, Reservation, RoomReservation, 0, -1, ResSetGuest['RoomNumber'], false);
     try
 
-      tokens := LoadAllTokens(Reservation, RoomReservation);
+      LoadAllTokens(Reservation, RoomReservation, tokens);
       FillTokenComboBox(cbPaycards, tokens, ResSetGuest['PAYCARD_TOKEN_ID']);
       PersonId := ResSetGuest['ID'];
       Customer := ResSetGuest['Customer'];
@@ -824,7 +826,7 @@ var currIdx : Integer;
 begin
   currIdx := cbPayCards.ItemIndex;
   ManagePaymentCards(Reservation, RoomReservation);
-  tokens := LoadAllTokens(Reservation, RoomReservation);
+  LoadAllTokens(Reservation, RoomReservation, tokens);
   FillTokenComboBox(cbPaycards, tokens, -1);
   cbPayCards.ItemIndex := currIdx;
 end;
