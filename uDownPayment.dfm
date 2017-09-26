@@ -74,7 +74,6 @@ object frmDownPayment: TfrmDownPayment
     ParentFont = False
     TabOrder = 0
     SkinData.SkinSection = 'GROUPBOX'
-    ExplicitTop = -5
     object labPayment: TsLabel
       Left = 102
       Top = 37
@@ -199,6 +198,7 @@ object frmDownPayment: TfrmDownPayment
       Align = alClient
       TabOrder = 0
       LookAndFeel.NativeStyle = False
+      ExplicitTop = 5
       object tvPayType: TcxGridDBTableView
         OnDblClick = tvPayTypeDblClick
         Navigator.Buttons.CustomButtons = <>
@@ -241,26 +241,34 @@ object frmDownPayment: TfrmDownPayment
     Align = alTop
     TabOrder = 4
     object btnViewPayCard: TsButton
-      Left = 119
-      Top = 1
+      AlignWithMargins = True
+      Left = 139
+      Top = 4
       Width = 129
-      Height = 38
-      Caption = 'Pay-card info'
+      Height = 33
+      Align = alLeft
+      Caption = 'Paycard info'
       ImageIndex = 92
       Images = DImages.PngImageList1
       TabOrder = 0
       OnClick = btnViewPayCardClick
+      ExplicitLeft = 119
+      ExplicitTop = 1
+      ExplicitHeight = 38
     end
     object btnChargePAyCard: TsButton
-      Left = 254
-      Top = 1
+      AlignWithMargins = True
+      Left = 4
+      Top = 4
       Width = 129
-      Height = 38
-      Caption = 'Charge Pay-card'
+      Height = 33
+      Align = alLeft
+      Caption = 'Charge Paycard'
       ImageIndex = 92
       Images = DImages.PngImageList1
       TabOrder = 1
       OnClick = btnChargePAyCardClick
+      ExplicitLeft = 0
     end
   end
   object kbmPayType: TkbmMemTable

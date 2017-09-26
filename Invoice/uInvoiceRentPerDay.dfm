@@ -978,8 +978,6 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
             DragMode = dmAutomatic
             TabOrder = 1
             LookAndFeel.NativeStyle = False
-            ExplicitLeft = 0
-            ExplicitTop = 22
             object tvPayments: TcxGridDBTableView
               OnMouseDown = tvPaymentsMouseDown
               Navigator.Buttons.CustomButtons = <>
@@ -1108,7 +1106,6 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
               Action = actEditDownPayment
               Align = alRight
               TabOrder = 1
-              Visible = False
               SkinData.SkinSection = 'BUTTON'
             end
             object btnDeleteDownpayment: TsButton
@@ -1122,7 +1119,6 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
               Action = actDeleteDownPayment
               Align = alRight
               TabOrder = 2
-              Visible = False
               SkinData.SkinSection = 'BUTTON'
             end
           end
@@ -1385,6 +1381,8 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
           SelectionTextColor = clHighlightText
           SortSettings.DefaultFormat = ssAutomatic
           Version = '8.2.4.1'
+          ExplicitLeft = 17
+          ExplicitTop = 4
           ColWidths = (
             24
             28
@@ -2146,6 +2144,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
       000000000000}
   end
   object actInvoiceActions: TActionList
+    OnUpdate = actInvoiceActionsUpdate
     Left = 136
     Top = 300
     object actSaveAndExit: TAction
@@ -2274,19 +2273,16 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
       Category = 'Downpayment'
       Caption = 'Revert Downpayment'
       OnExecute = actRevertDownpaymentExecute
-      OnUpdate = actRevertDownpaymentUpdate
     end
     object actEditDownPayment: TAction
       Category = 'Downpayment'
       Caption = 'Edit Dowpayment'
       OnExecute = actEditDownPaymentExecute
-      OnUpdate = actEditDownPaymentUpdate
     end
     object actDeleteDownPayment: TAction
       Category = 'Downpayment'
       Caption = 'Delete downpayment'
       OnExecute = actDeleteDownPaymentExecute
-      OnUpdate = actDeleteDownPaymentUpdate
     end
   end
   object timCloseInvoice: TTimer

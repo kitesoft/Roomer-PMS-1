@@ -130,18 +130,18 @@ uses uD,
 const
 
   XML_PAYMENT_RESPONSE = 'paymentResponse';
-  XML_GATEWAY_NAME = 'GatewayName';
-  XML_OPERATION_RESULT_CODE = 'OperationResultCode';
-  XML_OPERATION_RESULT_DESCRIPTION = 'OperationResultDescription';
-  XML_AUTHORIZATION_CODE = 'AuthorizationCode';
-  XML_GATEWAY_REFERENCE = 'GatewayReference';
-  XML_GATEWAY_RESULT_CODE = 'GatewayResultCode';
-  XML_GATEWAY_RESULT_DESCRIPTION = 'GatewayResultDescription';
-  XML_OPERATON_TYPE = 'OperationType';
-  XML_AMOUNT = 'Amount';
-  XML_CURRENCY = 'Currency';
-  XML_RESERVATION = 'Reservation';
-  XML_ROOMRESERVATION = 'RoomReservation';
+  XML_GATEWAY_NAME = 'gatewayName';
+  XML_OPERATION_RESULT_CODE = 'operationresultcode';
+  XML_OPERATION_RESULT_DESCRIPTION = 'operationresultdescription';
+  XML_AUTHORIZATION_CODE = 'authorizationcode';
+  XML_GATEWAY_REFERENCE = 'gatewayreference';
+  XML_GATEWAY_RESULT_CODE = 'gatewayresultcode';
+  XML_GATEWAY_RESULT_DESCRIPTION = 'gatewayresultdescription';
+  XML_OPERATON_TYPE = 'operationtype';
+  XML_AMOUNT = 'amount';
+  XML_CURRENCY = 'currency';
+  XML_RESERVATION = 'reservation';
+  XML_ROOMRESERVATION = 'roomreservation';
 
 
 function RefundChargeFromChargeId(ReservationId: integer; RoomReservationId: integer; ChargeId: integer): TTokenCharge;
@@ -331,7 +331,10 @@ end;
 procedure TFrmChargePayCard.cbxPaycardsCloseUp(Sender: TObject);
 begin
   inherited;
-  token := TToken(cbxPaycards.Items.Objects[cbxPaycards.ItemIndex]);
+  if (cbxPaycards.ItemIndex >= 0) and assigned(cbxPaycards.Items.Objects[cbxPaycards.ItemIndex]) then
+    token := TToken(cbxPaycards.Items.Objects[cbxPaycards.ItemIndex])
+  else
+    token := nil;
 end;
 
 procedure TFrmChargePayCard.ProcessChargeSuccess(token : TToken; msg : String);
@@ -390,7 +393,7 @@ begin
   _XML_ROOMRESERVATION := 0;
   if listNode <> nil then
   begin
-    if listNode.nodeName = 'paymentResponse' then
+    if Sametext(listNode.nodeName, 'paymentresponse') then
     begin
       with result do
       begin
@@ -399,40 +402,40 @@ begin
           rootNode := listNode.childNodes.item[i];
           with rootNode do
           begin
-            if rootNode.nodeName = XML_PAYMENT_RESPONSE then
+            if SameText(rootNode.nodeName, XML_PAYMENT_RESPONSE) then
                _XML_PAYMENT_RESPONSE := rootNode.text
             else
-            if rootNode.nodeName = XML_GATEWAY_NAME then
+            if SameText(rootNode.nodeName, XML_GATEWAY_NAME) then
                _XML_GATEWAY_NAME := rootNode.text
             else
-            if rootNode.nodeName = XML_OPERATION_RESULT_CODE then
+            if SameText(rootNode.nodeName, XML_OPERATION_RESULT_CODE) then
                _XML_OPERATION_RESULT_CODE := rootNode.text
             else
-            if rootNode.nodeName = XML_OPERATION_RESULT_DESCRIPTION then
+            if SameText(rootNode.nodeName, XML_OPERATION_RESULT_DESCRIPTION) then
                _XML_OPERATION_RESULT_DESCRIPTION := rootNode.text
             else
-            if rootNode.nodeName = XML_AUTHORIZATION_CODE then
+            if SameText(rootNode.nodeName, XML_AUTHORIZATION_CODE) then
                _XML_AUTHORIZATION_CODE := rootNode.text
             else
-            if rootNode.nodeName = XML_GATEWAY_REFERENCE then
+            if SameText(rootNode.nodeName,  XML_GATEWAY_REFERENCE) then
                _XML_GATEWAY_REFERENCE := rootNode.text
             else
-            if rootNode.nodeName = XML_GATEWAY_RESULT_CODE then
+            if SameText(rootNode.nodeName, XML_GATEWAY_RESULT_CODE) then
                _XML_GATEWAY_RESULT_CODE := rootNode.text
             else
-            if rootNode.nodeName = XML_GATEWAY_RESULT_DESCRIPTION then
+            if SameText(rootNode.nodeName, XML_GATEWAY_RESULT_DESCRIPTION) then
                _XML_GATEWAY_RESULT_DESCRIPTION := rootNode.text
             else
-            if rootNode.nodeName = XML_OPERATON_TYPE then
+            if SameText(rootNode.nodeName,  XML_OPERATON_TYPE) then
                _XML_OPERATON_TYPE := rootNode.text
             else
-            if rootNode.nodeName = XML_AMOUNT then
+            if SameText(rootNode.nodeName, XML_AMOUNT) then
                _XML_AMOUNT := _StrToFloat(rootNode.text)
             else
-            if rootNode.nodeName = XML_ROOMRESERVATION then
+            if SameText(rootNode.nodeName,  XML_ROOMRESERVATION) then
                _XML_ROOMRESERVATION := StrToIntDef(rootNode.text, 0)
             else
-            if rootNode.nodeName = XML_CURRENCY then
+            if SameText(rootNode.nodeName, XML_CURRENCY) then
                _XML_CURRENCY := rootNode.text;
           end;
         end;

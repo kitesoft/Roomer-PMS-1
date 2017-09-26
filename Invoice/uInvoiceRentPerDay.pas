@@ -175,11 +175,17 @@ type
     tvPaymentsPayGroup: TcxGridDBColumn;
     tvPaymentsMemo: TcxGridDBColumn;
     tvPaymentsconfirmDate: TcxGridDBColumn;
+    tvPaymentsid: TcxGridDBColumn;
+    tvPaymentsRecId: TcxGridDBColumn;
+    tvPaymentsInvoiceIndex: TcxGridDBColumn;
+    tvPaymentsPaycardTraceIndex: TcxGridDBColumn;
+    tvPaymentsCCCharged: TcxGridDBColumn;
+    tvPaymentsCurrency: TcxGridDBColumn;
+    tvPaymentsCurrencyAmount: TcxGridDBColumn;
     clabDownpayments: TsLabel;
     edtDownPayments: TsEdit;
     clabBalance: TsLabel;
     edtBalance: TsEdit;
-    tvPaymentsid: TcxGridDBColumn;
     clabForeignCurrency: TsLabel;
     edtForeignCurrency: TsEdit;
     grbInclutedTaxes: TsGroupBox;
@@ -197,7 +203,11 @@ type
     mPaymentsMemo: TMemoField;
     mPaymentsconfirmDate: TDateTimeField;
     mPaymentsid: TIntegerField;
-    mnuMoveItem: TPopupMenu;
+    mPaymentsInvoiceIndex: TIntegerField;
+    mPaymentsPaycardTraceIndex: TIntegerField;
+    mPaymentsChargedOnCC: TBooleanField;
+    mPaymentsCurrency: TWideStringField;
+    mPaymentsCurrencyAmount: TFloatField;
     mnuMoveRoom: TPopupMenu;
     mnuItemToGroupInvoice: TMenuItem;
     mnuItemToRoomInvoice: TMenuItem;
@@ -288,7 +298,6 @@ type
     mRoomRatesRentAmount: TFloatField;
     mRoomRatesNativeAmount: TFloatField;
     mRoomRatesGuestName: TWideStringField;
-    mPaymentsInvoiceIndex: TIntegerField;
     lblResNr: TsLabel;
     edResNr: TsLabel;
     btnSaveChanges: TsButton;
@@ -348,21 +357,11 @@ type
     pnlPaymentButtons: TsPanel;
     btnAddDownPayment: TsButton;
     btnRevertDownpayment: TsButton;
-    mPaymentsPaycardTraceIndex: TIntegerField;
-    tvPaymentsRecId: TcxGridDBColumn;
-    tvPaymentsInvoiceIndex: TcxGridDBColumn;
-    tvPaymentsPaycardTraceIndex: TcxGridDBColumn;
-    tvPaymentsCCCharged: TcxGridDBColumn;
-    mPaymentsChargedOnCC: TBooleanField;
-    mPaymentsCurrency: TWideStringField;
-    tvPaymentsCurrency: TcxGridDBColumn;
     btnEditDownpayment: TsButton;
     actEditDownPayment: TAction;
     actDeleteDownPayment: TAction;
     btnDeleteDownpayment: TsButton;
     splExtraInfo: TsSplitter;
-    mPaymentsCurrencyAmount: TFloatField;
-    tvPaymentsCurrencyAmount: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure agrLinesMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
     procedure edtCustomerDblClick(Sender: TObject);
@@ -433,17 +432,15 @@ type
     procedure pnlInvoiceIndicesDragOver(Sender, Source: TObject; X, Y: Integer; State: TDragState; var Accept: Boolean);
     procedure mnuMoveRoomToInvoiceIndexClick(Sender: TObject);
     procedure actRevertDownpaymentExecute(Sender: TObject);
-    procedure actRevertDownpaymentUpdate(Sender: TObject);
     procedure mPaymentsCalcFields(DataSet: TDataSet);
-    procedure actEditDownPaymentUpdate(Sender: TObject);
     procedure actDeleteDownPaymentExecute(Sender: TObject);
     procedure actEditDownPaymentExecute(Sender: TObject);
-    procedure actDeleteDownPaymentUpdate(Sender: TObject);
     procedure tvPaymentNativeAmountGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
       var AProperties: TcxCustomEditProperties);
     procedure tvPaymentsCurrencyAmountGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
       var AProperties: TcxCustomEditProperties);
     procedure memExtraTextChange(Sender: TObject);
+    procedure actInvoiceActionsUpdate(Action: TBasicAction; var Handled: Boolean);
   private
     { Private declarations }
 
@@ -3185,6 +3182,8 @@ procedure TfrmInvoiceRentPerDay.FormShow(Sender: TObject);
 begin
   actRemoveSelected.Visible := glb.PMSSettings.InvoiceSettings.AllowDeletingItemsFromInvoice;
   actToggleLodgingTax.Visible := glb.PMSSettings.InvoiceSettings.AllowTogglingOfCityTaxes;
+  actDeleteDownPayment.Visible := glb.PMSSettings.InvoiceSettings.AllowPaymentModification;
+  actEditDownPayment.Visible := glb.PMSSettings.InvoiceSettings.AllowPaymentModification;
 
   LoadInvoice;
   UpdateCaptions;
@@ -5731,12 +5730,6 @@ begin
   end;
 end;
 
-procedure TfrmInvoiceRentPerDay.actEditDownPaymentUpdate(Sender: TObject);
-begin
-  actEditDownPayment.Visible := glb.PMSSettings.InvoiceSettings.AllowPaymentModification;
-  actEditDownPayment.Enabled := (mPayments.RecordCount > 0) and (mPaymentsPaycardTraceIndex.AsInteger = 0);
-end;
-
 procedure TfrmInvoiceRentPerDay.MoveDownpaymentToInvoiceIndex(toInvoiceIndex: integer);
 var
   rec: recDownPayment;
@@ -5895,6 +5888,14 @@ begin
   g.openresMemo(FReservation);
 end;
 
+procedure TfrmInvoiceRentPerDay.actInvoiceActionsUpdate(Action: TBasicAction; var Handled: Boolean);
+begin
+  Handled := true;
+  actRevertDownpayment.Enabled := not mPayments.IsEmpty;
+  actDeleteDownPayment.Enabled := (mPayments.RecordCount > 0) and (mPaymentsPaycardTraceIndex.AsInteger <= 0);
+  actEditDownPayment.Enabled := (mPayments.RecordCount > 0) and (mPaymentsPaycardTraceIndex.AsInteger <= 0);
+end;
+
 procedure TfrmInvoiceRentPerDay.actAddLineExecute(Sender: TObject);
 begin
   agrLines.row := agrLines.RowCount - 1;
@@ -5965,12 +5966,6 @@ begin
   begin
     ShowMessage('It is not allowed to Delete confirmed payments');
   end;
-end;
-
-procedure TfrmInvoiceRentPerDay.actDeleteDownPaymentUpdate(Sender: TObject);
-begin
-  actDeleteDownPayment.Visible := glb.PMSSettings.InvoiceSettings.AllowPaymentModification;
-  actDeleteDownPayment.Enabled := (mPayments.RecordCount > 0) and (mPaymentsPaycardTraceIndex.AsInteger = 0);
 end;
 
 procedure TfrmInvoiceRentPerDay.AddARoom;
@@ -6128,11 +6123,6 @@ begin
     DisplayTotals;
 
   end;
-end;
-
-procedure TfrmInvoiceRentPerDay.actRevertDownpaymentUpdate(Sender: TObject);
-begin
-  actRevertDownpayment.Enabled := not mPayments.IsEmpty;
 end;
 
 procedure TfrmInvoiceRentPerDay.actMoveRoomToTempExecute(Sender: TObject);

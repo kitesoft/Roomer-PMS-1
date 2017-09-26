@@ -1,19 +1,19 @@
 inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
   BorderStyle = bsSizeable
   Caption = 'Paycards of reservation'
-  ClientHeight = 485
+  ClientHeight = 471
   ClientWidth = 1000
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   ExplicitWidth = 1016
-  ExplicitHeight = 524
+  ExplicitHeight = 510
   PixelsPerInch = 96
   TextHeight = 13
   inherited sbStatusBar: TsStatusBar
-    Top = 465
+    Top = 451
     Width = 1000
-    ExplicitTop = 475
-    ExplicitWidth = 1010
+    ExplicitTop = 465
+    ExplicitWidth = 1000
   end
   object pnlTop: TsPanel [1]
     Left = 0
@@ -23,7 +23,6 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 1010
     DesignSize = (
       1000
       113)
@@ -138,24 +137,22 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
       Images = DImages.PngImageList1
       TabOrder = 0
       OnClick = btnRefreshClick
-      ExplicitLeft = 902
     end
   end
   object pnlBottom: TsPanel [2]
     Left = 0
     Top = 113
     Width = 1000
-    Height = 309
+    Height = 295
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 3
-    ExplicitWidth = 1010
-    ExplicitHeight = 319
+    ExplicitHeight = 309
     object splGrids: TsSplitter
       AlignWithMargins = True
       Left = 452
       Top = 3
-      Height = 296
+      Height = 282
       Margins.Bottom = 10
       Color = clSkyBlue
       ParentColor = False
@@ -167,16 +164,16 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
       Left = 0
       Top = 0
       Width = 449
-      Height = 309
+      Height = 295
       Align = alLeft
       BevelOuter = bvNone
       TabOrder = 0
-      ExplicitHeight = 319
+      ExplicitHeight = 309
       object sLabel2: TsLabel
         AlignWithMargins = True
         Left = 3
         Top = 3
-        Width = 107
+        Width = 443
         Height = 13
         Align = alTop
         Caption = 'Available paycards'
@@ -186,13 +183,14 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
+        ExplicitWidth = 107
       end
       object lvTokens: TsListView
         AlignWithMargins = True
         Left = 3
         Top = 22
         Width = 443
-        Height = 243
+        Height = 229
         Align = alClient
         Checkboxes = True
         Color = clWhite
@@ -232,34 +230,33 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
         ViewStyle = vsReport
         OnDblClick = lvTokensDblClick
         OnSelectItem = lvTokensSelectItem
-        ExplicitHeight = 253
+        ExplicitHeight = 243
       end
       object sPanel6: TsPanel
         Left = 0
-        Top = 268
+        Top = 254
         Width = 449
         Height = 41
         Align = alBottom
         BevelOuter = bvNone
         TabOrder = 1
-        ExplicitTop = 278
+        ExplicitTop = 268
       end
     end
     object pnlRightGrid: TsPanel
       Left = 461
       Top = 0
       Width = 539
-      Height = 309
+      Height = 295
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitWidth = 549
-      ExplicitHeight = 319
+      ExplicitHeight = 309
       object sLabel1: TsLabel
         AlignWithMargins = True
         Left = 3
         Top = 3
-        Width = 131
+        Width = 533
         Height = 13
         Align = alTop
         Caption = 'Paycard charge history'
@@ -269,13 +266,14 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
+        ExplicitWidth = 131
       end
       object lvCharges: TsListView
         AlignWithMargins = True
         Left = 3
         Top = 22
         Width = 526
-        Height = 176
+        Height = 162
         Margins.Right = 10
         Align = alClient
         Color = clWhite
@@ -326,28 +324,27 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
         ViewStyle = vsReport
         OnDblClick = lvChargesDblClick
         OnSelectItem = lvChargesSelectItem
+        ExplicitHeight = 176
       end
       object sPanel5: TsPanel
         Left = 0
-        Top = 268
+        Top = 254
         Width = 539
         Height = 41
         Align = alBottom
         BevelOuter = bvNone
         TabOrder = 1
-        ExplicitTop = 278
-        ExplicitWidth = 549
+        ExplicitTop = 268
       end
       object sPanel7: TsPanel
         Left = 0
-        Top = 201
+        Top = 187
         Width = 539
         Height = 67
         Align = alBottom
         BevelOuter = bvNone
         TabOrder = 2
-        ExplicitTop = 211
-        ExplicitWidth = 549
+        ExplicitTop = 201
         DesignSize = (
           539
           67)
@@ -436,7 +433,6 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
           Images = DImages.PngImageList1
           TabOrder = 0
           OnClick = btnChargeViewClick
-          ExplicitLeft = 313
         end
         object btnRefundOrCapture: TsButton
           AlignWithMargins = True
@@ -455,27 +451,26 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
           Style = bsSplitButton
           TabOrder = 1
           OnClick = btnClickDropDown
-          ExplicitLeft = 431
         end
       end
     end
   end
   inherited pnlButtons: TsPanel
-    Top = 422
+    Top = 408
     Width = 1000
-    ExplicitTop = 432
-    ExplicitWidth = 1010
+    ExplicitTop = 422
+    ExplicitWidth = 1000
     inherited btnOK: TsButton
       Left = 684
-      ExplicitLeft = 694
+      ExplicitLeft = 684
     end
     inherited btnCancel: TsButton
       Left = 790
-      ExplicitLeft = 800
+      ExplicitLeft = 790
     end
     inherited btnClose: TsButton
       Left = 896
-      ExplicitLeft = 906
+      ExplicitLeft = 896
     end
     object btnTokenNew: TsButton
       AlignWithMargins = True

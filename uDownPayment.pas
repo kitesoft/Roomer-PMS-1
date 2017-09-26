@@ -97,7 +97,9 @@ implementation
 
 {$R *.dfm}
 
-uses uAppGlobal, uD, uDImages, uSQLUtils, uFrmPayCardView, uTokenHelpers, uFrmChargePayCard;
+uses uAppGlobal, uD, uDImages, uSQLUtils, uFrmPayCardView, uTokenHelpers, uFrmChargePayCard
+    , Math
+    ;
 
 procedure TfrmDownPayment.btnCancelClick(Sender: TObject);
 begin
@@ -107,8 +109,6 @@ end;
 
 procedure TfrmDownPayment.btnChargePayCardClick(Sender: TObject);
 var charge : TTokenCharge;
-    PayType : String;
-    i : Integer;
 begin
   charge := ChargePayCardForPayment(rec.Reservation,
                   rec.Roomreservation,
@@ -175,12 +175,11 @@ begin
 end;
 
 procedure TfrmDownPayment.ShowOrHideButtonViewPayCard;
-var rSet : TRoomerDataSet;
-    s : String;
-    channelId: integer;
+var
+  channelId: integer;
 begin
-  btnViewPayCard.Visible := ReservationHasPaycard(rec.Reservation, rec.RoomReservation, channelId);
-  if btnViewPayCard.Visible then
+  btnViewPayCard.Enabled := ReservationHasPaycard(rec.Reservation, rec.RoomReservation, channelId);
+  if btnViewPayCard.Enabled then
     btnViewPayCard.Tag := ORD(glb.PCIContractOpenForChannel(channelId));
 end;
 
@@ -228,7 +227,7 @@ end;
 
 procedure TfrmDownPayment.tvPayTypeDblClick(Sender: TObject);
 begin
-  if (edAmount.Text <> '0') AND (NOT kbmPayType.Eof) then
+  if (not SameValue(edAmount.Value, 0, 2)) AND (NOT kbmPayType.Eof) then
     btnOk.Click;
 end;
 
