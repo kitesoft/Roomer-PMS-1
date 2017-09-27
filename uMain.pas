@@ -3029,8 +3029,8 @@ procedure TfrmMain.CheckPCIContract;
 var xml : String;
     rSet : TRoomerDataSet;
 begin
-  xml := d.roomerMainDataSet.downloadUrlAsString(  d.roomerMainDataSet.RoomerUri + 'paycard/token');
   try
+    xml := d.roomerMainDataSet.downloadUrlAsString(  d.roomerMainDataSet.RoomerUri + 'paycard/token');
     rSet := d.roomerMainDataSet.ActivateNewDataset(xml);
     try
       if NOT rSet.Eof then
