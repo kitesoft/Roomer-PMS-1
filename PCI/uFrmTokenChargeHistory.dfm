@@ -12,7 +12,7 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
   inherited sbStatusBar: TsStatusBar
     Top = 451
     Width = 1000
-    ExplicitTop = 465
+    ExplicitTop = 451
     ExplicitWidth = 1000
   end
   object pnlTop: TsPanel [1]
@@ -147,6 +147,7 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 3
+    ExplicitTop = 111
     object splGrids: TsSplitter
       AlignWithMargins = True
       Left = 452
@@ -167,12 +168,11 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
       Align = alLeft
       BevelOuter = bvNone
       TabOrder = 0
-      ExplicitHeight = 309
       object sLabel2: TsLabel
         AlignWithMargins = True
         Left = 3
         Top = 3
-        Width = 107
+        Width = 443
         Height = 13
         Align = alTop
         Caption = 'Available paycards'
@@ -182,6 +182,7 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
+        ExplicitWidth = 107
       end
       object lvTokens: TsListView
         AlignWithMargins = True
@@ -190,7 +191,6 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
         Width = 443
         Height = 229
         Align = alClient
-        Checkboxes = True
         Color = clWhite
         Columns = <
           item
@@ -228,7 +228,6 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
         ViewStyle = vsReport
         OnDblClick = lvTokensDblClick
         OnSelectItem = lvTokensSelectItem
-        ExplicitHeight = 243
       end
       object sPanel6: TsPanel
         Left = 0
@@ -238,7 +237,6 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
         Align = alBottom
         BevelOuter = bvNone
         TabOrder = 1
-        ExplicitTop = 268
       end
     end
     object pnlRightGrid: TsPanel
@@ -256,14 +254,14 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
         Width = 533
         Height = 13
         Align = alTop
-        Caption = 'Paycard charge history'
+        Caption = 'Paycard action history'
         ParentFont = False
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
-        ExplicitWidth = 131
+        ExplicitWidth = 127
       end
       object lvCharges: TsListView
         AlignWithMargins = True
@@ -282,7 +280,7 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
           end
           item
             AutoSize = True
-            Caption = 'Res / RoomRes'
+            Caption = 'Group / Room'
             MinWidth = 50
           end
           item
@@ -321,7 +319,6 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
         ViewStyle = vsReport
         OnDblClick = lvChargesDblClick
         OnSelectItem = lvChargesSelectItem
-        ExplicitHeight = 176
       end
       object sPanel5: TsPanel
         Left = 0
@@ -331,7 +328,6 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
         Align = alBottom
         BevelOuter = bvNone
         TabOrder = 1
-        ExplicitTop = 268
       end
       object sPanel7: TsPanel
         Left = 0
@@ -423,7 +419,7 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
           Margins.Right = 10
           Margins.Bottom = 5
           Anchors = [akTop, akRight]
-          Caption = 'View Charge'
+          Caption = 'View Action'
           Enabled = False
           ImageIndex = 130
           Images = DImages.PngImageList1
@@ -440,7 +436,7 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
           Margins.Right = 10
           Margins.Bottom = 5
           Anchors = [akTop, akRight]
-          Caption = 'Charge action'
+          Caption = 'Card Action'
           DropDownMenu = pupCharge
           Enabled = False
           Images = DImages.PngImageList1
@@ -454,7 +450,7 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
   inherited pnlButtons: TsPanel
     Top = 408
     Width = 1000
-    ExplicitTop = 422
+    ExplicitTop = 408
     ExplicitWidth = 1000
     inherited btnOK: TsButton
       Left = 684
