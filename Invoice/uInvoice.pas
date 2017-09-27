@@ -3351,6 +3351,8 @@ begin
 
   try
 
+    // NOTE: All calculated taxes are in the roomrent currency = selected invoice currency!
+
     lStayTaxUnitCount := 0;
     lTotalTaxIncluded := 0.00;
     lStayTaxUnitCountIncluded := 0;
@@ -3401,7 +3403,7 @@ begin
 
   grbInclutedTaxes.Visible := (lStayTaxUnitCountIncluded <> 0);
 
-  labLodgingTaxISK.caption := _floattostr(lTotalTaxIncluded, vWidth, vDec);
+  labLodgingTaxISK.caption := _floattostr(lTotalTaxIncluded * zCurrencyRate, vWidth, vDec);
   labLodgingTaxNights.caption := floattostr(lStayTaxUnitCount);
 
   DisplayTotals;
