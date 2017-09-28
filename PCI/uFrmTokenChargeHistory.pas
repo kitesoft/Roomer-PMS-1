@@ -7,7 +7,7 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uTokenHelpers, uRoomerForm, Vcl.StdCtrls, sLabel, Vcl.ComCtrls, sListView, sGroupBox, Vcl.ExtCtrls, sPanel,
   cxGridTableView, cxStyles, dxPScxCommon, dxPScxGridLnk, cxClasses, cxPropertiesStore, sStatusBar,
   Generics.Collections, sButton, Vcl.Menus, udImages
-     , uRoomerDialogForm, sSplitter;
+     , uRoomerDialogForm, sSplitter, uCurrencyHandlersMap;
 
 type
   TFrmTokenChargeHistory = class(TfrmBaseRoomerDialogForm)
@@ -82,6 +82,7 @@ type
     FReservation: integer;
     FRoomReservation: integer;
     FOrigMnuRoomCaption: string;
+    FCUrrencyHandlersMap: TCurrencyHandlersMap;
     procedure DisplayTokens;
     procedure DisplayCharges;
     function GetCardStatusByReference(tokenId: Integer; GatewayReference: String): Double;
@@ -138,6 +139,7 @@ begin
   inherited;
   FTokenList := TObjectList<TToken>.Create;
   FTokenChargeList := TObjectList<TTokenCharge>.Create;
+  FCUrrencyHandlersMap := TCurrencyHandlersMap.Create;
 end;
 
 procedure TFrmTokenChargeHistory.FormDestroy(Sender: TObject);
@@ -145,6 +147,7 @@ begin
   inherited;
   FTokenList.Free;
   FTokenChargeList.Free;
+  FCUrrencyHandlersMap.Free;
 end;
 
 procedure TFrmTokenChargeHistory.DisplayTokens;
@@ -252,29 +255,29 @@ begin
       lvi.SubItems.Add('Group');
     lvi.SubItems.Add(charge.operationType);
     lvi.SubItems.Add(charge.operationResultCode);
-    lvi.SubItems.Add(_FloatToStr(charge.amount, 20, 2));
+    lvi.SubItems.Add(FCurrencyHandlersMap[charge.currency].FormattedValue(charge.amount));
     lvi.SubItems.Add(charge.currency);
     lvi.Data := charge;
 
     if (LowerCase(charge.operationResultCode) = 'success') then
     begin
       if (LowerCase(charge.operationType) = 'charge') then
-        charged := charged + charge.amount
+        charged := charged + FCurrencyHandlersMap[g.qNativeCurrency].ConvertFrom(charge.amount, charge.currency)
       else if (LowerCase(charge.operationType) = 'capture') then
       begin
-        charged := charged + charge.amount;
-        preAuthed := preAuthed - charge.amount;
+        charged := charged + FCurrencyHandlersMap[g.qNativeCurrency].ConvertFrom(charge.amount, charge.currency);
+        preAuthed := preAuthed - FCurrencyHandlersMap[g.qNativeCurrency].ConvertFrom(charge.amount, charge.currency);
       end
       else if (LowerCase(charge.operationType) = 'refund') then
-        charged := charged - charge.amount
+        charged := charged - FCurrencyHandlersMap[g.qNativeCurrency].ConvertFrom(charge.amount, charge.currency)
       else if (LowerCase(charge.operationType) = 'preauth') then
-        preAuthed := preAuthed + charge.amount
+        preAuthed := preAuthed + FCurrencyHandlersMap[g.qNativeCurrency].ConvertFrom(charge.amount, charge.currency)
       else if (LowerCase(charge.operationType) = 'void') then
-        preAuthed := preAuthed - charge.amount;
+        preAuthed := preAuthed - FCurrencyHandlersMap[g.qNativeCurrency].ConvertFrom(charge.amount, charge.currency)
     end;
   end;
-  lbCharged.Caption := trim(_floattostr(charged, 20, 2));
-  lbPreAuth.Caption := trim(_floattostr(preAuthed, 20, 2));
+  lbCharged.Caption := FCurrencyHandlersMap[g.qNativeCurrency].FormattedValueWithCode(charged);
+  lbPreAuth.Caption := FCurrencyHandlersMap[g.qNativeCurrency].FormattedValueWithCode(preAuthed);
 end;
 
 procedure TFrmTokenChargeHistory.DoLoadData;

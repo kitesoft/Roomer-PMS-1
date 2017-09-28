@@ -147,7 +147,6 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 3
-    ExplicitTop = 111
     object splGrids: TsSplitter
       AlignWithMargins = True
       Left = 452
@@ -297,7 +296,7 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
             Alignment = taRightJustify
             AutoSize = True
             Caption = 'Amount'
-            MinWidth = 50
+            MinWidth = 80
           end
           item
             AutoSize = True

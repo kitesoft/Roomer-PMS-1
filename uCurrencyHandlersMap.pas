@@ -28,7 +28,7 @@ type
     function ConvertAmount(Amount : Double; FromCurrency, ToCurrency : String) : Double; overload;
     function ConvertAmount(Amount : Double; FromCurrencyId, ToCurrencyId : Integer) : Double; overload;
 
-    property CurrencyHandler[const forCurrency: string]: TCurrencyHandler read GetCurrencyHandler;
+    property CurrencyHandler[const forCurrency: string]: TCurrencyHandler read GetCurrencyHandler; default;
   end;
 
 
