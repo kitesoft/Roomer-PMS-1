@@ -134,6 +134,7 @@ var
     sSelectedCustomer  : string;
     fSelectedAmount    : Double;
     stlPaySelections   : TStringlist;
+    COnfirmation       : string;
 
 
 implementation
@@ -167,6 +168,7 @@ var
   i : integer;
   selected : string;
   frm: TfrmInvoicePayment;
+  sTemp: string;
 begin
   // --
   frm := TfrmInvoicePayment.Create(nil);
@@ -243,18 +245,18 @@ begin
         aLocation := frm.cbxLocation.items[frm.cbxLocation.itemindex];
       end;
 
-//      for i := 0 to frm.agrPayTypes.RowCount - 1  do
-//      begin
-//        if GridCellFloatValue( frm.agrPayTypes, 1, i ) <> 0 then
-//        begin
-//          sTemp := frm.agrPayTypes.Cells[ 0, i ];
-//          glb.LocateSpecificRecordAndGetValue('paytypes', 'PayType', sTemp, 'Description', sTemp);
-//          stlPaySelections.add( frm.agrPayTypes.Cells[ 0, i ] + '|' + frm.agrPayTypes.Cells[ 1, i ] + '|' + sTemp );
+      for i := 0 to frm.agrPayTypes.RowCount - 1  do
+      begin
+        if GridCellFloatValue( frm.agrPayTypes, 1, i ) <> 0 then
+        begin
+          sTemp := frm.agrPayTypes.Cells[ 0, i ];
+          glb.LocateSpecificRecordAndGetValue('paytypes', 'PayType', sTemp, 'Description', sTemp);
+          stlPaySelections.add( frm.agrPayTypes.Cells[ 0, i ] + '|' + frm.agrPayTypes.Cells[ 1, i ] + '|' + sTemp );
 //          if d.AskApproval( frm.agrPayTypes.Cells[ 0, i ] ) then
 //            // FConfirmation := InputBox( 'Confirm code', 'Code :', '' );
 //    			 Confirmation := InputBox( GetTranslatedText('shTx_InvoicePayment_ConfirmCode'), GetTranslatedText('shTx_InvoicePayment_Code'), '' );
-//        end;
-//      end;
+        end;
+      end;
     end;
   finally
     frm.free;
