@@ -2049,8 +2049,10 @@ begin
                   end;
                   if setAllWrongsToZero OR setWrongToZero then
                   begin
-                    PriceData.MinStay := 0;
-                    PriceData.MaxStay := 0;
+                    if PriceData.MinStayDirty then
+                      PriceData.MinStay := 0;
+                    if PriceData.MaxStayDirty then
+                      PriceData.MaxStay := 0;
                   end;
                   setWrongToZero := False;
                 end;
