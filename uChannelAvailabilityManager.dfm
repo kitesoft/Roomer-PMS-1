@@ -126,7 +126,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
         object pnlRestrictions: TsPanel
           AlignWithMargins = True
           Left = 3
-          Top = 295
+          Top = 288
           Width = 425
           Height = 169
           Align = alTop
@@ -135,7 +135,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
           Padding.Bottom = 3
           TabOrder = 0
           SkinData.SkinSection = 'PANEL'
-          ExplicitTop = 288
+          ExplicitTop = 293
           object lblMinStay: TsLabel
             Left = 134
             Top = 7
@@ -506,7 +506,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
             Left = 1
             Top = 32
             Width = 423
-            Height = 120
+            Height = 116
             Margins.Left = 0
             Margins.Right = 0
             Align = alTop
@@ -874,7 +874,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
           Left = 3
           Top = 199
           Width = 425
-          Height = 90
+          Height = 83
           Align = alTop
           AutoSize = True
           TabOrder = 3
@@ -884,7 +884,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
             Left = 1
             Top = 4
             Width = 423
-            Height = 23
+            Height = 21
             Margins.Left = 0
             Margins.Right = 0
             Align = alTop
@@ -995,14 +995,13 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
             Left = 1
             Top = 31
             Width = 423
-            Height = 24
+            Height = 21
             Margins.Left = 0
             Margins.Right = 0
             Align = alTop
             AutoSize = True
             BevelOuter = bvNone
             TabOrder = 1
-            ExplicitTop = 33
             object lblSingleUsePrice: TsLabel
               Left = 13
               Top = 4
@@ -1070,16 +1069,15 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
           object pnlBulkChangesAvail: TsPanel
             AlignWithMargins = True
             Left = 1
-            Top = 61
+            Top = 58
             Width = 423
-            Height = 23
+            Height = 21
             Margins.Left = 0
             Margins.Right = 0
             Align = alTop
             AutoSize = True
             BevelOuter = bvNone
             TabOrder = 2
-            ExplicitTop = 63
             object lblDCAvailability: TsLabel
               Left = 13
               Top = 3
@@ -1559,10 +1557,6 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
           Margins.Right = 2
           Margins.Bottom = 2
           Caption = 'Rates'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object rateGrid: TAdvStringGrid
             Left = 0
             Top = 54
@@ -2145,8 +2139,9 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
               Width = 199
               Height = 254
               BorderStyle = bsSingle
+              Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = clWindowText
+              Font.Color = clBlack
               Font.Height = -11
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -2684,7 +2679,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
           Left = 120
           Top = 5
           Width = 109
-          Height = 24
+          Height = 21
           Margins.Left = 5
           Margins.Top = 5
           Margins.Right = 2

@@ -1455,8 +1455,8 @@ begin
                                             'Rate: %s' + #13#13 +
                                             'Min stay: %d ' + #13 +
                                             'Max stay: %d' + #13#13 +
-                                            '[Yes] = Change the Min. and Max stay of this date and rate to be zero.' + #13 +
-                                            '[All] = Change all wrong Min. and Max stays to be zero.' + #13 +
+                                            '[Yes] = Reset the altered Min. and Max stay of this date and rate to be zero.' + #13 +
+                                            '[All] = reset all altered wrong Min. and Max stays to be zero.' + #13 +
                                             '[Cancel] = Stop publishing changes.');
 
   constants.Add('shUI_ChannelManager_OkOrCancel', 'Click [Ok] to continue, otherwise [Cancel]');
@@ -1726,8 +1726,8 @@ begin
   constants.Add('Vat_FinanceConnect_AddedCode', 'You have added a new vat code.' + #10#13 + 'Do want to open vat mappings for %s?');
 
   constants.Add('PCI_VIEW_Warning_PleaseNote', 'Please note:');
-  constants.Add('PCI_VIEW_Warning_ChargePerView', 'Viewing the credit card is charged per-view.');
-  constants.Add('PCI_CREATE_Warning_ChargePerCreate', 'Creating a payment card is charged per-card.');
+  constants.Add('PCI_VIEW_Warning_ChargePerView', 'Viewing the credit card information is charged to your hotel per-view.');
+  constants.Add('PCI_CREATE_Warning_ChargePerCreate', 'Your hotel will be charged for adding a payment card.');
   constants.Add('PCI_VIEW_Warning_SecurityCodeOnceVisible', 'The credit-card security code (CVC) is only shown <B><U>once</U></B>. After that it will not be shown again.');
   constants.Add('PCI_VIEW_Warning_NumberOfViews', 'The credit-card of this reservation has been viewed {VIEWS} times.');
 
