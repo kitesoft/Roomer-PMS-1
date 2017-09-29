@@ -25,7 +25,6 @@ object FrmReservationEmailingDialog: TFrmReservationEmailingDialog
     Align = alTop
     TabOrder = 0
     SkinData.SkinSection = 'PANEL'
-    ExplicitWidth = 760
     object sLabel1: TsLabel
       Left = 95
       Top = 15
@@ -207,14 +206,12 @@ object FrmReservationEmailingDialog: TFrmReservationEmailingDialog
     Align = alBottom
     TabOrder = 1
     SkinData.SkinSection = 'PANEL'
-    ExplicitTop = 522
-    ExplicitWidth = 760
     DesignSize = (
       750
       46)
     object btnOk: TsButton
-      Left = 610
-      Top = 10
+      Left = 504
+      Top = 11
       Width = 111
       Height = 25
       Anchors = [akRight, akBottom]
@@ -223,8 +220,8 @@ object FrmReservationEmailingDialog: TFrmReservationEmailingDialog
       Enabled = False
       ModalResult = 1
       TabOrder = 0
+      OnClick = btnOkClick
       SkinData.SkinSection = 'BUTTON'
-      ExplicitLeft = 620
     end
     object btnEdit: TsButton
       Left = 25
@@ -235,6 +232,18 @@ object FrmReservationEmailingDialog: TFrmReservationEmailingDialog
       Enabled = False
       TabOrder = 1
       OnClick = btnEditClick
+      SkinData.SkinSection = 'BUTTON'
+    end
+    object btnCancel: TsButton
+      Left = 628
+      Top = 10
+      Width = 111
+      Height = 25
+      Anchors = [akRight, akBottom]
+      Caption = 'Cancel'
+      Enabled = False
+      ModalResult = 2
+      TabOrder = 2
       SkinData.SkinSection = 'BUTTON'
     end
   end

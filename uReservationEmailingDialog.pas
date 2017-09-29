@@ -32,6 +32,7 @@ type
     shpTo: TShape;
     shpSubject: TShape;
     WebBrowser: TWebBrowser;
+    btnCancel: TsButton;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure edTemplateCloseUp(Sender: TObject);
@@ -41,6 +42,7 @@ type
     procedure edToCloseUp(Sender: TObject);
     procedure edSubjectChange(Sender: TObject);
     procedure edToChange(Sender: TObject);
+    procedure btnOkClick(Sender: TObject);
   private
     FEmailType: TEmailType;
     FResourceType: TResourceType;
@@ -53,12 +55,12 @@ type
     procedure EnableDisableOKButton;
     procedure GetEmailAddresses;
     procedure RefreshTemplateList;
+    procedure SendConfirmationEmail;
     { Private declarations }
   public
     ReservationId : Integer;
 
     destructor Destroy; override;
-    procedure SendConfirmationEmail;
     property EmailType : TEmailType read FEmailType write SetEmailType;
   end;
 
@@ -98,9 +100,7 @@ begin
   try
     _FrmReservationEmailingDialog.EmailType := EMAIL_TYPE_NEW_RESERVATION_CONFIRMATION;
     _FrmReservationEmailingDialog.ReservationId := ReservationId;
-    result := (_FrmReservationEmailingDialog.ShowModal = mrOk);
-    if result then
-      _FrmReservationEmailingDialog.SendConfirmationEmail;
+    Result := _FrmReservationEmailingDialog.ShowModal = mrOK;
   finally
     FreeAndNil(_FrmReservationEmailingDialog);
   end;
@@ -114,9 +114,7 @@ begin
   try
     _FrmReservationEmailingDialog.EmailType := EMAIL_TYPE_CANCEL_RESERVATION_CONFIRMATION;
     _FrmReservationEmailingDialog.ReservationId := ReservationId;
-    result := (_FrmReservationEmailingDialog.ShowModal = mrOk);
-    if result then
-      _FrmReservationEmailingDialog.SendConfirmationEmail;
+    result := _FrmReservationEmailingDialog.ShowModal = mrOk;
   finally
     FreeAndNil(_FrmReservationEmailingDialog);
   end;
@@ -134,17 +132,17 @@ begin
   files := TStringlist.Create;
   Strings := TStringlist.Create;
   att := TStringlist.Create;
+  Screen.Cursor := crHourGlass;
   try
     try
-    Strings.LoadFromFile(tempFilename, TEncoding.UTF8);
+      Strings.LoadFromFile(tempFilename, TEncoding.UTF8);
 
-    bcc := '';
-    if g.qDefaultSendCCEmailToHotel then
-      bcc := ctrlGetString('CompanyEmail');
+      bcc := '';
+      if g.qDefaultSendCCEmailToHotel then
+        bcc := ctrlGetString('CompanyEmail');
 
-    d.RoomerMainDataset.sendEmailOpenAPI(edSubject.Text, hData.ctrlGetString('CompanyEmail'),
-        edTo.Text, edCc.Text, bcc, '', ConvertToEncion(Strings.Text), files);
-    Close;
+      d.RoomerMainDataset.sendEmailOpenAPI(edSubject.Text, hData.ctrlGetString('CompanyEmail'),
+          edTo.Text, edCc.Text, bcc, '', ConvertToEncion(Strings.Text), files);
     finally
       if attName <> '' then
          try TFile.Delete(attName); except end;
@@ -153,6 +151,7 @@ begin
     att.Free;
     Strings.Free;
     files.Free;
+    Screen.Cursor := crDefault;
   end;
 end;
 
@@ -170,6 +169,12 @@ begin
   finally
     edTemplate.Items.EndUpdate;
   end;
+end;
+
+procedure TFrmReservationEmailingDialog.btnOkClick(Sender: TObject);
+begin
+  SendConfirmationEmail;
+  Close;
 end;
 
 procedure TFrmReservationEmailingDialog.btnResourcesClick(Sender: TObject);

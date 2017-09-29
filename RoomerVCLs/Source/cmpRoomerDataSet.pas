@@ -35,6 +35,7 @@ type
 
   ERoomerDatasetException = class(Exception);
   ERegistrationException = class(Exception);
+  ESendEmailException = class(Exception);
 
   TRoomerDataSet = class;
   TRoomerDatasetList = TObjectList<TRoomerDataSet>;
@@ -1592,42 +1593,47 @@ var
 begin
   multi := TIdMultipartFormDataStream.Create;
   try
-    for i := 0 to files.Count - 1 do
-    begin
-      filename := Copy(files[i], POS('=', files[i]) + 1, maxint);
-      filePath := Copy(files[i], 1, POS('=', files[i]) - 1);
-      contType := '';
-      contType := GetMIMEtype(filename);
-      if LENGTH(contType) < 4 then
-        contType := 'application/unknown';
-      att := multi.AddFile('attachment', filePath, contType);
-      att.filename := extractFilename(filename);
-    end;
-
-    multi.AddFormField('to', recipient, 'UTF-8');
-    if TRIM(cc) <> '' then
-      multi.AddFormField('cc', cc, 'UTF-8');
-    if TRIM(bcc) <> '' then
-      multi.AddFormField('bcc', bcc, 'UTF-8');
-    multi.AddFormField('from', from, 'UTF-8');
-    multi.AddFormField('subject', subject, 'UTF-8');
-
-    multi.AddFormField('plaintext', _text, 'UTF-8', 'text/plain', 'emailText.txt');
-    multi.AddFormField('htmltext', _htmlText, 'UTF-8', 'text/html', 'htmlText.html');
-
-    IdSSLIOHandlerSocketOpenSSL1 := nil;
-    http := TIdHTTP.Create(nil);
     try
-      if LowerCase(Copy(OpenApiUri, 1, 8)) = 'https://' then
+      for i := 0 to files.Count - 1 do
       begin
-        IdSSLIOHandlerSocketOpenSSL1 := TIdSSLIOHandlerSocketOpenSSL.Create(nil);
-        http.IOHandler := IdSSLIOHandlerSocketOpenSSL1;
+        filename := Copy(files[i], POS('=', files[i]) + 1, maxint);
+        filePath := Copy(files[i], 1, POS('=', files[i]) - 1);
+        contType := '';
+        contType := GetMIMEtype(filename);
+        if LENGTH(contType) < 4 then
+          contType := 'application/unknown';
+        att := multi.AddFile('attachment', filePath, contType);
+        att.filename := extractFilename(filename);
       end;
-      http.Request.CustomHeaders.AddValue(PROMOIR_ROOMER_HOTEL_IDENTIFIER, AppKey);
-      http.Request.CustomHeaders.AddValue(PROMOIR_ROOMER_HOTEL_APPLICATION_ID, ApplicationId);
-      http.Request.CustomHeaders.AddValue(PROMOIR_ROOMER_HOTEL_SECRET, CalculateOTP(AppSecret));
 
-      Result := http.Post(OpenApiUri + 'hotelservices/email', multi);
+      multi.AddFormField('to', recipient, 'UTF-8');
+      if TRIM(cc) <> '' then
+        multi.AddFormField('cc', cc, 'UTF-8');
+      if TRIM(bcc) <> '' then
+        multi.AddFormField('bcc', bcc, 'UTF-8');
+      multi.AddFormField('from', from, 'UTF-8');
+      multi.AddFormField('subject', subject, 'UTF-8');
+
+      multi.AddFormField('plaintext', _text, 'UTF-8', 'text/plain', 'emailText.txt');
+      multi.AddFormField('htmltext', _htmlText, 'UTF-8', 'text/html', 'htmlText.html');
+
+      IdSSLIOHandlerSocketOpenSSL1 := nil;
+      http := TIdHTTP.Create(nil);
+      try
+        if LowerCase(Copy(OpenApiUri, 1, 8)) = 'https://' then
+        begin
+          IdSSLIOHandlerSocketOpenSSL1 := TIdSSLIOHandlerSocketOpenSSL.Create(nil);
+          http.IOHandler := IdSSLIOHandlerSocketOpenSSL1;
+        end;
+        http.Request.CustomHeaders.AddValue(PROMOIR_ROOMER_HOTEL_IDENTIFIER, AppKey);
+        http.Request.CustomHeaders.AddValue(PROMOIR_ROOMER_HOTEL_APPLICATION_ID, ApplicationId);
+        http.Request.CustomHeaders.AddValue(PROMOIR_ROOMER_HOTEL_SECRET, CalculateOTP(AppSecret));
+
+        Result := http.Post(OpenApiUri + 'hotelservices/email', multi);
+      except
+        on e: Exception do
+          raise ESendEmailException.CreateFmt('An error occured while sending the email: %s', [e.Message]);
+      end;
     finally
       IdSSLIOHandlerSocketOpenSSL1.Free;
       http.Free;
