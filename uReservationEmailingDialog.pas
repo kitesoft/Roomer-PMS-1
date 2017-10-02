@@ -64,8 +64,6 @@ type
     property EmailType : TEmailType read FEmailType write SetEmailType;
   end;
 
-var
-  FrmReservationEmailingDialog: TFrmReservationEmailingDialog;
 
 function SendNewReservationConfirmation(ReservationId : Integer) : Boolean;
 function SendCancellationConfirmation(ReservationId : Integer) : Boolean;
@@ -123,34 +121,22 @@ end;
 { TFrmReservationEmailingDialog }
 
 procedure TFrmReservationEmailingDialog.SendConfirmationEmail;
-var Strings,
-    files : TStringlist;
-    att : TStrings;
-    attName : String;
+var lMessage: TStringlist;
     bcc : String;
 begin
-  files := TStringlist.Create;
-  Strings := TStringlist.Create;
-  att := TStringlist.Create;
+  lMessage := TStringlist.Create;
   Screen.Cursor := crHourGlass;
   try
-    try
-      Strings.LoadFromFile(tempFilename, TEncoding.UTF8);
+    lMessage.LoadFromFile(tempFilename, TEncoding.UTF8);
 
-      bcc := '';
-      if g.qDefaultSendCCEmailToHotel then
-        bcc := ctrlGetString('CompanyEmail');
+    bcc := '';
+    if g.qDefaultSendCCEmailToHotel then
+      bcc := ctrlGetString('CompanyEmail');
 
-      d.RoomerMainDataset.sendEmailOpenAPI(edSubject.Text, hData.ctrlGetString('CompanyEmail'),
-          edTo.Text, edCc.Text, bcc, '', ConvertToEncion(Strings.Text), files);
-    finally
-      if attName <> '' then
-         try TFile.Delete(attName); except end;
-    end;
+    d.RoomerMainDataset.sendEmailOpenAPI(edSubject.Text, hData.ctrlGetString('CompanyEmail'),
+        edTo.Text, edCc.Text, bcc, '', ConvertToEncion(lMessage.Text));
   finally
-    att.Free;
-    Strings.Free;
-    files.Free;
+    lMessage.Free;
     Screen.Cursor := crDefault;
   end;
 end;

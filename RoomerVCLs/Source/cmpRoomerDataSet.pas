@@ -227,7 +227,7 @@ type
 
     function SendConfirmationEmailOpenAPI(Reservation: Integer): String;
     function SendEmailOpenAPI(subject: UTF8String; from, recipient, cc, bcc: String; _text, _htmlText: UTF8String;
-      files: TStringList): String;
+      files: TStringList=nil): String;
 
     function HashedPassword(password: String): String;
     function SystemDownloadFileFromURI(URI, filename: String): boolean;
@@ -1580,7 +1580,7 @@ begin
 end;
 
 function TRoomerDataSet.SendEmailOpenAPI(subject: UTF8String; from, recipient, cc, bcc: String;
-  _text, _htmlText: UTF8String; files: TStringList): String;
+  _text, _htmlText: UTF8String; files: TStringList=nil): String;
 var
   multi: TIdMultipartFormDataStream;
   http: TIdHTTP;
@@ -1594,17 +1594,18 @@ begin
   multi := TIdMultipartFormDataStream.Create;
   try
     try
-      for i := 0 to files.Count - 1 do
-      begin
-        filename := Copy(files[i], POS('=', files[i]) + 1, maxint);
-        filePath := Copy(files[i], 1, POS('=', files[i]) - 1);
-        contType := '';
-        contType := GetMIMEtype(filename);
-        if LENGTH(contType) < 4 then
-          contType := 'application/unknown';
-        att := multi.AddFile('attachment', filePath, contType);
-        att.filename := extractFilename(filename);
-      end;
+      if assigned(files) then
+        for i := 0 to files.Count - 1 do
+        begin
+          filename := Copy(files[i], POS('=', files[i]) + 1, maxint);
+          filePath := Copy(files[i], 1, POS('=', files[i]) - 1);
+          contType := '';
+          contType := GetMIMEtype(filename);
+          if LENGTH(contType) < 4 then
+            contType := 'application/unknown';
+          att := multi.AddFile('attachment', filePath, contType);
+          att.filename := extractFilename(filename);
+        end;
 
       multi.AddFormField('to', recipient, 'UTF-8');
       if TRIM(cc) <> '' then

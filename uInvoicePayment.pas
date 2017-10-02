@@ -79,8 +79,9 @@ type
     __LblLocalCurrency: TsLabel;
     LblForeignCurrency: TsLabel;
     LblLocalCurrency: TsLabel;
-    btnViewPayCard: TsButton;
-    btnChargePAyCard: TsButton;
+    pnlPayCard: TsPanel;
+    btnManagePaycards: TsButton;
+    btnChargePayCard: TsButton;
     procedure FormShow(Sender: TObject);
     procedure agrPayTypesSelectCell(Sender: TObject; ACol, ARow: Integer;
       var CanSelect: Boolean);
@@ -93,8 +94,8 @@ type
     procedure BtnOkClick(Sender: TObject);
     procedure agrPayTypesGetAlignment(Sender: TObject; ARow, ACol: Integer; var HAlign: TAlignment; var VAlign: TVAlignment);
     procedure agrPayTypesClickCell(Sender: TObject; ARow, ACol: Integer);
-    procedure btnViewPayCardClick(Sender: TObject);
-    procedure btnChargePAyCardClick(Sender: TObject);
+    procedure btnManagePaycardsClick(Sender: TObject);
+    procedure btnChargePayCardClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -107,8 +108,8 @@ type
     FRoomReservation: Integer;
     procedure Recalc;
     procedure FillPayGrid;
-    procedure ShowOrHideButtonViewPayCard;
     function AlreadyProvidedPayments: Double;
+    procedure EnabledChargepaycard;
   public
     { Public declarations }
      procedure WndProc(var Message: TMessage); override;
@@ -149,7 +150,7 @@ uses
    , uFrmChargePayCard
    , uTokenHelpers
    , uFrmManagePCIConnection
-  ;
+  , uFrmTokenChargeHistory;
 
 {$R *.DFM}
 
@@ -226,6 +227,7 @@ begin
     end;
 
     frm.Reservation := Reservation;
+    frm.RoomReservation := RoomReservation;
     if frm.ShowModal <> mrOK then
     begin
       result := false;
@@ -342,24 +344,24 @@ begin
 end;
 
 
-procedure TfrmInvoicePayment.ShowOrHideButtonViewPayCard;
-var
-  channelId: integer;
-begin
-  btnViewPayCard.Visible := ReservationHasPaycard(Reservation, RoomReservation, channelId);
-  if btnViewPayCard.Visible then
-    btnViewPayCard.Tag := ORD(glb.PCIContractOpenForChannel(channelId));
-end;
-
 procedure TfrmInvoicePayment.FormShow(Sender: TObject);
 begin
-  ShowOrHideButtonViewPayCard;
   edtCustomer.text := FCustomer;
   recalc;
   FillPayGrid;
   lblSelected.caption := _FloatToStr( 0, 12, 2 );
   lblLeft.caption     := _FloatToStr( FAmount, 12, 2 );
   postmessage( handle, WM_ActivateAmount, 0, 0 );
+
+  EnabledChargepaycard;
+end;
+
+procedure TfrmInvoicePayment.EnabledChargepaycard;
+var
+  channelId: integer;
+begin
+  channelId := -1;
+  btnChargePAyCard.Enabled := ReservationHasPaycard(FReservation, FRoomReservation, channelId);
 end;
 
 procedure TfrmInvoicePayment.agrPayTypesGetAlignment(Sender: TObject; ARow, ACol: Integer; var HAlign: TAlignment; var VAlign: TVAlignment);
@@ -384,7 +386,7 @@ begin
    end;
 end;
 
-procedure TfrmInvoicePayment.btnChargePAyCardClick(Sender: TObject);
+procedure TfrmInvoicePayment.btnChargePayCardClick(Sender: TObject);
 var charge : TTokenCharge;
     PayType : String;
     i : Integer;
@@ -426,9 +428,9 @@ begin
   end;
 end;
 
-procedure TfrmInvoicePayment.btnViewPayCardClick(Sender: TObject);
+procedure TfrmInvoicePayment.btnManagePaycardsClick(Sender: TObject);
 begin
-  ShowPayCardInformation(FReservation, 0, btnViewPayCard.Tag);
+  ManagePaymentCards(FReservation, FRoomReservation);
 end;
 
 procedure TfrmInvoicePayment.agrPayTypesKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);

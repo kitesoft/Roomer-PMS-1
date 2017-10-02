@@ -73,7 +73,7 @@ type
     sSpeedButton1: TsButton;
     FormStore: TcxPropertiesStore;
     pnlCCButtons: TsPanel;
-    btnViewPayCard: TsButton;
+    btnManagePaycards: TsButton;
     btnChargePAyCard: TsButton;
     procedure btnOkClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -82,7 +82,7 @@ type
     procedure btnCancelClick(Sender: TObject);
     procedure btnGetInvoiceBalanceClick(Sender: TObject);
     procedure tvPayTypeDblClick(Sender: TObject);
-    procedure btnViewPayCardClick(Sender: TObject);
+    procedure btnManagePaycardsClick(Sender: TObject);
     procedure btnChargePAyCardClick(Sender: TObject);
   private
     { Private declarations }
@@ -98,6 +98,7 @@ implementation
 {$R *.dfm}
 
 uses uAppGlobal, uD, uDImages, uSQLUtils, uFrmPayCardView, uTokenHelpers, uFrmChargePayCard
+    , uFrmTokenChargeHistory
     , Math
     , uFloatUtils;
 
@@ -157,9 +158,9 @@ begin
 end;
 
 
-procedure TfrmDownPayment.btnViewPayCardClick(Sender: TObject);
+procedure TfrmDownPayment.btnManagePaycardsClick(Sender: TObject);
 begin
-  ShowPayCardInformation(rec.Reservation, rec.RoomReservation, btnViewPayCard.Tag);
+  ManagePaymentCards(rec.Reservation, rec.RoomReservation);
 end;
 
 procedure TfrmDownPayment.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -179,9 +180,8 @@ procedure TfrmDownPayment.ShowOrHideButtonViewPayCard;
 var
   channelId: integer;
 begin
-  btnViewPayCard.Enabled := ReservationHasPaycard(rec.Reservation, rec.RoomReservation, channelId);
-  if btnViewPayCard.Enabled then
-    btnViewPayCard.Tag := ORD(glb.PCIContractOpenForChannel(channelId));
+  channelId := -1;
+  btnChargePAyCard.Enabled := ReservationHasPaycard(rec.Reservation, rec.RoomReservation, channelId);
 end;
 
 procedure TfrmDownPayment.FormShow(Sender: TObject);

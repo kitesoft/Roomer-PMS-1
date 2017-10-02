@@ -1,5 +1,5 @@
 inherited FrmChargePayCard: TFrmChargePayCard
-  Caption = 'Charge pay-card'
+  Caption = 'Charge Paycard'
   ClientHeight = 615
   ClientWidth = 768
   OnShow = FormShow
@@ -72,13 +72,13 @@ inherited FrmChargePayCard: TFrmChargePayCard
       Font.Style = [fsBold]
     end
     object sLabel1: TsLabel
-      Left = 134
+      Left = 138
       Top = 69
-      Width = 47
+      Width = 43
       Height = 13
       Alignment = taRightJustify
       BiDiMode = bdLeftToRight
-      Caption = 'Pay-card:'
+      Caption = 'Paycard:'
       ParentBiDiMode = False
     end
     object sLabel2: TsLabel
@@ -143,6 +143,10 @@ inherited FrmChargePayCard: TFrmChargePayCard
       inherited pnlCurrency: TsPanel
         Width = 208
         ExplicitWidth = 208
+        inherited lblCurrencyName: TsLabel
+          Width = 142
+          Height = 14
+        end
       end
     end
     object edAmount: TsCurrencyEdit

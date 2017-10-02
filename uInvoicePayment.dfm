@@ -21,9 +21,9 @@ object frmInvoicePayment: TfrmInvoicePayment
   TextHeight = 13
   object Panel1: TsPanel
     Left = 0
-    Top = 426
+    Top = 428
     Width = 336
-    Height = 45
+    Height = 43
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 2
@@ -33,7 +33,7 @@ object frmInvoicePayment: TfrmInvoicePayment
       Left = 123
       Top = 3
       Width = 102
-      Height = 39
+      Height = 37
       Hint = 'Apply and close'
       Align = alRight
       Caption = 'OK'
@@ -43,13 +43,14 @@ object frmInvoicePayment: TfrmInvoicePayment
       TabOrder = 0
       OnClick = BtnOkClick
       SkinData.SkinSection = 'BUTTON'
+      ExplicitHeight = 39
     end
     object btnCancel: TsButton
       AlignWithMargins = True
       Left = 231
       Top = 3
       Width = 102
-      Height = 39
+      Height = 37
       Hint = 'Cancel and close'
       Align = alRight
       Caption = 'Cancel'
@@ -58,6 +59,7 @@ object frmInvoicePayment: TfrmInvoicePayment
       ModalResult = 2
       TabOrder = 1
       SkinData.SkinSection = 'BUTTON'
+      ExplicitHeight = 39
     end
   end
   object Panel2: TsPanel
@@ -83,7 +85,7 @@ object frmInvoicePayment: TfrmInvoicePayment
       Font.Style = []
     end
     object lblAmount: TsLabel
-      Left = 30
+      Left = 66
       Top = 8
       Width = 37
       Height = 13
@@ -114,7 +116,7 @@ object frmInvoicePayment: TfrmInvoicePayment
       SkinData.SkinSection = 'EDIT'
     end
     object edtAmount: TsEdit
-      Left = 73
+      Left = 109
       Top = 5
       Width = 123
       Height = 21
@@ -132,7 +134,7 @@ object frmInvoicePayment: TfrmInvoicePayment
   end
   object Panel3: TsPanel
     Left = 0
-    Top = 115
+    Top = 117
     Width = 336
     Height = 19
     Align = alTop
@@ -147,10 +149,11 @@ object frmInvoicePayment: TfrmInvoicePayment
     ParentFont = False
     TabOrder = 3
     SkinData.SkinSection = 'PANEL'
+    ExplicitTop = 115
   end
   object agrPayTypes: TAdvStringGrid
     Left = 0
-    Top = 134
+    Top = 136
     Width = 336
     Height = 173
     Cursor = crDefault
@@ -250,6 +253,7 @@ object frmInvoicePayment: TfrmInvoicePayment
     SearchFooter.ResultFormat = '(%d of %d)'
     SortSettings.DefaultFormat = ssAutomatic
     Version = '8.2.4.1'
+    ExplicitTop = 134
     ColWidths = (
       169
       116)
@@ -259,7 +263,7 @@ object frmInvoicePayment: TfrmInvoicePayment
   end
   object Panel5: TsPanel
     Left = 0
-    Top = 307
+    Top = 309
     Width = 336
     Height = 22
     Align = alBottom
@@ -273,6 +277,7 @@ object frmInvoicePayment: TfrmInvoicePayment
     ParentFont = False
     TabOrder = 4
     SkinData.SkinSection = 'PANEL'
+    ExplicitTop = 307
     object Label2: TsLabel
       Left = 26
       Top = 5
@@ -331,13 +336,14 @@ object frmInvoicePayment: TfrmInvoicePayment
   end
   object sPanel1: TsPanel
     Left = 0
-    Top = 329
+    Top = 331
     Width = 336
     Height = 97
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 5
     SkinData.SkinSection = 'PANEL'
+    ExplicitTop = 329
     object sLabel1: TsLabel
       Left = 10
       Top = 11
@@ -370,7 +376,7 @@ object frmInvoicePayment: TfrmInvoicePayment
     end
     object sLabel3: TsLabel
       Left = 7
-      Top = 67
+      Top = 65
       Width = 127
       Height = 13
       Alignment = taRightJustify
@@ -452,10 +458,11 @@ object frmInvoicePayment: TfrmInvoicePayment
     Left = 0
     Top = 29
     Width = 336
-    Height = 86
+    Height = 48
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 6
+    ExplicitTop = 73
     object LblForeignCurrencyAmount: TsLabel
       Left = 31
       Top = 8
@@ -526,27 +533,42 @@ object frmInvoicePayment: TfrmInvoicePayment
       Height = 13
       Caption = '...'
     end
-    object btnViewPayCard: TsButton
-      Left = 31
-      Top = 44
+  end
+  object pnlPayCard: TsPanel
+    Left = 0
+    Top = 77
+    Width = 336
+    Height = 40
+    Align = alTop
+    TabOrder = 7
+    object btnManagePaycards: TsButton
+      AlignWithMargins = True
+      Left = 173
+      Top = 4
       Width = 129
-      Height = 38
-      Caption = 'Pay-card info'
+      Height = 32
+      Align = alLeft
+      Caption = 'Manage Paycards'
       ImageIndex = 92
       Images = DImages.PngImageList1
       TabOrder = 0
-      OnClick = btnViewPayCardClick
+      OnClick = btnManagePaycardsClick
+      ExplicitTop = 6
     end
-    object btnChargePAyCard: TsButton
-      Left = 166
-      Top = 44
+    object btnChargePayCard: TsButton
+      AlignWithMargins = True
+      Left = 38
+      Top = 4
       Width = 129
-      Height = 38
-      Caption = 'Charge Pay-card'
+      Height = 32
+      Margins.Left = 37
+      Align = alLeft
+      Caption = 'Charge Paycard'
       ImageIndex = 92
       Images = DImages.PngImageList1
       TabOrder = 1
-      OnClick = btnChargePAyCardClick
+      OnClick = btnChargePayCardClick
+      ExplicitLeft = 0
     end
   end
   object sSkinProvider1: TsSkinProvider

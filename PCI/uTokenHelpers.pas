@@ -208,6 +208,7 @@ var
   xml : String;
   token : TToken;
 begin
+  Assert(assigned(tokens), 'Tokenlist is not assigned');
   tokens.clear;
   xml := d.roomerMainDataSet.downloadUrlAsString(d.roomerMainDataSet.RoomerUri + format('paycard/bookings/%d/tokens', [ReservationId]));
   rSet := d.roomerMainDataSet.ActivateNewDataset(xml);

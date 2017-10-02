@@ -32,7 +32,7 @@ type
     edSubject: TsEdit;
     sPanel2: TsPanel;
     sPanel3: TsPanel;
-    sButton1: TsButton;
+    btnSend: TsButton;
     sButton2: TsButton;
     edEmailText: TsMemo;
     sImage1: TsImage;
@@ -41,11 +41,10 @@ type
     cbxTemplates: TsComboBox;
     __SubjectSample: TsLabel;
     procedure FormCreate(Sender: TObject);
-    procedure sButton1Click(Sender: TObject);
+    procedure btnSendClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormDestroy(Sender: TObject);
-    procedure cbxTemplatesCloseUp(Sender: TObject);
     procedure edSubjectChange(Sender: TObject);
   private
     FFiles: TStringList;
@@ -121,23 +120,6 @@ begin
   end;
 end;
 
-(*
-function TFrmEmailingDialog.Download(template : TEmailTemplateInfo) : String;
-var filename : String;
-begin
-  result := '';
-  Screen.Cursor := crHourglass;
-  try
-    filename := TPath.Combine(GetTempDir, template.Name);
-    if FileExists(filename) then
-      DeleteFile(filename);
-    if d.roomerMainDataSet.DownloadFileResourceOpenAPI(template.URI, filename) then
-      result := filename;
-  finally
-    Screen.Cursor := crDefault;
-  end;
-end;
-*)
 procedure TFrmEmailingDialog.edSubjectChange(Sender: TObject);
 begin
   __SubjectSample.Caption := getSubject;
@@ -173,14 +155,6 @@ begin
   end;
 end;
 
-
-procedure TFrmEmailingDialog.cbxTemplatesCloseUp(Sender: TObject);
-begin
-  if cbxTemplates.ItemIndex > 0 then
-  begin
-    //
-  end;
-end;
 
 procedure TFrmEmailingDialog.FormClose(Sender: TObject; var Action: TCloseAction);
 var Key : String;
@@ -260,7 +234,7 @@ begin
 end;
 *)
 
-procedure TFrmEmailingDialog.sButton1Click(Sender: TObject);
+procedure TFrmEmailingDialog.btnSendClick(Sender: TObject);
 var bcc : String;
 begin
   bcc := trim(edBcc.Text);
@@ -272,7 +246,7 @@ begin
       bcc := bcc + ',' + ctrlGetString('CompanyEmail');
   end;
   d.RoomerMainDataset.sendEmailOpenAPI(getSubject, hData.ctrlGetString('CompanyEmail'),
-        edRecipient.Text, edCc.Text, bcc, edEmailText.Text, simpleTextTosimpleHtml(getText), files);
+        edRecipient.Text, edCc.Text, bcc, edEmailText.Text, simpleTextTosimpleHtml(getText), Files);
   Close;
 end;
 

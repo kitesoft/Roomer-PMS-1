@@ -61,11 +61,17 @@ type
     FOperationResultingCharge: TTokenCharge;
     FPaycardOperationType: TPayCardOperationType;
     FAmountIsFixed: boolean;
+    FExternalTokenList: TObjectList<TToken>;
+    FOwnedTokenList: TObjectList<TToken>;
     procedure ProcessChargeSuccess(token : TToken; msg: String);
     function ParseSettings(token : TToken; XmlString: String): TTokenCharge;
     procedure evtCurrencyChangedAndValid(Sender: TObject);
     procedure evtCurrencyChanged(Sender: TObject);
     procedure SetPaycardOperationType(const Value: TPayCardOperationType);
+    procedure SetTokenList(const Value: TObjectList<TToken>);
+    function GetTokenList: TObjectList<TToken>;
+    procedure LoadCards;
+    procedure DisplayTokens;
   protected
     procedure DoUpdateControls; override;
   public
@@ -78,11 +84,16 @@ type
     refNumber : String;
     tokenCharge : TTokenCharge;
     token : TToken;
-    tokenList : TObjectList<TToken>;
+
+    constructor Create(aOwner: TComponent); override;
+    destructor Destroy; override;
+
+    /// <summary>
+    ///   List of tokens defined for the set reservation. If not provided extrnally, a local one is created and populated
+    /// </summary>
+    property TokenList: TObjectList<TToken> read GetTokenList write SetTokenList;
     property PayCardOperationType : TPayCardOperationType read FPaycardOperationType write SetPaycardOperationType;
     property AmountIsFixed: boolean read FAmountIsFixed write FAMountIsFixed;
-    procedure LoadCards;
-    procedure DisplayTokens;
 
     property OperationResultingCharge : TTokenCharge read FOperationResultingCharge write FOperationResultingCharge;
   end;
@@ -114,7 +125,8 @@ implementation
 
 {$R *.dfm}
 
-uses uD,
+uses Data.DB,
+     uD,
      cmpRoomerDataSet,
      hData,
      uG,
@@ -346,6 +358,12 @@ begin
     token := nil;
 end;
 
+constructor TFrmChargePayCard.Create(aOwner: TComponent);
+begin
+  inherited;
+  FOwnedTokenList :=  TObjectList<TToken>.Create();
+end;
+
 procedure TFrmChargePayCard.ProcessChargeSuccess(token : TToken; msg : String);
 var charge : TTokenCharge;
 begin
@@ -374,6 +392,11 @@ procedure TFrmChargePayCard.SetPaycardOperationType(const Value: TPayCardOperati
 begin
   FPaycardOperationType := Value;
   btnProceed.Caption := PAY_CARD_OPERATION_TYPE[Value];
+end;
+
+procedure TFrmChargePayCard.SetTokenList(const Value: TObjectList<TToken>);
+begin
+  FExternalTokenList := Value;
 end;
 
 function TFrmChargePayCard.ParseSettings(token : TToken; XmlString : String) : TTokenCharge;
@@ -469,6 +492,12 @@ begin
 end;
 
 
+destructor TFrmChargePayCard.Destroy;
+begin
+  FOwnedTokenList.Free;
+  inherited;
+end;
+
 procedure TFrmChargePayCard.DisplayTokens;
 var
   idx : Integer;
@@ -476,13 +505,21 @@ var
   token : TToken;
 begin
   idx := -1;
-  for token IN tokenList do
-  begin
-    cbxIndex := cbxPaycards.Items.AddObject(format('(%s) %s, %s [%s]', [token.CardType, token.CardNumber, token.ExpireDate, token.NameOnCard]), token);
-    if token.id = CardTokenId then
-      idx := cbxIndex;
+  cbxPaycards.Items.BeginUpdate;
+  try
+    cbxPaycards.Enabled := false;
+    cbxPaycards.Items.clear;
+    for token IN TokenList do
+    begin
+      cbxIndex := cbxPaycards.Items.AddObject(format('(%s) %s, %s [%s]', [token.CardType, token.CardNumber, token.ExpireDate, token.NameOnCard]), token);
+      if token.id = CardTokenId then
+        idx := cbxIndex;
+    end;
+    cbxPaycards.ItemIndex := idx;
+  finally
+    cbxPaycards.Items.EndUpdate;
+    cbxPaycards.Enabled := true;
   end;
-  cbxPaycards.ItemIndex := idx;
 end;
 
 procedure TFrmChargePayCard.FormShow(Sender: TObject);
@@ -491,7 +528,7 @@ begin
   FOperationResultingCharge := nil;
   pnlBottom.Visible := False;
   cbxPaycards.Enabled := False;
-  if Assigned(tokenList) then
+  if (TokenList.Count > 0) then
     DisplayTokens
   else
     LoadCards;
@@ -508,6 +545,14 @@ begin
   DialogButtons := [mbClose];
   fraCurrency.OnCurrencyChangeAndValid := evtCurrencyChangedAndValid;
   fraCurrency.OnCurrencyChange := evtCurrencyChanged;
+end;
+
+function TFrmChargePayCard.GetTokenList: TObjectList<TToken>;
+begin
+  if assigned(FExternalTokenList) then
+    Result := FExternalTokenList
+  else
+    Result := FOwnedTokenList;
 end;
 
 procedure TFrmChargePayCard.edAmountChange(Sender: TObject);
@@ -531,60 +576,50 @@ begin
 end;
 
 procedure TFrmChargePayCard.LoadCards;
-var
-  rSet: TRoomerDataSet;
-  xml : String;
-  token : TToken;
+//var
+//  rSet: TRoomerDataSet;
+//  xml : String;
+//  token : TToken;
 begin
-  if Assigned(tokenList) then
-    tokenList.Free;
-  tokenList := TObjectList<TToken>.Create;
+  LoadAllTokens(ReservationId, RoomReservationId, Tokenlist);
 
-  lbReservation.Caption := inttostr(ReservationId);
-  lbRoomReservation.Caption := inttostr(RoomReservationId);
+//  rSet := CreateNewDataSet;
+//  xml := d.roomerMainDataSet.downloadUrlAsString(d.roomerMainDataSet.RoomerUri + format('paycard/bookings/%d/tokens', [ReservationId]));
+//  rSet := d.roomerMainDataSet.ActivateNewDataset(xml);
+//    try
+//      rSet.First;
+//      while NOT rSet.Eof do
+//      begin
+//        if (rSet['ID'] = -1) OR (rSet['ROOM_RESERVATION'] = RoomReservationId) OR (rSet['ROOM_RESERVATION'] <= 0) then
+//        begin
+//          token := TToken.Create(rSet['ID'],
+//                        rSet['RESERVATION'],
+//                        rSet['ROOM_RESERVATION'],
+//                        rSet['PAYCARD_TOKEN'],
+//                        rSet['ENABLED'],
+//                        rSet['NAME_ON_CARD'],
+//                        rSet['CARD_TYPE'],
+//                        rSet['USER_ID'],
+//                        rSet['DESCRIPTION'],
+//                        rSet['NOTES'],
+//                        rSet['CREATE_TSTAMP'],
+//
+//                        rSet['ROOM'],
+//                        rSet['SOURCE'],
+//
+//                        rSet['CARD_NUMBER'],
+//                        rSet['EXP_DATE']);
+//
+//          tokenList.Add(token);
+//        end;
+//        rSet.Next;
+//      end;
+//  finally
+//    freeandNil(rSet);
+//  end;
 
-  rSet := CreateNewDataSet;
-  xml := d.roomerMainDataSet.downloadUrlAsString(d.roomerMainDataSet.RoomerUri + format('paycard/bookings/%d/tokens', [ReservationId]));
-  rSet := d.roomerMainDataSet.ActivateNewDataset(xml);
-  try
-    cbxPaycards.Items.BeginUpdate;
-    try
-      cbxPaycards.Items.Clear;
-      rSet.First;
-      while NOT rSet.Eof do
-      begin
-        if (rSet['ID'] = -1) OR (rSet['ROOM_RESERVATION'] = RoomReservationId) OR (rSet['ROOM_RESERVATION'] <= 0) then
-        begin
-          token := TToken.Create(rSet['ID'],
-                        rSet['RESERVATION'],
-                        rSet['ROOM_RESERVATION'],
-                        rSet['PAYCARD_TOKEN'],
-                        rSet['ENABLED'],
-                        rSet['NAME_ON_CARD'],
-                        rSet['CARD_TYPE'],
-                        rSet['USER_ID'],
-                        rSet['DESCRIPTION'],
-                        rSet['NOTES'],
-                        rSet['CREATE_TSTAMP'],
 
-                        rSet['ROOM'],
-                        rSet['SOURCE'],
-
-                        rSet['CARD_NUMBER'],
-                        rSet['EXP_DATE']);
-
-          tokenList.Add(token);
-        end;
-        rSet.Next;
-      end;
-    finally
-      cbxPaycards.Items.EndUpdate;
-    end;
-  finally
-    freeandNil(rSet);
-  end;
   DisplayTokens;
-  cbxPaycards.Enabled := True;
 end;
 
 

@@ -1731,10 +1731,10 @@ begin
   constants.Add('PCI_VIEW_Warning_SecurityCodeOnceVisible', 'The credit-card security code (CVC) is only shown <B><U>once</U></B>. After that it will not be shown again.');
   constants.Add('PCI_VIEW_Warning_NumberOfViews', 'The credit-card of this reservation has been viewed {VIEWS} times.');
 
-  constants.Add('PCI_REFUND_TOO_HIGH_AMOUNT', 'Refund cannot be hight thant the originally charged amount.');
+  constants.Add('PCI_REFUND_TOO_HIGH_AMOUNT', 'Refund cannot be higher than the originally charged amount.');
 
   constants.Add('OPT_IN_PLEASE_NOTE', 'Please note:');
-  constants.Add('OPT_IN_MESSAGE_1', 'To be able to view the creditcard information from the various channels you will need an extended agreement with Roomer.');
+  constants.Add('OPT_IN_MESSAGE_1', 'To be able to work with creditcard information from the various channels you will need an extended agreement with Roomer.');
   constants.Add('OPT_IN_MESSAGE_2', 'Please feel free to contact Roomer by clicking on the email address below.');
   constants.Add('OPT_IN_FROM_ROOMER', 'With kind regards,<BR><I>Your Roomer Team</I>');
   constants.Add('OPT_IN_EMAIL_SUBJECT', 'Opt-In Email Message - %s');
@@ -1934,7 +1934,7 @@ begin
   TFrmEditResourceProperties.Create(nil).Free;
 
   frmRptBookkeeping := TfrmRptBookkeeping.Create(nil); frmRptBookkeeping.Free; frmRptBookkeeping := nil;
-  FrmReservationEmailingDialog := TFrmReservationEmailingDialog.Create(nil); FrmReservationEmailingDialog.Free; FrmReservationEmailingDialog := nil;
+  TFrmReservationEmailingDialog.Create(nil).Free;
   TFrmReservationCancellationDialog.Create(nil).Free;
   frmRptCashier := TfrmRptCashier.Create(nil); frmRptCashier.Free; frmRptCashier := nil;
 

@@ -1183,6 +1183,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
           TabOrder = 3
           OnClick = btnClickDropDown
           SkinData.SkinSection = 'BUTTON'
+          ExplicitTop = 5
         end
         object btnRemoveSelected: TsButton
           AlignWithMargins = True
@@ -1381,8 +1382,6 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
           SelectionTextColor = clHighlightText
           SortSettings.DefaultFormat = ssAutomatic
           Version = '8.2.4.1'
-          ExplicitLeft = 17
-          ExplicitTop = 4
           ColWidths = (
             24
             28

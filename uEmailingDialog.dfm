@@ -391,7 +391,6 @@ object FrmEmailingDialog: TFrmEmailingDialog
       ParentFont = False
       TabOrder = 4
       Visible = False
-      OnCloseUp = cbxTemplatesCloseUp
     end
   end
   object sPanel2: TsPanel
@@ -412,7 +411,7 @@ object FrmEmailingDialog: TFrmEmailingDialog
       BevelOuter = bvNone
       TabOrder = 0
       SkinData.SkinSection = 'TRANSPARENT'
-      object sButton1: TsButton
+      object btnSend: TsButton
         Left = 3
         Top = 8
         Width = 114
@@ -422,7 +421,7 @@ object FrmEmailingDialog: TFrmEmailingDialog
         Default = True
         ModalResult = 1
         TabOrder = 0
-        OnClick = sButton1Click
+        OnClick = btnSendClick
         SkinData.SkinSection = 'BUTTON'
       end
       object sButton2: TsButton
@@ -453,8 +452,6 @@ object FrmEmailingDialog: TFrmEmailingDialog
     ParentFont = False
     TabOrder = 1
     SkinData.SkinSection = 'EDIT'
-    ExplicitTop = 190
-    ExplicitHeight = 272
   end
   object StoreMain: TcxPropertiesStore
     Components = <

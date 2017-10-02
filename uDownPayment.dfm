@@ -239,31 +239,34 @@ object frmDownPayment: TfrmDownPayment
     Height = 41
     Align = alTop
     TabOrder = 4
-    object btnViewPayCard: TsButton
+    object btnManagePaycards: TsButton
       AlignWithMargins = True
-      Left = 139
+      Left = 254
       Top = 4
       Width = 129
       Height = 33
       Align = alLeft
-      Caption = 'Paycard info'
+      Caption = 'Manage Paycards'
       ImageIndex = 92
       Images = DImages.PngImageList1
       TabOrder = 0
-      OnClick = btnViewPayCardClick
+      OnClick = btnManagePaycardsClick
+      ExplicitLeft = 139
     end
     object btnChargePAyCard: TsButton
       AlignWithMargins = True
-      Left = 4
+      Left = 119
       Top = 4
       Width = 129
       Height = 33
+      Margins.Left = 118
       Align = alLeft
       Caption = 'Charge Paycard'
       ImageIndex = 92
       Images = DImages.PngImageList1
       TabOrder = 1
       OnClick = btnChargePAyCardClick
+      ExplicitLeft = 4
     end
   end
   object kbmPayType: TkbmMemTable
