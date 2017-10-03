@@ -1183,7 +1183,6 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
           TabOrder = 3
           OnClick = btnClickDropDown
           SkinData.SkinSection = 'BUTTON'
-          ExplicitTop = 5
         end
         object btnRemoveSelected: TsButton
           AlignWithMargins = True

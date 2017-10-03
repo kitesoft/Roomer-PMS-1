@@ -259,7 +259,7 @@ begin
         rec.PayDate       := rSet.FieldByName('PayDate').AsString;
         rec.Customer      := rSet.FieldByName('Customer').AsString;
         rec.PayType       := rSet.FieldByName('PayType').AsString;
-        rec.Amount        := rSet.FieldByName('Amount').AsFloat;
+        rec.NativeAmount        := rSet.FieldByName('Amount').AsFloat;
         rec.Description   := rSet.FieldByName('Description').AsString;
         rec.CurrencyRate  := rSet.FieldByName('CurrencyRate').AsFloat;
         rec.Currency      := rSet.FieldByName('Currency').AsString;

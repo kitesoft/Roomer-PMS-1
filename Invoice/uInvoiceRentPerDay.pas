@@ -5561,7 +5561,12 @@ begin
   end;
 
   if PayAndPrintFinalInvoice then
-    close;
+    close
+  else
+  begin
+    LoadPayments;
+    DisplayTotals;
+  end;
 end;
 
 function TfrmInvoiceRentPerDay.PayAndPrintFinalInvoice: boolean;
@@ -5613,12 +5618,12 @@ begin
   g.initRecDownPayment(rec);
 
   if edtBalance.Text <> '' then
-    rec.InvoiceBalance := _StrToFloat(edtBalance.Text) + _StrToFloat(edtDownPayments.Text);
+    rec.InvoiceBalanceInCurrency := _StrToFloat(edtBalance.Text) + _StrToFloat(edtDownPayments.Text);
 
   rec.reservation := FReservation;
   rec.RoomReservation := FRoomReservation;
   rec.Invoice := zInvoiceNumber;
-  rec.Amount := mPaymentsNativeAmount.AsFloat;
+  rec.AmountInCurrency := mPaymentsNativeAmount.AsFloat;
   rec.Quantity := 1;
   rec.Description := mPayments.FieldByName('Description').asString;
   rec.Notes := mPayments.FieldByName('Memo').asString;
@@ -5696,13 +5701,13 @@ begin
   g.initRecDownPayment(rec);
 
   if edtBalance.Text <> '' then
-    rec.InvoiceBalance := _StrToFloat(edtBalance.Text) +
+    rec.InvoiceBalanceInCurrency := _StrToFloat(edtBalance.Text) +
       _StrToFloat(edtDownPayments.Text);
 
   rec.reservation := FReservation;
   rec.RoomReservation := FRoomReservation;
   rec.Invoice := zInvoiceNumber;
-  rec.Amount := mPaymentsNativeAmount.asfloat;
+  rec.AmountInCurrency := mPaymentsNativeAmount.asfloat;
   rec.Quantity := 1;
   rec.Description := mPayments.FieldByName('Description').asString;
   rec.Notes := mPayments.FieldByName('Memo').asString;
@@ -5718,7 +5723,7 @@ begin
     if OpenAssignPayment(Id) then
     begin
       AddInvoiceActivityLog(g.qUser, rec.reservation, rec.RoomReservation, 1
-        , CHANGE_PAYMENT, rec.PaymentType, rec.Amount, zInvoiceNumber, rec.Description);
+        , CHANGE_PAYMENT, rec.PaymentType, rec.AmountInCurrency, zInvoiceNumber, rec.Description);
 
       LoadPayments;
       DisplayTotals;
@@ -5745,7 +5750,7 @@ begin
   rec.reservation := FReservation;
   rec.RoomReservation := FRoomReservation;
   rec.Invoice := zInvoiceNumber;
-  rec.Amount := mPaymentsNativeAmount.AsFloat;
+  rec.AmountInCurrency := mPaymentsNativeAmount.AsFloat;
   rec.Quantity := 1;
   rec.Description := mPayments.FieldByName('Description').asString;
   rec.Notes := mPayments.FieldByName('Memo').asString;
@@ -5765,10 +5770,10 @@ begin
     begin
       AddInvoiceActivityLog(g.qUser, rec.reservation, rec.RoomReservation, FInvoiceIndex
         // field typeindex 0 = invoice payment 1 = downpayment
-        , DELETE_PAYMENT, rec.PaymentType, rec.Amount, zInvoiceNumber, rec.Description);
+        , DELETE_PAYMENT, rec.PaymentType, rec.AmountInCurrency, zInvoiceNumber, rec.Description);
       AddInvoiceActivityLog(g.qUser, rec.reservation, rec.RoomReservation, toInvoiceIndex
         // field typeindex 0 = invoice payment 1 = downpayment
-        , ADD_PAYMENT, rec.PaymentType, rec.Amount, zInvoiceNumber, rec.Description);
+        , ADD_PAYMENT, rec.PaymentType, rec.AmountInCurrency, zInvoiceNumber, rec.Description);
 
       LoadPayments;
       DisplayTotals;
@@ -5840,7 +5845,8 @@ begin
   rec.reservation := FReservation;
   rec.RoomReservation := FRoomReservation;
   rec.Invoice := zInvoiceNumber;
-  rec.Amount := 0;
+  rec.Currency := zCurrentCurrency;
+  rec.AmountInCurrency := 0;
 
   if (rec.reservation = 0) and (rec.RoomReservation = 0) then
   begin
@@ -5849,7 +5855,7 @@ begin
   end;
 
   if edtBalance.Text <> '' then
-    rec.InvoiceBalance := FInvoiceLinesList.TotalOnInvoiceNativeCurrency - getDownPayments;
+    rec.InvoiceBalanceInCurrency := FCurrencyhandlersMap.ConvertAmount(FInvoiceLinesList.TotalOnInvoiceNativeCurrency - getDownPayments, zNativeCurrency, zCurrentCurrency);
 
   if g.OpenDownPayment(actInsert, rec) then
   begin
@@ -5864,7 +5870,7 @@ begin
     theData.InvoiceNumber := zInvoiceNumber;
     theData.customer := edtCustomer.Text;
     theData.PayDate := _db(Date, false);
-    theData.Amount := rec.Amount;
+    theData.NativeAmount := FCurrencyhandlersMap.ConvertAmount(rec.AmountInCurrency, zCurrentCurrency, zNativeCurrency);
     theData.Description := rec.Description;
     theData.CurrencyRate := zCurrencyRate; // ATH
     theData.Currency := zCurrentCurrency;
@@ -5874,12 +5880,12 @@ begin
     theData.InvoiceIndex := InvoiceIndex;
 
     NewId := 0;
-    if INS_Payment(theData, NewId) then
-    begin
-      LoadPayments;
-      DisplayTotals;
-    end;
+    INS_Payment(theData, NewId);
   end;
+
+  // CC charges are updated in backend, so udpate always needed
+  LoadPayments;
+  DisplayTotals;
 
 end;
 
@@ -5923,7 +5929,7 @@ begin
   rec.reservation := FReservation;
   rec.RoomReservation := FRoomReservation;
   rec.Invoice := zInvoiceNumber;
-  rec.Amount := mPaymentsNativeAmount.asfloat;
+  rec.AmountInCurrency := mPaymentsNativeAmount.asfloat;
   rec.Quantity := 1;
   rec.Description := mPayments.FieldByName('Description').asString;
   rec.Notes := mPayments.FieldByName('Memo').asString;
@@ -5943,7 +5949,7 @@ begin
   if (rec.confirmDate < 3) and (Id > 0) then
   begin
     if MessageDlg('Delete payment ?'#10 + rec.Description + ' / Amount ' +
-      _floattostr(rec.Amount, vWidth, vDec), mtConfirmation,
+      _floattostr(rec.AmountInCurrency, vWidth, vDec), mtConfirmation,
       [mbYes, mbNo, mbCancel], 0) = mrYes then
     begin
       mPayments.delete;
@@ -5955,7 +5961,7 @@ begin
       begin
         AddInvoiceActivityLog(g.qUser, rec.reservation, rec.RoomReservation, 1
             // field typeindex 0 = invoice payment 1 = downpayment
-            , DELETE_PAYMENT, rec.PaymentType, rec.Amount, zInvoiceNumber,
+            , DELETE_PAYMENT, rec.PaymentType, rec.AmountInCurrency, zInvoiceNumber,
             rec.Description);
       end;
 
@@ -6059,7 +6065,7 @@ begin
     end
     else
     begin
-      msg := Format(GetTranslatedtext('shTxInvoicePayments_RevertPayment'), [mPaymentsDescription.AsString, _floattostr(mPaymentsnativeAmount.AsFloat, vWidth, vDec), mPaymentsCurrency.AsString]);
+      msg := Format(GetTranslatedtext('shTxInvoicePayments_RevertPayment'), [mPaymentsDescription.AsString, _floattostr(mPaymentsCurrencyAmount.AsFloat, vWidth, vDec), mPaymentsCurrency.AsString]);
       if MessageDlg(msg, mtConfirmation, [mbOK, mbCancel], 0) = mrOK then
       begin
         s := s + ' insert into payments ( '#10;

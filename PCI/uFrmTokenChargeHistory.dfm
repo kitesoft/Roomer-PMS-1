@@ -149,29 +149,29 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
     TabOrder = 3
     object splGrids: TsSplitter
       AlignWithMargins = True
-      Left = 452
+      Left = 491
       Top = 3
       Height = 282
       Margins.Bottom = 10
+      Align = alRight
       Color = clSkyBlue
       ParentColor = False
-      ExplicitLeft = 200
-      ExplicitTop = 0
-      ExplicitHeight = 424
+      ExplicitLeft = 600
     end
     object pnlLeftGrid: TsPanel
       Left = 0
       Top = 0
-      Width = 449
+      Width = 488
       Height = 295
-      Align = alLeft
+      Align = alClient
       BevelOuter = bvNone
       TabOrder = 0
+      ExplicitWidth = 449
       object sLabel2: TsLabel
         AlignWithMargins = True
         Left = 3
         Top = 3
-        Width = 443
+        Width = 482
         Height = 13
         Align = alTop
         Caption = 'Available paycards'
@@ -187,7 +187,7 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
         AlignWithMargins = True
         Left = 3
         Top = 22
-        Width = 443
+        Width = 482
         Height = 229
         Align = alClient
         Color = clWhite
@@ -227,30 +227,32 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
         ViewStyle = vsReport
         OnDblClick = lvTokensDblClick
         OnSelectItem = lvTokensSelectItem
+        ExplicitWidth = 443
       end
       object sPanel6: TsPanel
         Left = 0
         Top = 254
-        Width = 449
+        Width = 488
         Height = 41
         Align = alBottom
         BevelOuter = bvNone
         TabOrder = 1
+        ExplicitWidth = 449
       end
     end
     object pnlRightGrid: TsPanel
-      Left = 461
+      Left = 500
       Top = 0
-      Width = 539
+      Width = 500
       Height = 295
-      Align = alClient
+      Align = alRight
       BevelOuter = bvNone
       TabOrder = 1
       object sLabel1: TsLabel
         AlignWithMargins = True
         Left = 3
         Top = 3
-        Width = 533
+        Width = 494
         Height = 13
         Align = alTop
         Caption = 'Paycard action history'
@@ -266,7 +268,7 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
         AlignWithMargins = True
         Left = 3
         Top = 22
-        Width = 526
+        Width = 487
         Height = 162
         Margins.Right = 10
         Align = alClient
@@ -318,26 +320,29 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
         ViewStyle = vsReport
         OnDblClick = lvChargesDblClick
         OnSelectItem = lvChargesSelectItem
+        ExplicitWidth = 526
       end
       object sPanel5: TsPanel
         Left = 0
         Top = 254
-        Width = 539
+        Width = 500
         Height = 41
         Align = alBottom
         BevelOuter = bvNone
         TabOrder = 1
+        ExplicitWidth = 539
       end
       object sPanel7: TsPanel
         Left = 0
         Top = 187
-        Width = 539
+        Width = 500
         Height = 67
         Align = alBottom
         BevelOuter = bvNone
         TabOrder = 2
+        ExplicitWidth = 539
         DesignSize = (
-          539
+          500
           67)
         object sLabel7: TsLabel
           Left = 79
@@ -410,7 +415,7 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
         end
         object btnChargeView: TsButton
           AlignWithMargins = True
-          Left = 303
+          Left = 264
           Top = 5
           Width = 105
           Height = 31
@@ -424,10 +429,11 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
           Images = DImages.PngImageList1
           TabOrder = 0
           OnClick = btnChargeViewClick
+          ExplicitLeft = 303
         end
         object btnRefundOrCapture: TsButton
           AlignWithMargins = True
-          Left = 421
+          Left = 382
           Top = 5
           Width = 105
           Height = 31
@@ -442,6 +448,7 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
           Style = bsSplitButton
           TabOrder = 1
           OnClick = btnClickDropDown
+          ExplicitLeft = 421
         end
       end
     end

@@ -838,6 +838,8 @@ begin
   constants.Add('shTx_InvoicePayment_ConfirmCode', 'Confirm code');
   constants.Add('shTx_InvoicePayment_Code', 'Code :');
   constants.Add('shTx_InvoicePayment_ExceedsInvoice', 'Payments exceed total invoice?!');
+  constants.Add('shTx_InvoicePayment_PaycardPayTypeNotFound', 'Charge has been registered but paytype cannot be found for cardtype %s');
+
   constants.Add('shTx_Items2_ItemTypeRequired', 'Item type is required - set value or use [ESC] to cancel ');
 //  constants.Add('shTx_Items2_ItemRequired', 'Item is requierd - set value or use [ESC] to cancel ');
   constants.Add('shTx_Items2_ItemRequired', 'Item is required - set value or use [ESC] to cancel ');

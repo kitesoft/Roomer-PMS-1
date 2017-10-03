@@ -75,6 +75,7 @@ type
     pnlCCButtons: TsPanel;
     btnManagePaycards: TsButton;
     btnChargePAyCard: TsButton;
+    lbCurrency: TsLabel;
     procedure btnOkClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -87,7 +88,7 @@ type
   private
     { Private declarations }
     zCanClose : boolean;
-    procedure ShowOrHideButtonViewPayCard;
+    procedure EnableDisableButtonViewPayCard;
   public
     { Public declarations }
     rec : recDownPayment;
@@ -113,14 +114,14 @@ var charge : TTokenCharge;
 begin
   charge := ChargePayCardForPayment(rec.Reservation,
                   rec.Roomreservation,
-                  iif(edAmount.Value = 0, rec.InvoiceBalance, edAmount.Value),
+                  iif(edAmount.Value = 0, rec.InvoiceBalanceInCurrency, edAmount.Value),
                   rec.Currency,
                   PCO_CHARGE,
                   False);
   if Assigned(charge) then
   begin
     edAmount.Value := charge.amount;
-    BtnOk.Click;
+    btnCancel.Click; // Payment is already registered
   end;
 end;
 
@@ -131,7 +132,7 @@ var
 begin
   zCanClose := true;
 
-  balance := RoundDecimals(rec.InvoiceBalance-edAmount.value, 2);
+  balance := RoundDecimals(rec.InvoiceBalanceInCurrency-edAmount.value, 2);
 
   if edAmount.value = 0 then
   begin
@@ -150,17 +151,18 @@ begin
       exit;
     end;
 
-  rec.Amount          := edAmount.value;
+  rec.AmountInCurrency          := edAmount.value;
   rec.Description     := edDescription.text;
   rec.Notes           := memNotes.Text;
   rec.PaymentType     := kbmPayType.FieldByName('payType').asstring;
-  rec.InvoiceBalance  := balance;
+  rec.InvoiceBalanceInCurrency  := balance;
 end;
 
 
 procedure TfrmDownPayment.btnManagePaycardsClick(Sender: TObject);
 begin
-  ManagePaymentCards(rec.Reservation, rec.RoomReservation);
+  ManagePaymentCards(rec.Reservation, rec.RoomReservation, pcmCardsOnly);
+  EnableDisableButtonViewPayCard;
 end;
 
 procedure TfrmDownPayment.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -176,7 +178,7 @@ begin
   zCanClose := true;
 end;
 
-procedure TfrmDownPayment.ShowOrHideButtonViewPayCard;
+procedure TfrmDownPayment.EnableDisableButtonViewPayCard;
 var
   channelId: integer;
 begin
@@ -192,7 +194,8 @@ var
    defaultType : string;
 
 begin
-  edAmount.Value                 := rec.Amount;
+  lbCurrency.Caption             := rec.Currency;
+  edAmount.Value                 := rec.AmountInCurrency;
   edDescription.text             := rec.Description;
   memNotes.Text                  := rec.Notes;
 
@@ -218,12 +221,12 @@ begin
     freeandnil(rSet);
   end;
 
-  ShowOrHideButtonViewPayCard;
+  EnableDisableButtonViewPayCard;
 end;
 
 procedure TfrmDownPayment.btnGetInvoiceBalanceClick(Sender: TObject);
 begin
-  edAmount.value := rec.InvoiceBalance;
+  edAmount.value := rec.InvoiceBalanceInCurrency;
 end;
 
 procedure TfrmDownPayment.tvPayTypeDblClick(Sender: TObject);

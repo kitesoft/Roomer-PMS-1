@@ -30,8 +30,8 @@ type
     FExpireDate: String;
     FCardNumber: String;
     function GetCardNumber: String;
-     public
-       constructor Create(id : Integer;
+  public
+     constructor Create(id : Integer;
                   Reservation : Integer;
                   RoomReservation : Integer;
                   Token : String;
@@ -47,22 +47,24 @@ type
                   CardNumber : String;
                   ExpireDate : String);
 
-       property id : Integer read Fid write Fid;
-       property Reservation : Integer read FReservation write FReservation;
-       property RoomReservation : Integer read FRoomReservation write FRoomReservation;
-       property Token : String read FToken write FToken;
-       property Enabled : Boolean read FEnabled write FEnabled;
-       property NameOnCard : String read FNameOnCard write FNameOnCard;
-       property CardType : String read FCardType write FCardType;
-       property UserId : String read FUserId write FUserId;
-       property Description : String read FDescription write FDescription;
-       property Notes : String read FNotes write FNotes;
-       property Created : TDateTime read FCreated write FCreated;
-       property Room : String read FRoom write FRoom;
-       property Source : String read FSource write FSource;
-       property CardNumber : String read GetCardNumber write FCardNumber;
-       property ExpireDate : String read FExpireDate write FExpireDate;
-     end;
+     function Clone: TToken;
+
+     property id : Integer read Fid write Fid;
+     property Reservation : Integer read FReservation write FReservation;
+     property RoomReservation : Integer read FRoomReservation write FRoomReservation;
+     property Token : String read FToken write FToken;
+     property Enabled : Boolean read FEnabled write FEnabled;
+     property NameOnCard : String read FNameOnCard write FNameOnCard;
+     property CardType : String read FCardType write FCardType;
+     property UserId : String read FUserId write FUserId;
+     property Description : String read FDescription write FDescription;
+     property Notes : String read FNotes write FNotes;
+     property Created : TDateTime read FCreated write FCreated;
+     property Room : String read FRoom write FRoom;
+     property Source : String read FSource write FSource;
+     property CardNumber : String read GetCardNumber write FCardNumber;
+     property ExpireDate : String read FExpireDate write FExpireDate;
+   end;
 
   TTokenCharge = class
   private
@@ -87,7 +89,7 @@ type
         authCode : String; operationType : String; operationResultCode : String; operationResultDescription : String;
         gatewayName : String; gatewayReference : String; gatewayResultCode : String; gatewayResultDescription : String;
         created : TDateTime);
-
+    destructor Destroy; override;
     property id: Integer read Fid write Fid;
     property Reservation: integer read FReservation write FReservation;
     property RoomReservation: integer read FRoomReservation write FRoomReservation;
@@ -116,6 +118,25 @@ implementation
 uses TypInfo, uD, cmpRoomerDataset, SysUtils, hData, uAppGlobal;
 
 { TToken }
+
+function TToken.Clone: TToken;
+begin
+  Result := TToken.Create(id,
+                  Reservation,
+                  RoomReservation,
+                  Token,
+                  Enabled,
+                  NameOnCard,
+                  CardType,
+                  UserId,
+                  Description,
+                  Notes,
+                  Created,
+                  Room,
+                  Source,
+                  CardNumber,
+                  ExpireDate);
+end;
 
 constructor TToken.Create(id, Reservation, RoomReservation: Integer; Token: String; Enabled: Boolean; NameOnCard, CardType, UserId, Description, Notes: String;
   Created: TDateTime; Room, Source: String;
@@ -153,7 +174,7 @@ constructor TTokenCharge.Create(id: Integer; token : TToken; Reservation: intege
 begin
   FReservation := Reservation;
   FRoomReservation := Roomreservation;
-  Ftoken := token;
+  Ftoken := token.Clone;
   FoperationResultDescription := operationResultDescription;
   FgatewayResultDescription := gatewayResultDescription;
   FcurrencyRate := currencyRate;
@@ -271,6 +292,12 @@ end;
 function TPCITokenOperationTypeHelper.ToString: string;
 begin
   result := GetEnumName(TypeInfo(TPCITokenOperationType), Ord(Self));
+end;
+
+destructor TTokenCharge.Destroy;
+begin
+  FToken.Free;
+  inherited;
 end;
 
 end.
