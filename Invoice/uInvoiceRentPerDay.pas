@@ -77,12 +77,15 @@ uses
   , uInvoiceDefinitions, uRoomerBookingDataModel_ModelObjects
   , Spring.Collections.Lists
   , Spring.Collections, cxCheckBox, cxCurrencyEdit, sSplitter
+  , RoomerExceptionHandling, ufraCurrencyPanel
   ;
 
 type
   TCreditType = (ctManual, ctReference, ctErr);
   TInvoiceSaveType = (stProvisionally, stProforma, stDefinitive);
 
+
+  EInvocieException = class(ERoomerUserException);
 {$M+}
   TRoomInfoList = TObjectlist<TInvoiceRoomEntity>;
 
@@ -122,7 +125,6 @@ type
     SendItemToGroupInvoice: TMenuItem;
     pnlHead: TsPanel;
     clabCurrency: TsLabel;
-    edtDisplayCurrency: TsEdit;
     actInvoiceActions: TActionList;
     actSaveAndExit: TAction;
     actPrintInvoice: TAction;
@@ -135,14 +137,11 @@ type
     actMoveRoomToTemp: TAction;
     actMoveItemToTemp: TAction;
     actMoveItemToGroupInvoice: TAction;
-    edtRate: TsEdit;
-    clabRate: TsLabel;
     timCloseInvoice: TTimer;
     edtInvRefrence: TsLabel;
     clabRefrence: TsLabel;
     GuestName1: TMenuItem;
     Refrence1: TMenuItem;
-    btnGetCurrency: TsButton;
     clabInvoice: TsLabel;
     edtRoomGuest: TsLabel;
     clabRoomGuest: TsLabel;
@@ -362,11 +361,12 @@ type
     actDeleteDownPayment: TAction;
     btnDeleteDownpayment: TsButton;
     splExtraInfo: TsSplitter;
+    fraInvoiceCurrency: TfraCurrencyPanel;
     procedure FormCreate(Sender: TObject);
     procedure agrLinesMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
     procedure edtCustomerDblClick(Sender: TObject);
     procedure agrLinesGetEditText(Sender: TObject; ACol, ARow: integer; var Value: string);
-    procedure edtDisplayCurrencyDblClick(Sender: TObject);
+    procedure evtCurrencyChangedAndValid(Sender: TObject);
     procedure agrLinesDrawCell(Sender: TObject; ACol, ARow: integer; Rect: TRect; State: TGridDrawState);
     procedure rgrInvoiceTypeClick(Sender: TObject);
     procedure actSaveAndExitExecute(Sender: TObject);
@@ -475,11 +475,6 @@ type
     zbRoomRentinTemp: boolean;
     FInvoiceLinesList: TInvoiceLineList;
 
-    // Global currency and Rate
-    zCurrentCurrency: string;
-    zCurrencyRate: Double;
-    zNativeCurrency: string;
-
     zErr: boolean;
 
     tempInvoiceNo: integer;
@@ -504,6 +499,7 @@ type
     FInvoiceIndexTotals: TInvoiceIndexTotalList;
 
     FTaxAPIResponse : TxsdRoomRentTaxReceiptList;
+    FInvoiceCurrency: string;
 
     procedure LoadInvoice;
     procedure loadInvoiceToMemtable(var m: TKbmMemTable);
@@ -669,6 +665,9 @@ type
     procedure RetrieveTaxesforRoomReservation(aReservation, aRoomreservation: integer);
     procedure LoadPayments;
     procedure SetHeaderChanged(const Value: boolean);
+    procedure SetInvoiceCurrency(const Value: string);
+
+    function InvoiceCurrencyRate: double;
 
     property InvoiceIndex: TInvoiceIndex read FInvoiceIndex write SetInvoiceIndex;
     property AnyRowChecked: boolean read GetAnyRowSelected;
@@ -685,6 +684,7 @@ type
     procedure WndProc(var message: TMessage); override;
     property Reservation: integer read FReservation write FReservation;
     property RoomReservation: integer read FRoomReservation write FRoomReservation;
+    property InvoiceCurrency: string read FInvoiceCurrency write SetInvoiceCurrency;
   published
     property lineCount: integer read GetInvoiceLineCount;
   end;
@@ -762,13 +762,17 @@ const
   // WM_StartUpLists = WM_User + 381;
   WM_REDRAW_LINE = WM_User + 290;
 
-  REMOVE_CURRENT_PROFORMA_INVOICE: Array [0 .. 2] OF String = ('DELETE FROM invoicelines WHERE invoiceNumber=%d',
-    'DELETE FROM invoiceheads WHERE invoiceNumber=%d', 'DELETE FROM payments WHERE invoiceNumber=%d');
+  REMOVE_CURRENT_PROFORMA_INVOICE: Array [0 .. 2] OF String = (
+    'DELETE FROM invoicelines WHERE invoiceNumber=%d',
+    'DELETE FROM invoiceheads WHERE invoiceNumber=%d',
+    'DELETE FROM payments WHERE invoiceNumber=%d',
+    'DELETE FROM invoiceaddressees WHERE invoiceNumber=%d');
 
   REMOVE_REDUNDANT_INVOICES: Array [0 .. 2] OF String = (
     // Credit invoices                          // Proforma invoices
     'DELETE FROM invoicelines WHERE (SplitNumber = 1 AND InvoiceNumber = -1) OR (InvoiceNumber > 1000000000)',
     'DELETE FROM invoiceheads WHERE (SplitNumber = 1 AND InvoiceNumber = -1) OR (InvoiceNumber > 1000000000)',
+    'DELETE FROM invoiceaddressees WHERE (SplitNumber = 1 AND InvoiceNumber = -1) OR (InvoiceNumber > 1000000000)',
     'DELETE FROM payments WHERE InvoiceNumber > 1000000000');
 
 procedure EditInvoiceRentPerDay(reservation, RoomReservation, SplitNumber, InvoiceIndex: integer; bCredit: boolean);
@@ -782,7 +786,6 @@ begin
     _frmInvoice.FnewSplitNumber := SplitNumber;
     _frmInvoice.FInvoiceIndex := InvoiceIndex;
     _frmInvoice.FIsCredit := bCredit;
-    _frmInvoice.zNativeCurrency := ctrlGetString('NativeCurrency');
 
     _frmInvoice.ShowModal;
   finally
@@ -1142,11 +1145,11 @@ begin
     .FormattedValueWithCode(aInvoiceLine.TotalRevenue);
 
   lValue := FCurrencyhandlersMap.ConvertAmount(aInvoiceLine.AmountOnInvoice, aInvoiceLine.Currency,
-    edtDisplayCurrency.Text);
+    fraInvoiceCurrency.CurrencyCode);
   if SameValue(lValue, 0.00, 0.01) then
     agrLines.Cells[col_TotalOnInvoice, ARow] := ''
   else
-    agrLines.Cells[col_TotalOnInvoice, ARow] := FCurrencyhandlersMap.CurrencyHandler[edtDisplayCurrency.Text]
+    agrLines.Cells[col_TotalOnInvoice, ARow] := FCurrencyhandlersMap.CurrencyHandler[fraInvoiceCurrency.CurrencyCode]
       .FormattedValueWithCode(lValue); // trim(_floattostr(lAmountOnInvoice * lDisplayCurrencyRate, vWidth, vDec));
 
   agrLines.Cells[col_System, ARow] := '';
@@ -1197,8 +1200,8 @@ begin
       labLodgingTax.Caption := FormattedValueWithCode(FInvoiceLinesList.TotalCityTaxRevenues);
     end;
 
-    if (edtDisplayCurrency.Text <> '') and (edtDisplayCurrency.Text <> zNativeCurrency) then
-      with FCurrencyhandlersMap.CurrencyHandler[edtDisplayCurrency.Text] do
+    if (fraInvoiceCurrency.CurrencyCode <> '') and (fraInvoiceCurrency.CurrencyCode <> g.qNativeCurrency) then
+      with FCurrencyhandlersMap.CurrencyHandler[fraInvoiceCurrency.CurrencyCode] do
         edtForeignCurrency.Text := FormattedValueWithCode(ConvertFrom(nativeTotal, g.qNativeCurrency));
 
     labLodgingTaxNights.Caption := inttostr(trunc(FInvoiceLinesList.CityTaxUnitCount));
@@ -1334,8 +1337,8 @@ begin
   s := s + ', ' + _db(zInvoiceDate);
   s := s + ', ' + _db(zConfirmDate);
   s := s + ', ' + _db(zPayDate);
-  s := s + ', ' + _db(edtDisplayCurrency.Text);
-  s := s + ', ' + _db(_StrToFloat(edtRate.Text));
+  s := s + ', ' + _db(fraInvoiceCurrency.CurrencyCode);
+  s := s + ', ' + _db(fraInvoiceCurrency.CurrencyRate);
   s := s + ', ' + _db(zLocation);
 
   s := s + ')' + #10;
@@ -1985,7 +1988,7 @@ begin
       ItemPrice := 0;
     end;
 
-    ItemPrice := iMultiplier * zCurrencyRate * ItemPrice;
+    ItemPrice := iMultiplier * InvoiceCurrencyRate * ItemPrice;
     TotalPrice := ItemCount * ItemPrice * iMultiplier;
 
     lInvRoom := TInvoiceRoomEntity.Create(lineItem, 1, 0, ItemCount, TotalPrice, g.qNativeCurrency, 1.0, 0, 0, false);
@@ -2026,8 +2029,8 @@ begin
     // _CommaToDot(floattostr(iMultiplier * fItemTotalWOVat));
     m.FieldByName('VAT').AsFloat := fVat;
     // _CommaToDot(floattostr(iMultiplier * fItemTotalVAT));
-    m.FieldByName('CurrencyRate').AsFloat := zCurrencyRate;
-    m.FieldByName('Currency').asString := edtDisplayCurrency.Text;
+    m.FieldByName('CurrencyRate').AsFloat := InvoiceCurrencyRate;
+    m.FieldByName('Currency').asString := InvoiceCurrency;
     m.FieldByName('Persons').asinteger := iPersons;
     m.FieldByName('Nights').asinteger := iNights;
     m.FieldByName('BreakfastPrice').AsFloat := 0.00;
@@ -2129,7 +2132,7 @@ begin
 
     if FInvoiceIndexTotals.HasInvoiceLines[i] then
     begin
-      lInvLinesIndicator.Hint := FCurrencyhandlersMap.CurrencyHandler[edtDisplayCurrency.Text].FormattedValueWithCode(FInvoiceIndexTotals.TotalInvoiceLinesOnIndex[i]);
+      lInvLinesIndicator.Hint := FCurrencyhandlersMap.CurrencyHandler[fraInvoiceCurrency.CurrencyCode].FormattedValueWithCode(FInvoiceIndexTotals.TotalInvoiceLinesOnIndex[i]);
       lInvLinesIndicator.Brush.Color := clRed; // $00C1FFFF;
     end;
     lInvLinesIndicator.Visible := FInvoiceIndexTotals.HasInvoiceLines[i];
@@ -2138,7 +2141,7 @@ begin
     lRoomRentIndicator.Brush.Color := clWhite;
     if FInvoiceIndexTotals.HasRoomRentItems[i] then
     begin
-      lRoomRentIndicator.Hint := FCurrencyhandlersMap.CurrencyHandler[edtDisplayCurrency.Text].FormattedValueWithCode(FInvoiceIndexTotals.TotalRoomRentOnIndex[i]);
+      lRoomRentIndicator.Hint := FCurrencyhandlersMap.CurrencyHandler[fraInvoiceCurrency.CurrencyCode].FormattedValueWithCode(FInvoiceIndexTotals.TotalRoomRentOnIndex[i]);
       lRoomRentIndicator.Brush.Color := clBlue; // $00FFCFA8;
     end;
     lRoomRentIndicator.Visible := FInvoiceIndexTotals.HasRoomRentItems[i];
@@ -2294,15 +2297,10 @@ begin
     zConfirmDate := 2;
     zbRoomRentinTemp := false;
 
-    edResNr.Caption := format('%d / %d', [FReservation, FRoomReservation]);
-
     if FnewSplitNumber = cCashInvoice then
     begin
       CreateCashInvoice(g.qRackCustomer);
-      edtDisplayCurrency.Text := zNativeCurrency;
-      zCurrentCurrency := edtDisplayCurrency.Text;
-      zCurrencyRate := GetRate(zCurrentCurrency);
-      edtRate.Text := floattostr(zCurrencyRate);
+      InvoiceCurrency := g.qNativeCurrency;
       InitInvoiceGrid;
       exit;
     end;
@@ -2369,10 +2367,7 @@ begin
         btnClearAddresses.Enabled := rgrInvoiceType.itemIndex <> 1;
       end;
 
-      edtDisplayCurrency.Text := trim(zrSet.FieldByName('ihCurrency').asString);
-      zCurrentCurrency := edtDisplayCurrency.Text;
-      zCurrencyRate := GetRate(zCurrentCurrency);
-      edtRate.Text := floattostr(zCurrencyRate);
+      InvoiceCurrency := trim(zrSet.FieldByName('ihCurrency').asString);
       memExtraText.Lines.Text := trim(zrSet.FieldByName('ExtraText').asString);
 
     end
@@ -2400,7 +2395,7 @@ begin
 
       zrSet.first;
       // INS-InvoiceHead
-      // If there is no tmp invoice then create it
+      // If there is no invoiceheader then create it
       // and goto label Again
       if not zrSet.eof then
       begin
@@ -2827,9 +2822,6 @@ begin
 
   tempInvoiceItemList.Clear;
 
-  zCurrentCurrency := edtDisplayCurrency.Text;
-  zCurrencyRate := GetRate(zCurrentCurrency);
-
   for i := 1 to agrLines.RowCount - 1 do
   begin
     Item := _trimlower(agrLines.Cells[col_Item, i]);
@@ -2844,7 +2836,7 @@ begin
       itemVAT := 0.00;
       if ItemPrice <> 0 then
       begin
-        lInvRoom := TInvoiceRoomEntity.Create(Item, taxGuests, 0, taxNights, ItemPrice, zCurrentCurrency, zCurrencyRate, 0, 0, false);
+        lInvRoom := TInvoiceRoomEntity.Create(Item, taxGuests, 0, taxNights, ItemPrice, InvoiceCurrency, InvoiceCurrencyRate, 0, 0, false);
         try
           itemVAT := GetVATForItem(Item, ItemPrice, 1, lInvRoom, tempInvoiceItemList, ItemTypeInfo, edtCustomer.Text);
           // BHG
@@ -2883,9 +2875,6 @@ var
   lInvLine: TInvoiceLine;
 
 begin
-
-  zCurrentCurrency := edtDisplayCurrency.Text;
-  zCurrencyRate := GetRate(zCurrentCurrency);
 
   itemVAT := 0.00;
 
@@ -2927,7 +2916,7 @@ begin
         lInvRoom := nil;
         if not SameValue(ItemPrice, 0) then
         begin
-          lInvRoom := TInvoiceRoomEntity.Create(Item, taxGuests, taxChildren, taxNights, ItemPrice, zCurrentCurrency, zCurrencyRate, 0, Discount,
+          lInvRoom := TInvoiceRoomEntity.Create(Item, taxGuests, taxChildren, taxNights, ItemPrice, InvoiceCurrency, InvoiceCurrencyRate, 0, Discount,
             lBreakfastIncl);
           lInvRoom.Vat := GetVATForItem(Item, ItemPrice, 1, lInvRoom, tempInvoiceItemList, ItemTypeInfo,
             edtCustomer.Text);
@@ -2940,7 +2929,7 @@ begin
           if assigned(lInvRoom) then
             RoomInvoiceLines.Add(lInvRoom)
           else
-            RoomInvoiceLines.Add(TInvoiceRoomEntity.Create(Item, taxGuests, taxChildren, taxNights, ItemPrice, zCurrentCurrency, zCurrencyRate, itemVAT,
+            RoomInvoiceLines.Add(TInvoiceRoomEntity.Create(Item, taxGuests, taxChildren, taxNights, ItemPrice, InvoiceCurrency, InvoiceCurrencyRate, itemVAT,
               Discount, lBreakfastIncl));
 
         ItemInvoiceLines.Add(TInvoiceItemEntity.Create(Item, taxNights, ItemPrice, itemVAT));
@@ -3128,8 +3117,6 @@ begin
 
   vDec := 2;
 
-  zCurrencyRate := 1.00;
-
 end;
 
 procedure TfrmInvoiceRentPerDay.FormDestroy(Sender: TObject);
@@ -3172,6 +3159,8 @@ begin
   actToggleLodgingTax.Visible := glb.PMSSettings.InvoiceSettings.AllowTogglingOfCityTaxes;
   actDeleteDownPayment.Visible := glb.PMSSettings.InvoiceSettings.AllowPaymentModification;
   actEditDownPayment.Visible := glb.PMSSettings.InvoiceSettings.AllowPaymentModification;
+
+  fraInvoiceCurrency.OnCurrencyChangeAndValid := evtCurrencyChangedAndValid;
 
   LoadInvoice;
   UpdateCaptions;
@@ -3333,6 +3322,8 @@ var
 begin
   Caption := GetTranslatedText('shUI_InvoiceCaption');
 
+  edResNr.Caption := format('%d / %s', [FReservation, iif(FRoomReservation > 0, IntToStr(FRoomReservation), GetTranslatedText('shUI_OnGroupInvoice')]);
+
   agrLines.Col := 0;
   agrLines.row := 1;
 
@@ -3428,7 +3419,7 @@ begin
         begin
           if assigned(lInvLine.RoomEntity) then
             lGotoRoomRes := lInvLine.RoomEntity.RoomReservation;
-          if EditRoomRates(lROomResList, FInvoiceIndex, zCurrentCurrency, lGotoRoomRes) then
+          if EditRoomRates(lROomResList, FInvoiceIndex, InvoiceCurrency, lGotoRoomRes) then
           begin
             SaveAnd(false);
             zFirsttime := false;
@@ -3494,8 +3485,8 @@ begin
       d.GetRoomReservationLocations(FRoomReservation, lstLocations);
 
     lOpenBalance := FInvoiceLinesList.TotalOnInvoiceNativeCurrency - getDownPayments;
-    if SelectPaymentTypes(lOpenBalance, edtCustomer.Text, ptInvoice, edtDisplayCurrency.Text,
-      GetRate(edtDisplayCurrency.Text), FReservation, FRoomreservation, lstLocations, aInvoiceDate, aPayDate, aLocation) then
+    if SelectPaymentTypes(lOpenBalance, edtCustomer.Text, ptInvoice, fraInvoiceCurrency.CurrencyCode,
+      GetRate(fraInvoiceCurrency.CurrencyCode), FReservation, FRoomreservation, lstLocations, aInvoiceDate, aPayDate, aLocation) then
       with FCurrencyhandlersMap.CurrencyHandler[g.qNativeCurrency] do
         result := (RoundedValue(GatherPayments(stlPaySelections)) = RoundedValue(lOpenBalance));
 
@@ -3570,7 +3561,7 @@ begin
     _db(memExtraText.Lines.Text),
     _db(edtPersonalId.Text),
     rgrInvoiceType.itemIndex,
-    _db(zCurrentCurrency)
+    _db(InvoiceCurrency)
   ]);
 
   s := s + format(
@@ -3598,7 +3589,7 @@ begin
       _db(memExtraText.Lines.Text),
       _db(edtPersonalId.Text),
       rgrInvoiceType.itemIndex,
-      _db(zCurrentCurrency)
+      _db(invoiceCurrency)
     ]);
 
   copytoclipboard(s);
@@ -3704,8 +3695,8 @@ begin
   s := s + ', ' + _db(zConfirmDate, True);
   s := s + ', ' + _db(zPayDate, True);
   s := s + ', ' + _db(edtInvRefrence.Caption);
-  s := s + ', ' + _db(edtDisplayCurrency.Text);
-  s := s + ', ' + _db(GetRate(edtDisplayCurrency.Text));
+  s := s + ', ' + _db(fraInvoiceCurrency.CurrencyCode);
+  s := s + ', ' + _db(GetRate(fraInvoiceCurrency.CurrencyCode));
   s := s + ', ' + _db(showPackageItems);
   s := s + ', ' + _db(aInvoiceLocation);
   s := s + ', ' + _db(FInvoiceLinesList.TotalCityTaxRevenues);
@@ -3774,9 +3765,6 @@ begin
             0) = mrYes) then
             d.copyInvoiceToInvoiceLinesTmp(zRefNum, True);
         end;
-
-        // zDoSave := false;
-        // SaveAnd(false);                           //????????????
 
         try
           result := True;
@@ -4035,8 +4023,8 @@ begin
     end
     else
     begin
-      s := s + ', ' + _db(GetRate(edtDisplayCurrency.Text));
-      s := s + ', ' + _db(edtDisplayCurrency.Text);
+      s := s + ', ' + _db(GetRate(fraInvoiceCurrency.CurrencyCode));
+      s := s + ', ' + _db(fraInvoiceCurrency.CurrencyCode);
     end;
     s := s + ', ' + _db(aInvoiceLine.noGuests);
     s := s + ', ' + _db(iNights);
@@ -4078,8 +4066,8 @@ begin
     end
     else
     begin
-      s := s + ' , CurrencyRate= ' + _db(GetRate(edtDisplayCurrency.Text));
-      s := s + ' , Currency= ' + _db(edtDisplayCurrency.Text);
+      s := s + ' , CurrencyRate= ' + _db(GetRate(fraInvoiceCurrency.CurrencyCode));
+      s := s + ' , Currency= ' + _db(fraInvoiceCurrency.CurrencyCode);
     end;
 
     s := s + ' , Persons= ' + _db(aInvoiceLine.noGuests) + ' , Nights= ' + _db(iNights) + ' , ilAccountKey= ' +
@@ -4097,6 +4085,14 @@ begin
       MarkRoomRentAsPaid(aInvoiceLine, aInvoiceNumber, aExecPlan);
     RemoveInvoicelineVisibilityRecord(aInvoiceLine, aInvoiceNumber, aExecPlan);
   end;
+end;
+
+function TfrmInvoiceRentPerDay.InvoiceCurrencyRate: double;
+begin
+  if fraInvoiceCurrency.IsValid then
+    result := fraInvoiceCurrency.CurrencyRate
+  else
+    result := 1.0;
 end;
 
 procedure TfrmInvoiceRentPerDay.MarkRoomRentAsPaid(aInvLine: TInvoiceLine; aInvoiceNumber: integer;
@@ -4189,8 +4185,8 @@ begin
     s := s + ', ' + _db(lPaymentType);
     s := s + ', ' + _db(lPaymentValue);
     s := s + ', ' + _db(lPaymentDesc);
-    s := s + ', ' + _db(GetRate(edtDisplayCurrency.Text));
-    s := s + ', ' + _db(edtDisplayCurrency.Text);
+    s := s + ', ' + _db(GetRate(fraInvoiceCurrency.CurrencyCode));
+    s := s + ', ' + _db(fraInvoiceCurrency.CurrencyCode);
     s := s + ', 0';
 
     s := s + ', ' + inttostr(lYear);
@@ -4697,7 +4693,7 @@ begin
 end;
 
 // -- The original Invoice contains a special field which links it to the
-// subceeding credit invoice. This is for traceback puurposes.
+// subceeding credit invoice. This is for traceback purposes.
 procedure TfrmInvoiceRentPerDay.MarkOriginalInvoiceAsCredited(iInvoice: integer);
 var
   s: string;
@@ -4708,9 +4704,7 @@ begin
   s := s + '  CreditInvoice ' + ' = ' + _db(iInvoice) + #10;
   s := s + ' where InvoiceNumber = ' + _db(zRefNum);
   if not cmd_bySQL(s) then
-  begin
-    ShowMessage('MarkOriginalInvoiceAsCredited');
-  end;
+    raise EInvocieException.CreateFmt('Marking invoice [%d] as credited failed', [zRefNum]);
 end;
 
 procedure TfrmInvoiceRentPerDay.MoveRoomToGroupInvoice;
@@ -4786,7 +4780,7 @@ begin
   end;
 end;
 
-procedure TfrmInvoiceRentPerDay.edtDisplayCurrencyDblClick(Sender: TObject);
+procedure TfrmInvoiceRentPerDay.evtCurrencyChangedAndValid(Sender: TObject);
 var
   theData: recCurrencyHolder;
   oldCurrency: string;
@@ -4794,10 +4788,10 @@ begin
   if not IfInvoiceChangedThenOptionallySave(True) then
     exit;
 
-  oldCurrency := trim(edtDisplayCurrency.Text);
-  theData.Currency := oldCurrency;
-  if Currencies(actLookup, theData) and (theData.Currency <> '') then
-    ExecuteCurrencyChange(oldCurrency, theData.Currency);
+  oldCurrency := InvoiceCurrency;
+  InvoiceCurrency := fraInvoiceCurrency.CurrencyCode;
+  if oldCurrency <> InvoiceCurrency then
+    ExecuteCurrencyChange(oldCurrency, InvoiceCurrency);
 end;
 
 procedure TfrmInvoiceRentPerDay.agrLinesDrawCell(Sender: TObject; ACol, ARow: integer; Rect: TRect;
@@ -4846,9 +4840,9 @@ begin
   if aFromCurrency.ToLower.Equals(aToCurrency.ToLower) then
     exit;
 
-  zCurrentCurrency := aToCurrency;
-  lOldRate := GetRate(aFromCurrency);
-  lNewRate := GetRate(aToCurrency);
+  lOldRate := InvoiceCurrencyRate;
+  InvoiceCurrency := aToCurrency;
+  lNewRate := InvoiceCurrencyRate;
 
   if lNewRate = 0 then
     lNewRate := 1;
@@ -4957,6 +4951,12 @@ begin
     FHeaderChanged := value;
     chkChanged;
   end;
+end;
+
+procedure TfrmInvoiceRentPerDay.SetInvoiceCurrency(const Value: string);
+begin
+  FInvoiceCurrency := Value;
+  fraInvoiceCurrency.CurrencyCode := Value;
 end;
 
 procedure TfrmInvoiceRentPerDay.SetInvoiceIndex(const Value: TInvoiceIndex);
@@ -5854,8 +5854,8 @@ begin
     theData.PayDate := _db(Date, false);
     theData.Amount := rec.Amount;
     theData.Description := rec.Description;
-    theData.CurrencyRate := zCurrencyRate; // ATH
-    theData.Currency := zCurrentCurrency;
+    theData.CurrencyRate := InvoiceCurrencyRate; // ATH
+    theData.Currency := InvoiceCurrency;
     theData.ConfirmDate := 2; // _db('1900-01-01 00:00:00');
     theData.Notes := rec.Notes;
     theData.PayType := rec.PaymentType;
@@ -6261,7 +6261,7 @@ begin
   end;
   TotalWOVat := Total - Vat;
 
-  Currency := edtDisplayCurrency.Text;
+  Currency := fraInvoiceCurrency.CurrencyCode;
   CurrencyRate := GetRate(Currency);
   edtRate.Text := floattostr(CurrencyRate);
 
@@ -6427,7 +6427,7 @@ begin
   ItemTypeInfo := d.Item_Get_ItemTypeInfo(ItemId, agrLines.Cells[col_Source, CurrentRow]);
 
   lInvRoom := TInvoiceRoomEntity.Create(agrLines.Cells[col_Item, CurrentRow], 1, 0,
-    _StrToFloat(agrLines.Cells[col_ItemCount, CurrentRow]), _StrToFloat(agrLines.Cells[col_ItemPrice, CurrentRow]), zCurrentCurrency, zCurrencyRate, 0,
+    _StrToFloat(agrLines.Cells[col_ItemCount, CurrentRow]), _StrToFloat(agrLines.Cells[col_ItemPrice, CurrentRow]), InvoiceCurrency, InvoiceCurrencyRate, 0,
     0, false);
   try
     TotalVAT := GetVATForItem(agrLines.Cells[col_Item, CurrentRow], Total,
@@ -6687,7 +6687,7 @@ begin
         ItemTypeInfo := d.Item_Get_ItemTypeInfo(ItemId, agrLines.Cells[col_Source, CurrentRow]);
 
         lInvRoom := TInvoiceRoomEntity.Create(agrLines.Cells[col_Item, CurrentRow], 1, 0,
-          _StrToFloat(agrLines.Cells[col_ItemCount, CurrentRow]), CurrentRow, zCurrentCurrency, zCurrencyRate, 0, 0, false);
+          _StrToFloat(agrLines.Cells[col_ItemCount, CurrentRow]), CurrentRow, InvoiceCurrency, InvoiceCurrencyRate, 0, 0, false);
         try
           TotalVAT := GetVATForItem(agrLines.Cells[col_Item, CurrentRow], Total,
             _StrToFloat(agrLines.Cells[col_ItemCount, CurrentRow]), lInvRoom, tempInvoiceItemList, ItemTypeInfo,
