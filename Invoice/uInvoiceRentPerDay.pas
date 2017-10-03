@@ -677,21 +677,19 @@ type
     { Public declarations }
     FnewSplitNumber: integer; // 0 = herbergjareikningur
     FIsCredit: boolean;
-    zFromKredit: boolean;
 
     OriginalInvoiceStatus: Double;
     constructor Create(aOwner: TComponent); override;
     destructor Destroy; override;
     procedure UpdateCaptions;
     procedure WndProc(var message: TMessage); override;
-    property reservation: integer read FReservation write FReservation;
+    property Reservation: integer read FReservation write FReservation;
     property RoomReservation: integer read FRoomReservation write FRoomReservation;
   published
     property lineCount: integer read GetInvoiceLineCount;
   end;
 
-procedure EditInvoiceRentPerDay(reservation, RoomReservation, SplitNumber, InvoiceIndex: integer; bCredit: boolean;
-  FromKredit: boolean = false);
+procedure EditInvoiceRentPerDay(reservation, RoomReservation, SplitNumber, InvoiceIndex: integer; bCredit: boolean);
 
 implementation
 
@@ -773,8 +771,7 @@ const
     'DELETE FROM invoiceheads WHERE (SplitNumber = 1 AND InvoiceNumber = -1) OR (InvoiceNumber > 1000000000)',
     'DELETE FROM payments WHERE InvoiceNumber > 1000000000');
 
-procedure EditInvoiceRentPerDay(reservation, RoomReservation, SplitNumber, InvoiceIndex: integer; bCredit: boolean;
-  FromKredit: boolean = false);
+procedure EditInvoiceRentPerDay(reservation, RoomReservation, SplitNumber, InvoiceIndex: integer; bCredit: boolean);
 var
   _frmInvoice: TfrmInvoiceRentPerDay;
 begin
@@ -786,7 +783,6 @@ begin
     _frmInvoice.FInvoiceIndex := InvoiceIndex;
     _frmInvoice.FIsCredit := bCredit;
     _frmInvoice.zNativeCurrency := ctrlGetString('NativeCurrency');
-    _frmInvoice.zFromKredit := FromKredit;
 
     _frmInvoice.ShowModal;
   finally
@@ -1232,9 +1228,6 @@ var
   lItemInfo: TItemTypeInfo;
   lInvLine: TInvoiceLine;
 begin
-  if zFromKredit then
-    exit;
-
   ConfirmDate := 2;
   ConfirmAmount := 0;
 
@@ -1763,9 +1756,6 @@ var
   tt, l: integer;
   lCalcOptions: TInvoiceCityTaxCalculationOptions;
 begin
-  if zFromKredit then
-    exit;
-
   RemoveTaxinvoiceLinesForRoomItem(aInvLine);
 
   FStayTaxEnabled := ctrlGetBoolean('useStayTax') AND RV_useStayTax(FReservation);
@@ -1817,8 +1807,6 @@ var
   iList: IList<TxsdRoomRentTaxReceiptType>;
   lObject: TxsdRoomRentTaxReceiptType;
 begin
-  if zFromKredit then
-    exit;
 
   RemoveTaxinvoiceLinesForRoomItem(aInvLine);
 
@@ -2988,7 +2976,7 @@ var
   lItem: string;
   lItemInfo: TItemTypeInfo;
 begin
-  if zFromKredit or (aIncludedBreakfastCount = 0) then
+  if (aIncludedBreakfastCount = 0) then
     exit;
 
   lItem := g.qBreakFastItem;

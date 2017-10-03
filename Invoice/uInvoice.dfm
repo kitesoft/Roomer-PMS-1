@@ -70,7 +70,6 @@ object frmInvoice: TfrmInvoice
       ParentColor = True
       TabOrder = 0
       SkinData.SkinSection = 'PANEL'
-      ExplicitWidth = 1096
       DesignSize = (
         1178
         166)

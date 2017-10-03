@@ -668,7 +668,7 @@ type
 var
   frmInvoice: TfrmInvoice;
 
-procedure EditInvoice(reservation, RoomReservation, SplitNumber, InvoiceIndex: integer; bCredit: boolean; FromKredit: boolean = false);
+procedure EditInvoice(reservation, RoomReservation, SplitNumber, InvoiceIndex: integer; bCredit: boolean);
 
 implementation
 
@@ -748,14 +748,14 @@ const
     'DELETE FROM payments WHERE InvoiceNumber > 1000000000'
     );
 
-procedure EditInvoice(reservation, RoomReservation, SplitNumber, InvoiceIndex: integer; bCredit: boolean; FromKredit: boolean = false);
+procedure EditInvoice(reservation, RoomReservation, SplitNumber, InvoiceIndex: integer; bCredit: boolean);
 var
   _frmInvoice: TfrmInvoice;
 begin
 
   if (glb.PMSSettings.InvoiceSettings.RoomRentPerDayOninvoice = rpdAlways)  or
     (glb.PMSSettings.InvoiceSettings.RoomRentPerDayOninvoice = rpdAsk) and (MessageDlg(GetTranslatedText('shEditInvoice_RoomRentPerDay'), mtConfirmation, mbYesNo, 0) = mrYes) then
-    EditInvoiceRentPerDay(Reservation, ROomReservation, SplitNumber, InvoiceIndex, bCredit, FromKredit)
+    EditInvoiceRentPerDay(Reservation, ROomReservation, SplitNumber, InvoiceIndex, bCredit)
   else
   begin
     _frmInvoice := TfrmInvoice.create(nil);
@@ -766,7 +766,7 @@ begin
       _frmInvoice.FInvoiceIndex := InvoiceIndex;
       _frmInvoice.FIsCredit := bCredit;
       _frmInvoice.zNativeCurrency := ctrlGetString('NativeCurrency');
-      _frmInvoice.zFromKredit := FromKredit;
+//      _frmInvoice.zFromKredit := FromKredit;
 
       _frmInvoice.ShowModal;
     finally
