@@ -866,15 +866,15 @@ begin
   rec.RoomReservation := RoomReservation;
   rec.Description := GetTranslatedText('shTx_CheckIn_PaymentGuarantee_Downpayment');
   rec.Invoice := -1;
-  rec.Amount := 0;
+  rec.AmountInCurrency := 0;
 
-  rec.InvoiceBalance := FCurrentRealBalance; // ResSetGuest['CurrentBalance'];
+  rec.InvoiceBalanceInCurrency := FCurrentRealBalance; // ResSetGuest['CurrentBalance'];
   rec.NotInvoice := True;
 
   if g.OpenDownPayment(actInsert, rec) then
   begin
     lbPayment.Caption := rec.PaymentType;
-    edAmount.Text := FloatToStr(rec.Amount);
+    edAmount.Text := FloatToStr(rec.AmountInCurrency);
 
     theDownPaymentData.Reservation := Reservation;
     theDownPaymentData.RoomReservation := RoomReservation;
@@ -883,7 +883,7 @@ begin
     theDownPaymentData.invoiceNumber := -1;
     theDownPaymentData.Customer := Customer;
     theDownPaymentData.PayDate := _db(now, false);
-    theDownPaymentData.Amount := rec.Amount;
+    theDownPaymentData.NativeAmount := rec.AmountInCurrency;
     theDownPaymentData.Description := rec.Description;
     theDownPaymentData.CurrencyRate := 1.00; // ATH
     theDownPaymentData.Currency := NativeCurrency;

@@ -69,7 +69,7 @@ type
     Invoice         : integer; // -1
 
     Quantity    : integer; //-
-    Amount      : double ; //Amount
+    AmountInCurrency      : double ; //Amount
     Currency    : string;
     Description : string ; //Description
     Notes       : string ; //Memo
@@ -79,7 +79,7 @@ type
     payGroup     : string ;
     confirmdate  : TdateTime;
 
-    InvoiceBalance : double;
+    InvoiceBalanceInCurrency : double;
 
     NotInvoice : Boolean;
 
@@ -732,7 +732,7 @@ begin
     Invoice         := 0;
 
     Quantity    := 1;
-    Amount      := 0.00;
+    AmountInCurrency      := 0.00;
     Currency    := g.qNativeCurrency;
     //Description := 'Downpayment/inn�grei�sla';
     Description := GetTranslatedText('shTx_G_Downpayment');
@@ -743,7 +743,7 @@ begin
     payGroup     := '';
     confirmdate  := 2;
 
-    invoiceBalance := 0;
+    InvoiceBalanceInCurrency := 0;
 
     NotInvoice := False;
   end;

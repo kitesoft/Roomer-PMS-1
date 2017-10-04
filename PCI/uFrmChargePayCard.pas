@@ -472,7 +472,8 @@ begin
           end;
         end;
       end;
-      result := TTokenCharge.Create(-1, token,
+      result := TTokenCharge.Create(-1,
+                          token,
                           ReservationId,
                           _XML_ROOMRESERVATION,
                           _XML_AMOUNT,

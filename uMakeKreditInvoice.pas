@@ -400,7 +400,7 @@ var
           PayDate            := _db(dtInvoicedate.date,false);
           Customer           := kbmPayments['Customer'];
           PayType            := kbmPayments['PayType'];
-          Amount             := kbmPayments['Amount']*-1;
+          NativeAmount             := kbmPayments['Amount']*-1;
           Description        := kbmPayments['Description'];
           CurrencyRate       := kbmPayments['CurrencyRate'];
           Currency           := kbmPayments['Currency'];

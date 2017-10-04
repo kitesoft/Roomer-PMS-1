@@ -87,8 +87,7 @@ uses PrjConst,
      uG,
      HData,
      uUtils,
-     uStringUtils
-     ;
+     uStringUtils;
 
 function SendNewReservationConfirmation(ReservationId : Integer) : Boolean;
 var
@@ -159,8 +158,13 @@ end;
 
 procedure TFrmReservationEmailingDialog.btnOkClick(Sender: TObject);
 begin
-  SendConfirmationEmail;
-  Close;
+  try
+    SendConfirmationEmail;
+    Close;
+  except
+    ModalResult := mrAbort;
+    raise;
+  end;
 end;
 
 procedure TFrmReservationEmailingDialog.btnResourcesClick(Sender: TObject);

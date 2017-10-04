@@ -102,10 +102,12 @@ type
     CloseOK : boolean;
     err : integer;
 
-    FAmount : Double;
+    FNativeAmount : Double;
     FCustomer : string;
     FReservation: Integer;
     FRoomReservation: Integer;
+    FCurrency: String;
+    FCurrencyRate: Double;
     procedure Recalc;
     procedure FillPayGrid;
     function AlreadyProvidedPayments: Double;
@@ -115,11 +117,13 @@ type
      procedure WndProc(var Message: TMessage); override;
      property Reservation : Integer read FReservation write FReservation;
      property RoomReservation : Integer read FRoomReservation write FRoomReservation;
+     property Currency: String read FCurrency write FCurrency;
+     property CurrencyRate: Double read FCurrencyRate write FCurrencyRate;
   end;
 
 
 // --
-function SelectPaymentTypes( Amount : Double;
+function SelectPaymentTypes( NativeAmount : Double;
                             Customer : string;
                             PaymentType : hdata.TPaymentTypes;
                             Currency : String;
@@ -154,7 +158,7 @@ uses
 
 {$R *.DFM}
 
-function SelectPaymentTypes( Amount : Double;
+function SelectPaymentTypes( NativeAmount : Double;
                              Customer : string;
                              PaymentType : hdata.TPaymentTypes;
                              Currency : String;
@@ -175,13 +179,15 @@ begin
   frm := TfrmInvoicePayment.Create(nil);
   try
 //    Confirmation := '';
-    frm.FAmount := Amount;
-    frm.edtAmount.text := trim( _FloatToStr( Amount, 9, 2 ) );
+    frm.FNativeAmount := NativeAmount;
+    frm.edtAmount.text := trim( _FloatToStr( NativeAmount, 9, 2 ) );
     frm.FCustomer := Customer;
     frm.lblSelected.caption := '0';
-    frm.lblLeft.caption := trim( _FloatToStr( Amount, 9, 2 ) );
+    frm.lblLeft.caption := trim( _FloatToStr( NativeAmount, 9, 2 ) );
     frm.dtInvDate.Date := Date;
     frm.dtPayDate.Date := Date;
+    frm.Currency := Currency;
+    frm.CUrrencyRate := CurrencyRate;
     sSelectedCustomer := Customer;
     stlPaySelections.clear;
 
@@ -220,8 +226,8 @@ begin
       frm.LblForeignCurrencyAmount.Visible := frm.LblForeignCurrency.Visible;
       frm.__LblForeignCurrency.Visible := frm.LblForeignCurrency.Visible;
       frm.__pnlCurrencies.Visible := true;
-      frm.__LblLocalCurrency.Caption := trim(_floattostr(Amount, 10, 2));
-      frm.__LblForeignCurrency.Caption := trim(_floattostr(Amount / CurrencyRate, 10, 2));
+      frm.__LblLocalCurrency.Caption := trim(_floattostr(NativeAmount, 10, 2));
+      frm.__LblForeignCurrency.Caption := trim(_floattostr(NativeAmount / CurrencyRate, 10, 2));
       frm.LblLocalCurrency.Caption := ctrlGetString('NativeCurrency');
       frm.LblForeignCurrency.Caption := Currency;
     end;
@@ -325,7 +331,7 @@ begin
 
   end;
 
-  fLeft               := FAmount - fSelected;
+  fLeft               := FNativeAmount - fSelected;
   lblSelected.caption := _FloatToStr( fSelected, 12, 2 );
   lblLeft.caption     := _FloatToStr( fLeft,     12, 2 );
   if fLeft = 0 then beep;
@@ -350,7 +356,7 @@ begin
   recalc;
   FillPayGrid;
   lblSelected.caption := _FloatToStr( 0, 12, 2 );
-  lblLeft.caption     := _FloatToStr( FAmount, 12, 2 );
+  lblLeft.caption     := _FloatToStr( FNativeAmount, 12, 2 );
   postmessage( handle, WM_ActivateAmount, 0, 0 );
 
   EnabledChargepaycard;
@@ -393,7 +399,7 @@ var charge : TTokenCharge;
 begin
   charge := ChargePayCardForPayment(Reservation,
             Roomreservation,
-            FAmount - AlreadyProvidedPayments,
+            (FNativeAmount - AlreadyProvidedPayments) / CurrencyRate,
             LblForeignCurrency.Caption,
             PCO_CHARGE,
             True);
@@ -401,6 +407,7 @@ begin
   begin
     PayType := getMapForCardType(charge.token.CardType);
     if PayType <> '' then
+    begin
       for i := 1 to agrPayTypes.RowCount - 1 do
         if LowerCase(agrPayTypes.Cells[0, i]) = LowerCase(PayType) then
         begin
@@ -408,6 +415,12 @@ begin
           ReCalc;
           BtnOk.Click;
         end;
+    end
+    else
+    begin
+      MessageDlg(Format(GetTranslatedText('shTx_InvoicePayment_PaycardPayTypeNotFound'), [charge.token.CardType]), mtWarning, [mbOK], 0);
+      btnCancel.Click;
+    end;
   end;
 end;
 
@@ -430,7 +443,7 @@ end;
 
 procedure TfrmInvoicePayment.btnManagePaycardsClick(Sender: TObject);
 begin
-  ManagePaymentCards(FReservation, FRoomReservation);
+  ManagePaymentCards(FReservation, FRoomReservation, pcmCardsOnly);
 end;
 
 procedure TfrmInvoicePayment.agrPayTypesKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -447,7 +460,7 @@ end;
 
 procedure TfrmInvoicePayment.agrPayTypesEnter(Sender: TObject);
 begin
-  if (FAmount = 0) and edtAmount.CanFocus then
+  if (FNativeAmount = 0) and edtAmount.CanFocus then
     ActiveControl := edtAmount;
   postMessage( handle, WM_ActivateAmount, 0, 0 );
 end;
@@ -455,8 +468,8 @@ end;
 procedure TfrmInvoicePayment.edtAmountExit(Sender: TObject);
 begin
   // --
-  FAmount := _StrToFloat( edtAmount.text );
-  fSelectedAmount := FAmount;
+  FNativeAmount := _StrToFloat( edtAmount.text );
+  fSelectedAmount := FNativeAmount;
   // --
   postMessage( handle, WM_ActivateAmount, 0, 0 );
 end;

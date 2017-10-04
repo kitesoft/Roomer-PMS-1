@@ -43,7 +43,6 @@ object frmInvoicePayment: TfrmInvoicePayment
       TabOrder = 0
       OnClick = BtnOkClick
       SkinData.SkinSection = 'BUTTON'
-      ExplicitHeight = 39
     end
     object btnCancel: TsButton
       AlignWithMargins = True
@@ -59,7 +58,6 @@ object frmInvoicePayment: TfrmInvoicePayment
       ModalResult = 2
       TabOrder = 1
       SkinData.SkinSection = 'BUTTON'
-      ExplicitHeight = 39
     end
   end
   object Panel2: TsPanel
@@ -149,7 +147,6 @@ object frmInvoicePayment: TfrmInvoicePayment
     ParentFont = False
     TabOrder = 3
     SkinData.SkinSection = 'PANEL'
-    ExplicitTop = 115
   end
   object agrPayTypes: TAdvStringGrid
     Left = 0
@@ -253,7 +250,6 @@ object frmInvoicePayment: TfrmInvoicePayment
     SearchFooter.ResultFormat = '(%d of %d)'
     SortSettings.DefaultFormat = ssAutomatic
     Version = '8.2.4.1'
-    ExplicitTop = 134
     ColWidths = (
       169
       116)
@@ -277,7 +273,6 @@ object frmInvoicePayment: TfrmInvoicePayment
     ParentFont = False
     TabOrder = 4
     SkinData.SkinSection = 'PANEL'
-    ExplicitTop = 307
     object Label2: TsLabel
       Left = 26
       Top = 5
@@ -343,7 +338,6 @@ object frmInvoicePayment: TfrmInvoicePayment
     BevelOuter = bvNone
     TabOrder = 5
     SkinData.SkinSection = 'PANEL'
-    ExplicitTop = 329
     object sLabel1: TsLabel
       Left = 10
       Top = 11
@@ -462,7 +456,6 @@ object frmInvoicePayment: TfrmInvoicePayment
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 6
-    ExplicitTop = 73
     object LblForeignCurrencyAmount: TsLabel
       Left = 31
       Top = 8
@@ -553,7 +546,6 @@ object frmInvoicePayment: TfrmInvoicePayment
       Images = DImages.PngImageList1
       TabOrder = 0
       OnClick = btnManagePaycardsClick
-      ExplicitTop = 6
     end
     object btnChargePayCard: TsButton
       AlignWithMargins = True
@@ -568,7 +560,6 @@ object frmInvoicePayment: TfrmInvoicePayment
       Images = DImages.PngImageList1
       TabOrder = 1
       OnClick = btnChargePayCardClick
-      ExplicitLeft = 0
     end
   end
   object sSkinProvider1: TsSkinProvider

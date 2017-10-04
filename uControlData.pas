@@ -740,7 +740,6 @@ type
     edSmtpFromEmail: TsEdit;
     lbSmtpFromEmail: TsLabel;
     lbSmtpPort: TsLabel;
-    cbSmtpTLS: TsCheckBox;
     cbSmtpAuthenticate: TsCheckBox;
     lbSmtpUsername: TsLabel;
     edSmtpUsername: TsEdit;
@@ -750,6 +749,7 @@ type
     edSmtpPort: TsSpinEdit;
     cbUseStaytax: TsCheckBox;
     lbUseStayTax: TsLabel;
+    rgEncryption: TsRadioGroup;
     procedure FormCreate(Sender : TObject);
     procedure FormClose(Sender : TObject; var Action : TCloseAction);
     procedure FormShow(Sender : TObject);
@@ -1365,7 +1365,13 @@ g.ReadWriteSettingsToRegistry(0);
     edSmtpUsername.Text := FHotelServicesSettings.SmtpServiceSettings.SmtpUsername;
     cbSmtpAuthenticate.Checked := FHotelServicesSettings.SmtpServiceSettings.SmtpAuthenticate;
     edSmtpPassword.Text := FHotelServicesSettings.SmtpServiceSettings.SmtpPassword;
-    cbSmtpTLS.Checked := FHotelServicesSettings.SmtpServiceSettings.SmtpTLS;
+
+    if FHotelServicesSettings.SmtpServiceSettings.SmtpSSLTLS then
+      rgEncryption.ItemIndex := 1
+    else if FHotelServicesSettings.SmtpServiceSettings.SmtpStartTLS then
+      rgEncryption.ItemIndex := 2
+    else
+      rgEncryption.ItemIndex := 0;
 
     cbSmtpServiceActiveClick(nil);
 
@@ -1986,7 +1992,9 @@ begin
       FHotelServicesSettings.SmtpServiceSettings.SmtpUsername := edSmtpUsername.Text;
       FHotelServicesSettings.SmtpServiceSettings.SmtpAuthenticate := cbSmtpAuthenticate.Checked;
       FHotelServicesSettings.SmtpServiceSettings.SmtpPassword := edSmtpPassword.Text;
-      FHotelServicesSettings.SmtpServiceSettings.SmtpTLS := cbSmtpTLS.Checked;
+
+      FHotelServicesSettings.SmtpServiceSettings.SmtpSSLTLS := rgEncryption.ItemIndex = 1;
+      FHotelServicesSettings.SmtpServiceSettings.SmtpStartTLS := rgEncryption.ItemIndex = 2;
 
       try
         rControlData.fieldbyname('callType').AsInteger := cbxCallType.ItemIndex;
@@ -3603,7 +3611,7 @@ begin
   edSmtpUsername.Enabled := cbSmtpServiceActive.Checked;
   cbSmtpAuthenticate.Enabled := cbSmtpServiceActive.Checked;
   edSmtpPassword.Enabled := cbSmtpServiceActive.Checked;
-  cbSmtpTLS.Enabled := cbSmtpServiceActive.Checked;
+  rgEncryption.Enabled := cbSmtpServiceActive.Checked;
 
   lbSmtpServer.Enabled := cbSmtpServiceActive.Checked;
   lbSmtpFromEmail.Enabled := cbSmtpServiceActive.Checked;

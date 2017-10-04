@@ -10,6 +10,8 @@ uses
      , uRoomerDialogForm, sSplitter, uCurrencyHandlersMap;
 
 type
+  TManagePayCardsMode = (pcmCardsOnly, pcmCardsAndHistory);
+
   TFrmTokenChargeHistory = class(TfrmBaseRoomerDialogForm)
     pnlTop: TsPanel;
     pnlBottom: TsPanel;
@@ -83,6 +85,7 @@ type
     FRoomReservation: integer;
     FOrigMnuRoomCaption: string;
     FCUrrencyHandlersMap: TCurrencyHandlersMap;
+    FMode: TManagePayCardsMode;
     procedure DisplayTokens;
     procedure DisplayCharges;
     function GetCardStatusByReference(tokenId: Integer; GatewayReference: String): Double;
@@ -96,9 +99,10 @@ type
     { Public declarations }
     property Reservation: integer read FReservation write FReservation;
     property RoomReservation: integer read FRoomReservation write FRoomReservation;
+    property Mode: TManagePayCardsMode read FMode write FMode;
   end;
 
-procedure ManagePaymentCards(Reservation, RoomReservation : Integer);
+procedure ManagePaymentCards(Reservation, RoomReservation : Integer; aMode: TManagePayCardsMode = pcmCardsAndHistory);
 
 implementation
 
@@ -120,7 +124,7 @@ uses ud,
      uFrmPayCardView,
      Types;
 
-procedure ManagePaymentCards(Reservation, RoomReservation : Integer);
+procedure ManagePaymentCards(Reservation, RoomReservation : Integer; aMode: TManagePayCardsMode = pcmCardsAndHistory);
 var
   _FrmTokenChargeHistory: TFrmTokenChargeHistory;
 begin
@@ -128,6 +132,7 @@ begin
   try
     _FrmTokenChargeHistory.Reservation := Reservation;
     _FrmTokenChargeHistory.RoomReservation := RoomReservation;
+    _FrmTokenChargeHistory.Mode := aMode;
     _FrmTokenChargeHistory.ShowModal;
   finally
     _FrmTokenChargeHistory.Free;
@@ -176,6 +181,14 @@ begin
     lbRoomReservation.Caption := inttostr(RoomReservation)
   else
     lbRoomReservation.Caption := '(Group)';
+
+  pnlRightGrid.Visible := (Mode = pcmCardsAndHistory);
+  splGrids.Visible :=  (Mode = pcmCardsAndHistory);
+  btnCharge.Visible :=  (Mode = pcmCardsAndHistory);
+
+  if not pnlRightGrid.Visible then
+    Width := Width - pnlRightGrid.Width;
+
   inherited;
 
   if lvTokens.Items.Count > 0 then

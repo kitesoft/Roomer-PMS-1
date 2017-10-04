@@ -97,9 +97,11 @@ type
     cSmtpPortDefault = 25;
     cSmtpEmailAddress = 'SMTP_EMAIL_ADDRESS';
     cSmtpSSLTLS = 'SMTP_SSL_TLS';
+    cSmtpSTARTTLS = 'SMTP_STARTTLS';
     cSmtpAuthenticate = 'SMTP_AUTHENTICATE';
     cSmtpUsername = 'SMTP_USERNAME';
     cSmtpPassword = 'SMTP_PASSWORD';
+    cSmtpTransportProtocol = 'SMTP_TRANSPORT_PROTOCOL';
   private
     function GetSmtpAuthenticate: Boolean;
     function GetSmtpFromEmail: String;
@@ -107,7 +109,7 @@ type
     function GetSmtpPort: Integer;
     function GetSmtpServer: String;
     function GetSmtpServiceActive: Boolean;
-    function GetSmtpTLS: Boolean;
+    function GetSmtpSSLTLS: Boolean;
     function GetSmtpUsername: String;
     procedure SetSmtpAuthenticate(const Value: Boolean);
     procedure SetSmtpFromEmail(const Value: String);
@@ -115,8 +117,10 @@ type
     procedure SetSmtpPort(const Value: Integer);
     procedure SetSmtpServer(const Value: String);
     procedure SetSmtpServiceActive(const Value: Boolean);
-    procedure SetSmtpTLS(const Value: Boolean);
+    procedure SetSmtpSSLTLS(const Value: Boolean);
     procedure SetSmtpUsername(const Value: String);
+    function GetSmtpStartTLS: Boolean;
+    procedure SetSmtpStartTLS(const Value: Boolean);
   public
     property SmtpServiceActive : Boolean read GetSmtpServiceActive write SetSmtpServiceActive;
     property SmtpServer : String read GetSmtpServer write SetSmtpServer;
@@ -125,7 +129,8 @@ type
     property SmtpUsername : String read GetSmtpUsername write SetSmtpUsername;
     property SmtpAuthenticate : Boolean read GetSmtpAuthenticate write SetSmtpAuthenticate;
     property SmtpPassword : String read GetSmtpPassword write SetSmtpPassword;
-    property SmtpTLS : Boolean read GetSmtpTLS write SetSmtpTLS;
+    property SmtpSSLTLS : Boolean read GetSmtpSSLTLS write SetSmtpSSLTLS;
+    property SmtpStartTLS: Boolean read GetSmtpStartTLS write SetSmtpStartTLS;
  end;
 
 
@@ -315,9 +320,14 @@ begin
   Result := FHotelServicesAccessor.GetServiceEnabled(cSmtpService, cSmtpServiceType);
 end;
 
-function TSmtpServiceSettings.GetSmtpTLS: Boolean;
+function TSmtpServiceSettings.GetSmtpSSLTLS: Boolean;
 begin
   Result := FHotelServicesAccessor.GetServiceSettingAsBoolean(cSmtpService, cSmtpServiceType, cSmtpSSLTLS);
+end;
+
+function TSmtpServiceSettings.GetSmtpStartTLS: Boolean;
+begin
+  Result := FHotelServicesAccessor.GetServiceSettingAsBoolean(cSmtpService, cSmtpServiceType, cSmtpSTARTTLS);
 end;
 
 function TSmtpServiceSettings.GetSmtpUsername: String;
@@ -355,9 +365,14 @@ begin
   FHotelServicesAccessor.SetServiceEnabled(cSmtpService, cSmtpServiceType, Value);
 end;
 
-procedure TSmtpServiceSettings.SetSmtpTLS(const Value: Boolean);
+procedure TSmtpServiceSettings.SetSmtpSSLTLS(const Value: Boolean);
 begin
   FHotelServicesAccessor.SetServiceSettingAsBoolean(cSmtpService, cSmtpServiceType, cSmtpSSLTLS, Value);
+end;
+
+procedure TSmtpServiceSettings.SetSmtpStartTLS(const Value: Boolean);
+begin
+  FHotelServicesAccessor.SetServiceSettingAsBoolean(cSmtpService, cSmtpServiceType, cSmtpSTARTTLS, Value);
 end;
 
 procedure TSmtpServiceSettings.SetSmtpUsername(const Value: String);

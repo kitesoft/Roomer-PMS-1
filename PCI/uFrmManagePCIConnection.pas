@@ -104,6 +104,8 @@ function getMapForCardType(foreignCardType : String) : String;
 var rSet : TRoomerDataSet;
     sql : String;
 begin
+
+  //TODO Add configuration of this to the payments table!
   result := '';
   sql := 'SELECT value FROM pms_settings WHERE keyGroup=''%s'' AND `key`=''MAP_%s'' ';
   sql := format(sql, [PCI_BOOKING_UPG, foreignCardType]);

@@ -36,7 +36,7 @@ object frmDownPayment: TfrmDownPayment
       Width = 100
       Height = 25
       Anchors = [akTop, akRight]
-      Caption = 'OK'
+      Caption = 'Add'
       ImageIndex = 82
       Images = DImages.PngImageList1
       ModalResult = 1
@@ -90,10 +90,17 @@ object frmDownPayment: TfrmDownPayment
       Alignment = taRightJustify
       Caption = 'Description :'
     end
-    object sSpeedButton1: TsButton
+    object lbCurrency: TsLabel
       Left = 251
+      Top = 37
+      Width = 8
+      Height = 13
+      Caption = '--'
+    end
+    object sSpeedButton1: TsButton
+      Left = 296
       Top = 34
-      Width = 132
+      Width = 113
       Height = 21
       Caption = 'Get invoice balance'
       TabOrder = 2
@@ -103,7 +110,7 @@ object frmDownPayment: TfrmDownPayment
     object edDescription: TsEdit
       Left = 157
       Top = 61
-      Width = 226
+      Width = 252
       Height = 21
       Color = clWhite
       Font.Charset = DEFAULT_CHARSET
@@ -251,7 +258,6 @@ object frmDownPayment: TfrmDownPayment
       Images = DImages.PngImageList1
       TabOrder = 0
       OnClick = btnManagePaycardsClick
-      ExplicitLeft = 139
     end
     object btnChargePAyCard: TsButton
       AlignWithMargins = True
@@ -266,7 +272,6 @@ object frmDownPayment: TfrmDownPayment
       Images = DImages.PngImageList1
       TabOrder = 1
       OnClick = btnChargePAyCardClick
-      ExplicitLeft = 4
     end
   end
   object kbmPayType: TkbmMemTable

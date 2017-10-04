@@ -236,7 +236,7 @@ type
     PayDate: string; // 'YYYY-MM-DD'
     Customer: string;
     PayType: string;
-    Amount: double;
+    NativeAmount: double;
     Description: string;
     CurrencyRate: double;
     Currency: string;
@@ -2582,7 +2582,7 @@ begin
     PayDate := dxMemData['PayDate'];
     Customer := dxMemData['Customer'];
     PayType := dxMemData['PayType'];
-    Amount := dxMemData['Amount'];
+    NativeAmount := dxMemData['Amount'];
     Description := dxMemData['Description'];
     CurrencyRate := dxMemData['CurrencyRate'];
     Currency := dxMemData['Currency'];
@@ -2613,7 +2613,7 @@ begin
     dxMemData['PayDate'] := PayDate;
     dxMemData['Customer'] := Customer;
     dxMemData['PayType'] := PayType;
-    dxMemData['Amount'] := Amount;
+    dxMemData['Amount'] := NativeAmount;
     dxMemData['Description'] := Description;
     dxMemData['CurrencyRate'] := CurrencyRate;
     dxMemData['Currency'] := Currency;
@@ -2651,7 +2651,7 @@ begin
     PayDate := '1900-01-01'; // 'YYYY-MM-DD'
     Customer := '';
     PayType := '';
-    Amount := 0.00;
+    NativeAmount := 0.00;
     Description := '';
     CurrencyRate := 1;
     Currency := '';
@@ -3437,7 +3437,7 @@ begin
   s := s + '  , ' + _db(theData.PayDate) + #10;
   s := s + '  , ' + _db(theData.Customer) + #10;
   s := s + '  , ' + _db(theData.PayType) + #10;
-  s := s + '  , ' + _db(theData.Amount) + #10;
+  s := s + '  , ' + _db(theData.NativeAmount) + #10;
   s := s + '  , ' + _db(theData.Description) + #10;
   s := s + '  , ' + _db(theData.CurrencyRate) + #10;
   s := s + '  , ' + _db(theData.Currency) + #10;
@@ -3472,7 +3472,7 @@ begin
                          ,theData.TypeIndex
                          ,ADD_PAYMENT
                          ,theData.PayType
-                         ,theData.Amount
+                         ,theData.NativeAmount
                          ,theData.InvoiceNumber
                          ,theData.Description);
   end;
