@@ -6142,6 +6142,7 @@ begin
   s := s+' rr.numChildren, '+#10; //
   s := s+' rr.numInfants, '+#10; //
   s := s+' (SELECT AVG(RoomRate) FROM roomsdate rd WHERE rd.RoomReservation=rr.RoomReservation AND (rd.ResFlag NOT IN (''X'',''C''))) AS AverageRate, '+#10; //
+  s := s+' (SELECT MAX(Currency) FROM roomsdate rd WHERE rd.RoomReservation=rr.RoomReservation AND (rd.ResFlag NOT IN (''X'',''C''))) AS Currency, '+#10; //
   s := s+' rr.RateCount, '+#10; //
   s := s+' rr.Package, '+#10; //
 

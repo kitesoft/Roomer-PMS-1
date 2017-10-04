@@ -52,12 +52,12 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         1158
         189)
       object clabCurrency: TsLabel
-        Left = 618
+        Left = 616
         Top = 120
-        Width = 100
+        Width = 102
         Height = 13
         Alignment = taRightJustify
-        Caption = 'invoice Currency :'
+        Caption = 'Invoice Currency :'
         ParentFont = False
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clBlack
@@ -580,18 +580,17 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         inherited pnlCurrency: TsPanel
           Height = 21
           Align = alClient
+          ExplicitHeight = 21
           inherited lblCurrencyName: TsLabel
             Width = 140
             Height = 15
-            ExplicitTop = 1
-            ExplicitWidth = 140
-            ExplicitHeight = 15
           end
           inherited edCurrencyCode: TsEdit
             Height = 20
           end
           inherited btnGetCurrency: TsButton
             Height = 21
+            ExplicitHeight = 21
           end
         end
       end

@@ -82,6 +82,7 @@ type
     function GetParentReservation: integer;
     function GetParentRoomReservation: integer;
     procedure SetParentInvoiceLine(const Value: TinvoiceLine);
+    function GetBelongsToROom: TInvoiceRoomEntity;
   protected
     function GetAmountIncludedInParent: double; virtual;
     function GetIsGenerated: boolean; virtual;
@@ -141,6 +142,7 @@ type
     /// </summary>
     property ChildInvoiceLines: TList<TInvoiceLine> read FChildInvoiceLines;
     property RoomEntity: TInvoiceRoomEntity read FROomEntity write FROomEntity;
+    property BelongsToRoom: TInvoiceRoomEntity read GetBelongsToROom;
 
     property ItemKind: TItemKind read GetItemKind;
     /// <summary>
@@ -248,6 +250,7 @@ type
     function GetCityTaxUnitCount: Double;
     function GetLastLineIndex: integer;
     procedure SetShowPackageItems(const Value: boolean);
+
   protected
     procedure Notify(const Item: TInvoiceLine; Action: TCollectionNotification); override;
   public
@@ -344,6 +347,19 @@ begin
   end
   else
     result := 0;
+end;
+
+function TInvoiceLine.GetBelongsToRoom: TInvoiceRoomEntity;
+var
+  lParent: TInvoiceLine;
+begin
+  Result := nil;
+  lParent := Self;
+  while not assigned(result) and assigned(lParent) do
+  begin
+    result := lParent.RoomEntity;
+    lParent := lParent.Parent;
+  end;
 end;
 
 function TInvoiceLine.GetIsGenerated: boolean;
@@ -671,6 +687,5 @@ begin
 
   FParentList.Remove(aParent);
 end;
-
 
 end.

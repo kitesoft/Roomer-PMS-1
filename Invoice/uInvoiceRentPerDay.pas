@@ -500,6 +500,7 @@ type
 
     FTaxAPIResponse : TxsdRoomRentTaxReceiptList;
     FInvoiceCurrency: string;
+    FRentPerDay: boolean;
 
     procedure LoadInvoice;
     procedure loadInvoiceToMemtable(var m: TKbmMemTable);
@@ -669,9 +670,13 @@ type
 
     function InvoiceCurrencyRate: double;
 
+    property RentPerDay: boolean read FRentPerDay write FRentPerDay;
     property InvoiceIndex: TInvoiceIndex read FInvoiceIndex write SetInvoiceIndex;
+
     property AnyRowChecked: boolean read GetAnyRowSelected;
     property HeaderChanged: boolean read GetHeaderChanged write SetHeaderChanged;
+    procedure GenerateRoomRentLinesPerDay;
+    procedure GenerateRoomRentLinesPerRoom;
   public
     { Public declarations }
     FnewSplitNumber: integer; // 0 = herbergjareikningur
@@ -730,7 +735,7 @@ uses
   uFinanceConnectService
   , uBookingsTaxesAPICaller
   , uRoomerCanonicalDataModel_DataStructures, uRoomerCanonicalDataModel_SimpleTypes
-  , uFrmChargePayCard;
+  , uFrmChargePayCard, uPMSSettings;
 
 {$R *.DFM}
 
@@ -762,13 +767,13 @@ const
   // WM_StartUpLists = WM_User + 381;
   WM_REDRAW_LINE = WM_User + 290;
 
-  REMOVE_CURRENT_PROFORMA_INVOICE: Array [0 .. 2] OF String = (
+  REMOVE_CURRENT_PROFORMA_INVOICE: Array [0 .. 3] OF String = (
     'DELETE FROM invoicelines WHERE invoiceNumber=%d',
     'DELETE FROM invoiceheads WHERE invoiceNumber=%d',
     'DELETE FROM payments WHERE invoiceNumber=%d',
     'DELETE FROM invoiceaddressees WHERE invoiceNumber=%d');
 
-  REMOVE_REDUNDANT_INVOICES: Array [0 .. 2] OF String = (
+  REMOVE_REDUNDANT_INVOICES: Array [0 .. 3] OF String = (
     // Credit invoices                          // Proforma invoices
     'DELETE FROM invoicelines WHERE (SplitNumber = 1 AND InvoiceNumber = -1) OR (InvoiceNumber > 1000000000)',
     'DELETE FROM invoiceheads WHERE (SplitNumber = 1 AND InvoiceNumber = -1) OR (InvoiceNumber > 1000000000)',
@@ -1063,7 +1068,6 @@ begin
     agrLines.BeginUpdate;
     Screen.Cursor := crHourGlass;
     try
-      // agrLines.ClearRows(1, agrLines.RowCount);
       EmptyStringGrid(agrLines);
       agrLines.RowCount := FInvoiceLinesList.Count + 1;
 
@@ -2173,81 +2177,24 @@ end;
 
 procedure TfrmInvoiceRentPerDay.LoadInvoice;
 var
-  iLastRoomRes: integer;
-  sText: string;
-
-  s: string;
-
-  tmp: string;
-
   ItemId: string;
   LineId: integer;
-  Description: string;
   Price: Double;
-  VATType: string;
-  Total: Double;
-  TotalWOVat: Double;
-  Vat: Double;
   CurrencyRate: Double;
-  Currency: string;
-  Persons: integer;
-  Nights: integer;
-
-  isGroupAccount: boolean;
   _s: string;
-
-  status: string;
-
-  dTmp: Double;
 
   lRoomReservation: integer;
   Room: string;
-  RoomType: string;
-  NumberGuests: integer;
-  RoomDescription: string;
-  RoomTypeDescription: string;
-  Arrival: TDate;
-  Departure: TDate;
-  ChildrenCount: integer;
-  infantCount: integer;
-  PriceCode: string;
-
   invoiceHeadData: recInvoiceHeadHolder;
-
-  RateDate: TDateTime;
-
-  i: integer;
-
-  Rate: Double;
-  Discount: Double;
-  isPercentage: boolean;
-  ShowDiscount: boolean;
-  isPaid: boolean;
-  DiscountAmount: Double;
-  rentAmount: Double;
-  NativeAmount: Double;
-
-  AverageRate: Double;
-  RateCount: integer;
-
-  AverageDiscountPerc: Double;
-
-  DiscountText: string;
-  GuestName: String;
-  NumChildren: integer;
 
   lExecutionPlan: TRoomerExecutionPlan;
 
   sql: string;
   package: string;
 
-  showPackageItems: boolean;
-  isPackage: boolean;
-
-  eSet, zrSet, reservationSet: TRoomerDataset;
+  eSet, lInvoiceHeadSet, reservationSet: TRoomerDataset;
 
   dNumber: Double;
-  lRoomText: string;
   lRoomAdditionalText: string;
 
   procedure SetInvoiceTypeIndex(Index: integer);
@@ -2260,19 +2207,12 @@ var
     end;
   end;
 
-var
-  list: TStringList;
-  zRoomRSet: TRoomerDataset;
-  sTemp: String;
-  lCurrency: string;
-
 label
   Again;
+
 begin
 
-  zrSet := CreateNewDataSet;
-  zRoomRSet := CreateNewDataSet;
-  zRoomRSet.CommandType := cmdText;
+  lInvoiceHeadSet := CreateNewDataSet;
 
   mRoomRes.DisableControls;
   mRoomRates.DisableControls;
@@ -2331,29 +2271,29 @@ begin
       '        AND ia.SplitNumber=ih.SplitNumber ' + '        AND ia.InvoiceIndex=%d ' + 'where ih.Reservation = %d '#10
       + '   and ih.RoomReservation = %d and ih.SplitNumber = %d '#10 +
       '   and ih.InvoiceNumber = -1 and ih.Finished = 0';
-    if zrSet.active then
-      zrSet.close;
+    if lInvoiceHeadSet.active then
+      lInvoiceHeadSet.close;
 
     sql := format(sql, [InvoiceIndex, FReservation, FRoomReservation, FnewSplitNumber]);
 
     copytoclipboard(sql);
 
-    hData.rSet_bySQL(zrSet, sql);
+    hData.rSet_bySQL(lInvoiceHeadSet, sql);
 
-    zrSet.first;
+    lInvoiceHeadSet.first;
 
     // If invoice header is found...
-    if not zrSet.eof then
+    if not lInvoiceHeadSet.eof then
     begin
 
-      zInvoiceNumber := zrSet.FieldByName('InvoiceNumber').asinteger;
+      zInvoiceNumber := lInvoiceHeadSet.FieldByName('InvoiceNumber').asinteger;
 
       if FnewSplitNumber <> cCashInvoice then
       begin
-        GetInvoiceHeader(FReservation, FRoomReservation, zrSet); // To initialize with current data
-        SetInvoiceTypeIndex(zrSet.FieldByName('InvoiceType').asinteger);
+        GetInvoiceHeader(FReservation, FRoomReservation, lInvoiceHeadSet); // To initialize with current data
+        SetInvoiceTypeIndex(lInvoiceHeadSet.FieldByName('InvoiceType').asinteger);
 
-        if zrSet.FieldByName('InvoiceType').asinteger = 1 then   // Reservation customer
+        if lInvoiceHeadSet.FieldByName('InvoiceType').asinteger = 1 then   // Reservation customer
           GetReservationHeader(FReservation, FRoomReservation);
 
         if FnewSplitNumber = 1 then // Kreditinvoice
@@ -2367,8 +2307,8 @@ begin
         btnClearAddresses.Enabled := rgrInvoiceType.itemIndex <> 1;
       end;
 
-      InvoiceCurrency := trim(zrSet.FieldByName('ihCurrency').asString);
-      memExtraText.Lines.Text := trim(zrSet.FieldByName('ExtraText').asString);
+      InvoiceCurrency := trim(lInvoiceHeadSet.FieldByName('ihCurrency').asString);
+      memExtraText.Lines.Text := trim(lInvoiceHeadSet.FieldByName('ExtraText').asString);
 
     end
     else
@@ -2379,8 +2319,8 @@ begin
       zConfirmDate := 2;
       zPayDate := trunc(now);
 
-      if zrSet.active then
-        zrSet.close;
+      if lInvoiceHeadSet.active then
+        lInvoiceHeadSet.close;
 
       sql := 'SELECT r.*, rr.Currency '#10 +
              ' FROM reservations r '#10 +
@@ -2391,13 +2331,13 @@ begin
 
       sql := format(sql, [FReservation, FRoomreservation, FRoomreservation]);
 
-      hData.rSet_bySQL(zrSet, sql);
+      hData.rSet_bySQL(lInvoiceHeadSet, sql);
 
-      zrSet.first;
+      lInvoiceHeadSet.first;
       // INS-InvoiceHead
       // If there is no invoiceheader then create it
       // and goto label Again
-      if not zrSet.eof then
+      if not lInvoiceHeadSet.eof then
       begin
         initInvoiceHeadHolderRec(invoiceHeadData);
 
@@ -2406,17 +2346,17 @@ begin
         invoiceHeadData.SplitNumber := FnewSplitNumber;
         invoiceHeadData.InvoiceNumber := zInvoiceNumber;
         invoiceHeadData.InvoiceDate := _db(zInvoiceDate, false);
-        invoiceHeadData.ihCurrency := zrSet.FieldByName('Currency').asString;
-        invoiceHeadData.ihCurrencyRate := GetRate(zrSet.FieldByName('Currency').asString);
+        invoiceHeadData.ihCurrency := lInvoiceHeadSet.FieldByName('Currency').asString;
+        invoiceHeadData.ihCurrencyRate := GetRate(lInvoiceHeadSet.FieldByName('Currency').asString);
 
-        invoiceHeadData.customer := zrSet.FieldByName('Customer').asString;
-        invoiceHeadData.Name := zrSet.FieldByName('Name').asString;
-        invoiceHeadData.Address1 := zrSet.FieldByName('Address1').asString;
-        invoiceHeadData.Address2 := zrSet.FieldByName('Address2').asString;
-        invoiceHeadData.Address3 := zrSet.FieldByName('Address3').asString;
+        invoiceHeadData.customer := lInvoiceHeadSet.FieldByName('Customer').asString;
+        invoiceHeadData.Name := lInvoiceHeadSet.FieldByName('Name').asString;
+        invoiceHeadData.Address1 := lInvoiceHeadSet.FieldByName('Address1').asString;
+        invoiceHeadData.Address2 := lInvoiceHeadSet.FieldByName('Address2').asString;
+        invoiceHeadData.Address3 := lInvoiceHeadSet.FieldByName('Address3').asString;
         invoiceHeadData.Address4 := '';
         // ATH _db(zrSet.FieldByName('Address4').asString);
-        invoiceHeadData.Country := zrSet.FieldByName('Country').asString;
+        invoiceHeadData.Country := lInvoiceHeadSet.FieldByName('Country').asString;
         invoiceHeadData.Total := 0.00;
         invoiceHeadData.TotalWOVat := 0.00;
         invoiceHeadData.TotalVAT := 0.00;
@@ -2424,7 +2364,7 @@ begin
         invoiceHeadData.ExtraText := memExtraText.Lines.Text;
         invoiceHeadData.Finished := false;
         invoiceHeadData.InvoiceType := rgrInvoiceType.itemIndex;
-        invoiceHeadData.CustPID := zrSet.FieldByName('CustPid').asString;
+        invoiceHeadData.CustPID := lInvoiceHeadSet.FieldByName('CustPid').asString;
         invoiceHeadData.ihDate := Date;
         invoiceHeadData.ihInvoiceDate := zInvoiceDate;
         invoiceHeadData.ihConfirmDate := zConfirmDate;
@@ -2435,183 +2375,20 @@ begin
       end
     end;
 
-    DisplayGuestName(zrSet);
+    DisplayGuestName(lInvoiceHeadSet);
 
     RetrieveTaxesforRoomReservation(FReservation, FRoomreservation);
 
-    sql := Select_Invoice_GenerateInvoiceLinesRoomRentPerDay(FRoomReservation, FReservation, FInvoiceIndex, edtCustomer.Text );
-
-    if zRoomRSet.active then
-      zRoomRSet.close;
-
-    copytoclipboard(sql);
-    hData.rSet_bySQL(zRoomRSet, sql);
-
-    iLastRoomRes := -1;
-
-    zRoomRSet.first;
-    if not zRoomRSet.eof then
-    begin
-
-      zEmailAddress := '';
-      list := TStringList.Create;
-      try
-        uUtils.SplitString(trim(zRoomRSet.FieldByName('ContactEmail').asString), list, ';');
-        for i := 0 to list.Count - 1 do
-          if list[i] <> '' then
-          begin
-            if zEmailAddress = '' then
-              zEmailAddress := QuotedStr(list[i])
-            else
-              zEmailAddress := zEmailAddress + ';' + QuotedStr(list[i])
-          end;
-      finally
-        FreeAndNil(list);
-      end;
-
-      if trim(zRoomRSet.FieldByName('GuestEmail').asString) <> '' then
-      begin
-        if zEmailAddress = '' then
-        begin
-          zEmailAddress := QuotedStr(trim(zRoomRSet.FieldByName('GuestEmail').asString))
-        end
-        else
-        begin
-          zEmailAddress := zEmailAddress + ';' + QuotedStr(trim(zRoomRSet.FieldByName('GuestEmail').asString));
-        end;
-      end;
-    end;
-
-    zRoomRSet.first;
-    while not zRoomRSet.eof do
-    begin
-      lRoomReservation := zRoomRSet.FieldByName('Roomreservation').asinteger;
-
-      isGroupAccount := zRoomRSet['GroupAccount'];
-      status := zRoomRSet.FieldByName('status').asString;
-      Room := zRoomRSet.FieldByName('room').asString;
-      RoomType := zRoomRSet.FieldByName('RoomType').asString;
-      package := zRoomRSet.FieldByName('package').asString;
-      NumberGuests := zRoomRSet.FieldByName('numGuests').asinteger;
-      RoomDescription := zRoomRSet.FieldByName('RoomDescription').asString;
-      RoomTypeDescription := zRoomRSet.FieldByName('RoomTypeDescription').asString;
-      Arrival := zRoomRSet.FieldByName('rrArrival').asdateTime;
-      Departure := zRoomRSet.FieldByName('rrDeparture').asdateTime;
-      ChildrenCount := zRoomRSet.FieldByName('numChildren').asinteger;
-      infantCount := zRoomRSet.FieldByName('numInfants').asinteger;
-      PriceCode := zRoomRSet.FieldByName('PriceType').asString;
-      AverageRate := zRoomRSet.FieldByName('AverageRate').AsFloat;
-      RateCount := zRoomRSet.FieldByName('rateCount').asinteger;
-      AverageDiscountPerc := zRoomRSet.FieldByName('discount').AsFloat;
-
-      if iLastRoomRes <> lRoomReservation then
-      begin
-        mRoomRes.append;
-        mRoomResroomreservation.asinteger := lRoomReservation;
-        mRoomResRoom.asString := Room;
-        mRoomResRoomType.asString := RoomType;
-        mRoomResPackage.asString := package;
-        mRoomResGuests.asinteger := NumberGuests;
-        mRoomResAvragePrice.AsFloat := AverageRate;
-        mRoomResRateCount.AsFloat := RateCount;
-        mRoomResRoomDescription.asString := RoomDescription;
-        mRoomResRoomTypeDescription.asString := RoomTypeDescription;
-        mRoomResArrival.asdateTime := Arrival;
-        mRoomResDeparture.asdateTime := Departure;
-        mRoomResChildrenCount.asinteger := ChildrenCount;
-        mRoomResinfantCount.asinteger := infantCount;
-        mRoomResPriceCode.asString := PriceCode;
-        mRoomResAvrageDiscount.AsFloat := AverageDiscountPerc;
-        mRoomResInvoiceIndex.asinteger := FInvoiceIndex;
-        mRoomResGroupAccount.asBoolean := IsGroupAccount;
-
-        GuestName := zRoomRSet.FieldByName('guestName').asString;
-        mRoomResGuests.asinteger := NumberGuests;
-        mRoomResGuestName.asString := GuestName;
-        mRoomRes.post;
-
-        iLastRoomRes := lRoomReservation;
-      end;
-
-      PriceCode := zRoomRSet.FieldByName('PriceCode').asString;
-      RateDate := SQLToDate(zRoomRSet.FieldByName('ADate').asString);
-      Rate := zRoomRSet.FieldByName('RoomRate').AsFloat; // in selected currency
-      lCurrency := zRoomRSet.FieldByName('Currency').asString;
-      Discount := zRoomRSet.FieldByName('Discount').AsFloat;
-      isPercentage := zRoomRSet.FieldByName('isPercentage').asBoolean;
-      ShowDiscount := zRoomRSet.FieldByName('ShowDiscount').asBoolean;
-      isPaid := zRoomRSet.FieldByName('Paid').asBoolean;
-
-      if isPercentage then
-        DiscountAmount := Rate * Discount / 100
-      else
-        DiscountAmount := Discount;
-
-      rentAmount := Rate - DiscountAmount;
-      try
-        CurrencyRate := GetRate(lCurrency);
-      except
-        CurrencyRate := 1
-      end;
-
-      if CurrencyRate = 0 then
-        CurrencyRate := 1;
-
-      NativeAmount := rentAmount * CurrencyRate;
-
-      mRoomRates.append;
-      mRoomRates.FieldByName('Reservation').asinteger := FReservation;
-      mRoomRates.FieldByName('RoomReservation').asinteger := lRoomReservation;
-      mRoomRates.FieldByName('RoomNumber').asString := Room;
-      mRoomRates.FieldByName('PriceCode').asString := PriceCode;
-      mRoomRates.FieldByName('RateDate').asdateTime := RateDate;
-      mRoomRates.FieldByName('Rate').AsFloat := Rate;
-      mRoomRates.FieldByName('Discount').AsFloat := Discount;
-      mRoomRates.FieldByName('isPercentage').asBoolean := isPercentage;
-      mRoomRates.FieldByName('ShowDiscount').asBoolean := ShowDiscount;
-      mRoomRates.FieldByName('isPaid').asBoolean := isPaid;
-      mRoomRates.FieldByName('DiscountAmount').AsFloat := DiscountAmount;
-      mRoomRates.FieldByName('RentAmount').AsFloat := rentAmount;
-      mRoomRates.FieldByName('NativeAmount').AsFloat := NativeAmount;
-      mRoomRates.post;
-
-      isPackage := false;
-      if package <> '' then
-      begin
-        isPackage := True;
-        sText := Package_getRoomDescription(Package, Room, RateDate, RateDate, GuestName);
-        if FRoomReservation = 0 then
-          sText := sText + ' Room :' + Room;
-
-      end
-      else
-      begin
-        lRoomText := GetTranslatedText('shRoom');
-        sText := format(lRoomText + ' %s on %s', [Room, FormatDateTime('dd/mm', RateDate)])
-      end;
-
-      tmp := trim(zRoomRSet.FieldByName('rrDescription').asString);
-
-      if copy(tmp, 1, 2) = '--' then
-        sText := '';
-      sText := tmp + sText;
-
-      if isPercentage then
-        DiscountText := DiscountText + '(' + floattostr(Discount) + '%)';
-
-      AddRoom(Room, Rate, lCurrency, RateDate, RateDate + 1, 1, sText, (FRoomReservation = 0),
-        lRoomReservation, DiscountAmount, isPercentage, DiscountText, GuestName, NumberGuests, ChildrenCount,
-        isPackage, lRoomReservation, zRoomRSet.FieldByName('invBreakFast').asBoolean);
-
-      zRoomRSet.Next;
-    end;
+    if RentPerDay then
+      GenerateRoomRentLinesPerDay
+    else
+      GenerateRoomRentLinesPerRoom;
 
     lExecutionPlan := d.roomerMainDataSet.CreateExecutionPlan;
     try
       RestoreTMPInvoicelines;
 
       // -- Then the invoice lines..., excluding left over package lines from cancelled rooms
-
       sql := 'SELECT il.*, '#10 +
         ' (select resflag from roomsdate rd where rd.roomreservation=il.roomreservationalias limit 1) as resflag '#10 +
         ' FROM invoicelines il '#10 +
@@ -2725,8 +2502,7 @@ begin
     end;
 
   finally
-    zrSet.Free;
-    zRoomRSet.Free;
+    lInvoiceHeadSet.Free;
     mRoomRes.EnableControls;
     mRoomRates.EnableControls;
     agrLines.EndUpdate;
@@ -3154,6 +2930,8 @@ begin
 end;
 
 procedure TfrmInvoiceRentPerDay.FormShow(Sender: TObject);
+var
+  lAnswer: word;
 begin
   actRemoveSelected.Visible := glb.PMSSettings.InvoiceSettings.AllowDeletingItemsFromInvoice;
   actToggleLodgingTax.Visible := glb.PMSSettings.InvoiceSettings.AllowTogglingOfCityTaxes;
@@ -3161,6 +2939,19 @@ begin
   actEditDownPayment.Visible := glb.PMSSettings.InvoiceSettings.AllowPaymentModification;
 
   fraInvoiceCurrency.OnCurrencyChangeAndValid := evtCurrencyChangedAndValid;
+
+  case glb.PMSSettings.InvoiceSettings.RoomRentPerDayOninvoice of
+    rpdAlways:  RentPerDay := true;
+    rpdNever:   RentPerDay := False;
+    rpdAsk:     begin
+                  lAnswer := MessageDlg(GetTranslatedText('shEditInvoice_RoomRentPerDay'), mtConfirmation, mbYesNoCancel, 0);
+                  case lAnswer of
+                    mrYes:     RentPerDay := true;
+                    mrNo:      RentPerDay := False;
+                    mrCancel:  Close;
+                  end;
+                end;
+  end;
 
   LoadInvoice;
   UpdateCaptions;
@@ -3322,7 +3113,7 @@ var
 begin
   Caption := GetTranslatedText('shUI_InvoiceCaption');
 
-  edResNr.Caption := format('%d / %s', [FReservation, iif(FRoomReservation > 0, IntToStr(FRoomReservation), GetTranslatedText('shUI_OnGroupInvoice')]);
+  edResNr.Caption := format('%d / %s', [FReservation, iif(FRoomReservation > 0, IntToStr(FRoomReservation), GetTranslatedText('shUI_OnGroupInvoice'))]);
 
   agrLines.Col := 0;
   agrLines.row := 1;
@@ -4475,6 +4266,548 @@ begin
     inherited WndProc(message);
 end;
 
+procedure TfrmInvoiceRentPerDay.GenerateRoomRentLinesPerRoom();
+var
+  NativeAmount: Double;
+  Arrival: TDate;
+  infantCount: Integer;
+  Rate: Double;
+  AvrageDiscountPerc: Double;
+  isPackage: Boolean;
+  TotalRate: Double;
+  DiscountAmount: Double;
+  Room: string;
+  allIsPercentage: Boolean;
+  isPaid: Boolean;
+  showPackage: Boolean;
+  lRoomRateCurrency: string;
+  GuestsInRoomRes: Integer;
+  lRoomReservation: Integer;
+  rSet: TRoomerDataSet;
+  UnpaidDays: Integer;
+  AverageRate: Double;
+  RoomDescription: string;
+  lExecutionPlan: TRoomerExecutionPlan;
+  s: string;
+  isGroupAccount: Boolean;
+  sText:
+  string; iLastRoomRes:
+  Integer; package:
+  string; isPercentage:
+  Boolean; sql:
+  string; ChildrenCount:
+  Integer; list:
+  TStringList; dayCount:
+  Integer; DiscountText:
+  string; reservation:
+  Integer; ShowDiscount:
+  Boolean; RoomTypeDescription:
+  string; i: Integer;
+  RateCount: Integer;
+  GuestName: string;
+  CurrencyRate: Double;
+  tmp: string;
+  Discount: Double;
+  AverageDiscountAmount: Double;
+  GuestNights: Integer;
+  rentAmount: Double;
+  lRoomText: string;
+  RoomRentPaidDays: Double;
+  Index: Integer;
+  PriceCode: string;
+  RoomType: string;
+  RateDate: TDateTime;
+  zRoomRSet: TRoomerDataSet;
+  status: string;
+  _s: string;
+  iTotalResDays: Integer;
+  NumberGuests: Integer;
+  TotalDiscountAmount: Double;
+  Departure: TDate;
+  Local_i: Integer;
+  Local_i1: Integer;
+begin
+
+  zRoomRSet := CreateNewDataSet;
+  lExecutionPlan := d.roomerMainDataSet.CreateExecutionPlan;
+  try
+    sql := Select_Invoice_LoadInvoice3_WithInvoiceIndex(FRoomReservation, FReservation, FInvoiceIndex, edtCustomer.Text, false);
+    if FRoomReservation = 0 then
+      // GroupInvoice
+      sql := format(sql, [FReservation])
+    else
+      sql := format(sql, [FRoomReservation, FRoomReservation]);
+    if zRoomRSet.active then
+      zRoomRSet.close;
+    copytoclipboard(sql);
+    hData.rSet_bySQL(zRoomRSet, sql);
+    iLastRoomRes := -1;
+    RoomRentPaidDays := 0;
+    zRoomRSet.first;
+
+    if not zRoomRSet.eof then
+    begin
+      zEmailAddress := '';
+      list := TStringList.create;
+      try
+        uUtils.SplitString(trim(zRoomRSet.FieldByName('ContactEmail').asString), list, ';');
+        for Local_i := 0 to list.Count - 1 do
+          if list[Local_i] <> '' then
+          begin
+            if zEmailAddress = '' then
+              zEmailAddress := QuotedStr(list[Local_i])
+            else
+              zEmailAddress := zEmailAddress + ';' + QuotedStr(list[Local_i]);
+          end;
+      finally
+        FreeAndNil(list);
+      end;
+      if trim(zRoomRSet.FieldByName('GuestEmail').asString) <> '' then
+      begin
+        if zEmailAddress = '' then
+        begin
+          zEmailAddress := QuotedStr(trim(zRoomRSet.FieldByName('GuestEmail').asString));
+        end
+        else
+        begin
+          zEmailAddress := zEmailAddress + ';' + QuotedStr(trim(zRoomRSet.FieldByName('GuestEmail').asString));
+        end;
+      end;
+    end;
+    // **
+    while not zRoomRSet.eof do
+    begin
+      lRoomReservation := zRoomRSet.FieldByName('Roomreservation').asinteger;
+      s := 'SELECT '#10'';
+      s := s + 'rd.ADate, '#10'';
+      s := s + 'rd.Room, '#10'';
+      s := s + 'rd.RoomReservation, '#10'';
+      s := s + 'rd.Reservation, '#10'';
+      s := s + 'rd.PriceCode, '#10'';
+      s := s + 'rd.RoomRate, '#10'';
+      s := s + 'rd.Currency, '#10'';
+      s := s + 'rd.Discount, '#10'';
+      s := s + 'rd.isPercentage, '#10'';
+      s := s + 'rd.showDiscount, '#10'';
+      s := s + 'rd.Paid '#10'';
+      s := s + ',IF(ISNULL((SELECT name FROM persons pe WHERE pe.MainName AND pe.roomreservation = rd.roomreservation LIMIT 1)), '#10'';
+      s := s + '   (SELECT name FROM persons pe WHERE pe.roomreservation = rd.roomreservation LIMIT 1), '#10'';
+      s := s + '   (SELECT name FROM persons pe WHERE pe.MainName AND pe.roomreservation = rd.roomreservation LIMIT 1)) AS guestName '#10'';
+      s := s + 'FROM roomsdate rd '#10'';
+      s := s + 'WHERE '#10'';
+      s := s + '(rd.roomreservation = %d) AND (rd.paid=0) AND rd.ResFlag NOT IN (''X'', ''C'') '#10'';
+      s := s + 'ORDER BY '#10'';
+      s := s + '  ADate '#10'';
+      s := format(s, [lRoomReservation]);
+      copytoclipboard(s);
+
+      lExecutionPlan.AddQuery(s);
+
+      zRoomRSet.Next;
+    end;
+
+    if lExecutionPlan.Execute(ptQuery) then
+    begin
+      zRoomRSet.first;
+      index := 0;
+      while not zRoomRSet.eof do
+      begin
+        lRoomReservation := zRoomRSet.FieldByName('Roomreservation').asinteger;
+        isGroupAccount := zRoomRSet['GroupAccount'];
+        status := zRoomRSet.FieldByName('status').asString;
+        Room := zRoomRSet.FieldByName('room').asString;
+        RoomType := zRoomRSet.FieldByName('RoomType').asString;
+        package := zRoomRSet.FieldByName('package').asString;
+        NumberGuests := zRoomRSet.FieldByName('numGuests').asinteger;
+        RoomDescription := zRoomRSet.FieldByName('RoomDescription').asString;
+        RoomTypeDescription := zRoomRSet.FieldByName('RoomTypeDescription').asString;
+        Arrival := zRoomRSet.FieldByName('rrArrival').asdateTime;
+        Departure := zRoomRSet.FieldByName('rrDeparture').asdateTime;
+        ChildrenCount := zRoomRSet.FieldByName('numChildren').asinteger;
+        infantCount := zRoomRSet.FieldByName('numInfants').asinteger;
+        PriceCode := zRoomRSet.FieldByName('PriceType').asString;
+        AverageRate := zRoomRSet.FieldByName('AverageRate').AsFloat;
+        RateCount := zRoomRSet.FieldByName('rateCount').asinteger;
+        AvrageDiscountPerc := zRoomRSet.FieldByName('discount').AsFloat;
+        mRoomRes.append;
+        mRoomRes.FieldByName('RoomReservation').asinteger := lRoomReservation;
+        mRoomRes.FieldByName('room').asString := Room;
+        mRoomRes.FieldByName('RoomType').asString := RoomType;
+        mRoomRes.FieldByName('Package').asString := package;
+        mRoomRes.FieldByName('Guests').asinteger := NumberGuests;
+        mRoomRes.FieldByName('AvragePrice').asfloat := AverageRate;
+        mRoomRes.FieldByName('RateCount').asfloat := RateCount;
+        mRoomRes.FieldByName('RoomDescription').asString := RoomDescription;
+        mRoomRes.FieldByName('RoomTypeDescription').asString := RoomTypeDescription;
+        mRoomRes.FieldByName('arrival').asdateTime := Arrival;
+        mRoomRes.FieldByName('departure').asdateTime := Departure;
+        mRoomRes.FieldByName('ChildrenCount').asinteger := ChildrenCount;
+        mRoomRes.FieldByName('InfantCount').asinteger := infantCount;
+        mRoomRes.FieldByName('PriceCode').asString := PriceCode;
+        mRoomRes.FieldByName('AvrageDiscount').asfloat := AvrageDiscountPerc;
+        mRoomRes.FieldByName('InvoiceIndex').asinteger := FInvoiceIndex;
+        mRoomRes.FieldByName('GroupAccount').asBoolean := zRoomRSet['GroupAccount'];
+
+        dayCount := trunc(Departure) - trunc(Arrival);
+        RateDate := Arrival;
+        TotalDiscountAmount := 0;
+        TotalRate := 0;
+        UnpaidDays := 0;
+        allIsPercentage := true;
+
+        rSet := lExecutionPlan.Results[index];
+        rSet.first;
+        if not rSet.eof then
+        begin
+          GuestName := rSet.FieldByName('guestName').asString;
+          if mRoomRes.State in [dsEdit, dsInsert] then
+          begin
+            mRoomRes.FieldByName('Guests').asinteger := NumberGuests;
+            mRoomRes.FieldByName('GuestName').asString := GuestName;
+            mRoomRes.post;
+          end;
+          for Local_i1 := 1 to dayCount do
+          begin
+            DiscountText := '';
+            if rset.Locate('ADate', _db(RateDate), []) then
+            begin
+              reservation := rSet.FieldByName('Reservation').asinteger;
+              Room := rSet.FieldByName('Room').asString;
+              PriceCode := rSet.FieldByName('PriceCode').asString;
+              RateDate := SQLToDate(rSet.FieldByName('ADate').asString);
+              Rate := rSet.FieldByName('RoomRate').AsFloat;
+              Discount := rSet.FieldByName('Discount').AsFloat;
+              isPercentage := rSet.FieldByName('isPercentage').asBoolean;
+
+              // This is normally not needed, but in exceptional cases (i.e. with a new header with a different currency)
+              // it will correct the shown rates
+              lRoomRateCurrency := rSet.FieldByName('Currency').AsString;
+              if (lRoomRateCurrency <> InvoiceCurrency) then
+              begin
+                Rate := Rate * GetRate(lRoomRateCurrency) / InvoiceCurrencyRate;
+                if not IsPercentage then
+                  Discount := Discount * GetRate(lRoomRateCurrency) / invoiceCurrencyRate;
+              end;
+
+              ShowDiscount := rSet.FieldByName('ShowDiscount').asBoolean;
+              isPaid := rSet.FieldByName('Paid').asBoolean;
+              if not isPaid then
+              begin
+                UnpaidDays := UnpaidDays + 1;
+              end;
+
+              if isPercentage then
+                DiscountAmount := Rate * Discount / 100
+              else
+                DiscountAmount := Discount;
+
+              rentAmount := Rate - DiscountAmount;
+              NativeAmount := rentAmount * CurrencyRate;
+              TotalDiscountAmount := TotalDiscountAmount + DiscountAmount;
+              TotalRate := TotalRate + Rate;
+              allIsPercentage := allIsPercentage and IsPercentage;
+
+              mRoomRates.append;
+              mRoomRates.FieldByName('Reservation').asinteger := reservation;
+              mRoomRates.FieldByName('RoomReservation').asinteger := lRoomReservation;
+              mRoomRates.FieldByName('RoomNumber').asString := Room;
+              mRoomRates.FieldByName('PriceCode').asString := PriceCode;
+              mRoomRates.FieldByName('RateDate').asdateTime := RateDate;
+              mRoomRates.FieldByName('Rate').asfloat := Rate;
+              mRoomRates.FieldByName('Discount').asfloat := Discount;
+              mRoomRates.FieldByName('isPercentage').asBoolean := isPercentage;
+              mRoomRates.FieldByName('ShowDiscount').asBoolean := ShowDiscount;
+              mRoomRates.FieldByName('isPaid').asBoolean := isPaid;
+              mRoomRates.FieldByName('DiscountAmount').asfloat := DiscountAmount;
+              mRoomRates.FieldByName('RentAmount').asfloat := rentAmount;
+              mRoomRates.FieldByName('NativeAmount').asfloat := NativeAmount;
+              mRoomRates.post;
+            end;
+            RateDate := RateDate + 1;
+          end;
+        end;
+        iTotalResDays := trunc(Departure) - trunc(Arrival);
+        GuestsInRoomRes := NumberGuests;
+        // ChildrenCount+infantCount
+        GuestNights := GuestsInRoomRes * UnpaidDays;
+        RoomRentPaidDays := iTotalResDays - UnpaidDays;
+        if UnpaidDays > 0 then
+        begin
+          AverageRate := TotalRate / UnpaidDays;
+          AverageDiscountAmount := TotalDiscountAmount / UnpaidDays;
+          if AverageRate <> 0 then
+            AvrageDiscountPerc := AverageDiscountAmount / (AverageRate / 100)
+          else
+            AvrageDiscountPerc := 0;
+          isPackage := false;
+          if ABS(AverageRate) > 0 then
+          begin
+            if package <> '' then
+            begin
+              isPackage := True;
+              _s := Package_getRoomDescription(Package, Room, Arrival, Departure, GuestName);
+              if FRoomReservation = 0 then
+                _s := _s + ' Room :' + Room;
+            end
+            else
+            begin
+              lRoomText := GetTranslatedText('shRoom');
+              if UnpaidDays = trunc(Departure) - trunc(Arrival) then
+                _s := format(lRoomtext + ' %s %s - %s', [Room, FormatDateTime('dd/mm', Arrival), FormatDateTime('dd/mm', Departure)])
+              else
+                _s := format(lRoomtext + ' %s for %d nights', [Room, UnpaidDays]);
+            end;
+            sText := _s;
+            tmp := trim(zRoomRSet.FieldByName('rrDescription').asString);
+            if copy(tmp, 1, 2) = '--' then
+              sText := '';
+            sText := tmp + sText;
+            if allIsPercentage then
+.              DiscountText := DiscountText + '(' + floattostr(RoundDecimals(AvrageDiscountPerc, 2)) + '%)';
+
+            AddRoom(Room, AverageRate, Arrival, Departure, UnpaidDays, sText, (FRoomReservation = 0), lRoomReservation,
+                    iif(AllIsPercentage, AvrageDiscountPerc, AverageDiscountAmount), AllisPercentage, DiscountText,
+                    GuestName, NumberGuests, ChildrenCount, isPackage, lRoomReservation, zRoomRSet.FieldByName('invBreakFast').AsBoolean);
+
+          end;
+          if (ABS(AverageRate) = 0) and (status <> 'B') then
+          begin
+            if package <> '' then
+            begin
+              isPackage := True;
+              _s := Package_getRoomDescription(Package, Room, Arrival, Departure, GuestName);
+              if FRoomReservation = 0 then
+                _s := _s + ' ' + lRoomText + ':' + Room;
+            end
+            else
+              _s := format(lRoomtext + ' %s %s-%s', [Room, FormatDateTime('dd/mm', Arrival), FormatDateTime('dd/mm', Departure)]);
+            sText := _s;
+            tmp := trim(zRoomRSet.FieldByName('rrDescription').asString);
+            if copy(tmp, 1, 2) = '--' then
+              sText := '';
+            sText := tmp + sText;
+            AddRoom(Room, 0, Arrival, Departure, UnpaidDays, sText, (lRoomReservation = 0), lRoomReservation, 0, false, '', '', NumberGuests, ChildrenCount, isPackage, lRoomReservation, zRoomRSet.FieldByName('invBreakFast').AsBoolean);
+          end;
+        end;
+        inc(index);
+        zRoomRSet.Next;
+      end;
+    end;
+  finally
+    lExecutionPlan.free;
+    zRoomRSet.Free;
+  end;
+
+
+end;
+
+procedure TfrmInvoiceRentPerDay.GenerateRoomRentLinesPerDay();
+var
+  lCurrency: string;
+  lRoomText: string;
+  RateCount: Integer;
+  isPackage: Boolean;
+  status: string;
+  isPaid: Boolean;
+  ShowDiscount: Boolean;
+  Discount: Double;
+  tmp: string;
+  sText: string;
+  isGroupAccount: Boolean;
+  infantCount: Integer;
+  lRoomsDateSet: TRoomerDataSet;
+  list: TStringList;
+  Room: string;
+  RoomTypeDescription: string;
+  RateDate: TDateTime;
+  DiscountAmount: Double;
+  RoomType: string;
+  ChildrenCount: Integer;
+  isPercentage: Boolean;
+  lBreakFastIncluded: Boolean;
+  RoomDescription: string;
+  CurrencyRate: Double;
+  package: string;
+  i: Integer;
+  lRoomReservation: Integer;
+  PriceCode: string;
+  AverageDiscountPerc: Double;
+  Rate: Double;
+  GuestName: string;
+  AverageRate: Double;
+  Arrival: TDate;
+  iLastRoomRes: Integer;
+  Departure: TDate;
+  sql: string;
+  NativeAmount: Double;
+  NumberGuests: Integer;
+  DiscountText: string;
+  rentAmount: Double;
+  Local_i: Integer;
+begin
+  sql := Select_Invoice_GenerateInvoiceLinesRoomRentPerDay(FRoomReservation, FReservation, FInvoiceIndex, edtCustomer.Text);
+
+  lRoomsDateSet := CreateNewDataSet;
+  try
+    lRoomsDateSet.CommandType := cmdText;
+
+    copytoclipboard(sql);
+    hData.rSet_bySQL(lRoomsDateSet, sql);
+
+    iLastRoomRes := -1;
+    lRoomsDateSet.first;
+    if not lRoomsDateSet.eof then
+    begin
+      zEmailAddress := '';
+      list := TStringList.Create;
+      try
+        uUtils.SplitString(trim(lRoomsDateSet.FieldByName('ContactEmail').asString), list, ';');
+        for Local_i := 0 to list.Count - 1 do
+          if list[Local_i] <> '' then
+          begin
+            if zEmailAddress = '' then
+              zEmailAddress := QuotedStr(list[Local_i])
+            else
+              zEmailAddress := zEmailAddress + ';' + QuotedStr(list[Local_i]);
+          end;
+      finally
+        FreeAndNil(list);
+      end;
+      if trim(lRoomsDateSet.FieldByName('GuestEmail').asString) <> '' then
+      begin
+        if zEmailAddress = '' then
+        begin
+          zEmailAddress := QuotedStr(trim(lRoomsDateSet.FieldByName('GuestEmail').asString));
+        end
+        else
+        begin
+          zEmailAddress := zEmailAddress + ';' + QuotedStr(trim(lRoomsDateSet.FieldByName('GuestEmail').asString));
+        end;
+      end;
+    end;
+
+    lRoomsDateSet.first;
+    while not lRoomsDateSet.eof do
+    begin
+      lRoomReservation := lRoomsDateSet.FieldByName('Roomreservation').asinteger;
+      isGroupAccount := lRoomsDateSet['GroupAccount'];
+      status := lRoomsDateSet.FieldByName('status').asString;
+      Room := lRoomsDateSet.FieldByName('room').asString;
+      RoomType := lRoomsDateSet.FieldByName('RoomType').asString;
+      package := lRoomsDateSet.FieldByName('package').asString;
+      NumberGuests := lRoomsDateSet.FieldByName('numGuests').asinteger;
+      RoomDescription := lRoomsDateSet.FieldByName('RoomDescription').asString;
+      RoomTypeDescription := lRoomsDateSet.FieldByName('RoomTypeDescription').asString;
+      Arrival := lRoomsDateSet.FieldByName('rrArrival').asdateTime;
+      Departure := lRoomsDateSet.FieldByName('rrDeparture').asdateTime;
+      ChildrenCount := lRoomsDateSet.FieldByName('numChildren').asinteger;
+      infantCount := lRoomsDateSet.FieldByName('numInfants').asinteger;
+      PriceCode := lRoomsDateSet.FieldByName('PriceType').asString;
+      AverageRate := lRoomsDateSet.FieldByName('AverageRate').AsFloat;
+      RateCount := lRoomsDateSet.FieldByName('rateCount').asinteger;
+      AverageDiscountPerc := lRoomsDateSet.FieldByName('discount').AsFloat;
+      if iLastRoomRes <> lRoomReservation then
+      begin
+        mRoomRes.append;
+        mRoomResroomreservation.asinteger := lRoomReservation;
+        mRoomResRoom.asString := Room;
+        mRoomResRoomType.asString := RoomType;
+        mRoomResPackage.asString := package;
+        mRoomResGuests.asinteger := NumberGuests;
+        mRoomResAvragePrice.AsFloat := AverageRate;
+        mRoomResRateCount.AsFloat := RateCount;
+        mRoomResRoomDescription.asString := RoomDescription;
+        mRoomResRoomTypeDescription.asString := RoomTypeDescription;
+        mRoomResArrival.asdateTime := Arrival;
+        mRoomResDeparture.asdateTime := Departure;
+        mRoomResChildrenCount.asinteger := ChildrenCount;
+        mRoomResinfantCount.asinteger := infantCount;
+        mRoomResPriceCode.asString := PriceCode;
+        mRoomResAvrageDiscount.AsFloat := AverageDiscountPerc;
+        mRoomResInvoiceIndex.asinteger := FInvoiceIndex;
+        mRoomResGroupAccount.asBoolean := IsGroupAccount;
+        GuestName := lRoomsDateSet.FieldByName('guestName').asString;
+        mRoomResGuests.asinteger := NumberGuests;
+        mRoomResGuestName.asString := GuestName;
+        mRoomRes.post;
+        iLastRoomRes := lRoomReservation;
+      end;
+
+      PriceCode := lRoomsDateSet.FieldByName('PriceCode').asString;
+      RateDate := SQLToDate(lRoomsDateSet.FieldByName('ADate').asString);
+      Rate := lRoomsDateSet.FieldByName('RoomRate').AsFloat;
+      // in selected currency
+      lCurrency := lRoomsDateSet.FieldByName('Currency').asString;
+      Discount := lRoomsDateSet.FieldByName('Discount').AsFloat;
+      isPercentage := lRoomsDateSet.FieldByName('isPercentage').asBoolean;
+      ShowDiscount := lRoomsDateSet.FieldByName('ShowDiscount').asBoolean;
+      isPaid := lRoomsDateSet.FieldByName('Paid').asBoolean;
+
+      if isPercentage then
+        DiscountAmount := Rate * Discount / 100
+      else
+        DiscountAmount := Discount;
+
+      rentAmount := Rate - DiscountAmount;
+
+      try
+        CurrencyRate := GetRate(lCurrency);
+      except
+        CurrencyRate := 1;
+      end;
+
+      if CurrencyRate = 0 then
+        CurrencyRate := 1;
+
+      NativeAmount := rentAmount * CurrencyRate;
+      mRoomRates.append;
+      mRoomRates.FieldByName('Reservation').asinteger := FReservation;
+      mRoomRates.FieldByName('RoomReservation').asinteger := lRoomReservation;
+      mRoomRates.FieldByName('RoomNumber').asString := Room;
+      mRoomRates.FieldByName('PriceCode').asString := PriceCode;
+      mRoomRates.FieldByName('RateDate').asdateTime := RateDate;
+      mRoomRates.FieldByName('Rate').AsFloat := Rate;
+      mRoomRates.FieldByName('Discount').AsFloat := Discount;
+      mRoomRates.FieldByName('isPercentage').asBoolean := isPercentage;
+      mRoomRates.FieldByName('ShowDiscount').asBoolean := ShowDiscount;
+      mRoomRates.FieldByName('isPaid').asBoolean := isPaid;
+      mRoomRates.FieldByName('DiscountAmount').AsFloat := DiscountAmount;
+      mRoomRates.FieldByName('RentAmount').AsFloat := rentAmount;
+      mRoomRates.FieldByName('NativeAmount').AsFloat := NativeAmount;
+      mRoomRates.post;
+
+      isPackage := false;
+      if package <> '' then
+      begin
+        isPackage := True;
+        lRoomtext := Package_getRoomDescription(Package, Room, RateDate, RateDate, GuestName);
+        if FRoomReservation = 0 then
+          lRoomtext := lRoomtext + ' ' + GetTranslatedText('shRoom') + ': ' + Room;
+      end
+      else
+        lRoomText := format(GetTranslatedText('shRoom') + ' %s on %s', [Room, FormatDateTime('dd/mm', RateDate)]);
+
+      tmp := trim(lRoomsDateSet.FieldByName('rrDescription').asString);
+
+      if copy(tmp, 1, 2) = '--' then
+        lRoomText := '';
+
+      lRoomText := tmp + ' ' + lRoomText;
+
+      if isPercentage then
+        DiscountText := DiscountText + '(' + floattostr(Discount) + '%)';
+
+      AddRoom(Room, Rate, lCurrency, RateDate, RateDate + 1, 1, sText, (FRoomReservation = 0), lRoomReservation,
+              DiscountAmount, isPercentage, DiscountText, GuestName, NumberGuests, ChildrenCount, isPackage,
+              lRoomReservation, lRoomsDateSet.FieldByName('invBreakFast').asBoolean);
+
+      lRoomsDateSet.Next;
+    end; // while not roomdateSet.eof()
+  finally
+    lRoomsDateSet.Free;
+  end;
+end;
+
 procedure TfrmInvoiceRentPerDay.agrLinesCellValidate(Sender: TObject; ACol, ARow: integer; var Value: string;
   var Valid: boolean);
 var
@@ -4782,7 +5115,6 @@ end;
 
 procedure TfrmInvoiceRentPerDay.evtCurrencyChangedAndValid(Sender: TObject);
 var
-  theData: recCurrencyHolder;
   oldCurrency: string;
 begin
   if not IfInvoiceChangedThenOptionallySave(True) then
