@@ -200,21 +200,19 @@ object FrmReservationEmailingDialog: TFrmReservationEmailingDialog
   end
   object sPanel2: TsPanel
     Left = 0
-    Top = 512
+    Top = 520
     Width = 750
-    Height = 46
+    Height = 38
     Align = alBottom
     TabOrder = 1
     SkinData.SkinSection = 'PANEL'
-    DesignSize = (
-      750
-      46)
     object btnOk: TsButton
-      Left = 504
-      Top = 11
+      AlignWithMargins = True
+      Left = 518
+      Top = 4
       Width = 111
-      Height = 25
-      Anchors = [akRight, akBottom]
+      Height = 30
+      Align = alRight
       Caption = 'Send'
       Default = True
       Enabled = False
@@ -222,36 +220,48 @@ object FrmReservationEmailingDialog: TFrmReservationEmailingDialog
       TabOrder = 0
       OnClick = btnOkClick
       SkinData.SkinSection = 'BUTTON'
+      ExplicitLeft = 511
+      ExplicitTop = 6
+      ExplicitHeight = 25
     end
     object btnEdit: TsButton
-      Left = 25
-      Top = 10
+      AlignWithMargins = True
+      Left = 4
+      Top = 4
       Width = 111
-      Height = 25
+      Height = 30
+      Align = alLeft
       Caption = 'Edit text'
       Enabled = False
       TabOrder = 1
       OnClick = btnEditClick
       SkinData.SkinSection = 'BUTTON'
+      ExplicitLeft = 25
+      ExplicitTop = 10
+      ExplicitHeight = 25
     end
     object btnCancel: TsButton
-      Left = 628
-      Top = 10
+      AlignWithMargins = True
+      Left = 635
+      Top = 4
       Width = 111
-      Height = 25
-      Anchors = [akRight, akBottom]
+      Height = 30
+      Align = alRight
       Caption = 'Cancel'
       Enabled = False
       ModalResult = 2
       TabOrder = 2
       SkinData.SkinSection = 'BUTTON'
+      ExplicitLeft = 628
+      ExplicitTop = 10
+      ExplicitHeight = 25
     end
   end
   object WebBrowser: TWebBrowser
     Left = 0
     Top = 153
     Width = 750
-    Height = 359
+    Height = 367
     Align = alClient
     TabOrder = 2
     ExplicitLeft = 95
@@ -259,7 +269,7 @@ object FrmReservationEmailingDialog: TFrmReservationEmailingDialog
     ExplicitWidth = 300
     ExplicitHeight = 150
     ControlData = {
-      4C000000844D00001B2500000000000000000000000000000000000000000000
+      4C000000844D0000EE2500000000000000000000000000000000000000000000
       000000004C000000000000000000000001000000E0D057007335CF11AE690800
       2B2E126208000000000000004C0000000114020000000000C000000000000046
       8000000000000000000000000000000000000000000000000000000000000000
