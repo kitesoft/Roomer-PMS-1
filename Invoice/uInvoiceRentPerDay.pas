@@ -475,8 +475,6 @@ type
     zbRoomRentinTemp: boolean;
     FInvoiceLinesList: TInvoiceLineList;
 
-    zErr: boolean;
-
     tempInvoiceNo: integer;
 
     zStayTaxIncluded: boolean;
@@ -535,9 +533,9 @@ type
     /// for the supplied discount (if any). The Invoiceline objects are not attached to the grid.
     /// </summary>
     procedure AddRoom(const aRoom: String; aRoomPrice: Double; aCurrency: string; aFromDate: TDate; aToDate: TDate;
-      aDayCount: integer; const aDescription: string; aGetGuestName: boolean; aRoomReservation: integer;
+      aDayCount: integer; const aDescription: string; aRoomReservation: integer;
       aDiscountAmount: Double; aDiscountIsPercentage: boolean; const aDiscountText: string; const aGuestName: String;
-      aNumGuests: integer; aNumChildren: integer; aIsPackage: boolean; aRRAlias: integer;
+      aNumGuests: integer; aNumChildren: integer; const aPackageName: string; aRRAlias: integer;
       aBeakfastIncluded: boolean);
 
     Procedure AddRoomTaxToLinesAndGrid(totalTax: Double; TaxUnits: Double; taxItem: string; aPurchaseDate: TDate;
@@ -560,7 +558,7 @@ type
     /// </summary>
     procedure RestoreTMPInvoicelines;
 
-    procedure SaveHeader(aInvoiceNumber: integer; aExecutionPlan: TRoomerExecutionPlan; const aInvoiceLocation: string = '');
+    procedure AddSaveHeaderToExecPlan(aInvoiceNumber: integer; aExecutionPlan: TRoomerExecutionPlan; const aInvoiceLocation: string = '');
 
     function SaveInvoice(aInvoiceNumber: integer; aSaveType: TInvoiceSaveType; const aInvoiceLocation: string = ''): boolean;
 
@@ -669,8 +667,10 @@ type
     procedure SetInvoiceCurrency(const Value: string);
 
     function InvoiceCurrencyRate: double;
+    function LocateDate(recordSet: TRoomerDataset; field: String; Value: TDate): boolean;
+    function FormatRoomDescription(const aRoomNumber: string; const aRoomResDescription: String; aArrival: TDate; aDeparture: TDate; aDayCount: integer;
+                                   const aPackagename: string; aAddGuestName: boolean; const aGuestName: string): string;
 
-    property RentPerDay: boolean read FRentPerDay write FRentPerDay;
     property InvoiceIndex: TInvoiceIndex read FInvoiceIndex write SetInvoiceIndex;
 
     property AnyRowChecked: boolean read GetAnyRowSelected;
@@ -689,7 +689,12 @@ type
     procedure WndProc(var message: TMessage); override;
     property Reservation: integer read FReservation write FReservation;
     property RoomReservation: integer read FRoomReservation write FRoomReservation;
+    /// <summary>
+    ///   Currency to display amounts on invoice. not that setting this property does not
+    ///  alter the currencysettings of the invoice or roomreservation in the database
+    /// </summary>
     property InvoiceCurrency: string read FInvoiceCurrency write SetInvoiceCurrency;
+    property RentPerDay: boolean read FRentPerDay write FRentPerDay;
   published
     property lineCount: integer read GetInvoiceLineCount;
   end;
@@ -783,7 +788,23 @@ const
 procedure EditInvoiceRentPerDay(reservation, RoomReservation, SplitNumber, InvoiceIndex: integer; bCredit: boolean);
 var
   _frmInvoice: TfrmInvoiceRentPerDay;
+  lRentPerDay: boolean;
+  lAnswer: word;
 begin
+  lRentPerDay := false;
+  case glb.PMSSettings.InvoiceSettings.RoomRentPerDayOninvoice of
+    rpdAlways:  lRentPerDay := true;
+    rpdNever:   lRentPerDay := False;
+    rpdAsk:     begin
+                  lAnswer := MessageDlg(GetTranslatedText('shEditInvoice_RoomRentPerDay'), mtConfirmation, mbYesNoCancel, 0);
+                  case lAnswer of
+                    mrYes:     lRentPerDay := true;
+                    mrNo:      lRentPerDay := False;
+                    mrCancel:  Exit;
+                  end;
+                end;
+  end;
+
   _frmInvoice := TfrmInvoiceRentPerDay.Create(nil);
   try
     _frmInvoice.reservation := reservation;
@@ -791,6 +812,7 @@ begin
     _frmInvoice.FnewSplitNumber := SplitNumber;
     _frmInvoice.FInvoiceIndex := InvoiceIndex;
     _frmInvoice.FIsCredit := bCredit;
+    _frmInvoice.RentPerDay := lRentPerDay;
 
     _frmInvoice.ShowModal;
   finally
@@ -878,12 +900,6 @@ var
 begin
   result := True;
 
-  if zErr then
-  begin
-    close;
-    exit;
-  end;
-
   if FnewSplitNumber <> cCreditInvoive then // 1
   begin
     if chkChanged then
@@ -970,9 +986,6 @@ end;
 const
   vWidth: integer = 9;
   vDec: integer = 2;
-
-  eWidth: integer = 12;
-  eDec: integer = 4;
 
 procedure TfrmInvoiceRentPerDay.ClearInvoiceLines;
 var
@@ -1142,19 +1155,17 @@ begin
   agrLines.Cells[col_Description, ARow] := aInvoiceLine.Text;
   agrLines.Cells[col_ItemCount, ARow] := trim(_floattostr(aInvoiceLine.Number, vWidth, vDec));
 
-  agrLines.Cells[col_ItemPrice, ARow] := FCurrencyhandlersMap.CurrencyHandler[aInvoiceLine.Currency]
+  agrLines.Cells[col_ItemPrice, ARow] := FCurrencyhandlersMap[aInvoiceLine.Currency]
     .FormattedValueWithCode(aInvoiceLine.RevenuePrice);
 
-  agrLines.Cells[col_TotalPrice, ARow] := FCurrencyhandlersMap.CurrencyHandler[aInvoiceLine.Currency]
+  agrLines.Cells[col_TotalPrice, ARow] := FCurrencyhandlersMap[aInvoiceLine.Currency]
     .FormattedValueWithCode(aInvoiceLine.TotalRevenue);
 
-  lValue := FCurrencyhandlersMap.ConvertAmount(aInvoiceLine.AmountOnInvoice, aInvoiceLine.Currency,
-    fraInvoiceCurrency.CurrencyCode);
+  lValue := FCurrencyhandlersMap.ConvertAmount(aInvoiceLine.AmountOnInvoice, aInvoiceLine.Currency, InvoiceCurrency);
   if SameValue(lValue, 0.00, 0.01) then
     agrLines.Cells[col_TotalOnInvoice, ARow] := ''
   else
-    agrLines.Cells[col_TotalOnInvoice, ARow] := FCurrencyhandlersMap.CurrencyHandler[fraInvoiceCurrency.CurrencyCode]
-      .FormattedValueWithCode(lValue); // trim(_floattostr(lAmountOnInvoice * lDisplayCurrencyRate, vWidth, vDec));
+    agrLines.Cells[col_TotalOnInvoice, ARow] := FCurrencyhandlersMap[InvoiceCurrency].FormattedValueWithCode(lValue);
 
   agrLines.Cells[col_System, ARow] := '';
   agrLines.Cells[col_Reference, ARow] := aInvoiceLine.Reference;
@@ -1194,7 +1205,7 @@ begin
     TotalDownPayments := getDownPayments;
     TotalBalance := nativeTotal - TotalDownPayments;
 
-    with FCurrencyhandlersMap.CurrencyHandler[g.qNativeCurrency] do
+    with FCurrencyhandlersMap[g.qNativeCurrency] do
     begin
       edtTotalWOVat.Text := FormattedValueWithCode(nativeTotal - ttVAT);
       edtVat.Text := FormattedValueWithCode(ttVAT);
@@ -1205,7 +1216,7 @@ begin
     end;
 
     if (fraInvoiceCurrency.CurrencyCode <> '') and (fraInvoiceCurrency.CurrencyCode <> g.qNativeCurrency) then
-      with FCurrencyhandlersMap.CurrencyHandler[fraInvoiceCurrency.CurrencyCode] do
+      with FCurrencyhandlersMap[fraInvoiceCurrency.CurrencyCode] do
         edtForeignCurrency.Text := FormattedValueWithCode(ConvertFrom(nativeTotal, g.qNativeCurrency));
 
     labLodgingTaxNights.Caption := inttostr(trunc(FInvoiceLinesList.CityTaxUnitCount));
@@ -1607,22 +1618,71 @@ begin
 
 end;
 
+function TfrmInvoiceRentPerDay.FormatRoomDescription(const aRoomNumber: string; const aRoomResDescription: String; aArrival: TDate; aDeparture: TDate; aDayCount: integer;
+                                                     const aPackagename: string; aAddGuestName: boolean; const aGuestName: string): string;
+var
+  lRoom: string;
+  lPrefix: string;
+begin
+
+  lPrefix := '';
+
+  if aRoomResDescription.StartsWith('--') or aRoomResDescription.StartsWith('&&') then
+  begin
+    Result := aRoomResDescription.TrimStart(['-', '&']);
+  end
+
+  else if aRoomResDescription.StartsWith('&-') then
+  begin
+    Result := aRoomResDescription.TrimStart(['-', '&']);
+    lPrefix := aGuestName;
+  end
+
+  else
+  begin
+    if aAddGuestName then
+      lPrefix := aGuestName;
+    lRoom := GetTranslatedText('shRoom');
+
+    if (not aPackageName.IsEmpty) then
+    begin
+      Result := Package_getRoomDescription(aPackagename, aRoomNumber, aArrival, aDeparture, aGuestName);
+      if FRoomReservation = 0 then
+        Result := Format('%s %s: %s', [Result, lRoom, aRoomNumber]);
+    end
+
+    else
+    begin
+      if aDayCount = 1 then
+        Result := format('%s %s %s', [lRoom, aRoomNumber, DateToDayMonthString(aArrival)])
+      else if aDayCount = trunc(aDeparture) - trunc(aArrival) then
+        Result := format('%s %s %s - %s', [lRoom, aRoomNumber, DateToDayMonthString(aArrival), DateToDayMonthString(aDeparture)])
+      else
+        Result := format('%s %s, %d %s', [lRoom, aRoomNumber, aDayCount, GetTranslatedText('shTx_Invoice_Nights')]);
+    end;
+
+    Result := (aRoomResDescription.Trim + ' ' + Result).Trim;
+  end;
+
+  if not lPrefix.IsEmpty then
+    result := Format('%s (%s)', [lPrefix, Result]);
+end;
+
 procedure TfrmInvoiceRentPerDay.AddRoom(const aRoom: String; aRoomPrice: Double; aCurrency: string; aFromDate: TDate;
-  aToDate: TDate; aDayCount: integer; const aDescription: string; aGetGuestName: boolean; aRoomReservation: integer;
+  aToDate: TDate; aDayCount: integer; const aDescription: string; aRoomReservation: integer;
   aDiscountAmount: Double; aDiscountIsPercentage: boolean; const aDiscountText: string; const aGuestName: String;
-  aNumGuests: integer; aNumChildren: integer; aIsPackage: boolean; aRRAlias: integer;
+  aNumGuests: integer; aNumChildren: integer; const aPackageName: string; aRRAlias: integer;
   aBeakfastIncluded: boolean);
 var
   lRmRntItem: string;
   lDiscountItem: string;
 
   lGuestName: string;
-  lNumGuests: integer;
   lConfirmDate: TDateTime;
   lConfirmAmount: Double;
 
-  lRRText: string;
-  lText: string;
+//  lRRText: string;
+//  lText: string;
   lRoomInfo: TInvoiceRoomEntity;
   lInvoiceLine: TInvoiceLine;
   lItemInfo: TItemTypeInfo;
@@ -1635,36 +1695,8 @@ begin
   lRmRntItem := trim(g.qRoomRentItem);
   lItemInfo := d.Item_Get_ItemTypeInfo(lRmRntItem);
 
-  lRRText := Item_GetDescription(lRmRntItem);
-  lDescription := aDescription;
-  if copy(lDescription, 1, 2) = '--' then
-  begin
-    lRRText := '';
-    lDescription := copy(lDescription, 3, maxint);
-  end;
 
-  if copy(lDescription, 1, 2) = '&-' then
-  begin
-    lRRText := '';
-    lDescription := copy(lDescription, 3, maxint);
-  end;
-
-  if copy(lDescription, 1, 2) = '&&' then
-  begin
-    aGetGuestName := True;
-    lDescription := copy(lDescription, 3, maxint);
-  end;
-
-  lGuestName := aGuestName;
-  lNumGuests := aNumGuests;
-
-  if not aGetGuestName then
-    if lRRText <> '' then
-      lText := lRRText + ' (' + lDescription + ') '
-    else
-      lText := lDescription
-  else
-    lDescription := trim(lGuestName) + ' (' + lDescription + ') ';
+  lDescription := FormatRoomDescription(aRoom, aDescription, aFromDate, aToDate, aDayCount, aPackageName, (FRoomReservation = 0), aGuestName);
 
   lRoomInfo := TInvoiceRoomEntity.Create;
   // -- Attach the Room information
@@ -1675,17 +1707,17 @@ begin
   lRoomInfo.Departure := aToDate;
   lRoomInfo.Price := aRoomPrice;
   lROomInfo.Currency := aCurrency;
-  lRoomInfo.CurrencyRate := FCurrencyhandlersMap.CurrencyHandler[aCurrency].Rate;
+  lRoomInfo.CurrencyRate := FCurrencyhandlersMap[aCurrency].Rate;
   lRoomInfo.Discount := 0.00;
   lRoomInfo.Room := aRoom;
-  lRoomInfo.NumGuests := lNumGuests;
+  lRoomInfo.NumGuests := aNumGuests;
   lRoomInfo.NumChildren := aNumChildren;
   lRoomInfo.BreakFastIncluded := aBeakfastIncluded;
   FRoomInfoList.Add(lRoomInfo);
 
   // add a TInvoiceline object for the RoomRent to InvoiceLineList
   lInvoiceLine := AddLine(0, nil, lRmRntItem, lDescription, aDayCount, aRoomPrice, aCurrency, lItemInfo.VATCode, aFromDate, True,
-    '', '', aIsPackage, lNumGuests, lConfirmDate, lConfirmAmount, aRRAlias, _GetCurrentTick); // *77
+    '', '', not aPackageName.IsEmpty, aNumGuests, lConfirmDate, lConfirmAmount, aRRAlias, _GetCurrentTick); // *77
   lInvoiceLine.RoomEntity := lRoomInfo;
   lRoomInfo.Vat := lInvoiceLine.VATOnInvoice;
 
@@ -1848,13 +1880,13 @@ end;
 procedure TfrmInvoiceRentPerDay.tvPaymentNativeAmountGetProperties(Sender: TcxCustomGridTableItem;
   ARecord: TcxCustomGridRecord; var AProperties: TcxCustomEditProperties);
 begin
-  aProperties := FCurrencyhandlersMap.CurrencyHandler[g.qNativeCurrency].GetcxEditProperties();
+  aProperties := FCurrencyhandlersMap[g.qNativeCurrency].GetcxEditProperties();
 end;
 
 procedure TfrmInvoiceRentPerDay.tvPaymentsCurrencyAmountGetProperties(Sender: TcxCustomGridTableItem;
   ARecord: TcxCustomGridRecord; var AProperties: TcxCustomEditProperties);
 begin
-  aProperties := FCurrencyhandlersMap.CurrencyHandler[mPaymentsCurrency.AsString].GetcxEditProperties();
+  aProperties := FCurrencyhandlersMap[mPaymentsCurrency.AsString].GetcxEditProperties();
 end;
 
 procedure TfrmInvoiceRentPerDay.tvPaymentsMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState;
@@ -2136,7 +2168,7 @@ begin
 
     if FInvoiceIndexTotals.HasInvoiceLines[i] then
     begin
-      lInvLinesIndicator.Hint := FCurrencyhandlersMap.CurrencyHandler[fraInvoiceCurrency.CurrencyCode].FormattedValueWithCode(FInvoiceIndexTotals.TotalInvoiceLinesOnIndex[i]);
+      lInvLinesIndicator.Hint := FCurrencyhandlersMap[InvoiceCurrency].FormattedValueWithCode(FInvoiceIndexTotals.TotalInvoiceLinesOnIndex[i]);
       lInvLinesIndicator.Brush.Color := clRed; // $00C1FFFF;
     end;
     lInvLinesIndicator.Visible := FInvoiceIndexTotals.HasInvoiceLines[i];
@@ -2145,7 +2177,7 @@ begin
     lRoomRentIndicator.Brush.Color := clWhite;
     if FInvoiceIndexTotals.HasRoomRentItems[i] then
     begin
-      lRoomRentIndicator.Hint := FCurrencyhandlersMap.CurrencyHandler[fraInvoiceCurrency.CurrencyCode].FormattedValueWithCode(FInvoiceIndexTotals.TotalRoomRentOnIndex[i]);
+      lRoomRentIndicator.Hint := FCurrencyhandlersMap[InvoiceCurrency].FormattedValueWithCode(FInvoiceIndexTotals.TotalRoomRentOnIndex[i]);
       lRoomRentIndicator.Brush.Color := clBlue; // $00FFCFA8;
     end;
     lRoomRentIndicator.Visible := FInvoiceIndexTotals.HasRoomRentItems[i];
@@ -2865,7 +2897,6 @@ end;
 
 procedure TfrmInvoiceRentPerDay.FormCreate(Sender: TObject);
 begin
-  zErr := false;
   zFirsttime := True;
 
   linesNumDays := 0;
@@ -2930,8 +2961,6 @@ begin
 end;
 
 procedure TfrmInvoiceRentPerDay.FormShow(Sender: TObject);
-var
-  lAnswer: word;
 begin
   actRemoveSelected.Visible := glb.PMSSettings.InvoiceSettings.AllowDeletingItemsFromInvoice;
   actToggleLodgingTax.Visible := glb.PMSSettings.InvoiceSettings.AllowTogglingOfCityTaxes;
@@ -2939,19 +2968,6 @@ begin
   actEditDownPayment.Visible := glb.PMSSettings.InvoiceSettings.AllowPaymentModification;
 
   fraInvoiceCurrency.OnCurrencyChangeAndValid := evtCurrencyChangedAndValid;
-
-  case glb.PMSSettings.InvoiceSettings.RoomRentPerDayOninvoice of
-    rpdAlways:  RentPerDay := true;
-    rpdNever:   RentPerDay := False;
-    rpdAsk:     begin
-                  lAnswer := MessageDlg(GetTranslatedText('shEditInvoice_RoomRentPerDay'), mtConfirmation, mbYesNoCancel, 0);
-                  case lAnswer of
-                    mrYes:     RentPerDay := true;
-                    mrNo:      RentPerDay := False;
-                    mrCancel:  Close;
-                  end;
-                end;
-  end;
 
   LoadInvoice;
   UpdateCaptions;
@@ -3278,7 +3294,7 @@ begin
     lOpenBalance := FInvoiceLinesList.TotalOnInvoiceNativeCurrency - getDownPayments;
     if SelectPaymentTypes(lOpenBalance, edtCustomer.Text, ptInvoice, fraInvoiceCurrency.CurrencyCode,
       GetRate(fraInvoiceCurrency.CurrencyCode), FReservation, FRoomreservation, lstLocations, aInvoiceDate, aPayDate, aLocation) then
-      with FCurrencyhandlersMap.CurrencyHandler[g.qNativeCurrency] do
+      with FCurrencyhandlersMap[g.qNativeCurrency] do
         result := (RoundedValue(GatherPayments(stlPaySelections)) = RoundedValue(lOpenBalance));
 
   finally
@@ -3286,7 +3302,7 @@ begin
   end;
 end;
 
-procedure TfrmInvoiceRentPerDay.SaveHeader(aInvoiceNumber: integer; aExecutionPlan: TRoomerExecutionPlan; const aInvoiceLocation: string);
+procedure TfrmInvoiceRentPerDay.AddSaveHeaderToExecPlan(aInvoiceNumber: integer; aExecutionPlan: TRoomerExecutionPlan; const aInvoiceLocation: string);
 var
   iMultiplier: integer;
 var
@@ -3528,7 +3544,7 @@ begin
             invoiceLine.Item, invoiceLine.Total, aInvoiceNumber, invoiceLine.Text));
       end;
 
-      SaveHeader(aInvoiceNumber, lExecutionPlan, aInvoiceLocation);
+      AddSaveHeaderToExecPlan(aInvoiceNumber, lExecutionPlan, aInvoiceLocation);
 
       if (aSaveType = stDefinitive) then
       begin
@@ -4120,7 +4136,7 @@ var
 begin
   lInvLine := GetInvoiceLineByRow(ARow);
   if (ACol = col_ItemPrice) and assigned(lInvLine) then
-    Value := FCurrencyhandlersMap.CurrencyHandler[lInvLine.Currency].FormattedValue(lInvLine.Price, false);
+    Value := FCurrencyhandlersMap[lInvLine.Currency].FormattedValue(lInvLine.Price, false);
   FCellValueBeforeEdit := agrLines.Cells[ACol, ARow];
   FCellDoubleBeforeEdit := StrToFloatDef(FCellValueBeforeEdit, 0);
 end;
@@ -4266,6 +4282,22 @@ begin
     inherited WndProc(message);
 end;
 
+function TfrmInvoiceRentPerDay.LocateDate(recordSet: TRoomerDataset; field: String; Value: TDate): boolean;
+begin
+  // work around for Multiple Step errors in ADODataset when using normal locate()
+  result := false;
+  recordSet.first;
+  while NOT recordSet.eof do
+  begin
+    if recordSet[field] = _db(Value, false) then
+    begin
+      result := True;
+      break;
+    end;
+    recordSet.Next;
+  end;
+end;
+
 procedure TfrmInvoiceRentPerDay.GenerateRoomRentLinesPerRoom();
 var
   NativeAmount: Double;
@@ -4326,6 +4358,7 @@ var
   Departure: TDate;
   Local_i: Integer;
   Local_i1: Integer;
+
 begin
 
   zRoomRSet := CreateNewDataSet;
@@ -4469,12 +4502,11 @@ begin
           for Local_i1 := 1 to dayCount do
           begin
             DiscountText := '';
-            if rset.Locate('ADate', _db(RateDate), []) then
+            if LocateDate( rSet, 'aDate', RateDate) then
             begin
               reservation := rSet.FieldByName('Reservation').asinteger;
               Room := rSet.FieldByName('Room').asString;
               PriceCode := rSet.FieldByName('PriceCode').asString;
-              RateDate := SQLToDate(rSet.FieldByName('ADate').asString);
               Rate := rSet.FieldByName('RoomRate').AsFloat;
               Discount := rSet.FieldByName('Discount').AsFloat;
               isPercentage := rSet.FieldByName('isPercentage').asBoolean;
@@ -4535,59 +4567,45 @@ begin
         begin
           AverageRate := TotalRate / UnpaidDays;
           AverageDiscountAmount := TotalDiscountAmount / UnpaidDays;
+
           if AverageRate <> 0 then
             AvrageDiscountPerc := AverageDiscountAmount / (AverageRate / 100)
           else
             AvrageDiscountPerc := 0;
-          isPackage := false;
-          if ABS(AverageRate) > 0 then
-          begin
-            if package <> '' then
-            begin
-              isPackage := True;
-              _s := Package_getRoomDescription(Package, Room, Arrival, Departure, GuestName);
-              if FRoomReservation = 0 then
-                _s := _s + ' Room :' + Room;
-            end
-            else
-            begin
-              lRoomText := GetTranslatedText('shRoom');
-              if UnpaidDays = trunc(Departure) - trunc(Arrival) then
-                _s := format(lRoomtext + ' %s %s - %s', [Room, FormatDateTime('dd/mm', Arrival), FormatDateTime('dd/mm', Departure)])
-              else
-                _s := format(lRoomtext + ' %s for %d nights', [Room, UnpaidDays]);
-            end;
-            sText := _s;
-            tmp := trim(zRoomRSet.FieldByName('rrDescription').asString);
-            if copy(tmp, 1, 2) = '--' then
-              sText := '';
-            sText := tmp + sText;
-            if allIsPercentage then
-.              DiscountText := DiscountText + '(' + floattostr(RoundDecimals(AvrageDiscountPerc, 2)) + '%)';
 
-            AddRoom(Room, AverageRate, Arrival, Departure, UnpaidDays, sText, (FRoomReservation = 0), lRoomReservation,
+          isPackage := not package.IsEmpty;
+
+//          if ABS(AverageRate) > 0 then
+//          begin
+//
+            if allIsPercentage and (AvrageDiscountPerc <> 0) then
+              DiscountText := DiscountText + '(' + floattostr(RoundDecimals(AvrageDiscountPerc, 2)) + '%)';
+
+            AddRoom(Room, AverageRate, InvoiceCurrency, Arrival, Departure, UnpaidDays, zRoomRSet.FieldByName('rrDescription').asString,
+                    lRoomReservation,
                     iif(AllIsPercentage, AvrageDiscountPerc, AverageDiscountAmount), AllisPercentage, DiscountText,
-                    GuestName, NumberGuests, ChildrenCount, isPackage, lRoomReservation, zRoomRSet.FieldByName('invBreakFast').AsBoolean);
+                    GuestName, NumberGuests, ChildrenCount, Package, lRoomReservation, zRoomRSet.FieldByName('invBreakFast').AsBoolean);
 
-          end;
-          if (ABS(AverageRate) = 0) and (status <> 'B') then
-          begin
-            if package <> '' then
-            begin
-              isPackage := True;
-              _s := Package_getRoomDescription(Package, Room, Arrival, Departure, GuestName);
-              if FRoomReservation = 0 then
-                _s := _s + ' ' + lRoomText + ':' + Room;
-            end
-            else
-              _s := format(lRoomtext + ' %s %s-%s', [Room, FormatDateTime('dd/mm', Arrival), FormatDateTime('dd/mm', Departure)]);
-            sText := _s;
-            tmp := trim(zRoomRSet.FieldByName('rrDescription').asString);
-            if copy(tmp, 1, 2) = '--' then
-              sText := '';
-            sText := tmp + sText;
-            AddRoom(Room, 0, Arrival, Departure, UnpaidDays, sText, (lRoomReservation = 0), lRoomReservation, 0, false, '', '', NumberGuests, ChildrenCount, isPackage, lRoomReservation, zRoomRSet.FieldByName('invBreakFast').AsBoolean);
-          end;
+//          end
+
+//??? What is this about?
+//          else if (ABS(AverageRate) = 0) and (status <> 'B') then
+//          begin
+//            if package <> '' then
+//            begin
+//              _s := Package_getRoomDescription(Package, Room, Arrival, Departure, GuestName);
+//              if FRoomReservation = 0 then
+//                _s := _s + ' ' + lRoomText + ':' + Room;
+//            end
+//            else
+//              _s := format(lRoomtext + ' %s %s-%s', [Room, FormatDateTime('dd/mm', Arrival), FormatDateTime('dd/mm', Departure)]);
+//            sText := _s;
+//            tmp := trim(zRoomRSet.FieldByName('rrDescription').asString);
+//            if copy(tmp, 1, 2) = '--' then
+//              sText := '';
+//            sText := tmp + sText;
+//            AddRoom(Room, 0, InvoiceCurrency, Arrival, Departure, UnpaidDays, sText, (lRoomReservation = 0), lRoomReservation, 0, false, '', '', NumberGuests, ChildrenCount, package, lRoomReservation, zRoomRSet.FieldByName('invBreakFast').AsBoolean);
+//          end;
         end;
         inc(index);
         zRoomRSet.Next;
@@ -4604,15 +4622,15 @@ end;
 procedure TfrmInvoiceRentPerDay.GenerateRoomRentLinesPerDay();
 var
   lCurrency: string;
-  lRoomText: string;
+//  lRoomText: string;
   RateCount: Integer;
-  isPackage: Boolean;
+//  isPackage: Boolean;
   status: string;
   isPaid: Boolean;
   ShowDiscount: Boolean;
   Discount: Double;
-  tmp: string;
-  sText: string;
+//  tmp: string;
+//  sText: string;
   isGroupAccount: Boolean;
   infantCount: Integer;
   lRoomsDateSet: TRoomerDataSet;
@@ -4624,11 +4642,11 @@ var
   RoomType: string;
   ChildrenCount: Integer;
   isPercentage: Boolean;
-  lBreakFastIncluded: Boolean;
+//  lBreakFastIncluded: Boolean;
   RoomDescription: string;
   CurrencyRate: Double;
   package: string;
-  i: Integer;
+//  i: Integer;
   lRoomReservation: Integer;
   PriceCode: string;
   AverageDiscountPerc: Double;
@@ -4776,29 +4794,30 @@ begin
       mRoomRates.FieldByName('NativeAmount').AsFloat := NativeAmount;
       mRoomRates.post;
 
-      isPackage := false;
-      if package <> '' then
-      begin
-        isPackage := True;
-        lRoomtext := Package_getRoomDescription(Package, Room, RateDate, RateDate, GuestName);
-        if FRoomReservation = 0 then
-          lRoomtext := lRoomtext + ' ' + GetTranslatedText('shRoom') + ': ' + Room;
-      end
-      else
-        lRoomText := format(GetTranslatedText('shRoom') + ' %s on %s', [Room, FormatDateTime('dd/mm', RateDate)]);
-
-      tmp := trim(lRoomsDateSet.FieldByName('rrDescription').asString);
-
-      if copy(tmp, 1, 2) = '--' then
-        lRoomText := '';
-
-      lRoomText := tmp + ' ' + lRoomText;
+//      isPackage := not package.IsEmpty;
+//      if package <> '' then
+//      begin
+//        isPackage := True;
+//        lRoomtext := Package_getRoomDescription(Package, Room, RateDate, RateDate, GuestName);
+//        if FRoomReservation = 0 then
+//          lRoomtext := lRoomtext + ' ' + GetTranslatedText('shRoom') + ': ' + Room;
+//      end
+//      else
+//        lRoomText := format(GetTranslatedText('shRoom') + ' %s on %s', [Room, FormatDateTime('dd/mm', RateDate)]);
+//
+//      tmp := trim(lRoomsDateSet.FieldByName('rrDescription').asString);
+//
+//      if copy(tmp, 1, 2) = '--' then
+//        lRoomText := '';
+//
+//      lRoomText := tmp + ' ' + lRoomText;
 
       if isPercentage then
         DiscountText := DiscountText + '(' + floattostr(Discount) + '%)';
 
-      AddRoom(Room, Rate, lCurrency, RateDate, RateDate + 1, 1, sText, (FRoomReservation = 0), lRoomReservation,
-              DiscountAmount, isPercentage, DiscountText, GuestName, NumberGuests, ChildrenCount, isPackage,
+      AddRoom(Room, Rate, lCurrency, RateDate, RateDate + 1, 1, lRoomsDateSet.FieldByName('rrDescription').asString,
+              lRoomReservation,
+              DiscountAmount, isPercentage, DiscountText, GuestName, NumberGuests, ChildrenCount, package,
               lRoomReservation, lRoomsDateSet.FieldByName('invBreakFast').asBoolean);
 
       lRoomsDateSet.Next;
@@ -5118,7 +5137,11 @@ var
   oldCurrency: string;
 begin
   if not IfInvoiceChangedThenOptionallySave(True) then
+  begin
+    // not saved, revert currency change in frame
+    Invoicecurrency := FInvoiceCurrency;
     exit;
+  end;
 
   oldCurrency := InvoiceCurrency;
   InvoiceCurrency := fraInvoiceCurrency.CurrencyCode;
@@ -5172,9 +5195,8 @@ begin
   if aFromCurrency.ToLower.Equals(aToCurrency.ToLower) then
     exit;
 
-  lOldRate := InvoiceCurrencyRate;
-  InvoiceCurrency := aToCurrency;
-  lNewRate := InvoiceCurrencyRate;
+  lOldRate := GetRate(aFromCurrency);
+  lNewRate := GetRate(aToCurrency);
 
   if lNewRate = 0 then
     lNewRate := 1;
@@ -5188,7 +5210,7 @@ begin
       lExecPlan := TRoomerExecutionPlan.Create(rSet);
       try
 
-        SaveHeader(-1, lExecplan);
+        AddSaveHeaderToExecPlan(-1, lExecplan);
 
         if (FRoomReservation = 0) and (FReservation > 0) then
         begin
@@ -5288,7 +5310,12 @@ end;
 procedure TfrmInvoiceRentPerDay.SetInvoiceCurrency(const Value: string);
 begin
   FInvoiceCurrency := Value;
-  fraInvoiceCurrency.CurrencyCode := Value;
+  fraInvoiceCurrency.DisableEvents;
+  try
+    fraInvoiceCurrency.CurrencyCode := Value;
+  finally
+    fraInvoiceCurrency.EnableEvents;
+  end;
 end;
 
 procedure TfrmInvoiceRentPerDay.SetInvoiceIndex(const Value: TInvoiceIndex);
@@ -6165,7 +6192,7 @@ begin
   rec.reservation := FReservation;
   rec.RoomReservation := FRoomReservation;
   rec.Invoice := zInvoiceNumber;
-  rec.Currency := zCurrentCurrency;
+  rec.Currency := InvoiceCurrency;
   rec.AmountInCurrency := 0;
 
   if (rec.reservation = 0) and (rec.RoomReservation = 0) then
@@ -6175,7 +6202,7 @@ begin
   end;
 
   if edtBalance.Text <> '' then
-    rec.InvoiceBalanceInCurrency := FCurrencyhandlersMap.ConvertAmount(FInvoiceLinesList.TotalOnInvoiceNativeCurrency - getDownPayments, zNativeCurrency, zCurrentCurrency);
+    rec.InvoiceBalanceInCurrency := FCurrencyhandlersMap.ConvertAmount(FInvoiceLinesList.TotalOnInvoiceNativeCurrency - getDownPayments, g.qNativeCurrency, InvoiceCurrency);
 
   if g.OpenDownPayment(actInsert, rec) then
   begin
@@ -6190,9 +6217,9 @@ begin
     theData.InvoiceNumber := zInvoiceNumber;
     theData.customer := edtCustomer.Text;
     theData.PayDate := _db(Date, false);
-    theData.NativeAmount := FCurrencyhandlersMap.ConvertAmount(rec.AmountInCurrency, zCurrentCurrency, zNativeCurrency);
+    theData.NativeAmount := FCurrencyhandlersMap.ConvertAmount(rec.AmountInCurrency, InvoiceCurrency, g.qNativeCurrency);
     theData.Description := rec.Description;
-    theData.CurrencyRate := InvoiceCurrencyRate; // ATH
+    theData.CurrencyRate := InvoiceCurrencyRate;
     theData.Currency := InvoiceCurrency;
     theData.ConfirmDate := 2; // _db('1900-01-01 00:00:00');
     theData.Notes := rec.Notes;
@@ -6298,7 +6325,7 @@ procedure TfrmInvoiceRentPerDay.AddARoom;
 var
   lIntDate: integer;
   lDate: TDate;
-  lRoomText: string;
+//  lRoomText: string;
   iPersons: integer;
   iRooms: integer;
   iNights: integer;
@@ -6319,9 +6346,9 @@ begin
       for lIntDate := trunc(now) to trunc(now) + iNights - 1 do
       begin
         lDate := lIntDate * 1.0;
-        lRoomText := GetTranslatedText('shRoom') + format(' on %s', [FormatDateTime('dd/mm', TDateTime(lDate))]);
-        AddRoom('', dRoomPrice, '', TDate(lDate), TDate(lDate) + 1, 1, lRoomText, false, -1, 0, false, '', edtName.Text,
-          iPersons, 0, false, -1, false);
+//        lRoomText := GetTranslatedText('shRoom') + format(' on %s', [FormatDateTime('dd/mm', TDateTime(lDate))]);
+        AddRoom('', dRoomPrice, '', TDate(lDate), TDate(lDate) + 1, 1, '', -1, 0, false, '', edtName.Text,
+          iPersons, 0, '', -1, false);
       end;
     end;
     UpdateGrid;

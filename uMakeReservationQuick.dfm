@@ -775,8 +775,6 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                 ExplicitHeight = 21
                 inherited lblCountryName: TLabel
                   Left = 67
-                  Width = 19
-                  Height = 13
                   ExplicitLeft = 67
                 end
                 inherited edCountryCode: TsEdit

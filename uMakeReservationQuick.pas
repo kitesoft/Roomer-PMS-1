@@ -3577,6 +3577,9 @@ begin
       if g.qWarnWhenOverbooking then
       begin
         sMessage := '';
+
+        //TODO Improve for roomreservations with different arrival and departure date. which is possible by
+        // selecting cells from the period grid and starting quick reservation
         AvailabilityPerDay := TAvailabilityPerDay.Create(dtArrival.date, dtDeparture.date, FNewReservation);
         sRoomTypes := AvailabilityPerDay.Overbookings;
         try

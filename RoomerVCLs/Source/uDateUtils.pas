@@ -28,6 +28,11 @@ function RoomerStringToDateTime(dateStr : String) : TDateTime;
 
 function DateTimeToHHMM(date: TDateTime): string;
 
+/// <summary>
+///   Format Datetime with only day and month, according to ShortDateFormat of FormatSettings
+/// </summary>
+function DateToDayMonthString(Date: TDateTime): string;
+
 
 implementation
 
@@ -216,5 +221,15 @@ begin
   Result := FormatDateTime('hh:mm', date);
 end;
 
+function DateToDayMonthString(Date: TDateTime): string;
+var
+  lFormat: string;
+begin
+  lFormat := FormatSettings.ShortDateFormat;
+  lFormat := StringReplace(lFormat, 'Y', '', [rfReplaceAll, rfIgnoreCase]);
+  lFormat := lFormat.TrimEnd([FormatSettings.DateSeparator]).TrimStart([FormatSettings.DateSeparator]);
+
+  Result := FormatDateTime(lFormat, Date);
+end;
 
 end.

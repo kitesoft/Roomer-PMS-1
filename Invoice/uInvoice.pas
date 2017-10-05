@@ -753,26 +753,28 @@ var
   _frmInvoice: TfrmInvoice;
 begin
 
-  if (glb.PMSSettings.InvoiceSettings.RoomRentPerDayOninvoice = rpdAlways)  or
-    (glb.PMSSettings.InvoiceSettings.RoomRentPerDayOninvoice = rpdAsk) and (MessageDlg(GetTranslatedText('shEditInvoice_RoomRentPerDay'), mtConfirmation, mbYesNo, 0) = mrYes) then
-    EditInvoiceRentPerDay(Reservation, ROomReservation, SplitNumber, InvoiceIndex, bCredit)
-  else
-  begin
-    _frmInvoice := TfrmInvoice.create(nil);
-    try
-      _frmInvoice.reservation := reservation;
-      _frmInvoice.RoomReservation := RoomReservation;
-      _frmInvoice.FnewSplitNumber := SplitNumber;
-      _frmInvoice.FInvoiceIndex := InvoiceIndex;
-      _frmInvoice.FIsCredit := bCredit;
-      _frmInvoice.zNativeCurrency := ctrlGetString('NativeCurrency');
-//      _frmInvoice.zFromKredit := FromKredit;
+  EditInvoiceRentPerDay(Reservation, ROomReservation, SplitNumber, InvoiceIndex, bCredit);
 
-      _frmInvoice.ShowModal;
-    finally
-      FreeAndNil(_frmInvoice);
-    end;
-  end;
+//  if (glb.PMSSettings.InvoiceSettings.RoomRentPerDayOninvoice = rpdAlways)  or
+//    (glb.PMSSettings.InvoiceSettings.RoomRentPerDayOninvoice = rpdAsk) and (MessageDlg(GetTranslatedText('shEditInvoice_RoomRentPerDay'), mtConfirmation, mbYesNo, 0) = mrYes) then
+//    EditInvoiceRentPerDay(Reservation, ROomReservation, SplitNumber, InvoiceIndex, bCredit)
+//  else
+//  begin
+//    _frmInvoice := TfrmInvoice.create(nil);
+//    try
+//      _frmInvoice.reservation := reservation;
+//      _frmInvoice.RoomReservation := RoomReservation;
+//      _frmInvoice.FnewSplitNumber := SplitNumber;
+//      _frmInvoice.FInvoiceIndex := InvoiceIndex;
+//      _frmInvoice.FIsCredit := bCredit;
+//      _frmInvoice.zNativeCurrency := ctrlGetString('NativeCurrency');
+////      _frmInvoice.zFromKredit := FromKredit;
+//
+//      _frmInvoice.ShowModal;
+//    finally
+//      FreeAndNil(_frmInvoice);
+//    end;
+//  end;
 end;
 
 procedure EmptyStringGrid(Grid: TAdvStringGrid);

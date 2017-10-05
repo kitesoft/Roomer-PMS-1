@@ -947,6 +947,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
               OptionsData.DeletingConfirmation = False
               OptionsData.Editing = False
               OptionsData.Inserting = False
+              OptionsView.ColumnAutoWidth = True
               OptionsView.GroupByBox = False
               object tvPaymentsPayDate: TcxGridDBColumn
                 Caption = 'Date'
@@ -1338,6 +1339,8 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
           SelectionTextColor = clHighlightText
           SortSettings.DefaultFormat = ssAutomatic
           Version = '8.2.4.1'
+          ExplicitLeft = 17
+          ExplicitTop = 4
           ColWidths = (
             24
             28
