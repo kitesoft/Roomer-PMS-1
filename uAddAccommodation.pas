@@ -47,6 +47,7 @@ type
     edRoomPrice: TsCalcEdit;
     BtnOk: TsButton;
     btnCancel: TsButton;
+    lbCurrency: TsLabel;
     procedure FormCreate(Sender : TObject);
     procedure FormShow(Sender : TObject);
     procedure btnOKClick(Sender : TObject);
@@ -73,7 +74,7 @@ uses
     uRoomerLanguage
   , uUtils
   , uDImages
-  , uMain;
+  , uMain, uG;
 
 procedure TfrmAddAccommodation.btnOKClick(Sender : TObject);
 begin
@@ -103,6 +104,7 @@ begin
   edNights.Value := zNights;
   edRooms.Value := zRooms;
   edRoomPrice.value := zRoomPrice;
+  lbCurrency.Caption := g.qNativeCurrency;
   edRoomprice.SetFocus;
 end;
 

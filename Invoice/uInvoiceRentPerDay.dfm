@@ -257,7 +257,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
       end
       object btnExit: TsButton
         Left = 991
-        Top = 3
+        Top = 1
         Width = 161
         Height = 41
         Hint = 'Close form'
@@ -330,19 +330,16 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         Top = 137
         Width = 161
         Height = 41
+        Action = actSave
         Anchors = [akTop, akRight]
-        Caption = 'Save changes'
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWhite
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
-        ImageIndex = 2
         Images = DImages.cxSmallImagesFlat
         ParentFont = False
         TabOrder = 8
-        Visible = False
-        OnClick = btnSaveChangesClick
         SkinData.CustomFont = True
         SkinData.ColorTone = clRed
       end
@@ -1937,9 +1934,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         ShortCut = 16465
       end
       object S1: TMenuItem
-        Caption = 'Sa&ve'
-        ShortCut = 16467
-        OnClick = S1Click
+        Action = actSave
       end
       object Exit1: TMenuItem
         Caption = 'Close'
@@ -2281,6 +2276,11 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
       Category = 'Downpayment'
       Caption = 'Delete downpayment'
       OnExecute = actDeleteDownPaymentExecute
+    end
+    object actSave: TAction
+      Category = 'File'
+      Caption = 'Save changes'
+      OnExecute = btnSaveChangesClick
     end
   end
   object timCloseInvoice: TTimer
