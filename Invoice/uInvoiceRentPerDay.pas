@@ -154,7 +154,7 @@ type
     btnExit: TsButton;
     btnInvoice: TsButton;
     btnProforma: TsButton;
-    sPanel2: TsPanel;
+    pnlTotals: TsPanel;
     clabTotalwoVAT: TsLabel;
     clavVAT: TsLabel;
     clabInvoiceTotal: TsLabel;
@@ -185,8 +185,6 @@ type
     edtDownPayments: TsEdit;
     clabBalance: TsLabel;
     edtBalance: TsEdit;
-    clabForeignCurrency: TsLabel;
-    edtForeignCurrency: TsEdit;
     grbInclutedTaxes: TsGroupBox;
     labLodgingTax: TsLabel;
     labLodgingTaxNights: TsLabel;
@@ -363,6 +361,11 @@ type
     splExtraInfo: TsSplitter;
     actSave: TAction;
     fraInvoiceCurrency: TfraCurrencyPanel;
+    pnlTotalsInCurrency: TsPanel;
+    lbTotalInCurrency: TsLabel;
+    edtTotalInCurrency: TsEdit;
+    edtBalanceInCurrency: TsEdit;
+    lbBalanceInCurrency: TsLabel;
     procedure FormCreate(Sender: TObject);
     procedure agrLinesMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
     procedure edtCustomerDblClick(Sender: TObject);
@@ -690,7 +693,7 @@ type
     property Reservation: integer read FReservation write FReservation;
     property RoomReservation: integer read FRoomReservation write FRoomReservation;
     /// <summary>
-    ///   Currency to display amounts on invoice. not that setting this property does not
+    ///   Currency to display amounts on invoice. note that setting this property does not
     ///  alter the currencysettings of the invoice or roomreservation in the database
     /// </summary>
     property InvoiceCurrency: string read FInvoiceCurrency write SetInvoiceCurrency;
@@ -749,7 +752,7 @@ const
   cInvoiceLineAttachColumn = 0;
   cPurchaseDateAsObjectColumn = 3;
 
-  // Columns in grid
+  // Visible Columns in grid
   col_Select = 0;
   col_VisibleOnInvoice = col_Select + 1;
   col_Item = col_VisibleOnInvoice + 1;
@@ -759,6 +762,8 @@ const
   col_ItemPrice = col_ItemCount + 1;
   col_TotalPrice = col_ItemPrice + 1;
   col_TotalOnInvoice = col_TotalPrice + 1;
+
+  // inVisible Columns in grid
   col_System = col_TotalOnInvoice + 1;
   col_Reference = col_System + 1;
   col_Source = col_Reference + 1;
@@ -1081,12 +1086,12 @@ var
   lInvoiceLine: TInvoiceLine;
   cnt: integer;
 begin
-  if not agrLines.IsUpdating then
-  begin
+//  if not agrLines.IsUpdating then
+//  begin
     agrLines.BeginUpdate;
     Screen.Cursor := crHourGlass;
     try
-      EmptyStringGrid(agrLines);
+      InitInvoiceGrid;
       agrLines.RowCount := FInvoiceLinesList.Count + 1;
 
       cnt := 1;
@@ -1106,7 +1111,7 @@ begin
       agrLines.EndUpdate;
       Screen.Cursor := crDefault;
     end;
-  end;
+//  end;
 end;
 
 procedure TfrmInvoiceRentPerDay.UpdateLine(ARow: integer);
@@ -1218,13 +1223,17 @@ begin
       edtDownPayments.Text := FormattedValueWithCode(TotalDownPayments);
       edtBalance.Text := FormattedValueWithCode(TotalBalance);
       labLodgingTax.Caption := FormattedValueWithCode(FInvoiceLinesList.TotalCityTaxRevenues);
+      labLodgingTaxNights.Caption := inttostr(trunc(FInvoiceLinesList.CityTaxUnitCount));
     end;
 
     if (fraInvoiceCurrency.CurrencyCode <> '') and (fraInvoiceCurrency.CurrencyCode <> g.qNativeCurrency) then
       with FCurrencyhandlersMap[fraInvoiceCurrency.CurrencyCode] do
-        edtForeignCurrency.Text := FormattedValueWithCode(ConvertFrom(nativeTotal, g.qNativeCurrency));
+      begin
+        edtTotalInCurrency.Text := FormattedValueWithCode(ConvertFrom(nativeTotal, g.qNativeCurrency));
+        edtBalanceInCurrency.Text := FormattedValueWithCode(ConvertFrom(TotalBalance, g.qNativeCurrency));
+      end;
 
-    labLodgingTaxNights.Caption := inttostr(trunc(FInvoiceLinesList.CityTaxUnitCount));
+
   finally
     Screen.Cursor := crDefault;
   end;
@@ -1593,6 +1602,7 @@ begin
   agrLines.Cells[col_autogen, 0] := 'ID';
 
   agrLines.AutoFitColumns(false);
+
   agrLines.ColWidths[col_Select] := 30;
   agrLines.ColWidths[col_VisibleOnInvoice] := 80;
   agrLines.ColWidths[col_Item] := 100;
@@ -1602,21 +1612,32 @@ begin
   agrLines.ColWidths[col_TotalPrice] := 100;
   agrLines.ColWidths[col_TotalOnInvoice] := 100;
   agrLines.ColWidths[col_Source] := 60;
-  iWidth := agrLines.ClientWidth - agrLines.ColWidths[col_Select] - agrLines.ColWidths[col_VisibleOnInvoice] -
-    agrLines.ColWidths[col_Item] - agrLines.ColWidths[col_ItemCount] - agrLines.ColWidths[col_ItemPrice] -
-    agrLines.ColWidths[col_TotalPrice] - agrLines.ColWidths[col_TotalOnInvoice] - agrLines.ColWidths[col_Source] - 5;
+  iWidth := agrLines.ClientWidth
+            - agrLines.ColWidths[col_Select]
+            - agrLines.ColWidths[col_VisibleOnInvoice]
+            - agrLines.ColWidths[col_Item]
+            - agrLines.ColWidths[col_ItemCount]
+            - agrLines.ColWidths[col_date]
+            - agrLines.ColWidths[col_ItemPrice]
+            - agrLines.ColWidths[col_TotalPrice]
+            - agrLines.ColWidths[col_TotalOnInvoice]
+            - agrLines.ColWidths[col_Source] - 5;
 
   if iWidth > 0 then
     agrLines.ColWidths[col_Description] := iWidth;
 
-//  agrLines.HideColumn(col_date);
   agrLines.HideColumn(col_System);
   agrLines.HideColumn(col_Reference);
-  agrLines.HideColumns(col_isPackage, col_autogen);
+  agrLines.HideColumn(col_isPackage);
+  agrLines.HideColumn(col_NoGuests);
+  agrLines.HideColumn(col_confirmdate);
+  agrLines.HideColumn(col_confirmAmount);
+  agrLines.HideColumn(col_rrAlias);
+  agrLines.HideColumn(col_autogen);
 
-  for i := 0 to agrLines.ColCount - 1 do
-    if agrLines.IsHiddenColumn(i) then
-      agrLines.ColWidths[i] := 0;
+//  for i := 0 to agrLines.ColCount - 1 do
+//    if agrLines.IsHiddenColumn(i) then
+//      agrLines.ColWidths[i] := 0;
 
   if not agrLines.HasCheckBox(0, col_Select) then
     agrLines.AddCheckBox(0, col_Select, false, false);
@@ -2325,10 +2346,10 @@ begin
 
       zInvoiceNumber := lInvoiceHeadSet.FieldByName('InvoiceNumber').asinteger;
 
-      GetInvoiceHeader(FReservation, FRoomReservation, zrSet); // To initialize with current data
-      SetInvoiceTypeIndex(zrSet.FieldByName('InvoiceType').asinteger);
+      GetInvoiceHeader(FReservation, FRoomReservation, lInvoiceHeadSet); // To initialize with current data
+      SetInvoiceTypeIndex(lInvoiceHeadSet.FieldByName('InvoiceType').asinteger);
 
-      if zrSet.FieldByName('InvoiceType').asinteger = 1 then   // Reservation customer
+      if lInvoiceHeadSet.FieldByName('InvoiceType').asinteger = 1 then   // Reservation customer
         GetReservationHeader(FReservation, FRoomReservation);
 
       if FnewSplitNumber = 1 then // Kreditinvoice
@@ -2341,16 +2362,13 @@ begin
       btnGetCustomer.Enabled := rgrInvoiceType.itemIndex <> 1;
       btnClearAddresses.Enabled := rgrInvoiceType.itemIndex <> 1;
 
-      edtDisplayCurrency.Text := trim(zrSet.FieldByName('ihCurrency').asString);
-      zCurrentCurrency := edtDisplayCurrency.Text;
-      zCurrencyRate := GetRate(zCurrentCurrency);
-      edtRate.Text := floattostr(zCurrencyRate);
-      memExtraText.Lines.Text := trim(zrSet.FieldByName('ExtraText').asString);
+      InvoiceCurrency := trim(lInvoiceHeadSet.FieldByName('ihCurrency').asString);
+      memExtraText.Lines.Text := trim(lInvoiceHeadSet.FieldByName('ExtraText').asString);
 
     end
     else
     begin
-      // Otherwise - create New invoice
+      // Otherwise - create New invoiceheader
       zInvoiceNumber := -1;
       zInvoiceDate := now;
       zConfirmDate := 2;
@@ -2863,6 +2881,8 @@ begin
     actToggleLodgingTax.Caption := GetTranslatedText('shUI_InvoiceEnableLodgingTax');
 
   btnReservationNotes.Enabled := actMoveRoomToTemp.Enabled;
+  pnlTotalsInCurrency.Visible := InvoiceCurrency <> g.qNativeCurrency;
+
 end;
 
 function TfrmInvoiceRentPerDay.GenerateInvoiceNumber: integer;
@@ -2976,9 +2996,7 @@ begin
   actEditDownPayment.Visible := glb.PMSSettings.InvoiceSettings.AllowPaymentModification;
 
   fraInvoiceCurrency.OnCurrencyChangeAndValid := evtCurrencyChangedAndValid;
-
-  btnGetCurrency.Enabled := not IsCashInvoice;
-  pnlInvoiceIndices.Visible := not IsCashInvoice;
+  fraInvoiceCurrency.Enabled := not IsCashInvoice;
 
   LoadInvoice;
   UpdateCaptions;
@@ -3090,7 +3108,7 @@ end;
 
 procedure TfrmInvoiceRentPerDay.NullifyGrid;
 begin
-  agrLines.UnHideColumnsAll;
+//  agrLines.UnHideColumnsAll;
   RemoveAllCheckboxes;
   agrLines.RemoveRows(0, agrLines.RowCount);
   agrLines.RowCount := 0;
@@ -4101,7 +4119,7 @@ begin
     col_Reference:
       HAlign := taLeftJustify;
     col_Source:
-      HAlign := taLeftJustify;
+      HAlign := taRightJustify;
     col_isPackage:
       HAlign := taLeftJustify;
     col_NoGuests:
@@ -5167,31 +5185,35 @@ end;
 
 procedure TfrmInvoiceRentPerDay.agrLinesDrawCell(Sender: TObject; ACol, ARow: integer; Rect: TRect;
   State: TGridDrawState);
-var
-  Bmp: TIcon;
-  Item: string;
+//var
+//  Bmp: TIcon;
+//  Item: string;
 begin
   inherited;
+
+  // Show sun-icon with roomrent and discount items when foreign curency selected
+  // Not needed anymore?
+
   // --
-  if not edtForeignCurrency.Visible then
-    exit;
-  if (ACol <> 5) then
-    exit;
-
-  Item := trim(TAdvStringGrid(Sender).Cells[col_Item, ARow]);
-  if (trim(g.qRoomRentItem) <> Item) and (trim(g.qDiscountItem) <> Item) then
-    exit;
-
-  try
-    Bmp := TIcon.Create;
-    try
-      GridImages.GetIcon(0, Bmp);
-      TAdvStringGrid(Sender).canvas.Draw(Rect.left + 1, Rect.top + 1, Bmp);
-    finally
-      Bmp.Free;
-    end;
-  except
-  end;
+//  if not edtForeignCurrency.Visible then
+//    exit;
+//  if (ACol <> 5) then
+//    exit;
+//
+//  Item := trim(TAdvStringGrid(Sender).Cells[col_Item, ARow]);
+//  if (trim(g.qRoomRentItem) <> Item) and (trim(g.qDiscountItem) <> Item) then
+//    exit;
+//
+//  try
+//    Bmp := TIcon.Create;
+//    try
+//      GridImages.GetIcon(0, Bmp);
+//      TAdvStringGrid(Sender).canvas.Draw(Rect.left + 1, Rect.top + 1, Bmp);
+//    finally
+//      Bmp.Free;
+//    end;
+//  except
+//  end;
 end;
 
 procedure TfrmInvoiceRentPerDay.UpdateRoomReservationsCurrency(const aFromCurrency: string; const aToCurrency: string);
@@ -6337,7 +6359,6 @@ procedure TfrmInvoiceRentPerDay.AddARoom;
 var
   lIntDate: integer;
   lDate: TDate;
-//  lRoomText: string;
   iPersons: integer;
   iRooms: integer;
   iNights: integer;
@@ -6355,12 +6376,16 @@ begin
       if NOT CheckExtraWithdrawalAllowed(iNights * dRoomPrice) then
         exit;
 
-      for lIntDate := trunc(now) to trunc(now) + iNights - 1 do
-      begin
-        lDate := lIntDate * 1.0;
-        AddRoom('', dRoomPrice, zNativeCurrency, TDate(lDate), TDate(lDate) + 1, 1, lRoomText, false, -1, 0, false, '', edtName.Text,
-          iPersons, 0, false, -1, false);
-      end;
+      if RentPerDay then
+        for lIntDate := trunc(now) to trunc(now) + iNights - 1 do
+        begin
+          lDate := lIntDate * 1.0;
+          AddRoom('', dRoomPrice, g.qNativeCurrency, TDate(lDate), TDate(lDate) + 1, 1, '',  -1, 0, false, '', edtName.Text,
+            iPersons, 0, '', -1, false);
+        end
+      else
+          AddRoom('', dRoomPrice, g.qNativeCurrency, trunc(now), trunc(now) + iNights, 1, '', -1, 0, false, '', edtName.Text,
+            iPersons, 0, '', -1, false);
     end;
     UpdateGrid;
   end;
