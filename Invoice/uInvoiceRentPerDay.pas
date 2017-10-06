@@ -361,6 +361,7 @@ type
     actDeleteDownPayment: TAction;
     btnDeleteDownpayment: TsButton;
     splExtraInfo: TsSplitter;
+    actSave: TAction;
     fraInvoiceCurrency: TfraCurrencyPanel;
     procedure FormCreate(Sender: TObject);
     procedure agrLinesMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
@@ -412,7 +413,6 @@ type
     procedure FormShow(Sender: TObject);
     procedure CheckBoxClick(Sender: TObject; ACol, ARow: integer; State: boolean);
     procedure agrLinesKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
-    procedure S1Click(Sender: TObject);
     procedure Exit1Click(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure agrLinesGetDisplText(Sender: TObject; ACol, ARow: integer; var Value: string);
@@ -928,7 +928,12 @@ end;
 
 procedure TfrmInvoiceRentPerDay.btnExitClick(Sender: TObject);
 begin
-  if IsCashInvoice or IfInvoiceChangedThenOptionallySave then
+  if IsCashInvoice then
+  begin
+    if MessageDlg(GetTranslatedText('shTx_Invoice_WarningCloseCashInvoice'), mtConfirmation, mbOKCancel, 0) = mrOK then
+      Close;
+  end
+  else if IfInvoiceChangedThenOptionallySave then
     close;
 end;
 
@@ -2320,27 +2325,27 @@ begin
 
       zInvoiceNumber := lInvoiceHeadSet.FieldByName('InvoiceNumber').asinteger;
 
-      if FnewSplitNumber <> cCashInvoice then
+      GetInvoiceHeader(FReservation, FRoomReservation, zrSet); // To initialize with current data
+      SetInvoiceTypeIndex(zrSet.FieldByName('InvoiceType').asinteger);
+
+      if zrSet.FieldByName('InvoiceType').asinteger = 1 then   // Reservation customer
+        GetReservationHeader(FReservation, FRoomReservation);
+
+      if FnewSplitNumber = 1 then // Kreditinvoice
       begin
-        GetInvoiceHeader(FReservation, FRoomReservation, lInvoiceHeadSet); // To initialize with current data
-        SetInvoiceTypeIndex(lInvoiceHeadSet.FieldByName('InvoiceType').asinteger);
-
-        if lInvoiceHeadSet.FieldByName('InvoiceType').asinteger = 1 then   // Reservation customer
-          GetReservationHeader(FReservation, FRoomReservation);
-
-        if FnewSplitNumber = 1 then // Kreditinvoice
-        begin
-          GetInvoiceHeader(FReservation, FRoomReservation);
-          SetInvoiceTypeIndex(3);
-        end;
-
-        HeaderChanged := false;
-        btnGetCustomer.Enabled := rgrInvoiceType.itemIndex <> 1;
-        btnClearAddresses.Enabled := rgrInvoiceType.itemIndex <> 1;
+        GetInvoiceHeader(FReservation, FRoomReservation);
+        SetInvoiceTypeIndex(3);
       end;
 
-      InvoiceCurrency := trim(lInvoiceHeadSet.FieldByName('ihCurrency').asString);
-      memExtraText.Lines.Text := trim(lInvoiceHeadSet.FieldByName('ExtraText').asString);
+      HeaderChanged := false;
+      btnGetCustomer.Enabled := rgrInvoiceType.itemIndex <> 1;
+      btnClearAddresses.Enabled := rgrInvoiceType.itemIndex <> 1;
+
+      edtDisplayCurrency.Text := trim(zrSet.FieldByName('ihCurrency').asString);
+      zCurrentCurrency := edtDisplayCurrency.Text;
+      zCurrencyRate := GetRate(zCurrentCurrency);
+      edtRate.Text := floattostr(zCurrencyRate);
+      memExtraText.Lines.Text := trim(zrSet.FieldByName('ExtraText').asString);
 
     end
     else
@@ -2832,21 +2837,24 @@ begin
     sRoomRentItem := _trimlower(g.qRoomRentItem);
     sDiscountItem := _trimlower(g.qDiscountItem);
 
+    actSaveAndExit.Enabled := not IsCashInvoice;
+    actSave.Enabled := not IsCashInvoice;
+
     actMoveRoomToTemp.Enabled := false; // ((sCurrentItem = sRoomRentItem) OR (sCurrentItem = sDiscountItem)) OR (AnyRowChecked AND IsRoomSelected);
-    btnMoveRoom.Enabled := ((sCurrentItem = sRoomRentItem) OR (sCurrentItem = sDiscountItem)) OR (AnyRowChecked AND IsRoomSelected);
+    btnMoveRoom.Enabled := (not IsCashInvoice) and ((sCurrentItem = sRoomRentItem) OR (sCurrentItem = sDiscountItem)) OR (AnyRowChecked AND IsRoomSelected);
 
     actMoveItemToTemp.Enabled := false; //AnyRowChecked OR ((NOT isSystemLine(lRow)) AND (sCurrentItem <> ''));
-    actMoveItemToGroupInvoice.Enabled := AnyRowChecked OR ((NOT isSystemLine(lRow)) AND (sCurrentItem <> ''));
+    actMoveItemToGroupInvoice.Enabled := (not IsCashInvoice) and (AnyRowChecked OR ((NOT isSystemLine(lRow)) AND (sCurrentItem <> '')));
     actRemoveSelected.Enabled := AnyRowChecked OR ((NOT isSystemLine(lRow)) AND (sCurrentItem <> ''));
-    btnMoveItem.Enabled := AnyRowChecked OR ((NOT isSystemLine(lRow)) AND (sCurrentItem <> ''));
+    btnMoveItem.Enabled := (not IsCashInvoice) and (AnyRowChecked OR ((NOT isSystemLine(lRow)) AND (sCurrentItem <> '')));
   end
   else
   begin
     actMoveItemToTemp.Enabled := false; //AnyRowChecked;
-    actMoveItemToGroupInvoice.Enabled := AnyRowChecked;
-    btnMoveRoom.Enabled := AnyRowChecked AND IsRoomSelected;
+    actMoveItemToGroupInvoice.Enabled := (not IsCashInvoice) and AnyRowChecked;
+    btnMoveRoom.Enabled := (not IsCashInvoice) and AnyRowChecked AND IsRoomSelected;
     actRemoveSelected.Enabled := AnyRowChecked;
-    btnMoveItem.Enabled := AnyRowChecked;
+    btnMoveItem.Enabled := (not IsCashInvoice) and AnyRowChecked;
   end;
 
   if FStayTaxEnabled then
@@ -2969,8 +2977,12 @@ begin
 
   fraInvoiceCurrency.OnCurrencyChangeAndValid := evtCurrencyChangedAndValid;
 
+  btnGetCurrency.Enabled := not IsCashInvoice;
+  pnlInvoiceIndices.Visible := not IsCashInvoice;
+
   LoadInvoice;
   UpdateCaptions;
+  UpdateControls;
 
   Exit1.Enabled := True;
 end;
@@ -4962,6 +4974,7 @@ begin
 
     UpdateGrid;
   end;
+  UpdateControls;
 end;
 
 function TfrmInvoiceRentPerDay.GetAnyRowSelected: boolean;
@@ -5102,6 +5115,9 @@ var
   list: TList<integer>;
   invoiceline: TinvoiceLine;
 begin
+  if IsCashInvoice then
+    Exit;
+
   if FRoomReservation > 0 then
   begin
     ShowMessage(GetTranslatedText('shTx_Invoice_RoomInvoice'));
@@ -5874,16 +5890,12 @@ begin
   SetCustEdits;
 end;
 
-procedure TfrmInvoiceRentPerDay.S1Click(Sender: TObject);
-begin
-  btnSaveChanges.Click;
-end;
-
 procedure TfrmInvoiceRentPerDay.SaveAnd(doExit: boolean);
 begin
   if zDoSave then
   begin
-    SaveInvoice(zInvoiceNumber, stProvisionally);
+    if not IsCashInvoice then
+      SaveInvoice(zInvoiceNumber, stProvisionally);
     chkChanged;
     if doExit then
       close;
@@ -6346,9 +6358,8 @@ begin
       for lIntDate := trunc(now) to trunc(now) + iNights - 1 do
       begin
         lDate := lIntDate * 1.0;
-//        lRoomText := GetTranslatedText('shRoom') + format(' on %s', [FormatDateTime('dd/mm', TDateTime(lDate))]);
-        AddRoom('', dRoomPrice, '', TDate(lDate), TDate(lDate) + 1, 1, '', -1, 0, false, '', edtName.Text,
-          iPersons, 0, '', -1, false);
+        AddRoom('', dRoomPrice, zNativeCurrency, TDate(lDate), TDate(lDate) + 1, 1, lRoomText, false, -1, 0, false, '', edtName.Text,
+          iPersons, 0, false, -1, false);
       end;
     end;
     UpdateGrid;
@@ -7258,12 +7269,9 @@ end;
 
 function TfrmInvoiceRentPerDay.chkChanged: boolean;
 begin
-  result := false;
-  if IsCashInvoice then
-    exit;
-
-  result := FInvoiceLinesList.IsChanged or HeaderChanged or (DeletedLines.Count > 0);
+  result := (not IsCashInvoice) and (FInvoiceLinesList.IsChanged or HeaderChanged or (DeletedLines.Count > 0));
   btnSaveChanges.Visible := result;
+  actSave.Enabled := Result;
 end;
 
 procedure TfrmInvoiceRentPerDay.LoadRoomListForCurrentReservation(reservation: integer);

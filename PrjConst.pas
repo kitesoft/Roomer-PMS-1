@@ -903,6 +903,7 @@ begin
   constants.Add('shTx_OpenInvoiceNew_Group', 'Group');
   constants.Add('shTx_OpenInvoiceNew_CashInvoice', 'This is a cash invoice');
   constants.Add('shTx_OpenInvoiceNew_CashInvoice2', 'This is cash invoice - not related to any reservation');
+  constants.Add('shTx_Invoice_WarningCloseCashInvoice', 'Cash invoice will not be saved. Are you sure you want to close?');
   constants.Add('shTx_OpenInvoiceNew_Guest', 'Guest');
   constants.Add('shTx_OpenInvoiceNew_NotArrived', 'Not Arrived');
   constants.Add('shTx_OpenInvoiceNew_Departed', 'Departed');

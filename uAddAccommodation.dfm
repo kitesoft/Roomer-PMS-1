@@ -5,7 +5,7 @@ object frmAddAccommodation: TfrmAddAccommodation
   BorderStyle = bsDialog
   Caption = 'Add accommodation'
   ClientHeight = 172
-  ClientWidth = 248
+  ClientWidth = 286
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -78,14 +78,21 @@ object frmAddAccommodation: TfrmAddAccommodation
     Font.Name = 'Tahoma'
     Font.Style = []
   end
+  object lbCurrency: TsLabel
+    Left = 232
+    Top = 96
+    Width = 4
+    Height = 13
+    Caption = '-'
+  end
   object edPersons: TsSpinEdit
     Left = 144
     Top = 13
     Width = 81
     Height = 21
-    Color = 3355443
+    Color = clWhite
     Font.Charset = DEFAULT_CHARSET
-    Font.Color = 15724527
+    Font.Color = clBlack
     Font.Height = -11
     Font.Name = 'Tahoma'
     Font.Style = []
@@ -106,9 +113,9 @@ object frmAddAccommodation: TfrmAddAccommodation
     Top = 36
     Width = 81
     Height = 21
-    Color = 3355443
+    Color = clWhite
     Font.Charset = DEFAULT_CHARSET
-    Font.Color = 15724527
+    Font.Color = clBlack
     Font.Height = -11
     Font.Name = 'Tahoma'
     Font.Style = []
@@ -129,9 +136,9 @@ object frmAddAccommodation: TfrmAddAccommodation
     Top = 69
     Width = 81
     Height = 21
-    Color = 3355443
+    Color = clWhite
     Font.Charset = DEFAULT_CHARSET
-    Font.Color = 15724527
+    Font.Color = clBlack
     Font.Height = -11
     Font.Name = 'Tahoma'
     Font.Style = []
@@ -150,42 +157,49 @@ object frmAddAccommodation: TfrmAddAccommodation
   object sPanel1: TsPanel
     Left = 0
     Top = 131
-    Width = 248
+    Width = 286
     Height = 41
     Align = alBottom
     TabOrder = 4
     SkinData.SkinSection = 'PANEL'
-    DesignSize = (
-      248
-      41)
+    ExplicitWidth = 248
     object BtnOk: TsButton
-      Left = 64
-      Top = 6
+      AlignWithMargins = True
+      Left = 108
+      Top = 4
       Width = 83
-      Height = 25
+      Height = 33
       Hint = 'Apply and close'
-      Anchors = [akTop, akRight]
+      Align = alRight
       Caption = 'OK'
+      Default = True
       ImageIndex = 82
       Images = DImages.PngImageList1
       ModalResult = 1
       TabOrder = 0
       OnClick = BtnOkClick
       SkinData.SkinSection = 'BUTTON'
+      ExplicitLeft = 64
+      ExplicitTop = 6
+      ExplicitHeight = 25
     end
     object btnCancel: TsButton
-      Left = 153
-      Top = 6
+      AlignWithMargins = True
+      Left = 197
+      Top = 4
       Width = 85
-      Height = 25
+      Height = 33
       Hint = 'Cancel and close'
-      Anchors = [akTop, akRight]
+      Align = alRight
       Caption = 'Cancel'
       ImageIndex = 4
       Images = DImages.PngImageList1
       ModalResult = 2
       TabOrder = 1
       SkinData.SkinSection = 'BUTTON'
+      ExplicitLeft = 153
+      ExplicitTop = 6
+      ExplicitHeight = 25
     end
   end
   object edRoomPrice: TsCalcEdit
@@ -194,9 +208,9 @@ object frmAddAccommodation: TfrmAddAccommodation
     Width = 81
     Height = 21
     AutoSize = False
-    Color = 3355443
+    Color = clWhite
     Font.Charset = DEFAULT_CHARSET
-    Font.Color = 15724527
+    Font.Color = clBlack
     Font.Height = -11
     Font.Name = 'Tahoma'
     Font.Style = []
@@ -211,15 +225,13 @@ object frmAddAccommodation: TfrmAddAccommodation
       item
         Component = Owner
         Properties.Strings = (
-          'Height'
           'Left'
           'Position'
-          'Top'
-          'Width')
+          'Top')
       end>
     StorageName = 'Software\Roomer\FormStatus\frmAddAccommodation'
     StorageType = stRegistry
-    Left = 2
-    Top = 6
+    Left = 10
+    Top = 14
   end
 end

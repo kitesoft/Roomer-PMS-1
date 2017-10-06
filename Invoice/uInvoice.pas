@@ -3586,6 +3586,9 @@ begin
   btnEditDownPayment.Visible := glb.PMSSettings.InvoiceSettings.AllowPaymentModification;
   actDeleteDownPayment.Visible := glb.PMSSettings.InvoiceSettings.AllowPaymentModification;
 
+  btnGetCurrency.Enabled := not IsCashInvoice;
+  btnGetRate.Enabled := not IsCashInvoice;
+
   LoadInvoice;
   UpdateCaptions;
 
