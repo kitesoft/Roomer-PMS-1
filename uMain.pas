@@ -685,6 +685,9 @@ type
     btnPayCards: TdxBarLargeButton;
     btnManagePaycards: TdxBarLargeButton;
     btnItemTransations: TdxBarLargeButton;
+    acHotelStatus: TAction;
+    dxBarButton7: TdxBarButton;
+    dxBarButton8: TdxBarButton;
     procedure FormCreate(Sender: TObject);
     procedure DefaultHandler(var Message); override;
     procedure FormShow(Sender: TObject);
@@ -978,6 +981,7 @@ type
     procedure btnPayCardsClick(Sender: TObject);
     procedure btnManagePaycardsClick(Sender: TObject);
     procedure btnItemTransationsClick(Sender: TObject);
+    procedure acHotelStatusExecute(Sender: TObject);
 
   protected
     procedure CreateParams(var Params: TCreateParams); override;
@@ -9199,6 +9203,15 @@ begin
   FrmReservationHintHolder.CancelHint;
 end;
 
+
+procedure TfrmMain.acHotelStatusExecute(Sender: TObject);
+var
+  xml: string;
+begin
+  xml := d.roomerMainDataSet.downloadUrlAsString(d.roomerMainDataSet.RoomerUri + 'statistics/bookings?sd="2017-10-01"&ed=2017-10-10?sdc=2016-10-01');
+  copytoclipboard(xml);
+  ShowMessage('Result on clipboard');
+end;
 
 procedure TfrmMain.ActivateMessagesIfApplicable;
 begin

@@ -1,4 +1,4 @@
-object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
+inherited frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
   Left = 686
   Top = 154
   HorzScrollBar.Visible = False
@@ -7,37 +7,40 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
   Caption = 'Invoice'
   ClientHeight = 697
   ClientWidth = 1158
-  Color = clBtnFace
   Constraints.MinWidth = 1112
   DoubleBuffered = True
-  Font.Charset = DEFAULT_CHARSET
-  Font.Color = clWindowText
   Font.Height = -11
-  Font.Name = 'Tahoma'
-  Font.Style = []
-  KeyPreview = True
   Menu = MainMenu1
-  OldCreateOrder = False
   Position = poDesigned
   Scaled = False
-  ShowHint = True
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnKeyDown = FormKeyDown
   OnResize = FormResize
   OnShow = FormShow
+  ExplicitTop = -28
+  ExplicitWidth = 1174
+  ExplicitHeight = 740
   PixelsPerInch = 96
   TextHeight = 13
-  object pnlMain: TsPanel
+  inherited sbStatusBar: TsStatusBar
+    Top = 661
+    Width = 1158
+    ExplicitTop = 642
+    ExplicitWidth = 1158
+  end
+  object pnlMain: TsPanel [1]
     Left = 0
     Top = 0
     Width = 1158
     Height = 678
+    Height = 661
     Align = alClient
     BevelOuter = bvNone
     Color = clWhite
     TabOrder = 1
     SkinData.SkinSection = 'PANEL'
+    ExplicitHeight = 642
     object pnlHead: TsPanel
       Left = 0
       Top = 0
@@ -173,7 +176,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
       end
       object btnExit: TsButton
         Left = 991
-        Top = 1
+        Top = 4
         Width = 161
         Height = 41
         Hint = 'Close form'
@@ -556,13 +559,14 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
       Left = 0
       Top = 189
       Width = 1158
-      Height = 489
+      Height = 472
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
+      ExplicitHeight = 453
       object pnlTotalsAndPayments: TsPanel
         Left = 0
-        Top = 280
+        Top = 277
         Width = 1158
         Height = 209
         Align = alBottom
@@ -570,6 +574,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         ParentColor = True
         TabOrder = 0
         SkinData.SkinSection = 'PANEL'
+        ExplicitTop = 258
         object splExtraInfo: TsSplitter
           Left = 526
           Top = 1
@@ -1246,7 +1251,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         Left = 0
         Top = 49
         Width = 1083
-        Height = 231
+        Height = 228
         Align = alClient
         BevelOuter = bvNone
         Caption = 'pnlLinesGrid'
@@ -1256,11 +1261,12 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         Padding.Bottom = 5
         TabOrder = 2
         SkinData.SkinSection = 'PANEL'
+        ExplicitHeight = 209
         object agrLines: TAdvStringGrid
           Left = 10
           Top = 5
           Width = 1063
-          Height = 221
+          Height = 218
           Cursor = crDefault
           Align = alClient
           BevelInner = bvNone
@@ -1390,6 +1396,7 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
           SelectionTextColor = clHighlightText
           SortSettings.DefaultFormat = ssAutomatic
           Version = '8.2.4.1'
+          ExplicitHeight = 199
           ColWidths = (
             24
             28
@@ -1414,12 +1421,13 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         Left = 1086
         Top = 52
         Width = 69
-        Height = 225
+        Height = 222
         HorzScrollBar.Visible = False
         VertScrollBar.Tracking = True
         Align = alRight
         TabOrder = 1
         OnDragOver = pnlInvoiceIndicesDragOver
+        ExplicitHeight = 203
         object pnlInvoiceIndex0: TsPanel
           Left = 0
           Top = 4
@@ -1928,13 +1936,26 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
       end
     end
   end
-  object FriendlyStatusBar1: TsStatusBar
-    Left = 0
-    Top = 678
-    Width = 1158
-    Height = 19
-    Panels = <>
-    SkinData.SkinSection = 'STATUSBAR'
+  inherited psRoomerBase: TcxPropertiesStore
+    Components = <
+      item
+        Component = frmBaseRoomerForm.Owner
+        Properties.Strings = (
+          'Height'
+          'Left'
+          'Top'
+          'Width'
+          'Position')
+      end>
+  end
+  inherited cxsrRoomerStyleRepository: TcxStyleRepository
+    PixelsPerInch = 96
+    inherited dxssRoomerGridReportLink: TdxGridReportLinkStyleSheet
+      BuiltIn = True
+    end
+    inherited cxssRoomerGridTableView: TcxGridTableViewStyleSheet
+      BuiltIn = True
+    end
   end
   object MainMenu1: TMainMenu
     Left = 372
@@ -2301,42 +2322,6 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
     OnTimer = timCloseInvoiceTimer
     Left = 57
     Top = 405
-  end
-  object StoreMain: TcxPropertiesStore
-    Components = <
-      item
-        Component = actInvoiceProperties
-        Properties.Strings = (
-          'AutoCheck'
-          'Caption'
-          'Category'
-          'Checked'
-          'Enabled'
-          'GroupIndex'
-          'HelpContext'
-          'HelpKeyword'
-          'HelpType'
-          'Hint'
-          'ImageIndex'
-          'Name'
-          'SecondaryShortCuts'
-          'ShortCut'
-          'Tag'
-          'Visible')
-      end
-      item
-        Component = Owner
-        Properties.Strings = (
-          'Height'
-          'Left'
-          'Position'
-          'Top'
-          'Width')
-      end>
-    StorageName = 'Software\Roomer\FormStatus\Invoice'
-    StorageType = stRegistry
-    Left = 448
-    Top = 312
   end
   object PaymentsDS: TDataSource
     DataSet = mPayments

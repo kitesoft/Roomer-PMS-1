@@ -55,7 +55,6 @@ object frmMain: TfrmMain
     SunkenBorder = True
     UseOwnColor = True
     UseOwnSunkenBorder = True
-    ExplicitTop = 122
   end
   object panMain: TsPanel
     Left = 0
@@ -1312,7 +1311,6 @@ object frmMain: TfrmMain
             OnMoved = splitPeriodMoved
             Color = 6842472
             ParentColor = False
-            ExplicitTop = 157
           end
           object pnlPeriodNoRooms: TsPanel
             Left = 0
@@ -1632,32 +1630,16 @@ object frmMain: TfrmMain
         end
         object tabFreeRooms: TsTabSheet
           Caption = 'tabFreeRooms'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
         end
         object tabDashboard: TsTabSheet
           Caption = 'tabDashboard'
           SkinData.SkinSection = 'TRANSPARENT'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
         end
         object tabRateQuery: TsTabSheet
           Caption = 'tabRateQuery'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
         end
         object tabFrontDesk: TsTabSheet
           Caption = 'tabFrontDesk'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object sbFrontDesk: TsScrollBox
             Left = 0
             Top = 0
@@ -5570,6 +5552,10 @@ object frmMain: TfrmMain
         item
           Visible = True
           ItemName = 'bbUpdateTranslations'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton8'
         end>
     end
     object bbUpdateTranslations: TdxBarButton
@@ -5667,6 +5653,16 @@ object frmMain: TfrmMain
       Visible = ivAlways
       LargeImageIndex = 29
       OnClick = btnItemTransationsClick
+    end
+    object dxBarButton7: TdxBarButton
+      Caption = 'New Button'
+      Category = 0
+      Hint = 'New Button'
+      Visible = ivAlways
+    end
+    object dxBarButton8: TdxBarButton
+      Action = acHotelStatus
+      Category = 0
     end
     object mmnuFile: TdxBarSubItem
       Caption = '&File'
@@ -24256,6 +24252,10 @@ object frmMain: TfrmMain
     object acUpdateTranslations: TAction
       Caption = 'Update Translations'
       OnExecute = acUpdateTranslationsExecute
+    end
+    object acHotelStatus: TAction
+      Caption = 'Test HotelStatus App '
+      OnExecute = acHotelStatusExecute
     end
   end
   object pupSelectHomePage: TPopupMenu

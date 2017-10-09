@@ -76,7 +76,7 @@ uses
   uInvoiceObjects
   , uInvoiceDefinitions, uRoomerBookingDataModel_ModelObjects
   , Spring.Collections.Lists
-  , Spring.Collections, cxCheckBox, cxCurrencyEdit, sSplitter
+  , Spring.Collections, cxCheckBox, cxCurrencyEdit, sSplitter, uRoomerForm, dxPScxCommon, dxPScxGridLnk
   , RoomerExceptionHandling, ufraCurrencyPanel
   ;
 
@@ -101,8 +101,7 @@ type
   //
   // ------------------------------------------------------------------------------
 
-  TfrmInvoiceRentPerDay = class(TForm)
-    FriendlyStatusBar1: TsStatusBar;
+  TfrmInvoiceRentPerDay = class(TfrmBaseRoomerForm)
     MainMenu1: TMainMenu;
     File1: TMenuItem;
     ExitandSave1: TMenuItem;
@@ -145,7 +144,6 @@ type
     clabInvoice: TsLabel;
     edtRoomGuest: TsLabel;
     clabRoomGuest: TsLabel;
-    StoreMain: TcxPropertiesStore;
     pnlTotalsAndPayments: TsPanel;
     memExtraText: TMemo;
     pnlLineButtons: TsPanel;
@@ -503,7 +501,6 @@ type
     FInvoiceCurrency: string;
     FRentPerDay: boolean;
 
-    procedure LoadInvoice;
     procedure loadInvoiceToMemtable(var m: TKbmMemTable);
 
     procedure UpdateControls(aRow: integer=0);
@@ -680,6 +677,8 @@ type
     property HeaderChanged: boolean read GetHeaderChanged write SetHeaderChanged;
     procedure GenerateRoomRentLinesPerDay;
     procedure GenerateRoomRentLinesPerRoom;
+  protected
+    procedure DoLoadData; override;
   public
     { Public declarations }
     FnewSplitNumber: integer; // 0 = herbergjareikningur
@@ -968,7 +967,7 @@ end;
 procedure TfrmInvoiceRentPerDay.actToggleLodgingTaxClick(Sender: TObject);
 begin
   FStaytaxEnabled := RV_ToggleUseStayTax(FReservation) and ctrlGetBoolean('useStayTax');
-  LoadInvoice;
+  RefreshData;
 end;
 
 procedure TfrmInvoiceRentPerDay.btnReservationNotesClick(Sender: TObject);
@@ -980,7 +979,7 @@ procedure TfrmInvoiceRentPerDay.btnSaveChangesClick(Sender: TObject);
 begin
   IfInvoiceChangedThenOptionallySave(false);
   UpdateInvoiceIndexTabs;
-  LoadInvoice;
+  RefreshData;
 end;
 
 procedure TfrmInvoiceRentPerDay.ClearRoomInfoObjects;
@@ -2233,7 +2232,7 @@ begin
 
 end;
 
-procedure TfrmInvoiceRentPerDay.LoadInvoice;
+procedure TfrmInvoiceRentPerDay.DoLoadData;
 var
   ItemId: string;
   LineId: integer;
@@ -2270,6 +2269,7 @@ label
 
 begin
 
+  inherited;
   lInvoiceHeadSet := CreateNewDataSet;
 
   mRoomRes.DisableControls;
@@ -2997,7 +2997,7 @@ begin
   fraInvoiceCurrency.OnCurrencyChangeAndValid := evtCurrencyChangedAndValid;
   fraInvoiceCurrency.Enabled := not IsCashInvoice;
 
-  LoadInvoice;
+  RefreshData;
   UpdateCaptions;
   UpdateControls;
 
@@ -3102,7 +3102,7 @@ begin
       [RoomReservation, FromRoomReservation]);
   copytoclipboard(sql);
   d.roomerMainDataSet.DoCommand(sql, false);
-  LoadInvoice;
+  RefreshData;
 end;
 
 procedure TfrmInvoiceRentPerDay.NullifyGrid;
@@ -3259,7 +3259,7 @@ begin
           begin
             SaveAnd(false);
             zFirsttime := false;
-            LoadInvoice;
+            RefreshData;
             loadInvoiceToMemtable(d.mInvoicelines_after);
             UpdateCaptions;
           end;
@@ -5103,7 +5103,7 @@ begin
   begin
     d.UpdateGroupAccountone(FReservation, FRoomReservation, FRoomReservation, True);
     SaveInvoice(zInvoiceNumber, stProvisionally);
-    LoadInvoice;
+    RefreshData;
   end;
 end;
 
@@ -5158,7 +5158,7 @@ begin
         end
       end;
       SaveInvoice(zInvoiceNumber, stProvisionally);
-      LoadInvoice;
+      RefreshData;
     finally
       list.Free;
     end;
@@ -5315,7 +5315,7 @@ end;
 procedure TfrmInvoiceRentPerDay.ExecuteCurrencyChange(const aOldCurrency: string; const aNewCurrency: string);
 begin
   UpdateRoomReservationsCurrency(aOldCurrency, aNewCurrency);
-  LoadInvoice;
+  ;
   UpdateCaptions;
 end;
 
@@ -5360,7 +5360,7 @@ begin
   IfInvoiceChangedThenOptionallySave;
   FInvoiceIndex := Value;
   RemoveAllCheckboxes;
-  LoadInvoice;
+  ;
 end;
 
 procedure TfrmInvoiceRentPerDay.pnlInvoiceIndex0Click(Sender: TObject);
@@ -6913,7 +6913,7 @@ begin
     FreeAndNil(rSet);
   end;
 
-  LoadInvoice;
+  ;
 end;
 
 procedure TfrmInvoiceRentPerDay.MoveItemToNewInvoiceIndex(rowIndex, toInvoiceIndex: integer);
@@ -7172,7 +7172,7 @@ begin
   finally
     list.Free;
   end;
-  LoadInvoice;
+  RefreshData;
 end;
 
 function TfrmInvoiceRentPerDay.CreateProformaID: integer;
