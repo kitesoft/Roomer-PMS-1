@@ -762,12 +762,12 @@ const
   col_ItemPrice = col_ItemCount + 1;
   col_TotalPrice = col_ItemPrice + 1;
   col_TotalOnInvoice = col_TotalPrice + 1;
+  col_Source = col_TotalOnInvoice + 1;
 
   // inVisible Columns in grid
-  col_System = col_TotalOnInvoice + 1;
+  col_System = col_source + 1;
   col_Reference = col_System + 1;
-  col_Source = col_Reference + 1;
-  col_isPackage = col_Source + 1;
+  col_isPackage = col_Reference + 1;
   col_NoGuests = col_isPackage + 1;
   col_confirmdate = col_NoGuests + 1;
   col_confirmAmount = col_confirmdate + 1;
@@ -1086,32 +1086,29 @@ var
   lInvoiceLine: TInvoiceLine;
   cnt: integer;
 begin
-//  if not agrLines.IsUpdating then
-//  begin
-    agrLines.BeginUpdate;
-    Screen.Cursor := crHourGlass;
-    try
-      InitInvoiceGrid;
-      agrLines.RowCount := FInvoiceLinesList.Count + 1;
+  agrLines.BeginUpdate;
+  Screen.Cursor := crHourGlass;
+  try
+    InitInvoiceGrid;
+    agrLines.RowCount := FInvoiceLinesList.Count + 1;
 
-      cnt := 1;
-      FInvoiceLinesList.SortOnInvoiceLineIndex;
-      for lInvoiceLine in FInvoiceLinesList do
-      begin
-        DisplayLine(lInvoiceLine, cnt);
-        inc(cnt);
-      end;
-
-      DisplayTotals;
-      AddAndInitNewRow;
-      UpdateInvoiceIndexTabs;
-
-      chkChanged;
-    finally
-      agrLines.EndUpdate;
-      Screen.Cursor := crDefault;
+    cnt := 1;
+    FInvoiceLinesList.SortOnInvoiceLineIndex;
+    for lInvoiceLine in FInvoiceLinesList do
+    begin
+      DisplayLine(lInvoiceLine, cnt);
+      inc(cnt);
     end;
-//  end;
+
+    DisplayTotals;
+    AddAndInitNewRow;
+    UpdateInvoiceIndexTabs;
+
+    chkChanged;
+  finally
+    agrLines.EndUpdate;
+    Screen.Cursor := crDefault;
+  end;
 end;
 
 procedure TfrmInvoiceRentPerDay.UpdateLine(ARow: integer);
@@ -1579,68 +1576,76 @@ Procedure TfrmInvoiceRentPerDay.InitInvoiceGrid;
 var
   iWidth, i: integer;
 begin
-  EmptyStringGrid(agrLines);
-  agrLines.ColCount := col_autogen + 1;
-  agrLines.RowHeights[0] := 40;
-  agrLines.RowCount := 2;
-  agrLines.Cells[col_Item, 0] := GetTranslatedText('shTxInvoice_Form_Header_Item');
-  agrLines.Cells[col_VisibleOnInvoice, 0] := GetTranslatedText('shTxInvoice_Form_Header_VisibleOnInvoice');
-  agrLines.Cells[col_Description, 0] := GetTranslatedText('shTxInvoice_Form_Header_Text');
-  agrLines.Cells[col_Date, 0] := GetTranslatedText('shTxInvoice_Form_Header_Date');
-  agrLines.Cells[col_ItemCount, 0] := GetTranslatedText('shTxInvoice_Form_Header_Number');
-  agrLines.Cells[col_ItemPrice, 0] := GetTranslatedText('shTxInvoice_Form_Header_UnitPrice');
-  agrLines.Cells[col_TotalPrice, 0] := GetTranslatedText('shTxInvoice_Form_Header_Total');
-  agrLines.Cells[col_TotalOnInvoice, 0] := GetTranslatedText('shTxInvoice_Form_Header_TotalOnInvoice');
-  agrLines.Cells[col_System, 0] := ' !';
-  agrLines.Cells[col_Reference, 0] := GetTranslatedText('shTxInvoice_Form_Header_Reference');
-  agrLines.Cells[col_Source, 0] := GetTranslatedText('shTxInvoice_Form_Header_Source');
-  agrLines.Cells[col_isPackage, 0] := GetTranslatedText('shTxInvoice_Form_Header_Package');
-  agrLines.Cells[col_NoGuests, 0] := GetTranslatedText('shTxInvoice_Form_Header_Guests');
-  agrLines.Cells[col_confirmdate, 0] := GetTranslatedText('shTxInvoice_Form_Header_Confirmdate');
-  agrLines.Cells[col_confirmAmount, 0] := GetTranslatedText('shTxInvoice_Form_Header_ConfirmAmount');
-  agrLines.Cells[col_rrAlias, 0] := GetTranslatedText('shTxInvoice_Form_Header_Alias');
-  agrLines.Cells[col_autogen, 0] := 'ID';
+  agrLines.BeginUpdate;
+  try
+    EmptyStringGrid(agrLines);
+    agrLines.ColCount := col_autogen + 1;
+    agrLines.RowHeights[0] := 40;
+    agrLines.RowCount := 2;
+    agrLines.Cells[col_Item, 0] := GetTranslatedText('shTxInvoice_Form_Header_Item');
+    agrLines.Cells[col_VisibleOnInvoice, 0] := GetTranslatedText('shTxInvoice_Form_Header_VisibleOnInvoice');
+    agrLines.Cells[col_Description, 0] := GetTranslatedText('shTxInvoice_Form_Header_Text');
+    agrLines.Cells[col_Date, 0] := GetTranslatedText('shTxInvoice_Form_Header_Date');
+    agrLines.Cells[col_ItemCount, 0] := GetTranslatedText('shTxInvoice_Form_Header_Number');
+    agrLines.Cells[col_ItemPrice, 0] := GetTranslatedText('shTxInvoice_Form_Header_UnitPrice');
+    agrLines.Cells[col_TotalPrice, 0] := GetTranslatedText('shTxInvoice_Form_Header_Total');
+    agrLines.Cells[col_TotalOnInvoice, 0] := GetTranslatedText('shTxInvoice_Form_Header_TotalOnInvoice');
+    agrLines.Cells[col_System, 0] := ' !';
+    agrLines.Cells[col_Reference, 0] := GetTranslatedText('shTxInvoice_Form_Header_Reference');
+    agrLines.Cells[col_Source, 0] := GetTranslatedText('shTxInvoice_Form_Header_Source');
+    agrLines.Cells[col_isPackage, 0] := GetTranslatedText('shTxInvoice_Form_Header_Package');
+    agrLines.Cells[col_NoGuests, 0] := GetTranslatedText('shTxInvoice_Form_Header_Guests');
+    agrLines.Cells[col_confirmdate, 0] := GetTranslatedText('shTxInvoice_Form_Header_Confirmdate');
+    agrLines.Cells[col_confirmAmount, 0] := GetTranslatedText('shTxInvoice_Form_Header_ConfirmAmount');
+    agrLines.Cells[col_rrAlias, 0] := GetTranslatedText('shTxInvoice_Form_Header_Alias');
+    agrLines.Cells[col_autogen, 0] := 'ID';
 
-  agrLines.AutoFitColumns(false);
+    agrLines.AutoFitColumns(false);
 
-  agrLines.ColWidths[col_Select] := 30;
-  agrLines.ColWidths[col_VisibleOnInvoice] := 80;
-  agrLines.ColWidths[col_Item] := 100;
-  agrLines.ColWidths[col_Date] := 100;
-  agrLines.ColWidths[col_ItemCount] := 80;
-  agrLines.ColWidths[col_ItemPrice] := 80;
-  agrLines.ColWidths[col_TotalPrice] := 100;
-  agrLines.ColWidths[col_TotalOnInvoice] := 100;
-  agrLines.ColWidths[col_Source] := 60;
-  iWidth := agrLines.ClientWidth
-            - agrLines.ColWidths[col_Select]
-            - agrLines.ColWidths[col_VisibleOnInvoice]
-            - agrLines.ColWidths[col_Item]
-            - agrLines.ColWidths[col_ItemCount]
-            - agrLines.ColWidths[col_date]
-            - agrLines.ColWidths[col_ItemPrice]
-            - agrLines.ColWidths[col_TotalPrice]
-            - agrLines.ColWidths[col_TotalOnInvoice]
-            - agrLines.ColWidths[col_Source] - 5;
+    agrLines.ColWidths[col_Select] := 30;
+    agrLines.ColWidths[col_VisibleOnInvoice] := 80;
+    agrLines.ColWidths[col_Item] := 100;
+    agrLines.ColWidths[col_Date] := 100;
+    agrLines.ColWidths[col_ItemCount] := 80;
+    agrLines.ColWidths[col_ItemPrice] := 80;
+    agrLines.ColWidths[col_TotalPrice] := 100;
+    agrLines.ColWidths[col_TotalOnInvoice] := 100;
+    agrLines.ColWidths[col_Source] := 70;
+    iWidth := agrLines.ClientWidth
+              - agrLines.ColWidths[col_Select]
+              - agrLines.ColWidths[col_VisibleOnInvoice]
+              - agrLines.ColWidths[col_Item]
+              - agrLines.ColWidths[col_ItemCount]
+              - agrLines.ColWidths[col_date]
+              - agrLines.ColWidths[col_ItemPrice]
+              - agrLines.ColWidths[col_TotalPrice]
+              - agrLines.ColWidths[col_TotalOnInvoice]
+              - agrLines.ColWidths[col_Source] - 5;
 
-  if iWidth > 0 then
-    agrLines.ColWidths[col_Description] := iWidth;
+    if iWidth > 0 then
+      agrLines.ColWidths[col_Description] := iWidth;
 
-  agrLines.HideColumn(col_System);
-  agrLines.HideColumn(col_Reference);
-  agrLines.HideColumn(col_isPackage);
-  agrLines.HideColumn(col_NoGuests);
-  agrLines.HideColumn(col_confirmdate);
-  agrLines.HideColumn(col_confirmAmount);
-  agrLines.HideColumn(col_rrAlias);
-  agrLines.HideColumn(col_autogen);
+    agrLines.HideColumn(col_System);
+    agrLines.HideColumn(col_Reference);
+    agrLines.HideColumn(col_isPackage);
+    agrLines.HideColumn(col_NoGuests);
+    agrLines.HideColumn(col_confirmdate);
+    agrLines.HideColumn(col_confirmAmount);
+    agrLines.HideColumn(col_rrAlias);
+    agrLines.HideColumn(col_autogen);
 
-//  for i := 0 to agrLines.ColCount - 1 do
-//    if agrLines.IsHiddenColumn(i) then
-//      agrLines.ColWidths[i] := 0;
 
-  if not agrLines.HasCheckBox(0, col_Select) then
-    agrLines.AddCheckBox(0, col_Select, false, false);
+    agrLines.FixedRightCols:= agrLines.ColCount - col_Source - 1; // needed to let AutoFitColumns leave hidden columns alone
+
+    for i := 0 to agrLines.ColCount -1 do
+      if agrLines.IsHiddenColumn(i) then
+        agrLines.ColWidths[i] := -1;
+
+    if not agrLines.HasCheckBox(0, col_Select) then
+      agrLines.AddCheckBox(0, col_Select, false, false);
+  finally
+    agrLines.EndUpdate;
+  end;
 
 end;
 
@@ -1863,8 +1868,6 @@ begin
   finally
     lTaxResultInvoiceLines.Free;
   end;
-
-  UpdateGrid;
 end;
 
 procedure TfrmInvoiceRentPerDay.UpdateTaxinvoiceLinesForRoomItemUsingBackend(aInvLine: TInvoiceLine);
@@ -1898,9 +1901,6 @@ begin
           aInvLine,
           lObject.CityTaxIncludedInRoomPrice //  lIsIncluded
     );
-
-    UpdateGrid;
-
 end;
 
 procedure TfrmInvoiceRentPerDay.tvPaymentNativeAmountGetProperties(Sender: TcxCustomGridTableItem;
@@ -2299,7 +2299,6 @@ begin
     begin
       CreateCashInvoice(g.qRackCustomer);
       InvoiceCurrency := g.qNativeCurrency;
-      InitInvoiceGrid;
       exit;
     end;
 
@@ -4119,7 +4118,7 @@ begin
     col_Reference:
       HAlign := taLeftJustify;
     col_Source:
-      HAlign := taRightJustify;
+      HAlign := taCenter;
     col_isPackage:
       HAlign := taLeftJustify;
     col_NoGuests:

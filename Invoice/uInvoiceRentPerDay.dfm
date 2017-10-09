@@ -867,7 +867,6 @@ object frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
               Margins.Bottom = 0
               Align = alBottom
               TabOrder = 6
-              ExplicitTop = 105
               object lbTotalInCurrency: TsLabel
                 Left = 22
                 Top = 8
