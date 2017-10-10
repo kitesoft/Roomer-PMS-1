@@ -9200,6 +9200,18 @@ begin
 end;
 
 
+procedure TfrmMain.acHotelStatusExecute(Sender: TObject);
+var
+  xml: string;
+begin
+  xml := d.roomerMainDataSet.downloadUrlAsString(d.roomerMainDataSet.RoomerUri + 'statistics/bookings?sd=2017-10-01&ed=2017-10-10&sdc=2016-10-01');
+  copytoclipboard(xml);
+  ShowMessage('Statistics Result on clipboard');
+  xml := d.roomerMainDataSet.downloadUrlAsString(d.roomerMainDataSet.RoomerUri + 'statistics/performance?startdate=2017-10-01&enddate=2017-10-10');
+  copytoclipboard(xml);
+  ShowMessage('Performance Result on clipboard');
+end;
+
 procedure TfrmMain.ActivateMessagesIfApplicable;
 begin
   // if the timer has been enabled means the idle duration is already counting.
