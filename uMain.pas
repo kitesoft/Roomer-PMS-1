@@ -685,6 +685,8 @@ type
     btnPayCards: TdxBarLargeButton;
     btnManagePaycards: TdxBarLargeButton;
     btnItemTransations: TdxBarLargeButton;
+    actHotelStatusApp: TAction;
+    dxBarButton7: TdxBarButton;
     procedure FormCreate(Sender: TObject);
     procedure DefaultHandler(var Message); override;
     procedure FormShow(Sender: TObject);
@@ -978,6 +980,7 @@ type
     procedure btnPayCardsClick(Sender: TObject);
     procedure btnManagePaycardsClick(Sender: TObject);
     procedure btnItemTransationsClick(Sender: TObject);
+    procedure actHotelStatusAppExecute(Sender: TObject);
 
   protected
     procedure CreateParams(var Params: TCreateParams); override;
@@ -9200,7 +9203,7 @@ begin
 end;
 
 
-procedure TfrmMain.acHotelStatusExecute(Sender: TObject);
+procedure TfrmMain.actHotelStatusAppExecute(Sender: TObject);
 var
   xml: string;
 begin
