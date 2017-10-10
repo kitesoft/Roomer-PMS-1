@@ -254,6 +254,7 @@ type
   protected
     procedure Notify(const Item: TInvoiceLine; Action: TCollectionNotification); override;
   public
+    procedure ResetChanged;
     function AddInvoiceLine(aLineId: integer; aParent: TInvoiceLine): TInvoiceLine;
     function AddPackageInvoiceLine(aLineId: integer; aParent: TInvoiceLine; aRoomreservation:integer): TPackageInvoiceLine;
 
@@ -312,6 +313,7 @@ begin
   FSource := '';
   FChildInvoiceLines := TList<TInvoiceLine>.Create;
   FCurrency := g.qNativeCurrency;
+  FChanged := True;
 end;
 
 destructor TInvoiceLine.Destroy;
@@ -597,6 +599,14 @@ begin
 
   inherited;
 
+end;
+
+procedure TInvoiceLineList.ResetChanged;
+var
+  lInvLine: TInvoiceLine;
+begin
+  for lInvLine in self do
+    lInvLine.Changed := false;
 end;
 
 procedure TInvoiceLineList.SetAllVisibleOnInvoiceTo(aVisible: boolean; aItemKindSet: TItemKindSet);

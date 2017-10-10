@@ -842,7 +842,6 @@ var i : Integer;
     begin
       timFilter.Enabled := False;
       timFilter.Interval := 500;
-      timFilter.Interval := 30;
       timFilter.Enabled := True;
     end;
 begin

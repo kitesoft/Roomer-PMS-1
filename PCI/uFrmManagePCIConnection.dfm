@@ -11,27 +11,27 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
   inherited sbStatusBar: TsStatusBar
     Top = 372
     Width = 780
-    ExplicitTop = 407
-    ExplicitWidth = 766
+    ExplicitTop = 372
+    ExplicitWidth = 780
   end
   inherited pnlButtons: TsPanel
     Top = 329
     Width = 780
     TabOrder = 0
-    ExplicitTop = 323
-    ExplicitWidth = 766
+    ExplicitTop = 329
+    ExplicitWidth = 780
     inherited btnOK: TsButton
       Left = 464
       OnClick = btnOKClick
-      ExplicitLeft = 450
+      ExplicitLeft = 464
     end
     inherited btnCancel: TsButton
       Left = 570
-      ExplicitLeft = 556
+      ExplicitLeft = 570
     end
     inherited btnClose: TsButton
       Left = 676
-      ExplicitLeft = 662
+      ExplicitLeft = 676
     end
   end
   object pnlTop: TsPanel [2]
@@ -41,9 +41,6 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
     Height = 57
     Align = alTop
     TabOrder = 2
-    ExplicitLeft = 80
-    ExplicitTop = 40
-    ExplicitWidth = 633
     object cbxIsActive: TsCheckBox
       AlignWithMargins = True
       Left = 11
@@ -63,9 +60,6 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       ImgChecked = 0
       ImgUnchecked = 0
       ReadOnly = True
-      ExplicitLeft = 8
-      ExplicitTop = 10
-      ExplicitHeight = 17
     end
   end
   object pnlLeft: TsPanel [3]
@@ -75,9 +69,6 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
     Height = 272
     Align = alLeft
     TabOrder = 3
-    ExplicitLeft = 1
-    ExplicitTop = 62
-    ExplicitHeight = 307
     object __lblVISA: TsLabel
       Left = 147
       Top = 14
@@ -216,6 +207,7 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       Align = alTop
       Alignment = taLeftJustify
       VerticalAlignment = taAlignTop
+      Style = csDropDownList
       Color = clWhite
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlack
@@ -228,9 +220,6 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       Text = '< SELECT >'
       Items.Strings = (
         '< SELECT >')
-      ExplicitLeft = 194
-      ExplicitTop = 23
-      ExplicitWidth = 169
     end
     object cbAMEX: TsComboBox
       AlignWithMargins = True
@@ -243,6 +232,7 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       Align = alTop
       Alignment = taLeftJustify
       VerticalAlignment = taAlignTop
+      Style = csDropDownList
       Color = clWhite
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlack
@@ -255,9 +245,6 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       Text = '< SELECT >'
       Items.Strings = (
         '< SELECT >')
-      ExplicitLeft = 194
-      ExplicitTop = 50
-      ExplicitWidth = 169
     end
     object cbBC: TsComboBox
       AlignWithMargins = True
@@ -270,6 +257,7 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       Align = alTop
       Alignment = taLeftJustify
       VerticalAlignment = taAlignTop
+      Style = csDropDownList
       Color = clWhite
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlack
@@ -282,9 +270,6 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       Text = '< SELECT >'
       Items.Strings = (
         '< SELECT >')
-      ExplicitLeft = 194
-      ExplicitTop = 77
-      ExplicitWidth = 169
     end
     object cbMastercard: TsComboBox
       AlignWithMargins = True
@@ -297,6 +282,7 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       Align = alTop
       Alignment = taLeftJustify
       VerticalAlignment = taAlignTop
+      Style = csDropDownList
       Color = clWhite
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlack
@@ -309,9 +295,6 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       Text = '< SELECT >'
       Items.Strings = (
         '< SELECT >')
-      ExplicitLeft = 194
-      ExplicitTop = 103
-      ExplicitWidth = 169
     end
     object cbMC_Alaska: TsComboBox
       AlignWithMargins = True
@@ -324,6 +307,7 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       Align = alTop
       Alignment = taLeftJustify
       VerticalAlignment = taAlignTop
+      Style = csDropDownList
       Color = clWhite
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlack
@@ -336,9 +320,6 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       Text = '< SELECT >'
       Items.Strings = (
         '< SELECT >')
-      ExplicitLeft = 194
-      ExplicitTop = 130
-      ExplicitWidth = 169
     end
     object cbMC_Canada: TsComboBox
       AlignWithMargins = True
@@ -351,6 +332,7 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       Align = alTop
       Alignment = taLeftJustify
       VerticalAlignment = taAlignTop
+      Style = csDropDownList
       Color = clWhite
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlack
@@ -363,9 +345,6 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       Text = '< SELECT >'
       Items.Strings = (
         '< SELECT >')
-      ExplicitLeft = 194
-      ExplicitTop = 157
-      ExplicitWidth = 169
     end
     object cbUnionPay: TsComboBox
       AlignWithMargins = True
@@ -378,6 +357,7 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       Align = alTop
       Alignment = taLeftJustify
       VerticalAlignment = taAlignTop
+      Style = csDropDownList
       Color = clWhite
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlack
@@ -390,9 +370,6 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       Text = '< SELECT >'
       Items.Strings = (
         '< SELECT >')
-      ExplicitLeft = 194
-      ExplicitTop = 184
-      ExplicitWidth = 169
     end
     object cbDiscover: TsComboBox
       AlignWithMargins = True
@@ -405,6 +382,7 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       Align = alTop
       Alignment = taLeftJustify
       VerticalAlignment = taAlignTop
+      Style = csDropDownList
       Color = clWhite
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlack
@@ -417,9 +395,6 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       Text = '< SELECT >'
       Items.Strings = (
         '< SELECT >')
-      ExplicitLeft = 194
-      ExplicitTop = 210
-      ExplicitWidth = 169
     end
     object cbDincersclub: TsComboBox
       AlignWithMargins = True
@@ -432,6 +407,7 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       Align = alTop
       Alignment = taLeftJustify
       VerticalAlignment = taAlignTop
+      Style = csDropDownList
       Color = clWhite
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlack
@@ -444,9 +420,6 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       Text = '< SELECT >'
       Items.Strings = (
         '< SELECT >')
-      ExplicitLeft = 194
-      ExplicitTop = 237
-      ExplicitWidth = 169
     end
   end
   object pnlRight: TsPanel [4]
@@ -456,9 +429,6 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
     Height = 272
     Align = alClient
     TabOrder = 4
-    ExplicitLeft = 403
-    ExplicitTop = 55
-    ExplicitHeight = 307
     object __lbCartaSi: TsLabel
       Left = 106
       Top = 14
@@ -597,6 +567,7 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       Align = alTop
       Alignment = taLeftJustify
       VerticalAlignment = taAlignTop
+      Style = csDropDownList
       Color = clWhite
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlack
@@ -609,9 +580,6 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       Text = '< SELECT >'
       Items.Strings = (
         '< SELECT >')
-      ExplicitLeft = 140
-      ExplicitTop = 23
-      ExplicitWidth = 165
     end
     object cbCarteBleue: TsComboBox
       AlignWithMargins = True
@@ -624,6 +592,7 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       Align = alTop
       Alignment = taLeftJustify
       VerticalAlignment = taAlignTop
+      Style = csDropDownList
       Color = clWhite
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlack
@@ -636,9 +605,6 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       Text = '< SELECT >'
       Items.Strings = (
         '< SELECT >')
-      ExplicitLeft = 140
-      ExplicitTop = 50
-      ExplicitWidth = 165
     end
     object cbDankort: TsComboBox
       AlignWithMargins = True
@@ -651,6 +617,7 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       Align = alTop
       Alignment = taLeftJustify
       VerticalAlignment = taAlignTop
+      Style = csDropDownList
       Color = clWhite
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlack
@@ -663,9 +630,6 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       Text = '< SELECT >'
       Items.Strings = (
         '< SELECT >')
-      ExplicitLeft = 140
-      ExplicitTop = 76
-      ExplicitWidth = 165
     end
     object cbDelta: TsComboBox
       AlignWithMargins = True
@@ -678,6 +642,7 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       Align = alTop
       Alignment = taLeftJustify
       VerticalAlignment = taAlignTop
+      Style = csDropDownList
       Color = clWhite
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlack
@@ -690,9 +655,6 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       Text = '< SELECT >'
       Items.Strings = (
         '< SELECT >')
-      ExplicitLeft = 140
-      ExplicitTop = 103
-      ExplicitWidth = 165
     end
     object cbElectron: TsComboBox
       AlignWithMargins = True
@@ -705,6 +667,7 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       Align = alTop
       Alignment = taLeftJustify
       VerticalAlignment = taAlignTop
+      Style = csDropDownList
       Color = clWhite
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlack
@@ -717,9 +680,6 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       Text = '< SELECT >'
       Items.Strings = (
         '< SELECT >')
-      ExplicitLeft = 140
-      ExplicitTop = 130
-      ExplicitWidth = 165
     end
     object cbJCB: TsComboBox
       AlignWithMargins = True
@@ -732,6 +692,7 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       Align = alTop
       Alignment = taLeftJustify
       VerticalAlignment = taAlignTop
+      Style = csDropDownList
       Color = clWhite
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlack
@@ -744,9 +705,6 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       Text = '< SELECT >'
       Items.Strings = (
         '< SELECT >')
-      ExplicitLeft = 140
-      ExplicitTop = 157
-      ExplicitWidth = 165
     end
     object cbMaestro: TsComboBox
       AlignWithMargins = True
@@ -759,6 +717,7 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       Align = alTop
       Alignment = taLeftJustify
       VerticalAlignment = taAlignTop
+      Style = csDropDownList
       Color = clWhite
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlack
@@ -771,9 +730,6 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       Text = '< SELECT >'
       Items.Strings = (
         '< SELECT >')
-      ExplicitLeft = 140
-      ExplicitTop = 183
-      ExplicitWidth = 165
     end
     object cbSwitch: TsComboBox
       AlignWithMargins = True
@@ -786,6 +742,7 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       Align = alTop
       Alignment = taLeftJustify
       VerticalAlignment = taAlignTop
+      Style = csDropDownList
       Color = clWhite
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlack
@@ -798,9 +755,6 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       Text = '< SELECT >'
       Items.Strings = (
         '< SELECT >')
-      ExplicitLeft = 140
-      ExplicitTop = 210
-      ExplicitWidth = 165
     end
     object cbSolo: TsComboBox
       AlignWithMargins = True
@@ -813,6 +767,7 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       Align = alTop
       Alignment = taLeftJustify
       VerticalAlignment = taAlignTop
+      Style = csDropDownList
       Color = clWhite
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlack
@@ -825,9 +780,6 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       Text = '< SELECT >'
       Items.Strings = (
         '< SELECT >')
-      ExplicitLeft = 140
-      ExplicitTop = 236
-      ExplicitWidth = 165
     end
   end
   inherited cxsrRoomerStyleRepository: TcxStyleRepository

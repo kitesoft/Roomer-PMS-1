@@ -523,7 +523,7 @@ type
     /// Create a new TInvoiceLine object and add this to InvoiceLinesList collection
     /// </summary>
     function AddLine(LineId: integer; aParentInvoice: TInvoiceLine; sItem, sText: string; iNumber: Double; aPrice: Double;
-      const aCurrency: string; const VATCode: string; PurchaseDate: TDate; bAuto: boolean; Refrence, Source: string;
+      const aCurrency: string; const VATCode: string; PurchaseDate: TDate; aIsGenerated: boolean; Refrence, Source: string;
       isPackage: boolean; noGuests: integer; ConfirmDate: TDateTime; ConfirmAmount: Double; rrAlias: integer;
       AutoGen: string; itemIndex: integer = 0; aVisibleOnInvoice: boolean = true): TInvoiceLine;
 
@@ -536,7 +536,7 @@ type
       aDayCount: integer; const aDescription: string; aRoomReservation: integer;
       aDiscountAmount: Double; aDiscountIsPercentage: boolean; const aDiscountText: string; const aGuestName: String;
       aNumGuests: integer; aNumChildren: integer; const aPackageName: string; aRRAlias: integer;
-      aBeakfastIncluded: boolean);
+      aBeakfastIncluded: boolean; aIsGenerated: boolean);
 
     Procedure AddRoomTaxToLinesAndGrid(totalTax: Double; TaxUnits: Double; taxItem: string; aPurchaseDate: TDate;
       iAddAt: integer = 0; aParentInvoice: TInvoiceLine = nil; aIsIncludedInParent: boolean = false);
@@ -1014,7 +1014,7 @@ begin
 end;
 
 function TfrmInvoiceRentPerDay.AddLine(LineId: integer; aParentInvoice: TInvoiceLine; sItem, sText: string; iNumber: Double;
-  aPrice: Double; const aCurrency: string; const VATCode: string; PurchaseDate: TDate; bAuto: boolean;
+  aPrice: Double; const aCurrency: string; const VATCode: string; PurchaseDate: TDate; aIsGenerated: boolean;
   Refrence, Source: string; isPackage: boolean; noGuests: integer; ConfirmDate: TDateTime; ConfirmAmount: Double;
   rrAlias: integer; AutoGen: string; itemIndex: integer = 0; aVisibleOnInvoice: boolean = true): TInvoiceLine;
 var
@@ -1040,7 +1040,7 @@ begin
     invoiceLine.Text := sText;
     invoiceLine.Number := iNumber;
     invoiceLine.Price := aPrice;
-    invoiceLine.IsGeneratedLine := bAuto;
+    invoiceLine.IsGeneratedLine := aIsGenerated;
     invoiceLine.PurchaseDate := PurchaseDate;
     invoiceLine.Reference := Refrence;
     invoiceLine.Source := Source;
@@ -1266,7 +1266,7 @@ begin
   unitPrice := totalTax / TaxUnits;
 
   lInvLine := AddLine(0, aParentInvoice, taxItem, Item_GetDescription(taxItem), TaxUnits, unitPrice, g.qNativeCurrency,
-    lItemInfo.VATCode, aPurchaseDate, True, '', '', false, 0, ConfirmDate, ConfirmAmount, -1, _GetCurrentTick, 0, not aIsIncludedInParent);
+    lItemInfo.VATCode, aPurchaseDate, aParentInvoice.IsGeneratedLine, '', '', false, 0, ConfirmDate, ConfirmAmount, -1, _GetCurrentTick, 0, not aIsIncludedInParent);
 
   lInvLine.TotalIsIncludedInParent := aIsIncludedInParent;
 end;
@@ -1702,7 +1702,7 @@ procedure TfrmInvoiceRentPerDay.AddRoom(const aRoom: String; aRoomPrice: Double;
   aToDate: TDate; aDayCount: integer; const aDescription: string; aRoomReservation: integer;
   aDiscountAmount: Double; aDiscountIsPercentage: boolean; const aDiscountText: string; const aGuestName: String;
   aNumGuests: integer; aNumChildren: integer; const aPackageName: string; aRRAlias: integer;
-  aBeakfastIncluded: boolean);
+  aBeakfastIncluded: boolean; aIsGenerated: boolean);
 var
   lRmRntItem: string;
   lDiscountItem: string;
@@ -1746,7 +1746,7 @@ begin
   FRoomInfoList.Add(lRoomInfo);
 
   // add a TInvoiceline object for the RoomRent to InvoiceLineList
-  lInvoiceLine := AddLine(0, nil, lRmRntItem, lDescription, aDayCount, aRoomPrice, aCurrency, lItemInfo.VATCode, aFromDate, True,
+  lInvoiceLine := AddLine(0, nil, lRmRntItem, lDescription, aDayCount, aRoomPrice, aCurrency, lItemInfo.VATCode, aFromDate, aIsGenerated,
     '', '', not aPackageName.IsEmpty, aNumGuests, lConfirmDate, lConfirmAmount, aRRAlias, _GetCurrentTick); // *77
   lInvoiceLine.RoomEntity := lRoomInfo;
   lRoomInfo.Vat := lInvoiceLine.VATOnInvoice;
@@ -1860,6 +1860,7 @@ begin
           end;
 
           lTotalNative := FCurrencyhandlersMap.ConvertAmount(lTotal, aInvLine.Currency, g.qNativeCurrency);
+
           AddRoomTaxToLinesAndGrid(lTotalNative, trunc(lTaxResultInvoiceLines[l].NumItems), TaxTypes[tt],
             aInvLine.RoomEntity.Arrival, 0, aInvLine, lIsIncluded);
         end; // for l + if
@@ -2565,6 +2566,7 @@ begin
   end;
 
   UpdateItemInvoiceLinesForTaxCalculations;
+  FInvoiceLinesList.ResetChanged;
 
   AddEmptyLine(false);
 
@@ -3587,8 +3589,7 @@ begin
         raise Exception.Create(lExecutionPlan.ExecException);
 
       HeaderChanged := false;
-      for invoiceLine in FInvoiceLinesList do
-        invoiceLine.Changed := false;
+      FInvoiceLinesList.ResetChanged;
 
       if (aSaveType = stDefinitive) then
       begin
@@ -4221,7 +4222,6 @@ begin
 
               lInvoiceLine := AddLine(0, nil, Item, Description, 1, Price, g.qNativeCurrency, VATCode, now(), false, '',
                 '', false, 0, 0, 0, 0, '');
-              lInvoiceLine.Changed := True;
 
               if lJumpToRow = -1 then
                 lJumpToRow := lInvoiceLine.InvoiceLineIndex;
@@ -4613,7 +4613,7 @@ begin
             AddRoom(Room, AverageRate, InvoiceCurrency, Arrival, Departure, UnpaidDays, zRoomRSet.FieldByName('rrDescription').asString,
                     lRoomReservation,
                     iif(AllIsPercentage, AvrageDiscountPerc, AverageDiscountAmount), AllisPercentage, DiscountText,
-                    GuestName, NumberGuests, ChildrenCount, Package, lRoomReservation, zRoomRSet.FieldByName('invBreakFast').AsBoolean);
+                    GuestName, NumberGuests, ChildrenCount, Package, lRoomReservation, zRoomRSet.FieldByName('invBreakFast').AsBoolean, true);
 
 //          end
 
@@ -4847,7 +4847,7 @@ begin
       AddRoom(Room, Rate, lCurrency, RateDate, RateDate + 1, 1, lRoomsDateSet.FieldByName('rrDescription').asString,
               lRoomReservation,
               DiscountAmount, isPercentage, DiscountText, GuestName, NumberGuests, ChildrenCount, package,
-              lRoomReservation, lRoomsDateSet.FieldByName('invBreakFast').asBoolean);
+              lRoomReservation, lRoomsDateSet.FieldByName('invBreakFast').asBoolean, true);
 
       lRoomsDateSet.Next;
     end; // while not roomdateSet.eof()
@@ -6362,6 +6362,8 @@ var
   iRooms: integer;
   iNights: integer;
   dRoomPrice: Double;
+  iRoomCount: integer;
+  lRoomText: string;
 begin
   iPersons := 1;
   iRooms := 1;
@@ -6378,13 +6380,16 @@ begin
       if RentPerDay then
         for lIntDate := trunc(now) to trunc(now) + iNights - 1 do
         begin
-          lDate := lIntDate * 1.0;
+        lDate := lIntDate * 1.0;
+        lRoomText := GetTranslatedText('shRoom') + format(' on %s', [FormatDateTime('dd/mm', TDateTime(lDate))]);
+        for iRoomCount := 0 to iRooms -1 do
           AddRoom('', dRoomPrice, g.qNativeCurrency, TDate(lDate), TDate(lDate) + 1, 1, '',  -1, 0, false, '', edtName.Text,
-            iPersons, 0, '', -1, false);
+            iPersons, 0, '', -1, false, false);
         end
       else
+        for iRoomCount := 0 to iRooms -1 do
           AddRoom('', dRoomPrice, g.qNativeCurrency, trunc(now), trunc(now) + iNights, 1, '', -1, 0, false, '', edtName.Text,
-            iPersons, 0, '', -1, false);
+            iPersons, 0, '', -1, false, false);
     end;
     UpdateGrid;
   end;

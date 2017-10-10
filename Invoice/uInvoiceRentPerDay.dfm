@@ -18,29 +18,26 @@ inherited frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
   OnKeyDown = FormKeyDown
   OnResize = FormResize
   OnShow = FormShow
-  ExplicitTop = -28
   ExplicitWidth = 1174
-  ExplicitHeight = 740
+  ExplicitHeight = 756
   PixelsPerInch = 96
   TextHeight = 13
   inherited sbStatusBar: TsStatusBar
-    Top = 661
+    Top = 677
     Width = 1158
-    ExplicitTop = 642
+    ExplicitTop = 677
     ExplicitWidth = 1158
   end
   object pnlMain: TsPanel [1]
     Left = 0
     Top = 0
     Width = 1158
-    Height = 678
-    Height = 661
+    Height = 677
     Align = alClient
     BevelOuter = bvNone
     Color = clWhite
     TabOrder = 1
     SkinData.SkinSection = 'PANEL'
-    ExplicitHeight = 642
     object pnlHead: TsPanel
       Left = 0
       Top = 0
@@ -559,14 +556,13 @@ inherited frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
       Left = 0
       Top = 189
       Width = 1158
-      Height = 472
+      Height = 488
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitHeight = 453
       object pnlTotalsAndPayments: TsPanel
         Left = 0
-        Top = 277
+        Top = 279
         Width = 1158
         Height = 209
         Align = alBottom
@@ -574,7 +570,6 @@ inherited frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         ParentColor = True
         TabOrder = 0
         SkinData.SkinSection = 'PANEL'
-        ExplicitTop = 258
         object splExtraInfo: TsSplitter
           Left = 526
           Top = 1
@@ -1251,7 +1246,7 @@ inherited frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         Left = 0
         Top = 49
         Width = 1083
-        Height = 228
+        Height = 230
         Align = alClient
         BevelOuter = bvNone
         Caption = 'pnlLinesGrid'
@@ -1261,12 +1256,11 @@ inherited frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         Padding.Bottom = 5
         TabOrder = 2
         SkinData.SkinSection = 'PANEL'
-        ExplicitHeight = 209
         object agrLines: TAdvStringGrid
           Left = 10
           Top = 5
           Width = 1063
-          Height = 218
+          Height = 220
           Cursor = crDefault
           Align = alClient
           BevelInner = bvNone
@@ -1396,7 +1390,6 @@ inherited frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
           SelectionTextColor = clHighlightText
           SortSettings.DefaultFormat = ssAutomatic
           Version = '8.2.4.1'
-          ExplicitHeight = 199
           ColWidths = (
             24
             28
@@ -1421,13 +1414,12 @@ inherited frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
         Left = 1086
         Top = 52
         Width = 69
-        Height = 222
+        Height = 224
         HorzScrollBar.Visible = False
         VertScrollBar.Tracking = True
         Align = alRight
         TabOrder = 1
         OnDragOver = pnlInvoiceIndicesDragOver
-        ExplicitHeight = 203
         object pnlInvoiceIndex0: TsPanel
           Left = 0
           Top = 4

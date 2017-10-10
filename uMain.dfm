@@ -847,6 +847,10 @@ object frmMain: TfrmMain
         object tabPeriod: TsTabSheet
           Caption = 'tabPeriod'
           ImageIndex = 2
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object sLabel2: TsLabel
             Left = 224
             Top = 400
@@ -2652,7 +2656,6 @@ object frmMain: TfrmMain
       Index = 1
     end
     object rbTabInvoice: TdxRibbonTab
-      Active = True
       Caption = 'Invoice'
       Groups = <
         item
@@ -2768,6 +2771,7 @@ object frmMain: TfrmMain
       Index = 7
     end
     object rbTabConnections: TdxRibbonTab
+      Active = True
       Caption = 'Connections'
       Groups = <
         item
@@ -5555,7 +5559,7 @@ object frmMain: TfrmMain
         end
         item
           Visible = True
-          ItemName = 'dxBarButton8'
+          ItemName = 'dxBarButton7'
         end>
     end
     object bbUpdateTranslations: TdxBarButton
@@ -5655,13 +5659,7 @@ object frmMain: TfrmMain
       OnClick = btnItemTransationsClick
     end
     object dxBarButton7: TdxBarButton
-      Caption = 'New Button'
-      Category = 0
-      Hint = 'New Button'
-      Visible = ivAlways
-    end
-    object dxBarButton8: TdxBarButton
-      Action = acHotelStatus
+      Action = actHotelStatusApp
       Category = 0
     end
     object mmnuFile: TdxBarSubItem
@@ -24253,9 +24251,9 @@ object frmMain: TfrmMain
       Caption = 'Update Translations'
       OnExecute = acUpdateTranslationsExecute
     end
-    object acHotelStatus: TAction
-      Caption = 'Test HotelStatus App '
-      OnExecute = acHotelStatusExecute
+    object actHotelStatusApp: TAction
+      Caption = 'Test HotelStatus App'
+      OnExecute = actHotelStatusAppExecute
     end
   end
   object pupSelectHomePage: TPopupMenu
