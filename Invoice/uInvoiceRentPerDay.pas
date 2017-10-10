@@ -3265,22 +3265,31 @@ var
   omnu: TMenuItem;
   list: TList<String>;
   i, l, RealRoomReservation: integer;
+
 begin
   //
   omnu := TMenuItem(Sender);
 
+  if (MessageDlg(Format(GetTranslatedText('shTx_Invoice_TransferRoomToRoom'), [SelectableExternalRooms[omnu.Tag].Room]),
+                  mtConfirmation, [mbYes, mbNo], 0) <> mrYes) then
+    Exit;
+
   list := GetSelectedRows;
   try
-    for l := list.Count - 1 downto 0 do
+    if list.count > 0 then
     begin
-      i := IndexOfAutoGen(list[l]);
-      if i >= 0 then
+      for l := list.Count - 1 downto 0 do
       begin
-        agrLines.row := i;
-        RealRoomReservation := GetInvoiceLineByRow(i).RoomEntity.RoomReservation;
-        TransferRoomToAnotherRoomReservationInvoice(FRoomReservation, SelectableExternalRooms[omnu.Tag].RoomReservation,
-          RealRoomReservation, SelectableExternalRooms[omnu.Tag].reservation);
+        i := IndexOfAutoGen(list[l]);
+        if i >= 0 then
+        begin
+          RealRoomReservation := GetInvoiceLineByRow(i).RoomEntity.RoomReservation;
+          d.UpdateGroupAccountone(FReservation, RealRoomReservation, RealRoomReservation, false);
+          TransferRoomToAnotherRoomReservationInvoice(FRoomReservation, SelectableExternalRooms[omnu.Tag].RoomReservation,
+            RealRoomReservation, SelectableExternalRooms[omnu.Tag].reservation);
+        end;
       end;
+      LoadInvoice;
     end;
   finally
     list.Free;
@@ -3297,10 +3306,9 @@ begin
       [RealRoomReservation])
   else
     sql := format('UPDATE roomsdate rd SET PaidBy=%d WHERE RoomReservation=%d AND (ResFlag NOT IN (''X'',''C''))',
-      [RoomReservation, FromRoomReservation]);
+      [RoomReservation, RealRoomReservation]);
   copytoclipboard(sql);
   d.roomerMainDataSet.DoCommand(sql, false);
-  LoadInvoice;
 end;
 
 procedure TfrmInvoiceRentPerDay.NullifyGrid;
@@ -4781,11 +4789,13 @@ begin
   if IsCashInvoice then
     Exit;
 
-  if FRoomReservation > 0 then
+  if (FRoomReservation > 0) then
   begin
     ShowMessage(GetTranslatedText('shTx_Invoice_RoomInvoice'));
     exit;
   end;
+
+  SaveInvoice(zInvoiceNumber, stProvisionally);
   chkChanged;
 
   // if (MessageDlg('Move roomrent to Groupinvoice ' + chr(10) + 'and save other changes ?', mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
@@ -4797,14 +4807,11 @@ begin
       for i := list.Count - 1 downto 0 do
       begin
         invoiceLine := GetInvoiceLineByRow(list[i]);
-        agrLines.row := list[i];
         if invoiceLine.IsGeneratedLine AND (invoiceLine.ItemKind = ikRoomRent) then
         begin
           d.UpdateGroupAccountone(invoiceline.RoomEntity.Reservation, invoiceline.RoomEntity.RoomReservation, invoiceline.RoomEntity.RoomReservation, false);
         end
       end;
-      SaveInvoice(zInvoiceNumber, stProvisionally);
-      LoadInvoice;
     finally
       list.Free;
     end;

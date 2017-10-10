@@ -784,6 +784,8 @@ begin
                                              'and save other changes ?');
   constants.Add('shTx_Invoice_RoomrentToRoomAndSaveChanges', 'Move roomrent to Room invoice ' + #10 +
                                              'and save other changes ?');
+   constants.Add('shTx_Invoice_TransferRoomToRoom', 'Move roomrent to invoice of room %s ?');
+
  // constants.Add('shTx_Invoice_ReferenceNumberNotFound', 'Tilvísunarnúmer %d fannst ekki ');
   constants.Add('shTx_Invoice_ReferenceNumberNotFound', 'Reference number %d not found ');
   constants.Add('shTx_Invoice_Nights', 'Nights.');

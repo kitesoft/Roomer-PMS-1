@@ -472,8 +472,6 @@ type
 
     tempInvoiceItemList: TInvoiceItemEntityList;
 
-    selectedRoomReservation: integer;
-
     zLocation: string;
     FInvoiceIndex: integer;
 
@@ -648,6 +646,7 @@ type
     procedure LoadPayments;
     property InvoiceIndex: integer read FInvoiceIndex write SetInvoiceIndex;
     property AnyRowChecked: boolean read GetAnyRowChecked;
+    function SelectedRoomReservation: integer;
   public
     { Public declarations }
     FnewSplitNumber: integer; // 0 = herbergjareikningur
@@ -1862,6 +1861,17 @@ begin
   btnExit.Enabled := True;
   btnInvoice.Enabled := True;
   btnProforma.Enabled := True;
+end;
+
+function TfrmInvoice.SelectedRoomReservation: integer;
+var
+  lObject: TObject;
+begin
+  lObject := agrLines.Objects[cRoomInfoAttachColumn, agrLines.Row];
+  if assigned(lObject) and (lObject is TRoomInfo) then
+    Result := TRoomInfo(lObject).RoomReservation
+  else
+    result := 0;
 end;
 
 procedure TfrmInvoice.tvPaymentNativeAmountGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
@@ -3654,19 +3664,28 @@ begin
   //
   omnu := TMenuItem(Sender);
 
+  if (MessageDlg(Format(GetTranslatedText('shTx_Invoice_TransferRoomToRoom'), [SelectableExternalRooms[omnu.Tag].Room]),
+                  mtConfirmation, [mbYes, mbNo], 0) <> mrYes) then
+    Exit;
+
   list := GetSelectedRows;
   try
-    for l := list.Count - 1 downto 0 do
+    if list.Count > 0 then
     begin
-      i := IndexOfAutoGen(list[l]);
-      if i >= 0 then
+      for l := list.Count - 1 downto 0 do
       begin
-        agrLines.row := i;
-        RealRoomReservation := TRoomInfo(agrLines.Objects[cRoomInfoAttachColumn, i]).RoomReservation;
-        TransferRoomToAnotherRoomReservationInvoice(FRoomReservation,
-          SelectableExternalRooms[omnu.Tag].RoomReservation, RealRoomReservation,
-          SelectableExternalRooms[omnu.Tag].Reservation);
+        i := IndexOfAutoGen(list[l]);
+        if i >= 0 then
+        begin
+          agrLines.row := i;
+          RealRoomReservation := TRoomInfo(agrLines.Objects[cRoomInfoAttachColumn, i]).RoomReservation;
+          d.UpdateGroupAccountone(FReservation, RealRoomReservation, RealRoomReservation, false);
+          TransferRoomToAnotherRoomReservationInvoice(FRoomReservation,
+            SelectableExternalRooms[omnu.Tag].RoomReservation, RealRoomReservation,
+            SelectableExternalRooms[omnu.Tag].Reservation);
+        end;
       end;
+      LoadInvoice;
     end;
   finally
     list.free;
@@ -6076,25 +6095,39 @@ begin
 end;
 
 procedure TfrmInvoice.MoveRoomToRoomInvoice;
+var
+  lROomRes: integer;
+  list: TList<string>;
+  l, i: integer;
 begin
-  if FRoomReservation > 0 then
+  if (FRoomReservation > 0) then
   begin
     ShowMessage(GetTranslatedText('shTx_Invoice_RoomInvoice'));
     exit;
   end;
-  chkChanged;
-  if selectedRoomReservation < 0 then
-    exit;
 
-  // if (MessageDlg('Move roomrent to Groupinvoice ' + chr(10) + 'and save other changes ?', mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
-  if (MessageDlg(GetTranslatedText('shTx_Invoice_RoomrentToRoomAndSaveChanges'),
-    mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
-  begin
-    d.UpdateGroupAccountone(FReservation, selectedRoomReservation,
-      selectedRoomReservation, false);
-    SaveInvoice(zInvoiceNumber);
-    LoadInvoice;
+  chkChanged;
+  SaveInvoice(zInvoiceNumber);
+
+  list := GetSelectedRows;
+  try
+    if (MessageDlg(GetTranslatedText('shTx_Invoice_RoomrentToRoomAndSaveChanges'), mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
+    begin
+      for l := list.Count - 1 downto 0 do
+      begin
+        i := IndexOfAutoGen(list[l]);
+        if i >= 0 then
+        begin
+          lRoomRes := TRoomInfo(agrLines.Objects[cRoomInfoAttachColumn, i]).RoomReservation;
+          d.UpdateGroupAccountone(FReservation, lRoomRes, lRoomRes, false);
+        end;
+      end;
+      LoadInvoice;
+    end;
+  finally
+    list.free;
   end;
+
 end;
 
 procedure TfrmInvoice.edtCurrencyDblClick(Sender: TObject);
