@@ -442,6 +442,7 @@ type
       var AProperties: TcxCustomEditProperties);
     procedure memExtraTextChange(Sender: TObject);
     procedure actInvoiceActionsUpdate(Action: TBasicAction; var Handled: Boolean);
+    procedure fraInvoiceCurrencybtnGetCurrencyClick(Sender: TObject);
   private
     { Private declarations }
 
@@ -684,7 +685,6 @@ type
     FnewSplitNumber: integer; // 0 = herbergjareikningur
     FIsCredit: boolean;
 
-    OriginalInvoiceStatus: Double;
     constructor Create(aOwner: TComponent); override;
     destructor Destroy; override;
     procedure UpdateCaptions;
@@ -3006,6 +3006,13 @@ begin
   Exit1.Enabled := True;
 end;
 
+procedure TfrmInvoiceRentPerDay.fraInvoiceCurrencybtnGetCurrencyClick(Sender: TObject);
+begin
+  inherited;
+  fraInvoiceCurrency.btnGetCurrencyClick(Sender);
+
+end;
+
 procedure TfrmInvoiceRentPerDay.MoveSelectedLinesToRoomInvoiceIndex(Sender: TObject);
 var
   omnu: TMenuItem;
@@ -3189,7 +3196,6 @@ begin
     agrLines.ColWidths[col_TotalPrice] := 100;
   end;
 
-  OriginalInvoiceStatus := GridFloatValueFromString(edtBalance.Text);
 end;
 
 procedure TfrmInvoiceRentPerDay.agrLinesMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState;
@@ -5315,8 +5321,7 @@ end;
 procedure TfrmInvoiceRentPerDay.ExecuteCurrencyChange(const aOldCurrency: string; const aNewCurrency: string);
 begin
   UpdateRoomReservationsCurrency(aOldCurrency, aNewCurrency);
-  ;
-  UpdateCaptions;
+  LoadInvoice;
 end;
 
 procedure TfrmInvoiceRentPerDay.SetCustEdits;
