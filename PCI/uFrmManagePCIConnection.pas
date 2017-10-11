@@ -60,6 +60,7 @@ type
     procedure FormDestroy(Sender: TObject);
     procedure btnOKClick(Sender: TObject);
     procedure cbChange(Sender: TObject);
+    procedure cbKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
   private
     combos : TDictionary<TPayCardType, TsComboBox>;
     procedure Save;
@@ -158,31 +159,56 @@ end;
 
 procedure TFrmManagePCIConnection.Save;
 var
-    sql_template, sql : String;
-    lComboPair: TPair<TpaycardType, TsComboBox>;
-begin
-  sql_template := 'INSERT INTO pms_settings ' +
+  sql : String;
+  lComboPair: TPair<TpaycardType, TsComboBox>;
+  lExecPlan: TRoomerExecutionPlan;
+const
+  sql_INS_template = 'INSERT INTO pms_settings ' +
                   '(keyGroup, ' +
                   '`key`, ' +
                   'value) ' +
                   'VALUES ' +
-                  '(''%s'', ' +
-                  '''%s'', ' +
-                  '''%s'') ' +
-                  'ON DUPLICATE KEY UPDATE value=''%s'' ';
-  for lComboPair IN combos do
-  begin
-    if lComboPair.Value.ItemIndex > -1 then
+                  '(%s, ' +
+                  '%s, ' +
+                  '%s) ' +
+                  'ON DUPLICATE KEY UPDATE value=%s ';
+
+  sql_DEL_TEMPLATE = 'DELETE from pms_settings ' +
+                      ' WHERE keyGroup=%s and `key`=%s';
+begin
+
+  lExecPlan := d.roomerMainDataSet.CreateExecutionPlan;
+  try
+
+    for lComboPair IN combos do
     begin
-      sql := format(sql_template,
-          [
-            HS_PCI_BOOKING_UPG,
-            PMS_MAPPING_PREFIX + lComboPair.Key.ToDB,
-            lComboPair.Value.Items[lComboPair.Value.ItemIndex],
-            lComboPair.Value.Items[lComboPair.Value.ItemIndex]
-          ]);
-      cmd_bySQL(sql, false);
+
+      if (lComboPair.Value = cbDefault) or (lComboPair.Value.ItemIndex > 0) then
+      begin
+        sql := format(sql_INS_template,
+            [
+              _db(HS_PCI_BOOKING_UPG),
+              _db(PMS_MAPPING_PREFIX + lComboPair.Key.ToDB),
+              _db(lComboPair.Value.Items[lComboPair.Value.ItemIndex]),
+              _db(lComboPair.Value.Items[lComboPair.Value.ItemIndex])
+            ]);
+
+        lExecPlan.AddExec(sql);
+      end
+      else
+      begin // itemidex = 0 or -1, remove setting
+        sql := format(sql_DEL_template,
+            [
+              _db(HS_PCI_BOOKING_UPG),
+              _db(PMS_MAPPING_PREFIX + lComboPair.Key.ToDB)
+            ]);
+        lExecPlan.AddExec(sql);
+      end;
     end;
+
+    lExecPLan.Execute(ptExec, true, true);
+  finally
+    lExecPlan.Free;
   end;
 end;
 
@@ -232,6 +258,13 @@ begin
   UpdateControls;
 end;
 
+procedure TFrmManagePCIConnection.cbKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
+begin
+  inherited;
+  if Key = VK_DELETE then
+    TsCombobox(Sender).itemIndex := 0;
+end;
+
 procedure TFrmManagePCIConnection.DoLoadData;
 var rSet : TRoomerDataset;
     sql : String;
@@ -243,6 +276,8 @@ var rSet : TRoomerDataset;
 begin
   inherited;
   rSet := CreateNewDataSet;
+  // Stop redrawing components
+  SendMessage(Handle, WM_SETREDRAW, WPARAM(False), 0);
   try
 
     cbxIsActive.Checked := PCIBookingsActivated;
@@ -253,6 +288,7 @@ begin
 
     ptList := TStringList.Create;
     try
+      ptList.Add(GetTranslatedText('shTx_PCIConnection_AsDefault'));
       glb.PaytypesSet.First;
       while NOT glb.PaytypesSet.Eof do
       begin
@@ -261,12 +297,20 @@ begin
       end;
       for combo in combos.Values do
       begin
-        combo.Items.Clear;
-        combo.Items.Assign(ptList);
+        combo.Items.BeginUpdate;
+        try
+          combo.Items.Clear;
+          combo.Items.Assign(ptList);
+          combo.ItemIndex := 0;
+        finally
+          combo.Items.EndUpdate;
+        end;
       end;
     finally
       ptList.Free;
     end;
+
+    cbDefault.Items.Delete(0); // cannot set default as default
 
     sql := 'SELECT `key`, value FROM pms_settings WHERE keyGroup=''%s'' ';
     sql := format(sql, [HS_PCI_BOOKING_UPG]);
@@ -277,15 +321,18 @@ begin
     begin
       sKey := rSet['key'];
       sValue := rSet['value'];
-      // MAP_AMEX
-      if combos.TryGetValue(TPayCardType.FromString(sKey.Substring(4)), combo) then
-        combo.ItemIndex := combo.Items.IndexOf(sValue);
+      if combos.TryGetValue(TPayCardType.FromString(sKey.Substring(Length(PMS_MAPPING_PREFIX))), combo) then
+        combo.ItemIndex := combo.Items.IndexOf(sValue)
+      else
+        combo.ItemIndex := 0;
 
       rSet.Next;
     end;
 
   finally
     rSet.Free;
+    // enable updating components again
+    SendMessage(Handle, WM_SETREDRAW, WPARAM(True), 0);
   end;
 end;
 

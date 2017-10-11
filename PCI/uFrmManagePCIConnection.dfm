@@ -10,14 +10,14 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
   inherited sbStatusBar: TsStatusBar
     Top = 430
     Width = 780
-    ExplicitTop = 372
+    ExplicitTop = 430
     ExplicitWidth = 780
   end
   inherited pnlButtons: TsPanel
     Top = 387
     Width = 780
     TabOrder = 0
-    ExplicitTop = 329
+    ExplicitTop = 387
     ExplicitWidth = 780
     inherited btnOK: TsButton
       Left = 464
@@ -40,7 +40,6 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
     Height = 57
     Align = alTop
     TabOrder = 2
-    ExplicitTop = -3
     object cbxIsActive: TsCheckBox
       AlignWithMargins = True
       Left = 21
@@ -62,7 +61,6 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       ImgChecked = 0
       ImgUnchecked = 0
       ReadOnly = True
-      ExplicitTop = 24
     end
   end
   object pnlLeft: TsPanel [3]
@@ -233,6 +231,7 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       Top = 44
       Width = 186
       Height = 21
+      Hint = 'Press Del to clear'
       Margins.Left = 190
       Margins.Top = 10
       Margins.Right = 25
@@ -251,9 +250,9 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       TabOrder = 1
       Text = '< SELECT >'
       OnChange = cbChange
+      OnKeyUp = cbKeyUp
       Items.Strings = (
         '< SELECT >')
-      ExplicitTop = 43
     end
     object cbAMEX: TsComboBox
       Tag = 2
@@ -262,6 +261,7 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       Top = 71
       Width = 186
       Height = 21
+      Hint = 'Press Del to clear'
       Margins.Left = 190
       Margins.Right = 25
       Align = alTop
@@ -281,9 +281,6 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       OnChange = cbChange
       Items.Strings = (
         '< SELECT >')
-      ExplicitLeft = 195
-      ExplicitTop = 38
-      ExplicitWidth = 195
     end
     object cbBC: TsComboBox
       Tag = 3
@@ -292,6 +289,7 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       Top = 98
       Width = 186
       Height = 21
+      Hint = 'Press Del to clear'
       Margins.Left = 190
       Margins.Right = 25
       Align = alTop
@@ -311,9 +309,6 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       OnChange = cbChange
       Items.Strings = (
         '< SELECT >')
-      ExplicitLeft = 195
-      ExplicitTop = 65
-      ExplicitWidth = 195
     end
     object cbMastercard: TsComboBox
       Tag = 4
@@ -322,6 +317,7 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       Top = 125
       Width = 186
       Height = 21
+      Hint = 'Press Del to clear'
       Margins.Left = 190
       Margins.Right = 25
       Align = alTop
@@ -341,9 +337,6 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       OnChange = cbChange
       Items.Strings = (
         '< SELECT >')
-      ExplicitLeft = 195
-      ExplicitTop = 92
-      ExplicitWidth = 195
     end
     object cbMC_Alaska: TsComboBox
       Tag = 5
@@ -352,6 +345,7 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       Top = 152
       Width = 186
       Height = 21
+      Hint = 'Press Del to clear'
       Margins.Left = 190
       Margins.Right = 25
       Align = alTop
@@ -371,9 +365,6 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       OnChange = cbChange
       Items.Strings = (
         '< SELECT >')
-      ExplicitLeft = 195
-      ExplicitTop = 119
-      ExplicitWidth = 195
     end
     object cbMC_Canada: TsComboBox
       Tag = 6
@@ -382,6 +373,7 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       Top = 179
       Width = 186
       Height = 21
+      Hint = 'Press Del to clear'
       Margins.Left = 190
       Margins.Right = 25
       Align = alTop
@@ -401,9 +393,6 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       OnChange = cbChange
       Items.Strings = (
         '< SELECT >')
-      ExplicitLeft = 195
-      ExplicitTop = 146
-      ExplicitWidth = 195
     end
     object cbUnionPay: TsComboBox
       Tag = 7
@@ -412,6 +401,7 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       Top = 206
       Width = 186
       Height = 21
+      Hint = 'Press Del to clear'
       Margins.Left = 190
       Margins.Right = 25
       Align = alTop
@@ -431,9 +421,6 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       OnChange = cbChange
       Items.Strings = (
         '< SELECT >')
-      ExplicitLeft = 195
-      ExplicitTop = 173
-      ExplicitWidth = 195
     end
     object cbDiscover: TsComboBox
       Tag = 8
@@ -442,6 +429,7 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       Top = 233
       Width = 186
       Height = 21
+      Hint = 'Press Del to clear'
       Margins.Left = 190
       Margins.Right = 25
       Align = alTop
@@ -461,9 +449,6 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       OnChange = cbChange
       Items.Strings = (
         '< SELECT >')
-      ExplicitLeft = 195
-      ExplicitTop = 200
-      ExplicitWidth = 195
     end
     object cbDincersclub: TsComboBox
       Tag = 9
@@ -472,6 +457,7 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       Top = 260
       Width = 186
       Height = 21
+      Hint = 'Press Del to clear'
       Margins.Left = 190
       Margins.Right = 25
       Align = alTop
@@ -491,7 +477,6 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       OnChange = cbChange
       Items.Strings = (
         '< SELECT >')
-      ExplicitLeft = 187
     end
     object cbDefault: TsComboBox
       AlignWithMargins = True
@@ -519,9 +504,6 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       OnChange = cbChange
       Items.Strings = (
         '< SELECT >')
-      ExplicitLeft = 165
-      ExplicitTop = 0
-      ExplicitWidth = 226
     end
   end
   object pnlRight: TsPanel [4]
@@ -665,6 +647,7 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       Top = 10
       Width = 210
       Height = 21
+      Hint = 'Press Del to clear'
       Margins.Left = 159
       Margins.Top = 10
       Margins.Right = 10
@@ -683,11 +666,9 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       TabOrder = 0
       Text = '< SELECT >'
       OnChange = cbChange
+      OnKeyUp = cbKeyUp
       Items.Strings = (
         '< SELECT >')
-      ExplicitLeft = 166
-      ExplicitTop = 11
-      ExplicitWidth = 202
     end
     object cbCarteBleue: TsComboBox
       Tag = 11
@@ -696,6 +677,7 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       Top = 37
       Width = 210
       Height = 21
+      Hint = 'Press Del to clear'
       Margins.Left = 159
       Margins.Right = 10
       Align = alTop
@@ -713,10 +695,9 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       TabOrder = 1
       Text = '< SELECT >'
       OnChange = cbChange
+      OnKeyUp = cbKeyUp
       Items.Strings = (
         '< SELECT >')
-      ExplicitTop = 36
-      ExplicitWidth = 207
     end
     object cbDankort: TsComboBox
       Tag = 12
@@ -725,6 +706,7 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       Top = 64
       Width = 210
       Height = 21
+      Hint = 'Press Del to clear'
       Margins.Left = 159
       Margins.Right = 10
       Align = alTop
@@ -742,11 +724,9 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       TabOrder = 2
       Text = '< SELECT >'
       OnChange = cbChange
+      OnKeyUp = cbKeyUp
       Items.Strings = (
         '< SELECT >')
-      ExplicitLeft = 166
-      ExplicitTop = 65
-      ExplicitWidth = 202
     end
     object cbDelta: TsComboBox
       Tag = 13
@@ -755,6 +735,7 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       Top = 91
       Width = 210
       Height = 21
+      Hint = 'Press Del to clear'
       Margins.Left = 159
       Margins.Right = 10
       Align = alTop
@@ -772,11 +753,9 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       TabOrder = 3
       Text = '< SELECT >'
       OnChange = cbChange
+      OnKeyUp = cbKeyUp
       Items.Strings = (
         '< SELECT >')
-      ExplicitLeft = 166
-      ExplicitTop = 92
-      ExplicitWidth = 202
     end
     object cbElectron: TsComboBox
       Tag = 14
@@ -785,6 +764,7 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       Top = 118
       Width = 210
       Height = 21
+      Hint = 'Press Del to clear'
       Margins.Left = 159
       Margins.Right = 10
       Align = alTop
@@ -802,11 +782,9 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       TabOrder = 4
       Text = '< SELECT >'
       OnChange = cbChange
+      OnKeyUp = cbKeyUp
       Items.Strings = (
         '< SELECT >')
-      ExplicitLeft = 166
-      ExplicitTop = 119
-      ExplicitWidth = 202
     end
     object cbJCB: TsComboBox
       Tag = 15
@@ -815,6 +793,7 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       Top = 145
       Width = 210
       Height = 21
+      Hint = 'Press Del to clear'
       Margins.Left = 159
       Margins.Right = 10
       Align = alTop
@@ -832,11 +811,9 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       TabOrder = 5
       Text = '< SELECT >'
       OnChange = cbChange
+      OnKeyUp = cbKeyUp
       Items.Strings = (
         '< SELECT >')
-      ExplicitLeft = 166
-      ExplicitTop = 146
-      ExplicitWidth = 202
     end
     object cbMaestro: TsComboBox
       Tag = 16
@@ -845,6 +822,7 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       Top = 172
       Width = 210
       Height = 21
+      Hint = 'Press Del to clear'
       Margins.Left = 159
       Margins.Right = 10
       Align = alTop
@@ -862,11 +840,9 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       TabOrder = 6
       Text = '< SELECT >'
       OnChange = cbChange
+      OnKeyUp = cbKeyUp
       Items.Strings = (
         '< SELECT >')
-      ExplicitLeft = 166
-      ExplicitTop = 173
-      ExplicitWidth = 202
     end
     object cbSwitch: TsComboBox
       Tag = 17
@@ -875,6 +851,7 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       Top = 199
       Width = 210
       Height = 21
+      Hint = 'Press Del to clear'
       Margins.Left = 159
       Margins.Right = 10
       Align = alTop
@@ -892,11 +869,9 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       TabOrder = 7
       Text = '< SELECT >'
       OnChange = cbChange
+      OnKeyUp = cbKeyUp
       Items.Strings = (
         '< SELECT >')
-      ExplicitLeft = 166
-      ExplicitTop = 200
-      ExplicitWidth = 202
     end
     object cbSolo: TsComboBox
       Tag = 18
@@ -905,6 +880,7 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       Top = 226
       Width = 210
       Height = 21
+      Hint = 'Press Del to clear'
       Margins.Left = 159
       Margins.Right = 10
       Align = alTop
@@ -922,11 +898,9 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       TabOrder = 8
       Text = '< SELECT >'
       OnChange = cbChange
+      OnKeyUp = cbKeyUp
       Items.Strings = (
         '< SELECT >')
-      ExplicitLeft = 166
-      ExplicitTop = 227
-      ExplicitWidth = 202
     end
   end
   object pnlMapCaption: TsPanel [5]
@@ -953,8 +927,6 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       Font.Height = -11
       Font.Name = 'Tahoma'
       Font.Style = [fsBold]
-      ExplicitLeft = 4
-      ExplicitTop = 4
       ExplicitHeight = 13
     end
   end

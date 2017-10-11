@@ -1747,7 +1747,7 @@ begin
 
   constants.Add('shTx_PCIConnection_SettingActiveCaption', 'Connection to payment provider has been activated');
   constants.Add('shTx_PCIConnection_SettingInActiveCaption', 'Connection to payment provider has not been activated. Ask your Roomer account manager about the possibilities');
-
+  constants.Add('shTx_PCIConnection_AsDefault', '<default mapping>');
 end;
 
 procedure AddConstants_OfflineReports;
