@@ -1694,26 +1694,30 @@ begin
   lInvoiceLine.RoomEntity := lRoomInfo;
   lRoomInfo.Vat := lInvoiceLine.VATOnInvoice;
 
-  if glb.PMSSettings.BetaFunctionality.UseNewTaxcalcMethod then
-    UpdateTaxinvoiceLinesForRoomItemUsingBackend(lInvoiceLine)
-  else
-    UpdateTaxinvoiceLinesForRoomItem(lInvoiceLine);
-
-  // Included Breakfast invoicelines
-  AddBreakfastInvoicelinesForRoomItem(lRoomInfo, lInvoiceLine);
-
-  // -- Discount
-  if aDiscountAmount <> 0 then
+  // Only add included stuff if a regular room is added and not a manually added one
+  if aIsGenerated then
   begin
-    lDiscountItem := trim(g.qDiscountItem);
-    lItemInfo := d.Item_Get_ItemTypeInfo(lDiscountItem);
+    if glb.PMSSettings.BetaFunctionality.UseNewTaxcalcMethod then
+      UpdateTaxinvoiceLinesForRoomItemUsingBackend(lInvoiceLine)
+    else
+      UpdateTaxinvoiceLinesForRoomItem(lInvoiceLine);
 
-    lDescription := Item_GetDescription(lDiscountItem) + ' ' + aDiscountText;
+    // Included Breakfast invoicelines
+    AddBreakfastInvoicelinesForRoomItem(lRoomInfo, lInvoiceLine);
 
-    /// Add an InvoiceLine object for the discount
-    AddLine(0, lInvoiceLine, lDiscountItem, lDescription, aDayCount, -1 * aDiscountAmount, aCurrency,
-            lItemInfo.VATCode, aFromDate, True, '', '', false, aNumGuests, lConfirmDate, lConfirmAmount, aRRAlias, _GetCurrentTick);
-    lRoomInfo.Discount := aDiscountAmount * aDayCount;
+    // -- Discount
+    if aDiscountAmount <> 0 then
+    begin
+      lDiscountItem := trim(g.qDiscountItem);
+      lItemInfo := d.Item_Get_ItemTypeInfo(lDiscountItem);
+
+      lDescription := Item_GetDescription(lDiscountItem) + ' ' + aDiscountText;
+
+      /// Add an InvoiceLine object for the discount
+      AddLine(0, lInvoiceLine, lDiscountItem, lDescription, aDayCount, -1 * aDiscountAmount, aCurrency,
+              lItemInfo.VATCode, aFromDate, True, '', '', false, aNumGuests, lConfirmDate, lConfirmAmount, aRRAlias, _GetCurrentTick);
+      lRoomInfo.Discount := aDiscountAmount * aDayCount;
+    end;
   end;
 
   UpdateItemInvoiceLinesForTaxCalculations;
@@ -4478,8 +4482,8 @@ begin
   end;
 
   CanEdit := (NOT(ACol IN [col_Item, col_TotalPrice, col_System, col_date, col_Reference, col_Source, col_isPackage,
-    col_NoGuests, col_confirmdate, col_confirmAmount, col_TotalOnInvoice])) AND
-    (TaxTypes.IndexOf(agrLines.Cells[col_Item, ARow]) < 0) // not a tax line
+                            col_NoGuests, col_confirmdate, col_confirmAmount, col_TotalOnInvoice]))
+          AND ((TaxTypes.IndexOf(agrLines.Cells[col_Item, ARow]) < 0) OR (NOT isSystemLine(ARow)))  // not a GENERATED tax line
     AND not(isSystemLine(ARow) and (agrLines.Cells[col_Item, ARow] = g.qBreakFastItem)) // generated breakfast lines
     AND ((glb.GetNumberBaseOfItem(agrLines.Cells[col_Item, ARow]) = INB_USER_EDIT) OR
     (ACol IN [col_ItemPrice, col_Description]));

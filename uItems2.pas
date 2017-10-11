@@ -97,6 +97,7 @@ uses
   dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, cxDropDownEdit, cxCheckBox, cxCalendar, cxCurrencyEdit,
   uCurrencyHandler
   , RoomerExceptionHandling
+  , uTaxCalc
   ;
 
 type
@@ -294,7 +295,7 @@ type
 
     FLocateAfterPost: integer;
     FCurrencyhandler: TCurrencyHandler;
-
+    FActiveTax: TTax;
     Procedure fillGridFromDataset(sGoto : string);
     procedure fillHolder;
     Procedure chkFilter;
@@ -364,8 +365,7 @@ uses
   , Math
   , uSQLUtils
   , uFrmFinanceConnect
-  , uFinanceConnectService
-  ;
+  , uFinanceConnectService;
 
 
 
@@ -632,6 +632,8 @@ end;
 Procedure TfrmItems2.fillGridFromDataset(sGoto : string);
 var
   rSet : TRoomerDataSet;
+  lActiveTaxFound: boolean;
+  tax: TTax;
 begin
   zFirstTime := true;
 
@@ -656,6 +658,24 @@ begin
           GetStockitemAvailability;
 
         m_Items.LoadFromDataSet(rSet);
+
+        lActivetaxFound := false;
+        // Alter price of citytax to tax settings if fixed, 0 if percentage based
+        for tax in taxList do
+          if (tax.VALID_FROM <= now()) and (tax.VALID_TO >= now()) then
+          begin
+            if m_items.Locate('Item', g.qStayTaxItem, []) then
+            begin
+              m_items.Edit;
+              m_ItemsPrice.AsFloat := iif(tax.TAX_TYPE = TT_FIXED_AMOUNT, tax.Amount, 0.00);
+              m_items.Post;
+              lActivetaxFound := True;
+              Break;
+            end;
+          end;
+
+        if lActiveTaxFound then
+          FActiveTax := tax;
 
         if (sGoto = '') or not m_Items.Locate('item',sGoto,[]) then
           m_Items.First;
@@ -1261,16 +1281,22 @@ begin
   with Sender.DataController do
   begin
     if (aItem.Index = tvDataPrice.index) then
-      // Don't allow dirct price editing of stockitems
+      // Don't allow direct price editing of stockitems
     begin
-      aAllow := (Values[FocusedRecordIndex, tvDataStockItem.Index] = False);
-      if not aAllow then // open detail view
+      if (Values[FocusedRecordIndex, tvDataStockItem.Index] = True) then // open detail view
+      begin
         tvData.ViewData.Records[tvData.DataController.FocusedRecordIndex].Expand(True);
-
+        aAllow := false;
+      end else if (assigned(FActiveTax) and (Values[FocusedRecordIndex, tvDataItem.index] = FActiveTax.BOOKING_ITEM) then
+      begin
+        MessageDlg(GetTranslatedText('shTx_Items_TaxPriceEditInTaxTable'), mtInformation, [mbOK], 0);
+        aAllow := false;
+      end;
     end
     else if (aItem.Index = tvDataTotalStock.index) then
       // Only allow totalstock editing when stockitem
       aAllow := (Values[FocusedRecordIndex, tvDataStockItem.Index] = True)
+
     else
       aAllow := True;
   end;
