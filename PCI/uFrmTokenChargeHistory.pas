@@ -296,7 +296,7 @@ end;
 procedure TFrmTokenChargeHistory.DoLoadData;
 var
   rSet: TRoomerDataSet;
-  xml : String;
+//  xml : String;
   s : String;
 begin
   inherited;
@@ -318,9 +318,9 @@ begin
     rSet.Free;
   end;
 
-  xml := d.roomerMainDataSet.downloadUrlAsString(d.roomerMainDataSet.RoomerUri + format('paycard/bookings/%d/tokens', [Reservation]));
-  rSet := d.roomerMainDataSet.ActivateNewDataset(xml);
-  try
+//  xml := d.roomerMainDataSet.downloadUrlAsString(d.roomerMainDataSet.RoomerUri + format('paycard/bookings/%d/tokens', [Reservation]));
+//  rSet := d.roomerMainDataSet.ActivateNewDataset(xml);
+//  try
     lvTokens.Items.BeginUpdate;
     try
       lvTokens.Items.Clear;
@@ -328,9 +328,9 @@ begin
     finally
       lvTokens.Items.EndUpdate;
     end;
-  finally
-    freeandNil(rSet);
-  end;
+//  finally
+//    freeandNil(rSet);
+//  end;
   DisplayTokens;
 end;
 

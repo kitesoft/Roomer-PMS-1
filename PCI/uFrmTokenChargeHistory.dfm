@@ -166,7 +166,6 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 0
-      ExplicitWidth = 449
       object sLabel2: TsLabel
         AlignWithMargins = True
         Left = 3
@@ -227,7 +226,6 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
         ViewStyle = vsReport
         OnDblClick = lvTokensDblClick
         OnSelectItem = lvTokensSelectItem
-        ExplicitWidth = 443
       end
       object sPanel6: TsPanel
         Left = 0
@@ -237,7 +235,6 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
         Align = alBottom
         BevelOuter = bvNone
         TabOrder = 1
-        ExplicitWidth = 449
       end
     end
     object pnlRightGrid: TsPanel
@@ -320,7 +317,6 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
         ViewStyle = vsReport
         OnDblClick = lvChargesDblClick
         OnSelectItem = lvChargesSelectItem
-        ExplicitWidth = 526
       end
       object sPanel5: TsPanel
         Left = 0
@@ -330,7 +326,6 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
         Align = alBottom
         BevelOuter = bvNone
         TabOrder = 1
-        ExplicitWidth = 539
       end
       object sPanel7: TsPanel
         Left = 0
@@ -340,7 +335,6 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
         Align = alBottom
         BevelOuter = bvNone
         TabOrder = 2
-        ExplicitWidth = 539
         DesignSize = (
           500
           67)
@@ -429,7 +423,6 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
           Images = DImages.PngImageList1
           TabOrder = 0
           OnClick = btnChargeViewClick
-          ExplicitLeft = 303
         end
         object btnRefundOrCapture: TsButton
           AlignWithMargins = True
@@ -448,7 +441,6 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
           Style = bsSplitButton
           TabOrder = 1
           OnClick = btnClickDropDown
-          ExplicitLeft = 421
         end
       end
     end
