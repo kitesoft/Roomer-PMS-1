@@ -527,7 +527,7 @@ object frmInvoice: TfrmInvoice
       end
       object edtAddress4: TsEdit
         Left = 111
-        Top = 128
+        Top = 131
         Width = 253
         Height = 17
         AutoSize = False
@@ -632,8 +632,8 @@ object frmInvoice: TfrmInvoice
       object chkShowPackage: TsCheckBox
         Left = 724
         Top = 143
-        Width = 119
-        Height = 17
+        Width = 111
+        Height = 20
         Caption = 'Package on invoice'
         Checked = True
         State = cbChecked
