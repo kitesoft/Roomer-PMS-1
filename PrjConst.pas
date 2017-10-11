@@ -1745,6 +1745,9 @@ begin
   constants.Add('OPT_IN_EMAIL_SUBJECT', 'Opt-In Email Message - %s');
   constants.Add('OPT_IN_EMAIL_BODY', '');
 
+  constants.Add('shTx_PCIConnection_SettingActiveCaption', 'Connection to payment provider has been activated');
+  constants.Add('shTx_PCIConnection_SettingInActiveCaption', 'Connection to payment provider has not been activated. Ask your Roomer account manager about the possibilities');
+
 end;
 
 procedure AddConstants_OfflineReports;
