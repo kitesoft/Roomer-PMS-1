@@ -311,6 +311,7 @@ begin
     end;
 
     cbDefault.Items.Delete(0); // cannot set default as default
+    cbDefault.ItemIndex := -1; // cannot set default as default
 
     sql := 'SELECT `key`, value FROM pms_settings WHERE keyGroup=''%s'' ';
     sql := format(sql, [HS_PCI_BOOKING_UPG]);
@@ -322,9 +323,7 @@ begin
       sKey := rSet['key'];
       sValue := rSet['value'];
       if combos.TryGetValue(TPayCardType.FromString(sKey.Substring(Length(PMS_MAPPING_PREFIX))), combo) then
-        combo.ItemIndex := combo.Items.IndexOf(sValue)
-      else
-        combo.ItemIndex := 0;
+        combo.ItemIndex := combo.Items.IndexOf(sValue);
 
       rSet.Next;
     end;

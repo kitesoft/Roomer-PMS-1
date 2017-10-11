@@ -45,7 +45,7 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       Left = 21
       Top = 19
       Width = 755
-      Height = 20
+      Height = 17
       Margins.Left = 20
       Margins.Top = 18
       Margins.Bottom = 10
@@ -71,8 +71,6 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
     Align = alLeft
     BevelOuter = bvNone
     TabOrder = 3
-    ExplicitLeft = -3
-    ExplicitTop = 92
     object __lblVISA: TsLabel
       Left = 147
       Top = 47
