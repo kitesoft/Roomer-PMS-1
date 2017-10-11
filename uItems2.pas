@@ -1287,7 +1287,7 @@ begin
       begin
         tvData.ViewData.Records[tvData.DataController.FocusedRecordIndex].Expand(True);
         aAllow := false;
-      end else if (assigned(FActiveTax) and (Values[FocusedRecordIndex, tvDataItem.index] = FActiveTax.BOOKING_ITEM) then
+      end else if (assigned(FActiveTax) and (Values[FocusedRecordIndex, tvDataItem.index] = FActiveTax.BOOKING_ITEM)) then
       begin
         MessageDlg(GetTranslatedText('shTx_Items_TaxPriceEditInTaxTable'), mtInformation, [mbOK], 0);
         aAllow := false;
