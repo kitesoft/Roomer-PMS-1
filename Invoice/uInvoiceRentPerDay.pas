@@ -4123,7 +4123,7 @@ begin
 
   if (aSaveType = stDefinitive) then
   begin
-    if (aInvoiceLine.ItemKind = ikRoomRent) then
+    if aInvoiceLine.IsGeneratedLine and (aInvoiceLine.ItemKind = ikRoomRent) then
       MarkRoomRentAsPaid(aInvoiceLine, aInvoiceNumber, aExecPlan);
     RemoveInvoicelineVisibilityRecord(aInvoiceLine, aInvoiceNumber, aExecPlan);
   end;
