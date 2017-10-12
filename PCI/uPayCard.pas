@@ -4,7 +4,54 @@ interface
 
 uses cmpRoomerDataSet;
 
-type TPCIToken = class
+type
+
+  TPayCardType = (
+    Default,
+    VISA,
+    AMEX,
+    BC,
+    Mastercard,
+    MC_Alaska,
+    MC_Canada,
+    UnionPay,
+    Discover,
+    Dincersclub,
+    CartaSi,
+    CarteBleue,
+    Dankort,
+    Delta,
+    Electron,
+    JCB,
+    Maestro,
+    Switch,
+    Solo
+  );
+
+  TPayCardTypeHelper = record helper for TPayCardType
+  private
+  public
+    // constructor
+    /// <summary>
+    ///   Create a TPayCardType from a string
+    /// </summary>
+    class function FromString(const aType: string) : TPayCardType; static;
+
+    /// <summary>
+    ///   Return a TPayCardType based in index.
+    /// </summary>
+    function ToItemIndex: integer;
+
+    /// <summary>
+    ///   Return the string as this TPayCardType is stored in the database
+    /// </summary>
+    function ToDB: string;
+  end;
+
+
+
+
+  TPCIToken = class
   private
     FENABLED: Boolean;
     FROOM_RESERVATION: Integer;
@@ -38,6 +85,10 @@ end;
 
 implementation
 
+uses
+  TypInfo
+  ;
+
 { TPCIToken }
 
 constructor TPCIToken.Create(data: TRoomerDataSet);
@@ -66,6 +117,23 @@ begin
     FHOTEL_ID := data.FieldByName('SOURCE').AsString;
   if data.FieldByName('ROOM') <> nil then
     FHOTEL_ID := data.FieldByName('ROOM').AsString;
+end;
+
+{ TPayCardTypeHelper }
+
+class function TPayCardTypeHelper.FromString(const aType: string): TPayCardType;
+begin
+  Result := TPaycardType(GetEnumValue(TypeInfo(TPayCardType), aType));
+end;
+
+function TPayCardTypeHelper.ToDB: string;
+begin
+  Result := GetEnumName( TypeInfo(TPayCardType), ord(self));
+end;
+
+function TPayCardTypeHelper.ToItemIndex: integer;
+begin
+  Result := ord(Self);
 end;
 
 end.

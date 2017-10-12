@@ -7,6 +7,7 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, sCheckBox, uRoomerForm, sButton, Vcl.ExtCtrls, sPanel, cxGridTableView, cxStyles, dxPScxCommon,
   dxPScxGridLnk, cxClasses, cxPropertiesStore, Vcl.ComCtrls, sStatusBar, sComboBox, sLabel,
   Generics.Collections, uRoomerDialogForm
+  , uPayCard
   ;
 
 type
@@ -23,15 +24,6 @@ type
     __lbUnionPay: TsLabel;
     __lbDiscover: TsLabel;
     __lbDinersclub: TsLabel;
-    cbVISA: TsComboBox;
-    cbAMEX: TsComboBox;
-    cbBC: TsComboBox;
-    cbMastercard: TsComboBox;
-    cbMC_Alaska: TsComboBox;
-    cbMC_Canada: TsComboBox;
-    cbUnionPay: TsComboBox;
-    cbDiscover: TsComboBox;
-    cbDincersclub: TsComboBox;
     pnlRight: TsPanel;
     __lbCartaSi: TsLabel;
     __lbCarteBleue: TsLabel;
@@ -42,6 +34,15 @@ type
     __lbMaestro: TsLabel;
     __lbSwitch: TsLabel;
     __lbSolo: TsLabel;
+    cbVISA: TsComboBox;
+    cbAMEX: TsComboBox;
+    cbBC: TsComboBox;
+    cbMastercard: TsComboBox;
+    cbMC_Alaska: TsComboBox;
+    cbMC_Canada: TsComboBox;
+    cbUnionPay: TsComboBox;
+    cbDiscover: TsComboBox;
+    cbDincersclub: TsComboBox;
     cbCartaSi: TsComboBox;
     cbCarteBleue: TsComboBox;
     cbDankort: TsComboBox;
@@ -51,15 +52,19 @@ type
     cbMaestro: TsComboBox;
     cbSwitch: TsComboBox;
     cbSolo: TsComboBox;
-    procedure FormCreate(Sender: TObject);
+    cbDefault: TsComboBox;
+    pnlMapCaption: TsPanel;
+    sLabel1: TsLabel;
+    lbOtherCards: TsLabel;
+    shpDefaultPaytypeEmpty: TShape;
     procedure FormDestroy(Sender: TObject);
     procedure btnOKClick(Sender: TObject);
+    procedure cbChange(Sender: TObject);
+    procedure cbKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
   private
-    labels : TObjectlist<TsLabel>;
-    combos : TObjectlist<TsComboBox>;
+    combos : TDictionary<TPayCardType, TsComboBox>;
     procedure Save;
-    function getComboBoxes: TObjectlist<TsComboBox>;
-    function getLabels: TObjectlist<TsLabel>;
+    function getComboBoxes: TDictionary<TPayCardType, TsComboBox>;
     { Private declarations }
   protected
     procedure DoShow; override;
@@ -71,6 +76,8 @@ type
 
 procedure ManagePCIConnection;
 function getMapForCardType(foreignCardType : String) : String;
+function PCIBookingsActivated: boolean;
+function PCIBookingConfigured: boolean;
 
 implementation
 
@@ -81,9 +88,37 @@ uses uAppGlobal,
      cmpRoomerDataset,
      uD,
      hData
-     ;
+     , Math
+     , PrjConst
+     , uSQLUtils;
 
-const PCI_BOOKING_UPG = 'PCIBOOKING_UPG';
+const
+  HS_PCI_BOOKING_UPG = 'PCIBOOKING_UPG';
+  HS_PAYMENT = 'PAYMENT';
+  HS_CARDTYPE_OTHER = 'DEFAULT';
+  PMS_MAPPING_PREFIX = 'MAP_';
+
+
+function PCIBookingConfigured: boolean;
+begin
+  Result := PCIBookingsActivated and not getMapForCardType(HS_CARDTYPE_OTHER).IsEmpty;
+end;
+
+function PCIBookingsActivated: boolean;
+var
+  rSet: TRoomerDataset;
+  sql: string;
+begin
+  rSet := CreateNewDataSet;
+  try
+    sql := 'SELECT * FROM home100.hotelservices WHERE hotelId=''%s'' AND service=%s AND serviceType=%s AND active=1';
+    sql := format(sql, [d.roomerMainDataSet.hotelId, _db(HS_PAYMENT), _db(HS_PCI_BOOKING_UPG)]);
+    hData.rSet_bySQL(rSet, sql);
+    Result := rSet.RecordCount > 0;
+  finally
+    rSet.Free;
+  end;
+end;
 
 procedure ManagePCIConnection;
 var _FrmManagePCIConnection: TFrmManagePCIConnection;
@@ -105,10 +140,10 @@ var rSet : TRoomerDataSet;
     sql : String;
 begin
 
-  //TODO Add configuration of this to the payments table!
+  //TODO Move configuration of this to the payments table!
   result := '';
   sql := 'SELECT value FROM pms_settings WHERE keyGroup=''%s'' AND `key`=''MAP_%s'' ';
-  sql := format(sql, [PCI_BOOKING_UPG, foreignCardType]);
+  sql := format(sql, [HS_PCI_BOOKING_UPG, foreignCardType]);
   rSet := CreateNewDataSet;
   try
     hData.rSet_bySQL(rSet, sql);
@@ -123,84 +158,92 @@ begin
 end;
 
 procedure TFrmManagePCIConnection.Save;
-var ACombo : TsComboBox;
-    sql_template, sql : String;
-begin
-  sql_template := 'INSERT INTO pms_settings ' +
+var
+  sql : String;
+  lComboPair: TPair<TpaycardType, TsComboBox>;
+  lExecPlan: TRoomerExecutionPlan;
+const
+  sql_INS_template = 'INSERT INTO pms_settings ' +
                   '(keyGroup, ' +
                   '`key`, ' +
                   'value) ' +
                   'VALUES ' +
-                  '(''%s'', ' +
-                  '''%s'', ' +
-                  '''%s'') ' +
-                  'ON DUPLICATE KEY UPDATE value=''%s'' ';
-  for ACombo IN combos do
-  begin
-    if ACombo.ItemIndex > -1 then
+                  '(%s, ' +
+                  '%s, ' +
+                  '%s) ' +
+                  'ON DUPLICATE KEY UPDATE value=%s ';
+
+  sql_DEL_TEMPLATE = 'DELETE from pms_settings ' +
+                      ' WHERE keyGroup=%s and `key`=%s';
+begin
+
+  lExecPlan := d.roomerMainDataSet.CreateExecutionPlan;
+  try
+
+    for lComboPair IN combos do
     begin
-      sql := format(sql_template,
-          [
-            PCI_BOOKING_UPG,
-            'MAP_' + copy(ACombo.Name, 3, MAXINT),
-            ACombo.Items[ACombo.ItemIndex],
-            ACombo.Items[ACombo.ItemIndex]
-          ]);
-      cmd_bySQL(sql, false);
+
+      if (lComboPair.Value = cbDefault) or (lComboPair.Value.ItemIndex > 0) then
+      begin
+        sql := format(sql_INS_template,
+            [
+              _db(HS_PCI_BOOKING_UPG),
+              _db(PMS_MAPPING_PREFIX + lComboPair.Key.ToDB),
+              _db(lComboPair.Value.Items[lComboPair.Value.ItemIndex]),
+              _db(lComboPair.Value.Items[lComboPair.Value.ItemIndex])
+            ]);
+
+        lExecPlan.AddExec(sql);
+      end
+      else
+      begin // itemidex = 0 or -1, remove setting
+        sql := format(sql_DEL_template,
+            [
+              _db(HS_PCI_BOOKING_UPG),
+              _db(PMS_MAPPING_PREFIX + lComboPair.Key.ToDB)
+            ]);
+        lExecPlan.AddExec(sql);
+      end;
     end;
+
+    lExecPLan.Execute(ptExec, true, true);
+  finally
+    lExecPlan.Free;
   end;
 end;
 
 procedure TFrmManagePCIConnection.DoShow;
 begin
-  inherited;
   DialogButtons := mbOKCancel;
-  RefreshData;
-end;
-
-procedure TFrmManagePCIConnection.FormCreate(Sender: TObject);
-begin
-  inherited;
-  labels := getLabels;
   combos := getComboBoxes;
+
+  inherited;
 end;
 
 procedure TFrmManagePCIConnection.FormDestroy(Sender: TObject);
 begin
   inherited;
-  labels.Free;
   combos.Free;
 end;
 
-function TFrmManagePCIConnection.getComboBoxes : TObjectlist<TsComboBox>;
+function TFrmManagePCIConnection.getComboBoxes : TDictionary<TPayCardType, TsComboBox>;
 var
   i: Integer;
 begin
-  result := TObjectlist<TsComboBox>.Create;
+  result := TDictionary<TPayCardType, TsComboBox>.Create;
   for i := 0 to ComponentCount - 1 do
     if Components[i] IS TsComboBox then
-      result.Add(Components[i] AS TsComboBox);
-end;
-
-function TFrmManagePCIConnection.getLabels : TObjectlist<TsLabel>;
-var
-  i: Integer;
-begin
-  result := TObjectlist<TsLabel>.Create;
-  for i := 0 to ComponentCount - 1 do
-    if Components[i] IS TsLabel then
-      result.Add(Components[i] AS TsLabel);
+      result.Add(TPaycardType(components[i].tag), Components[i] AS TsComboBox);
 end;
 
 procedure TFrmManagePCIConnection.DoUpdateControls;
-var ALabel : TsLabel;
-    ACombo : TsComboBox;
 begin
   inherited;
-  for ALabel IN labels do
-    ALabel.Enabled := cbxIsActive.Checked;
-  for ACombo IN combos do
-    ACombo.Enabled := cbxIsActive.Checked;
+  pnlLeft.Enabled := cbxIsActive.Checked;
+  pnlRight.Enabled := cbxIsActive.Checked;
+
+  shpDefaultPaytypeEmpty.Visible := cbDefault.ItemIndex = -1;
+  btnOK.Enabled := cbxIsActive.Checked and not shpDefaultPaytypeEmpty.Visible;
 end;
 
 procedure TFrmManagePCIConnection.btnOKClick(Sender: TObject);
@@ -209,78 +252,86 @@ begin
   Save;
 end;
 
+procedure TFrmManagePCIConnection.cbChange(Sender: TObject);
+begin
+  inherited;
+  UpdateControls;
+end;
+
+procedure TFrmManagePCIConnection.cbKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
+begin
+  inherited;
+  if Key = VK_DELETE then
+    TsCombobox(Sender).itemIndex := 0;
+end;
+
 procedure TFrmManagePCIConnection.DoLoadData;
 var rSet : TRoomerDataset;
-    sql, s : String;
+    sql : String;
     ptList : TStrings;
     sKey : String;
     sValue : String;
-    i, idx : Integer;
+    combo: TsCombobox;
 
-    function getComboIndex(partName : String) : Integer;
-    var i : Integer;
-    begin
-      result := -1;
-      for i := 0 to combos.Count - 1 do
-        if combos[i].Name = 'cb' + partName then
-        begin
-          result := i;
-          Break;
-        end;
-    end;
 begin
   inherited;
   rSet := CreateNewDataSet;
+  // Stop redrawing components
+  SendMessage(Handle, WM_SETREDRAW, WPARAM(False), 0);
   try
-    sql := 'SELECT * FROM home100.hotelservices WHERE hotelId=''%s'' AND service=''PAYMENT'' AND serviceType=''PCIBOOKING_UPG'' AND active=1';
-    sql := format(sql, [d.roomerMainDataSet.hotelId]);
+
+    cbxIsActive.Checked := PCIBookingsActivated;
+    if cbxIsActive.Checked then
+      cbxIsActive.Caption := GetTranslatedText('shTx_PCIConnection_SettingActiveCaption')
+    else
+      cbxIsActive.Caption := GetTranslatedText('shTx_PCIConnection_SettingInActiveCaption');
+
+    ptList := TStringList.Create;
+    try
+      ptList.Add(GetTranslatedText('shTx_PCIConnection_AsDefault'));
+      glb.PaytypesSet.First;
+      while NOT glb.PaytypesSet.Eof do
+      begin
+        ptList.Add(glb.PaytypesSet['PayType']);
+        glb.PaytypesSet.Next;
+      end;
+      for combo in combos.Values do
+      begin
+        combo.Items.BeginUpdate;
+        try
+          combo.Items.Clear;
+          combo.Items.Assign(ptList);
+          combo.ItemIndex := 0;
+        finally
+          combo.Items.EndUpdate;
+        end;
+      end;
+    finally
+      ptList.Free;
+    end;
+
+    cbDefault.Items.Delete(0); // cannot set default as default
+    cbDefault.ItemIndex := -1; // cannot set default as default
+
+    sql := 'SELECT `key`, value FROM pms_settings WHERE keyGroup=''%s'' ';
+    sql := format(sql, [HS_PCI_BOOKING_UPG]);
+
     hData.rSet_bySQL(rSet, sql);
     rSet.first;
-    cbxIsActive.Checked := not rSet.eof;
+    while not rSet.eof do
+    begin
+      sKey := rSet['key'];
+      sValue := rSet['value'];
+      if combos.TryGetValue(TPayCardType.FromString(sKey.Substring(Length(PMS_MAPPING_PREFIX))), combo) then
+        combo.ItemIndex := combo.Items.IndexOf(sValue);
 
-      ptList := TStringList.Create;
-      try
-        ptList.Add('< SELECT >');
-        glb.PaytypesSet.First;
-        while NOT glb.PaytypesSet.Eof do
-        begin
-          ptList.Add(glb.PaytypesSet['PayType']);
-          glb.PaytypesSet.Next;
-        end;
-        for i := 0 to combos.Count - 1 do
-        begin
-          combos[i].Items.Clear;
-          combos[i].Items.Assign(ptList);
-        end;
-      finally
-        ptList.Free;
-      end;
-
-
-      sql := 'SELECT `key`, value FROM pms_settings WHERE keyGroup=''%s'' ';
-      sql := format(sql, [PCI_BOOKING_UPG]);
-      rSet.Free;
-      rSet := CreateNewDataSet;
-      hData.rSet_bySQL(rSet, sql);
-      rSet.first;
-      while not rSet.eof do
-      begin
-        sKey := rSet['key'];
-        sValue := rSet['value'];
-        // MAP_AMEX
-        s := copy(sKey, 5, MAXINT);
-        idx := getComboIndex(s);
-        if idx > -1 then
-        begin
-          combos[idx].ItemIndex := combos[idx].Items.IndexOf(sValue);
-          if combos[idx].ItemIndex < 0 then
-            combos[idx].ItemIndex := 0;
-        end;
-        rSet.Next;
-      end;
+      rSet.Next;
+    end;
 
   finally
     rSet.Free;
+    // enable updating components again
+    SendMessage(Handle, WM_SETREDRAW, WPARAM(True), 0);
   end;
 end;
 

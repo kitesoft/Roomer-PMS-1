@@ -141,7 +141,9 @@ uses Data.DB,
      Xml.XMLIntf,
      _Glob,
      uUtils
-     , UITypes;
+     , UITypes
+     , Types
+     , uFrmManagePCIConnection;
 
 const
 
@@ -251,8 +253,19 @@ function ChargePayCard(tokenCharge : TTokenCharge;
                 PayCardOperationType : TPayCardOperationType;
                 AmountIsFixed: boolean) : TTokenCharge;
 
-var _FrmChargePayCard: TFrmChargePayCard;
+var
+  _FrmChargePayCard: TFrmChargePayCard;
 begin
+  Result := nil;
+
+  if not PCIBookingConfigured then
+  begin
+    ManagePCIConnection;
+    if not PCIBookingConfigured then
+      Exit;
+  end;
+
+
   _FrmChargePayCard := TFrmChargePayCard.Create(nil);
   try
     _FrmChargePayCard.token := token;
@@ -299,7 +312,7 @@ var s : String;
 begin
   inherited;
 
-  if (PayCardOperationType = PCO_REFUND) AND (edAmount.Value > tokenCharge.amount) then
+  if (PayCardOperationType = PCO_REFUND) AND (CompareValue(edAmount.Value, tokenCharge.amount, 0.01) = GreaterThanValue) then
   begin
       MessageDlg(GetTranslatedText('PCI_REFUND_TOO_HIGH_AMOUNT'), mtError, [mbOk], 0);
       exit;
@@ -577,49 +590,8 @@ begin
 end;
 
 procedure TFrmChargePayCard.LoadCards;
-//var
-//  rSet: TRoomerDataSet;
-//  xml : String;
-//  token : TToken;
 begin
   LoadAllTokens(ReservationId, RoomReservationId, Tokenlist);
-
-//  rSet := CreateNewDataSet;
-//  xml := d.roomerMainDataSet.downloadUrlAsString(d.roomerMainDataSet.RoomerUri + format('paycard/bookings/%d/tokens', [ReservationId]));
-//  rSet := d.roomerMainDataSet.ActivateNewDataset(xml);
-//    try
-//      rSet.First;
-//      while NOT rSet.Eof do
-//      begin
-//        if (rSet['ID'] = -1) OR (rSet['ROOM_RESERVATION'] = RoomReservationId) OR (rSet['ROOM_RESERVATION'] <= 0) then
-//        begin
-//          token := TToken.Create(rSet['ID'],
-//                        rSet['RESERVATION'],
-//                        rSet['ROOM_RESERVATION'],
-//                        rSet['PAYCARD_TOKEN'],
-//                        rSet['ENABLED'],
-//                        rSet['NAME_ON_CARD'],
-//                        rSet['CARD_TYPE'],
-//                        rSet['USER_ID'],
-//                        rSet['DESCRIPTION'],
-//                        rSet['NOTES'],
-//                        rSet['CREATE_TSTAMP'],
-//
-//                        rSet['ROOM'],
-//                        rSet['SOURCE'],
-//
-//                        rSet['CARD_NUMBER'],
-//                        rSet['EXP_DATE']);
-//
-//          tokenList.Add(token);
-//        end;
-//        rSet.Next;
-//      end;
-//  finally
-//    freeandNil(rSet);
-//  end;
-
-
   DisplayTokens;
 end;
 

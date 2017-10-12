@@ -861,6 +861,7 @@ begin
   constants.Add('shTx_ItemsTypes2_ItemCode', 'Item code ');
   constants.Add('shTx_ItemsTypes2_VATCode', 'VAT code ');
   constants.Add('shTx_ItemsTypes2_EditInGrid', 'Edit in grid');
+  constants.Add('shTx_Items_TaxPriceEditInTaxTable', 'The price of staytax is defined in the Taxes table and cannot be edited here.');
  constants.Add('shTx_Locations2_LocationRequired', 'Location is required - set value or use [ESC] to cancel ');
   constants.Add('shTx_Locations2_DescriptionIsRequired', 'Description - is required - Use ESC to cancel');
   constants.Add('shTx_Locations2_EditInGrid', 'Edit in grid');
@@ -1745,6 +1746,9 @@ begin
   constants.Add('OPT_IN_EMAIL_SUBJECT', 'Opt-In Email Message - %s');
   constants.Add('OPT_IN_EMAIL_BODY', '');
 
+  constants.Add('shTx_PCIConnection_SettingActiveCaption', 'Connection to payment provider has been activated');
+  constants.Add('shTx_PCIConnection_SettingInActiveCaption', 'Connection to payment provider has not been activated. Ask your Roomer account manager about the possibilities');
+  constants.Add('shTx_PCIConnection_AsDefault', '<default mapping>');
 end;
 
 procedure AddConstants_OfflineReports;

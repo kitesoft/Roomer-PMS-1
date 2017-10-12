@@ -166,7 +166,6 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 0
-      ExplicitWidth = 449
       object sLabel2: TsLabel
         AlignWithMargins = True
         Left = 3
@@ -184,6 +183,7 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
         ExplicitWidth = 107
       end
       object lvTokens: TsListView
+        Tag = 2
         AlignWithMargins = True
         Left = 3
         Top = 22
@@ -223,11 +223,13 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
         ReadOnly = True
         RowSelect = True
         ParentFont = False
+        SortType = stData
         TabOrder = 0
         ViewStyle = vsReport
+        OnCompare = lvTokensCompare
         OnDblClick = lvTokensDblClick
+        OnResize = lvResize
         OnSelectItem = lvTokensSelectItem
-        ExplicitWidth = 443
       end
       object sPanel6: TsPanel
         Left = 0
@@ -237,7 +239,6 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
         Align = alBottom
         BevelOuter = bvNone
         TabOrder = 1
-        ExplicitWidth = 449
       end
     end
     object pnlRightGrid: TsPanel
@@ -316,11 +317,13 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
         ReadOnly = True
         RowSelect = True
         ParentFont = False
+        SortType = stData
         TabOrder = 0
         ViewStyle = vsReport
+        OnCompare = lvChargesCompare
         OnDblClick = lvChargesDblClick
+        OnResize = lvResize
         OnSelectItem = lvChargesSelectItem
-        ExplicitWidth = 526
       end
       object sPanel5: TsPanel
         Left = 0
@@ -330,7 +333,6 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
         Align = alBottom
         BevelOuter = bvNone
         TabOrder = 1
-        ExplicitWidth = 539
       end
       object sPanel7: TsPanel
         Left = 0
@@ -340,7 +342,6 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
         Align = alBottom
         BevelOuter = bvNone
         TabOrder = 2
-        ExplicitWidth = 539
         DesignSize = (
           500
           67)
@@ -429,7 +430,6 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
           Images = DImages.PngImageList1
           TabOrder = 0
           OnClick = btnChargeViewClick
-          ExplicitLeft = 303
         end
         object btnRefundOrCapture: TsButton
           AlignWithMargins = True
@@ -448,7 +448,6 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
           Style = bsSplitButton
           TabOrder = 1
           OnClick = btnClickDropDown
-          ExplicitLeft = 421
         end
       end
     end

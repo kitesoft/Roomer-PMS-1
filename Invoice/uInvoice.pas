@@ -646,7 +646,6 @@ type
     procedure LoadPayments;
     property InvoiceIndex: integer read FInvoiceIndex write SetInvoiceIndex;
     property AnyRowChecked: boolean read GetAnyRowChecked;
-    function SelectedRoomReservation: integer;
   public
     { Public declarations }
     FnewSplitNumber: integer; // 0 = herbergjareikningur
@@ -1863,17 +1862,6 @@ begin
   btnExit.Enabled := True;
   btnInvoice.Enabled := True;
   btnProforma.Enabled := True;
-end;
-
-function TfrmInvoice.SelectedRoomReservation: integer;
-var
-  lObject: TObject;
-begin
-  lObject := agrLines.Objects[cRoomInfoAttachColumn, agrLines.Row];
-  if assigned(lObject) and (lObject is TRoomInfo) then
-    Result := TRoomInfo(lObject).RoomReservation
-  else
-    result := 0;
 end;
 
 procedure TfrmInvoice.tvPaymentNativeAmountGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
@@ -7051,11 +7039,8 @@ end;
 
 procedure TfrmInvoice.btnEditDownPaymentClick(Sender: TObject);
 var
-  rSet: TRoomerDataset;
   rec: recDownPayment;
-  s: string;
   Id: integer;
-  sql: string;
 begin
   // **
   if mPayments.RecordCount = 0 then
