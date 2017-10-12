@@ -222,8 +222,10 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
         ReadOnly = True
         RowSelect = True
         ParentFont = False
+        SortType = stData
         TabOrder = 0
         ViewStyle = vsReport
+        OnCompare = lvTokensCompare
         OnDblClick = lvTokensDblClick
         OnSelectItem = lvTokensSelectItem
       end
@@ -313,8 +315,10 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
         ReadOnly = True
         RowSelect = True
         ParentFont = False
+        SortType = stData
         TabOrder = 0
         ViewStyle = vsReport
+        OnCompare = lvChargesCompare
         OnDblClick = lvChargesDblClick
         OnSelectItem = lvChargesSelectItem
       end

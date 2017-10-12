@@ -141,7 +141,9 @@ uses Data.DB,
      Xml.XMLIntf,
      _Glob,
      uUtils
-     , UITypes, uFrmManagePCIConnection;
+     , UITypes
+     , Types
+     , uFrmManagePCIConnection;
 
 const
 
@@ -310,7 +312,7 @@ var s : String;
 begin
   inherited;
 
-  if (PayCardOperationType = PCO_REFUND) AND (edAmount.Value > tokenCharge.amount) then
+  if (PayCardOperationType = PCO_REFUND) AND (CompareValue(edAmount.Value, tokenCharge.amount, 0.01) = GreaterThanValue) then
   begin
       MessageDlg(GetTranslatedText('PCI_REFUND_TOO_HIGH_AMOUNT'), mtError, [mbOk], 0);
       exit;

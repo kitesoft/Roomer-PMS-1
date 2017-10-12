@@ -78,6 +78,8 @@ type
     procedure btnClickDropDown(Sender: TObject);
     procedure mnuChargeForReservationClick(Sender: TObject);
     procedure mnuPreAuthforRoomClick(Sender: TObject);
+    procedure lvTokensCompare(Sender: TObject; Item1, Item2: TListItem; Data: Integer; var Compare: Integer);
+    procedure lvChargesCompare(Sender: TObject; Item1, Item2: TListItem; Data: Integer; var Compare: Integer);
   private
     FTokenList : TObjectList<TToken>;
     FTokenChargeList : TObjectList<TTokenCharge>;
@@ -90,6 +92,7 @@ type
     procedure DisplayCharges;
     function GetCardStatusByReference(tokenId: Integer; GatewayReference: String): Double;
     function IsThereAnActiveContract: Boolean;
+    procedure AddSortIconsToHeader(aListView: TCustomListView; aColumnNr: integer);
     { Private declarations }
   protected
     procedure DoLoadData; override;
@@ -111,6 +114,7 @@ implementation
 uses ud,
      hData,
      cmpRoomerDataSet,
+     DateUtils,
      uDateUtils,
      uFrmViewChargeInfo,
      uFrmViewPayCardDetails,
@@ -122,7 +126,9 @@ uses ud,
      uFrmOptInMessage,
      _Glob,
      uFrmPayCardView,
-     Types;
+     Types,
+     Winapi.CommCtrl
+     ;
 
 procedure ManagePaymentCards(Reservation, RoomReservation : Integer; aMode: TManagePayCardsMode = pcmCardsAndHistory);
 var
@@ -193,6 +199,23 @@ begin
 
   if lvTokens.Items.Count > 0 then
     lvTokens.Selected := lvTokens.Items[0];
+
+  AddSortIconsToHeader(lvTokens, 2);
+  AddSortIconsToHeader(lvCharges, 0);
+end;
+
+procedure TfrmTokenChargeHistory.AddSortIconsToHeader(aListView: TCustomListView; aColumnNr: integer);
+var
+  Header: HWND;
+  Item: THDItem;
+begin
+  Header := ListView_GetHeader(aListView.Handle);
+  ZeroMemory(@Item, SizeOf(Item));
+  Item.Mask := HDI_FORMAT;
+  Header_GetItem(Header, aColumnNr, Item);
+  Item.fmt := Item.fmt and not (HDF_SORTUP or HDF_SORTDOWN);//remove both flags
+  Item.fmt := Item.fmt or HDF_SORTDOWN;//include the sort descending flag
+  Header_SetItem(Header, aColumnNr, Item);
 end;
 
 procedure TFrmTokenChargeHistory.DoUpdateControls;
@@ -318,22 +341,24 @@ begin
     rSet.Free;
   end;
 
-//  xml := d.roomerMainDataSet.downloadUrlAsString(d.roomerMainDataSet.RoomerUri + format('paycard/bookings/%d/tokens', [Reservation]));
-//  rSet := d.roomerMainDataSet.ActivateNewDataset(xml);
-//  try
-    lvTokens.Items.BeginUpdate;
-    try
-      lvTokens.Items.Clear;
-      LoadAllTokens(Reservation, RoomReservation, FTokenList);
-    finally
-      lvTokens.Items.EndUpdate;
-    end;
-//  finally
-//    freeandNil(rSet);
-//  end;
+  lvTokens.Items.BeginUpdate;
+  try
+    lvTokens.Items.Clear;
+    LoadAllTokens(Reservation, RoomReservation, FTokenList);
+  finally
+    lvTokens.Items.EndUpdate;
+  end;
   DisplayTokens;
 end;
 
+
+procedure TFrmTokenChargeHistory.lvChargesCompare(Sender: TObject; Item1, Item2: TListItem; Data: Integer;
+  var Compare: Integer);
+begin
+  inherited;
+  //Sort on date created desc
+  Compare := CompareDateTime( TTokenCharge(Item2.Data).created, TTokenCharge(Item1.Data).Created);
+end;
 
 procedure TFrmTokenChargeHistory.lvChargesDblClick(Sender: TObject);
 begin
@@ -347,6 +372,14 @@ begin
   inherited;
   btnChargeView.Enabled := selected;
   btnRefundOrCapture.Enabled := selected;
+end;
+
+procedure TFrmTokenChargeHistory.lvTokensCompare(Sender: TObject; Item1, Item2: TListItem; Data: Integer;
+  var Compare: Integer);
+begin
+  inherited;
+  //Sort on date created desc
+  Compare :=  CompareDateTime(TToken(Item2.Data).Created, TToken(Item1.Data).Created);
 end;
 
 procedure TFrmTokenChargeHistory.lvTokensDblClick(Sender: TObject);
@@ -492,7 +525,7 @@ begin
   inherited;
   if NOT IsThereAnActiveContract then exit;
 
-  CreatePayCardInformation(Reservation, -1, ORD(glb.PCIContractOpenForChannel(-1)));
+  CreatePayCardInformation(Reservation, 0, ORD(glb.PCIContractOpenForChannel(-1)));
   btnRefresh.Click;
 end;
 
