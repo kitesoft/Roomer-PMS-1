@@ -80,6 +80,7 @@ type
     procedure mnuPreAuthforRoomClick(Sender: TObject);
     procedure lvTokensCompare(Sender: TObject; Item1, Item2: TListItem; Data: Integer; var Compare: Integer);
     procedure lvChargesCompare(Sender: TObject; Item1, Item2: TListItem; Data: Integer; var Compare: Integer);
+    procedure lvResize(Sender: TObject);
   private
     FTokenList : TObjectList<TToken>;
     FTokenChargeList : TObjectList<TTokenCharge>;
@@ -92,7 +93,8 @@ type
     procedure DisplayCharges;
     function GetCardStatusByReference(tokenId: Integer; GatewayReference: String): Double;
     function IsThereAnActiveContract: Boolean;
-    procedure AddSortIconsToHeader(aListView: TCustomListView; aColumnNr: integer);
+    // Add sortitem to listview. Listview.Tag indicates columnnr
+    procedure AddSortIconsToHeader(aListView: TCustomListView);
     { Private declarations }
   protected
     procedure DoLoadData; override;
@@ -200,22 +202,24 @@ begin
   if lvTokens.Items.Count > 0 then
     lvTokens.Selected := lvTokens.Items[0];
 
-  AddSortIconsToHeader(lvTokens, 2);
-  AddSortIconsToHeader(lvCharges, 0);
+  AddSortIconsToHeader(lvTokens);
+  AddSortIconsToHeader(lvCharges);
 end;
 
-procedure TfrmTokenChargeHistory.AddSortIconsToHeader(aListView: TCustomListView; aColumnNr: integer);
+procedure TfrmTokenChargeHistory.AddSortIconsToHeader(aListView: TCustomListView);
 var
   Header: HWND;
   Item: THDItem;
+  lCol: integer;
 begin
+  lCol := aListView.Tag;
   Header := ListView_GetHeader(aListView.Handle);
   ZeroMemory(@Item, SizeOf(Item));
   Item.Mask := HDI_FORMAT;
-  Header_GetItem(Header, aColumnNr, Item);
+  Header_GetItem(Header, lCol, Item);
   Item.fmt := Item.fmt and not (HDF_SORTUP or HDF_SORTDOWN);//remove both flags
   Item.fmt := Item.fmt or HDF_SORTDOWN;//include the sort descending flag
-  Header_SetItem(Header, aColumnNr, Item);
+  Header_SetItem(Header, lCol, Item);
 end;
 
 procedure TFrmTokenChargeHistory.DoUpdateControls;
@@ -365,6 +369,16 @@ begin
   inherited;
   if ASSIGNED(lvCharges.Selected) then
     btnChargeView.Click;
+end;
+
+procedure TFrmTokenChargeHistory.lvResize(Sender: TObject);
+var
+  lListView: TCustomListView;
+begin
+  inherited;
+  lListView := Sender as TCustomListview;
+  if assigned(lListView) then
+    AddSortIconsToHeader(lListView);
 end;
 
 procedure TFrmTokenChargeHistory.lvChargesSelectItem(Sender: TObject; Item: TListItem; Selected: Boolean);

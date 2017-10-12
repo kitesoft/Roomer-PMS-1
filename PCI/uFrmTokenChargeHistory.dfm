@@ -183,6 +183,7 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
         ExplicitWidth = 107
       end
       object lvTokens: TsListView
+        Tag = 2
         AlignWithMargins = True
         Left = 3
         Top = 22
@@ -227,6 +228,7 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
         ViewStyle = vsReport
         OnCompare = lvTokensCompare
         OnDblClick = lvTokensDblClick
+        OnResize = lvResize
         OnSelectItem = lvTokensSelectItem
       end
       object sPanel6: TsPanel
@@ -320,6 +322,7 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
         ViewStyle = vsReport
         OnCompare = lvChargesCompare
         OnDblClick = lvChargesDblClick
+        OnResize = lvResize
         OnSelectItem = lvChargesSelectItem
       end
       object sPanel5: TsPanel
