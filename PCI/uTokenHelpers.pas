@@ -174,7 +174,8 @@ constructor TTokenCharge.Create(id: Integer; token : TToken; Reservation: intege
 begin
   FReservation := Reservation;
   FRoomReservation := Roomreservation;
-  Ftoken := token.Clone;
+  if assigned(token) then
+    Ftoken := token.Clone;
   FoperationResultDescription := operationResultDescription;
   FgatewayResultDescription := gatewayResultDescription;
   FcurrencyRate := currencyRate;
