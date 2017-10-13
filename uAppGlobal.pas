@@ -285,6 +285,7 @@ Type
       function GetBooleanValueOfFieldFromId(tableName : String; fieldName : String; id: Integer): boolean;
 
       property PMSSettings: TPmsSettings read FPmsSettings;
+      property TableList: TTableDictionary read tableslist;
 
       function PCIContractOpenForChannel(channelId : Integer) : Boolean;
       function PCIContractNotOpen: Boolean;
@@ -379,7 +380,7 @@ end;
 
 constructor TGlobalSettings.Create;
 begin
-  tablesList := TTableDictionary.Create([doOwnsValues]);
+  tablesList := TTableDictionary.Create;
   tablesList.InitializeTables;
 
   FRoomFloors := TList<Integer>.Create;

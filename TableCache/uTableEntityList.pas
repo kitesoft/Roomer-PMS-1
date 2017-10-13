@@ -32,6 +32,7 @@ type
     property sql : String read FSql write FSql;
     property RSet : TRoomerDataSet read FRSet;
     property RefreshEnabled : Boolean read FRefreshEnabled write FRefreshEnabled;
+    property LocalFileDate: TDateTime read FileTimeStamp;
   end;
 
   TTableDictionary = class(TObjectDictionary<String, TTableEntity>)
@@ -39,6 +40,7 @@ type
     function GetTableEntityByName(aName: string): TTableEntity;
     function GetDatasetByName(aName: string): TRoomerDataset;
   public
+    constructor Create;
     procedure InitializeTables;
     procedure RefreshAllIfNeeded;
     procedure RefreshAllLocally(ForceRefresh : Boolean = true);
@@ -61,9 +63,15 @@ uses
   , uUtils
   , IOUtils
   , uStringUtils
-  , uFileSystemUtils, uAppGlobal;
-
+  , uFileSystemUtils, uAppGlobal
+  , PrjConst
+  ;
 { TTableDictionary }
+
+constructor TTableDictionary.Create;
+begin
+  inherited Create([doOwnsValues], TCaseInsensitiveEqualityComparer.Create);
+end;
 
 function TTableDictionary.GetDatasetByName(aName: string): TRoomerDataset;
 var
@@ -218,6 +226,7 @@ begin
 //
 //  result := TPath.Combine(sPath, format(cRoomerTableFileName, [FTableName]));
 end;
+
 
 
 procedure TTableEntity.RefreshIfNeeded;

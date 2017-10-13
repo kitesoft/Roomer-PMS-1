@@ -43,6 +43,7 @@ object frmInvoicePayment: TfrmInvoicePayment
       TabOrder = 0
       OnClick = BtnOkClick
       SkinData.SkinSection = 'BUTTON'
+      ExplicitTop = 6
     end
     object btnCancel: TsButton
       AlignWithMargins = True
@@ -251,7 +252,6 @@ object frmInvoicePayment: TfrmInvoicePayment
     SearchFooter.ResultFormat = '(%d of %d)'
     SortSettings.DefaultFormat = ssAutomatic
     Version = '8.2.4.1'
-    ExplicitTop = 135
     ColWidths = (
       169
       116)

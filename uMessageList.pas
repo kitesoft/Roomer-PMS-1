@@ -47,18 +47,12 @@ Type
 
     TDatePair = class
     public
-      oldDate : TDateTime;
-      newDate : TDateTime;
+      LocalFileDate : TDateTime;
+      LastUpdateOnServerUTC : TDateTime;
       function IsChanged: boolean;
     end;
 
     TRoomerMessageList = TObjectList<TRoomermessage>;
-
-    TCaseInsensitiveComparer = class(TEqualityComparer<String>)
-    public
-      function Equals(const Left, Right: String): Boolean; override;
-      function GetHashCode(const Value: String): Integer; override;
-    end;
 
     TMessageList = class
     private
@@ -97,7 +91,10 @@ implementation
 
 { TRoomerMessage }
 
-uses uMain;
+uses uMain
+    , uAppGlobal
+    , DateUtils
+    , PrjConst;
 
 constructor TRoomerMessage.Create(RoomerMessageType : String;
                                   MessageType: integer;
@@ -146,7 +143,7 @@ begin
   inherited;
   MessageList := TRoomerMessageList.Create(True);
   LastTableCheckStamp := now;
-  TableStatusses := TObjectDictionary<String, TDatePair>.Create([doOwnsValues], TCaseInsensitiveComparer.Create);
+  TableStatusses := TObjectDictionary<String, TDatePair>.Create([doOwnsValues], TCaseInsensitiveEqualityComparer.Create);
 end;
 
 procedure TMessageList.Delete(idx: Integer);
@@ -283,6 +280,7 @@ var TableRefreshSet : TRoomerDataset;
     i : integer;
     datePair : TDatePair;
     key : String;
+    tablename: string;
 begin
   if d.roomerMainDataSet.OfflineMode then
     exit;
@@ -298,13 +296,15 @@ begin
         begin
           key := TableRefreshSet.Fields[i].FieldName;
           if TableStatusses.TryGetValue(key, datePair) then
-            datePair.newDate := TableRefreshSet.fieldByName(key).AsDateTime
+            datePair.LastUpdateOnServerUTC := TableRefreshSet.fieldByName(key).AsDateTime
           else
           begin
             datePair := TDatePair.Create;
             try
-              datePair.oldDate := TableRefreshSet.fieldByName(key).AsDateTime;
-              datePair.newDate := TableRefreshSet.fieldByName(key).AsDateTime;
+//              datePair.LocalFileDate := TableRefreshSet.fieldByName(key).AsDateTime;
+              tablename := copy(key, 0, key.length -length('_lastupdate'));
+              datePair.LocalFileDate := glb.TableList.TableEntity[tableName].LocalFileDate;
+              datePair.LastUpdateOnServerUTC := TableRefreshSet.fieldByName(key).AsDateTime;
               TableStatusses.Add(key, datePair);
             except
               datePair.Free;
@@ -336,7 +336,7 @@ begin
   result := 0;
   key := format('%s_lastUpdate', [TableName]).tolower;
   if TableStatusses.TryGetValue(key, datePair) then
-    result := datePair.newDate;
+    result := datePair.LastUpdateOnServerUTC;
 end;
 
 procedure TMessageList.MarkTableAsRefreshed(TableName: String);
@@ -345,7 +345,7 @@ var datePair : TDatePair;
 begin
   key := format('%s_lastUpdate', [TableName]);
   if TableStatusses.TryGetValue(key, datePair) then
-    datePair.oldDate := datePair.newDate;
+    datePair.LocalFileDate := datePair.LastUpdateOnServerUTC;
 end;
 
 procedure TMessageList.MarkTableAsRefreshed(TableName: String; dt : TDateTime);
@@ -355,31 +355,17 @@ begin
   key := format('%s_lastUpdate', [TableName]);
   if TableStatusses.TryGetValue(key, datePair) then
   begin
-    datePair.oldDate := dt;
-    datePair.newDate := dt;
+    datePair.LocalFileDate := dt;
+    datePair.LastUpdateOnServerUTC := dt;
   end;
 end;
 
-
-{ TCaseInsensitiveComparer }
-
-function TCaseInsensitiveComparer.Equals(const Left, Right: String): Boolean;
-begin
-  { Make a case-insensitive comparison }
-  Result := CompareText(Left, Right) = 0;
-end;
-
-
-function TCaseInsensitiveComparer.GetHashCode(const Value: String): Integer;
-begin
-  result := BobJenkinsHash(Value[1], Length(Value) * SizeOf(Value[1]), 0);
-end;
 
 { TDatePair }
 
 function TDatePair.IsChanged: boolean;
 begin
-  result := oldDate <> newDate;
+  result := TTimeZone.Local.ToUniversalTime(LocalFileDate) <> LastUpdateOnServerUTC;
 end;
 
 initialization

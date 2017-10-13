@@ -5,6 +5,14 @@ interface
 uses System.Generics.Collections, System.Generics.Defaults, SysUtils
   ;
 
+Type
+  TCaseInsensitiveEqualityComparer = class(TEqualityComparer<string>)
+  public
+    function Equals(const Left, Right: string): Boolean; override;
+    function GetHashCode(const Value: string): Integer; override;
+  end;
+
+
 resourcestring
   SVersion = 'Version ';
   SDatabase = 'Database ';
@@ -203,13 +211,6 @@ uses uAppGlobal,
 
   ;
 
-
-Type
-  TCustomEqualityComparer = class(TEqualityComparer<string>)
-  public
-    function Equals(const Left, Right: string): Boolean; override;
-    function GetHashCode(const Value: string): Integer; override;
-  end;
 
 const PRE_KEY_NAME = 'PrjConst.Constants.';
 
@@ -1768,7 +1769,7 @@ end;
 
 procedure prepareConstants;
 begin
-  constants := TDictionary<String, String>.Create(TCustomEqualityComparer.Create());
+  constants := TDictionary<String, String>.Create(TCaseInsensitiveEqualityComparer.Create());
 
   OriginalConstants;
   AddConstants_1;
@@ -2020,12 +2021,12 @@ end;
 ///
 ///
 
-function TCustomEqualityComparer.Equals(const Left, Right: string): Boolean;
+function TCaseInsensitiveEqualityComparer.Equals(const Left, Right: string): Boolean;
 begin
   Result := SameText(Left, Right);
 end;
 
-function TCustomEqualityComparer.GetHashCode(const Value: string): Integer;
+function TCaseInsensitiveEqualityComparer.GetHashCode(const Value: string): Integer;
 var s: string;
 begin
   s := UpperCase(Value);
