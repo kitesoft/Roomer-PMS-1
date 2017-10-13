@@ -1085,28 +1085,31 @@ var
   lInvoiceLine: TInvoiceLine;
   cnt: integer;
 begin
-  agrLines.BeginUpdate;
-  Screen.Cursor := crHourGlass;
-  try
-    InitInvoiceGrid;
-    agrLines.RowCount := FInvoiceLinesList.Count + 1;
+  if not agrLines.IsUpdating then
+  begin
+    agrLines.BeginUpdate;
+    Screen.Cursor := crHourGlass;
+    try
+      InitInvoiceGrid;
+      agrLines.RowCount := FInvoiceLinesList.Count + 1;
 
-    cnt := 1;
-    FInvoiceLinesList.SortOnInvoiceLineIndex;
-    for lInvoiceLine in FInvoiceLinesList do
-    begin
-      DisplayLine(lInvoiceLine, cnt);
-      inc(cnt);
+      cnt := 1;
+      FInvoiceLinesList.SortOnInvoiceLineIndex;
+      for lInvoiceLine in FInvoiceLinesList do
+      begin
+        DisplayLine(lInvoiceLine, cnt);
+        inc(cnt);
+      end;
+
+      DisplayTotals;
+      AddAndInitNewRow;
+      UpdateInvoiceIndexTabs;
+
+      chkChanged;
+    finally
+      agrLines.EndUpdate;
+      Screen.Cursor := crDefault;
     end;
-
-    DisplayTotals;
-    AddAndInitNewRow;
-    UpdateInvoiceIndexTabs;
-
-    chkChanged;
-  finally
-    agrLines.EndUpdate;
-    Screen.Cursor := crDefault;
   end;
 end;
 
@@ -2560,6 +2563,11 @@ begin
       lExecutionPlan.Free;
     end;
 
+    UpdateItemInvoiceLinesForTaxCalculations;
+    FInvoiceLinesList.ResetChanged;
+
+    AddEmptyLine(false);
+
   finally
     lInvoiceHeadSet.Free;
     mRoomRes.EnableControls;
@@ -2568,11 +2576,6 @@ begin
     Screen.Cursor := crDefault;
     zFirsttime := True;
   end;
-
-  UpdateItemInvoiceLinesForTaxCalculations;
-  FInvoiceLinesList.ResetChanged;
-
-  AddEmptyLine(false);
 
   UpdateGrid;
   SetCurrentVisible;
@@ -3104,7 +3107,7 @@ begin
             RealRoomReservation, SelectableExternalRooms[omnu.Tag].reservation);
         end;
       end;
-      LoadInvoice;
+      Refreshdata;
     end;
   finally
     list.Free;
@@ -5122,7 +5125,7 @@ begin
   begin
     SaveInvoice(zInvoiceNumber, stProvisionally);
     d.UpdateGroupAccountone(FReservation, FRoomReservation, FRoomReservation, True);
-    LoadInvoice;
+    Refreshdata;
   end;
 end;
 
@@ -5335,7 +5338,7 @@ end;
 procedure TfrmInvoiceRentPerDay.ExecuteCurrencyChange(const aOldCurrency: string; const aNewCurrency: string);
 begin
   UpdateRoomReservationsCurrency(aOldCurrency, aNewCurrency);
-  LoadInvoice;
+  Refreshdata;
 end;
 
 procedure TfrmInvoiceRentPerDay.SetCustEdits;
@@ -6869,7 +6872,7 @@ begin
     exit;
   end;
 
-  LoadInvoice;
+  Refreshdata;
 end;
 
 procedure TfrmInvoiceRentPerDay.MoveItemToNewInvoiceIndex(rowIndex, toInvoiceIndex: integer);

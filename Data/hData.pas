@@ -2779,7 +2779,8 @@ const TABLES_WITH_ITEM_CODE : Array [0..4] of String =
      'invoicelines,ItemID',
      'invoicelinestmp,ItemID',
      'items,Item',
-     'turnoverandpayments,Item');
+     'turnoverandpayments,Item',
+     'control,staytaxitem');
 
 procedure UpdateItemCode(oldCode, newCode : String);
 begin
