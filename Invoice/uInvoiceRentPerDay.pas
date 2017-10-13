@@ -1697,10 +1697,11 @@ begin
   // Only add included stuff if a regular room is added and not a manually added one
   if aIsGenerated then
   begin
-    if glb.PMSSettings.BetaFunctionality.UseNewTaxcalcMethod then
-      UpdateTaxinvoiceLinesForRoomItemUsingBackend(lInvoiceLine)
-    else
-      UpdateTaxinvoiceLinesForRoomItem(lInvoiceLine);
+    with glb.PMSSettings.BetaFunctionality do
+      if BetaFunctionsAvailable and UseNewTaxcalcMethod then
+        UpdateTaxinvoiceLinesForRoomItemUsingBackend(lInvoiceLine)
+      else
+        UpdateTaxinvoiceLinesForRoomItem(lInvoiceLine);
 
     // Included Breakfast invoicelines
     AddBreakfastInvoicelinesForRoomItem(lRoomInfo, lInvoiceLine);

@@ -182,8 +182,8 @@ type
   private
     function GetBetaFunctionsAvailable: boolean;
     procedure SetBetaFunctionsAvailable(const Value: boolean);
-    function GetUseInvocieOnObjectsForm: boolean;
-    procedure SetUseInvocieOnObjectsForm(const Value: boolean);
+    function GetUseNewTaxcalcMethod: boolean;
+    procedure SetUseNewTaxcalcMethod(const Value: boolean);
   protected
     function GetKeyGroup: string; override;
   public
@@ -192,7 +192,7 @@ type
     ///  This setting can only be enabled directly in the database and not via the controldata form
     /// </summary>
     property BetaFunctionsAvailable: boolean read GetBetaFunctionsAvailable write SetBetaFunctionsAvailable;
-    property UseNewTaxcalcMethod: boolean read GetUseInvocieOnObjectsForm write SetUseInvocieOnObjectsForm;
+    property UseNewTaxcalcMethod: boolean read GetUseNewTaxcalcMethod write SetUseNewTaxcalcMethod;
   end;
 
   TPMSPMSSpecificSettings = class(TPMSSettingsGroup)
@@ -492,7 +492,7 @@ begin
   Result := cBetaFunctionsGroup;
 end;
 
-function TPMSSettingsBetaFunctionality.GetUseInvocieOnObjectsForm: boolean;
+function TPMSSettingsBetaFunctionality.GetUseNewTaxcalcMethod: boolean;
 begin
   Result := GetSettingsAsBoolean(cBetaFunctionUseNewTaxcalcMethod, false);
 end;
@@ -502,7 +502,7 @@ begin
   SaveSetting(cBetaFunctionsAvailableName, Value);
 end;
 
-procedure TPMSSettingsBetaFunctionality.SetUseInvocieOnObjectsForm(const Value: boolean);
+procedure TPMSSettingsBetaFunctionality.SetUseNewTaxcalcMethod(const Value: boolean);
 begin
   SaveSetting(cBetaFunctionUseNewTaxcalcMethod, Value);
 end;
