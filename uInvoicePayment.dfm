@@ -220,6 +220,7 @@ object frmInvoicePayment: TfrmInvoicePayment
     HoverButtons.Position = hbLeftFromColumnLeft
     HTMLSettings.ImageFolder = 'images'
     HTMLSettings.ImageBaseName = 'img'
+    MouseActions.WheelAction = waScroll
     PrintSettings.DateFormat = 'dd/mm/yyyy'
     PrintSettings.Font.Charset = DEFAULT_CHARSET
     PrintSettings.Font.Color = clWindowText
@@ -250,6 +251,7 @@ object frmInvoicePayment: TfrmInvoicePayment
     SearchFooter.ResultFormat = '(%d of %d)'
     SortSettings.DefaultFormat = ssAutomatic
     Version = '8.2.4.1'
+    ExplicitTop = 135
     ColWidths = (
       169
       116)
