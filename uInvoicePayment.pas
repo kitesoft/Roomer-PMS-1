@@ -260,9 +260,6 @@ begin
           sTemp := frm.agrPayTypes.Cells[ 0, i ];
           glb.LocateSpecificRecordAndGetValue('paytypes', 'PayType', sTemp, 'Description', sTemp);
           stlPaySelections.add( frm.agrPayTypes.Cells[ 0, i ] + '|' + frm.agrPayTypes.Cells[ 1, i ] + '|' + sTemp );
-//          if d.AskApproval( frm.agrPayTypes.Cells[ 0, i ] ) then
-//            // FConfirmation := InputBox( 'Confirm code', 'Code :', '' );
-//    			 Confirmation := InputBox( GetTranslatedText('shTx_InvoicePayment_ConfirmCode'), GetTranslatedText('shTx_InvoicePayment_Code'), '' );
         end;
       end;
     end;
@@ -405,22 +402,9 @@ begin
             True);
   if Assigned(charge) then
   begin
-    PayType := getMapForCardType(charge.token.CardType);
-    if PayType <> '' then
-    begin
-      for i := 1 to agrPayTypes.RowCount - 1 do
-        if LowerCase(agrPayTypes.Cells[0, i]) = LowerCase(PayType) then
-        begin
-          agrPayTypes.Cells[1, i] := FloatToStr(charge.amount);
-          ReCalc;
-          BtnOk.Click;
-        end;
-    end
-    else
-    begin
-      MessageDlg(Format(GetTranslatedText('shTx_InvoicePayment_PaycardPayTypeNotFound'), [charge.token.CardType]), mtWarning, [mbOK], 0);
-      btnCancel.Click;
-    end;
+    // Dont add to list otherwise it will be save twice
+    BtnOk.click;
+    //TODO: Improve this so form isnt closed if balance <> 0
   end;
 end;
 

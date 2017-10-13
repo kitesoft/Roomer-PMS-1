@@ -644,6 +644,8 @@ type
     procedure DeleteSelectedLines;
     procedure MoveSelectedLinesToInvoiceIndex(aNewIndex: integer);
     procedure LoadPayments;
+    function CompletePayments(var aInvoiceDate, aPayDate: TDate; var aLocation: string): boolean;
+    procedure SaveCompletePayments;
     property InvoiceIndex: integer read FInvoiceIndex write SetInvoiceIndex;
     property AnyRowChecked: boolean read GetAnyRowChecked;
   public
@@ -5199,6 +5201,135 @@ begin
   result := tt;
 end;
 
+procedure TfrmInvoice.SaveCompletePayments();
+var
+  lPaymentType: string;
+  lPaymentValue: Double;
+  lPaymentDesc: string;
+  i: integer;
+  lYear, lMonth, lDay: Word;
+  s: string;
+  lExecPlan: TRoomerExecutionPlan;
+begin
+
+  lExecPlan := d.roomerMainDataSet.CreateExecutionPlan;
+  try
+    for i := 0 to stlPaySelections.Count - 1 do
+    begin
+
+      lPaymentType := _strTokenAt(stlPaySelections[i], '|', 0);
+      lPaymentValue := IIF(FIsCredit, -1, 1) * _StrToFloat(_strTokenAt(stlPaySelections[i], '|', 1));
+      lPaymentDesc := _strTokenAt(stlPaySelections[i], '|', 2) + ' [' + lPaymentType + ']';
+
+      decodedate(zInvoiceDate, lYear, lMonth, lDay);
+
+      s := '';
+      s := s + 'INSERT INTO payments' + #10;
+      s := s + '(' + #10;
+      s := s + '  Reservation' + '' + #10;
+      s := s + ', RoomReservation' + #10;
+      s := s + ', Person' + #10;
+
+      s := s + ', Customer' + #10;
+      s := s + ', AutoGen' + #10;
+      s := s + ', InvoiceNumber' + #10;
+      s := s + ', PayDate' + #10;
+
+      s := s + ', PayType' + #10;
+      s := s + ', Amount' + #10;
+      s := s + ', Description' + #10;
+
+      s := s + ', CurrencyRate' + #10;
+      s := s + ', Currency' + #10;
+
+      s := s + ', TypeIndex' + #10;
+
+      s := s + ', AYear' + #10;
+      s := s + ', AMon' + #10;
+      s := s + ', ADay' + #10;
+      s := s + ', staff' + #10;
+      s := s + ', InvoiceIndex' + #10;
+
+      s := s + ')' + #10;
+      s := s + 'Values' + #10;
+      s := s + '(' + #10;
+
+      s := s + '  ' + inttostr(FReservation);
+      s := s + ', ' + inttostr(FRoomReservation);
+      s := s + ', ' + inttostr(FnewSplitNumber);
+
+      s := s + ', ' + _db(edtCustomer.Text);
+
+      s := s + ', ' + _db(_GetCurrentTick);
+
+      s := s + ', ' + inttostr(-1);
+      s := s + ', ' + _db(zInvoiceDate, True);
+
+      s := s + ', ' + _db(lPaymentType);
+      s := s + ', ' + _db(lPaymentValue);
+      s := s + ', ' + _db(lPaymentDesc);
+      s := s + ', ' + _db(GetRate(edtCurrency.Text));
+      s := s + ', ' + _db(edtCurrency.Text);
+      s := s + ', 0';
+
+      s := s + ', ' + inttostr(lYear);
+      s := s + ', ' + inttostr(lMonth);
+      s := s + ', ' + inttostr(lDay);
+      s := s + ', ' + _db(d.roomerMainDataSet.username);
+      s := s + ', ' + _db(FInvoiceIndex);
+      s := s + ')';
+
+      lExecPlan.AddExec(s);
+
+    end;
+
+    lExecPlan.Execute(ptExec,True, True);
+
+  finally
+    lExecplan.Free;
+  end;
+
+end;
+
+
+function TfrmInvoice.CompletePayments(var aInvoiceDate: TDate; var aPayDate: TDate; var aLocation: string): boolean;
+var
+  lstLocations: TStringList;
+  lOpenBalance: Double;
+begin
+  result := false;
+  lstLocations := TStringList.Create;
+  try
+
+    if RoomReservation = 0 then
+      d.GetReservationLocations(FReservation, lstLocations)
+    else
+      d.GetRoomReservationLocations(FRoomReservation, lstLocations);
+
+    lOpenBalance := _StrToFloat(edtBalance.Text);
+
+    if SelectPaymentTypes(lOpenBalance, edtCustomer.Text, ptInvoice, edtCurrency.Text,
+      GetRate(edtCurrency.Text), FReservation, FRoomreservation, lstLocations, aInvoiceDate, aPayDate, aLocation) then
+    begin
+      SaveCompletePayments();
+      LoadPayments;
+      DisplayTotals;
+      Result := SameValue(_StrToFloat(edtBalance.Text), 0, 0.01);
+
+      if not Result then
+      begin
+        // raise Exception.create('Payment need to total to the same amount as the total invoice');
+        raise Exception.create
+          (GetTranslatedText('shTx_Invoice_PaymentTotalInvoice'));
+      end;
+
+    end;
+
+  finally
+    lstLocations.Free;
+  end;
+end;
+
 function TfrmInvoice.PayInvoiceAndPrint: boolean;
 var
   ItemTypeInfo: TItemTypeInfo;
@@ -5327,34 +5458,30 @@ begin
   lstLocations := TStringList.create;
   try
 
-    if FRoomReservation = 0 then
-    begin
-      d.GetReservationLocations(FReservation, lstLocations);
-    end
-    else
-    begin
-      d.GetRoomReservationLocations(FRoomReservation, lstLocations);
-    end;
-
+//    if FRoomReservation = 0 then
+//    begin
+//      d.GetReservationLocations(FReservation, lstLocations);
+//    end
+//    else
+//    begin
+//      d.GetRoomReservationLocations(FRoomReservation, lstLocations);
+//    end;
+//
     if agrLines.Cells[col_Item, 1] = '' then
       raise Exception.create('No items on invoice');
 
     if (zInvoiceNumber = -1) or (FnewSplitNumber = 1) then
     begin
-      if not SelectPaymentTypes(_StrToFloat(edtBalance.Text), edtCustomer.Text,
-        ptInvoice, edtCurrency.Text, _StrToFloat(edtRate.Text), FReservation, FRoomReservation,
-        lstLocations, zInvoiceDate, zPayDate, zLocation) then
-      begin
-        exit;
-      end;
-      TotalPayments := GatherPayments(stlPaySelections, days);
+      if not CompletePayments(zInvoiceDate, zPayDate, zLocation) then
+        Exit;
 
-      if round(TotalPayments) <> round(_StrToFloat(edtBalance.Text)) then
-      begin
-        // raise Exception.create('Payment need to total to the same amount as the total invoice');
-        raise Exception.create
-          (GetTranslatedText('shTx_Invoice_PaymentTotalInvoice'));
-      end;
+
+//      if not SelectPaymentTypes(_StrToFloat(edtBalance.Text), edtCustomer.Text,
+//        ptInvoice, edtCurrency.Text, _StrToFloat(edtRate.Text), FReservation, FRoomReservation,
+//        lstLocations, zInvoiceDate, zPayDate, zLocation) then
+//      begin
+//        exit;
+//      end;
 
       zInvoiceNumber := IVH_SetNewID();
 
@@ -5808,104 +5935,13 @@ begin
 
         lExecutionPlan.AddExec(s);
 
-
-
-
-        // ***************************
-        //
-        // INSERxT PAYMENTS
-        //
-        // ***************************
-
-        // PaymentDescription := 'Payment Invoice ' + inttostr(zInvoiceNumber);
-        PaymentType := ptInvoice;
-        pmStr := '';
-
-        for i := 0 to stlPaySelections.Count - 1 do
-        begin
-          PaymentDescription := _strTokenAt(stlPaySelections[i], '|', 2);
-          decodedate(zInvoiceDate, AYear, AMon, ADay);
-          // SQL 117 INSERxT Payments
-          s := '';
-          s := s + 'INSERT INTO payments' + #10;
-          s := s + '(' + #10;
-          s := s + '  Reservation' + '' + #10;
-          s := s + ', RoomReservation' + #10;
-          s := s + ', Person' + #10;
-
-          s := s + ', Customer' + #10;
-          s := s + ', AutoGen' + #10;
-          s := s + ', InvoiceNumber' + #10;
-          s := s + ', PayDate' + #10;
-
-          s := s + ', PayType' + #10;
-          s := s + ', Amount' + #10;
-          s := s + ', Description' + #10;
-
-          s := s + ', CurrencyRate' + #10;
-          s := s + ', Currency' + #10;
-
-          s := s + ', TypeIndex' + #10;
-
-          s := s + ', AYear' + #10;
-          s := s + ', AMon' + #10;
-          s := s + ', ADay' + #10;
-          s := s + ', staff' + #10;
-          s := s + ', InvoiceIndex' + #10;
-
-          s := s + ')' + #10;
-          s := s + 'Values' + #10;
-          s := s + '(' + #10;
-
-          s := s + '  ' + inttostr(FReservation);
-          s := s + ', ' + inttostr(FRoomReservation);
-          s := s + ', ' + inttostr(FnewSplitNumber);
-
-          s := s + ', ' + _db(sSelectedCustomer);
-
-          ct := _GetCurrentTick;
-          s := s + ', ' + _db(ct);
-
-          s := s + ', ' + inttostr(zInvoiceNumber);
-          s := s + ', ' + _db(zInvoiceDate, True);
-          sTmp := _strTokenAt(stlPaySelections[i], '|', 0);
-          s := s + ', ' + _db(_strTokenAt(stlPaySelections[i], '|', 0));
-          s := s + ', ' + _CommaToDot
-            (trim(floattostr(iMultiplier *
-            _StrToFloat(_strTokenAt(stlPaySelections[i], '|', 1)))));
-          s := s + ', ' + _db(PaymentDescription + ' [' +
-            _strTokenAt(stlPaySelections[i], '|', 0) + ']');
-          s := s + ', ' + _CommaToDot(floattostr(zCurrencyRate));
-          s := s + ', ' + _db(edtCurrency.Text);
-          if PaymentType = ptInvoice then
-            s := s + ', 0'
-          else if PaymentType = ptDownPayment then
-            s := s + ', 1';
-          s := s + ', ' + inttostr(AYear);
-          s := s + ', ' + inttostr(AMon);
-          s := s + ', ' + inttostr(ADay);
-          s := s + ', ' + _db(d.roomerMainDataSet.username);
-          s := s + ', ' + _db(FInvoiceIndex);
-          s := s + ')';
-
-          lExecutionPlan.AddExec(s);
-
-          paymentValue := iMultiplier * _StrToFloat(_strTokenAt(stlPaySelections[i], '|', 1));
-          paymentCode := _strTokenAt(stlPaySelections[i], '|', 0);
-          paymentStr := PaymentDescription + ' [' + _strTokenAt(stlPaySelections[i], '|', 0) + ']';
-
-          lstActivity.add(CreateInvoiceActivityLog(g.qUser, FReservation,
-            FRoomReservation, FnewSplitNumber, ADD_PAYMENT, paymentCode,
-            paymentValue, zInvoiceNumber, paymentStr));
-
-          AllOk := True;
-        end;
+        AllOk := True;
 
         s := '';
         s := s + ' UPDATE `payments` '#10;
         s := s + '  SET '#10;
         s := s + ' `invoicenumber` = ' + _db(zInvoiceNumber) + ' '#10;
-        s := s + ' WHERE (`reservation` = %d) and (`Roomreservation` = %d) and (Invoicenumber=-1) and (InvoiceIndex=%d) and (typeindex=1); ';
+        s := s + ' WHERE (`reservation` = %d) and (`Roomreservation` = %d) and (Invoicenumber=-1) and (InvoiceIndex=%d); ';
         s := format(s, [FReservation, FRoomReservation, FInvoiceIndex]);
         lExecutionPlan.AddExec(s);
 

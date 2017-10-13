@@ -43,7 +43,6 @@ object frmInvoicePayment: TfrmInvoicePayment
       TabOrder = 0
       OnClick = BtnOkClick
       SkinData.SkinSection = 'BUTTON'
-      ExplicitTop = 6
     end
     object btnCancel: TsButton
       AlignWithMargins = True
