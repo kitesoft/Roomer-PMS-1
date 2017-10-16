@@ -6870,7 +6870,7 @@ begin
   s := s + '    AND InvoiceIndex=%d '#10;
 
   s := format(s, [aInvoiceNumber, FReservation, FRoomReservation, FInvoiceIndex]);
-  aExecPlan.AddQuery(s);
+  aExecPlan.AddExec(s);
 end;
 
 function TfrmInvoiceRentPerDay.IsCashInvoice: boolean;
