@@ -4890,6 +4890,7 @@ var
   rSet: TRoomerDataset;
   s: string;
   lExecPlan: TRoomerExecutionPlan;
+  lRoomResList: IList<Integer>;
 begin
   if (FRoomReservation = 0) and (FReservation = 0) then
     exit;
@@ -4905,12 +4906,12 @@ begin
     lNewRate := 1;
   lFactor := lOldRate / lNewRate;
 
-  d.roomerMainDataSet.SystemStartTransaction;
+  rSet := CreateNewDataSet;
   try
-
-    rSet := CreateNewDataSet;
+    lRoomResList := TList<Integer>.Create;
+    lExecPlan := TRoomerExecutionPlan.Create(rSet);
     try
-      lExecPlan := TRoomerExecutionPlan.Create(rSet);
+      d.roomerMainDataSet.SystemStartTransaction;
       try
 
         SaveHeader(-1, lExecplan);
@@ -4930,16 +4931,11 @@ begin
               begin
                 lDate := _db(mRoomRates.FieldByName('rateDate').asdateTime, false);
                 d.RR_Upd_CurrencyRoomPrice(lRoomres, lDate, aToCurrency, lFactor);
+                if not lRoomResList.Contains(lRoomRes) then
+                  lRoomResList.Add(lRoomRes);
               end;
               mRoomRates.Next;
             end;
-            s := '';
-            s := s + ' UPDATE roomreservations ' + chr(10);
-            s := s + ' SET ' + chr(10);
-            s := s + ' Currency=' + _db(aToCurrency) + ' ' + chr(10);
-            s := s + ' WHERE (RoomReservation = ' + inttostr(lRoomres) + ') ' + chr(10);
-            lExecPlan.AddExec(s);
-
             rSet.Next;
           end;
 
@@ -4950,31 +4946,37 @@ begin
           mRoomRates.first;
           while not mRoomRates.eof do
           begin
+            lRooMres := mRoomRatesRoomReservation.AsInteger;
             lDate := _db(mRoomRates.FieldByName('rateDate').asdateTime, false);
-            d.RR_Upd_CurrencyRoomPrice(FRoomReservation, lDate, aToCurrency, lFactor);
+            d.RR_Upd_CurrencyRoomPrice(lRoomres, lDate, aToCurrency, lFactor);
+            if not lRoomResList.Contains(lRoomRes) then
+              lRoomResList.Add(lRoomRes);
             mRoomRates.Next;
           end;
+        end;
+
+        for lRoomRes in lRoomresList do
+        begin
           s := '';
           s := s + ' UPDATE roomreservations ' + chr(10);
           s := s + ' SET ' + chr(10);
           s := s + ' Currency=' + _db(aToCurrency) + ' ' + chr(10);
-          s := s + ' WHERE (RoomReservation = ' + inttostr(FRoomReservation) + ') ' + chr(10);
+          s := s + ' WHERE (RoomReservation = ' + inttostr(lRoomRes) + ') ' + chr(10);
           lExecPlan.AddExec(s);
-
         end;
 
         lExecPlan.Execute(ptExec, false, false);
         d.roomerMainDataSet.SystemCommitTransaction;
-      finally
-        lExecPlan.Free;
+      except
+        d.roomerMainDataSet.SystemRollbackTransaction;
+        raise;
       end;
-
     finally
-      rSet.Free;
+      lExecPlan.Free;
     end;
-  except
-    d.roomerMainDataSet.SystemRollbackTransaction;
-    raise;
+
+  finally
+    rSet.Free;
   end;
 end;
 
