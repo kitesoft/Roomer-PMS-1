@@ -5140,9 +5140,15 @@ begin
   SaveAnd(False);
 
   if (Source = agrLines) then
-    MoveSelectedLinesToInvoiceIndex(lMoveToIndex)
+  begin
+    MoveSelectedLinesToInvoiceIndex(lMoveToIndex);
+    UpdateGrid;
+  end
   else if (Source is TcxDragControlObject) and (TcxDragControlObject(Source).control = grPayments) then
+  begin
     MoveDownpaymentToInvoiceIndex(lMoveToIndex);
+    LoadPayments;
+  end;
 end;
 
 procedure TfrmInvoiceRentPerDay.pnlInvoiceIndex0DragOver(Sender, Source: TObject; X, Y: integer; State: TDragState;
