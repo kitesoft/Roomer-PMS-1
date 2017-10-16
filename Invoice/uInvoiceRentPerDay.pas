@@ -4267,7 +4267,7 @@ begin
   s := s + ' UPDATE payments '#10;
   s := s + '  SET '#10;
   s := s + ' invoicenumber = ' + _db(aInvoiceNumber) + ' '#10;
-  s := s + ' WHERE (reservation = %d) and (Roomreservation = %d) and (Invoicenumber=-1) and (InvoiceIndex=%d) and (typeindex=1); ';
+  s := s + ' WHERE (reservation = %d) and (Roomreservation = %d) and (Invoicenumber=-1) and (InvoiceIndex=%d); ';
   s := format(s, [FReservation, FRoomReservation, FInvoiceIndex]);
   lExecutionPlan.AddExec(s);
 end;
@@ -4775,8 +4775,8 @@ begin
     = mrYes) then
   begin
     SaveInvoice(zInvoiceNumber, stProvisionally);
-    d.UpdateGroupAccountone(FReservation, FRoomReservation, FRoomReservation, True);
-    LoadInvoice;
+    if d.UpdateGroupAccountone(FReservation, FRoomReservation, FRoomReservation, True) then
+      LoadInvoice;
   end;
 end;
 
