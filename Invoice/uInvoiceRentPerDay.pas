@@ -650,7 +650,7 @@ type
     function PayAndPrintFinalInvoice: boolean;
     procedure MarkRoomRentAsPaid(aInvLine: TInvoiceLine; aInvoiceNumber: integer; aExecPlan: TRoomerExecutionPlan);
     procedure SetInvoiceNumberOfPayments(aInvoiceNumber: integer; lExecutionPlan: TRoomerExecutionPlan);
-    procedure SaveCompletePayments(aInvoiceNumber: integer; aExecPlan: TRoomerExecutionPlan; aActivityLog: TStringList);
+    procedure SaveCompletePayments();
     procedure CopyPaymentsForProforma(aInvoiceNumber: integer; aExecPlan: TRoomerExecutionPlan);
     procedure UpdateRoomReservationsCurrency(const aFromCurrency, aToCurrency: string);
     procedure RemoveTaxinvoiceLinesForRoomItem(aInvLine: TInvoiceLine);
@@ -1757,10 +1757,11 @@ begin
   // Only add included stuff if a regular room is added and not a manually added one
   if aIsGenerated then
   begin
-    if glb.PMSSettings.BetaFunctionality.UseNewTaxcalcMethod then
-      UpdateTaxinvoiceLinesForRoomItemUsingBackend(lInvoiceLine)
-    else
-      UpdateTaxinvoiceLinesForRoomItem(lInvoiceLine);
+    with glb.PMSSettings.BetaFunctionality do
+      if BetaFunctionsAvailable and UseNewTaxcalcMethod then
+        UpdateTaxinvoiceLinesForRoomItemUsingBackend(lInvoiceLine)
+      else
+        UpdateTaxinvoiceLinesForRoomItem(lInvoiceLine);
 
     // Included Breakfast invoicelines
     AddBreakfastInvoicelinesForRoomItem(lRoomInfo, lInvoiceLine);
@@ -3102,9 +3103,9 @@ begin
         if i >= 0 then
         begin
           RealRoomReservation := GetInvoiceLineByRow(i).RoomEntity.RoomReservation;
-          d.UpdateGroupAccountone(FReservation, RealRoomReservation, RealRoomReservation, false);
-          TransferRoomToAnotherRoomReservationInvoice(FRoomReservation, SelectableExternalRooms[omnu.Tag].RoomReservation,
-            RealRoomReservation, SelectableExternalRooms[omnu.Tag].reservation);
+          if d.UpdateGroupAccountone(FReservation, RealRoomReservation, RealRoomReservation, false) then
+            TransferRoomToAnotherRoomReservationInvoice(FRoomReservation, SelectableExternalRooms[omnu.Tag].RoomReservation,
+              RealRoomReservation, SelectableExternalRooms[omnu.Tag].reservation);
         end;
       end;
       Refreshdata;
@@ -3329,8 +3330,7 @@ begin
     d.roomerMainDataSet.DoCommand(REMOVE_REDUNDANT_INVOICES[i]);
 end;
 
-function TfrmInvoiceRentPerDay.CompletePayments(var aInvoiceDate: TDate; var aPayDate: TDate;
-  var aLocation: string): boolean;
+function TfrmInvoiceRentPerDay.CompletePayments(var aInvoiceDate: TDate; var aPayDate: TDate; var aLocation: string): boolean;
 var
   lstLocations: TStringList;
   lOpenBalance: Double;
@@ -3346,9 +3346,20 @@ begin
 
     lOpenBalance := FInvoiceLinesList.TotalOnInvoiceNativeCurrency - getDownPayments;
     if SelectPaymentTypes(lOpenBalance, edtCustomer.Text, ptInvoice, fraInvoiceCurrency.CurrencyCode,
-      GetRate(fraInvoiceCurrency.CurrencyCode), FReservation, FRoomreservation, lstLocations, aInvoiceDate, aPayDate, aLocation) then
-      with FCurrencyhandlersMap[g.qNativeCurrency] do
-        result := (RoundedValue(GatherPayments(stlPaySelections)) = RoundedValue(lOpenBalance));
+      fraInvoiceCurrency.CurrencyRate, FReservation, FRoomreservation, lstLocations, aInvoiceDate, aPayDate, aLocation) then
+    begin
+      SaveCompletePayments();
+      LoadPayments;
+      Result := SameValue(FInvoiceLinesList.TotalOnInvoiceNativeCurrency, getDownPayments, 0.01);
+
+      if not Result then
+      begin
+        // raise Exception.create('Payment need to total to the same amount as the total invoice');
+        raise Exception.create
+          (GetTranslatedText('shTx_Invoice_PaymentTotalInvoice'));
+      end;
+
+    end;
 
   finally
     lstLocations.Free;
@@ -3556,7 +3567,7 @@ begin
   s := s + ', ' + _db(zPayDate, True);
   s := s + ', ' + _db(edtInvRefrence.Caption);
   s := s + ', ' + _db(fraInvoiceCurrency.CurrencyCode);
-  s := s + ', ' + _db(GetRate(fraInvoiceCurrency.CurrencyCode));
+  s := s + ', ' + _db(fraInvoiceCurrency.CurrencyRate);
   s := s + ', ' + _db(showPackageItems);
   s := s + ', ' + _db(aInvoiceLocation);
   s := s + ', ' + _db(FInvoiceLinesList.TotalCityTaxRevenues);
@@ -3600,10 +3611,8 @@ begin
       AddSaveHeaderToExecPlan(aInvoiceNumber, lExecutionPlan, aInvoiceLocation);
 
       if (aSaveType = stDefinitive) then
-      begin
-        SaveCompletePayments(aInvoiceNumber, lExecutionPlan, lstActivity);
-        SetInvoiceNumberOfPayments(aInvoiceNumber, lExecutionPlan);
-      end
+        SetInvoiceNumberOfPayments(aInvoiceNumber, lExecutionPlan)
+
       else if (aSaveType = stProforma) then
         CopyPaymentsForProforma(aInvoiceNumber, lExecutionPlan);
 
@@ -3882,7 +3891,7 @@ begin
     end
     else
     begin
-      s := s + ', ' + _db(GetRate(fraInvoiceCurrency.CurrencyCode));
+      s := s + ', ' + _db(fraInvoiceCurrency.CurrencyRate);
       s := s + ', ' + _db(fraInvoiceCurrency.CurrencyCode);
     end;
     s := s + ', ' + _db(aInvoiceLine.noGuests);
@@ -3925,7 +3934,7 @@ begin
     end
     else
     begin
-      s := s + ' , CurrencyRate= ' + _db(GetRate(fraInvoiceCurrency.CurrencyCode));
+      s := s + ' , CurrencyRate= ' + _db(fraInvoiceCurrency.CurrencyRate);
       s := s + ' , Currency= ' + _db(fraInvoiceCurrency.CurrencyCode);
     end;
 
@@ -3979,8 +3988,7 @@ begin
 
 end;
 
-procedure TfrmInvoiceRentPerDay.SaveCompletePayments(aInvoiceNumber: integer; aExecPlan: TRoomerExecutionPlan;
-  aActivityLog: TStringList);
+procedure TfrmInvoiceRentPerDay.SaveCompletePayments();
 var
   lPaymentType: string;
   lPaymentValue: Double;
@@ -3988,78 +3996,84 @@ var
   i: integer;
   lYear, lMonth, lDay: Word;
   s: string;
+  lExecPlan: TRoomerExecutionPlan;
 begin
 
-  for i := 0 to stlPaySelections.Count - 1 do
-  begin
+  lExecPlan := d.roomerMainDataSet.CreateExecutionPlan;
+  try
+    for i := 0 to stlPaySelections.Count - 1 do
+    begin
 
-    lPaymentType := _strTokenAt(stlPaySelections[i], '|', 0);
-    lPaymentValue := IIF(FIsCredit, -1, 1) * _StrToFloat(_strTokenAt(stlPaySelections[i], '|', 1));
-    lPaymentDesc := _strTokenAt(stlPaySelections[i], '|', 2) + ' [' + lPaymentType + ']';
+      lPaymentType := _strTokenAt(stlPaySelections[i], '|', 0);
+      lPaymentValue := IIF(FIsCredit, -1, 1) * _StrToFloat(_strTokenAt(stlPaySelections[i], '|', 1));
+      lPaymentDesc := _strTokenAt(stlPaySelections[i], '|', 2) + ' [' + lPaymentType + ']';
 
-    decodedate(zInvoiceDate, lYear, lMonth, lDay);
+      decodedate(zInvoiceDate, lYear, lMonth, lDay);
 
-    s := '';
-    s := s + 'INSERT INTO payments' + #10;
-    s := s + '(' + #10;
-    s := s + '  Reservation' + '' + #10;
-    s := s + ', RoomReservation' + #10;
-    s := s + ', Person' + #10;
+      s := '';
+      s := s + 'INSERT INTO payments' + #10;
+      s := s + '(' + #10;
+      s := s + '  Reservation' + '' + #10;
+      s := s + ', RoomReservation' + #10;
+      s := s + ', Person' + #10;
 
-    s := s + ', Customer' + #10;
-    s := s + ', AutoGen' + #10;
-    s := s + ', InvoiceNumber' + #10;
-    s := s + ', PayDate' + #10;
+      s := s + ', Customer' + #10;
+      s := s + ', AutoGen' + #10;
+      s := s + ', InvoiceNumber' + #10;
+      s := s + ', PayDate' + #10;
 
-    s := s + ', PayType' + #10;
-    s := s + ', Amount' + #10;
-    s := s + ', Description' + #10;
+      s := s + ', PayType' + #10;
+      s := s + ', Amount' + #10;
+      s := s + ', Description' + #10;
 
-    s := s + ', CurrencyRate' + #10;
-    s := s + ', Currency' + #10;
+      s := s + ', CurrencyRate' + #10;
+      s := s + ', Currency' + #10;
 
-    s := s + ', TypeIndex' + #10;
+      s := s + ', TypeIndex' + #10;
 
-    s := s + ', AYear' + #10;
-    s := s + ', AMon' + #10;
-    s := s + ', ADay' + #10;
-    s := s + ', staff' + #10;
-    s := s + ', InvoiceIndex' + #10;
+      s := s + ', AYear' + #10;
+      s := s + ', AMon' + #10;
+      s := s + ', ADay' + #10;
+      s := s + ', staff' + #10;
+      s := s + ', InvoiceIndex' + #10;
 
-    s := s + ')' + #10;
-    s := s + 'Values' + #10;
-    s := s + '(' + #10;
+      s := s + ')' + #10;
+      s := s + 'Values' + #10;
+      s := s + '(' + #10;
 
-    s := s + '  ' + inttostr(FReservation);
-    s := s + ', ' + inttostr(FRoomReservation);
-    s := s + ', ' + inttostr(FnewSplitNumber);
+      s := s + '  ' + inttostr(FReservation);
+      s := s + ', ' + inttostr(FRoomReservation);
+      s := s + ', ' + inttostr(FnewSplitNumber);
 
-    s := s + ', ' + _db(edtCustomer.Text);
+      s := s + ', ' + _db(edtCustomer.Text);
 
-    s := s + ', ' + _db(_GetCurrentTick);
+      s := s + ', ' + _db(_GetCurrentTick);
 
-    s := s + ', ' + inttostr(aInvoiceNumber);
-    s := s + ', ' + _db(zInvoiceDate, True);
+      s := s + ', ' + inttostr(-1);
+      s := s + ', ' + _db(zInvoiceDate, True);
 
     s := s + ', ' + _db(lPaymentType);
     s := s + ', ' + _db(lPaymentValue);
     s := s + ', ' + _db(lPaymentDesc);
-    s := s + ', ' + _db(GetRate(fraInvoiceCurrency.CurrencyCode));
+    s := s + ', ' + _db(fraInvoiceCurrency.CurrencyRate);
     s := s + ', ' + _db(fraInvoiceCurrency.CurrencyCode);
     s := s + ', 0';
 
-    s := s + ', ' + inttostr(lYear);
-    s := s + ', ' + inttostr(lMonth);
-    s := s + ', ' + inttostr(lDay);
-    s := s + ', ' + _db(d.roomerMainDataSet.username);
-    s := s + ', ' + _db(FInvoiceIndex);
-    s := s + ')';
+      s := s + ', ' + inttostr(lYear);
+      s := s + ', ' + inttostr(lMonth);
+      s := s + ', ' + inttostr(lDay);
+      s := s + ', ' + _db(d.roomerMainDataSet.username);
+      s := s + ', ' + _db(FInvoiceIndex);
+      s := s + ')';
 
-    aExecPlan.AddExec(s);
+      lExecPlan.AddExec(s);
 
-    aActivityLog.Add(CreateInvoiceActivityLog(g.qUser, FReservation, FRoomReservation, FnewSplitNumber, ADD_PAYMENT,
-      lPaymentType, lPaymentValue, zInvoiceNumber, lPaymentDesc));
+    end;
 
+    lExecPlan.Execute(ptExec,True, True);
+
+  finally
+    lExecplan.Free;
   end;
 
 end;
@@ -5248,6 +5262,7 @@ var
   rSet: TRoomerDataset;
   s: string;
   lExecPlan: TRoomerExecutionPlan;
+  lRoomResList: IList<Integer>;
 begin
   if (FRoomReservation = 0) and (FReservation = 0) then
     exit;
@@ -5262,12 +5277,12 @@ begin
     lNewRate := 1;
   lFactor := lOldRate / lNewRate;
 
-  d.roomerMainDataSet.SystemStartTransaction;
+  rSet := CreateNewDataSet;
   try
-
-    rSet := CreateNewDataSet;
+    lRoomResList := TList<Integer>.Create;
+    lExecPlan := TRoomerExecutionPlan.Create(rSet);
     try
-      lExecPlan := TRoomerExecutionPlan.Create(rSet);
+      d.roomerMainDataSet.SystemStartTransaction;
       try
 
         AddSaveHeaderToExecPlan(-1, lExecplan);
@@ -5287,16 +5302,11 @@ begin
               begin
                 lDate := _db(mRoomRates.FieldByName('rateDate').asdateTime, false);
                 d.RR_Upd_CurrencyRoomPrice(lRoomres, lDate, aToCurrency, lFactor);
+                if not lRoomResList.Contains(lRoomRes) then
+                  lRoomResList.Add(lRoomRes);
               end;
               mRoomRates.Next;
             end;
-            s := '';
-            s := s + ' UPDATE roomreservations ' + chr(10);
-            s := s + ' SET ' + chr(10);
-            s := s + ' Currency=' + _db(aToCurrency) + ' ' + chr(10);
-            s := s + ' WHERE (RoomReservation = ' + inttostr(lRoomres) + ') ' + chr(10);
-            lExecPlan.AddExec(s);
-
             rSet.Next;
           end;
 
@@ -5307,31 +5317,37 @@ begin
           mRoomRates.first;
           while not mRoomRates.eof do
           begin
+            lRooMres := mRoomRatesRoomReservation.AsInteger;
             lDate := _db(mRoomRates.FieldByName('rateDate').asdateTime, false);
-            d.RR_Upd_CurrencyRoomPrice(FRoomReservation, lDate, aToCurrency, lFactor);
+            d.RR_Upd_CurrencyRoomPrice(lRoomres, lDate, aToCurrency, lFactor);
+            if not lRoomResList.Contains(lRoomRes) then
+              lRoomResList.Add(lRoomRes);
             mRoomRates.Next;
           end;
+        end;
+
+        for lRoomRes in lRoomresList do
+        begin
           s := '';
           s := s + ' UPDATE roomreservations ' + chr(10);
           s := s + ' SET ' + chr(10);
           s := s + ' Currency=' + _db(aToCurrency) + ' ' + chr(10);
-          s := s + ' WHERE (RoomReservation = ' + inttostr(FRoomReservation) + ') ' + chr(10);
+          s := s + ' WHERE (RoomReservation = ' + inttostr(lRoomRes) + ') ' + chr(10);
           lExecPlan.AddExec(s);
-
         end;
 
         lExecPlan.Execute(ptExec, false, false);
         d.roomerMainDataSet.SystemCommitTransaction;
-      finally
-        lExecPlan.Free;
+      except
+        d.roomerMainDataSet.SystemRollbackTransaction;
+        raise;
       end;
-
     finally
-      rSet.Free;
+      lExecPlan.Free;
     end;
-  except
-    d.roomerMainDataSet.SystemRollbackTransaction;
-    raise;
+
+  finally
+    rSet.Free;
   end;
 end;
 
@@ -7242,7 +7258,7 @@ begin
   s := s + '    AND InvoiceIndex=%d '#10;
 
   s := format(s, [aInvoiceNumber, FReservation, FRoomReservation, FInvoiceIndex]);
-  aExecPlan.AddQuery(s);
+  aExecPlan.AddExec(s);
 end;
 
 function TfrmInvoiceRentPerDay.IsCashInvoice: boolean;

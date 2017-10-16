@@ -2774,7 +2774,7 @@ begin
 end;
 
 
-const TABLES_WITH_ITEM_CODE : Array [0..4] of String =
+const TABLES_WITH_ITEM_CODE : Array [0..5] of String =
     ('invoicelinepricechange,ItemID',
      'invoicelines,ItemID',
      'invoicelinestmp,ItemID',

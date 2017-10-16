@@ -111,6 +111,7 @@ object frmGoToRoomandDate: TfrmGoToRoomandDate
       Alignment = taLeftJustify
       SkinData.SkinSection = 'COMBOBOX'
       VerticalAlignment = taAlignTop
+      Style = csDropDownList
       Color = clWhite
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlack
