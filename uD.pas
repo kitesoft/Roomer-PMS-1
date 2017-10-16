@@ -430,8 +430,8 @@ type
 
     procedure UpdateBreakfastIncluted(reservation, RoomReservation: Integer; BreakfastIncluted: boolean);
     procedure UpdateGroupAccountAll(reservation, RoomReservation, RoomReservationAlias: Integer; GroupAccount: boolean);
-    procedure UpdateGroupAccountOne(reservation, RoomReservation, RoomReservationAlias: Integer; GroupAccount: boolean;
-      InvoiceIndex: Integer = -1);
+    function UpdateGroupAccountOne(reservation, RoomReservation, RoomReservationAlias: Integer; GroupAccount: boolean;
+      InvoiceIndex: Integer = -1): boolean;
     procedure MoveRoomDateToInvoiceIndex(aReservation, aRoomReservation: integer; aDate:TDate; aInvoiceIndex: Integer);
     function UpdateReservationMarket(aReservation: Integer; aMarket: TReservationMarketType): boolean;
 
@@ -3806,12 +3806,13 @@ begin
   end;
 end;
 
-procedure Td.UpdateGroupAccountOne(reservation, RoomReservation, RoomReservationAlias: Integer; GroupAccount: boolean;
-  InvoiceIndex: Integer = -1);
+function Td.UpdateGroupAccountOne(reservation, RoomReservation, RoomReservationAlias: Integer; GroupAccount: boolean;
+  InvoiceIndex: Integer = -1): boolean;
 var
   s: string;
   ExecutionPlan: TRoomerExecutionPlan;
 begin
+  result := false;
   if not isAllRRSameCurrency(reservation) then
   begin
     showmessage(GetTranslatedText('shTx_D_CurrencyCancel'));
@@ -3859,10 +3860,20 @@ begin
         ExecutionPlan.AddExec(s);
       end;
 
-      if ExecutionPlan.Execute(ptExec, False, False) then
-        ExecutionPlan.CommitTransaction
-      else
+      if not ExecutionPlan.Execute(ptExec, False, False) then
         raise Exception.Create(ExecutionPlan.ExecException);
+
+      ExecutionPlan.CommitTransaction;
+
+      if (InvoiceIndex > -1) then
+      begin
+        if GroupAccount then
+          UpdPaymentsWhenChangingReservationToGroup(reservation, RoomReservation)
+        else
+          UpdPaymentsWhenChangingReservationToRoom(reservation, RoomReservation)
+      end;
+
+      result := true;
 
     except
       ExecutionPlan.RollbackTransaction;
@@ -3872,13 +3883,6 @@ begin
     Executionplan.Free;
   end;
 
-  if (InvoiceIndex > -1) then
-  begin
-    if GroupAccount then
-      UpdPaymentsWhenChangingReservationToGroup(reservation, RoomReservation)
-    else
-      UpdPaymentsWhenChangingReservationToRoom(reservation, RoomReservation)
-  end;
 end;
 
 procedure Td.UpdPaymentsWhenChangingReservationToGroup(reservation, RoomReservation: Integer);

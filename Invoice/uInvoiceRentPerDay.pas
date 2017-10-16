@@ -3289,9 +3289,9 @@ begin
         if i >= 0 then
         begin
           RealRoomReservation := GetInvoiceLineByRow(i).RoomEntity.RoomReservation;
-          d.UpdateGroupAccountone(FReservation, RealRoomReservation, RealRoomReservation, false);
-          TransferRoomToAnotherRoomReservationInvoice(FRoomReservation, SelectableExternalRooms[omnu.Tag].RoomReservation,
-            RealRoomReservation, SelectableExternalRooms[omnu.Tag].reservation);
+          if d.UpdateGroupAccountone(FReservation, RealRoomReservation, RealRoomReservation, false) then
+            TransferRoomToAnotherRoomReservationInvoice(FRoomReservation, SelectableExternalRooms[omnu.Tag].RoomReservation,
+              RealRoomReservation, SelectableExternalRooms[omnu.Tag].reservation);
         end;
       end;
       LoadInvoice;
