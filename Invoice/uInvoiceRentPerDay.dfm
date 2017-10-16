@@ -326,7 +326,7 @@ inherited frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
           Font.Name = 'Tahoma'
           Font.Style = [fsBold]
         end
-        object rgrInvoiceType: TsRadioGroup
+        object rgrInvoiceAddressType: TsRadioGroup
           Left = 368
           Top = 10
           Width = 189
@@ -334,7 +334,7 @@ inherited frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
           Caption = 'Invoice header method'
           ParentBackground = False
           TabOrder = 0
-          OnClick = rgrInvoiceTypeClick
+          OnClick = rgrInvoiceAddressTypeClick
           SkinData.SkinSection = 'GROUPBOX'
           ItemIndex = 1
           Items.Strings = (
@@ -539,7 +539,6 @@ inherited frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
           Align = alClient
           ExplicitHeight = 21
           inherited lblCurrencyName: TsLabel
-            Width = 140
             Height = 15
           end
           inherited edCurrencyCode: TsEdit
@@ -547,7 +546,6 @@ inherited frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
           end
           inherited btnGetCurrency: TsButton
             Height = 21
-            OnClick = fraInvoiceCurrencybtnGetCurrencyClick
             ExplicitHeight = 21
           end
         end

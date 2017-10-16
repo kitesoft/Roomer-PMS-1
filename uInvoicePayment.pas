@@ -391,8 +391,6 @@ end;
 
 procedure TfrmInvoicePayment.btnChargePayCardClick(Sender: TObject);
 var charge : TTokenCharge;
-    PayType : String;
-    i : Integer;
 begin
   charge := ChargePayCardForPayment(Reservation,
             Roomreservation,
