@@ -631,7 +631,7 @@ type
     procedure FillAllRoomsInMenu(mnuItem: TMenuItem);
     procedure LoadRoomListForAllReservations;
     procedure TransferRoomToAnyRoomsClick(Sender: TObject);
-    procedure TransferRoomToAnotherRoomReservationInvoice(FromRoomReservation, RoomReservation, RealRoomReservation,
+    procedure UpdatePaidByOfRoomsdate(FromRoomReservation, RoomReservation, RealRoomReservation,
       reservation: integer);
     procedure AddIncludedBreakfastToLinesAndGrid(aIncludedBreakfastCount: integer; aPurchaseDate: TDate;
       iAddAt: integer = 0; aParent: TInvoiceLine = nil);
@@ -3275,7 +3275,7 @@ begin
         begin
           RealRoomReservation := GetInvoiceLineByRow(i).RoomEntity.RoomReservation;
           if d.UpdateGroupAccountone(FReservation, RealRoomReservation, RealRoomReservation, false) then
-            TransferRoomToAnotherRoomReservationInvoice(FRoomReservation, SelectableExternalRooms[omnu.Tag].RoomReservation,
+            UpdatePaidByOfRoomsdate(FRoomReservation, SelectableExternalRooms[omnu.Tag].RoomReservation,
               RealRoomReservation, SelectableExternalRooms[omnu.Tag].reservation);
         end;
       end;
@@ -3286,7 +3286,7 @@ begin
   end;
 end;
 
-procedure TfrmInvoiceRentPerDay.TransferRoomToAnotherRoomReservationInvoice(FromRoomReservation, RoomReservation,
+procedure TfrmInvoiceRentPerDay.UpdatePaidByOfRoomsdate(FromRoomReservation, RoomReservation,
   RealRoomReservation, reservation: integer);
 var
   sql: String;
@@ -4787,6 +4787,7 @@ begin
           d.UpdateGroupAccountone(invoiceline.RoomEntity.Reservation, invoiceline.RoomEntity.RoomReservation, invoiceline.RoomEntity.RoomReservation, false);
         end
       end;
+      LoadInvoice;
     finally
       list.Free;
     end;
