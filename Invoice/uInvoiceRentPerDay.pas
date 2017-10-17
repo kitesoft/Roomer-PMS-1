@@ -736,7 +736,7 @@ uses
   uFinanceConnectService
   , uBookingsTaxesAPICaller
   , uRoomerCanonicalDataModel_DataStructures, uRoomerCanonicalDataModel_SimpleTypes
-  , uFrmChargePayCard, uPMSSettings;
+  , uFrmChargePayCard, uPMSSettings, uAmount, uCurrencyConstants;
 
 {$R *.DFM}
 
@@ -1014,7 +1014,7 @@ begin
     invoiceLine.Item := sItem;
     invoiceLine.Text := sText;
     invoiceLine.Number := iNumber;
-    invoiceLine.Price := aPrice;
+    invoiceLine.Price := TAmount.Create(aPrice, aCurrency);
     invoiceLine.IsGeneratedLine := aIsGenerated;
     invoiceLine.PurchaseDate := PurchaseDate;
     invoiceLine.Reference := Refrence;
@@ -1592,7 +1592,7 @@ begin
 
     for i := 0 to agrLines.ColCount - 1 do
       if agrLines.IsHiddenColumn(i) then
-        agrLines.ColWidths[i] := 0;
+        agrLines.ColWidths[i] := -1;
 
     if not agrLines.HasCheckBox(0, col_Select) then
       agrLines.AddCheckBox(0, col_Select, false, false);
@@ -4927,7 +4927,7 @@ begin
               exit;
             end;
 
-            lInvoiceLine.Price := lNewValue;
+            lInvoiceLine.Price := TAmount.Create(lNewValue, lInvoiceLine.Currency);
             lInvoiceLine.Changed := True;
             agrLines.Cells[col_System, ARow] := '';
           end;

@@ -319,7 +319,12 @@ uses
   uCalculationTypeDefinitions in 'Definitions\uCalculationTypeDefinitions.pas',
   uCalculationTypeExtraDefinitions in 'Definitions\uCalculationTypeExtraDefinitions.pas',
   uItemTransactionsReport in 'uItemTransactionsReport.pas' {frmItemTransactionsReport},
-  uFraCurrencyPanel in 'Embeddables\uFraCurrencyPanel.pas' {fraCurrencyPanel: TFrame};
+  uFraCurrencyPanel in 'Embeddables\uFraCurrencyPanel.pas' {fraCurrencyPanel: TFrame},
+  uAmount in 'RoomerVCLs\Source\uAmount.pas',
+  uRoomerCurrencymanager in 'Currencies\uRoomerCurrencymanager.pas',
+  uRoomerCurrencyDefinition in 'Currencies\uRoomerCurrencyDefinition.pas',
+  uCurrencyDefinition in 'RoomerVCLs\Source\uCurrencyDefinition.pas',
+  uCurrencyConstants in 'RoomerVCLs\Source\uCurrencyConstants.pas';
 
 {$R *.RES}
 
@@ -350,7 +355,7 @@ begin
     TSplashFormManager.Show;
 
     Application.CreateForm(TD, D);
-  D.ApplicationId := cOpenAPIApplicationID;
+    D.ApplicationId := cOpenAPIApplicationID;
 
     Application.CreateForm(TDReportData, DReportData);
     TSplashFormManager.UpdateProgress('Loading forms...');

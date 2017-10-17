@@ -876,6 +876,7 @@ type
     Decimals: integer;
     Displayformat: string;
     CurrencySign: string;
+    CurrencyFormat: Byte;
     procedure Init;
     procedure ReadFromDataset(aRSet: TDataset);
   end;

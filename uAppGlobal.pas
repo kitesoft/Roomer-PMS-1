@@ -365,6 +365,7 @@ uses   dbTables
      , uSQLUtils
      , UITypes
      , RegularExpressions
+     , uRoomerCurrencymanager
      ;
 
 procedure FilterRoom( RoomNumber : string );
@@ -396,6 +397,8 @@ begin
   LoadStaticTables(true);
 
   ReloadPreviousGuests;
+
+  RoomerCurrencyManager;
 end;
 
 destructor TGlobalSettings.Destroy;

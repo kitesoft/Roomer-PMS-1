@@ -6,6 +6,7 @@ uses
   Generics.Collections
   , uInvoiceEntities
   , hData
+  , uAmount
   ;
 
 type
@@ -36,7 +37,7 @@ type
     FItem: string;
     FText: string;
     FNumber: Double; // -96
-    FPrice: Double;
+    FPrice: TAmount;
     FTotal: Double;
     FDate: TDate;
     FAuto: boolean;
@@ -74,7 +75,7 @@ type
     function GetPriceNativeCurrency: Double;
     function GetAmountOnInvoiceNativeCurrency: Double;
     function GetVatOnInvoiceNativeCurrency: Double;
-    function GetPrice: Double;
+    function GetPrice: TAmount;
     function GetPriceOnInvoice: Double;
     function GetPriceOnInvoiceNativeCurrency: Double;
     function GetTotalRevenue: Double;
@@ -179,7 +180,7 @@ type
     /// <summary>
     /// Price per item in selected currency
     /// </summary>
-    property Price: Double read GetPrice write FPrice;
+    property Price: TAmount read GetPrice write FPrice;
     /// <summary>
     /// Selected currency for this invoiceline
     /// </summary>
@@ -307,7 +308,7 @@ begin
   FItem := '';
   FText := '';
   FNumber := 0;
-  FPrice := 0.00;
+  FPrice := 0.00; // in native currency by default
   FTotal := 0.00;
   FReference := '';
   FSource := '';
@@ -390,7 +391,7 @@ begin
     Result := -1;
 end;
 
-function TInvoiceLine.GetPrice: Double;
+function TInvoiceLine.GetPrice: TAmount;
 begin
   result := FPrice;
 end;

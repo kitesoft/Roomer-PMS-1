@@ -978,6 +978,11 @@ $(PostBuildEvent)]]></PostBuildEvent>
             <Form>fraCurrencyPanel</Form>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
+        <DCCReference Include="RoomerVCLs\Source\uAmount.pas"/>
+        <DCCReference Include="Currencies\uRoomerCurrencymanager.pas"/>
+        <DCCReference Include="Currencies\uRoomerCurrencyDefinition.pas"/>
+        <DCCReference Include="RoomerVCLs\Source\uCurrencyDefinition.pas"/>
+        <DCCReference Include="RoomerVCLs\Source\uCurrencyConstants.pas"/>
         <None Include="Roomer.todo"/>
         <None Include="notes.txt"/>
         <None Include="Roomer.inc"/>
@@ -1092,7 +1097,7 @@ $(PostBuildEvent)]]></PostBuildEvent>
         <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
         <PreLinkEvent/>
         <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
-        <PostBuildEvent>$(OUTPUTDIR)DeployOnDev.bat</PostBuildEvent>
+        <PostBuildEvent>$(OUTPUTDIR)DeployOnDev.bat</PostBuildEvent>
         <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
     </PropertyGroup>
 </Project>
