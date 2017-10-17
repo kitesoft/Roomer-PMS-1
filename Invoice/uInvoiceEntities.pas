@@ -280,9 +280,9 @@ begin
     sql := sql + '         0, '#10;
     sql := sql + '         sum(coalesce(rd.roomrate,0)) '#10;
     sql := sql + '    from roomreservations rr '#10;
-    sql := sql + '    join roomsdate rd on rd.roomreservation=rr.roomreservation '#10;
-    sql := sql + '    where rr.reservation=%d '#10;
-    sql := sql + '    and (rr.roomreservation = %d or (%d=0 and rr.groupaccount)) '#10;
+    sql := sql + '    join roomsdate rd on rd.roomreservation=rr.roomreservation and not rd.paid '#10;
+    sql := sql + '    where ((rr.roomreservation = 205446 or (rr.reservation=76890 and 205446=0 and rr.groupaccount))) '#10;
+    sql := sql + '           or rd.paidby = 205446 '#10;
     sql := sql + '    group by rateInvIndex '#10;
     sql := sql + '     ) u '#10;
     sql := sql + ' where invoicelinestotal <> 0 or roomrenttotal <> 0 '#10;
