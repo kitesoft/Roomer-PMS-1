@@ -74,8 +74,8 @@ object frmItems2: TfrmItems2
       Font.Style = []
     end
     object btnClear: TsSpeedButton
-      Left = 273
-      Top = 39
+      Left = 277
+      Top = 37
       Width = 63
       Height = 20
       Caption = 'Clear'
@@ -610,6 +610,7 @@ object frmItems2: TfrmItems2
     Left = 80
     Top = 136
     object prLink_grData: TdxGridReportLink
+      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 5080
       PrinterPage.GrayShading = True
@@ -623,6 +624,7 @@ object frmItems2: TfrmItems2
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
       ReportDocument.CreationDate = 41334.495374884260000000
+      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
   end

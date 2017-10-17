@@ -566,16 +566,20 @@ end;
 procedure TInvoiceLineList.Notify(const Item: TInvoiceline; Action: TCollectionNotification);
 var
   lInvLine: TInvoiceLine;
+  i: integer;
 begin
   if Action in [cnRemoved, cnExtracted] then
   begin
     // if removing a line then all child lines are also removed
-    for linvLine in Item.ChildInvoiceLines do
+    for i := Item.ChildInvoiceLines.count-1 downto 0 do
+    begin
+      lInvLine := Item.ChildInvoiceLines[i];
       if (linvLine <> Item) then // avoid recursion
         if lInvLine.IsGeneratedLine then
           Remove(lInvLine)
         else
           lInvLine.Parent := nil;
+    end;
   end;
 
   inherited;
