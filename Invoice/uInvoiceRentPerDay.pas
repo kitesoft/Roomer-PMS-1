@@ -571,7 +571,6 @@ type
     procedure MarkOriginalInvoiceAsCredited(iInvoice: integer);
 
     function isSystemLine(row: integer): boolean;
-    function GatherPayments(PayLines: TStringList): Double;
     procedure SetCustEdits;
     function GetInvoiceHeader(Res, RoomRes: integer): boolean; overload;
     function GetInvoiceHeader(Res, RoomRes: integer; arSet: TRoomerDataset): boolean; overload;
@@ -794,25 +793,6 @@ begin
   end;
 end;
 
-procedure EmptyStringGrid(Grid: TAdvStringGrid);
-var
-  i, l: integer;
-begin
-  for l := 1 to Grid.RowCount - 1 do
-  begin
-    Grid.SetCheckBoxState(col_Select, l, false);
-    Grid.RemoveCheckBox(col_Select, l);
-    for i := 0 to Grid.ColCount - 1 do
-    begin
-      Grid.Cells[i, l] := '';
-      Grid.CellProperties[i, l] := nil; // .Free;
-      Grid.Objects[i, l] := nil;
-    end;
-  end;
-
-  Grid.RowCount := 2;
-  Grid.FixedRows := 1;
-end;
 
 procedure TfrmInvoiceRentPerDay.RemoveAllCheckboxes;
 var
@@ -820,8 +800,8 @@ var
 begin
   for i := 0 to agrLines.RowCount - 1 do
   begin
-    if agrLines.HasCheckBox(col_Select, i) then
-      agrLines.RemoveCheckBox(col_Select, i);
+    agrLines.RemoveCheckBox(col_Select, i);
+    agrLines.RemoveCheckBox(col_VisibleOnInvoice, i);
   end;
 end;
 
@@ -1070,7 +1050,7 @@ begin
     Screen.Cursor := crHourGlass;
     try
       // agrLines.ClearRows(1, agrLines.RowCount);
-      EmptyStringGrid(agrLines);
+      InitInvoiceGrid;
       agrLines.RowCount := FInvoiceLinesList.Count + 1;
 
       cnt := 1;
@@ -1559,57 +1539,62 @@ Procedure TfrmInvoiceRentPerDay.InitInvoiceGrid;
 var
   iWidth, i: integer;
 begin
-  EmptyStringGrid(agrLines);
-  agrLines.ColCount := col_autogen + 1;
-  agrLines.RowHeights[0] := 40;
-  agrLines.RowCount := 2;
-  agrLines.Cells[col_Item, 0] := GetTranslatedText('shTxInvoice_Form_Header_Item');
-  agrLines.Cells[col_VisibleOnInvoice, 0] := GetTranslatedText('shTxInvoice_Form_Header_VisibleOnInvoice');
-  agrLines.Cells[col_Description, 0] := GetTranslatedText('shTxInvoice_Form_Header_Text');
-  agrLines.Cells[col_Date, 0] := GetTranslatedText('shTxInvoice_Form_Header_Date');
-  agrLines.Cells[col_ItemCount, 0] := GetTranslatedText('shTxInvoice_Form_Header_Number');
-  agrLines.Cells[col_ItemPrice, 0] := GetTranslatedText('shTxInvoice_Form_Header_UnitPrice');
-  agrLines.Cells[col_TotalPrice, 0] := GetTranslatedText('shTxInvoice_Form_Header_Total');
-  agrLines.Cells[col_TotalOnInvoice, 0] := GetTranslatedText('shTxInvoice_Form_Header_TotalOnInvoice');
-  agrLines.Cells[col_System, 0] := ' !';
-  agrLines.Cells[col_Reference, 0] := GetTranslatedText('shTxInvoice_Form_Header_Reference');
-  agrLines.Cells[col_Source, 0] := GetTranslatedText('shTxInvoice_Form_Header_Source');
-  agrLines.Cells[col_isPackage, 0] := GetTranslatedText('shTxInvoice_Form_Header_Package');
-  agrLines.Cells[col_NoGuests, 0] := GetTranslatedText('shTxInvoice_Form_Header_Guests');
-  agrLines.Cells[col_confirmdate, 0] := GetTranslatedText('shTxInvoice_Form_Header_Confirmdate');
-  agrLines.Cells[col_confirmAmount, 0] := GetTranslatedText('shTxInvoice_Form_Header_ConfirmAmount');
-  agrLines.Cells[col_rrAlias, 0] := GetTranslatedText('shTxInvoice_Form_Header_Alias');
-  agrLines.Cells[col_autogen, 0] := 'ID';
+  agrLines.BeginUpdate;
+  try
+    agrLines.ClearAll;
+    agrLines.ColCount := col_autogen + 1;
+    agrLines.RowHeights[0] := 40;
+    agrLines.RowCount := 2;
+    agrLines.Cells[col_Item, 0] := GetTranslatedText('shTxInvoice_Form_Header_Item');
+    agrLines.Cells[col_VisibleOnInvoice, 0] := GetTranslatedText('shTxInvoice_Form_Header_VisibleOnInvoice');
+    agrLines.Cells[col_Description, 0] := GetTranslatedText('shTxInvoice_Form_Header_Text');
+    agrLines.Cells[col_Date, 0] := GetTranslatedText('shTxInvoice_Form_Header_Date');
+    agrLines.Cells[col_ItemCount, 0] := GetTranslatedText('shTxInvoice_Form_Header_Number');
+    agrLines.Cells[col_ItemPrice, 0] := GetTranslatedText('shTxInvoice_Form_Header_UnitPrice');
+    agrLines.Cells[col_TotalPrice, 0] := GetTranslatedText('shTxInvoice_Form_Header_Total');
+    agrLines.Cells[col_TotalOnInvoice, 0] := GetTranslatedText('shTxInvoice_Form_Header_TotalOnInvoice');
+    agrLines.Cells[col_System, 0] := ' !';
+    agrLines.Cells[col_Reference, 0] := GetTranslatedText('shTxInvoice_Form_Header_Reference');
+    agrLines.Cells[col_Source, 0] := GetTranslatedText('shTxInvoice_Form_Header_Source');
+    agrLines.Cells[col_isPackage, 0] := GetTranslatedText('shTxInvoice_Form_Header_Package');
+    agrLines.Cells[col_NoGuests, 0] := GetTranslatedText('shTxInvoice_Form_Header_Guests');
+    agrLines.Cells[col_confirmdate, 0] := GetTranslatedText('shTxInvoice_Form_Header_Confirmdate');
+    agrLines.Cells[col_confirmAmount, 0] := GetTranslatedText('shTxInvoice_Form_Header_ConfirmAmount');
+    agrLines.Cells[col_rrAlias, 0] := GetTranslatedText('shTxInvoice_Form_Header_Alias');
+    agrLines.Cells[col_autogen, 0] := 'ID';
 
-  agrLines.AutoFitColumns(false);
-  agrLines.ColWidths[col_Select] := 30;
-  agrLines.ColWidths[col_VisibleOnInvoice] := 80;
-  agrLines.ColWidths[col_Item] := 100;
-  agrLines.ColWidths[col_Date] := 100;
-  agrLines.ColWidths[col_ItemCount] := 80;
-  agrLines.ColWidths[col_ItemPrice] := 80;
-  agrLines.ColWidths[col_TotalPrice] := 100;
-  agrLines.ColWidths[col_TotalOnInvoice] := 100;
-  agrLines.ColWidths[col_Source] := 60;
-  iWidth := agrLines.ClientWidth - agrLines.ColWidths[col_Select] - agrLines.ColWidths[col_VisibleOnInvoice] -
-    agrLines.ColWidths[col_Item] - agrLines.ColWidths[col_ItemCount] - agrLines.ColWidths[col_ItemPrice] -
-    agrLines.ColWidths[col_TotalPrice] - agrLines.ColWidths[col_TotalOnInvoice] - agrLines.ColWidths[col_Source] - 5;
+    agrLines.AutoFitColumns(false);
+    agrLines.ColWidths[col_Select] := 30;
+    agrLines.ColWidths[col_VisibleOnInvoice] := 80;
+    agrLines.ColWidths[col_Item] := 100;
+    agrLines.ColWidths[col_Date] := 100;
+    agrLines.ColWidths[col_ItemCount] := 80;
+    agrLines.ColWidths[col_ItemPrice] := 80;
+    agrLines.ColWidths[col_TotalPrice] := 100;
+    agrLines.ColWidths[col_TotalOnInvoice] := 100;
+    agrLines.ColWidths[col_Source] := 60;
+    iWidth := agrLines.ClientWidth - agrLines.ColWidths[col_Select] - agrLines.ColWidths[col_VisibleOnInvoice] -
+      agrLines.ColWidths[col_Item] - agrLines.ColWidths[col_ItemCount] - agrLines.ColWidths[col_ItemPrice] -
+      agrLines.ColWidths[col_TotalPrice] - agrLines.ColWidths[col_TotalOnInvoice] - agrLines.ColWidths[col_Source] - 5;
 
-  if iWidth > 0 then
-    agrLines.ColWidths[col_Description] := iWidth;
+    if iWidth > 0 then
+      agrLines.ColWidths[col_Description] := iWidth;
 
-//  agrLines.HideColumn(col_date);
-  agrLines.HideColumn(col_System);
-  agrLines.HideColumn(col_Reference);
-  agrLines.HideColumns(col_isPackage, col_autogen);
+  //  agrLines.HideColumn(col_date);
+    agrLines.HideColumn(col_System);
+    agrLines.HideColumn(col_Reference);
+    agrLines.HideColumns(col_isPackage, col_autogen);
 
-  for i := 0 to agrLines.ColCount - 1 do
-    if agrLines.IsHiddenColumn(i) then
-      agrLines.ColWidths[i] := 0;
+    for i := 0 to agrLines.ColCount - 1 do
+      if agrLines.IsHiddenColumn(i) then
+        agrLines.ColWidths[i] := 0;
 
-  if not agrLines.HasCheckBox(0, col_Select) then
-    agrLines.AddCheckBox(0, col_Select, false, false);
+    if not agrLines.HasCheckBox(0, col_Select) then
+      agrLines.AddCheckBox(0, col_Select, false, false);
 
+  finally
+    agrLines.EndUpdate;
+  end;
 end;
 
 procedure TfrmInvoiceRentPerDay.AddRoom(const aRoom: String; aRoomPrice: Double; aCurrency: string; aFromDate: TDate;
@@ -4716,37 +4701,8 @@ begin
   itemLookup;
 end;
 
-function TfrmInvoiceRentPerDay.GatherPayments(PayLines: TStringList): Double;
-var
-  tt: Double;
-  i: integer;
-  pmCode: string;
-  pmAmount: Double;
-  sTmp: string;
-
-begin
-  tt := 0;
-
-  for i := 0 to PayLines.Count - 1 do
-  begin
-    pmCode := trim(_strTokenAt(PayLines[i], '|', 0));
-    sTmp := trim(_strTokenAt(PayLines[i], '|', 1));
-
-    try
-      pmAmount := _StrToFloat(sTmp);
-    except
-      pmAmount := 0;
-    end;
-    if (pmCode <> '') and (pmAmount <> 0) then
-    begin
-      tt := tt + pmAmount;
-    end;
-  end;
-  result := tt;
-end;
-
 // -- The original Invoice contains a special field which links it to the
-// subceeding credit invoice. This is for traceback puurposes.
+// subceeding credit invoice. This is for traceback purposes.
 procedure TfrmInvoiceRentPerDay.MarkOriginalInvoiceAsCredited(iInvoice: integer);
 var
   s: string;
@@ -5101,7 +5057,7 @@ begin
       if invoiceLine.IsGeneratedLine AND (invoiceLine.ItemKind = ikRoomRent) then
       begin
         invoiceline.MoveToInvoiceIndex(aNewIndex);
-        // Moved generated childlines to new invoiceindex too
+        // Also Moves generated childlines to new invoiceindex
         FInvoiceLinesList.Remove(invoiceLine);
       end
       else if invoiceLine.IsGeneratedLine AND (invoiceLine.ItemKind = ikStayTax) then
