@@ -3698,59 +3698,63 @@ var
 begin
   if not isAllRRSameCurrency(reservation) then
   begin
-    showmessage(GetTranslatedText('shTx_D_CurrencyCancel'));
+    showmessage(GetTranslatedText('shTx_D_CurrencyCancel') + Format(' Reservation [%d]', [Reservation]));
     exit;
   end;
   AllOk := True;
   ExecutionPlan := d.roomerMainDataSet.CreateExecutionPlan;
-  ExecutionPlan.BeginTransaction;
   try
+    ExecutionPlan.BeginTransaction;
+    try
 
-    s := '';
-    s := s + ' UPDATE roomreservations ' + chr(10);
-    s := s + ' Set' + chr(10);
-    s := s + ' GroupAccount = ' + _db(GroupAccount) + chr(10); // ATH var boolTostr
-    s := s + ' WHERE Reservation = ' + inttostr(reservation) + chr(10);
-    ExecutionPlan.AddExec(s);
+      s := '';
+      s := s + ' UPDATE roomreservations ' + chr(10);
+      s := s + ' Set' + chr(10);
+      s := s + ' GroupAccount = ' + _db(GroupAccount) + chr(10); // ATH var boolTostr
+      s := s + ' WHERE Reservation = ' + inttostr(reservation) + chr(10);
+      ExecutionPlan.AddExec(s);
 
-    if GroupAccount then
-    begin
-      s := '';
-      s := s + ' UPDATE invoicelines ' + chr(10);
-      s := s + ' Set' + chr(10);
-      s := s + ' Roomreservation = 0 ';
-      s := s + ' WHERE (Reservation = ' + inttostr(reservation) + ') AND (isPackage=1) ';
-      // copytoclipboard(s);
-      // debugmessage(s);
-      ExecutionPlan.AddExec(s);
-    end
-    else
-    begin
-      s := '';
-      s := s + ' UPDATE invoicelines ' + chr(10);
-      s := s + ' Set' + chr(10);
-      s := s + ' Roomreservation =RoomreservationAlias ' + chr(10);
-      s := s + ' WHERE (Reservation = ' + inttostr(reservation) + ') AND (isPackage=1) ';
-      // copytoclipboard(s);
-      // debugmessage(s);
-      ExecutionPlan.AddExec(s);
+      if GroupAccount then
+      begin
+        s := '';
+        s := s + ' UPDATE invoicelines ' + chr(10);
+        s := s + ' Set' + chr(10);
+        s := s + ' Roomreservation = 0 ';
+        s := s + ' WHERE (Reservation = ' + inttostr(reservation) + ') AND (isPackage=1) ';
+        // copytoclipboard(s);
+        // debugmessage(s);
+        ExecutionPlan.AddExec(s);
+      end
+      else
+      begin
+        s := '';
+        s := s + ' UPDATE invoicelines ' + chr(10);
+        s := s + ' Set' + chr(10);
+        s := s + ' Roomreservation =RoomreservationAlias ' + chr(10);
+        s := s + ' WHERE (Reservation = ' + inttostr(reservation) + ') AND (isPackage=1) ';
+        // copytoclipboard(s);
+        // debugmessage(s);
+        ExecutionPlan.AddExec(s);
+      end;
+
+      if ExecutionPlan.Execute(ptExec, False, False) then
+      begin
+        ExecutionPlan.CommitTransaction;
+      end
+      else
+        raise Exception.Create(ExecutionPlan.ExecException);
+
+    except
+      on e: Exception do
+      begin
+        ExecutionPlan.RollbackTransaction;
+        AllOk := False;
+      end;
     end;
 
-    if ExecutionPlan.Execute(ptExec, False, False) then
-    begin
-      ExecutionPlan.CommitTransaction;
-    end
-    else
-      raise Exception.Create(ExecutionPlan.ExecException);
-
-  except
-    on e: Exception do
-    begin
-      AllOk := False;
-    end;
+  finally
+    freeandnil(ExecutionPlan);
   end;
-
-  freeandnil(ExecutionPlan);
 
   if AllOk then
   begin

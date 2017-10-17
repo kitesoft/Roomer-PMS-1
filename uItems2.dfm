@@ -74,8 +74,8 @@ object frmItems2: TfrmItems2
       Font.Style = []
     end
     object btnClear: TsSpeedButton
-      Left = 273
-      Top = 39
+      Left = 277
+      Top = 37
       Width = 63
       Height = 20
       Caption = 'Clear'

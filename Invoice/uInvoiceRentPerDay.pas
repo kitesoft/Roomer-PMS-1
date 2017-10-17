@@ -819,25 +819,6 @@ begin
   end;
 end;
 
-procedure EmptyStringGrid(Grid: TAdvStringGrid);
-var
-  i, l: integer;
-begin
-  for l := 1 to Grid.RowCount - 1 do
-  begin
-    Grid.SetCheckBoxState(col_Select, l, false);
-    Grid.RemoveCheckBox(col_Select, l);
-    for i := 0 to Grid.ColCount - 1 do
-    begin
-      Grid.Cells[i, l] := '';
-      Grid.CellProperties[i, l] := nil; // .Free;
-      Grid.Objects[i, l] := nil;
-    end;
-  end;
-
-  Grid.RowCount := 2;
-  Grid.FixedRows := 1;
-end;
 
 procedure TfrmInvoiceRentPerDay.RemoveAllCheckboxes;
 var
@@ -845,8 +826,8 @@ var
 begin
   for i := 0 to agrLines.RowCount - 1 do
   begin
-    if agrLines.HasCheckBox(col_Select, i) then
-      agrLines.RemoveCheckBox(col_Select, i);
+    agrLines.RemoveCheckBox(col_Select, i);
+    agrLines.RemoveCheckBox(col_VisibleOnInvoice, i);
   end;
 end;
 
@@ -1570,7 +1551,7 @@ var
 begin
   agrLines.BeginUpdate;
   try
-    EmptyStringGrid(agrLines);
+    agrLines.ClearAll;
     agrLines.ColCount := col_autogen + 1;
     agrLines.RowHeights[0] := 40;
     agrLines.RowCount := 2;
@@ -1593,7 +1574,6 @@ begin
     agrLines.Cells[col_autogen, 0] := 'ID';
 
     agrLines.AutoFitColumns(false);
-
     agrLines.ColWidths[col_Select] := 30;
     agrLines.ColWidths[col_VisibleOnInvoice] := 80;
     agrLines.ColWidths[col_Item] := 100;
@@ -1602,43 +1582,29 @@ begin
     agrLines.ColWidths[col_ItemPrice] := 80;
     agrLines.ColWidths[col_TotalPrice] := 100;
     agrLines.ColWidths[col_TotalOnInvoice] := 100;
-    agrLines.ColWidths[col_Source] := 70;
-    iWidth := agrLines.ClientWidth
-              - agrLines.ColWidths[col_Select]
-              - agrLines.ColWidths[col_VisibleOnInvoice]
-              - agrLines.ColWidths[col_Item]
-              - agrLines.ColWidths[col_ItemCount]
-              - agrLines.ColWidths[col_date]
-              - agrLines.ColWidths[col_ItemPrice]
-              - agrLines.ColWidths[col_TotalPrice]
-              - agrLines.ColWidths[col_TotalOnInvoice]
-              - agrLines.ColWidths[col_Source] - 5;
+    agrLines.ColWidths[col_Source] := 60;
+    iWidth := agrLines.ClientWidth - agrLines.ColWidths[col_Select] - agrLines.ColWidths[col_VisibleOnInvoice] -
+      agrLines.ColWidths[col_Item] - agrLines.ColWidths[col_ItemCount] - agrLines.ColWidths[col_ItemPrice] -
+      agrLines.ColWidths[col_TotalPrice] - agrLines.ColWidths[col_TotalOnInvoice] - agrLines.ColWidths[col_Source] - 5;
 
     if iWidth > 0 then
       agrLines.ColWidths[col_Description] := iWidth;
 
+  //  agrLines.HideColumn(col_date);
     agrLines.HideColumn(col_System);
     agrLines.HideColumn(col_Reference);
-    agrLines.HideColumn(col_isPackage);
-    agrLines.HideColumn(col_NoGuests);
-    agrLines.HideColumn(col_confirmdate);
-    agrLines.HideColumn(col_confirmAmount);
-    agrLines.HideColumn(col_rrAlias);
-    agrLines.HideColumn(col_autogen);
+    agrLines.HideColumns(col_isPackage, col_autogen);
 
-
-    agrLines.FixedRightCols:= agrLines.ColCount - col_Source - 1; // needed to let AutoFitColumns leave hidden columns alone
-
-    for i := 0 to agrLines.ColCount -1 do
+    for i := 0 to agrLines.ColCount - 1 do
       if agrLines.IsHiddenColumn(i) then
-        agrLines.ColWidths[i] := -1;
+        agrLines.ColWidths[i] := 0;
 
     if not agrLines.HasCheckBox(0, col_Select) then
       agrLines.AddCheckBox(0, col_Select, false, false);
+
   finally
     agrLines.EndUpdate;
   end;
-
 end;
 
 function TfrmInvoiceRentPerDay.FormatRoomDescription(const aRoomNumber: string; const aRoomResDescription: String; aArrival: TDate; aDeparture: TDate; aDayCount: integer;
@@ -4070,7 +4036,7 @@ begin
   s := s + ' UPDATE payments '#10;
   s := s + '  SET '#10;
   s := s + ' invoicenumber = ' + _db(aInvoiceNumber) + ' '#10;
-  s := s + ' WHERE (reservation = %d) and (Roomreservation = %d) and (Invoicenumber=-1) and (InvoiceIndex=%d) and (typeindex=1); ';
+  s := s + ' WHERE (reservation = %d) and (Roomreservation = %d) and (Invoicenumber=-1) and (InvoiceIndex=%d); ';
   s := format(s, [FReservation, FRoomReservation, FInvoiceIndex]);
   lExecutionPlan.AddExec(s);
 end;
@@ -5092,7 +5058,7 @@ begin
     = mrYes) then
   begin
     SaveInvoice(zInvoiceNumber, stProvisionally);
-    d.UpdateGroupAccountone(FReservation, FRoomReservation, FRoomReservation, True);
+    if d.UpdateGroupAccountone(FReservation, FRoomReservation, FRoomReservation, True) then
     Refreshdata;
   end;
 end;
@@ -5436,7 +5402,7 @@ begin
       if invoiceLine.IsGeneratedLine AND (invoiceLine.ItemKind = ikRoomRent) then
       begin
         invoiceline.MoveToInvoiceIndex(aNewIndex);
-        // Moved generated childlines to new invoiceindex too
+        // Also Moves generated childlines to new invoiceindex
         FInvoiceLinesList.Remove(invoiceLine);
       end
       else if invoiceLine.IsGeneratedLine AND (invoiceLine.ItemKind = ikStayTax) then
@@ -5475,9 +5441,15 @@ begin
   SaveAnd(False);
 
   if (Source = agrLines) then
-    MoveSelectedLinesToInvoiceIndex(lMoveToIndex)
+  begin
+    MoveSelectedLinesToInvoiceIndex(lMoveToIndex);
+    UpdateGrid;
+  end
   else if (Source is TcxDragControlObject) and (TcxDragControlObject(Source).control = grPayments) then
+  begin
     MoveDownpaymentToInvoiceIndex(lMoveToIndex);
+    LoadPayments;
+  end;
 end;
 
 procedure TfrmInvoiceRentPerDay.pnlInvoiceIndex0DragOver(Sender, Source: TObject; X, Y: integer; State: TDragState;

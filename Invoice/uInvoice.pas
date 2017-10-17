@@ -3671,10 +3671,10 @@ begin
         begin
           agrLines.row := i;
           RealRoomReservation := TRoomInfo(agrLines.Objects[cRoomInfoAttachColumn, i]).RoomReservation;
-          d.UpdateGroupAccountone(FReservation, RealRoomReservation, RealRoomReservation, false);
-          TransferRoomToAnotherRoomReservationInvoice(FRoomReservation,
-            SelectableExternalRooms[omnu.Tag].RoomReservation, RealRoomReservation,
-            SelectableExternalRooms[omnu.Tag].Reservation);
+          if d.UpdateGroupAccountone(FReservation, RealRoomReservation, RealRoomReservation, false) then
+            TransferRoomToAnotherRoomReservationInvoice(FRoomReservation,
+              SelectableExternalRooms[omnu.Tag].RoomReservation, RealRoomReservation,
+              SelectableExternalRooms[omnu.Tag].Reservation);
         end;
       end;
       LoadInvoice;
@@ -6083,22 +6083,19 @@ begin
   end;
 
   // if (MessageDlg('Move roomrent to Groupinvoice ' + chr(10) + 'and save other changes ?', mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
-  if (MessageDlg(GetTranslatedText
-    ('shTx_Invoice_RoomrentToGroupAndSaveChanges'), mtConfirmation,
-    [mbYes, mbNo], 0) = mrYes) then
-  begin
-    d.UpdateGroupAccountone(FReservation, FRoomReservation,
-      FRoomReservation, True);
-    SaveInvoice(zInvoiceNumber);
-    LoadInvoice;
-  end;
+  if (MessageDlg(GetTranslatedText('shTx_Invoice_RoomrentToGroupAndSaveChanges'), mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
+    if d.UpdateGroupAccountone(FReservation, FRoomReservation, FRoomReservation, True) then
+    begin
+      SaveInvoice(zInvoiceNumber);
+      LoadInvoice;
+    end;
 end;
 
 procedure TfrmInvoice.MoveRoomToNewInvoiceIndex(rowIndex, toInvoiceIndex: integer);
 begin
   // if (MessageDlg('Move roomrent to Groupinvoice ' + chr(10) + 'and save other changes ?', mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
-  d.UpdateGroupAccountone(FReservation, FRoomReservation, FRoomReservation, FRoomReservation = 0, toInvoiceIndex);
-  InvoiceIndex := FInvoiceIndex;
+  if d.UpdateGroupAccountone(FReservation, FRoomReservation, FRoomReservation, FRoomReservation = 0, toInvoiceIndex) then
+    InvoiceIndex := FInvoiceIndex;
 end;
 
 function TfrmInvoice.IsRoomSelected: boolean;
@@ -8032,8 +8029,8 @@ begin
         CurrentRow := agrLines.row;
         if isSystemLine(CurrentRow) then
         begin
-          d.UpdateGroupAccountone(FReservation, FRoomReservation, FRoomReservation, True);
-          reloadNeeded := True;
+          if d.UpdateGroupAccountone(FReservation, FRoomReservation, FRoomReservation, True) then
+            reloadNeeded := True;
           continue;
         end;
 
