@@ -539,12 +539,12 @@ type
       aNumGuests: integer; aNumChildren: integer; const aPackageName: string; aRRAlias: integer;
       aBeakfastIncluded: boolean; aIsGenerated: boolean);
 
-    Procedure AddRoomTaxToLinesAndGrid(totalTax: Double; TaxUnits: Double; taxItem: string; aPurchaseDate: TDate;
+    Procedure AddRoomTaxToInvoiceLines(totalTax: Double; TaxUnits: Double; taxItem: string; aPurchaseDate: TDate;
       iAddAt: integer = 0; aParentInvoice: TInvoiceLine = nil; aIsIncludedInParent: boolean = false);
     procedure ClearInvoiceLines;
-    function getDownPayments: Double;
+    function getTotalNativeDownPayments: Double;
 
-    procedure DisplayGuestName(zrSet: TRoomerDataset);
+    procedure DisplayGuestName;
 
     /// <summary>
     /// Display the info of TInvoiceLine object in the grid and attach it to the row<br/>
@@ -588,7 +588,6 @@ type
     procedure NullifyGrid;
 
     Procedure InitInvoiceGrid;
-    function GenerateInvoiceNumber: integer;
     procedure AddDeleteFromInvoiceToExecutionPlan(aExecutionPlan: TRoomerExecutionPlan);
 
     procedure GetTaxTypes(TaxResultInvoiceLines: TInvoiceTaxEntityList);
@@ -1182,7 +1181,7 @@ begin
   try
     nativeTotal := FInvoiceLinesList.TotalOnInvoiceNativeCurrency;
     ttVAT := FInvoiceLinesList.TotalVatOnInvoiceNativeCurrency;
-    TotalDownPayments := getDownPayments;
+    TotalDownPayments := getTotalNativeDownPayments;
     TotalBalance := nativeTotal - TotalDownPayments;
 
     with FCurrencyhandlersMap[g.qNativeCurrency] do
@@ -1209,19 +1208,15 @@ begin
   end;
 end;
 
-procedure TfrmInvoiceRentPerDay.DisplayGuestName(zrSet: TRoomerDataset);
+procedure TfrmInvoiceRentPerDay.DisplayGuestName;
 begin
-  if zrSet = nil then
-  begin
-    exit;
-  end;
   if copy(edtRoomGuest.Caption, 1, 1) <> '-' then
   begin
     edtRoomGuest.Caption := GetMainGuestName(FReservation, FRoomReservation);
   end;
 end;
 
-procedure TfrmInvoiceRentPerDay.AddRoomTaxToLinesAndGrid(totalTax: Double; TaxUnits: Double; taxItem: String;
+procedure TfrmInvoiceRentPerDay.AddRoomTaxToInvoiceLines(totalTax: Double; TaxUnits: Double; taxItem: String;
   aPurchaseDate: TDate; iAddAt: integer = 0; aParentInvoice: TInvoiceLine = nil; aIsIncludedInParent: boolean = false);
 var
   ConfirmDate: TDateTime;
@@ -1825,7 +1820,7 @@ begin
 
           lTotalNative := FCurrencyhandlersMap.ConvertAmount(lTotal, aInvLine.Currency, g.qNativeCurrency);
 
-          AddRoomTaxToLinesAndGrid(lTotalNative, trunc(lTaxResultInvoiceLines[l].NumItems), TaxTypes[tt],
+          AddRoomTaxToInvoiceLines(lTotalNative, trunc(lTaxResultInvoiceLines[l].NumItems), TaxTypes[tt],
             aInvLine.RoomEntity.Arrival, 0, aInvLine, lIsIncluded);
         end; // for l + if
     end; // for tt
@@ -1856,7 +1851,7 @@ begin
                                               and (aObject.StayDate = aInvLine.PurchaseDate);
                                   end
   ) do
-    AddRoomTaxToLinesAndGrid(
+    AddRoomTaxToInvoiceLines(
           FCurrencyhandlersMap.ConvertAmount(lObject.CityTax.Amount, lObject.CityTax.Currency.AsString, g.qNativeCurrency),
           lObject.Quantity, //trunc(lTaxResultInvoiceLines[l].NumItems),
           lObject.Item, // TaxTypes[tt],
@@ -1888,7 +1883,7 @@ begin
   end;
 end;
 
-function TfrmInvoiceRentPerDay.getDownPayments: Double;
+function TfrmInvoiceRentPerDay.getTotalNativeDownPayments: Double;
 var
   Total: Double;
 begin
@@ -2394,7 +2389,7 @@ begin
       end
     end;
 
-    DisplayGuestName(lInvoiceHeadSet);
+    DisplayGuestName;
 
     RetrieveTaxesforRoomReservation(FReservation, FRoomreservation);
 
@@ -2782,9 +2777,9 @@ var
 begin
   Result := aDefault;
   if ShowRentPerDay then
-    s := Format(select_GetInvoiceLineVisible, [_db(aReservation), _db(aRoomReservation), _db(aInvoiceIndex), _db(aPurchaseDate), _db(aItem)])
+    s := Format(select_GetInvoiceLineVisible_OnDate, [_db(aReservation), _db(aRoomReservation), _db(aInvoiceIndex), _db(aPurchaseDate), _db(aItem)])
   else
-xxx    s := Format(select_GetInvoiceLineVisible, [_db(aReservation), _db(aRoomReservation), _db(aInvoiceIndex), _db(aPurchaseDate), _db(aItem)])
+    s := Format(select_GetInvoiceLineVisible_NoDate, [_db(aReservation), _db(aRoomReservation), _db(aInvoiceIndex), _db(aItem)]);
 
   rSet := CreateNewDataSet;
   try
@@ -2852,18 +2847,6 @@ begin
   btnReservationNotes.Enabled := actMoveRoomToTemp.Enabled;
   pnlTotalsInCurrency.Visible := InvoiceCurrencyCode <> g.qNativeCurrency;
 
-end;
-
-function TfrmInvoiceRentPerDay.GenerateInvoiceNumber: integer;
-var
-  iTemp: DWord;
-begin
-  iTemp := GetTickCount;
-  if iTemp > 2100000000 then
-    iTemp := 999999 + (iTemp - 2100000000)
-  else if iTemp < 999999 then
-    iTemp := 999999 + iTemp;
-  result := iTemp;
 end;
 
 procedure TfrmInvoiceRentPerDay.DeleteLinesInList(ExecutionPlan: TRoomerExecutionPlan);
@@ -3291,13 +3274,13 @@ begin
     else
       d.GetRoomReservationLocations(FRoomReservation, lstLocations);
 
-    lOpenBalance := FInvoiceLinesList.TotalOnInvoiceNativeCurrency - getDownPayments;
+    lOpenBalance := FInvoiceLinesList.TotalOnInvoiceNativeCurrency - getTotalNativeDownPayments;
     if SelectPaymentTypes(lOpenBalance, edtCustomer.Text, ptInvoice, InvoiceCurrencyCode,
       InvoiceCurrencyRate, FReservation, FRoomreservation, lstLocations, aInvoiceDate, aPayDate, aLocation) then
     begin
       SaveCompletePayments();
       LoadPayments;
-      Result := SameValue(FInvoiceLinesList.TotalOnInvoiceNativeCurrency, getDownPayments, 0.01);
+      Result := SameValue(FInvoiceLinesList.TotalOnInvoiceNativeCurrency, getTotalNativeDownPayments, 0.01);
 
       if not Result then
       begin
@@ -3717,7 +3700,8 @@ begin
   s := s + ' reservation = ' +_db(aInvoiceLine.ParentReservation) + #10;
   s := s + ' and roomreservation=' + _db(aInvoiceLine.ParentRoomReservation) + #10;
   s := s + ' and invoiceindex=' + _db(FInvoiceIndex)+#10;
-  s := s + ' and adate=' + _db(aInvoiceLine.PurchaseDate)+#10;
+  if ShowRentPerDay then
+    s := s + ' and adate=' + _db(aInvoiceLine.PurchaseDate)+#10;
   s := s + ' and item=' + _db(aInvoiceLine.Item)+#10;
 
   copyToClipboard(s);
@@ -6199,7 +6183,7 @@ begin
   end;
 
   if edtBalance.Text <> '' then
-    rec.InvoiceBalanceInCurrency := FCurrencyhandlersMap.ConvertAmount(FInvoiceLinesList.TotalOnInvoiceNativeCurrency - getDownPayments, g.qNativeCurrency, InvoiceCurrencyCode);
+    rec.InvoiceBalanceInCurrency := FCurrencyhandlersMap.ConvertAmount(FInvoiceLinesList.TotalOnInvoiceNativeCurrency - getTotalNativeDownPayments, g.qNativeCurrency, InvoiceCurrencyCode);
 
   if g.OpenDownPayment(actInsert, rec) then
   begin

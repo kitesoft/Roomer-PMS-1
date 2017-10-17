@@ -539,6 +539,7 @@ inherited frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
           Align = alClient
           ExplicitHeight = 21
           inherited lblCurrencyName: TsLabel
+            Width = 140
             Height = 15
           end
           inherited edCurrencyCode: TsEdit
