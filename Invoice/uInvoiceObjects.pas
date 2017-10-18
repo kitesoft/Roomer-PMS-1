@@ -65,17 +65,17 @@ type
     function GetRevenueNativeCurrency: Double;
     function GetAmountOnInvoice: TAmount;
     function GetTotal: TAmount;
-    function GetVatOnRevenueNativeCurrency: Double;
+    function GetVatOnRevenue: TAmount;
     procedure GetPurchaseDate(const Value: TDate);
     function GetItemKind: TItemKind;
-    function GetVatOnInvoice: Double;
+    function GetVatOnInvoice: TAmount;
     procedure SetVATCode(const Value: string);
     function GetTotalNativeCurrency: TAmount;
     function GetPriceNativeCurrency: Double;
-    function GetAmountOnInvoiceNativeCurrency: Double;
+    function GetAmountOnInvoiceNativeCurrency: TAmount;
     function GetVatOnInvoiceNativeCurrency: Double;
     function GetPrice: TAmount;
-    function GetPriceOnInvoice: Double;
+    function GetPriceOnInvoice: TAmount;
     function GetPriceOnInvoiceNativeCurrency: Double;
     function GetTotalRevenue: Double;
     function GetRevenuePrice: Double;
@@ -84,7 +84,7 @@ type
     procedure SetParentInvoiceLine(const Value: TinvoiceLine);
     function GetBelongsToROom: TInvoiceRoomEntity;
   protected
-    function GetAmountIncludedInParent: double; virtual;
+    function GetAmountIncludedInParent: TAmount; virtual;
     function GetIsGenerated: boolean; virtual;
   public
     constructor Create(aIndex, _id: integer); virtual;
@@ -108,15 +108,15 @@ type
     /// See table in class documentation
     /// </summary>
     property AmountOnInvoice: TAmount read GetAmountOnInvoice;
-    property AmountOnInvoiceNativeCurrency: Double read GetAmountOnInvoiceNativeCurrency;
+    property AmountOnInvoiceNativeCurrency: TAmount read GetAmountOnInvoiceNativeCurrency;
     /// <summary>
     ///   The Native amount that will be added to the InvoiceAmount of a Parent
     /// </summary>
-    property AmountIncludedInParent: double read GetAmountIncludedInParent;
+    property AmountIncludedInParent: TAmount read GetAmountIncludedInParent;
     /// <summary>
     /// Price which will be visible on the invoice in selected currency. Calculated as AmountOnInvoice / Number
     /// </summary>
-    property PriceOnInvoice: Double read GetPriceOnInvoice;
+    property PriceOnInvoice: TAmount read GetPriceOnInvoice;
     property PriceOnInvoiceNativeCurrency: Double read GetPriceOnInvoiceNativeCurrency;
 
     property RevenuePrice: Double read GetRevenuePrice;
@@ -146,15 +146,15 @@ type
 
     property ItemKind: TItemKind read GetItemKind;
     /// <summary>
-    /// Calculated VAT based on revenue of this item, in native currency
+    /// Calculated VAT based on revenue of this item,
     /// See table in class documentation
     /// </summary>
-    property VATOnRevenueNativeCurrency: Double read GetVatOnRevenueNativeCurrency;
+    property VATOnRevenue: TAmount read GetVatOnRevenue;
     /// <summary>
     /// Calculated VAT on the invoice for this item, in selected currency
     /// See table in class documentation
     /// </summary>
-    property VATOnInvoice: Double read GetVatOnInvoice;
+    property VATOnInvoice: TAmount read GetVatOnInvoice;
     /// <summary>
     /// Calculated VAT on the invoice for this item, in native currency
     /// See table in class documentation
@@ -223,7 +223,7 @@ type
     FParentList: TList<TInvoiceline>;
   protected
     function GetIsGenerated: boolean; override;
-    function GetAmountIncludedInParent: double; override;
+    function GetAmountIncludedInParent: TAmount; override;
   public
     constructor Create(aIndex, _id: integer); override;
     destructor Destroy; override;
@@ -322,13 +322,13 @@ begin
   inherited Destroy;
 end;
 
-function TInvoiceLine.GetAmountIncludedInParent: double;
+function TInvoiceLine.GetAmountIncludedInParent: TAmount;
 begin
   Result := 0;
   if VisibleOnInvoice and TotalIsIncludedInParent then
-    result := - TotalNativeCurrency
+    result := - Total
   else if not VisibleOnInvoice and not TotalIsIncludedInParent then
-    result := TotalNativeCurrency;
+    result := Total;
 end;
 
 function TInvoiceLine.GetAmountOnInvoiceNativeCurrency: TAmount;
@@ -396,10 +396,10 @@ end;
 
 function TInvoiceLine.GetPriceNativeCurrency: Double;
 begin
-  result := Price * GetRate(FCurrency);
+  result := RoomerCurrencyManager.ConvertValueToDefault(Price);
 end;
 
-function TInvoiceLine.GetPriceOnInvoice: Double;
+function TInvoiceLine.GetPriceOnInvoice: TAmount;
 begin
   result := AmountOnInvoice / Number;
 end;
@@ -444,28 +444,28 @@ begin
   result := RevenueNativeCurrency / GetRate(FCurrency);
 end;
 
-function TInvoiceLine.GetVatOnInvoice: Double;
+function TInvoiceLine.GetVatOnInvoiceNativeCurrency: Double;
 begin
-  result := GetVatOnInvoiceNativeCurrency / GetRate(FCurrency);
+  result := RoomerCurrencyManager.ConvertValueToDefault(VatOnInvoice);
 end;
 
-function TInvoiceLine.GetVatOnInvoiceNativeCurrency: Double;
+function TInvoiceLine.GetVatOnInvoice: TAmount;
 var
   lInvLine: TInvoiceLine;
 begin
   result := 0;
   if VisibleOnInvoice then
   begin
-    result := VATOnRevenueNativeCurrency;
+    result := VATOnRevenue;
     for lInvLine in ChildInvoiceLines do
       if not lInvLine.VisibleOnInvoice then
-        result := result + lInvLine.VATOnRevenueNativeCurrency;
+        result := result + lInvLine.VATOnRevenue;
   end;
 end;
 
-function TInvoiceLine.GetVatOnRevenueNativeCurrency: Double;
+function TInvoiceLine.GetVatOnRevenue: TAmount;
 begin
-  result := _calcVat(TotalNativeCurrency, FVATPercentage);
+  result := TAmount.Create(_calcVat(Total.Value, FVATPercentage), Total.CurrencyCode);
 end;
 
 procedure TInvoiceLine.MoveToInvoiceIndex(aInvoiceIndex: integer);
@@ -686,7 +686,7 @@ begin
   inherited;
 end;
 
-function TPackageInvoiceLine.GetAmountIncludedInParent: double;
+function TPackageInvoiceLine.GetAmountIncludedInParent: TAmount;
 begin
   Result := inherited / FParentList.Count;
 end;
