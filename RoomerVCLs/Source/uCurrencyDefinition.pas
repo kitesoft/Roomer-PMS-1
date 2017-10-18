@@ -49,7 +49,11 @@ type
     /// <summary>
     ///   Format aAmount according to the formatsettings of the currency
     /// </summary>
-    function FormattedValue(aAmount: double): string;
+    function FormattedValue(aAmount: double; aIncludeCurrencySymbol: boolean = false): string;
+    /// <summary>
+    ///   Format aAmount according to the formatsettings of the currency, including the 3 letter currencycode
+    /// </summary>
+    function FormattedValueWithCode(aAmount: double): string;
     /// <summary>
     ///   Format aAmount according to the formatsettings of the currency for editing purposes, so exclusing currencySign but with
     ///  correct number of decimals
@@ -78,7 +82,7 @@ begin
   FCode := aCurrencyCode;
   FRate := 1.0;
   FID := -1;
-  FFormatSettings :=TFormatSettings.Create; // System defaults
+  FFormatSettings := TFormatSettings.Create; // System defaults
 end;
 
 constructor TCurrencyDefinition.Create(const aCurrencyCode: string; aCurID: integer);
@@ -97,9 +101,23 @@ begin
   Result := FloatToStrF(RoundedValue(aAmount), ffFixed, 10, FFormatsettings.CurrencyDecimals, FFormatSettings);
 end;
 
-function TCurrencyDefinition.FormattedValue(aAmount: double): string;
+function TCurrencyDefinition.FormattedValue(aAmount: double; aIncludeCurrencySymbol: boolean = false): string;
+var
+  lSettings: TFormatSettings;
 begin
-  Result := CurrToStrF(RoundedValue(aAmount), ffCurrency, FFormatsettings.CurrencyDecimals, FFormatSettings);
+  if aIncludeCurrencySymbol then
+  begin
+    lSettings := FFormatSettings;
+    lSettings.CurrencyString := '';
+    Result := CurrToStrF(aAMount, ffCurrency, lSettings.CurrencyDecimals, lSettings)
+  end
+  else
+    Result := CurrToStrF(aAmount, ffFixed, FFormatSettings.CurrencyDecimals, FFormatSettings);
+end;
+
+function TCurrencyDefinition.FormattedValueWithCode(aAmount: double): string;
+begin
+  Result := Format('%s %s', [FormattedValue(aAmount), string(CurrencyCode)]);
 end;
 
 function TCurrencyDefinition.GetCurrencyCode: string;

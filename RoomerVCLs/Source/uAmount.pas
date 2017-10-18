@@ -88,10 +88,12 @@ type
     class operator Negative(a: TAmount): TAmount;
 
     function AsDisplayString: string;
+    function AsDisplayStringWithCode: string;
     function AsEditString: string;
     function ToCurrency(const aCurrCode: TCurrencyCode): TAmount; overload;
     function ToCurrency(aCurrDef: TCurrencyDefinition): TAmount; overload;
     function ToCurrency(aCurId: integer): TAmount; overload;
+    function ToNative(): TAmount;
 
     property Value: Currency read FValue;
     property CurrencyCode: TCurrencyCode read FCurCode;
@@ -125,9 +127,13 @@ end;
 
 class operator TAmount.Add(a, b: TAmount): TAmount;
 begin
-  CheckSameCurrency(a, b);
-  Result.FValue := a.FValue + b.FValue;
-  Result.FCurCode := a.FCurCode;
+  if not IsSameCurrency(a, b) then
+    Result := a + b.ToCurrency(a.CurrencyCode)
+  else
+  begin
+    Result.FValue := a.FValue + b.FValue;
+    Result.FCurCode := a.FCurCode;
+  end;
 end;
 
 class operator TAmount.Add(a: TAmount; c: Currency): TAmount;
@@ -145,6 +151,11 @@ end;
 function TAmount.AsDisplayString: string;
 begin
   Result := CurrencyDefinition.FormattedValue(FValue);
+end;
+
+function TAmount.AsDisplayStringWithCode: string;
+begin
+  Result := CurrencyDefinition.FormattedValueWithCode(FValue);
 end;
 
 function TAmount.AsEditString: string;
@@ -205,13 +216,17 @@ end;
 
 class operator TAmount.GreaterThan(a, b: TAmount): boolean;
 begin
-  CheckSameCurrency(a, b);
-  Result := a.FValue > b.FValue;
+  if not isSameCurrency(a, b) then
+    Result := a > b.ToCurrency(a.CurrencyDefinition)
+  else
+    Result := a.FValue > b.FValue;
 end;
 
 class operator TAmount.GreaterThanOrEqual(a, b: TAmount): boolean;
 begin
-  CheckSameCurrency(a, b);
+  if not isSameCurrency(a, b) then
+    Result := a >= b.ToCurrency(a.CurrencyDefinition)
+  else
   Result := a.FValue >= b.FValue;
 end;
 
@@ -269,7 +284,9 @@ end;
 
 class operator TAmount.LessThan(a, b: TAmount): boolean;
 begin
-  CheckSameCurrency(a, b);
+  if not isSameCurrency(a, b) then
+    Result := a < b.ToCurrency(a.CurrencyDefinition)
+  else
   Result := a.FValue < b.FValue;
 end;
 
@@ -280,7 +297,9 @@ end;
 
 class operator TAmount.LessThanOrEqual(a, b: TAmount): boolean;
 begin
-  CheckSameCurrency(a, b);
+  if not isSameCurrency(a, b) then
+    Result := a <= b.ToCurrency(a.CurrencyDefinition)
+  else
   Result := a.FValue <= b.FValue;
 end;
 
@@ -323,6 +342,11 @@ begin
   Result := ToCurrency(CurrencyManager.CurrencyDefinitionByID[aCurID]);
 end;
 
+function TAmount.ToNative: TAmount;
+begin
+  Result := CurrencyManager.ConvertValueToDefault(Self);
+end;
+
 function TAmount.ToCurrency(aCurrDef: TCurrencyDefinition): TAmount;
 begin
   Result := ToCurrency(aCurrDef.CurrencyCode);
@@ -336,14 +360,21 @@ end;
 
 class operator TAmount.Subtract(a, b: TAmount): TAmount;
 begin
-  CheckSameCurrency(a,b);
-  Result.FValue := a.FValue - b.FValue;
-  Result.FCurCode := a.FCurCode;
+  if not IsSameCurrency(a,b) then
+    Result := a - b.ToCurrency(a.CurrencyCode)
+  else
+  begin
+    Result.FValue := a.FValue - b.FValue;
+    Result.FCurCode := a.FCurCode;
+  end;
 end;
 
 function TAmount.ToCurrency(const aCurrCode: TCurrencyCode): TAmount;
 begin
-  Result := CurrencyManager.ConvertValue(FValue, aCurrCode);
+  if FCurCode <> aCurrCOde then
+    Result := CurrencyManager.ConvertValue(Self, aCurrCode)
+  else
+    Result := Self;
 end;
 
 class function TAmount.Create(const a: Extended; const c: TCurrencyCode): TAmount;

@@ -63,7 +63,7 @@ type
     /// </summary>
     function ConvertValueToDefault(aValue: TAmount): TAmount;
 
-    property CurrencyDefinition[const CurCode: TCurrencyCode]: TCurrencyDefinition read GetCurrencyDefinitionByCode;
+    property CurrencyDefinition[const CurCode: TCurrencyCode]: TCurrencyDefinition read GetCurrencyDefinitionByCode; default;
     property CurrencyDefinitionByID[CurID: integer]: TCurrencyDefinition read GetCurrencyDefinitionByID;
     property DefaultCurrency: TCurrencyCode read GetDefaultCurrency write SetDefaultCurrency;
     property DefaultCurrencyDefinition: TCurrencyDefinition read GetDefaultCurrencydefinition;
