@@ -365,6 +365,7 @@ uses   dbTables
      , uSQLUtils
      , UITypes
      , RegularExpressions
+     , uCurrencymanager
      , uRoomerCurrencymanager
      ;
 
@@ -397,8 +398,6 @@ begin
   LoadStaticTables(true);
 
   ReloadPreviousGuests;
-
-  RoomerCurrencyManager;
 end;
 
 destructor TGlobalSettings.Destroy;
@@ -1715,6 +1714,7 @@ procedure OpenAppSettings;
 begin
   glb.Free;
   glb := TGlobalSettings.create;
+  InitGlobalCurrencyManager(TRoomerCurrencyManager, glb.ControlSet.FieldByName('nativecurrency').asString);
 end;
 
 procedure CloseAppSettings;

@@ -4,6 +4,7 @@ interface
 
 uses
   SysUtils
+  , uCurrencyConstants
   ;
 
 type
@@ -33,6 +34,7 @@ type
     FID: integer;
   public
     constructor Create(const aCurrencyCode: string); overload; virtual;
+    constructor Create(const aCurrencyCode: TCurrencyCode); overload; virtual;
     constructor Create(const aCurrencyCode: string; aCurID: integer); overload; virtual;
 
     property ID: integer read FId;
@@ -69,9 +71,9 @@ uses
   ;
 
 
-constructor TCurrencyDefinition.Create(const aCurrencyCode: string);
+constructor TCurrencyDefinition.Create(const aCurrencyCode: TCurrencyCode);
 begin
-  if aCurrencyCode.IsEmpty then
+  if String(aCurrencyCode).IsEmpty then
     raise ECurrencyDefinitionException.Create('Cannot create a currencydefinition with empty currencycode');
   FCode := aCurrencyCode;
   FRate := 1.0;
@@ -83,6 +85,11 @@ constructor TCurrencyDefinition.Create(const aCurrencyCode: string; aCurID: inte
 begin
   Create(aCurrencyCode);
   FId := aCurId;
+end;
+
+constructor TCurrencyDefinition.Create(const aCurrencyCode: string);
+begin
+  Create(TCurrencyCode(aCurrencyCode));
 end;
 
 function TCurrencyDefinition.EditValue(aAmount: double): string;

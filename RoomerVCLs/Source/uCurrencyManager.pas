@@ -6,6 +6,7 @@ uses
   Generics.Collections
   , uCurrencyDefinition
   , uCurrencyConstants
+  , uAmount
   ;
 
 type
@@ -44,8 +45,7 @@ type
     procedure Lock;
     procedure UnLock;
   public
-    constructor Create(); overload; virtual;
-    constructor Create(const aDefaultCurrency: TCurrencyCode); overload; virtual;
+    constructor Create(const aDefaultCurrency: TCurrencyCode); virtual;
     destructor Destroy; override;
     procedure ClearCache;
     function DefinitionExists(const aCurrCode: TCurrencyCode): boolean;
@@ -56,7 +56,12 @@ type
     ///   Calculate the value when converting aValue from aFromCurCode to aToCurrCode.
     ///  Note that this function does not use the TAmount types directly to avoid unneeded and circular dependencies
     /// </summary>
-    function ConvertValue(aValue: Currency; const aFromCurrCode, aToCurrCode: TCurrencyCode): Currency;
+    function ConvertValue(aValue: TAmount; const aToCurrCode: TCurrencyCode): TAmount;
+    /// <summary>
+    ///   Calculate the value when converting aValue to the default currency
+    ///  Note that this function does not use the TAmount types directly to avoid unneeded and circular dependencies
+    /// </summary>
+    function ConvertValueToDefault(aValue: TAmount): TAmount;
 
     property CurrencyDefinition[const CurCode: TCurrencyCode]: TCurrencyDefinition read GetCurrencyDefinitionByCode;
     property CurrencyDefinitionByID[CurID: integer]: TCurrencyDefinition read GetCurrencyDefinitionByID;
@@ -69,7 +74,7 @@ type
 /// <summary>
 ///   Global factory method for instantiating a currencymanager of a certain class
 /// </summary>
-procedure InitGlobalCurrencyManager(aClass: TCurrencymanagerClass);
+procedure InitGlobalCurrencyManager(aClass: TCurrencymanagerClass; const aDefaultCurrency: TCurrencyCode);
 
 /// <summary>
 /// Global access method to a global currencymangere. If aDontInit = false (default) and non has been initialized with the InitGlobalCurrencymanager() method
@@ -81,22 +86,23 @@ implementation
 
 uses
   Math
+  , SysUtils
   ;
 
 var
   gCurrencyManager: TCurrencyManager = nil;
 
 
-procedure InitGlobalCurrencyManager(aClass: TCurrencymanagerClass);
+procedure InitGlobalCurrencyManager(aClass: TCurrencymanagerClass; const aDefaultCurrency: TCurrencyCode);
 begin
   gCurrencyManager.Free;
-  gCurrencyManager := aClass.Create();
+  gCurrencyManager := aClass.Create(aDefaultCurrency);
 end;
 
 function CurrencyManager(aDontInit: boolean = false): TCurrencyManager;
 begin
   if not assigned(gCurrencyManager) and not aDontInit then
-    InitGlobalCurrencyManager(TCurrencyManager);
+    InitGlobalCurrencyManager(TCurrencyManager, '   ');
   Result := gCurrencyManager;
 end;
 
@@ -123,17 +129,26 @@ begin
   try
     FDefaultDef := nil;
     FCache.Clear;
-    DefaultCurrency := cDefaultCurrency;
+    DefaultCurrency := FDefault;
   finally
     UnLock;
   end;
 end;
 
-function TCurrencyManager.ConvertValue(aValue: Currency; const aFromCurrCode, aToCurrCode: TCurrencyCode): Currency;
+function TCurrencyManager.ConvertValue(aValue: TAmount; const aToCurrCode: TCurrencyCode): TAmount;
+var
+  lNewValue: Currency;
 begin
-  if not DefinitionExists(aFromCurrCode) or not DefinitionExists(aToCurrCode) then
-    raise ECurrencyConversionException.CreateFmt('Converting from or to an unknown currency [%s -> %s]', [aFromCurrCode, aToCurrCode]);
-  Result := aValue * Currencydefinition[aFromCurrCode].Rate / Currencydefinition[aToCurrCode].Rate;
+  if not DefinitionExists(aToCurrCode) then
+    raise ECurrencyConversionException.CreateFmt('Converting to an unknown currency [%s]', [aToCurrCode]);
+
+  lNewValue := aValue * CurrencyDefinition[aValue.CurrencyCode].Rate / CurrencyDefinition[aToCurrCode].Rate;
+  Result := TAmount.Create(lNewValue, aToCurrCode);
+end;
+
+function TCurrencyManager.ConvertValueToDefault(aValue: TAmount): TAmount;
+begin
+  Result := ConvertValue(aValue, DefaultCurrency);
 end;
 
 constructor TCurrencyManager.Create(const aDefaultCurrency: TCurrencyCode);
@@ -143,11 +158,6 @@ begin
   FCache.OnValueNotify := CacheNotification;
   if (aDefaultCurrency <> '   ') then
     DefaultCurrency := aDefaultCurrency;
-end;
-
-constructor TCurrencyManager.Create;
-begin
-  Create('   ');
 end;
 
 function TCurrencyManager.CreateDefinition(const CurCode: TCurrencyCode; aCurID: integer): TCurrencyDefinition;
@@ -206,7 +216,7 @@ end;
 
 function TCurrencyManager.GetOrCreateCurrencyDefinition(const CurCode: TCurrencyCode; aCurID: integer = -1): TCurrencyDefinition;
 begin
-  if CurCode = '' then
+  if String(CurCode).trim = '' then
     raise ECurrencyManagerException.Create('No currencycode provided');
 
   Lock;

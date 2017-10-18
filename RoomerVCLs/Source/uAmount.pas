@@ -85,6 +85,8 @@ type
     class operator LessThan(a: TAmount; b: integer): boolean;
     class operator LessThanOrEqual(a, b: TAmount): boolean;
 
+    class operator Negative(a: TAmount): TAmount;
+
     function AsDisplayString: string;
     function AsEditString: string;
     function ToCurrency(const aCurrCode: TCurrencyCode): TAmount; overload;
@@ -299,6 +301,11 @@ begin
   Result := a * d;
 end;
 
+class operator TAmount.Negative(a: TAmount): TAmount;
+begin
+  Result := a * -1;
+end;
+
 class operator TAmount.NotEqual(a, b: TAmount): boolean;
 begin
   Result := not (a = b);
@@ -336,14 +343,14 @@ end;
 
 function TAmount.ToCurrency(const aCurrCode: TCurrencyCode): TAmount;
 begin
-  Result := TAmount.Create(CurrencyManager.ConvertValue(FValue, FCurCode, aCurrCode), aCurrCode);
+  Result := CurrencyManager.ConvertValue(FValue, aCurrCode);
 end;
 
 class function TAmount.Create(const a: Extended; const c: TCurrencyCode): TAmount;
 begin
   CheckValidCurrencyCode(c);
   Result.FCurCode := c;
-  Result.FValue := RoundDecimals(a, 4);
+  Result.FValue := a;
 end;
 
 class function TAmount.Create(const c: TCurrencyCode): TAmount;

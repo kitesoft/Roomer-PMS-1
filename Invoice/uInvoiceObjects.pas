@@ -38,7 +38,6 @@ type
     FText: string;
     FNumber: Double; // -96
     FPrice: TAmount;
-    FTotal: Double;
     FDate: TDate;
     FAuto: boolean;
     FReference: string;
@@ -64,14 +63,14 @@ type
 
   private
     function GetRevenueNativeCurrency: Double;
-    function GetAmountOnInvoice: Double;
-    function GetTotal: Double;
+    function GetAmountOnInvoice: TAmount;
+    function GetTotal: TAmount;
     function GetVatOnRevenueNativeCurrency: Double;
     procedure GetPurchaseDate(const Value: TDate);
     function GetItemKind: TItemKind;
     function GetVatOnInvoice: Double;
     procedure SetVATCode(const Value: string);
-    function GetTotalNativeCurrency: Double;
+    function GetTotalNativeCurrency: TAmount;
     function GetPriceNativeCurrency: Double;
     function GetAmountOnInvoiceNativeCurrency: Double;
     function GetVatOnInvoiceNativeCurrency: Double;
@@ -98,17 +97,17 @@ type
     /// At this moment only line that are generated and linked to a roomrent item can be made invisible
     /// </summary>
     function CanBeHiddenFromInvoice: boolean; virtual;
-    property TotalNativeCurrency: Double read GetTotalNativeCurrency;
+    property TotalNativeCurrency: TAmount read GetTotalNativeCurrency;
     /// <summary>
     /// Revenue total in selected currency, including VAT for this item, calculated as Price * Number
     /// </summary>
-    property Total: Double read GetTotal;
+    property Total: TAmount read GetTotal;
     /// <summary>
     /// Amount which will be visible on the invoice in selected currency.
     /// Dependent on the VisibleOnInvoice property and on ChildInvoiceLines which are not visible on the invoice
     /// See table in class documentation
     /// </summary>
-    property AmountOnInvoice: Double read GetAmountOnInvoice;
+    property AmountOnInvoice: TAmount read GetAmountOnInvoice;
     property AmountOnInvoiceNativeCurrency: Double read GetAmountOnInvoiceNativeCurrency;
     /// <summary>
     ///   The Native amount that will be added to the InvoiceAmount of a Parent
@@ -289,7 +288,7 @@ uses
   , uD
   , System.Generics.Defaults
   , Math
-  ;
+  , uRoomerCurrencymanager;
 
 { TInvoiceLine }
 function TInvoiceLine.CanBeHiddenFromInvoice: boolean;
@@ -309,7 +308,6 @@ begin
   FText := '';
   FNumber := 0;
   FPrice := 0.00; // in native currency by default
-  FTotal := 0.00;
   FReference := '';
   FSource := '';
   FChildInvoiceLines := TList<TInvoiceLine>.Create;
@@ -333,18 +331,18 @@ begin
     result := TotalNativeCurrency;
 end;
 
-function TInvoiceLine.GetAmountOnInvoice: Double;
+function TInvoiceLine.GetAmountOnInvoiceNativeCurrency: TAmount;
 begin
-  result := GetAmountOnInvoiceNativeCurrency / GetRate(FCurrency);
+  result := RoomerCurrencyManager.ConvertValueToDefault(GetAmountOnInvoice);
 end;
 
-function TInvoiceLine.GetAmountOnInvoiceNativeCurrency: Double;
+function TInvoiceLine.GetAmountOnInvoice: TAmount;
 var
   lChild: TInvoiceLine;
 begin
   if FVisibleOnInvoice then
   begin
-    result := TotalNativeCurrency;
+    result := Total;
     for lChild in FChildInvoiceLines do
         result := result + lChild.AmountIncludedInParent; //lChild.TotalNativeCurrency;
   end
@@ -431,14 +429,14 @@ begin
   Result := TotalRevenue / Number;
 end;
 
-function TInvoiceLine.GetTotal: Double;
+function TInvoiceLine.GetTotal: TAmount;
 begin
-  result := FNumber * FPrice;
+  result := FPrice * FNumber;
 end;
 
-function TInvoiceLine.GetTotalNativeCurrency: Double;
+function TInvoiceLine.GetTotalNativeCurrency: TAmount;
 begin
-  result := Total * GetRate(FCurrency);
+  result := RoomerCurrencyManager.ConvertValueToDefault(Total);
 end;
 
 function TInvoiceLine.GetTotalRevenue: Double;

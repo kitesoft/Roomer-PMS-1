@@ -22,7 +22,7 @@ type
     function CurrencyDefinitionClass: TCurrencyDefinitionClass; override;
 
   public
-    constructor Create; overload; override;
+    constructor Create(const aDefaultCurrency: TCurrencyCode); override;
 
     procedure UpdateDefinitions(Sender: TObject);
 
@@ -40,13 +40,14 @@ uses
   , uAppGLobal
   , uG
   , Math
+  , cmpRoomerDataset
   ;
 
 function RoomerCurrencyManager: TRoomerCurrencyManager;
 begin
   if not assigned(CurrencyManager(True)) or not (Currencymanager is TRoomerCurrencyManager) then
   begin
-    InitGlobalCurrencyManager(TRoomerCurrencymanager);
+    InitGlobalCurrencyManager(TRoomerCurrencymanager, '   ');
   end;
   Result := Currencymanager as TRoomerCurrencyManager;
 end;
@@ -56,8 +57,8 @@ end;
 constructor TRoomerCurrencyManager.Create;
 begin
   inherited ;
-  if glb.TableList.ContainsKey('currencies') then
-    glb.TableList['currencies'].RSet.DataSource.OnStateChange := (Currencymanager as TRoomerCurrencyManager).UpdateDefinitions;
+//  if glb.TableList.ContainsKey('currencies') then
+//    glb.TableList['currencies'].RSet.DataSource.OnStateChange := UpdateDefinitions;
   UpdateDefinitions(nil);
 end;
 
@@ -79,10 +80,10 @@ end;
 
 procedure TRoomerCurrencyManager.UpdateDefinitions(Sender: TObject);
 var
-  ds: TDataset;
+  ds: TRoomerDataset;
   bm: TBookmark;
 begin
-  ds := (Sender as TDataSource).dataset;
+  ds := glb.CurrenciesSet;
 
   Lock;
   try
@@ -100,12 +101,10 @@ begin
               if fieldbyName('active').asBoolean then
               begin
                 CreateDefinition(fieldByName('currency').asString, fieldByName('ID').asInteger);
-                if SameValue(fieldByName('rate').AsFLoat, 1.0, 0.01) then
-                  DefaultCurrency := fieldByName('currency').asString;
               end;
               Next;
             end;
-            DefaultCurrency := g.qNativeCurrency;
+            DefaultCurrency := glb.ControlSet.fieldByname('nativecurrency').AsString;
           finally
             BookMark := bm;
             EnableControls;
