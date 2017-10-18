@@ -674,8 +674,7 @@ type
 
     // ---------------------------------------------------------------
     function RV_Upd_Name(res: Integer; newName: string): boolean;
-    function RR_Upd_CurrencyRoomPrice(iRoomReservation: Integer; aDate: string; Currency: string;
-      Convert: Double): boolean;
+    function RR_Upd_CurrencyRoomPrice(iRoomReservation: Integer; aDate: string; Currency: string): boolean;
 
     function RR_Upd_MemoTexts(iRoomReservation: Integer; HiddenInfo: string): boolean;
     function RR_Upd_Paycard_Token_Id(iRoomReservation: Integer; tokenId : Integer): boolean;
@@ -9136,8 +9135,7 @@ begin
   end;
 end;
 
-function Td.RR_Upd_CurrencyRoomPrice(iRoomReservation: Integer; aDate: string; Currency: string;
-  Convert: Double): boolean;
+function Td.RR_Upd_CurrencyRoomPrice(iRoomReservation: Integer; aDate: string; Currency: string): boolean;
 var
   rSet: TRoomerDataSet;
   s: string;
@@ -9146,6 +9144,7 @@ var
   isPercentage: boolean;
   paid: boolean;
   sql: string;
+  lFactor: Double;
 begin
   result := False;
   if iRoomReservation < 1 then
@@ -9162,25 +9161,28 @@ begin
       ' ,Discount '#10 +
       ' ,isPercentage '#10 +
       ' ,paid '#10 +
+      ' ,(select max(aValue) from currencies c where c.currency = rd.Currency) as orgCurrencyRate '#10 +
+      ' ,(select max(aValue) from currencies c where c.currency = %s ) as newCurrencyRate '#10 +
       'FROM '#10 +
-      '  roomsdate '#10 +
+      '  roomsdate rd '#10 +
       'WHERE '#10 +
       '  (paid=0) AND (roomreservation=%d) and (aDate=%s) '#10 +
       '   AND (ResFlag <> ' + _db(STATUS_DELETED) + ' ) '#10; // **zxhj b�tt vi�
 
-    s := format(sql, [iRoomReservation, _db(aDate)]);
+    s := format(sql, [_db(Currency), iRoomReservation, _db(aDate)]);
     if hData.rSet_bySQL(rSet, s) then
     begin
       roomRate := rSet.FieldByName('roomRate').AsFloat;
       Discount := rSet.FieldByName('Discount').AsFloat;
       isPercentage := rSet.FieldByName('isPercentage').asBoolean;
       paid := rSet.FieldByName('paid').asBoolean;
+      lFactor := rSet.FieldByName('orgCurrencyRate').asFloat / rSet.FieldByName('newCurrencyRate').asFloat;
       if not paid then
       begin
-        roomRate := roomRate * Convert;
+        roomRate := roomRate * lFactor;
 
         if not isPercentage then
-          Discount := Discount * Convert;
+          Discount := Discount * lFactor;
         s := '';
         s := s + ' UPDATE roomsdate '#10;
         s := s + ' SET '#10;
@@ -9193,10 +9195,7 @@ begin
         s := s + ' AND (ResFlag <> ' + _db(STATUS_DELETED) + ' ) '#10;
         /// /**zxhj b�tt vi�
 
-        if not cmd_bySQL(s) then
-        begin
-        end;
-        result := True;
+        Result := cmd_bySQL(s);
       end;
     end;
   finally
