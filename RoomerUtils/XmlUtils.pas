@@ -151,24 +151,31 @@ end;
 
 function XMLToDateTime(const aStringValue: string): TDateTime;
 begin
-  with TXSDateTime.Create do
   try
-    XSToNative(aStringValue);
-    Result := AsDateTime;
-  finally
-    Free;
+    with TXSDateTime.Create do
+    try
+      XSToNative(aStringValue);
+      Result := AsDateTime;
+    finally
+      Free;
+    end
+  except
+    Result := 0;
   end;
-//  Result := StrToDateTimeDef(aStringValue, 0, XMLFormatSettings);
 end;
 
 function XMLToDate(const aStringValue: string): TDate;
 begin
-  with TXSDate.Create do
   try
-    XSToNative(aStringValue);
-    Result := AsDate;
-  finally
-    Free;
+    with TXSDate.Create do
+    try
+      XSToNative(aStringValue);
+      Result := AsDate;
+    finally
+      Free;
+    end;
+  except
+    Result := 0;
   end;
 end;
 
