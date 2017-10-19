@@ -177,7 +177,7 @@ begin
   try
     lResponseContentStream := TStringStream.Create('');
     lResponseContentHeader := TALHTTPResponseHeader.Create();
-    lUrl := AnsiString(aUrl + FQueryParams.AsUrltext);
+    lUrl := AnsiString( aUrl.TrimEnd(['/', ' ']) + FQueryParams.AsUrltext);
     try
       inherited Get(AnsiString(lURL), lResponseContentStream, lResponseContentHeader);
       Result := StrToInt(lResponseContentHeader.StatusCode);
