@@ -68,7 +68,7 @@ end;
 procedure TfrmBaseRoomerGridForm.btnCloseClick(Sender: TObject);
 begin
   inherited;
-  if assigned(dsData.DataSet) then
+  if assigned(dsData.DataSet) and (dsData.Dataset.Active) then
     dsData.DataSet.CheckBrowseMode;
 end;
 
