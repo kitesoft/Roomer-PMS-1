@@ -1682,10 +1682,10 @@ begin
   // Only add included stuff if a regular room is added and not a manually added one
   if aIsGenerated then
   begin
-    with glb.PMSSettings.BetaFunctionality do
-      if BetaFunctionsAvailable and UseNewTaxcalcMethod then
-        UpdateTaxinvoiceLinesForRoomItemUsingBackend(lInvoiceLine)
-      else
+//    with glb.PMSSettings.BetaFunctionality do
+//      if BetaFunctionsAvailable and UseNewTaxcalcMethod then
+//        UpdateTaxinvoiceLinesForRoomItemUsingBackend(lInvoiceLine)
+//      else
         UpdateTaxinvoiceLinesForRoomItem(lInvoiceLine);
 
     // Included Breakfast invoicelines
@@ -2447,7 +2447,7 @@ begin
 
     DisplayGuestName(zrSet);
 
-    RetrieveTaxesforRoomReservation(FReservation, FRoomreservation);
+//    RetrieveTaxesforRoomReservation(FReservation, FRoomreservation);
 
     sql := Select_Invoice_GenerateInvoiceLinesRoomRentPerDay(FRoomReservation, FReservation, FInvoiceIndex, edtCustomer.Text );
 
