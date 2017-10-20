@@ -281,14 +281,14 @@ begin
     sql := sql + '         sum(coalesce(rd.roomrate,0)) '#10;
     sql := sql + '    from roomreservations rr '#10;
     sql := sql + '    join roomsdate rd on rd.roomreservation=rr.roomreservation and not rd.paid '#10;
-    sql := sql + '    where ((rr.roomreservation = %d or (rr.reservation=%d and %d=0 and rr.groupaccount))) '#10;
-    sql := sql + '           or rd.paidby = %d'#10;
+    sql := sql + '    where (%d<>0 and ((rr.reservation=%d and rr.roomreservation = %d) or rd.paidBy=%d) or '#10;
+    sql := sql + '           (%d=0 and rr.reservation=%d and rr.groupaccount)) '#10;
     sql := sql + '    group by rateInvIndex '#10;
     sql := sql + '     ) u '#10;
     sql := sql + ' where invoicelinestotal <> 0 or roomrenttotal <> 0 '#10;
     sql := sql + ' group by invoiceindex '#10;
 
-    sql := format(sql, [aReservation, aRoomReservation, aRoomReservation, aReservation, aRoomReservation, aRoomReservation]);
+    sql := format(sql, [aReservation, aRoomReservation, aRoomReservation, aReservation, aRoomReservation, aRoomReservation, aRoomReservation, aReservation]);
 
     hData.rSet_bySQL(rSet, sql);
     rSet.First;

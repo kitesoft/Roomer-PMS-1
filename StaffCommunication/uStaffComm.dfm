@@ -3,7 +3,6 @@ inherited frmStaffComm: TfrmStaffComm
   ClientHeight = 663
   ClientWidth = 648
   Constraints.MinWidth = 450
-  Font.Height = -11
   Position = poOwnerFormCenter
   OnClose = FormClose
   OnCreate = FormCreate
@@ -18,57 +17,14 @@ inherited frmStaffComm: TfrmStaffComm
     ExplicitTop = 643
     ExplicitWidth = 648
   end
-  object panBtn: TsPanel [1]
-    Left = 0
-    Top = 611
-    Width = 648
-    Height = 32
-    Align = alBottom
-    TabOrder = 3
-    SkinData.SkinSection = 'PANEL'
-    DesignSize = (
-      648
-      32)
-    object btnCancel: TsButton
-      Left = 569
-      Top = 4
-      Width = 75
-      Height = 25
-      Hint = 'Cancel and close'
-      Anchors = [akTop, akRight]
-      Cancel = True
-      Caption = 'Cancel'
-      ImageIndex = 4
-      Images = DImages.PngImageList1
-      ModalResult = 2
-      TabOrder = 0
-      OnClick = btnCancelClick
-      SkinData.SkinSection = 'BUTTON'
-    end
-    object BtnOk: TsButton
-      Left = 491
-      Top = 4
-      Width = 75
-      Height = 25
-      Hint = 'Apply and close'
-      Anchors = [akTop, akRight]
-      Caption = 'OK'
-      ImageIndex = 82
-      Images = DImages.PngImageList1
-      ModalResult = 1
-      TabOrder = 1
-      OnClick = BtnOkClick
-      SkinData.SkinSection = 'BUTTON'
-    end
-  end
   inherited grData: TcxGrid
     Top = 105
     Width = 648
-    Height = 506
+    Height = 495
     TabOrder = 0
     ExplicitTop = 105
     ExplicitWidth = 648
-    ExplicitHeight = 506
+    ExplicitHeight = 463
     inherited tvData: TcxGridDBBandedTableView
       OnCellDblClick = tvDataCellDblClick
       DataController.Filter.OnChanged = tvDataDataControllerFilterChanged
@@ -157,7 +113,7 @@ inherited frmStaffComm: TfrmStaffComm
   inherited pnlTop: TsPanel
     Width = 648
     Height = 105
-    TabOrder = 1
+    TabOrder = 3
     ExplicitWidth = 648
     ExplicitHeight = 105
     object cLabFilter: TsLabel
@@ -311,6 +267,24 @@ inherited frmStaffComm: TfrmStaffComm
       ImgUnchecked = 0
     end
   end
+  inherited pnlButtons: TsPanel
+    Top = 600
+    Width = 648
+    ExplicitTop = 568
+    ExplicitWidth = 648
+    inherited btnOK: TsButton
+      Left = 332
+      ExplicitLeft = 332
+    end
+    inherited btnCancel: TsButton
+      Left = 438
+      ExplicitLeft = 438
+    end
+    inherited btnClose: TsButton
+      Left = 544
+      ExplicitLeft = 544
+    end
+  end
   inherited cxsrRoomerStyleRepository: TcxStyleRepository
     PixelsPerInch = 96
     inherited dxssRoomerGridReportLink: TdxGridReportLinkStyleSheet
@@ -373,7 +347,6 @@ inherited frmStaffComm: TfrmStaffComm
     Left = 88
     Top = 200
     object prLink_grData: TdxGridReportLink
-      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 5080
       PrinterPage.GrayShading = True
@@ -387,7 +360,6 @@ inherited frmStaffComm: TfrmStaffComm
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
       ReportDocument.CreationDate = 42831.668015393520000000
-      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
   end

@@ -9,7 +9,8 @@ inherited frmBaseRoomerGridForm: TfrmBaseRoomerGridForm
   inherited sbStatusBar: TsStatusBar
     Top = 297
     Width = 645
-    ExplicitTop = 307
+    ExplicitTop = 297
+    ExplicitWidth = 645
   end
   object grData: TcxGrid [1]
     Left = 0
@@ -19,8 +20,6 @@ inherited frmBaseRoomerGridForm: TfrmBaseRoomerGridForm
     Align = alClient
     TabOrder = 3
     LookAndFeel.NativeStyle = False
-    ExplicitWidth = 655
-    ExplicitHeight = 199
     object tvData: TcxGridDBBandedTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = dsData
@@ -47,20 +46,23 @@ inherited frmBaseRoomerGridForm: TfrmBaseRoomerGridForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 2
-    ExplicitWidth = 655
   end
   inherited pnlButtons: TsPanel
     Top = 254
     Width = 645
-    ExplicitTop = 264
+    ExplicitTop = 254
+    ExplicitWidth = 645
     inherited btnOK: TsButton
       Left = 329
+      ExplicitLeft = 329
     end
     inherited btnCancel: TsButton
       Left = 435
+      ExplicitLeft = 435
     end
     inherited btnClose: TsButton
       Left = 541
+      ExplicitLeft = 541
     end
   end
   inherited cxsrRoomerStyleRepository: TcxStyleRepository

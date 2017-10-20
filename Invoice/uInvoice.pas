@@ -6213,7 +6213,6 @@ end;
 
 procedure TfrmInvoice.CheckCurrencyChange(oldCurrency: string);
 var
-  oldRate, NewRate: Double;
   i: integer;
 
   sUnitPrice: string;
@@ -6221,9 +6220,6 @@ var
 
   unitPrice: Double;
   TotalPrice: Double;
-
-  convert: Double;
-
   unitCount: Double; // -96
 
   s: string;
@@ -6237,14 +6233,10 @@ begin
 
   if zCurrentCurrency <> oldCurrency then
   begin
-    oldRate := GetRate(oldCurrency);
-    NewRate := GetRate(zCurrentCurrency);
+    SaveAnd(false);
 
-    if NewRate = 0 then
-      NewRate := 1;
-    zCurrencyRate := NewRate;
+    zCurrencyRate := GetRate(zCurrentCurrency);
     edtRate.Text := floattostr(zCurrencyRate);
-    convert := oldRate / NewRate;
 
     // Then update database;
     if (FRoomReservation = 0) and (FReservation > 0) then
@@ -6265,8 +6257,7 @@ begin
             begin
               aDate := _db(mRoomRates.FieldByName('rateDate')
                 .asdateTime, false);
-              d.RR_Upd_CurrencyRoomPrice(RoomReservation, aDate,
-                zCurrentCurrency, convert);
+              d.RR_Upd_CurrencyRoomPrice(RoomReservation, aDate, zCurrentCurrency);
             end;
             mRoomRates.Next;
           end;
@@ -6292,8 +6283,7 @@ begin
       while not mRoomRates.eof do
       begin
         aDate := _db(mRoomRates.FieldByName('rateDate').asdateTime, false);
-        d.RR_Upd_CurrencyRoomPrice(FRoomReservation, aDate,
-          zCurrentCurrency, convert);
+        d.RR_Upd_CurrencyRoomPrice(FRoomReservation, aDate, zCurrentCurrency);
         s := '';
         s := s + ' UPDATE roomreservations ' + chr(10);
         s := s + ' SET ' + chr(10);
@@ -6309,35 +6299,34 @@ begin
       exit;
     end;
 
-    calcAndAddAutoItems(FReservation);
+//    calcAndAddAutoItems(FReservation);
+//
+//    for i := 1 to agrLines.RowCount - 1 do
+//    begin
+//      Item := agrLines.Cells[col_Item, i];
+//      if Item_isRoomRent(Item) then
+//      begin
+//        if NOT isSystemLine(i) then
+//        begin
+//          sUnitPrice := agrLines.Cells[col_ItemPrice, i];
+//          fUnitPrice := _StrToFloat(sUnitPrice);
+//          unitPrice := fUnitPrice * convert;
+//
+//          try
+//            unitCount := _StrToFloat(agrLines.Cells[col_ItemCount, i])
+//          except
+//            unitCount := 1;
+//          end;
+//
+//          TotalPrice := unitCount * unitPrice;
+//          agrLines.Cells[col_ItemPrice, i] :=
+//            _floattostr(unitPrice, vWidth, vDec);
+//          agrLines.Cells[col_TotalPrice, i] :=
+//            _floattostr(TotalPrice, vWidth, vDec);
+//        end;
+//      end;
+//    end;
 
-    for i := 1 to agrLines.RowCount - 1 do
-    begin
-      Item := agrLines.Cells[col_Item, i];
-      if Item_isRoomRent(Item) then
-      begin
-        if NOT isSystemLine(i) then
-        begin
-          sUnitPrice := agrLines.Cells[col_ItemPrice, i];
-          fUnitPrice := _StrToFloat(sUnitPrice);
-          unitPrice := fUnitPrice * convert;
-
-          try
-            unitCount := _StrToFloat(agrLines.Cells[col_ItemCount, i])
-          except
-            unitCount := 1;
-          end;
-
-          TotalPrice := unitCount * unitPrice;
-          agrLines.Cells[col_ItemPrice, i] :=
-            _floattostr(unitPrice, vWidth, vDec);
-          agrLines.Cells[col_TotalPrice, i] :=
-            _floattostr(TotalPrice, vWidth, vDec);
-        end;
-      end;
-    end;
-
-    SaveAnd(false, true);
 //    FormCreate(nil);
     LoadInvoice;
     UpdateCaptions;

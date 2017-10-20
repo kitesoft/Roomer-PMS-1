@@ -115,7 +115,7 @@ function ReservationHasPayCard(aReservation: integer; aRoomReservation: integer;
 
 implementation
 
-uses TypInfo, uD, cmpRoomerDataset, SysUtils, hData, uAppGlobal;
+uses TypInfo, uD, cmpRoomerDataset, SysUtils, hData, uAppGlobal, PrjConst;
 
 { TToken }
 
@@ -273,7 +273,7 @@ var i, idx: Integer;
 begin
   cb.Clear;
   idx := -1;
-  cb.Items.AddObject('', nil);
+  cb.Items.AddObject(GetTranslatedText('shTx_Checkin_Unregistered card'), nil);
   for i := 0 to tokens.Count - 1 do
   begin
     token := tokens[i];

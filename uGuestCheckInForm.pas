@@ -114,7 +114,6 @@ type
     edFax: TsEdit;
     sLabel39: TsLabel;
     edVAT: TsEdit;
-    sTabSheet7: TsTabSheet;
     cbActiveLiveSearch: TsCheckBox;
     sLabel41: TsLabel;
     lbTaxes: TsLabel;
@@ -131,7 +130,6 @@ type
     cbPaycards: TsComboBox;
     btnManagePayCards: TsButton;
     procedure FormCreate(Sender: TObject);
-    procedure cbxGuaranteeTypesCloseUp(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure edLastNameChange(Sender: TObject);
     procedure cbCreditCardClick(Sender: TObject);
@@ -149,6 +147,8 @@ type
     function fdRegFormDesignerSaveReport(Report: TfrxReport; SaveAs: Boolean): Boolean;
     procedure btnManagePayCardsClick(Sender: TObject);
     procedure cbPaycardsCloseUp(Sender: TObject);
+    procedure cbPaycardsChange(Sender: TObject);
+    procedure cbxGuaranteeTypesChange(Sender: TObject);
   private
     FisCheckIn: Boolean;
     FCurrencyhandler: TCurrencyHandler;
@@ -169,6 +169,7 @@ type
     procedure UpdateGuaranteeTags;
     procedure Changed(Sender: TObject);
     function GetTotalTaxesForRoomreservation(aReservation, aRoomReservation: integer): double;
+    procedure LoadPaycardInfo(aSelectTokenId: integer);
     { Private declarations }
   public
     { Public declarations }
@@ -392,6 +393,11 @@ begin
 end;
 
 
+procedure TFrmGuestCheckInForm.cbPaycardsChange(Sender: TObject);
+begin
+  UpdateControls;
+end;
+
 procedure TFrmGuestCheckInForm.cbPaycardsCloseUp(Sender: TObject);
 begin
   UpdateControls;
@@ -408,19 +414,20 @@ begin
     shpCash.Tag := 0;
     edAmount.Tag := 0;
   end;
-  if cbxGuaranteeTypes.ItemIndex = 0 then
+  if (cbxGuaranteeTypes.ItemIndex = 0) and (cbPaycards.ItemIndex > 0) then
   begin
     shpCC.Tag := mfGuarantee.AsTagid;
-//    cbCreditCard.Tag := mfGuarantee.AsTagid;
     cbPaycards.Tag := mfGuarantee.AsTagid;
+    cbCreditCard.Tag := 0;
   end else
   begin
-    shpCC.Tag := 0;
-    cbCreditCard.Tag := 0;
+    shpCC.Tag := mfGuarantee.AsTagid;
+    cbPaycards.Tag := 0;
+    cbCreditCard.Tag := mfGuarantee.AsTagid;
   end;
 end;
 
-procedure TFrmGuestCheckInForm.cbxGuaranteeTypesCloseUp(Sender: TObject);
+procedure TFrmGuestCheckInForm.cbxGuaranteeTypesChange(Sender: TObject);
 begin
   pgGuaranteeTypes.ActivePageIndex := cbxGuaranteeTypes.ItemIndex;
 
@@ -595,6 +602,9 @@ end;
 
 procedure TFrmGuestCheckInForm.UpdateControls;
 begin
+  cbCreditCard.Visible := (cbPaycards.ItemIndex = 0);
+  sLabel12.Visible := (cbPaycards.ItemIndex = 0);
+
   CheckMandatoryFields;
 
   // Overriden by 3P connection? (Amsterdam Gemeente)
@@ -602,6 +612,8 @@ begin
   begin
     shpMarket.Visible := (cbxMarket.ItemIndex < 0);
   end;
+
+
   BtnOk.Enabled := Not isCheckIn or NOT AnyTShapeVisible;
 end;
 
@@ -676,6 +688,12 @@ begin
 
 end;
 
+procedure TFrmGuestCheckInForm.LoadPaycardInfo(aSelectTokenId: integer);
+begin
+  LoadAllTokens(Reservation, RoomReservation, tokens);
+  FillTokenComboBox(cbPaycards, tokens, aSelectTokenId);
+end;
+
 procedure TFrmGuestCheckInForm.LoadGuestInfo;
 var
   lRoomInvoice: TInvoice;
@@ -687,9 +705,7 @@ begin
 
     lRoomInvoice := TInvoice.Create(ritRoom, -1, Reservation, RoomReservation, 0, -1, ResSetGuest['RoomNumber'], false);
     try
-
-      LoadAllTokens(Reservation, RoomReservation, tokens);
-      FillTokenComboBox(cbPaycards, tokens, ResSetGuest['PAYCARD_TOKEN_ID']);
+      LoadPayCardInfo(ResSetGuest['PAYCARD_TOKEN_ID']);
       PersonId := ResSetGuest['ID'];
       Customer := ResSetGuest['Customer'];
       NativeCurrency := ResSetGuest['NativeCurrency'];
@@ -750,7 +766,7 @@ begin
       edDateOfBirth.Date := ResSetGuest['DateOfBirth'];
 
       cbxGuaranteeTypes.ItemIndex := IndexOfArray(PAYMENT_GUARANTEE_TYPE, ResSetGuest['PaymentGuaranteeType'], 3);
-      cbxGuaranteeTypesCloseUp(cbxGuaranteeTypes);
+//      cbxGuaranteeTypesCloseUp(cbxGuaranteeTypes);
       case cbxGuaranteeTypes.ItemIndex of
         0:
           cbCreditCard.Checked := (ResSetGuest['ResStatus'] = 'G') OR (ResSetGuest['ResStatus'] = 'D');
@@ -1034,12 +1050,16 @@ end;
 
 procedure TFrmGuestCheckInForm.FormShow(Sender: TObject);
 begin
-  sPageControl2.ActivePageIndex := 0;
-  cbxGuaranteeTypes.ItemIndex := 3;
-  pgGuaranteeTypes.ActivePageIndex := cbxGuaranteeTypes.ItemIndex;
   LoadGuestInfo;
-
   FillQuickFind;
+  cbxGuaranteeTypes.ItemIndex := 0;
+  if cbPaycards.Items.Count > 1 then
+    cbPayCards.ItemIndex := -1
+  else
+    cbPaycards.ItemIndex := 0;
+  pgGuaranteeTypes.ActivePageIndex := 0;
+
+  UpdateControls;
 end;
 
 function TFrmGuestCheckInForm.fdRegFormDesignerSaveReport(Report: TfrxReport; SaveAs: Boolean): Boolean;
@@ -1096,6 +1116,7 @@ end;
 procedure TFrmGuestCheckInForm.CheckMandatoryFields;
 var
   i: Integer;
+  lGaranteed: boolean;
 begin
   for i := 0 to ComponentCount - 1 do
   begin
@@ -1112,6 +1133,24 @@ begin
           SetShapeStatus(Components[i].Tag, False);
       end;
 
+  end;
+
+  // Special case for credit card garantee
+  if TMandatoryCheckinField.mfGuarantee.IsCurrentlyOn then
+  begin
+    case cbxGuaranteeTypes.ItemIndex of
+      0:  begin //Credit card
+            lGaranteed := ((cbPaycards.ItemIndex = 0) and cbCreditCard.Checked)
+                         or (cbPayCards.ItemIndex > 0);
+            shpCC.Visible := (cbPaycards.ItemIndex = 0) and not cbCreditCard.Checked;
+          end;
+      1:  begin //Down payment
+            lGaranteed := (edAmount.Text <> '') and (StrToIntDef(edAmount.Text, 0) > 0);
+          end;
+      2:  lGaranteed := True;  //No guarantee provided
+      3:  lGaranteed := False; // Nothing Selected
+    end;
+    shpGuarantee.Visible := not lGaranteed;
   end;
 end;
 
