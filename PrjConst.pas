@@ -1375,7 +1375,7 @@ begin
   constants.Add('shUI_ValueCopiedToClipboard', 'Value has been copied to clipboard.');
   constants.Add('shUI_CheckInDialog', 'Show details dialog during check-in.');
   constants.Add('shTx_CheckIn_PaymentGuarantee_Downpayment', 'Down payment as guarantee.');
-
+  constants.Add('shTx_Checkin_Unregistered card', '<Unregistered card>');
   constants.Add('shTx_ClearWindowsCacheAndClose', 'This will clear the statuses of the Roomer windows.'#10'After the clearing of the cache then Roomer will shut down.'#10'Afterwards, please start Roomer again.');
 
   constants.Add('shUI_AmountOverAllowedWithdrawalLimit', 'Unable to add item to Invoice'#13'Total invoice exceeds the maximum withdrawal limit of this room');

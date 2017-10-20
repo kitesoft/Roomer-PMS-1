@@ -28,10 +28,6 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
     SkinData.SkinSection = 'PAGECONTROL'
     object sTabSheet1: TsTabSheet
       Caption = 'Room 101'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object sPanel1: TsPanel
         Left = 0
         Top = 0
@@ -71,10 +67,6 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
           object sTabSheet2: TsTabSheet
             Caption = 'Guest Info'
             SkinData.SkinSection = 'TRANSPARENT'
-            ExplicitLeft = 0
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
             object sLabel6: TsLabel
               Left = 97
               Top = 126
@@ -265,7 +257,7 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
             end
             object sLabel34: TsLabel
               Left = 73
-              Top = 180
+              Top = 177
               Width = 111
               Height = 13
               Alignment = taRightJustify
@@ -547,8 +539,8 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
             object cbActiveLiveSearch: TsCheckBox
               Left = 190
               Top = 47
-              Width = 79
-              Height = 17
+              Width = 74
+              Height = 20
               Caption = 'Live search'
               TabOrder = 19
               OnClick = cbActiveLiveSearchClick
@@ -610,8 +602,8 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
             object chkCountryForAllGuests: TsCheckBox
               Left = 190
               Top = 532
-              Width = 249
-              Height = 17
+              Width = 244
+              Height = 20
               Hint = 
                 'When checked the selected country will be set for all guests of ' +
                 'this room that don'#39't already have a country set'
@@ -634,6 +626,10 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
               inherited pnlCountry: TsPanel
                 Width = 241
                 ExplicitWidth = 241
+                inherited lblCountryName: TLabel
+                  Width = 175
+                  Height = 14
+                end
               end
             end
             inline fraCountry: TfraCountryPanel
@@ -648,15 +644,15 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
               inherited pnlCountry: TsPanel
                 Width = 241
                 ExplicitWidth = 241
+                inherited lblCountryName: TLabel
+                  Width = 175
+                  Height = 14
+                end
               end
             end
           end
           object sTabSheet6: TsTabSheet
             Caption = 'Company'
-            ExplicitLeft = 0
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
             object sLabel22: TsLabel
               Left = 11
               Top = 24
@@ -921,6 +917,10 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
               inherited pnlCountry: TsPanel
                 Width = 241
                 ExplicitWidth = 241
+                inherited lblCountryName: TLabel
+                  Width = 175
+                  Height = 14
+                end
               end
             end
           end
@@ -1165,13 +1165,14 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
           Font.Style = []
           ItemIndex = -1
           ParentFont = False
+          ParentShowHint = False
+          ShowHint = False
           TabOrder = 0
-          OnCloseUp = cbxGuaranteeTypesCloseUp
+          OnChange = cbxGuaranteeTypesChange
           Items.Strings = (
             'Credit card'
             'Down payment'
-            'No guarantee provided'
-            'Select')
+            'No guarantee provided')
         end
         object pgGuaranteeTypes: TsPageControl
           Left = 16
@@ -1183,10 +1184,6 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
           SkinData.SkinSection = 'PAGECONTROL'
           object sTabSheet3: TsTabSheet
             Caption = 'Credit card'
-            ExplicitLeft = 0
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
             object sLabel12: TsLabel
               Left = 66
               Top = 117
@@ -1231,6 +1228,8 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
               Height = 21
               Alignment = taLeftJustify
               VerticalAlignment = taAlignTop
+              TextHint = 'Select card'
+              Style = csDropDownList
               Color = clWhite
               Font.Charset = DEFAULT_CHARSET
               Font.Color = 4473924
@@ -1241,10 +1240,11 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
               ParentFont = False
               TabOrder = 1
               OnCloseUp = cbPaycardsCloseUp
+              OnChange = cbPaycardsChange
             end
             object btnManagePayCards: TsButton
-              Left = 32
-              Top = 54
+              Left = 88
+              Top = 55
               Width = 153
               Height = 25
               Caption = 'Manage Paycards'
@@ -1256,10 +1256,6 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
           end
           object sTabSheet4: TsTabSheet
             Caption = 'Cash'
-            ExplicitLeft = 0
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
             object sLabel16: TsLabel
               Left = 38
               Top = 21
@@ -1329,7 +1325,7 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
               SkinData.SkinSection = 'BUTTON'
             end
             object pnlHidePayment: TsPanel
-              Left = 56
+              Left = 64
               Top = 80
               Width = 185
               Height = 41
@@ -1340,17 +1336,6 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
           end
           object sTabSheet5: TsTabSheet
             Caption = 'None'
-            ExplicitLeft = 0
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
-          end
-          object sTabSheet7: TsTabSheet
-            Caption = 'Select'
-            ExplicitLeft = 0
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
           end
         end
       end
