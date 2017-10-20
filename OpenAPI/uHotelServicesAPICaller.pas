@@ -16,9 +16,9 @@ type
   ///  </summary>
   TUserActivityLogAPICaller = class(TBaseOpenAPICaller)
   const
-    cResourcesURI = '/hotelservices';
-    cUserActivityLogsURI = '/useractivitylogs';
-    cGetAllCategoriesURI = '/categories';
+    cResourcesURI = 'hotelservices/';
+    cUserActivityLogsURI = 'useractivitylogs/';
+    cGetAllCategoriesURI = 'categories/';
   private
   public
     type
@@ -89,9 +89,9 @@ begin
 
     if not aParams.Category.IsEmpty then
     begin
-      lUri := lUri + '/' + d.RoomerMainDataset.UrlEncode(aParams.Category);
+      lUri := lUri + d.RoomerMainDataset.UrlEncode(aParams.Category);
       if not aParams.Action.IsEmpty then
-        lUri := lUri + '/' + d.roomerMainDataSet.UrlEncode(aParams.Action);
+        lUri := lUri + d.roomerMainDataSet.UrlEncode(aParams.Action);
     end;
 
     if aParams.DoneAfterDate > 0 then

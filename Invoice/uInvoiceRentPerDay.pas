@@ -624,7 +624,7 @@ type
     procedure FillAllRoomsInMenu(mnuItem: TMenuItem);
     procedure LoadRoomListForAllReservations;
     procedure TransferRoomToAnyRoomsClick(Sender: TObject);
-    procedure TransferRoomToAnotherRoomReservationInvoice(FromRoomReservation, RoomReservation, RealRoomReservation,
+    procedure UpdatePaidByOfRoomsdate(FromRoomReservation, RoomReservation, RealRoomReservation,
       reservation: integer);
     procedure AddIncludedBreakfastToLinesAndGrid(aIncludedBreakfastCount: integer; aPurchaseDate: TDate;
       iAddAt: integer = 0; aParent: TInvoiceLine = nil);
@@ -1671,10 +1671,10 @@ begin
   // Only add included stuff if a regular room is added and not a manually added one
   if aIsGenerated then
   begin
-    with glb.PMSSettings.BetaFunctionality do
-      if BetaFunctionsAvailable and UseNewTaxcalcMethod then
-        UpdateTaxinvoiceLinesForRoomItemUsingBackend(lInvoiceLine)
-      else
+//    with glb.PMSSettings.BetaFunctionality do
+//      if BetaFunctionsAvailable and UseNewTaxcalcMethod then
+//        UpdateTaxinvoiceLinesForRoomItemUsingBackend(lInvoiceLine)
+//      else
         UpdateTaxinvoiceLinesForRoomItem(lInvoiceLine);
 
     // Included Breakfast invoicelines
@@ -2355,7 +2355,7 @@ begin
 
     DisplayGuestName;
 
-    RetrieveTaxesforRoomReservation(FReservation, FRoomreservation);
+//    RetrieveTaxesforRoomReservation(FReservation, FRoomreservation);
 
     if ShowRentPerDay then
       GenerateRoomRentLinesPerDay
@@ -3026,7 +3026,7 @@ begin
         begin
           RealRoomReservation := GetInvoiceLineByRow(i).RoomEntity.RoomReservation;
           if d.UpdateGroupAccountone(FReservation, RealRoomReservation, RealRoomReservation, false) then
-            TransferRoomToAnotherRoomReservationInvoice(FRoomReservation, SelectableExternalRooms[omnu.Tag].RoomReservation,
+            UpdatePaidByOfRoomsdate(FRoomReservation, SelectableExternalRooms[omnu.Tag].RoomReservation,
               RealRoomReservation, SelectableExternalRooms[omnu.Tag].reservation);
         end;
       end;
@@ -3037,7 +3037,7 @@ begin
   end;
 end;
 
-procedure TfrmInvoiceRentPerDay.TransferRoomToAnotherRoomReservationInvoice(FromRoomReservation, RoomReservation,
+procedure TfrmInvoiceRentPerDay.UpdatePaidByOfRoomsdate(FromRoomReservation, RoomReservation,
   RealRoomReservation, reservation: integer);
 var
   sql: String;
@@ -5150,9 +5150,6 @@ end;
 
 procedure TfrmInvoiceRentPerDay.UpdateRoomReservationsCurrency(const aFromCurrency: string; const aToCurrency: string);
 var
-  lOldRate: Double;
-  lNewRate: Double;
-  lFactor: Double;
   lRoomres: integer;
   lDate: string;
   rSet: TRoomerDataset;
@@ -5165,13 +5162,6 @@ begin
 
   if aFromCurrency.ToLower.Equals(aToCurrency.ToLower) then
     exit;
-
-  lOldRate := GetRate(aFromCurrency);
-  lNewRate := GetRate(aToCurrency);
-
-  if lNewRate = 0 then
-    lNewRate := 1;
-  lFactor := lOldRate / lNewRate;
 
   rSet := CreateNewDataSet;
   try
@@ -5197,8 +5187,7 @@ begin
               if mRoomRates['Roomreservation'] = lRoomres then
               begin
                 lDate := _db(mRoomRates.FieldByName('rateDate').asdateTime, false);
-                d.RR_Upd_CurrencyRoomPrice(lRoomres, lDate, aToCurrency, lFactor);
-                if not lRoomResList.Contains(lRoomRes) then
+                if d.RR_Upd_CurrencyRoomPrice(lRoomres, lDate, aToCurrency) and not lRoomResList.Contains(lRoomRes) then
                   lRoomResList.Add(lRoomRes);
               end;
               mRoomRates.Next;
@@ -5215,7 +5204,7 @@ begin
           begin
             lRooMres := mRoomRatesRoomReservation.AsInteger;
             lDate := _db(mRoomRates.FieldByName('rateDate').asdateTime, false);
-            d.RR_Upd_CurrencyRoomPrice(lRoomres, lDate, aToCurrency, lFactor);
+            d.RR_Upd_CurrencyRoomPrice(lRoomres, lDate, aToCurrency);
             if not lRoomResList.Contains(lRoomRes) then
               lRoomResList.Add(lRoomRes);
             mRoomRates.Next;

@@ -111,9 +111,6 @@ type
     mnuiGridToHtml: TMenuItem;
     mnuiGridToText: TMenuItem;
     mnuiGridToXml: TMenuItem;
-    panBtn: TsPanel;
-    btnCancel: TsButton;
-    BtnOk: TsButton;
     grPrinter: TdxComponentPrinter;
     prLink_grData: TdxGridReportLink;
     m_: TdxMemData;
@@ -301,7 +298,6 @@ end;
 procedure TfrmStaffComm.DoUpdateControls;
 begin
   inherited;
-  panBtn.Visible := ZAct = actLookup;
   tvDatadate.Visible := chkShowAllNotes.Checked;
 end;
 
@@ -402,8 +398,6 @@ end;
 procedure TfrmStaffComm.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
   glb.EnableOrDisableTableRefresh('items', True);
-  if tvdata.DataController.DataSet.State in [dsInsert, dsEdit] then
-    tvdata.DataController.Post;
 end;
 
 
