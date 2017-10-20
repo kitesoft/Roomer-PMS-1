@@ -1016,8 +1016,8 @@ begin
     invoiceLine.PurchaseDate := PurchaseDate;
     invoiceLine.Reference := Refrence;
     invoiceLine.Source := Source;
-    invoiceLine.TotalIsIncludedInParent := false;
-    invoiceLine.VisibleOnInvoice := aVisibleOnInvoice;
+    invoiceLine.IsTotalIncludedInParent := false;
+    invoiceLine.IsVisibleOnInvoice := aVisibleOnInvoice;
 
     invoiceLine.noGuests := noGuests;
     invoiceLine.ConfirmDate := ConfirmDate;
@@ -1030,9 +1030,9 @@ begin
 
     // Check if visiblity overridden in invoicelines_visiblity table
     if invoiceLine.CanBeHiddenFromInvoice then
-      invoiceline.VisibleOnInvoice := GetInvoiceLineVisibility(invoiceline.ParentReservation, invoiceline.ParentRoomReservation,
+      invoiceline.IsVisibleOnInvoice := GetInvoiceLineVisibility(invoiceline.ParentReservation, invoiceline.ParentRoomReservation,
                                                                FInvoiceIndex, invoiceline.PurchaseDate, invoiceline.Item,
-                                                               invoiceline.VisibleOnInvoice);
+                                                               invoiceline.IsVisibleOnInvoice);
 
   except
     if assigned(invoiceline) then
@@ -1123,7 +1123,7 @@ begin
   begin
     if NOT agrLines.HasCheckBox(col_VisibleOnInvoice, ARow) then
       agrLines.AddCheckBox(col_VisibleOnInvoice, ARow, false, false);
-    agrLines.SetCheckBoxState(col_VisibleOnInvoice, ARow, aInvoiceLine.VisibleOnInvoice);
+    agrLines.SetCheckBoxState(col_VisibleOnInvoice, ARow, aInvoiceLine.IsVisibleOnInvoice);
   end
   else if agrLines.HasCheckBox(col_VisibleOnInvoice, ARow) then
     agrLines.RemoveCheckBox(col_VisibleOnInvoice, ARow);
@@ -1227,7 +1227,7 @@ begin
   lInvLine := AddLine(0, aParentInvoice, taxItem, Item_GetDescription(taxItem), TaxUnits, unitPrice, g.qNativeCurrency,
     lItemInfo.VATCode, aPurchaseDate, aParentInvoice.IsGeneratedLine, '', '', false, 0, ConfirmDate, ConfirmAmount, -1, _GetCurrentTick, 0, not aIsIncludedInParent);
 
-  lInvLine.TotalIsIncludedInParent := aIsIncludedInParent;
+  lInvLine.IsTotalIncludedInParent := aIsIncludedInParent;
 end;
 
 procedure TfrmInvoiceRentPerDay.SetCurrentVisible;
@@ -1742,8 +1742,7 @@ var
   lIsIncluded: boolean;
   lIsIncludedCust: boolean;
   lTaxResultInvoiceLines: TInvoiceTaxEntityList;
-  lTotal: Double;
-  lTotalNative: Double;
+  lTotal: TAmount;
   tt, l: integer;
   lCalcOptions: TInvoiceCityTaxCalculationOptions;
 begin
@@ -1781,9 +1780,7 @@ begin
               lIsIncluded := false;
           end;
 
-          lTotalNative := RoomerCurrencyManager.ConvertValueToDefault(TAmount.Create(lTotal, aInvLine.Currency));
-
-          AddRoomTaxToInvoiceLines(lTotalNative, trunc(lTaxResultInvoiceLines[l].NumItems), TaxTypes[tt],
+          AddRoomTaxToInvoiceLines(lTotal.ToNative, trunc(lTaxResultInvoiceLines[l].NumItems), TaxTypes[tt],
             aInvLine.RoomEntity.Arrival, 0, aInvLine, lIsIncluded);
         end; // for l + if
     end; // for tt
@@ -1815,8 +1812,7 @@ begin
                                   end
   ) do
     AddRoomTaxToInvoiceLines(
-
-          FCurrencyhandlersMap.ConvertAmount(lObject.CityTax.Amount, lObject.CityTax.Currency.AsString, g.qNativeCurrency),
+          TAmount.Create(lObject.CityTax.Amount, lObject.CityTax.Currency.AsString).ToNative.Value,
           lObject.Quantity, //trunc(lTaxResultInvoiceLines[l].NumItems),
           lObject.Item, // TaxTypes[tt],
           aInvLine.RoomEntity.Arrival,
@@ -1829,13 +1825,13 @@ end;
 procedure TfrmInvoiceRentPerDay.tvPaymentNativeAmountGetProperties(Sender: TcxCustomGridTableItem;
   ARecord: TcxCustomGridRecord; var AProperties: TcxCustomEditProperties);
 begin
-  aProperties := FCurrencyhandlersMap[g.qNativeCurrency].GetcxEditProperties();
+  aProperties := RoomerCurrencyManager.DefaultCurrencyDefinition.GetcxEditProperties();
 end;
 
 procedure TfrmInvoiceRentPerDay.tvPaymentsCurrencyAmountGetProperties(Sender: TcxCustomGridTableItem;
   ARecord: TcxCustomGridRecord; var AProperties: TcxCustomEditProperties);
 begin
-  aProperties := FCurrencyhandlersMap[mPaymentsCurrency.AsString].GetcxEditProperties();
+  aProperties := RoomerCurrencyManager[mPaymentsCurrency.AsString].GetcxEditProperties();
 end;
 
 procedure TfrmInvoiceRentPerDay.tvPaymentsMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState;
@@ -2117,7 +2113,7 @@ begin
 
     if FInvoiceIndexTotals.HasInvoiceLines[i] then
     begin
-      lInvLinesIndicator.Hint := FCurrencyhandlersMap[InvoiceCurrencyCode].FormattedValueWithCode(FInvoiceIndexTotals.TotalInvoiceLinesOnIndex[i]);
+      lInvLinesIndicator.Hint := RoomerCurrencyManager[InvoiceCurrencyCode].FormattedValueWithCode(FInvoiceIndexTotals.TotalInvoiceLinesOnIndex[i]);
       lInvLinesIndicator.Brush.Color := clRed; // $00C1FFFF;
     end;
     lInvLinesIndicator.Visible := FInvoiceIndexTotals.HasInvoiceLines[i];
@@ -2126,7 +2122,7 @@ begin
     lRoomRentIndicator.Brush.Color := clWhite;
     if FInvoiceIndexTotals.HasRoomRentItems[i] then
     begin
-      lRoomRentIndicator.Hint := FCurrencyhandlersMap[InvoiceCurrencyCode].FormattedValueWithCode(FInvoiceIndexTotals.TotalRoomRentOnIndex[i]);
+      lRoomRentIndicator.Hint := RoomerCurrencyManager[InvoiceCurrencyCode].FormattedValueWithCode(FInvoiceIndexTotals.TotalRoomRentOnIndex[i]);
       lRoomRentIndicator.Brush.Color := clBlue; // $00FFCFA8;
     end;
     lRoomRentIndicator.Visible := FInvoiceIndexTotals.HasRoomRentItems[i];
@@ -2729,7 +2725,7 @@ begin
   lInvoiceLine := AddLine(0, aParent, lItem, lText, aIncludedBreakfastCount, Item_GetPrice(lItem),
     g.qNativeCurrency, lItemInfo.VATCode, aPurchaseDate, True, '', '', false, 0, 0, 0, -1, _GetCurrentTick, 0, False);
 
-  lInvoiceLine.TotalIsIncludedInParent := True;
+  lInvoiceLine.IsTotalIncludedInParent := True;
 
 end;
 
@@ -2833,7 +2829,6 @@ begin
   FInvoiceLinesList := TInvoiceLineList.Create;
   FRoomInfoList := TRoomInfoList.Create(True);
   tempInvoiceItemList := TInvoiceItemEntityList.Create(True);
-  FCurrencyhandlersMap := TCurrencyhandlersMap.Create;
   FInvoiceIndexTotals := TInvoiceIndexTotalList.Create;
   FTaxAPIResponse := TxsdRoomRentTaxReceiptList.Create;
   inherited;
@@ -2972,7 +2967,8 @@ end;
 procedure TfrmInvoiceRentPerDay.mPaymentsCalcFields(DataSet: TDataSet);
 begin
   mPaymentsChargedOnCC.AsBoolean := mPaymentsPaycardTraceIndex.AsInteger > 0;
-  mPaymentsCurrencyAmount.AsFloat := FCurrencyhandlersMap.ConvertAmount(mPaymentsNativeAmount.AsFloat, G.qNativeCurrency, mPaymentsCurrency.AsString);
+  if not mPaymentsCurrency.IsNull then
+    mPaymentsCurrencyAmount.AsFloat := RoomerCurrencyManager.ConvertAmount(mPaymentsNativeAmount.AsFloat, mPaymentsCurrency.AsString);
 end;
 
 procedure TfrmInvoiceRentPerDay.ExternalRoomsClick(Sender: TObject);
@@ -3667,10 +3663,10 @@ begin
   s := s + ' ,' + _db(FInvoiceIndex)+#10;
   s := s + ' ,' + iif( ShowRentPerDay, _db(aInvoiceLine.PurchaseDate), 'NULL')+#10;
   s := s + ' ,' + _db(aInvoiceLine.Item)+#10;
-  s := s + ' ,' + _db(aInvoiceLine.VisibleOnInvoice)+#10;
+  s := s + ' ,' + _db(aInvoiceLine.IsVisibleOnInvoice)+#10;
   s := s + ') '#10;
   s := s + ' ON DUPLICATE KEY '#10;
-  s := s + ' UPDATE visible = '+ _db(aInvoiceLine.VisibleOnInvoice)+#10;
+  s := s + ' UPDATE visible = '+ _db(aInvoiceLine.IsVisibleOnInvoice)+#10;
 
   copyToClipboard(s);
   aExecPLan.AddExec(s);
@@ -3838,7 +3834,7 @@ begin
     s := s + ', ' + _db(aInvoiceLine.Roomreservation);
     s := s + ', ' + _db(FInvoiceIndex);
     s := s + ', ' + _db(d.roomerMainDataSet.username);
-    s := s + ', ' + _db(aInvoiceLine.VisibleOnInvoice);
+    s := s + ', ' + _db(aInvoiceLine.IsVisibleOnInvoice);
     s := s + ', ' + _db(iCreditInvoiceMultiplier * aInvoiceLine.TotalRevenue.ToNative);
 
     s := s + ')' + #10;
@@ -3865,7 +3861,7 @@ begin
 
     s := s + ' , Persons= ' + _db(aInvoiceLine.noGuests) + ' , Nights= ' + _db(iNights) + ' , ilAccountKey= ' +
       _db(sAccountKey) + ' , InvoiceIndex= ' + _db(FInvoiceIndex) + ' , staffLastEdit= ' +
-      _db(d.roomerMainDataSet.username) + ' , VisibleOnInvoice = ' + _db(aInvoiceLine.VisibleOnInvoice) +
+      _db(d.roomerMainDataSet.username) + ' , VisibleOnInvoice = ' + _db(aInvoiceLine.IsVisibleOnInvoice) +
       ' , Revenue = ' + _db(iCreditInvoiceMultiplier * aInvoiceLine.TotalRevenue.ToNative) + ' WHERE id=' +
       _db(aInvoiceLine.LineId);
   end;
@@ -4127,7 +4123,7 @@ var
 begin
   lInvLine := GetInvoiceLineByRow(ARow);
   if (ACol = col_ItemPrice) and assigned(lInvLine) then
-    Value := FCurrencyhandlersMap[lInvLine.Currency].FormattedValue(lInvLine.Price, false);
+    Value := RoomerCurrencyManager[lInvLine.Currency].FormattedValue(lInvLine.Price, false);
   FCellValueBeforeEdit := agrLines.Cells[ACol, ARow];
   FCellDoubleBeforeEdit := StrToFloatDef(FCellValueBeforeEdit, 0);
 end;
@@ -4947,7 +4943,7 @@ begin
   begin
     agrLines.GetCheckBoxState(col_VisibleOnInvoice, ARow, check);
     lInvoiceLine := GetInvoiceLineByRow(ARow);
-    lInvoiceLine.VisibleOnInvoice := check;
+    lInvoiceLine.IsVisibleOnInvoice := check;
     lInvoiceLine.Changed := True;
 
     UpdateGrid;
@@ -6164,7 +6160,7 @@ begin
   end;
 
   if edtBalance.Text <> '' then
-    rec.InvoiceBalanceInCurrency := FCurrencyhandlersMap.ConvertAmount(FInvoiceLinesList.TotalOnInvoice.ToNative - getTotalNativeDownPayments, g.qNativeCurrency, InvoiceCurrencyCode);
+    rec.InvoiceBalanceInCurrency := RoomerCurrencyManager.ConvertAmount(FInvoiceLinesList.TotalOnInvoice.ToNative - getTotalNativeDownPayments, InvoiceCurrencyCode);
 
   if g.OpenDownPayment(actInsert, rec) then
   begin
@@ -6179,7 +6175,7 @@ begin
     theData.InvoiceNumber := zInvoiceNumber;
     theData.customer := edtCustomer.Text;
     theData.PayDate := _db(Date, false);
-    theData.NativeAmount := FCurrencyhandlersMap.ConvertAmount(rec.AmountInCurrency, InvoiceCurrencyCode, g.qNativeCurrency);
+    theData.NativeAmount := RoomerCurrencyManager.ConvertAmountToDefault(TAmount.Create(rec.AmountInCurrency, InvoiceCurrencyCode));
     theData.Description := rec.Description;
     theData.CurrencyRate := InvoiceCurrencyRate;
     theData.Currency := InvoiceCurrencyCode;

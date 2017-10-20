@@ -27,7 +27,7 @@ type
     procedure UpdateDefinitions(Sender: TObject);
 
     property DefaultCurrencyDefinition: TRoomerCurrencyDefinition read GetDefaultDefinition;
-    property CurrencyDefinition[const CurCode: TCurrencyCode]: TRoomerCurrencyDefinition read GetDefinition;
+    property CurrencyDefinition[const CurCode: TCurrencyCode]: TRoomerCurrencyDefinition read GetDefinition; default;
   end;
 
 function RoomerCurrencyManager: TRoomerCurrencyManager;

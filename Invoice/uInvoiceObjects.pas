@@ -51,7 +51,7 @@ type
     FrrAlias: integer;
     FAutoGen: string;
     FLineId: integer;
-    FVisibleOnInvoice: boolean;
+    FIsVisibleOnInvoice: boolean;
     FVATCode: string;
     FVATPercentage: Double;
     FParentInvoiceLine: TInvoiceLine;
@@ -60,7 +60,7 @@ type
     FInvoiceNumber: integer;
     FChanged: boolean;
     FCurrency: TCurrencyCode;
-    FTotalIsIncludedInParent: boolean;
+    FIsTotalIncludedInParent: boolean;
 
   private
     function GetAmountOnInvoice: TAmount;
@@ -73,7 +73,7 @@ type
     function GetPrice: TAmount;
     function GetPriceOnInvoice: TAmount;
     function GetTotalRevenue: TAmount;
-    function GetRevenuePrice: Double;
+    function GetRevenuePrice: TAmount;
     function GetParentReservation: integer;
     function GetParentRoomReservation: integer;
     procedure SetParentInvoiceLine(const Value: TinvoiceLine);
@@ -187,12 +187,12 @@ type
     /// True if this line should be printed on the actual invoice. This setting influences the amounts on invoice, revenues and calculated VAT
     /// for this line and its parentline (if present)
     /// </summary>
-    property VisibleOnInvoice: boolean read FVisibleOnInvoice write FVisibleOnInvoice;
+    property IsVisibleOnInvoice: boolean read FIsVisibleOnInvoice write FIsVisibleOnInvoice;
     /// <summary>
     /// If true then the total amount of this invoicelineitem is originally included in its parent
     /// When this line is set VisibleOnInvoice then the amount of the parent will be decreased with the amount of this line
     /// </summary>
-    property TotalIsIncludedInParent: boolean read FTotalIsIncludedInParent write FTotalIsIncludedInParent;
+    property IsTotalIncludedInParent: boolean read FIsTotalIncludedInParent write FIsTotalIncludedInParent;
   end;
 
   /// <summary>
@@ -284,7 +284,7 @@ begin
   inherited Create;
 
   FInvoiceLineIndex := aIndex;
-  FVisibleOnInvoice := True;
+  FIsVisibleOnInvoice := True;
   FInvoiceNumber := -1;
   FLineId := _id;
   FItem := '';
@@ -308,9 +308,9 @@ end;
 function TInvoiceLine.GetAmountIncludedInParent: TAmount;
 begin
   Result := 0;
-  if VisibleOnInvoice and TotalIsIncludedInParent then
+  if IsVisibleOnInvoice and IsTotalIncludedInParent then
     result := - Total
-  else if not VisibleOnInvoice and not TotalIsIncludedInParent then
+  else if not IsVisibleOnInvoice and not IsTotalIncludedInParent then
     result := Total;
 end;
 
@@ -318,7 +318,7 @@ function TInvoiceLine.GetAmountOnInvoice: TAmount;
 var
   lChild: TInvoiceLine;
 begin
-  if FVisibleOnInvoice then
+  if FIsVisibleOnInvoice then
   begin
     result := Total;
     for lChild in FChildInvoiceLines do
@@ -398,7 +398,7 @@ var
 begin
   result := Total;
   for lInvLine in FChildInvoiceLines do
-    if lInvLine.TotalIsIncludedInParent then
+    if lInvLine.IsTotalIncludedInParent then
       result := result - lInvLine.Total;
 end;
 
@@ -407,11 +407,11 @@ var
   lInvLine: TInvoiceLine;
 begin
   result := 0;
-  if VisibleOnInvoice then
+  if IsVisibleOnInvoice then
   begin
     result := VATOnRevenue;
     for lInvLine in ChildInvoiceLines do
-      if not lInvLine.VisibleOnInvoice then
+      if not lInvLine.IsVisibleOnInvoice then
         result := result + lInvLine.VATOnRevenue;
   end;
 end;
@@ -572,7 +572,7 @@ begin
   for lInvLine in self do
     if linvLine.CanBeHiddenFromInvoice and (lInvLine.ItemKind in aItemKindSet) and (not linvLine.isPackage) then
     begin
-      linvLine.VisibleOnInvoice := aVisible;
+      linvLine.IsVisibleOnInvoice := aVisible;
       lInvLine.Changed := true
     end;
 end;
@@ -584,7 +584,7 @@ begin
   FShowPackageItem := Value;
   for lItem in Self do
     if lItem.isPackage and (lItem.ItemKind <> ikRoomRent) then
-      lItem.VisibleOnInvoice := Value;
+      lItem.IsVisibleOnInvoice := Value;
 end;
 
 procedure TInvoiceLineList.SortOnInvoiceLineIndex;

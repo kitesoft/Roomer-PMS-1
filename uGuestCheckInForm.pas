@@ -1148,7 +1148,8 @@ begin
             lGaranteed := (edAmount.Text <> '') and (StrToIntDef(edAmount.Text, 0) > 0);
           end;
       2:  lGaranteed := True;  //No guarantee provided
-      3:  lGaranteed := False; // Nothing Selected
+    else
+          lGaranteed := False; // Nothing Selected
     end;
     shpGuarantee.Visible := not lGaranteed;
   end;

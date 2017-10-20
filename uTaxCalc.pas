@@ -17,6 +17,7 @@ uses
   IOUtils,
   RoomerMathParser
   , uInvoiceEntities
+  , uAmount
   ;
 
 type
@@ -33,16 +34,16 @@ type
     BookingItem: String;
     Description: String;
     NumItems: Double;
-    Amount: Double;
+    Amount: TAmount;
     IncludedInPrice: TEnumTaxIncl_Excl;
     Percentage: Boolean;
   private
-    function GetTotal: Double;
+    function GetTotal: TAmount;
   public
 
-    constructor Create(_BookingItem: String; _Description: String; _NumItems: Double; _Amount: Double;
+    constructor Create(_BookingItem: String; _Description: String; _NumItems: Double; _Amount: TAmount;
       _IncludedInPrice: TEnumTaxIncl_Excl; _Percentage: Boolean);
-    property total: Double read GetTotal;
+    property Total: TAmount read GetTotal;
   end;
 
   TInvoiceTaxEntityList = TObjectList<TInvoiceTaxEntity>;
@@ -114,7 +115,7 @@ uses
   uAppGlobal,
   _Glob,
   uMain
-  , uDateTimeHelper;
+  , uDateTimeHelper, uCurrencyConstants;
 
 procedure initializeTaxes;
 var
@@ -306,31 +307,6 @@ begin
   end;
 end;
 
-//function FillHashMapWithValues(ItemTaxEntities: TInvoiceItemEntityList): TInvoiceItemEntityDictionary;
-//var
-//  i: Integer;
-//  Item: TInvoiceItemEntity;
-//begin
-//  result := TInvoiceItemEntityDictionary.Create([doOwnsValues]);
-//  if Assigned(ItemTaxEntities) then
-//  begin
-//    for i := 0 to ItemTaxEntities.Count - 1 do
-//    begin
-//      if NOT result.TryGetValue(ItemTaxEntities[i].Item, Item) then
-//      begin
-//        Item := TInvoiceItemEntity.Create(ItemTaxEntities[i].Item, 0, ItemTaxEntities[i].Price * ItemTaxEntities[i]
-//          .NumItems, ItemTaxEntities[i].Vat * ItemTaxEntities[i].NumItems);
-//        result.Add(Item.Item, Item);
-//      end
-//      else
-//      begin
-//        Item.Price := Item.Price + (ItemTaxEntities[i].Price * ItemTaxEntities[i].NumItems);
-//        Item.Vat := Item.Vat + (ItemTaxEntities[i].Vat * ItemTaxEntities[i].NumItems);
-//      end;
-//    end;
-//  end;
-//end;
-
 function GetFilledInFormula(formula: String; RoomTaxEntity: TInvoiceRoomEntity;
   map: TInvoiceItemEntityList): String;
 var
@@ -496,7 +472,8 @@ function MakeInvoiceTaxEntity(aTax: TTax; aInvoiceRoomEntity: TInvoiceRoomEntity
                               aOptions: TInvoiceCityTaxCalculationOptions): TInvoiceTaxEntity;
 var
   NumItems: Double;
-  Amount, baseAmount: Double;
+  Amount: TAmount;
+  baseAmount: Double;
 
   Percentage: Boolean;
   taxGuests: Integer;
@@ -517,7 +494,7 @@ begin
 
   if aTax.TAX_TYPE = TT_FIXED_AMOUNT then
   begin
-    Amount := aTax.Amount / aInvoiceRoomEntity.CurrencyRate;
+    Amount := TAmount.Create(aTax.Amount, aInvoiceRoomEntity.Currency); // / aInvoiceRoomEntity.CurrencyRate; //in room currency
     Percentage := False;
   end
   else
@@ -528,12 +505,12 @@ begin
       if TaxIsIncluded(aTax, lCustomerIncludedDefault) then
       begin
         baseAmount := aInvoiceRoomEntity.Price / (1 + ((aTax.Amount + aItemTypeInfo.VATPercentage) / 100));
-        Amount := baseAmount * aTax.Amount / 100;
+        Amount := TAmount.Create(baseAmount * aTax.Amount / 100, aInvoiceRoomEntity.Currency) ;
       end
       else
       begin
         baseAmount := (aInvoiceRoomEntity.Price - aInvoiceRoomEntity.Vat);
-        Amount := baseAmount * aTax.Amount / 100;
+        Amount := TAmount.Create(baseAmount * aTax.Amount / 100, aInvoiceRoomEntity.Currency);
       end;
     end
     else
@@ -541,12 +518,12 @@ begin
       if TaxIsIncluded(aTax, lCustomerIncludedDefault) then
       begin
         baseAmount := aInvoiceRoomEntity.Price / (1 + (aTax.Amount / 100)); // (Room.Price - Room.Vat)
-        Amount := baseAmount * aTax.Amount / 100;
+        Amount := TAmount.Create(baseAmount * aTax.Amount / 100, aInvoiceRoomEntity.Currency);
       end
       else
       begin
         baseAmount := aInvoiceRoomEntity.Price;
-        Amount := baseAmount * aTax.Amount / 100;
+        Amount := TAmount.Create(baseAmount * aTax.Amount / 100, aInvoiceRoomEntity.Currency);
       end;
     end;
     Description := aTax.Description + format(' (%n %% of %m)', [aTax.Amount, baseAmount]);
@@ -795,15 +772,15 @@ end;
 // TEnumTaxIncl_Excl = (TIE_INCLUDED, TIE_EXCLUDED);
 
 { TTaxEntity }
-function TInvoiceTaxEntity.GetTotal: Double;
+function TInvoiceTaxEntity.GetTotal: TAmount;
 begin
-  result := NumItems * Amount;
+  result := Amount * NumItems;
 end;
 
 
 
-constructor TInvoiceTaxEntity.Create(_BookingItem, _Description: String; _NumItems, _Amount: Double;
-  _IncludedInPrice: TEnumTaxIncl_Excl; _Percentage: Boolean);
+constructor TInvoiceTaxEntity.Create(_BookingItem: String; _Description: String; _NumItems: Double; _Amount: TAmount;
+      _IncludedInPrice: TEnumTaxIncl_Excl; _Percentage: Boolean);
 begin
   BookingItem := _BookingItem;
   Description := _Description;

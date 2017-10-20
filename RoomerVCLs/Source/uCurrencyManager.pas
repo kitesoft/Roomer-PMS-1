@@ -56,12 +56,12 @@ type
     ///   Calculate the value when converting aValue from aFromCurCode to aToCurrCode.
     ///  Note that this function does not use the TAmount types directly to avoid unneeded and circular dependencies
     /// </summary>
-    function ConvertValue(aValue: TAmount; const aToCurrCode: TCurrencyCode): TAmount;
+    function ConvertAmount(aValue: TAmount; const aToCurrCode: TCurrencyCode): TAmount;
     /// <summary>
     ///   Calculate the value when converting aValue to the default currency
     ///  Note that this function does not use the TAmount types directly to avoid unneeded and circular dependencies
     /// </summary>
-    function ConvertValueToDefault(aValue: TAmount): TAmount;
+    function ConvertAmountToDefault(aValue: TAmount): TAmount;
 
     property CurrencyDefinition[const CurCode: TCurrencyCode]: TCurrencyDefinition read GetCurrencyDefinitionByCode; default;
     property CurrencyDefinitionByID[CurID: integer]: TCurrencyDefinition read GetCurrencyDefinitionByID;
@@ -135,7 +135,7 @@ begin
   end;
 end;
 
-function TCurrencyManager.ConvertValue(aValue: TAmount; const aToCurrCode: TCurrencyCode): TAmount;
+function TCurrencyManager.ConvertAmount(aValue: TAmount; const aToCurrCode: TCurrencyCode): TAmount;
 var
   lNewValue: Currency;
 begin
@@ -146,9 +146,9 @@ begin
   Result := TAmount.Create(lNewValue, aToCurrCode);
 end;
 
-function TCurrencyManager.ConvertValueToDefault(aValue: TAmount): TAmount;
+function TCurrencyManager.ConvertAmountToDefault(aValue: TAmount): TAmount;
 begin
-  Result := ConvertValue(aValue, DefaultCurrency);
+  Result := ConvertAmount(aValue, DefaultCurrency);
 end;
 
 constructor TCurrencyManager.Create(const aDefaultCurrency: TCurrencyCode);
