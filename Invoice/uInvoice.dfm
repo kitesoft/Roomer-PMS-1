@@ -567,7 +567,6 @@ object frmInvoice: TfrmInvoice
         Caption = 'Close'
         ImageIndex = 4
         Images = DImages.cxLargeImagesFlat
-        ModalResult = 1
         ParentShowHint = False
         ShowHint = True
         TabOrder = 17

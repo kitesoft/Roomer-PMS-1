@@ -895,9 +895,16 @@ end;
 
 procedure TfrmInvoice.btnExitClick(Sender: TObject);
 begin
-  if NOT IsCashInvoice then
-    IfInvoiceChangedThenOptionallySave;
-  close;
+  if IsCashInvoice then
+  begin
+    if MessageDlg(GetTranslatedText('shTx_Invoice_WarningCloseCashInvoice'), mtConfirmation, mbOKCancel, 0) = mrOK then
+    begin
+      d.RemoveInvoiceCashInvoice;
+      Close;
+    end;
+  end
+  else if IfInvoiceChangedThenOptionallySave then
+    close;
 end;
 
 procedure TfrmInvoice.btnClearAddressesClick(Sender: TObject);

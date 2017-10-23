@@ -891,7 +891,11 @@ begin
   if IsCashInvoice then
   begin
     if MessageDlg(GetTranslatedText('shTx_Invoice_WarningCloseCashInvoice'), mtConfirmation, mbOKCancel, 0) = mrOK then
+    begin
+      d.RemoveInvoiceCashInvoice;
       Close;
+    end;
+
   end
   else if IfInvoiceChangedThenOptionallySave then
     close;
