@@ -78,6 +78,7 @@ type
     function GetParentRoomReservation: integer;
     procedure SetParentInvoiceLine(const Value: TinvoiceLine);
     function GetBelongsToROom: TInvoiceRoomEntity;
+    function GetDescription: string;
   protected
     function GetAmountIncludedInParent: TAmount; virtual;
     function GetIsGenerated: boolean; virtual;
@@ -147,6 +148,7 @@ type
     property Changed: boolean read FChanged write FChanged;
     property ParentReservation: integer read GetParentReservation;
     property ParentRoomReservation: integer read GetParentRoomReservation;
+    property Description: string read GetDescription;
   published
     /// <summary>Id in invoicelines table of this invoiceline item, if <= 0 then this invoiceline instance does not have
     /// a record in the table invoicelines </summary>
@@ -339,6 +341,11 @@ begin
     result := lParent.RoomEntity;
     lParent := lParent.Parent;
   end;
+end;
+
+function TInvoiceLine.GetDescription: string;
+begin
+  Result := Text;
 end;
 
 function TInvoiceLine.GetIsGenerated: boolean;

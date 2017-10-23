@@ -209,7 +209,7 @@ uses uAppGlobal,
 
   , uItemTransactionsReport
 
-  ;
+  , uInvoiceRentPerDay;
 
 
 const PRE_KEY_NAME = 'PrjConst.Constants.';
@@ -1727,6 +1727,9 @@ begin
   constants.Add('shRoomRentPErDaySetting_Ask', 'Ask per invoice');
   constants.Add('shRoomRentPErDaySetting_Always', 'Always');
 
+  constants.Add('shEditInvoice_CashInvoiceExists', 'Cash invoicelines already exist! Is somebody else creating a cash invoice?'#13#10 +
+                                                   'Continuing will remove the existing cash invoicelines.');
+
   constants.Add('FinanceConnect_TabName', 'Finance Connect');
   constants.Add('Customers_FinanceConnect_AddedCustomer', 'You have added a new customer.' + #10#13 + 'Do want to open customer mappings for %s?');
   constants.Add('Items_FinanceConnect_AddedItem', 'You have added a new item.' + #10#13 + 'Do want to open items mappings for %s?');
@@ -2014,7 +2017,7 @@ begin
   TFrmManagePCIConnection.Create(nil).Free;
 
   TfrmItemTransactionsReport.Create(nil).Free;
-
+  TfrmInvoiceRentPerDay.Create(nil).Free;
 end;
 
 ///////////////////////////////////////////////////////////////////////////////////////

@@ -667,6 +667,8 @@ type
     function LocateDate(recordSet: TRoomerDataset; field: String; Value: TDate): boolean;
     function FormatRoomDescription(const aRoomNumber: string; const aRoomResDescription: String; aArrival: TDate; aDeparture: TDate; aDayCount: integer;
                                    const aPackagename: string; aAddGuestName: boolean; const aGuestName: string): string;
+    function CashInvoiceLinesExist: boolean;
+    procedure RemoveExistingCashInvoiceLines;
 
     property InvoiceIndex: TInvoiceIndex read FInvoiceIndex write SetInvoiceIndex;
 
@@ -693,7 +695,7 @@ type
     property ShowRentPerDay: boolean read FShowRentPerDay write FShowRentPerDay;
   end;
 
-procedure EditInvoiceRentPerDay(reservation, RoomReservation, SplitNumber, InvoiceIndex: integer; bCredit: boolean);
+procedure EditInvoiceRentPerDay(reservation, RoomReservation, InvoiceType, InvoiceIndex: integer; bCredit: boolean);
 
 implementation
 
@@ -774,6 +776,11 @@ const
     'DELETE FROM payments WHERE invoiceNumber=%d',
     'DELETE FROM invoiceaddressees WHERE invoiceNumber=%d');
 
+  REMOVE_OPEN_CASH_INVOICES: Array [0 .. 2] OF String = (
+    'DELETE FROM invoicelines WHERE roomreservation=0 and reservation=0 and invoiceNumber=-1 and splitnumber=2',
+    'DELETE FROM invoiceheads WHERE roomreservation=0 and reservation=0 and invoiceNumber=-1 and splitnumber=2',
+    'DELETE FROM payments WHERE roomreservation=0 and reservation=0 and invoiceNumber=-1 and person=2');
+
   REMOVE_REDUNDANT_INVOICES: Array [0 .. 3] OF String = (
     // Credit invoices                          // Proforma invoices
     'DELETE FROM invoicelines WHERE (SplitNumber = 1 AND InvoiceNumber = -1) OR (InvoiceNumber > 1000000000)',
@@ -781,13 +788,14 @@ const
     'DELETE FROM invoiceaddressees WHERE (SplitNumber = 1 AND InvoiceNumber = -1) OR (InvoiceNumber > 1000000000)',
     'DELETE FROM payments WHERE InvoiceNumber > 1000000000');
 
-procedure EditInvoiceRentPerDay(reservation, RoomReservation, SplitNumber, InvoiceIndex: integer; bCredit: boolean);
+procedure EditInvoiceRentPerDay(reservation, RoomReservation, InvoiceType, InvoiceIndex: integer; bCredit: boolean);
 var
   _frmInvoice: TfrmInvoiceRentPerDay;
   lRentPerDay: boolean;
   lAnswer: word;
 begin
   lRentPerDay := false;
+
   case glb.PMSSettings.InvoiceSettings.RoomRentPerDayOninvoice of
     rpdAlways:  lRentPerDay := true;
     rpdNever:   lRentPerDay := False;
@@ -805,7 +813,7 @@ begin
   try
     _frmInvoice.reservation := reservation;
     _frmInvoice.RoomReservation := RoomReservation;
-    _frmInvoice.FInvoiceType := TInvoiceType(SplitNumber);
+    _frmInvoice.FInvoiceType := TInvoiceType(InvoiceType);
     _frmInvoice.FInvoiceIndex := InvoiceIndex;
     _frmInvoice.FIsCredit := bCredit;
     _frmInvoice.ShowRentPerDay := lRentPerDay;
@@ -816,6 +824,37 @@ begin
   end;
 end;
 
+function TfrmInvoiceRentPerDay.CashInvoiceLinesExist: boolean;
+var
+  sql: string;
+  rSet: TRoomerDataSet;
+begin
+  sql := '';
+  sql := sql + 'SELECT ';
+  sql := sql + ' (SELECT count(*) from invoicelines ';
+  sql := sql + '  where roomreservation=0 and reservation=0 and invoicenumber=-1 and splitnumber=2) as ilCount,';
+  sql := sql + ' (SELECT count(*) from payments ';
+  sql := sql + '  where roomreservation=0 and reservation=0 and invoicenumber=-1 and person=2) as payCount,';
+
+  Result := false;
+  rSet := CreateNewDataSet;
+  try
+    if hData.rSet_bySQL(rSet, sql) then
+      Result := rSet.fieldByName('ilCount').AsInteger + rSet.fieldByName('payCount').AsInteger > 0;
+  finally
+    rSet.Free;
+  end;
+
+end;
+
+procedure TfrmInvoiceRentPerDay.RemoveExistingCashInvoiceLines;
+var
+  sql: String;
+  i: integer;
+begin
+  for i := LOW(REMOVE_OPEN_CASH_INVOICES) to HIGH(REMOVE_OPEN_CASH_INVOICES) do
+    d.roomerMainDataSet.DoCommand(REMOVE_OPEN_CASH_INVOICES[i]);
+end;
 
 procedure TfrmInvoiceRentPerDay.RemoveAllCheckboxes;
 var
@@ -1139,7 +1178,7 @@ begin
   if lValue = 0 then
     agrLines.Cells[col_TotalOnInvoice, ARow] := ''
   else
-    agrLines.Cells[col_TotalOnInvoice, ARow] := lValue.AsDisplayStringWithCode;
+    agrLines.Cells[col_TotalOnInvoice, ARow] := lValue.ToCurrency(FInvoiceCurrencyCode).AsDisplayStringWithCode;
 
   agrLines.Cells[col_System, ARow] := '';
   agrLines.Cells[col_Reference, ARow] := aInvoiceLine.Reference;
@@ -1531,9 +1570,16 @@ begin
 end;
 
 Procedure TfrmInvoiceRentPerDay.InitInvoiceGrid;
+var
+  lTopRow: TGridRect;
 begin
   agrLines.BeginUpdate;
   try
+    lTopRow.Left := 0;
+    lTopRow.Top := 0;
+    lTopRow.Right := col_select;
+    lTopRow.Bottom := 0;
+
     agrLines.ClearAll;
     agrLines.ColCount := col_autogen + 1;
     agrLines.RowHeights[0] := 40;
@@ -1559,6 +1605,7 @@ begin
     if not agrLines.HasCheckBox(0, col_Select) then
       agrLines.AddCheckBox(0, col_Select, false, false);
 
+    agrLines.SetFontStyle( lTopRow, fsBold, true);
     FormResize(nil);
   finally
     agrLines.EndUpdate;
@@ -2508,8 +2555,8 @@ begin
     mPayments.Open;
 
     sql := 'SELECT * FROM payments ' + ' where Reservation = %d ' + '   and RoomReservation = %d ' +
-      '   and InvoiceNumber = -1 AND InvoiceIndex = %d';
-    sql := format(sql, [FReservation, FRoomReservation, FInvoiceIndex]);
+      '   and InvoiceNumber = -1 AND InvoiceIndex = %d and person = %d';
+    sql := format(sql, [FReservation, FRoomReservation, FInvoiceIndex, ord(FInvoiceType)]);
 
     hData.rSet_bySQL(eSet, sql);
 
@@ -2923,6 +2970,13 @@ end;
 
 procedure TfrmInvoiceRentPerDay.FormShow(Sender: TObject);
 begin
+
+  if (TInvoiceType(FInvoiceType) = itCashInvoice) and CashInvoiceLinesExist then
+    if MessageDlg(GetTranslatedText('shEditInvoice_CashInvoiceExists'), mtWarning, mbOKCancel, 0) = mrOk then
+      RemoveExistingCashInvoiceLines
+    else
+      btnExit.Click;
+
   actRemoveSelected.Visible := glb.PMSSettings.InvoiceSettings.AllowDeletingItemsFromInvoice;
   actToggleLodgingTax.Visible := glb.PMSSettings.InvoiceSettings.AllowTogglingOfCityTaxes;
   actDeleteDownPayment.Visible := glb.PMSSettings.InvoiceSettings.AllowPaymentModification;
@@ -6175,7 +6229,7 @@ begin
     theData.InvoiceNumber := zInvoiceNumber;
     theData.customer := edtCustomer.Text;
     theData.PayDate := _db(Date, false);
-    theData.NativeAmount := RoomerCurrencyManager.ConvertAmountToDefault(TAmount.Create(rec.AmountInCurrency, InvoiceCurrencyCode));
+    theData.NativeAmount := TAmount.Create(rec.AmountInCurrency, InvoiceCurrencyCode).ToNative;
     theData.Description := rec.Description;
     theData.CurrencyRate := InvoiceCurrencyRate;
     theData.Currency := InvoiceCurrencyCode;

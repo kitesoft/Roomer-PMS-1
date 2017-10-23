@@ -964,8 +964,8 @@ inherited frmInvoiceRentPerDay: TfrmInvoiceRentPerDay
             TabOrder = 0
             SkinData.SkinSection = 'PANEL'
             object labPayments: TsLabel
-              Left = 9
-              Top = 2
+              Left = 5
+              Top = 1
               Width = 97
               Height = 13
               Caption = 'Down payments :'
