@@ -6483,7 +6483,7 @@ end;
 procedure TfrmInvoice.mPaymentsCalcFields(DataSet: TDataSet);
 begin
   mPaymentsChargedOnCC.AsBoolean := mPaymentsPaycardTraceIndex.AsInteger > 0;
-  mPaymentsCurrencyAmount.AsFloat := mPaymentsNativeAmount.AsFloat * GetRate(mPaymentsCurrency.AsString);
+  mPaymentsCurrencyAmount.AsFloat := mPaymentsNativeAmount.AsFloat / GetRate(mPaymentsCurrency.AsString);
 end;
 
 procedure TfrmInvoice.pnlInvoiceIndex0DragOver(Sender, Source: TObject;
