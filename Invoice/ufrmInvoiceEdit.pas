@@ -947,7 +947,7 @@ begin
   begin
     if MessageDlg(GetTranslatedText('shTx_Invoice_WarningCloseCashInvoice'), mtConfirmation, mbOKCancel, 0) = mrOK then
     begin
-      d.RemoveInvoiceCashInvoice;
+      d.RemoveInvoiceCashInvoice(FnewSplitNumber);
       Close;
     end;
 
@@ -1289,7 +1289,7 @@ var
   CustomerHolder: recCustomerHolderEX;
   s: string;
 begin
-  d.RemoveInvoiceCashInvoice;
+  d.RemoveInvoiceCashInvoice(FnewSplitNumber);
 
   pnlHead.Color := $00FFDDDD; // $00EAFFEA
   pnlTotalsAndPayments.Color := $00FFDDDD; // $00EAFFEA
@@ -1914,7 +1914,8 @@ begin
       mPayments.EnableControls;
     end;
   end;
-  result := Total;
+  // Items in a credit invoice as specified positive, but payments are save as negative ...............
+  result := IIF(FIsCredit, -1, 1) * Total;
 end;
 
 procedure TfrmInvoiceEdit.loadInvoiceToMemtable(var m: TKbmMemTable);
