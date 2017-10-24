@@ -46,6 +46,10 @@ inherited frmRptReservations: TfrmRptReservations
       object tabReservation: TsTabSheet
         Caption = 'Reservations'
         ImageIndex = 2
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object Panel5: TsPanel
           Left = 0
           Top = 0

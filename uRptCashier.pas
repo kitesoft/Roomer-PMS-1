@@ -311,8 +311,8 @@ implementation
 {$R *.dfm}
 
 uses
-  uD, uRoomerLanguage, uDimages, uDateUtils, uFrmResources, PrjConst, uGridUtils, uRptbViewer, uReservationProfile, uFinishedInvoices2, uInvoice
-    , uSQLUtils;
+  uD, uRoomerLanguage, uDimages, uDateUtils, uFrmResources, PrjConst, uGridUtils, uRptbViewer, uReservationProfile, uFinishedInvoices2
+    , uSQLUtils, ufrmInvoiceEdit;
 
 CONST
   FINANCE_QUERY = 'SELECT ' + #10

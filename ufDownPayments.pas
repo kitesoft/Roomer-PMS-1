@@ -307,7 +307,6 @@ uses
   uD
   , uReservationProfile
   , uFinishedInvoices2
-  , uInvoice
   , uRptbViewer
   , uStringUtils
   , uAppGlobal
@@ -317,7 +316,7 @@ uses
   , PrjConst
   , uAssignPayment
   , DateUtils
-  , uDImages, uSQLUtils;
+  , uDImages, uSQLUtils, ufrmInvoiceEdit;
 
 
 procedure AddGroupToReport(aBreakName: String; aDataPipeline: TppDataPipeline;   aReport: TppCustomReport);

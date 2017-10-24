@@ -23,7 +23,6 @@ uses
   uAppGlobal in 'uAppGlobal.pas',
   uPriceOBJ in 'uPriceOBJ.pas',
   uProvideARoom2 in 'uProvideARoom2.pas' {frmProvideARoom2},
-  uInvoice in 'Invoice\uInvoice.pas' {frmInvoice},
   uReservationProfile in 'uReservationProfile.pas' {frmReservationProfile},
   uInvoicePayment in 'uInvoicePayment.pas' {frmInvoicePayment},
   uControlData in 'uControlData.pas' {frmControlData},
@@ -152,7 +151,6 @@ uses
   uFrmEmbeddedHtmlEditor in 'uFrmEmbeddedHtmlEditor.pas' {FrmEmbeddedHtmlEditor},
   uFrmChannelCopyFrom in 'uFrmChannelCopyFrom.pas' {FrmChannelCopyFrom},
   uRoomerExceptions in 'RoomerVCLs\Source\uRoomerExceptions.pas',
-  uFrmBackupInvoice in 'uFrmBackupInvoice.pas' {FrmBackupInvoice},
   uPackages in 'uPackages.pas' {frmPackages},
   uPackageItems in 'uPackageItems.pas' {frmPackageItems},
   uFrmPostInvoices in 'uFrmPostInvoices.pas' {FrmPostInvoices},
@@ -282,7 +280,7 @@ uses
   uStaffCommunicationDefinitions in 'Definitions\uStaffCommunicationDefinitions.pas',
   uRptReservationStatusPerDay in 'Reporting\uRptReservationStatusPerDay.pas' {FrmRptReservationStatusPerDay},
   uVersionManagement in 'VersionManagement\uVersionManagement.pas',
-  uInvoiceRentPerDay in 'Invoice\uInvoiceRentPerDay.pas' {frmInvoiceRentPerDay},
+  ufrmInvoiceEdit in 'Invoice\ufrmInvoiceEdit.pas' {frmInvoiceEdit},
   uRoomerFinancialDataModel_ModelObjects in 'OpenAPI\schema\uRoomerFinancialDataModel_ModelObjects.pas',
   uRoomerCanonicalDataModel_BaseTypes in 'OpenAPI\schema\uRoomerCanonicalDataModel_BaseTypes.pas',
   uRoomerCanonicalDataModel_SimpleTypes in 'OpenAPI\schema\uRoomerCanonicalDataModel_SimpleTypes.pas',
@@ -355,7 +353,7 @@ begin
     TSplashFormManager.Show;
 
     Application.CreateForm(TD, D);
-    D.ApplicationId := cOpenAPIApplicationID;
+  D.ApplicationId := cOpenAPIApplicationID;
 
     Application.CreateForm(TDReportData, DReportData);
     TSplashFormManager.UpdateProgress('Loading forms...');

@@ -560,7 +560,7 @@ implementation
 
 uses
   uAppGlobal, uD, uDReportData, uRoomerLanguage, uReservationProfile, uFinishedInvoices2,
-  uInvoice, uRptConfirms, uDImages, uSQLUtils, UITypes;
+  uRptConfirms, uDImages, uSQLUtils, UITypes, ufrmInvoiceEdit;
 
 function OpenRptTurnoverAndPayments2: boolean;
 var _frmRptTurnoverAndPayments2 : TfrmRptTurnoverAndPayments2;

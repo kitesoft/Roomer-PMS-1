@@ -255,7 +255,6 @@ uses
     uD
   , uReservationProfile
   , uFinishedInvoices2
-  , uInvoice
   , uGuestProfile2
   , uRptbViewer
   , uSqlDefinitions

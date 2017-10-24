@@ -42,6 +42,10 @@ object frmRptReservationsCust: TfrmRptReservationsCust
       SkinData.SkinSection = 'PAGECONTROL'
       object tabRoom: TsTabSheet
         Caption = 'Rooms'
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object grRooms: TcxGrid
           Left = 0
           Top = 44

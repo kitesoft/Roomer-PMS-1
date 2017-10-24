@@ -301,14 +301,13 @@ uses
   uD,
   uReservationProfile,
   uFinishedInvoices2,
-  uInvoice,
   uGuestProfile2,
   uCustomers2,
   uAppGlobal,
   uRoomerLanguage,
   PrjConst
   , uDImages
-  , DateUtils, uSQLUtils;
+  , DateUtils, uSQLUtils, ufrmInvoiceEdit;
 
 function RptResInvoices : boolean;
 begin

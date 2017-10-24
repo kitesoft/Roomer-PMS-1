@@ -195,7 +195,6 @@ uses
     uD
   , uReservationProfile
   , uFinishedInvoices2
-  , uInvoice
   , uGuestProfile2
   , uRptbViewer
   , uSqlDefinitions
@@ -205,7 +204,7 @@ uses
   , uSQLUtils
   , uFrmOptInMessage
   , uDateUtils
-  ;
+  , ufrmInvoiceEdit;
 
 
 {$R *.dfm}

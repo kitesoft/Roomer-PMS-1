@@ -300,14 +300,13 @@ uses
     uD
   , uReservationProfile
   , uFinishedInvoices2
-  , uInvoice
   , uGuestProfile2
   , uRptbViewer
   , uSqlDefinitions
   , uAppGlobal
   , uDImages
   , uMain
-  , uSQLUtils;
+  , uSQLUtils, ufrmInvoiceEdit;
 
 
 {$R *.dfm}

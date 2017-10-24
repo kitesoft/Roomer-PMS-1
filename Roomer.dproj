@@ -300,9 +300,6 @@ $(PostBuildEvent)]]></PostBuildEvent>
         <DCCReference Include="uProvideARoom2.pas">
             <Form>frmProvideARoom2</Form>
         </DCCReference>
-        <DCCReference Include="Invoice\uInvoice.pas">
-            <Form>frmInvoice</Form>
-        </DCCReference>
         <DCCReference Include="uReservationProfile.pas">
             <Form>frmReservationProfile</Form>
         </DCCReference>
@@ -640,9 +637,6 @@ $(PostBuildEvent)]]></PostBuildEvent>
             <Form>FrmChannelCopyFrom</Form>
         </DCCReference>
         <DCCReference Include="RoomerVCLs\Source\uRoomerExceptions.pas"/>
-        <DCCReference Include="uFrmBackupInvoice.pas">
-            <Form>FrmBackupInvoice</Form>
-        </DCCReference>
         <DCCReference Include="uPackages.pas">
             <Form>frmPackages</Form>
         </DCCReference>
@@ -903,8 +897,8 @@ $(PostBuildEvent)]]></PostBuildEvent>
             <Form>FrmRptReservationStatusPerDay</Form>
         </DCCReference>
         <DCCReference Include="VersionManagement\uVersionManagement.pas"/>
-        <DCCReference Include="Invoice\uInvoiceRentPerDay.pas">
-            <Form>frmInvoiceRentPerDay</Form>
+        <DCCReference Include="Invoice\ufrmInvoiceEdit.pas">
+            <Form>frmInvoiceEdit</Form>
         </DCCReference>
         <DCCReference Include="OpenAPI\schema\uRoomerFinancialDataModel_ModelObjects.pas"/>
         <DCCReference Include="OpenAPI\schema\uRoomerCanonicalDataModel_BaseTypes.pas"/>
@@ -1095,8 +1089,7 @@ $(PostBuildEvent)]]></PostBuildEvent>
         <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
         <PreLinkEvent/>
         <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
-        <PostBuildEvent>$(OUTPUTDIR)DeployOnDev.bat
-</PostBuildEvent>
+        <PostBuildEvent>$(OUTPUTDIR)DeployOnDev.bat</PostBuildEvent>
         <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
     </PropertyGroup>
 </Project>

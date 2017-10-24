@@ -850,7 +850,6 @@ uses
   uGuestProfile2,
   uProvideARoom2,
   uFinishedInvoices2,
-  uInvoice,
   uResGuestList,
   uCountries,
   uCustomers2,
@@ -880,7 +879,7 @@ uses
   , uResourceTypeDefinitions
   , uFrmPayCardView
   , uFrmTokenChargeHistory
-  ;
+  , ufrmInvoiceEdit;
 
 {$R *.DFM}
 

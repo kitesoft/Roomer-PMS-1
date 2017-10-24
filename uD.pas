@@ -839,7 +839,6 @@ uses
     , uInvoiceSummeryOBJ
     , uSqlDefinitions
     , uMain
-    , uInvoice
     , objRoomList2
     , PrjConst
     , uUtils
@@ -854,7 +853,7 @@ uses
     , uAlerts
     , uFrmCheckOut
     , UITypes
-    , uVatCalculator, uTableEntityList, uSQLUtils, uCredentialsAPICaller;
+    , uVatCalculator, uTableEntityList, uSQLUtils, uCredentialsAPICaller, ufrmInvoiceEdit;
 
 {$R *.dfm}
 

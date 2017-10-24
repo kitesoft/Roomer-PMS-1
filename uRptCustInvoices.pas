@@ -241,7 +241,6 @@ uses
   uD,
   uReservationProfile,
   uFinishedInvoices2,
-  uInvoice,
   uGuestProfile2,
   uCustomers2,
   uAppGlobal,

@@ -146,14 +146,13 @@ uses
   , uAlerts
   , uProvideARoom2
   , uGuestCheckInForm
-  , uInvoice
   , uReservationProfile
   , uReservationStateDefinitions
   , uReservationStateChangeHandler
   , uInvoiceContainer
   , uSQLUtils
   , uDataSetFilterUtils
-  ;
+  , ufrmInvoiceEdit;
 
 
 const
