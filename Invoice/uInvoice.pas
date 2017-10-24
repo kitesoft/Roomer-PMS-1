@@ -899,7 +899,7 @@ begin
   begin
     if MessageDlg(GetTranslatedText('shTx_Invoice_WarningCloseCashInvoice'), mtConfirmation, mbOKCancel, 0) = mrOK then
     begin
-      d.RemoveInvoiceCashInvoice;
+      d.RemoveInvoiceCashInvoice(FnewSplitNumber);
       Close;
     end;
   end
@@ -1393,7 +1393,7 @@ var
   CustomerHolder: recCustomerHolderEX;
   s: string;
 begin
-  d.RemoveInvoiceCashInvoice;
+  d.RemoveInvoiceCashInvoice(FnewSplitNumber);
 
   Panel1.Color := $00FFDDDD; // $00EAFFEA
   Panel2.Color := $00FFDDDD; // $00EAFFEA
@@ -1923,7 +1923,7 @@ begin
       mPayments.EnableControls;
     end;
   end;
-  result := Total;
+  result := IIF(FIsCredit, -1, 1) * Total;
 end;
 
 procedure TfrmInvoice.loadInvoiceToMemtable(var m: TKbmMemTable);

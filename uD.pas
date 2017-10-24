@@ -551,7 +551,7 @@ type
     function NextRoomReservatiaon(Room: string; RoomReservation: Integer; noResDate: Tdate): Integer;
     function LastRoomReservatiaon(Room: string; RoomReservation: Integer; noResDate: Tdate): Integer;
 
-    function RemoveInvoiceCashInvoice: boolean;
+    function RemoveInvoiceCashInvoice(aInvoiceType: integer): boolean;
 
     function InsInvoiceAction(R: TInvoiceActionRec): boolean;
 
@@ -5362,7 +5362,7 @@ begin
 
 end;
 
-function Td.RemoveInvoiceCashInvoice: boolean;
+function Td.RemoveInvoiceCashInvoice(aInvoiceType: integer): boolean;
 var
   s: string;
 begin
@@ -5372,30 +5372,24 @@ begin
 
   s := '';
   s := s + ' DELETE FROM invoicelines ' + chr(10);
-  s := s + ' WHERE (Reservation = 0) AND (RoomReservation = 0) AND (SplitNumber = 2) AND (InvoiceNumber = -1) '
+  s := s + ' WHERE (Reservation = 0) AND (RoomReservation = 0) AND (SplitNumber = %d) AND (InvoiceNumber = -1) '
     + chr(10);
-  if not cmd_bySQL(s) then
-  begin
-    result := False;
-  end;
+  s := Format(s, [aInvoiceType]);
+  result := cmd_bySQL(s);
 
   s := '';
   s := s + ' DELETE FROM invoiceheads ' + chr(10);
-  s := s + ' WHERE (Reservation = 0) AND (RoomReservation = 0) AND (SplitNumber = 2) AND (InvoiceNumber = -1) '
+  s := s + ' WHERE (Reservation = 0) AND (RoomReservation = 0) AND (SplitNumber = %d) AND (InvoiceNumber = -1) '
     + chr(10);
-  if not cmd_bySQL(s) then
-  begin
-    result := False;
-  end;
+  s := Format(s, [aInvoiceType]);
+  result := cmd_bySQL(s);
 
   s := '';
   s := s + ' DELETE FROM payments ' + chr(10);
-  s := s + ' WHERE (Reservation = 0) AND (RoomReservation = 0) AND (person = 2) AND (InvoiceNumber = -1) '
+  s := s + ' WHERE (Reservation = 0) AND (RoomReservation = 0) AND (person = %d) AND (InvoiceNumber = -1) '
     + chr(10);
-  if not cmd_bySQL(s) then
-  begin
-    result := False;
-  end;
+  s := Format(s, [aInvoiceType]);
+  result := cmd_bySQL(s);
 end;
 
 function Td.RemoveReservationsByReservation(iReservation: Integer): boolean;
