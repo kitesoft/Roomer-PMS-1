@@ -2302,9 +2302,7 @@ begin
     zConfirmDate := 2;
     zbRoomRentinTemp := false;
 
-    edResNr.Caption := format('%d / %d', [FReservation, FRoomReservation]);
-
-    if FnewSplitNumber = cCashInvoice then
+    if IsCashInvoice then // FnewSplitNumber = cCashInvoice then
     begin
       CreateCashInvoice(g.qRackCustomer);
       edtDisplayCurrency.Text := zNativeCurrency;
@@ -2314,6 +2312,9 @@ begin
       InitInvoiceGrid;
       exit;
     end;
+
+    edResNr.Caption := format('%d / %d', [FReservation, FRoomReservation]);
+
 
   Again:
     // Retrieve invoice header information

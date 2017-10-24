@@ -35,6 +35,7 @@ type
 implementation
 
 uses uAppGlobal
+     , uG
      ;
 
 
@@ -85,7 +86,10 @@ end;
 
 function TCurrencyHandlersMap.GetCurrencyHandler(const forCurrency: string): TCurrencyHandler;
 begin
-  Result := FMapByCode.Items[forCurrency];
+  if forCurrency.IsEmpty then
+    Result := FMapByCode.Items[g.qNativeCurrency]
+  else
+    Result := FMapByCode.Items[forCurrency];
 end;
 
 function TCurrencyHandlersMap.ListOfCurrencies: TStrings;
