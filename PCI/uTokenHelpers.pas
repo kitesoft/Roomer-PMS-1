@@ -164,7 +164,7 @@ function TToken.GetCardNumber: String;
 begin
   Result := FCardNumber;
   if FCardNumber = '' then
-    Result := 'Card example not available';
+    Result := GetTranslatedText('shTX_CCTokenInfoNotAvailable');
 end;
 
 { TTokenCharge }
