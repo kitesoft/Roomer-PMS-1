@@ -3043,6 +3043,7 @@ begin
 
     actSaveAndExit.Enabled := not IsCashInvoice;
     actSave.Enabled := not IsCashInvoice;
+    actToggleLodgingTax.Enabled := not IsCashInvoice;
 
     actMoveRoomToTemp.Enabled := false; // ((sCurrentItem = sRoomRentItem) OR (sCurrentItem = sDiscountItem)) OR (AnyRowChecked AND IsRoomSelected);
     btnMoveRoom.Enabled := (not IsCashInvoice) and ((sCurrentItem = sRoomRentItem) OR (sCurrentItem = sDiscountItem)) OR (AnyRowChecked AND IsRoomSelected);

@@ -1727,6 +1727,8 @@ begin
     if agrLines.IsHiddenColumn(i) then
       agrLines.ColWidths[i] := 0;
 
+  SetControls;
+
 end;
 
 function TfrmInvoice.AddRoom(Room: String; fRoomPrice: Double; FromDate: TDate;
@@ -3457,8 +3459,8 @@ end;
 
 procedure TfrmInvoice.setControls;
 begin
-  btnRoomToTemp.Enabled := not((FReservation = 0) AND
-    (FRoomReservation = 0));
+  btnRoomToTemp.Enabled := not isCashInvoice;
+
   if (agrLines.Cells[col_Item, 1] = '') then
     btnRoomToTemp.Enabled := false;
 
@@ -3468,7 +3470,6 @@ begin
   Removetemporarily1.Enabled := btnRoomToTemp.Enabled;
   RemoveRoomRenttemporarity1.Enabled := btnRoomToTemp.Enabled;
   SendItemToGroupInvoice.Enabled := btnRoomToTemp.Enabled;
-
 end;
 
 function TfrmInvoice.GenerateInvoiceNumber: integer;
