@@ -2576,8 +2576,8 @@ begin
     s := s + '    , rr.Room '#10;
     s := s + '    , rr.RoomType '#10;
     s := s + '    , rr.package '#10;
-    s := s + '    , rrArrival as Arrival'#10;
-    s := s + '    , rrDeparture as Departure'#10;
+    s := s + '    , cast((SELECT min(rd.aDate) from roomsdate rd where rd.Roomreservation=rr.roomreservation) as DateTIME) as Arrival'#10;
+    s := s + '    , cast((SELECT DATE_ADD(max(rd.aDate), INTERVAL 1 DAY) from roomsdate rd where rd.Roomreservation=rr.roomreservation) as DateTIME) as Departure'#10;
     s := s + '    , ExpectedTimeOfArrival'#10;
     s := s + '    , ExpectedCheckoutTime'#10;
     s := s + '    , rr.Status '#10;

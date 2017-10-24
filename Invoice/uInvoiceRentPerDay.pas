@@ -551,7 +551,7 @@ type
 
     procedure UpdateGrid;
 
-    procedure DisplayTotals(editCol: integer = -1; editRow: integer = -1; Value: Double = 0.00);
+    procedure DisplayTotals;
     /// <summary>
     /// Move Invoicelines for property RoomReservation from tmpinvoicelines table to invoicelines table
     /// </summary>
@@ -946,7 +946,11 @@ begin
   if IsCashInvoice then
   begin
     if MessageDlg(GetTranslatedText('shTx_Invoice_WarningCloseCashInvoice'), mtConfirmation, mbOKCancel, 0) = mrOK then
+    begin
+      d.RemoveInvoiceCashInvoice;
       Close;
+    end;
+
   end
   else if IfInvoiceChangedThenOptionallySave then
     close;
@@ -1204,7 +1208,7 @@ begin
   result := ARow;
 end;
 
-procedure TfrmInvoiceRentPerDay.DisplayTotals(editCol: integer = -1; editRow: integer = -1; Value: Double = 0.00);
+procedure TfrmInvoiceRentPerDay.DisplayTotals;
 var
   TotalDownPayments: TAmount;
   TotalBalance: TAmount;
@@ -3316,12 +3320,14 @@ begin
     else
       d.GetRoomReservationLocations(FRoomReservation, lstLocations);
 
+    LoadPayments; // Make sure you have all records, catches problems with mutliple cash invoices being created at once
     lOpenBalance := FInvoiceLinesList.TotalOnInvoice.ToNative - getTotalNativeDownPayments;
     if SelectPaymentTypes(lOpenBalance.Value, edtCustomer.Text, ptInvoice, InvoiceCurrencyCode,
       InvoiceCurrencyRate, FReservation, FRoomreservation, lstLocations, aInvoiceDate, aPayDate, aLocation) then
     begin
       SaveCompletePayments();
       LoadPayments;
+      DisplayTotals();
       Result := FInvoiceLinesList.TotalOnInvoice.ToNative = getTotalNativeDownPayments;
 
       if not Result then
@@ -7197,14 +7203,19 @@ begin
   s := s + '    AND ROomReservation=%d '#10;
   s := s + '    AND Invoicenumber=-1 '#10;
   s := s + '    AND InvoiceIndex=%d '#10;
+  s := s + '    AND person=%d '#10;
 
-  s := format(s, [aInvoiceNumber, FReservation, FRoomReservation, FInvoiceIndex]);
+  s := format(s, [aInvoiceNumber, FReservation, FRoomReservation, FInvoiceIndex, FNewSplitNumber]);
   aExecPlan.AddExec(s);
 end;
 
 function TfrmInvoiceRentPerDay.IsCashInvoice: boolean;
 begin
-  result := ((FReservation + FRoomReservation) = 0);
+  if (FReservation + FRoomReservation > 0) xor (FnewSplitNumber = 2) then
+    result := ((FReservation + FRoomReservation) = 0)
+  else
+    raise Exception.CreateFmt('Cashinvoice not compatible with Reservation or Roomreservatiom number [R: %d RR: %d Split: %d]',
+                              [FReservation, FRoomReservation, FnewSplitNumber]);
 end;
 
 function TfrmInvoiceRentPerDay.chkChanged: boolean;

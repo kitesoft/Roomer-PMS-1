@@ -390,7 +390,7 @@ object frmInvoice: TfrmInvoice
       end
       object edtCustomer: TsEdit
         Left = 111
-        Top = 8
+        Top = 7
         Width = 93
         Height = 17
         AutoSize = False
@@ -567,7 +567,6 @@ object frmInvoice: TfrmInvoice
         Caption = 'Close'
         ImageIndex = 4
         Images = DImages.cxLargeImagesFlat
-        ModalResult = 1
         ParentShowHint = False
         ShowHint = True
         TabOrder = 17
