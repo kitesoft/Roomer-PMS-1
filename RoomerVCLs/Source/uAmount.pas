@@ -33,7 +33,6 @@ type
     FCurCode: TCurrencyCode;
     function GetCurrencyDefinition: TCurrencyDefinition;
   private
-    class procedure CheckSameCurrency(a1, a2: TAmount); static;
     class function IsSameCurrency(a1, a2: TAmount): boolean; static;
     class function IsValidCurrencyCode(const c: TCurrencyCode): boolean; static;
     class procedure CheckValidCurrencyCode(const c: TCurrencyCode); static;
@@ -163,11 +162,6 @@ begin
   Result := CurrencyDefinition.EditValue(FValue);
 end;
 
-class procedure TAmount.CheckSameCurrency(a1, a2: TAmount);
-begin
-  if a1.FCurCode <> a2.FCurCode then
-    raise ECurrencyException.CreateFmt('Currencies are not equal [%s, %s]', [a1.FCurCode, a2.FCurCode]);
-end;
 
 class procedure TAmount.CheckValidCurrencyCode(const c: TCurrencyCode);
 begin

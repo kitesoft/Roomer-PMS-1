@@ -40,7 +40,7 @@ type
   published
     procedure TestSetupTearDown;
     procedure TestEqual;
-    procedure TestGreaterAndLess;
+    procedure TestGreaterAndLesser;
   end;
 
 implementation
@@ -133,6 +133,7 @@ var
   i: integer;
   a: TAmount;
   b: TAmount;
+  r: TAmount;
 begin
 
   c := 23.9986;
@@ -140,7 +141,7 @@ begin
   e := 78943.877632;
   i := 653542;
 
-  a := 61;
+  a := 61;       // default curr
   b := a + c;
   CheckTrue(Samevalue(b.Value, 61 + 23.9986), 'Addition with currency not working');
   b := a + d;
@@ -154,8 +155,13 @@ begin
   CheckEquals(TAmount(a+b).Value, 100);
 
   b := TAmount.Create(39, 'GBP');
-  ExpectedException := ECurrencyException;
-  CheckFalse(TAmount(a+b).Value = 100, 'Addition of different currencies should not be allowed');
+  r := a + b;
+  CheckEqualsString(r.CurrencyCode, CurrencyManager.DefaultCurrency);
+  CheckEquals(r, TAmount(61 + 39 * 1.15));
+
+  r := b + a;
+  CheckEqualsString(r.CurrencyCode, b.CurrencyCode);
+  CheckEquals(r, TAmount.Create(61/1.15 + 39, r.CurrencyCode));
 
 end;
 
@@ -224,6 +230,7 @@ var
   i: integer;
   a: TAmount;
   b: TAmount;
+  r: TAmount;
 begin
 
   c := 23.9986;
@@ -245,9 +252,14 @@ begin
   CheckEquals(TAmount(a-b).Value, 61-39, 'Subtracting same currencies not working');
 
   b := TAmount.Create(39, 'GBP');
-  ExpectedException := ECurrencyException;
-  CheckFalse(TAmount(a-b).Value = 61-39, 'Addition of different currencies should not be allowed');
 
+  r := a - b;
+  CheckEqualsString(r.CurrencyCode, CurrencyManager.DefaultCurrency);
+  CheckTrue(SameValue(r.Value, 61 - 39 * 1.15, 0.0001), 'Subtracting a- b not working');
+
+  r := b - a;
+  CheckEqualsString(r.CurrencyCode, b.CurrencyCode);
+  CheckTrue(SameValue(r.Value, 39 - 61/1.15, 0.0001), 'Subtracting b - a not working');
 end;
 
 { TAmountCompareTests }
@@ -297,7 +309,7 @@ begin
 
 end;
 
-procedure TAmountCompareTests.TestGreaterAndLess;
+procedure TAmountCompareTests.TestGreaterAndLesser;
 var
   a, b: TAmount;
 begin
@@ -310,8 +322,7 @@ begin
   CheckTrue(a <= b);
   CheckTrue(b >= a);
 
-  b := TAmount.Create(98.9901, 'USD');
-  ExpectedException := ECurrencyException;
+  b := TAmount.Create(98.99, 'USD');
   CheckFalse(a < b);
 
 end;

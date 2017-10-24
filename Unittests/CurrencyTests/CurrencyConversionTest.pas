@@ -17,6 +17,7 @@ type
     procedure TestSetupTearDown;
     procedure TestConvertTo;
     procedure TestConvertToUnknown;
+    procedure TestConvertToNative;
   end;
 
 implementation
@@ -33,8 +34,8 @@ uses
 
 procedure TCurrencyConversionTest.SetUp;
 begin
-  CurrencyManager.ClearCache;
-  CurrencyManager.CreateDefinition('EUR').Rate := 1.0;
+  InitGlobalCurrencyManager(TCurrencyManager, 'EUR');
+  CurrencyManager.DefaultCurrency := 'EUR';
   CurrencyManager.CreateDefinition('GBP').Rate := 1.15;
   CurrencyManager.CreateDefinition('ISK').Rate := 0.007;
 end;
@@ -63,6 +64,17 @@ begin
   CheckEqualsString(string(v2.CurrencyCode), 'GBP');
 
   CheckTrue(SameValue(v1.Value, v2.ToCurrency('EUR'), 0.0001), 'Rondtrip conversion failed');
+end;
+
+procedure TCurrencyConversionTest.TestConvertToNative;
+var
+  v1, v2: TAmount;
+begin
+  v1 := TAmount.Create(15.35, 'GBP');
+  v2 := v1.ToNative;
+  CheckTrue(SameValue(15.35 * 1.15, v2.Value, 0.0001), Format('Expected %f, found %f', [ 15.35*1.15, v2.value]));
+  CheckEqualsString(string(v2.CurrencyCode), 'EUR');
+
 end;
 
 procedure TCurrencyConversionTest.TestSetupTearDown;

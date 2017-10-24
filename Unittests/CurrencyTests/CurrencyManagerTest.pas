@@ -32,11 +32,14 @@ uses
   , Math
   ;
 
+const
+  cDefaultCurrency = 'EUR';
+
 { TCurrencymanagertest }
 
 procedure TCurrencymanagertest.SetUp;
 begin
-  FMgr := TCurrencymanager.Create;
+  FMgr := TCurrencymanager.Create(cDefaultCurrency);
 end;
 
 procedure TCurrencymanagertest.TearDown;
@@ -97,7 +100,7 @@ end;
 
 procedure TCurrencymanagertest.TestStartEmpty;
 begin
-  CheckTrue(FMgr.DefinitionExists('EUR'));
+  CheckTrue(FMgr.DefinitionExists(cDefaultCurrency));
 end;
 
 initialization

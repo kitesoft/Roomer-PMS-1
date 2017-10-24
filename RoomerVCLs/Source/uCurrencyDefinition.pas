@@ -23,7 +23,7 @@ type
   TCurrencyDefinition = class
   private
     FRate: double;
-    FCode: string;
+    FCode: TCurrencyCode;
     FFormatSettings: TFormatSettings;
     function GetRate: double;
     function GetCurrencyCode: string;
@@ -122,7 +122,7 @@ end;
 
 function TCurrencyDefinition.GetCurrencyCode: string;
 begin
-  Result := FCode;
+  Result := String(FCode);
 end;
 
 function TCurrencyDefinition.GetFormatSettings: TFormatSettings;

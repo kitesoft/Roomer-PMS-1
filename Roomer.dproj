@@ -242,6 +242,7 @@ $(PostBuildEvent)]]></PostBuildEvent>
         <DCC_DcuOutput>_dcu</DCC_DcuOutput>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_3_Win32)'!=''">
+        <DCC_IMPLICIT_STRING_CAST>false</DCC_IMPLICIT_STRING_CAST>
         <VerInfo_MajorVer>9</VerInfo_MajorVer>
         <VerInfo_Release>9</VerInfo_Release>
         <VerInfo_Build>9</VerInfo_Build>
