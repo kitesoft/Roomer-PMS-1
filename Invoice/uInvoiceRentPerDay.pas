@@ -3035,6 +3035,10 @@ begin
   if lRow = 0 then
     lRow := agrLines.Row;
 
+  actToggleLodgingTax.Enabled := not IsCashInvoice;
+  btnShowOnInvoice.Enabled := not IsCashInvoice;
+  btnReservationNotes.Enabled := not IsCashInvoice;
+
   if (lRow > 0) then
   begin
     sCurrentItem := _trimlower(agrLines.Cells[col_Item, lRow ]);
@@ -3043,7 +3047,6 @@ begin
 
     actSaveAndExit.Enabled := not IsCashInvoice;
     actSave.Enabled := not IsCashInvoice;
-    actToggleLodgingTax.Enabled := not IsCashInvoice;
 
     actMoveRoomToTemp.Enabled := false; // ((sCurrentItem = sRoomRentItem) OR (sCurrentItem = sDiscountItem)) OR (AnyRowChecked AND IsRoomSelected);
     btnMoveRoom.Enabled := (not IsCashInvoice) and ((sCurrentItem = sRoomRentItem) OR (sCurrentItem = sDiscountItem)) OR (AnyRowChecked AND IsRoomSelected);
@@ -3052,6 +3055,7 @@ begin
     actMoveItemToGroupInvoice.Enabled := (not IsCashInvoice) and (AnyRowChecked OR ((NOT isSystemLine(lRow)) AND (sCurrentItem <> '')));
     actRemoveSelected.Enabled := AnyRowChecked OR ((NOT isSystemLine(lRow)) AND (sCurrentItem <> ''));
     btnMoveItem.Enabled := (not IsCashInvoice) and (AnyRowChecked OR ((NOT isSystemLine(lRow)) AND (sCurrentItem <> '')));
+
   end
   else
   begin
@@ -3067,7 +3071,6 @@ begin
   else
     actToggleLodgingTax.Caption := GetTranslatedText('shUI_InvoiceEnableLodgingTax');
 
-  btnReservationNotes.Enabled := actMoveRoomToTemp.Enabled;
 end;
 
 function TfrmInvoiceRentPerDay.GenerateInvoiceNumber: integer;
@@ -3519,7 +3522,7 @@ begin
     lOpenBalance := FInvoiceLinesList.TotalOnInvoiceNativeCurrency - getDownPayments;
 
     if SelectPaymentTypes(lOpenBalance, edtCustomer.Text, ptInvoice, edtDisplayCurrency.Text,
-      GetRate(edtDisplayCurrency.Text), FReservation, FRoomreservation, lstLocations, aInvoiceDate, aPayDate, aLocation) then
+      GetRate(edtDisplayCurrency.Text), FReservation, FRoomreservation, FInvoiceIndex, lstLocations, aInvoiceDate, aPayDate, aLocation) then
     begin
       SaveCompletePayments();
       LoadPayments;
@@ -5616,6 +5619,7 @@ begin
   rec.reservation := FReservation;
   rec.RoomReservation := FRoomReservation;
   rec.Invoice := zInvoiceNumber;
+  rec.invoiceIndex := FInvoiceIndex;
   rec.AmountInCurrency := mPaymentsNativeAmount.AsFloat;
   rec.Quantity := 1;
   rec.Description := mPayments.FieldByName('Description').asString;
@@ -5700,6 +5704,7 @@ begin
   rec.reservation := FReservation;
   rec.RoomReservation := FRoomReservation;
   rec.Invoice := zInvoiceNumber;
+  rec.InvoiceIndex := FInvoiceIndex;
   rec.AmountInCurrency := mPaymentsNativeAmount.asfloat;
   rec.Quantity := 1;
   rec.Description := mPayments.FieldByName('Description').asString;
@@ -5743,6 +5748,7 @@ begin
   rec.reservation := FReservation;
   rec.RoomReservation := FRoomReservation;
   rec.Invoice := zInvoiceNumber;
+  rec.InvoiceIndex := FInvoiceIndex;
   rec.AmountInCurrency := mPaymentsNativeAmount.AsFloat;
   rec.Quantity := 1;
   rec.Description := mPayments.FieldByName('Description').asString;
@@ -5838,6 +5844,7 @@ begin
   rec.reservation := FReservation;
   rec.RoomReservation := FRoomReservation;
   rec.Invoice := zInvoiceNumber;
+  rec.InvoiceIndex := FInvoiceIndex;
   rec.Currency := zCurrentCurrency;
   rec.AmountInCurrency := 0;
 
@@ -5922,6 +5929,7 @@ begin
   rec.reservation := FReservation;
   rec.RoomReservation := FRoomReservation;
   rec.Invoice := zInvoiceNumber;
+  rec.InvoiceIndex := FInvoiceIndex;
   rec.AmountInCurrency := mPaymentsNativeAmount.asfloat;
   rec.Quantity := 1;
   rec.Description := mPayments.FieldByName('Description').asString;

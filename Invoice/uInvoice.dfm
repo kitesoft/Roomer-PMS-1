@@ -1223,6 +1223,7 @@ object frmInvoice: TfrmInvoice
             TabOrder = 1
             OnClick = btnEditDownPaymentClick
             SkinData.SkinSection = 'BUTTON'
+            ExplicitTop = 3
           end
           object btnDeleteDownpayment: TsButton
             AlignWithMargins = True

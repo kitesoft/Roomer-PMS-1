@@ -3460,6 +3460,8 @@ end;
 procedure TfrmInvoice.setControls;
 begin
   btnRoomToTemp.Enabled := not isCashInvoice;
+  btnMoveItem.Enabled := not isCashInvoice;
+  btnMoveRoom.Enabled := not isCashInvoice;
 
   if (agrLines.Cells[col_Item, 1] = '') then
     btnRoomToTemp.Enabled := false;
@@ -3470,6 +3472,7 @@ begin
   Removetemporarily1.Enabled := btnRoomToTemp.Enabled;
   RemoveRoomRenttemporarity1.Enabled := btnRoomToTemp.Enabled;
   SendItemToGroupInvoice.Enabled := btnRoomToTemp.Enabled;
+
 end;
 
 function TfrmInvoice.GenerateInvoiceNumber: integer;
@@ -5322,7 +5325,7 @@ begin
     lOpenBalance := _StrToFloat(edtBalance.Text);
 
     if SelectPaymentTypes(lOpenBalance, edtCustomer.Text, ptInvoice, edtCurrency.Text,
-      GetRate(edtCurrency.Text), FReservation, FRoomreservation, lstLocations, aInvoiceDate, aPayDate, aLocation) then
+      GetRate(edtCurrency.Text), FReservation, FRoomreservation, FInvoiceIndex, lstLocations, aInvoiceDate, aPayDate, aLocation) then
     begin
       SaveCompletePayments();
       LoadPayments;

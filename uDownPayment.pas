@@ -183,7 +183,7 @@ var
   channelId: integer;
 begin
   channelId := -1;
-  btnChargePAyCard.Enabled := ReservationHasPaycard(rec.Reservation, rec.RoomReservation, channelId);
+  btnChargePAyCard.Enabled := (rec.InvoiceIndex <= 0) and  ReservationHasPaycard(rec.Reservation, rec.RoomReservation, channelId);
 end;
 
 procedure TfrmDownPayment.FormShow(Sender: TObject);

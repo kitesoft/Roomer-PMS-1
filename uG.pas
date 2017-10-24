@@ -67,6 +67,7 @@ type
     Reservation     : Integer; //-
     RoomReservation : integer; //-
     Invoice         : integer; // -1
+    InvoiceIndex    : Integer;
 
     Quantity    : integer; //-
     AmountInCurrency      : double ; //Amount
@@ -730,6 +731,7 @@ begin
     Reservation     := 0;
     RoomReservation := 0;
     Invoice         := 0;
+    InvoiceIndex    := 0;
 
     Quantity    := 1;
     AmountInCurrency      := 0.00;
