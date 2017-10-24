@@ -5313,6 +5313,8 @@ begin
     else
       d.GetRoomReservationLocations(FRoomReservation, lstLocations);
 
+    LoadPayments; // Make sure you have all records, catches problems with mutliple cash invoices being created at once
+    DisplayTotals;
     lOpenBalance := _StrToFloat(edtBalance.Text);
 
     if SelectPaymentTypes(lOpenBalance, edtCustomer.Text, ptInvoice, edtCurrency.Text,
@@ -8621,8 +8623,8 @@ begin
   try
     sql := 'SELECT * FROM payments ' + '  where Reservation = %d ' +
       '    and RoomReservation = %d ' +
-      '    and InvoiceNumber = -1 AND InvoiceIndex=%d';
-    s := format(sql, [FReservation, FRoomReservation, FInvoiceIndex]);
+      '    and InvoiceNumber = -1 AND InvoiceIndex = %d and person = %d';
+    s := format(sql, [FReservation, FRoomReservation, FInvoiceIndex, FNewSPlitNumber]);
     hData.rSet_bySQL(rSet, s);
 
     rSet.first;

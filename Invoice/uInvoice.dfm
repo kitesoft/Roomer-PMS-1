@@ -390,7 +390,7 @@ object frmInvoice: TfrmInvoice
       end
       object edtCustomer: TsEdit
         Left = 111
-        Top = 8
+        Top = 7
         Width = 93
         Height = 17
         AutoSize = False
