@@ -135,6 +135,7 @@ function SelectPaymentTypes( NativeAmount : Double;
                             Reservation : Integer;
                             RoomReservation : Integer;
                             InvoiceIndex: integer;
+                            AllowPaycardCharging: boolean;
                             var lst : TstringList;
                             var aInvoiceDate : TDate;
                             var aPayDate : TDate;
@@ -171,6 +172,7 @@ function SelectPaymentTypes( NativeAmount : Double;
                              Reservation : Integer;
                              RoomReservation : Integer;
                              InvoiceIndex: integer;
+                             AllowPaycardCharging: boolean;
                              var lst : TstringList;
                              var aInvoiceDate : TDate;
                              var aPayDate : TDate;
@@ -196,7 +198,7 @@ begin
     frm.CUrrencyRate := CurrencyRate;
 
     // TODO: Extend backend to allow specifying invoiceindex to store payment in
-    frm.AllowPaycardCharge := (InvoiceIndex <= 0);
+    frm.AllowPaycardCharge := AllowPaycardCharging and (InvoiceIndex <= 0);
     sSelectedCustomer := Customer;
     stlPaySelections.clear;
 
@@ -373,6 +375,7 @@ var
   channelId: integer;
 begin
   channelId := -1;
+  btnManagePaycards.Enabled := AllowPaycardCharge;
   btnChargePAyCard.Enabled := AllowPaycardCharge and ReservationHasPaycard(FReservation, FRoomReservation, channelId);
 end;
 

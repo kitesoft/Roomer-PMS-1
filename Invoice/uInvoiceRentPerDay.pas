@@ -3522,7 +3522,7 @@ begin
     lOpenBalance := FInvoiceLinesList.TotalOnInvoiceNativeCurrency - getDownPayments;
 
     if SelectPaymentTypes(lOpenBalance, edtCustomer.Text, ptInvoice, edtDisplayCurrency.Text,
-      GetRate(edtDisplayCurrency.Text), FReservation, FRoomreservation, FInvoiceIndex, lstLocations, aInvoiceDate, aPayDate, aLocation) then
+      GetRate(edtDisplayCurrency.Text), FReservation, FRoomreservation, FInvoiceIndex, not IsCashInvoice, lstLocations, aInvoiceDate, aPayDate, aLocation) then
     begin
       SaveCompletePayments();
       LoadPayments;
@@ -5857,7 +5857,7 @@ begin
   if edtBalance.Text <> '' then
     rec.InvoiceBalanceInCurrency := FCurrencyhandlersMap.ConvertAmount(FInvoiceLinesList.TotalOnInvoiceNativeCurrency - getDownPayments, zNativeCurrency, zCurrentCurrency);
 
-  if g.OpenDownPayment(actInsert, rec) then
+  if g.OpenDownPayment(actInsert, not IsCashInvoice, rec) then
   begin
     // insert payment
 
