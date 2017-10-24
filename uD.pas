@@ -551,7 +551,7 @@ type
     function NextRoomReservatiaon(Room: string; RoomReservation: Integer; noResDate: Tdate): Integer;
     function LastRoomReservatiaon(Room: string; RoomReservation: Integer; noResDate: Tdate): Integer;
 
-    function RemoveInvoiceCashInvoice(aInvoiceType: integer): boolean;
+    function RemoveDirectInvoiceRemnants(aInvoiceType: integer): boolean;
 
     function InsInvoiceAction(R: TInvoiceActionRec): boolean;
 
@@ -5361,11 +5361,10 @@ begin
 
 end;
 
-function Td.RemoveInvoiceCashInvoice(aInvoiceType: integer): boolean;
+function Td.RemoveDirectInvoiceRemnants(aInvoiceType: integer): boolean;
 var
   s: string;
 begin
-  result := True;
 
   // ATHOLD 09112 Setja inn roolback
 
@@ -5381,14 +5380,14 @@ begin
   s := s + ' WHERE (Reservation = 0) AND (RoomReservation = 0) AND (SplitNumber = %d) AND (InvoiceNumber = -1) '
     + chr(10);
   s := Format(s, [aInvoiceType]);
-  result := cmd_bySQL(s);
+  result := result and cmd_bySQL(s);
 
   s := '';
   s := s + ' DELETE FROM payments ' + chr(10);
   s := s + ' WHERE (Reservation = 0) AND (RoomReservation = 0) AND (person = %d) AND (InvoiceNumber = -1) '
     + chr(10);
   s := Format(s, [aInvoiceType]);
-  result := cmd_bySQL(s);
+  result := result and cmd_bySQL(s);
 end;
 
 function Td.RemoveReservationsByReservation(iReservation: Integer): boolean;

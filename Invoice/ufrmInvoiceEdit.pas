@@ -667,8 +667,7 @@ type
     function LocateDate(recordSet: TRoomerDataset; field: String; Value: TDate): boolean;
     function FormatRoomDescription(const aRoomNumber: string; const aRoomResDescription: String; aArrival: TDate; aDeparture: TDate; aDayCount: integer;
                                    const aPackagename: string; aAddGuestName: boolean; const aGuestName: string): string;
-    function CashInvoiceLinesExist: boolean;
-    procedure RemoveExistingCashInvoiceLines;
+    function DirectInvoiceLinesExist: boolean;
 
     property InvoiceIndex: TInvoiceIndex read FInvoiceIndex write SetInvoiceIndex;
 
@@ -775,11 +774,6 @@ const
     'DELETE FROM payments WHERE invoiceNumber=%d',
     'DELETE FROM invoiceaddressees WHERE invoiceNumber=%d');
 
-  REMOVE_OPEN_CASH_INVOICES: Array [0 .. 2] OF String = (
-    'DELETE FROM invoicelines WHERE roomreservation=0 and reservation=0 and invoiceNumber=-1 and splitnumber=2',
-    'DELETE FROM invoiceheads WHERE roomreservation=0 and reservation=0 and invoiceNumber=-1 and splitnumber=2',
-    'DELETE FROM payments WHERE roomreservation=0 and reservation=0 and invoiceNumber=-1 and person=2');
-
   REMOVE_REDUNDANT_INVOICES: Array [0 .. 3] OF String = (
     // Credit invoices                          // Proforma invoices
     'DELETE FROM invoicelines WHERE (SplitNumber = 1 AND InvoiceNumber = -1) OR (InvoiceNumber > 1000000000)',
@@ -824,7 +818,7 @@ begin
   end;
 end;
 
-function TfrmInvoiceEdit.CashInvoiceLinesExist: boolean;
+function TfrmInvoiceEdit.DirectInvoiceLinesExist: boolean;
 var
   sql: string;
   rSet: TRoomerDataSet;
@@ -832,10 +826,10 @@ begin
   sql := '';
   sql := sql + 'SELECT ';
   sql := sql + ' (SELECT count(*) from invoicelines ';
-  sql := sql + '  where roomreservation=0 and reservation=0 and invoicenumber=-1 and splitnumber=2) as ilCount,';
+  sql := sql + '  where roomreservation=0 and reservation=0 and invoicenumber=-1 and splitnumber=%d) as ilCount,';
   sql := sql + ' (SELECT count(*) from payments ';
-  sql := sql + '  where roomreservation=0 and reservation=0 and invoicenumber=-1 and person=2) as payCount';
-
+  sql := sql + '  where roomreservation=0 and reservation=0 and invoicenumber=-1 and person=%d) as payCount';
+  sql := Format(sql, [ord(FInvoiceType), ord(FInvoiceType)]);
   Result := false;
   rSet := CreateNewDataSet;
   try
@@ -845,15 +839,6 @@ begin
     rSet.Free;
   end;
 
-end;
-
-procedure TfrmInvoiceEdit.RemoveExistingCashInvoiceLines;
-var
-  sql: String;
-  i: integer;
-begin
-  for i := LOW(REMOVE_OPEN_CASH_INVOICES) to HIGH(REMOVE_OPEN_CASH_INVOICES) do
-    d.roomerMainDataSet.DoCommand(REMOVE_OPEN_CASH_INVOICES[i]);
 end;
 
 procedure TfrmInvoiceEdit.RemoveAllCheckboxes;
@@ -947,7 +932,7 @@ begin
   begin
     if MessageDlg(GetTranslatedText('shTx_Invoice_WarningCloseCashInvoice'), mtConfirmation, mbOKCancel, 0) = mrOK then
     begin
-      d.RemoveInvoiceCashInvoice(FnewSplitNumber);
+      d.RemoveDirectInvoiceRemnants(ord(FInvoiceType));
       Close;
     end;
 
@@ -1289,7 +1274,7 @@ var
   CustomerHolder: recCustomerHolderEX;
   s: string;
 begin
-  d.RemoveInvoiceCashInvoice(FnewSplitNumber);
+  d.RemoveDirectInvoiceRemnants(ord(FInvoiceType));
 
   pnlHead.Color := $00FFDDDD; // $00EAFFEA
   pnlTotalsAndPayments.Color := $00FFDDDD; // $00EAFFEA
@@ -2979,9 +2964,9 @@ end;
 procedure TfrmInvoiceEdit.FormShow(Sender: TObject);
 begin
 
-  if (TInvoiceType(FInvoiceType) = itCashInvoice) and CashInvoiceLinesExist then
+  if (TInvoiceType(FInvoiceType) = itCashInvoice) and DirectInvoiceLinesExist then
     if MessageDlg(GetTranslatedText('shEditInvoice_CashInvoiceExists'), mtWarning, mbOKCancel, 0) = mrOk then
-      RemoveExistingCashInvoiceLines
+      d.RemoveDirectInvoiceRemnants(ord(FinvoiceType))
     else
       btnExit.Click;
 
