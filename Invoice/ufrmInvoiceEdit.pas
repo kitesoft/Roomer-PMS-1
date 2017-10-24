@@ -2266,12 +2266,15 @@ begin
     zConfirmDate := 2;
     zbRoomRentinTemp := false;
 
-    if FInvoiceType = itCashInvoice then
+    if IsCashInvoice then // FnewSplitNumber = cCashInvoice then
     begin
       CreateCashInvoice(g.qRackCustomer);
       InvoiceCurrencyCode := g.qNativeCurrency;
       exit;
     end;
+
+    edResNr.Caption := format('%d / %d', [FReservation, FRoomReservation]);
+
 
   Again:
     // Retrieve invoice header information
@@ -7211,11 +7214,7 @@ end;
 
 function TfrmInvoiceEdit.IsCashInvoice: boolean;
 begin
-  if (FReservation + FRoomReservation > 0) xor (FInvoiceType = itCashInvoice) then
-    result := ((FReservation + FRoomReservation) = 0)
-  else
-    raise Exception.CreateFmt('Cashinvoice not compatible with Reservation or Roomreservatiom number [R: %d RR: %d Split: %d]',
-                              [FReservation, FRoomReservation, ord(FInvoiceType)]);
+  result := ((FReservation + FRoomReservation) = 0)
 end;
 
 function TfrmInvoiceEdit.chkChanged: boolean;
