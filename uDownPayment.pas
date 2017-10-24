@@ -88,10 +88,12 @@ type
   private
     { Private declarations }
     zCanClose : boolean;
+    FAllowPaycardCharge: boolean;
     procedure EnableDisableButtonViewPayCard;
   public
     { Public declarations }
     rec : recDownPayment;
+    property AllowPaycardCharge: boolean read FAllowPaycardCharge write FAllowPaycardCharge;
   end;
 
 implementation
@@ -183,7 +185,8 @@ var
   channelId: integer;
 begin
   channelId := -1;
-  btnChargePAyCard.Enabled := ReservationHasPaycard(rec.Reservation, rec.RoomReservation, channelId);
+  btnManagePaycards.Enabled := AllowPaycardCharge and (rec.InvoiceIndex <= 0);
+  btnChargePAyCard.Enabled := (rec.InvoiceIndex <= 0) and  ReservationHasPaycard(rec.Reservation, rec.RoomReservation, channelId);
 end;
 
 procedure TfrmDownPayment.FormShow(Sender: TObject);

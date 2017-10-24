@@ -108,6 +108,8 @@ type
     FRoomReservation: Integer;
     FCurrency: String;
     FCurrencyRate: Double;
+    FInvoiceIndex: Integer;
+    FAllowPaycardCharge: boolean;
     procedure Recalc;
     procedure FillPayGrid;
     function AlreadyProvidedPayments: Double;
@@ -117,8 +119,10 @@ type
      procedure WndProc(var Message: TMessage); override;
      property Reservation : Integer read FReservation write FReservation;
      property RoomReservation : Integer read FRoomReservation write FRoomReservation;
+     property InvocieIndex: Integer read FInvoiceIndex write FInvoiceIndex;
      property Currency: String read FCurrency write FCurrency;
      property CurrencyRate: Double read FCurrencyRate write FCurrencyRate;
+     property AllowPaycardCharge: boolean read FAllowPaycardCharge write FAllowPaycardCharge;
   end;
 
 
@@ -130,6 +134,8 @@ function SelectPaymentTypes( NativeAmount : Double;
                             CurrencyRate : Double;
                             Reservation : Integer;
                             RoomReservation : Integer;
+                            InvoiceIndex: integer;
+                            AllowPaycardCharging: boolean;
                             var lst : TstringList;
                             var aInvoiceDate : TDate;
                             var aPayDate : TDate;
@@ -165,6 +171,8 @@ function SelectPaymentTypes( NativeAmount : Double;
                              CurrencyRate : Double;
                              Reservation : Integer;
                              RoomReservation : Integer;
+                             InvoiceIndex: integer;
+                             AllowPaycardCharging: boolean;
                              var lst : TstringList;
                              var aInvoiceDate : TDate;
                              var aPayDate : TDate;
@@ -188,6 +196,9 @@ begin
     frm.dtPayDate.Date := Date;
     frm.Currency := Currency;
     frm.CUrrencyRate := CurrencyRate;
+
+    // TODO: Extend backend to allow specifying invoiceindex to store payment in
+    frm.AllowPaycardCharge := AllowPaycardCharging and (InvoiceIndex <= 0);
     sSelectedCustomer := Customer;
     stlPaySelections.clear;
 
@@ -364,7 +375,8 @@ var
   channelId: integer;
 begin
   channelId := -1;
-  btnChargePAyCard.Enabled := ReservationHasPaycard(FReservation, FRoomReservation, channelId);
+  btnManagePaycards.Enabled := AllowPaycardCharge;
+  btnChargePAyCard.Enabled := AllowPaycardCharge and ReservationHasPaycard(FReservation, FRoomReservation, channelId);
 end;
 
 procedure TfrmInvoicePayment.agrPayTypesGetAlignment(Sender: TObject; ARow, ACol: Integer; var HAlign: TAlignment; var VAlign: TVAlignment);
