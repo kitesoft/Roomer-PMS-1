@@ -611,7 +611,7 @@ type
     function IsRoomSelected: boolean;
     procedure RemoveProformaInvoice(ProformaInvoiceNumber: integer);
     procedure DeleteLinesInList(ExecutionPlan: TRoomerExecutionPlan);
-    procedure LoadRoomListForOtherReservations(reservation: integer);
+    procedure LoadRoomListForOtherRoomReservations(RoomReservation: integer);
     procedure ExternalRoomsClick(Sender: TObject);
     procedure FillExternalRoomsInMenu(mnuItem: TMenuItem);
     procedure FillAllRoomsInMenu(mnuItem: TMenuItem);
@@ -1731,7 +1731,7 @@ end;
 procedure TfrmInvoiceEdit.AddBreakfastInvoicelinesForRoomItem(aRoomEntity: TInvoiceRoomEntity; aParent: TInvoiceLine);
 begin
   if aRoomEntity.BreakFastIncluded then
-    AddIncludedBreakfastToLinesAndGrid(aRoomEntity.NumGuests * aRoomEntity.NumberOfNights, aRoomEntity.Arrival, 0, aParent);
+    AddIncludedBreakfastToLinesAndGrid(aRoomEntity.NumGuests * aRoomEntity.Nights, aRoomEntity.Arrival, 0, aParent);
 
 end;
 
@@ -1783,7 +1783,8 @@ begin
 
   glb.LocateSpecificRecordAndGetValue('customers', 'Customer', edtCustomer.Text, 'StayTaxIncluted', lIsIncludedCust);
 
-  lCalcOptions := [tcoCalcTaxPerNight];
+  if ShowRentPerDay then
+    Include(lCalcOptions, tcoCalcTaxPerNight);
   if lIsIncludedCust then
     Include(lCalcOptions, tcoCustomerHasTaxIncluded);
 
@@ -1975,7 +1976,7 @@ begin
     iNights := 0;
     lInvLine := GetInvoiceLineByRow(i);
     if assigned(lInvLine.RoomEntity) then
-      iNights := lInvLine.RoomEntity.NumberOfNights;
+      iNights := lInvLine.RoomEntity.Nights;
 
     iPersons := 0;
     if lineNoGuests <> '' then
@@ -2000,7 +2001,7 @@ begin
     ItemPrice := iMultiplier * InvoiceCurrencyRate * ItemPrice;
     TotalPrice := ItemCount * ItemPrice * iMultiplier;
 
-    lInvRoom := TInvoiceRoomEntity.Create(lineItem, 1, 0, ItemCount, TotalPrice, g.qNativeCurrency, 1.0, 0, 0, false);
+    lInvRoom := TInvoiceRoomEntity.Create(lineItem, 1, 0, trunc(ItemCount), TotalPrice, g.qNativeCurrency, 1.0, 0, 0, false);
     try
       fVat := GetVATForItem(lineItem, TotalPrice, ItemCount, lInvRoom, tempInvoiceItemList, ItemTypeInfo,
         edtCustomer.Text);
@@ -2588,7 +2589,7 @@ end;
 
 procedure TfrmInvoiceEdit.UpdateItemInvoiceLinesForTaxCalculations;
 var
-  taxNights: Double;
+  taxNights: integer;
   taxGuests: integer;
   //
   i: integer;
@@ -2633,7 +2634,7 @@ end;
 
 procedure TfrmInvoiceEdit.calcAndAddAutoItems(reservation: integer; aAutoItems: TInvoiceAutoItemSet);
 var
-  taxNights: Double;
+  taxNights: integer;
   taxGuests: integer;
   taxChildren: integer;
   Discount: Double;
@@ -2671,7 +2672,7 @@ begin
         litemKind := Item_GetKind(Item);
 
         taxGuests := StrToIntDef(trim(agrLines.Cells[col_NoGuests, i]), 0);
-        taxNights := StrToFloatDef(trim(agrLines.Cells[col_ItemCount, i]), 0.00);
+        taxNights := StrTointDef(trim(agrLines.Cells[col_ItemCount, i]), 0);
 
         lInvLine := GetInvoiceLineByRow(i);
 
@@ -3767,7 +3768,7 @@ begin
   begin
     aInvoiceLine.PurchaseDate := now();
     if aInvoiceLine.RoomEntity <> nil then
-      iNights := aInvoiceLine.RoomEntity.NumberOfNights;
+      iNights := aInvoiceLine.RoomEntity.Nights;
   end;
 
   fItemTotal := aInvoiceLine.AmountOnInvoice.ToNative;
@@ -6767,7 +6768,7 @@ begin
         ItemTypeInfo := d.Item_Get_ItemTypeInfo(ItemId, agrLines.Cells[col_Source, CurrentRow]);
 
         lInvRoom := TInvoiceRoomEntity.Create(agrLines.Cells[col_Item, CurrentRow], 1, 0,
-          _StrToFloat(agrLines.Cells[col_ItemCount, CurrentRow]), CurrentRow, InvoiceCurrencyCode, InvoiceCurrencyRate, 0, 0, false);
+          StrToInt(agrLines.Cells[col_ItemCount, CurrentRow]), CurrentRow, InvoiceCurrencyCode, InvoiceCurrencyRate, 0, 0, false);
         try
           TotalVAT := GetVATForItem(agrLines.Cells[col_Item, CurrentRow], Total,
             _StrToFloat(agrLines.Cells[col_ItemCount, CurrentRow]), lInvRoom, tempInvoiceItemList, ItemTypeInfo,
@@ -7009,7 +7010,7 @@ begin
   end;
 end;
 
-procedure TfrmInvoiceEdit.LoadRoomListForOtherReservations(reservation: integer);
+procedure TfrmInvoiceEdit.LoadRoomListForOtherRoomReservations(RoomReservation: integer);
 var
   sql: String;
   rSet: TRoomerDataset;
@@ -7018,7 +7019,7 @@ begin
   SelectableExternalRooms.Clear;
   sql := format('SELECT DISTINCT rd.Room, rd.Reservation, rd.RoomReservation '#10 + ' FROM roomsdate rd '#10 +
     ' join rooms r on r.room=rd.room '#10 + ' WHERE ADate=''' + dateToSqlString(frmMain.dtDate.Date) +
-    ''' AND Reservation != %d AND ResFlag IN (''P'',''G'')', [reservation]) + #10 + ' ORDER BY rd.room ';
+    ''' AND RoomReservation != %d AND ResFlag IN (''P'',''G'')', [RoomReservation]) + #10 + ' ORDER BY rd.room ';
   rSet := CreateNewDataSet;
   try
     if hData.rSet_bySQL(rSet, sql, false) then
@@ -7107,7 +7108,7 @@ var
 begin
   if (mnuItem = mnuMoveItemToAnyOtherRoomAndInvoiceIndex) then
   begin
-    LoadRoomListForOtherReservations(FReservation);
+    LoadRoomListForOtherRoomReservations(FReservation);
     mnuItem.Clear;
     for i := 0 to SelectableExternalRooms.Count - 1 do
     begin
@@ -7135,7 +7136,8 @@ var
   i: integer;
   Item: TMenuItem;
 begin
-  LoadRoomListForAllReservations;
+  LoadRoomListForOtherRoomReservations(FRoomReservation);
+//  LoadRoomListForAllReservations;
   mnuItem.Clear;
   for i := 0 to SelectableExternalRooms.Count - 1 do
   begin
