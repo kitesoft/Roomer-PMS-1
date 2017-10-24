@@ -5387,6 +5387,15 @@ begin
   begin
     result := False;
   end;
+
+  s := '';
+  s := s + ' DELETE FROM payments ' + chr(10);
+  s := s + ' WHERE (Reservation = 0) AND (RoomReservation = 0) AND (person = 2) AND (InvoiceNumber = -1) '
+    + chr(10);
+  if not cmd_bySQL(s) then
+  begin
+    result := False;
+  end;
 end;
 
 function Td.RemoveReservationsByReservation(iReservation: Integer): boolean;

@@ -895,9 +895,16 @@ end;
 
 procedure TfrmInvoice.btnExitClick(Sender: TObject);
 begin
-  if NOT IsCashInvoice then
-    IfInvoiceChangedThenOptionallySave;
-  close;
+  if IsCashInvoice then
+  begin
+    if MessageDlg(GetTranslatedText('shTx_Invoice_WarningCloseCashInvoice'), mtConfirmation, mbOKCancel, 0) = mrOK then
+    begin
+      d.RemoveInvoiceCashInvoice;
+      Close;
+    end;
+  end
+  else if IfInvoiceChangedThenOptionallySave then
+    close;
 end;
 
 procedure TfrmInvoice.btnClearAddressesClick(Sender: TObject);
@@ -5306,6 +5313,8 @@ begin
     else
       d.GetRoomReservationLocations(FRoomReservation, lstLocations);
 
+    LoadPayments; // Make sure you have all records, catches problems with mutliple cash invoices being created at once
+    DisplayTotals;
     lOpenBalance := _StrToFloat(edtBalance.Text);
 
     if SelectPaymentTypes(lOpenBalance, edtCustomer.Text, ptInvoice, edtCurrency.Text,
@@ -8614,8 +8623,8 @@ begin
   try
     sql := 'SELECT * FROM payments ' + '  where Reservation = %d ' +
       '    and RoomReservation = %d ' +
-      '    and InvoiceNumber = -1 AND InvoiceIndex=%d';
-    s := format(sql, [FReservation, FRoomReservation, FInvoiceIndex]);
+      '    and InvoiceNumber = -1 AND InvoiceIndex = %d and person = %d';
+    s := format(sql, [FReservation, FRoomReservation, FInvoiceIndex, FNewSPlitNumber]);
     hData.rSet_bySQL(rSet, s);
 
     rSet.first;
