@@ -1727,6 +1727,8 @@ begin
     if agrLines.IsHiddenColumn(i) then
       agrLines.ColWidths[i] := 0;
 
+  SetControls;
+
 end;
 
 function TfrmInvoice.AddRoom(Room: String; fRoomPrice: Double; FromDate: TDate;
@@ -3457,8 +3459,10 @@ end;
 
 procedure TfrmInvoice.setControls;
 begin
-  btnRoomToTemp.Enabled := not((FReservation = 0) AND
-    (FRoomReservation = 0));
+  btnRoomToTemp.Enabled := not isCashInvoice;
+  btnMoveItem.Enabled := not isCashInvoice;
+  btnMoveRoom.Enabled := not isCashInvoice;
+
   if (agrLines.Cells[col_Item, 1] = '') then
     btnRoomToTemp.Enabled := false;
 
@@ -5321,7 +5325,7 @@ begin
     lOpenBalance := _StrToFloat(edtBalance.Text);
 
     if SelectPaymentTypes(lOpenBalance, edtCustomer.Text, ptInvoice, edtCurrency.Text,
-      GetRate(edtCurrency.Text), FReservation, FRoomreservation, lstLocations, aInvoiceDate, aPayDate, aLocation) then
+      GetRate(edtCurrency.Text), FReservation, FRoomreservation, FInvoiceIndex, not IsCashInvoice, lstLocations, aInvoiceDate, aPayDate, aLocation) then
     begin
       SaveCompletePayments();
       LoadPayments;
@@ -7258,7 +7262,7 @@ begin
   if edtBalance.Text <> '' then
     rec.InvoiceBalanceInCurrency :=  _StrToFloat(edtBalance.Text)  / zCurrencyRate;
 
-  if g.OpenDownPayment(actInsert, rec) then
+  if g.OpenDownPayment(actInsert, not IsCashInvoice, rec) then
   begin
     // insert payment
 

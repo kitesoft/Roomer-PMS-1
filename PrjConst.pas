@@ -823,6 +823,7 @@ begin
   constants.add('shTxInvoicePayments_RevertPayment', 'Reverting payment [%s] Amount [%s %s].' + #10 + 'Are you Sure?');
   constants.add('shTxInvoicePayments_Reverted', ' (reverted)');
   constants.add('shTx_Invoice_CannotEditDeletePCITokenPayment', 'Modifying or deleting a CreditCard charge is not allowed');
+  constants.add('shTX_CCTokenInfoNotAvailable', '<Carddetails available via cardinfo button>');
 
  (* constants.Add('shTx_InvoiceList2_BookingNumber', 'Númer bókunnar er tala');
   constants.Add('shTx_InvoiceList2_CashAccount', 'Þetta er staðgreiðslureikningur');

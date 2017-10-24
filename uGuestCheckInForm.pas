@@ -887,7 +887,7 @@ begin
   rec.InvoiceBalanceInCurrency := FCurrentRealBalance; // ResSetGuest['CurrentBalance'];
   rec.NotInvoice := True;
 
-  if g.OpenDownPayment(actInsert, rec) then
+  if g.OpenDownPayment(actInsert, true, rec) then
   begin
     lbPayment.Caption := rec.PaymentType;
     edAmount.Text := FloatToStr(rec.AmountInCurrency);

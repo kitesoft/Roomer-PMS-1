@@ -67,6 +67,7 @@ type
     Reservation     : Integer; //-
     RoomReservation : integer; //-
     Invoice         : integer; // -1
+    InvoiceIndex    : Integer;
 
     Quantity    : integer; //-
     AmountInCurrency      : double ; //Amount
@@ -410,7 +411,7 @@ type
 
     /// /***********************
 
-    function OpenDownPayment(act : TActTableAction; var rec : recDownPayment) : boolean;
+    function OpenDownPayment(act : TActTableAction; AllowPaycardCharging: boolean; var rec : recDownPayment) : boolean;
 
     function OpenResMemo(reservation : integer) : boolean;
     function AddAccommodation(var Persons,rooms,nights : integer; var roomPrice : double) : boolean;
@@ -730,6 +731,7 @@ begin
     Reservation     := 0;
     RoomReservation := 0;
     Invoice         := 0;
+    InvoiceIndex    := 0;
 
     Quantity    := 1;
     AmountInCurrency      := 0.00;
@@ -1337,7 +1339,7 @@ end;
 /// //////////////////////////////////////////////////
 
 
-function TGlobalApplication.OpenDownPayment(act : TActTableAction; var rec : recDownPayment) : boolean;
+function TGlobalApplication.OpenDownPayment(act : TActTableAction; AllowPaycardCharging: boolean; var rec : recDownPayment) : boolean;
 var
   frm: TfrmDownPayment;
 begin
@@ -1345,6 +1347,7 @@ begin
   frm := TfrmDownPayment.Create(nil);
   try
     frm.rec := rec;
+    frm.AllowPaycardCharge := AllowPaycardCharging;
 
     frm.ShowModal;
     if frm.modalresult = mrOk then
