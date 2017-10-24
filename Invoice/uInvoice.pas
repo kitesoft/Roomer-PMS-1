@@ -903,8 +903,11 @@ begin
       Close;
     end;
   end
-  else if IfInvoiceChangedThenOptionallySave then
-    close;
+  else
+  begin
+    IfInvoiceChangedThenOptionallySave;
+    Close;
+  end;
 end;
 
 procedure TfrmInvoice.btnClearAddressesClick(Sender: TObject);
@@ -2406,7 +2409,7 @@ begin
     zConfirmDate := 2;
     zbRoomRentinTemp := false;
 
-    if FnewSplitNumber = cCashInvoice then
+    if IsCashInvoice then // FnewSplitNumber = cCashInvoice then
     begin
       CreateCashInvoice(g.qRackCustomer);
       edtCurrency.Text := zNativeCurrency;
