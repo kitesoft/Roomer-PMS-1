@@ -77,6 +77,7 @@ uses
   , Spring.Collections.Lists
   , Spring.Collections, cxCheckBox, cxCurrencyEdit, sSplitter, uRoomerForm, dxPScxCommon, dxPScxGridLnk
   , RoomerExceptionHandling, ufraCurrencyPanel
+  , uAmount
   ;
 
 type
@@ -135,8 +136,6 @@ type
     actInfo: TAction;
     actAddLine: TAction;
     actRemoveSelected: TAction;
-    actMoveRoomToTemp: TAction;
-    actMoveItemToTemp: TAction;
     actMoveItemToGroupInvoice: TAction;
     timCloseInvoice: TTimer;
     edtInvRefrence: TsLabel;
@@ -314,8 +313,6 @@ type
     edtAddress4: TsEdit;
     btnClearAddresses: TsButton;
     btnGetCustomer: TsButton;
-    mnuRoomToTemp: TMenuItem;
-    mnuItemToTemp: TMenuItem;
     actToggleLodgingTax: TAction;
     actMoveRoomToGroupInvoice: TAction;
     actMoveRoomToRoomInvoice: TAction;
@@ -380,8 +377,6 @@ type
     procedure actInfoExecute(Sender: TObject);
     procedure actAddLineExecute(Sender: TObject);
     procedure actRemoveSelectedExecute(Sender: TObject);
-    procedure actMoveRoomToTempExecute(Sender: TObject);
-    procedure actMoveItemToTempExecute(Sender: TObject);
     procedure actMoveItemToGroupInvoiceExecute(Sender: TObject);
     procedure timCloseInvoiceTimer(Sender: TObject);
     procedure actToggleLodgingTaxClick(Sender: TObject);
@@ -475,7 +470,6 @@ type
     FCellValueBeforeEdit: string;
     FCellDoubleBeforeEdit: Double;
 
-    zbRoomRentinTemp: boolean;
     FInvoiceLinesList: TInvoiceLineList;
 
     zStayTaxIncluded: boolean;
@@ -540,7 +534,7 @@ type
     Procedure AddRoomTaxToInvoiceLines(totalTax: Double; TaxUnits: Double; taxItem: string; aPurchaseDate: TDate;
       iAddAt: integer = 0; aParentInvoice: TInvoiceLine = nil; aIsIncludedInParent: boolean = false);
     procedure ClearInvoiceLines;
-    function getTotalNativeDownPayments: Double;
+    function getTotalDownPayments: TAmount;
 
     procedure DisplayGuestName;
 
@@ -582,7 +576,6 @@ type
     procedure CreateCashInvoice(customer: string);
 
     function chkChanged: boolean;
-    procedure ItemToTemp(confirm: boolean);
     procedure NullifyGrid;
 
     Procedure InitInvoiceGrid;
@@ -734,7 +727,7 @@ uses
   uFinanceConnectService
   , uBookingsTaxesAPICaller
   , uRoomerCanonicalDataModel_DataStructures, uRoomerCanonicalDataModel_SimpleTypes
-  , uFrmChargePayCard, uPMSSettings, uAmount, uCurrencyConstants, uRoomerCurrencymanager;
+  , uFrmChargePayCard, uPMSSettings, uCurrencyConstants, uRoomerCurrencymanager;
 
 {$R *.DFM}
 
@@ -1204,7 +1197,7 @@ begin
   try
     nativeTotal := FInvoiceLinesList.TotalOnInvoice.ToNative;
     ttVAT := FInvoiceLinesList.TotalVatOnInvoice.ToNative;
-    TotalDownPayments := getTotalNativeDownPayments;
+    TotalDownPayments := getTotalDownPayments;
     TotalBalance := nativeTotal - TotalDownPayments;
 
     edtTotalWOVat.Text := (nativeTotal - ttVAT).AsDisplayStringWithCode;
@@ -1879,11 +1872,9 @@ begin
   end;
 end;
 
-function TfrmInvoiceEdit.getTotalNativeDownPayments: Double;
-var
-  Total: Double;
+function TfrmInvoiceEdit.getTotalDownPayments: TAmount;
 begin
-  Total := 0;
+  Result := 0;
 
   if mPayments.RecordCount > 0 then
   begin
@@ -1892,7 +1883,7 @@ begin
       mPayments.first;
       while not mPayments.eof do
       begin
-        Total := Total + mPaymentsNativeAmount.AsFloat; // in native currency
+        Result := Result + mPaymentsNativeAmount.AsFloat; // in native currency
         mPayments.Next;
       end;
     finally
@@ -1900,7 +1891,7 @@ begin
     end;
   end;
   // Items in a credit invoice as specified positive, but payments are save as negative ...............
-  result := IIF(FIsCredit, -1, 1) * Total;
+  result := IIF(FIsCredit, -1, 1) * Result;
 end;
 
 procedure TfrmInvoiceEdit.loadInvoiceToMemtable(var m: TKbmMemTable);
@@ -2250,7 +2241,6 @@ begin
     zInvoiceDate := now;
     zPayDate := now;
     zConfirmDate := 2;
-    zbRoomRentinTemp := false;
 
     if IsCashInvoice then // FnewSplitNumber = cCashInvoice then
     begin
@@ -2821,18 +2811,16 @@ begin
 
     actSaveAndExit.Enabled := not IsCashInvoice;
     actSave.Enabled := not IsCashInvoice;
+    btnReservationNotes.Enabled := not IsCashInvoice;
 
-    actMoveRoomToTemp.Enabled := false; // ((sCurrentItem = sRoomRentItem) OR (sCurrentItem = sDiscountItem)) OR (AnyRowChecked AND IsRoomSelected);
     btnMoveRoom.Enabled := (not IsCashInvoice) and ((sCurrentItem = sRoomRentItem) OR (sCurrentItem = sDiscountItem)) OR (AnyRowChecked AND IsRoomSelected);
 
-    actMoveItemToTemp.Enabled := false; //AnyRowChecked OR ((NOT isSystemLine(lRow)) AND (sCurrentItem <> ''));
     actMoveItemToGroupInvoice.Enabled := (not IsCashInvoice) and (AnyRowChecked OR ((NOT isSystemLine(lRow)) AND (sCurrentItem <> '')));
     actRemoveSelected.Enabled := AnyRowChecked OR ((NOT isSystemLine(lRow)) AND (sCurrentItem <> ''));
     btnMoveItem.Enabled := (not IsCashInvoice) and (AnyRowChecked OR ((NOT isSystemLine(lRow)) AND (sCurrentItem <> '')));
   end
   else
   begin
-    actMoveItemToTemp.Enabled := false; //AnyRowChecked;
     actMoveItemToGroupInvoice.Enabled := (not IsCashInvoice) and AnyRowChecked;
     btnMoveRoom.Enabled := (not IsCashInvoice) and AnyRowChecked AND IsRoomSelected;
     actRemoveSelected.Enabled := AnyRowChecked;
@@ -2844,7 +2832,6 @@ begin
   else
     actToggleLodgingTax.Caption := GetTranslatedText('shUI_InvoiceEnableLodgingTax');
 
-  btnReservationNotes.Enabled := actMoveRoomToTemp.Enabled;
   pnlTotalsInCurrency.Visible := InvoiceCurrencyCode <> g.qNativeCurrency;
 
 end;
@@ -3310,14 +3297,14 @@ begin
       d.GetRoomReservationLocations(FRoomReservation, lstLocations);
 
     LoadPayments; // Make sure you have all records, catches problems with mutliple cash invoices being created at once
-    lOpenBalance := FInvoiceLinesList.TotalOnInvoice.ToNative - getTotalNativeDownPayments;
+    lOpenBalance := FInvoiceLinesList.TotalOnInvoice.ToNative - getTotalDownPayments;
     if SelectPaymentTypes(lOpenBalance.Value, edtCustomer.Text, ptInvoice, InvoiceCurrencyCode,
       InvoiceCurrencyRate, FReservation, FRoomreservation, lstLocations, aInvoiceDate, aPayDate, aLocation) then
     begin
       SaveCompletePayments();
       LoadPayments;
       DisplayTotals();
-      Result := FInvoiceLinesList.TotalOnInvoice.ToNative = getTotalNativeDownPayments;
+      Result := FInvoiceLinesList.TotalOnInvoice.ToNative = getTotalDownPayments;
 
       if not Result then
       begin
@@ -6209,7 +6196,7 @@ begin
   end;
 
   if edtBalance.Text <> '' then
-    rec.InvoiceBalanceInCurrency := RoomerCurrencyManager.ConvertAmount(FInvoiceLinesList.TotalOnInvoice.ToNative - getTotalNativeDownPayments, InvoiceCurrencyCode);
+    rec.InvoiceBalanceInCurrency := RoomerCurrencyManager.ConvertAmount(FInvoiceLinesList.TotalOnInvoice.ToNative - getTotalDownPayments, InvoiceCurrencyCode);
 
   if g.OpenDownPayment(actInsert, rec) then
   begin
@@ -6489,224 +6476,6 @@ begin
     LoadPayments;
     DisplayTotals;
 
-  end;
-end;
-
-procedure TfrmInvoiceEdit.actMoveRoomToTempExecute(Sender: TObject);
-var
-  CurrentRow: integer;
-  sRoomRentItem: string;
-  sDiscountItem: string;
-  sCurrentItem: string;
-  list: TList<String>;
-  i, l: integer;
-begin
-  // if MessageDlg('Set room to temp ', mtConfirmation, [mbYes, mbNo], 0) <> mrYes then
-  if MessageDlg(GetTranslatedText('shTx_Invoice_SetTemp'), mtConfirmation, [mbYes, mbNo], 0) <> mrYes then
-  begin
-    exit;
-  end;
-
-  list := GetSelectedRows;
-  try
-    for l := list.Count - 1 downto 0 do
-    begin
-      i := IndexOfAutoGen(list[l]);
-      if i >= 0 then
-      begin
-        CurrentRow := i;
-
-        sRoomRentItem := _trimlower(g.qRoomRentItem);
-        sDiscountItem := _trimlower(g.qDiscountItem);
-        sCurrentItem := _trimlower(agrLines.Cells[col_Item, CurrentRow]);
-
-        agrLines.row := 1;
-        agrLines.Col := 0;
-        CurrentRow := 0;
-
-        repeat
-          inc(CurrentRow);
-          sCurrentItem := _trimlower(agrLines.Cells[col_Item, CurrentRow]);
-
-          if (sCurrentItem = sRoomRentItem) or (sCurrentItem = sDiscountItem) then
-          begin
-            DeleteRow(agrLines, CurrentRow);
-            AddEmptyLine;
-            chkChanged;
-            CurrentRow := 0;
-            agrLines.row := 1;
-            zbRoomRentinTemp := True;
-          end;
-        until (CurrentRow = agrLines.RowCount - 1);
-      end;
-    end;
-  finally
-    list.Free;
-  end;
-  calcAndAddAutoItems(FReservation);
-end;
-
-procedure TfrmInvoiceEdit.ItemToTemp(confirm: boolean);
-(*
-var
-  PurchaseDate: TDateTime;
-  InvoiceNumber: integer;
-  itemNumber: integer;
-  ItemId: string; // (10)
-
-  Number: Double; // -96
-
-  Description: string; // (70)
-  Price: Double;
-  VATType: string; // (10)
-  Total: Double;
-  TotalWOVat: Double;
-  Vat: Double;
-  CurrencyRate: Double;
-  Currency: string; // (5)
-  Persons: integer;
-  Nights: integer;
-  importRefrence: string;
-  ImportSource: string;
-
-  // ***
-
-  s: string;
-  CurrentRow: integer;
-  ItemTypeInfo: TItemTypeInfo;
-
-  isPackage: boolean;
-
-  lInvRoom: TInvoiceRoomEntity;
-  lInvLine: TInvoiceLine;
-*)
-begin
-(*  isPackage := false;
-
-  CurrentRow := agrLines.row;
-  if isSystemLine(CurrentRow) then
-  begin
-    ShowMessage(GetTranslatedText('shTx_Invoice_SaleNotSelected'));
-    exit;
-  end;
-
-  PurchaseDate := integer(agrLines.Objects[cPurchaseDateAsObjectColumn, CurrentRow]);
-  InvoiceNumber := zInvoiceNumber;
-  itemNumber := CurrentRow;
-
-  ItemId := trim(agrLines.Cells[col_Item, CurrentRow]);
-
-  if ItemId = '' then
-  begin
-    ShowMessage(GetTranslatedText('shTx_Invoice_EmptyInvoice'));
-    exit;
-  end;
-
-  Description := trim(agrLines.Cells[col_Description, CurrentRow]); // (70)
-  importRefrence := trim(agrLines.Cells[col_Reference, CurrentRow]);
-  ImportSource := trim(agrLines.Cells[col_Source, CurrentRow]);
-
-  // if MessageDlg('Take [' + itemId + '] from invoice ', mtConfirmation, [mbYes, mbNo], 0) <> mrYes then
-  if confirm AND (MessageDlg(format(GetTranslatedText('shTx_Invoice_TakeItemFromInvoice'), [ItemId]), mtConfirmation,
-    [mbYes, mbNo], 0) <> mrYes) then
-  begin
-    exit;
-  end;
-
-  s := trim(agrLines.Cells[col_ItemCount, CurrentRow]);
-  try
-    Number := _StrToFloat(s); // -96
-  except
-    Number := 0.00;
-  end;
-
-  s := trim(agrLines.Cells[col_ItemPrice, CurrentRow]);
-  Price := _StrToFloat(s); // Was StrToFloatDef()
-
-  s := trim(agrLines.Cells[col_TotalPrice, CurrentRow]);
-  Total := _StrToFloat(s); // Was StrToFloatDef()
-
-  ItemTypeInfo := d.Item_Get_ItemTypeInfo(ItemId);
-  VATType := ItemTypeInfo.VATCode;
-
-  lInvRoom := TInvoiceRoomEntity.Create(agrLines.Cells[col_Item, CurrentRow], 1, 0,
-    _StrToFloat(agrLines.Cells[col_ItemCount, CurrentRow]), Total, 0, 0, false);
-  try
-    Vat := GetVATForItem(agrLines.Cells[col_Item, CurrentRow], Total,
-      _StrToFloat(agrLines.Cells[col_ItemCount, CurrentRow]), lInvRoom, tempInvoiceItemList, ItemTypeInfo,
-      edtCustomer.Text);
-  finally
-    lInvRoom.Free;
-  end;
-  TotalWOVat := Total - Vat;
-
-  Currency := fraInvoiceCurrency.CurrencyCode;
-  CurrencyRate := GetRate(Currency);
-  edtRate.Text := floattostr(CurrencyRate);
-
-  Persons := 0;
-  Nights := 0;
-  lInvLine := GetInvoiceLineByRow(CurrentRow);
-  if assigned(lInvLine.RoomEntity) then
-  begin
-    Persons := lInvLine.RoomEntity.NumGuests;
-    Nights := lInvLine.RoomEntity.NumberOfNights;
-  end;
-
-  d.kbmInvoicelines.insert;
-  d.kbmInvoicelines.FieldByName('Reservation').asinteger := FReservation;
-  d.kbmInvoicelines.FieldByName('RoomReservation').asinteger := FRoomReservation;
-  d.kbmInvoicelines.FieldByName('SplitNumber').asinteger := 0;
-  d.kbmInvoicelines.FieldByName('ItemNumber').asinteger := itemNumber;
-  d.kbmInvoicelines.FieldByName('PurchaseDate').asdateTime := PurchaseDate;
-  d.kbmInvoicelines.FieldByName('InvoiceNumber').asinteger := InvoiceNumber;
-  d.kbmInvoicelines.FieldByName('ItemId').asString := ItemId;
-  d.kbmInvoicelines.FieldByName('Number').AsFloat := Number;
-  d.kbmInvoicelines.FieldByName('Description').asString := Description;
-  d.kbmInvoicelines.FieldByName('Price').AsFloat := Price;
-  d.kbmInvoicelines.FieldByName('VATType').asString := VATType;
-  d.kbmInvoicelines.FieldByName('Total').AsFloat := Total;
-  d.kbmInvoicelines.FieldByName('TotalWOVat').AsFloat := TotalWOVat;
-  d.kbmInvoicelines.FieldByName('VAT').AsFloat := Vat;
-  d.kbmInvoicelines.FieldByName('CurrencyRate').AsFloat := CurrencyRate;
-  d.kbmInvoicelines.FieldByName('Currency').asString := Currency;
-  d.kbmInvoicelines.FieldByName('Persons').asinteger := Persons;
-  d.kbmInvoicelines.FieldByName('Nights').asinteger := Nights;
-  d.kbmInvoicelines.FieldByName('BreakfastPrice').AsFloat := 0.00;
-  d.kbmInvoicelines.FieldByName('ImportSource').asString := ImportSource;
-  d.kbmInvoicelines.FieldByName('importRefrence').asString := importRefrence;
-  d.kbmInvoicelines.FieldByName('isPackage').asBoolean := isPackage;
-  d.kbmInvoicelines.post;
-
-  if isSystemLine(agrLines.row) then
-    // raise Exception.create('System item can not delete ');
-    raise Exception.Create(GetTranslatedText('shTx_Invoice_CanNotDelete'));
-
-  DeleteRow(agrLines, agrLines.row);
-  AddEmptyLine;
-  calcAndAddAutoItems(FReservation);
-  chkChanged;
-*)
-end;
-
-procedure TfrmInvoiceEdit.actMoveItemToTempExecute(Sender: TObject);
-var
-  list: TList<String>;
-  i, l: integer;
-begin
-  list := GetSelectedRows;
-  try
-    for l := list.Count - 1 downto 0 do
-    begin
-      i := IndexOfAutoGen(list[l]);
-      if i >= 0 then
-      begin
-        agrLines.row := i;
-        ItemToTemp(l = list.Count - 1);
-      end;
-    end;
-  finally
-    list.Free;
   end;
 end;
 

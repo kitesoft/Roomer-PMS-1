@@ -2005,10 +2005,12 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
         Caption = '-'
       end
       object Removetemporarily1: TMenuItem
-        Action = actMoveItemToTemp
+        Caption = 'Item to temp'
+        ShortCut = 114
       end
       object RemoveRoomRenttemporarity1: TMenuItem
-        Action = actMoveRoomToTemp
+        Caption = 'Room to temp'
+        ShortCut = 115
       end
       object N4: TMenuItem
         Caption = '-'
@@ -2206,18 +2208,6 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
       ShortCut = 16430
       OnExecute = actRemoveSelectedExecute
     end
-    object actMoveRoomToTemp: TAction
-      Category = 'MoveRoom'
-      Caption = 'Room to temp'
-      ShortCut = 115
-      OnExecute = actMoveRoomToTempExecute
-    end
-    object actMoveItemToTemp: TAction
-      Category = 'MoveItem'
-      Caption = 'Item to temp'
-      ShortCut = 114
-      OnExecute = actMoveItemToTempExecute
-    end
     object actMoveItemToGroupInvoice: TAction
       Category = 'MoveItem'
       Caption = 'Item to groupinvoice'
@@ -2383,10 +2373,6 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
     object mnuItemToRoomInvoice: TMenuItem
       Caption = 'Item to room invoice'
     end
-    object mnuItemToTemp: TMenuItem
-      Action = actMoveItemToTemp
-      Visible = False
-    end
     object N6: TMenuItem
       Caption = '-'
     end
@@ -2410,10 +2396,6 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
       Caption = 'Room to invoiceindex'
       object TMenuItem
       end
-    end
-    object mnuRoomToTemp: TMenuItem
-      Action = actMoveRoomToTemp
-      Visible = False
     end
     object N7: TMenuItem
       Caption = '-'
