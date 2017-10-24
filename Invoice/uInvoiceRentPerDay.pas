@@ -6831,11 +6831,7 @@ end;
 
 function TfrmInvoiceRentPerDay.IsCashInvoice: boolean;
 begin
-  if (FReservation + FRoomReservation > 0) xor (FnewSplitNumber = 2) then
-    result := ((FReservation + FRoomReservation) = 0)
-  else
-    raise Exception.CreateFmt('Cashinvoice not compatible with Reservation or Roomreservatiom number [R: %d RR: %d Split: %d]',
-                              [FReservation, FRoomReservation, FnewSplitNumber]);
+  result := ((FReservation + FRoomReservation) = 0)
 end;
 
 function TfrmInvoiceRentPerDay.chkChanged: boolean;
