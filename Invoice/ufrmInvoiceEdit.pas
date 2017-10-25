@@ -499,13 +499,6 @@ type
 
     procedure UpdateControls(aRow: integer=0);
 
-    /// <summary>
-    /// Based on the current items in the grid, calculate all automatic items (StayTax and included Breakfast) and
-    /// add object to Lines[] and rows to the grid
-    /// </summary>
-    procedure calcAndAddAutoItems(reservation: integer;
-      aAutoItems: TInvoiceAutoItemSet = [aiStayTax, aiIncludedBreakfast]); deprecated;
-    procedure CalcAndAddIncludedBreakFast(aRoominvoiceLinesList: TInvoiceRoomEntityList); deprecated;
 
     procedure ClearRoomInfoObjects;
     procedure SetCurrentVisible;
@@ -582,7 +575,6 @@ type
     procedure AddDeleteFromInvoiceToExecutionPlan(aExecutionPlan: TRoomerExecutionPlan);
 
     procedure GetTaxTypes(TaxResultInvoiceLines: TInvoiceTaxEntityList);
-    function FindLastRoomRentLine: integer;
     procedure UpdateItemInvoiceLinesForTaxCalculations;
     function CreateProformaID: integer;
     procedure MoveRoomToGroupInvoice;
@@ -600,7 +592,7 @@ type
     function GetInvoiceIndexItems(Index: integer): TShape;
     function GetInvoiceIndexItemsRR(Index: integer): TShape;
     procedure MoveDownpaymentToInvoiceIndex(toInvoiceIndex: integer);
-    function IsCashInvoice: boolean;
+    function IsDirectInvoice: boolean;
     function GetCalculatedNumberOfItems(ItemId: String; dDefault: Double): Double;
     procedure CheckOrUncheckAll(check: boolean);
     function GetAnyRowSelected: boolean;
@@ -615,7 +607,6 @@ type
     procedure ExternalRoomsClick(Sender: TObject);
     procedure FillExternalRoomsInMenu(mnuItem: TMenuItem);
     procedure FillAllRoomsInMenu(mnuItem: TMenuItem);
-    procedure LoadRoomListForAllReservations;
     procedure TransferRoomToAnyRoomsClick(Sender: TObject);
     procedure UpdatePaidByOfRoomsdate(FromRoomReservation, RoomReservation, RealRoomReservation,
       reservation: integer);
@@ -650,8 +641,6 @@ type
     procedure RemoveInvoicelineVisibilityRecord(aInvoiceLine: TInvoiceLine; aInvoiceNumber: integer;
       aExecPlan: TRoomerExecutionPlan);
     procedure MoveSelectedLinesToInvoiceIndex(aNewIndex: integer);
-    procedure UpdateTaxinvoiceLinesForRoomItemUsingBackend(aInvLine: TInvoiceLine);
-    procedure RetrieveTaxesforRoomReservation(aReservation, aRoomreservation: integer);
     procedure LoadPayments;
     procedure SetHeaderChanged(const Value: boolean);
     procedure SetInvoiceCurrencyCode(const Value: string);
@@ -725,8 +714,6 @@ uses
   uDateTimeHelper,
   Types,
   uFinanceConnectService
-  , uBookingsTaxesAPICaller
-  , uRoomerCanonicalDataModel_DataStructures, uRoomerCanonicalDataModel_SimpleTypes
   , uFrmChargePayCard, uPMSSettings, uCurrencyConstants, uRoomerCurrencymanager;
 
 {$R *.DFM}
@@ -921,7 +908,7 @@ end;
 
 procedure TfrmInvoiceEdit.btnExitClick(Sender: TObject);
 begin
-  if IsCashInvoice then
+  if IsDirectInvoice then
   begin
     if MessageDlg(GetTranslatedText('shTx_Invoice_WarningCloseCashInvoice'), mtConfirmation, mbOKCancel, 0) = mrOK then
     begin
@@ -1819,39 +1806,6 @@ begin
   end;
 end;
 
-procedure TfrmInvoiceEdit.UpdateTaxinvoiceLinesForRoomItemUsingBackend(aInvLine: TInvoiceLine);
-var
-  iList: IList<TxsdRoomRentTaxReceiptType>;
-  lObject: TxsdRoomRentTaxReceiptType;
-begin
-
-  RemoveTaxinvoiceLinesForRoomItem(aInvLine);
-
-  FStayTaxEnabled := ctrlGetBoolean('useStayTax') AND RV_useStayTax(FReservation);
-  if not FStayTaxEnabled then
-    exit;
-
-  if not Supports(FTaxAPIResponse.Receipts, IObjectList, iList) then
-    exit;
-
-  for lObject in iList.Where(
-        function(const aObject: TxsdRoomRentTaxReceiptType): boolean
-                                  begin
-                                    Result := (aObject.RoomReservationId = aInvLine.Roomreservation)
-                                              and (aObject.StayDate = aInvLine.PurchaseDate);
-                                  end
-  ) do
-    AddRoomTaxToInvoiceLines(
-          TAmount.Create(lObject.CityTax.Amount, lObject.CityTax.Currency.AsString).ToNative.Value,
-          lObject.Quantity, //trunc(lTaxResultInvoiceLines[l].NumItems),
-          lObject.Item, // TaxTypes[tt],
-          aInvLine.RoomEntity.Arrival,
-          0,
-          aInvLine,
-          lObject.CityTaxIncludedInRoomPrice //  lIsIncluded
-    );
-end;
-
 procedure TfrmInvoiceEdit.tvPaymentNativeAmountGetProperties(Sender: TcxCustomGridTableItem;
   ARecord: TcxCustomGridRecord; var AProperties: TcxCustomEditProperties);
 begin
@@ -2166,21 +2120,6 @@ begin
   end;
 end;
 
-procedure TfrmInvoiceEdit.RetrieveTaxesforRoomReservation(aReservation, aRoomreservation: integer);
-var
-  lCaller: TBookingsTaxesTabAPICaller;
-begin
-
-  lCaller := TBookingsTaxesTabAPICaller.Create;
-  try
-    if not lCaller.GetRoomReservationTaxes(aReservation, aRoomreservation, FTaxApiResponse) then
-      FTaxAPIResponse.Clear;
-  finally
-    lCaller.Free;
-  end;
-
-end;
-
 procedure TfrmInvoiceEdit.DoLoadData;
 var
   ItemId: string;
@@ -2243,7 +2182,7 @@ begin
     zPayDate := now;
     zConfirmDate := 2;
 
-    if IsCashInvoice then // FnewSplitNumber = cCashInvoice then
+    if IsDirectInvoice then // FnewSplitNumber = cCashInvoice then
     begin
       CreateCashInvoice(g.qRackCustomer);
       InvoiceCurrencyCode := g.qNativeCurrency;
@@ -2573,20 +2512,6 @@ begin
   end;
 end;
 
-function TfrmInvoiceEdit.FindLastRoomRentLine: integer;
-var
-  i: integer;
-begin
-  result := 0;
-  for i := 1 to agrLines.RowCount - 1 do
-  begin
-    if agrLines.Cells[col_Item, i] = g.qRoomRentItem then
-      result := i
-    else
-      Break;
-  end;
-end;
-
 procedure TfrmInvoiceEdit.UpdateItemInvoiceLinesForTaxCalculations;
 var
   taxNights: integer;
@@ -2632,112 +2557,6 @@ begin
   end;
 end;
 
-procedure TfrmInvoiceEdit.calcAndAddAutoItems(reservation: integer; aAutoItems: TInvoiceAutoItemSet);
-var
-  taxNights: integer;
-  taxGuests: integer;
-  taxChildren: integer;
-  Discount: Double;
-
-  i: integer;
-  ItemPrice: Double;
-  //
-  Item: string;
-  //
-  RoomInvoiceLines: TInvoiceRoomEntityList;
-  ItemInvoiceLines: TInvoiceItemEntityList;
-
-  itemVAT: Double;
-  ItemTypeInfo: TItemTypeInfo;
-
-  lInvRoom: TInvoiceRoomEntity;
-
-  lBreakfastIncl: boolean;
-  litemKind: TItemKind;
-  lInvLine: TInvoiceLine;
-
-begin
-
-  itemVAT := 0.00;
-
-  ItemInvoiceLines := TInvoiceItemEntityList.Create(True);
-  RoomInvoiceLines := TInvoiceRoomEntityList.Create(True);
-  try
-    for i := 1 to agrLines.RowCount - 1 do
-    begin
-      Item := _trimlower(agrLines.Cells[col_Item, i]);
-      if trim(Item) <> '' then
-      begin
-        ItemTypeInfo := d.Item_Get_ItemTypeInfo(Item, agrLines.Cells[col_Source, i]);
-        litemKind := Item_GetKind(Item);
-
-        taxGuests := StrToIntDef(trim(agrLines.Cells[col_NoGuests, i]), 0);
-        taxNights := StrTointDef(trim(agrLines.Cells[col_ItemCount, i]), 0);
-
-        lInvLine := GetInvoiceLineByRow(i);
-
-        if assigned(lInvLine.RoomEntity) then
-        begin
-          taxChildren := lInvLine.RoomEntity.NumChildren;
-          Discount := lInvLine.RoomEntity.Discount;
-          lBreakfastIncl := lInvLine.RoomEntity.BreakFastIncluded;
-        end
-        else
-        begin
-          taxChildren := 0;
-          Discount := 0;
-          lBreakfastIncl := false;
-        end;
-
-        if SameValue(taxNights, 0) then
-          ItemPrice := 0.00
-        else
-          ItemPrice := StrToFloatDef(agrLines.Cells[col_TotalPrice, i], 0.00) / taxNights;
-        // use total price because itemprice is rounded
-
-        lInvRoom := nil;
-        if not SameValue(ItemPrice, 0) then
-        begin
-          lInvRoom := TInvoiceRoomEntity.Create(Item, taxGuests, taxChildren, taxNights, ItemPrice, InvoiceCurrencyCode, InvoiceCurrencyRate, 0, Discount,
-            lBreakfastIncl);
-          lInvRoom.Vat := GetVATForItem(Item, ItemPrice, 1, lInvRoom, tempInvoiceItemList, ItemTypeInfo,
-            edtCustomer.Text);
-
-          // if NOT(lItemKind IN [ikRoomRent, ikRoomRentDiscount]) then
-          // agrLines.Cells[col_Vat, i] := trim(_floattostr(itemVAT, vWidth, 3));
-        end;
-
-        if (litemKind = ikRoomRent) then
-          if assigned(lInvRoom) then
-            RoomInvoiceLines.Add(lInvRoom)
-          else
-            RoomInvoiceLines.Add(TInvoiceRoomEntity.Create(Item, taxGuests, taxChildren, taxNights, ItemPrice, InvoiceCurrencyCode, InvoiceCurrencyRate, itemVAT,
-              Discount, lBreakfastIncl));
-
-        ItemInvoiceLines.Add(TInvoiceItemEntity.Create(Item, taxNights, ItemPrice, itemVAT));
-      end;
-    end;
-
-    if aiIncludedBreakfast in aAutoItems then
-      CalcAndAddIncludedBreakFast(RoomInvoiceLines);
-
-    if aiStayTax in aAutoItems then
-      UpdateTaxinvoiceLinesForAllRooms;
-
-  finally
-    RoomInvoiceLines.Free;
-    ItemInvoiceLines.Free;
-  end;
-end;
-
-procedure TfrmInvoiceEdit.CalcAndAddIncludedBreakFast(aRoominvoiceLinesList: TInvoiceRoomEntityList);
-begin
-  if glb.PMSSettings.InvoiceSettings.ShowIncludedBreakfastOnInvoice then
-  begin
-    AddIncludedBreakfastToLinesAndGrid(aRoominvoiceLinesList.IncludedBreakfastCount, FindLastRoomRentLine + 1);
-    DisplayTotals;
-  end;
-end;
 
 procedure TfrmInvoiceEdit.AddIncludedBreakfastToLinesAndGrid(aIncludedBreakfastCount: integer;
   aPurchaseDate: TDate; iAddAt: integer = 0; aParent: TInvoiceLine = nil);
@@ -2804,9 +2623,9 @@ begin
   if lRow = 0 then
     lRow := agrLines.Row;
 
-  actToggleLodgingTax.Enabled := not IsCashInvoice;
-  btnShowOnInvoice.Enabled := not IsCashInvoice;
-  btnReservationNotes.Enabled := not IsCashInvoice;
+  actToggleLodgingTax.Enabled := not IsDirectInvoice;
+  btnShowOnInvoice.Enabled := not IsDirectInvoice;
+  btnReservationNotes.Enabled := not IsDirectInvoice;
 
   if (lRow > 0) then
   begin
@@ -2814,22 +2633,22 @@ begin
     sRoomRentItem := _trimlower(g.qRoomRentItem);
     sDiscountItem := _trimlower(g.qDiscountItem);
 
-    actSaveAndExit.Enabled := not IsCashInvoice;
-    actSave.Enabled := not IsCashInvoice;
-    btnReservationNotes.Enabled := not IsCashInvoice;
+    actSaveAndExit.Enabled := not IsDirectInvoice;
+    actSave.Enabled := not IsDirectInvoice;
+    btnReservationNotes.Enabled := not IsDirectInvoice;
 
-    btnMoveRoom.Enabled := (not IsCashInvoice) and ((sCurrentItem = sRoomRentItem) OR (sCurrentItem = sDiscountItem)) OR (AnyRowChecked AND IsRoomSelected);
+    btnMoveRoom.Enabled := (not IsDirectInvoice) and ((sCurrentItem = sRoomRentItem) OR (sCurrentItem = sDiscountItem)) OR (AnyRowChecked AND IsRoomSelected);
 
-    actMoveItemToGroupInvoice.Enabled := (not IsCashInvoice) and (AnyRowChecked OR ((NOT isSystemLine(lRow)) AND (sCurrentItem <> '')));
+    actMoveItemToGroupInvoice.Enabled := (not IsDirectInvoice) and (AnyRowChecked OR ((NOT isSystemLine(lRow)) AND (sCurrentItem <> '')));
     actRemoveSelected.Enabled := AnyRowChecked OR ((NOT isSystemLine(lRow)) AND (sCurrentItem <> ''));
-    btnMoveItem.Enabled := (not IsCashInvoice) and (AnyRowChecked OR ((NOT isSystemLine(lRow)) AND (sCurrentItem <> '')));
+    btnMoveItem.Enabled := (not IsDirectInvoice) and (AnyRowChecked OR ((NOT isSystemLine(lRow)) AND (sCurrentItem <> '')));
   end
   else
   begin
-    actMoveItemToGroupInvoice.Enabled := (not IsCashInvoice) and AnyRowChecked;
-    btnMoveRoom.Enabled := (not IsCashInvoice) and AnyRowChecked AND IsRoomSelected;
+    actMoveItemToGroupInvoice.Enabled := (not IsDirectInvoice) and AnyRowChecked;
+    btnMoveRoom.Enabled := (not IsDirectInvoice) and AnyRowChecked AND IsRoomSelected;
     actRemoveSelected.Enabled := AnyRowChecked;
-    btnMoveItem.Enabled := (not IsCashInvoice) and AnyRowChecked;
+    btnMoveItem.Enabled := (not IsDirectInvoice) and AnyRowChecked;
   end;
 
   if FStayTaxEnabled then
@@ -2956,7 +2775,7 @@ end;
 procedure TfrmInvoiceEdit.FormShow(Sender: TObject);
 begin
 
-  if (TInvoiceType(FInvoiceType) = itCashInvoice) and DirectInvoiceLinesExist then
+  if (TInvoiceType(FInvoiceType) in [itCashInvoice, itCreditInvoice]) and DirectInvoiceLinesExist then
     if MessageDlg(GetTranslatedText('shEditInvoice_CashInvoiceExists'), mtWarning, mbOKCancel, 0) = mrOk then
       d.RemoveDirectInvoiceRemnants(ord(FinvoiceType))
     else
@@ -2968,7 +2787,7 @@ begin
   actEditDownPayment.Visible := glb.PMSSettings.InvoiceSettings.AllowPaymentModification;
 
   fraInvoiceCurrency.OnCurrencyChangeAndValid := evtCurrencyChangedAndValid;
-  fraInvoiceCurrency.Enabled := not IsCashInvoice;
+  fraInvoiceCurrency.Enabled := not IsDirectInvoice;
 
   RefreshData;
   UpdateCaptions;
@@ -3304,7 +3123,7 @@ begin
     LoadPayments; // Make sure you have all records, catches problems with mutliple cash invoices being created at once
     lOpenBalance := FInvoiceLinesList.TotalOnInvoice.ToNative - getTotalDownPayments;
     if SelectPaymentTypes(lOpenBalance.Value, edtCustomer.Text, ptInvoice, InvoiceCurrencyCode,
-      InvoiceCurrencyRate, FReservation, FRoomreservation, FinvoiceIndex, not IsCashInvoice, lstLocations, aInvoiceDate, aPayDate, aLocation) then
+      InvoiceCurrencyRate, FReservation, FRoomreservation, FinvoiceIndex, not IsDirectInvoice, lstLocations, aInvoiceDate, aPayDate, aLocation) then
     begin
       SaveCompletePayments();
       LoadPayments;
@@ -5101,7 +4920,7 @@ var
   list: TList<integer>;
   invoiceline: TinvoiceLine;
 begin
-  if IsCashInvoice then
+  if IsDirectInvoice then
     Exit;
 
   if (FRoomReservation > 0) then
@@ -5881,7 +5700,7 @@ procedure TfrmInvoiceEdit.SaveAnd(doExit: boolean);
 begin
   if zDoSave then
   begin
-    if not IsCashInvoice then
+    if not IsDirectInvoice then
       SaveInvoice(zInvoiceNumber, stProvisionally);
     chkChanged;
     if doExit then
@@ -6207,7 +6026,7 @@ begin
   if edtBalance.Text <> '' then
     rec.InvoiceBalanceInCurrency := RoomerCurrencyManager.ConvertAmount(FInvoiceLinesList.TotalOnInvoice.ToNative - getTotalDownPayments, InvoiceCurrencyCode);
 
-  if g.OpenDownPayment(actInsert, not IsCashInvoice, rec) then
+  if g.OpenDownPayment(actInsert, not IsDirectInvoice, rec) then
   begin
     // insert payment
 
@@ -6977,14 +6796,14 @@ begin
   aExecPlan.AddExec(s);
 end;
 
-function TfrmInvoiceEdit.IsCashInvoice: boolean;
+function TfrmInvoiceEdit.IsDirectInvoice: boolean;
 begin
   result := ((FReservation + FRoomReservation) = 0)
 end;
 
 function TfrmInvoiceEdit.chkChanged: boolean;
 begin
-  result := (not IsCashInvoice) and (FInvoiceLinesList.IsChanged or HeaderChanged or (DeletedLines.Count > 0));
+  result := (not IsDirectInvoice) and (FInvoiceLinesList.IsChanged or HeaderChanged or (DeletedLines.Count > 0));
   btnSaveChanges.Visible := result;
   actSave.Enabled := Result;
 end;
@@ -7029,35 +6848,6 @@ begin
   sql := format('SELECT DISTINCT rd.Room, rd.Reservation, rd.RoomReservation '#10 + ' FROM roomsdate rd '#10 +
     ' join rooms r on r.room=rd.room '#10 + ' WHERE ADate=''' + dateToSqlString(frmMain.dtDate.Date) +
     ''' AND RoomReservation != %d AND ResFlag IN (''P'',''G'')', [RoomReservation]) + #10 + ' ORDER BY rd.room ';
-  rSet := CreateNewDataSet;
-  try
-    if hData.rSet_bySQL(rSet, sql, false) then
-    begin
-      rSet.first;
-      while NOT rSet.eof do
-      begin
-        Room := TInvoiceRoomEntity.Create;
-        Room.Room := rSet['Room'];
-        Room.RoomReservation := rSet['RoomReservation'];
-        Room.reservation := rSet['Reservation'];
-        SelectableExternalRooms.Add(Room);
-        rSet.Next;
-      end;
-    end;
-  finally
-    FreeAndNil(rSet);
-  end;
-end;
-
-procedure TfrmInvoiceEdit.LoadRoomListForAllReservations;
-var
-  sql: String;
-  rSet: TRoomerDataset;
-  Room: TInvoiceRoomEntity;
-begin
-  SelectableExternalRooms.Clear;
-  sql := 'SELECT DISTINCT Room, Reservation, RoomReservation FROM roomsdate WHERE ADate=''' +
-    dateToSqlString(frmMain.dtDate.Date) + ''' AND ResFlag IN (''P'',''G'')';
   rSet := CreateNewDataSet;
   try
     if hData.rSet_bySQL(rSet, sql, false) then
