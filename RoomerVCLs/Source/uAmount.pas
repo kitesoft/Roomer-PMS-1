@@ -10,6 +10,9 @@ uses
 
 type
 
+  EAmountException = class(Exception);
+  EAmountInvalidCastException = class(EAmountException);
+
   ///	<summary>
   ///	  An Amount is a value in a fixed currency.<br />Different amount can
   ///	  only be added or subtracted if they are of the same currency, otherwise
@@ -61,6 +64,8 @@ type
     class operator Implicit(a: TAmount): extended;
     class operator Implicit(a: TAmount): integer;
 
+    class operator Explicit(a: TAmount): integer;
+
     class operator Add(a, b: TAmount): TAmount;
     class operator Add(a: TAmount; c: Currency): TAmount;
     class operator Add(a: TAmount; c: extended): TAmount;
@@ -70,11 +75,15 @@ type
     class operator Subtract(a: TAmount; c: extended): TAmount;
 
     class operator Multiply(a: TAmount; d: double): TAmount;
+    class operator Multiply(a: TAmount; c: currency): TAmount;
     class operator Multiply(a: TAmount; d: integer): TAmount;
+    class operator Multiply(a: TAmount; e: Extended): TAmount;
     class operator Multiply(d: integer; a: TAmount): TAmount;
+    class operator Multiply(a: TAmount; b: TAmount): TAmount;
 
     class operator Divide(a: TAmount; d: double): TAmount;
     class operator Divide(a: TAmount; d: integer): TAmount;
+    class operator Divide(a: TAmount; b: TAmount): TAmount;
 
     class operator Equal(a, b: TAmount): boolean;
     class operator NotEqual(a, b: TAmount): boolean;
@@ -203,6 +212,11 @@ begin
 end;
 
 
+class operator TAmount.Explicit(a: TAmount): integer;
+begin
+  Result := round(a.Value);
+end;
+
 function TAmount.GetCurrencyDefinition: TCurrencyDefinition;
 begin
   Result := CurrencyManager.CurrencyDefinition[FCurCode];
@@ -242,7 +256,8 @@ end;
 
 class operator TAmount.Implicit(a: TAmount): integer;
 begin
-  Result := trunc(a.FValue);
+  // Not allowed because of unseen and maybe unwanted truncation.
+  raise EAmountInvalidCastException.Create('Invalid cast from TAmount to Integer. Use explicit casting instead.');
 end;
 
 class operator TAmount.Implicit(a: Extended): TAmount;
@@ -297,6 +312,20 @@ begin
     Result := a.FValue <= b.FValue;
 end;
 
+class operator TAmount.Multiply(a: TAmount; e: Extended): TAmount;
+begin
+  Result.FCurCode := a.FCurCode;
+  Result.FValue := a.FValue * e;
+end;
+
+class operator TAmount.Multiply(a, b: TAmount): TAmount;
+begin
+  if not isSameCurrency(a, b) then
+    Result := a * b.ToCurrency(a.CurrencyCode)
+  else
+    Result := TAmount.Create(a.FValue * b.FValue, a.CurrencyCode);
+end;
+
 class operator TAmount.Multiply(a: TAmount; d: double): TAmount;
 begin
   Result.FCurCode := a.FCurCode;
@@ -312,6 +341,12 @@ end;
 class operator TAmount.Multiply(d: integer; a: TAmount): TAmount;
 begin
   Result := a * d;
+end;
+
+class operator TAmount.Multiply(a: TAmount; c: Currency): TAmount;
+begin
+  Result := a;
+  Result.FValue := Result.Value * c;
 end;
 
 class operator TAmount.Negative(a: TAmount): TAmount;
@@ -406,6 +441,18 @@ end;
 class function TAmount.Create(const a: Extended; const id: integer): TAmount;
 begin
   Result := Create(a, CheckValidCurrencyID(id));
+end;
+
+class operator TAmount.Divide(a, b: TAmount): TAmount;
+begin
+  if not IsSameCurrency(a,b) then
+    Result := a / b.ToCurrency(a.CurrencyCode)
+  else
+  begin
+    Result.FValue := a.FValue / b.FValue;
+    Result.FCurCode := a.FCurCode;
+  end;
+
 end;
 
 initialization

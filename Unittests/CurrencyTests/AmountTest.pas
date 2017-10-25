@@ -157,11 +157,11 @@ begin
   b := TAmount.Create(39, 'GBP');
   r := a + b;
   CheckEqualsString(r.CurrencyCode, CurrencyManager.DefaultCurrency);
-  CheckEquals(r, TAmount(61 + 39 * 1.15));
+  CheckTrue(SameValue(r, TAmount(61 + 39 * 1.15)), 'Adding a + b not working');
 
   r := b + a;
   CheckEqualsString(r.CurrencyCode, b.CurrencyCode);
-  CheckEquals(r, TAmount.Create(61/1.15 + 39, r.CurrencyCode));
+  CheckTrue(SameValue(r, TAmount.Create(61/1.15 + 39, r.CurrencyCode)), 'Adding b + a not working');
 
 end;
 
@@ -172,6 +172,7 @@ var
   e: extended;
   i: integer;
   a: TAmount;
+  a2: TAmount;
   b: TAmount;
 begin
 
@@ -189,6 +190,13 @@ begin
   CheckTrue(SameValue(b.Value, 899661 / 1178943.877632, 0.001), 'Dividing extended not working');
   b := a / i;
   CheckTrue(SameValue(b.Value, 899661 / 6542, 0.001), 'Dividing integer not working');
+
+  a2 := TAmount.Create(91.2623, a.CurrencyCode);
+  b := a / a2;
+  CheckTrue(SameValue(b.Value, RoundDecimals(899661 / 91.2623, 4), 0.0001), 'Dividing by same currency not working');
+  a2 := TAmount.Create(91.2623, 'GBP');
+  b := a /a2;
+  CheckTrue(SameValue(b.Value, 899661 / RoundDecimals(91.2623 * 1.15, 4), 0.0001), 'Dividing by different currency not working');
 end;
 
 procedure TAmountArtithmeticTests.TestMultiply;
@@ -198,6 +206,7 @@ var
   e: extended;
   i: integer;
   a: TAmount;
+  a2: TAmount;
   b: TAmount;
 begin
 
@@ -205,16 +214,25 @@ begin
   d := 1576.098;
   e := 78943.877632;
   i := 653542;
+  a2 := TAmount.Create(911.0665, 'EUR');
 
   a := TAmount.Create(61, 'GBP');
   b := a * c;
-  CheckTrue(SameValue(b.Value, 61 * 23.9986), 'Multiplying currency not working');
+  CheckTrue(SameValue(b.Value, 61 * 23.9986, 0.0001), 'Multiplying currency not working');
   b := a * d;
-  CheckTrue(SameValue(b.Value, 61 * 1576.098), 'Multiplying double not working');
+  CheckTrue(SameValue(b.Value, 61 * 1576.098, 0.0001), 'Multiplying double not working');
   b := a * e;
-  CheckTrue(SameValue(b.Value, 61 * 78943.8776), 'Multiplying extended not working');
+  CheckTrue(SameValue(b.Value, 61 * 78943.877632, 0.0001), 'Multiplying extended not working');
   b := a * i;
   CheckTrue(b.Value = 61 * 653542, 'Multiplying integer not working');
+
+  a2 := TAmount.Create(911.0665, 'EUR');
+  b := a * a2;
+  CheckTrue(SameValue(b.Value, 61 * RoundDecimals(911.0665 / 1.15, 4), 0.0001), 'Multiplying amounts with diff currencies not working');
+  a2 := TAmount.Create(911.0665, a.CurrencyCode);
+  b := a * a2;
+  CheckTrue(SameValue(b.Value, 61 * 911.0665, 0.0001), 'Multiplying amounts with same currencies not working');
+
 end;
 
 procedure TAmountArtithmeticTests.TestSetupTearDown;
