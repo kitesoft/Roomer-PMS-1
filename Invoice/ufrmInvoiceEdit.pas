@@ -2804,6 +2804,10 @@ begin
   if lRow = 0 then
     lRow := agrLines.Row;
 
+  actToggleLodgingTax.Enabled := not IsCashInvoice;
+  btnShowOnInvoice.Enabled := not IsCashInvoice;
+  btnReservationNotes.Enabled := not IsCashInvoice;
+
   if (lRow > 0) then
   begin
     sCurrentItem := _trimlower(agrLines.Cells[col_Item, lRow ]);
@@ -3300,7 +3304,7 @@ begin
     LoadPayments; // Make sure you have all records, catches problems with mutliple cash invoices being created at once
     lOpenBalance := FInvoiceLinesList.TotalOnInvoice.ToNative - getTotalDownPayments;
     if SelectPaymentTypes(lOpenBalance.Value, edtCustomer.Text, ptInvoice, InvoiceCurrencyCode,
-      InvoiceCurrencyRate, FReservation, FRoomreservation, lstLocations, aInvoiceDate, aPayDate, aLocation) then
+      InvoiceCurrencyRate, FReservation, FRoomreservation, FinvoiceIndex, not IsCashInvoice, lstLocations, aInvoiceDate, aPayDate, aLocation) then
     begin
       SaveCompletePayments();
       LoadPayments;
@@ -5965,6 +5969,7 @@ begin
   rec.reservation := FReservation;
   rec.RoomReservation := FRoomReservation;
   rec.Invoice := zInvoiceNumber;
+  rec.InvoiceIndex := FInvoiceIndex;
   rec.AmountInCurrency := mPaymentsNativeAmount.AsFloat;
   rec.Quantity := 1;
   rec.Description := mPayments.FieldByName('Description').asString;
@@ -6049,6 +6054,7 @@ begin
   rec.reservation := FReservation;
   rec.RoomReservation := FRoomReservation;
   rec.Invoice := zInvoiceNumber;
+  rec.InvoiceIndex := FInvoiceIndex;
   rec.AmountInCurrency := mPaymentsNativeAmount.asfloat;
   rec.Quantity := 1;
   rec.Description := mPayments.FieldByName('Description').asString;
@@ -6092,6 +6098,7 @@ begin
   rec.reservation := FReservation;
   rec.RoomReservation := FRoomReservation;
   rec.Invoice := zInvoiceNumber;
+  rec.InvoiceIndex := FInvoiceIndex;
   rec.AmountInCurrency := mPaymentsNativeAmount.AsFloat;
   rec.Quantity := 1;
   rec.Description := mPayments.FieldByName('Description').asString;
@@ -6186,6 +6193,7 @@ begin
 
   rec.reservation := FReservation;
   rec.RoomReservation := FRoomReservation;
+  rec.InvoiceIndex := FInvoiceIndex;
   rec.Invoice := zInvoiceNumber;
   rec.Currency := InvoiceCurrencyCode;
   rec.AmountInCurrency := 0;
@@ -6199,7 +6207,7 @@ begin
   if edtBalance.Text <> '' then
     rec.InvoiceBalanceInCurrency := RoomerCurrencyManager.ConvertAmount(FInvoiceLinesList.TotalOnInvoice.ToNative - getTotalDownPayments, InvoiceCurrencyCode);
 
-  if g.OpenDownPayment(actInsert, rec) then
+  if g.OpenDownPayment(actInsert, not IsCashInvoice, rec) then
   begin
     // insert payment
 
@@ -6271,6 +6279,7 @@ begin
   rec.reservation := FReservation;
   rec.RoomReservation := FRoomReservation;
   rec.Invoice := zInvoiceNumber;
+  rec.InvoiceIndex := FInvoiceIndex;
   rec.AmountInCurrency := mPaymentsNativeAmount.asfloat;
   rec.Quantity := 1;
   rec.Description := mPayments.FieldByName('Description').asString;
