@@ -19,6 +19,8 @@ type
     procedure TestAmountFromDouble;
     procedure TestAmountFromExtended;
     procedure TestAmountFromInteger;
+    procedure TestImplicitCasting;
+    procedure TestExplicitCasting;
   end;
 
   TAmountArtithmeticTests = class(TTestCase)
@@ -104,6 +106,44 @@ begin
   a := c;
   CheckTrue(SameValue(a.value, c, 0.0001), 'wrong value');
   CheckTrue(CurrencyManager.DefaultCurrency = a.CurrencyCode, 'Different currencycode');
+end;
+
+procedure TAmountImplicitTests.TestExplicitCasting;
+var
+  a:TAmount;
+  i: integer;
+  d: double;
+  e: extended;
+begin
+
+  a := TAmount.Create(4056.7639, 'EUR');
+  d := Double(a);
+  CheckTrue(SameValue(d, 4056.7639, 0.0001), 'Explicit cast to double failed');
+  e := Extended(a);
+  CheckTrue(SameValue(e, 4056.7639, 0.0001), 'Explicit cast to extended failed');
+  i := Integer(a);
+  CheckEquals(i, 4057, 'Explicit cast to integer failed');
+end;
+
+procedure TAmountImplicitTests.TestImplicitCasting;
+var
+  a:TAmount;
+  i: integer;
+  d: double;
+  e: extended;
+  c: currency;
+begin
+
+  a := TAmount.Create(4056.7639, 'EUR');
+  d := a;
+  CheckTrue(SameValue(d, 4056.7639, 0.0001), 'Implicit cast to double failed');
+  e := a;
+  CheckTrue(SameValue(e, 4056.7639, 0.0001), 'Implicit cast to extended failed');
+  c := a;
+  CheckTrue(SameValue(c, 4056.7639, 0.0001), 'Implicit cast to extended failed');
+
+  ExpectedException := EAmountInvalidCastException;
+  i := a;
 end;
 
 procedure TAmountImplicitTests.TestSetupTearDown;

@@ -385,7 +385,6 @@ type
     procedure agrLinesGetCellColor(Sender: TObject; ARow, ACol: integer; AState: TGridDrawState; ABrush: TBrush;
       AFont: TFont);
     procedure edtCustomerChange(Sender: TObject);
-    procedure actEditDownPaymentClick(Sender: TObject);
     procedure agrLinesGetAlignment(Sender: TObject; ARow, ACol: integer; var HAlign: TAlignment;
       var VAlign: TVAlignment);
     procedure agrLinesColumnSize(Sender: TObject; ACol: integer; var Allow: boolean);
@@ -3329,11 +3328,10 @@ begin
     '        AND ia.Reservation=%d ' + '        AND ia.RoomReservation=%d ' + '        AND ia.SplitNumber=%d ' +
     '        AND ia.InvoiceIndex=%d ' + '       ), %s))', [zInvoiceNumber, FReservation, FRoomReservation,
     ord(FInvoiceType), InvoiceIndex, _db(zCountry)]);
-  s := s + ', ' + _CommaToDot(floattostr(iMultiplier * FInvoiceLinesList.TotalOnInvoice.ToNative));
-  s := s + ', ' + _CommaToDot(floattostr(iMultiplier * FInvoiceLinesList.TotalOnInvoice.ToNative -
-    FInvoiceLinesList.TotalVatOnInvoice.ToNative));
-  s := s + ', ' + _CommaToDot(floattostr(iMultiplier * FInvoiceLinesList.TotalVatOnInvoice.ToNative));
-  s := s + ', ' + _CommaToDot(floattostr(0.00));
+  s := s + ', ' + _db(FInvoiceLinesList.TotalOnInvoice.ToNative * iMultiplier);
+  s := s + ', ' + _db((FInvoiceLinesList.TotalOnInvoice -  FInvoiceLinesList.TotalVatOnInvoice).ToNative * iMultiplier);
+  s := s + ', ' + _db(FInvoiceLinesList.TotalVatOnInvoice.ToNative * iMultiplier);
+  s := s + ', ' + _db(0.00);
   s := s + ', ' + _db('');
   s := s + ', ' + inttostr(zOriginalInvoice);
   s := s + ', ' + _db(false);
@@ -3657,12 +3655,12 @@ begin
     s := s + ', ' + _db(aInvoiceLine.Number); // -96ath
     s := s + ', ' + _db(aInvoiceLine.Text);
 
-    s := s + ', ' + _db(iCreditInvoiceMultiplier * aInvoiceLine.PriceOnInvoice.ToNative);
+    s := s + ', ' + _db(iCreditInvoiceMultiplier * aInvoiceLine.PriceOnInvoice.ToNative.Value);
 
     s := s + ', ' + _db(lItemTypeInfo.VATCode);
     s := s + ', ' + _db(iCreditInvoiceMultiplier * fItemTotal);
     s := s + ', ' + _db(iCreditInvoiceMultiplier * fItemTotalWOVat);
-    s := s + ', ' + _db(iCreditInvoiceMultiplier * aInvoiceLine.VATOnInvoice.ToNative);
+    s := s + ', ' + _db(iCreditInvoiceMultiplier * aInvoiceLine.VATOnInvoice.ToNative.Value);
 
     // If not storing provisionally, all records should set payment-currency = Currency of invoice
     if (aSaveType = stProvisionally) then
@@ -3695,7 +3693,7 @@ begin
     s := s + ', ' + _db(FInvoiceIndex);
     s := s + ', ' + _db(d.roomerMainDataSet.username);
     s := s + ', ' + _db(aInvoiceLine.IsVisibleOnInvoice);
-    s := s + ', ' + _db(iCreditInvoiceMultiplier * aInvoiceLine.TotalRevenue.ToNative);
+    s := s + ', ' + _db(iCreditInvoiceMultiplier * aInvoiceLine.TotalRevenue.ToNative.Value);
 
     s := s + ')' + #10;
   end
@@ -5766,91 +5764,12 @@ begin
   PrintProforma;
 end;
 
-procedure TfrmInvoiceEdit.actEditDownPaymentClick(Sender: TObject);
-var
-  rSet: TRoomerDataset;
-  rec: recDownPayment;
-  s: string;
-  Id: integer;
-  sql: string;
-begin
-  // **
-  if mPayments.RecordCount = 0 then
-  begin
-    exit;
-  end;
-
-  g.initRecDownPayment(rec);
-
-  if edtBalance.Text <> '' then
-    rec.InvoiceBalanceInCurrency := _StrToFloat(edtBalance.Text) + _StrToFloat(edtDownPayments.Text);
-
-  rec.reservation := FReservation;
-  rec.RoomReservation := FRoomReservation;
-  rec.Invoice := zInvoiceNumber;
-  rec.InvoiceIndex := FInvoiceIndex;
-  rec.AmountInCurrency := mPaymentsNativeAmount.AsFloat;
-  rec.Quantity := 1;
-  rec.Description := mPayments.FieldByName('Description').asString;
-  rec.Notes := mPayments.FieldByName('Memo').asString;
-  rec.PaymentType := mPayments.FieldByName('PayType').asString;
-  rec.PayDate := mPayments.FieldByName('PayDate').asdateTime;
-  rec.payGroup := mPayments.FieldByName('PayGroup').asString;
-  rec.ConfirmDate := mPayments.FieldByName('Confirmdate').asdateTime;
-
-  Id := mPayments.FieldByName('ID').asinteger;
-
-  if rec.ConfirmDate < 3 then
-  begin
-    if OpenAssignPayment(Id) then
-    begin
-      rSet := CreateNewDataSet;
-      try
-        mPayments.close;
-        mPayments.Open;
-
-        sql := 'SELECT * FROM payments ' + ' where Reservation = %d ' + '   and RoomReservation = %d ' +
-          '   and InvoiceNumber = -1 AND InvoiceIndex=%d';
-        s := format(sql, [FReservation, FRoomReservation, FInvoiceIndex]);
-        if rSet_bySQL(rSet, s) then
-        begin
-          while not rSet.eof do
-          begin
-            mPayments.insert;
-            mPayments.FieldByName('PayType').asString := rSet.FieldByName('PayType').asString;
-            mPayments.FieldByName('PayDate').asdateTime := SQLToDateTime(rSet.FieldByName('PayDate').asString);
-            mPayments.FieldByName('NativeAmount').AsFloat := rSet.FieldByName('Amount').AsFloat;
-            mPayments.FieldByName('Currency').AsFloat := rSet.FieldByName('currency').AsFloat;
-            mPayments.FieldByName('Description').asString := rSet.FieldByName('Description').asString;
-            mPayments.FieldByName('PayGroup').asString := '';
-            mPayments.FieldByName('Memo').asString := rSet.FieldByName('Notes').asString;
-            mPayments.FieldByName('confirmDate').asdateTime := rSet.FieldByName('Confirmdate').asdateTime;
-            mPayments.FieldByName('Id').asinteger := rSet.FieldByName('ID').asinteger;
-            if glb.Paytypesset.Locate('payType', rSet.FieldByName('PayType').asString, []) then
-            begin
-              mPayments.FieldByName('PayGroup').asString := glb.Paytypesset.FieldByName('payGroup').asString;
-            end;
-            mPayments.post;
-            rSet.Next;
-          end;
-        end;
-      finally
-        FreeAndNil(rSet);
-      end;
-      mPayments.Locate('id', Id, []);
-      DisplayTotals;
-    end;
-  end
-  else
-  begin
-    ShowMessage('It is not allowed to change confirmed payments');
-  end;
-end;
 
 procedure TfrmInvoiceEdit.actEditDownPaymentExecute(Sender: TObject);
 var
   rec: recDownPayment;
   Id: integer;
+  lAllowEditAmount: boolean;
 begin
   // **
   if mPayments.RecordCount = 0 then
@@ -6024,7 +5943,7 @@ begin
   end;
 
   if edtBalance.Text <> '' then
-    rec.InvoiceBalanceInCurrency := RoomerCurrencyManager.ConvertAmount(FInvoiceLinesList.TotalOnInvoice.ToNative - getTotalDownPayments, InvoiceCurrencyCode);
+    rec.InvoiceBalanceInCurrency := (FInvoiceLinesList.TotalOnInvoice.ToNative - getTotalDownPayments).ToCurrency(InvoiceCurrencyCode);
 
   if g.OpenDownPayment(actInsert, not IsDirectInvoice, rec) then
   begin

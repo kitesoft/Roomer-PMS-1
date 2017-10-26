@@ -296,10 +296,6 @@ object frmRptDownPayments: TfrmRptDownPayments
     object sTabSheet1: TsTabSheet
       Caption = 'sTabSheet1'
       TabVisible = False
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object grPayments: TcxGrid
         Left = 0
         Top = 43
@@ -528,8 +524,8 @@ object frmRptDownPayments: TfrmRptDownPayments
         object sCheckBox1: TsCheckBox
           Left = 700
           Top = 4
-          Width = 115
-          Height = 17
+          Width = 107
+          Height = 20
           Caption = 'Group on paytype'
           TabOrder = 6
           SkinData.SkinSection = 'CHECKBOX'

@@ -14,17 +14,18 @@ type
   EAmountInvalidCastException = class(EAmountException);
 
   ///	<summary>
-  ///	  An Amount is a value in a fixed currency.<br />Different amount can
-  ///	  only be added or subtracted if they are of the same currency, otherwise
-  ///	  an EAmountException will be raised.<br />Mulitplying an amount or
-  ///	  dividing an amount will always return a result of the same currency
+  ///	  An Amount is a value in a fixed currency.<br />
+  ///  Values are stored as a Currency type, which has 4 fixed decimal places
+  ///   Different amounts can be added or subtracted and will have the currencycode of the first term<br />Mulitplying an amount or
+  ///	  dividing an amount will always return a result of the same currency of the firt factor
   ///	  When a value is implicitly converted to an amount, then the native
   ///	  currency will be used, provided by the TAmountConfigurator
+  ///  Implicitly casting to an Integer is not allowed, to avoid unintentional rounding. Explicit casting to Integer is allowed
   ///	</summary>
   ///	<remarks>
   ///	  <para>
-  ///	    Future extensions might include automatic converions of the second
-  ///	    term when adding, subtracting different currencies
+  ///	    Future enhancements may include using a BigDecimal implementation in stead of the Currency type.
+  ///     This will allow for greater precision if needed
   ///	  </para>
   ///	  <para>
   ///	    Unittests are available in <c>Roomer-PMS-1\Unittests\CurrencyTests</c>
