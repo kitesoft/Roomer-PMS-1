@@ -3862,6 +3862,19 @@ begin
         ExecutionPlan.AddExec(s);
       end;
 
+      if InvoiceIndex >= 0 then
+      begin
+        s := '';
+        s := s + ' UPDATE invoicelines_visibility ' + chr(10);
+        s := s + ' Set' + chr(10);
+        s := s + ' invoiceindex = ' + _db(InvoiceIndex) + chr(10);
+        s := s + ' WHERE Reservation = ' + _db(reservation) + chr(10);
+        s := s + ' AND RoomReservation = ' + _db(RoomReservationAlias) + chr(10);
+        // copytoclipboard(s);
+        // debugmessage(s);
+        ExecutionPlan.AddExec(s);
+      end;
+
       if not ExecutionPlan.Execute(ptExec, False, False) then
         raise Exception.Create(ExecutionPlan.ExecException);
 

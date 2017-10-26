@@ -494,7 +494,7 @@ begin
 
   if aTax.TAX_TYPE = TT_FIXED_AMOUNT then
   begin
-    Amount := TAmount.Create(aTax.Amount, aInvoiceRoomEntity.Currency); // / aInvoiceRoomEntity.CurrencyRate; //in room currency
+    Amount := TAmount(aTax.Amount); // / aInvoiceRoomEntity.CurrencyRate; //in room currency
     Percentage := False;
   end
   else

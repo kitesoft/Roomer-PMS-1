@@ -3483,7 +3483,8 @@ end;
 procedure TfrmInvoiceEdit.SaveInvoicelineVisibility(aInvoiceLine: TInvoiceLine; aInvoiceNumber: integer; aExecPlan: TRoomerExecutionPlan);
 var
   s: string;
-  lResnr: integer;
+  lRoom: TInvoiceRoomEntity;
+  lResNr: integer;
   lRoomResNr: integer;
 begin
   // Store set visiblity in invoicelines_visiblity
@@ -3495,14 +3496,18 @@ begin
   if not aInvoiceLine.CanBeHiddenFromInvoice then
     Exit;
 
-  lresNr := aInvoiceLine.ParentReservation;
-  lRoomResNr := aInvoiceLine.ParentRoomReservation;
-
-  // fallback
-  if lresNr = -1 then
+  lRoom := aInvoiceLine.BelongsToRoom;
+  if assigned(lRoom) then
+  begin
+    lResNr := lRoom.Reservation;
+    lRoomResNr := lRoom.RoomReservation;
+  end
+  else
+  begin
     lResNr := FReservation;
-  if lRoomResNr = -1 then
     lRoomResNr := FRoomReservation;
+  end;
+
 
   // construct SQL
   s := '';
@@ -3519,7 +3524,7 @@ begin
   s := s + '  ' +_db(lResNr) + #10;
   s := s + ' ,' + _db(lRoomResNr) + #10;
   s := s + ' ,' + _db(FInvoiceIndex)+#10;
-  s := s + ' ,' + iif( ShowRentPerDay, _db(aInvoiceLine.PurchaseDate), 'NULL')+#10;
+  s := s + ' ,' + iif( ShowRentPerDay, _db(aInvoiceLine.PurchaseDate), _db(lRoom.Arrival))+#10;
   s := s + ' ,' + _db(aInvoiceLine.Item)+#10;
   s := s + ' ,' + _db(aInvoiceLine.IsVisibleOnInvoice)+#10;
   s := s + ') '#10;
@@ -3533,9 +3538,25 @@ end;
 procedure TfrmInvoiceEdit.RemoveInvoicelineVisibilityRecord(aInvoiceLine: TInvoiceLine; aInvoiceNumber: integer; aExecPlan: TRoomerExecutionPlan);
 var
   s: string;
+  lRoom: TInvoiceRoomEntity;
+  lResNr: integer;
+  lRoomResNr: integer;
 begin
+
   if not aInvoiceLine.CanBeHiddenFromInvoice then
     Exit;
+
+  lRoom := aInvoiceLine.BelongsToRoom;
+  if assigned(lRoom) then
+  begin
+    lResNr := lRoom.Reservation;
+    lRoomResNr := lRoom.RoomReservation;
+  end
+  else
+  begin
+    lResNr := FReservation;
+    lRoomResNr := FRoomReservation;
+  end;
 
   // TODO: Only store when setting is different then the default
 
@@ -3543,11 +3564,10 @@ begin
   s := '';
   s := s + 'DELETE from invoicelines_visibility '#10;
   s := s + ' WHERE '#10;
-  s := s + ' reservation = ' +_db(aInvoiceLine.ParentReservation) + #10;
-  s := s + ' and roomreservation=' + _db(aInvoiceLine.ParentRoomReservation) + #10;
+  s := s + ' reservation = ' +_db(lResNr) + #10;
+  s := s + ' and roomreservation=' + _db(lRoomResNr) + #10;
   s := s + ' and invoiceindex=' + _db(FInvoiceIndex)+#10;
-  if ShowRentPerDay then
-    s := s + ' and adate=' + _db(aInvoiceLine.PurchaseDate)+#10;
+  s := s + ' and adate=' + iif( ShowRentPerDay,  _db(aInvoiceLine.PurchaseDate), _db(lRoom.Arrival)) + #10;
   s := s + ' and item=' + _db(aInvoiceLine.Item)+#10;
 
   copyToClipboard(s);
