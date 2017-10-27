@@ -650,7 +650,6 @@ uses
     , Dialogs
     , uReservationProfile
     , uFinishedInvoices2
-    , uInvoice
     , uGuestProfile2
     , uSqlDefinitions
     , uRptbViewer
@@ -667,7 +666,7 @@ uses
     , _Glob
     , ShellApi
     , Math
-    , uSQLUtils, uInvoiceDefinitions;
+    , uSQLUtils, uInvoiceDefinitions, ufrmInvoiceEdit;
 
 {$R *.dfm}
 

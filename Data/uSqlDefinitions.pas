@@ -2553,7 +2553,7 @@ select_telLog_refresh : string =
   ///s := s + '  (invoicenumber='+_Db(Invoicenumber)+') '+#10;
   ///
 
-  select_GetInvoiceLineVisible: string =
+  select_GetInvoiceLineVisible_OnDate: string =
   'SELECT '#10 +
   ' visible'#10 +
   ' FROM invoicelines_visibility '#10 +
@@ -2564,6 +2564,16 @@ select_telLog_refresh : string =
   ' AND aDate=%s ' + #10 +
   ' AND item=%s ';
 
+  select_GetInvoiceLineVisible_NoDate: string =
+  'SELECT '#10 +
+  ' visible'#10 +
+  ' FROM invoicelines_visibility '#10 +
+  ' WHERE '#10 +
+  '     reservation=%s ' +
+  ' AND roomreservation=%s ' + #10 +
+  ' AND invoiceindex=%s ' + #10 +
+  ' AND item=%s ' + #10 +
+  ' order by adate '; // null first, otherwise use first with date
 
   select_isRoomCheckedIN : string =
   '  SELECT '+
@@ -6142,6 +6152,7 @@ begin
   s := s+' rr.numChildren, '+#10; //
   s := s+' rr.numInfants, '+#10; //
   s := s+' (SELECT AVG(RoomRate) FROM roomsdate rd WHERE rd.RoomReservation=rr.RoomReservation AND (rd.ResFlag NOT IN (''X'',''C''))) AS AverageRate, '+#10; //
+  s := s+' (SELECT MAX(Currency) FROM roomsdate rd WHERE rd.RoomReservation=rr.RoomReservation AND (rd.ResFlag NOT IN (''X'',''C''))) AS Currency, '+#10; //
   s := s+' rr.RateCount, '+#10; //
   s := s+' rr.Package, '+#10; //
 

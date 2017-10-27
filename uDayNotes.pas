@@ -394,7 +394,6 @@ uses
   ,uMain
   ,uReservationProfile
   ,uFinishedInvoices2
-  ,uInvoice
   ,uGuestProfile2
   ,objPosSale
   ,uSqlDefinitions
@@ -403,7 +402,7 @@ uses
   , uDImages
   , uRoomerDefinitions
   , uReservationStateDefinitions
-  , uSQLUtils, uDateTimeHelper;
+  , uSQLUtils, uDateTimeHelper, ufrmInvoiceEdit;
 
 
 

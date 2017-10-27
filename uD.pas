@@ -551,7 +551,7 @@ type
     function NextRoomReservatiaon(Room: string; RoomReservation: Integer; noResDate: Tdate): Integer;
     function LastRoomReservatiaon(Room: string; RoomReservation: Integer; noResDate: Tdate): Integer;
 
-    function RemoveInvoiceCashInvoice(aInvoiceType: integer): boolean;
+    function RemoveDirectInvoiceRemnants(aInvoiceType: integer): boolean;
 
     function InsInvoiceAction(R: TInvoiceActionRec): boolean;
 
@@ -839,7 +839,6 @@ uses
     , uInvoiceSummeryOBJ
     , uSqlDefinitions
     , uMain
-    , uInvoice
     , objRoomList2
     , PrjConst
     , uUtils
@@ -854,7 +853,7 @@ uses
     , uAlerts
     , uFrmCheckOut
     , UITypes
-    , uVatCalculator, uTableEntityList, uSQLUtils, uCredentialsAPICaller;
+    , uVatCalculator, uTableEntityList, uSQLUtils, uCredentialsAPICaller, ufrmInvoiceEdit;
 
 {$R *.dfm}
 
@@ -3863,6 +3862,19 @@ begin
         ExecutionPlan.AddExec(s);
       end;
 
+      if InvoiceIndex >= 0 then
+      begin
+        s := '';
+        s := s + ' UPDATE invoicelines_visibility ' + chr(10);
+        s := s + ' Set' + chr(10);
+        s := s + ' invoiceindex = ' + _db(InvoiceIndex) + chr(10);
+        s := s + ' WHERE Reservation = ' + _db(reservation) + chr(10);
+        s := s + ' AND RoomReservation = ' + _db(RoomReservationAlias) + chr(10);
+        // copytoclipboard(s);
+        // debugmessage(s);
+        ExecutionPlan.AddExec(s);
+      end;
+
       if not ExecutionPlan.Execute(ptExec, False, False) then
         raise Exception.Create(ExecutionPlan.ExecException);
 
@@ -5362,11 +5374,10 @@ begin
 
 end;
 
-function Td.RemoveInvoiceCashInvoice(aInvoiceType: integer): boolean;
+function Td.RemoveDirectInvoiceRemnants(aInvoiceType: integer): boolean;
 var
   s: string;
 begin
-  result := True;
 
   // ATHOLD 09112 Setja inn roolback
 
@@ -5382,14 +5393,14 @@ begin
   s := s + ' WHERE (Reservation = 0) AND (RoomReservation = 0) AND (SplitNumber = %d) AND (InvoiceNumber = -1) '
     + chr(10);
   s := Format(s, [aInvoiceType]);
-  result := cmd_bySQL(s);
+  result := result and cmd_bySQL(s);
 
   s := '';
   s := s + ' DELETE FROM payments ' + chr(10);
   s := s + ' WHERE (Reservation = 0) AND (RoomReservation = 0) AND (person = %d) AND (InvoiceNumber = -1) '
     + chr(10);
   s := Format(s, [aInvoiceType]);
-  result := cmd_bySQL(s);
+  result := result and cmd_bySQL(s);
 end;
 
 function Td.RemoveReservationsByReservation(iReservation: Integer): boolean;

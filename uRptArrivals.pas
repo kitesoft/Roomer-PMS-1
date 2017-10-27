@@ -153,13 +153,12 @@ uses
   , uAlerts
   , uProvideARoom2
   , uGuestCheckInForm
-  , uInvoice
   , uReservationProfile
   , uRptbViewer
   , uReservationStateChangeHandler
   , uReservationStateDefinitions
   , uDataSetFilterUtils
-  ;
+  , ufrmInvoiceEdit;
 
 const
   cSQL = 'SELECT '#10 +

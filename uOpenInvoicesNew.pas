@@ -172,7 +172,6 @@ uses
     uD
   , uReservationProfile
   , uFinishedInvoices2
-  , uInvoice
   , uG
   , uAppGlobal
   , uSqlDefinitions
@@ -182,7 +181,7 @@ uses
   , uRoomerDefinitions
   , uReservationStateDefinitions
   , UITypes
-  , uSQLUtils;
+  , uSQLUtils, ufrmInvoiceEdit;
 {$R *.dfm}
 
 procedure TfrmOpenInvoicesNew.FormCreate(Sender : TObject);

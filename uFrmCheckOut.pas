@@ -91,13 +91,12 @@ uses
     _Glob
   , uD
   , PrjConst
-  , uInvoice
   , uRoomerLanguage
   , uAppGlobal
   , uUtils
   , uCurrencyHandler
   , Math
-  ;
+  , ufrmInvoiceEdit;
 
 procedure CheckoutGuestWithDialog(Reservation, RoomReservation: Integer; RoomNumber: String);
 var

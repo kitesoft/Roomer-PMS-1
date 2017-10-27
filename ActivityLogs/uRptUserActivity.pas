@@ -87,7 +87,6 @@ uses
   , Spring.Collections
   , Math
   , uActivityLogs
-  , uInvoice
   , uReservationProfile
   , TypInfo
   , hData

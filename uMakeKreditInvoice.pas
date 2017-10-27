@@ -202,11 +202,10 @@ uses
   , uDImages
   , uReservationProfile
   , uFinishedInvoices2
-  , uInvoice
   , uFrmHandleBookKeepingException
   , uMain
   , RoomerCloudEntities
-  , uSQLUtils, uInvoiceDefinitions;
+  , uSQLUtils, uInvoiceDefinitions, ufrmInvoiceEdit;
 
 
 function MakeKreditInvoice(number : integer; var createNew : boolean) : boolean;
@@ -739,7 +738,7 @@ EditInvoice(0, // Reservation,
       0, // RoomReservation,
       1, // SplitNumber : integer;
       0, // InvoiceIndex
-      true, // bCredit,
+      true // bCredit,
     );
 
 end;

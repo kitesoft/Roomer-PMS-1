@@ -25,9 +25,9 @@ object frmDayNotes: TfrmDayNotes
   object DateLabel1: TDateLabel
     Left = 480
     Top = 328
-    Width = 50
+    Width = 56
     Height = 13
-    Caption = '14-8-2017'
+    Caption = '24-10-2017'
     DateTimeFormat = 'd/m/yyyy'
     Version = '1.1.0.0'
     RefreshInterval = 0
@@ -57,6 +57,10 @@ object frmDayNotes: TfrmDayNotes
     SkinData.SkinSection = 'PAGECONTROL'
     object tabDayNotes: TsTabSheet
       Caption = 'Front'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object sGroupBox1: TsGroupBox
         Left = 0
         Top = 0
@@ -74,8 +78,8 @@ object frmDayNotes: TfrmDayNotes
           AlignWithMargins = True
           Left = 5
           Top = 18
-          Width = 918
-          Height = 90
+          Width = 351
+          Height = 64
           Align = alClient
           Alignment = taCenter
           Caption = 
@@ -94,8 +98,6 @@ object frmDayNotes: TfrmDayNotes
           HoverFont.Height = -11
           HoverFont.Name = 'Tahoma'
           HoverFont.Style = []
-          ExplicitWidth = 351
-          ExplicitHeight = 64
         end
       end
       object edCurrentDate: TEdit
@@ -111,6 +113,10 @@ object frmDayNotes: TfrmDayNotes
     object tabStatus: TsTabSheet
       Caption = 'Availibility status'
       ImageIndex = 3
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Panel3: TsPanel
         Left = 0
         Top = 81
@@ -518,6 +524,10 @@ object frmDayNotes: TfrmDayNotes
     object tabLog: TsTabSheet
       Caption = 'Log'
       ImageIndex = 1
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Panel1: TsPanel
         Left = 0
         Top = 0
@@ -642,6 +652,10 @@ object frmDayNotes: TfrmDayNotes
         object tabImportLog: TcxTabSheet
           Caption = 'Import'
           ImageIndex = 1
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object Panel6: TsPanel
             Left = 0
             Top = 0
@@ -1060,6 +1074,7 @@ object frmDayNotes: TfrmDayNotes
             HotZoneClassName = 'TcxMediaPlayer9Style'
             AlignSplitter = salTop
             Control = Panel7
+            ExplicitWidth = 8
           end
           object Panel8: TsPanel
             Left = 0
@@ -1178,6 +1193,10 @@ object frmDayNotes: TfrmDayNotes
     object tabCurrentGuests: TsTabSheet
       Caption = 'In house'
       ImageIndex = 3
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Panel2: TsPanel
         Left = 0
         Top = 0

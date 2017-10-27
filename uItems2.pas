@@ -660,6 +660,7 @@ begin
         m_Items.LoadFromDataSet(rSet);
 
         lActivetaxFound := false;
+        tax := nil;
         // Alter price of citytax to tax settings if fixed, 0 if percentage based
         for tax in taxList do
           if (tax.VALID_FROM <= now()) and (tax.VALID_TO >= now()) then

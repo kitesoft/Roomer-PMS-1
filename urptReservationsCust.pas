@@ -248,7 +248,6 @@ uses
     uD
   , uReservationProfile
   , uFinishedInvoices2
-  , uInvoice
   , uRptbViewer
   , uStringUtils
   , uAppGlobal

@@ -196,10 +196,11 @@
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_8_Win32)'!=''">
         <VerInfo_PreRelease>false</VerInfo_PreRelease>
+        <VerInfo_Build>0</VerInfo_Build>
         <PostBuildEvent><![CDATA[$(OUTPUTDIR)DeployOnDev.bat
 $(PostBuildEvent)]]></PostBuildEvent>
-        <VerInfo_Release>16</VerInfo_Release>
-        <VerInfo_Keys>CompanyName=Promoir BV;FileDescription=Roomer PMS;FileVersion=1.9.16.1;InternalName=;LegalCopyright=(C) 2013, 2014, 2015, 2016, 2017 Promoir BV;LegalTrademarks=Roomer is a Registered Trademark of Promoir BV;OriginalFilename=Roomer.exe;ProductName=Roomer Open Hospitality Platform;ProductVersion=1.9.16.1;Comments=;ExtraBuild=171024ToldYou;PrivateBuild=</VerInfo_Keys>
+        <VerInfo_Release>17</VerInfo_Release>
+        <VerInfo_Keys>CompanyName=Promoir BV;FileDescription=Roomer PMS;FileVersion=1.9.17.0;InternalName=;LegalCopyright=(C) 2013, 2014, 2015, 2016, 2017 Promoir BV;LegalTrademarks=Roomer is a Registered Trademark of Promoir BV;OriginalFilename=Roomer.exe;ProductName=Roomer Open Hospitality Platform;ProductVersion=1.9.17.0;Comments=;ExtraBuild=171026ImprovedAttempt;PrivateBuild=</VerInfo_Keys>
         <Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
         <VerInfo_Debug>false</VerInfo_Debug>
     </PropertyGroup>
@@ -242,6 +243,7 @@ $(PostBuildEvent)]]></PostBuildEvent>
         <DCC_DcuOutput>_dcu</DCC_DcuOutput>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_3_Win32)'!=''">
+        <DCC_IMPLICIT_STRING_CAST>false</DCC_IMPLICIT_STRING_CAST>
         <VerInfo_MajorVer>9</VerInfo_MajorVer>
         <VerInfo_Release>9</VerInfo_Release>
         <VerInfo_Build>9</VerInfo_Build>
@@ -299,9 +301,6 @@ $(PostBuildEvent)]]></PostBuildEvent>
         <DCCReference Include="uPriceOBJ.pas"/>
         <DCCReference Include="uProvideARoom2.pas">
             <Form>frmProvideARoom2</Form>
-        </DCCReference>
-        <DCCReference Include="Invoice\uInvoice.pas">
-            <Form>frmInvoice</Form>
         </DCCReference>
         <DCCReference Include="uReservationProfile.pas">
             <Form>frmReservationProfile</Form>
@@ -640,9 +639,6 @@ $(PostBuildEvent)]]></PostBuildEvent>
             <Form>FrmChannelCopyFrom</Form>
         </DCCReference>
         <DCCReference Include="RoomerVCLs\Source\uRoomerExceptions.pas"/>
-        <DCCReference Include="uFrmBackupInvoice.pas">
-            <Form>FrmBackupInvoice</Form>
-        </DCCReference>
         <DCCReference Include="uPackages.pas">
             <Form>frmPackages</Form>
         </DCCReference>
@@ -903,8 +899,8 @@ $(PostBuildEvent)]]></PostBuildEvent>
             <Form>FrmRptReservationStatusPerDay</Form>
         </DCCReference>
         <DCCReference Include="VersionManagement\uVersionManagement.pas"/>
-        <DCCReference Include="Invoice\uInvoiceRentPerDay.pas">
-            <Form>frmInvoiceRentPerDay</Form>
+        <DCCReference Include="Invoice\ufrmInvoiceEdit.pas">
+            <Form>frmInvoiceEdit</Form>
         </DCCReference>
         <DCCReference Include="OpenAPI\schema\uRoomerFinancialDataModel_ModelObjects.pas"/>
         <DCCReference Include="OpenAPI\schema\uRoomerCanonicalDataModel_BaseTypes.pas"/>
@@ -976,6 +972,11 @@ $(PostBuildEvent)]]></PostBuildEvent>
             <Form>fraCurrencyPanel</Form>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
+        <DCCReference Include="RoomerVCLs\Source\uAmount.pas"/>
+        <DCCReference Include="Currencies\uRoomerCurrencymanager.pas"/>
+        <DCCReference Include="Currencies\uRoomerCurrencyDefinition.pas"/>
+        <DCCReference Include="RoomerVCLs\Source\uCurrencyDefinition.pas"/>
+        <DCCReference Include="RoomerVCLs\Source\uCurrencyConstants.pas"/>
         <None Include="Roomer.todo"/>
         <None Include="notes.txt"/>
         <None Include="Roomer.inc"/>

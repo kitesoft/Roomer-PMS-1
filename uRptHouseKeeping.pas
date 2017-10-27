@@ -110,7 +110,6 @@ uses
   , uAlerts
   , uProvideARoom2
   , uGuestCheckInForm
-  , uInvoice
   , uReservationProfile
   , uRptbViewer
   , _Glob, uCleaningNotesDefinitions, uSQLUtils;

@@ -147,8 +147,7 @@ uses
   , PrjConst
   , uReservationProfile
   , uRptbViewer
-  , uInvoice
-  , uOpenAPICaller;
+  , uOpenAPICaller, ufrmInvoiceEdit;
 
 const
   WM_REFRESH_DATA = WM_User + 51;

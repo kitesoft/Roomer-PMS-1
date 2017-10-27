@@ -2632,6 +2632,7 @@ object frmMain: TfrmMain
     TabOrder = 2
     TabStop = False
     object rbTabHome: TdxRibbonTab
+      Active = True
       Caption = 'Roomer'
       Groups = <
         item
@@ -2789,7 +2790,6 @@ object frmMain: TfrmMain
       Index = 7
     end
     object rbTabConnections: TdxRibbonTab
-      Active = True
       Caption = 'Connections'
       Groups = <
         item

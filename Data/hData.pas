@@ -876,6 +876,7 @@ type
     Decimals: integer;
     Displayformat: string;
     CurrencySign: string;
+    CurrencyFormat: Byte;
     procedure Init;
     procedure ReadFromDataset(aRSet: TDataset);
   end;
@@ -2774,12 +2775,13 @@ begin
 end;
 
 
-const TABLES_WITH_ITEM_CODE : Array [0..4] of String =
+const TABLES_WITH_ITEM_CODE : Array [0..5] of String =
     ('invoicelinepricechange,ItemID',
      'invoicelines,ItemID',
      'invoicelinestmp,ItemID',
      'items,Item',
-     'turnoverandpayments,Item');
+     'turnoverandpayments,Item',
+     'control,staytaxitem');
 
 procedure UpdateItemCode(oldCode, newCode : String);
 begin

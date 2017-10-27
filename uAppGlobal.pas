@@ -365,6 +365,8 @@ uses   dbTables
      , uSQLUtils
      , UITypes
      , RegularExpressions
+     , uCurrencymanager
+     , uRoomerCurrencymanager
      ;
 
 procedure FilterRoom( RoomNumber : string );
@@ -1712,6 +1714,7 @@ procedure OpenAppSettings;
 begin
   glb.Free;
   glb := TGlobalSettings.create;
+  InitGlobalCurrencyManager(TRoomerCurrencyManager, glb.ControlSet.FieldByName('nativecurrency').asString);
 end;
 
 procedure CloseAppSettings;

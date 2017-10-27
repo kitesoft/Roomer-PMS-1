@@ -1518,7 +1518,6 @@ implementation
 uses
      uD
 		, uProvideARoom2
-		, uInvoice
 		, uTaxes
 		, clipbrd
 		, sndkey32
@@ -1645,7 +1644,7 @@ uses
     , uFrmTokenChargeHistory
     , uFrmManagePCIConnection
     , uItemTransactionsReport
-		;
+		, ufrmInvoiceEdit;
 
 {$R *.DFM}
 {$R Cursors.res}

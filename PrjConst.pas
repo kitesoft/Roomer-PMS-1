@@ -28,7 +28,6 @@ uses uAppGlobal,
 
   uRoomerLanguage,
 //  uInvoiceInfo,
-  uInvoice,
   uReservationProfile,
   uInvoicePayment,
   uControlData,
@@ -209,7 +208,7 @@ uses uAppGlobal,
 
   , uItemTransactionsReport
 
-  ;
+  , ufrmInvoiceEdit;
 
 
 const PRE_KEY_NAME = 'PrjConst.Constants.';
@@ -1728,6 +1727,9 @@ begin
   constants.Add('shRoomRentPErDaySetting_Ask', 'Ask per invoice');
   constants.Add('shRoomRentPErDaySetting_Always', 'Always');
 
+  constants.Add('shEditInvoice_CashInvoiceExists', 'Cash invoicelines already exist! Is somebody else creating a cash invoice?'#13#10 +
+                                                   'Continuing will remove the existing cash invoicelines.');
+
   constants.Add('FinanceConnect_TabName', 'Finance Connect');
   constants.Add('Customers_FinanceConnect_AddedCustomer', 'You have added a new customer.' + #10#13 + 'Do want to open customer mappings for %s?');
   constants.Add('Items_FinanceConnect_AddedItem', 'You have added a new item.' + #10#13 + 'Do want to open items mappings for %s?');
@@ -1812,38 +1814,26 @@ procedure GenerateTranslateTextTableForAllForms;
 begin
   TfrmProvideARoom2.Create(nil).Free;
   frmMultiSelection := TfrmMultiSelection.Create(nil); frmMultiSelection.Free; frmMultiSelection := nil;
-//  frmInvoiceInfo := TfrmInvoiceInfo.Create(nil); frmInvoiceInfo.Free; frmInvoiceInfo := nil;
-  frmInvoice := TfrmInvoice.Create(nil); frmInvoice.Free; frmInvoice := nil;
   frmReservationProfile := TfrmReservationProfile.Create(nil); frmReservationProfile.Free; frmReservationProfile := nil;
-//frmSplash := TfrmSplash.Create(nil); frmSplash.Free; frmSplash := nil;
   TfrmInvoicePayment.Create(nil).Free;
   frmControlData := TfrmControlData.Create(nil); frmControlData.Free; frmControlData := nil;
   frmFinishedInvoices2 := TfrmFinishedInvoices2.Create(nil); frmFinishedInvoices2.Free; frmFinishedInvoices2 := nil;
   frmCreditPrompt := TfrmCreditPrompt.Create(nil); frmCreditPrompt.Free; frmCreditPrompt := nil;
-//  frmInvoiceCompress := TfrmInvoiceCompress.Create(nil); frmInvoiceCompress.Free; frmInvoiceCompress := nil;
   frmInvoiceList := TfrmInvoiceList.Create(nil); frmInvoiceList.Free; frmInvoiceList := nil;
   frmConverts := TfrmConverts.Create(nil); frmConverts.Free; frmConverts := nil;
   frmSelLang := TfrmSelLang.Create(nil); frmSelLang.Free; frmSelLang := nil;
-//frmUDL := TfrmUDL.Create(nil); frmUDL.Free; frmUDL := nil;
-//frmHotelListMissing := TfrmHotelListMissing.Create(nil); frmHotelListMissing.Free; frmHotelListMissing := nil;
   TfrmMaidActions.Create(nil).Free;
   TfrmMaidActionsEdit.Create(nil).Free;
-// Empty?  frmMakeReservation := TfrmMakeReservation.Create(nil); frmMakeReservation.Free; frmMakeReservation := nil;
   frmRoomDateProblem := TfrmRoomDateProblem.Create(nil); frmRoomDateProblem.Free; frmRoomDateProblem := nil;
   TfrmResProblem.Create(nil).Free;
-//  frmStatisticsForcast := TfrmStatisticsForcast.Create(nil); frmStatisticsForcast.Free; frmStatisticsForcast := nil;
   frmDayFinical := TfrmDayFinical.Create(nil); frmDayFinical.Free; frmDayFinical := nil;
   frmConvertGroups := TfrmConvertGroups.Create(nil); frmConvertGroups.Free; frmConvertGroups := nil;
   TfrmInvoiceList2.Create(nil).Free;
-//  frmRptCustomer := TfrmRptCustomer.Create(nil); frmRptCustomer.Free; frmRptCustomer := nil;
-//frmDayNotes := TfrmDayNotes.Create(nil); frmDayNotes.Free; frmDayNotes := nil;
   frmChangeRRdates := TfrmChangeRRdates.Create(nil); frmChangeRRdates.Free; frmChangeRRdates := nil;
   frmChangeRate := TfrmChangeRate.Create(nil); frmChangeRate.Free; frmChangeRate := nil;
   TfrmOpenInvoicesNew.Create(nil).Free;
   frmResMemos := TfrmResMemos.Create(nil); frmResMemos.Free; frmResMemos := nil;
-//  frmSelHotel := TfrmSelHotel.Create(nil); frmSelHotel.Free; frmSelHotel := nil;
   TfrmHomedate.Create(nil).Free;
-//  frmGoToRoomandDate := TfrmGoToRoomandDate.Create(nil); frmGoToRoomandDate.Free; frmGoToRoomandDate := nil;
   frmHiddenInfo := TfrmHiddenInfo.Create(nil); frmHiddenInfo.Free; frmHiddenInfo := nil;
   TfrmDownPayment.Create(nil).Free;
   frmLodgingTaxReport2 := TfrmLodgingTaxReport2.Create(nil); frmLodgingTaxReport2.Free; frmLodgingTaxReport2 := nil;
@@ -1880,23 +1870,16 @@ begin
   frmStaffMembers2 := TfrmStaffMembers2.Create(nil); frmStaffMembers2.Free; frmStaffMembers2 := nil;
   frmCustomerEdit2 := TfrmCustomerEdit2.Create(nil); frmCustomerEdit2.Free; frmCustomerEdit2 := nil;
   TfrmChannels.Create(nil).Free;
-//  frmSystemTriggers := TfrmSystemTriggers.Create(nil); frmSystemTriggers.Free; frmSystemTriggers := nil;
-//  frmCreatePassword := TfrmCreatePassword.Create(nil); frmCreatePassword.Free; frmCreatePassword := nil;
-//  frmSystemServers := TfrmSystemServers.Create(nil); frmSystemServers.Free; frmSystemServers := nil;
-//  frmSystemActions := TfrmSystemActions.Create(nil); frmSystemActions.Free; frmSystemActions := nil;
   frmStaffTypes2 := TfrmStaffTypes2.Create(nil); frmStaffTypes2.Free; frmStaffTypes2 := nil;
   TfrmItems2.Create(nil).Free;
   frmItemTypes2 := TfrmItemTypes2.Create(nil); frmItemTypes2.Free; frmItemTypes2 := nil;
   frmLocations := TfrmLocations.Create(nil); frmLocations.Free; frmLocations := nil;
   frmCurrencies := TfrmCurrencies.Create(nil); frmCurrencies.Free; frmCurrencies := nil;
-//  frmInvoicePayment2 := TfrmInvoicePayment2.Create(nil); frmInvoicePayment2.Free; frmInvoicePayment2 := nil;
   frmChannelManager := TfrmChannelManager.Create(nil); frmChannelManager.Free; frmChannelManager := nil;
   frmCommunicationTest := TfrmCommunicationTest.Create(nil); frmCommunicationTest.Free; frmCommunicationTest := nil;
   frmHouseKeeping := TfrmHouseKeeping.Create(nil); frmHouseKeeping.Free; frmHouseKeeping := nil;
-//  frmTableEditForm := TfrmTableEditForm.Create(nil); frmTableEditForm.Free; frmTableEditForm := nil;
   frmRptResStats := TfrmRptResStats.Create(nil); frmRptResStats.Free; frmRptResStats := nil;
   frmGuestSearch := TfrmGuestSearch.Create(nil); frmGuestSearch.Free; frmGuestSearch := nil;
-//  frmRptResDates := TfrmRptResDates.Create(nil); frmRptResDates.Free; frmRptResDates := nil;
   TfrmChannelTogglingRules.Create(nil).Free;
   TfrmAllotmentToRes.Create(nil).Free;
   frmPersonviptypes := TfrmPersonviptypes.Create(nil); frmPersonviptypes.Free; frmPersonviptypes := nil;
@@ -1926,7 +1909,6 @@ begin
   TfrmGuestCheckInForm.Create(nil).Free;
 
   frmRptNotes := TfrmRptNotes.Create(nil); frmRptNotes.Free; frmRptNotes := nil;
-//  frmRptGuests := TfrmRptGuests.Create(nil); frmRptGuests.Free; frmRptGuests := nil;
   frmRptReservationsCust := TfrmRptReservationsCust.Create(nil); frmRptReservationsCust.Free; frmRptReservationsCust := nil;
 
   frmGuestProfiles := TfrmGuestProfiles.Create(nil); frmGuestProfiles.Free; frmGuestProfiles := nil;
@@ -2015,7 +1997,7 @@ begin
   TFrmManagePCIConnection.Create(nil).Free;
 
   TfrmItemTransactionsReport.Create(nil).Free;
-
+  TfrmInvoiceEdit.Create(nil).Free;
 end;
 
 ///////////////////////////////////////////////////////////////////////////////////////
