@@ -206,7 +206,6 @@ type
     mPaymentsCurrencyAmount: TFloatField;
     mnuMoveRoom: TPopupMenu;
     mnuItemToGroupInvoice: TMenuItem;
-    mnuItemToRoomInvoice: TMenuItem;
     mnuMoveRoomRentFromRoomInvoiceToGroup: TMenuItem;
     mnuMoveRoomRentFromGroupToNormalRoomInvoice: TMenuItem;
     pnlLnes: TsPanel;
@@ -363,14 +362,12 @@ type
     edtTotalInCurrency: TsEdit;
     edtBalanceInCurrency: TsEdit;
     lbBalanceInCurrency: TsLabel;
-    actMoveItemToRoomInvoice: TAction;
     mnuMoveItemToInvoiceIndex: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure agrLinesMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
     procedure edtCustomerDblClick(Sender: TObject);
     procedure agrLinesGetEditText(Sender: TObject; ACol, ARow: integer; var Value: string);
     procedure evtCurrencyChangedAndValid(Sender: TObject);
-    procedure agrLinesDrawCell(Sender: TObject; ACol, ARow: integer; Rect: TRect; State: TGridDrawState);
     procedure rgrInvoiceAddressTypeClick(Sender: TObject);
     procedure actSaveAndExitExecute(Sender: TObject);
     procedure actPrintInvoiceExecute(Sender: TObject);
@@ -440,7 +437,6 @@ type
       var AProperties: TcxCustomEditProperties);
     procedure memExtraTextChange(Sender: TObject);
     procedure actInvoiceActionsUpdate(Action: TBasicAction; var Handled: Boolean);
-    procedure actMoveItemToRoomInvoiceExecute(Sender: TObject);
   private
     { Private declarations }
 
@@ -583,7 +579,6 @@ type
     procedure MoveItemToRoomInvoice(toRoomReservation, toReservation: integer; InvoiceIndex: integer);
     procedure MoveRoomToRoomInvoice;
     function RoomByRoomReservation(RoomReservation: integer): String;
-    procedure DeleteRow(aGrid: TAdvStringGrid; iRow: integer);
     procedure SetInvoiceIndex(const Value: TInvoiceIndex);
     function IfInvoiceChangedThenOptionallySave(Ask: boolean = True): boolean;
     procedure MoveItemToNewInvoiceIndex(rowIndex, toInvoiceIndex: integer);
@@ -830,13 +825,6 @@ begin
     agrLines.RemoveCheckBox(col_Select, i);
     agrLines.RemoveCheckBox(col_VisibleOnInvoice, i);
   end;
-end;
-
-procedure TfrmInvoiceEdit.DeleteRow(aGrid: TAdvStringGrid; iRow: integer);
-begin
-  if agrLines.HasCheckBox(col_Select, iRow) then
-    agrLines.RemoveCheckBox(col_Select, iRow);
-  agrLines.RemoveRows(iRow, 1);
 end;
 
 destructor TfrmInvoiceEdit.Destroy;
@@ -2831,12 +2819,12 @@ end;
 
 procedure TfrmInvoiceEdit.ExternalRoomsClick(Sender: TObject);
 var
-  omnu: TMenuItem;
   list: TList<String>;
   i, l: integer;
+  lRoominfo: TInvoiceRoomEntity;
 begin
-  //
-  omnu := TMenuItem(Sender).Parent;
+
+  lRoomInfo := SelectableExternalRooms[TMenuItem(Sender).Tag];
 
   list := GetSelectedRows;
   try
@@ -2846,8 +2834,7 @@ begin
       if i >= 0 then
       begin
         agrLines.row := i;
-        MoveItemToRoomInvoice(SelectableExternalRooms[omnu.Tag].RoomReservation,
-          SelectableExternalRooms[omnu.Tag].reservation, TMenuItem(Sender).Tag);
+        MoveItemToRoomInvoice(lRoomInfo.RoomReservation, lRoomInfo.reservation, 0);
       end;
     end;
   finally
@@ -4990,39 +4977,6 @@ begin
     ExecuteCurrencyChange(oldCurrency, InvoiceCurrencyCode);
 end;
 
-procedure TfrmInvoiceEdit.agrLinesDrawCell(Sender: TObject; ACol, ARow: integer; Rect: TRect;
-  State: TGridDrawState);
-//var
-//  Bmp: TIcon;
-//  Item: string;
-begin
-  inherited;
-
-  // Show sun-icon with roomrent and discount items when foreign curency selected
-  // Not needed anymore?
-
-  // --
-//  if not edtForeignCurrency.Visible then
-//    exit;
-//  if (ACol <> 5) then
-//    exit;
-//
-//  Item := trim(TAdvStringGrid(Sender).Cells[col_Item, ARow]);
-//  if (trim(g.qRoomRentItem) <> Item) and (trim(g.qDiscountItem) <> Item) then
-//    exit;
-//
-//  try
-//    Bmp := TIcon.Create;
-//    try
-//      GridImages.GetIcon(0, Bmp);
-//      TAdvStringGrid(Sender).canvas.Draw(Rect.left + 1, Rect.top + 1, Bmp);
-//    finally
-//      Bmp.Free;
-//    end;
-//  except
-//  end;
-end;
-
 procedure TfrmInvoiceEdit.UpdateRoomReservationsCurrency(const aFromCurrency: string; const aToCurrency: string);
 var
   lRoomres: integer;
@@ -6010,12 +5964,6 @@ begin
   actEditDownPayment.Enabled := (mPayments.RecordCount > 0) and (mPaymentsPaycardTraceIndex.AsInteger <= 0);
 end;
 
-procedure TfrmInvoiceEdit.actMoveItemToRoomInvoiceExecute(Sender: TObject);
-begin
-  inherited;
-//
-end;
-
 procedure TfrmInvoiceEdit.actAddLineExecute(Sender: TObject);
 begin
   agrLines.row := agrLines.RowCount - 1;
@@ -6454,54 +6402,41 @@ end;
 
 procedure TfrmInvoiceEdit.actMoveItemToGroupInvoiceExecute(Sender: TObject);
 var
-  reservation: integer;
-  RoomReservation: integer;
-  itemNumber: integer;
-  ItemId: string; // (10)
-
   Description: string; // (70)
 
   s: string;
-  CurrentRow: integer;
 
   NextInvoiceLine: integer;
   RoomNumber: string;
-
-  Btn: Word;
-
-  rSet: TRoomerDataset;
-
-  ItemTypeInfo: TItemTypeInfo;
-
-  Total: Double;
-  TotalWOVat: Double;
-  TotalVAT: Double;
-  sTotal: string;
 
   UpdateOk: boolean;
 
   err: string;
 
-  lInvRoom: TInvoiceRoomEntity;
-
   list: TList<String>;
   i, l: integer;
-  InvoicelineId: integer;
+  lInvLine: TInvoiceLine;
 
 begin
   err := '';
   UpdateOk := false;
-
-  Total := 0;
 
   if FRoomReservation = 0 then
   begin
     ShowMessage(GetTranslatedText('shTx_Invoice_GroupInvoice'));
     exit;
   end;
-  chkChanged;
 
   list := GetSelectedRows;
+
+  if list.Count > 0 then
+  begin
+    s := GetTranslatedText('shTx_Invoice_MoveSelectedItemsToGroupInvoice');
+    if MessageDlg(s, mtConfirmation, [mbYes, mbNo], 0) <> mrYes then
+      exit;
+  end;
+
+  IfInvoiceChangedThenOptionallySave(true);
   try
     for l := list.Count - 1 downto 0 do
     begin
@@ -6509,65 +6444,20 @@ begin
       if i >= 0 then
       begin
         agrLines.row := i;
-
-        CurrentRow := agrLines.row;
-        if isSystemLine(CurrentRow) then
+        if isSystemLine(i) then
         begin
           d.UpdateGroupAccountone(FReservation, FRoomReservation, FRoomReservation, True);
           continue;
         end;
 
-        ItemId := trim(agrLines.Cells[col_Item, CurrentRow]);
-
-        if ItemId = '' then
-        begin
+        linvLine := GetInvoiceLineByRow(i);
+        if not Assigned(lInvLine) or lInvLine.Item.IsEmpty then
           continue;
-        end;
 
-        reservation := FReservation;
-        RoomReservation := FRoomReservation;
-        itemNumber := CurrentRow;
         RoomNumber := d.RR_GetRoomNr(RoomReservation);
-        Description := trim(agrLines.Cells[col_Description, CurrentRow]);
-        sTotal := trim(agrLines.Cells[col_TotalPrice, CurrentRow]);
+        Description := linvLine.Description + format(' (%s: %s)', [GetTranslatedText('shRoom'), RoomNumber]);
 
-        try
-          Total := _StrToFloat(sTotal);
-        except
-          ShowMessage(format(GetTranslatedText('shTx_Invoice_ErrorInTotal'), [sTotal]));
-          exit;
-        end;
-
-        ItemTypeInfo := d.Item_Get_ItemTypeInfo(ItemId, agrLines.Cells[col_Source, CurrentRow]);
-
-        lInvRoom := TInvoiceRoomEntity.Create(agrLines.Cells[col_Item, CurrentRow], 1, 0,
-          StrToInt(agrLines.Cells[col_ItemCount, CurrentRow]), CurrentRow, InvoiceCurrencyCode, InvoiceCurrencyRate, 0, 0, false);
-        try
-          TotalVAT := GetVATForItem(agrLines.Cells[col_Item, CurrentRow], Total,
-            _StrToFloat(agrLines.Cells[col_ItemCount, CurrentRow]), lInvRoom, tempInvoiceItemList, ItemTypeInfo,
-            edtCustomer.Text); // BHG
-        finally
-          lInvRoom.Free;
-        end;
-        TotalWOVat := Total - TotalVAT;
-
-        if l = list.Count - 1 then
-        begin
-          s := GetTranslatedText('shTx_Invoice_MoveSelectedItemsToGroupInvoice');
-
-          Btn := MessageDlg(s, mtConfirmation, [mbYes, mbNo], 0);
-          if Btn <> mrYes then
-            exit;
-
-          SaveAnd(false);
-        end;
-
-        Description := Description + format(' (%s: %s)', [GetTranslatedText('shRoom'), RoomNumber]);
-        if agrLines.Objects[cInvoiceLineAttachColumn, agrLines.row] IS TInvoiceLine then
-          InvoicelineId := TInvoiceLine(agrLines.Objects[cInvoiceLineAttachColumn, agrLines.row]).LineId
-        else
-          InvoicelineId := -1;
-        NextInvoiceLine := NumberOfInvoiceLines(reservation, 0, 0) + 1 + RR_GetNumberGroupInvoices(reservation);
+        NextInvoiceLine := NumberOfInvoiceLines(FReservation, 0, 0) + 1 + RR_GetNumberGroupInvoices(FReservation);
         s := '';
         s := s + ' UPDATE invoicelines ' + #10;
         s := s + ' Set ' + #10;
@@ -6575,15 +6465,15 @@ begin
         s := s + ' , itemNumber = ' + _db(NextInvoiceLine) + ' ' + #10;
         s := s + ' , Description = ' + _db(Description) + ' ' + #10;
         s := s + ' , staffLastEdit = ' + _db(d.roomerMainDataSet.username) + ' ' + #10;
-        if InvoicelineId = -1 then
+        if lInvLine.LineId = -1 then
         begin
-          s := s + 'where Reservation = ' + _db(reservation);
-          s := s + '  and RoomReservation = ' + _db(RoomReservation);
+          s := s + 'where Reservation = ' + _db(FReservation);
+          s := s + '  and RoomReservation = ' + _db(FRoomReservation);
           s := s + '   and Splitnumber = 0 ' + #10;
-          s := s + '   and itemNumber = ' + _db(itemNumber);
+          s := s + '   and itemNumber = ' + _db(i);
         end
         else
-          s := s + 'where id = ' + _db(InvoicelineId);
+          s := s + 'where id = ' + _db(lInvLine.LineId);
 
         try
           UpdateOk := cmd_bySQL(s);
@@ -6600,27 +6490,6 @@ begin
           ShowMessage(format(GetTranslatedText('shTx_Invoice_FailedGroupInvoice'), [err]));
           exit;
         end;
-
-        rSet := CreateNewDataSet;
-        try
-          s := format(select_Invoice_actItemToGroupInvoiceExecute, [reservation]);
-          hData.rSet_bySQL(rSet, s);
-          rSet.first;
-          if not rSet.eof then
-          begin
-            rSet.edit;
-            rSet.FieldByName('Total').Value := Total + rSet.FieldByName('Total').AsFloat;
-            rSet.FieldByName('TotalWOVAT').Value := TotalWOVat + rSet.FieldByName('TotalWOVAT').AsFloat;
-            rSet.FieldByName('TotalVAT').Value := TotalVAT + rSet.FieldByName('TotalVAT').AsFloat;
-            rSet.post; // ID ADDED
-          end;
-
-        finally
-          FreeAndNil(rSet);
-        end;
-
-        DeleteRow(agrLines, agrLines.row);
-        AddEmptyLine;
       end;
     end;
   finally
@@ -6812,7 +6681,6 @@ begin
   AddInvoiceIndicesToMenu(mnuMoveItemToInvoiceIndex, mnuMoveItemOrRoomToInvoiceIndexClick);
 
   actMoveItemToGroupInvoice.Visible:= (FRoomReservation > 0);
-  actMoveItemToRoomInvoice.Visible := (FRoomReservation = 0);
 end;
 
 procedure TfrmInvoiceEdit.mnuMoveRoomPopup(Sender: TObject);

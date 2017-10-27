@@ -1281,7 +1281,6 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
           ParentFont = False
           ScrollBars = ssBoth
           TabOrder = 0
-          OnDrawCell = agrLinesDrawCell
           OnGetEditText = agrLinesGetEditText
           OnKeyDown = agrLinesKeyDown
           OnMouseDown = agrLinesMouseDown
@@ -2297,11 +2296,6 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
       Caption = 'Save changes'
       OnExecute = btnSaveChangesClick
     end
-    object actMoveItemToRoomInvoice: TAction
-      Category = 'MoveItem'
-      Caption = 'Item to room invoice'
-      OnExecute = actMoveItemToRoomInvoiceExecute
-    end
   end
   object timCloseInvoice: TTimer
     Enabled = False
@@ -2374,9 +2368,6 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
     Top = 328
     object mnuItemToGroupInvoice: TMenuItem
       Action = actMoveItemToGroupInvoice
-    end
-    object mnuItemToRoomInvoice: TMenuItem
-      Action = actMoveItemToRoomInvoice
     end
     object mnuMoveItemToInvoiceIndex: TMenuItem
       Caption = 'Item to Invoiceindex'
