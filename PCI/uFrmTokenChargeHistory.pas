@@ -625,8 +625,8 @@ begin
   charge := TTokenCharge(lvCharges.Selected.Data);
   ChargePayCard(charge,
                 charge.token,
-                charge.token.Reservation,
-                charge.token.RoomReservation,
+                charge.Reservation,
+                charge.RoomReservation,
                 charge.token.id,
                 charge.amount,
                 charge.currency,

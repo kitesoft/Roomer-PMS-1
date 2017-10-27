@@ -143,6 +143,10 @@ inherited FrmChargePayCard: TFrmChargePayCard
       inherited pnlCurrency: TsPanel
         Width = 208
         ExplicitWidth = 208
+        inherited lblCurrencyName: TsLabel
+          Width = 142
+          Height = 14
+        end
       end
     end
     object edAmount: TsCurrencyEdit

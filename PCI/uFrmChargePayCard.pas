@@ -300,7 +300,7 @@ begin
   else
     lbRoomReservation.Caption := '(Group)';
 
-  edAmount.Enabled := (NOT AmountIsFixed) AND (PayCardOperationType IN [PCO_CHARGE, PCO_PRE_AUTH, PCO_REFUND]);
+  edAmount.Enabled := (NOT AmountIsFixed) AND (PayCardOperationType IN [PCO_CHARGE, PCO_PRE_AUTH]);
   fraCurrency.Enabled := edAmount.Enabled;
 
   btnProceed.Enabled := (edAmount.value > 0) and fraCurrency.IsValid and (cbxPaycards.ItemIndex >= 0);
