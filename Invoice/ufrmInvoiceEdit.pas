@@ -77,7 +77,7 @@ uses
   , Spring.Collections.Lists
   , Spring.Collections, cxCheckBox, cxCurrencyEdit, sSplitter, uRoomerForm, dxPScxCommon, dxPScxGridLnk
   , RoomerExceptionHandling, ufraCurrencyPanel
-  , uAmount
+  , uAmount, uCurrencyConstants
   ;
 
 type
@@ -363,6 +363,8 @@ type
     edtTotalInCurrency: TsEdit;
     edtBalanceInCurrency: TsEdit;
     lbBalanceInCurrency: TsLabel;
+    actMoveItemToRoomInvoice: TAction;
+    mnuMoveItemToInvoiceIndex: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure agrLinesMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
     procedure edtCustomerDblClick(Sender: TObject);
@@ -427,7 +429,7 @@ type
     procedure acHidePackageItemsExecute(Sender: TObject);
     procedure acShowpackageItemsExecute(Sender: TObject);
     procedure pnlInvoiceIndicesDragOver(Sender, Source: TObject; X, Y: Integer; State: TDragState; var Accept: Boolean);
-    procedure mnuMoveRoomToInvoiceIndexClick(Sender: TObject);
+    procedure mnuMoveItemOrRoomToInvoiceIndexClick(Sender: TObject);
     procedure actRevertDownpaymentExecute(Sender: TObject);
     procedure mPaymentsCalcFields(DataSet: TDataSet);
     procedure actDeleteDownPaymentExecute(Sender: TObject);
@@ -438,6 +440,7 @@ type
       var AProperties: TcxCustomEditProperties);
     procedure memExtraTextChange(Sender: TObject);
     procedure actInvoiceActionsUpdate(Action: TBasicAction; var Handled: Boolean);
+    procedure actMoveItemToRoomInvoiceExecute(Sender: TObject);
   private
     { Private declarations }
 
@@ -489,7 +492,7 @@ type
     FInvoiceIndexTotals: TInvoiceIndexTotalList;
 
     FTaxAPIResponse : TxsdRoomRentTaxReceiptList;
-    FInvoiceCurrencyCode: string;
+    FInvoiceCurrencyCode: TCurrencyCode;
     FShowRentPerDay: boolean;
     FInvoiceType: TInvoiceType;
     FIsCredit: boolean;
@@ -579,7 +582,6 @@ type
     procedure MoveRoomToGroupInvoice;
     procedure MoveItemToRoomInvoice(toRoomReservation, toReservation: integer; InvoiceIndex: integer);
     procedure MoveRoomToRoomInvoice;
-    procedure FillRoomsInMenu(mnuItem: TMenuItem);
     function RoomByRoomReservation(RoomReservation: integer): String;
     procedure LoadRoomListForCurrentReservation(reservation: integer);
     procedure DeleteRow(aGrid: TAdvStringGrid; iRow: integer);
@@ -604,8 +606,7 @@ type
     procedure DeleteLinesInList(ExecutionPlan: TRoomerExecutionPlan);
     procedure LoadRoomListForOtherRoomReservations(RoomReservation: integer);
     procedure ExternalRoomsClick(Sender: TObject);
-    procedure FillExternalRoomsInMenu(mnuItem: TMenuItem);
-    procedure FillAllRoomsInMenu(mnuItem: TMenuItem);
+    procedure FillAllOtherRoomsInMenu(mnuItem: TMenuItem; aEventHandler: TNotifyEvent);
     procedure TransferRoomToAnyRoomsClick(Sender: TObject);
     procedure UpdatePaidByOfRoomsdate(FromRoomReservation, RoomReservation, RealRoomReservation,
       reservation: integer);
@@ -642,13 +643,14 @@ type
     procedure MoveSelectedLinesToInvoiceIndex(aNewIndex: integer);
     procedure LoadPayments;
     procedure SetHeaderChanged(const Value: boolean);
-    procedure SetInvoiceCurrencyCode(const Value: string);
+    procedure SetInvoiceCurrencyCode(const Value: TCurrencyCode);
 
     function InvoiceCurrencyRate: double;
     function LocateDate(recordSet: TRoomerDataset; field: String; Value: TDate): boolean;
     function FormatRoomDescription(const aRoomNumber: string; const aRoomResDescription: String; aArrival: TDate; aDeparture: TDate; aDayCount: integer;
                                    const aPackagename: string; aAddGuestName: boolean; const aGuestName: string): string;
     function DirectInvoiceLinesExist: boolean;
+    procedure AddInvoiceIndicesToMenu(mnuItem: TMenuItem; aEventHandler: TNotifyEvent);
 
     property InvoiceIndex: TInvoiceIndex read FInvoiceIndex write SetInvoiceIndex;
 
@@ -671,7 +673,7 @@ type
     ///   Currency to display amounts on invoice. note that setting this property does not
     ///  alter the currencysettings of the invoice or roomreservation in the database
     /// </summary>
-    property InvoiceCurrencyCode: string read FInvoiceCurrencyCode write SetInvoiceCurrencyCode;
+    property InvoiceCurrencyCode: TCurrencyCode read FInvoiceCurrencyCode write SetInvoiceCurrencyCode;
     property ShowRentPerDay: boolean read FShowRentPerDay write FShowRentPerDay;
   end;
 
@@ -713,7 +715,7 @@ uses
   uDateTimeHelper,
   Types,
   uFinanceConnectService
-  , uFrmChargePayCard, uPMSSettings, uCurrencyConstants, uRoomerCurrencymanager;
+  , uFrmChargePayCard, uPMSSettings, uRoomerCurrencymanager;
 
 {$R *.DFM}
 
@@ -5141,7 +5143,7 @@ begin
   end;
 end;
 
-procedure TfrmInvoiceEdit.SetInvoiceCurrencyCode(const Value: string);
+procedure TfrmInvoiceEdit.SetInvoiceCurrencyCode(const Value: TCurrencyCode);
 begin
   FInvoiceCurrencyCode := Value;
   fraInvoiceCurrency.DisableEvents;
@@ -5789,7 +5791,6 @@ procedure TfrmInvoiceEdit.actEditDownPaymentExecute(Sender: TObject);
 var
   rec: recDownPayment;
   Id: integer;
-  lAllowEditAmount: boolean;
 begin
   // **
   if mPayments.RecordCount = 0 then
@@ -6008,6 +6009,12 @@ begin
   actRevertDownpayment.Enabled := not mPayments.IsEmpty;
   actDeleteDownPayment.Enabled := (mPayments.RecordCount > 0) and (mPaymentsPaycardTraceIndex.AsInteger <= 0);
   actEditDownPayment.Enabled := (mPayments.RecordCount > 0) and (mPaymentsPaycardTraceIndex.AsInteger <= 0);
+end;
+
+procedure TfrmInvoiceEdit.actMoveItemToRoomInvoiceExecute(Sender: TObject);
+begin
+  inherited;
+//
 end;
 
 procedure TfrmInvoiceEdit.actAddLineExecute(Sender: TObject);
@@ -6807,69 +6814,7 @@ begin
   end;
 end;
 
-procedure TfrmInvoiceEdit.FillRoomsInMenu(mnuItem: TMenuItem);
-var
-  i: integer;
-  Item, subItem: TMenuItem;
-  l: integer;
-begin
-  if (mnuItem = mnuItemToRoomInvoice) then
-  begin
-    LoadRoomListForCurrentReservation(FReservation);
-    mnuItem.Clear;
-    for i := 0 to SelectableRooms.Count - 1 do
-    begin
-      Item := TMenuItem.Create(nil);
-      Item.Caption := SelectableRooms[i].Room;
-      Item.Tag := i;
-      mnuItem.Add(Item);
-
-      Item.Clear;
-      for l := 0 to mnuInvoiceIndex.Items.Count - 1 do
-      begin
-        subItem := TMenuItem.Create(nil);
-        subItem.Caption := mnuInvoiceIndex.Items[l].Caption;
-        subItem.Tag := mnuInvoiceIndex.Items[l].Tag;
-        subItem.OnClick := MoveSelectedLinesToRoomInvoiceIndex;
-        Item.Add(subItem);
-        subItem.Enabled := subItem.Tag >= 0;
-      end;
-    end;
-  end;
-end;
-
-procedure TfrmInvoiceEdit.FillExternalRoomsInMenu(mnuItem: TMenuItem);
-var
-  i: integer;
-  Item, subItem: TMenuItem;
-  l: integer;
-begin
-  if (mnuItem = mnuMoveItemToAnyOtherRoomAndInvoiceIndex) then
-  begin
-    LoadRoomListForOtherRoomReservations(FReservation);
-    mnuItem.Clear;
-    for i := 0 to SelectableExternalRooms.Count - 1 do
-    begin
-      Item := TMenuItem.Create(nil);
-      Item.Caption := SelectableExternalRooms[i].Room;
-      Item.Tag := i;
-      mnuItem.Add(Item);
-
-      Item.Clear;
-      for l := 0 to mnuInvoiceIndex.Items.Count - 1 do
-      begin
-        subItem := TMenuItem.Create(nil);
-        subItem.Caption := mnuInvoiceIndex.Items[l].Caption;
-        subItem.Tag := mnuInvoiceIndex.Items[l].Tag;
-        subItem.OnClick := ExternalRoomsClick;
-        Item.Add(subItem);
-        subItem.Enabled := subItem.Tag >= 0;
-      end;
-    end;
-  end;
-end;
-
-procedure TfrmInvoiceEdit.FillAllRoomsInMenu(mnuItem: TMenuItem);
+procedure TfrmInvoiceEdit.FillAllOtherRoomsInMenu(mnuItem: TMenuItem; aEventHandler: TNotifyEvent);
 var
   i: integer;
   Item: TMenuItem;
@@ -6883,7 +6828,7 @@ begin
     Item.Caption := SelectableExternalRooms[i].Room;
     Item.Tag := i;
     mnuItem.Add(Item);
-    Item.OnClick := TransferRoomToAnyRoomsClick;
+    Item.OnClick := aEventHandler;
   end;
 end;
 
@@ -6894,34 +6839,41 @@ end;
 
 procedure TfrmInvoiceEdit.mnuMoveItemPopup(Sender: TObject);
 begin
-  FillRoomsInMenu(mnuItemToRoomInvoice);
-  FillExternalRoomsInMenu(mnuMoveItemToAnyOtherRoomAndInvoiceIndex);
+  FillAllOtherRoomsInMenu(mnuMoveItemToAnyOtherRoomAndInvoiceIndex, ExternalRoomsClick);
+  AddInvoiceIndicesToMenu(mnuMoveItemToInvoiceIndex, mnuMoveItemOrRoomToInvoiceIndexClick);
 
-  actMoveItemToGroupInvoice.Enabled := (FRoomReservation > 0);
+  actMoveItemToGroupInvoice.Visible:= (FRoomReservation > 0);
+  actMoveItemToRoomInvoice.Visible := (FRoomReservation = 0);
 end;
 
 procedure TfrmInvoiceEdit.mnuMoveRoomPopup(Sender: TObject);
+begin
+  FillAllOtherRoomsInMenu(mnuTransferRoomRentToDifferentRoom, TransferRoomToAnyRoomsClick);
+  AddInvoiceIndicesToMenu(mnuMoveRoomToInvoiceIndex, mnuMoveItemOrRoomToInvoiceIndexClick);
+
+  actMoveRoomToGroupInvoice.Visible := (FRoomReservation > 0);
+  actMoveRoomToRoomInvoice.Visible :=  (FRoomReservation = 0);
+end;
+
+procedure TfrmInvoiceEdit.AddInvoiceIndicesToMenu(mnuItem: TMenuItem; aEventHandler: TNotifyEvent);
 var
   l: integer;
   subItem: TMenuItem;
 begin
-  FillAllRoomsInMenu(mnuTransferRoomRentToDifferentRoom);
-  actMoveRoomToGroupInvoice.Visible := (FRoomReservation > 0);
-  actMoveRoomToRoomInvoice.Visible :=  (FRoomReservation = 0);
-
-  mnuMoveRoomToInvoiceIndex.Clear;
+  mnuItem.Clear;
   for l := 0 to mnuInvoiceIndex.Items.Count - 1 do
   begin
     subItem := TMenuItem.Create(nil);
     subItem.Caption := mnuInvoiceIndex.Items[l].Caption;
     subItem.Tag := mnuInvoiceIndex.Items[l].Tag;
-    subItem.OnClick := mnuMoveRoomToInvoiceIndexClick;
-    mnuMoveRoomToInvoiceIndex.Add(subItem);
+    subItem.OnClick := aEventHandler;
+    mnuItem.Add(subItem);
     subItem.Enabled := subItem.Tag >= 0;
   end;
 end;
 
-procedure TfrmInvoiceEdit.mnuMoveRoomToInvoiceIndexClick(Sender: TObject);
+
+procedure TfrmInvoiceEdit.mnuMoveItemOrRoomToInvoiceIndexClick(Sender: TObject);
 var
   mnu: TMenuItem;
 begin

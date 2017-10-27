@@ -1593,6 +1593,8 @@ var
 begin
   multi := TIdMultipartFormDataStream.Create;
   try
+    http := TIdHTTP.Create(nil);
+    IdSSLIOHandlerSocketOpenSSL1 := nil;
     try
       if assigned(files) then
         for i := 0 to files.Count - 1 do
@@ -1618,8 +1620,6 @@ begin
       multi.AddFormField('plaintext', _text, 'UTF-8', 'text/plain', 'emailText.txt');
       multi.AddFormField('htmltext', _htmlText, 'UTF-8', 'text/html', 'htmlText.html');
 
-      IdSSLIOHandlerSocketOpenSSL1 := nil;
-      http := TIdHTTP.Create(nil);
       try
         if LowerCase(Copy(OpenApiUri, 1, 8)) = 'https://' then
         begin

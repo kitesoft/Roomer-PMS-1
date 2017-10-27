@@ -49,6 +49,10 @@ type
     class function Create(const a: integer; const c: TCurrencyCode): TAmount; overload; static; inline;
     class function Create(const a: double; const c: TCurrencyCode): TAmount; overload; static; inline;
     class function Create(const a: Extended; const c: TCurrencyCode): TAmount; overload; static; inline;
+    class function Create(const a: Currency; const c: string): TAmount; overload; static; inline;
+    class function Create(const a: integer; const c: string): TAmount; overload; static; inline;
+    class function Create(const a: double; const c: string): TAmount; overload; static; inline;
+    class function Create(const a: Extended; const c: string): TAmount; overload; static; inline;
     class function Create(const c: TCurrencyCode): TAmount; overload; static; inline;
 
     class function Create(const a: Currency; const id: integer): TAmount; overload; static; inline;
@@ -442,6 +446,26 @@ end;
 class function TAmount.Create(const a: Extended; const id: integer): TAmount;
 begin
   Result := Create(a, CheckValidCurrencyID(id));
+end;
+
+class function TAmount.Create(const a: integer; const c: string): TAmount;
+begin
+  Result := Create(a, c.Substring(0, 3));
+end;
+
+class function TAmount.Create(const a: Currency; const c: string): TAmount;
+begin
+  Result := Create(a, c.Substring(0, 3));
+end;
+
+class function TAmount.Create(const a: Extended; const c: string): TAmount;
+begin
+  Result := Create(a, c.Substring(0, 3));
+end;
+
+class function TAmount.Create(const a: double; const c: string): TAmount;
+begin
+  Result := Create(a, c.Substring(0, 3));
 end;
 
 class operator TAmount.Divide(a, b: TAmount): TAmount;

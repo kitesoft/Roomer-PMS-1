@@ -539,9 +539,12 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
           Height = 21
           Align = alClient
           ExplicitHeight = 21
+          inherited lblCurrencyName: TsLabel
+            Width = 140
+            Height = 15
+          end
           inherited edCurrencyCode: TsEdit
             Height = 20
-            ExplicitHeight = 20
           end
           inherited btnGetCurrency: TsButton
             Height = 21
@@ -2209,7 +2212,6 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
     object actMoveItemToGroupInvoice: TAction
       Category = 'MoveItem'
       Caption = 'Item to groupinvoice'
-      ShortCut = 116
       OnExecute = actMoveItemToGroupInvoiceExecute
     end
     object actAddPackage: TAction
@@ -2295,6 +2297,11 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
       Caption = 'Save changes'
       OnExecute = btnSaveChangesClick
     end
+    object actMoveItemToRoomInvoice: TAction
+      Category = 'MoveItem'
+      Caption = 'Item to room invoice'
+      OnExecute = actMoveItemToRoomInvoiceExecute
+    end
   end
   object timCloseInvoice: TTimer
     Enabled = False
@@ -2369,15 +2376,18 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
       Action = actMoveItemToGroupInvoice
     end
     object mnuItemToRoomInvoice: TMenuItem
-      Caption = 'Item to room invoice'
+      Action = actMoveItemToRoomInvoice
+    end
+    object mnuMoveItemToInvoiceIndex: TMenuItem
+      Caption = 'Item to Invoiceindex'
+      object TMenuItem
+      end
     end
     object N6: TMenuItem
       Caption = '-'
     end
     object mnuMoveItemToAnyOtherRoomAndInvoiceIndex: TMenuItem
       Caption = 'Transfer'
-      object TMenuItem
-      end
     end
   end
   object mnuMoveRoom: TPopupMenu
@@ -2392,8 +2402,6 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
     end
     object mnuMoveRoomToInvoiceIndex: TMenuItem
       Caption = 'Room to invoiceindex'
-      object TMenuItem
-      end
     end
     object N7: TMenuItem
       Caption = '-'
