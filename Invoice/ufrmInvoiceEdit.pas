@@ -583,7 +583,6 @@ type
     procedure MoveItemToRoomInvoice(toRoomReservation, toReservation: integer; InvoiceIndex: integer);
     procedure MoveRoomToRoomInvoice;
     function RoomByRoomReservation(RoomReservation: integer): String;
-    procedure LoadRoomListForCurrentReservation(reservation: integer);
     procedure DeleteRow(aGrid: TAdvStringGrid; iRow: integer);
     procedure SetInvoiceIndex(const Value: TInvoiceIndex);
     function IfInvoiceChangedThenOptionallySave(Ask: boolean = True): boolean;
@@ -1816,7 +1815,7 @@ end;
 procedure TfrmInvoiceEdit.tvPaymentsCurrencyAmountGetProperties(Sender: TcxCustomGridTableItem;
   ARecord: TcxCustomGridRecord; var AProperties: TcxCustomEditProperties);
 begin
-  aProperties := RoomerCurrencyManager[mPaymentsCurrency.AsString].GetcxEditProperties();
+  aProperties := RoomerCurrencyManager[aRecord.Values[tvPaymentsCurrency.Index]].GetcxEditProperties();
 end;
 
 procedure TfrmInvoiceEdit.tvPaymentsMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState;
@@ -2827,7 +2826,7 @@ procedure TfrmInvoiceEdit.mPaymentsCalcFields(DataSet: TDataSet);
 begin
   mPaymentsChargedOnCC.AsBoolean := mPaymentsPaycardTraceIndex.AsInteger > 0;
   if not mPaymentsCurrency.IsNull then
-    mPaymentsCurrencyAmount.AsFloat := RoomerCurrencyManager.ConvertAmount(mPaymentsNativeAmount.AsFloat, mPaymentsCurrency.AsString);
+    mPaymentsCurrencyAmount.AsFloat := TAmount(mPaymentsNativeAmount.AsFloat).ToCurrency(mPaymentsCurrency.AsString).Value;
 end;
 
 procedure TfrmInvoiceEdit.ExternalRoomsClick(Sender: TObject);
@@ -6752,36 +6751,6 @@ begin
   result := (not IsDirectInvoice) and (FInvoiceLinesList.IsChanged or HeaderChanged or (DeletedLines.Count > 0));
   btnSaveChanges.Visible := result;
   actSave.Enabled := Result;
-end;
-
-procedure TfrmInvoiceEdit.LoadRoomListForCurrentReservation(reservation: integer);
-var
-  sql: String;
-  rSet: TRoomerDataset;
-  Room: TInvoiceRoomEntity;
-begin
-  SelectableRooms.Clear;
-  sql := format
-    ('SELECT DISTINCT Room, RoomReservation, Reservation FROM roomsdate WHERE Reservation=%d AND ResFlag NOT IN (''X'', ''C'')',
-    [reservation]);
-  rSet := CreateNewDataSet;
-  try
-    if hData.rSet_bySQL(rSet, sql, false) then
-    begin
-      rSet.first;
-      while NOT rSet.eof do
-      begin
-        Room := TInvoiceRoomEntity.Create;
-        Room.Room := rSet['Room'];
-        Room.RoomReservation := rSet['RoomReservation'];
-        Room.reservation := rSet['Reservation'];
-        SelectableRooms.Add(Room);
-        rSet.Next;
-      end;
-    end;
-  finally
-    FreeAndNil(rSet);
-  end;
 end;
 
 procedure TfrmInvoiceEdit.LoadRoomListForOtherRoomReservations(RoomReservation: integer);

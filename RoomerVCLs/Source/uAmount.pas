@@ -450,22 +450,22 @@ end;
 
 class function TAmount.Create(const a: integer; const c: string): TAmount;
 begin
-  Result := Create(a, c.Substring(0, 3));
+  Result := Create(a, TCurrencyCode(c.Substring(0, 3)));
 end;
 
 class function TAmount.Create(const a: Currency; const c: string): TAmount;
 begin
-  Result := Create(a, c.Substring(0, 3));
+  Result := Create(a, TCurrencyCode(c.Substring(0, 3)));
 end;
 
 class function TAmount.Create(const a: Extended; const c: string): TAmount;
 begin
-  Result := Create(a, c.Substring(0, 3));
+  Result := Create(a, TCurrencyCode(c.Substring(0, 3)));
 end;
 
 class function TAmount.Create(const a: double; const c: string): TAmount;
 begin
-  Result := Create(a, c.Substring(0, 3));
+  Result := Create(a, TCurrencyCode(c.Substring(0, 3)));
 end;
 
 class operator TAmount.Divide(a, b: TAmount): TAmount;
