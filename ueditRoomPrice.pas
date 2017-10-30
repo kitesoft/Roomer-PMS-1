@@ -155,7 +155,9 @@ type
     procedure mRoomRatesBeforePost(DataSet: TDataSet);
     procedure tvRoomRatesNativeAmountGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
       var AProperties: TcxCustomEditProperties);
-    procedure tvRoomRatesRentAmountGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
+    procedure tvRoomRatesRentDiscountGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
+      var AProperties: TcxCustomEditProperties);
+    procedure tvRoomRatesRateGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
       var AProperties: TcxCustomEditProperties);
   private
     { Private declarations }
@@ -567,7 +569,14 @@ begin
   aProperties := d.getCurrencyProperties(g.qNativeCurrency);
 end;
 
-procedure TfrmEditRoomPrice.tvRoomRatesRentAmountGetProperties(Sender: TcxCustomGridTableItem;
+procedure TfrmEditRoomPrice.tvRoomRatesRateGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
+  var AProperties: TcxCustomEditProperties);
+begin
+  inherited;
+  aProperties := FCurrencyHandler.GetcxEditPropertiesKeepEvents(aProperties);
+end;
+
+procedure TfrmEditRoomPrice.tvRoomRatesRentDiscountGetProperties(Sender: TcxCustomGridTableItem;
   ARecord: TcxCustomGridRecord; var AProperties: TcxCustomEditProperties);
 begin
   if not aRecord.Values[tvRoomRatesisPercentage.Index] then
