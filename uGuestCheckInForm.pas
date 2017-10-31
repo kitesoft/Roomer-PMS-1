@@ -1136,6 +1136,7 @@ begin
   end;
 
   // Special case for credit card garantee
+  shpCC.Visible := False;
   if TMandatoryCheckinField.mfGuarantee.IsCurrentlyOn then
   begin
     case cbxGuaranteeTypes.ItemIndex of
