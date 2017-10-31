@@ -68,6 +68,7 @@ type
     class operator Implicit(a: TAmount): double;
     class operator Implicit(a: TAmount): extended;
     class operator Implicit(a: TAmount): integer;
+    class operator Implicit(a: TAmount): string;
 
     class operator Explicit(a: TAmount): integer;
 
@@ -478,6 +479,11 @@ begin
     Result.FCurCode := a.FCurCode;
   end;
 
+end;
+
+class operator TAmount.Implicit(a: TAmount): string;
+begin
+  Result := a.AsDisplayString;
 end;
 
 initialization

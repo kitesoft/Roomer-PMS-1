@@ -168,6 +168,7 @@ object frmInvoicePayment: TfrmInvoicePayment
     HoverRowCells = [hcNormal, hcSelected]
     OnGetAlignment = agrPayTypesGetAlignment
     OnClickCell = agrPayTypesClickCell
+    OnEditCellDone = agrPayTypesEditCellDone
     ActiveCellFont.Charset = DEFAULT_CHARSET
     ActiveCellFont.Color = clWindowText
     ActiveCellFont.Height = -11
@@ -251,6 +252,7 @@ object frmInvoicePayment: TfrmInvoicePayment
     SearchFooter.ResultFormat = '(%d of %d)'
     SortSettings.DefaultFormat = ssAutomatic
     Version = '8.2.4.1'
+    ExplicitTop = 135
     ColWidths = (
       169
       116)
@@ -486,7 +488,7 @@ object frmInvoicePayment: TfrmInvoicePayment
       Font.Style = []
     end
     object __LblForeignCurrency: TsLabel
-      Left = 224
+      Left = 248
       Top = 4
       Width = 29
       Height = 18
@@ -500,7 +502,7 @@ object frmInvoicePayment: TfrmInvoicePayment
       Font.Style = []
     end
     object __LblLocalCurrency: TsLabel
-      Left = 224
+      Left = 248
       Top = 23
       Width = 29
       Height = 18
@@ -512,20 +514,6 @@ object frmInvoicePayment: TfrmInvoicePayment
       Font.Height = -15
       Font.Name = 'Tahoma'
       Font.Style = []
-    end
-    object LblForeignCurrency: TsLabel
-      Left = 264
-      Top = 8
-      Width = 12
-      Height = 13
-      Caption = '...'
-    end
-    object LblLocalCurrency: TsLabel
-      Left = 264
-      Top = 27
-      Width = 12
-      Height = 13
-      Caption = '...'
     end
   end
   object pnlPayCard: TsPanel

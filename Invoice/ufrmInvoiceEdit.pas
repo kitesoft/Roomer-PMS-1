@@ -74,7 +74,9 @@ uses
   uInvoiceEntities,
   uInvoiceObjects
   , uInvoiceDefinitions, uRoomerBookingDataModel_ModelObjects
+  , Generics.Collections
   , Spring.Collections.Lists
+  , Spring.Collections.Dictionaries
   , Spring.Collections, cxCheckBox, cxCurrencyEdit, sSplitter, uRoomerForm, dxPScxCommon, dxPScxGridLnk
   , RoomerExceptionHandling, ufraCurrencyPanel
   , uAmount, uCurrencyConstants
@@ -570,7 +572,7 @@ type
     procedure NullifyGrid;
 
     Procedure InitInvoiceGrid;
-    procedure AddDeleteFromInvoiceToExecutionPlan(aExecutionPlan: TRoomerExecutionPlan);
+    procedure AddDeleteInvoiceHeadToExecutionPlan(aExecutionPlan: TRoomerExecutionPlan);
 
     procedure GetTaxTypes(TaxResultInvoiceLines: TInvoiceTaxEntityList);
     procedure UpdateItemInvoiceLinesForTaxCalculations;
@@ -709,7 +711,8 @@ uses
   uDateTimeHelper,
   Types,
   uFinanceConnectService
-  , uFrmChargePayCard, uPMSSettings, uRoomerCurrencymanager;
+  , uFrmChargePayCard, uPMSSettings, uRoomerCurrencymanager
+  ;
 
 {$R *.DFM}
 
@@ -848,7 +851,7 @@ begin
   end;
 end;
 
-procedure TfrmInvoiceEdit.AddDeleteFromInvoiceToExecutionPlan(aExecutionPlan: TRoomerExecutionPlan);
+procedure TfrmInvoiceEdit.AddDeleteInvoiceHeadToExecutionPlan(aExecutionPlan: TRoomerExecutionPlan);
 var
   s: string;
 begin
@@ -3109,7 +3112,7 @@ begin
 
     LoadPayments; // Make sure you have all records, catches problems with mutliple cash invoices being created at once
     lOpenBalance := FInvoiceLinesList.TotalOnInvoice.ToNative - getTotalDownPayments;
-    if SelectPaymentTypes(lOpenBalance.Value, edtCustomer.Text, ptInvoice, InvoiceCurrencyCode,
+    if SelectPaymentTypes(lOpenBalance, edtCustomer.Text, ptInvoice, InvoiceCurrencyCode,
       InvoiceCurrencyRate, FReservation, FRoomreservation, FinvoiceIndex, not IsDirectInvoice, lstLocations, aInvoiceDate, aPayDate, aLocation) then
     begin
       SaveCompletePayments();
@@ -3360,7 +3363,7 @@ begin
     if (aSaveType <> stProforma) then
     begin
       DeleteLinesInList(lExecutionPlan);
-      AddDeleteFromInvoiceToExecutionPlan(lExecutionPlan);
+      AddDeleteInvoiceHeadToExecutionPlan(lExecutionPlan);
     end;
 
     try
@@ -3777,85 +3780,82 @@ end;
 
 procedure TfrmInvoiceEdit.SaveCompletePayments();
 var
-  lPaymentType: string;
-  lPaymentValue: Double;
   lPaymentDesc: string;
   i: integer;
   lYear, lMonth, lDay: Word;
   s: string;
   lExecPlan: TRoomerExecutionPlan;
+  lPair: TPair<string, TAmount>;
 begin
 
   lExecPlan := d.roomerMainDataSet.CreateExecutionPlan;
   try
-    for i := 0 to stlPaySelections.Count - 1 do
-    begin
+//    for i := 0 to stlPaySelections.Count - 1 do
+    decodedate(zInvoiceDate, lYear, lMonth, lDay);
+    for lPair in stlPaySelections do
+      if (lPair.Value <> 0.00) then
+      begin
+        glb.LocateSpecificRecordAndGetValue('paytypes', 'PayType', lPair.Key, 'Description', lPaymentDesc);
 
-      lPaymentType := _strTokenAt(stlPaySelections[i], '|', 0);
-      lPaymentValue := IIF(FIsCredit, -1, 1) * _StrToFloat(_strTokenAt(stlPaySelections[i], '|', 1));
-      lPaymentDesc := _strTokenAt(stlPaySelections[i], '|', 2) + ' [' + lPaymentType + ']';
+        s := '';
+        s := s + 'INSERT INTO payments' + #10;
+        s := s + '(' + #10;
+        s := s + '  Reservation' + '' + #10;
+        s := s + ', RoomReservation' + #10;
+        s := s + ', Person' + #10;
 
-      decodedate(zInvoiceDate, lYear, lMonth, lDay);
+        s := s + ', Customer' + #10;
+        s := s + ', AutoGen' + #10;
+        s := s + ', InvoiceNumber' + #10;
+        s := s + ', PayDate' + #10;
 
-      s := '';
-      s := s + 'INSERT INTO payments' + #10;
-      s := s + '(' + #10;
-      s := s + '  Reservation' + '' + #10;
-      s := s + ', RoomReservation' + #10;
-      s := s + ', Person' + #10;
+        s := s + ', PayType' + #10;
+        s := s + ', Amount' + #10;
+        s := s + ', Description' + #10;
 
-      s := s + ', Customer' + #10;
-      s := s + ', AutoGen' + #10;
-      s := s + ', InvoiceNumber' + #10;
-      s := s + ', PayDate' + #10;
+        s := s + ', CurrencyRate' + #10;
+        s := s + ', Currency' + #10;
 
-      s := s + ', PayType' + #10;
-      s := s + ', Amount' + #10;
-      s := s + ', Description' + #10;
+        s := s + ', TypeIndex' + #10;
 
-      s := s + ', CurrencyRate' + #10;
-      s := s + ', Currency' + #10;
+        s := s + ', AYear' + #10;
+        s := s + ', AMon' + #10;
+        s := s + ', ADay' + #10;
+        s := s + ', staff' + #10;
+        s := s + ', InvoiceIndex' + #10;
 
-      s := s + ', TypeIndex' + #10;
+        s := s + ')' + #10;
+        s := s + 'Values' + #10;
+        s := s + '(' + #10;
 
-      s := s + ', AYear' + #10;
-      s := s + ', AMon' + #10;
-      s := s + ', ADay' + #10;
-      s := s + ', staff' + #10;
-      s := s + ', InvoiceIndex' + #10;
+        s := s + '  ' + inttostr(FReservation);
+        s := s + ', ' + inttostr(FRoomReservation);
+        s := s + ', ' + _db(ord(FInvoiceType));
 
-      s := s + ')' + #10;
-      s := s + 'Values' + #10;
-      s := s + '(' + #10;
+        s := s + ', ' + _db(edtCustomer.Text);
 
-      s := s + '  ' + inttostr(FReservation);
-      s := s + ', ' + inttostr(FRoomReservation);
-      s := s + ', ' + _db(ord(FInvoiceType));
+        s := s + ', ' + _db(_GetCurrentTick);
 
-      s := s + ', ' + _db(edtCustomer.Text);
+        s := s + ', ' + inttostr(-1);
+        s := s + ', ' + _db(zInvoiceDate, True);
 
-      s := s + ', ' + _db(_GetCurrentTick);
+        s := s + ', ' + _db(lPair.Key);
+        s := s + ', ' + _db(lPair.Value);
+        s := s + ', ' + _db(lPaymentDesc);
+        s := s + ', ' + _db(InvoiceCurrencyRate);
+        s := s + ', ' + _db(InvoiceCurrencyCode);
+        s := s + ', 0';
 
-      s := s + ', ' + inttostr(-1);
-      s := s + ', ' + _db(zInvoiceDate, True);
+        s := s + ', ' + inttostr(lYear);
+        s := s + ', ' + inttostr(lMonth);
+        s := s + ', ' + inttostr(lDay);
+        s := s + ', ' + _db(d.roomerMainDataSet.username);
+        s := s + ', ' + _db(FInvoiceIndex);
+        s := s + ')';
 
-    s := s + ', ' + _db(lPaymentType);
-    s := s + ', ' + _db(lPaymentValue);
-    s := s + ', ' + _db(lPaymentDesc);
-    s := s + ', ' + _db(InvoiceCurrencyRate);
-    s := s + ', ' + _db(InvoiceCurrencyCode);
-    s := s + ', 0';
+        lExecPlan.AddExec(s);
 
-      s := s + ', ' + inttostr(lYear);
-      s := s + ', ' + inttostr(lMonth);
-      s := s + ', ' + inttostr(lDay);
-      s := s + ', ' + _db(d.roomerMainDataSet.username);
-      s := s + ', ' + _db(FInvoiceIndex);
-      s := s + ')';
-
-      lExecPlan.AddExec(s);
-
-    end;
+      end;
 
     lExecPlan.Execute(ptExec,True, True);
 
@@ -5000,6 +5000,7 @@ begin
       d.roomerMainDataSet.SystemStartTransaction;
       try
 
+        AddDeleteInvoiceHeadToExecutionPlan(lExecPlan);
         AddSaveHeaderToExecPlan(-1, lExecplan);
 
         if (FRoomReservation = 0) and (FReservation > 0) then

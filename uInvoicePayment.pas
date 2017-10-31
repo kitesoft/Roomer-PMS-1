@@ -42,7 +42,8 @@ uses
   , AdvObj
   , BaseGrid
   , AdvGrid, sComboBox, AdvUtil
-  , uD
+  , uD, uAmount
+  , Spring.Collections.Dictionaries
   ;
 
 type
@@ -77,8 +78,6 @@ type
     LblLocalCurrencyAmount: TsLabel;
     __LblForeignCurrency: TsLabel;
     __LblLocalCurrency: TsLabel;
-    LblForeignCurrency: TsLabel;
-    LblLocalCurrency: TsLabel;
     pnlPayCard: TsPanel;
     btnManagePaycards: TsButton;
     btnChargePayCard: TsButton;
@@ -96,13 +95,14 @@ type
     procedure agrPayTypesClickCell(Sender: TObject; ARow, ACol: Integer);
     procedure btnManagePaycardsClick(Sender: TObject);
     procedure btnChargePayCardClick(Sender: TObject);
+    procedure agrPayTypesEditCellDone(Sender: TObject; ACol, ARow: Integer);
 
   private
     { Private declarations }
     CloseOK : boolean;
     err : integer;
 
-    FNativeAmount : Double;
+    FNativeAmount : TAmount;
     FCustomer : string;
     FReservation: Integer;
     FRoomReservation: Integer;
@@ -110,10 +110,13 @@ type
     FCurrencyRate: Double;
     FInvoiceIndex: Integer;
     FAllowPaycardCharge: boolean;
+    FAmountLeft: TAmount;
     procedure Recalc;
     procedure FillPayGrid;
-    function AlreadyProvidedPayments: Double;
+    function AlreadyProvidedPayments: TAmount;
     procedure EnabledChargepaycard;
+    procedure SetAmountLeft(const Value: TAmount);
+    property AmountLeft: TAmount read FAmountLeft write SetAmountLeft;
   public
     { Public declarations }
      procedure WndProc(var Message: TMessage); override;
@@ -127,7 +130,7 @@ type
 
 
 // --
-function SelectPaymentTypes( NativeAmount : Double;
+function SelectPaymentTypes( NativeAmount : TAmount;
                             Customer : string;
                             PaymentType : hdata.TPaymentTypes;
                             Currency : String;
@@ -144,7 +147,7 @@ function SelectPaymentTypes( NativeAmount : Double;
 var
     sSelectedCustomer  : string;
     fSelectedAmount    : Double;
-    stlPaySelections   : TStringlist;
+    stlPaySelections   : TDictionary<string, TAmount>;
     COnfirmation       : string;
 
 
@@ -164,7 +167,7 @@ uses
 
 {$R *.DFM}
 
-function SelectPaymentTypes( NativeAmount : Double;
+function SelectPaymentTypes( NativeAmount : TAmount;
                              Customer : string;
                              PaymentType : hdata.TPaymentTypes;
                              Currency : String;
@@ -188,10 +191,10 @@ begin
   try
 //    Confirmation := '';
     frm.FNativeAmount := NativeAmount;
-    frm.edtAmount.text := trim( _FloatToStr( NativeAmount, 9, 2 ) );
+    frm.edtAmount.text := frm.FNativeAmount.AsDisplayString;
     frm.FCustomer := Customer;
     frm.lblSelected.caption := '0';
-    frm.lblLeft.caption := trim( _FloatToStr( NativeAmount, 9, 2 ) );
+    frm.AmountLeft := NativeAmount;
     frm.dtInvDate.Date := Date;
     frm.dtPayDate.Date := Date;
     frm.Currency := Currency;
@@ -233,14 +236,10 @@ begin
     begin
 	    frm.Caption := GetTranslatedText('shTx_InvoicePayment_InvoicePayment');
       frm.panel2.visible := false;
-      frm.LblForeignCurrency.Visible := UpperCase(Currency) <> UpperCase(ctrlGetString('NativeCurrency'));
-      frm.LblForeignCurrencyAmount.Visible := frm.LblForeignCurrency.Visible;
-      frm.__LblForeignCurrency.Visible := frm.LblForeignCurrency.Visible;
+      frm.LblForeignCurrencyAmount.Visible := UpperCase(Currency) <> UpperCase(ctrlGetString('NativeCurrency'));
       frm.__pnlCurrencies.Visible := true;
-      frm.__LblLocalCurrency.Caption := trim(_floattostr(NativeAmount, 10, 2));
-      frm.__LblForeignCurrency.Caption := trim(_floattostr(NativeAmount / CurrencyRate, 10, 2));
-      frm.LblLocalCurrency.Caption := ctrlGetString('NativeCurrency');
-      frm.LblForeignCurrency.Caption := Currency;
+      frm.__LblLocalCurrency.Caption := NativeAmount.AsDisplayStringWithCode;
+      frm.__LblForeignCurrency.Caption := NativeAmount.ToCurrency(Currency).AsDisplayStringWithCode;
     end;
 
     frm.Reservation := Reservation;
@@ -264,15 +263,15 @@ begin
         aLocation := frm.cbxLocation.items[frm.cbxLocation.itemindex];
       end;
 
-      for i := 0 to frm.agrPayTypes.RowCount - 1  do
-      begin
-        if GridCellFloatValue( frm.agrPayTypes, 1, i ) <> 0 then
-        begin
-          sTemp := frm.agrPayTypes.Cells[ 0, i ];
-          glb.LocateSpecificRecordAndGetValue('paytypes', 'PayType', sTemp, 'Description', sTemp);
-          stlPaySelections.add( frm.agrPayTypes.Cells[ 0, i ] + '|' + frm.agrPayTypes.Cells[ 1, i ] + '|' + sTemp );
-        end;
-      end;
+//      for i := 0 to frm.agrPayTypes.RowCount - 1  do
+//      begin
+//        if GridCellFloatValue( frm.agrPayTypes, 1, i ) <> 0 then
+//        begin
+//          sTemp := frm.agrPayTypes.Cells[ 0, i ];
+//          glb.LocateSpecificRecordAndGetValue('paytypes', 'PayType', sTemp, 'Description', sTemp);
+//          stlPaySelections.add( frm.agrPayTypes.Cells[ 0, i ] + '|' + frm.agrPayTypes.Cells[ 1, i ] + '|' + sTemp );
+//        end;
+//      end;
     end;
   finally
     frm.free;
@@ -306,6 +305,7 @@ begin
         inc(l);
         agrPayTypes.RowCount := l;
         agrPayTypes.Cells[ 0, l - 1 ] := glb.PaytypesSet.FieldByName( 'PayType' ).AsString;
+        stlPaySelections.Add(glb.PaytypesSet.FieldByName( 'PayType' ).AsString, 0);
       end;
       glb.PaytypesSet.next;
     end;
@@ -314,8 +314,7 @@ end;
 procedure TfrmInvoicePayment.Recalc;
 var
   i : integer;
-      fSelected,
-      fLeft : Double;
+  lPaid: TAmount;
 
   maxDays : integer;
   payType : string;
@@ -323,13 +322,14 @@ var
 begin
   // --
   maxDays   := 0;
-  fSelected := 0;
+  lPaid := 0;
 
   for i := 0 to agrPayTypes.RowCount - 1 do
   begin
     payType := agrPayTypes.Cells[0,i];
 
-    fSelected := fSelected + GridCellFloatValue( agrPayTypes, 1, i );
+    lPaid := lPaid + stlPaySelections.Items[agrPayTypes.cells[0, i]];
+ //GridCellFloatValue( agrPayTypes, 1, i );
 
     if GridCellFloatValue( agrPayTypes, 1, i ) <> 0 then
     begin
@@ -339,35 +339,36 @@ begin
 
   end;
 
-  fLeft               := FNativeAmount - fSelected;
-  lblSelected.caption := _FloatToStr( fSelected, 12, 2 );
-  lblLeft.caption     := _FloatToStr( fLeft,     12, 2 );
-  if fLeft = 0 then beep;
+  AmountLeft         := FNativeAmount - lPaid;
+  lblSelected.caption := lPaid.AsDisplayStringWithCode;
+  if AmountLeft = 0.0 then beep;
 
   dtpayDate.Date := MaxDays + dtInvDate.Date
 end;
 
-function TfrmInvoicePayment.AlreadyProvidedPayments : Double;
-var
-  i : integer;
+procedure TfrmInvoicePayment.SetAmountLeft(const Value: TAmount);
 begin
-  result := 0.00;
-  // --
-  for i := 0 to agrPayTypes.RowCount - 1 do
-    result := result + GridCellFloatValue( agrPayTypes, 1, i );
+  FAmountLeft := Value;
+  lblLeft.Caption := FAmountLeft.ToNative.AsDisplayStringWithCode;
+end;
+
+function TfrmInvoicePayment.AlreadyProvidedPayments : TAmount;
+var
+  amount: TAmount;
+begin
+  result := 0;
+  for amount in stlPaySelections.Values do
+    Result := Result + amount;
 end;
 
 
 procedure TfrmInvoicePayment.FormShow(Sender: TObject);
 begin
   edtCustomer.text := FCustomer;
-  recalc;
   FillPayGrid;
   lblSelected.caption := _FloatToStr( 0, 12, 2 );
-  lblLeft.caption     := _FloatToStr( FNativeAmount, 12, 2 );
-  postmessage( handle, WM_ActivateAmount, 0, 0 );
-
   EnabledChargepaycard;
+  postmessage( handle, WM_ActivateAmount, 0, 0 );
 end;
 
 procedure TfrmInvoicePayment.EnabledChargepaycard;
@@ -385,20 +386,17 @@ begin
 end;
 
 procedure TfrmInvoicePayment.agrPayTypesSelectCell(Sender: TObject; ACol, ARow: Integer; var CanSelect: Boolean);
+var
+  amount: TAmount;
 begin
-  // --
-   Recalc;
-   agrPayTypes.Options := [goFixedVertLine,goFixedHorzLine,goVertLine,goHorzLine,goRangeSelect,goEditing];
-  // --
-   agrPayTypes.OnSelectCell := nil;
-   try
-      if trunc( GridCellFloatValue( agrPayTypes, 1, ARow ) ) = 0 then
-      begin
-        agrPayTypes.Cells[ ACol, ARow ] := lblLeft.caption;
-      end;
-   finally
-      agrPayTypes.OnSelectCell := agrPayTypesSelectCell;
-   end;
+  if (AmountLeft <> 0.00) and stlPaySelections.TryGetValue(agrPayTypes.cells[0, aRow], amount) and (amount = 0) then
+  begin
+    amount := AmountLeft.ToNative;
+    stlPaySelections.AddOrSetValue(agrPayTypes.cells[0, aRow], amount);
+    agrPayTypes.Cells[ 1, ARow ] := amount;
+    Recalc;
+  end;
+  agrPayTypes.Options := agrPayTypes.Options  + [goEditing];
 end;
 
 procedure TfrmInvoicePayment.btnChargePayCardClick(Sender: TObject);
@@ -406,8 +404,8 @@ var charge : TTokenCharge;
 begin
   charge := ChargePayCardForPayment(Reservation,
             Roomreservation,
-            (FNativeAmount - AlreadyProvidedPayments) / CurrencyRate,
-            LblForeignCurrency.Caption,
+            (FNativeAmount - AlreadyProvidedPayments).ToCurrency(Currency),
+            Currency,
             PCO_CHARGE,
             True);
   if Assigned(charge) then
@@ -452,11 +450,22 @@ begin
   postMessage( handle, WM_ActivateAmount, 0, 0 );
 end;
 
+procedure TfrmInvoicePayment.agrPayTypesEditCellDone(Sender: TObject; ACol, ARow: Integer);
+var
+  amount: TAmount;
+begin
+  amount := TAmount(_strToFloat(agrPaytypes.Cells[aCol, aRow]));
+  stlPaySelections.AddOrSetValue(agrPayTypes.Cells[0, aRow], amount);
+  agrPaytypes.Cells[aCol, aRow] := amount;
+  agrPayTypes.Options := agrPayTypes.Options - [goEditing];
+  Recalc;
+end;
+
 procedure TfrmInvoicePayment.agrPayTypesEnter(Sender: TObject);
 begin
   if (FNativeAmount = 0) and edtAmount.CanFocus then
     ActiveControl := edtAmount;
-  postMessage( handle, WM_ActivateAmount, 0, 0 );
+  //postMessage( handle, WM_ActivateAmount, 0, 0 );
 end;
 
 procedure TfrmInvoicePayment.edtAmountExit(Sender: TObject);
@@ -485,7 +494,7 @@ end;
 
 initialization
 begin
-   stlPaySelections := TStringlist.create;
+   stlPaySelections := TDictionary<string, TAmount>.create;
 end;
 
 finalization
