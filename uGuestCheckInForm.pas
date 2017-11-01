@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, sEdit,
   sLabel, Vcl.ComCtrls, sPageControl, sButton, Vcl.ExtCtrls, sPanel, sComboBox, Vcl.Mask, sMaskEdit, sCustomComboEdit, sTooledit, sCheckBox, cmpRoomerDataSet,
   hData, uG, frxDesgn, frxClass, frxDBSet, System.Generics.Collections, uRoomerFilterComboBox
-  , uCurrencyHandler, uFraCountryPanel, uTokenHelpers, udImages
+  , uCurrencyHandler, uFraCountryPanel, uTokenHelpers, udImages, sCurrEdit
     ;
 
 type
@@ -38,7 +38,7 @@ type
     sLabel15: TsLabel;
     edDateOfBirth: TsDateEdit;
     sLabel16: TsLabel;
-    edAmount: TsEdit;
+    edAmount: TsCalcEdit;
     sTabSheet5: TsTabSheet;
     cbCreditCard: TsCheckBox;
     panBtn: TsPanel;
@@ -829,7 +829,7 @@ begin
       raise Exception.Create('Unable to update country for other guests.');
   end;
 
-  if (cbxGuaranteeTypes.ItemIndex = 1) AND (StrToFloatDef(edAmount.Text, -99999) <> -99999) then
+  if (cbxGuaranteeTypes.ItemIndex = 1) AND (edAmount.Value <> 0) then
   begin
     NewId := 0;
     if NOT INS_Payment(theDownPaymentData, NewId) then
@@ -890,7 +890,7 @@ begin
   if g.OpenDownPayment(actInsert, true, rec) then
   begin
     lbPayment.Caption := rec.PaymentType;
-    edAmount.Text := FloatToStr(rec.AmountInCurrency);
+    edAmount.Value:= rec.AmountInCurrency;
 
     theDownPaymentData.Reservation := Reservation;
     theDownPaymentData.RoomReservation := RoomReservation;
@@ -1146,7 +1146,7 @@ begin
             shpCC.Visible := (cbPaycards.ItemIndex = 0) and not cbCreditCard.Checked;
           end;
       1:  begin //Down payment
-            lGaranteed := (edAmount.Text <> '') and (StrToIntDef(edAmount.Text, 0) > 0);
+            lGaranteed := edAmount.Value > 0;
           end;
       2:  lGaranteed := True;  //No guarantee provided
     else

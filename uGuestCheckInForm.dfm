@@ -1179,7 +1179,7 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
           Top = 294
           Width = 326
           Height = 170
-          ActivePage = sTabSheet3
+          ActivePage = sTabSheet4
           TabOrder = 1
           SkinData.SkinSection = 'PAGECONTROL'
           object sTabSheet3: TsTabSheet
@@ -1292,31 +1292,32 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
               Shape = stCircle
               Visible = False
             end
-            object edAmount: TsEdit
+            object edAmount: TsCalcEdit
               Tag = 16
               Left = 94
               Top = 18
-              Width = 67
+              Width = 97
               Height = 21
-              Alignment = taRightJustify
+              AutoSize = False
               Color = clWhite
-              Enabled = False
               Font.Charset = DEFAULT_CHARSET
               Font.Color = 4473924
               Font.Height = -11
               Font.Name = 'Tahoma'
               Font.Style = []
-              MaxLength = 7
-              NumbersOnly = True
               ParentFont = False
+              ReadOnly = True
               TabOrder = 0
               TextHint = 'Amount'
               OnChange = edLastNameChange
-              SkinData.SkinSection = 'EDIT'
               BoundLabel.Caption = 'test'
+              SkinData.SkinSection = 'EDIT'
+              GlyphMode.Blend = 0
+              GlyphMode.Grayed = False
+              ShowButton = False
             end
             object sButton5: TsButton
-              Left = 162
+              Left = 193
               Top = 18
               Width = 23
               Height = 21
