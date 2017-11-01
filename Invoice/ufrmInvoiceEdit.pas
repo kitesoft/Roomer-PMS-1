@@ -74,7 +74,6 @@ uses
   uInvoiceEntities,
   uInvoiceObjects
   , uInvoiceDefinitions, uRoomerBookingDataModel_ModelObjects
-  , Generics.Collections
   , Spring.Collections.Lists
   , Spring.Collections.Dictionaries
   , Spring.Collections, cxCheckBox, cxCurrencyEdit, sSplitter, uRoomerForm, dxPScxCommon, dxPScxGridLnk
@@ -3780,22 +3779,29 @@ end;
 
 procedure TfrmInvoiceEdit.SaveCompletePayments();
 var
+  lAmount: TAmount;
+  lPayType: string;
   lPaymentDesc: string;
   i: integer;
   lYear, lMonth, lDay: Word;
   s: string;
   lExecPlan: TRoomerExecutionPlan;
-  lPair: TPair<string, TAmount>;
 begin
 
   lExecPlan := d.roomerMainDataSet.CreateExecutionPlan;
   try
-//    for i := 0 to stlPaySelections.Count - 1 do
     decodedate(zInvoiceDate, lYear, lMonth, lDay);
-    for lPair in stlPaySelections do
-      if (lPair.Value <> 0.00) then
+    for i := 0 to stlPaySelections.Count - 1 do
+    begin
+      with stlPaySelections.ElementAt(i) do
       begin
-        glb.LocateSpecificRecordAndGetValue('paytypes', 'PayType', lPair.Key, 'Description', lPaymentDesc);
+        lAmount := Value;
+        lPayType := Key;
+      end;
+
+      if (lAmount <> TAmount.ZERO) then
+      begin
+        glb.LocateSpecificRecordAndGetValue('paytypes', 'PayType', lPayType, 'Description', lPaymentDesc);
 
         s := '';
         s := s + 'INSERT INTO payments' + #10;
@@ -3839,8 +3845,8 @@ begin
         s := s + ', ' + inttostr(-1);
         s := s + ', ' + _db(zInvoiceDate, True);
 
-        s := s + ', ' + _db(lPair.Key);
-        s := s + ', ' + _db(lPair.Value);
+        s := s + ', ' + _db(lPAyType);
+        s := s + ', ' + _db(lAmount.ToNative);
         s := s + ', ' + _db(lPaymentDesc);
         s := s + ', ' + _db(InvoiceCurrencyRate);
         s := s + ', ' + _db(InvoiceCurrencyCode);
@@ -3856,6 +3862,7 @@ begin
         lExecPlan.AddExec(s);
 
       end;
+    end;
 
     lExecPlan.Execute(ptExec,True, True);
 

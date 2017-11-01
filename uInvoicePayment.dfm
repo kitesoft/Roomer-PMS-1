@@ -252,7 +252,6 @@ object frmInvoicePayment: TfrmInvoicePayment
     SearchFooter.ResultFormat = '(%d of %d)'
     SortSettings.DefaultFormat = ssAutomatic
     Version = '8.2.4.1'
-    ExplicitTop = 135
     ColWidths = (
       169
       116)

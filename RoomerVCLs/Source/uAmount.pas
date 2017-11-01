@@ -72,6 +72,8 @@ type
 
     class operator Explicit(a: TAmount): integer;
 
+    class function ZERO(): TAmount; static; inline;
+
     class operator Add(a, b: TAmount): TAmount;
     class operator Add(a: TAmount; c: Currency): TAmount;
     class operator Add(a: TAmount; c: extended): TAmount;
@@ -380,6 +382,11 @@ end;
 function TAmount.ToNative: TAmount;
 begin
   Result := CurrencyManager.ConvertAmountToDefault(Self);
+end;
+
+class function TAmount.ZERO: TAmount;
+begin
+  Result := TAmount(0.0000);
 end;
 
 function TAmount.ToCurrency(aCurrDef: TCurrencyDefinition): TAmount;
