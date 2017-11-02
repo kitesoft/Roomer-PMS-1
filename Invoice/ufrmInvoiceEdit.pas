@@ -3557,7 +3557,10 @@ begin
   s := s + ' reservation = ' +_db(lResNr) + #10;
   s := s + ' and roomreservation=' + _db(lRoomResNr) + #10;
   s := s + ' and invoiceindex=' + _db(FInvoiceIndex)+#10;
-  s := s + ' and adate=' + iif( ShowRentPerDay,  _db(aInvoiceLine.PurchaseDate), _db(lRoom.Arrival)) + #10;
+  if ShowRentPerDay or not assigned(lRoom) then
+    s := s + ' and adate=' + _db(aInvoiceLine.PurchaseDate) + #10
+  else
+    s := s + ' and adate=' + _db(lRoom.Arrival) + #10;
   s := s + ' and item=' + _db(aInvoiceLine.Item)+#10;
 
   copyToClipboard(s);
