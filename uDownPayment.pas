@@ -123,7 +123,8 @@ begin
   if Assigned(charge) then
   begin
     edAmount.Value := charge.amount;
-    btnCancel.Click; // Payment is already registered
+    rec.IsStored := true;
+    btnOK.Click; // Payment is already registered
   end;
 end;
 

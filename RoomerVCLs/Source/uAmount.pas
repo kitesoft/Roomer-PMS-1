@@ -115,6 +115,15 @@ type
     property CurrencyCode: TCurrencyCode read FCurCode;
   end;
 
+  /// <summary>
+  ///   Workaround for using TAmount records in TList<> and TDictionary<>
+  /// </summary>
+  TAmountClass = class(TObject)
+  public
+    Amount: TAmount;
+    constructor Create(aAmount: TAmount);
+  end;
+
 implementation
 
 
@@ -491,6 +500,13 @@ end;
 class operator TAmount.Implicit(a: TAmount): string;
 begin
   Result := a.AsDisplayString;
+end;
+
+{ TAmountClass }
+
+constructor TAmountClass.Create(aAmount: TAmount);
+begin
+  Amount := aAmount;
 end;
 
 initialization

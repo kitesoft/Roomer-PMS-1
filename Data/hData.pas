@@ -252,6 +252,7 @@ type
     staff: string;
     dtCreated: TdateTime;
     invoiceIndex : Integer;
+    IsStored: boolean;
   end;
 
 

@@ -113,11 +113,12 @@ object frmInvoicePayment: TfrmInvoicePayment
       TabOrder = 1
       SkinData.SkinSection = 'EDIT'
     end
-    object edtAmount: TsEdit
+    object edtAmount: TsCalcEdit
       Left = 109
       Top = 5
       Width = 123
       Height = 21
+      AutoSize = False
       Color = clWhite
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlack
@@ -128,6 +129,9 @@ object frmInvoicePayment: TfrmInvoicePayment
       TabOrder = 0
       OnExit = edtAmountExit
       SkinData.SkinSection = 'EDIT'
+      GlyphMode.Blend = 0
+      GlyphMode.Grayed = False
+      ShowButton = False
     end
   end
   object Panel3: TsPanel

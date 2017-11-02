@@ -83,7 +83,7 @@ type
     InvoiceBalanceInCurrency : double;
 
     NotInvoice : Boolean;
-
+    IsStored: boolean;
   end;
 
 
@@ -746,8 +746,8 @@ begin
     confirmdate  := 2;
 
     InvoiceBalanceInCurrency := 0;
-
     NotInvoice := False;
+    IsStored := false;
   end;
 end;
 

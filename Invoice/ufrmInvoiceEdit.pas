@@ -3795,7 +3795,7 @@ begin
     begin
       with stlPaySelections.ElementAt(i) do
       begin
-        lAmount := Value;
+        lAmount := Value.Amount;
         lPayType := Key;
       end;
 

@@ -829,7 +829,7 @@ begin
       raise Exception.Create('Unable to update country for other guests.');
   end;
 
-  if (cbxGuaranteeTypes.ItemIndex = 1) AND (edAmount.Value <> 0) then
+  if (cbxGuaranteeTypes.ItemIndex = 1) AND (edAmount.Value <> 0) and not theDownPaymentData.IsStored then
   begin
     NewId := 0;
     if NOT INS_Payment(theDownPaymentData, NewId) then
@@ -911,6 +911,7 @@ begin
     theDownPaymentData.Ayear := YearOf(now);
     theDownPaymentData.Amon := MonthOf(now);
     theDownPaymentData.Aday := DayOf(now);
+    theDownPaymentData.IsStored:= rec.IsStored;
   end;
 
 end;
