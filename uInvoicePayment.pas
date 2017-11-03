@@ -380,6 +380,13 @@ begin
   lblSelected.caption := _FloatToStr( 0, 12, 2 );
   FAmountChargedToPaycard := 0;
   EnabledChargepaycard;
+
+  // Fix order of labels in pnl5
+  lblLeft.Left := 0;
+  Label3.Left := 0;
+  lblSelected.Left := 0;
+  Label2.Left := 0;
+
   postmessage( handle, WM_ActivateAmount, 0, 0 );
 end;
 
@@ -425,10 +432,12 @@ begin
             True);
   if Assigned(charge) then
   begin
-    FAmountChargedToPaycard := FAmountChargedToPaycard + amount;
+    FAmountChargedToPaycard := FAmountChargedToPaycard + TAmount.Create(charge.amount, charge.currency);
     Recalc;
-    // Dont add to list otherwise it will be saved twice
-    BtnOk.click;
+    if AmountLeft = TAmount.ZERO then
+      // Dont add to list otherwise it will be saved twice
+      BtnOk.click;
+
     //TODO: Improve this so form isnt closed if balance <> 0
   end;
 end;

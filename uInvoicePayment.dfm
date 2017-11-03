@@ -4,7 +4,7 @@ object frmInvoicePayment: TfrmInvoicePayment
   BorderStyle = bsDialog
   Caption = 'Invoice payment'
   ClientHeight = 471
-  ClientWidth = 336
+  ClientWidth = 368
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -22,7 +22,7 @@ object frmInvoicePayment: TfrmInvoicePayment
   object Panel1: TsPanel
     Left = 0
     Top = 428
-    Width = 336
+    Width = 368
     Height = 43
     Align = alBottom
     BevelOuter = bvNone
@@ -30,7 +30,7 @@ object frmInvoicePayment: TfrmInvoicePayment
     SkinData.SkinSection = 'PANEL'
     object BtnOk: TsButton
       AlignWithMargins = True
-      Left = 123
+      Left = 155
       Top = 3
       Width = 102
       Height = 37
@@ -46,7 +46,7 @@ object frmInvoicePayment: TfrmInvoicePayment
     end
     object btnCancel: TsButton
       AlignWithMargins = True
-      Left = 231
+      Left = 263
       Top = 3
       Width = 102
       Height = 37
@@ -63,7 +63,7 @@ object frmInvoicePayment: TfrmInvoicePayment
   object Panel2: TsPanel
     Left = 0
     Top = 0
-    Width = 336
+    Width = 368
     Height = 29
     Align = alTop
     BevelOuter = bvNone
@@ -137,7 +137,7 @@ object frmInvoicePayment: TfrmInvoicePayment
   object Panel3: TsPanel
     Left = 0
     Top = 117
-    Width = 336
+    Width = 368
     Height = 19
     Align = alTop
     Alignment = taLeftJustify
@@ -155,7 +155,7 @@ object frmInvoicePayment: TfrmInvoicePayment
   object agrPayTypes: TAdvStringGrid
     Left = 0
     Top = 136
-    Width = 336
+    Width = 368
     Height = 173
     Cursor = crDefault
     Align = alClient
@@ -266,7 +266,7 @@ object frmInvoicePayment: TfrmInvoicePayment
   object Panel5: TsPanel
     Left = 0
     Top = 309
-    Width = 336
+    Width = 368
     Height = 22
     Align = alBottom
     BevelOuter = bvLowered
@@ -279,11 +279,15 @@ object frmInvoicePayment: TfrmInvoicePayment
     ParentFont = False
     TabOrder = 4
     SkinData.SkinSection = 'PANEL'
+    ExplicitTop = 311
     object Label2: TsLabel
-      Left = 26
-      Top = 5
+      AlignWithMargins = True
+      Left = 166
+      Top = 4
       Width = 45
-      Height = 13
+      Height = 14
+      Margins.Right = 5
+      Align = alRight
       Alignment = taRightJustify
       Caption = 'Selected:'
       ParentFont = False
@@ -292,40 +296,16 @@ object frmInvoicePayment: TfrmInvoicePayment
       Font.Height = -11
       Font.Name = 'Tahoma'
       Font.Style = []
-    end
-    object Label3: TsLabel
-      Left = 141
-      Top = 5
-      Width = 23
-      Height = 13
-      Caption = 'Left:'
-      ParentFont = False
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clBlack
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = []
+      ExplicitLeft = 0
     end
     object lblSelected: TsLabel
-      Left = 77
-      Top = 5
-      Width = 6
-      Height = 13
-      Caption = '0'
-      ParentFont = False
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clBlack
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = []
-    end
-    object lblLeft: TsLabel
-      Left = 172
-      Top = 5
-      Width = 94
-      Height = 13
-      Alignment = taRightJustify
-      AutoSize = False
+      AlignWithMargins = True
+      Left = 219
+      Top = 4
+      Width = 22
+      Height = 14
+      Margins.Right = 50
+      Align = alRight
       Caption = '0.00'
       ParentFont = False
       Font.Charset = DEFAULT_CHARSET
@@ -333,12 +313,48 @@ object frmInvoicePayment: TfrmInvoicePayment
       Font.Height = -11
       Font.Name = 'Tahoma'
       Font.Style = []
+      ExplicitLeft = 0
+    end
+    object Label3: TsLabel
+      AlignWithMargins = True
+      Left = 294
+      Top = 4
+      Width = 23
+      Height = 14
+      Margins.Right = 5
+      Align = alRight
+      Caption = 'Left:'
+      ParentFont = False
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ExplicitLeft = 0
+    end
+    object lblLeft: TsLabel
+      AlignWithMargins = True
+      Left = 325
+      Top = 4
+      Width = 22
+      Height = 14
+      Margins.Right = 20
+      Align = alRight
+      Alignment = taRightJustify
+      Caption = '0.00'
+      ParentFont = False
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ExplicitLeft = 0
     end
   end
   object sPanel1: TsPanel
     Left = 0
     Top = 331
-    Width = 336
+    Width = 368
     Height = 97
     Align = alBottom
     BevelOuter = bvNone
@@ -457,7 +473,7 @@ object frmInvoicePayment: TfrmInvoicePayment
   object __pnlCurrencies: TsPanel
     Left = 0
     Top = 29
-    Width = 336
+    Width = 368
     Height = 48
     Align = alTop
     BevelOuter = bvNone
@@ -522,7 +538,7 @@ object frmInvoicePayment: TfrmInvoicePayment
   object pnlPayCard: TsPanel
     Left = 0
     Top = 77
-    Width = 336
+    Width = 368
     Height = 40
     Align = alTop
     TabOrder = 7

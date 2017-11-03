@@ -4802,6 +4802,7 @@ begin
   finally
     PostMessage(handle, WM_REDRAW_LINE, 0, agrLines.row);
     agrLines.EndUpdate;
+    chkChanged;
   end;
 end;
 
