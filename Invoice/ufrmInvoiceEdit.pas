@@ -1175,7 +1175,7 @@ begin
     nativeTotal := FInvoiceLinesList.TotalOnInvoice.ToNative;
     ttVAT := FInvoiceLinesList.TotalVatOnInvoice.ToNative;
     TotalDownPayments := getTotalDownPayments;
-    TotalBalance := nativeTotal - TotalDownPayments;
+    TotalBalance := nativeTotal.Rounded() - TotalDownPayments.Rounded();
 
     edtTotalWOVat.Text := (nativeTotal - ttVAT).AsDisplayStringWithCode;
     edtVat.Text := ttVAT.AsDisplayStringWithCode;
@@ -3110,14 +3110,14 @@ begin
       d.GetRoomReservationLocations(FRoomReservation, lstLocations);
 
     LoadPayments; // Make sure you have all records, catches problems with mutliple cash invoices being created at once
-    lOpenBalance := FInvoiceLinesList.TotalOnInvoice.ToNative - getTotalDownPayments;
+    lOpenBalance := FInvoiceLinesList.TotalOnInvoice.ToNative.Rounded() - getTotalDownPayments.Rounded();
     if SelectPaymentTypes(lOpenBalance, edtCustomer.Text, ptInvoice, InvoiceCurrencyCode,
       InvoiceCurrencyRate, FReservation, FRoomreservation, FinvoiceIndex, not IsDirectInvoice, lstLocations, aInvoiceDate, aPayDate, aLocation) then
     begin
       SaveCompletePayments();
       LoadPayments;
       DisplayTotals();
-      Result := FInvoiceLinesList.TotalOnInvoice.ToNative = getTotalDownPayments;
+      Result := FInvoiceLinesList.TotalOnInvoice.ToNative.Rounded() = getTotalDownPayments.Rounded();
 
       if not Result then
       begin

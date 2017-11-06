@@ -111,6 +111,8 @@ type
     function ToCurrency(aCurId: integer): TAmount; overload;
     function ToNative(): TAmount;
 
+    function Rounded(): TAmount;
+
     property Value: Currency read FValue;
     property CurrencyCode: TCurrencyCode read FCurCode;
   end;
@@ -374,6 +376,12 @@ end;
 class operator TAmount.NotEqual(a, b: TAmount): boolean;
 begin
   Result := not (a = b);
+end;
+
+function TAmount.Rounded: TAmount;
+begin
+  Result.FCurCode := Self.CurrencyCode;
+  Result.FValue := CurrencyDefinition.RoundedValue(Self.Value);
 end;
 
 class operator TAmount.Subtract(a: TAmount; c: extended): TAmount;

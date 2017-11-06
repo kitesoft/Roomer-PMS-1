@@ -502,7 +502,8 @@ uses
   , uFinishedInvoices2
   , uSqlDefinitions
   , uAppGlobal
-  , uSQLUtils;
+  , uSQLUtils
+  , uAmount;
 
 // *****************************************************************************
 // TCustInfo - Starts
@@ -1615,7 +1616,7 @@ begin
       FivhTotal_prePaid := prePaid;
       if invoicenumber = PROFORMA_INVOICE_NUMBER then
       begin
-        FivhTotal_Balance := {sumTotal} FivhTotal-prepaid;
+        FivhTotal_Balance := {sumTotal} TAmount.Create(FivhTotal, FCurrency).Rounded() - TAmount.Create(prepaid, FCUrrency).Rounded();
       end else
       begin
         FivhTotal_Balance := balance;
