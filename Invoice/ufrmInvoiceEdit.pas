@@ -5931,7 +5931,7 @@ begin
   if edtBalance.Text <> '' then
     rec.InvoiceBalanceInCurrency := (FInvoiceLinesList.TotalOnInvoice.ToNative - getTotalDownPayments).ToCurrency(InvoiceCurrencyCode);
 
-  if g.OpenDownPayment(actInsert, not IsDirectInvoice, rec) then
+  if g.OpenDownPayment(actInsert, not IsDirectInvoice, rec) and not rec.IsStored then
   begin
     // insert payment
 

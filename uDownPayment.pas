@@ -135,30 +135,34 @@ var
 begin
   zCanClose := true;
 
-  balance := RoundDecimals(rec.InvoiceBalanceInCurrency-edAmount.value, 2);
-
-  if edAmount.value = 0 then
+  if not rec.IsStored then
   begin
-    showmessage('Payment can not be 0');
-    edAmount.SetFocus;
-    zCanClose := false;
-    exit;
-  end;
+    //if already stored then don't bother with warnings
 
-  if NOT rec.NotInvoice then
-    if (balance < 0) AND (NOT ctrlGetBoolean('AllowNegativeInvoice')) then
+    if edAmount.value = 0 then
     begin
-      showmessage('Payments can not be higher than the invoice amount');
+      showmessage('Payment can not be 0');
       edAmount.SetFocus;
       zCanClose := false;
       exit;
     end;
 
-  rec.AmountInCurrency          := edAmount.value;
-  rec.Description     := edDescription.text;
-  rec.Notes           := memNotes.Text;
-  rec.PaymentType     := kbmPayType.FieldByName('payType').asstring;
-  rec.InvoiceBalanceInCurrency  := balance;
+    balance := RoundDecimals(rec.InvoiceBalanceInCurrency-edAmount.value, 2);
+    if NOT rec.NotInvoice then
+      if (balance < 0) AND (NOT ctrlGetBoolean('AllowNegativeInvoice')) then
+      begin
+        showmessage('Payments can not be higher than the invoice amount');
+        edAmount.SetFocus;
+        zCanClose := false;
+        exit;
+      end;
+
+    rec.AmountInCurrency         := edAmount.value;
+    rec.Description              := edDescription.text;
+    rec.Notes                    := memNotes.Text;
+    rec.PaymentType              := kbmPayType.FieldByName('payType').asstring;
+    rec.InvoiceBalanceInCurrency := balance;
+  end;
 end;
 
 
