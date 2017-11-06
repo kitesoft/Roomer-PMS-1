@@ -875,6 +875,8 @@ begin
 end;
 
 procedure TFrmGuestCheckInForm.sButton5Click(Sender: TObject);
+var
+  Rate: double;
 begin
   g.initRecDownPayment(rec);
 
@@ -890,7 +892,8 @@ begin
   if g.OpenDownPayment(actInsert, true, rec) then
   begin
     lbPayment.Caption := rec.PaymentType;
-    edAmount.Value:= rec.AmountInCurrency;
+    rate := GetRate(rec.Currency);
+    edAmount.Value:= rec.AmountInCurrency * Rate;
 
     theDownPaymentData.Reservation := Reservation;
     theDownPaymentData.RoomReservation := RoomReservation;
@@ -899,7 +902,7 @@ begin
     theDownPaymentData.invoiceNumber := -1;
     theDownPaymentData.Customer := Customer;
     theDownPaymentData.PayDate := _db(now, false);
-    theDownPaymentData.NativeAmount := rec.AmountInCurrency;
+    theDownPaymentData.NativeAmount := rec.AmountInCurrency * Rate;
     theDownPaymentData.Description := rec.Description;
     theDownPaymentData.CurrencyRate := 1.00; // ATH
     theDownPaymentData.Currency := NativeCurrency;

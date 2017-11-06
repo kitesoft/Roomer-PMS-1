@@ -122,7 +122,9 @@ begin
                   False);
   if Assigned(charge) then
   begin
-    edAmount.Value := charge.amount;
+    edAmount.Value        := charge.amount;
+    rec.AmountInCurrency  := charge.amount;
+    rec.Currency          := charge.currency;
     rec.IsStored := true;
     btnOK.Click; // Payment is already registered
   end;
