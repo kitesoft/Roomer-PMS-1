@@ -6,9 +6,12 @@ uses
     uCurrencyDefinition
   , cxEdit
   , cxCurrencyEdit
+  , RoomerExceptionHandling
   ;
 
 type
+  EInvalidCurrencyRateException = class(ERoomerUserException);
+
   TRoomerCurrencyDefinition = class(TCurrencyDefinition)
   private
   public
@@ -45,6 +48,8 @@ begin
       if (fieldByName('currency').asstring = aCurrencyCode) or Locate('currency', aCurrencyCode, [loCaseInsensitive]) then
       begin
         lRec.ReadFromDataset(glb.CurrenciesSet);
+        if lRec.Value <= 0.00 then
+          raise EInvalidCurrencyRateException.createFmt('Invalid rate for currency [%s]: [%g]' + #13 + 'Correct rate and restart Roomer', [aCurrencyCode, lRec.Value]);
         lFormat := CurrencyFormatSettings;
         lFormat.CurrencyString := lRec.CurrencySign;
         lFormat.CurrencyFormat := lRec.CurrencyFormat;
