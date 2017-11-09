@@ -114,11 +114,12 @@ inherited frmEditRoomPrice: TfrmEditRoomPrice
         OnDblClick = btnSelectPriceCodeClick
         SkinData.SkinSection = 'EDIT'
       end
-      object edRoomResDiscount: TsSpinEdit
+      object edRoomResDiscount: TsCalcEdit
         Left = 109
         Top = 68
         Width = 109
         Height = 21
+        AutoSize = False
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clBlack
@@ -127,15 +128,15 @@ inherited frmEditRoomPrice: TfrmEditRoomPrice
         Font.Style = []
         ParentFont = False
         TabOrder = 4
-        SkinData.SkinSection = 'EDIT'
         BoundLabel.Font.Charset = DEFAULT_CHARSET
         BoundLabel.Font.Color = clWindowText
         BoundLabel.Font.Height = -13
         BoundLabel.Font.Name = 'Tahoma'
         BoundLabel.Font.Style = []
-        MaxValue = 999999
-        MinValue = 0
-        Value = 0
+        SkinData.SkinSection = 'EDIT'
+        GlyphMode.Blend = 0
+        GlyphMode.Grayed = False
+        MaxValue = 99999999.000000000000000000
       end
       object cbxIsRoomResDiscountPrec: TsComboBox
         Left = 224

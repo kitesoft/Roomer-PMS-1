@@ -106,7 +106,7 @@ type
     clabPriceCode: TsLabel;
     clabDiscount: TsLabel;
     edPcCode: TsEdit;
-    edRoomResDiscount: TsSpinEdit;
+    edRoomResDiscount: TsCalcEdit;
     cbxIsRoomResDiscountPrec: TsComboBox;
     ApplyDiscount: TsButton;
     edRate: TsCalcEdit;
