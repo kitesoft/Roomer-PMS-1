@@ -30,6 +30,8 @@ uses
   , hData
   , DB
   , SysUtils
+  , Math
+  , Types
   ;
 
 { TRoomerCurrencyDefinition }
@@ -48,7 +50,7 @@ begin
       if (fieldByName('currency').asstring = aCurrencyCode) or Locate('currency', aCurrencyCode, [loCaseInsensitive]) then
       begin
         lRec.ReadFromDataset(glb.CurrenciesSet);
-        if lRec.Value <= 0.00 then
+        if CompareValue(lRec.Value, 0.000, 0.0001) = LessThanValue then
           raise EInvalidCurrencyRateException.createFmt('Invalid rate for currency [%s]: [%g]' + #13 + 'Correct rate and restart Roomer', [aCurrencyCode, lRec.Value]);
         lFormat := CurrencyFormatSettings;
         lFormat.CurrencyString := lRec.CurrencySign;
