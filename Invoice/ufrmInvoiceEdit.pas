@@ -4445,7 +4445,7 @@ begin
 
             AddRoom(Room, AverageRate, InvoiceCurrencyCode, Arrival, Departure, UnpaidDays, zRoomRSet.FieldByName('rrDescription').asString,
                     lRoomReservation,
-                    iif(AllIsPercentage, AvrageDiscountPerc, AverageDiscountAmount), AllisPercentage, DiscountText,
+                    AverageDiscountAmount, AllisPercentage, DiscountText,
                     GuestName, NumberGuests, ChildrenCount, Package, lRoomReservation, zRoomRSet.FieldByName('invBreakFast').AsBoolean, true);
 
 //          end
