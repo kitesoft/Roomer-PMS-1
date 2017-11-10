@@ -2,15 +2,8 @@
 
 interface
 
-uses System.Generics.Collections, System.Generics.Defaults, SysUtils
+uses  SysUtils
   ;
-
-Type
-  TCaseInsensitiveEqualityComparer = class(TEqualityComparer<string>)
-  public
-    function Equals(const Left, Right: string): Boolean; override;
-    function GetHashCode(const Value: string): Integer; override;
-  end;
 
 
 resourcestring
@@ -208,7 +201,10 @@ uses uAppGlobal,
 
   , uItemTransactionsReport
 
-  , ufrmInvoiceEdit;
+  , ufrmInvoiceEdit
+  , uUtils
+  , Generics.Collections
+  ;
 
 
 const PRE_KEY_NAME = 'PrjConst.Constants.';
@@ -1998,22 +1994,6 @@ begin
 
   TfrmItemTransactionsReport.Create(nil).Free;
   TfrmInvoiceEdit.Create(nil).Free;
-end;
-
-///////////////////////////////////////////////////////////////////////////////////////
-///
-///
-
-function TCaseInsensitiveEqualityComparer.Equals(const Left, Right: string): Boolean;
-begin
-  Result := SameText(Left, Right);
-end;
-
-function TCaseInsensitiveEqualityComparer.GetHashCode(const Value: string): Integer;
-var s: string;
-begin
-  s := UpperCase(Value);
-  Result := BobJenkinsHash(s[1], Length(s) * SizeOf(s[1]), 0);
 end;
 
 

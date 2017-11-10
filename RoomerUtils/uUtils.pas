@@ -26,6 +26,7 @@ uses
     , kbmMemTable
     , Vcl.Forms
     , TypInfo
+    , Generics.Defaults
     ;
 
 type
@@ -33,6 +34,12 @@ type
     fvalue : integer;
   public
     constructor Create(value : integer);
+  end;
+
+  TCaseInsensitiveEqualityComparer = class(TEqualityComparer<string>)
+  public
+    function Equals(const Left, Right: string): Boolean; override;
+    function GetHashCode(const Value: string): Integer; override;
   end;
 
   TMouseBtnType = (_mbLeft, _mbMiddle, _mbRight);
@@ -1569,6 +1576,17 @@ begin
   fvalue := value;
 end;
 
+function TCaseInsensitiveEqualityComparer.Equals(const Left, Right: string): Boolean;
+begin
+  Result := SameText(Left, Right);
+end;
+
+function TCaseInsensitiveEqualityComparer.GetHashCode(const Value: string): Integer;
+var s: string;
+begin
+  s := UpperCase(Value);
+  Result := BobJenkinsHash(s[1], Length(s) * SizeOf(s[1]), 0);
+end;
 
 /////////////////////////////////////////////////////////
 //procedure SetSystemDecimalSeparator;

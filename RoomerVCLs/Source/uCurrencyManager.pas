@@ -87,7 +87,15 @@ implementation
 uses
   Math
   , SysUtils
-  ;
+  , uUtils
+  , Generics.Defaults;
+
+type
+  TCurrencyCodeEqualityComparer = class(TEqualityComparer<TCurrencyCode>)
+  public
+    function Equals(const Left, Right: TCurrencyCode): Boolean; override;
+    function GetHashCode(const Value: TCurrencyCode): Integer; override;
+  end;
 
 var
   gCurrencyManager: TCurrencyManager = nil;
@@ -153,7 +161,7 @@ end;
 
 constructor TCurrencyManager.Create(const aDefaultCurrency: TCurrencyCode);
 begin
-  FCache := TCurrencyDefinitionDictionary.Create([doOwnsValues]);
+  FCache := TCurrencyDefinitionDictionary.Create([doOwnsValues], TCurrencyCodeEqualityComparer.Create);
   FIDCache := TCurrencyDefinitionDictionaryID.Create;
   FCache.OnValueNotify := CacheNotification;
   if (aDefaultCurrency <> '   ') then
@@ -267,6 +275,21 @@ end;
 procedure TCurrencyManager.UnLock;
 begin
   MonitorExit(Self);
+end;
+
+{ TCurrencyCodeEqualityComparer }
+
+function TCurrencyCodeEqualityComparer.Equals(const Left, Right: TCurrencyCode): Boolean;
+begin
+  Result := SameText(Left, Right);
+end;
+
+function TCurrencyCodeEqualityComparer.GetHashCode(const Value: TCurrencyCode): Integer;
+var
+  s: string;
+begin
+  s := UpperCase(String(Value));
+  Result := BobJenkinsHash(s[1], Length(s) * SizeOf(s[1]), 0);
 end;
 
 initialization
