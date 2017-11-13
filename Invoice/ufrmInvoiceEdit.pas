@@ -1672,7 +1672,7 @@ begin
   lInvoiceLine := AddLine(0, nil, lRmRntItem, lDescription, aDayCount, aRoomPrice, aCurrency, lItemInfo.VATCode, aFromDate, aIsGenerated,
     '', '', not aPackageName.IsEmpty, aNumGuests, lConfirmDate, lConfirmAmount, aRRAlias, _GetCurrentTick); // *77
   lInvoiceLine.RoomEntity := lRoomInfo;
-  lRoomInfo.Vat := lInvoiceLine.VATOnInvoice;
+  lRoomInfo.VatPerNight := lInvoiceLine.VATOnRevenue / aDayCount;
 
   // Only add included stuff if a regular room is added and not a manually added one
   if aIsGenerated then
