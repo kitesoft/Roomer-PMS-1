@@ -318,7 +318,7 @@ begin
   begin
     excl := format('{%s.excl}', [RoomTaxEntity.RoomItem]);
     incl := format('{%s.incl}', [RoomTaxEntity.RoomItem]);
-    result := StringReplace(result, excl, FloatToStr(RoomTaxEntity.Price - RoomTaxEntity.Vat),
+    result := StringReplace(result, excl, FloatToStr(RoomTaxEntity.Price - RoomTaxEntity.VatPerNight),
       [rfReplaceAll, rfIgnoreCase]);
     result := StringReplace(result, incl, FloatToStr(RoomTaxEntity.Price), [rfReplaceAll, rfIgnoreCase]);
 
@@ -509,7 +509,7 @@ begin
       end
       else
       begin
-        baseAmount := (aInvoiceRoomEntity.Price - aInvoiceRoomEntity.Vat);
+        baseAmount := (aInvoiceRoomEntity.Price - aInvoiceRoomEntity.VatPerNight);
         Amount := TAmount.Create(baseAmount * aTax.Amount / 100, aInvoiceRoomEntity.Currency);
       end;
     end

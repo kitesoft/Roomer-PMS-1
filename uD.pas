@@ -5396,6 +5396,13 @@ begin
   result := result and cmd_bySQL(s);
 
   s := '';
+  s := s + ' DELETE FROM invoiceaddressees ' + chr(10);
+  s := s + ' WHERE (Reservation = 0) AND (RoomReservation = 0) AND (SplitNumber = %d) AND (InvoiceNumber = -1) '
+    + chr(10);
+  s := Format(s, [aInvoiceType]);
+  result := result and cmd_bySQL(s);
+
+  s := '';
   s := s + ' DELETE FROM payments ' + chr(10);
   s := s + ' WHERE (Reservation = 0) AND (RoomReservation = 0) AND (person = %d) AND (InvoiceNumber = -1) '
     + chr(10);

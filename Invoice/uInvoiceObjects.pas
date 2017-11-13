@@ -207,7 +207,6 @@ type
   private
     FParentList: TList<TInvoiceline>;
   protected
-    function GetIsGenerated: boolean; override;
     function GetAmountIncludedInParent: TAmount; override;
   public
     constructor Create(aIndex, _id: integer); override;
@@ -425,7 +424,7 @@ end;
 
 function TInvoiceLine.GetVatOnRevenue: TAmount;
 begin
-  result := TAmount.Create(_calcVat(Total.Value, FVATPercentage), Total.CurrencyCode);
+  result := TAmount.Create(_calcVat(TotalRevenue.Value, FVATPercentage), TotalRevenue.CurrencyCode);
 end;
 
 procedure TInvoiceLine.MoveToInvoiceIndex(aInvoiceIndex: integer);
@@ -649,11 +648,6 @@ end;
 function TPackageInvoiceLine.GetAmountIncludedInParent: TAmount;
 begin
   Result := inherited / FParentList.Count;
-end;
-
-function TPackageInvoiceLine.GetIsGenerated: boolean;
-begin
-  Result := true;
 end;
 
 procedure TPackageInvoiceLine.RemoveParent(aParent: TInvoiceLine);

@@ -17,7 +17,7 @@ type
     FFrom: TDateTime;
     FTo: TDateTime;
     FNights: integer;
-    FVat: Double;
+    FVatPerNight: Double;
     FNumPersons: integer;
     FNumChildren: integer;
     FPrice: Double;
@@ -44,7 +44,7 @@ type
     property Currency: string read FCurrency write FCurrency;
     property CurrencyRate: double read FCurrencyRate write FCurrencyRate;
     property Discount: double read FDiscount write FDiscount;
-    property Vat: double read FVat write FVat;
+    property VatPerNight: double read FVatPerNight write FVatPerNight;
     property BreakfastIncluded: boolean read FBreakfastIncluded write FBreakfastIncluded;
     property NumGuests: integer read FNumPersons write FNumPersons;
     property NumChildren: integer read FNumChildren write FNUmChildren;
@@ -133,7 +133,7 @@ begin
   FCurrency := _Currency;
   FCUrrencyRate := _CurrencyRate;
   FDiscount := _Discount;
-  FVat := _Vat;
+  FVatPerNight := _Vat;
   FBreakFastIncluded := _BreakFastIncluded;
 end;
 

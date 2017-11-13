@@ -94,7 +94,7 @@ implementation
 uses uMain
     , uAppGlobal
     , DateUtils
-    , PrjConst;
+    , PrjConst, uUtils;
 
 constructor TRoomerMessage.Create(RoomerMessageType : String;
                                   MessageType: integer;

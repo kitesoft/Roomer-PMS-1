@@ -79,7 +79,7 @@ constructor TCurrencyDefinition.Create(const aCurrencyCode: TCurrencyCode);
 begin
   if String(aCurrencyCode).IsEmpty then
     raise ECurrencyDefinitionException.Create('Cannot create a currencydefinition with empty currencycode');
-  FCode := aCurrencyCode;
+  FCode := UpperCase(String(aCurrencyCode));
   FRate := 1.0;
   FID := -1;
   FFormatSettings := TFormatSettings.Create; // System defaults

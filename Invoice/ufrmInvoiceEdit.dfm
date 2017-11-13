@@ -539,9 +539,12 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
           Height = 21
           Align = alClient
           ExplicitHeight = 21
+          inherited lblCurrencyName: TsLabel
+            Width = 140
+            Height = 15
+          end
           inherited edCurrencyCode: TsEdit
             Height = 20
-            ExplicitHeight = 20
           end
           inherited btnGetCurrency: TsButton
             Height = 21
@@ -1387,6 +1390,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
           SelectionTextColor = clHighlightText
           SortSettings.DefaultFormat = ssAutomatic
           Version = '8.2.4.1'
+          ExplicitLeft = 17
           ColWidths = (
             24
             28
