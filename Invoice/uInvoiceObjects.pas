@@ -425,7 +425,7 @@ end;
 
 function TInvoiceLine.GetVatOnRevenue: TAmount;
 begin
-  result := TAmount.Create(_calcVat(Total.Value, FVATPercentage), Total.CurrencyCode);
+  result := TAmount.Create(_calcVat(TotalRevenue.Value, FVATPercentage), TotalRevenue.CurrencyCode);
 end;
 
 procedure TInvoiceLine.MoveToInvoiceIndex(aInvoiceIndex: integer);
