@@ -2406,9 +2406,10 @@ begin
         package := trim(eSet.FieldByName('importSource').asString);
 
         AddLine(LineId, nil, ItemId, _s, dNumber, Price, g.qNativeCurrency, eSet.FieldByName('VATType').asString,
-          SQLToDate(eSet.FieldByName('PurchaseDate').asString), false,
+          SQLToDate(eSet.FieldByName('PurchaseDate').asString), false {not generated},
           trim(eSet.FieldByName('importRefrence').asString), package,
-          eSet.FieldByName('isPackage').asBoolean, eSet.FieldByName('Persons').asinteger,
+          eSet.FieldByName('isPackage').asBoolean,
+          eSet.FieldByName('Persons').asinteger,
           eSet.FieldByName('ConfirmDate').asdateTime, eSet.FieldByName('ConfirmAmount').AsFloat, lRoomReservation,
           eSet.FieldByName('AutoGen').asString, eSet.FieldByName('ItemNumber').asinteger, eSet.FieldByName('visibleoninvoice').asBoolean );
 
@@ -4700,16 +4701,16 @@ var
   lNewValue: Double;
 begin
   Valid := True;
-  agrLines.BeginUpdate;
   try
-    try
-      lInvoiceLine := GetInvoiceLineByRow(ARow);
-      if not assigned(lInvoiceLine) then
-      begin
-        lInvoiceLine := AddLine(0, nil, '', '', 1, 0, g.qNativeCurrency, '', now(), false, '', '', false, 0, 0, 0, 0, '');
-        agrLines.Objects[cInvoiceLineAttachColumn, ARow] := lInvoiceLine;
-      end;
+    lInvoiceLine := GetInvoiceLineByRow(ARow);
+    if not assigned(lInvoiceLine) then
+    begin
+      lInvoiceLine := AddLine(0, nil, '', '', 1, 0, g.qNativeCurrency, '', now(), false, '', '', false, 0, 0, 0, 0, '');
+      agrLines.Objects[cInvoiceLineAttachColumn, ARow] := lInvoiceLine;
+    end;
 
+    agrLines.BeginUpdate;
+    try
       lNewValue := StrToFloatDef(Value, FCellDoubleBeforeEdit);
 
       case ACol of
@@ -4796,13 +4797,18 @@ begin
             agrLines.Cells[col_System, ARow] := '';
           end;
       end;
-    except
-      Valid := false;
+
+    // If packageitem prices have changed then the roomrent item totals can be changed too
+
+    finally
+      agrLines.EndUpdate;
+      PostMessage(handle, WM_REDRAW_LINE, 0, agrLines.row);
+      if lInvoiceLine is TPackageInvoiceLine then
+        UpdateGrid;
+      chkChanged;
     end;
-  finally
-    PostMessage(handle, WM_REDRAW_LINE, 0, agrLines.row);
-    agrLines.EndUpdate;
-    chkChanged;
+  except
+    Valid := false;
   end;
 end;
 
