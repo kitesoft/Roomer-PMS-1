@@ -1390,7 +1390,6 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
           SelectionTextColor = clHighlightText
           SortSettings.DefaultFormat = ssAutomatic
           Version = '8.2.4.1'
-          ExplicitLeft = 17
           ColWidths = (
             24
             28

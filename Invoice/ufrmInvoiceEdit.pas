@@ -3323,7 +3323,7 @@ begin
   s := s + ', ' + _db((FInvoiceLinesList.TotalOnInvoice -  FInvoiceLinesList.TotalVatOnInvoice).ToNative * iMultiplier);
   s := s + ', ' + _db(FInvoiceLinesList.TotalVatOnInvoice.ToNative * iMultiplier);
   s := s + ', ' + _db(0.00);
-  s := s + ', ' + _db('');
+  s := s + ', ' + _db(memExtraText.Lines.Text);
   s := s + ', ' + inttostr(zOriginalInvoice);
   s := s + ', ' + _db(false);
   s := s + ', ' + inttostr(1);
