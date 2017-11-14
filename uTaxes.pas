@@ -159,7 +159,7 @@ type
     m_After_discount: TWideStringField;
     tvDataAfter_discount: TcxGridDBBandedColumn;
     m_Probe_Date: TWideStringField;
-    tvDataProbe_Date: TcxGridDBBandedColumn;
+    __tvDataProbe_Date: TcxGridDBBandedColumn;
     procedure m_BeforeInsert(DataSet: TDataSet);
     procedure m_BeforePost(DataSet: TDataSet);
     procedure m_NewRecord(DataSet: TDataSet);
@@ -221,7 +221,7 @@ uses
   , UITypes
   , uItems2
   , DateUtils
-  ;
+  , uTaxCalcDefinitions;
 
 
 

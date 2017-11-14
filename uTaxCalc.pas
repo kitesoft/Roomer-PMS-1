@@ -18,6 +18,7 @@ uses
   RoomerMathParser
   , uInvoiceEntities
   , uAmount
+  , uTaxCalcDefinitions
   ;
 
 type
@@ -48,6 +49,7 @@ type
 
   TInvoiceTaxEntityList = TObjectList<TInvoiceTaxEntity>;
 
+
   TTax = class
     ID: Integer;
     Description: String;
@@ -63,7 +65,7 @@ type
     VALUE_FORMULA: String;
     ROUND_VALUE: Double;
     VALID_FROM, VALID_TO: TDate;
-
+    PROBE_DATE: TTaxProbeDate;
   private
 
     function getEnumTaxType(_tax_type: String): TEnumTaxType;
@@ -74,7 +76,7 @@ type
   public
     constructor Create(_id: Integer; _Description: String; _Amount: Double; _tax_type, _tax_base, _time_due, _reTaxable,
       _taxChildren, _booking_item, _incl_excl, _netto_Amount_Based, _value_Formula: String; _round_Value: Double;
-      _valid_From, _valid_To: TDate);
+      _valid_From, _valid_To: TDate; _probe_date: string);
 
 
     function IsValidOn(aDate: TDate): boolean;
@@ -115,7 +117,9 @@ uses
   uAppGlobal,
   _Glob,
   uMain
-  , uDateTimeHelper, uCurrencyConstants;
+  , uDateTimeHelper
+  , uCurrencyConstants
+  , TypInfo;
 
 procedure initializeTaxes;
 var
@@ -125,7 +129,7 @@ begin
   TaxList.Clear;
   if NOT d.roomerMainDataSet.OfflineMode then
   begin
-    s := format(select_Taxes_fillGridFromDataset, ['RETAXABLE']);
+    s := select_Taxes_fillGridFromDataset;
     s := d.roomerMainDataSet.queryRoomer(s);
   end;
 
@@ -136,7 +140,8 @@ begin
     begin
       TaxList.Add(TTax.Create(rSet['ID'], rSet['Description'], rSet['Amount'], rSet['Tax_Type'], rSet['Tax_Base'],
         rSet['Time_Due'], rSet['Retaxable'], rSet['TaxChildren'], rSet['Booking_Item'], rSet['INCL_EXCL'],
-        rSet['NETTO_AMOUNT_BASED'], rSet['VALUE_FORMULA'], rSet['ROUND_VALUE'], rSet['VALID_FROM'], rSet['VALID_TO']));
+        rSet['NETTO_AMOUNT_BASED'], rSet['VALUE_FORMULA'], rSet['ROUND_VALUE'], rSet['VALID_FROM'], rSet['VALID_TO'],
+        rSet['PROBE_DATE']));
       rSet.Next;
     end;
   finally
@@ -548,7 +553,8 @@ begin
   result := TInvoiceTaxEntityList.Create(True);
 
   for Tax in TaxList do
-    if (aRoomEntity.Departure <= 0) OR Tax.IsValidOn(aRoomEntity.Departure) then
+      if ((Tax.PROBE_DATE = TTaxProbeDate.InvoiceDate) AND Tax.IsValidOn(now)) OR
+         ((Tax.PROBE_DATE = TTaxProbeDate.StayDate) AND Tax.IsValidOn(aRoomEntity.Departure)) then
       Result.Add(MakeInvoiceTaxEntity(Tax, aRoomEntity, ItemTypeInfo, aOptions));
 end;
 
@@ -561,7 +567,8 @@ begin
 
   for Tax in TaxList do
     for lInvoiceRoomEntity in aRoomEntitiesList do
-      if ((lInvoiceRoomEntity.Departure <= 0) AND Tax.IsValidOn(now)) OR Tax.IsValidOn(lInvoiceRoomEntity.Departure) then
+      if ((Tax.PROBE_DATE = TTaxProbeDate.InvoiceDate) AND Tax.IsValidOn(now)) OR
+         ((Tax.PROBE_DATE = TTaxProbeDate.StayDate) and Tax.IsValidOn(lInvoiceRoomEntity.Departure)) then
         Result.Add(MakeInvoiceTaxEntity(Tax, lInvoiceRoomEntity, ItemTypeInfo, aOptions));
 end;
 
@@ -701,7 +708,7 @@ end;
 
 constructor TTax.Create(_id: Integer; _Description: String; _Amount: Double;
   _tax_type, _tax_base, _time_due, _reTaxable, _taxChildren, _booking_item, _incl_excl, _netto_Amount_Based,
-  _value_Formula: String; _round_Value: Double; _valid_From, _valid_To: TDate);
+  _value_Formula: String; _round_Value: Double; _valid_From, _valid_To: TDate; _probe_date: string);
 begin
   ID := _id;
   Description := _Description;
@@ -718,6 +725,8 @@ begin
   ROUND_VALUE := _round_Value;
   VALID_FROM := _valid_From;
   VALID_TO := _valid_To;
+
+  PROBE_DATE := TTaxProbeDate.FromDBString(_probe_date);
 end;
 
 function TTax.getEnumTaxType(_tax_type: String): TEnumTaxType;
@@ -789,8 +798,6 @@ begin
   IncludedInPrice := _IncludedInPrice;
   Percentage := _Percentage;
 end;
-
-{ TRoomTaxEntity }
 
 
 initialization

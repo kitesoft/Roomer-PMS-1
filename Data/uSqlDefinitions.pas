@@ -4551,7 +4551,7 @@ select_ivh_otherInfo : string =
 '    , TotalWOVAT '#10+
 '    , TotalVAT '#10+
 '    , TotalBreakFast '#10+
-'    , ExtraText '#10+
+'    , IFNULL(ia.ExtraText, ih.ExtraText) as ExtraText '#10+
 '    , Finished '#10+
 '    , CreditInvoice '#10+
 '    , OriginalInvoice '#10+
@@ -4564,7 +4564,11 @@ select_ivh_otherInfo : string =
 '    , Location '#10+
 ' '#10+
 '   FROM '#10+
-'     InvoiceHeads '#10+
+'     InvoiceHeads ih '#10+
+'   JOIN invoiceaddressees ia on ia.invoiceNumber=ih.InvoiceNumber '#10+
+'        AND ia.Reservation=ih.Reservation '#10+
+'        AND ia.RoomReservation=ih.RoomReservation '#10+
+'        AND ia.SplitNumber=ih.SplitNumber '#10+
 '   WHERE '#10+
 '     (InvoiceNumber = %d) ';
 
