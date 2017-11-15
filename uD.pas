@@ -1269,7 +1269,7 @@ begin
       SplitNumber := rSet.FieldByName('SplitNumber').AsInteger;
       SelectedInvoiceIndex := rSet.FieldByName('SelectedInvoiceIndex').AsInteger;
 
-      if not FromKredit then
+      if not FromKredit and (qRes <> 0) then
       begin
         if qRres = 0 then
         begin
