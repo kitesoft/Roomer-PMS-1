@@ -4542,31 +4542,35 @@ select_invoiceHead_customerInfo : string =
 
 select_ivh_otherInfo : string =
 '  SELECT '#10+
-'      InvoiceNumber '#10+
-'    , Reservation '#10+
-'    , RoomReservation '#10+
-'    , SplitNumber '#10+
-'    , InvoiceDate '#10+
-'    , Total '#10+
-'    , TotalWOVAT '#10+
-'    , TotalVAT '#10+
-'    , TotalBreakFast '#10+
-'    , ExtraText '#10+
-'    , Finished '#10+
-'    , CreditInvoice '#10+
-'    , OriginalInvoice '#10+
-'    , ihStaff '#10+
-'    , ihPayDate '#10+
-'    , invRefrence '#10+
-'    , TotalStayTax '#10+
-'    , TotalStayTaxNights '#10+
-'    , ShowPackage '#10+
-'    , Location '#10+
+'      ih.InvoiceNumber '#10+
+'    , ih.Reservation '#10+
+'    , ih.RoomReservation '#10+
+'    , ih.SplitNumber '#10+
+'    , ih.InvoiceDate '#10+
+'    , ih.Total '#10+
+'    , ih.TotalWOVAT '#10+
+'    , ih.TotalVAT '#10+
+'    , ih.TotalBreakFast '#10+
+'    , IFNULL(ia.ExtraText, ih.ExtraText) as ExtraText '#10+
+'    , ih.Finished '#10+
+'    , ih.CreditInvoice '#10+
+'    , ih.OriginalInvoice '#10+
+'    , ih.ihStaff '#10+
+'    , ih.ihPayDate '#10+
+'    , ih.invRefrence '#10+
+'    , ih.TotalStayTax '#10+
+'    , ih.TotalStayTaxNights '#10+
+'    , ih.ShowPackage '#10+
+'    , ih.Location '#10+
 ' '#10+
 '   FROM '#10+
-'     InvoiceHeads '#10+
+'     InvoiceHeads ih '#10+
+'   JOIN invoiceaddressees ia on ia.invoiceNumber=ih.InvoiceNumber '#10+
+'        AND ia.Reservation=ih.Reservation '#10+
+'        AND ia.RoomReservation=ih.RoomReservation '#10+
+'        AND ia.SplitNumber=ih.SplitNumber '#10+
 '   WHERE '#10+
-'     (InvoiceNumber = %d) ';
+'     (ih.InvoiceNumber = %d) ';
 
 //	@InvoiceNumber int
 

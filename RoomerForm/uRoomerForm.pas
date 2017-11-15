@@ -180,6 +180,8 @@ end;
 procedure TfrmBaseRoomerForm.Loaded;
 begin
   psRoomerBase.StorageName := 'Software\Roomer\FormStatus\' + classname;
+  if psRoomerBase.ComponentCount > 0 then
+    psRoomerBase.Components[0].Component := Self;
   inherited;
 end;
 

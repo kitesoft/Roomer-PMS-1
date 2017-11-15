@@ -528,7 +528,7 @@ type
     procedure ClearInvoiceLines;
     function getTotalDownPayments: TAmount;
 
-    procedure DisplayGuestName;
+    procedure DisplayMainGuestName;
 
     /// <summary>
     /// Display the info of TInvoiceLine object in the grid and attach it to the row<br/>
@@ -1196,12 +1196,15 @@ begin
   end;
 end;
 
-procedure TfrmInvoiceEdit.DisplayGuestName;
+procedure TfrmInvoiceEdit.DisplayMainGuestName;
+var
+  name: string;
 begin
-  if copy(edtRoomGuest.Caption, 1, 1) <> '-' then
-  begin
-    edtRoomGuest.Caption := GetMainGuestName(FReservation, FRoomReservation);
-  end;
+  name := GetMainGuestName(FReservation, FRoomReservation);
+  if name.IsEmpty then
+    edtRoomGuest.Caption := '-'
+  else
+    edtRoomGuest.Caption := name;
 end;
 
 procedure TfrmInvoiceEdit.AddRoomTaxToInvoiceLines(totalTax: Double; TaxUnits: Double; taxItem: String;
@@ -1835,8 +1838,6 @@ begin
       mPayments.EnableControls;
     end;
   end;
-  // Items in a credit invoice as specified positive, but payments are save as negative ...............
-  result := IIF(FIsCredit, -1, 1) * Result;
 end;
 
 procedure TfrmInvoiceEdit.loadInvoiceToMemtable(var m: TKbmMemTable);
@@ -2309,7 +2310,7 @@ begin
       end
     end;
 
-    DisplayGuestName;
+    DisplayMainGuestName;
 
 //    RetrieveTaxesforRoomReservation(FReservation, FRoomreservation);
 
@@ -2481,7 +2482,10 @@ begin
       mPaymentsPayType.asString := eSet.FieldByName('PayType').asString;
       mPaymentsPayDate.asdateTime := SQLToDateTime(eSet.FieldByName('PayDate').asString);
       mPaymentsCurrency.AsString := eSet.FieldByName('Currency').AsString;
-      mPaymentsNativeAmount.AsFloat := eSet.FieldByName('Amount').AsFloat;
+      if FIsCredit then
+        mPaymentsNativeAmount.AsFloat := eSet.FieldByName('Amount').AsFloat * -1
+      else
+        mPaymentsNativeAmount.AsFloat := eSet.FieldByName('Amount').AsFloat;
       mPaymentsDescription.asString := eSet.FieldByName('Description').asString;
       mPaymentsPayGroup.asString := '';
       mPaymentsMemo.asString := eSet.FieldByName('Notes').asString;
@@ -3323,7 +3327,7 @@ begin
   s := s + ', ' + _db((FInvoiceLinesList.TotalOnInvoice -  FInvoiceLinesList.TotalVatOnInvoice).ToNative * iMultiplier);
   s := s + ', ' + _db(FInvoiceLinesList.TotalVatOnInvoice.ToNative * iMultiplier);
   s := s + ', ' + _db(0.00);
-  s := s + ', ' + _db('');
+  s := s + ', ' + _db(memExtraText.Lines.Text);
   s := s + ', ' + inttostr(zOriginalInvoice);
   s := s + ', ' + _db(false);
   s := s + ', ' + inttostr(1);
@@ -3850,7 +3854,12 @@ begin
         s := s + ', ' + _db(zInvoiceDate, True);
 
         s := s + ', ' + _db(lPAyType);
-        s := s + ', ' + _db(lAmount.ToNative);
+
+        if FIsCredit then
+          s := s + ', ' + _db(lAmount.ToNative * -1)
+        else
+          s := s + ', ' + _db(lAmount.ToNative);
+
         s := s + ', ' + _db(lPaymentDesc);
         s := s + ', ' + _db(InvoiceCurrencyRate);
         s := s + ', ' + _db(InvoiceCurrencyCode);
@@ -4969,7 +4978,7 @@ begin
           d.UpdateGroupAccountone(invoiceline.RoomEntity.Reservation, invoiceline.RoomEntity.RoomReservation, invoiceline.RoomEntity.RoomReservation, false);
         end
       end;
-      SaveInvoice(zInvoiceNumber, stProvisionally);
+//      SaveInvoice(zInvoiceNumber, stProvisionally);
       RefreshData;
     finally
       list.Free;
@@ -5631,7 +5640,7 @@ begin
   rSet := CreateNewDataSet;
   try
     sql := ' SELECT ' + '    Name ' + ' FROM ' + '   persons ' + ' WHERE ' +
-      '   (Reservation = %d) AND (RoomReservation = %d) ';
+      '   (Reservation = %d) AND (RoomReservation = %d) and MainName';
     s := format(sql, [Res, RoomRes]);
     hData.rSet_bySQL(rSet, s);
     rSet.first;
@@ -5682,7 +5691,6 @@ begin
       end;
 
   end;
-  edtRoomGuest.Caption := GetMainGuestName(FReservation, FRoomReservation);
   HeaderChanged := True;
   SetCustEdits;
 end;
@@ -5950,7 +5958,10 @@ begin
     theData.InvoiceNumber := zInvoiceNumber;
     theData.customer := edtCustomer.Text;
     theData.PayDate := _db(Date, false);
-    theData.NativeAmount := TAmount.Create(rec.AmountInCurrency, InvoiceCurrencyCode).ToNative;
+    if FIsCredit then
+      theData.NativeAmount := TAmount.Create(rec.AmountInCurrency, InvoiceCurrencyCode).ToNative * -1
+    else
+      theData.NativeAmount := TAmount.Create(rec.AmountInCurrency, InvoiceCurrencyCode).ToNative;
     theData.Description := rec.Description;
     theData.CurrencyRate := InvoiceCurrencyRate;
     theData.Currency := InvoiceCurrencyCode;

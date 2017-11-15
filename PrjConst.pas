@@ -1008,6 +1008,10 @@ begin
   constants.Add('shTx_Taxes_BookingItemRequired', 'Booking Item is required - set value or use [ESC] to cancel ');
   constants.Add('shTx_Taxes_InvalidDates', 'Valid_From and Valid_To are not valid - set value or use [ESC] to cancel ');
   constants.Add('shTx_Taxes_OverlappingDates', 'Taxes exists with overlapping dates. This could cause unexpected behaviour in invoicing');
+
+  constants.Add('shTx_TaxProbeDate_InvoiceDate', 'Invoice date');
+  constants.Add('shTx_TaxprobeDate_StayDate', 'Stay date');
+
   constants.Add('shTx_Rates_DescriptionIsRequired', 'Description - is required - Use ESC to cancel');
   constants.Add('shTx_Rates_DefaultForCurrenyAlreadyExists', 'Default for %s already exists - Use [ESC] to abandon changes');
   constants.Add('shTx_Rates_CurrencyIsRequired', 'Currency - is required');

@@ -322,7 +322,8 @@ uses
   uRoomerCurrencymanager in 'Currencies\uRoomerCurrencymanager.pas',
   uRoomerCurrencyDefinition in 'Currencies\uRoomerCurrencyDefinition.pas',
   uCurrencyDefinition in 'RoomerVCLs\Source\uCurrencyDefinition.pas',
-  uCurrencyConstants in 'RoomerVCLs\Source\uCurrencyConstants.pas';
+  uCurrencyConstants in 'RoomerVCLs\Source\uCurrencyConstants.pas',
+  uTaxCalcDefinitions in 'Definitions\uTaxCalcDefinitions.pas';
 
 {$R *.RES}
 

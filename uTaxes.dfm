@@ -77,14 +77,14 @@ inherited frmTaxes: TfrmTaxes
         Position.ColIndex = 4
         Position.RowIndex = 0
       end
-      object tvDataProbe_Date: TcxGridDBBandedColumn
+      object __tvDataProbe_Date: TcxGridDBBandedColumn
         Caption = 'Probe Date'
         DataBinding.FieldName = 'Probe_Date'
         PropertiesClassName = 'TcxComboBoxProperties'
         Properties.DropDownListStyle = lsFixedList
         Properties.Items.Strings = (
-          'STAYDATE'
-          'INVOICEDATE')
+          'INVOICEDATE'
+          'STAYDATE')
         MinWidth = 80
         Position.BandIndex = 0
         Position.ColIndex = 3
@@ -491,6 +491,7 @@ inherited frmTaxes: TfrmTaxes
     Left = 368
     Top = 224
     object prLink_grData: TdxGridReportLink
+      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -504,6 +505,7 @@ inherited frmTaxes: TfrmTaxes
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
       ReportDocument.CreationDate = 41334.495374884260000000
+      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
   end
