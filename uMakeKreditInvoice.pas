@@ -478,14 +478,13 @@ var
   EmailAddress : string;
 
 begin
-  zdoRestore      := chkCreateNew.Checked;
-  OrginalInvoice  := kbmInvoiceheads['invoicenumber'];
-  RoomReservation := kbmInvoiceheads['roomreservation'];
-  Reservation     := kbmInvoiceheads['reservation'];
-  ShowPackage     := kbmInvoiceHeads['ShowPackage'];
-
-  if saveInvoice then
+  if (zInvoiceNumber > 0) and SaveInvoice then
   begin
+    zdoRestore      := chkCreateNew.Checked;
+    OrginalInvoice  := kbmInvoiceheads['invoicenumber'];
+    RoomReservation := kbmInvoiceheads['roomreservation'];
+    Reservation     := kbmInvoiceheads['reservation'];
+    ShowPackage     := kbmInvoiceHeads['ShowPackage'];
 
     SendInvoicesToFinancePacket(zCreditInvoiceNumber);
     ViewInvoice2(zCreditInvoiceNumber, true, false, true, ShowPackage, EmailAddress);
@@ -495,8 +494,6 @@ begin
       d.copyInvoiceToInvoiceLinesTmp(OrginalInvoice, true, hasPackage, SelectedInvoiceIndex);
       EditInvoice(Reservation, Roomreservation, 0, SelectedInvoiceIndex, NOT hasPackage);
     end;
-  end else
-  begin
   end;
 end;
 
@@ -584,17 +581,19 @@ var
   rset4 : TRoomerDataset;
   ExecutionPlan : TRoomerExecutionPlan;
   Amount : double;
+  lInvoiceLoaded: boolean;
 begin
+  linvoiceLoaded := false;
   zEmailAddress := '';
 
   dtInvoiceDate.date := Date;
   dtPayDate.date := Date;
 
 
-  if zInvoicenumber > -1 then
-  begin
-    ExecutionPlan := d.roomerMainDataSet.CreateExecutionPlan;
-    try
+  ExecutionPlan := d.roomerMainDataSet.CreateExecutionPlan;
+  try
+    if zInvoicenumber > 0 then
+    begin
       s := '';
       s := 'SELECT * FROM invoiceheads WHERE invoicenumber ='+_db(zInvoicenumber)+' ';
       ExecutionPlan.AddQuery(s);
@@ -643,20 +642,17 @@ begin
           if kbmInvoiceHeads.FieldByName('Splitnumber').asinteger = 1 then
           begin
             showmessage('This is a CreditInvoice');
-            zInvoicenumber := 0;
             edInvoicenumber.Text := '0';
-            btnOk.Enabled := false;
-          end else
-          begin
-            btnOk.Enabled := true;
+            Exit;
           end;
         end else
         begin
-          btnOk.Enabled := false;
           if zInvoicenumber > 0 then showmessage('invoice not found');
           edInvoiceNumber.SetFocus;
+          Exit;
         end;
 
+        lInvoiceLoaded := true;
         if zInvoicenumber > 0 then
         begin
           if not rSet4.eof then zEmailAddress := rSet4.fieldbyname('ContactEmail').asstring;
@@ -714,9 +710,10 @@ begin
 //        dtInvoicedate.date :=kbmInvoiceHeads.fieldbyname('ihInvoiceDate').asDateTime;
 //        dtPayDate.date     :=kbmInvoiceHeads.fieldbyname('ihInvoiceDate').asDateTime; //Ath could be ? set from kbmInvoiceHeads.fieldbyname('ihPayDate').asDateTime;
        end;
-    finally
-      ExecutionPlan.Free;
     end;
+  finally
+    ExecutionPlan.Free;
+    btnOK.Enabled := lInvoiceLoaded;
   end;
 end;
 
