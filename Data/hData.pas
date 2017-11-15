@@ -397,6 +397,7 @@ type
     RoomreservationAlias : Integer;
     InvoiceIndex : Integer;
     Revenue: double;
+    VisibleOnInvoice: boolean;
   end;
 
   recItemPlusHolder = record
@@ -3530,6 +3531,7 @@ begin
   s := s + '   ,confirmAmount ' + #10;
   s := s + '   ,RoomReservationAlias ' + #10;
   s := s + '   ,Revenue' + #10;
+  s := s + '   ,VisibleOnInvoice' + #10;
   s := s + ' ) ' + #10;
   s := s + ' VALUES ' + #10;
   s := s + ' ( ' + #10;
@@ -3570,6 +3572,7 @@ begin
   s := s + ' , ' + _db(theData.confirmAmount) + #10;
   s := s + ' , ' + _db(theData.RoomReservationAlias) + #10;
   s := s + ' , ' + _db(theData.Revenue) + #10;
+  s := s + ' , ' + _db(theData.VisibleOnInvoice) + #10;
   s := s + ' )';
   result := s;
 
