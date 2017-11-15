@@ -528,7 +528,7 @@ type
     procedure ClearInvoiceLines;
     function getTotalDownPayments: TAmount;
 
-    procedure DisplayGuestName;
+    procedure DisplayMainGuestName;
 
     /// <summary>
     /// Display the info of TInvoiceLine object in the grid and attach it to the row<br/>
@@ -1196,12 +1196,15 @@ begin
   end;
 end;
 
-procedure TfrmInvoiceEdit.DisplayGuestName;
+procedure TfrmInvoiceEdit.DisplayMainGuestName;
+var
+  name: string;
 begin
-  if copy(edtRoomGuest.Caption, 1, 1) <> '-' then
-  begin
-    edtRoomGuest.Caption := GetMainGuestName(FReservation, FRoomReservation);
-  end;
+  name := GetMainGuestName(FReservation, FRoomReservation);
+  if name.IsEmpty then
+    edtRoomGuest.Caption := '-'
+  else
+    edtRoomGuest.Caption := name;
 end;
 
 procedure TfrmInvoiceEdit.AddRoomTaxToInvoiceLines(totalTax: Double; TaxUnits: Double; taxItem: String;
@@ -2307,7 +2310,7 @@ begin
       end
     end;
 
-    DisplayGuestName;
+    DisplayMainGuestName;
 
 //    RetrieveTaxesforRoomReservation(FReservation, FRoomreservation);
 
@@ -5637,7 +5640,7 @@ begin
   rSet := CreateNewDataSet;
   try
     sql := ' SELECT ' + '    Name ' + ' FROM ' + '   persons ' + ' WHERE ' +
-      '   (Reservation = %d) AND (RoomReservation = %d) ';
+      '   (Reservation = %d) AND (RoomReservation = %d) and MainName';
     s := format(sql, [Res, RoomRes]);
     hData.rSet_bySQL(rSet, s);
     rSet.first;
@@ -5688,7 +5691,6 @@ begin
       end;
 
   end;
-  edtRoomGuest.Caption := GetMainGuestName(FReservation, FRoomReservation);
   HeaderChanged := True;
   SetCustEdits;
 end;
