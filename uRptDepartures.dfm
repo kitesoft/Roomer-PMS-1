@@ -3,7 +3,7 @@ inherited frmDeparturesReport: TfrmDeparturesReport
   ClientHeight = 585
   ClientWidth = 1103
   Font.Height = -11
-  Position = poOwnerFormCenter
+  Position = poDesigned
   ExplicitWidth = 1119
   ExplicitHeight = 624
   PixelsPerInch = 96
@@ -52,8 +52,8 @@ inherited frmDeparturesReport: TfrmDeparturesReport
       object rbToday: TsRadioButton
         Left = 4
         Top = 21
-        Width = 58
-        Height = 19
+        Width = 50
+        Height = 20
         Caption = 'Today'
         Checked = True
         TabOrder = 0
@@ -63,8 +63,8 @@ inherited frmDeparturesReport: TfrmDeparturesReport
       object rbTomorrow: TsRadioButton
         Left = 4
         Top = 46
-        Width = 76
-        Height = 19
+        Width = 68
+        Height = 20
         Caption = 'Tomorrow'
         TabOrder = 1
         OnClick = rbRadioButtonClick
@@ -72,8 +72,8 @@ inherited frmDeparturesReport: TfrmDeparturesReport
       object rbManualRange: TsRadioButton
         Left = 119
         Top = 21
-        Width = 122
-        Height = 19
+        Width = 114
+        Height = 20
         Caption = 'Manual date range:'
         TabOrder = 2
         OnClick = rbRadioButtonClick
@@ -134,7 +134,6 @@ inherited frmDeparturesReport: TfrmDeparturesReport
       BevelOuter = bvNone
       TabOrder = 2
       SkinData.SkinSection = 'PANEL'
-      ExplicitTop = 61
       object btnExcel: TsButton
         AlignWithMargins = True
         Left = 3
@@ -148,7 +147,6 @@ inherited frmDeparturesReport: TfrmDeparturesReport
         TabOrder = 0
         OnClick = btnExcelClick
         SkinData.SkinSection = 'BUTTON'
-        ExplicitHeight = 37
       end
       object btnCheckOut: TsButton
         AlignWithMargins = True
@@ -163,7 +161,6 @@ inherited frmDeparturesReport: TfrmDeparturesReport
         TabOrder = 1
         OnClick = btnCheckOutClick
         SkinData.SkinSection = 'BUTTON'
-        ExplicitHeight = 37
       end
       object btnProfile: TsButton
         AlignWithMargins = True
@@ -178,7 +175,6 @@ inherited frmDeparturesReport: TfrmDeparturesReport
         TabOrder = 2
         OnClick = btnProfileClick
         SkinData.SkinSection = 'BUTTON'
-        ExplicitHeight = 37
       end
       object btnInvoice: TsButton
         AlignWithMargins = True
@@ -195,7 +191,6 @@ inherited frmDeparturesReport: TfrmDeparturesReport
         TabOrder = 3
         OnClick = mnuRoomInvoiceClick
         SkinData.SkinSection = 'BUTTON'
-        ExplicitHeight = 37
       end
       object btnPrintGrid: TsButton
         AlignWithMargins = True
@@ -210,7 +205,6 @@ inherited frmDeparturesReport: TfrmDeparturesReport
         TabOrder = 4
         OnClick = btnPrintGridClick
         SkinData.SkinSection = 'BUTTON'
-        ExplicitHeight = 37
       end
       object sPanel1: TsPanel
         Left = 0
@@ -220,7 +214,6 @@ inherited frmDeparturesReport: TfrmDeparturesReport
         Align = alBottom
         BevelOuter = bvNone
         TabOrder = 5
-        ExplicitTop = 10
         object cLabFilter: TsLabel
           Left = 19
           Top = 6
@@ -274,8 +267,6 @@ inherited frmDeparturesReport: TfrmDeparturesReport
     PopupMenu = pnmuGridMenu
     TabOrder = 1
     LookAndFeel.NativeStyle = False
-    ExplicitTop = 144
-    ExplicitHeight = 421
     object tvDeparturesList: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DeparturesListDS
@@ -403,16 +394,6 @@ inherited frmDeparturesReport: TfrmDeparturesReport
     end
   end
   inherited psRoomerBase: TcxPropertiesStore
-    Components = <
-      item
-        Component = frmBaseRoomerForm.Owner
-        Properties.Strings = (
-          'Height'
-          'Left'
-          'Top'
-          'Width'
-          'Position')
-      end>
     Left = 616
     Top = 40
   end
@@ -586,7 +567,6 @@ inherited frmDeparturesReport: TfrmDeparturesReport
     object grdPrinterLink1: TdxGridReportLink
       Active = True
       Component = grDeparturesList
-      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -608,14 +588,13 @@ inherited frmDeparturesReport: TfrmDeparturesReport
       PrinterPage.ScaleMode = smFit
       PrinterPage._dxMeasurementUnits_ = 2
       PrinterPage._dxLastMU_ = 2
-      ReportDocument.CreationDate = 43032.391140729170000000
+      ReportDocument.CreationDate = 43061.380454143520000000
       ReportTitle.Font.Charset = DEFAULT_CHARSET
       ReportTitle.Font.Color = clBlack
       ReportTitle.Font.Height = -19
       ReportTitle.Font.Name = 'Arial'
       ReportTitle.Font.Style = [fsBold]
       ShrinkToPageWidth = True
-      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlack
       Font.Height = -11

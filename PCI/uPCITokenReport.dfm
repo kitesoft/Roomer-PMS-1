@@ -5,7 +5,6 @@ inherited frmPCITokenReport: TfrmPCITokenReport
   ClientHeight = 641
   ClientWidth = 1116
   Font.Height = -11
-  Position = poOwnerFormCenter
   OnClose = FormClose
   OnCreate = FormCreate
   ExplicitWidth = 1132
@@ -30,10 +29,6 @@ inherited frmPCITokenReport: TfrmPCITokenReport
     object sheetMain: TsTabSheet
       Caption = 'Main'
       TabVisible = False
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Panel1: TsPanel
         Left = 0
         Top = 0
@@ -77,7 +72,7 @@ inherited frmPCITokenReport: TfrmPCITokenReport
           AlignWithMargins = True
           Left = 405
           Top = 3
-          Width = 203
+          Width = 211
           Height = 37
           Caption = 'Page break before summary on report'
           Align = alLeft
@@ -118,8 +113,6 @@ inherited frmPCITokenReport: TfrmPCITokenReport
         BorderStyle = cxcbsNone
         TabOrder = 1
         LookAndFeel.NativeStyle = False
-        ExplicitLeft = -1
-        ExplicitTop = 41
         object tvTokenUsage: TcxGridDBTableView
           OnDblClick = tvTokenUsageDblClick
           Navigator.Buttons.CustomButtons = <>
@@ -458,18 +451,6 @@ inherited frmPCITokenReport: TfrmPCITokenReport
       OnClick = btnRefreshClick
       SkinData.SkinSection = 'BUTTON'
     end
-  end
-  inherited psRoomerBase: TcxPropertiesStore
-    Components = <
-      item
-        Component = frmBaseRoomerForm.Owner
-        Properties.Strings = (
-          'Height'
-          'Left'
-          'Top'
-          'Width'
-          'Position')
-      end>
   end
   inherited cxsrRoomerStyleRepository: TcxStyleRepository
     PixelsPerInch = 96

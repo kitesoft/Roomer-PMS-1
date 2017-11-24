@@ -5,7 +5,6 @@ inherited frmInvoiceList2: TfrmInvoiceList2
   ClientHeight = 616
   ClientWidth = 1133
   Font.Height = -11
-  Position = poOwnerFormCenter
   OnCreate = FormCreate
   OnShow = FormShow
   ExplicitWidth = 1149
@@ -891,18 +890,6 @@ inherited frmInvoiceList2: TfrmInvoiceList2
     object lvInvoiceHead: TcxGridLevel
       GridView = tvInvoiceHead
     end
-  end
-  inherited psRoomerBase: TcxPropertiesStore
-    Components = <
-      item
-        Component = frmBaseRoomerForm.Owner
-        Properties.Strings = (
-          'Height'
-          'Left'
-          'Top'
-          'Width'
-          'Position')
-      end>
   end
   inherited cxsrRoomerStyleRepository: TcxStyleRepository
     PixelsPerInch = 96

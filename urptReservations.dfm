@@ -6,7 +6,6 @@ inherited frmRptReservations: TfrmRptReservations
   ClientWidth = 1234
   Constraints.MinWidth = 920
   Font.Height = -11
-  Position = poOwnerFormCenter
   OnClose = FormClose
   OnCreate = FormCreate
   OnShow = FormShow
@@ -46,10 +45,6 @@ inherited frmRptReservations: TfrmRptReservations
       object tabReservation: TsTabSheet
         Caption = 'Reservations'
         ImageIndex = 2
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object Panel5: TsPanel
           Left = 0
           Top = 0
@@ -1285,18 +1280,6 @@ inherited frmRptReservations: TfrmRptReservations
         SkinData.SkinSection = 'BUTTON'
       end
     end
-  end
-  inherited psRoomerBase: TcxPropertiesStore
-    Components = <
-      item
-        Component = frmBaseRoomerForm.Owner
-        Properties.Strings = (
-          'Height'
-          'Left'
-          'Top'
-          'Width'
-          'Position')
-      end>
   end
   inherited cxsrRoomerStyleRepository: TcxStyleRepository
     PixelsPerInch = 96

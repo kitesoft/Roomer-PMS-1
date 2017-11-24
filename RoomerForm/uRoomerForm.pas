@@ -179,10 +179,16 @@ end;
 
 procedure TfrmBaseRoomerForm.Loaded;
 begin
-  psRoomerBase.StorageName := 'Software\Roomer\FormStatus\' + classname;
-  if psRoomerBase.ComponentCount > 0 then
-    psRoomerBase.Components[0].Component := Self;
   inherited;
+  psRoomerBase.StorageName := 'Software\Roomer\FormStatus\' + classname;
+  with psRoomerBase.Components.Add do
+  begin
+    Component := Self;
+    Properties.Add('Left');
+    Properties.Add('Width');
+    Properties.Add('Top');
+    Properties.Add('Height');
+  end;
 end;
 
 procedure TfrmBaseRoomerForm.RefreshData;

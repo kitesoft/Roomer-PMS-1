@@ -3,7 +3,7 @@ inherited frmHouseKeepingReport: TfrmHouseKeepingReport
   ClientHeight = 586
   ClientWidth = 1123
   Font.Height = -11
-  Position = poOwnerFormCenter
+  Position = poDesigned
   ExplicitWidth = 1139
   ExplicitHeight = 625
   PixelsPerInch = 96
@@ -304,18 +304,6 @@ inherited frmHouseKeepingReport: TfrmHouseKeepingReport
       GridView = grHouseKeepingListDBTableView1
     end
   end
-  inherited psRoomerBase: TcxPropertiesStore
-    Components = <
-      item
-        Component = frmBaseRoomerForm.Owner
-        Properties.Strings = (
-          'Height'
-          'Left'
-          'Top'
-          'Width'
-          'Position')
-      end>
-  end
   inherited cxsrRoomerStyleRepository: TcxStyleRepository
     PixelsPerInch = 96
     inherited dxssRoomerGridReportLink: TdxGridReportLinkStyleSheet
@@ -461,7 +449,6 @@ inherited frmHouseKeepingReport: TfrmHouseKeepingReport
     object gridPrinterLink: TdxGridReportLink
       Active = True
       Component = grHouseKeepingList
-      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -490,14 +477,13 @@ inherited frmHouseKeepingReport: TfrmHouseKeepingReport
       PrinterPage.ScaleMode = smFit
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
-      ReportDocument.CreationDate = 43032.391569432870000000
+      ReportDocument.CreationDate = 43061.381732951390000000
       ReportTitle.Font.Charset = DEFAULT_CHARSET
       ReportTitle.Font.Color = clBlack
       ReportTitle.Font.Height = -19
       ReportTitle.Font.Name = 'Arial'
       ReportTitle.Font.Style = [fsBold]
       ShrinkToPageWidth = True
-      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlack
       Font.Height = -15
