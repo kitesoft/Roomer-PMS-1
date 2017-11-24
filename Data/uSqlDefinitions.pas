@@ -6150,8 +6150,11 @@ begin
   s := s+' rr.PriceType, '+#10; //
   s := s+' rr.RoomType, '+#10; //
   s := s+' rr.rrDescription, '+#10; //
-  s := s+' rr.rrDeparture, '+#10; //
-  s := s+' rr.rrArrival, '+#10; //
+
+  s := s+'  date_add((select max(CAST(aDate as DATE))from roomsdate rd where rd.roomreservation=rr.roomreservation AND (rd.ResFlag NOT IN (''X'',''C''))), INTERVAL 1 DAY) as rrDeparture, '#10;
+  //s := s+' rr.rrDeparture, '+#10; //
+  s := s+' (select min(CAST(aDate as DATE)) from roomsdate rd where rd.roomreservation=rr.roomreservation AND (rd.ResFlag NOT IN (''X'',''C''))) as rrArrival, '#10;
+  //s := s+' rr.rrArrival, '+#10; //
   s := s+' (SELECT COUNT(id) FROM persons WHERE RoomReservation=rr.RoomReservation) AS numGuests, '+#10; //
   s := s+' rr.numChildren, '+#10; //
   s := s+' rr.numInfants, '+#10; //
@@ -6238,8 +6241,10 @@ begin
   s := s+' rr.PriceType, '+#10;
   s := s+' rr.RoomType, '+#10;
   s := s+' rr.rrDescription, '+#10;
-  s := s+' rr.rrDeparture, '+#10;
-  s := s+' rr.rrArrival, '+#10;
+  s := s+'  date_add((select max(CAST(aDate as DATE))from roomsdate rd where rd.roomreservation=rr.roomreservation AND (rd.ResFlag NOT IN (''X'',''C''))), INTERVAL 1 DAY) as rrDeparture, '#10;
+  //s := s+' rr.rrDeparture, '+#10; //
+  s := s+' (select min(CAST(aDate as DATE)) from roomsdate rd where rd.roomreservation=rr.roomreservation AND (rd.ResFlag NOT IN (''X'',''C''))) as rrArrival, '#10;
+  //s := s+' rr.rrArrival, '+#10; //
   s := s+' (SELECT COUNT(id) FROM persons WHERE RoomReservation=rr.RoomReservation) AS numGuests, '+#10;
   s := s+' rr.numChildren, '+#10;
   s := s+' rr.numInfants, '+#10;
