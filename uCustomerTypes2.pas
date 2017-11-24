@@ -297,6 +297,7 @@ begin
     end;
   finally
     freeandnil(rSet);
+    zFirstTime := false;
   end;
 end;
 
@@ -350,7 +351,6 @@ end;
 procedure TfrmCustomerTypes2.FormCreate(Sender: TObject);
 begin
   //**
-  zFirstTime  := true;
   zAct        := actNone;
   zisAddrow   := false;
 end;
