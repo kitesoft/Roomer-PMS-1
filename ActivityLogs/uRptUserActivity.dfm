@@ -309,20 +309,6 @@ inherited frmUserActivityReport: TfrmUserActivityReport
       GridView = grActivityLogDBTableView
     end
   end
-  inherited psRoomerBase: TcxPropertiesStore
-    Components = <
-      item
-        Component = frmBaseRoomerForm.Owner
-        Properties.Strings = (
-          'Height'
-          'Left'
-          'Top'
-          'Width'
-          'Position')
-      end>
-    Left = 744
-    Top = 80
-  end
   inherited cxsrRoomerStyleRepository: TcxStyleRepository
     Left = 664
     Top = 72

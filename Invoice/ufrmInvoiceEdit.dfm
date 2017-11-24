@@ -6,7 +6,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
   BorderIcons = [biMinimize, biMaximize]
   Caption = 'Invoice'
   ClientHeight = 697
-  ClientWidth = 1158
+  ClientWidth = 1096
   Constraints.MinWidth = 1112
   DoubleBuffered = True
   Font.Height = -11
@@ -18,38 +18,40 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
   OnKeyDown = FormKeyDown
   OnResize = FormResize
   OnShow = FormShow
-  ExplicitWidth = 1174
+  ExplicitWidth = 1112
   ExplicitHeight = 756
   PixelsPerInch = 96
   TextHeight = 13
   inherited sbStatusBar: TsStatusBar
     Top = 677
-    Width = 1158
+    Width = 1096
     ExplicitTop = 677
     ExplicitWidth = 1158
   end
   object pnlMain: TsPanel [1]
     Left = 0
     Top = 0
-    Width = 1158
+    Width = 1096
     Height = 677
     Align = alClient
     BevelOuter = bvNone
     Color = clWhite
     TabOrder = 1
     SkinData.SkinSection = 'PANEL'
+    ExplicitWidth = 1158
     object pnlHead: TsPanel
       Left = 0
       Top = 0
-      Width = 1158
+      Width = 1096
       Height = 189
       Align = alTop
       BevelOuter = bvNone
       ParentColor = True
       TabOrder = 0
       SkinData.SkinSection = 'PANEL'
+      ExplicitWidth = 1158
       DesignSize = (
-        1158
+        1096
         189)
       object clabCurrency: TsLabel
         Left = 616
@@ -172,7 +174,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
         Font.Style = []
       end
       object btnExit: TsButton
-        Left = 991
+        Left = 929
         Top = 4
         Width = 161
         Height = 41
@@ -186,9 +188,10 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
         TabOrder = 1
         OnClick = btnExitClick
         SkinData.SkinSection = 'BUTTON'
+        ExplicitLeft = 991
       end
       object btnInvoice: TsButton
-        Left = 991
+        Left = 929
         Top = 93
         Width = 161
         Height = 41
@@ -201,9 +204,10 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
         ShowHint = True
         TabOrder = 3
         SkinData.SkinSection = 'BUTTON'
+        ExplicitLeft = 991
       end
       object btnProforma: TsButton
-        Left = 991
+        Left = 929
         Top = 48
         Width = 161
         Height = 41
@@ -215,9 +219,10 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
         ShowHint = True
         TabOrder = 2
         SkinData.SkinSection = 'BUTTON'
+        ExplicitLeft = 991
       end
       object btnSaveChanges: TsButton
-        Left = 991
+        Left = 929
         Top = 137
         Width = 161
         Height = 41
@@ -234,6 +239,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
         Visible = False
         SkinData.CustomFont = True
         SkinData.ColorTone = clRed
+        ExplicitLeft = 991
       end
       object gbxHeader: TsGroupBox
         Left = 3
@@ -556,21 +562,23 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
     object pnlLnes: TsPanel
       Left = 0
       Top = 189
-      Width = 1158
+      Width = 1096
       Height = 488
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
+      ExplicitWidth = 1158
       object pnlTotalsAndPayments: TsPanel
         Left = 0
         Top = 279
-        Width = 1158
+        Width = 1096
         Height = 209
         Align = alBottom
         BevelOuter = bvLowered
         ParentColor = True
         TabOrder = 0
         SkinData.SkinSection = 'PANEL'
+        ExplicitWidth = 1158
         object splExtraInfo: TsSplitter
           Left = 526
           Top = 1
@@ -950,20 +958,22 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
         object pnlPayments: TsPanel
           Left = 532
           Top = 1
-          Width = 625
+          Width = 563
           Height = 207
           Align = alClient
           Caption = 'pnlPayments'
           TabOrder = 1
           SkinData.SkinSection = 'PANEL'
+          ExplicitWidth = 625
           object sPanel3: TsPanel
             Left = 1
             Top = 1
-            Width = 623
+            Width = 561
             Height = 20
             Align = alTop
             TabOrder = 0
             SkinData.SkinSection = 'PANEL'
+            ExplicitWidth = 623
             object labPayments: TsLabel
               Left = 5
               Top = 1
@@ -981,12 +991,13 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
           object grPayments: TcxGrid
             Left = 1
             Top = 21
-            Width = 623
+            Width = 561
             Height = 146
             Align = alClient
             DragMode = dmAutomatic
             TabOrder = 1
             LookAndFeel.NativeStyle = False
+            ExplicitWidth = 623
             object tvPayments: TcxGridDBTableView
               OnMouseDown = tvPaymentsMouseDown
               Navigator.Buttons.CustomButtons = <>
@@ -1075,13 +1086,14 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
           object pnlPaymentButtons: TsPanel
             Left = 1
             Top = 167
-            Width = 623
+            Width = 561
             Height = 39
             Align = alBottom
             TabOrder = 2
+            ExplicitWidth = 623
             object btnAddDownPayment: TsButton
               AlignWithMargins = True
-              Left = 125
+              Left = 63
               Top = 3
               Width = 119
               Height = 33
@@ -1091,10 +1103,11 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
               Align = alRight
               TabOrder = 0
               SkinData.SkinSection = 'BUTTON'
+              ExplicitLeft = 125
             end
             object btnRevertDownpayment: TsButton
               AlignWithMargins = True
-              Left = 500
+              Left = 438
               Top = 3
               Width = 119
               Height = 33
@@ -1104,10 +1117,11 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
               Align = alRight
               TabOrder = 3
               SkinData.SkinSection = 'BUTTON'
+              ExplicitLeft = 500
             end
             object btnEditDownpayment: TsButton
               AlignWithMargins = True
-              Left = 250
+              Left = 188
               Top = 3
               Width = 119
               Height = 33
@@ -1117,10 +1131,11 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
               Align = alRight
               TabOrder = 1
               SkinData.SkinSection = 'BUTTON'
+              ExplicitLeft = 250
             end
             object btnDeleteDownpayment: TsButton
               AlignWithMargins = True
-              Left = 375
+              Left = 313
               Top = 3
               Width = 119
               Height = 33
@@ -1130,6 +1145,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
               Align = alRight
               TabOrder = 2
               SkinData.SkinSection = 'BUTTON'
+              ExplicitLeft = 375
             end
           end
         end
@@ -1137,12 +1153,13 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
       object pnlLineButtons: TsPanel
         Left = 0
         Top = 0
-        Width = 1158
+        Width = 1096
         Height = 49
         Align = alTop
         BevelOuter = bvNone
         TabOrder = 3
         SkinData.SkinSection = 'PANEL'
+        ExplicitWidth = 1158
         object btnAddRoom: TsButton
           AlignWithMargins = True
           Left = 3
@@ -1246,7 +1263,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
       object pnlLinesGrid: TsPanel
         Left = 0
         Top = 49
-        Width = 1083
+        Width = 1021
         Height = 230
         Align = alClient
         BevelOuter = bvNone
@@ -1257,10 +1274,11 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
         Padding.Bottom = 5
         TabOrder = 2
         SkinData.SkinSection = 'PANEL'
+        ExplicitWidth = 1083
         object agrLines: TAdvStringGrid
           Left = 10
           Top = 5
-          Width = 1063
+          Width = 1001
           Height = 220
           Cursor = crDefault
           Align = alClient
@@ -1390,6 +1408,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
           SelectionTextColor = clHighlightText
           SortSettings.DefaultFormat = ssAutomatic
           Version = '8.2.4.1'
+          ExplicitWidth = 1063
           ColWidths = (
             24
             28
@@ -1411,7 +1430,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
       end
       object pnlInvoiceIndices: TsScrollBox
         AlignWithMargins = True
-        Left = 1086
+        Left = 1024
         Top = 52
         Width = 69
         Height = 224
@@ -1420,6 +1439,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
         Align = alRight
         TabOrder = 1
         OnDragOver = pnlInvoiceIndicesDragOver
+        ExplicitLeft = 1086
         object pnlInvoiceIndex0: TsPanel
           Left = 0
           Top = 4
@@ -1928,28 +1948,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
       end
     end
   end
-  inherited psRoomerBase: TcxPropertiesStore
-    Components = <
-      item
-        Component = frmBaseRoomerForm.Owner
-        Properties.Strings = (
-          'Height'
-          'Left'
-          'Top'
-          'Width'
-          'Position')
-      end>
-  end
-  inherited cxsrRoomerStyleRepository: TcxStyleRepository
-    PixelsPerInch = 96
-    inherited dxssRoomerGridReportLink: TdxGridReportLinkStyleSheet
-      BuiltIn = True
-    end
-    inherited cxssRoomerGridTableView: TcxGridTableViewStyleSheet
-      BuiltIn = True
-    end
-  end
-  object MainMenu1: TMainMenu
+  object MainMenu1: TMainMenu [3]
     Left = 372
     Top = 304
     object File1: TMenuItem
@@ -2020,7 +2019,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
       end
     end
   end
-  object GridImages: TImageList
+  object GridImages: TImageList [4]
     Left = 933
     Top = 328
     Bitmap = {
@@ -2163,7 +2162,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
       BE7B000000000000FEFF00000000000000000000000000000000000000000000
       000000000000}
   end
-  object actInvoiceActions: TActionList
+  object actInvoiceActions: TActionList [5]
     OnUpdate = actInvoiceActionsUpdate
     Left = 136
     Top = 300
@@ -2297,19 +2296,19 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
       OnExecute = btnSaveChangesClick
     end
   end
-  object timCloseInvoice: TTimer
+  object timCloseInvoice: TTimer [6]
     Enabled = False
     Interval = 100
     OnTimer = timCloseInvoiceTimer
     Left = 57
     Top = 405
   end
-  object PaymentsDS: TDataSource
+  object PaymentsDS: TDataSource [7]
     DataSet = mPayments
     Left = 680
     Top = 520
   end
-  object mPayments: TdxMemData
+  object mPayments: TdxMemData [8]
     Indexes = <>
     SortOptions = []
     OnCalcFields = mPaymentsCalcFields
@@ -2362,7 +2361,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
       Calculated = True
     end
   end
-  object mnuMoveItem: TPopupMenu
+  object mnuMoveItem: TPopupMenu [9]
     OnPopup = mnuMoveItemPopup
     Left = 208
     Top = 328
@@ -2381,7 +2380,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
       Caption = 'Transfer'
     end
   end
-  object mnuMoveRoom: TPopupMenu
+  object mnuMoveRoom: TPopupMenu [10]
     OnPopup = mnuMoveRoomPopup
     Left = 40
     Top = 328
@@ -2403,7 +2402,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
       end
     end
   end
-  object mnuInvoiceIndex: TPopupMenu
+  object mnuInvoiceIndex: TPopupMenu [11]
     Left = 632
     Top = 352
     object I1: TMenuItem
@@ -2465,7 +2464,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
       Caption = '10'
     end
   end
-  object mRoomRes: TdxMemData
+  object mRoomRes: TdxMemData [12]
     Indexes = <
       item
         FieldName = 'Room'
@@ -2538,7 +2537,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
       Size = 60
     end
   end
-  object mRoomRates: TdxMemData
+  object mRoomRates: TdxMemData [13]
     Indexes = <>
     SortOptions = []
     Left = 224
@@ -2589,7 +2588,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
       Size = 60
     end
   end
-  object mnuShowOnInvoice: TPopupMenu
+  object mnuShowOnInvoice: TPopupMenu [14]
     Left = 352
     Top = 384
     object mnuCityTax: TMenuItem
@@ -2627,6 +2626,15 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
       object mnuHidePackageItems: TMenuItem
         Action = acHidePackageItems
       end
+    end
+  end
+  inherited cxsrRoomerStyleRepository: TcxStyleRepository
+    PixelsPerInch = 96
+    inherited dxssRoomerGridReportLink: TdxGridReportLinkStyleSheet
+      BuiltIn = True
+    end
+    inherited cxssRoomerGridTableView: TcxGridTableViewStyleSheet
+      BuiltIn = True
     end
   end
 end

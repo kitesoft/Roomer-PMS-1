@@ -5,7 +5,6 @@ inherited frmItemTransactionsReport: TfrmItemTransactionsReport
   ClientHeight = 641
   ClientWidth = 1116
   Font.Height = -11
-  Position = poOwnerFormCenter
   OnClose = FormClose
   OnCreate = FormCreate
   ExplicitWidth = 1132
@@ -30,10 +29,6 @@ inherited frmItemTransactionsReport: TfrmItemTransactionsReport
     object sheetMain: TsTabSheet
       Caption = 'Main'
       TabVisible = False
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Panel1: TsPanel
         Left = 0
         Top = 0
@@ -72,7 +67,6 @@ inherited frmItemTransactionsReport: TfrmItemTransactionsReport
           TabOrder = 1
           OnClick = btnShowReservationClick
           SkinData.SkinSection = 'BUTTON'
-          ExplicitTop = 0
         end
         object btnShowInvoice: TsButton
           AlignWithMargins = True
@@ -89,7 +83,6 @@ inherited frmItemTransactionsReport: TfrmItemTransactionsReport
           Visible = False
           OnClick = btnShowInvoiceClick
           SkinData.SkinSection = 'BUTTON'
-          ExplicitTop = 0
         end
       end
       object gTrxList: TcxGrid
@@ -444,18 +437,6 @@ inherited frmItemTransactionsReport: TfrmItemTransactionsReport
       OnClick = btnRefreshClick
       SkinData.SkinSection = 'BUTTON'
     end
-  end
-  inherited psRoomerBase: TcxPropertiesStore
-    Components = <
-      item
-        Component = frmBaseRoomerForm.Owner
-        Properties.Strings = (
-          'Height'
-          'Left'
-          'Top'
-          'Width'
-          'Position')
-      end>
   end
   inherited cxsrRoomerStyleRepository: TcxStyleRepository
     PixelsPerInch = 96

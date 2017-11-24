@@ -857,6 +857,14 @@ object frmMakeKreditInvoice: TfrmMakeKreditInvoice
       item
         Name = 'invoiceIndex'
         DataType = ftInteger
+      end
+      item
+        Name = 'revenue'
+        DataType = ftFloat
+      end
+      item
+        Name = 'VisibleOnInvoice'
+        DataType = ftBoolean
       end>
     IndexDefs = <>
     SortOptions = []

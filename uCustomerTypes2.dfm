@@ -4,7 +4,6 @@ inherited frmCustomerTypes2: TfrmCustomerTypes2
   ClientWidth = 558
   Constraints.MinWidth = 470
   Font.Height = -11
-  Position = poOwnerFormCenter
   OnClose = FormClose
   OnCreate = FormCreate
   OnKeyPress = FormKeyPress
@@ -266,18 +265,6 @@ inherited frmCustomerTypes2: TfrmCustomerTypes2
       GridView = tvData
     end
   end
-  inherited psRoomerBase: TcxPropertiesStore
-    Components = <
-      item
-        Component = frmBaseRoomerForm.Owner
-        Properties.Strings = (
-          'Height'
-          'Left'
-          'Top'
-          'Width'
-          'Position')
-      end>
-  end
   inherited cxsrRoomerStyleRepository: TcxStyleRepository
     PixelsPerInch = 96
     inherited dxssRoomerGridReportLink: TdxGridReportLinkStyleSheet
@@ -340,6 +327,7 @@ inherited frmCustomerTypes2: TfrmCustomerTypes2
     Left = 368
     Top = 224
     object prLink_grData: TdxGridReportLink
+      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -353,6 +341,7 @@ inherited frmCustomerTypes2: TfrmCustomerTypes2
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
       ReportDocument.CreationDate = 41334.495374884260000000
+      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
   end

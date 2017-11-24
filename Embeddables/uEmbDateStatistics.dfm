@@ -490,16 +490,6 @@ inherited frmEmbDateStatistics: TfrmEmbDateStatistics
     end
   end
   inherited psRoomerBase: TcxPropertiesStore
-    Components = <
-      item
-        Component = frmBaseRoomerForm.Owner
-        Properties.Strings = (
-          'Height'
-          'Left'
-          'Top'
-          'Width'
-          'Position')
-      end>
     Left = 112
     Top = 8
   end

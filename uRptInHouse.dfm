@@ -3,7 +3,7 @@ inherited frmInHouseReport: TfrmInHouseReport
   ClientHeight = 586
   ClientWidth = 1123
   Font.Height = -11
-  Position = poOwnerFormCenter
+  Position = poDesigned
   ExplicitWidth = 1139
   ExplicitHeight = 625
   PixelsPerInch = 96
@@ -51,7 +51,6 @@ inherited frmInHouseReport: TfrmInHouseReport
         TabOrder = 0
         OnClick = btnExcelClick
         SkinData.SkinSection = 'BUTTON'
-        ExplicitHeight = 37
       end
       object btnProfile: TsButton
         AlignWithMargins = True
@@ -66,7 +65,6 @@ inherited frmInHouseReport: TfrmInHouseReport
         TabOrder = 1
         OnClick = btnProfileClick
         SkinData.SkinSection = 'BUTTON'
-        ExplicitHeight = 37
       end
       object btnInvoice: TsButton
         AlignWithMargins = True
@@ -83,7 +81,6 @@ inherited frmInHouseReport: TfrmInHouseReport
         TabOrder = 2
         OnClick = mnuRoomInvoiceClick
         SkinData.SkinSection = 'BUTTON'
-        ExplicitHeight = 37
       end
       object btnReport: TsButton
         AlignWithMargins = True
@@ -98,7 +95,6 @@ inherited frmInHouseReport: TfrmInHouseReport
         TabOrder = 3
         OnClick = btnReportClick
         SkinData.SkinSection = 'BUTTON'
-        ExplicitHeight = 37
       end
       object btnCheckOut: TsButton
         AlignWithMargins = True
@@ -113,7 +109,6 @@ inherited frmInHouseReport: TfrmInHouseReport
         TabOrder = 4
         OnClick = btnCheckOutClick
         SkinData.SkinSection = 'BUTTON'
-        ExplicitHeight = 37
       end
       object sPanel1: TsPanel
         Left = 0
@@ -123,7 +118,6 @@ inherited frmInHouseReport: TfrmInHouseReport
         Align = alBottom
         BevelOuter = bvNone
         TabOrder = 5
-        ExplicitTop = 36
         object cLabFilter: TsLabel
           Left = 19
           Top = 6
@@ -177,8 +171,6 @@ inherited frmInHouseReport: TfrmInHouseReport
     PopupMenu = pnmuGridMenu
     TabOrder = 1
     LookAndFeel.NativeStyle = False
-    ExplicitTop = 78
-    ExplicitHeight = 488
     object grInHouseListDBTableView1: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       OnCellDblClick = grInHouseListDBTableView1CellDblClick
@@ -294,18 +286,6 @@ inherited frmInHouseReport: TfrmInHouseReport
     Width = 1123
     ExplicitTop = 566
     ExplicitWidth = 1123
-  end
-  inherited psRoomerBase: TcxPropertiesStore
-    Components = <
-      item
-        Component = frmBaseRoomerForm.Owner
-        Properties.Strings = (
-          'Height'
-          'Left'
-          'Position'
-          'Top'
-          'Width')
-      end>
   end
   inherited cxsrRoomerStyleRepository: TcxStyleRepository
     PixelsPerInch = 96
@@ -489,6 +469,7 @@ inherited frmInHouseReport: TfrmInHouseReport
     object grdPrinterLink1: TdxGridReportLink
       Active = True
       Component = grInHouseList
+      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -510,13 +491,14 @@ inherited frmInHouseReport: TfrmInHouseReport
       PrinterPage.ScaleMode = smFit
       PrinterPage._dxMeasurementUnits_ = 2
       PrinterPage._dxLastMU_ = 2
-      ReportDocument.CreationDate = 43032.392128449070000000
+      ReportDocument.CreationDate = 43061.381576944440000000
       ReportTitle.Font.Charset = DEFAULT_CHARSET
       ReportTitle.Font.Color = clBlack
       ReportTitle.Font.Height = -19
       ReportTitle.Font.Name = 'Arial'
       ReportTitle.Font.Style = [fsBold]
       ShrinkToPageWidth = True
+      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlack
       Font.Height = -11

@@ -4,7 +4,7 @@ inherited frmRptTotallist: TfrmRptTotallist
   ClientWidth = 1347
   Constraints.MinWidth = 570
   Font.Height = -11
-  Position = poOwnerFormCenter
+  Position = poDesigned
   OnCreate = FormCreate
   OnShow = FormShow
   ExplicitWidth = 1363
@@ -516,18 +516,6 @@ inherited frmRptTotallist: TfrmRptTotallist
     object lvTotallistLevel1: TcxGridLevel
       GridView = lvTotallist
     end
-  end
-  inherited psRoomerBase: TcxPropertiesStore
-    Components = <
-      item
-        Component = frmBaseRoomerForm.Owner
-        Properties.Strings = (
-          'Height'
-          'Left'
-          'Top'
-          'Width'
-          'Position')
-      end>
   end
   inherited cxsrRoomerStyleRepository: TcxStyleRepository
     PixelsPerInch = 96

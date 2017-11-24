@@ -4565,7 +4565,7 @@ select_ivh_otherInfo : string =
 ' '#10+
 '   FROM '#10+
 '     InvoiceHeads ih '#10+
-'   JOIN invoiceaddressees ia on ia.invoiceNumber=ih.InvoiceNumber '#10+
+'   LEFT JOIN invoiceaddressees ia on ia.invoiceNumber=ih.InvoiceNumber '#10+
 '        AND ia.Reservation=ih.Reservation '#10+
 '        AND ia.RoomReservation=ih.RoomReservation '#10+
 '        AND ia.SplitNumber=ih.SplitNumber '#10+

@@ -357,6 +357,8 @@ var
           ImportSource         := kbmInvoiceLines['ImportSource'];
           IsPackage            := kbmInvoiceLines['IsPackage'];
           InvoiceIndex         := kbmInvoiceLines['InvoiceIndex'];
+          Revenue              := kbmInvoiceLines['Revenue'] * -1;
+          VisibleOnInvoice     := kbmInvoiceLines.FieldByName('VisibleOnInvoice').AsBoolean;
 
 
 //   confirmDate   := kbmInvoiceLines['confirmDate'];

@@ -3,7 +3,6 @@ inherited frmRptDailyRevenues: TfrmRptDailyRevenues
   ClientHeight = 644
   ClientWidth = 1390
   Font.Height = -11
-  Position = poOwnerFormCenter
   ExplicitWidth = 1406
   ExplicitHeight = 683
   PixelsPerInch = 96
@@ -188,8 +187,8 @@ inherited frmRptDailyRevenues: TfrmRptDailyRevenues
         object rbYesterday: TsRadioButton
           Left = 16
           Top = 21
-          Width = 69
-          Height = 20
+          Width = 77
+          Height = 19
           Caption = 'Yesterday'
           Checked = True
           TabOrder = 0
@@ -200,8 +199,8 @@ inherited frmRptDailyRevenues: TfrmRptDailyRevenues
         object rbOther: TsRadioButton
           Left = 16
           Top = 48
-          Width = 48
-          Height = 20
+          Width = 56
+          Height = 19
           Caption = 'Other'
           TabOrder = 1
           OnClick = rbPresetDateClick
@@ -354,8 +353,6 @@ inherited frmRptDailyRevenues: TfrmRptDailyRevenues
         TabOrder = 0
         LookAndFeel.NativeStyle = False
         RootLevelOptions.DetailTabsPosition = dtpTop
-        ExplicitLeft = 0
-        ExplicitTop = 5
         object tvRevenues: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = dsRevenues
@@ -605,17 +602,6 @@ inherited frmRptDailyRevenues: TfrmRptDailyRevenues
     end
   end
   inherited psRoomerBase: TcxPropertiesStore
-    Components = <
-      item
-        Component = grDataRevenues
-        Properties.Strings = (
-          'Width')
-      end
-      item
-        Component = pnlLeft
-        Properties.Strings = (
-          'Width')
-      end>
     Left = 808
     Top = 72
   end
@@ -683,6 +669,7 @@ inherited frmRptDailyRevenues: TfrmRptDailyRevenues
     object grdPrinterLinkRevenues: TdxGridReportLink
       Active = True
       Component = grDataRevenues
+      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -698,12 +685,13 @@ inherited frmRptDailyRevenues: TfrmRptDailyRevenues
       PrinterPage.ScaleMode = smFit
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
-      ReportDocument.CreationDate = 42839.489699004630000000
+      ReportDocument.CreationDate = 43061.383398321760000000
       ReportTitle.Font.Charset = DEFAULT_CHARSET
       ReportTitle.Font.Color = clBlack
       ReportTitle.Font.Height = -19
       ReportTitle.Font.Name = 'Arial'
       ReportTitle.Font.Style = [fsBold]
+      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlack
       Font.Height = -12
@@ -723,6 +711,7 @@ inherited frmRptDailyRevenues: TfrmRptDailyRevenues
     object grdPrinterLinkPayments: TdxGridReportLink
       Active = True
       Component = grDataPayments
+      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -738,12 +727,13 @@ inherited frmRptDailyRevenues: TfrmRptDailyRevenues
       PrinterPage.ScaleMode = smFit
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
-      ReportDocument.CreationDate = 42839.489699027780000000
+      ReportDocument.CreationDate = 43061.383398344910000000
       ReportTitle.Font.Charset = DEFAULT_CHARSET
       ReportTitle.Font.Color = clBlack
       ReportTitle.Font.Height = -19
       ReportTitle.Font.Name = 'Arial'
       ReportTitle.Font.Style = [fsBold]
+      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlack
       Font.Height = -12
@@ -764,6 +754,7 @@ inherited frmRptDailyRevenues: TfrmRptDailyRevenues
     object gridPrinterLinkBalance: TdxGridReportLink
       Active = True
       Component = grBalance
+      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -779,12 +770,13 @@ inherited frmRptDailyRevenues: TfrmRptDailyRevenues
       PrinterPage.ScaleMode = smFit
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
-      ReportDocument.CreationDate = 42839.489699039350000000
+      ReportDocument.CreationDate = 43061.383398356480000000
       ReportTitle.Font.Charset = DEFAULT_CHARSET
       ReportTitle.Font.Color = clBlack
       ReportTitle.Font.Height = -19
       ReportTitle.Font.Name = 'Arial'
       ReportTitle.Font.Style = [fsBold]
+      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlack
       Font.Height = -12

@@ -12,7 +12,7 @@ object frmBaseRoomerForm: TfrmBaseRoomerForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
-  Position = poMainFormCenter
+  Position = poDesigned
   ShowHint = True
   PixelsPerInch = 96
   TextHeight = 13
@@ -39,16 +39,7 @@ object frmBaseRoomerForm: TfrmBaseRoomerForm
     SkinData.SkinSection = 'STATUSBAR'
   end
   object psRoomerBase: TcxPropertiesStore
-    Components = <
-      item
-        Component = Owner
-        Properties.Strings = (
-          'Height'
-          'Left'
-          'Top'
-          'Width'
-          '')
-      end>
+    Components = <>
     StorageName = 'cxPropertiesStore1'
     StorageType = stRegistry
     Left = 568

@@ -3,7 +3,6 @@ inherited frmEditRoomPrice: TfrmEditRoomPrice
   ClientHeight = 497
   ClientWidth = 732
   Font.Height = -11
-  Position = poOwnerFormCenter
   OnDestroy = FormDestroy
   ExplicitWidth = 748
   ExplicitHeight = 536
@@ -605,18 +604,6 @@ inherited frmEditRoomPrice: TfrmEditRoomPrice
       OnClick = sButton2Click
       SkinData.SkinSection = 'BUTTON'
     end
-  end
-  inherited psRoomerBase: TcxPropertiesStore
-    Components = <
-      item
-        Component = frmBaseRoomerForm.Owner
-        Properties.Strings = (
-          'Height'
-          'Left'
-          'Top'
-          'Width'
-          'Position')
-      end>
   end
   inherited cxsrRoomerStyleRepository: TcxStyleRepository
     PixelsPerInch = 96
