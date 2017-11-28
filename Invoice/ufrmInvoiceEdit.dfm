@@ -11,7 +11,6 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
   DoubleBuffered = True
   Font.Height = -11
   Menu = MainMenu1
-  Position = poDesigned
   Scaled = False
   OnCreate = FormCreate
   OnDestroy = FormDestroy

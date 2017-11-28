@@ -5107,11 +5107,11 @@ begin
     edtCustomer.Text := ctrlGetString('RackCustomer');
   end;
 
-  edtName.ReadOnly := rgrInvoiceAddressType.itemIndex IN [0, 1, 2, 3];
-  edtAddress1.ReadOnly := rgrInvoiceAddressType.itemIndex IN [0, 1, 2, 3];
-  edtAddress2.ReadOnly := rgrInvoiceAddressType.itemIndex IN [0, 1, 2, 3];
-  edtAddress3.ReadOnly := rgrInvoiceAddressType.itemIndex IN [0, 1, 2, 3];
-  edtAddress4.ReadOnly := rgrInvoiceAddressType.itemIndex IN [0, 1, 2, 3];
+//  edtName.ReadOnly := rgrInvoiceAddressType.itemIndex IN [0, 1, 2, 3];
+//  edtAddress1.ReadOnly := rgrInvoiceAddressType.itemIndex IN [0, 1, 2, 3];
+//  edtAddress2.ReadOnly := rgrInvoiceAddressType.itemIndex IN [0, 1, 2, 3];
+//  edtAddress3.ReadOnly := rgrInvoiceAddressType.itemIndex IN [0, 1, 2, 3];
+//  edtAddress4.ReadOnly := rgrInvoiceAddressType.itemIndex IN [0, 1, 2, 3];
 end;
 
 procedure TfrmInvoiceEdit.SetHeaderChanged(const Value: boolean);

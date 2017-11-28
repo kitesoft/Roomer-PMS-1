@@ -20,14 +20,17 @@ type
     FOnCurrencyChangeAndValid: TNotifyEvent;
     FDisableEventCount: integer;
     FValidCurrency: boolean;
+    FShowCurrencyName: boolean;
     procedure SetAllowEdit(const Value: boolean);
     function GetCurrencyCode: string;
     function GetCurrencyName: string;
     procedure SetCurrencyCode(const Value: string);
     function GetIsValid: boolean;
     function GetCurrencyRate: double;
+    procedure SetShowCurrencyName(const Value: boolean);
     { Private declarations }
   public
+    constructor Create(aOwner: TComponent); override;
     procedure DisableEvents;
     procedure EnableEvents;
     function EventsEnabled: boolean;
@@ -37,6 +40,7 @@ type
   published
     { Public declarations }
     property AllowEdit: boolean read FAllowEdit write SetAllowEdit;
+    property ShowCurrencyName: boolean read FShowCurrencyName write SetShowCurrencyName;
     property OnCurrencyChange: TNotifyEvent read FOnCurrencyChange write FOnCurrencyChange;
     property OnCurrencyChangeAndValid: TNotifyEvent read FOnCurrencyChangeAndValid write FOnCurrencyChangeAndValid;
     property CurrencyCode: string read GetCurrencyCode write SetCurrencyCode;
@@ -62,6 +66,12 @@ begin
   curr := edCurrencyCode.Text;
   if getCurrency(curr, lblCurrencyName) then
     edCurrencyCode.Text := curr;
+end;
+
+constructor TfraCurrencyPanel.Create(aOwner: TComponent);
+begin
+  inherited;
+  FShowCurrencyName := True;
 end;
 
 procedure TfraCurrencyPanel.DisableEvents;
@@ -129,6 +139,12 @@ procedure TfraCurrencyPanel.SetCurrencyCode(const Value: string);
 begin
   if not Sametext(edCurrencyCode.Text, Value) then
     edCurrencyCode.Text := Value;
+end;
+
+procedure TfraCurrencyPanel.SetShowCurrencyName(const Value: boolean);
+begin
+  FShowCurrencyName := Value;
+  lblCurrencyName.Visible := FShowCurrencyName;
 end;
 
 initialization
