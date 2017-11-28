@@ -30,7 +30,7 @@ uses
   , uFileSystemUtils
   , uRegistryServices
   , uRoomerDefinitions
-  , System.Generics.Collections, uReservationStateDefinitions
+  , System.Generics.Collections, uReservationStateDefinitions, uAmount
   ;
 
 
@@ -414,7 +414,7 @@ type
     function OpenDownPayment(act : TActTableAction; AllowPaycardCharging: boolean; var rec : recDownPayment) : boolean;
 
     function OpenResMemo(reservation : integer) : boolean;
-    function AddAccommodation(var Persons,rooms,nights : integer; var roomPrice : double) : boolean;
+    function AddAccommodation(var Persons,rooms,nights : integer; var roomPrice : TAmount) : boolean;
 //    function AddDiscount(var DiscountType : integer; var Amount : double) : boolean;
 
 
@@ -1481,7 +1481,7 @@ begin
 end;
 
 
-function TGlobalApplication.AddAccommodation(var Persons,rooms,nights : integer; var roomPrice : double) : boolean;
+function TGlobalApplication.AddAccommodation(var Persons,rooms,nights : integer; var roomPrice : TAmount) : boolean;
 begin
   result := false;
   frmAddAccommodation := TfrmAddAccommodation.Create(nil);
@@ -1489,7 +1489,7 @@ begin
     frmAddAccommodation.zPersons   :=  Persons;
     frmAddAccommodation.zRooms     :=  Rooms;
     frmAddAccommodation.zNights    :=  Nights;
-    frmAddAccommodation.zRoomPrice :=  roomPrice;
+    frmAddAccommodation.RoomPrice :=  roomPrice;
 
     frmAddAccommodation.ShowModal;
     if frmAddAccommodation.modalresult = mrOk then
@@ -1498,7 +1498,7 @@ begin
       Persons   := frmAddAccommodation.zPersons   ;
       Rooms     := frmAddAccommodation.zRooms     ;
       Nights    := frmAddAccommodation.zNights    ;
-      roomPrice := frmAddAccommodation.zRoomPrice ;
+      roomPrice := frmAddAccommodation.RoomPrice ;
     end
     else
     begin

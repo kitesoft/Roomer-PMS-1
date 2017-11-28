@@ -4,8 +4,8 @@ object frmAddAccommodation: TfrmAddAccommodation
   BorderIcons = []
   BorderStyle = bsDialog
   Caption = 'Add accommodation'
-  ClientHeight = 172
-  ClientWidth = 286
+  ClientHeight = 163
+  ClientWidth = 278
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,7 +19,7 @@ object frmAddAccommodation: TfrmAddAccommodation
   PixelsPerInch = 96
   TextHeight = 13
   object cxLabel1: TsLabel
-    Left = 24
+    Left = 4
     Top = 16
     Width = 114
     Height = 17
@@ -34,7 +34,7 @@ object frmAddAccommodation: TfrmAddAccommodation
     Font.Style = []
   end
   object cxLabel2: TsLabel
-    Left = 24
+    Left = 4
     Top = 39
     Width = 114
     Height = 17
@@ -49,7 +49,7 @@ object frmAddAccommodation: TfrmAddAccommodation
     Font.Style = []
   end
   object cxLabel3: TsLabel
-    Left = 24
+    Left = 4
     Top = 72
     Width = 114
     Height = 17
@@ -64,7 +64,7 @@ object frmAddAccommodation: TfrmAddAccommodation
     Font.Style = []
   end
   object cxLabel4: TsLabel
-    Left = 24
+    Left = 4
     Top = 96
     Width = 114
     Height = 17
@@ -78,15 +78,8 @@ object frmAddAccommodation: TfrmAddAccommodation
     Font.Name = 'Tahoma'
     Font.Style = []
   end
-  object lbCurrency: TsLabel
-    Left = 232
-    Top = 96
-    Width = 4
-    Height = 13
-    Caption = '-'
-  end
   object edPersons: TsSpinEdit
-    Left = 144
+    Left = 124
     Top = 13
     Width = 81
     Height = 21
@@ -109,7 +102,7 @@ object frmAddAccommodation: TfrmAddAccommodation
     Value = 0
   end
   object edNights: TsSpinEdit
-    Left = 144
+    Left = 124
     Top = 36
     Width = 81
     Height = 21
@@ -132,7 +125,7 @@ object frmAddAccommodation: TfrmAddAccommodation
     Value = 0
   end
   object edRooms: TsSpinEdit
-    Left = 144
+    Left = 124
     Top = 69
     Width = 81
     Height = 21
@@ -156,16 +149,17 @@ object frmAddAccommodation: TfrmAddAccommodation
   end
   object sPanel1: TsPanel
     Left = 0
-    Top = 131
-    Width = 286
+    Top = 122
+    Width = 278
     Height = 41
     Align = alBottom
-    TabOrder = 4
+    TabOrder = 5
     SkinData.SkinSection = 'PANEL'
-    ExplicitWidth = 248
+    ExplicitTop = 131
+    ExplicitWidth = 286
     object BtnOk: TsButton
       AlignWithMargins = True
-      Left = 108
+      Left = 100
       Top = 4
       Width = 83
       Height = 33
@@ -179,13 +173,11 @@ object frmAddAccommodation: TfrmAddAccommodation
       TabOrder = 0
       OnClick = BtnOkClick
       SkinData.SkinSection = 'BUTTON'
-      ExplicitLeft = 64
-      ExplicitTop = 6
-      ExplicitHeight = 25
+      ExplicitLeft = 108
     end
     object btnCancel: TsButton
       AlignWithMargins = True
-      Left = 197
+      Left = 189
       Top = 4
       Width = 85
       Height = 33
@@ -197,13 +189,11 @@ object frmAddAccommodation: TfrmAddAccommodation
       ModalResult = 2
       TabOrder = 1
       SkinData.SkinSection = 'BUTTON'
-      ExplicitLeft = 153
-      ExplicitTop = 6
-      ExplicitHeight = 25
+      ExplicitLeft = 197
     end
   end
   object edRoomPrice: TsCalcEdit
-    Left = 144
+    Left = 124
     Top = 93
     Width = 81
     Height = 21
@@ -216,9 +206,31 @@ object frmAddAccommodation: TfrmAddAccommodation
     Font.Style = []
     ParentFont = False
     TabOrder = 3
+    OnChange = edRoomPriceChange
     SkinData.SkinSection = 'EDIT'
     GlyphMode.Blend = 0
     GlyphMode.Grayed = False
+  end
+  inline fraCurrencyPanel: TfraCurrencyPanel
+    Left = 209
+    Top = 93
+    Width = 135
+    Height = 21
+    TabOrder = 4
+    ExplicitLeft = 209
+    ExplicitTop = 93
+    ExplicitWidth = 135
+    ExplicitHeight = 21
+    inherited pnlCurrency: TsPanel
+      Width = 135
+      inherited lblCurrencyName: TsLabel
+        Width = 73
+        ExplicitLeft = 65
+        ExplicitTop = 0
+        ExplicitWidth = 70
+        ExplicitHeight = 14
+      end
+    end
   end
   object FormStore: TcxPropertiesStore
     Components = <
@@ -231,7 +243,7 @@ object frmAddAccommodation: TfrmAddAccommodation
       end>
     StorageName = 'Software\Roomer\FormStatus\frmAddAccommodation'
     StorageType = stRegistry
-    Left = 10
-    Top = 14
+    Left = 18
+    Top = 126
   end
 end

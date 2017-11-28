@@ -30,7 +30,8 @@ uses
   sButton,
 
   cxClasses,
-  cxPropertiesStore
+  cxPropertiesStore, ufraCurrencyPanel
+  , uAmount
   ;
 
 type
@@ -47,11 +48,13 @@ type
     edRoomPrice: TsCalcEdit;
     BtnOk: TsButton;
     btnCancel: TsButton;
-    lbCurrency: TsLabel;
+    fraCurrencyPanel: TfraCurrencyPanel;
     procedure FormCreate(Sender : TObject);
     procedure FormShow(Sender : TObject);
     procedure btnOKClick(Sender : TObject);
+    procedure edRoomPriceChange(Sender: TObject);
   private
+    procedure RecalcAmount(Sender : TObject);
     { Private declarations }
 
   public
@@ -59,8 +62,7 @@ type
     zPersons : integer;
     zNights : integer;
     zRooms : integer;
-    zRoomPrice : double;
-
+    RoomPrice : TAmount;
   end;
 
 var
@@ -74,14 +76,20 @@ uses
     uRoomerLanguage
   , uUtils
   , uDImages
-  , uMain, uG;
+  , uMain
+  , uG
+  , Math;
 
 procedure TfrmAddAccommodation.btnOKClick(Sender : TObject);
 begin
   zPersons := edPersons.Value;
   zNights := edNights.Value;
   zRooms := edRooms.Value;
-  zRoomPrice := edRoomPrice.value;
+end;
+
+procedure TfrmAddAccommodation.edRoomPriceChange(Sender: TObject);
+begin
+  RoomPrice := TAmount.Create(edRoomPrice.Value, fraCurrencyPanel.CurrencyCode);
 end;
 
 procedure TfrmAddAccommodation.FormCreate(Sender : TObject);
@@ -94,18 +102,26 @@ begin
   zPersons := 1;
   zNights := 1;
   zRooms := 1;
-  zRoomPrice := 0.00;
 end;
 
 procedure TfrmAddAccommodation.FormShow(Sender : TObject);
 begin
-//  _restoreForm(frmAddAccommodation);
+  fraCurrencyPanel.CurrencyCode := g.qNativeCurrency;
+  fraCurrencyPanel.ShowCurrencyName := false;
+  fraCurrencyPanel.OnCurrencyChangeAndValid := reCalcAmount;
   edPersons.Value := zPersons;
   edNights.Value := zNights;
   edRooms.Value := zRooms;
-  edRoomPrice.value := zRoomPrice;
-  lbCurrency.Caption := g.qNativeCurrency;
+  edRoomPrice.value := RoomPrice;
   edRoomprice.SetFocus;
+end;
+
+procedure TfrmAddAccommodation.RecalcAmount(Sender : TObject);
+begin
+  if (RoomPrice <> TAmount.ZERO) and (RoomPrice.CurrencyCode <> fraCurrencyPanel.CurrencyCode) then
+  begin
+    edRoomPrice.Value := RoomPrice.ToCurrency(fraCurrencyPanel.CurrencyCode)
+  end;
 end;
 
 end.

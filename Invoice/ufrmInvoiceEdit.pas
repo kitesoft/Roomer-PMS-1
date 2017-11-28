@@ -6073,7 +6073,7 @@ var
   iPersons: integer;
   iRooms: integer;
   iNights: integer;
-  dRoomPrice: Double;
+  dRoomPrice: TAmount;
   iRoomCount: integer;
   lRoomText: string;
 begin
@@ -6095,12 +6095,12 @@ begin
         lDate := lIntDate * 1.0;
         lRoomText := GetTranslatedText('shRoom') + format(' on %s', [FormatDateTime('dd/mm', TDateTime(lDate))]);
         for iRoomCount := 0 to iRooms -1 do
-          AddRoom('', dRoomPrice, g.qNativeCurrency, TDate(lDate), TDate(lDate) + 1, 1, '',  -1, 0, false, '', edtName.Text,
+          AddRoom('', dRoomPrice, dRoomPrice.CurrencyCode, TDate(lDate), TDate(lDate) + 1, 1, '',  -1, 0, false, '', edtName.Text,
             iPersons, 0, '', -1, false, false);
         end
       else
         for iRoomCount := 0 to iRooms -1 do
-          AddRoom('', dRoomPrice, g.qNativeCurrency, trunc(now), trunc(now) + iNights, 1, '', -1, 0, false, '', edtName.Text,
+          AddRoom('', dRoomPrice, dRoomPrice.CurrencyCode, trunc(now), trunc(now) + iNights, 1, '', -1, 0, false, '', edtName.Text,
             iPersons, 0, '', -1, false, false);
     end;
     UpdateGrid;
