@@ -68,8 +68,8 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
         Font.Style = [fsBold]
       end
       object clabRefrence: TsLabel
-        Left = 654
-        Top = 53
+        Left = 655
+        Top = 73
         Width = 64
         Height = 13
         Alignment = taRightJustify
@@ -112,8 +112,8 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
         Font.Style = [fsBold]
       end
       object lblResNr: TsLabel
-        Left = 673
-        Top = 77
+        Left = 672
+        Top = 49
         Width = 45
         Height = 13
         Alignment = taRightJustify
@@ -126,22 +126,6 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
-      end
-      object edtInvRefrence: TsLabel
-        Left = 725
-        Top = 53
-        Width = 160
-        Height = 17
-        AutoSize = False
-        Caption = '-'
-        Color = clWhite
-        ParentColor = False
-        ParentFont = False
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
-        Font.Height = -11
-        Font.Name = 'Tahoma'
-        Font.Style = []
       end
       object edtRoomGuest: TsLabel
         Left = 725
@@ -160,8 +144,8 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
         Font.Style = []
       end
       object edResNr: TsLabel
-        Left = 725
-        Top = 77
+        Left = 724
+        Top = 49
         Width = 160
         Height = 17
         AutoSize = False
@@ -172,6 +156,23 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
+      end
+      object edtInvRefrence: TsEdit
+        Left = 725
+        Top = 72
+        Width = 180
+        Height = 21
+        AutoSize = False
+        Color = clWhite
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        ParentFont = False
+        TabOrder = 5
+        OnChange = evtHeaderChanged
+        SkinData.SkinSection = 'EDIT'
       end
       object btnExit: TsButton
         Left = 929
@@ -192,7 +193,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
       end
       object btnInvoice: TsButton
         Left = 929
-        Top = 93
+        Top = 90
         Width = 161
         Height = 41
         Action = actPrintInvoice
@@ -392,7 +393,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
           ParentFont = False
           ReadOnly = True
           TabOrder = 2
-          OnChange = edtPersonalIdChange
+          OnChange = evtHeaderChanged
           OnDblClick = edtCustomerDblClick
           SkinData.SkinSection = 'EDIT'
           BoundLabel.Font.Charset = DEFAULT_CHARSET
@@ -415,7 +416,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
           Font.Style = []
           ParentFont = False
           TabOrder = 3
-          OnChange = edtPersonalIdChange
+          OnChange = evtHeaderChanged
           SkinData.SkinSection = 'EDIT'
           BoundLabel.Font.Charset = DEFAULT_CHARSET
           BoundLabel.Font.Color = clWindowText
@@ -437,7 +438,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
           Font.Style = []
           ParentFont = False
           TabOrder = 4
-          OnChange = edtPersonalIdChange
+          OnChange = evtHeaderChanged
           SkinData.SkinSection = 'EDIT'
           BoundLabel.Font.Charset = DEFAULT_CHARSET
           BoundLabel.Font.Color = clWindowText
@@ -459,7 +460,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
           Font.Style = []
           ParentFont = False
           TabOrder = 5
-          OnChange = edtPersonalIdChange
+          OnChange = evtHeaderChanged
           SkinData.SkinSection = 'EDIT'
           BoundLabel.Font.Charset = DEFAULT_CHARSET
           BoundLabel.Font.Color = clWindowText
@@ -481,7 +482,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
           Font.Style = []
           ParentFont = False
           TabOrder = 6
-          OnChange = edtPersonalIdChange
+          OnChange = evtHeaderChanged
           SkinData.SkinSection = 'EDIT'
           BoundLabel.Font.Charset = DEFAULT_CHARSET
           BoundLabel.Font.Color = clWindowText
@@ -503,7 +504,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
           Font.Style = []
           ParentFont = False
           TabOrder = 7
-          OnChange = edtPersonalIdChange
+          OnChange = evtHeaderChanged
           SkinData.SkinSection = 'EDIT'
           BoundLabel.Font.Charset = DEFAULT_CHARSET
           BoundLabel.Font.Color = clWindowText
@@ -537,7 +538,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
         Top = 116
         Width = 206
         Height = 21
-        TabOrder = 5
+        TabOrder = 6
         ExplicitLeft = 725
         ExplicitTop = 116
         ExplicitHeight = 21

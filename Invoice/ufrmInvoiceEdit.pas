@@ -139,7 +139,7 @@ type
     actRemoveSelected: TAction;
     actMoveItemToGroupInvoice: TAction;
     timCloseInvoice: TTimer;
-    edtInvRefrence: TsLabel;
+    edtInvRefrence: TsEdit;
     clabRefrence: TsLabel;
     GuestName1: TMenuItem;
     Refrence1: TMenuItem;
@@ -415,7 +415,7 @@ type
     procedure agrLinesGetDisplText(Sender: TObject; ACol, ARow: integer; var Value: string);
     procedure actAddRoomExecute(Sender: TObject);
     procedure agrLinesMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
-    procedure edtPersonalIdChange(Sender: TObject);
+    procedure evtHeaderChanged(Sender: TObject);
     procedure btnClickDropDown(Sender: TObject);
     procedure agrLinesRowChanging(Sender: TObject; OldRow, NewRow: Integer; var Allow: Boolean);
     procedure acShowAllCTaxExecute(Sender: TObject);
@@ -3336,7 +3336,7 @@ begin
   s := s + ', ' + _db(zInvoiceDate, True);
   s := s + ', ' + _db(zConfirmDate, True);
   s := s + ', ' + _db(zPayDate, True);
-  s := s + ', ' + _db(edtInvRefrence.Caption);
+  s := s + ', ' + _db(edtInvRefrence.Text);
   s := s + ', ' + _db(InvoiceCurrencyCode);
   s := s + ', ' + _db(InvoiceCurrencyRate);
   s := s + ', ' + _db(showPackageItems);
@@ -3936,7 +3936,7 @@ begin
   end;
 end;
 
-procedure TfrmInvoiceEdit.edtPersonalIdChange(Sender: TObject);
+procedure TfrmInvoiceEdit.evtHeaderChanged(Sender: TObject);
 begin
   HeaderChanged := True;
 end;
@@ -5398,7 +5398,7 @@ begin
       edtAddress2.Text := trim(Address2);
       edtAddress3.Text := trim(Address3);
       edtAddress4.Text := trim(Address4);
-      edtInvRefrence.Caption := trim(invRefrence);
+      edtInvRefrence.Text:= trim(invRefrence);
 
       zCountry := trim(Country);
       result := True;
@@ -5473,7 +5473,7 @@ begin
     edtAddress2.Text := trim(Address2);
     edtAddress3.Text := trim(Address3);
     edtAddress4.Text := trim(Address4);
-    edtInvRefrence.Caption := trim(invRefrence);
+    edtInvRefrence.Text:= trim(invRefrence);
     memExtraText.Lines.Text := trim(FreeText);
 
     zCountry := trim(Country);
@@ -5540,7 +5540,7 @@ begin
     edtAddress2.Text := trim(Address2);
     edtAddress3.Text := trim(Address3);
     edtAddress4.Text := trim(Address4);
-    edtInvRefrence.Caption := trim(invRefrence);
+    edtInvRefrence.Text:= trim(invRefrence);
     zCountry := trim(Country);
 
     result := True;
