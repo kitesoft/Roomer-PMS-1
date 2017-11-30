@@ -8,11 +8,9 @@ set awsregion=--region=eu-west-1
 if not exist "Deployment" mkdir Deployment
 
 copy Roomer.exe Deployment
-copy RoomerUpgradeAgent.exe Deployment
 copy RoomerUpgradeDaemon.exe Deployment
 
 call SignSpecific Deployment\Roomer.exe
-call SignSpecific Deployment\RoomerUpgradeAgent.exe
 call SignSpecific Deployment\RoomerUpgradeDaemon.exe
 
 rem 2880 minutes = 48 hours
