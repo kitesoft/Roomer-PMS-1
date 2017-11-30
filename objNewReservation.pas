@@ -1120,6 +1120,7 @@ var
     invoiceHeadData.ihCurrencyRate := 1.00;
     invoiceHeadData.ReportDate := '';
     invoiceHeadData.ReportTime := '';
+    invoiceHeadData.AggregateCityTax := glb.PMSSettings.InvoiceSettings.AggregateCityTax;
 
     ExecutionPlan.AddExec(SQL_INS_InvoiceHead(invoiceHeadData));
 
@@ -1558,6 +1559,7 @@ begin
             invoiceLineData.Ispackage          := false;
             invoiceLineData.InvoiceIndex          := 0;
             invoiceLineData.Revenue           := lRevenue;
+            invoiceLineData.VisibleOnInvoice  := True;
             ExecutionPlan.AddExec(SQL_INS_InvoiceLine(invoiceLineData));
             //***Add invoice log here
                lstInvoiceActivity.add(CreateInvoiceActivityLog(g.quser
@@ -1627,6 +1629,7 @@ begin
             invoiceLineData.Ispackage          := false;
             invoiceLineData.InvoiceIndex       := 0;
             invoiceLineData.Revenue            := lRevenue;
+            invoicelineData.VisibleOnInvoice   := True;
             ExecutionPlan.AddExec(SQL_INS_InvoiceLine(invoiceLineData));
             //***Add invoice log here
                lstInvoiceActivity.add(CreateInvoiceActivityLog(g.quser
