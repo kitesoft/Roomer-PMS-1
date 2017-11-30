@@ -414,7 +414,6 @@ type
     function OpenDownPayment(act : TActTableAction; AllowPaycardCharging: boolean; var rec : recDownPayment) : boolean;
 
     function OpenResMemo(reservation : integer) : boolean;
-    function AddAccommodation(var Persons,rooms,nights : integer; var roomPrice : TAmount) : boolean;
 //    function AddDiscount(var DiscountType : integer; var Amount : double) : boolean;
 
 
@@ -562,7 +561,6 @@ uses
   uMakereseRvationQuick,
   udayNotes,
   uResMemos,
-  uAddAccommodation,
   uHiddenInfo,
   uDownPayment,
   uCancelReservation2,
@@ -1480,34 +1478,6 @@ begin
   end;
 end;
 
-
-function TGlobalApplication.AddAccommodation(var Persons,rooms,nights : integer; var roomPrice : TAmount) : boolean;
-begin
-  result := false;
-  frmAddAccommodation := TfrmAddAccommodation.Create(nil);
-  try
-    frmAddAccommodation.zPersons   :=  Persons;
-    frmAddAccommodation.zRooms     :=  Rooms;
-    frmAddAccommodation.zNights    :=  Nights;
-    frmAddAccommodation.RoomPrice :=  roomPrice;
-
-    frmAddAccommodation.ShowModal;
-    if frmAddAccommodation.modalresult = mrOk then
-    begin
-      result := true;
-      Persons   := frmAddAccommodation.zPersons   ;
-      Rooms     := frmAddAccommodation.zRooms     ;
-      Nights    := frmAddAccommodation.zNights    ;
-      roomPrice := frmAddAccommodation.RoomPrice ;
-    end
-    else
-    begin
-    end;
-  finally
-    frmAddAccommodation.free;
-    frmAddAccommodation := nil;
-  end;
-end;
 
 function TGlobalApplication.OpenResMemo(reservation : integer) : boolean;
 begin

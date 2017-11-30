@@ -143,7 +143,7 @@ object frmControlData: TfrmControlData
         Top = 1
         Width = 1101
         Height = 743
-        ActivePage = tabEmailService
+        ActivePage = tsInvoiceSystem
         Align = alClient
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
@@ -156,17 +156,9 @@ object frmControlData: TfrmControlData
         object tsNull: TsTabSheet
           Caption = 'tsNull'
           SkinData.SkinSection = 'FORM'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
         end
         object tsCompany: TsTabSheet
           Caption = 'Company'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object gbxCompany: TsGroupBox
             Left = 3
             Top = 4
@@ -465,6 +457,10 @@ object frmControlData: TfrmControlData
               inherited pnlCountry: TsPanel
                 Width = 218
                 ExplicitWidth = 218
+                inherited lblCountryName: TLabel
+                  Width = 152
+                  Height = 14
+                end
               end
             end
           end
@@ -916,10 +912,6 @@ object frmControlData: TfrmControlData
         end
         object tsSystemItemIDs: TsTabSheet
           Caption = 'ID Numbers'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object cbxIdNumbers: TsGroupBox
             AlignWithMargins = True
             Left = 3
@@ -1223,10 +1215,6 @@ object frmControlData: TfrmControlData
         end
         object tsInvoiceTexts: TsTabSheet
           Caption = 'Invoice texts'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object AdvPageControl2: TsPageControl
             Left = 0
             Top = 0
@@ -1244,10 +1232,6 @@ object frmControlData: TfrmControlData
             SkinData.SkinSection = 'PAGECONTROL'
             object tsInvTexts_Laser1: TsTabSheet
               Caption = '1'
-              ExplicitLeft = 0
-              ExplicitTop = 0
-              ExplicitWidth = 0
-              ExplicitHeight = 0
               object gbxInvoiceHead: TsGroupBox
                 Left = 4
                 Top = 4
@@ -2232,10 +2216,6 @@ object frmControlData: TfrmControlData
             end
             object tsInvTexts_Laser2: TsTabSheet
               Caption = '2'
-              ExplicitLeft = 0
-              ExplicitTop = 0
-              ExplicitWidth = 0
-              ExplicitHeight = 0
               object gbxVATlist: TsGroupBox
                 Left = 440
                 Top = 6
@@ -3013,10 +2993,6 @@ object frmControlData: TfrmControlData
             end
             object AdvTabSheet15: TsTabSheet
               Caption = '3'
-              ExplicitLeft = 0
-              ExplicitTop = 0
-              ExplicitWidth = 0
-              ExplicitHeight = 0
               object GroupBox3: TsGroupBox
                 AlignWithMargins = True
                 Left = 3
@@ -3336,10 +3312,6 @@ object frmControlData: TfrmControlData
         end
         object tsInvoiceSystem: TsTabSheet
           Caption = 'Invoice Settings'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object LMDGroupBox5: TsGroupBox
             AlignWithMargins = True
             Left = 3
@@ -3616,13 +3588,14 @@ object frmControlData: TfrmControlData
           object LMDGroupBox1: TsGroupBox
             AlignWithMargins = True
             Left = 3
-            Top = 324
+            Top = 412
             Width = 1087
             Height = 71
             Align = alTop
             Caption = 'Room rate '
             TabOrder = 1
             SkinData.SkinSection = 'GROUPBOX'
+            ExplicitTop = 324
             object Label1: TsLabel
               Left = 6
               Top = 22
@@ -3763,13 +3736,13 @@ object frmControlData: TfrmControlData
               Font.Name = 'Tahoma'
               Font.Style = []
             end
-            object lbUseStayTax: TsLabel
-              Left = 332
+            object lblAllowDeleteItemsFromInvoice: TsLabel
+              Left = 191
               Top = 89
-              Width = 87
+              Width = 228
               Height = 14
               Alignment = taRightJustify
-              Caption = 'Enable staytax :'
+              Caption = 'Allow deletion of items added to invoice :'
               ParentFont = False
               Font.Charset = DEFAULT_CHARSET
               Font.Color = clBlack
@@ -3844,9 +3817,9 @@ object frmControlData: TfrmControlData
               ParentFont = False
               TabOrder = 2
             end
-            object cbUseStaytax: TsCheckBox
+            object cbAllowDeleteItemsFromInvoice: TsCheckBox
               Left = 425
-              Top = 87
+              Top = 88
               Width = 20
               Height = 20
               TabOrder = 4
@@ -3858,13 +3831,14 @@ object frmControlData: TfrmControlData
           object LMDGroupBox26: TsGroupBox
             AlignWithMargins = True
             Left = 3
-            Top = 271
+            Top = 359
             Width = 1087
             Height = 47
             Align = alTop
             Caption = 'A/R '
             TabOrder = 3
             SkinData.SkinSection = 'GROUPBOX'
+            ExplicitTop = 271
             object Label65: TsLabel
               Left = 109
               Top = 20
@@ -3918,9 +3892,9 @@ object frmControlData: TfrmControlData
           object sGroupBox19: TsGroupBox
             AlignWithMargins = True
             Left = 3
-            Top = 502
+            Top = 590
             Width = 1087
-            Height = 145
+            Height = 107
             Align = alTop
             Caption = 'Payments'
             TabOrder = 4
@@ -3981,34 +3955,6 @@ object frmControlData: TfrmControlData
               Font.Name = 'Tahoma'
               Font.Style = []
             end
-            object lblAllowDeleteItemsFromInvoice: TsLabel
-              Left = 216
-              Top = 98
-              Width = 228
-              Height = 14
-              Alignment = taRightJustify
-              Caption = 'Allow deletion of items added to invoice :'
-              ParentFont = False
-              Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
-              Font.Height = -12
-              Font.Name = 'Tahoma'
-              Font.Style = []
-            end
-            object lbAllowTogglingOfCityTaxesOnInvoice: TsLabel
-              Left = 241
-              Top = 117
-              Width = 203
-              Height = 14
-              Alignment = taRightJustify
-              Caption = 'Allow toggling of city tax on invoice :'
-              ParentFont = False
-              Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
-              Font.Height = -12
-              Font.Name = 'Tahoma'
-              Font.Style = []
-            end
             object chkNegInvoice: TsCheckBox
               Left = 450
               Top = 18
@@ -4049,37 +3995,18 @@ object frmControlData: TfrmControlData
               ImgChecked = 0
               ImgUnchecked = 0
             end
-            object cbAllowDeleteItemsFromInvoice: TsCheckBox
-              Left = 450
-              Top = 97
-              Width = 20
-              Height = 20
-              TabOrder = 4
-              SkinData.SkinSection = 'CHECKBOX'
-              ImgChecked = 0
-              ImgUnchecked = 0
-            end
-            object cbAllowTogglingOfCityTaxesOnInvoice: TsCheckBox
-              Left = 450
-              Top = 116
-              Width = 20
-              Height = 20
-              TabOrder = 5
-              SkinData.SkinSection = 'CHECKBOX'
-              ImgChecked = 0
-              ImgUnchecked = 0
-            end
           end
           object sPanel2: TsPanel
             AlignWithMargins = True
             Left = 3
-            Top = 401
+            Top = 489
             Width = 1087
             Height = 95
             Align = alTop
             AutoSize = True
             BevelOuter = bvNone
             TabOrder = 5
+            ExplicitTop = 401
             object cxGroupBox5: TsGroupBox
               Left = 0
               Top = 0
@@ -4311,13 +4238,92 @@ object frmControlData: TfrmControlData
               end
             end
           end
+          object sGroupBox4: TsGroupBox
+            AlignWithMargins = True
+            Left = 3
+            Top = 271
+            Width = 1087
+            Height = 82
+            Align = alTop
+            Caption = 'Citytax'
+            TabOrder = 6
+            SkinData.SkinSection = 'GROUPBOX'
+            object lbUseStayTax: TsLabel
+              Left = 332
+              Top = 13
+              Width = 87
+              Height = 14
+              Alignment = taRightJustify
+              Caption = 'Enable staytax :'
+              ParentFont = False
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clBlack
+              Font.Height = -12
+              Font.Name = 'Tahoma'
+              Font.Style = []
+            end
+            object lbAllowTogglingOfCityTaxesOnInvoice: TsLabel
+              Left = 216
+              Top = 35
+              Width = 203
+              Height = 14
+              Alignment = taRightJustify
+              Caption = 'Allow toggling of city tax on invoice :'
+              ParentFont = False
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clBlack
+              Font.Height = -12
+              Font.Name = 'Tahoma'
+              Font.Style = []
+            end
+            object lbAggregateCityTax: TsLabel
+              Left = 142
+              Top = 56
+              Width = 277
+              Height = 14
+              Alignment = taRightJustify
+              Caption = 'Aggregate excluded citytax on invoice by default :'
+              ParentFont = False
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clBlack
+              Font.Height = -12
+              Font.Name = 'Tahoma'
+              Font.Style = []
+            end
+            object cbUseStaytax: TsCheckBox
+              Left = 425
+              Top = 11
+              Width = 20
+              Height = 20
+              TabOrder = 0
+              SkinData.SkinSection = 'CHECKBOX'
+              ImgChecked = 0
+              ImgUnchecked = 0
+            end
+            object cbAllowTogglingOfCityTaxesOnInvoice: TsCheckBox
+              Left = 425
+              Top = 34
+              Width = 20
+              Height = 20
+              TabOrder = 1
+              SkinData.SkinSection = 'CHECKBOX'
+              ImgChecked = 0
+              ImgUnchecked = 0
+            end
+            object cbAggregateCityTax: TsCheckBox
+              Left = 425
+              Top = 55
+              Width = 20
+              Height = 20
+              TabOrder = 2
+              SkinData.SkinSection = 'CHECKBOX'
+              ImgChecked = 0
+              ImgUnchecked = 0
+            end
+          end
         end
         object tsInvoiceRouting: TsTabSheet
           Caption = 'Invoice Routing'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object sGroupBox15: TsGroupBox
             AlignWithMargins = True
             Left = 3
@@ -4529,10 +4535,6 @@ object frmControlData: TfrmControlData
         end
         object tsRoomStatusColors: TsTabSheet
           Caption = 'Room Status Texts'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object LMDGroupBox3: TsGroupBox
             AlignWithMargins = True
             Left = 3
@@ -4850,10 +4852,6 @@ object frmControlData: TfrmControlData
         object tsMail: TsTabSheet
           Caption = 'Mail'
           TabVisible = False
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object sLabel5: TsLabel
             Left = 24
             Top = 17
@@ -5093,10 +5091,6 @@ object frmControlData: TfrmControlData
         end
         object tsLookMainScreen: TsTabSheet
           Caption = 'tsLookMainScreen'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object GroupBox1: TsGroupBox
             AlignWithMargins = True
             Left = 3
@@ -5485,10 +5479,6 @@ object frmControlData: TfrmControlData
         end
         object tsInvoiceMain: TsTabSheet
           Caption = 'tsInvoiceMain'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object LMDGroupBox10: TsGroupBox
             AlignWithMargins = True
             Left = 3
@@ -5645,10 +5635,6 @@ object frmControlData: TfrmControlData
         end
         object tsInvEmail: TsTabSheet
           Caption = 'Reservations'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object LMDGroupBox25: TsGroupBox
             AlignWithMargins = True
             Left = 3
@@ -6065,10 +6051,6 @@ object frmControlData: TfrmControlData
         end
         object AdvTabSheet3: TsTabSheet
           Caption = 'Channelmanager'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object sGroupBox1: TsGroupBox
             AlignWithMargins = True
             Left = 3
@@ -6584,17 +6566,9 @@ object frmControlData: TfrmControlData
         end
         object AdvTabSheet5: TsTabSheet
           Caption = '-'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
         end
         object AdvTabSheet6: TsTabSheet
           Caption = 'Accounting'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object gbxForceExternalIdCorrectness: TsGroupBox
             AlignWithMargins = True
             Left = 3
@@ -6977,10 +6951,6 @@ object frmControlData: TfrmControlData
         end
         object AdvTabSheet7: TsTabSheet
           Caption = 'Pos'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object LMDSimplePanel2: TsPanel
             Left = 0
             Top = 0
@@ -7081,10 +7051,6 @@ object frmControlData: TfrmControlData
             SkinData.SkinSection = 'PAGECONTROL'
             object AdvTabSheet8: TsTabSheet
               Caption = 'Nothing'
-              ExplicitLeft = 0
-              ExplicitTop = 0
-              ExplicitWidth = 0
-              ExplicitHeight = 0
               object clabNoAccontConnection: TsLabel
                 Left = 8
                 Top = 8
@@ -7101,10 +7067,6 @@ object frmControlData: TfrmControlData
             end
             object AdvTabSheet9: TsTabSheet
               Caption = 'poster'
-              ExplicitLeft = 0
-              ExplicitTop = 0
-              ExplicitWidth = 0
-              ExplicitHeight = 0
               object LMDSimplePanel3: TsPanel
                 Left = 0
                 Top = 0
@@ -7189,10 +7151,6 @@ object frmControlData: TfrmControlData
                 SkinData.SkinSection = 'PAGECONTROL'
                 object AdvTabSheet12: TsTabSheet
                   Caption = '-'
-                  ExplicitLeft = 0
-                  ExplicitTop = 0
-                  ExplicitWidth = 0
-                  ExplicitHeight = 0
                   object LMDSimpleLabel70: TsLabel
                     Left = 6
                     Top = 20
@@ -7662,10 +7620,6 @@ object frmControlData: TfrmControlData
             end
             object AdvTabSheet10: TsTabSheet
               Caption = 'Touch Text Entries'
-              ExplicitLeft = 0
-              ExplicitTop = 0
-              ExplicitWidth = 0
-              ExplicitHeight = 0
               object LMDSimpleLabel71: TsLabel
                 Left = 26
                 Top = 20
@@ -7875,33 +7829,17 @@ object frmControlData: TfrmControlData
             end
             object AdvTabSheet11: TsTabSheet
               Caption = 'TOK Windows'
-              ExplicitLeft = 0
-              ExplicitTop = 0
-              ExplicitWidth = 0
-              ExplicitHeight = 0
             end
           end
         end
         object AdvTabSheet13: TsTabSheet
           Caption = 'AdvTabSheet13'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
         end
         object AdvTabSheet14: TsTabSheet
           Caption = 'Quick Booking'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
         end
         object tsIncomingMonitor: TsTabSheet
           Caption = 'Incoming Monitor'#13#10
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object LMDGroupBox23: TsGroupBox
             AlignWithMargins = True
             Left = 3
@@ -8054,10 +7992,6 @@ object frmControlData: TfrmControlData
         end
         object tsColors: TsTabSheet
           Caption = 'tsColors'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object Panel4: TsPanel
             Left = 0
             Top = 0
@@ -9319,10 +9253,6 @@ object frmControlData: TfrmControlData
         end
         object tabMandatory: TsTabSheet
           Caption = 'Mandatory info'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object pcMandatoryInfo: TsPageControl
             AlignWithMargins = True
             Left = 3
@@ -9334,10 +9264,6 @@ object frmControlData: TfrmControlData
             TabOrder = 0
             object tabGuestInformation: TsTabSheet
               Caption = 'Mandatory Guest information'
-              ExplicitLeft = 0
-              ExplicitTop = 0
-              ExplicitWidth = 0
-              ExplicitHeight = 0
               object clbMandatoryFields: TsCheckListBox
                 AlignWithMargins = True
                 Left = 20
@@ -9398,10 +9324,6 @@ object frmControlData: TfrmControlData
         end
         object tsBetaFunctions: TsTabSheet
           Caption = 'Beta Functions'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object gbxInvoiceBeta: TsGroupBox
             Left = 0
             Top = 0

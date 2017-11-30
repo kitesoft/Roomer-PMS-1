@@ -3577,25 +3577,6 @@ select_RR_GetCurrency : string =
 'SELECT Currency FROM roomreservations'#10+
 ' WHERE RoomReservation = %d ';  //' + inttostr(iRoomReservation)
 
-select_DraftInv_Create : string =
-' SELECT '#10+
-'   Customer '#10+
-'  ,Name '#10+
-'  ,CustPid '#10+
-' ,Address1 '#10+
-' ,Address2 '#10+
-' ,Address3 '#10+
-' ,Address4 '#10+
-' ,Country '#10+
-' FROM reservations '#10+
-' WHERE Reservation = %d ';  //' + inttostr(Reservation)
-
-select_DraftInv_Create2 : string =
-' SELECT '#10+
-'   currency '#10+
-' FROM roomreservations '#10+
-' WHERE RoomReservation = %d ';  //' + inttostr(RoomReservation)
-
 select_DraftInv_RRUpdateAmounts : string =
 ' SELECT '#10+
 '     Reservation '#10+

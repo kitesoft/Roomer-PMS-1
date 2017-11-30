@@ -1537,6 +1537,7 @@ begin
                       'ihCurrency, ' +
                       'ihCurrencyRate, ' +
                       'invRefrence, ' +
+                      'aggregateCityTax, ' +
                       'TotalStayTax, ' +
                       'TotalStayTaxNights, ' +
                       'showPackage, ' +
@@ -1573,6 +1574,7 @@ begin
                       'ihCurrency, ' +
                       'ihCurrencyRate, ' +
                       'invRefrence, ' +
+                      'aggregateCityTax, ' +
                       'TotalStayTax, ' +
                       'TotalStayTaxNights, ' +
                       'showPackage, ' +
@@ -1595,10 +1597,7 @@ begin
                         [SelectedInvoiceIndex, Invoice]);
           CopyToClipboard(sql);
           lExecutionPlan.AddExec(sql);
-        end;
 
-        if hasRooms then
-        begin
           sql := format('UPDATE roomsdate rd, ' +
                         '       control c ' +
                         'Set Paid=0, InvoiceNumber=0 ' +

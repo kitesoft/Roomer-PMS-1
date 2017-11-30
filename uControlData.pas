@@ -678,16 +678,12 @@ type
     cbxWithdrawalWithoutGuarantee: TsCheckBox;
     cbAllowPaymentModification: TsCheckBox;
     lblAllowPaymentModifications: TsLabel;
-    lblAllowDeleteItemsFromInvoice: TsLabel;
-    cbAllowDeleteItemsFromInvoice: TsCheckBox;
     lbTopClassAvaiabilityOrderActive: TsLabel;
     cbTopClassAvaiabilityOrderActive: TsCheckBox;
     ceMasterRateCurrency: TsComboEdit;
     lblMasterRateCurrency: TsLabel;
     cbxCurrencyCalculation: TsCheckBox;
     lblMasterRateCurrencyName: TsLabel;
-    lbAllowTogglingOfCityTaxesOnInvoice: TsLabel;
-    cbAllowTogglingOfCityTaxesOnInvoice: TsCheckBox;
     tsBetaFunctions: TsTabSheet;
     gbxInvoiceBeta: TsGroupBox;
     cbxNewTaxCalcMethod: TsCheckBox;
@@ -747,9 +743,16 @@ type
     lbSmtpPassword: TsLabel;
     cbSmtpServiceActive: TsCheckBox;
     edSmtpPort: TsSpinEdit;
-    cbUseStaytax: TsCheckBox;
-    lbUseStayTax: TsLabel;
     rgEncryption: TsRadioGroup;
+    sGroupBox4: TsGroupBox;
+    lbUseStayTax: TsLabel;
+    cbUseStaytax: TsCheckBox;
+    lbAllowTogglingOfCityTaxesOnInvoice: TsLabel;
+    cbAllowTogglingOfCityTaxesOnInvoice: TsCheckBox;
+    lblAllowDeleteItemsFromInvoice: TsLabel;
+    cbAllowDeleteItemsFromInvoice: TsCheckBox;
+    lbAggregateCityTax: TsLabel;
+    cbAggregateCityTax: TsCheckBox;
     procedure FormCreate(Sender : TObject);
     procedure FormClose(Sender : TObject; var Action : TCloseAction);
     procedure FormShow(Sender : TObject);
@@ -1597,6 +1600,7 @@ g.ReadWriteSettingsToRegistry(0);
     ceMasterRateCurrency.Text := glb.PMSSettings.MasterRatesSettings.MasterRateCurrency;
     cbxCurrencyCalculation.Checked := glb.PMSSettings.MasterRatesSettings.MasterRateCurrencyConvert;
     cbAllowTogglingOfCityTaxesOnInvoice.Checked := glb.PMSSettings.InvoiceSettings.AllowTogglingOfCityTaxes;
+    cbAggregateCityTax.Checked := glb.PMSSettings.InvoiceSettings.AggregateCityTax;
 
     cbxPreloadPreviousGuests.Checked := glb.PMSSettings.VariousOptions.PreloadListOfPreviousGuests;
 
@@ -2127,6 +2131,7 @@ begin
       glb.PMSSettings.MasterRatesSettings.MasterRateCurrency := ceMasterRateCurrency.Text;
       glb.PMSSettings.MasterRatesSettings.MasterRateCurrencyConvert := cbxCurrencyCalculation.Checked;
       glb.PMSSettings.InvoiceSettings.AllowTogglingOfCityTaxes := cbAllowTogglingOfCityTaxesOnInvoice.Checked;
+      glb.PMSSettings.InvoiceSettings.AggregateCityTax := cbAggregateCityTax.Checked;
       glb.PMSSettings.VariousOptions.PreloadListOfPreviousGuests := cbxPreloadPreviousGuests.Checked;
 
       try

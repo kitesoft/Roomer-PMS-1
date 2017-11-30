@@ -73,7 +73,9 @@ type
     cAllowTogglingOfCityTaxes = 'ALLOW_TOGGLING_OF_CITY_TAXES_INVOICE';
     cShowIncludedBreakfastOnInvoice = 'SHOW_INCLUDED_BREAKFAST_ON_INVOICE';
     cShowRoomRentPerDay = 'SHOW_ROOMRENT_PER_DAY';
+    cAggregateCityTax= 'AGGREGATE_CITYTAX';
   private
+    FAggregateCityTax: boolean;
     function GetShowInvoiceAsPaidWhenStatusIsZero: boolean;
     procedure SetShowInvoiceAsPaidWhenStatusIsZero(const Value: boolean);
     function GetAllowDeletingItemsFromInvoice: boolean;
@@ -86,6 +88,8 @@ type
     procedure SetShowIncludedBreakfastOnInvoice(const Value: boolean);
     function GetRoomRentPerDayOninvoice: TRoomrentPerDaySetting;
     procedure SetRoomRentPerDayOninvoice(const Value: TRoomrentPerDaySetting);
+    function GetAggregateCityTax: boolean;
+    procedure SetAggregateCityTax(const Value: boolean);
   protected
     function GetKeyGroup: string; override;
   public
@@ -95,6 +99,7 @@ type
     property AllowDeletingItemsFromInvoice: boolean read GetAllowDeletingItemsFromInvoice write SetAllowDeletingItemsFromInvoice;
     property AllowTogglingOfCityTaxes: boolean read GetAllowTogglingOfCityTaxes write SetAllowTogglingOfCityTaxes;
     property RoomRentPerDayOninvoice: TRoomrentPerDaySetting read GetRoomRentPerDayOninvoice write SetRoomRentPerDayOninvoice;
+    property AggregateCityTax: boolean read GetAggregateCityTax write SetAggregateCityTax;
   end;
 
   TPMSSettingsRatesAvailabilities = class(TPMSSettingsGroup)
@@ -361,6 +366,11 @@ begin
   result := TRoomRentPerDaySetting.FromString(GetSettingsAsString(cShowRoomRentPerDay, rpdNever.AsDB));
 end;
 
+function TPMSSettingsInvoice.GetAggregateCityTax: boolean;
+begin
+  Result := GetSettingsAsBoolean(cAggregateCityTax, false);
+end;
+
 function TPMSSettingsInvoice.GetAllowDeletingItemsFromInvoice: boolean;
 begin
   Result := GetSettingsAsBoolean(cAllowDeletingItemsFromInvoice, True);
@@ -384,6 +394,11 @@ end;
 function TPMSSettingsInvoice.GetShowInvoiceAsPaidWhenStatusIsZero: boolean;
 begin
   Result := GetSettingsAsBoolean(cInvoiceHandlingShowAsPaidWhenZero, False);
+end;
+
+procedure TPMSSettingsInvoice.SetAggregateCityTax(const Value: boolean);
+begin
+  SaveSetting(cAggregateCityTax, Value);
 end;
 
 procedure TPMSSettingsInvoice.SetAllowDeletingItemsFromInvoice(const Value: boolean);

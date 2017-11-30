@@ -3,6 +3,7 @@ object fraCurrencyPanel: TfraCurrencyPanel
   Top = 0
   Width = 206
   Height = 20
+  AutoSize = True
   TabOrder = 0
   object pnlCurrency: TsPanel
     Left = 0
@@ -14,40 +15,46 @@ object fraCurrencyPanel: TfraCurrencyPanel
     Margins.Right = 0
     Margins.Bottom = 0
     Align = alTop
+    AutoSize = True
     BevelOuter = bvNone
     TabOrder = 0
     StyleElements = [seFont, seClient]
     SkinData.SkinSection = 'PANEL'
     object lblCurrencyName: TsLabel
       AlignWithMargins = True
-      Left = 62
-      Top = 3
-      Width = 144
-      Height = 14
+      Left = 64
+      Top = 0
+      Width = 142
+      Height = 20
+      Margins.Left = 6
+      Margins.Top = 0
       Margins.Right = 0
+      Margins.Bottom = 0
       Align = alClient
-      Alignment = taCenter
+      AutoSize = False
       Caption = '-'
       Color = clBtnFace
       ParentColor = False
       ParentFont = False
+      Layout = tlCenter
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
       Font.Name = 'Tahoma'
       Font.Style = []
-      ExplicitLeft = 63
+      ExplicitLeft = 62
+      ExplicitTop = 3
       ExplicitWidth = 4
       ExplicitHeight = 13
     end
     object edCurrencyCode: TsEdit
       AlignWithMargins = True
       Left = 0
-      Top = 1
+      Top = 0
       Width = 37
-      Height = 19
+      Height = 20
       Margins.Left = 0
-      Margins.Top = 1
+      Margins.Top = 0
       Margins.Right = 0
       Margins.Bottom = 0
       Align = alLeft
@@ -69,13 +76,16 @@ object fraCurrencyPanel: TfraCurrencyPanel
       BoundLabel.Font.Height = -13
       BoundLabel.Font.Name = 'Tahoma'
       BoundLabel.Font.Style = []
+      ExplicitTop = 1
+      ExplicitHeight = 19
     end
     object btnGetCurrency: TsButton
       AlignWithMargins = True
-      Left = 40
+      Left = 37
       Top = 0
-      Width = 19
+      Width = 21
       Height = 20
+      Margins.Left = 0
       Margins.Top = 0
       Margins.Right = 0
       Margins.Bottom = 0
@@ -84,7 +94,6 @@ object fraCurrencyPanel: TfraCurrencyPanel
       TabOrder = 1
       OnClick = btnGetCurrencyClick
       SkinData.SkinSection = 'BUTTON'
-      ExplicitTop = 1
     end
   end
 end

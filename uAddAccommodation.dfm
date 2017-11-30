@@ -1,24 +1,19 @@
-object frmAddAccommodation: TfrmAddAccommodation
+inherited frmAddAccommodation: TfrmAddAccommodation
   Left = 931
   Top = 376
   BorderIcons = []
-  BorderStyle = bsDialog
   Caption = 'Add accommodation'
-  ClientHeight = 163
-  ClientWidth = 278
-  Color = clBtnFace
-  Font.Charset = DEFAULT_CHARSET
-  Font.Color = clWindowText
-  Font.Height = -11
-  Font.Name = 'Tahoma'
-  Font.Style = []
-  OldCreateOrder = False
-  Position = poOwnerFormCenter
+  ClientHeight = 194
+  ClientWidth = 273
+  ParentFont = False
+  Position = poDefault
   OnCreate = FormCreate
   OnShow = FormShow
+  ExplicitWidth = 279
+  ExplicitHeight = 223
   PixelsPerInch = 96
   TextHeight = 13
-  object cxLabel1: TsLabel
+  object cxLabel1: TsLabel [0]
     Left = 4
     Top = 16
     Width = 114
@@ -33,7 +28,7 @@ object frmAddAccommodation: TfrmAddAccommodation
     Font.Name = 'Tahoma'
     Font.Style = []
   end
-  object cxLabel2: TsLabel
+  object cxLabel2: TsLabel [1]
     Left = 4
     Top = 39
     Width = 114
@@ -48,7 +43,7 @@ object frmAddAccommodation: TfrmAddAccommodation
     Font.Name = 'Tahoma'
     Font.Style = []
   end
-  object cxLabel3: TsLabel
+  object cxLabel3: TsLabel [2]
     Left = 4
     Top = 72
     Width = 114
@@ -63,7 +58,7 @@ object frmAddAccommodation: TfrmAddAccommodation
     Font.Name = 'Tahoma'
     Font.Style = []
   end
-  object cxLabel4: TsLabel
+  object cxLabel4: TsLabel [3]
     Left = 4
     Top = 96
     Width = 114
@@ -78,7 +73,32 @@ object frmAddAccommodation: TfrmAddAccommodation
     Font.Name = 'Tahoma'
     Font.Style = []
   end
-  object edPersons: TsSpinEdit
+  inherited sbStatusBar: TsStatusBar
+    Top = 174
+    Width = 273
+    ExplicitTop = 143
+    ExplicitWidth = 278
+  end
+  inherited pnlButtons: TsPanel
+    Top = 131
+    Width = 273
+    TabOrder = 6
+    ExplicitTop = 100
+    ExplicitWidth = 278
+    inherited btnOK: TsButton
+      Left = -43
+      ExplicitLeft = -38
+    end
+    inherited btnCancel: TsButton
+      Left = 63
+      ExplicitLeft = 68
+    end
+    inherited btnClose: TsButton
+      Left = 169
+      ExplicitLeft = 174
+    end
+  end
+  object edPersons: TsSpinEdit [6]
     Left = 124
     Top = 13
     Width = 81
@@ -91,6 +111,7 @@ object frmAddAccommodation: TfrmAddAccommodation
     Font.Style = []
     ParentFont = False
     TabOrder = 0
+    OnChange = HandleChanged
     SkinData.SkinSection = 'EDIT'
     BoundLabel.Font.Charset = DEFAULT_CHARSET
     BoundLabel.Font.Color = clWindowText
@@ -101,7 +122,7 @@ object frmAddAccommodation: TfrmAddAccommodation
     MinValue = 0
     Value = 0
   end
-  object edNights: TsSpinEdit
+  object edNights: TsSpinEdit [7]
     Left = 124
     Top = 36
     Width = 81
@@ -114,6 +135,7 @@ object frmAddAccommodation: TfrmAddAccommodation
     Font.Style = []
     ParentFont = False
     TabOrder = 1
+    OnChange = HandleChanged
     SkinData.SkinSection = 'EDIT'
     BoundLabel.Font.Charset = DEFAULT_CHARSET
     BoundLabel.Font.Color = clWindowText
@@ -124,7 +146,7 @@ object frmAddAccommodation: TfrmAddAccommodation
     MinValue = 0
     Value = 0
   end
-  object edRooms: TsSpinEdit
+  object edRooms: TsSpinEdit [8]
     Left = 124
     Top = 69
     Width = 81
@@ -137,6 +159,7 @@ object frmAddAccommodation: TfrmAddAccommodation
     Font.Style = []
     ParentFont = False
     TabOrder = 2
+    OnChange = HandleChanged
     SkinData.SkinSection = 'EDIT'
     BoundLabel.Font.Charset = DEFAULT_CHARSET
     BoundLabel.Font.Color = clWindowText
@@ -147,52 +170,7 @@ object frmAddAccommodation: TfrmAddAccommodation
     MinValue = 0
     Value = 0
   end
-  object sPanel1: TsPanel
-    Left = 0
-    Top = 122
-    Width = 278
-    Height = 41
-    Align = alBottom
-    TabOrder = 5
-    SkinData.SkinSection = 'PANEL'
-    ExplicitTop = 131
-    ExplicitWidth = 286
-    object BtnOk: TsButton
-      AlignWithMargins = True
-      Left = 100
-      Top = 4
-      Width = 83
-      Height = 33
-      Hint = 'Apply and close'
-      Align = alRight
-      Caption = 'OK'
-      Default = True
-      ImageIndex = 82
-      Images = DImages.PngImageList1
-      ModalResult = 1
-      TabOrder = 0
-      OnClick = BtnOkClick
-      SkinData.SkinSection = 'BUTTON'
-      ExplicitLeft = 108
-    end
-    object btnCancel: TsButton
-      AlignWithMargins = True
-      Left = 189
-      Top = 4
-      Width = 85
-      Height = 33
-      Hint = 'Cancel and close'
-      Align = alRight
-      Caption = 'Cancel'
-      ImageIndex = 4
-      Images = DImages.PngImageList1
-      ModalResult = 2
-      TabOrder = 1
-      SkinData.SkinSection = 'BUTTON'
-      ExplicitLeft = 197
-    end
-  end
-  object edRoomPrice: TsCalcEdit
+  object edRoomPrice: TsCalcEdit [9]
     Left = 124
     Top = 93
     Width = 81
@@ -211,39 +189,43 @@ object frmAddAccommodation: TfrmAddAccommodation
     GlyphMode.Blend = 0
     GlyphMode.Grayed = False
   end
-  inline fraCurrencyPanel: TfraCurrencyPanel
+  inline fraCurrencyPanel: TfraCurrencyPanel [10]
     Left = 209
     Top = 93
     Width = 135
-    Height = 21
+    Height = 20
+    AutoSize = True
     TabOrder = 4
     ExplicitLeft = 209
     ExplicitTop = 93
     ExplicitWidth = 135
-    ExplicitHeight = 21
     inherited pnlCurrency: TsPanel
       Width = 135
+      ExplicitTop = -1
+      ExplicitWidth = 135
       inherited lblCurrencyName: TsLabel
-        Width = 73
-        ExplicitLeft = 65
-        ExplicitTop = 0
-        ExplicitWidth = 70
+        Width = 70
+        ExplicitWidth = 73
         ExplicitHeight = 14
+      end
+      inherited btnGetCurrency: TsButton
+        ExplicitTop = 0
       end
     end
   end
-  object FormStore: TcxPropertiesStore
-    Components = <
-      item
-        Component = Owner
-        Properties.Strings = (
-          'Left'
-          'Position'
-          'Top')
-      end>
-    StorageName = 'Software\Roomer\FormStatus\frmAddAccommodation'
-    StorageType = stRegistry
-    Left = 18
-    Top = 126
+  inherited psRoomerBase: TcxPropertiesStore [11]
+    Left = 8
+    Top = 40
+  end
+  inherited cxsrRoomerStyleRepository: TcxStyleRepository
+    Left = 8
+    Top = 88
+    PixelsPerInch = 96
+    inherited dxssRoomerGridReportLink: TdxGridReportLinkStyleSheet
+      BuiltIn = True
+    end
+    inherited cxssRoomerGridTableView: TcxGridTableViewStyleSheet
+      BuiltIn = True
+    end
   end
 end

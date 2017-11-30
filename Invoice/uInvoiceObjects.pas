@@ -89,6 +89,12 @@ type
     procedure MoveToInvoiceIndex(aInvoiceIndex: integer);
 
     /// <summary>
+    ///   Add the numbers of aOtherLine onto this line
+    ///  This is done by adding the quantities together, and the total, and calculating the price from that.
+    ///  When Self doesnt have an Item property set, than all static properties of aOtherline will be copied into Self
+    /// </summary>
+    procedure Add(aOtherLine: TInvoiceLine);
+    /// <summary>
     /// Indicates whether or not the "VisibleOnInvoice" functionality is available for this line
     /// At this moment only line that are generated and linked to a roomrent item can be made invisible
     /// </summary>
@@ -225,6 +231,22 @@ type
 
   // TODO Refactor into TCollection, so CollectionItems can call functions from this collection
   TInvoiceLineList = class(TObjectlist<TInvoiceLine>)
+  strict private
+    type
+      /// <summary>
+      ///   Enumerator for TInvoiceLinesList which will aggregate all excluded and visible citytax lines into one total line
+      /// </summary>
+      TInvoiceLinesAggCityTaxEnumerator = class(TEnumerator<TInvoiceLine>)
+      protected
+        FBaseEnum: TEnumerator<TInvoiceLine>;
+        FCityTaxLine: TInvoiceLine;
+        FLastLineReached: boolean;
+        function DoGetCurrent: TInvoiceLine; override;
+        function DoMoveNext: Boolean; override;
+      public
+        constructor Create(aBaseEnum: TEnumerator<TInvoiceLine>);
+        destructor Destroy; override;
+      end;
   private
     FShowPackageItem: boolean;
     function GetTotalOnInvoice: TAmount;
@@ -242,6 +264,7 @@ type
     function AddInvoiceLine(aLineId: integer; aParent: TInvoiceLine): TInvoiceLine;
     function AddPackageInvoiceLine(aLineId: integer; aParent: TInvoiceLine; aRoomreservation:integer): TPackageInvoiceLine;
 
+    function GetEnumeratorWithAggregatedCityTax: TInvoiceLinesAggCityTaxEnumerator;
     /// <summary>
     ///   Sets or unsets the VisibleOnInvoice property of Invoiceline object of certain type.
     ///  Notice that this not alter the property of PackageItems!
@@ -264,6 +287,8 @@ type
   end;
 
 
+
+
 implementation
 
 uses
@@ -272,9 +297,35 @@ uses
   , uD
   , System.Generics.Defaults
   , Math
-  , uRoomerCurrencymanager;
+  , uRoomerCurrencymanager
+  , SysUtils;
 
 { TInvoiceLine }
+procedure TInvoiceLine.Add(aOtherLine: TInvoiceLine);
+var
+  lNewTotal: TAmount;
+begin
+  if FItem.IsEmpty then // first time, init this with otherline
+  begin
+    FItem := aOtherLine.Item;
+    FText := aOtherLine.Text;
+    FDate := aOtherLine.PurchaseDate;
+    FAuto := aOtherline.IsGeneratedLine;
+    FReference := aOtherLine.Reference;
+    FSource := aOtherline.Source;
+    FIspackage := aOtherLine.isPackage;
+    FIsVisibleOnInvoice := aOtherLine.IsVisibleOnInvoice;
+    FVATCode := aOtherLine.VATCode;
+    FVATPercentage := aOtherLine.VATPercentage;
+    FCurrency := aOtherLine.Currency;
+  end;
+
+  FNoGuests := FNoGuests + aOtherline.noGuests;
+  lNewTotal := Total + aOtherLine.Total;
+  Number := Number + aOtherLine.Number;
+  Price := lNewTotal / Number;
+end;
+
 function TInvoiceLine.CanBeHiddenFromInvoice: boolean;
 begin
   result := (Item <> g.qRoomRentItem) and IsGeneratedLine and assigned(Parent);
@@ -656,6 +707,57 @@ begin
       aParent.ChildInvoiceLines.Remove(self);
 
   FParentList.Remove(aParent);
+end;
+
+function TInvoiceLineList.GetEnumeratorWithAggregatedCityTax: TInvoiceLinesAggCityTaxEnumerator;
+begin
+  Result := TInvoiceLinesAggCityTaxEnumerator.Create(inherited GetEnumerator);
+end;
+
+
+{ TInvoiceLineList.TInvoiceLinesAggCityTaxEnumerator }
+
+constructor TInvoiceLineList.TInvoiceLinesAggCityTaxEnumerator.Create(aBaseEnum: TEnumerator<TInvoiceLine>);
+begin
+  FBaseEnum := aBaseEnum;
+  FCityTaxLine := TInvoiceLine.Create(999,-1);
+  FLastLineReached := False;
+end;
+
+destructor TInvoiceLineList.TInvoiceLinesAggCityTaxEnumerator.Destroy;
+begin
+  FBaseEnum.Free;
+  FCityTaxLine.Free;
+  inherited;
+end;
+
+function TInvoiceLineList.TInvoiceLinesAggCityTaxEnumerator.DoGetCurrent: TInvoiceLine;
+begin
+  if FLastLineReached then
+    Result := FCityTaxLine
+  else
+    Result := FBaseENum.Current;
+end;
+
+function TInvoiceLineList.TInvoiceLinesAggCityTaxEnumerator.DoMoveNext: Boolean;
+begin
+  if FLastLineReached then
+    result := false
+  else
+  begin
+    result := FBaseEnum.MoveNext;
+    //Skip all lines with visible citytax and aggregate values
+    while (Result and not FLastLineReached) and (FBaseEnum.Current.ItemKind = ikStayTax) and FBaseEnum.Current.IsVisibleOnInvoice do
+    begin
+      FCityTaxLine.Add(FBaseEnum.Current);
+      if not FBaseEnum.MoveNext then
+      begin
+        FLastLineReached := True;
+        Result := True;
+      end;
+    end;
+  end;
+
 end;
 
 end.

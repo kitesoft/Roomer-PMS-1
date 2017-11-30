@@ -1840,7 +1840,7 @@ begin
   frmCancelReservation3 := TfrmCancelReservation3.Create(nil); frmCancelReservation3.Free; frmCancelReservation3 := nil;
   frmCancelReservation2 := TfrmCancelReservation2.Create(nil); frmCancelReservation2.Free; frmCancelReservation2 := nil;
   TfrmNationalReport3.Create(nil).Free;
-  frmAddAccommodation := TfrmAddAccommodation.Create(nil); frmAddAccommodation.Free; frmAddAccommodation := nil;
+  TfrmAddAccommodation.Create(nil).Free;
   frmCountries := TfrmCountries.Create(nil); frmCountries.Free; frmCountries := nil;
   frmPayGroups := TfrmPayGroups.Create(nil); frmPayGroups.Free; frmPayGroups := nil;
   frmPriceCodes := TfrmPriceCodes.Create(nil); frmPriceCodes.Free; frmPriceCodes := nil;

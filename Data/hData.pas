@@ -346,6 +346,7 @@ type
     ReportTime: string; // **** nvarchar(5))
 
     invRefrence: string;
+    AggregateCityTax: boolean;
     TotalStayTax: double;
     TotalStayTaxNights: integer;
     ShowPackage: boolean;
@@ -1865,7 +1866,6 @@ function UnpaidGroupInvoiceLineItems_exist(aReservation: integer): boolean;
 
 function DraftInvGroup_exists(Reservation: integer): boolean;
 function DraftInv_exists(RoomReservation: integer): boolean;
-function DraftInv_Create(Reservation, RoomReservation: integer; user: string): boolean;
 function DraftInv_RRUpdateAmounts(RoomReservation: integer): boolean;
 
 function Customer_Exists(Customer: string): boolean;
@@ -2514,6 +2514,7 @@ begin
     ReportTime := dxMemData['ReportTime'];
 
     invRefrence := dxMemData['invRefrence'];
+    AggregateCityTax := dxMemData['aggregateCityTax'];
     TotalStayTax := dxMemData['TotalStayTax'];
     TotalStayTaxNights := dxMemData['TotalStayTaxNights'];
     ShowPackage := dxMemData['ShowPackage'];
@@ -2564,6 +2565,7 @@ begin
     dxMemData['ReportTime'] := ReportTime;
 
     dxMemData['invRefrence'] := invRefrence;
+    dxMemData['aggregateCityTax'] := AggregateCityTax;
     dxMemData['TotalStayTax'] := TotalStayTax;
     dxMemData['TotalStayTaxNights'] := TotalStayTaxNights;
     dxMemData['ShowPackage'] := ShowPackage;
@@ -2713,6 +2715,7 @@ begin
     ReportDate := ''; // nvarchar(10)
     ReportTime := ''; // nvarchar(5))
     invRefrence := '';
+    AggregateCityTax := glb.PMSSettings.InvoiceSettings.AggregateCityTax;
     TotalStayTax := 0.00;
     TotalStayTaxNights := 0;
     ShowPackage := false;
@@ -3350,6 +3353,7 @@ begin
   s := s + '    ,ReportDate ';
   s := s + '    ,ReportTime ';
   s := s + '    ,invRefrence ';
+  s := s + '    ,aggregateCityTax ';
   s := s + '    ,TotalStayTax ';
   s := s + '    ,TotalStayTaxNights ';
   s := s + '    ,showpackage ';
@@ -3391,6 +3395,7 @@ begin
   s := s + '  , ' + _db(theData.ReportDate) + #10;
   s := s + '  , ' + _db(theData.ReportTime) + #10;
   s := s + '  , ' + _db(theData.invRefrence) + #10;
+  s := s + '  , ' + _db(theData.AggregateCityTax) + #10;
   s := s + '  , ' + _db(theData.TotalStayTax) + #10;
   s := s + '  , ' + _db(theData.TotalStayTaxNights) + #10;
   s := s + '  , ' + _db(theData.ShowPackage) + #10;
@@ -5371,134 +5376,6 @@ begin
   end;
 end;
 
-function DraftInv_Create(Reservation, RoomReservation: integer; user: string): boolean;
-var
-  rSet: TRoomerDataSet;
-
-  invoiceHeadData: recInvoiceHeadHolder;
-
-  InvoiceDate: Tdate;
-  Customer: string;
-  aName: string;
-  custPID: string;
-  Address1: string;
-  Address2: string;
-  Address3: string;
-  Address4: string;
-  Country: string;
-
-  GuestName: string;
-  Staff: string;
-  Currency: string;
-
-  s: string;
-begin
-  result := true;
-  // Get related data from Reservations
-  rSet := CreateNewDataSet;
-  try
-    Customer := '';
-    aName := '';
-    custPID := '';
-    Address1 := '';
-    Address2 := '';
-    Address3 := '';
-    Address4 := '';
-    Country := '';
-
-    // s := '';
-    // s := s + ' SELECT '+#10;
-    // s := s + '   Customer '+#10;
-    // s := s + '  ,Name '+#10;
-    // s := s + '  ,CustPid '+#10;
-    // s := s + ' ,Address1 '+#10;
-    // s := s + ' ,Address2 '+#10;
-    // s := s + ' ,Address3 '+#10;
-    // s := s + ' ,Address4 '+#10;
-    // s := s + ' ,Country '+#10;
-    // s := s + ' FROM [Reservations] '+#10;
-    // s := s + ' WHERE Reservation = ' + inttostr(Reservation)+#10;
-    s := format(select_DraftInv_Create, [Reservation]);
-    if hData.rSet_bySQL(rSet, s) then
-    begin
-      Customer := rSet.fieldbyname('Customer').asString;
-      aName := rSet.fieldbyname('Name').asString;
-      custPID := rSet.fieldbyname('CustPid').asString;
-      Address1 := rSet.fieldbyname('Address1').asString;
-      Address2 := rSet.fieldbyname('Address2').asString;
-      Address3 := rSet.fieldbyname('Address3').asString;
-      Address4 := rSet.fieldbyname('Address4').asString;
-      Country := rSet.fieldbyname('Country').asString;
-    end;
-  finally
-    freeandnil(rSet);
-  end;
-
-  // Get related data from RoomReservations
-  rSet := CreateNewDataSet;
-  try
-    Currency := '';
-    // s := '';
-    // s := s + ' SELECT '+#10;
-    // s := s + '   currency '+#10;
-    // s := s + ' FROM [RoomReservations] '+#10;
-    // s := s + ' WHERE RoomReservation = ' + inttostr(RoomReservation)+#10;
-    s := format(select_DraftInv_Create2, [RoomReservation]);
-    if hData.rSet_bySQL(rSet, s) then
-    begin
-      Currency := rSet.fieldbyname('currency').asString;
-    end;
-  finally
-    freeandnil(rSet);
-  end;
-
-  Staff := user;
-  InvoiceDate := date;
-  GuestName := RR_GetFirstGuestNameFast(RoomReservation);
-
-  initInvoiceHeadHolderRec(invoiceHeadData);
-  invoiceHeadData.Reservation := Reservation;
-  invoiceHeadData.RoomReservation := RoomReservation;
-  invoiceHeadData.SplitNumber := cHotelInvoice; // 0
-  invoiceHeadData.InvoiceNumber := -1;
-  invoiceHeadData.InvoiceDate := _db(InvoiceDate, false); // ath
-  invoiceHeadData.Customer := Customer;
-  invoiceHeadData.name := aName + ', ' + GuestName;
-  invoiceHeadData.Address1 := Address1;
-  invoiceHeadData.Address2 := Address2;
-  invoiceHeadData.Address3 := Address3;
-  invoiceHeadData.Address4 := Address4;
-  invoiceHeadData.Country := Country;
-  invoiceHeadData.Total := 0.00;
-  invoiceHeadData.TotalWOVAT := 0.00;
-  invoiceHeadData.TotalVAT := 0.00;
-  invoiceHeadData.TotalBreakFast := 0.00;
-  invoiceHeadData.ExtraText := '';;
-  invoiceHeadData.Finished := false;
-  invoiceHeadData.CreditInvoice := 0;
-  invoiceHeadData.OriginalInvoice := 0;
-  invoiceHeadData.InvoiceType := 1;
-  invoiceHeadData.ihTmp := 'N';
-
-  invoiceHeadData.custPID := custPID;
-  invoiceHeadData.RoomGuest := GuestName;
-  invoiceHeadData.ihDate := InvoiceDate;
-  invoiceHeadData.ihInvoiceDate := InvoiceDate;
-  invoiceHeadData.ihConfirmDate := 2;
-  invoiceHeadData.ihPayDate := InvoiceDate;
-  invoiceHeadData.ihStaff := Staff;
-  invoiceHeadData.ihCurrency := Currency;
-  invoiceHeadData.ihCurrencyRate := 1.00;
-  invoiceHeadData.ReportDate := '';
-  invoiceHeadData.ReportTime := '';
-  invoiceHeadData.Staff := Staff;
-
-  if not SP_INS_InvoiceHead(invoiceHeadData) then
-  begin
-    // **
-  end;
-
-end;
 
 function DraftInv_RRUpdateAmounts(RoomReservation: integer): boolean;
 var

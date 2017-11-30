@@ -31,11 +31,12 @@ uses
 
   cxClasses,
   cxPropertiesStore, ufraCurrencyPanel
-  , uAmount
+  , uAmount, uRoomerDialogForm, cxGridTableView, cxStyles, dxPScxCommon, dxPScxGridLnk, Vcl.ComCtrls, sStatusBar
+
   ;
 
 type
-  TfrmAddAccommodation = class(TForm)
+  TfrmAddAccommodation = class(TfrmBaseRoomerDialogForm)
     edPersons: TsSpinEdit;
     cxLabel1: TsLabel;
     cxLabel2: TsLabel;
@@ -43,20 +44,18 @@ type
     cxLabel3: TsLabel;
     edRooms: TsSpinEdit;
     cxLabel4: TsLabel;
-    FormStore: TcxPropertiesStore;
-    sPanel1: TsPanel;
     edRoomPrice: TsCalcEdit;
-    BtnOk: TsButton;
-    btnCancel: TsButton;
     fraCurrencyPanel: TfraCurrencyPanel;
     procedure FormCreate(Sender : TObject);
     procedure FormShow(Sender : TObject);
     procedure btnOKClick(Sender : TObject);
     procedure edRoomPriceChange(Sender: TObject);
+    procedure HandleChanged(Sender: TObject);
   private
     procedure RecalcAmount(Sender : TObject);
     { Private declarations }
-
+  protected
+    procedure DoUpdateControls; override;
   public
     { Public declarations }
     zPersons : integer;
@@ -65,8 +64,7 @@ type
     RoomPrice : TAmount;
   end;
 
-var
-  frmAddAccommodation : TfrmAddAccommodation;
+  function AddAccommodation(var Persons,rooms,nights : integer; var roomPrice : TAmount) : boolean;
 
 implementation
 
@@ -80,6 +78,34 @@ uses
   , uG
   , Math;
 
+
+function AddAccommodation(var Persons,rooms,nights : integer; var roomPrice : TAmount) : boolean;
+var
+  frm: TfrmAddAccommodation;
+begin
+  result := false;
+  frm := TfrmAddAccommodation.Create(nil);
+  try
+    frm.zPersons   :=  Persons;
+    frm.zRooms     :=  Rooms;
+    frm.zNights    :=  Nights;
+    frm.RoomPrice :=  roomPrice;
+
+    frm.ShowModal;
+    if frm.modalresult = mrOk then
+    begin
+      result := true;
+      Persons   := frm.zPersons   ;
+      Rooms     := frm.zRooms     ;
+      Nights    := frm.zNights    ;
+      roomPrice := frm.RoomPrice ;
+    end
+  finally
+    frm.free;
+  end;
+end;
+
+
 procedure TfrmAddAccommodation.btnOKClick(Sender : TObject);
 begin
   zPersons := edPersons.Value;
@@ -87,17 +113,27 @@ begin
   zRooms := edRooms.Value;
 end;
 
+procedure TfrmAddAccommodation.DoUpdateControls;
+begin
+  inherited;
+  btnOK.Enabled := fraCurrencyPanel.IsValid and (edPersons.Value > 0) and (edNights.Value > 0) and (edRooms.Value > 0);
+end;
+
+procedure TfrmAddAccommodation.HandleChanged(Sender: TObject);
+begin
+  inherited;
+  UpdateControls;
+end;
+
 procedure TfrmAddAccommodation.edRoomPriceChange(Sender: TObject);
 begin
-  RoomPrice := TAmount.Create(edRoomPrice.Value, fraCurrencyPanel.CurrencyCode);
+  if fraCurrencyPanel.IsValid then
+    RoomPrice := TAmount.Create(edRoomPrice.Value, fraCurrencyPanel.CurrencyCode);
+  HandleChanged(Sender);
 end;
 
 procedure TfrmAddAccommodation.FormCreate(Sender : TObject);
 begin
-  RoomerLanguage.TranslateThisForm(self);
-  glb.PerformAuthenticationAssertion(self);
-  PlaceFormOnVisibleMonitor(self);
-
   // **
   zPersons := 1;
   zNights := 1;
@@ -109,16 +145,18 @@ begin
   fraCurrencyPanel.CurrencyCode := g.qNativeCurrency;
   fraCurrencyPanel.ShowCurrencyName := false;
   fraCurrencyPanel.OnCurrencyChangeAndValid := reCalcAmount;
+  fraCurrencyPanel.OnCurrencyChange := HandleChanged;
   edPersons.Value := zPersons;
   edNights.Value := zNights;
   edRooms.Value := zRooms;
   edRoomPrice.value := RoomPrice;
   edRoomprice.SetFocus;
+  DialogButtons := mbOKCancel;
 end;
 
 procedure TfrmAddAccommodation.RecalcAmount(Sender : TObject);
 begin
-  if (RoomPrice <> TAmount.ZERO) and (RoomPrice.CurrencyCode <> fraCurrencyPanel.CurrencyCode) then
+  if (RoomPrice <> TAmount.ZERO) and fraCurrencyPanel.IsValid and (RoomPrice.CurrencyCode <> fraCurrencyPanel.CurrencyCode) then
   begin
     edRoomPrice.Value := RoomPrice.ToCurrency(fraCurrencyPanel.CurrencyCode)
   end;

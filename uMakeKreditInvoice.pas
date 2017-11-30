@@ -294,6 +294,7 @@ var
       ReportDate            := sReportdate;
       ReportTime            := sReportTime;
       invRefrence           := kbmInvoiceHeads['invRefrence'];
+      AggregateCityTax      := kbmInvoiceHeads['aggregateCityTax'];
       TotalStayTax          := kbmInvoiceHeads['TotalStayTax']*-1;
       TotalStayTaxNights    := kbmInvoiceHeads['TotalStayTaxNights']*-1;
       ShowPackage           := kbmInvoiceHeads['ShowPackage'];
@@ -302,7 +303,7 @@ var
     s := SQL_INS_InvoiceHead(invoiceHeadData);
 //    copyToClipboard(s);
 //    debugmessage(s);
-    ExecutionPlan.AddExec(SQL_INS_InvoiceHead(invoiceHeadData));
+    ExecutionPlan.AddExec(s);
   end;
 
   procedure createInvoiceLines;

@@ -6,7 +6,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
   BorderIcons = [biMinimize, biMaximize]
   Caption = 'Invoice'
   ClientHeight = 697
-  ClientWidth = 1096
+  ClientWidth = 1099
   Constraints.MinWidth = 1112
   DoubleBuffered = True
   Font.Height = -11
@@ -17,235 +17,45 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
   OnKeyDown = FormKeyDown
   OnResize = FormResize
   OnShow = FormShow
-  ExplicitWidth = 1112
+  ExplicitWidth = 1115
   ExplicitHeight = 756
   PixelsPerInch = 96
   TextHeight = 13
   inherited sbStatusBar: TsStatusBar
     Top = 677
-    Width = 1096
+    Width = 1099
     ExplicitTop = 677
-    ExplicitWidth = 1158
+    ExplicitWidth = 1111
   end
   object pnlMain: TsPanel [1]
     Left = 0
     Top = 0
-    Width = 1096
+    Width = 1099
     Height = 677
     Align = alClient
     BevelOuter = bvNone
     Color = clWhite
     TabOrder = 1
     SkinData.SkinSection = 'PANEL'
-    ExplicitWidth = 1158
+    ExplicitWidth = 1111
     object pnlHead: TsPanel
       Left = 0
       Top = 0
-      Width = 1096
+      Width = 1099
       Height = 189
       Align = alTop
       BevelOuter = bvNone
       ParentColor = True
       TabOrder = 0
       SkinData.SkinSection = 'PANEL'
-      ExplicitWidth = 1158
-      DesignSize = (
-        1096
-        189)
-      object clabCurrency: TsLabel
-        Left = 616
-        Top = 120
-        Width = 102
-        Height = 13
-        Alignment = taRightJustify
-        Caption = 'Invoice Currency :'
-        ParentFont = False
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
-        Font.Height = -11
-        Font.Name = 'Tahoma'
-        Font.Style = [fsBold]
-      end
-      object clabRefrence: TsLabel
-        Left = 655
-        Top = 73
-        Width = 64
-        Height = 13
-        Alignment = taRightJustify
-        Caption = 'Reference :'
-        Color = 15400938
-        ParentColor = False
-        ParentFont = False
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
-        Font.Height = -11
-        Font.Name = 'Tahoma'
-        Font.Style = [fsBold]
-      end
-      object clabInvoice: TsLabel
-        Left = 657
-        Top = 7
-        Width = 56
-        Height = 18
-        Alignment = taRightJustify
-        Caption = 'Invoice'
-        ParentFont = False
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
-        Font.Height = -15
-        Font.Name = 'Tahoma'
-        Font.Style = [fsBold]
-      end
-      object clabRoomGuest: TsLabel
-        Left = 644
-        Top = 31
-        Width = 74
-        Height = 13
-        Alignment = taRightJustify
-        Caption = 'Guest name :'
-        ParentFont = False
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
-        Font.Height = -11
-        Font.Name = 'Tahoma'
-        Font.Style = [fsBold]
-      end
-      object lblResNr: TsLabel
-        Left = 672
-        Top = 49
-        Width = 45
-        Height = 13
-        Alignment = taRightJustify
-        Caption = 'Res. nr :'
-        Color = 15400938
-        ParentColor = False
-        ParentFont = False
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
-        Font.Height = -11
-        Font.Name = 'Tahoma'
-        Font.Style = [fsBold]
-      end
-      object edtRoomGuest: TsLabel
-        Left = 725
-        Top = 31
-        Width = 160
-        Height = 17
-        AutoSize = False
-        Caption = '-'
-        Color = clWhite
-        ParentColor = False
-        ParentFont = False
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
-        Font.Height = -11
-        Font.Name = 'Tahoma'
-        Font.Style = []
-      end
-      object edResNr: TsLabel
-        Left = 724
-        Top = 49
-        Width = 160
-        Height = 17
-        AutoSize = False
-        Caption = '-'
-        ParentFont = False
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
-        Font.Height = -11
-        Font.Name = 'Tahoma'
-        Font.Style = []
-      end
-      object edtInvRefrence: TsEdit
-        Left = 725
-        Top = 72
-        Width = 180
-        Height = 21
-        AutoSize = False
-        Color = clWhite
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
-        Font.Height = -11
-        Font.Name = 'Tahoma'
-        Font.Style = []
-        ParentFont = False
-        TabOrder = 5
-        OnChange = evtHeaderChanged
-        SkinData.SkinSection = 'EDIT'
-      end
-      object btnExit: TsButton
-        Left = 929
-        Top = 4
-        Width = 161
-        Height = 41
-        Hint = 'Close form'
-        Anchors = [akTop, akRight]
-        Caption = 'Close'
-        ImageIndex = 4
-        Images = DImages.cxLargeImagesFlat
-        ParentShowHint = False
-        ShowHint = True
-        TabOrder = 1
-        OnClick = btnExitClick
-        SkinData.SkinSection = 'BUTTON'
-        ExplicitLeft = 991
-      end
-      object btnInvoice: TsButton
-        Left = 929
-        Top = 90
-        Width = 161
-        Height = 41
-        Action = actPrintInvoice
-        Anchors = [akTop, akRight]
-        Caption = 'Pay and Print'
-        ImageIndex = 59
-        Images = DImages.cxLargeImagesFlat
-        ParentShowHint = False
-        ShowHint = True
-        TabOrder = 3
-        SkinData.SkinSection = 'BUTTON'
-        ExplicitLeft = 991
-      end
-      object btnProforma: TsButton
-        Left = 929
-        Top = 48
-        Width = 161
-        Height = 41
-        Action = actPrintProforma
-        Anchors = [akTop, akRight]
-        ImageIndex = 3
-        Images = DImages.cxLargeImagesFlat
-        ParentShowHint = False
-        ShowHint = True
-        TabOrder = 2
-        SkinData.SkinSection = 'BUTTON'
-        ExplicitLeft = 991
-      end
-      object btnSaveChanges: TsButton
-        Left = 929
-        Top = 137
-        Width = 161
-        Height = 41
-        Action = actSave
-        Anchors = [akTop, akRight]
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWhite
-        Font.Height = -11
-        Font.Name = 'Tahoma'
-        Font.Style = [fsBold]
-        Images = DImages.cxSmallImagesFlat
-        ParentFont = False
-        TabOrder = 4
-        Visible = False
-        SkinData.CustomFont = True
-        SkinData.ColorTone = clRed
-        ExplicitLeft = 991
-      end
+      ExplicitWidth = 1111
       object gbxHeader: TsGroupBox
+        AlignWithMargins = True
         Left = 3
         Top = 3
         Width = 567
-        Height = 178
+        Height = 183
+        Align = alLeft
         Caption = 'Invoice Header'
         TabOrder = 0
         object clabCustomer: TsLabel
@@ -334,10 +144,13 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
           Font.Style = [fsBold]
         end
         object rgrInvoiceAddressType: TsRadioGroup
-          Left = 368
-          Top = 10
+          AlignWithMargins = True
+          Left = 373
+          Top = 15
           Width = 189
-          Height = 165
+          Height = 163
+          Margins.Top = 0
+          Align = alRight
           Caption = 'Invoice header method'
           ParentBackground = False
           TabOrder = 0
@@ -532,29 +345,269 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
           SkinData.SkinSection = 'BUTTON'
         end
       end
-      inline fraInvoiceCurrency: TfraCurrencyPanel
-        Left = 725
-        Top = 116
-        Width = 206
-        Height = 21
-        TabOrder = 6
-        ExplicitLeft = 725
-        ExplicitTop = 116
-        ExplicitHeight = 21
-        inherited pnlCurrency: TsPanel
+      object pnlInvoiceButtons: TsPanel
+        AlignWithMargins = True
+        Left = 928
+        Top = 3
+        Width = 168
+        Height = 183
+        Align = alRight
+        BevelOuter = bvNone
+        TabOrder = 1
+        ExplicitLeft = 940
+        object btnExit: TsButton
+          AlignWithMargins = True
+          Left = 3
+          Top = 6
+          Width = 162
+          Height = 41
+          Hint = 'Close form'
+          Margins.Top = 6
+          Margins.Bottom = 0
+          Align = alTop
+          Caption = 'Close'
+          ImageIndex = 4
+          Images = DImages.cxLargeImagesFlat
+          ParentShowHint = False
+          ShowHint = True
+          TabOrder = 0
+          OnClick = btnExitClick
+          SkinData.SkinSection = 'BUTTON'
+        end
+        object btnProforma: TsButton
+          AlignWithMargins = True
+          Left = 3
+          Top = 50
+          Width = 162
+          Height = 41
+          Margins.Bottom = 0
+          Action = actPrintProforma
+          Align = alTop
+          Images = DImages.cxLargeImagesFlat
+          ParentShowHint = False
+          ShowHint = True
+          TabOrder = 1
+          SkinData.SkinSection = 'BUTTON'
+        end
+        object btnInvoice: TsButton
+          AlignWithMargins = True
+          Left = 3
+          Top = 94
+          Width = 162
+          Height = 41
+          Margins.Bottom = 0
+          Action = actPrintInvoice
+          Align = alTop
+          Images = DImages.cxLargeImagesFlat
+          ParentShowHint = False
+          ShowHint = True
+          TabOrder = 2
+          SkinData.SkinSection = 'BUTTON'
+        end
+        object btnSaveChanges: TsButton
+          AlignWithMargins = True
+          Left = 3
+          Top = 138
+          Width = 162
+          Height = 41
+          Action = actSave
+          Align = alTop
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWhite
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = [fsBold]
+          ParentFont = False
+          TabOrder = 3
+          SkinData.CustomFont = True
+          SkinData.ColorTone = clRed
+        end
+      end
+      object pnlInvoiceProperties: TsPanel
+        AlignWithMargins = True
+        Left = 576
+        Top = 9
+        Width = 346
+        Height = 177
+        Margins.Top = 9
+        Align = alClient
+        TabOrder = 2
+        ExplicitWidth = 358
+        object clabCurrency: TsLabel
+          Left = 16
+          Top = 107
+          Width = 102
+          Height = 13
+          Alignment = taRightJustify
+          Caption = 'Invoice Currency :'
+          ParentFont = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = [fsBold]
+        end
+        object clabRefrence: TsLabel
+          Left = 54
+          Top = 79
+          Width = 64
+          Height = 13
+          Alignment = taRightJustify
+          Caption = 'Reference :'
+          Color = 15400938
+          ParentColor = False
+          ParentFont = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = [fsBold]
+        end
+        object clabInvoice: TsLabel
+          AlignWithMargins = True
+          Left = 4
+          Top = 6
+          Width = 338
+          Height = 18
+          Margins.Top = 5
+          Align = alTop
+          Alignment = taCenter
+          Caption = 'Invoice'
+          ParentFont = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -15
+          Font.Name = 'Tahoma'
+          Font.Style = [fsBold]
+          ExplicitTop = 4
+          ExplicitWidth = 56
+        end
+        object clabRoomGuest: TsLabel
+          Left = 44
+          Top = 30
+          Width = 74
+          Height = 13
+          Alignment = taRightJustify
+          Caption = 'Guest name :'
+          ParentFont = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = [fsBold]
+        end
+        object lblResNr: TsLabel
+          Left = 73
+          Top = 53
+          Width = 45
+          Height = 13
+          Alignment = taRightJustify
+          Caption = 'Res. nr :'
+          Color = 15400938
+          ParentColor = False
+          ParentFont = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = [fsBold]
+        end
+        object edtRoomGuest: TsLabel
+          AlignWithMargins = True
+          Left = 125
+          Top = 53
+          Width = 217
+          Height = 17
+          Margins.Left = 124
+          Align = alTop
+          AutoSize = False
+          Caption = '-'
+          Color = clWhite
+          ParentColor = False
+          ParentFont = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ExplicitTop = 29
+          ExplicitWidth = 160
+        end
+        object edResNr: TsLabel
+          AlignWithMargins = True
+          Left = 125
+          Top = 30
+          Width = 217
+          Height = 17
+          Margins.Left = 124
+          Align = alTop
+          AutoSize = False
+          Caption = '-'
+          ParentFont = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ExplicitLeft = 124
+          ExplicitTop = 47
+          ExplicitWidth = 160
+        end
+        object edtInvRefrence: TsEdit
+          AlignWithMargins = True
+          Left = 125
+          Top = 76
+          Width = 215
           Height = 21
-          Align = alClient
+          Margins.Left = 124
+          Margins.Right = 5
+          Align = alTop
+          AutoSize = False
+          Color = clWhite
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 0
+          OnChange = evtHeaderChanged
+          SkinData.SkinSection = 'EDIT'
+          ExplicitTop = 88
+          ExplicitWidth = 180
+        end
+        inline fraInvoiceCurrency: TfraCurrencyPanel
+          AlignWithMargins = True
+          Left = 125
+          Top = 103
+          Width = 217
+          Height = 21
+          Margins.Left = 124
+          Align = alTop
+          AutoSize = True
+          TabOrder = 1
+          ExplicitLeft = 125
+          ExplicitTop = 114
           ExplicitHeight = 21
-          inherited lblCurrencyName: TsLabel
-            Width = 140
-            Height = 15
-          end
-          inherited edCurrencyCode: TsEdit
-            Height = 20
-          end
-          inherited btnGetCurrency: TsButton
+          inherited pnlCurrency: TsPanel
+            Width = 217
             Height = 21
+            Align = alClient
             ExplicitHeight = 21
+            inherited lblCurrencyName: TsLabel
+              Width = 153
+              Height = 21
+              ExplicitWidth = 168
+              ExplicitHeight = 18
+            end
+            inherited edCurrencyCode: TsEdit
+              Height = 21
+              ExplicitHeight = 20
+            end
+            inherited btnGetCurrency: TsButton
+              Height = 21
+              ExplicitHeight = 21
+            end
           end
         end
       end
@@ -562,23 +615,23 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
     object pnlLnes: TsPanel
       Left = 0
       Top = 189
-      Width = 1096
+      Width = 1099
       Height = 488
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitWidth = 1158
+      ExplicitWidth = 1111
       object pnlTotalsAndPayments: TsPanel
         Left = 0
         Top = 279
-        Width = 1096
+        Width = 1099
         Height = 209
         Align = alBottom
         BevelOuter = bvLowered
         ParentColor = True
         TabOrder = 0
         SkinData.SkinSection = 'PANEL'
-        ExplicitWidth = 1158
+        ExplicitWidth = 1111
         object splExtraInfo: TsSplitter
           Left = 526
           Top = 1
@@ -958,22 +1011,22 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
         object pnlPayments: TsPanel
           Left = 532
           Top = 1
-          Width = 563
+          Width = 566
           Height = 207
           Align = alClient
           Caption = 'pnlPayments'
           TabOrder = 1
           SkinData.SkinSection = 'PANEL'
-          ExplicitWidth = 625
+          ExplicitWidth = 578
           object sPanel3: TsPanel
             Left = 1
             Top = 1
-            Width = 561
+            Width = 564
             Height = 20
             Align = alTop
             TabOrder = 0
             SkinData.SkinSection = 'PANEL'
-            ExplicitWidth = 623
+            ExplicitWidth = 576
             object labPayments: TsLabel
               Left = 5
               Top = 1
@@ -991,13 +1044,13 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
           object grPayments: TcxGrid
             Left = 1
             Top = 21
-            Width = 561
+            Width = 564
             Height = 146
             Align = alClient
             DragMode = dmAutomatic
             TabOrder = 1
             LookAndFeel.NativeStyle = False
-            ExplicitWidth = 623
+            ExplicitWidth = 576
             object tvPayments: TcxGridDBTableView
               OnMouseDown = tvPaymentsMouseDown
               Navigator.Buttons.CustomButtons = <>
@@ -1086,14 +1139,14 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
           object pnlPaymentButtons: TsPanel
             Left = 1
             Top = 167
-            Width = 561
+            Width = 564
             Height = 39
             Align = alBottom
             TabOrder = 2
-            ExplicitWidth = 623
+            ExplicitWidth = 576
             object btnAddDownPayment: TsButton
               AlignWithMargins = True
-              Left = 63
+              Left = 66
               Top = 3
               Width = 119
               Height = 33
@@ -1103,11 +1156,11 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
               Align = alRight
               TabOrder = 0
               SkinData.SkinSection = 'BUTTON'
-              ExplicitLeft = 125
+              ExplicitLeft = 78
             end
             object btnRevertDownpayment: TsButton
               AlignWithMargins = True
-              Left = 438
+              Left = 441
               Top = 3
               Width = 119
               Height = 33
@@ -1117,11 +1170,11 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
               Align = alRight
               TabOrder = 3
               SkinData.SkinSection = 'BUTTON'
-              ExplicitLeft = 500
+              ExplicitLeft = 453
             end
             object btnEditDownpayment: TsButton
               AlignWithMargins = True
-              Left = 188
+              Left = 191
               Top = 3
               Width = 119
               Height = 33
@@ -1131,11 +1184,11 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
               Align = alRight
               TabOrder = 1
               SkinData.SkinSection = 'BUTTON'
-              ExplicitLeft = 250
+              ExplicitLeft = 203
             end
             object btnDeleteDownpayment: TsButton
               AlignWithMargins = True
-              Left = 313
+              Left = 316
               Top = 3
               Width = 119
               Height = 33
@@ -1145,7 +1198,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
               Align = alRight
               TabOrder = 2
               SkinData.SkinSection = 'BUTTON'
-              ExplicitLeft = 375
+              ExplicitLeft = 328
             end
           end
         end
@@ -1153,13 +1206,13 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
       object pnlLineButtons: TsPanel
         Left = 0
         Top = 0
-        Width = 1096
+        Width = 1099
         Height = 49
         Align = alTop
         BevelOuter = bvNone
         TabOrder = 3
         SkinData.SkinSection = 'PANEL'
-        ExplicitWidth = 1158
+        ExplicitWidth = 1111
         object btnAddRoom: TsButton
           AlignWithMargins = True
           Left = 3
@@ -1235,15 +1288,17 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
         end
         object btnReservationNotes: TsButton
           AlignWithMargins = True
-          Left = 955
+          Left = 963
           Top = 3
           Width = 130
           Height = 43
-          Align = alLeft
+          Margins.Right = 6
+          Align = alRight
           Caption = 'Reservation notes'
           TabOrder = 6
           OnClick = btnReservationNotesClick
           SkinData.SkinSection = 'BUTTON'
+          ExplicitLeft = 955
         end
         object btnShowOnInvoice: TsButton
           AlignWithMargins = True
@@ -1263,7 +1318,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
       object pnlLinesGrid: TsPanel
         Left = 0
         Top = 49
-        Width = 1021
+        Width = 1024
         Height = 230
         Align = alClient
         BevelOuter = bvNone
@@ -1274,11 +1329,11 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
         Padding.Bottom = 5
         TabOrder = 2
         SkinData.SkinSection = 'PANEL'
-        ExplicitWidth = 1083
+        ExplicitWidth = 1036
         object agrLines: TAdvStringGrid
           Left = 10
           Top = 5
-          Width = 1001
+          Width = 1004
           Height = 220
           Cursor = crDefault
           Align = alClient
@@ -1408,7 +1463,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
           SelectionTextColor = clHighlightText
           SortSettings.DefaultFormat = ssAutomatic
           Version = '8.2.4.1'
-          ExplicitWidth = 1063
+          ExplicitWidth = 1016
           ColWidths = (
             24
             28
@@ -1430,7 +1485,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
       end
       object pnlInvoiceIndices: TsScrollBox
         AlignWithMargins = True
-        Left = 1024
+        Left = 1027
         Top = 52
         Width = 69
         Height = 224
@@ -1439,7 +1494,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
         Align = alRight
         TabOrder = 1
         OnDragOver = pnlInvoiceIndicesDragOver
-        ExplicitLeft = 1086
+        ExplicitLeft = 1039
         object pnlInvoiceIndex0: TsPanel
           Left = 0
           Top = 4
@@ -1948,6 +2003,10 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
       end
     end
   end
+  inherited psRoomerBase: TcxPropertiesStore
+    Left = 488
+    Top = 368
+  end
   object MainMenu1: TMainMenu [3]
     Left = 372
     Top = 304
@@ -1963,17 +2022,6 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
       object Exit1: TMenuItem
         Caption = 'Close'
         OnClick = Exit1Click
-      end
-      object N1: TMenuItem
-        Caption = '-'
-      end
-      object GuestName1: TMenuItem
-        Caption = 'Copy Guest name to clipboard'
-        ShortCut = 16455
-      end
-      object Refrence1: TMenuItem
-        Caption = 'Copy Refrence to clipboard'
-        ShortCut = 16466
       end
     end
     object Invoice2: TMenuItem
@@ -2001,17 +2049,6 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
         Action = actRemoveSelected
       end
       object N2: TMenuItem
-        Caption = '-'
-      end
-      object Removetemporarily1: TMenuItem
-        Caption = 'Item to temp'
-        ShortCut = 114
-      end
-      object RemoveRoomRenttemporarity1: TMenuItem
-        Caption = 'Room to temp'
-        ShortCut = 115
-      end
-      object N4: TMenuItem
         Caption = '-'
       end
       object SendItemToGroupInvoice: TMenuItem
@@ -2163,6 +2200,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
       000000000000}
   end
   object actInvoiceActions: TActionList [5]
+    Images = DImages.cxLargeImagesFlat
     OnUpdate = actInvoiceActionsUpdate
     Left = 136
     Top = 300
@@ -2173,13 +2211,14 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
     end
     object actPrintInvoice: TAction
       Category = 'Invoice'
-      Caption = 'To invoice'
+      Caption = 'Pay and Print'
+      ImageIndex = 59
       OnExecute = actPrintInvoiceExecute
     end
     object actPrintProforma: TAction
       Category = 'Invoice'
       Caption = 'Print proforma'
-      ImageIndex = 30
+      ImageIndex = 3
       OnExecute = actPrintProformaExecute
     end
     object actInvoiceProperties: TAction
@@ -2293,7 +2332,13 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
     object actSave: TAction
       Category = 'File'
       Caption = 'Save changes'
+      ImageIndex = 2
       OnExecute = btnSaveChangesClick
+    end
+    object acAggregateCityTax: TAction
+      Category = 'ShowHide'
+      Caption = 'Aggregate Citytax'
+      OnExecute = acAggregateCityTaxExecute
     end
   end
   object timCloseInvoice: TTimer [6]
@@ -2599,6 +2644,9 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
       object mnuHideallCitytax: TMenuItem
         Action = acHideAllCTax
       end
+      object mnuAggregateCitytax: TMenuItem
+        Action = acAggregateCityTax
+      end
     end
     object mnuBreakfast: TMenuItem
       Caption = 'Breakfasts'
@@ -2629,6 +2677,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
     end
   end
   inherited cxsrRoomerStyleRepository: TcxStyleRepository
+    Top = 304
     PixelsPerInch = 96
     inherited dxssRoomerGridReportLink: TdxGridReportLinkStyleSheet
       BuiltIn = True

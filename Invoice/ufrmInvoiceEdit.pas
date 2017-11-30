@@ -74,9 +74,12 @@ uses
   uInvoiceEntities,
   uInvoiceObjects
   , uInvoiceDefinitions, uRoomerBookingDataModel_ModelObjects
-  , Spring.Collections.Lists
-  , Spring.Collections.Dictionaries
-  , Spring.Collections, cxCheckBox, cxCurrencyEdit, sSplitter, uRoomerForm, dxPScxCommon, dxPScxGridLnk
+
+//  , Spring.Collections.Lists
+//  , Spring.Collections.Dictionaries
+//  , Spring.Collections
+  , Generics.Collections
+  , cxCheckBox, cxCurrencyEdit, sSplitter, uRoomerForm, dxPScxCommon, dxPScxGridLnk
   , RoomerExceptionHandling, ufraCurrencyPanel
   , uAmount, uCurrencyConstants
   ;
@@ -109,7 +112,6 @@ type
     MainMenu1: TMainMenu;
     File1: TMenuItem;
     ExitandSave1: TMenuItem;
-    N1: TMenuItem;
     Exit1: TMenuItem;
     Items1: TMenuItem;
     Add1: TMenuItem;
@@ -117,17 +119,13 @@ type
     pnlMain: TsPanel;
     GridImages: TImageList;
     N2: TMenuItem;
-    Removetemporarily1: TMenuItem;
     Invoice2: TMenuItem;
     Print2: TMenuItem;
     PrintProforma1: TMenuItem;
     N3: TMenuItem;
     Downpayment1: TMenuItem;
-    RemoveRoomRenttemporarity1: TMenuItem;
-    N4: TMenuItem;
     SendItemToGroupInvoice: TMenuItem;
     pnlHead: TsPanel;
-    clabCurrency: TsLabel;
     actInvoiceActions: TActionList;
     actSaveAndExit: TAction;
     actPrintInvoice: TAction;
@@ -139,21 +137,11 @@ type
     actRemoveSelected: TAction;
     actMoveItemToGroupInvoice: TAction;
     timCloseInvoice: TTimer;
-    edtInvRefrence: TsEdit;
-    clabRefrence: TsLabel;
-    GuestName1: TMenuItem;
-    Refrence1: TMenuItem;
-    clabInvoice: TsLabel;
-    edtRoomGuest: TsLabel;
-    clabRoomGuest: TsLabel;
     pnlTotalsAndPayments: TsPanel;
     memExtraText: TMemo;
     pnlLineButtons: TsPanel;
     pnlLinesGrid: TsPanel;
     agrLines: TAdvStringGrid;
-    btnExit: TsButton;
-    btnInvoice: TsButton;
-    btnProforma: TsButton;
     pnlTotals: TsPanel;
     clabTotalwoVAT: TsLabel;
     clavVAT: TsLabel;
@@ -294,9 +282,6 @@ type
     mRoomRatesRentAmount: TFloatField;
     mRoomRatesNativeAmount: TFloatField;
     mRoomRatesGuestName: TWideStringField;
-    lblResNr: TsLabel;
-    edResNr: TsLabel;
-    btnSaveChanges: TsButton;
     gbxHeader: TsGroupBox;
     clabCustomer: TsLabel;
     clabPId: TsLabel;
@@ -357,13 +342,29 @@ type
     btnDeleteDownpayment: TsButton;
     splExtraInfo: TsSplitter;
     actSave: TAction;
-    fraInvoiceCurrency: TfraCurrencyPanel;
     pnlTotalsInCurrency: TsPanel;
     lbTotalInCurrency: TsLabel;
     edtTotalInCurrency: TsEdit;
     edtBalanceInCurrency: TsEdit;
     lbBalanceInCurrency: TsLabel;
     mnuMoveItemToInvoiceIndex: TMenuItem;
+    pnlInvoiceButtons: TsPanel;
+    btnExit: TsButton;
+    btnProforma: TsButton;
+    btnInvoice: TsButton;
+    btnSaveChanges: TsButton;
+    pnlInvoiceProperties: TsPanel;
+    clabCurrency: TsLabel;
+    clabRefrence: TsLabel;
+    clabInvoice: TsLabel;
+    clabRoomGuest: TsLabel;
+    lblResNr: TsLabel;
+    edtRoomGuest: TsLabel;
+    edResNr: TsLabel;
+    edtInvRefrence: TsEdit;
+    fraInvoiceCurrency: TfraCurrencyPanel;
+    acAggregateCityTax: TAction;
+    mnuAggregateCitytax: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure agrLinesMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
     procedure edtCustomerDblClick(Sender: TObject);
@@ -438,10 +439,11 @@ type
       var AProperties: TcxCustomEditProperties);
     procedure memExtraTextChange(Sender: TObject);
     procedure actInvoiceActionsUpdate(Action: TBasicAction; var Handled: Boolean);
+    procedure acAggregateCityTaxExecute(Sender: TObject);
   private
     { Private declarations }
 
-    DeletedLines: IList<integer>;
+    DeletedLines: TList<integer>;
     linesNumDays, linesNumGuests: integer;
     NumberGuestNights: integer;
 
@@ -493,6 +495,7 @@ type
     FShowRentPerDay: boolean;
     FInvoiceType: TInvoiceType;
     FIsCredit: boolean;
+    FAggregateCityTax: boolean;
 
     procedure loadInvoiceToMemtable(var m: TKbmMemTable);
 
@@ -646,14 +649,15 @@ type
                                    const aPackagename: string; aAddGuestName: boolean; const aGuestName: string): string;
     function DirectInvoiceLinesExist: boolean;
     procedure AddInvoiceIndicesToMenu(mnuItem: TMenuItem; aEventHandler: TNotifyEvent);
-
-    property InvoiceIndex: TInvoiceIndex read FInvoiceIndex write SetInvoiceIndex;
-
-    property AnyRowChecked: boolean read GetAnyRowSelected;
-    property HeaderChanged: boolean read GetHeaderChanged write SetHeaderChanged;
     procedure GenerateRoomRentLinesPerDay;
     procedure GenerateRoomRentLinesPerRoom;
     procedure UpdateCaptions;
+    procedure SetAggregateCityTax(const Value: boolean);
+
+    property InvoiceIndex: TInvoiceIndex read FInvoiceIndex write SetInvoiceIndex;
+    property AnyRowChecked: boolean read GetAnyRowSelected;
+    property HeaderChanged: boolean read GetHeaderChanged write SetHeaderChanged;
+    property AggregateCityTax: boolean read FAggregateCityTax write SetAggregateCityTax;
   protected
     procedure DoLoadData; override;
   public
@@ -710,7 +714,10 @@ uses
   uDateTimeHelper,
   Types,
   uFinanceConnectService
-  , uFrmChargePayCard, uPMSSettings, uRoomerCurrencymanager
+  , uFrmChargePayCard
+  , uPMSSettings
+  , uRoomerCurrencymanager
+  , uAddAccommodation
   ;
 
 {$R *.DFM}
@@ -1231,6 +1238,16 @@ begin
   lInvLine.IsTotalIncludedInParent := aIsIncludedInParent;
 end;
 
+procedure TfrmInvoiceEdit.SetAggregateCityTax(const Value: boolean);
+begin
+  if (Value <> FAggregateCityTax) then
+  begin
+    FAggregateCityTax := Value;
+    acAggregateCityTax.Checked := FAggregateCityTax;
+    HeaderChanged := true;
+  end;
+end;
+
 procedure TfrmInvoiceEdit.SetCurrentVisible;
 begin
   if agrLines.RowCount > agrLines.VisibleRowCount then
@@ -1292,6 +1309,7 @@ begin
   s := s + ', ihCurrency ' + #10; // **98
   s := s + ', ihCurrencyrate ' + #10; // **98
   s := s + ', Location ' + #10; // **98
+  s := s + ', aggregateCityTax ' + #10; // **98
   s := s + ')' + #10;
 
   s := s + 'Values' + #10;
@@ -1325,7 +1343,7 @@ begin
   s := s + ', ' + _db(InvoiceCurrencyCode);
   s := s + ', ' + _db(InvoiceCurrencyRate);
   s := s + ', ' + _db(zLocation);
-
+  s := s + ', ' + _db(AggregateCityTax);
   s := s + ')' + #10;
 
   if not cmd_bySQL(s) then
@@ -2194,12 +2212,13 @@ begin
       'IFNULL(ia.Address1, ih.Address1) AS Address1, ' + 'IFNULL(ia.Address2, ih.Address2) AS Address2, ' +
       'IFNULL(ia.Zip, ih.Address3) AS Address3, ' + 'IFNULL(ia.City, ih.Address4) AS Address4, ' +
       'IFNULL(ia.Country, ih.Country) AS Country, ' + 'ih.Total, ' + 'ih.TotalWOVAT, ' + 'ih.TotalVAT, ' +
+      ' ih.aggregateCityTax, ' +
       'ih.TotalBreakFast, ' + 'IFNULL(ia.ExtraText, ih.ExtraText) AS ExtraText, ' + 'ih.Finished, ' + 'ih.ReportDate, '
       + 'ih.ReportTime, ' + 'ih.CreditInvoice, ' + 'ih.OriginalInvoice, ' +
       'IFNULL(ia.InvoiceType, ih.InvoiceType) AS InvoiceType, ' + 'ih.ihTmp, ' + 'ih.ID, ' +
       'IFNULL(ia.CustPID, ih.CustPID) AS custPID, ' + 'ih.RoomGuest, ' + 'ih.ihDate, ' + 'ih.ihStaff, ' +
       'ih.ihPayDate, ' + 'ih.ihConfirmDate, ' + 'ih.ihInvoiceDate, ' +
-      'COALESCE(ia.ihcurrency, ih.ihcurrency) as ihCurrency, ' +           // See Note on end of unit!
+      'IF(ISNULL(ia.ihCurrency) OR TRIM(ia.ihCurrency) = '''', ih.ihcurrency, ia.ihcurrency) as ihCurrency, ' +           // See Note on end of unit!
       'ih.invRefrence, ' +
       'ih.TotalStayTax, ' + 'ih.TotalStayTaxNights, ' + 'ih.showPackage, ' + 'ih.staff, ' + 'ih.location, ' +
       'ih.externalInvoiceId ' +
@@ -2244,6 +2263,7 @@ begin
 
       InvoiceCurrencyCode := trim(lInvoiceHeadSet.FieldByName('ihCurrency').asString);
       memExtraText.Lines.Text := trim(lInvoiceHeadSet.FieldByName('ExtraText').asString);
+      AggregateCityTax := lInvoiceHeadSet.FieldByName('aggregateCityTax').asBoolean;
 
     end
     else
@@ -2292,10 +2312,6 @@ begin
         invoiceHeadData.Address4 := '';
         // ATH _db(zrSet.FieldByName('Address4').asString);
         invoiceHeadData.Country := lInvoiceHeadSet.FieldByName('Country').asString;
-        invoiceHeadData.Total := 0.00;
-        invoiceHeadData.TotalWOVat := 0.00;
-        invoiceHeadData.TotalVAT := 0.00;
-        invoiceHeadData.TotalBreakFast := 0.00;
         invoiceHeadData.ExtraText := memExtraText.Lines.Text;
         invoiceHeadData.Finished := false;
         invoiceHeadData.InvoiceType := rgrInvoiceAddressType.itemIndex;
@@ -2439,6 +2455,7 @@ begin
 
     UpdateItemInvoiceLinesForTaxCalculations;
     FInvoiceLinesList.ResetChanged;
+    HeaderChanged := False;
 
     AddEmptyLine(false);
 
@@ -2715,7 +2732,7 @@ begin
   ClearGrid;
   FInvoiceLinesList.Free;
   FRoomInfoList.Free;
-//  DeletedLines.Free;
+  DeletedLines.Free;
 
   if mRoomRes.active then
     mRoomRes.close;
@@ -3279,6 +3296,7 @@ begin
   s := s + ', ihCurrencyrate ' + #10; // **98
   s := s + ', showPackage ' + #10; // *99+
   s := s + ', Location ' + #10; // *99+
+  s := s + ', aggregateCityTax ' + #10; // *99+
   s := s + ', TotalStayTax ' + #10; // *99+
   s := s + ', TotalStayTaxNights ' + #10; // *99+
 
@@ -3341,6 +3359,7 @@ begin
   s := s + ', ' + _db(InvoiceCurrencyRate);
   s := s + ', ' + _db(showPackageItems);
   s := s + ', ' + _db(aInvoiceLocation);
+  s := s + ', ' + _db(AggregateCityTax);
   s := s + ', ' + _db(FInvoiceLinesList.TotalCityTaxRevenues);
   s := s + ', ' + _db(FInvoiceLinesList.CityTaxUnitCount);
   s := s + ')' + #10;
@@ -3354,9 +3373,8 @@ var
   rSet: TRoomerDataset;
   s: string;
   lExecutionPlan: TRoomerExecutionPlan;
-  invoiceLine: TInvoiceLine;
   lstActivity: TStringList;
-
+  lEnumerator: TEnumerator<TInvoiceLine>;
 begin
 
   result := True;
@@ -3371,12 +3389,21 @@ begin
     end;
 
     try
-      for invoiceLine in FInvoiceLinesList do
-      begin
-        InsertOrUpdateInvoiceLine(invoiceLine, aInvoiceNumber, lExecutionPlan, aSaveType);
-        if aSaveType <> stProforma then
-          lstActivity.Add(CreateInvoiceActivityLog(g.qUser, FReservation, FRoomReservation, ord(FInvoiceType), ADD_LINE,
-            invoiceLine.Item, invoiceLine.Total, aInvoiceNumber, invoiceLine.Text));
+      if (aSaveType in [stProforma, stDefinitive]) and AggregateCityTax then
+        lEnumerator := FInvoiceLinesList.GetEnumeratorWithAggregatedCityTax
+      else
+        lEnumerator := FInvoiceLinesList.GetEnumerator;
+
+      try
+        while lEnumerator.MoveNext do
+        begin
+          InsertOrUpdateInvoiceLine(lEnumerator.Current, aInvoiceNumber, lExecutionPlan, aSaveType);
+          if aSaveType <> stProforma then
+            lstActivity.Add(CreateInvoiceActivityLog(g.qUser, FReservation, FRoomReservation, ord(FInvoiceType), ADD_LINE,
+              lEnumerator.Current.Item, lEnumerator.Current.Total, aInvoiceNumber, lEnumerator.Current.Text));
+        end;
+      finally
+        lEnumerator.Free;
       end;
 
       AddSaveHeaderToExecPlan(aInvoiceNumber, lExecutionPlan, aInvoiceLocation);
@@ -5010,7 +5037,7 @@ var
   rSet: TRoomerDataset;
   s: string;
   lExecPlan: TRoomerExecutionPlan;
-  lRoomResList: IList<Integer>;
+  lRoomResList: TList<Integer>;
 begin
   if (FRoomReservation = 0) and (FReservation = 0) then
     exit;
@@ -5018,9 +5045,9 @@ begin
   if aFromCurrency.ToLower.Equals(aToCurrency.ToLower) then
     exit;
 
+  lRoomResList := TList<Integer>.Create;
   rSet := CreateNewDataSet;
   try
-    lRoomResList := TList<Integer>.Create;
     lExecPlan := TRoomerExecutionPlan.Create(rSet);
     try
       d.roomerMainDataSet.SystemStartTransaction;
@@ -5089,6 +5116,7 @@ begin
 
   finally
     rSet.Free;
+    lRoomResList.Free;
   end;
 end;
 
@@ -5125,7 +5153,14 @@ end;
 
 procedure TfrmInvoiceEdit.SetInvoiceCurrencyCode(const Value: TCurrencyCode);
 begin
-  FInvoiceCurrencyCode := Value;
+  if RoomerCurrencyManager.DefinitionExists(Value) then
+    FInvoiceCurrencyCode := Value
+  else
+  begin
+    MessageDlg('Unknown currency [%s] found. Using native currency for this invoice.', mtWarning, [mbOK], 0);
+    FInvoiceCurrencyCode := RoomerCurrencyManager.DefaultCurrency;
+  end;
+
   fraInvoiceCurrency.DisableEvents;
   try
     fraInvoiceCurrency.CurrencyCode := Value;
@@ -5872,6 +5907,12 @@ begin
   end;
 end;
 
+procedure TfrmInvoiceEdit.acAggregateCityTaxExecute(Sender: TObject);
+begin
+  inherited;
+  AggregateCityTax := not AggregateCityTax;
+end;
+
 procedure TfrmInvoiceEdit.acHideAllBreakfastsExecute(Sender: TObject);
 begin
   FInvoiceLinesList.SetAllVisibleOnInvoiceTo(False, [ikBreakfast]);
@@ -6082,7 +6123,7 @@ begin
   iNights := 1;
   dRoomPrice := 0;
 
-  if g.AddAccommodation(iPersons, iRooms, iNights, dRoomPrice) then
+  if AddAccommodation(iPersons, iRooms, iNights, dRoomPrice) then
   begin
     if (iPersons > 0) and (iNights > 0) then
     begin

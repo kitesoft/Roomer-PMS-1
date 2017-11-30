@@ -434,8 +434,8 @@ object frmMakeKreditInvoice: TfrmMakeKreditInvoice
       SkinData.SkinSection = 'BUTTON'
     end
     object BtnOk: TsButton
-      Left = 485
-      Top = 4
+      Left = 482
+      Top = 6
       Width = 127
       Height = 29
       Hint = 'Apply and close'
@@ -643,6 +643,10 @@ object frmMakeKreditInvoice: TfrmMakeKreditInvoice
         Name = 'invRefrence'
         DataType = ftWideString
         Size = 150
+      end
+      item
+        Name = 'aggregateCityTax'
+        DataType = ftBoolean
       end
       item
         Name = 'TotalStayTax'
