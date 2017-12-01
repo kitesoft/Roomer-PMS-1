@@ -745,17 +745,14 @@ begin
     result := false
   else
   begin
-    result := FBaseEnum.MoveNext;
+    FLastLineReached := not FBaseEnum.MoveNext;
     //Skip all lines with visible citytax and aggregate values
-    while (Result and not FLastLineReached) and (FBaseEnum.Current.ItemKind = ikStayTax) and FBaseEnum.Current.IsVisibleOnInvoice do
+    while not FLastLineReached and (FBaseEnum.Current.ItemKind = ikStayTax) and FBaseEnum.Current.IsVisibleOnInvoice do
     begin
       FCityTaxLine.Add(FBaseEnum.Current);
-      if not FBaseEnum.MoveNext then
-      begin
-        FLastLineReached := True;
-        Result := True;
-      end;
+      FLastLineReached := not FBaseEnum.MoveNext;
     end;
+    Result := true;
   end;
 
 end;
