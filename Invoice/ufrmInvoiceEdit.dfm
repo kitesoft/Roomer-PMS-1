@@ -48,7 +48,6 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
       ParentColor = True
       TabOrder = 0
       SkinData.SkinSection = 'PANEL'
-      ExplicitWidth = 1111
       object gbxHeader: TsGroupBox
         AlignWithMargins = True
         Left = 3
@@ -467,7 +466,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
           AlignWithMargins = True
           Left = 4
           Top = 6
-          Width = 338
+          Width = 56
           Height = 18
           Margins.Top = 5
           Align = alTop
@@ -479,8 +478,6 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
           Font.Height = -15
           Font.Name = 'Tahoma'
           Font.Style = [fsBold]
-          ExplicitTop = 4
-          ExplicitWidth = 56
         end
         object clabRoomGuest: TsLabel
           Left = 44
@@ -588,11 +585,13 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
           TabOrder = 1
           ExplicitLeft = 125
           ExplicitTop = 114
+          ExplicitWidth = 217
           ExplicitHeight = 21
           inherited pnlCurrency: TsPanel
             Width = 217
             Height = 21
             Align = alClient
+            ExplicitWidth = 217
             ExplicitHeight = 21
             inherited lblCurrencyName: TsLabel
               Width = 153

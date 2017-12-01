@@ -2400,6 +2400,7 @@ begin
         CurrencyRate := eSet.FieldByName('CurrencyRate').AsFloat;
         Price := eSet.FieldByName('Price').AsFloat;
 
+        // Manually added roomrent
         if Item_isRoomRent(ItemId) then
         begin
           if CurrencyRate <> 0 then
@@ -2422,7 +2423,9 @@ begin
         dNumber := GetCalculatedNumberOfItems(ItemId, eSet.FieldByName('Number').AsFloat);
         package := trim(eSet.FieldByName('importSource').asString);
 
-        AddLine(LineId, nil, ItemId, _s, dNumber, Price, g.qNativeCurrency, eSet.FieldByName('VATType').asString,
+        AddLine(LineId, nil, ItemId, _s, dNumber,
+          Price, eSet.fieldByName('Currency').AsString, //  g.qNativeCurrency,
+          eSet.FieldByName('VATType').asString,
           SQLToDate(eSet.FieldByName('PurchaseDate').asString), false {not generated},
           trim(eSet.FieldByName('importRefrence').asString), package,
           eSet.FieldByName('isPackage').asBoolean,
@@ -3701,7 +3704,6 @@ begin
     s := s + ', ' + _db(aInvoiceLine.Text);
 
     s := s + ', ' + _db(iCreditInvoiceMultiplier * aInvoiceLine.PriceOnInvoice.ToNative.Value);
-
     s := s + ', ' + _db(lItemTypeInfo.VATCode);
     s := s + ', ' + _db(iCreditInvoiceMultiplier * fItemTotal);
     s := s + ', ' + _db(iCreditInvoiceMultiplier * fItemTotalWOVat);
