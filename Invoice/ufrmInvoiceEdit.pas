@@ -1077,6 +1077,7 @@ begin
       AddAndInitNewRow;
       UpdateInvoiceIndexTabs;
 
+      UpdateControls;
       chkChanged;
     finally
       agrLines.EndUpdate;
@@ -6194,6 +6195,7 @@ begin
         FInvoiceLinesList.Remove(lInvLine);
       end;
       UpdateGrid;
+
     finally
       list.Free;
     end;
