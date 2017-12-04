@@ -2685,6 +2685,7 @@ begin
 
   pnlTotalsInCurrency.Visible := InvoiceCurrencyCode <> g.qNativeCurrency;
 
+  actPrintInvoice.Enabled := FInvoiceLinesList.Count > 0;
 end;
 
 procedure TfrmInvoiceEdit.DeleteLinesInList(ExecutionPlan: TRoomerExecutionPlan);
