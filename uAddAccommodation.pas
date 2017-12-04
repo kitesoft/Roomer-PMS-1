@@ -46,22 +46,28 @@ type
     cxLabel4: TsLabel;
     edRoomPrice: TsCalcEdit;
     fraCurrencyPanel: TfraCurrencyPanel;
-    procedure FormCreate(Sender : TObject);
     procedure FormShow(Sender : TObject);
-    procedure btnOKClick(Sender : TObject);
     procedure edRoomPriceChange(Sender: TObject);
     procedure HandleChanged(Sender: TObject);
   private
+    FRoomPrice: TAmount;
     procedure RecalcAmount(Sender : TObject);
+    procedure SetNights(const Value: integer);
+    procedure SetPersons(const Value: integer);
+    procedure SetRooms(const Value: integer);
+    procedure SetRoomPrice(const Value: TAmount);
+    function GetNights: integer;
+    function GetPersons: integer;
+    function GetRooms: integer;
     { Private declarations }
   protected
     procedure DoUpdateControls; override;
   public
     { Public declarations }
-    zPersons : integer;
-    zNights : integer;
-    zRooms : integer;
-    RoomPrice : TAmount;
+    property Persons: integer read GetPersons write SetPersons;
+    property Nights: integer read GetNights write SetNights;
+    property Rooms: integer read GetRooms write SetRooms;
+    property RoomPrice: TAmount read FRoomPrice write SetRoomPrice;
   end;
 
   function AddAccommodation(var Persons,rooms,nights : integer; var roomPrice : TAmount) : boolean;
@@ -86,18 +92,18 @@ begin
   result := false;
   frm := TfrmAddAccommodation.Create(nil);
   try
-    frm.zPersons   :=  Persons;
-    frm.zRooms     :=  Rooms;
-    frm.zNights    :=  Nights;
+    frm.Persons   :=  Persons;
+    frm.Rooms     :=  Rooms;
+    frm.Nights    :=  Nights;
     frm.RoomPrice :=  roomPrice;
 
     frm.ShowModal;
     if frm.modalresult = mrOk then
     begin
       result := true;
-      Persons   := frm.zPersons   ;
-      Rooms     := frm.zRooms     ;
-      Nights    := frm.zNights    ;
+      Persons   := frm.Persons   ;
+      Rooms     := frm.Rooms     ;
+      Nights    := frm.Nights    ;
       roomPrice := frm.RoomPrice ;
     end
   finally
@@ -106,17 +112,10 @@ begin
 end;
 
 
-procedure TfrmAddAccommodation.btnOKClick(Sender : TObject);
-begin
-  zPersons := edPersons.Value;
-  zNights := edNights.Value;
-  zRooms := edRooms.Value;
-end;
-
 procedure TfrmAddAccommodation.DoUpdateControls;
 begin
   inherited;
-  btnOK.Enabled := fraCurrencyPanel.IsValid and (edPersons.Value > 0) and (edNights.Value > 0) and (edRooms.Value > 0);
+  btnOK.Enabled := fraCurrencyPanel.IsValid and (Persons > 0) and (Nights > 0) and (Rooms > 0);
 end;
 
 procedure TfrmAddAccommodation.HandleChanged(Sender: TObject);
@@ -128,16 +127,8 @@ end;
 procedure TfrmAddAccommodation.edRoomPriceChange(Sender: TObject);
 begin
   if fraCurrencyPanel.IsValid then
-    RoomPrice := TAmount.Create(edRoomPrice.Value, fraCurrencyPanel.CurrencyCode);
+    FRoomPrice := TAmount.Create(edRoomPrice.Value, fraCurrencyPanel.CurrencyCode);
   HandleChanged(Sender);
-end;
-
-procedure TfrmAddAccommodation.FormCreate(Sender : TObject);
-begin
-  // **
-  zPersons := 1;
-  zNights := 1;
-  zRooms := 1;
 end;
 
 procedure TfrmAddAccommodation.FormShow(Sender : TObject);
@@ -146,12 +137,24 @@ begin
   fraCurrencyPanel.ShowCurrencyName := false;
   fraCurrencyPanel.OnCurrencyChangeAndValid := reCalcAmount;
   fraCurrencyPanel.OnCurrencyChange := HandleChanged;
-  edPersons.Value := zPersons;
-  edNights.Value := zNights;
-  edRooms.Value := zRooms;
-  edRoomPrice.value := RoomPrice;
+  FRoomPrice := 0;
   edRoomprice.SetFocus;
   DialogButtons := mbOKCancel;
+end;
+
+function TfrmAddAccommodation.GetNights: integer;
+begin
+  Result := edNights.Value;
+end;
+
+function TfrmAddAccommodation.GetPersons: integer;
+begin
+  Result := edPersons.Value;
+end;
+
+function TfrmAddAccommodation.GetRooms: integer;
+begin
+  Result := edRooms.Value;
 end;
 
 procedure TfrmAddAccommodation.RecalcAmount(Sender : TObject);
@@ -160,6 +163,26 @@ begin
   begin
     edRoomPrice.Value := RoomPrice.ToCurrency(fraCurrencyPanel.CurrencyCode)
   end;
+end;
+
+procedure TfrmAddAccommodation.SetNights(const Value: integer);
+begin
+  edNights.value := Value;
+end;
+
+procedure TfrmAddAccommodation.SetPersons(const Value: integer);
+begin
+  edPersons.Value := value;
+end;
+
+procedure TfrmAddAccommodation.SetRoomPrice(const Value: TAmount);
+begin
+  edRoomPrice.Value := Value;
+end;
+
+procedure TfrmAddAccommodation.SetRooms(const Value: integer);
+begin
+  edRooms.Value := Value;
 end;
 
 end.

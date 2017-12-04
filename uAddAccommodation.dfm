@@ -7,7 +7,6 @@ inherited frmAddAccommodation: TfrmAddAccommodation
   ClientWidth = 273
   ParentFont = False
   Position = poDefault
-  OnCreate = FormCreate
   OnShow = FormShow
   ExplicitWidth = 279
   ExplicitHeight = 223
@@ -30,7 +29,7 @@ inherited frmAddAccommodation: TfrmAddAccommodation
   end
   object cxLabel2: TsLabel [1]
     Left = 4
-    Top = 39
+    Top = 42
     Width = 114
     Height = 17
     Alignment = taRightJustify
@@ -45,7 +44,7 @@ inherited frmAddAccommodation: TfrmAddAccommodation
   end
   object cxLabel3: TsLabel [2]
     Left = 4
-    Top = 72
+    Top = 68
     Width = 114
     Height = 17
     Alignment = taRightJustify
@@ -76,26 +75,26 @@ inherited frmAddAccommodation: TfrmAddAccommodation
   inherited sbStatusBar: TsStatusBar
     Top = 174
     Width = 273
-    ExplicitTop = 143
-    ExplicitWidth = 278
+    ExplicitTop = 174
+    ExplicitWidth = 273
   end
   inherited pnlButtons: TsPanel
     Top = 131
     Width = 273
     TabOrder = 6
-    ExplicitTop = 100
-    ExplicitWidth = 278
+    ExplicitTop = 131
+    ExplicitWidth = 273
     inherited btnOK: TsButton
       Left = -43
-      ExplicitLeft = -38
+      ExplicitLeft = -43
     end
     inherited btnCancel: TsButton
       Left = 63
-      ExplicitLeft = 68
+      ExplicitLeft = 63
     end
     inherited btnClose: TsButton
       Left = 169
-      ExplicitLeft = 174
+      ExplicitLeft = 169
     end
   end
   object edPersons: TsSpinEdit [6]
@@ -111,6 +110,7 @@ inherited frmAddAccommodation: TfrmAddAccommodation
     Font.Style = []
     ParentFont = False
     TabOrder = 0
+    Text = '1'
     OnChange = HandleChanged
     SkinData.SkinSection = 'EDIT'
     BoundLabel.Font.Charset = DEFAULT_CHARSET
@@ -120,11 +120,11 @@ inherited frmAddAccommodation: TfrmAddAccommodation
     BoundLabel.Font.Style = []
     MaxValue = 0
     MinValue = 0
-    Value = 0
+    Value = 1
   end
   object edNights: TsSpinEdit [7]
     Left = 124
-    Top = 36
+    Top = 39
     Width = 81
     Height = 21
     Color = clWhite
@@ -135,6 +135,7 @@ inherited frmAddAccommodation: TfrmAddAccommodation
     Font.Style = []
     ParentFont = False
     TabOrder = 1
+    Text = '1'
     OnChange = HandleChanged
     SkinData.SkinSection = 'EDIT'
     BoundLabel.Font.Charset = DEFAULT_CHARSET
@@ -144,11 +145,11 @@ inherited frmAddAccommodation: TfrmAddAccommodation
     BoundLabel.Font.Style = []
     MaxValue = 0
     MinValue = 0
-    Value = 0
+    Value = 1
   end
   object edRooms: TsSpinEdit [8]
     Left = 124
-    Top = 69
+    Top = 65
     Width = 81
     Height = 21
     Color = clWhite
@@ -159,6 +160,7 @@ inherited frmAddAccommodation: TfrmAddAccommodation
     Font.Style = []
     ParentFont = False
     TabOrder = 2
+    Text = '1'
     OnChange = HandleChanged
     SkinData.SkinSection = 'EDIT'
     BoundLabel.Font.Charset = DEFAULT_CHARSET
@@ -168,7 +170,7 @@ inherited frmAddAccommodation: TfrmAddAccommodation
     BoundLabel.Font.Style = []
     MaxValue = 0
     MinValue = 0
-    Value = 0
+    Value = 1
   end
   object edRoomPrice: TsCalcEdit [9]
     Left = 124
@@ -201,15 +203,15 @@ inherited frmAddAccommodation: TfrmAddAccommodation
     ExplicitWidth = 135
     inherited pnlCurrency: TsPanel
       Width = 135
-      ExplicitTop = -1
       ExplicitWidth = 135
       inherited lblCurrencyName: TsLabel
-        Width = 70
+        Width = 71
         ExplicitWidth = 73
         ExplicitHeight = 14
       end
-      inherited btnGetCurrency: TsButton
+      inherited edCurrencyCode: TsEdit
         ExplicitTop = 0
+        ExplicitHeight = 20
       end
     end
   end

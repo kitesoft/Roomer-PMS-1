@@ -1622,23 +1622,33 @@ begin
     begin
       Result := Package_getRoomDescription(aPackagename, aRoomNumber, aArrival, aDeparture, aGuestName);
       if FRoomReservation = 0 then
-        Result := Format('%s %s: %s', [Result, lRoom, aRoomNumber]);
+      begin
+        Result := Format('%s %s', [Result, lRoom]);
+        if not aRoomNumber.IsEmpty then
+          result := Format('%s: %s', [Result, aRoomNumber]);
+      end;
     end
 
     else
     begin
       if aDayCount = 1 then
-        Result := format('%s %s %s', [lRoom, aRoomNumber, DateToDayMonthString(aArrival)])
+        Result := format('%s{roomnumber}, %s', [lRoom, DateToDayMonthString(aArrival)])
       else if aDayCount = trunc(aDeparture) - trunc(aArrival) then
-        Result := format('%s %s %s - %s', [lRoom, aRoomNumber, DateToDayMonthString(aArrival), DateToDayMonthString(aDeparture)])
+        Result := format('%s{roomnumber}, %s - %s', [lRoom, DateToDayMonthString(aArrival), DateToDayMonthString(aDeparture)])
       else
-        Result := format('%s %s, %d %s', [lRoom, aRoomNumber, aDayCount, GetTranslatedText('shTx_Invoice_Nights')]);
+        Result := format('%s{roomnumber}, %d %s', [lRoom, aDayCount, GetTranslatedText('shTx_Invoice_Nights')]);
+
+      if not aRoomNumber.Trim.IsEmpty then
+        Result := StringReplace(Result, '{roomnumber}', ' ' +aRoomNumber, [rfIgnoreCase])
+      else
+        Result := StringReplace(Result, '{roomnumber}', '', [rfIgnoreCase])
     end;
 
-    Result := (aRoomResDescription.Trim + ' ' + Result).Trim;
+    if not aRoomResDescription.Trim.IsEmpty then
+      Result := (aRoomResDescription.Trim + ' ' + Result).Trim;
   end;
 
-  if not lPrefix.IsEmpty then
+  if not lPrefix.Trim.IsEmpty then
     result := Format('%s (%s)', [lPrefix, Result]);
 end;
 
@@ -1691,12 +1701,12 @@ begin
   FRoomInfoList.Add(lRoomInfo);
 
   // add a TInvoiceline object for the RoomRent to InvoiceLineList
-  lInvoiceLine := AddLine(0, nil, lRmRntItem, lDescription, aDayCount, aRoomPrice, aCurrency, lItemInfo.VATCode, aFromDate, aIsGenerated,
   lInvoiceLine := AddLine(0, nil, lRmRntItem, lDescription, aUnpaidNightCount, aRoomPrice, aCurrency, lItemInfo.VATCode, aFromDate, aIsGenerated,
     '', '', not aPackageName.IsEmpty, aNumGuests, lConfirmDate, lConfirmAmount, aRRAlias, _GetCurrentTick); // *77
   lInvoiceLine.RoomEntity := lRoomInfo;
-  lRoomInfo.VatPerNight := lInvoiceLine.VATOnRevenue / aDayCount;
   lRoomInfo.VatPerNight := lInvoiceLine.VATOnRevenue / aUnpaidNightCount;
+
+  UpdateTaxinvoiceLinesForRoomItem(lInvoiceLine);
 
   // Only add included stuff if a regular room is added and not a manually added one
   if aIsGenerated then
@@ -1705,7 +1715,6 @@ begin
 //      if BetaFunctionsAvailable and UseNewTaxcalcMethod then
 //        UpdateTaxinvoiceLinesForRoomItemUsingBackend(lInvoiceLine)
 //      else
-        UpdateTaxinvoiceLinesForRoomItem(lInvoiceLine);
 
     // Included Breakfast invoicelines
     AddBreakfastInvoicelinesForRoomItem(lRoomInfo, lInvoiceLine);
@@ -6121,7 +6130,6 @@ var
   iNights: integer;
   dRoomPrice: TAmount;
   iRoomCount: integer;
-  lRoomText: string;
 begin
   iPersons := 1;
   iRooms := 1;
@@ -6139,7 +6147,6 @@ begin
         for lIntDate := trunc(now) to trunc(now) + iNights - 1 do
         begin
           lDate := lIntDate * 1.0;
-          lRoomText := GetTranslatedText('shRoom') + format(' on %s', [FormatDateTime('dd/mm', TDateTime(lDate))]);
           for iRoomCount := 0 to iRooms -1 do
             AddRoom('', dRoomPrice, dRoomPrice.CurrencyCode, TDate(lDate), TDate(lDate) + 1, 1, '',  -1, 0, false, '', edtName.Text,
               iPersons, 0, '', -1, false, false);
@@ -6693,7 +6700,7 @@ end;
 function TfrmInvoiceEdit.chkChanged: boolean;
 begin
   result := (not IsDirectInvoice) and (FInvoiceLinesList.IsChanged or HeaderChanged or (DeletedLines.Count > 0));
-  btnSaveChanges.Visible := result;
+  btnSaveChanges.Visible := not UpdatingData and Result;
   actSave.Enabled := Result;
 end;
 
