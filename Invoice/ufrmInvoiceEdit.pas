@@ -3327,36 +3327,36 @@ begin
   s := s + ', ' + _db(zInvoiceDate, True);
   s := s + ', ' + format('(SELECT IFNULL((SELECT Customer FROM invoiceaddressees ia WHERE ia.invoiceNumber=%d ' +
     '        AND ia.Reservation=%d ' + '        AND ia.RoomReservation=%d ' + '        AND ia.SplitNumber=%d ' +
-    '        AND ia.InvoiceIndex=%d ' + '       ), %s))', [zInvoiceNumber, FReservation, FRoomReservation,
+    '        AND ia.InvoiceIndex=%d ' + '       ), %s))', [aInvoiceNumber, FReservation, FRoomReservation,
     ord(FInvoiceType), InvoiceIndex, _db(edtCustomer.Text)]);
   s := s + ', ' + format('(SELECT IFNULL((SELECT Name FROM invoiceaddressees ia WHERE ia.invoiceNumber=%d ' +
     '        AND ia.Reservation=%d ' + '        AND ia.RoomReservation=%d ' + '        AND ia.SplitNumber=%d ' +
-    '        AND ia.InvoiceIndex=%d ' + '       ), %s))', [zInvoiceNumber, FReservation, FRoomReservation,
+    '        AND ia.InvoiceIndex=%d ' + '       ), %s))', [aInvoiceNumber, FReservation, FRoomReservation,
     ord(FInvoiceType), InvoiceIndex, _db(edtName.Text)]);
   s := s + ', ' + format('(SELECT IFNULL((SELECT CustPid FROM invoiceaddressees ia WHERE ia.invoiceNumber=%d ' +
     '        AND ia.Reservation=%d ' + '        AND ia.RoomReservation=%d ' + '        AND ia.SplitNumber=%d ' +
-    '        AND ia.InvoiceIndex=%d ' + '       ), %s))', [zInvoiceNumber, FReservation, FRoomReservation,
+    '        AND ia.InvoiceIndex=%d ' + '       ), %s))', [aInvoiceNumber, FReservation, FRoomReservation,
     ord(FInvoiceType), InvoiceIndex, _db(edtPersonalId.Text)]);
   s := s + ', ' + _db(edtRoomGuest.Caption);
   s := s + ', ' + format('(SELECT IFNULL((SELECT Address1 FROM invoiceaddressees ia WHERE ia.invoiceNumber=%d ' +
     '        AND ia.Reservation=%d ' + '        AND ia.RoomReservation=%d ' + '        AND ia.SplitNumber=%d ' +
-    '        AND ia.InvoiceIndex=%d ' + '       ), %s))', [zInvoiceNumber, FReservation, FRoomReservation,
+    '        AND ia.InvoiceIndex=%d ' + '       ), %s))', [aInvoiceNumber, FReservation, FRoomReservation,
     ord(FInvoiceType), InvoiceIndex, _db(edtAddress1.Text)]);
   s := s + ', ' + format('(SELECT IFNULL((SELECT Address2 FROM invoiceaddressees ia WHERE ia.invoiceNumber=%d ' +
     '        AND ia.Reservation=%d ' + '        AND ia.RoomReservation=%d ' + '        AND ia.SplitNumber=%d ' +
-    '        AND ia.InvoiceIndex=%d ' + '       ), %s))', [zInvoiceNumber, FReservation, FRoomReservation,
+    '        AND ia.InvoiceIndex=%d ' + '       ), %s))', [aInvoiceNumber, FReservation, FRoomReservation,
     ord(FInvoiceType), InvoiceIndex, _db(edtAddress2.Text)]);
   s := s + ', ' + format('(SELECT IFNULL((SELECT Zip FROM invoiceaddressees ia WHERE ia.invoiceNumber=%d ' +
     '        AND ia.Reservation=%d ' + '        AND ia.RoomReservation=%d ' + '        AND ia.SplitNumber=%d ' +
-    '        AND ia.InvoiceIndex=%d ' + '       ), %s))', [zInvoiceNumber, FReservation, FRoomReservation,
+    '        AND ia.InvoiceIndex=%d ' + '       ), %s))', [aInvoiceNumber, FReservation, FRoomReservation,
     ord(FInvoiceType), InvoiceIndex, _db(edtAddress3.Text)]);
   s := s + ', ' + format('(SELECT IFNULL((SELECT City FROM invoiceaddressees ia WHERE ia.invoiceNumber=%d ' +
     '        AND ia.Reservation=%d ' + '        AND ia.RoomReservation=%d ' + '        AND ia.SplitNumber=%d ' +
-    '        AND ia.InvoiceIndex=%d ' + '       ), %s))', [zInvoiceNumber, FReservation, FRoomReservation,
+    '        AND ia.InvoiceIndex=%d ' + '       ), %s))', [aInvoiceNumber, FReservation, FRoomReservation,
     ord(FInvoiceType), InvoiceIndex, _db(edtAddress4.Text)]);
   s := s + ', ' + format('(SELECT IFNULL((SELECT Country FROM invoiceaddressees ia WHERE ia.invoiceNumber=%d ' +
     '        AND ia.Reservation=%d ' + '        AND ia.RoomReservation=%d ' + '        AND ia.SplitNumber=%d ' +
-    '        AND ia.InvoiceIndex=%d ' + '       ), %s))', [zInvoiceNumber, FReservation, FRoomReservation,
+    '        AND ia.InvoiceIndex=%d ' + '       ), %s))', [aInvoiceNumber, FReservation, FRoomReservation,
     ord(FInvoiceType), InvoiceIndex, _db(zCountry)]);
   s := s + ', ' + _db(FInvoiceLinesList.TotalOnInvoice.ToNative * iMultiplier);
   s := s + ', ' + _db((FInvoiceLinesList.TotalOnInvoice -  FInvoiceLinesList.TotalVatOnInvoice).ToNative * iMultiplier);
@@ -3457,7 +3457,7 @@ begin
           except
             on e: Exception do
             begin
-              ShowMessage('Ekki tókst ad senda reikning No. ' + inttostr(zInvoiceNumber) +
+              ShowMessage('Ekki tókst ad senda reikning No. ' + inttostr(aInvoiceNumber) +
                 ' til bókhaldskerfisins. Vinsamlega sendið reikninginn handvirkt síðar ');
               AddRoomerActivityLog(d.roomerMainDataSet.username, ERROR, e.message,
                 format('Exception while sending invoice to booking keeping. Invoice %d, RoomReservation %d, Reservation %d -> %s',
