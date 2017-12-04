@@ -25,7 +25,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
     Top = 677
     Width = 1099
     ExplicitTop = 677
-    ExplicitWidth = 1111
+    ExplicitWidth = 1099
   end
   object pnlMain: TsPanel [1]
     Left = 0
@@ -37,7 +37,6 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
     Color = clWhite
     TabOrder = 1
     SkinData.SkinSection = 'PANEL'
-    ExplicitWidth = 1111
     object pnlHead: TsPanel
       Left = 0
       Top = 0
@@ -353,7 +352,6 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
         Align = alRight
         BevelOuter = bvNone
         TabOrder = 1
-        ExplicitLeft = 940
         object btnExit: TsButton
           AlignWithMargins = True
           Left = 3
@@ -431,7 +429,6 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
         Margins.Top = 9
         Align = alClient
         TabOrder = 2
-        ExplicitWidth = 358
         object clabCurrency: TsLabel
           Left = 16
           Top = 107
@@ -466,7 +463,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
           AlignWithMargins = True
           Left = 4
           Top = 6
-          Width = 56
+          Width = 338
           Height = 18
           Margins.Top = 5
           Align = alTop
@@ -478,6 +475,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
           Font.Height = -15
           Font.Name = 'Tahoma'
           Font.Style = [fsBold]
+          ExplicitWidth = 56
         end
         object clabRoomGuest: TsLabel
           Left = 44
@@ -512,7 +510,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
         object edtRoomGuest: TsLabel
           AlignWithMargins = True
           Left = 125
-          Top = 53
+          Top = 30
           Width = 217
           Height = 17
           Margins.Left = 124
@@ -527,13 +525,12 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
-          ExplicitTop = 29
-          ExplicitWidth = 160
+          ExplicitTop = 20
         end
         object edResNr: TsLabel
           AlignWithMargins = True
           Left = 125
-          Top = 30
+          Top = 53
           Width = 217
           Height = 17
           Margins.Left = 124
@@ -570,8 +567,6 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
           TabOrder = 0
           OnChange = evtHeaderChanged
           SkinData.SkinSection = 'EDIT'
-          ExplicitTop = 88
-          ExplicitWidth = 180
         end
         inline fraInvoiceCurrency: TfraCurrencyPanel
           AlignWithMargins = True
@@ -584,7 +579,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
           AutoSize = True
           TabOrder = 1
           ExplicitLeft = 125
-          ExplicitTop = 114
+          ExplicitTop = 103
           ExplicitWidth = 217
           ExplicitHeight = 21
           inherited pnlCurrency: TsPanel
@@ -601,7 +596,8 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
             end
             inherited edCurrencyCode: TsEdit
               Height = 21
-              ExplicitHeight = 20
+              ExplicitTop = 0
+              ExplicitHeight = 21
             end
             inherited btnGetCurrency: TsButton
               Height = 21
@@ -619,7 +615,6 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitWidth = 1111
       object pnlTotalsAndPayments: TsPanel
         Left = 0
         Top = 279
@@ -630,7 +625,6 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
         ParentColor = True
         TabOrder = 0
         SkinData.SkinSection = 'PANEL'
-        ExplicitWidth = 1111
         object splExtraInfo: TsSplitter
           Left = 526
           Top = 1
@@ -1016,7 +1010,6 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
           Caption = 'pnlPayments'
           TabOrder = 1
           SkinData.SkinSection = 'PANEL'
-          ExplicitWidth = 578
           object sPanel3: TsPanel
             Left = 1
             Top = 1
@@ -1025,7 +1018,6 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
             Align = alTop
             TabOrder = 0
             SkinData.SkinSection = 'PANEL'
-            ExplicitWidth = 576
             object labPayments: TsLabel
               Left = 5
               Top = 1
@@ -1049,7 +1041,6 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
             DragMode = dmAutomatic
             TabOrder = 1
             LookAndFeel.NativeStyle = False
-            ExplicitWidth = 576
             object tvPayments: TcxGridDBTableView
               OnMouseDown = tvPaymentsMouseDown
               Navigator.Buttons.CustomButtons = <>
@@ -1142,7 +1133,6 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
             Height = 39
             Align = alBottom
             TabOrder = 2
-            ExplicitWidth = 576
             object btnAddDownPayment: TsButton
               AlignWithMargins = True
               Left = 66
@@ -1155,7 +1145,6 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
               Align = alRight
               TabOrder = 0
               SkinData.SkinSection = 'BUTTON'
-              ExplicitLeft = 78
             end
             object btnRevertDownpayment: TsButton
               AlignWithMargins = True
@@ -1169,7 +1158,6 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
               Align = alRight
               TabOrder = 3
               SkinData.SkinSection = 'BUTTON'
-              ExplicitLeft = 453
             end
             object btnEditDownpayment: TsButton
               AlignWithMargins = True
@@ -1183,7 +1171,6 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
               Align = alRight
               TabOrder = 1
               SkinData.SkinSection = 'BUTTON'
-              ExplicitLeft = 203
             end
             object btnDeleteDownpayment: TsButton
               AlignWithMargins = True
@@ -1197,7 +1184,6 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
               Align = alRight
               TabOrder = 2
               SkinData.SkinSection = 'BUTTON'
-              ExplicitLeft = 328
             end
           end
         end
@@ -1211,7 +1197,6 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
         BevelOuter = bvNone
         TabOrder = 3
         SkinData.SkinSection = 'PANEL'
-        ExplicitWidth = 1111
         object btnAddRoom: TsButton
           AlignWithMargins = True
           Left = 3
@@ -1297,7 +1282,6 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
           TabOrder = 6
           OnClick = btnReservationNotesClick
           SkinData.SkinSection = 'BUTTON'
-          ExplicitLeft = 955
         end
         object btnShowOnInvoice: TsButton
           AlignWithMargins = True
@@ -1328,7 +1312,6 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
         Padding.Bottom = 5
         TabOrder = 2
         SkinData.SkinSection = 'PANEL'
-        ExplicitWidth = 1036
         object agrLines: TAdvStringGrid
           Left = 10
           Top = 5
@@ -1462,7 +1445,6 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
           SelectionTextColor = clHighlightText
           SortSettings.DefaultFormat = ssAutomatic
           Version = '8.2.4.1'
-          ExplicitWidth = 1016
           ColWidths = (
             24
             28
@@ -1493,7 +1475,6 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
         Align = alRight
         TabOrder = 1
         OnDragOver = pnlInvoiceIndicesDragOver
-        ExplicitLeft = 1039
         object pnlInvoiceIndex0: TsPanel
           Left = 0
           Top = 4
