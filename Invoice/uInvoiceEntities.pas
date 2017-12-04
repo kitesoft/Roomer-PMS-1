@@ -39,7 +39,6 @@ type
     property Name: string read FName write FName;
     property Arrival: TDateTime read FFrom write FFrom;
     property Departure: TDateTime read FTo write FTo;
-
     property Price: double read FPrice write FPrice;
     property Currency: string read FCurrency write FCurrency;
     property CurrencyRate: double read FCurrencyRate write FCurrencyRate;
@@ -48,7 +47,10 @@ type
     property BreakfastIncluded: boolean read FBreakfastIncluded write FBreakfastIncluded;
     property NumGuests: integer read FNumPersons write FNumPersons;
     property NumChildren: integer read FNumChildren write FNUmChildren;
-    property Nights: integer read GetNumberOfNights;
+    /// <summary>
+    ///   Defaults to Departure - Arrival when not set, otherwise this is overriden by the set value
+    /// </summary>
+    property UnpaidNights: integer read GetNumberOfNights write FNights;
   end;
 
   TInvoiceItemEntity = class
@@ -196,7 +198,7 @@ begin
   Result := 0;
   for lRoomEnt in Self do
     if lRoomEnt.BreakfastIncluded then
-      inc(Result, lRoomEnt.NumGuests * trunc(lRoomEnt.Nights));
+      inc(Result, lRoomEnt.NumGuests * trunc(lRoomEnt.UnpaidNights));
 end;
 
 { TInvoiceIndexTotal }

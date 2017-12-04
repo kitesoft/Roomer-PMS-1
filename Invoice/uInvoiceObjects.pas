@@ -481,7 +481,7 @@ end;
 procedure TInvoiceLine.MoveToInvoiceIndex(aInvoiceIndex: integer);
 begin
   if ItemKind = ikRoomRent then
-    if RoomEntity.Nights = 1 then
+    if RoomEntity.UnpaidNights = 1 then
       d.MoveRoomDateToInvoiceIndex(RoomEntity.Reservation, RoomEntity.RoomReservation, PurchaseDate, aInvoiceIndex)
     else
       d.UpdateGroupAccountone(RoomEntity.Reservation, RoomEntity.RoomReservation, RoomReservation, RoomReservation = 0, aInvoiceIndex)

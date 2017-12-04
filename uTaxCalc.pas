@@ -492,7 +492,7 @@ begin
   if (tcoCalcTaxPerNight in aOptions) then
     lNumNights := 1
   else
-    lNumNights := trunc(aInvoiceRoomEntity.Nights);
+    lNumNights := trunc(aInvoiceRoomEntity.UnpaidNights);
 
   if aTax.TAXCHILDREN then
     taxGuests := taxGuests + aInvoiceRoomEntity.NumChildren;

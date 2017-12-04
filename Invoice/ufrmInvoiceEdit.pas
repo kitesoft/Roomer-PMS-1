@@ -521,7 +521,7 @@ type
     /// for the supplied discount (if any). The Invoiceline objects are not attached to the grid.
     /// </summary>
     procedure AddRoom(const aRoom: String; aRoomPrice: Double; aCurrency: string; aFromDate: TDate; aToDate: TDate;
-      aDayCount: integer; const aDescription: string; aRoomReservation: integer;
+      aUnpaidNightCount: integer; const aDescription: string; aRoomReservation: integer;
       aDiscountAmount: Double; aDiscountIsPercentage: boolean; const aDiscountText: string; const aGuestName: String;
       aNumGuests: integer; aNumChildren: integer; const aPackageName: string; aRRAlias: integer;
       aBeakfastIncluded: boolean; aIsGenerated: boolean);
@@ -1643,7 +1643,7 @@ begin
 end;
 
 procedure TfrmInvoiceEdit.AddRoom(const aRoom: String; aRoomPrice: Double; aCurrency: string; aFromDate: TDate;
-  aToDate: TDate; aDayCount: integer; const aDescription: string; aRoomReservation: integer;
+  aToDate: TDate; aUnpaidNightCount: integer; const aDescription: string; aRoomReservation: integer;
   aDiscountAmount: Double; aDiscountIsPercentage: boolean; const aDiscountText: string; const aGuestName: String;
   aNumGuests: integer; aNumChildren: integer; const aPackageName: string; aRRAlias: integer;
   aBeakfastIncluded: boolean; aIsGenerated: boolean);
@@ -1670,7 +1670,7 @@ begin
   lItemInfo := d.Item_Get_ItemTypeInfo(lRmRntItem);
 
 
-  lDescription := FormatRoomDescription(aRoom, aDescription, aFromDate, aToDate, aDayCount, aPackageName, (FRoomReservation = 0), aGuestName);
+  lDescription := FormatRoomDescription(aRoom, aDescription, aFromDate, aToDate, aUnpaidNightCount, aPackageName, (FRoomReservation = 0), aGuestName);
 
   lRoomInfo := TInvoiceRoomEntity.Create;
   // -- Attach the Room information
@@ -1679,6 +1679,7 @@ begin
   lRoomInfo.Name := lGuestName;
   lRoomInfo.Arrival := aFromDate;
   lRoomInfo.Departure := aToDate;
+  lRoomInfo.UnpaidNights := aUnpaidNightCount;
   lRoomInfo.Price := aRoomPrice;
   lROomInfo.Currency := aCurrency;
   lRoomInfo.CurrencyRate := RoomerCurrencyManager.CurrencyDefinition[aCurrency].Rate;
@@ -1691,9 +1692,11 @@ begin
 
   // add a TInvoiceline object for the RoomRent to InvoiceLineList
   lInvoiceLine := AddLine(0, nil, lRmRntItem, lDescription, aDayCount, aRoomPrice, aCurrency, lItemInfo.VATCode, aFromDate, aIsGenerated,
+  lInvoiceLine := AddLine(0, nil, lRmRntItem, lDescription, aUnpaidNightCount, aRoomPrice, aCurrency, lItemInfo.VATCode, aFromDate, aIsGenerated,
     '', '', not aPackageName.IsEmpty, aNumGuests, lConfirmDate, lConfirmAmount, aRRAlias, _GetCurrentTick); // *77
   lInvoiceLine.RoomEntity := lRoomInfo;
   lRoomInfo.VatPerNight := lInvoiceLine.VATOnRevenue / aDayCount;
+  lRoomInfo.VatPerNight := lInvoiceLine.VATOnRevenue / aUnpaidNightCount;
 
   // Only add included stuff if a regular room is added and not a manually added one
   if aIsGenerated then
@@ -1716,9 +1719,9 @@ begin
       lDescription := Item_GetDescription(lDiscountItem) + ' ' + aDiscountText;
 
       /// Add an InvoiceLine object for the discount
-      AddLine(0, lInvoiceLine, lDiscountItem, lDescription, aDayCount, -1 * aDiscountAmount, aCurrency,
+      AddLine(0, lInvoiceLine, lDiscountItem, lDescription, aUnpaidNightCount, -1 * aDiscountAmount, aCurrency,
               lItemInfo.VATCode, aFromDate, True, '', '', false, aNumGuests, lConfirmDate, lConfirmAmount, aRRAlias, _GetCurrentTick);
-      lRoomInfo.Discount := aDiscountAmount * aDayCount;
+      lRoomInfo.Discount := aDiscountAmount * aUnpaidNightCount;
     end;
   end;
 
@@ -1729,7 +1732,7 @@ end;
 procedure TfrmInvoiceEdit.AddBreakfastInvoicelinesForRoomItem(aRoomEntity: TInvoiceRoomEntity; aParent: TInvoiceLine);
 begin
   if aRoomEntity.BreakFastIncluded then
-    AddIncludedBreakfastToLinesAndGrid(aRoomEntity.NumGuests * aRoomEntity.Nights, aRoomEntity.Arrival, 0, aParent);
+    AddIncludedBreakfastToLinesAndGrid(aRoomEntity.NumGuests * aRoomEntity.UnpaidNights, aRoomEntity.Arrival, 0, aParent);
 
 end;
 
@@ -1939,7 +1942,7 @@ begin
     iNights := 0;
     lInvLine := GetInvoiceLineByRow(i);
     if assigned(lInvLine.RoomEntity) then
-      iNights := lInvLine.RoomEntity.Nights;
+      iNights := lInvLine.RoomEntity.UnpaidNights;
 
     iPersons := 0;
     if lineNoGuests <> '' then
@@ -3637,7 +3640,7 @@ begin
   begin
     aInvoiceLine.PurchaseDate := now();
     if aInvoiceLine.RoomEntity <> nil then
-      iNights := aInvoiceLine.RoomEntity.Nights;
+      iNights := aInvoiceLine.RoomEntity.UnpaidNights;
   end;
 
   fItemTotal := aInvoiceLine.AmountOnInvoice.ToNative;
@@ -6135,15 +6138,15 @@ begin
       if ShowRentPerDay then
         for lIntDate := trunc(now) to trunc(now) + iNights - 1 do
         begin
-        lDate := lIntDate * 1.0;
-        lRoomText := GetTranslatedText('shRoom') + format(' on %s', [FormatDateTime('dd/mm', TDateTime(lDate))]);
-        for iRoomCount := 0 to iRooms -1 do
-          AddRoom('', dRoomPrice, dRoomPrice.CurrencyCode, TDate(lDate), TDate(lDate) + 1, 1, '',  -1, 0, false, '', edtName.Text,
-            iPersons, 0, '', -1, false, false);
+          lDate := lIntDate * 1.0;
+          lRoomText := GetTranslatedText('shRoom') + format(' on %s', [FormatDateTime('dd/mm', TDateTime(lDate))]);
+          for iRoomCount := 0 to iRooms -1 do
+            AddRoom('', dRoomPrice, dRoomPrice.CurrencyCode, TDate(lDate), TDate(lDate) + 1, 1, '',  -1, 0, false, '', edtName.Text,
+              iPersons, 0, '', -1, false, false);
         end
       else
         for iRoomCount := 0 to iRooms -1 do
-          AddRoom('', dRoomPrice, dRoomPrice.CurrencyCode, trunc(now), trunc(now) + iNights, 1, '', -1, 0, false, '', edtName.Text,
+          AddRoom('', dRoomPrice, dRoomPrice.CurrencyCode, trunc(now), trunc(now) + iNights, iNights, '', -1, 0, false, '', edtName.Text,
             iPersons, 0, '', -1, false, false);
     end;
     UpdateGrid;
