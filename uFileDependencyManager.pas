@@ -62,6 +62,7 @@ type
   end;
 
 function FileDependencyManager: TFileDependencymanager;
+procedure ClearFileDependencyManager;
 
 implementation
 
@@ -88,6 +89,11 @@ begin
     gFileDependencyMgr := TFileDependencymanager.Create;
 
   Result := gFileDependencyMgr;
+end;
+
+procedure ClearFileDependencyManager;
+begin
+  FreeAndNil(gFileDependencyMgr);
 end;
 
 procedure TFileDependencymanager.ReadFilesFromStaticResources;

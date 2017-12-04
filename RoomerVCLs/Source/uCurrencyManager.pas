@@ -82,6 +82,11 @@ procedure InitGlobalCurrencyManager(aClass: TCurrencymanagerClass; const aDefaul
 /// </summary>
 function CurrencyManager(aDontInit: boolean = false): TCurrencyManager;
 
+/// <summary>
+///   Frees the current global currency manager
+/// </summary>
+procedure ClearGlobalCurrencyManager;
+
 implementation
 
 uses
@@ -112,6 +117,11 @@ begin
   if not assigned(gCurrencyManager) and not aDontInit then
     InitGlobalCurrencyManager(TCurrencyManager, '   ');
   Result := gCurrencyManager;
+end;
+
+procedure ClearGlobalCurrencyManager;
+begin
+  FreeAndNil(gCurrencyManager);
 end;
 
 

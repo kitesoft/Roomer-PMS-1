@@ -126,8 +126,8 @@ object frmFinishedInvoices2: TfrmFinishedInvoices2
     object chkShowPackage: TsCheckBox
       Left = 5
       Top = 47
-      Width = 140
-      Height = 20
+      Width = 148
+      Height = 17
       Caption = 'Show Package on invoice'
       TabOrder = 4
       SkinData.SkinSection = 'CHECKBOX'
@@ -1596,7 +1596,7 @@ object frmFinishedInvoices2: TfrmFinishedInvoices2
       end
     end
   end
-  object frxDesigner1: TfrxDesigner
+  object frxDesigner: TfrxDesigner
     DefaultScriptLanguage = 'PascalScript'
     DefaultFont.Charset = DEFAULT_CHARSET
     DefaultFont.Color = clWindowText
@@ -1615,6 +1615,7 @@ object frmFinishedInvoices2: TfrmFinishedInvoices2
     Restrictions = []
     RTLLanguage = False
     MemoParentFont = False
+    OnSaveReport = frxDesignerSaveReport
     Left = 464
     Top = 296
   end
@@ -1767,7 +1768,7 @@ object frmFinishedInvoices2: TfrmFinishedInvoices2
     Left = 398
     Top = 440
   end
-  object frxReport1: TfrxReport
+  object frxInvoiceReport: TfrxReport
     Version = '4.13.2'
     DotMatrixReport = False
     EngineOptions.DoublePass = True
@@ -1820,7 +1821,7 @@ object frmFinishedInvoices2: TfrmFinishedInvoices2
       'begin'
       ''
       'end.')
-    OnPrintPage = frxReport1PrintPage
+    OnPrintPage = frxInvoiceReportPrintPage
     Left = 564
     Top = 300
     Datasets = <
@@ -2342,7 +2343,7 @@ object frmFinishedInvoices2: TfrmFinishedInvoices2
           Width = 233.637910000000000000
           Height = 18.897650000000000000
           ShowHint = False
-          Page = frxReport1.PagePayments
+          Page = frxInvoiceReport.PagePayments
           PrintOnParent = True
         end
         object rptDsHeadGuestName: TfrxMemoView
@@ -2625,7 +2626,7 @@ object frmFinishedInvoices2: TfrmFinishedInvoices2
           Width = 340.157700000000000000
           Height = 34.015745590000000000
           ShowHint = False
-          Page = frxReport1.PageVAT
+          Page = frxInvoiceReport.PageVAT
           PrintOnParent = True
         end
         object Totals: TfrxSubreport
@@ -2634,7 +2635,7 @@ object frmFinishedInvoices2: TfrmFinishedInvoices2
           Width = 317.480520000000000000
           Height = 94.488250000000000000
           ShowHint = False
-          Page = frxReport1.TotalAera
+          Page = frxInvoiceReport.TotalAera
           PrintOnParent = True
         end
       end

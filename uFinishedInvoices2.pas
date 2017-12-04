@@ -80,7 +80,7 @@ TYPE
     LMDBackPanel1: TsPanel;
     btnPrint: TsButton;
     LMDSpeedButton5: TsButton;
-    frxDesigner1: TfrxDesigner;
+    frxDesigner: TfrxDesigner;
     btnDesign: TsButton;
     rptDsLines: TfrxDBDataset;
     rptDs1: TfrxDBDataset;
@@ -164,7 +164,7 @@ TYPE
     Label3: TsLabel;
     Label11: TsLabel;
     edtPayments: TsEdit;
-    frxReport1: TfrxReport;
+    frxInvoiceReport: TfrxReport;
     procedure btnCloseClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure tcPagesChange(Sender: TObject);
@@ -183,9 +183,10 @@ TYPE
     procedure timCloseTimer(Sender: TObject);
     procedure btnEmailSendClick(Sender: TObject);
     procedure LMDSpeedButton3Click(Sender: TObject);
-    procedure frxReport1PrintPage(Page: TfrxReportPage; CopyNo: Integer);
+    procedure frxInvoiceReportPrintPage(Page: TfrxReportPage; CopyNo: Integer);
     function frxMailExport1SendMail(const Server: string; const Port: Integer; const UserField, PasswordField: string; FromField, ToField, SubjectField, CompanyField, TextField: WideString; FileNames: TStringList; Timeout: Integer;
       ConfurmReading: Boolean): string;
+    function frxDesignerSaveReport(Report: TfrxReport; SaveAs: Boolean): Boolean;
 
 
   private
@@ -193,6 +194,7 @@ TYPE
     zForeign : boolean;
     zNative : string;
     externalUsers : String;
+    FDesigningFileName: string;
     procedure DisplayTab;
     procedure DisplayInvoice(InvoiceNumber : integer );
     function  Display : boolean;
@@ -844,26 +846,25 @@ begin
     exit;
   end;
 
-  frxReport1.LoadFromFile(lFileName);
-  frxReport1.PrintOptions.Printer := 'Default';
-
+  frxInvoiceReport.LoadFromFile(lFileName);
+  frxInvoiceReport.PrintOptions.Printer := 'Default';
 
   if zuseReportPrinter then
   begin
     if g.qReportPrinter <> '' then
     begin
-      frxReport1.PrintOptions.Printer := g.qReportPrinter;
+      frxInvoiceReport.PrintOptions.Printer := g.qReportPrinter;
     end;
   end else
   begin
     if g.qInvoicePrinter <> '' then
     begin
-      frxReport1.PrintOptions.Printer := g.qInvoicePrinter;
+      frxInvoiceReport.PrintOptions.Printer := g.qInvoicePrinter;
     end;
   end;
 
 
-  frxReport1.ShowReport(false);
+  frxInvoiceReport.ShowReport(false);
 
   if d.mtHead_.Active then d.mtHead_.Close;
   if d.mtLines_.Active then d.mtLines_.Close;
@@ -887,19 +888,11 @@ var
 begin
   d.InsertMTdata(zInvoiceNumber,zXML_export,false,false);
 
-  TRY
-    Filename := FileDependencyManager.getLocalInvoiceFilePath;
-  EXCEPT
-  END;
-
   currency := d.GetInvoiceCurrency(zInvoiceNumber);
   if _trimlower(ctrlGetString('NativeCurrency')) <> _trimlower(Currency) then
-  begin
-    TRY
-      Filename := FileDependencyManager.getForeignInvoiceFilePath;;
-    EXCEPT
-    END;
-  end;
+    Filename := FileDependencyManager.getForeignInvoiceFilePath
+  else
+    Filename := FileDependencyManager.getLocalInvoiceFilePath;
 
   if not fileExists(filename) then
   begin
@@ -907,27 +900,27 @@ begin
     exit;
   end;
 
-  frxReport1.LoadFromFile(filename);
+  frxInvoiceReport.LoadFromFile(filename);
 
-  frxReport1.PrintOptions.Printer := 'Default';
+  frxInvoiceReport.PrintOptions.Printer := 'Default';
 
   if zuseReportPrinter then
   begin
     if g.qReportPrinter <> '' then
     begin
-      frxReport1.PrintOptions.Printer := g.qReportPrinter;
+      frxInvoiceReport.PrintOptions.Printer := g.qReportPrinter;
     end;
   end else
   begin
     if g.qInvoicePrinter <> '' then
     begin
-      frxReport1.PrintOptions.Printer := g.qInvoicePrinter;
+      frxInvoiceReport.PrintOptions.Printer := g.qInvoicePrinter;
     end;
   end;
 
-  FrxReport1.PrepareReport(false);
+  frxInvoiceReport.PrepareReport(false);
 
-  frxPDFExport1.Report          := frxReport1;
+  frxPDFExport1.Report          := frxInvoiceReport;
   frxPDFExport1.Compressed      := true;
   frxPDFExport1.FileName        := d.mtHead_.fieldbyname('Customer').AsString +'_'+ d.mtHead_.fieldbyname('InvoiceNumber').AsString+'.pdf';
 
@@ -943,7 +936,7 @@ begin
   frxPDFExport1.ShowDialog      := false;
 
   try
-    FrxReport1.Export(frxPdfExport1);
+    frxInvoiceReport.Export(frxPdfExport1);
   except
   end;
 
@@ -977,19 +970,12 @@ var
   currency : string;
 begin
   d.InsertMTdata(zInvoiceNumber,false,false,chkShowPackage.Checked);
-  TRY
-    Filename := FileDependencyManager.getLocalInvoiceFilePath;
-  EXCEPT
-  END;
 
   currency := d.GetInvoiceCurrency(zInvoiceNumber);
   if _trimlower(ctrlGetString('NativeCurrency')) <> _trimlower(Currency) then
-  begin
-    TRY
-      Filename := FileDependencyManager.getForeignInvoiceFilePath;;
-    EXCEPT
-    END;
-  end;
+    Filename := FileDependencyManager.getForeignInvoiceFilePath
+  else
+    Filename := FileDependencyManager.getLocalInvoiceFilePath;
 
   if not fileExists(filename) then
   begin
@@ -997,10 +983,13 @@ begin
     exit;
   end;
 
-  frxReport1.LoadFromFile(filename);
-
-
-  frxReport1.DesignReport(true);
+  FDesigningFileName := filename;
+  try
+    frxInvoiceReport.LoadFromFile(filename);
+    frxInvoiceReport.DesignReport(true);
+  finally
+    FDesigningFileName := '';
+  end;
 
   if d.mtHead_.Active then d.mtHead_.Close;
   if d.mtLines_.Active then d.mtLines_.Close;
@@ -1010,12 +999,10 @@ begin
   if d.mtCaptions_.Active then d.mtCaptions_.Close;
 
   try
-    frxReport1.LoadFromFile('');
+    frxInvoiceReport.LoadFromFile('');
   except
   end;
-  frxReport1.Clear;
-
-  FileDependencyManager.sendChangedFile(filename);
+  frxInvoiceReport.Clear;
 end;
 
 procedure TfrmFinishedInvoices2.timCloseTimer(Sender: TObject);
@@ -1040,6 +1027,22 @@ begin
 end;
 
 
+function TfrmFinishedInvoices2.frxDesignerSaveReport(Report: TfrxReport; SaveAs: Boolean): Boolean;
+begin
+  if (not SaveAs) and Report.FileName.ToLower.Equals(FDesigningFileName.ToLower) then
+  begin
+    Report.SaveToFile(Report.FileName);
+    FileDependencyManager.sendChangedFile(Report.FileName);
+    Result := true;
+  end
+  else
+  begin
+    Result := ((frxInvoiceReport.Designer as TfrxDesignerForm) <> nil) and TfrxDesignerForm(frxInvoiceReport.Designer).SaveFile(SaveAs, false);
+    if Result and Report.FileName.ToLower.Equals(FDesigningFileName.ToLower) then
+      FileDependencyManager.sendChangedFile(Report.FileName);
+  end;
+end;
+
 function TfrmFinishedInvoices2.frxMailExport1SendMail(const Server: string; const Port: Integer; const UserField, PasswordField: string; FromField, ToField, SubjectField, CompanyField, TextField: WideString; FileNames: TStringList; Timeout: Integer;
   ConfurmReading: Boolean): string;
 var filename : String;
@@ -1057,7 +1060,7 @@ begin
      frxPDFExport1.Filename := filename;
      List := TStringList.Create;
      List.Add(filename + '=invoice.pdf');
-     frxReport1.Export(frxPDFExport1);
+     frxInvoiceReport.Export(frxPDFExport1);
    finally
      frxPDFExport1.ShowDialog := True;
      frxPDFExport1.ShowProgress := True;
@@ -1091,13 +1094,13 @@ begin
    end;
 end;
 
-procedure TfrmFinishedInvoices2.frxReport1PrintPage(Page: TfrxReportPage; CopyNo: Integer);
+procedure TfrmFinishedInvoices2.frxInvoiceReportPrintPage(Page: TfrxReportPage; CopyNo: Integer);
 var
   ar : TInvoiceActionRec;
   s : string;
 
 begin
-    s := frxReport1.PrintOptions.Printer;
+    s := frxInvoiceReport.PrintOptions.Printer;
     ar.reservation      := d.mtHead_.fieldbyname('Reservation').asInteger;
     ar.RoomReservation  := d.mtHead_.fieldbyname('RoomReservation').asInteger;
     ar.InvoiceNumber    := d.mtHead_.fieldbyname('InvoiceNumber').asInteger;

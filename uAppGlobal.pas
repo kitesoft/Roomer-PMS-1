@@ -367,7 +367,7 @@ uses   dbTables
      , RegularExpressions
      , uCurrencymanager
      , uRoomerCurrencymanager
-     ;
+     , uFileDependencyManager;
 
 procedure FilterRoom( RoomNumber : string );
 begin
@@ -1720,6 +1720,8 @@ end;
 procedure CloseAppSettings;
 begin
   FreeAndNil(glb);
+  ClearFileDependencyManager;
+  ClearGlobalCurrencyManager;
 end;
 
 { TSet_Of_Integer }
