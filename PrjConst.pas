@@ -1368,6 +1368,7 @@ begin
   constants.Add('shUI_OnGroupInvoice', '[Group Invoice]');
 
   constants.Add('shUI_InvoiceCaption', 'INVOICE');
+  constants.Add('shUI_GroupInvoiceCaption', 'GROUP INVOICE');
   constants.Add('shUI_CreditInvoiceCaption', 'CREDIT INVOICE');
   constants.Add('shUI_InvoiceEnableLodgingTax', 'Enable lodging tax');
   constants.Add('shUI_InvoiceDisableLodgingTax', 'Disable lodging tax');

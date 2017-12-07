@@ -83,6 +83,7 @@ type
     FImportSource : string;
     FIsPackage    : boolean;
     FRoomreservationAlias : integer;
+    FIsVisibleOnInvoice: boolean;
 
   public
     constructor Create(LineNo : integer);
@@ -108,7 +109,7 @@ type
     property ItemKind  : TItemKind read FItemKind write FItemKind;
     property IsPackage : boolean   read FIsPackage write FIsPackage;
     property RoomreservationAlias : integer read FRoomreservationAlias write FRoomreservationAlias;
-
+    property IsVisibleOnInvoice : boolean   read FIsVisibleOnInvoice write FIsVisibleOnInvoice;
   end;
 
   /// *****************************************************************************
@@ -314,6 +315,7 @@ type
     FinvTxtPaymentListDescription : string;
     FinvTxtHeadPrePaid            : string;
     FinvTxtHeadBalance            : string;
+    FivhAggregateCityTax: boolean;
 
 
 
@@ -325,7 +327,8 @@ type
 
     function AddLine(ilID : integer; Date : TDate; LineNo : integer; Code : string; Description : string; Count : double;
       Price : double; TotalPrice : double; TotalWOVat : double; VATAmount : double; VatType : string;
-      AccountKey : string; importRefrence, importSource : string; isPackage : boolean;RoomreservationAlias:integer) : integer;
+      AccountKey : string; importRefrence, importSource : string; isPackage : boolean;RoomreservationAlias:integer;
+      VisibleOnInvoice: boolean) : integer;
 
     function GetPayment(idx : integer) : TInvoicePayment;
     function GetPaymentCount : integer;
@@ -375,6 +378,7 @@ type
     property ivhTotal_prePaid : double read FivhTotal_prePaid write FivhTotal_prePaid;
     property ivhTotal_Balance : double read FivhTotal_Balance write FivhTotal_Balance;
 
+    property ivhAggregateCityTax       : boolean  read FivhAggregateCityTax        write  FivhAggregateCityTax;
     property ivhTotalStayTax           : double   read FivhTotalStayTax            write  FivhTotalStayTax      ;
     property ivhTotalStayTaxNights     : integer  read FivhTotalStayTaxNights      write  FivhTotalStayTaxNights;
 
@@ -721,7 +725,7 @@ begin
   FIvhLocation := '';
 
 
-
+  FivhAggregateCityTax   := false;
   FivhTotalStayTax       := 0.00;
   FivhTotalStayTaxNights := 0;
 
@@ -872,7 +876,8 @@ function TInvoiceInfo.AddLine(ilID : integer;
                               AccountKey : string;
                               importRefrence, importSource : string;
                               isPackage : boolean;
-                              RoomreservationAlias : integer
+                              RoomreservationAlias : integer;
+                              VisibleOnInvoice: boolean
                               ) : integer;
 
 var
@@ -911,6 +916,7 @@ begin
   InvoiceLine.importSource := importSource;
   InvoiceLine.Ispackage := ispackage;
   Invoiceline.RoomreservationAlias := RoomreservationAlias;
+  InvoiceLine.IsVisibleOnInvoice := VisibleOnInvoice;
 
   InvoiceLine.FItemKind := Item_GetKind(Code);
  (* ikUnknown,ikNormal,ikRoomRent,ikRoomRentDiscount,ikBrekfastInc,ikPhoneUse,ikPayment*)
@@ -1260,7 +1266,7 @@ begin
 
 
 
-
+    FivhAggregateCityTax   := invoiceData.AggregateCityTax;
     FivhTotalStayTax       := 0.00;
     FivhTotalStayTaxNights := 0;
 
@@ -1325,6 +1331,7 @@ begin
         FivhTotalStayTaxNights := rSet.fieldbyname('TotalStayTaxNights').asInteger;
         FivhShowPackage        := rSet.fieldbyname('Showpackage').asBoolean;
         FivhLocation           := rSet.fieldbyname('Location').asString;
+        FivhAggregateCityTax   := rSet.fieldByName('AggregateCityTax').AsBoolean;
 
         FKreditType := ktDebit;
         if FivhTotal < 0 then
@@ -1503,6 +1510,7 @@ begin
     '       , importSource '#10+
     '       , isPackage '#10+
     '       , RoomReservationAlias '#10+
+    '       , VisibleOnInvoice'#10+
     '      FROM '#10+
     '        invoicelines '#10+
     '      WHERE '#10+
@@ -1575,7 +1583,9 @@ begin
                 importRefrence,
                 importSource,
                 ispackage,
-                RoomreservationAlias);
+                RoomreservationAlias,
+                rSet.fieldByName('visibleOnInvoice').asBoolean // always true but more consistent adding it
+                );
 
         rSet.Next;
       end;

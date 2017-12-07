@@ -35,9 +35,13 @@ function FloatToSQL(aValue: double; aDecimals: integer): string; overload;
 ///   Convert a SQl string to a float
 /// </summary>
 function SQLToFloat(const aStringValue: string; aDefault: extended = 0.00): extended;
-
 function SQLToDate(const aStringvalue: string): TDate;
 function SQLToDateTime(const aStringvalue: string): TDateTime;
+/// <summary>
+///   Converts Delphi format of GUID { xxx.xxx.xxx.xx } into MySQL format of UUID xxx.xxxx.xxxx.xxxx
+/// </summary>
+function GUIDToSQL(const aGUID: string): string;
+function SQLToGUID(const aGUID: string): string;
 
 var
   // Fixed predefined formatsettings to be used when formatting from or to SQL strings
@@ -166,7 +170,19 @@ begin
   Result := StrToDateTime(aStringValue, SQLFormatSettings);
 end;
 
+function GUIDToSQL(const aGUID: string): string;
+begin
+  result := _db(aGUID.Replace('{', '').Replace('}', ''));
+end;
 
+function SQLToGUID(const aGUID: string): string;
+begin
+  Result := aGUID;
+  if not Result.StartsWith('{') then
+    Result := '{' + Result;
+  if not Result.EndsWith('}') then
+    Result := Result + '}';
+end;
 
 procedure InitSQLFormatSettings;
 begin

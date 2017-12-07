@@ -63,6 +63,7 @@ type
     FIsTotalIncludedInParent: boolean;
 
   private
+    FLineGuid: string;
     function GetAmountOnInvoice: TAmount;
     function GetTotal: TAmount;
     function GetVatOnRevenue: TAmount;
@@ -83,10 +84,10 @@ type
     function GetAmountIncludedInParent: TAmount; virtual;
     function GetIsGenerated: boolean; virtual;
   public
-    constructor Create(aIndex, _id: integer); virtual;
+    constructor Create(aIndex, _id: integer; const aLineGuid: string = ''); virtual;
     destructor Destroy; override;
 
-    procedure MoveToInvoiceIndex(aInvoiceIndex: integer);
+    procedure MoveToInvoiceIndex(aInvoiceIndex: integer; aMoveAllDates: boolean);
 
     /// <summary>
     ///   Add the numbers of aOtherLine onto this line
@@ -159,6 +160,7 @@ type
     /// <summary>Id in invoicelines table of this invoiceline item, if <= 0 then this invoiceline instance does not have
     /// a record in the table invoicelines </summary>
     property LineId: integer read FLineId write FLineId;
+    property lineGuid: string read FLineGuid write FLineGuid;
     property InvoiceNumber: integer read FInvoiceNumber write FInvoiceNumber;
     property Item: string read FItem write FItem;
     property Text: string read FText write FText;
@@ -215,7 +217,7 @@ type
   protected
     function GetAmountIncludedInParent: TAmount; override;
   public
-    constructor Create(aIndex, _id: integer); override;
+    constructor Create(aIndex, _id: integer; const aLineGuid: string = ''); override;
     destructor Destroy; override;
 
     /// <summary>
@@ -263,7 +265,10 @@ type
     procedure ResetChanged;
     function AddInvoiceLine(aLineId: integer; aParent: TInvoiceLine): TInvoiceLine;
     function AddPackageInvoiceLine(aLineId: integer; aParent: TInvoiceLine; aRoomreservation:integer): TPackageInvoiceLine;
-
+    /// <summary>
+    ///   Try locate an invoiceline by it lineGUID, if not found nil is returned
+    /// </summary>
+    function FindLineByGUID(const lParentlineGUID: string): TInvoiceLine;
     function GetEnumeratorWithAggregatedCityTax: TInvoiceLinesAggCityTaxEnumerator;
     /// <summary>
     ///   Sets or unsets the VisibleOnInvoice property of Invoiceline object of certain type.
@@ -328,10 +333,12 @@ end;
 
 function TInvoiceLine.CanBeHiddenFromInvoice: boolean;
 begin
-  result := (Item <> g.qRoomRentItem) and IsGeneratedLine and assigned(Parent);
+  result := (Item <> g.qRoomRentItem) and assigned(Parent);
 end;
 
-constructor TInvoiceLine.Create(aIndex, _id: integer);
+constructor TInvoiceLine.Create(aIndex, _id: integer; const aLineGuid: string = '');
+var
+  newGUID: TGUID;
 begin
   inherited Create;
 
@@ -348,6 +355,13 @@ begin
   FChildInvoiceLines := TList<TInvoiceLine>.Create;
   FCurrency := g.qNativeCurrency;
   FChanged := True;
+  if lineGuid.IsEmpty then
+  begin
+    CreateGUID(newGUID);
+    FLineGuid := GUIDToString(newGUID);
+  end
+  else
+    FlineGuid := aLineGuid;
 end;
 
 destructor TInvoiceLine.Destroy;
@@ -478,13 +492,14 @@ begin
   result := TAmount.Create(_calcVat(TotalRevenue.Value, FVATPercentage), TotalRevenue.CurrencyCode);
 end;
 
-procedure TInvoiceLine.MoveToInvoiceIndex(aInvoiceIndex: integer);
+procedure TInvoiceLine.MoveToInvoiceIndex(aInvoiceIndex: integer; aMoveAllDates: boolean);
 begin
   if ItemKind = ikRoomRent then
-    if RoomEntity.UnpaidNights = 1 then
-      d.MoveRoomDateToInvoiceIndex(RoomEntity.Reservation, RoomEntity.RoomReservation, PurchaseDate, aInvoiceIndex)
+//    if RoomEntity.UnpaidNights = 1 then
+    if aMoveAllDates then
+      d.MoveGroupRoomToInvoiceIndex(RoomEntity.Reservation, RoomEntity.RoomReservation, aInvoiceIndex)
     else
-      d.UpdateGroupAccountone(RoomEntity.Reservation, RoomEntity.RoomReservation, RoomReservation, RoomReservation = 0, aInvoiceIndex)
+      d.MoveRoomDateToInvoiceIndex(RoomEntity.Reservation, RoomEntity.RoomReservation, PurchaseDate, aInvoiceIndex)
   else
   begin
     //todo
@@ -542,6 +557,20 @@ begin
     for lInvLine in Self do
       if (lInvLine.ItemKind = ikRoomRent) and (linvLine.RoomEntity.RoomReservation = aRoomreservation) then
         Result.AddParent(lInvLine);
+end;
+
+function TInvoiceLineList.FindLineByGUID(const lParentlineGUID: string): TInvoiceLine;
+var
+  lInvLine: TInvoiceLine;
+begin
+  result := nil;
+  if not lParentlineGUID.IsEmpty then
+    for lInvLine in self do
+      if lInvLine.lineGuid.Equals(lParentlineGUID) then
+      begin
+        result := lInvLine;
+        Break;
+      end;
 end;
 
 function TInvoiceLineList.GetCityTaxUnitCount: Double;
@@ -682,7 +711,7 @@ begin
     RemoveParent(FParentList[i]);
 end;
 
-constructor TPackageInvoiceLine.Create(aIndex, _id: integer);
+constructor TPackageInvoiceLine.Create(aIndex, _id: integer; const aLineGuid: string = '');
 begin
   inherited;
   FParentList := TList<TInvoiceLine>.Create;

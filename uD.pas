@@ -433,6 +433,7 @@ type
     function UpdateGroupAccountOne(reservation, RoomReservation, RoomReservationAlias: Integer; GroupAccount: boolean;
       InvoiceIndex: Integer = -1): boolean;
     procedure MoveRoomDateToInvoiceIndex(aReservation, aRoomReservation: integer; aDate:TDate; aInvoiceIndex: Integer);
+    procedure MoveGroupRoomToInvoiceIndex(aReservation, aRoomReservation, aInvoiceIndex: Integer);
     function UpdateReservationMarket(aReservation: Integer; aMarket: TReservationMarketType): boolean;
 
     function UpdateExpectedCheckoutTime(aReservation, aRoomReservation: Integer; const aCheckoutTime: string): boolean;
@@ -853,7 +854,8 @@ uses
     , uAlerts
     , uFrmCheckOut
     , UITypes
-    , uVatCalculator, uTableEntityList, uSQLUtils, uCredentialsAPICaller, ufrmInvoiceEdit;
+    , uVatCalculator, uTableEntityList, uSQLUtils, uCredentialsAPICaller, ufrmInvoiceEdit,
+    Math;
 
 {$R *.dfm}
 
@@ -3765,6 +3767,63 @@ begin
     end;
   end;
 
+end;
+
+procedure Td.MoveGroupRoomToInvoiceIndex(aReservation, aRoomReservation: integer; aInvoiceIndex: Integer);
+var
+  s: string;
+  ExecutionPlan: TRoomerExecutionPlan;
+begin
+  if not isAllRRSameCurrency(aReservation) then
+  begin
+    showmessage(GetTranslatedText('shTx_D_CurrencyCancel'));
+    exit;
+  end;
+
+  ExecutionPlan := d.roomerMainDataSet.CreateExecutionPlan;
+  try
+    ExecutionPlan.BeginTransaction;
+    try
+      s := '';
+      s := s + ' UPDATE roomreservations ' + chr(10);
+      s := s + ' Set' + chr(10);
+      s := s + ' InvoiceIndex = ' + _db(aInvoiceIndex) + chr(10);
+      s := s + ' WHERE Reservation = ' + inttostr(aReservation) + chr(10);
+      s := s + ' AND roomreservation = ' + inttostr(aRoomReservation) + chr(10);
+
+      ExecutionPlan.AddExec(s);
+
+      s := '';
+      s := s + ' UPDATE roomsdate ' + chr(10);
+      s := s + ' Set' + chr(10);
+      s := s + ' invoiceindex = null';
+      s := s + ' WHERE Reservation = ' + inttostr(aReservation) + chr(10);
+      s := s + ' AND roomreservation = ' + inttostr(aRoomReservation) + chr(10);
+      s := s + ' AND not paid ' + chr(10);
+      s := s + ' AND resflag not in (''X'', ''C'') ' + chr(10);
+
+      ExecutionPlan.AddExec(s);
+
+      s := '';
+      s := s + ' UPDATE invoicelines_visibility ' + chr(10);
+      s := s + ' Set' + chr(10);
+      s := s + ' invoiceindex = ' + _db(aInvoiceIndex) + chr(10);
+      s := s + ' WHERE Reservation = ' + _db(aReservation) + chr(10);
+      s := s + ' AND RoomReservation = ' + _db(aRoomReservation) + chr(10);
+      ExecutionPlan.AddExec(s);
+
+      if ExecutionPlan.Execute(ptExec, false, false) then
+        ExecutionPlan.CommitTransaction
+      else
+        raise Exception.Create(ExecutionPlan.ExecException);
+
+    except
+      ExecutionPlan.RollbackTransaction;
+      raise;
+    end;
+  finally
+    Executionplan.Free;
+  end;
 end;
 
 procedure Td.MoveRoomDateToInvoiceIndex(aReservation, aRoomReservation: integer; aDate:TDate; aInvoiceIndex: Integer);
@@ -6814,6 +6873,8 @@ var
   pckTotalsList: TRoomPackageLineEntryList;
 
   lineInfo: TInvoiceLineInfo;
+  maxLineNr: Integer;
+  lAggregatedTaxLine: TinvoiceLineInfo;
 
 begin
   initPaymentHolderRec(PaymentData);
@@ -6931,98 +6992,159 @@ begin
       tmpfoPrice := 0.00;
 
       ii := 0;
-
-      d.mtLines_.Insert;
-      d.mtLines_.ClearFields;
-      for i := 0 to IvI.lineCount - 1 do
-      begin
-
-        if (IvI.LinesList[i].IsPackage) and showPackage then
+      maxLineNr := -1;
+      lAggregatedTaxLine := nil;
+      try
+        d.mtLines_.Insert;
+        d.mtLines_.ClearFields;
+        for i := 0 to IvI.lineCount - 1 do
         begin
-          inc(ii);
-          lineInfo := IvI.LinesList[i];
-          AddOrCreateToPackage(pckTotalsList
-            , lineInfo.Code
-            , lineInfo.Description
-            , lineInfo.RoomReservationAlias
-            , lineInfo.TotalPrice
-            , lineInfo.TotalWOVAT
-            , lineInfo.VatAmount
-            , lineInfo.Code = g.qRoomRentItem
-            , lineInfo.ImportSource
-            , lineInfo.ImportRefrence
-            , lineInfo.LineNo
-            , lineInfo.date
-            , lineInfo.Count
-            );
 
-        end
-        else
-        begin
-          d.mtLines_.Insert;
-          d.mtLines_.FieldByName('lineNo').AsInteger := IvI.LinesList[i].LineNo;
-          d.mtLines_.FieldByName('Date').asDateTime := IvI.LinesList[i].date;
-          d.mtLines_.FieldByName('Code').Asstring := IvI.LinesList[i].Code;
-          d.mtLines_.FieldByName('Description').Asstring := IvI.LinesList[i].Description;
-          d.mtLines_.FieldByName('Count').asFloat := IvI.LinesList[i].Count; // -96
-          d.mtLines_.FieldByName('Price').asFloat := IvI.LinesList[i].Price;
+          maxLineNr := max(maxLineNr, IvI.LinesList[i].lineno);
 
-          d.mtLines_.FieldByName('Amount').asFloat := IvI.LinesList[i].TotalPrice;
-          d.mtLines_.FieldByName('AmountWoVat').asFloat := IvI.LinesList[i].TotalWOVAT;
-          d.mtLines_.FieldByName('VatAmount').asFloat := IvI.LinesList[i].VatAmount;
-
-          d.mtLines_.FieldByName('VatCode').Asstring := IvI.LinesList[i].VATCode;
-          d.mtLines_.FieldByName('AccountKey').Asstring := IvI.LinesList[i].AccountKey;
-          d.mtLines_.FieldByName('importSource').Asstring := IvI.LinesList[i].ImportSource;
-          d.mtLines_.FieldByName('importRefrence').Asstring := IvI.LinesList[i].ImportRefrence;
-
-          d.mtLines_.FieldByName('foPrice').asFloat := IvI.LinesList[i].Price / Rate;
-          d.mtLines_.FieldByName('foAmount').asFloat := IvI.LinesList[i].TotalPrice / Rate;
-          d.mtLines_.FieldByName('foAmountWoVat').asFloat := IvI.LinesList[i].TotalWOVAT / Rate;
-          d.mtLines_.FieldByName('foVatAmount').asFloat := IvI.LinesList[i].VatAmount / Rate;
-          d.mtLines_.post;
-        end;
-      end;
-
-      if ii > 0 then
-      begin
-
-        for ii := 0 to pckTotalsList.Count - 1 do
-        begin
-          tmpPrice := 0;
-          if pckTotalsList[ii].ItemCount <> 0 then
+          if (IvI.LinesList[i].IsPackage) and showPackage then
           begin
-            tmpPrice := pckTotalsList[ii].Amount / pckTotalsList[ii].ItemCount;
-            tmpfoPrice := tmpPrice / Rate;
+            inc(ii);
+            lineInfo := IvI.LinesList[i];
+            AddOrCreateToPackage(pckTotalsList
+              , lineInfo.Code
+              , lineInfo.Description
+              , lineInfo.RoomReservationAlias
+              , lineInfo.TotalPrice
+              , lineInfo.TotalWOVAT
+              , lineInfo.VatAmount
+              , lineInfo.Code = g.qRoomRentItem
+              , lineInfo.ImportSource
+              , lineInfo.ImportRefrence
+              , lineInfo.LineNo
+              , lineInfo.date
+              , lineInfo.Count
+              );
+
+          end
+          else
+          begin
+            if IvI.ivhAggregateCityTax and (Ivi.LinesList[i].Code = g.qStayTaxItem) and Ivi.LinesList[i].isVisibleOnInvoice then
+            begin
+              if not assigned(lAggregatedTaxLine) then
+                lAggregatedTaxLine  := TInvoiceLineInfo.Create(-1);
+
+              with lAggregatedTaxLine do
+              begin
+                Date := IvI.LinesList[i].date;
+                Code := IvI.LinesList[i].Code;
+                Description := IvI.LinesList[i].Description;
+                Count := Count + IvI.LinesList[i].Count; // -96
+
+                TotalPrice := Totalprice + IvI.LinesList[i].TotalPrice;
+                TotalWOVat := TotalWOVat + IvI.LinesList[i].TotalWOVAT;
+                VATAmount := VatAmount + IvI.LinesList[i].VatAmount;
+
+                VatCode :=  IvI.LinesList[i].VATCode;
+                AccountKey := IvI.LinesList[i].AccountKey;
+                ImportSource := IvI.LinesList[i].ImportSource;
+                Importrefrence := IvI.LinesList[i].ImportRefrence;
+
+                Price := TotalPrice / Count;
+              end;
+
+            end
+            else
+            begin
+              d.mtLines_.Insert;
+              d.mtLines_.FieldByName('lineNo').AsInteger := IvI.LinesList[i].LineNo;
+              d.mtLines_.FieldByName('Date').asDateTime := IvI.LinesList[i].date;
+              d.mtLines_.FieldByName('Code').Asstring := IvI.LinesList[i].Code;
+              d.mtLines_.FieldByName('Description').Asstring := IvI.LinesList[i].Description;
+              d.mtLines_.FieldByName('Count').asFloat := IvI.LinesList[i].Count; // -96
+              d.mtLines_.FieldByName('Price').asFloat := IvI.LinesList[i].Price;
+
+              d.mtLines_.FieldByName('Amount').asFloat := IvI.LinesList[i].TotalPrice;
+              d.mtLines_.FieldByName('AmountWoVat').asFloat := IvI.LinesList[i].TotalWOVAT;
+              d.mtLines_.FieldByName('VatAmount').asFloat := IvI.LinesList[i].VatAmount;
+
+              d.mtLines_.FieldByName('VatCode').Asstring := IvI.LinesList[i].VATCode;
+              d.mtLines_.FieldByName('AccountKey').Asstring := IvI.LinesList[i].AccountKey;
+              d.mtLines_.FieldByName('importSource').Asstring := IvI.LinesList[i].ImportSource;
+              d.mtLines_.FieldByName('importRefrence').Asstring := IvI.LinesList[i].ImportRefrence;
+
+              d.mtLines_.FieldByName('foPrice').asFloat := IvI.LinesList[i].Price / Rate;
+              d.mtLines_.FieldByName('foAmount').asFloat := IvI.LinesList[i].TotalPrice / Rate;
+              d.mtLines_.FieldByName('foAmountWoVat').asFloat := IvI.LinesList[i].TotalWOVAT / Rate;
+              d.mtLines_.FieldByName('foVatAmount').asFloat := IvI.LinesList[i].VatAmount / Rate;
+              d.mtLines_.post;
+            end;
           end;
+        end;
 
-          tmpfoAmount := pckTotalsList[ii].Amount / Rate;
-          tmpfoAmountWoVat := pckTotalsList[ii].AmountWoVat / Rate;
-          tmpfoVatAmount := pckTotalsList[ii].VatAmount / Rate;
-
+        if Ivi.ivhAggregateCityTax and assigned(lAggregatedTaxLine) then with lAggregatedTaxLine do
+        begin
           d.mtLines_.Insert;
-          d.mtLines_.FieldByName('lineNo').AsInteger := pckTotalsList[ii].LineNo;
-          d.mtLines_.FieldByName('Date').asDateTime := pckTotalsList[ii].aDate;
-          d.mtLines_.FieldByName('Code').Asstring := pckTotalsList[ii].packageCode;
-          d.mtLines_.FieldByName('Description').Asstring := pckTotalsList[ii].Description;
-          d.mtLines_.FieldByName('Count').asFloat := pckTotalsList[ii].ItemCount;
-          d.mtLines_.FieldByName('Price').asFloat := tmpPrice;
+          d.mtLines_.FieldByName('lineNo').AsInteger := maxLineNr + 1;
+          d.mtLines_.FieldByName('Date').asDateTime := date;
+          d.mtLines_.FieldByName('Code').Asstring := Code;
+          d.mtLines_.FieldByName('Description').Asstring := Description;
+          d.mtLines_.FieldByName('Count').asFloat := Count; // -96
+          d.mtLines_.FieldByName('Price').asFloat := Price;
 
-          d.mtLines_.FieldByName('Amount').asFloat := pckTotalsList[ii].Amount;
-          d.mtLines_.FieldByName('AmountWoVat').asFloat := pckTotalsList[ii].AmountWoVat;
-          d.mtLines_.FieldByName('VatAmount').asFloat := pckTotalsList[ii].VatAmount;
+          d.mtLines_.FieldByName('Amount').asFloat := TotalPrice;
+          d.mtLines_.FieldByName('AmountWoVat').asFloat := TotalWOVAT;
+          d.mtLines_.FieldByName('VatAmount').asFloat := VatAmount;
 
-          d.mtLines_.FieldByName('VatCode').Asstring := tmpVatCode;
-          d.mtLines_.FieldByName('AccountKey').Asstring := tmpAccountKey;
-          d.mtLines_.FieldByName('importSource').Asstring := tmpimportSource;
-          d.mtLines_.FieldByName('importRefrence').Asstring := tmpimportRefrence;
+          d.mtLines_.FieldByName('VatCode').Asstring := VATCode;
+          d.mtLines_.FieldByName('AccountKey').Asstring := AccountKey;
+          d.mtLines_.FieldByName('importSource').Asstring := ImportSource;
+          d.mtLines_.FieldByName('importRefrence').Asstring := ImportRefrence;
 
-          d.mtLines_.FieldByName('foPrice').asFloat := tmpfoPrice;
-          d.mtLines_.FieldByName('foAmount').asFloat := tmpfoAmount;
-          d.mtLines_.FieldByName('foAmountWoVat').asFloat := tmpfoAmountWoVat;
-          d.mtLines_.FieldByName('foVatAmount').asFloat := tmpfoVatAmount;
+          d.mtLines_.FieldByName('foPrice').asFloat := Price / Rate;
+          d.mtLines_.FieldByName('foAmount').asFloat := TotalPrice / Rate;
+          d.mtLines_.FieldByName('foAmountWoVat').asFloat := TotalWOVAT / Rate;
+          d.mtLines_.FieldByName('foVatAmount').asFloat := VatAmount / Rate;
           d.mtLines_.post;
         end;
+
+        if ii > 0 then
+        begin
+
+          for ii := 0 to pckTotalsList.Count - 1 do
+          begin
+            tmpPrice := 0;
+            if pckTotalsList[ii].ItemCount <> 0 then
+            begin
+              tmpPrice := pckTotalsList[ii].Amount / pckTotalsList[ii].ItemCount;
+              tmpfoPrice := tmpPrice / Rate;
+            end;
+
+            tmpfoAmount := pckTotalsList[ii].Amount / Rate;
+            tmpfoAmountWoVat := pckTotalsList[ii].AmountWoVat / Rate;
+            tmpfoVatAmount := pckTotalsList[ii].VatAmount / Rate;
+
+            d.mtLines_.Insert;
+            d.mtLines_.FieldByName('lineNo').AsInteger := pckTotalsList[ii].LineNo;
+            d.mtLines_.FieldByName('Date').asDateTime := pckTotalsList[ii].aDate;
+            d.mtLines_.FieldByName('Code').Asstring := pckTotalsList[ii].packageCode;
+            d.mtLines_.FieldByName('Description').Asstring := pckTotalsList[ii].Description;
+            d.mtLines_.FieldByName('Count').asFloat := pckTotalsList[ii].ItemCount;
+            d.mtLines_.FieldByName('Price').asFloat := tmpPrice;
+
+            d.mtLines_.FieldByName('Amount').asFloat := pckTotalsList[ii].Amount;
+            d.mtLines_.FieldByName('AmountWoVat').asFloat := pckTotalsList[ii].AmountWoVat;
+            d.mtLines_.FieldByName('VatAmount').asFloat := pckTotalsList[ii].VatAmount;
+
+            d.mtLines_.FieldByName('VatCode').Asstring := tmpVatCode;
+            d.mtLines_.FieldByName('AccountKey').Asstring := tmpAccountKey;
+            d.mtLines_.FieldByName('importSource').Asstring := tmpimportSource;
+            d.mtLines_.FieldByName('importRefrence').Asstring := tmpimportRefrence;
+
+            d.mtLines_.FieldByName('foPrice').asFloat := tmpfoPrice;
+            d.mtLines_.FieldByName('foAmount').asFloat := tmpfoAmount;
+            d.mtLines_.FieldByName('foAmountWoVat').asFloat := tmpfoAmountWoVat;
+            d.mtLines_.FieldByName('foVatAmount').asFloat := tmpfoVatAmount;
+            d.mtLines_.post;
+          end;
+        end;
+      finally
+        lAggregatedTaxLine.Free;
       end;
 
       d.mtLines_.SortOn('lineNo', []);

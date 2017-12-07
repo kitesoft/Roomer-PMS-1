@@ -4543,6 +4543,7 @@ select_ivh_otherInfo : string =
 '    , ih.TotalStayTaxNights '#10+
 '    , ih.ShowPackage '#10+
 '    , ih.Location '#10+
+'    , ih.AggregateCityTax '#10+
 ' '#10+
 '   FROM '#10+
 '     InvoiceHeads ih '#10+
@@ -6188,7 +6189,7 @@ begin
          ' RoomReservation IN (SELECT rd.RoomReservation ' +
          ' FROM roomsdate rd JOIN roomreservations rr ON rr.RoomReservation=rd.RoomReservation ' +
          ' WHERE (ResFlag NOT IN (''X'',''C'')) AND (rr.GroupAccount = 0 AND (PaidBy=%d OR (rd.RoomReservation=%d AND PaidBy=0))) ' +
-         IIF(InvoiceIndex <> -1, ' AND rr.InvoiceIndex = ' + inttostr(InvoiceIndex), '') + ') ' + #13;
+         IIF(InvoiceIndex <> -1, ' AND coalesce(rd.InvoiceIndex, rr.invoiceindex) = ' + inttostr(InvoiceIndex), '') + ') ' + #13;
   end;
   result := s;
 end;

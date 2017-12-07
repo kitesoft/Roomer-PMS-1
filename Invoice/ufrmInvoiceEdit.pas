@@ -510,7 +510,7 @@ type
     /// <summary>
     /// Create a new TInvoiceLine object and add this to InvoiceLinesList collection
     /// </summary>
-    function AddLine(LineId: integer; aParentInvoice: TInvoiceLine; sItem, sText: string; iNumber: Double; aPrice: Double;
+    function AddLine(LineId: integer; aParentInvoice: TInvoiceLine; const aLineGUID: string; sItem, sText: string; iNumber: Double; aPrice: Double;
       const aCurrency: string; const VATCode: string; PurchaseDate: TDate; aIsGenerated: boolean; Refrence, Source: string;
       isPackage: boolean; noGuests: integer; ConfirmDate: TDateTime; ConfirmAmount: Double; rrAlias: integer;
       AutoGen: string; itemIndex: integer = 0; aVisibleOnInvoice: boolean = true): TInvoiceLine;
@@ -990,7 +990,7 @@ begin
   FInvoiceLinesList.Clear;
 end;
 
-function TfrmInvoiceEdit.AddLine(LineId: integer; aParentInvoice: TInvoiceLine; sItem, sText: string; iNumber: Double;
+function TfrmInvoiceEdit.AddLine(LineId: integer; aParentInvoice: TInvoiceLine; const aLineGUID: string; sItem, sText: string; iNumber: Double;
   aPrice: Double; const aCurrency: string; const VATCode: string; PurchaseDate: TDate; aIsGenerated: boolean;
   Refrence, Source: string; isPackage: boolean; noGuests: integer; ConfirmDate: TDateTime; ConfirmAmount: Double;
   rrAlias: integer; AutoGen: string; itemIndex: integer = 0; aVisibleOnInvoice: boolean = true): TInvoiceLine;
@@ -1013,6 +1013,8 @@ begin
     else
       invoiceLine := FInvoiceLinesList.AddInvoiceLine(lineId, lParent);
 
+    if not aLineGUID.IsEmpty then
+      invoiceLine.lineGuid := aLineGUID;
     invoiceLine.Item := sItem;
     invoiceLine.Text := sText;
     invoiceLine.Number := iNumber;
@@ -1233,7 +1235,7 @@ begin
 
   unitPrice := totalTax / TaxUnits;
 
-  lInvLine := AddLine(0, aParentInvoice, taxItem, Item_GetDescription(taxItem), TaxUnits, unitPrice, g.qNativeCurrency,
+  lInvLine := AddLine(0, aParentInvoice, '', taxItem, Item_GetDescription(taxItem), TaxUnits, unitPrice, g.qNativeCurrency,
     lItemInfo.VATCode, aPurchaseDate, aParentInvoice.IsGeneratedLine, '', '', false, 0, ConfirmDate, ConfirmAmount, -1, _GetCurrentTick, 0, not aIsIncludedInParent);
 
   lInvLine.IsTotalIncludedInParent := aIsIncludedInParent;
@@ -1661,13 +1663,9 @@ procedure TfrmInvoiceEdit.AddRoom(const aRoom: String; aRoomPrice: Double; aCurr
 var
   lRmRntItem: string;
   lDiscountItem: string;
-
   lGuestName: string;
   lConfirmDate: TDateTime;
   lConfirmAmount: Double;
-
-//  lRRText: string;
-//  lText: string;
   lRoomInfo: TInvoiceRoomEntity;
   lInvoiceLine: TInvoiceLine;
   lItemInfo: TItemTypeInfo;
@@ -1679,7 +1677,6 @@ begin
 
   lRmRntItem := trim(g.qRoomRentItem);
   lItemInfo := d.Item_Get_ItemTypeInfo(lRmRntItem);
-
 
   lDescription := FormatRoomDescription(aRoom, aDescription, aFromDate, aToDate, aUnpaidNightCount, aPackageName, (FRoomReservation = 0), aGuestName);
 
@@ -1702,7 +1699,7 @@ begin
   FRoomInfoList.Add(lRoomInfo);
 
   // add a TInvoiceline object for the RoomRent to InvoiceLineList
-  lInvoiceLine := AddLine(0, nil, lRmRntItem, lDescription, aUnpaidNightCount, aRoomPrice, aCurrency, lItemInfo.VATCode, aFromDate, aIsGenerated,
+  lInvoiceLine := AddLine(0, nil, '', lRmRntItem, lDescription, aUnpaidNightCount, aRoomPrice, aCurrency, lItemInfo.VATCode, aFromDate, aIsGenerated,
     '', '', not aPackageName.IsEmpty, aNumGuests, lConfirmDate, lConfirmAmount, aRRAlias, _GetCurrentTick); // *77
   lInvoiceLine.RoomEntity := lRoomInfo;
   lRoomInfo.VatPerNight := lInvoiceLine.VATOnRevenue / aUnpaidNightCount;
@@ -1712,11 +1709,6 @@ begin
   // Only add included stuff if a regular room is added and not a manually added one
   if aIsGenerated then
   begin
-//    with glb.PMSSettings.BetaFunctionality do
-//      if BetaFunctionsAvailable and UseNewTaxcalcMethod then
-//        UpdateTaxinvoiceLinesForRoomItemUsingBackend(lInvoiceLine)
-//      else
-
     // Included Breakfast invoicelines
     AddBreakfastInvoicelinesForRoomItem(lRoomInfo, lInvoiceLine);
 
@@ -1729,7 +1721,7 @@ begin
       lDescription := Item_GetDescription(lDiscountItem) + ' ' + aDiscountText;
 
       /// Add an InvoiceLine object for the discount
-      AddLine(0, lInvoiceLine, lDiscountItem, lDescription, aUnpaidNightCount, -1 * aDiscountAmount, aCurrency,
+      AddLine(0, lInvoiceLine, '', lDiscountItem, lDescription, aUnpaidNightCount, -1 * aDiscountAmount, aCurrency,
               lItemInfo.VATCode, aFromDate, True, '', '', false, aNumGuests, lConfirmDate, lConfirmAmount, aRRAlias, _GetCurrentTick);
       lRoomInfo.Discount := aDiscountAmount * aUnpaidNightCount;
     end;
@@ -2163,6 +2155,8 @@ var
 
   dNumber: Double;
   lRoomAdditionalText: string;
+  lParentlineGUID: string;
+  lParentLine: TInvoiceLine;
 
   procedure SetInvoiceAddressTypeIndex(Index: integer);
   begin
@@ -2210,9 +2204,6 @@ begin
       InvoiceCurrencyCode := g.qNativeCurrency;
       exit;
     end;
-
-    edResNr.Caption := format('%d / %d', [FReservation, FRoomReservation]);
-
 
   Again:
     // Retrieve invoice header information
@@ -2354,6 +2345,7 @@ begin
 
       // -- Then the invoice lines..., excluding left over package lines from cancelled rooms
       sql := 'SELECT il.*, '#10 +
+        // [BS] Does this work? what if first day of roomres is cancelled?
         ' (select resflag from roomsdate rd where rd.roomreservation=il.roomreservationalias limit 1) as resflag '#10 +
         ' FROM invoicelines il '#10 +
         ' where Reservation = %d '#10 +
@@ -2436,15 +2428,34 @@ begin
         dNumber := GetCalculatedNumberOfItems(ItemId, eSet.FieldByName('Number').AsFloat);
         package := trim(eSet.FieldByName('importSource').asString);
 
-        AddLine(LineId, nil, ItemId, _s, dNumber,
-          Price, eSet.fieldByName('Currency').AsString, //  g.qNativeCurrency,
+        lParentlineGUID := SQLToGUID( eset.FieldByName('parentLineGUID').asString);
+        if not lParentlineGuid.IsEmpty then
+          lParentLine := FInvoiceLinesList.FindLineByGUID(lParentlineGUID)
+        else
+          lParentLine := nil;
+
+        AddLine(
+          LineId,
+          lParentLine,
+          SQLToGUID(eset.FieldByName('lineGUID').asString),
+          ItemId, _s,
+          dNumber,
+          Price,
+          eSet.fieldByName('Currency').AsString, //  g.qNativeCurrency,
           eSet.FieldByName('VATType').asString,
-          SQLToDate(eSet.FieldByName('PurchaseDate').asString), false {not generated},
-          trim(eSet.FieldByName('importRefrence').asString), package,
+          SQLToDate(eSet.FieldByName('PurchaseDate').asString),
+          false {not generated},
+          trim(eSet.FieldByName('importRefrence').asString),
+          package,
           eSet.FieldByName('isPackage').asBoolean,
           eSet.FieldByName('Persons').asinteger,
-          eSet.FieldByName('ConfirmDate').asdateTime, eSet.FieldByName('ConfirmAmount').AsFloat, lRoomReservation,
-          eSet.FieldByName('AutoGen').asString, eSet.FieldByName('ItemNumber').asinteger, eSet.FieldByName('visibleoninvoice').asBoolean );
+          eSet.FieldByName('ConfirmDate').asdateTime,
+          eSet.FieldByName('ConfirmAmount').AsFloat,
+          lRoomReservation,
+          eSet.FieldByName('AutoGen').asString,
+          eSet.FieldByName('ItemNumber').asinteger,
+          eSet.FieldByName('visibleoninvoice').asBoolean
+        );
 
         eSet.Next;
       end;
@@ -2486,7 +2497,6 @@ begin
 
   UpdateGrid;
   SetCurrentVisible;
-  UpdateControls;
 end;
 
 procedure TfrmInvoiceEdit.LoadPayments;
@@ -2600,7 +2610,7 @@ begin
   lItem := g.qBreakFastItem;
   lText := Item_GetDescription(lItem) + ' (' + GetTranslatedText('shTx_ReservationProfile_Included') + ')';
   lItemInfo := d.Item_Get_ItemTypeInfo(lItem);
-  lInvoiceLine := AddLine(0, aParent, lItem, lText, aIncludedBreakfastCount, Item_GetPrice(lItem),
+  lInvoiceLine := AddLine(0, aParent, '', lItem, lText, aIncludedBreakfastCount, Item_GetPrice(lItem),
     g.qNativeCurrency, lItemInfo.VATCode, aPurchaseDate, True, '', '', false, 0, 0, 0, -1, _GetCurrentTick, 0, False);
 
   lInvoiceLine.IsTotalIncludedInParent := True;
@@ -2652,7 +2662,7 @@ begin
     lRow := agrLines.Row;
 
   actToggleLodgingTax.Enabled := not IsDirectInvoice;
-  btnShowOnInvoice.Enabled := not IsDirectInvoice;
+//  btnShowOnInvoice.Enabled := not IsDirectInvoice;
   btnReservationNotes.Enabled := not IsDirectInvoice;
 
   if (lRow > 0) then
@@ -2988,7 +2998,9 @@ var
 begin
   Caption := GetTranslatedText('shUI_InvoiceCaption');
 
-  edResNr.Caption := format('%d / %s', [FReservation, iif(FRoomReservation > 0, IntToStr(FRoomReservation), GetTranslatedText('shUI_OnGroupInvoice'))]);
+  edResnr.Caption := intToStr(FReservation);
+  if FRoomReservation > 0 then
+    edResnr.Caption := edResNr.Caption + ' / ' + IntToStr(FRoomReservation);
 
   agrLines.Col := 0;
   agrLines.row := 1;
@@ -3008,6 +3020,13 @@ begin
     zCreditType := ctManual;
     zRefNum := -1;
     zOriginalInvoice := zRefNum;
+  end
+  else
+  begin
+    if FRoomReservation > 0 then
+      clabInvoice.Caption := GetTranslatedText('shUI_InvoiceCaption')
+    else
+      clabInvoice.Caption := GetTranslatedText('shUI_GroupInvoiceCaption')
   end;
 
   if (agrLines.ColCount >= col_TotalPrice) then
@@ -3406,9 +3425,9 @@ begin
     end;
 
     try
-      if (aSaveType in [stProforma, stDefinitive]) and AggregateCityTax then
-        lEnumerator := FInvoiceLinesList.GetEnumeratorWithAggregatedCityTax
-      else
+//      if (aSaveType in [stProforma, stDefinitive]) and AggregateCityTax then
+//        lEnumerator := FInvoiceLinesList.GetEnumeratorWithAggregatedCityTax
+//      else
         lEnumerator := FInvoiceLinesList.GetEnumerator;
 
       try
@@ -3649,7 +3668,7 @@ begin
   // RoomRentItem
   if aInvoiceLine.IsGeneratedLine or (aInvoiceLine.ItemKind in [ikRoomRent, ikRoomRentDiscount]) then
   begin
-    aInvoiceLine.PurchaseDate := now();
+//    aInvoiceLine.PurchaseDate := now();
     if aInvoiceLine.RoomEntity <> nil then
       iNights := aInvoiceLine.RoomEntity.UnpaidNights;
   end;
@@ -3703,6 +3722,8 @@ begin
     s := s + ', ' + 'staffCreated ' + #10;
     s := s + ', ' + 'VisibleOnInvoice ' + #10;
     s := s + ', ' + 'Revenue' + #10;
+    s := s + ', ' + 'lineGUID' + #10;
+    s := s + ', ' + 'parentlineGUID' + #10;
     s := s + ')' + #10;
     s := s + 'Values' + #10;
     s := s + '(' + #10;
@@ -3755,34 +3776,48 @@ begin
     s := s + ', ' + _db(d.roomerMainDataSet.username);
     s := s + ', ' + _db(aInvoiceLine.IsVisibleOnInvoice);
     s := s + ', ' + _db(iCreditInvoiceMultiplier * aInvoiceLine.TotalRevenue.ToNative.Value);
-
+    s := s + ', ' + GUIDToSQL(aInvoiceLine.lineGuid);
+    if assigned(aInvoiceLine.Parent) then
+      s := s + ', ' + GUIDToSQL(aInvoiceLine.Parent.lineGuid)
+    else
+      s := s + ', ' + _db('');
     s := s + ')' + #10;
   end
   else
   begin
-    s := 'UPDATE invoicelines' + ' Set ItemNumber= ' + _db(aInvoiceLine.InvoiceLineIndex) + ' , InvoiceNumber= ' +
-      _db(aInvoiceNumber) + ' , Description= ' + _db(aInvoiceLine.Text) + ' , Number= ' + _db(aInvoiceLine.Number) +
-      ' , Price= ' + _db(iCreditInvoiceMultiplier * aInvoiceLine.Price.ToNative) + ' , Total= ' +
-      _db(iCreditInvoiceMultiplier * fItemTotal) + ' , TotalWOVat= ' + _db(iCreditInvoiceMultiplier * fItemTotalWOVat) +
-      ' , VAT= ' + _db(iCreditInvoiceMultiplier * aInvoiceLine.VATOnInvoice.ToNative);
+    s := 'UPDATE invoicelines' + ' Set '#10 +
+        '  ItemNumber= ' + _db(aInvoiceLine.InvoiceLineIndex) + #10 +
+        ', InvoiceNumber= ' + _db(aInvoiceNumber) + #10 +
+        ', Description= ' + _db(aInvoiceLine.Text) + #10 +
+        ', Number= ' + _db(aInvoiceLine.Number) + #10 +
+        ', Price= ' + _db(iCreditInvoiceMultiplier * aInvoiceLine.Price.ToNative) + #10 +
+        ', Total= ' + _db(iCreditInvoiceMultiplier * fItemTotal) + #10 +
+        ', TotalWOVat= ' + _db(iCreditInvoiceMultiplier * fItemTotalWOVat) + #10 +
+        ', VAT= ' + _db(iCreditInvoiceMultiplier * aInvoiceLine.VATOnInvoice.ToNative) + #10;
 
     // If not storing provisionally, all records should set payment-currency = Currency of invoice
     if (aSaveType = stProvisionally) then
     begin
-      s := s + ' , CurrencyRate= ' + _db(GetRate(aInvoiceLine.Currency));
-      s := s + ' , Currency= ' + _db(aInvoiceLine.Currency);
+      s := s + ' , CurrencyRate= ' + _db(GetRate(aInvoiceLine.Currency)) + #10;
+      s := s + ' , Currency= ' + _db(aInvoiceLine.Currency) + #10;
     end
     else
     begin
-      s := s + ' , CurrencyRate= ' + _db(InvoiceCurrencyRate);
-      s := s + ' , Currency= ' + _db(InvoiceCurrencyCode);
+      s := s + ' , CurrencyRate= ' + _db(InvoiceCurrencyRate) + #10;
+      s := s + ' , Currency= ' + _db(InvoiceCurrencyCode) + #10;
     end;
 
-    s := s + ' , Persons= ' + _db(aInvoiceLine.noGuests) + ' , Nights= ' + _db(iNights) + ' , ilAccountKey= ' +
-      _db(sAccountKey) + ' , InvoiceIndex= ' + _db(FInvoiceIndex) + ' , staffLastEdit= ' +
-      _db(d.roomerMainDataSet.username) + ' , VisibleOnInvoice = ' + _db(aInvoiceLine.IsVisibleOnInvoice) +
-      ' , Revenue = ' + _db(iCreditInvoiceMultiplier * aInvoiceLine.TotalRevenue.ToNative) + ' WHERE id=' +
-      _db(aInvoiceLine.LineId);
+    s := s + ' , Persons= ' + _db(aInvoiceLine.noGuests) + #10 +
+             ' , Nights= ' + _db(iNights) + #10 +
+             ' , ilAccountKey= ' + _db(sAccountKey) + #10 +
+             ' , InvoiceIndex= ' + _db(FInvoiceIndex) + #10 +
+             ' , staffLastEdit= ' + _db(d.roomerMainDataSet.username) + #10 +
+             ' , VisibleOnInvoice = ' + _db(aInvoiceLine.IsVisibleOnInvoice) + #10 +
+             ' , Revenue = ' + _db(iCreditInvoiceMultiplier * aInvoiceLine.TotalRevenue.ToNative) +  #10;
+    if assigned(aInvoiceLine.Parent) then
+      s := s + ' , parentlineGuid= ' + GUIDToSQL(aInvoiceline.Parent.lineGuid) + #10;
+
+    s := s + ' WHERE id=' + _db(aInvoiceLine.LineId);
   end;
   aExecPlan.AddExec(s);
   copytoclipboard(s);
@@ -4106,7 +4141,7 @@ begin
               if NOT CheckExtraWithdrawalAllowed(Price) then
                 exit;
 
-              lInvoiceLine := AddLine(0, nil, Item, Description, 1, Price, g.qNativeCurrency, VATCode, now(), false, '',
+              lInvoiceLine := AddLine(0, nil, '', Item, Description, 1, Price, g.qNativeCurrency, VATCode, now(), false, '',
                 '', false, 0, 0, 0, 0, '');
 
               if lJumpToRow = -1 then
@@ -4757,7 +4792,7 @@ begin
     lInvoiceLine := GetInvoiceLineByRow(ARow);
     if not assigned(lInvoiceLine) then
     begin
-      lInvoiceLine := AddLine(0, nil, '', '', 1, 0, g.qNativeCurrency, '', now(), false, '', '', false, 0, 0, 0, 0, '');
+      lInvoiceLine := AddLine(0, nil, '', '', '', 1, 0, g.qNativeCurrency, '', now(), false, '', '', false, 0, 0, 0, 0, '');
       agrLines.Objects[cInvoiceLineAttachColumn, ARow] := lInvoiceLine;
     end;
 
@@ -5273,7 +5308,7 @@ begin
       agrLines.row := list[i];
       if invoiceLine.IsGeneratedLine AND (invoiceLine.ItemKind = ikRoomRent) then
       begin
-        invoiceline.MoveToInvoiceIndex(aNewIndex);
+        invoiceline.MoveToInvoiceIndex(aNewIndex, not ShowRentPerDay);
         // Also Moves generated childlines to new invoiceindex
         FInvoiceLinesList.Remove(invoiceLine);
       end
