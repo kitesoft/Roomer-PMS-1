@@ -38,7 +38,7 @@ type
     FCloseOnEsc: boolean;
     FBusyState: TRoomerFormBusyState;
     FUpdatingControls: boolean;
-    FUpdatingData: boolean;
+    FLoadingData: boolean;
     FProgressBar: TAdvSmoothProgressBar;
     function GetStateTextPanel: TStatusPanel;
     function GetBusyState: TRoomerFormBusyState;
@@ -61,7 +61,7 @@ type
     /// </summary>
     procedure DoLoadData; virtual;
     procedure LoadData;
-    property UpdatingData: boolean read FUpdatingData;
+    property LoadingData: boolean read FLoadingData;
     property StateTextPanel: TStatusPanel read GetStateTextPanel;
     property ProgressBar: TAdvSmoothProgressBar read FProgressBar;
   public
@@ -160,9 +160,9 @@ procedure TfrmBaseRoomerForm.LoadData;
 var
   lCursor: TCursor;
 begin
-  if not FUpdatingData then
+  if not FLoadingData then
   try
-    FUpdatingData := True;
+    FLoadingData := True;
     lCursor := Screen.Cursor;
     Screen.Cursor := crHourGlass;
     try
@@ -173,7 +173,7 @@ begin
       Screen.Cursor := lCursor;
     end;
   finally
-    FUpdatingData := False;
+    FLoadingData := False;
   end;
 end;
 

@@ -499,9 +499,6 @@ type
 
     procedure loadInvoiceToMemtable(var m: TKbmMemTable);
 
-    procedure UpdateControls(aRow: integer=0);
-
-
     procedure ClearRoomInfoObjects;
     procedure SetCurrentVisible;
     function GetInvoiceLineByRow(ARow: integer): TInvoiceLine;
@@ -660,6 +657,7 @@ type
     property AggregateCityTax: boolean read FAggregateCityTax write SetAggregateCityTax;
   protected
     procedure DoLoadData; override;
+    procedure DoUpdateControls; override;
   public
     { Public declarations }
 
@@ -1068,7 +1066,7 @@ begin
       agrLines.RowCount := FInvoiceLinesList.Count + 1;
 
       cnt := 1;
-      FInvoiceLinesList.SortOnInvoiceLineIndex;
+      FInvoiceLinesList.SortHierarchical;
       for lInvoiceLine in FInvoiceLinesList do
       begin
         DisplayLine(lInvoiceLine, cnt);
@@ -1080,7 +1078,6 @@ begin
       UpdateInvoiceIndexTabs;
 
       UpdateControls;
-      chkChanged;
     finally
       agrLines.EndUpdate;
       Screen.Cursor := crDefault;
@@ -1115,12 +1112,11 @@ function TfrmInvoiceEdit.DisplayLine(aInvoiceLine: TInvoiceLine; ARow: integer):
 var
   lValue: TAmount;
 begin
-  agrLines.Cells[col_Item, ARow] := aInvoiceLine.Item;
 
   // Add Select checkbox
   if not aInvoiceLine.CanBeHiddenFromInvoice then
   begin
-    if NOT agrLines.HasCheckBox(col_Select, ARow) and (agrLines.Cells[col_Item, ARow] <> '') then
+    if NOT agrLines.HasCheckBox(col_Select, ARow) and  not aInvoiceLine.Item.IsEmpty then
       agrLines.AddCheckBox(col_Select, ARow, false, false);
   end
   else if agrLines.HasCheckBox(col_Select, ARow) then
@@ -1136,6 +1132,7 @@ begin
   else if agrLines.HasCheckBox(col_VisibleOnInvoice, ARow) then
     agrLines.RemoveCheckBox(col_VisibleOnInvoice, ARow);
 
+  agrLines.Cells[col_Item, ARow] :=  aInvoiceLine.Item;
   agrLines.Cells[col_Description, ARow] := aInvoiceLine.Text;
   agrLines.Cells[col_ItemCount, ARow] := trim(_floattostr(aInvoiceLine.Number, vWidth, vDec));
 
@@ -2403,7 +2400,14 @@ begin
         LineId := eSet.FieldByName('Id').asinteger;
 
         CurrencyRate := eSet.FieldByName('CurrencyRate').AsFloat;
-        Price := eSet.FieldByName('Price').AsFloat;
+
+        dNumber := GetCalculatedNumberOfItems(ItemId, eSet.FieldByName('Number').AsFloat);
+        Price := 0;
+        if not SameValue(dNumber, 0.00) then
+          Price := eSet.FieldByName('revenue').asFloat / eSet.fieldByName('Number').AsFloat;
+
+        if SameValue(Price,0.00) then // fallback
+          Price := eSet.FieldByName('Price').AsFloat;
 
         // Manually added roomrent
         if Item_isRoomRent(ItemId) then
@@ -2425,7 +2429,6 @@ begin
         if (eSet.FieldByName('isPackage').asBoolean) and not _s.Contains(lRoomAdditionalText) then
           _s := _s + format(' %s %s', [lRoomAdditionalText, Room]);
 
-        dNumber := GetCalculatedNumberOfItems(ItemId, eSet.FieldByName('Number').AsFloat);
         package := trim(eSet.FieldByName('importSource').asString);
 
         lParentlineGUID := SQLToGUID( eset.FieldByName('parentLineGUID').asString);
@@ -2652,17 +2655,14 @@ begin
   end;
 end;
 
-procedure TfrmInvoiceEdit.UpdateControls(aRow: integer=0);
+procedure TfrmInvoiceEdit.DoUpdateControls;
 var
   lRow:integer;
   sCurrentItem, sRoomRentItem, sDiscountItem: String;
 begin
-  lRow := aRow;
-  if lRow = 0 then
-    lRow := agrLines.Row;
+  lRow := agrLines.Row;
 
   actToggleLodgingTax.Enabled := not IsDirectInvoice;
-//  btnShowOnInvoice.Enabled := not IsDirectInvoice;
   btnReservationNotes.Enabled := not IsDirectInvoice;
 
   if (lRow > 0) then
@@ -2695,8 +2695,9 @@ begin
     actToggleLodgingTax.Caption := GetTranslatedText('shUI_InvoiceEnableLodgingTax');
 
   pnlTotalsInCurrency.Visible := InvoiceCurrencyCode <> g.qNativeCurrency;
-
   actPrintInvoice.Enabled := FInvoiceLinesList.Count > 0;
+
+  chkChanged;
 end;
 
 procedure TfrmInvoiceEdit.DeleteLinesInList(ExecutionPlan: TRoomerExecutionPlan);
@@ -3029,12 +3030,12 @@ begin
       clabInvoice.Caption := GetTranslatedText('shUI_GroupInvoiceCaption')
   end;
 
-  if (agrLines.ColCount >= col_TotalPrice) then
-  begin
-    agrLines.ColWidths[col_ItemCount] := 100;
-    agrLines.ColWidths[col_ItemPrice] := 100;
-    agrLines.ColWidths[col_TotalPrice] := 100;
-  end;
+//  if (agrLines.ColCount >= col_TotalPrice) then
+//  begin
+//    agrLines.ColWidths[col_ItemCount] := 100;
+//    agrLines.ColWidths[col_ItemPrice] := 100;
+//    agrLines.ColWidths[col_TotalPrice] := 100;
+//  end;
 
 end;
 
@@ -3128,7 +3129,7 @@ end;
 
 procedure TfrmInvoiceEdit.agrLinesRowChanging(Sender: TObject; OldRow, NewRow: Integer; var Allow: Boolean);
 begin
-  UpdateControls(NewRow);
+  UpdateControls;
 end;
 
 procedure TfrmInvoiceEdit.CheckOrUncheckAll(check: boolean);
@@ -3425,11 +3426,11 @@ begin
     end;
 
     try
-//      if (aSaveType in [stProforma, stDefinitive]) and AggregateCityTax then
-//        lEnumerator := FInvoiceLinesList.GetEnumeratorWithAggregatedCityTax
-//      else
-        lEnumerator := FInvoiceLinesList.GetEnumerator;
 
+      // Order must be hierarchal, or at least parents before children, because all lineguids are replaced on saving
+      // new lines
+      FinvoiceLinesList.SortHierarchical;
+      lEnumerator := FInvoiceLinesList.GetEnumerator;
       try
         while lEnumerator.MoveNext do
         begin
@@ -3776,7 +3777,8 @@ begin
     s := s + ', ' + _db(d.roomerMainDataSet.username);
     s := s + ', ' + _db(aInvoiceLine.IsVisibleOnInvoice);
     s := s + ', ' + _db(iCreditInvoiceMultiplier * aInvoiceLine.TotalRevenue.ToNative.Value);
-    s := s + ', ' + GUIDToSQL(aInvoiceLine.lineGuid);
+    ainvoiceLine.lineGuid := CreateAGUID;             // New one needed
+    s := s + ', ' + GUIDToSQL(ainvoiceLine.lineGuid);
     if assigned(aInvoiceLine.Parent) then
       s := s + ', ' + GUIDToSQL(aInvoiceLine.Parent.lineGuid)
     else
@@ -3807,13 +3809,16 @@ begin
       s := s + ' , Currency= ' + _db(InvoiceCurrencyCode) + #10;
     end;
 
+    ainvoiceLine.lineGuid := CreateAGUID;             // New one needed
     s := s + ' , Persons= ' + _db(aInvoiceLine.noGuests) + #10 +
              ' , Nights= ' + _db(iNights) + #10 +
              ' , ilAccountKey= ' + _db(sAccountKey) + #10 +
              ' , InvoiceIndex= ' + _db(FInvoiceIndex) + #10 +
              ' , staffLastEdit= ' + _db(d.roomerMainDataSet.username) + #10 +
              ' , VisibleOnInvoice = ' + _db(aInvoiceLine.IsVisibleOnInvoice) + #10 +
+             ' , lineGUID = ' + GUIDToSQL(ainvoiceLine.lineGuid) + #10 +
              ' , Revenue = ' + _db(iCreditInvoiceMultiplier * aInvoiceLine.TotalRevenue.ToNative) +  #10;
+
     if assigned(aInvoiceLine.Parent) then
       s := s + ' , parentlineGuid= ' + GUIDToSQL(aInvoiceline.Parent.lineGuid) + #10;
 
@@ -6178,23 +6183,28 @@ begin
 
   if AddAccommodation(iPersons, iRooms, iNights, dRoomPrice) then
   begin
-    if (iPersons > 0) and (iNights > 0) then
-    begin
-      if NOT CheckExtraWithdrawalAllowed(iNights * dRoomPrice) then
-        exit;
+    agrLines.BeginUpdate;
+    try
+      if (iPersons > 0) and (iNights > 0) then
+      begin
+        if NOT CheckExtraWithdrawalAllowed(iNights * dRoomPrice) then
+          exit;
 
-      if ShowRentPerDay then
-        for lIntDate := trunc(now) to trunc(now) + iNights - 1 do
-        begin
-          lDate := lIntDate * 1.0;
+        if ShowRentPerDay then
+          for lIntDate := trunc(now) to trunc(now) + iNights - 1 do
+          begin
+            lDate := lIntDate * 1.0;
+            for iRoomCount := 0 to iRooms -1 do
+              AddRoom('', dRoomPrice, dRoomPrice.CurrencyCode, TDate(lDate), TDate(lDate) + 1, 1, '',  -1, 0, false, '', edtName.Text,
+                iPersons, 0, '', -1, false, false);
+          end
+        else
           for iRoomCount := 0 to iRooms -1 do
-            AddRoom('', dRoomPrice, dRoomPrice.CurrencyCode, TDate(lDate), TDate(lDate) + 1, 1, '',  -1, 0, false, '', edtName.Text,
+            AddRoom('', dRoomPrice, dRoomPrice.CurrencyCode, trunc(now), trunc(now) + iNights, iNights, '', -1, 0, false, '', edtName.Text,
               iPersons, 0, '', -1, false, false);
-        end
-      else
-        for iRoomCount := 0 to iRooms -1 do
-          AddRoom('', dRoomPrice, dRoomPrice.CurrencyCode, trunc(now), trunc(now) + iNights, iNights, '', -1, 0, false, '', edtName.Text,
-            iPersons, 0, '', -1, false, false);
+      end;
+    finally
+      agrLines.EndUpdate;
     end;
     UpdateGrid;
   end;
@@ -6741,7 +6751,7 @@ end;
 function TfrmInvoiceEdit.chkChanged: boolean;
 begin
   result := (not IsDirectInvoice) and (FInvoiceLinesList.IsChanged or HeaderChanged or (DeletedLines.Count > 0));
-  btnSaveChanges.Visible := not UpdatingData and Result;
+  btnSaveChanges.Visible := not LoadingData and Result;
   actSave.Enabled := Result;
 end;
 

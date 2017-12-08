@@ -100,6 +100,12 @@ type
     /// At this moment only line that are generated and linked to a roomrent item can be made invisible
     /// </summary>
     function CanBeHiddenFromInvoice: boolean; virtual;
+
+    /// <summary>
+    ///   Returns the depth of this invoiceline in the hierarchy with 0 being a root element
+    /// </summary>
+    function HierarchalDepth: integer;
+
     /// <summary>
     /// Revenue total in selected currency, including VAT for this item, calculated as Price * Number
     /// </summary>
@@ -228,7 +234,6 @@ type
     procedure AddParent(aParent: TInvoiceLine);
     procedure RemoveParent(aParent: TInvoiceLine);
     procedure ClearParentsList;
-    procedure AddParentsForRoomreservation(aRoomRes: integer);
   end;
 
   // TODO Refactor into TCollection, so CollectionItems can call functions from this collection
@@ -258,6 +263,12 @@ type
     function GetCityTaxUnitCount: Double;
     function GetLastLineIndex: integer;
     procedure SetShowPackageItems(const Value: boolean);
+    /// <summary>
+    ///   Renumber invoiceLineIndex properties according to current order in list
+    /// </summary>
+    procedure ReNumberLineIndicesSequentially;
+    procedure ReNumberLineIndicesHierachally;
+    function CalculateMaxDepth: integer;
 
   protected
     procedure Notify(const Item: TInvoiceLine; Action: TCollectionNotification); override;
@@ -276,6 +287,11 @@ type
     /// </summary>
     procedure SetAllVisibleOnInvoiceTo(aVisible: boolean; aItemKindSet: TItemKindSet = [ikRoomRentDiscount, ikStayTax, ikBreakfast]);
     procedure SortOnInvoiceLineIndex;
+    /// <summary>
+    ///   Sort invoicelines in list hierchical, so child lines are displayed directly beneath their parents
+    ///  and set the LineId accordingly
+    /// </summary>
+    procedure SortHierarchical;
     /// <summary>
     /// Calculate the total amount including VAT
     /// </summary>
@@ -492,6 +508,19 @@ begin
   result := TAmount.Create(_calcVat(TotalRevenue.Value, FVATPercentage), TotalRevenue.CurrencyCode);
 end;
 
+function TInvoiceLine.HierarchalDepth: integer;
+var
+  lLine: TInvoiceLine;
+begin
+  Result := 0;
+  lLine := Self;
+  while assigned(lLine.Parent) do
+  begin
+    inc(Result);
+    lLine := lLine.Parent;
+  end;
+end;
+
 procedure TInvoiceLine.MoveToInvoiceIndex(aInvoiceIndex: integer; aMoveAllDates: boolean);
 begin
   if ItemKind = ikRoomRent then
@@ -673,6 +702,65 @@ begin
       lItem.IsVisibleOnInvoice := Value;
 end;
 
+procedure TInvoiceLineList.SortHierarchical;
+begin
+  ReNumberLineIndicesHierachally;
+  SortOnInvoiceLineIndex;
+  ReNumberLineIndicesSequentially;
+end;
+
+function TInvoiceLineList.CalculateMaxDepth: integer;
+var
+  lInvLine: TInvoiceline;
+begin
+  Result := 0;
+  for lInvLine in Self do
+    Result := Max(Result, linvLine.HierarchalDepth);
+end;
+
+procedure TInvoiceLineList.ReNumberLineIndicesHierachally;
+var
+  lInvLine: TInvoiceline;
+  lMaxDepth: integer;
+begin
+  // Sort on depth
+  Sort(TComparer<TInvoiceLine>.Construct(
+    function(const l, R: TInvoiceLine): integer
+    begin
+      result := l.HierarchalDepth - R.HierarchalDepth;
+      // Keep original order of items on same level
+      if result = 0 then
+        Result := l.InvoiceLineIndex - R.InvoiceLineIndex
+    end));
+
+  ReNumberLineIndicesSequentially;
+
+  // Multiply current lineindex with 10^(depth+1), this allows max 100 children of a single parent
+  lMaxDepth := CalculateMaxDepth;
+  for lInvLine in Self do
+  begin
+    // Dont update lowest level child nodes
+    if (linvLine.HierarchalDepth <> lMaxDepth) then
+      linvLine.InvoiceLineIndex := trunc(Power10(linvLine.InvoiceLineIndex, lMaxDepth - linvLine.HierarchalDepth + 2));
+    // Note that because we have sorted on depth first, the index of parent has already been updated
+    if assigned(lInvLine.Parent) then
+      linvLine.InvoiceLineIndex := linvLine.InvoiceLineIndex + linvLine.Parent.InvoiceLineIndex;
+  end;
+end;
+
+procedure TInvoiceLineList.ReNumberLineIndicesSequentially;
+var
+  cnt: integer;
+  lInvLine: TInvoiceline;
+begin
+  cnt := 1;
+  for lInvLine in Self do
+  begin
+    lInvLine.InvoiceLineIndex := cnt;
+    cnt := cnt + 1;
+  end;
+end;
+
 procedure TInvoiceLineList.SortOnInvoiceLineIndex;
 begin
   Sort(TComparer<TInvoiceLine>.Construct(
@@ -690,12 +778,6 @@ begin
       aParent.ChildInvoiceLines.Add(self);
 
   FParentList.Add(aParent);
-end;
-
-procedure TPackageInvoiceLine.AddParentsForRoomreservation(aRoomRes: integer);
-begin
-  ClearParentsList;
-
 end;
 
 function TPackageInvoiceLine.CanBeHiddenFromInvoice: boolean;

@@ -390,7 +390,7 @@ var
   s : string;
   id : Integer;
 begin
-  if UpdatingData then exit;
+  if LoadingData then exit;
 
   s := '';
   s := s+GetTranslatedText('shDeleteMasterRatesDefault')+' '+RoomerDateToString(DataSet['fromDate']) + #13#13;
@@ -411,7 +411,7 @@ end;
 
 procedure TfrmMasterRateDefaults.m_BeforeInsert(DataSet: TDataSet);
 begin
-  if UpdatingData then exit;
+  if LoadingData then exit;
   tvData.GetColumnByFieldName('fromDate').Focused := True;
 end;
 
@@ -419,7 +419,7 @@ procedure TfrmMasterRateDefaults.m_BeforePost(DataSet: TDataSet);
 var s : String;
     id : Integer;
 begin
-  if UpdatingData then exit;
+  if LoadingData then exit;
   if FIsUpdating then exit;
 
   if dataset['fromDate'] < TDateTime.Today then raise Exception.Create(GetTranslatedText('DateCanNotBeFromThePast'));
@@ -488,7 +488,7 @@ end;
 
 procedure TfrmMasterRateDefaults.m_NewRecord(DataSet: TDataSet);
 begin
-  if UpdatingData then exit;
+  if LoadingData then exit;
 
   if glb.LocateSpecificRecord('roomtypegroups', 'id', FSelectedRate) then
   begin
