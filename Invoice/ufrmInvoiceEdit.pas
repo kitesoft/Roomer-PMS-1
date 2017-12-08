@@ -4451,7 +4451,6 @@ begin
           end;
           for Local_i1 := 1 to dayCount do
           begin
-            DiscountText := '';
             if LocateDate( rSet, 'aDate', RateDate) then
             begin
               reservation := rSet.FieldByName('Reservation').asinteger;
@@ -4529,7 +4528,9 @@ begin
 //          begin
 //
             if allIsPercentage and (AvrageDiscountPerc <> 0) then
-              DiscountText := DiscountText + '(' + floattostr(RoundDecimals(AvrageDiscountPerc, 2)) + '%)';
+              DiscountText := '(' + floattostr(RoundDecimals(AvrageDiscountPerc, 2)) + '%)'
+            else
+              DiscountText := '';
 
             AddRoom(Room, AverageRate, InvoiceCurrencyCode, Arrival, Departure, UnpaidDays, zRoomRSet.FieldByName('rrDescription').asString,
                     lRoomReservation,
@@ -4763,7 +4764,9 @@ begin
 //      lRoomText := tmp + ' ' + lRoomText;
 
       if isPercentage then
-        DiscountText := DiscountText + '(' + floattostr(Discount) + '%)';
+        DiscountText := '(' + floattostr(Discount) + '%)'
+      else
+        DiscountText := '';
 
       AddRoom(Room, Rate, lCurrency, RateDate, RateDate + 1, 1, lRoomsDateSet.FieldByName('rrDescription').asString,
               lRoomReservation,
